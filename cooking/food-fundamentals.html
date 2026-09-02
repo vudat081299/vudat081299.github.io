@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Food Fundamentals · thịt, hải sản, nhiệt độ &amp; rượu</title>
+<meta name="description" content="Kiến thức nền về thực phẩm cho người nấu ăn — sơ đồ các phần thịt lợn &amp; bò và tính chất từng loại, chọn hải sản, vì sao nhiệt độ quan trọng (Maillard, collagen, nhiệt lõi), kỹ thuật nấu theo loại thực phẩm, rượu trong bếp và cách kết hợp vị.">
+
+<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+<link rel="stylesheet" href="../web-builder/web-builder.css">
+<script>
+  /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành. */
+  try {
+    var t = localStorage.getItem('hub-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+
+<style>
+  /* Page-local layout only — mọi màu / bo / bóng đến từ token wb-*. */
+  body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+  body { --wb-ico-weight: 400; }
+
+  /* ---------- hero ---------- */
+  .fk-hero { padding: 26px 0 18px; }
+  .fk-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+  .fk-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 10px; line-height: 1.15; }
+  .fk-title u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  .fk-sub { color: var(--wb-fg-muted); font-size: 15px; max-width: 78ch; line-height: 1.65; margin: 0 0 12px; }
+  .fk-sub b { color: var(--wb-fg); font-weight: 620; }
+  .fk-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; }
+
+  /* ---------- sections ---------- */
+  section[id] { scroll-margin-top: 76px; }
+  .fk-sec-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .fk-sec-eyebrow b { color: var(--wb-fg); font-weight: 650; }
+  .fk-sec-title { font-size: 22px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 10px; }
+  .fk-sec-title em { font-style: italic; }
+  .fk-sec-intro { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.7; max-width: 82ch; margin: 0 0 20px; }
+  .fk-sec-intro b { color: var(--wb-fg); font-weight: 620; }
+  .fk-sec-intro em { font-style: italic; color: var(--wb-fg); }
+  h3.fk-sub-title { font-size: 15px; font-weight: 680; margin: 28px 0 12px; }
+  .fk-body { line-height: 1.72; font-size: 14.5px; color: var(--wb-fg); max-width: 82ch; }
+  .fk-body p { margin: 0 0 13px; }
+  .fk-body b { font-weight: 640; }
+  .fk-body em { font-style: italic; }
+
+  /* ---------- table of contents ---------- */
+  .fk-toc { display: flex; flex-wrap: wrap; gap: 7px; margin: 4px 0 0; }
+  .fk-toc a { font-family: var(--wb-font-mono); font-size: 12px; text-decoration: none; color: var(--wb-fg-muted);
+    border: var(--wb-bw) solid var(--wb-border); border-radius: 999px; padding: 5px 11px; transition: .12s; }
+  .fk-toc a:hover { color: var(--wb-fg); border-color: var(--wb-border-strong); }
+
+  /* ---------- butcher diagram ---------- */
+  .fk-diagram { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-card-radius, 12px);
+    background: var(--wb-surface-2, var(--wb-gray-50)); padding: 14px 14px 6px; overflow-x: auto; }
+  .fk-diagram svg { display: block; width: 100%; height: auto; max-width: 720px; margin: 0 auto; color: var(--wb-fg); }
+  .fk-anim-body { fill: var(--wb-gray-150); stroke: var(--wb-fg); stroke-width: 2.4; stroke-linejoin: round; }
+  .fk-anim-cut { fill: none; stroke: var(--wb-fg); stroke-width: 1.4; stroke-dasharray: 5 4; opacity: .55; }
+  .fk-anim-detail { fill: none; stroke: var(--wb-fg); stroke-width: 1.8; stroke-linecap: round; }
+  .fk-anim-eye { fill: var(--wb-fg); }
+  .fk-badge circle { fill: var(--wb-fg); }
+  .fk-badge text { fill: var(--wb-canvas); font-family: var(--wb-font-mono); font-size: 15px; font-weight: 700; text-anchor: middle; }
+  .fk-cap { text-align: center; font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle);
+    letter-spacing: .04em; margin: 8px 0 2px; }
+
+  /* legend that pairs a number with a cut */
+  .fk-legend { list-style: none; margin: 16px 0 0; padding: 0; display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 8px 18px; }
+  .fk-legend li { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start;
+    padding: 8px 0; border-top: var(--wb-bw) solid var(--wb-border); }
+  .fk-legend .fk-n { font-family: var(--wb-font-mono); font-weight: 700; font-size: 12px;
+    background: var(--wb-fg); color: var(--wb-canvas); width: 22px; height: 22px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center; flex: none; }
+  .fk-legend .fk-nm { font-size: 13.5px; font-weight: 650; }
+  .fk-legend .fk-nm span { font-weight: 500; color: var(--wb-fg-subtle); font-size: 12px; }
+  .fk-legend .fk-d { font-size: 12.5px; color: var(--wb-fg-muted); line-height: 1.5; margin-top: 2px; }
+  .fk-legend .fk-d b { color: var(--wb-fg); font-weight: 620; }
+
+  /* ---------- key/value rows (reused for many lists) ---------- */
+  .fk-kv { display: flex; align-items: baseline; gap: 12px; padding: 9px 0; border-bottom: var(--wb-bw) dashed var(--wb-border); }
+  .fk-kv:last-child { border-bottom: 0; }
+  .fk-kv__k { font-size: 13.5px; font-weight: 640; flex: none; min-width: 132px; }
+  .fk-kv__v { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.55; }
+  .fk-kv__v b { color: var(--wb-fg); font-weight: 620; }
+
+  /* ---------- temperature ladder ---------- */
+  .fk-ladder { display: grid; grid-template-columns: 86px 1fr; gap: 0; margin: 6px 0 0;
+    border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-card-radius, 12px); overflow: hidden; }
+  .fk-ladder__row { display: contents; }
+  .fk-ladder__t { font-family: var(--wb-font-mono); font-size: 12.5px; font-weight: 640; padding: 11px 12px;
+    border-top: var(--wb-bw) solid var(--wb-border); border-right: var(--wb-bw) solid var(--wb-border);
+    display: flex; align-items: center; white-space: nowrap; }
+  .fk-ladder__d { padding: 11px 14px; border-top: var(--wb-bw) solid var(--wb-border); font-size: 13px; line-height: 1.55; }
+  .fk-ladder__d b { font-weight: 640; }
+  .fk-ladder__row:first-child .fk-ladder__t, .fk-ladder__row:first-child .fk-ladder__d { border-top: 0; }
+  .fk-ladder__row--hot .fk-ladder__t { color: var(--wb-fg); background: var(--wb-gray-100); }
+  .fk-ladder__row--cold .fk-ladder__t { color: var(--wb-fg-muted); }
+
+  /* doneness strip */
+  .fk-done { display: grid; grid-template-columns: minmax(0,130px) minmax(0,92px) minmax(0,1fr); gap: 4px 14px;
+    padding: 9px 0; border-bottom: var(--wb-bw) dashed var(--wb-border); align-items: baseline; }
+  .fk-done:last-child { border-bottom: 0; }
+  .fk-done__n { font-size: 13.5px; font-weight: 640; }
+  .fk-done__t { font-family: var(--wb-font-mono); font-size: 12.5px; font-weight: 640; }
+  .fk-done__c { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.55; }
+  .fk-done__c b { color: var(--wb-fg); font-weight: 620; }
+  @media (max-width: 620px) { .fk-done { grid-template-columns: 1fr auto; gap: 2px 10px; } .fk-done__c { grid-column: 1 / -1; } }
+
+  /* ---------- taste balance chips ---------- */
+  .fk-taste { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .fk-taste__c { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-card-radius, 12px); padding: 12px 13px; }
+  .fk-taste__h { font-size: 14px; font-weight: 680; margin: 0 0 5px; display: flex; align-items: center; gap: 7px; }
+  .fk-taste__h .wb-ico { color: var(--wb-fg-subtle); font-size: 18px; }
+  .fk-taste__p { font-size: 12.5px; color: var(--wb-fg-muted); line-height: 1.5; margin: 0; }
+  .fk-taste__p b { color: var(--wb-fg); font-weight: 620; }
+
+  /* utility */
+  .fk-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+  .fk-foot { border-top: var(--wb-bw) solid var(--wb-border); margin-top: 20px; padding: 20px 0 60px;
+    font-size: 13px; color: var(--wb-fg-muted); }
+  .fk-foot a { color: var(--wb-fg); }
+  .wb-table td b { font-weight: 640; }
+  .wb-table td .fk-mut { color: var(--wb-fg-subtle); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="wb-navbar wb-navbar--sticky">
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">食</span> Food Fundamentals</a>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <a class="wb-btn wb-btn--ghost wb-btn--sm mc-navhide" href="#thit">Thịt</a>
+    <a class="wb-btn wb-btn--ghost wb-btn--sm mc-navhide" href="#nhiet-do">Nhiệt độ</a>
+    <a class="wb-btn wb-btn--ghost wb-btn--sm" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> <span class="mc-navhide">Trang chủ</span></a>
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</div>
+
+<main class="wb-container wb-container--wide">
+
+  <header class="fk-hero">
+    <p class="fk-eyebrow">Kiến thức nền · trước khi mở công thức</p>
+    <h1 class="fk-title">Hiểu <u>nguyên liệu</u> và <u>nhiệt độ</u> — rồi công thức chỉ còn là chi tiết.</h1>
+    <p class="fk-sub">Bốn trang công thức bên cạnh trả lời câu hỏi <em>"nấu món này thế nào"</em>. Trang này trả lời câu hỏi ở dưới đó: <b>vì sao</b> một miếng ba chỉ hợp để nướng còn bắp bò thì phải hầm, <b>vì sao</b> "để lửa to cho nhanh" lại làm hỏng món, cá tươi khác cá ươn ở đâu, rượu làm gì trong nồi, và vì sao một bát nước chấm chua lại "cắt" được vị béo. Toàn bộ bám sát nguyên liệu và kỹ thuật đang dùng trong <a href="vietnamese-home-cooking.html" style="color:inherit">Mâm cơm Việt</a>, <a href="korean-home-cooking.html" style="color:inherit">Bếp Hàn</a>, <a href="european-savoury.html" style="color:inherit">Món Âu mặn</a> và <a href="european-baking.html" style="color:inherit">Bánh Âu</a> — chỉ những kiến thức <b>phổ biến và dùng được ngay</b>, không lý thuyết hàn lâm.</p>
+    <p class="fk-meta">SƠ ĐỒ THỊT LỢN &amp; BÒ · HẢI SẢN · NHIỆT ĐỘ · KỸ THUẬT · RƯỢU · KẾT HỢP VỊ</p>
+    <nav class="fk-toc" aria-label="Mục lục">
+      <a href="#doc-hieu">00 · Đọc miếng thịt</a>
+      <a href="#thit">01 · Thịt lợn &amp; bò</a>
+      <a href="#hai-san">02 · Hải sản</a>
+      <a href="#nhiet-do">03 · Nhiệt độ</a>
+      <a href="#ky-thuat">04 · Kỹ thuật nấu</a>
+      <a href="#ruou">05 · Rượu</a>
+      <a href="#ket-hop">06 · Kết hợp vị</a>
+    </nav>
+  </header>
+
+  <hr class="wb-divider">
+
+  <div class="wb-stack" style="--wb-stack-gap:48px; padding: 26px 0 20px">
+
+    <!-- ============ 00 — ĐỌC MIẾNG THỊT ============ -->
+    <section id="doc-hieu">
+      <p class="fk-sec-eyebrow"><b>00</b> — Ba thứ quyết định một miếng thịt</p>
+      <h2 class="fk-sec-title">Mềm hay dai không nằm ở con vật — nằm ở <em>bộ phận</em>.</h2>
+      <p class="fk-sec-intro">Cùng một con lợn, miếng thăn mềm tan còn chân giò dai như cao su nếu nấu sai. Khác biệt đến từ ba thứ vật lý, và chỉ cần nhìn ba thứ này là đoán được nên nấu kiểu gì — trước cả khi biết tên miếng thịt.</p>
+
+      <div class="wb-grid wb-grid--3">
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <span class="wb-cap wb-cap--lg"><span class="wb-ico wb-ico--xs">fitness_center</span> Vận động</span>
+          <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Cơ càng làm việc càng dai</h4>
+          <p class="wb-help">Bắp chân, vai, cổ, đuôi — cơ vận động nhiều → nhiều <b style="color:var(--wb-fg)">mô liên kết (collagen)</b>, dai. Thăn lưng gần như không vận động → mềm. Đây là quy tắc gốc.</p>
+        </div></div>
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <span class="wb-cap wb-cap--lg"><span class="wb-ico wb-ico--xs">grain</span> Mỡ giắt</span>
+          <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Mỡ = ẩm + vị</h4>
+          <p class="wb-help">Mỡ xen trong thớ (ba chỉ, ribeye, nạc vai) tan khi nấu, giữ ẩm và mang vị. Miếng <b style="color:var(--wb-fg)">nạc kiệt mỡ</b> (thăn, ức gà) rất dễ khô khi quá lửa.</p>
+        </div></div>
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <span class="wb-cap wb-cap--lg"><span class="wb-ico wb-ico--xs">density_medium</span> Mô liên kết</span>
+          <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Collagen cần thời gian</h4>
+          <p class="wb-help">Gân, màng (collagen) <b style="color:var(--wb-fg)">chỉ mềm khi nấu ẩm, lâu, 70–90&nbsp;°C</b> — biến thành gelatin sánh. Nấu nhanh thì nó co lại và dai. Đây là lý do miếng dai phải hầm.</p>
+        </div></div>
+      </div>
+
+      <div class="wb-alert wb-alert--plain" style="margin-top:16px">
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Một câu để nhớ cả trang này</p>
+          <p class="wb-alert__msg"><b>Miếng mềm ít gân → nhiệt khô, nhanh</b> (áp chảo, nướng, xào — giữ mềm mọng). · <b>Miếng dai nhiều gân → nhiệt ẩm, chậm</b> (kho, hầm — biến gân thành gelatin). Nấu ngược lại là hỏng: thăn đem hầm thì bã, bắp bò đem áp chảo thì dai nhách.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="wb-divider">
+
+    <!-- ============ 01 — THỊT ============ -->
+    <section id="thit">
+      <p class="fk-sec-eyebrow"><b>01</b> — Bản đồ các phần thịt</p>
+      <h2 class="fk-sec-title">Con lợn và con bò, chia theo <em>miếng</em> — và mỗi miếng nấu kiểu gì.</h2>
+      <p class="fk-sec-intro">Số trên hình khớp với số trong danh sách dưới. Tên tiếng Việt ở chợ có thể khác nhau theo vùng, nên mỗi miếng ghi kèm tên phổ thông và tên tiếng Anh để tra khi mua đồ nhập.</p>
+
+      <h3 class="fk-sub-title">Con lợn (heo)</h3>
+      <div class="fk-diagram">
+        <svg viewBox="0 0 720 340" role="img" aria-label="Sơ đồ các phần thịt lợn nhìn ngang">
+          <!-- thân lợn -->
+          <path class="fk-anim-body" d="M96 176
+            C86 150 92 128 112 120 C120 96 150 92 162 112
+            C182 104 214 100 246 104 C300 92 372 88 452 96
+            C520 102 578 110 616 128 C654 146 664 170 650 190
+            C662 196 664 214 652 220 C660 232 650 246 636 244
+            C632 236 628 226 626 214 C610 220 590 222 572 220
+            C566 250 560 276 556 300 C554 312 536 312 534 300
+            C532 278 534 252 532 226 C470 236 400 238 336 232
+            C332 262 328 286 324 302 C322 314 304 314 302 302
+            C300 280 304 254 306 228 C270 224 234 216 206 204
+            C200 236 196 264 192 288 C190 300 172 300 170 288
+            C168 262 172 232 174 200 C150 200 120 196 104 186 Z"/>
+          <!-- tai -->
+          <path class="fk-anim-detail" d="M150 116 C138 96 140 82 156 80 C168 92 168 106 162 116" fill="var(--wb-gray-150)"/>
+          <!-- mũi -->
+          <path class="fk-anim-detail" d="M96 176 C84 172 82 186 94 188" />
+          <circle class="fk-anim-eye" cx="140" cy="132" r="4.4"/>
+          <!-- lỗ mũi -->
+          <circle class="fk-anim-eye" cx="92" cy="180" r="2.6"/>
+          <!-- đuôi xoắn -->
+          <path class="fk-anim-detail" d="M650 168 C678 158 686 140 672 132 C662 126 654 134 660 144" />
+
+          <!-- ranh giới các miếng (dashed) -->
+          <path class="fk-anim-cut" d="M196 112 C202 150 202 186 200 204"/>       <!-- vai | thăn -->
+          <path class="fk-anim-cut" d="M336 100 C340 150 336 196 336 232"/>       <!-- thăn | mông (trên) -->
+          <path class="fk-anim-cut" d="M300 150 L536 156"/>                        <!-- thăn/lưng | ba chỉ (ngang) -->
+          <path class="fk-anim-cut" d="M206 150 C210 178 208 196 206 204"/>       <!-- vai | ba chỉ trước -->
+
+          <!-- badges -->
+          <g class="fk-badge"><circle cx="150" cy="168" r="15"/><text x="150" y="173">1</text></g>
+          <g class="fk-badge"><circle cx="258" cy="132" r="15"/><text x="258" y="137">2</text></g>
+          <g class="fk-badge"><circle cx="398" cy="130" r="15"/><text x="398" y="135">3</text></g>
+          <g class="fk-badge"><circle cx="398" cy="198" r="15"/><text x="398" y="203">4</text></g>
+          <g class="fk-badge"><circle cx="586" cy="160" r="15"/><text x="586" y="165">5</text></g>
+          <g class="fk-badge"><circle cx="330" cy="174" r="15"/><text x="330" y="179">6</text></g>
+          <g class="fk-badge"><circle cx="184" cy="262" r="14"/><text x="184" y="267">7</text></g>
+          <g class="fk-badge"><circle cx="546" cy="286" r="14"/><text x="546" y="291">7</text></g>
+        </svg>
+        <p class="fk-cap">Nhìn ngang, đầu bên trái · số khớp với danh sách bên dưới</p>
+      </div>
+
+      <ul class="fk-legend">
+        <li><span class="fk-n">1</span><div><div class="fk-nm">Nạc vai / cổ <span>· Shoulder / Pork butt</span></div><p class="fk-d">Nhiều mỡ giắt và mô liên kết. <b>Hợp: kho, hầm, xào, quay lâu, xay làm nhân.</b> Nấu nhanh thì dai. → <em>thịt xào cay (제육), giả cầy, thịt băm.</em></p></div></li>
+        <li><span class="fk-n">2</span><div><div class="fk-nm">Thăn vai / cốt lết <span>· Blade / loin chop</span></div><p class="fk-d">Nạc vừa, có chút mỡ. <b>Hợp: rán, nướng, áp chảo.</b> → <em>sườn cốt lết, thịt nướng.</em></p></div></li>
+        <li><span class="fk-n">3</span><div><div class="fk-nm">Thăn lưng / thăn nội <span>· Loin / tenderloin</span></div><p class="fk-d">Nạc nhất, mềm nhất, gần như không vận động. <b>Hợp: áp chảo &amp; nướng nhanh, chiên (tonkatsu).</b> Rất dễ khô — <b>đừng nấu quá chín.</b></p></div></li>
+        <li><span class="fk-n">4</span><div><div class="fk-nm">Ba chỉ / bụng <span>· Belly</span></div><p class="fk-d">Xen kẽ mỡ–nạc thành lớp, chịu nhiệt lâu mà không khô. <b>Hợp: nướng, kho, quay giòn bì, luộc.</b> → <em>ba chỉ nướng (삼겹살), thịt kho tàu.</em></p></div></li>
+        <li><span class="fk-n">5</span><div><div class="fk-nm">Mông / đùi sau <span>· Ham / leg</span></div><p class="fk-d">Khối nạc lớn, ít mỡ. <b>Hợp: luộc, quay, giăm bông, ruốc.</b> Hơi khô nên hay luộc rồi thái. → <em>thịt luộc, giò.</em></p></div></li>
+        <li><span class="fk-n">6</span><div><div class="fk-nm">Sườn <span>· Ribs</span></div><p class="fk-d">Sườn non (gần bụng) nhiều sụn–mỡ; sườn già (gần lưng) nạc hơn. <b>Hợp: kho, nướng, hầm, chiên.</b> → <em>sườn xào chua ngọt, canh sườn.</em></p></div></li>
+        <li><span class="fk-n">7</span><div><div class="fk-nm">Chân giò / móng <span>· Hock / trotter</span></div><p class="fk-d">Nhiều da–gân–collagen, rất ít nạc. <b>Bắt buộc hầm/luộc lâu</b> để gân thành gelatin. → <em>giò heo hầm, thịt đông, giả cầy.</em></p></div></li>
+      </ul>
+
+      <h3 class="fk-sub-title">Con bò</h3>
+      <div class="fk-diagram">
+        <svg viewBox="0 0 720 340" role="img" aria-label="Sơ đồ các phần thịt bò nhìn ngang">
+          <!-- thân bò -->
+          <path class="fk-anim-body" d="M120 150
+            C108 120 112 104 128 100 C130 84 150 82 158 96
+            C160 82 178 80 184 94 C220 84 300 82 392 88
+            C500 92 590 104 632 120 C650 128 654 142 648 156
+            C660 160 662 176 650 182 C640 210 632 244 628 270
+            C626 284 606 284 604 270 C602 246 606 214 606 190
+            C540 202 462 206 386 202 C384 232 380 258 378 274
+            C376 288 356 288 354 274 C352 248 356 218 356 198
+            C300 194 244 186 206 176 C204 214 200 246 198 270
+            C196 284 176 284 174 270 C172 244 176 210 178 172
+            C150 168 128 162 120 150 Z"/>
+          <!-- tai -->
+          <path class="fk-anim-detail" d="M160 98 C152 84 156 72 172 74 C176 86 170 98 162 102" fill="var(--wb-gray-150)"/>
+          <!-- hai sừng cong lên -->
+          <path class="fk-anim-detail" d="M138 94 C130 78 132 66 142 62"/>
+          <path class="fk-anim-detail" d="M150 92 C148 76 154 66 166 62"/>
+          <circle class="fk-anim-eye" cx="148" cy="120" r="4.2"/>
+          <!-- mõm dài kiểu bò -->
+          <path class="fk-anim-detail" d="M120 150 C104 150 104 134 122 132"/>
+          <path class="fk-anim-detail" d="M112 142 L124 142" opacity=".6"/>
+          <!-- đuôi dài có chùm lông -->
+          <path class="fk-anim-detail" d="M648 156 C674 160 684 206 670 244 C666 256 658 252 662 238 C670 208 662 178 646 174"/>
+
+          <!-- ranh giới miếng -->
+          <path class="fk-anim-cut" d="M206 96 C210 140 208 168 206 176"/>       <!-- vai | sườn -->
+          <path class="fk-anim-cut" d="M356 90 C360 140 356 176 356 198"/>       <!-- sườn | thăn -->
+          <path class="fk-anim-cut" d="M470 92 C474 140 472 172 472 200"/>       <!-- thăn | mông -->
+          <path class="fk-anim-cut" d="M300 150 L606 150"/>                        <!-- lưng | bụng (ngang) -->
+          <path class="fk-anim-cut" d="M206 150 C210 130 210 112 206 96"/>
+
+          <!-- badges -->
+          <g class="fk-badge"><circle cx="164" cy="150" r="15"/><text x="164" y="155">1</text></g>
+          <g class="fk-badge"><circle cx="280" cy="122" r="15"/><text x="280" y="127">2</text></g>
+          <g class="fk-badge"><circle cx="414" cy="120" r="15"/><text x="414" y="125">3</text></g>
+          <g class="fk-badge"><circle cx="540" cy="128" r="15"/><text x="540" y="133">4</text></g>
+          <g class="fk-badge"><circle cx="588" cy="180" r="15"/><text x="588" y="185">5</text></g>
+          <g class="fk-badge"><circle cx="300" cy="182" r="15"/><text x="300" y="187">6</text></g>
+          <g class="fk-badge"><circle cx="450" cy="176" r="15"/><text x="450" y="181">7</text></g>
+          <g class="fk-badge"><circle cx="188" cy="238" r="14"/><text x="188" y="243">8</text></g>
+          <g class="fk-badge"><circle cx="368" cy="246" r="14"/><text x="368" y="251">8</text></g>
+        </svg>
+        <p class="fk-cap">Nhìn ngang, đầu bên trái · số khớp với danh sách bên dưới</p>
+      </div>
+
+      <ul class="fk-legend">
+        <li><span class="fk-n">1</span><div><div class="fk-nm">Nạc vai / cổ <span>· Chuck</span></div><p class="fk-d">Nhiều mô liên kết, đậm vị. <b>Hợp: hầm, bò kho, xay (burger, bò băm).</b> → <em>bò kho, ragù, nhân.</em></p></div></li>
+        <li><span class="fk-n">2</span><div><div class="fk-nm">Sườn / ba sườn <span>· Rib · ribeye</span></div><p class="fk-d">Mỡ giắt nhiều, mềm mọng. <b>Hợp: áp chảo, nướng (steak), sườn nướng.</b> Ăn ngon nhất ở mức tái–chín tới. → <em>ribeye, sườn galbi.</em></p></div></li>
+        <li><span class="fk-n">3</span><div><div class="fk-nm">Thăn lưng · thăn nội <span>· Short loin · tenderloin</span></div><p class="fk-d">Mềm nhất (thăn nội / filet) đến đậm mà mềm (thăn ngoại / striploin). <b>Hợp: áp chảo &amp; nướng nhanh, tái.</b> → <em>bít tết, bò lúc lắc.</em></p></div></li>
+        <li><span class="fk-n">4</span><div><div class="fk-nm">Thăn mông / hông <span>· Sirloin</span></div><p class="fk-d">Nạc, khá mềm, giá vừa. <b>Hợp: nướng, áp chảo, thái mỏng xào.</b> → <em>bò nướng, bulgogi.</em></p></div></li>
+        <li><span class="fk-n">5</span><div><div class="fk-nm">Mông sau / đùi <span>· Round · topside</span></div><p class="fk-d">Rất nạc, thớ chắc, dễ khô. <b>Hợp: thái lát mỏng nướng nhanh, kho, bò khô.</b> → <em>bulgogi thái mỏng, bò kho tương (장조림).</em></p></div></li>
+        <li><span class="fk-n">6</span><div><div class="fk-nm">Gầu / nạm ức <span>· Brisket</span></div><p class="fk-d">Nhiều collagen, thớ dài. <b>Hầm lâu là mềm rục, thơm.</b> → <em>phở, bò hầm, pastrami.</em></p></div></li>
+        <li><span class="fk-n">7</span><div><div class="fk-nm">Ba chỉ bò / sườn non <span>· Plate · short rib</span></div><p class="fk-d">Mỡ và gân xen, rất đậm. <b>Hợp: nướng mỏng (BBQ), hầm (galbijjim).</b></p></div></li>
+        <li><span class="fk-n">8</span><div><div class="fk-nm">Bắp / nạm hông <span>· Shank · flank</span></div><p class="fk-d">Bắp nhiều gân nhất → <b>ninh/hầm</b> (bắp bò, canh bò cay 육개장). Nạm hông thớ thô → <b>nướng nhanh, thái ngang thớ.</b></p></div></li>
+      </ul>
+
+      <div class="wb-alert wb-alert--plain" style="margin-top:18px">
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Mẹo thái: luôn cắt <em>ngang thớ</em></p>
+          <p class="wb-alert__msg">Nhìn hướng sợi cơ (thớ) rồi cắt vuông góc với nó. Cắt ngang thớ làm sợi cơ ngắn lại → miếng thịt mềm hơn hẳn khi nhai. Đây là lý do bò bulgogi hay bắp bò luộc đều thái lát mỏng ngang thớ. Gà đùi và ức cũng vậy.</p>
+        </div>
+      </div>
+
+      <h3 class="fk-sub-title">Gà — một con, hai tính cách</h3>
+      <div class="fk-kv"><span class="fk-kv__k">Ức (breast)</span><span class="fk-kv__v">Nạc, gần như không mỡ. Chín rất nhanh và <b>khô ngay khi quá lửa</b>. Áp chảo/nướng nhanh, rút ra ở 72–74&nbsp;°C. Thái mỏng ướp bột để giữ ẩm khi xào.</span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Đùi (thigh)</span><span class="fk-kv__v">Nhiều mỡ và mô liên kết, <b>ẩm và tha thứ hơn nhiều</b> — khó nấu hỏng. Chịu được kho, hầm, nướng, chiên lâu. → <em>gà kho, gà xào cay (닭갈비), gà rán.</em></span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Cả con / xương</span><span class="fk-kv__v">Xương và da cho nước dùng ngọt. Luộc/ninh cả con rồi xé (gà luộc, phở gà). Da chứa mỡ và collagen — quay giòn hoặc bỏ tuỳ món.</span></div>
+    </section>
+
+    <hr class="wb-divider">
+
+    <!-- ============ 02 — HẢI SẢN ============ -->
+    <section id="hai-san">
+      <p class="fk-sec-eyebrow"><b>02</b> — Hải sản</p>
+      <h2 class="fk-sec-title">Hải sản gần như không hỏng vì nấu thiếu — nó hỏng vì <em>nấu quá</em> và vì <em>không tươi</em>.</h2>
+      <p class="fk-sec-intro">Thịt cá và hải sản có rất ít mô liên kết, nên chín cực nhanh; nấu quá vài phút là protein co lại, nước bị vắt ra, thành dai và bã. Cộng thêm: hải sản ươn rất nhanh và mùi ươn thì không cứu được. Nên hai kỹ năng quan trọng nhất là <b>chọn đồ tươi</b> và <b>biết lúc dừng</b>.</p>
+
+      <h3 class="fk-sub-title">Nhận biết tươi — nhìn, sờ, ngửi</h3>
+      <div class="wb-table-scroll">
+        <table class="wb-table wb-table--compact wb-table--striped">
+          <thead><tr><th>Loại</th><th>Tươi</th><th>Bắt đầu ươn — bỏ qua</th></tr></thead>
+          <tbody>
+            <tr><td>Cá nguyên con</td><td>Mắt <b>trong, hơi lồi</b>; mang <b>đỏ tươi</b>; thịt đàn hồi (ấn nảy lại); nhớt trong; mùi biển nhẹ</td><td>Mắt lõm đục; mang nâu xám; ấn để lại vết lõm; mùi <b>tanh gắt / khai (amoniac)</b></td></tr>
+            <tr><td>Phi lê cá</td><td>Thớ bóng, ẩm, dính chặt; không rỉ nước đục</td><td>Thịt xỉn, bở, tách thớ, chảy nước đục</td></tr>
+            <tr><td>Tôm</td><td>Thân <b>chắc, cong tự nhiên</b>; vỏ bám thịt; đầu dính chặt</td><td>Thân nhũn; <b>đầu thâm đen</b>; vỏ tuột; mùi khai</td></tr>
+            <tr><td>Mực</td><td>Da <b>bóng, óng</b>; thịt trong chắc; mùi ngọt biển</td><td>Da xỉn tróc; thịt nhão đục; mùi chua</td></tr>
+            <tr><td>Nghêu / sò / trai</td><td>Vỏ <b>ngậm kín</b>, hoặc khép lại khi gõ vào</td><td>Vỏ <b>há mãi không khép</b> (sống) → đã chết, bỏ</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="fk-sub-title">Dấu hiệu "chín tới" — mỗi loại một kiểu</h3>
+      <div class="fk-kv"><span class="fk-kv__k">Cá</span><span class="fk-kv__v">Thịt <b>chuyển đục và vừa tách thành lát</b> khi gẩy đũa, lõi trong tâm còn hơi trong. Nhiệt lõi 50–54&nbsp;°C. Để lâu thêm là khô xác.</span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Tôm</span><span class="fk-kv__v">Cong thành <b>chữ "C" và đỏ cam</b> là chín. Cong chặt thành <b>chữ "O" = đã quá lửa</b>, dai. Chỉ mất 2–3 phút.</span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Mực</span><span class="fk-kv__v">Quy tắc "2 phút hoặc 30 phút": nấu <b>rất nhanh</b> (chần/xào &lt; 2 phút) hoặc <b>hầm rất lâu</b> (&gt; 30 phút). Ở khoảng giữa mực dai như cao su.</span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Nghêu / trai</span><span class="fk-kv__v"><b>Vừa mở miệng là chín</b> — vớt ra ngay, để lâu trong nồi là teo lại. Con nào <b>không mở sau khi nấu</b> thì bỏ.</span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Nghêu/sò trước khi nấu</span><span class="fk-kv__v">Ngâm nước muối loãng 30–60 phút cho nhả cát. Chà vỏ sạch. Bỏ con vỏ vỡ hoặc há không khép.</span></div>
+
+      <div class="fk-tags">
+        <span class="wb-tag">→ canh chua cá</span>
+        <span class="wb-tag">→ đậu phụ non hải sản (순두부)</span>
+        <span class="wb-tag">→ bánh xèo hải sản (해물파전)</span>
+        <span class="wb-tag">→ moules · nghêu hấp rượu</span>
+      </div>
+    </section>
+
+    <hr class="wb-divider">
+
+    <!-- ============ 03 — NHIỆT ĐỘ ============ -->
+    <section id="nhiet-do">
+      <p class="fk-sec-eyebrow"><b>03</b> — Nhiệt độ</p>
+      <h2 class="fk-sec-title">"Để lửa to cho nhanh, canh đừng cháy" — đó là hiểu <em>sai</em> phổ biến nhất.</h2>
+      <p class="fk-sec-intro">Nhiệt độ không phải một cái núm "càng cao càng nhanh". Nó là công cụ để tạo ra những <b>phản ứng khác nhau</b>, mỗi phản ứng xảy ra ở một khoảng nhiệt riêng. Hiểu bốn khoảng nhiệt dưới đây là hiểu 90% chuyện tại sao món ăn ngon hay dở — và tại sao "lửa to" có lúc đúng, có lúc phá hỏng món.</p>
+
+      <h3 class="fk-sub-title">Bốn khoảng nhiệt, bốn việc khác nhau</h3>
+      <div class="fk-ladder">
+        <div class="fk-ladder__row fk-ladder__row--cold">
+          <div class="fk-ladder__t">≤ 100&nbsp;°C</div>
+          <div class="fk-ladder__d"><b>Vùng nước.</b> Luộc, hấp, chần, kho, hầm — mọi thứ có nước đều bị chặn ở 100&nbsp;°C (nước sôi không nóng hơn được). Ở đây <b>không bao giờ có màu nâu</b>. Đây là vùng để <em>làm mềm</em> (gân → gelatin) và <em>nấu chín xuyên</em>, không phải để tạo vị nâu.</div>
+        </div>
+        <div class="fk-ladder__row">
+          <div class="fk-ladder__t">140–165&nbsp;°C</div>
+          <div class="fk-ladder__d"><b>Phản ứng Maillard.</b> Bề mặt <em>khô</em> của thịt/bánh mì gặp nhiệt này thì đạm + đường phản ứng, cho <b>màu nâu và hàng trăm chất thơm</b> — vị "xém cạnh", vỏ bánh, thịt áp chảo. Muốn có nó thì bề mặt phải <b>khô</b> và chảo phải <b>đủ nóng</b>; thịt ướt chỉ hấp trong nước của chính nó.</div>
+        </div>
+        <div class="fk-ladder__row fk-ladder__row--hot">
+          <div class="fk-ladder__t">~170&nbsp;°C</div>
+          <div class="fk-ladder__d"><b>Caramel hoá.</b> Đường (không cần đạm) chảy và ngả nâu, vị ngọt đắng thơm — nước hàng (nước màu) kho cá, caramel, vỏ bánh flan. Quá tay vài chục độ là <b>khét đắng</b>.</div>
+        </div>
+        <div class="fk-ladder__row fk-ladder__row--hot">
+          <div class="fk-ladder__t">&gt; 180&nbsp;°C</div>
+          <div class="fk-ladder__d"><b>Cháy &amp; khói.</b> Dầu vượt <em>điểm bốc khói</em> của nó thì phân huỷ, sinh khói và vị khét. Đây mới là "cháy" — và nó không cho thêm vị ngon nào, chỉ có hại. "Lửa to" chỉ đúng đến trước ngưỡng này.</div>
+        </div>
+      </div>
+
+      <div class="wb-alert wb-alert--plain" style="margin-top:16px">
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Vì sao món xào phải lửa to mà món hầm thì không</p>
+          <p class="wb-alert__msg"><b>Xào/áp chảo</b> muốn màu nâu Maillard → cần bề mặt vượt 140&nbsp;°C nhanh, mà thịt lại tiết nước làm nguội chảo, nên phải <b>lửa thật to + tãi mỏng</b> để nước bay kịp. <b>Hầm/kho</b> có nước nên trần đã bị khoá ở 100&nbsp;°C — để lửa to chỉ làm nước cạn nhanh và sôi bùng làm thịt <b>co dai</b>; hầm cần <b>liu riu</b> để 70–90&nbsp;°C giữ lâu cho gân tan. Cùng chữ "nóng", hai việc ngược nhau.</p>
+        </div>
+      </div>
+
+      <h3 class="fk-sub-title">Tại sao thịt mềm phải nấu <em>ít</em>, thịt dai phải nấu <em>nhiều</em></h3>
+      <div class="fk-body">
+        <p>Nghe ngược đời nhưng là vật lý: trong thịt có hai thứ phản ứng với nhiệt theo hai hướng ngược nhau.</p>
+        <p><b>Sợi cơ (phần nạc)</b> co lại và <b>vắt nước ra</b> khi nóng dần — quá 65–70&nbsp;°C là bắt đầu khô xác. Nên miếng <b>nạc mềm ít gân</b> (thăn, ức gà, cá) phải rút ra <b>sớm</b>, ở mức tái–chín tới, để còn mọng.</p>
+        <p><b>Mô liên kết (collagen, gân)</b> thì ngược lại: nó chỉ <b>tan thành gelatin</b> khi được giữ ở 70–90&nbsp;°C trong <b>thời gian dài</b> (hàng giờ). Nên miếng <b>dai nhiều gân</b> (bắp, gầu, nạc vai, chân giò) phải nấu <b>lâu</b> — nấu tới khi collagen tan thì miếng thịt mềm rục và nước sánh. Rút ra sớm ở mức "chín" như miếng thăn thì nó vẫn dai nhách.</p>
+        <p>Đó là toàn bộ lý do một miếng đem <b>áp chảo 3 phút</b> ngon, miếng khác phải <b>hầm 3 tiếng</b> mới ngon.</p>
+      </div>
+
+      <h3 class="fk-sub-title">Nhiệt độ <em>lõi</em> — thứ quyết định chín, khác với nhiệt chảo</h3>
+      <p class="fk-sec-intro" style="margin-bottom:12px">Nhiệt của chảo/lò có thể 200&nbsp;°C, nhưng cái quyết định miếng thịt chín tới hay khô là <b>nhiệt ở giữa lõi</b>. Đo bằng nhiệt kế đầu dò ở chỗ dày nhất. Bảng dưới là nhiệt lõi khi <em>rút khỏi bếp</em> (thịt còn chín thêm khi nghỉ — xem phần dưới).</p>
+      <div class="wb-card"><div class="wb-card__body" style="padding-top:6px">
+        <div class="fk-done"><span class="fk-done__n">Bò — tái (rare)</span><span class="fk-done__t">50–52&nbsp;°C</span><span class="fk-done__c">Lõi đỏ tươi, mát. Chỉ hợp thăn.</span></div>
+        <div class="fk-done"><span class="fk-done__n">Bò — tái chín (med-rare)</span><span class="fk-done__t">54–57&nbsp;°C</span><span class="fk-done__c">Hồng đỏ, ứa nước. <b>Mốc ngon nhất cho steak.</b></span></div>
+        <div class="fk-done"><span class="fk-done__n">Bò — chín tới (medium)</span><span class="fk-done__t">60–63&nbsp;°C</span><span class="fk-done__c">Hồng nhạt, săn mà còn mọng.</span></div>
+        <div class="fk-done"><span class="fk-done__n">Bò — chín kỹ (well)</span><span class="fk-done__t">71&nbsp;°C+</span><span class="fk-done__c">Hết hồng, bắt đầu khô. Muốn chín kỹ mà mềm thì dùng miếng hầm, không dùng thăn.</span></div>
+        <div class="fk-done"><span class="fk-done__n">Lợn</span><span class="fk-done__t">63&nbsp;°C</span><span class="fk-done__c">Rút ở 63&nbsp;°C rồi nghỉ 3 phút — hồng nhạt, mọng, an toàn. Không cần nấu tới khô như quan niệm cũ.</span></div>
+        <div class="fk-done"><span class="fk-done__n">Gà &amp; gia cầm</span><span class="fk-done__t">74&nbsp;°C</span><span class="fk-done__c">Không thoả hiệp. Đo chỗ dày nhất, không chạm xương. Nước chảy ra trong.</span></div>
+        <div class="fk-done"><span class="fk-done__n">Cá</span><span class="fk-done__t">50–54&nbsp;°C</span><span class="fk-done__c">Vừa tách lát, lõi còn hơi trong. Cá hỏng vì nấu quá chứ hầu như không vì nấu thiếu.</span></div>
+        <div class="fk-done"><span class="fk-done__n">Thịt xay</span><span class="fk-done__t">71&nbsp;°C</span><span class="fk-done__c">Xay trộn bề mặt vào trong nên phải chín kỹ hơn miếng nguyên.</span></div>
+      </div></div>
+
+      <div class="wb-grid wb-grid--2" style="margin-top:16px">
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <p class="wb-card__title" style="font-size:14px;margin:0 0 6px">Nghỉ thịt &amp; chín thêm (carryover)</p>
+          <p class="wb-help">Rút khỏi bếp, miếng thịt vẫn <b style="color:var(--wb-fg)">nóng thêm 2–5&nbsp;°C</b> ở lõi và nước thịt phân bố lại. Nên luôn rút ra <b style="color:var(--wb-fg)">sớm hơn đích vài độ</b> và để nghỉ: steak nghỉ bằng nửa thời gian nấu, khối lớn 15–20 phút. Cắt ngay = nước chảy hết ra thớt.</p>
+        </div></div>
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <p class="wb-card__title" style="font-size:14px;margin:0 0 6px">Điểm bốc khói của dầu</p>
+          <p class="wb-help">Chọn dầu theo nhiệt: <b style="color:var(--wb-fg)">bơ ~150&nbsp;°C</b> (dễ cháy, để phi nhẹ/hoàn thiện), <b style="color:var(--wb-fg)">dầu mè rang ~175&nbsp;°C</b> (chỉ để rưới cuối, không chiên), dầu ô liu nguyên chất ~190–200&nbsp;°C, <b style="color:var(--wb-fg)">dầu ăn tinh luyện ~220&nbsp;°C</b> (chiên rán). Dầu vượt điểm khói thì khét và sinh chất hại.</p>
+        </div></div>
+      </div>
+
+      <div class="wb-alert wb-alert--plain" style="margin-top:14px">
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">"Đóng lại rồi mới hạ" — quy tắc nhiệt cho gần như mọi món xào/áp chảo</p>
+          <p class="wb-alert__msg"><b>Vào chảo thật nóng (lửa to)</b> để tạo màu nâu và không dính, <b>rồi hạ xuống vừa</b> để nấu xuyên mà không cháy mặt. Người mới hay để một mức lửa suốt: hoặc mặt cháy mà trong sống (lửa to suốt), hoặc thịt ra nước xám không nâu (lửa nhỏ suốt).</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="wb-divider">
+
+    <!-- ============ 04 — KỸ THUẬT ============ -->
+    <section id="ky-thuat">
+      <p class="fk-sec-eyebrow"><b>04</b> — Kỹ thuật nấu</p>
+      <h2 class="fk-sec-title">Kỹ thuật chia làm hai họ: <em>nhiệt khô</em> và <em>nhiệt ẩm</em>.</h2>
+      <p class="fk-sec-intro">Mọi cách nấu đều thuộc một trong hai họ, và chọn đúng họ theo <b>loại thực phẩm</b> quan trọng hơn mọi mẹo vặt. Nhiệt khô (không nước, &gt;100&nbsp;°C) tạo màu nâu và vị đậm, hợp miếng mềm. Nhiệt ẩm (có nước, ≤100&nbsp;°C) làm mềm và chín đều, hợp miếng dai. Rất nhiều món ngon là <b>ghép cả hai</b>: xém trước cho vị, rồi hầm sau cho mềm.</p>
+
+      <div class="wb-table-scroll">
+        <table class="wb-table wb-table--compact wb-table--striped">
+          <thead><tr><th>Kỹ thuật</th><th>Họ</th><th>Hợp với</th><th>Món ở 4 trang</th></tr></thead>
+          <tbody>
+            <tr><td><b>Áp chảo / sear</b> <span class="fk-mut">pan-fry</span></td><td>Khô</td><td>Miếng mỏng, mềm: steak, cá phi lê, đậu phụ</td><td>bít tết, cá hồi áp chảo, đậu phụ kho (rán trước)</td></tr>
+            <tr><td><b>Xào</b> <span class="fk-mut">stir-fry</span></td><td>Khô</td><td>Thái nhỏ/mỏng, lửa to, nhanh</td><td>thịt xào cay (제육), bulgogi, rau xào, japchae</td></tr>
+            <tr><td><b>Nướng</b> <span class="fk-mut">grill</span></td><td>Khô</td><td>Thịt tẩm, ba chỉ, gà, hải sản</td><td>ba chỉ nướng (삼겹살), bún chả, galbi</td></tr>
+            <tr><td><b>Quay</b> <span class="fk-mut">roast</span></td><td>Khô</td><td>Khối lớn, gà nguyên con, rau củ</td><td>gà quay, thịt quay, roast beef, rau nướng</td></tr>
+            <tr><td><b>Chiên ngập dầu</b> <span class="fk-mut">deep-fry</span></td><td>Khô</td><td>Đồ tẩm bột, chín nhanh giòn</td><td>gà rán (양념치킨), nem rán, tempura, tonkatsu</td></tr>
+            <tr><td><b>Luộc / chần</b> <span class="fk-mut">boil / blanch</span></td><td>Ẩm</td><td>Rau, mì, trứng, thịt luộc</td><td>rau luộc, namul (rau chần), mì, gà luộc</td></tr>
+            <tr><td><b>Hấp</b> <span class="fk-mut">steam</span></td><td>Ẩm</td><td>Cá, bánh, trứng — giữ nguyên hình &amp; ẩm</td><td>cá hấp, trứng hấp (계란찜), bánh bao</td></tr>
+            <tr><td><b>Kho / rim</b> <span class="fk-mut">braise-glaze</span></td><td>Ghép</td><td>Miếng chắc: xém rồi rim cạn nước sốt</td><td>thịt kho tàu, cá kho, đậu phụ kho (조림)</td></tr>
+            <tr><td><b>Hầm / ninh</b> <span class="fk-mut">stew / simmer</span></td><td>Ghép</td><td>Miếng dai nhiều gân: xém rồi hầm lâu</td><td>bò kho, boeuf bourguignon, canh bò cay (육개장)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="wb-alert wb-alert--plain" style="margin-top:16px">
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Vì sao "xém trước rồi hầm" là công thức của gần như mọi món hầm ngon</p>
+          <p class="wb-alert__msg">Bước <b>áp chảo cho xém cạnh</b> (nhiệt khô, Maillard) tạo lớp vị nâu đậm mà nồi nước không bao giờ tạo được. Bước <b>hầm liu riu</b> sau đó (nhiệt ẩm) làm gân tan, thịt mềm. Bỏ bước xém thì nồi bò kho vẫn mềm nhưng <b>nhạt màu, thiếu chiều sâu</b>. Đây chính là lý do các công thức luôn bảo "xào/áp thịt cho săn" trước khi đổ nước.</p>
+        </div>
+      </div>
+    </section>
+
+    <hr class="wb-divider">
+
+    <!-- ============ 05 — RƯỢU ============ -->
+    <section id="ruou">
+      <p class="fk-sec-eyebrow"><b>05</b> — Rượu trong bếp</p>
+      <h2 class="fk-sec-title">Rượu trong nồi không phải để "cho có men" — nó làm <em>bốn việc</em> cụ thể.</h2>
+      <p class="fk-sec-intro">Một chút rượu đúng chỗ đổi hẳn món ăn, và không phải vì cồn. Cồn là <b>dung môi</b>: nó hoà tan được cả những chất thơm mà nước và mỡ không hoà được, rồi mang chúng lan khắp món. Đó là lý do rượu vang trong nồi bò hầm hay rượu trắng khi khử cá lại có tác dụng thật.</p>
+
+      <div class="wb-grid wb-grid--2">
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <span class="wb-cap wb-cap--lg"><span class="wb-ico wb-ico--xs">local_bar</span> 1 · Mang hương</span>
+          <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Hoà tan chất thơm</h4>
+          <p class="wb-help">Cồn kéo ra và giữ những phân tử thơm không tan trong nước hay mỡ, làm vị món <b style="color:var(--wb-fg)">tròn và sâu hơn</b>. Vang trong sốt cà, rượu Thiệu Hưng trong món Hoa.</p>
+        </div></div>
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <span class="wb-cap wb-cap--lg"><span class="wb-ico wb-ico--xs">air</span> 2 · Khử mùi</span>
+          <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Cuốn mùi tanh bay đi</h4>
+          <p class="wb-help">Cồn hoà tan các amin gây tanh (cá, ngan, lòng) rồi <b style="color:var(--wb-fg)">bay hơi mang mùi theo</b>. Đây là lý do <b style="color:var(--wb-fg)">rượu trắng + gừng</b> khử cá, hay soju rửa lòng.</p>
+        </div></div>
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <span class="wb-cap wb-cap--lg"><span class="wb-ico wb-ico--xs">restaurant</span> 3 · Làm mềm &amp; nêm</span>
+          <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Ướp: axit + men</h4>
+          <p class="wb-help">Rượu vang/rượu gạo có <b style="color:var(--wb-fg)">axit nhẹ</b> làm mềm bề mặt thịt và thêm vị. Mirin (rượu ngọt Nhật) cho <b style="color:var(--wb-fg)">vị ngọt umami và độ bóng</b> cho món kho, sốt teriyaki.</p>
+        </div></div>
+        <div class="wb-card wb-card--flat"><div class="wb-card__body">
+          <span class="wb-cap wb-cap--lg"><span class="wb-ico wb-ico--xs">local_fire_department</span> 4 · Chảo &amp; lửa</span>
+          <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Deglaze &amp; flambé</h4>
+          <p class="wb-help">Đổ rượu vào chảo vừa áp thịt để <b style="color:var(--wb-fg)">hoà tan lớp nâu (fond)</b> bám đáy thành sốt. Flambé (đốt) đốt cháy cồn bề mặt lấy hương, giữ lại vị.</p>
+        </div></div>
+      </div>
+
+      <div class="wb-alert wb-alert--plain" style="margin-top:16px">
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Cồn có "bay hết" khi nấu không? — Không hẳn</p>
+          <p class="wb-alert__msg">Đun sôi nhanh chỉ bay một phần; <b>hầm lâu 1–2 tiếng vẫn còn ~5%</b> cồn, đốt flambé còn nhiều hơn. Với người kiêng rượu tuyệt đối (thai kỳ, trẻ nhỏ, lý do sức khoẻ) thì đừng coi là đã hết. Về vị thì phần lớn đã chuyển hoá, chỉ còn lại hương và axit.</p>
+        </div>
+      </div>
+
+      <h3 class="fk-sub-title">Ghép rượu với món — bốn quy tắc đủ dùng</h3>
+      <div class="fk-kv"><span class="fk-kv__k">Nặng đi với nặng</span><span class="fk-kv__v">Món đậm (bò hầm, thịt nướng) hợp rượu mạnh mẽ (vang đỏ đậm); món nhẹ (cá, salad) hợp rượu nhẹ (vang trắng). <b>Đừng để rượu át món hoặc món át rượu.</b></span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Chát cắt béo</span><span class="fk-kv__v">Vang đỏ nhiều <b>tannin (chát)</b> gặp món nhiều mỡ/đạm (bò, phô mai già) thì tannin bám mỡ, làm cả hai dịu lại — cặp kinh điển bít tết + vang đỏ.</span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Chua đi với béo/chua</span><span class="fk-kv__v">Rượu <b>chua (axit cao)</b> làm sạch vị béo và hợp món có axit (sốt cà, chanh) — vang trắng với hải sản, đồ chiên.</span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Ngọt trị cay</span><span class="fk-kv__v">Món <b>cay</b> (đồ Hàn, đồ Thái) dịu đi với đồ uống <b>hơi ngọt hoặc mát</b> (vang ngọt nhẹ, bia). Vang đỏ chát gặp món cay lại thành đắng gắt — tránh.</span></div>
+      <p class="fk-sec-intro" style="margin-top:12px">Một cặp cần tránh: <b>vang đỏ chát + hải sản dầu</b> (cá thu, cá mòi) cho vị tanh kim loại. Hải sản gần như luôn hợp vang trắng hoặc bia hơn.</p>
+    </section>
+
+    <hr class="wb-divider">
+
+    <!-- ============ 06 — KẾT HỢP VỊ ============ -->
+    <section id="ket-hop">
+      <p class="fk-sec-eyebrow"><b>06</b> — Kết hợp vị</p>
+      <h2 class="fk-sec-title">Nấu ngon là trò chơi <em>cân bằng</em> — năm vị, cộng béo, cay và mùi thơm.</h2>
+      <p class="fk-sec-intro">Lưỡi chỉ nhận <b>năm vị cơ bản</b>. "Cay" không phải vị mà là cảm giác nóng, "béo" và "mùi thơm" là kênh riêng — nhưng tất cả cùng chơi trên một đĩa. Một món "thiếu gì đó" gần như luôn là <b>lệch cân bằng</b>: thiếu chua, thiếu mặn, hoặc thiếu một điểm nhấn. Biết mỗi vị <em>làm gì với vị khác</em> là biết cách sửa.</p>
+
+      <div class="fk-taste">
+        <div class="fk-taste__c"><p class="fk-taste__h"><span class="wb-ico">grain</span> Mặn</p><p class="fk-taste__p"><b>Nâng mọi vị khác</b> và nén vị đắng. Thiếu muối thì món "nhạt nhẽo" dù đủ thứ khác. Muối, nước mắm, nước tương, tương.</p></div>
+        <div class="fk-taste__c"><p class="fk-taste__h"><span class="wb-ico">bakery_dining</span> Ngọt</p><p class="fk-taste__p"><b>Làm dịu cay, chua và đắng</b>, tròn vị. Một nhúm đường cân lại nồi sốt cà chua gắt. Đường, mật, siro, rau củ ngọt.</p></div>
+        <div class="fk-taste__c"><p class="fk-taste__h"><span class="wb-ico">water_drop</span> Chua</p><p class="fk-taste__p"><b>Cắt béo và làm bừng sáng</b> món nặng. Vắt chanh vào món nhiều mỡ là "sáng" hẳn. Chanh, giấm, me, đồ lên men.</p></div>
+        <div class="fk-taste__c"><p class="fk-taste__h"><span class="wb-ico">local_cafe</span> Đắng</p><p class="fk-taste__p"><b>Thêm chiều sâu, chống ngán</b>. Rau đắng, cà phê, cacao, vỏ cam cháy. Dùng ít làm nền, nhiều thì gắt.</p></div>
+        <div class="fk-taste__c"><p class="fk-taste__h"><span class="wb-ico">set_meal</span> Umami</p><p class="fk-taste__p"><b>Vị "đậm đà thịt", làm món thoả mãn</b>. Cộng hưởng khi ghép nhiều nguồn. Nước mắm, tương, nấm, cà chua, phô mai, nước xương.</p></div>
+        <div class="fk-taste__c"><p class="fk-taste__h"><span class="wb-ico">local_fire_department</span> Cay &amp; béo</p><p class="fk-taste__p"><b>Cay</b> là cảm giác nóng, kích thích; <b>béo</b> mang vị và làm "đầy miệng". Béo tải được vị cay và làm nó tròn.</p></div>
+      </div>
+
+      <h3 class="fk-sub-title">Ba cặp cân bằng đáng thuộc</h3>
+      <div class="fk-kv"><span class="fk-kv__k">Béo ↔ Chua/Mặn</span><span class="fk-kv__v">Món béo (thịt kho, chiên, phô mai) cần một thứ <b>chua hoặc chua-mặn</b> đi kèm để đỡ ngán: dưa góp cạnh thịt đông, chanh trên cá chiên, kim chi với ba chỉ, dưa chua với món nhiều dầu.</span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Cay ↔ Ngọt/Mát</span><span class="fk-kv__v">Món cay (đồ Hàn, lẩu) dịu lại nhờ <b>ngọt hoặc mát-béo</b>: đường/siro trong sốt gochujang, sữa/phô mai trong món cay, cơm trắng làm nền.</span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Đậm ↔ Tươi</span><span class="fk-kv__v">Đĩa nhiều đạm-mỡ cần <b>rau thơm, hành, chua tươi</b> để cân: rau sống cuốn thịt nướng, thì là trong canh cá, mùi–hành rắc cuối. Đây là "vai" của rau thơm trong mọi bếp.</span></div>
+
+      <div class="wb-alert wb-alert--plain" style="margin-top:16px">
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Vì sao "món này chấm gì" lại là câu hỏi về cân bằng</p>
+          <p class="wb-alert__msg">Bát nước chấm chính là <b>công cụ cân bằng cầm tay</b>: món luộc/nướng nhạt và béo thì cần chấm <b>mặn-chua-cay</b> (nước mắm chanh ớt, ssamjang) để đủ vị; còn món kho/xào đã <b>tự đậm</b> thì chấm thêm là mặn chồng mặn. Đó là toàn bộ logic "cần chấm hay không cần" ở mục nước chấm của bốn trang công thức — giờ bạn thấy nó không phải quy ước, mà là vật lý của vị.</p>
+        </div>
+      </div>
+
+      <h3 class="fk-sub-title">Vài cặp "hợp nhau tự nhiên" — vì chia sẻ chất thơm hoặc bù vị</h3>
+      <div class="fk-tags">
+        <span class="wb-tag">cà chua + phô mai/húng quế</span>
+        <span class="wb-tag">thịt lợn + đồ chua (kim chi, dưa)</span>
+        <span class="wb-tag">bò + nấm/tiêu/vang đỏ</span>
+        <span class="wb-tag">cá + thì là/chanh</span>
+        <span class="wb-tag">gà + gừng/hành</span>
+        <span class="wb-tag">dầu mè + rong biển/vừng</span>
+        <span class="wb-tag">tỏi + gần như mọi thứ mặn</span>
+        <span class="wb-tag">sô-cô-la + muối/cà phê</span>
+        <span class="wb-tag">bơ + vani (bánh Âu)</span>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="fk-foot">
+    Kiến thức nền cho bếp · một trang trong <a href="../index.html">vudat081299 / collection</a> · trang chị em: <a href="vietnamese-home-cooking.html">Mâm cơm Việt</a>, <a href="korean-home-cooking.html">Bếp Hàn</a>, <a href="european-savoury.html">Món Âu mặn</a>, <a href="european-baking.html">Bánh ngọt châu Âu</a>
+  </footer>
+</main>
+
+<script>
+  /* Theme toggle — dùng chung localStorage 'hub-theme' với cả site. */
+  (function () {
+    var root = document.documentElement;
+    function apply(dark) { root.classList.toggle('dark', dark); }
+    var saved = null;
+    try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
+    apply(saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
+    var t = document.getElementById('theme-toggle');
+    if (t) t.addEventListener('click', function () {
+      var dark = !root.classList.contains('dark');
+      apply(dark);
+      try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>

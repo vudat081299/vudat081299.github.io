@@ -15,9 +15,10 @@ cách chúng chạy tự động**.
 
 `pages/` và `cooking/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự chứa,
 không có luật nội dung chung để viết ra. Cổng của chúng chỉ kiểm thứ đúng/sai khách quan —
-id trùng, anchor gãy, asset thiếu, thẻ lệch. `cooking/` là bốn trang bếp (Việt, Hàn, Âu mặn,
-Bánh Âu) dùng chung một khung filter/modal; tách khỏi `pages/` để gom một chỗ, nên có cổng
-cùng bộ kiểm nhưng riêng thư mục.
+id trùng, anchor gãy, asset thiếu, thẻ lệch. `cooking/` gồm bốn trang công thức (Việt, Hàn,
+Âu mặn, Bánh Âu) dùng chung một khung filter/modal, cộng một trang kiến thức nền
+(`food-fundamentals` — explainer tĩnh, sơ đồ SVG thịt/bò, nhiệt độ, kỹ thuật, rượu); tách
+khỏi `pages/` để gom một chỗ, nên có cổng cùng bộ kiểm nhưng riêng thư mục.
 
 Cổng `cashy/` cần Node ≥ 20 (oxlint cần ≥ 22). Node mặc định trên máy có thể là bản cũ do
 fnm/nvm ghim, nên hook tự dò Homebrew thay vì tin vào `PATH` — nếu không nó sẽ "im lặng
