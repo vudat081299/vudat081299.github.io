@@ -168,12 +168,57 @@
   .fk-legend li:hover { background: var(--wb-surface-hover); }
   .fk-legend li.is-active { background: var(--wb-surface-hover); box-shadow: inset 3px 0 0 var(--wb-fg); }
   .fk-legend li:focus-visible { outline: 2px solid var(--wb-fg); outline-offset: 1px; }
+
+  /* =========================================================================
+     ĐIỆN THOẠI — trang này dùng chung khung nav + bảng với 4 trang công thức
+     nhưng thiếu phần mobile tương ứng, nên nav và bảng tràn ngang. Bù lại đây.
+     ====================================================================== */
+
+  /* nav: các link chữ ("Thịt", "Nhiệt độ", "Trang chủ") không ẩn nên tràn ra ngoài
+     → ẩn chữ, giữ icon; tên trang dài thì cho brand co lại + cắt gọn bằng "…". */
+  @media (max-width: 720px) {
+    .wb-navbar { padding: 0 14px; gap: 10px; }
+    .wb-navbar__brand { flex: 0 1 auto; min-width: 0; }
+    .mc-brand-t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .wb-navbar__actions { min-width: 0; }
+    .mc-navhide { display: none; }
+  }
+
+  /* hai bảng tra cứu (độ tươi hải sản 3 cột, kỹ thuật nấu 4 cột) cuộn ngang trên
+     điện thoại — chỉ thấy nửa cột. Dưới 720px xếp lại thành thẻ như các trang công
+     thức: mỗi hàng một thẻ, nhãn cột bơm bằng ::before theo section nên không phải
+     sửa markup. Desktop (>720px) giữ nguyên bảng. */
+  @media (max-width: 720px) {
+    .wb-table-scroll { overflow-x: visible; }
+    .wb-table-scroll .wb-table,
+    .wb-table-scroll .wb-table thead,
+    .wb-table-scroll .wb-table tbody,
+    .wb-table-scroll .wb-table tr,
+    .wb-table-scroll .wb-table td { display: block; }
+    .wb-table-scroll .wb-table thead { position: absolute; width: 1px; height: 1px; padding: 0;
+      margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    .wb-table-scroll .wb-table tbody tr { border: var(--wb-bw) solid var(--wb-border);
+      border-radius: var(--wb-radius); background: var(--wb-surface); padding: 12px 14px; margin: 0 0 10px; }
+    .wb-table-scroll .wb-table--striped tbody tr:nth-child(even) { background: var(--wb-surface); }
+    .wb-table-scroll .wb-table tbody td { padding: 0; border: 0; }
+    .wb-table-scroll .wb-table tbody td:first-child { font-size: 15px; font-weight: 680; white-space: normal;
+      margin-bottom: 9px; padding-bottom: 9px; border-bottom: var(--wb-bw) dashed var(--wb-border); }
+    .wb-table-scroll .wb-table tbody td:not(:first-child) { margin-top: 8px; }
+    .wb-table-scroll .wb-table tbody td:not(:first-child)::before { display: block; margin-bottom: 2px;
+      font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--wb-fg-subtle); }
+    #hai-san .wb-table tbody td:nth-of-type(2)::before { content: "Tươi"; }
+    #hai-san .wb-table tbody td:nth-of-type(3)::before { content: "Bắt đầu ươn — bỏ qua"; }
+    #ky-thuat .wb-table tbody td:nth-of-type(2)::before { content: "Họ"; }
+    #ky-thuat .wb-table tbody td:nth-of-type(3)::before { content: "Hợp với"; }
+    #ky-thuat .wb-table tbody td:nth-of-type(4)::before { content: "Món ở 4 trang"; }
+  }
 </style>
 </head>
 <body>
 
 <div class="wb-navbar wb-navbar--sticky">
-  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">食</span> Food Fundamentals</a>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">食</span> <span class="mc-brand-t">Food Fundamentals</span></a>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
     <a class="wb-btn wb-btn--ghost wb-btn--sm mc-navhide" href="#thit">Thịt</a>
