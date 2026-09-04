@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
-<title>Hiểu bảo hiểm nhân thọ — và chiêu "đóng 10 năm"</title>
-<meta name="description" content="Giải thích thật dễ hiểu hai loại bảo hiểm nhân thọ phổ biến (liên kết đơn vị và liên kết chung) qua hai ví dụ: được gì, khi có chuyện thì làm gì để lấy tiền, và vì sao câu 'chỉ cần đóng 10 năm' là nói lập lờ.">
+<title>Bảo hiểm gia đình — quyền lợi, phí, đóng 10/20/30 năm</title>
+<meta name="description" content="Hai hợp đồng bảo hiểm nhân thọ của gia đình nhìn cạnh nhau: Người A (Prudential, liên kết đơn vị) và Người B (AIA, liên kết chung) — được gì, phí bao nhiêu và tiền chảy đi đâu, đóng đủ 10/20/30 năm thì sao, và câu 'đóng 10 năm rồi thôi' đúng tới đâu (kèm phân tích tạm dừng đóng rồi đóng lại).">
 
 <!-- Web Builder — bộ giao diện tối giản dùng chung cho cả site -->
 <link rel="stylesheet" href="../web-builder/web-builder.css">
@@ -82,7 +82,7 @@
   @media (max-width: 560px) { .hw-parts { grid-template-columns: minmax(0, 1fr); } }
   .hw-parts a { text-decoration: none; color: inherit; }
 
-  /* ---- thẻ "một kiểu nói lập lờ = một khối" ---- */
+  /* ---- thẻ "một khối = một ý" ---- */
   .hw-fal-list { display: flex; flex-direction: column; gap: 14px; margin: 12px 0 6px; }
   .hw-fal { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 16px 18px; scroll-margin-top: 76px; }
   .hw-fal__top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 9px; margin-bottom: 8px; }
@@ -131,6 +131,13 @@
   .ins-dl dt { color: var(--wb-fg-subtle); }
   .ins-dl dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
 
+  /* so sánh hai kịch bản + ô công thức nhỏ */
+  .ins-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 14px 0; }
+  @media (max-width: 620px) { .ins-two { grid-template-columns: minmax(0, 1fr); } }
+  .ins-math { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 14px 16px; margin: 14px 0; font-family: var(--wb-font-mono); font-size: 12.5px; line-height: 1.75; color: var(--wb-fg); overflow-x: auto; }
+  .ins-math b { color: var(--wb-fg); font-weight: 700; }
+  .ins-math .c { color: var(--wb-fg-subtle); }
+
   /* ---- nút lên đầu trang ---- */
   .hw-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
   .hw-top.is-on { opacity: 1; pointer-events: auto; }
@@ -143,14 +150,13 @@
           aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
   <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🛡️</span> Hiểu bảo hiểm</a>
   <nav class="wb-nav wb-navbar__menu">
-    <a class="wb-nav__link" href="#mo-dau">Mở đầu</a>
-    <a class="wb-nav__link" href="#g1">1 · Câu "10 năm"</a>
-    <a class="wb-nav__link" href="#ghn">Hiểu nhầm</a>
-    <a class="wb-nav__link" href="#g2">2 · Hai loại</a>
-    <a class="wb-nav__link" href="#g3">3 · Được gì</a>
-    <a class="wb-nav__link" href="#g4">4 · Khi có chuyện</a>
-    <a class="wb-nav__link" href="#g5">5 · Nên làm gì</a>
-    <a class="wb-nav__link" href="#ket">Kết</a>
+    <a class="wb-nav__link" href="#hai-goi">1 · Hai gói</a>
+    <a class="wb-nav__link" href="#quyen-loi">2 · Quyền lợi</a>
+    <a class="wb-nav__link" href="#phi">3 · Phí</a>
+    <a class="wb-nav__link" href="#case">4 · 10/20/30 năm</a>
+    <a class="wb-nav__link" href="#muoi-nam">5 · Câu "10 năm"</a>
+    <a class="wb-nav__link" href="#khi-co-chuyen">6 · Khi có chuyện</a>
+    <a class="wb-nav__link" href="#nen-lam">7 · Nên hỏi gì</a>
     <span class="wb-navbar__spacer"></span>
     <a class="wb-nav__link" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Trang chủ</a>
   </nav>
@@ -166,81 +172,92 @@
 <main class="wb-container wb-container--wide">
 
   <header class="hw-hero">
-    <p class="hw-eyebrow">Giải thích thật dễ hiểu · Bảo hiểm nhân thọ qua hai ví dụ</p>
-    <h1 class="hw-title">Giấy tờ ghi phải đóng tiền tới lúc người được bảo vệ <u>100 tuổi</u> — nên câu <i>"chỉ đóng 10 năm rồi thôi"</i> là nói chưa đúng.</h1>
-    <p class="hw-sub"><b>Bảo hiểm nhân thọ là gì?</b> Là mình đóng một khoản tiền đều đặn cho công ty. Đổi lại, <b>nếu chẳng may có chuyện xấu</b> (ốm nặng, tai nạn, qua đời…), công ty <b>trả cho gia đình một số tiền lớn</b>. Giống như đóng tiền để mua sẵn một cái ô: trời nắng thì thôi, trời mưa to thì có cái che.</p>
-    <p class="hw-sub">Trang này lấy <b>hai ví dụ</b> để giải thích cho dễ: <b>Người A</b> — 57 tuổi, mua gói kiểu <b>"để tiền vào quỹ cổ phiếu"</b> (gọi là <i>liên kết đơn vị</i>); và <b>Người B</b> — 19 tuổi, mua gói kiểu <b>"có hứa lãi tối thiểu"</b> (gọi là <i>liên kết chung</i>). Với mỗi ví dụ, trang nói ba điều: <b>(1)</b> họ <b>được gì</b> khi có chuyện; <b>(2)</b> khi có chuyện thật thì <b>phải làm gì</b> để lấy được tiền; <b>(3)</b> vì sao câu <b>"đóng 10 năm là xong"</b> là <b>nói lập lờ</b> (nghe xuôi tai nhưng gài bẫy).</p>
-    <p class="hw-meta">HAI VÍ DỤ MINH HOẠ · SỐ LIỆU LÀ SỐ VÍ DỤ, KHÔNG PHẢI CỦA RIÊNG AI<br>ĐÂY LÀ GIẢI THÍCH ĐỂ HIỂU · KHÔNG PHẢI LỜI KHUYÊN VỀ TIỀN BẠC · NÊN HỎI LẠI CÔNG TY CHO CHẮC</p>
+    <p class="hw-eyebrow">Hai hợp đồng của gia đình · nhìn cạnh nhau cho rõ</p>
+    <h1 class="hw-title">Hai gói bảo hiểm nhân thọ: <u>được gì</u>, <u>phí bao nhiêu</u>, và đóng đủ <i>10 · 20 · 30 năm</i> thì ra sao</h1>
+    <p class="hw-sub"><b>Bảo hiểm nhân thọ là gì?</b> Mình đóng tiền đều đặn cho công ty; đổi lại, <b>nếu chẳng may có chuyện</b> (ốm nặng, tai nạn, qua đời…), công ty <b>trả cho gia đình một khoản lớn</b>. Phần tiền dư (nếu có) được để vào một tài khoản đầu tư, sinh lời hoặc lỗ theo từng loại gói.</p>
+    <p class="hw-sub">Trang này xếp <b>hai hợp đồng thật của gia đình</b> cạnh nhau. <b>Người A</b> — người thân <b>65 tuổi</b>, gói <b>Prudential — PRU-Đầu Tư Linh Hoạt</b> (loại <i>liên kết đơn vị</i>, tiền vào quỹ cổ phiếu). <b>Người B</b> — <b>mình, 26 tuổi</b>, gói <b>AIA — An Phúc Trọn Đời Ưu Việt</b> (loại <i>liên kết chung</i>, có hứa lãi tối thiểu). <b>Cả hai đã đóng 8 năm (8 lần).</b> Trang đi theo thứ tự: <b>(1)</b> hai gói là gì · <b>(2)</b> được những quyền lợi gì · <b>(3)</b> phí bao nhiêu và tiền chảy đi đâu · <b>(4)</b> đóng đủ 10/20/30 năm thì sao · rồi mới tới <b>(5)</b> câu "đóng 10 năm rồi thôi" đúng tới đâu.</p>
+    <p class="hw-meta">CON SỐ &amp; SẢN PHẨM LẤY TỪ CHÍNH HAI HỢP ĐỒNG · TÊN NGƯỜI ĐỂ ẨN CHO RIÊNG TƯ<br>ĐÂY LÀ GIẢI THÍCH ĐỂ HIỂU · KHÔNG PHẢI LỜI KHUYÊN VỀ TIỀN BẠC · NÊN GỌI TỔNG ĐÀI CÔNG TY HỎI LẠI CHO CHẮC</p>
   </header>
 
-  <div class="hw-figs" style="margin-bottom:20px">
-    <div class="hw-fig"><span class="n">Tới 100 tuổi</span><span class="l">Giấy tờ ghi: đóng tiền tới khi người được bảo vệ 100 tuổi. Không phải 10 năm</span></div>
-    <div class="hw-fig"><span class="n">4–5 năm</span><span class="l">Số năm BẮT BUỘC phải đóng ở các gói này. Chỉ có mốc này là bắt buộc thật — số "10" không ghi ở đâu cả</span></div>
-    <div class="hw-fig"><span class="n">≈ 30 triệu</span><span class="l">Với Người A, tới 77 tuổi riêng tiền "phí bảo vệ" mỗi năm đã ≈ bằng cả số tiền đóng vào — và sau đó còn đắt nữa</span></div>
-    <div class="hw-fig"><span class="n">Không hứa lãi</span><span class="l">Gói của Người A để tiền vào quỹ cổ phiếu — lãi lời không ai hứa trước, có năm lời có năm lỗ</span></div>
+  <div class="ins-two" style="margin-bottom:18px">
+    <div class="ins-idcard">
+      <p class="ins-idcard__name">Người A — người thân 65 tuổi</p>
+      <p class="ins-idcard__who">Prudential · <b>PRU-Đầu Tư Linh Hoạt</b> · loại <i>liên kết đơn vị</i> <span class="wb-tag wb-tag--sm wb-tag--warning">tiền vào quỹ cổ phiếu</span></p>
+      <dl class="ins-dl">
+        <dt>Được bảo vệ</dt><dd>410 triệu</dd>
+        <dt>Đóng mỗi năm</dt><dd>≈ 30,3 triệu</dd>
+        <dt>Đã đóng</dt><dd>8 năm (từ 2019)</dd>
+        <dt>Ghi đóng tới</dt><dd>99 tuổi</dd>
+        <dt>Tiền để đâu</dt><dd>100% cổ phiếu VN</dd>
+        <dt>Có hứa lãi?</dt><dd>Không</dd>
+      </dl>
+    </div>
+    <div class="ins-idcard">
+      <p class="ins-idcard__name">Người B — mình, 26 tuổi</p>
+      <p class="ins-idcard__who">AIA · <b>An Phúc Trọn Đời Ưu Việt</b> · loại <i>liên kết chung</i> <span class="wb-tag wb-tag--sm wb-tag--info">có hứa lãi tối thiểu</span></p>
+      <dl class="ins-dl">
+        <dt>Được bảo vệ</dt><dd>1,2 tỷ</dd>
+        <dt>Đóng mỗi năm</dt><dd>25 triệu (cả gói)</dd>
+        <dt>Đã đóng</dt><dd>8 năm (từ 18 tuổi)</dd>
+        <dt>Ghi đóng tới</dt><dd>100 tuổi</dd>
+        <dt>Tiền để đâu</dt><dd>Quỹ chung, có sàn lãi</dd>
+        <dt>Có hứa lãi?</dt><dd>Có (mức cam kết)</dd>
+      </dl>
+    </div>
   </div>
 
   <div class="hw-parts">
-    <a class="wb-card wb-card--hover wb-card--pad" href="#g1">
+    <a class="wb-card wb-card--hover wb-card--pad" href="#hai-goi">
       <div class="wb-media">
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">1</span>
         <div class="wb-media__body">
-          <p class="wb-media__title">Câu "đóng 10 năm"</p>
-          <p class="wb-media__text">Ba kiểu nói lập lờ trong câu đó, và vì sao ngừng đóng quá sớm có thể làm mất trắng cả hợp đồng.</p>
+          <p class="wb-media__title">Hai gói là gì</p>
+          <p class="wb-media__text">Liên kết đơn vị (A) khác liên kết chung (B) chỗ nào, và vì sao khác đó quan trọng.</p>
         </div>
       </div>
     </a>
-    <a class="wb-card wb-card--hover wb-card--pad" href="#ghn">
-      <div class="wb-media">
-        <span class="wb-avatar wb-avatar--sm">!</span>
-        <div class="wb-media__body">
-          <p class="wb-media__title">Hiểu nhầm hay bị "gài"</p>
-          <p class="wb-media__text">Bảy hiểu nhầm phổ biến mà tư vấn viên hay tạo ra để người mua "gật đầu" — và sự thật đằng sau từng cái.</p>
-        </div>
-      </div>
-    </a>
-    <a class="wb-card wb-card--hover wb-card--pad" href="#g2">
+    <a class="wb-card wb-card--hover wb-card--pad" href="#quyen-loi">
       <div class="wb-media">
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">2</span>
         <div class="wb-media__body">
-          <p class="wb-media__title">Hai loại khác nhau</p>
-          <p class="wb-media__text">Gói của Người A và của Người B không giống nhau. Vì sao ngừng đóng ở gói Người A nguy hiểm hơn nhiều.</p>
+          <p class="wb-media__title">Quyền lợi: được gì</p>
+          <p class="wb-media__text">Từng trường hợp, từng số tiền: qua đời, tai nạn, ung thư, bệnh hiểm nghèo, nằm viện.</p>
         </div>
       </div>
     </a>
-    <a class="wb-card wb-card--hover wb-card--pad" href="#g3">
+    <a class="wb-card wb-card--hover wb-card--pad" href="#phi">
       <div class="wb-media">
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">3</span>
         <div class="wb-media__body">
-          <p class="wb-media__title">Mỗi người được gì</p>
-          <p class="wb-media__text">Chính xác được bao nhiêu tiền trong từng trường hợp: qua đời, ốm nặng, tai nạn, nằm viện.</p>
+          <p class="wb-media__title">Phí &amp; tiền chảy đi đâu</p>
+          <p class="wb-media__text">Phí ban đầu ngốn bao nhiêu, phí bảo vệ tăng thế nào theo tuổi — đây là chỗ "hại".</p>
         </div>
       </div>
     </a>
-    <a class="wb-card wb-card--hover wb-card--pad" href="#g4">
+    <a class="wb-card wb-card--hover wb-card--pad" href="#case">
       <div class="wb-media">
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">4</span>
         <div class="wb-media__body">
-          <p class="wb-media__title">Khi có chuyện → làm gì</p>
-          <p class="wb-media__text">Từng bước một: gọi ai, cần giấy tờ gì, nộp trong bao lâu, bao lâu thì nhận được tiền.</p>
+          <p class="wb-media__title">Đóng 10 / 20 / 30 năm</p>
+          <p class="wb-media__text">Số tiền cầm chắc trong tay ở từng mốc — và phần nào chỉ là dự tính.</p>
         </div>
       </div>
     </a>
-    <a class="wb-card wb-card--hover wb-card--pad" href="#g5">
+    <a class="wb-card wb-card--hover wb-card--pad" href="#muoi-nam">
       <div class="wb-media">
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">5</span>
         <div class="wb-media__body">
-          <p class="wb-media__title">Nên làm gì bây giờ</p>
-          <p class="wb-media__text">Mấy câu nên hỏi công ty, và mấy con số nên tự kiểm tra, trước khi quyết định gì.</p>
+          <p class="wb-media__title">Câu "đóng 10 năm"</p>
+          <p class="wb-media__text">Đúng tới đâu — và <b>tạm dừng đóng rồi đóng lại</b> thì lợi hay hại so với đóng liên tục.</p>
         </div>
       </div>
     </a>
-    <a class="wb-card wb-card--hover wb-card--pad" href="#mo-dau">
+    <a class="wb-card wb-card--hover wb-card--pad" href="#khi-co-chuyen">
       <div class="wb-media">
-        <span class="wb-avatar wb-avatar--sm">?</span>
+        <span class="wb-avatar wb-avatar--sm">+</span>
         <div class="wb-media__body">
-          <p class="wb-media__title">Bắt đầu ở đây</p>
-          <p class="wb-media__text">Trả lời gọn trong một đoạn, và chỗ "lập lờ" nằm ở đâu. Đọc phần Mở đầu trước.</p>
+          <p class="wb-media__title">Khi có chuyện · Nên hỏi gì</p>
+          <p class="wb-media__text">Các bước để lấy được tiền, và mấy câu nên hỏi công ty trước khi quyết định gì.</p>
         </div>
       </div>
     </a>
@@ -250,34 +267,38 @@
     <span class="wb-ico wb-alert__icon">info</span>
     <div class="wb-alert__body">
       <p class="wb-alert__title">Đọc nhanh cái này trước</p>
-      <p class="wb-alert__msg">Đây là <b>ví dụ minh hoạ</b> hai loại bảo hiểm nhân thọ phổ biến — <b>không phải hồ sơ của riêng ai</b>. Những con số "lãi 6%, 9%" chỉ là <b>con số đoán trước cho vui</b>, <b>không ai hứa chắc</b> — thực tế có thể ít hơn. Đây là bài <b>giải thích để hiểu</b>, <b>không phải lời khuyên nên làm gì với tiền</b>. Với hợp đồng thật của mình, hãy đọc kỹ giấy tờ và <b>gọi tổng đài công ty hỏi lại cho chắc</b>.</p>
+      <p class="wb-alert__msg">Số liệu ở đây lấy từ <b>chính hai hợp đồng</b> (bảng minh hoạ, hồ sơ, quy tắc điều khoản). <b>Tên người được để ẩn</b> vì trang công khai. Những con số "lãi 5%" chỉ là <b>mức đoán trước</b>, <b>không phải mức chắc chắn</b> — cái chắc chắn được ghi rõ là "cam kết". Đây là bài <b>giải thích để hiểu</b>, <b>không phải lời khuyên nên làm gì với tiền</b>; với quyết định thật (ngừng đóng, đổi quỹ, rút, huỷ) hãy đọc bản gốc và <b>gọi tổng đài công ty</b>.</p>
     </div>
   </div>
 
   <div class="hw-layout">
     <nav class="wb-sidenav hw-toc wb-sticky wb-scroll-y" style="--wb-sticky-gap:72px" id="toc">
-      <div class="wb-sidenav__section">Mở đầu</div>
-      <a class="wb-sidenav__link" href="#s-cot-loi">Trả lời trong một đoạn</a>
-      <a class="wb-sidenav__link" href="#s-nguy-bien">Chỗ "lập lờ" nằm ở đâu</a>
+      <div class="wb-sidenav__section">Phần 1 — Hai gói là gì</div>
+      <a class="wb-sidenav__link" href="#hai-goi">Nhìn cạnh nhau</a>
+      <a class="wb-sidenav__link" href="#khac-nhau">Khác nhau chỗ nào</a>
 
-      <div class="wb-sidenav__section" style="margin-top:12px">Phần 1 — Câu "10 năm"</div>
-      <a class="wb-sidenav__link" href="#g1">Ba kiểu nói lập lờ</a>
-      <a class="wb-sidenav__link" href="#s-bang-chung">Bằng chứng bằng số</a>
+      <div class="wb-sidenav__section" style="margin-top:12px">Phần 2 — Quyền lợi</div>
+      <a class="wb-sidenav__link" href="#ql-a">Người A được gì</a>
+      <a class="wb-sidenav__link" href="#ql-b">Người B được gì</a>
 
-      <div class="wb-sidenav__section" style="margin-top:12px">Bổ sung — Hiểu nhầm hay gặp</div>
-      <a class="wb-sidenav__link" href="#ghn">Bảy kiểu bị "gài"</a>
+      <div class="wb-sidenav__section" style="margin-top:12px">Phần 3 — Phí</div>
+      <a class="wb-sidenav__link" href="#phi-xo">Tiền chảy đi đâu</a>
+      <a class="wb-sidenav__link" href="#phi-bandau">Phí ban đầu</a>
+      <a class="wb-sidenav__link" href="#phi-tuoi">Phí bảo vệ theo tuổi</a>
 
-      <div class="wb-sidenav__section" style="margin-top:12px">Phần 2 — Hai loại</div>
-      <a class="wb-sidenav__link" href="#g2">Nhìn cạnh nhau</a>
+      <div class="wb-sidenav__section" style="margin-top:12px">Phần 4 — Đóng 10/20/30 năm</div>
+      <a class="wb-sidenav__link" href="#case-b">Người B: bảng tích luỹ</a>
+      <a class="wb-sidenav__link" href="#case-a">Người A: không hứa lãi</a>
 
-      <div class="wb-sidenav__section" style="margin-top:12px">Phần 3 — Được gì</div>
-      <a class="wb-sidenav__link" href="#g3">Mỗi người được gì</a>
+      <div class="wb-sidenav__section" style="margin-top:12px">Phần 5 — Câu "10 năm"</div>
+      <a class="wb-sidenav__link" href="#muoi-nam">"10 năm" đúng tới đâu</a>
+      <a class="wb-sidenav__link" href="#tam-dung">Tạm dừng rồi đóng lại</a>
 
-      <div class="wb-sidenav__section" style="margin-top:12px">Phần 4 — Khi có chuyện</div>
-      <a class="wb-sidenav__link" href="#g4">Làm gì để lấy tiền</a>
+      <div class="wb-sidenav__section" style="margin-top:12px">Phần 6 — Khi có chuyện</div>
+      <a class="wb-sidenav__link" href="#khi-co-chuyen">Làm gì để lấy tiền</a>
 
-      <div class="wb-sidenav__section" style="margin-top:12px">Phần 5 — Nên làm gì</div>
-      <a class="wb-sidenav__link" href="#g5">Hỏi gì, kiểm tra gì</a>
+      <div class="wb-sidenav__section" style="margin-top:12px">Phần 7 — Nên hỏi gì</div>
+      <a class="wb-sidenav__link" href="#nen-lam">Hỏi gì, tránh gì</a>
 
       <div class="wb-sidenav__section" style="margin-top:12px">Kết</div>
       <a class="wb-sidenav__link" href="#ket">Sáu điều nhớ lấy</a>
@@ -285,123 +306,242 @@
 
     <div class="wb-stack" style="--wb-stack-gap:48px">
 
-      <!-- ══════════════════ MỞ ĐẦU ══════════════════ -->
-      <div class="hw-part-head" id="mo-dau" style="border-top:0;padding-top:0">
-        <p class="kicker">Mở đầu · đọc cái này trước</p>
-        <h2>Nếu ai đó nói "đóng 10 năm rồi thôi" — hãy dừng lại một chút</h2>
-        <p>Hai mục dưới đây là toàn bộ ý chính. Hiểu hai mục này là đủ để không bị một câu nói khéo dẫn đi sai. Phần sau chỉ là con số và các bước cụ thể.</p>
+      <!-- ══════════════════ PHẦN 1 — HAI GÓI ══════════════════ -->
+      <div class="hw-part-head" id="hai-goi" style="border-top:0;padding-top:0">
+        <p class="kicker">Phần 1 · nền tảng</p>
+        <h2>Hai gói là hai loại khác nhau — nắm chỗ khác này thì mọi phần sau đều dễ</h2>
+        <p>Cùng gọi là "bảo hiểm nhân thọ", nhưng gói của Người A và Người B <b>vận hành khác nhau ở phần đầu tư</b>. Chỗ khác đó quyết định phí, rủi ro, và số tiền cầm về sau này.</p>
       </div>
 
-      <section id="s-cot-loi">
-        <p class="hw-eyebrow-sec"><b>Mở đầu</b> — trả lời gọn</p>
-        <h2 class="hw-sec-title">Giấy tờ ghi phải đóng tiền tới khi người được bảo vệ 100 tuổi. "10 năm" chỉ là <i>được phép tạm nghỉ đóng</i> — mà còn kèm điều kiện.</h2>
+      <section id="s-hai-goi">
+        <p class="hw-lede">Cả hai gói đều tách làm hai phần: một phần <b>mua sự bảo vệ</b> (có chuyện thì công ty trả tiền lớn) và một phần <b>tài khoản đầu tư</b> (tiền dư để dành, sinh lời). Khác nhau nằm ở <b>chỗ để tiền dư và ai chịu rủi ro đầu tư</b>.</p>
 
-        <p class="hw-lede">Trong giấy tờ có một ô ghi <b>"thời hạn đóng phí"</b>. Ở các gói này, ô đó thường ghi <b>tới khi người được bảo vệ tròn 100 tuổi</b> — có thể là 40, 50 năm hay hơn. Đó không phải in nhầm.</p>
-
-        <p class="hw-p">Vậy con số "10 năm" ở đâu ra? Nó nói tránh đi một điều có thật, nhưng nói không đủ. Sự thật là: <b>mấy năm đầu bắt buộc phải đóng</b> (thường là <b>4 hoặc 5 năm</b>). Sau đó, người mua <b>được phép tạm ngừng đóng</b>. Nhưng "được phép ngừng" khác hẳn "đóng xong rồi, khỏi lo nữa". Muốn ngừng mà hợp đồng vẫn sống, thì <b>số tiền trong quỹ phải luôn còn đủ</b> để mỗi tháng công ty trừ đi <b>tiền phí bảo vệ</b> (mỗi năm một đắt hơn). Khi trong quỹ hết tiền, hợp đồng <b>tự huỷ</b> — và tự huỷ nghĩa là mất hết bảo vệ, đúng lúc về già cần nó nhất.</p>
-
-        <div class="hw-figs">
-          <div class="hw-fig"><span class="n">Ghi trong giấy</span><span class="l">Đóng tiền tới khi người được bảo vệ 100 tuổi</span></div>
-          <div class="hw-fig"><span class="n">Bắt buộc</span><span class="l">Chỉ 4–5 năm đầu — đây mới là điều bắt buộc thật</span></div>
-          <div class="hw-fig"><span class="n">"10 năm"</span><span class="l">Không ghi ở đâu trong hợp đồng. Là con số người bán tự nói</span></div>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th>Điều</th><th>Người A — Prudential (liên kết đơn vị)</th><th>Người B — AIA (liên kết chung)</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><b>Tiền dư để đâu</b></td>
+                <td>Mua "đơn vị quỹ" — ở đây là <b>100% quỹ cổ phiếu Việt Nam</b></td>
+                <td>Bỏ vào <b>quỹ chung của công ty</b>, ăn theo lãi công ty công bố</td>
+              </tr>
+              <tr>
+                <td><b>Ai chịu rủi ro đầu tư</b></td>
+                <td><b>Người mua chịu hết</b> — chợ lên thì lời, chợ xuống thì lỗ, <span class="wb-tag wb-tag--sm wb-tag--danger">không có đáy</span></td>
+                <td>Công ty gánh phần đáy — <b>có mức lãi cam kết tối thiểu</b> <span class="wb-tag wb-tag--sm wb-tag--info">có sàn</span></td>
+              </tr>
+              <tr>
+                <td><b>Có hứa lãi tối thiểu?</b></td>
+                <td>Không. Giấy tờ ghi rõ người mua "<em>chịu mọi rủi ro đầu tư</em>"</td>
+                <td>Có. Bảng minh hoạ tách hẳn cột "<b>lãi suất cam kết</b>"</td>
+              </tr>
+              <tr>
+                <td><b>Tuổi người được bảo vệ</b></td>
+                <td>Lớn tuổi (65) → phí bảo vệ đắt và tăng nhanh</td>
+                <td>Trẻ (26) → phí bảo vệ rẻ, tăng chậm</td>
+              </tr>
+              <tr>
+                <td><b>Số tiền được bảo vệ</b></td>
+                <td>410 triệu</td>
+                <td>1,2 tỷ (phần chính) + nhiều gói kèm</td>
+              </tr>
+              <tr>
+                <td><b>Tính chất</b></td>
+                <td>Nghiêng về <b>đầu tư</b> — được ăn cả, ngã cũng chịu</td>
+                <td>Nghiêng về <b>bảo vệ trọn đời</b> có tích luỹ chắc chắn</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
-        <p class="hw-p">Nói một câu cho dễ nhớ: <b>người mua không "buộc" phải đóng đúng 10 năm rồi dừng, và cũng không được ai bảo đảm rằng đóng 10 năm là đủ.</b> Cả hai đều sai. Sự thật nằm ở giữa và <b>có kèm điều kiện</b> — và cái "điều kiện" đó chính là chỗ bị câu tư vấn giấu đi.</p>
-      </section>
-
-      <section id="s-nguy-bien">
-        <p class="hw-eyebrow-sec"><b>Mở đầu</b> — ý chính</p>
-        <h2 class="hw-sec-title">Nói lập lờ không phải là nói dối — mà là <i>biến một chuyện "có thể" thành một lời hứa "chắc chắn"</i></h2>
-
-        <p class="hw-p">Câu "đóng 10 năm rồi thôi" nghe xuôi tai vì <b>từng mảnh trong đó đều có thật</b>: người mua <i>thật sự</i> được ngừng đóng sau vài năm; tờ giấy tính toán <i>thật sự</i> vẽ ra một quỹ lớn dần. Nhưng lỗi không nằm ở từng mảnh, mà ở <b>chỗ ghép</b> — ở bước nhảy từ "được ngừng, và <i>có thể</i> ổn nếu đầu tư tốt" sang "đóng 10 năm là <i>xong</i>, khỏi lo".</p>
-
-        <div class="hw-quote">
-          Hãy tách làm hai câu hỏi khác nhau: <b>"Tôi có được phép ngừng đóng không?"</b> — có, sau 4–6 năm. Và <b>"Nếu tôi ngừng ở năm thứ 10, hợp đồng có chắc còn sống tới 100 tuổi không?"</b> — không ai bảo đảm, vì còn tuỳ lãi đầu tư (không ai hứa) và tiền phí bảo vệ (mỗi năm một đắt).
-          <cite>Câu nói bán hàng trộn hai câu này làm một, rồi trả lời câu dễ ("được ngừng") để bạn tưởng đã nghe trả lời câu khó ("ngừng thì vẫn an toàn").</cite>
+        <div class="hw-part-head" id="khac-nhau" style="border-top:0;padding:0;margin-top:10px">
+          <h2 style="font-size:16px">Một câu để nhớ chỗ khác nhau</h2>
         </div>
+        <p class="hw-p">Gói Người A giống <b>gửi tiền vào chứng khoán kèm một hợp đồng bảo vệ</b>: có thể lời to, cũng có thể lỗ, và <b>không ai bảo đảm đáy</b>. Gói Người B giống <b>một hợp đồng bảo vệ trọn đời kèm sổ tiết kiệm có lãi sàn</b>: lời ít hơn khi chợ tốt, nhưng có một mức <b>chắc chắn nhận được</b>. Vì vậy hai gói này <b>không so trực tiếp "cái nào lời hơn"</b> được — chúng nhắm hai mục tiêu khác nhau.</p>
 
-        <p class="hw-p">Phần 1 sẽ gọi tên <b>ba kiểu nói lập lờ</b> tạo ra cái tưởng nhầm đó, và gỡ từng kiểu bằng con số. Trước đó, có một hình ảnh giúp hiểu nhanh: hãy hình dung hợp đồng như một <b>cái xô bị múc nước mỗi tháng</b> — mục kế bên giải thích cái xô đó.</p>
+        <div class="wb-alert wb-alert--plain" role="note">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Vì sao chỗ khác này quan trọng</p>
+            <p class="wb-alert__msg">Với gói <b>Người A</b>, những năm chợ cổ phiếu xuống thì tài khoản <b>lỗ thật</b>, mà phí bảo vệ vẫn bị trừ đều — nên "để đó tự chạy" rủi ro hơn. Với gói <b>Người B</b>, phần cam kết cho mình một cái <b>đáy để tính</b>. Điều này sẽ quay lại ở Phần 4 (đóng 10/20/30 năm) và Phần 5 (ngừng đóng).</p>
+          </div>
+        </div>
       </section>
 
-      <!-- ══════════════════ PHẦN 1 ══════════════════ -->
-      <div class="hw-part-head" id="g1">
-        <p class="kicker">Phần 1 · mổ xẻ câu nói</p>
-        <h2>Câu "đóng 10 năm" — ba kiểu nói lập lờ, và câu chuyện cái xô thủng</h2>
-        <p>Ba kiểu dưới đây thường đi chung trong một câu tư vấn. Sau đó là <b>câu chuyện cái xô</b> cho thấy vì sao ngừng đóng sớm làm quỹ cạn, và <b>một biểu đồ bằng số</b> cho ví dụ Người A.</p>
+      <!-- ══════════════════ PHẦN 2 — QUYỀN LỢI ══════════════════ -->
+      <div class="hw-part-head" id="quyen-loi">
+        <p class="kicker">Phần 2 · được gì</p>
+        <h2>Quyền lợi: mỗi người được trả bao nhiêu, trong trường hợp nào</h2>
+        <p>Phần này để <b>tra cứu</b>. Mỗi dòng là một trường hợp kèm số tiền và điều kiện. Thẻ màu cho biết khoản đó <b>chắc chắn</b> hay <b>tuỳ tiền trong quỹ</b> (không chắc trước).</p>
       </div>
 
-      <section id="g1-body">
-        <div class="hw-fal-list">
+      <section id="ql-a">
+        <h3 class="hw-h3">Người A (Prudential 410 triệu) được gì</h3>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th>Khi xảy ra</th><th>Được trả</th><th>Điều cần nhớ</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><b>Qua đời hoặc tàn tật toàn bộ &amp; vĩnh viễn</b></td>
+                <td><b>410 triệu + toàn bộ tiền trong quỹ</b> <span class="wb-tag wb-tag--sm">một phần chắc chắn</span></td>
+                <td>Trước 70 tuổi thì <b>cộng</b> như trên. Sau 70 tuổi có thể chọn đổi sang "<b>lấy số lớn hơn</b>" giữa 410 triệu và tiền trong quỹ. Phần tàn tật chỉ tính tới 80 tuổi.</td>
+              </tr>
+              <tr>
+                <td>Chết/tàn tật <b>do tai nạn</b> (gói kèm)</td>
+                <td>+ thêm <b>100 triệu</b></td>
+                <td><span class="wb-tag wb-tag--sm wb-tag--danger">Sắp hết</span> Gói tai nạn này có <b>thời hạn 8 năm</b> (mua từ 2019) — tức <b>đang tới hạn kết thúc</b>. Sau đó không còn khoản tai nạn riêng này.</td>
+              </tr>
+              <tr>
+                <td>Sống tới hết hợp đồng (99 tuổi)</td>
+                <td>Toàn bộ tiền còn trong quỹ <span class="wb-tag wb-tag--sm wb-tag--warning">không chắc trước</span></td>
+                <td>Chỉ là tiền còn trong quỹ lúc đó, <b>không cộng thêm 410 triệu</b>.</td>
+              </tr>
+              <tr>
+                <td>Thưởng vì giữ hợp đồng lâu</td>
+                <td>3,5% giá trị tài khoản bình quân, xét <b>mỗi 5 năm</b></td>
+                <td>Điều kiện: <b>đóng đủ phí &amp; không rút</b>. Ngừng đóng có thể mất khoản này (quan trọng cho Phần 5).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p"><em>Nói thẳng:</em> gói của Người A <b>gọn</b> — chủ yếu là một khoản bảo vệ 410 triệu cộng tài khoản đầu tư. Nó <b>không có</b> các gói bệnh hiểm nghèo, nằm viện, viện phí như của Người B.</p>
+      </section>
 
-          <article class="hw-fal" id="f-danh-trao">
-            <div class="hw-fal__top"><span class="hw-fal__no">Kiểu 1</span><h3 class="hw-fal__name">Tráo chữ</h3><span class="wb-tag">một chữ, ba nghĩa</span></div>
-            <p class="hw-fal__def">Cùng một chữ <b>"đóng tiền"</b> được dùng cho <b>ba việc khác nhau</b>, rồi tráo qua tráo lại: <b>(a)</b> mấy năm đầu <em>bắt buộc</em> phải đóng, <b>(b)</b> sau đó <em>được phép</em> tạm ngừng, và <b>(c)</b> "đóng cho xong rồi thôi". Câu "chỉ cần đóng 10 năm" mượn cái đúng của (a) và (b) để bạn tin vào (c) — mà (c) thì không có thật.</p>
-            <div class="hw-fal__meta">
-              <span class="hw-fal__k">Thường gặp</span>
-              <p class="hw-fal__v">Giấy chứng nhận hay ghi kiểu: <em>"Thời hạn đóng phí… bằng Thời hạn hợp đồng. Tuy nhiên, Bên mua bảo hiểm có thể đóng phí linh hoạt kể từ Năm hợp đồng thứ 6…"</em> — tức là thời hạn đóng là tới 100 tuổi, còn "linh hoạt từ năm 6" chỉ là <b>được phép</b>, không phải điểm kết thúc.</p>
-              <span class="hw-fal__k">Cách gỡ</span>
-              <p class="hw-fal__v">Hỏi thẳng: <b>"đóng 10 năm rồi thôi" là ý nào trong ba ý trên, và chỉ giúp tôi dòng nào trong hợp đồng viết vậy.</b> Sẽ không có dòng nào cả.</p>
-            </div>
-          </article>
-
-          <article class="hw-fal" id="f-ban-phan">
-            <div class="hw-fal__top"><span class="hw-fal__no">Kiểu 2</span><h3 class="hw-fal__name">Nói nửa sự thật</h3><span class="wb-tag">giấu mất vế "chỉ khi…"</span></div>
-            <p class="hw-fal__def">Nói một nửa đúng, <b>giấu đi nửa quan trọng</b>. "Được ngừng đóng từ năm 6" là đúng — nhưng bị cắt mất vế đi kèm ngay trong cùng điều khoản: <b>chỉ ngừng được chừng nào quỹ còn đủ tiền trả phí bảo vệ mỗi tháng</b>; nếu không, hợp đồng <b>tự huỷ</b>.</p>
-            <div class="hw-fal__meta">
-              <span class="hw-fal__k">Thường gặp</span>
-              <p class="hw-fal__v">Điều khoản hay ghi: được tạm ngừng <em>"với điều kiện… Giá trị quỹ… còn đủ để trả cho Phí bảo hiểm rủi ro và Phí quản lý"</em>, và <em>"có thể bị mất hiệu lực"</em>. Chỗ khác ghi: hợp đồng mất hiệu lực <em>"kể từ ngày Giá trị quỹ… không đủ để trả…"</em>.</p>
-              <span class="hw-fal__k">Cách gỡ</span>
-              <p class="hw-fal__v">Hỏi <b>"còn thiếu điều kiện gì không?"</b> Câu đủ phải là: "được ngừng đóng, <b>miễn là</b> quỹ luôn đủ tự trả phí tới 100 tuổi." Thêm lại chữ "miễn là" thì lời hứa chắc nịch biến mất.</p>
-            </div>
-          </article>
-
-          <article class="hw-fal" id="f-du-phong">
-            <div class="hw-fal__top"><span class="hw-fal__no">Kiểu 3</span><h3 class="hw-fal__name">Coi con số đoán là chắc chắn</h3><span class="wb-tag">"có thể" ≠ "chắc chắn"</span></div>
-            <p class="hw-fal__def">Lấy một <b>con số đoán trước</b> (lãi 6%/năm, 9%/năm) rồi nói như thể <b>chắc chắn được vậy</b>. Tờ giấy tính toán vẽ quỹ lớn dần và tự nuôi hợp đồng — nhưng đó là <em>nếu</em> lãi được như vậy <em>đều đều suốt mấy chục năm</em>. Với gói kiểu Người A thì càng mong manh, vì tiền để trong <b>quỹ cổ phiếu, không ai hứa lãi tối thiểu</b>.</p>
-            <div class="hw-fal__meta">
-              <span class="hw-fal__k">Thường gặp</span>
-              <p class="hw-fal__v">Chính tờ giấy của công ty in dòng cảnh báo: người mua <em>"được hưởng toàn bộ kết quả đầu tư và chấp nhận mọi rủi ro đầu tư"</em>, và các con số lãi <em>"chỉ mang tính minh hoạ và KHÔNG ĐƯỢC ĐẢM BẢO"</em>. Gói của Người B có hứa lãi tối thiểu, nhưng ngay bảng tính "ngừng đóng năm 15" ở mức lãi tối thiểu vẫn cho thấy hợp đồng <b>tự huỷ khi ~67 tuổi</b> (xem Phần 4).</p>
-              <span class="hw-fal__k">Cách gỡ</span>
-              <p class="hw-fal__v">Tách con số đoán khỏi con số chắc. Hỏi: <b>"Ở mức lãi thấp nhất, nếu tôi ngừng ở năm 10 thì hợp đồng sống tới năm nào?"</b> Câu này buộc người tư vấn rời khỏi cái kịch bản đẹp.</p>
-            </div>
-          </article>
-
+      <section id="ql-b">
+        <h3 class="hw-h3">Người B (AIA 1,2 tỷ) được gì — phần chính</h3>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th>Khi xảy ra</th><th>Được trả</th><th>Điều cần nhớ</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><b>Qua đời</b> hoặc <b>tàn tật toàn bộ &amp; vĩnh viễn</b></td>
+                <td><b>Lấy số lớn hơn</b> giữa 1,2 tỷ và tiền trong quỹ <span class="wb-tag wb-tag--sm">một phần chắc chắn</span></td>
+                <td>Trả số lớn hơn, không cộng dồn. Tàn tật: bảo vệ tới 75 tuổi.</td>
+              </tr>
+              <tr>
+                <td>Qua đời <b>vì tai nạn</b></td>
+                <td>Trả gấp đôi: <b>2,4 tỷ</b> (200% số tiền bảo hiểm)</td>
+                <td>Áp dụng tới <b>65 tuổi</b>.</td>
+              </tr>
+              <tr>
+                <td>Mắc <b>ung thư nghiêm trọng</b></td>
+                <td>Ứng trước <b>300 triệu</b> (25%)</td>
+                <td>Tới 65 tuổi; sau sẽ <b>trừ vào</b> khoản qua đời.</td>
+              </tr>
+              <tr>
+                <td>Qua đời &amp; <b>không hút thuốc</b></td>
+                <td>+ thêm <b>120 triệu</b> (10%)</td>
+                <td>Nếu được xác định không hút thuốc; tới 65 tuổi.</td>
+              </tr>
+              <tr>
+                <td>Sống lâu &amp; tích luỹ</td>
+                <td>Tiền trong quỹ (có <b>lãi cam kết tối thiểu</b>) <span class="wb-tag wb-tag--sm wb-tag--info">có sàn</span></td>
+                <td>Con số từng mốc ở Phần 4.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
-        <h3 class="hw-h3">Câu chuyện cái xô: tiền bị múc ra mỗi tháng</h3>
-        <p class="hw-p">Đây là hình ảnh giúp hiểu cả ba kiểu trên cùng lúc. Tiền đóng vào không "nằm im" trong hợp đồng. Nó chảy qua một dòng, có chỗ vào và chỗ ra:</p>
+        <h3 class="hw-h3">Bốn gói kèm thêm của Người B (số tiền tối đa)</h3>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th>Gói kèm</th><th>Trả</th><th>Điều kiện / giới hạn</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><b>Toàn diện bệnh hiểm nghèo</b><br>(tối đa 200tr · phí 1,06tr/năm)</td>
+                <td>Mức nhẹ 60tr · Mức vừa 120tr (<b>+ miễn đóng phí gói này</b> các năm sau) · Mức nặng 200tr · Võng mạc tiểu đường +40tr</td>
+                <td>Chia 3 mức bệnh, cộng lại không quá 200tr; bảo vệ tới 75 tuổi. <b>5 năm liền không đòi quyền lợi → hoàn lại 1 năm phí</b> gói này.</td>
+              </tr>
+              <tr>
+                <td><b>Tử vong &amp; thương tật do tai nạn</b><br>(tối đa 200tr · phí 0,91tr/năm)</td>
+                <td>Tới 200tr theo mức thương tật; <b>gấp đôi (400tr)</b> nếu tai nạn trên xe công cộng / thang máy / cháy nhà công cộng</td>
+                <td>Có bảng chia % cho từng loại thương tật; bảo vệ tới 75 tuổi.</td>
+              </tr>
+              <tr>
+                <td><b>Thẻ sức khoẻ — nội trú (cơ bản)</b><br>(tối đa 200tr/năm · phí 3,38tr/năm)</td>
+                <td>Nằm viện có mổ ≤ 50tr/lần; không mổ ≤ 20tr/lần; ghép tạng 100tr; xạ/hoá trị ung thư <b>không giới hạn phụ</b></td>
+                <td><b>Chỉ tính khi nằm viện nội trú</b> (không tính khám ngoại trú); bảo vệ tới 70 tuổi. Chờ 30 ngày (bệnh thường) đến 12 tháng (bệnh có sẵn).</td>
+              </tr>
+              <tr>
+                <td><b>Hỗ trợ chi phí nằm viện</b><br>(phí 0,62tr/năm)</td>
+                <td><b>400k/ngày</b> phòng thường; <b>800k/ngày</b> phòng ICU</td>
+                <td>Phòng thường tối đa 365 ngày/lần nằm; ICU tối đa 25 ngày/lần; cả đời tối đa 1.000 ngày; bảo vệ tới 65 tuổi. Chờ: bệnh 30 ngày, tai nạn 0 ngày.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p"><em>Nói thẳng:</em> gói Người B <b>nhiều tầng</b> hơn hẳn — ngoài khoản bảo vệ 1,2 tỷ còn có bệnh hiểm nghèo, tai nạn, thẻ viện phí và trợ cấp nằm viện. Đổi lại, <b>phí của bốn gói kèm là "phí đóng không tích luỹ"</b> — trả cho sự bảo vệ hằng năm, <b>không cộng vào tài khoản để dành</b> (xem Phần 3).</p>
+      </section>
 
+      <!-- ══════════════════ PHẦN 3 — PHÍ ══════════════════ -->
+      <div class="hw-part-head" id="phi">
+        <p class="kicker">Phần 3 · phí &amp; chỗ "hại"</p>
+        <h2>Phí: đóng bao nhiêu, và tiền chảy đi đâu trước khi vào quỹ</h2>
+        <p>Đây là phần dễ hiểu nhầm nhất — và là chỗ "hại" thật sự nếu không nắm rõ. Tiền đóng vào <b>không "nằm im"</b> trong hợp đồng: nó bị trừ vài khoản phí trước, rồi phần còn lại mới vào quỹ đầu tư.</p>
+      </div>
+
+      <section id="phi-xo">
+        <h3 class="hw-h3">Cái xô: tiền vào rồi bị múc ra mỗi tháng</h3>
+        <p class="hw-p">Hình dung hợp đồng như một cái xô có chỗ vào và chỗ ra:</p>
         <div class="ins-flow">
-          <div class="ins-flow__box">
-            <p class="ins-flow__t">① Tiền đổ vào</p>
-            <p class="ins-flow__d">Ví dụ 25–30 triệu/năm</p>
+          <div class="ins-flow__box ins-flow__box--in">
+            <p class="ins-flow__t">① Tiền đóng vào</p>
+            <p class="ins-flow__d">A: ~30,3tr/năm · B: 25tr/năm</p>
           </div>
           <span class="ins-flow__arrow"><span class="wb-ico">arrow_forward</span></span>
           <div class="ins-flow__box ins-flow__box--out">
-            <p class="ins-flow__t">② − Bị trừ "phí ban đầu"</p>
-            <p class="ins-flow__d">Năm đầu bị trừ rất nhiều — chỉ một phần nhỏ tiền mới thật sự vào xô.</p>
+            <p class="ins-flow__t">② − Phí ban đầu</p>
+            <p class="ins-flow__d">Trừ ngay khi đóng. Năm đầu trừ rất nhiều — chỉ một phần nhỏ vào xô.</p>
           </div>
           <span class="ins-flow__arrow"><span class="wb-ico">arrow_forward</span></span>
           <div class="ins-flow__box">
-            <p class="ins-flow__t">③ Vào xô (quỹ đầu tư)</p>
-            <p class="ins-flow__d">Có thể sinh lời hoặc lỗ. Gói Người A: toàn cổ phiếu.</p>
+            <p class="ins-flow__t">③ Vào xô (quỹ)</p>
+            <p class="ins-flow__d">Sinh lời hoặc lỗ. A: toàn cổ phiếu. B: quỹ chung có lãi sàn.</p>
           </div>
           <span class="ins-flow__arrow"><span class="wb-ico">arrow_forward</span></span>
           <div class="ins-flow__box ins-flow__box--out">
-            <p class="ins-flow__t">④ − Mỗi tháng bị múc ra</p>
-            <p class="ins-flow__d">Tiền phí bảo vệ (<b>càng lớn tuổi càng đắt</b>) + phí quản lý.</p>
+            <p class="ins-flow__t">④ − Mỗi tháng múc ra</p>
+            <p class="ins-flow__d">Phí bảo vệ (<b>càng già càng đắt</b>) + phí quản lý hợp đồng + phí quản lý quỹ.</p>
           </div>
         </div>
+        <p class="hw-p"><b>Còn đổ nước vào (①)</b> thì tiền mới bù cho chỗ múc ra (④), xô đầy dần. <b>Ngừng đổ</b> thì chỉ còn trông vào lãi (③) chống lại chỗ múc (④) — mà chỗ múc thì <b>không đứng yên</b>. Ba khoản phí đáng chú ý nhất: <b>phí ban đầu</b> (mục dưới) và <b>phí bảo vệ theo tuổi</b> (mục kế), cộng phí quản lý quỹ trừ đều trên số dư.</p>
+      </section>
 
-        <p class="hw-p"><b>Khi còn đổ nước vào (①)</b>, có tiền mới bù cho chỗ bị múc ra (④), nên xô đầy dần. <b>Khi ngừng đổ</b>, chỉ còn trông vào lãi đầu tư (③) để chống lại chỗ múc ra (④). Rắc rối là chỗ múc — <b>tiền phí bảo vệ — không đứng yên: càng lớn tuổi càng bị múc nhiều</b>. Nếu lãi không bù kịp, mực nước tụt dần về 0, và hợp đồng tự huỷ.</p>
-        <p class="hw-p"><em>Chỗ ví von này cũng có giới hạn:</em> cái xô thật thì lỗ thủng cố định, còn ở đây <b>lỗ to dần theo từng tuổi</b>, và vòi nước (lãi) thì lúc chảy lúc ngừng, thậm chí chảy ngược (lỗ). Nên "ngừng đổ nước sớm" nguy hiểm hơn một cái xô thủng bình thường nhiều.</p>
+      <section id="phi-bandau">
+        <h3 class="hw-h3">Phí ban đầu — vì sao mấy năm đầu tiền trong quỹ ÍT hơn tiền đã đóng</h3>
+        <p class="hw-p">Với gói Người A, quy tắc &amp; điều khoản ghi rõ tỷ lệ <b>phí ban đầu</b> bị trừ khỏi phí đóng mỗi năm, trước khi phần còn lại vào quỹ:</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th>Năm hợp đồng</th><th>Năm 1</th><th>Năm 2</th><th>Năm 3</th><th>Năm 4</th><th>Năm 5 trở đi</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><b>Bị trừ phí ban đầu</b></td>
+                <td><b>85%</b></td>
+                <td><b>75%</b></td>
+                <td>10%</td>
+                <td>5%</td>
+                <td>0%</td>
+              </tr>
+              <tr>
+                <td>Phần thật sự vào quỹ</td>
+                <td>15%</td>
+                <td>25%</td>
+                <td>90%</td>
+                <td>95%</td>
+                <td>100%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p">Đọc ra: <b>năm đầu đóng ~30,3 triệu thì chỉ ~4,5 triệu vào quỹ</b>; năm 2 chỉ ~7,6 triệu. Đây là lý do <b>huỷ trong vài năm đầu là mất phần lớn tiền</b>, và vì sao sau 8 năm tiền trong quỹ vẫn có thể <b>ít hơn</b> tổng tiền đã đóng. Điều này <b>không</b> có nghĩa hợp đồng "vô dụng" — phần chênh chính là <b>tiền mua sự bảo vệ 410 triệu</b> suốt thời gian đó — nhưng nó cho thấy đây <b>không phải "gửi tiết kiệm sinh lời"</b>.</p>
+        <p class="hw-p"><em>Với gói Người B (liên kết chung),</em> cơ chế tương tự nhưng phần chính có <b>lãi cam kết</b> đỡ lưng, và <b>bốn gói kèm là "phí không tích luỹ"</b> — tức mỗi năm ~6 triệu cho bốn gói kèm là trả cho bảo vệ, <b>không</b> vào tài khoản để dành; chỉ ~19 triệu (phần chính) mới là phần có tích luỹ.</p>
+      </section>
 
-        <h3 class="hw-h3" id="s-bang-chung">Bằng chứng bằng số: lỗ thủng to đến đâu</h3>
-        <p class="hw-p">Đây là <b>tiền phí bảo vệ mỗi năm</b> cho ví dụ Người A (mua năm 57 tuổi, gói cổ phiếu, số tiền bảo hiểm 410 triệu, đóng ~30 triệu/năm). Đường kẻ đứt là <b>số tiền đóng mỗi năm (30,3 triệu)</b>. Hãy nhìn cái cột cuối cùng:</p>
-
+      <section id="phi-tuoi">
+        <h3 class="hw-h3">Phí bảo vệ theo tuổi — "lỗ thủng" to dần của gói Người A</h3>
+        <p class="hw-p">Phí bảo vệ (phí bảo hiểm rủi ro) được tính theo <b>tuổi + số tiền được bảo vệ</b>: càng lớn tuổi càng đắt. Đây là ước tính minh hoạ cho Người A (được bảo vệ 410 triệu). Đường kẻ đứt là <b>số tiền đóng mỗi năm (~30,3 triệu)</b> — hãy nhìn cột cuối:</p>
         <div class="hw-viz">
           <div class="wb-chart">
-            <svg class="wb-chart__svg" viewBox="0 0 560 300" role="img" aria-label="Biểu đồ cột cho thấy tiền phí bảo vệ tăng dần theo tuổi của Người A: từ 5 triệu lúc 58 tuổi lên 30,2 triệu lúc 77 tuổi — chạm đúng số tiền đóng mỗi năm là 30,3 triệu, và còn tăng tiếp sau đó.">
+            <svg class="wb-chart__svg" viewBox="0 0 560 300" role="img" aria-label="Biểu đồ cột cho thấy phí bảo vệ mỗi năm của Người A tăng dần theo tuổi: khoảng 5 triệu lúc 58 tuổi lên khoảng 30 triệu lúc 77 tuổi — chạm gần số tiền đóng mỗi năm là 30,3 triệu, và còn tăng tiếp sau đó.">
               <line class="ins-refline" x1="70" y1="51" x2="520" y2="51"></line>
               <text class="hw-vs" x="516" y="46" text-anchor="end">tiền đóng: 30,3tr/năm</text>
               <line class="hw-vaxis" x1="70" y1="40" x2="70" y2="250"></line>
@@ -424,491 +564,262 @@
               <text class="hw-vs" x="326" y="264" text-anchor="middle">67t</text>
               <text class="hw-vs" x="398" y="264" text-anchor="middle">72t</text>
               <text class="hw-vs" x="470" y="264" text-anchor="middle">77t</text>
-              <text class="hw-vs" x="295" y="284" text-anchor="middle">tuổi của Người A — tiền phí bảo vệ mỗi năm (triệu đồng)</text>
+              <text class="hw-vs" x="295" y="284" text-anchor="middle">tuổi của Người A — phí bảo vệ mỗi năm (triệu đồng)</text>
               <text class="hw-vt" x="470" y="34" text-anchor="middle" style="font-weight:720">→ còn tăng nữa</text>
             </svg>
           </div>
-          <p class="hw-src">Con số lấy từ bảng minh hoạ của một hợp đồng liên kết đơn vị có thật (mục "Phân bổ phí bảo hiểm"), dùng làm ví dụ. Bảng này theo luật chỉ vẽ 20 năm; sau 77 tuổi, tiền phí bảo vệ <b>còn tăng tiếp</b> cho đến 99 tuổi.</p>
+          <p class="hw-src">Ước tính minh hoạ theo cơ cấu phí bảo hiểm rủi ro của gói liên kết đơn vị. Sau 77 tuổi, phí bảo vệ <b>còn tăng tiếp</b> cho đến 99 tuổi.</p>
         </div>
+        <p class="hw-p">Đọc ra ba điều: <b>(1)</b> tới ~77 tuổi, phí bảo vệ <b>≈ 30 triệu — gần bằng cả năm đóng</b>, nghĩa là toàn bộ tiền đóng chỉ vừa đủ trả phí, gần như <b>không còn gì để dành</b>. <b>(2)</b> Đó mới 77 tuổi; con số này còn tăng ở 80, 90. <b>(3)</b> Nếu ngừng đóng, cái xô phải <b>một mình gánh</b> khoản múc đang phình to này — mà quỹ lại toàn cổ phiếu, có năm lỗ. Với gói Người B (26 tuổi) thì ngược lại: phí bảo vệ hiện <b>rất rẻ</b> và tăng chậm, nên áp lực này còn xa.</p>
+      </section>
 
-        <p class="hw-p">Đọc ra ba điều: <b>(1)</b> tới lúc Người A 77 tuổi, tiền phí bảo vệ <b>≈ 30,2 triệu — gần bằng cả số tiền đóng vào</b>. Nghĩa là toàn bộ tiền đóng chỉ vừa đủ trả phí, không còn gì để dành. <b>(2)</b> Đó mới là 77 tuổi; con số này còn <b>tăng nữa</b> ở tuổi 80, 90. <b>(3)</b> Nếu ngừng đóng ở năm 10, cái xô phải một mình gánh khoản múc đang phình to này — trong khi quỹ toàn cổ phiếu, có năm lỗ.</p>
+      <!-- ══════════════════ PHẦN 4 — 10/20/30 NĂM ══════════════════ -->
+      <div class="hw-part-head" id="case">
+        <p class="kicker">Phần 4 · đóng đủ 10 / 20 / 30 năm</p>
+        <h2>Đóng đủ 10, 20, 30 năm thì sao — số nào cầm chắc, số nào chỉ là dự tính</h2>
+        <p>Đây là câu quan trọng nhất khi nghĩ dài hạn. Hai gói trả lời <b>rất khác nhau</b>, đúng như chỗ khác ở Phần 1: Người B có bảng cam kết, Người A thì không.</p>
+      </div>
 
+      <section id="case-b">
+        <h3 class="hw-h3">Người B (AIA) — có bảng tích luỹ, tách "cam kết" và "dự tính"</h3>
+        <p class="hw-p">Bảng minh hoạ của hợp đồng B ghi rõ <b>số tiền nhận về</b> nếu đóng đều tới từng mốc, ở hai kịch bản lãi. Cột "<b>cam kết</b>" là mức <b>chắc chắn</b>; cột "5%/năm" chỉ là <b>giả định</b>, có thể hơn hoặc kém:</p>
         <div class="hw-tw">
           <table class="wb-table wb-table--compact">
-            <thead><tr><th>Ví dụ Người A, sau ~8 năm đóng</th><th>Con số</th><th>Nghĩa là</th></tr></thead>
+            <thead><tr><th>Đóng đủ…</th><th>Tuổi của B</th><th>Lãi cam kết <span class="wb-tag wb-tag--sm">chắc chắn</span></th><th>Nếu lãi 5%/năm <span class="wb-tag wb-tag--sm wb-tag--warning">dự tính</span></th></tr></thead>
             <tbody>
-              <tr><td>Tổng tiền đã đóng</td><td><b>≈ 242 triệu</b></td><td>8 năm × ~30 triệu</td></tr>
-              <tr><td>Tiền trong quỹ (nếu lãi 6%)</td><td><b>≈ 161 triệu</b></td><td>Ít hơn số đã đóng — vì hai năm đầu bị trừ "phí ban đầu" rất nhiều</td></tr>
-              <tr><td>Tiền trong quỹ (nếu lãi 0%)</td><td>≈ 129 triệu</td><td>Nếu năm đó không sinh lời</td></tr>
+              <tr><td><b>10 năm</b></td><td>28 tuổi</td><td><b>155,7 triệu</b></td><td>185,9 triệu</td></tr>
+              <tr><td><b>15 năm</b></td><td>33 tuổi</td><td><b>259,9 triệu</b></td><td>335,8 triệu</td></tr>
+              <tr><td><b>20 năm</b></td><td>38 tuổi</td><td><b>374 triệu</b></td><td>527,1 triệu</td></tr>
+              <tr><td>30 năm</td><td>48 tuổi</td><td colspan="2"><em>Không có trong bảng minh hoạ (bảng chỉ vẽ tới năm 20). Theo cơ chế, cả hai cột tiếp tục lớn dần; cột 5% lớn nhanh hơn cột cam kết vì lãi cộng dồn.</em></td></tr>
             </tbody>
           </table>
         </div>
-        <p class="hw-p">Điều này <b>không</b> có nghĩa hợp đồng "lỗ" hay "vô dụng" — suốt 8 năm qua Người A vẫn được bảo vệ <b>410 triệu</b>, và phần chênh chính là <b>tiền mua sự bảo vệ đó</b>. Nó chỉ cho thấy: <b>quỹ chưa hề "dư dả để tự nuôi hợp đồng"</b>, nên tin rằng đóng 10 năm là quỹ tự sống tới 100 tuổi chỉ là <b>một cái cược</b>, không phải điều chắc chắn.</p>
+        <p class="hw-p">Hai điều cần đọc đúng: <b>(1)</b> con số "cam kết" là phần <b>chắc chắn cầm về</b> nếu đóng đều — đây là cái quý của loại liên kết chung. <b>(2)</b> So với tiền bỏ ra: phần chính đóng ~19 triệu/năm, tức 10 năm bỏ ~190 triệu mà cam kết nhận 155,7 triệu — <b>thấp hơn tiền đóng</b>, vì phần chênh là <b>tiền mua sự bảo vệ 1,2 tỷ</b> suốt thời gian đó (chưa kể bốn gói kèm bảo vệ sức khoẻ). Đây là <b>bảo hiểm có tích luỹ</b>, không phải kênh sinh lời thuần.</p>
+      </section>
 
+      <section id="case-a">
+        <h3 class="hw-h3">Người A (Prudential) — không có con số cam kết</h3>
+        <p class="hw-p">Vì tiền để <b>100% cổ phiếu</b> và <b>không hứa lãi tối thiểu</b>, gói A <b>không có</b> bảng "đóng đủ X năm thì chắc chắn có ngần này". Số tiền trong quỹ mỗi mốc <b>tuỳ thị trường</b> — có năm lời, có năm lỗ. Đây là ước tính minh hoạ (chưa phải bảng giá trị tài khoản thực tế của hợp đồng):</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th>Ví dụ Người A</th><th>Con số (ước tính)</th><th>Nghĩa là</th></tr></thead>
+            <tbody>
+              <tr><td>Đã đóng sau 8 năm</td><td><b>≈ 242 triệu</b></td><td>8 năm × ~30,3 triệu</td></tr>
+              <tr><td>Tiền trong quỹ (nếu lãi ~6%)</td><td><b>≈ 160 triệu</b> <span class="wb-tag wb-tag--sm wb-tag--warning">không chắc</span></td><td>Ít hơn tiền đóng — vì phí ban đầu năm 1–2 ngốn nhiều</td></tr>
+              <tr><td>Tiền trong quỹ (nếu năm đó lỗ)</td><td>thấp hơn nữa</td><td>Quỹ cổ phiếu không có đáy</td></tr>
+              <tr><td>Đóng đủ 10 / 20 / 30 năm</td><td><b>Không có số cam kết</b></td><td>Tuỳ thị trường; và <b>phí bảo vệ leo thang</b> (Phần 3) nuốt dần tiền đóng khi về già</td></tr>
+            </tbody>
+          </table>
+        </div>
         <div class="wb-alert wb-alert--warning" role="note">
           <span class="wb-ico wb-alert__icon">warning</span>
           <div class="wb-alert__body">
-            <p class="wb-alert__title">Chốt lại Phần 1 cho công bằng</p>
-            <p class="wb-alert__msg">Người tư vấn <b>không hẳn nói dối</b>: được ngừng đóng là có thật, và <em>nếu</em> đầu tư thuận lợi thì quỹ <em>có thể</em> đủ nuôi hợp đồng. Nhưng biến một chuyện <b>"có thể, nếu…"</b> thành một <b>lời hứa chắc nịch</b> ("đóng 10 năm rồi thôi") — đó chính là nói lập lờ. Sự thật đúng hơn là: trên giấy phải đóng tới 100 tuổi, và trên thực tế phải đóng đủ lâu để quỹ thật sự khoẻ đủ tự gánh phí đang mỗi ngày một đắt.</p>
+            <p class="wb-alert__title">Chỗ cần cân nhắc cho Người A khi nghĩ dài hạn</p>
+            <p class="wb-alert__msg">Người A đã 65 tuổi. Càng về sau, <b>phí bảo vệ càng đắt</b> (tới ~77 tuổi ≈ cả năm đóng), nên phần "để dành" trong quỹ <b>khó lớn</b> dù đóng đủ 20–30 năm — trừ khi cổ phiếu lời rất tốt và đều. Đây <b>không phải</b> lời khuyên ngừng hay tiếp; chỉ là: với gói này, <b>đừng kỳ vọng một con số tích luỹ chắc chắn</b>. Giá trị thật của nó là <b>khoản bảo vệ 410 triệu</b> và toàn bộ quỹ khi có chuyện.</p>
           </div>
         </div>
       </section>
 
-      <!-- ══════════════════ BỔ SUNG · HIỂU NHẦM ══════════════════ -->
-      <div class="hw-part-head" id="ghn">
-        <p class="kicker">Bổ sung Phần 1 · cùng một kiểu lập lờ</p>
-        <h2>Bảy hiểu nhầm hay khiến người ta "gật đầu mua" — và sự thật</h2>
-        <p>Câu "10 năm" chỉ là một trong nhiều cách nói lập lờ. Dưới đây là những hiểu nhầm phổ biến nhất mà người mua hay bị dẫn tới — kèm <b>cách tư vấn hay diễn đạt</b> và <b>sự thật</b> đằng sau. Biết mặt chúng thì khó bị "gài".</p>
+      <!-- ══════════════════ PHẦN 5 — CÂU "10 NĂM" ══════════════════ -->
+      <div class="hw-part-head" id="muoi-nam">
+        <p class="kicker">Phần 5 · câu "đóng 10 năm rồi thôi"</p>
+        <h2>Câu "đóng 10 năm rồi thôi" đúng tới đâu — và tạm dừng rồi đóng lại thì sao</h2>
+        <p>Giờ mới tới câu hay nghe nhất. Hiểu bốn phần trên rồi thì câu này sáng ngay.</p>
       </div>
 
-      <section id="ghn-body">
-        <div class="hw-fal-list">
+      <section id="s-muoi-nam">
+        <p class="hw-lede">Sự thật gọn: giấy tờ ghi <b>đóng phí tới khi người được bảo vệ ~99–100 tuổi</b>. Bắt buộc thật chỉ là <b>4–5 năm đầu</b>. Từ năm 6, người mua <b>được phép tạm ngừng đóng</b> — nhưng "<b>được ngừng</b>" khác hẳn "<b>đã xong</b>".</p>
+        <p class="hw-p">Được ngừng <b>kèm một điều kiện</b> nằm ngay trong cùng điều khoản: chỉ ngừng được <b>chừng nào tiền trong quỹ còn đủ</b> để mỗi tháng công ty trừ phí bảo vệ + phí quản lý. Khi quỹ cạn, hết 60 ngày gia hạn là hợp đồng <b>mất hiệu lực</b> — mất luôn bảo vệ, đúng lúc về già cần nhất. "Đóng 10 năm rồi thôi" biến một chuyện <b>"có thể, nếu quỹ đủ"</b> thành một <b>lời hứa chắc nịch</b> — đó là chỗ nói lập lờ. Với gói Người A (già, phí leo thang, quỹ cổ phiếu không đáy) thì càng mong manh.</p>
+        <div class="hw-quote">
+          Tách làm hai câu hỏi: <b>"Tôi có được phép ngừng đóng không?"</b> — có, sau 4–6 năm. Và <b>"Ngừng ở năm 10 thì hợp đồng có chắc sống tới 100 tuổi không?"</b> — không ai bảo đảm, vì còn tuỳ lãi (không ai hứa với gói A) và phí bảo vệ (mỗi năm một đắt).
+          <cite>Câu bán hàng trộn hai câu này làm một, rồi trả lời câu dễ để bạn tưởng đã nghe trả lời câu khó.</cite>
+        </div>
+      </section>
 
-          <article class="hw-fal" id="f-tiet-kiem">
-            <div class="hw-fal__top"><span class="hw-fal__no">HN 1</span><h3 class="hw-fal__name">Tưởng đây là "gửi tiết kiệm sinh lời"</h3><span class="wb-tag">tráo mục đích</span></div>
-            <p class="hw-fal__def">Người mua tưởng bỏ tiền vào đây giống <b>gửi ngân hàng mà lời hơn</b>. Thật ra đây <b>trước hết là mua sự bảo vệ</b>; phần "đầu tư" bị trừ phí rất nặng mấy năm đầu, nên vài năm đầu tiền trong quỹ thường <b>ÍT hơn</b> tiền đã đóng.</p>
-            <div class="hw-fal__meta">
-              <span class="hw-fal__k">Tư vấn hay nói</span>
-              <p class="hw-fal__v"><em>"Vừa được bảo vệ vừa tiết kiệm, lời hơn gửi ngân hàng."</em></p>
-              <span class="hw-fal__k">Sự thật</span>
-              <p class="hw-fal__v">Bảo vệ là chính. Muốn lời cao và rút linh hoạt thì <b>gửi tiết kiệm / quỹ riêng</b> hợp hơn. Đừng gộp hai mục tiêu vào một sản phẩm.</p>
-            </div>
-          </article>
+      <section id="tam-dung">
+        <h3 class="hw-h3">Câu hỏi của mình: đóng 10 năm → tạm dừng → sắp âm thì đóng lại. Lợi hay hại so với đóng liên tục?</h3>
+        <p class="hw-p">Kịch bản: đóng đủ 10 năm, rồi <b>ngừng đóng</b>; hợp đồng <b>tự trừ tiền trong quỹ</b> để nuôi phí; <b>trước khi quỹ về âm thì mình đóng tiếp</b>. So với đóng đều liên tục thì được/mất gì?</p>
 
-          <article class="hw-fal" id="f-rut-von">
-            <div class="hw-fal__top"><span class="hw-fal__no">HN 2</span><h3 class="hw-fal__name">Tưởng "rút ra lúc nào cũng đủ vốn"</h3><span class="wb-tag">giấu chuyện lỗ khi huỷ sớm</span></div>
-            <p class="hw-fal__def">Tưởng huỷ giữa chừng vẫn lấy lại (gần) đủ tiền đã đóng. Thật ra huỷ trong <b>mấy năm đầu là mất phần lớn tiền</b>, vì "phí ban đầu" đã ngốn <b>80–90% phí năm đầu tiên</b>.</p>
-            <div class="hw-fal__meta">
-              <span class="hw-fal__k">Tư vấn hay nói</span>
-              <p class="hw-fal__v"><em>"Không thích thì rút ra, coi như để dành."</em></p>
-              <span class="hw-fal__k">Sự thật</span>
-              <p class="hw-fal__v">Huỷ sớm = lỗ nặng. Chỉ nên mua nếu <b>chắc theo được nhiều năm</b>; nếu không chắc, đừng để bị thuyết phục.</p>
-            </div>
-          </article>
+        <p class="hw-p"><b>Trực giác của mình — và nó đúng phần cốt lõi:</b> "số tiền bị trừ ra để nuôi hợp đồng, nếu cứ để trong quỹ và mình tự bỏ tiền túi đóng, thì số đó tiếp tục sinh lãi; nên thiệt hại là lãi hằng năm ít đi vì vốn trong quỹ còn ít." <b>Đúng — nhưng chưa đủ.</b> Cần thêm một mảnh: khi ngừng đóng, <b>mình giữ lại được khoản phí đó trong túi</b>. Nên câu hỏi thật không phải "để trong quỹ hay không", mà là <b>"khoản phí đó sinh lời tốt hơn ở trong quỹ hay ở trong tay mình?"</b></p>
 
-          <article class="hw-fal" id="f-khai-that">
-            <div class="hw-fal__top"><span class="hw-fal__no">HN 3</span><h3 class="hw-fal__name">Được bảo "cứ khai không cho dễ đậu"</h3><span class="wb-tag wb-tag--danger">bẫy nguy hiểm nhất</span></div>
-            <p class="hw-fal__def">Tư vấn tự điền hộ tờ khai, hoặc bảo <b>đừng khai bệnh cũ</b> "cho hồ sơ dễ được duyệt". Người mua nghe theo vì tưởng vô hại — đây là hiểu nhầm <b>nguy hiểm nhất</b>.</p>
-            <div class="hw-fal__meta">
-              <span class="hw-fal__k">Vì sao nguy</span>
-              <p class="hw-fal__v">Khai sai / giấu bệnh là lý do <b>TỪ CHỐI chi trả phổ biến nhất</b>. Lúc có chuyện, công ty rà lại hồ sơ và có quyền không trả.</p>
-              <span class="hw-fal__k">Sự thật</span>
-              <p class="hw-fal__v"><b>Tự tay khai, khai THẬT mọi thứ.</b> Thà bị tăng phí hoặc loại trừ một bệnh, còn hơn sau này không được trả đồng nào.</p>
-            </div>
-          </article>
+        <h3 class="hw-h3">Kiểm chứng bằng một phép tính nhỏ</h3>
+        <p class="hw-p">Gọi <b>V</b> = tiền trong quỹ đầu năm, <b>P</b> = phí đóng mỗi năm, <b>C</b> = phí bị múc ra mỗi năm (bảo vệ + quản lý), <b>r</b> = lãi ròng của quỹ. So một năm:</p>
+        <div class="ins-math">
+          <span class="c"># Đóng liên tục — cuối năm quỹ có:</span><br>
+          A_liên_tục = (V + <b>P</b> − C) × (1 + r)<br><br>
+          <span class="c"># Tạm dừng — cuối năm quỹ có:</span><br>
+          A_tạm_dừng = (V − C) × (1 + r)<br><br>
+          <span class="c"># Chênh lệch trong quỹ đúng bằng:</span><br>
+          A_liên_tục − A_tạm_dừng = <b>P × (1 + r)</b>
+        </div>
+        <p class="hw-p">Nhưng ở kịch bản tạm dừng, mình <b>còn giữ P trong túi</b>. Nếu mình đem P đi đầu tư ở mức lãi <b>r</b> y hệt, sau một năm túi mình có <b>P × (1 + r)</b> — <b>đúng bằng</b> phần quỹ bị thiếu. Tức là <b>hoà</b>: tiền vẫn sinh lời như nhau, chỉ khác chỗ nó nằm.</p>
+        <ul class="hw-ul">
+          <li>Nếu P <b>để không, không đầu tư</b> (lãi 0%) → mình <b>thiệt</b> đúng phần <b>P × r</b> mỗi năm. <b>Đây chính là kịch bản mình lo, và nó đúng.</b></li>
+          <li>Nếu P <b>đem đầu tư bằng hoặc hơn</b> lãi quỹ → gần như <b>hoà</b>, thậm chí <b>lời hơn</b> chút, vì tiền để ngoài <b>không phải trả phí quản lý quỹ</b> cho công ty.</li>
+        </ul>
+        <p class="hw-p">Vậy về <b>thuần đầu tư</b>, tạm dừng <b>không tự động là lỗ</b> — chỉ lỗ nếu khoản phí giữ lại nằm im. Cái thực sự làm tạm dừng <b>hại hơn</b> là mấy khoản <b>lệch</b> dưới đây, không nằm trong phép tính trên.</p>
 
-          <article class="hw-fal" id="f-lo-het">
-            <div class="hw-fal__top"><span class="hw-fal__no">HN 4</span><h3 class="hw-fal__name">Tưởng "cái gì cũng được đền"</h3><span class="wb-tag">nói quá phạm vi</span></div>
-            <p class="hw-fal__def">Tưởng mua rồi thì ốm gì, tai nạn gì cũng được trả. Thật ra có <b>loại trừ</b>, có <b>thời gian chờ</b>, <b>bệnh đã có sẵn</b> thường không được trả, và mỗi bệnh có <b>định nghĩa chặt</b>.</p>
-            <div class="hw-fal__meta">
-              <span class="hw-fal__k">Tư vấn hay nói</span>
-              <p class="hw-fal__v"><em>"Gói này lo trọn, an tâm cả đời."</em></p>
-              <span class="hw-fal__k">Sự thật</span>
-              <p class="hw-fal__v">Hỏi rõ: <b>loại trừ những gì, chờ bao lâu, định nghĩa bệnh thế nào</b>. Đọc phần "loại trừ" trong hợp đồng trước khi ký.</p>
-            </div>
-          </article>
-
-          <article class="hw-fal" id="f-con-so">
-            <div class="hw-fal__top"><span class="hw-fal__no">HN 5</span><h3 class="hw-fal__name">Tưởng "sau X năm chắc chắn có ngần này tỷ"</h3><span class="wb-tag">số đoán thành số chắc</span></div>
-            <p class="hw-fal__def">Bảng vẽ ra con số to lúc đáo hạn, người mua tưởng đó là <b>số chắc chắn nhận</b>. Thật ra chỉ một <b>phần nhỏ được đảm bảo</b>; phần lớn là <b>đoán theo lãi giả định</b>, có thể ít hơn nhiều.</p>
-            <div class="hw-fal__meta">
-              <span class="hw-fal__k">Tư vấn hay nói</span>
-              <p class="hw-fal__v"><em>"Tới năm đó con anh/chị có sẵn X tỷ học đại học."</em></p>
-              <span class="hw-fal__k">Sự thật</span>
-              <p class="hw-fal__v">Bắt tách rõ <b>"phần đảm bảo"</b> và <b>"phần không đảm bảo"</b>. Chỉ tin phần đảm bảo.</p>
-            </div>
-          </article>
-
-          <article class="hw-fal" id="f-nguoi-quen">
-            <div class="hw-fal__top"><span class="hw-fal__no">HN 6</span><h3 class="hw-fal__name">Tin vì "người quen / ngân hàng mời"</h3><span class="wb-tag">nể uy tín, không xét việc</span></div>
-            <p class="hw-fal__def">Mua vì nể người thân, hoặc nhân viên ngân hàng gợi ý (đôi khi làm như là <b>điều kiện để được vay</b>). Tưởng "chỗ uy tín thì chắc tốt cho mình".</p>
-            <div class="hw-fal__meta">
-              <span class="hw-fal__k">Vì sao dính</span>
-              <p class="hw-fal__v">Người giới thiệu thường <b>nhận hoa hồng</b>; giới thiệu ≠ hợp với nhu cầu của mình. Và <b>không ai được ép mua bảo hiểm để cấp khoản vay</b> — đó là trái quy định.</p>
-              <span class="hw-fal__k">Sự thật</span>
-              <p class="hw-fal__v">Tách <b>"ai mời"</b> khỏi <b>"có hợp với mình không"</b>. Tự xem nhu cầu và khả năng đóng dài hạn của mình.</p>
-            </div>
-          </article>
-
-          <article class="hw-fal" id="f-ky-gap">
-            <div class="hw-fal__top"><span class="hw-fal__no">HN 7</span><h3 class="hw-fal__name">Bị hối "ký nhanh kẻo hết ưu đãi"</h3><span class="wb-tag">tạo áp lực thời gian</span></div>
-            <p class="hw-fal__def">Tạo cảm giác gấp để mình ký trước khi kịp đọc kỹ. Thật ra bảo hiểm là <b>cam kết mấy chục năm</b> — không việc gì phải vội trong vài phút.</p>
-            <div class="hw-fal__meta">
-              <span class="hw-fal__k">Sự thật</span>
-              <p class="hw-fal__v">Có <b>21 ngày cân nhắc</b>: sau khi nhận hợp đồng, đọc kỹ trong 21 ngày, nếu thấy không ổn được <b>huỷ và lấy lại phí</b> (chỉ trừ ít chi phí khám). Cứ đọc kỹ rồi hãy quyết.</p>
-              <span class="hw-fal__k">Cách gỡ</span>
-              <p class="hw-fal__v">Xin toàn bộ giấy tờ + bảng minh hoạ mang về đọc / nhờ người am hiểu xem. <b>Đừng ký tại chỗ chỉ vì bị hối.</b></p>
-            </div>
-          </article>
-
+        <h3 class="hw-h3">Bốn khoản "lệch" khiến tạm dừng thường thiệt nhẹ</h3>
+        <div class="ins-two">
+          <div class="ins-idcard">
+            <p class="ins-idcard__name">Mất thưởng duy trì</p>
+            <p class="hw-fal__v" style="margin-top:6px">Thưởng "giữ hợp đồng" (gói A: 3,5% mỗi 5 năm) có điều kiện <b>đóng đủ phí &amp; không rút</b>. Tạm dừng có thể <b>mất suất thưởng</b> của chu kỳ đó — một khoản thật sự mất, không lấy lại.</p>
+          </div>
+          <div class="ins-idcard">
+            <p class="ins-idcard__name">Rủi ro canh sai → mất hiệu lực</p>
+            <p class="hw-fal__v" style="margin-top:6px">Phí bảo vệ <b>nhảy mỗi sinh nhật</b>, giá quỹ lên xuống, bảng kê lại có độ trễ. "Canh sắp âm thì đóng" <b>rất dễ trượt</b>, nhất là tuổi cao (Người A). Trượt → hợp đồng <b>huỷ</b> → mất cả bảo vệ.</p>
+          </div>
+          <div class="ins-idcard">
+            <p class="ins-idcard__name">Bán quỹ lúc chợ xuống (gói A)</p>
+            <p class="hw-fal__v" style="margin-top:6px">Nuôi phí bằng cách <b>bán đơn vị quỹ</b>. Nếu tạm dừng trúng năm cổ phiếu giảm, mình <b>bán rẻ</b> để trả phí — mất số đơn vị đó vĩnh viễn, đúng kiểu "bán đáy".</p>
+          </div>
+          <div class="ins-idcard">
+            <p class="ins-idcard__name">Phí bảo vệ có thể tăng thêm (gói B)</p>
+            <p class="hw-fal__v" style="margin-top:6px">Gói B trả "<b>số lớn hơn</b> giữa 1,2 tỷ và quỹ", nên phần công ty gánh = 1,2 tỷ − quỹ. Quỹ càng cạn → phần gánh càng lớn → <b>phí bảo vệ càng cao</b> → quỹ cạn nhanh hơn. Gói A (trả 410tr <b>cộng</b> quỹ) <b>không</b> bị hiệu ứng này.</p>
+          </div>
         </div>
 
         <div class="wb-alert wb-alert--plain" role="note">
           <div class="wb-alert__body">
-            <p class="wb-alert__title">Một câu để không bị "gài"</p>
-            <p class="wb-alert__msg">Cả bảy hiểu nhầm trên đều tan khi bạn hỏi đúng một câu: <b>"Chỗ này ghi ở dòng nào trong hợp đồng, và phần nào là ĐẢM BẢO, phần nào chỉ là DỰ TÍNH?"</b> Lời nói miệng không phải hợp đồng — chỉ những gì <b>in trong quy tắc &amp; điều khoản</b> mới có giá trị. Có gì mập mờ thì dùng 21 ngày cân nhắc để đọc lại cho kỹ.</p>
+            <p class="wb-alert__title">Chốt cho câu hỏi của mình</p>
+            <p class="wb-alert__msg"><b>Phần trực giác của mình đúng:</b> rút vốn khỏi quỹ để nuôi phí thì đúng là <b>mất phần lãi cộng dồn trên số vốn đó</b> — <b>nếu</b> khoản phí giữ lại để không. Nhưng nói cho đủ: <b>(1)</b> phí bảo vệ <b>vẫn phải trả dù đóng hay không</b> — nó không phải khoản lỗ thêm do tạm dừng, mà là giá của sự bảo vệ; <b>(2)</b> vì mình giữ lại khoản phí, nếu đem đầu tư ngang lãi quỹ thì <b>coi như hoà</b> về đầu tư; <b>(3)</b> cái làm tạm dừng thường <b>thiệt nhẹ</b> là bốn khoản lệch ở trên — mất thưởng, rủi ro canh sai gây huỷ, bán quỹ lúc đáy, và (với gói B) phí bảo vệ tăng khi quỹ cạn. Tóm lại: tạm-dừng-rồi-đóng-lại <b>thường hơi hại hơn</b> đóng liên tục, và <b>hại nhiều hơn ở gói A</b> (tuổi cao, cổ phiếu, dễ canh trượt) hơn gói B. Chỉ nên làm khi <b>thật sự kẹt tiền</b>, hoặc có <b>chỗ dùng tiền rõ ràng tốt hơn</b> và mình <b>chủ động theo dõi</b> để không bị huỷ.</p>
           </div>
         </div>
       </section>
 
-      <!-- ══════════════════ PHẦN 2 ══════════════════ -->
-      <div class="hw-part-head" id="g2">
-        <p class="kicker">Phần 2 · nhìn cạnh nhau</p>
-        <h2>Hai loại gói, hai kiểu khác nhau — nên câu "10 năm" sai theo hai cách</h2>
-        <p>Trước khi nói được gì, cần thấy đây là <b>hai loại khác nhau</b>. Chỗ khác này quyết định vì sao ngừng đóng sớm ở gói Người A nguy hiểm hơn hẳn gói Người B.</p>
+      <!-- ══════════════════ PHẦN 6 — KHI CÓ CHUYỆN ══════════════════ -->
+      <div class="hw-part-head" id="khi-co-chuyen">
+        <p class="kicker">Phần 6 · làm theo từng bước</p>
+        <h2>Khi có chuyện thật xảy ra — làm gì để lấy được tiền</h2>
+        <p>Mỗi trường hợp là một chuỗi: <b>báo ai · cần giấy gì · nộp trong bao lâu · bao lâu nhận tiền</b>. Cuối phần có 5 điều luôn đúng.</p>
       </div>
 
-      <section id="g2-body">
-        <div class="wb-grid wb-grid--2" style="gap:14px">
-          <div class="ins-idcard">
-            <p class="ins-idcard__name">Người A — gói "để tiền vào quỹ cổ phiếu"</p>
-            <p class="ins-idcard__who">57 tuổi · loại <i>liên kết đơn vị</i> <span class="wb-tag wb-tag--sm wb-tag--warning">tiền vào quỹ cổ phiếu</span></p>
-            <dl class="ins-dl">
-              <dt>Được bảo vệ</dt><dd>410 triệu</dd>
-              <dt>Đóng mỗi năm</dt><dd>≈ 30 triệu</dd>
-              <dt>Ghi đóng tới</dt><dd>100 tuổi</dd>
-              <dt>Bắt buộc đóng</dt><dd>5 năm đầu</dd>
-              <dt>Tiền để đâu</dt><dd>100% cổ phiếu</dd>
-              <dt>Có hứa lãi?</dt><dd>Không</dd>
-            </dl>
-          </div>
-          <div class="ins-idcard">
-            <p class="ins-idcard__name">Người B — gói "có hứa lãi tối thiểu"</p>
-            <p class="ins-idcard__who">19 tuổi · loại <i>liên kết chung</i> <span class="wb-tag wb-tag--sm wb-tag--info">có hứa lãi tối thiểu</span></p>
-            <dl class="ins-dl">
-              <dt>Được bảo vệ</dt><dd>1,2 tỷ</dd>
-              <dt>Đóng mỗi năm</dt><dd>≈ 25 triệu (cả gói)</dd>
-              <dt>Ghi đóng tới</dt><dd>100 tuổi</dd>
-              <dt>Bắt buộc đóng</dt><dd>4 năm đầu</dd>
-              <dt>Tiền để đâu</dt><dd>Quỹ chung</dd>
-              <dt>Có hứa lãi?</dt><dd>Có (5% → 2%)</dd>
-            </dl>
-          </div>
-        </div>
-
-        <h3 class="hw-h3">Vì sao chỗ khác này quan trọng cho câu "10 năm"</h3>
-        <div class="hw-tw">
-          <table class="wb-table wb-table--compact">
-            <thead><tr><th>Điều</th><th>Người A</th><th>Người B</th><th>Nên nếu ngừng đóng sớm…</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><b>Tuổi</b></td>
-                <td>Lớn tuổi (57)</td>
-                <td>Trẻ (19)</td>
-                <td>Phí bảo vệ của Người A tăng nhanh và đắt; của Người B thấp và về gần 0 khi ~67 tuổi</td>
-              </tr>
-              <tr>
-                <td><b>Tiền để đâu</b></td>
-                <td>Toàn cổ phiếu, <span class="wb-tag wb-tag--sm wb-tag--danger">dễ lên xuống</span></td>
-                <td>Quỹ chung, có sàn</td>
-                <td>Quỹ Người A có thể lỗ những năm chợ xuống; của Người B có lãi tối thiểu đỡ lưng</td>
-              </tr>
-              <tr>
-                <td><b>Có hứa lãi tối thiểu?</b></td>
-                <td>Không</td>
-                <td>Có</td>
-                <td>Với Người A, năm xấu không có đáy; với Người B thì tính được đáy</td>
-              </tr>
-              <tr>
-                <td><b>Có "lá chắn" giữ hợp đồng?</b></td>
-                <td>Chỉ 5 năm đầu</td>
-                <td>Có thêm: đóng đủ 4 năm &amp; chưa rút tiền → hợp đồng vẫn được giữ, phần thiếu ghi thành "nợ" không tính lãi</td>
-                <td>Gói Người B có một lớp che thêm; gói Người A không có lớp này sau năm 5</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="hw-p"><b>Tóm lại:</b> với <b>gói kiểu Người A</b>, "đóng 10 năm rồi thôi" là <b>rủi ro cao</b> — người được bảo vệ đã lớn tuổi, phí leo dốc, quỹ toàn cổ phiếu và không có đáy. Với <b>gói kiểu Người B</b>, an toàn hơn nhiều (còn trẻ, phí về gần 0 khi ~67 tuổi, có hứa lãi) — <b>nhưng</b> ngay bảng tính cũng cho thấy: nếu chỉ đóng 15 năm rồi ngừng mà lãi chỉ đạt mức tối thiểu, hợp đồng vẫn <b>tự huỷ lúc ~67 tuổi</b>. Nên với cả hai, "đóng 10 năm" không phải một điểm dừng chắc chắn an toàn.</p>
-      </section>
-
-      <!-- ══════════════════ PHẦN 3 ══════════════════ -->
-      <div class="hw-part-head" id="g3">
-        <p class="kicker">Phần 3 · để tra cứu</p>
-        <h2>Mỗi người được gì: từng trường hợp, từng số tiền</h2>
-        <p>Phần này để <b>tra cứu khi cần</b>. Mỗi quyền lợi kèm số tiền và điều kiện. Thẻ màu cho biết đó là khoản <b>chắc chắn</b> hay khoản <b>tuỳ tiền trong quỹ</b> (không chắc trước).</p>
-      </div>
-
-      <section id="g3-body">
-        <h3 class="hw-h3" id="s-ql-pru">Gói của Người A cho những gì</h3>
-        <div class="hw-tw">
-          <table class="wb-table wb-table--compact">
-            <thead><tr><th>Khi xảy ra</th><th>Được trả</th><th>Điều cần nhớ</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><b>Qua đời hoặc tàn tật nặng vĩnh viễn</b></td>
-                <td><b>410 triệu + toàn bộ tiền trong quỹ</b> <span class="wb-tag wb-tag--sm">một phần chắc chắn</span></td>
-                <td>Trước 70 tuổi thì cộng như trên. Sau 70 tuổi có thể chuyển sang <b>lấy số lớn hơn</b> giữa 410 triệu và tiền trong quỹ. Phần tàn tật chỉ tính trước 80 tuổi.</td>
-              </tr>
-              <tr>
-                <td>Sống tới hết hợp đồng (100 tuổi)</td>
-                <td>Toàn bộ tiền trong quỹ <span class="wb-tag wb-tag--sm wb-tag--warning">không chắc trước</span></td>
-                <td>Chỉ là tiền còn trong quỹ lúc đó, không cộng thêm 410 triệu.</td>
-              </tr>
-              <tr>
-                <td>Tai nạn (gói kèm thêm)</td>
-                <td>100tr (tai nạn) · 200tr (trên xe buýt/tàu) · 300tr (trên máy bay)</td>
-                <td><span class="wb-tag wb-tag--sm wb-tag--danger">Lưu ý</span> Gói tai nạn kèm thêm kiểu này thường <b>hết hạn khi người được bảo vệ 65 tuổi</b>. Sau mốc đó không còn khoản tai nạn này — nhớ kiểm tra ngày hết hạn.</td>
-              </tr>
-              <tr>
-                <td>Thưởng vì giữ hợp đồng lâu</td>
-                <td>Một khoản nhỏ, xét mỗi 5 năm</td>
-                <td>Điều kiện: đóng đủ tiền &amp; không rút. <b>Ngừng đóng có thể mất khoản này.</b></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <h3 class="hw-h3" id="s-ql-aia">Gói của Người B cho những gì</h3>
-        <p class="hw-p">Cái này "nhiều tầng" hơn: một phần chính + bốn gói kèm thêm. Phần chính:</p>
-        <div class="hw-tw">
-          <table class="wb-table wb-table--compact">
-            <thead><tr><th>Khi xảy ra</th><th>Được trả</th><th>Điều cần nhớ</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><b>Qua đời hoặc tàn tật nặng vĩnh viễn</b></td>
-                <td><b>Lấy số lớn hơn</b> giữa 1,2 tỷ và tiền trong quỹ <span class="wb-tag wb-tag--sm">một phần chắc chắn</span></td>
-                <td>Loại này trả số lớn hơn, không cộng dồn.</td>
-              </tr>
-              <tr>
-                <td>Qua đời <b>vì tai nạn</b></td>
-                <td>+ thêm 1,2 tỷ nữa → tổng <b>2,4 tỷ</b></td>
-                <td>Trước 65 tuổi, đã đóng đủ tiền đúng hạn.</td>
-              </tr>
-              <tr>
-                <td>Bị <b>ung thư</b></td>
-                <td>Ứng trước <b>300 triệu</b></td>
-                <td>Trước 65 tuổi; phải qua 90 ngày đầu; sau sẽ trừ vào khoản qua đời.</td>
-              </tr>
-              <tr>
-                <td>Không hút thuốc</td>
-                <td>+ thêm 10% khi qua đời</td>
-                <td>Nếu được xác định không hút thuốc.</td>
-              </tr>
-              <tr>
-                <td>Sống tới 100 tuổi &amp; thưởng giữ hợp đồng</td>
-                <td>Toàn bộ tiền trong quỹ + thưởng năm 10/15/20 <span class="wb-tag wb-tag--sm wb-tag--warning">tuỳ quỹ</span></td>
-                <td>Thưởng cần đóng đủ các năm trước.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="hw-p">Bốn gói kèm thêm của Người B (số tiền tối đa):</p>
-        <div class="hw-tw">
-          <table class="wb-table wb-table--compact">
-            <thead><tr><th>Gói</th><th>Trả</th><th>Điều kiện / giới hạn</th></tr></thead>
-            <tbody>
-              <tr>
-                <td><b>Bệnh hiểm nghèo</b> (tối đa 200tr)</td>
-                <td>Nhẹ: 60tr · Vừa: 120tr (+ khỏi đóng phí gói này) · Nặng: 200tr</td>
-                <td>Chia 3 mức bệnh; cộng lại không quá 200tr; phải qua 90 ngày đầu.</td>
-              </tr>
-              <tr>
-                <td><b>Tai nạn</b> (tối đa 200tr)</td>
-                <td>Tới 200tr theo mức thương tật; <b>gấp đôi (400tr)</b> nếu tai nạn trên xe công cộng / thang máy / cháy nhà</td>
-                <td>Có bảng chia % cho từng loại thương tật.</td>
-              </tr>
-              <tr>
-                <td><b>Trợ cấp nằm viện</b> (400k/ngày)</td>
-                <td>400k/ngày · phòng cấp cứu đặc biệt 800k/ngày · bệnh viện huyện 200k/ngày</td>
-                <td>Tối đa 365 ngày/lần nằm; cả đời tối đa 1.000 ngày; phải qua 30 ngày đầu.</td>
-              </tr>
-              <tr>
-                <td><b>Trả viện phí</b> — gói cơ bản, nằm viện, ở Việt Nam (tối đa 200tr/năm)</td>
-                <td>Viện phí khi nằm viện tới 200tr/năm; có mổ ≤50tr/lần; không mổ ≤20tr/lần</td>
-                <td><b>Chỉ tính khi nằm viện</b> (không tính khám ngoại trú, không nha khoa); phải qua 30 ngày đến 12 tháng đầu tuỳ bệnh.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ══════════════════ PHẦN 4 ══════════════════ -->
-      <div class="hw-part-head" id="g4">
-        <p class="kicker">Phần 4 · làm theo từng bước</p>
-        <h2>Khi có chuyện thật xảy ra — phải làm gì để lấy được tiền</h2>
-        <p>Đây là phần cần khi <b>chuyện thật xảy ra</b>. Mỗi trường hợp là một chuỗi việc: <b>báo ai · cần giấy gì · nộp trong bao lâu · bao lâu nhận tiền</b>. Cuối phần có <b>5 điều luôn đúng</b>. Có cả trường hợp muốn ngừng đóng.</p>
-      </div>
-
-      <section id="g4-body">
-
-        <h3 class="hw-h3" id="s-sk-tuvong">Trường hợp A — Qua đời hoặc tàn tật nặng vĩnh viễn</h3>
-        <p class="hw-p">Đúng cho cả hai loại gói. Người đứng ra xin tiền là <b>người được ghi nhận tiền</b> (hoặc người thừa kế).</p>
+      <section id="s-khi-co-chuyen">
+        <h3 class="hw-h3">Qua đời hoặc tàn tật nặng vĩnh viễn (cả hai gói)</h3>
         <ol class="wb-steps">
           <li class="wb-steps__item is-done">
             <span class="wb-steps__marker">1</span>
             <div class="wb-steps__content">
               <p class="wb-steps__title">Gọi báo công ty sớm</p>
-              <p class="wb-steps__desc">Gọi tổng đài công ty (số in trên hợp đồng) để được chỉ cách và lấy tờ "xin nhận quyền lợi".</p>
+              <p class="wb-steps__desc">Gọi tổng đài (số in trên hợp đồng) để được hướng dẫn và lấy tờ "yêu cầu giải quyết quyền lợi".</p>
             </div>
           </li>
           <li class="wb-steps__item is-done">
             <span class="wb-steps__marker">2</span>
             <div class="wb-steps__content">
-              <p class="wb-steps__title">Gom giấy tờ</p>
-              <p class="wb-steps__desc">Tờ xin nhận; giấy chứng tử (nếu qua đời); giấy tờ bệnh viện; giấy tờ tai nạn (nếu do tai nạn); giấy tờ chứng minh mình là người được nhận tiền + giấy tuỳ thân. Nếu là tàn tật: thêm <b>giấy giám định y khoa cấp tỉnh trở lên</b>.</p>
+              <p class="wb-steps__title">Gom giấy tờ gốc</p>
+              <p class="wb-steps__desc">Tờ yêu cầu; giấy chứng tử (nếu qua đời); hồ sơ bệnh viện; giấy tờ tai nạn (nếu do tai nạn); giấy chứng minh là người được nhận + giấy tuỳ thân. Nếu tàn tật: thêm <b>giám định y khoa cấp tỉnh trở lên</b>.</p>
             </div>
           </li>
           <li class="wb-steps__item is-active">
             <span class="wb-steps__marker">3</span>
             <div class="wb-steps__content">
               <p class="wb-steps__title">Nộp đúng hẹn</p>
-              <p class="wb-steps__desc"><b>Trong vòng 12 tháng</b> kể từ ngày xảy ra chuyện. Nộp muộn có thể bị từ chối.</p>
+              <p class="wb-steps__desc"><b>Trong 12 tháng</b> kể từ ngày xảy ra chuyện. Nộp muộn có thể bị từ chối.</p>
             </div>
           </li>
           <li class="wb-steps__item is-todo">
             <span class="wb-steps__marker">4</span>
             <div class="wb-steps__content">
               <p class="wb-steps__title">Nhận tiền</p>
-              <p class="wb-steps__desc">Công ty thường trả trong <b>30 ngày</b> kể từ khi nhận đủ giấy tờ. Trả chậm thì phải trả thêm lãi.</p>
+              <p class="wb-steps__desc">Thường trong <b>30 ngày</b> kể từ khi nhận đủ giấy tờ hợp lệ. Trả chậm thì công ty phải trả thêm lãi.</p>
             </div>
           </li>
         </ol>
-        <p class="hw-p"><em>Bẫy cần tránh:</em> nếu là <b>tự tử trong 2 năm đầu</b>, hoặc <b>khai sai chuyện sức khoẻ lúc ký</b>, công ty có quyền chỉ trả lại tiền trong quỹ chứ không trả khoản bảo vệ. Vì vậy, khai thật lúc ký là điều kiện sống còn để sau này được trả.</p>
+        <p class="hw-p"><em>Bẫy cần tránh:</em> <b>tự tử trong 2 năm đầu</b> hoặc <b>khai sai sức khoẻ lúc ký</b> → công ty có quyền chỉ trả lại tiền trong quỹ, không trả khoản bảo vệ. <b>Khai thật lúc ký là điều kiện sống còn.</b></p>
 
-        <h3 class="hw-h3" id="s-sk-benh">Trường hợp B — Mắc bệnh hiểm nghèo (gói kèm thêm của Người B)</h3>
-        <ol class="wb-steps">
-          <li class="wb-steps__item is-done">
-            <span class="wb-steps__marker">1</span>
-            <div class="wb-steps__content">
-              <p class="wb-steps__title">Lấy giấy chẩn đoán rõ ràng</p>
-              <p class="wb-steps__desc">Cần giấy tờ bệnh viện xác định bệnh và mức độ. Trả theo 3 mức: 60tr / 120tr / 200tr. Phải sống ít nhất 14 ngày sau khi chẩn đoán.</p>
-            </div>
-          </li>
-          <li class="wb-steps__item is-active">
-            <span class="wb-steps__marker">2</span>
-            <div class="wb-steps__content">
-              <p class="wb-steps__title">Nộp trong 12 tháng</p>
-              <p class="wb-steps__desc">Kể từ ngày chẩn đoán. Nhớ: <b>90 ngày đầu hợp đồng</b> mà mắc bệnh thì chưa được trả.</p>
-            </div>
-          </li>
-          <li class="wb-steps__item is-todo">
-            <span class="wb-steps__marker">3</span>
-            <div class="wb-steps__content">
-              <p class="wb-steps__title">Nhận tiền trong 60 ngày</p>
-              <p class="wb-steps__desc">Nếu là <b>ung thư</b>, còn được ứng trước 300 triệu từ phần chính (khoản riêng, xem Phần 3).</p>
-            </div>
-          </li>
-        </ol>
-
-        <h3 class="hw-h3" id="s-sk-namvien">Trường hợp C — Nằm viện (gói kèm thêm của Người B)</h3>
+        <h3 class="hw-h3">Các trường hợp riêng của Người B</h3>
         <ul class="hw-ul">
-          <li><b>Trợ cấp nằm viện</b> (400k/ngày): <b>báo trong 30 ngày</b> kể từ ngày vào viện; nộp giấy trong 30 ngày sau khi ra viện — cần <b>hoá đơn gốc</b>, giấy ra viện, tóm tắt bệnh án.</li>
-          <li><b>Trả viện phí</b> (tới 200tr/năm): giữ <b>toàn bộ hoá đơn gốc</b>, đơn thuốc, kết quả xét nghiệm, giấy ra viện; nộp trong <b>90 ngày</b> sau khi ra viện; công ty trả trong khoảng 45 ngày làm việc.</li>
-          <li><em>Mẹo:</em> khi vào viện, báo công ty ngay và hỏi bệnh viện có <b>bảo lãnh viện phí</b> với công ty bảo hiểm không — nếu có thì khỏi phải ứng tiền trước.</li>
+          <li><b>Ung thư / bệnh hiểm nghèo:</b> lấy giấy chẩn đoán rõ mức độ; nộp trong 12 tháng; nhớ <b>90 ngày đầu</b> mắc bệnh thì chưa được trả. Ung thư còn được <b>ứng trước 300 triệu</b> từ phần chính.</li>
+          <li><b>Nằm viện (thẻ viện phí + trợ cấp):</b> giữ <b>toàn bộ hoá đơn gốc</b>, đơn thuốc, giấy ra viện; báo trong 30 ngày, nộp trong ~90 ngày sau ra viện. Hỏi bệnh viện có <b>bảo lãnh viện phí</b> với AIA không để khỏi ứng tiền.</li>
+          <li><b>Tai nạn:</b> trả tới 200tr theo mức thương tật (gấp đôi 400tr nếu trên xe công cộng / thang máy / cháy nhà công cộng). Luôn giữ <b>biên bản công an / khám nghiệm hiện trường</b> — đây là giấy hay thiếu nhất.</li>
         </ul>
-
-        <h3 class="hw-h3" id="s-sk-tainan">Trường hợp D — Tai nạn</h3>
-        <ul class="hw-ul">
-          <li><b>Gói Người A:</b> trả 100tr / 200tr / 300tr tuỳ hoàn cảnh — <b>nhưng gói tai nạn kèm thêm thường chỉ tới khi 65 tuổi</b>. Cần giấy tờ tai nạn + giấy bệnh viện; nộp trong 12 tháng.</li>
-          <li><b>Gói Người B:</b> trả tới 200tr (gấp đôi 400tr nếu trên xe công cộng / thang máy / cháy nhà). Cần giấy tờ tai nạn + giấy bệnh viện; nộp trong <b>24 tháng</b>.</li>
-          <li>Luôn giữ <b>biên bản công an / khám nghiệm hiện trường</b> nếu có — đây là giấy hay bị thiếu nhất khi xin tiền tai nạn.</li>
-        </ul>
-
-        <h3 class="hw-h3" id="s-sk-ngungdong">Trường hợp E — Muốn (hoặc buộc phải) ngừng đóng</h3>
-        <p class="hw-p">Đây đúng là trường hợp mà câu "10 năm" nói tới. Chuyện sẽ diễn ra thế này:</p>
-        <ol class="wb-steps">
-          <li class="wb-steps__item is-active">
-            <span class="wb-steps__marker">1</span>
-            <div class="wb-steps__content">
-              <p class="wb-steps__title">Tới hạn không đóng → được thêm 60 ngày</p>
-              <p class="wb-steps__desc">Trong 60 ngày này, bảo vệ vẫn còn; công ty vẫn múc phí từ quỹ ra.</p>
-            </div>
-          </li>
-          <li class="wb-steps__item is-todo">
-            <span class="wb-steps__marker">2</span>
-            <div class="wb-steps__content">
-              <p class="wb-steps__title">Quỹ tự trả phí — chừng nào còn đủ</p>
-              <p class="wb-steps__desc">Sau các năm bắt buộc, hợp đồng lấy tiền trong quỹ trả phí mỗi tháng. Gói Người B có thêm lá chắn (nếu đã đóng đủ 4 năm &amp; chưa rút).</p>
-            </div>
-          </li>
-          <li class="wb-steps__item is-todo">
-            <span class="wb-steps__marker"><span class="wb-ico">priority_high</span></span>
-            <div class="wb-steps__content">
-              <p class="wb-steps__title">Quỹ cạn → hợp đồng tự huỷ → mất bảo vệ</p>
-              <p class="wb-steps__desc">Khi quỹ không đủ trả phí, hết 60 ngày là <b>mất hiệu lực</b>. Có bảng tính cho thấy: nếu ngừng ở năm 15 và lãi chỉ ở mức tối thiểu, điều này xảy ra lúc ~<b>67 tuổi</b>.</p>
-            </div>
-          </li>
-          <li class="wb-steps__item is-todo">
-            <span class="wb-steps__marker">4</span>
-            <div class="wb-steps__content">
-              <p class="wb-steps__title">Còn cửa cứu trong 24 tháng</p>
-              <p class="wb-steps__desc">Có thể xin khôi phục trong 24 tháng kể từ ngày mất hiệu lực (đóng bù, có thể phải khám lại sức khoẻ). Quá 24 tháng thì hợp đồng mất hẳn.</p>
-            </div>
-          </li>
-        </ol>
 
         <div class="wb-alert wb-alert--plain" role="note">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Năm điều luôn đúng khi xin tiền bảo hiểm</p>
-            <p class="wb-alert__msg"><b>(1)</b> Báo công ty <b>càng sớm càng tốt</b>. <b>(2)</b> Giữ <b>hoá đơn &amp; giấy tờ gốc</b> — bản photo thường không đủ. <b>(3)</b> Nộp <b>đúng hẹn</b> (đa số 12 tháng; nằm viện báo trong 30 ngày). <b>(4)</b> Khai <b>thật</b> — khai sai lúc ký là lý do bị từ chối phổ biến nhất. <b>(5)</b> Nếu bị từ chối, xin <b>giấy nói rõ lý do và dựa vào điều nào</b>, rồi so lại với hợp đồng.</p>
+            <p class="wb-alert__msg"><b>(1)</b> Báo công ty <b>càng sớm càng tốt</b>. <b>(2)</b> Giữ <b>hoá đơn &amp; giấy tờ gốc</b>. <b>(3)</b> Nộp <b>đúng hẹn</b> (đa số 12 tháng; nằm viện báo trong 30 ngày). <b>(4)</b> Khai <b>thật</b> lúc ký — khai sai là lý do bị từ chối phổ biến nhất. <b>(5)</b> Nếu bị từ chối, xin <b>giấy nêu rõ lý do &amp; dựa vào điều khoản nào</b>, rồi soi lại hợp đồng.</p>
           </div>
         </div>
       </section>
 
-      <!-- ══════════════════ PHẦN 5 ══════════════════ -->
-      <div class="hw-part-head" id="g5">
-        <p class="kicker">Phần 5 · nên làm gì</p>
-        <h2>Nên làm gì bây giờ: hỏi đúng câu, kiểm tra đúng số</h2>
-        <p>Đây <b>không phải</b> lời khuyên mua/bán/huỷ. Đây là mấy câu hỏi và con số giúp tự quyết định dựa trên sự thật, thay vì dựa vào một câu nói.</p>
+      <!-- ══════════════════ PHẦN 7 — NÊN HỎI GÌ ══════════════════ -->
+      <div class="hw-part-head" id="nen-lam">
+        <p class="kicker">Phần 7 · nên làm gì bây giờ</p>
+        <h2>Nên hỏi công ty gì, và tránh mấy cái "gài" nào</h2>
+        <p>Đây <b>không phải</b> lời khuyên mua/giữ/huỷ. Là mấy câu hỏi và mấy cái bẫy để tự quyết dựa trên sự thật, thay vì dựa vào một câu nói.</p>
       </div>
 
-      <section id="g5-body">
-        <h3 class="hw-h3" id="s-hanhdong">Câu nên hỏi công ty (nên hỏi bằng tin nhắn/email để có bằng chứng)</h3>
+      <section id="s-nen-lam">
+        <h3 class="hw-h3">Câu nên hỏi công ty (hỏi bằng tin nhắn/email để có bằng chứng)</h3>
         <ul class="hw-ul">
-          <li>Xin <b>tờ tính lại theo tiền trong quỹ HIỆN NAY</b> — không phải tờ hồi mới ký.</li>
-          <li><b>"Nếu tôi ngừng đóng ở năm thứ X, ở mức lãi thấp nhất, hợp đồng còn sống tới năm nào?"</b> Câu này buộc rời khỏi kịch bản đẹp.</li>
-          <li>Bây giờ trong quỹ còn bao nhiêu tiền, và nếu huỷ hôm nay thì lấy lại được bao nhiêu.</li>
-          <li>Gói tai nạn kèm thêm còn hiệu lực tới năm nào, sau đó còn khoản tai nạn nào không.</li>
-          <li>Đã đóng đủ số năm bắt buộc chưa, và đã từng rút tiền chưa (để biết "lá chắn" giữ hợp đồng còn hay không).</li>
+          <li>Xin <b>bảng tính lại theo tiền trong quỹ HIỆN NAY</b> — không phải bảng hồi mới ký.</li>
+          <li><b>"Nếu tôi ngừng đóng ở năm X, ở mức lãi thấp nhất, hợp đồng còn sống tới năm nào?"</b> — buộc rời khỏi kịch bản đẹp.</li>
+          <li>Hiện trong quỹ còn bao nhiêu, và <b>nếu huỷ hôm nay lấy lại được bao nhiêu</b> (giá trị hoàn lại).</li>
+          <li>Gói tai nạn của Người A còn hiệu lực tới năm nào (đang sắp hết hạn 8 năm).</li>
+          <li>Đã đóng đủ số năm bắt buộc chưa, đã từng rút tiền chưa (để biết còn được thưởng duy trì không).</li>
         </ul>
 
-        <h3 class="hw-h3">Điều nên tự biết (là sự thật, không phải lời khuyên)</h3>
-        <ul class="hw-ul">
-          <li>Nếu tiền đang để <b>toàn cổ phiếu</b> — theo cách công ty phân loại là <b>rủi ro cao</b>. Hợp đồng thường cho phép <b>đổi sang quỹ an toàn hơn, miễn phí</b> nếu muốn; đây là <b>quyền có sẵn</b>, còn có nên đổi hay không là quyết định của mình (nên hỏi một người am hiểu).</li>
-          <li>Thay vì hỏi "10 năm là đủ chưa", hãy hỏi câu đúng hơn: <b>"quỹ cần lớn tới mức nào để tự trả phí tới 100 tuổi"</b> — chỉ tờ tính mới nhất mới trả lời được.</li>
-          <li>Đừng ngừng đóng chỉ vì một câu nói miệng. Mọi thay đổi (giảm đóng, ngừng đóng, rút tiền, đổi quỹ) nên dựa trên tờ tính mới + giấy xác nhận của công ty.</li>
-        </ul>
+        <h3 class="hw-h3">Bốn cái "gài" hay gặp — và sự thật</h3>
+        <div class="hw-fal-list">
+          <article class="hw-fal">
+            <div class="hw-fal__top"><span class="hw-fal__no">1</span><h3 class="hw-fal__name">"Cứ khai không cho dễ đậu hồ sơ"</h3><span class="wb-tag wb-tag--danger">nguy hiểm nhất</span></div>
+            <p class="hw-fal__def">Được khuyên <b>giấu bệnh cũ</b> cho hồ sơ dễ duyệt. Đây là lý do <b>bị từ chối chi trả phổ biến nhất</b> về sau. <b>Tự tay khai, khai thật mọi thứ</b> — thà bị tăng phí hoặc loại trừ một bệnh, còn hơn sau này không được trả đồng nào.</p>
+          </article>
+          <article class="hw-fal">
+            <div class="hw-fal__top"><span class="hw-fal__no">2</span><h3 class="hw-fal__name">"Vừa bảo vệ vừa tiết kiệm, lời hơn ngân hàng"</h3><span class="wb-tag">tráo mục đích</span></div>
+            <p class="hw-fal__def">Đây <b>trước hết là mua bảo vệ</b>; phần đầu tư bị trừ phí nặng mấy năm đầu (Phần 3), nên vài năm đầu tiền trong quỹ thường <b>ÍT hơn</b> tiền đã đóng. Muốn lời cao &amp; rút linh hoạt thì gửi tiết kiệm / quỹ riêng hợp hơn.</p>
+          </article>
+          <article class="hw-fal">
+            <div class="hw-fal__top"><span class="hw-fal__no">3</span><h3 class="hw-fal__name">"Sau X năm chắc chắn có ngần này tỷ"</h3><span class="wb-tag">số đoán thành số chắc</span></div>
+            <p class="hw-fal__def">Bảng vẽ số to lúc đáo hạn, tưởng là số chắc. Thật ra chỉ <b>phần "cam kết"</b> mới đảm bảo; phần còn lại là <b>đoán theo lãi giả định</b>. Luôn bắt tách rõ <b>"phần đảm bảo" và "phần dự tính"</b>, chỉ tin phần đảm bảo.</p>
+          </article>
+          <article class="hw-fal">
+            <div class="hw-fal__top"><span class="hw-fal__no">4</span><h3 class="hw-fal__name">"Ký nhanh kẻo hết ưu đãi"</h3><span class="wb-tag">ép thời gian</span></div>
+            <p class="hw-fal__def">Bảo hiểm là cam kết mấy chục năm — không việc gì phải vội. Có <b>21 ngày cân nhắc</b>: nhận hợp đồng rồi đọc kỹ, thấy không ổn thì <b>huỷ và lấy lại phí</b> (chỉ trừ ít chi phí khám). Xin giấy tờ mang về đọc / nhờ người am hiểu xem trước.</p>
+          </article>
+        </div>
       </section>
 
       <!-- ══════════════════ KẾT ══════════════════ -->
       <div class="hw-part-head" id="ket">
         <p class="kicker">Kết</p>
         <h2>Sáu điều nhớ lấy</h2>
-        <p>Nếu quên hết mọi thứ ở trên, sáu điều này vẫn đủ để không bị một câu nói dẫn đi sai.</p>
+        <p>Quên hết mọi thứ ở trên thì sáu điều này vẫn đủ dùng.</p>
       </div>
       <section id="s-ket">
         <div class="wb-grid wb-grid--2">
           <div class="wb-card wb-card--pad">
-            <p class="wb-media__title">1 · "10 năm" không có trong hợp đồng</p>
-            <p class="wb-media__text">Giấy tờ ghi đóng tới khi người được bảo vệ 100 tuổi. Điều bắt buộc duy nhất là <b>4–5 năm</b> đầu.</p>
+            <p class="wb-media__title">1 · Hai gói, hai mục tiêu khác nhau</p>
+            <p class="wb-media__text">A (Prudential, cổ phiếu, không hứa lãi) nghiêng về <b>đầu tư</b>; B (AIA, có lãi cam kết) nghiêng về <b>bảo vệ trọn đời có tích luỹ</b>. Đừng so trực tiếp "cái nào lời hơn".</p>
           </div>
           <div class="wb-card wb-card--pad">
-            <p class="wb-media__title">2 · "Được ngừng" khác "đã xong"</p>
-            <p class="wb-media__text">Được tạm ngừng đóng là thật, nhưng <b>kèm điều kiện</b>: quỹ phải luôn đủ trả phí. Biến "có thể, nếu…" thành lời hứa chắc nịch — đó là nói lập lờ.</p>
+            <p class="wb-media__title">2 · Tiền không "nằm im"</p>
+            <p class="wb-media__text">Phí ban đầu năm 1 của gói A trừ tới <b>85%</b> — chỉ ~15% vào quỹ. Vài năm đầu tiền trong quỹ ÍT hơn tiền đóng là bình thường; phần chênh là <b>tiền mua bảo vệ</b>.</p>
           </div>
           <div class="wb-card wb-card--pad">
-            <p class="wb-media__title">3 · Phí bảo vệ càng già càng đắt</p>
-            <p class="wb-media__text">Với gói Người A, tới 77 tuổi phí bảo vệ <b>≈ 30 triệu — bằng cả năm đóng</b>, và còn tăng. Đó là "lỗ thủng" to dần mà quỹ phải một mình gánh nếu ngừng đóng.</p>
+            <p class="wb-media__title">3 · Chỉ tin "phần cam kết"</p>
+            <p class="wb-media__text">Gói B có bảng cam kết (10 năm ≈ 155,7tr). Gói A <b>không có số chắc chắn</b>. Lãi 5% chỉ là dự tính — luôn hỏi mức thấp nhất trước.</p>
           </div>
           <div class="wb-card wb-card--pad">
-            <p class="wb-media__title">4 · Con số đoán ≠ chắc chắn</p>
-            <p class="wb-media__text">Lãi 6–9% chỉ là đoán. Quỹ cổ phiếu không ai hứa lãi. Luôn hỏi trường hợp lãi <b>thấp nhất</b> trước khi tin con số đẹp.</p>
+            <p class="wb-media__title">4 · "10 năm" không có trong hợp đồng</p>
+            <p class="wb-media__text">Giấy ghi đóng tới ~99–100 tuổi; bắt buộc thật là <b>4–5 năm</b> đầu. "Được ngừng" khác "đã xong" — ngừng được chỉ khi quỹ luôn đủ trả phí.</p>
           </div>
           <div class="wb-card wb-card--pad">
-            <p class="wb-media__title">5 · Khi có chuyện: báo sớm, giữ giấy gốc, nộp đúng hẹn</p>
-            <p class="wb-media__text">Đa số phải xin trong <b>12 tháng</b>; nằm viện báo trong <b>30 ngày</b>. Khai thật lúc ký là điều kiện để sau này được trả.</p>
+            <p class="wb-media__title">5 · Tạm dừng rồi đóng lại: thường hơi hại</p>
+            <p class="wb-media__text">Về thuần đầu tư gần như <b>hoà</b> nếu tiền giữ lại được đầu tư tiếp. Nhưng dễ <b>mất thưởng, canh trượt gây huỷ, bán quỹ lúc đáy</b> — và hại hơn ở gói A.</p>
           </div>
           <div class="wb-card wb-card--pad">
-            <p class="wb-media__title">6 · Quyết định bằng tờ tính mới nhất</p>
-            <p class="wb-media__text">Trước mọi thay đổi, xin <b>tờ tính theo tiền quỹ hiện nay</b> và hỏi bằng văn bản. Đừng dừng đóng chỉ vì một lời nói.</p>
+            <p class="wb-media__title">6 · Quyết định bằng bảng tính mới nhất</p>
+            <p class="wb-media__text">Trước mọi thay đổi, xin <b>bảng tính theo quỹ hiện nay</b> + hỏi bằng văn bản. Khi có chuyện: báo sớm, giữ giấy gốc, nộp đúng hẹn, khai thật.</p>
           </div>
         </div>
 
         <div class="wb-alert wb-alert--plain" style="margin-top:18px">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Về trang này</p>
-            <p class="wb-alert__msg">Trang dùng <b>hai ví dụ minh hoạ</b> hai loại bảo hiểm nhân thọ phổ biến (liên kết đơn vị và liên kết chung). <b>Người A, Người B và các con số chỉ là ví dụ</b>, không phải hồ sơ của riêng ai. Các con số lãi 5–9% là <b>đoán trước, không ai bảo đảm</b>.</p>
-            <p class="wb-alert__msg">Đây là bản <b>giải thích để hiểu</b>, <b>không phải lời khuyên về tiền bạc hay pháp luật</b>. Với hợp đồng thật, hãy xem lại bản gốc, gọi tổng đài công ty, và nên hỏi thêm một người am hiểu trước khi quyết định (ngừng đóng, đổi quỹ, rút, huỷ, mua thêm).</p>
+            <p class="wb-alert__msg">Số liệu &amp; sản phẩm lấy từ <b>chính hai hợp đồng của gia đình</b> (Prudential — PRU-Đầu Tư Linh Hoạt; AIA — An Phúc Trọn Đời Ưu Việt). <b>Tên người được để ẩn</b> vì đây là trang công khai. Các con số lãi 5% là <b>dự tính, không ai bảo đảm</b>; chỉ phần ghi "cam kết" mới chắc chắn. Một số con số phí bảo vệ theo tuổi và giá trị quỹ là <b>ước tính minh hoạ</b>, chưa phải bảng giá trị tài khoản thực tế.</p>
+            <p class="wb-alert__msg">Đây là bản <b>giải thích để hiểu</b>, <b>không phải lời khuyên về tiền bạc hay pháp luật</b>. Với quyết định thật (ngừng đóng, đổi quỹ, rút, huỷ, mua thêm), hãy xem bản gốc, gọi tổng đài công ty, và nên hỏi thêm một người am hiểu.</p>
           </div>
         </div>
       </section>
@@ -920,7 +831,7 @@
 <footer class="wb-footer wb-footer--slim">
   <div class="wb-footer__inner">
     <div class="wb-footer__bottom">
-      <span class="wb-footer__copy">Hiểu bảo hiểm nhân thọ — giải thích dễ hiểu qua hai ví dụ · để hiểu, không phải lời khuyên về tiền bạc</span>
+      <span class="wb-footer__copy">Hai hợp đồng bảo hiểm của gia đình — giải thích để hiểu, không phải lời khuyên về tiền bạc</span>
       <a class="wb-footer__link" href="../index.html">← Trang chủ</a>
     </div>
   </div>
