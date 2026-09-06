@@ -172,6 +172,9 @@ h4 { font-size:14px; font-weight:690; margin:20px 0 8px; letter-spacing:.005em; 
   display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px;
   letter-spacing:.03em; color:var(--muted); background:var(--surface-2); border:1px solid var(--border);
   border-radius:999px; padding:2.5px 10px; margin:0 0 14px;
+  /* chip nowrap sẽ tràn viewport ở 320px vì có token dài không ngắt được
+     (ví dụ "Vanishing/exploding"): cho phép xuống dòng và ngắt trong từ khi bí. */
+  flex-wrap:wrap; max-width:100%; overflow-wrap:anywhere;
 }
 .map b { color:var(--ink); font-weight:640; }
 
@@ -185,7 +188,10 @@ ul, ol { max-width:var(--measure); margin:0 0 16px; padding-left:22px; }
 li { margin-bottom:8px; }
 ul.tight li, ol.tight li { margin-bottom:4px; }
 code { font-family:var(--mono); font-size:.88em; background:var(--surface-2); border-radius:4px; padding:1.5px 5px; }
-.mono { font-family:var(--mono); font-size:.9em; }
+/* .mono dùng cho cả span inline (URL, công thức) lẫn khối <p class="mono"> có
+   white-space:pre + overflow-x:auto. `anywhere` chỉ ngắt khi từ không còn chỗ,
+   và không có tác dụng khi white-space:pre — nên khối scroll vẫn scroll như cũ. */
+.mono { font-family:var(--mono); font-size:.9em; overflow-wrap:anywhere; }
 .dim { color:var(--subtle); }
 .mark { background:linear-gradient(transparent 62%, var(--m-line) 62%); }
 
@@ -327,6 +333,17 @@ input[type=text]:focus, input[type=number]:focus, select:focus { outline:2px sol
 .btn:disabled { opacity:.45; cursor:not-allowed; }
 .val { font-family:var(--mono); font-size:12.5px; color:var(--ink); min-width:56px; display:inline-block; }
 
+/* Vùng chạm trên điện thoại: thanh trượt cao 22px và nút cao 27px quá nhỏ cho ngón tay.
+   Nới chiều cao vùng chạm mà KHÔNG đổi hình dáng rãnh trượt (rãnh vẫn tự căn giữa). */
+@media (max-width:620px) {
+  input[type=range] { height:40px; }
+  input[type=range]::-webkit-slider-thumb { width:20px; height:20px; margin-top:-8.5px; }
+  input[type=range]::-moz-range-thumb { width:20px; height:20px; }
+  .btn { min-height:36px; padding:8px 13px; }
+  .tab { min-height:38px; }
+  .chip { display:inline-flex; align-items:center; min-height:34px; padding:5px 12px; }
+}
+
 /* tab trong lab */
 .tabs { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:14px; border-bottom:1px solid var(--border); }
 .tab {
@@ -345,7 +362,10 @@ input[type=text]:focus, input[type=number]:focus, select:focus { outline:2px sol
 .out b { font-weight:700; }
 
 /* svg / canvas trong lab */
-.viz { width:100%; height:auto; display:block; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--sunk); touch-action:none; }
+.viz { width:100%; height:auto; display:block; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--sunk); }
+/* CHỈ ô vẽ của mô hình 10 mới chặn cử chỉ chạm — mọi biểu đồ khác phải để ngón tay
+   cuộn trang bình thường, nếu không trên điện thoại người đọc sẽ bị kẹt ở mỗi hình. */
+#m10-in { touch-action:none; }
 .viz--plain { border:0; background:transparent; }
 .vt { fill:var(--ink); font-size:12px; font-weight:600; font-family:var(--font); }
 .vs { fill:var(--muted); font-size:10.5px; font-family:var(--font); }
@@ -554,7 +574,7 @@ footer a { color:var(--muted); }
           <p class="box__t">"Mô hình khớp dữ liệu càng sát thì càng tốt."</p>
           <div class="row">
             <span class="k">Nghe có lý vì</span><span>ta huấn luyện bằng cách <i>giảm sai số</i>, nên sai số nhỏ hơn nghe hiển nhiên là tốt hơn.</span>
-            <span class="k">Chỗ sai</span><span>sai số nhỏ trên dữ liệu <b>đã thấy</b> không nói gì về dữ liệu <b>chưa thấy</b>. Một đa thức bậc 20 đi qua đúng 20 điểm dữ liệu sẽ có sai số bằng 0 và <i>dự đoán bậy hoàn toàn</i> ở điểm thứ 21. Bạn sẽ tự tay dựng ra thảm hoạ này ở <a href="#s-overfit">mô hình 4</a>.</span>
+            <span class="k">Chỗ sai</span><span>sai số nhỏ trên dữ liệu <b>đã thấy</b> không nói gì về dữ liệu <b>chưa thấy</b>. Một đa thức bậc 20 đi qua đúng 20 điểm dữ liệu sẽ có sai số bằng 0 và <i>dự đoán bậy hoàn toàn</i> ở điểm thứ 21. Bạn sẽ tự tay dựng ra thảm hoạ này ở <a href="#s-overfit">mô hình 5</a>.</span>
           </div>
         </div>
 
@@ -1047,7 +1067,7 @@ footer a { color:var(--muted); }
           <p class="fx__note">Bấm vào từng ký hiệu.</p>
         </div>
 
-        <p><b>Ranh giới quyết định</b> là chỗ mô hình phân vân đúng 50-50, tức là <span class="mono">z = w·x + b = 0</span>. Đây là một <i>đường thẳng</i> trong không gian đặc trưng. Nhìn rõ chỗ này thì hết bí ẩn: <b>sigmoid không hề làm cong ranh giới</b>, nó chỉ đổi cách đọc đầu ra. Muốn ranh giới cong thì phải thêm đặc trưng cong (như <span class="mono">x₁²  + x₂²</span>) hoặc chuyển sang mạng nơ-ron.</p>
+        <p><b>Ranh giới quyết định</b> là chỗ mô hình phân vân đúng 50-50, tức là <span class="mono">z = w·x + b = 0</span>. Đây là một <i>đường thẳng</i> trong không gian đặc trưng. Nhìn rõ chỗ này thì hết bí ẩn: <b>sigmoid không hề làm cong ranh giới</b>, nó chỉ đổi cách đọc đầu ra. Muốn ranh giới cong thì phải thêm đặc trưng cong (như <span class="mono">x₁² + x₂²</span>) hoặc chuyển sang mạng nơ-ron.</p>
 
         <h3>Vì sao <i>bắt buộc</i> phải đổi hàm mất mát</h3>
         <p>Đây là chỗ hay bị lướt qua, mà lại là ví dụ hay nhất trong cả khoá về việc <b>ba bộ phận không độc lập với nhau</b>. Nếu bạn giữ nguyên sai số bình phương và chỉ thay mô hình bằng sigmoid, thì hàm chi phí <b>mất tính lồi</b> — nó trở thành một bề mặt gợn sóng đầy hố. Gradient descent sẽ kẹt ở hố ngẫu nhiên nào đó và bạn sẽ đổ lỗi cho thuật toán, trong khi thủ phạm là thước đo.</p>
@@ -2066,7 +2086,7 @@ footer a { color:var(--muted); }
 
         <div class="fx">
           <div class="fx__line sm" data-fx>
-            <span class="tm t-m" data-n="Kích thước một chiều của đầu ra. Áp dụng riêng cho chiều cao và chiều rộng.">kích thước ra</span><span class="op">=</span><span class="op">⌊</span><span class="tm t-m" data-n="Kích thước đầu vào, ví dụ 32."><i>n</i></span><span class="op">+</span><span class="tm t-m" data-n="Đệm hai bên, nên nhân 2. Với ‘same’ padding thì p được chọn để cả biểu thức bằng n.">2<i>p</i></span><span class="op">−</span><span class="tm t-m" data-n="Cạnh bộ lọc, thường 3 hoặc 5. Trừ đi vì bộ lọc cần chỗ để đặt trọn vẹn."><i>f</i></span><span class="op">)/</span><span class="tm t-m" data-n="Bước trượt. Chia cho s vì cứ s ô mới có một vị trí."><i>s</i></span><span class="op">⌋ + 1</span>
+            <span class="tm t-m" data-n="Kích thước một chiều của đầu ra. Áp dụng riêng cho chiều cao và chiều rộng.">kích thước ra</span><span class="op">=</span><span class="op">⌊(</span><span class="tm t-m" data-n="Kích thước đầu vào, ví dụ 32."><i>n</i></span><span class="op">+</span><span class="tm t-m" data-n="Đệm hai bên, nên nhân 2. Với ‘same’ padding thì p được chọn để cả biểu thức bằng n.">2<i>p</i></span><span class="op">−</span><span class="tm t-m" data-n="Cạnh bộ lọc, thường 3 hoặc 5. Trừ đi vì bộ lọc cần chỗ để đặt trọn vẹn."><i>f</i></span><span class="op">)/</span><span class="tm t-m" data-n="Bước trượt. Chia cho s vì cứ s ô mới có một vị trí."><i>s</i></span><span class="op">⌋ + 1</span>
           </div>
           <p class="fx__note">Công thức duy nhất của mục này. <span class="dim">Dấu ⌊ ⌋ là làm tròn xuống — bộ lọc không được thò ra ngoài ảnh.</span></p>
         </div>
@@ -2095,7 +2115,7 @@ footer a { color:var(--muted); }
               <tr><td><b>LeNet-5</b><br><span class="dim">1998</span></td><td>CONV → POOL lặp lại, rồi FC. Khoảng 60 nghìn tham số.</td><td>Chứng minh ý tưởng chạy được — trên chữ số viết tay, trên máy tính thời đó.</td></tr>
               <tr><td><b>AlexNet</b><br><span class="dim">2012</span></td><td>Cùng công thức, nhưng <b>lớn hơn 1.000 lần</b> (~60 triệu tham số), dùng ReLU, chạy trên GPU.</td><td>Chứng minh rằng vấn đề trước giờ không phải ý tưởng sai mà là <b>thiếu dữ liệu và thiếu máy</b>. Đây là bài báo khơi mào cả làn sóng học sâu.</td></tr>
               <tr><td><b>VGG-16</b><br><span class="dim">2014</span></td><td><b>Đơn giản hoá triệt để</b>: chỉ dùng conv 3×3 stride 1 same, và maxpool 2×2 stride 2. Cứ mỗi lần pool thì số kênh gấp đôi.</td><td>Trước đó mỗi lớp một cấu hình khác nhau, chọn siêu tham số là ác mộng. VGG cho thấy <b>một quy luật đều đặn cũng đủ tốt</b> — và dễ hiểu hơn nhiều. Cái giá: 138 triệu tham số.</td></tr>
-              <tr><td><b>ResNet</b><br><span class="dim">2015</span></td><td><b>Kết nối tắt</b>: đầu ra của lớp l được cộng thẳng vào đầu vào của lớp l+2, bỏ qua hai lớp ở giữa.</td><td>Bức tường lớn nhất: <b>mạng sâu hơn lại tệ hơn</b>, kể cả trên tập huấn luyện. ResNet phá được trần này và cho phép huấn luyện mạng <b>trên 100 lớp</b>.</td></tr>
+              <tr><td><b>ResNet</b><br><span class="dim">2015</span></td><td><b>Kết nối tắt</b>: đầu ra của lớp l được cộng thẳng vào lớp l+2 <i>ngay trước hàm kích hoạt</i>, bỏ qua hai lớp ở giữa.</td><td>Bức tường lớn nhất: <b>mạng sâu hơn lại tệ hơn</b>, kể cả trên tập huấn luyện. ResNet phá được trần này và cho phép huấn luyện mạng <b>trên 100 lớp</b>.</td></tr>
               <tr><td><b>Inception</b><br><span class="dim">2014</span></td><td>Thay vì chọn 1×1 hay 3×3 hay 5×5 hay pool, <b>làm hết rồi ghép lại</b>, để mạng tự chọn qua trọng số.</td><td>"Chọn kích thước bộ lọc" là một siêu tham số khó. Inception xoá nó đi — nhưng sinh ra vấn đề chi phí tính toán, xem ô dưới.</td></tr>
               <tr><td><b>MobileNet</b><br><span class="dim">2017</span></td><td><b>Tích chập tách theo chiều sâu</b>: tách một phép conv thành hai bước rẻ hơn nhiều.</td><td>Chạy trên điện thoại. Giảm chi phí tính toán khoảng <b>10 lần</b> với độ chính xác gần như giữ nguyên.</td></tr>
               <tr><td><b>EfficientNet</b><br><span class="dim">2019</span></td><td><b>Mở rộng có phối hợp</b>: tăng đồng thời độ phân giải ảnh, chiều sâu và chiều rộng theo một tỉ lệ chung.</td><td>Trước đó người ta tăng bừa một chiều. EfficientNet cho một công thức để chọn cấu hình hợp với đúng thiết bị của bạn.</td></tr>
@@ -2443,7 +2463,7 @@ footer a { color:var(--muted); }
                 </div>
                 <div class="row"><span class="k">Đọc bảng</span><pre class="out" id="m11-mout"></pre></div>
               </div>
-              <p class="lab__f"><b>Hàng "nó" là hàng đáng nhìn nhất.</b> Truy vấn của một đại từ chỉ vật đi tìm các khoá "đồ vật", nên nó dồn trọng số về <b>sách</b> chứ không phải <b>Lan</b> — dù Lan đứng gần hơn. Đây là điều RNN rất chật vật: khoảng cách trong câu không còn quan trọng, vì attention <b>nối trực tiếp mọi cặp từ</b>. Đây cũng là lần thứ tư trong trang này lời giải là "nối tắt vòng qua phần giữa".</p>
+              <p class="lab__f"><b>Hàng "nó" là hàng đáng nhìn nhất.</b> Truy vấn của một đại từ chỉ vật đi tìm các khoá "đồ vật", nên nó dồn trọng số về <b>sách</b> chứ không phải <b>bàn</b> — dù bàn đứng gần hơn. Đây là điều RNN rất chật vật: khoảng cách trong câu không còn quan trọng, vì attention <b>nối trực tiếp mọi cặp từ</b>. Đây cũng là lần thứ tư trong trang này lời giải là "nối tắt vòng qua phần giữa".</p>
               <p class="lab__f"><b>Bật/tắt phép chia √d với d = 512</b> và xem bảng đổi thế nào: không chia thì bảng gần như <b>đen trắng hoàn toàn</b> — mỗi hàng dồn hết vào một ô. Trông có vẻ "dứt khoát", nhưng đó chính là softmax bão hoà: gradient gần 0, mạng ngừng học. Đây là ví dụ hay về chuyện <i>một hằng số chia trông vụn vặt lại quyết định mô hình huấn luyện được hay không</i>.</p>
             </div>
           </div>
@@ -3474,7 +3494,6 @@ function drawCostMap(svg, W, H, P) {
     /* ranh giới w1 x + w2 y + b = 0 */
     var pts = [];
     if (Math.abs(w2) > 1e-6) {
-      pts = [[-R, (-b + w1 * R) / w2 * -1], [R, (-b - w1 * R) / w2]];
       pts = [[-R, (-b - w1 * (-R)) / w2], [R, (-b - w1 * R) / w2]];
     } else if (Math.abs(w1) > 1e-6) { pts = [[-b / w1, -R], [-b / w1, R]]; }
     if (pts.length) el(sp, 'line', { x1: sx(pts[0][0]), y1: sy(pts[0][1]), x2: sx(pts[1][0]), y2: sy(pts[1][1]) },
