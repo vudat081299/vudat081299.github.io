@@ -418,7 +418,55 @@ footer a { color:var(--muted); }
 .totop.on { opacity:1; pointer-events:auto; }
 .totop svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
-@media print { .bar, .toc, .totop, .prog, .scrim { display:none !important; } .layout { grid-template-columns:1fr; } }
+/* ── thuật ngữ bấm được: gạch chân chấm, bấm ra popup song ngữ ───────────── */
+.term {
+  border-bottom:1.5px dotted var(--m-line); border-radius:2px; cursor:pointer;
+  padding:0 1px; margin:0 -1px; transition:background .12s, border-color .12s;
+}
+.term:hover { background:var(--m-bg); border-bottom-color:var(--m); }
+.term.is-open { background:var(--m-bg); border-bottom-style:solid; border-bottom-color:var(--m); }
+.term:focus-visible { outline:2px solid var(--m); outline-offset:1px; }
+
+.pop {
+  position:fixed; z-index:60; width:min(348px, calc(100vw - 26px));
+  background:var(--surface); border:1px solid var(--border-2); border-radius:var(--radius);
+  box-shadow:0 8px 30px -8px rgba(20,22,28,.30), 0 2px 6px rgba(20,22,28,.08);
+  padding:14px 16px 14px; font-size:14px; line-height:1.62; color:var(--ink);
+  opacity:0; pointer-events:none; transform:translateY(5px); transition:opacity .13s ease, transform .13s ease;
+}
+html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
+.pop.on { opacity:1; pointer-events:auto; transform:none; }
+.pop__en { font-size:15.5px; font-weight:730; letter-spacing:-.012em; margin:0 0 2px; padding-right:24px; line-height:1.3; }
+.pop__vi { font-family:var(--mono); font-size:11.5px; color:var(--muted); margin:0 0 9px; letter-spacing:.02em; }
+.pop__d { margin:0; max-width:none; }
+.pop__d b { font-weight:660; }
+.pop__d code { font-size:.86em; }
+.pop__go {
+  display:inline-block; margin-top:10px; font-family:var(--mono); font-size:11.5px;
+  color:var(--m); text-decoration:none; border-bottom:1px solid var(--m-line);
+}
+.pop__go:hover { border-bottom-color:var(--m); }
+.pop__x {
+  position:absolute; top:7px; right:8px; width:24px; height:24px; padding:0; border:0; cursor:pointer;
+  background:transparent; color:var(--subtle); border-radius:5px; display:grid; place-items:center; font:inherit;
+}
+.pop__x:hover { background:var(--surface-2); color:var(--ink); }
+.pop__x svg { width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; }
+@media (max-width:620px) {
+  .pop { left:9px !important; right:9px; bottom:9px; top:auto !important; width:auto; }
+}
+
+/* ── từ điển thuật ngữ ────────────────────────────────────────────────────── */
+.gl-bar { display:flex; flex-wrap:wrap; gap:9px; align-items:center; margin:14px 0 12px; }
+.gl-bar input { flex:1 1 220px; max-width:340px; }
+.gl-count { font-family:var(--mono); font-size:11.5px; color:var(--subtle); }
+.gl-tw td:first-child { white-space:nowrap; font-weight:650; }
+.gl-tw td:nth-child(2) { color:var(--muted); font-style:italic; white-space:nowrap; }
+.gl-tw tr.hide { display:none; }
+.gl-tw td a { font-family:var(--mono); font-size:11px; color:var(--m); text-decoration:none; white-space:nowrap; }
+@media (max-width:640px) { .gl-tw td:nth-child(2) { white-space:normal; } }
+
+@media print { .bar, .toc, .totop, .prog, .scrim, .pop { display:none !important; } .layout { grid-template-columns:1fr; } .term { border-bottom:0; } }
 </style>
 </head>
 <body>
@@ -427,24 +475,24 @@ footer a { color:var(--muted); }
 
 <header class="bar">
   <div class="bar__in">
-    <button class="iconbtn" id="tocBtn" aria-label="Mục lục">
+    <button class="iconbtn" id="tocBtn" aria-label="Contents">
       <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-    <a class="bar__brand" href="../index.html">Học máy &amp; Học sâu <span class="d">· Andrew Ng, 8 khoá</span></a>
+    <a class="bar__brand" href="../index.html">Machine Learning <span class="d">&amp; Deep Learning · Andrew Ng · 8 courses</span></a>
     <nav class="bar__nav">
-      <a href="#mo-dau">Mở đầu</a>
-      <a href="#act1">1 · Một đường</a>
-      <a href="#act2">2 · Xếp chồng</a>
-      <a href="#act3">3 · Khi hỏng</a>
-      <a href="#act4">4 · Hình dạng</a>
-      <a href="#act5">5 · Không nhãn</a>
-      <a href="#ket">Tra cứu</a>
+      <a href="#mo-dau">Foundations</a>
+      <a href="#act1">1 · One Line</a>
+      <a href="#act2">2 · Stacking</a>
+      <a href="#act3">3 · Diagnostics</a>
+      <a href="#act4">4 · Structure</a>
+      <a href="#act5">5 · Unsupervised</a>
+      <a href="#ket">Reference</a>
     </nav>
     <div class="bar__act">
-      <a class="iconbtn" href="../index.html" aria-label="Trang chủ">
+      <a class="iconbtn" href="../index.html" aria-label="Home">
         <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
       </a>
-      <button class="iconbtn" id="themeBtn" aria-label="Sáng / tối">
+      <button class="iconbtn" id="themeBtn" aria-label="Light / dark">
         <svg class="ic-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8"/></svg>
         <svg class="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       </button>
@@ -460,7 +508,7 @@ footer a { color:var(--muted); }
     <p>Trang này diễn giải bằng tiếng Việt <b>toàn bộ nội dung 8 khoá</b> của Andrew Ng: 3 khoá <i>Machine Learning Specialization</i> và 5 khoá <i>Deep Learning Specialization</i>. Nhưng nó không kể theo thứ tự tuần. Nó kể theo <b>thứ tự các bức tường</b>: mỗi chặng bắt đầu bằng một thứ mà chặng trước <i>không biểu diễn nổi</i>, rồi dựng đúng công cụ để vượt qua.</p>
     <p>Sợi chỉ xuyên suốt là một câu: <b>mọi thuật toán ở đây — từ hồi quy tuyến tính tới Transformer — đều là ba lựa chọn</b>. Chọn <b class="c-m">một hàm để đoán</b>, chọn <b class="c-l">một cách đo sai</b>, chọn <b class="c-o">một cách sửa</b>. Ba màu ấy đi suốt trang và không bao giờ đổi vai: thấy chúng ở Transformer cũng đúng như thấy chúng ở đường thẳng đầu tiên.</p>
     <p><b>Mười ba mô hình nghịch được ngay trên trang.</b> Mỗi cái dựng lên để giết một hiểu nhầm cụ thể, không phải để trang trí: kéo thanh trượt cho gradient descent phân kỳ, tắt hàm kích hoạt để thấy mạng 5 lớp sập về một đường thẳng, bấm từng bước lan truyền ngược, xem attention thật ra chỉ là một phép tra cứu mềm.</p>
-    <p class="meta">MỖI MỤC CÓ CHIP GHI RÕ NÓ ỨNG VỚI KHOÁ NÀO · TUẦN NÀO CỦA BẢN GỐC, ĐỂ BẠN TÌM ĐÚNG BÀI GIẢNG<br>MỌI TÍNH TOÁN CHẠY TRONG TRÌNH DUYỆT CỦA BẠN — KHÔNG CÓ DỮ LIỆU NÀO RỜI KHỎI TRANG</p>
+    <p class="meta">THUẬT NGỮ GẠCH CHÂN CHẤM LÀ BẤM ĐƯỢC — HIỆN TÊN TIẾNG ANH CHÍNH THỨC KÈM GIẢI THÍCH NGẮN<br>MỖI MỤC CÓ CHIP GHI RÕ NÓ ỨNG VỚI KHOÁ NÀO · TUẦN NÀO CỦA BẢN GỐC, ĐỂ BẠN TÌM ĐÚNG BÀI GIẢNG<br>MỌI TÍNH TOÁN CHẠY TRONG TRÌNH DUYỆT CỦA BẠN — KHÔNG CÓ DỮ LIỆU NÀO RỜI KHỎI TRANG</p>
   </header>
 
   <div class="stats">
@@ -537,6 +585,7 @@ footer a { color:var(--muted); }
       <a href="#s-dated">Chỗ nào của khoá đã cũ</a>
       <a href="#s-mistakes">14 sai lầm hay gặp</a>
       <a href="#s-cheat">Bảng tra cứu</a>
+      <a href="#s-glossary">Từ điển thuật ngữ EN↔VI</a>
       <a href="#s-learn">Năm câu mang theo</a>
     </nav>
 
@@ -689,7 +738,7 @@ footer a { color:var(--muted); }
 
         <h3>Câu hỏi 2 — <span class="c-l">Mất mát</span>: đo sai bằng gì, và vì sao đo kiểu đó?</h3>
         <p>Hàm mất mát ép toàn bộ "mô hình này tốt hay tệ" xuống <b>một con số duy nhất</b>. Đây là bước có tính chính trị nhất trong cả quy trình: <i>bạn đo cái gì thì máy sẽ tối ưu đúng cái đó, kể cả khi đó không phải điều bạn muốn</i>. Nếu 99% email không phải spam và bạn đo bằng "tỉ lệ đoán đúng", mô hình "luôn nói không phải spam" đạt 99% và hoàn toàn vô dụng.</p>
-        <p>Chọn hàm mất mát cũng không tuỳ ý về mặt kỹ thuật. Bạn sẽ thấy ở <a href="#s-logistic">mục hồi quy logistic</a> rằng dùng sai hàm mất mát biến một bài toán dễ thành một bề mặt lồi lõm mà gradient descent bị kẹt — cùng một mô hình, chỉ đổi thước đo, và thuật toán tối ưu hỏng.</p>
+        <p>Chọn hàm mất mát cũng không tuỳ ý về mặt kỹ thuật. Bạn sẽ thấy ở <a href="#s-logistic">mục hồi quy logistic</a> rằng dùng sai hàm mất mát biến một bài toán dễ thành một bề mặt gồ ghề mà gradient descent bị kẹt — cùng một mô hình, chỉ đổi thước đo, và thuật toán tối ưu hỏng.</p>
 
         <h3>Câu hỏi 3 — <span class="c-o">Tối ưu</span>: đi tìm bộ tham số tốt nhất kiểu gì?</h3>
         <p>Về nguyên tắc bạn muốn bộ tham số làm mất mát nhỏ nhất. Trong thực tế bạn không giải được phương trình đó — với vài triệu tham số thì không có công thức đóng. Nên bạn <b>dò</b>: đứng ở một điểm, tính xem đi hướng nào thì mất mát giảm nhanh nhất, bước một bước nhỏ, lặp lại. Đó là <b>gradient descent</b>, và mọi thứ trong <a href="#s-optim">mục optimizer</a> — momentum, RMSprop, Adam — chỉ là các phiên bản khôn hơn của cùng ý tưởng ấy.</p>
@@ -780,9 +829,9 @@ footer a { color:var(--muted); }
         <p class="lede">Bạn có 5.000 căn nhà đã bán, biết diện tích và giá. Ai đó hỏi giá một căn 78 m² chưa từng bán. Cách đơn giản nhất mà vẫn không ngớ ngẩn: <b>vẽ một đường thẳng đi giữa đám điểm ấy, rồi đọc giá trị của đường tại 78</b>. Toàn bộ hồi quy tuyến tính là câu đó, viết bằng ký hiệu.</p>
 
         <div class="spine">
-          <div class="s-m"><div class="lbl">Mô hình</div><div class="v">Đường thẳng <span class="mono">f(x) = wx + b</span>. Hai tham số. Vẽ được: mọi đường thẳng. Không vẽ được: mọi thứ cong.</div></div>
-          <div class="s-l"><div class="lbl">Mất mát</div><div class="v">Trung bình <b>bình phương</b> sai lệch giữa dự đoán và giá thật.</div></div>
-          <div class="s-o"><div class="lbl">Tối ưu</div><div class="v">Gradient descent. (Với riêng bài này còn có công thức đóng, nhưng nó không mở rộng được — xem cuối mục.)</div></div>
+          <div class="s-m"><div class="lbl">Mô hình · model</div><div class="v">Đường thẳng <span class="mono">f(x) = wx + b</span>. Hai tham số. Vẽ được: mọi đường thẳng. Không vẽ được: mọi thứ cong.</div></div>
+          <div class="s-l"><div class="lbl">Mất mát · loss</div><div class="v">Trung bình <b>bình phương</b> sai lệch giữa dự đoán và giá thật.</div></div>
+          <div class="s-o"><div class="lbl">Tối ưu · optimizer</div><div class="v">Gradient descent. (Với riêng bài này còn có công thức đóng, nhưng nó không mở rộng được — xem cuối mục.)</div></div>
         </div>
 
         <div class="fx">
@@ -917,7 +966,7 @@ footer a { color:var(--muted); }
         <h3>Ba điều đáng ngạc nhiên về hành vi của nó</h3>
         <ul>
           <li><b>Bước tự nhỏ dần mà không cần ai bảo.</b> Gần đáy thì độ dốc nhỏ, mà bước = α × độ dốc, nên bước tự co lại. Bạn <i>không</i> phải giảm α theo thời gian để nó hội tụ — dù giảm α theo lịch vẫn có ích vì lý do khác, xem <a href="#s-optim">mục optimizer</a>.</li>
-          <li><b>Nó không tìm đáy toàn cục, nó tìm <i>một</i> đáy.</b> Với hồi quy tuyến tính, bát chỉ có một đáy nên không sao. Với mạng nơ-ron thì bề mặt lồi lõm và nơi bạn dừng phụ thuộc vào nơi bạn bắt đầu. Hoá ra điều này ít tai hại hơn người ta lo — lý do ở <a href="#s-optim">mục optimizer</a>.</li>
+          <li><b>Nó không tìm đáy toàn cục, nó tìm <i>một</i> đáy.</b> Với hồi quy tuyến tính, bát chỉ có một đáy nên không sao. Với mạng nơ-ron thì bề mặt gồ ghề và nơi bạn dừng phụ thuộc vào nơi bạn bắt đầu. Hoá ra điều này ít tai hại hơn người ta lo — lý do ở <a href="#s-optim">mục optimizer</a>.</li>
           <li><b>Thất bại thường gặp nhất không phải kẹt, mà là phân kỳ.</b> α hơi quá lớn thì mỗi bước nhảy qua đáy và đáp lên chỗ <i>dốc hơn</i>, nên bước sau còn dài hơn nữa. Chi phí tăng theo cấp số nhân và ra <span class="mono">NaN</span> trong vài chục vòng. Bạn sắp thấy nó.</li>
         </ul>
 
@@ -1055,9 +1104,9 @@ footer a { color:var(--muted); }
         <p class="lede">Câu hỏi mới: "căn nhà này bán được trong 30 ngày không?". Đáp án chỉ có 0 hoặc 1. Nếu dùng thẳng hồi quy tuyến tính, mô hình sẽ trả về những thứ như −0,4 hay 1,8 — <b>vô nghĩa với một câu hỏi có/không</b>. Cần một cái phễu ép mọi số thực về khoảng (0, 1) để đọc được thành <i>xác suất</i>.</p>
 
         <div class="spine">
-          <div class="s-m"><div class="lbl">Mô hình</div><div class="v">Vẫn là <span class="mono">w·x + b</span>, nhưng bọc thêm sigmoid ở ngoài. Ranh giới nó vẽ được vẫn là một <b>đường thẳng</b> (siêu phẳng).</div></div>
-          <div class="s-l"><div class="lbl">Mất mát</div><div class="v"><b>Log loss</b> — không phải bình phương. Đây là chỗ đổi thật sự, và có lý do bắt buộc.</div></div>
-          <div class="s-o"><div class="lbl">Tối ưu</div><div class="v">Gradient descent, <b>công thức cập nhật trông y hệt</b> hồi quy tuyến tính. Trùng hợp đẹp, không phải ngẫu nhiên.</div></div>
+          <div class="s-m"><div class="lbl">Mô hình · model</div><div class="v">Vẫn là <span class="mono">w·x + b</span>, nhưng bọc thêm sigmoid ở ngoài. Ranh giới nó vẽ được vẫn là một <b>đường thẳng</b> (siêu phẳng).</div></div>
+          <div class="s-l"><div class="lbl">Mất mát · loss</div><div class="v"><b>Log loss</b> — không phải bình phương. Đây là chỗ đổi thật sự, và có lý do bắt buộc.</div></div>
+          <div class="s-o"><div class="lbl">Tối ưu · optimizer</div><div class="v">Gradient descent, <b>công thức cập nhật trông y hệt</b> hồi quy tuyến tính. Trùng hợp đẹp, không phải ngẫu nhiên.</div></div>
         </div>
 
         <div class="fx">
@@ -1507,7 +1556,7 @@ footer a { color:var(--muted); }
 
         <div class="box good-box">
           <p class="box__k">Gradient checking — công cụ debug, không phải công cụ huấn luyện</p>
-          <p>Nếu bạn tự viết backprop và nghi có bug: tính đạo hàm bằng định nghĩa số học <span class="mono">(J(θ+ε) − J(θ−ε)) / 2ε</span> với ε ≈ 10⁻⁷, rồi so với gradient của bạn. Sai lệch tương đối dưới 10⁻⁷ là tốt, trên 10⁻³ là có bug. <b>Ba lưu ý Ng nhấn mạnh:</b> chỉ dùng để debug rồi tắt đi (nó chậm hơn hàng nghìn lần); <b>không dùng chung với dropout</b> (hàm chi phí đổi mỗi lần gọi nên số học vô nghĩa); và nhớ tính cả số hạng regularization vào J khi so.</p>
+          <p>Kỹ thuật này gọi là <b>gradient checking</b>. Nếu bạn tự viết backprop và nghi có bug: tính đạo hàm bằng định nghĩa số học <span class="mono">(J(θ+ε) − J(θ−ε)) / 2ε</span> với ε ≈ 10⁻⁷, rồi so với gradient của bạn. Sai lệch tương đối dưới 10⁻⁷ là tốt, trên 10⁻³ là có bug. <b>Ba lưu ý Ng nhấn mạnh:</b> chỉ dùng để debug rồi tắt đi (nó chậm hơn hàng nghìn lần); <b>không dùng chung với dropout</b> (hàm chi phí đổi mỗi lần gọi nên số học vô nghĩa); và nhớ tính cả số hạng regularization vào J khi so.</p>
         </div>
 
         <div class="take"><span class="k">Mang theo</span><p>Mạng sâu có hai bệnh mà mạng nông không có: đối xứng khi khởi tạo bằng 0, và tích số mũ khi gradient chảy qua nhiều lớp. Cả hai đều <b>im lặng</b> — không exception, chỉ là kết quả tệ một cách khó hiểu.</p></div>
@@ -1671,7 +1720,7 @@ footer a { color:var(--muted); }
 
         <div class="box note">
           <p class="box__k">Vì sao phải có "mức con người" mới chẩn đoán đúng</p>
-          <p>Sai số huấn luyện 8% là tốt hay tệ? <b>Không trả lời được nếu chưa biết bài toán khó cỡ nào.</b> Nhận dạng mèo mà người làm sai 0,5% thì 8% là thảm hoạ về bias. Nhưng nhận dạng giọng nói trong quán ăn ồn mà người cũng sai 7% thì 8% là gần như kịch trần — lúc này đổ tiền vào mạng to hơn là ném tiền qua cửa sổ, và bạn phải chuyển sang giảm variance hoặc kiếm dữ liệu tốt hơn. <b>Cùng một con số 8%, hai chẩn đoán trái ngược.</b></p>
+          <p>Sai số huấn luyện 8% là tốt hay tệ? <b>Không trả lời được nếu chưa biết bài toán khó cỡ nào.</b> Mốc lý thuyết gọi là <b>Bayes error</b> — mức sai thấp nhất mà bất kỳ mô hình nào cũng không vượt qua được; nhưng nó không đo được, nên Ng thay bằng mức con người. Nhận dạng mèo mà người làm sai 0,5% thì 8% là thảm hoạ về bias. Nhưng nhận dạng giọng nói trong quán ăn ồn mà người cũng sai 7% thì 8% là gần như kịch trần — lúc này đổ tiền vào mạng to hơn là ném tiền qua cửa sổ, và bạn phải chuyển sang giảm variance hoặc kiếm dữ liệu tốt hơn. <b>Cùng một con số 8%, hai chẩn đoán trái ngược.</b></p>
         </div>
 
         <div class="lab" id="m9">
@@ -1918,12 +1967,12 @@ footer a { color:var(--muted); }
         <p class="lede">Đặt ở đây, không đặt ở chặng 1, vì lý do sư phạm: <b>cây quyết định là câu trả lời thực dụng cho phần lớn bài toán doanh nghiệp</b>, và bạn chỉ đánh giá đúng điều đó sau khi đã thấy mạng nơ-ron đòi hỏi bao nhiêu công chăm sóc.</p>
 
         <div class="spine">
-          <div class="s-m"><div class="lbl">Mô hình</div><div class="v">Một chuỗi câu hỏi có/không lồng nhau. Vẽ được: các vùng <b>hình hộp</b> song song trục. Không vẽ được: ranh giới chéo mượt (phải xấp xỉ bằng bậc thang).</div></div>
-          <div class="s-l"><div class="lbl">Mất mát</div><div class="v"><b>Entropy</b> — đo mức "lẫn lộn" của một nhóm. Mục tiêu mỗi lần tách: giảm lẫn lộn nhiều nhất.</div></div>
-          <div class="s-o"><div class="lbl">Tối ưu</div><div class="v"><b>Không có gradient descent.</b> Duyệt tham lam: thử mọi cách tách, chọn cái tốt nhất, đệ quy. Đây là điểm khác biệt căn bản.</div></div>
+          <div class="s-m"><div class="lbl">Mô hình · model</div><div class="v">Một chuỗi câu hỏi có/không lồng nhau. Vẽ được: các vùng <b>hình hộp</b> song song trục. Không vẽ được: ranh giới chéo mượt (phải xấp xỉ bằng bậc thang).</div></div>
+          <div class="s-l"><div class="lbl">Mất mát · loss</div><div class="v"><b>Entropy</b> — đo mức "lẫn lộn" của một nhóm. Mục tiêu mỗi lần tách: giảm lẫn lộn nhiều nhất.</div></div>
+          <div class="s-o"><div class="lbl">Tối ưu · optimizer</div><div class="v"><b>Không có gradient descent.</b> Duyệt tham lam: thử mọi cách tách, chọn cái tốt nhất, đệ quy. Đây là điểm khác biệt căn bản.</div></div>
         </div>
 
-        <p>Cách cây học: tại mỗi nút, thử <b>mọi đặc trưng và mọi ngưỡng</b>, chọn cách tách làm hai nhóm con "thuần" nhất, rồi lặp lại cho từng nhóm con. Dừng khi nhóm đã thuần, hoặc quá nhỏ, hoặc cây đã quá sâu.</p>
+        <p>Cách cây học dùng một đại lượng tên là <b>information gain</b> — lượng thông tin thu được sau khi tách. Tại mỗi nút, thử <b>mọi đặc trưng và mọi ngưỡng</b>, chọn cách tách làm hai nhóm con "thuần" nhất, rồi lặp lại cho từng nhóm con. Dừng khi nhóm đã thuần, hoặc quá nhỏ, hoặc cây đã quá sâu.</p>
 
         <div class="fx">
           <div class="fx__line sm" data-fx>
@@ -1983,9 +2032,9 @@ footer a { color:var(--muted); }
         <p>Lãng phí ở chỗ nào? Vì mạng thường sẽ phải học <i>riêng biệt</i> cách nhận ra một cạnh dọc ở góc trên trái, rồi lại học <b>lại từ đầu</b> cách nhận ra cạnh dọc ở góc dưới phải. Với nó, hai vùng ảnh đó không liên quan gì đến nhau. Nhưng chúng ta biết rằng <b>một cạnh dọc là một cạnh dọc, ở đâu cũng vậy</b>. Tích chập là cách nhét đúng hiểu biết ấy vào kiến trúc.</p>
 
         <div class="spine">
-          <div class="s-m"><div class="lbl">Mô hình</div><div class="v">Một <b>bộ lọc nhỏ</b> (thường 3×3) trượt khắp ảnh, mỗi vị trí tính một tích vô hướng. <b>Cùng một bộ trọng số cho mọi vị trí.</b></div></div>
-          <div class="s-l"><div class="lbl">Mất mát</div><div class="v">Không đổi gì cả — vẫn softmax + cross-entropy như <a href="#s-softmax">chặng 2</a>.</div></div>
-          <div class="s-o"><div class="lbl">Tối ưu</div><div class="v">Không đổi gì cả — vẫn Adam, vẫn backprop. <b>Chỉ có mô hình thay đổi.</b></div></div>
+          <div class="s-m"><div class="lbl">Mô hình · model</div><div class="v">Một <b>bộ lọc nhỏ</b> (thường 3×3) trượt khắp ảnh, mỗi vị trí tính một tích vô hướng. <b>Cùng một bộ trọng số cho mọi vị trí.</b></div></div>
+          <div class="s-l"><div class="lbl">Mất mát · loss</div><div class="v">Không đổi gì cả — vẫn softmax + cross-entropy như <a href="#s-softmax">chặng 2</a>.</div></div>
+          <div class="s-o"><div class="lbl">Tối ưu · optimizer</div><div class="v">Không đổi gì cả — vẫn Adam, vẫn backprop. <b>Chỉ có mô hình thay đổi.</b></div></div>
         </div>
 
         <p>Chú ý dải trên: <b>hai trong ba bộ phận không đổi một chữ</b>. Đây là bằng chứng mạnh nhất cho luận điểm của cả trang — CNN không phải một ngành riêng, nó là <i>một lựa chọn khác cho ô màu xanh dương</i>.</p>
@@ -2214,10 +2263,10 @@ footer a { color:var(--muted); }
           <p class="fx__note">Bấm vào α — nó là chi tiết chống gian lận, và là phần dễ bỏ sót nhất khi tự cài.</p>
         </div>
 
-        <p><b>Chọn bộ ba thế nào cũng quan trọng ngang công thức:</b> nếu lấy A, P, N ngẫu nhiên thì điều kiện đã thoả sẵn ở hầu hết bộ ba (hai người ngẫu nhiên vốn đã rất khác nhau), gradient bằng 0, mạng không học gì. Phải chủ động chọn các bộ ba <b>khó</b> — những cặp khác người mà trông giống nhau. Đây là ví dụ tốt cho một nguyên tắc chung: <i>khi hàm mất mát của bạn hầu như luôn bằng 0, đó không phải tin vui</i>.</p>
+        <p>Hàm mất mát này tên chính thức là <b>triplet loss</b>. <b>Chọn bộ ba thế nào cũng quan trọng ngang công thức:</b> nếu lấy A, P, N ngẫu nhiên thì điều kiện đã thoả sẵn ở hầu hết bộ ba (hai người ngẫu nhiên vốn đã rất khác nhau), gradient bằng 0, mạng không học gì. Phải chủ động chọn các bộ ba <b>khó</b> — những cặp khác người mà trông giống nhau. Đây là ví dụ tốt cho một nguyên tắc chung: <i>khi hàm mất mát của bạn hầu như luôn bằng 0, đó không phải tin vui</i>.</p>
 
         <h3>Chuyển phong cách: khi tham số cần tối ưu là <i>bức ảnh</i>, không phải mạng</h3>
-        <p>Bài toán: lấy nội dung ảnh C, vẽ lại theo phong cách tranh S. Điều lạ và đáng nhớ nhất: <b>ở đây mạng đứng yên hoàn toàn, và thứ được gradient descent chỉnh sửa chính là các điểm ảnh của bức tranh đầu ra G</b>. Bạn khởi tạo G bằng nhiễu ngẫu nhiên rồi "huấn luyện" bức ảnh.</p>
+        <p>Bài toán, tên tiếng Anh là <b>neural style transfer</b>: lấy nội dung ảnh C, vẽ lại theo phong cách tranh S. Điều lạ và đáng nhớ nhất: <b>ở đây mạng đứng yên hoàn toàn, và thứ được gradient descent chỉnh sửa chính là các điểm ảnh của bức tranh đầu ra G</b>. Bạn khởi tạo G bằng nhiễu ngẫu nhiên rồi "huấn luyện" bức ảnh.</p>
         <ul class="tight">
           <li><b>Chi phí nội dung</b> — so activation ở một lớp giữa của mạng giữa G và C. Lớp giữa vì lớp đầu quá sát pixel, lớp cuối quá trừu tượng.</li>
           <li><b>Chi phí phong cách</b> — định nghĩa phong cách là <b>tương quan giữa các kênh</b> trong cùng một lớp (ma trận Gram). Trực giác: nếu kênh "nét xoáy" và kênh "màu vàng" thường cùng kích hoạt ở một chỗ, thì "nét xoáy màu vàng" là một đặc điểm phong cách. Tương quan này <b>không phụ thuộc vị trí</b> — đúng như phong cách nên thế.</li>
@@ -2235,9 +2284,9 @@ footer a { color:var(--muted); }
         <p class="lede">Câu "quán này đông nhưng đồ ăn dở" có 7 từ; câu tiếp theo có 22 từ. Một mạng thường cần số đầu vào cố định — <b>hỏng ngay từ bước đầu</b>. Và kể cả nếu bạn đệm cho đủ dài, mạng thường vẫn phải học <i>riêng</i> ý nghĩa của từ "nhưng" ở vị trí 4 và ở vị trí 17. Đây <b>chính xác</b> là vấn đề của ảnh, chỉ chuyển từ trục không gian sang trục thời gian — và lời giải cũng chính xác là lời giải đó: <b>chia sẻ trọng số</b>.</p>
 
         <div class="spine">
-          <div class="s-m"><div class="lbl">Mô hình</div><div class="v">Một khối duy nhất, chạy lặp lại cho từng bước thời gian, mang theo một <b>trạng thái ẩn</b> a từ bước trước. <b>Cùng một W cho mọi bước.</b></div></div>
-          <div class="s-l"><div class="lbl">Mất mát</div><div class="v">Cộng mất mát của <b>mọi bước thời gian</b>. Với mô hình ngôn ngữ, mỗi bước là một softmax trên toàn bộ từ điển.</div></div>
-          <div class="s-o"><div class="lbl">Tối ưu</div><div class="v">Backprop, nhưng chảy ngược <b>theo trục thời gian</b> — gọi là BPTT. Cùng thuật toán, đường đi dài hơn.</div></div>
+          <div class="s-m"><div class="lbl">Mô hình · model</div><div class="v">Một khối duy nhất, chạy lặp lại cho từng bước thời gian, mang theo một <b>trạng thái ẩn</b> a từ bước trước. <b>Cùng một W cho mọi bước.</b></div></div>
+          <div class="s-l"><div class="lbl">Mất mát · loss</div><div class="v">Cộng mất mát của <b>mọi bước thời gian</b>. Với mô hình ngôn ngữ, mỗi bước là một softmax trên toàn bộ từ điển.</div></div>
+          <div class="s-o"><div class="lbl">Tối ưu · optimizer</div><div class="v">Backprop, nhưng chảy ngược <b>theo trục thời gian</b> — gọi là BPTT. Cùng thuật toán, đường đi dài hơn.</div></div>
         </div>
 
         <div class="fx">
@@ -2368,7 +2417,7 @@ footer a { color:var(--muted); }
         <span class="map">Bản gốc · <b>DLS C5 Tuần 3</b> · Basic Models, Beam Search, Refinements, Error Analysis, BLEU</span>
         <h2 class="st">Encoder–decoder, và vì sao chọn từng từ tốt nhất lại cho ra câu tệ</h2>
 
-        <p class="lede">Dịch máy: một RNN <b>đọc</b> hết câu tiếng Việt và nén nó thành một vector; một RNN khác <b>viết</b> câu tiếng Anh từ vector đó. Chú thích ảnh dùng đúng khung này, chỉ thay encoder bằng một CNN. Kiến trúc đẹp và tổng quát — nhưng nó đẻ ra một bài toán mới mà chặng trước chưa có.</p>
+        <p class="lede">Kiến trúc này tên là <b>seq2seq</b> (sequence to sequence). Dịch máy: một RNN <b>đọc</b> hết câu tiếng Việt và nén nó thành một vector; một RNN khác <b>viết</b> câu tiếng Anh từ vector đó. Chú thích ảnh dùng đúng khung này, chỉ thay encoder bằng một CNN. Kiến trúc đẹp và tổng quát — nhưng nó đẻ ra một bài toán mới mà chặng trước chưa có.</p>
 
         <p>Bài toán mới: decoder ở mỗi bước cho ra <i>phân phối xác suất</i> của từ kế tiếp. Bạn cần <b>cả câu</b> có xác suất cao nhất, không phải <i>từng từ</i> có xác suất cao nhất. Hai thứ đó khác nhau, và đây là chỗ trực giác hay sai.</p>
 
@@ -2480,9 +2529,9 @@ footer a { color:var(--muted); }
         <p class="lede">RNN có một hạn chế không sửa được bằng cách tinh chỉnh: <b>nó bắt buộc phải xử lý từ trái sang phải, từng bước một</b>. Muốn tính bước 100 thì phải xong bước 99. Trên một cỗ máy có hàng nghìn nhân tính toán song song, đó là lãng phí gần như toàn bộ phần cứng. Bài báo 2017 đặt câu hỏi táo bạo: <b>nếu attention đã nối trực tiếp mọi cặp từ, thì còn cần tính tuần tự để làm gì?</b> Nhan đề của nó chính là câu trả lời — <i>Attention Is All You Need</i>.</p>
 
         <div class="spine">
-          <div class="s-m"><div class="lbl">Mô hình</div><div class="v">Xếp chồng các khối <b>self-attention nhiều đầu + mạng thường</b>, mỗi khối có kết nối tắt và chuẩn hoá. <b>Không có vòng lặp thời gian.</b></div></div>
-          <div class="s-l"><div class="lbl">Mất mát</div><div class="v">Vẫn cross-entropy trên từ kế tiếp. <b>Không đổi từ chặng 2.</b></div></div>
-          <div class="s-o"><div class="lbl">Tối ưu</div><div class="v">Vẫn Adam + backprop. <b>Không đổi từ chặng 2.</b></div></div>
+          <div class="s-m"><div class="lbl">Mô hình · model</div><div class="v">Xếp chồng các khối <b>self-attention nhiều đầu + mạng thường</b>, mỗi khối có kết nối tắt và chuẩn hoá. <b>Không có vòng lặp thời gian.</b></div></div>
+          <div class="s-l"><div class="lbl">Mất mát · loss</div><div class="v">Vẫn cross-entropy trên từ kế tiếp. <b>Không đổi từ chặng 2.</b></div></div>
+          <div class="s-o"><div class="lbl">Tối ưu · optimizer</div><div class="v">Vẫn Adam + backprop. <b>Không đổi từ chặng 2.</b></div></div>
         </div>
 
         <p>Lại là dải quen thuộc: <b>hai trong ba bộ phận không đổi</b>. Kiến trúc đã lật đổ cả một ngành, mà hàm mất mát và thuật toán tối ưu thì y hệt cái bạn đã học ở mục hồi quy logistic.</p>
@@ -2529,9 +2578,9 @@ footer a { color:var(--muted); }
         <h2 class="st">K-means: hai bước lặp lại, và một cái bẫy tên là điểm xuất phát</h2>
 
         <div class="spine">
-          <div class="s-m"><div class="lbl">Mô hình</div><div class="v"><b>K điểm tâm cụm</b>. Mỗi dữ liệu thuộc về tâm gần nó nhất. Vẽ được: các vùng đa giác lồi (ô Voronoi). Không vẽ được: cụm hình vành khăn hay hình chữ C.</div></div>
-          <div class="s-l"><div class="lbl">Mất mát</div><div class="v"><b>Distortion</b> — trung bình bình phương khoảng cách từ mỗi điểm tới tâm cụm của nó. Nó <b>phải giảm ở mọi bước</b>; tăng là có bug.</div></div>
-          <div class="s-o"><div class="lbl">Tối ưu</div><div class="v">Không phải gradient descent, mà <b>tối ưu luân phiên</b>: cố định tâm rồi gán điểm, cố định gán rồi dời tâm. Mỗi bước đều giảm distortion.</div></div>
+          <div class="s-m"><div class="lbl">Mô hình · model</div><div class="v"><b>K điểm tâm cụm</b>. Mỗi dữ liệu thuộc về tâm gần nó nhất. Vẽ được: các vùng đa giác lồi (ô Voronoi). Không vẽ được: cụm hình vành khăn hay hình chữ C.</div></div>
+          <div class="s-l"><div class="lbl">Mất mát · loss</div><div class="v"><b>Distortion</b> — trung bình bình phương khoảng cách từ mỗi điểm tới tâm cụm của nó. Nó <b>phải giảm ở mọi bước</b>; tăng là có bug.</div></div>
+          <div class="s-o"><div class="lbl">Tối ưu · optimizer</div><div class="v">Không phải gradient descent, mà <b>tối ưu luân phiên</b>: cố định tâm rồi gán điểm, cố định gán rồi dời tâm. Mỗi bước đều giảm distortion.</div></div>
         </div>
 
         <p>Thuật toán, đầy đủ, hai bước:</p>
@@ -2674,9 +2723,9 @@ footer a { color:var(--muted); }
         <p class="lede">Dạy trực thăng tự bay. Bạn <b>không thể</b> gán nhãn "ở trạng thái này, góc lái đúng là 12,4 độ" — chính bạn cũng không biết. Nhưng bạn <i>biết</i> khi nào nó bay tốt và khi nào nó rơi. Học tăng cường thay nhãn bằng <b>phần thưởng</b>: một con số nói kết quả tốt hay tệ, đến <i>sau</i> một chuỗi hành động, và <b>không nói hành động nào trong chuỗi đã đúng</b>. Đó gọi là bài toán gán công trạng, và nó là toàn bộ độ khó.</p>
 
         <div class="spine">
-          <div class="s-m"><div class="lbl">Mô hình</div><div class="v">Hàm <b>Q(s, a)</b>: "nếu đang ở trạng thái s, làm hành động a, rồi từ đó về sau chơi tối ưu, thì tổng thưởng là bao nhiêu". Với trạng thái liên tục, Q là một mạng nơ-ron.</div></div>
-          <div class="s-l"><div class="lbl">Mất mát</div><div class="v">Bình phương sai lệch giữa Q hiện tại và <b>vế phải phương trình Bellman</b> — tức là ép Q phải nhất quán với chính nó ở bước sau.</div></div>
-          <div class="s-o"><div class="lbl">Tối ưu</div><div class="v">Vẫn gradient descent trên mạng Q. Cái mới nằm ở chỗ <b>nhãn được tự sinh ra từ chính mô hình</b>, và nó thay đổi khi mô hình thay đổi.</div></div>
+          <div class="s-m"><div class="lbl">Mô hình · model</div><div class="v">Hàm <b>Q(s, a)</b>: "nếu đang ở trạng thái s, làm hành động a, rồi từ đó về sau chơi tối ưu, thì tổng thưởng là bao nhiêu". Với trạng thái liên tục, Q là một mạng nơ-ron.</div></div>
+          <div class="s-l"><div class="lbl">Mất mát · loss</div><div class="v">Bình phương sai lệch giữa Q hiện tại và <b>vế phải phương trình Bellman</b> — tức là ép Q phải nhất quán với chính nó ở bước sau.</div></div>
+          <div class="s-o"><div class="lbl">Tối ưu · optimizer</div><div class="v">Vẫn gradient descent trên mạng Q. Cái mới nằm ở chỗ <b>nhãn được tự sinh ra từ chính mô hình</b>, và nó thay đổi khi mô hình thay đổi.</div></div>
         </div>
 
         <p>Ba khái niệm phải có trước khi đọc công thức:</p>
@@ -2737,7 +2786,7 @@ footer a { color:var(--muted); }
       </div>
 
       <section id="s-dated">
-        <p class="sechead"><b>Kết 1/4</b> — đánh giá trung thực về tuổi của tài liệu</p>
+        <p class="sechead"><b>Kết 1/5</b> — đánh giá trung thực về tuổi của tài liệu</p>
         <h2 class="st">Cái gì bền, cái gì đã trôi, và khoảng cách còn lại tới hiện tại</h2>
 
         <div class="grid2">
@@ -2772,7 +2821,7 @@ footer a { color:var(--muted); }
       </section>
 
       <section id="s-mistakes">
-        <p class="sechead"><b>Kết 2/4</b> — những chỗ người ta ngã, xếp theo thứ tự hay gặp</p>
+        <p class="sechead"><b>Kết 2/5</b> — những chỗ người ta ngã, xếp theo thứ tự hay gặp</p>
         <h2 class="st">14 sai lầm mà bạn sẽ mắc ít nhất một nửa nếu không đọc trước</h2>
 
         <div class="tw">
@@ -2799,7 +2848,7 @@ footer a { color:var(--muted); }
       </section>
 
       <section id="s-cheat">
-        <p class="sechead"><b>Kết 3/4</b> — dán lên tường</p>
+        <p class="sechead"><b>Kết 3/5</b> — dán lên tường</p>
         <h2 class="st">Bảng tra cứu</h2>
 
         <h3>Chọn hàm mất mát theo kiểu đáp án</h3>
@@ -2874,8 +2923,34 @@ footer a { color:var(--muted); }
         <p class="dim" style="font-size:13px">Hai chủ đề trong bản gốc được nhắc gọn trong trang này thay vì có mục riêng, vì chúng là ứng dụng chứ không phải nguyên lý mới: <b>nhận dạng giọng nói &amp; CTC</b> và <b>phát hiện từ khoá kích hoạt</b> (DLS C5 Tuần 3) — cả hai đều là RNN/attention áp lên chuỗi âm thanh; và <b>1D/3D generalizations của tích chập</b> (DLS C4 Tuần 4) — cùng công thức, đổi số chiều.</p>
       </section>
 
+      <section id="s-glossary">
+        <p class="sechead"><b>Kết 4/5</b> — tên tiếng Anh chính thức của mọi khái niệm trong trang</p>
+        <h2 class="st">Từ điển thuật ngữ EN ↔ VI</h2>
+
+        <p class="lede">Trang này giải thích bằng tiếng Việt, nhưng <b>tài liệu, bài báo, thư viện và mọi bài giảng gốc đều dùng tiếng Anh</b>. Nếu bạn chỉ nhớ "lan truyền ngược" mà không nhớ <i>backpropagation</i>, bạn sẽ không tra được gì. Bảng này ghép hai tên lại.</p>
+
+        <p>Trong toàn bộ trang, <b>mọi thuật ngữ được gạch chân chấm là bấm được</b> — bấm vào sẽ hiện tên tiếng Anh chính thức, tên tiếng Việt, một câu giải thích, và đường dẫn tới mục nói kỹ về nó. Bảng dưới đây là cùng bộ dữ liệu ấy, xếp theo thứ tự bảng chữ cái để tra nhanh.</p>
+
+        <div class="gl-bar">
+          <input type="text" id="gl-q" placeholder="Lọc: gõ tiếng Anh hoặc tiếng Việt…" aria-label="Lọc từ điển">
+          <span class="gl-count" id="gl-count"></span>
+        </div>
+        <div class="tw gl-tw">
+          <table>
+            <thead><tr><th>English</th><th>Tiếng Việt</th><th>Nghĩa ngắn</th><th>Mục</th></tr></thead>
+            <tbody id="gl-body"></tbody>
+          </table>
+        </div>
+
+        <div class="box note">
+          <p class="box__k">Quy ước dịch trong trang này</p>
+          <p>Ba loại từ được <b>giữ nguyên tiếng Anh</b>, không dịch, vì bản dịch tiếng Việt hoặc không tồn tại hoặc gây hại nhiều hơn lợi: <b>(1) tên riêng của thuật toán và kiến trúc</b> — gradient descent, Adam, dropout, batch norm, softmax, ReLU, ResNet, LSTM, Transformer, XGBoost; <b>(2) tên tham số và hàm bạn sẽ gõ trong code</b> — learning rate, epoch, mini-batch, logits, keep_prob; <b>(3) thuật ngữ mà cộng đồng Việt cũng nói bằng tiếng Anh</b> — overfitting, bias/variance, embedding, attention, fine-tune.</p>
+          <p>Các khái niệm còn lại được dịch để câu văn đọc trôi, <b>nhưng tên tiếng Anh luôn có mặt</b>: hoặc trong chip "Bản gốc" ở đầu mỗi mục (chép nguyên tên bài giảng của Ng), hoặc trong popup khi bạn bấm vào thuật ngữ, hoặc trong bảng này.</p>
+        </div>
+      </section>
+
       <section id="s-learn">
-        <p class="sechead"><b>Kết 4/4</b> — nếu chỉ giữ lại vài câu</p>
+        <p class="sechead"><b>Kết 5/5</b> — nếu chỉ giữ lại vài câu</p>
         <h2 class="st">Năm câu mang theo, và chỗ đọc tiếp</h2>
 
         <div class="grid2">
@@ -4449,6 +4524,422 @@ function accuracy(net, data) {
   }
   ['m13-g', 'm13-r1', 'm13-r6'].forEach(function (id) { $(id).addEventListener('input', draw); });
   redraws.push(draw); draw();
+})();
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   TỪ ĐIỂN THUẬT NGỮ + POPUP GIẢI THÍCH
+   Mỗi mục: [ tên tiếng Anh chính thức, tên tiếng Việt, nghĩa ngắn, mục để đọc kỹ,
+             các cách viết khác cần nhận ra trong bài, cách nhau bằng | ]
+   Cùng một mảng này vừa sinh ra popup khi bấm vào thuật ngữ trong bài, vừa sinh ra
+   bảng tra ở mục #s-glossary — nên hai chỗ không bao giờ lệch nhau.
+   ═════════════════════════════════════════════════════════════════════════════ */
+var GLOSS = [
+/* ── nền tảng ─────────────────────────────────────────────────────────────── */
+['supervised learning','học có giám sát','Bạn có sẵn cặp (đầu vào, đáp án đúng) và máy học ánh xạ giữa chúng. Chiếm phần lớn giá trị kinh tế mà học máy tạo ra.','#s-why','học có giám sát'],
+['unsupervised learning','học không giám sát','Chỉ có đầu vào, không ai nói đâu là đáp án. Máy đi tìm cấu trúc tự có: cụm, cái bất thường, chiều nén được.','#s-why','học không giám sát'],
+['feature','đặc trưng','Một cột dữ liệu mô tả ví dụ — diện tích, số phòng ngủ. Ký hiệu x. Số đặc trưng là n.','#s-thread','đặc trưng'],
+['label','nhãn','Đáp án đúng đi kèm một ví dụ. Ký hiệu y. Có nhãn thì là học có giám sát.','#s-thread','nhãn'],
+['parameter','tham số','Con số mà việc huấn luyện chỉnh — w và b. Khác siêu tham số: siêu tham số do bạn chọn, tham số do máy tìm.','#s-linreg','tham số'],
+['hyperparameter','siêu tham số','Con số bạn tự chọn trước khi huấn luyện: learning rate, số lớp, λ, cỡ mini-batch. Máy không học nó.','#s-regdl','siêu tham số'],
+['loss function','hàm mất mát','Đo mô hình sai bao nhiêu trên MỘT ví dụ. Ký hiệu L. Ép mọi thứ về một con số duy nhất để đi giảm.','#s-machine','hàm mất mát'],
+['cost function','hàm chi phí','Trung bình hàm mất mát trên CẢ tập. Ký hiệu J. Ng phân biệt rõ L (một ví dụ) và J (cả tập).','#s-cost','hàm chi phí'],
+['generalization','tổng quát hoá','Khả năng làm đúng trên dữ liệu CHƯA THẤY. Đây là mục tiêu thật, không phải khớp dữ liệu đang có.','#s-overfit','tổng quát hoá'],
+['inference','suy luận','Chạy mô hình đã huấn luyện để lấy dự đoán. Ở bước này phải TẮT dropout và dùng trung bình trượt của batch norm.','#s-regdl','suy luận'],
+['distribution','phân phối','Kiểu dữ liệu mà mẫu được lấy ra từ đó. Dev/test phải cùng phân phối với dữ liệu ngày triển khai, nếu không bạn ngắm sai bia.','#s-split','phân phối'],
+
+/* ── chặng 1 ──────────────────────────────────────────────────────────────── */
+['linear regression','hồi quy tuyến tính','Mô hình f(x) = w·x + b. Dự đoán một số thực. Chỉ vẽ được đường thẳng hoặc siêu phẳng.','#s-linreg','hồi quy tuyến tính'],
+['mean squared error','sai số bình phương trung bình','Hàm mất mát cho hồi quy: trung bình của (dự đoán − thật)². Phạt nặng sai lớn, trơn, và lồi với mô hình tuyến tính.','#s-cost','MSE|sai số bình phương'],
+['gradient descent','tụt dốc theo đạo hàm','Đứng ở một điểm, tính hướng dốc xuống mạnh nhất, bước một bước dài α, lặp lại. Thuật toán tối ưu chạy đằng sau gần như mọi hệ thống AI hôm nay.','#s-gd',''],
+['learning rate','độ dài bước học','Ký hiệu α. Quá nhỏ thì bò cả ngày, quá lớn thì nhảy qua đáy và <b>phân kỳ</b>. Siêu tham số quan trọng nhất — dò theo bội số 3 trên thang log.','#s-gd','learning rate'],
+['convergence','hội tụ','Chi phí thôi giảm đáng kể — thuật toán đã tới (gần) đáy. Dấu hiệu tốt: J giảm ở mọi vòng.','#s-gd','hội tụ'],
+['divergence','phân kỳ','Chi phí tăng theo cấp số nhân rồi ra NaN. Nguyên nhân số một: α quá lớn.','#s-gd','phân kỳ'],
+['convex','lồi','Bề mặt hình bát, chỉ có ĐÚNG MỘT đáy. Hồi quy tuyến tính và logistic thì lồi; mạng nơ-ron thì không.','#s-cost','lồi'],
+['local minimum','cực tiểu địa phương','Một đáy nhỏ không phải đáy sâu nhất. Đứng ở đó gradient bằng 0 y như ở đáy thật, nên thuật toán không biết mình đang ở đâu.','#s-gd','cực tiểu địa phương|đáy cục bộ|đáy nhỏ'],
+['saddle point','điểm yên ngựa','Điểm cong lên theo vài chiều và cong xuống theo vài chiều khác. Trong không gian nhiều chiều, đây là thứ ta gặp thật — nó làm CHẬM chứ không làm KẸT.','#s-optim','điểm yên ngựa'],
+['normal equation','công thức đóng cho hồi quy','Giải trực tiếp ra w tối ưu bằng đại số, không lặp. Nhưng cần nghịch đảo ma trận n×n và chỉ dùng được cho hồi quy tuyến tính — nên không mở rộng.','#s-gd','normal equation|công thức đóng'],
+['feature scaling','chuẩn hoá đặc trưng','Đưa mọi đặc trưng về cùng thang đo. Không đổi bài toán, nhưng đổi HÌNH DẠNG bề mặt chi phí — nhờ đó khoảng α dùng được rộng ra nhiều bậc.','#s-scale','chuẩn hoá đặc trưng'],
+['z-score normalization','chuẩn hoá theo độ lệch chuẩn','(x − µ) / σ. Cách chuẩn hoá phổ biến nhất. µ và σ phải tính TRÊN TẬP HUẤN LUYỆN rồi áp cho mọi tập.','#s-scale','z-score'],
+['data leakage','rò rỉ dữ liệu','Thông tin từ tập kiểm thử lọt vào lúc huấn luyện. Kết quả đẹp bất thường trên giấy rồi sập khi triển khai. Nguồn phổ biến nhất: tính µ, σ trên toàn bộ dữ liệu trước khi chia tập.','#s-scale','rò rỉ dữ liệu'],
+['logistic regression','hồi quy logistic','Vẫn là w·x + b, nhưng bọc sigmoid ở ngoài để đầu ra đọc được thành xác suất. Ranh giới nó vẽ được vẫn là đường thẳng.','#s-logistic','hồi quy logistic'],
+['sigmoid','hàm sigmoid','σ(z) = 1/(1+e⁻ᶻ). Cái phễu ép mọi số thực về khoảng (0,1). Chỉ nên dùng ở LỚP ĐẦU RA cho bài nhị phân, đừng dùng ở lớp ẩn.','#s-logistic',''],
+['decision boundary','ranh giới quyết định','Chỗ mô hình phân vân đúng 50-50, tức z = 0. Sigmoid KHÔNG làm cong ranh giới — muốn cong thì phải thêm đặc trưng cong hoặc dùng mạng nơ-ron.','#s-logistic','ranh giới quyết định'],
+['log loss','hàm mất mát logarit','Còn gọi binary cross-entropy. Chỉ nhìn xác suất mô hình gán cho ĐÁP ÁN ĐÚNG rồi phạt theo logarit. Tự tin mà sai thì phạt tới vô cực.','#s-logistic','log loss'],
+['binary cross-entropy','entropy chéo nhị phân','Tên chính thức của log loss. Dùng với lớp đầu ra sigmoid một nơ-ron.','#s-logistic','binary cross-entropy'],
+['overfitting','quá khớp','Mô hình học thuộc cả nhiễu trong tập huấn luyện. Sai số huấn luyện gần 0, sai số dữ liệu mới thảm. Ng gọi là <b>variance cao</b>.','#s-overfit','quá khớp'],
+['underfitting','thiếu khớp','Mô hình quá nghèo hình dạng để bám nổi xu thế. Sai CẢ trên tập huấn luyện. Ng gọi là <b>bias cao</b>.','#s-overfit','thiếu khớp'],
+['regularization','phạt tham số lớn','Cộng thêm vào hàm chi phí một khoản phạt cho việc để trọng số lớn. Giữ hết đặc trưng nhưng ép mô hình mượt hơn.','#s-overfit',''],
+['L2 regularization','phạt bình phương trọng số','Khoản phạt là λ·Σw². Còn gọi ridge, và trong học sâu gọi là <b>weight decay</b>. Không phạt b — b không làm mô hình phức tạp hơn.','#s-overfit','L2|weight decay'],
+['lambda','hệ số phạt λ','Quyết định mô hình nghiêng về "khớp dữ liệu" hay "đơn giản". λ = 0 là tắt phạt; λ rất lớn ép mô hình thành một hằng số. Phải dò bằng tập dev.','#s-overfit','λ'],
+['polynomial regression','hồi quy đa thức','Thêm x², x³… làm đặc trưng mới rồi vẫn chạy hồi quy tuyến tính. Vẽ được đường cong mà vẫn là mô hình tuyến tính ĐỐI VỚI w.','#s-linreg','hồi quy đa thức'],
+['feature engineering','chế đặc trưng bằng tay','Tự nghĩ ra đặc trưng mới từ đặc trưng cũ (tỉ số, luỹ thừa, tổ hợp). Trước 2012 đây là phần lớn công việc — và mạng nơ-ron ra đời để máy tự làm bước này.','#s-linreg',''],
+['vectorization','vector hoá','Viết phép tính thành phép nhân ma trận thay vì vòng lặp. Không phải ký hiệu cho oai: GPU chạy song song nên nhanh hơn hàng chục lần.','#s-linreg','vector hoá'],
+['dot product','tích vô hướng','Nhân từng cặp phần tử rồi cộng lại: w·x. Phép tính nền của mọi thứ trong trang này, kể cả attention.','#s-linreg','tích vô hướng'],
+
+/* ── chặng 2 ──────────────────────────────────────────────────────────────── */
+['neural network','mạng nơ-ron','Nhiều hồi quy logistic xếp thành lớp, đầu ra lớp trước làm đầu vào lớp sau. Cái nó mua cho bạn là <b>khả năng tự sinh đặc trưng trung gian</b>.','#s-nn','mạng nơ-ron'],
+['hidden layer','lớp ẩn','Lớp nằm giữa đầu vào và đầu ra. Gọi là "ẩn" vì bạn không chỉ định nó phải học gì — gradient descent tự quyết.','#s-nn','lớp ẩn'],
+['forward propagation','lan truyền xuôi','Chạy dữ liệu từ đầu vào tới đầu ra để lấy dự đoán. Chỉ là lặp lại a = g(Wa + b) từ lớp 1 tới lớp cuối.','#s-nn','lan truyền xuôi'],
+['backpropagation','lan truyền ngược','Tính đạo hàm cho MỌI tham số với chi phí xấp xỉ một lần chạy xuôi. Cơ chế: quy tắc chuỗi + không tính lại cái đã tính.','#s-backprop','lan truyền ngược|backprop'],
+['chain rule','quy tắc chuỗi','Nếu a ảnh hưởng b và b ảnh hưởng c thì ∂c/∂a = (∂c/∂b)(∂b/∂a). Toàn bộ backprop là quy tắc này áp lặp lại.','#s-backprop','quy tắc chuỗi'],
+['computation graph','đồ thị tính toán','Biểu thức vẽ thành các nút và mũi tên. Chạy xuôi thì điền giá trị, chạy ngược thì mỗi bước chỉ là một phép nhân.','#s-backprop','đồ thị tính toán'],
+['activation function','hàm kích hoạt','Phần PHI TUYẾN của một nơ-ron, ký hiệu g. Bỏ nó đi thì mạng 100 lớp thu gọn về đúng một đường thẳng.','#s-act','hàm kích hoạt'],
+['ReLU','đơn vị tuyến tính chỉnh','max(0, z). Mặc định cho mọi lớp ẩn. Thắng vì đạo hàm là 0 hoặc 1 — không bão hoà, tính cực nhanh.','#s-act',''],
+['tanh','hàm tang hyperbolic','Giống sigmoid nhưng đầu ra căn giữa quanh 0, nên gần như luôn tốt hơn sigmoid ở lớp ẩn. Vẫn bão hoà ở hai đầu.','#s-act',''],
+['softmax','hàm softmax','Nhận k điểm số, trả về k xác suất cộng lại bằng 1. Với k = 2 nó rút gọn về đúng sigmoid. Nó nhìn CẢ vector cùng lúc.','#s-softmax',''],
+['cross-entropy','entropy chéo','Hàm mất mát cho phân loại: −log(xác suất mô hình gán cho lớp đúng). Các lớp khác không xuất hiện trong công thức.','#s-softmax','cross-entropy'],
+['logits','điểm thô trước softmax','Đầu ra tuyến tính z của lớp cuối, chưa qua softmax. Truyền logits cho hàm mất mát (<code>from_logits=True</code>) ổn định số học hơn nhiều.','#s-softmax','from_logits'],
+['multiclass classification','phân loại đa lớp','Mỗi mẫu thuộc ĐÚNG MỘT lớp. Dùng softmax, xác suất cộng bằng 1.','#s-softmax','đa lớp|multiclass'],
+['multilabel classification','phân loại đa nhãn','Mỗi mẫu có thể mang NHIỀU nhãn cùng lúc. Dùng nhiều sigmoid độc lập, KHÔNG dùng softmax.','#s-softmax','đa nhãn|multilabel'],
+['weight initialization','khởi tạo trọng số','Đặt giá trị ban đầu cho w. Khởi tạo toàn 0 làm mọi nơ-ron trong một lớp giống hệt nhau mãi mãi; khởi tạo sai thang làm gradient tan biến.','#s-init','khởi tạo trọng số|khởi tạo'],
+['He initialization','khởi tạo He','Phương sai 2/n với n là số đầu vào của lớp. Mặc định khi dùng ReLU — hệ số 2 bù cho việc ReLU cắt mất một nửa tín hiệu.','#s-init',''],
+['Xavier initialization','khởi tạo Xavier','Phương sai 1/n. Dùng với tanh và sigmoid. Còn gọi khởi tạo Glorot.','#s-init','Xavier|Glorot'],
+['symmetry breaking','phá đối xứng','Lý do phải khởi tạo NGẪU NHIÊN: nếu mọi nơ-ron trong một lớp bắt đầu giống nhau, chúng nhận cùng gradient và mãi mãi giống nhau.','#s-init','phá đối xứng|đối xứng'],
+['vanishing gradient','gradient tan biến','Gradient chảy qua nhiều lớp là tích của nhiều số nhỏ hơn 1, nên teo về 0 và các lớp đầu ĐỨNG YÊN. Không báo lỗi, chỉ là kết quả tệ khó hiểu.','#s-init','gradient tan biến'],
+['exploding gradient','gradient bùng nổ','Ngược lại: tích của nhiều số lớn hơn 1 làm cập nhật văng mô hình đi mất, thấy NaN. Chữa bằng cắt ngưỡng gradient.','#s-init','gradient bùng nổ'],
+['gradient checking','kiểm tra gradient bằng số','So gradient của bạn với đạo hàm tính theo định nghĩa (J(θ+ε)−J(θ−ε))/2ε. Chỉ để DEBUG rồi tắt đi, và không dùng chung với dropout.','#s-init','gradient checking|kiểm tra gradient'],
+['gradient clipping','cắt ngưỡng gradient','Nếu chuẩn của gradient vượt ngưỡng thì co nó lại. Thô nhưng hiệu quả, và là cách chuẩn để chữa gradient bùng nổ trong RNN.','#s-rnn','cắt ngưỡng gradient'],
+['mini-batch','lô nhỏ','Chia dữ liệu thành các lô rồi bước một bước mỗi lô, thay vì chờ tính hết cả tập. Mỗi bước nhiễu hơn nhưng tổng thể nhanh hơn nhiều. Thường 64–512.','#s-optim','lô nhỏ'],
+['epoch','một lượt qua hết dữ liệu','Một epoch = mô hình đã xem qua toàn bộ tập huấn luyện một lần. Với mini-batch, một epoch gồm nhiều bước cập nhật.','#s-optim',''],
+['stochastic gradient descent','tụt dốc ngẫu nhiên','Mini-batch với cỡ lô bằng 1. Cực nhiễu, và mất hết lợi thế vector hoá nên thường CHẬM hơn trên GPU dù mỗi bước rẻ.','#s-optim','SGD'],
+['exponentially weighted average','trung bình trượt theo cấp số nhân','v := βv + (1−β)·giá trị mới. Một dòng, không cần lưu lịch sử, và là nền tảng chung của momentum, RMSprop lẫn Adam.','#s-optim','trung bình trượt'],
+['momentum','quán tính','Làm mượt GRADIENT bằng trung bình trượt: nhiễu ngang triệt tiêu nhau, xu hướng dọc cộng dồn. Bớt zigzag trong khe hẹp. β = 0,9 gần như luôn dùng được.','#s-optim',''],
+['RMSprop','chia bước theo độ lớn gradient','Làm mượt BÌNH PHƯƠNG gradient rồi chia bước cho căn của nó. Kết quả: mỗi tham số có learning rate riêng, tự điều chỉnh.','#s-optim',''],
+['Adam','trình tối ưu Adam','Adaptive moment estimation — dùng cả momentum lẫn RMSprop, cộng hiệu chỉnh chệch cho những vòng đầu. Mặc định hợp lý cho gần như mọi thứ. β₁=0,9 · β₂=0,999 · ε=10⁻⁸.','#s-optim',''],
+['learning rate decay','giảm dần α theo thời gian','Bước lớn lúc đầu để đi nhanh, bước nhỏ lúc cuối để không nảy quanh đáy. Có ích, nhưng tìm đúng α₀ quan trọng hơn nhiều so với chọn đúng lịch giảm.','#s-optim','learning rate decay'],
+['dropout','tắt ngẫu nhiên nơ-ron','Mỗi bước huấn luyện tắt ngẫu nhiên một tỉ lệ nơ-ron, buộc mạng phân tán trách nhiệm. <b>Phải TẮT hoàn toàn lúc suy luận</b> — bật nhầm là bug âm thầm hay gặp nhất.','#s-regdl',''],
+['inverted dropout','dropout nghịch đảo','Bản dropout phổ biến: sau khi tắt, chia phần còn lại cho keep_prob để kỳ vọng đầu ra không đổi. Nhờ vậy lúc dự đoán không phải chỉnh gì.','#s-regdl','inverted dropout|keep_prob'],
+['batch normalization','chuẩn hoá theo lô','Chuẩn hoá z ngay TRONG từng lớp về trung bình 0 phương sai 1, rồi nhân lại với hai tham số học được γ, β. Huấn luyện nhanh hơn rõ rệt.','#s-regdl','batch norm|batch normalization'],
+['data augmentation','tăng cường dữ liệu','Lật, xoay, cắt cúp, méo màu để tạo ví dụ mới từ ví dụ cũ. Rẻ hơn đi gán nhãn thêm. Chỉ dùng phép biến đổi KHÔNG đổi nhãn.','#s-regdl','tăng cường dữ liệu'],
+['early stopping','dừng sớm','Dừng huấn luyện ngay khi sai số dev bắt đầu đi lên. Hiệu quả nhưng Ng không thích: nó động vào hai núm cùng lúc, phá trực giao hoá.','#s-regdl','dừng sớm'],
+['universal approximation','xấp xỉ phổ quát','Định lý nói một lớp ẩn đủ rộng đã xấp xỉ được mọi hàm liên tục. Nhưng "đủ rộng" có thể là rộng theo cấp số nhân — nên vẫn cần độ sâu.','#s-deep','xấp xỉ phổ quát'],
+
+/* ── chặng 3 ──────────────────────────────────────────────────────────────── */
+['training set','tập huấn luyện','Dữ liệu dùng để chỉnh tham số w, b. Sai số đo ở đây LUÔN lạc quan vì mô hình đã thấy nó.','#s-split','tập huấn luyện'],
+['dev set','tập kiểm định','Còn gọi validation set. Dùng để chọn siêu tham số và để chẩn đoán. Phải cùng phân phối với dữ liệu ngày triển khai.','#s-split','dev set|validation set|tập dev'],
+['test set','tập kiểm thử','Chỉ để báo cáo con số cuối cùng, xem đúng một lần. Xem nhiều lần rồi chỉnh theo là bạn đã biến nó thành tập dev thứ hai.','#s-split','test set|tập kiểm thử'],
+['cross-validation','kiểm định chéo','Cách dùng dữ liệu tiết kiệm để chọn mô hình: chia thành k phần, lần lượt lấy một phần làm tập kiểm định. Ng gọi tập dev là cross-validation set.','#s-split','cross validation|kiểm định chéo'],
+['bias','thiên lệch của mô hình','CẢNH BÁO hai nghĩa: (1) <b>bias</b> = mô hình quá nghèo hình dạng, sai cả trên tập huấn luyện; (2) <b>bias term b</b> = tham số độ chệch trong w·x + b. Ngữ cảnh quyết định.','#s-bias',''],
+['variance','phương sai của mô hình','Khoảng cách giữa sai số dev và sai số huấn luyện. Đo mức mô hình học thuộc lòng thay vì học quy luật.','#s-bias',''],
+['avoidable bias','bias tránh được','Sai số huấn luyện trừ mức con người. Đây là phần bạn CÓ QUYỀN cải thiện. Không có mốc con người thì con số sai số không diễn giải được.','#s-bias','bias tránh được'],
+['human-level performance','mức con người làm được','Mốc thay cho sai số Bayes vì nó ĐO ĐƯỢC: thuê vài chuyên gia làm rồi đếm. Cùng một sai số 8% có thể là thảm hoạ hoặc gần kịch trần, tuỳ mốc này.','#s-bias','mức con người'],
+['Bayes error','sai số Bayes','Giới hạn lý thuyết: mức sai thấp nhất mà BẤT KỲ mô hình nào cũng không vượt qua được, do bản thân dữ liệu có nhiễu.','#s-bias','sai số Bayes|sàn nhiễu|Bayes'],
+['learning curve','đường cong học','Sai số vẽ theo số ví dụ huấn luyện (hoặc theo số vòng lặp). Đây là cách BIẾT TRƯỚC thêm dữ liệu có ích không, thay vì bỏ tiền ra rồi mới biết.','#s-bias','đường cong học'],
+['orthogonalization','trực giao hoá','Giữ cho mỗi "núm" chỉnh đúng một việc, như các núm riêng của chiếc TV cũ. Nhờ vậy bạn biết nên xoay núm nào khi kết quả tệ.','#s-split','trực giao hoá'],
+['single number evaluation metric','một số đo duy nhất','Ép chất lượng mô hình về MỘT con số để so được tức thì. Hai số đo nghĩa là mỗi lần thử nghiệm lại phải họp để tranh luận.','#s-metric','một số đo duy nhất'],
+['satisficing metric','tiêu chí chỉ cần đạt ngưỡng','Tiêu chí bạn chỉ cần vượt ngưỡng, không cần tối đa hoá — ví dụ "chạy dưới 100 ms". Một tiêu chí optimizing, N−1 tiêu chí satisficing.','#s-metric','satisficing'],
+['optimizing metric','tiêu chí cần tối đa hoá','Tiêu chí duy nhất bạn đi tối ưu, sau khi các tiêu chí khác đã đạt ngưỡng.','#s-metric','optimizing metric|optimizing'],
+['precision','độ chuẩn xác','TP/(TP+FP). Trong những ca mô hình BÁO DƯƠNG, bao nhiêu là thật? Nó bỏ qua những ca mô hình bỏ sót hoàn toàn.','#s-metric','độ chuẩn xác'],
+['recall','độ bao phủ','TP/(TP+FN). Trong những ca THẬT SỰ DƯƠNG, mô hình bắt được bao nhiêu? Nó bỏ qua số lần báo động giả.','#s-metric','độ bao phủ'],
+['F1 score','điểm F1','Trung bình ĐIỀU HOÀ của precision và recall: 2PR/(P+R). Chọn điều hoà chứ không phải cộng vì nó trừng phạt sự mất cân bằng.','#s-metric','F1'],
+['threshold','ngưỡng quyết định','Mức xác suất để chuyển dự đoán thành quyết định. Nâng ngưỡng thì precision cao recall thấp, và ngược lại. Đây là lựa chọn của CON NGƯỜI, không phải của thuật toán.','#s-metric','ngưỡng'],
+['skewed dataset','dữ liệu lệch lớp','Một lớp chiếm áp đảo (99,5% âm). Ở đây "tỉ lệ đoán đúng" là số đo dối trá — mô hình luôn nói "âm" cũng đạt 99,5%.','#s-metric','dữ liệu lệch'],
+['error analysis','phân tích lỗi bằng tay','Lấy 100 ca dev mà mô hình làm sai, đếm theo nguyên nhân. Phần trăm mỗi nguyên nhân chính là TRẦN LỢI ÍCH của việc đi sửa nó. Hai tiếng thay cho hai tháng.','#s-error','phân tích lỗi'],
+['ceiling analysis','tính trần lợi ích','Tính TRƯỚC xem giải quyết triệt để một nguyên nhân thì cải thiện được tối đa bao nhiêu. Ngăn bạn đầu tư hai tháng để lấy 0,8%.','#s-error','ceiling analysis|trần lợi ích'],
+['data mismatch','lệch phân phối dữ liệu','Tập huấn luyện và dữ liệu thật khác loại nhau (ảnh web sạch vs ảnh điện thoại mờ). Khác hoàn toàn với quá khớp, và chữa bằng cách khác.','#s-mismatch','lệch phân phối'],
+['train-dev set','tập train-dev','Một tập nhỏ CÙNG PHÂN PHỐI với tập huấn luyện nhưng không đem đi huấn luyện. Cắt ra miễn phí, và nó tách được variance khỏi lệch phân phối.','#s-mismatch','train-dev'],
+['transfer learning','học chuyển giao','Lấy mô hình đã huấn luyện trên bài toán nhiều dữ liệu, bỏ lớp cuối, gắn lớp mới cho bài của bạn. Nước đi đầu tiên đáng thử khi dữ liệu ít.','#s-mismatch','học chuyển giao'],
+['fine-tuning','tinh chỉnh','Huấn luyện tiếp một mô hình đã có sẵn trọng số, với α nhỏ. Khác với huấn luyện từ số ngẫu nhiên.','#s-mismatch','tinh chỉnh|fine-tune'],
+['multi-task learning','học đa nhiệm','Một mạng, nhiều đầu ra, huấn luyện đồng thời cho nhiều nhiệm vụ. Các lớp đầu được chia sẻ nên mỗi nhiệm vụ hưởng lợi từ dữ liệu của nhiệm vụ kia.','#s-mismatch','học đa nhiệm'],
+['end-to-end learning','học đầu-cuối','Một mạng duy nhất đi từ dữ liệu thô tới đáp án cuối, xoá hết khâu trung gian. Thắng khi có RẤT NHIỀU dữ liệu đầu-cuối; là bẫy khi chỉ có dữ liệu cho từng khâu.','#s-e2e','end-to-end'],
+['decision tree','cây quyết định','Chuỗi câu hỏi có/không lồng nhau. Không dùng gradient descent — duyệt tham lam mọi cách tách và chọn cái tốt nhất. Vẽ được các vùng hình hộp song song trục.','#s-trees','cây quyết định'],
+['entropy','độ hỗn độn','Bằng 0 khi nhóm hoàn toàn thuần, bằng 1 khi chia đôi 50-50. Thước "lẫn lộn" mà cây quyết định đi giảm.','#s-trees',''],
+['information gain','lượng thông tin thu được','Entropy trước khi tách trừ trung bình CÓ TRỌNG SỐ của entropy hai nhánh. Cây chọn cách tách làm hiệu này lớn nhất.','#s-trees','information gain|gain'],
+['bagging','gộp nhiều cây song song','Dựng nhiều cây, mỗi cây học trên một mẫu bootstrap (lấy có hoàn lại), rồi bỏ phiếu. Chữa bệnh một-cây-rất-không-ổn-định.','#s-trees',''],
+['random forest','rừng ngẫu nhiên','Bagging cộng thêm một mẹo: tại mỗi nút chỉ được chọn trong một tập con ngẫu nhiên các đặc trưng. Nếu không, mọi cây sẽ giống hệt nhau.','#s-trees','random forest|rừng ngẫu nhiên'],
+['boosting','tăng cường tuần tự','Dựng cây tuần tự, cây sau tập trung vào các mẫu mà cây trước làm sai. Như luyện tập có chủ đích: chơi lại đúng đoạn nhạc mình vấp.','#s-trees',''],
+['XGBoost','cây tăng cường XGBoost','Bản boosting phổ biến nhất. <b>Lựa chọn mặc định cho dữ liệu bảng</b> — thường thắng mạng nơ-ron, huấn luyện nhanh hơn nhiều lần và ít phải chỉnh hơn.','#s-trees',''],
+['one-hot encoding','mã hoá một-nóng','Biến một cột hạng mục k giá trị thành k cột 0/1. Cách chuẩn để đưa dữ liệu hạng mục vào mô hình số.','#s-trees','one-hot'],
+
+/* ── chặng 4: CNN ─────────────────────────────────────────────────────────── */
+['convolution','tích chập','Một bộ lọc nhỏ trượt khắp ảnh, mỗi vị trí tính một tích vô hướng. Cùng một bộ trọng số cho MỌI vị trí — đó là chỗ tiết kiệm tham số.','#s-cnn','tích chập'],
+['filter','bộ lọc tích chập','Còn gọi kernel. Ma trận nhỏ (thường 3×3) mà mạng học được. Chiều sâu của bộ lọc = chiều sâu của đầu vào; SỐ bộ lọc = chiều sâu của đầu ra.','#s-cnn','bộ lọc|kernel'],
+['feature map','bản đồ đặc trưng','Đầu ra của một bộ lọc trượt khắp ảnh — nó cho biết bộ lọc đó "kêu to" ở chỗ nào.','#s-cnn','bản đồ đặc trưng'],
+['padding','đệm viền','Viền thêm số 0 quanh ảnh trước khi tích chập. Không đệm thì ảnh co dần qua mỗi lớp, và điểm ảnh ở góc bị coi nhẹ. "same" = đệm sao cho đầu ra bằng đầu vào.','#s-cnnparts',''],
+['stride','bước trượt','Nhảy mấy ô mỗi lần trượt bộ lọc. s = 2 giảm kích thước đầu ra khoảng một nửa mỗi chiều.','#s-cnnparts',''],
+['channel','kênh','Chiều sâu của một khối dữ liệu. Ảnh RGB có 3 kênh; sau một lớp 32 bộ lọc thì có 32 kênh. Chiều kênh trả lời "CÁI GÌ", chiều không gian trả lời "Ở ĐÂU".','#s-cnnparts','kênh'],
+['pooling','gộp vùng','Max pooling 2×2 giữ giá trị lớn nhất mỗi ô 2×2. KHÔNG có tham số nào để học. Nó nói "ở vùng này có đặc trưng đó không", bỏ qua vị trí chính xác.','#s-cnnparts',''],
+['parameter sharing','chia sẻ tham số','Một bộ dò cạnh dọc dùng được ở mọi vị trí, nên chỉ cần lưu 9 số thay vì học lại cho từng vùng ảnh. Đây là lý do CNN rẻ.','#s-cnn','chia sẻ tham số'],
+['translation invariance','bất biến tịnh tiến','Dịch ảnh sang phải vài pixel thì bản đồ đặc trưng cũng dịch theo, thông tin không mất. Tri thức về ảnh được nhét thẳng vào kiến trúc.','#s-cnn','bất biến tịnh tiến'],
+['ResNet','mạng có kết nối tắt','Kiến trúc thêm đường tắt cộng đầu vào của khối vào đầu ra của nó. Nhờ vậy hàm đồng nhất học được miễn phí, và thêm lớp KHÔNG THỂ làm tệ đi.','#s-cnnarch',''],
+['skip connection','kết nối tắt','Nối đầu vào của một khối thẳng sang đầu ra, vòng qua phần giữa. Xuất hiện ba lần trong trang: ResNet (cho gradient), U-Net (cho chi tiết không gian), Transformer.','#s-cnnarch','kết nối tắt|đường tắt'],
+['1x1 convolution','tích chập 1×1','Nhìn đúng một điểm ảnh nhưng xuyên hết chiều sâu — thực chất là một nơ-ron kết nối đầy đủ chạy trên trục kênh. Dùng để GIẢM số kênh, rẻ hơn 10 lần.','#s-cnnarch','1×1|nút thắt cổ chai|bottleneck'],
+['Inception','khối Inception','Thay vì chọn 1×1 hay 3×3 hay 5×5, làm hết rồi ghép lại và để mạng tự chọn qua trọng số. Xoá một siêu tham số khó.','#s-cnnarch',''],
+['MobileNet','mạng cho điện thoại','Dùng tích chập tách theo chiều sâu: tách một phép conv thành hai bước rẻ hơn. Giảm chi phí tính toán khoảng 10 lần với độ chính xác gần như giữ nguyên.','#s-cnnarch',''],
+['depthwise separable convolution','tích chập tách theo chiều sâu','Kỹ thuật cốt lõi của MobileNet: làm riêng phần không gian rồi mới trộn kênh, thay vì làm cả hai cùng lúc.','#s-cnnarch','tích chập tách theo chiều sâu'],
+['EfficientNet','mạng mở rộng có phối hợp','Tăng ĐỒNG THỜI độ phân giải ảnh, chiều sâu và chiều rộng theo một tỉ lệ chung, thay vì tăng bừa một chiều.','#s-cnnarch',''],
+['object detection','phát hiện vật thể','Trả lời "có những gì, mỗi cái ở đâu, bao nhiêu cái" — khó hơn phân loại hẳn một bậc.','#s-detect','phát hiện vật thể'],
+['bounding box','khung bao','Bốn số bx, by, bh, bw mô tả hình chữ nhật quanh vật. Được học y như mọi tham số khác, không có gì đặc biệt.','#s-detect','khung bao|khung chữ nhật'],
+['IoU','tỉ lệ giao trên hợp','Intersection over Union: diện tích phần giao chia diện tích phần hợp giữa khung dự đoán và khung thật. Ngưỡng quy ước 0,5 — con số này là quy ước của con người.','#s-detect',''],
+['non-max suppression','dẹp khung trùng','Giữ khung tự tin nhất, xoá mọi khung có IoU với nó trên ngưỡng, lặp lại. Không học gì cả nhưng BẮT BUỘC phải có, nếu không đầu ra là một mớ hỗn độn.','#s-detect','non-max suppression'],
+['anchor box','khung mẫu','Mỗi ô lưới dự đoán k khung mẫu với tỉ lệ khác nhau (cao gầy cho người, thấp rộng cho xe). Cách gỡ khi hai vật có tâm rơi cùng một ô.','#s-detect','anchor box|khung mẫu'],
+['YOLO','You Only Look Once','Chia ảnh thành lưới, mỗi ô dự đoán các vật có TÂM rơi vào ô đó. Một lần chạy mạng ra hết — nhanh đủ để chạy thời gian thực trên video.','#s-detect',''],
+['semantic segmentation','phân đoạn ngữ nghĩa','Gán nhãn cho TỪNG PIXEL, không phải một khung chữ nhật. Cần khi bác sĩ muốn biết đúng những pixel nào là khối u.','#s-detect','phân đoạn ngữ nghĩa'],
+['transpose convolution','tích chập chuyển vị','Phép PHÓNG TO có tham số học được, ngược với tích chập thường. Đưa bản đồ đặc trưng nhỏ trở lại kích thước ảnh gốc.','#s-detect','tích chập chuyển vị'],
+['U-Net','kiến trúc chữ U','Nhánh xuống nén ảnh (biết CÁI GÌ, mất Ở ĐÂU), nhánh lên phóng to trở lại, và mỗi tầng có đường tắt chuyển chi tiết không gian sang. Hình chữ U ấy là nguồn gốc cái tên.','#s-detect',''],
+['one-shot learning','học từ một ví dụ','Nhận ra một người mới chỉ với MỘT tấm ảnh. Cách làm: đừng học "đây là ai", hãy học một hàm khoảng cách "hai tấm này có cùng người không".','#s-face','one-shot|học một lần'],
+['Siamese network','mạng song sinh','Cho hai ảnh chạy qua CÙNG một mạng (cùng trọng số), lấy hai vector embedding, rồi đo khoảng cách giữa chúng.','#s-face','Siamese|mạng song sinh'],
+['embedding','vector biểu diễn','Một vector số thực đại diện cho một đối tượng (khuôn mặt, từ, phim) sao cho KHOẢNG CÁCH giữa các vector mang nghĩa.','#s-embed',''],
+['triplet loss','mất mát ba ảnh','Nhìn ba ảnh cùng lúc: neo, dương (cùng người), âm (khác người). Ép d(A,P) nhỏ hơn d(A,N) một BIÊN α — thiếu biên thì mạng gian lận bằng cách cho mọi embedding bằng 0.','#s-face','triplet loss'],
+['neural style transfer','chuyển phong cách','Vẽ lại nội dung ảnh C theo phong cách tranh S. Điều lạ: mạng ĐỨNG YÊN, còn thứ gradient descent chỉnh sửa chính là các điểm ảnh của bức tranh đầu ra.','#s-face','chuyển phong cách|style transfer'],
+['Gram matrix','ma trận Gram','Tương quan giữa các kênh trong cùng một lớp — cách định nghĩa "phong cách". Tương quan này không phụ thuộc vị trí, đúng như phong cách nên thế.','#s-face','ma trận Gram'],
+
+/* ── chặng 4: chuỗi ───────────────────────────────────────────────────────── */
+['RNN','mạng nơ-ron hồi quy','Một khối duy nhất chạy lặp cho từng bước thời gian, mang theo trạng thái ẩn. Dùng chung trọng số theo THỜI GIAN, đúng như CNN dùng chung theo KHÔNG GIAN.','#s-rnn','mạng hồi quy'],
+['hidden state','trạng thái ẩn','Trí nhớ của RNN: bản tóm tắt mọi thứ đã đọc từ đầu chuỗi, nén vào một vector cố định. Ký hiệu a⟨t⟩.','#s-rnn','trạng thái ẩn'],
+['BPTT','lan truyền ngược theo thời gian','Backpropagation through time: backprop chảy ngược theo trục thời gian. Cùng thuật toán, chỉ là đường đi dài bằng độ dài chuỗi.','#s-rnn',''],
+['language model','mô hình ngôn ngữ','Mô hình đoán TỪ KẾ TIẾP. Nhãn có sẵn miễn phí nên dữ liệu là toàn bộ chữ viết. Đây chính là cơ chế của mọi mô hình ngôn ngữ lớn hôm nay.','#s-rnn','mô hình ngôn ngữ'],
+['sampling','lấy mẫu sinh chuỗi','Bốc ngẫu nhiên theo phân phối xác suất mà mô hình cho ra, rồi đưa từ vừa bốc vào làm đầu vào bước sau. Đó là cách sinh văn bản mới.','#s-rnn','lấy mẫu'],
+['GRU','đơn vị hồi quy có cổng','Gated Recurrent Unit: hai cổng, một dòng trí nhớ. Ít tham số hơn LSTM, chạy nhanh hơn, thường ngang ngửa.','#s-lstm',''],
+['LSTM','bộ nhớ dài-ngắn hạn','Long Short-Term Memory: ba cổng (quên, cập nhật, đầu ra) và HAI dòng tách biệt — ô nhớ c là đường cao tốc ít bị can thiệp. Ra đời 1997, trước ResNet gần hai mươi năm.','#s-lstm',''],
+['gate','cổng','Một hàm sigmoid có trọng số học được, cho ra số từ 0 tới 1, rồi trí nhớ được NHÂN với số đó. Vì nó liên tục nên lấy đạo hàm được và học được.','#s-lstm','cổng quên|cổng cập nhật|cổng đầu ra'],
+['bidirectional RNN','RNN hai chiều','Chạy hai RNN, một xuôi một ngược, rồi ghép trạng thái. Cần khi phải đọc hết câu mới hiểu đầu câu. Nhược điểm: KHÔNG dùng được cho thời gian thực.','#s-lstm','RNN hai chiều|hai chiều'],
+['word embedding','vector biểu diễn từ','Thay one-hot bằng vector dày đặc 300 chiều, học sao cho từ dùng trong ngữ cảnh giống nhau thì ở gần nhau. Nhờ đó tri thức chuyển được giữa "táo" và "cam".','#s-embed','word embedding'],
+['one-hot vector','vector một-nóng','Vector toàn 0 trừ đúng một số 1. Vấn đề chí mạng: tích vô hướng của hai one-hot bất kỳ luôn bằng 0, nên mọi từ cách nhau đúng bằng nhau.','#s-embed','one-hot vector'],
+['word2vec','word2vec','Học embedding bằng bài toán giả: cho một từ giữa câu, đoán các từ xung quanh (skip-gram). Bản thân bài toán giả không ai quan tâm — chỉ lấy trọng số.','#s-embed','skip-gram'],
+['negative sampling','lấy mẫu âm','Đổi bài toán thành "cặp từ này có thật sự đứng gần nhau không". Mỗi bước chỉ cần k+1 hồi quy logistic thay vì một softmax 10.000 lớp.','#s-embed','negative sampling'],
+['GloVe','GloVe','Học embedding bằng cách khớp trực tiếp với BẢNG ĐẾM số lần hai từ cùng xuất hiện. Đơn giản hơn hẳn về khái niệm, kết quả tương đương word2vec.','#s-embed',''],
+['cosine similarity','độ tương đồng cosine','Đo góc giữa hai vector, bỏ qua độ dài. Cách chuẩn để tìm "từ gần nghĩa nhất" trong không gian embedding.','#s-embed','cosine similarity'],
+['debiasing','giảm định kiến trong embedding','Embedding học luôn cả định kiến trong văn bản mà loài người đã viết. Quy trình giảm: xác định hướng thiên lệch, chiếu bỏ nó khỏi các từ trung tính, cân bằng lại các cặp có giới.','#s-embed','debiasing|định kiến'],
+['seq2seq','mô hình chuỗi sang chuỗi','Một RNN ĐỌC hết câu nguồn và nén thành một vector; một RNN khác VIẾT câu đích từ vector đó. Khuyết điểm: cái nút thắt cổ chai một-vector.','#s-seq2seq','seq2seq'],
+['encoder','bộ mã hoá','Nửa ĐỌC của seq2seq: nén đầu vào thành biểu diễn trung gian. Với chú thích ảnh, encoder là một CNN.','#s-seq2seq','encoder'],
+['decoder','bộ giải mã','Nửa VIẾT của seq2seq: sinh chuỗi đầu ra từng bước từ biểu diễn trung gian. Mô hình ngôn ngữ lớn hôm nay là kiến trúc CHỈ-decoder.','#s-seq2seq','decoder'],
+['beam search','tìm kiếm chùm tia','Giữ B phương án tốt nhất ở mỗi bước thay vì 1 (tham lam) hay tất cả (bất khả thi). Vì xác suất cao nhất của TỪNG TỪ không cộng thành xác suất cao nhất của CẢ CÂU.','#s-seq2seq','beam search'],
+['length normalization','chuẩn hoá theo độ dài','Chia log xác suất cho số từ. Không có nó, beam search thiên vị câu ngắn cụt lủn vì xác suất là tích của nhiều số nhỏ hơn 1.','#s-seq2seq','chuẩn hoá theo độ dài'],
+['BLEU','điểm BLEU','Chấm điểm bản dịch tự động bằng cách đếm các cụm 1–4 từ khớp với bản dịch của người, có chặn để tránh gian lận. Giá trị chính của nó là biến chất lượng thành MỘT con số tự động.','#s-seq2seq',''],
+['attention','cơ chế chú ý','Một phép TRA CỨU TỪ ĐIỂN được làm mềm để lấy đạo hàm được: truy vấn hỏi, khoá trả lời "tôi khớp bao nhiêu", giá trị là thứ lấy về, softmax quyết định tỉ lệ trộn.','#s-attn',''],
+['query','truy vấn Q','Thứ mà từ hiện tại "đang đi tìm". Sinh ra từ chính nó qua một ma trận W_Q học được.','#s-attn','truy vấn'],
+['key','khoá K','Thứ mà mỗi từ "quảng cáo về mình". Tích vô hướng của truy vấn với khoá cho điểm khớp.','#s-attn',''],
+['value','giá trị V','Thứ thật sự được lấy về và trộn lại theo trọng số. Kết quả attention là trung bình có trọng số của các giá trị.','#s-attn',''],
+['self-attention','tự chú ý','Attention của một câu VỚI CHÍNH NÓ: mỗi từ nhìn mọi từ khác trong cùng câu và nhận một biểu diễn mới đã trộn ngữ cảnh vào. Nhờ đó "đông" trong "quán đông" khác "phương đông".','#s-transformer','self-attention'],
+['multi-head attention','chú ý nhiều đầu','Chạy self-attention h lần song song với các ma trận W khác nhau rồi ghép lại. Mỗi "đầu" học một loại quan hệ — một câu hỏi cho mỗi đầu, hỏi cùng lúc.','#s-transformer','multi-head|nhiều đầu'],
+['positional encoding','mã hoá vị trí','Vì Transformer đã bỏ tính tuần tự, nó KHÔNG còn biết từ nào đứng trước từ nào — phải cộng thêm một vector mã hoá vị trí vào mỗi embedding.','#s-transformer','mã hoá vị trí'],
+['layer normalization','chuẩn hoá theo lớp','Bản chuẩn hoá dùng trong Transformer, chuẩn hoá trên trục đặc trưng của từng mẫu thay vì trên trục lô. Không có nó, mạng gần trăm lớp không huấn luyện nổi.','#s-transformer','chuẩn hoá lớp'],
+['Transformer','kiến trúc Transformer','Self-attention nhiều đầu + mạng thường + kết nối tắt + chuẩn hoá, xếp chồng, cộng mã hoá vị trí. Thắng phần lớn nhờ CHẠY SONG SONG ĐƯỢC, không phải nhờ "thông minh hơn".','#s-transformer',''],
+['scaling laws','quy luật mở rộng','Quan sát rằng cứ thêm lớp, thêm dữ liệu, thêm tính toán thì chất lượng tốt lên ĐỀU ĐẶN VÀ DỰ ĐOÁN ĐƯỢC. Chính tính chất này sinh ra cuộc đua mô hình lớn.','#s-transformer','quy luật mở rộng'],
+['foundation model','mô hình nền','Huấn luyện MỘT LẦN trên dữ liệu khổng lồ rồi cả thế giới thích nghi nó cho việc riêng. Chính là học chuyển giao được đẩy tới cực hạn.','#s-dated','mô hình nền'],
+
+/* ── chặng 5 ──────────────────────────────────────────────────────────────── */
+['clustering','phân cụm','Chia dữ liệu thành các nhóm giống nhau khi KHÔNG có nhãn nào cả. Khó đánh giá hơn học có giám sát vì không có đáp án để so.','#s-kmeans','phân cụm'],
+['k-means','phân cụm k-means','Hai bước lặp lại: gán mỗi điểm về tâm gần nhất, rồi dời mỗi tâm về trung bình các điểm của nó. Đảm bảo hội tụ, nhưng KHÔNG đảm bảo hội tụ đúng chỗ.','#s-kmeans',''],
+['centroid','tâm cụm','Điểm đại diện của một cụm, bằng trung bình các điểm thuộc cụm đó.','#s-kmeans','tâm cụm'],
+['distortion','độ méo','Hàm chi phí của k-means: trung bình bình phương khoảng cách từ mỗi điểm tới tâm cụm của nó. Phải giảm ở mọi bước; tăng là có bug.','#s-kmeans',''],
+['elbow method','phương pháp khuỷu tay','Vẽ distortion theo K rồi tìm chỗ đường cong gãy. Được dạy ở mọi nơi nhưng Ng nói thẳng là ông ít dùng — với dữ liệu thật đường cong thường trơn tuột.','#s-kmeans','khuỷu tay'],
+['anomaly detection','phát hiện bất thường','Học xem "bình thường" trông thế nào rồi báo động khi lệch. Dùng khi mẫu dương quá ít VÀ quá đa dạng để phân loại được.','#s-anomaly','phát hiện bất thường'],
+['Gaussian distribution','phân phối chuẩn','Hình chuông, mô tả bằng trung bình µ và phương sai σ². Nền của thuật toán phát hiện bất thường mà Ng dạy.','#s-anomaly','phân phối chuẩn'],
+['PCA','phân tích thành phần chính','Tìm vài trục mới giữ được nhiều BIẾN THIÊN nhất rồi bỏ phần còn lại. Ngày nay dùng chủ yếu để TRỰC QUAN HOÁ, không còn để tăng tốc huấn luyện — chính Ng đã rút lại lời khuyên cũ.','#s-pca',''],
+['recommender system','hệ gợi ý','Bảng người dùng × món hàng với đa số ô trống, và bài toán là điền các ô trống đó.','#s-recsys','hệ gợi ý'],
+['collaborative filtering','lọc cộng tác','Học ĐỒNG THỜI sở thích của người và tính chất của món, dù cả hai đều chưa biết. Chạy gradient descent trên cả hai bộ tham số cùng lúc.','#s-recsys','lọc cộng tác'],
+['content-based filtering','lọc theo nội dung','Dùng thông tin sẵn có về người dùng và món hàng, đưa qua hai mạng riêng để lấy hai vector rồi nhân vô hướng. Giải được bài toán khởi đầu lạnh.','#s-recsys','lọc theo nội dung|hai tháp'],
+['mean normalization','trừ trung bình mỗi hàng','Chi tiết bắt buộc trong hệ gợi ý: không có nó, người dùng mới nhận dự đoán 0 sao cho mọi món. Có nó, họ nhận điểm trung bình của món đó.','#s-recsys','chuẩn hoá theo trung bình'],
+['cold start','khởi đầu lạnh','Người dùng mới hoặc món hàng mới chưa có tương tác nào, nên lọc cộng tác thuần không biết gợi ý gì.','#s-recsys','khởi đầu lạnh'],
+['retrieval and ranking','truy hồi rồi xếp hạng','Kiến trúc chuẩn của hệ gợi ý quy mô lớn: lấy nhanh vài trăm ứng viên bằng cách rẻ, rồi chạy mô hình đắt chỉ trên vài trăm ứng viên đó.','#s-recsys','truy hồi|xếp hạng'],
+['reinforcement learning','học tăng cường','Thay nhãn bằng PHẦN THƯỞNG — một con số tới sau một chuỗi hành động và không nói hành động nào đã đúng. Đó gọi là bài toán gán công trạng.','#s-rl','học tăng cường'],
+['reward','phần thưởng','Con số nói kết quả tốt hay tệ. BẠN viết nó ra, không phải agent học nó — nên mọi hành vi kỳ quặc của agent thường là hàm thưởng của bạn viết chưa đúng.','#s-rl','phần thưởng'],
+['return','tổng thưởng có chiết khấu','Không phải phần thưởng tức thì mà R₁ + γR₂ + γ²R₃ + … Đây là thứ agent thật sự đi tối đa hoá.','#s-rl',''],
+['discount factor','hệ số chiết khấu γ','Nói agent KIÊN NHẪN tới mức nào. γ = 0,3 thì phần thưởng sau 3 bước chỉ còn 2,7% giá trị. Siêu tham số quan trọng nhất của học tăng cường — đổi nó là lật ngược cả chiến lược.','#s-rl','hệ số chiết khấu|γ'],
+['policy','chính sách','Hàm nói ở trạng thái nào thì làm gì. Đây là đích đến: có Q rồi thì chính sách tối ưu chỉ là "chọn hành động làm Q lớn nhất".','#s-rl','chính sách'],
+['Q-function','hàm giá trị hành động','Q(s,a) = "nếu đang ở s, làm a, rồi từ đó về sau chơi tối ưu thì tổng thưởng bao nhiêu". Với trạng thái liên tục, Q là một mạng nơ-ron.','#s-rl','Q-function|state-action value'],
+['Bellman equation','phương trình Bellman','Q(s,a) = R(s) + γ·max Q(s′,a′). Q xuất hiện ở CẢ HAI VẾ — một phương trình đệ quy, và đó là toàn bộ vẻ đẹp của nó.','#s-rl','phương trình Bellman|Bellman'],
+['DQN','mạng Q sâu','Deep Q-Network: dùng mạng nơ-ron xấp xỉ Q khi trạng thái liên tục. Điểm khó: mạng TỰ TẠO NHÃN cho chính nó, nên nhãn thay đổi trong lúc huấn luyện.','#s-rl',''],
+['epsilon-greedy','thăm dò ngẫu nhiên ε','Với xác suất ε thì chọn hành động ngẫu nhiên. Không có nó, agent không bao giờ THỬ hành động mà nó (sai lầm) cho là tệ, nên không bao giờ biết mình sai.','#s-rl','ε-greedy|epsilon-greedy'],
+['replay buffer','bộ đệm kinh nghiệm','Lưu lại các bộ (s, a, R, s′) đã trải qua rồi lấy mẫu ngẫu nhiên từ đó để huấn luyện, thay vì học ngay theo thứ tự xảy ra.','#s-rl','bộ đệm'],
+['soft update','cập nhật mềm','Trộn W ← 0,01·W_mới + 0,99·W_cũ thay vì thay hẳn. Nhãn đổi chậm hơn nên vòng huấn luyện ổn định hơn. Cùng ý tưởng trung bình trượt.','#s-rl','cập nhật mềm']
+];
+
+/* ── dựng bộ nhận dạng & popup ─────────────────────────────────────────────── */
+(function () {
+  var byKey = {}, keys = [], i, j;
+  for (i = 0; i < GLOSS.length; i++) {
+    var g = GLOSS[i];
+    var forms = [g[0]].concat(g[4] ? g[4].split('|') : []);
+    for (j = 0; j < forms.length; j++) {
+      var f = forms[j].trim();
+      if (!f) continue;
+      var lk = f.toLowerCase();
+      if (!byKey[lk]) { byKey[lk] = g; keys.push(f); }
+    }
+  }
+  keys.sort(function (a, b) { return b.length - a.length; });
+
+  function esc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+  var RE = null;
+  try {
+    RE = new RegExp('(?<![\\p{L}\\p{N}_])(?:' + keys.map(esc).join('|') + ')(?![\\p{L}\\p{N}_])', 'giu');
+  } catch (e) {
+    try { RE = new RegExp('(?:' + keys.map(esc).join('|') + ')', 'gi'); } catch (e2) { RE = null; }
+  }
+
+  /* ── popup ──────────────────────────────────────────────────────────────── */
+  var pop = document.createElement('div');
+  pop.className = 'pop';
+  pop.setAttribute('role', 'dialog');
+  pop.innerHTML = '<button class="pop__x" aria-label="Đóng"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
+    '<p class="pop__en"></p><p class="pop__vi"></p><p class="pop__d"></p><a class="pop__go" href="#"></a>';
+  document.body.appendChild(pop);
+  var pEn = pop.querySelector('.pop__en'), pVi = pop.querySelector('.pop__vi'),
+      pD = pop.querySelector('.pop__d'), pGo = pop.querySelector('.pop__go');
+  var anchor = null;
+
+  function secName(href) {
+    var el2 = document.querySelector(href);
+    if (!el2) return 'mục liên quan';
+    var h = el2.querySelector('h2.st') || el2.querySelector('h2');
+    var t = h ? h.textContent : '';
+    t = t.split(/[:—]/)[0].trim();
+    return t.length > 46 ? t.slice(0, 44) + '…' : (t || 'mục liên quan');
+  }
+  function place(fromScroll) {
+    if (!anchor) return;
+    var r = anchor.getBoundingClientRect();
+    if (fromScroll && (r.bottom < 0 || r.top > window.innerHeight)) { hide(); return; }
+    if (window.innerWidth <= 620) { pop.style.top = ''; pop.style.left = ''; return; }
+    var w = pop.offsetWidth, h = pop.offsetHeight, gap = 9;
+    var left = Math.min(Math.max(10, r.left - 12), window.innerWidth - w - 10);
+    var top = r.bottom + gap;
+    if (top + h > window.innerHeight - 10) top = Math.max(60, r.top - h - gap);
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+  }
+  function show(el2, g) {
+    if (anchor) anchor.classList.remove('is-open');
+    anchor = el2;
+    anchor.classList.add('is-open');
+    pEn.textContent = g[0];
+    pVi.textContent = g[1] ? '· ' + g[1] : '';
+    pD.innerHTML = g[2];
+    if (g[3]) { pGo.href = g[3]; pGo.textContent = '→ đọc kỹ ở: ' + secName(g[3]); pGo.style.display = ''; }
+    else pGo.style.display = 'none';
+    pop.classList.add('on');
+    place();
+  }
+  function hide() {
+    pop.classList.remove('on');
+    if (anchor) anchor.classList.remove('is-open');
+    anchor = null;
+  }
+  pop.querySelector('.pop__x').addEventListener('click', hide);
+  pGo.addEventListener('click', hide);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest ? e.target.closest('.term') : null;
+    if (t) {
+      e.preventDefault();
+      if (t === anchor) { hide(); return; }
+      var g = byKey[(t.getAttribute('data-k') || t.textContent).toLowerCase()];
+      if (g) show(t, g);
+      return;
+    }
+    if (!e.target.closest || !e.target.closest('.pop')) hide();
+  });
+  window.addEventListener('scroll', function () { if (anchor) place(true); }, { passive: true });
+  window.addEventListener('resize', function () { if (anchor) place(); });
+
+  /* ── tự gạch chân thuật ngữ trong bài ───────────────────────────────────── */
+  /* chỉ bọc LẦN XUẤT HIỆN ĐẦU TIÊN của mỗi thuật ngữ trong mỗi mục — nếu bọc hết
+     thì cả trang thành một tấm lưới gạch chân, không ai đọc được. */
+  var SKIP_TAG = /^(A|CODE|PRE|BUTTON|INPUT|LABEL|SUMMARY|H1|H2|H3|H4|H5|H6|TEXTAREA|SELECT|OPTION|SCRIPT|STYLE|KBD)$/;
+  var SKIP_CLASS = ['term', 'mono', 'out', 'fx', 'map', 'sechead', 'lbl', 'box__k', 'lab__k', 'lab__t', 'box__t', 'eyebrow', 'meta', 'val', 'chip', 'gl-tw', 'pop'];
+  function skipped(node, root) {
+    var p = node.parentNode;
+    while (p && p !== root) {
+      if (p.nodeType !== 1) { p = p.parentNode; continue; }
+      if (typeof SVGElement !== 'undefined' && p instanceof SVGElement) return true;
+      if (SKIP_TAG.test(p.tagName)) return true;
+      for (var k = 0; k < SKIP_CLASS.length; k++) if (p.classList && p.classList.contains(SKIP_CLASS[k])) return true;
+      p = p.parentNode;
+    }
+    return false;
+  }
+  var SKIP_SECTION = { 's-cheat': 1, 's-glossary': 1 };
+  function sectionOf(node) {
+    var p = node.parentNode;
+    while (p && p.nodeType === 1) {
+      if (p.tagName === 'SECTION' && p.id) return p.id;
+      if (p.classList && p.classList.contains('acthead')) return p.id || 'act';
+      p = p.parentNode;
+    }
+    return 'hero';
+  }
+  function markUp() {
+    if (!RE) return 0;
+    var root = document.querySelector('.col');
+    if (!root) return 0;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var nodes = [], n;
+    while ((n = walker.nextNode())) if (n.nodeValue && /\S/.test(n.nodeValue) && !skipped(n, root)) nodes.push(n);
+
+    var seen = {}, count = 0;
+    for (var a = 0; a < nodes.length; a++) {
+      var node = nodes[a], text = node.nodeValue, sec = sectionOf(node);
+      if (SKIP_SECTION[sec]) continue;
+      RE.lastIndex = 0;
+      var frag = null, last = 0, m;
+      while ((m = RE.exec(text))) {
+        var raw = m[0], key = raw.toLowerCase(), g = byKey[key];
+        if (!g) continue;
+        var tag = sec + '|' + g[0];
+        if (seen[tag]) continue;
+        seen[tag] = 1;
+        if (!frag) frag = document.createDocumentFragment();
+        if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+        var span = document.createElement('span');
+        span.className = 'term';
+        span.setAttribute('data-k', key);
+        span.setAttribute('role', 'button');
+        span.setAttribute('tabindex', '0');
+        span.setAttribute('title', g[0] + ' — bấm để xem giải thích');
+        span.textContent = raw;
+        frag.appendChild(span);
+        last = m.index + raw.length;
+        count++;
+      }
+      if (frag) {
+        if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+        node.parentNode.replaceChild(frag, node);
+      }
+    }
+    return count;
+  }
+  var marked = markUp();
+
+  /* bàn phím: Enter / Space mở popup */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var t = document.activeElement;
+    if (!t || !t.classList || !t.classList.contains('term')) return;
+    e.preventDefault();
+    if (t === anchor) { hide(); return; }
+    var g = byKey[(t.getAttribute('data-k') || t.textContent).toLowerCase()];
+    if (g) show(t, g);
+  });
+
+  /* ── bảng tra ở mục #s-glossary ─────────────────────────────────────────── */
+  var body = document.getElementById('gl-body');
+  if (body) {
+    var sorted = GLOSS.slice().sort(function (x, y) {
+      return x[0].toLowerCase().localeCompare(y[0].toLowerCase(), 'en');
+    });
+    var html = sorted.map(function (g) {
+      var link = g[3] ? '<a href="' + g[3] + '">' + g[3].replace('#s-', '').replace('#', '') + '</a>' : '';
+      return '<tr data-s="' + (g[0] + ' ' + g[1] + ' ' + (g[4] || '')).toLowerCase().replace(/"/g, '') + '">' +
+        '<td>' + g[0] + '</td><td>' + g[1] + '</td><td>' + g[2] + '</td><td>' + link + '</td></tr>';
+    }).join('');
+    body.innerHTML = html;
+    var cnt = document.getElementById('gl-count'), q = document.getElementById('gl-q');
+    var rows = Array.prototype.slice.call(body.children);
+    function filter() {
+      var v = (q.value || '').trim().toLowerCase(), shown = 0;
+      rows.forEach(function (r) {
+        var ok = !v || r.getAttribute('data-s').indexOf(v) >= 0;
+        r.classList.toggle('hide', !ok);
+        if (ok) shown++;
+      });
+      cnt.textContent = shown + ' / ' + rows.length + ' thuật ngữ' + (marked ? '  ·  ' + marked + ' chỗ đã gạch chân trong bài' : '');
+    }
+    q.addEventListener('input', filter);
+    filter();
+  }
 })();
 
 })();
