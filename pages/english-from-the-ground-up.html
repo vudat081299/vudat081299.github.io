@@ -194,6 +194,55 @@
   /* back-to-top */
   .ec-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
   .ec-top.is-on { opacity: 1; pointer-events: auto; }
+
+  /* ---- chỉ dấu cuộn ngang ----
+     Trang có 45 khối cuộn ngang (bảng rộng, công thức dài). Trên điện thoại và trên
+     macOS thanh cuộn là loại phủ, chỉ hiện lúc đang vuốt — nên người đọc dễ tưởng nội
+     dung chỉ có phần nhìn thấy. Ép một thanh cuộn mảnh luôn hiện: nó chỉ xuất hiện khi
+     thật sự còn nội dung bên phải, nên vừa là chỉ dấu vừa không nói dối. */
+  .ec-tw, .ec-formula { scrollbar-width: thin; scrollbar-color: var(--wb-neutral) transparent; }
+  .ec-tw::-webkit-scrollbar,
+  .ec-formula::-webkit-scrollbar { height: 8px; }
+  .ec-tw::-webkit-scrollbar-track,
+  .ec-formula::-webkit-scrollbar-track { background: var(--wb-surface-hover); border-radius: 999px; }
+  .ec-tw::-webkit-scrollbar-thumb,
+  .ec-formula::-webkit-scrollbar-thumb { background: var(--wb-neutral); border-radius: 999px; }
+  .ec-tw::-webkit-scrollbar-thumb:hover,
+  .ec-formula::-webkit-scrollbar-thumb:hover { background: var(--wb-neutral-strong); }
+
+  /* ---- vùng chạm trên điện thoại ----
+     Các bài tập tương tác (chọn mạo từ, ghép âm tiết, chọn câu, lưới thì) là phần cốt
+     lõi của trang này, nhưng mặc định nút chỉ cao 27–30px và dính sát nhau. Nâng cả cỡ
+     nút LẪN khoảng cách giữa các nút — nút to mà sát nhau vẫn bấm nhầm sang nút bên. */
+  @media (max-width: 560px) {
+    .ec-chips { gap: 9px; }
+    .ec-chip { box-sizing: border-box; min-height: 42px; padding: 10px 15px; font-size: 13px; }
+
+    .ec-syl { gap: 8px; }
+    .ec-syl button { box-sizing: border-box; min-height: 44px; min-width: 46px; padding: 11px 12px; }
+
+    .ec-ans { gap: 9px; }
+    .ec-ans button { box-sizing: border-box; min-height: 44px; min-width: 62px; padding: 11px 14px; font-size: 14px; }
+
+    .ec-grid12 { gap: 6px; }
+    .ec-gc { box-sizing: border-box; min-height: 46px; padding: 10px 8px; }
+
+    .ec-cl { gap: 4px; }
+    .ec-cl label { padding: 11px 8px; gap: 12px; }
+    .ec-cl input { width: 22px; height: 22px; margin-top: 0; }
+    .ec-cl .lv { padding-top: 3px; }
+
+    /* nút "Từ tiếp theo" / "Câu tiếp theo" — chỉ trong lab, không đụng .wb-btn trần */
+    .ec-lab .wb-btn--sm { min-height: 42px; padding: 10px 16px; }
+
+    /* thanh trượt: track chỉ cao 4px nên vùng chạm thật gần như không có.
+       Viền trong suốt nới vùng chạm mà không làm track dày lên. */
+    .ec-lab .wb-range {
+      box-sizing: content-box; margin: 0;
+      border-top: 16px solid transparent; border-bottom: 16px solid transparent;
+      background-clip: padding-box;
+    }
+  }
 </style>
 </head>
 <body class="wb-app">
@@ -229,7 +278,7 @@
     <p class="ec-sub">Bạn đã học ngữ pháp mười năm mà vẫn nghe không kịp và nói không ra. Đó không phải lỗi trí nhớ. Đó là vì <b>biết luật</b> và <b>dùng được luật trong 0,3 giây</b> nằm ở hai chỗ khác nhau trong đầu, và chỉ một loại luyện tập chuyển được từ chỗ này sang chỗ kia.</p>
     <p class="ec-sub">Trang này là giáo trình đầy đủ, nhưng <b>không sắp theo chương sách</b>. Nó sắp theo <b>thứ tự thứ gì chặn bạn trước</b>: âm thanh chặn nghe → ngữ pháp chặn hiểu câu dài → từ vựng chặn tốc độ → kỹ năng chặn việc biến hiểu biết thành phản xạ. Mỗi phần chỉ giữ thứ có tác dụng thật, và luôn nói rõ <b>phần nào bạn có thể bỏ qua</b>.</p>
     <p class="ec-sub">Điểm khác biệt lớn nhất: mọi chỗ có <b>bẫy riêng của người Việt</b> đều được gọi tên. Bạn nuốt phụ âm cuối không phải vì lười — vì tiếng Việt không có âm cuối bật ra. Bạn quên <span class="ec-mono">-s</span> và <span class="ec-mono">-ed</span> không phải vì quên ngữ pháp — vì chúng <i>là</i> phụ âm cuối. Biết cơ chế thì sửa được; không biết thì sửa mười năm vẫn thế.</p>
-    <p class="ec-meta">SÁU PHẦN · 40 MỤC · 10 MÔ HÌNH NGHỊCH ĐƯỢC NGAY TRÊN TRANG<br>GIẢI THÍCH BẰNG TIẾNG VIỆT · THUẬT NGỮ VÀ ĐIỀU HƯỚNG GIỮ NGUYÊN TIẾNG ANH ĐỂ BẠN TRA ĐƯỢC Ở NƠI KHÁC</p>
+    <p class="ec-meta">SÁU PHẦN · 46 MỤC · 10 MÔ HÌNH NGHỊCH ĐƯỢC NGAY TRÊN TRANG<br>GIẢI THÍCH BẰNG TIẾNG VIỆT · THUẬT NGỮ VÀ ĐIỀU HƯỚNG GIỮ NGUYÊN TIẾNG ANH ĐỂ BẠN TRA ĐƯỢC Ở NƠI KHÁC</p>
   </header>
 
   <div class="ec-figs" style="margin-bottom:20px">
@@ -461,7 +510,7 @@
         </div>
 
         <div class="ec-quote">
-          <b>Ví von và chỗ nó hỏng:</b> học ngôn ngữ giống tập gym — cần khối lượng đều đặn, không có đường tắt, và nghỉ dài thì tụt. Nhưng ví von này hỏng ở một chỗ quan trọng: <b>cơ bắp lớn lên khi nghỉ, ngôn ngữ thì cần tiếp xúc gần như hàng ngày</b>. 20 phút mỗi ngày ăn đứt 2,5 giờ mỗi Chủ nhật, dù tổng thời gian bằng nhau — vì trí nhớ ngôn ngữ phai theo ngày chứ không theo giờ.
+          <b>Ví von và chỗ nó hỏng:</b> học ngôn ngữ giống tập gym — cần khối lượng đều đặn, không có đường tắt, và nghỉ dài thì tụt. Nhưng ví von này hỏng ở một chỗ quan trọng: <b>cơ bắp lớn lên khi nghỉ, ngôn ngữ thì cần tiếp xúc gần như hàng ngày</b>. 20 phút mỗi ngày ăn đứt 2 giờ 20 phút mỗi Chủ nhật, dù tổng thời gian bằng nhau — vì trí nhớ ngôn ngữ phai theo ngày chứ không theo giờ.
         </div>
       </section>
 
@@ -564,7 +613,7 @@
             <tbody>
               <tr><td class="ec-mono"><b>/iː/ vs /ɪ/</b></td><td>Không chỉ dài–ngắn: /ɪ/ còn <b>mở hơn và lỏng hơn</b>, gần "ê" hơn "i".</td><td class="ec-mono">sheep–ship · beat–bit · feel–fill · leave–live · seat–sit</td></tr>
               <tr><td class="ec-mono"><b>/æ/ vs /e/</b></td><td>/æ/ mở miệng rộng, gần "a"; /e/ hẹp hơn, gần "e".</td><td class="ec-mono">bad–bed · man–men · sad–said · bat–bet · land–lend</td></tr>
-              <tr><td class="ec-mono"><b>/ʌ/ vs /ɑː/ vs /æ/</b></td><td>Ba âm, người Việt thường gộp thành một "a".</td><td class="ec-mono">cup–carp–cap · but–bart–bat · fun–far–fan</td></tr>
+              <tr><td class="ec-mono"><b>/ʌ/ vs /ɑː/ vs /æ/</b></td><td>Ba âm, người Việt thường gộp thành một "a".</td><td class="ec-mono">cup–carp–cap · cut–cart–cat · bun–barn–ban</td></tr>
               <tr><td class="ec-mono"><b>/uː/ vs /ʊ/</b></td><td>/ʊ/ ngắn, lỏng, môi không tròn hẳn.</td><td class="ec-mono">pool–pull · fool–full · Luke–look</td></tr>
               <tr><td class="ec-mono"><b>/ɜː/</b></td><td>Âm giữa, môi không tròn, lưỡi phẳng. Không có tương đương tiếng Việt.</td><td class="ec-mono">bird · work · learn · turn · nurse · girl</td></tr>
               <tr><td class="ec-mono"><b>/ə/ schwa</b></td><td><b>Âm phổ biến nhất tiếng Anh.</b> Không phải một âm riêng để học — là <i>kết quả của việc không nhấn</i>. Xem <a href="#rhythm">Rhythm</a>.</td><td class="ec-mono">about · teacher · problem · support · banana</td></tr>
@@ -787,7 +836,7 @@ I didn't say he stole the <b>money</b>.       <span class="c">→ tôi nói anh 
               <tr><td><b>e câm cuối từ</b></td><td>Kéo nguyên âm trước thành "dài" (thực ra là đổi hẳn âm).</td><td class="ec-mono">hat→hate · kit→kite · not→note · cut→cute · rid→ride</td></tr>
               <tr><td><b>Phụ âm đôi</b></td><td>Giữ nguyên âm trước ở dạng ngắn.</td><td class="ec-mono">hoping/hopping · later/latter · diner/dinner · super/supper</td></tr>
               <tr><td><b>c và g trước e, i, y</b></td><td>c → /s/ · g → /dʒ/. Còn lại: c → /k/ · g → /g/.</td><td class="ec-mono">city, cell, cycle · age, gym, giant — nhưng cat, cup, go, gun · (ngoại lệ: get, give)</td></tr>
-              <tr><td><b>-ture, -sure, -tion, -sion</b></td><td>Đuôi đông cứng, luôn đọc như nhau.</td><td class="ec-mono">-ture /tʃə/ future, nature · -sure /ʒə/ measure, pleasure · -tion /ʃən/ nation · -sion /ʒən/ vision</td></tr>
+              <tr><td><b>-ture, -sure, -tion, -sion</b></td><td>Đuôi đông cứng. Riêng <span class="ec-mono">-sure</span> và <span class="ec-mono">-sion</span> còn theo âm đứng trước: sau <b>nguyên âm</b> đọc /ʒ/, sau <b>phụ âm</b> đọc /ʃ/.</td><td class="ec-mono">-ture /tʃə/ future, nature · -tion /ʃən/ nation · -sure /ʒə/ measure <b>nhưng</b> /ʃə/ pressure · -sion /ʒən/ vision <b>nhưng</b> /ʃən/ tension</td></tr>
               <tr><td><b>Chữ câm</b></td><td>Dấu vết của âm từng được phát ra thật, giờ chỉ còn trên giấy.</td><td class="ec-mono">k(now) · w(rite) · clim(b) · wal(k) · lis(t)en · (h)our · (p)sychology · si(g)n · recei(p)t</td></tr>
               <tr><td><b>-ough</b><br><span class="ec-dim">trường hợp tệ nhất</span></td><td>Bảy cách đọc. Không có luật — phải nhớ từng từ.</td><td class="ec-mono">though /əʊ/ · through /uː/ · thought /ɔː/ · tough /ʌf/ · cough /ɒf/ · plough /aʊ/ · thorough /ə/</td></tr>
             </tbody>
@@ -1107,7 +1156,7 @@ is fixed · was fixed · has been fixed · is being fixed · will be fixed · mu
         <div class="ec-formula">
 "Where <b>does he work</b>?"  → She asked where <b>he worked</b>.       <span class="c">✓ trật tự câu kể</span>
                              <span class="ec-bad">She asked where did he work.</span>   <span class="c">✗ lỗi rất phổ biến</span>
-"<b>Are</b> you ready?"       → He asked <b>if / whether</b> I <b>was</b> ready.  <span class="c">✓ không có Yes/No thì dùng if</span>
+"<b>Are</b> you ready?"       → He asked <b>if / whether</b> I <b>was</b> ready.  <span class="c">✓ hỏi Yes/No (không có từ Wh-) thì dùng if / whether</span>
         </div>
         <p class="ec-p">Cùng quy tắc này áp cho <b>câu hỏi gián tiếp</b> lịch sự — thứ bạn dùng hằng ngày: <span class="ec-en">Could you tell me where <b>the meeting room is</b>?</span> chứ không phải <span class="ec-bad">…where is the meeting room</span>.</p>
 
@@ -1283,7 +1332,7 @@ promise / offer / refuse + to V   They <b>refused to</b> merge it.
             <tbody>
               <tr><td><b>Phẩy nối câu</b><br><span class="ec-dim">comma splice</span></td><td>Hai câu đủ <b>không</b> nối được bằng dấu phẩy. Đây là lỗi bị bắt nhiều nhất.</td><td class="ec-mono"><span class="ec-bad">It was late, we went home.</span> ✗<br>It was late<b>,</b> <b>so</b> we went home. ✓<br>It was late<b>;</b> we went home. ✓</td></tr>
               <tr><td><b>Phẩy sau mở đầu</b></td><td>Cụm hoặc mệnh đề mở đầu thì có phẩy ngăn với phần chính.</td><td class="ec-mono"><b>After the release,</b> we monitored the logs.</td></tr>
-              <tr><td><b>Phẩy danh sách</b></td><td>Phẩy trước <i>and</i> cuối cùng (Oxford comma) — bắt buộc ở Mỹ, tuỳ chọn ở Anh, nhưng luôn dùng khi thiếu nó gây mơ hồ.</td><td class="ec-mono">backend<b>,</b> frontend<b>,</b> and infra</td></tr>
+              <tr><td><b>Phẩy danh sách</b></td><td>Phẩy trước <i>and</i> cuối cùng (Oxford comma) — sách văn phong học thuật Mỹ (Chicago, APA) bắt buộc, báo chí Mỹ (AP) thì bỏ, ở Anh tuỳ nhà xuất bản. Luôn dùng khi thiếu nó gây mơ hồ.</td><td class="ec-mono">backend<b>,</b> frontend<b>,</b> and infra</td></tr>
               <tr><td><b>Chấm phẩy</b> <span class="ec-mono">;</span></td><td>Nối hai câu đủ có quan hệ chặt; hoặc ngăn các mục trong danh sách mà bản thân mục đã có phẩy.</td><td class="ec-mono">The tests passed<b>;</b> the deploy still failed.</td></tr>
               <tr><td><b>Hai chấm</b> <span class="ec-mono">:</span></td><td>Phần sau <b>giải thích hoặc liệt kê</b> phần trước. Trước dấu hai chấm phải là câu đủ.</td><td class="ec-mono">There was one problem<b>:</b> nobody had tested it.</td></tr>
               <tr><td><b>Dấu lược</b> <span class="ec-mono">'</span></td><td>Chỉ dùng cho <b>sở hữu</b> và <b>viết tắt</b>. <b>Không bao giờ</b> dùng để tạo số nhiều.</td><td class="ec-mono">the dev<b>'s</b> laptop <span class="c">(một dev)</span> · the dev<b>s'</b> laptops <span class="c">(nhiều dev)</span> · the 1990<b>s</b> <span class="c">(không phải 1990's)</span></td></tr>
@@ -1519,7 +1568,7 @@ promise / offer / refuse + to V   They <b>refused to</b> merge it.
               </div>
             </div>
             <div style="margin-top:10px"><pre class="ec-out" id="sr-out"></pre></div>
-            <p class="ec-lab__foot"><b>Mô hình này là đồ chơi, không phải số liệu thật:</b> nó dùng một hàm mũ đơn giản với giả định "mỗi lần ôn đúng thì độ bền nhân lên khoảng 2,3 lần". Hình dạng hai đường phản ánh đúng thứ đã được đo trong nghiên cứu về hiệu ứng giãn cách; còn con số phần trăm cụ thể thì phụ thuộc vào từng người, từng loại nội dung.</p>
+            <p class="ec-lab__foot"><b>Mô hình này là đồ chơi, không phải số liệu thật:</b> nó dùng một hàm mũ đơn giản với giả định "mỗi lần ôn đúng thì độ bền nhân lên khoảng 2,4–3,4 lần — nhân nhiều hơn khi bạn đã quên bớt trước lúc ôn". Hình dạng hai đường phản ánh đúng thứ đã được đo trong nghiên cứu về hiệu ứng giãn cách; còn con số phần trăm cụ thể thì phụ thuộc vào từng người, từng loại nội dung.</p>
           </div>
         </div>
 
@@ -1907,7 +1956,7 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
 
 <b>Ngày bận — sàn 20 phút:</b>  10' chép chính tả + 10' thẻ SRS.  <span class="c">Không bao giờ để về 0.</span>
 <span class="c">Lý do có sàn: chuỗi ngày đứt là thứ giết việc học ngôn ngữ, không phải một ngày học ít.</span>
-<span class="c">20 phút mỗi ngày ăn đứt 2,5 giờ mỗi Chủ nhật, dù tổng thời gian bằng nhau.</span>
+<span class="c">20 phút mỗi ngày ăn đứt 2 giờ 20 phút mỗi Chủ nhật, dù tổng thời gian bằng nhau.</span>
         </div>
 
         <h3 class="ec-h3">Ghép vào ngày làm việc của một người làm phần mềm</h3>
@@ -2045,7 +2094,7 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
               <tr><td class="ec-bad">Take care your health.</td><td class="ec-en">Take care of your health.</td><td>Thiếu giới từ cố định</td></tr>
               <tr><td class="ec-bad">How to say this in English?</td><td class="ec-en">How do you say this in English?</td><td>Thiếu chủ ngữ và trợ động từ</td></tr>
               <tr><td class="ec-bad">I look forward to hear from you.</td><td class="ec-en">I look forward to hearing from you.</td><td><i>to</i> ở đây là giới từ → phải + V-ing</td></tr>
-              <tr><td class="ec-bad">I have ever been to Japan.</td><td class="ec-en">I have been to Japan.</td><td><i>ever</i> chỉ dùng trong câu hỏi và phủ định</td></tr>
+              <tr><td class="ec-bad">I have ever been to Japan.</td><td class="ec-en">I have been to Japan.</td><td><i>ever</i> dùng trong câu hỏi, phủ định và sau so sánh nhất — không dùng trong câu khẳng định thường</td></tr>
               <tr><td class="ec-bad">She is more beautiful than me a lot.</td><td class="ec-en">She is much more beautiful than me.</td><td>Trạng từ so sánh đứng trước, không đứng cuối</td></tr>
               <tr><td class="ec-bad">I like very much this book.</td><td class="ec-en">I like this book very much.</td><td>Không chen gì giữa động từ và tân ngữ</td></tr>
               <tr><td class="ec-bad">According to me,…</td><td class="ec-en">In my opinion,… / I think…</td><td>"theo tôi" — <i>according to</i> chỉ dùng cho nguồn khác</td></tr>
@@ -2302,7 +2351,7 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
     { s: ['pho', 'to', 'gra', 'phy'], a: 1, r: 'Hậu tố -graphy kéo về ngay trước: CÙNG GỐC mà trọng âm đã nhảy một chỗ.' },
     { s: ['pho', 'to', 'gra', 'phic'], a: 2, r: 'Hậu tố -ic kéo về ngay trước: cũng gốc đó, trọng âm nhảy lần thứ ba.' },
     { s: ['pos', 'si', 'bi', 'li', 'ty'], a: 2, r: 'Hậu tố -ity kéo về ngay trước nó.' },
-    { s: ['e', 'co', 'no', 'mic'], a: 2, r: 'Hậu tố -ic kéo về ngay trước. So sánh: E-co-no-my thì lại nhấn "co".' },
+    { s: ['e', 'co', 'no', 'mic'], a: 2, r: 'Hậu tố -ic kéo về ngay trước. So sánh: cùng gốc mà economy lại nhấn chỗ khác — e-CO-no-my.' },
     { s: ['en', 'gi', 'neer'], a: 2, r: 'Hậu tố -eer TỰ MANG trọng âm — không kéo, mà giữ luôn cho mình.' },
     { s: ['Viet', 'nam', 'ese'], a: 2, r: 'Hậu tố -ese tự mang trọng âm. Cùng nhóm: Japanese, Chinese, Portuguese.' },
     { s: ['de', 've', 'lop', 'ment'], a: 1, r: 'Hậu tố -ment TRUNG TÍNH: de-VE-lop nhấn đâu thì development nhấn đó.' },
@@ -2570,7 +2619,7 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
   if (!slider) return;
   var NS = 'http://www.w3.org/2000/svg';
   /* Ước lượng độ phủ, làm tròn từ các nghiên cứu về vocabulary coverage (Nation). */
-  var WRITTEN = [[500,74],[1000,82],[2000,88],[3000,91],[4000,93],[5000,94.2],[6000,95],[7000,95.8],[8000,96.5],[9000,97.4],[10000,98]];
+  var WRITTEN = [[500,74],[1000,82],[2000,88],[3000,91],[4000,93],[5000,94.5],[6000,95.6],[7000,96.5],[8000,97.3],[9000,98],[10000,98.5]];
   var SPOKEN  = [[500,80],[1000,85],[2000,90],[3000,94],[4000,95.5],[5000,96.5],[6000,97.4],[7000,98],[8000,98.4],[9000,98.7],[10000,99]];
   var X0 = 62, X1 = 690, Y0 = 22, Y1 = 172, NMIN = 500, NMAX = 10000, PMIN = 70, PMAX = 100;
 
