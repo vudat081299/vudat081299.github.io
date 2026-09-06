@@ -84,6 +84,19 @@
   /* ---- tables ---- */
   .db-tw { overflow-x: auto; margin: 4px 0 16px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); }
   .db-tw .wb-table { margin: 0; border: 0; }
+  /* Chỉ dấu "bảng còn chạy tiếp sang phải" — trên điện thoại thanh cuộn tự ẩn, nên
+     không có gì báo cho người đọc biết bảng rộng hơn khung. Shell do JS bọc quanh mỗi
+     .db-tw; margin của con thu gọn xuyên qua shell nên ::after phủ đúng hộp của bảng.
+     JS hỏng ⇒ không có class .has-more ⇒ không có lớp phủ, trang y như cũ. */
+  .db-tw-shell { position: relative; }
+  .db-tw-shell::after {
+    content: ""; position: absolute; pointer-events: none;
+    top: var(--wb-bw); right: var(--wb-bw); bottom: var(--wb-bw); width: 34px;
+    border-radius: 0 var(--wb-radius) var(--wb-radius) 0;
+    background: linear-gradient(to left, var(--wb-surface) 22%, transparent);
+    opacity: 0; transition: opacity .16s ease;
+  }
+  .db-tw-shell.has-more::after { opacity: 1; }
   .db-tw .wb-table th, .db-tw .wb-table td { font-size: 13.5px; line-height: 1.55; vertical-align: top; }
   .db-tw .wb-table td code, .db-tw .wb-table th code { font-size: 12px; }
 
@@ -169,8 +182,9 @@
   /* picked speech row in the format lab */
   .db-tw .wb-table tr.is-picked td { background: var(--wb-surface-hover); font-weight: 620; color: var(--wb-fg); }
 
-  /* timer readout */
-  .db-clock { font-family: var(--wb-font-mono); font-size: clamp(30px, 7vw, 44px); font-weight: 700; letter-spacing: -.02em; line-height: 1; color: var(--wb-fg); }
+  /* timer readout — min-width giữ đúng 6 ký tự ("+00:00") để ô số không co lại khi
+     đồng hồ nhảy từ 10:00 xuống 9:59 hay từ 00:00 sang +00:01, kéo theo cả cụm nút. */
+  .db-clock { font-family: var(--wb-font-mono); font-size: clamp(30px, 7vw, 44px); font-weight: 700; letter-spacing: -.02em; line-height: 1; color: var(--wb-fg); font-variant-numeric: tabular-nums; min-width: 6ch; }
   .db-clock.is-warn { color: var(--wb-warning-text); }
   .db-clock.is-over { color: var(--wb-danger-text); }
   .db-clock__sub { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; }
@@ -180,6 +194,21 @@
   @media (max-width: 720px) { .db-split { grid-template-columns: minmax(0, 1fr); } }
   .db-pane { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; background: var(--wb-canvas); }
   .db-pane__h { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 8px; }
+
+  /* ---- vùng chạm trên điện thoại ----
+     Mọi thứ ở đây chỉ nới hộp bấm, không đổi màu và không đụng .wb-btn / .wb-range trần
+     (dùng chung ~15 trang). Slider của bộ cân là ca đáng ngại nhất: track chỉ cao 4px,
+     nên hộp của chính <input> cũng chỉ 4px — kéo bằng ngón tay gần như không trúng.
+     padding-block + box-sizing:content-box nới hộp lên 34px, còn background-clip
+     giữ dải track vẫn vẽ đúng 4px như thiết kế gốc. */
+  @media (max-width: 560px) {
+    .db-lab .wb-btn--sm { min-height: 38px; padding-block: 9px; }
+    .db-lab__row .wb-range {
+      box-sizing: content-box; padding-block: 15px; margin-block: 0;
+      background-clip: content-box;
+    }
+    .db-chip { min-height: 34px; padding: 8px 12px; display: inline-flex; align-items: center; }
+  }
 
   /* ---- back to top ---- */
   .db-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
@@ -270,7 +299,7 @@
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">4</span>
         <div class="wb-media__body">
           <p class="wb-media__title">Formats</p>
-          <p class="wb-media__text">BP, WSDC, Australs, Policy, LD, Public Forum — luật, thời lượng, vai, và chỗ chúng khác nhau thật.</p>
+          <p class="wb-media__text">BP, WSDC, Asian Parl., Australs, Policy, LD, Public Forum — luật, thời lượng, vai, và chỗ chúng khác nhau thật.</p>
         </div>
       </div>
     </a>
@@ -352,7 +381,7 @@
 <div class="db-part-head" id="p0">
   <p class="kicker">Phần 0 · Foundations</p>
   <h2>Trước khi học nói, học xem một lập luận gồm những gì</h2>
-  <p>Bốn phần sau đều là kỹ năng. Phần này là <b>định nghĩa</b> — và nếu bỏ qua nó, mọi kỹ thuật về sau sẽ được áp lên một mô hình sai. Người mới gần như luôn mang sẵn một mô hình sai: <i>“tranh biện là cãi nhau có luật”</i>. Gỡ nó trước.</p>
+  <p>Năm phần sau đều là kỹ năng. Phần này là <b>định nghĩa</b> — và nếu bỏ qua nó, mọi kỹ thuật về sau sẽ được áp lên một mô hình sai. Người mới gần như luôn mang sẵn một mô hình sai: <i>“tranh biện là cãi nhau có luật”</i>. Gỡ nó trước.</p>
 </div>
 
 <section id="s-what">
@@ -364,7 +393,7 @@
   <p class="db-p"><b>Chỗ sai:</b> cãi vã cho phép bạn <i>đổi chủ đề</i> khi đuối, cho phép bạn <i>lờ đi</i> câu hỏi khó, và thưởng cho người nào <i>trụ lâu hơn</i>. Tranh biện được thiết kế để chặn cả ba. Nó là một <b>thủ tục</b> có đúng bốn ràng buộc, và mỗi ràng buộc chặn một đường thoát:</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:26%">Ràng buộc</th><th style="width:37%">Nó chặn đường thoát nào</th><th>Hệ quả thực tế</th></tr></thead>
       <tbody>
         <tr><td><b>Một kiến nghị cố định</b> (motion)</td><td>Đổi chủ đề khi bí</td><td>Mọi câu bạn nói phải quy về được câu hỏi ban đầu, nếu không nó không tính điểm</td></tr>
@@ -456,14 +485,14 @@
         </marker>
       </defs>
     </svg>
-    <p class="db-src">Sáu ô, nhưng chỉ bốn ô bắt buộc nói ra: lý do · mối nối · khẳng định · hệ quả. Hai ô còn lại (qualifier, rebuttal condition) là chỗ người giỏi thêm vào để lập luận khó bị lật.</p>
+    <p class="db-src">Sáu ô, nhưng chỉ bốn ô bắt buộc nói ra: lý do · mối nối · khẳng định · hệ quả. Hai ô còn lại (backing, rebuttal condition) — cùng với qualifier ghi ngay trên mũi tên — là chỗ người giỏi thêm vào để lập luận khó bị lật.</p>
   </div>
 
   <h3 class="db-h3">Cùng một ý, ba mức độ chín</h3>
   <p class="db-p">Kiến nghị chạy xuyên trang: <b>“Nhà này sẽ cấm xe máy chạy xăng trong nội đô.”</b> Cùng một ý ủng hộ, viết ở ba mức:</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:12%">Mức</th><th style="width:44%">Điều được nói ra</th><th>Vì sao nó dừng ở đó</th></tr></thead>
       <tbody>
         <tr>
@@ -495,7 +524,7 @@
   <p class="db-p">Có ba kiểu suy luận, và chúng khác nhau ở <b>mức bảo đảm</b> mà tiền đề cho kết luận:</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:16%">Kiểu</th><th style="width:32%">Tiền đề đúng thì kết luận…</th><th style="width:28%">Ví dụ trên kiến nghị</th><th>Chỗ bị đâm</th></tr></thead>
       <tbody>
         <tr><td><b>Diễn dịch</b><br><span class="db-dim">deduction</span></td><td>… <b>bắt buộc</b> đúng. Không có kẽ hở.</td><td>“Mọi lệnh cấm đều hạn chế tự do; đây là một lệnh cấm; vậy nó hạn chế tự do.”</td><td>Không đâm được vào hình thức — chỉ đâm được vào <i>tiền đề</i>, hoặc vào chỗ “hạn chế tự do” chưa đủ để kết luận “nên bỏ”.</td></tr>
@@ -521,7 +550,7 @@
   <p class="db-lede">Nguyên tắc gốc: <b>ai khẳng định, người đó chứng minh</b> (<i>onus probandi</i>). Ai đòi thay đổi hiện trạng thì phải cho lý do; hiện trạng không phải tự bào chữa cho mình.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:24%">Khái niệm</th><th style="width:38%">Nghĩa</th><th>Trong vòng đấu</th></tr></thead>
       <tbody>
         <tr><td><b>Burden of proof</b><br><span class="db-dim">nghĩa vụ chứng minh</span></td><td>Phải dựng lý do đủ mạnh cho điều mình khẳng định</td><td>Bên <b>ủng hộ</b> (Proposition) gánh: phải cho thấy thế giới sau thay đổi <i>tốt hơn</i> thế giới hiện tại</td></tr>
@@ -551,7 +580,7 @@
   <p class="db-p">Người La Mã gọi đây là <b>stasis</b>: chỗ hai bên thật sự dừng lại và đối đầu. Có bốn tầng, đi theo thứ tự, và <b>chỉ khi cả hai đứng cùng một tầng thì mới có clash thật</b>.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:18%">Tầng</th><th style="width:26%">Câu hỏi</th><th style="width:28%">Clash trông như thế nào</th><th>Dấu hiệu bạn đang ở đây</th></tr></thead>
       <tbody>
         <tr><td><b>1. Sự việc</b><br><span class="db-dim">conjecture / fact</span></td><td>Nó có thật không? Có xảy ra không?</td><td>“Xe máy đóng góp bao nhiêu phần trăm bụi mịn PM2.5?”</td><td>Hai bên ném số liệu và nguồn vào nhau</td></tr>
@@ -581,7 +610,7 @@
   </ul>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:18%">Lỗi định nghĩa</th><th style="width:38%">Nó là gì</th><th>Trên kiến nghị của chúng ta</th></tr></thead>
       <tbody>
         <tr><td><b>Squirrelling</b><br><span class="db-dim">bẻ lái</span></td><td>Kéo kiến nghị sang một chủ đề khác hẳn để dùng bài đã soạn sẵn</td><td>Định nghĩa “nội đô” là <i>khu bảo tồn quốc gia</i> để biến thành tranh cãi môi trường hoang dã</td></tr>
@@ -627,7 +656,7 @@
   <p class="db-p">Kiến nghị mở đầu bằng một cụm quy ước, và cụm đó nói cho bạn biết <b>bạn phải chứng minh cái gì</b>. Đọc sai tiền tố là dựng nhầm cả bài.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:16%">Tiền tố</th><th style="width:20%">Đầy đủ</th><th style="width:30%">Bên ủng hộ phải chứng minh</th><th>Ví dụ</th></tr></thead>
       <tbody>
         <tr><td><b>THW</b></td><td>This House Would</td><td>Một <b>hành động</b> nên được làm — cần mô hình, cần so với hiện trạng</td><td>THW cấm xe máy chạy xăng trong nội đô</td></tr>
@@ -662,7 +691,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-p"><b>Hiểu nhầm phổ biến:</b> ai có số liệu người đó thắng. Nghe có lý vì số liệu trông khách quan. Nhưng trong phòng đấu, một con số không ai giải thích được là một con số chết — giám khảo không được phép tra Google, nên họ chỉ tin được thứ bạn <i>giải thích cho họ hiểu vì sao nó quan trọng</i>.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:18%">Loại</th><th style="width:34%">Mạnh khi</th><th>Bị đâm bằng</th></tr></thead>
       <tbody>
         <tr><td><b>Thống kê</b></td><td>Cho thấy quy mô — biến “có hại” thành “hại bao nhiêu người”</td><td>Mẫu, thời điểm, đơn vị đo, ai tài trợ nghiên cứu, và câu hỏi chí mạng: <i>tương quan hay nhân quả?</i></td></tr>
@@ -809,7 +838,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-p">Với kiến nghị hành động (<code>THW…</code>), bên ủng hộ nên đưa <b>mô hình</b> — bản mô tả cụ thể thứ mình đề xuất. Không phải để trang trí: mô hình chốt cuộc tranh cãi lại, khiến đối phương không thể tấn công một phiên bản cực đoan mà bạn chưa từng nói.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:20%">Thành phần</th><th style="width:30%">Câu hỏi</th><th>Trên kiến nghị của chúng ta</th></tr></thead>
       <tbody>
         <tr><td><b>Chủ thể</b></td><td>Ai ra quyết định và thực thi?</td><td>UBND thành phố, cảnh sát giao thông, camera phạt nguội</td></tr>
@@ -841,7 +870,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-p">Trong 15 phút chuẩn bị, sau khi chạy tám cỗ máy, hãy vẽ nhanh <b>bản đồ bên liên quan</b>. Nó sinh ra ý nhanh hơn suy nghĩ trừu tượng, vì nó buộc bạn nghĩ về người thật.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:24%">Nhóm</th><th style="width:20%">Được gì</th><th style="width:22%">Mất gì</th><th>Vì sao nhóm này đáng được nói tới</th></tr></thead>
       <tbody>
         <tr><td>Người đi xe máy có thu nhập trung bình</td><td>Không khí sạch hơn</td><td>Chi phí đổi xe, bất tiện</td><td>Đông nhất — nhưng cũng chịu đựng được nhất</td></tr>
@@ -878,7 +907,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-p">Trong mọi thể thức đồng đội, mỗi vị trí có <b>việc phải làm</b>. Làm việc của người khác không được thêm điểm, mà mất điểm ở phần việc của mình. Đây là bộ khung chung; chi tiết theo từng thể thức nằm ở <a href="#p4">Formats</a>.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:16%">Vị trí</th><th style="width:42%">Việc bắt buộc</th><th>Lỗi thường gặp</th></tr></thead>
       <tbody>
         <tr><td><b>Người 1</b><br><span class="db-dim">opening</span></td><td>Định nghĩa · framing · nêu nghĩa vụ · mô hình · 2 lập luận chính</td><td>Dùng hết ý của cả đội; hoặc bỏ mô hình rồi để người 2 phải chữa</td></tr>
@@ -987,7 +1016,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-lede">Một lập luận có bốn mảnh. Bốn mảnh cho bốn hướng đâm, cộng một nước đặc biệt: giữ nguyên lập luận của họ nhưng <b>quay đầu nó</b>.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:19%">Nước</th><th style="width:15%">Nhắm vào</th><th style="width:33%">Câu mẫu</th><th>Khi nào nó hỏng</th></tr></thead>
       <tbody>
         <tr>
@@ -1061,7 +1090,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-p">Phản bác thường chỉ <b>trừ điểm</b> của đối phương. Đòn lật (<i>turn</i>) vừa trừ điểm của họ vừa <b>cộng điểm cho bạn</b> — nên một turn thành công đáng giá bằng hai đòn phản bác thường. Có hai loại:</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:18%">Loại</th><th style="width:32%">Nói gì</th><th>Ví dụ trên kiến nghị</th></tr></thead>
       <tbody>
         <tr><td><b>Link turn</b><br><span class="db-dim">lật mối nối</span></td><td>Cơ chế của họ chạy, nhưng nó chạy <i>theo chiều ngược lại</i></td><td>“Họ nói cấm xe sẽ đẩy người ta sang giao thông công cộng. Nhưng khi hàng trăm nghìn người dồn vào một hệ thống xe buýt đã quá tải, trải nghiệm tệ đi khiến ai đủ tiền sẽ mua <b>ô tô</b> — phương tiện chiếm chỗ và phát thải nhiều hơn xe máy trên mỗi hành khách.”</td></tr>
@@ -1070,7 +1099,8 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
     </table>
   </div>
 
-  <p class="db-p"><b>Cái bẫy phải tránh — double turn.</b> Nếu bạn vừa nói <i>“cơ chế của họ không chạy”</i> vừa nói <i>“cơ chế của họ chạy và tạo ra kết quả xấu”</i>, bạn đang tự mâu thuẫn, và đối phương chỉ cần chỉ ra điều đó là cả hai đòn của bạn cùng mất giá. Chọn một. Nếu muốn giữ cả hai, phải nói rõ <b>cấu trúc điều kiện</b>: <i>“Cơ chế của họ nhiều khả năng không chạy. Nhưng nếu giám khảo cho rằng nó chạy, thì hãy để ý hệ quả kèm theo là …”</i> — đó là <a href="#s-evenif">kiến trúc “kể cả khi”</a>, hợp lệ và mạnh.</p>
+  <p class="db-p"><b>Cái bẫy phải tránh — double turn.</b> Đúng nghĩa của từ này là <b>tung cả hai loại lật lên cùng một lập luận</b>: link turn nói cơ chế của họ chạy ngược (kiến nghị làm thứ đó <i>ít đi</i>), impact turn nói chính thứ đó vốn <i>là điều xấu</i>. Ghép hai câu lại, bạn vừa nói hộ họ một lý do bỏ phiếu: kiến nghị làm một thứ xấu ít đi. Nên với mỗi lập luận, <b>chọn một loại lật</b>.</p>
+  <p class="db-p">Một mâu thuẫn họ hàng, hay gặp hơn ở người mới: vừa nói <i>“cơ chế của họ không chạy”</i> vừa nói <i>“cơ chế của họ chạy và tạo ra kết quả xấu”</i>. Đối phương chỉ cần chỉ ra chỗ vênh là cả hai đòn của bạn cùng mất giá. Nếu muốn giữ cả hai, phải nói rõ <b>cấu trúc điều kiện</b>: <i>“Cơ chế của họ nhiều khả năng không chạy. Nhưng nếu giám khảo cho rằng nó chạy, thì hãy để ý hệ quả kèm theo là …”</i> — đó là <a href="#s-evenif">kiến trúc “kể cả khi”</a>, hợp lệ và mạnh.</p>
 </section>
 
 <section id="s-evenif">
@@ -1099,10 +1129,10 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-eyebrow-sec">2.6 · <b>Points of Information</b></p>
   <h2 class="db-sec-title">POI: mười lăm giây để đặt một cái bẫy, hoặc để bước vào một cái bẫy</h2>
 
-  <p class="db-p"><b>Point of Information</b> là quyền xen ngang khi đối phương đang nói: bạn đứng dậy, họ có quyền nhận hoặc từ chối, và nếu nhận thì bạn có <b>khoảng 15 giây</b> để hỏi hoặc nêu một điểm. Có trong British Parliamentary, WSDC, Asian Parliamentary và Australs. <b>Không có trong bài reply</b> ở các thể thức có bài reply — bài đó phải liền mạch. Các thể thức Mỹ (Policy, LD, Public Forum) không có POI — thay vào đó là <b>cross-examination</b>: một khoảng thời gian riêng để hỏi đáp trực tiếp.</p>
+  <p class="db-p"><b>Point of Information</b> là quyền xen ngang khi đối phương đang nói: bạn đứng dậy, họ có quyền nhận hoặc từ chối, và nếu nhận thì bạn có <b>khoảng 15 giây</b> để hỏi hoặc nêu một điểm. Có trong British Parliamentary, WSDC và Asian Parliamentary. <b>Không có trong bài reply</b> ở các thể thức có bài reply — bài đó phải liền mạch. <b>Australs không có POI</b> ở bất kỳ bài nào: mọi bài nói đều liền mạch, và đó là khác biệt lớn nhất giữa nó với WSDC. Các thể thức Mỹ (Policy, LD, Public Forum) cũng không có POI — thay vào đó là <b>cross-examination</b>: một khoảng thời gian riêng để hỏi đáp trực tiếp.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:22%">Luật thường gặp</th><th>Nội dung</th></tr></thead>
       <tbody>
         <tr><td><b>Thời gian được bảo vệ</b></td><td>Phút đầu và phút cuối của mỗi bài không được xen ngang. Người nói cần mở bài và chốt bài liền mạch.</td></tr>
@@ -1143,7 +1173,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-p">Danh sách nguỵ biện có hàng chục mục, nhưng trong một vòng đấu thật bạn chỉ gặp đi gặp lại chừng này. Quan trọng hơn: <b>đừng gọi tên nguỵ biện bằng tiếng Latin</b>. Nói <i>“đó là ad hominem”</i> làm giám khảo phải tự dịch; nói <i>“họ đang trả lời con người thay vì trả lời lập luận”</i> thì đòn nằm ngay trên bàn.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:22%">Lỗi</th><th style="width:34%">Trông như thế nào</th><th>Nói gì tại chỗ</th></tr></thead>
       <tbody>
         <tr><td><b>Người rơm</b><br><span class="db-dim">straw man</span></td><td>Đánh vào phiên bản cực đoan hơn thứ bạn nói</td><td>“Chúng tôi không đề xuất cấm ngay lập tức. Mô hình có lộ trình 5 năm — xin phản bác cái đó.”</td></tr>
@@ -1181,7 +1211,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-p"><b>Hiểu nhầm phổ biến:</b> tác động càng khủng khiếp thì càng thắng. Nghe có lý — “hàng triệu người” nghe nặng hơn “vài nghìn người”. Nhưng giám khảo <b>chiết khấu theo xác suất</b>, và một thảm hoạ cần bảy bước suy diễn để tới thì bị chiết khấu gần về không. Một tác động vừa phải nhưng gần như chắc chắn thắng một thảm hoạ xa vời, gần như mọi lần.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:18%">Trục</th><th style="width:26%">Câu hỏi</th><th style="width:26%">Câu nói ra</th><th>Bẫy</th></tr></thead>
       <tbody>
         <tr><td><b>Quy mô</b><br><span class="db-dim">magnitude</span></td><td>Bao nhiêu người, và mỗi người nặng tới đâu?</td><td>“Tác động của họ chạm tới vài nghìn hộ; của chúng tôi chạm tới cả thành phố mỗi ngày.”</td><td>Số to mà không có cơ chế thì rỗng. Luôn phải kèm trục xác suất.</td></tr>
@@ -1329,12 +1359,14 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
 
   <p class="db-p">Bài cuối của mỗi bên (whip / summary / reply) không thêm lập luận mới — ở nhiều thể thức đó là lỗi bị trừ điểm. Việc của nó là <b>giảm vòng đấu xuống còn hai hoặc ba câu hỏi</b> và trả lời từng câu bằng so sánh.</p>
 
-  <div class="db-formula"><span class="c">cấu trúc bài whip 4 phút</span>
+  <div class="db-formula"><span class="c">cấu trúc bài tổng kết 4 phút — bài reply của WSDC · Asian · Australs</span>
 <b>0:00–0:30</b>  “Vòng này rút lại còn ba câu hỏi: (1) … (2) … (3) …”
 <b>0:30–1:40</b>  Câu hỏi 1 — họ nói gì, ta nói gì, <b>ai thắng và vì sao</b>
 <b>1:40–2:50</b>  Câu hỏi 2 — như trên
 <b>2:50–3:40</b>  Câu hỏi 3 — như trên
 <b>3:40–4:00</b>  “Kể cả khi giám khảo cho họ câu 1, câu 2 và 3 vẫn quyết định vòng đấu, vì …”</div>
+
+  <p class="db-p"><b>Đổi thang cho từng thể thức:</b> khung trên là cho một bài <b>4 phút</b>. Bài <i>whip</i> của BP và Asian Parliamentary dài <b>7 phút</b> — vẫn đúng bộ khung này, chỉ giãn ra: mỗi vấn đề khoảng hai phút thay vì một, và phần chốt được một phút trọn. Bài <i>summary</i> của Public Forum chỉ có 3 phút, nên thường chỉ đủ chỗ cho hai câu hỏi.</p>
 
   <p class="db-p"><b>Chọn ba câu hỏi thế nào:</b> chọn những chỗ hai bên <i>thật sự</i> đụng nhau, không phải những chỗ bạn nói hay nhất. Nếu một lập luận của bạn không bị ai đụng tới, nói một câu (“điểm này không được trả lời, nên nó đứng”) rồi đi tiếp — dành thời gian cho chỗ có tranh chấp.</p>
 
@@ -1357,7 +1389,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   </ul>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:30%">Điều giám khảo <b>không</b> được làm</th><th>Vì sao quy tắc ấy tồn tại</th></tr></thead>
       <tbody>
         <tr><td>Dùng kiến thức riêng để bổ khuyết cho một bên</td><td>Nếu giám khảo tự vá lỗ hổng, đội yếu hơn được thưởng cho thứ họ không nói. Họ phải chấm <b>vòng đấu đã diễn ra</b>, không phải vòng đấu lẽ ra có thể có.</td></tr>
@@ -1388,7 +1420,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
 <!-- ══════════════════════════ PART 4 — FORMATS ══════════════════════════ -->
 <div class="db-part-head" id="p4">
   <p class="kicker">Phần 4 · Formats</p>
-  <h2>Thể thức: cùng một kỹ năng, sáu bộ luật chơi khác nhau</h2>
+  <h2>Thể thức: cùng một kỹ năng, bảy bộ luật chơi khác nhau</h2>
   <p>Chọn thể thức trước khi luyện, vì nó quyết định bạn nên đầu tư vào cái gì. <b>Thể thức nghị viện</b> (BP, WSDC, Asian, Australs) thưởng cho <i>phân tích ứng khẩu</i>; <b>thể thức Mỹ</b> (Policy, LD, PF) thưởng cho <i>nghiên cứu và bằng chứng có trích dẫn</i>. Luyện sai hướng thì bỏ ra một trăm giờ cho kỹ năng không được chấm.</p>
 </div>
 
@@ -1397,7 +1429,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <h2 class="db-sec-title">Bảng so sánh — đọc dòng cuối trước, nó quyết định bạn luyện gì</h2>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr>
         <th style="width:15%">Thể thức</th><th style="width:10%">Đội</th><th style="width:13%">Bài nói</th>
         <th style="width:12%">Chuẩn bị</th><th style="width:12%">Xen ngang</th><th>Chấm chủ yếu vào</th>
@@ -1406,7 +1438,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
         <tr><td><b>British Parliamentary</b><br><span class="db-dim">WUDC, EUDC, đại học VN</span></td><td>4 đội × 2 người</td><td>7 phút × 8</td><td>15 phút</td><td>POI</td><td>Phân tích ứng khẩu · phần mở rộng của nửa sau · xếp hạng 1–4 chứ không thắng/thua</td></tr>
         <tr><td><b>WSDC</b><br><span class="db-dim">giải học sinh thế giới</span></td><td>2 đội × 3 người</td><td>8 phút × 6<br>+ reply 4 phút</td><td>1 giờ (đề ứng khẩu)<br>hoặc biết trước</td><td>POI</td><td>Content 40 · Style 40 · Strategy 20 — trọng số công bố công khai</td></tr>
         <tr><td><b>Asian Parliamentary</b><br><span class="db-dim">giải khu vực châu Á</span></td><td>2 đội × 3 người</td><td>7 phút × 6<br>+ reply 4 phút</td><td>30 phút</td><td>POI</td><td>Matter · Manner · Method, gần WSDC nhưng ít nhấn phong cách hơn</td></tr>
-        <tr><td><b>Australs</b><br><span class="db-dim">Úc – châu Á, đại học</span></td><td>2 đội × 3 người</td><td>8 phút × 6<br>+ reply 4 phút</td><td>30 phút<br><span class="db-dim">gồm cả chọn đề</span></td><td>POI</td><td>Matter · Manner · Method; giống WSDC về cấu trúc, khác ở chỗ đây là giải đại học và đề nặng về chính sách hơn</td></tr>
+        <tr><td><b>Australs</b><br><span class="db-dim">Úc – châu Á, đại học</span></td><td>2 đội × 3 người</td><td>8 phút × 6<br>+ reply 4 phút</td><td>30 phút<br><span class="db-dim">gồm cả chọn đề</span></td><td><b>Không có</b><br><span class="db-dim">bài nói liền mạch</span></td><td>Matter · Manner · Method; giống WSDC về cấu trúc, khác ở hai chỗ: <b>không có POI</b>, và đây là giải đại học nên đề nặng về chính sách hơn</td></tr>
         <tr><td><b>Policy (CX)</b><br><span class="db-dim">Mỹ, một đề cho cả năm</span></td><td>2 đội × 2 người</td><td>8/8/8/8 + 5/5/5/5<br>+ cross-ex 3 phút</td><td>8 phút dự trữ<br>+ cả năm nghiên cứu</td><td>Cross-ex</td><td>Bằng chứng có trích dẫn · độ sâu kỹ thuật · nói rất nhanh (<i>spreading</i>)</td></tr>
         <tr><td><b>Lincoln–Douglas</b><br><span class="db-dim">Mỹ, đấu đơn</span></td><td>1 vs 1</td><td>6/7/4/6/3<br>+ cross-ex 3 phút</td><td>4 phút dự trữ</td><td>Cross-ex</td><td>Xung đột <b>giá trị</b>: tiêu chí đạo đức, khung triết học, rồi mới tới hệ quả</td></tr>
         <tr><td><b>Public Forum</b><br><span class="db-dim">Mỹ, đề đổi hằng tháng</span></td><td>2 đội × 2 người</td><td>4/4/3/2 mỗi bên<br>+ crossfire 3 phút</td><td>3 phút dự trữ</td><td>Crossfire</td><td>Thuyết phục <b>người ngoài ngành</b> — giám khảo có thể là phụ huynh, không phải dân chuyên</td></tr>
@@ -1424,7 +1456,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-p">BP là thể thức của giải vô địch thế giới sinh viên. Nó khác mọi thứ ở trên vì có <b>bốn đội</b> chứ không hai, chia thành hai nửa: <i>mở màn</i> (opening) và <i>khép lại</i> (closing). Giám khảo <b>xếp hạng 1–2–3–4</b>, nên đội cùng phe với bạn cũng là đối thủ của bạn.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:8%">Lượt</th><th style="width:26%">Vị trí</th><th>Việc phải làm</th></tr></thead>
       <tbody>
         <tr><td>1</td><td><b>Prime Minister</b> · OG</td><td>Định nghĩa, mô hình, framing, 2 lập luận. Đặt sân cho cả bảy bài còn lại</td></tr>
@@ -1450,7 +1482,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-p">Đây là hai thể thức phổ biến nhất ở châu Á và là nơi phần lớn người Việt bắt đầu. Chúng gần nhau; khác biệt chính là độ dài bài và mức nhấn vào phong cách.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:22%">Hạng mục</th><th style="width:39%">WSDC</th><th>Asian Parliamentary</th></tr></thead>
       <tbody>
         <tr><td>Bài chính</td><td>8 phút × 3 mỗi bên</td><td>7 phút × 3 mỗi bên</td></tr>
@@ -1550,7 +1582,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
     </div>
 
     <p class="db-lab__hint" id="ft-note" style="margin:0 0 10px"></p>
-    <div class="db-tw" style="margin-bottom:14px"><table class="wb-table wb-table--zebra"><tbody id="ft-rows"></tbody></table></div>
+    <div class="db-tw" style="margin-bottom:14px"><table class="wb-table wb-table--striped"><tbody id="ft-rows"></tbody></table></div>
 
     <div class="wb-cluster wb-cluster--middle" style="gap:18px">
       <div>
@@ -1571,7 +1603,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
 <div class="db-part-head" id="p5">
   <p class="kicker">Phần 5 · Practice</p>
   <h2>Luyện một mình: nơi kỹ năng thật sự hình thành</h2>
-  <p>Bốn phần trước là kiến thức, và kiến thức về tranh biện <b>không tự chuyển thành kỹ năng</b> — cũng như đọc sách về bơi. Phần này là những gì bạn làm được ở nhà, không cần đối thủ, không cần câu lạc bộ: bảy bài tập, một quy trình chuẩn bị, và một lịch tám tuần.</p>
+  <p>Năm phần trước là kiến thức, và kiến thức về tranh biện <b>không tự chuyển thành kỹ năng</b> — cũng như đọc sách về bơi. Phần này là những gì bạn làm được ở nhà, không cần đối thủ, không cần câu lạc bộ: bảy bài tập, một quy trình chuẩn bị, và một lịch tám tuần.</p>
 </div>
 
 <section id="s-speech">
@@ -1604,7 +1636,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-p"><b>Flow</b> là cách ghi chép riêng của tranh biện, và nó khác ghi chép thường ở một điểm quyết định: <b>bố cục theo chiều ngang</b>. Mỗi bài nói là một cột; một lập luận đi qua cả vòng đấu nằm trên <i>cùng một dòng</i>. Nhìn ngang một dòng là thấy ngay lập luận đó bị đánh chưa, đỡ chưa, ai bỏ rơi nó.</p>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:20%">Dòng · lập luận</th><th style="width:20%">PM</th><th style="width:20%">LO</th><th style="width:20%">DPM</th><th>Trạng thái</th></tr></thead>
       <tbody>
         <tr><td><b>chuyển đổi p.tiện</b></td><td>cấm → đổi xe điện → PM2.5 ↓</td><td>✗ nghèo ko đổi được → mất việc</td><td>→ trợ giá + lộ trình 5n</td><td>còn tranh chấp — clash chính</td></tr>
@@ -1629,7 +1661,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <h2 class="db-sec-title">Giọng nói: nhân với nội dung, không cộng vào nội dung</h2>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:18%">Yếu tố</th><th style="width:32%">Mốc dùng được</th><th>Cách sửa ở nhà</th></tr></thead>
       <tbody>
         <tr><td><b>Tốc độ</b></td><td>Hội thoại thường ~120–150 từ/phút. Trên bục nên ở khoảng đó hoặc nhanh hơn chút; nhanh hơn nữa thì giám khảo mất chỗ ghi</td><td>Ghi âm 2 phút, đếm số từ, chia cho 2. Đo lại mỗi tuần</td></tr>
@@ -1705,7 +1737,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
 
     <div class="db-item">
       <div class="db-item__top"><span class="db-item__no">D5</span><p class="db-item__name">Ghi flow theo video · <span class="db-dim">45 phút</span></p></div>
-      <p class="db-item__def">Mở một vòng chung kết quay sẵn. Ghi flow đầy đủ. Tạm dừng trước bài tổng kết cuối, tự viết bài whip 4 phút từ bản flow, rồi bật tiếp và so với người thật.</p>
+      <p class="db-item__def">Mở một vòng chung kết quay sẵn. Ghi flow đầy đủ. Tạm dừng trước bài tổng kết cuối, tự viết một bài tổng kết 4 phút từ bản flow, rồi bật tiếp và so với người thật.</p>
       <div class="db-item__meta">
         <span class="db-item__k">Sửa lỗi</span><p class="db-item__v">Không phân biệt được chỗ nào quan trọng — lỗi khiến bài tổng kết thành bản kể lại</p>
         <span class="db-item__k">Biết tiến bộ khi</span><p class="db-item__v">Ba vấn đề bạn chọn trùng với ba vấn đề giám khảo nêu trong phần nhận xét</p>
@@ -1737,7 +1769,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <h2 class="db-sec-title">Tám tuần, khoảng 4 giờ mỗi tuần, không cần câu lạc bộ</h2>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:9%">Tuần</th><th style="width:24%">Trọng tâm</th><th style="width:37%">Làm gì</th><th>Sản phẩm cuối tuần</th></tr></thead>
       <tbody>
         <tr><td><b>1</b></td><td>Bốn mảnh lập luận</td><td>Đọc Phần 0. D2 mỗi ngày. Dùng <a href="#s-lab-build">Lab 01</a> cho 10 khẳng định khác nhau</td><td>10 lập luận viết đủ bốn mảnh</td></tr>
@@ -1745,7 +1777,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
         <tr><td><b>3</b></td><td>Dựng case đủ</td><td>Đọc 1.4–1.7. Ba case đầy đủ (framing · nghĩa vụ · mô hình · 3 lập luận), mỗi case 30 phút</td><td>3 case viết ra giấy, đọc thành tiếng đúng 7 phút</td></tr>
         <tr><td><b>4</b></td><td>Phản bác</td><td>Đọc Phần 2. D4 mỗi ngày. <a href="#s-lab-matrix">Lab 02</a> cho tới khi chọn nước mất dưới 10 giây</td><td>Phản xạ: nghe một lập luận → nói ngay hai nước đánh khác nhau</td></tr>
         <tr><td><b>5</b></td><td>Cân &amp; so sánh</td><td>Đọc Phần 3. <a href="#s-lab-weigh">Lab 03</a>. Viết 20 câu so sánh theo bốn khuôn ở 3.2</td><td>20 câu “kể cả khi… vẫn… vì…” cho 5 kiến nghị khác nhau</td></tr>
-        <tr><td><b>6</b></td><td>Flow &amp; bài tổng kết</td><td>D5 hai lần. Ghi flow hai vòng chung kết, tự viết whip, so với bản thật</td><td>Hai bản flow đầy đủ + hai bài whip 4 phút</td></tr>
+        <tr><td><b>6</b></td><td>Flow &amp; bài tổng kết</td><td>D5 hai lần. Ghi flow hai vòng chung kết, tự viết whip, so với bản thật</td><td>Hai bản flow đầy đủ + hai bài tổng kết 4 phút</td></tr>
         <tr><td><b>7</b></td><td>Giọng &amp; nhịp</td><td>Đọc 5.3. D1 và D6 mỗi ngày. Quay video một bài 7 phút, xem lại tắt tiếng</td><td>Từ đệm dưới 3 lần/phút; nói 7 phút không nhìn giấy quá 3 lần</td></tr>
         <tr><td><b>8</b></td><td>Ráp lại</td><td>D7 hai lần. Một vòng đấu mô phỏng đầy đủ: 15 phút chuẩn bị, nói cả 4 bài của một phe</td><td>Một vòng tự đấu hoàn chỉnh có ghi hình, tự chấm theo <a href="#s-checklist">checklist</a></td></tr>
       </tbody>
@@ -1809,7 +1841,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <h2 class="db-sec-title">Từ vựng — giữ tên tiếng Anh, vì tài liệu và trọng tài đều dùng tên gốc</h2>
 
   <div class="db-tw">
-    <table class="wb-table wb-table--zebra">
+    <table class="wb-table wb-table--striped">
       <thead><tr><th style="width:24%">Thuật ngữ</th><th style="width:22%">Tiếng Việt</th><th>Nghĩa dùng được</th></tr></thead>
       <tbody>
         <tr><td><b>Motion</b> · resolution</td><td>Kiến nghị</td><td>Câu đề được tranh biện. Tiền tố (THW, THBT…) quyết định nghĩa vụ của mỗi bên</td></tr>
@@ -1907,7 +1939,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <ul class="db-ul">
     <li><b>Điều lệ gốc — đọc bản chính thức của thể thức bạn nhắm tới.</b> Tìm theo đúng tên: <i>“WUDC Debating and Judging Manual”</i> cho British Parliamentary, <i>“WSDC rules”</i> cho giải học sinh thế giới. Bảng trong trang này là bản tóm; điều lệ mỗi giải mới là thứ trọng tài áp dụng.</li>
     <li><b>Vòng đấu quay sẵn</b> — tìm trên YouTube: <span class="db-mono">WUDC grand final</span>, <span class="db-mono">WSDC grand final</span>, <span class="db-mono">Asian BP final</span>. Xem kèm bài tập D5: ghi flow, tự viết whip, rồi so với người thật. Đừng xem thụ động — xem thụ động gần như không dạy được gì.</li>
-    <li><b>Tổ chức có tài liệu mở</b> — <a href="https://www.speechanddebate.org" target="_blank" rel="noopener">NSDA</a> (Mỹ, tài liệu cho Policy/LD/PF) và <a href="https://idebate.net" target="_blank" rel="noopener">IDEA</a> (kho kiến nghị và tài liệu huấn luyện).</li>
+    <li><b>Tổ chức có tài liệu mở</b> — <a href="https://www.speechanddebate.org" target="_blank" rel="noopener">NSDA · speechanddebate.org</a> (Mỹ, tài liệu cho Policy/LD/PF) và <a href="https://idebate.net" target="_blank" rel="noopener">IDEA · idebate.net</a> (kho kiến nghị và tài liệu huấn luyện). Đây là hai liên kết duy nhất dẫn ra ngoài trang này; cả hai mở ở tab mới.</li>
     <li><b>Sách nền, theo thứ tự nên đọc:</b> <i>Thank You for Arguing</i> (Jay Heinrichs) — thuật hùng biện cổ điển viết dễ đọc, hợp làm cuốn đầu tiên; <i>The Uses of Argument</i> (Stephen Toulmin) — nguồn gốc sơ đồ ở mục 0.2, khô nhưng đáng đọc chương đầu; <i>Asking the Right Questions</i> (Browne &amp; Keeley) — sổ tay soi lập luận của người khác.</li>
     <li><b>Ba trang cùng bộ sưu tập này</b>, bổ trợ trực tiếp: <a href="how-to-win-every-argument.html">How to Win Every Argument</a> — ~79 lối nguỵ biện, dùng làm từ điển tra khi gặp một đòn không gọi được tên; <a href="the-little-blue-reasoning-book.html">The Little Blue Reasoning Book</a> — 50 nguyên tắc tư duy nền; <a href="structured-speaking.html">Structured Speaking</a> — chọn khung trình bày cho các tình huống nói ngoài phòng đấu.</li>
   </ul>
@@ -1978,6 +2010,34 @@ function mmss(sec) { var s = Math.max(0, Math.round(sec)); return pad2(Math.floo
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
   top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+
+/* ═════════════════ chỉ dấu cuộn ngang cho các bảng .db-tw ═════════════════
+   25 scroller, 20 cái thật sự tràn ở khổ 375px; trên điện thoại thanh cuộn tự ẩn
+   nên người đọc dễ tưởng bảng chỉ có phần nhìn thấy. Bọc mỗi scroller trong một shell rồi
+   bật lớp phủ mờ ở mép phải khi còn nội dung chưa lộ ra. Bảng của Lab 04 được
+   dựng lại bằng JS nên phải theo dõi cả kích thước của bảng bên trong.         */
+(function () {
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.db-tw'));
+  boxes.forEach(function (el) {
+    var shell = document.createElement('div');
+    shell.className = 'db-tw-shell';
+    el.parentNode.insertBefore(shell, el);
+    shell.appendChild(el);
+
+    function sync() {
+      var over = el.scrollWidth - el.clientWidth;
+      shell.classList.toggle('has-more', over > 4 && el.scrollLeft < over - 4);
+    }
+    el.addEventListener('scroll', sync, { passive: true });
+    if ('ResizeObserver' in window) {
+      var ro = new ResizeObserver(sync);
+      ro.observe(el);
+      if (el.firstElementChild) ro.observe(el.firstElementChild);
+    }
+    window.addEventListener('resize', sync);
+    sync();
+  });
 })();
 
 /* ═════════════════ Lab 01 — Argument builder ═════════════════
@@ -2188,7 +2248,7 @@ function mmss(sec) { var s = Math.max(0, Math.round(sec)); return pad2(Math.floo
     lines.push('CÂU SO SÁNH ĐỂ NÓI RA:');
     lines.push('“Kể cả khi giám khảo tin trọn vẹn tác động của bên ' + lo + ', bên ' + hi + ' vẫn nặng hơn —');
     lines.push(' vì nó chạm tới ' + scopeLabel(H.e) + ' với xác suất ' + Math.round(H.pr * 100) + '%,');
-    lines.push(' trong khi bên ' + lo + ' cần ' + Math.round(L.pr * 100) + '% xác suất mới đạt tới ' + scopeLabel(L.e) + '.');
+    lines.push(' trong khi bên ' + lo + ' chỉ chạm tới ' + scopeLabel(L.e) + ' với xác suất ' + Math.round(L.pr * 100) + '%.');
     lines.push(' Ở điểm đó, ' + factors[0].k + ' là thứ quyết định.”');
     $('wg-out').textContent = lines.join('\n');
   }
@@ -2261,7 +2321,7 @@ function makeClock(clockEl, opts) {
       ]
     },
     australs: {
-      note: 'Bài chính 8 phút, reply 4 phút do người nói thứ 1 hoặc 2 trình bày và <b>phe phản đối reply trước</b>. POI được phép trong bài chính (ngoài phút đầu và phút cuối), không được phép trong bài reply. Chuẩn bị 30 phút, gồm cả thời gian chọn đề. Chấm theo Matter · Manner · Method.',
+      note: 'Bài chính 8 phút, reply 4 phút do người nói thứ 1 hoặc 2 trình bày và <b>phe phản đối reply trước</b>. <b>Không có POI</b> ở bất kỳ bài nào — mọi bài đều liền mạch, đây là khác biệt lớn nhất so với WSDC. Chuẩn bị 30 phút, gồm cả thời gian chọn đề. Chấm theo Matter · Manner · Method.',
       rows: [
         ['1 · Affirmative 1', 480], ['2 · Negative 1', 480], ['3 · Affirmative 2', 480],
         ['4 · Negative 2', 480], ['5 · Affirmative 3', 480], ['6 · Negative 3', 480],
