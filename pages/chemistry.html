@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
 <title>Chemistry — giáo trình hoá học tự học, từ hạt nhân tới phản ứng hữu cơ</title>
-<meta name="description" content="Giáo trình hoá học đầy đủ để tự học tại nhà, viết bằng tiếng Việt: cấu tạo nguyên tử, orbital, bảng tuần hoàn, liên kết, hình học phân tử, lực liên phân tử, mol và stoichiometry, khí, dung dịch, nhiệt hoá học, entropy, năng lượng tự do Gibbs, động học, cân bằng, acid–base, chuẩn độ, oxi hoá khử và điện hoá, hoá hữu cơ, cơ chế phản ứng, phổ, sinh hoá và hoá vô cơ — kèm 14 mô hình tương tác nghịch trực tiếp trên trang.">
+<meta name="description" content="Giáo trình hoá học đầy đủ để tự học tại nhà, viết bằng tiếng Việt: cấu tạo nguyên tử, orbital, bảng tuần hoàn, liên kết, hình học phân tử, lực liên phân tử, mol và stoichiometry, khí, dung dịch, nhiệt hoá học, entropy, năng lượng tự do Gibbs, động học, cân bằng, acid–base, chuẩn độ, oxi hoá khử và điện hoá, hoá hữu cơ, cơ chế phản ứng, phổ, sinh hoá và hoá vô cơ — kèm 16 mô hình tương tác nghịch trực tiếp trên trang.">
 
 <!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
 <link rel="stylesheet" href="../web-builder/web-builder.css">
@@ -88,6 +88,39 @@
   .ch-tw .wb-table { margin: 0; border: 0; }
   .ch-tw .wb-table th, .ch-tw .wb-table td { font-size: 13.5px; line-height: 1.55; vertical-align: top; }
   .ch-tw .wb-table td code, .ch-tw .wb-table th code { font-size: 12px; }
+
+  /* ---- chỉ dấu cuộn ngang ----------------------------------------------------
+     Bảng, công thức và bảng tuần hoàn đều rộng hơn màn hình điện thoại. Không có
+     chỉ dấu thì người đọc tưởng nội dung chỉ có bấy nhiêu. JS gắn .has-xscroll cho
+     khối NÀO THẬT SỰ tràn, và .at-start / .at-end theo vị trí cuộn hiện tại; mép
+     nào còn nội dung phía ngoài thì bị làm mờ đi.
+
+     Dùng mask chứ không dùng gradient nền: mask nằm TRÊN cả nội dung nên thấy được
+     kể cả khi bên trong là <table> có nền đục, và mask của một scroller được đặt
+     theo border-box nên nó đứng yên khi cuộn. Màu trong mask chỉ là kênh alpha,
+     không phải màu giao diện — nên #000 ở đây không phá quy ước token. */
+  .ch-tw.has-xscroll:not(.at-end),
+  .ch-formula.has-xscroll:not(.at-end),
+  .ch-pt-wrap.has-xscroll:not(.at-end) {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 42px), rgba(0, 0, 0, .16));
+            mask-image: linear-gradient(to right, #000 calc(100% - 42px), rgba(0, 0, 0, .16));
+  }
+  .ch-tw.has-xscroll:not(.at-start),
+  .ch-formula.has-xscroll:not(.at-start),
+  .ch-pt-wrap.has-xscroll:not(.at-start) {
+    -webkit-mask-image: linear-gradient(to left, #000 calc(100% - 42px), rgba(0, 0, 0, .16));
+            mask-image: linear-gradient(to left, #000 calc(100% - 42px), rgba(0, 0, 0, .16));
+  }
+  .ch-tw.has-xscroll:not(.at-start):not(.at-end),
+  .ch-formula.has-xscroll:not(.at-start):not(.at-end),
+  .ch-pt-wrap.has-xscroll:not(.at-start):not(.at-end) {
+    -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, .16), #000 42px, #000 calc(100% - 42px), rgba(0, 0, 0, .16));
+            mask-image: linear-gradient(to right, rgba(0, 0, 0, .16), #000 42px, #000 calc(100% - 42px), rgba(0, 0, 0, .16));
+  }
+
+  /* Dòng gợi ý chỉ hiện khi khối ngay trên nó thật sự cuộn được. */
+  .ch-swipe { display: none; font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .04em; color: var(--wb-fg-subtle); margin: 8px 0 0; }
+  .has-xscroll + .ch-swipe { display: block; }
 
   /* ---- part overview tiles ---- */
   .ch-parts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
@@ -179,6 +212,20 @@
   .ch-el-grid div { font-size: 12px; color: var(--wb-fg-muted); line-height: 1.5; }
   .ch-el-grid div b { display: block; font-family: var(--wb-font-mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); font-weight: 600; }
 
+  /* Trên màn hẹp, thu ô lại để lọt nhiều cột hơn — vẫn giữ đúng 18 cột, vì mất
+     hình bảng là mất luôn ý nghĩa chu kỳ / nhóm. 700px → 520px đưa phần nhìn thấy
+     được ở 375px từ ~43% lên ~58%; phần còn lại vẫn cuộn, và có chỉ dấu ở mép. */
+  @media (max-width: 640px) {
+    .ch-pt { grid-template-columns: repeat(18, minmax(26px, 1fr)); gap: 2px; min-width: 520px; }
+    .ch-el { padding: 2px 1px 3px; border-radius: 3px; }
+    .ch-el .z { font-size: 7px; }
+    .ch-el .sym { font-size: 11px; }
+    .ch-el .val { font-size: 6.5px; min-height: 8px; }
+    .ch-pt-note { font-size: 7.5px; }
+    .ch-pt-gap { height: 6px; }
+    .ch-el-card__sym { font-size: 26px; }
+  }
+
   /* ---- reaction-family / group cards ---- */
   .ch-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 12px 0 16px; }
   @media (max-width: 720px) { .ch-grid2 { grid-template-columns: minmax(0, 1fr); } }
@@ -191,6 +238,21 @@
   /* ---- back to top ---- */
   .ch-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
   .ch-top.is-on { opacity: 1; pointer-events: auto; }
+
+  /* ---- vùng chạm trên màn cảm ứng --------------------------------------------
+     Thanh trượt là cách chính để nghịch 16 mô hình, nhưng `.wb-range` cao đúng
+     4px — vùng chạm thật của <input type=range> là hộp của chính nó, núm 18px vẽ
+     tràn ra ngoài KHÔNG nhận được chạm. Cho hộp cao 36px để ngón tay bắt được, rồi
+     vẽ lại rãnh bằng một dải gradient 4px căn giữa nên nhìn vẫn y như cũ.
+     Chỉ scope trong .ch-lab của trang này, không đụng `.wb-range` trần. */
+  @media (max-width: 760px) {
+    .ch-lab .wb-range {
+      height: 36px; margin: 0;
+      background: linear-gradient(var(--wb-border-strong), var(--wb-border-strong)) center / 100% 4px no-repeat;
+    }
+    .ch-lab .ch-chip { font-size: 12px; padding: 9px 13px; line-height: 1.25; }
+    .ch-lab .ch-chips { gap: 8px; }
+  }
 </style>
 </head>
 <body class="wb-app">
@@ -517,7 +579,7 @@
           <div class="ch-item">
             <div class="ch-item__top"><span class="ch-item__no">Hiểu nhầm 6</span><p class="ch-item__name">“Hoá học là môn phải học thuộc.”</p></div>
             <p class="ch-item__def">Nghe hợp lý vì đề thi hay hỏi thuộc lòng, và vì bảng tuần hoàn trông như một danh sách cần nhớ. Nhưng gần như mọi thứ trong hoá <b>suy ra được từ ba nguyên lý</b>: (1) điện tích trái dấu hút nhau, (2) hệ trôi về trạng thái năng lượng thấp hơn và hỗn loạn hơn, (3) electron xếp vào các mức có sức chứa cố định.</p>
-            <p class="ch-item__def">Thử nghiệm: “vì sao NaCl tan trong nước còn dầu thì không?” không cần nhớ gì — chỉ cần (1) và (2). Phần <i>thật sự</i> phải thuộc rất nhỏ: khoảng 20 ký hiệu nguyên tố, 12 ion đa nguyên tử, và vài quy tắc tan. Tất cả nằm trong <a href="#s-tables">bảng tra cuối trang</a>. Học thuộc thêm nữa là dấu hiệu bạn đang bù cho chỗ chưa hiểu.</p>
+            <p class="ch-item__def">Thử nghiệm: “vì sao NaCl tan trong nước còn dầu thì không?” không cần nhớ gì — chỉ cần (1) và (2). Phần <i>thật sự</i> phải thuộc rất nhỏ: khoảng 20 ký hiệu nguyên tố, 15 ion đa nguyên tử, và vài quy tắc tan. Tất cả nằm trong <a href="#s-tables">bảng tra cuối trang</a>. Học thuộc thêm nữa là dấu hiệu bạn đang bù cho chỗ chưa hiểu.</p>
           </div>
         </div>
       </section>
@@ -714,6 +776,7 @@ Ar = 34,969 × 0,7576 + 36,966 × 0,2424 = <b>35,45</b>  <span class="c">— kh�
           <div class="ch-lab__body">
             <div class="ch-chips" id="pt-modes" style="margin-bottom:12px"></div>
             <div class="ch-pt-wrap"><div class="ch-pt" id="pt-grid"></div></div>
+            <p class="ch-swipe">Vuốt ngang để xem hết 18 nhóm →</p>
             <div class="ch-pt-legend" id="pt-legend"></div>
             <div class="ch-el-card" id="pt-card"></div>
             <p class="ch-lab__foot"><b>Cách đọc bảng trong 10 giây:</b> <b>hàng ngang (chu kỳ)</b> = số lớp electron, đi ngang là thêm dần electron vào cùng một lớp. <b>Cột dọc (nhóm)</b> = số electron lớp ngoài cùng giống nhau, nên <b>tính chất hoá học giống nhau</b> — đó là toàn bộ ý nghĩa của chữ “tuần hoàn”. Li, Na, K đều nổ khi gặp nước vì cả ba đều có đúng 1 electron ngoài cùng cần tống đi.</p>
@@ -1876,7 +1939,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
 <span class="c">Ví dụ MnO₄⁻: 4 O cho −8, tổng phải bằng −1  ⇒  Mn = <b>+7</b> — mức oxi hoá cao nhất Mn đạt được.</span></div>
 
         <h3 class="ch-h3">Cân bằng phản ứng oxi hoá khử bằng nửa phản ứng</h3>
-        <div class="ch-formula"><b>Năm bước — mẫu: MnO₄⁻ + Fe²⁺ → Mn²⁺ + Fe³⁺ (môi trường acid)</b>
+        <div class="ch-formula"><b>Sáu bước — mẫu: MnO₄⁻ + Fe²⁺ → Mn²⁺ + Fe³⁺ (môi trường acid)</b>
 1. Tách hai nửa:      MnO₄⁻ → Mn²⁺        |  Fe²⁺ → Fe³⁺
 2. Cân nguyên tố ≠ O,H: <span class="c">đã cân</span>
 3. Cân O bằng H₂O:    MnO₄⁻ → Mn²⁺ + 4H₂O
@@ -2348,7 +2411,7 @@ nitro hoá (HNO₃/H₂SO₄) · halogen hoá (Br₂/FeBr₃) · sulfo hoá (SO�
           <table class="wb-table wb-table--striped">
             <thead><tr><th style="width:140px">Họ</th><th style="width:150px">Mắt xích</th><th style="width:160px">Liên kết nối</th><th>Vai trò &amp; điểm hoá học đáng chú ý</th></tr></thead>
             <tbody>
-              <tr><td><b>Carbohydrate</b></td><td>Monosaccharide (glucose, fructose)</td><td>Liên kết glycoside (ester của ancol)</td><td>Nhiên liệu và khung đỡ. <b>Tinh bột và cellulose đều là polymer của glucose</b> — khác nhau duy nhất ở hướng liên kết (α hay β), và chỉ khác biệt lập thể đó khiến người tiêu hoá được cơm mà không tiêu hoá được giấy.</td></tr>
+              <tr><td><b>Carbohydrate</b></td><td>Monosaccharide (glucose, fructose)</td><td>Liên kết glycoside (acetal, kiểu ether)</td><td>Nhiên liệu và khung đỡ. <b>Tinh bột và cellulose đều là polymer của glucose</b> — khác nhau duy nhất ở hướng liên kết (α hay β), và chỉ khác biệt lập thể đó khiến người tiêu hoá được cơm mà không tiêu hoá được giấy.</td></tr>
               <tr><td><b>Lipid</b></td><td>Acid béo + glycerol</td><td>Liên kết ester</td><td>Dự trữ năng lượng và làm màng. <b>Không phải polymer</b> — chúng tụ lại bằng hiệu ứng kỵ nước. Béo no (mạch thẳng, xếp chặt) thì rắn; béo không no <i>cis</i> (gấp khúc) thì lỏng.</td></tr>
               <tr><td><b>Protein</b></td><td>20 amino acid</td><td><b>Liên kết peptide</b> (amide)</td><td>Làm gần như mọi việc: xúc tác, vận chuyển, cấu trúc, tín hiệu. Chuỗi tự cuộn thành hình 3D duy nhất — và <b>hình đó quyết định chức năng</b>. Đun nóng làm mất hình (biến tính) ⇒ trứng luộc không trở lại lỏng được.</td></tr>
               <tr><td><b>Acid nucleic</b></td><td>4 nucleotide (A, T/U, G, C)</td><td>Liên kết phosphodiester</td><td>Lưu và truyền thông tin. Hai mạch bám nhau bằng <b>liên kết hydro</b> — đủ mạnh để giữ, đủ yếu để tách ra khi sao chép. A–T có 2 liên kết hydro, G–C có 3, nên vùng giàu G–C khó tách hơn.</td></tr>
@@ -2532,7 +2595,7 @@ Nhanh hay chậm? → nhìn Ea, không nhìn ΔG. Hai chuyện khác nhau.</div>
         <p class="ch-eyebrow-sec"><b>R.2</b> — phần thật sự đáng thuộc, và nó rất ngắn</p>
         <h2 class="ch-sec-title">Bốn bảng tra: ion đa nguyên tử, quy tắc tan, dãy hoạt động, pKa</h2>
 
-        <h3 class="ch-h3">Ion đa nguyên tử thường gặp — 14 cái này thì nên thuộc</h3>
+        <h3 class="ch-h3">Ion đa nguyên tử thường gặp — 15 cái này thì nên thuộc</h3>
         <div class="ch-tw">
           <table class="wb-table">
             <thead><tr><th style="width:120px">Ion</th><th style="width:140px">Tên</th><th style="width:120px">Ion</th><th style="width:140px">Tên</th><th style="width:120px">Ion</th><th>Tên</th></tr></thead>
@@ -3116,16 +3179,19 @@ function periodOfZ(z) {
     lines.push('hành xử như hợp chất cộng hoá trị, còn HF (ΔEN 1,78) thì vẫn là phân tử cộng hoá trị có cực.');
     out.textContent = lines.join('\n');
   }
+  function setPair(i) {
+    var a = bySym(PAIRS[i][1]), b = bySym(PAIRS[i][2]);
+    rng.value = Math.round(Math.abs(a.en - b.en) * 100);
+  }
   function wire() {
     chips(box, PAIRS.map(function (p) { return p[0]; }), pick, function (i) {
-      pick = i; wire();
-      var a = bySym(PAIRS[i][1]), b = bySym(PAIRS[i][2]);
-      rng.value = Math.round(Math.abs(a.en - b.en) * 100);
-      render();
+      pick = i; wire(); setPair(i); render();
     });
   }
   rng.addEventListener('input', render);
-  wire(); render();
+  /* Cặp mặc định phải khớp ΔEN mặc định, nếu không lần vẽ đầu tiên sẽ hiện chip
+     H–O đang sáng mà thanh trượt lại nằm ở một giá trị khác. */
+  wire(); setPair(pick); render();
   redraws.push(render);
 })();
 
@@ -3702,7 +3768,7 @@ function periodOfZ(z) {
       'Con số này CHỈ đúng cho hình vẽ. Với năng lượng hoạt hoá thật, tỉ lệ nhỏ hơn nhiều bậc\n' +
       'và mức tăng khi thêm 10 K thì lớn hơn nhiều — đó mới là điều đáng nhớ.\n\n' +
       'SỐ LIỆU THẬT, tính bằng Arrhenius với Eₐ = 50 kJ/mol (không nén thang gì cả):\n' +
-      '  tỉ lệ phân tử vượt rào ở 298 K ≈ ' + k1.toExponential(2) + '  (khoảng 1 phần 10 tỉ)\n' +
+      '  tỉ lệ phân tử vượt rào ở 298 K ≈ ' + k1.toExponential(2) + '  (khoảng 2 phần tỉ)\n' +
       '  k(308 K)/k(298 K) = e^(−50/(R×308)) ÷ e^(−50/(R×298)) = ' + fx(k2 / k1, 2) + ' lần\n' +
       '  ⇒ đúng quy tắc kinh nghiệm “thêm 10 °C thì nhanh gấp đôi”.\n\n' +
       'Điều quan trọng nhìn thấy được trên hình: đỉnh đường cong chỉ dịch sang phải một chút và THẤP đi,\n' +
@@ -3785,7 +3851,7 @@ function periodOfZ(z) {
   function solve(kind, K, C) {
     var h;
     if (kind === 'sa') h = (C + Math.sqrt(C * C + 4 * KW)) / 2;
-    else if (kind === 'wa') h = (-K + Math.sqrt(K * K + 4 * K * C)) / 2 + KW / Math.max(C, 1e-12) * 0;
+    else if (kind === 'wa') h = (-K + Math.sqrt(K * K + 4 * K * C)) / 2;
     else if (kind === 'sb') h = KW / ((C + Math.sqrt(C * C + 4 * KW)) / 2);
     else { var oh = (-K + Math.sqrt(K * K + 4 * K * C)) / 2; h = KW / Math.max(oh, 1e-12); }
     return h;
@@ -3863,27 +3929,25 @@ function periodOfZ(z) {
   var ACIDS = [['HCl (acid mạnh)', 0], ['CH₃COOH (Kₐ = 1,8×10⁻⁵)', 1.8e-5], ['HF (Kₐ = 6,8×10⁻⁴)', 6.8e-4]];
   var pick = 1;
 
-  function pHat(Vb, Ka) {
-    var na = Ca * Va / 1000, nb = Cb * Vb / 1000, Vt = (Va + Vb) / 1000, h;
-    if (Ka === 0) {
-      if (nb < na) h = (na - nb) / Vt;
-      else if (nb > na) h = KW / ((nb - na) / Vt);
-      else h = 1e-7;
-    } else {
-      if (Vb === 0) h = (-Ka + Math.sqrt(Ka * Ka + 4 * Ka * Ca)) / 2;
-      else if (nb < na) {
-        var ha = (na - nb) / Vt, a = nb / Vt;
-        h = Ka * ha / a;
-        /* hiệu chỉnh nhẹ ở vùng rất gần điểm tương đương */
-        if (h < 1e-9) h = 1e-9;
-      } else if (nb > na) h = KW / ((nb - na) / Vt);
-      else {
-        var Kb = KW / Ka, cA = na / Vt;
-        var oh = (-Kb + Math.sqrt(Kb * Kb + 4 * Kb * cA)) / 2;
-        h = KW / oh;
-      }
+  /* Giải [H⁺] từ cân bằng điện tích của hệ HA / A⁻ / Na⁺ / H₂O:
+       [Na⁺] + [H⁺] = [OH⁻] + [A⁻]      với  [A⁻] = C_T·Kₐ / (Kₐ + [H⁺])
+     Một phương trình dùng được ở MỌI điểm của phép chuẩn độ. Các công thức rút gọn
+     quen thuộc đều gãy ở đâu đó: Henderson–Hasselbalch cho pH THẤP HƠN cả acid
+     nguyên chất ngay sau giọt base đầu tiên (thêm base mà dung dịch acid hơn — vô
+     lý), và nó vọt lên vô hạn ngay trước điểm tương đương. Vế trái giảm đơn điệu
+     theo pH nên chia đôi khoảng luôn hội tụ. Kₐ = 0 nghĩa là acid mạnh (phân ly hết). */
+  function solveH(cT, cNa, Ka) {
+    function f(h) { return cNa + h - KW / h - (Ka > 0 ? cT * Ka / (Ka + h) : cT); }
+    var loP = -1, hiP = 15;
+    for (var i = 0; i < 80; i++) {
+      var mid = (loP + hiP) / 2;
+      if (f(Math.pow(10, -mid)) > 0) loP = mid; else hiP = mid;
     }
-    return clamp(-Math.log(h) / Math.LN10, 0, 14);
+    return Math.pow(10, -(loP + hiP) / 2);
+  }
+  function pHat(Vb, Ka) {
+    var na = Ca * Va / 1000, nb = Cb * Vb / 1000, Vt = (Va + Vb) / 1000;
+    return clamp(-Math.log(solveH(na / Vt, nb / Vt, Ka)) / Math.LN10, 0, 14);
   }
   function render() {
     var Vb = parseInt(rv.value, 10) / 10, Ka = ACIDS[pick][1];
@@ -3992,7 +4056,8 @@ function periodOfZ(z) {
       'Số electron trao đổi n = ' + n + '   (bội chung nhỏ nhất của hai nửa)\n' +
       'ΔG° = −nFE° = −' + n + ' × 96485 × ' + fx(E, 2) + ' = ' + fx(dG, 1) + ' kJ/mol   ⇒ ' +
         (dG < 0 ? 'ÂM ⇒ pin tự phóng điện được' : 'DƯƠNG ⇒ phải cấp điện từ ngoài') + '\n' +
-      'K = e^(nE°/0,02569) ≈ ' + (K > 1e6 ? K.toExponential(2) : fx(K, 1)) + '   ⇒ cân bằng lệch hẳn về phía sản phẩm\n' +
+      'K = e^(nE°/0,02569) ≈ ' + (K > 1e6 ? K.toExponential(2) : fx(K, 1)) +
+        (K > 1e3 ? '   ⇒ cân bằng lệch hẳn về phía sản phẩm' : '   ⇒ K chỉ hơn 1 chút, cân bằng dừng lại khi hai bên còn lượng đáng kể') + '\n' +
       '\n' +
       'Electron chạy trong dây từ ANODE sang CATHODE. Trong dung dịch, ion chạy qua cầu muối theo chiều ngược lại\n' +
       'để giữ cả hai cốc trung hoà điện — thiếu cầu muối là pin tắt ngay sau vài giây.';
@@ -4070,6 +4135,42 @@ function periodOfZ(z) {
   }
   wire(); render();
   redraws.push(render);
+})();
+
+/* ═════════════════ chỉ dấu cuộn ngang ═════════════════
+   35 bảng, 39 khối công thức và bảng tuần hoàn đều rộng hơn màn hình điện thoại.
+   Chúng cuộn được, nhưng không có dấu hiệu nào cho biết còn nội dung bên phải —
+   người đọc mobile tưởng bài chỉ có bấy nhiêu. Đánh dấu khối NÀO thật sự tràn
+   (không phải mọi khối) rồi để CSS làm mờ đúng cái mép còn nội dung phía ngoài. */
+(function () {
+  var list = Array.prototype.slice.call(
+    document.querySelectorAll('.ch-tw, .ch-formula, .ch-pt-wrap'));
+  if (!list.length) return;
+
+  function edges(el) {
+    var max = el.scrollWidth - el.clientWidth;
+    el.classList.toggle('at-start', el.scrollLeft <= 2);
+    el.classList.toggle('at-end', el.scrollLeft >= max - 2);
+  }
+  function measure() {
+    list.forEach(function (el) {
+      var over = el.scrollWidth - el.clientWidth > 4;
+      el.classList.toggle('has-xscroll', over);
+      if (over) edges(el);
+      else { el.classList.remove('at-start'); el.classList.remove('at-end'); }
+    });
+  }
+  list.forEach(function (el) {
+    el.addEventListener('scroll', function () { edges(el); }, { passive: true });
+  });
+  var t = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(t); t = setTimeout(measure, 120);
+  });
+  /* Đo lại sau khi font web nạp xong — chiều rộng chữ đổi thì chỗ tràn cũng đổi. */
+  window.addEventListener('load', measure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure).catch(function () {});
+  measure();
 })();
 
 })();
