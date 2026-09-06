@@ -64,8 +64,11 @@
 
   code, .cb-code { font-family: var(--wb-font-mono); font-size: .92em; background: var(--wb-surface-hover); border-radius: 4px; padding: 1px 5px; }
 
-  /* ---- formula strip: the one line worth memorising ---- */
-  .cb-formula { font-family: var(--wb-font-mono); font-size: 13px; line-height: 1.85; background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; margin: 4px 0 16px; overflow-x: auto; color: var(--wb-fg); }
+  /* ---- formula strip: the one line worth memorising ----
+     white-space: pre is load-bearing — 9 of the 14 blocks are multi-line and the
+     newlines are the layout; without it they collapse into one run-on paragraph.
+     Long lines then scroll inside the box (that is what overflow-x is here for). */
+  .cb-formula { font-family: var(--wb-font-mono); font-size: 13px; line-height: 1.85; background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; margin: 4px 0 16px; overflow-x: auto; color: var(--wb-fg); white-space: pre; }
   .cb-formula b { font-weight: 700; }
   .cb-formula .c { color: var(--wb-fg-subtle); }
 
@@ -139,7 +142,10 @@
 
   .cb-out { font-family: var(--wb-font-mono); font-size: 12px; line-height: 1.7; background: var(--wb-canvas); border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; padding: 9px 11px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; color: var(--wb-fg); margin: 0; }
   .cb-out b { font-weight: 700; }
-  .cb-mono { font-family: var(--wb-font-mono); font-size: 12px; }
+  /* overflow-wrap: anywhere — .cb-mono carries unbreakable runs (URL khoá học, chuỗi
+     hex, dòng kết quả sinh bằng JS). Ở 320px chúng đẩy cả trang rộng ra; cho phép
+     ngắt ở bất kỳ đâu là chấp nhận được với dữ liệu kiểu mã/hex/URL. */
+  .cb-mono { font-family: var(--wb-font-mono); font-size: 12px; overflow-wrap: anywhere; }
   .cb-dim { color: var(--wb-fg-subtle); }
   .cb-mark { background: var(--wb-fg); color: var(--wb-canvas); border-radius: 3px; padding: 0 3px; }
 
@@ -175,6 +181,35 @@
   /* ---- back to top ---- */
   .cb-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
   .cb-top.is-on { opacity: 1; pointer-events: auto; }
+
+  /* ---- điện thoại hẹp ----
+     Hai việc, cả hai đều page-local (không đụng web-builder.css):
+     1. Navbar: .wb-navbar__brand là flex:none nên tiêu đề dài đẩy cụm nút bên phải
+        tràn khỏi viewport ở 320px. Cho brand co lại và cắt chữ bằng ellipsis;
+        .wb-navbar__mark vẫn flex:none nên biểu tượng không bao giờ méo.
+     2. Nút/ô chọn trong các mô hình: wb-btn--sm chỉ cao 27–30px, checkbox 18px,
+        thanh trượt dày 4px — đều dưới ngưỡng chạm 32px trên cảm ứng. */
+  @media (max-width: 560px) {
+    .wb-navbar__brand { flex: 0 1 auto; min-width: 0; overflow: hidden; }
+    .cb-brand-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .cb-lab .wb-btn--sm { min-height: 36px; padding-block: 8px; }
+    .cb-lab .wb-check { min-height: 36px; --wb-check-size: 22px; }
+    /* Vùng chạm 36px cho thanh trượt. .wb-range của kit là height:4px + box-sizing:border-box,
+       nên padding-block đơn thuần bị chặn ở 22px — phải đổi sang content-box thì padding mới
+       cộng thêm thật. background-clip: content-box giữ vệt track vẫn đúng 4px như cũ. */
+    .cb-lab .wb-range {
+      box-sizing: content-box; height: 4px; padding-block: 16px; margin-block: 0;
+      background-clip: content-box;
+    }
+    .cb-lab .wb-range-ticks__marks { margin-top: -8px; }
+    .cb-chip { padding: 8px 12px; }
+  }
+  /* Ở 320px, chỉ co brand thôi thì chữ vẫn bị cắt mất đuôi; nhả thêm 30px từ
+     padding + gap của thanh nav là đủ chỗ cho trọn chữ "Cryptography". */
+  @media (max-width: 400px) {
+    .wb-navbar { gap: 10px; padding-inline: 12px; }
+  }
 </style>
 </head>
 <body class="wb-app">
@@ -182,7 +217,7 @@
 <header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
           aria-label="Open menu"><span class="wb-ico">menu</span></button>
-  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🔐</span> Cryptography</a>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🔐</span><span class="cb-brand-text">Cryptography</span></a>
   <nav class="wb-nav wb-navbar__menu">
     <a class="wb-nav__link" href="#mo-dau">Foundations</a>
     <a class="wb-nav__link" href="#act1">1 · Secrecy</a>
@@ -587,7 +622,8 @@
         <h4 class="cb-h4">Định nghĩa an toàn của PRG, viết cho lập trình viên</h4>
         <p class="cb-p">Một <b>phép thử thống kê</b> <code>A</code> là bất kỳ chương trình nào nhận vào một chuỗi <code>n</code> bit và in ra <code>0</code> hoặc <code>1</code> — “tôi nghĩ đây là ngẫu nhiên” hoặc không. Ví dụ: đếm số bit 1 rồi báo <code>1</code> nếu xấp xỉ <code>n/2</code>; hoặc kiểm xem có nhiều cặp <code>00</code> bất thường không. <b>Lợi thế</b> của <code>A</code> là hiệu hai xác suất:</p>
 
-        <div class="cb-formula">Adv(A) = | Pr[ A(G(k)) = 1 ]  −  Pr[ A(r) = 1 ] |   <span class="c">k lấy ngẫu nhiên trong không gian hạt giống, r ngẫu nhiên đều trong {0,1}ⁿ</span></div>
+        <div class="cb-formula">Adv(A) = | Pr[ A(G(k)) = 1 ]  −  Pr[ A(r) = 1 ] |
+<span class="c">// k lấy ngẫu nhiên trong không gian hạt giống, r ngẫu nhiên đều trong {0,1}ⁿ</span></div>
 
         <p class="cb-p"><code>G</code> an toàn nếu <b>mọi</b> <code>A</code> chạy trong thời gian hợp lý đều có lợi thế bé tới mức không đáng kể (cỡ <code>2⁻⁸⁰</code> trở xuống). Chú ý cách phát biểu: ta không kể ra một danh sách phép thử phải vượt qua — ta lượng hoá trên <i>toàn bộ</i> chương trình khả dĩ. Đó là điểm khác biệt giữa “đã qua bộ kiểm ngẫu nhiên NIST” và “an toàn theo nghĩa mật mã”.</p>
 
@@ -905,8 +941,8 @@ c' = c ⊕ Δ  ⟹  m' = c' ⊕ ks = (m ⊕ ks ⊕ Δ) ⊕ ks = <b>m ⊕ Δ</b>
         <p class="cb-p">Đây là ví dụ đắt giá nhất cho luận điểm “chứng minh chỉ đúng trong mô hình”. Mọi thứ ở trên vẫn đúng nguyên vẹn, thế mà hệ vẫn thủng — vì <b>hàm so sánh chuỗi</b>. Cách viết tự nhiên nhất trong mọi ngôn ngữ là so sánh từng byte và <b>thoát ngay khi khác</b>:</p>
 
         <div class="cb-formula">
-<span class="c">// Cài đặt tự nhiên — và hỏng</span>
-for (i = 0; i &lt; n; i++) if (tag[i] != computed[i]) return FAIL;   <span class="c">// thoát sớm ⇒ thời gian chạy tiết lộ số byte đầu đã đúng</span>
+<span class="c">// Cài đặt tự nhiên — và hỏng: thoát sớm ⇒ thời gian chạy tiết lộ số byte đầu đã đúng</span>
+for (i = 0; i &lt; n; i++) if (tag[i] != computed[i]) return FAIL;
 
 <span class="c">// Cài đặt hằng thời gian — luôn duyệt hết</span>
 diff = 0;  for (i = 0; i &lt; n; i++) diff |= tag[i] ^ computed[i];   return diff == 0;</div>
@@ -923,7 +959,7 @@ diff = 0;  for (i = 0; i &lt; n; i++) diff |= tag[i] ^ computed[i];   return dif
         <p class="cb-p">Va chạm chắc chắn <i>tồn tại</i> — nén vô hạn xuống 256 bit thì không thể tránh, đó là nguyên lý chuồng bồ câu. Yêu cầu không phải “không có” mà là “<b>không ai tìm ra được</b>”. Đây là một trong số ít nơi trong mật mã mà định nghĩa an toàn nói về <i>khả năng tìm</i> chứ không về <i>sự tồn tại</i>.</p>
 
         <h4 class="cb-h4">Vì sao 256 bit chỉ cho 128 bit an toàn</h4>
-        <p class="cb-p">Đây là con số hay bị hiểu sai. Trực giác nói: muốn tìm va chạm trên đầu ra <code>n</code> bit thì phải thử cỡ <code>2ⁿ</code> lần. Sai — chỉ cần cỡ <b><code>2^(n/2)</code></b>. Lý do là <b>nghịch lý sinh nhật</b>: bạn không cần trùng với <i>một</i> giá trị định trước, bạn chỉ cần <i>một cặp bất kỳ</i> trong đống đã sinh trùng nhau. Với <code>q</code> mẫu có <code>q(q−1)/2</code> cặp, nên số cặp tăng theo bình phương, và ngưỡng 50% rơi vào khoảng <code>1{,}18 · √(2ⁿ)</code>.</p>
+        <p class="cb-p">Đây là con số hay bị hiểu sai. Trực giác nói: muốn tìm va chạm trên đầu ra <code>n</code> bit thì phải thử cỡ <code>2ⁿ</code> lần. Sai — chỉ cần cỡ <b><code>2^(n/2)</code></b>. Lý do là <b>nghịch lý sinh nhật</b>: bạn không cần trùng với <i>một</i> giá trị định trước, bạn chỉ cần <i>một cặp bất kỳ</i> trong đống đã sinh trùng nhau. Với <code>q</code> mẫu có <code>q(q−1)/2</code> cặp, nên số cặp tăng theo bình phương, và ngưỡng 50% rơi vào khoảng <code>1,18 · √(2ⁿ)</code>.</p>
 
         <p class="cb-p">Cái tên đến từ ví dụ quen: trong phòng 23 người, xác suất có <i>hai người</i> trùng ngày sinh đã hơn 50% — dù xác suất ai đó trùng ngày sinh với <i>bạn</i> vẫn rất nhỏ. Cùng một hiện tượng, và nó chi phối mọi giới hạn an toàn trong trang này.</p>
 
