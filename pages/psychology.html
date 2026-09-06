@@ -182,6 +182,32 @@
   /* ---- back to top ---- */
   .ps-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
   .ps-top.is-on { opacity: 1; pointer-events: auto; }
+
+  /* ---- màn hẹp: nội dung trong lab phải co lại, không được tràn rồi bị cắt ----
+     .ps-lab đặt overflow:hidden, còn .wb-btn của kit là white-space:nowrap. Một nút chữ dài
+     (các phương án trắc nghiệm ở #lab-bias) bị flex bóp hẹp lại vẫn không xuống dòng, nên chữ
+     tràn ra cả hai bên và nửa bên phải biến mất hẳn — không scroll được, không đọc được.
+     Cho chữ trong nút xuống dòng là sửa tận gốc; các lab khác chỉ tình cờ đủ hẹp nên chưa lộ,
+     vì vậy luật đặt ở cấp class chứ không riêng một lab. */
+  .ps-lab .wb-btn { white-space: normal; }
+  #bi-quiz .ps-scale .wb-btn { justify-content: flex-start; text-align: left; line-height: 1.4; }
+  /* Sân khấu Stroop / dãy số: dãy chữ số dài không có chỗ ngắt tự nhiên. */
+  .ps-stage > * { min-width: 0; max-width: 100%; }
+  .ps-stim { overflow-wrap: anywhere; }
+
+  @media (max-width: 620px) {
+    /* Vùng chạm. .wb-btn--sm cao 27px và .wb-range chỉ dày 4px — trên điện thoại gần như
+       không bấm hay kéo được, mà thanh trượt lại là cách chính để nghịch các mô hình.
+       Thanh trượt: content-box + padding dọc để vùng chạm cao 36px trong khi vệt track vẫn
+       dày 4px (background-clip: content-box giữ nguyên hình dạng cũ). */
+    .ps-lab .wb-btn { min-height: 36px; padding-top: 8px; padding-bottom: 8px; }
+    .ps-scale .wb-btn { min-width: 40px; }
+    .ps-lab .wb-switch { min-height: 36px; }   /* cả cái nhãn là vùng bấm, không chỉ 23px track */
+    .ps-lab .wb-range {
+      box-sizing: content-box; height: 4px; padding-block: 16px; margin: 0;
+      background-clip: content-box;
+    }
+  }
 </style>
 </head>
 <body class="wb-app">
@@ -548,7 +574,7 @@
               <button class="wb-btn wb-btn--sm" id="pw-run"><span class="wb-ico wb-ico--xs">play_arrow</span> Chạy 200 nghiên cứu</button>
             </div>
             <pre class="ps-out" id="pw-out">Bấm “Chạy 200 nghiên cứu”.</pre>
-            <p class="ps-lab__foot"><b>Thử ba cấu hình này theo thứ tự.</b> (1) Hiệu ứng thật = 0, không hack → khoảng 5% ra “có ý nghĩa”: đó là tỉ lệ báo động giả ta chấp nhận. (2) Hiệu ứng thật = 0, <b>bật hack</b> → tỉ lệ nhảy lên quanh 20%: một phần tư “phát hiện” là ảo, mà không ai nói dối câu nào. (3) Hiệu ứng thật = 0,3 với n = 20 → lực chỉ khoảng 12%, và cỡ hiệu ứng trung bình <i>trong nhóm được xuất bản</i> phồng lên gấp 2–3 lần sự thật.</p>
+            <p class="ps-lab__foot"><b>Thử ba cấu hình này theo thứ tự.</b> (1) Hiệu ứng thật = 0, không hack → khoảng 5% ra “có ý nghĩa”: đó là tỉ lệ báo động giả ta chấp nhận. (2) Hiệu ứng thật = 0, <b>bật hack</b> → tỉ lệ nhảy lên quanh 20%: một phần năm số phòng thí nghiệm báo cáo một “phát hiện” hoàn toàn ảo, mà không ai nói dối câu nào. (3) Hiệu ứng thật = 0,3 với n = 20 → lực chỉ khoảng 15%, và cỡ hiệu ứng trung bình <i>trong nhóm được xuất bản</i> phồng lên gấp 2–3 lần sự thật.</p>
           </div>
         </div>
       </section>
@@ -557,7 +583,7 @@
         <p class="ps-eyebrow-sec"><b>Method 5/5</b> — chuyện gì đã xảy ra với ngành này từ 2011</p>
         <h2 class="ps-sec-title">Khủng hoảng lặp lại: vì sao một nửa những gì bạn từng nghe về tâm lý học đã bị rút lại</h2>
 
-        <p class="ps-lede">Năm 2015, dự án <b>Reproducibility Project: Psychology</b> làm lại 100 nghiên cứu đã xuất bản trên các tạp chí hàng đầu. 97 nghiên cứu gốc có kết quả “có ý nghĩa”. Khi làm lại đúng quy trình với mẫu lớn hơn: <b>chỉ 36 lặp lại được</b>, và cỡ hiệu ứng trung bình chỉ còn <b>khoảng một nửa</b>.</p>
+        <p class="ps-lede">Năm 2015, dự án <b>Reproducibility Project: Psychology</b> làm lại 100 nghiên cứu đã xuất bản trên các tạp chí hàng đầu. 97 nghiên cứu gốc có kết quả “có ý nghĩa”. Khi làm lại đúng quy trình với mẫu lớn hơn: <b>chỉ 36% lặp lại được</b>, và cỡ hiệu ứng trung bình chỉ còn <b>khoảng một nửa</b>.</p>
 
         <p class="ps-p">Đây không phải chuyện gian lận. Nó là hệ quả cộng dồn của bốn thói quen mà mọi người đều coi là bình thường: <b>mẫu quá nhỏ</b> (lực ~35%), <b>tự do phân tích quá lớn</b> (chọn thang đo, chọn cách loại dữ liệu sau khi đã nhìn kết quả — chính là mô hình 2 ở trên), <b>thiên lệch xuất bản</b> (kết quả “không thấy gì” gần như không được đăng), và <b>không ai làm lại</b> (làm lại nghiên cứu của người khác không giúp thăng tiến).</p>
 
