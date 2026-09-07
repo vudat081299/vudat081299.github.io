@@ -25,15 +25,15 @@
 
   /* ---------- hero ---------- */
   .mc-hero { padding: 26px 0 18px; }
-  .mc-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+  .mc-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-muted); margin: 0 0 10px; }
   .mc-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 10px; line-height: 1.15; }
   .mc-sub { color: var(--wb-fg-muted); font-size: 15px; max-width: 76ch; line-height: 1.65; margin: 0 0 12px; }
   .mc-sub b { color: var(--wb-fg); font-weight: 620; }
-  .mc-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; }
+  .mc-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); letter-spacing: .04em; }
 
   /* ---------- sections ---------- */
   section[id] { scroll-margin-top: 76px; }
-  .mc-sec-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .mc-sec-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-muted); margin: 0 0 6px; }
   .mc-sec-eyebrow b { color: var(--wb-fg); font-weight: 650; }
   .mc-sec-title { font-size: 22px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 10px; }
   .mc-sec-intro { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.7; max-width: 80ch; margin: 0 0 20px; }
@@ -54,10 +54,10 @@
   .mc-frow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .mc-frow + .mc-frow { margin-top: 9px; }
   .mc-flabel { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--wb-fg-subtle); flex: none; width: 74px; }
+    color: var(--wb-fg-muted); flex: none; width: 74px; }
   .mc-chip { cursor: pointer; user-select: none; border: none; font: inherit; font-size: 12.5px; }
   .mc-search { max-width: 300px; width: 100%; }
-  .mc-count { margin-left: auto; font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-subtle); }
+  .mc-count { margin-left: auto; font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-muted); }
   /* Cả rổ capsule gấp lại được ở mọi khổ màn hình — mở ra chỉ khi cần lọc, còn lại
      nhường chỗ cho danh sách món. */
   .mc-fpanel { display: none; }
@@ -76,11 +76,11 @@
   .mc-card__name { font-size: 15.5px; font-weight: 660; line-height: 1.3; margin: 0; letter-spacing: -.01em; }
   .mc-card__why { font-size: 12.5px; color: var(--wb-fg-muted); line-height: 1.5; margin: 0; }
   .mc-card__foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: auto; padding-top: 4px;
-    font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); }
+    font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); }
   .mc-card__foot .wb-ico { font-size: 14px; vertical-align: -2px; }
   .mc-card__dip { display: flex; align-items: baseline; gap: 5px; font-size: 12px; color: var(--wb-fg-muted); line-height: 1.4; }
   .mc-card__dip .wb-ico { font-size: 14px; flex: none; align-self: center; }
-  .mc-card__dip.is-none { color: var(--wb-fg-subtle); }
+  .mc-card__dip.is-none { color: var(--wb-fg-muted); }
   .mc-card__dipn { font-family: var(--wb-font-mono); font-size: 10.5px; }
 
   /* difficulty dots — neutral, classification not status */
@@ -104,10 +104,10 @@
   }
   .mc-panel-h { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .mc-panel-h__t { font-size: 13px; font-weight: 680; letter-spacing: .02em; }
-  .mc-panel-h__n { margin-left: auto; font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); }
+  .mc-panel-h__n { margin-left: auto; font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); }
 
   .mc-group { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--wb-fg-subtle); margin: 16px 0 7px; }
+    color: var(--wb-fg-muted); margin: 16px 0 7px; }
   .mc-group:first-of-type { margin-top: 4px; }
   /* .wb-check gives the input the kit's box + tick; the grid below overrides its inline-flex row */
   .mc-ing.wb-check { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 9px; align-items: baseline;
@@ -124,7 +124,7 @@
   /* thanh đi chợ dưới danh sách nguyên liệu */
   .mc-shop { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 12px;
     padding-top: 11px; border-top: var(--wb-bw) solid var(--wb-border); }
-  .mc-shop__n { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); margin-right: auto; }
+  .mc-shop__n { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); margin-right: auto; }
 
   /* ---------- nước chấm đi kèm ----------
      Câu hỏi "món này chấm gì" phải trả lời được trước khi đi chợ, nên khối này
@@ -150,8 +150,8 @@
   .mc-flow__s:hover { color: var(--wb-fg); }
   .mc-flow__s.is-now { background: var(--wb-fg); color: var(--wb-canvas); }
   .mc-flow__s.is-past { opacity: .5; }
-  .mc-flow__s b { font-family: var(--wb-font-mono); font-size: 10px; opacity: .75; }
-  .mc-flow__m { font-family: var(--wb-font-mono); font-size: 10px; opacity: .75; }
+  .mc-flow__s b { font-family: var(--wb-font-mono); font-size: 10px; }
+  .mc-flow__m { font-family: var(--wb-font-mono); font-size: 10px; }
 
   /* steps */
   .mc-steps .wb-steps__item { cursor: pointer; }
@@ -162,7 +162,7 @@
   .mc-steps .wb-steps__item.is-todo .mc-step-d { color: var(--wb-fg-muted); }
   .mc-cook { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
   .mc-cook .wb-progress { flex: 1 1 auto; }
-  .mc-cookn { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); flex: none; }
+  .mc-cookn { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); flex: none; }
 
   .mc-tip { font-size: 13px; line-height: 1.6; margin: 0 0 6px; padding-left: 16px; position: relative; color: var(--wb-fg-muted); }
   .mc-tip:before { content: "›"; position: absolute; left: 2px; color: var(--wb-fg-subtle); }
@@ -189,7 +189,7 @@
     border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); box-shadow: var(--wb-shadow-md); }
   .mc-dock[hidden] { display: none; }
   .mc-dock__head { display: flex; align-items: center; gap: 7px; padding: 7px 8px 7px 12px;
-    border-bottom: var(--wb-bw) solid var(--wb-border); color: var(--wb-fg-subtle); }
+    border-bottom: var(--wb-bw) solid var(--wb-border); color: var(--wb-fg-muted); }
   .mc-dock__t { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; }
   .mc-dock__t b { color: var(--wb-fg); }
   .mc-dock__head .wb-btn { margin-left: auto; }
@@ -225,7 +225,7 @@
   /* thẻ nước chấm — cùng lưới với thẻ món, nhưng dày hơn vì có danh sách món hợp */
   .mc-dipcard .wb-card__body { display: flex; flex-direction: column; gap: 0; }
   .mc-dipcard__lb { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--wb-fg-subtle); margin: 14px 0 7px; }
+    color: var(--wb-fg-muted); margin: 14px 0 7px; }
   .mc-dipcard__u { display: flex; flex-wrap: wrap; gap: 4px; }
   .mc-dipcard__u .wb-tag { cursor: pointer; font: inherit; font-size: 11px; }
   .mc-dipcard__u .wb-tag:hover { border-color: var(--wb-fg); color: var(--wb-fg); }
@@ -233,14 +233,20 @@
 
   /* combo */
   .mc-combo__list { display: flex; flex-direction: column; gap: 2px; margin: 10px 0 0; }
-  .mc-combo__row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-top: var(--wb-bw) dashed var(--wb-border); cursor: pointer; }
+  .mc-combo__row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border: 0;
+    border-top: var(--wb-bw) dashed var(--wb-border); cursor: pointer;
+    width: 100%; text-align: left; background: none; font: inherit; color: var(--wb-fg); }
   .mc-combo__row:hover .mc-combo__n { text-decoration: underline; }
   .mc-combo__n { font-size: 13.5px; font-weight: 560; }
-  .mc-combo__t { margin-left: auto; font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); }
+  .mc-combo__t { margin-left: auto; font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); }
 
   .mc-foot { border-top: var(--wb-bw) solid var(--wb-border); padding: 18px 0 28px; color: var(--wb-fg-muted); font-size: 13px; }
   .mc-foot a { color: var(--wb-fg-muted); text-decoration: none; }
   .mc-foot a:hover { color: var(--wb-fg); }
+
+  /* [hidden] một mình thua display:inline-flex của .wb-btn — hai nút dưới đây ẩn
+     bằng thuộc tính hidden nên phải nói rõ, giống .mc-trow__btns ở trên. */
+  .mc-shop > [hidden], .mc-dock__head > [hidden] { display: none; }
 
   .is-hidden { display: none !important; }
 
@@ -320,23 +326,31 @@
   /* máy hẹp quá thì bỏ +1′ ở giá nổi (trong bước vẫn còn nút "+1 phút") để tên món đủ chỗ */
   @media (max-width: 380px) { .mc-trow:not(.is-done) [data-a="plus"] { display: none; } }
 
-  /* ---------- riêng trang món Âu ---------- */
-  /* Bảng phô mai — cột "dùng cho gì" là cột người đọc tìm, nên nó rộng nhất. */
-  .ma-cheese { width: 100%; }
-  .ma-cheese .wb-table td:first-child { font-weight: 640; white-space: nowrap; }
-  .ma-cheese .wb-table td { vertical-align: top; }
-  .ma-melt { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+  /* =========================================================================
+     VÙNG CHẠM — bộ kit đo theo con trỏ chuột: capsule cao 24px, nút --sm 27px,
+     dấu × 26px, thẻ tag 18px. Ngón tay cần 40px. Nới lại ở khổ điện thoại thay
+     vì sửa kit, vì kit còn dùng cho các trang khác.
+     ====================================================================== */
+  @media (max-width: 720px) {
+    .mc-chip { min-height: 40px; }
+    .mc-flow__s { min-height: 40px; padding: 8px 12px; }
+    .mc-dip__row { min-height: 40px; align-items: center; }
+    .mc-dipcard__u .wb-tag { min-height: 40px; padding: 8px 12px; }
+    .mc-combo__row { min-height: 44px; }
+    .mc-filterwrap .wb-btn { min-height: 40px; }
+    .mc-detail .wb-btn--sm, .mc-dock .wb-btn--sm, .mc-tdock .wb-btn { min-height: 40px; }
+    .mc-dtabs .wb-tab, .mc-detail .wb-tabs--pill .wb-tab { min-height: 40px; }
+    .mc-dhead .wb-close { width: 44px; height: 44px; }
+    .mc-dtitle { padding-right: 52px; }
+    .mc-trow .wb-close { width: 40px; height: 40px; }
+  }
 
-  /* Bảng độ chín thịt */
-  .ma-done { display: grid; grid-template-columns: minmax(0, 130px) minmax(0, 92px) minmax(0, 1fr); gap: 4px 14px;
-    padding: 9px 0; border-bottom: var(--wb-bw) dashed var(--wb-border); align-items: baseline; }
-  .ma-done:last-child { border-bottom: 0; }
-  .ma-done__n { font-size: 13.5px; font-weight: 620; }
-  .ma-done__t { font-family: var(--wb-font-mono); font-size: 12.5px; font-weight: 620; }
-  .ma-done__c { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.55; }
-  .ma-done__c b { color: var(--wb-fg); font-weight: 620; }
-  @media (max-width: 620px) { .ma-done { grid-template-columns: 1fr auto; gap: 2px 10px; }
-    .ma-done__c { grid-column: 1 / -1; } }
+  /* ---------- bảng gia vị ----------
+     Cột "dùng cho" là cột người đọc tìm, nên tên gia vị không được ngắt dòng
+     lung tung và mọi ô căn theo mép trên. */
+  .mc-spice { width: 100%; }
+  .mc-spice .wb-table td:first-child { font-weight: 640; white-space: nowrap; }
+  .mc-spice .wb-table td { vertical-align: top; }
 </style>
 </head>
 <body>
@@ -360,7 +374,7 @@
   <header class="mc-hero">
     <p class="mc-eyebrow">Bếp Hàn tại nhà · cơm nhà · đường phố · món nhậu</p>
     <h1 class="mc-title">Cả bếp Hàn gói trong <u>bốn thứ tương</u> và một chai <u>dầu mè</u>.</h1>
-    <p class="mc-sub">Món Hàn có tiếng là cay và cầu kỳ, nhưng phần lớn món ăn hằng ngày chỉ xoay quanh <b>bốn thứ tương</b> (ớt bột <em>gochugaru</em>, tương ớt <em>gochujang</em>, tương đậu <em>doenjang</em>, nước tương <em>ganjang</em>) cộng <b>tỏi, dầu mè và đường</b>. Học thuộc vài tỉ lệ nêm là nấu được cả trang này. Trang viết theo lối của <a href="vietnamese-home-cooking.html" style="color:inherit">Mâm cơm Việt</a>: mỗi bước có thời gian, mức lửa, <b>dấu hiệu nhận biết đã đạt</b> và nút <b>hẹn giờ</b>. Thêm hai thứ riêng của bếp Hàn: <b>bảng gia vị</b> (thứ nào để nêm, thứ nào để chấm, mua ở VN thế nào) và <b>nước chấm đi kèm từng món</b>. Các món chọn theo tiêu chí: <b>phổ biến ở Hàn, dễ ăn, và ở Việt Nam cũng dễ tìm nguyên liệu</b>.</p>
+    <p class="mc-sub">Món Hàn có tiếng là cay và cầu kỳ, nhưng phần lớn món ăn hằng ngày chỉ xoay quanh <b>bốn thứ tương</b> (ớt bột <em>gochugaru</em>, tương ớt <em>gochujang</em>, tương đậu <em>doenjang</em>, nước tương <em>ganjang</em>) cộng <b>tỏi, dầu mè và đường</b>. Học thuộc vài tỉ lệ nêm là nấu được cả trang này. Mỗi bước có thời gian, mức lửa, <b>dấu hiệu nhận biết đã đạt</b> và nút <b>hẹn giờ</b>. Hai thứ riêng của bếp Hàn được làm kỹ nhất: <b>bảng gia vị</b> (thứ nào để nêm, thứ nào để chấm, mua ở VN thế nào) và <b>nước chấm đi kèm từng món</b>. Các món chọn theo tiêu chí: <b>phổ biến ở Hàn, dễ ăn, và ở Việt Nam cũng dễ tìm nguyên liệu</b>.</p>
     <p class="mc-meta">36 CÔNG THỨC · 6 NƯỚC CHẤM & TƯƠNG · 5 KIỂU BỮA · BẢNG GIA VỊ HÀN · LỌC THEO TÊN · NGUYÊN LIỆU · KIỂU BỮA · LOẠI MÓN · ĐỘ KHÓ · THỜI GIAN</p>
   </header>
 
@@ -451,7 +465,7 @@
         </div>
       </div>
 
-      <div class="wb-table-scroll ma-cheese">
+      <div class="wb-table-scroll mc-spice">
         <table class="wb-table wb-table--compact wb-table--striped">
           <thead><tr>
             <th>Gia vị</th><th>Dùng cho</th><th>Vị</th><th>Thay tạm bằng</th><th>Ghi chú mua ở VN</th>
@@ -611,7 +625,7 @@
 
 <!-- ============ DETAIL MODAL ============ -->
 <div class="wb-overlay" id="detail">
-  <div class="wb-modal mc-modal">
+  <div class="wb-modal mc-modal" role="dialog" aria-modal="true" aria-labelledby="d-name" tabindex="-1">
     <div class="mc-dhead">
       <button class="wb-close" data-modal-close aria-label="Đóng"></button>
       <h3 class="mc-dtitle" id="d-name">—</h3>
@@ -824,11 +838,16 @@ RECIPES.push(
     { n: 'Phô mai lát', q: 1, u: 'lát', r: 'main' },
     { n: 'Mì gói (ramyeon)', q: 1, u: 'vắt', note: 'Cho vào lúc gần ăn.', r: 'main' },
     { n: 'Hành tây + hành lá', q: 1, u: 'phần', r: 'veg' },
-    { n: 'Nước dùng', q: 800, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' }
+    { n: 'Nước dùng', q: 800, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Gochugaru', q: 2, u: 'thìa canh', note: 'Cả năm thứ dưới đây là chén sốt cay ở bước 1.', r: 'season' },
+    { n: 'Gochujang', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Tỏi băm', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Nước tương', q: 1, u: 'thìa canh', r: 'season' },
+    { n: 'Đường', q: 0.5, u: 'thìa canh', r: 'season' }
   ],
   steps: [
     { t: 'Pha sốt cay', d: 'Trộn 2 thìa canh gochugaru + 1 thìa gochujang + 1 thìa tỏi băm + 1 thìa nước tương + ½ thìa đường thành một chén sốt.', m: 4, heat: '—', cue: 'Sốt <b>sánh đỏ, quyện đều</b> — đây là phần nêm chính của nồi lẩu.' },
-    { t: 'Xếp nồi', d: 'Xếp spam, xúc xích, kim chi, đậu phụ, hành tây theo múi quanh nồi, đặt chén sốt vào giữa.', m: 5, heat: '—', cue: 'Các nguyên liệu <b>xếp thành hình quạt gọn gàng</b>, nhìn đã thấy muốn ăn — đây là món ăn bằng mắt.' },
+    { t: 'Xếp nồi', d: 'Xếp spam, xúc xích, kim chi, đậu phụ, hành tây theo múi quanh nồi, đổ đậu hộp vào một góc, đặt chén sốt vào giữa.', m: 5, heat: '—', cue: 'Các nguyên liệu <b>xếp thành hình quạt gọn gàng</b>, mỗi thứ một múi để lúc ăn ai cũng gắp được đúng thứ mình muốn.' },
     { t: 'Chan nước, đun sôi', d: 'Chan nước dùng ngập 2/3, đun sôi cho sốt tan ra khắp nồi.', m: 8, heat: 'Lửa to', cue: 'Nước <b>sôi bùng và chuyển đỏ đều</b>, spam và xúc xích nổi mỡ thơm.' },
     { t: 'Cho mì và phô mai', d: 'Khi mọi người sắp ăn mới thả vắt mì và đặt lát phô mai lên trên, đun 3 phút.', m: 3, heat: 'Lửa vừa', cue: 'Mì <b>vừa mềm còn dai</b> và phô mai <b>chảy loang trên mặt</b> — ăn ngay, để lâu mì nở bở.' }
   ],
@@ -915,7 +934,7 @@ RECIPES.push(
   tags: ['cơm', 'rau', 'trứng', 'thịt bò'],
   why: 'Cơm trộn với nhiều loại rau xào nêm riêng, thịt và sốt gochujang. Không khó nhưng nhiều việc lặt vặt song song.',
   ing: [
-    { n: 'Cơm trắng nóng', q: 4, u: 'bát', per: { n: 200, l: 'bát đầy' }, r: 'main' },
+    { n: 'Cơm trắng nóng', q: 4, u: 'bát', note: '1 bát đầy ≈ 200 g cơm chín.', r: 'main' },
     { n: 'Rau chân vịt (cải bó xôi)', q: 150, u: 'g', per: { n: 300, l: 'mớ' }, note: 'Chần, vắt, trộn dầu mè + muối.', r: 'veg' },
     { n: 'Giá đậu', q: 150, u: 'g', per: { n: 45, l: 'nắm tay' }, note: 'Chần, trộn muối + dầu mè.', r: 'veg' },
     { n: 'Cà rốt', q: 1, u: 'củ', note: 'Thái sợi, xào nhanh với chút muối.', r: 'veg' },
@@ -939,7 +958,7 @@ RECIPES.push(
   tags: ['cơm', 'kim chi', 'trứng'],
   why: 'Món cứu đói kinh điển: cơm nguội + kim chi chua + một quả trứng. 10 phút là xong.',
   ing: [
-    { n: 'Cơm nguội', q: 2, u: 'bát', per: { n: 200, l: 'bát đầy' }, note: 'Cơm nguội rời hạt rang mới ngon.', r: 'main' },
+    { n: 'Cơm nguội', q: 2, u: 'bát', note: '1 bát đầy ≈ 200 g. Cơm nguội rời hạt rang mới ngon.', r: 'main' },
     { n: 'Kim chi chua', q: 150, u: 'g', per: { n: 100, l: 'nắm tay đầy' }, note: 'Cắt nhỏ. Giữ chút nước kim chi.', r: 'main' },
     { n: 'Thịt lợn hoặc spam', q: 80, u: 'g', per: { n: 80, l: 'miếng nhỏ' }, note: 'Thái hạt lựu.', r: 'main' },
     { n: 'Gochujang', q: 0.5, u: 'thìa canh', r: 'season' },
@@ -984,7 +1003,7 @@ RECIPES.push(
 {
   id: 'bibim-guksu', name: 'Bibim-guksu · mì trộn cay 비빔국수', cat: 'myeon', role: 'hangret', diff: 1, serves: 2, prep: 12,
   tags: ['mì', 'kim chi', 'cay chua ngọt'],
-  why: 'Mì trộn sốt gochujang chua-cay-ngọt, mát lạnh. Món mùa hè, ăn là tỉnh cả người.',
+  why: 'Mì trộn sốt gochujang chua-cay-ngọt, mát lạnh. Món mùa hè.',
   ing: [
     { n: 'Mì somyeon', q: 160, u: 'g', per: { n: 80, l: 'nắm bằng đồng xu' }, r: 'main' },
     { n: 'Kim chi chua', q: 100, u: 'g', per: { n: 100, l: 'nắm tay đầy' }, note: 'Thái nhỏ.', r: 'veg' },
@@ -1035,7 +1054,7 @@ RECIPES.push(
   tags: ['mì gói', 'trứng', 'nhanh'],
   why: 'Mì gói Hàn nhưng nấu đúng cách: đúng lượng nước, đúng lúc cho trứng, thêm vài thứ là khác hẳn.',
   ing: [
-    { n: 'Mì gói Hàn (ramyeon)', q: 1, u: 'gói', per: { n: 120, l: 'gói' }, r: 'main' },
+    { n: 'Mì gói Hàn (ramyeon)', q: 1, u: 'gói', note: 'Gói khoảng 120 g.', r: 'main' },
     { n: 'Nước', q: 550, u: 'ml', per: { n: 250, l: 'bát con' }, note: 'Đong đúng ~550 ml, không ước lượng.', r: 'main' },
     { n: 'Trứng gà', q: 1, u: 'quả', r: 'main' },
     { n: 'Hành lá', q: 1, u: 'nhánh', note: 'Thái nhỏ.', r: 'herb' },
@@ -1130,7 +1149,7 @@ RECIPES.push(
 {
   id: 'dakgalbi', name: 'Dak-galbi · gà xào cay Chuncheon 닭갈비', cat: 'bokkeum', role: 'main', diff: 2, serves: 4, prep: 35,
   tags: ['thịt gà', 'cay', 'bắp cải', 'tteok'],
-  why: 'Gà xào sốt cay cùng bắp cải, khoai lang, bánh gạo trên chảo lớn giữa bàn. Món tụ tập rất vui.',
+  why: 'Gà xào sốt cay cùng bắp cải, khoai lang, bánh gạo trên chảo lớn giữa bàn — nấu và ăn ngay tại bàn.',
   ing: [
     { n: 'Đùi gà lọc xương', q: 600, u: 'g', per: { n: 150, l: 'phần/người' }, note: 'Thái miếng vừa ăn.', r: 'main' },
     { n: 'Bắp cải', q: 300, u: 'g', per: { n: 300, l: '¼ bắp' }, note: 'Thái miếng to.', r: 'veg' },
@@ -1168,7 +1187,7 @@ RECIPES.push(
   ],
   steps: [
     { t: 'Luộc miến', d: 'Luộc miến 6–7 phút cho dai, xả nước, trộn ngay với 1 thìa nước tương + 1 thìa dầu mè cho khỏi dính.', m: 8, heat: 'Lửa to', cue: 'Sợi miến <b>trong, dai, không bết</b>, đã áo chút màu và dầu.' },
-    { t: 'Xào riêng từng loại', d: 'Xào lần lượt: hành tây, cà rốt, ớt chuông, nấm — mỗi thứ nêm chút muối, để riêng. Xào thịt bò với nước tương + đường.', m: 15, heat: 'Lửa vừa', cue: 'Mỗi loại <b>giữ màu và độ giòn riêng</b> — xào chung một mẻ thì rau ra nước và nhũn.' },
+    { t: 'Xào riêng từng loại', d: 'Xào lần lượt: hành tây, cà rốt, ớt chuông, nấm — mỗi thứ nêm chút muối, để riêng. Xào thịt bò với nước tương + đường + tỏi băm.', m: 15, heat: 'Lửa vừa', cue: 'Mỗi loại <b>giữ màu và độ giòn riêng</b> — xào chung một mẻ thì rau ra nước và nhũn.' },
     { t: 'Trộn tất cả', d: 'Cho miến và tất cả rau thịt vào chảo lớn/âu to, thêm nước tương + đường + dầu mè còn lại, trộn đều bằng tay.', m: 5, heat: 'Lửa nhỏ', cue: 'Tất cả <b>áo đều màu nâu bóng, nếm mặn-ngọt hài hoà</b>.' },
     { t: 'Hoàn thiện', d: 'Rắc vừng và rau chân vịt, trộn nhẹ, nêm lại.', m: 1, heat: 'Tắt bếp', cue: 'Đĩa miến nhiều màu, bóng dầu mè — ngon cả khi nguội.' }
   ],
@@ -1185,6 +1204,7 @@ RECIPES.push(
   why: 'Đậu phụ áp chảo rồi rim sốt cay mặn ngọt. Món panchan dễ, đưa cơm, làm sẵn để tủ ăn dần.',
   ing: [
     { n: 'Đậu phụ (loại cứng)', q: 600, u: 'g', per: { n: 300, l: 'bìa đậu (한 모)' }, note: 'Thái miếng dày 1,5 cm, thấm khô.', r: 'main' },
+    { n: 'Dầu ăn', q: 2, u: 'thìa canh', note: 'Để áp chảo đậu.', r: 'season' },
     { n: 'Nước tương', q: 3, u: 'thìa canh', r: 'season' },
     { n: 'Gochugaru', q: 1, u: 'thìa canh', r: 'season' },
     { n: 'Đường', q: 0.5, u: 'thìa canh', r: 'season' },
@@ -1207,9 +1227,9 @@ RECIPES.push(
   tags: ['trứng', 'mềm', 'nhanh'],
   why: 'Trứng hấp phồng mềm như bông. Bí quyết là lọc trứng và khuấy khi đun để không bị rỗ.',
   ing: [
-    { n: 'Trứng gà', q: 4, u: 'quả', per: { n: 55, l: 'quả' }, r: 'main' },
+    { n: 'Trứng gà', q: 4, u: 'quả', note: 'Quả cỡ vừa ≈ 55 g.', r: 'main' },
     { n: 'Nước (hoặc nước dùng cá cơm)', q: 300, u: 'ml', per: { n: 250, l: 'bát con' }, note: 'Tỉ lệ ~1 trứng : 75 ml nước.', r: 'main' },
-    { n: 'Muối tôm (saeu-jeot) hoặc muối', q: 0.5, u: 'thìa cà phê', r: 'season' },
+    { n: 'Mắm tép Hàn (saeu-jeot) hoặc muối', q: 0.5, u: 'thìa cà phê', note: 'Saeu-jeot là tép muối nguyên con trong nước mặn — dịu hơn mắm tôm Việt, dùng thay muối để nêm.', r: 'season' },
     { n: 'Hành lá', q: 1, u: 'nhánh', note: 'Thái nhỏ.', r: 'herb' },
     { n: 'Dầu mè + vừng', q: 1, u: 'thìa cà phê', r: 'season' }
   ],
@@ -1227,7 +1247,7 @@ RECIPES.push(
   why: 'Bò kho nước tương xé sợi, ăn dần cả tuần. Mặn dịu, ngọt nhẹ, kèm trứng cút — món panchan để tủ kinh điển.',
   ing: [
     { n: 'Bắp bò (hoặc thăn)', q: 500, u: 'g', per: { n: 250, l: 'khối bằng nắm tay' }, note: 'Luộc rồi xé sợi.', r: 'main' },
-    { n: 'Trứng cút luộc', q: 12, u: 'quả', per: { n: 10, l: 'quả' }, note: 'Bóc vỏ.', r: 'main' },
+    { n: 'Trứng cút luộc', q: 12, u: 'quả', note: 'Bóc vỏ. Mỗi quả ≈ 10 g.', r: 'main' },
     { n: 'Ớt xanh Hàn', q: 3, u: 'quả', note: 'Cắt khúc.', r: 'veg' },
     { n: 'Tỏi', q: 6, u: 'tép', r: 'season' },
     { n: 'Nước tương', q: 6, u: 'thìa canh', r: 'season' },
@@ -1321,7 +1341,7 @@ RECIPES.push(
   tags: ['trứng', 'rau củ', 'cơm hộp'],
   why: 'Trứng cuộn nhiều lớp với rau củ băm. Món panchan và cơm hộp quen thuộc; khó nhất là cuộn cho đều tay.',
   ing: [
-    { n: 'Trứng gà', q: 5, u: 'quả', per: { n: 55, l: 'quả' }, r: 'main' },
+    { n: 'Trứng gà', q: 5, u: 'quả', note: 'Quả cỡ vừa ≈ 55 g.', r: 'main' },
     { n: 'Cà rốt + hành lá + ớt chuông', q: 60, u: 'g', per: { n: 60, l: 'phần nhỏ' }, note: 'Băm thật nhỏ.', r: 'veg' },
     { n: 'Rong biển gim (tuỳ chọn)', q: 1, u: 'lá', note: 'Đặt vào giữa để cuộn có lõi đen đẹp.', r: 'main' },
     { n: 'Muối', q: 0.5, u: 'thìa cà phê', r: 'season' },
@@ -1360,7 +1380,7 @@ RECIPES.push(
   tags: ['dưa leo', 'cay chua', 'giòn'],
   why: 'Dưa leo trộn gochugaru chua cay giòn mát. Panchan mùa hè làm trong 10 phút, ăn giải ngán.',
   ing: [
-    { n: 'Dưa leo', q: 2, u: 'quả', per: { n: 180, l: 'quả' }, note: 'Thái lát chéo mỏng.', r: 'main' },
+    { n: 'Dưa leo', q: 2, u: 'quả', note: 'Quả vừa ≈ 180 g. Thái lát chéo mỏng.', r: 'main' },
     { n: 'Muối', q: 1, u: 'thìa cà phê', note: 'Xát dưa cho ra nước.', r: 'season' },
     { n: 'Gochugaru', q: 1, u: 'thìa canh', r: 'season' },
     { n: 'Giấm gạo', q: 1, u: 'thìa canh', r: 'season' },
@@ -1406,7 +1426,7 @@ RECIPES.push(
   tags: ['cơm', 'rong biển', 'rau củ', 'trứng'],
   why: 'Cơm cuộn rong biển với nhiều nhân — món dã ngoại và cơm hộp. Không khó nhưng cần chuẩn bị nhiều nhân và cuộn chặt tay.',
   ing: [
-    { n: 'Cơm trắng', q: 4, u: 'bát', per: { n: 200, l: 'bát đầy' }, note: 'Trộn nóng với dầu mè + muối + vừng.', r: 'main' },
+    { n: 'Cơm trắng', q: 4, u: 'bát', note: '1 bát đầy ≈ 200 g. Trộn nóng với dầu mè + muối + vừng.', r: 'main' },
     { n: 'Lá rong biển gim (khổ to)', q: 4, u: 'lá', r: 'main' },
     { n: 'Trứng gà', q: 3, u: 'quả', note: 'Tráng dày, thái thanh dài.', r: 'main' },
     { n: 'Cà rốt', q: 1, u: 'củ', note: 'Thái sợi, xào chút muối.', r: 'veg' },
@@ -1428,7 +1448,7 @@ RECIPES.push(
 {
   id: 'tteokbokki', name: 'Tteokbokki · bánh gạo xào cay 떡볶이', cat: 'bunsik', role: 'hangret', diff: 1, serves: 4, prep: 10,
   tags: ['bánh gạo', 'cay ngọt', 'chả cá'],
-  why: 'Bánh gạo dẻo trong sốt gochujang cay ngọt — món ăn vặt đường phố số một. Dễ làm, gây nghiện.',
+  why: 'Bánh gạo dẻo trong sốt gochujang cay ngọt — món ăn vặt đường phố số một.',
   ing: [
     { n: 'Bánh gạo thanh (tteok)', q: 400, u: 'g', per: { n: 400, l: 'túi' }, note: 'Ngâm nước ấm 10 phút nếu cứng.', r: 'main' },
     { n: 'Chả cá Hàn (eomuk)', q: 150, u: 'g', per: { n: 150, l: '3 lá' }, note: 'Thái miếng tam giác.', r: 'main' },
@@ -1746,7 +1766,7 @@ var LABELS = {
     return out;
   }
   /* Hai bảng phụ (vùng miền, nước chấm) gắn vào công thức ở đây. Thiếu một dòng
-     thì kêu ngay trong console thay vì im lặng hiện sai — bảng có 86 dòng, quên
+     thì kêu ngay trong console thay vì im lặng hiện sai — bảng có 36 dòng, quên
      một món là chuyện sẽ xảy ra. */
   RECIPES.forEach(function (r) {
     r.region = REGION[r.id] || 'chung';
@@ -1978,6 +1998,8 @@ var LABELS = {
 
   /* ---- detail modal ---- */
   var overlay = byId('detail'), current = null, factor = 1, stepIdx = 0;
+  /* Nút đã mở modal — đóng xong phải trả tiêu điểm về đúng chỗ, không thả về đầu trang. */
+  var lastFocus = null;
   var GROUPS = [
     { k: 'main', l: 'Nguyên liệu chính' },
     { k: 'veg', l: 'Rau & củ' },
@@ -2201,6 +2223,7 @@ var LABELS = {
   });
 
   function open(r) {
+    if (!overlay.classList.contains('is-open')) lastFocus = document.activeElement;
     current = r; factor = preferServes / r.serves; stepIdx = 0;
     var c = catOf(r.cat);
     byId('d-name').textContent = r.name;
@@ -2227,10 +2250,13 @@ var LABELS = {
     overlay.classList.add('is-open');
     document.body.style.overflow = 'hidden';
     byId('detail').querySelector('.mc-modal__body').scrollTop = 0;
+    try { overlay.querySelector('.mc-modal').focus({ preventScroll: true }); } catch (e) {}
   }
   function close() {
     overlay.classList.remove('is-open');
     document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) { try { lastFocus.focus({ preventScroll: true }); } catch (e) {} }
+    lastFocus = null;
   }
   // Nút × / [data-modal-close]: bấm là đóng.
   overlay.addEventListener('click', function (e) {
@@ -2565,11 +2591,11 @@ var LABELS = {
     var items = cb.items.map(function (x) { return { r: byIdMap[x.id], when: x.when }; }).filter(function (x) { return x.r; });
     var card = el('div', 'wb-card');
     var rows = items.map(function (x, n) {
-      return '<div class="mc-combo__row" data-open="' + x.r.id + '">' +
+      return '<button type="button" class="mc-combo__row" data-open="' + x.r.id + '">' +
         '<span class="wb-avatar wb-avatar--solid wb-avatar--sm">' + (n + 1) + '</span>' +
         '<span><span class="mc-combo__n">' + x.r.name + '</span><br>' +
         '<span class="wb-help" style="margin:0">' + x.when + '</span></span>' +
-        '<span class="mc-combo__t">' + timeText(x.r.total) + '</span></div>';
+        '<span class="mc-combo__t">' + timeText(x.r.total) + '</span></button>';
     }).join('');
     card.innerHTML =
       '<div class="wb-card__head"><h4 class="wb-card__title">' + cb.name + '</h4></div>' +
