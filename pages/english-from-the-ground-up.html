@@ -7,7 +7,6 @@
 <title>English From the Ground Up — giáo trình tự học tiếng Anh trọn vẹn</title>
 <meta name="description" content="Giáo trình tự học tiếng Anh đầy đủ bằng tiếng Việt, sắp theo hệ thống chứ không theo chương sách: hệ âm thanh, bộ máy ngữ pháp, từ vựng theo tần suất, bốn kỹ năng, tiếng Anh công sở, và lộ trình 12 tháng. Kèm 10 mô hình nghịch trực tiếp trên trang và bảng lỗi đặc trưng của người Việt.">
 
-<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
 <link rel="stylesheet" href="../web-builder/web-builder.css">
 <script>
   /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành. */
@@ -25,11 +24,13 @@
 
   /* ---- hero ---- */
   .ec-hero { padding: 30px 0 20px; }
-  .ec-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+  .ec-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-muted); margin: 0 0 10px; }
   .ec-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 12px; line-height: 1.16; }
   .ec-sub { color: var(--wb-fg-muted); font-size: 15.5px; max-width: 76ch; line-height: 1.65; margin: 0 0 12px; }
   .ec-sub b { color: var(--wb-fg); }
-  .ec-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; line-height: 1.6; }
+  /* Chữ mờ ở trang này dùng --wb-fg-muted, KHÔNG dùng --wb-fg-subtle: subtle là token
+     dành cho placeholder (≈2,5:1 trên nền sáng), dưới ngưỡng 4,5:1 cho chữ đọc thật. */
+  .ec-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); letter-spacing: .04em; line-height: 1.6; }
 
   /* ---- two-column reading layout ---- */
   .ec-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 34px; align-items: start; padding: 26px 0 60px; }
@@ -41,12 +42,12 @@
   /* ---- section rhythm ---- */
   section[id] { scroll-margin-top: 76px; }
   .ec-part-head { border-top: var(--wb-bw) solid var(--wb-border); padding: 24px 0 2px; scroll-margin-top: 76px; }
-  .ec-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .ec-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-muted); margin: 0 0 6px; }
   .ec-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
   .ec-part-head p { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.65; margin: 0 0 10px; max-width: 80ch; }
   .ec-part-head p b { color: var(--wb-fg); font-weight: 640; }
 
-  .ec-eyebrow-sec { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .ec-eyebrow-sec { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-muted); margin: 0 0 6px; }
   .ec-eyebrow-sec b { color: var(--wb-fg); font-weight: 650; }
   .ec-sec-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 12px; line-height: 1.3; }
   h3.ec-h3 { font-size: 15.5px; font-weight: 680; margin: 26px 0 10px; letter-spacing: -.005em; }
@@ -65,7 +66,7 @@
 
   code, .ec-code { font-family: var(--wb-font-mono); font-size: .92em; background: var(--wb-surface-hover); border-radius: 4px; padding: 1px 5px; }
   .ec-mono { font-family: var(--wb-font-mono); font-size: 12.5px; }
-  .ec-dim { color: var(--wb-fg-subtle); }
+  .ec-dim { color: var(--wb-fg-muted); }
 
   /* English sample vs Vietnamese gloss, inline */
   .ec-en { font-weight: 600; }
@@ -74,12 +75,12 @@
   /* ---- pattern strip: the one line worth memorising ---- */
   .ec-formula { font-family: var(--wb-font-mono); font-size: 13px; line-height: 1.85; white-space: pre; background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; margin: 4px 0 16px; overflow-x: auto; color: var(--wb-fg); }
   .ec-formula b { font-weight: 700; }
-  .ec-formula .c { color: var(--wb-fg-subtle); }
+  .ec-formula .c { color: var(--wb-fg-muted); }
 
   /* ---- pull quote — analogy limits & honest caveats ---- */
   .ec-quote { border-left: 2px solid var(--wb-neutral-strong); padding: 2px 0 2px 14px; margin: 16px 0; color: var(--wb-fg-muted); font-size: 14.5px; line-height: 1.62; max-width: 76ch; }
   .ec-quote b { color: var(--wb-fg); }
-  .ec-quote cite { display: block; font-style: normal; font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-subtle); margin-top: 7px; line-height: 1.6; letter-spacing: 0; }
+  .ec-quote cite { display: block; font-style: normal; font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-muted); margin-top: 7px; line-height: 1.6; letter-spacing: 0; }
 
   /* ---- number anchors ---- */
   .ec-figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin: 14px 0 16px; }
@@ -104,14 +105,14 @@
   .ec-list { display: flex; flex-direction: column; gap: 14px; margin: 12px 0 6px; }
   .ec-item { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 16px 18px; scroll-margin-top: 76px; }
   .ec-item__top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 9px; margin-bottom: 8px; }
-  .ec-item__no { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); font-weight: 600; }
+  .ec-item__no { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); font-weight: 600; }
   .ec-item__name { font-size: 15.5px; font-weight: 710; letter-spacing: -.01em; margin: 0; }
   .ec-item__def { font-size: 14px; line-height: 1.72; color: var(--wb-fg); margin: 0 0 8px; max-width: 82ch; }
   .ec-item__def:last-child { margin-bottom: 0; }
   .ec-item__def b { font-weight: 650; }
   .ec-item__def em { font-style: italic; color: var(--wb-fg-muted); }
   .ec-item__meta { display: grid; grid-template-columns: 116px minmax(0, 1fr); gap: 8px 12px; margin-top: 13px; padding-top: 12px; border-top: var(--wb-bw) solid var(--wb-border); }
-  .ec-item__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); padding-top: 2px; line-height: 1.45; }
+  .ec-item__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-muted); padding-top: 2px; line-height: 1.45; }
   .ec-item__v { font-size: 13px; line-height: 1.62; color: var(--wb-fg-muted); margin: 0; }
   .ec-item__v b { color: var(--wb-fg); font-weight: 640; }
   @media (max-width: 560px) { .ec-item__meta { grid-template-columns: minmax(0, 1fr); gap: 3px 0; } .ec-item__k { padding-top: 8px; } }
@@ -119,7 +120,7 @@
   /* ---- diagrams ---- */
   .ec-viz { margin: 16px 0 6px; }
   .ec-viz .wb-chart__svg { width: 100%; height: auto; }
-  .ec-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .03em; color: var(--wb-fg-subtle); margin: 10px 0 0; line-height: 1.55; }
+  .ec-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .03em; color: var(--wb-fg-muted); margin: 10px 0 0; line-height: 1.55; }
   .ec-vt { fill: var(--wb-fg); font-size: 12px; font-weight: 640; font-family: var(--wb-font); }
   .ec-vs { fill: var(--wb-fg-muted); font-size: 10.5px; font-family: var(--wb-font); }
   .ec-vm { fill: var(--wb-fg); font-size: 11px; font-family: var(--wb-font-mono); }
@@ -132,13 +133,13 @@
   /* ---- lab: the interactive models ---- */
   .ec-lab { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); margin: 18px 0; overflow: hidden; }
   .ec-lab__head { padding: 12px 16px; border-bottom: var(--wb-bw) solid var(--wb-border); }
-  .ec-lab__kick { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 3px; }
+  .ec-lab__kick { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-muted); margin: 0 0 3px; }
   .ec-lab__title { font-size: 14.5px; font-weight: 690; margin: 0; letter-spacing: -.005em; }
   .ec-lab__hint { font-size: 12.5px; color: var(--wb-fg-muted); margin: 5px 0 0; line-height: 1.55; }
   .ec-lab__hint b { color: var(--wb-fg); font-weight: 640; }
   .ec-lab__body { padding: 14px 16px 16px; }
   .ec-lab__row { display: grid; grid-template-columns: 116px minmax(0, 1fr); gap: 8px 12px; align-items: center; margin-bottom: 10px; }
-  .ec-lab__row > label, .ec-lab__row > .k { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); line-height: 1.4; }
+  .ec-lab__row > label, .ec-lab__row > .k { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-muted); line-height: 1.4; }
   @media (max-width: 620px) { .ec-lab__row { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
   .ec-lab__foot { font-size: 12.5px; color: var(--wb-fg-muted); line-height: 1.62; margin: 12px 0 0; padding-top: 11px; border-top: var(--wb-bw) solid var(--wb-border); }
   .ec-lab__foot b { color: var(--wb-fg); font-weight: 640; }
@@ -155,7 +156,7 @@
   /* tense grid */
   .ec-grid12 { display: grid; grid-template-columns: 92px repeat(3, minmax(0, 1fr)); gap: 6px; }
   @media (max-width: 620px) { .ec-grid12 { grid-template-columns: 62px repeat(3, minmax(0, 1fr)); gap: 4px; } }
-  .ec-gh { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); display: flex; align-items: flex-end; padding-bottom: 4px; line-height: 1.3; }
+  .ec-gh { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-muted); display: flex; align-items: flex-end; padding-bottom: 4px; line-height: 1.3; }
   .ec-gc { border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); padding: 8px 7px; cursor: pointer; text-align: left; font-family: var(--wb-font); font-size: 11.5px; line-height: 1.4; color: var(--wb-fg-muted); }
   .ec-gc:hover { border-color: var(--wb-neutral-strong); color: var(--wb-fg); }
   .ec-gc.on { background: var(--wb-fg); border-color: var(--wb-fg); color: var(--wb-canvas); }
@@ -180,7 +181,7 @@
   .ec-cl label { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; line-height: 1.55; padding: 5px 6px; border-radius: 5px; cursor: pointer; color: var(--wb-fg); }
   .ec-cl label:hover { background: var(--wb-surface-hover); }
   .ec-cl input { margin-top: 3px; flex: none; accent-color: var(--wb-fg); }
-  .ec-cl .lv { font-family: var(--wb-font-mono); font-size: 10px; color: var(--wb-fg-subtle); flex: none; width: 22px; padding-top: 2px; }
+  .ec-cl .lv { font-family: var(--wb-font-mono); font-size: 10px; color: var(--wb-fg-muted); flex: none; width: 22px; padding-top: 2px; }
 
   /* the sentence-with-blank used by several models */
   .ec-sent { font-size: 15px; line-height: 1.7; color: var(--wb-fg); margin: 0 0 10px; }
@@ -188,8 +189,17 @@
 
   /* rhythm beat diagram rows */
   .ec-beat { display: flex; gap: 4px; align-items: flex-end; flex-wrap: wrap; }
-  .ec-beat span { font-family: var(--wb-font-mono); font-size: 12px; padding: 3px 6px; border-radius: 4px; border: var(--wb-bw) solid var(--wb-border); background: var(--wb-canvas); color: var(--wb-fg-subtle); }
+  .ec-beat span { font-family: var(--wb-font-mono); font-size: 12px; padding: 3px 6px; border-radius: 4px; border: var(--wb-bw) solid var(--wb-border); background: var(--wb-canvas); color: var(--wb-fg-muted); }
   .ec-beat span.s { background: var(--wb-fg); border-color: var(--wb-fg); color: var(--wb-canvas); font-weight: 700; font-size: 14px; padding: 6px 10px; }
+
+  /* ---- focus bàn phím ----
+     Các control của mô hình là <button> trần, không phải .wb-btn, nên chúng không
+     nhận vòng focus của kit. Dùng đúng vòng đó để bàn phím thấy được mình đang ở đâu,
+     kể cả trên nút đã tô đen (.on / .hit) — nơi vòng mặc định của trình duyệt rất mờ. */
+  .ec-chip:focus-visible,
+  .ec-syl button:focus-visible,
+  .ec-ans button:focus-visible,
+  .ec-gc:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
 
   /* back-to-top */
   .ec-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
@@ -235,12 +245,27 @@
     /* nút "Từ tiếp theo" / "Câu tiếp theo" — chỉ trong lab, không đụng .wb-btn trần */
     .ec-lab .wb-btn--sm { min-height: 42px; padding: 10px 16px; }
 
+    /* "Quay lại giáo trình" là đường ra duy nhất của lớp phủ từ vựng */
+    .ev-topbar .wb-btn--sm { min-height: 42px; padding: 10px 14px; }
+
     /* thanh trượt: track chỉ cao 4px nên vùng chạm thật gần như không có.
        Viền trong suốt nới vùng chạm mà không làm track dày lên. */
     .ec-lab .wb-range {
       box-sizing: content-box; margin: 0;
-      border-top: 16px solid transparent; border-bottom: 16px solid transparent;
+      border-top: 20px solid transparent; border-bottom: 20px solid transparent;
       background-clip: padding-box;
+    }
+
+    /* nút lên đầu trang: giữ tối thiểu 44px cả hai chiều */
+    .ec-top { min-width: 44px; min-height: 44px; }
+
+    /* Từ có gạch chân chấm trong bảng bẫy nghĩa là thứ phải chạm mới ra cách dùng,
+       nhưng nó là chữ 13px nên vùng chạm thật chỉ ~20px. Nới bằng một lớp trong
+       suốt: không đẩy gạch chân xuống, không đổi baseline của hàng. */
+    .ev-item { padding: 9px 0; }
+    .ev-en.is-term { position: relative; }
+    .ev-en.is-term::after {
+      content: ''; position: absolute; left: -8px; right: -8px; top: -11px; bottom: -11px;
     }
   }
 
@@ -266,7 +291,7 @@
   .ev-topbar__t { font-size: 15px; font-weight: 720; letter-spacing: -.01em; margin: 0; }
   .ev-topbar__sp { flex: 1 1 24px; }
   .ev-search { flex: 0 1 250px; min-width: 148px; }
-  .ev-count { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); flex: none; white-space: nowrap; }
+  .ev-count { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); flex: none; white-space: nowrap; }
 
   .ev-lede { font-size: 14px; line-height: 1.7; color: var(--wb-fg-muted); max-width: 82ch; margin: 2px 0 22px; }
   .ev-lede b { color: var(--wb-fg); font-weight: 620; }
@@ -296,7 +321,7 @@
   .ev-en.is-term:hover, .ev-en.is-term.is-open { border-bottom-style: solid; border-bottom-color: var(--wb-fg); background: var(--wb-surface-hover); }
   .ev-en.is-term:focus-visible { outline: 2px solid var(--wb-fg); outline-offset: 2px; }
 
-  .ev-empty { font-size: 13px; color: var(--wb-fg-subtle); padding: 22px 2px; }
+  .ev-empty { font-size: 13px; color: var(--wb-fg-muted); padding: 22px 2px; }
   .ev-empty.hide { display: none; }
 
   /* Popover cách dùng */
@@ -308,7 +333,7 @@
   .dark .evp { box-shadow: 0 12px 36px -6px rgba(0,0,0,.72); }
   .evp.on { opacity: 1; pointer-events: auto; transform: none; }
   .evp__en { font-size: 14.5px; font-weight: 730; letter-spacing: -.01em; margin: 0 0 2px; padding-right: 22px; line-height: 1.3; }
-  .evp__vi { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); margin: 0 0 9px; letter-spacing: .02em; }
+  .evp__vi { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); margin: 0 0 9px; letter-spacing: .02em; }
   .evp__d { margin: 0; }
   .evp__d b { font-weight: 660; color: var(--wb-fg); }
   .evp__d .m { font-family: var(--wb-font-mono); font-size: .9em; background: var(--wb-surface-hover); border-radius: 4px; padding: 1px 4px; }
@@ -319,7 +344,11 @@
     background: transparent; color: var(--wb-fg-subtle); border-radius: 5px; display: grid; place-items: center; font: inherit; line-height: 1; }
   .evp__x:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
   .evp__x svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
-  @media (max-width: 620px) { .evp { left: 9px !important; right: 9px; bottom: 9px; top: auto !important; width: auto; } }
+  @media (max-width: 620px) {
+    .evp { left: 9px !important; right: 9px; bottom: 9px; top: auto !important; width: auto; }
+    /* nút đóng vẽ 24px cho gọn; nới vùng chạm bằng lớp trong suốt, không xê dịch icon */
+    .evp__x::after { content: ''; position: absolute; inset: -9px; }
+  }
 </style>
 </head>
 <body class="wb-app">
@@ -360,8 +389,8 @@
 
   <div class="ec-figs" style="margin-bottom:20px">
     <div class="ec-fig"><span class="n">3 000 từ</span><span class="l">phủ khoảng 95% hội thoại đời thường. Từ thứ 20 000 gần như không mua thêm được gì — học theo tần suất, không học theo hứng</span></div>
-    <div class="ec-fig"><span class="n">2 thì</span><span class="l">tiếng Anh chỉ có past và non-past. "12 thì" là 2 thì × 4 cách nhìn — học 2 trục, khỏi thuộc 12 ô</span></div>
-    <div class="ec-fig"><span class="n">98%</span><span class="l">ngưỡng từ đã biết để đọc hiểu mà không cần tra. Dưới ngưỡng đó, đọc nhiều cũng không tự tiến</span></div>
+    <div class="ec-fig"><span class="n">2 thì</span><span class="l">tiếng Anh chỉ có past và non-past. "12 thì" là 3 mốc thời gian × 4 cách nhìn — học 2 trục, khỏi thuộc 12 ô</span></div>
+    <div class="ec-fig"><span class="n">98%</span><span class="l">ngưỡng từ đã biết để đọc hiểu mà không cần tra. Dưới ngưỡng đó vẫn đọc được, nhưng phải chọn tài liệu dễ hơn hoặc chấp nhận tra từ</span></div>
     <div class="ec-fig"><span class="n">~1 200 giờ</span><span class="l">ước tính giờ học có hướng dẫn từ số 0 tới C2 (Cambridge). Chia cho 1 giờ/ngày ≈ 3–4 năm — con số này để bạn chọn mục tiêu thật</span></div>
   </div>
 
@@ -604,7 +633,7 @@
         <p class="ec-eyebrow-sec">03 · <b>Vietnamese → English Gaps</b></p>
         <h2 class="ec-sec-title">Mười khác biệt cấu trúc sinh ra gần như toàn bộ lỗi của người Việt</h2>
 
-        <p class="ec-lede">Lỗi của bạn <b>không ngẫu nhiên</b>. Chúng là hình chiếu của tiếng Việt lên tiếng Anh, nên chúng lặp lại y hệt ở hàng triệu người và <b>đoán trước được</b>. Đây là bảng quan trọng nhất trang: mỗi dòng là một cái bẫy, và biết cơ chế thì sửa nhanh hơn nhiều so với sửa từng lỗi lẻ.</p>
+        <p class="ec-lede">Lỗi của bạn <b>không ngẫu nhiên</b>. Chúng là hình chiếu của tiếng Việt lên tiếng Anh, nên chúng lặp lại y hệt ở hàng triệu người và <b>đoán trước được</b>. Mỗi dòng dưới đây là một cái bẫy, và biết cơ chế thì sửa nhanh hơn nhiều so với sửa từng lỗi lẻ.</p>
 
         <div class="ec-tw">
           <table class="wb-table wb-table--compact wb-table--striped">
@@ -683,7 +712,7 @@
           <table class="wb-table wb-table--compact">
             <thead><tr><th style="width:120px">Nhóm</th><th>Các âm và ví dụ</th><th style="width:38%">Cái bẫy cho người Việt</th></tr></thead>
             <tbody>
-              <tr><td><b>Bật hơi</b><br><span class="ec-dim">plosive</span></td><td class="ec-mono">/p/ pen · /b/ bad · /t/ tea · /d/ did · /k/ cat · /g/ get</td><td>Đầu từ thì ổn. <b>Cuối từ</b> tiếng Việt ngậm lại không bật — tiếng Anh phải bật ra. <span class="ec-en">stop</span> không phải "stốp" ngậm.</td></tr>
+              <tr><td><b>Tắc</b><br><span class="ec-dim">plosive</span></td><td class="ec-mono">/p/ pen · /b/ bad · /t/ tea · /d/ did · /k/ cat · /g/ get</td><td>Đầu từ thì ổn. <b>Cuối từ</b> tiếng Việt ngậm lại không bật — tiếng Anh phải bật ra. <span class="ec-en">stop</span> không phải "stốp" ngậm.</td></tr>
               <tr><td><b>Xát</b><br><span class="ec-dim">fricative</span></td><td class="ec-mono">/f/ fall · /v/ van · <b>/θ/ think</b> · <b>/ð/ this</b> · /s/ see · <b>/z/ zoo</b> · <b>/ʃ/ she</b> · <b>/ʒ/ measure</b> · /h/ how</td><td><b>/θ/ /ð/ không có trong tiếng Việt</b> → thành /t/ /s/ hoặc /d/ /z/. <b>/z/ cuối từ</b> gần như luôn bị mất: <span class="ec-en">is, was, boys, does</span>. Giọng Nam: /v/ dễ thành /j/.</td></tr>
               <tr><td><b>Tắc-xát</b><br><span class="ec-dim">affricate</span></td><td class="ec-mono"><b>/tʃ/ church</b> · <b>/dʒ/ judge</b></td><td>Hay bị gộp với /ʃ/ hoặc với "ch" tiếng Việt (vốn nhẹ hơn nhiều). <span class="ec-en">cheap</span> ≠ <span class="ec-en">sheep</span> ≠ <span class="ec-en">jeep</span>.</td></tr>
               <tr><td><b>Mũi</b><br><span class="ec-dim">nasal</span></td><td class="ec-mono">/m/ man · /n/ no · /ŋ/ sing</td><td>Có sẵn cả ba. Chỉ cần nhớ /ŋ/ cuối từ vẫn phải nghe rõ.</td></tr>
@@ -719,7 +748,7 @@
 
         <p class="ec-lede">Trong tiếng Anh, <b>số nhiều, thì quá khứ, ngôi thứ ba, sở hữu</b> đều nằm ở một phụ âm cuối. Tiếng Việt không bật phụ âm cuối. Nên khi bạn nói <span class="ec-bad">Yesterday I work eight hour</span>, đó không phải lỗi ngữ pháp — bạn <i>định</i> nói <span class="ec-en">worked</span> và <span class="ec-en">hours</span>, chỉ là cái đuôi không bao giờ ra khỏi miệng.</p>
 
-        <p class="ec-p">Đây là chỗ nối quan trọng nhất của cả trang: <b>một lỗi phát âm hiện ra như bốn lỗi ngữ pháp.</b> Chữa ở đúng gốc thì bốn lỗi kia biến mất cùng lúc. Chữa bằng cách học lại luật số nhiều thì không có tác dụng gì, vì bạn đã biết luật rồi.</p>
+        <p class="ec-p"><b>Một lỗi phát âm hiện ra như bốn lỗi ngữ pháp.</b> Chữa ở đúng gốc thì bốn lỗi kia biến mất cùng lúc. Chữa bằng cách học lại luật số nhiều thì không có tác dụng gì, vì bạn đã biết luật rồi.</p>
 
         <h3 class="ec-h3">Đuôi <span class="ec-mono">-s</span> đọc ba kiểu — theo âm đứng trước, không theo chữ viết</h3>
         <div class="ec-tw">
@@ -922,7 +951,7 @@ I didn't say he stole the <b>money</b>.       <span class="c">→ tôi nói anh 
               <tr><td><b>e câm cuối từ</b></td><td>Kéo nguyên âm trước thành "dài" (thực ra là đổi hẳn âm).</td><td class="ec-mono">hat→hate · kit→kite · not→note · cut→cute · rid→ride</td></tr>
               <tr><td><b>Phụ âm đôi</b></td><td>Giữ nguyên âm trước ở dạng ngắn.</td><td class="ec-mono">hoping/hopping · later/latter · diner/dinner · super/supper</td></tr>
               <tr><td><b>c và g trước e, i, y</b></td><td>c → /s/ · g → /dʒ/. Còn lại: c → /k/ · g → /g/.</td><td class="ec-mono">city, cell, cycle · age, gym, giant — nhưng cat, cup, go, gun · (ngoại lệ: get, give)</td></tr>
-              <tr><td><b>-ture, -sure, -tion, -sion</b></td><td>Đuôi đông cứng. Riêng <span class="ec-mono">-sure</span> và <span class="ec-mono">-sion</span> còn theo âm đứng trước: sau <b>nguyên âm</b> đọc /ʒ/, sau <b>phụ âm</b> đọc /ʃ/.</td><td class="ec-mono">-ture /tʃə/ future, nature · -tion /ʃən/ nation · -sure /ʒə/ measure <b>nhưng</b> /ʃə/ pressure · -sion /ʒən/ vision <b>nhưng</b> /ʃən/ tension</td></tr>
+              <tr><td><b>-ture, -sure, -tion, -sion</b></td><td>Đuôi đông cứng. Riêng <span class="ec-mono">-sure</span> và <span class="ec-mono">-sion</span> còn theo <b>chữ đứng ngay trước</b>: sau nguyên âm đọc /ʒ/, sau phụ âm — kể cả chữ s trong <span class="ec-mono">-ssure</span> — đọc /ʃ/.</td><td class="ec-mono">-ture /tʃə/ future, nature · -tion /ʃən/ nation · -sure /ʒə/ measure, pleasure — /ʃə/ pressure, insure · -sion /ʒən/ vision, decision — /ʃən/ tension, mansion</td></tr>
               <tr><td><b>Chữ câm</b></td><td>Dấu vết của âm từng được phát ra thật, giờ chỉ còn trên giấy.</td><td class="ec-mono">k(now) · w(rite) · clim(b) · wal(k) · lis(t)en · (h)our · (p)sychology · si(g)n · recei(p)t</td></tr>
               <tr><td><b>-ough</b><br><span class="ec-dim">trường hợp tệ nhất</span></td><td>Bảy cách đọc. Không có luật — phải nhớ từng từ.</td><td class="ec-mono">though /əʊ/ · through /uː/ · thought /ɔː/ · tough /ʌf/ · cough /ɒf/ · plough /aʊ/ · thorough /ə/</td></tr>
             </tbody>
@@ -999,7 +1028,7 @@ I didn't say he stole the <b>money</b>.       <span class="c">→ tôi nói anh 
 
       <section id="verbs">
         <p class="ec-eyebrow-sec">13 · <b>The Verb System</b></p>
-        <h2 class="ec-sec-title">Không có 12 thì. Có 2 thì × 4 cách nhìn — nhân lên thành 12 ô</h2>
+        <h2 class="ec-sec-title">Không có 12 thì. Có 2 trục — 3 mốc thời gian × 4 cách nhìn — nhân lên thành 12 ô</h2>
 
         <p class="ec-lede">Đây là chỗ trường học làm hỏng nhiều nhất: dạy 12 thì như 12 thứ rời rạc phải thuộc. Thực ra chỉ có <b>hai trục</b>. Trục <b>thời gian</b> nói chuyện xảy ra khi nào. Trục <b>thể</b> (aspect) nói bạn <i>nhìn</i> chuyện đó thế nào — trọn gói, đang diễn ra, hay nhìn ngược lại từ một mốc. Học hai trục thì 12 ô tự suy ra.</p>
 
@@ -1625,7 +1654,7 @@ promise / offer / refuse + to V   They <b>refused to</b> merge it.
         </div>
 
         <div class="ec-quote">
-          <b>Lời khuyên ngược dòng, nhưng đúng:</b> <b>đừng học nhiều thành ngữ.</b> Người học hay nhồi thành ngữ vì tưởng nó làm mình nghe "bản xứ" — thực tế nó thường tạo hiệu ứng ngược: dùng sai ngữ cảnh, sai mức trang trọng, hoặc dùng thành ngữ đã lỗi thời nghe rất lạ. Ưu tiên đúng theo thứ tự: <b>hiểu được khi nghe</b> (rất cần) &gt; <b>dùng được vài chục cái phổ biến</b> (đủ) &gt; <b>dùng nhiều</b> (không cần). Cùng số giờ đó, đổ vào <a href="#chunks">collocation</a> có lợi hơn nhiều lần.
+          <b>Lời khuyên ngược dòng:</b> <b>đừng học nhiều thành ngữ.</b> Người học hay nhồi thành ngữ vì tưởng nó làm mình nghe "bản xứ" — thực tế nó thường tạo hiệu ứng ngược: dùng sai ngữ cảnh, sai mức trang trọng, hoặc dùng thành ngữ đã lỗi thời nghe rất lạ. Ưu tiên đúng theo thứ tự: <b>hiểu được khi nghe</b> (rất cần) &gt; <b>dùng được vài chục cái phổ biến</b> (đủ) &gt; <b>dùng nhiều</b> (không cần). Cùng số giờ đó, đổ vào <a href="#chunks">collocation</a> có lợi hơn nhiều lần.
         </div>
       </section>
 
@@ -2043,7 +2072,6 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
 
 <b>Ngày bận — sàn 20 phút:</b>  10' chép chính tả + 10' thẻ SRS.  <span class="c">Không bao giờ để về 0.</span>
 <span class="c">Lý do có sàn: chuỗi ngày đứt là thứ giết việc học ngôn ngữ, không phải một ngày học ít.</span>
-<span class="c">20 phút mỗi ngày ăn đứt 2 giờ 20 phút mỗi Chủ nhật, dù tổng thời gian bằng nhau.</span>
         </div>
 
         <h3 class="ec-h3">Ghép vào ngày làm việc của một người làm phần mềm</h3>
@@ -2126,8 +2154,8 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
 
       <section id="ref-verbs">
         <p class="ec-eyebrow-sec">43 · <b>Irregular Verbs</b></p>
-        <h2 class="ec-sec-title">~75 động từ bất quy tắc, xếp theo <u>khuôn biến đổi</u> chứ không theo abc</h2>
-        <p class="ec-p">Danh sách abc bắt bạn nhớ 75 thứ rời. Xếp theo khuôn thì chỉ còn <b>9 nhóm</b> — và trong mỗi nhóm, một từ gợi ra cả nhóm. Đây là toàn bộ số động từ bất quy tắc bạn thật sự cần; số còn lại hiếm tới mức tra khi gặp là đủ.</p>
+        <h2 class="ec-sec-title">~80 động từ bất quy tắc, xếp theo <u>khuôn biến đổi</u> chứ không theo abc</h2>
+        <p class="ec-p">Danh sách abc bắt bạn nhớ 80 thứ rời. Xếp theo khuôn thì chỉ còn <b>9 nhóm</b> — và trong mỗi nhóm, một từ gợi ra cả nhóm. Đây là toàn bộ số động từ bất quy tắc bạn thật sự cần; số còn lại hiếm tới mức tra khi gặp là đủ.</p>
         <div class="ec-tw">
           <table class="wb-table wb-table--compact wb-table--striped">
             <thead><tr><th style="width:150px">Khuôn</th><th>Các từ · <span class="ec-dim">V1 – V2 – V3</span></th></tr></thead>
@@ -3016,7 +3044,7 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
      Không có `use` → chỉ hiện nghĩa. Bên trong `use` chỉ dùng nháy đơn cho thuộc tính. */
   var CATS = [
     { h: 'Số ít một nghĩa, số nhiều nghĩa khác', tag: 'plural ≠ singular',
-      note: 'Thêm <b>-s</b> vào mấy từ này là đổi hẳn nghĩa, không phải chỉ đổi số lượng. Đây là nhóm bạn hỏi.',
+      note: 'Thêm <b>-s</b> vào mấy từ này là đổi hẳn nghĩa, không phải chỉ đổi số lượng.',
       items: [
         { en: 'work → works', vi: 'công việc → nhà máy / tác phẩm',
           use: "<b>work</b> (không đếm được) = công việc — không bao giờ thêm -s. <b>works</b> đổi nghĩa hẳn: <b>nhà máy / công trình</b> (a steel <span class='m'>works</span>) hoặc <b>tác phẩm</b> của một tác giả.<span class='ex'><b>I have a lot of work.</b> — <span class='no'>works</span> ở đây là sai.</span><span class='ex'><b>the complete works of Nam Cao</b> — toàn bộ tác phẩm.</span>" },
@@ -3084,7 +3112,7 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
         { en: 'knowledge', vi: 'kiến thức',
           use: "Không đếm. <span class='m'>a good knowledge of X</span> được (a + tính từ + knowledge), nhưng vẫn không có knowledges." },
         { en: 'staff', vi: 'nhân viên (cả tập thể)',
-          use: "<b>staff</b> = toàn bộ nhân viên. Một người là <span class='m'>a staff member</span> / <span class='m'>an employee</span> — <span class='no'>a staff</span> nghe sai. Đi với động từ số nhiều: <span class='m'>the staff are…</span>" },
+          use: "<b>staff</b> = toàn bộ nhân viên. Một người là <span class='m'>a staff member</span> / <span class='m'>an employee</span> — <span class='no'>a staff</span> nghe sai. Anh-Anh đi với động từ số nhiều (<span class='m'>the staff are…</span>), Anh-Mỹ thường số ít (<span class='m'>the staff is…</span>) — cùng luật với <span class='m'>the team</span> ở mục 38." },
         { en: 'traffic', vi: 'giao thông' },
         { en: 'homework', vi: 'bài tập về nhà',
           use: "Không đếm. <span class='m'>do homework</span> (không make), <span class='m'>a piece of homework</span>." },
