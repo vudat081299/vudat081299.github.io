@@ -7,7 +7,6 @@
 <title>Food Fundamentals · thịt, hải sản, nhiệt độ &amp; rượu</title>
 <meta name="description" content="Kiến thức nền về thực phẩm cho người nấu ăn — sơ đồ các phần thịt lợn &amp; bò và tính chất từng loại, chọn hải sản, vì sao nhiệt độ quan trọng (Maillard, collagen, nhiệt lõi), kỹ thuật nấu theo loại thực phẩm, rượu trong bếp và cách kết hợp vị.">
 
-<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
 <link rel="stylesheet" href="../web-builder/web-builder.css">
 <script>
   /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành. */
@@ -54,18 +53,21 @@
     border: var(--wb-bw) solid var(--wb-border); border-radius: 999px; padding: 5px 11px; transition: .12s; }
   .fk-toc a:hover { color: var(--wb-fg); border-color: var(--wb-border-strong); }
 
-  /* ---------- butcher diagram ---------- */
-  .fk-diagram { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-card-radius, 12px);
-    background: var(--wb-surface-2, var(--wb-gray-50)); padding: 14px 14px 6px; overflow-x: auto; }
-  .fk-diagram svg { display: block; width: 100%; height: auto; max-width: 720px; margin: 0 auto; color: var(--wb-fg); }
-  .fk-anim-body { fill: var(--wb-gray-150); stroke: var(--wb-fg); stroke-width: 2.4; stroke-linejoin: round; }
-  .fk-anim-cut { fill: none; stroke: var(--wb-fg); stroke-width: 1.4; stroke-dasharray: 5 4; opacity: .55; }
-  .fk-anim-detail { fill: none; stroke: var(--wb-fg); stroke-width: 1.8; stroke-linecap: round; }
-  .fk-anim-eye { fill: var(--wb-fg); }
-  .fk-badge circle { fill: var(--wb-fg); }
-  .fk-badge text { fill: var(--wb-canvas); font-family: var(--wb-font-mono); font-size: 15px; font-weight: 700; text-anchor: middle; }
-  .fk-cap { text-align: center; font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle);
-    letter-spacing: .04em; margin: 8px 0 2px; }
+  /* ---------- sơ đồ thịt: nền vùng phải theo theme ----------
+     Thang --wb-gray-* KHÔNG đảo ở dark mode. Nếu nền vùng cứ là gray-150 (rất sáng)
+     thì ở dark mode viền thân, đường cắt và mắt — tất cả đều vẽ bằng --wb-fg, tức
+     gần trắng — nằm trên nền sáng và biến mất; cả con vật thành một vệt xám phẳng.
+     Nên nền vùng đi qua ba token riêng, đảo ở nhánh .dark. */
+  :root {
+    --fk-fill:       var(--wb-gray-150);
+    --fk-fill-hover: var(--wb-gray-300);
+    --fk-fill-on:    var(--wb-gray-600);
+  }
+  .dark {
+    --fk-fill:       var(--wb-gray-800);
+    --fk-fill-hover: var(--wb-gray-700);
+    --fk-fill-on:    var(--wb-gray-400);
+  }
 
   /* legend that pairs a number with a cut */
   .fk-legend { list-style: none; margin: 16px 0 0; padding: 0; display: grid;
@@ -135,13 +137,13 @@
   .fk-meat__hint { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase;
     color: var(--wb-fg-subtle); text-align: center; margin: 8px 0 2px; }
 
-  .fk-region { fill: var(--wb-gray-150); stroke: none; cursor: pointer; transition: fill .12s ease; }
-  .fk-region:hover { fill: var(--wb-gray-300); }
-  .fk-region:focus-visible { fill: var(--wb-gray-300); outline: none; }
-  .fk-region.is-active { fill: var(--wb-gray-600); }
+  .fk-region { fill: var(--fk-fill); stroke: none; cursor: pointer; transition: fill .12s ease; }
+  .fk-region:hover { fill: var(--fk-fill-hover); }
+  .fk-region:focus-visible { fill: var(--fk-fill-hover); outline: none; }
+  .fk-region.is-active { fill: var(--fk-fill-on); }
   .fk-region--leg { stroke: var(--wb-fg); stroke-width: 2.4; stroke-linejoin: round; }
-  .fk-leg { fill: var(--wb-gray-150); stroke: var(--wb-fg); stroke-width: 2.4; stroke-linejoin: round; pointer-events: none; }
-  .fk-anim-body { fill: var(--wb-gray-150); stroke: none; pointer-events: none; }
+  .fk-leg { fill: var(--fk-fill); stroke: var(--wb-fg); stroke-width: 2.4; stroke-linejoin: round; pointer-events: none; }
+  .fk-anim-body { fill: var(--fk-fill); stroke: none; pointer-events: none; }
   .fk-anim-outline { fill: none; stroke: var(--wb-fg); stroke-width: 2.6; stroke-linejoin: round; stroke-linecap: round; pointer-events: none; }
   .fk-anim-cut { fill: none; stroke: var(--wb-fg); stroke-width: 1.2; stroke-dasharray: 4 5; opacity: .42; pointer-events: none; }
   .fk-anim-detail { fill: none; stroke: var(--wb-fg); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
@@ -168,6 +170,15 @@
   .fk-legend li:hover { background: var(--wb-surface-hover); }
   .fk-legend li.is-active { background: var(--wb-surface-hover); box-shadow: inset 3px 0 0 var(--wb-fg); }
   .fk-legend li:focus-visible { outline: 2px solid var(--wb-fg); outline-offset: 1px; }
+
+  /* ---------- điện thoại: vùng chạm ----------
+     Mọi thứ bấm được ở trang này (mục lục, dòng danh sách miếng thịt, vùng thịt trên
+     sơ đồ) đều đang cao 26–34px — dưới ngưỡng 40px cho ngón tay. Đặt sàn chiều cao,
+     không đổi cách bày. */
+  @media (max-width: 720px) {
+    .fk-toc a { display: inline-flex; align-items: center; min-height: 40px; padding: 6px 14px; }
+    .fk-legend li { min-height: 44px; align-content: center; padding-top: 10px; padding-bottom: 10px; }
+  }
 </style>
 </head>
 <body>
@@ -191,7 +202,7 @@
   <header class="fk-hero">
     <p class="fk-eyebrow">Kiến thức nền · trước khi mở công thức</p>
     <h1 class="fk-title">Hiểu <u>nguyên liệu</u> và <u>nhiệt độ</u> — rồi công thức chỉ còn là chi tiết.</h1>
-    <p class="fk-sub">Bốn trang công thức bên cạnh trả lời câu hỏi <em>"nấu món này thế nào"</em>. Trang này trả lời câu hỏi ở dưới đó: <b>vì sao</b> một miếng ba chỉ hợp để nướng còn bắp bò thì phải hầm, <b>vì sao</b> "để lửa to cho nhanh" lại làm hỏng món, cá tươi khác cá ươn ở đâu, rượu làm gì trong nồi, và vì sao một bát nước chấm chua lại "cắt" được vị béo. Toàn bộ bám sát nguyên liệu và kỹ thuật đang dùng trong <a href="vietnamese-home-cooking.html" style="color:inherit">Mâm cơm Việt</a>, <a href="korean-home-cooking.html" style="color:inherit">Bếp Hàn</a>, <a href="european-savoury.html" style="color:inherit">Món Âu mặn</a> và <a href="european-baking.html" style="color:inherit">Bánh Âu</a> — chỉ những kiến thức <b>phổ biến và dùng được ngay</b>, không lý thuyết hàn lâm.</p>
+    <p class="fk-sub">Bốn trang công thức bên cạnh trả lời câu hỏi <em>"nấu món này thế nào"</em>. Trang này trả lời câu hỏi ở dưới đó: <b>vì sao</b> một miếng ba chỉ hợp để nướng còn bắp bò thì phải hầm, <b>vì sao</b> "để lửa to cho nhanh" lại làm hỏng món, cá tươi khác cá ươn ở đâu, rượu làm gì trong nồi, và vì sao một bát nước chấm chua lại "cắt" được vị béo. Toàn bộ bám sát nguyên liệu và kỹ thuật đang dùng trong <a href="vietnamese-home-cooking.html" style="color:inherit">Mâm cơm Việt</a>, <a href="korean-home-cooking.html" style="color:inherit">Bếp Hàn</a>, <a href="european-savoury.html" style="color:inherit">Món Âu mặn</a> và <a href="european-baking.html" style="color:inherit">Bánh Âu</a>.</p>
     <p class="fk-meta">SƠ ĐỒ THỊT LỢN &amp; BÒ · HẢI SẢN · NHIỆT ĐỘ · KỸ THUẬT · RƯỢU · KẾT HỢP VỊ</p>
     <nav class="fk-toc" aria-label="Mục lục">
       <a href="#doc-hieu">00 · Đọc miếng thịt</a>
@@ -279,7 +290,7 @@
             <path class="fk-anim-outline" d="M70 232 C60 214 70 186 96 176 C104 150 132 146 156 156 C210 138 320 128 440 130 C540 132 606 142 640 168 C666 188 664 216 642 232 C650 250 642 268 626 272 C540 288 400 292 268 288 C210 286 150 280 116 268 C96 262 80 252 74 242 C71 238 70 235 70 232 Z"/>
 
             <!-- chi tiết đầu + đuôi -->
-            <path class="fk-anim-detail" d="M150 156 C140 138 146 124 162 128 C172 140 168 154 158 162" fill="var(--wb-gray-150)"/>
+            <path class="fk-anim-detail" d="M150 156 C140 138 146 124 162 128 C172 140 168 154 158 162" fill="var(--fk-fill)"/>
             <circle class="fk-anim-eye" cx="126" cy="196" r="4.6"/>
             <path class="fk-anim-detail" d="M70 206 C56 210 56 232 72 238"/>
             <circle class="fk-anim-eye" cx="74" cy="214" r="2.4"/>
@@ -350,7 +361,7 @@
             </g>
 
             <!-- chi tiết đầu + đuôi -->
-            <path class="fk-anim-detail" d="M158 158 C150 142 156 130 172 134 C176 146 168 158 160 162" fill="var(--wb-gray-150)"/>
+            <path class="fk-anim-detail" d="M158 158 C150 142 156 130 172 134 C176 146 168 158 160 162" fill="var(--fk-fill)"/>
             <path class="fk-anim-detail" d="M138 150 C130 132 134 120 144 116"/>
             <path class="fk-anim-detail" d="M150 150 C150 130 158 120 170 116"/>
             <circle class="fk-anim-eye" cx="120" cy="196" r="4.4"/>
@@ -397,7 +408,7 @@
       </div>
 
       <h3 class="fk-sub-title">Gà — một con, hai tính cách</h3>
-      <div class="fk-kv"><span class="fk-kv__k">Ức (breast)</span><span class="fk-kv__v">Nạc, gần như không mỡ. Chín rất nhanh và <b>khô ngay khi quá lửa</b>. Áp chảo/nướng nhanh, rút ra ở 72–74&nbsp;°C. Thái mỏng ướp bột để giữ ẩm khi xào.</span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Ức (breast)</span><span class="fk-kv__v">Nạc, gần như không mỡ. Chín rất nhanh và <b>khô ngay khi quá lửa</b>. Áp chảo/nướng nhanh, rút ra ở <b>74&nbsp;°C</b> — gia cầm không hạ được mốc này. Thái mỏng ướp bột để giữ ẩm khi xào.</span></div>
       <div class="fk-kv"><span class="fk-kv__k">Đùi (thigh)</span><span class="fk-kv__v">Nhiều mỡ và mô liên kết, <b>ẩm và tha thứ hơn nhiều</b> — khó nấu hỏng. Chịu được kho, hầm, nướng, chiên lâu. → <em>gà kho, gà xào cay (닭갈비), gà rán.</em></span></div>
       <div class="fk-kv"><span class="fk-kv__k">Cả con / xương</span><span class="fk-kv__v">Xương và da cho nước dùng ngọt. Luộc/ninh cả con rồi xé (gà luộc, phở gà). Da chứa mỡ và collagen — quay giòn hoặc bỏ tuỳ món.</span></div>
     </section>
@@ -425,7 +436,7 @@
       </div>
 
       <h3 class="fk-sub-title">Dấu hiệu "chín tới" — mỗi loại một kiểu</h3>
-      <div class="fk-kv"><span class="fk-kv__k">Cá</span><span class="fk-kv__v">Thịt <b>chuyển đục và vừa tách thành lát</b> khi gẩy đũa, lõi trong tâm còn hơi trong. Nhiệt lõi 50–54&nbsp;°C. Để lâu thêm là khô xác.</span></div>
+      <div class="fk-kv"><span class="fk-kv__k">Cá</span><span class="fk-kv__v">Thịt <b>chuyển đục và vừa tách thành lát</b> khi gẩy đũa, lõi trong tâm còn hơi trong. Nhiệt lõi 50–54&nbsp;°C ở mức ngon; mốc an toàn là <b>63&nbsp;°C</b> (xem mục Nhiệt độ). Để lâu thêm là khô xác.</span></div>
       <div class="fk-kv"><span class="fk-kv__k">Tôm</span><span class="fk-kv__v">Cong thành <b>chữ "C" và đỏ cam</b> là chín. Cong chặt thành <b>chữ "O" = đã quá lửa</b>, dai. Chỉ mất 2–3 phút.</span></div>
       <div class="fk-kv"><span class="fk-kv__k">Mực</span><span class="fk-kv__v">Quy tắc "2 phút hoặc 30 phút": nấu <b>rất nhanh</b> (chần/xào &lt; 2 phút) hoặc <b>hầm rất lâu</b> (&gt; 30 phút). Ở khoảng giữa mực dai như cao su.</span></div>
       <div class="fk-kv"><span class="fk-kv__k">Nghêu / trai</span><span class="fk-kv__v"><b>Vừa mở miệng là chín</b> — vớt ra ngay, để lâu trong nồi là teo lại. Con nào <b>không mở sau khi nấu</b> thì bỏ.</span></div>
@@ -491,7 +502,7 @@
         <div class="fk-done"><span class="fk-done__n">Bò — chín kỹ (well)</span><span class="fk-done__t">71&nbsp;°C+</span><span class="fk-done__c">Hết hồng, bắt đầu khô. Muốn chín kỹ mà mềm thì dùng miếng hầm, không dùng thăn.</span></div>
         <div class="fk-done"><span class="fk-done__n">Lợn</span><span class="fk-done__t">63&nbsp;°C</span><span class="fk-done__c">Rút ở 63&nbsp;°C rồi nghỉ 3 phút — hồng nhạt, mọng, an toàn. Không cần nấu tới khô như quan niệm cũ.</span></div>
         <div class="fk-done"><span class="fk-done__n">Gà &amp; gia cầm</span><span class="fk-done__t">74&nbsp;°C</span><span class="fk-done__c">Không thoả hiệp. Đo chỗ dày nhất, không chạm xương. Nước chảy ra trong.</span></div>
-        <div class="fk-done"><span class="fk-done__n">Cá</span><span class="fk-done__t">50–54&nbsp;°C</span><span class="fk-done__c">Vừa tách lát, lõi còn hơi trong. Cá hỏng vì nấu quá chứ hầu như không vì nấu thiếu.</span></div>
+        <div class="fk-done"><span class="fk-done__n">Cá &amp; hải sản</span><span class="fk-done__t">50–54&nbsp;°C · an toàn 63&nbsp;°C</span><span class="fk-done__c">50–54&nbsp;°C là mốc <b>ngon</b>: vừa tách lát, lõi còn hơi trong. Cá hỏng vì nấu quá chứ hầu như không vì nấu thiếu. Nhưng mốc <b>an toàn</b> là 63&nbsp;°C — chỉ hạ xuống 50–54 với cá thật tươi, và <b>luôn nấu tới 63&nbsp;°C</b> cho thai phụ, trẻ nhỏ, người già, người suy giảm miễn dịch.</span></div>
         <div class="fk-done"><span class="fk-done__n">Thịt xay</span><span class="fk-done__t">71&nbsp;°C</span><span class="fk-done__c">Xay trộn bề mặt vào trong nên phải chín kỹ hơn miếng nguyên.</span></div>
       </div></div>
 
@@ -504,6 +515,13 @@
           <p class="wb-card__title" style="font-size:14px;margin:0 0 6px">Điểm bốc khói của dầu</p>
           <p class="wb-help">Chọn dầu theo nhiệt: <b style="color:var(--wb-fg)">bơ ~150&nbsp;°C</b> (dễ cháy, để phi nhẹ/hoàn thiện), <b style="color:var(--wb-fg)">dầu mè rang ~175&nbsp;°C</b> (chỉ để rưới cuối, không chiên), dầu ô liu nguyên chất ~190–200&nbsp;°C, <b style="color:var(--wb-fg)">dầu ăn tinh luyện ~220&nbsp;°C</b> (chiên rán). Dầu vượt điểm khói thì khét và sinh chất hại.</p>
         </div></div>
+      </div>
+
+      <div class="wb-alert wb-alert--plain" style="margin-top:14px">
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Khoảng nhiệt thứ năm, không dùng để nấu: 5–60&nbsp;°C</p>
+          <p class="wb-alert__msg">Đây là <b>vùng nguy hiểm</b> — khoảng vi khuẩn sinh sôi nhanh nhất. Đồ tươi (thịt, cá, sữa, kem, cơm nguội, món đã nấu) <b>không để trong khoảng này quá 2 giờ</b> tính cộng dồn; trời nóng trên 32&nbsp;°C thì rút xuống 1 giờ. Ba hệ quả thực tế: <b>rã đông trong ngăn mát</b> hoặc nước lạnh chảy, không rã đông trên bàn; <b>hạ nhiệt món nấu xong bằng khay mỏng</b> rồi cho vào tủ chứ đừng để cả nồi nguội dần; và <b>hâm lại thì hâm tới sôi</b>, không hâm âm ấm.</p>
+        </div>
       </div>
 
       <div class="wb-alert wb-alert--plain" style="margin-top:14px">
@@ -618,7 +636,7 @@
       <div class="wb-alert wb-alert--plain" style="margin-top:16px">
         <div class="wb-alert__body">
           <p class="wb-alert__title">Vì sao "món này chấm gì" lại là câu hỏi về cân bằng</p>
-          <p class="wb-alert__msg">Bát nước chấm chính là <b>công cụ cân bằng cầm tay</b>: món luộc/nướng nhạt và béo thì cần chấm <b>mặn-chua-cay</b> (nước mắm chanh ớt, ssamjang) để đủ vị; còn món kho/xào đã <b>tự đậm</b> thì chấm thêm là mặn chồng mặn. Đó là toàn bộ logic "cần chấm hay không cần" ở mục nước chấm của bốn trang công thức — giờ bạn thấy nó không phải quy ước, mà là vật lý của vị.</p>
+          <p class="wb-alert__msg">Bát nước chấm chính là <b>công cụ cân bằng cầm tay</b>: món luộc/nướng nhạt và béo thì cần chấm <b>mặn-chua-cay</b> (nước mắm chanh ớt, ssamjang) để đủ vị; còn món kho/xào đã <b>tự đậm</b> thì chấm thêm là mặn chồng mặn. Đó là toàn bộ logic "cần chấm hay không cần" ở mục nước chấm của bốn trang công thức.</p>
         </div>
       </div>
 
