@@ -1,11 +1,5 @@
 <!doctype html>
-<!-- =============================================================================
-     Nói có cấu trúc — trang học.
-     Frame copied from web-builder/assets/templates/landing.html (public page:
-     wb-navbar + wb-container + wb-footer, no rail). Content, not aesthetics,
-     is what changed: every colour / gap / radius still comes from wb-* tokens.
-     Colour ladder: tier 1 everywhere except quiz đúng/sai, which is real status.
-     ========================================================================== -->
+<!-- Nói có cấu trúc — trang học. -->
 <html lang="vi" class="wb-scrollbars">
 <head>
 <meta charset="utf-8" />
@@ -14,7 +8,6 @@
 <title>Structured Speaking — pick a framework per situation</title>
 <meta name="description" content="Không học thuộc 20 khung giao tiếp. Một câu hỏi duy nhất chọn ra khung đúng: sau khi nghe xong, bạn muốn người kia làm gì? Kèm bộ chọn khung, 7 nhóm tình huống, bài luyện tập và trình soạn nháp." />
 
-<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
 <link rel="stylesheet" href="../web-builder/web-builder.css" />
 <script>
   /* Theme before first paint, so a dark user never sees a white flash. */
@@ -56,9 +49,11 @@
   .ct-goal[aria-pressed="true"] {
     border-color: var(--wb-neutral-ink); background: var(--wb-surface-2);
   }
+  /* Chữ mờ ở trang này dùng --wb-fg-muted, KHÔNG dùng --wb-fg-subtle: subtle là token
+     dành cho placeholder (≈2,5:1 trên nền sáng), dưới ngưỡng 4,5:1 cho chữ đọc thật. */
   .ct-goal__n {
     font-family: var(--wb-font-mono); font-size: var(--wb-text-label);
-    color: var(--wb-fg-subtle); display: block; margin-bottom: 4px;
+    color: var(--wb-fg-muted); display: block; margin-bottom: 4px;
   }
   .ct-goal__t { font-weight: 640; display: block; }
   .ct-goal__s { color: var(--wb-fg-muted); font-size: var(--wb-text-help); display: block; margin-top: 3px; }
@@ -77,12 +72,28 @@
   /* Mono labels reused in a few places (frame part names, counters). */
   .ct-mono {
     font-family: var(--wb-font-mono); font-size: var(--wb-text-label);
-    letter-spacing: .08em; text-transform: uppercase; color: var(--wb-fg-subtle);
+    letter-spacing: .08em; text-transform: uppercase; color: var(--wb-fg-muted);
   }
 
   /* Skeleton line of a frame: PART → PART → PART */
   .ct-shape { font-family: var(--wb-font-mono); font-size: var(--wb-text-help); color: var(--wb-fg-muted); }
   .ct-shape b { color: var(--wb-fg); font-weight: 640; }
+
+  /* Focus bàn phím: .ct-goal và .ct-opt là <button> trần, không phải .wb-btn, nên
+     chúng không nhận vòng focus của kit. Dùng đúng vòng đó. */
+  .ct-goal:focus-visible,
+  .ct-opt:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
+
+  /* ---- vùng chạm trên điện thoại ----
+     Thẻ trả lời quiz và các nút nhỏ trong bài (Ghép lại / Chép / Soạn thử khung này /
+     Làm lại) mặc định chỉ cao 32–34px. Nâng lên mức chạm được, và nới khoảng cách —
+     nút to mà sát nhau vẫn bấm nhầm sang nút bên. */
+  @media (max-width: 560px) {
+    .ct-opt { min-height: 44px; padding: 12px 13px; }
+    /* chỉ các nút NẰM TRONG BÀI, không đụng nút icon của navbar/footer */
+    .wb-section .wb-btn { min-height: 42px; }
+    .wb-section .wb-btn--sm { padding: 10px 16px; }
+  }
 </style>
 </head>
 <body class="wb-app">
@@ -307,8 +318,8 @@
   <!-- ========================= 5 · BỘ XƯƠNG =========================== -->
   <section class="wb-section" id="bo-xuong">
     <h2>Bộ xương chung: Neo → Căng → Lối ra</h2>
-    <p class="wb-section__desc">Đây là phần đáng nhớ nhất của cả trang. Hai mươi khung không phải hai
-    mươi thứ khác nhau — chúng là các cách đặt tên khác nhau cho cùng ba mảnh.</p>
+    <p class="wb-section__desc">Hai mươi khung không phải hai mươi thứ khác nhau — chúng là các cách
+    đặt tên khác nhau cho cùng ba mảnh.</p>
 
     <ol class="wb-steps wb-steps--horizontal">
       <li class="wb-steps__item">
@@ -368,7 +379,7 @@
               <tr><td class="wb-cell-strong">I like / I wish / What if</td><td>I like</td><td>I wish</td><td>What if</td><td class="wb-cell-muted">5</td></tr>
               <tr><td class="wb-cell-strong">NVC</td><td>Observation</td><td>Feeling + Need</td><td>Request</td><td class="wb-cell-muted">6</td></tr>
               <tr><td class="wb-cell-strong">DESC</td><td>Describe</td><td>Express</td><td>Specify + Consequences</td><td class="wb-cell-muted">6</td></tr>
-              <tr><td class="wb-cell-strong">Context – Ask – Rationale</td><td>Context</td><td class="wb-cell-muted">Ask đảo lên trước</td><td>Ask + Rationale</td><td class="wb-cell-muted">7</td></tr>
+              <tr><td class="wb-cell-strong">Context – Ask – Rationale</td><td>Context</td><td>Rationale (lý do gấp)</td><td>Ask</td><td class="wb-cell-muted">7</td></tr>
             </tbody>
           </table>
         </div>
@@ -528,7 +539,7 @@
             sự kiện bằng “và rồi… <b>nhưng</b>… <b>cho nên</b>…” thay vì “và rồi… và rồi…”. Nếu bạn kể mà
             toàn “và rồi”, câu chuyện phẳng vì không có mâu thuẫn nào. Áp mẹo này lên bất kỳ khung nào
             trong nhóm.</p>
-            <p><b>Pixar</b> (“Ngày xưa… Mỗi ngày… Cho đến một hôm… Vì thế mà… Cuối cùng thì…”) dựng được
+            <p><b>Pixar</b> (“Ngày xưa… Mỗi ngày… Cho đến một hôm… Vì thế mà… Vì thế mà… Cuối cùng thì…”) dựng được
             cao trào chỉ trong sáu câu — hợp cho mở đầu một bài nói, không hợp cho báo cáo sự cố.</p>
             <p><b>Lỗi hay gặp:</b> kể bằng “chúng em” trong buổi phỏng vấn. Người nghe đang đánh giá bạn,
             không đánh giá nhóm cũ của bạn.</p>
@@ -1061,7 +1072,7 @@
       q: 'Một bạn mới trong nhóm đã ba lần push thẳng lên nhánh main. Bạn là người review chính.',
       opts: [
         { t: 'Nhóm 5 — COIN', ok: true,
-          why: 'Đây là góp ý về hành vi, và bạn có trách nhiệm đề nghị bước tiếp theo — nên SBI cộng thêm chữ N. Nêu tình huống cụ thể, hành vi đếm được (“ba PR”), tác động thật (“hai cái phải revert”), rồi đề nghị: bật branch protection từ tuần sau.' },
+          why: 'Đây là góp ý về hành vi, và bạn có trách nhiệm đề nghị bước tiếp theo — nên SBI cộng thêm chữ N. Nêu tình huống cụ thể, hành vi đếm được (“ba lần push thẳng lên main”), tác động thật (những commit đó không ai review, và bạn phải dò lại khi có lỗi), rồi đề nghị: bật branch protection từ tuần sau.' },
         { t: 'Nhóm 6 — DESC', ok: false,
           why: 'DESC là để đặt ranh giới và nêu hệ quả, dùng khi đã nhắc mà không đổi. Với một bạn mới chưa được nhắc lần nào, mở bằng hệ quả là doạ.' },
         { t: 'Nhóm 2 — Vấn đề–Giải pháp–Lợi ích', ok: false,
