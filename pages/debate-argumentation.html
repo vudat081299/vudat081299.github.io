@@ -23,13 +23,21 @@
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
 
+  /* ---- tương phản chữ mờ ----
+     --wb-fg-subtle là gray-400 (#a1a1aa): trên canvas sáng nó chỉ đạt ~2,4:1, dưới xa
+     mức 4,5:1 của chữ thường. Nó dùng được cho nhãn thuần trang trí (eyebrow, kicker,
+     số thứ tự), nhưng KHÔNG dùng được cho thứ phải đọc: nghĩa tiếng Anh trong bảng
+     (.db-dim), chú thích sơ đồ (.db-src, .db-vk), phần giải thích trong khối công thức
+     (.db-formula .c), nhãn form, và chữ trong <cite>. Những chỗ đó chuyển sang
+     --wb-fg-muted (gray-500, ~4,5:1 sáng · ~7,7:1 tối). */
+
   /* ---- hero ---- */
   .db-hero { padding: 30px 0 20px; }
   .db-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
   .db-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 12px; line-height: 1.16; }
   .db-sub { color: var(--wb-fg-muted); font-size: 15.5px; max-width: 76ch; line-height: 1.65; margin: 0 0 12px; }
   .db-sub b { color: var(--wb-fg); }
-  .db-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; line-height: 1.6; }
+  .db-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); letter-spacing: .04em; line-height: 1.6; }
 
   /* ---- two-column reading layout ---- */
   .db-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 34px; align-items: start; padding: 26px 0 60px; }
@@ -62,18 +70,18 @@
   .db-ul b { font-weight: 650; }
   .db-ul em { font-style: italic; color: var(--wb-fg-muted); }
 
-  code, .db-code { font-family: var(--wb-font-mono); font-size: .92em; background: var(--wb-surface-hover); border-radius: 4px; padding: 1px 5px; }
+  code, .db-code { font-family: var(--wb-font-mono); font-size: .92em; background: var(--wb-surface-hover); border-radius: 4px; padding: 1px 5px; overflow-wrap: break-word; }
 
   /* ---- the one line worth memorising ---- */
   .db-formula { font-family: var(--wb-font-mono); font-size: 13px; line-height: 1.85; white-space: pre-wrap; background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; margin: 4px 0 16px; overflow-x: auto; color: var(--wb-fg); }
   .db-formula b { font-weight: 700; }
-  .db-formula .c { color: var(--wb-fg-subtle); }
+  .db-formula .c { color: var(--wb-fg-muted); }
 
   /* ---- pull quote — analogy limits, honest caveats, sample lines to say out loud ---- */
   .db-quote { border-left: 2px solid var(--wb-neutral-strong); padding: 2px 0 2px 14px; margin: 16px 0; color: var(--wb-fg-muted); font-size: 14.5px; line-height: 1.62; max-width: 76ch; }
   .db-quote b { color: var(--wb-fg); }
-  .db-quote cite { display: block; font-style: normal; font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-subtle); margin-top: 7px; line-height: 1.6; letter-spacing: 0; }
-  .db-quote cite b { color: var(--wb-fg-muted); }
+  .db-quote cite { display: block; font-style: normal; font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-muted); margin-top: 7px; line-height: 1.6; letter-spacing: 0; }
+  .db-quote cite b { color: var(--wb-fg); }
 
   /* ---- number anchors ---- */
   .db-figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin: 14px 0 16px; }
@@ -97,6 +105,7 @@
     opacity: 0; transition: opacity .16s ease;
   }
   .db-tw-shell.has-more::after { opacity: 1; }
+  .db-tw[tabindex="0"]:focus-visible { outline: 2px solid var(--wb-fg); outline-offset: 1px; }
   .db-tw .wb-table th, .db-tw .wb-table td { font-size: 13.5px; line-height: 1.55; vertical-align: top; }
   .db-tw .wb-table td code, .db-tw .wb-table th code { font-size: 12px; }
 
@@ -110,14 +119,16 @@
   .db-list { display: flex; flex-direction: column; gap: 14px; margin: 12px 0 6px; }
   .db-item { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 16px 18px; scroll-margin-top: 76px; }
   .db-item__top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 9px; margin-bottom: 8px; }
-  .db-item__no { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); font-weight: 600; }
+  /* Mã của thẻ (01…08, CX/LD/PF, D1…D7) được nhắc lại ở bảng 8 tuần, nên nó là nội dung
+     phải đọc được, không phải trang trí. */
+  .db-item__no { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); font-weight: 600; }
   .db-item__name { font-size: 15.5px; font-weight: 710; letter-spacing: -.01em; margin: 0; }
   .db-item__def { font-size: 14px; line-height: 1.72; color: var(--wb-fg); margin: 0 0 8px; max-width: 82ch; }
   .db-item__def:last-child { margin-bottom: 0; }
   .db-item__def b { font-weight: 650; }
   .db-item__def em { font-style: italic; color: var(--wb-fg-muted); }
   .db-item__meta { display: grid; grid-template-columns: 116px minmax(0, 1fr); gap: 8px 12px; margin-top: 13px; padding-top: 12px; border-top: var(--wb-bw) solid var(--wb-border); }
-  .db-item__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); padding-top: 2px; line-height: 1.45; }
+  .db-item__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-muted); padding-top: 2px; line-height: 1.45; }
   .db-item__v { font-size: 13px; line-height: 1.62; color: var(--wb-fg-muted); margin: 0; }
   .db-item__v b { color: var(--wb-fg); font-weight: 640; }
   .db-item__v em { font-style: italic; }
@@ -126,11 +137,11 @@
   /* ---- diagrams ---- */
   .db-viz { margin: 16px 0 6px; }
   .db-viz svg { width: 100%; height: auto; display: block; }
-  .db-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .03em; color: var(--wb-fg-subtle); margin: 10px 0 0; line-height: 1.55; }
+  .db-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .03em; color: var(--wb-fg-muted); margin: 10px 0 0; line-height: 1.55; }
   .db-vt { fill: var(--wb-fg); font-size: 12px; font-weight: 640; font-family: var(--wb-font); }
   .db-vs { fill: var(--wb-fg-muted); font-size: 10.5px; font-family: var(--wb-font); }
   .db-vm { fill: var(--wb-fg); font-size: 11px; font-family: var(--wb-font-mono); }
-  .db-vk { fill: var(--wb-fg-subtle); font-size: 9.5px; font-family: var(--wb-font-mono); letter-spacing: .08em; }
+  .db-vk { fill: var(--wb-fg-muted); font-size: 9.5px; font-family: var(--wb-font-mono); letter-spacing: .08em; }
   .db-vpanel { fill: var(--wb-surface); stroke: var(--wb-border); stroke-width: 1; }
   .db-vbox { fill: var(--wb-canvas); stroke: var(--wb-neutral-strong); stroke-width: 1.2; }
   .db-vbox--fill { fill: var(--wb-surface-hover); stroke: var(--wb-neutral-strong); stroke-width: 1.2; }
@@ -147,7 +158,7 @@
   .db-lab__hint b { color: var(--wb-fg); font-weight: 640; }
   .db-lab__body { padding: 14px 16px 16px; }
   .db-lab__row { display: grid; grid-template-columns: 116px minmax(0, 1fr); gap: 8px 12px; align-items: center; margin-bottom: 10px; }
-  .db-lab__row > label, .db-lab__row > .k { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); line-height: 1.4; }
+  .db-lab__row > label, .db-lab__row > .k { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-muted); line-height: 1.4; }
   @media (max-width: 620px) { .db-lab__row { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
   .db-lab__foot { font-size: 12.5px; color: var(--wb-fg-muted); line-height: 1.62; margin: 12px 0 0; padding-top: 11px; border-top: var(--wb-bw) solid var(--wb-border); }
   .db-lab__foot b { color: var(--wb-fg); font-weight: 640; }
@@ -156,58 +167,76 @@
   .db-out { font-family: var(--wb-font-mono); font-size: 12px; line-height: 1.7; background: var(--wb-canvas); border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; padding: 9px 11px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; color: var(--wb-fg); margin: 0; }
   .db-out b { font-weight: 700; }
   .db-mono { font-family: var(--wb-font-mono); font-size: 12px; }
-  .db-dim { color: var(--wb-fg-subtle); }
+  .db-dim { color: var(--wb-fg-muted); }
   .db-mark { background: var(--wb-fg); color: var(--wb-canvas); border-radius: 3px; padding: 0 3px; }
 
-  /* chips — clickable choice pills used by several labs */
+  /* chips — clickable choice pills used by several labs. JS dựng chúng bằng <button
+     type="button">, không phải <span>, để bấm được bằng bàn phím và được trình đọc màn
+     hình đọc ra là nút; các thuộc tính dưới đây chỉ gỡ style mặc định của <button>. */
   .db-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .db-chip { font-size: 12.5px; padding: 5px 11px; border-radius: 999px; border: var(--wb-bw) solid var(--wb-border); background: var(--wb-canvas); color: var(--wb-fg-muted); cursor: pointer; user-select: none; }
+  .db-chip {
+    font-family: inherit; font-size: 12.5px; line-height: 1.35; text-align: left;
+    padding: 5px 11px; border-radius: 999px; border: var(--wb-bw) solid var(--wb-border);
+    background: var(--wb-canvas); color: var(--wb-fg-muted); cursor: pointer; user-select: none;
+  }
   .db-chip:hover { border-color: var(--wb-border-strong); color: var(--wb-fg); }
+  .db-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
   .db-chip.on { background: var(--wb-fg); border-color: var(--wb-fg); color: var(--wb-canvas); font-weight: 620; }
 
-  /* slot meter — the five parts of an argument, lit when filled */
+  /* slot meter — the five parts of an argument, lit when filled. Ba trạng thái phân biệt
+     bằng nền + viền, không chỉ bằng độ mờ: đủ (nền đảo) · quá ngắn (viền nét đứt, chữ
+     đậm màu vì đây là trạng thái cần để ý) · trống (nền xám). */
   .db-slots { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-  .db-slot { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; background: var(--wb-surface-hover); color: var(--wb-fg-subtle); border: var(--wb-bw) solid transparent; }
+  .db-slot { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; background: var(--wb-surface-2); color: var(--wb-fg-muted); border: var(--wb-bw) solid transparent; }
   .db-slot.on { background: var(--wb-fg); color: var(--wb-canvas); }
-  .db-slot.warn { background: transparent; color: var(--wb-fg-muted); border-color: var(--wb-border-strong); border-style: dashed; }
+  .db-slot.warn { background: transparent; color: var(--wb-fg); border-color: var(--wb-border-strong); border-style: dashed; }
 
   /* weighing bars */
   .db-scale { display: grid; grid-template-columns: 88px minmax(0, 1fr) 62px; gap: 8px 10px; align-items: center; margin-bottom: 7px; }
-  .db-scale__k { font-family: var(--wb-font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--wb-fg-subtle); }
+  .db-scale__k { font-family: var(--wb-font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--wb-fg-muted); }
   .db-scale__bar { height: 12px; border-radius: 3px; background: var(--wb-surface-hover); overflow: hidden; }
   .db-scale__fill { height: 100%; background: var(--wb-fg); border-radius: 3px; transition: width .18s ease; }
   .db-scale__fill--alt { background: var(--wb-neutral-strong); }
   .db-scale__n { font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-muted); text-align: right; }
 
-  /* picked speech row in the format lab */
+  /* picked speech row in the format lab. Hàng bấm được nên phải thấy được khi tab tới —
+     JS gắn tabindex + Enter/Space cho chính hàng đó. */
   .db-tw .wb-table tr.is-picked td { background: var(--wb-surface-hover); font-weight: 620; color: var(--wb-fg); }
+  .db-tw .wb-table tr[tabindex]:focus-visible { outline: 2px solid var(--wb-fg); outline-offset: -2px; }
 
   /* timer readout — min-width giữ đúng 6 ký tự ("+00:00") để ô số không co lại khi
      đồng hồ nhảy từ 10:00 xuống 9:59 hay từ 00:00 sang +00:01, kéo theo cả cụm nút. */
   .db-clock { font-family: var(--wb-font-mono); font-size: clamp(30px, 7vw, 44px); font-weight: 700; letter-spacing: -.02em; line-height: 1; color: var(--wb-fg); font-variant-numeric: tabular-nums; min-width: 6ch; }
   .db-clock.is-warn { color: var(--wb-warning-text); }
   .db-clock.is-over { color: var(--wb-danger-text); }
-  .db-clock__sub { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; }
+  .db-clock__sub { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); letter-spacing: .06em; text-transform: uppercase; margin-top: 6px; }
 
   /* two-column split used by labs and side-by-side comparisons */
   .db-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
   @media (max-width: 720px) { .db-split { grid-template-columns: minmax(0, 1fr); } }
   .db-pane { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; background: var(--wb-canvas); }
-  .db-pane__h { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 8px; }
+  .db-pane__h { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--wb-fg-muted); margin: 0 0 8px; }
 
   /* ---- vùng chạm trên điện thoại ----
      Mọi thứ ở đây chỉ nới hộp bấm, không đổi màu và không đụng .wb-btn / .wb-range trần
-     (dùng chung ~15 trang). Slider của bộ cân là ca đáng ngại nhất: track chỉ cao 4px,
-     nên hộp của chính <input> cũng chỉ 4px — kéo bằng ngón tay gần như không trúng.
-     padding-block + box-sizing:content-box nới hộp lên 34px, còn background-clip
-     giữ dải track vẫn vẽ đúng 4px như thiết kế gốc. */
-  @media (max-width: 560px) {
-    .db-lab .wb-btn--sm { min-height: 38px; padding-block: 9px; }
+     (dùng chung ~15 trang). Mốc là 40px — dưới mức đó ngón tay bấm trượt.
+     Slider của bộ cân là ca đáng ngại nhất: track chỉ cao 4px, nên hộp của chính <input>
+     cũng chỉ 4px — kéo bằng ngón tay gần như không trúng. padding-block +
+     box-sizing:content-box nới hộp lên 4+36 = 40px, còn background-clip giữ dải track
+     vẫn vẽ đúng 4px như thiết kế gốc.
+     Ngưỡng 768px chứ không 560px: máy tính bảng cầm tay cũng là ngón tay, và vì phần nới
+     nằm trong padding (không phải chiều cao nhìn thấy) nên desktop hẹp không bị lệch. */
+  @media (max-width: 768px) {
+    .db-lab .wb-btn--sm { min-height: 40px; padding-block: 10px; }
     .db-lab__row .wb-range {
-      box-sizing: content-box; padding-block: 15px; margin-block: 0;
+      box-sizing: content-box; padding-block: 18px; margin-block: 0;
       background-clip: content-box;
     }
-    .db-chip { min-height: 34px; padding: 8px 12px; display: inline-flex; align-items: center; }
+    .db-chip { min-height: 40px; padding: 8px 13px; display: inline-flex; align-items: center; }
+    /* Hàng bảng bấm được của Lab 04 — cao mặc định ~34px ở cỡ chữ 13.5px. */
+    #ft-rows td { padding-block: 11px; }
+    /* Mục lục xổ xuống của navbar: 14px + padding 8px = ~33px, chưa đủ tầm ngón tay. */
+    .wb-navbar__menu.is-open .wb-nav__link { min-height: 40px; }
   }
 
   /* ---- back to top ---- */
@@ -219,7 +248,7 @@
 
 <header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
-          aria-label="Open menu"><span class="wb-ico">menu</span></button>
+          aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
   <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">⚖</span> Debate</a>
   <nav class="wb-nav wb-navbar__menu">
     <a class="wb-nav__link" href="#p0">Foundations</a>
@@ -232,8 +261,8 @@
   </nav>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
-    <a class="wb-btn wb-btn--ghost wb-btn--icon" href="../index.html" aria-label="Home"><span class="wb-ico">home</span></a>
-    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Light / dark">
+    <a class="wb-btn wb-btn--ghost wb-btn--icon" href="../index.html" aria-label="Trang chủ"><span class="wb-ico">home</span></a>
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
       <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
       <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
     </button>
@@ -577,7 +606,7 @@
   <p class="db-eyebrow-sec">0.5 · <b>Fact, value, policy</b></p>
   <h2 class="db-sec-title">Bốn tầng tranh cãi — và vì sao đa số vòng đấu tệ là do hai bên đứng khác tầng</h2>
 
-  <p class="db-p">Người La Mã gọi đây là <b>stasis</b>: chỗ hai bên thật sự dừng lại và đối đầu. Có bốn tầng, đi theo thứ tự, và <b>chỉ khi cả hai đứng cùng một tầng thì mới có clash thật</b>.</p>
+  <p class="db-p">Người Hy Lạp gọi đây là <b>stasis</b> — chỗ hai bên thật sự dừng lại và đối đầu; người La Mã dịch thành <i>status</i>. Có bốn tầng, đi theo thứ tự, và <b>chỉ khi cả hai đứng cùng một tầng thì mới có clash thật</b>.</p>
 
   <div class="db-tw">
     <table class="wb-table wb-table--striped">
@@ -594,7 +623,7 @@
   <p class="db-p"><b>Vì sao điều này cứu bạn:</b> khi vòng đấu rối và bạn không biết nói gì, gần như luôn là vì hai bên đang ở hai tầng khác nhau. Bên Prop nói tầng 3 (“sức khoẻ quan trọng hơn”), bên Opp nói tầng 4 (“chưa có metro thì cấm thế nào”). Cả hai đều không sai, và cũng không ai đụng vào ai.</p>
   <p class="db-p">Nước đi là <b>gọi tên tầng ra thành lời</b>: <i>“Vòng này không cãi về việc ô nhiễm có hại hay không — cả hai đã đồng ý. Vòng này cãi về việc, với hạ tầng hiện có, lệnh cấm có chuyển được người ta sang phương tiện khác hay chỉ đẩy họ vào cảnh không đi được.”</i> Câu đó vừa dọn chiến trường, vừa dọn theo hướng có lợi cho bạn — đó là <a href="#s-frame">framing</a>.</p>
 
-  <p class="db-p"><b>Một phân biệt phải giữ chặt suốt cả trang:</b> câu hỏi tầng 1 giải được bằng dữ liệu; câu hỏi tầng 3 <b>không</b>. “Cấm xe xăng có làm giảm PM2.5 không” là câu hỏi thực nghiệm. “Có nên đánh đổi sinh kế nhóm này lấy sức khoẻ nhóm kia không” là câu hỏi giá trị — thêm bao nhiêu dữ liệu cũng không trả lời hộ được. Lẫn hai loại này là lỗi phổ biến nhất trong tranh luận đời thường, và nhận ra nó là một trong những thứ hữu ích nhất trang này dạy được.</p>
+  <p class="db-p"><b>Một phân biệt phải giữ chặt suốt cả trang:</b> câu hỏi tầng 1 giải được bằng dữ liệu; câu hỏi tầng 3 <b>không</b>. “Cấm xe xăng có làm giảm PM2.5 không” là câu hỏi thực nghiệm. “Có nên đánh đổi sinh kế nhóm này lấy sức khoẻ nhóm kia không” là câu hỏi giá trị — thêm bao nhiêu dữ liệu cũng không trả lời hộ được. Lẫn hai loại này là lỗi phổ biến nhất trong tranh luận đời thường.</p>
 </section>
 
 <section id="s-frame">
@@ -1071,7 +1100,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
           <option value="1">[Phản đối] Lệnh cấm rơi vào nhóm nghèo nhất ⇒ mất sinh kế</option>
           <option value="2">[Ủng hộ] Nhà nước có quyền chặn hành vi đẩy chi phí sang người khác</option>
         </select>
-        <span class="wb-ico">expand_more</span>
+        <span class="wb-ico" aria-hidden="true">expand_more</span>
       </div>
     </div>
     <div class="db-lab__row">
@@ -1129,7 +1158,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <p class="db-eyebrow-sec">2.6 · <b>Points of Information</b></p>
   <h2 class="db-sec-title">POI: mười lăm giây để đặt một cái bẫy, hoặc để bước vào một cái bẫy</h2>
 
-  <p class="db-p"><b>Point of Information</b> là quyền xen ngang khi đối phương đang nói: bạn đứng dậy, họ có quyền nhận hoặc từ chối, và nếu nhận thì bạn có <b>khoảng 15 giây</b> để hỏi hoặc nêu một điểm. Có trong British Parliamentary, WSDC và Asian Parliamentary. <b>Không có trong bài reply</b> ở các thể thức có bài reply — bài đó phải liền mạch. <b>Australs không có POI</b> ở bất kỳ bài nào: mọi bài nói đều liền mạch, và đó là khác biệt lớn nhất giữa nó với WSDC. Các thể thức Mỹ (Policy, LD, Public Forum) cũng không có POI — thay vào đó là <b>cross-examination</b>: một khoảng thời gian riêng để hỏi đáp trực tiếp.</p>
+  <p class="db-p"><b>Point of Information</b> là quyền xen ngang khi đối phương đang nói: bạn đứng dậy, họ có quyền nhận hoặc từ chối, và nếu nhận thì bạn có <b>tối đa 15 giây</b> để hỏi hoặc nêu một điểm. Có trong cả bốn thể thức nghị viện: British Parliamentary, WSDC, Asian Parliamentary và Australs. <b>Không có trong bài reply</b> ở các thể thức có bài reply (WSDC, Asian, Australs) — bài đó phải liền mạch. Các thể thức Mỹ (Policy, LD, Public Forum) cũng không có POI — thay vào đó là <b>cross-examination</b>: một khoảng thời gian riêng để hỏi đáp trực tiếp.</p>
 
   <div class="db-tw">
     <table class="wb-table wb-table--striped">
@@ -1285,12 +1314,12 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
         <div class="db-lab__row"><label for="wg-a-time">Thời điểm</label>
           <div class="wb-select-wrap"><select class="wb-select" id="wg-a-time">
             <option value="1">Ngay lập tức</option><option value="0.75" selected>Vài năm nữa</option><option value="0.5">Hàng chục năm</option>
-          </select><span class="wb-ico">expand_more</span></div>
+          </select><span class="wb-ico" aria-hidden="true">expand_more</span></div>
         </div>
         <div class="db-lab__row"><label for="wg-a-rev">Đảo ngược</label>
           <div class="wb-select-wrap"><select class="wb-select" id="wg-a-rev">
             <option value="0.6">Đảo ngược được</option><option value="0.85" selected>Khó đảo ngược</option><option value="1">Không thể đảo</option>
-          </select><span class="wb-ico">expand_more</span></div>
+          </select><span class="wb-ico" aria-hidden="true">expand_more</span></div>
         </div>
         <p class="db-out" id="wg-a-read"></p>
       </div>
@@ -1303,12 +1332,12 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
         <div class="db-lab__row"><label for="wg-b-time">Thời điểm</label>
           <div class="wb-select-wrap"><select class="wb-select" id="wg-b-time">
             <option value="1" selected>Ngay lập tức</option><option value="0.75">Vài năm nữa</option><option value="0.5">Hàng chục năm</option>
-          </select><span class="wb-ico">expand_more</span></div>
+          </select><span class="wb-ico" aria-hidden="true">expand_more</span></div>
         </div>
         <div class="db-lab__row"><label for="wg-b-rev">Đảo ngược</label>
           <div class="wb-select-wrap"><select class="wb-select" id="wg-b-rev">
             <option value="0.6" selected>Đảo ngược được</option><option value="0.85">Khó đảo ngược</option><option value="1">Không thể đảo</option>
-          </select><span class="wb-ico">expand_more</span></div>
+          </select><span class="wb-ico" aria-hidden="true">expand_more</span></div>
         </div>
         <p class="db-out" id="wg-b-read"></p>
       </div>
@@ -1321,7 +1350,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
 
     <p class="db-out" id="wg-out" style="margin-top:12px"></p>
 
-    <p class="db-lab__foot"><b>Giám khảo không nhân số.</b> Không có công thức nào được viết trong bất kỳ điều lệ nào, và con số ở đây không phải điểm số của vòng đấu.</p>
+    <p class="db-lab__foot"><b>Giám khảo không nhân số.</b> Không có công thức nào được viết trong bất kỳ điều lệ nào, và con số ở đây không phải điểm số của vòng đấu. Trục quy mô đọc theo <b>bậc 10</b> — từ 100 người tới 10 triệu người là sáu bậc, không phải một trăm nghìn lần — vì nếu tính theo đầu người thì quy mô sẽ nghiền nát cả bốn trục còn lại.</p>
     <p class="db-lab__foot">Cái mô hình này dạy được là <b>độ nhạy</b>: kéo thanh xác suất từ 90% xuống 20% và xem cán cân lật, dù quy mô không đổi. Khi bạn có phản xạ ấy, bạn sẽ tự động đi tìm cách <i>rút ngắn chuỗi nhân quả</i> thay vì đi tìm tính từ mạnh hơn — và đó đúng là thứ phân biệt người mới với người đã luyện.</p>
   </div>
 </div>
@@ -1438,7 +1467,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
         <tr><td><b>British Parliamentary</b><br><span class="db-dim">WUDC, EUDC, đại học VN</span></td><td>4 đội × 2 người</td><td>7 phút × 8</td><td>15 phút</td><td>POI</td><td>Phân tích ứng khẩu · phần mở rộng của nửa sau · xếp hạng 1–4 chứ không thắng/thua</td></tr>
         <tr><td><b>WSDC</b><br><span class="db-dim">giải học sinh thế giới</span></td><td>2 đội × 3 người</td><td>8 phút × 6<br>+ reply 4 phút</td><td>1 giờ (đề ứng khẩu)<br>hoặc biết trước</td><td>POI</td><td>Content 40 · Style 40 · Strategy 20 — trọng số công bố công khai</td></tr>
         <tr><td><b>Asian Parliamentary</b><br><span class="db-dim">giải khu vực châu Á</span></td><td>2 đội × 3 người</td><td>7 phút × 6<br>+ reply 4 phút</td><td>30 phút</td><td>POI</td><td>Matter · Manner · Method, gần WSDC nhưng ít nhấn phong cách hơn</td></tr>
-        <tr><td><b>Australs</b><br><span class="db-dim">Úc – châu Á, đại học</span></td><td>2 đội × 3 người</td><td>8 phút × 6<br>+ reply 4 phút</td><td>30 phút<br><span class="db-dim">gồm cả chọn đề</span></td><td><b>Không có</b><br><span class="db-dim">bài nói liền mạch</span></td><td>Matter · Manner · Method; giống WSDC về cấu trúc, khác ở hai chỗ: <b>không có POI</b>, và đây là giải đại học nên đề nặng về chính sách hơn</td></tr>
+        <tr><td><b>Australs</b><br><span class="db-dim">Úc – châu Á, đại học</span></td><td>2 đội × 3 người</td><td>8 phút × 6<br>+ reply 4 phút</td><td>30 phút<br><span class="db-dim">gồm cả chọn đề</span></td><td>POI</td><td>Matter · Manner · Method; cấu trúc gần trùng WSDC — khác ở chỗ đây là giải <b>đại học</b> nên đề nặng về chính sách hơn, và không có thang trọng số công bố như WSDC</td></tr>
         <tr><td><b>Policy (CX)</b><br><span class="db-dim">Mỹ, một đề cho cả năm</span></td><td>2 đội × 2 người</td><td>8/8/8/8 + 5/5/5/5<br>+ cross-ex 3 phút</td><td>8 phút dự trữ<br>+ cả năm nghiên cứu</td><td>Cross-ex</td><td>Bằng chứng có trích dẫn · độ sâu kỹ thuật · nói rất nhanh (<i>spreading</i>)</td></tr>
         <tr><td><b>Lincoln–Douglas</b><br><span class="db-dim">Mỹ, đấu đơn</span></td><td>1 vs 1</td><td>6/7/4/6/3<br>+ cross-ex 3 phút</td><td>4 phút dự trữ</td><td>Cross-ex</td><td>Xung đột <b>giá trị</b>: tiêu chí đạo đức, khung triết học, rồi mới tới hệ quả</td></tr>
         <tr><td><b>Public Forum</b><br><span class="db-dim">Mỹ, đề đổi hằng tháng</span></td><td>2 đội × 2 người</td><td>4/4/3/2 mỗi bên<br>+ crossfire 3 phút</td><td>3 phút dự trữ</td><td>Crossfire</td><td>Thuyết phục <b>người ngoài ngành</b> — giám khảo có thể là phụ huynh, không phải dân chuyên</td></tr>
@@ -1572,12 +1601,12 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
           <option value="bp">British Parliamentary — 4 đội × 2</option>
           <option value="wsdc">WSDC — 2 đội × 3 + reply</option>
           <option value="ap">Asian Parliamentary — 2 đội × 3 + reply</option>
-          <option value="australs">Australs — 2 đội × 3, không POI</option>
+          <option value="australs">Australs — 2 đội × 3 + reply</option>
           <option value="ld">Lincoln–Douglas — 1 vs 1</option>
           <option value="pf">Public Forum — 2 đội × 2</option>
           <option value="cx">Policy (CX) — 2 đội × 2</option>
         </select>
-        <span class="wb-ico">expand_more</span>
+        <span class="wb-ico" aria-hidden="true">expand_more</span>
       </div>
     </div>
 
@@ -1939,7 +1968,7 @@ cấm  →  người đi <b>chuyển</b> sang xe điện / xe buýt  →  phát 
   <ul class="db-ul">
     <li><b>Điều lệ gốc — đọc bản chính thức của thể thức bạn nhắm tới.</b> Tìm theo đúng tên: <i>“WUDC Debating and Judging Manual”</i> cho British Parliamentary, <i>“WSDC rules”</i> cho giải học sinh thế giới. Bảng trong trang này là bản tóm; điều lệ mỗi giải mới là thứ trọng tài áp dụng.</li>
     <li><b>Vòng đấu quay sẵn</b> — tìm trên YouTube: <span class="db-mono">WUDC grand final</span>, <span class="db-mono">WSDC grand final</span>, <span class="db-mono">Asian BP final</span>. Xem kèm bài tập D5: ghi flow, tự viết whip, rồi so với người thật. Đừng xem thụ động — xem thụ động gần như không dạy được gì.</li>
-    <li><b>Tổ chức có tài liệu mở</b> — <a href="https://www.speechanddebate.org" target="_blank" rel="noopener">NSDA · speechanddebate.org</a> (Mỹ, tài liệu cho Policy/LD/PF) và <a href="https://idebate.net" target="_blank" rel="noopener">IDEA · idebate.net</a> (kho kiến nghị và tài liệu huấn luyện). Đây là hai liên kết duy nhất dẫn ra ngoài trang này; cả hai mở ở tab mới.</li>
+    <li><b>Tổ chức có tài liệu mở</b> — <a href="https://www.speechanddebate.org" target="_blank" rel="noopener">NSDA · speechanddebate.org</a> (Mỹ, tài liệu cho Policy/LD/PF) và <a href="https://idebate.net" target="_blank" rel="noopener">IDEA · idebate.net</a> (kho kiến nghị và tài liệu huấn luyện).</li>
     <li><b>Sách nền, theo thứ tự nên đọc:</b> <i>Thank You for Arguing</i> (Jay Heinrichs) — thuật hùng biện cổ điển viết dễ đọc, hợp làm cuốn đầu tiên; <i>The Uses of Argument</i> (Stephen Toulmin) — nguồn gốc sơ đồ ở mục 0.2, khô nhưng đáng đọc chương đầu; <i>Asking the Right Questions</i> (Browne &amp; Keeley) — sổ tay soi lập luận của người khác.</li>
     <li><b>Ba trang cùng bộ sưu tập này</b>, bổ trợ trực tiếp: <a href="how-to-win-every-argument.html">How to Win Every Argument</a> — ~79 lối nguỵ biện, dùng làm từ điển tra khi gặp một đòn không gọi được tên; <a href="the-little-blue-reasoning-book.html">The Little Blue Reasoning Book</a> — 50 nguyên tắc tư duy nền; <a href="structured-speaking.html">Structured Speaking</a> — chọn khung trình bày cho các tình huống nói ngoài phòng đấu.</li>
   </ul>
@@ -2028,6 +2057,9 @@ function mmss(sec) { var s = Math.max(0, Math.round(sec)); return pad2(Math.floo
     function sync() {
       var over = el.scrollWidth - el.clientWidth;
       shell.classList.toggle('has-more', over > 4 && el.scrollLeft < over - 4);
+      /* Vùng cuộn chỉ cuộn được bằng bàn phím nếu chính nó nhận được tiêu điểm. Chỉ thêm
+         chặng tab ở bảng THẬT SỰ tràn, để bảng vừa khung không sinh chặng tab vô ích. */
+      el.tabIndex = over > 4 ? 0 : -1;
     }
     el.addEventListener('scroll', sync, { passive: true });
     if ('ResizeObserver' in window) {
@@ -2173,10 +2205,18 @@ function mmss(sec) { var s = Math.max(0, Math.round(sec)); return pad2(Math.floo
     var box = $('rm-moves');
     box.innerHTML = '';
     MOVES.forEach(function (m, i) {
-      var b = document.createElement('span');
+      var b = document.createElement('button');
+      b.type = 'button';
       b.className = 'db-chip' + (i === moveIdx ? ' on' : '');
+      b.setAttribute('aria-pressed', i === moveIdx ? 'true' : 'false');
       b.textContent = (i + 1) + ' · ' + m;
-      b.addEventListener('click', function () { moveIdx = i; renderChips(); renderOut(); });
+      /* Cả hàng chip được dựng lại sau mỗi lần bấm, nên phải trả tiêu điểm về đúng chip
+         vừa bấm — nếu không, người dùng bàn phím bấm Enter một cái là mất tiêu điểm. */
+      b.addEventListener('click', function () {
+        var had = document.activeElement === b;
+        moveIdx = i; renderChips(); renderOut();
+        if (had && box.children[i]) box.children[i].focus();
+      });
       box.appendChild(b);
     });
   }
@@ -2227,13 +2267,17 @@ function mmss(sec) { var s = Math.max(0, Math.round(sec)); return pad2(Math.floo
     var H = hi === 'A' ? A : B, L = hi === 'A' ? B : A;
     var ratio = L.score > 0 ? (H.score / L.score) : Infinity;
 
-    /* Biến nào tạo ra chênh lệch lớn nhất — tính bằng tỷ số từng hệ số. */
+    /* Biến nào tạo ra chênh lệch lớn nhất — tính bằng tỷ số từng hệ số. `say` đọc giá
+       trị của chính hệ số ấy, để câu so sánh nêu ĐÚNG trục đang thắng. Bản trước luôn
+       nêu quy mô + xác suất, nên khi bên nặng hơn lại có quy mô NHỎ hơn — đúng thí
+       nghiệm mà phần hướng dẫn của lab bảo người đọc thử — nó in ra một câu tự bác
+       mình: “bên A chỉ chạm tới 10 triệu người”. */
     var factors = [
-      { k: 'quy mô',          v: H.e / L.e },
-      { k: 'mức nặng',        v: H.sev / L.sev },
-      { k: 'xác suất',        v: H.pr / L.pr },
-      { k: 'thời điểm',       v: H.t / L.t },
-      { k: 'khả năng đảo ngược', v: H.r / L.r }
+      { k: 'quy mô',             v: H.e / L.e,     say: function (s) { return scopeLabel(s.e); } },
+      { k: 'mức nặng',           v: H.sev / L.sev, say: function (s) { return s.sev + '/10'; } },
+      { k: 'xác suất',           v: H.pr / L.pr,   say: function (s) { return Math.round(s.pr * 100) + '%'; } },
+      { k: 'thời điểm',          v: H.t / L.t,     say: function (s) { return s.timeTxt.toLowerCase(); } },
+      { k: 'khả năng đảo ngược', v: H.r / L.r,     say: function (s) { return s.revTxt.toLowerCase(); } }
     ].sort(function (x, y) { return y.v - x.v; });
 
     var lines = [];
@@ -2244,12 +2288,17 @@ function mmss(sec) { var s = Math.max(0, Math.round(sec)); return pad2(Math.floo
       lines.push('BÊN ' + hi + ' NẶNG HƠN' + (isFinite(ratio) ? ' — gấp khoảng ' + ratio.toFixed(1) + ' lần' : ''));
       lines.push('Biến tạo chênh lệch lớn nhất: ' + factors[0].k + ' (×' + factors[0].v.toFixed(2) + ')');
     }
+    var f0 = factors[0];
     lines.push('');
     lines.push('CÂU SO SÁNH ĐỂ NÓI RA:');
-    lines.push('“Kể cả khi giám khảo tin trọn vẹn tác động của bên ' + lo + ', bên ' + hi + ' vẫn nặng hơn —');
-    lines.push(' vì nó chạm tới ' + scopeLabel(H.e) + ' với xác suất ' + Math.round(H.pr * 100) + '%,');
-    lines.push(' trong khi bên ' + lo + ' chỉ chạm tới ' + scopeLabel(L.e) + ' với xác suất ' + Math.round(L.pr * 100) + '%.');
-    lines.push(' Ở điểm đó, ' + factors[0].k + ' là thứ quyết định.”');
+    if (f0.v > 1.001) {
+      lines.push('“Kể cả khi giám khảo tin trọn vẹn tác động của bên ' + lo + ', bên ' + hi + ' vẫn nặng hơn —');
+      lines.push(' vì ' + f0.k + ' nghiêng hẳn về phía chúng tôi: ' + f0.say(H) + ' so với ' + f0.say(L) + '.');
+      lines.push(' Ở điểm đó, ' + f0.k + ' là thứ quyết định.”');
+    } else {
+      lines.push('“Hai tác động ngang nhau trên cả năm hệ số. Vòng này chỉ còn quyết được bằng');
+      lines.push(' câu hỏi ai chịu thiệt hại, và bên nào có đệm đỡ.”');
+    }
     $('wg-out').textContent = lines.join('\n');
   }
   ['a', 'b'].forEach(function (p) {
@@ -2321,7 +2370,7 @@ function makeClock(clockEl, opts) {
       ]
     },
     australs: {
-      note: 'Bài chính 8 phút, reply 4 phút do người nói thứ 1 hoặc 2 trình bày và <b>phe phản đối reply trước</b>. <b>Không có POI</b> ở bất kỳ bài nào — mọi bài đều liền mạch, đây là khác biệt lớn nhất so với WSDC. Chuẩn bị 30 phút, gồm cả thời gian chọn đề. Chấm theo Matter · Manner · Method.',
+      note: 'Bài chính 8 phút, reply 4 phút do người nói thứ 1 hoặc 2 trình bày và <b>phe phản đối reply trước</b>. POI được phép ở bài chính, ngoài phút đầu và phút cuối; <b>bài reply không có POI</b>. Chuẩn bị 30 phút, gồm cả thời gian chọn đề. Chấm theo Matter · Manner · Method.',
       rows: [
         ['1 · Affirmative 1', 480], ['2 · Negative 1', 480], ['3 · Affirmative 2', 480],
         ['4 · Negative 2', 480], ['5 · Affirmative 3', 480], ['6 · Negative 3', 480],
@@ -2378,11 +2427,19 @@ function makeClock(clockEl, opts) {
     f.rows.forEach(function (r) {
       var tr = document.createElement('tr');
       tr.style.cursor = 'pointer';
+      /* Hàng bấm được nhưng <tr> không tự nhận tiêu điểm — thêm tabindex và Enter/Space
+         để nạp đồng hồ được bằng bàn phím, không chỉ bằng chuột. */
+      tr.tabIndex = 0;
       var a = document.createElement('td'); a.textContent = r[0];
       var b = document.createElement('td'); b.textContent = mmss(r[1]);
       b.style.width = '84px'; b.style.fontFamily = 'var(--wb-font-mono)';
       tr.appendChild(a); tr.appendChild(b);
       tr.addEventListener('click', function () { selectRow(r[0], r[1], tr); });
+      tr.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+        e.preventDefault();
+        selectRow(r[0], r[1], tr);
+      });
       body.appendChild(tr);
     });
     selectRow(f.rows[0][0], f.rows[0][1], body.children[0]);
@@ -2464,10 +2521,16 @@ function makeClock(clockEl, opts) {
   function chips(host, items, get, set) {
     host.innerHTML = '';
     items.forEach(function (it, i) {
-      var b = document.createElement('span');
+      var b = document.createElement('button');
+      b.type = 'button';
       b.className = 'db-chip' + (get() === i ? ' on' : '');
+      b.setAttribute('aria-pressed', get() === i ? 'true' : 'false');
       b.textContent = Array.isArray(it) ? it[1] : it;
-      b.addEventListener('click', function () { set(i); });
+      b.addEventListener('click', function () {
+        var had = document.activeElement === b;
+        set(i);
+        if (had && host.children[i]) host.children[i].focus();
+      });
       host.appendChild(b);
     });
   }
@@ -2480,10 +2543,16 @@ function makeClock(clockEl, opts) {
     var host = $('dr-skel');
     host.innerHTML = '';
     SKELETON.forEach(function (t, i) {
-      var b = document.createElement('span');
+      var b = document.createElement('button');
+      b.type = 'button';
       b.className = 'db-chip' + (done[i] ? ' on' : '');
+      b.setAttribute('aria-pressed', done[i] ? 'true' : 'false');
       b.textContent = (done[i] ? '✓ ' : '') + t;
-      b.addEventListener('click', function () { done[i] = !done[i]; renderSkeleton(); });
+      b.addEventListener('click', function () {
+        var had = document.activeElement === b;
+        done[i] = !done[i]; renderSkeleton();
+        if (had && host.children[i]) host.children[i].focus();
+      });
       host.appendChild(b);
     });
   }
