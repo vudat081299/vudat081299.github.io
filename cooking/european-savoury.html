@@ -287,7 +287,15 @@
     /* .mc-frow + .mc-frow không bắt được vì đứng trước là <span class="mc-fmore">,
        nên hàng "Loại món" dính sát ô Sắp xếp — vòng focus đè lên chữ. */
     .mc-fpanel > .mc-fmore + .mc-frow { margin-top: 11px; }
-    .mc-chip { min-height: 32px; }                    /* ngón tay, không phải con trỏ */
+    /* Vùng chạm: 40px là sàn cho ngón tay. Trước bản này chip cao 32px, nút --sm cao
+       27–33px, nút × của modal 36px, còn dòng sốt / dòng mâm / dòng đồng hồ chỉ 19–33px
+       — tất cả đều dưới ngưỡng. Chỉ đặt sàn chiều cao, không đổi cách bày. */
+    .mc-chip { min-height: 40px; }
+    .mc-filterwrap .wb-btn { min-height: 40px; }
+    .mc-flow__s { min-height: 40px; }
+    .mc-dip__row, .mc-combo__row { min-height: 44px; align-items: center; }
+    .mc-trow__label { min-height: 44px; }
+    .mc-dock .wb-close { width: 44px; height: 44px; }
     .mc-grid { gap: 10px; }
 
     /* modal: mở toàn màn hình, nguyên liệu / các bước tách thành hai tab */
@@ -295,23 +303,23 @@
     .mc-modal { max-width: 100%; height: 100vh; height: 100dvh; max-height: 100dvh;
       border-radius: 0; border-width: 0; }
     .mc-dhead { padding: 12px 14px 0; }
-    .mc-dtitle { font-size: 18px; margin-bottom: 8px; padding-right: 40px; }
-    .mc-dhead .wb-close { top: 8px; right: 8px; width: 36px; height: 36px; margin: 0; }
+    .mc-dtitle { font-size: 18px; margin-bottom: 8px; padding-right: 56px; }
+    .mc-dhead .wb-close { top: 8px; right: 8px; width: 44px; height: 44px; margin: 0; }
     .mc-dtabs { display: flex; width: 100%; margin: 10px 0 0; border-radius: var(--wb-radius) var(--wb-radius) 0 0; }
-    .mc-dtabs .wb-tab { flex: 1 1 0; padding: 9px 10px; }
+    .mc-dtabs .wb-tab { flex: 1 1 0; padding: 9px 10px; min-height: 44px; }
     .mc-detail__ing, .mc-detail__steps { padding: 14px 14px 30px; }
     .mc-detail.is-steps .mc-detail__ing { display: none; }
     .mc-detail.is-ing .mc-detail__steps { display: none; }
     .mc-detail.is-ing .mc-detail__ing { border-bottom: 0; }
-    .mc-ing.wb-check { padding: 10px 0; }
+    .mc-ing.wb-check { padding: 10px 0; min-height: 44px; align-content: center; }
 
     /* nút "xong bước này" phải luôn với tới được, kể cả khi đã cuộn xuống bước 7 */
     .mc-cook { position: sticky; top: 0; z-index: 3; flex-wrap: wrap; row-gap: 9px;
       margin: -14px -14px 12px; padding: 11px 14px;
       background: var(--wb-surface); border-bottom: var(--wb-bw) solid var(--wb-border); }
     .mc-cook #d-next { flex: 1 1 100%; justify-content: center; }
-    .mc-detail .wb-btn--sm, .mc-dock .wb-btn--sm { padding: 9px 13px; }
-    .mc-detail .wb-tabs--pill .wb-tab { padding: 8px 14px; }
+    .mc-detail .wb-btn--sm, .mc-dock .wb-btn--sm { padding: 9px 13px; min-height: 40px; }
+    .mc-detail .wb-tabs--pill .wb-tab { padding: 8px 14px; min-height: 40px; }
 
     .mc-dock { left: 8px; right: 8px; width: auto; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
     /* ba đồng hồ cùng chạy sẽ ăn nửa màn hình — cho cuộn, giữ trần ở 46% chiều cao */
@@ -325,7 +333,6 @@
   .ma-cheese { width: 100%; }
   .ma-cheese .wb-table td:first-child { font-weight: 640; white-space: nowrap; }
   .ma-cheese .wb-table td { vertical-align: top; }
-  .ma-melt { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 
   /* Bảng độ chín thịt */
   .ma-done { display: grid; grid-template-columns: minmax(0, 130px) minmax(0, 92px) minmax(0, 1fr); gap: 4px 14px;
@@ -361,7 +368,7 @@
     <p class="mc-eyebrow">Món Âu mặn · Ý · Pháp · Địa Trung Hải</p>
     <h1 class="mc-title">Nhà hàng không nấu giỏi hơn bạn. Họ chỉ có <u>chảo nóng hơn</u> và <u>sốt làm sẵn</u>.</h1>
     <p class="mc-sub">Phần lớn khoảng cách giữa đĩa mì ở nhà và đĩa mì ở quán nằm ở ba chỗ rất cụ thể: <b>chảo chưa đủ nóng</b> (nên thịt hấp trong nước của chính nó thay vì xém cạnh), <b>nước luộc mì không đủ mặn</b> (mì nhạt thì chan bao nhiêu sốt cũng vô ích), và <b>không giữ lại nước mì</b> (thứ làm sốt bám vào sợi). Trang này viết theo lối của <a href="vietnamese-home-cooking.html" style="color:inherit">Mâm cơm Việt</a>: mỗi bước có thời gian, mức lửa, <b>dấu hiệu nhận biết đã đạt</b> và nút <b>hẹn giờ</b>. Thêm hai thứ riêng của bếp Âu: <b>bảng phô mai</b> (loại nào cho salad, loại nào cho pizza, loại nào chảy được) và <b>sốt đi kèm từng món</b>.</p>
-    <p class="mc-meta">40 CÔNG THỨC · 9 LOẠI SỐT · 16 LOẠI PHÔ MAI · 5 XUẤT XỨ · LỌC THEO TÊN · NGUYÊN LIỆU · XUẤT XỨ · LOẠI MÓN · ĐỘ KHÓ · THỜI GIAN</p>
+    <p class="mc-meta">40 CÔNG THỨC · 9 LOẠI SỐT · 17 LOẠI PHÔ MAI · 5 XUẤT XỨ · LỌC THEO TÊN · NGUYÊN LIỆU · XUẤT XỨ · LOẠI MÓN · ĐỘ KHÓ · THỜI GIAN</p>
   </header>
 
   <hr class="wb-divider">
@@ -710,7 +717,7 @@ RECIPES.push(
     { n: 'Dầu ô liu extra virgin', q: 80, u: 'ml', note: 'Cho hẳn tay. Dầu ở đây là nguyên liệu chính chứ không phải để chống dính.', r: 'season' },
     { n: 'Ớt khô vụn (peperoncino)', q: 1, u: 'thìa cà phê', r: 'season' },
     { n: 'Mùi tây (parsley)', q: 1, u: 'nắm', note: 'Thái nhỏ.', r: 'herb' },
-    { n: 'Muối hạt (cho nước luộc)', q: 20, u: 'g', note: '10 g cho mỗi lít nước — mặn như nước biển.', r: 'season' },
+    { n: 'Muối hạt (cho nước luộc)', q: 40, u: 'g', note: '10 g cho mỗi lít nước — 4 lít thì 40 g, mặn như nước biển.', r: 'season' },
     { n: 'Parmesan (tuỳ chọn)', q: 30, u: 'g', note: 'Người Naples không cho. Cho cũng ngon.', r: 'herb' }
   ],
   steps: [
@@ -1055,7 +1062,7 @@ RECIPES.push(
   ],
   steps: [
     { t: 'Đánh trứng thật kỹ', d: 'Đánh trứng với muối cho tới khi lòng đỏ và lòng trắng hoà hoàn toàn, không còn vệt.', m: 2, heat: '—', cue: 'Hỗn hợp <b>đồng màu vàng, không còn sợi lòng trắng nào</b>. Còn vệt là omelette có mảng trắng.' },
-    { t: 'Đun bơ đến sủi', d: 'Chảo chống dính 20 cm, lửa vừa, cho bơ, đợi hết sủi bọt.', m: 2, heat: 'Lửa vừa', cue: 'Bơ <b>hết sủi bọt và vừa bắt đầu thơm, chưa ngả nâu</b>. Đổ trứng vào lúc này.' },
+    { t: 'Đun bơ đến sủi', d: 'Chảo chống dính 20 cm, lửa vừa, cho một nửa chỗ bơ, đợi hết sủi bọt. <b>Rán hai lượt, mỗi lượt 3 quả trứng</b> — chảo 20 cm chỉ vừa 3 quả.', m: 2, heat: 'Lửa vừa', cue: 'Bơ <b>hết sủi bọt và vừa bắt đầu thơm, chưa ngả nâu</b>. Đổ trứng vào lúc này.' },
     { t: 'Khuấy liên tục 40 giây', d: 'Đổ trứng vào, dùng đũa hoặc spatula khuấy vòng liên tục đồng thời lắc chảo.', m: 1, heat: 'Lửa vừa-nhỏ', cue: 'Trứng <b>thành các mảng nhỏ li ti trong lòng chảo, còn ướt bóng</b> — trạng thái này gọi là "baveuse".' },
     { t: 'Dàn phẳng và để yên', d: 'Ngừng khuấy, dàn phẳng mặt, để yên 20 giây cho đáy kết lại. Rắc phô mai và hẹ.', m: 1, heat: 'Lửa nhỏ', cue: 'Đáy <b>kết thành một lớp liền, mặt trên vẫn còn ướt bóng</b>.' },
     { t: 'Gấp và trút ra đĩa', d: 'Nghiêng chảo, gấp mép xa xuống, dùng chảo lăn omelette thành hình thoi rồi úp ra đĩa.', m: 1, heat: 'Tắt bếp', cue: 'Bên ngoài <b>vàng nhạt không có vệt nâu</b>, cắt ra giữa còn mềm ướt. Omelette Pháp <b>không được có màu nâu</b>.' }
@@ -1197,7 +1204,7 @@ RECIPES.push(
   tags: ['thịt bò', 'bơ', 'húng tây'],
   why: 'Miếng steak ở nhà thường thua ở nhà hàng vì ba lý do rất cụ thể: thịt lạnh, thịt ướt, chảo nguội. Sửa cả ba là xong.',
   ing: [
-    { n: 'Thăn ngoại (ribeye) hoặc thăn lưng', q: 500, u: 'g', per: { n: 250, l: 'miếng dày 3 cm' }, note: 'Dày tối thiểu 2,5 cm. Miếng mỏng thì chín hết trước khi kịp xém.', r: 'main' },
+    { n: 'Ribeye (dẻ sườn) hoặc thăn ngoại (striploin)', q: 500, u: 'g', per: { n: 250, l: 'miếng dày 3 cm' }, note: 'Dày tối thiểu 2,5 cm. Miếng mỏng thì chín hết trước khi kịp xém.', r: 'main' },
     { n: 'Muối hạt', q: 8, u: 'g', note: 'Ướp trước ít nhất 40 phút — hoặc ướp ngay trước khi rán. Khoảng giữa là tệ nhất.', r: 'season' },
     { n: 'Dầu chịu nhiệt cao', q: 2, u: 'thìa canh', note: 'Dầu hạt cải hoặc dầu ăn thường. Không dùng dầu ô liu extra virgin — nó cháy.', r: 'season' },
     { n: 'Bơ lạt', q: 50, u: 'g', r: 'main' },
@@ -1216,7 +1223,7 @@ RECIPES.push(
     { t: 'Làm sốt chảo trong lúc nghỉ', d: 'Vẫn chảo đó: chắt bớt mỡ, xào hành tím băm 1 phút, đổ rượu cạo đáy chảo, đun rút một nửa, tắt bếp rồi cho một miếng bơ lạnh.', m: 6, heat: 'Lửa vừa → tắt', cue: 'Sốt <b>sánh, bóng và bám mặt thìa</b>. Cho bơ khi chảo còn sôi là sốt tách dầu.' },
     { t: 'Cắt ngang thớ', d: 'Cắt ngang thớ thịt thành lát dày 1 cm, rắc muối hạt và tiêu xay, chan sốt.', m: 2, heat: '—', cue: 'Mặt cắt <b>hồng đều từ rìa vào giữa</b>, không có vòng xám dày. Vòng xám dày nghĩa là lửa quá nhỏ và rán quá lâu.' }
   ],
-  tips: ['Ướp muối <b>40 phút trước</b> hoặc <b>ngay trước khi rán</b>. Ướp 5–20 phút trước là lúc muối đã rút nước ra mặt mà chưa kịp ngấm lại — mặt ướt, không xém được.', 'Một cái nhiệt kế đầu dò rẻ hơn một miếng thăn bò. Đây là món đáng mua dụng cụ.'],
+  tips: ['Ướp muối <b>40 phút trước</b> hoặc <b>ngay trước khi rán</b>. Ướp 5–20 phút trước là lúc muối đã rút nước ra mặt mà chưa kịp ngấm lại — mặt ướt, không xém được.'],
   serveWith: 'Sốt chảo đã có sẵn. Ăn với khoai nghiền, gratin hoặc rau xanh áp chảo. Chimichurri nếu muốn kiểu Nam Mỹ.'
 },
 {
@@ -1224,7 +1231,7 @@ RECIPES.push(
   tags: ['thịt bò', 'húng tây'],
   why: 'Một khối thịt lớn thì không thể canh bằng thời gian — chỉ có nhiệt kế mới đúng. Đây là món dạy cách nướng ngược: nhiệt thấp trước, xém mặt sau.',
   ing: [
-    { n: 'Thăn lưng bò (striploin) hoặc bắp hoa', q: 1500, u: 'g', per: { n: 1500, l: 'khối' }, note: 'Buộc dây cho khối tròn đều — chỗ dày mỏng khác nhau thì chín không đều.', r: 'main' },
+    { n: 'Thăn lưng bò (striploin) hoặc mông (topside)', q: 1500, u: 'g', per: { n: 1500, l: 'khối' }, note: 'Buộc dây cho khối tròn đều — chỗ dày mỏng khác nhau thì chín không đều. Đừng dùng bắp hay gầu: nhiều gân, chỉ mềm khi hầm chứ không khi nướng tái.', r: 'main' },
     { n: 'Muối hạt', q: 20, u: 'g', note: 'Ướp khô trước 12–24 tiếng trong ngăn mát, để hở.', r: 'season' },
     { n: 'Hạt tiêu', q: 1, u: 'thìa canh', r: 'season' },
     { n: 'Tỏi', q: 6, u: 'tép', r: 'season' },
@@ -1417,7 +1424,7 @@ RECIPES.push(
     { n: 'Bánh mì cũ', q: 200, u: 'g', note: 'Cắt khối 2 cm để làm crouton.', r: 'main' },
     { n: 'Parmigiano Reggiano', q: 80, u: 'g', note: 'Một nửa vào dressing, một nửa bào lát mỏng rắc lên.', r: 'main' },
     { n: 'Phi lê cá cơm ngâm dầu (anchovy)', q: 6, u: 'con', note: 'Đây là nguyên liệu bắt buộc. Nó không làm salad tanh — nó làm salad đậm.', r: 'main' },
-    { n: 'Lòng đỏ trứng', q: 2, u: 'quả', note: 'Trứng thật tươi. Hoặc chần cả quả 1 phút cho an toàn.', r: 'main' },
+    { n: 'Lòng đỏ trứng', q: 2, u: 'quả', note: 'Dressing này <b>không nấu</b>: dùng trứng tiệt trùng (pasteurized) hoặc trứng thật tươi. Chần 1 phút không diệt được khuẩn — nó chỉ làm lòng đỏ đặc hơn.', r: 'main' },
     { n: 'Tỏi', q: 2, u: 'tép', r: 'season' },
     { n: 'Mù tạt Dijon', q: 1, u: 'thìa cà phê', r: 'season' },
     { n: 'Nước cốt chanh', q: 2, u: 'thìa canh', r: 'season' },
@@ -1431,7 +1438,7 @@ RECIPES.push(
     { t: 'Cho parmesan và nếm', d: 'Trộn một nửa parmesan bào mịn vào dressing, nếm rồi chỉnh chanh và tiêu. Thường không cần muối.', m: 3, heat: '—', cue: 'Nếm thấy <b>mặn – chua – đậm cùng lúc</b>. Muốn loãng hơn thì thêm một thìa nước.' },
     { t: 'Trộn ngay trước khi ăn', d: 'Cho xà lách vào âu to, rưới dressing, trộn bằng tay cho áo đều, rồi mới cho crouton và parmesan lát.', m: 3, heat: '—', cue: 'Mỗi lá <b>áo một lớp dressing mỏng bóng</b>, đáy âu không đọng vũng. Trộn sớm 10 phút là xà lách ỉu.' }
   ],
-  tips: ['Cá cơm là bắt buộc, và nó là lý do món này ngon. Bỏ cá cơm thì bạn có một bát xà lách trộn mayonnaise.', 'Lá xà lách phải <b>thật khô</b>. Vẩy rau hoặc lau từng lá — đây là quy tắc chung cho mọi loại salad.'],
+  tips: ['Cá cơm là bắt buộc, và nó là lý do món này ngon. Bỏ cá cơm thì bạn có một bát xà lách trộn mayonnaise.', 'Lá xà lách phải <b>thật khô</b>. Vẩy rau hoặc lau từng lá — đây là quy tắc chung cho mọi loại salad.', 'Dressing có <b>lòng đỏ sống</b>. Thai phụ, trẻ nhỏ, người già và người suy giảm miễn dịch thì dùng trứng tiệt trùng, hoặc trộn mayonnaise bán sẵn với cá cơm giã và parmesan.'],
   serveWith: 'Dressing đã nằm trong món. Ăn như khai vị, hoặc thêm gà nướng thành một bữa.'
 },
 {
@@ -1662,7 +1669,7 @@ RECIPES.push(
     { t: 'Rót dòng nhỏ đến hết dầu', d: 'Rót dầu thành dòng nhỏ liên tục, đánh đều tay.', m: 4, heat: '—', cue: 'Aioli <b>đặc đến mức thìa cắm đứng được</b>. Loãng quá thì rót chậm lại; quá đặc thì thêm vài giọt nước ấm.' },
     { t: 'Nêm cuối', d: 'Cho nốt chanh, nếm, chỉnh muối.', m: 1, heat: '—', cue: 'Nếm thấy <b>tỏi rõ nhưng không cháy cổ</b>.' }
   ],
-  tips: ['Vỡ nhũ tương thì cứu được: lấy một lòng đỏ mới, rót hỗn hợp đã vỡ vào <b>từng giọt như rót dầu</b>.', 'Đừng dùng dầu ô liu extra virgin cho toàn bộ — đánh mạnh làm nó đắng gắt.'],
+  tips: ['Vỡ nhũ tương thì cứu được: lấy một lòng đỏ mới, rót hỗn hợp đã vỡ vào <b>từng giọt như rót dầu</b>.', 'Đừng dùng dầu ô liu extra virgin cho toàn bộ — đánh mạnh làm nó đắng gắt.', 'Đây là <b>mayonnaise trứng sống</b>: dùng trứng tiệt trùng (pasteurized) hoặc trứng thật tươi, giữ trong ngăn mát và <b>dùng trong 2 ngày</b>, đừng để ngoài bàn quá 2 giờ. Thai phụ, trẻ nhỏ, người già và người suy giảm miễn dịch thì dùng mayonnaise bán sẵn trộn tỏi giã thay vì làm từ trứng sống.'],
   serveWith: 'Khoai tây chiên, hải sản nướng, rau luộc, bánh mì, cá áp chảo, burger.'
 },
 {
@@ -1686,7 +1693,7 @@ RECIPES.push(
     { t: 'Rót dầu thành dòng nhỏ', d: 'Vừa đánh vừa rót dầu thật chậm.', m: 4, heat: '—', cue: 'Dressing <b>đặc như mayonnaise loãng, bám mặt thìa</b>.' },
     { t: 'Cho parmesan và tiêu', d: 'Trộn parmesan bào mịn và tiêu xay, nếm rồi chỉnh chanh.', m: 2, heat: '—', cue: 'Nếm thấy <b>mặn – chua – đậm cùng lúc</b>. Thường không cần thêm muối.' }
   ],
-  tips: ['Muốn tránh trứng sống: chần cả quả trứng trong nước sôi 60 giây rồi dùng lòng đỏ.', 'Để ngăn mát 3 ngày. Đặc lại thì khuấy với một thìa nước ấm.'],
+  tips: ['Đây là <b>trứng sống</b>, không nấu ở bước nào. Dùng <b>trứng tiệt trùng (pasteurized)</b> nếu mua được; chần 60 giây <b>không</b> làm trứng an toàn. Thai phụ, trẻ nhỏ, người già và người suy giảm miễn dịch thì đừng ăn — hoặc đổi sang mayonnaise bán sẵn trộn cá cơm và parmesan.', 'Để ngăn mát tối đa 3 ngày, đựng lọ kín. Đặc lại thì khuấy với một thìa nước ấm.'],
   serveWith: 'Caesar salad, rau nướng, ức gà nướng, bông cải nướng, khoai tây nướng.'
 }
 );
@@ -1770,7 +1777,7 @@ var COMBOS = [
       { id: 'boeuf-bourguignon', when: 'Rán thịt trong lúc hành đang xào, rồi cho vào lò' },
       { id: 'gratin-dauphinois', when: 'Vào lò cùng tầng dưới nồi hầm' },
       { id: 'vinaigrette', when: 'Pha sẵn, trộn salad lúc cuối' } ] },
-  { name: 'Bữa tối đãi khách — không hầm', note: 'Không món nào cần trên 90 phút. Steak là việc cuối cùng vì nó không chờ được.', items: [
+  { name: 'Bữa tối đãi khách — không hầm', note: 'Không món nào phải hầm nhiều tiếng — lâu nhất là gratin, khoảng 1 giờ 45. Steak là việc cuối cùng vì nó không chờ được.', items: [
       { id: 'caesar-salad', when: 'Làm dressing và crouton trước, trộn lúc khách đến' },
       { id: 'gratin-dauphinois', when: 'Vào lò trước 90 phút' },
       { id: 'steak-pan-sauce', when: 'Áp chảo cuối cùng, nghỉ thịt 8 phút rồi bưng ra' },
@@ -2133,6 +2140,11 @@ var LABELS = {
 
   /* ---- detail modal ---- */
   var overlay = byId('detail'), current = null, factor = 1, stepIdx = 0;
+  /* Nút đã mở modal. Bàn phím và trình đọc màn hình cần focus đi vào hộp khi mở và
+     quay đúng về nút cũ khi đóng — không thì đóng xong con trỏ nhảy về đầu trang và
+     người dùng phải Tab lại từ đầu. Chỉ ghi lại ở lần mở đầu: bấm một dòng sốt bên
+     TRONG modal cũng gọi open(), mà nút đó sẽ bị xoá khi vẽ lại. */
+  var opener = null;
   var GROUPS = [
     { k: 'main', l: 'Nguyên liệu chính' },
     { k: 'veg', l: 'Rau & củ' },
@@ -2379,13 +2391,22 @@ var LABELS = {
     byId('d-extra').innerHTML = extra;
     showPanel('ing');
     renderServe(); renderIng(); renderDip(); renderSteps();
+    var first = !overlay.classList.contains('is-open');
+    if (first) {
+      var a = document.activeElement;
+      opener = (a && a !== document.body && document.body.contains(a)) ? a : null;
+    }
     overlay.classList.add('is-open');
     document.body.style.overflow = 'hidden';
     byId('detail').querySelector('.mc-modal__body').scrollTop = 0;
+    var x = overlay.querySelector('[data-modal-close]');
+    if (x) x.focus();
   }
   function close() {
     overlay.classList.remove('is-open');
     document.body.style.overflow = '';
+    if (opener && document.body.contains(opener)) opener.focus();
+    opener = null;
   }
   // Nút × / [data-modal-close]: bấm là đóng.
   overlay.addEventListener('click', function (e) {
