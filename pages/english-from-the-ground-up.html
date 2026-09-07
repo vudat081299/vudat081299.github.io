@@ -243,6 +243,83 @@
       background-clip: padding-box;
     }
   }
+
+  /* ═══════════════ Vocabulary view — bảng "bẫy nghĩa" (mở đè, có nút back) ═══════════════ */
+  /* Nút mở trong bài */
+  .ec-vocab-cta { display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+    border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 14px 16px; margin: 16px 0 4px; }
+  .ec-vocab-cta__t { font-size: 14px; font-weight: 690; margin: 0 0 4px; letter-spacing: -.005em; }
+  .ec-vocab-cta__d { font-size: 12.5px; line-height: 1.6; color: var(--wb-fg-muted); margin: 0; max-width: 62ch; }
+  .ec-vocab-cta__d b { color: var(--wb-fg); font-weight: 620; }
+
+  /* Lớp phủ toàn màn hình */
+  .ev-view { position: fixed; inset: 0; z-index: 80; background: var(--wb-canvas); color: var(--wb-fg);
+    overflow-y: auto; overflow-x: hidden; opacity: 0; visibility: hidden; transform: translateY(8px);
+    transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s; }
+  .ev-view.is-open { opacity: 1; visibility: visible; transform: none; transition: opacity .18s ease, transform .18s ease; }
+  .ev-wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px 84px; }
+  @media (max-width: 560px) { .ev-wrap { padding: 0 14px 64px; } }
+
+  .ev-topbar { position: sticky; top: 0; z-index: 3; background: var(--wb-canvas);
+    display: flex; align-items: center; gap: 12px 14px; flex-wrap: wrap;
+    padding: 14px 0 12px; border-bottom: var(--wb-bw) solid var(--wb-border); margin-bottom: 16px; }
+  .ev-topbar__t { font-size: 15px; font-weight: 720; letter-spacing: -.01em; margin: 0; }
+  .ev-topbar__sp { flex: 1 1 24px; }
+  .ev-search { flex: 0 1 250px; min-width: 148px; }
+  .ev-count { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); flex: none; white-space: nowrap; }
+
+  .ev-lede { font-size: 14px; line-height: 1.7; color: var(--wb-fg-muted); max-width: 82ch; margin: 2px 0 22px; }
+  .ev-lede b { color: var(--wb-fg); font-weight: 620; }
+  .ev-lede .dot { display: inline-block; border-bottom: 1.5px dotted var(--wb-neutral-strong); }
+
+  .ev-cat { margin: 0 0 24px; scroll-margin-top: 76px; }
+  .ev-cat__h { font-size: 14px; font-weight: 720; letter-spacing: -.005em; margin: 0 0 3px; }
+  .ev-cat__h .ec-dim { font-family: var(--wb-font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .04em; }
+  .ev-cat__n { font-size: 12.5px; line-height: 1.6; color: var(--wb-fg-muted); margin: 0 0 11px; max-width: 84ch; }
+  .ev-cat__n b { color: var(--wb-fg); font-weight: 620; }
+  .ev-cat.hide { display: none; }
+
+  .ev-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; border-top: var(--wb-bw) solid var(--wb-border); }
+  @media (max-width: 780px) { .ev-grid { grid-template-columns: minmax(0, 1fr); } }
+  .ev-item { display: grid; grid-template-columns: minmax(0, 148px) minmax(0, 1fr); gap: 0 12px; align-items: baseline;
+    padding: 6px 0; border-bottom: var(--wb-bw) solid var(--wb-border); }
+  @media (max-width: 430px) { .ev-item { grid-template-columns: minmax(0, 1fr); gap: 1px 0; padding: 8px 0; } }
+  .ev-item.hide { display: none; }
+  .ev-en { font-size: 13px; font-weight: 640; letter-spacing: -.003em; }
+  .ev-vi { font-size: 12.5px; line-height: 1.5; color: var(--wb-fg-muted); }
+  .ev-vi b { color: var(--wb-fg); font-weight: 600; }
+  .ev-vi .ar { color: var(--wb-fg-subtle); font-family: var(--wb-font-mono); font-size: .92em; padding: 0 2px; }
+
+  /* Từ khó → gạch chân chấm, hover/tap ra popover cách dùng */
+  .ev-en.is-term { border-bottom: 1.5px dotted var(--wb-neutral-strong); cursor: help; padding-bottom: 1px; border-radius: 2px;
+    transition: border-color .12s, background .12s; }
+  .ev-en.is-term:hover, .ev-en.is-term.is-open { border-bottom-style: solid; border-bottom-color: var(--wb-fg); background: var(--wb-surface-hover); }
+  .ev-en.is-term:focus-visible { outline: 2px solid var(--wb-fg); outline-offset: 2px; }
+
+  .ev-empty { font-size: 13px; color: var(--wb-fg-subtle); padding: 22px 2px; }
+  .ev-empty.hide { display: none; }
+
+  /* Popover cách dùng */
+  .evp { position: fixed; z-index: 90; width: min(360px, calc(100vw - 24px));
+    background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius);
+    box-shadow: 0 10px 34px -8px rgba(20,22,28,.30), 0 2px 6px rgba(20,22,28,.08);
+    padding: 13px 15px; font-size: 13px; line-height: 1.62; color: var(--wb-fg);
+    opacity: 0; pointer-events: none; transform: translateY(5px); transition: opacity .13s ease, transform .13s ease; }
+  .dark .evp { box-shadow: 0 12px 36px -6px rgba(0,0,0,.72); }
+  .evp.on { opacity: 1; pointer-events: auto; transform: none; }
+  .evp__en { font-size: 14.5px; font-weight: 730; letter-spacing: -.01em; margin: 0 0 2px; padding-right: 22px; line-height: 1.3; }
+  .evp__vi { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); margin: 0 0 9px; letter-spacing: .02em; }
+  .evp__d { margin: 0; }
+  .evp__d b { font-weight: 660; color: var(--wb-fg); }
+  .evp__d .m { font-family: var(--wb-font-mono); font-size: .9em; background: var(--wb-surface-hover); border-radius: 4px; padding: 1px 4px; }
+  .evp__d .ex { display: block; margin-top: 7px; padding-left: 9px; border-left: 2px solid var(--wb-border); color: var(--wb-fg-muted); }
+  .evp__d .ex b { color: var(--wb-fg); font-weight: 600; }
+  .evp__d .no { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--wb-fg-subtle); }
+  .evp__x { position: absolute; top: 6px; right: 7px; width: 24px; height: 24px; padding: 0; border: 0; cursor: pointer;
+    background: transparent; color: var(--wb-fg-subtle); border-radius: 5px; display: grid; place-items: center; font: inherit; line-height: 1; }
+  .evp__x:hover { background: var(--wb-surface-hover); color: var(--wb-fg); }
+  .evp__x svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+  @media (max-width: 620px) { .evp { left: 9px !important; right: 9px; bottom: 9px; top: auto !important; width: auto; } }
 </style>
 </head>
 <body class="wb-app">
@@ -345,6 +422,14 @@
     </a>
   </div>
 
+  <div class="ec-vocab-cta">
+    <div>
+      <p class="ec-vocab-cta__t">Bảng từ vựng — những từ <u>không dễ dùng</u></p>
+      <p class="ec-vocab-cta__d">Số ít/số nhiều <b>khác nghĩa</b> (<i>work → works</i>), danh từ <b>không đếm được</b>, từ đổi nghĩa theo đếm được hay không, và từ <b>bắt buộc đi kèm cụm cố định</b>. Rê chuột (hoặc chạm) vào từ tiếng Anh để xem cách dùng đầy đủ.</p>
+    </div>
+    <a class="wb-btn" href="#vocab">Mở bảng từ vựng <span class="wb-ico" aria-hidden="true">arrow_forward</span></a>
+  </div>
+
   <div class="ec-layout">
     <nav class="wb-sidenav ec-toc wb-sticky wb-scroll-y" style="--wb-sticky-gap:72px" id="toc">
       <div class="wb-sidenav__section">Getting Started</div>
@@ -384,6 +469,7 @@
       <a class="wb-sidenav__link" href="#phrasal">Phrasal Verbs</a>
       <a class="wb-sidenav__link" href="#idioms">Idioms &amp; Metaphor</a>
       <a class="wb-sidenav__link" href="#memory">Making It Stick</a>
+      <a class="wb-sidenav__link" href="#vocab">Bảng bẫy nghĩa ↗</a>
 
       <div class="wb-sidenav__section" style="margin-top:12px">Part 4 · Skills</div>
       <a class="wb-sidenav__link" href="#listening">Listening</a>
@@ -1346,6 +1432,7 @@ promise / offer / refuse + to V   They <b>refused to</b> merge it.
         <p class="kicker">Part 3 · Words</p>
         <h2>Từ vựng là thứ quyết định trần của bạn — nhưng học đúng thứ tự quan trọng hơn học nhiều</h2>
         <p>Ngữ pháp có giới hạn: học xong Phần 2 là gần như hết. Từ vựng thì không đáy. Vì vậy câu hỏi đúng không phải "học bao nhiêu từ" mà là <b>học từ nào trước</b>, <b>học ở dạng gì</b>, và <b>làm sao để không quên</b>. Ba câu hỏi này chiếm cả phần.</p>
+        <p>Kèm một bảng tra riêng cho <b>những từ dễ dùng sai</b> — số ít/số nhiều khác nghĩa, danh từ không đếm được, từ phải đi kèm cụm cố định: <a href="#vocab">mở bảng bẫy nghĩa →</a></p>
       </div>
 
       <section id="frequency">
@@ -2169,6 +2256,22 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
   </div>
 </main>
 
+<!-- ═══════════════════════════ VOCABULARY VIEW · bảng bẫy nghĩa ═══════════════════════════ -->
+<section class="ev-view" id="vocab" aria-label="Bảng từ vựng — những từ không dễ dùng" aria-hidden="true">
+  <div class="ev-wrap">
+    <div class="ev-topbar">
+      <button class="wb-btn wb-btn--ghost wb-btn--sm" id="ev-back" type="button"><span class="wb-ico" aria-hidden="true">arrow_back</span> Quay lại giáo trình</button>
+      <p class="ev-topbar__t">Bảng bẫy nghĩa</p>
+      <span class="ev-topbar__sp"></span>
+      <input class="wb-input ev-search" id="ev-search" type="search" placeholder="Lọc từ… (vd: work, hải quan)" aria-label="Lọc từ vựng" autocomplete="off">
+      <span class="ev-count" id="ev-count"></span>
+    </div>
+    <p class="ev-lede">Đây <b>không phải danh sách để học thuộc</b> — mà là bảng tra những từ <b>dễ dùng sai</b>: nghĩa đổi theo số ít/số nhiều, danh từ không đếm được, từ đổi nghĩa theo đếm được hay không, contronym (một từ hai nghĩa trái ngược), và từ bắt buộc đi kèm cụm cố định. Từ có <span class="dot">gạch chân chấm</span> thì rê chuột hoặc chạm để xem cách dùng đầy đủ; từ còn lại chỉ cần biết nghĩa là đủ.</p>
+    <div id="ev-body"></div>
+    <p class="ev-empty hide" id="ev-empty">Không có từ nào khớp bộ lọc.</p>
+  </div>
+</section>
+
 <footer class="wb-footer wb-footer--slim">
   <div class="wb-footer__inner">
     <div class="wb-footer__bottom">
@@ -2900,6 +3003,388 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
     x.k.forEach(function (k) { lines.push('  · ' + k); });
     out.textContent = lines.join('\n');
   }, 0);
+})();
+
+/* ═════════════════ Vocabulary view · bảng "bẫy nghĩa" ═════════════════ */
+(function () {
+  var view = $('vocab');
+  if (!view) return;
+  var body = $('ev-body'), searchEl = $('ev-search'), countEl = $('ev-count'),
+      backBtn = $('ev-back'), emptyEl = $('ev-empty');
+
+  /* Mỗi mục: {en, vi, use?}. Có `use` → từ khó, gạch chân chấm, hover/tap ra cách dùng.
+     Không có `use` → chỉ hiện nghĩa. Bên trong `use` chỉ dùng nháy đơn cho thuộc tính. */
+  var CATS = [
+    { h: 'Số ít một nghĩa, số nhiều nghĩa khác', tag: 'plural ≠ singular',
+      note: 'Thêm <b>-s</b> vào mấy từ này là đổi hẳn nghĩa, không phải chỉ đổi số lượng. Đây là nhóm bạn hỏi.',
+      items: [
+        { en: 'work → works', vi: 'công việc → nhà máy / tác phẩm',
+          use: "<b>work</b> (không đếm được) = công việc — không bao giờ thêm -s. <b>works</b> đổi nghĩa hẳn: <b>nhà máy / công trình</b> (a steel <span class='m'>works</span>) hoặc <b>tác phẩm</b> của một tác giả.<span class='ex'><b>I have a lot of work.</b> — <span class='no'>works</span> ở đây là sai.</span><span class='ex'><b>the complete works of Nam Cao</b> — toàn bộ tác phẩm.</span>" },
+        { en: 'custom → customs', vi: 'phong tục → hải quan',
+          use: "<b>custom</b> = phong tục, tập quán. <b>customs</b> ngoài nghĩa các phong tục còn = <b>hải quan</b> (luôn số nhiều).<span class='ex'><b>go through customs</b> at the airport — làm thủ tục hải quan.</span>" },
+        { en: 'arm → arms', vi: 'cánh tay → vũ khí',
+          use: "<b>arm</b> = cánh tay. <b>arms</b> = <b>vũ khí</b> (trang trọng/quân sự): <span class='m'>arms race</span> = chạy đua vũ trang, <span class='m'>bear arms</span>. Nghĩa hai cánh tay vẫn là arms — ngữ cảnh phân biệt." },
+        { en: 'content → contents', vi: 'nội dung / sự hài lòng → những thứ bên trong, mục lục',
+          use: "<b>content</b> (không đếm) = nội dung (video <span class='m'>content</span>); là tính từ thì = hài lòng (<span class='m'>content</span> with…). <b>contents</b> = <b>thứ chứa bên trong</b> hoặc <b>mục lục</b>: table of <span class='m'>contents</span>.<span class='ex'><b>the contents of the box</b> — đồ bên trong hộp.</span>" },
+        { en: 'good → goods', vi: 'điều tốt → hàng hoá',
+          use: "<b>good</b> = tốt / điều tốt. <b>goods</b> (luôn số nhiều) = <b>hàng hoá</b>: <span class='m'>consumer goods</span>, <span class='m'>deliver the goods</span>. Không có a goods." },
+        { en: 'damage → damages', vi: 'thiệt hại → tiền bồi thường',
+          use: "<b>damage</b> (không đếm) = thiệt hại, hư hại: <span class='m'>cause damage</span>. <b>damages</b> (số nhiều, pháp lý) = <b>tiền bồi thường</b>.<span class='ex'><b>claim damages</b> — đòi bồi thường. Còn hư hại thì <span class='no'>damages</span> là sai.</span>" },
+        { en: 'manner → manners', vi: 'cách thức → phép lịch sự',
+          use: "<b>manner</b> = cách thức (in this <span class='m'>manner</span>) / phong thái. <b>manners</b> = <b>phép cư xử</b>: <span class='m'>good manners</span>, <span class='m'>table manners</span>." },
+        { en: 'ground → grounds', vi: 'mặt đất → căn cứ (lý do), khuôn viên',
+          use: "<b>ground</b> = mặt đất. <b>grounds</b> đổi nghĩa: <b>lý do chính đáng</b> (<span class='m'>grounds for dismissal</span> = căn cứ sa thải) và <b>khuôn viên</b> (the hospital <span class='m'>grounds</span>). Cũng là bã cà phê." },
+        { en: 'pain → pains', vi: 'cơn đau → công sức bỏ ra',
+          use: "<b>pain</b> = sự đau. <span class='m'>take pains to do sth</span> = <b>bỏ công sức</b> làm gì cẩn thận; <span class='m'>go to great pains</span> = rất cất công." },
+        { en: 'spectacle → spectacles', vi: 'cảnh tượng → kính mắt',
+          use: "<b>spectacle</b> = cảnh tượng hoành tráng. <b>spectacles</b> (trang trọng/cũ) = <b>kính đeo mắt</b> = glasses; nói tắt là <span class='m'>specs</span>." },
+        { en: 'force → forces', vi: 'lực, sức mạnh → lực lượng vũ trang',
+          use: "<b>force</b> = lực, sức mạnh (by <span class='m'>force</span>). <b>forces</b> = <b>lực lượng vũ trang</b>: the armed <span class='m'>forces</span>. <span class='m'>in force</span> = (luật) đang có hiệu lực." },
+        { en: 'minute → minutes', vi: 'phút → biên bản họp',
+          use: "<b>minute</b> = phút. <b>minutes</b> ngoài các phút còn = <b>biên bản cuộc họp</b>.<span class='ex'><b>take the minutes</b> — ghi biên bản. <b>send out the minutes</b> — gửi biên bản họp.</span>" },
+        { en: 'quarter → quarters', vi: 'một phần tư / quý → nơi ăn ở',
+          use: "<b>quarter</b> = 1/4, quý (Q3), khu phố. <b>quarters</b> = <b>nơi ăn ở</b> (nhất là quân đội): <span class='m'>living quarters</span>. <span class='m'>at close quarters</span> = ở cự ly rất gần." },
+        { en: 'saving → savings', vi: 'khoản tiết kiệm được → tiền để dành',
+          use: "<b>a saving</b> = một khoản tiết kiệm được (a <span class='m'>saving</span> of 20%). <b>savings</b> = <b>tiền để dành</b>: <span class='m'>savings account</span>, life <span class='m'>savings</span>. Nghĩa tiền để dành hay bị quên -s." },
+        { en: 'look → looks', vi: 'cái nhìn → ngoại hình',
+          use: "<b>a look</b> = cái nhìn (take a <span class='m'>look</span>). <b>looks</b> = <b>ngoại hình, nhan sắc</b>: <span class='m'>good looks</span>." },
+        { en: 'air → airs', vi: 'không khí → điệu bộ làm cao',
+          use: "<b>air</b> (không đếm) = không khí. <span class='m'>put on airs</span> / <span class='m'>give yourself airs</span> = <b>làm bộ làm tịch</b>, tỏ vẻ ta đây (nghĩa xấu)." },
+        { en: 'green → greens', vi: 'màu xanh → rau xanh',
+          use: "<b>green</b> = màu xanh lá / bãi cỏ. <b>greens</b> = <b>rau xanh</b>: eat your <span class='m'>greens</span>." },
+        { en: 'premise → premises', vi: 'tiền đề → mặt bằng, toà nhà',
+          use: "<b>premise</b> = tiền đề, luận điểm cơ sở. <b>premises</b> (luôn số nhiều) = <b>mặt bằng / khuôn viên toà nhà</b>: <span class='m'>on the premises</span> = trong khuôn viên." }
+      ] },
+
+    { h: 'Không đếm được — đừng thêm -s', tag: 'uncountable',
+      note: 'Tiếng Việt đếm được mọi thứ nên ta quen thêm -s. Những từ này <b>không có số nhiều</b>; muốn đếm thì mượn đơn vị (<span class="m">a piece of…</span>).',
+      items: [
+        { en: 'information', vi: 'thông tin',
+          use: "Không đếm được. Đếm bằng <span class='m'>a piece of information</span>, <span class='m'>two pieces of information</span>.<span class='ex'><span class='no'>many informations</span> → <b>a lot of information</b>.</span>" },
+        { en: 'advice', vi: 'lời khuyên',
+          use: "Không đếm. <span class='m'>a piece of advice</span>. Đừng nhầm với động từ <b>advise</b> /-z/.<span class='ex'><span class='no'>an advice</span> → <b>a piece of advice</b>.</span>" },
+        { en: 'news', vi: 'tin tức (có -s nhưng chia số ít)',
+          use: "Nhìn như số nhiều nhưng <b>chia số ít</b>: <span class='m'>the news is good</span>, không phải <span class='no'>are</span>. Đếm bằng <span class='m'>a piece of news</span>." },
+        { en: 'furniture', vi: 'đồ đạc, nội thất',
+          use: "Không đếm. <span class='m'>a piece of furniture</span>, <span class='m'>some furniture</span>. Không có furnitures." },
+        { en: 'equipment', vi: 'thiết bị',
+          use: "Không đếm. <span class='m'>a piece of equipment</span>, <span class='m'>a lot of equipment</span>." },
+        { en: 'luggage / baggage', vi: 'hành lý',
+          use: "Không đếm. <span class='m'>two pieces of luggage</span> hoặc <span class='m'>two bags</span>." },
+        { en: 'software', vi: 'phần mềm',
+          use: "Không đếm. Dùng <span class='m'>a piece of software</span>, <span class='m'>an app / a program</span>, <span class='m'>software tools</span>. Không có softwares." },
+        { en: 'hardware', vi: 'phần cứng',
+          use: "Không đếm được, như software: <span class='m'>a piece of hardware</span>." },
+        { en: 'feedback', vi: 'phản hồi',
+          use: "Không đếm. <span class='m'>some feedback</span>, <span class='m'>a piece of feedback</span>, <span class='m'>a few comments</span>. Không có feedbacks." },
+        { en: 'research', vi: 'sự nghiên cứu',
+          use: "Không đếm. <span class='m'>do research</span>, <span class='m'>a piece of research</span>, số nhiều dùng <span class='m'>studies</span>. Động từ: <span class='m'>research sth</span> (không about)." },
+        { en: 'progress', vi: 'tiến độ, tiến bộ',
+          use: "Không đếm. <span class='m'>make progress</span>, <span class='m'>some progress</span>.<span class='ex'><span class='no'>make a progress</span> → <b>make progress</b>.</span>" },
+        { en: 'knowledge', vi: 'kiến thức',
+          use: "Không đếm. <span class='m'>a good knowledge of X</span> được (a + tính từ + knowledge), nhưng vẫn không có knowledges." },
+        { en: 'staff', vi: 'nhân viên (cả tập thể)',
+          use: "<b>staff</b> = toàn bộ nhân viên. Một người là <span class='m'>a staff member</span> / <span class='m'>an employee</span> — <span class='no'>a staff</span> nghe sai. Đi với động từ số nhiều: <span class='m'>the staff are…</span>" },
+        { en: 'traffic', vi: 'giao thông' },
+        { en: 'homework', vi: 'bài tập về nhà',
+          use: "Không đếm. <span class='m'>do homework</span> (không make), <span class='m'>a piece of homework</span>." },
+        { en: 'evidence', vi: 'bằng chứng',
+          use: "Không đếm. <span class='m'>a piece of evidence</span>, <span class='m'>strong evidence</span>." },
+        { en: 'accommodation', vi: 'chỗ ở (Anh-Anh: không -s)',
+          use: "Anh-Anh không đếm: <span class='m'>find accommodation</span>. Anh-Mỹ đôi khi dùng <span class='m'>accommodations</span>." },
+        { en: 'money', vi: 'tiền',
+          use: "Không đếm. Đơn vị là <span class='m'>a sum of money</span>; các loại tiền tệ là <span class='m'>currencies</span>. Không có moneys." },
+        { en: 'vocabulary', vi: 'vốn từ',
+          use: "Nói vốn từ thì không đếm: <span class='m'>a wide vocabulary</span>. Dạng vocabularies chỉ khi so nhiều bộ từ khác nhau." }
+      ] },
+
+    { h: 'Đổi nghĩa theo đếm được hay không', tag: 'a X vs X',
+      note: 'Cùng một từ: thêm <b>a/an</b> (hoặc để số nhiều) thì ra nghĩa cụ thể; để trần (không đếm) thì ra nghĩa chung. Chọn sai là câu lệch nghĩa.',
+      items: [
+        { en: 'a paper / paper', vi: 'bài báo, tờ báo, bài luận → giấy',
+          use: "<b>paper</b> (không đếm) = giấy. <b>a paper</b> = một <b>bài báo khoa học</b>, một <b>tờ báo</b>, hoặc một <b>bài luận</b>. <span class='m'>papers</span> còn = giấy tờ tuỳ thân." },
+        { en: 'a coffee / coffee', vi: 'một ly cà phê → cà phê (chất)',
+          use: "<b>coffee</b> (không đếm) = cà phê nói chung. <b>a coffee / two coffees</b> = một/hai <b>ly</b> (rút gọn của a cup of coffee). Cùng kiểu: <span class='m'>a beer</span>, <span class='m'>three teas</span>." },
+        { en: 'a room / room', vi: 'căn phòng → chỗ trống',
+          use: "<b>a room</b> = một căn phòng. <b>room</b> (không đếm) = <b>chỗ trống, không gian</b>.<span class='ex'><b>Is there room for one more?</b> — còn chỗ không? <span class='no'>a room</span> ở đây là sai.</span>" },
+        { en: 'an experience / experience', vi: 'một trải nghiệm → kinh nghiệm',
+          use: "<b>experience</b> (không đếm) = kinh nghiệm: <span class='m'>work experience</span>. <b>an experience</b> = một <b>trải nghiệm</b> cụ thể: a scary <span class='m'>experience</span>." },
+        { en: 'a business / business', vi: 'một doanh nghiệp → việc kinh doanh',
+          use: "<b>business</b> (không đếm) = việc làm ăn: <span class='m'>do business</span>. <b>a business</b> = một <b>doanh nghiệp</b> cụ thể: start a <span class='m'>business</span>." },
+        { en: 'a glass / glass', vi: 'cái ly → thuỷ tinh',
+          use: "<b>glass</b> (không đếm) = thuỷ tinh: made of <span class='m'>glass</span>. <b>a glass</b> = cái ly. (<b>glasses</b> = kính mắt — lại một nghĩa khác.)" },
+        { en: 'a light / light', vi: 'cái đèn → ánh sáng',
+          use: "<b>light</b> (không đếm) = ánh sáng. <b>a light</b> = một cái đèn: turn off the <span class='m'>lights</span>." },
+        { en: 'a chicken / chicken', vi: 'con gà → thịt gà',
+          use: "<b>a chicken</b> = con gà. <b>chicken</b> (không đếm) = <b>thịt gà</b>: eat <span class='m'>chicken</span>. Cùng kiểu: <span class='m'>fish</span>, <span class='m'>lamb</span>." },
+        { en: 'a hair / hair', vi: 'một sợi tóc → tóc (cả mái)',
+          use: "<b>hair</b> (không đếm) = tóc nói chung: long <span class='m'>hair</span>. <b>a hair</b> = một <b>sợi</b>: there is a <span class='m'>hair</span> in my soup." },
+        { en: 'a time / time', vi: 'một lần / thời điểm → thời gian',
+          use: "<b>time</b> (không đếm) = thời gian. <b>a time</b> = một lần / thời điểm; <b>times</b> = số lần (three <span class='m'>times</span>) hoặc thời kỳ (modern <span class='m'>times</span>)." }
+      ] },
+
+    { h: 'Contronym — một từ, hai nghĩa trái ngược', tag: 'auto-antonym',
+      note: 'Cùng một từ mang hai nghĩa <b>ngược nhau</b>. Không suy được từ mặt chữ — phải đọc theo ngữ cảnh, nếu không hiểu ngược ý người nói.',
+      items: [
+        { en: 'sanction', vi: 'phê chuẩn ↔ trừng phạt',
+          use: "Động từ <b>to sanction</b> = <b>chính thức cho phép</b> (the plan was <span class='m'>sanctioned</span>). Danh từ số nhiều <b>sanctions</b> = <b>lệnh trừng phạt</b> (impose <span class='m'>sanctions</span>). Hai nghĩa trái ngược." },
+        { en: 'oversight', vi: 'sự giám sát ↔ sự sơ suất',
+          use: "<b>oversight</b> = <b>sự giám sát</b> (congressional <span class='m'>oversight</span>) nhưng cũng = <b>lỗi bỏ sót do sơ ý</b> (a clerical <span class='m'>oversight</span>)." },
+        { en: 'dust', vi: 'phủi bụi đi ↔ rắc bột lên',
+          use: "<b>to dust</b> = <b>lau/phủi bụi đi</b> (dust the shelf) nhưng cũng = <b>rắc một lớp bột lên</b> (dust with sugar)." },
+        { en: 'left', vi: 'còn lại ↔ đã rời đi',
+          use: "<b>left</b> là quá khứ của leave theo hai hướng: <b>còn lại</b> (two seats <span class='m'>left</span>) và <b>đã rời đi</b> (he <span class='m'>left</span> early)." },
+        { en: 'screen', vi: 'che khuất ↔ chiếu ra',
+          use: "<b>to screen</b> = <b>che chắn</b> (screen from view) nhưng cũng = <b>chiếu (phim)</b> (screen a film) và <b>sàng lọc</b> (screen candidates)." },
+        { en: 'overlook', vi: 'trông ra ↔ bỏ sót',
+          use: "<b>overlook</b> = <b>nhìn ra, trông xuống</b> (the room overlooks the sea) nhưng cũng = <b>bỏ sót, ngó lơ</b> (overlook a mistake)." },
+        { en: 'fine', vi: 'ổn, tốt ↔ tiền phạt',
+          use: "<b>fine</b> (tính từ) = ổn, tốt. <b>a fine</b> / <b>to fine</b> = <b>tiền phạt / phạt tiền</b>: a parking <span class='m'>fine</span>." },
+        { en: 'clip', vi: 'kẹp vào ↔ cắt rời',
+          use: "<b>to clip</b> = <b>kẹp/gắn vào</b> (clip papers together) nhưng cũng = <b>cắt bớt</b> (clip a coupon, clip the hedge)." }
+      ] },
+
+    { h: 'Bắt buộc đi kèm cụm / giới từ cố định', tag: 'fixed pattern',
+      note: 'Mấy từ này gần như <b>không đứng một mình</b> — dùng sai giới từ hoặc dịch thẳng từ tiếng Việt là lộ ngay. Nhớ nguyên khuôn, đừng dịch từng chữ.',
+      items: [
+        { en: 'depend', vi: 'luôn: depend on',
+          use: "Luôn có <b>on</b>: <span class='m'>depend on sb/sth</span>. <span class='no'>depend of</span>, <span class='no'>depend to</span> đều sai. Nói tắt <b>It depends.</b> thì bỏ được on." },
+        { en: 'rely', vi: 'luôn: rely on',
+          use: "<span class='m'>rely on sb/sth</span> = trông cậy vào. Cùng khuôn với depend on." },
+        { en: 'marry', vi: 'marry sb (không with)',
+          use: "<span class='m'>marry someone</span> — không giới từ.<span class='ex'><span class='no'>marry with her</span> → <b>marry her</b>.</span>Bị động: <span class='m'>get married to sb</span>." },
+        { en: 'arrive', vi: 'arrive at/in (không to)',
+          use: "<b>arrive in</b> + thành phố/nước; <b>arrive at</b> + địa điểm cụ thể. <span class='no'>arrive to</span> luôn sai. (Nhưng <span class='m'>get to</span> thì đúng.)" },
+        { en: 'succeed', vi: 'succeed in doing',
+          use: "<span class='m'>succeed in doing sth</span> (+ V-ing). <span class='no'>succeed to do</span> sai. Danh từ: <span class='m'>success in</span>." },
+        { en: 'prevent', vi: 'prevent sb from doing',
+          use: "<span class='m'>prevent sb from doing sth</span>. <span class='no'>prevent sb to do</span> sai. Cùng khuôn: <span class='m'>stop/keep sb from doing</span>." },
+        { en: 'consist', vi: 'consist of (không bị động)',
+          use: "<span class='m'>consist of</span> = gồm có. Không dùng bị động: <span class='no'>is consisted of</span> → <b>consists of</b> hoặc <b>is composed of</b>." },
+        { en: 'result', vi: 'result in (gây ra) / result from (do bởi)',
+          use: "<b>result in</b> = dẫn tới (X results <span class='m'>in</span> Y). <b>result from</b> = là hậu quả của (Y results <span class='m'>from</span> X). Hai chiều ngược nhau." },
+        { en: 'apologize', vi: 'apologize to sb for sth',
+          use: "<span class='m'>apologize to someone for something</span>. <span class='no'>apologize sb</span> sai. Danh từ: <span class='m'>an apology</span>." },
+        { en: 'congratulate', vi: 'congratulate sb on sth',
+          use: "<span class='m'>congratulate sb on sth</span> — không for. <span class='m'>Congratulations on your promotion.</span>" },
+        { en: 'blame', vi: 'blame sb for / blame sth on sb',
+          use: "<span class='m'>blame sb for sth</span> hoặc <span class='m'>blame sth on sb</span>. <span class='m'>be to blame</span> = là người có lỗi." },
+        { en: 'apply', vi: 'apply for (xin) / apply to (nộp cho, áp dụng cho)',
+          use: "<b>apply for</b> + việc/vị trí. <b>apply to</b> + nơi nhận (apply to a university) và = <b>áp dụng cho</b> (the rule applies to everyone)." },
+        { en: 'insist', vi: 'insist on doing',
+          use: "<span class='m'>insist on doing sth</span> hoặc <span class='m'>insist that…</span>. <span class='no'>insist to do</span> sai." },
+        { en: 'participate', vi: 'participate in',
+          use: "<span class='m'>participate in sth</span>. <span class='no'>participate to</span> sai. Đời thường hay dùng <span class='m'>take part in</span>." },
+        { en: 'complain', vi: 'complain to sb about sth',
+          use: "<span class='m'>complain to sb about sth</span>. Danh từ: <span class='m'>a complaint about…</span>" },
+        { en: 'remind', vi: 'remind sb of / remind sb to',
+          use: "<b>remind sb of sth</b> = làm nhớ tới (you remind me of my brother). <b>remind sb to do</b> = nhắc ai làm gì. Khác <b>remember</b> = tự nhớ." }
+      ] },
+
+    { h: 'Trông quen mà nghĩa khác (false friends)', tag: 'nghĩa dễ đoán sai',
+      note: 'Những từ hay bị đoán nghĩa theo mặt chữ hoặc theo một từ giống giống — và đoán sai.',
+      items: [
+        { en: 'actually', vi: 'thực ra (KHÔNG phải hiện nay)',
+          use: "<b>actually</b> = thật ra, thực ra (dùng để đính chính). Hiện nay là <span class='m'>currently / at the moment</span>.<span class='ex'><b>Actually, it is not finished yet.</b></span>" },
+        { en: 'eventually', vi: 'cuối cùng thì (KHÔNG phải có thể)',
+          use: "<b>eventually</b> = rốt cuộc, sau một hồi (they eventually agreed). Có khả năng là <span class='m'>possibly / maybe</span>." },
+        { en: 'sympathetic', vi: 'biết cảm thông (KHÔNG phải dễ mến)',
+          use: "<b>sympathetic</b> = biết cảm thông. Dễ mến/dễ thương là <span class='m'>likeable / friendly / nice</span>." },
+        { en: 'sensible', vi: 'biết điều, hợp lý (KHÔNG phải nhạy cảm)',
+          use: "<b>sensible</b> = có lý trí, khôn ngoan (a sensible decision). Nhạy cảm là <span class='m'>sensitive</span>." },
+        { en: 'comprehensive', vi: 'toàn diện (KHÔNG phải dễ hiểu)',
+          use: "<b>comprehensive</b> = đầy đủ, bao quát (a comprehensive guide). Dễ hiểu là <span class='m'>comprehensible / clear</span>." },
+        { en: 'library', vi: 'thư viện (KHÔNG phải hiệu sách)',
+          use: "<b>library</b> = thư viện. Hiệu sách là <span class='m'>bookshop / bookstore</span>." },
+        { en: 'fabric', vi: 'vải vóc (KHÔNG phải nhà máy)',
+          use: "<b>fabric</b> = vải, chất liệu. Nhà máy là <span class='m'>factory</span>. Nghĩa bóng: the <span class='m'>fabric</span> of society = kết cấu xã hội." },
+        { en: 'novel', vi: 'tiểu thuyết / mới lạ',
+          use: "<b>a novel</b> (danh từ) = tiểu thuyết. <b>novel</b> (tính từ) = mới lạ (a novel approach). Truyện ngắn là <span class='m'>a short story</span>." },
+        { en: 'assist', vi: 'hỗ trợ (KHÔNG phải tham dự)',
+          use: "<b>assist</b> = giúp đỡ, hỗ trợ. Tham dự là <span class='m'>attend</span>." },
+        { en: 'lecture', vi: 'bài giảng / mắng dạy đời',
+          use: "<b>a lecture</b> = bài giảng. <b>to lecture sb</b> = giảng giải kiểu dạy đời, mắng. Không phải bài đọc (= <span class='m'>a reading / a text</span>)." },
+        { en: 'figure', vi: 'con số / vóc dáng / nhân vật',
+          use: "<b>figure</b> nhiều nghĩa: <b>con số</b> (sales figures), <b>vóc dáng</b>, <b>nhân vật</b> (a public figure), <b>hình vẽ</b> (see Figure 2). <span class='m'>figure out</span> = tìm ra." }
+      ] }
+  ];
+
+  /* ── dựng bảng ─────────────────────────────────────────────────────────── */
+  function noDia(s) {
+    try { return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd'); }
+    catch (e) { return s; }
+  }
+  var records = [], termCount = 0;
+  CATS.forEach(function (cat, ci) {
+    var sec = el('div', 'ev-cat');
+    var head = el('p', 'ev-cat__h');
+    head.innerHTML = cat.h + (cat.tag ? ' <span class="ec-dim">· ' + cat.tag + '</span>' : '');
+    sec.appendChild(head);
+    if (cat.note) { var nn = el('p', 'ev-cat__n'); nn.innerHTML = cat.note; sec.appendChild(nn); }
+    var grid = el('div', 'ev-grid');
+    cat.items.forEach(function (it) {
+      var item = el('div', 'ev-item');
+      var s = (it.en + ' ' + it.vi).toLowerCase();
+      var enEl = el('span', 'ev-en', it.en);
+      if (it.use) {
+        enEl.className = 'ev-en is-term';
+        enEl.setAttribute('tabindex', '0');
+        enEl.setAttribute('role', 'button');
+        enEl.setAttribute('aria-label', it.en + ' — xem cách dùng');
+        enEl.setAttribute('title', 'Xem cách dùng');
+        enEl._use = it.use; enEl._en = it.en; enEl._vi = it.vi;
+        termCount++;
+      }
+      var viEl = el('span', 'ev-vi', it.vi);
+      item.appendChild(enEl);
+      item.appendChild(viEl);
+      grid.appendChild(item);
+      records.push({ el: item, cat: sec, s: s, sn: noDia(s) });
+    });
+    sec.appendChild(grid);
+    body.appendChild(sec);
+  });
+
+  /* ── popover cách dùng ─────────────────────────────────────────────────── */
+  var pop = el('div', 'evp');
+  pop.setAttribute('role', 'dialog');
+  pop.innerHTML = '<button class="evp__x" type="button" aria-label="Đóng"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
+    '<p class="evp__en"></p><p class="evp__vi"></p><p class="evp__d"></p>';
+  document.body.appendChild(pop);
+  var pEn = pop.querySelector('.evp__en'), pVi = pop.querySelector('.evp__vi'), pD = pop.querySelector('.evp__d');
+  var anchor = null, hideT = null;
+
+  function clearHide() { if (hideT) { clearTimeout(hideT); hideT = null; } }
+  function scheduleHide() { clearHide(); hideT = setTimeout(hidePop, 180); }
+  function place(fromScroll) {
+    if (!anchor) return;
+    var r = anchor.getBoundingClientRect();
+    if (fromScroll && (r.bottom < 0 || r.top > window.innerHeight)) { hidePop(); return; }
+    if (window.innerWidth <= 620) { pop.style.top = ''; pop.style.left = ''; return; }
+    var w = pop.offsetWidth, h = pop.offsetHeight, gap = 9;
+    var left = Math.min(Math.max(10, r.left - 12), window.innerWidth - w - 10);
+    var top = r.bottom + gap;
+    if (top + h > window.innerHeight - 10) top = Math.max(60, r.top - h - gap);
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+  }
+  function showPop(elm) {
+    clearHide();
+    if (anchor && anchor !== elm) anchor.classList.remove('is-open');
+    anchor = elm;
+    elm.classList.add('is-open');
+    pEn.textContent = elm._en;
+    pVi.textContent = elm._vi ? '· ' + elm._vi : '';
+    pD.innerHTML = elm._use;
+    pop.classList.add('on');
+    place();
+  }
+  function hidePop() {
+    clearHide();
+    pop.classList.remove('on');
+    if (anchor) anchor.classList.remove('is-open');
+    anchor = null;
+  }
+
+  /* hover (desktop) */
+  body.addEventListener('mouseover', function (e) {
+    var t = e.target.closest ? e.target.closest('.ev-en.is-term') : null;
+    if (t && t !== anchor) showPop(t);
+    else if (t) clearHide();
+  });
+  body.addEventListener('mouseout', function (e) {
+    var t = e.target.closest ? e.target.closest('.ev-en.is-term') : null;
+    if (t) scheduleHide();
+  });
+  pop.addEventListener('mouseenter', clearHide);
+  pop.addEventListener('mouseleave', scheduleHide);
+
+  /* click / tap toggle */
+  document.addEventListener('click', function (e) {
+    var x = e.target.closest ? e.target.closest('.evp__x') : null;
+    if (x) { hidePop(); return; }
+    var t = e.target.closest ? e.target.closest('.ev-en.is-term') : null;
+    if (t) { if (t === anchor) hidePop(); else showPop(t); return; }
+    if (!(e.target.closest && e.target.closest('.evp'))) hidePop();
+  });
+  /* bàn phím */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      var a = document.activeElement;
+      if (a && a.classList && a.classList.contains('is-term')) {
+        e.preventDefault();
+        if (a === anchor) hidePop(); else showPop(a);
+      }
+    }
+  });
+  view.addEventListener('scroll', function () { if (anchor) place(true); }, { passive: true });
+  window.addEventListener('resize', function () { if (anchor) place(); });
+
+  /* ── lọc ───────────────────────────────────────────────────────────────── */
+  function applyFilter() {
+    var q = (searchEl.value || '').trim().toLowerCase(), qn = noDia(q), shown = 0;
+    records.forEach(function (o) {
+      var hit = !q || o.s.indexOf(q) >= 0 || o.sn.indexOf(qn) >= 0;
+      o.el.classList.toggle('hide', !hit);
+      if (hit) shown++;
+    });
+    var cats = body.querySelectorAll('.ev-cat'), i;
+    for (i = 0; i < cats.length; i++) {
+      cats[i].classList.toggle('hide', cats[i].querySelectorAll('.ev-item:not(.hide)').length === 0);
+    }
+    emptyEl.classList.toggle('hide', shown !== 0);
+    countEl.textContent = q ? (shown + '/' + records.length + ' từ')
+      : (records.length + ' từ · ' + termCount + ' có cách dùng');
+  }
+  if (searchEl) searchEl.addEventListener('input', applyFilter);
+  applyFilter();
+
+  /* ── mở / đóng lớp phủ ─────────────────────────────────────────────────── */
+  var lastFocus = null;
+  function openView() {
+    if (view.classList.contains('is-open')) return;
+    lastFocus = document.activeElement;
+    view.classList.add('is-open');
+    view.setAttribute('aria-hidden', 'false');
+    document.documentElement.style.overflow = 'hidden';
+    view.scrollTop = 0;
+    setTimeout(function () { try { backBtn.focus(); } catch (e) {} }, 40);
+  }
+  function closeView() {
+    if (!view.classList.contains('is-open')) return;
+    hidePop();
+    view.classList.remove('is-open');
+    view.setAttribute('aria-hidden', 'true');
+    document.documentElement.style.overflow = '';
+    if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) {} }
+  }
+
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[href="#vocab"]') : null;
+    if (a) {
+      e.preventDefault();
+      openView();
+      if (window.history && history.pushState) history.pushState(null, '', '#vocab');
+      else location.hash = 'vocab';
+    }
+  });
+  if (backBtn) backBtn.addEventListener('click', function () {
+    if (window.history && history.pushState) history.pushState(null, '', location.pathname + location.search);
+    else location.hash = '';
+    closeView();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (pop.classList.contains('on')) { hidePop(); return; }
+    if (view.classList.contains('is-open')) {
+      if (window.history && history.pushState) history.pushState(null, '', location.pathname + location.search);
+      closeView();
+    }
+  });
+  window.addEventListener('popstate', function () {
+    if (location.hash === '#vocab') openView(); else closeView();
+  });
+  if (location.hash === '#vocab') openView();
 })();
 
 })();
