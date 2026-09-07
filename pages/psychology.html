@@ -23,6 +23,16 @@
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
 
+  /* ---- chữ mờ phải đọc được ----
+     Bậc --wb-fg-subtle của kit là gray-400: chỉ ~2,4:1 trên nền sáng và ~3,8:1 trên
+     nền tối, dưới ngưỡng 4,5:1 cho chữ thường. Trang này lại dùng đúng bậc đó cho
+     eyebrow, nhãn ô nhập trong mô hình, chú thích hình, nhãn trục của các biểu đồ SVG
+     và phần cite của trích dẫn — toàn thứ phải đọc được, không phải trang trí. Nâng
+     một bậc: ~4,5:1 sáng, ~7,2:1 tối. Định nghĩa ở CẢ HAI nhánh theme, nếu không
+     nhánh còn lại rơi về giá trị kit. */
+  :root { --wb-fg-subtle: var(--wb-gray-500); }
+  .dark { --wb-fg-subtle: var(--wb-gray-400); }
+
   /* ---- hero ---- */
   .ps-hero { padding: 30px 0 20px; }
   .ps-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
@@ -198,13 +208,15 @@
   @media (max-width: 620px) {
     /* Vùng chạm. .wb-btn--sm cao 27px và .wb-range chỉ dày 4px — trên điện thoại gần như
        không bấm hay kéo được, mà thanh trượt lại là cách chính để nghịch các mô hình.
-       Thanh trượt: content-box + padding dọc để vùng chạm cao 36px trong khi vệt track vẫn
+       Ngưỡng dùng ở đây là 40px cho MỌI thứ bấm/kéo được trong .ps-lab.
+       Thanh trượt: content-box + padding dọc để vùng chạm cao 40px trong khi vệt track vẫn
        dày 4px (background-clip: content-box giữ nguyên hình dạng cũ). */
-    .ps-lab .wb-btn { min-height: 36px; padding-top: 8px; padding-bottom: 8px; }
+    .ps-lab .wb-btn { min-height: 40px; padding-top: 10px; padding-bottom: 10px; }
     .ps-scale .wb-btn { min-width: 40px; }
-    .ps-lab .wb-switch { min-height: 36px; }   /* cả cái nhãn là vùng bấm, không chỉ 23px track */
+    .ps-lab .wb-input { min-height: 40px; }
+    .ps-lab .wb-switch { min-height: 40px; }   /* cả cái nhãn là vùng bấm, không chỉ 23px track */
     .ps-lab .wb-range {
-      box-sizing: content-box; height: 4px; padding-block: 16px; margin: 0;
+      box-sizing: content-box; height: 4px; padding-block: 18px; margin: 0;
       background-clip: content-box;
     }
   }
@@ -517,10 +529,14 @@
               <label for="cf-n">Cỡ mẫu</label>
               <div class="wb-cluster"><input class="wb-range" type="range" id="cf-n" min="20" max="400" step="10" value="160" style="flex:1 1 180px"><span class="ps-mono" id="cf-n-l" style="width:44px"></span></div>
             </div>
+            <div class="ps-lab__row">
+              <span>Mẫu mới, cùng tham số</span>
+              <div class="wb-cluster"><button class="wb-btn wb-btn--sm" type="button" id="cf-re">Lấy mẫu lại</button></div>
+            </div>
             <svg viewBox="0 0 520 300" class="ps-svg" id="cf-svg" role="img" aria-label="Biểu đồ phân tán giữa hai biến, kèm hệ số tương quan"></svg>
             <div style="margin-top:10px"><pre class="ps-out" id="cf-out"></pre></div>
             <p class="ps-lab__foot"><b>Điều cần thấy:</b> ở mặc định, tác động thật đúng bằng <b>0</b> — cấm hẳn X ảnh hưởng lên Y — mà đám mây điểm vẫn dốc rõ và <code>r</code> vẫn quanh 0,6. Một bài báo đo hai biến này sẽ viết “dùng mạng xã hội nhiều liên quan tới trầm buồn”, hoàn toàn đúng, và người đọc sẽ tự thêm chữ “gây ra” vào.</p>
-            <p class="ps-lab__foot">Ba cách một tương quan ra đời mà không có nhân quả trực tiếp: <b>biến thứ ba</b> (như trên), <b>chiều ngược lại</b> (trầm buồn khiến người ta ở nhà lướt mạng nhiều hơn), và <b>trùng hợp</b> khi mẫu nhỏ — hãy kéo cỡ mẫu xuống 20 và bấm đi bấm lại để thấy <code>r</code> nhảy loạn thế nào.</p>
+            <p class="ps-lab__foot">Ba cách một tương quan ra đời mà không có nhân quả trực tiếp: <b>biến thứ ba</b> (như trên), <b>chiều ngược lại</b> (trầm buồn khiến người ta ở nhà lướt mạng nhiều hơn), và <b>trùng hợp</b> khi mẫu nhỏ — hãy kéo cỡ mẫu xuống 20 rồi bấm <b>Lấy mẫu lại</b> vài lượt để thấy <code>r</code> nhảy loạn thế nào.</p>
           </div>
         </div>
 
@@ -1067,7 +1083,7 @@
             </div>
             <div style="margin-top:10px"><pre class="ps-out" id="sp-out">Chưa chạy.</pre></div>
             <p class="ps-lab__foot"><b>Con số bình thường:</b> 5–9 chữ số. Nếu bạn đạt trên 9, gần như chắc chắn bạn đã <b>đóng gói</b> — nhóm chữ số thành ngày tháng, số điện thoại, cặp đôi. Đó không phải gian lận, đó chính là cơ chế mà mọi kỹ thuật ghi nhớ đều khai thác.</p>
-            <p class="ps-lab__foot"><b>Vì sao con số này đáng quan tâm:</b> nó là <b>cổ chai</b> của mọi việc học. Một lời giải thích nhét bốn khái niệm mới vào một câu sẽ vượt trần, và người nghe mất luôn cả bốn. Đây cũng là lý do trang này giới thiệu đúng một ý mới mỗi lúc.</p>
+            <p class="ps-lab__foot"><b>Vì sao con số này đáng quan tâm:</b> nó là <b>cổ chai</b> của mọi việc học. Một lời giải thích nhét bốn khái niệm mới vào một câu sẽ vượt trần, và người nghe mất luôn cả bốn.</p>
           </div>
         </div>
 
@@ -1081,7 +1097,7 @@
         <p class="ps-eyebrow-sec"><b>Mind 6/9</b> — ứng dụng trực tiếp: học trang này bằng chính trang này</p>
         <h2 class="ps-sec-title">Bốn kỹ thuật học có bằng chứng mạnh nhất — và ba kỹ thuật phổ biến gần như vô dụng</h2>
 
-        <p class="ps-lede">Đây là mục có tỉ lệ “lợi ích trên số chữ” cao nhất cả trang. Các kỹ thuật dưới đây đứng vững qua hàng trăm thí nghiệm, nhiều độ tuổi, nhiều môn học. Điểm chung của chúng: <b>chúng đều làm việc học cảm thấy khó hơn và hiệu quả hơn</b> — và đó chính là lý do hầu như không ai dùng.</p>
+        <p class="ps-lede">Các kỹ thuật dưới đây đứng vững qua hàng trăm thí nghiệm, nhiều độ tuổi, nhiều môn học. Điểm chung của chúng: <b>chúng đều làm việc học cảm thấy khó hơn và hiệu quả hơn</b> — và đó chính là lý do hầu như không ai dùng.</p>
 
         <div class="ps-tw">
           <table class="wb-table wb-table--compact">
@@ -1252,7 +1268,7 @@
         <p class="ps-eyebrow-sec"><b>Self 2/5</b> — cảm xúc</p>
         <h2 class="ps-sec-title">Cảm xúc không phải phản ứng thuần tuý. Nó là <i>một cách diễn giải</i> trạng thái cơ thể</h2>
 
-        <p class="ps-lede">Bốn lý thuyết lớn, và điều đáng học không phải tên chúng mà là <b>trật tự nhân quả mà mỗi cái đề xuất</b>. Sự khác nhau nghe hàn lâm nhưng có hệ quả thực hành trực tiếp: nếu diễn giải là một khâu trong chuỗi, thì <b>đổi diễn giải sẽ đổi cảm xúc</b> — và đó là toàn bộ nền tảng của liệu pháp nhận thức ở phần Clinical.</p>
+        <p class="ps-lede">Năm lý thuyết lớn, và điều đáng học không phải tên chúng mà là <b>trật tự nhân quả mà mỗi cái đề xuất</b>. Sự khác nhau nghe hàn lâm nhưng có hệ quả thực hành trực tiếp: nếu diễn giải là một khâu trong chuỗi, thì <b>đổi diễn giải sẽ đổi cảm xúc</b> — và đó là toàn bộ nền tảng của liệu pháp nhận thức ở phần Clinical.</p>
 
         <div class="ps-tw">
           <table class="wb-table wb-table--compact">
@@ -2048,10 +2064,13 @@ function tTestP(t, df) { return ibeta(df / 2, 0.5, df / (df + t * t)); }
 (function () {
   var box = $('cf-svg'); if (!box) return;
   var W = 520, H = 300, L = 52, R = 16, T = 16, B = 40;
-  var draws = null, lastN = -1;
+  /* Hạt giống là biến, không phải hằng: mô hình này dạy "tương quan ở mẫu nhỏ nhảy loạn",
+     mà muốn thấy nó nhảy thì phải bốc được mẫu MỚI với cùng tham số. Hạt cố định thì mỗi
+     cỡ mẫu chỉ có đúng một bộ số, và r không bao giờ đổi. */
+  var draws = null, lastN = -1, seed = 20260906;
 
   function sample(n) {
-    var rand = rng(20260906);
+    var rand = rng(seed);
     draws = { z: normals(n, rand), e1: normals(n, rand), e2: normals(n, rand) };
     lastN = n;
   }
@@ -2114,6 +2133,7 @@ function tTestP(t, df) { return ibeta(df / 2, 0.5, df / (df + t * t)); }
       '\n' + verdict;
   }
   ['cf-eff', 'cf-conf', 'cf-n'].forEach(function (id) { $(id).addEventListener('input', render); });
+  $('cf-re').addEventListener('click', function () { seed = (seed + 7919) % 2147483647; lastN = -1; render(); });
   redraws.push(render);
   render();
 })();
@@ -2294,11 +2314,15 @@ function tTestP(t, df) { return ibeta(df / 2, 0.5, df / (df + t * t)); }
 /* ═════════════════ Mô hình 5 — bài Stroop ═════════════════ */
 (function () {
   var stage = $('st-word'); if (!stage) return;
+  /* Bốn màu này là KÍCH THÍCH của bài Stroop nên phải giữ nguyên ở cả hai theme —
+     không token hoá được. Đổi lại chúng phải đọc được trên cả nền sáng lẫn nền tối:
+     #c8971b (2,4:1) và #e07a1e (2,8:1) trên nền sáng là quá mờ, nên hai màu đó được
+     hạ độ sáng vừa đủ để cả bốn vượt 3:1 ở hai nền mà vẫn giữ đúng sắc. */
   var COLORS = [
     { name: 'ĐỎ',  css: '#e0483c' },
-    { name: 'VÀNG', css: '#c8971b' },
+    { name: 'VÀNG', css: '#b3860f' },
     { name: 'TÍM', css: '#8a5cd1' },
-    { name: 'CAM', css: '#e07a1e' }
+    { name: 'CAM', css: '#cf6a12' }
   ];
   var trials = [], idx = -1, t0 = 0, data = [];
 
@@ -2658,7 +2682,7 @@ function tTestP(t, df) { return ibeta(df / 2, 0.5, df / (df + t * t)); }
       if (q.a < 0) head += 'không có đáp án đúng, và đó chính là điểm của câu hỏi.';
       else if (picks[i] === null) head += 'bạn chưa chọn. Đáp án đúng: “' + q.o[q.a] + '”.';
       else if (picks[i] === q.a) head += 'bạn chọn đúng.';
-      else head += 'đa số chọn như bạn, và đó là câu trả lời sai. Đáp án đúng: “' + q.o[q.a] + '”.';
+      else head += 'đó là câu trả lời sai. Đáp án đúng: “' + q.o[q.a] + '”.';
       var p1 = document.createElement('p');
       p1.className = 'ps-q__t';
       p1.innerHTML = '<b>' + head + '</b>';
