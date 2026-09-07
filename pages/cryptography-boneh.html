@@ -23,6 +23,15 @@
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
 
+  /* ---- chữ mờ phải đọc được ----
+     Bậc --wb-fg-subtle của kit là gray-400: chỉ ~2,4:1 trên nền sáng và ~3,8:1 trên
+     nền tối, dưới ngưỡng 4,5:1 cho chữ thường. Trang này lại dùng đúng bậc đó cho
+     eyebrow, nhãn ô nhập trong mô hình, chú thích hình và phần cite của trích dẫn —
+     toàn thứ phải đọc được, không phải trang trí. Nâng một bậc: ~4,5:1 sáng, ~7,2:1
+     tối. Định nghĩa ở CẢ HAI nhánh theme, nếu không nhánh còn lại rơi về giá trị kit. */
+  :root { --wb-fg-subtle: var(--wb-gray-500); }
+  .dark { --wb-fg-subtle: var(--wb-gray-400); }
+
   /* ---- hero ---- */
   .cb-hero { padding: 30px 0 20px; }
   .cb-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
@@ -116,7 +125,6 @@
   /* ---- diagrams ---- */
   .cb-viz { margin: 16px 0 6px; }
   .cb-viz .wb-chart__svg { width: 100%; height: auto; }
-  .cb-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .03em; color: var(--wb-fg-subtle); margin: 10px 0 0; line-height: 1.55; }
   .cb-vt { fill: var(--wb-fg); font-size: 12px; font-weight: 640; font-family: var(--wb-font); }
   .cb-vs { fill: var(--wb-fg-muted); font-size: 10.5px; font-family: var(--wb-font); }
   .cb-vm { fill: var(--wb-fg); font-size: 11px; font-family: var(--wb-font-mono); }
@@ -151,10 +159,12 @@
 
   /* bit strip */
   .cb-bits { display: flex; flex-wrap: wrap; gap: 2px; }
-  .cb-bit { width: 15px; height: 18px; display: grid; place-items: center; font-family: var(--wb-font-mono); font-size: 10.5px; border-radius: 3px; background: var(--wb-surface-hover); color: var(--wb-fg-subtle); }
+  /* Ô bit/byte nằm trên --wb-surface-hover (đậm hơn canvas), nên bậc chữ mờ ở đó chỉ
+     đạt 4,3:1. Dùng --wb-fg: trạng thái bật/tắt vẫn phân biệt rõ nhờ ô đảo màu. */
+  .cb-bit { width: 15px; height: 18px; display: grid; place-items: center; font-family: var(--wb-font-mono); font-size: 10.5px; border-radius: 3px; background: var(--wb-surface-hover); color: var(--wb-fg); }
   .cb-bit.on { background: var(--wb-fg); color: var(--wb-canvas); }
   .cb-bytes { display: flex; flex-wrap: wrap; gap: 3px; }
-  .cb-byte { min-width: 26px; padding: 2px 4px; text-align: center; font-family: var(--wb-font-mono); font-size: 11px; border-radius: 4px; background: var(--wb-surface-hover); color: var(--wb-fg-muted); }
+  .cb-byte { min-width: 26px; padding: 2px 4px; text-align: center; font-family: var(--wb-font-mono); font-size: 11px; border-radius: 4px; background: var(--wb-surface-hover); color: var(--wb-fg); }
   .cb-byte.hot { background: var(--wb-fg); color: var(--wb-canvas); font-weight: 700; }
   .cb-byte.warm { background: var(--wb-neutral-strong); color: var(--wb-canvas); }
 
@@ -168,7 +178,11 @@
 
   /* share chips for Shamir */
   .cb-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .cb-chip { font-family: var(--wb-font-mono); font-size: 11.5px; padding: 4px 9px; border-radius: 999px; border: var(--wb-bw) solid var(--wb-border); background: var(--wb-canvas); color: var(--wb-fg-muted); cursor: pointer; user-select: none; }
+  /* Chip là <button> thật (không phải <span> có onclick) để bấm được bằng bàn phím
+     và để trình đọc màn hình đọc ra trạng thái qua aria-pressed. Vì thế phải tự đặt
+     lại mấy mặc định của <button>: margin (Safari), line-height, canh giữa. */
+  .cb-chip { display: inline-flex; align-items: center; margin: 0; font-family: var(--wb-font-mono); font-size: 11.5px; line-height: 1.45; padding: 4px 9px; border-radius: 999px; border: var(--wb-bw) solid var(--wb-border); background: var(--wb-canvas); color: var(--wb-fg-muted); cursor: pointer; user-select: none; }
+  .cb-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
   .cb-chip.on { background: var(--wb-fg); border-color: var(--wb-fg); color: var(--wb-canvas); font-weight: 640; }
 
   /* interactive svg surfaces */
@@ -187,23 +201,27 @@
      1. Navbar: .wb-navbar__brand là flex:none nên tiêu đề dài đẩy cụm nút bên phải
         tràn khỏi viewport ở 320px. Cho brand co lại và cắt chữ bằng ellipsis;
         .wb-navbar__mark vẫn flex:none nên biểu tượng không bao giờ méo.
-     2. Nút/ô chọn trong các mô hình: wb-btn--sm chỉ cao 27–30px, checkbox 18px,
-        thanh trượt dày 4px — đều dưới ngưỡng chạm 32px trên cảm ứng. */
+     2. Nút/ô chọn trong các mô hình: wb-btn--sm chỉ cao 27–30px, tab dạng pill 29px,
+        checkbox 18px, thanh trượt dày 4px — đều dưới ngưỡng chạm 40px trên cảm ứng.
+        Mọi thứ bấm/kéo được trong .cb-lab đều được nâng lên đúng 40px. */
   @media (max-width: 560px) {
     .wb-navbar__brand { flex: 0 1 auto; min-width: 0; overflow: hidden; }
     .cb-brand-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-    .cb-lab .wb-btn--sm { min-height: 36px; padding-block: 8px; }
-    .cb-lab .wb-check { min-height: 36px; --wb-check-size: 22px; }
-    /* Vùng chạm 36px cho thanh trượt. .wb-range của kit là height:4px + box-sizing:border-box,
+    .cb-lab .wb-btn--sm { min-height: 40px; padding-block: 10px; }
+    .cb-lab .wb-check { min-height: 40px; --wb-check-size: 22px; }
+    .cb-lab .wb-input { min-height: 40px; }
+    /* <button> tự canh giữa nội dung theo chiều dọc, nên min-height là đủ. */
+    .cb-lab .wb-tab { min-height: 40px; }
+    /* Vùng chạm 40px cho thanh trượt. .wb-range của kit là height:4px + box-sizing:border-box,
        nên padding-block đơn thuần bị chặn ở 22px — phải đổi sang content-box thì padding mới
        cộng thêm thật. background-clip: content-box giữ vệt track vẫn đúng 4px như cũ. */
     .cb-lab .wb-range {
-      box-sizing: content-box; height: 4px; padding-block: 16px; margin-block: 0;
+      box-sizing: content-box; height: 4px; padding-block: 18px; margin-block: 0;
       background-clip: content-box;
     }
-    .cb-lab .wb-range-ticks__marks { margin-top: -8px; }
-    .cb-chip { padding: 8px 12px; }
+    .cb-lab .wb-range-ticks__marks { margin-top: -10px; }
+    .cb-chip { min-height: 40px; padding: 8px 14px; }
   }
   /* Ở 320px, chỉ co brand thôi thì chữ vẫn bị cắt mất đuôi; nhả thêm 30px từ
      padding + gap của thanh nav là đủ chỗ cho trọn chữ "Cryptography". */
@@ -449,7 +467,6 @@
               <text class="cb-vs" x="30" y="200">Ô bên phải được tin là không tồn tại ⇒ ô đứt nét ở giữa cũng không tồn tại. Đó là toàn bộ nội dung của một chứng minh quy dẫn.</text>
             </svg>
           </div>
-          <p class="cb-src">Hình cho thấy hướng của phép chứng minh: kẻ địch bị dùng như linh kiện, nên sự tồn tại của hắn kéo theo một điều ta tin là bất khả.</p>
         </div>
 
         <div class="cb-quote">
@@ -745,7 +762,6 @@
               <text class="cb-vs" x="354" y="194">cả vòng vẫn là một song ánh hoàn hảo.</text>
             </svg>
           </div>
-          <p class="cb-src">Hình cho thấy đường đi của hai nửa trong một vòng, và ba bước quay lui — điểm mấu chốt là bước 2 chỉ chạy F theo chiều xuôi.</p>
         </div>
 
         <h3 class="cb-h3">DES: bài học về độ dài khoá</h3>
@@ -931,7 +947,7 @@ c' = c ⊕ Δ  ⟹  m' = c' ⊕ ks = (m ⊕ ks ⊕ Δ) ⊕ ks = <b>m ⊕ Δ</b>
               <tr><td><b>MAC từ PRF</b></td><td>một PRF an toàn</td><td>Chính là <code>t = F(k, m)</code>, cho thông điệp ngắn. Định lý: PRF an toàn với miền ra đủ lớn ⇒ MAC an toàn. Thẻ có thể <b>cắt ngắn</b> còn 80–96 bit vẫn ổn — vì kẻ địch phải đoán đúng cả thẻ, xác suất <code>2⁻⁸⁰</code> là đủ.</td></tr>
               <tr><td><b>CBC-MAC / ECBC</b></td><td>block cipher</td><td>Chạy CBC rồi <b>chỉ giữ khối cuối</b>, sau đó mã hoá thêm một lần bằng khoá thứ hai. Không có bước cuối ấy thì giả mạo được dễ dàng bằng cách nối chuỗi. Là nền của <b>CMAC</b> — chuẩn được dùng trong nhiều hệ nhúng và thẻ thanh toán.</td></tr>
               <tr><td><b>NMAC → HMAC</b></td><td>hàm băm</td><td>Xích các lần gọi hàm nén rồi “bọc” lại bằng một lần gọi nữa với khoá khác. Bản thực dụng của nó là <b>HMAC</b> — xem mục sau. Đây là MAC phổ biến nhất thế giới.</td></tr>
-              <tr><td><b>PMAC</b></td><td>block cipher</td><td><b>Song song hoá được</b> (CBC-MAC thì không) và <b>cập nhật tăng dần</b>: đổi một khối trong thông điệp dài thì tính lại thẻ chỉ tốn hai lần gọi mật mã, không phải chạy lại từ đầu. Hữu ích cho dữ liệu lớn sửa tại chỗ.</td></tr>
+              <tr><td><b>PMAC</b></td><td>block cipher</td><td><b>Song song hoá được</b> (CBC-MAC thì không) và <b>cập nhật tăng dần</b>: đổi một khối trong thông điệp dài thì tính lại thẻ chỉ tốn vài lần gọi mật mã, không phải chạy lại từ đầu. Hữu ích cho dữ liệu lớn sửa tại chỗ.</td></tr>
               <tr><td><b>Carter–Wegman</b></td><td>hàm băm phổ quát + PRF</td><td>Nén thông điệp dài bằng một <b>hàm băm phổ quát</b> rất nhanh (chỉ là phép nhân trên trường hữu hạn — không cần chống va chạm theo nghĩa mật mã), rồi chỉ chạy PRF <b>một lần duy nhất</b> lên kết quả kèm nonce. <b>Nhanh nhất trong các loại</b>, và là ruột của <b>GCM</b> và <b>Poly1305</b>. Cái giá: nonce lặp thì lộ khoá băm, và mất luôn khả năng xác thực — nghiêm trọng hơn nhiều so với lặp nonce khi chỉ mã hoá.</td></tr>
             </tbody>
           </table>
@@ -1043,7 +1059,6 @@ diff = 0;  for (i = 0; i &lt; n; i++) diff |= tag[i] ^ computed[i];   return dif
               <text class="cb-vs" x="20" y="192">HMAC vá đúng chỗ này bằng cách bọc thêm một lần băm nữa ở ngoài, nên giá trị xích cuối không lộ ra ngoài.</text>
             </svg>
           </div>
-          <p class="cb-src">Hình cho thấy vì sao “băm khoá nối thông điệp” là một MAC hỏng, và HMAC vá bằng cách nào.</p>
         </div>
 
         <p class="cb-p">Hệ quả thực tế rất cụ thể: nếu API của bạn xác thực bằng <code>t = SHA256(secret ‖ params)</code>, kẻ địch <b>nối thêm tham số của hắn</b> vào cuối và tính được thẻ hợp lệ — mà nhiều bộ phân tích tham số lại lấy giá trị <i>cuối cùng</i> khi có trùng khoá. Đây là lỗi đã xảy ra ở nhiều API thật, kể cả của các công ty lớn. Cách vá đúng là dùng <b>HMAC</b>:</p>
@@ -1473,7 +1488,7 @@ Bob:    k = H(u, u<sup>b</sup>) — vì u<sup>b</sup> = g<sup>ab</sup> = h<sup>a
         <ul class="cb-ul">
           <li><b>Ngẫu nhiên hoá sẵn trong thiết kế.</b> Mỗi lần gửi Alice bốc <code>a</code> mới, nên cùng một thông điệp ra hai bản mã khác nhau — không cần bôi thêm lớp đệm như RSA. Đây là ưu điểm cấu trúc, không phải chi tiết cài đặt.</li>
           <li><b>An toàn dựa trên DDH</b> cộng một hàm băm; đạt an toàn CCA khi ghép với AEAD và chứng minh trong mô hình bộ tiên tri ngẫu nhiên.</li>
-          <li><b>Bản mã dài gấp đôi</b> (phải gửi kèm <code>u</code>), đổi lại <b>khoá ngắn hơn nhiều</b> khi chuyển sang đường cong elliptic. Biến thể EC của nó tên là <b>ECIES</b>, và đó là thứ đang chạy trong phần lớn hệ thống hiện đại — kể cả mã hoá đầu-cuối của các ứng dụng nhắn tin.</li>
+          <li><b>Bản mã dài thêm đúng một phần tử nhóm</b> (phải gửi kèm <code>u</code>) — với ElGamal sách giáo khoa, nơi bản rõ <i>là</i> một phần tử nhóm, đó chính là gấp đôi; với bản lai ở trên thì chỉ là phần phụ trội cố định. Đổi lại <b>khoá ngắn hơn nhiều</b> khi chuyển sang đường cong elliptic. Biến thể EC của nó tên là <b>ECIES</b>, và đó là thứ đang chạy trong phần lớn hệ thống hiện đại — kể cả mã hoá đầu-cuối của các ứng dụng nhắn tin.</li>
         </ul>
 
         <div class="wb-alert wb-alert--plain">
@@ -1604,7 +1619,6 @@ Bob:    k = H(u, u<sup>b</sup>) — vì u<sup>b</sup> = g<sup>ab</sup> = h<sup>a
               <text class="cb-vs" x="60" y="184">Thứ tự là tất cả: cam kết TRƯỚC khi biết thử thách ⇒ không kịp bịa.</text>
             </svg>
           </div>
-          <p class="cb-src">Hình cho thấy ba nhịp và điều kiện kiểm tra cuối; toàn bộ sức mạnh nằm ở chỗ cam kết được gửi trước thử thách.</p>
         </div>
 
         <p class="cb-p">Vì sao nó thuyết phục được người kiểm? Nếu kẻ mạo danh <i>không</i> biết <code>a</code>, hắn phải chọn <code>u</code> trước khi biết <code>c</code>. Với <code>u</code> đã cố định, hắn chỉ trả lời đúng được cho <b>một</b> giá trị <code>c</code> duy nhất mà hắn đoán trước. Xác suất đoán trúng là <code>1/|c|</code> — nhỏ tuỳ ý.</p>
@@ -1673,7 +1687,9 @@ Bob:    k = H(u, u<sup>b</sup>) — vì u<sup>b</sup> = g<sup>ab</sup> = h<sup>a
             <div class="wb-cluster wb-cluster--tight" style="margin-bottom:10px">
               <label class="wb-check"><input type="checkbox" id="zk-cheat"> Người chứng minh gian lận (không có lời giải thật)</label>
             </div>
-            <svg class="cb-svg cb-svg--sm" id="zk-svg" viewBox="0 0 360 240" role="img" aria-label="Đồ thị sáu đỉnh; bấm vào một cạnh để mở màu hai đỉnh đầu mút"></svg>
+            <!-- role="group", không phải role="img": các cạnh bên trong là nút bấm được,
+                 mà role="img" thì trình đọc màn hình che hết con bên trong. -->
+            <svg class="cb-svg cb-svg--sm" id="zk-svg" viewBox="0 0 360 240" role="group" aria-label="Đồ thị sáu đỉnh; bấm vào một cạnh để mở màu hai đỉnh đầu mút"></svg>
             <div class="wb-cluster wb-cluster--tight" style="margin-top:12px">
               <button class="wb-btn wb-btn--sm" id="zk-next"><span class="wb-ico wb-ico--xs">refresh</span> Vòng mới (úp lại &amp; đổi màu)</button>
               <button class="wb-btn wb-btn--sm wb-btn--outline" id="zk-auto">Chạy nhanh 30 vòng</button>
@@ -2487,11 +2503,20 @@ Array.prototype.slice.call(document.querySelectorAll('[data-cbtabs]')).forEach(f
       l.setAttribute('x2', V[e[1]][0]); l.setAttribute('y2', V[e[1]][1]);
       l.setAttribute('style', 'stroke:var(--wb-' + (revealed === i ? 'fg' : 'neutral') + ');stroke-width:' + (revealed === i ? 2.6 : 1.3));
       svg.appendChild(l);
+      /* Dải trong suốt để bấm. Rộng 18px là mức tối đa an toàn: hai cạnh kề nhau chỉ
+         cách nhau ~22px ở chỗ hẹp nhất, rộng hơn nữa là bấm cạnh này lại trúng cạnh kia.
+         tabindex + role + keydown để mở được cạnh bằng bàn phím, không chỉ bằng chuột. */
       var hit = document.createElementNS(NS, 'line');
       hit.setAttribute('x1', V[e[0]][0]); hit.setAttribute('y1', V[e[0]][1]);
       hit.setAttribute('x2', V[e[1]][0]); hit.setAttribute('y2', V[e[1]][1]);
       hit.setAttribute('style', 'stroke:transparent;stroke-width:18;cursor:pointer');
+      hit.setAttribute('tabindex', '0');
+      hit.setAttribute('role', 'button');
+      hit.setAttribute('aria-label', 'Mở cạnh ' + (e[0] + 1) + '–' + (e[1] + 1));
       hit.addEventListener('click', function () { reveal(i); });
+      hit.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Enter' || ev.key === ' ' || ev.key === 'Spacebar') { ev.preventDefault(); reveal(i); }
+      });
       svg.appendChild(hit);
     });
     V.forEach(function (v, i) {
@@ -2615,12 +2640,17 @@ Array.prototype.slice.call(document.querySelectorAll('[data-cbtabs]')).forEach(f
     } else {
       $('ec-out').textContent = 'P và Q đối xứng nhau \u2192 P + Q = điểm ở vô cực (phần tử đơn vị của nhóm).';
     }
+    /* Vòng trong suốt r=20 quanh mỗi tay kéo. Điểm đen chỉ r=8 (16px, co còn ~13px trên
+       điện thoại) nên gần như không bắt được bằng ngón tay. Vẽ TRƯỚC điểm đen để điểm đen
+       vẫn nằm trên; fill:transparent vẫn nhận sự kiện con trỏ (fill:none thì không). */
+    var t1 = el('circle', { cx: sx(P.x), cy: sy(py), r: 20 }, 'fill:transparent;cursor:grab');
+    var t2 = el('circle', { cx: sx(Q.x), cy: sy(qy), r: 20 }, 'fill:transparent;cursor:grab');
     var h1 = el('circle', { cx: sx(P.x), cy: sy(py), r: 8 }, 'fill:var(--wb-fg);cursor:grab');
     var h2 = el('circle', { cx: sx(Q.x), cy: sy(qy), r: 8 }, 'fill:var(--wb-fg);cursor:grab');
     el('text', { x: sx(P.x) + 11, y: sy(py) - 8 }, 'font-size:12px;font-weight:650;fill:var(--wb-fg);font-family:var(--wb-font)').textContent = 'P';
     el('text', { x: sx(Q.x) + 11, y: sy(qy) - 8 }, 'font-size:12px;font-weight:650;fill:var(--wb-fg);font-family:var(--wb-font)').textContent = 'Q';
-    h1.addEventListener('pointerdown', function (e) { drag = P; e.preventDefault(); });
-    h2.addEventListener('pointerdown', function (e) { drag = Q; e.preventDefault(); });
+    [t1, h1].forEach(function (n) { n.addEventListener('pointerdown', function (e) { drag = P; e.preventDefault(); }); });
+    [t2, h2].forEach(function (n) { n.addEventListener('pointerdown', function (e) { drag = Q; e.preventDefault(); }); });
   }
   svg.addEventListener('pointermove', function (e) {
     if (!drag) return;
@@ -2672,14 +2702,26 @@ Array.prototype.slice.call(document.querySelectorAll('[data-cbtabs]')).forEach(f
     var a2 = ((x1 * y2 % MOD - y1 * x2 % MOD) % MOD + MOD) % MOD * inv(det) % MOD;
     return 'f(x) = ' + S + ' + ' + a1 + 'x + ' + a2 + 'x\u00b2';
   }
+  /* Chip là <button> chứ không phải <span>: bấm được bằng Tab + Enter, và aria-pressed
+     đọc ra trạng thái đang chọn. Chỉ vẽ lại chip khi bí mật đổi — bấm chọn thì cập nhật
+     tại chỗ, nếu không mỗi lần bấm sẽ dựng lại nút và tiêu điểm bàn phím rơi về body. */
+  var chips = [];
   function render() {
     box.innerHTML = '';
-    shares.forEach(function (sh, i) {
-      var b = document.createElement('span');
-      b.className = 'cb-chip' + (sel[i] ? ' on' : '');
+    chips = shares.map(function (sh, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
       b.textContent = 'mảnh ' + sh[0] + ' = ' + sh[1];
-      b.addEventListener('click', function () { sel[i] = !sel[i]; render(); });
+      b.addEventListener('click', function () { sel[i] = !sel[i]; paint(); });
       box.appendChild(b);
+      return b;
+    });
+    paint();
+  }
+  function paint() {
+    chips.forEach(function (b, i) {
+      b.className = 'cb-chip' + (sel[i] ? ' on' : '');
+      b.setAttribute('aria-pressed', sel[i] ? 'true' : 'false');
     });
     var pts = shares.filter(function (_, i) { return sel[i]; });
     var out = $('sh-out');
