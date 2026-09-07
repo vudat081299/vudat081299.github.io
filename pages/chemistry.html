@@ -7,7 +7,6 @@
 <title>Chemistry — giáo trình hoá học tự học, từ hạt nhân tới phản ứng hữu cơ</title>
 <meta name="description" content="Giáo trình hoá học đầy đủ để tự học tại nhà, viết bằng tiếng Việt: cấu tạo nguyên tử, orbital, bảng tuần hoàn, liên kết, hình học phân tử, lực liên phân tử, mol và stoichiometry, khí, dung dịch, nhiệt hoá học, entropy, năng lượng tự do Gibbs, động học, cân bằng, acid–base, chuẩn độ, oxi hoá khử và điện hoá, hoá hữu cơ, cơ chế phản ứng, phổ, sinh hoá và hoá vô cơ — kèm 16 mô hình tương tác nghịch trực tiếp trên trang.">
 
-<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
 <link rel="stylesheet" href="../web-builder/web-builder.css">
 <script>
   /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành. */
@@ -22,6 +21,19 @@
   /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+
+  /* ---- tương phản của bậc chữ mờ nhất ----------------------------------------
+     Bậc "subtle" của kit là gray-400: chỉ 2,4:1 trên nền sáng, dưới xa ngưỡng đọc
+     được 4,5:1. Trang này dùng bậc đó cho nhãn trục đồ thị, lời dẫn nguồn, nhãn
+     bảng và phần <cite> của mỗi ví von — tất cả đều là nội dung phải ĐỌC, không
+     phải trang trí. Đè lại trong phạm vi trang (không sửa kit, vì 14 trang khác
+     dùng chung file CSS đó): đo được 5,0:1 ở nền sáng và 6,2:1 ở nền tối.
+     Lưu ý một giới hạn thật: trên nền sáng #f7f7f8, ngưỡng 4,5:1 rơi đúng vào bậc
+     --wb-fg-muted, nên không còn chỗ cho một bậc thứ ba vừa mờ hơn vừa đọc được —
+     ở light mode hai bậc mờ nhất gần như trùng nhau. Nền tối thì vẫn còn chỗ, và
+     bậc subtle ở đó vẫn rõ ràng mờ hơn muted. */
+  body { --wb-fg-subtle: #6a6a73; }
+  .dark body { --wb-fg-subtle: #909099; }
 
   /* ---- hero ---- */
   .ch-hero { padding: 30px 0 20px; }
@@ -179,13 +191,20 @@
   .ch-dim { color: var(--wb-fg-subtle); }
   .ch-mark { background: var(--wb-fg); color: var(--wb-canvas); border-radius: 3px; padding: 0 3px; }
 
-  /* ---- chips / toggles inside labs ---- */
+  /* ---- chips / toggles inside labs ----
+     Chip là <button type="button">, không phải <span>: chúng là cách duy nhất để
+     đổi trạng thái của 13 trong 16 mô hình, nên phải tới được bằng Tab và Enter. */
   .ch-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .ch-chip { font-family: var(--wb-font-mono); font-size: 11.5px; padding: 4px 9px; border-radius: 999px; border: var(--wb-bw) solid var(--wb-border); background: var(--wb-canvas); color: var(--wb-fg-muted); cursor: pointer; user-select: none; }
+  .ch-chip { font-family: var(--wb-font-mono); font-size: 11.5px; line-height: 1.3; padding: 5px 9px; border-radius: 999px; border: var(--wb-bw) solid var(--wb-border); background: var(--wb-canvas); color: var(--wb-fg-muted); cursor: pointer; user-select: none; -webkit-appearance: none; appearance: none; text-align: center; }
   .ch-chip.on { background: var(--wb-fg); border-color: var(--wb-fg); color: var(--wb-canvas); font-weight: 640; }
+  .ch-chip:focus-visible { outline: 2px solid var(--wb-fg); outline-offset: 2px; }
 
-  /* ---- interactive svg surfaces ---- */
-  .ch-svg { width: 100%; height: auto; display: block; margin: 0 auto; touch-action: none; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
+  /* ---- interactive svg surfaces ----
+     KHÔNG đặt touch-action: none ở đây. Không SVG nào trên trang nhận chạm (mọi
+     tương tác đi qua chip và thanh trượt), nên nó chỉ có một tác dụng: ngón tay
+     đặt trúng một sơ đồ cao 150–240px chiếm gần hết màn hình thì trang không cuộn
+     được nữa. */
+  .ch-svg { width: 100%; height: auto; display: block; margin: 0 auto; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
   .ch-svg--sm { max-width: 400px; }
   .ch-svg--md { max-width: 560px; }
 
@@ -195,6 +214,15 @@
   .ch-el { position: relative; border: var(--wb-bw) solid var(--wb-border); border-radius: 4px; background: var(--wb-surface); padding: 3px 2px 4px; text-align: center; cursor: pointer; user-select: none; line-height: 1.1; transition: transform .08s ease; }
   .ch-el:hover { transform: translateY(-1px); border-color: var(--wb-fg); z-index: 2; }
   .ch-el.is-sel { outline: 2px solid var(--wb-fg); outline-offset: 1px; z-index: 3; }
+  .ch-el:focus-visible { outline: 3px solid var(--wb-fg); outline-offset: 2px; z-index: 4; }
+
+  /* Ô nguyên tố chỉ rộng 26–34px, không cách nào đạt vùng chạm 40×40 mà vẫn giữ
+     đủ 18 cột trên một màn hình điện thoại. Nên có thêm MỘT đường chọn nữa: hộp
+     chọn dưới đây (cao 40px, mở ra danh sách hệ điều hành) là cách chính để chọn
+     nguyên tố trên mobile và bằng bàn phím; lưới vẫn dùng để nhìn xu hướng. */
+  .ch-pt-pick { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .ch-pt-pick label { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); }
+  .ch-pt-pick .wb-select { width: auto; max-width: 100%; min-height: 40px; }
   .ch-el .z { font-family: var(--wb-font-mono); font-size: 8px; color: var(--wb-fg-subtle); display: block; }
   .ch-el .sym { font-size: 13px; font-weight: 700; color: var(--wb-fg); display: block; }
   .ch-el .val { font-family: var(--wb-font-mono); font-size: 7.5px; color: var(--wb-fg-muted); display: block; min-height: 9px; }
@@ -242,16 +270,22 @@
   /* ---- vùng chạm trên màn cảm ứng --------------------------------------------
      Thanh trượt là cách chính để nghịch 16 mô hình, nhưng `.wb-range` cao đúng
      4px — vùng chạm thật của <input type=range> là hộp của chính nó, núm 18px vẽ
-     tràn ra ngoài KHÔNG nhận được chạm. Cho hộp cao 36px để ngón tay bắt được, rồi
+     tràn ra ngoài KHÔNG nhận được chạm. Cho hộp cao 40px để ngón tay bắt được, rồi
      vẽ lại rãnh bằng một dải gradient 4px căn giữa nên nhìn vẫn y như cũ.
+     Chip, ô số và hộp chọn cũng được kê lên đúng 40px bằng min-height thay vì
+     padding, để không phụ thuộc cỡ chữ bên trong.
      Chỉ scope trong .ch-lab của trang này, không đụng `.wb-range` trần. */
   @media (max-width: 760px) {
     .ch-lab .wb-range {
-      height: 36px; margin: 0;
+      height: 40px; margin: 0;
       background: linear-gradient(var(--wb-border-strong), var(--wb-border-strong)) center / 100% 4px no-repeat;
     }
-    .ch-lab .ch-chip { font-size: 12px; padding: 9px 13px; line-height: 1.25; }
+    .ch-lab .ch-chip {
+      font-size: 12px; padding: 0 14px; min-height: 40px; min-width: 40px;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
     .ch-lab .ch-chips { gap: 8px; }
+    .ch-lab .wb-input, .ch-lab .wb-select { min-height: 40px; }
   }
 </style>
 </head>
@@ -268,6 +302,7 @@
     <a class="wb-nav__link" href="#p4">Energy</a>
     <a class="wb-nav__link" href="#p5">Change</a>
     <a class="wb-nav__link" href="#p6">Organic</a>
+    <a class="wb-nav__link" href="#p7">Applied</a>
     <a class="wb-nav__link" href="#ref">Reference</a>
   </nav>
   <span class="wb-navbar__spacer"></span>
@@ -286,7 +321,7 @@
     <p class="ch-eyebrow">Chemistry · giáo trình tự học · từ hạt nhân tới phân tử sống</p>
     <h1 class="ch-title">Toàn bộ hoá học chỉ trả lời <u>hai câu hỏi</u>: electron đang ở đâu, và năng lượng sẽ đi về đâu. Mọi chương bạn từng học đều là một cách hỏi lại hai câu đó.</h1>
     <p class="ch-sub">Trang này là một <b>giáo trình hoàn chỉnh</b> — đủ để tự học từ số không tới trình độ đại học năm nhất — nhưng không kể theo thứ tự chương của sách giáo khoa. Nó kể theo <b>một sợi dây nhân quả</b>: hạt nhân quyết định số electron → electron quyết định liên kết → liên kết quyết định hình dạng → hình dạng quyết định tính chất → và năng lượng quyết định phản ứng nào xảy ra, nhanh tới đâu, dừng ở chỗ nào.</p>
-    <p class="ch-sub">Mỗi phần bắt đầu bằng <b>câu hỏi mà phần trước không trả lời nổi</b>, chứ không bắt đầu bằng định nghĩa. Công thức luôn xuất hiện <i>sau</i> khi bạn đã thấy vấn đề nó giải. <b>Mười sáu mô hình nghịch được ngay trên trang</b> — kéo thanh trượt, đổi số, xem hệ đổ về đâu — mỗi cái dựng lên để giết một hiểu nhầm cụ thể, không phải để trang trí.</p>
+    <p class="ch-sub">Mỗi phần bắt đầu bằng <b>câu hỏi mà phần trước không trả lời nổi</b>, chứ không bắt đầu bằng định nghĩa. Công thức luôn xuất hiện <i>sau</i> khi bạn đã thấy vấn đề nó giải. <b>Mười sáu mô hình nghịch được ngay trên trang</b> — kéo thanh trượt, đổi số, xem hệ đổ về đâu — mỗi cái dựng lên để giết một hiểu nhầm cụ thể.</p>
     <p class="ch-meta">BẢY PHẦN · 43 MỤC · 16 MÔ HÌNH TƯƠNG TÁC · 10 SƠ ĐỒ · 35 BẢNG TRA<br>SỐ LIỆU LÀ GIÁ TRỊ QUY CHIẾU THÔNG DỤNG (IUPAC / CRC) — LÀM TRÒN CHO DỄ NHỚ, KHÔNG DÙNG CHO CÔNG BỐ</p>
   </header>
 
@@ -523,7 +558,7 @@
               <text class="ch-vs" x="26" y="220">Hiểu hoá = dịch được theo CẢ HAI chiều giữa ba ô. Học vẹt = chỉ ở lại ô bên phải.</text>
             </svg>
           </div>
-          <p class="ch-src">Sơ đồ Johnstone (1982) — khung được dùng rộng rãi trong nghiên cứu dạy hoá để giải thích vì sao học sinh giải được bài tập nhưng không hiểu chuyện gì đang xảy ra.</p>
+          <p class="ch-src">Sơ đồ Johnstone (1982) — khung được dùng rộng rãi trong nghiên cứu dạy hoá học.</p>
         </div>
 
         <p class="ch-p">Bài tập hoá phần lớn nằm gọn ở tầng ký hiệu, nên <b>giải đúng bài tập không chứng minh là đã hiểu</b>. Phép thử thật sự: nhìn một hiện tượng ở tầng vĩ mô, tự kể được câu chuyện ở tầng hạt, rồi viết ra ký hiệu — và ngược lại, nhìn một phương trình mà hình dung được cái gì đang sủi bọt.</p>
@@ -775,8 +810,12 @@ Ar = 34,969 × 0,7576 + 36,966 × 0,2424 = <b>35,45</b>  <span class="c">— kh�
           </div>
           <div class="ch-lab__body">
             <div class="ch-chips" id="pt-modes" style="margin-bottom:12px"></div>
-            <div class="ch-pt-wrap"><div class="ch-pt" id="pt-grid"></div></div>
-            <p class="ch-swipe">Vuốt ngang để xem hết 18 nhóm →</p>
+            <div class="ch-pt-pick">
+              <label for="pt-pick">Chọn nguyên tố</label>
+              <select class="wb-select" id="pt-pick"></select>
+            </div>
+            <div class="ch-pt-wrap"><div class="ch-pt" id="pt-grid" role="group" aria-label="Bảng tuần hoàn — bấm một ô để xem chi tiết nguyên tố"></div></div>
+            <p class="ch-swipe">Vuốt ngang để xem hết 18 nhóm → · trên ô đang chọn, dùng ← → để đi sang nguyên tố kế tiếp</p>
             <div class="ch-pt-legend" id="pt-legend"></div>
             <div class="ch-el-card" id="pt-card"></div>
             <p class="ch-lab__foot"><b>Cách đọc bảng trong 10 giây:</b> <b>hàng ngang (chu kỳ)</b> = số lớp electron, đi ngang là thêm dần electron vào cùng một lớp. <b>Cột dọc (nhóm)</b> = số electron lớp ngoài cùng giống nhau, nên <b>tính chất hoá học giống nhau</b> — đó là toàn bộ ý nghĩa của chữ “tuần hoàn”. Li, Na, K đều nổ khi gặp nước vì cả ba đều có đúng 1 electron ngoài cùng cần tống đi.</p>
@@ -819,7 +858,7 @@ Ar = 34,969 × 0,7576 + 36,966 × 0,2424 = <b>35,45</b>  <span class="c">— kh�
         <div class="ch-viz">
           <div class="wb-chart">
             <div class="wb-chart__title">Năng lượng ion hoá thứ nhất, Z = 1 → 20</div>
-            <div class="wb-chart__sub">Đỉnh nhọn = khí hiếm (rất khó giật electron). Đáy = kim loại kiềm (rất dễ). Hai chỗ tụt bất thường tại Al và S là bằng chứng đo được của quy tắc Hund.</div>
+            <div class="wb-chart__sub">Đỉnh nhọn = khí hiếm (rất khó giật electron). Đáy = kim loại kiềm (rất dễ). Hai chỗ tụt bất thường: <b>Al</b> là bằng chứng đo được của việc phân lớp s và p khác mức năng lượng, <b>S</b> là bằng chứng của quy tắc Hund.</div>
             <svg class="wb-chart__svg" viewBox="0 0 700 240" role="img" aria-label="Đồ thị năng lượng ion hoá thứ nhất từ hydrogen tới calcium, hình răng cưa với đỉnh ở helium, neon, argon và đáy ở lithium, sodium, potassium">
               <line class="ch-vdash" x1="40" y1="31.98" x2="668" y2="31.98"></line>
               <line class="ch-vdash" x1="40" y1="115.9" x2="668" y2="115.9"></line>
@@ -858,7 +897,7 @@ Ar = 34,969 × 0,7576 + 36,966 × 0,2424 = <b>35,45</b>  <span class="c">— kh�
               <text class="ch-vs" x="40" y="236">Chu kỳ lặp lại đúng bằng chiều rộng của bảng — đó là nghĩa đen của chữ “tuần hoàn”.</text>
             </svg>
           </div>
-          <p class="ch-src">Số liệu: năng lượng ion hoá thứ nhất, giá trị quy chiếu thông dụng (CRC Handbook), làm tròn tới kJ/mol.</p>
+          <p class="ch-src">Số liệu: giá trị quy chiếu thông dụng (CRC Handbook), làm tròn tới kJ/mol.</p>
         </div>
 
         <p class="ch-p">Hai chỗ tụt nhỏ đáng để dừng lại, vì chúng là bằng chứng thực nghiệm cho hai quy tắc vừa học ở <a href="#s-orbital">mục 1.2</a>:</p>
@@ -940,7 +979,7 @@ Ar = 34,969 × 0,7576 + 36,966 × 0,2424 = <b>35,45</b>  <span class="c">— kh�
         <div class="ch-formula"><b>Năng lượng của một phản ứng, tính bằng liên kết</b>
 ΔH ≈ Σ(năng lượng phá liên kết chất đầu) − Σ(năng lượng tạo liên kết sản phẩm)
 
-<span class="c">Ví dụ đốt methane: CH₄ + 2O₂ → CO₂ + 2H₂O</span>
+<span class="c">Ví dụ đốt methane: CH₄(g) + 2O₂(g) → CO₂(g) + 2H₂O(g)  — entanpi liên kết chỉ dùng được cho chất ở thể KHÍ</span>
 Phá:  4×(C–H) + 2×(O=O) = 4×413 + 2×498 = <b>2648 kJ</b>   <span class="c">— tiền phải trả</span>
 Tạo:  2×(C=O) + 4×(O–H) = 2×799 + 4×463 = <b>3450 kJ</b>   <span class="c">— tiền thu về</span>
 ΔH ≈ 2648 − 3450 = <b>−802 kJ/mol</b>  <span class="c">— âm ⇒ toả nhiệt. Đo thực tế: −802,3 kJ/mol.</span></div>
@@ -1091,7 +1130,7 @@ Kết quả: một liên kết N=O và hai liên kết N–O⁻ …
               <tr><td>4</td><td>1</td><td>Chóp tam giác</td><td>107°</td><td>NH₃, PCl₃, H₃O⁺</td></tr>
               <tr><td>4</td><td>2</td><td>Gấp khúc</td><td>104,5°</td><td><b>H₂O</b>, H₂S, OF₂</td></tr>
               <tr><td>5</td><td>0</td><td>Lưỡng chóp tam giác</td><td>90° &amp; 120°</td><td>PCl₅, PF₅</td></tr>
-              <tr><td>5</td><td>1</td><td>Bập bênh</td><td>~90°, ~117°</td><td>SF₄</td></tr>
+              <tr><td>5</td><td>1</td><td>Bập bênh</td><td>~90°, ~102°</td><td>SF₄</td></tr>
               <tr><td>5</td><td>2</td><td>Chữ T</td><td>~90°</td><td>ClF₃</td></tr>
               <tr><td>5</td><td>3</td><td>Thẳng</td><td>180°</td><td>XeF₂, I₃⁻</td></tr>
               <tr><td>6</td><td>0</td><td>Bát diện</td><td>90°</td><td>SF₆, [Fe(CN)₆]³⁻</td></tr>
@@ -1152,7 +1191,7 @@ Kết quả: một liên kết N=O và hai liên kết N–O⁻ …
               <text class="ch-vs" x="12" y="231">từ dạng cis sang trans — π khoá góc, nên việc bẻ nó thành một tín hiệu.</text>
             </svg>
           </div>
-          <p class="ch-src">Liên kết đôi = 1 σ + 1 π. Liên kết ba = 1 σ + 2 π. Số σ luôn đúng bằng số “gạch nối” giữa hai nguyên tử tính một lần.</p>
+          <p class="ch-src">Liên kết ba = 1 σ + 2 π. Số σ luôn đúng bằng số “gạch nối” giữa hai nguyên tử tính một lần.</p>
         </div>
 
         <p class="ch-p">Sự khác biệt xoay-được và không-xoay-được nghe như chi tiết vụn, nhưng nó là <b>nền của toàn bộ hoá sinh</b>: chất béo <i>cis</i> gấp khúc nên lỏng ở nhiệt độ phòng (dầu ăn), chất béo <i>trans</i> thẳng nên xếp chặt và rắn (bơ thực vật) — cùng công thức phân tử, chỉ khác góc quanh một liên kết đôi, và cơ thể xử lý chúng hoàn toàn khác nhau.</p>
@@ -1174,7 +1213,7 @@ Kết quả: một liên kết N=O và hai liên kết N–O⁻ …
             <tbody>
               <tr><td><b>Khuếch tán London</b><br><span class="wb-cell-sub">van der Waals</span></td><td>0,05–40 kJ/mol</td><td><b>Mọi chất, không trừ cái nào</b></td><td>Đám mây electron dao động ngẫu nhiên; trong một khoảnh khắc nó lệch về một bên, tạo lưỡng cực tức thời, và cảm ứng lưỡng cực lên phân tử bên cạnh. <b>Phân tử càng lớn và càng dài thì càng mạnh</b> — nhiều electron hơn, đám mây “mềm” hơn.</td></tr>
               <tr><td><b>Lưỡng cực – lưỡng cực</b></td><td>5–25 kJ/mol</td><td>Phân tử có cực</td><td>Đầu δ⁺ của phân tử này hút đầu δ⁻ của phân tử kia, như hàng nam châm nhỏ tự xếp hàng.</td></tr>
-              <tr><td><b>Liên kết hydro</b></td><td>10–40 kJ/mol</td><td>H nối trực tiếp với <b>N, O hoặc F</b></td><td>Trường hợp cực đoan của lưỡng cực–lưỡng cực. H mất gần hết mật độ electron nên gần như là một proton trần, bé xíu, ép sát vào cặp electron riêng của N/O/F bên cạnh. <b>Chỉ N, O, F</b> — S và Cl không đủ âm điện.</td></tr>
+              <tr><td><b>Liên kết hydro</b></td><td>10–40 kJ/mol</td><td>H nối trực tiếp với <b>N, O hoặc F</b></td><td>Trường hợp cực đoan của lưỡng cực–lưỡng cực. H mất gần hết mật độ electron nên gần như là một proton trần, bé xíu, ép sát vào cặp electron riêng của N/O/F bên cạnh. <b>Chỉ N, O, F</b> — và lý do S, Cl không được không phải độ âm điện (Cl 3,16 còn cao hơn N 3,04) mà là <b>kích thước</b>: nguyên tử càng to thì cặp electron riêng càng loãng, không giữ nổi proton trần.</td></tr>
               <tr><td><b>Ion – lưỡng cực</b></td><td>40–600 kJ/mol</td><td>Ion trong dung môi có cực</td><td>Lý do NaCl tan trong nước: mỗi Na⁺ được ~6 phân tử nước quay đầu O về phía nó, ôm lấy và kéo ra khỏi tinh thể.</td></tr>
             </tbody>
           </table>
@@ -1240,7 +1279,7 @@ Kết quả: một liên kết N=O và hai liên kết N–O⁻ …
         <p class="ch-eyebrow-sec"><b>2.7</b> — cùng một chất, ba trạng thái, một cuộc giằng co</p>
         <h2 class="ch-sec-title">Trạng thái vật chất là kết quả của trận đấu giữa <i>lực hút</i> và <i>chuyển động nhiệt</i></h2>
 
-        <p class="ch-lede">Không có gì bí ẩn trong việc nước đá tan. Có đúng hai phe: <b>lực liên phân tử</b> kéo các phân tử lại gần và giữ chúng đúng chỗ, còn <b>nhiệt độ</b> cấp động năng để chúng giãy ra. Nhiệt độ thấp thì lực thắng ⇒ rắn. Nhiệt độ cao thì động năng thắng ⇒ khí. Ở giữa là lỏng: đủ sức trượt lên nhau nhưng chưa đủ sức bay đi.</p>
+        <p class="ch-lede">Khi nước đá tan, có đúng hai phe: <b>lực liên phân tử</b> kéo các phân tử lại gần và giữ chúng đúng chỗ, còn <b>nhiệt độ</b> cấp động năng để chúng giãy ra. Nhiệt độ thấp thì lực thắng ⇒ rắn. Nhiệt độ cao thì động năng thắng ⇒ khí. Ở giữa là lỏng: đủ sức trượt lên nhau nhưng chưa đủ sức bay đi.</p>
 
         <div class="ch-tw">
           <table class="wb-table">
@@ -1554,7 +1593,8 @@ Nhiệt độ đông <b>giảm</b>    ΔT<sub>f</sub> = i · K<sub>f</sub> · m 
 <span class="c">Ví dụ: CH₄(g) + 2O₂(g) → CO₂(g) + 2H₂O(l)</span>
 Σ sản phẩm = (−393,5) + 2×(−285,8) = −965,1 kJ
 Σ chất đầu = (−74,8)  + 2×0        = −74,8 kJ
-ΔH° = −965,1 − (−74,8) = <b>−890,3 kJ/mol</b>  <span class="c">— chính xác hơn cách tính bằng năng lượng liên kết ở mục 2.1</span></div>
+ΔH° = −965,1 − (−74,8) = <b>−890,3 kJ/mol</b>  <span class="c">— lệch với −802 kJ/mol ở mục 2.1 KHÔNG phải vì sai số:</span>
+<span class="c">ở đó nước là hơi, ở đây là lỏng, và ngưng 2 mol hơi nước toả thêm đúng 88 kJ.</span></div>
 
         <div class="ch-quote">
           Ví von: enthalpy là <b>độ cao</b>. Leo từ Hà Nội lên đỉnh Fansipan, chênh lệch độ cao là cố định dù bạn đi đường mòn, đi cáp treo hay đi trực thăng. <b>Định luật Hess chính là câu đó, nói bằng đơn vị kJ.</b>
@@ -1999,7 +2039,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
           <div class="ch-lab__head">
             <p class="ch-lab__kick">Mô hình 15 / 16 · nghịch được</p>
             <p class="ch-lab__title">Máy tính hiệu điện thế pin — ghép hai nửa phản ứng bất kỳ</p>
-            <p class="ch-lab__hint">Chọn hai cặp và xem máy tự quyết ai làm cực âm. Quy tắc duy nhất: <b>E° cao hơn thì bị khử</b> (làm cathode). Nếu E°<sub>pin</sub> ra âm nghĩa là bạn chọn ngược — đảo lại là được pin chạy.</p>
+            <p class="ch-lab__hint">Chọn hai cặp và xem máy tự quyết ai làm cực âm. Quy tắc duy nhất: <b>E° cao hơn thì bị khử</b> (làm cathode) — nên máy luôn gán nửa có E° cao làm cathode, và E°<sub>pin</sub> không bao giờ ra âm.</p>
           </div>
           <div class="ch-lab__body">
             <div class="ch-lab__row">
@@ -2026,7 +2066,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
           </div>
         </div>
 
-        <p class="ch-p"><b>Ăn mòn là một cục pin bạn không muốn có.</b> Sắt gỉ vì một chỗ trên bề mặt thành anode (Fe → Fe²⁺ + 2e⁻), chỗ khác thành cathode (O₂ + H₂O + 4e⁻ → 4OH⁻), và nước muối làm chất điện ly nối hai chỗ đó — nên xe ở vùng biển gỉ nhanh hơn hẳn. Cách chống hiệu quả nhất là <b>bảo vệ catot</b>: gắn một khối kẽm hoặc magie có E° âm hơn, nó sẽ <i>hy sinh</i> tự ăn mòn trước để cứu sắt. Tàu biển, đường ống, bình nóng lạnh đều có một thanh như vậy, và thay nó định kỳ rẻ hơn thay cả thiết bị.</p>
+        <p class="ch-p"><b>Ăn mòn là một cục pin bạn không muốn có.</b> Sắt gỉ vì một chỗ trên bề mặt thành anode (Fe → Fe²⁺ + 2e⁻), chỗ khác thành cathode (O₂ + 2H₂O + 4e⁻ → 4OH⁻), và nước muối làm chất điện ly nối hai chỗ đó — nên xe ở vùng biển gỉ nhanh hơn hẳn. Cách chống hiệu quả nhất là <b>bảo vệ catot</b>: gắn một khối kẽm hoặc magie có E° âm hơn, nó sẽ <i>hy sinh</i> tự ăn mòn trước để cứu sắt. Tàu biển, đường ống, bình nóng lạnh đều có một thanh như vậy, và thay nó định kỳ rẻ hơn thay cả thiết bị.</p>
       </section>
 
       <section id="s-rxntypes">
@@ -2206,7 +2246,7 @@ alkane → ancol → aldehyde → acid carboxylic → CO₂
                 <text class="ch-vm" x="38" y="34">CH₃</text>
                 <text class="ch-vm" x="8" y="48">H</text>
               </g>
-              <text class="ch-vt" x="190" y="54" style="text-anchor:middle">L-alanine</text>
+              <text class="ch-vt" x="190" y="54" style="text-anchor:middle">D-alanine</text>
 
               <g transform="translate(510,130)">
                 <line x1="0" y1="0" x2="0" y2="-40" style="stroke:var(--wb-fg);stroke-width:1.6"></line>
@@ -2220,7 +2260,7 @@ alkane → ancol → aldehyde → acid carboxylic → CO₂
                 <text class="ch-vm" x="-38" y="34" style="text-anchor:end">H₃C</text>
                 <text class="ch-vm" x="-8" y="48" style="text-anchor:end">H</text>
               </g>
-              <text class="ch-vt" x="510" y="54" style="text-anchor:middle">D-alanine</text>
+              <text class="ch-vt" x="510" y="54" style="text-anchor:middle">L-alanine</text>
 
               <text class="ch-vs" x="12" y="228">Xoay hình bên trái bằng mọi cách, nó không bao giờ trùng khít hình bên phải — đúng như bàn tay.</text>
               <text class="ch-vs" x="12" y="243">Protein trong cơ thể bạn dùng gần như chỉ dạng L; đường thì gần như chỉ dạng D.</text>
@@ -2735,11 +2775,17 @@ function txt(parent, x, y, s, style, anchor) {
   t.textContent = s;
   return t;
 }
+/* Chip dựng bằng <button>, không phải <span>: 13 trong 16 mô hình chỉ đổi trạng
+   thái được qua chip, nên nếu chúng không tới được bằng Tab thì người dùng bàn
+   phím mất hẳn phần tương tác của trang. aria-pressed để trình đọc màn hình biết
+   chip nào đang bật. */
 function chips(box, items, current, onPick) {
   clear(box);
   items.forEach(function (it, i) {
-    var b = document.createElement('span');
+    var b = document.createElement('button');
+    b.type = 'button';
     b.className = 'ch-chip' + (i === current ? ' on' : '');
+    b.setAttribute('aria-pressed', i === current ? 'true' : 'false');
     b.textContent = it;
     b.addEventListener('click', function () { onPick(i); });
     box.appendChild(b);
@@ -2898,7 +2944,13 @@ function periodOfZ(z) {
   document.addEventListener('click', function (e) {
     if (!menu || !e.target.closest) return;
     if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
-    else if (e.target.closest('.wb-navbar__menu .wb-nav__link')) menu.classList.remove('is-open');
+    /* Bấm một mục thì đóng — và bấm RA NGOÀI cũng đóng, nếu không thì menu mở
+       che mất phần đầu bài và không có cách nào đóng lại ngoài nút toggle. */
+    else if (e.target.closest('.wb-navbar__menu .wb-nav__link') || !e.target.closest('.wb-navbar__menu'))
+      menu.classList.remove('is-open');
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menu) menu.classList.remove('is-open');
   });
 
   var links = Array.prototype.slice.call(document.querySelectorAll('#toc .wb-sidenav__link'));
@@ -2977,7 +3029,13 @@ function periodOfZ(z) {
       lines.push('');
       lines.push('⚠ NGOẠI LỆ — Aufbau dự đoán ' + ex[0] + ' đầy trước, nhưng thực tế ' + ex[2] +
         ' electron chuyển từ ' + ex[0] + ' sang ' + ex[1] + '.');
-      lines.push('   Lý do: phân lớp đầy một nửa hoặc đầy hẳn là cấu hình bền bất thường.');
+      /* Không phải ngoại lệ nào cũng do "đầy một nửa": La, Ce, Ac, Th, U… lệch vì ở đầu
+         khối f thì phân lớp d còn thấp hơn f, và Lr lệch vì hiệu ứng tương đối. */
+      lines.push('   Lý do: ' + (ex[0][1] === 's'
+        ? 'phân lớp d đầy một nửa (d⁵) hay đầy hẳn (d¹⁰) là cấu hình bền bất thường, đủ bền để "vay" 1 electron của phân lớp s.'
+        : (ex[0][1] === 'f'
+          ? 'ở đầu khối f, phân lớp d vẫn còn nằm THẤP hơn phân lớp f, nên electron vào d trước.'
+          : 'ở nguyên tố siêu nặng, hiệu ứng tương đối kéo 7p xuống dưới 6d.')));
     }
     out.textContent = lines.join('\n');
   }
@@ -2990,7 +3048,7 @@ function periodOfZ(z) {
 /* ═════════════════ Mô hình 2 — bảng tuần hoàn tương tác ═════════════════ */
 (function () {
   var grid = $('pt-grid'); if (!grid) return;
-  var legend = $('pt-legend'), card = $('pt-card'), modeBox = $('pt-modes');
+  var legend = $('pt-legend'), card = $('pt-card'), modeBox = $('pt-modes'), pickSel = $('pt-pick');
   var MODES = ['Category', 'Block', 'Electronegativity', 'Atomic radius', 'Ionisation energy'];
   var CATCOL = { am: '99,102,241', ae: '20,184,166', tm: '113,113,122', pt: '132,204,22',
     me: '245,158,11', nm: '59,130,246', hg: '236,72,153', ng: '139,92,246',
@@ -3015,9 +3073,28 @@ function periodOfZ(z) {
       var e = EL[z - 1];
       var d = document.createElement('div');
       d.className = 'ch-el';
+      /* Ô là div nhưng phải hành xử như nút: role + nhãn cho trình đọc màn hình,
+         và tabindex luân phiên (chỉ ô ĐANG CHỌN vào được bằng Tab) — 118 điểm
+         dừng Tab trong một trang dài là cách chắc nhất để làm khổ người dùng
+         bàn phím. Từ ô đó, ← → đi tiếp; hộp chọn phía trên là đường vào thứ hai. */
+      d.setAttribute('role', 'button');
+      d.setAttribute('aria-label', e.sym + ' — ' + e.name + ', số hiệu ' + z);
       d.innerHTML = '<span class="z">' + z + '</span><span class="sym">' + e.sym +
         '</span><span class="val"></span>';
       d.addEventListener('click', function () { sel = z; paint(); });
+      d.addEventListener('keydown', function (ev) {
+        var k = ev.key, nz = 0;
+        if (k === 'ArrowRight') nz = z + 1;
+        else if (k === 'ArrowLeft') nz = z - 1;
+        else if (k === 'Home') nz = 1;
+        else if (k === 'End') nz = 118;
+        else if (k === 'Enter' || k === ' ') { ev.preventDefault(); sel = z; paint(); return; }
+        else return;
+        ev.preventDefault();
+        nz = clamp(nz, 1, 118);
+        sel = nz; paint();
+        if (cells[nz]) cells[nz].focus();
+      });
       grid.appendChild(d);
       cells[z] = d;
       pos[z] = { period: r, group: cIdx };
@@ -3063,7 +3140,10 @@ function periodOfZ(z) {
       d.style.background = bg;
       vs.textContent = label;
       d.classList.toggle('is-sel', e.z === sel);
+      d.setAttribute('tabindex', e.z === sel ? '0' : '-1');
+      d.setAttribute('aria-pressed', e.z === sel ? 'true' : 'false');
     });
+    if (pickSel && +pickSel.value !== sel) pickSel.value = sel;
     drawLegend(lo, hi, ink);
     drawCard();
   }
@@ -3101,7 +3181,8 @@ function periodOfZ(z) {
       box('Chu kỳ / nhóm', (p.period || '—') + ' / ' + g) +
       box('Cấu hình', shortConfig(sel, c)) +
       box('Khối', blockOfZ(sel)) +
-      box('Độ âm điện', e.en > 0 ? fx(e.en, 2) : '— (không tạo liên kết thường)') +
+      box('Độ âm điện', e.en > 0 ? fx(e.en, 2)
+        : (e.cat === 'ng' ? '— (khí hiếm, không tạo liên kết thường)' : '— (chưa có số liệu)')) +
       box('Bán kính', e.r > 0 ? e.r + ' pm' : '—') +
       box('Năng lượng ion hoá 1', e.ie > 0 ? e.ie + ' kJ/mol' : '—') +
       box('Lớp electron', shells(c).join(' · ')) +
@@ -3110,7 +3191,18 @@ function periodOfZ(z) {
   function wireModes() {
     chips(modeBox, MODES, mode, function (i) { mode = i; wireModes(); paint(); });
   }
-  build(); wireModes(); paint();
+  function wirePick() {
+    if (!pickSel) return;
+    EL.forEach(function (e) {
+      var o = document.createElement('option');
+      o.value = e.z;
+      o.textContent = e.z + ' — ' + e.sym + ' — ' + e.name;
+      pickSel.appendChild(o);
+    });
+    pickSel.value = sel;
+    pickSel.addEventListener('change', function () { sel = clamp(+pickSel.value, 1, 118); paint(); });
+  }
+  build(); wireModes(); wirePick(); paint();
   redraws.push(paint);
 })();
 
@@ -3142,6 +3234,10 @@ function periodOfZ(z) {
     svgEl(svg, 'circle', { cx: xa, cy: y, r: 26 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.6');
     svgEl(svg, 'circle', { cx: xb, cy: y, r: 26 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.6');
     var A = PAIRS[pick][1], B = PAIRS[pick][2];
+    /* Vế PHẢI luôn phải là nguyên tử âm điện hơn — đám mây lệch về phía đó và nhãn δ−
+       cũng đặt ở đó. Không sắp lại thì cặp C–H (C âm điện hơn H) bị vẽ ngược dấu. */
+    var eA = bySym(A), eB = bySym(B);
+    if (eA && eB && eA.en > eB.en) { var swp = A; A = B; B = swp; }
     txt(svg, xa, y + 5, A, 'font-size:16px;font-weight:700;fill:var(--wb-fg);font-family:var(--wb-font)', 'middle');
     txt(svg, xb, y + 5, B, 'font-size:16px;font-weight:700;fill:var(--wb-fg);font-family:var(--wb-font)', 'middle');
 
@@ -3208,7 +3304,7 @@ function periodOfZ(z) {
     41: { n: 'Chóp tam giác', ang: '107°', ex: 'NH₃, PCl₃, H₃O⁺', eg: 'Tứ diện', b: [[150,D],[90,L],[30,W]], p: [[-90]] },
     42: { n: 'Gấp khúc', ang: '104,5°', ex: 'H₂O, H₂S, OF₂', eg: 'Tứ diện', b: [[135,L],[45,L]], p: [[-125],[-55]] },
     50: { n: 'Lưỡng chóp tam giác', ang: '90° &amp; 120°', ex: 'PCl₅, PF₅', eg: 'Lưỡng chóp tam giác', b: [[-90,L],[90,L],[180,L],[35,W],[-35,D]], p: [] },
-    51: { n: 'Bập bênh', ang: '~90°, ~117°', ex: 'SF₄', eg: 'Lưỡng chóp tam giác', b: [[-90,L],[90,L],[35,W],[-35,D]], p: [[180]] },
+    51: { n: 'Bập bênh', ang: '~90°, ~102°', ex: 'SF₄', eg: 'Lưỡng chóp tam giác', b: [[-90,L],[90,L],[35,W],[-35,D]], p: [[180]] },
     52: { n: 'Chữ T', ang: '~90°', ex: 'ClF₃', eg: 'Lưỡng chóp tam giác', b: [[-90,L],[90,L],[180,L]], p: [[35],[-35]] },
     53: { n: 'Thẳng', ang: '180°', ex: 'XeF₂, I₃⁻', eg: 'Lưỡng chóp tam giác', b: [[-90,L],[90,L]], p: [[180],[35],[-35]] },
     60: { n: 'Bát diện', ang: '90°', ex: 'SF₆, [Fe(CN)₆]³⁻', eg: 'Bát diện', b: [[-90,L],[90,L],[180,L],[0,L],[40,W],[220,D]], p: [] },
@@ -3754,7 +3850,7 @@ function periodOfZ(z) {
     txt(svg, X0, Y0 + 24, '300 K (nét đứt, để so)', HALO + 'font-size:10px;fill:var(--wb-fg-subtle);font-family:var(--wb-font)');
     txt(svg, (X0 + X1) / 2, Y1 + 20, 'động năng của một phân tử  →', 'font-size:10px;fill:var(--wb-fg-subtle);font-family:var(--wb-font)', 'middle');
     txt(svg, X0, 16, 'số phân tử', 'font-size:10px;fill:var(--wb-fg-subtle);font-family:var(--wb-font)');
-    txt(svg, X0, Y1 + 36, 'Trục tung và trục hoành đều được NÉN để nhìn thấy được cái đuôi —',
+    txt(svg, X0, Y1 + 36, 'Trục tung bị nén và trục năng lượng bị phóng đại để nhìn thấy được cái đuôi —',
       'font-size:9.5px;fill:var(--wb-fg-subtle);font-family:var(--wb-font)');
     txt(svg, X0, Y1 + 50, 'với năng lượng hoạt hoá thật, đuôi còn mỏng hơn nhiều bậc.',
       'font-size:9.5px;fill:var(--wb-fg-subtle);font-family:var(--wb-font)');
@@ -3762,7 +3858,7 @@ function periodOfZ(z) {
     var f = frac(Ea, T), f2 = frac(Ea, T + 10);
     var realEa = 50, k1 = Math.exp(-realEa / (R * 298)), k2 = Math.exp(-realEa / (R * 308));
     out.textContent =
-      'TRÊN ĐƯỜNG CONG ĐANG VẼ (thang năng lượng đã nén ' + MAG + ' lần cho nhìn thấy được):\n' +
+      'TRÊN ĐƯỜNG CONG ĐANG VẼ (thang năng lượng đã phóng đại ' + MAG + ' lần cho nhìn thấy được):\n' +
       '  ở ' + T + ' K, phần diện tích bên phải vạch Eₐ ≈ ' + fx(f * 100, 2) + ' % tổng diện tích\n' +
       '  lên ' + (T + 10) + ' K thì thành ' + fx(f2 * 100, 2) + ' %  →  gấp ' + fx(f2 / f, 2) + ' lần\n' +
       'Con số này CHỈ đúng cho hình vẽ. Với năng lượng hoạt hoá thật, tỉ lệ nhỏ hơn nhiều bậc\n' +
