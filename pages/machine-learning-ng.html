@@ -29,7 +29,9 @@
    ══════════════════════════════════════════════════════════════════════════ */
 :root {
   --canvas:#fbfbf9; --surface:#ffffff; --surface-2:#f4f4f1; --sunk:#f7f7f4;
-  --ink:#15171c; --muted:#575d6b; --subtle:#8b91a0; --border:#e5e4de; --border-2:#d6d5cd;
+  /* --subtle dùng cho chữ thường cỡ 10–13px (nhãn mono, .dim, th, caption), nên nó phải
+     đạt 4.5:1 với cả --canvas, --surface, --surface-2 và --sunk. #8b91a0 cũ chỉ được 2.8:1. */
+  --ink:#15171c; --muted:#575d6b; --subtle:#676e80; --border:#e5e4de; --border-2:#d6d5cd;
   --m:#3450c8; --m-bg:#eceffc; --m-line:#c3cdf3;
   --l:#a2560b; --l-bg:#fbf1e4; --l-line:#eed4ac;
   --o:#0d6b60; --o-bg:#e6f3f0; --o-line:#b3ddd5;
@@ -44,7 +46,7 @@
 }
 html.dark {
   --canvas:#0f1115; --surface:#171a20; --surface-2:#1e222a; --sunk:#12151a;
-  --ink:#e7e9ee; --muted:#a0a7b5; --subtle:#767d8c; --border:#282d36; --border-2:#3a404b;
+  --ink:#e7e9ee; --muted:#a0a7b5; --subtle:#868d9c; --border:#282d36; --border-2:#3a404b;
   --m:#93a8f5; --m-bg:#1a2140; --m-line:#33417a;
   --l:#e0a763; --l-bg:#302315; --l-line:#5d4423;
   --o:#5cc4b1; --o-bg:#122a27; --o-line:#245049;
@@ -146,6 +148,9 @@ html.dark .ic-moon { display:none; }
     transform:translateX(-100%); transition:transform .2s ease; box-shadow:var(--shadow);
   }
   .toc.open { transform:none; }
+  /* Trong ngăn trượt, 45 link xếp sát nhau cao 27px — bấm bằng ngón tay là trượt sang
+     mục bên cạnh. Nới lên 40px; ngăn đã có overflow-y:auto nên chỉ dài thêm, không tràn. */
+  .toc a { display:flex; align-items:center; min-height:40px; padding:6px 10px; }
   .scrim { position:fixed; inset:52px 0 0; background:rgba(0,0,0,.32); z-index:38; opacity:0; pointer-events:none; transition:opacity .2s; }
   .scrim.on { opacity:1; pointer-events:auto; }
 }
@@ -334,15 +339,39 @@ input[type=text]:focus, input[type=number]:focus, select:focus { outline:2px sol
 .val { font-family:var(--mono); font-size:12.5px; color:var(--ink); min-width:56px; display:inline-block; }
 
 /* Vùng chạm trên điện thoại: thanh trượt cao 22px và nút cao 27px quá nhỏ cho ngón tay.
-   Nới chiều cao vùng chạm mà KHÔNG đổi hình dáng rãnh trượt (rãnh vẫn tự căn giữa). */
+   Nới chiều cao vùng chạm mà KHÔNG đổi hình dáng rãnh trượt (rãnh vẫn tự căn giữa).
+   Mốc là 40px — dưới mức đó ngón tay bấm trượt sang thứ bên cạnh. */
 @media (max-width:620px) {
-  input[type=range] { height:40px; }
-  input[type=range]::-webkit-slider-thumb { width:20px; height:20px; margin-top:-8.5px; }
-  input[type=range]::-moz-range-thumb { width:20px; height:20px; }
-  .btn { min-height:36px; padding:8px 13px; }
-  .tab { min-height:38px; }
-  .chip { display:inline-flex; align-items:center; min-height:34px; padding:5px 12px; }
+  input[type=range] { height:44px; }
+  input[type=range]::-webkit-slider-thumb { width:22px; height:22px; margin-top:-9.5px; }
+  input[type=range]::-moz-range-thumb { width:22px; height:22px; }
+  .btn { min-height:40px; padding:10px 14px; }
+  .tab { min-height:40px; padding:10px 13px; }
+  .chip { display:inline-flex; align-items:center; min-height:40px; padding:8px 13px; }
+  /* ký hiệu bấm được trong công thức: nới vùng chạm bằng padding. Không đổi được chiều
+     ngang của một ký tự đơn, nhưng .fx__line có line-height 2.1 nên 40px chiều cao vẫn vừa. */
+  .fx__line .tm { padding:8px 6px; }
+  .iconbtn { width:40px; height:40px; }
+  /* chốt an toàn: icon 40px ăn thêm 24px chiều ngang của thanh trên, tên trang không
+     được phép đẩy thanh tràn ngang. */
+  .bar__brand { min-width:0; overflow:hidden; min-height:40px; }
+  /* .totop, .pop__x, .pop__en được nới vùng chạm ở khối @media phía DƯỚI — chúng được
+     định nghĩa sau khối này, nên override đặt ở đây sẽ bị chính định nghĩa gốc ghi đè. */
 }
+@media (max-width:380px) {
+  .bar__in { gap:6px; }
+  .bar__brand { font-size:13px; }
+}
+
+/* Viền focus bàn phím: mọi thứ bấm được phải thấy được khi đi bằng Tab.
+   :focus-visible nên chuột bấm không hiện viền. */
+.btn:focus-visible, .tab:focus-visible, .chip:focus-visible, .iconbtn:focus-visible,
+.totop:focus-visible, .pop__x:focus-visible, .pop__go:focus-visible,
+details.q > summary:focus-visible, input[type=range]:focus-visible,
+.bar__nav a:focus-visible, .toc a:focus-visible, .acts a:focus-visible {
+  outline:2px solid var(--m); outline-offset:2px;
+}
+.tm:focus-visible { outline:2px solid var(--m); outline-offset:1px; }
 
 /* tab trong lab */
 .tabs { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:14px; border-bottom:1px solid var(--border); }
@@ -453,7 +482,21 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 .pop__x:hover { background:var(--surface-2); color:var(--ink); }
 .pop__x svg { width:14px; height:14px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; }
 @media (max-width:620px) {
-  .pop { left:9px !important; right:9px; bottom:9px; top:auto !important; width:auto; }
+  /* neo popup xuống đáy màn hình. max-height + cuộn dọc để giải thích dài không tràn
+     khỏi viewport và bị cắt mất phần dưới. */
+  .pop { left:9px !important; right:9px; bottom:9px; top:auto !important; width:auto; max-height:62vh; overflow-y:auto; }
+  /* nới vùng chạm cho hai nút nhỏ nhất của trang (phải đặt ở đây, sau định nghĩa gốc) */
+  .pop__x { width:40px; height:40px; top:3px; right:3px; }
+  .pop__en { padding-right:44px; }
+  .totop { width:44px; height:44px; right:14px; bottom:14px; }
+  footer .in a { display:inline-flex; align-items:center; min-height:40px; }
+  /* link "đọc kỹ ở" cao 20px. Nới hộp lên 40px và chuyển gạch chân từ border-bottom sang
+     text-decoration, nếu không gạch chân sẽ rơi xuống đáy hộp cách chữ 20px. */
+  .pop__go {
+    display:inline-flex; align-items:center; min-height:40px; border-bottom:0;
+    text-decoration:underline; text-decoration-color:var(--m-line); text-underline-offset:3px;
+  }
+  .pop__go:hover { text-decoration-color:var(--m); }
 }
 
 /* ── từ điển thuật ngữ ────────────────────────────────────────────────────── */
@@ -464,7 +507,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 .gl-tw td:nth-child(2) { color:var(--muted); font-style:italic; white-space:nowrap; }
 .gl-tw tr.hide { display:none; }
 .gl-tw td a { font-family:var(--mono); font-size:11px; color:var(--m); text-decoration:none; white-space:nowrap; }
-@media (max-width:640px) { .gl-tw td:nth-child(2) { white-space:normal; } }
+@media (max-width:640px) { .gl-tw td:first-child, .gl-tw td:nth-child(2) { white-space:normal; } }
 
 @media print { .bar, .toc, .totop, .prog, .scrim, .pop { display:none !important; } .layout { grid-template-columns:1fr; } .term { border-bottom:0; } }
 </style>
@@ -660,7 +703,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <div class="grid2">
           <div class="mini">
             <p class="t">Học có giám sát <span class="dim mono">(supervised)</span></p>
-            <p class="d">Bạn có <b>cặp</b> (đầu vào, đáp án đúng). Máy học ánh xạ từ đầu vào sang đáp án. Chiếm khoảng <b>95% giá trị kinh tế</b> mà học máy tạo ra tới nay, và chiếm chặng 1 tới 4 của trang này. Hai kiểu con: <b>hồi quy</b> (đáp án là một con số bất kỳ — giá nhà) và <b>phân loại</b> (đáp án là một trong vài nhãn — chó/mèo).</p>
+            <p class="d">Bạn có <b>cặp</b> (đầu vào, đáp án đúng). Máy học ánh xạ từ đầu vào sang đáp án. Theo Ng, nó chiếm khoảng <b>99% giá trị kinh tế</b> mà học máy tạo ra tới nay, và chiếm chặng 1 tới 4 của trang này. Hai kiểu con: <b>hồi quy</b> (đáp án là một con số bất kỳ — giá nhà) và <b>phân loại</b> (đáp án là một trong vài nhãn — chó/mèo).</p>
           </div>
           <div class="mini">
             <p class="t">Học không giám sát <span class="dim mono">(unsupervised)</span></p>
@@ -750,7 +793,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p>Ba màu trong trang tương ứng ba câu hỏi, và <b>không bao giờ dùng vào việc khác</b>: <b class="c-m">xanh dương = mô hình</b>, <b class="c-l">cam = mất mát</b>, <b class="c-o">xanh lục = tối ưu</b>. Đầu mỗi thuật toán có một dải ba ô đúng ba màu ấy, điền sẵn ba câu trả lời. Đọc dải đó trước khi đọc văn xuôi — nó là bản tóm tắt trung thực nhất của thuật toán.</p>
 
-        <div class="take"><span class="k">Mang theo</span><p>Gặp thuật toán lạ, đừng hỏi "nó là gì". Hỏi ba câu: nó vẽ được hình dạng nào, nó đo sai bằng thước nào, nó dò xuống bằng cách nào. Trả lời được ba câu ấy là bạn đã hiểu nó hơn phần lớn người đọc xong bài báo gốc.</p></div>
+        <div class="take"><span class="k">Mang theo</span><p>Gặp thuật toán lạ, đừng hỏi "nó là gì". Hỏi ba câu: nó vẽ được hình dạng nào, nó đo sai bằng thước nào, nó dò xuống bằng cách nào.</p></div>
       </section>
 
       <section id="s-thread">
@@ -1304,7 +1347,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="box note">
           <p class="box__k">Chỗ này quan trọng, đừng lướt</p>
-          <p><b>Bạn không chỉ định nơ-ron ẩn phải học gì.</b> Bạn chỉ nói "cho tôi ba nơ-ron ở giữa", rồi gradient descent tự tìm ra 12 trọng số sao cho tổng thể sai ít nhất. Nếu mạng học ra ba khái niệm đẹp như "quy mô gia đình / tiện đi bộ / chất lượng trường" thì đó là <b>may mắn dễ chịu</b>, không phải thiết kế. Thường thì nó học ra ba tổ hợp lai tạp, chồng chéo, và giải thích được từng cái là một ngành nghiên cứu riêng (interpretability). Đây là cái giá bạn trả để khỏi phải tự nghĩ đặc trưng.</p>
+          <p><b>Bạn không chỉ định nơ-ron ẩn phải học gì.</b> Bạn chỉ nói "cho tôi ba nơ-ron ở giữa", rồi gradient descent tự tìm cả 19 tham số sao cho tổng thể sai ít nhất. Nếu mạng học ra ba khái niệm đẹp như "quy mô gia đình / tiện đi bộ / chất lượng trường" thì đó là <b>may mắn dễ chịu</b>, không phải thiết kế. Thường thì nó học ra ba tổ hợp lai tạp, chồng chéo, và giải thích được từng cái là một ngành nghiên cứu riêng (interpretability). Đây là cái giá bạn trả để khỏi phải tự nghĩ đặc trưng.</p>
         </div>
 
         <h3>Ký hiệu: ba loại chỉ số đứng cạnh nhau</h3>
@@ -1840,7 +1883,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <h3>Optimizing và satisficing: khi thật sự không gộp được thành một số</h3>
         <p>Đôi khi các tiêu chí không cùng đơn vị: độ chính xác (%) và thời gian chạy (ms). Ng đưa khuôn mẫu rất thực dụng: <b>chọn một tiêu chí để tối ưu, biến phần còn lại thành điều kiện cần đạt</b>.</p>
         <p class="mono" style="font-size:13.5px;background:var(--sunk);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 13px;max-width:var(--measure)">Tối đa hoá độ chính xác — với điều kiện thời gian chạy &lt; 100 ms và bộ nhớ &lt; 200 MB.</p>
-        <p>Một tiêu chí optimizing, N−1 tiêu chí satisficing. Giờ mọi mô hình vượt ngưỡng đều so được với nhau bằng một con số. Đây là mẹo đơn giản nhất trong cả chặng và cũng là mẹo tiết kiệm nhiều thời gian họp hành nhất.</p>
+        <p>Một tiêu chí optimizing, N−1 tiêu chí satisficing. Giờ mọi mô hình vượt ngưỡng đều so được với nhau bằng một con số.</p>
 
         <div class="box good-box">
           <p class="box__k">Khi nào phải đổi số đo giữa chừng</p>
@@ -1883,7 +1926,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p><b>"Xây hệ thống đầu tiên thật nhanh, rồi lặp."</b> Đừng dành sáu tuần thiết kế kiến trúc hoàn hảo. Dựng một mô hình thô trong vài ngày, chạy trên dev, <b>làm error analysis</b>, rồi để bảng đếm nói cho bạn biết nên đầu tư vào đâu. Lý do rất thực tế: <i>bạn không đoán được trước lỗi sẽ rơi vào đâu</i>. Ng nói ngoại lệ duy nhất là khi bạn đã có kinh nghiệm dày trong đúng lĩnh vực đó, hoặc đã có tài liệu học thuật chỉ rõ kiến trúc nào thắng.</p>
         </div>
 
-        <div class="take"><span class="k">Mang theo</span><p>Xem 100 lỗi bằng tay, đếm theo nguyên nhân, và để tỉ lệ phần trăm quyết định bạn làm gì tiếp. Đây là công cụ rẻ nhất trong cả tám khoá và cũng là công cụ có tỉ lệ hoàn vốn cao nhất.</p></div>
+        <div class="take"><span class="k">Mang theo</span><p>Xem 100 lỗi bằng tay, đếm theo nguyên nhân, và để tỉ lệ phần trăm quyết định bạn làm gì tiếp.</p></div>
       </section>
 
       <section id="s-mismatch">
@@ -2009,7 +2052,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="box good-box">
           <p class="box__k">Lời khuyên rút gọn thành một dòng</p>
-          <p><b>Dữ liệu của bạn nằm trong bảng Excel được không? → thử XGBoost trước. Là ảnh, âm thanh hay chữ? → mạng nơ-ron.</b> Ng nói gần đúng như vậy trong bài <i>When to use decision trees</i>, và đó là lời khuyên tiết kiệm được nhiều tuần công nhất trong cả khoá 2.</p>
+          <p><b>Dữ liệu của bạn nằm trong bảng Excel được không? → thử XGBoost trước. Là ảnh, âm thanh hay chữ? → mạng nơ-ron.</b> Ng nói gần đúng như vậy trong bài <i>When to use decision trees</i>.</p>
         </div>
 
         <div class="take"><span class="k">Mang theo</span><p>Cây quyết định là họ mô hình duy nhất trong tám khoá không dùng gradient descent — nên nó thoát khỏi cả learning rate, chuẩn hoá lẫn khởi tạo. Trên dữ liệu bảng, đó thường là món hời chứ không phải bước lùi.</p></div>
@@ -2318,7 +2361,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <p>Sau khi huấn luyện, bạn <b>lấy mẫu</b> từ nó: đưa vào một từ mở đầu, mạng cho phân phối xác suất của từ kế tiếp, bạn <i>bốc ngẫu nhiên</i> theo phân phối đó, đưa từ vừa bốc vào làm đầu vào bước sau, lặp lại. Kết quả là văn bản mới chưa từng tồn tại.</p>
         <div class="box note">
           <p class="box__k">Đây là chỗ trang này chạm vào hiện tại</p>
-          <p>Ba câu vừa rồi <b>chính là cơ chế của ChatGPT và mọi mô hình ngôn ngữ lớn</b>, không thiếu bước nào về nguyên tắc. Khác biệt nằm ở ba chỗ: khối lặp lại là <b>Transformer</b> chứ không phải RNN (mục <a href="#s-transformer">cuối chặng</a>); quy mô lớn hơn hàng triệu lần; và có thêm giai đoạn tinh chỉnh theo phản hồi con người. Nhưng "đoán từ tiếp theo, rồi bốc ngẫu nhiên theo phân phối" thì y nguyên. Nếu bạn hiểu đoạn này, bạn đã hiểu điều cốt lõi mà phần lớn bài báo phổ thông giải thích sai.</p>
+          <p>Ba câu vừa rồi <b>chính là cơ chế của ChatGPT và mọi mô hình ngôn ngữ lớn</b>, không thiếu bước nào về nguyên tắc. Khác biệt nằm ở ba chỗ: khối lặp lại là <b>Transformer</b> chứ không phải RNN (mục <a href="#s-transformer">cuối chặng</a>); quy mô lớn hơn hàng triệu lần; và có thêm giai đoạn tinh chỉnh theo phản hồi con người. Nhưng "đoán từ tiếp theo, rồi bốc ngẫu nhiên theo phân phối" thì y nguyên.</p>
         </div>
 
         <h3>Bức tường của RNN: phụ thuộc xa</h3>
@@ -2541,7 +2584,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="mini"><p class="t">1 · Self-attention</p><p class="d">Attention của một câu <b>với chính nó</b>: mỗi từ sinh ra truy vấn của nó, và nhìn mọi từ khác trong cùng câu. Kết quả là mỗi từ nhận được một biểu diễn mới đã <b>trộn ngữ cảnh</b> vào. Chữ "đông" trong "quán đông" và trong "phương đông" giờ có vector khác nhau — điều mà word embedding tĩnh ở <a href="#s-embed">mục trước</a> không làm được.</p></div>
           <div class="mini"><p class="t">2 · Nhiều đầu <span class="dim mono">multi-head</span></p><p class="d">Chạy self-attention <b>h lần song song</b> (thường 8 hoặc 12) với các ma trận W khác nhau, rồi ghép kết quả. Mỗi "đầu" học một loại quan hệ: đầu này theo dõi quan hệ chủ ngữ–động từ, đầu kia theo dõi đại từ trỏ về đâu. <b>Một câu hỏi cho mỗi đầu</b>, hỏi cùng lúc.</p></div>
           <div class="mini"><p class="t">3 · Mã hoá vị trí</p><p class="d">Vì đã bỏ tính tuần tự, mô hình <b>không còn biết từ nào đứng trước từ nào</b> — với nó, câu là một cái túi từ. Nên phải <b>cộng thêm</b> vào mỗi embedding một vector mã hoá vị trí (bản gốc dùng các hàm sin/cos nhiều tần số). Đây là bằng chứng rõ nhất rằng Transformer <i>thật sự</i> đã vứt bỏ thứ tự — và phải bù lại bằng tay.</p></div>
-          <div class="mini"><p class="t">4 · Nối tắt + chuẩn hoá lớp</p><p class="d">Mỗi khối con được bọc trong <span class="mono">x + Sublayer(x)</span> rồi chuẩn hoá. Đây <b>chính xác là ResNet</b> ở <a href="#s-cnnarch">mục kiến trúc CNN</a> và <b>chính xác là ý tưởng chuẩn hoá</b> ở <a href="#s-regdl">batch norm</a>. Không có hai thứ này, mạng 96 lớp không huấn luyện nổi.</p></div>
+          <div class="mini"><p class="t">4 · Nối tắt + chuẩn hoá lớp</p><p class="d">Mỗi khối con được bọc trong <span class="mono">x + Sublayer(x)</span> rồi chuẩn hoá. Đây <b>chính xác là ResNet</b> ở <a href="#s-cnnarch">mục kiến trúc CNN</a> và <b>cùng một ý tưởng chuẩn hoá</b> với <a href="#s-regdl">batch norm</a> — chỉ khác là Transformer dùng <b>layer norm</b>, chuẩn hoá trên trục đặc trưng của từng mẫu chứ không trên trục lô. Không có hai thứ này, mạng 96 lớp không huấn luyện nổi.</p></div>
         </div>
 
         <div class="box note">
@@ -2695,7 +2738,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <h3>Ba chi tiết quyết định hệ có dùng được không</h3>
         <div class="grid3">
-          <div class="mini"><p class="t">Chuẩn hoá theo trung bình</p><p class="d">Người dùng mới chưa chấm gì → mọi w bị regularize về 0 → hệ dự đoán <b>0 sao cho mọi phim</b>, vô dụng. Cách chữa: trừ trung bình mỗi hàng trước khi huấn luyện, rồi cộng lại khi dự đoán. Giờ người mới nhận được <b>điểm trung bình của phim đó</b> — dự đoán hợp lý nhất khi chưa biết gì.</p></div>
+          <div class="mini"><p class="t">Chuẩn hoá theo trung bình</p><p class="d">Người dùng mới chưa chấm gì → mọi w bị regularize về 0 → hệ dự đoán <b>0 sao cho mọi phim</b>, vô dụng. Cách chữa: trừ điểm trung bình <b>của từng phim</b> trước khi huấn luyện, rồi cộng lại khi dự đoán. Giờ người mới nhận được <b>điểm trung bình của phim đó</b> — dự đoán hợp lý nhất khi chưa biết gì.</p></div>
           <div class="mini"><p class="t">Nhãn nhị phân</p><p class="d">Thực tế bạn hiếm khi có điểm 1–5; bạn có <b>bấm/không bấm, xem hết/bỏ giữa chừng</b>. Chỉ cần thay tích vô hướng bằng <b>sigmoid của tích vô hướng</b> và đổi sang log loss — đúng bước đi từ hồi quy tuyến tính sang logistic ở <a href="#s-logistic">chặng 1</a>. Cùng một mẫu hình, lần thứ ba.</p></div>
           <div class="mini"><p class="t">Lọc theo nội dung &amp; hai tháp</p><p class="d">Khi có sẵn thông tin người dùng (tuổi, quốc gia) và phim (thể loại, năm), dùng <b>hai mạng nơ-ron riêng</b> — một cho người, một cho phim — mỗi mạng cho ra một vector 32 chiều, rồi lấy tích vô hướng. Kiến trúc "hai tháp" này giải được <b>bài toán khởi đầu lạnh</b> mà lọc cộng tác thuần bó tay.</p></div>
         </div>
@@ -2772,7 +2815,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="box good-box">
           <p class="box__k">Ng nói thẳng, và trang này giữ nguyên</p>
-          <p>Học tăng cường được <b>báo chí nhắc nhiều hơn nhiều so với mức nó được dùng trong sản phẩm thật</b>. Nó rực rỡ trong game và mô phỏng — nơi bạn chạy được hàng triệu lượt thử miễn phí. Trong robot thật và hệ thống thật, nó khó hơn hẳn: mỗi lần thử tốn thời gian, tốn tiền, có khi làm hỏng thiết bị. Ng khuyên hiểu nó vì nó là hướng nghiên cứu quan trọng, nhưng <b>đừng chọn nó khi bạn có thể giải bài toán bằng học có giám sát</b>. Đây là lời khuyên hiếm khi nghe được từ một khoá học về chính chủ đề đó, và nó đáng tin hơn vì thế.</p>
+          <p>Học tăng cường được <b>báo chí nhắc nhiều hơn nhiều so với mức nó được dùng trong sản phẩm thật</b>. Nó rực rỡ trong game và mô phỏng — nơi bạn chạy được hàng triệu lượt thử miễn phí. Trong robot thật và hệ thống thật, nó khó hơn hẳn: mỗi lần thử tốn thời gian, tốn tiền, có khi làm hỏng thiết bị. Ng khuyên hiểu nó vì nó là hướng nghiên cứu quan trọng, nhưng <b>đừng chọn nó khi bạn có thể giải bài toán bằng học có giám sát</b>.</p>
         </div>
 
         <div class="take"><span class="k">Mang theo</span><p>Học tăng cường thay nhãn bằng phần thưởng có chiết khấu, và γ định nghĩa mức kiên nhẫn. Agent không có mục tiêu — <b>bạn viết mục tiêu cho nó</b>, và mọi hành vi kỳ quặc của nó thường là hàm thưởng của bạn viết chưa đúng.</p></div>
@@ -2973,7 +3016,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="box note">
           <p class="box__k">Về 13 mô hình tương tác trong trang</p>
-          <p>Chúng dùng <b>dữ liệu đồ chơi cỡ nhỏ</b>, viết ra để nhìn thấy cơ chế trong một màn hình. Mọi con số là thật — gradient descent thật, softmax thật, phương trình Bellman thật — nhưng quy mô thì nhỏ hơn thực tế hàng nghìn tới hàng triệu lần, và vài chỗ được đơn giản hoá có chủ ý (ma trận W của attention đặt sẵn thay vì học; mạng trong mô hình 6 và 7 dùng một bộ tối ưu tối giản). <b>Mọi phép tính chạy hoàn toàn trong trình duyệt của bạn</b>; không có dữ liệu nào rời khỏi trang, không có yêu cầu mạng nào được gửi đi.</p>
+          <p>Chúng dùng <b>dữ liệu đồ chơi cỡ nhỏ</b>, viết ra để nhìn thấy cơ chế trong một màn hình. Mọi con số là thật — gradient descent thật, softmax thật, phương trình Bellman thật — nhưng quy mô thì nhỏ hơn thực tế hàng nghìn tới hàng triệu lần, và vài chỗ được đơn giản hoá có chủ ý (ma trận W của attention đặt sẵn thay vì học; mạng trong mô hình 6 và 7 dùng một bộ tối ưu tối giản).</p>
         </div>
 
         <div class="box good-box">
@@ -3084,10 +3127,31 @@ function solve(A, b) {
 
   /* mục lục trên máy nhỏ */
   var toc = $('toc'), scrim = $('scrim'), tb = $('tocBtn');
-  function setToc(open) { toc.classList.toggle('open', open); scrim.classList.toggle('on', open); }
-  if (tb) tb.addEventListener('click', function () { setToc(!toc.classList.contains('open')); });
+  /* Ở khổ hẹp, mục lục là một ngăn trượt ra ngoài màn hình nhưng vẫn nằm trong DOM —
+     không chặn thì Tab đi lạc vào 40 link vô hình. `inert` gỡ cả tab order lẫn hit-test
+     mà không đụng tới layout, nên hoạt ảnh trượt vẫn còn. */
+  function syncInert() {
+    toc.inert = window.innerWidth <= 1040 && !toc.classList.contains('open');
+  }
+  function setToc(open) {
+    toc.classList.toggle('open', open);
+    scrim.classList.toggle('on', open);
+    if (tb) tb.setAttribute('aria-expanded', open ? 'true' : 'false');
+    syncInert();
+  }
+  syncInert();
+  window.addEventListener('resize', syncInert);
+  if (tb) {
+    tb.setAttribute('aria-controls', 'toc');
+    tb.setAttribute('aria-expanded', 'false');
+    tb.addEventListener('click', function () { setToc(!toc.classList.contains('open')); });
+  }
   scrim.addEventListener('click', function () { setToc(false); });
   toc.addEventListener('click', function (e) { if (e.target.tagName === 'A') setToc(false); });
+  /* Escape đóng mục lục — bấm ra ngoài đã đóng được, bàn phím thì chưa. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && toc.classList.contains('open')) { setToc(false); if (tb) tb.focus(); }
+  });
 
   /* đánh dấu mục đang đọc */
   var links = Array.prototype.slice.call(toc.querySelectorAll('a'));
@@ -3128,6 +3192,25 @@ Array.prototype.slice.call(document.querySelectorAll('[data-tabs]')).forEach(fun
     redraws.forEach(function (f) { try { f(); } catch (err) {} });
   });
 });
+
+/* Bàn phím cho hai loại "nút" viết bằng <span>: .chip (chọn kịch bản trong các mô hình)
+   và .tm (ký hiệu bấm được trong công thức). Cả hai chỉ có handler click, nên nếu không
+   gắn role/tabindex thì người dùng bàn phím không tới được — và đó là toàn bộ phần
+   tương tác của trang. Enter/Space phát lại một click để dùng đúng handler đã có. */
+(function () {
+  Array.prototype.slice.call(document.querySelectorAll('.chip, .tm')).forEach(function (n) {
+    if (n.hasAttribute('tabindex')) return;
+    n.setAttribute('role', 'button');
+    n.setAttribute('tabindex', '0');
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var t = document.activeElement;
+    if (!t || !t.classList || !(t.classList.contains('chip') || t.classList.contains('tm'))) return;
+    e.preventDefault();
+    t.click();
+  });
+})();
 
 /* công thức bấm được */
 document.addEventListener('click', function (e) {
@@ -4662,7 +4745,7 @@ var GLOSS = [
 ['parameter sharing','chia sẻ tham số','Một bộ dò cạnh dọc dùng được ở mọi vị trí, nên chỉ cần lưu 9 số thay vì học lại cho từng vùng ảnh. Đây là lý do CNN rẻ.','#s-cnn','chia sẻ tham số'],
 ['translation invariance','bất biến tịnh tiến','Dịch ảnh sang phải vài pixel thì bản đồ đặc trưng cũng dịch theo, thông tin không mất. Tri thức về ảnh được nhét thẳng vào kiến trúc.','#s-cnn','bất biến tịnh tiến'],
 ['ResNet','mạng có kết nối tắt','Kiến trúc thêm đường tắt cộng đầu vào của khối vào đầu ra của nó. Nhờ vậy hàm đồng nhất học được miễn phí, và thêm lớp KHÔNG THỂ làm tệ đi.','#s-cnnarch',''],
-['skip connection','kết nối tắt','Nối đầu vào của một khối thẳng sang đầu ra, vòng qua phần giữa. Xuất hiện ba lần trong trang: ResNet (cho gradient), U-Net (cho chi tiết không gian), Transformer.','#s-cnnarch','kết nối tắt|đường tắt'],
+['skip connection','kết nối tắt','Nối đầu vào của một khối thẳng sang đầu ra, vòng qua phần giữa. Xuất hiện bốn lần trong trang: ResNet (cho gradient), U-Net (cho chi tiết không gian), cổng của LSTM (cho trí nhớ xa), attention trong Transformer (cho quan hệ giữa các từ xa nhau).','#s-cnnarch','kết nối tắt|đường tắt'],
 ['1x1 convolution','tích chập 1×1','Nhìn đúng một điểm ảnh nhưng xuyên hết chiều sâu — thực chất là một nơ-ron kết nối đầy đủ chạy trên trục kênh. Dùng để GIẢM số kênh, rẻ hơn 10 lần.','#s-cnnarch','1×1|nút thắt cổ chai|bottleneck'],
 ['Inception','khối Inception','Thay vì chọn 1×1 hay 3×3 hay 5×5, làm hết rồi ghép lại và để mạng tự chọn qua trọng số. Xoá một siêu tham số khó.','#s-cnnarch',''],
 ['MobileNet','mạng cho điện thoại','Dùng tích chập tách theo chiều sâu: tách một phép conv thành hai bước rẻ hơn. Giảm chi phí tính toán khoảng 10 lần với độ chính xác gần như giữ nguyên.','#s-cnnarch',''],
@@ -4731,7 +4814,7 @@ var GLOSS = [
 ['recommender system','hệ gợi ý','Bảng người dùng × món hàng với đa số ô trống, và bài toán là điền các ô trống đó.','#s-recsys','hệ gợi ý'],
 ['collaborative filtering','lọc cộng tác','Học ĐỒNG THỜI sở thích của người và tính chất của món, dù cả hai đều chưa biết. Chạy gradient descent trên cả hai bộ tham số cùng lúc.','#s-recsys','lọc cộng tác'],
 ['content-based filtering','lọc theo nội dung','Dùng thông tin sẵn có về người dùng và món hàng, đưa qua hai mạng riêng để lấy hai vector rồi nhân vô hướng. Giải được bài toán khởi đầu lạnh.','#s-recsys','lọc theo nội dung|hai tháp'],
-['mean normalization','trừ trung bình mỗi hàng','Chi tiết bắt buộc trong hệ gợi ý: không có nó, người dùng mới nhận dự đoán 0 sao cho mọi món. Có nó, họ nhận điểm trung bình của món đó.','#s-recsys','chuẩn hoá theo trung bình'],
+['mean normalization','trừ trung bình của từng món','Chi tiết bắt buộc trong hệ gợi ý: không có nó, người dùng mới nhận dự đoán 0 sao cho mọi món. Có nó, họ nhận điểm trung bình của món đó.','#s-recsys','chuẩn hoá theo trung bình'],
 ['cold start','khởi đầu lạnh','Người dùng mới hoặc món hàng mới chưa có tương tác nào, nên lọc cộng tác thuần không biết gợi ý gì.','#s-recsys','khởi đầu lạnh'],
 ['retrieval and ranking','truy hồi rồi xếp hạng','Kiến trúc chuẩn của hệ gợi ý quy mô lớn: lấy nhanh vài trăm ứng viên bằng cách rẻ, rồi chạy mô hình đắt chỉ trên vài trăm ứng viên đó.','#s-recsys','truy hồi|xếp hạng'],
 ['reinforcement learning','học tăng cường','Thay nhãn bằng PHẦN THƯỞNG — một con số tới sau một chuỗi hành động và không nói hành động nào đã đúng. Đó gọi là bài toán gán công trạng.','#s-rl','học tăng cường'],
@@ -4774,6 +4857,7 @@ var GLOSS = [
   var pop = document.createElement('div');
   pop.className = 'pop';
   pop.setAttribute('role', 'dialog');
+  pop.setAttribute('aria-label', 'Giải thích thuật ngữ');
   pop.innerHTML = '<button class="pop__x" aria-label="Đóng"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
     '<p class="pop__en"></p><p class="pop__vi"></p><p class="pop__d"></p><a class="pop__go" href="#"></a>';
   document.body.appendChild(pop);
