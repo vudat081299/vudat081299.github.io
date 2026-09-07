@@ -7,7 +7,6 @@
 <title>European Baking · bánh ngọt Pháp &amp; Ý</title>
 <meta name="description" content="Công thức bánh ngọt châu Âu — Pháp, Ý, Anh, Mỹ — cân theo gam, nhiệt độ lò thật, dấu hiệu nhận biết từng bước, và bảng sốt/kem ăn kèm cho mỗi loại bánh.">
 
-<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
 <link rel="stylesheet" href="../web-builder/web-builder.css">
 <script>
   /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành. */
@@ -288,7 +287,15 @@
     /* .mc-frow + .mc-frow không bắt được vì đứng trước là <span class="mc-fmore">,
        nên hàng "Loại món" dính sát ô Sắp xếp — vòng focus đè lên chữ. */
     .mc-fpanel > .mc-fmore + .mc-frow { margin-top: 11px; }
-    .mc-chip { min-height: 32px; }                    /* ngón tay, không phải con trỏ */
+    /* Vùng chạm: 40px là sàn cho ngón tay. Trước bản này chip cao 32px, nút --sm cao
+       27–33px, nút × của modal 36px, còn dòng sốt / dòng mâm / dòng đồng hồ chỉ 19–33px
+       — tất cả đều dưới ngưỡng. Chỉ đặt sàn chiều cao, không đổi cách bày. */
+    .mc-chip { min-height: 40px; }
+    .mc-filterwrap .wb-btn { min-height: 40px; }
+    .mc-flow__s { min-height: 40px; }
+    .mc-dip__row, .mc-combo__row { min-height: 44px; align-items: center; }
+    .mc-trow__label { min-height: 44px; }
+    .mc-dock .wb-close { width: 44px; height: 44px; }
     .mc-grid { gap: 10px; }
 
     /* modal: mở toàn màn hình, nguyên liệu / các bước tách thành hai tab */
@@ -296,23 +303,23 @@
     .mc-modal { max-width: 100%; height: 100vh; height: 100dvh; max-height: 100dvh;
       border-radius: 0; border-width: 0; }
     .mc-dhead { padding: 12px 14px 0; }
-    .mc-dtitle { font-size: 18px; margin-bottom: 8px; padding-right: 40px; }
-    .mc-dhead .wb-close { top: 8px; right: 8px; width: 36px; height: 36px; margin: 0; }
+    .mc-dtitle { font-size: 18px; margin-bottom: 8px; padding-right: 56px; }
+    .mc-dhead .wb-close { top: 8px; right: 8px; width: 44px; height: 44px; margin: 0; }
     .mc-dtabs { display: flex; width: 100%; margin: 10px 0 0; border-radius: var(--wb-radius) var(--wb-radius) 0 0; }
-    .mc-dtabs .wb-tab { flex: 1 1 0; padding: 9px 10px; }
+    .mc-dtabs .wb-tab { flex: 1 1 0; padding: 9px 10px; min-height: 44px; }
     .mc-detail__ing, .mc-detail__steps { padding: 14px 14px 30px; }
     .mc-detail.is-steps .mc-detail__ing { display: none; }
     .mc-detail.is-ing .mc-detail__steps { display: none; }
     .mc-detail.is-ing .mc-detail__ing { border-bottom: 0; }
-    .mc-ing.wb-check { padding: 10px 0; }
+    .mc-ing.wb-check { padding: 10px 0; min-height: 44px; align-content: center; }
 
     /* nút "xong bước này" phải luôn với tới được, kể cả khi đã cuộn xuống bước 7 */
     .mc-cook { position: sticky; top: 0; z-index: 3; flex-wrap: wrap; row-gap: 9px;
       margin: -14px -14px 12px; padding: 11px 14px;
       background: var(--wb-surface); border-bottom: var(--wb-bw) solid var(--wb-border); }
     .mc-cook #d-next { flex: 1 1 100%; justify-content: center; }
-    .mc-detail .wb-btn--sm, .mc-dock .wb-btn--sm { padding: 9px 13px; }
-    .mc-detail .wb-tabs--pill .wb-tab { padding: 8px 14px; }
+    .mc-detail .wb-btn--sm, .mc-dock .wb-btn--sm { padding: 9px 13px; min-height: 40px; }
+    .mc-detail .wb-tabs--pill .wb-tab { padding: 8px 14px; min-height: 40px; }
 
     .mc-dock { left: 8px; right: 8px; width: auto; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); }
     /* ba đồng hồ cùng chạy sẽ ăn nửa màn hình — cho cuộn, giữ trần ở 46% chiều cao */
@@ -445,7 +452,7 @@
 
         <div class="wb-card"><div class="wb-card__head"><h4 class="wb-card__title">Lò &amp; nhiệt độ</h4></div>
           <div class="wb-card__body" style="padding-top:4px">
-            <div class="mc-conv"><span class="mc-conv__k">°C → °F</span><span class="mc-conv__v">160 °C = 325 °F · 175 °C = 350 °F · 180 °C = 355 °F · 200 °C = 390 °F · 220 °C = 425 °F.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">°C → °F</span><span class="mc-conv__v"><b>°F = °C × 9/5 + 32</b>. Các nấc lò quen dùng: 150 °C = 300 °F · 160 °C = 325 °F · 175 °C = 350 °F · 190 °C = 375 °F · 200 °C = 400 °F · 220 °C = 425 °F.</span></div>
             <div class="mc-conv"><span class="mc-conv__k">Có quạt (fan)</span><span class="mc-conv__v"><b>Hạ 20 °C</b> so với công thức không quạt, và rút ngắn thời gian ~10%. Quạt làm mặt bánh khô nhanh hơn.</span></div>
             <div class="mc-conv"><span class="mc-conv__k">Làm nóng trước</span><span class="mc-conv__v">Tối thiểu <b>15 phút</b> sau khi đèn báo tắt. Đèn tắt nghĩa là <em>không khí</em> đã nóng, chưa phải thành lò và khay.</span></div>
             <div class="mc-conv"><span class="mc-conv__k">Vị trí khay</span><span class="mc-conv__v">Mặc định <b>rãnh giữa</b>. Bánh cần đáy giòn (pie, pizza) thì rãnh dưới; cần mặt vàng (meringue nướng, gratin) thì rãnh trên.</span></div>
@@ -900,7 +907,7 @@ RECIPES.push(
     { t: 'Fold — làm ba lần', d: 'Trộn 1/3 lòng trắng vào chocolate để làm loãng, rồi fold nốt 2/3 còn lại bằng spatula, cắt xuống giữa và hất lên.', m: 5, heat: '—', cue: 'Hỗn hợp <b>đồng màu, không còn vệt trắng, và vẫn phồng</b>. Còn vệt trắng thì chưa xong; hết phồng là đã fold quá tay.' },
     { t: 'Ướp lạnh', d: 'Chia vào cốc, bọc kín, để ngăn mát tối thiểu 4 tiếng.', m: 240, heat: 'Ngăn mát', cue: 'Mousse <b>đứng thìa, múc lên thành khối giữ nếp</b>.' }
   ],
-  tips: ['Fold là <b>cắt xuống — hất lên — xoay âu</b>, không phải khuấy vòng. Khuấy vòng làm vỡ hết bọt khí.', 'Món này dùng trứng sống: chọn trứng thật tươi, và không cho trẻ nhỏ, người mang thai ăn.'],
+  tips: ['Fold là <b>cắt xuống — hất lên — xoay âu</b>, không phải khuấy vòng. Khuấy vòng làm vỡ hết bọt khí.', 'Món này dùng trứng sống: chọn trứng tiệt trùng (pasteurized) hoặc trứng thật tươi, giữ lạnh và ăn trong 2 ngày. Không cho <b>trẻ nhỏ, thai phụ, người già, người suy giảm miễn dịch</b> ăn.'],
   serveWith: 'Chantilly và một chút muối biển. Hoặc coulis mâm xôi để cắt độ béo.'
 },
 {
@@ -1153,7 +1160,7 @@ RECIPES.push(
     { t: 'Xếp tầng', d: 'Một lớp bánh — một lớp kem — một lớp bánh — một lớp kem. Gạt phẳng mặt.', m: 8, heat: '—', cue: 'Mỗi lớp kem <b>dày bằng lớp bánh</b>, mặt trên phẳng.' },
     { t: 'Ướp lạnh tối thiểu 6 tiếng', d: 'Bọc kín, để ngăn mát. Rây cacao lên ngay trước khi bưng ra.', m: 360, heat: 'Ngăn mát', cue: 'Cắt một nhát thấy <b>các tầng đứng rõ, không sụp</b>. Rây cacao sớm là nó hút ẩm và thành mảng ướt.' }
   ],
-  tips: ['Cà phê phải <b>nguội hoàn toàn</b>. Đây là lỗi phổ biến nhất và nó phá cả khay bánh.', 'Món này dùng trứng sống. Muốn an toàn thì đánh lòng đỏ với siro đường 118 °C (kiểu pâte à bombe).'],
+  tips: ['Cà phê phải <b>nguội hoàn toàn</b>. Đây là lỗi phổ biến nhất và nó phá cả khay bánh.', 'Món này dùng <b>trứng sống cả lòng đỏ lẫn lòng trắng</b> và không nấu ở bước nào. Muốn an toàn thì nấu cả hai: lòng đỏ đánh với siro đường 118 °C (pâte à bombe) và lòng trắng đánh thành meringue Ý cũng bằng siro 118 °C — chỉ làm pâte à bombe thì lòng trắng vẫn còn sống. Thai phụ, trẻ nhỏ, người già và người suy giảm miễn dịch thì bỏ lòng trắng, thay bằng 200 ml kem tươi đánh chóp mềm fold vào.'],
   serveWith: 'Tự nó đã đủ. Một ly vang ngọt hoặc espresso.'
 },
 {
@@ -1305,7 +1312,7 @@ RECIPES.push(
     { t: 'Nghỉ trên khay 5 phút', d: 'Để nguyên trên khay 5 phút rồi mới chuyển sang rack.', m: 6, heat: '—', cue: 'Bánh <b>đủ cứng để nhấc mà không gãy</b>. Chuyển ngay là bánh gãy đôi.' }
   ],
   tips: ['Muốn bánh có vòng sóng đẹp: đập khay xuống bàn 2–3 lần trong lúc nướng, ở phút thứ 8 và 10.', 'Bột viên sẵn để ngăn đá được 2 tháng — nướng thẳng từ đông lạnh, cộng thêm 2 phút.'],
-  serveWith: 'Sữa lạnh. Đó là cặp đôi, không phải chuyện đùa.'
+  serveWith: 'Sữa lạnh.'
 },
 {
   id: 'cheesecake-ny', name: 'New York cheesecake', cat: 'cake', role: 'tiec', diff: 2, serves: 12, prep: 25,
@@ -1402,7 +1409,7 @@ RECIPES.push(
     { t: 'Xếp chuối và phủ kem', d: 'Thái chuối lát dày 1 cm, xếp kín mặt caramel. Đánh kem tươi lạnh với đường bột đến chóp mềm, phủ lên.', m: 10, heat: '—', cue: 'Kem <b>giữ nếp khi múc, không chảy</b>. Chóp cứng quá là kem sẽ bị "hạt" và tách bơ.' },
     { t: 'Rắc và làm lạnh', d: 'Bào chocolate và rắc muối biển lên mặt, để lạnh 1 tiếng trước khi cắt.', m: 60, heat: 'Ngăn mát', cue: 'Cắt ra thấy <b>bốn tầng đứng rõ</b>.' }
   ],
-  tips: ['Lon sữa đặc phải <b>luôn ngập nước</b> khi luộc. Đây là chỗ duy nhất trong trang này có rủi ro thật.', 'Làm trong ngày ăn. Chuối sẽ thâm sau khoảng 12 tiếng dù có kem phủ.'],
+  tips: ['Lon sữa đặc phải <b>luôn ngập nước</b> khi luộc — cạn nước là lon nổ. Đây là một trong hai chỗ trong trang này có rủi ro thật (chỗ kia là nồi caramel).', 'Làm trong ngày ăn. Chuối sẽ thâm sau khoảng 12 tiếng dù có kem phủ.'],
   serveWith: 'Tự nó đã đủ — đã có kem, caramel và chuối.'
 },
 {
@@ -1689,7 +1696,7 @@ RECIPES.push(
     { t: 'Rót kem ấm từ từ', d: 'Rót kem đã hâm ấm thành dòng nhỏ, khuấy liên tục, đứng lùi ra một bước.', m: 3, heat: 'Tắt bếp', cue: 'Sốt <b>ngừng sủi và trở thành một khối nâu bóng đồng nhất</b>. Kem lạnh sẽ làm nó bùng lên — luôn hâm ấm trước.' },
     { t: 'Cho muối và để nguội', d: 'Cho muối biển, nếm, chỉnh. Để nguội — sốt sẽ đặc thêm một bậc.', m: 3, heat: '—', cue: 'Nguội xuống thì sốt <b>sánh như mật ong</b>. Nếu quá đặc thì hâm lại với 1 thìa kem.' }
   ],
-  tips: ['Caramel nóng ở khoảng <b>170 °C</b> — nóng hơn dầu chiên. Đừng nếm bằng ngón tay, đừng để trẻ con đứng cạnh.', 'Để lọ kín trong ngăn mát được <b>3 tuần</b>. Hâm lò vi sóng 15 giây trước khi dùng.'],
+  tips: ['Caramel nóng ở khoảng <b>170 °C</b> — nóng gần gấp đôi nước sôi, và nó dính chặt vào da chứ không chảy đi. Đừng nếm bằng ngón tay, đừng để trẻ con đứng cạnh.', 'Để lọ kín trong ngăn mát được <b>3 tuần</b>. Hâm lò vi sóng 15 giây trước khi dùng.'],
   serveWith: 'Brownie, kem vani, crêpe, panna cotta, waffle, apple pie.'
 },
 {
@@ -2220,6 +2227,11 @@ var LABELS = {
 
   /* ---- detail modal ---- */
   var overlay = byId('detail'), current = null, factor = 1, stepIdx = 0;
+  /* Nút đã mở modal. Bàn phím và trình đọc màn hình cần focus đi vào hộp khi mở và
+     quay đúng về nút cũ khi đóng — không thì đóng xong con trỏ nhảy về đầu trang và
+     người dùng phải Tab lại từ đầu. Chỉ ghi lại ở lần mở đầu: bấm một dòng sốt bên
+     TRONG modal cũng gọi open(), mà nút đó sẽ bị xoá khi vẽ lại. */
+  var opener = null;
   var GROUPS = [
     { k: 'main', l: 'Nguyên liệu chính' },
     { k: 'veg', l: 'Rau & củ' },
@@ -2466,13 +2478,22 @@ var LABELS = {
     byId('d-extra').innerHTML = extra;
     showPanel('ing');
     renderServe(); renderIng(); renderDip(); renderSteps();
+    var first = !overlay.classList.contains('is-open');
+    if (first) {
+      var a = document.activeElement;
+      opener = (a && a !== document.body && document.body.contains(a)) ? a : null;
+    }
     overlay.classList.add('is-open');
     document.body.style.overflow = 'hidden';
     byId('detail').querySelector('.mc-modal__body').scrollTop = 0;
+    var x = overlay.querySelector('[data-modal-close]');
+    if (x) x.focus();
   }
   function close() {
     overlay.classList.remove('is-open');
     document.body.style.overflow = '';
+    if (opener && document.body.contains(opener)) opener.focus();
+    opener = null;
   }
   // Nút × / [data-modal-close]: bấm là đóng.
   overlay.addEventListener('click', function (e) {
