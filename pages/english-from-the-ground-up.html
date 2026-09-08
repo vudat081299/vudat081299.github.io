@@ -64,7 +64,7 @@
   .ec-ul b { font-weight: 650; }
   .ec-ul em { font-style: italic; color: var(--wb-fg-muted); }
 
-  code, .ec-code { font-family: var(--wb-font-mono); font-size: .92em; background: var(--wb-surface-hover); border-radius: 4px; padding: 1px 5px; }
+  code { font-family: var(--wb-font-mono); font-size: .92em; background: var(--wb-surface-hover); border-radius: 4px; padding: 1px 5px; }
   .ec-mono { font-family: var(--wb-font-mono); font-size: 12.5px; }
   .ec-dim { color: var(--wb-fg-muted); }
 
@@ -101,21 +101,6 @@
   @media (max-width: 560px) { .ec-parts { grid-template-columns: minmax(0, 1fr); } }
   .ec-parts a { text-decoration: none; color: inherit; }
 
-  /* ---- concept card ---- */
-  .ec-list { display: flex; flex-direction: column; gap: 14px; margin: 12px 0 6px; }
-  .ec-item { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 16px 18px; scroll-margin-top: 76px; }
-  .ec-item__top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 9px; margin-bottom: 8px; }
-  .ec-item__no { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); font-weight: 600; }
-  .ec-item__name { font-size: 15.5px; font-weight: 710; letter-spacing: -.01em; margin: 0; }
-  .ec-item__def { font-size: 14px; line-height: 1.72; color: var(--wb-fg); margin: 0 0 8px; max-width: 82ch; }
-  .ec-item__def:last-child { margin-bottom: 0; }
-  .ec-item__def b { font-weight: 650; }
-  .ec-item__def em { font-style: italic; color: var(--wb-fg-muted); }
-  .ec-item__meta { display: grid; grid-template-columns: 116px minmax(0, 1fr); gap: 8px 12px; margin-top: 13px; padding-top: 12px; border-top: var(--wb-bw) solid var(--wb-border); }
-  .ec-item__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-muted); padding-top: 2px; line-height: 1.45; }
-  .ec-item__v { font-size: 13px; line-height: 1.62; color: var(--wb-fg-muted); margin: 0; }
-  .ec-item__v b { color: var(--wb-fg); font-weight: 640; }
-  @media (max-width: 560px) { .ec-item__meta { grid-template-columns: minmax(0, 1fr); gap: 3px 0; } .ec-item__k { padding-top: 8px; } }
 
   /* ---- diagrams ---- */
   .ec-viz { margin: 16px 0 6px; }
@@ -845,7 +830,7 @@
               <div><div class="ec-beat"><span>the</span><span class="s">DOGS</span><span>must</span><span>have</span><span>been</span><span class="s">EA</span><span>ting</span><span>the</span><span class="s">BONES</span></div><p class="ec-src" style="margin-top:5px">9 âm tiết · <b>vẫn 3 nhịp</b> — <span class="ec-mono">must have been</span> gói lại thành /məstəvbɪn/, nghe như một từ</p></div>
             </div>
           </div>
-          <p class="ec-src">Đây là thí nghiệm bạn tự làm được: gõ nhịp tay đều ba cái, đọc cả ba câu sao cho mỗi từ in hoa rơi đúng vào một nhịp. Câu thứ ba buộc bạn phải nén — và khi nén được, bạn cũng bắt đầu <i>nghe ra</i> chỗ người ta nén.</p>
+          <p class="ec-src">Đây là thí nghiệm bạn tự làm được: gõ nhịp tay đều ba cái, đọc cả ba câu sao cho mỗi từ in hoa rơi đúng vào một nhịp. Câu thứ ba buộc bạn phải nén — và khi nén được, bạn cũng bắt đầu <i>nghe ra</i> chỗ người ta nén. Một lưu ý về mức độ: đo bằng máy thì các nhịp này <b>không</b> cách nhau đều tăm tắp, và cách chia cứng "tiếng Anh nhịp trọng âm / tiếng Việt nhịp âm tiết" đã bị chính các phép đo bác bỏ — giới ngữ âm nay coi đó là một dải liên tục. Thứ có thật, và là thứ bài tập này luyện, là <b>độ nén của âm không nhấn</b>: tiếng Anh nén mạnh hơn tiếng Việt rất nhiều, nên chỗ nén là chỗ bạn nghe hụt.</p>
         </div>
 
         <h3 class="ec-h3">Cái gì được nhấn, cái gì bị nén</h3>
@@ -1125,7 +1110,7 @@ perfect continuous <span class="c">đứng ở một mốc, nhìn ngược lại
             <thead><tr><th style="width:30%">Nhóm</th><th style="width:34%">Vì sao dễ sai</th><th>Cách nói đúng</th></tr></thead>
             <tbody>
               <tr><td><b>Không đếm được nhưng "cảm giác" đếm được</b></td><td>Tiếng Việt đếm bình thường: một thông tin, hai lời khuyên.</td><td class="ec-mono">information · advice · equipment · furniture · news · luggage · research · software · feedback · progress · knowledge · work<br><span class="ec-bad">two informations</span> → <span class="ec-en">two pieces of information</span></td></tr>
-              <tr><td><b>Cách đếm chúng</b></td><td>Phải mượn một đơn vị.</td><td class="ec-mono">a piece of advice · a bit of information · an item of equipment · a job of work · a loaf of bread</td></tr>
+              <tr><td><b>Cách đếm chúng</b></td><td>Phải mượn một đơn vị.</td><td class="ec-mono">a piece of advice · a bit of information · an item of equipment · a piece of work · a loaf of bread</td></tr>
               <tr><td><b>Số nhiều bất quy tắc</b></td><td>Không thêm -s.</td><td class="ec-mono">child→children · man→men · woman→women · foot→feet · tooth→teeth · mouse→mice · person→people</td></tr>
               <tr><td><b>Không đổi</b></td><td>Số ít và số nhiều giống hệt.</td><td class="ec-mono">sheep · fish · deer · series · species · aircraft · means</td></tr>
               <tr><td><b>Gốc Latin/Hy Lạp</b></td><td>Hay gặp trong văn kỹ thuật và học thuật.</td><td class="ec-mono">analysis→analyses · criterion→criteria · datum→data · phenomenon→phenomena · index→indices · matrix→matrices</td></tr>
@@ -3369,11 +3354,28 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
 
   /* ── mở / đóng lớp phủ ─────────────────────────────────────────────────── */
   var lastFocus = null;
+  /* Lớp phủ này che kín trang, nhưng phần trang phía sau vẫn nằm trong thứ tự Tab và
+     vẫn lộ ra với screen reader — Tab hết bảng từ vựng là rơi vào giáo trình vô hình.
+     `inert` gỡ cả hai cùng lúc, gọn hơn tự bẫy Tab. Trình duyệt cũ bỏ qua thuộc tính
+     này và giữ nguyên hành vi trước đây, nên không hỏng gì. */
+  function siblings() {
+    var out = [], k = document.body.children;
+    for (var i = 0; i < k.length; i++) {
+      if (k[i] !== view && k[i] !== pop && k[i].tagName !== 'SCRIPT') out.push(k[i]);
+    }
+    return out;
+  }
+  function setBackgroundInert(on) {
+    siblings().forEach(function (n) {
+      if (on) n.setAttribute('inert', ''); else n.removeAttribute('inert');
+    });
+  }
   function openView() {
     if (view.classList.contains('is-open')) return;
     lastFocus = document.activeElement;
     view.classList.add('is-open');
     view.setAttribute('aria-hidden', 'false');
+    setBackgroundInert(true);
     document.documentElement.style.overflow = 'hidden';
     view.scrollTop = 0;
     setTimeout(function () { try { backBtn.focus(); } catch (e) {} }, 40);
@@ -3383,8 +3385,11 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
     hidePop();
     view.classList.remove('is-open');
     view.setAttribute('aria-hidden', 'true');
+    setBackgroundInert(false);
     document.documentElement.style.overflow = '';
-    if (lastFocus && lastFocus.focus) { try { lastFocus.focus(); } catch (e) {} }
+    if (lastFocus && lastFocus.focus && document.contains(lastFocus)) {
+      try { lastFocus.focus(); } catch (e) {}
+    }
   }
 
   document.addEventListener('click', function (e) {
