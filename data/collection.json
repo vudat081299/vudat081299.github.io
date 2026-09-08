@@ -107,7 +107,7 @@
           "icon": "model_training",
           "name": "Machine Learning & Deep Learning",
           "desc": "Andrew Ng's 8 courses, retold in Vietnamese — regression & gradient descent, neural nets & backprop, tuning, and diagnosing a model that doesn't work",
-          "href": "pages/machine-learning-ng.html"
+          "href": "pages/machine-learning.html"
         },
         {
           "key": "i",
