@@ -19,6 +19,15 @@
 </script>
 
 <style>
+  /* =========================================================================
+     TƯƠNG PHẢN — --wb-fg-subtle của kit là gray-400 (#a1a1aa), chỉ đạt 2,6:1 trên
+     nền sáng, dưới ngưỡng WCAG AA 4,5:1. Trang này dùng token đó cho chữ mang
+     thông tin thật — nhãn bộ lọc, số món tìm được, tên phần thịt tiếng Anh, chú
+     thích sơ đồ, đơn vị trong bảng — ở cỡ 11–12px, nên không được miễn theo luật
+     chữ lớn. Nâng token lên mức đạt chuẩn ở cả hai theme; mọi màu khác giữ nguyên.
+     ====================================================================== */
+  :root { --wb-fg-subtle: #6d6d72; }  /* 5,15:1 trên trắng · 4,56:1 trên #f1f1f3 */
+  .dark { --wb-fg-subtle: #888891; }  /* 5,60:1 trên #0b0b0d · 4,56:1 trên #212127 */
   /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
@@ -725,7 +734,8 @@ RECIPES.push(
     { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
     { n: 'Muối', q: 1, u: 'thìa cà phê', r: 'season' },
     { n: 'Hành lá', q: 2, u: 'nhánh', r: 'herb' },
-    { n: 'Hạt tiêu', q: 1, u: 'nhúm', r: 'season' }
+    { n: 'Hạt tiêu', q: 1, u: 'nhúm', r: 'season' },
+    { n: 'Dầu ăn', q: 1, u: 'thìa canh', r: 'season' }
   ],
   steps: [
     { t: 'Ướp và phi hành', d: 'Ướp thịt băm với ½ thìa cà phê nước mắm + chút tiêu, để 5 phút. Băm hành khô, phi với 1 thìa canh dầu.', m: 5, heat: 'Lửa vừa', cue: 'Hành chuyển vàng nhạt và dậy mùi — <b>vàng nhạt là tắt</b>, để đến vàng sậm sẽ đắng.' },
@@ -967,7 +977,9 @@ RECIPES.push(
     { n: 'Đường', q: 1, u: 'thìa canh', r: 'season' },
     { n: 'Nước hàng', q: 1, u: 'thìa canh', r: 'season' },
     { n: 'Nước chè xanh (hoặc nước dừa)', q: 300, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
-    { n: 'Ớt + hành khô', q: 3, u: 'củ', r: 'season' }
+    { n: 'Ớt + hành khô', q: 3, u: 'củ', r: 'season' },
+    { n: 'Gừng', q: 20, u: 'g', note: 'Giã dập — chỉ để xát khử tanh cá rồi rửa đi.', r: 'season' },
+    { n: 'Muối', q: 1, u: 'thìa canh', note: 'Dùng để xát cá, không nêm vào nồi kho.', r: 'season' }
   ],
   steps: [
     { t: 'Sơ chế cá', d: 'Xát muối và gừng lên khúc cá, rửa sạch, để thật ráo rồi ướp với mắm, đường, nước hàng, riềng giã.', m: 30, heat: '—', cue: 'Cá <b>ráo mặt, không đọng nước</b> — cá ướt thì kho sẽ tanh và bở.' },
@@ -1424,7 +1436,8 @@ RECIPES.push(
     { n: 'Nước mắm', q: 1, u: 'thìa canh', note: 'Bản chay: thay bằng nước tương.', r: 'season' },
     { n: 'Đường', q: 1, u: 'thìa cà phê', r: 'season' },
     { n: 'Hành lá', q: 3, u: 'nhánh', r: 'herb' },
-    { n: 'Dầu ăn', q: 3, u: 'thìa canh', r: 'season' }
+    { n: 'Dầu ăn', q: 3, u: 'thìa canh', r: 'season' },
+    { n: 'Muối', q: 0.25, u: 'thìa cà phê', r: 'season' }
   ],
   steps: [
     { t: 'Rán đậu', d: 'Thấm khô đậu, rán vàng các mặt, vớt ra để ráo.', m: 10, heat: 'Lửa vừa', cue: 'Vỏ vàng và <b>tự tách khỏi chảo</b> khi lắc.' },
@@ -1643,7 +1656,8 @@ RECIPES.push(
     { n: 'Đu đủ xanh', q: 200, u: 'g', per: { n: 200, l: 'khúc bằng nắm tay' }, note: 'Thái lát mỏng như đồng xu.', r: 'veg' },
     { n: 'Cà rốt', q: 1, u: 'củ', note: 'Thái lát mỏng cùng cỡ với đu đủ.', r: 'veg' },
     { n: 'Tỏi', q: 4, u: 'tép', r: 'season' },
-    { n: 'Ớt tươi', q: 2, u: 'quả', r: 'season' }
+    { n: 'Ớt tươi', q: 2, u: 'quả', r: 'season' },
+    { n: 'Muối', q: 1, u: 'thìa cà phê', note: 'Chỉ để bóp dưa góp — rửa lại sau, không vào bát nước chấm.', r: 'season' }
   ],
   steps: [
     { t: 'Bóp dưa góp', d: 'Đu đủ và cà rốt thái lát, bóp với 1 thìa cà phê muối 10 phút rồi rửa lại, vắt kiệt.', m: 12, heat: '—', cue: 'Lát đu đủ <b>trong lại ở mép và bẻ cong không gãy</b>. Không bóp muối thì dưa ra nước làm nhạt cả bát.' },
@@ -1787,7 +1801,8 @@ RECIPES.push(
     { n: 'Gừng', q: 1, u: 'củ', note: 'To bằng ngón cái, thái lát mỏng.', r: 'season' },
     { n: 'Lá chanh', q: 6, u: 'lá', note: 'Vò nhẹ cho ra tinh dầu.', r: 'herb' },
     { n: 'Ớt tươi', q: 2, u: 'quả', r: 'season' },
-    { n: 'Nước', q: 100, u: 'ml', per: { n: 250, l: 'bát con' }, note: 'Chỉ để tạo hơi lúc đầu — ngao sẽ tự tiết ra rất nhiều nước.', r: 'main' }
+    { n: 'Nước', q: 100, u: 'ml', per: { n: 250, l: 'bát con' }, note: 'Chỉ để tạo hơi lúc đầu — ngao sẽ tự tiết ra rất nhiều nước.', r: 'main' },
+    { n: 'Muối', q: 1, u: 'thìa canh', note: 'Chỉ pha vào nước ngâm nhả cát. Không cho vào nồi hấp — ngao đã mặn sẵn.', r: 'season' }
   ],
   steps: [
     { t: 'Ngâm nhả cát', d: 'Ngâm ngao trong nước vo gạo pha 1 thìa canh muối, thả 2 quả ớt đập dập vào cùng.', m: 20, heat: '—', cue: 'Đáy chậu <b>lắng một lớp cát mịn</b> và ngao thò vòi ra ngoài vỏ. Chưa thấy cát dưới đáy là ngâm chưa đủ.' },
@@ -1829,7 +1844,8 @@ RECIPES.push(
     { n: 'Hành khô', q: 1, u: 'củ', r: 'season' },
     { n: 'Nước mắm', q: 1, u: 'thìa canh', r: 'season' },
     { n: 'Thì là + hành lá', q: 4, u: 'nhánh', r: 'herb' },
-    { n: 'Ớt tươi', q: 1, u: 'quả', r: 'season' }
+    { n: 'Ớt tươi', q: 1, u: 'quả', r: 'season' },
+    { n: 'Muối', q: 0.25, u: 'thìa cà phê', r: 'season' }
   ],
   steps: [
     { t: 'Luộc ngao lấy nước', d: 'Cho ngao vào nồi với 1 lít nước, đun đến khi ngao há hết miệng thì vớt ngao ra.', m: 8, heat: 'Lửa to', cue: '<b>Toàn bộ ngao há miệng</b>. Vớt ra ngay — để lại trong nồi là thịt teo và dai.' },
@@ -1973,7 +1989,10 @@ RECIPES.push(
     { n: 'Hành khô', q: 2, u: 'củ', r: 'season' },
     { n: 'Nước mắm', q: 1.5, u: 'thìa canh', r: 'season' },
     { n: 'Hạt tiêu', q: 1, u: 'thìa cà phê', r: 'season' },
-    { n: 'Thì là + hành lá', q: 5, u: 'nhánh', r: 'herb' }
+    { n: 'Thì là + hành lá', q: 5, u: 'nhánh', r: 'herb' },
+    { n: 'Gừng', q: 20, u: 'g', note: 'Giã dập — chỉ dùng để rửa khử tanh mực, không vào nhân.', r: 'season' },
+    { n: 'Muối', q: 1, u: 'thìa canh', note: 'Dùng để rửa mực.', r: 'season' },
+    { n: 'Dầu ăn', q: 3, u: 'thìa canh', note: '2 thìa để rán mực, phần còn lại để phi hành làm sốt.', r: 'season' }
   ],
   steps: [
     { t: 'Sơ chế mực', d: 'Rửa mực với muối và gừng, lộn trong ra rửa sạch rồi lộn lại. Băm nhỏ phần râu mực để trộn vào nhân.', m: 12, heat: '—', cue: 'Ống mực <b>trắng ngà, sờ không còn nhớt</b>, bên trong không còn sạn.' },
@@ -2480,7 +2499,8 @@ RECIPES.push(
     { n: 'Hành lá', q: 4, u: 'nhánh', r: 'herb' },
     { n: 'Nước mắm', q: 1.5, u: 'thìa canh', r: 'season' },
     { n: 'Hành khô', q: 3, u: 'củ', r: 'season' },
-    { n: 'Nước', q: 400, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' }
+    { n: 'Nước', q: 400, u: 'ml', per: { n: 250, l: 'bát con' }, r: 'main' },
+    { n: 'Dầu ăn', q: 4, u: 'thìa canh', note: 'Rán cá xâm xấp đáy chảo.', r: 'season' }
   ],
   steps: [
     { t: 'Rán sơ cá', d: 'Cá để thật ráo, rán vàng hai mặt trong chảo dầu nóng già rồi vớt ra.', m: 10, heat: 'Lửa vừa', cue: 'Mặt cá <b>vàng se và không dính chảo khi lắc nhẹ</b>. Rán qua là để miếng cá giữ hình trong lúc om.' },
@@ -3106,10 +3126,12 @@ var LABELS = {
     var b = el('button', 'wb-cap mc-chip wb-cap--dashed');
     b.innerHTML = (icon ? '<span class="wb-ico wb-ico--xs">' + icon + '</span> ' : '') + label;
     b.setAttribute('data-on', 'false');
+    b.setAttribute('aria-pressed', 'false');
     return b;
   }
   function paintChip(b) {
     var on = b.getAttribute('data-on') === 'true';
+    b.setAttribute('aria-pressed', String(on));
     b.classList.toggle('wb-cap--dashed', !on);
     b.classList.toggle('wb-cap--solid', on);
   }
@@ -3503,7 +3525,10 @@ var LABELS = {
   });
 
   function open(r) {
-    if (!overlay.classList.contains('is-open')) lastFocus = document.activeElement;
+    if (!overlay.classList.contains('is-open')) {
+      var a = document.activeElement;
+      lastFocus = (a && a !== document.body && document.body.contains(a)) ? a : null;
+    }
     current = r; factor = preferServes / r.serves; stepIdx = 0;
     var c = catOf(r.cat);
     byId('d-name').textContent = r.name;
@@ -3535,7 +3560,9 @@ var LABELS = {
   function close() {
     overlay.classList.remove('is-open');
     document.body.style.overflow = '';
-    if (lastFocus && lastFocus.focus) { try { lastFocus.focus({ preventScroll: true }); } catch (e) {} }
+    if (lastFocus && lastFocus.focus && document.body.contains(lastFocus)) {
+      try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
+    }
     lastFocus = null;
   }
   // Nút × / [data-modal-close]: bấm là đóng.
