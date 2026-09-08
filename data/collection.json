@@ -1,0 +1,305 @@
+{
+  "updated": "2026-09-08",
+  "note": "Nội dung của index.html. Thêm một trang = thêm một item vào section đúng chỗ; phím tắt `key` phải chưa ai dùng. Số 'n page' của subject được tính từ files, đừng ghi tay.",
+  "sections": [
+    {
+      "id": "tiles",
+      "icon": "grid_view",
+      "label": "Pages",
+      "desc": "Standalone pages & tools.",
+      "kind": "tiles",
+      "items": [
+        {
+          "key": "1",
+          "icon": "casino",
+          "name": "Loto",
+          "desc": "Lottery heatmap & statistics",
+          "href": "loto/loto.html"
+        },
+        {
+          "key": "2",
+          "icon": "table_chart",
+          "name": "Excel → Table",
+          "desc": "Read Excel files into a table",
+          "href": "read-excel-file-to-table/index.html"
+        },
+        {
+          "key": "3",
+          "icon": "two_wheeler",
+          "name": "Scooter Maintenance",
+          "desc": "Scooter service schedule",
+          "href": "pages/scooter-maintenance-guide.html"
+        },
+        {
+          "key": "4",
+          "icon": "account_balance_wallet",
+          "name": "Cashy",
+          "desc": "Personal finance & expense tracker",
+          "href": "cashy/"
+        },
+        {
+          "key": "5",
+          "icon": "account_tree",
+          "name": "JSON Analysis",
+          "desc": "Inspect, repair, search & compare JSON",
+          "href": "json-analysis/"
+        },
+        {
+          "key": "6",
+          "icon": "account_balance",
+          "name": "Economics Handbook",
+          "desc": "Interactive rulebook — economic & financial \"if-then\" rules",
+          "href": "pages/finance-econ-rulebook.html"
+        },
+        {
+          "key": "8",
+          "icon": "lightbulb",
+          "name": "Fact",
+          "desc": "Verified facts on thinking, money, psychology & the world",
+          "href": "facts/"
+        },
+        {
+          "key": "9",
+          "icon": "record_voice_over",
+          "name": "Structured Speaking",
+          "desc": "Pick the right speaking framework — decision tool, drills & drafting pad",
+          "href": "pages/structured-speaking.html"
+        },
+        {
+          "key": "7",
+          "icon": "gavel",
+          "name": "Debate & Argumentation",
+          "desc": "Giáo trình tự học tranh biện — lập luận, phản bác, cân tác động, các thể thức & 5 công cụ luyện tại chỗ",
+          "href": "pages/debate-argumentation.html"
+        },
+        {
+          "key": "g",
+          "icon": "translate",
+          "name": "English From the Ground Up",
+          "desc": "Giáo trình tự học tiếng Anh — âm thanh, ngữ pháp, từ vựng, kỹ năng, lộ trình 12 tháng & 10 mô hình nghịch tại chỗ",
+          "href": "pages/english-from-the-ground-up.html"
+        },
+        {
+          "key": "y",
+          "icon": "neurology",
+          "name": "Psychology",
+          "desc": "Giáo trình tự học tâm lý học — 6 phần từ nơ-ron tới xã hội, 11 mô hình tương tác, nhãn độ vững của từng phát hiện",
+          "href": "pages/psychology.html"
+        }
+      ]
+    },
+    {
+      "id": "technology",
+      "icon": "memory",
+      "label": "Technology",
+      "desc": "Cryptography, machine learning, AI workflow & the UI kit these pages are built with.",
+      "kind": "tiles",
+      "items": [
+        {
+          "key": "x",
+          "icon": "encrypted",
+          "name": "Cryptography",
+          "desc": "Dan Boneh's two courses, retold in Vietnamese — 4 acts, 10 interactive models",
+          "href": "pages/cryptography-boneh.html"
+        },
+        {
+          "key": "n",
+          "icon": "model_training",
+          "name": "Machine Learning & Deep Learning",
+          "desc": "Andrew Ng's 8 courses, retold in Vietnamese — 5 acts, 13 interactive models",
+          "href": "pages/machine-learning-ng.html"
+        },
+        {
+          "key": "i",
+          "icon": "hub",
+          "name": "Working with AI",
+          "desc": "Workflow AI cho team dev — harness, multi-agent, skill vs plugin, pipeline, SOT, hook vs gate",
+          "href": "pages/ai-native-workflow.html"
+        },
+        {
+          "key": "w",
+          "icon": "dashboard_customize",
+          "name": "Web Builder",
+          "desc": "Minimalist UI kit & component docs",
+          "href": "web-builder/"
+        }
+      ]
+    },
+    {
+      "id": "science",
+      "icon": "biotech",
+      "label": "Science",
+      "desc": "Self-study science pages — chemistry & physics, each with interactive models.",
+      "kind": "tiles",
+      "items": [
+        {
+          "key": "m",
+          "icon": "science",
+          "name": "Chemistry",
+          "desc": "Giáo trình tự học hoá học — 7 phần từ hạt nhân tới hoá hữu cơ, bảng tuần hoàn tương tác & 16 mô hình nghịch tại chỗ",
+          "href": "pages/chemistry.html"
+        },
+        {
+          "key": "u",
+          "icon": "rocket_launch",
+          "name": "Relativity",
+          "desc": "Thuyết tương đối hẹp & rộng, giải thích từ số không — đồng hồ chạy chậm, Doppler, không-thời gian cong; 9 hình động & phương trình thật sau mỗi phần",
+          "href": "pages/relativity.html"
+        }
+      ]
+    },
+    {
+      "id": "cooking",
+      "icon": "restaurant",
+      "label": "Cooking",
+      "desc": "Công thức nấu ăn tra cứu được — lọc theo nguyên liệu, loại món, độ khó; mỗi bước có dấu hiệu & hẹn giờ.",
+      "kind": "tiles",
+      "items": [
+        {
+          "key": "k",
+          "icon": "rice_bowl",
+          "name": "Korean Home Cooking",
+          "desc": "Món Hàn phổ biến — canh cay (kimchi/sundubu/budae), cơm trộn, kimbap, tteokbokki, đồ nướng",
+          "href": "cooking/korean-home-cooking.html"
+        },
+        {
+          "key": "v",
+          "icon": "soup_kitchen",
+          "name": "Vietnamese Home Cooking",
+          "desc": "Searchable Vietnamese home-cooking recipes, by region & dipping sauce",
+          "href": "cooking/vietnamese-home-cooking.html"
+        },
+        {
+          "key": "e",
+          "icon": "ramen_dining",
+          "name": "European Savoury",
+          "desc": "Italian & French mains — pasta, pizza, roasts, salads & a cheese guide",
+          "href": "cooking/european-savoury.html"
+        },
+        {
+          "key": "p",
+          "icon": "cake",
+          "name": "European Baking",
+          "desc": "French & Italian pastry — weights, oven temps, sauces to serve with",
+          "href": "cooking/european-baking.html"
+        },
+        {
+          "key": "h",
+          "icon": "menu_book",
+          "name": "Food Fundamentals",
+          "desc": "Kiến thức nền: sơ đồ thịt lợn/bò, hải sản, nhiệt độ, kỹ thuật, rượu, kết hợp vị — bổ trợ cho công thức",
+          "href": "cooking/food-fundamentals.html"
+        }
+      ]
+    },
+    {
+      "id": "books",
+      "icon": "auto_stories",
+      "label": "Book Summaries",
+      "desc": "Full summaries, book by book — read instead of the book, or before buying it.",
+      "kind": "tiles",
+      "items": [
+        {
+          "key": "b",
+          "icon": "payments",
+          "name": "How Money Works",
+          "desc": "DK · 2017 — money, business, central banks & personal finance",
+          "href": "pages/how-money-works.html"
+        },
+        {
+          "key": "c",
+          "icon": "forum",
+          "name": "How to Win Every Argument",
+          "desc": "Madsen Pirie — diễn giải ~79 lối ngụy biện theo 5 nhóm",
+          "href": "pages/how-to-win-every-argument.html"
+        },
+        {
+          "key": "l",
+          "icon": "psychology",
+          "name": "The Little Blue Reasoning Book",
+          "desc": "Brandon Royal — 50 nguyên tắc tư duy rõ ràng, gom theo 5 chặng",
+          "href": "pages/the-little-blue-reasoning-book.html"
+        }
+      ]
+    },
+    {
+      "id": "subjects",
+      "icon": "school",
+      "label": "Master's Degree",
+      "desc": "Each subject is a card — its rows are the pages inside that subject's folder.",
+      "kind": "subjects",
+      "items": [
+        {
+          "icon": "route",
+          "title": "Data Science Roadmap",
+          "meta": "Self-study curriculum · zero to master's level",
+          "files": [
+            {
+              "key": "d",
+              "icon": "school",
+              "href": "masters-degree/data-science-roadmap/data-science-roadmap.html",
+              "title": "Data Science — zero to master's",
+              "sub": "Tracked progress · main thread stays clean — math in pop-ups, tool comparisons in a side drawer · a browser-only path for weak machines · pandas, SQL & Colab, feature engineering, transformers, shipping a real product, thesis & defense"
+            }
+          ]
+        },
+        {
+          "icon": "query_stats",
+          "title": "Business Analytics",
+          "meta": "Graduate course · data analytics with ML",
+          "files": [
+            {
+              "key": "a",
+              "icon": "menu_book",
+              "href": "masters-degree/business-analytics/business-analytics.html",
+              "title": "Course Notes",
+              "sub": "CRISP-DM · KPIs · EDA · regression · classification · clustering · time series"
+            },
+            {
+              "key": "f",
+              "icon": "shield",
+              "href": "masters-degree/business-analytics/fraud-detection-project.html",
+              "title": "Fraud Detection — Project",
+              "sub": "Course project — payment fraud detection with machine learning"
+            }
+          ]
+        },
+        {
+          "icon": "science",
+          "title": "Research Proposal Project",
+          "meta": "Graduate course · from project to master thesis",
+          "files": [
+            {
+              "key": "r",
+              "icon": "menu_book",
+              "href": "masters-degree/research-proposal-project/research-proposal-project.html",
+              "title": "Research & Thesis Guide",
+              "sub": "Research question · literature review · model comparison · writing the 6 chapters"
+            },
+            {
+              "key": "t",
+              "icon": "checklist",
+              "href": "masters-degree/thesis-topic-selector/thesis-topic-selector.html",
+              "title": "Thesis Topic Selector",
+              "sub": "Candidate topics ranked by real-world impact · filter by impact, difficulty, data risk"
+            }
+          ]
+        },
+        {
+          "icon": "schema",
+          "title": "System Analysis and Design",
+          "meta": "Graduate course · UML, requirements & architecture",
+          "files": [
+            {
+              "key": "s",
+              "icon": "smart_toy",
+              "href": "masters-degree/system-analysis-design/social-housing-chatbot-project.html",
+              "title": "Social Housing Chatbot — Project",
+              "sub": "Group project, read to present it — RAG pipeline ordered by cost, DLP gate, rule-based scoring & loan maths, 10 test cases · plus 16 places the report contradicts itself and what to say instead"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
