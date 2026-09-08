@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
-<title>Làm việc với AI trong kỹ thuật phần mềm — hướng dẫn từ đầu</title>
+<title>Working with AI — làm việc với AI trong kỹ thuật phần mềm, hướng dẫn từ đầu</title>
 <meta name="description" content="Một sợi chỉ xuyên suốt để hiểu cách team dev dùng AI hôm nay: harness, skill, plugin, MCP, hook, gate, meta repo, SOT, ADR, handoff — mỗi khái niệm là một chỗ khác nhau để CẤT tri thức, vì AI quên sạch sau mỗi phiên. Diễn giải dễ hiểu, bám vào setup thật kv-engineering + meta repo.">
 
 <!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
@@ -23,6 +23,15 @@
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
   body { --wb-ico-weight: 400; }
+
+  /* ---- chữ mờ phải đọc được ----
+     Bậc --wb-fg-subtle của kit là gray-400: chỉ 2,46:1 trên nền sáng, dưới ngưỡng
+     4,5:1 cho chữ thường. Trang này lại dùng đúng bậc đó cho eyebrow, kicker của
+     từng mục (mang cả số thứ tự phần) và cho .wb-sidenav__section của mục lục —
+     toàn thứ phải đọc được. Nâng một bậc: 4,63:1 sáng, 7,76:1 tối. Định nghĩa ở CẢ
+     HAI nhánh theme, nếu không nhánh còn lại rơi về giá trị kit. */
+  :root { --wb-fg-subtle: var(--wb-gray-500); }
+  .dark { --wb-fg-subtle: var(--wb-gray-400); }
 
   /* long brand text must not overflow on phones */
   @media (max-width: 480px) { .wb-navbar__brand { max-width: calc(100vw - 132px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
@@ -59,9 +68,6 @@
   .hw-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
   .hw-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
   .hw-part-head p { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.65; margin: 0; max-width: 80ch; }
-  .hw-eyebrow-sec { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
-  .hw-eyebrow-sec b { color: var(--wb-fg); font-weight: 650; }
-  .hw-sec-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 12px; line-height: 1.3; }
   h3.hw-h3 { font-size: 15.5px; font-weight: 680; margin: 24px 0 9px; letter-spacing: -.005em; }
 
   /* ---- prose ---- */
@@ -70,23 +76,16 @@
   .hw-p { font-size: 14.5px; line-height: 1.75; color: var(--wb-fg); max-width: 78ch; margin: 0 0 12px; }
   .hw-p b { color: var(--wb-fg); font-weight: 650; }
   .hw-p em { font-style: italic; color: var(--wb-fg-muted); }
-  .hw-p code, .hw-li code, .hw-tw code { font-family: var(--wb-font-mono); font-size: .88em; background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-sm); padding: .5px 5px; overflow-wrap: break-word; }
+  .hw-p code, .hw-tw code { font-family: var(--wb-font-mono); font-size: .88em; background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-sm); padding: .5px 5px; overflow-wrap: break-word; }
   .hw-ul { font-size: 14.5px; line-height: 1.72; color: var(--wb-fg); max-width: 78ch; margin: 0 0 14px; padding-left: 20px; }
   .hw-ul li { margin-bottom: 6px; }
   .hw-ul b { font-weight: 650; }
 
-  /* ---- pull quote ---- */
-  .hw-quote { border-left: 2px solid var(--wb-neutral-strong); padding: 2px 0 2px 14px; margin: 16px 0; color: var(--wb-fg-muted); font-size: 14.5px; line-height: 1.6; max-width: 74ch; }
-  .hw-quote b { color: var(--wb-fg); }
-
   /* ---- concept cards (glossary deep) ---- */
-  .hw-defs { display: flex; flex-direction: column; gap: 14px; margin: 12px 0 6px; }
   .hw-def { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 16px 18px; }
   .hw-def__top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 9px; margin-bottom: 8px; }
   .hw-def__no { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); font-weight: 600; }
   .hw-def__name { font-size: 15.5px; font-weight: 710; letter-spacing: -.01em; margin: 0; }
-  .hw-def__def { font-size: 14px; line-height: 1.7; color: var(--wb-fg); margin: 0; max-width: 82ch; }
-  .hw-def__def b { font-weight: 650; }
   .hw-def__meta { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 7px 12px; margin-top: 12px; padding-top: 11px; border-top: var(--wb-bw) solid var(--wb-border); }
   .hw-def__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-muted); padding-top: 2px; line-height: 1.4; }
   .hw-def__v { font-size: 13px; line-height: 1.6; color: var(--wb-fg-muted); margin: 0; }
@@ -111,9 +110,8 @@
   /* ---- diagrams ---- */
   .hw-viz { margin: 16px 0 8px; }
   .hw-viz .wb-chart__svg { width: 100%; height: auto; }
-  /* Tương phản chữ mờ: --wb-fg-subtle (gray-400) chỉ đạt ~2,4:1 trên canvas sáng — đủ cho
-     nhãn trang trí (eyebrow, kicker) nhưng không đủ cho thứ phải đọc. Chú thích sơ đồ và
-     chữ trong SVG là nội dung, nên chúng dùng --wb-fg-muted (gray-500, ~4,5:1). */
+  /* Chú thích sơ đồ và chữ trong SVG là nội dung đọc kỹ, nên dùng thẳng --wb-fg-muted
+     (gray-500 sáng / gray-400 tối) thay vì bậc mờ nhất. */
   .hw-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .04em; color: var(--wb-fg-muted); margin: 8px 0 0; line-height: 1.5; }
   .hw-vt { fill: var(--wb-fg); font-size: 12px; font-weight: 640; font-family: var(--wb-font); }
   .hw-vs { fill: var(--wb-fg-muted); font-size: 10.5px; font-family: var(--wb-font); }
@@ -133,12 +131,25 @@
   .hw-take li b { font-weight: 680; }
   .hw-take li::before { counter-increment: t; content: counter(t); position: absolute; left: 0; top: 0; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; background: var(--wb-fg); color: var(--wb-canvas); font-family: var(--wb-font-mono); font-size: 12px; font-weight: 700; }
 
-  /* ---- vùng chạm trên điện thoại ----
-     Mốc 40px. Link trong mục lục xổ xuống của navbar chỉ cao ~33px (14px + padding 8px),
+  /* ---- vùng chạm trên cảm ứng ----
+     Mốc 40px. Link trong mục lục xổ xuống của navbar chỉ cao ~37px (14px + padding 8px),
      nên phải nới; phần nới nằm ở min-height của một hộp flex đã căn giữa, không đổi
-     hình dáng gì khác. */
-  @media (max-width: 768px) {
+     hình dáng gì khác. Ngưỡng phải là 900px — đó là chỗ .wb-navbar--collapse-lg gập
+     menu lại; để 768px thì dải 769–900px (máy tính bảng cầm dọc) vẫn hụt. */
+  @media (max-width: 900px) {
     .wb-navbar__menu.is-open .wb-nav__link { min-height: 40px; }
+  }
+  @media (max-width: 620px) {
+    /* Hai link điều hướng đứng một mình (không nằm trong câu): brand ở navbar cao
+       26px, link ở footer cao 21px — đều dưới ngưỡng chạm 40px. */
+    .wb-navbar__brand { min-height: 40px; }
+    /* Link footer thì nới bằng ::after trong suốt: min-height ở đây đẩy cả hàng
+       footer cao thêm 19px, còn lớp phủ tuyệt đối thì không đụng vào layout. */
+    .wb-footer__link { position: relative; }
+    .wb-footer__link::after {
+      content: ''; position: absolute; left: 0; right: 0; top: 50%;
+      height: 40px; transform: translateY(-50%);
+    }
   }
 
   /* ---- back to top ---- */
@@ -150,7 +161,7 @@
 
 <header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
-          aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
+          aria-expanded="false" aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
   <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🤖</span> Làm việc với AI</a>
   <nav class="wb-nav wb-navbar__menu">
     <a class="wb-nav__link" href="#vong-lap">Vòng lặp</a>
@@ -193,7 +204,7 @@
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm"><span class="wb-ico wb-ico--sm">sync</span></span>
         <div class="wb-media__body">
           <p class="wb-media__title">Một buổi làm việc với AI</p>
-          <p class="wb-media__text">Harness là gì (thứ bạn nghe loáng thoáng là “hác-nít”), vòng lặp model ↔ công cụ, và phép ví bếp ăn.</p>
+          <p class="wb-media__text">Harness là gì, vòng lặp model ↔ công cụ, và phép ví bếp ăn dùng suốt trang.</p>
         </div>
       </div>
     </a>
@@ -202,7 +213,7 @@
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm"><span class="wb-ico wb-ico--sm">stairs</span></span>
         <div class="wb-media__body">
           <p class="wb-media__title">Các cấp làm việc với AI</p>
-          <p class="wb-media__text">4 cấp: hỏi–đáp → 1 agent → master agent + subagent → workflow. “Master agent” bạn tưởng nằm ở đâu.</p>
+          <p class="wb-media__text">4 cấp: hỏi–đáp → 1 agent → master agent + subagent → workflow. “Master agent” nằm ở cấp nào.</p>
         </div>
       </div>
     </a>
@@ -427,10 +438,10 @@
         <div class="hw-part-head">
           <p class="kicker">Bức tranh lớn · phần 2</p>
           <h2>Các cấp làm việc với AI — và “master agent” nằm ở đâu</h2>
-          <p>Đây là cả bức tranh — và chỗ “master agent” bạn hình dung thật ra nằm ở đâu.</p>
+          <p>Một cái thang xếp theo số agent cùng làm việc — và chỗ harness đứng ngoài cái thang đó.</p>
         </div>
 
-        <p class="hw-lede">Có <b>4 cấp</b>, càng lên càng nhiều agent phối hợp. Cái bạn tưởng là “master agent” chính là <b>orchestrator</b> ở <b>Cấp 2</b>. Còn <b>harness</b> (phần 1) <b>không phải một cấp</b> — nó là cái CHẠY cả bốn cấp.</p>
+        <p class="hw-lede">Có <b>4 cấp</b>, càng lên càng nhiều agent phối hợp. Thứ thường được gọi là “master agent” chính là <b>orchestrator</b> ở <b>Cấp 2</b>. Còn <b>harness</b> (phần 1) <b>không phải một cấp</b> — nó là cái CHẠY cả bốn cấp.</p>
 
         <div class="hw-viz">
           <div class="wb-chart">
@@ -545,7 +556,7 @@
         <div class="hw-part-head">
           <p class="kicker">Cách làm chuẩn hôm nay · phần 4</p>
           <h2>Skill, Plugin, Rules — thứ khiến nhiều người rối nhất</h2>
-          <p>Câu hỏi của bạn: “plugin khác gì skill?”. Trả lời một câu: chúng không cùng loại để mà so.</p>
+          <p>Plugin khác gì skill? Trả lời một câu: chúng không cùng loại để mà so.</p>
         </div>
 
         <div class="wb-alert wb-alert--info" style="margin-bottom:16px">
@@ -657,7 +668,7 @@
         <div class="hw-part-head">
           <p class="kicker">Cách làm chuẩn hôm nay · phần 5</p>
           <h2>Cách một team dev thật sự dùng AI hôm nay</h2>
-          <p>Câu hỏi của bạn: “workflow nào phổ biến, dev ở Claude dùng AI thế nào?”. Đây là câu trả lời.</p>
+          <p>Workflow nào đang phổ biến, và một team dev dùng AI hằng ngày ra sao.</p>
         </div>
 
         <div class="wb-alert wb-alert--info" style="margin-bottom:16px">
@@ -672,17 +683,17 @@
 
         <div class="hw-flow">
           <ol class="wb-steps wb-steps--horizontal">
-            <li class="wb-steps__item is-done"><span class="wb-steps__marker">1</span><div class="wb-steps__content"><p class="wb-steps__title">discovery</p><p class="wb-steps__desc">hiểu yêu cầu</p></div></li>
-            <li class="wb-steps__item is-done"><span class="wb-steps__marker">2</span><div class="wb-steps__content"><p class="wb-steps__title">spec</p><p class="wb-steps__desc">chốt CẦN GÌ</p></div></li>
-            <li class="wb-steps__item is-done"><span class="wb-steps__marker">3</span><div class="wb-steps__content"><p class="wb-steps__title">bdd</p><p class="wb-steps__desc">kịch bản .feature</p></div></li>
-            <li class="wb-steps__item is-active"><span class="wb-steps__marker">4</span><div class="wb-steps__content"><p class="wb-steps__title">tech-design</p><p class="wb-steps__desc">thiết kế + ADR</p></div></li>
-            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">5</span><div class="wb-steps__content"><p class="wb-steps__title">plan</p><p class="wb-steps__desc">chia task nhỏ</p></div></li>
-            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">6</span><div class="wb-steps__content"><p class="wb-steps__title">exec</p><p class="wb-steps__desc">code theo TDD</p></div></li>
-            <li class="wb-steps__item is-todo"><span class="wb-steps__marker">7</span><div class="wb-steps__content"><p class="wb-steps__title">review → ship</p><p class="wb-steps__desc">soát &amp; tạo MR</p></div></li>
+            <li class="wb-steps__item"><span class="wb-steps__marker">1</span><div class="wb-steps__content"><p class="wb-steps__title">discovery</p><p class="wb-steps__desc">hiểu yêu cầu</p></div></li>
+            <li class="wb-steps__item"><span class="wb-steps__marker">2</span><div class="wb-steps__content"><p class="wb-steps__title">spec</p><p class="wb-steps__desc">chốt CẦN GÌ</p></div></li>
+            <li class="wb-steps__item"><span class="wb-steps__marker">3</span><div class="wb-steps__content"><p class="wb-steps__title">bdd</p><p class="wb-steps__desc">kịch bản .feature</p></div></li>
+            <li class="wb-steps__item"><span class="wb-steps__marker">4</span><div class="wb-steps__content"><p class="wb-steps__title">tech-design</p><p class="wb-steps__desc">thiết kế + ADR</p></div></li>
+            <li class="wb-steps__item"><span class="wb-steps__marker">5</span><div class="wb-steps__content"><p class="wb-steps__title">plan</p><p class="wb-steps__desc">chia task nhỏ</p></div></li>
+            <li class="wb-steps__item"><span class="wb-steps__marker">6</span><div class="wb-steps__content"><p class="wb-steps__title">exec</p><p class="wb-steps__desc">code theo TDD</p></div></li>
+            <li class="wb-steps__item"><span class="wb-steps__marker">7</span><div class="wb-steps__content"><p class="wb-steps__title">review → ship</p><p class="wb-steps__desc">soát &amp; tạo MR</p></div></li>
           </ol>
         </div>
 
-        <p class="hw-p">Mỗi bước là một <b>skill</b> (gọi tay bằng <code>/discovery</code>, <code>/spec</code>…). Điểm mấu chốt cho người mới: <b>bạn không cần thuộc lòng chúng</b> — AI tự định tuyến vào bước đúng theo việc bạn mô tả. Cái cần nhớ là <i>vì sao</i> có dây chuyền này: mỗi bước biến suy nghĩ thành một <b>file bền</b>, nên phiên sau (hoặc người khác) đọc file là tiếp được, không phải hỏi lại.</p>
+        <p class="hw-p">Mỗi bước là một <b>skill</b> (gọi tay bằng <code>/discovery</code>, <code>/to-spec</code>, <code>/to-bdd</code>…). Điểm mấu chốt cho người mới: <b>bạn không cần thuộc lòng chúng</b> — AI tự định tuyến vào bước đúng theo việc bạn mô tả. Cái cần nhớ là <i>vì sao</i> có dây chuyền này: mỗi bước biến suy nghĩ thành một <b>file bền</b>, nên phiên sau (hoặc người khác) đọc file là tiếp được, không phải hỏi lại.</p>
 
         <div class="hw-tw">
           <table class="wb-table">
@@ -707,7 +718,7 @@
         <div class="hw-part-head">
           <p class="kicker">Cách làm chuẩn hôm nay · phần 6</p>
           <h2>SOT — “nguồn sự thật” là trái tim, không phải chi tiết phụ</h2>
-          <p>Câu hỏi của bạn: “SOT có quan trọng không?”. Cực kỳ — nó là lý do cả pipeline trên tồn tại.</p>
+          <p>SOT quan trọng tới mức nào? Nó chính là lý do cả pipeline ở phần trước tồn tại.</p>
         </div>
 
         <p class="hw-lede"><b>SOT (Source of Truth)</b> = <b>một</b> chỗ chính thức duy nhất chứa một thông tin, để không ai phải đoán và không có hai bản “sự thật” cãi nhau. Với AI nó sống còn vì <b>AI chỉ biết những gì file nói</b> — không có SOT thì mỗi phiên AI tự bịa một “sự thật” khác nhau.</p>
@@ -765,7 +776,7 @@
         <div class="hw-part-head">
           <p class="kicker">Tổ chức thực tế · phần 7</p>
           <h2>Đưa một project có-trước-AI vào guồng cho cả team</h2>
-          <p>Câu hỏi của bạn: “project A có từ trước, giờ cả team làm bằng AI thì tổ chức sao — bộ skill chung hay plugin?”.</p>
+          <p>Một project có từ trước AI, giờ cả team làm bằng AI thì tổ chức sao — bộ skill chung hay plugin?</p>
         </div>
 
         <p class="hw-lede"><b>Không cần viết lại code.</b> Việc phải làm là thêm một <b>lớp tài liệu mỏng mà AI đọc được</b>, theo thứ tự từ rẻ-nhất-nhiều-lợi-nhất xuống. Bạn không cần làm hết ngày một; làm bước 1–2 là đã dùng được ngay.</p>
@@ -818,7 +829,7 @@
         <div class="hw-part-head">
           <p class="kicker">Tổ chức thực tế · phần 8</p>
           <h2>Chung vs riêng — thói quen mỗi người ghi ở đâu, có commit không</h2>
-          <p>Câu hỏi của bạn: “mọi người dùng chung một bộ skill, nhưng tư duy/quyết định mỗi người mỗi khác — ghi ở đâu?”.</p>
+          <p>Cả team dùng chung một bộ skill, nhưng tư duy và quyết định mỗi người mỗi khác — ghi ở đâu?</p>
         </div>
 
         <p class="hw-lede">Quy tắc vàng, suy thẳng từ Trục 2 ở đầu trang: <b>ảnh hưởng người khác hoặc ảnh hưởng code → commit. Chỉ là gu của riêng bạn → bộ nhớ cá nhân, không commit.</b></p>
@@ -845,7 +856,7 @@
           </div>
         </div>
 
-        <p class="hw-p">Chỗ tinh tế trong câu hỏi của bạn: <b>“thói quen ra quyết định”</b> rơi vào đâu? Tách hai loại. Nếu đó là <i>cách bạn thích làm việc</i> (“tôi muốn AI hỏi lại trước khi xoá file”) → <b>gu cá nhân</b>, để ở memory riêng. Nếu đó là <i>một lựa chọn đã áp lên code/kiến trúc</i> mà người sau phải theo (“ở repo này ta luôn validate SĐT ở tầng service”) → nó <b>không còn là của riêng bạn nữa</b>, phải thành quy ước chung (CLAUDE.md) hoặc ADR, và <b>phải commit</b>. Phép thử: <i>“nếu tôi nghỉ việc, người sau có cần biết điều này không?”</i> — Có → commit.</p>
+        <p class="hw-p">Chỗ tinh tế: <b>“thói quen ra quyết định”</b> rơi vào đâu? Tách hai loại. Nếu đó là <i>cách bạn thích làm việc</i> (“tôi muốn AI hỏi lại trước khi xoá file”) → <b>gu cá nhân</b>, để ở memory riêng. Nếu đó là <i>một lựa chọn đã áp lên code/kiến trúc</i> mà người sau phải theo (“ở repo này ta luôn validate SĐT ở tầng service”) → nó <b>không còn là của riêng bạn nữa</b>, phải thành quy ước chung (CLAUDE.md) hoặc ADR, và <b>phải commit</b>. Phép thử: <i>“nếu tôi nghỉ việc, người sau có cần biết điều này không?”</i> — Có → commit.</p>
       </section>
 
       <!-- ══════════════ 9 · ADR ══════════════ -->
@@ -885,7 +896,7 @@
         <div class="hw-part-head">
           <p class="kicker">Tổ chức thực tế · phần 10</p>
           <h2>Handoff — việc tạm chưa làm / đang làm dở gửi cho “ca sau”</h2>
-          <p>Câu hỏi của bạn: “việc tạm chưa làm thì tạo file handoff à?”. Đúng vậy — và nó khác ADR/spec.</p>
+          <p>Việc tạm chưa làm thì để lại một file handoff — và nó khác ADR lẫn spec ở tuổi thọ.</p>
         </div>
 
         <p class="hw-lede"><b>Handoff</b> = tờ giấy ca sáng để lại cho ca tối: <b>đang làm tới đâu, còn gì dang dở, làm tiếp từ đâu</b>. Vì AI mở phiên mới là trắng trí nhớ, không có tờ này thì phiên sau (hoặc đồng nghiệp) phải dò lại từ đầu.</p>
@@ -913,7 +924,7 @@
         <div class="hw-part-head">
           <p class="kicker">Cổng &amp; file · phần 11</p>
           <h2>Hook vs Gate — cái bấm nút, cái gác cửa</h2>
-          <p>Câu hỏi của bạn: “gate đặt ở đâu, hook đặt ở đâu, hook khác gate chỗ nào, có phải cài gate lúc pre-push không?”.</p>
+          <p>Gate đặt ở đâu, hook đặt ở đâu, hai thứ khác nhau chỗ nào, và có phải cài gate lúc pre-push không.</p>
         </div>
 
         <p class="hw-lede"><b>Hook</b> là cái CẢM BIẾN — “khi sự kiện X xảy ra thì chạy Y”. <b>Gate</b> là NGƯỜI GÁC CỬA — “chưa đạt thì không cho qua”. Chúng <b>khác vai, không thay nhau</b>: hook thường là cái <b>chạy</b> gate. Nói cách khác — hook trả lời <i>“khi nào chạy”</i>, gate trả lời <i>“đạt hay không”</i>.</p>
@@ -1024,7 +1035,7 @@
         <div class="hw-part-head">
           <p class="kicker">Cổng &amp; file · phần 12</p>
           <h2>Bộ file đầy đủ — mỗi file để làm gì, ai đọc, có commit không</h2>
-          <p>Câu hỏi của bạn: “README cho tổng quan, CLAUDE.md là rules, còn file chức năng nào cần nữa?”. Đây là bảng tra gộp tất cả.</p>
+          <p>README cho tổng quan, CLAUDE.md cho quy ước — còn file nào nữa? Bảng dưới gộp đủ.</p>
         </div>
 
         <p class="hw-lede">Một project sẵn-sàng-AI có khoảng <b>10 loại file/nơi cất</b>. Đọc bảng theo hai trục đầu trang: cột <b>“Nạp kiểu”</b> = Trục 1 (luôn-bật/khi-cần), cột <b>“Commit?”</b> = Trục 2 (chung/riêng).</p>
@@ -1055,7 +1066,7 @@
       <section id="tu-cham">
         <div class="hw-part-head">
           <p class="kicker">Cổng &amp; file · phần 13</p>
-          <h2>“Sếp làm meta repo có đúng cấu trúc không?” — bảng để bạn tự chấm</h2>
+          <h2>Một meta repo có đúng cấu trúc không — bảng để tự chấm</h2>
           <p>Bạn không cần biết hết để đánh giá — chỉ cần một danh sách dấu hiệu.</p>
         </div>
 
@@ -1087,11 +1098,11 @@
 
         <div class="wb-alert wb-alert--plain" style="margin-top:6px">
           <div class="wb-alert__body">
-            <p class="wb-alert__title">Áp vào chính setup của bạn — cân bằng, không phải chê</p>
-            <p class="wb-alert__msg">Setup của bạn <b>trúng gần hết cột trái</b>: có <code>docs/INDEX.md</code> chỉ-trỏ, SOT markdown, mỗi submodule một CLAUDE.md, hook 3 lớp, ADR được ghi. Cột phải cũng bắt được <b>hai vệt “drift” thật</b>, và đây là điều đáng học nhất: (1) version trong <code>marketplace.json</code> (3.4.8) <b>trễ hơn</b> version trong <code>plugin.json</code> (3.4.12) — một thông tin ở hai nơi; (2) phần “Structure” trong README còn tả thư mục <code>agent_docs/</code> trong khi tài liệu thật đã dời sang <code>docs/</code>. Cả hai đều thuộc <b>một lớp bệnh duy nhất: docs drift</b> — kẻ thù kinh niên của mọi hệ thống tài liệu. Cách chữa gốc không phải “sửa cho đúng một lần” mà là <b>để một chỗ tự sinh ra chỗ kia</b> (version đọc từ một nguồn), hoặc <b>thêm một gate</b> nhắc khi hai chỗ lệch. Nói cách khác: bắt được drift thì đừng chỉ vá — hãy biến nó thành một cổng, đúng tinh thần mục Hook vs Gate.</p>
+            <p class="wb-alert__title">Áp bảng vào setup thật: hai vệt drift bắt được</p>
+            <p class="wb-alert__msg">Setup thật dùng làm ví dụ suốt trang <b>trúng gần hết cột trái</b>: có <code>docs/INDEX.md</code> chỉ-trỏ, SOT markdown, mỗi submodule một CLAUDE.md, hook 3 lớp, ADR được ghi. Cột phải bắt được <b>hai vệt “drift” thật</b>: (1) version trong <code>marketplace.json</code> (3.4.8) <b>trễ hơn</b> version trong <code>plugin.json</code> (3.4.12) — một thông tin ở hai nơi; (2) phần “Structure” trong README còn tả thư mục <code>agent_docs/</code> trong khi tài liệu thật đã dời sang <code>docs/</code>. Cả hai đều thuộc <b>một lớp bệnh duy nhất: docs drift</b> — kẻ thù kinh niên của mọi hệ thống tài liệu. Cách chữa gốc không phải “sửa cho đúng một lần” mà là <b>để một chỗ tự sinh ra chỗ kia</b> (version đọc từ một nguồn), hoặc <b>thêm một gate</b> nhắc khi hai chỗ lệch. Nói cách khác: bắt được drift thì đừng chỉ vá — hãy biến nó thành một cổng, đúng tinh thần mục Hook vs Gate.</p>
           </div>
         </div>
-        <p class="hw-p">Kết luận cho câu hỏi gốc: cấu trúc sếp bạn dựng <b>đi đúng hướng chuẩn mực hiện hành</b>. “Sai” hầu như không phải sai thiết kế, mà là <b>drift</b> — thứ mọi repo đều mắc và chữa được bằng cổng, không phải bằng cách trách người.</p>
+        <p class="hw-p">Kết luận rút ra khi soi một meta repo dựng tử tế: nó <b>đi đúng hướng chuẩn mực hiện hành</b>, và “sai” hầu như không phải sai thiết kế, mà là <b>drift</b> — thứ mọi repo đều mắc và chữa được bằng cổng, không phải bằng cách trách người.</p>
       </section>
 
       <!-- ══════════════ KẾT ══════════════ -->
@@ -1149,10 +1160,23 @@
   });
 
   var menu = document.querySelector('.wb-navbar__menu');
+  var navToggle = document.querySelector('[data-navbar-toggle]');
+  function syncMenu() {
+    if (navToggle) navToggle.setAttribute('aria-expanded', menu.classList.contains('is-open') ? 'true' : 'false');
+  }
   document.addEventListener('click', function (e) {
-    if (!menu) return;
+    if (!menu || !e.target.closest) return;
     if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
     else if (e.target.closest('.wb-navbar__menu .wb-nav__link')) menu.classList.remove('is-open');
+    else return;
+    syncMenu();
+  });
+  /* Escape đóng menu và trả tiêu điểm về đúng nút đã mở nó. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || !menu || !menu.classList.contains('is-open')) return;
+    menu.classList.remove('is-open');
+    syncMenu();
+    if (navToggle) navToggle.focus();
   });
 
   var links = [].slice.call(document.querySelectorAll('#toc .wb-sidenav__link'));
