@@ -450,6 +450,7 @@ A handoff is a **temporary work queue**, not project documentation.
 | **CLAUDE.md** (this) | the AI map |
 | [DECISIONS.md](DECISIONS.md) | owner decisions, one `CASHY-NNN` code each — taste, stack, loan redesign, doc rules |
 | [docs/architecture.md](docs/architecture.md) | **normative** for `src/` — layers, import matrix, procedures, traps |
+| [ARCHITECTURE-WALKTHROUGH.md](ARCHITECTURE-WALKTHROUGH.md) | guided tour of the same ground — file tree, dependency rule, where each rule lives. Narrative, not normative; `docs/architecture.md` wins on conflict |
 | [docs/data-model.md](docs/data-model.md) | full data dictionary — entities, enums, relationships, derived values |
 | [docs/components.md](docs/components.md) | component catalogue — tiers, props, screen→component map |
 | [docs/features/](docs/features/) | **per-feature deep dives** — one doc per screen (overview, transactions, subscriptions, wallets, loans, contacts, categories, tags, settings, onboarding); see [features/README.md](docs/features/README.md) |
@@ -458,4 +459,5 @@ A handoff is a **temporary work queue**, not project documentation.
 | [docs/cashy-v1-spec.md](docs/cashy-v1-spec.md) | v1 use-case spec (native-iOS-flavoured) |
 | [docs/wallets-plan.md](docs/wallets-plan.md) | wallets **design record** (all five phases shipped; see [features/wallets.md](docs/features/wallets.md)) |
 | [docs/loans-plan.md](docs/loans-plan.md) | loans (owe / owed) **design record** (all phases shipped; see [features/loans.md](docs/features/loans.md)) |
+| [docs/PLAN.md](docs/PLAN.md) | **design record** of one shipped batch — `₫` glyph app-wide, subscriptions filter/sort/trial, web-spec split (all shipped) |
 | [docs/agentic-workflow/](docs/agentic-workflow/) | kv-pipeline artifacts (spec → tech-design → plan) for the **loan-redesign programme**; its [README](docs/agentic-workflow/README.md) is the **open handoff** for slice B (transaction-linked loans, migration v10) + slice C. BDD scenarios live in [features/](features/) |
