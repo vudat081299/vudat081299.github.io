@@ -11,7 +11,8 @@ set -e
 DIR="cooking"
 ROOT=$(git rev-parse --show-toplevel)
 
-CHANGED=$(git diff --cached --name-only --diff-filter=ACMR | grep "^$DIR/.*\.html$" || true)
+CHANGED=$(git diff --cached --name-only --diff-filter=ACMR \
+  | grep -E "^$DIR/([^/]*\.html|data/[^/]*\.json)$" || true)
 [ -z "$CHANGED" ] && exit 0
 
 if ! command -v python3 >/dev/null 2>&1; then
@@ -36,6 +37,7 @@ thẳng lên GitHub Pages — không có build step nào bắt lỗi hộ.
   · anchor gãy    → href="#x" không có id nào tên x
   · asset thiếu   → src/href trỏ vào file không tồn tại
   · thẻ lệch      → div/section/table/ul/ol mở đóng không khớp
+  · data/*.json   → id công thức trùng, cat/role lạ, region/dips lệch
 
 Xem thêm:  python3 cooking/tools/lint-cooking.py -v
 Bỏ qua có ý thức:  git commit --no-verify

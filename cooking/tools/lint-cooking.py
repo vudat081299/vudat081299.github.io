@@ -22,6 +22,7 @@ Exit code: 1 nếu có LỖI, 0 nếu không.
 import collections
 import pathlib
 import re
+import json
 import sys
 
 COOKING_DIR = pathlib.Path(__file__).resolve().parent.parent
@@ -102,27 +103,104 @@ def check_page(path: pathlib.Path):
     return errors, notes
 
 
+def check_data(path: pathlib.Path):
+    """Kiểm một file cooking/data/*.json.
+
+    Nội dung công thức chuyển sang JSON thì phần kiểm HTML không còn thấy nó nữa — cổng bị
+    mù đúng chỗ nội dung vừa dọn tới. Ở đây chỉ kiểm thứ đúng/sai khách quan, và lãi thêm
+    thứ HTML chưa bao giờ kiểm được: id trùng, khoá phân loại trỏ vào chỗ không tồn tại,
+    và bảng region/dips lệch khỏi danh sách công thức.
+    """
+    errors = []
+    try:
+        d = json.loads(path.read_text(encoding='utf-8'))
+    except Exception as e:
+        return ['JSON không đọc được — %s' % e], []
+
+    recipes = d.get('recipes') or []
+    if not recipes:
+        errors.append('không có công thức nào')
+
+    ids, seen = [], set()
+    for i, r in enumerate(recipes):
+        where = r.get('id') or ('recipes[%d]' % i)
+        for f in ('id', 'name', 'cat', 'ing', 'steps'):
+            if f not in r or not r[f]:
+                errors.append('%s: thiếu hoặc rỗng "%s"' % (where, f))
+        rid = r.get('id')
+        if rid:
+            if rid in seen:
+                errors.append('%s: id trùng' % rid)
+            seen.add(rid)
+            ids.append(rid)
+        for step in (r.get('steps') or []):
+            if not step.get('t') and not step.get('d'):
+                errors.append('%s: có bước không có tên lẫn mô tả' % where)
+        for ing in (r.get('ing') or []):
+            if not ing.get('n'):
+                errors.append('%s: có nguyên liệu không có tên' % where)
+
+    # khoá phân loại phải tồn tại trong chính taxonomy của trang
+    for key, tax in (('cat', 'cats'), ('role', 'roles'), ('diff', 'diffs')):
+        allowed = {t.get('k') for t in (d.get(tax) or [])}
+        if not allowed:
+            continue
+        if key == 'diff':
+            allowed |= set(range(1, 6))     # diff là số, thang riêng
+            continue
+        for r in recipes:
+            v = r.get(key)
+            if v is not None and v not in allowed:
+                errors.append('%s: %s="%s" không có trong %s' % (r.get('id'), key, v, tax))
+
+    # bảng phụ khoá theo id công thức — lệch là bug thật, HTML không kiểm được
+    for tbl in ('region', 'dips'):
+        m = d.get(tbl)
+        if isinstance(m, dict):
+            orphan = [k for k in m if k not in seen]
+            if orphan:
+                errors.append('%s: %d khoá không khớp công thức nào (%s%s)'
+                              % (tbl, len(orphan), ', '.join(orphan[:3]),
+                                 '…' if len(orphan) > 3 else ''))
+    return errors, []
+
+
 def main(argv):
     verbose = '-v' in argv or '--verbose' in argv
     names = [a for a in argv if not a.startswith('-')]
 
+    named_data = []
     if names:
         targets = []
         for n in names:
             p = pathlib.Path(n)
             if not p.is_absolute():
-                p = COOKING_DIR / pathlib.Path(n).name
+                p = COOKING_DIR / ('data/' if p.suffix == '.json' else '') / p.name
             if p.suffix == '.html' and p.exists():
                 targets.append(p)
+            elif p.suffix == '.json' and p.exists():
+                named_data.append(p)
     else:
         targets = sorted(COOKING_DIR.glob('*.html'))
 
-    if not targets:
-        print('lint-cooking: không có trang nào để kiểm.')
+    # Hook truyền tên file đang commit; phải kiểm cả data được truyền, kẻo cổng im lặng
+    # bỏ qua đúng chỗ nội dung vừa dọn tới.
+    data_files = named_data if names else sorted((COOKING_DIR / 'data').glob('*.json'))
+
+    if not targets and not data_files:
+        print('lint-cooking: không có gì để kiểm.')
         return 0
 
     total_err = 0
     total_note = 0
+    for path in data_files:
+        errors, _ = check_data(path)
+        total_err += len(errors)
+        if errors:
+            print(f'\ndata/{path.name} — LỖI ({len(errors)}):')
+            for e in errors:
+                print(f'    {e}')
+
     for path in targets:
         errors, notes = check_page(path)
         total_err += len(errors)
@@ -140,9 +218,9 @@ def main(argv):
     if total_note and not verbose:
         print(f'{total_note} mục mức XEM (thêm -v để xem).')
     if total_err:
-        print(f'cooking: {total_err} LỖI trên {len(targets)} trang.')
+        print(f'cooking: {total_err} LỖI trên {len(targets)} trang + {len(data_files)} file data.')
         return 1
-    print(f'cooking: OK ({len(targets)} trang).')
+    print(f'cooking: OK ({len(targets)} trang, {len(data_files)} file data).')
     return 0
 
 
