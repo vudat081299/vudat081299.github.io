@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
-<title>Học máy &amp; Học sâu — diễn giải trọn bộ 8 khoá của Andrew Ng</title>
+<title>Machine Learning &amp; Deep Learning — diễn giải trọn bộ 8 khoá của Andrew Ng</title>
 <meta name="description" content="Diễn giải bằng tiếng Việt toàn bộ Machine Learning Specialization (3 khoá) và Deep Learning Specialization (5 khoá) của Andrew Ng, theo một sợi chỉ duy nhất: mọi thuật toán đều là cùng một cỗ máy ba bộ phận — mô hình, hàm mất mát, thuật toán tối ưu. Hồi quy tuyến tính, gradient descent, hồi quy logistic, quá khớp, mạng nơ-ron, lan truyền ngược, Adam, batch norm, bias/variance, error analysis, cây quyết định, XGBoost, CNN, ResNet, YOLO, U-Net, RNN, LSTM, word embedding, attention, Transformer, k-means, PCA, hệ gợi ý, học tăng cường — kèm 13 mô hình nghịch trực tiếp trên trang.">
 
 <script>
@@ -1102,17 +1102,17 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__h">
             <p class="lab__k">Mô hình 3 / 13 · giết hiểu nhầm “chuẩn hoá chỉ là bước tiền xử lý cho gọn gàng”</p>
             <p class="lab__t">Cùng một thuật toán, cùng một α, khác nhau ở chỗ có chuẩn hoá hay không</p>
-            <p class="lab__hint">Hai bản đồ, hai bài toán <b>y hệt nhau về mặt toán học</b> — chỉ khác đơn vị đo của đặc trưng (m² thô, và cùng đại lượng đó đã chuẩn hoá). Bấm <b>Chạy cả hai</b>, rồi kéo α lên khoảng <b>1</b> và chạy lại.</p>
+            <p class="lab__hint">Hai bản đồ, hai bài toán <b>y hệt nhau về mặt toán học</b> — chỉ khác đơn vị đo của đặc trưng (m² thô, và cùng đại lượng đó đã chuẩn hoá). Trục là hai tham số <i>w</i> và <i>b</i>; nền <b>càng đậm là chi phí càng cao</b>, vòng tròn là đáy. Bấm <b>Chạy cả hai</b>, rồi kéo α lên khoảng <b>1</b> và chạy lại.</p>
           </div>
           <div class="lab__b">
             <div class="pair">
               <figure>
                 <svg class="viz" id="m3-raw" viewBox="0 0 320 250"></svg>
-                <figcaption><b>Chưa chuẩn hoá.</b> Đường đồng mức dẹt như quả trứng nằm ngang; đường đi zigzag.</figcaption>
+                <figcaption><b>Chưa chuẩn hoá.</b> Vùng chi phí thấp là một dải <b>dẹt như quả trứng nằm ngang</b>; đường đi zigzag.</figcaption>
               </figure>
               <figure>
                 <svg class="viz" id="m3-norm" viewBox="0 0 320 250"></svg>
-                <figcaption><b>Đã chuẩn hoá.</b> Đường đồng mức gần tròn; gradient chỉ gần như thẳng vào đáy.</figcaption>
+                <figcaption><b>Đã chuẩn hoá.</b> Vùng chi phí thấp <b>gần tròn</b>; đường đi gần như thẳng vào đáy.</figcaption>
               </figure>
             </div>
             <div style="margin-top:14px">
@@ -1910,7 +1910,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="box note">
           <p class="box__k">Vì sao bước 4 quyết định mọi thứ</p>
-          <p>Giả sử bạn định bỏ hai tháng xây một mô-đun riêng để phân biệt chó với mèo. Bảng đếm cho thấy chó chỉ chiếm <b>8%</b> số lỗi. Vậy dù bạn giải quyết <i>triệt để</i>, sai số dev từ 10% chỉ xuống 9,2%. <b>Hai tháng cho 0,8%.</b> Trong khi cột "ảnh mờ" chiếm 43% — đó mới là chỗ đáng đầu tư. Bảng đếm này đổi quyết định của bạn trong <b>hai tiếng</b>, thay vì phát hiện ra sau <b>hai tháng</b>. Ng gọi nó là <i>ceiling analysis</i>: tính trần lợi ích <b>trước</b> khi làm.</p>
+          <p>Giả sử bạn định bỏ hai tháng xây một mô-đun riêng để phân biệt chó với mèo. Bảng đếm cho thấy chó chỉ chiếm <b>8%</b> số lỗi. Vậy dù bạn giải quyết <i>triệt để</i>, sai số dev từ 10% chỉ xuống 9,2%. <b>Hai tháng cho 0,8%.</b> Trong khi cột "ảnh mờ" chiếm 43% — đó mới là chỗ đáng đầu tư. Bảng đếm này đổi quyết định của bạn trong <b>hai tiếng</b>, thay vì phát hiện ra sau <b>hai tháng</b>. Ng gọi bảng này là <i>error analysis</i>, và phần trăm mỗi cột chính là trần lợi ích của cột đó. Đừng lẫn nó với <i>ceiling analysis</i> — cùng tinh thần "tính trần <b>trước</b> khi làm", nhưng dùng cho <b>pipeline nhiều chặng</b>: lần lượt thay đầu ra của từng chặng bằng đáp án đúng do người gán tay, rồi xem độ chính xác của cả hệ thống nhảy lên bao nhiêu. Chặng nào thay vào mà hệ thống chẳng khá hơn thì chặng đó không phải chỗ nghẽn.</p>
         </div>
 
         <h3>Nhãn sai thì có đáng sửa không?</h3>
@@ -2417,7 +2417,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <span class="map">Bản gốc · <b>DLS C5 Tuần 2</b> · Word Representation, Properties, Word2Vec, Negative Sampling, GloVe, Debiasing</span>
         <h2 class="st">Word embedding: từ nào hay xuất hiện cùng ngữ cảnh thì được đặt gần nhau</h2>
 
-        <p class="lede">Cách ngây thơ để đưa từ vào mạng là <b>one-hot</b>: từ điển 10.000 từ, mỗi từ là một vector 10.000 chiều toàn số 0 trừ đúng một số 1. Vấn đề chí mạng: <b>tích vô hướng của hai one-hot bất kỳ luôn bằng 0</b>. Với biểu diễn này, "táo" và "cam" xa nhau đúng bằng khoảng cách giữa "táo" và "thuế". Mạng học được câu "tôi muốn một ly nước cam" <b>không hề</b> giúp nó hiểu "tôi muốn một ly nước táo".</p>
+        <p class="lede">Cách ngây thơ để đưa từ vào mạng là <b>one-hot</b>: từ điển 10.000 từ, mỗi từ là một vector 10.000 chiều toàn số 0 trừ đúng một số 1. Vấn đề chí mạng: <b>tích vô hướng của one-hot hai từ khác nhau luôn bằng 0</b>. Với biểu diễn này, "táo" và "cam" xa nhau đúng bằng khoảng cách giữa "táo" và "thuế". Mạng học được câu "tôi muốn một ly nước cam" <b>không hề</b> giúp nó hiểu "tôi muốn một ly nước táo".</p>
 
         <p><b>Embedding</b> thay bằng một vector dày đặc, ví dụ 300 chiều, gồm các số thực. Nó được học sao cho <b>từ dùng trong ngữ cảnh giống nhau thì ở gần nhau</b>. Giờ "táo" và "cam" gần nhau, và tri thức <i>chuyển được</i> giữa chúng.</p>
 
@@ -2917,7 +2917,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <tbody>
               <tr><td>Learning rate α</td><td><b>0,001</b> với Adam</td><td>Quan trọng nhất. Dò theo bội số 3, trên thang log.</td></tr>
               <tr><td>Optimizer</td><td><b>Adam</b></td><td>β₁ = 0,9 · β₂ = 0,999 · ε = 10⁻⁸ — gần như không đổi.</td></tr>
-              <tr><td>Cỡ mini-batch</td><td><b>64–256</b></td><td>Luỹ thừa của 2; giới hạn thật là RAM của GPU.</td></tr>
+              <tr><td>Cỡ mini-batch</td><td><b>64–512</b></td><td>Luỹ thừa của 2; giới hạn thật là RAM của GPU. Tập nhỏ (dưới ~2.000 ví dụ) thì bỏ hẳn mini-batch, chạy batch cả tập.</td></tr>
               <tr><td>Hàm kích hoạt ẩn</td><td><b>ReLU</b></td><td>Không phân vân thì chọn cái này.</td></tr>
               <tr><td>Khởi tạo</td><td><b>He</b> với ReLU</td><td>Thư viện mặc định đã đúng.</td></tr>
               <tr><td>λ (L2)</td><td><b>0</b>, rồi tăng nếu variance cao</td><td>Dò 0,01 → 0,1 → 1 → 10.</td></tr>
@@ -4718,7 +4718,7 @@ var GLOSS = [
 ['threshold','ngưỡng quyết định','Mức xác suất để chuyển dự đoán thành quyết định. Nâng ngưỡng thì precision cao recall thấp, và ngược lại. Đây là lựa chọn của CON NGƯỜI, không phải của thuật toán.','#s-metric','ngưỡng'],
 ['skewed dataset','dữ liệu lệch lớp','Một lớp chiếm áp đảo (99,5% âm). Ở đây "tỉ lệ đoán đúng" là số đo dối trá — mô hình luôn nói "âm" cũng đạt 99,5%.','#s-metric','dữ liệu lệch'],
 ['error analysis','phân tích lỗi bằng tay','Lấy 100 ca dev mà mô hình làm sai, đếm theo nguyên nhân. Phần trăm mỗi nguyên nhân chính là TRẦN LỢI ÍCH của việc đi sửa nó. Hai tiếng thay cho hai tháng.','#s-error','phân tích lỗi'],
-['ceiling analysis','tính trần lợi ích','Tính TRƯỚC xem giải quyết triệt để một nguyên nhân thì cải thiện được tối đa bao nhiêu. Ngăn bạn đầu tư hai tháng để lấy 0,8%.','#s-error','ceiling analysis|trần lợi ích'],
+['ceiling analysis','tính trần lợi ích','Tính TRƯỚC xem giải quyết triệt để một chỗ thì cải thiện được tối đa bao nhiêu, để không bỏ hai tháng ra lấy 0,8%. Trong bảng error analysis, trần đó là phần trăm của mỗi cột. Riêng thuật ngữ ceiling analysis là bản dùng cho pipeline: thay đầu ra một chặng bằng đáp án đúng do người gán, rồi xem cả hệ thống nhảy bao nhiêu.','#s-error','ceiling analysis|trần lợi ích'],
 ['data mismatch','lệch phân phối dữ liệu','Tập huấn luyện và dữ liệu thật khác loại nhau (ảnh web sạch vs ảnh điện thoại mờ). Khác hoàn toàn với quá khớp, và chữa bằng cách khác.','#s-mismatch','lệch phân phối'],
 ['train-dev set','tập train-dev','Một tập nhỏ CÙNG PHÂN PHỐI với tập huấn luyện nhưng không đem đi huấn luyện. Cắt ra miễn phí, và nó tách được variance khỏi lệch phân phối.','#s-mismatch','train-dev'],
 ['transfer learning','học chuyển giao','Lấy mô hình đã huấn luyện trên bài toán nhiều dữ liệu, bỏ lớp cuối, gắn lớp mới cho bài của bạn. Nước đi đầu tiên đáng thử khi dữ liệu ít.','#s-mismatch','học chuyển giao'],
@@ -4778,7 +4778,7 @@ var GLOSS = [
 ['gate','cổng','Một hàm sigmoid có trọng số học được, cho ra số từ 0 tới 1, rồi trí nhớ được NHÂN với số đó. Vì nó liên tục nên lấy đạo hàm được và học được.','#s-lstm','cổng quên|cổng cập nhật|cổng đầu ra'],
 ['bidirectional RNN','RNN hai chiều','Chạy hai RNN, một xuôi một ngược, rồi ghép trạng thái. Cần khi phải đọc hết câu mới hiểu đầu câu. Nhược điểm: KHÔNG dùng được cho thời gian thực.','#s-lstm','RNN hai chiều|hai chiều'],
 ['word embedding','vector biểu diễn từ','Thay one-hot bằng vector dày đặc 300 chiều, học sao cho từ dùng trong ngữ cảnh giống nhau thì ở gần nhau. Nhờ đó tri thức chuyển được giữa "táo" và "cam".','#s-embed','word embedding'],
-['one-hot vector','vector một-nóng','Vector toàn 0 trừ đúng một số 1. Vấn đề chí mạng: tích vô hướng của hai one-hot bất kỳ luôn bằng 0, nên mọi từ cách nhau đúng bằng nhau.','#s-embed','one-hot vector'],
+['one-hot vector','vector một-nóng','Vector toàn 0 trừ đúng một số 1. Vấn đề chí mạng: tích vô hướng của one-hot hai từ khác nhau luôn bằng 0, nên mọi từ cách nhau đúng bằng nhau.','#s-embed','one-hot vector'],
 ['word2vec','word2vec','Học embedding bằng bài toán giả: cho một từ giữa câu, đoán các từ xung quanh (skip-gram). Bản thân bài toán giả không ai quan tâm — chỉ lấy trọng số.','#s-embed','skip-gram'],
 ['negative sampling','lấy mẫu âm','Đổi bài toán thành "cặp từ này có thật sự đứng gần nhau không". Mỗi bước chỉ cần k+1 hồi quy logistic thay vì một softmax 10.000 lớp.','#s-embed','negative sampling'],
 ['GloVe','GloVe','Học embedding bằng cách khớp trực tiếp với BẢNG ĐẾM số lần hai từ cùng xuất hiện. Đơn giản hơn hẳn về khái niệm, kết quả tương đương word2vec.','#s-embed',''],
