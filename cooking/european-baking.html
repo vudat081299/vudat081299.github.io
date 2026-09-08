@@ -87,6 +87,7 @@
   .mc-card__foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: auto; padding-top: 4px;
     font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); }
   .mc-card__foot .wb-ico { font-size: 14px; vertical-align: -2px; }
+  .mc-wait { color: var(--wb-fg); font-weight: 700; }
   .mc-card__dip { display: flex; align-items: baseline; gap: 5px; font-size: 12px; color: var(--wb-fg-muted); line-height: 1.4; }
   .mc-card__dip .wb-ico { font-size: 14px; flex: none; align-self: center; }
   .mc-card__dip.is-none { color: var(--wb-fg-subtle); }
@@ -437,6 +438,13 @@
           </p>
         </div>
       </div>
+    
+      <div class="wb-alert wb-alert--info" style="margin-top:18px"><span class="wb-ico">schedule</span>
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Thời gian trên thẻ là thời gian bạn đứng làm</p>
+          <p class="wb-alert__msg">Nó <b>không gồm lúc chờ</b> — ướp lạnh, ủ bột, để bánh ngấm nhân. Bánh nào phải chờ thì có thêm nhãn <b>“+ chờ …”</b> ngay cạnh, và bộ lọc thời gian vẫn lọc theo thời gian làm để bạn tìm được việc vừa với buổi tối hôm nay.</p>
+        </div>
+      </div>
     </section>
 
     <hr class="wb-divider">
@@ -732,7 +740,7 @@ var RECIPES = [];
 /* ---------- PHÁP — NHÓM DỄ ---------- */
 RECIPES.push(
 {
-  id: 'madeleine', name: 'Madeleine', cat: 'cookie', role: 'cafe', diff: 1, serves: 8, prep: 15,
+  id: 'madeleine', name: 'Madeleine', cat: 'cookie', role: 'cafe', diff: 1, serves: 8,
   tags: ['bơ', 'trứng', 'chanh'],
   why: 'Bánh Pháp dễ nhất mà vẫn có một chi tiết kỹ thuật thật: cái bụng gồ lên giữa lưng bánh chỉ xuất hiện khi bột lạnh gặp lò nóng.',
   ing: [
@@ -756,7 +764,7 @@ RECIPES.push(
   serveWith: 'Trà đen hoặc espresso. Chấm nhẹ vào trà là cách ăn của Proust.'
 },
 {
-  id: 'financier', name: 'Financier hạnh nhân', cat: 'cookie', role: 'cafe', diff: 1, serves: 8, prep: 15,
+  id: 'financier', name: 'Financier hạnh nhân', cat: 'cookie', role: 'cafe', diff: 1, serves: 8,
   tags: ['bơ', 'hạnh nhân', 'lòng trắng'],
   why: 'Cách xử lý chỗ lòng trắng trứng thừa, và là bài học đầu tiên về bơ nâu — thứ làm nên mùi hạt rang của bánh Pháp.',
   ing: [
@@ -779,7 +787,7 @@ RECIPES.push(
   serveWith: 'Cà phê. Rất hợp ăn kèm coulis quả mọng nếu bày ra đĩa.'
 },
 {
-  id: 'sable', name: 'Sablé bơ (bánh quy Pháp)', cat: 'cookie', role: 'cafe', diff: 1, serves: 12, prep: 20,
+  id: 'sable', name: 'Sablé bơ (bánh quy Pháp)', cat: 'cookie', role: 'cafe', diff: 1, serves: 12,
   tags: ['bơ'],
   why: 'Một tỉ lệ thay cho một công thức: 1 đường – 2 bơ – 3 bột. Thuộc rồi thì làm được bánh quy mọi lúc mà không cần tra gì.',
   ing: [
@@ -801,7 +809,7 @@ RECIPES.push(
   serveWith: 'Trà chiều. Hoặc dùng làm đế nghiền vụn cho cheesecake.'
 },
 {
-  id: 'crepe', name: 'Crêpe Pháp', cat: 'chao', role: 'sang', diff: 1, serves: 8, prep: 10,
+  id: 'crepe', name: 'Crêpe Pháp', cat: 'chao', role: 'sang', diff: 1, serves: 8,
   tags: ['trứng', 'sữa'],
   why: 'Cái chảo đầu tiên bao giờ cũng hỏng, và đó là chuyện bình thường — nó dùng để dò nhiệt độ chảo, người Pháp còn có tên riêng cho nó.',
   ing: [
@@ -823,7 +831,7 @@ RECIPES.push(
   serveWith: 'Đường và chanh, hoặc sốt caramel muối, hoặc ganache. Crêpe Suzette thì đun sốt cam với Grand Marnier.'
 },
 {
-  id: 'clafoutis', name: 'Clafoutis anh đào', cat: 'custard', role: 'trangmieng', diff: 1, serves: 8, prep: 12,
+  id: 'clafoutis', name: 'Clafoutis anh đào', cat: 'custard', role: 'trangmieng', diff: 1, serves: 8,
   tags: ['trứng', 'sữa', 'quả tươi'],
   why: 'Nằm giữa bánh flan và bánh bông lan, và làm xong trong 12 phút chuẩn bị. Món tráng miệng nông thôn Pháp đúng nghĩa.',
   ing: [
@@ -850,7 +858,7 @@ RECIPES.push(
 /* ---------- PHÁP — NHÓM VỪA ---------- */
 RECIPES.push(
 {
-  id: 'creme-brulee', name: 'Crème brûlée', cat: 'custard', role: 'trangmieng', diff: 2, serves: 8, prep: 15,
+  id: 'creme-brulee', name: 'Crème brûlée', cat: 'custard', role: 'trangmieng', diff: 2, serves: 8, wait: '4 tiếng',
   tags: ['kem tươi', 'lòng đỏ', 'vani'],
   why: 'Ba nguyên liệu và một cái đèn khò. Cái khó duy nhất là nướng cách thuỷ đúng độ: quá 5 phút là custard rỗ tổ ong.',
   ing: [
@@ -873,7 +881,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ. Vài quả mâm xôi bên cạnh nếu muốn cắt ngọt.'
 },
 {
-  id: 'creme-caramel', name: 'Crème caramel (bánh flan)', cat: 'custard', role: 'trangmieng', diff: 2, serves: 8, prep: 15,
+  id: 'creme-caramel', name: 'Crème caramel (bánh flan)', cat: 'custard', role: 'trangmieng', diff: 2, serves: 8, wait: '4 tiếng',
   tags: ['trứng', 'sữa', 'caramel'],
   why: 'Anh em của crème brûlée nhưng dùng cả quả trứng nên chắc hơn, và có thêm một bài học riêng: nấu caramel.',
   ing: [
@@ -898,7 +906,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ — caramel chính là nước sốt.'
 },
 {
-  id: 'mousse-chocolat', name: 'Mousse au chocolat', cat: 'lanh', role: 'trangmieng', diff: 2, serves: 8, prep: 25,
+  id: 'mousse-chocolat', name: 'Mousse au chocolat', cat: 'lanh', role: 'trangmieng', diff: 2, serves: 8,
   tags: ['chocolate', 'trứng'],
   why: 'Hai nguyên liệu chính và không cần lò. Toàn bộ kỹ thuật nằm ở chữ "fold" — và đây là chỗ tốt nhất để học nó.',
   ing: [
@@ -920,7 +928,7 @@ RECIPES.push(
   serveWith: 'Chantilly và một chút muối biển. Hoặc coulis mâm xôi để cắt độ béo.'
 },
 {
-  id: 'tarte-tatin', name: 'Tarte Tatin táo', cat: 'tart', role: 'trangmieng', diff: 2, serves: 8, prep: 25,
+  id: 'tarte-tatin', name: 'Tarte Tatin táo', cat: 'tart', role: 'trangmieng', diff: 2, serves: 8,
   tags: ['táo', 'caramel', 'bơ'],
   why: 'Bánh táo lộn ngược, ra đời từ một tai nạn trong bếp. Điểm khó nằm ở chỗ ít ai ngờ: úp bánh ra đĩa mà không bỏng và không vỡ.',
   ing: [
@@ -942,7 +950,7 @@ RECIPES.push(
   serveWith: 'Ăn ấm với một muôi kem vani — đây là cặp kinh điển, nóng gặp lạnh.'
 },
 {
-  id: 'tarte-citron', name: 'Tarte au citron', cat: 'tart', role: 'trangmieng', diff: 2, serves: 8, prep: 40,
+  id: 'tarte-citron', name: 'Tarte au citron', cat: 'tart', role: 'trangmieng', diff: 2, serves: 8, wait: '3 tiếng',
   tags: ['chanh', 'bơ', 'trứng'],
   why: 'Bài học về hai thứ cùng lúc: đế tart nướng mù (blind bake) và lemon curd. Cả hai đều có một ngưỡng rõ ràng để dừng.',
   ing: [
@@ -967,7 +975,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ. Vài quả mâm xôi để cân màu nếu bày tiệc.'
 },
 {
-  id: 'canele', name: 'Canelé Bordeaux', cat: 'custard', role: 'cafe', diff: 3, serves: 12, prep: 20,
+  id: 'canele', name: 'Canelé Bordeaux', cat: 'custard', role: 'cafe', diff: 3, serves: 12,
   tags: ['sữa', 'rượu rum', 'vani'],
   why: 'Vỏ ngoài cứng gần như cháy, trong ruột mềm như flan — hai thái cực trong một cái bánh nhỏ. Đòi hai thứ mà không mẹo nào thay được: bột nghỉ 24 tiếng và khuôn tráng sáp ong.',
   ing: [
@@ -993,7 +1001,7 @@ RECIPES.push(
   serveWith: 'Espresso. Không cần thêm gì cả.'
 },
 {
-  id: 'choux-chantilly', name: 'Choux kem (profiterole)', cat: 'choux', role: 'trangmieng', diff: 2, serves: 8, prep: 30,
+  id: 'choux-chantilly', name: 'Choux kem (profiterole)', cat: 'choux', role: 'trangmieng', diff: 2, serves: 8,
   tags: ['trứng', 'bơ', 'kem tươi'],
   why: 'Vỏ choux là loại bột duy nhất được nấu chín trên bếp trước khi vào lò. Học được nó là mở ra cả éclair, Paris-Brest, gougère.',
   ing: [
@@ -1018,7 +1026,7 @@ RECIPES.push(
   serveWith: 'Rưới ganache chocolate nóng lên trên — đó chính là profiterole.'
 },
 {
-  id: 'eclair-chocolat', name: 'Éclair chocolate', cat: 'choux', role: 'tiec', diff: 3, serves: 8, prep: 40,
+  id: 'eclair-chocolat', name: 'Éclair chocolate', cat: 'choux', role: 'tiec', diff: 3, serves: 8,
   tags: ['chocolate', 'trứng', 'sữa'],
   why: 'Cùng vỏ choux nhưng khó hơn hẳn: hình thuôn dài dễ nứt và cong, còn nhân crème pâtissière lại có ngưỡng nhiệt riêng.',
   ing: [
@@ -1043,7 +1051,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ — vỏ, kem và ganache đã là ba tầng.'
 },
 {
-  id: 'macaron', name: 'Macaron', cat: 'cookie', role: 'tiec', diff: 3, serves: 12, prep: 45,
+  id: 'macaron', name: 'Macaron', cat: 'cookie', role: 'tiec', diff: 3, serves: 12, wait: '24 tiếng',
   tags: ['hạnh nhân', 'lòng trắng'],
   why: 'Bánh khó nhất trang này, và khó vì một lý do rất khó chịu: mọi thứ đều đúng mà vẫn hỏng do độ ẩm không khí. Cần cân chính xác đến gam.',
   ing: [
@@ -1072,7 +1080,7 @@ RECIPES.push(
 /* ---------- PHÁP — MEN & NGÀN LỚP ---------- */
 RECIPES.push(
 {
-  id: 'brioche', name: 'Brioche', cat: 'bread', role: 'sang', diff: 2, serves: 8, prep: 30,
+  id: 'brioche', name: 'Brioche', cat: 'bread', role: 'sang', diff: 2, serves: 8,
   tags: ['bơ', 'men', 'trứng'],
   why: 'Bánh mì có nhiều bơ đến mức gần thành bánh ngọt. Cửa ải duy nhất: cho bơ vào lúc bột đã dai, không phải lúc đầu.',
   ing: [
@@ -1097,7 +1105,7 @@ RECIPES.push(
   serveWith: 'Bơ và mứt. Brioche cũ dùng làm bánh mì nướng kiểu Pháp thì tuyệt.'
 },
 {
-  id: 'croissant', name: 'Croissant', cat: 'lam', role: 'sang', diff: 3, serves: 8, prep: 60,
+  id: 'croissant', name: 'Croissant', cat: 'lam', role: 'sang', diff: 3, serves: 8,
   tags: ['bơ', 'men'],
   why: 'Bài kiểm tra cuối cùng của bếp bánh gia đình. Không có kỹ thuật nào bí ẩn — chỉ có một yêu cầu khắc nghiệt: bơ và bột phải luôn cùng độ dẻo và luôn lạnh.',
   ing: [
@@ -1124,7 +1132,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ. Cà phê đen. Nhồi chocolate vào thì thành pain au chocolat.'
 },
 {
-  id: 'baguette', name: 'Baguette', cat: 'bread', role: 'sang', diff: 3, serves: 8, prep: 25,
+  id: 'baguette', name: 'Baguette', cat: 'bread', role: 'sang', diff: 3, serves: 8,
   tags: ['men'],
   why: 'Bốn nguyên liệu: bột, nước, muối, men. Không có gì để giấu — nên đây là bài kiểm tra thuần tuý nhất về tay nghề và về hơi nước trong lò.',
   ing: [
@@ -1149,7 +1157,7 @@ RECIPES.push(
 /* ---------- Ý ---------- */
 RECIPES.push(
 {
-  id: 'tiramisu', name: 'Tiramisù', cat: 'lanh', role: 'trangmieng', diff: 2, serves: 8, prep: 30,
+  id: 'tiramisu', name: 'Tiramisù', cat: 'lanh', role: 'trangmieng', diff: 2, serves: 8,
   tags: ['mascarpone', 'cà phê', 'trứng'],
   why: 'Món tráng miệng Ý nổi tiếng nhất thế giới và cũng bị làm sai nhiều nhất: nhúng bánh quá lâu, và đánh mascarpone quá tay.',
   ing: [
@@ -1173,7 +1181,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ. Một ly vang ngọt hoặc espresso.'
 },
 {
-  id: 'panna-cotta', name: 'Panna cotta', cat: 'lanh', role: 'trangmieng', diff: 1, serves: 8, prep: 12,
+  id: 'panna-cotta', name: 'Panna cotta', cat: 'lanh', role: 'trangmieng', diff: 1, serves: 8,
   tags: ['kem tươi', 'gelatin', 'vani'],
   why: 'Món tráng miệng ít việc nhất trang này — đun và rót. Toàn bộ tay nghề nằm ở một con số: bao nhiêu gelatin.',
   ing: [
@@ -1195,7 +1203,7 @@ RECIPES.push(
   serveWith: 'Coulis quả mọng là cặp kinh điển — chua để cắt béo. Hoặc sốt caramel muối.'
 },
 {
-  id: 'biscotti', name: 'Biscotti (cantucci)', cat: 'cookie', role: 'cafe', diff: 1, serves: 12, prep: 15,
+  id: 'biscotti', name: 'Biscotti (cantucci)', cat: 'cookie', role: 'cafe', diff: 1, serves: 12,
   tags: ['hạnh nhân', 'trứng'],
   why: 'Bánh nướng hai lần nên khô cứng và để được hàng tháng. Không có bơ, nên đây cũng là bánh quy ít béo nhất trang.',
   ing: [
@@ -1218,7 +1226,7 @@ RECIPES.push(
   serveWith: 'Cà phê hoặc rượu ngọt — bánh này khô, cố ý khô, để chấm.'
 },
 {
-  id: 'cannoli', name: 'Cannoli Sicilia', cat: 'choux', role: 'trangmieng', diff: 3, serves: 12, prep: 40,
+  id: 'cannoli', name: 'Cannoli Sicilia', cat: 'choux', role: 'trangmieng', diff: 3, serves: 12,
   tags: ['ricotta', 'chocolate'],
   why: 'Vỏ chiên giòn rộp và nhân ricotta mát — nhưng chỉ giữ được đúng cấu trúc đó trong nửa tiếng sau khi bơm nhân.',
   ing: [
@@ -1245,7 +1253,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ. Espresso.'
 },
 {
-  id: 'crostata', name: 'Crostata mứt', cat: 'tart', role: 'cafe', diff: 1, serves: 8, prep: 20,
+  id: 'crostata', name: 'Crostata mứt', cat: 'tart', role: 'cafe', diff: 1, serves: 8,
   tags: ['mứt', 'bơ'],
   why: 'Bánh bà nội của Ý: một đế bột ngọt, một lọ mứt, và mấy dải bột đan lên trên. Ít kỹ thuật nhất trong nhóm tart.',
   ing: [
@@ -1273,7 +1281,7 @@ RECIPES.push(
 /* ---------- ANH & MỸ ---------- */
 RECIPES.push(
 {
-  id: 'brownie', name: 'Brownie fudgy', cat: 'cake', role: 'cafe', diff: 1, serves: 12, prep: 12,
+  id: 'brownie', name: 'Brownie fudgy', cat: 'cake', role: 'cafe', diff: 1, serves: 12,
   tags: ['chocolate', 'bơ'],
   why: 'Bánh chocolate dễ nhất và cũng dễ làm hỏng nhất — vì ranh giới giữa "fudgy" và "khô như bánh gato" chỉ là 5 phút trong lò.',
   ing: [
@@ -1298,7 +1306,7 @@ RECIPES.push(
   serveWith: 'Kem vani và sốt caramel muối. Nóng gặp lạnh, ngọt gặp mặn.'
 },
 {
-  id: 'cookie-choc', name: 'Chocolate chip cookie', cat: 'cookie', role: 'cafe', diff: 1, serves: 12, prep: 15,
+  id: 'cookie-choc', name: 'Chocolate chip cookie', cat: 'cookie', role: 'cafe', diff: 1, serves: 12,
   tags: ['chocolate', 'bơ'],
   why: 'Bánh quy phổ biến nhất thế giới. Ba biến số quyết định nó giòn hay dẻo: tỉ lệ đường nâu, nhiệt độ bơ, và thời gian ướp lạnh.',
   ing: [
@@ -1324,7 +1332,7 @@ RECIPES.push(
   serveWith: 'Sữa lạnh.'
 },
 {
-  id: 'cheesecake-ny', name: 'New York cheesecake', cat: 'cake', role: 'tiec', diff: 2, serves: 12, prep: 25,
+  id: 'cheesecake-ny', name: 'New York cheesecake', cat: 'cake', role: 'tiec', diff: 2, serves: 12,
   tags: ['cream cheese', 'trứng'],
   why: 'Đặc, nặng, mịn như satin. Hai thứ quyết định: nướng cách thuỷ ở nhiệt thấp, và làm nguội thật chậm — nứt mặt luôn là do sốc nhiệt.',
   ing: [
@@ -1350,7 +1358,7 @@ RECIPES.push(
   serveWith: 'Coulis quả mọng hoặc sốt caramel muối. Cheesecake béo nên rất cần một thứ chua.'
 },
 {
-  id: 'cheesecake-basque', name: 'Basque burnt cheesecake', cat: 'cake', role: 'trangmieng', diff: 1, serves: 8, prep: 12,
+  id: 'cheesecake-basque', name: 'Basque burnt cheesecake', cat: 'cake', role: 'trangmieng', diff: 1, serves: 8,
   tags: ['cream cheese', 'kem tươi'],
   why: 'Cheesecake không đế, cố ý nướng đến cháy mặt, và không nướng cách thuỷ. Nghĩa là gần như mọi chỗ khó của cheesecake đều bị bỏ đi.',
   ing: [
@@ -1371,7 +1379,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ. Một ly vang ngọt hoặc espresso.'
 },
 {
-  id: 'apple-pie', name: 'Apple pie', cat: 'tart', role: 'trangmieng', diff: 2, serves: 8, prep: 40,
+  id: 'apple-pie', name: 'Apple pie', cat: 'tart', role: 'trangmieng', diff: 2, serves: 8,
   tags: ['táo', 'bơ', 'quế'],
   why: 'Bánh táo hai vỏ kiểu Mỹ. Cái khó là chống "đáy ướt": nhân táo ra rất nhiều nước trong lò, phải xử lý trước.',
   ing: [
@@ -1383,7 +1391,8 @@ RECIPES.push(
     { n: 'Bột bắp', q: 30, u: 'g', note: 'Thứ giữ nước táo lại thành sốt thay vì chảy ra đáy.', r: 'season' },
     { n: 'Quế + nhục đậu khấu', q: 2, u: 'thìa cà phê', r: 'season' },
     { n: 'Nước cốt chanh', q: 2, u: 'thìa canh', r: 'season' },
-    { n: 'Trứng quét mặt', q: 1, u: 'quả', r: 'season' }
+    { n: 'Trứng quét mặt', q: 1, u: 'quả', r: 'season' },
+    { n: 'Muối', q: 3, u: 'g', note: 'Cho vào bột vỏ — vỏ không muối nhạt thếch dù nhân ngọt.', r: 'season' }
   ],
   steps: [
     { t: 'Làm vỏ — giữ hạt bơ', d: 'Trộn bột với muối, cắt bơ lạnh vào bằng dao hoặc đầu ngón tay đến khi còn hạt bơ cỡ hạt đậu, rưới nước đá, kết khối thì dừng.', m: 10, heat: '—', cue: 'Bột <b>còn nhìn thấy mảng bơ dẹt</b>. Chính những mảng bơ đó hoá hơi trong lò và tạo lớp bong — xoa nhuyễn hết là vỏ bở chứ không bong.' },
@@ -1398,7 +1407,7 @@ RECIPES.push(
   serveWith: 'Kem vani. "Apple pie à la mode" chính là như thế.'
 },
 {
-  id: 'banoffee', name: 'Banoffee pie', cat: 'lanh', role: 'trangmieng', diff: 1, serves: 8, prep: 20,
+  id: 'banoffee', name: 'Banoffee pie', cat: 'lanh', role: 'trangmieng', diff: 1, serves: 8,
   tags: ['chuối', 'caramel', 'kem tươi'],
   why: 'Không cần lò nếu mua sẵn caramel. Bốn tầng rõ rệt, và bài học nằm ở chỗ xếp tầng sao cho không bị ướt lẫn nhau.',
   ing: [
@@ -1422,7 +1431,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ — đã có kem, caramel và chuối.'
 },
 {
-  id: 'carrot-cake', name: 'Carrot cake phủ cream cheese', cat: 'cake', role: 'tiec', diff: 1, serves: 12, prep: 25,
+  id: 'carrot-cake', name: 'Carrot cake phủ cream cheese', cat: 'cake', role: 'tiec', diff: 1, serves: 12,
   tags: ['cà rốt', 'cream cheese', 'quế'],
   why: 'Bánh ẩm nhất trong nhóm bánh gato vì dùng dầu thay bơ. Không cần đánh bông gì cả — trộn khô với ướt là xong.',
   ing: [
@@ -1450,7 +1459,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ — lớp kem cream cheese chính là phần chua cân lại.'
 },
 {
-  id: 'scone', name: 'Scone Anh', cat: 'bread', role: 'sang', diff: 1, serves: 8, prep: 15,
+  id: 'scone', name: 'Scone Anh', cat: 'bread', role: 'sang', diff: 1, serves: 8,
   tags: ['bơ', 'sữa'],
   why: 'Từ lúc bắt đầu đến lúc ra lò chỉ 30 phút. Quy tắc duy nhất: đụng vào bột càng ít càng tốt.',
   ing: [
@@ -1473,7 +1482,7 @@ RECIPES.push(
   serveWith: 'Kem đặc (clotted cream) và mứt dâu. Cornwall phết mứt trước, Devon phết kem trước — chọn phe.'
 },
 {
-  id: 'pancake', name: 'Pancake buttermilk', cat: 'chao', role: 'sang', diff: 1, serves: 8, prep: 10,
+  id: 'pancake', name: 'Pancake buttermilk', cat: 'chao', role: 'sang', diff: 1, serves: 8,
   tags: ['sữa', 'trứng'],
   why: 'Bữa sáng nhanh nhất trang này. Bí quyết ai cũng bỏ qua: bột phải còn lợn cợn, và phải để nghỉ 10 phút.',
   ing: [
@@ -1500,7 +1509,7 @@ RECIPES.push(
 /* ---------- TRUNG ÂU & NAM ÂU ---------- */
 RECIPES.push(
 {
-  id: 'sachertorte', name: 'Sachertorte', cat: 'cake', role: 'tiec', diff: 3, serves: 12, prep: 45,
+  id: 'sachertorte', name: 'Sachertorte', cat: 'cake', role: 'tiec', diff: 3, serves: 12,
   tags: ['chocolate', 'mứt mơ'],
   why: 'Bánh chocolate Vienna, và là bài học về lớp phủ chocolate bóng gương — thứ chỉ đạt được ở đúng một khoảng nhiệt.',
   ing: [
@@ -1527,7 +1536,7 @@ RECIPES.push(
   serveWith: 'Bắt buộc một muôi chantilly không đường — bánh rất ngọt, kem là phần cân lại.'
 },
 {
-  id: 'waffle-liege', name: 'Waffle Liège', cat: 'chao', role: 'sang', diff: 2, serves: 8, prep: 25,
+  id: 'waffle-liege', name: 'Waffle Liège', cat: 'chao', role: 'sang', diff: 2, serves: 8,
   tags: ['men', 'bơ', 'đường'],
   why: 'Waffle Bỉ thật là bánh làm từ bột men chứ không phải bột lỏng, và có hạt đường cục nóng chảy thành caramel ngay trên mặt bánh.',
   ing: [
@@ -1552,7 +1561,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ — đường caramel là lớp ngọt rồi. Muốn thêm thì chantilly và dâu.'
 },
 {
-  id: 'pastel-de-nata', name: 'Pastel de nata', cat: 'tart', role: 'cafe', diff: 2, serves: 12, prep: 30,
+  id: 'pastel-de-nata', name: 'Pastel de nata', cat: 'tart', role: 'cafe', diff: 2, serves: 12,
   tags: ['trứng', 'quế', 'sữa'],
   why: 'Bánh trứng Bồ Đào Nha: vỏ ngàn lớp giòn tan, nhân custard cháy sém mặt. Cần lò thật nóng — nóng hơn hầu hết công thức khác.',
   ing: [
@@ -1577,7 +1586,7 @@ RECIPES.push(
   serveWith: 'Espresso và một chút quế bột rắc lên.'
 },
 {
-  id: 'churros', name: 'Churros', cat: 'choux', role: 'trangmieng', diff: 2, serves: 8, prep: 15,
+  id: 'churros', name: 'Churros', cat: 'choux', role: 'trangmieng', diff: 2, serves: 8,
   tags: ['chocolate'],
   why: 'Cùng nguyên lý bột choux nhưng chiên thay vì nướng. Rẻ, nhanh, và có đúng một chỗ nguy hiểm: nhiệt độ dầu.',
   ing: [
@@ -1609,7 +1618,7 @@ RECIPES.push(
    và giữ được vài ngày. */
 RECIPES.push(
 {
-  id: 'chantilly', name: 'Kem chantilly', cat: 'sot', role: 'sot', diff: 1, serves: 8, prep: 5,
+  id: 'chantilly', name: 'Kem chantilly', cat: 'sot', role: 'sot', diff: 1, serves: 8,
   tags: ['kem tươi', 'vani'],
   why: 'Ba nguyên liệu và hai phút, nhưng có một ngưỡng rất hẹp: quá 20 giây là kem tách bơ và không quay lại được.',
   ing: [
@@ -1627,7 +1636,7 @@ RECIPES.push(
   serveWith: 'Gần như mọi thứ nóng, chua hoặc đắng: tarte Tatin, Sachertorte, brownie, crêpe.'
 },
 {
-  id: 'creme-anglaise', name: 'Crème anglaise (sốt vani)', cat: 'sot', role: 'sot', diff: 2, serves: 8, prep: 5,
+  id: 'creme-anglaise', name: 'Crème anglaise (sốt vani)', cat: 'sot', role: 'sot', diff: 2, serves: 8,
   tags: ['lòng đỏ', 'sữa', 'vani'],
   why: 'Sốt vani nền của bếp Pháp, và là chỗ để học ngưỡng nhiệt của trứng: 82 °C là sốt mượt, 86 °C là trứng bác.',
   ing: [
@@ -1648,7 +1657,7 @@ RECIPES.push(
   serveWith: 'Clafoutis, brownie, bánh chocolate nóng, biscotti, mọi thứ hơi khô.'
 },
 {
-  id: 'creme-patissiere', name: 'Crème pâtissière (kem trứng sữa)', cat: 'sot', role: 'sot', diff: 2, serves: 8, prep: 5,
+  id: 'creme-patissiere', name: 'Crème pâtissière (kem trứng sữa)', cat: 'sot', role: 'sot', diff: 2, serves: 8,
   tags: ['lòng đỏ', 'sữa'],
   why: 'Ruột của éclair, choux, tart quả và mille-feuille. Khác crème anglaise ở một chỗ quan trọng: cái này <b>phải sôi</b>.',
   ing: [
@@ -1670,7 +1679,7 @@ RECIPES.push(
   serveWith: 'Là nhân chứ không phải sốt rưới: choux, éclair, tart quả tươi, mille-feuille.'
 },
 {
-  id: 'ganache', name: 'Ganache chocolate', cat: 'sot', role: 'sot', diff: 1, serves: 8, prep: 5,
+  id: 'ganache', name: 'Ganache chocolate', cat: 'sot', role: 'sot', diff: 1, serves: 8,
   tags: ['chocolate', 'kem tươi'],
   why: 'Một tỉ lệ làm được ba thứ khác nhau: sốt rưới, kem phủ, hay viên truffle — chỉ khác nhau ở lượng kem.',
   ing: [
@@ -1689,7 +1698,7 @@ RECIPES.push(
   serveWith: 'Profiterole, éclair, brownie, crêpe, churros, bánh gato chocolate.'
 },
 {
-  id: 'caramel-sauce', name: 'Sốt caramel muối', cat: 'sot', role: 'sot', diff: 2, serves: 8, prep: 5,
+  id: 'caramel-sauce', name: 'Sốt caramel muối', cat: 'sot', role: 'sot', diff: 2, serves: 8,
   tags: ['caramel', 'kem tươi'],
   why: 'Một trong hai chỗ trong trang này có thể gây bỏng thật. Nhưng đây cũng là sốt đổi được nhiều món nhất bằng một lọ.',
   ing: [
@@ -1709,7 +1718,7 @@ RECIPES.push(
   serveWith: 'Brownie, kem vani, crêpe, panna cotta, waffle, apple pie.'
 },
 {
-  id: 'coulis', name: 'Coulis quả mọng', cat: 'sot', role: 'sot', diff: 1, serves: 8, prep: 5,
+  id: 'coulis', name: 'Coulis quả mọng', cat: 'sot', role: 'sot', diff: 1, serves: 8,
   tags: ['quả tươi'],
   why: 'Sốt dễ nhất trang này và là thứ thiếu nhiều nhất ở bánh làm tại nhà: một vệt chua để cắt béo. Làm bằng quả đông lạnh cũng ngon như quả tươi.',
   ing: [
@@ -1727,7 +1736,7 @@ RECIPES.push(
   serveWith: 'Cheesecake, panna cotta, mousse chocolate, financier, pancake — mọi thứ béo hoặc ngọt đậm.'
 },
 {
-  id: 'zabaione', name: 'Zabaione', cat: 'sot', role: 'sot', diff: 2, serves: 8, prep: 5,
+  id: 'zabaione', name: 'Zabaione', cat: 'sot', role: 'sot', diff: 2, serves: 8,
   tags: ['lòng đỏ', 'rượu'],
   why: 'Sốt Ý làm trong 8 phút từ ba thứ, ăn nóng ngay tại chỗ. Là một trong ít món tráng miệng phải bưng ra bàn khi vẫn còn bốc hơi.',
   ing: [
@@ -1745,7 +1754,7 @@ RECIPES.push(
   serveWith: 'Biscotti để chấm, hoặc rưới lên dâu tây tươi.'
 },
 {
-  id: 'glaze-chanh', name: 'Glaze chanh (đường phủ)', cat: 'sot', role: 'sot', diff: 1, serves: 12, prep: 3,
+  id: 'glaze-chanh', name: 'Glaze chanh (đường phủ)', cat: 'sot', role: 'sot', diff: 1, serves: 12,
   tags: ['chanh'],
   why: 'Hai nguyên liệu và ba phút, nhưng nó là thứ biến một ổ bánh bơ trông đơn điệu thành một cái bánh trông có chủ đích.',
   ing: [
@@ -1952,6 +1961,12 @@ var LABELS = {
     var h = Math.floor(m / 60), r = m % 60;
     return h + ' giờ' + (r ? ' ' + r + '′' : '');
   }
+  /* Thời gian CHỜ — ướp lạnh, ủ, muối, phơi — KHÔNG nằm trong `total`. `total` chỉ cộng
+     `m` của các bước, tức thời gian bạn thật sự đứng làm, và bộ lọc thời gian cũng lọc theo
+     đó. Nhưng món nào có chờ thì phải nói ra: nhãn "1 giờ 3′" trên một hũ dưa cải phải muối
+     ba ngày là nói dối người đọc. Dùng chuỗi chứ không phải số phút, vì phần lớn là khoảng
+     ("3–6 ngày") và làm tròn khoảng thành một con số là chính xác giả. */
+  function waitText(r) { return r.wait ? ' <span class="mc-wait">+ chờ ' + r.wait + '</span>' : ''; }
   function dots(d) {
     var s = '<span class="mc-dots">';
     for (var i = 1; i <= 3; i++) s += '<i class="' + (i <= d ? 'on' : '') + '"></i>';
@@ -2167,7 +2182,7 @@ var LABELS = {
       dipLine +
       '<div class="wb-tags">' + tags + more + '</div>' +
       '<div class="mc-card__foot">' +
-        '<span><span class="wb-ico">schedule</span> ' + timeText(r.total) + '</span>' +
+        '<span><span class="wb-ico">schedule</span> ' + timeText(r.total) + waitText(r) + '</span>' +
         '<span><span class="wb-ico">shopping_basket</span> ' + r.ing.length + ' ' + LABELS.thingWord + '</span>' +
         '<span><span class="wb-ico">format_list_numbered</span> ' + r.steps.length + ' bước</span>' +
       '</div>';
@@ -2405,7 +2420,7 @@ var LABELS = {
     byId('d-prog').style.width = Math.round(stepIdx / n * 100) + '%';
     byId('d-progn').textContent = stepIdx >= n ? 'xong ' + n + '/' + n : 'bước ' + (stepIdx + 1) + '/' + n;
     byId('d-next').textContent = stepIdx >= n ? 'Nấu lại từ đầu' : 'Xong bước này';
-    byId('d-stepn').textContent = timeText(current.total);
+    byId('d-stepn').textContent = timeText(current.total) + (current.wait ? ' + chờ ' + current.wait : '');
     renderFlow();
   }
 
@@ -2474,7 +2489,7 @@ var LABELS = {
       '<span class="wb-cap">' + roleOf(r.role).l + '</span>' +
       '<span class="wb-cap"><span class="wb-ico wb-ico--xs">' + regionOf(r.region).i + '</span> ' + regionOf(r.region).l + '</span>' +
       '<span class="wb-cap">' + dots(r.diff) + ' ' + diffLabel(r.diff) + '</span>' +
-      '<span class="wb-cap"><span class="wb-ico wb-ico--xs">schedule</span> ' + timeText(r.total) + '</span>' +
+      '<span class="wb-cap"><span class="wb-ico wb-ico--xs">schedule</span> ' + timeText(r.total) + waitText(r) + '</span>' +
       (r.tags || []).map(function (t) { return '<span class="wb-tag wb-tag--sm">' + t.replace(/\s/g, '-') + '</span>'; }).join('');
     var extra = '';
     if (r.tips && r.tips.length) {

@@ -87,6 +87,7 @@
   .mc-card__foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: auto; padding-top: 4px;
     font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); }
   .mc-card__foot .wb-ico { font-size: 14px; vertical-align: -2px; }
+  .mc-wait { color: var(--wb-fg); font-weight: 700; }
   .mc-card__dip { display: flex; align-items: baseline; gap: 5px; font-size: 12px; color: var(--wb-fg-muted); line-height: 1.4; }
   .mc-card__dip .wb-ico { font-size: 14px; flex: none; align-self: center; }
   .mc-card__dip.is-none { color: var(--wb-fg-subtle); }
@@ -438,6 +439,13 @@
         <div class="ma-done"><span class="ma-done__n">Thịt xay</span><span class="ma-done__t">71 °C</span><span class="ma-done__c">Máy xay trộn bề mặt vào giữa khối thịt, nên <b>mọi mốc tái ở trên không áp dụng cho thịt xay</b> — burger, bò băm, ragù đều phải tới 71 °C.</span></div>
         <div class="ma-done"><span class="ma-done__n">Cá</span><span class="ma-done__t">50–54 °C · an toàn 63 °C</span><span class="ma-done__c">Thịt <b>vừa tách thành lát khi gẩy nĩa, lõi còn hơi trong</b>. Cá là món hỏng vì nấu quá chứ hầu như không bao giờ vì nấu thiếu. Nhưng 50–54 °C là mốc <b>ngon</b>, không phải mốc an toàn: mốc <b>an toàn là 63 °C</b> — chỉ hạ xuống 50–54 với cá thật tươi, và <b>luôn nấu tới 63 °C</b> cho thai phụ, trẻ nhỏ, người già, người suy giảm miễn dịch.</span></div>
       </div></div>
+    
+      <div class="wb-alert wb-alert--info" style="margin-top:18px"><span class="wb-ico">local_dining</span>
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Hai quy ước khi đọc danh sách nguyên liệu</p>
+          <p class="wb-alert__msg"><b>Muối, tiêu và dầu ăn coi như luôn có trong bếp</b> — chúng chỉ được liệt kê khi công thức cần một định lượng cụ thể, hoặc khi phải mua thêm (dầu để rán ngập). Bước nào ghi "nêm vừa ăn" thì bạn nêm bằng miệng mình, không cần đong.</p>
+        </div>
+      </div>
     </section>
 
     <hr class="wb-divider">
@@ -718,7 +726,7 @@ var RECIPES = [];
 /* ---------- Ý — MÌ & RISOTTO ---------- */
 RECIPES.push(
 {
-  id: 'aglio-e-olio', name: 'Spaghetti aglio e olio', cat: 'pasta', role: 'nhanh', diff: 1, serves: 4, prep: 5,
+  id: 'aglio-e-olio', name: 'Spaghetti aglio e olio', cat: 'pasta', role: 'nhanh', diff: 1, serves: 4,
   tags: ['mì Ý', 'tỏi'],
   why: 'Bốn nguyên liệu, 12 phút, và là bài học đầu tiên về nước mì — thứ biến dầu ô liu và nước thành một lớp sốt bám vào sợi.',
   ing: [
@@ -741,7 +749,7 @@ RECIPES.push(
   serveWith: 'Món này là một chặng riêng (primo), ăn trước thịt chứ không ăn cùng.'
 },
 {
-  id: 'cacio-e-pepe', name: 'Cacio e pepe', cat: 'pasta', role: 'nhanh', diff: 2, serves: 4, prep: 5,
+  id: 'cacio-e-pepe', name: 'Cacio e pepe', cat: 'pasta', role: 'nhanh', diff: 2, serves: 4,
   tags: ['mì Ý', 'pecorino', 'tiêu'],
   why: 'Ba nguyên liệu và một chỗ hỏng duy nhất, nhưng chỗ đó hỏng rất thường xuyên: phô mai gặp nhiệt cao sẽ vón thành cục dai.',
   ing: [
@@ -761,7 +769,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã có sốt. Một ly vang trắng khô.'
 },
 {
-  id: 'carbonara', name: 'Carbonara', cat: 'pasta', role: 'nhanh', diff: 2, serves: 4, prep: 8,
+  id: 'carbonara', name: 'Carbonara', cat: 'pasta', role: 'nhanh', diff: 2, serves: 4,
   tags: ['mì Ý', 'trứng', 'pecorino'],
   why: 'Không có kem, không có tỏi, không có hành. Sốt là trứng và phô mai, và nó chín bằng hơi nóng còn lại của mì — không phải bằng bếp.',
   ing: [
@@ -785,7 +793,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã có sốt. Salad rocket parmesan để cân lại độ béo.'
 },
 {
-  id: 'amatriciana', name: 'Bucatini all\'amatriciana', cat: 'pasta', role: 'nhanh', diff: 1, serves: 4, prep: 8,
+  id: 'amatriciana', name: 'Bucatini all\'amatriciana', cat: 'pasta', role: 'nhanh', diff: 1, serves: 4,
   tags: ['mì Ý', 'cà chua', 'pecorino'],
   why: 'Anh em của carbonara nhưng dễ hơn nhiều vì có cà chua làm nền — không có chỗ nào để trứng vón.',
   ing: [
@@ -808,7 +816,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã có sốt.'
 },
 {
-  id: 'spaghetti-vongole', name: 'Spaghetti alle vongole', cat: 'pasta', role: 'chinh', diff: 2, serves: 4, prep: 30,
+  id: 'spaghetti-vongole', name: 'Spaghetti alle vongole', cat: 'pasta', role: 'chinh', diff: 2, serves: 4,
   tags: ['mì Ý', 'ngao', 'tỏi'],
   why: 'Không có phô mai và không cần nước dùng — nước sốt là nước ngao tiết ra. Cả món xoay quanh việc giữ lại thứ nước đó cho sạch cát.',
   ing: [
@@ -833,7 +841,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã có sốt. Bánh mì để vét đĩa.'
 },
 {
-  id: 'ragu-bolognese', name: 'Ragù alla bolognese', cat: 'pasta', role: 'chinh', diff: 2, serves: 6, prep: 25,
+  id: 'ragu-bolognese', name: 'Ragù alla bolognese', cat: 'pasta', role: 'chinh', diff: 2, serves: 6,
   tags: ['thịt bò', 'cà chua', 'sữa'],
   why: 'Không phải "sốt thịt bằm nấu nhanh". Ragù thật hầm 3 tiếng, có sữa, có rất ít cà chua, và ăn với tagliatelle chứ không phải spaghetti.',
   ing: [
@@ -861,7 +869,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã có sốt. Rắc parmesan bào. Một ly vang đỏ Sangiovese.'
 },
 {
-  id: 'lasagna', name: 'Lasagna alla bolognese', cat: 'pasta', role: 'chinh', diff: 3, serves: 6, prep: 40,
+  id: 'lasagna', name: 'Lasagna alla bolognese', cat: 'pasta', role: 'chinh', diff: 3, serves: 6,
   tags: ['thịt bò', 'mozzarella', 'sữa'],
   why: 'Ba món trong một: ragù, béchamel và lá mì. Khó không phải vì kỹ thuật mà vì phải làm ba thứ đúng rồi mới ráp lại.',
   ing: [
@@ -886,7 +894,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã có sốt. Salad rocket đơn giản để cắt béo.'
 },
 {
-  id: 'risotto-nam', name: 'Risotto nấm', cat: 'pasta', role: 'chinh', diff: 2, serves: 4, prep: 15,
+  id: 'risotto-nam', name: 'Risotto nấm', cat: 'pasta', role: 'chinh', diff: 2, serves: 4,
   tags: ['gạo Ý', 'nấm', 'parmesan'],
   why: 'Không phải cơm nấu với nước dùng. Kem trong risotto đến từ tinh bột của hạt gạo được khuấy ra — nên khuấy là kỹ thuật chứ không phải thói quen.',
   ing: [
@@ -913,7 +921,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã có sốt. Rắc thêm parmesan lúc bưng ra.'
 },
 {
-  id: 'gnocchi', name: 'Gnocchi khoai tây', cat: 'pasta', role: 'chinh', diff: 2, serves: 4, prep: 40,
+  id: 'gnocchi', name: 'Gnocchi khoai tây', cat: 'pasta', role: 'chinh', diff: 2, serves: 4,
   tags: ['khoai tây', 'parmesan'],
   why: 'Ba nguyên liệu, nhưng tỉ lệ bột phụ thuộc vào khoai — mà khoai thì mỗi củ một khác. Đây là món phải nhìn và sờ chứ không cân được.',
   ing: [
@@ -940,7 +948,7 @@ RECIPES.push(
 /* ---------- Ý — PIZZA, KHAI VỊ, THỊT ---------- */
 RECIPES.push(
 {
-  id: 'bruschetta', name: 'Bruschetta cà chua', cat: 'salad', role: 'khai', diff: 1, serves: 4, prep: 15,
+  id: 'bruschetta', name: 'Bruschetta cà chua', cat: 'salad', role: 'khai', diff: 1, serves: 4,
   tags: ['cà chua', 'tỏi', 'bánh mì'],
   why: 'Món khai vị Ý dễ nhất, và là bài học về việc rút nước cà chua — bỏ qua thì bánh mì ướt nhẹp trong hai phút.',
   ing: [
@@ -961,7 +969,7 @@ RECIPES.push(
   serveWith: 'Khai vị. Một ly vang trắng hoặc prosecco.'
 },
 {
-  id: 'caprese', name: 'Salad caprese', cat: 'salad', role: 'khai', diff: 1, serves: 4, prep: 10,
+  id: 'caprese', name: 'Salad caprese', cat: 'salad', role: 'khai', diff: 1, serves: 4,
   tags: ['cà chua', 'mozzarella', 'húng quế'],
   why: 'Ba nguyên liệu và không nấu gì cả — nên nó phơi bày chất lượng nguyên liệu hoàn toàn. Đây là món để mua đồ ngon chứ không phải để trổ tài.',
   ing: [
@@ -981,7 +989,7 @@ RECIPES.push(
   serveWith: 'Khai vị hoặc món phụ. Bánh mì để vét dầu.'
 },
 {
-  id: 'pizza-margherita', name: 'Pizza margherita (bột ủ lạnh)', cat: 'pizza', role: 'chinh', diff: 3, serves: 4, prep: 40,
+  id: 'pizza-margherita', name: 'Pizza margherita (bột ủ lạnh)', cat: 'pizza', role: 'chinh', diff: 3, serves: 4,
   tags: ['bột mì', 'mozzarella', 'cà chua'],
   why: 'Lò nhà không lên được 450 °C như lò củi, nên trang này giải bài toán đó bằng hai thứ: bột ủ lạnh 24–72 tiếng và một cái chảo gang nung sẵn.',
   ing: [
@@ -1009,7 +1017,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã có sốt. Rocket và parmesan rắc lên sau nếu thích.'
 },
 {
-  id: 'focaccia', name: 'Focaccia hương thảo', cat: 'pizza', role: 'phu', diff: 1, serves: 6, prep: 15,
+  id: 'focaccia', name: 'Focaccia hương thảo', cat: 'pizza', role: 'phu', diff: 1, serves: 6,
   tags: ['bột mì', 'dầu ô liu'],
   why: 'Bánh mì dễ nhất trong cả ba trang bếp: không nhồi, không tạo hình, đổ vào khay là xong. Và nó dạy đúng một thứ: dầu ô liu nhiều đến mức trông như sai.',
   ing: [
@@ -1032,7 +1040,7 @@ RECIPES.push(
   serveWith: 'Chấm dầu ô liu và giấm balsamic, hoặc dùng làm bánh mì cho cả bữa.'
 },
 {
-  id: 'scaloppine-limone', name: 'Scaloppine gà sốt chanh', cat: 'thit', role: 'chinh', diff: 1, serves: 4, prep: 15,
+  id: 'scaloppine-limone', name: 'Scaloppine gà sốt chanh', cat: 'thit', role: 'chinh', diff: 1, serves: 4,
   tags: ['thịt gà', 'chanh', 'bơ'],
   why: 'Món thịt nhanh nhất trang này — 15 phút — và là ví dụ sạch sẽ nhất về pan sauce: sốt làm ngay trong chảo vừa áp thịt xong.',
   ing: [
@@ -1062,7 +1070,7 @@ RECIPES.push(
 /* ---------- PHÁP ---------- */
 RECIPES.push(
 {
-  id: 'omelette-phap', name: 'Trứng ốp kiểu Pháp (omelette)', cat: 'trung', role: 'nhanh', diff: 2, serves: 2, prep: 3,
+  id: 'omelette-phap', name: 'Trứng ốp kiểu Pháp (omelette)', cat: 'trung', role: 'nhanh', diff: 2, serves: 2,
   tags: ['trứng', 'bơ'],
   why: 'Ba quả trứng và 90 giây, nhưng đây là món các bếp trưởng Pháp dùng để thử tay nghề người xin việc — vì không có gì để giấu.',
   ing: [
@@ -1083,7 +1091,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ. Bánh mì và salad xanh.'
 },
 {
-  id: 'sup-hanh-tay', name: 'Súp hành tây kiểu Pháp', cat: 'sup', role: 'khai', diff: 2, serves: 4, prep: 15,
+  id: 'sup-hanh-tay', name: 'Súp hành tây kiểu Pháp', cat: 'sup', role: 'khai', diff: 2, serves: 4,
   tags: ['hành tây', 'gruyère'],
   why: 'Ba nguyên liệu rẻ nhất chợ biến thành một bát súp sâu vị — nhưng phải trả giá bằng 50 phút đứng khuấy hành. Không có đường tắt.',
   ing: [
@@ -1107,7 +1115,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã đủ. Ăn như khai vị hoặc một bữa nhẹ.'
 },
 {
-  id: 'ratatouille', name: 'Ratatouille', cat: 'rau', role: 'phu', diff: 2, serves: 4, prep: 25,
+  id: 'ratatouille', name: 'Ratatouille', cat: 'rau', role: 'phu', diff: 2, serves: 4,
   tags: ['cà tím', 'bí ngòi', 'cà chua'],
   why: 'Bí quyết trái với trực giác: <b>xào riêng từng loại rau</b> rồi mới trộn. Cho tất cả vào một nồi là ra một nồi rau nhũn không rõ vị gì.',
   ing: [
@@ -1132,7 +1140,7 @@ RECIPES.push(
   serveWith: 'Món phụ cho thịt nướng, cá áp chảo. Hoặc ăn với bánh mì và trứng ốp.'
 },
 {
-  id: 'gratin-dauphinois', name: 'Gratin dauphinois', cat: 'rau', role: 'phu', diff: 2, serves: 6, prep: 20,
+  id: 'gratin-dauphinois', name: 'Gratin dauphinois', cat: 'rau', role: 'phu', diff: 2, serves: 6,
   tags: ['khoai tây', 'kem tươi', 'gruyère'],
   why: 'Khoai tây, kem, tỏi. Bản gốc Pháp thậm chí không có phô mai — và chỗ hỏng duy nhất là rửa khoai sau khi thái.',
   ing: [
@@ -1156,7 +1164,7 @@ RECIPES.push(
   serveWith: 'Món phụ kinh điển cho thịt bò bỏ lò, gà quay, sườn cừu.'
 },
 {
-  id: 'moules-mariniere', name: 'Moules marinière (vẹm hấp vang trắng)', cat: 'ca', role: 'chinh', diff: 1, serves: 4, prep: 20,
+  id: 'moules-mariniere', name: 'Moules marinière (vẹm hấp vang trắng)', cat: 'ca', role: 'chinh', diff: 1, serves: 4,
   tags: ['vẹm', 'rượu vang', 'kem tươi'],
   why: 'Từ lúc bật bếp đến lúc bưng ra: 8 phút. Món hải sản có tỉ lệ công sức trên kết quả tốt nhất trong cả trang.',
   ing: [
@@ -1180,7 +1188,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã có sốt. Bánh mì để vét, và khoai tây chiên nếu theo kiểu Bỉ.'
 },
 {
-  id: 'quiche-lorraine', name: 'Quiche Lorraine', cat: 'trung', role: 'chinh', diff: 2, serves: 6, prep: 30,
+  id: 'quiche-lorraine', name: 'Quiche Lorraine', cat: 'trung', role: 'chinh', diff: 2, serves: 6,
   tags: ['trứng', 'kem tươi', 'thịt xông khói'],
   why: 'Bánh mặn Pháp cổ điển. Hai chỗ hỏng: đế ướt, và nhân trứng bị rỗ vì nướng quá nóng.',
   ing: [
@@ -1212,7 +1220,7 @@ RECIPES.push(
 /* ---------- THỊT & CÁ ---------- */
 RECIPES.push(
 {
-  id: 'steak-pan-sauce', name: 'Steak áp chảo & sốt chảo', cat: 'thit', role: 'chinh', diff: 2, serves: 2, prep: 45,
+  id: 'steak-pan-sauce', name: 'Steak áp chảo & sốt chảo', cat: 'thit', role: 'chinh', diff: 2, serves: 2,
   tags: ['thịt bò', 'bơ', 'húng tây'],
   why: 'Miếng steak ở nhà thường thua ở nhà hàng vì ba lý do rất cụ thể: thịt lạnh, thịt ướt, chảo nguội. Sửa cả ba là xong.',
   ing: [
@@ -1239,7 +1247,7 @@ RECIPES.push(
   serveWith: 'Sốt chảo đã có sẵn. Ăn với khoai nghiền, gratin hoặc rau xanh áp chảo. Chimichurri nếu muốn kiểu Nam Mỹ.'
 },
 {
-  id: 'roast-beef', name: 'Thịt bò bỏ lò (roast beef)', cat: 'thit', role: 'chinh', diff: 2, serves: 6, prep: 30,
+  id: 'roast-beef', name: 'Thịt bò bỏ lò (roast beef)', cat: 'thit', role: 'chinh', diff: 2, serves: 6,
   tags: ['thịt bò', 'húng tây'],
   why: 'Một khối thịt lớn thì không thể canh bằng thời gian — chỉ có nhiệt kế mới đúng. Đây là món dạy cách nướng ngược: nhiệt thấp trước, xém mặt sau.',
   ing: [
@@ -1264,7 +1272,7 @@ RECIPES.push(
   serveWith: 'Gratin dauphinois hoặc khoai nướng. Chimichurri hoặc sốt chảo. Mù tạt Dijon để riêng.'
 },
 {
-  id: 'beef-wellington', name: 'Beef Wellington', cat: 'thit', role: 'chinh', diff: 3, serves: 6, prep: 90,
+  id: 'beef-wellington', name: 'Beef Wellington', cat: 'thit', role: 'chinh', diff: 3, serves: 6,
   tags: ['thịt bò', 'nấm', 'bột ngàn lớp'],
   why: 'Món khó nhất trang này, và nổi tiếng chính vì cái khó đó: bọc một khối thịt ẩm trong bột ngàn lớp mà đáy bánh vẫn phải giòn. Toàn bộ công thức là một cuộc chiến chống độ ẩm.',
   ing: [
@@ -1291,7 +1299,7 @@ RECIPES.push(
   serveWith: 'Sốt chảo vang đỏ. Ăn với khoai nghiền và rau xanh.'
 },
 {
-  id: 'coq-au-vin', name: 'Coq au vin', cat: 'sup', role: 'chinh', diff: 2, serves: 6, prep: 30,
+  id: 'coq-au-vin', name: 'Coq au vin', cat: 'sup', role: 'chinh', diff: 2, serves: 6,
   tags: ['thịt gà', 'rượu vang', 'nấm'],
   why: 'Gà hầm rượu vang đỏ — món cho thấy vì sao bếp Pháp hầm lâu: thịt và rượu đổi vị cho nhau, và cả hai đều ngon hơn.',
   ing: [
@@ -1320,7 +1328,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã có sốt. Khoai nghiền, mì trứng hoặc bánh mì để vét.'
 },
 {
-  id: 'boeuf-bourguignon', name: 'Bœuf bourguignon', cat: 'sup', role: 'chinh', diff: 2, serves: 6, prep: 35,
+  id: 'boeuf-bourguignon', name: 'Bœuf bourguignon', cat: 'sup', role: 'chinh', diff: 2, serves: 6,
   tags: ['thịt bò', 'rượu vang', 'cà rốt'],
   why: 'Món hầm nổi tiếng nhất nước Pháp, và bài học quan trọng nhất của nó rất ngắn: <b>rán thịt thành nhiều mẻ</b>. Nhồi hết vào chảo một lượt là món này hỏng ngay từ phút thứ năm.',
   ing: [
@@ -1349,7 +1357,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã có sốt. Khoai nghiền, mì trứng hoặc bánh mì.'
 },
 {
-  id: 'ca-hoi-ap-chao', name: 'Cá hồi áp chảo da giòn', cat: 'ca', role: 'chinh', diff: 1, serves: 4, prep: 10,
+  id: 'ca-hoi-ap-chao', name: 'Cá hồi áp chảo da giòn', cat: 'ca', role: 'chinh', diff: 1, serves: 4,
   tags: ['cá hồi', 'chanh'],
   why: 'Da giòn không phải may rủi. Nó là kết quả của ba điều kiện đơn giản: da khô, chảo nóng, và không động vào miếng cá.',
   ing: [
@@ -1372,7 +1380,7 @@ RECIPES.push(
   serveWith: 'Sốt hollandaise hoặc bơ chanh. Ăn với rau xanh áp chảo hoặc salad.'
 },
 {
-  id: 'shakshuka', name: 'Shakshuka', cat: 'trung', role: 'nhanh', diff: 1, serves: 4, prep: 10,
+  id: 'shakshuka', name: 'Shakshuka', cat: 'trung', role: 'nhanh', diff: 1, serves: 4,
   tags: ['trứng', 'cà chua', 'ớt chuông'],
   why: 'Một chảo, 30 phút, và một bữa hoàn chỉnh. Bài học duy nhất: sốt phải đủ đặc trước khi đập trứng vào.',
   ing: [
@@ -1399,7 +1407,7 @@ RECIPES.push(
   serveWith: 'Tự nó đã có sốt. Bánh mì nướng hoặc bánh pita.'
 },
 {
-  id: 'rau-nuong-dth', name: 'Rau củ nướng kiểu Địa Trung Hải', cat: 'rau', role: 'phu', diff: 1, serves: 4, prep: 15,
+  id: 'rau-nuong-dth', name: 'Rau củ nướng kiểu Địa Trung Hải', cat: 'rau', role: 'phu', diff: 1, serves: 4,
   tags: ['cà tím', 'bí ngòi', 'ớt chuông'],
   why: 'Món phụ dễ nhất và bị làm sai nhiều nhất: rau xếp chồng lên nhau trong khay thì nó hấp, không nướng.',
   ing: [
@@ -1429,7 +1437,7 @@ RECIPES.push(
 /* ---------- SALAD & MÓN BỎ LÒ ---------- */
 RECIPES.push(
 {
-  id: 'caesar-salad', name: 'Caesar salad', cat: 'salad', role: 'khai', diff: 2, serves: 4, prep: 20,
+  id: 'caesar-salad', name: 'Caesar salad', cat: 'salad', role: 'khai', diff: 2, serves: 4,
   tags: ['xà lách', 'parmesan', 'cá cơm'],
   why: 'Salad nổi tiếng nhất thế giới và cũng bị làm sai nhiều nhất — bản đúng không có gà, không có kem, và có cá cơm.',
   ing: [
@@ -1455,7 +1463,7 @@ RECIPES.push(
   serveWith: 'Dressing đã nằm trong món. Ăn như khai vị, hoặc thêm gà nướng thành một bữa.'
 },
 {
-  id: 'greek-salad', name: 'Salad Hy Lạp (horiatiki)', cat: 'salad', role: 'khai', diff: 1, serves: 4, prep: 15,
+  id: 'greek-salad', name: 'Salad Hy Lạp (horiatiki)', cat: 'salad', role: 'khai', diff: 1, serves: 4,
   tags: ['cà chua', 'feta', 'dưa chuột'],
   why: 'Không có xà lách, không có dressing pha sẵn — chỉ có rau củ, một khối feta nguyên và dầu ô liu. Càng ít can thiệp càng đúng.',
   ing: [
@@ -1479,7 +1487,7 @@ RECIPES.push(
   serveWith: 'Dầu ô liu là dressing rồi. Bánh mì để vét nước cà chua dưới đáy đĩa.'
 },
 {
-  id: 'mac-and-cheese', name: 'Mac and cheese bỏ lò', cat: 'pasta', role: 'chinh', diff: 1, serves: 6, prep: 15,
+  id: 'mac-and-cheese', name: 'Mac and cheese bỏ lò', cat: 'pasta', role: 'chinh', diff: 1, serves: 6,
   tags: ['cheddar', 'gruyère', 'sữa'],
   why: 'Béchamel + phô mai = sốt Mornay, và đây là ví dụ rõ nhất về "sốt mẹ đẻ ra sốt con". Chỗ hỏng duy nhất: phô mai gặp lửa to sẽ tách dầu.',
   ing: [
@@ -1511,7 +1519,7 @@ RECIPES.push(
    thường xuyên, sốt chảo hiện đại, và bốn thứ trộn nguội. */
 RECIPES.push(
 {
-  id: 'vinaigrette', name: 'Vinaigrette', cat: 'sot', role: 'sot', diff: 1, serves: 6, prep: 5,
+  id: 'vinaigrette', name: 'Vinaigrette', cat: 'sot', role: 'sot', diff: 1, serves: 6,
   tags: ['dầu ô liu', 'giấm'],
   why: 'Một tỉ lệ thay cho cả kệ dressing bán sẵn: 3 dầu – 1 giấm. Đổi loại giấm hoặc thêm một thứ là ra một dressing khác.',
   ing: [
@@ -1531,7 +1539,7 @@ RECIPES.push(
   serveWith: 'Mọi loại salad xanh, rau nướng, măng tây luộc, cá áp chảo.'
 },
 {
-  id: 'pesto', name: 'Pesto alla genovese', cat: 'sot', role: 'sot', diff: 1, serves: 6, prep: 15,
+  id: 'pesto', name: 'Pesto alla genovese', cat: 'sot', role: 'sot', diff: 1, serves: 6,
   tags: ['húng quế', 'parmesan', 'thông'],
   why: 'Sốt không nấu. Chỗ hỏng duy nhất là nhiệt: máy xay làm nóng lá húng quế và pesto chuyển màu xanh rêu, đắng.',
   ing: [
@@ -1553,7 +1561,7 @@ RECIPES.push(
   serveWith: 'Mì (trộn với chút nước mì), khoai tây luộc, cá áp chảo, bánh mì nướng, salad cà chua.'
 },
 {
-  id: 'sot-pomodoro', name: 'Sốt cà chua Ý (pomodoro)', cat: 'sot', role: 'sot', diff: 1, serves: 6, prep: 5,
+  id: 'sot-pomodoro', name: 'Sốt cà chua Ý (pomodoro)', cat: 'sot', role: 'sot', diff: 1, serves: 6,
   tags: ['cà chua', 'húng quế', 'tỏi'],
   why: 'Một trong năm sốt mẹ, và là sốt có tỉ lệ công sức trên kết quả tốt nhất: bốn nguyên liệu, 40 phút hầu như không cần đứng bếp.',
   ing: [
@@ -1574,7 +1582,7 @@ RECIPES.push(
   serveWith: 'Mì Ý, pizza, gnocchi, thịt viên, cá bỏ lò, trứng.'
 },
 {
-  id: 'bechamel', name: 'Béchamel (sốt trắng)', cat: 'sot', role: 'sot', diff: 1, serves: 6, prep: 3,
+  id: 'bechamel', name: 'Béchamel (sốt trắng)', cat: 'sot', role: 'sot', diff: 1, serves: 6,
   tags: ['sữa', 'bơ'],
   why: 'Sốt mẹ dùng nhiều nhất trong bếp nhà: lasagna, gratin, mac and cheese, croque monsieur đều bắt đầu từ đây.',
   ing: [
@@ -1595,7 +1603,7 @@ RECIPES.push(
   serveWith: 'Lasagna, gratin rau, mac and cheese, cá bỏ lò, croque monsieur.'
 },
 {
-  id: 'hollandaise', name: 'Hollandaise', cat: 'sot', role: 'sot', diff: 3, serves: 4, prep: 5,
+  id: 'hollandaise', name: 'Hollandaise', cat: 'sot', role: 'sot', diff: 3, serves: 4,
   tags: ['bơ', 'lòng đỏ', 'chanh'],
   why: 'Sốt mẹ khó nhất và cũng dễ tách nhất — nhưng nếu hiểu nó là một nhũ tương giữa bơ và nước thì mọi bước đều có lý do.',
   ing: [
@@ -1617,7 +1625,7 @@ RECIPES.push(
   serveWith: 'Trứng chần (eggs Benedict), măng tây luộc, cá hồi áp chảo, bông cải xanh.'
 },
 {
-  id: 'pan-sauce', name: 'Pan sauce (sốt chảo)', cat: 'sot', role: 'sot', diff: 2, serves: 4, prep: 2,
+  id: 'pan-sauce', name: 'Pan sauce (sốt chảo)', cat: 'sot', role: 'sot', diff: 2, serves: 4,
   tags: ['rượu vang', 'bơ'],
   why: 'Không nằm trong năm sốt mẹ nhưng là sốt được dùng nhiều nhất ở bếp nhà hàng hiện đại: làm ngay trong chảo vừa áp thịt xong, mất 5 phút, không cần nước dùng nấu sẵn.',
   ing: [
@@ -1641,7 +1649,7 @@ RECIPES.push(
   serveWith: 'Steak, ức gà áp chảo, sườn lợn, cá áp chảo.'
 },
 {
-  id: 'chimichurri', name: 'Chimichurri', cat: 'sot', role: 'sot', diff: 1, serves: 6, prep: 10,
+  id: 'chimichurri', name: 'Chimichurri', cat: 'sot', role: 'sot', diff: 1, serves: 6,
   tags: ['mùi tây', 'tỏi', 'giấm'],
   why: 'Sốt sống chua và cay của Argentina — thứ cắt vị béo của thịt nướng tốt hơn bất kỳ sốt nóng nào. Không nấu, không xay.',
   ing: [
@@ -1663,7 +1671,7 @@ RECIPES.push(
   serveWith: 'Steak, thịt bò bỏ lò, gà nướng, rau củ nướng, bánh mì nướng.'
 },
 {
-  id: 'aioli', name: 'Aioli tỏi', cat: 'sot', role: 'sot', diff: 2, serves: 6, prep: 10,
+  id: 'aioli', name: 'Aioli tỏi', cat: 'sot', role: 'sot', diff: 2, serves: 6,
   tags: ['tỏi', 'dầu ô liu', 'lòng đỏ'],
   why: 'Mayonnaise phiên bản Địa Trung Hải. Đây là chỗ tốt nhất để học nhũ tương — và cũng là chỗ dễ thấy nhất khi nó vỡ.',
   ing: [
@@ -1686,7 +1694,7 @@ RECIPES.push(
   serveWith: 'Khoai tây chiên, hải sản nướng, rau luộc, bánh mì, cá áp chảo, burger.'
 },
 {
-  id: 'caesar-dressing', name: 'Dressing Caesar', cat: 'sot', role: 'sot', diff: 2, serves: 6, prep: 10,
+  id: 'caesar-dressing', name: 'Dressing Caesar', cat: 'sot', role: 'sot', diff: 2, serves: 6,
   tags: ['cá cơm', 'parmesan', 'lòng đỏ'],
   why: 'Cùng nguyên lý với aioli nhưng có cá cơm và parmesan — nên nó đậm đến mức dùng được cho cả rau nướng và gà, không chỉ salad.',
   ing: [
@@ -1869,6 +1877,12 @@ var LABELS = {
     var h = Math.floor(m / 60), r = m % 60;
     return h + ' giờ' + (r ? ' ' + r + '′' : '');
   }
+  /* Thời gian CHỜ — ướp lạnh, ủ, muối, phơi — KHÔNG nằm trong `total`. `total` chỉ cộng
+     `m` của các bước, tức thời gian bạn thật sự đứng làm, và bộ lọc thời gian cũng lọc theo
+     đó. Nhưng món nào có chờ thì phải nói ra: nhãn "1 giờ 3′" trên một hũ dưa cải phải muối
+     ba ngày là nói dối người đọc. Dùng chuỗi chứ không phải số phút, vì phần lớn là khoảng
+     ("3–6 ngày") và làm tròn khoảng thành một con số là chính xác giả. */
+  function waitText(r) { return r.wait ? ' <span class="mc-wait">+ chờ ' + r.wait + '</span>' : ''; }
   function dots(d) {
     var s = '<span class="mc-dots">';
     for (var i = 1; i <= 3; i++) s += '<i class="' + (i <= d ? 'on' : '') + '"></i>';
@@ -2084,7 +2098,7 @@ var LABELS = {
       dipLine +
       '<div class="wb-tags">' + tags + more + '</div>' +
       '<div class="mc-card__foot">' +
-        '<span><span class="wb-ico">schedule</span> ' + timeText(r.total) + '</span>' +
+        '<span><span class="wb-ico">schedule</span> ' + timeText(r.total) + waitText(r) + '</span>' +
         '<span><span class="wb-ico">shopping_basket</span> ' + r.ing.length + ' ' + LABELS.thingWord + '</span>' +
         '<span><span class="wb-ico">format_list_numbered</span> ' + r.steps.length + ' bước</span>' +
       '</div>';
@@ -2322,7 +2336,7 @@ var LABELS = {
     byId('d-prog').style.width = Math.round(stepIdx / n * 100) + '%';
     byId('d-progn').textContent = stepIdx >= n ? 'xong ' + n + '/' + n : 'bước ' + (stepIdx + 1) + '/' + n;
     byId('d-next').textContent = stepIdx >= n ? 'Nấu lại từ đầu' : 'Xong bước này';
-    byId('d-stepn').textContent = timeText(current.total);
+    byId('d-stepn').textContent = timeText(current.total) + (current.wait ? ' + chờ ' + current.wait : '');
     renderFlow();
   }
 
@@ -2391,7 +2405,7 @@ var LABELS = {
       '<span class="wb-cap">' + roleOf(r.role).l + '</span>' +
       '<span class="wb-cap"><span class="wb-ico wb-ico--xs">' + regionOf(r.region).i + '</span> ' + regionOf(r.region).l + '</span>' +
       '<span class="wb-cap">' + dots(r.diff) + ' ' + diffLabel(r.diff) + '</span>' +
-      '<span class="wb-cap"><span class="wb-ico wb-ico--xs">schedule</span> ' + timeText(r.total) + '</span>' +
+      '<span class="wb-cap"><span class="wb-ico wb-ico--xs">schedule</span> ' + timeText(r.total) + waitText(r) + '</span>' +
       (r.tags || []).map(function (t) { return '<span class="wb-tag wb-tag--sm">' + t.replace(/\s/g, '-') + '</span>'; }).join('');
     var extra = '';
     if (r.tips && r.tips.length) {

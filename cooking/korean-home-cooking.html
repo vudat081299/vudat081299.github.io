@@ -87,6 +87,7 @@
   .mc-card__foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: auto; padding-top: 4px;
     font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); }
   .mc-card__foot .wb-ico { font-size: 14px; vertical-align: -2px; }
+  .mc-wait { color: var(--wb-fg); font-weight: 700; }
   .mc-card__dip { display: flex; align-items: baseline; gap: 5px; font-size: 12px; color: var(--wb-fg-muted); line-height: 1.4; }
   .mc-card__dip .wb-ico { font-size: 14px; flex: none; align-self: center; }
   .mc-card__dip.is-none { color: var(--wb-fg-muted); }
@@ -453,6 +454,13 @@
               <p class="wb-steps__desc">Gimbap, japchae, gà rán sốt, jjajangmyeon — nhiều nhân, nhiều việc song song.</p></div></li>
         </ol>
       </div></div>
+    
+      <div class="wb-alert wb-alert--info" style="margin-top:18px"><span class="wb-ico">local_dining</span>
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Hai quy ước khi đọc danh sách nguyên liệu</p>
+          <p class="wb-alert__msg"><b>Muối, tiêu và dầu ăn coi như luôn có trong bếp</b> — chúng chỉ được liệt kê khi công thức cần một định lượng cụ thể, hoặc khi phải mua thêm (dầu để rán ngập). Bước nào ghi "nêm vừa ăn" thì bạn nêm bằng miệng mình, không cần đong.</p>
+        </div>
+      </div>
     </section>
 
     <hr class="wb-divider">
@@ -760,7 +768,7 @@ var RECIPES = [];
 /* ---------- CANH HẦM & LẨU CAY (찌개) ---------- */
 RECIPES.push(
 {
-  id: 'kimchi-jjigae', name: 'Kimchi-jjigae · canh kim chi 김치찌개', cat: 'jjigae', role: 'guk', diff: 1, serves: 4, prep: 10,
+  id: 'kimchi-jjigae', name: 'Kimchi-jjigae · canh kim chi 김치찌개', cat: 'jjigae', role: 'guk', diff: 1, serves: 4,
   tags: ['kim chi', 'thịt lợn', 'đậu phụ'],
   why: 'Món canh quốc dân. Bí quyết nằm ở kim chi: càng chua càng ngon, kim chi mới muối thì canh nhạt.',
   ing: [
@@ -784,7 +792,7 @@ RECIPES.push(
   serveWith: 'Ăn với cơm trắng nóng và vài món panchan. Tự nó đã đậm, không cần chấm.'
 },
 {
-  id: 'doenjang-jjigae', name: 'Doenjang-jjigae · canh tương đậu 된장찌개', cat: 'jjigae', role: 'guk', diff: 1, serves: 4, prep: 10,
+  id: 'doenjang-jjigae', name: 'Doenjang-jjigae · canh tương đậu 된장찌개', cat: 'jjigae', role: 'guk', diff: 1, serves: 4,
   tags: ['tương đậu', 'đậu phụ', 'bí ngòi'],
   why: 'Canh tương lên men — món ăn hằng ngày của người Hàn. Nêm bằng doenjang, gần như không cần muối.',
   ing: [
@@ -809,7 +817,7 @@ RECIPES.push(
   serveWith: 'Trung tâm của một mâm cơm nhà — ăn với cơm và kim chi. Không cần chấm.'
 },
 {
-  id: 'sundubu-jjigae', name: 'Sundubu-jjigae · canh đậu phụ non cay 순두부찌개', cat: 'jjigae', role: 'guk', diff: 2, serves: 4, prep: 12,
+  id: 'sundubu-jjigae', name: 'Sundubu-jjigae · canh đậu phụ non cay 순두부찌개', cat: 'jjigae', role: 'guk', diff: 2, serves: 4,
   tags: ['đậu phụ', 'hải sản', 'trứng'],
   why: 'Đậu phụ non mềm như tào phớ trong nước dùng cay đỏ. Khó ở khâu làm dầu ớt (gochu-gireum) cho đẹp mà không khét.',
   ing: [
@@ -835,7 +843,7 @@ RECIPES.push(
   serveWith: 'Ăn với cơm; trộn cơm vào nước canh cũng ngon. Không cần chấm.'
 },
 {
-  id: 'budae-jjigae', name: 'Budae-jjigae · lẩu quân đội 부대찌개', cat: 'jjigae', role: 'guk', diff: 2, serves: 4, prep: 15,
+  id: 'budae-jjigae', name: 'Budae-jjigae · lẩu quân đội 부대찌개', cat: 'jjigae', role: 'guk', diff: 2, serves: 4,
   tags: ['xúc xích', 'ham/spam', 'kim chi', 'mì gói'],
   why: 'Món lai ra đời sau chiến tranh: spam, xúc xích, đậu, phô mai gặp kim chi và ớt Hàn. Vui nhất khi ăn lẩu tại bàn.',
   ing: [
@@ -868,7 +876,7 @@ RECIPES.push(
 /* ---------- CANH & SÚP THANH (국·탕) ---------- */
 RECIPES.push(
 {
-  id: 'miyeok-guk', name: 'Miyeok-guk · canh rong biển 미역국', cat: 'guk', role: 'guk', diff: 1, serves: 4, prep: 10,
+  id: 'miyeok-guk', name: 'Miyeok-guk · canh rong biển 미역국', cat: 'guk', role: 'guk', diff: 1, serves: 4,
   tags: ['rong biển', 'thịt bò'],
   why: 'Canh sinh nhật của người Hàn. Rất dễ, chỉ cần xào rong biển với dầu mè cho thật thơm trước khi đổ nước.',
   ing: [
@@ -889,7 +897,7 @@ RECIPES.push(
   serveWith: 'Ăn với cơm và một món mặn như trứng cuộn hay cá kho. Không cần chấm.'
 },
 {
-  id: 'kongnamul-guk', name: 'Kongnamul-guk · canh giá đậu tương 콩나물국', cat: 'guk', role: 'guk', diff: 1, serves: 4, prep: 8,
+  id: 'kongnamul-guk', name: 'Kongnamul-guk · canh giá đậu tương 콩나물국', cat: 'guk', role: 'guk', diff: 1, serves: 4,
   tags: ['giá đậu', 'thanh mát'],
   why: 'Canh giá thanh mát, dân dã, hay ăn để giải rượu. Quy tắc duy nhất: đậy hay mở vung phải nhất quán từ đầu.',
   ing: [
@@ -910,7 +918,7 @@ RECIPES.push(
   serveWith: 'Canh nền cho mọi mâm. Không cần chấm.'
 },
 {
-  id: 'yukgaejang', name: 'Yukgaejang · canh bò xé cay 육개장', cat: 'guk', role: 'guk', diff: 3, serves: 6, prep: 30,
+  id: 'yukgaejang', name: 'Yukgaejang · canh bò xé cay 육개장', cat: 'guk', role: 'guk', diff: 3, serves: 6,
   tags: ['thịt bò', 'giá đậu', 'cay'],
   why: 'Canh bò cay đỏ, thịt xé sợi cùng nhiều rau. Khó vì phải ninh bò mềm rồi xé, và làm dầu ớt cho nước đỏ đẹp.',
   ing: [
@@ -939,7 +947,7 @@ RECIPES.push(
 /* ---------- CƠM & CƠM TRỘN (밥) ---------- */
 RECIPES.push(
 {
-  id: 'bibimbap', name: 'Bibimbap · cơm trộn 비빔밥', cat: 'bap', role: 'hangret', diff: 2, serves: 4, prep: 30,
+  id: 'bibimbap', name: 'Bibimbap · cơm trộn 비빔밥', cat: 'bap', role: 'hangret', diff: 2, serves: 4,
   tags: ['cơm', 'rau', 'trứng', 'thịt bò'],
   why: 'Cơm trộn với nhiều loại rau xào nêm riêng, thịt và sốt gochujang. Không khó nhưng nhiều việc lặt vặt song song.',
   ing: [
@@ -963,7 +971,7 @@ RECIPES.push(
   serveWith: 'Chan sốt trộn gochujang (bibim-yangnyeom) rồi trộn đều trước khi ăn.'
 },
 {
-  id: 'kimchi-bokkeumbap', name: 'Kimchi-bokkeumbap · cơm rang kim chi 김치볶음밥', cat: 'bap', role: 'hangret', diff: 1, serves: 2, prep: 8,
+  id: 'kimchi-bokkeumbap', name: 'Kimchi-bokkeumbap · cơm rang kim chi 김치볶음밥', cat: 'bap', role: 'hangret', diff: 1, serves: 2,
   tags: ['cơm', 'kim chi', 'trứng'],
   why: 'Món cứu đói kinh điển: cơm nguội + kim chi chua + một quả trứng. 10 phút là xong.',
   ing: [
@@ -988,7 +996,7 @@ RECIPES.push(
 /* ---------- MÌ (면) ---------- */
 RECIPES.push(
 {
-  id: 'janchi-guksu', name: 'Janchi-guksu · mì nước thanh 잔치국수', cat: 'myeon', role: 'hangret', diff: 1, serves: 4, prep: 15,
+  id: 'janchi-guksu', name: 'Janchi-guksu · mì nước thanh 잔치국수', cat: 'myeon', role: 'hangret', diff: 1, serves: 4,
   tags: ['mì', 'trứng', 'thanh'],
   why: '"Mì tiệc" — mì sợi nhỏ trong nước dùng cá cơm thanh, phủ trứng thái sợi và rau. Nhẹ và nhanh.',
   ing: [
@@ -1010,7 +1018,7 @@ RECIPES.push(
   serveWith: 'Kèm chén nước tương trộn hành ớt (yangnyeom-ganjang) để mỗi người tự nêm.'
 },
 {
-  id: 'bibim-guksu', name: 'Bibim-guksu · mì trộn cay 비빔국수', cat: 'myeon', role: 'hangret', diff: 1, serves: 2, prep: 12,
+  id: 'bibim-guksu', name: 'Bibim-guksu · mì trộn cay 비빔국수', cat: 'myeon', role: 'hangret', diff: 1, serves: 2,
   tags: ['mì', 'kim chi', 'cay chua ngọt'],
   why: 'Mì trộn sốt gochujang chua-cay-ngọt, mát lạnh. Món mùa hè.',
   ing: [
@@ -1035,7 +1043,7 @@ RECIPES.push(
   serveWith: 'Món tự nó đã có sốt — không chấm thêm.'
 },
 {
-  id: 'jjajangmyeon', name: 'Jjajangmyeon · mì tương đen 짜장면', cat: 'myeon', role: 'hangret', diff: 2, serves: 4, prep: 25,
+  id: 'jjajangmyeon', name: 'Jjajangmyeon · mì tương đen 짜장면', cat: 'myeon', role: 'hangret', diff: 2, serves: 4,
   tags: ['mì', 'thịt lợn', 'tương đen'],
   why: 'Mì tương đen Hàn–Hoa, món giao tận nhà quốc dân. Bí quyết là rán tương đen (chunjang) cho hết vị đắng.',
   ing: [
@@ -1060,7 +1068,7 @@ RECIPES.push(
   serveWith: 'Ăn kèm củ cải vàng muối (danmuji) và hành tây sống chấm tương đen. Tự nó đã có sốt.'
 },
 {
-  id: 'ramyeon', name: 'Ramyeon nâng cấp · mì gói kiểu Hàn 라면', cat: 'myeon', role: 'hangret', diff: 1, serves: 1, prep: 3,
+  id: 'ramyeon', name: 'Ramyeon nâng cấp · mì gói kiểu Hàn 라면', cat: 'myeon', role: 'hangret', diff: 1, serves: 1,
   tags: ['mì gói', 'trứng', 'nhanh'],
   why: 'Mì gói Hàn nhưng nấu đúng cách: đúng lượng nước, đúng lúc cho trứng, thêm vài thứ là khác hẳn.',
   ing: [
@@ -1084,7 +1092,7 @@ RECIPES.push(
 /* ---------- NƯỚNG & ÁP CHẢO (구이) ---------- */
 RECIPES.push(
 {
-  id: 'samgyeopsal', name: 'Samgyeopsal · ba chỉ nướng 삼겹살', cat: 'gui', role: 'main', diff: 1, serves: 4, prep: 5,
+  id: 'samgyeopsal', name: 'Samgyeopsal · ba chỉ nướng 삼겹살', cat: 'gui', role: 'main', diff: 1, serves: 4,
   tags: ['thịt lợn', 'nướng', 'cuốn lá'],
   why: 'Ba chỉ nướng cuốn rau — bữa tiệc tại bàn phổ biến nhất. Không ướp gì, cái ngon nằm ở cách nướng và bộ đồ cuốn.',
   ing: [
@@ -1105,7 +1113,7 @@ RECIPES.push(
   serveWith: 'Bắt buộc có ssamjang để phết vào lá cuốn, và gireumjang để chấm.'
 },
 {
-  id: 'bulgogi', name: 'Bulgogi · bò nướng tương ngọt 불고기', cat: 'gui', role: 'main', diff: 2, serves: 4, prep: 40,
+  id: 'bulgogi', name: 'Bulgogi · bò nướng tương ngọt 불고기', cat: 'gui', role: 'main', diff: 2, serves: 4,
   tags: ['thịt bò', 'nướng', 'tương ngọt'],
   why: 'Bò thái mỏng ướp nước tương ngọt, xào hoặc nướng. Dễ ăn với mọi người, kể cả trẻ con. Cả bí quyết nằm ở nước ướp và lê.',
   ing: [
@@ -1133,7 +1141,7 @@ RECIPES.push(
 /* ---------- XÀO (볶음) ---------- */
 RECIPES.push(
 {
-  id: 'jeyuk-bokkeum', name: 'Jeyuk-bokkeum · thịt lợn xào cay 제육볶음', cat: 'bokkeum', role: 'main', diff: 2, serves: 4, prep: 30,
+  id: 'jeyuk-bokkeum', name: 'Jeyuk-bokkeum · thịt lợn xào cay 제육볶음', cat: 'bokkeum', role: 'main', diff: 2, serves: 4,
   tags: ['thịt lợn', 'cay', 'gochujang'],
   why: 'Thịt lợn xào sốt gochujang cay ngọt — món cơm hộp và quán ăn quốc dân. Ăn rất tốn cơm.',
   ing: [
@@ -1157,7 +1165,7 @@ RECIPES.push(
   serveWith: 'Cuốn lá xà lách với ssamjang, hoặc ăn thẳng với cơm. Tự nó đã đậm.'
 },
 {
-  id: 'dakgalbi', name: 'Dak-galbi · gà xào cay Chuncheon 닭갈비', cat: 'bokkeum', role: 'main', diff: 2, serves: 4, prep: 35,
+  id: 'dakgalbi', name: 'Dak-galbi · gà xào cay Chuncheon 닭갈비', cat: 'bokkeum', role: 'main', diff: 2, serves: 4,
   tags: ['thịt gà', 'cay', 'bắp cải', 'tteok'],
   why: 'Gà xào sốt cay cùng bắp cải, khoai lang, bánh gạo trên chảo lớn giữa bàn — nấu và ăn ngay tại bàn.',
   ing: [
@@ -1181,7 +1189,7 @@ RECIPES.push(
   serveWith: 'Cuốn lá tía tô hoặc ăn với cơm. Tự nó đã đậm.'
 },
 {
-  id: 'japchae', name: 'Japchae · miến trộn 잡채', cat: 'bokkeum', role: 'main', diff: 2, serves: 4, prep: 35,
+  id: 'japchae', name: 'Japchae · miến trộn 잡채', cat: 'bokkeum', role: 'main', diff: 2, serves: 4,
   tags: ['miến', 'rau', 'thịt bò'],
   why: 'Miến khoai lang dai trộn nhiều rau xào và thịt. Món cỗ, tiệc. Nhiều việc nhưng không khó, mấu chốt là xào riêng từng thứ.',
   ing: [
@@ -1209,7 +1217,7 @@ RECIPES.push(
 /* ---------- KHO & HẤP (조림·찜) ---------- */
 RECIPES.push(
 {
-  id: 'dubu-jorim', name: 'Dubu-jorim · đậu phụ kho cay 두부조림', cat: 'jorim', role: 'banchan', diff: 1, serves: 4, prep: 12,
+  id: 'dubu-jorim', name: 'Dubu-jorim · đậu phụ kho cay 두부조림', cat: 'jorim', role: 'banchan', diff: 1, serves: 4,
   tags: ['đậu phụ', 'cay', 'chay được'],
   why: 'Đậu phụ áp chảo rồi rim sốt cay mặn ngọt. Món panchan dễ, đưa cơm, làm sẵn để tủ ăn dần.',
   ing: [
@@ -1233,7 +1241,7 @@ RECIPES.push(
   serveWith: 'Món phụ đưa cơm. Tự nó đã đậm.'
 },
 {
-  id: 'gyeranjjim', name: 'Gyeran-jjim · trứng hấp 계란찜', cat: 'jorim', role: 'banchan', diff: 1, serves: 4, prep: 5,
+  id: 'gyeranjjim', name: 'Gyeran-jjim · trứng hấp 계란찜', cat: 'jorim', role: 'banchan', diff: 1, serves: 4,
   tags: ['trứng', 'mềm', 'nhanh'],
   why: 'Trứng hấp phồng mềm như bông. Bí quyết là lọc trứng và khuấy khi đun để không bị rỗ.',
   ing: [
@@ -1252,7 +1260,7 @@ RECIPES.push(
   serveWith: 'Món phụ ăn kèm cơm và món nướng. Không cần chấm.'
 },
 {
-  id: 'jangjorim', name: 'Jangjorim · bò kho nước tương 장조림', cat: 'jorim', role: 'banchan', diff: 2, serves: 6, prep: 20,
+  id: 'jangjorim', name: 'Jangjorim · bò kho nước tương 장조림', cat: 'jorim', role: 'banchan', diff: 2, serves: 6,
   tags: ['thịt bò', 'trứng', 'panchan để sẵn'],
   why: 'Bò kho nước tương xé sợi, ăn dần cả tuần. Mặn dịu, ngọt nhẹ, kèm trứng cút — món panchan để tủ kinh điển.',
   ing: [
@@ -1278,7 +1286,7 @@ RECIPES.push(
 /* ---------- BÁNH ÁP CHẢO & CHIÊN (전·튀김) ---------- */
 RECIPES.push(
 {
-  id: 'haemul-pajeon', name: 'Haemul-pajeon · bánh xèo hải sản hành 해물파전', cat: 'jeon', role: 'banchan', diff: 2, serves: 4, prep: 15,
+  id: 'haemul-pajeon', name: 'Haemul-pajeon · bánh xèo hải sản hành 해물파전', cat: 'jeon', role: 'banchan', diff: 2, serves: 4,
   tags: ['hải sản', 'hành lá', 'bánh áp chảo'],
   why: 'Bánh áp chảo giòn rìa với hành lá và hải sản. Món nhậu ngày mưa. Cả bí quyết là nhiều dầu và ép mỏng cho giòn.',
   ing: [
@@ -1299,7 +1307,7 @@ RECIPES.push(
   serveWith: 'Bắt buộc chấm nước tương giấm (cho-ganjang). Ăn nóng.'
 },
 {
-  id: 'kimchi-jeon', name: 'Kimchi-jeon · bánh kim chi áp chảo 김치전', cat: 'jeon', role: 'banchan', diff: 1, serves: 4, prep: 8,
+  id: 'kimchi-jeon', name: 'Kimchi-jeon · bánh kim chi áp chảo 김치전', cat: 'jeon', role: 'banchan', diff: 1, serves: 4,
   tags: ['kim chi', 'bánh áp chảo', 'nhanh'],
   why: 'Bánh áp chảo từ kim chi chua — nhanh, rẻ, chua cay giòn. Món dọn tủ khi kim chi đã chua kỹ.',
   ing: [
@@ -1319,7 +1327,7 @@ RECIPES.push(
   serveWith: 'Chấm nước tương giấm (cho-ganjang), hoặc ăn không cũng đủ vị.'
 },
 {
-  id: 'yangnyeom-chicken', name: 'Yangnyeom-chicken · gà rán sốt cay ngọt 양념치킨', cat: 'jeon', role: 'main', diff: 3, serves: 4, prep: 40,
+  id: 'yangnyeom-chicken', name: 'Yangnyeom-chicken · gà rán sốt cay ngọt 양념치킨', cat: 'jeon', role: 'main', diff: 3, serves: 4,
   tags: ['thịt gà', 'chiên', 'cay ngọt'],
   why: 'Gà rán hai lần cho giòn lâu rồi áo sốt gochujang cay ngọt bóng. Món gà rán kiểu Hàn trứ danh (với bia — chimaek).',
   ing: [
@@ -1347,7 +1355,7 @@ RECIPES.push(
 /* ---------- PANCHAN & KIM CHI (반찬·김치) ---------- */
 RECIPES.push(
 {
-  id: 'gyeranmari', name: 'Gyeran-mari · trứng cuộn 계란말이', cat: 'banchan', role: 'banchan', diff: 1, serves: 4, prep: 8,
+  id: 'gyeranmari', name: 'Gyeran-mari · trứng cuộn 계란말이', cat: 'banchan', role: 'banchan', diff: 1, serves: 4,
   tags: ['trứng', 'rau củ', 'cơm hộp'],
   why: 'Trứng cuộn nhiều lớp với rau củ băm. Món panchan và cơm hộp quen thuộc; khó nhất là cuộn cho đều tay.',
   ing: [
@@ -1367,7 +1375,7 @@ RECIPES.push(
   serveWith: 'Panchan/cơm hộp. Không cần chấm.'
 },
 {
-  id: 'sigeumchi-namul', name: 'Sigeumchi-namul · rau chân vịt trộn 시금치나물', cat: 'banchan', role: 'banchan', diff: 1, serves: 4, prep: 8,
+  id: 'sigeumchi-namul', name: 'Sigeumchi-namul · rau chân vịt trộn 시금치나물', cat: 'banchan', role: 'banchan', diff: 1, serves: 4,
   tags: ['rau chân vịt', 'namul', 'chay'],
   why: 'Rau chân vịt chần trộn dầu mè — namul cơ bản nhất, cũng là món rau cho bibimbap. 8 phút.',
   ing: [
@@ -1386,7 +1394,7 @@ RECIPES.push(
   serveWith: 'Panchan hoặc topping cho bibimbap. Không cần chấm.'
 },
 {
-  id: 'oi-muchim', name: 'Oi-muchim · dưa leo trộn cay 오이무침', cat: 'banchan', role: 'banchan', diff: 1, serves: 4, prep: 10,
+  id: 'oi-muchim', name: 'Oi-muchim · dưa leo trộn cay 오이무침', cat: 'banchan', role: 'banchan', diff: 1, serves: 4,
   tags: ['dưa leo', 'cay chua', 'giòn'],
   why: 'Dưa leo trộn gochugaru chua cay giòn mát. Panchan mùa hè làm trong 10 phút, ăn giải ngán.',
   ing: [
@@ -1407,7 +1415,7 @@ RECIPES.push(
   serveWith: 'Panchan mát. Không cần chấm.'
 },
 {
-  id: 'geotjeori', name: 'Geotjeori · kim chi tươi ăn liền 겉절이', cat: 'banchan', role: 'banchan', diff: 1, serves: 4, prep: 20,
+  id: 'geotjeori', name: 'Geotjeori · kim chi tươi ăn liền 겉절이', cat: 'banchan', role: 'banchan', diff: 1, serves: 4,
   tags: ['cải thảo', 'kim chi', 'ăn liền'],
   why: 'Kim chi "ăn liền" — trộn xổi không cần ủ lên men. Giòn tươi, ngọt cay, làm nhanh khi thèm kim chi mà không có sẵn.',
   ing: [
@@ -1432,7 +1440,7 @@ RECIPES.push(
 /* ---------- ĐỒ ĂN ĐƯỜNG PHỐ (분식) ---------- */
 RECIPES.push(
 {
-  id: 'gimbap', name: 'Gimbap · cơm cuộn rong biển 김밥', cat: 'bunsik', role: 'hangret', diff: 2, serves: 4, prep: 40,
+  id: 'gimbap', name: 'Gimbap · cơm cuộn rong biển 김밥', cat: 'bunsik', role: 'hangret', diff: 2, serves: 4,
   tags: ['cơm', 'rong biển', 'rau củ', 'trứng'],
   why: 'Cơm cuộn rong biển với nhiều nhân — món dã ngoại và cơm hộp. Không khó nhưng cần chuẩn bị nhiều nhân và cuộn chặt tay.',
   ing: [
@@ -1456,7 +1464,7 @@ RECIPES.push(
   serveWith: 'Ăn tay, chấm chút nước tương giấm nếu thích. Thường ăn không.'
 },
 {
-  id: 'tteokbokki', name: 'Tteokbokki · bánh gạo xào cay 떡볶이', cat: 'bunsik', role: 'hangret', diff: 1, serves: 4, prep: 10,
+  id: 'tteokbokki', name: 'Tteokbokki · bánh gạo xào cay 떡볶이', cat: 'bunsik', role: 'hangret', diff: 1, serves: 4,
   tags: ['bánh gạo', 'cay ngọt', 'chả cá'],
   why: 'Bánh gạo dẻo trong sốt gochujang cay ngọt — món ăn vặt đường phố số một.',
   ing: [
@@ -1484,7 +1492,7 @@ RECIPES.push(
 /* ---------- NƯỚC CHẤM & TƯƠNG (양념장) ---------- */
 RECIPES.push(
 {
-  id: 'ssamjang', name: 'Ssamjang · tương chấm cuốn 쌈장', cat: 'jang', role: 'jang', diff: 1, serves: 8, prep: 5,
+  id: 'ssamjang', name: 'Ssamjang · tương chấm cuốn 쌈장', cat: 'jang', role: 'jang', diff: 1, serves: 8,
   tags: ['tương đậu', 'chấm thịt nướng'],
   why: 'Tương phết vào lá cuốn thịt nướng — trộn doenjang với gochujang cùng hành tỏi dầu mè. Bắt buộc có khi ăn samgyeopsal.',
   ing: [
@@ -1502,7 +1510,7 @@ RECIPES.push(
   serveWith: ''
 },
 {
-  id: 'chogochujang', name: 'Chogochujang · tương ớt chua ngọt 초고추장', cat: 'jang', role: 'jang', diff: 1, serves: 8, prep: 4,
+  id: 'chogochujang', name: 'Chogochujang · tương ớt chua ngọt 초고추장', cat: 'jang', role: 'jang', diff: 1, serves: 8,
   tags: ['tương ớt', 'chua ngọt', 'hải sản'],
   why: 'Gochujang pha giấm đường — sốt chua cay ngọt để trộn hoặc chấm hải sản, rau luộc, bún miến trộn.',
   ing: [
@@ -1519,7 +1527,7 @@ RECIPES.push(
   serveWith: ''
 },
 {
-  id: 'cho-ganjang', name: 'Cho-ganjang · nước tương giấm 초간장', cat: 'jang', role: 'jang', diff: 1, serves: 8, prep: 3,
+  id: 'cho-ganjang', name: 'Cho-ganjang · nước tương giấm 초간장', cat: 'jang', role: 'jang', diff: 1, serves: 8,
   tags: ['nước tương', 'chấm bánh áp chảo'],
   why: 'Nước tương pha giấm — nước chấm cho mọi loại bánh áp chảo (jeon), há cảo (mandu). Đơn giản mà không thể thiếu.',
   ing: [
@@ -1536,7 +1544,7 @@ RECIPES.push(
   serveWith: ''
 },
 {
-  id: 'yangnyeom-ganjang', name: 'Yangnyeom-ganjang · nước tương trộn hành 양념간장', cat: 'jang', role: 'jang', diff: 1, serves: 8, prep: 5,
+  id: 'yangnyeom-ganjang', name: 'Yangnyeom-ganjang · nước tương trộn hành 양념간장', cat: 'jang', role: 'jang', diff: 1, serves: 8,
   tags: ['nước tương', 'trộn cơm', 'hành lá'],
   why: 'Nước tương trộn nhiều hành lá, tỏi, dầu mè, ớt — rưới lên cơm trắng, trứng, đậu phụ hoặc mì nước là thành bữa.',
   ing: [
@@ -1554,7 +1562,7 @@ RECIPES.push(
   serveWith: ''
 },
 {
-  id: 'bibim-yangnyeom', name: 'Bibim-yangnyeom · sốt trộn gochujang 비빔양념', cat: 'jang', role: 'jang', diff: 1, serves: 8, prep: 5,
+  id: 'bibim-yangnyeom', name: 'Bibim-yangnyeom · sốt trộn gochujang 비빔양념', cat: 'jang', role: 'jang', diff: 1, serves: 8,
   tags: ['gochujang', 'trộn cơm', 'bibimbap'],
   why: 'Sốt gochujang để trộn bibimbap và mì trộn — thêm dầu mè, giấm, đường cho dịu và bóng. Sốt then chốt của mọi món trộn.',
   ing: [
@@ -1572,7 +1580,7 @@ RECIPES.push(
   serveWith: ''
 },
 {
-  id: 'gireumjang', name: 'Gireumjang · dầu mè muối tiêu 기름장', cat: 'jang', role: 'jang', diff: 1, serves: 8, prep: 2,
+  id: 'gireumjang', name: 'Gireumjang · dầu mè muối tiêu 기름장', cat: 'jang', role: 'jang', diff: 1, serves: 8,
   tags: ['dầu mè', 'chấm thịt nướng'],
   why: 'Chén dầu mè pha muối tiêu — nước chấm thịt nướng đơn giản nhất mà quán nào cũng có. 2 phút.',
   ing: [
@@ -1724,6 +1732,12 @@ var LABELS = {
     var h = Math.floor(m / 60), r = m % 60;
     return h + ' giờ' + (r ? ' ' + r + '′' : '');
   }
+  /* Thời gian CHỜ — ướp lạnh, ủ, muối, phơi — KHÔNG nằm trong `total`. `total` chỉ cộng
+     `m` của các bước, tức thời gian bạn thật sự đứng làm, và bộ lọc thời gian cũng lọc theo
+     đó. Nhưng món nào có chờ thì phải nói ra: nhãn "1 giờ 3′" trên một hũ dưa cải phải muối
+     ba ngày là nói dối người đọc. Dùng chuỗi chứ không phải số phút, vì phần lớn là khoảng
+     ("3–6 ngày") và làm tròn khoảng thành một con số là chính xác giả. */
+  function waitText(r) { return r.wait ? ' <span class="mc-wait">+ chờ ' + r.wait + '</span>' : ''; }
   function dots(d) {
     var s = '<span class="mc-dots">';
     for (var i = 1; i <= 3; i++) s += '<i class="' + (i <= d ? 'on' : '') + '"></i>';
@@ -1939,7 +1953,7 @@ var LABELS = {
       dipLine +
       '<div class="wb-tags">' + tags + more + '</div>' +
       '<div class="mc-card__foot">' +
-        '<span><span class="wb-ico">schedule</span> ' + timeText(r.total) + '</span>' +
+        '<span><span class="wb-ico">schedule</span> ' + timeText(r.total) + waitText(r) + '</span>' +
         '<span><span class="wb-ico">shopping_basket</span> ' + r.ing.length + ' ' + LABELS.thingWord + '</span>' +
         '<span><span class="wb-ico">format_list_numbered</span> ' + r.steps.length + ' bước</span>' +
       '</div>';
@@ -2174,7 +2188,7 @@ var LABELS = {
     byId('d-prog').style.width = Math.round(stepIdx / n * 100) + '%';
     byId('d-progn').textContent = stepIdx >= n ? 'xong ' + n + '/' + n : 'bước ' + (stepIdx + 1) + '/' + n;
     byId('d-next').textContent = stepIdx >= n ? 'Nấu lại từ đầu' : 'Xong bước này';
-    byId('d-stepn').textContent = timeText(current.total);
+    byId('d-stepn').textContent = timeText(current.total) + (current.wait ? ' + chờ ' + current.wait : '');
     renderFlow();
   }
 
@@ -2247,7 +2261,7 @@ var LABELS = {
       '<span class="wb-cap">' + roleOf(r.role).l + '</span>' +
       '<span class="wb-cap"><span class="wb-ico wb-ico--xs">' + regionOf(r.region).i + '</span> ' + regionOf(r.region).l + '</span>' +
       '<span class="wb-cap">' + dots(r.diff) + ' ' + diffLabel(r.diff) + '</span>' +
-      '<span class="wb-cap"><span class="wb-ico wb-ico--xs">schedule</span> ' + timeText(r.total) + '</span>' +
+      '<span class="wb-cap"><span class="wb-ico wb-ico--xs">schedule</span> ' + timeText(r.total) + waitText(r) + '</span>' +
       (r.tags || []).map(function (t) { return '<span class="wb-tag wb-tag--sm">' + t.replace(/\s/g, '-') + '</span>'; }).join('');
     var extra = '';
     if (r.tips && r.tips.length) {

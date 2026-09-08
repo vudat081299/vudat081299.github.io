@@ -88,6 +88,7 @@
   .mc-card__foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: auto; padding-top: 4px;
     font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); }
   .mc-card__foot .wb-ico { font-size: 14px; vertical-align: -2px; }
+  .mc-wait { color: var(--wb-fg); font-weight: 700; }
   .mc-card__dip { display: flex; align-items: baseline; gap: 5px; font-size: 12px; color: var(--wb-fg-muted); line-height: 1.4; }
   .mc-card__dip .wb-ico { font-size: 14px; flex: none; align-self: center; }
   .mc-card__dip.is-none { color: var(--wb-fg-muted); }
@@ -445,6 +446,13 @@
           </p>
         </div>
       </div>
+    
+      <div class="wb-alert wb-alert--info" style="margin-top:18px"><span class="wb-ico">local_dining</span>
+        <div class="wb-alert__body">
+          <p class="wb-alert__title">Hai quy ước khi đọc danh sách nguyên liệu</p>
+          <p class="wb-alert__msg"><b>Muối, tiêu và dầu ăn coi như luôn có trong bếp</b> — chúng chỉ được liệt kê khi công thức cần một định lượng cụ thể, hoặc khi phải mua thêm (dầu để rán ngập). Bước nào ghi "nêm vừa ăn" thì bạn nêm bằng miệng mình, không cần đong. Và <b>thời gian trên thẻ món là thời gian bạn đứng làm</b>, không gồm lúc chờ — món nào phải ướp lạnh, ủ hay muối thì có thêm nhãn <b>“+ chờ …”</b> ngay cạnh.</p>
+        </div>
+      </div>
     </section>
 
     <hr class="wb-divider">
@@ -723,7 +731,7 @@ var RECIPES = [];
 /* ---------- CANH ---------- */
 RECIPES.push(
 {
-  id: 'canh-cai-thit-bam', name: 'Canh cải nấu thịt băm', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 8,
+  id: 'canh-cai-thit-bam', name: 'Canh cải nấu thịt băm', cat: 'canh', role: 'canh', diff: 1, serves: 4,
   tags: ['thịt lợn', 'rau lá'],
   why: 'Món canh dễ nhất để tập nêm. Rau thả vào là gần như xong.',
   ing: [
@@ -748,7 +756,7 @@ RECIPES.push(
   serveWith: 'Hợp với mọi món kho hoặc rán mặn.'
 },
 {
-  id: 'canh-thit-bam-ca-chua', name: 'Canh thịt băm cà chua', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 8,
+  id: 'canh-thit-bam-ca-chua', name: 'Canh thịt băm cà chua', cat: 'canh', role: 'canh', diff: 1, serves: 4,
   tags: ['thịt lợn', 'cà chua'],
   why: 'Chua nhẹ, dễ ăn, nguyên liệu lúc nào cũng có trong tủ lạnh.',
   ing: [
@@ -771,7 +779,7 @@ RECIPES.push(
   serveWith: 'Ăn với đậu phụ rán, thịt kho, hoặc trứng rán.'
 },
 {
-  id: 'canh-rau-ngot-thit-bam', name: 'Canh rau ngót thịt băm', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 10,
+  id: 'canh-rau-ngot-thit-bam', name: 'Canh rau ngót thịt băm', cat: 'canh', role: 'canh', diff: 1, serves: 4,
   tags: ['thịt lợn', 'rau lá'],
   why: 'Nấu 10 phút. Khó nhất là khâu tuốt lá và vò rau cho hết chát.',
   ing: [
@@ -792,7 +800,7 @@ RECIPES.push(
   serveWith: 'Cặp kinh điển với thịt kho tàu hoặc đậu phụ rán.'
 },
 {
-  id: 'canh-bi-dao-tom-kho', name: 'Canh bí đao nấu tôm khô', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 10,
+  id: 'canh-bi-dao-tom-kho', name: 'Canh bí đao nấu tôm khô', cat: 'canh', role: 'canh', diff: 1, serves: 4,
   tags: ['tôm', 'củ quả'],
   why: 'Ngọt nước mà không cần thịt. Rất hợp ngày nóng.',
   ing: [
@@ -815,7 +823,7 @@ RECIPES.push(
   serveWith: 'Hợp món kho đậm như cá kho, thịt kho tiêu.'
 },
 {
-  id: 'canh-suon-khoai-tay-ca-rot', name: 'Canh sườn khoai tây cà rốt', cat: 'canh', role: 'canh', diff: 2, serves: 4, prep: 15,
+  id: 'canh-suon-khoai-tay-ca-rot', name: 'Canh sườn khoai tây cà rốt', cat: 'canh', role: 'canh', diff: 2, serves: 4,
   tags: ['thịt lợn', 'củ quả'],
   why: 'Chỉ khó ở khâu chần sườn và canh thời gian ninh cho củ không nát.',
   ing: [
@@ -839,7 +847,7 @@ RECIPES.push(
   serveWith: 'Một mâm chỉ cần thêm món xào là đủ.'
 },
 {
-  id: 'canh-cua-rau-day-muop', name: 'Canh cua rau đay mướp', cat: 'canh', role: 'canh', diff: 3, serves: 4, prep: 25,
+  id: 'canh-cua-rau-day-muop', name: 'Canh cua rau đay mướp', cat: 'canh', role: 'canh', diff: 3, serves: 4,
   tags: ['cua', 'rau lá'],
   why: 'Khó ở chỗ giữ cho gạch cua đóng thành tảng, không bị vỡ vụn.',
   ing: [
@@ -863,7 +871,7 @@ RECIPES.push(
   serveWith: 'Bắt buộc có cà pháo muối và một bát nước mắm.'
 },
 {
-  id: 'canh-mang-ngan', name: 'Canh măng ngan', cat: 'canh', role: 'canh', diff: 3, serves: 6, prep: 40,
+  id: 'canh-mang-ngan', name: 'Canh măng ngan', cat: 'canh', role: 'canh', diff: 3, serves: 6, wait: '12 tiếng',
   tags: ['ngan/vịt', 'măng'],
   why: 'Nhiều công đoạn và phải khử mùi ngan đúng cách. Món cỗ, không phải món ngày thường.',
   ing: [
@@ -888,7 +896,7 @@ RECIPES.push(
   serveWith: 'Ăn kèm bún hoặc cơm, chấm ngan bằng mắm gừng.'
 },
 {
-  id: 'canh-chua-ca', name: 'Canh chua cá', cat: 'canh', role: 'canh', diff: 2, serves: 4, prep: 20,
+  id: 'canh-chua-ca', name: 'Canh chua cá', cat: 'canh', role: 'canh', diff: 2, serves: 4,
   tags: ['cá', 'cà chua', 'củ quả'],
   why: 'Cần cho nguyên liệu đúng thứ tự để mỗi thứ chín tới, và cá không nát.',
   ing: [
@@ -919,7 +927,7 @@ RECIPES.push(
 /* ---------- KHO / RIM ---------- */
 RECIPES.push(
 {
-  id: 'thit-kho-tau', name: 'Thịt kho tàu (thịt kho trứng)', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 20,
+  id: 'thit-kho-tau', name: 'Thịt kho tàu (thịt kho trứng)', cat: 'kho', role: 'man', diff: 2, serves: 4,
   tags: ['thịt lợn', 'trứng'],
   why: 'Kỹ thuật đơn giản nhưng cần kiên nhẫn: gần một tiếng lửa liu riu và không đụng vào.',
   ing: [
@@ -943,7 +951,7 @@ RECIPES.push(
   serveWith: 'Ăn với dưa cải muối hoặc dưa góp để cắt ngấy.'
 },
 {
-  id: 'thit-kho-tieu', name: 'Thịt ba chỉ kho tiêu', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 15,
+  id: 'thit-kho-tieu', name: 'Thịt ba chỉ kho tiêu', cat: 'kho', role: 'man', diff: 2, serves: 4,
   tags: ['thịt lợn'],
   why: 'Kho khô, nhanh hơn kho tàu, chỉ cần canh lúc nước cạn để không cháy.',
   ing: [
@@ -966,7 +974,7 @@ RECIPES.push(
   serveWith: 'Cần một bát canh rau để cân lại vị mặn.'
 },
 {
-  id: 'ca-kho-rieng', name: 'Cá kho riềng', cat: 'kho', role: 'man', diff: 3, serves: 4, prep: 25,
+  id: 'ca-kho-rieng', name: 'Cá kho riềng', cat: 'kho', role: 'man', diff: 3, serves: 4,
   tags: ['cá'],
   why: 'Kho lâu, phải xếp nồi đúng cách và tuyệt đối không đảo, nếu không cá nát bét.',
   ing: [
@@ -992,7 +1000,7 @@ RECIPES.push(
   serveWith: 'Ăn với canh rau và dưa muối.'
 },
 {
-  id: 'tom-rim-thit-ba-chi', name: 'Tôm rim thịt ba chỉ', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 15,
+  id: 'tom-rim-thit-ba-chi', name: 'Tôm rim thịt ba chỉ', cat: 'kho', role: 'man', diff: 2, serves: 4,
   tags: ['tôm', 'thịt lợn'],
   why: 'Nhanh, chỉ cần rim cho tới lúc nước sánh áo tôm là dừng.',
   ing: [
@@ -1014,7 +1022,7 @@ RECIPES.push(
   serveWith: 'Rất hợp canh bí đao hoặc canh rau ngót.'
 },
 {
-  id: 'suon-kho-man-ngot', name: 'Sườn kho mặn ngọt', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 20,
+  id: 'suon-kho-man-ngot', name: 'Sườn kho mặn ngọt', cat: 'kho', role: 'man', diff: 2, serves: 4,
   tags: ['thịt lợn'],
   why: 'Chỉ khó ở khâu chần sườn và canh lửa lúc rim cạn.',
   ing: [
@@ -1037,7 +1045,7 @@ RECIPES.push(
   serveWith: 'Cơm nóng + canh cải là đủ một mâm đơn giản.'
 },
 {
-  id: 'ga-kho-gung', name: 'Gà kho gừng', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 15,
+  id: 'ga-kho-gung', name: 'Gà kho gừng', cat: 'kho', role: 'man', diff: 2, serves: 4,
   tags: ['thịt gà'],
   why: 'Ít bước, nhưng cần đủ gừng và đủ thời gian để miếng gà thấm.',
   ing: [
@@ -1063,7 +1071,7 @@ RECIPES.push(
 /* ---------- XÀO ---------- */
 RECIPES.push(
 {
-  id: 'rau-muong-xao-toi', name: 'Rau muống xào tỏi', cat: 'xao', role: 'rau', diff: 1, serves: 4, prep: 10,
+  id: 'rau-muong-xao-toi', name: 'Rau muống xào tỏi', cat: 'xao', role: 'rau', diff: 1, serves: 4,
   tags: ['rau lá'],
   why: 'Món xào đầu tiên nên học: chỉ có hai biến số là lửa và tốc độ tay.',
   ing: [
@@ -1083,7 +1091,7 @@ RECIPES.push(
   serveWith: 'Đi với mọi món kho.'
 },
 {
-  id: 'trung-xao-ca-chua', name: 'Trứng xào cà chua', cat: 'xao', role: 'man', diff: 1, serves: 4, prep: 8,
+  id: 'trung-xao-ca-chua', name: 'Trứng xào cà chua', cat: 'xao', role: 'man', diff: 1, serves: 4,
   tags: ['trứng', 'cà chua'],
   why: '10 phút, hai nguyên liệu, gần như không thể hỏng.',
   ing: [
@@ -1105,7 +1113,7 @@ RECIPES.push(
   serveWith: 'Món cứu đói khi tủ lạnh trống.'
 },
 {
-  id: 'cai-chip-xao-nam', name: 'Cải chíp xào nấm hương', cat: 'xao', role: 'rau', diff: 1, serves: 4, prep: 12,
+  id: 'cai-chip-xao-nam', name: 'Cải chíp xào nấm hương', cat: 'xao', role: 'rau', diff: 1, serves: 4,
   tags: ['rau lá', 'nấm'],
   why: 'Món rau dễ, đẹp mâm. Chỉ cần nhớ cho cọng trước, lá sau.',
   ing: [
@@ -1127,7 +1135,7 @@ RECIPES.push(
   serveWith: 'Hợp mâm cỗ hoặc ăn cùng món kho đậm.'
 },
 {
-  id: 'dau-cove-xao-thit-bo', name: 'Đậu cove xào thịt bò', cat: 'xao', role: 'man', diff: 1, serves: 4, prep: 15,
+  id: 'dau-cove-xao-thit-bo', name: 'Đậu cove xào thịt bò', cat: 'xao', role: 'man', diff: 1, serves: 4,
   tags: ['thịt bò', 'củ quả'],
   why: 'Dễ, nhưng phải xào bò và đậu riêng rồi mới trộn — nếu không bò sẽ dai.',
   ing: [
@@ -1149,7 +1157,7 @@ RECIPES.push(
   serveWith: 'Một món xào đủ chất, chỉ cần thêm canh.'
 },
 {
-  id: 'thit-bo-xao-hanh-tay', name: 'Thịt bò xào hành tây', cat: 'xao', role: 'man', diff: 2, serves: 4, prep: 15,
+  id: 'thit-bo-xao-hanh-tay', name: 'Thịt bò xào hành tây', cat: 'xao', role: 'man', diff: 2, serves: 4,
   tags: ['thịt bò', 'củ quả'],
   why: 'Cần chảo thật nóng và tay thật nhanh — quá 2 phút là bò dai.',
   ing: [
@@ -1172,7 +1180,7 @@ RECIPES.push(
   serveWith: 'Ăn kèm canh chua hoặc canh rau.'
 },
 {
-  id: 'muc-xao-can-toi', name: 'Mực xào cần tỏi', cat: 'xao', role: 'man', diff: 2, serves: 4, prep: 20,
+  id: 'muc-xao-can-toi', name: 'Mực xào cần tỏi', cat: 'xao', role: 'man', diff: 2, serves: 4,
   tags: ['mực', 'củ quả'],
   why: 'Mực chỉ có hai trạng thái: chín tới trong 90 giây, hoặc dai như cao su.',
   ing: [
@@ -1199,7 +1207,7 @@ RECIPES.push(
 /* ---------- LUỘC ---------- */
 RECIPES.push(
 {
-  id: 'rau-muong-luoc', name: 'Rau muống luộc dầm sấu', cat: 'luoc', role: 'rau', diff: 1, serves: 4, prep: 8,
+  id: 'rau-muong-luoc', name: 'Rau muống luộc dầm sấu', cat: 'luoc', role: 'rau', diff: 1, serves: 4,
   tags: ['rau lá', 'chay'],
   why: 'Món dễ nhất trong nhà, nhưng luộc đúng cách thì rau xanh và nước ngọt.',
   ing: [
@@ -1218,7 +1226,7 @@ RECIPES.push(
   serveWith: 'Chấm nước mắm tỏi ớt hoặc tương bần.'
 },
 {
-  id: 'trung-luoc', name: 'Trứng luộc (lòng đào → chín kỹ)', cat: 'luoc', role: 'man', diff: 1, serves: 4, prep: 3,
+  id: 'trung-luoc', name: 'Trứng luộc (lòng đào → chín kỹ)', cat: 'luoc', role: 'man', diff: 1, serves: 4,
   tags: ['trứng'],
   why: 'Không có gì để hỏng ngoài thời gian — nên đây là bài tập canh giờ.',
   ing: [
@@ -1237,7 +1245,7 @@ RECIPES.push(
   serveWith: 'Chấm muối tiêu chanh, hoặc thả vào nồi thịt kho.'
 },
 {
-  id: 'thit-ba-chi-luoc', name: 'Thịt ba chỉ luộc', cat: 'luoc', role: 'man', diff: 1, serves: 4, prep: 10,
+  id: 'thit-ba-chi-luoc', name: 'Thịt ba chỉ luộc', cat: 'luoc', role: 'man', diff: 1, serves: 4,
   tags: ['thịt lợn'],
   why: 'Dễ, nhưng nhiều người luộc quá tay khiến thịt khô và bã.',
   ing: [
@@ -1258,7 +1266,7 @@ RECIPES.push(
   serveWith: 'Bắt buộc có mắm tôm chanh ớt hoặc mắm tép, kèm rau sống.'
 },
 {
-  id: 'ga-luoc', name: 'Gà luộc (da vàng, không nứt)', cat: 'luoc', role: 'man', diff: 3, serves: 6, prep: 20,
+  id: 'ga-luoc', name: 'Gà luộc (da vàng, không nứt)', cat: 'luoc', role: 'man', diff: 3, serves: 6,
   tags: ['thịt gà'],
   why: 'Cả món chỉ là nước sôi, nhưng để da không nứt và thịt không đỏ xương thì cần đúng nhiệt.',
   ing: [
@@ -1285,7 +1293,7 @@ RECIPES.push(
 /* ---------- RÁN / CHIÊN ---------- */
 RECIPES.push(
 {
-  id: 'dau-phu-ran', name: 'Đậu phụ rán giòn', cat: 'ran', role: 'man', diff: 1, serves: 4, prep: 5,
+  id: 'dau-phu-ran', name: 'Đậu phụ rán giòn', cat: 'ran', role: 'man', diff: 1, serves: 4,
   tags: ['đậu phụ', 'chay'],
   why: 'Rẻ, nhanh, và là bài tập tốt để hiểu thế nào là "dầu đủ nóng".',
   ing: [
@@ -1304,7 +1312,7 @@ RECIPES.push(
   serveWith: 'Chấm mắm tôm hoặc nước mắm tỏi ớt; ăn với canh cua thì đúng bài.'
 },
 {
-  id: 'trung-ran-thit-bam', name: 'Trứng rán thịt băm (chả trứng)', cat: 'ran', role: 'man', diff: 1, serves: 4, prep: 10,
+  id: 'trung-ran-thit-bam', name: 'Trứng rán thịt băm (chả trứng)', cat: 'ran', role: 'man', diff: 1, serves: 4,
   tags: ['trứng', 'thịt lợn'],
   why: 'Chỉ cần lửa nhỏ và kiên nhẫn — vội là cháy mặt mà sống ruột.',
   ing: [
@@ -1326,7 +1334,7 @@ RECIPES.push(
   serveWith: 'Ăn với canh cà chua thịt băm hoặc rau luộc.'
 },
 {
-  id: 'cha-la-lot', name: 'Chả lá lốt', cat: 'ran', role: 'man', diff: 2, serves: 4, prep: 25,
+  id: 'cha-la-lot', name: 'Chả lá lốt', cat: 'ran', role: 'man', diff: 2, serves: 4,
   tags: ['thịt lợn', 'rau lá'],
   why: 'Không khó về nhiệt, khó ở khâu cuốn chặt tay để chả không bung.',
   ing: [
@@ -1347,7 +1355,7 @@ RECIPES.push(
   serveWith: 'Chấm nước mắm chua ngọt, ăn kèm bún và rau sống.'
 },
 {
-  id: 'ca-ran-gion', name: 'Cá rán giòn', cat: 'ran', role: 'man', diff: 2, serves: 4, prep: 15,
+  id: 'ca-ran-gion', name: 'Cá rán giòn', cat: 'ran', role: 'man', diff: 2, serves: 4,
   tags: ['cá'],
   why: 'Phải để cá thật khô và đừng lật sớm — hai điều này quyết định tất cả.',
   ing: [
@@ -1368,7 +1376,7 @@ RECIPES.push(
   serveWith: 'Chấm mắm gừng hoặc mắm tỏi ớt, ăn với dưa góp.'
 },
 {
-  id: 'nem-ran', name: 'Nem rán (chả giò)', cat: 'ran', role: 'man', diff: 3, serves: 6, prep: 45,
+  id: 'nem-ran', name: 'Nem rán (chả giò)', cat: 'ran', role: 'man', diff: 3, serves: 6,
   tags: ['thịt lợn', 'tôm', 'trứng'],
   why: 'Nhiều nguyên liệu, cuốn mất thời gian, và phải rán hai lửa mới giòn lâu.',
   ing: [
@@ -1398,7 +1406,7 @@ RECIPES.push(
 /* ---------- OM / HẤP / SỐT ---------- */
 RECIPES.push(
 {
-  id: 'oc-chuoi-dau', name: 'Ốc chuối đậu', cat: 'om', role: 'man', diff: 3, serves: 4, prep: 45,
+  id: 'oc-chuoi-dau', name: 'Ốc chuối đậu', cat: 'om', role: 'man', diff: 3, serves: 4, wait: '2 tiếng',
   tags: ['ốc', 'đậu phụ', 'thịt lợn', 'củ quả'],
   why: 'Món khó nhất trong danh sách: nhiều nguyên liệu sơ chế riêng, chuối dễ thâm, ốc dễ dai.',
   ing: [
@@ -1426,7 +1434,7 @@ RECIPES.push(
   serveWith: 'Ăn với bún hoặc cơm; cần rất nhiều tía tô.'
 },
 {
-  id: 'dau-sot-ca-chua', name: 'Đậu phụ sốt cà chua', cat: 'om', role: 'man', diff: 1, serves: 4, prep: 8,
+  id: 'dau-sot-ca-chua', name: 'Đậu phụ sốt cà chua', cat: 'om', role: 'man', diff: 1, serves: 4,
   tags: ['đậu phụ', 'cà chua'],
   why: 'Chỉ hai nguyên liệu chính, hỏng cũng khó. Món tủ của sinh viên.',
   ing: [
@@ -1449,7 +1457,7 @@ RECIPES.push(
   serveWith: 'Ăn với rau muống luộc là tròn mâm.'
 },
 {
-  id: 'trung-hap-thit', name: 'Trứng hấp thịt băm', cat: 'om', role: 'man', diff: 1, serves: 4, prep: 10,
+  id: 'trung-hap-thit', name: 'Trứng hấp thịt băm', cat: 'om', role: 'man', diff: 1, serves: 4,
   tags: ['trứng', 'thịt lợn'],
   why: 'Không cần đảo, không cần canh lửa — chỉ cần hấp đủ và đừng để nước rơi vào.',
   ing: [
@@ -1471,7 +1479,7 @@ RECIPES.push(
   serveWith: 'Ăn với canh rau và cơm nóng.'
 },
 {
-  id: 'ca-hap-hanh-gung', name: 'Cá hấp hành gừng', cat: 'om', role: 'man', diff: 2, serves: 4, prep: 20,
+  id: 'ca-hap-hanh-gung', name: 'Cá hấp hành gừng', cat: 'om', role: 'man', diff: 2, serves: 4,
   tags: ['cá'],
   why: 'Nhẹ nhàng nhưng phải canh phút — cá hấp quá 2 phút là bở.',
   ing: [
@@ -1498,7 +1506,7 @@ RECIPES.push(
 /* ---------- NỘM / DƯA ---------- */
 RECIPES.push(
 {
-  id: 'nom-su-hao-ca-rot', name: 'Nộm su hào cà rốt', cat: 'nom', role: 'rau', diff: 1, serves: 4, prep: 25,
+  id: 'nom-su-hao-ca-rot', name: 'Nộm su hào cà rốt', cat: 'nom', role: 'rau', diff: 1, serves: 4,
   tags: ['củ quả'],
   why: 'Không cần bếp. Chỉ cần vắt kiệt nước và trộn đúng lúc ăn.',
   ing: [
@@ -1522,7 +1530,7 @@ RECIPES.push(
   serveWith: 'Cắt ngấy cho các món rán, kho.'
 },
 {
-  id: 'dua-gop', name: 'Dưa góp ăn liền', cat: 'nom', role: 'cham', diff: 1, serves: 4, prep: 15,
+  id: 'dua-gop', name: 'Dưa góp ăn liền', cat: 'nom', role: 'cham', diff: 1, serves: 4,
   tags: ['củ quả', 'chay'],
   why: '15 phút là ăn được, không cần muối chua nhiều ngày.',
   ing: [
@@ -1547,7 +1555,7 @@ RECIPES.push(
 /* ---------- NƯỚC CHẤM ---------- */
 RECIPES.push(
 {
-  id: 'nuoc-mam-chua-ngot', name: 'Nước mắm chua ngọt', cat: 'cham', role: 'cham', diff: 1, serves: 4, prep: 5,
+  id: 'nuoc-mam-chua-ngot', name: 'Nước mắm chua ngọt', cat: 'cham', role: 'cham', diff: 1, serves: 4,
   tags: [],
   why: 'Một công thức tỉ lệ, thuộc rồi thì pha được mọi lúc mà không cần nếm.',
   ing: [
@@ -1567,7 +1575,7 @@ RECIPES.push(
   serveWith: 'Nem rán, bún chả, chả lá lốt, cá rán, đậu rán.'
 },
 {
-  id: 'mam-gung', name: 'Mắm gừng', cat: 'cham', role: 'cham', diff: 1, serves: 4, prep: 5,
+  id: 'mam-gung', name: 'Mắm gừng', cat: 'cham', role: 'cham', diff: 1, serves: 4,
   tags: [],
   why: 'Ba nguyên liệu, giã và trộn.',
   ing: [
@@ -1585,7 +1593,7 @@ RECIPES.push(
   serveWith: 'Ngan luộc, vịt luộc, thịt ba chỉ luộc, ốc.'
 },
 {
-  id: 'mam-tom-chanh-ot', name: 'Mắm tôm đánh chanh ớt', cat: 'cham', role: 'cham', diff: 2, serves: 4, prep: 5,
+  id: 'mam-tom-chanh-ot', name: 'Mắm tôm đánh chanh ớt', cat: 'cham', role: 'cham', diff: 2, serves: 4,
   tags: [],
   why: 'Dễ về thao tác nhưng cần đánh đúng cách cho bông, nếu không sẽ nồng gắt.',
   ing: [
@@ -1605,7 +1613,7 @@ RECIPES.push(
   serveWith: 'Thịt ba chỉ luộc, đậu phụ rán, bún đậu, chả cá.'
 },
 {
-  id: 'muoi-tieu-chanh', name: 'Muối tiêu chanh', cat: 'cham', role: 'cham', diff: 1, serves: 4, prep: 3,
+  id: 'muoi-tieu-chanh', name: 'Muối tiêu chanh', cat: 'cham', role: 'cham', diff: 1, serves: 4,
   tags: ['chay'],
   why: 'Bát chấm mặc định cho gà luộc và hải sản hấp. Ba thứ, hai phút, và vẫn có một chỗ làm sai được: vắt chanh quá sớm.',
   ing: [
@@ -1624,7 +1632,7 @@ RECIPES.push(
   serveWith: 'Gà luộc, chim quay, ghẹ hấp, tôm hấp, mực hấp, thịt bò nướng.'
 },
 {
-  id: 'muoi-ot-xanh', name: 'Muối ớt xanh', cat: 'cham', role: 'cham', diff: 1, serves: 4, prep: 5,
+  id: 'muoi-ot-xanh', name: 'Muối ớt xanh', cat: 'cham', role: 'cham', diff: 1, serves: 4,
   tags: [],
   why: 'Bát chấm hải sản mạnh nhất: cay xanh, chua gắt, đủ sức át vị tanh của con ghẹ, con ốc. Máy xay làm được trong một phút.',
   ing: [
@@ -1645,7 +1653,7 @@ RECIPES.push(
   serveWith: 'Ghẹ hấp, ốc luộc, mực nướng, tôm hấp, gà nướng, hải sản nướng.'
 },
 {
-  id: 'nuoc-cham-bun-cha', name: 'Nước chấm bún chả / nem', cat: 'cham', role: 'cham', diff: 2, serves: 4, prep: 15,
+  id: 'nuoc-cham-bun-cha', name: 'Nước chấm bún chả / nem', cat: 'cham', role: 'cham', diff: 2, serves: 4,
   tags: [],
   why: 'Nước chấm Hà Nội thật sự là một bát canh nhạt: pha đúng thì uống được cả bát, không gắt mặn ở đâu cả.',
   ing: [
@@ -1669,7 +1677,7 @@ RECIPES.push(
   serveWith: 'Bún chả, nem rán, bún nem, chả lá lốt.'
 },
 {
-  id: 'nuoc-mam-ot-toi', name: 'Nước mắm nguyên chất dằm ớt tỏi', cat: 'cham', role: 'cham', diff: 1, serves: 4, prep: 3,
+  id: 'nuoc-mam-ot-toi', name: 'Nước mắm nguyên chất dằm ớt tỏi', cat: 'cham', role: 'cham', diff: 1, serves: 4,
   tags: [],
   why: 'Bát mắm mặc định trên mâm cơm Bắc. Không pha loãng, không đường — dùng để chấm rau luộc và dằm quả ớt cho vui miệng.',
   ing: [
@@ -1686,7 +1694,7 @@ RECIPES.push(
   serveWith: 'Rau muống luộc, bắp cải luộc, su hào luộc, cá kho, thịt luộc, trứng luộc.'
 },
 {
-  id: 'tuong-ban', name: 'Tương bần chấm', cat: 'cham', role: 'cham', diff: 1, serves: 4, prep: 5,
+  id: 'tuong-ban', name: 'Tương bần chấm', cat: 'cham', role: 'cham', diff: 1, serves: 4,
   tags: ['chay'],
   why: 'Bát chấm chay của làng Bắc: tương đậu nành lên men, ngọt hậu và thơm mùi mốc — thứ nước mắm không thay được.',
   ing: [
@@ -1705,7 +1713,7 @@ RECIPES.push(
   serveWith: 'Rau muống luộc, thịt ba chỉ luộc, bê thui, đậu phụ luộc, cà pháo.'
 },
 {
-  id: 'xi-dau-toi-ot', name: 'Xì dầu tỏi ớt', cat: 'cham', role: 'cham', diff: 1, serves: 4, prep: 5,
+  id: 'xi-dau-toi-ot', name: 'Xì dầu tỏi ớt', cat: 'cham', role: 'cham', diff: 1, serves: 4,
   tags: ['chay'],
   why: 'Bát chấm chay và bát chấm cá hấp. Ai không ăn được mắm thì đây là chỗ thay thế duy nhất mà không mất vị.',
   ing: [
@@ -1725,7 +1733,7 @@ RECIPES.push(
   serveWith: 'Cá hấp, đậu phụ, rau luộc, nấm nướng, trứng hấp, mâm chay.'
 },
 {
-  id: 'mam-nem', name: 'Mắm nêm pha dứa', cat: 'cham', role: 'cham', diff: 2, serves: 4, prep: 10,
+  id: 'mam-nem', name: 'Mắm nêm pha dứa', cat: 'cham', role: 'cham', diff: 2, serves: 4,
   tags: [],
   why: 'Bát chấm miền Trung mạnh nhất. Nồng, nhưng pha đúng với dứa và tỏi thì thơm chứ không gắt.',
   ing: [
@@ -1747,7 +1755,7 @@ RECIPES.push(
   serveWith: 'Thịt luộc cuốn bánh tráng, bò nhúng dấm, cá nục hấp, bún mắm nêm.'
 },
 {
-  id: 'muoi-vung-lac', name: 'Muối vừng lạc', cat: 'cham', role: 'cham', diff: 1, serves: 6, prep: 15,
+  id: 'muoi-vung-lac', name: 'Muối vừng lạc', cat: 'cham', role: 'cham', diff: 1, serves: 6,
   tags: ['chay'],
   why: 'Thứ chấm khô duy nhất trên mâm Bắc, và là món cứu đói bền nhất: làm một lọ ăn được hai tuần.',
   ing: [
@@ -1765,7 +1773,7 @@ RECIPES.push(
   serveWith: 'Rau luộc, cơm nắm, xôi trắng, cơm trắng ngày ốm.'
 },
 {
-  id: 'sot-me-hai-san', name: 'Sốt me chấm hải sản', cat: 'cham', role: 'cham', diff: 2, serves: 4, prep: 10,
+  id: 'sot-me-hai-san', name: 'Sốt me chấm hải sản', cat: 'cham', role: 'cham', diff: 2, serves: 4,
   tags: [],
   why: 'Chua đậm và sánh, bám vào vỏ tôm ghẹ. Một bát này cứu được cả mẻ hải sản luộc bị nhạt.',
   ing: [
@@ -1792,7 +1800,7 @@ RECIPES.push(
    "Đạt khi" ở nhóm này gần như đều là dấu hiệu để TẮT BẾP, không phải để nấu tiếp. */
 RECIPES.push(
 {
-  id: 'ngao-hap-sa', name: 'Ngao (nghêu) hấp sả', cat: 'luoc', role: 'man', diff: 1, serves: 4, prep: 25,
+  id: 'ngao-hap-sa', name: 'Ngao (nghêu) hấp sả', cat: 'luoc', role: 'man', diff: 1, serves: 4,
   tags: ['ngao/sò'],
   why: 'Món hải sản dễ nhất — nồi chỉ có ngao và sả, và dấu hiệu chín thì nhìn bằng mắt: con nào há miệng là con đó xong.',
   ing: [
@@ -1814,7 +1822,7 @@ RECIPES.push(
   serveWith: 'Chấm muối tiêu chanh hoặc mắm gừng. Nước ngao còn lại đừng đổ — nấu canh chua rất ngọt.'
 },
 {
-  id: 'ghe-hap-bia', name: 'Ghẹ (hoặc cua biển) hấp bia', cat: 'luoc', role: 'man', diff: 1, serves: 4, prep: 15,
+  id: 'ghe-hap-bia', name: 'Ghẹ (hoặc cua biển) hấp bia', cat: 'luoc', role: 'man', diff: 1, serves: 4,
   tags: ['ghẹ', 'cua'],
   why: 'Chỉ có hai việc thật sự cần làm đúng: giết ghẹ trước khi hấp để nó không rụng càng, và canh màu vỏ để tắt bếp.',
   ing: [
@@ -1833,7 +1841,7 @@ RECIPES.push(
   serveWith: 'Muối tiêu chanh, hoặc muối ớt xanh. Ăn kèm rau răm.'
 },
 {
-  id: 'canh-ngao-chua', name: 'Canh ngao nấu chua', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 25,
+  id: 'canh-ngao-chua', name: 'Canh ngao nấu chua', cat: 'canh', role: 'canh', diff: 1, serves: 4,
   tags: ['ngao/sò', 'cà chua'],
   why: 'Ngọt nước mà không cần ninh xương — con ngao tự lo phần nước dùng. Chỉ cần nhớ lọc cát.',
   ing: [
@@ -1857,7 +1865,7 @@ RECIPES.push(
   serveWith: 'Ăn với thịt luộc, đậu rán hay bất kỳ món kho nào.'
 },
 {
-  id: 'canh-bau-tom', name: 'Canh bầu nấu tôm', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 10,
+  id: 'canh-bau-tom', name: 'Canh bầu nấu tôm', cat: 'canh', role: 'canh', diff: 1, serves: 4,
   tags: ['tôm', 'củ quả'],
   why: 'Bát canh mùa hè nhanh nhất: bầu chín trong ba phút, tôm giã dập là đủ ngọt nước.',
   ing: [
@@ -1881,7 +1889,7 @@ RECIPES.push(
   serveWith: 'Hợp nhất với món kho mặn hoặc cá rán.'
 },
 {
-  id: 'tom-rang-me', name: 'Tôm rang me', cat: 'xao', role: 'man', diff: 2, serves: 4, prep: 15,
+  id: 'tom-rang-me', name: 'Tôm rang me', cat: 'xao', role: 'man', diff: 2, serves: 4,
   tags: ['tôm'],
   why: 'Cái khó không nằm ở con tôm mà ở nồi sốt: phải rim đến đúng độ keo thì sốt mới bám được vào vỏ.',
   ing: [
@@ -1904,7 +1912,7 @@ RECIPES.push(
   serveWith: 'Cơm trắng. Món này đủ đậm nên chỉ cần thêm một bát canh nhạt.'
 },
 {
-  id: 'ca-thu-sot-ca-chua', name: 'Cá thu sốt cà chua', cat: 'om', role: 'man', diff: 2, serves: 4, prep: 15,
+  id: 'ca-thu-sot-ca-chua', name: 'Cá thu sốt cà chua', cat: 'om', role: 'man', diff: 2, serves: 4,
   tags: ['cá', 'cà chua'],
   why: 'Cá biển thịt chắc nên không nát như cá đồng — nhưng vẫn phải rán se mặt trước, nếu không om xong sẽ tanh.',
   ing: [
@@ -1929,7 +1937,7 @@ RECIPES.push(
   serveWith: 'Cơm nóng và một bát canh rau nhạt để cân lại vị đậm.'
 },
 {
-  id: 'ca-nuc-kho-dua', name: 'Cá nục kho dứa', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 15,
+  id: 'ca-nuc-kho-dua', name: 'Cá nục kho dứa', cat: 'kho', role: 'man', diff: 2, serves: 4,
   tags: ['cá'],
   why: 'Dứa vừa khử tanh vừa làm mềm thịt cá. Công thức này kho vừa đủ để cá chắc và đậm — muốn rục cả xương thì phải kho lâu hơn nhiều (xem mẹo cuối).',
   ing: [
@@ -1954,7 +1962,7 @@ RECIPES.push(
   serveWith: 'Cơm trắng, rau luộc và một bát nước rau vắt chanh.'
 },
 {
-  id: 'ca-chien-sot-mam-toi', name: 'Cá chiên sốt mắm tỏi', cat: 'ran', role: 'man', diff: 2, serves: 4, prep: 15,
+  id: 'ca-chien-sot-mam-toi', name: 'Cá chiên sốt mắm tỏi', cat: 'ran', role: 'man', diff: 2, serves: 4,
   tags: ['cá'],
   why: 'Hai kỹ thuật gộp làm một: chiên cho giòn, rồi rưới sốt lúc cá còn nóng để sốt bám mà vỏ chưa kịp ỉu.',
   ing: [
@@ -1977,7 +1985,7 @@ RECIPES.push(
   serveWith: 'Cơm nóng, dưa góp và rau sống.'
 },
 {
-  id: 'muc-nhoi-thit', name: 'Mực nhồi thịt sốt cà', cat: 'om', role: 'man', diff: 3, serves: 4, prep: 30,
+  id: 'muc-nhoi-thit', name: 'Mực nhồi thịt sốt cà', cat: 'om', role: 'man', diff: 3, serves: 4,
   tags: ['mực', 'thịt lợn', 'cà chua'],
   why: 'Khó ở chỗ nhồi: nhồi chặt là mực nứt bung khi gặp nhiệt, nhồi lỏng thì nhân rời ra trong nồi.',
   ing: [
@@ -2006,7 +2014,7 @@ RECIPES.push(
   serveWith: 'Cơm trắng; món này đủ đậm để đứng một mình trong mâm.'
 },
 {
-  id: 'ghe-rang-muoi', name: 'Ghẹ (hoặc tôm) rang muối', cat: 'xao', role: 'man', diff: 3, serves: 4, prep: 20,
+  id: 'ghe-rang-muoi', name: 'Ghẹ (hoặc tôm) rang muối', cat: 'xao', role: 'man', diff: 3, serves: 4,
   tags: ['ghẹ', 'tôm'],
   why: 'Khó vì phải làm ba việc gần như cùng lúc: chiên giòn, rang muối cho khô, và đảo áo mà không để tỏi cháy.',
   ing: [
@@ -2037,7 +2045,7 @@ RECIPES.push(
    không tính lúc ngồi ăn. */
 RECIPES.push(
 {
-  id: 'oc-luoc-sa-ot', name: 'Ốc luộc sả ớt', cat: 'luoc', role: 'ngoai', diff: 1, serves: 4, prep: 65,
+  id: 'oc-luoc-sa-ot', name: 'Ốc luộc sả ớt', cat: 'luoc', role: 'ngoai', diff: 1, serves: 4,
   tags: ['ốc'],
   why: 'Món nhậu dễ nhất và cũng là món hay bị làm hỏng nhất — vì người ta luộc quá lâu, ốc teo lại không khều ra được.',
   ing: [
@@ -2059,7 +2067,7 @@ RECIPES.push(
   serveWith: 'Nước mắm gừng sả. Món để nhâm nhi, không ăn với cơm.'
 },
 {
-  id: 'ga-nuong-muoi-ot', name: 'Cánh gà nướng muối ớt', cat: 'nuong', role: 'ngoai', diff: 1, serves: 4, prep: 70,
+  id: 'ga-nuong-muoi-ot', name: 'Cánh gà nướng muối ớt', cat: 'nuong', role: 'ngoai', diff: 1, serves: 4,
   tags: ['thịt gà'],
   why: 'Món nướng dễ nhất để bắt đầu: cánh gà mỏng đều nên khó bị ngoài cháy trong sống như đùi hay cả con.',
   ing: [
@@ -2084,7 +2092,7 @@ RECIPES.push(
   serveWith: 'Muối tiêu chanh, dưa chuột chẻ. Món để nhâm nhi hoặc ăn với xôi.'
 },
 {
-  id: 'hai-san-nuong-mo-hanh', name: 'Hải sản nướng mỡ hành', cat: 'nuong', role: 'ngoai', diff: 1, serves: 4, prep: 25,
+  id: 'hai-san-nuong-mo-hanh', name: 'Hải sản nướng mỡ hành', cat: 'nuong', role: 'ngoai', diff: 1, serves: 4,
   tags: ['tôm', 'mực', 'ngao/sò'],
   why: 'Không cần ướp, không cần canh giờ chính xác — chỉ cần biết lúc nào thịt chuyển đục là gắp ra.',
   ing: [
@@ -2107,7 +2115,7 @@ RECIPES.push(
   serveWith: 'Muối ớt xanh và bia. Món quanh bếp than, không phải món trong mâm.'
 },
 {
-  id: 'ba-chi-nuong-rieng-me', name: 'Ba chỉ nướng riềng mẻ', cat: 'nuong', role: 'ngoai', diff: 2, serves: 4, prep: 190,
+  id: 'ba-chi-nuong-rieng-me', name: 'Ba chỉ nướng riềng mẻ', cat: 'nuong', role: 'ngoai', diff: 2, serves: 4,
   tags: ['thịt lợn'],
   why: 'Vị Bắc rất đặc trưng, nhưng mẻ là con dao hai lưỡi: đúng liều thì thơm và mềm, quá tay thì thịt bở và chua gắt.',
   ing: [
@@ -2132,7 +2140,7 @@ RECIPES.push(
   serveWith: 'Bún, rau sống, và mắm tôm chanh ớt hoặc mắm nêm.'
 },
 {
-  id: 'lau-ga-nam', name: 'Lẩu gà nấm', cat: 'lau', role: 'ngoai', diff: 2, serves: 4, prep: 40,
+  id: 'lau-ga-nam', name: 'Lẩu gà nấm', cat: 'lau', role: 'ngoai', diff: 2, serves: 4,
   tags: ['thịt gà', 'nấm'],
   why: 'Nồi lẩu dễ nhất vì nước dùng chính là nước luộc gà — không phải ninh xương riêng, không cần gia vị lạ.',
   ing: [
@@ -2158,7 +2166,7 @@ RECIPES.push(
   serveWith: 'Bún tươi hoặc mì trứng. Nồi cho 4 người ngồi ăn khoảng một tiếng.'
 },
 {
-  id: 'lau-thai-hai-san', name: 'Lẩu Thái hải sản', cat: 'lau', role: 'ngoai', diff: 2, serves: 4, prep: 45,
+  id: 'lau-thai-hai-san', name: 'Lẩu Thái hải sản', cat: 'lau', role: 'ngoai', diff: 2, serves: 4,
   tags: ['tôm', 'mực', 'ngao/sò'],
   why: 'Toàn bộ độ khó nằm ở việc cân bốn vị chua – cay – mặn – ngọt trong nồi nước, chứ hải sản chỉ nhúng là chín.',
   ing: [
@@ -2188,7 +2196,7 @@ RECIPES.push(
   serveWith: 'Bún tươi, rau muống chẻ, cải thảo, nấm kim châm.'
 },
 {
-  id: 'lau-rieu-cua-bap-bo', name: 'Lẩu riêu cua bắp bò', cat: 'lau', role: 'ngoai', diff: 3, serves: 4, prep: 60,
+  id: 'lau-rieu-cua-bap-bo', name: 'Lẩu riêu cua bắp bò', cat: 'lau', role: 'ngoai', diff: 3, serves: 4,
   tags: ['cua', 'thịt bò', 'cà chua'],
   why: 'Khó nhất trong các nồi lẩu: phải gạn được gạch cua đóng thành tảng mà không vỡ, giống canh cua nhưng ở quy mô nồi lẩu.',
   ing: [
@@ -2217,7 +2225,7 @@ RECIPES.push(
   serveWith: 'Bún, rau muống chẻ, hoa chuối thái, tía tô. Có thể thêm chả cá hoặc lòng non.'
 },
 {
-  id: 'mien-xao-cua', name: 'Miến xào cua bể', cat: 'xao', role: 'ngoai', diff: 2, serves: 4, prep: 30,
+  id: 'mien-xao-cua', name: 'Miến xào cua bể', cat: 'xao', role: 'ngoai', diff: 2, serves: 4,
   tags: ['cua', 'ghẹ'],
   why: 'Cả món hỏng hay không nằm ở sợi miến: ngâm quá tay là nát bét trong chảo, không cứu được bằng bất cứ cách nào.',
   ing: [
@@ -2252,7 +2260,7 @@ RECIPES.push(
    mùa rét). Ghi rõ mùa ở mẹo, vì nguyên liệu trái mùa thì có tiền cũng không mua được. */
 RECIPES.push(
 {
-  id: 'canh-ca-nau-ngot', name: 'Canh cá nấu ngót', cat: 'canh', role: 'canh', diff: 2, serves: 4, prep: 15,
+  id: 'canh-ca-nau-ngot', name: 'Canh cá nấu ngót', cat: 'canh', role: 'canh', diff: 2, serves: 4,
   tags: ['cá', 'cà chua'],
   why: 'Bát canh cá của nhà Bắc: chua nhẹ từ cà chua và dọc mùng, ngọt từ chính con cá, không dùng me và không dùng đường.',
   ing: [
@@ -2277,7 +2285,7 @@ RECIPES.push(
   serveWith: 'Ăn với cá kho hoặc thịt rang cháy cạnh, và một bát mắm ớt.'
 },
 {
-  id: 'canh-moc-nam-huong', name: 'Canh mọc nấm hương', cat: 'canh', role: 'canh', diff: 2, serves: 6, prep: 25,
+  id: 'canh-moc-nam-huong', name: 'Canh mọc nấm hương', cat: 'canh', role: 'canh', diff: 2, serves: 6,
   tags: ['thịt lợn', 'nấm'],
   why: 'Bát canh của mâm cỗ Bắc: nước trong veo, viên mọc nổi lên mềm mà không bở. Điểm khó duy nhất là làm sao nước không đục.',
   ing: [
@@ -2303,7 +2311,7 @@ RECIPES.push(
   serveWith: 'Mâm cỗ Bắc: nem rán, gà luộc, giò lụa, xôi gấc.'
 },
 {
-  id: 'canh-dua-chua-suon', name: 'Canh dưa chua nấu sườn', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 10,
+  id: 'canh-dua-chua-suon', name: 'Canh dưa chua nấu sườn', cat: 'canh', role: 'canh', diff: 1, serves: 4,
   tags: ['sườn', 'dưa muối'],
   why: 'Món dùng hết lọ dưa muối đã quá chua. Chua sẵn nên không phải nêm nhiều, và càng nấu càng ngọt.',
   ing: [
@@ -2325,7 +2333,7 @@ RECIPES.push(
   serveWith: 'Ăn với thịt rang cháy cạnh hoặc đậu phụ rán.'
 },
 {
-  id: 'canh-cai-cuc-thit-bam', name: 'Canh cải cúc nấu thịt băm', cat: 'canh', role: 'canh', diff: 1, serves: 4, prep: 6,
+  id: 'canh-cai-cuc-thit-bam', name: 'Canh cải cúc nấu thịt băm', cat: 'canh', role: 'canh', diff: 1, serves: 4,
   tags: ['thịt lợn', 'rau lá'],
   why: 'Bát canh mùa rét của Bắc, nấu trong 8 phút. Cải cúc thơm rất mạnh nên gần như không cần nêm gì thêm.',
   ing: [
@@ -2347,7 +2355,7 @@ RECIPES.push(
   serveWith: 'Rất hợp mùa lạnh, đi với thịt kho tàu hoặc cá kho.'
 },
 {
-  id: 'canh-khoai-so-suon', name: 'Canh khoai sọ nấu sườn', cat: 'canh', role: 'canh', diff: 2, serves: 4, prep: 20,
+  id: 'canh-khoai-so-suon', name: 'Canh khoai sọ nấu sườn', cat: 'canh', role: 'canh', diff: 2, serves: 4,
   tags: ['sườn', 'khoai'],
   why: 'Bát canh đặc, bùi, ăn no. Khó ở đúng một chỗ: khoai sọ hoặc bở tan thành cháo, hoặc còn sượng — không có ở giữa nếu thả sai lúc.',
   ing: [
@@ -2369,7 +2377,7 @@ RECIPES.push(
   serveWith: 'Một mình bát canh này với cơm nóng là đủ bữa mùa đông.'
 },
 {
-  id: 'thit-rang-chay-canh', name: 'Thịt ba chỉ rang cháy cạnh', cat: 'kho', role: 'man', diff: 1, serves: 4, prep: 10,
+  id: 'thit-rang-chay-canh', name: 'Thịt ba chỉ rang cháy cạnh', cat: 'kho', role: 'man', diff: 1, serves: 4,
   tags: ['thịt lợn'],
   why: 'Món mặn phổ biến nhất trên mâm cơm Bắc hằng ngày. Chỉ có một bí quyết: rang khô trước cho ra mỡ, nêm sau.',
   ing: [
@@ -2390,7 +2398,7 @@ RECIPES.push(
   serveWith: 'Cặp kinh điển với canh dưa chua hoặc canh cải, thêm bát mắm ớt.'
 },
 {
-  id: 'ca-kho-tuong', name: 'Cá kho tương', cat: 'kho', role: 'man', diff: 2, serves: 4, prep: 20,
+  id: 'ca-kho-tuong', name: 'Cá kho tương', cat: 'kho', role: 'man', diff: 2, serves: 4, wait: '1 tiếng',
   tags: ['cá'],
   why: 'Cách kho cá của làng Bắc trước khi có nước hàng: dùng tương thay đường, nên màu nâu trầm và vị hậu ngọt chứ không gắt.',
   ing: [
@@ -2415,7 +2423,7 @@ RECIPES.push(
   serveWith: 'Cơm trắng, canh rau, dưa cải muối. Ăn nguội cũng ngon.'
 },
 {
-  id: 'thit-dong', name: 'Thịt đông', cat: 'om', role: 'man', diff: 2, serves: 6, prep: 30,
+  id: 'thit-dong', name: 'Thịt đông', cat: 'om', role: 'man', diff: 2, serves: 6,
   tags: ['thịt lợn', 'mộc nhĩ'],
   why: 'Món chỉ nấu được vào mùa rét Bắc — trời phải đủ lạnh để đông tự nhiên. Thử làm giữa hè bằng tủ lạnh thì được, nhưng vị không giống.',
   ing: [
@@ -2440,7 +2448,7 @@ RECIPES.push(
   serveWith: 'Cơm nóng và dưa hành. Đây là cặp bắt buộc của mâm Tết Bắc.'
 },
 {
-  id: 'bap-cai-xao-ca-chua', name: 'Bắp cải xào cà chua', cat: 'xao', role: 'rau', diff: 1, serves: 4, prep: 8,
+  id: 'bap-cai-xao-ca-chua', name: 'Bắp cải xào cà chua', cat: 'xao', role: 'rau', diff: 1, serves: 4,
   tags: ['rau lá', 'cà chua'],
   why: 'Món rau rẻ nhất mùa đông Bắc. Hỏng ở đúng một chỗ: xào quá tay thì bắp cải ra nước, thành canh chứ không thành món xào.',
   ing: [
@@ -2462,7 +2470,7 @@ RECIPES.push(
   serveWith: 'Đi với mọi món kho, mọi món rang.'
 },
 {
-  id: 'long-xao-dua', name: 'Lòng xào dưa', cat: 'xao', role: 'man', diff: 2, serves: 4, prep: 25,
+  id: 'long-xao-dua', name: 'Lòng xào dưa', cat: 'xao', role: 'man', diff: 2, serves: 4,
   tags: ['lòng', 'dưa muối'],
   why: 'Món quán bia hơi Hà Nội, nhưng nấu ở nhà cũng được. Cái khó nằm ở khâu làm sạch lòng, không phải khâu xào.',
   ing: [
@@ -2486,7 +2494,7 @@ RECIPES.push(
   serveWith: 'Cơm nóng hoặc bia. Thêm bát mắm ớt để chấm lòng.'
 },
 {
-  id: 'ca-om-dua', name: 'Cá om dưa', cat: 'om', role: 'man', diff: 2, serves: 4, prep: 20,
+  id: 'ca-om-dua', name: 'Cá om dưa', cat: 'om', role: 'man', diff: 2, serves: 4,
   tags: ['cá', 'dưa muối'],
   why: 'Nồi om Bắc điển hình: cá rán qua rồi om với dưa chua, ăn cả nước lẫn cái. Một nồi này thay được cả món mặn lẫn bát canh.',
   ing: [
@@ -2512,7 +2520,7 @@ RECIPES.push(
   serveWith: 'Cơm nóng hoặc bún. Không cần thêm canh.'
 },
 {
-  id: 'bo-sot-vang', name: 'Bò sốt vang', cat: 'om', role: 'man', diff: 3, serves: 6, prep: 40,
+  id: 'bo-sot-vang', name: 'Bò sốt vang', cat: 'om', role: 'man', diff: 3, serves: 6,
   tags: ['thịt bò', 'cà chua'],
   why: 'Món Pháp nhập tịch Hà Nội. Khó ở chỗ phải kiên nhẫn: hầm đủ lâu thì bắp bò mềm mà không nát, vội là dai.',
   ing: [
@@ -2540,7 +2548,7 @@ RECIPES.push(
   serveWith: 'Bánh mì nóng, hoặc cơm trắng. Rắc rau mùi tàu thái nhỏ lên mặt.'
 },
 {
-  id: 'cha-com', name: 'Chả cốm', cat: 'ran', role: 'man', diff: 2, serves: 4, prep: 20,
+  id: 'cha-com', name: 'Chả cốm', cat: 'ran', role: 'man', diff: 2, serves: 4,
   tags: ['thịt lợn', 'cốm'],
   why: 'Món Hà Nội mùa thu. Vỏ ngoài vàng giòn, bên trong hạt cốm còn dẻo — khoảng cách giữa hai thứ đó là toàn bộ kỹ thuật của món.',
   ing: [
@@ -2562,7 +2570,7 @@ RECIPES.push(
   serveWith: 'Bún, rau sống và nước chấm chua ngọt. Hoặc ăn với cơm như món mặn.'
 },
 {
-  id: 'nom-hoa-chuoi', name: 'Nộm hoa chuối', cat: 'nom', role: 'rau', diff: 2, serves: 4, prep: 30,
+  id: 'nom-hoa-chuoi', name: 'Nộm hoa chuối', cat: 'nom', role: 'rau', diff: 2, serves: 4,
   tags: ['hoa chuối'],
   why: 'Món nộm Bắc giòn nhất. Toàn bộ độ khó nằm ở 5 phút đầu: hoa chuối thái xong mà không ngâm ngay thì đen sì.',
   ing: [
@@ -2585,7 +2593,7 @@ RECIPES.push(
   serveWith: 'Ăn như món khai vị hoặc món rau trong mâm; rất hợp với món kho đậm.'
 },
 {
-  id: 'dua-cai-muoi', name: 'Dưa cải muối chua', cat: 'nom', role: 'cham', diff: 2, serves: 6, prep: 20,
+  id: 'dua-cai-muoi', name: 'Dưa cải muối chua', cat: 'nom', role: 'cham', diff: 2, serves: 6, wait: '3–6 ngày',
   tags: ['dưa muối', 'chay'],
   why: 'Lọ dưa là thứ giữ cho mâm cơm Bắc không ngán suốt mùa đông. Muối hỏng gần như luôn vì cùng một lý do: dụng cụ còn dính dầu.',
   ing: [
@@ -2606,7 +2614,7 @@ RECIPES.push(
   serveWith: 'Ăn kèm thịt kho, thịt luộc, cá kho. Là món "chống ngán" của mâm Bắc.'
 },
 {
-  id: 'ca-phao-muoi', name: 'Cà pháo muối xổi', cat: 'nom', role: 'cham', diff: 1, serves: 6, prep: 15,
+  id: 'ca-phao-muoi', name: 'Cà pháo muối xổi', cat: 'nom', role: 'cham', diff: 1, serves: 6, wait: '3 ngày',
   tags: ['chay'],
   why: 'Ba ngày là ăn được, và là thứ đi cùng canh cua trong mâm cơm Bắc mùa hè. Giòn hay không quyết định ở bước phơi.',
   ing: [
@@ -2627,7 +2635,7 @@ RECIPES.push(
   serveWith: 'Canh cua rau đay, canh riêu, thịt luộc.'
 },
 {
-  id: 'ngan-luoc', name: 'Ngan luộc', cat: 'luoc', role: 'man', diff: 2, serves: 6, prep: 25,
+  id: 'ngan-luoc', name: 'Ngan luộc', cat: 'luoc', role: 'man', diff: 2, serves: 6,
   tags: ['ngan/vịt'],
   why: 'Anh em với gà luộc nhưng khó hơn một bậc: ngan nhiều mỡ và mùi mạnh hơn, luộc ẩu là hôi.',
   ing: [
@@ -2649,7 +2657,7 @@ RECIPES.push(
   serveWith: 'Bắt buộc chấm mắm gừng. Ăn kèm canh măng và bún.'
 },
 {
-  id: 'ga-xao-sa-ot', name: 'Gà xào sả ớt', cat: 'xao', role: 'man', diff: 1, serves: 4, prep: 15,
+  id: 'ga-xao-sa-ot', name: 'Gà xào sả ớt', cat: 'xao', role: 'man', diff: 1, serves: 4,
   tags: ['thịt gà'],
   why: 'Món xào đậm đà kiểu Trung – Nam, làm trong 20 phút. Chỉ cần nhớ: sả phi trước và phi thật kỹ.',
   ing: [
@@ -2678,7 +2686,7 @@ RECIPES.push(
 /* ---------- BIỂN & MIỀN TRUNG ---------- */
 RECIPES.push(
 {
-  id: 'cha-muc-ha-long', name: 'Chả mực giã tay', cat: 'ran', role: 'man', diff: 3, serves: 4, prep: 40,
+  id: 'cha-muc-ha-long', name: 'Chả mực giã tay', cat: 'ran', role: 'man', diff: 3, serves: 4,
   tags: ['mực'],
   why: 'Đặc sản Hạ Long, và là món chứng minh vì sao có những thứ máy xay không làm thay được: giã tay cho thớ mực dai, xay máy cho ra bột nhão.',
   ing: [
@@ -2702,7 +2710,7 @@ RECIPES.push(
   serveWith: 'Chấm tương ớt hoặc muối tiêu chanh. Ăn với xôi trắng hoặc bún.'
 },
 {
-  id: 'muc-mot-nang-nuong', name: 'Mực một nắng nướng', cat: 'nuong', role: 'ngoai', diff: 1, serves: 4, prep: 10,
+  id: 'muc-mot-nang-nuong', name: 'Mực một nắng nướng', cat: 'nuong', role: 'ngoai', diff: 1, serves: 4,
   tags: ['mực'],
   why: 'Món nhậu biển dễ nhất: không ướp, không nêm. Chỉ có một quyết định duy nhất — khi nào thì rút ra khỏi lửa.',
   ing: [
@@ -2721,7 +2729,7 @@ RECIPES.push(
   serveWith: 'Tương ớt hoặc muối ớt xanh, kèm dưa chuột. Món nhậu, không ăn với cơm.'
 },
 {
-  id: 'ca-nuc-hap-cuon-banh-trang', name: 'Cá nục hấp cuốn bánh tráng', cat: 'om', role: 'man', diff: 2, serves: 4, prep: 20,
+  id: 'ca-nuc-hap-cuon-banh-trang', name: 'Cá nục hấp cuốn bánh tráng', cat: 'om', role: 'man', diff: 2, serves: 4,
   tags: ['cá'],
   why: 'Món miền Trung ăn cả bữa: cá hấp, rau sống, bánh tráng và một bát mắm nêm — không cần thêm gì khác.',
   ing: [
@@ -3014,6 +3022,12 @@ var LABELS = {
     var h = Math.floor(m / 60), r = m % 60;
     return h + ' giờ' + (r ? ' ' + r + '′' : '');
   }
+  /* Thời gian CHỜ — ướp lạnh, ủ, muối, phơi — KHÔNG nằm trong `total`. `total` chỉ cộng
+     `m` của các bước, tức thời gian bạn thật sự đứng làm, và bộ lọc thời gian cũng lọc theo
+     đó. Nhưng món nào có chờ thì phải nói ra: nhãn "1 giờ 3′" trên một hũ dưa cải phải muối
+     ba ngày là nói dối người đọc. Dùng chuỗi chứ không phải số phút, vì phần lớn là khoảng
+     ("3–6 ngày") và làm tròn khoảng thành một con số là chính xác giả. */
+  function waitText(r) { return r.wait ? ' <span class="mc-wait">+ chờ ' + r.wait + '</span>' : ''; }
   function dots(d) {
     var s = '<span class="mc-dots">';
     for (var i = 1; i <= 3; i++) s += '<i class="' + (i <= d ? 'on' : '') + '"></i>';
@@ -3229,7 +3243,7 @@ var LABELS = {
       dipLine +
       '<div class="wb-tags">' + tags + more + '</div>' +
       '<div class="mc-card__foot">' +
-        '<span><span class="wb-ico">schedule</span> ' + timeText(r.total) + '</span>' +
+        '<span><span class="wb-ico">schedule</span> ' + timeText(r.total) + waitText(r) + '</span>' +
         '<span><span class="wb-ico">shopping_basket</span> ' + r.ing.length + ' ' + LABELS.thingWord + '</span>' +
         '<span><span class="wb-ico">format_list_numbered</span> ' + r.steps.length + ' bước</span>' +
       '</div>';
@@ -3464,7 +3478,7 @@ var LABELS = {
     byId('d-prog').style.width = Math.round(stepIdx / n * 100) + '%';
     byId('d-progn').textContent = stepIdx >= n ? 'xong ' + n + '/' + n : 'bước ' + (stepIdx + 1) + '/' + n;
     byId('d-next').textContent = stepIdx >= n ? 'Nấu lại từ đầu' : 'Xong bước này';
-    byId('d-stepn').textContent = timeText(current.total);
+    byId('d-stepn').textContent = timeText(current.total) + (current.wait ? ' + chờ ' + current.wait : '');
     renderFlow();
   }
 
@@ -3537,7 +3551,7 @@ var LABELS = {
       '<span class="wb-cap">' + roleOf(r.role).l + '</span>' +
       '<span class="wb-cap"><span class="wb-ico wb-ico--xs">' + regionOf(r.region).i + '</span> ' + regionOf(r.region).l + '</span>' +
       '<span class="wb-cap">' + dots(r.diff) + ' ' + diffLabel(r.diff) + '</span>' +
-      '<span class="wb-cap"><span class="wb-ico wb-ico--xs">schedule</span> ' + timeText(r.total) + '</span>' +
+      '<span class="wb-cap"><span class="wb-ico wb-ico--xs">schedule</span> ' + timeText(r.total) + waitText(r) + '</span>' +
       (r.tags || []).map(function (t) { return '<span class="wb-tag wb-tag--sm">' + t.replace(/\s/g, '-') + '</span>'; }).join('');
     var extra = '';
     if (r.tips && r.tips.length) {
