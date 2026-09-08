@@ -1,0 +1,5131 @@
+{
+ "cats": [
+  {
+   "k": "cake",
+   "l": "Gato & bông lan",
+   "i": "cake"
+  },
+  {
+   "k": "tart",
+   "l": "Tart & pie",
+   "i": "donut_large"
+  },
+  {
+   "k": "choux",
+   "l": "Choux & kem",
+   "i": "bakery_dining"
+  },
+  {
+   "k": "lam",
+   "l": "Ngàn lớp",
+   "i": "layers"
+  },
+  {
+   "k": "cookie",
+   "l": "Bánh quy nhỏ",
+   "i": "cookie"
+  },
+  {
+   "k": "lanh",
+   "l": "Lạnh, không nướng",
+   "i": "ac_unit"
+  },
+  {
+   "k": "custard",
+   "l": "Custard & flan",
+   "i": "egg_alt"
+  },
+  {
+   "k": "bread",
+   "l": "Bánh mì & brioche",
+   "i": "breakfast_dining"
+  },
+  {
+   "k": "chao",
+   "l": "Bánh chảo",
+   "i": "restaurant"
+  },
+  {
+   "k": "sot",
+   "l": "Sốt & kem",
+   "i": "water_drop"
+  }
+ ],
+ "roles": [
+  {
+   "k": "trangmieng",
+   "l": "Tráng miệng"
+  },
+  {
+   "k": "cafe",
+   "l": "Ăn với cà phê"
+  },
+  {
+   "k": "sang",
+   "l": "Bữa sáng"
+  },
+  {
+   "k": "tiec",
+   "l": "Bánh tiệc"
+  },
+  {
+   "k": "sot",
+   "l": "Sốt & kem"
+  }
+ ],
+ "regions": [
+  {
+   "k": "phap",
+   "l": "Pháp",
+   "i": "tour"
+  },
+  {
+   "k": "y",
+   "l": "Ý",
+   "i": "local_pizza"
+  },
+  {
+   "k": "anhmy",
+   "l": "Anh & Mỹ",
+   "i": "local_cafe"
+  },
+  {
+   "k": "trungau",
+   "l": "Trung Âu",
+   "i": "castle"
+  },
+  {
+   "k": "namau",
+   "l": "Nam Âu",
+   "i": "sunny"
+  },
+  {
+   "k": "chung",
+   "l": "Khắp nơi",
+   "i": "public"
+  }
+ ],
+ "diffs": [
+  {
+   "k": 1,
+   "l": "Dễ"
+  },
+  {
+   "k": 2,
+   "l": "Vừa"
+  },
+  {
+   "k": 3,
+   "l": "Khó"
+  }
+ ],
+ "times": [
+  {
+   "k": "a",
+   "l": "≤ 45 phút",
+   "max": 45
+  },
+  {
+   "k": "b",
+   "l": "45 phút – 2 giờ",
+   "max": 120
+  },
+  {
+   "k": "c",
+   "l": "> 2 giờ",
+   "max": 99999
+  }
+ ],
+ "recipes": [
+  {
+   "id": "madeleine",
+   "name": "Madeleine",
+   "cat": "cookie",
+   "role": "cafe",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "bơ",
+    "trứng",
+    "chanh"
+   ],
+   "why": "Bánh Pháp dễ nhất mà vẫn có một chi tiết kỹ thuật thật: cái bụng gồ lên giữa lưng bánh chỉ xuất hiện khi bột lạnh gặp lò nóng.",
+   "ing": [
+    {
+     "n": "Bột mì số 8",
+     "q": 120,
+     "u": "g",
+     "per": {
+      "n": 125,
+      "l": "cốc"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 110,
+     "u": "g",
+     "per": {
+      "n": 200,
+      "l": "cốc"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 2,
+     "u": "quả",
+     "note": "Để ra ngoài tủ lạnh trước 30 phút.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 120,
+     "u": "g",
+     "note": "Đun chảy, để nguội còn ấm tay.",
+     "r": "main"
+    },
+    {
+     "n": "Bột nở",
+     "q": 4,
+     "u": "g",
+     "per": {
+      "n": 4,
+      "l": "thìa cà phê"
+     },
+     "note": "Gạt bằng, đừng đầy ngọn.",
+     "r": "season"
+    },
+    {
+     "n": "Vỏ chanh vàng",
+     "q": 1,
+     "u": "quả",
+     "note": "Chỉ bào phần vàng, phần trắng đắng.",
+     "r": "season"
+    },
+    {
+     "n": "Muối",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đánh trứng đường",
+     "d": "Đánh trứng với đường và muối đến khi nhạt màu và đặc lại.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Nhấc phới lên, hỗn hợp <b>chảy xuống thành dải và giữ vệt 3 giây rồi mới chìm</b> — đây gọi là \"ribbon stage\"."
+    },
+    {
+     "t": "Trộn bột",
+     "d": "Rây bột và bột nở vào, fold nhẹ tay bằng spatula, không đánh.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Không còn vệt bột khô. <b>Dừng ngay khi vừa đều</b> — trộn thêm 20 vòng nữa là bánh dai."
+    },
+    {
+     "t": "Cho bơ và vỏ chanh",
+     "d": "Rưới bơ chảy còn ấm theo thành âu, thêm vỏ chanh bào, fold đến khi bóng.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Bột <b>bóng mượt, không còn váng bơ nổi trên mặt</b>."
+    },
+    {
+     "t": "Ướp lạnh — bước quan trọng nhất",
+     "d": "Bọc kín, để ngăn mát tối thiểu 1 tiếng, tốt nhất là qua đêm.",
+     "m": 60,
+     "heat": "Ngăn mát",
+     "cue": "Bột <b>đặc lại như kem, múc lên không chảy</b>. Bỏ bước này thì bánh vẫn ngon nhưng phẳng lì, không có bụng."
+    },
+    {
+     "t": "Nướng",
+     "d": "Bơ và phủ bột khuôn vỏ sò, múc bột đầy 3/4 mỗi ô, nướng lò đã nóng sẵn.",
+     "m": 11,
+     "heat": "Lò 200 °C",
+     "cue": "Giữa lưng bánh <b>gồ lên thành một cái bụng tròn</b> và mép bánh vàng nâu. Đó là dấu hiệu duy nhất cần nhìn."
+    },
+    {
+     "t": "Gỡ ngay khi ra lò",
+     "d": "Úp khuôn xuống rack, gõ nhẹ cho bánh rơi ra.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Bánh rời khuôn <b>trong một cú gõ</b>. Để nguội trong khuôn là bánh hấp hơi và mất giòn mép."
+    }
+   ],
+   "tips": [
+    "Madeleine ngon nhất trong <b>2 tiếng đầu</b> sau khi ra lò. Đây là loại bánh không để dành được.",
+    "Muốn bụng cao hơn nữa: khuôn cũng để lạnh, và lò nướng 220 °C trong 4 phút đầu rồi hạ xuống 190 °C."
+   ],
+   "serveWith": "Trà đen hoặc espresso. Chấm nhẹ vào trà là cách ăn của Proust."
+  },
+  {
+   "id": "financier",
+   "name": "Financier hạnh nhân",
+   "cat": "cookie",
+   "role": "cafe",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "bơ",
+    "hạnh nhân",
+    "lòng trắng"
+   ],
+   "why": "Cách xử lý chỗ lòng trắng trứng thừa, và là bài học đầu tiên về bơ nâu — thứ làm nên mùi hạt rang của bánh Pháp.",
+   "ing": [
+    {
+     "n": "Bơ lạt",
+     "q": 120,
+     "u": "g",
+     "note": "Sẽ đun thành bơ nâu (beurre noisette).",
+     "r": "main"
+    },
+    {
+     "n": "Bột hạnh nhân",
+     "q": 90,
+     "u": "g",
+     "per": {
+      "n": 90,
+      "l": "cốc lỏng"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Đường bột",
+     "q": 120,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì số 8",
+     "q": 50,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Lòng trắng trứng",
+     "q": 4,
+     "u": "quả",
+     "per": {
+      "n": 30,
+      "l": "lòng trắng"
+     },
+     "note": "Không cần đánh bông, chỉ đánh tan.",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    },
+    {
+     "n": "Hạnh nhân lát",
+     "q": 20,
+     "u": "g",
+     "note": "Rắc mặt.",
+     "r": "veg"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đun bơ nâu",
+     "d": "Đun bơ ở lửa vừa trong nồi đáy sáng màu, khuấy liên tục.",
+     "m": 6,
+     "heat": "Lửa vừa",
+     "cue": "Bơ sủi hết bọt, dưới đáy nồi xuất hiện <b>cặn nâu và mùi hạt rang</b>. Tắt ngay lúc này — thêm 30 giây là khét."
+    },
+    {
+     "t": "Trộn khô",
+     "d": "Rây đường bột, bột hạnh nhân, bột mì và muối vào âu.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>tơi, không vón</b>. Bột hạnh nhân hay vón cục, phải rây thật."
+    },
+    {
+     "t": "Cho lòng trắng",
+     "d": "Đánh tan lòng trắng (không bông), đổ vào hỗn hợp khô, khuấy đều.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>sánh mịn như kem đặc</b>."
+    },
+    {
+     "t": "Cho bơ nâu",
+     "d": "Rưới bơ nâu còn ấm (lọc bỏ cặn hoặc giữ lại tuỳ khẩu vị), khuấy đến bóng.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Bột <b>bóng và có mùi hạt rang rõ</b>. Để nghỉ lạnh 30 phút nếu có thời gian."
+    },
+    {
+     "t": "Nướng",
+     "d": "Đổ vào khuôn chữ nhật đã bơ, rắc hạnh nhân lát, nướng.",
+     "m": 15,
+     "heat": "Lò 190 °C",
+     "cue": "Mép bánh <b>nâu vàng và tách nhẹ khỏi thành khuôn</b>, giữa vẫn hơi ẩm khi xiên tăm."
+    }
+   ],
+   "tips": [
+    "Bơ nâu là toàn bộ mùi của cái bánh này. Dùng nồi <b>sáng màu</b> để nhìn được cặn chuyển nâu.",
+    "Financier để được 3 ngày trong hộp kín và ngày thứ hai còn ẩm hơn ngày đầu."
+   ],
+   "serveWith": "Cà phê. Rất hợp ăn kèm coulis quả mọng nếu bày ra đĩa."
+  },
+  {
+   "id": "sable",
+   "name": "Sablé bơ (bánh quy Pháp)",
+   "cat": "cookie",
+   "role": "cafe",
+   "diff": 1,
+   "serves": 12,
+   "tags": [
+    "bơ"
+   ],
+   "why": "Một tỉ lệ thay cho một công thức: 1 đường – 2 bơ – 3 bột. Thuộc rồi thì làm được bánh quy mọi lúc mà không cần tra gì.",
+   "ing": [
+    {
+     "n": "Bơ lạt",
+     "q": 200,
+     "u": "g",
+     "note": "Mềm ở nhiệt độ phòng — ấn ngón tay vào lún nhưng không dính.",
+     "r": "main"
+    },
+    {
+     "n": "Đường bột",
+     "q": 100,
+     "u": "g",
+     "note": "Đường bột cho bánh mịn; đường cát cho bánh giòn rôm rốp hơn.",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì số 8",
+     "q": 300,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 1,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 2,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Vani",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đánh bơ với đường",
+     "d": "Đánh bơ mềm với đường bột và muối đến khi nhạt màu.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>chuyển từ vàng sang trắng ngà và nở phồng</b>. Bơ lạnh thì không bao giờ tới trạng thái này."
+    },
+    {
+     "t": "Cho lòng đỏ và vani",
+     "d": "Cho lòng đỏ, vani, đánh thêm 30 giây.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>quyện, không tách nước</b>. Tách nước nghĩa là trứng lạnh quá."
+    },
+    {
+     "t": "Trộn bột — dừng sớm",
+     "d": "Rây bột vào, trộn bằng spatula đến khi vừa kết thành khối.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Bột <b>vừa dính lại thành khối, còn thấy vài chỗ lấm tấm</b>. Nhồi tiếp là bánh dai chứ không tan trong miệng."
+    },
+    {
+     "t": "Lăn thành khúc và ướp lạnh",
+     "d": "Lăn bột thành khúc tròn đường kính 4 cm, bọc kín, để ngăn mát 1 tiếng.",
+     "m": 60,
+     "heat": "Ngăn mát",
+     "cue": "Khúc bột <b>cứng, cắt lát không bị bẹp</b>. Đây là điều kiện để bánh giữ hình tròn."
+    },
+    {
+     "t": "Cắt và nướng",
+     "d": "Cắt lát dày 8 mm, xếp cách nhau 3 cm, nướng.",
+     "m": 14,
+     "heat": "Lò 170 °C",
+     "cue": "Chỉ <b>viền bánh ngả vàng, mặt trên vẫn nhạt màu</b>. Vàng đều cả mặt là đã quá và bánh sẽ cứng."
+    }
+   ],
+   "tips": [
+    "Khúc bột bọc kín để ngăn đá được <b>1 tháng</b>: thèm lúc nào cắt lát nướng lúc đó, không cần rã đông.",
+    "Muốn viền bánh có hạt đường: lăn khúc bột qua đường cát trước khi cắt."
+   ],
+   "serveWith": "Trà chiều. Hoặc dùng làm đế nghiền vụn cho cheesecake."
+  },
+  {
+   "id": "crepe",
+   "name": "Crêpe Pháp",
+   "cat": "chao",
+   "role": "sang",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "trứng",
+    "sữa"
+   ],
+   "why": "Cái chảo đầu tiên bao giờ cũng hỏng, và đó là chuyện bình thường — nó dùng để dò nhiệt độ chảo, người Pháp còn có tên riêng cho nó.",
+   "ing": [
+    {
+     "n": "Bột mì số 8",
+     "q": 200,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 3,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi",
+     "q": 500,
+     "u": "ml",
+     "per": {
+      "n": 250,
+      "l": "cốc"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 40,
+     "u": "g",
+     "note": "Đun chảy, cho vào bột — không phải để tráng chảo.",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 30,
+     "u": "g",
+     "note": "Bỏ đường nếu làm crêpe mặn.",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    },
+    {
+     "n": "Vani (hoặc rượu rum)",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Trộn bột",
+     "d": "Đánh trứng với sữa, đổ vào bột đã rây, khuấy từ giữa ra ngoài.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Bột <b>loãng như kem tươi chưa đánh, chảy thành dòng liền</b>. Đặc quá thì crêpe dày và dai."
+    },
+    {
+     "t": "Lọc và để nghỉ",
+     "d": "Lọc qua rây, cho bơ chảy và vani, để nghỉ 30 phút.",
+     "m": 30,
+     "heat": "—",
+     "cue": "Không còn cục bột nào trên rây. Nghỉ đủ thì <b>bọt khí trên mặt tan hết</b> — bột nghỉ cho crêpe mềm hơn hẳn."
+    },
+    {
+     "t": "Dò nhiệt bằng cái đầu tiên",
+     "d": "Chảo chống dính 24 cm, lửa vừa, quét một lớp bơ mỏng, đổ một muôi bột và xoay tròn ngay.",
+     "m": 3,
+     "heat": "Lửa vừa",
+     "cue": "Bột <b>bám kín đáy trong 3 giây</b>. Chậm hơn là chảo nguội; bột đông ngay khi chạm là chảo quá nóng."
+    },
+    {
+     "t": "Tráng cả mẻ",
+     "d": "Mỗi mặt khoảng 45 giây, lật khi mép bánh tự bong.",
+     "m": 15,
+     "heat": "Lửa vừa",
+     "cue": "Mép crêpe <b>tự tách khỏi thành chảo và mặt dưới có đốm nâu vàng</b>. Lật sớm là bánh rách."
+    }
+   ],
+   "tips": [
+    "Cái crêpe đầu tiên hỏng là bình thường — người Pháp gọi nó là <b>\"cái của con chó\"</b>. Đừng chỉnh công thức vì nó.",
+    "Xếp chồng crêpe lên nhau khi còn nóng và đậy khăn: hơi nước giữ chúng mềm."
+   ],
+   "serveWith": "Đường và chanh, hoặc sốt caramel muối, hoặc ganache. Crêpe Suzette thì đun sốt cam với Grand Marnier."
+  },
+  {
+   "id": "clafoutis",
+   "name": "Clafoutis anh đào",
+   "cat": "custard",
+   "role": "trangmieng",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "trứng",
+    "sữa",
+    "quả tươi"
+   ],
+   "why": "Nằm giữa bánh flan và bánh bông lan, và làm xong trong 12 phút chuẩn bị. Món tráng miệng nông thôn Pháp đúng nghĩa.",
+   "ing": [
+    {
+     "n": "Anh đào (hoặc mận, nho, việt quất)",
+     "q": 400,
+     "u": "g",
+     "per": {
+      "n": 8,
+      "l": "quả anh đào"
+     },
+     "note": "Kiểu truyền thống để nguyên hạt — hạt cho mùi hạnh nhân.",
+     "r": "veg"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 3,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi",
+     "q": 300,
+     "u": "ml",
+     "per": {
+      "n": 250,
+      "l": "cốc"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Kem tươi",
+     "q": 100,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 90,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì số 8",
+     "q": 60,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 20,
+     "u": "g",
+     "note": "Bơ khuôn.",
+     "r": "season"
+    },
+    {
+     "n": "Muối + vani",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Chuẩn bị khuôn",
+     "d": "Bơ khuôn sứ 24 cm, rắc một lớp đường mỏng, xếp quả kín đáy.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Đáy khuôn <b>kín quả, không còn khoảng trống lớn</b> — quả nổi lên khi đổ bột nếu xếp thưa."
+    },
+    {
+     "t": "Đánh hỗn hợp",
+     "d": "Đánh trứng với đường, cho bột, rồi từ từ đổ sữa và kem, thêm vani và muối.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>loãng như bột crêpe, mịn không cục</b>. Lọc qua rây cho chắc."
+    },
+    {
+     "t": "Nướng",
+     "d": "Đổ nhẹ hỗn hợp lên quả, nướng ở rãnh giữa.",
+     "m": 40,
+     "heat": "Lò 180 °C",
+     "cue": "Mặt <b>phồng lên, vàng nâu, và lắc khuôn thì giữa chỉ rung nhẹ như thạch</b> chứ không sóng sánh."
+    },
+    {
+     "t": "Để nguội bớt",
+     "d": "Lấy ra, để nguội 20 phút — bánh sẽ xẹp xuống, đó là đúng.",
+     "m": 20,
+     "heat": "—",
+     "cue": "Mặt bánh <b>xẹp lại thành mặt phẳng hơi lõm</b>. Clafoutis không giữ độ phồng, đừng lo."
+    }
+   ],
+   "tips": [
+    "Ăn <b>ấm</b>, không ăn lạnh. Để tủ lạnh qua đêm là bánh cứng và mất mùi.",
+    "Anh đào để nguyên hạt cho mùi thơm hơn — nhưng phải báo người ăn."
+   ],
+   "serveWith": "Rắc đường bột. Rất hợp một muôi kem vani hoặc crème anglaise."
+  },
+  {
+   "id": "creme-brulee",
+   "name": "Crème brûlée",
+   "cat": "custard",
+   "role": "trangmieng",
+   "diff": 2,
+   "serves": 8,
+   "wait": "4 tiếng",
+   "tags": [
+    "kem tươi",
+    "lòng đỏ",
+    "vani"
+   ],
+   "why": "Ba nguyên liệu và một cái đèn khò. Cái khó duy nhất là nướng cách thuỷ đúng độ: quá 5 phút là custard rỗ tổ ong.",
+   "ing": [
+    {
+     "n": "Kem tươi (whipping 35%)",
+     "q": 500,
+     "u": "ml",
+     "per": {
+      "n": 250,
+      "l": "hộp nhỏ"
+     },
+     "note": "Không thay bằng sữa — sữa không đủ béo để đông thành custard mượt.",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 6,
+     "u": "quả",
+     "per": {
+      "n": 20,
+      "l": "lòng đỏ"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 90,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Vani (quả hoặc chiết xuất)",
+     "q": 1,
+     "u": "quả",
+     "note": "Quả vani chẻ dọc cạo hạt. Không có thì 2 thìa cà phê chiết xuất.",
+     "r": "season"
+    },
+    {
+     "n": "Muối",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    },
+    {
+     "n": "Đường để khò",
+     "q": 40,
+     "u": "g",
+     "note": "Đường cát mịn, rắc mỏng lúc ăn.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Hâm kem với vani",
+     "d": "Đun kem với hạt vani và cả vỏ quả đến khi bốc hơi nhẹ, không sôi. Tắt bếp, ngâm 15 phút.",
+     "m": 18,
+     "heat": "Lửa nhỏ",
+     "cue": "Mép nồi <b>lăn tăn bọt nhỏ, mặt kem bốc hơi</b> — khoảng 80 °C. Sôi lên là kem tách và có mùi sữa nấu."
+    },
+    {
+     "t": "Đánh lòng đỏ",
+     "d": "Đánh lòng đỏ với đường và muối, chỉ đến khi tan đường.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>vàng nhạt và sánh nhẹ</b>. Đánh bông quá là custard có bọt và mặt rỗ."
+    },
+    {
+     "t": "Hoà từ từ (tempering)",
+     "d": "Rót kem nóng vào lòng đỏ thành dòng nhỏ, khuấy liên tục.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>mượt, không có sợi trứng chín</b>. Đổ nhanh là thành trứng bác ngay tại chỗ."
+    },
+    {
+     "t": "Lọc và hớt bọt",
+     "d": "Lọc qua rây vào cốc rót, hớt sạch bọt trên mặt rồi chia vào ramekin.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Mặt custard trong ramekin <b>phẳng và không một bọt khí</b>. Bọt còn lại sẽ thành lỗ rỗ sau khi nướng."
+    },
+    {
+     "t": "Nướng cách thuỷ",
+     "d": "Đặt ramekin vào khay sâu, rót nước nóng ngập nửa thành ramekin, nướng.",
+     "m": 40,
+     "heat": "Lò 150 °C",
+     "cue": "Lắc nhẹ khay: giữa mặt custard <b>rung như thạch, mép đã đông</b>. Còn sóng sánh như nước là chưa; nứt là đã quá."
+    },
+    {
+     "t": "Làm lạnh rồi khò",
+     "d": "Để nguội, ướp lạnh tối thiểu 4 tiếng. Lúc ăn rắc đường mỏng và khò.",
+     "m": 6,
+     "heat": "Đèn khò",
+     "cue": "Lớp đường <b>chuyển hổ phách và cứng lại, gõ thìa nghe tách</b>. Khò trước khi ướp lạnh thì lớp đường sẽ chảy ra."
+    }
+   ],
+   "tips": [
+    "Không có đèn khò: rắc đường rồi để ramekin dưới thanh nhiệt trên của lò ở nấc cao nhất trong 2–3 phút, nhìn không rời mắt.",
+    "Custard đã lạnh mới khò. Khò lúc còn ấm là mặt đường chảy thành siro chứ không giòn."
+   ],
+   "serveWith": "Tự nó đã đủ. Vài quả mâm xôi bên cạnh nếu muốn cắt ngọt."
+  },
+  {
+   "id": "creme-caramel",
+   "name": "Crème caramel (bánh flan)",
+   "cat": "custard",
+   "role": "trangmieng",
+   "diff": 2,
+   "serves": 8,
+   "wait": "4 tiếng",
+   "tags": [
+    "trứng",
+    "sữa",
+    "caramel"
+   ],
+   "why": "Anh em của crème brûlée nhưng dùng cả quả trứng nên chắc hơn, và có thêm một bài học riêng: nấu caramel.",
+   "ing": [
+    {
+     "n": "Sữa tươi",
+     "q": 500,
+     "u": "ml",
+     "per": {
+      "n": 250,
+      "l": "cốc"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Kem tươi",
+     "q": 100,
+     "u": "ml",
+     "note": "Bỏ cũng được, nhưng có thì flan mượt hơn.",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 3,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 2,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Đường (cho custard)",
+     "q": 80,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Đường (cho caramel)",
+     "q": 100,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Nước (cho caramel)",
+     "q": 30,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Vani",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Nấu caramel",
+     "d": "Đun đường với nước ở lửa vừa, <b>không khuấy</b>, chỉ lắc nồi.",
+     "m": 8,
+     "heat": "Lửa vừa",
+     "cue": "Đường chuyển <b>màu hổ phách như mật ong sẫm và bốc khói mỏng</b>. Tắt bếp ngay — nhiệt dư sẽ đưa nó sẫm thêm một bậc."
+    },
+    {
+     "t": "Tráng khuôn",
+     "d": "Rót caramel vào đáy ramekin, xoay đều, để nguội cho cứng lại.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Caramel <b>đông cứng, gõ nghe cạch</b>. Rót chậm là nó đông ngay trong nồi."
+    },
+    {
+     "t": "Hâm sữa và tempering",
+     "d": "Hâm sữa với kem đến 80 °C. Đánh tan trứng với đường rồi rót sữa nóng vào từ từ.",
+     "m": 8,
+     "heat": "Lửa nhỏ",
+     "cue": "Hỗn hợp <b>đồng nhất, không có sợi trứng</b>. Đánh trứng nhẹ tay — nhiều bọt là flan rỗ."
+    },
+    {
+     "t": "Lọc và rót",
+     "d": "Lọc hai lần qua rây, hớt bọt, rót vào ramekin đã có caramel.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Mặt <b>phẳng, không bọt</b>. Đây là bước quyết định flan mịn hay rỗ."
+    },
+    {
+     "t": "Nướng cách thuỷ",
+     "d": "Đặt vào khay có nước nóng ngập nửa, phủ giấy bạc, nướng.",
+     "m": 45,
+     "heat": "Lò 150 °C",
+     "cue": "Giữa mặt <b>rung nhẹ khi lắc, xiên tăm ra sạch</b>. Nhiệt cao hơn 160 °C là flan rỗ tổ ong, không cứu được."
+    },
+    {
+     "t": "Làm lạnh rồi úp",
+     "d": "Để nguội, ướp lạnh tối thiểu 4 tiếng. Lấy dao lách quanh thành rồi úp ra đĩa.",
+     "m": 10,
+     "heat": "Ngăn mát",
+     "cue": "Úp ra, caramel <b>chảy thành lớp nước sốt quanh bánh</b>. Úp lúc còn ấm là flan vỡ."
+    }
+   ],
+   "tips": [
+    "Không khuấy caramel bằng thìa — đường sẽ kết tinh lại thành cục. Chỉ lắc nồi.",
+    "Caramel đun quá sẫm thì đắng, chưa đủ thì nhạt. Màu đúng là <b>hổ phách sẫm, gần như màu đồng</b>."
+   ],
+   "serveWith": "Tự nó đã đủ — caramel chính là nước sốt."
+  },
+  {
+   "id": "mousse-chocolat",
+   "name": "Mousse au chocolat",
+   "cat": "lanh",
+   "role": "trangmieng",
+   "diff": 2,
+   "serves": 8,
+   "tags": [
+    "chocolate",
+    "trứng"
+   ],
+   "why": "Hai nguyên liệu chính và không cần lò. Toàn bộ kỹ thuật nằm ở chữ \"fold\" — và đây là chỗ tốt nhất để học nó.",
+   "ing": [
+    {
+     "n": "Chocolate đen 70%",
+     "q": 200,
+     "u": "g",
+     "note": "Chocolate thật, không phải compound.",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 5,
+     "u": "quả",
+     "note": "Tách riêng lòng đỏ và lòng trắng. Trứng thật tươi vì món này không nấu chín.",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 60,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 40,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    },
+    {
+     "n": "Kem tươi",
+     "q": 100,
+     "u": "ml",
+     "note": "Tuỳ chọn — cho mousse mềm hơn kiểu nhà hàng.",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đun chảy chocolate",
+     "d": "Đun chocolate với bơ cách thuỷ, khuấy nhẹ.",
+     "m": 6,
+     "heat": "Cách thuỷ",
+     "cue": "Chocolate <b>chảy mượt, bóng, không quá 45 °C</b> (chạm môi thấy ấm chứ không nóng). Quá nóng là nó sẽ nấu chín lòng đỏ."
+    },
+    {
+     "t": "Cho lòng đỏ",
+     "d": "Để chocolate nguội bớt 3 phút rồi khuấy lòng đỏ vào từng quả một.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>đặc lại, bóng như satin</b>. Nếu vón hạt là chocolate còn nóng quá."
+    },
+    {
+     "t": "Đánh lòng trắng",
+     "d": "Đánh lòng trắng với muối, cho đường vào làm ba lần khi đã nổi bọt lớn.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Nhấc que lên, chóp <b>đứng và chỉ hơi gục đầu</b> (chóp mềm). Đánh đến chóp cứng là mousse bị khô và có bọt to."
+    },
+    {
+     "t": "Fold — làm ba lần",
+     "d": "Trộn 1/3 lòng trắng vào chocolate để làm loãng, rồi fold nốt 2/3 còn lại bằng spatula, cắt xuống giữa và hất lên.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>đồng màu, không còn vệt trắng, và vẫn phồng</b>. Còn vệt trắng thì chưa xong; hết phồng là đã fold quá tay."
+    },
+    {
+     "t": "Ướp lạnh",
+     "d": "Chia vào cốc, bọc kín, để ngăn mát tối thiểu 4 tiếng.",
+     "m": 240,
+     "heat": "Ngăn mát",
+     "cue": "Mousse <b>đứng thìa, múc lên thành khối giữ nếp</b>."
+    }
+   ],
+   "tips": [
+    "Fold là <b>cắt xuống — hất lên — xoay âu</b>, không phải khuấy vòng. Khuấy vòng làm vỡ hết bọt khí.",
+    "Món này dùng trứng sống: chọn trứng tiệt trùng (pasteurized) hoặc trứng thật tươi, giữ lạnh và ăn trong 2 ngày. Không cho <b>trẻ nhỏ, thai phụ, người già, người suy giảm miễn dịch</b> ăn."
+   ],
+   "serveWith": "Chantilly và một chút muối biển. Hoặc coulis mâm xôi để cắt độ béo."
+  },
+  {
+   "id": "tarte-tatin",
+   "name": "Tarte Tatin táo",
+   "cat": "tart",
+   "role": "trangmieng",
+   "diff": 2,
+   "serves": 8,
+   "tags": [
+    "táo",
+    "caramel",
+    "bơ"
+   ],
+   "why": "Bánh táo lộn ngược, ra đời từ một tai nạn trong bếp. Điểm khó nằm ở chỗ ít ai ngờ: úp bánh ra đĩa mà không bỏng và không vỡ.",
+   "ing": [
+    {
+     "n": "Táo (Fuji, Gala hoặc táo xanh)",
+     "q": 1000,
+     "u": "g",
+     "per": {
+      "n": 180,
+      "l": "quả vừa"
+     },
+     "note": "Gọt vỏ, bổ tư, bỏ lõi. Táo giòn chứ đừng táo bở.",
+     "r": "veg"
+    },
+    {
+     "n": "Đường",
+     "q": 150,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 80,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột puff pastry (hoặc pâte brisée)",
+     "q": 250,
+     "u": "g",
+     "note": "Mua sẵn cũng hoàn toàn được cho món này.",
+     "r": "main"
+    },
+    {
+     "n": "Nước cốt chanh",
+     "q": 1,
+     "u": "thìa canh",
+     "note": "Xóc với táo cho khỏi thâm.",
+     "r": "season"
+    },
+    {
+     "n": "Vani hoặc quế",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Nấu caramel trong chảo gang",
+     "d": "Đun đường trong chảo gang 24 cm chịu lò, không khuấy, đến màu hổ phách rồi cho bơ vào khuấy tan.",
+     "m": 8,
+     "heat": "Lửa vừa",
+     "cue": "Caramel <b>màu hổ phách, sủi đều, quyện với bơ thành sốt bóng</b>."
+    },
+    {
+     "t": "Xếp táo thật khít",
+     "d": "Xếp táo úp mặt cong xuống, xếp vòng tròn khít nhau, chèn miếng nhỏ vào khe.",
+     "m": 8,
+     "heat": "Lửa nhỏ",
+     "cue": "Mặt chảo <b>kín táo, không thấy đáy</b>. Táo sẽ co lại 1/3 khi nấu — xếp thưa là bánh rỗng."
+    },
+    {
+     "t": "Rim táo trên bếp",
+     "d": "Rim lửa nhỏ, thỉnh thoảng nghiêng chảo rưới caramel lên táo.",
+     "m": 20,
+     "heat": "Lửa nhỏ",
+     "cue": "Táo <b>ngả vàng hổ phách, mềm nhưng còn giữ hình múi</b> và caramel sánh lại. Bước này quyết định bánh có ướt nhão hay không."
+    },
+    {
+     "t": "Phủ bột và nướng",
+     "d": "Cán bột thành hình tròn to hơn chảo 2 cm, phủ lên, nhét mép bột xuống quanh thành, chọc vài lỗ thoát hơi.",
+     "m": 30,
+     "heat": "Lò 200 °C",
+     "cue": "Vỏ bánh <b>phồng, vàng nâu đều và khô ráo</b>. Caramel sôi trào lên mép là bình thường."
+    },
+    {
+     "t": "Nghỉ 10 phút rồi úp",
+     "d": "Để nguyên 10 phút, úp đĩa lên chảo rồi lật dứt khoát trong một động tác.",
+     "m": 12,
+     "heat": "—",
+     "cue": "Úp ra thấy <b>mặt táo bóng màu hổ phách, caramel không chảy loang</b>. Úp ngay khi vừa ra lò là caramel còn lỏng và chảy hết; để nguội hẳn là bánh dính chặt chảo."
+    }
+   ],
+   "tips": [
+    "Táo phải là loại <b>giữ được hình khi nấu</b>. Táo bở sẽ thành mứt táo và bánh nhão.",
+    "Nếu để nguội quá và bánh dính chảo: hâm lại đáy chảo trên bếp 1 phút rồi úp."
+   ],
+   "serveWith": "Ăn ấm với một muôi kem vani — đây là cặp kinh điển, nóng gặp lạnh."
+  },
+  {
+   "id": "tarte-citron",
+   "name": "Tarte au citron",
+   "cat": "tart",
+   "role": "trangmieng",
+   "diff": 2,
+   "serves": 8,
+   "wait": "3 tiếng",
+   "tags": [
+    "chanh",
+    "bơ",
+    "trứng"
+   ],
+   "why": "Bài học về hai thứ cùng lúc: đế tart nướng mù (blind bake) và lemon curd. Cả hai đều có một ngưỡng rõ ràng để dừng.",
+   "ing": [
+    {
+     "n": "Bột mì số 8",
+     "q": 200,
+     "u": "g",
+     "note": "Cho phần đế.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt (cho đế)",
+     "q": 100,
+     "u": "g",
+     "note": "Lạnh, cắt hạt lựu.",
+     "r": "main"
+    },
+    {
+     "n": "Đường bột (cho đế)",
+     "q": 60,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng (cho đế)",
+     "q": 1,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Chanh vàng",
+     "q": 4,
+     "u": "quả",
+     "per": {
+      "n": 60,
+      "l": "quả"
+     },
+     "note": "Lấy 120 ml nước cốt và vỏ bào của 2 quả.",
+     "r": "veg"
+    },
+    {
+     "n": "Trứng gà (cho nhân)",
+     "q": 3,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Đường (cho nhân)",
+     "q": 130,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt (cho nhân)",
+     "q": 120,
+     "u": "g",
+     "note": "Cắt hạt lựu, để lạnh — cho vào cuối cùng.",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Làm bột đế",
+     "d": "Xoa bơ lạnh vào bột và đường bột bằng đầu ngón tay đến khi thành vụn, cho lòng đỏ, vừa kết khối thì dừng.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Bột <b>vừa dính lại, còn thấy hạt bơ nhỏ</b>. Hạt bơ chính là thứ tạo lớp giòn."
+    },
+    {
+     "t": "Nghỉ, cán, lót khuôn, nghỉ tiếp",
+     "d": "Bọc kín để lạnh 30 phút, cán mỏng 3 mm, lót vào khuôn tart 22 cm, ấn nhẹ chứ không kéo. Để lạnh thêm 30 phút.",
+     "m": 65,
+     "heat": "Ngăn mát",
+     "cue": "Đế <b>cứng lại, ấn không lún</b>. Bỏ lần nghỉ thứ hai là đế co lại tụt xuống khi nướng."
+    },
+    {
+     "t": "Nướng mù",
+     "d": "Lót giấy nến, đổ đầy đậu khô hoặc gạo, nướng 15 phút rồi bỏ đậu nướng tiếp 8 phút.",
+     "m": 25,
+     "heat": "Lò 180 °C",
+     "cue": "Đế <b>vàng đều cả đáy, khô ráo và có mùi bơ nướng</b>. Đáy còn nhạt màu là sau này sẽ ỉu khi đổ nhân."
+    },
+    {
+     "t": "Nấu lemon curd",
+     "d": "Đánh trứng với đường, cho nước cốt chanh và vỏ bào, đun cách thuỷ khuấy liên tục.",
+     "m": 12,
+     "heat": "Cách thuỷ",
+     "cue": "Hỗn hợp <b>đặc lại, kéo ngón tay qua mặt thìa để lại rãnh không khép</b> — khoảng 82 °C. Quá 85 °C là lợn cợn."
+    },
+    {
+     "t": "Cho bơ lạnh",
+     "d": "Bắc khỏi bếp, cho bơ lạnh từng ít một, khuấy đến tan hết rồi lọc qua rây.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Curd <b>bóng như satin và mượt tuyệt đối</b>. Cho bơ lúc còn trên bếp là curd tách dầu."
+    },
+    {
+     "t": "Đổ nhân và làm lạnh",
+     "d": "Đổ curd vào đế còn ấm, gạt phẳng, để nguội rồi ướp lạnh 3 tiếng.",
+     "m": 15,
+     "heat": "Ngăn mát",
+     "cue": "Mặt bánh <b>phẳng, bóng, cắt ra thấy đứng thành</b>."
+    }
+   ],
+   "tips": [
+    "Hai lần nghỉ lạnh của đế tart là bắt buộc, không phải để cho có. Đó là toàn bộ lý do đế không co.",
+    "Muốn kiểu meringuée: phủ meringue Ý lên mặt rồi khò vàng."
+   ],
+   "serveWith": "Tự nó đã đủ. Vài quả mâm xôi để cân màu nếu bày tiệc."
+  },
+  {
+   "id": "canele",
+   "name": "Canelé Bordeaux",
+   "cat": "custard",
+   "role": "cafe",
+   "diff": 3,
+   "serves": 12,
+   "tags": [
+    "sữa",
+    "rượu rum",
+    "vani"
+   ],
+   "why": "Vỏ ngoài cứng gần như cháy, trong ruột mềm như flan — hai thái cực trong một cái bánh nhỏ. Đòi hai thứ mà không mẹo nào thay được: bột nghỉ 24 tiếng và khuôn tráng sáp ong.",
+   "ing": [
+    {
+     "n": "Sữa tươi",
+     "q": 500,
+     "u": "ml",
+     "per": {
+      "n": 250,
+      "l": "cốc"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 250,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì số 8",
+     "q": 125,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 1,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 3,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 50,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Rượu rum đen",
+     "q": 50,
+     "u": "ml",
+     "note": "Không thay được bằng thứ khác nếu muốn đúng mùi.",
+     "r": "season"
+    },
+    {
+     "n": "Vani",
+     "q": 1,
+     "u": "quả",
+     "r": "season"
+    },
+    {
+     "n": "Sáp ong + bơ (tráng khuôn)",
+     "q": 50,
+     "u": "g",
+     "note": "Tỉ lệ 1 sáp : 1 bơ. Không có sáp thì bơ dày cũng tạm được nhưng vỏ kém giòn.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đun sữa với vani và bơ",
+     "d": "Đun sữa với quả vani chẻ và bơ đến khi bốc hơi, không sôi. Để nguội còn ấm.",
+     "m": 10,
+     "heat": "Lửa nhỏ",
+     "cue": "Mặt sữa <b>bốc hơi, mép nồi lăn tăn</b> — khoảng 80 °C."
+    },
+    {
+     "t": "Trộn bột",
+     "d": "Trộn bột với đường, cho trứng và lòng đỏ, khuấy nhẹ rồi rót sữa ấm vào từ từ.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>loãng như bột crêpe</b>. Khuấy nhẹ tay — đánh mạnh làm gluten phát triển và ruột bánh sẽ dai."
+    },
+    {
+     "t": "Cho rum, lọc, nghỉ 24 tiếng",
+     "d": "Cho rum, lọc qua rây, bọc kín, để ngăn mát tối thiểu 24 tiếng (tốt nhất 48).",
+     "m": 1440,
+     "heat": "Ngăn mát",
+     "cue": "Bột <b>tách lớp và lắng xuống</b> — đó là bình thường, khuấy nhẹ lại trước khi dùng. Không nghỉ đủ thì ruột bánh đặc và không có tổ ong."
+    },
+    {
+     "t": "Tráng khuôn",
+     "d": "Đun chảy sáp ong với bơ, rót vào khuôn đồng đã hơ nóng, xoay đều rồi đổ ngược ra, úp khuôn cho ráo.",
+     "m": 12,
+     "heat": "Lửa nhỏ",
+     "cue": "Lòng khuôn <b>phủ một lớp sáp mỏng bóng, không đọng vũng ở đáy</b>. Lớp dày là bánh không nở lên được."
+    },
+    {
+     "t": "Nướng hai nhiệt",
+     "d": "Rót bột đầy 4/5 khuôn lạnh, nướng 15 phút ở 240 °C rồi hạ xuống 180 °C nướng tiếp.",
+     "m": 60,
+     "heat": "Lò 240 °C → 180 °C",
+     "cue": "Vỏ <b>nâu sẫm gần như đen bóng, cứng khi gõ</b>. Màu nâu nhạt nghĩa là chưa xong — đây là loại bánh phải nướng đến chỗ trông như cháy."
+    },
+    {
+     "t": "Gỡ ngay và để nguội đứng",
+     "d": "Úp khuôn ra rack ngay khi vừa ra lò, để nguội hoàn toàn.",
+     "m": 30,
+     "heat": "—",
+     "cue": "Bánh <b>rơi ra khỏi khuôn, vỏ giòn nghe tách khi cắn</b>. Để trong khuôn là hơi nước làm vỏ mềm nhũn."
+    }
+   ],
+   "tips": [
+    "Khuôn đồng cho kết quả tốt nhất; khuôn silicon làm được nhưng vỏ không bao giờ giòn bằng.",
+    "Canelé chỉ giữ được vỏ giòn trong <b>4–6 tiếng</b>. Đây là bánh làm để ăn trong ngày."
+   ],
+   "serveWith": "Espresso. Không cần thêm gì cả."
+  },
+  {
+   "id": "choux-chantilly",
+   "name": "Choux kem (profiterole)",
+   "cat": "choux",
+   "role": "trangmieng",
+   "diff": 2,
+   "serves": 8,
+   "tags": [
+    "trứng",
+    "bơ",
+    "kem tươi"
+   ],
+   "why": "Vỏ choux là loại bột duy nhất được nấu chín trên bếp trước khi vào lò. Học được nó là mở ra cả éclair, Paris-Brest, gougère.",
+   "ing": [
+    {
+     "n": "Nước",
+     "q": 125,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi",
+     "q": 125,
+     "u": "ml",
+     "note": "Nửa nước nửa sữa cho vỏ vừa giòn vừa vàng đẹp.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 110,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì số 11",
+     "q": 150,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 4,
+     "u": "quả",
+     "note": "Đánh tan sẵn ra bát — cho vào từ từ, có thể không dùng hết.",
+     "r": "main"
+    },
+    {
+     "n": "Muối + đường",
+     "q": 5,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Kem tươi (nhân)",
+     "q": 300,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Đường bột (nhân)",
+     "q": 30,
+     "u": "g",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đun sôi chất lỏng với bơ",
+     "d": "Đun nước, sữa, bơ, muối, đường đến sôi bùng.",
+     "m": 5,
+     "heat": "Lửa vừa",
+     "cue": "Bơ <b>tan hết đúng lúc hỗn hợp sôi</b>. Sôi trước khi bơ tan là bay mất nước, tỉ lệ sai."
+    },
+    {
+     "t": "Cho bột, khuấy thành khối",
+     "d": "Bắc khỏi bếp, đổ hết bột vào một lần, khuấy mạnh cho quyện, rồi bắc lại lên bếp khuấy tiếp.",
+     "m": 4,
+     "heat": "Lửa nhỏ",
+     "cue": "Khối bột <b>tách khỏi thành nồi thành một cục và để lại một lớp màng mỏng dưới đáy nồi</b>. Đây là dấu hiệu bột đã đủ khô."
+    },
+    {
+     "t": "Hạ nhiệt rồi cho trứng",
+     "d": "Trút bột ra âu, đánh 2 phút cho bớt nóng, rồi cho trứng đánh tan vào từng ít một.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Nhấc phới lên, bột <b>chảy xuống thành hình chữ V rồi đứt</b>. Đến trạng thái này thì dừng, dù còn thừa trứng."
+    },
+    {
+     "t": "Bắt bánh và nướng",
+     "d": "Bắt các viên tròn đường kính 4 cm cách nhau 4 cm, vuốt chóp nhọn bằng ngón tay ướt. Nướng 200 °C 15 phút rồi hạ 170 °C.",
+     "m": 35,
+     "heat": "Lò 200 °C → 170 °C",
+     "cue": "Vỏ <b>nâu vàng đều kể cả các rãnh, cầm lên thấy nhẹ và rỗng</b>. Còn nhạt màu ở rãnh là bánh sẽ xẹp khi ra lò."
+    },
+    {
+     "t": "Hong khô trong lò",
+     "d": "Tắt lò, chọc một lỗ nhỏ dưới đáy mỗi cái, để trong lò hé cửa 10 phút.",
+     "m": 12,
+     "heat": "Lò đã tắt",
+     "cue": "Ruột bánh <b>khô ráo khi bẻ thử một cái</b>. Còn ẩm là vài phút nữa sẽ mềm oặt."
+    },
+    {
+     "t": "Đánh kem và bơm nhân",
+     "d": "Đánh kem tươi lạnh với đường bột đến chóp mềm, bơm vào qua lỗ dưới đáy.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Cầm lên thấy <b>nặng tay hẳn</b> — đó là cách duy nhất để biết đã đầy."
+    }
+   ],
+   "tips": [
+    "Đừng mở cửa lò trong 20 phút đầu. Choux nở bằng hơi nước, mất hơi là xẹp và không phồng lại.",
+    "Bơm nhân <b>ngay trước khi ăn</b>. Vỏ choux gặp kem sẽ mềm trong khoảng một tiếng."
+   ],
+   "serveWith": "Rưới ganache chocolate nóng lên trên — đó chính là profiterole."
+  },
+  {
+   "id": "eclair-chocolat",
+   "name": "Éclair chocolate",
+   "cat": "choux",
+   "role": "tiec",
+   "diff": 3,
+   "serves": 8,
+   "tags": [
+    "chocolate",
+    "trứng",
+    "sữa"
+   ],
+   "why": "Cùng vỏ choux nhưng khó hơn hẳn: hình thuôn dài dễ nứt và cong, còn nhân crème pâtissière lại có ngưỡng nhiệt riêng.",
+   "ing": [
+    {
+     "n": "Bột choux (xem công thức Choux kem)",
+     "q": 1,
+     "u": "mẻ",
+     "note": "Nước 125 ml, sữa 125 ml, bơ 110 g, bột 150 g, trứng 4 quả.",
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi (nhân)",
+     "q": 500,
+     "u": "ml",
+     "per": {
+      "n": 250,
+      "l": "cốc"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng (nhân)",
+     "q": 4,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Đường (nhân)",
+     "q": 100,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột bắp (nhân)",
+     "q": 40,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Chocolate đen 60%",
+     "q": 120,
+     "u": "g",
+     "note": "Một nửa cho nhân, một nửa cho lớp phủ.",
+     "r": "main"
+    },
+    {
+     "n": "Kem tươi (lớp phủ)",
+     "q": 60,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Vani",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Nấu crème pâtissière",
+     "d": "Đun sữa với vani. Đánh lòng đỏ với đường và bột bắp, tempering rồi bắc lên bếp khuấy liên tục.",
+     "m": 12,
+     "heat": "Lửa vừa",
+     "cue": "Kem <b>đặc lại rồi sôi \"bụp\" một cái ở giữa</b> — phải để nó sôi thêm 60 giây nữa thì bột bắp mới hết vị sống."
+    },
+    {
+     "t": "Cho chocolate và làm nguội nhanh",
+     "d": "Bắc khỏi bếp, cho 60 g chocolate, khuấy tan. Trải mỏng ra khay, áp màng bọc sát mặt kem, để lạnh.",
+     "m": 30,
+     "heat": "Ngăn mát",
+     "cue": "Màng bọc <b>dính sát mặt kem, không có khoảng hở</b>. Hở là mặt kem đóng váng khô."
+    },
+    {
+     "t": "Bắt éclair",
+     "d": "Bắt các thanh dài 12 cm bằng đui răng cưa, giữ tay đều lực, cắt dứt khoát ở cuối.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Thanh bột <b>đều bề ngang từ đầu đến cuối, các rãnh sắc nét</b>. Rãnh giúp bánh nở đều và không nứt."
+    },
+    {
+     "t": "Nướng",
+     "d": "Nướng 200 °C 15 phút rồi hạ 170 °C, không mở cửa lò trong 20 phút đầu.",
+     "m": 35,
+     "heat": "Lò 200 °C → 170 °C",
+     "cue": "Vỏ <b>nâu vàng cả trong rãnh, cứng và nhẹ tay</b>. Nhấc lên gõ đáy nghe rỗng."
+    },
+    {
+     "t": "Bơm nhân",
+     "d": "Đánh lại crème pâtissière cho mượt, bơm vào qua ba lỗ chọc dưới đáy.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Bánh <b>nặng tay và kem bắt đầu ứa ra ở lỗ cuối cùng</b>."
+    },
+    {
+     "t": "Phủ ganache",
+     "d": "Đun kem nóng, đổ lên 60 g chocolate, khuấy từ tâm ra thành ganache, để nguội hơi sánh rồi nhúng mặt bánh.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Ganache <b>bám thành lớp phẳng, không chảy xuống thành bánh</b>. Còn loãng thì đợi thêm 5 phút."
+    }
+   ],
+   "tips": [
+    "Crème pâtissière <b>phải sôi</b> ít nhất một phút, nếu không sẽ có vị bột sống và loãng dần khi để lạnh.",
+    "Nhúng ganache rồi thì để lạnh 15 phút cho lớp phủ đứng lại trước khi bày."
+   ],
+   "serveWith": "Tự nó đã đủ — vỏ, kem và ganache đã là ba tầng."
+  },
+  {
+   "id": "macaron",
+   "name": "Macaron",
+   "cat": "cookie",
+   "role": "tiec",
+   "diff": 3,
+   "serves": 12,
+   "wait": "24 tiếng",
+   "tags": [
+    "hạnh nhân",
+    "lòng trắng"
+   ],
+   "why": "Bánh khó nhất trang này, và khó vì một lý do rất khó chịu: mọi thứ đều đúng mà vẫn hỏng do độ ẩm không khí. Cần cân chính xác đến gam.",
+   "ing": [
+    {
+     "n": "Bột hạnh nhân",
+     "q": 150,
+     "u": "g",
+     "note": "Rây thật kỹ, bỏ phần thô còn lại trên rây.",
+     "r": "main"
+    },
+    {
+     "n": "Đường bột",
+     "q": 150,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Lòng trắng trứng",
+     "q": 110,
+     "u": "g",
+     "per": {
+      "n": 30,
+      "l": "lòng trắng"
+     },
+     "note": "Chia đôi: 55 g trộn với bột, 55 g đánh meringue. Để già 24 tiếng trong ngăn mát thì tốt hơn.",
+     "r": "main"
+    },
+    {
+     "n": "Đường cát",
+     "q": 150,
+     "u": "g",
+     "note": "Nấu siro cho meringue Ý.",
+     "r": "main"
+    },
+    {
+     "n": "Nước",
+     "q": 50,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Màu thực phẩm dạng gel",
+     "q": 1,
+     "u": "nhúm",
+     "note": "Gel chứ không phải nước — màu nước làm loãng bột.",
+     "r": "season"
+    },
+    {
+     "n": "Nhân (ganache hoặc buttercream)",
+     "q": 200,
+     "u": "g",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Rây và trộn bột hạnh nhân",
+     "d": "Rây bột hạnh nhân với đường bột hai lần, trộn với 55 g lòng trắng thành khối nhão đặc.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Khối bột <b>đặc như kem đánh răng, nhấc lên thành khối</b>. Còn khô là bột hạnh nhân bị ẩm — sấy lò 50 °C 10 phút rồi làm lại."
+    },
+    {
+     "t": "Nấu siro và đánh meringue Ý",
+     "d": "Nấu đường với nước đến 118 °C. Song song đánh 55 g lòng trắng đến bọt lớn, rồi rót siro nóng thành dòng nhỏ vào, đánh tiếp đến nguội.",
+     "m": 12,
+     "heat": "Bếp + máy đánh",
+     "cue": "Meringue <b>bóng như satin, chóp cứng đứng thẳng, âu chỉ còn hơi ấm</b>. Cần nhiệt kế cho bước này, đoán là hỏng."
+    },
+    {
+     "t": "Macaronage — bước quyết định",
+     "d": "Fold meringue vào khối hạnh nhân làm ba lần, miết bột vào thành âu để xả bớt khí.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Nhấc spatula, bột <b>chảy xuống thành dải liên tục và vệt để lại tự phẳng trong 15–20 giây</b>. Tự phẳng nhanh hơn là đã quá tay; không phẳng là chưa đủ."
+    },
+    {
+     "t": "Bắt và đập khay",
+     "d": "Bắt các vòng tròn 3,5 cm, đập khay xuống mặt bàn vài lần để phá bọt khí.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Mặt bánh <b>phẳng, không còn chóp nhọn và không còn bọt khí lớn</b>. Chọc bọt còn sót bằng tăm."
+    },
+    {
+     "t": "Se mặt",
+     "d": "Để ngoài không khí đến khi chạm ngón tay không dính.",
+     "m": 30,
+     "heat": "—",
+     "cue": "Chạm nhẹ vào mặt bánh, <b>ngón tay không dính bột và mặt hơi lì</b>. Trời nồm thì bước này có thể mất 90 phút — không se được thì đừng nướng."
+    },
+    {
+     "t": "Nướng",
+     "d": "Nướng ở rãnh giữa, không quạt.",
+     "m": 15,
+     "heat": "Lò 150 °C",
+     "cue": "Chân bánh (<b>\"pied\"</b>) <b>nhô lên đều quanh viền</b>, đẩy nhẹ thấy mặt bánh không trượt trên chân. Trượt là chưa chín."
+    },
+    {
+     "t": "Để nguội rồi ghép",
+     "d": "Để nguội hoàn toàn trên khay mới gỡ, ghép đôi với nhân ở giữa, ủ tủ lạnh 24 tiếng.",
+     "m": 20,
+     "heat": "Ngăn mát",
+     "cue": "Sau 24 tiếng, vỏ <b>hơi mềm và dính vào nhân</b> — macaron mới ghép ăn khô, để một ngày mới đúng vị."
+    }
+   ],
+   "tips": [
+    "Ngày nồm ẩm thì đừng làm macaron. Đây không phải mê tín — độ ẩm làm mặt bánh không se được và bánh sẽ nứt.",
+    "Cân từng nguyên liệu đến gam. Đây là công thức duy nhất trong trang không tha thứ cho sai số ±10%."
+   ],
+   "serveWith": "Tự nó đã đủ. Espresso hoặc trà không đường."
+  },
+  {
+   "id": "brioche",
+   "name": "Brioche",
+   "cat": "bread",
+   "role": "sang",
+   "diff": 2,
+   "serves": 8,
+   "tags": [
+    "bơ",
+    "men",
+    "trứng"
+   ],
+   "why": "Bánh mì có nhiều bơ đến mức gần thành bánh ngọt. Cửa ải duy nhất: cho bơ vào lúc bột đã dai, không phải lúc đầu.",
+   "ing": [
+    {
+     "n": "Bột mì số 11",
+     "q": 400,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 4,
+     "u": "quả",
+     "note": "Lạnh — bột brioche phải mát để bơ không chảy.",
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi",
+     "q": 60,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Men instant",
+     "q": 7,
+     "u": "g",
+     "per": {
+      "n": 7,
+      "l": "gói nhỏ"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 50,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 8,
+     "u": "g",
+     "note": "Không để chạm trực tiếp vào men lúc trộn.",
+     "r": "season"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 200,
+     "u": "g",
+     "note": "Mềm nhưng vẫn mát, cắt lát mỏng.",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ + sữa (quét mặt)",
+     "q": 1,
+     "u": "quả",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Nhồi bột nền",
+     "d": "Trộn bột, đường, men, muối, trứng và sữa. Nhồi máy tốc độ vừa hoặc nhồi tay.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Bột <b>tách khỏi thành âu, dẻo và bóng</b>. Kéo một mẩu ra thấy giãn mỏng gần trong suốt trước khi rách."
+    },
+    {
+     "t": "Cho bơ từng ít một",
+     "d": "Cho bơ mềm vào từng lát, chỉ cho lát sau khi lát trước đã tan hết.",
+     "m": 12,
+     "heat": "—",
+     "cue": "Sau mỗi lát, bột <b>lại quyện thành khối bóng</b>. Cho ào một lúc là bột trượt trong bơ và không bao giờ kết lại."
+    },
+    {
+     "t": "Ủ lần một trong tủ lạnh",
+     "d": "Bọc kín, ủ ngăn mát tối thiểu 6 tiếng, tốt nhất qua đêm.",
+     "m": 360,
+     "heat": "Ngăn mát",
+     "cue": "Bột <b>nở gần gấp đôi và cứng lại, ấn xuống lún chậm</b>. Ủ lạnh là bắt buộc: bột brioche ấm thì không tạo hình được."
+    },
+    {
+     "t": "Chia và tạo hình",
+     "d": "Chia 8 phần, vê tròn, xếp vào khuôn loaf hoặc khuôn brioche.",
+     "m": 12,
+     "heat": "—",
+     "cue": "Các viên <b>căng mặt, khép kín đáy</b>. Đáy hở là lúc nướng bánh bung ra."
+    },
+    {
+     "t": "Ủ lần hai",
+     "d": "Ủ ở nhiệt độ phòng (dưới 26 °C) cho đến khi nở gần đầy khuôn.",
+     "m": 90,
+     "heat": "Nhiệt độ phòng",
+     "cue": "Ấn nhẹ ngón tay, vết lõm <b>phồng trở lại chậm và không đầy hẳn</b>. Phồng lại ngay là chưa đủ; không phồng lại là quá đà."
+    },
+    {
+     "t": "Quét trứng và nướng",
+     "d": "Quét lòng đỏ pha sữa thật mỏng, nướng ở rãnh giữa.",
+     "m": 30,
+     "heat": "Lò 175 °C",
+     "cue": "Vỏ <b>nâu vàng bóng</b>, nhiệt kế cắm giữa ruột báo <b>90 °C</b>. Không có nhiệt kế thì gõ đáy nghe rỗng."
+    }
+   ],
+   "tips": [
+    "Bơ cho vào <b>sau</b> khi bột đã dai. Đây là quy tắc chung của mọi loại bột nhiều bơ.",
+    "Bột chưa dùng hết để ngăn mát được 2 ngày và càng để càng thơm."
+   ],
+   "serveWith": "Bơ và mứt. Brioche cũ dùng làm bánh mì nướng kiểu Pháp thì tuyệt."
+  },
+  {
+   "id": "croissant",
+   "name": "Croissant",
+   "cat": "lam",
+   "role": "sang",
+   "diff": 3,
+   "serves": 8,
+   "tags": [
+    "bơ",
+    "men"
+   ],
+   "why": "Bài kiểm tra cuối cùng của bếp bánh gia đình. Không có kỹ thuật nào bí ẩn — chỉ có một yêu cầu khắc nghiệt: bơ và bột phải luôn cùng độ dẻo và luôn lạnh.",
+   "ing": [
+    {
+     "n": "Bột mì số 11",
+     "q": 500,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Nước lạnh",
+     "q": 140,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Sữa lạnh",
+     "q": 140,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Men instant",
+     "q": 10,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 55,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 11,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Bơ lạt (trong bột)",
+     "q": 40,
+     "u": "g",
+     "note": "Mềm, nhồi cùng bột.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt Âu 82% (để cán lớp)",
+     "q": 280,
+     "u": "g",
+     "note": "Đây là chỗ đáng chi tiền. Bơ 80% thường dễ gãy khi cán lạnh.",
+     "r": "main"
+    },
+    {
+     "n": "Trứng quét mặt",
+     "q": 1,
+     "u": "quả",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Nhồi bột nền và ủ lạnh",
+     "d": "Nhồi tất cả (trừ 280 g bơ) đến khi vừa mịn, không cần nhồi kỹ. Bọc kín, để ngăn mát 8 tiếng.",
+     "m": 480,
+     "heat": "Ngăn mát",
+     "cue": "Bột <b>nở nhẹ, mát lạnh và không dính tay</b>. Nhồi kỹ quá là bột đàn hồi mạnh, sau này cán rất mệt."
+    },
+    {
+     "t": "Dát khối bơ",
+     "d": "Đặt bơ giữa hai lớp giấy nến, đập và cán thành tấm vuông 18×18 cm. Để lạnh 20 phút.",
+     "m": 25,
+     "heat": "Ngăn mát",
+     "cue": "Tấm bơ <b>dẻo như đất nặn: bẻ cong không gãy, ấn không lún</b>. Đây là độ dẻo phải khớp với bột."
+    },
+    {
+     "t": "Bọc bơ và cán lớp lần 1",
+     "d": "Cán bột thành 26×26 cm, đặt bơ xoay 45°, gói kín mép. Cán dài rồi gấp ba. Để lạnh 40 phút.",
+     "m": 55,
+     "heat": "Ngăn mát",
+     "cue": "Cán ra thấy <b>bơ chạy đều trong bột, không vỡ thành mảng và không đùn ra ngoài</b>. Thấy bơ lòi ra thì rắc bột và cho vào lạnh ngay."
+    },
+    {
+     "t": "Cán lớp lần 2 và 3",
+     "d": "Lặp lại gấp ba thêm hai lần, mỗi lần nghỉ lạnh 40 phút.",
+     "m": 120,
+     "heat": "Ngăn mát",
+     "cue": "Cắt thử mép bột thấy <b>các lớp bơ – bột xen kẽ rõ như vân gỗ</b>. Ba lần gấp ba cho 27 lớp bơ, vừa đủ."
+    },
+    {
+     "t": "Cắt và cuộn",
+     "d": "Cán thành tấm dày 4 mm, cắt tam giác đáy 9 cm, rạch một nhát ở đáy rồi cuộn từ đáy lên.",
+     "m": 20,
+     "heat": "—",
+     "cue": "Cuộn xong <b>chóp nhọn nằm dưới thân bánh</b>. Chóp hở là lúc nướng bánh bung ra."
+    },
+    {
+     "t": "Ủ — bước dễ hỏng nhất",
+     "d": "Ủ ở 24–26 °C cho đến khi nở gấp rưỡi và lắc khay thấy rung.",
+     "m": 120,
+     "heat": "24–26 °C",
+     "cue": "Bánh <b>phồng, lắc khay thì rung như thạch, và nhìn nghiêng thấy các lớp tách nhau</b>. Nếu thấy <b>bơ chảy ra khay là đã quá ấm</b> — cho vào ngăn mát 15 phút rồi nướng luôn."
+    },
+    {
+     "t": "Nướng",
+     "d": "Quét trứng nhẹ tay (đừng để chảy xuống mép cắt), nướng ở rãnh giữa.",
+     "m": 20,
+     "heat": "Lò 200 °C",
+     "cue": "Bánh <b>nâu vàng đậm, các lớp bung rõ ở hai đầu, đáy khô ráo</b>. Vàng nhạt là ruột còn ẩm."
+    }
+   ],
+   "tips": [
+    "Nhiệt độ phòng trên 28 °C thì gần như không làm được croissant nếu không có phòng điều hoà. Bơ sẽ chảy trước khi bạn cán xong.",
+    "Bột lì không chịu cán thì <b>cho vào lạnh 15 phút</b> rồi cán tiếp — đừng cố ép, bột sẽ rách và bơ lòi ra."
+   ],
+   "serveWith": "Tự nó đã đủ. Cà phê đen. Nhồi chocolate vào thì thành pain au chocolat."
+  },
+  {
+   "id": "baguette",
+   "name": "Baguette",
+   "cat": "bread",
+   "role": "sang",
+   "diff": 3,
+   "serves": 8,
+   "tags": [
+    "men"
+   ],
+   "why": "Bốn nguyên liệu: bột, nước, muối, men. Không có gì để giấu — nên đây là bài kiểm tra thuần tuý nhất về tay nghề và về hơi nước trong lò.",
+   "ing": [
+    {
+     "n": "Bột mì số 11 (hoặc số 13)",
+     "q": 500,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Nước",
+     "q": 360,
+     "u": "ml",
+     "per": {
+      "n": 250,
+      "l": "cốc"
+     },
+     "note": "72% so với bột — bột ướt, dính tay, và đó là đúng.",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 10,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Men instant",
+     "q": 3,
+     "u": "g",
+     "note": "Rất ít men, bù bằng thời gian dài — đó là chỗ mùi vị đến từ.",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Trộn và ngâm bột (autolyse)",
+     "d": "Trộn bột với nước cho vừa ẩm đều, đậy lại, để yên 40 phút. Chưa cho muối và men.",
+     "m": 45,
+     "heat": "—",
+     "cue": "Bột <b>mềm ra và bớt vón</b>. Bước ngâm này làm việc thay cho 10 phút nhồi."
+    },
+    {
+     "t": "Cho men, muối và gấp bột",
+     "d": "Rắc men và muối lên, bóp cho ngấm. Sau đó cứ 30 phút lại gấp bột một lượt (kéo mép lên gấp vào giữa, xoay âu, làm 4 phía) — tổng 4 lượt.",
+     "m": 120,
+     "heat": "Nhiệt độ phòng",
+     "cue": "Sau lượt cuối, bột <b>căng mặt, bóng và nở khoảng gấp đôi</b>, thấy bọt khí lớn dưới đáy âu."
+    },
+    {
+     "t": "Chia và tạo hình sơ",
+     "d": "Đổ bột ra bàn có bột áo, chia 3 phần, vê nhẹ thành khối chữ nhật, để nghỉ 20 phút.",
+     "m": 25,
+     "heat": "—",
+     "cue": "Khối bột <b>giãn ra và mềm lại</b> — nghỉ đủ thì cuộn không bị co."
+    },
+    {
+     "t": "Cuộn thành ổ",
+     "d": "Gấp mép trên xuống 1/3, mép dưới lên, rồi gấp đôi và miết kín đường nối. Lăn dài 35 cm.",
+     "m": 12,
+     "heat": "—",
+     "cue": "Ổ bánh <b>căng mặt, đường nối kín và nằm phía dưới</b>. Mặt chùng là bánh nở ngang chứ không lên cao."
+    },
+    {
+     "t": "Ủ lần cuối",
+     "d": "Ủ trên khăn vải có gấp nếp giữ hình, đậy kín.",
+     "m": 60,
+     "heat": "Nhiệt độ phòng",
+     "cue": "Ấn nhẹ, vết lõm <b>phồng lại chậm, không đầy hẳn</b>."
+    },
+    {
+     "t": "Rạch và nướng có hơi nước",
+     "d": "Rạch 3–4 đường chéo bằng dao lam nghiêng 30°. Cho khay nước sôi xuống đáy lò, nướng 240 °C 10 phút rồi bỏ khay nước, hạ 220 °C.",
+     "m": 25,
+     "heat": "Lò 240 °C → 220 °C",
+     "cue": "Vỏ <b>nâu vàng, các đường rạch bung thành tai</b>, và để nguội trên rack nghe <b>tiếng vỏ nứt lách tách</b> — đó là dấu hiệu ổ bánh đạt."
+    }
+   ],
+   "tips": [
+    "Hơi nước trong 10 phút đầu là thứ tạo vỏ giòn. Không có hơi nước thì vỏ dày và lì, dù mọi bước khác đúng.",
+    "Bột 72% nước dính tay là bình thường. Làm ướt tay thay vì thêm bột — thêm bột là ruột bánh đặc."
+   ],
+   "serveWith": "Bơ lạt và muối biển. Hoặc dùng cho mọi món trong trang Món Âu mặn."
+  },
+  {
+   "id": "tiramisu",
+   "name": "Tiramisù",
+   "cat": "lanh",
+   "role": "trangmieng",
+   "diff": 2,
+   "serves": 8,
+   "tags": [
+    "mascarpone",
+    "cà phê",
+    "trứng"
+   ],
+   "why": "Món tráng miệng Ý nổi tiếng nhất thế giới và cũng bị làm sai nhiều nhất: nhúng bánh quá lâu, và đánh mascarpone quá tay.",
+   "ing": [
+    {
+     "n": "Mascarpone",
+     "q": 500,
+     "u": "g",
+     "note": "Để lạnh cho tới lúc dùng. Không thay bằng cream cheese — vị chua hoàn toàn khác.",
+     "r": "main"
+    },
+    {
+     "n": "Bánh savoiardi (ladyfinger)",
+     "q": 300,
+     "u": "g",
+     "per": {
+      "n": 12,
+      "l": "cái"
+     },
+     "note": "Loại cứng khô, không phải bánh bông lan mềm.",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 4,
+     "u": "quả",
+     "note": "Tách riêng lòng đỏ và lòng trắng.",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 100,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Cà phê espresso",
+     "q": 300,
+     "u": "ml",
+     "note": "Pha đậm, để nguội hoàn toàn. Cà phê nóng làm bánh nát ngay.",
+     "r": "main"
+    },
+    {
+     "n": "Rượu Marsala (hoặc rum, amaretto)",
+     "q": 30,
+     "u": "ml",
+     "note": "Bỏ được nếu có trẻ con ăn.",
+     "r": "season"
+    },
+    {
+     "n": "Bột cacao không đường",
+     "q": 20,
+     "u": "g",
+     "note": "Rây lên mặt ngay trước khi ăn.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đánh lòng đỏ với đường",
+     "d": "Đánh lòng đỏ với 2/3 chỗ đường đến khi nhạt màu và đặc.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>vàng nhạt, sánh, nhấc phới để lại vệt ribbon</b>."
+    },
+    {
+     "t": "Trộn mascarpone — nhẹ tay",
+     "d": "Cho mascarpone lạnh vào từng thìa, trộn ở tốc độ thấp hoặc bằng spatula.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Kem <b>mịn và đặc, giữ nếp</b>. Đánh quá tay là mascarpone tách nước và lợn cợn — không cứu được."
+    },
+    {
+     "t": "Đánh lòng trắng và fold",
+     "d": "Đánh lòng trắng với chỗ đường còn lại đến chóp mềm, fold vào kem làm ba lần.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Kem <b>nhẹ, phồng, không còn vệt trắng</b>. Đây là thứ làm tiramisu nhẹ chứ không nặng như bánh kem."
+    },
+    {
+     "t": "Nhúng bánh — đếm đến hai",
+     "d": "Pha cà phê nguội với rượu. Nhúng nhanh từng cái savoiardi, mỗi mặt <b>1 giây</b>.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Bánh <b>ướt mặt ngoài nhưng lõi vẫn còn cứng khi bóp nhẹ</b>. Nhúng đến mềm là tầng dưới sẽ thành cháo sau vài tiếng."
+    },
+    {
+     "t": "Xếp tầng",
+     "d": "Một lớp bánh — một lớp kem — một lớp bánh — một lớp kem. Gạt phẳng mặt.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Mỗi lớp kem <b>dày bằng lớp bánh</b>, mặt trên phẳng."
+    },
+    {
+     "t": "Ướp lạnh tối thiểu 6 tiếng",
+     "d": "Bọc kín, để ngăn mát. Rây cacao lên ngay trước khi bưng ra.",
+     "m": 360,
+     "heat": "Ngăn mát",
+     "cue": "Cắt một nhát thấy <b>các tầng đứng rõ, không sụp</b>. Rây cacao sớm là nó hút ẩm và thành mảng ướt."
+    }
+   ],
+   "tips": [
+    "Cà phê phải <b>nguội hoàn toàn</b>. Đây là lỗi phổ biến nhất và nó phá cả khay bánh.",
+    "Món này dùng <b>trứng sống cả lòng đỏ lẫn lòng trắng</b> và không nấu ở bước nào. Muốn an toàn thì nấu cả hai: lòng đỏ đánh với siro đường 118 °C (pâte à bombe) và lòng trắng đánh thành meringue Ý cũng bằng siro 118 °C — chỉ làm pâte à bombe thì lòng trắng vẫn còn sống. Thai phụ, trẻ nhỏ, người già và người suy giảm miễn dịch thì bỏ lòng trắng, thay bằng 200 ml kem tươi đánh chóp mềm fold vào."
+   ],
+   "serveWith": "Tự nó đã đủ. Một ly vang ngọt hoặc espresso."
+  },
+  {
+   "id": "panna-cotta",
+   "name": "Panna cotta",
+   "cat": "lanh",
+   "role": "trangmieng",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "kem tươi",
+    "gelatin",
+    "vani"
+   ],
+   "why": "Món tráng miệng ít việc nhất trang này — đun và rót. Toàn bộ tay nghề nằm ở một con số: bao nhiêu gelatin.",
+   "ing": [
+    {
+     "n": "Kem tươi (whipping 35%)",
+     "q": 500,
+     "u": "ml",
+     "per": {
+      "n": 250,
+      "l": "hộp nhỏ"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi",
+     "q": 200,
+     "u": "ml",
+     "note": "Toàn kem thì quá béo; pha sữa cho nhẹ hơn.",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 80,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Gelatin lá",
+     "q": 7,
+     "u": "g",
+     "per": {
+      "n": 2,
+      "l": "lá"
+     },
+     "note": "10 g cho mỗi lít chất lỏng là ngưỡng \"vừa đứng\". Nhiều hơn là thành thạch.",
+     "r": "main"
+    },
+    {
+     "n": "Vani",
+     "q": 1,
+     "u": "quả",
+     "r": "season"
+    },
+    {
+     "n": "Muối",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Ngâm gelatin",
+     "d": "Ngâm lá gelatin trong nước <b>lạnh</b> 5 phút rồi vắt ráo.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Lá gelatin <b>mềm oặt, trong suốt, không còn cứng</b>. Ngâm nước ấm là tan mất một phần vào nước."
+    },
+    {
+     "t": "Đun kem với vani",
+     "d": "Đun kem, sữa, đường, hạt vani và muối đến khi bốc hơi nhẹ.",
+     "m": 6,
+     "heat": "Lửa nhỏ",
+     "cue": "Mép nồi <b>lăn tăn bọt, đường tan hết</b> — khoảng 80 °C. Không cần sôi."
+    },
+    {
+     "t": "Cho gelatin",
+     "d": "Bắc khỏi bếp, cho gelatin đã vắt vào, khuấy đến tan hoàn toàn.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Nhìn nghiêng không còn <b>vệt trong lấp lánh</b> nào trong hỗn hợp — đó là gelatin chưa tan."
+    },
+    {
+     "t": "Lọc và rót",
+     "d": "Lọc qua rây vào cốc hoặc khuôn, để nguội rồi bọc kín.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Mặt <b>phẳng, không bọt</b>."
+    },
+    {
+     "t": "Làm lạnh",
+     "d": "Ướp ngăn mát tối thiểu 4 tiếng.",
+     "m": 240,
+     "heat": "Ngăn mát",
+     "cue": "Nghiêng cốc, mặt panna cotta <b>rung nhẹ nhưng không chảy</b>. Cứng ngắc như thạch là quá nhiều gelatin."
+    }
+   ],
+   "tips": [
+    "<b>10 g gelatin cho 1 lít</b> là ngưỡng chuẩn. Muốn úp ra đĩa được thì tăng lên 12 g; ăn trong cốc thì 8 g cho mềm.",
+    "Muốn hương khác: thay vani bằng vỏ chanh, trà Earl Grey, hoặc cà phê ngâm trong lúc đun kem."
+   ],
+   "serveWith": "Coulis quả mọng là cặp kinh điển — chua để cắt béo. Hoặc sốt caramel muối."
+  },
+  {
+   "id": "biscotti",
+   "name": "Biscotti (cantucci)",
+   "cat": "cookie",
+   "role": "cafe",
+   "diff": 1,
+   "serves": 12,
+   "tags": [
+    "hạnh nhân",
+    "trứng"
+   ],
+   "why": "Bánh nướng hai lần nên khô cứng và để được hàng tháng. Không có bơ, nên đây cũng là bánh quy ít béo nhất trang.",
+   "ing": [
+    {
+     "n": "Bột mì số 8",
+     "q": 300,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 200,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 3,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Hạnh nhân nguyên hạt",
+     "q": 200,
+     "u": "g",
+     "per": {
+      "n": 40,
+      "l": "nắm nhỏ"
+     },
+     "note": "Rang sơ cho thơm, để nguyên hạt.",
+     "r": "veg"
+    },
+    {
+     "n": "Bột nở",
+     "q": 5,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Vỏ cam bào",
+     "q": 1,
+     "u": "quả",
+     "r": "season"
+    },
+    {
+     "n": "Muối",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Trộn bột",
+     "d": "Đánh trứng với đường, cho vỏ cam, rồi trộn bột, bột nở và muối. Cuối cùng cho hạnh nhân.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Bột <b>dính và đặc, kéo lên thành khối</b>. Dính tay là bình thường — làm ướt tay thay vì thêm bột."
+    },
+    {
+     "t": "Tạo thành khúc",
+     "d": "Chia đôi, tạo hai khúc dài dẹt rộng 7 cm, cao 2 cm trên khay.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Hai khúc <b>cách nhau ít nhất 6 cm</b> — chúng sẽ bè ra khi nướng."
+    },
+    {
+     "t": "Nướng lần một",
+     "d": "Nướng đến khi mặt se và ngả vàng.",
+     "m": 28,
+     "heat": "Lò 170 °C",
+     "cue": "Khúc bánh <b>chắc khi ấn, mặt nứt nhẹ và vàng nhạt</b>. Còn mềm là cắt sẽ nát."
+    },
+    {
+     "t": "Để nguội rồi cắt",
+     "d": "Để nguội 15 phút, dùng dao răng cưa cắt chéo dày 1,5 cm.",
+     "m": 18,
+     "heat": "—",
+     "cue": "Lát cắt <b>gọn, hạt hạnh nhân không bị bung ra</b>. Cắt lúc còn nóng là vụn nát; để nguội hẳn là cứng khó cắt."
+    },
+    {
+     "t": "Nướng lần hai",
+     "d": "Xếp lát nằm nghiêng trên khay, nướng, lật một lần giữa chừng.",
+     "m": 18,
+     "heat": "Lò 150 °C",
+     "cue": "Hai mặt <b>khô ráo và vàng nhạt đều</b>. Bánh sẽ cứng thêm khi nguội — đừng nướng đến khi cứng ngay trong lò."
+    }
+   ],
+   "tips": [
+    "Để trong hộp kín ăn được <b>một tháng</b>. Đây là loại bánh làm sẵn cho cả tháng cà phê sáng.",
+    "Ở Tuscany người ta chấm vào rượu Vin Santo. Cà phê hoặc trà cũng làm được việc đó."
+   ],
+   "serveWith": "Cà phê hoặc rượu ngọt — bánh này khô, cố ý khô, để chấm."
+  },
+  {
+   "id": "cannoli",
+   "name": "Cannoli Sicilia",
+   "cat": "choux",
+   "role": "trangmieng",
+   "diff": 3,
+   "serves": 12,
+   "tags": [
+    "ricotta",
+    "chocolate"
+   ],
+   "why": "Vỏ chiên giòn rộp và nhân ricotta mát — nhưng chỉ giữ được đúng cấu trúc đó trong nửa tiếng sau khi bơm nhân.",
+   "ing": [
+    {
+     "n": "Bột mì số 11",
+     "q": 250,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Rượu vang trắng (hoặc marsala)",
+     "q": 80,
+     "u": "ml",
+     "note": "Cồn làm vỏ phồng rộp khi chiên — không thay bằng nước được.",
+     "r": "main"
+    },
+    {
+     "n": "Mỡ lợn hoặc bơ",
+     "q": 30,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Đường (cho vỏ)",
+     "q": 20,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Giấm",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Ricotta",
+     "q": 500,
+     "u": "g",
+     "note": "Phải để ráo qua rây <b>ít nhất 4 tiếng</b> — nhân ướt là vỏ mềm ngay.",
+     "r": "main"
+    },
+    {
+     "n": "Đường bột (cho nhân)",
+     "q": 120,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Chocolate vụn",
+     "q": 60,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Vỏ cam bào + quế",
+     "q": 1,
+     "u": "quả",
+     "r": "season"
+    },
+    {
+     "n": "Dầu chiên",
+     "q": 700,
+     "u": "ml",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Để ráo ricotta",
+     "d": "Cho ricotta vào rây lót vải, đặt trên bát, để ngăn mát tối thiểu 4 tiếng.",
+     "m": 240,
+     "heat": "Ngăn mát",
+     "cue": "Bát dưới <b>đọng nước trong, ricotta đặc lại và giữ nếp thìa</b>. Đây là bước quyết định nhân có chảy hay không."
+    },
+    {
+     "t": "Nhồi bột vỏ",
+     "d": "Trộn bột, đường, mỡ, giấm và rượu, nhồi 10 phút đến khi thật mịn. Bọc kín, nghỉ 1 tiếng.",
+     "m": 70,
+     "heat": "—",
+     "cue": "Bột <b>mịn như đất sét, không dính tay chút nào</b>. Bột vỏ cannoli phải dai để cán được thật mỏng."
+    },
+    {
+     "t": "Cán mỏng và cuốn ống",
+     "d": "Cán mỏng 1–2 mm, cắt tròn 10 cm, cuốn quanh ống kim loại, miết mép bằng lòng trắng trứng.",
+     "m": 15,
+     "heat": "—",
+     "cue": "Miếng bột <b>mỏng đến mức nhìn thấy vân tay qua nó</b>. Dày hơn là vỏ cứng chứ không rộp."
+    },
+    {
+     "t": "Chiên ngập dầu",
+     "d": "Chiên ở 180 °C, mỗi mẻ vài cái, trở đều.",
+     "m": 12,
+     "heat": "Dầu 180 °C",
+     "cue": "Vỏ <b>nổi bong bóng rộp khắp bề mặt và vàng nâu</b>. Không rộp nghĩa là bột cán dày hoặc thiếu rượu."
+    },
+    {
+     "t": "Trộn nhân",
+     "d": "Trộn ricotta ráo với đường bột, vỏ cam, quế và chocolate vụn.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Nhân <b>mịn, đặc, múc lên không chảy</b>."
+    },
+    {
+     "t": "Bơm nhân — ngay trước khi ăn",
+     "d": "Rút ống ra khỏi vỏ đã nguội, bơm nhân từ hai đầu.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Nhân <b>đầy tràn hai đầu vỏ</b>. Bơm trước 30 phút là vỏ đã bắt đầu mềm."
+    }
+   ],
+   "tips": [
+    "Vỏ chiên xong để hộp kín được <b>3 ngày</b>; nhân để tủ lạnh được 2 ngày. Chỉ ghép lại lúc ăn.",
+    "Đây là quy tắc chung: mọi thứ giòn gặp mọi thứ ướt đều chỉ có một khoảng thời gian ngắn."
+   ],
+   "serveWith": "Tự nó đã đủ. Espresso."
+  },
+  {
+   "id": "crostata",
+   "name": "Crostata mứt",
+   "cat": "tart",
+   "role": "cafe",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "mứt",
+    "bơ"
+   ],
+   "why": "Bánh bà nội của Ý: một đế bột ngọt, một lọ mứt, và mấy dải bột đan lên trên. Ít kỹ thuật nhất trong nhóm tart.",
+   "ing": [
+    {
+     "n": "Bột mì số 8",
+     "q": 300,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 150,
+     "u": "g",
+     "note": "Lạnh, cắt hạt lựu.",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 120,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 1,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 1,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Mứt (mơ, dâu, việt quất)",
+     "q": 350,
+     "u": "g",
+     "note": "Mứt đặc chứ đừng mứt loãng — mứt loãng sẽ sôi trào ra ngoài.",
+     "r": "main"
+    },
+    {
+     "n": "Vỏ chanh bào",
+     "q": 1,
+     "u": "quả",
+     "r": "season"
+    },
+    {
+     "n": "Bột nở",
+     "q": 3,
+     "u": "g",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Làm bột (pasta frolla)",
+     "d": "Xoa bơ lạnh vào bột, đường, bột nở và vỏ chanh đến khi thành vụn, cho trứng, kết khối thì dừng.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Bột <b>vừa kết lại, còn thấy hạt bơ</b>. Nhồi tiếp là đế dai."
+    },
+    {
+     "t": "Nghỉ lạnh",
+     "d": "Bọc kín, để ngăn mát 1 tiếng.",
+     "m": 60,
+     "heat": "Ngăn mát",
+     "cue": "Bột <b>cứng lại, cán không dính</b>."
+    },
+    {
+     "t": "Lót khuôn",
+     "d": "Cán 2/3 chỗ bột dày 4 mm, lót khuôn 24 cm, ấn nhẹ, cắt mép.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Đế <b>đều dày, không mỏng ở góc</b> — góc mỏng là chỗ cháy trước."
+    },
+    {
+     "t": "Đổ mứt và đan dải",
+     "d": "Phết mứt đều, cắt dải bột rộng 1,5 cm, đan lưới lên mặt, miết chặt mép.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Các dải <b>dính chặt vào viền đế</b>. Hở là lúc nướng chúng co lại và tụt xuống."
+    },
+    {
+     "t": "Nướng",
+     "d": "Nướng ở rãnh giữa.",
+     "m": 35,
+     "heat": "Lò 180 °C",
+     "cue": "Dải bột <b>vàng nâu, mứt sôi lăn tăn ở các ô lưới</b>. Đáy phải khô — nhấc thử một mép xem."
+    }
+   ],
+   "tips": [
+    "Bột thừa gói lại để ngăn đá được một tháng, lần sau dùng làm bánh quy.",
+    "Mứt quá loãng thì đun với 1 thìa bột bắp cho đặc lại trước khi phết."
+   ],
+   "serveWith": "Cà phê sáng. Ở Ý đây là món ăn sáng chứ không phải tráng miệng."
+  },
+  {
+   "id": "brownie",
+   "name": "Brownie fudgy",
+   "cat": "cake",
+   "role": "cafe",
+   "diff": 1,
+   "serves": 12,
+   "tags": [
+    "chocolate",
+    "bơ"
+   ],
+   "why": "Bánh chocolate dễ nhất và cũng dễ làm hỏng nhất — vì ranh giới giữa \"fudgy\" và \"khô như bánh gato\" chỉ là 5 phút trong lò.",
+   "ing": [
+    {
+     "n": "Chocolate đen 60%",
+     "q": 200,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 150,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 200,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 3,
+     "u": "quả",
+     "note": "Nhiệt độ phòng.",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì số 8",
+     "q": 90,
+     "u": "g",
+     "note": "Ít bột là bí quyết của fudgy — nhiều bột thành bánh gato.",
+     "r": "main"
+    },
+    {
+     "n": "Bột cacao",
+     "q": 25,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 3,
+     "u": "g",
+     "note": "Cho hẳn ½ thìa cà phê — muối là thứ làm chocolate đậm lên.",
+     "r": "season"
+    },
+    {
+     "n": "Hạt óc chó",
+     "q": 80,
+     "u": "g",
+     "note": "Tuỳ chọn, rang sơ trước.",
+     "r": "veg"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đun chảy chocolate và bơ",
+     "d": "Đun cách thuỷ chocolate với bơ đến khi mượt, để nguội bớt.",
+     "m": 6,
+     "heat": "Cách thuỷ",
+     "cue": "Hỗn hợp <b>bóng, chảy thành dòng</b> và chạm vào thấy ấm chứ không nóng."
+    },
+    {
+     "t": "Đánh trứng đường thật kỹ",
+     "d": "Đánh trứng với đường và muối 4 phút — đây là bước tạo lớp vỏ bóng nứt trên mặt brownie.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>nhạt màu, đặc, nhấc phới để lại vệt</b>. Đây là toàn bộ bí mật của lớp mặt bóng như giấy."
+    },
+    {
+     "t": "Trộn chocolate",
+     "d": "Đổ chocolate vào trứng, trộn đều.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>đồng màu nâu bóng</b>."
+    },
+    {
+     "t": "Cho bột — trộn tối thiểu",
+     "d": "Rây bột và cacao vào, fold đến khi vừa hết vệt bột. Cho hạt óc chó.",
+     "m": 3,
+     "heat": "—",
+     "cue": "<b>Dừng ngay khi hết vệt bột khô.</b> Mỗi vòng trộn thừa là một bậc khô của cái bánh."
+    },
+    {
+     "t": "Nướng — lấy ra sớm",
+     "d": "Đổ vào khuôn 20×20 cm lót giấy, nướng.",
+     "m": 25,
+     "heat": "Lò 175 °C",
+     "cue": "Mép <b>đã chín và tách khỏi thành</b>, xiên tăm vào giữa ra <b>còn vài vụn ẩm bám</b>. Tăm ra sạch nghĩa là đã quá — brownie sẽ khô."
+    },
+    {
+     "t": "Để nguội hoàn toàn rồi cắt",
+     "d": "Để nguội trong khuôn tối thiểu 2 tiếng, tốt nhất để tủ lạnh rồi mới cắt.",
+     "m": 120,
+     "heat": "—",
+     "cue": "Cắt ra thấy <b>mặt cắt mịn đặc, không vụn</b>. Cắt lúc nóng là nát bét."
+    }
+   ],
+   "tips": [
+    "Brownie <b>chín tiếp sau khi ra lò</b>. Lấy ra lúc trông như còn hơi non là đúng.",
+    "Rắc chút muối biển hạt to lên mặt trước khi nướng — thay đổi cả cái bánh."
+   ],
+   "serveWith": "Kem vani và sốt caramel muối. Nóng gặp lạnh, ngọt gặp mặn."
+  },
+  {
+   "id": "cookie-choc",
+   "name": "Chocolate chip cookie",
+   "cat": "cookie",
+   "role": "cafe",
+   "diff": 1,
+   "serves": 12,
+   "tags": [
+    "chocolate",
+    "bơ"
+   ],
+   "why": "Bánh quy phổ biến nhất thế giới. Ba biến số quyết định nó giòn hay dẻo: tỉ lệ đường nâu, nhiệt độ bơ, và thời gian ướp lạnh.",
+   "ing": [
+    {
+     "n": "Bơ lạt",
+     "q": 170,
+     "u": "g",
+     "note": "Mềm ở nhiệt độ phòng — không chảy lỏng.",
+     "r": "main"
+    },
+    {
+     "n": "Đường nâu",
+     "q": 150,
+     "u": "g",
+     "note": "Đường nâu giữ ẩm nên bánh dẻo. Nhiều đường trắng hơn thì bánh giòn hơn.",
+     "r": "main"
+    },
+    {
+     "n": "Đường trắng",
+     "q": 80,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 2,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì số 11",
+     "q": 300,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Muối nở (baking soda)",
+     "q": 5,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Muối",
+     "q": 5,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Chocolate đen 55%",
+     "q": 250,
+     "u": "g",
+     "note": "Chặt thô bằng dao thay vì dùng chip — mảnh to nhỏ khác nhau cho vệt chocolate đẹp hơn.",
+     "r": "main"
+    },
+    {
+     "n": "Vani",
+     "q": 2,
+     "u": "thìa cà phê",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đánh bơ với hai loại đường",
+     "d": "Đánh bơ mềm với đường nâu và đường trắng 3 phút.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>nhạt màu và bông xốp</b>. Bơ chảy lỏng thì bước này không xảy ra và bánh sẽ bẹt."
+    },
+    {
+     "t": "Cho trứng và vani",
+     "d": "Cho từng quả trứng, đánh đều sau mỗi quả, thêm vani.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>quyện mượt</b>, không tách."
+    },
+    {
+     "t": "Trộn bột và chocolate",
+     "d": "Cho bột, muối nở, muối, trộn đến vừa đều rồi cho chocolate.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Vừa hết vệt bột thì dừng."
+    },
+    {
+     "t": "Ướp lạnh — thứ tách bánh ngon khỏi bánh thường",
+     "d": "Bọc kín, để ngăn mát tối thiểu 2 tiếng, lý tưởng là 24–36 tiếng.",
+     "m": 120,
+     "heat": "Ngăn mát",
+     "cue": "Bột <b>cứng, viên lên không dính tay</b>. Ướp 24 tiếng làm vị đậm hơn hẳn và bánh ít chảy bẹt."
+    },
+    {
+     "t": "Viên và nướng",
+     "d": "Viên tròn cỡ quả bóng bàn, xếp cách nhau 6 cm, nướng.",
+     "m": 12,
+     "heat": "Lò 180 °C",
+     "cue": "Mép <b>vàng nâu, giữa còn trông hơi ướt và phồng</b>. Lấy ra lúc này; bánh chín tiếp trên khay nóng."
+    },
+    {
+     "t": "Nghỉ trên khay 5 phút",
+     "d": "Để nguyên trên khay 5 phút rồi mới chuyển sang rack.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Bánh <b>đủ cứng để nhấc mà không gãy</b>. Chuyển ngay là bánh gãy đôi."
+    }
+   ],
+   "tips": [
+    "Muốn bánh có vòng sóng đẹp: đập khay xuống bàn 2–3 lần trong lúc nướng, ở phút thứ 8 và 10.",
+    "Bột viên sẵn để ngăn đá được 2 tháng — nướng thẳng từ đông lạnh, cộng thêm 2 phút."
+   ],
+   "serveWith": "Sữa lạnh."
+  },
+  {
+   "id": "cheesecake-ny",
+   "name": "New York cheesecake",
+   "cat": "cake",
+   "role": "tiec",
+   "diff": 2,
+   "serves": 12,
+   "tags": [
+    "cream cheese",
+    "trứng"
+   ],
+   "why": "Đặc, nặng, mịn như satin. Hai thứ quyết định: nướng cách thuỷ ở nhiệt thấp, và làm nguội thật chậm — nứt mặt luôn là do sốc nhiệt.",
+   "ing": [
+    {
+     "n": "Cream cheese",
+     "q": 900,
+     "u": "g",
+     "note": "Để hẳn ra ngoài 1 tiếng cho mềm. Lạnh là vón cục, không cứu được.",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 220,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 4,
+     "u": "quả",
+     "note": "Nhiệt độ phòng.",
+     "r": "main"
+    },
+    {
+     "n": "Kem chua (sour cream)",
+     "q": 200,
+     "u": "g",
+     "note": "Không có thì thay bằng sữa chua Hy Lạp không đường.",
+     "r": "main"
+    },
+    {
+     "n": "Bánh quy digestive",
+     "q": 200,
+     "u": "g",
+     "note": "Nghiền vụn cho đế.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt (cho đế)",
+     "q": 90,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột bắp",
+     "q": 20,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Vỏ chanh + vani",
+     "q": 1,
+     "u": "quả",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Làm đế",
+     "d": "Trộn vụn bánh với bơ chảy, nén chặt xuống đáy khuôn 22 cm, nướng 10 phút rồi để nguội.",
+     "m": 14,
+     "heat": "Lò 175 °C",
+     "cue": "Đế <b>nén chặt, dùng đáy cốc miết cho phẳng và cứng</b>. Nén lỏng là đế vỡ khi cắt."
+    },
+    {
+     "t": "Bọc khuôn chống nước",
+     "d": "Bọc đáy và thành ngoài khuôn đế rời bằng hai lớp giấy bạc khổ rộng.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Không có mép nối nào <b>nằm dưới mực nước</b> sẽ dâng. Nước vào là đế nhão."
+    },
+    {
+     "t": "Đánh cream cheese — tốc độ thấp",
+     "d": "Đánh cream cheese mềm với đường và bột bắp ở tốc độ thấp cho mịn, vét thành âu vài lần.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>mịn tuyệt đối, không một hạt lợn cợn</b>. Đánh tốc độ cao là đưa khí vào và mặt bánh sẽ phồng rồi nứt."
+    },
+    {
+     "t": "Cho trứng từng quả",
+     "d": "Cho từng quả trứng ở tốc độ thấp nhất, dừng ngay khi vừa hoà. Cuối cùng cho kem chua, vỏ chanh, vani.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>sánh chảy như kem đặc, gần như không có bọt trên mặt</b>."
+    },
+    {
+     "t": "Nướng cách thuỷ",
+     "d": "Đổ vào khuôn, đặt vào khay sâu, rót nước sôi ngập 3 cm thành khuôn, nướng.",
+     "m": 75,
+     "heat": "Lò 150 °C",
+     "cue": "Viền <b>đã đông, đường kính 8 cm ở giữa vẫn rung như thạch</b> khi lắc khay. Đông cứng hết là đã quá."
+    },
+    {
+     "t": "Làm nguội chậm trong lò",
+     "d": "Tắt lò, hé cửa lò 10 cm, để bánh nguội trong lò 1 tiếng.",
+     "m": 60,
+     "heat": "Lò đã tắt",
+     "cue": "Mặt bánh <b>không nứt và hạ xuống từ từ</b>. Mang ra ngoài ngay là chênh nhiệt và nứt toác."
+    },
+    {
+     "t": "Ướp lạnh qua đêm",
+     "d": "Để nguội hẳn rồi ướp ngăn mát tối thiểu 8 tiếng.",
+     "m": 480,
+     "heat": "Ngăn mát",
+     "cue": "Cắt bằng dao nhúng nước nóng lau khô, mặt cắt <b>mượt như satin</b>."
+    }
+   ],
+   "tips": [
+    "Nứt mặt gần như luôn là <b>sốc nhiệt</b>, không phải công thức. Nướng thấp, nguội chậm là xong.",
+    "Cắt bằng dao nóng, lau sạch sau mỗi nhát — đó là cách nhà hàng cắt."
+   ],
+   "serveWith": "Coulis quả mọng hoặc sốt caramel muối. Cheesecake béo nên rất cần một thứ chua."
+  },
+  {
+   "id": "cheesecake-basque",
+   "name": "Basque burnt cheesecake",
+   "cat": "cake",
+   "role": "trangmieng",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "cream cheese",
+    "kem tươi"
+   ],
+   "why": "Cheesecake không đế, cố ý nướng đến cháy mặt, và không nướng cách thuỷ. Nghĩa là gần như mọi chỗ khó của cheesecake đều bị bỏ đi.",
+   "ing": [
+    {
+     "n": "Cream cheese",
+     "q": 600,
+     "u": "g",
+     "note": "Nhiệt độ phòng.",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 180,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 4,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Kem tươi (35%)",
+     "q": 300,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì số 8",
+     "q": 20,
+     "u": "g",
+     "note": "Rất ít — chỉ để giữ cấu trúc.",
+     "r": "main"
+    },
+    {
+     "n": "Muối + vani",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Lót khuôn bằng giấy nến nhàu",
+     "d": "Vò nhàu giấy nến, lót vào khuôn 20 cm cho giấy cao hơn thành 5 cm, để nếp nhăn tự nhiên.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Giấy <b>cao hẳn khỏi thành khuôn</b> — bánh nở lên rất cao rồi mới xẹp xuống."
+    },
+    {
+     "t": "Đánh mịn",
+     "d": "Đánh cream cheese với đường và muối cho mịn, cho từng quả trứng, rồi kem tươi, cuối cùng rây bột vào.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>loãng, mượt, chảy thành dòng liền</b>. Lọc qua rây cho chắc chắn không cục."
+    },
+    {
+     "t": "Nướng thật nóng",
+     "d": "Đổ vào khuôn, nướng ở rãnh giữa với lò đã nóng sẵn.",
+     "m": 45,
+     "heat": "Lò 220 °C",
+     "cue": "Mặt bánh <b>nâu sẫm gần như đen ở chóp</b>, giữa vẫn sóng sánh rõ khi lắc khuôn. Đúng — nó phải trông như cháy."
+    },
+    {
+     "t": "Để nguội và nghỉ",
+     "d": "Để nguội hoàn toàn ở nhiệt độ phòng (bánh sẽ xẹp xuống, đó là đúng), rồi để ngăn mát 4 tiếng.",
+     "m": 240,
+     "heat": "—",
+     "cue": "Cắt ra thấy <b>viền đã đông còn tâm mềm chảy nhẹ</b> — đó là kết cấu đặc trưng của bánh này."
+    }
+   ],
+   "tips": [
+    "Đừng sợ mặt cháy. Vị đắng nhẹ của mặt cháy chính là thứ cân lại độ béo — đó là toàn bộ ý tưởng của món.",
+    "Ăn ở nhiệt độ phòng chứ đừng ăn lạnh buốt: để ra ngoài 20 phút trước khi cắt."
+   ],
+   "serveWith": "Tự nó đã đủ. Một ly vang ngọt hoặc espresso."
+  },
+  {
+   "id": "apple-pie",
+   "name": "Apple pie",
+   "cat": "tart",
+   "role": "trangmieng",
+   "diff": 2,
+   "serves": 8,
+   "tags": [
+    "táo",
+    "bơ",
+    "quế"
+   ],
+   "why": "Bánh táo hai vỏ kiểu Mỹ. Cái khó là chống \"đáy ướt\": nhân táo ra rất nhiều nước trong lò, phải xử lý trước.",
+   "ing": [
+    {
+     "n": "Bột mì số 11 (cho vỏ)",
+     "q": 350,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt (cho vỏ)",
+     "q": 230,
+     "u": "g",
+     "note": "Lạnh cứng, cắt hạt lựu — để ngăn đá 10 phút trước khi dùng.",
+     "r": "main"
+    },
+    {
+     "n": "Nước đá",
+     "q": 90,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Táo xanh (Granny Smith)",
+     "q": 1200,
+     "u": "g",
+     "per": {
+      "n": 180,
+      "l": "quả vừa"
+     },
+     "note": "Táo chua giòn — táo ngọt mềm sẽ thành mứt.",
+     "r": "veg"
+    },
+    {
+     "n": "Đường nâu",
+     "q": 120,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột bắp",
+     "q": 30,
+     "u": "g",
+     "note": "Thứ giữ nước táo lại thành sốt thay vì chảy ra đáy.",
+     "r": "season"
+    },
+    {
+     "n": "Quế + nhục đậu khấu",
+     "q": 2,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Nước cốt chanh",
+     "q": 2,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Trứng quét mặt",
+     "q": 1,
+     "u": "quả",
+     "r": "season"
+    },
+    {
+     "n": "Muối",
+     "q": 3,
+     "u": "g",
+     "note": "Cho vào bột vỏ — vỏ không muối nhạt thếch dù nhân ngọt.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Làm vỏ — giữ hạt bơ",
+     "d": "Trộn bột với muối, cắt bơ lạnh vào bằng dao hoặc đầu ngón tay đến khi còn hạt bơ cỡ hạt đậu, rưới nước đá, kết khối thì dừng.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Bột <b>còn nhìn thấy mảng bơ dẹt</b>. Chính những mảng bơ đó hoá hơi trong lò và tạo lớp bong — xoa nhuyễn hết là vỏ bở chứ không bong."
+    },
+    {
+     "t": "Nghỉ lạnh",
+     "d": "Chia đôi, ép dẹt, bọc kín, để ngăn mát tối thiểu 1 tiếng.",
+     "m": 60,
+     "heat": "Ngăn mát",
+     "cue": "Bột <b>cứng, cán ra không dính</b>."
+    },
+    {
+     "t": "Rút nước táo trước",
+     "d": "Thái táo lát 5 mm, xóc với đường, chanh và quế, để 45 phút rồi <b>chắt bỏ nước</b> (hoặc rim nước đó thành siro rồi đổ lại).",
+     "m": 50,
+     "heat": "—",
+     "cue": "Chắt ra được <b>khoảng 150 ml nước</b>. Đây chính là chỗ nước sẽ làm ướt đáy nếu bạn bỏ qua bước này."
+    },
+    {
+     "t": "Lót vỏ dưới và đổ nhân",
+     "d": "Cán một nửa bột, lót khuôn pie 23 cm, trộn táo với bột bắp rồi đổ vào, vun cao ở giữa.",
+     "m": 12,
+     "heat": "—",
+     "cue": "Nhân <b>vun thành mái vòm</b> — táo sẽ xẹp xuống nên vun thấp là bánh rỗng ruột."
+    },
+    {
+     "t": "Phủ vỏ trên và rạch",
+     "d": "Cán nửa còn lại, phủ lên, cắt mép, gấp và bấm viền, rạch 5 khe thoát hơi, quét trứng.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Viền <b>bấm chặt kín</b> và có khe thoát hơi. Không có khe là hơi đẩy bung vỏ."
+    },
+    {
+     "t": "Nướng hai nhiệt",
+     "d": "Nướng 220 °C 20 phút ở rãnh dưới, rồi hạ 190 °C và chuyển rãnh giữa.",
+     "m": 55,
+     "heat": "Lò 220 °C → 190 °C",
+     "cue": "Vỏ <b>vàng nâu</b> và <b>nhân sôi ục ục nhìn thấy qua khe rạch</b>. Nhân chưa sôi thì bột bắp chưa làm việc và nước sẽ chảy khi cắt."
+    },
+    {
+     "t": "Nguội hoàn toàn mới cắt",
+     "d": "Để nguội trên rack tối thiểu 4 tiếng.",
+     "m": 240,
+     "heat": "—",
+     "cue": "Cắt ra <b>miếng bánh đứng, nhân không chảy loang ra đĩa</b>. Cắt lúc nóng là nhân chảy hết."
+    }
+   ],
+   "tips": [
+    "Chắt nước táo trước khi nướng là khác biệt giữa bánh có đáy giòn và bánh có đáy ướt.",
+    "Nướng rãnh dưới 20 phút đầu để đáy chín trước — đây là mẹo dùng cho mọi loại pie."
+   ],
+   "serveWith": "Kem vani. \"Apple pie à la mode\" chính là như thế."
+  },
+  {
+   "id": "banoffee",
+   "name": "Banoffee pie",
+   "cat": "lanh",
+   "role": "trangmieng",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "chuối",
+    "caramel",
+    "kem tươi"
+   ],
+   "why": "Không cần lò nếu mua sẵn caramel. Bốn tầng rõ rệt, và bài học nằm ở chỗ xếp tầng sao cho không bị ướt lẫn nhau.",
+   "ing": [
+    {
+     "n": "Bánh quy digestive",
+     "q": 250,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 110,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Sữa đặc có đường",
+     "q": 400,
+     "u": "g",
+     "per": {
+      "n": 400,
+      "l": "lon"
+     },
+     "note": "Đun thành dulce de leche, hoặc mua caramel làm sẵn.",
+     "r": "main"
+    },
+    {
+     "n": "Chuối chín",
+     "q": 4,
+     "u": "quả",
+     "note": "Chín vừa, còn cứng. Chuối nẫu sẽ nát và thâm.",
+     "r": "veg"
+    },
+    {
+     "n": "Kem tươi (35%)",
+     "q": 400,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Đường bột",
+     "q": 30,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Chocolate đen (bào vụn)",
+     "q": 30,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Muối biển",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Làm caramel từ sữa đặc",
+     "d": "Luộc nguyên lon sữa đặc chưa mở trong nồi nước ngập hoàn toàn, 2,5 tiếng, châm nước liên tục.",
+     "m": 150,
+     "heat": "Lửa nhỏ",
+     "cue": "Mở ra thấy <b>màu caramel nâu vàng, đặc quánh</b>. <b>Nước phải luôn ngập lon</b> — cạn nước là lon nổ, đây là cảnh báo thật."
+    },
+    {
+     "t": "Làm đế",
+     "d": "Nghiền vụn bánh quy, trộn bơ chảy, nén chặt xuống khuôn 22 cm, để lạnh 30 phút.",
+     "m": 35,
+     "heat": "Ngăn mát",
+     "cue": "Đế <b>cứng lại, gõ nghe cạch</b>."
+    },
+    {
+     "t": "Phết caramel",
+     "d": "Phết caramel nguội lên đế thành lớp đều, để lạnh 20 phút cho se.",
+     "m": 22,
+     "heat": "Ngăn mát",
+     "cue": "Lớp caramel <b>se mặt, chạm không dính tay</b> — se rồi mới xếp chuối lên được."
+    },
+    {
+     "t": "Xếp chuối và phủ kem",
+     "d": "Thái chuối lát dày 1 cm, xếp kín mặt caramel. Đánh kem tươi lạnh với đường bột đến chóp mềm, phủ lên.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Kem <b>giữ nếp khi múc, không chảy</b>. Chóp cứng quá là kem sẽ bị \"hạt\" và tách bơ."
+    },
+    {
+     "t": "Rắc và làm lạnh",
+     "d": "Bào chocolate và rắc muối biển lên mặt, để lạnh 1 tiếng trước khi cắt.",
+     "m": 60,
+     "heat": "Ngăn mát",
+     "cue": "Cắt ra thấy <b>bốn tầng đứng rõ</b>."
+    }
+   ],
+   "tips": [
+    "Lon sữa đặc phải <b>luôn ngập nước</b> khi luộc — cạn nước là lon nổ. Đây là một trong hai chỗ trong trang này có rủi ro thật (chỗ kia là nồi caramel).",
+    "Làm trong ngày ăn. Chuối sẽ thâm sau khoảng 12 tiếng dù có kem phủ."
+   ],
+   "serveWith": "Tự nó đã đủ — đã có kem, caramel và chuối."
+  },
+  {
+   "id": "carrot-cake",
+   "name": "Carrot cake phủ cream cheese",
+   "cat": "cake",
+   "role": "tiec",
+   "diff": 1,
+   "serves": 12,
+   "tags": [
+    "cà rốt",
+    "cream cheese",
+    "quế"
+   ],
+   "why": "Bánh ẩm nhất trong nhóm bánh gato vì dùng dầu thay bơ. Không cần đánh bông gì cả — trộn khô với ướt là xong.",
+   "ing": [
+    {
+     "n": "Cà rốt",
+     "q": 350,
+     "u": "g",
+     "per": {
+      "n": 100,
+      "l": "củ vừa"
+     },
+     "note": "Bào sợi nhỏ. Bào thô là bánh có sợi dai.",
+     "r": "veg"
+    },
+    {
+     "n": "Bột mì số 8",
+     "q": 280,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Đường nâu",
+     "q": 200,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Dầu ăn (hoặc dầu dừa)",
+     "q": 220,
+     "u": "ml",
+     "note": "Dầu chứ không bơ — đó là lý do bánh ẩm cả tuần.",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 4,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Bột nở + muối nở",
+     "q": 8,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Quế + gừng bột",
+     "q": 3,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Óc chó (hoặc hồ đào)",
+     "q": 100,
+     "u": "g",
+     "r": "veg"
+    },
+    {
+     "n": "Cream cheese (phủ)",
+     "q": 300,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt (phủ)",
+     "q": 80,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Đường bột (phủ)",
+     "q": 150,
+     "u": "g",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Trộn khô và ướt riêng",
+     "d": "Trộn bột, bột nở, muối nở, quế, gừng, muối vào một âu. Âu kia đánh trứng với đường nâu và dầu.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Hỗn hợp ướt <b>đồng nhất, dầu không tách nổi lên mặt</b>."
+    },
+    {
+     "t": "Trộn hai phần",
+     "d": "Đổ khô vào ướt, trộn bằng spatula đến vừa hết vệt bột, rồi cho cà rốt và hạt.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Vừa hết bột khô thì dừng. Bột này không cần mượt."
+    },
+    {
+     "t": "Nướng",
+     "d": "Chia vào hai khuôn tròn 18 cm lót giấy, nướng ở rãnh giữa.",
+     "m": 35,
+     "heat": "Lò 175 °C",
+     "cue": "Xiên tăm vào giữa <b>ra sạch hoặc còn vài vụn khô</b>, mặt bánh đàn hồi khi ấn nhẹ."
+    },
+    {
+     "t": "Nguội hoàn toàn",
+     "d": "Để nguội trong khuôn 10 phút rồi gỡ ra rack, để nguội hẳn.",
+     "m": 60,
+     "heat": "—",
+     "cue": "Đáy bánh <b>nguội hẳn khi chạm tay</b>. Phủ kem lên bánh còn ấm là kem chảy hết."
+    },
+    {
+     "t": "Đánh kem phủ",
+     "d": "Đánh bơ mềm với đường bột trước, rồi cho cream cheese lạnh, đánh ở tốc độ thấp vừa đủ mịn.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Kem <b>đặc, giữ nếp</b>. Đánh lâu là cream cheese loãng ra và không phết được — đây là lỗi kinh điển."
+    },
+    {
+     "t": "Phủ và ghép tầng",
+     "d": "Phết một lớp kem giữa hai tầng, phủ mặt và thành.",
+     "m": 12,
+     "heat": "—",
+     "cue": "Lớp kem <b>đứng thành, không trượt xuống</b>. Nếu trượt thì cho cả bánh vào tủ lạnh 20 phút rồi làm tiếp."
+    }
+   ],
+   "tips": [
+    "Cream cheese phủ <b>đánh càng ít càng đặc</b>. Ngược với mọi loại kem khác.",
+    "Bánh này ngon hơn vào ngày thứ hai. Bọc kín để ngăn mát được 5 ngày."
+   ],
+   "serveWith": "Tự nó đã đủ — lớp kem cream cheese chính là phần chua cân lại."
+  },
+  {
+   "id": "scone",
+   "name": "Scone Anh",
+   "cat": "bread",
+   "role": "sang",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "bơ",
+    "sữa"
+   ],
+   "why": "Từ lúc bắt đầu đến lúc ra lò chỉ 30 phút. Quy tắc duy nhất: đụng vào bột càng ít càng tốt.",
+   "ing": [
+    {
+     "n": "Bột mì số 8",
+     "q": 350,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 85,
+     "u": "g",
+     "note": "Lạnh cứng, cắt hạt lựu.",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 50,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột nở",
+     "q": 15,
+     "u": "g",
+     "note": "Nhiều bột nở — đó là cách scone leo cao.",
+     "r": "season"
+    },
+    {
+     "n": "Sữa tươi (hoặc buttermilk)",
+     "q": 175,
+     "u": "ml",
+     "note": "Lạnh.",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 1,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Nho khô",
+     "q": 80,
+     "u": "g",
+     "note": "Tuỳ chọn, ngâm nước ấm 10 phút rồi vắt ráo.",
+     "r": "veg"
+    },
+    {
+     "n": "Muối",
+     "q": 3,
+     "u": "g",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Xoa bơ vào bột",
+     "d": "Trộn bột, bột nở, đường, muối. Xoa bơ lạnh bằng đầu ngón tay đến khi thành vụn thô.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>như vụn bánh mì, còn hạt bơ cỡ hạt đậu</b>. Tay ấm thì rửa tay nước lạnh trước."
+    },
+    {
+     "t": "Cho chất lỏng, trộn tối thiểu",
+     "d": "Đánh trứng với sữa, đổ vào, dùng dao trộn <b>vài nhát</b> đến khi vừa kết. Cho nho khô.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Bột <b>còn xù xì và hơi dính</b>. Nhẵn mịn nghĩa là đã trộn quá và scone sẽ cứng."
+    },
+    {
+     "t": "Gấp ba lần rồi cắt",
+     "d": "Đổ ra bàn có bột áo, ép dẹt và gấp đôi ba lần, ép thành tấm dày 3 cm, cắt bằng khuôn tròn ấn thẳng xuống.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Khuôn <b>ấn thẳng xuống, không xoay</b>. Xoay khuôn là mép bị bịt và scone leo lệch."
+    },
+    {
+     "t": "Nướng lửa cao",
+     "d": "Quét sữa lên mặt (đừng để chảy xuống thành), nướng ở lò thật nóng.",
+     "m": 14,
+     "heat": "Lò 210 °C",
+     "cue": "Scone <b>cao gấp đôi, mặt vàng và thân nứt ngang thành một đường</b> — đường nứt đó là dấu hiệu đạt."
+    }
+   ],
+   "tips": [
+    "Bột càng ít bị nhồi càng tốt. Scone hỏng luôn là vì trộn kỹ quá.",
+    "Ăn nóng trong ngày. Scone nguội qua đêm thì phải hâm lại lò 3 phút."
+   ],
+   "serveWith": "Kem đặc (clotted cream) và mứt dâu. Cornwall phết mứt trước, Devon phết kem trước — chọn phe."
+  },
+  {
+   "id": "pancake",
+   "name": "Pancake buttermilk",
+   "cat": "chao",
+   "role": "sang",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "sữa",
+    "trứng"
+   ],
+   "why": "Bữa sáng nhanh nhất trang này. Bí quyết ai cũng bỏ qua: bột phải còn lợn cợn, và phải để nghỉ 10 phút.",
+   "ing": [
+    {
+     "n": "Bột mì số 8",
+     "q": 250,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Buttermilk",
+     "q": 350,
+     "u": "ml",
+     "note": "Không có thì pha 350 ml sữa với 1 thìa canh giấm, để 10 phút.",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 2,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 50,
+     "u": "g",
+     "note": "Đun chảy.",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 40,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột nở",
+     "q": 10,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Muối nở",
+     "q": 3,
+     "u": "g",
+     "note": "Cần buttermilk chua mới nở được.",
+     "r": "season"
+    },
+    {
+     "n": "Muối",
+     "q": 3,
+     "u": "g",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Trộn khô và ướt",
+     "d": "Trộn bột, bột nở, muối nở, đường, muối. Đánh trứng với buttermilk và bơ chảy.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Hai phần <b>riêng biệt, chưa trộn với nhau</b>."
+    },
+    {
+     "t": "Trộn — chừa cục lại",
+     "d": "Đổ ướt vào khô, khuấy <b>10 vòng thôi</b>.",
+     "m": 1,
+     "heat": "—",
+     "cue": "Bột <b>vẫn còn cục nhỏ nhìn thấy được</b>. Khuấy đến mịn là pancake dai như bánh đa."
+    },
+    {
+     "t": "Để nghỉ",
+     "d": "Để yên 10 phút.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Mặt bột <b>nổi bọt khí li ti</b> — bột nở đang làm việc và bột mì đang ngậm nước."
+    },
+    {
+     "t": "Rán",
+     "d": "Chảo chống dính lửa vừa-nhỏ, quét bơ mỏng, múc một muôi bột.",
+     "m": 12,
+     "heat": "Lửa vừa-nhỏ",
+     "cue": "Lật khi <b>bọt khí nổi lên khắp mặt và các bọt ở rìa đã vỡ và không khép lại</b>. Lật sớm là bánh xẹp."
+    }
+   ],
+   "tips": [
+    "Lửa vừa-nhỏ, không lửa to. Lửa to là ngoài cháy trong sống — pancake dày cần thời gian.",
+    "Chồng pancake để trong lò 90 °C nếu làm nhiều mẻ, đừng chồng lên đĩa lạnh."
+   ],
+   "serveWith": "Bơ và siro phong. Hoặc coulis quả mọng nếu muốn đỡ ngọt."
+  },
+  {
+   "id": "sachertorte",
+   "name": "Sachertorte",
+   "cat": "cake",
+   "role": "tiec",
+   "diff": 3,
+   "serves": 12,
+   "tags": [
+    "chocolate",
+    "mứt mơ"
+   ],
+   "why": "Bánh chocolate Vienna, và là bài học về lớp phủ chocolate bóng gương — thứ chỉ đạt được ở đúng một khoảng nhiệt.",
+   "ing": [
+    {
+     "n": "Chocolate đen 55%",
+     "q": 130,
+     "u": "g",
+     "note": "Cho cốt bánh.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 130,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Đường bột",
+     "q": 110,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 6,
+     "u": "quả",
+     "note": "Tách riêng.",
+     "r": "main"
+    },
+    {
+     "n": "Đường cát",
+     "q": 110,
+     "u": "g",
+     "note": "Cho meringue.",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì số 8",
+     "q": 140,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Mứt mơ",
+     "q": 250,
+     "u": "g",
+     "note": "Đun ấm và lọc qua rây — lớp mứt này là đặc trưng của Sacher.",
+     "r": "main"
+    },
+    {
+     "n": "Chocolate đen (lớp phủ)",
+     "q": 200,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Đường (lớp phủ)",
+     "q": 200,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Nước (lớp phủ)",
+     "q": 125,
+     "u": "ml",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đánh bơ và cho lòng đỏ",
+     "d": "Đun chảy 130 g chocolate. Đánh bơ với đường bột đến bông, cho từng lòng đỏ, rồi cho chocolate nguội.",
+     "m": 10,
+     "heat": "Cách thuỷ",
+     "cue": "Hỗn hợp <b>bông, nhạt màu, không tách</b>."
+    },
+    {
+     "t": "Đánh meringue",
+     "d": "Đánh lòng trắng với đường cát đến chóp mềm.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Chóp <b>đứng và hơi gục đầu</b>. Chóp cứng là bánh khô và nứt mặt."
+    },
+    {
+     "t": "Fold xen kẽ",
+     "d": "Fold 1/3 meringue vào hỗn hợp chocolate, rồi xen kẽ bột rây và meringue còn lại.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Bột <b>đồng màu, còn phồng nhẹ</b>."
+    },
+    {
+     "t": "Nướng",
+     "d": "Đổ vào khuôn 22 cm lót giấy, nướng ở rãnh giữa.",
+     "m": 50,
+     "heat": "Lò 170 °C",
+     "cue": "Xiên tăm <b>ra sạch</b> và mặt bánh nứt nhẹ — Sacher nứt mặt là bình thường vì sẽ bị cắt phẳng."
+    },
+    {
+     "t": "Cắt đôi và phết mứt",
+     "d": "Để nguội hẳn, cắt bánh làm hai tầng, phết mứt mơ vào giữa và phủ kín cả mặt lẫn thành.",
+     "m": 12,
+     "heat": "—",
+     "cue": "Toàn bộ mặt bánh <b>phủ một lớp mứt mỏng và bóng</b>. Lớp mứt này giữ vụn bánh không lẫn vào lớp phủ chocolate."
+    },
+    {
+     "t": "Nấu lớp phủ và tráng",
+     "d": "Đun đường với nước đến 108 °C, bắc ra, cho chocolate, khuấy đến mượt rồi để nguội xuống ~40 °C và dội một lần lên bánh.",
+     "m": 15,
+     "heat": "Bếp",
+     "cue": "Lớp phủ <b>chảy phủ kín trong một lần dội, mặt bóng như gương</b>. Dội lúc quá nóng là lớp mỏng và lộ mứt; quá nguội là đặc và gợn."
+    }
+   ],
+   "tips": [
+    "Chỉ dội <b>một lần</b> và không quét lại bằng spatula — quét là mất mặt gương.",
+    "Lớp mứt mơ không phải để trang trí: nó bịt vụn bánh lại để lớp phủ mượt."
+   ],
+   "serveWith": "Bắt buộc một muôi chantilly không đường — bánh rất ngọt, kem là phần cân lại."
+  },
+  {
+   "id": "waffle-liege",
+   "name": "Waffle Liège",
+   "cat": "chao",
+   "role": "sang",
+   "diff": 2,
+   "serves": 8,
+   "tags": [
+    "men",
+    "bơ",
+    "đường"
+   ],
+   "why": "Waffle Bỉ thật là bánh làm từ bột men chứ không phải bột lỏng, và có hạt đường cục nóng chảy thành caramel ngay trên mặt bánh.",
+   "ing": [
+    {
+     "n": "Bột mì số 11",
+     "q": 350,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi ấm",
+     "q": 130,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Men instant",
+     "q": 7,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 2,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 180,
+     "u": "g",
+     "note": "Mềm, cho vào sau khi bột đã dai.",
+     "r": "main"
+    },
+    {
+     "n": "Đường cục (pearl sugar)",
+     "q": 150,
+     "u": "g",
+     "note": "Đường hạt to chịu nhiệt. Không thay được bằng đường cát — đường cát tan mất.",
+     "r": "main"
+    },
+    {
+     "n": "Mật ong",
+     "q": 20,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Muối + vani",
+     "q": 4,
+     "u": "g",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Kích men",
+     "d": "Hoà men vào sữa ấm với 1 thìa cà phê đường, để 10 phút.",
+     "m": 12,
+     "heat": "—",
+     "cue": "Mặt sữa <b>nổi bọt và phồng lên như bọt bia</b>. Không nổi là men chết — bỏ đi làm lại."
+    },
+    {
+     "t": "Nhồi bột",
+     "d": "Trộn bột, trứng, mật ong, muối, vani với hỗn hợp men, nhồi 8 phút.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Bột <b>dẻo, kéo ra giãn mỏng</b>."
+    },
+    {
+     "t": "Cho bơ từng ít",
+     "d": "Cho bơ mềm từng lát, chỉ cho lát sau khi lát trước đã ngấm.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Bột <b>bóng, mềm, dính nhẹ vào thành âu rồi lại nhả ra</b>."
+    },
+    {
+     "t": "Ủ",
+     "d": "Đậy kín, ủ đến khi nở gấp đôi.",
+     "m": 90,
+     "heat": "Nhiệt độ phòng",
+     "cue": "Ấn ngón tay xuống, vết lõm <b>giữ nguyên không phồng lại</b>."
+    },
+    {
+     "t": "Trộn đường cục và chia viên",
+     "d": "Xả khí, trộn nhẹ đường cục vào (đừng nhồi kỹ), chia viên 90 g, ủ thêm 20 phút.",
+     "m": 25,
+     "heat": "—",
+     "cue": "Đường cục <b>phân bố đều mà vẫn còn nguyên hạt</b>. Nhồi kỹ là đường tan vào bột và mất hết công dụng."
+    },
+    {
+     "t": "Nướng máy",
+     "d": "Nướng ở máy waffle nóng sẵn, mỗi mặt cho đến khi vàng.",
+     "m": 12,
+     "heat": "Máy waffle",
+     "cue": "Mặt bánh <b>vàng nâu và các hạt đường ở mép đã chảy thành caramel giòn</b>. Đó là dấu hiệu duy nhất cần nhìn."
+    }
+   ],
+   "tips": [
+    "Lau máy waffle bằng khăn khô sau mỗi mẻ — caramel cháy bám lại sẽ làm mẻ sau đắng.",
+    "Bột viên sẵn bọc kín để ngăn đá được một tháng."
+   ],
+   "serveWith": "Tự nó đã đủ — đường caramel là lớp ngọt rồi. Muốn thêm thì chantilly và dâu."
+  },
+  {
+   "id": "pastel-de-nata",
+   "name": "Pastel de nata",
+   "cat": "tart",
+   "role": "cafe",
+   "diff": 2,
+   "serves": 12,
+   "tags": [
+    "trứng",
+    "quế",
+    "sữa"
+   ],
+   "why": "Bánh trứng Bồ Đào Nha: vỏ ngàn lớp giòn tan, nhân custard cháy sém mặt. Cần lò thật nóng — nóng hơn hầu hết công thức khác.",
+   "ing": [
+    {
+     "n": "Bột puff pastry",
+     "q": 300,
+     "u": "g",
+     "note": "Mua sẵn là hoàn toàn ổn cho món này.",
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi",
+     "q": 250,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Kem tươi",
+     "q": 100,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 180,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Nước",
+     "q": 90,
+     "u": "ml",
+     "note": "Nấu siro với đường và quế.",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 6,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì số 8",
+     "q": 30,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Quế thanh + vỏ chanh",
+     "q": 1,
+     "u": "thanh",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Cuộn và cắt vỏ",
+     "d": "Cán mỏng puff pastry, cuộn chặt thành khúc tròn, cắt lát dày 1,5 cm.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Mặt cắt <b>thấy rõ vòng xoáy các lớp</b> — vòng xoáy đó là lớp bánh sau khi nướng."
+    },
+    {
+     "t": "Ấn vào khuôn bằng ngón cái",
+     "d": "Đặt lát bột (mặt xoáy hướng lên) vào khuôn muffin, nhúng ngón cái vào nước rồi miết từ đáy lên thành.",
+     "m": 12,
+     "heat": "—",
+     "cue": "Vỏ <b>mỏng ở đáy, cao hơn miệng khuôn 2 mm</b>. Đáy dày là bánh không giòn."
+    },
+    {
+     "t": "Nấu siro",
+     "d": "Đun đường với nước, quế và vỏ chanh đến 100 °C, đun thêm 2 phút.",
+     "m": 6,
+     "heat": "Lửa vừa",
+     "cue": "Siro <b>trong, hơi sánh</b>. Không để chuyển màu."
+    },
+    {
+     "t": "Làm custard",
+     "d": "Đánh bột mì với một ít sữa lạnh cho tan, đun phần sữa và kem còn lại đến nóng, trộn lại rồi rót siro nóng vào, cuối cùng cho lòng đỏ.",
+     "m": 10,
+     "heat": "Lửa nhỏ",
+     "cue": "Hỗn hợp <b>sánh như kem tươi chưa đánh, chảy thành dòng</b>. Lọc qua rây — bắt buộc."
+    },
+    {
+     "t": "Nướng thật nóng",
+     "d": "Rót custard đầy 3/4 vỏ, nướng ở rãnh trên trong lò nóng tối đa.",
+     "m": 14,
+     "heat": "Lò 250 °C",
+     "cue": "Mặt custard <b>nổi các đốm cháy nâu đen</b> và vỏ vàng giòn. Không có đốm cháy là chưa đúng — lò chưa đủ nóng."
+    },
+    {
+     "t": "Gỡ ngay",
+     "d": "Gỡ ra rack ngay, để nguội 5 phút, rắc quế và đường bột.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Vỏ <b>giòn nghe rộp khi cắn</b>. Để trong khuôn là hơi nước làm vỏ mềm."
+    }
+   ],
+   "tips": [
+    "Lò nhà thường không lên nổi 250 °C thật. Nếu lò yếu, nướng lâu hơn ở rãnh trên cùng và bật thanh nhiệt trên ở 2 phút cuối.",
+    "Ăn ấm trong ngày. Đây là bánh không để dành được."
+   ],
+   "serveWith": "Espresso và một chút quế bột rắc lên."
+  },
+  {
+   "id": "churros",
+   "name": "Churros",
+   "cat": "choux",
+   "role": "trangmieng",
+   "diff": 2,
+   "serves": 8,
+   "tags": [
+    "chocolate"
+   ],
+   "why": "Cùng nguyên lý bột choux nhưng chiên thay vì nướng. Rẻ, nhanh, và có đúng một chỗ nguy hiểm: nhiệt độ dầu.",
+   "ing": [
+    {
+     "n": "Nước",
+     "q": 250,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 50,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì số 11",
+     "q": 150,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 3,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 1,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Đường + quế (lăn ngoài)",
+     "q": 80,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Dầu chiên",
+     "q": 700,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Chocolate đen (sốt chấm)",
+     "q": 120,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi (sốt chấm)",
+     "q": 150,
+     "u": "ml",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Nấu bột",
+     "d": "Đun sôi nước với bơ và muối, đổ hết bột vào một lần, khuấy mạnh trên lửa nhỏ.",
+     "m": 5,
+     "heat": "Lửa nhỏ",
+     "cue": "Khối bột <b>tách khỏi thành nồi thành một cục</b>."
+    },
+    {
+     "t": "Cho trứng",
+     "d": "Để nguội 3 phút rồi đánh trứng vào.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Bột <b>dẻo, bắt được qua đui răng cưa mà không đứt đoạn</b>. Churros đặc hơn choux — đừng cho nhiều trứng."
+    },
+    {
+     "t": "Đun dầu và dò nhiệt",
+     "d": "Đun dầu đến 180 °C. Thử bằng một mẩu bột nhỏ.",
+     "m": 8,
+     "heat": "Dầu 180 °C",
+     "cue": "Mẩu bột <b>nổi lên ngay và sủi bọt đều quanh</b>. Chìm rồi mới nổi là dầu nguội; cháy ngay là dầu quá nóng — và churros trong dầu quá nóng sẽ <b>nổ bắn</b>."
+    },
+    {
+     "t": "Bắt và chiên",
+     "d": "Bắt các thanh dài 12 cm bằng đui răng cưa to, cắt bằng kéo thả thẳng vào dầu, chiên vài cái một mẻ.",
+     "m": 12,
+     "heat": "Dầu 180 °C",
+     "cue": "Churros <b>vàng nâu đều và các rãnh nở rõ</b>. Rãnh là để bánh chín đều — dùng đui trơn thì ruột sẽ còn sống."
+    },
+    {
+     "t": "Lăn đường quế và làm sốt",
+     "d": "Vớt ra giấy thấm 30 giây rồi lăn ngay qua đường quế. Đun sữa nóng đổ lên chocolate làm sốt chấm.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Đường <b>bám đều vào thân bánh</b> — lăn lúc nguội là đường không bám."
+    }
+   ],
+   "tips": [
+    "Nhất định dùng <b>đui răng cưa</b>. Đui trơn làm churros phồng bít và ruột sống — đó cũng là lý do gây nổ dầu.",
+    "Ăn trong 15 phút sau khi chiên. Churros nguội là hết chuyện."
+   ],
+   "serveWith": "Sốt chocolate đặc để chấm — đó là cách ăn ở Madrid."
+  },
+  {
+   "id": "chantilly",
+   "name": "Kem chantilly",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "kem tươi",
+    "vani"
+   ],
+   "why": "Ba nguyên liệu và hai phút, nhưng có một ngưỡng rất hẹp: quá 20 giây là kem tách bơ và không quay lại được.",
+   "ing": [
+    {
+     "n": "Kem tươi (whipping 35% trở lên)",
+     "q": 300,
+     "u": "ml",
+     "per": {
+      "n": 250,
+      "l": "hộp nhỏ"
+     },
+     "note": "Dưới 30% béo thì không bao giờ bông. Đọc kỹ vỏ hộp.",
+     "r": "main"
+    },
+    {
+     "n": "Đường bột",
+     "q": 30,
+     "u": "g",
+     "note": "Đường bột chứ không đường cát — tan ngay, không lạo xạo.",
+     "r": "main"
+    },
+    {
+     "n": "Vani",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Muối",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Làm lạnh dụng cụ",
+     "d": "Cho âu inox và que đánh vào ngăn đá 15 phút. Kem để ngăn mát đến sát lúc dùng.",
+     "m": 15,
+     "heat": "Ngăn đá",
+     "cue": "Âu <b>lạnh buốt, có hơi nước đọng mờ bên ngoài</b>. Đây là bước quyết định kem có bông hay không, nhất là ở khí hậu nóng."
+    },
+    {
+     "t": "Đánh tốc độ vừa",
+     "d": "Đánh ở tốc độ vừa (không cao nhất), cho đường bột khi kem bắt đầu đặc.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Kem <b>để lại vệt của que đánh trên mặt</b> — từ lúc này phải nhìn không rời mắt."
+    },
+    {
+     "t": "Dừng ở chóp mềm",
+     "d": "Nhấc que lên kiểm tra, đánh nốt bằng tay nếu cần.",
+     "m": 1,
+     "heat": "—",
+     "cue": "Chóp kem <b>đứng lên rồi gục đầu xuống mềm mại</b>. Thấy kem hơi sần và không còn bóng là đã tách — dừng ngay."
+    }
+   ],
+   "tips": [
+    "Đánh quá tay thì <b>cứu được</b>: cho thêm 2–3 thìa kem tươi lỏng và trộn tay nhẹ nhàng. Chỉ cứu được nếu chưa thành bơ hẳn.",
+    "Muốn kem đứng lâu (phủ bánh, để tủ 1 ngày): thêm 1 thìa cà phê bột sữa hoặc mascarpone khi kem bắt đầu đặc."
+   ],
+   "serveWith": "Gần như mọi thứ nóng, chua hoặc đắng: tarte Tatin, Sachertorte, brownie, crêpe."
+  },
+  {
+   "id": "creme-anglaise",
+   "name": "Crème anglaise (sốt vani)",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 2,
+   "serves": 8,
+   "tags": [
+    "lòng đỏ",
+    "sữa",
+    "vani"
+   ],
+   "why": "Sốt vani nền của bếp Pháp, và là chỗ để học ngưỡng nhiệt của trứng: 82 °C là sốt mượt, 86 °C là trứng bác.",
+   "ing": [
+    {
+     "n": "Sữa tươi",
+     "q": 400,
+     "u": "ml",
+     "per": {
+      "n": 250,
+      "l": "cốc"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Kem tươi",
+     "q": 100,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 4,
+     "u": "quả",
+     "per": {
+      "n": 20,
+      "l": "lòng đỏ"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 80,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Vani",
+     "q": 1,
+     "u": "quả",
+     "r": "season"
+    },
+    {
+     "n": "Muối",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Hâm sữa với vani",
+     "d": "Đun sữa, kem và hạt vani đến khi bốc hơi nhẹ, tắt bếp, ngâm 10 phút.",
+     "m": 13,
+     "heat": "Lửa nhỏ",
+     "cue": "Mép nồi <b>lăn tăn bọt nhỏ</b>. Không sôi."
+    },
+    {
+     "t": "Đánh lòng đỏ và tempering",
+     "d": "Đánh lòng đỏ với đường, rót sữa nóng vào thành dòng nhỏ, khuấy liên tục.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>mượt, không có sợi trứng chín</b>."
+    },
+    {
+     "t": "Nấu đến 82 °C",
+     "d": "Đổ lại vào nồi, khuấy liên tục bằng spatula, vét cả đáy nồi.",
+     "m": 6,
+     "heat": "Lửa nhỏ",
+     "cue": "Kéo ngón tay qua mặt spatula để lại <b>một rãnh rõ, hai mép không khép lại</b>. Nếu có nhiệt kế: 82–84 °C. Quá 86 °C là lợn cợn."
+    },
+    {
+     "t": "Lọc và làm nguội nhanh",
+     "d": "Lọc ngay qua rây vào bát đặt trong chậu nước đá, khuấy cho nguội.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Sốt <b>mượt và bóng</b>. Để nguyên trong nồi nóng là nhiệt dư nấu tiếp và hỏng."
+    }
+   ],
+   "tips": [
+    "Lỡ bị lợn cợn: đổ vào máy xay cầm tay xay 20 giây rồi lọc — cứu được khoảng 80%.",
+    "Sốt này chính là nền của kem vani: cho vào máy làm kem là ra crème glacée."
+   ],
+   "serveWith": "Clafoutis, brownie, bánh chocolate nóng, biscotti, mọi thứ hơi khô."
+  },
+  {
+   "id": "creme-patissiere",
+   "name": "Crème pâtissière (kem trứng sữa)",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 2,
+   "serves": 8,
+   "tags": [
+    "lòng đỏ",
+    "sữa"
+   ],
+   "why": "Ruột của éclair, choux, tart quả và mille-feuille. Khác crème anglaise ở một chỗ quan trọng: cái này <b>phải sôi</b>.",
+   "ing": [
+    {
+     "n": "Sữa tươi",
+     "q": 500,
+     "u": "ml",
+     "per": {
+      "n": 250,
+      "l": "cốc"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 4,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 100,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột bắp",
+     "q": 40,
+     "u": "g",
+     "note": "Hoặc 25 g bột bắp + 20 g bột mì cho kem mềm hơn.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 30,
+     "u": "g",
+     "note": "Cho ở cuối, khi kem đã nguội bớt.",
+     "r": "main"
+    },
+    {
+     "n": "Vani",
+     "q": 1,
+     "u": "quả",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Hâm sữa với vani",
+     "d": "Đun sữa với vani đến bốc hơi.",
+     "m": 6,
+     "heat": "Lửa nhỏ",
+     "cue": "Mép nồi lăn tăn."
+    },
+    {
+     "t": "Đánh lòng đỏ với bột",
+     "d": "Đánh lòng đỏ với đường rồi cho bột bắp, đánh cho tan hết.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>đặc, mịn, không cục bột</b>."
+    },
+    {
+     "t": "Tempering và nấu đến sôi",
+     "d": "Rót sữa nóng vào, trộn đều, đổ lại nồi và khuấy liên tục ở lửa vừa.",
+     "m": 7,
+     "heat": "Lửa vừa",
+     "cue": "Kem đặc lại rồi <b>sôi \"bụp\" ở giữa nồi</b> — từ lúc đó khuấy thêm <b>60 giây</b> nữa. Không đủ thì kem có vị bột sống và sẽ chảy loãng khi để lạnh."
+    },
+    {
+     "t": "Cho bơ và làm nguội nhanh",
+     "d": "Bắc ra, cho bơ khuấy tan, trải mỏng ra khay, áp màng bọc sát mặt kem, để lạnh.",
+     "m": 5,
+     "heat": "Ngăn mát",
+     "cue": "Màng bọc <b>dính sát mặt kem, không hở</b>. Hở là mặt kem đóng váng khô thành mảng."
+    },
+    {
+     "t": "Đánh lại trước khi dùng",
+     "d": "Kem lạnh sẽ cứng như thạch — đánh lại 30 giây cho mượt trước khi bơm.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Kem <b>mượt trở lại, bóng, bơm qua đui trơn không gợn</b>."
+    }
+   ],
+   "tips": [
+    "Phải <b>sôi</b> ít nhất một phút — đây là khác biệt lớn nhất so với crème anglaise và là lỗi phổ biến nhất.",
+    "Trộn thêm kem chantilly vào theo tỉ lệ 2:1 thì thành crème diplomate, nhẹ hơn nhiều."
+   ],
+   "serveWith": "Là nhân chứ không phải sốt rưới: choux, éclair, tart quả tươi, mille-feuille."
+  },
+  {
+   "id": "ganache",
+   "name": "Ganache chocolate",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "chocolate",
+    "kem tươi"
+   ],
+   "why": "Một tỉ lệ làm được ba thứ khác nhau: sốt rưới, kem phủ, hay viên truffle — chỉ khác nhau ở lượng kem.",
+   "ing": [
+    {
+     "n": "Chocolate đen 60–70%",
+     "q": 200,
+     "u": "g",
+     "note": "Băm nhỏ đều — mảnh to nhỏ lẫn lộn là chỗ to không tan.",
+     "r": "main"
+    },
+    {
+     "n": "Kem tươi (35%)",
+     "q": 200,
+     "u": "ml",
+     "note": "1:1 để phủ · 2 chocolate : 1 kem để làm truffle · 1 chocolate : 2 kem để làm sốt rưới.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 20,
+     "u": "g",
+     "note": "Cho ở cuối — làm ganache bóng hơn.",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đun kem",
+     "d": "Đun kem đến khi vừa sôi lăn tăn ở mép.",
+     "m": 3,
+     "heat": "Lửa nhỏ",
+     "cue": "Mép nồi <b>sủi bọt nhỏ</b>. Sôi bùng là kem quá nóng và ganache sẽ tách dầu."
+    },
+    {
+     "t": "Đổ lên chocolate và đợi",
+     "d": "Đổ kem nóng lên chocolate băm, <b>đậy lại và đợi 2 phút, chưa khuấy</b>.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Sau 2 phút, chocolate <b>đã mềm chảy dưới lớp kem</b>. Khuấy ngay là chocolate chưa tan đều."
+    },
+    {
+     "t": "Khuấy từ tâm ra",
+     "d": "Dùng spatula khuấy vòng nhỏ ở chính giữa, mở rộng dần ra ngoài.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Từ giữa lan ra một vùng <b>bóng, đặc, mượt như satin</b>. Khuấy loạn từ đầu là nhũ tương không hình thành."
+    },
+    {
+     "t": "Cho bơ",
+     "d": "Khi ganache đã mượt và còn ấm, cho bơ và khuấy tan.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Ganache <b>bóng gương</b>."
+    }
+   ],
+   "tips": [
+    "Tách dầu thì cứu bằng <b>1 thìa sữa ấm</b>, khuấy mạnh từ tâm. Hoặc dùng máy xay cầm tay 10 giây.",
+    "Ganache 1:1 để nguội và đánh bông lên thì thành kem phủ bánh rất ngon."
+   ],
+   "serveWith": "Profiterole, éclair, brownie, crêpe, churros, bánh gato chocolate."
+  },
+  {
+   "id": "caramel-sauce",
+   "name": "Sốt caramel muối",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 2,
+   "serves": 8,
+   "tags": [
+    "caramel",
+    "kem tươi"
+   ],
+   "why": "Một trong hai chỗ trong trang này có thể gây bỏng thật. Nhưng đây cũng là sốt đổi được nhiều món nhất bằng một lọ.",
+   "ing": [
+    {
+     "n": "Đường",
+     "q": 200,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Nước",
+     "q": 50,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Kem tươi (35%)",
+     "q": 180,
+     "u": "ml",
+     "note": "<b>Hâm ấm trước</b> — kem lạnh gặp caramel nóng sẽ bùng lên và bắn.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 60,
+     "u": "g",
+     "note": "Cắt hạt lựu.",
+     "r": "main"
+    },
+    {
+     "n": "Muối biển",
+     "q": 4,
+     "u": "g",
+     "note": "Cho ở cuối, nếm rồi chỉnh.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Nấu caramel",
+     "d": "Đun đường với nước ở lửa vừa, <b>không khuấy</b>, chỉ lắc nồi. Quét thành nồi bằng chổi ướt nếu thấy đường bám.",
+     "m": 8,
+     "heat": "Lửa vừa",
+     "cue": "Đường chuyển <b>màu hổ phách sẫm và bốc khói mỏng</b>. Tắt bếp ngay — nhiệt dư còn đưa nó sẫm thêm."
+    },
+    {
+     "t": "Cho bơ",
+     "d": "Cho bơ vào, khuấy nhanh. Hỗn hợp sẽ sủi mạnh — đó là bình thường.",
+     "m": 2,
+     "heat": "Tắt bếp",
+     "cue": "Bơ <b>tan hết, hỗn hợp sủi rồi lắng xuống</b>."
+    },
+    {
+     "t": "Rót kem ấm từ từ",
+     "d": "Rót kem đã hâm ấm thành dòng nhỏ, khuấy liên tục, đứng lùi ra một bước.",
+     "m": 3,
+     "heat": "Tắt bếp",
+     "cue": "Sốt <b>ngừng sủi và trở thành một khối nâu bóng đồng nhất</b>. Kem lạnh sẽ làm nó bùng lên — luôn hâm ấm trước."
+    },
+    {
+     "t": "Cho muối và để nguội",
+     "d": "Cho muối biển, nếm, chỉnh. Để nguội — sốt sẽ đặc thêm một bậc.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Nguội xuống thì sốt <b>sánh như mật ong</b>. Nếu quá đặc thì hâm lại với 1 thìa kem."
+    }
+   ],
+   "tips": [
+    "Caramel nóng ở khoảng <b>170 °C</b> — nóng gần gấp đôi nước sôi, và nó dính chặt vào da chứ không chảy đi. Đừng nếm bằng ngón tay, đừng để trẻ con đứng cạnh.",
+    "Để lọ kín trong ngăn mát được <b>3 tuần</b>. Hâm lò vi sóng 15 giây trước khi dùng."
+   ],
+   "serveWith": "Brownie, kem vani, crêpe, panna cotta, waffle, apple pie."
+  },
+  {
+   "id": "coulis",
+   "name": "Coulis quả mọng",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 1,
+   "serves": 8,
+   "tags": [
+    "quả tươi"
+   ],
+   "why": "Sốt dễ nhất trang này và là thứ thiếu nhiều nhất ở bánh làm tại nhà: một vệt chua để cắt béo. Làm bằng quả đông lạnh cũng ngon như quả tươi.",
+   "ing": [
+    {
+     "n": "Quả mọng (mâm xôi, dâu, việt quất)",
+     "q": 300,
+     "u": "g",
+     "per": {
+      "n": 300,
+      "l": "gói đông lạnh nhỏ"
+     },
+     "note": "Quả đông lạnh hoàn toàn ổn — thậm chí ra nước tốt hơn.",
+     "r": "veg"
+    },
+    {
+     "n": "Đường",
+     "q": 60,
+     "u": "g",
+     "note": "Chỉnh theo độ chua của quả.",
+     "r": "main"
+    },
+    {
+     "n": "Nước cốt chanh",
+     "q": 1,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Nước",
+     "q": 30,
+     "u": "ml",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đun quả với đường",
+     "d": "Đun quả, đường và nước ở lửa vừa, dằm nhẹ.",
+     "m": 7,
+     "heat": "Lửa vừa",
+     "cue": "Quả <b>vỡ ra hết và hỗn hợp sôi lăn tăn</b>, màu chuyển sẫm và trong."
+    },
+    {
+     "t": "Xay và lọc",
+     "d": "Xay nhuyễn rồi lọc qua rây, miết bằng thìa để lấy hết phần thịt quả.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Trên rây chỉ còn <b>hạt và xơ khô</b>. Không lọc thì coulis lợn cợn hạt, ăn rất khác."
+    },
+    {
+     "t": "Chỉnh chua và độ đặc",
+     "d": "Cho nước cốt chanh, nếm. Quá đặc thì thêm nước, quá loãng thì đun thêm 2 phút.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Sốt <b>chảy khỏi thìa thành dòng liền và để lại vệt mỏng trên đĩa</b>."
+    }
+   ],
+   "tips": [
+    "Chua là mục đích, không phải khuyết điểm. Nếu nếm thấy chỉ ngọt thì thêm chanh.",
+    "Để ngăn mát 1 tuần, ngăn đá 3 tháng."
+   ],
+   "serveWith": "Cheesecake, panna cotta, mousse chocolate, financier, pancake — mọi thứ béo hoặc ngọt đậm."
+  },
+  {
+   "id": "zabaione",
+   "name": "Zabaione",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 2,
+   "serves": 8,
+   "tags": [
+    "lòng đỏ",
+    "rượu"
+   ],
+   "why": "Sốt Ý làm trong 8 phút từ ba thứ, ăn nóng ngay tại chỗ. Là một trong ít món tráng miệng phải bưng ra bàn khi vẫn còn bốc hơi.",
+   "ing": [
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 6,
+     "u": "quả",
+     "per": {
+      "n": 20,
+      "l": "lòng đỏ"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Đường",
+     "q": 100,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Rượu Marsala ngọt",
+     "q": 100,
+     "u": "ml",
+     "note": "Thay được bằng vang trắng ngọt hoặc rượu vang nổ.",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đánh lòng đỏ với đường",
+     "d": "Đánh lòng đỏ với đường và muối trong âu inox đến khi nhạt màu.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>vàng nhạt và sánh</b>."
+    },
+    {
+     "t": "Đánh cách thuỷ",
+     "d": "Đặt âu lên nồi nước sôi lăn tăn (đáy âu không chạm nước), cho rượu vào, đánh liên tục bằng phới lồng.",
+     "m": 8,
+     "heat": "Cách thuỷ",
+     "cue": "Hỗn hợp <b>nở gấp ba, bông đặc và nóng, nhấc phới lên để lại vệt giữ 3 giây</b>. Ngừng đánh 20 giây là trứng chín thành cục ở đáy."
+    },
+    {
+     "t": "Bưng ra ngay",
+     "d": "Múc vào cốc, ăn ngay khi còn ấm.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Còn bốc hơi khi bưng ra bàn. Zabaione để nguội sẽ xẹp và tách nước."
+    }
+   ],
+   "tips": [
+    "Đánh không ngừng tay và không rời mắt. Món này hỏng trong khoảng 20 giây nếu bạn quay đi.",
+    "Muốn ăn lạnh (kiểu semifreddo): đánh xong đặt âu vào nước đá, đánh tiếp cho nguội, rồi fold kem chantilly vào."
+   ],
+   "serveWith": "Biscotti để chấm, hoặc rưới lên dâu tây tươi."
+  },
+  {
+   "id": "glaze-chanh",
+   "name": "Glaze chanh (đường phủ)",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 1,
+   "serves": 12,
+   "tags": [
+    "chanh"
+   ],
+   "why": "Hai nguyên liệu và ba phút, nhưng nó là thứ biến một ổ bánh bơ trông đơn điệu thành một cái bánh trông có chủ đích.",
+   "ing": [
+    {
+     "n": "Đường bột",
+     "q": 200,
+     "u": "g",
+     "note": "Rây trước — không rây là vón cục, không cứu được.",
+     "r": "main"
+    },
+    {
+     "n": "Nước cốt chanh",
+     "q": 35,
+     "u": "ml",
+     "note": "Cho từng thìa một, đây là chỗ chỉnh độ đặc.",
+     "r": "main"
+    },
+    {
+     "n": "Vỏ chanh bào",
+     "q": 1,
+     "u": "quả",
+     "r": "season"
+    },
+    {
+     "n": "Muối",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Rây đường bột",
+     "d": "Rây đường bột vào bát, thêm vỏ chanh và muối.",
+     "m": 1,
+     "heat": "—",
+     "cue": "Đường <b>tơi, không cục</b>."
+    },
+    {
+     "t": "Cho chanh từng thìa",
+     "d": "Cho nước cốt chanh từng thìa cà phê một, khuấy kỹ sau mỗi thìa.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Glaze <b>chảy khỏi thìa thành dải và vệt để lại tự khép trong 5 giây</b>. Đó là độ đặc chuẩn để rưới."
+    },
+    {
+     "t": "Rưới lên bánh đã nguội",
+     "d": "Rưới lên bánh đã nguội hoàn toàn, để se 20 phút.",
+     "m": 20,
+     "heat": "—",
+     "cue": "Lớp glaze <b>se mặt, chạm không dính tay và hơi trong</b>. Rưới lên bánh còn ấm là glaze tan chảy hết xuống đĩa."
+    }
+   ],
+   "tips": [
+    "Lỡ loãng thì thêm đường bột chứ đừng đợi. Lỡ đặc thì thêm chanh từng vài giọt.",
+    "Thay chanh bằng sữa, cà phê hay nước cam đều được — cùng một tỉ lệ."
+   ],
+   "serveWith": "Bánh bơ, bánh mì ngọt, scone, muffin, donut."
+  }
+ ],
+ "region": {
+  "madeleine": "phap",
+  "financier": "phap",
+  "sable": "phap",
+  "crepe": "phap",
+  "clafoutis": "phap",
+  "creme-brulee": "phap",
+  "creme-caramel": "phap",
+  "mousse-chocolat": "phap",
+  "tarte-tatin": "phap",
+  "tarte-citron": "phap",
+  "canele": "phap",
+  "choux-chantilly": "phap",
+  "eclair-chocolat": "phap",
+  "macaron": "phap",
+  "brioche": "phap",
+  "croissant": "phap",
+  "baguette": "phap",
+  "chantilly": "phap",
+  "creme-anglaise": "phap",
+  "creme-patissiere": "phap",
+  "ganache": "phap",
+  "coulis": "phap",
+  "tiramisu": "y",
+  "panna-cotta": "y",
+  "biscotti": "y",
+  "cannoli": "y",
+  "crostata": "y",
+  "zabaione": "y",
+  "brownie": "anhmy",
+  "cookie-choc": "anhmy",
+  "cheesecake-ny": "anhmy",
+  "apple-pie": "anhmy",
+  "banoffee": "anhmy",
+  "carrot-cake": "anhmy",
+  "scone": "anhmy",
+  "pancake": "anhmy",
+  "sachertorte": "trungau",
+  "waffle-liege": "trungau",
+  "cheesecake-basque": "namau",
+  "pastel-de-nata": "namau",
+  "churros": "namau",
+  "caramel-sauce": "chung",
+  "glaze-chanh": "chung"
+ },
+ "dips": {
+  "madeleine": [],
+  "financier": [
+   {
+    "id": "coulis",
+    "w": "một vệt chua bên cạnh khi bày đĩa — financier khá ngọt"
+   }
+  ],
+  "sable": [],
+  "crepe": [
+   {
+    "id": "caramel-sauce",
+    "w": "cách ăn phổ biến nhất ở quán crêperie"
+   },
+   {
+    "id": "ganache",
+    "w": "crêpe chocolate kiểu trẻ con thích"
+   },
+   {
+    "id": "coulis",
+    "w": "bản nhẹ nhất, hợp bữa sáng"
+   }
+  ],
+  "clafoutis": [
+   {
+    "id": "creme-anglaise",
+    "w": "clafoutis ăn ấm + sốt vani ấm là cặp cổ điển"
+   },
+   {
+    "id": "chantilly",
+    "w": "khi muốn nhanh gọn"
+   }
+  ],
+  "creme-brulee": [],
+  "creme-caramel": [],
+  "mousse-chocolat": [
+   {
+    "id": "chantilly",
+    "w": "một muôi trắng trên nền nâu — vừa nhìn vừa cắt béo"
+   },
+   {
+    "id": "coulis",
+    "w": "mâm xôi chua là thứ hợp chocolate đắng nhất"
+   }
+  ],
+  "tarte-tatin": [
+   {
+    "id": "chantilly",
+    "w": "bánh nóng gặp kem lạnh — đây là cách ăn đúng"
+   },
+   {
+    "id": "creme-anglaise",
+    "w": "bản Pháp trang trọng hơn"
+   }
+  ],
+  "tarte-citron": [],
+  "canele": [],
+  "choux-chantilly": [
+   {
+    "id": "ganache",
+    "w": "rưới ganache nóng lên choux đã bơm kem — đó chính là profiterole"
+   }
+  ],
+  "eclair-chocolat": [],
+  "macaron": [],
+  "brioche": [
+   {
+    "id": "glaze-chanh",
+    "w": "phết lên brioche còn ấm cho bữa sáng ngọt"
+   }
+  ],
+  "croissant": [],
+  "baguette": [],
+  "tiramisu": [],
+  "panna-cotta": [
+   {
+    "id": "coulis",
+    "w": "cặp kinh điển — panna cotta rất béo, cần chua"
+   },
+   {
+    "id": "caramel-sauce",
+    "w": "bản đậm hơn, hợp mùa lạnh"
+   }
+  ],
+  "biscotti": [
+   {
+    "id": "zabaione",
+    "w": "chấm biscotti vào zabaione nóng — cách ăn ở Ý"
+   },
+   {
+    "id": "creme-anglaise",
+    "w": "bản nhẹ hơn, ăn lạnh"
+   }
+  ],
+  "cannoli": [],
+  "crostata": [
+   {
+    "id": "chantilly",
+    "w": "khi bày ra làm món tráng miệng thay vì ăn sáng"
+   }
+  ],
+  "brownie": [
+   {
+    "id": "caramel-sauce",
+    "w": "muối trong sốt caramel là thứ làm chocolate đậm lên"
+   },
+   {
+    "id": "creme-anglaise",
+    "w": "brownie ấm + sốt vani lạnh"
+   },
+   {
+    "id": "chantilly",
+    "w": "nhanh nhất, và luôn đúng"
+   }
+  ],
+  "cookie-choc": [],
+  "cheesecake-ny": [
+   {
+    "id": "coulis",
+    "w": "bắt buộc nếu bạn thấy cheesecake ngấy — chua cắt béo"
+   },
+   {
+    "id": "caramel-sauce",
+    "w": "bản đậm, rưới mỏng thôi"
+   }
+  ],
+  "cheesecake-basque": [],
+  "apple-pie": [
+   {
+    "id": "chantilly",
+    "w": "hoặc kem vani — \"à la mode\" nghĩa là như thế"
+   },
+   {
+    "id": "creme-anglaise",
+    "w": "bản Pháp của cùng ý tưởng"
+   }
+  ],
+  "banoffee": [],
+  "carrot-cake": [],
+  "scone": [
+   {
+    "id": "chantilly",
+    "w": "thay cho clotted cream nếu không mua được — kèm mứt dâu"
+   }
+  ],
+  "pancake": [
+   {
+    "id": "caramel-sauce",
+    "w": "thay siro phong nếu không có"
+   },
+   {
+    "id": "coulis",
+    "w": "bản ít ngọt cho bữa sáng ngày thường"
+   }
+  ],
+  "sachertorte": [
+   {
+    "id": "chantilly",
+    "w": "bắt buộc — ở Vienna không ai bưng Sacher ra mà không có kem"
+   }
+  ],
+  "waffle-liege": [
+   {
+    "id": "chantilly",
+    "w": "và vài quả dâu"
+   },
+   {
+    "id": "ganache",
+    "w": "bản Bỉ đúng nghĩa"
+   }
+  ],
+  "pastel-de-nata": [],
+  "churros": [
+   {
+    "id": "ganache",
+    "w": "sốt chocolate đặc để chấm — đây là cách ăn ở Madrid"
+   },
+   {
+    "id": "caramel-sauce",
+    "w": "bản ngọt hơn, hợp trẻ con"
+   }
+  ]
+ },
+ "combos": [
+  {
+   "name": "Bàn Pháp cổ điển",
+   "note": "Một nặng, một nhẹ, một giòn. Bắt đầu bằng crème brûlée vì nó cần 4 tiếng trong tủ lạnh.",
+   "items": [
+    {
+     "id": "creme-brulee",
+     "when": "Làm đầu tiên — cần 4 tiếng ướp lạnh"
+    },
+    {
+     "id": "tarte-citron",
+     "when": "Làm đế và curd trong lúc chờ"
+    },
+    {
+     "id": "sable",
+     "when": "Bột trộn sẵn, cắt và nướng lúc cuối"
+    },
+    {
+     "id": "chantilly",
+     "when": "Đánh ngay trước khi bưng ra"
+    }
+   ]
+  },
+  {
+   "name": "Bàn Ý",
+   "note": "Tiramisù phải làm từ hôm trước. Hai món kia làm trong ngày.",
+   "items": [
+    {
+     "id": "tiramisu",
+     "when": "Làm từ chiều hôm trước, ủ qua đêm"
+    },
+    {
+     "id": "panna-cotta",
+     "when": "Làm sáng hôm sau, 4 tiếng là đủ đông"
+    },
+    {
+     "id": "biscotti",
+     "when": "Nướng hai lần, làm được trước cả tuần"
+    },
+    {
+     "id": "coulis",
+     "when": "Nấu 10 phút, để nguội"
+    }
+   ]
+  },
+  {
+   "name": "Bữa sáng cuối tuần",
+   "note": "Ba thứ bột: một cần ủ qua đêm, một trộn nhanh, một chảo. Chia việc theo đó.",
+   "items": [
+    {
+     "id": "croissant",
+     "when": "Bột ủ và cán lớp từ hôm trước"
+    },
+    {
+     "id": "scone",
+     "when": "Trộn và nướng trong 30 phút sáng hôm sau"
+    },
+    {
+     "id": "pancake",
+     "when": "Rán cuối cùng, ăn nóng ngay"
+    },
+    {
+     "id": "caramel-sauce",
+     "when": "Nấu sẵn, để lọ trong tủ lạnh"
+    }
+   ]
+  },
+  {
+   "name": "Bàn chocolate",
+   "note": "Ba mức chocolate khác nhau: đắng, ngọt và mặn — chứ không phải ba lần cùng một vị.",
+   "items": [
+    {
+     "id": "mousse-chocolat",
+     "when": "Làm trước 4 tiếng"
+    },
+    {
+     "id": "brownie",
+     "when": "Nướng trong lúc mousse đang lạnh"
+    },
+    {
+     "id": "cookie-choc",
+     "when": "Bột ướp lạnh từ hôm trước, nướng lúc cuối"
+    },
+    {
+     "id": "coulis",
+     "when": "Vệt chua để cả bàn không bị ngán"
+    }
+   ]
+  },
+  {
+   "name": "Bàn không cần lò",
+   "note": "Cả bàn không bật lò một lần. Hợp mùa hè và hợp nhà không có lò.",
+   "items": [
+    {
+     "id": "tiramisu",
+     "when": "Làm từ hôm trước"
+    },
+    {
+     "id": "panna-cotta",
+     "when": "Làm buổi sáng"
+    },
+    {
+     "id": "banoffee",
+     "when": "Luộc lon sữa đặc trước 2,5 tiếng"
+    },
+    {
+     "id": "chantilly",
+     "when": "Đánh lúc cuối"
+    }
+   ]
+  },
+  {
+   "name": "Bàn tập làm bánh — mẻ đầu tiên",
+   "note": "Bốn thứ dễ nhất trang này, làm được hết trong một buổi chiều. Không có bước nào cần nhiệt kế.",
+   "items": [
+    {
+     "id": "brownie",
+     "when": "Bắt đầu ngay — nướng 25 phút"
+    },
+    {
+     "id": "madeleine",
+     "when": "Trộn bột rồi để lạnh trong lúc nướng brownie"
+    },
+    {
+     "id": "panna-cotta",
+     "when": "Đun và rót cốc, cho vào tủ lạnh"
+    },
+    {
+     "id": "coulis",
+     "when": "Nấu 10 phút, làm sốt cho cả ba món"
+    }
+   ]
+  }
+ ],
+ "labels": {
+  "sauceCat": "sot",
+  "sauceIcon": "water_drop",
+  "itemWord": "bánh",
+  "thingWord": "thứ",
+  "dipHead": "Ăn kèm với — bấm để mở công thức sốt",
+  "dipNone": "Bánh này <b>tự nó đã đủ</b> — kem hoặc sốt đã nằm sẵn bên trong. Thêm một thứ ngọt nữa bên cạnh là ngọt chồng ngọt.",
+  "dipCard": "Ăn với: ",
+  "dipNoneCard": "Tự nó đã đủ",
+  "dipSelfCard": "Sốt/kem — xem bánh hợp ở mục Sốt & kem",
+  "dipUses": "Đi được với",
+  "dipNoUses": "Chưa ghép với bánh nào trong trang — dùng cho bánh ngoài danh sách.",
+  "dipOpen": "Cách làm",
+  "timerHint": "Hết giờ sẽ kêu &amp; rung — hẹn được nhiều bước cùng lúc",
+  "serveUnit": "phần"
+ }
+}

@@ -1,0 +1,5042 @@
+{
+ "cats": [
+  {
+   "k": "pasta",
+   "l": "Mì Ý & risotto",
+   "i": "ramen_dining"
+  },
+  {
+   "k": "pizza",
+   "l": "Pizza & bánh nướng",
+   "i": "local_pizza"
+  },
+  {
+   "k": "thit",
+   "l": "Thịt & gia cầm",
+   "i": "lunch_dining"
+  },
+  {
+   "k": "ca",
+   "l": "Cá & hải sản",
+   "i": "set_meal"
+  },
+  {
+   "k": "salad",
+   "l": "Salad",
+   "i": "grass"
+  },
+  {
+   "k": "sup",
+   "l": "Súp & hầm",
+   "i": "soup_kitchen"
+  },
+  {
+   "k": "rau",
+   "l": "Rau & món phụ",
+   "i": "nutrition"
+  },
+  {
+   "k": "trung",
+   "l": "Trứng",
+   "i": "egg"
+  },
+  {
+   "k": "sot",
+   "l": "Sốt & dressing",
+   "i": "water_drop"
+  }
+ ],
+ "roles": [
+  {
+   "k": "khai",
+   "l": "Khai vị"
+  },
+  {
+   "k": "chinh",
+   "l": "Món chính"
+  },
+  {
+   "k": "phu",
+   "l": "Món phụ"
+  },
+  {
+   "k": "nhanh",
+   "l": "Bữa nhanh một đĩa"
+  },
+  {
+   "k": "sot",
+   "l": "Sốt"
+  }
+ ],
+ "regions": [
+  {
+   "k": "y",
+   "l": "Ý",
+   "i": "local_pizza"
+  },
+  {
+   "k": "phap",
+   "l": "Pháp",
+   "i": "tour"
+  },
+  {
+   "k": "dth",
+   "l": "Địa Trung Hải",
+   "i": "sunny"
+  },
+  {
+   "k": "anhmy",
+   "l": "Anh & Mỹ",
+   "i": "local_cafe"
+  },
+  {
+   "k": "chung",
+   "l": "Bếp Âu chung",
+   "i": "public"
+  }
+ ],
+ "diffs": [
+  {
+   "k": 1,
+   "l": "Dễ"
+  },
+  {
+   "k": 2,
+   "l": "Vừa"
+  },
+  {
+   "k": 3,
+   "l": "Khó"
+  }
+ ],
+ "times": [
+  {
+   "k": "a",
+   "l": "≤ 30 phút",
+   "max": 30
+  },
+  {
+   "k": "b",
+   "l": "30–90 phút",
+   "max": 90
+  },
+  {
+   "k": "c",
+   "l": "> 90 phút",
+   "max": 99999
+  }
+ ],
+ "recipes": [
+  {
+   "id": "aglio-e-olio",
+   "name": "Spaghetti aglio e olio",
+   "cat": "pasta",
+   "role": "nhanh",
+   "diff": 1,
+   "serves": 4,
+   "tags": [
+    "mì Ý",
+    "tỏi"
+   ],
+   "why": "Bốn nguyên liệu, 12 phút, và là bài học đầu tiên về nước mì — thứ biến dầu ô liu và nước thành một lớp sốt bám vào sợi.",
+   "ing": [
+    {
+     "n": "Spaghetti",
+     "q": 400,
+     "u": "g",
+     "per": {
+      "n": 100,
+      "l": "phần một người"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Tỏi",
+     "q": 6,
+     "u": "tép",
+     "note": "Thái lát mỏng chứ đừng băm — băm thì cháy trước khi kịp thơm.",
+     "r": "season"
+    },
+    {
+     "n": "Dầu ô liu extra virgin",
+     "q": 80,
+     "u": "ml",
+     "note": "Cho hẳn tay. Dầu ở đây là nguyên liệu chính chứ không phải để chống dính.",
+     "r": "season"
+    },
+    {
+     "n": "Ớt khô vụn (peperoncino)",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Mùi tây (parsley)",
+     "q": 1,
+     "u": "nắm",
+     "note": "Thái nhỏ.",
+     "r": "herb"
+    },
+    {
+     "n": "Muối hạt (cho nước luộc)",
+     "q": 40,
+     "u": "g",
+     "note": "10 g cho mỗi lít nước — 4 lít thì 40 g, mặn như nước biển.",
+     "r": "season"
+    },
+    {
+     "n": "Parmesan (tuỳ chọn)",
+     "q": 30,
+     "u": "g",
+     "note": "Người Naples không cho. Cho cũng ngon.",
+     "r": "herb"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đun nước và nêm thật mặn",
+     "d": "Đun 4 lít nước, cho 40 g muối hạt khi nước sôi.",
+     "m": 8,
+     "heat": "Lửa to",
+     "cue": "Nếm nước thấy <b>mặn rõ như nước canh đậm</b>. Đây là lần duy nhất mì được nêm — nhạt ở đây thì không cứu được ở sau."
+    },
+    {
+     "t": "Phi tỏi thật chậm",
+     "d": "Cho dầu ô liu và tỏi lát vào chảo <b>nguội</b>, bật lửa nhỏ.",
+     "m": 5,
+     "heat": "Lửa nhỏ",
+     "cue": "Tỏi <b>vàng nhạt ở mép và dầu sủi lăn tăn quanh lát tỏi</b>. Tỏi nâu là đắng — bắt đầu từ chảo nguội chính là để tránh chuyện đó."
+    },
+    {
+     "t": "Luộc mì non hơn 2 phút",
+     "d": "Thả mì, luộc ít hơn thời gian ghi trên gói 2 phút. Múc lại 1 cốc nước mì trước khi đổ.",
+     "m": 8,
+     "heat": "Lửa to",
+     "cue": "Cắn thử: <b>lõi sợi còn một chấm trắng cứng</b>. Mì sẽ chín nốt trong chảo sốt."
+    },
+    {
+     "t": "Ráp mì với sốt",
+     "d": "Cho ớt khô vào chảo tỏi, trút mì vào cùng nửa cốc nước mì, đảo mạnh trên lửa vừa.",
+     "m": 3,
+     "heat": "Lửa vừa",
+     "cue": "Sốt <b>chuyển từ trong sang đục và bám thành lớp bóng quanh sợi mì</b>, đáy chảo không còn dầu tách riêng. Đây là hiện tượng cần nhìn thấy — gọi là <em>mantecatura</em>."
+    },
+    {
+     "t": "Rắc mùi tây, bưng ra ngay",
+     "d": "Tắt bếp, cho mùi tây thái nhỏ, đảo một vòng.",
+     "m": 1,
+     "heat": "Tắt bếp",
+     "cue": "Mì <b>còn bóng dầu và nóng bốc hơi</b>. Để 3 phút là sốt hút hết vào sợi và đĩa mì khô."
+    }
+   ],
+   "tips": [
+    "Nước mì là <b>nguyên liệu</b>, không phải nước thải. Luôn múc lại một cốc trước khi đổ rổ.",
+    "Chảo tỏi phải bắt đầu từ <b>chảo nguội</b> — đây là mẹo áp dụng được cho mọi món có tỏi lát."
+   ],
+   "serveWith": "Món này là một chặng riêng (primo), ăn trước thịt chứ không ăn cùng."
+  },
+  {
+   "id": "cacio-e-pepe",
+   "name": "Cacio e pepe",
+   "cat": "pasta",
+   "role": "nhanh",
+   "diff": 2,
+   "serves": 4,
+   "tags": [
+    "mì Ý",
+    "pecorino",
+    "tiêu"
+   ],
+   "why": "Ba nguyên liệu và một chỗ hỏng duy nhất, nhưng chỗ đó hỏng rất thường xuyên: phô mai gặp nhiệt cao sẽ vón thành cục dai.",
+   "ing": [
+    {
+     "n": "Tonnarelli hoặc spaghetti",
+     "q": 400,
+     "u": "g",
+     "per": {
+      "n": 100,
+      "l": "phần một người"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Pecorino Romano",
+     "q": 200,
+     "u": "g",
+     "note": "Bào thật mịn như bột. Bào thô là chắc chắn vón cục.",
+     "r": "main"
+    },
+    {
+     "n": "Hạt tiêu đen nguyên hạt",
+     "q": 2,
+     "u": "thìa canh",
+     "note": "Giã thô, rang chảo khô 30 giây trước khi dùng.",
+     "r": "season"
+    },
+    {
+     "n": "Muối hạt (cho nước luộc)",
+     "q": 15,
+     "u": "g",
+     "note": "Ít muối hơn bình thường — pecorino đã rất mặn.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Rang tiêu",
+     "d": "Giã thô hạt tiêu, rang chảo khô đến khi dậy mùi.",
+     "m": 2,
+     "heat": "Lửa vừa",
+     "cue": "Bếp <b>dậy mùi tiêu nồng ấm</b>. Tiêu xay sẵn không làm được bước này — mùi khác hẳn."
+    },
+    {
+     "t": "Luộc mì trong ít nước",
+     "d": "Luộc mì trong khoảng 2 lít nước (ít hơn bình thường) để nước mì thật đặc tinh bột.",
+     "m": 8,
+     "heat": "Lửa to",
+     "cue": "Nước luộc <b>đục và hơi sánh</b> khi khuấy. Đó là \"hồ\" giữ cho phô mai không vón."
+    },
+    {
+     "t": "Đánh kem phô mai",
+     "d": "Trộn pecorino bào mịn với 3–4 thìa nước mì <b>ấm chứ không sôi</b> thành hỗn hợp sánh như kem.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>mượt như kem đặc, không lợn cợn</b>. Dùng nước sôi ở bước này là phô mai chín và vón ngay trong bát."
+    },
+    {
+     "t": "Trộn ngoài bếp",
+     "d": "Tắt bếp, cho mì vào chảo tiêu, để nguội 30 giây rồi mới trút kem phô mai vào, đảo nhanh và mạnh.",
+     "m": 3,
+     "heat": "Tắt bếp",
+     "cue": "Sốt <b>bám kín sợi mì thành lớp bóng màu kem</b>. Nếu thấy vón cục: thêm nước mì và đảo tiếp, cứu được nếu bắt kịp ngay."
+    },
+    {
+     "t": "Bưng ra ngay",
+     "d": "Chia đĩa, rắc thêm tiêu và pecorino.",
+     "m": 1,
+     "heat": "—",
+     "cue": "Đĩa mì <b>còn chảy và bóng</b>. Món này không chờ được một phút nào."
+    }
+   ],
+   "tips": [
+    "Phô mai <b>không được gặp lửa</b>. Đây là toàn bộ bí quyết, và cũng là lý do 90% mẻ hỏng.",
+    "Không có pecorino thì dùng parmesan — vị nhẹ hơn nhưng dễ làm hơn vì ít mặn."
+   ],
+   "serveWith": "Tự nó đã có sốt. Một ly vang trắng khô."
+  },
+  {
+   "id": "carbonara",
+   "name": "Carbonara",
+   "cat": "pasta",
+   "role": "nhanh",
+   "diff": 2,
+   "serves": 4,
+   "tags": [
+    "mì Ý",
+    "trứng",
+    "pecorino"
+   ],
+   "why": "Không có kem, không có tỏi, không có hành. Sốt là trứng và phô mai, và nó chín bằng hơi nóng còn lại của mì — không phải bằng bếp.",
+   "ing": [
+    {
+     "n": "Spaghetti hoặc rigatoni",
+     "q": 400,
+     "u": "g",
+     "per": {
+      "n": 100,
+      "l": "phần một người"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Guanciale (hoặc pancetta, thịt xông khói)",
+     "q": 200,
+     "u": "g",
+     "note": "Thái que dày 1 cm. Guanciale là má lợn — béo hơn và đúng vị hơn bacon.",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 4,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Trứng nguyên quả",
+     "q": 1,
+     "u": "quả",
+     "note": "Một quả nguyên để sốt không quá đặc.",
+     "r": "main"
+    },
+    {
+     "n": "Pecorino Romano",
+     "q": 120,
+     "u": "g",
+     "note": "Bào mịn.",
+     "r": "main"
+    },
+    {
+     "n": "Hạt tiêu đen",
+     "q": 1,
+     "u": "thìa canh",
+     "note": "Giã thô.",
+     "r": "season"
+    },
+    {
+     "n": "Muối hạt (cho nước luộc)",
+     "q": 15,
+     "u": "g",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Rán guanciale từ chảo nguội",
+     "d": "Cho thịt vào chảo <b>nguội, không dầu</b>, bật lửa vừa-nhỏ.",
+     "m": 8,
+     "heat": "Lửa vừa-nhỏ",
+     "cue": "Mỡ <b>chảy ra trong và các que thịt vàng giòn ở rìa nhưng còn mềm ở giữa</b>. Giòn hết là dai như bã. Chắt mỡ ra bát, giữ lại."
+    },
+    {
+     "t": "Đánh sốt trứng",
+     "d": "Đánh lòng đỏ + trứng nguyên với pecorino và nhiều tiêu thành hỗn hợp đặc.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>đặc như sốt kem, kéo lên thành dải</b>."
+    },
+    {
+     "t": "Luộc mì",
+     "d": "Luộc mì đến al dente, múc lại một cốc nước mì.",
+     "m": 9,
+     "heat": "Lửa to",
+     "cue": "Lõi sợi <b>còn một chấm trắng nhỏ</b>."
+    },
+    {
+     "t": "Ráp mì với mỡ",
+     "d": "Trút mì vào chảo có mỡ guanciale, đảo trên lửa nhỏ 30 giây rồi <b>tắt bếp</b>.",
+     "m": 2,
+     "heat": "Lửa nhỏ → tắt",
+     "cue": "Sợi mì <b>bóng mỡ đều</b>. Từ đây trở đi bếp phải tắt."
+    },
+    {
+     "t": "Đổ sốt trứng ngoài bếp",
+     "d": "Đợi 30 giây cho chảo bớt nóng, đổ sốt trứng vào, đảo liên tục và mạnh, thêm nước mì từng thìa cho tới độ sánh mong muốn.",
+     "m": 3,
+     "heat": "Tắt bếp",
+     "cue": "Sốt <b>bám sợi mì thành lớp kem vàng bóng và chảy chậm</b>. Thấy hạt trứng chín lấm tấm là chảo còn nóng quá — nhấc hẳn ra khỏi bếp và đảo tiếp."
+    },
+    {
+     "t": "Trả thịt về và bưng ra",
+     "d": "Cho guanciale vào, đảo một vòng, chia đĩa, rắc pecorino và tiêu.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Đĩa mì <b>bóng, sốt chảy chậm khi nghiêng đĩa</b>."
+    }
+   ],
+   "tips": [
+    "Không cho kem tươi. Độ sánh đến từ lòng đỏ và nước mì — cho kem là món khác, không phải carbonara.",
+    "Chảo quá nóng là lỗi duy nhất đáng sợ. Nếu không chắc thì trộn trong âu sứ đã hơ ấm thay vì trong chảo."
+   ],
+   "serveWith": "Tự nó đã có sốt. Salad rocket parmesan để cân lại độ béo."
+  },
+  {
+   "id": "amatriciana",
+   "name": "Bucatini all'amatriciana",
+   "cat": "pasta",
+   "role": "nhanh",
+   "diff": 1,
+   "serves": 4,
+   "tags": [
+    "mì Ý",
+    "cà chua",
+    "pecorino"
+   ],
+   "why": "Anh em của carbonara nhưng dễ hơn nhiều vì có cà chua làm nền — không có chỗ nào để trứng vón.",
+   "ing": [
+    {
+     "n": "Bucatini (hoặc spaghetti)",
+     "q": 400,
+     "u": "g",
+     "per": {
+      "n": 100,
+      "l": "phần một người"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Guanciale (hoặc pancetta)",
+     "q": 180,
+     "u": "g",
+     "note": "Thái que dày 1 cm.",
+     "r": "main"
+    },
+    {
+     "n": "Cà chua hộp nguyên quả (San Marzano)",
+     "q": 400,
+     "u": "g",
+     "per": {
+      "n": 400,
+      "l": "hộp"
+     },
+     "note": "Bóp nát bằng tay. Cà chua hộp Ý ngọt và đậm hơn cà chua tươi ở đây.",
+     "r": "veg"
+    },
+    {
+     "n": "Pecorino Romano",
+     "q": 100,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Ớt khô vụn",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Rượu vang trắng",
+     "q": 50,
+     "u": "ml",
+     "note": "Bỏ được, nhưng có thì sốt sâu hơn.",
+     "r": "season"
+    },
+    {
+     "n": "Muối hạt (cho nước luộc)",
+     "q": 15,
+     "u": "g",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Rán guanciale",
+     "d": "Chảo nguội, lửa vừa-nhỏ, rán đến khi mỡ chảy ra và thịt vàng rìa. Vớt thịt ra để riêng.",
+     "m": 8,
+     "heat": "Lửa vừa-nhỏ",
+     "cue": "Mỡ trong chảo <b>trong và nhiều</b>, thịt vàng rìa mà giữa còn mềm."
+    },
+    {
+     "t": "Cho ớt và rượu",
+     "d": "Cho ớt khô vào mỡ, đổ rượu vang, đun cho bay hơi cồn.",
+     "m": 3,
+     "heat": "Lửa vừa",
+     "cue": "Không còn mùi cồn gắt, chỉ còn mùi vang chín."
+    },
+    {
+     "t": "Rim cà chua",
+     "d": "Cho cà chua bóp nát, rim lửa nhỏ.",
+     "m": 15,
+     "heat": "Lửa nhỏ",
+     "cue": "Sốt <b>sẫm màu lại, dầu tách ra nổi vệt cam quanh mép chảo</b> — đó là dấu hiệu sốt đã \"chín\" chứ không còn là cà chua đun."
+    },
+    {
+     "t": "Luộc mì và ráp",
+     "d": "Luộc mì al dente, trút vào chảo sốt cùng nửa cốc nước mì, đảo mạnh 1 phút.",
+     "m": 10,
+     "heat": "Lửa vừa",
+     "cue": "Sốt <b>bám vào sợi, đáy chảo còn hơi ướt chứ không khô</b>."
+    },
+    {
+     "t": "Trả thịt và phô mai",
+     "d": "Tắt bếp, cho guanciale và pecorino bào, đảo đều.",
+     "m": 2,
+     "heat": "Tắt bếp",
+     "cue": "Phô mai <b>tan vào sốt, không vón</b> — vì bếp đã tắt."
+    }
+   ],
+   "tips": [
+    "Không cho tỏi và hành. Amatriciana chính thống chỉ có guanciale, cà chua, pecorino và ớt.",
+    "Cà chua hộp Ý ngon hơn cà chua tươi cho món này. Đây là một trong ít trường hợp đồ hộp thắng đồ tươi."
+   ],
+   "serveWith": "Tự nó đã có sốt."
+  },
+  {
+   "id": "spaghetti-vongole",
+   "name": "Spaghetti alle vongole",
+   "cat": "pasta",
+   "role": "chinh",
+   "diff": 2,
+   "serves": 4,
+   "tags": [
+    "mì Ý",
+    "ngao",
+    "tỏi"
+   ],
+   "why": "Không có phô mai và không cần nước dùng — nước sốt là nước ngao tiết ra. Cả món xoay quanh việc giữ lại thứ nước đó cho sạch cát.",
+   "ing": [
+    {
+     "n": "Ngao (nghêu) tươi",
+     "q": 1000,
+     "u": "g",
+     "per": {
+      "n": 35,
+      "l": "con to bằng miệng chén"
+     },
+     "note": "Ngâm nước muối 30 phút cho nhả cát.",
+     "r": "main"
+    },
+    {
+     "n": "Spaghetti",
+     "q": 400,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Tỏi",
+     "q": 5,
+     "u": "tép",
+     "note": "Thái lát.",
+     "r": "season"
+    },
+    {
+     "n": "Rượu vang trắng khô",
+     "q": 120,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Dầu ô liu extra virgin",
+     "q": 70,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Ớt khô vụn",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Mùi tây",
+     "q": 1,
+     "u": "nắm",
+     "r": "herb"
+    },
+    {
+     "n": "Muối hạt (cho nước luộc)",
+     "q": 15,
+     "u": "g",
+     "note": "Ít thôi — nước ngao đã mặn.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Ngâm ngao nhả cát",
+     "d": "Ngâm ngao trong nước muối loãng (30 g muối / lít) 30 phút ở chỗ tối.",
+     "m": 30,
+     "heat": "—",
+     "cue": "Đáy chậu <b>lắng một lớp cát mịn</b> và ngao thò vòi. Bỏ con nào há sẵn mà gõ không khép."
+    },
+    {
+     "t": "Mở ngao bằng rượu",
+     "d": "Phi 2 tép tỏi với dầu, cho ngao và rượu vào, đậy vung, lửa to.",
+     "m": 5,
+     "heat": "Lửa to",
+     "cue": "Ngao <b>há miệng hết trong 3–4 phút</b>. Vớt ra ngay khi há — để thêm 2 phút là thịt dai."
+    },
+    {
+     "t": "Lọc nước ngao",
+     "d": "Lọc nước trong nồi qua rây lót giấy hoặc khăn xô, bỏ phần cặn dưới đáy.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Nước ngao <b>trong, không lợn cợn</b>. Đây là toàn bộ nước sốt của món — bỏ qua bước lọc là ăn cát."
+    },
+    {
+     "t": "Làm nền sốt",
+     "d": "Chảo sạch, phi số tỏi còn lại với dầu từ chảo nguội, cho ớt, rồi đổ nước ngao đã lọc, đun rút bớt một nửa.",
+     "m": 6,
+     "heat": "Lửa vừa",
+     "cue": "Nước <b>rút còn một nửa và hơi sánh</b>."
+    },
+    {
+     "t": "Luộc mì và ráp",
+     "d": "Luộc mì non hơn 2 phút, trút thẳng vào chảo nước ngao, đảo cho mì hút nước.",
+     "m": 8,
+     "heat": "Lửa vừa",
+     "cue": "Mì <b>hút gần hết nước, sợi bóng và đáy chảo chỉ còn một lớp sốt mỏng sánh</b>."
+    },
+    {
+     "t": "Trả ngao về và bưng ra",
+     "d": "Tắt bếp, cho ngao và mùi tây, rưới thêm chút dầu ô liu sống, đảo.",
+     "m": 2,
+     "heat": "Tắt bếp",
+     "cue": "Ngao <b>nóng lại mà không bị nấu tiếp</b>."
+    }
+   ],
+   "tips": [
+    "Không cho phô mai vào món hải sản Ý. Đây là quy tắc gần như tuyệt đối trong bếp Ý.",
+    "Lọc nước ngao qua khăn xô. Một hạt cát làm hỏng cả đĩa."
+   ],
+   "serveWith": "Tự nó đã có sốt. Bánh mì để vét đĩa."
+  },
+  {
+   "id": "ragu-bolognese",
+   "name": "Ragù alla bolognese",
+   "cat": "pasta",
+   "role": "chinh",
+   "diff": 2,
+   "serves": 6,
+   "tags": [
+    "thịt bò",
+    "cà chua",
+    "sữa"
+   ],
+   "why": "Không phải \"sốt thịt bằm nấu nhanh\". Ragù thật hầm 3 tiếng, có sữa, có rất ít cà chua, và ăn với tagliatelle chứ không phải spaghetti.",
+   "ing": [
+    {
+     "n": "Thịt bò xay",
+     "q": 500,
+     "u": "g",
+     "per": {
+      "n": 100,
+      "l": "nắm chặt"
+     },
+     "note": "Xay thô, có mỡ. Nạc quá là ragù khô.",
+     "r": "main"
+    },
+    {
+     "n": "Thịt lợn xay (hoặc pancetta)",
+     "q": 250,
+     "u": "g",
+     "note": "Tỉ lệ 2 bò : 1 lợn là chuẩn Bologna.",
+     "r": "main"
+    },
+    {
+     "n": "Hành tây",
+     "q": 1,
+     "u": "củ",
+     "note": "Băm nhỏ.",
+     "r": "veg"
+    },
+    {
+     "n": "Cà rốt",
+     "q": 1,
+     "u": "củ",
+     "note": "Băm nhỏ.",
+     "r": "veg"
+    },
+    {
+     "n": "Cần tây",
+     "q": 2,
+     "u": "nhánh",
+     "note": "Băm nhỏ. Ba thứ này gọi là soffritto.",
+     "r": "veg"
+    },
+    {
+     "n": "Cà chua cô đặc (passata)",
+     "q": 200,
+     "u": "ml",
+     "note": "Ít thôi — ragù Bologna là món thịt, không phải món cà chua.",
+     "r": "veg"
+    },
+    {
+     "n": "Rượu vang trắng (hoặc đỏ)",
+     "q": 200,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Sữa tươi",
+     "q": 250,
+     "u": "ml",
+     "note": "Nghe lạ nhưng bắt buộc — sữa làm thịt mềm và bớt chua.",
+     "r": "main"
+    },
+    {
+     "n": "Nước dùng bò (hoặc nước)",
+     "q": 500,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Tagliatelle",
+     "q": 500,
+     "u": "g",
+     "note": "Sợi dẹt bản to mới giữ được ragù. Spaghetti thì sốt trượt hết.",
+     "r": "main"
+    },
+    {
+     "n": "Parmesan",
+     "q": 100,
+     "u": "g",
+     "r": "herb"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Xào soffritto",
+     "d": "Xào hành, cà rốt, cần tây băm với dầu ô liu ở lửa nhỏ, đảo đều.",
+     "m": 12,
+     "heat": "Lửa nhỏ",
+     "cue": "Rau <b>mềm nhũn, trong lại và ngọt, chưa ngả nâu</b>. Xào vội là ragù thiếu nền ngọt."
+    },
+    {
+     "t": "Xào thịt cho xém",
+     "d": "Tăng lửa, cho thịt vào, dàn một lớp, để yên 2 phút rồi mới đảo tơi.",
+     "m": 10,
+     "heat": "Lửa to",
+     "cue": "Thịt <b>xém nâu ở mặt đáy chảo</b> chứ không xám nhợt. Đảo liên tục ngay từ đầu là thịt luộc trong nước của chính nó."
+    },
+    {
+     "t": "Đổ rượu, đun cạn",
+     "d": "Đổ rượu vang, cạo đáy chảo, đun đến gần cạn.",
+     "m": 6,
+     "heat": "Lửa vừa",
+     "cue": "Không còn mùi cồn, đáy chảo <b>gần khô</b>."
+    },
+    {
+     "t": "Cho sữa",
+     "d": "Đổ sữa vào, đun liu riu đến khi sữa gần cạn hết.",
+     "m": 20,
+     "heat": "Liu riu",
+     "cue": "Sữa <b>thấm hết vào thịt, chảo chỉ còn hơi ẩm</b>. Sữa vào trước cà chua — đảo ngược thứ tự thì sữa sẽ vón."
+    },
+    {
+     "t": "Cho cà chua và hầm dài",
+     "d": "Cho passata và nước dùng, hạ lửa thật nhỏ, hé vung, hầm 2,5–3 tiếng, thỉnh thoảng khuấy.",
+     "m": 170,
+     "heat": "Liu riu",
+     "cue": "Ragù <b>sẫm nâu đỏ, sánh đặc, dầu tách ra nổi vệt trên mặt</b> và thịt tơi ra thành sợi mềm. Đây là điểm đến; dưới 2 tiếng thì vẫn còn là sốt thịt bằm."
+    },
+    {
+     "t": "Ráp với mì",
+     "d": "Luộc tagliatelle al dente, trút vào nồi ragù cùng chút nước mì, đảo 1 phút.",
+     "m": 8,
+     "heat": "Lửa vừa",
+     "cue": "Sốt <b>bám kín sợi mì</b>. Ở Ý người ta trộn mì vào sốt, không múc sốt lên mì."
+    }
+   ],
+   "tips": [
+    "Sữa trước, cà chua sau. Đảo thứ tự là sữa gặp axit và vón lại.",
+    "Ragù ngon hơn vào ngày hôm sau, và đông lạnh được 3 tháng. Nấu một nồi to là hợp lý."
+   ],
+   "serveWith": "Tự nó đã có sốt. Rắc parmesan bào. Một ly vang đỏ Sangiovese."
+  },
+  {
+   "id": "lasagna",
+   "name": "Lasagna alla bolognese",
+   "cat": "pasta",
+   "role": "chinh",
+   "diff": 3,
+   "serves": 6,
+   "tags": [
+    "thịt bò",
+    "mozzarella",
+    "sữa"
+   ],
+   "why": "Ba món trong một: ragù, béchamel và lá mì. Khó không phải vì kỹ thuật mà vì phải làm ba thứ đúng rồi mới ráp lại.",
+   "ing": [
+    {
+     "n": "Ragù alla bolognese",
+     "q": 1000,
+     "u": "g",
+     "note": "Xem công thức riêng — nấu từ hôm trước là hợp lý nhất.",
+     "r": "main"
+    },
+    {
+     "n": "Lá lasagna",
+     "q": 300,
+     "u": "g",
+     "per": {
+      "n": 15,
+      "l": "lá"
+     },
+     "note": "Loại tươi hoặc loại \"không cần luộc trước\".",
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi (cho béchamel)",
+     "q": 1000,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt (cho béchamel)",
+     "q": 80,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì (cho béchamel)",
+     "q": 80,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Nhục đậu khấu",
+     "q": 1,
+     "u": "nhúm",
+     "note": "Bào tươi — mùi đặc trưng của béchamel.",
+     "r": "season"
+    },
+    {
+     "n": "Parmesan",
+     "q": 150,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Mozzarella ít ẩm",
+     "q": 200,
+     "u": "g",
+     "note": "Loại khối khô, bào sợi. Mozzarella tươi ngâm nước sẽ làm lasagna ướt.",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Làm roux",
+     "d": "Đun chảy bơ, cho bột mì, khuấy liên tục ở lửa nhỏ.",
+     "m": 4,
+     "heat": "Lửa nhỏ",
+     "cue": "Hỗn hợp <b>sủi bọt đều và dậy mùi bánh quy nướng</b> — khoảng 2 phút. Chưa đủ thì béchamel có vị bột sống."
+    },
+    {
+     "t": "Làm béchamel",
+     "d": "Đổ sữa ấm vào từng ít một, khuấy tan hoàn toàn rồi mới đổ tiếp. Nêm muối và nhục đậu khấu.",
+     "m": 12,
+     "heat": "Lửa vừa",
+     "cue": "Sốt <b>sánh, bám mặt thìa thành một lớp, kéo ngón tay qua để lại rãnh</b>. Đổ sữa ào một lúc là vón cục."
+    },
+    {
+     "t": "Xếp tầng",
+     "d": "Trải một lớp béchamel mỏng xuống đáy khay, rồi lặp lại: lá mì → ragù → béchamel → parmesan. Làm 5–6 tầng.",
+     "m": 15,
+     "heat": "—",
+     "cue": "Mỗi lớp ragù <b>mỏng và đều, không vun đống</b>. Tầng trên cùng phải là béchamel + mozzarella + parmesan."
+    },
+    {
+     "t": "Nướng có phủ giấy bạc",
+     "d": "Phủ giấy bạc (không chạm mặt phô mai), nướng ở rãnh giữa.",
+     "m": 35,
+     "heat": "Lò 180 °C",
+     "cue": "Nhìn mép khay thấy <b>sốt sôi lăn tăn</b>. Xiên dao vào giữa thấy vào ngọt, không còn lá mì cứng."
+    },
+    {
+     "t": "Bỏ giấy bạc, nướng vàng mặt",
+     "d": "Bỏ giấy bạc, nướng tiếp cho mặt vàng nâu.",
+     "m": 15,
+     "heat": "Lò 200 °C",
+     "cue": "Mặt <b>vàng nâu loang lổ và phồng rộp ở vài chỗ</b>."
+    },
+    {
+     "t": "Nghỉ 20 phút — bắt buộc",
+     "d": "Để nguyên ngoài lò 20 phút rồi mới cắt.",
+     "m": 20,
+     "heat": "—",
+     "cue": "Cắt ra <b>miếng đứng thành, các tầng không trượt</b>. Cắt ngay khi ra lò là cả khay chảy nhão trên đĩa."
+    }
+   ],
+   "tips": [
+    "Nghỉ 20 phút là bắt buộc, không phải gợi ý. Đây là khác biệt giữa một miếng lasagna và một vũng lasagna.",
+    "Nấu ragù từ hôm trước. Chia hai ngày thì món này từ khó thành vừa."
+   ],
+   "serveWith": "Tự nó đã có sốt. Salad rocket đơn giản để cắt béo."
+  },
+  {
+   "id": "risotto-nam",
+   "name": "Risotto nấm",
+   "cat": "pasta",
+   "role": "chinh",
+   "diff": 2,
+   "serves": 4,
+   "tags": [
+    "gạo Ý",
+    "nấm",
+    "parmesan"
+   ],
+   "why": "Không phải cơm nấu với nước dùng. Kem trong risotto đến từ tinh bột của hạt gạo được khuấy ra — nên khuấy là kỹ thuật chứ không phải thói quen.",
+   "ing": [
+    {
+     "n": "Gạo Arborio hoặc Carnaroli",
+     "q": 320,
+     "u": "g",
+     "per": {
+      "n": 80,
+      "l": "phần một người"
+     },
+     "note": "Không thay bằng gạo thường — gạo Ý có lớp tinh bột ngoài, đó là toàn bộ vấn đề.",
+     "r": "main"
+    },
+    {
+     "n": "Nấm hỗn hợp (mỡ, sò, hương)",
+     "q": 400,
+     "u": "g",
+     "note": "Xé tay chứ đừng thái — mặt xé nhám sẽ bắt màu tốt hơn.",
+     "r": "veg"
+    },
+    {
+     "n": "Nấm hương khô",
+     "q": 15,
+     "u": "g",
+     "note": "Ngâm nước nóng 20 phút, giữ lại nước ngâm cho vào nước dùng.",
+     "r": "veg"
+    },
+    {
+     "n": "Nước dùng gà hoặc rau",
+     "q": 1200,
+     "u": "ml",
+     "note": "<b>Phải nóng</b> suốt quá trình — nước lạnh làm hạt gạo co lại.",
+     "r": "main"
+    },
+    {
+     "n": "Hành tây",
+     "q": 1,
+     "u": "củ",
+     "note": "Băm thật nhỏ.",
+     "r": "veg"
+    },
+    {
+     "n": "Rượu vang trắng khô",
+     "q": 120,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 60,
+     "u": "g",
+     "note": "Lạnh, cắt hạt lựu — cho ở bước cuối.",
+     "r": "main"
+    },
+    {
+     "n": "Parmesan",
+     "q": 80,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Mùi tây",
+     "q": 1,
+     "u": "nắm",
+     "r": "herb"
+    },
+    {
+     "n": "Dầu ô liu",
+     "q": 2,
+     "u": "thìa canh",
+     "note": "Để áp chảo nấm.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Áp chảo nấm riêng",
+     "d": "Chảo thật nóng, ít dầu, xếp nấm một lớp, <b>không đảo trong 2 phút đầu</b>, nêm muối ở cuối.",
+     "m": 8,
+     "heat": "Lửa to",
+     "cue": "Nấm <b>vàng nâu ở mặt tiếp chảo và đã bay hết nước</b>. Nêm muối sớm là nấm ra nước và luộc chứ không áp chảo. Múc riêng ra bát."
+    },
+    {
+     "t": "Xào hành và áo gạo",
+     "d": "Hạ lửa, xào hành với bơ đến trong, cho gạo vào đảo khô 2 phút.",
+     "m": 5,
+     "heat": "Lửa vừa",
+     "cue": "Hạt gạo <b>trong ở rìa, đục ở lõi và nóng khi chạm tay</b> — bước này gọi là <em>tostatura</em>, nó giữ hạt gạo không nát."
+    },
+    {
+     "t": "Đổ rượu",
+     "d": "Đổ rượu vang, khuấy đến khi cạn hẳn.",
+     "m": 3,
+     "heat": "Lửa vừa",
+     "cue": "Đáy nồi <b>gần khô, không còn mùi cồn</b>."
+    },
+    {
+     "t": "Chan nước dùng nóng từng muôi",
+     "d": "Chan một muôi nước dùng nóng, khuấy đến gần cạn rồi mới chan muôi tiếp. Lặp lại.",
+     "m": 18,
+     "heat": "Lửa vừa",
+     "cue": "Mỗi muôi <b>cạn xuống mức kéo thìa qua đáy nồi thấy một rãnh khép lại chậm</b> thì chan tiếp. Nếm hạt gạo: lõi còn hơi cứng thì đúng."
+    },
+    {
+     "t": "Mantecatura — bước tạo kem",
+     "d": "Tắt bếp, cho bơ lạnh và parmesan, đậy vung 1 phút rồi khuấy mạnh (hoặc lắc nồi) cho tới khi bóng.",
+     "m": 3,
+     "heat": "Tắt bếp",
+     "cue": "Risotto <b>bóng và chảy lan ra khi đổ lên đĩa phẳng, tạo thành \"sóng\"</b>. Đứng thành khối là đã quá khô — thêm một muôi nước dùng."
+    },
+    {
+     "t": "Trả nấm về",
+     "d": "Trộn nấm áp chảo vào, rắc mùi tây, bưng ra ngay.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Bưng ra trong 2 phút. Risotto tiếp tục hút nước và đặc lại rất nhanh."
+    }
+   ],
+   "tips": [
+    "Nước dùng phải <b>giữ nóng</b> trong nồi bên cạnh suốt quá trình. Đây là lỗi phổ biến nhất.",
+    "Risotto đúng thì <b>chảy</b>, không đứng thành khối. Người Ý gọi trạng thái đó là \"all'onda\" — thành sóng."
+   ],
+   "serveWith": "Tự nó đã có sốt. Rắc thêm parmesan lúc bưng ra."
+  },
+  {
+   "id": "gnocchi",
+   "name": "Gnocchi khoai tây",
+   "cat": "pasta",
+   "role": "chinh",
+   "diff": 2,
+   "serves": 4,
+   "tags": [
+    "khoai tây",
+    "parmesan"
+   ],
+   "why": "Ba nguyên liệu, nhưng tỉ lệ bột phụ thuộc vào khoai — mà khoai thì mỗi củ một khác. Đây là món phải nhìn và sờ chứ không cân được.",
+   "ing": [
+    {
+     "n": "Khoai tây bột (loại bở)",
+     "q": 1000,
+     "u": "g",
+     "per": {
+      "n": 200,
+      "l": "củ vừa"
+     },
+     "note": "Luộc hoặc nướng cả vỏ. Khoai sáp thì gnocchi dai.",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì số 8",
+     "q": 250,
+     "u": "g",
+     "note": "Con số này là <b>điểm bắt đầu</b>, không phải con số cố định — cho từng ít một.",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 1,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Parmesan",
+     "q": 40,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Muối + nhục đậu khấu",
+     "q": 5,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Bơ lạt + lá xô thơm (sage)",
+     "q": 80,
+     "u": "g",
+     "note": "Sốt đơn giản nhất và hợp nhất với gnocchi.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Nướng khoai (đừng luộc)",
+     "d": "Nướng khoai cả vỏ ở 200 °C cho tới khi xiên vào ngọt.",
+     "m": 55,
+     "heat": "Lò 200 °C",
+     "cue": "Xiên dao <b>vào ngọt tới lõi</b>. Nướng chứ đừng luộc: khoai luộc ngậm nước, mà nước thì phải bù bằng bột, mà nhiều bột thì gnocchi dai."
+    },
+    {
+     "t": "Nghiền khi còn nóng",
+     "d": "Bổ đôi, múc ruột, nghiền qua rây hoặc dụng cụ ép khoai ngay khi còn nóng, trải ra bàn cho bay hơi.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Khoai <b>tơi như bông, không còn cục</b>, hơi nước bốc lên. Để nguội mới nghiền là khoai dính và bết."
+    },
+    {
+     "t": "Trộn bột — cho từng ít",
+     "d": "Rắc parmesan, muối, nhục đậu khấu, lòng đỏ, rồi rắc bột từng nắm và trộn nhẹ tay.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Dừng khi khối bột <b>vừa kết lại, ấn nhẹ vẫn hơi dính đầu ngón tay</b>. Nhồi mịn như bột bánh là gnocchi thành cục cao su."
+    },
+    {
+     "t": "Lăn và cắt",
+     "d": "Lăn thành đũa dài đường kính 2 cm, cắt khúc 2 cm, lăn qua nĩa cho có rãnh.",
+     "m": 12,
+     "heat": "—",
+     "cue": "Viên gnocchi <b>giữ nguyên rãnh nĩa</b> — rãnh là để giữ sốt."
+    },
+    {
+     "t": "Luộc và vớt khi nổi",
+     "d": "Thả vào nồi nước sôi có muối, vớt ngay khi nổi lên mặt.",
+     "m": 4,
+     "heat": "Lửa vừa",
+     "cue": "<b>Nổi lên mặt là chín</b> — đợi thêm 30 giây rồi vớt. Để lâu là nát ra."
+    },
+    {
+     "t": "Áo bơ xô thơm",
+     "d": "Đun bơ đến khi ngả nâu và dậy mùi hạt, thả lá xô thơm, trút gnocchi vào đảo nhẹ.",
+     "m": 4,
+     "heat": "Lửa vừa",
+     "cue": "Bơ <b>nâu nhạt, lá xô thơm giòn</b> và gnocchi bóng đều."
+    }
+   ],
+   "tips": [
+    "Luộc thử <b>một viên</b> trước khi lăn cả mẻ. Nếu nó tan ra thì thêm bột; nếu nó cứng thì bạn đã cho quá nhiều.",
+    "Gnocchi chưa luộc rải khay để ngăn đá 1 tiếng rồi cho vào túi — luộc thẳng từ đông lạnh, cộng 1 phút."
+   ],
+   "serveWith": "Bơ xô thơm là cách đơn giản nhất. Sốt cà chua hoặc gorgonzola cũng rất hợp."
+  },
+  {
+   "id": "bruschetta",
+   "name": "Bruschetta cà chua",
+   "cat": "salad",
+   "role": "khai",
+   "diff": 1,
+   "serves": 4,
+   "tags": [
+    "cà chua",
+    "tỏi",
+    "bánh mì"
+   ],
+   "why": "Món khai vị Ý dễ nhất, và là bài học về việc rút nước cà chua — bỏ qua thì bánh mì ướt nhẹp trong hai phút.",
+   "ing": [
+    {
+     "n": "Cà chua chín",
+     "q": 500,
+     "u": "g",
+     "per": {
+      "n": 100,
+      "l": "quả vừa"
+     },
+     "note": "Cà chua bi ngọt hơn và ít nước hơn.",
+     "r": "veg"
+    },
+    {
+     "n": "Bánh mì vỏ cứng (baguette hoặc ciabatta)",
+     "q": 8,
+     "u": "lát",
+     "note": "Lát dày 1,5 cm.",
+     "r": "main"
+    },
+    {
+     "n": "Tỏi",
+     "q": 2,
+     "u": "tép",
+     "note": "Bổ đôi, chà lên mặt bánh mì đã nướng.",
+     "r": "season"
+    },
+    {
+     "n": "Dầu ô liu extra virgin",
+     "q": 4,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Húng quế (basil)",
+     "q": 1,
+     "u": "nắm",
+     "note": "Xé tay chứ đừng thái dao — dao làm lá thâm.",
+     "r": "herb"
+    },
+    {
+     "n": "Muối biển",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Bổ cà chua và rút nước",
+     "d": "Bỏ ruột hạt, thái hạt lựu, xóc với muối, để trong rây 15 phút.",
+     "m": 16,
+     "heat": "—",
+     "cue": "Dưới rây <b>chảy ra một lượng nước rõ</b>. Đây là chỗ nước sẽ làm ướt bánh nếu bạn bỏ bước này."
+    },
+    {
+     "t": "Nướng bánh mì",
+     "d": "Nướng lát bánh mì trên chảo gang khô hoặc dưới thanh nhiệt lò cho tới khi xém mặt.",
+     "m": 5,
+     "heat": "Lửa to",
+     "cue": "Mặt bánh <b>có vệt xém và cứng khi gõ</b>. Mềm là lát bánh sẽ sụp khi cắn."
+    },
+    {
+     "t": "Chà tỏi lên bánh nóng",
+     "d": "Chà mặt cắt của tép tỏi lên mặt bánh còn nóng, rưới dầu ô liu.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Mặt bánh <b>ướt dầu và dậy mùi tỏi sống</b>. Chà lúc bánh nguội thì tỏi không bám."
+    },
+    {
+     "t": "Trộn và bày lên",
+     "d": "Trộn cà chua đã ráo với dầu ô liu và húng quế xé, xúc lên bánh, bưng ra ngay.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Bưng ra <b>trong vòng 2 phút</b>. Bruschetta là món tính bằng phút."
+    }
+   ],
+   "tips": [
+    "Bày lên bánh <b>ngay tại bàn</b> nếu có thể. Đây là món hỏng vì chờ chứ không vì nấu sai.",
+    "Không cho giấm balsamic vào bruschetta cà chua kiểu Ý — dầu ô liu ngon và muối là đủ."
+   ],
+   "serveWith": "Khai vị. Một ly vang trắng hoặc prosecco."
+  },
+  {
+   "id": "caprese",
+   "name": "Salad caprese",
+   "cat": "salad",
+   "role": "khai",
+   "diff": 1,
+   "serves": 4,
+   "tags": [
+    "cà chua",
+    "mozzarella",
+    "húng quế"
+   ],
+   "why": "Ba nguyên liệu và không nấu gì cả — nên nó phơi bày chất lượng nguyên liệu hoàn toàn. Đây là món để mua đồ ngon chứ không phải để trổ tài.",
+   "ing": [
+    {
+     "n": "Cà chua chín cây",
+     "q": 500,
+     "u": "g",
+     "per": {
+      "n": 120,
+      "l": "quả vừa"
+     },
+     "note": "Cà chua nhạt thì cả đĩa nhạt. Để ngoài tủ lạnh — cà chua lạnh mất hết mùi.",
+     "r": "veg"
+    },
+    {
+     "n": "Mozzarella tươi (hoặc burrata)",
+     "q": 300,
+     "u": "g",
+     "per": {
+      "n": 125,
+      "l": "viên"
+     },
+     "note": "Lấy ra khỏi tủ lạnh trước 30 phút.",
+     "r": "main"
+    },
+    {
+     "n": "Húng quế tươi",
+     "q": 1,
+     "u": "nắm",
+     "r": "herb"
+    },
+    {
+     "n": "Dầu ô liu extra virgin",
+     "q": 4,
+     "u": "thìa canh",
+     "note": "Đây là lúc dùng chai dầu ngon nhất bạn có.",
+     "r": "season"
+    },
+    {
+     "n": "Muối biển hạt",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Hạt tiêu",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Để nguyên liệu về nhiệt độ phòng",
+     "d": "Lấy mozzarella và cà chua ra ngoài trước 30 phút.",
+     "m": 30,
+     "heat": "—",
+     "cue": "Sờ vào <b>không còn lạnh</b>. Đồ lạnh không toả mùi — đây là bước quan trọng nhất và cũng hay bị bỏ qua nhất."
+    },
+    {
+     "t": "Thái và để ráo",
+     "d": "Thái cà chua và mozzarella lát dày 1 cm, đặt mozzarella lên giấy thấm 5 phút.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Mozzarella <b>hết nước ngâm chảy ra</b>. Không thấm thì đĩa salad thành vũng nước."
+    },
+    {
+     "t": "Xếp và nêm",
+     "d": "Xếp xen kẽ cà chua – mozzarella – húng quế, rắc muối, rưới dầu, xay tiêu.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Muối rắc <b>lên cà chua trước khi rưới dầu</b> — dầu phủ trước thì muối không ngấm."
+    }
+   ],
+   "tips": [
+    "Không cho giấm balsamic. Caprese chuẩn chỉ có dầu ô liu, muối, tiêu.",
+    "Thay mozzarella bằng burrata thì cắt đôi viên ngay tại bàn cho phần kem chảy ra — hiệu ứng đáng giá."
+   ],
+   "serveWith": "Khai vị hoặc món phụ. Bánh mì để vét dầu."
+  },
+  {
+   "id": "pizza-margherita",
+   "name": "Pizza margherita (bột ủ lạnh)",
+   "cat": "pizza",
+   "role": "chinh",
+   "diff": 3,
+   "serves": 4,
+   "tags": [
+    "bột mì",
+    "mozzarella",
+    "cà chua"
+   ],
+   "why": "Lò nhà không lên được 450 °C như lò củi, nên trang này giải bài toán đó bằng hai thứ: bột ủ lạnh 24–72 tiếng và một cái chảo gang nung sẵn.",
+   "ing": [
+    {
+     "n": "Bột mì số 11 (hoặc bột 00)",
+     "q": 500,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Nước",
+     "q": 325,
+     "u": "ml",
+     "note": "65% so với bột. Bột ướt cho ruột xốp và bọt khí lớn.",
+     "r": "main"
+    },
+    {
+     "n": "Men instant",
+     "q": 2,
+     "u": "g",
+     "note": "Rất ít — vì ủ lạnh rất lâu.",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 12,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Cà chua hộp nguyên quả (San Marzano)",
+     "q": 400,
+     "u": "g",
+     "note": "Bóp nát bằng tay, nêm muối. <b>Không nấu chín</b> — sốt pizza là cà chua sống.",
+     "r": "veg"
+    },
+    {
+     "n": "Mozzarella ít ẩm",
+     "q": 300,
+     "u": "g",
+     "note": "Loại khối khô. Nếu dùng mozzarella tươi thì phải xé nhỏ và thấm thật khô.",
+     "r": "main"
+    },
+    {
+     "n": "Húng quế tươi",
+     "q": 1,
+     "u": "nắm",
+     "note": "Cho <b>sau</b> khi ra lò — nướng là cháy đen.",
+     "r": "herb"
+    },
+    {
+     "n": "Dầu ô liu extra virgin",
+     "q": 3,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Parmesan",
+     "q": 30,
+     "u": "g",
+     "note": "Rắc sau khi ra lò.",
+     "r": "herb"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Trộn bột và ngâm",
+     "d": "Trộn bột với nước cho vừa ẩm, để yên 30 phút (autolyse). Sau đó cho men và muối, nhồi 6 phút.",
+     "m": 40,
+     "heat": "—",
+     "cue": "Bột <b>mịn, đàn hồi, kéo mỏng thấy gần trong suốt</b>."
+    },
+    {
+     "t": "Ủ lạnh 24–72 tiếng",
+     "d": "Chia thành 4 viên 200 g, cho vào hộp kín, để ngăn mát.",
+     "m": 1440,
+     "heat": "Ngăn mát",
+     "cue": "Viên bột <b>nở gấp rưỡi, mặt căng bóng và có bọt khí nhìn thấy qua thành hộp</b>. Đây là chỗ vị bánh đến từ — ủ ấm 2 tiếng thì vỏ nhạt và cứng."
+    },
+    {
+     "t": "Ra nhiệt độ phòng",
+     "d": "Lấy bột ra trước 2 tiếng.",
+     "m": 120,
+     "heat": "Nhiệt độ phòng",
+     "cue": "Viên bột <b>mềm, ấn xuống lún chậm</b>. Bột lạnh thì kéo là rách."
+    },
+    {
+     "t": "Nung chảo gang / đá nướng",
+     "d": "Đặt chảo gang hoặc đá nướng vào lò, bật nhiệt tối đa, nung ít nhất 45 phút.",
+     "m": 45,
+     "heat": "Lò tối đa (250–300 °C)",
+     "cue": "Chảo/đá <b>nóng đều</b> — vẩy giọt nước lên thấy bốc hơi tức thì. Đây là thứ thay cho lò củi."
+    },
+    {
+     "t": "Kéo bột bằng tay",
+     "d": "Rắc bột áo (semolina), <b>dùng tay ấn từ giữa ra</b>, chừa 2 cm viền, không dùng cán bột.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Đế <b>mỏng ở giữa, viền dày và còn nguyên bọt khí</b>. Cán bột ép hết khí ra và viền sẽ không phồng."
+    },
+    {
+     "t": "Phủ nhân — mỏng tay",
+     "d": "Phết sốt cà chua sống thành lớp mỏng, rải mozzarella thưa, rưới chút dầu ô liu.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Nhìn <b>thấy đế qua các khoảng trống</b> giữa các mẩu phô mai. Phủ dày là đế không chín và pizza ướt."
+    },
+    {
+     "t": "Nướng thật nóng",
+     "d": "Trượt pizza lên chảo/đá đã nung, nướng ở rãnh trên, bật thanh nhiệt trên nếu có.",
+     "m": 8,
+     "heat": "Lò tối đa",
+     "cue": "Viền <b>phồng cao, có đốm cháy đen loang lổ</b> và phô mai sủi. Đốm cháy là dấu hiệu đúng, không phải lỗi."
+    },
+    {
+     "t": "Húng quế và parmesan sau khi ra lò",
+     "d": "Rắc húng quế tươi, parmesan bào và rưới dầu ô liu sống.",
+     "m": 1,
+     "heat": "—",
+     "cue": "Húng quế <b>còn xanh</b>. Cho vào lò trước là nó đen và đắng."
+    }
+   ],
+   "tips": [
+    "Nếu lò yếu: nướng đế trần 4 phút trước, rồi mới phủ nhân và nướng tiếp 5 phút. Đế sẽ giòn hơn hẳn.",
+    "Sốt pizza <b>không nấu</b>. Cà chua hộp bóp tay với muối là xong — nấu trước là nó chín hai lần và mất tươi."
+   ],
+   "serveWith": "Tự nó đã có sốt. Rocket và parmesan rắc lên sau nếu thích."
+  },
+  {
+   "id": "focaccia",
+   "name": "Focaccia hương thảo",
+   "cat": "pizza",
+   "role": "phu",
+   "diff": 1,
+   "serves": 6,
+   "tags": [
+    "bột mì",
+    "dầu ô liu"
+   ],
+   "why": "Bánh mì dễ nhất trong cả ba trang bếp: không nhồi, không tạo hình, đổ vào khay là xong. Và nó dạy đúng một thứ: dầu ô liu nhiều đến mức trông như sai.",
+   "ing": [
+    {
+     "n": "Bột mì số 11",
+     "q": 500,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Nước ấm",
+     "q": 400,
+     "u": "ml",
+     "note": "80% so với bột — bột rất ướt, không nhồi tay được, và đó là đúng.",
+     "r": "main"
+    },
+    {
+     "n": "Men instant",
+     "q": 7,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Muối",
+     "q": 10,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Dầu ô liu extra virgin",
+     "q": 100,
+     "u": "ml",
+     "note": "Nghe nhiều nhưng đúng là chừng đó: 50 ml trong bột, 50 ml trên khay và trên mặt.",
+     "r": "season"
+    },
+    {
+     "n": "Hương thảo (rosemary)",
+     "q": 3,
+     "u": "nhánh",
+     "r": "herb"
+    },
+    {
+     "n": "Muối biển hạt to",
+     "q": 1,
+     "u": "thìa cà phê",
+     "note": "Rắc mặt trước khi nướng.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Trộn bằng thìa",
+     "d": "Trộn bột, men, muối, nước ấm và 50 ml dầu bằng thìa gỗ đến khi vừa đều.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Bột <b>nhão, dính, kéo thành sợi</b>. Đừng cố nhồi — không nhồi được và cũng không cần."
+    },
+    {
+     "t": "Gấp bột 3 lượt",
+     "d": "Cứ 30 phút lại nhúng tay ướt, kéo mép bột lên gấp vào giữa, xoay âu, làm 4 phía. Lặp 3 lượt.",
+     "m": 90,
+     "heat": "Nhiệt độ phòng",
+     "cue": "Sau lượt cuối, bột <b>căng mặt, bóng và đầy bọt khí</b>."
+    },
+    {
+     "t": "Trải khay và nghỉ",
+     "d": "Rưới 30 ml dầu vào khay 25×35 cm, trút bột vào, kéo nhẹ ra bốn góc, đậy lại nghỉ 45 phút.",
+     "m": 50,
+     "heat": "Nhiệt độ phòng",
+     "cue": "Bột <b>tự giãn lấp đầy khay và phồng lên</b>. Chưa đến góc thì đợi thêm rồi kéo tiếp — đừng ép."
+    },
+    {
+     "t": "Ấn lỗ và rắc mặt",
+     "d": "Nhúng ngón tay vào dầu, ấn thẳng xuống tạo lỗ khắp mặt bột, rưới nốt dầu, rắc hương thảo và muối hạt.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Các lỗ <b>sâu đến gần đáy khay và đọng dầu</b>. Đó là chỗ tạo ra ruột xốp và mặt giòn."
+    },
+    {
+     "t": "Nướng",
+     "d": "Nướng ở rãnh giữa lò nóng sẵn.",
+     "m": 25,
+     "heat": "Lò 220 °C",
+     "cue": "Mặt <b>vàng nâu đậm, mép tách khỏi thành khay</b> và nhấc lên thấy đáy vàng giòn."
+    }
+   ],
+   "tips": [
+    "Đừng tiếc dầu. Focaccia ít dầu là bánh mì khay chứ không phải focaccia.",
+    "Bột có thể ủ ngăn mát qua đêm sau bước gấp — sáng hôm sau kéo khay và nướng, vị đậm hơn hẳn."
+   ],
+   "serveWith": "Chấm dầu ô liu và giấm balsamic, hoặc dùng làm bánh mì cho cả bữa."
+  },
+  {
+   "id": "scaloppine-limone",
+   "name": "Scaloppine gà sốt chanh",
+   "cat": "thit",
+   "role": "chinh",
+   "diff": 1,
+   "serves": 4,
+   "tags": [
+    "thịt gà",
+    "chanh",
+    "bơ"
+   ],
+   "why": "Món thịt nhanh nhất trang này — 15 phút — và là ví dụ sạch sẽ nhất về pan sauce: sốt làm ngay trong chảo vừa áp thịt xong.",
+   "ing": [
+    {
+     "n": "Ức gà",
+     "q": 600,
+     "u": "g",
+     "per": {
+      "n": 200,
+      "l": "miếng ức"
+     },
+     "note": "Lạng ngang thành lát mỏng 1 cm rồi dần cho đều.",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì",
+     "q": 60,
+     "u": "g",
+     "note": "Để áo thịt — lớp bột này vừa giữ thịt mọng vừa làm sánh sốt.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 60,
+     "u": "g",
+     "note": "Một nửa để áp chảo, một nửa cho vào sốt lúc cuối.",
+     "r": "main"
+    },
+    {
+     "n": "Chanh vàng",
+     "q": 2,
+     "u": "quả",
+     "note": "Nước cốt và vài lát mỏng.",
+     "r": "veg"
+    },
+    {
+     "n": "Rượu vang trắng khô",
+     "q": 120,
+     "u": "ml",
+     "note": "Thay bằng nước dùng gà cũng được.",
+     "r": "season"
+    },
+    {
+     "n": "Nước dùng gà",
+     "q": 150,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Nụ bạch hoa (capers)",
+     "q": 2,
+     "u": "thìa canh",
+     "note": "Rửa qua nếu ngâm muối. Bỏ được nhưng nó là thứ làm món đậm.",
+     "r": "season"
+    },
+    {
+     "n": "Mùi tây",
+     "q": 1,
+     "u": "nắm",
+     "r": "herb"
+    },
+    {
+     "n": "Dầu ô liu",
+     "q": 2,
+     "u": "thìa canh",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Dần mỏng và áo bột",
+     "d": "Lạng ức gà thành lát 1 cm, dần cho dày đều 7 mm, nêm muối tiêu rồi áo một lớp bột mỏng, phủi bớt.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Lát thịt <b>dày đều và phủ một lớp bột mờ như phấn</b>. Bột dày là sốt bị bột."
+    },
+    {
+     "t": "Áp chảo hai mặt",
+     "d": "Chảo thật nóng với dầu và một nửa bơ, xếp thịt không chồng lên nhau, mỗi mặt 2 phút.",
+     "m": 6,
+     "heat": "Lửa to",
+     "cue": "Mặt thịt <b>vàng nâu và mép se lại</b>. Chảo chật là thịt hấp chứ không xém — rán làm hai mẻ. Gắp thịt ra đĩa."
+    },
+    {
+     "t": "Đun cạn rượu (deglaze)",
+     "d": "Đổ rượu vào chảo nóng, dùng thìa gỗ cạo hết mảng nâu dưới đáy.",
+     "m": 3,
+     "heat": "Lửa to",
+     "cue": "Đáy chảo <b>sạch mảng nâu, rượu rút còn một nửa</b>. Mảng nâu đó chính là vị của cả nồi sốt."
+    },
+    {
+     "t": "Làm sốt",
+     "d": "Cho nước dùng, nước cốt chanh, capers và lát chanh, đun rút bớt.",
+     "m": 5,
+     "heat": "Lửa vừa",
+     "cue": "Sốt <b>rút còn khoảng một nửa và sánh nhẹ</b>."
+    },
+    {
+     "t": "Cho bơ lạnh (monter au beurre)",
+     "d": "Hạ lửa thật nhỏ, cho bơ lạnh từng miếng, lắc chảo cho tan.",
+     "m": 2,
+     "heat": "Lửa nhỏ",
+     "cue": "Sốt <b>bóng lên và sánh hẳn</b>. Nếu để sôi thì bơ tách dầu — chỉ được ấm, không được sôi."
+    },
+    {
+     "t": "Trả thịt về",
+     "d": "Cho thịt và nước thịt đọng trên đĩa vào chảo, lật một lần, rắc mùi tây.",
+     "m": 2,
+     "heat": "Lửa nhỏ",
+     "cue": "Thịt <b>áo một lớp sốt bóng</b>. Bưng ra ngay."
+    }
+   ],
+   "tips": [
+    "Cấu trúc <b>áp chảo → deglaze → rút nước → cho bơ lạnh</b> dùng được cho mọi loại thịt. Học một lần, dùng cho cả trang.",
+    "Không có rượu vang thì dùng nước dùng + 1 thìa giấm trắng."
+   ],
+   "serveWith": "Tự nó đã có sốt. Ăn với khoai nghiền hoặc rau xanh áp chảo."
+  },
+  {
+   "id": "omelette-phap",
+   "name": "Trứng ốp kiểu Pháp (omelette)",
+   "cat": "trung",
+   "role": "nhanh",
+   "diff": 2,
+   "serves": 2,
+   "tags": [
+    "trứng",
+    "bơ"
+   ],
+   "why": "Ba quả trứng và 90 giây, nhưng đây là món các bếp trưởng Pháp dùng để thử tay nghề người xin việc — vì không có gì để giấu.",
+   "ing": [
+    {
+     "n": "Trứng gà",
+     "q": 6,
+     "u": "quả",
+     "per": {
+      "n": 55,
+      "l": "quả"
+     },
+     "note": "Nhiệt độ phòng.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 30,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Muối + tiêu trắng",
+     "q": 2,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Hẹ tây (chives)",
+     "q": 1,
+     "u": "nắm",
+     "note": "Thái nhỏ, cho lúc cuối.",
+     "r": "herb"
+    },
+    {
+     "n": "Gruyère bào (tuỳ chọn)",
+     "q": 40,
+     "u": "g",
+     "r": "herb"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đánh trứng thật kỹ",
+     "d": "Đánh trứng với muối cho tới khi lòng đỏ và lòng trắng hoà hoàn toàn, không còn vệt.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>đồng màu vàng, không còn sợi lòng trắng nào</b>. Còn vệt là omelette có mảng trắng."
+    },
+    {
+     "t": "Đun bơ đến sủi",
+     "d": "Chảo chống dính 20 cm, lửa vừa, cho một nửa chỗ bơ, đợi hết sủi bọt. <b>Rán hai lượt, mỗi lượt 3 quả trứng</b> — chảo 20 cm chỉ vừa 3 quả.",
+     "m": 2,
+     "heat": "Lửa vừa",
+     "cue": "Bơ <b>hết sủi bọt và vừa bắt đầu thơm, chưa ngả nâu</b>. Đổ trứng vào lúc này."
+    },
+    {
+     "t": "Khuấy liên tục 40 giây",
+     "d": "Đổ trứng vào, dùng đũa hoặc spatula khuấy vòng liên tục đồng thời lắc chảo.",
+     "m": 1,
+     "heat": "Lửa vừa-nhỏ",
+     "cue": "Trứng <b>thành các mảng nhỏ li ti trong lòng chảo, còn ướt bóng</b> — trạng thái này gọi là \"baveuse\"."
+    },
+    {
+     "t": "Dàn phẳng và để yên",
+     "d": "Ngừng khuấy, dàn phẳng mặt, để yên 20 giây cho đáy kết lại. Rắc phô mai và hẹ.",
+     "m": 1,
+     "heat": "Lửa nhỏ",
+     "cue": "Đáy <b>kết thành một lớp liền, mặt trên vẫn còn ướt bóng</b>."
+    },
+    {
+     "t": "Gấp và trút ra đĩa",
+     "d": "Nghiêng chảo, gấp mép xa xuống, dùng chảo lăn omelette thành hình thoi rồi úp ra đĩa.",
+     "m": 1,
+     "heat": "Tắt bếp",
+     "cue": "Bên ngoài <b>vàng nhạt không có vệt nâu</b>, cắt ra giữa còn mềm ướt. Omelette Pháp <b>không được có màu nâu</b>."
+    }
+   ],
+   "tips": [
+    "Không để trứng ngả nâu. Nếu chảo làm trứng nâu thì lửa đang to quá — đó là lỗi duy nhất của món này.",
+    "Chảo 20 cm cho 3 quả trứng. Chảo to hơn là omelette mỏng và khô."
+   ],
+   "serveWith": "Tự nó đã đủ. Bánh mì và salad xanh."
+  },
+  {
+   "id": "sup-hanh-tay",
+   "name": "Súp hành tây kiểu Pháp",
+   "cat": "sup",
+   "role": "khai",
+   "diff": 2,
+   "serves": 4,
+   "tags": [
+    "hành tây",
+    "gruyère"
+   ],
+   "why": "Ba nguyên liệu rẻ nhất chợ biến thành một bát súp sâu vị — nhưng phải trả giá bằng 50 phút đứng khuấy hành. Không có đường tắt.",
+   "ing": [
+    {
+     "n": "Hành tây",
+     "q": 1200,
+     "u": "g",
+     "per": {
+      "n": 200,
+      "l": "củ vừa"
+     },
+     "note": "Thái lát mỏng đều theo chiều dọc củ.",
+     "r": "veg"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 60,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Nước dùng bò",
+     "q": 1200,
+     "u": "ml",
+     "note": "Nước dùng gà cũng được nhưng nhạt hơn.",
+     "r": "main"
+    },
+    {
+     "n": "Rượu vang trắng khô",
+     "q": 150,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Bánh mì baguette",
+     "q": 8,
+     "u": "lát",
+     "note": "Lát dày, nướng khô hai mặt.",
+     "r": "main"
+    },
+    {
+     "n": "Gruyère bào",
+     "q": 200,
+     "u": "g",
+     "note": "Loại chảy đẹp nhất cho món này. Emmental cũng được.",
+     "r": "main"
+    },
+    {
+     "n": "Lá nguyệt quế + húng tây",
+     "q": 2,
+     "u": "lá",
+     "r": "herb"
+    },
+    {
+     "n": "Đường",
+     "q": 1,
+     "u": "thìa cà phê",
+     "note": "Chỉ để giúp hành lên màu, không phải để ngọt.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Xào hành — 50 phút, không rút ngắn",
+     "d": "Đun chảy bơ, cho hết hành và một nhúm muối, đảo đều, để lửa vừa-nhỏ. Khuấy 5 phút một lần.",
+     "m": 50,
+     "heat": "Lửa vừa-nhỏ",
+     "cue": "Hành <b>xẹp còn 1/4 thể tích, chuyển màu nâu hổ phách đậm và ngọt lịm khi nếm</b>. Ở phút thứ 20 hành mới vàng nhạt — đó chưa phải điểm đến."
+    },
+    {
+     "t": "Deglaze bằng rượu",
+     "d": "Đổ rượu vang, cạo hết mảng nâu dưới đáy nồi, đun cạn.",
+     "m": 5,
+     "heat": "Lửa vừa",
+     "cue": "Đáy nồi <b>sạch mảng nâu</b>, rượu rút gần hết."
+    },
+    {
+     "t": "Ninh với nước dùng",
+     "d": "Đổ nước dùng, thả lá nguyệt quế và húng tây, ninh liu riu.",
+     "m": 30,
+     "heat": "Liu riu",
+     "cue": "Súp <b>nâu trong, nếm thấy ngọt sâu chứ không chỉ mặn</b>. Nêm lại muối tiêu."
+    },
+    {
+     "t": "Nướng bánh mì",
+     "d": "Nướng lát baguette hai mặt cho khô cứng hoàn toàn.",
+     "m": 8,
+     "heat": "Lò 200 °C",
+     "cue": "Lát bánh <b>khô cứng như bánh quy</b>. Bánh mềm là chìm nghỉm trong súp."
+    },
+    {
+     "t": "Phủ phô mai và nướng mặt",
+     "d": "Múc súp vào bát chịu nhiệt, đặt bánh mì lên, phủ dày gruyère, cho vào lò bật thanh nhiệt trên.",
+     "m": 6,
+     "heat": "Lò 230 °C (nhiệt trên)",
+     "cue": "Phô mai <b>chảy sủi, vàng nâu loang lổ và tràn xuống mép bát</b>. Đó là hình ảnh của món này."
+    }
+   ],
+   "tips": [
+    "50 phút xào hành là <b>toàn bộ món ăn</b>. Xào 15 phút thì bạn có súp hành, không phải súp hành Pháp.",
+    "Nồi đáy dày và rộng giúp hành bay hơi nhanh hơn — nồi hẹp thì hành luộc trong nước của chính nó."
+   ],
+   "serveWith": "Tự nó đã đủ. Ăn như khai vị hoặc một bữa nhẹ."
+  },
+  {
+   "id": "ratatouille",
+   "name": "Ratatouille",
+   "cat": "rau",
+   "role": "phu",
+   "diff": 2,
+   "serves": 4,
+   "tags": [
+    "cà tím",
+    "bí ngòi",
+    "cà chua"
+   ],
+   "why": "Bí quyết trái với trực giác: <b>xào riêng từng loại rau</b> rồi mới trộn. Cho tất cả vào một nồi là ra một nồi rau nhũn không rõ vị gì.",
+   "ing": [
+    {
+     "n": "Cà tím",
+     "q": 400,
+     "u": "g",
+     "per": {
+      "n": 250,
+      "l": "quả vừa"
+     },
+     "note": "Cắt khối 2 cm, xóc muối 20 phút rồi thấm khô.",
+     "r": "veg"
+    },
+    {
+     "n": "Bí ngòi (zucchini)",
+     "q": 400,
+     "u": "g",
+     "r": "veg"
+    },
+    {
+     "n": "Ớt chuông đỏ + vàng",
+     "q": 2,
+     "u": "quả",
+     "r": "veg"
+    },
+    {
+     "n": "Hành tây",
+     "q": 1,
+     "u": "củ",
+     "r": "veg"
+    },
+    {
+     "n": "Cà chua chín (hoặc hộp)",
+     "q": 600,
+     "u": "g",
+     "r": "veg"
+    },
+    {
+     "n": "Tỏi",
+     "q": 4,
+     "u": "tép",
+     "r": "season"
+    },
+    {
+     "n": "Dầu ô liu",
+     "q": 100,
+     "u": "ml",
+     "note": "Cà tím uống rất nhiều dầu — đừng tiếc ở bước đó.",
+     "r": "season"
+    },
+    {
+     "n": "Húng tây + hương thảo",
+     "q": 3,
+     "u": "nhánh",
+     "r": "herb"
+    },
+    {
+     "n": "Húng quế",
+     "q": 1,
+     "u": "nắm",
+     "note": "Cho lúc cuối.",
+     "r": "herb"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Xóc muối cà tím",
+     "d": "Cắt khối, xóc với muối, để rổ 20 phút rồi thấm thật khô.",
+     "m": 22,
+     "heat": "—",
+     "cue": "Cà tím <b>tiết ra nước nâu nhạt và mặt se lại</b>. Bước này làm cà tím bớt uống dầu và bớt đắng."
+    },
+    {
+     "t": "Xào từng loại riêng",
+     "d": "Xào cà tím trước ở lửa to cho vàng cạnh, múc ra. Rồi đến bí ngòi, rồi ớt chuông. Mỗi loại xào riêng.",
+     "m": 20,
+     "heat": "Lửa to",
+     "cue": "Mỗi loại <b>vàng xém ở cạnh và vẫn còn giữ hình khối</b>. Đây là điểm mấu chốt của món."
+    },
+    {
+     "t": "Làm nền cà chua",
+     "d": "Xào hành tây và tỏi ở lửa nhỏ đến mềm, cho cà chua và thảo mộc, rim.",
+     "m": 20,
+     "heat": "Lửa nhỏ",
+     "cue": "Sốt <b>sánh lại, dầu tách nổi vệt cam</b>."
+    },
+    {
+     "t": "Trộn lại và om ngắn",
+     "d": "Trả tất cả rau về nồi, đảo nhẹ, om lửa nhỏ, không đậy vung.",
+     "m": 12,
+     "heat": "Lửa nhỏ",
+     "cue": "Rau <b>ngấm sốt mà vẫn nhìn rõ từng loại</b>. Om lâu là thành cháo rau."
+    },
+    {
+     "t": "Nêm và thả húng quế",
+     "d": "Tắt bếp, nêm lại, rưới dầu ô liu sống và thả húng quế xé.",
+     "m": 3,
+     "heat": "Tắt bếp",
+     "cue": "Nếm thấy <b>từng loại rau còn vị riêng</b>. Đó là thước đo duy nhất của ratatouille."
+    }
+   ],
+   "tips": [
+    "Ratatouille ngon hơn khi <b>ăn ấm hoặc nguội</b>, ngày hôm sau còn ngon hơn nữa.",
+    "Đừng đậy vung khi om — hơi nước làm rau nhũn."
+   ],
+   "serveWith": "Món phụ cho thịt nướng, cá áp chảo. Hoặc ăn với bánh mì và trứng ốp."
+  },
+  {
+   "id": "gratin-dauphinois",
+   "name": "Gratin dauphinois",
+   "cat": "rau",
+   "role": "phu",
+   "diff": 2,
+   "serves": 6,
+   "tags": [
+    "khoai tây",
+    "kem tươi",
+    "gruyère"
+   ],
+   "why": "Khoai tây, kem, tỏi. Bản gốc Pháp thậm chí không có phô mai — và chỗ hỏng duy nhất là rửa khoai sau khi thái.",
+   "ing": [
+    {
+     "n": "Khoai tây",
+     "q": 1200,
+     "u": "g",
+     "per": {
+      "n": 200,
+      "l": "củ vừa"
+     },
+     "note": "Thái lát 3 mm bằng dao bào. <b>Không rửa sau khi thái</b> — tinh bột là thứ làm gratin kết dính.",
+     "r": "veg"
+    },
+    {
+     "n": "Kem tươi (35%)",
+     "q": 400,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi",
+     "q": 400,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Tỏi",
+     "q": 2,
+     "u": "tép",
+     "note": "Bổ đôi, chà lòng khay nướng.",
+     "r": "season"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 30,
+     "u": "g",
+     "note": "Bôi khay.",
+     "r": "main"
+    },
+    {
+     "n": "Nhục đậu khấu",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    },
+    {
+     "n": "Gruyère bào",
+     "q": 120,
+     "u": "g",
+     "note": "Tuỳ chọn — bản gốc Dauphiné không có, nhưng phần lớn nhà đều cho.",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Chuẩn bị khay",
+     "d": "Chà mặt cắt tỏi khắp lòng khay nướng, rồi bôi bơ dày.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Lòng khay <b>bóng bơ và dậy mùi tỏi</b>."
+    },
+    {
+     "t": "Thái khoai — không rửa",
+     "d": "Gọt vỏ, thái lát 3 mm bằng dao bào. Không ngâm, không rửa.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Lát khoai <b>dày đều và hơi dính vào nhau vì tinh bột</b>. Rửa đi là gratin rời rạc và chảy nước."
+    },
+    {
+     "t": "Đun khoai trong sữa kem",
+     "d": "Cho khoai vào nồi sữa + kem + nhục đậu khấu + muối, đun liu riu, đảo nhẹ.",
+     "m": 12,
+     "heat": "Liu riu",
+     "cue": "Sữa <b>sánh lại rõ và khoai vừa mềm ở rìa</b>. Bước này rút ngắn thời gian nướng và làm gratin không bị khô mặt sống ruột."
+    },
+    {
+     "t": "Xếp khay",
+     "d": "Trút khoai và sữa vào khay, dàn phẳng, ấn cho ngập, rắc gruyère.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Lớp trên cùng <b>ngập trong sữa kem</b> — lát nào nhô lên sẽ cháy khô."
+    },
+    {
+     "t": "Nướng",
+     "d": "Nướng ở rãnh giữa, phủ giấy bạc 30 phút rồi bỏ ra nướng tiếp.",
+     "m": 60,
+     "heat": "Lò 170 °C",
+     "cue": "Xiên dao vào <b>trượt qua các lớp không vướng</b>, mặt vàng nâu và mép sủi lăn tăn."
+    },
+    {
+     "t": "Nghỉ 15 phút",
+     "d": "Để nguyên ngoài lò 15 phút rồi mới xắn.",
+     "m": 15,
+     "heat": "—",
+     "cue": "Xắn ra <b>miếng giữ được lớp</b>, không chảy sữa ra đĩa."
+    }
+   ],
+   "tips": [
+    "Đừng rửa khoai đã thái. Đây là chỗ khác biệt lớn nhất và cũng là chỗ nhiều người làm sai nhất.",
+    "Khoai bột (bở) cho gratin mềm mịn; khoai sáp cho gratin rõ lát hơn. Cả hai đều đúng, chọn theo ý thích."
+   ],
+   "serveWith": "Món phụ kinh điển cho thịt bò bỏ lò, gà quay, sườn cừu."
+  },
+  {
+   "id": "moules-mariniere",
+   "name": "Moules marinière (vẹm hấp vang trắng)",
+   "cat": "ca",
+   "role": "chinh",
+   "diff": 1,
+   "serves": 4,
+   "tags": [
+    "vẹm",
+    "rượu vang",
+    "kem tươi"
+   ],
+   "why": "Từ lúc bật bếp đến lúc bưng ra: 8 phút. Món hải sản có tỉ lệ công sức trên kết quả tốt nhất trong cả trang.",
+   "ing": [
+    {
+     "n": "Vẹm xanh (hoặc trai)",
+     "q": 2000,
+     "u": "g",
+     "per": {
+      "n": 25,
+      "l": "con"
+     },
+     "note": "Chà sạch vỏ, rứt râu. Bỏ con nào há sẵn mà gõ không khép.",
+     "r": "main"
+    },
+    {
+     "n": "Hành tím (shallot)",
+     "q": 3,
+     "u": "củ",
+     "note": "Băm nhỏ.",
+     "r": "veg"
+    },
+    {
+     "n": "Tỏi",
+     "q": 3,
+     "u": "tép",
+     "r": "season"
+    },
+    {
+     "n": "Rượu vang trắng khô",
+     "q": 300,
+     "u": "ml",
+     "note": "Loại uống được — nếu bạn không uống được thì đừng nấu.",
+     "r": "season"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 60,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Kem tươi",
+     "q": 100,
+     "u": "ml",
+     "note": "Bản \"marinière\" gốc không có kem; bản Bỉ thì có.",
+     "r": "main"
+    },
+    {
+     "n": "Mùi tây",
+     "q": 1,
+     "u": "nắm",
+     "r": "herb"
+    },
+    {
+     "n": "Bánh mì baguette",
+     "q": 1,
+     "u": "ổ",
+     "note": "Để vét nước — đây là nửa cái ngon của món.",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Làm sạch vẹm",
+     "d": "Chà vỏ dưới vòi nước, rứt phần râu, bỏ con vỡ vỏ hoặc há mà gõ không khép.",
+     "m": 15,
+     "heat": "—",
+     "cue": "Vỏ <b>sạch, không còn hà bám</b>. Một con chết làm hỏng cả nồi — kiểm từng con là đáng."
+    },
+    {
+     "t": "Xào hành tím",
+     "d": "Đun chảy bơ trong nồi to, xào hành tím và tỏi băm ở lửa vừa.",
+     "m": 4,
+     "heat": "Lửa vừa",
+     "cue": "Hành <b>trong và mềm, chưa ngả vàng</b>."
+    },
+    {
+     "t": "Đổ rượu và thả vẹm",
+     "d": "Đổ rượu, đun sôi 1 phút cho bay cồn, trút vẹm vào, đậy vung, lửa to.",
+     "m": 5,
+     "heat": "Lửa to",
+     "cue": "Sau 3–4 phút, <b>gần hết vẹm há miệng</b>. Lắc nồi một lần giữa chừng cho con dưới lên trên."
+    },
+    {
+     "t": "Vớt vẹm, làm sốt",
+     "d": "Vớt vẹm ra tô ngay khi há (bỏ con không há). Cho kem vào nước trong nồi, đun sôi lại 1 phút.",
+     "m": 3,
+     "heat": "Lửa vừa",
+     "cue": "Nước <b>sánh nhẹ và trắng đục</b>. Nếm — thường không cần thêm muối vì vẹm đã mặn."
+    },
+    {
+     "t": "Chan lại và rắc mùi tây",
+     "d": "Chan nước sốt lên vẹm, rắc mùi tây thái nhỏ.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Bưng ra ngay cùng bánh mì và một tô rỗng để bỏ vỏ."
+    }
+   ],
+   "tips": [
+    "Vớt vẹm ra ngay khi há rồi mới làm sốt — để cả nồi trên bếp thêm 3 phút là thịt vẹm teo lại như cao su.",
+    "Con nào không há sau khi nấu thì bỏ. Đừng cạy ra."
+   ],
+   "serveWith": "Tự nó đã có sốt. Bánh mì để vét, và khoai tây chiên nếu theo kiểu Bỉ."
+  },
+  {
+   "id": "quiche-lorraine",
+   "name": "Quiche Lorraine",
+   "cat": "trung",
+   "role": "chinh",
+   "diff": 2,
+   "serves": 6,
+   "tags": [
+    "trứng",
+    "kem tươi",
+    "thịt xông khói"
+   ],
+   "why": "Bánh mặn Pháp cổ điển. Hai chỗ hỏng: đế ướt, và nhân trứng bị rỗ vì nướng quá nóng.",
+   "ing": [
+    {
+     "n": "Bột mì số 8 (cho đế)",
+     "q": 250,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt (cho đế)",
+     "q": 125,
+     "u": "g",
+     "note": "Lạnh cứng, cắt hạt lựu.",
+     "r": "main"
+    },
+    {
+     "n": "Nước đá",
+     "q": 50,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Thịt xông khói (lardons)",
+     "q": 200,
+     "u": "g",
+     "note": "Thái que, rán cho ra mỡ.",
+     "r": "main"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 3,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 1,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Kem tươi (35%)",
+     "q": 250,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi",
+     "q": 100,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Gruyère bào",
+     "q": 100,
+     "u": "g",
+     "note": "Bản gốc Lorraine không có phô mai, nhưng hầu như ai cũng cho.",
+     "r": "main"
+    },
+    {
+     "n": "Nhục đậu khấu + tiêu",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Làm đế và nghỉ lạnh",
+     "d": "Xoa bơ lạnh vào bột và muối đến khi thành vụn còn hạt bơ, rưới nước đá, kết khối. Bọc kín, để lạnh 45 phút.",
+     "m": 55,
+     "heat": "Ngăn mát",
+     "cue": "Bột <b>còn nhìn thấy mảng bơ</b> và cứng lại sau khi nghỉ."
+    },
+    {
+     "t": "Lót khuôn và nghỉ tiếp",
+     "d": "Cán 3 mm, lót khuôn tart 24 cm, ấn nhẹ không kéo, để lạnh thêm 30 phút.",
+     "m": 40,
+     "heat": "Ngăn mát",
+     "cue": "Đế <b>cứng, ấn không lún</b> — điều kiện để không co khi nướng."
+    },
+    {
+     "t": "Nướng mù",
+     "d": "Lót giấy nến, đổ đậu khô, nướng 15 phút rồi bỏ đậu nướng tiếp 10 phút.",
+     "m": 27,
+     "heat": "Lò 190 °C",
+     "cue": "Đáy đế <b>khô, vàng nhạt và có mùi bơ nướng</b>. Đây là bước duy nhất chống đế ướt."
+    },
+    {
+     "t": "Rán thịt xông khói",
+     "d": "Rán lardons từ chảo nguội cho ra mỡ và vàng rìa, để ráo trên giấy thấm.",
+     "m": 8,
+     "heat": "Lửa vừa",
+     "cue": "Thịt <b>vàng rìa, mỡ đã chảy ra</b>. Không chắt mỡ là quiche ngấy và ướt."
+    },
+    {
+     "t": "Trộn nhân trứng",
+     "d": "Đánh trứng + lòng đỏ với kem, sữa, nhục đậu khấu, tiêu. Không nêm nhiều muối — thịt và phô mai đã mặn.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>loãng, mịn, không bọt</b>. Đánh mạnh tạo bọt thì nhân sẽ phồng rồi xẹp."
+    },
+    {
+     "t": "Đổ nhân và nướng thấp",
+     "d": "Rải thịt và phô mai lên đế, đổ nhân, nướng ở rãnh giữa.",
+     "m": 35,
+     "heat": "Lò 160 °C",
+     "cue": "Lắc khuôn: giữa <b>rung nhẹ như thạch, mép đã đông</b>. Nhân phồng cao là nhiệt quá — hạ 10 °C."
+    },
+    {
+     "t": "Nghỉ 15 phút",
+     "d": "Để nguội bớt rồi mới cắt.",
+     "m": 15,
+     "heat": "—",
+     "cue": "Cắt ra <b>miếng đứng, nhân không chảy</b>."
+    }
+   ],
+   "tips": [
+    "Nướng mù đế là bắt buộc. Đổ nhân ướt lên đế sống thì đế không bao giờ giòn được.",
+    "Nhiệt thấp (160 °C) cho nhân mịn như custard. Nhiệt cao cho nhân rỗ tổ ong."
+   ],
+   "serveWith": "Tự nó đã đủ. Salad xanh với vinaigrette là cặp mặc định."
+  },
+  {
+   "id": "steak-pan-sauce",
+   "name": "Steak áp chảo & sốt chảo",
+   "cat": "thit",
+   "role": "chinh",
+   "diff": 2,
+   "serves": 2,
+   "tags": [
+    "thịt bò",
+    "bơ",
+    "húng tây"
+   ],
+   "why": "Miếng steak ở nhà thường thua ở nhà hàng vì ba lý do rất cụ thể: thịt lạnh, thịt ướt, chảo nguội. Sửa cả ba là xong.",
+   "ing": [
+    {
+     "n": "Ribeye (dẻ sườn) hoặc thăn ngoại (striploin)",
+     "q": 500,
+     "u": "g",
+     "per": {
+      "n": 250,
+      "l": "miếng dày 3 cm"
+     },
+     "note": "Dày tối thiểu 2,5 cm. Miếng mỏng thì chín hết trước khi kịp xém.",
+     "r": "main"
+    },
+    {
+     "n": "Muối hạt",
+     "q": 8,
+     "u": "g",
+     "note": "Ướp trước ít nhất 40 phút — hoặc ướp ngay trước khi rán. Khoảng giữa là tệ nhất.",
+     "r": "season"
+    },
+    {
+     "n": "Dầu chịu nhiệt cao",
+     "q": 2,
+     "u": "thìa canh",
+     "note": "Dầu hạt cải hoặc dầu ăn thường. Không dùng dầu ô liu extra virgin — nó cháy.",
+     "r": "season"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 50,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Tỏi",
+     "q": 3,
+     "u": "tép",
+     "note": "Đập dập, để nguyên vỏ.",
+     "r": "season"
+    },
+    {
+     "n": "Húng tây (thyme) hoặc hương thảo",
+     "q": 4,
+     "u": "nhánh",
+     "r": "herb"
+    },
+    {
+     "n": "Hành tím",
+     "q": 1,
+     "u": "củ",
+     "note": "Cho sốt chảo.",
+     "r": "veg"
+    },
+    {
+     "n": "Rượu vang đỏ (hoặc nước dùng bò)",
+     "q": 120,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Hạt tiêu",
+     "q": 1,
+     "u": "thìa cà phê",
+     "note": "Xay lúc dùng, cho <b>sau</b> khi rán — tiêu cháy thì đắng.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Ra nhiệt độ phòng và làm khô",
+     "d": "Lấy thịt ra trước 40 phút, ướp muối, thấm thật khô bằng giấy ngay trước khi rán.",
+     "m": 40,
+     "heat": "—",
+     "cue": "Mặt thịt <b>khô ráo, sờ không ướt tay</b>. Đây là điều kiện của phản ứng Maillard — thịt ướt thì hấp chứ không xém."
+    },
+    {
+     "t": "Nung chảo thật nóng",
+     "d": "Chảo gang hoặc inox đáy dày, lửa to, cho dầu khi chảo đã nóng.",
+     "m": 4,
+     "heat": "Lửa to",
+     "cue": "Dầu <b>gợn sóng và vừa bắt đầu bốc khói mỏng</b>. Chưa bốc khói là chưa đủ nóng."
+    },
+    {
+     "t": "Áp mặt thứ nhất — không động vào",
+     "d": "Đặt thịt vào (đặt xuôi ra xa người), <b>không di chuyển</b> trong 2,5 phút.",
+     "m": 3,
+     "heat": "Lửa to",
+     "cue": "Nhấc thử một góc: mặt thịt <b>nâu sẫm đều và tự tách khỏi chảo</b>. Còn dính là chưa xém xong — đặt xuống, đợi thêm."
+    },
+    {
+     "t": "Lật, cho bơ và rưới",
+     "d": "Lật mặt, hạ lửa vừa, cho bơ, tỏi đập và húng tây. Nghiêng chảo, dùng thìa múc bơ rưới liên tục lên mặt thịt.",
+     "m": 3,
+     "heat": "Lửa vừa",
+     "cue": "Bơ <b>sủi vàng nâu và dậy mùi hạt</b>, mặt thịt bóng. Nhiệt kế cắm ngang vào giữa: rút ra ở <b>51 °C</b> cho medium rare."
+    },
+    {
+     "t": "Nghỉ thịt — bắt buộc",
+     "d": "Chuyển thịt sang rack hoặc đĩa ấm, để nghỉ 6–8 phút. Không đậy kín.",
+     "m": 8,
+     "heat": "—",
+     "cue": "Nhiệt lõi <b>tự lên thêm 3–4 °C</b> trong lúc nghỉ. Cắt ngay là nước thịt chảy hết ra thớt — đó là toàn bộ độ mọng của miếng thịt."
+    },
+    {
+     "t": "Làm sốt chảo trong lúc nghỉ",
+     "d": "Vẫn chảo đó: chắt bớt mỡ, xào hành tím băm 1 phút, đổ rượu cạo đáy chảo, đun rút một nửa, tắt bếp rồi cho một miếng bơ lạnh.",
+     "m": 6,
+     "heat": "Lửa vừa → tắt",
+     "cue": "Sốt <b>sánh, bóng và bám mặt thìa</b>. Cho bơ khi chảo còn sôi là sốt tách dầu."
+    },
+    {
+     "t": "Cắt ngang thớ",
+     "d": "Cắt ngang thớ thịt thành lát dày 1 cm, rắc muối hạt và tiêu xay, chan sốt.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Mặt cắt <b>hồng đều từ rìa vào giữa</b>, không có vòng xám dày. Vòng xám dày nghĩa là lửa quá nhỏ và rán quá lâu."
+    }
+   ],
+   "tips": [
+    "Ướp muối <b>40 phút trước</b> hoặc <b>ngay trước khi rán</b>. Ướp 5–20 phút trước là lúc muối đã rút nước ra mặt mà chưa kịp ngấm lại — mặt ướt, không xém được."
+   ],
+   "serveWith": "Sốt chảo đã có sẵn. Ăn với khoai nghiền, gratin hoặc rau xanh áp chảo. Chimichurri nếu muốn kiểu Nam Mỹ."
+  },
+  {
+   "id": "roast-beef",
+   "name": "Thịt bò bỏ lò (roast beef)",
+   "cat": "thit",
+   "role": "chinh",
+   "diff": 2,
+   "serves": 6,
+   "tags": [
+    "thịt bò",
+    "húng tây"
+   ],
+   "why": "Một khối thịt lớn thì không thể canh bằng thời gian — chỉ có nhiệt kế mới đúng. Đây là món dạy cách nướng ngược: nhiệt thấp trước, xém mặt sau.",
+   "ing": [
+    {
+     "n": "Thăn lưng bò (striploin) hoặc mông (topside)",
+     "q": 1500,
+     "u": "g",
+     "per": {
+      "n": 1500,
+      "l": "khối"
+     },
+     "note": "Buộc dây cho khối tròn đều — chỗ dày mỏng khác nhau thì chín không đều. Đừng dùng bắp hay gầu: nhiều gân, chỉ mềm khi hầm chứ không khi nướng tái.",
+     "r": "main"
+    },
+    {
+     "n": "Muối hạt",
+     "q": 20,
+     "u": "g",
+     "note": "Ướp khô trước 12–24 tiếng trong ngăn mát, để hở.",
+     "r": "season"
+    },
+    {
+     "n": "Hạt tiêu",
+     "q": 1,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Tỏi",
+     "q": 6,
+     "u": "tép",
+     "r": "season"
+    },
+    {
+     "n": "Húng tây + hương thảo",
+     "q": 6,
+     "u": "nhánh",
+     "r": "herb"
+    },
+    {
+     "n": "Dầu ăn",
+     "q": 2,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Mù tạt Dijon",
+     "q": 2,
+     "u": "thìa canh",
+     "note": "Phết mặt ngoài — giúp gia vị bám và tạo lớp vỏ.",
+     "r": "season"
+    },
+    {
+     "n": "Hành tây + cà rốt",
+     "q": 2,
+     "u": "củ",
+     "note": "Cắt khúc to, lót dưới khối thịt.",
+     "r": "veg"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Ướp muối khô qua đêm",
+     "d": "Xát muối hạt khắp khối thịt, đặt trên rack trong ngăn mát, <b>không đậy</b>, 12–24 tiếng.",
+     "m": 720,
+     "heat": "Ngăn mát",
+     "cue": "Mặt thịt <b>khô se lại và sẫm màu hơn</b>. Mặt khô là điều kiện để lớp vỏ xém đẹp ở bước cuối."
+    },
+    {
+     "t": "Ra nhiệt độ phòng",
+     "d": "Lấy ra trước 2 tiếng, thấm khô, phết mù tạt, rắc tiêu và thảo mộc băm.",
+     "m": 120,
+     "heat": "—",
+     "cue": "Lõi thịt <b>không còn lạnh buốt khi chạm</b>. Nướng thịt lạnh là ngoài chín trong sống."
+    },
+    {
+     "t": "Nướng nhiệt thấp",
+     "d": "Lót hành tây cà rốt xuống khay, đặt thịt lên rack, nướng ở lò thấp cho tới khi lõi đạt 48 °C.",
+     "m": 90,
+     "heat": "Lò 120 °C",
+     "cue": "Nhiệt kế cắm giữa khối báo <b>48 °C</b> cho medium rare. Thời gian chỉ để ước lượng — con số trên nhiệt kế mới là điều kiện dừng."
+    },
+    {
+     "t": "Nghỉ 20 phút",
+     "d": "Lấy ra, phủ hờ giấy bạc, nghỉ 20 phút. Bật lò lên nhiệt tối đa trong lúc đó.",
+     "m": 20,
+     "heat": "—",
+     "cue": "Nhiệt lõi <b>lên thêm 3–4 °C rồi bắt đầu hạ</b>."
+    },
+    {
+     "t": "Xém mặt bằng nhiệt cao",
+     "d": "Cho lại vào lò 250 °C (hoặc áp chảo gang) đúng 8 phút cho vỏ nâu giòn.",
+     "m": 8,
+     "heat": "Lò 250 °C",
+     "cue": "Vỏ ngoài <b>nâu sẫm, khô và giòn</b>. Lõi hầu như không tăng thêm nhiệt vì thời gian rất ngắn."
+    },
+    {
+     "t": "Cắt lát mỏng ngang thớ",
+     "d": "Cắt lát mỏng 5 mm, ngang thớ.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Mặt cắt <b>hồng đều gần như đến sát vỏ</b> — đó là kết quả của cách nướng ngược này."
+    }
+   ],
+   "tips": [
+    "Nướng thấp trước, xém sau (<em>reverse sear</em>) cho lõi hồng đều. Nướng nóng ngay từ đầu thì có một vòng xám dày quanh rìa.",
+    "Nước thịt và rau dưới khay: đổ vào chảo, thêm nước dùng và rượu, đun rút — thành sốt gravy."
+   ],
+   "serveWith": "Gratin dauphinois hoặc khoai nướng. Chimichurri hoặc sốt chảo. Mù tạt Dijon để riêng."
+  },
+  {
+   "id": "beef-wellington",
+   "name": "Beef Wellington",
+   "cat": "thit",
+   "role": "chinh",
+   "diff": 3,
+   "serves": 6,
+   "tags": [
+    "thịt bò",
+    "nấm",
+    "bột ngàn lớp"
+   ],
+   "why": "Món khó nhất trang này, và nổi tiếng chính vì cái khó đó: bọc một khối thịt ẩm trong bột ngàn lớp mà đáy bánh vẫn phải giòn. Toàn bộ công thức là một cuộc chiến chống độ ẩm.",
+   "ing": [
+    {
+     "n": "Thăn nội bò (fillet), khúc giữa",
+     "q": 900,
+     "u": "g",
+     "per": {
+      "n": 900,
+      "l": "khúc dày đều"
+     },
+     "note": "Khúc giữa để đường kính đều. Buộc dây cho tròn.",
+     "r": "main"
+    },
+    {
+     "n": "Nấm mỡ (hoặc nấm hỗn hợp)",
+     "q": 700,
+     "u": "g",
+     "note": "Băm thật nhỏ bằng máy — đây là phần duxelles.",
+     "r": "veg"
+    },
+    {
+     "n": "Hành tím",
+     "q": 2,
+     "u": "củ",
+     "r": "veg"
+    },
+    {
+     "n": "Bột puff pastry (bơ thật)",
+     "q": 500,
+     "u": "g",
+     "note": "Loại làm bằng bơ chứ không phải bơ thực vật — khác biệt rất rõ.",
+     "r": "main"
+    },
+    {
+     "n": "Thịt nguội Parma (prosciutto)",
+     "q": 12,
+     "u": "lát",
+     "note": "Lớp chống ẩm giữa thịt và bột.",
+     "r": "main"
+    },
+    {
+     "n": "Mù tạt Dijon",
+     "q": 3,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Bánh crêpe mỏng (tuỳ chọn)",
+     "q": 3,
+     "u": "cái",
+     "note": "Lớp chống ẩm thứ hai — mẹo nhà hàng, rất hiệu quả.",
+     "r": "main"
+    },
+    {
+     "n": "Rượu vang trắng",
+     "q": 100,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Húng tây",
+     "q": 4,
+     "u": "nhánh",
+     "r": "herb"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 2,
+     "u": "quả",
+     "note": "Quét mặt.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Áp chảo khối thịt",
+     "d": "Thấm khô, nêm muối, áp chảo thật nóng đủ bốn mặt, mỗi mặt 60 giây. Để nguội rồi phết mù tạt.",
+     "m": 8,
+     "heat": "Lửa to",
+     "cue": "Toàn bộ mặt ngoài <b>nâu sẫm đều</b>, lõi vẫn sống nguyên. Bước này chỉ tạo vị và màu, không phải để nấu chín."
+    },
+    {
+     "t": "Làm duxelles và sấy kiệt nước",
+     "d": "Băm nhuyễn nấm và hành tím, xào chảo rộng ở lửa vừa-to, đổ rượu, xào tiếp đến khi khô hoàn toàn.",
+     "m": 30,
+     "heat": "Lửa vừa-to",
+     "cue": "Duxelles <b>khô đến mức kéo thìa qua đáy chảo để lại rãnh không khép và không thấy một giọt nước</b>. Đây là bước quyết định đáy bánh có ướt hay không — còn ẩm là hỏng."
+    },
+    {
+     "t": "Cuốn lớp chống ẩm",
+     "d": "Trải màng bọc, xếp prosciutto (và crêpe nếu dùng) thành tấm, phết duxelles đều lên, đặt thịt vào, cuốn thật chặt thành khối trụ. Để ngăn mát 30 phút.",
+     "m": 40,
+     "heat": "Ngăn mát",
+     "cue": "Khối cuốn <b>chặt, tròn đều, không có túi khí</b>. Xoắn hai đầu màng bọc như gói kẹo để ép chặt."
+    },
+    {
+     "t": "Bọc bột và nghỉ lạnh",
+     "d": "Cán puff pastry dày 4 mm, gỡ màng bọc, đặt khối thịt vào, cuốn kín, miết mép, cắt bớt bột thừa. Bọc lại và để lạnh 30 phút.",
+     "m": 40,
+     "heat": "Ngăn mát",
+     "cue": "Bột <b>ôm khít, mép dán kín và khối lạnh cứng</b>. Bột ấm là lúc nướng sẽ tuột và bung."
+    },
+    {
+     "t": "Quét trứng, khía và nướng",
+     "d": "Quét lòng đỏ hai lượt (cách nhau 10 phút trong ngăn mát), khía vân bằng dao, rắc muối hạt. Nướng ở rãnh giữa lò nóng sẵn.",
+     "m": 40,
+     "heat": "Lò 200 °C",
+     "cue": "Vỏ <b>vàng nâu bóng và phồng</b>; nhiệt kế cắm vào lõi thịt báo <b>50–52 °C</b> cho medium rare. Đây là con số duy nhất đáng tin."
+    },
+    {
+     "t": "Nghỉ 15 phút",
+     "d": "Để nguyên trên rack 15 phút rồi mới cắt bằng dao răng cưa sắc.",
+     "m": 15,
+     "heat": "—",
+     "cue": "Cắt ra <b>lõi hồng đều, lớp duxelles đen viền quanh, đáy bột khô ráo</b>. Cắt sớm là nước thịt tràn ra làm ướt bột."
+    }
+   ],
+   "tips": [
+    "Duxelles <b>phải khô kiệt</b>. Nếu chỉ nhớ một điều về món này thì nhớ điều đó — 90% Wellington hỏng vì đáy ướt.",
+    "Lớp crêpe mỏng giữa prosciutto và bột là mẹo của bếp nhà hàng. Tốn 10 phút, đổi lấy đáy bánh giòn chắc chắn."
+   ],
+   "serveWith": "Sốt chảo vang đỏ. Ăn với khoai nghiền và rau xanh."
+  },
+  {
+   "id": "coq-au-vin",
+   "name": "Coq au vin",
+   "cat": "sup",
+   "role": "chinh",
+   "diff": 2,
+   "serves": 6,
+   "tags": [
+    "thịt gà",
+    "rượu vang",
+    "nấm"
+   ],
+   "why": "Gà hầm rượu vang đỏ — món cho thấy vì sao bếp Pháp hầm lâu: thịt và rượu đổi vị cho nhau, và cả hai đều ngon hơn.",
+   "ing": [
+    {
+     "n": "Gà ta chặt miếng (hoặc đùi gà)",
+     "q": 1600,
+     "u": "g",
+     "per": {
+      "n": 200,
+      "l": "miếng đùi"
+     },
+     "note": "Đùi và má đùi ngon hơn ức — ức khô khi hầm.",
+     "r": "main"
+    },
+    {
+     "n": "Rượu vang đỏ",
+     "q": 750,
+     "u": "ml",
+     "per": {
+      "n": 750,
+      "l": "chai"
+     },
+     "note": "Loại uống được. Burgundy hoặc bất kỳ vang đỏ khô nào.",
+     "r": "main"
+    },
+    {
+     "n": "Thịt xông khói (lardons)",
+     "q": 200,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Hành tây nhỏ (hoặc hành tím)",
+     "q": 250,
+     "u": "g",
+     "note": "Để nguyên củ.",
+     "r": "veg"
+    },
+    {
+     "n": "Nấm mỡ",
+     "q": 300,
+     "u": "g",
+     "note": "Bổ đôi, áp chảo riêng.",
+     "r": "veg"
+    },
+    {
+     "n": "Cà rốt",
+     "q": 2,
+     "u": "củ",
+     "r": "veg"
+    },
+    {
+     "n": "Tỏi",
+     "q": 5,
+     "u": "tép",
+     "r": "season"
+    },
+    {
+     "n": "Cà chua cô đặc",
+     "q": 2,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Bột mì",
+     "q": 30,
+     "u": "g",
+     "note": "Áo gà — vừa tạo vỏ vừa làm sánh nước hầm.",
+     "r": "main"
+    },
+    {
+     "n": "Nước dùng gà",
+     "q": 400,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Lá nguyệt quế + húng tây",
+     "q": 3,
+     "u": "lá",
+     "r": "herb"
+    },
+    {
+     "n": "Dầu ô liu",
+     "q": 2,
+     "u": "thìa canh",
+     "note": "Để áp chảo nấm và gà.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Ướp gà trong rượu qua đêm",
+     "d": "Ướp gà với rượu vang, tỏi đập, thảo mộc trong ngăn mát 12 tiếng. Vớt gà ra, <b>giữ lại rượu</b>.",
+     "m": 720,
+     "heat": "Ngăn mát",
+     "cue": "Thịt gà <b>chuyển màu tím sẫm</b>. Bỏ bước này thì món vẫn ngon nhưng nông hơn rõ rệt."
+    },
+    {
+     "t": "Rán thịt xông khói và gà",
+     "d": "Rán lardons cho ra mỡ, vớt ra. Thấm thật khô gà, áo bột, rán trong mỡ đó cho vàng đủ mặt.",
+     "m": 15,
+     "heat": "Lửa vừa-to",
+     "cue": "Da gà <b>vàng nâu và giòn</b>. Gà ướt là không vàng được — thấm khô là bắt buộc sau khi vớt khỏi rượu."
+    },
+    {
+     "t": "Xào rau nền",
+     "d": "Trong nồi đó, xào hành nhỏ và cà rốt đến xém cạnh, cho cà chua cô đặc, đảo 1 phút.",
+     "m": 8,
+     "heat": "Lửa vừa",
+     "cue": "Cà chua cô đặc <b>sẫm màu lại và mất mùi hăng</b>."
+    },
+    {
+     "t": "Hầm",
+     "d": "Trả gà và lardons về nồi, đổ rượu ướp và nước dùng, đun sôi rồi hạ liu riu, đậy hé vung.",
+     "m": 75,
+     "heat": "Liu riu",
+     "cue": "Thịt <b>tách khỏi xương khi gẩy nĩa</b> và nước hầm sẫm màu, sánh nhẹ. Sôi bùng là thịt bã và nước đục."
+    },
+    {
+     "t": "Áp chảo nấm riêng",
+     "d": "Chảo nóng, ít dầu, áp nấm cho vàng cạnh, nêm muối cuối, rồi trút vào nồi ở 10 phút cuối.",
+     "m": 8,
+     "heat": "Lửa to",
+     "cue": "Nấm <b>vàng nâu, đã bay hết nước</b>. Thả nấm sống vào nồi là nồi hầm loãng ra."
+    },
+    {
+     "t": "Chỉnh độ sánh",
+     "d": "Vớt gà ra, đun nước hầm ở lửa to cho rút bớt đến độ sánh mong muốn, nêm lại rồi chan lên.",
+     "m": 10,
+     "heat": "Lửa to",
+     "cue": "Nước hầm <b>bám mặt thìa thành một lớp</b>."
+    }
+   ],
+   "tips": [
+    "Món này ngon hơn vào ngày hôm sau. Nấu hôm trước, hâm lại hôm sau là cách làm đúng.",
+    "Rượu vang nấu ăn bán sẵn thường mặn và dở. Dùng chai vang rẻ nhưng uống được."
+   ],
+   "serveWith": "Tự nó đã có sốt. Khoai nghiền, mì trứng hoặc bánh mì để vét."
+  },
+  {
+   "id": "boeuf-bourguignon",
+   "name": "Bœuf bourguignon",
+   "cat": "sup",
+   "role": "chinh",
+   "diff": 2,
+   "serves": 6,
+   "tags": [
+    "thịt bò",
+    "rượu vang",
+    "cà rốt"
+   ],
+   "why": "Món hầm nổi tiếng nhất nước Pháp, và bài học quan trọng nhất của nó rất ngắn: <b>rán thịt thành nhiều mẻ</b>. Nhồi hết vào chảo một lượt là món này hỏng ngay từ phút thứ năm.",
+   "ing": [
+    {
+     "n": "Nạm bò (hoặc bắp, gầu)",
+     "q": 1500,
+     "u": "g",
+     "per": {
+      "n": 60,
+      "l": "khối bằng bao diêm"
+     },
+     "note": "Phần nhiều gân — càng hầm càng mềm. Thăn thì hỏng.",
+     "r": "main"
+    },
+    {
+     "n": "Rượu vang đỏ",
+     "q": 750,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Thịt xông khói (lardons)",
+     "q": 200,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Hành tây",
+     "q": 2,
+     "u": "củ",
+     "r": "veg"
+    },
+    {
+     "n": "Cà rốt",
+     "q": 4,
+     "u": "củ",
+     "note": "Cắt khúc dày.",
+     "r": "veg"
+    },
+    {
+     "n": "Hành nhỏ nguyên củ",
+     "q": 250,
+     "u": "g",
+     "r": "veg"
+    },
+    {
+     "n": "Nấm mỡ",
+     "q": 300,
+     "u": "g",
+     "r": "veg"
+    },
+    {
+     "n": "Bột mì",
+     "q": 40,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Cà chua cô đặc",
+     "q": 2,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Nước dùng bò",
+     "q": 500,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Tỏi + lá nguyệt quế + húng tây",
+     "q": 5,
+     "u": "tép",
+     "r": "herb"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Thấm khô và rán từng mẻ",
+     "d": "Cắt khối 4 cm, thấm thật khô, nêm muối. Rán trong nồi gang thật nóng, <b>mỗi mẻ một lớp không chồng lên nhau</b>.",
+     "m": 25,
+     "heat": "Lửa to",
+     "cue": "Mỗi khối <b>nâu sẫm ở các mặt và có tiếng xèo rõ suốt quá trình</b>. Nghe tiếng lụp bụp và thấy nước đọng ở đáy nghĩa là nồi quá chật — thịt đang luộc."
+    },
+    {
+     "t": "Rán lardons và xào rau",
+     "d": "Rán lardons, rồi xào hành tây và cà rốt đến xém cạnh.",
+     "m": 10,
+     "heat": "Lửa vừa-to",
+     "cue": "Rau <b>xém vàng ở mép</b>."
+    },
+    {
+     "t": "Áo bột và cà chua cô đặc",
+     "d": "Trả thịt về nồi, rắc bột mì, đảo 2 phút, cho cà chua cô đặc, đảo tiếp 1 phút.",
+     "m": 4,
+     "heat": "Lửa vừa",
+     "cue": "Bột <b>bám hết vào thịt và không còn màu trắng</b>. Bột sống là nước hầm có vị bột."
+    },
+    {
+     "t": "Đổ rượu, cạo đáy nồi",
+     "d": "Đổ rượu, đun sôi, dùng thìa gỗ cạo sạch mảng nâu dưới đáy.",
+     "m": 6,
+     "heat": "Lửa to",
+     "cue": "Đáy nồi <b>sạch, nước chuyển màu nâu đỏ sẫm</b>. Mảng nâu đó là phần lớn hương vị."
+    },
+    {
+     "t": "Hầm trong lò",
+     "d": "Đổ nước dùng ngập gần mặt thịt, thả thảo mộc, đậy vung, cho vào lò.",
+     "m": 165,
+     "heat": "Lò 150 °C",
+     "cue": "Thịt <b>xiên nĩa vào ngọt và tách sợi khi gẩy nhẹ, nhưng khối vẫn còn nguyên</b>. Hầm trong lò cho nhiệt đều hơn hầm trên bếp."
+    },
+    {
+     "t": "Xử lý hành và nấm riêng",
+     "d": "Áp chảo hành nhỏ và nấm riêng cho vàng, cho vào nồi ở 20 phút cuối.",
+     "m": 12,
+     "heat": "Lửa to",
+     "cue": "Hành và nấm <b>vàng cạnh, giữ nguyên hình</b>. Thả sống từ đầu là chúng tan mất."
+    },
+    {
+     "t": "Chỉnh sánh và nghỉ",
+     "d": "Nếu loãng: vớt thịt ra, đun nước hầm cho rút. Để nồi nghỉ 20 phút trước khi ăn.",
+     "m": 20,
+     "heat": "Lửa to",
+     "cue": "Nước hầm <b>bám mặt thìa</b> và nếm thấy tròn vị chứ không gắt rượu."
+    }
+   ],
+   "tips": [
+    "Rán từng mẻ. Đây là chỗ khác biệt lớn nhất giữa một nồi bourguignon và một nồi bò kho nhạt.",
+    "Hầm trong lò 150 °C thay vì trên bếp: nhiệt bao quanh đều, không bị cháy đáy, không phải khuấy."
+   ],
+   "serveWith": "Tự nó đã có sốt. Khoai nghiền, mì trứng hoặc bánh mì."
+  },
+  {
+   "id": "ca-hoi-ap-chao",
+   "name": "Cá hồi áp chảo da giòn",
+   "cat": "ca",
+   "role": "chinh",
+   "diff": 1,
+   "serves": 4,
+   "tags": [
+    "cá hồi",
+    "chanh"
+   ],
+   "why": "Da giòn không phải may rủi. Nó là kết quả của ba điều kiện đơn giản: da khô, chảo nóng, và không động vào miếng cá.",
+   "ing": [
+    {
+     "n": "Phi lê cá hồi còn da",
+     "q": 600,
+     "u": "g",
+     "per": {
+      "n": 150,
+      "l": "miếng một người"
+     },
+     "note": "Dày đều, còn nguyên da.",
+     "r": "main"
+    },
+    {
+     "n": "Muối hạt",
+     "q": 6,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Dầu chịu nhiệt",
+     "q": 2,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 30,
+     "u": "g",
+     "note": "Cho ở cuối.",
+     "r": "main"
+    },
+    {
+     "n": "Chanh vàng",
+     "q": 1,
+     "u": "quả",
+     "r": "veg"
+    },
+    {
+     "n": "Húng tây",
+     "q": 3,
+     "u": "nhánh",
+     "r": "herb"
+    },
+    {
+     "n": "Tỏi",
+     "q": 2,
+     "u": "tép",
+     "note": "Đập dập, để nguyên vỏ.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Làm khô da",
+     "d": "Thấm da bằng giấy, rắc muối lên <b>mặt da</b>, để 10 phút rồi thấm lại lần nữa.",
+     "m": 12,
+     "heat": "—",
+     "cue": "Mặt da <b>khô ráo hoàn toàn, sờ nhám tay</b>. Da ẩm thì không bao giờ giòn — đây là điều kiện số một."
+    },
+    {
+     "t": "Vào chảo bằng mặt da",
+     "d": "Chảo nóng vừa-to với dầu, đặt cá <b>da xuống</b>, dùng spatula ấn nhẹ 20 giây cho da phẳng.",
+     "m": 1,
+     "heat": "Lửa vừa-to",
+     "cue": "Nghe tiếng xèo <b>đều và liên tục</b>. Ấn 20 giây để da không cong lên và bị cháy loang lổ."
+    },
+    {
+     "t": "Rán mặt da 70% thời gian",
+     "d": "Để yên, <b>không di chuyển</b>, rán mặt da khoảng 4–5 phút.",
+     "m": 5,
+     "heat": "Lửa vừa-to",
+     "cue": "Nhìn ngang miếng cá: <b>màu đục dâng từ dưới lên khoảng 3/4 chiều dày</b>, và da tự tách khỏi chảo khi lắc nhẹ."
+    },
+    {
+     "t": "Lật, cho bơ và rưới",
+     "d": "Lật, hạ lửa, cho bơ, tỏi, húng tây, rưới bơ lên mặt cá 60–90 giây.",
+     "m": 2,
+     "heat": "Lửa nhỏ",
+     "cue": "Lõi cá <b>vừa chuyển đục, gẩy nĩa thấy tách thành lát nhưng còn hơi trong ở chính giữa</b>. Đục hết là đã khô."
+    },
+    {
+     "t": "Vắt chanh và bưng ra ngay",
+     "d": "Tắt bếp, vắt chanh, bày cá <b>da hướng lên</b>.",
+     "m": 1,
+     "heat": "—",
+     "cue": "Đặt da xuống đĩa là hơi nước làm mềm da trong 30 giây — đặt da hướng lên."
+    }
+   ],
+   "tips": [
+    "Rán 70–80% thời gian ở mặt da. Cá chín gần hết từ dưới lên, mặt kia chỉ cần một chút.",
+    "Cá là món hỏng vì nấu quá. Rút ra sớm hơn bạn nghĩ một chút — nó chín tiếp trên đĩa."
+   ],
+   "serveWith": "Sốt hollandaise hoặc bơ chanh. Ăn với rau xanh áp chảo hoặc salad."
+  },
+  {
+   "id": "shakshuka",
+   "name": "Shakshuka",
+   "cat": "trung",
+   "role": "nhanh",
+   "diff": 1,
+   "serves": 4,
+   "tags": [
+    "trứng",
+    "cà chua",
+    "ớt chuông"
+   ],
+   "why": "Một chảo, 30 phút, và một bữa hoàn chỉnh. Bài học duy nhất: sốt phải đủ đặc trước khi đập trứng vào.",
+   "ing": [
+    {
+     "n": "Cà chua hộp nguyên quả",
+     "q": 800,
+     "u": "g",
+     "per": {
+      "n": 400,
+      "l": "hộp"
+     },
+     "note": "Bóp nát bằng tay.",
+     "r": "veg"
+    },
+    {
+     "n": "Trứng gà",
+     "q": 6,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Ớt chuông đỏ",
+     "q": 2,
+     "u": "quả",
+     "note": "Thái sợi.",
+     "r": "veg"
+    },
+    {
+     "n": "Hành tây",
+     "q": 1,
+     "u": "củ",
+     "r": "veg"
+    },
+    {
+     "n": "Tỏi",
+     "q": 4,
+     "u": "tép",
+     "r": "season"
+    },
+    {
+     "n": "Thì là Ai Cập (cumin)",
+     "q": 2,
+     "u": "thìa cà phê",
+     "note": "Rang chảo khô 30 giây trước khi dùng.",
+     "r": "season"
+    },
+    {
+     "n": "Ớt bột paprika",
+     "q": 1,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Feta",
+     "q": 100,
+     "u": "g",
+     "note": "Vụn lên mặt lúc cuối.",
+     "r": "main"
+    },
+    {
+     "n": "Rau mùi (hoặc mùi tây)",
+     "q": 1,
+     "u": "nắm",
+     "r": "herb"
+    },
+    {
+     "n": "Bánh mì",
+     "q": 1,
+     "u": "ổ",
+     "note": "Để vét chảo.",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Rang gia vị khô",
+     "d": "Rang cumin trên chảo khô đến khi dậy mùi rồi mới cho dầu.",
+     "m": 2,
+     "heat": "Lửa vừa",
+     "cue": "Bếp <b>dậy mùi cumin ấm</b>. Rang khô làm mùi mạnh gấp đôi so với thả thẳng vào dầu."
+    },
+    {
+     "t": "Xào hành và ớt chuông",
+     "d": "Cho dầu, xào hành tây và ớt chuông đến mềm ngọt, rồi cho tỏi và paprika.",
+     "m": 12,
+     "heat": "Lửa vừa",
+     "cue": "Ớt chuông <b>mềm hẳn và ngọt khi nếm</b>. Vội ở bước này là sốt có vị hăng."
+    },
+    {
+     "t": "Rim sốt cà chua đến đặc",
+     "d": "Cho cà chua bóp nát, nêm muối, rim không đậy vung.",
+     "m": 18,
+     "heat": "Lửa nhỏ",
+     "cue": "Kéo thìa qua đáy chảo để lại <b>một rãnh khép rất chậm</b>, dầu tách nổi vệt cam. Sốt loãng thì trứng chìm và chín không đều."
+    },
+    {
+     "t": "Tạo hốc và đập trứng",
+     "d": "Dùng thìa tạo 6 hốc trong sốt, đập từng quả trứng vào hốc, rắc muối tiêu lên lòng đỏ.",
+     "m": 3,
+     "heat": "Lửa nhỏ",
+     "cue": "Trứng <b>nằm gọn trong hốc, lòng trắng không loang ra khắp chảo</b>."
+    },
+    {
+     "t": "Đậy vung, hấp trứng",
+     "d": "Đậy vung, để lửa nhỏ.",
+     "m": 7,
+     "heat": "Lửa nhỏ",
+     "cue": "Lòng trắng <b>đục hoàn toàn, lòng đỏ còn rung khi lắc chảo</b>. Đó là điểm dừng — thêm 2 phút là lòng đỏ chín cứng."
+    },
+    {
+     "t": "Rắc feta và rau",
+     "d": "Tắt bếp, vụn feta và rau mùi lên mặt, rưới dầu ô liu.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Bưng cả chảo ra bàn với bánh mì."
+    }
+   ],
+   "tips": [
+    "Sốt phải đặc trước khi cho trứng. Đây là chỗ hỏng duy nhất của món.",
+    "Thêm 100 g xúc xích chorizo xào lúc đầu nếu muốn bản đậm hơn."
+   ],
+   "serveWith": "Tự nó đã có sốt. Bánh mì nướng hoặc bánh pita."
+  },
+  {
+   "id": "rau-nuong-dth",
+   "name": "Rau củ nướng kiểu Địa Trung Hải",
+   "cat": "rau",
+   "role": "phu",
+   "diff": 1,
+   "serves": 4,
+   "tags": [
+    "cà tím",
+    "bí ngòi",
+    "ớt chuông"
+   ],
+   "why": "Món phụ dễ nhất và bị làm sai nhiều nhất: rau xếp chồng lên nhau trong khay thì nó hấp, không nướng.",
+   "ing": [
+    {
+     "n": "Cà tím",
+     "q": 300,
+     "u": "g",
+     "r": "veg"
+    },
+    {
+     "n": "Bí ngòi",
+     "q": 300,
+     "u": "g",
+     "r": "veg"
+    },
+    {
+     "n": "Ớt chuông đỏ + vàng",
+     "q": 2,
+     "u": "quả",
+     "r": "veg"
+    },
+    {
+     "n": "Hành tây đỏ",
+     "q": 1,
+     "u": "củ",
+     "r": "veg"
+    },
+    {
+     "n": "Cà chua bi",
+     "q": 250,
+     "u": "g",
+     "note": "Cho vào ở 10 phút cuối — chín nhanh hơn hẳn.",
+     "r": "veg"
+    },
+    {
+     "n": "Tỏi",
+     "q": 1,
+     "u": "củ",
+     "note": "Cắt ngang củ, nướng nguyên — múc ruột ra ăn.",
+     "r": "season"
+    },
+    {
+     "n": "Dầu ô liu",
+     "q": 60,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Hương thảo + húng tây",
+     "q": 4,
+     "u": "nhánh",
+     "r": "herb"
+    },
+    {
+     "n": "Giấm balsamic",
+     "q": 2,
+     "u": "thìa canh",
+     "note": "Rưới sau khi ra lò.",
+     "r": "season"
+    },
+    {
+     "n": "Feta (tuỳ chọn)",
+     "q": 100,
+     "u": "g",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Cắt đều cỡ",
+     "d": "Cắt tất cả thành khối 3 cm — cùng cỡ để chín cùng lúc.",
+     "m": 10,
+     "heat": "—",
+     "cue": "Các miếng <b>xấp xỉ bằng nhau</b>. Miếng to nhỏ lẫn lộn là có miếng cháy có miếng sống."
+    },
+    {
+     "t": "Xóc dầu và trải một lớp",
+     "d": "Xóc rau với dầu, muối, thảo mộc. Trải ra <b>hai khay</b> nếu cần, mỗi khay một lớp không chồng.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Nhìn xuống khay thấy <b>khoảng trống giữa các miếng</b>. Chồng lên nhau là rau hấp và nhũn."
+    },
+    {
+     "t": "Nướng nhiệt cao",
+     "d": "Nướng ở rãnh giữa, đảo một lần ở giữa thời gian.",
+     "m": 30,
+     "heat": "Lò 220 °C",
+     "cue": "Rau <b>xém nâu ở cạnh và co lại</b>, hành tây trong. Vàng đều mà không có chỗ xém nghĩa là nhiệt thấp quá."
+    },
+    {
+     "t": "Cho cà chua bi",
+     "d": "Cho cà chua bi vào, nướng tiếp.",
+     "m": 10,
+     "heat": "Lò 220 °C",
+     "cue": "Cà chua <b>nứt vỏ và ứa nước</b>."
+    },
+    {
+     "t": "Rưới balsamic và feta",
+     "d": "Ra lò, rưới giấm balsamic, vụn feta lên khi rau còn nóng.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Feta <b>mềm ra vì hơi nóng nhưng vẫn giữ hình</b>."
+    }
+   ],
+   "tips": [
+    "Một lớp, không chồng. Thà dùng hai khay còn hơn một khay chật.",
+    "Rau nướng nguội ăn kèm salad, kẹp bánh mì, hoặc trộn với mì đều rất hợp."
+   ],
+   "serveWith": "Món phụ cho mọi món thịt và cá. Rưới thêm chimichurri nếu muốn đậm hơn."
+  },
+  {
+   "id": "caesar-salad",
+   "name": "Caesar salad",
+   "cat": "salad",
+   "role": "khai",
+   "diff": 2,
+   "serves": 4,
+   "tags": [
+    "xà lách",
+    "parmesan",
+    "cá cơm"
+   ],
+   "why": "Salad nổi tiếng nhất thế giới và cũng bị làm sai nhiều nhất — bản đúng không có gà, không có kem, và có cá cơm.",
+   "ing": [
+    {
+     "n": "Xà lách romaine",
+     "q": 2,
+     "u": "cây",
+     "per": {
+      "n": 300,
+      "l": "cây"
+     },
+     "note": "Rửa, vẩy thật khô, xé miếng to. Lá ướt thì dressing không bám.",
+     "r": "veg"
+    },
+    {
+     "n": "Bánh mì cũ",
+     "q": 200,
+     "u": "g",
+     "note": "Cắt khối 2 cm để làm crouton.",
+     "r": "main"
+    },
+    {
+     "n": "Parmigiano Reggiano",
+     "q": 80,
+     "u": "g",
+     "note": "Một nửa vào dressing, một nửa bào lát mỏng rắc lên.",
+     "r": "main"
+    },
+    {
+     "n": "Phi lê cá cơm ngâm dầu (anchovy)",
+     "q": 6,
+     "u": "con",
+     "note": "Đây là nguyên liệu bắt buộc. Nó không làm salad tanh — nó làm salad đậm.",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 2,
+     "u": "quả",
+     "note": "Dressing này <b>không nấu</b>: dùng trứng tiệt trùng (pasteurized) hoặc trứng thật tươi. Chần 1 phút không diệt được khuẩn — nó chỉ làm lòng đỏ đặc hơn.",
+     "r": "main"
+    },
+    {
+     "n": "Tỏi",
+     "q": 2,
+     "u": "tép",
+     "r": "season"
+    },
+    {
+     "n": "Mù tạt Dijon",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Nước cốt chanh",
+     "q": 2,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Dầu ô liu",
+     "q": 120,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Sốt Worcestershire",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Làm crouton",
+     "d": "Xóc khối bánh mì với dầu ô liu, muối và một tép tỏi đập, nướng lò cho vàng giòn.",
+     "m": 15,
+     "heat": "Lò 190 °C",
+     "cue": "Crouton <b>vàng nâu, cắn nghe giòn tới lõi</b>. Còn mềm ở giữa là nó sẽ ỉu ngay khi gặp dressing."
+    },
+    {
+     "t": "Giã nền dressing",
+     "d": "Giã cá cơm với tỏi và một nhúm muối trong cối thành hỗn hợp nhuyễn.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>nhuyễn thành nhão, không còn mảnh cá</b>. Còn mảnh là ăn sẽ gặp miếng cá mặn."
+    },
+    {
+     "t": "Đánh nhũ tương",
+     "d": "Cho lòng đỏ, mù tạt, chanh, Worcestershire, đánh đều rồi rót dầu ô liu thành <b>dòng thật nhỏ</b> vừa rót vừa đánh.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Dressing <b>đặc lại như mayonnaise loãng, bám mặt thìa</b>. Rót dầu nhanh là nhũ tương vỡ và tách dầu."
+    },
+    {
+     "t": "Cho parmesan và nếm",
+     "d": "Trộn một nửa parmesan bào mịn vào dressing, nếm rồi chỉnh chanh và tiêu. Thường không cần muối.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Nếm thấy <b>mặn – chua – đậm cùng lúc</b>. Muốn loãng hơn thì thêm một thìa nước."
+    },
+    {
+     "t": "Trộn ngay trước khi ăn",
+     "d": "Cho xà lách vào âu to, rưới dressing, trộn bằng tay cho áo đều, rồi mới cho crouton và parmesan lát.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Mỗi lá <b>áo một lớp dressing mỏng bóng</b>, đáy âu không đọng vũng. Trộn sớm 10 phút là xà lách ỉu."
+    }
+   ],
+   "tips": [
+    "Cá cơm là bắt buộc, và nó là lý do món này ngon. Bỏ cá cơm thì bạn có một bát xà lách trộn mayonnaise.",
+    "Lá xà lách phải <b>thật khô</b>. Vẩy rau hoặc lau từng lá — đây là quy tắc chung cho mọi loại salad.",
+    "Dressing có <b>lòng đỏ sống</b>. Thai phụ, trẻ nhỏ, người già và người suy giảm miễn dịch thì dùng trứng tiệt trùng, hoặc trộn mayonnaise bán sẵn với cá cơm giã và parmesan."
+   ],
+   "serveWith": "Dressing đã nằm trong món. Ăn như khai vị, hoặc thêm gà nướng thành một bữa."
+  },
+  {
+   "id": "greek-salad",
+   "name": "Salad Hy Lạp (horiatiki)",
+   "cat": "salad",
+   "role": "khai",
+   "diff": 1,
+   "serves": 4,
+   "tags": [
+    "cà chua",
+    "feta",
+    "dưa chuột"
+   ],
+   "why": "Không có xà lách, không có dressing pha sẵn — chỉ có rau củ, một khối feta nguyên và dầu ô liu. Càng ít can thiệp càng đúng.",
+   "ing": [
+    {
+     "n": "Cà chua chín",
+     "q": 500,
+     "u": "g",
+     "note": "Bổ múi to, không thái nhỏ.",
+     "r": "veg"
+    },
+    {
+     "n": "Dưa chuột",
+     "q": 300,
+     "u": "g",
+     "note": "Gọt vỏ sọc, cắt khúc dày.",
+     "r": "veg"
+    },
+    {
+     "n": "Hành tây đỏ",
+     "q": 0.5,
+     "u": "củ",
+     "note": "Thái lát mỏng, ngâm nước lạnh 10 phút cho bớt hăng.",
+     "r": "veg"
+    },
+    {
+     "n": "Ớt chuông xanh",
+     "q": 1,
+     "u": "quả",
+     "r": "veg"
+    },
+    {
+     "n": "Feta",
+     "q": 200,
+     "u": "g",
+     "note": "<b>Để nguyên khối</b> đặt lên trên, không vụn nhỏ — đó là cách bày đúng.",
+     "r": "main"
+    },
+    {
+     "n": "Ô liu Kalamata",
+     "q": 100,
+     "u": "g",
+     "r": "veg"
+    },
+    {
+     "n": "Dầu ô liu extra virgin",
+     "q": 60,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Lá oregano khô",
+     "q": 1,
+     "u": "thìa cà phê",
+     "note": "Oregano khô thơm hơn tươi ở món này.",
+     "r": "herb"
+    },
+    {
+     "n": "Giấm rượu vang đỏ",
+     "q": 1,
+     "u": "thìa canh",
+     "note": "Tuỳ chọn — bản Hy Lạp thuần chỉ có dầu.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Ngâm hành cho bớt hăng",
+     "d": "Thái lát mỏng hành tây đỏ, ngâm nước lạnh 10 phút, vớt ra để ráo.",
+     "m": 11,
+     "heat": "—",
+     "cue": "Hành <b>giòn hơn và mùi hăng dịu hẳn</b>. Đây là mẹo dùng được cho mọi salad có hành sống."
+    },
+    {
+     "t": "Cắt to bản",
+     "d": "Cà chua bổ múi, dưa chuột cắt khúc dày, ớt chuông thái vòng.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Miếng <b>to, thô, khác nhau</b> — salad Hy Lạp cố ý cắt to để mỗi miếng cắn có nhiều thứ."
+    },
+    {
+     "t": "Nêm rau trước",
+     "d": "Cho rau vào âu, rắc muối và oregano, xóc nhẹ, để 5 phút.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Cà chua <b>bắt đầu ứa nước ngọt</b> — thứ nước đó trộn với dầu chính là dressing."
+    },
+    {
+     "t": "Bày và đặt feta nguyên khối",
+     "d": "Trút ra đĩa, rải ô liu, đặt khối feta lên trên, rưới dầu ô liu và rắc oregano lên khối feta.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Khối feta <b>nằm nguyên trên mặt</b>. Người ăn tự cắt — đó là cách bày ở Hy Lạp."
+    }
+   ],
+   "tips": [
+    "Không cho xà lách. \"Horiatiki\" nghĩa là salad nhà quê, và ở quê thì không ai trồng xà lách để trộn.",
+    "Feta ngâm nước muối ngon hơn hẳn loại khô đóng gói. Nếu quá mặn thì rửa qua nước lạnh."
+   ],
+   "serveWith": "Dầu ô liu là dressing rồi. Bánh mì để vét nước cà chua dưới đáy đĩa."
+  },
+  {
+   "id": "mac-and-cheese",
+   "name": "Mac and cheese bỏ lò",
+   "cat": "pasta",
+   "role": "chinh",
+   "diff": 1,
+   "serves": 6,
+   "tags": [
+    "cheddar",
+    "gruyère",
+    "sữa"
+   ],
+   "why": "Béchamel + phô mai = sốt Mornay, và đây là ví dụ rõ nhất về \"sốt mẹ đẻ ra sốt con\". Chỗ hỏng duy nhất: phô mai gặp lửa to sẽ tách dầu.",
+   "ing": [
+    {
+     "n": "Macaroni (hoặc penne)",
+     "q": 500,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Sữa tươi",
+     "q": 800,
+     "u": "ml",
+     "note": "Hâm ấm trước — sữa lạnh đổ vào roux là vón cục.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 70,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì",
+     "q": 70,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Cheddar già bào",
+     "q": 300,
+     "u": "g",
+     "note": "Tự bào. Phô mai bào sẵn có bột chống dính làm sốt lợn cợn.",
+     "r": "main"
+    },
+    {
+     "n": "Gruyère bào",
+     "q": 150,
+     "u": "g",
+     "note": "Đây là thứ làm sốt mượt và không tách dầu.",
+     "r": "main"
+    },
+    {
+     "n": "Mù tạt bột (hoặc Dijon)",
+     "q": 1,
+     "u": "thìa cà phê",
+     "note": "Không làm món cay — nó làm vị phô mai bật lên.",
+     "r": "season"
+    },
+    {
+     "n": "Nhục đậu khấu",
+     "q": 1,
+     "u": "nhúm",
+     "r": "season"
+    },
+    {
+     "n": "Vụn bánh mì (panko)",
+     "q": 80,
+     "u": "g",
+     "note": "Trộn với 20 g bơ chảy để rắc mặt.",
+     "r": "main"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Luộc mì non",
+     "d": "Luộc mì ít hơn thời gian trên gói 3 phút — nó sẽ chín nốt trong lò.",
+     "m": 8,
+     "heat": "Lửa to",
+     "cue": "Lõi mì <b>còn cứng rõ</b>. Luộc đủ chín thì sau khi nướng mì sẽ nhũn."
+    },
+    {
+     "t": "Làm roux",
+     "d": "Đun chảy bơ, cho bột mì, khuấy liên tục ở lửa nhỏ.",
+     "m": 4,
+     "heat": "Lửa nhỏ",
+     "cue": "Hỗn hợp <b>sủi đều và dậy mùi bánh nướng</b> — khoảng 2 phút."
+    },
+    {
+     "t": "Làm béchamel",
+     "d": "Đổ sữa ấm từng ít một, khuấy tan hẳn rồi mới đổ tiếp. Nêm muối, mù tạt, nhục đậu khấu.",
+     "m": 10,
+     "heat": "Lửa vừa",
+     "cue": "Sốt <b>bám mặt thìa thành một lớp, kéo ngón tay để lại rãnh</b>."
+    },
+    {
+     "t": "Cho phô mai ngoài bếp",
+     "d": "<b>Tắt bếp</b>, đợi 1 phút rồi cho phô mai bào vào từng nắm, khuấy tan hết mới cho tiếp.",
+     "m": 5,
+     "heat": "Tắt bếp",
+     "cue": "Sốt <b>mượt, bóng, không thấy váng dầu vàng nổi lên</b>. Váng dầu nghĩa là phô mai đã tách — cho phô mai khi nồi còn sôi là nguyên nhân."
+    },
+    {
+     "t": "Trộn và vào khay",
+     "d": "Trộn mì với sốt, trút vào khay nướng, rắc panko trộn bơ lên mặt.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Sốt <b>ngập mì và hơi lỏng hơn bạn nghĩ là đúng</b> — mì còn hút nước trong lò."
+    },
+    {
+     "t": "Nướng",
+     "d": "Nướng ở rãnh giữa cho tới khi mặt vàng và mép sủi.",
+     "m": 25,
+     "heat": "Lò 190 °C",
+     "cue": "Mặt <b>vàng nâu giòn, mép khay sủi lăn tăn</b>."
+    }
+   ],
+   "tips": [
+    "Phô mai vào <b>sau khi tắt bếp</b>. Đây là quy tắc cho mọi sốt phô mai, kể cả cacio e pepe.",
+    "Tự bào phô mai. Loại bào sẵn phủ bột chống dính, và bột đó làm sốt lợn cợn."
+   ],
+   "serveWith": "Tự nó đã có sốt. Salad xanh chua để cắt béo."
+  },
+  {
+   "id": "vinaigrette",
+   "name": "Vinaigrette",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 1,
+   "serves": 6,
+   "tags": [
+    "dầu ô liu",
+    "giấm"
+   ],
+   "why": "Một tỉ lệ thay cho cả kệ dressing bán sẵn: 3 dầu – 1 giấm. Đổi loại giấm hoặc thêm một thứ là ra một dressing khác.",
+   "ing": [
+    {
+     "n": "Dầu ô liu extra virgin",
+     "q": 90,
+     "u": "ml",
+     "per": {
+      "n": 15,
+      "l": "thìa canh"
+     },
+     "r": "main"
+    },
+    {
+     "n": "Giấm (rượu vang đỏ, balsamic, hoặc nước cốt chanh)",
+     "q": 30,
+     "u": "ml",
+     "note": "Tỉ lệ gốc 3 : 1. Giấm mạnh thì hạ xuống 4 : 1.",
+     "r": "main"
+    },
+    {
+     "n": "Mù tạt Dijon",
+     "q": 1,
+     "u": "thìa cà phê",
+     "note": "Không phải để cay — nó là chất nhũ hoá giữ dầu và giấm không tách.",
+     "r": "season"
+    },
+    {
+     "n": "Hành tím",
+     "q": 1,
+     "u": "củ",
+     "note": "Băm thật nhỏ, ngâm trong giấm 5 phút trước.",
+     "r": "veg"
+    },
+    {
+     "n": "Mật ong",
+     "q": 1,
+     "u": "thìa cà phê",
+     "note": "Tuỳ chọn, cân lại vị chua.",
+     "r": "season"
+    },
+    {
+     "n": "Muối + tiêu",
+     "q": 3,
+     "u": "g",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Ngâm hành trong giấm",
+     "d": "Băm hành tím thật nhỏ, ngâm trong giấm với muối 5 phút.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Hành <b>ngả hồng nhạt và bớt hăng</b>. Muối phải tan trước khi cho dầu — trong dầu thì muối không tan."
+    },
+    {
+     "t": "Cho mù tạt và mật ong",
+     "d": "Khuấy mù tạt và mật ong vào giấm cho đều.",
+     "m": 1,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>đục và sánh nhẹ</b>."
+    },
+    {
+     "t": "Rót dầu thành dòng nhỏ",
+     "d": "Vừa đánh vừa rót dầu thành dòng thật nhỏ. Hoặc cho tất cả vào lọ và lắc mạnh 30 giây.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Dressing <b>đục đều, sánh, không thấy lớp dầu tách riêng</b>. Tách lớp nghĩa là rót dầu quá nhanh — lắc lại là được."
+    }
+   ],
+   "tips": [
+    "Nếm bằng cách <b>nhúng một lá xà lách</b>, đừng nếm bằng thìa. Nếm bằng thìa thì lúc nào cũng thấy quá chua.",
+    "Để lọ trong ngăn mát 1 tuần. Dầu ô liu sẽ đông lại — để ra ngoài 15 phút rồi lắc."
+   ],
+   "serveWith": "Mọi loại salad xanh, rau nướng, măng tây luộc, cá áp chảo."
+  },
+  {
+   "id": "pesto",
+   "name": "Pesto alla genovese",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 1,
+   "serves": 6,
+   "tags": [
+    "húng quế",
+    "parmesan",
+    "thông"
+   ],
+   "why": "Sốt không nấu. Chỗ hỏng duy nhất là nhiệt: máy xay làm nóng lá húng quế và pesto chuyển màu xanh rêu, đắng.",
+   "ing": [
+    {
+     "n": "Húng quế tươi (basil)",
+     "q": 80,
+     "u": "g",
+     "per": {
+      "n": 40,
+      "l": "bó lớn"
+     },
+     "note": "Chỉ lấy lá, bỏ cọng. Rửa và <b>lau thật khô</b>.",
+     "r": "herb"
+    },
+    {
+     "n": "Hạt thông (pine nuts)",
+     "q": 40,
+     "u": "g",
+     "note": "Rang sơ. Thay bằng hạt điều hoặc óc chó cũng được.",
+     "r": "main"
+    },
+    {
+     "n": "Parmigiano Reggiano",
+     "q": 60,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Pecorino",
+     "q": 20,
+     "u": "g",
+     "note": "Bỏ được, nhưng nó là thứ làm pesto có chiều sâu.",
+     "r": "main"
+    },
+    {
+     "n": "Tỏi",
+     "q": 1,
+     "u": "tép",
+     "note": "Một tép thôi — pesto không phải món tỏi.",
+     "r": "season"
+    },
+    {
+     "n": "Dầu ô liu extra virgin",
+     "q": 120,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Muối biển",
+     "q": 3,
+     "u": "g",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Rang hạt thông",
+     "d": "Rang chảo khô ở lửa nhỏ, đảo liên tục.",
+     "m": 4,
+     "heat": "Lửa nhỏ",
+     "cue": "Hạt <b>vàng nhạt và dậy mùi</b>. Hạt thông cháy rất nhanh — đứng cạnh chảo."
+    },
+    {
+     "t": "Giã tỏi, muối, hạt",
+     "d": "Giã tỏi với muối trong cối trước, rồi cho hạt thông giã tiếp.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>nhuyễn thành bột nhão</b>."
+    },
+    {
+     "t": "Giã lá húng quế",
+     "d": "Cho lá vào từng nắm, <b>giã xoay theo thành cối</b> chứ đừng nện.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Lá <b>nát ra và tứa nước xanh đậm, vẫn còn màu xanh tươi</b>. Chuyển xanh rêu nghĩa là đã nóng và bị oxy hoá."
+    },
+    {
+     "t": "Trộn phô mai và dầu",
+     "d": "Trộn phô mai bào, rồi rưới dầu ô liu vừa rưới vừa đảo.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Pesto <b>sánh, xanh sáng, dầu quyện chứ không nổi thành lớp</b>."
+    }
+   ],
+   "tips": [
+    "Dùng máy xay thì <b>ướp lạnh cối xay và lá trước</b>, và xay nhấp nhả từng nhịp ngắn. Nhiệt là kẻ thù duy nhất của pesto.",
+    "Bảo quản: đổ một lớp dầu ô liu phủ kín mặt, để ngăn mát 1 tuần. Không có lớp dầu là mặt pesto thâm đen sau một ngày."
+   ],
+   "serveWith": "Mì (trộn với chút nước mì), khoai tây luộc, cá áp chảo, bánh mì nướng, salad cà chua."
+  },
+  {
+   "id": "sot-pomodoro",
+   "name": "Sốt cà chua Ý (pomodoro)",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 1,
+   "serves": 6,
+   "tags": [
+    "cà chua",
+    "húng quế",
+    "tỏi"
+   ],
+   "why": "Một trong năm sốt mẹ, và là sốt có tỉ lệ công sức trên kết quả tốt nhất: bốn nguyên liệu, 40 phút hầu như không cần đứng bếp.",
+   "ing": [
+    {
+     "n": "Cà chua hộp nguyên quả (San Marzano)",
+     "q": 800,
+     "u": "g",
+     "per": {
+      "n": 400,
+      "l": "hộp"
+     },
+     "note": "Bóp nát bằng tay. Cà chua hộp Ý ổn định hơn cà chua tươi ngoài mùa.",
+     "r": "veg"
+    },
+    {
+     "n": "Tỏi",
+     "q": 4,
+     "u": "tép",
+     "note": "Đập dập để nguyên tép — vớt ra ở cuối.",
+     "r": "season"
+    },
+    {
+     "n": "Dầu ô liu extra virgin",
+     "q": 60,
+     "u": "ml",
+     "r": "season"
+    },
+    {
+     "n": "Húng quế tươi",
+     "q": 1,
+     "u": "nắm",
+     "note": "Cả cọng, thả nguyên vào nồi rồi vớt ra ở cuối.",
+     "r": "herb"
+    },
+    {
+     "n": "Muối",
+     "q": 5,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Đường",
+     "q": 1,
+     "u": "thìa cà phê",
+     "note": "Chỉ khi cà chua chua gắt. Nếm trước rồi mới quyết.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Phi tỏi từ chảo nguội",
+     "d": "Cho dầu và tỏi đập vào nồi nguội, bật lửa nhỏ.",
+     "m": 5,
+     "heat": "Lửa nhỏ",
+     "cue": "Tỏi <b>vàng nhạt và dầu dậy mùi</b>. Vàng nâu là đắng."
+    },
+    {
+     "t": "Cho cà chua",
+     "d": "Trút cà chua bóp nát, thêm muối và cả nhánh húng quế, đun sôi rồi hạ lửa.",
+     "m": 5,
+     "heat": "Lửa vừa",
+     "cue": "Sốt <b>sôi lăn tăn khắp mặt</b>."
+    },
+    {
+     "t": "Rim 35 phút",
+     "d": "Rim lửa nhỏ, hé vung, khuấy 10 phút một lần.",
+     "m": 35,
+     "heat": "Lửa nhỏ",
+     "cue": "Sốt <b>sẫm màu từ đỏ tươi sang đỏ gạch, và dầu tách ra nổi thành vệt cam quanh mép nồi</b>. Vệt dầu đó là dấu hiệu sốt đã chín — trước đó nó vẫn chỉ là cà chua đun."
+    },
+    {
+     "t": "Vớt tỏi, húng quế và nếm",
+     "d": "Vớt bỏ tỏi và cọng húng quế, nếm, chỉnh muối. Thêm đường chỉ khi thấy chua gắt.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Nếm thấy <b>ngọt tự nhiên của cà chua chứ không phải ngọt đường</b>."
+    }
+   ],
+   "tips": [
+    "Vệt dầu tách ra quanh mép nồi là dấu hiệu duy nhất đáng tin để biết sốt đã đủ. Nó không phụ thuộc vào đồng hồ.",
+    "Nấu một mẻ to, chia hộp để ngăn đá 3 tháng. Đây là nền của pizza, lasagna, shakshuka, gà sốt cà."
+   ],
+   "serveWith": "Mì Ý, pizza, gnocchi, thịt viên, cá bỏ lò, trứng."
+  },
+  {
+   "id": "bechamel",
+   "name": "Béchamel (sốt trắng)",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 1,
+   "serves": 6,
+   "tags": [
+    "sữa",
+    "bơ"
+   ],
+   "why": "Sốt mẹ dùng nhiều nhất trong bếp nhà: lasagna, gratin, mac and cheese, croque monsieur đều bắt đầu từ đây.",
+   "ing": [
+    {
+     "n": "Sữa tươi",
+     "q": 1000,
+     "u": "ml",
+     "per": {
+      "n": 250,
+      "l": "cốc"
+     },
+     "note": "<b>Hâm ấm</b> trước — sữa lạnh đổ vào roux nóng là vón cục.",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 80,
+     "u": "g",
+     "r": "main"
+    },
+    {
+     "n": "Bột mì",
+     "q": 80,
+     "u": "g",
+     "note": "Tỉ lệ bơ : bột luôn 1 : 1 theo khối lượng.",
+     "r": "main"
+    },
+    {
+     "n": "Nhục đậu khấu",
+     "q": 1,
+     "u": "nhúm",
+     "note": "Bào tươi. Đây là mùi đặc trưng, không bỏ được.",
+     "r": "season"
+    },
+    {
+     "n": "Muối + tiêu trắng",
+     "q": 4,
+     "u": "g",
+     "note": "Tiêu trắng để sốt không có đốm đen.",
+     "r": "season"
+    },
+    {
+     "n": "Lá nguyệt quế",
+     "q": 1,
+     "u": "lá",
+     "note": "Tuỳ chọn — thả vào sữa lúc hâm rồi vớt ra.",
+     "r": "herb"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Hâm sữa",
+     "d": "Hâm sữa với lá nguyệt quế đến khi bốc hơi nhẹ. Vớt lá ra.",
+     "m": 5,
+     "heat": "Lửa nhỏ",
+     "cue": "Mép nồi <b>lăn tăn</b>. Không cần sôi."
+    },
+    {
+     "t": "Làm roux trắng",
+     "d": "Đun chảy bơ, cho bột mì, khuấy liên tục ở lửa nhỏ.",
+     "m": 3,
+     "heat": "Lửa nhỏ",
+     "cue": "Hỗn hợp <b>sủi bọt đều và dậy mùi bánh quy, vẫn còn màu vàng nhạt</b>. Ngả nâu là thành roux nâu — dùng cho món khác."
+    },
+    {
+     "t": "Đổ sữa từng ít",
+     "d": "Đổ một muôi sữa ấm, khuấy đến khi <b>hoàn toàn mượt</b> rồi mới đổ muôi tiếp. Càng về sau càng đổ nhiều được.",
+     "m": 10,
+     "heat": "Lửa vừa",
+     "cue": "Sau mỗi lần: hỗn hợp <b>đặc lại rồi loãng ra, mượt hoàn toàn</b>. Đổ ào một lúc là vón — và vón rồi thì phải lọc rây."
+    },
+    {
+     "t": "Đun sánh và nêm",
+     "d": "Đun tiếp, khuấy đều tay đến độ sánh mong muốn, nêm muối, tiêu trắng, nhục đậu khấu.",
+     "m": 6,
+     "heat": "Lửa vừa",
+     "cue": "Sốt <b>bám mặt thìa thành một lớp, kéo ngón tay qua để lại rãnh không khép</b>. Đó là độ sánh chuẩn cho lasagna và gratin."
+    }
+   ],
+   "tips": [
+    "Vón cục thì cứu được: lọc qua rây, hoặc dùng máy xay cầm tay 10 giây.",
+    "Thêm 150 g gruyère hoặc cheddar sau khi <b>tắt bếp</b> là thành sốt Mornay — nền của mac and cheese và croque monsieur."
+   ],
+   "serveWith": "Lasagna, gratin rau, mac and cheese, cá bỏ lò, croque monsieur."
+  },
+  {
+   "id": "hollandaise",
+   "name": "Hollandaise",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 3,
+   "serves": 4,
+   "tags": [
+    "bơ",
+    "lòng đỏ",
+    "chanh"
+   ],
+   "why": "Sốt mẹ khó nhất và cũng dễ tách nhất — nhưng nếu hiểu nó là một nhũ tương giữa bơ và nước thì mọi bước đều có lý do.",
+   "ing": [
+    {
+     "n": "Bơ lạt",
+     "q": 200,
+     "u": "g",
+     "note": "Đun chảy, giữ ấm. Muốn sốt bền hơn thì lọc bỏ phần cặn sữa trắng.",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 3,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Nước lạnh",
+     "q": 2,
+     "u": "thìa canh",
+     "note": "Nghe thừa nhưng bắt buộc — nước là pha liên tục của nhũ tương.",
+     "r": "main"
+    },
+    {
+     "n": "Nước cốt chanh",
+     "q": 1,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Giấm trắng",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Muối + ớt bột cayenne",
+     "q": 2,
+     "u": "g",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Đun chảy bơ và giữ ấm",
+     "d": "Đun chảy bơ ở lửa nhỏ, để lắng rồi gạn phần vàng trong ở trên, bỏ cặn trắng dưới đáy.",
+     "m": 6,
+     "heat": "Lửa nhỏ",
+     "cue": "Bơ <b>trong, vàng và ấm khoảng 50–55 °C</b> — ấm chứ không nóng. Bơ quá nóng sẽ nấu chín lòng đỏ."
+    },
+    {
+     "t": "Đánh lòng đỏ với nước",
+     "d": "Đánh lòng đỏ với nước lạnh và giấm trong âu inox cho tới khi nổi bọt nhạt màu.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>nhạt màu và tăng gấp đôi thể tích</b>."
+    },
+    {
+     "t": "Đánh cách thuỷ đến sabayon",
+     "d": "Đặt âu lên nồi nước sôi lăn tăn (đáy không chạm nước), đánh liên tục.",
+     "m": 5,
+     "heat": "Cách thuỷ",
+     "cue": "Hỗn hợp <b>đặc lại, nhấc phới lên để lại vệt giữ 2 giây</b> và đạt khoảng 65 °C. Thấy hạt trứng chín là nhấc âu ra ngay và đánh tiếp ngoài bếp."
+    },
+    {
+     "t": "Rót bơ thành dòng nhỏ",
+     "d": "Nhấc âu ra khỏi nồi, vừa đánh vừa rót bơ ấm thành <b>dòng thật nhỏ</b>.",
+     "m": 5,
+     "heat": "—",
+     "cue": "Sốt <b>đặc dần, bóng và chảy chậm khỏi phới</b>. Nếu thấy tách dầu: dừng rót, thêm 1 thìa nước ấm và đánh mạnh — thường cứu được."
+    },
+    {
+     "t": "Nêm và giữ ấm",
+     "d": "Cho chanh, muối, cayenne. Giữ ấm trong âu đặt trên nước ấm 40 °C, tối đa 1 tiếng.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Sốt <b>mượt như satin, màu vàng nhạt</b>. Trên 60 °C là trứng đông; dưới 25 °C là bơ đặc lại — cả hai đều làm sốt tách."
+    }
+   ],
+   "tips": [
+    "Nếu sốt tách: đánh một lòng đỏ mới với 1 thìa nước ấm rồi rót sốt tách vào <b>từ từ như rót bơ</b>. Đây là cách cứu chắc ăn nhất.",
+    "Thêm ngải giấm (tarragon) và hành tím rim giấm là thành sốt béarnaise — cặp cổ điển của steak.",
+    "Đây là sốt <b>lòng đỏ chưa chín hẳn</b>: 65 °C trong lúc đánh không phải là tiệt trùng. Dùng <b>trứng tiệt trùng (pasteurized)</b> nếu mua được. Thai phụ, trẻ nhỏ, người già và người suy giảm miễn dịch thì đừng ăn.",
+    "Mốc \"tối đa 1 tiếng\" ở bước giữ ấm là <b>giới hạn cứng, không phải gợi ý</b>: 40 °C nằm giữa vùng nguy hiểm 5–60 °C, nơi vi khuẩn sinh sôi nhanh nhất. Hết 1 tiếng thì bỏ — <b>đừng để nguội rồi hâm lại</b>, và đừng giữ phần còn lại sang bữa sau."
+   ],
+   "serveWith": "Trứng chần (eggs Benedict), măng tây luộc, cá hồi áp chảo, bông cải xanh."
+  },
+  {
+   "id": "pan-sauce",
+   "name": "Pan sauce (sốt chảo)",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 2,
+   "serves": 4,
+   "tags": [
+    "rượu vang",
+    "bơ"
+   ],
+   "why": "Không nằm trong năm sốt mẹ nhưng là sốt được dùng nhiều nhất ở bếp nhà hàng hiện đại: làm ngay trong chảo vừa áp thịt xong, mất 5 phút, không cần nước dùng nấu sẵn.",
+   "ing": [
+    {
+     "n": "Chảo vừa áp thịt xong",
+     "q": 1,
+     "u": "cái",
+     "note": "Phải còn mảng nâu bám đáy (fond). Chảo chống dính không có mảng nâu — không làm được sốt này.",
+     "r": "main"
+    },
+    {
+     "n": "Hành tím",
+     "q": 2,
+     "u": "củ",
+     "note": "Băm nhỏ.",
+     "r": "veg"
+    },
+    {
+     "n": "Rượu vang (trắng cho gà/cá, đỏ cho bò)",
+     "q": 150,
+     "u": "ml",
+     "note": "Hoặc thay bằng nước dùng + 1 thìa giấm.",
+     "r": "season"
+    },
+    {
+     "n": "Nước dùng",
+     "q": 200,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Bơ lạt",
+     "q": 50,
+     "u": "g",
+     "note": "<b>Lạnh</b>, cắt hạt lựu. Bơ mềm thì không tạo được nhũ tương.",
+     "r": "main"
+    },
+    {
+     "n": "Húng tây hoặc ngải giấm",
+     "q": 3,
+     "u": "nhánh",
+     "r": "herb"
+    },
+    {
+     "n": "Mù tạt Dijon",
+     "q": 1,
+     "u": "thìa cà phê",
+     "note": "Tuỳ chọn — giúp sốt bền và đậm hơn.",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Chắt bớt mỡ",
+     "d": "Gắp thịt ra nghỉ. Chắt mỡ thừa ra bát, giữ lại khoảng 1 thìa canh và toàn bộ mảng nâu dưới đáy.",
+     "m": 1,
+     "heat": "—",
+     "cue": "Đáy chảo <b>còn mảng nâu bám chặt</b>. Đó là toàn bộ hương vị của sốt — đừng rửa, đừng cạo bỏ."
+    },
+    {
+     "t": "Xào hành tím",
+     "d": "Cho hành tím băm vào chảo, đảo trên lửa vừa.",
+     "m": 2,
+     "heat": "Lửa vừa",
+     "cue": "Hành <b>mềm và trong</b>."
+    },
+    {
+     "t": "Deglaze",
+     "d": "Đổ rượu vào, dùng thìa gỗ cạo mạnh đáy chảo cho mảng nâu tan hết.",
+     "m": 3,
+     "heat": "Lửa to",
+     "cue": "Đáy chảo <b>sạch bóng, chất lỏng chuyển màu nâu</b> và rút còn khoảng một nửa."
+    },
+    {
+     "t": "Rút nước dùng",
+     "d": "Đổ nước dùng và thảo mộc, đun ở lửa to cho rút bớt.",
+     "m": 5,
+     "heat": "Lửa to",
+     "cue": "Rút còn <b>khoảng 1/3, sốt bắt đầu bám mặt thìa</b>."
+    },
+    {
+     "t": "Monter au beurre",
+     "d": "<b>Tắt bếp</b>, cho bơ lạnh từng miếng, lắc chảo liên tục cho bơ tan mà không sôi.",
+     "m": 2,
+     "heat": "Tắt bếp",
+     "cue": "Sốt <b>bóng lên và đặc thêm một bậc</b>. Nếu để sôi thì bơ tách thành váng dầu — dấu hiệu là mặt sốt nổi vệt vàng."
+    },
+    {
+     "t": "Nêm và chan",
+     "d": "Nếm, chỉnh muối, cho nước thịt đọng trên đĩa nghỉ vào, chan lên thịt.",
+     "m": 1,
+     "heat": "—",
+     "cue": "Nước thịt đọng trên đĩa nghỉ <b>là phần đậm nhất</b> — đừng đổ đi."
+    }
+   ],
+   "tips": [
+    "Bơ phải <b>lạnh</b> và chảo phải <b>tắt lửa</b>. Hai điều kiện này quyết định sốt bóng hay tách.",
+    "Cấu trúc này dùng được với mọi thứ vừa áp chảo: gà, bò, lợn, cá, nấm."
+   ],
+   "serveWith": "Steak, ức gà áp chảo, sườn lợn, cá áp chảo."
+  },
+  {
+   "id": "chimichurri",
+   "name": "Chimichurri",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 1,
+   "serves": 6,
+   "tags": [
+    "mùi tây",
+    "tỏi",
+    "giấm"
+   ],
+   "why": "Sốt sống chua và cay của Argentina — thứ cắt vị béo của thịt nướng tốt hơn bất kỳ sốt nóng nào. Không nấu, không xay.",
+   "ing": [
+    {
+     "n": "Mùi tây (parsley)",
+     "q": 60,
+     "u": "g",
+     "per": {
+      "n": 60,
+      "l": "bó lớn"
+     },
+     "note": "Thái dao thật nhỏ, đừng xay máy.",
+     "r": "herb"
+    },
+    {
+     "n": "Lá oregano tươi (hoặc khô)",
+     "q": 1,
+     "u": "thìa canh",
+     "r": "herb"
+    },
+    {
+     "n": "Tỏi",
+     "q": 5,
+     "u": "tép",
+     "note": "Băm nhỏ, không giã.",
+     "r": "season"
+    },
+    {
+     "n": "Ớt khô vụn",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Giấm rượu vang đỏ",
+     "q": 60,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Dầu ô liu extra virgin",
+     "q": 150,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Muối biển",
+     "q": 5,
+     "u": "g",
+     "r": "season"
+    },
+    {
+     "n": "Hành tím",
+     "q": 1,
+     "u": "củ",
+     "note": "Tuỳ chọn, băm nhỏ.",
+     "r": "veg"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Ngâm tỏi và ớt trong giấm",
+     "d": "Trộn tỏi băm, ớt khô, muối và giấm, để 10 phút.",
+     "m": 11,
+     "heat": "—",
+     "cue": "Tỏi <b>ngả trắng đục và bớt hăng</b>. Bước này làm tỏi bớt gắt mà vẫn giữ vị."
+    },
+    {
+     "t": "Thái rau bằng dao",
+     "d": "Thái mùi tây thật nhỏ bằng dao sắc, trộn vào cùng oregano và hành tím.",
+     "m": 6,
+     "heat": "—",
+     "cue": "Rau <b>vẫn xanh tươi và rời</b>. Máy xay làm rau nát thành bột nhão và chuyển màu tối."
+    },
+    {
+     "t": "Rưới dầu và để nghỉ",
+     "d": "Rưới dầu ô liu, trộn nhẹ, để nghỉ tối thiểu 30 phút.",
+     "m": 30,
+     "heat": "—",
+     "cue": "Sốt <b>tách lớp là bình thường</b> — khuấy lại trước khi dùng. Để 30 phút thì các vị mới hoà vào nhau."
+    }
+   ],
+   "tips": [
+    "Thái dao, không xay máy. Đây là khác biệt giữa chimichurri và một thứ bột xanh.",
+    "Để ngăn mát 1 tuần, và ngày thứ hai ngon hơn ngày đầu."
+   ],
+   "serveWith": "Steak, thịt bò bỏ lò, gà nướng, rau củ nướng, bánh mì nướng."
+  },
+  {
+   "id": "aioli",
+   "name": "Aioli tỏi",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 2,
+   "serves": 6,
+   "tags": [
+    "tỏi",
+    "dầu ô liu",
+    "lòng đỏ"
+   ],
+   "why": "Mayonnaise phiên bản Địa Trung Hải. Đây là chỗ tốt nhất để học nhũ tương — và cũng là chỗ dễ thấy nhất khi nó vỡ.",
+   "ing": [
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 2,
+     "u": "quả",
+     "note": "Nhiệt độ phòng. Trứng lạnh làm nhũ tương khó hình thành.",
+     "r": "main"
+    },
+    {
+     "n": "Tỏi",
+     "q": 4,
+     "u": "tép",
+     "r": "season"
+    },
+    {
+     "n": "Dầu ô liu (không extra virgin)",
+     "q": 150,
+     "u": "ml",
+     "note": "Extra virgin bị đắng khi đánh mạnh. Dùng dầu ô liu thường, hoặc pha nửa dầu ăn.",
+     "r": "main"
+    },
+    {
+     "n": "Dầu ăn trung tính",
+     "q": 100,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Nước cốt chanh",
+     "q": 1,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Mù tạt Dijon",
+     "q": 1,
+     "u": "thìa cà phê",
+     "note": "Giúp nhũ tương bền hơn nhiều.",
+     "r": "season"
+    },
+    {
+     "n": "Muối",
+     "q": 3,
+     "u": "g",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Giã tỏi với muối",
+     "d": "Giã tỏi với muối trong cối thành bột nhão mịn.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Tỏi <b>nhuyễn hoàn toàn, không còn mảnh</b>."
+    },
+    {
+     "t": "Đánh nền",
+     "d": "Cho lòng đỏ, mù tạt và nửa chỗ chanh vào, đánh cho quyện.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>vàng đậm và sánh nhẹ</b>."
+    },
+    {
+     "t": "Nhỏ dầu từng giọt",
+     "d": "Nhỏ dầu <b>từng giọt một</b> trong 30 giây đầu, vừa nhỏ vừa đánh liên tục.",
+     "m": 3,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>đặc lại rõ rệt</b> — đó là lúc nhũ tương đã hình thành. Đến đây mới được rót thành dòng nhỏ."
+    },
+    {
+     "t": "Rót dòng nhỏ đến hết dầu",
+     "d": "Rót dầu thành dòng nhỏ liên tục, đánh đều tay.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Aioli <b>đặc đến mức thìa cắm đứng được</b>. Loãng quá thì rót chậm lại; quá đặc thì thêm vài giọt nước ấm."
+    },
+    {
+     "t": "Nêm cuối",
+     "d": "Cho nốt chanh, nếm, chỉnh muối.",
+     "m": 1,
+     "heat": "—",
+     "cue": "Nếm thấy <b>tỏi rõ nhưng không cháy cổ</b>."
+    }
+   ],
+   "tips": [
+    "Vỡ nhũ tương thì cứu được: lấy một lòng đỏ mới, rót hỗn hợp đã vỡ vào <b>từng giọt như rót dầu</b>.",
+    "Đừng dùng dầu ô liu extra virgin cho toàn bộ — đánh mạnh làm nó đắng gắt.",
+    "Đây là <b>mayonnaise trứng sống</b>: dùng trứng tiệt trùng (pasteurized) hoặc trứng thật tươi, giữ trong ngăn mát và <b>dùng trong 2 ngày</b>, đừng để ngoài bàn quá 2 giờ. Thai phụ, trẻ nhỏ, người già và người suy giảm miễn dịch thì dùng mayonnaise bán sẵn trộn tỏi giã thay vì làm từ trứng sống."
+   ],
+   "serveWith": "Khoai tây chiên, hải sản nướng, rau luộc, bánh mì, cá áp chảo, burger."
+  },
+  {
+   "id": "caesar-dressing",
+   "name": "Dressing Caesar",
+   "cat": "sot",
+   "role": "sot",
+   "diff": 2,
+   "serves": 6,
+   "tags": [
+    "cá cơm",
+    "parmesan",
+    "lòng đỏ"
+   ],
+   "why": "Cùng nguyên lý với aioli nhưng có cá cơm và parmesan — nên nó đậm đến mức dùng được cho cả rau nướng và gà, không chỉ salad.",
+   "ing": [
+    {
+     "n": "Phi lê cá cơm ngâm dầu",
+     "q": 6,
+     "u": "con",
+     "note": "Nguyên liệu bắt buộc, và nó không làm dressing tanh.",
+     "r": "main"
+    },
+    {
+     "n": "Lòng đỏ trứng",
+     "q": 2,
+     "u": "quả",
+     "r": "main"
+    },
+    {
+     "n": "Tỏi",
+     "q": 2,
+     "u": "tép",
+     "r": "season"
+    },
+    {
+     "n": "Parmigiano Reggiano",
+     "q": 50,
+     "u": "g",
+     "note": "Bào thật mịn.",
+     "r": "main"
+    },
+    {
+     "n": "Mù tạt Dijon",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Nước cốt chanh",
+     "q": 2,
+     "u": "thìa canh",
+     "r": "season"
+    },
+    {
+     "n": "Sốt Worcestershire",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    },
+    {
+     "n": "Dầu ô liu",
+     "q": 150,
+     "u": "ml",
+     "r": "main"
+    },
+    {
+     "n": "Tiêu đen",
+     "q": 1,
+     "u": "thìa cà phê",
+     "r": "season"
+    }
+   ],
+   "steps": [
+    {
+     "t": "Giã cá cơm và tỏi",
+     "d": "Giã cá cơm với tỏi và một nhúm muối thành hỗn hợp nhuyễn.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Không còn <b>mảnh cá nhìn thấy được</b>."
+    },
+    {
+     "t": "Đánh nền",
+     "d": "Cho lòng đỏ, mù tạt, chanh, Worcestershire, đánh cho quyện.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Hỗn hợp <b>sánh và đồng nhất</b>."
+    },
+    {
+     "t": "Rót dầu thành dòng nhỏ",
+     "d": "Vừa đánh vừa rót dầu thật chậm.",
+     "m": 4,
+     "heat": "—",
+     "cue": "Dressing <b>đặc như mayonnaise loãng, bám mặt thìa</b>."
+    },
+    {
+     "t": "Cho parmesan và tiêu",
+     "d": "Trộn parmesan bào mịn và tiêu xay, nếm rồi chỉnh chanh.",
+     "m": 2,
+     "heat": "—",
+     "cue": "Nếm thấy <b>mặn – chua – đậm cùng lúc</b>. Thường không cần thêm muối."
+    }
+   ],
+   "tips": [
+    "Đây là <b>trứng sống</b>, không nấu ở bước nào. Dùng <b>trứng tiệt trùng (pasteurized)</b> nếu mua được; chần 60 giây <b>không</b> làm trứng an toàn. Thai phụ, trẻ nhỏ, người già và người suy giảm miễn dịch thì đừng ăn — hoặc đổi sang mayonnaise bán sẵn trộn cá cơm và parmesan.",
+    "Để ngăn mát tối đa 3 ngày, đựng lọ kín. Đặc lại thì khuấy với một thìa nước ấm."
+   ],
+   "serveWith": "Caesar salad, rau nướng, ức gà nướng, bông cải nướng, khoai tây nướng."
+  }
+ ],
+ "region": {
+  "aglio-e-olio": "y",
+  "cacio-e-pepe": "y",
+  "carbonara": "y",
+  "amatriciana": "y",
+  "spaghetti-vongole": "y",
+  "ragu-bolognese": "y",
+  "lasagna": "y",
+  "risotto-nam": "y",
+  "gnocchi": "y",
+  "bruschetta": "y",
+  "caprese": "y",
+  "pizza-margherita": "y",
+  "focaccia": "y",
+  "scaloppine-limone": "y",
+  "pesto": "y",
+  "sot-pomodoro": "y",
+  "omelette-phap": "phap",
+  "sup-hanh-tay": "phap",
+  "ratatouille": "phap",
+  "gratin-dauphinois": "phap",
+  "moules-mariniere": "phap",
+  "quiche-lorraine": "phap",
+  "steak-pan-sauce": "phap",
+  "coq-au-vin": "phap",
+  "boeuf-bourguignon": "phap",
+  "bechamel": "phap",
+  "hollandaise": "phap",
+  "pan-sauce": "phap",
+  "vinaigrette": "phap",
+  "shakshuka": "dth",
+  "rau-nuong-dth": "dth",
+  "greek-salad": "dth",
+  "aioli": "dth",
+  "roast-beef": "anhmy",
+  "beef-wellington": "anhmy",
+  "mac-and-cheese": "anhmy",
+  "caesar-salad": "anhmy",
+  "caesar-dressing": "anhmy",
+  "ca-hoi-ap-chao": "chung",
+  "chimichurri": "chung"
+ },
+ "dips": {
+  "aglio-e-olio": [],
+  "cacio-e-pepe": [],
+  "carbonara": [],
+  "amatriciana": [],
+  "spaghetti-vongole": [],
+  "ragu-bolognese": [],
+  "lasagna": [],
+  "risotto-nam": [],
+  "gnocchi": [
+   {
+    "id": "sot-pomodoro",
+    "w": "bản kinh điển nhất, rắc thêm parmesan"
+   },
+   {
+    "id": "pesto",
+    "w": "gnocchi khoai tây với pesto là cặp của vùng Liguria"
+   }
+  ],
+  "bruschetta": [],
+  "caprese": [
+   {
+    "id": "pesto",
+    "w": "một vệt pesto dưới đáy đĩa thay cho lá húng quế rời"
+   }
+  ],
+  "pizza-margherita": [],
+  "focaccia": [
+   {
+    "id": "sot-pomodoro",
+    "w": "chấm, hoặc phết lên rồi nướng lại 3 phút"
+   },
+   {
+    "id": "pesto",
+    "w": "phết mỏng lên focaccia còn ấm"
+   },
+   {
+    "id": "aioli",
+    "w": "khi ăn focaccia như bánh mì khai vị"
+   }
+  ],
+  "scaloppine-limone": [],
+  "omelette-phap": [],
+  "sup-hanh-tay": [],
+  "ratatouille": [
+   {
+    "id": "pesto",
+    "w": "một thìa pesto khuấy vào lúc ăn — đổi hẳn món"
+   }
+  ],
+  "gratin-dauphinois": [],
+  "moules-mariniere": [
+   {
+    "id": "aioli",
+    "w": "chấm khoai tây chiên ăn kèm — cách ăn kiểu Bỉ"
+   }
+  ],
+  "quiche-lorraine": [
+   {
+    "id": "vinaigrette",
+    "w": "trộn salad xanh ăn kèm — quiche rất béo, cần chua"
+   }
+  ],
+  "steak-pan-sauce": [
+   {
+    "id": "chimichurri",
+    "w": "khi muốn một vệt chua cắt béo thay cho sốt chảo"
+   }
+  ],
+  "roast-beef": [
+   {
+    "id": "chimichurri",
+    "w": "chua và tươi, hợp thịt nguội hôm sau"
+   },
+   {
+    "id": "pan-sauce",
+    "w": "làm từ nước thịt và rau dưới khay nướng"
+   }
+  ],
+  "beef-wellington": [
+   {
+    "id": "pan-sauce",
+    "w": "sốt vang đỏ — bắt buộc, vì bản thân Wellington khá khô"
+   }
+  ],
+  "coq-au-vin": [],
+  "boeuf-bourguignon": [],
+  "ca-hoi-ap-chao": [
+   {
+    "id": "hollandaise",
+    "w": "cặp cổ điển của bếp Pháp"
+   },
+   {
+    "id": "aioli",
+    "w": "bản nhẹ nhàng hơn, không cần đứng canh nhiệt"
+   },
+   {
+    "id": "pesto",
+    "w": "một thìa lên miếng cá nóng"
+   }
+  ],
+  "shakshuka": [],
+  "rau-nuong-dth": [
+   {
+    "id": "chimichurri",
+    "w": "chua và cay, làm rau nướng bớt ngọt gắt"
+   },
+   {
+    "id": "caesar-dressing",
+    "w": "đậm, biến đĩa rau thành một món chính"
+   },
+   {
+    "id": "aioli",
+    "w": "để chấm từng miếng"
+   }
+  ],
+  "caesar-salad": [],
+  "greek-salad": [],
+  "mac-and-cheese": []
+ },
+ "combos": [
+  {
+   "name": "Bữa Ý ngày thường, 45 phút",
+   "note": "Một khai vị không nấu, một đĩa mì. Bắc nồi nước trước tiên vì nó lâu sôi nhất.",
+   "items": [
+    {
+     "id": "caprese",
+     "when": "Bày sẵn, để ra ngoài cho hết lạnh"
+    },
+    {
+     "id": "aglio-e-olio",
+     "when": "Bắc nồi nước ngay từ đầu"
+    },
+    {
+     "id": "focaccia",
+     "when": "Nướng từ hôm trước, hâm lại 5 phút"
+    }
+   ]
+  },
+  {
+   "name": "Bữa Ý cuối tuần",
+   "note": "Ragù nấu từ hôm trước. Hôm sau chỉ còn ráp lasagna và trộn salad.",
+   "items": [
+    {
+     "id": "ragu-bolognese",
+     "when": "Nấu từ hôm trước, hầm 3 tiếng"
+    },
+    {
+     "id": "lasagna",
+     "when": "Ráp và nướng hôm sau"
+    },
+    {
+     "id": "bruschetta",
+     "when": "Làm lúc lasagna đang nghỉ 20 phút"
+    },
+    {
+     "id": "greek-salad",
+     "when": "Trộn cuối cùng"
+    }
+   ]
+  },
+  {
+   "name": "Bữa Pháp cổ điển",
+   "note": "Món hầm bắt đầu trước tiên. Súp hành cũng lâu — làm hai thứ đó song song từ đầu.",
+   "items": [
+    {
+     "id": "sup-hanh-tay",
+     "when": "Xào hành 50 phút — bắt đầu ngay"
+    },
+    {
+     "id": "boeuf-bourguignon",
+     "when": "Rán thịt trong lúc hành đang xào, rồi cho vào lò"
+    },
+    {
+     "id": "gratin-dauphinois",
+     "when": "Vào lò cùng tầng dưới nồi hầm"
+    },
+    {
+     "id": "vinaigrette",
+     "when": "Pha sẵn, trộn salad lúc cuối"
+    }
+   ]
+  },
+  {
+   "name": "Bữa tối đãi khách — không hầm",
+   "note": "Không món nào phải hầm nhiều tiếng — lâu nhất là gratin, khoảng 1 giờ 45. Steak là việc cuối cùng vì nó không chờ được.",
+   "items": [
+    {
+     "id": "caesar-salad",
+     "when": "Làm dressing và crouton trước, trộn lúc khách đến"
+    },
+    {
+     "id": "gratin-dauphinois",
+     "when": "Vào lò trước 90 phút"
+    },
+    {
+     "id": "steak-pan-sauce",
+     "when": "Áp chảo cuối cùng, nghỉ thịt 8 phút rồi bưng ra"
+    },
+    {
+     "id": "chimichurri",
+     "when": "Làm trước 30 phút cho ngấm"
+    }
+   ]
+  },
+  {
+   "name": "Bữa lớn: Beef Wellington",
+   "note": "Món khó nhất trang này. Chia hai ngày, và đừng thêm món chính nào khác.",
+   "items": [
+    {
+     "id": "beef-wellington",
+     "when": "Duxelles và cuốn từ hôm trước, nướng trước bữa 55 phút"
+    },
+    {
+     "id": "sup-hanh-tay",
+     "when": "Nấu từ hôm trước, hâm lại"
+    },
+    {
+     "id": "rau-nuong-dth",
+     "when": "Nướng cùng lò trước khi cho Wellington vào"
+    },
+    {
+     "id": "pan-sauce",
+     "when": "Làm trong lúc Wellington nghỉ 15 phút"
+    }
+   ]
+  },
+  {
+   "name": "Bữa sáng muộn (brunch)",
+   "note": "Cả bữa dưới một tiếng, và không món nào cần lò trừ focaccia hâm lại.",
+   "items": [
+    {
+     "id": "shakshuka",
+     "when": "Rim sốt trước, đập trứng lúc mọi người ngồi vào bàn"
+    },
+    {
+     "id": "ca-hoi-ap-chao",
+     "when": "Áp chảo 7 phút, làm sau cùng"
+    },
+    {
+     "id": "hollandaise",
+     "when": "Đánh ngay trước khi ăn, giữ ấm 40 °C"
+    },
+    {
+     "id": "focaccia",
+     "when": "Hâm lò 5 phút"
+    }
+   ]
+  }
+ ],
+ "labels": {
+  "sauceCat": "sot",
+  "sauceIcon": "water_drop",
+  "itemWord": "món",
+  "thingWord": "thứ",
+  "dipHead": "Ăn kèm sốt — bấm để mở công thức",
+  "dipNone": "Món này <b>tự nó đã có sốt</b> — sốt nằm ngay trong nồi / trong chảo. Chan thêm một thứ nữa là át mất vị chính.",
+  "dipCard": "Sốt: ",
+  "dipNoneCard": "Tự nó đã có sốt",
+  "dipSelfCard": "Sốt — xem món hợp ở mục Sốt & dressing",
+  "dipUses": "Đi được với",
+  "dipNoUses": "Chưa ghép với món nào trong trang — dùng cho món ngoài danh sách.",
+  "dipOpen": "Cách làm",
+  "timerHint": "Hết giờ sẽ kêu &amp; rung — hẹn được nhiều bước cùng lúc",
+  "serveUnit": "người"
+ }
+}
