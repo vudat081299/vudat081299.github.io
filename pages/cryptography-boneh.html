@@ -71,7 +71,10 @@
   .cb-ul b { font-weight: 650; }
   .cb-ul em { font-style: italic; color: var(--wb-fg-muted); }
 
-  code, .cb-code { font-family: var(--wb-font-mono); font-size: .92em; background: var(--wb-surface-hover); border-radius: 4px; padding: 1px 5px; }
+  /* color phải đặt tường minh, không để thừa hưởng: <code> nằm trong .cb-quote,
+     .cb-lab__foot hay .cb-p em thì thừa hưởng --wb-fg-muted (gray-500), mà nền của
+     nó lại là --wb-surface-hover (gray-100) đậm hơn canvas — cặp đó chỉ đạt 4,28:1. */
+  code { font-family: var(--wb-font-mono); font-size: .92em; background: var(--wb-surface-hover); color: var(--wb-fg); border-radius: 4px; padding: 1px 5px; }
 
   /* ---- formula strip: the one line worth memorising ----
      white-space: pre is load-bearing — 9 of the 14 blocks are multi-line and the
@@ -115,12 +118,6 @@
   .cb-item__def:last-child { margin-bottom: 0; }
   .cb-item__def b { font-weight: 650; }
   .cb-item__def em { font-style: italic; color: var(--wb-fg-muted); }
-  .cb-item__meta { display: grid; grid-template-columns: 116px minmax(0, 1fr); gap: 8px 12px; margin-top: 13px; padding-top: 12px; border-top: var(--wb-bw) solid var(--wb-border); }
-  .cb-item__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); padding-top: 2px; line-height: 1.45; }
-  .cb-item__v { font-size: 13px; line-height: 1.62; color: var(--wb-fg-muted); margin: 0; }
-  .cb-item__v b { color: var(--wb-fg); font-weight: 640; }
-  .cb-item__v em { font-style: italic; }
-  @media (max-width: 560px) { .cb-item__meta { grid-template-columns: minmax(0, 1fr); gap: 3px 0; } .cb-item__k { padding-top: 8px; } }
 
   /* ---- diagrams ---- */
   .cb-viz { margin: 16px 0 6px; }
@@ -155,7 +152,6 @@
      ngắt ở bất kỳ đâu là chấp nhận được với dữ liệu kiểu mã/hex/URL. */
   .cb-mono { font-family: var(--wb-font-mono); font-size: 12px; overflow-wrap: anywhere; }
   .cb-dim { color: var(--wb-fg-subtle); }
-  .cb-mark { background: var(--wb-fg); color: var(--wb-canvas); border-radius: 3px; padding: 0 3px; }
 
   /* bit strip */
   .cb-bits { display: flex; flex-wrap: wrap; gap: 2px; }
@@ -189,25 +185,24 @@
   .cb-svg { width: 100%; height: auto; display: block; margin: 0 auto; touch-action: none; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
   .cb-svg--sm { max-width: 400px; }
   .cb-svg--md { max-width: 520px; }
-  .cb-handle { fill: var(--wb-fg); cursor: grab; }
-  .cb-handle:active { cursor: grabbing; }
 
   /* ---- back to top ---- */
   .cb-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
   .cb-top.is-on { opacity: 1; pointer-events: auto; }
 
-  /* ---- điện thoại hẹp ----
-     Hai việc, cả hai đều page-local (không đụng web-builder.css):
-     1. Navbar: .wb-navbar__brand là flex:none nên tiêu đề dài đẩy cụm nút bên phải
-        tràn khỏi viewport ở 320px. Cho brand co lại và cắt chữ bằng ellipsis;
-        .wb-navbar__mark vẫn flex:none nên biểu tượng không bao giờ méo.
-     2. Nút/ô chọn trong các mô hình: wb-btn--sm chỉ cao 27–30px, tab dạng pill 29px,
-        checkbox 18px, thanh trượt dày 4px — đều dưới ngưỡng chạm 40px trên cảm ứng.
-        Mọi thứ bấm/kéo được trong .cb-lab đều được nâng lên đúng 40px. */
-  @media (max-width: 560px) {
-    .wb-navbar__brand { flex: 0 1 auto; min-width: 0; overflow: hidden; }
-    .cb-brand-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* ---- vùng chạm trên cảm ứng ----
+     Menu navbar gập lại thành danh sách xổ xuống từ 900px (ngưỡng của
+     --collapse-lg), và ở đó .wb-nav__link chỉ cao ~37px (14px + padding 8px).
+     Nới bằng min-height, không đổi gì khác về hình dáng. */
+  @media (max-width: 900px) {
+    .wb-navbar__menu.is-open .wb-nav__link { min-height: 40px; }
+  }
 
+  /* Nút/ô chọn trong các mô hình: wb-btn--sm chỉ cao 27–30px, tab dạng pill 29px,
+     checkbox 18px, thanh trượt dày 4px — đều dưới ngưỡng chạm 40px trên cảm ứng.
+     Mọi thứ bấm/kéo được trong .cb-lab đều được nâng lên đúng 40px. Ngưỡng 620px
+     trùng với chỗ .cb-lab__row đổ về một cột, nên hai thứ đổi cùng lúc. */
+  @media (max-width: 620px) {
     .cb-lab .wb-btn--sm { min-height: 40px; padding-block: 10px; }
     .cb-lab .wb-check { min-height: 40px; --wb-check-size: 22px; }
     .cb-lab .wb-input { min-height: 40px; }
@@ -222,6 +217,26 @@
     }
     .cb-lab .wb-range-ticks__marks { margin-top: -10px; }
     .cb-chip { min-height: 40px; padding: 8px 14px; }
+
+    /* Hai link điều hướng đứng một mình (không nằm trong câu): brand ở navbar cao
+       26px, link ở footer cao 21px — đều dưới ngưỡng chạm 40px. */
+    .wb-navbar__brand { min-height: 40px; }
+    /* Link footer thì nới bằng ::after trong suốt: min-height ở đây đẩy cả hàng
+       footer cao thêm 19px, còn lớp phủ tuyệt đối thì không đụng vào layout. */
+    .wb-footer__link { position: relative; }
+    .wb-footer__link::after {
+      content: ''; position: absolute; left: 0; right: 0; top: 50%;
+      height: 40px; transform: translateY(-50%);
+    }
+  }
+
+  /* ---- điện thoại hẹp ----
+     .wb-navbar__brand là flex:none nên tiêu đề dài đẩy cụm nút bên phải tràn khỏi
+     viewport ở 320px. Cho brand co lại và cắt chữ bằng ellipsis; .wb-navbar__mark
+     vẫn flex:none nên biểu tượng không bao giờ méo. */
+  @media (max-width: 560px) {
+    .wb-navbar__brand { flex: 0 1 auto; min-width: 0; overflow: hidden; }
+    .cb-brand-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   }
   /* Ở 320px, chỉ co brand thôi thì chữ vẫn bị cắt mất đuôi; nhả thêm 30px từ
      padding + gap của thanh nav là đủ chỗ cho trọn chữ "Cryptography". */
@@ -234,7 +249,7 @@
 
 <header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
-          aria-label="Open menu"><span class="wb-ico">menu</span></button>
+          aria-expanded="false" aria-label="Open menu"><span class="wb-ico">menu</span></button>
   <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🔐</span><span class="cb-brand-text">Cryptography</span></a>
   <nav class="wb-nav wb-navbar__menu">
     <a class="wb-nav__link" href="#mo-dau">Foundations</a>
@@ -260,7 +275,7 @@
     <p class="cb-eyebrow">Diễn giải · Cryptography I &amp; II · Dan Boneh · Stanford</p>
     <h1 class="cb-title">Mật mã hiện đại không phải nghệ thuật giấu giếm. Nó là kỹ thuật <u>đổi một lời hứa thành một định lý</u>: nếu phá được hệ này thì cũng giải được bài toán mà cả thế giới bó tay.</h1>
     <p class="cb-sub">Trang này diễn giải trọn vẹn nội dung hai khoá <b>Cryptography</b> của <b>Dan Boneh</b> bằng tiếng Việt — nhưng không kể theo thứ tự chương. Nó kể theo <b>chuỗi tấn công</b>: mỗi chặng bắt đầu bằng một đòn mà chặng trước không đỡ nổi, rồi dựng đúng công cụ để đỡ nó. Bốn chặng ấy là <b>giữ bí mật → giữ toàn vẹn → không cần gặp nhau trước → không cần tin nhau</b>, và đó cũng chính là bốn nấc mà toàn bộ ngành này đã leo trong 50 năm.</p>
-    <p class="cb-sub">Một câu duy nhất — <span class="cb-mono">CHUYEN 100000 CHO BOB</span> — đi xuyên cả trang. Bạn sẽ thấy nó bị đọc trộm, bị sửa số tiền, bị moi ra từng byte qua thông báo lỗi, rồi từng bước được bảo vệ. <b>Mười mô hình nghịch được ngay trên trang</b>, mỗi cái dựng lên để giết một hiểu nhầm cụ thể chứ không phải để trang trí: kéo thanh trượt, đổi số, bấm tấn công, và xem hệ vỡ ở đâu.</p>
+    <p class="cb-sub">Một câu duy nhất — <span class="cb-mono">CHUYEN 100000 CHO BOB</span> — đi xuyên cả trang. Bạn sẽ thấy nó bị đọc trộm, bị sửa số tiền, bị moi ra từng byte qua thông báo lỗi, rồi từng bước được bảo vệ. <b>Mười mô hình nghịch được ngay trên trang</b>, mỗi cái dựng lên để giết một hiểu nhầm cụ thể: kéo thanh trượt, đổi số, bấm tấn công, và xem hệ vỡ ở đâu.</p>
     <p class="cb-meta">BỐN CHẶNG · MỖI CHẶNG SINH RA TỪ ĐÒN TẤN CÔNG CHẶNG TRƯỚC KHÔNG CHẶN ĐƯỢC<br>MÃ TRONG TRANG LÀ MÔ HÌNH ĐỒ CHƠI CỠ NHỎ, DỰNG ĐỂ NHÌN THẤY CƠ CHẾ — KHÔNG DÙNG THẬT</p>
   </header>
 
@@ -551,8 +566,8 @@
           </div>
           <div class="cb-lab__body">
             <div class="wb-tabs wb-tabs--pill" style="margin-bottom:14px" data-cbtabs="otp">
-              <button class="wb-tab is-active" data-cbtab="one">Dùng một lần — hoàn hảo</button>
-              <button class="wb-tab" data-cbtab="two">Dùng lại khoá — sập</button>
+              <button type="button" class="wb-tab is-active" data-cbtab="one" aria-pressed="true">Dùng một lần — hoàn hảo</button>
+              <button type="button" class="wb-tab" data-cbtab="two" aria-pressed="false">Dùng lại khoá — sập</button>
             </div>
 
             <div data-cbpanel="one">
@@ -939,7 +954,7 @@ c' = c ⊕ Δ  ⟹  m' = c' ⊕ ks = (m ⊕ ks ⊕ Δ) ⊕ ks = <b>m ⊕ Δ</b>
         </ol>
         <p class="cb-p">Gọi là <b>không giả mạo được dưới tấn công chọn thông điệp</b>. Định nghĩa mạnh tới mức kỳ quặc: nó cấm cả việc tạo ra một thẻ <i>khác</i> cho một thông điệp <i>cũ</i>. Vì sao khắt khe vậy? Vì ta không biết trước hệ thống bên trên sẽ diễn giải “thông điệp mới” thế nào — có nơi coi hai thẻ khác nhau là hai giao dịch khác nhau. Định nghĩa an toàn phải chặn cả những đường mà ta chưa nghĩ ra.</p>
 
-        <h4 class="cb-h4">Bốn cách dựng MAC, và chúng khác nhau ở đâu</h4>
+        <h4 class="cb-h4">Năm cách dựng MAC, và chúng khác nhau ở đâu</h4>
         <div class="cb-tw">
           <table class="wb-table">
             <thead><tr><th style="width:132px">Cách dựng</th><th style="width:150px">Từ đâu ra</th><th>Cơ chế &amp; điểm đáng nhớ</th></tr></thead>
@@ -1188,7 +1203,7 @@ diff = 0;  for (i = 0; i &lt; n; i++) diff |= tag[i] ^ computed[i];   return dif
           <div class="cb-item">
             <div class="cb-item__top"><span class="cb-item__no">1</span><p class="cb-item__name">Hàm dẫn xuất khoá (KDF): từ một bí mật xấu ra nhiều khoá tốt</p></div>
             <p class="cb-item__def">Thứ ta có sau khi trao khoá thường <b>không</b> phải một chuỗi bit ngẫu nhiên đều — nó là điểm chung Diffie–Hellman (một số trong nhóm, có cấu trúc), hoặc một mật khẩu (entropy thấp thảm hại). Ta lại cần <i>nhiều</i> khoá: một cho mã hoá, một cho MAC, mỗi chiều một bộ.</p>
-            <p class="cb-item__def"><b>HKDF</b> giải bài này bằng hai nhịp tách bạch: <b>extract</b> — dùng HMAC với một muối để ép bí mật thô thành một khoá giả ngẫu nhiên đều; rồi <b>expand</b> — nong khoá đó ra bao nhiêu byte tuỳ ý, mỗi lần gọi kèm một chuỗi <b>ngữ cảnh</b> (“khoá mã hoá chiều client→server”…). Ngữ cảnh không phải trang trí: nó bảo đảm hai mục đích khác nhau không bao giờ nhận cùng một khoá, kể cả khi cùng gốc.</p>
+            <p class="cb-item__def"><b>HKDF</b> giải bài này bằng hai nhịp tách bạch: <b>extract</b> — dùng HMAC với một muối để ép bí mật thô thành một khoá giả ngẫu nhiên đều; rồi <b>expand</b> — nong khoá đó ra bao nhiêu byte tuỳ ý, mỗi lần gọi kèm một chuỗi <b>ngữ cảnh</b> (“khoá mã hoá chiều client→server”…). Chuỗi ngữ cảnh bảo đảm hai mục đích khác nhau không bao giờ nhận cùng một khoá, kể cả khi cùng gốc.</p>
             <p class="cb-item__def"><b>Với mật khẩu thì khác hẳn.</b> Mật khẩu chỉ có cỡ 20–30 bit entropy thật; PRG nào cũng không tạo ra entropy. Cách duy nhất là <b>làm cho mỗi lần thử đắt lên</b>: <b>PBKDF2</b> (lặp hàm băm hàng trăm nghìn lần), <b>scrypt</b> và <b>Argon2</b> (thêm cả tốn <i>bộ nhớ</i> — điều này quan trọng vì nó vô hiệu hoá lợi thế của GPU và ASIC vốn dồi dào phép tính nhưng nghèo băng thông bộ nhớ). Kèm theo bắt buộc là <b>muối</b> ngẫu nhiên riêng từng người dùng, để một bảng dựng sẵn không dùng lại được cho người thứ hai.</p>
           </div>
           <div class="cb-item">
@@ -1294,7 +1309,7 @@ Eve thấy: p, g, A, B — và phải tính g<sup>ab</sup> từ đó.</div>
               </div>
             </div>
             <p class="cb-lab__foot"><b>Vì sao “sập trong tích tắc” lại không đáng lo:</b> dò cạn kiệt tốn cỡ <code>p</code> bước. Với <code>p</code> mười lăm triệu, đó là mười lăm triệu bước — một cái chớp mắt. Với <code>p</code> thật cỡ <b>2048 bit</b>, đó là <code>2²⁰⁴⁸</code> bước, con số lớn hơn số nguyên tử trong vũ trụ quan sát được nhiều bậc. Cùng một thuật toán, chỉ khác kích thước — và đó là toàn bộ điều làm nên mật mã khoá công khai.</p>
-            <p class="cb-lab__foot"><b>Nhưng dò cạn kiệt không phải tấn công tốt nhất.</b> Có <code>√p</code> (Pollard rho, Shanks) và có <b>index calculus</b> dưới mũ cho nhóm <code>Z<sub>p</sub>*</code>. Chính vì index calculus mà DH trên số nguyên modulo cần <b>2048 bit</b> mới đạt an toàn tương đương AES-112, trong khi trên <a href="#s-ecc">đường cong elliptic</a> chỉ cần <b>256 bit</b> đã tương đương AES-128 — vì ở đó index calculus không áp dụng được.</p>
+            <p class="cb-lab__foot"><b>Nhưng dò cạn kiệt không phải tấn công tốt nhất.</b> Có <code>√p</code> (Pollard rho, Shanks) và có <b>index calculus</b> dưới mũ cho nhóm <code>Z<sub>p</sub>*</code>. Chính vì index calculus mà DH trên số nguyên modulo cần <b>2048 bit</b> mới đạt <b>mức an toàn 112 bit</b>, trong khi trên <a href="#s-ecc">đường cong elliptic</a> chỉ cần <b>256 bit</b> đã tương đương AES-128 — vì ở đó index calculus không áp dụng được.</p>
           </div>
         </div>
       </section>
@@ -1312,7 +1327,7 @@ Eve thấy: p, g, A, B — và phải tính g<sup>ab</sup> từ đó.</div>
             <tbody>
               <tr><td>Cộng, nhân mod <code>N</code></td><td>trực tiếp</td><td>Với số <code>n</code> bit: cộng tốn <code>O(n)</code>, nhân tốn <code>O(n²)</code> theo cách học phổ thông (có thuật toán nhanh hơn).</td></tr>
               <tr><td>Luỹ thừa <code>x<sup>e</sup> mod N</code></td><td>bình phương lặp</td><td>Điểm mấu chốt của mọi thứ: <code>x²⁵ = ((x²)²·x)²·... </code> — chỉ <b><code>O(log e)</code></b> phép nhân thay vì <code>e</code>. Không có mẹo này thì RSA và DH đều vô dụng.</td></tr>
-              <tr><td>Ước chung lớn nhất</td><td>Euclid</td><td><code>O(n²)</code>. Nhanh tới mức <b>nó phá được RSA nếu hai khoá lỡ dùng chung một thừa số</b> — chuyện đã xảy ra thật với hàng trăm nghìn khoá của thiết bị nhúng thiếu entropy.</td></tr>
+              <tr><td>Ước chung lớn nhất</td><td>Euclid</td><td><code>O(n²)</code>. Nhanh tới mức <b>nó phá được RSA nếu hai khoá lỡ dùng chung một thừa số</b> — chuyện đã xảy ra thật với hàng chục nghìn khoá của thiết bị nhúng thiếu entropy.</td></tr>
               <tr><td>Nghịch đảo <code>x⁻¹ mod N</code></td><td>Euclid mở rộng</td><td>Tồn tại <b>khi và chỉ khi</b> <code>gcd(x, N) = 1</code>. Đây là cách tính khoá riêng <code>d</code> của RSA.</td></tr>
               <tr><td>Kiểm số nguyên tố</td><td>Miller–Rabin</td><td>Xác suất, rất nhanh. Sinh số nguyên tố 1024 bit = bốc số lẻ ngẫu nhiên rồi kiểm, trung bình vài trăm lần là trúng (mật độ số nguyên tố quanh <code>x</code> là <code>1/ln x</code>).</td></tr>
               <tr><td>Ghép nghiệm modulo</td><td>định lý phần dư Trung Hoa</td><td>Biết <code>x mod p</code> và <code>x mod q</code> thì dựng lại <code>x mod pq</code>. Dùng để <b>tăng tốc giải mã RSA khoảng 4 lần</b> — và chính chỗ đó mở ra tấn công gây lỗi ở mục sau.</td></tr>
@@ -1341,7 +1356,7 @@ Eve thấy: p, g, A, B — và phải tính g<sup>ab</sup> từ đó.</div>
           </table>
         </div>
 
-        <h4 class="cb-h4">Quy đổi kích thước khoá — bảng đáng nhớ nhất trong chặng này</h4>
+        <h4 class="cb-h4">Quy đổi kích thước khoá giữa các họ nguyên thuỷ</h4>
         <div class="cb-tw">
           <table class="wb-table wb-table--compact">
             <thead><tr><th style="width:140px">Mức an toàn</th><th style="width:130px">Đối xứng</th><th style="width:150px">RSA / DH mod p</th><th style="width:140px">Đường cong elliptic</th><th>Nhận xét</th></tr></thead>
@@ -1465,7 +1480,7 @@ Vì sao đúng:  y<sup>d</sup> = x<sup>ed</sup> = x<sup>1 + kφ(N)</sup> = x · 
               <tr><td><b>Số mũ e nhỏ</b></td><td><code>e = 3</code>, cùng <code>m</code> gửi cho ≥ 3 người</td><td>Ghép ba bản mã bằng định lý phần dư Trung Hoa được <code>m³</code> <i>không</i> bị modulo — rồi lấy căn bậc ba trên số nguyên. Coppersmith mở rộng cho cả trường hợp <code>m</code> chỉ khác nhau chút ít. <b>Phòng:</b> đệm ngẫu nhiên, và dùng <code>e = 65537</code>.</td></tr>
               <tr><td><b>Số mũ d nhỏ</b></td><td><code>d &lt; N<sup>0,25</sup></code></td><td>Tấn công Wiener khôi phục <code>d</code> bằng liên phân số. Cám dỗ chọn <code>d</code> nhỏ là để giải mã nhanh — <b>tuyệt đối không</b>. Muốn nhanh thì tăng tốc bằng CRT.</td></tr>
               <tr><td><b>Chung modulus</b></td><td>nhiều người dùng chung <code>N</code>, khác <code>e</code></td><td>Bất kỳ ai trong nhóm cũng phân tích được <code>N</code> từ cặp <code>(e, d)</code> của mình, rồi đọc của tất cả những người còn lại. <b>Không bao giờ dùng chung modulus.</b></td></tr>
-              <tr><td><b>Entropy kém</b></td><td>sinh khoá lúc thiết bị mới khởi động</td><td>Khảo sát thực tế đã quét hàng triệu khoá RSA công khai trên Internet và phát hiện <b>hàng trăm nghìn khoá chia sẻ một thừa số nguyên tố</b> với khoá khác. Chỉ cần một phép <code>gcd</code> giữa hai modulus là phá cả hai. Nguyên nhân: router, camera IP tự sinh khoá khi bể entropy còn rỗng. <b>Phòng:</b> không sinh khoá dài hạn ở lần khởi động đầu tiên.</td></tr>
+              <tr><td><b>Entropy kém</b></td><td>sinh khoá lúc thiết bị mới khởi động</td><td>Khảo sát năm 2012 quét hàng triệu khoá RSA công khai trên Internet và tính được khoá riêng của <b>khoảng 0,5% máy chủ TLS</b> — cỡ vài chục nghìn máy — chỉ vì chúng chia sẻ thừa số nguyên tố với nhau. Chỉ cần một phép <code>gcd</code> giữa hai modulus là phá cả hai. Nguyên nhân: router, camera IP tự sinh khoá khi bể entropy còn rỗng. <b>Phòng:</b> không sinh khoá dài hạn ở lần khởi động đầu tiên.</td></tr>
               <tr><td><b>Đo thời gian / điện năng</b></td><td>truy cập vật lý hoặc cùng máy chủ</td><td>Thời gian chạy bình phương lặp phụ thuộc các bit của <code>d</code>. Đo đủ nhiều lần là dựng lại được <code>d</code> từng bit. <b>Phòng:</b> làm mù (blinding) — giải mã <code>c·r<sup>e</sup></code> rồi chia lại cho <code>r</code>, khiến đầu vào ngẫu nhiên hoá mỗi lần.</td></tr>
               <tr><td><b>Gây lỗi khi dùng CRT</b></td><td>gây một lỗi tính toán duy nhất</td><td>Nếu giải mã bằng CRT mà một trong hai nhánh sai (do xung điện, tia vũ trụ, hay laser chiếu vào chip), thì <code>gcd(kết quả sai − kết quả đúng, N)</code> ra thẳng <code>p</code>. <b>Một lỗi bit là mất khoá.</b> <b>Phòng:</b> kiểm lại chữ ký trước khi xuất ra.</td></tr>
             </tbody>
@@ -1542,7 +1557,7 @@ Bob:    k = H(u, u<sup>b</sup>) — vì u<sup>b</sup> = g<sup>ab</sup> = h<sup>a
           </div>
           <div class="cb-item">
             <div class="cb-item__top"><span class="cb-item__no">BLS</span><p class="cb-item__name">BLS — chữ ký cộng dồn được</p></div>
-            <p class="cb-item__def">Dựa trên <a href="#s-ecc">pairing</a>. Chữ ký chỉ 48 byte và có một tính chất không hệ nào khác cho: <b>gộp một nghìn chữ ký của một nghìn người thành một chữ ký duy nhất</b>, kiểm một lần là xong. Đây là lý do nó thống trị trong các hệ đồng thuận blockchain, nơi hàng nghìn bên phải cùng ký một khối. Cái giá: kiểm chữ ký chậm hơn, và phải dựa vào giả định pairing — trẻ hơn và ít được soi hơn Dlog thuần.</p>
+            <p class="cb-item__def">Dựa trên <a href="#s-ecc">pairing</a>. Chữ ký ngắn — 48 byte nếu đặt chữ ký ở nhóm nhỏ; các hệ blockchain nhắc dưới đây thường đảo lại, lấy khoá công khai 48 byte và chữ ký 96 byte, vì bên kiểm cần khoá công khai nhỏ hơn. Nó cũng có một tính chất không hệ nào khác cho: <b>gộp một nghìn chữ ký của một nghìn người thành một chữ ký duy nhất</b>, kiểm một lần là xong. Đây là lý do nó thống trị trong các hệ đồng thuận blockchain, nơi hàng nghìn bên phải cùng ký một khối. Cái giá: kiểm chữ ký chậm hơn, và phải dựa vào giả định pairing — trẻ hơn và ít được soi hơn Dlog thuần.</p>
           </div>
           <div class="cb-item">
             <div class="cb-item__top"><span class="cb-item__no">Hash</span><p class="cb-item__name">Chữ ký chỉ từ hàm băm — và vì sao chúng quay lại</p></div>
@@ -2084,10 +2099,23 @@ function strip(el, byte) {
   });
 
   var menu = document.querySelector('.wb-navbar__menu');
+  var navToggle = document.querySelector('[data-navbar-toggle]');
+  function syncMenu() {
+    if (navToggle) navToggle.setAttribute('aria-expanded', menu.classList.contains('is-open') ? 'true' : 'false');
+  }
   document.addEventListener('click', function (e) {
     if (!menu || !e.target.closest) return;
     if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
     else if (e.target.closest('.wb-navbar__menu .wb-nav__link')) menu.classList.remove('is-open');
+    else return;
+    syncMenu();
+  });
+  /* Escape đóng menu và trả tiêu điểm về đúng nút đã mở nó. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || !menu || !menu.classList.contains('is-open')) return;
+    menu.classList.remove('is-open');
+    syncMenu();
+    if (navToggle) navToggle.focus();
   });
 
   var links = Array.prototype.slice.call(document.querySelectorAll('#toc .wb-sidenav__link'));
@@ -2125,7 +2153,10 @@ Array.prototype.slice.call(document.querySelectorAll('[data-cbtabs]')).forEach(f
   bar.addEventListener('click', function (e) {
     var btn = e.target.closest ? e.target.closest('[data-cbtab]') : null;
     if (!btn) return;
-    Array.prototype.slice.call(bar.querySelectorAll('.wb-tab')).forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+    Array.prototype.slice.call(bar.querySelectorAll('.wb-tab')).forEach(function (b) {
+      b.classList.toggle('is-active', b === btn);
+      b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+    });
     Array.prototype.slice.call(scope.querySelectorAll('[data-cbpanel]')).forEach(function (p) {
       p.hidden = p.getAttribute('data-cbpanel') !== btn.getAttribute('data-cbtab');
     });
