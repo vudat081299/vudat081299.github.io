@@ -18,6 +18,15 @@
 </script>
 
 <style>
+  /* =========================================================================
+     TƯƠNG PHẢN — --wb-fg-subtle của kit là gray-400 (#a1a1aa), chỉ đạt 2,6:1 trên
+     nền sáng, dưới ngưỡng WCAG AA 4,5:1. Trang này dùng token đó cho chữ mang
+     thông tin thật — nhãn bộ lọc, số món tìm được, tên tiếng Anh của món, đơn vị
+     và ghi chú trong các bảng quy đổi — ở cỡ 11–12px, nên không được miễn theo luật
+     chữ lớn. Nâng token lên mức đạt chuẩn ở cả hai theme; mọi màu khác giữ nguyên.
+     ====================================================================== */
+  :root { --wb-fg-subtle: #6d6d72; }  /* 5,15:1 trên trắng · 4,56:1 trên #f1f1f3 */
+  .dark { --wb-fg-subtle: #888891; }  /* 5,60:1 trên #0b0b0d · 4,56:1 trên #212127 */
   /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
@@ -452,7 +461,7 @@
 
         <div class="wb-card"><div class="wb-card__head"><h4 class="wb-card__title">Lò &amp; nhiệt độ</h4></div>
           <div class="wb-card__body" style="padding-top:4px">
-            <div class="mc-conv"><span class="mc-conv__k">°C → °F</span><span class="mc-conv__v"><b>°F = °C × 9/5 + 32</b>. Các nấc lò quen dùng: 150 °C = 300 °F · 160 °C = 325 °F · 175 °C = 350 °F · 190 °C = 375 °F · 200 °C = 400 °F · 220 °C = 425 °F.</span></div>
+            <div class="mc-conv"><span class="mc-conv__k">°C → °F</span><span class="mc-conv__v"><b>°F = °C × 9/5 + 32</b>. Các nấc lò quen dùng (<b>đã làm tròn về vạch có sẵn trên lò</b>, nên lệch vài độ so với công thức): 150 °C = 300 °F · 160 °C = 325 °F · 175 °C = 350 °F · 190 °C = 375 °F · 200 °C = 400 °F · 220 °C = 425 °F.</span></div>
             <div class="mc-conv"><span class="mc-conv__k">Có quạt (fan)</span><span class="mc-conv__v"><b>Hạ 20 °C</b> so với công thức không quạt, và rút ngắn thời gian ~10%. Quạt làm mặt bánh khô nhanh hơn.</span></div>
             <div class="mc-conv"><span class="mc-conv__k">Làm nóng trước</span><span class="mc-conv__v">Tối thiểu <b>15 phút</b> sau khi đèn báo tắt. Đèn tắt nghĩa là <em>không khí</em> đã nóng, chưa phải thành lò và khay.</span></div>
             <div class="mc-conv"><span class="mc-conv__k">Vị trí khay</span><span class="mc-conv__v">Mặc định <b>rãnh giữa</b>. Bánh cần đáy giòn (pie, pizza) thì rãnh dưới; cần mặt vàng (meringue nướng, gratin) thì rãnh trên.</span></div>
@@ -2055,10 +2064,12 @@ var LABELS = {
     var b = el('button', 'wb-cap mc-chip wb-cap--dashed');
     b.innerHTML = (icon ? '<span class="wb-ico wb-ico--xs">' + icon + '</span> ' : '') + label;
     b.setAttribute('data-on', 'false');
+    b.setAttribute('aria-pressed', 'false');
     return b;
   }
   function paintChip(b) {
     var on = b.getAttribute('data-on') === 'true';
+    b.setAttribute('aria-pressed', String(on));
     b.classList.toggle('wb-cap--dashed', !on);
     b.classList.toggle('wb-cap--solid', on);
   }
