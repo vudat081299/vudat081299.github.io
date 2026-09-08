@@ -110,6 +110,13 @@
           "href": "pages/machine-learning.html"
         },
         {
+          "key": "j",
+          "icon": "smart_toy",
+          "name": "Machine Learning for Kids",
+          "desc": "Cỗ máy đoán ba bộ phận và cách nó tự vặn núm — tụt dốc, học thuộc lòng, nơ-ron & lan truyền ngược, cây quyết định, tích chập trên ảnh, attention, và học từ phần thưởng",
+          "href": "pages/machine-learning-for-kids.html"
+        },
+        {
           "key": "i",
           "icon": "hub",
           "name": "Working with AI",
