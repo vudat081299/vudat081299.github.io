@@ -1,0 +1,9 @@
+#!/bin/sh
+# Cổng lớp 2 cho nội dung trang chủ. Bộ điều phối gọi mọi */tools/hooks/pre-commit;
+# hook này tự lọc — chỉ chạy khi commit có chạm data/collection.json hoặc index.html.
+set -eu
+ROOT=$(git rev-parse --show-toplevel)
+CHANGED=$(git diff --cached --name-only --diff-filter=ACM)
+
+echo "$CHANGED" | grep -qE '^(data/collection\.json|index\.html|tools/lint-collection\.py)$' || exit 0
+python3 "$ROOT/tools/lint-collection.py"
