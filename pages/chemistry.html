@@ -75,7 +75,10 @@
   .ch-ul b { font-weight: 650; }
   .ch-ul em { font-style: italic; color: var(--wb-fg-muted); }
 
-  code, .ch-code { font-family: var(--wb-font-mono); font-size: .92em; background: var(--wb-surface-hover); border-radius: 4px; padding: 1px 5px; }
+  /* color rõ ràng, không thừa kế: <code> hay nằm trong khối chữ mờ (.ch-lab__hint,
+     .ch-formula .c), và bậc mờ đặt trên nền --wb-surface-hover chỉ đạt 4,3:1. Ký hiệu
+     công thức là thứ phải đọc chính xác từng ký tự nên nó lấy mực đầy. */
+  code, .ch-code { font-family: var(--wb-font-mono); font-size: .92em; background: var(--wb-surface-hover); color: var(--wb-fg); border-radius: 4px; padding: 1px 5px; }
   sub, sup { font-size: .74em; line-height: 0; }
 
   /* ---- formula strip: the one line worth memorising ---- */
@@ -98,6 +101,11 @@
   /* ---- tables ---- */
   .ch-tw { overflow-x: auto; margin: 4px 0 16px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); }
   .ch-tw .wb-table { margin: 0; border: 0; }
+  /* Vùng cuộn ngang chỉ cuộn được bằng bàn phím nếu chính nó nhận được tiêu điểm; JS
+     gắn tabindex cho khối THẬT SỰ tràn, nên phải thấy được vòng tiêu điểm ở đó. */
+  .ch-tw[tabindex="0"]:focus-visible,
+  .ch-formula[tabindex="0"]:focus-visible,
+  .ch-pt-wrap[tabindex="0"]:focus-visible { outline: 2px solid var(--wb-fg); outline-offset: 1px; }
   .ch-tw .wb-table th, .ch-tw .wb-table td { font-size: 13.5px; line-height: 1.55; vertical-align: top; }
   .ch-tw .wb-table td code, .ch-tw .wb-table th code { font-size: 12px; }
 
@@ -223,9 +231,12 @@
   .ch-pt-pick { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 12px; }
   .ch-pt-pick label { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); }
   .ch-pt-pick .wb-select { width: auto; max-width: 100%; min-height: 40px; }
-  .ch-el .z { font-family: var(--wb-font-mono); font-size: 8px; color: var(--wb-fg-subtle); display: block; }
+  /* Hai nhãn nhỏ này nằm TRÊN ô đã tô màu theo giá trị, và độ đậm của màu tô thay đổi
+     theo dữ liệu — nên bậc chữ mờ không bao giờ đủ 4,5:1 ở đầu đậm của thang. Dùng mực
+     đầy, phân biệt với ký hiệu nguyên tố bằng cỡ chữ chứ không bằng độ mờ. */
+  .ch-el .z { font-family: var(--wb-font-mono); font-size: 8px; color: var(--wb-fg); display: block; }
   .ch-el .sym { font-size: 13px; font-weight: 700; color: var(--wb-fg); display: block; }
-  .ch-el .val { font-family: var(--wb-font-mono); font-size: 7.5px; color: var(--wb-fg-muted); display: block; min-height: 9px; }
+  .ch-el .val { font-family: var(--wb-font-mono); font-size: 7.5px; color: var(--wb-fg); display: block; min-height: 9px; }
   .ch-el.dim { opacity: .28; }
   .ch-pt-gap { grid-column: span 18; height: 7px; }
   .ch-pt-note { grid-column: span 3; display: grid; place-items: center; font-family: var(--wb-font-mono); font-size: 8.5px; color: var(--wb-fg-subtle); }
@@ -286,6 +297,9 @@
     }
     .ch-lab .ch-chips { gap: 8px; }
     .ch-lab .wb-input, .ch-lab .wb-select { min-height: 40px; }
+    /* Mục lục xổ xuống của navbar là đường điều hướng chính trên điện thoại, nhưng
+       14px + padding 8px = ~38px, còn thiếu tầm ngón tay. */
+    .wb-navbar__menu.is-open .wb-nav__link { min-height: 40px; }
   }
 </style>
 </head>
@@ -293,9 +307,9 @@
 
 <header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
-          aria-label="Open menu"><span class="wb-ico">menu</span></button>
+          aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu"><span class="wb-ico">menu</span></button>
   <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">⚗️</span> Chemistry</a>
-  <nav class="wb-nav wb-navbar__menu">
+  <nav class="wb-nav wb-navbar__menu" id="nav-menu">
     <a class="wb-nav__link" href="#p1">Atoms</a>
     <a class="wb-nav__link" href="#p2">Bonding</a>
     <a class="wb-nav__link" href="#p3">Amounts</a>
@@ -793,7 +807,7 @@ Ar = 34,969 × 0,7576 + 36,966 × 0,2424 = <b>35,45</b>  <span class="c">— kh�
           </table>
         </div>
 
-        <p class="ch-p"><b>Quy tắc bát tử (octet)</b> nói nguyên tử “muốn” 8 electron ở lớp ngoài cùng. Cách nói chính xác hơn: cấu hình khí hiếm bền vì <b>lớp s và p của mức đó đã đầy</b> (2 + 6 = 8), và mức tiếp theo cách một khoảng năng lượng lớn. Quy tắc này đúng tốt cho chu kỳ 2 (C, N, O, F) và bắt đầu rò rỉ từ chu kỳ 3 trở đi, vì các nguyên tố đó có orbital d trống để nhận thêm. Chi tiết ở <a href="#s-lewis">mục Lewis</a>.</p>
+        <p class="ch-p"><b>Quy tắc bát tử (octet)</b> nói nguyên tử “muốn” 8 electron ở lớp ngoài cùng. Cách nói chính xác hơn: cấu hình khí hiếm bền vì <b>lớp s và p của mức đó đã đầy</b> (2 + 6 = 8), và mức tiếp theo cách một khoảng năng lượng lớn. Quy tắc này đúng tốt cho chu kỳ 2 (C, N, O, F) và bắt đầu rò rỉ từ chu kỳ 3 trở đi, vì các nguyên tử đó <b>đủ lớn để xếp thêm nguyên tử quanh mình</b> và liên kết của chúng mang một phần tính ion. Chi tiết ở <a href="#s-lewis">mục Lewis</a>.</p>
       </section>
 
       <section id="s-ptable">
@@ -818,7 +832,7 @@ Ar = 34,969 × 0,7576 + 36,966 × 0,2424 = <b>35,45</b>  <span class="c">— kh�
             <p class="ch-swipe">Vuốt ngang để xem hết 18 nhóm → · trên ô đang chọn, dùng ← → để đi sang nguyên tố kế tiếp</p>
             <div class="ch-pt-legend" id="pt-legend"></div>
             <div class="ch-el-card" id="pt-card"></div>
-            <p class="ch-lab__foot"><b>Cách đọc bảng trong 10 giây:</b> <b>hàng ngang (chu kỳ)</b> = số lớp electron, đi ngang là thêm dần electron vào cùng một lớp. <b>Cột dọc (nhóm)</b> = số electron lớp ngoài cùng giống nhau, nên <b>tính chất hoá học giống nhau</b> — đó là toàn bộ ý nghĩa của chữ “tuần hoàn”. Li, Na, K đều nổ khi gặp nước vì cả ba đều có đúng 1 electron ngoài cùng cần tống đi.</p>
+            <p class="ch-lab__foot"><b>Cách đọc bảng trong 10 giây:</b> <b>hàng ngang (chu kỳ)</b> = số lớp electron, đi ngang là thêm dần electron vào cùng một lớp. <b>Cột dọc (nhóm)</b> = số electron lớp ngoài cùng giống nhau, nên <b>tính chất hoá học giống nhau</b> — đó là toàn bộ ý nghĩa của chữ “tuần hoàn”. Li, Na, K đều phản ứng với nước vì cả ba đều có đúng 1 electron ngoài cùng cần tống đi — và mức độ tăng dần Li (sủi đều) → Na (chảy thành giọt) → K (bắt lửa ngay).</p>
             <p class="ch-lab__foot"><b>Vì sao lanthanide và actinide bị đá xuống dưới:</b> chúng thuộc khối f, rộng 14 cột. Nhét đúng chỗ thì bảng dài 32 cột, không vừa trang giấy. Đây là quyết định <b>in ấn</b>, không phải quyết định hoá học — bảng “dạng dài” đặt chúng đúng vị trí vẫn tồn tại và chính xác hơn.</p>
           </div>
         </div>
@@ -900,7 +914,7 @@ Ar = 34,969 × 0,7576 + 36,966 × 0,2424 = <b>35,45</b>  <span class="c">— kh�
           <p class="ch-src">Số liệu: giá trị quy chiếu thông dụng (CRC Handbook), làm tròn tới kJ/mol.</p>
         </div>
 
-        <p class="ch-p">Hai chỗ tụt nhỏ đáng để dừng lại, vì chúng là bằng chứng thực nghiệm cho hai quy tắc vừa học ở <a href="#s-orbital">mục 1.2</a>:</p>
+        <p class="ch-p">Hai chỗ tụt nhỏ là bằng chứng thực nghiệm cho hai quy tắc vừa học ở <a href="#s-orbital">mục 1.2</a>:</p>
         <ul class="ch-ul">
           <li><b>Al thấp hơn Mg</b> — dù Al nhiều proton hơn. Vì electron ngoài cùng của Mg nằm ở 3s (đã đầy, bền), còn của Al nằm ở 3p (mức cao hơn, dễ bứt hơn). <i>Bằng chứng cho việc phân lớp có mức năng lượng khác nhau.</i></li>
           <li><b>S thấp hơn P</b> — P là 3p³, ba orbital mỗi cái một electron, đúng theo Hund và không có cặp nào đẩy nhau. S là 3p⁴: buộc phải có một cặp cùng orbital, và hai electron đó đẩy nhau nên một cái dễ bị bứt hơn. <i>Bằng chứng cho quy tắc Hund.</i></li>
@@ -912,7 +926,7 @@ Ar = 34,969 × 0,7576 + 36,966 × 0,2424 = <b>35,45</b>  <span class="c">— kh�
             <tbody>
               <tr><td><b>Bán kính nguyên tử</b></td><td>giảm</td><td>tăng</td><td>Đi ngang: cùng lớp mà thêm proton ⇒ kéo chặt hơn. Đi xuống: thêm hẳn một lớp. Cs (260 pm) có bán kính gấp hơn <b>8 lần</b> He (31 pm) — tức hơn 500 lần về thể tích.</td></tr>
               <tr><td><b>Năng lượng ion hoá</b></td><td>tăng</td><td>giảm</td><td>Kéo chặt hơn ⇒ giật electron tốn hơn. Đây là lý do kim loại nằm bên trái: chúng buông electron rẻ nhất.</td></tr>
-              <tr><td><b>Độ âm điện</b></td><td>tăng</td><td>giảm</td><td>Mức độ “giành electron” khi đã ở trong liên kết. F = 3,98 cao nhất bảng; Cs = 0,79 thấp nhất. Đây là con số quyết định liên kết ion hay cộng hoá trị — xem <a href="#s-bondtypes">mục 2.2</a>.</td></tr>
+              <tr><td><b>Độ âm điện</b></td><td>tăng</td><td>giảm</td><td>Mức độ “giành electron” khi đã ở trong liên kết. F = 3,98 cao nhất bảng; Fr = 0,70 thấp nhất (Cs = 0,79 là mức thấp nhất trong các nguyên tố bền). Đây là con số quyết định liên kết ion hay cộng hoá trị — xem <a href="#s-bondtypes">mục 2.2</a>.</td></tr>
               <tr><td><b>Ái lực electron</b></td><td>tăng (âm hơn)</td><td>giảm</td><td>Năng lượng toả ra khi nhận thêm 1 electron. Cl toả nhiều nhất (−349 kJ/mol), không phải F — vì F quá nhỏ, electron mới bị chen chúc. Một ngoại lệ có lý do.</td></tr>
               <tr><td><b>Tính kim loại</b></td><td>giảm</td><td>tăng</td><td>Kim loại = dễ nhường electron. Nên góc dưới trái (Fr, Cs) kim loại nhất, góc trên phải (F, O) phi kim nhất.</td></tr>
               <tr><td><b>Bán kính ion</b></td><td>—</td><td>tăng</td><td>Cation &lt; nguyên tử &lt; anion, luôn luôn. Na⁺ (102 pm) nhỏ hơn Na (186 pm) gần một nửa; Cl⁻ (181 pm) lớn hơn Cl (99 pm) gần gấp đôi.</td></tr>
@@ -1013,7 +1027,7 @@ Tạo:  2×(C=O) + 4×(O–H) = 2×799 + 4×463 = <b>3450 kJ</b>   <span class="
             </div>
             <svg id="bp-svg" class="ch-svg ch-svg--md" viewBox="0 0 520 190"></svg>
             <pre class="ch-out" id="bp-out" style="margin-top:12px"></pre>
-            <p class="ch-lab__foot"><b>Vì sao con số này quan trọng đến thế:</b> nó dự đoán gần như mọi tính chất vĩ mô. ΔEN lớn ⇒ ion ⇒ tinh thể cứng, nóng chảy rất cao, tan trong nước, dung dịch dẫn điện. ΔEN nhỏ ⇒ cộng hoá trị ⇒ phân tử rời, sôi thấp, tan trong dầu, không dẫn điện. NaCl nóng chảy ở 801 °C; CCl₄ có khối lượng phân tử lớn hơn nhiều nhưng sôi ở 77 °C.</p>
+            <p class="ch-lab__foot"><b>Vì sao con số này quan trọng đến thế:</b> nó dự đoán gần như mọi tính chất vĩ mô. ΔEN lớn ⇒ ion ⇒ tinh thể cứng, nóng chảy rất cao, và nếu tan thì dung dịch dẫn điện — nhưng “ion” không đồng nghĩa với “tan”: xem <a href="#s-tables">quy tắc tan</a>. ΔEN nhỏ ⇒ cộng hoá trị ⇒ phân tử rời, sôi thấp, tan trong dầu, không dẫn điện. NaCl nóng chảy ở 801 °C; CCl₄ có khối lượng phân tử lớn hơn nhiều nhưng sôi ở 77 °C.</p>
           </div>
         </div>
 
@@ -1023,7 +1037,7 @@ Tạo:  2×(C=O) + 4×(O–H) = 2×799 + 4×463 = <b>3450 kJ</b>   <span class="
             <tbody>
               <tr><td><b>Cộng hoá trị không cực</b></td><td>0 – 0,4</td><td>Chia đều, đám mây đối xứng</td><td>H₂, O₂, CH₄, C–C. Khí hoặc lỏng dễ bay hơi, không tan trong nước, không dẫn điện.</td></tr>
               <tr><td><b>Cộng hoá trị có cực</b></td><td>0,4 – 1,7</td><td>Chia lệch, có đầu δ⁺ và δ⁻</td><td>H₂O (ΔEN 1,24), HCl, C–O, N–H. <b>Đây là vùng của gần như toàn bộ hoá hữu cơ và sinh học.</b></td></tr>
-              <tr><td><b>Ion</b></td><td>&gt; 1,7 – 2,0</td><td>Cướp hẳn, thành ion rời</td><td>NaCl (2,23), MgO, CaF₂. Tinh thể giòn, nóng chảy cao, tan trong nước và <b>dung dịch dẫn điện</b>.</td></tr>
+              <tr><td><b>Ion</b></td><td>&gt; 1,7 – 2,0</td><td>Cướp hẳn, thành ion rời</td><td>NaCl (2,23), KBr, MgO, CaF₂. Tinh thể giòn, nóng chảy cao; chất nào tan thì <b>dung dịch dẫn điện</b> — NaCl và KBr tan, còn MgO và CaF₂ thì gần như không.</td></tr>
               <tr><td><b>Kim loại</b></td><td>~0, cả hai đều thấp</td><td>Không ai giữ — electron trôi tự do trong toàn khối</td><td>Fe, Cu, Al, hợp kim. Dẫn điện và nhiệt tốt, <b>dát mỏng được</b>, có ánh kim.</td></tr>
             </tbody>
           </table>
@@ -1040,7 +1054,7 @@ Tạo:  2×(C=O) + 4×(O–H) = 2×799 + 4×463 = <b>3450 kJ</b>   <span class="
           <div class="ch-mini">
             <h4>Tinh thể ion — “bàn cờ điện tích”</h4>
             <p>Ion dương và âm xen kẽ đều đặn. Gõ búa làm một lớp trượt đi <b>nửa ô</b>, và đột nhiên dương đối diện dương, âm đối diện âm. Toàn bộ mặt phẳng ấy <b>đẩy nhau</b> và tinh thể tách đôi đúng theo mặt phẳng đó.</p>
-            <p>Đó là lý do muối, thạch anh và đá quý <b>giòn</b> và vỡ theo mặt phẳng phẳng lì, còn thợ kim hoàn có thể chẻ kim cương theo hướng định trước bằng một nhát chính xác.</p>
+            <p>Đó là lý do muối ăn, calcite và fluorite <b>giòn</b> và vỡ theo mặt phẳng phẳng lì thay vì móp lại. Thợ kim hoàn cũng chẻ được kim cương theo hướng định trước, nhưng vì lý do khác: kim cương là <b>mạng cộng hoá trị</b>, không có ion nào để đẩy nhau — mặt {111} của nó chỉ đơn giản là mặt có ít liên kết cắt qua nhất.</p>
           </div>
         </div>
       </section>
@@ -1135,7 +1149,7 @@ Kết quả: một liên kết N=O và hai liên kết N–O⁻ …
               <tr><td>5</td><td>3</td><td>Thẳng</td><td>180°</td><td>XeF₂, I₃⁻</td></tr>
               <tr><td>6</td><td>0</td><td>Bát diện</td><td>90°</td><td>SF₆, [Fe(CN)₆]³⁻</td></tr>
               <tr><td>6</td><td>1</td><td>Chóp vuông</td><td>~85°</td><td>BrF₅</td></tr>
-              <tr><td>6</td><td>2</td><td>Vuông phẳng</td><td>90°</td><td>XeF₄, [Ni(CN)₄]²⁻</td></tr>
+              <tr><td>6</td><td>2</td><td>Vuông phẳng</td><td>90°</td><td>XeF₄, ICl₄⁻</td></tr>
             </tbody>
           </table>
         </div>
@@ -1153,9 +1167,9 @@ Kết quả: một liên kết N=O và hai liên kết N–O⁻ …
           <table class="wb-table">
             <thead><tr><th style="width:100px">Lai hoá</th><th style="width:110px">Trộn từ</th><th style="width:130px">Hình &amp; góc</th><th style="width:120px">Liên kết π còn lại</th><th>Ví dụ &amp; hệ quả</th></tr></thead>
             <tbody>
-              <tr><td><b>sp³</b></td><td>1s + 3p</td><td>tứ diện, 109,5°</td><td>không có</td><td>CH₄, C₂H₆, kim cương. <b>Xoay tự do quanh liên kết đơn</b> ⇒ mạch alkane mềm dẻo, gấp khúc được.</td></tr>
-              <tr><td><b>sp²</b></td><td>1s + 2p</td><td>tam giác phẳng, 120°</td><td>1 (vuông góc mặt phẳng)</td><td>C₂H₄ (ethylene), benzene, nhóm C=O. <b>Không xoay được</b> quanh liên kết đôi ⇒ sinh ra đồng phân cis/trans.</td></tr>
-              <tr><td><b>sp</b></td><td>1s + 1p</td><td>thẳng, 180°</td><td>2 (vuông góc nhau)</td><td>C₂H₂ (acetylene), HCN, CO₂. Liên kết ba rất ngắn và rất bền (837 kJ/mol).</td></tr>
+              <tr><td><b>sp³</b></td><td>1×s + 3×p</td><td>tứ diện, 109,5°</td><td>không có</td><td>CH₄, C₂H₆, kim cương. <b>Xoay tự do quanh liên kết đơn</b> ⇒ mạch alkane mềm dẻo, gấp khúc được.</td></tr>
+              <tr><td><b>sp²</b></td><td>1×s + 2×p</td><td>tam giác phẳng, 120°</td><td>1 (vuông góc mặt phẳng)</td><td>C₂H₄ (ethylene), benzene, nhóm C=O. <b>Không xoay được</b> quanh liên kết đôi ⇒ sinh ra đồng phân cis/trans.</td></tr>
+              <tr><td><b>sp</b></td><td>1×s + 1×p</td><td>thẳng, 180°</td><td>2 (vuông góc nhau)</td><td>C₂H₂ (acetylene), HCN, CO₂. Liên kết ba rất ngắn và rất bền (C≡C 837 kJ/mol, C≡N 891). CO₂ cũng lai hoá sp và cũng thẳng, nhưng nó có <b>hai liên kết đôi</b> chứ không có liên kết ba.</td></tr>
             </tbody>
           </table>
         </div>
@@ -1199,13 +1213,15 @@ Kết quả: một liên kết N=O và hai liên kết N–O⁻ …
 
       <section id="s-imf">
         <p class="ch-eyebrow-sec"><b>2.6</b> — lực GIỮA các phân tử, không phải bên trong</p>
-        <h2 class="ch-sec-title">Lực liên phân tử yếu hơn liên kết ~100 lần, nhưng chúng mới quyết định thứ bạn cầm được</h2>
+        <h2 class="ch-sec-title">Lực liên phân tử yếu hơn liên kết cả chục lần, nhưng chúng mới quyết định thứ bạn cầm được</h2>
 
-        <p class="ch-lede">Đun sôi nước <b>không phá liên kết O–H</b>. Hơi nước vẫn là H₂O nguyên vẹn. Thứ bị phá khi sôi là <b>lực hút giữa phân tử này với phân tử kia</b> — và nó yếu hơn liên kết trong phân tử khoảng hai bậc. Nhầm hai loại lực này là hiểu nhầm phổ biến thứ hai trong cả môn hoá, sau hiểu nhầm về năng lượng liên kết.</p>
+        <p class="ch-lede">Đun sôi nước <b>không phá liên kết O–H</b>. Hơi nước vẫn là H₂O nguyên vẹn. Thứ bị phá khi sôi là <b>lực hút giữa phân tử này với phân tử kia</b> — và nó yếu hơn liên kết trong phân tử khoảng một bậc. Nhầm hai loại lực này là hiểu nhầm phổ biến thứ hai trong cả môn hoá, sau hiểu nhầm về năng lượng liên kết.</p>
 
         <div class="ch-formula"><span class="c">Phá liên kết O–H trong nước:</span>  ~463 kJ/mol   <span class="c">— cần plasma hoặc điện phân</span>
 <span class="c">Phá lực hút giữa các phân tử nước:</span> ~41 kJ/mol   <span class="c">— chỉ cần ấm đun nước</span>
-<span class="c">Chênh nhau hơn 11 lần. Đây là lý do đun nước thì bốc hơi, chứ không nổ thành H₂ và O₂.</span></div>
+<span class="c">Chênh nhau hơn 11 lần. Đây là lý do đun nước thì bốc hơi, chứ không nổ thành H₂ và O₂.
+41 kJ/mol là để tách MỘT mol phân tử ra khỏi khối, tức là cắt khoảng hai liên kết hydro;
+tính trên từng liên kết hydro thì chỉ ~20 kJ/mol, khớp với dải 10–40 ở bảng dưới.</span></div>
 
         <div class="ch-tw">
           <table class="wb-table wb-table--striped">
@@ -1222,7 +1238,7 @@ Kết quả: một liên kết N=O và hai liên kết N–O⁻ …
         <div class="ch-viz">
           <div class="wb-chart">
             <div class="wb-chart__title">Nhiệt độ sôi của hydride theo chu kỳ — bằng chứng của liên kết hydro</div>
-            <div class="wb-chart__sub">Nhóm 14 (CH₄ → SnH₄) tăng đều theo kích thước, đúng như lực London dự đoán. Ba nhóm còn lại có <b>một điểm vọt lên bất thường ở chu kỳ 2</b>: đó chính là NH₃, H₂O, HF — ba chất duy nhất tạo được liên kết hydro.</div>
+            <div class="wb-chart__sub">Nhóm 14 (CH₄ → SnH₄) tăng đều theo kích thước, đúng như lực London dự đoán. Ba nhóm còn lại có <b>một điểm vọt lên bất thường ở chu kỳ 2</b>: đó chính là NH₃, H₂O, HF — ba hydride duy nhất trong đồ thị này tạo được liên kết hydro. Ngoài đồ thị thì mọi chất có H nối với N, O hoặc F đều tạo được, ancol và amine chẳng hạn.</div>
             <svg class="wb-chart__svg" viewBox="0 0 700 258" role="img" aria-label="Đồ thị nhiệt độ sôi của các hydride nhóm 14 tới 17 theo chu kỳ; nước, ammonia và hydro fluoride vọt cao bất thường so với xu hướng chung">
               <line class="ch-vdash" x1="90" y1="41.3" x2="668" y2="41.3"></line>
               <line class="ch-vdash" x1="90" y1="98.0" x2="668" y2="98.0"></line>
@@ -1311,7 +1327,7 @@ Kết quả: một liên kết N=O và hai liên kết N–O⁻ …
               <text class="ch-vt" x="128" y="90">RẮN</text>
               <text class="ch-vt" x="350" y="72">LỎNG</text>
               <text class="ch-vt" x="450" y="195">KHÍ</text>
-              <text class="ch-vs" x="664" y="108" style="text-anchor:end">chất lỏng siêu tới hạn</text>
+              <text class="ch-vs" x="664" y="108" style="text-anchor:end">chất lưu siêu tới hạn</text>
 
               <text class="ch-vs" x="170" y="34" style="text-anchor:middle">nước ↖</text>
               <text class="ch-vs" x="300" y="34">↗ hầu hết chất khác (CO₂…)</text>
@@ -1335,9 +1351,9 @@ Kết quả: một liên kết N=O và hai liên kết N–O⁻ …
         <p class="ch-p">Gần như mọi chất khi đông đặc thì <b>co lại</b> và chìm. Nước thì <b>nở ra 9%</b> và nổi. Nguyên nhân duy nhất: liên kết hydro có <b>hướng cố định</b>, buộc các phân tử nước trong tinh thể đá phải xếp thành lưới lục giác <i>rỗng</i>, thưa hơn cả trạng thái lỏng lộn xộn. Từ một chi tiết đó chảy ra một dây hệ quả:</p>
         <ul class="ch-ul">
           <li><b>Hồ đóng băng từ trên xuống</b>, lớp băng nổi làm chăn cách nhiệt cho nước bên dưới ⇒ cá sống qua mùa đông. Nếu đá chìm, các hồ ôn đới sẽ đóng băng đặc từ đáy lên và không tan hết vào mùa hè.</li>
-          <li><b>Nhiệt dung riêng cao nhất trong các chất lỏng thường</b> (4,18 J/g·K) ⇒ đại dương làm bộ điều hoà nhiệt của hành tinh; vùng ven biển ấm hơn vùng lục địa cùng vĩ độ.</li>
+          <li><b>Nhiệt dung riêng thuộc nhóm cao nhất trong các chất lỏng phổ biến</b> (4,18 J/g·K) ⇒ đại dương làm bộ điều hoà nhiệt của hành tinh; vùng ven biển ấm hơn vùng lục địa cùng vĩ độ.</li>
           <li><b>Nhiệt hoá hơi lớn</b> (2260 J/g) ⇒ đổ mồ hôi hạ nhiệt cơ thể rất hiệu quả.</li>
-          <li><b>Sức căng bề mặt cao</b> ⇒ nước dâng lên ngọn cây cao 100 m qua ống mao dẫn, chống lại trọng lực.</li>
+          <li><b>Lực cố kết giữa các phân tử rất mạnh</b> ⇒ cột nước trong mạch gỗ chịu được lực kéo mà không đứt, nên cây cao 100 m vẫn đưa được nước lên ngọn. Không phải nhờ mao dẫn: ống gỗ rộng 5–25 µm chỉ tự dâng được vài mét, phần còn lại do sức hút sinh ra khi nước thoát hơi ở lá.</li>
           <li><b>Ống nước vỡ khi trời rét</b> — cùng nguyên nhân, và là hệ quả tốn tiền nhất trong danh sách này.</li>
         </ul>
       </section>
@@ -1372,7 +1388,7 @@ n = 18 / 18,02 = <b>1,00 mol</b> → N = 6,02×10²³ phân tử → chứa 1,8�
           <div class="ch-lab__head">
             <p class="ch-lab__kick">Mô hình 6 / 16 · nghịch được</p>
             <p class="ch-lab__title">Cây cầu mol — gõ một công thức hoá học, đổi qua lại giữa gam, mol và số hạt</p>
-            <p class="ch-lab__hint">Thử gõ <code>C6H12O6</code>, <code>CuSO4.5H2O</code>, <code>Ca(OH)2</code>, <code>KMnO4</code>. Đổi con số ở bất kỳ ô nào — hai ô kia tự tính lại.</p>
+            <p class="ch-lab__hint">Thử gõ <code>C6H12O6</code>, <code>CuSO4.5H2O</code>, <code>Ca(OH)2</code>, <code>KMnO4</code>. Gõ khối lượng thì ô số mol tự tính lại, và ngược lại.</p>
           </div>
           <div class="ch-lab__body">
             <div class="ch-lab__row">
@@ -1388,7 +1404,7 @@ n = 18 / 18,02 = <b>1,00 mol</b> → N = 6,02×10²³ phân tử → chứa 1,8�
               <input class="wb-input" id="ml-n" type="number" value="1" step="any" style="max-width:220px">
             </div>
             <pre class="ch-out" id="ml-out"></pre>
-            <p class="ch-lab__foot"><b>Bẫy số một của chương này:</b> quên rằng khí đơn chất đi theo cặp. “1 mol oxygen” là 32 g nếu bạn nói về <b>phân tử O₂</b>, nhưng 16 g nếu bạn nói về <b>nguyên tử O</b>. Trong phản ứng thì gần như luôn là O₂. Bảy nguyên tố luôn tồn tại thành cặp ở dạng đơn chất: <b>H₂, N₂, O₂, F₂, Cl₂, Br₂, I₂</b>.</p>
+            <p class="ch-lab__foot"><b>Bẫy số một của chương này:</b> quên rằng khí đơn chất đi theo cặp. “1 mol oxygen” là 32 g nếu bạn nói về <b>phân tử O₂</b>, nhưng 16 g nếu bạn nói về <b>nguyên tử O</b>. Trong phản ứng thì gần như luôn là O₂. Bảy nguyên tố thường tồn tại thành phân tử hai nguyên tử ở dạng đơn chất: <b>H₂, N₂, O₂, F₂, Cl₂, Br₂, I₂</b> — “thường”, vì oxygen còn có dạng O₃ (ozone).</p>
           </div>
         </div>
       </section>
@@ -1411,7 +1427,7 @@ gam chất đầu → <b>÷ M</b> → mol chất đầu → <b>× tỉ lệ hệ
           <div class="ch-lab__head">
             <p class="ch-lab__kick">Mô hình 7 / 16 · nghịch được</p>
             <p class="ch-lab__title">Chất hạn chế — cho hai chất đầu với lượng tuỳ ý, xem cái nào cạn trước</p>
-            <p class="ch-lab__hint">Phản ứng tổng hợp ammonia (Haber): <b>N₂ + 3H₂ → 2NH₃</b>. Kéo hai thanh trượt và để ý: <b>không phải chất ít gam hơn sẽ hết trước</b> — phải chia cho hệ số rồi mới so.</p>
+            <p class="ch-lab__hint">Phản ứng tổng hợp ammonia (Haber): <b>N₂ + 3H₂ → 2NH₃</b>. Kéo hai thanh trượt và để ý: <b>không phải chất ít mol hơn sẽ hết trước</b> — phải chia cho hệ số rồi mới so.</p>
           </div>
           <div class="ch-lab__body">
             <div class="ch-lab__row">
@@ -1499,7 +1515,7 @@ R = 0,08206 L·atm/(mol·K)  hoặc  8,314 J/(mol·K)     T: nhiệt độ <b>tu
             </div>
             <svg id="gs-svg" class="ch-svg" viewBox="0 0 640 200" style="border:0;background:none"></svg>
             <pre class="ch-out" id="gs-out" style="margin-top:8px"></pre>
-            <p class="ch-lab__foot"><b>Thuyết động học phân tử — bốn giả định làm nên “lý tưởng”:</b> (1) phân tử là chấm không có thể tích, (2) chúng không hút nhau, (3) va chạm hoàn toàn đàn hồi, (4) động năng trung bình chỉ phụ thuộc nhiệt độ. Giả định (4) có hệ quả đẹp: <b>ở cùng nhiệt độ, mọi khí có cùng động năng trung bình</b> — nên phân tử nhẹ phải chạy nhanh hơn. Ở 25 °C, H₂ chạy trung bình 1920 m/s còn O₂ chỉ 482 m/s. Đó là lý do bóng bay heli xẹp nhanh hơn bóng bay không khí: heli chui qua lỗ nhỏ nhanh hơn.</p>
+            <p class="ch-lab__foot"><b>Thuyết động học phân tử — bốn giả định làm nên “lý tưởng”:</b> (1) phân tử là chấm không có thể tích, (2) chúng không hút nhau, (3) va chạm hoàn toàn đàn hồi, (4) động năng trung bình chỉ phụ thuộc nhiệt độ. Giả định (4) có hệ quả đẹp: <b>ở cùng nhiệt độ, mọi khí có cùng động năng trung bình</b> — nên phân tử nhẹ phải chạy nhanh hơn. Ở 25 °C, tốc độ căn quân phương của H₂ là 1920 m/s còn của O₂ chỉ 482 m/s. Đó là lý do bóng bay heli xẹp nhanh hơn bóng bay không khí: heli chui qua lỗ nhỏ nhanh hơn.</p>
             <p class="ch-lab__foot"><b>Khi nào mô hình lý tưởng gãy:</b> ở <b>áp suất rất cao</b> (phân tử bị ép sát, thể tích riêng của chúng không còn bỏ qua được) và <b>nhiệt độ rất thấp</b> (chúng đủ chậm để lực hút kéo lại). Hiệu chỉnh chuẩn là phương trình van der Waals <code>(P + an²/V²)(V − nb) = nRT</code>: <code>a</code> vá lực hút, <code>b</code> vá thể tích riêng. Không có mô hình nào đúng ở mọi điều kiện — biết chỗ gãy quan trọng ngang biết công thức.</p>
           </div>
         </div>
@@ -1642,7 +1658,7 @@ W = số cách sắp xếp vi mô cho ra cùng trạng thái vĩ mô;  k<sub>B</
           </table>
         </div>
 
-        <p class="ch-p"><b>Định luật ba</b> cho entropy một mốc tuyệt đối: một tinh thể hoàn hảo ở 0 K có S = 0, vì chỉ còn đúng một cách sắp xếp (W = 1, ln 1 = 0). Đây là điểm khác biệt so với enthalpy — với S ta <i>có</i> giá trị tuyệt đối, nên bảng tra ghi S° chứ không ghi ΔS°<sub>f</sub>. Và cũng vì vậy, <b>S° của mọi chất đều dương</b>, kể cả đơn chất.</p>
+        <p class="ch-p"><b>Định luật ba</b> cho entropy một mốc tuyệt đối: một tinh thể hoàn hảo ở 0 K có S = 0, vì chỉ còn đúng một cách sắp xếp (W = 1, ln 1 = 0). Đây là điểm khác biệt so với enthalpy — với S ta <i>có</i> giá trị tuyệt đối, nên bảng tra ghi S° chứ không ghi ΔS°<sub>f</sub>. Và cũng vì vậy, <b>S° của mọi chất nguyên chất đều dương</b>, kể cả đơn chất. (Ion trong nước là ngoại lệ hình thức: bảng tra quy ước S°(H⁺, aq) = 0 rồi đo các ion khác so với nó, nên Mg²⁺ ra −138 và Al³⁺ ra −321 J/mol·K — âm so với mốc quy ước, không phải âm thật.)</p>
       </section>
 
       <section id="s-gibbs">
@@ -1694,13 +1710,14 @@ W = số cách sắp xếp vi mô cho ra cùng trạng thái vĩ mô;  k<sub>B</
             </div>
             <svg id="gb-svg" class="ch-svg" viewBox="0 0 640 230" style="border:0;background:none"></svg>
             <pre class="ch-out" id="gb-out" style="margin-top:8px"></pre>
-            <p class="ch-lab__foot"><b>Bốn tình huống, và cả bốn đều gặp ngoài đời:</b> ΔH− ΔS+ ⇒ <b>luôn xảy ra ở mọi nhiệt độ</b> (đốt cháy); ΔH+ ΔS− ⇒ <b>không bao giờ</b> (quang hợp — nên nó cần ánh sáng bơm vào); ΔH− ΔS− ⇒ chỉ khi <b>lạnh</b> (nước đóng băng); ΔH+ ΔS+ ⇒ chỉ khi <b>nóng</b> (đá tan, nước sôi, nung vôi CaCO₃ ở trên ~835 °C).</p>
+            <p class="ch-lab__foot"><b>Bốn tình huống, và cả bốn đều gặp ngoài đời:</b> ΔH− ΔS+ ⇒ <b>luôn xảy ra ở mọi nhiệt độ</b> (phân huỷ oxy già thành nước và khí O₂); ΔH+ ΔS− ⇒ <b>không bao giờ</b> (quang hợp — nên nó cần ánh sáng bơm vào); ΔH− ΔS− ⇒ chỉ khi <b>lạnh</b> (nước đóng băng); ΔH+ ΔS+ ⇒ chỉ khi <b>nóng</b> (đá tan, nước sôi, nung vôi CaCO₃ ở trên ~835 °C).</p>
             <p class="ch-lab__foot"><b>Cách sự sống lách luật:</b> tế bào cần tổng hợp protein — ΔG dương, bị cấm. Nó <b>ghép</b> phản ứng đó với thuỷ phân ATP (ΔG° = −30,5 kJ/mol) qua một enzyme chung, và <b>tổng</b> ΔG của cặp ghép trở thành âm. Đây không phải mẹo vặt sinh học mà là chiến lược trung tâm của mọi sinh vật: dùng một phản ứng rất âm để kéo một phản ứng dương đi theo.</p>
           </div>
         </div>
 
         <h3 class="ch-h3">ΔG° và ΔG — hai ký hiệu gần giống nhau, nghĩa khác hẳn</h3>
-        <div class="ch-formula"><b>ΔG° </b> <span class="c">— giá trị ở điều kiện chuẩn (mọi chất 1 M hoặc 1 bar). Một CON SỐ CỐ ĐỊNH của phản ứng.</span>
+        <div class="ch-formula"><b>ΔG° </b> <span class="c">— giá trị ở điều kiện chuẩn (mọi chất 1 M hoặc 1 bar), tại MỘT nhiệt độ đã cho.
+      Cố định khi nồng độ đổi, nhưng vẫn đổi theo nhiệt độ: ΔG°(T) = ΔH° − TΔS°.</span>
 <b>ΔG  </b> <span class="c">— giá trị ở điều kiện hiện tại. THAY ĐỔI liên tục khi phản ứng chạy và nồng độ đổi.</span>
 
 <b>ΔG = ΔG° + RT · ln Q</b>   <span class="c">Q = thương số phản ứng, tính như K nhưng với nồng độ hiện thời</span>
@@ -1773,7 +1790,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
           <div class="ch-lab__head">
             <p class="ch-lab__kick">Mô hình 11 / 16 · nghịch được</p>
             <p class="ch-lab__title">Phân bố Maxwell–Boltzmann — vì sao thêm 10 °C lại đổi mọi thứ</p>
-            <p class="ch-lab__hint">Kéo nhiệt độ và nhìn <b>phần diện tích bên phải vạch Eₐ</b> — đó là tỉ lệ phân tử đủ mạnh để phản ứng. Đỉnh đường cong chỉ dịch một chút, nhưng <b>cái đuôi bên phải nở ra rất nhiều</b>. Tốc độ phụ thuộc cái đuôi, không phụ thuộc cái đỉnh.</p>
+            <p class="ch-lab__hint">Kéo nhiệt độ và nhìn <b>cái đuôi bên phải vạch Eₐ</b> — con số máy in ra là tỉ lệ phân tử đủ mạnh để phản ứng. Trục dọc bị nén lại cho dễ nhìn nên đừng ước lượng tỉ lệ đó bằng mắt từ diện tích; đọc con số. Đỉnh đường cong chỉ dịch một chút, nhưng <b>cái đuôi bên phải nở ra rất nhiều</b>. Tốc độ phụ thuộc cái đuôi, không phụ thuộc cái đỉnh.</p>
           </div>
           <div class="ch-lab__body">
             <div class="ch-lab__row">
@@ -1856,7 +1873,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
             <svg id="lc-svg" class="ch-svg" viewBox="0 0 640 190" style="border:0;background:none"></svg>
             <pre class="ch-out" id="lc-out" style="margin-top:8px"></pre>
             <p class="ch-lab__foot"><b>Phát biểu chuẩn:</b> khi một hệ đang cân bằng bị tác động, nó dịch chuyển theo chiều <b>làm giảm bớt tác động đó</b>. Nói kiểu đời thường: hệ bướng bỉnh, bạn đẩy nó thì nó đẩy lại.</p>
-            <p class="ch-lab__foot"><b>Chỉ có nhiệt độ đổi được K.</b> Thêm chất, đổi áp suất, thêm xúc tác đều làm hệ dịch chuyển nhưng <b>K giữ nguyên</b> — hệ chỉ trở về đúng tỉ lệ K cũ bằng cách đổi các nồng độ. Nhiệt độ thì khác: nó đổi bản thân giá trị K. Mẹo nhớ: coi <b>nhiệt như một chất</b> — phản ứng toả nhiệt thì viết “+ nhiệt” ở vế sản phẩm, rồi áp Le Chatelier như với chất bình thường.</p>
+            <p class="ch-lab__foot"><b>Chỉ có nhiệt độ đổi được K.</b> Thêm chất và đổi áp suất làm hệ dịch chuyển nhưng <b>K giữ nguyên</b> — hệ chỉ trở về đúng tỉ lệ K cũ bằng cách đổi các nồng độ. Thêm xúc tác thì <b>không dịch chuyển gì cả</b>: nó tăng đều cả hai chiều nên tới cân bằng nhanh hơn, còn điểm dừng vẫn y nguyên. Nhiệt độ thì khác: nó đổi bản thân giá trị K. Mẹo nhớ: coi <b>nhiệt như một chất</b> — phản ứng toả nhiệt thì viết “+ nhiệt” ở vế sản phẩm, rồi áp Le Chatelier như với chất bình thường.</p>
             <p class="ch-lab__foot"><b>Bài toán đánh đổi có thật của công nghiệp:</b> Haber muốn NH₃ nhiều ⇒ theo Le Chatelier nên chạy <b>lạnh</b> (toả nhiệt) và <b>áp suất cao</b> (4 mol khí → 2 mol khí). Nhưng lạnh thì phản ứng <b>chậm tới mức vô dụng</b>. Giải pháp thực tế: 400–450 °C (hy sinh cân bằng để lấy tốc độ), 150–250 bar, xúc tác sắt, và tuần hoàn khí chưa phản ứng. Đây là ví dụ sạch nhất cho thấy <b>nhiệt động và động học kéo ngược chiều nhau</b>, và kỹ sư phải chọn điểm thoả hiệp.</p>
           </div>
         </div>
@@ -1893,7 +1910,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
           <div class="ch-lab__head">
             <p class="ch-lab__kick">Mô hình 13 / 16 · nghịch được</p>
             <p class="ch-lab__title">Thang pH — chọn nồng độ và độ mạnh, xem pH thật sự là bao nhiêu</p>
-            <p class="ch-lab__hint">So <b>HCl 0,1 M</b> (acid mạnh, pH = 1,0) với <b>CH₃COOH 0,1 M</b> (acid yếu, pH ≈ 2,9): cùng nồng độ, nhưng acid yếu chỉ phân ly ~1,3% nên loãng hơn gần 100 lần về H⁺.</p>
+            <p class="ch-lab__hint">So <b>HCl 0,1 M</b> (acid mạnh, pH = 1,0) với <b>CH₃COOH 0,1 M</b> (acid yếu, pH ≈ 2,9): cùng nồng độ, nhưng acid yếu chỉ phân ly ~1,3% nên loãng hơn khoảng 75 lần về H⁺ (0,1 M so với 1,3 × 10⁻³ M).</p>
           </div>
           <div class="ch-lab__body">
             <div class="ch-lab__row">
@@ -1922,7 +1939,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
 <span class="c">Đó là điểm đệm khoẻ nhất, và cũng là điểm nửa tương đương trong chuẩn độ.</span>
 <span class="c">Đệm hoạt động tốt trong khoảng pK<sub>a</sub> ± 1 — ngoài khoảng đó nó gần như vô dụng.</span></div>
 
-        <p class="ch-p"><b>Dung dịch đệm</b> là hỗn hợp một acid yếu và base liên hợp của nó. Thêm acid vào? Base liên hợp nuốt lấy. Thêm base? Acid yếu nuốt lấy. Kết quả: pH gần như không đổi. Máu bạn được đệm bởi cặp <b>H₂CO₃ / HCO₃⁻</b> và giữ pH trong khoảng cực hẹp <b>7,35–7,45</b>; lệch xuống 6,8 hay lên 7,8 là ngưỡng tử vong. Đây là ứng dụng đệm quan trọng nhất bạn sở hữu.</p>
+        <p class="ch-p"><b>Dung dịch đệm</b> là hỗn hợp một acid yếu và base liên hợp của nó. Thêm acid vào? Base liên hợp nuốt lấy. Thêm base? Acid yếu nuốt lấy. Kết quả: pH gần như không đổi. Máu bạn được đệm bởi cặp <b>H₂CO₃ / HCO₃⁻</b> và giữ pH trong khoảng cực hẹp <b>7,35–7,45</b>; lệch xuống 6,8 hay lên 7,8 là ngưỡng tử vong. Chỗ này đáng dừng lại một nhịp, vì nó phá luật vừa nêu: pK<sub>a</sub> của H₂CO₃ là 6,35, nên pH 7,4 nằm ngoài khoảng ±1. Máu làm được là nhờ nó không phải một ống nghiệm kín — phổi thải bớt CO₂ và thận điều chỉnh HCO₃⁻, tức là hai đầu của cặp đệm được bơm lại liên tục. Luật pK<sub>a</sub> ± 1 chỉ đúng cho <b>hệ kín</b>.</p>
 
         <div class="ch-lab">
           <div class="ch-lab__head">
@@ -1991,7 +2008,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
 
 <span class="c">Môi trường base: làm y hệt, xong thêm OH⁻ vào cả hai vế để trung hoà hết H⁺ thành H₂O.</span></div>
 
-        <p class="ch-p">Phép chuẩn độ bằng KMnO₄ có một tiện lợi mà không phản ứng nào khác có: <b>nó tự làm chỉ thị</b>. MnO₄⁻ màu tím đậm, Mn²⁺ gần như không màu — nên giọt tím đầu tiên không mất màu chính là điểm tương đương.</p>
+        <p class="ch-p">Phép chuẩn độ bằng KMnO₄ có một tiện lợi mà rất ít phản ứng khác có: <b>nó tự làm chỉ thị</b>. MnO₄⁻ màu tím đậm, Mn²⁺ gần như không màu — nên giọt tím đầu tiên không mất màu chính là điểm tương đương.</p>
       </section>
 
       <section id="s-electro">
@@ -2147,7 +2164,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
               <text class="ch-vs" x="12" y="197">(1) đỉnh = carbon, (2) H trên carbon không vẽ, (3) mọi nguyên tử khác carbon thì phải viết ra.</text>
             </svg>
           </div>
-          <p class="ch-src">Vì sao bỏ hydro đi mà không mất thông tin: carbon <b>luôn</b> có đúng 4 liên kết. Đếm số gạch tại một đỉnh, thiếu bao nhiêu thì đó là số H. Quy tắc này không có ngoại lệ, nên H là thông tin thừa.</p>
+          <p class="ch-src">Vì sao bỏ hydro đi mà không mất thông tin: trong một phân tử trung hoà, carbon có đúng 4 liên kết. Đếm số gạch tại một đỉnh, thiếu bao nhiêu thì đó là số H. Quy tắc chỉ hụt ở các tiểu phân trung gian mang điện hoặc có electron độc thân — <a href="#s-subst">carbocation</a>, carbanion, gốc tự do — và những chỗ đó bao giờ cũng được vẽ kèm dấu điện tích hoặc chấm electron.</p>
         </div>
 
         <h3 class="ch-h3">Đọc tên — bốn mảnh ghép, và bạn gọi tên được hầu hết chất</h3>
@@ -2173,7 +2190,7 @@ Liên kết:  <b>-an-</b> chỉ đơn   <b>-en-</b> có đôi   <b>-yn-</b> có 
             <tbody>
               <tr><td><b>Alkane</b></td><td>C–C, C–H</td><td>-ane</td><td>Trơ, chỉ cháy và thế gốc tự do</td><td>Methane (khí bếp), octane (xăng), paraffin (nến)</td></tr>
               <tr><td><b>Alkene</b></td><td>C=C</td><td>-ene</td><td>Giàu electron ⇒ dễ bị <b>cộng</b></td><td>Ethylene (làm chín trái cây, nguyên liệu nhựa PE)</td></tr>
-              <tr><td><b>Alkyne</b></td><td>C≡C</td><td>-yne</td><td>Như alkene nhưng mạnh hơn, acid yếu ở đầu mạch</td><td>Acetylene (đèn xì hàn, 3300 °C)</td></tr>
+              <tr><td><b>Alkyne</b></td><td>C≡C</td><td>-yne</td><td>Cộng được hai lần, nhưng cộng electrophile <i>chậm hơn</i> alkene; H ở đầu mạch có tính acid yếu</td><td>Acetylene (đèn xì hàn, 3300 °C)</td></tr>
               <tr><td><b>Arene</b> (thơm)</td><td>vòng benzene</td><td>—</td><td><b>Bền bất thường</b>, thế chứ không cộng</td><td>Benzene, toluene, styrene, aspirin, paracetamol</td></tr>
               <tr><td><b>Ancol</b></td><td>–OH</td><td>-ol</td><td>Liên kết hydro ⇒ sôi cao, tan trong nước</td><td>Ethanol (rượu), glycerol, cholesterol</td></tr>
               <tr><td><b>Ether</b></td><td>C–O–C</td><td>-yl ether</td><td>Khá trơ, dung môi tốt</td><td>Diethyl ether (thuốc mê đầu tiên), THF</td></tr>
@@ -2318,7 +2335,7 @@ alkane → ancol → aldehyde → acid carboxylic → CO₂
           <div class="ch-lab__head">
             <p class="ch-lab__kick">Mô hình 16 / 16 · nghịch được</p>
             <p class="ch-lab__title">Bảng quyết định SN1 / SN2 / E1 / E2 — chọn điều kiện, xem cơ chế nào thắng</p>
-            <p class="ch-lab__hint">Đặt <b>bậc ba + base cồng kềnh mạnh</b> rồi đổi sang <b>bậc một + nucleophile mạnh</b>. Cùng một loại chất đầu, hai kết quả hoàn toàn khác — đó là lý do người ta điều khiển phản ứng bằng cách chọn dung môi và tác nhân, không phải bằng cách chọn chất đầu.</p>
+            <p class="ch-lab__hint">Giữ nguyên <b>bậc hai</b> rồi đổi mỗi điều kiện xung quanh: base cồng kềnh mạnh + nóng cho một kết quả, nucleophile yếu + dung môi proton + lạnh cho một kết quả khác hẳn. Cùng một chất đầu, bốn kết cục — đó là lý do người ta điều khiển phản ứng bằng dung môi, tác nhân và nhiệt độ chứ không chỉ bằng cách chọn chất đầu. Sau đó thử đổi bậc carbon để thấy đòn bẩy thứ năm.</p>
           </div>
           <div class="ch-lab__body">
             <div class="ch-lab__row">
@@ -2347,7 +2364,7 @@ alkane → ancol → aldehyde → acid carboxylic → CO₂
           <table class="wb-table wb-table--striped">
             <thead><tr><th style="width:76px">Cơ chế</th><th style="width:110px">Số bước</th><th style="width:150px">Luật tốc độ</th><th style="width:170px">Ưu tiên khi</th><th>Đặc điểm nhận dạng</th></tr></thead>
             <tbody>
-              <tr><td><b>SN2</b></td><td>1 (đồng bộ)</td><td>v = k[R–X][Nu]</td><td>Bậc <b>1</b>, Nu mạnh, dung môi không proton (acetone, DMSO)</td><td><b>Nghịch chuyển cấu hình</b> — như ô dù lộn ngược trong gió. Tâm bất đối đảo hẳn từ R sang S.</td></tr>
+              <tr><td><b>SN2</b></td><td>1 (đồng bộ)</td><td>v = k[R–X][Nu]</td><td>Bậc <b>1</b>, Nu mạnh, dung môi không proton (acetone, DMSO)</td><td><b>Nghịch chuyển cấu hình</b> — như ô dù lộn ngược trong gió. Nucleophile vào từ mặt đối diện nên vị trí trong không gian đảo hẳn; nhãn R/S thường đổi theo nhưng không phải luôn luôn, vì nhãn còn phụ thuộc thứ tự ưu tiên CIP của nhóm mới.</td></tr>
               <tr><td><b>SN1</b></td><td>2 (qua cation)</td><td>v = k[R–X]</td><td>Bậc <b>3</b>, Nu yếu, dung môi proton (nước, ancol)</td><td><b>Racemic hoá</b> — carbocation phẳng, Nu tấn công được cả hai mặt ⇒ ra hỗn hợp hai đối quang.</td></tr>
               <tr><td><b>E2</b></td><td>1 (đồng bộ)</td><td>v = k[R–X][B]</td><td>Base <b>mạnh</b>, nhiệt độ <b>cao</b></td><td>Cần H và nhóm rời ở vị trí <b>đối song song</b> (anti-periplanar). Tạo alkene bền nhất (quy tắc Zaitsev), trừ khi base quá cồng kềnh.</td></tr>
               <tr><td><b>E1</b></td><td>2 (qua cation)</td><td>v = k[R–X]</td><td>Bậc 3, base yếu, nhiệt độ cao</td><td>Luôn đi kèm SN1 vì chung một carbocation trung gian ⇒ thực tế thu hỗn hợp.</td></tr>
@@ -2355,7 +2372,7 @@ alkane → ancol → aldehyde → acid carboxylic → CO₂
           </table>
         </div>
 
-        <p class="ch-p">Điểm dễ bỏ sót: <b>SN1 và E1 luôn đi cùng nhau</b>, vì cả hai bắt đầu bằng cùng một bước chậm là tạo carbocation. Sau khi cation hình thành, nó không biết mình sẽ thành sản phẩm nào — nucleophile tới thì thành thế, base giật proton thì thành tách. Nên trong phòng thí nghiệm, một phản ứng SN1 luôn kèm một ít sản phẩm alkene, và cách duy nhất để điều khiển tỉ lệ là chỉnh nhiệt độ (nóng ưu tiên tách, vì tách có ΔS dương).</p>
+        <p class="ch-p">Điểm dễ bỏ sót: <b>SN1 và E1 luôn đi cùng nhau</b>, vì cả hai bắt đầu bằng cùng một bước chậm là tạo carbocation. Sau khi cation hình thành, nó không biết mình sẽ thành sản phẩm nào — nucleophile tới thì thành thế, base giật proton thì thành tách. Nên trong phòng thí nghiệm, một phản ứng SN1 luôn kèm một ít sản phẩm alkene, và đòn bẩy mạnh nhất để điều khiển tỉ lệ là nhiệt độ (nóng ưu tiên tách, vì tách có ΔS dương) — dung môi và độ base của tác nhân cũng dịch được tỉ lệ, đúng như mô hình phía trên cho thấy.</p>
       </section>
 
       <section id="s-carbonyl">
@@ -2380,12 +2397,12 @@ alkane → ancol → aldehyde → acid carboxylic → CO₂
           <table class="wb-table">
             <thead><tr><th style="width:180px">Phản ứng</th><th style="width:230px">Phương trình rút gọn</th><th>Ứng dụng</th></tr></thead>
             <tbody>
-              <tr><td><b>Ester hoá (Fischer)</b></td><td>RCOOH + R'OH ⇌ RCOOR' + H₂O</td><td>Cần acid xúc tác, và <b>thuận nghịch</b> — muốn hiệu suất cao phải tách nước ra liên tục. Làm hương liệu, làm aspirin.</td></tr>
+              <tr><td><b>Ester hoá (Fischer)</b></td><td>RCOOH + R'OH ⇌ RCOOR' + H₂O</td><td>Cần acid xúc tác, và <b>thuận nghịch</b> — muốn hiệu suất cao phải tách nước ra liên tục. Làm hương liệu (ester chuối, dứa, dầu chuối). Aspirin thì <i>không</i> đi đường này: nhóm OH của nó nằm trên vòng thơm, phải acetyl hoá bằng anhydride acetic.</td></tr>
               <tr><td><b>Thuỷ phân ester / xà phòng hoá</b></td><td>RCOOR' + NaOH → RCOONa + R'OH</td><td>Chất béo + NaOH → <b>xà phòng</b> + glycerol. Phản ứng công nghiệp cổ nhất còn dùng tới nay.</td></tr>
               <tr><td><b>Tạo amide</b></td><td>RCOOH + R'NH₂ → RCONHR' + H₂O</td><td>Liên kết peptide, nylon-6,6, paracetamol.</td></tr>
               <tr><td><b>Khử</b></td><td>C=O + [H] → CH–OH</td><td>NaBH₄ khử được aldehyde/ketone; LiAlH₄ mạnh hơn, khử được cả ester và acid.</td></tr>
               <tr><td><b>Cộng Grignard</b></td><td>RMgBr + C=O → C–R rồi thuỷ phân</td><td>Cách <b>tạo liên kết C–C</b> quan trọng nhất trong tổng hợp — nó cho phép dài mạch carbon ra theo ý muốn.</td></tr>
-              <tr><td><b>Ngưng tụ aldol</b></td><td>2 C=O → β-hydroxy carbonyl → alkene</td><td>Nối hai phân tử carbonyl. Cơ thể dùng đúng phản ứng này trong đường phân và tổng hợp acid béo.</td></tr>
+              <tr><td><b>Ngưng tụ aldol</b></td><td>2 C=O → β-hydroxy carbonyl → alkene</td><td>Nối hai phân tử carbonyl. Cơ thể dùng đúng phản ứng này trong đường phân (enzyme aldolase cắt fructose-1,6-bisphosphate bằng aldol ngược).</td></tr>
             </tbody>
           </table>
         </div>
@@ -2409,7 +2426,7 @@ nitro hoá (HNO₃/H₂SO₄) · halogen hoá (Br₂/FeBr₃) · sulfo hoá (SO�
         <p class="ch-eyebrow-sec"><b>6.7</b> — từ phân tử nhỏ tới vật liệu</p>
         <h2 class="ch-sec-title">Polymer: lặp lại một mắt xích vài nghìn lần, và tính chất đổi hoàn toàn</h2>
 
-        <p class="ch-lede">Ethylene là khí ở nhiệt độ phòng. Nối 50.000 phân tử ethylene lại thành mạch dài, bạn được <b>polyethylene</b> — vật liệu rắn làm túi nilon và bình nhựa. Không nguyên tử nào đổi, không nhóm chức nào mới; thứ duy nhất đổi là <b>chiều dài mạch</b>, và nó kéo lực London từ mức không đáng kể lên mức đủ giữ cả khối rắn.</p>
+        <p class="ch-lede">Ethylene là khí ở nhiệt độ phòng. Nối vài nghìn phân tử ethylene lại thành mạch dài, bạn được <b>polyethylene</b> — vật liệu rắn làm túi nilon và bình nhựa. (Loại mạch cực dài, cỡ vài chục nghìn mắt xích, cứng tới mức người ta làm khớp háng nhân tạo và áo chống đạn.) Không nguyên tử nào đổi, không nhóm chức nào mới; thứ duy nhất đổi là <b>chiều dài mạch</b>, và nó kéo lực London từ mức không đáng kể lên mức đủ giữ cả khối rắn.</p>
 
         <div class="ch-tw">
           <table class="wb-table">
@@ -2432,7 +2449,7 @@ nitro hoá (HNO₃/H₂SO₄) · halogen hoá (Br₂/FeBr₃) · sulfo hoá (SO�
           </div>
         </div>
 
-        <p class="ch-p"><b>Vì sao nhựa khó phân huỷ</b> nối thẳng về <a href="#s-kinetics">mục động học</a>: mạch polyethylene chỉ gồm liên kết C–C và C–H rất bền, và <i>không có nhóm chức nào</i> để enzyme bám vào. Về nhiệt động thì oxy hoá nó thành CO₂ và H₂O có ΔG rất âm — nghĩa là <b>được phép</b>. Nhưng không có sinh vật nào tiến hoá được enzyme hạ E<sub>a</sub> cho phản ứng đó, vì trước năm 1950 vật liệu này chưa từng tồn tại trong tự nhiên. Rác nhựa là một ví dụ giáo khoa về khoảng cách giữa <i>được phép</i> và <i>xảy ra</i>.</p>
+        <p class="ch-p"><b>Vì sao nhựa khó phân huỷ</b> nối thẳng về <a href="#s-kinetics">mục động học</a>: mạch polyethylene chỉ gồm liên kết C–C và C–H rất bền, và <i>không có nhóm chức nào</i> để enzyme bám vào. Về nhiệt động thì oxy hoá nó thành CO₂ và H₂O có ΔG rất âm — nghĩa là <b>được phép</b>. Nhưng chưa sinh vật nào tiến hoá được enzyme hạ E<sub>a</sub> cho một mạch hydrocarbon thuần như thế, vì trước năm 1950 vật liệu này chưa từng tồn tại trong tự nhiên. Nhựa <i>có</i> nhóm chức thì khác: PET mang liên kết ester, và năm 2016 người ta tìm được vi khuẩn <i>Ideonella sakaiensis</i> tiết enzyme cắt đúng liên kết đó. Rác nhựa là một ví dụ giáo khoa về khoảng cách giữa <i>được phép</i> và <i>xảy ra</i>.</p>
       </section>
 
       <div class="ch-part-head" id="p7">
@@ -2451,7 +2468,7 @@ nitro hoá (HNO₃/H₂SO₄) · halogen hoá (Br₂/FeBr₃) · sulfo hoá (SO�
           <table class="wb-table wb-table--striped">
             <thead><tr><th style="width:140px">Họ</th><th style="width:150px">Mắt xích</th><th style="width:160px">Liên kết nối</th><th>Vai trò &amp; điểm hoá học đáng chú ý</th></tr></thead>
             <tbody>
-              <tr><td><b>Carbohydrate</b></td><td>Monosaccharide (glucose, fructose)</td><td>Liên kết glycoside (acetal, kiểu ether)</td><td>Nhiên liệu và khung đỡ. <b>Tinh bột và cellulose đều là polymer của glucose</b> — khác nhau duy nhất ở hướng liên kết (α hay β), và chỉ khác biệt lập thể đó khiến người tiêu hoá được cơm mà không tiêu hoá được giấy.</td></tr>
+              <tr><td><b>Carbohydrate</b></td><td>Monosaccharide (glucose, fructose)</td><td>Liên kết glycoside (acetal, kiểu ether)</td><td>Nhiên liệu và khung đỡ. <b>Tinh bột và cellulose đều là polymer của glucose</b> — khác nhau chủ yếu ở hướng liên kết (α hay β) — tinh bột còn phân nhánh, cellulose thì thẳng tuột — và chỉ khác biệt lập thể đó khiến người tiêu hoá được cơm mà không tiêu hoá được giấy.</td></tr>
               <tr><td><b>Lipid</b></td><td>Acid béo + glycerol</td><td>Liên kết ester</td><td>Dự trữ năng lượng và làm màng. <b>Không phải polymer</b> — chúng tụ lại bằng hiệu ứng kỵ nước. Béo no (mạch thẳng, xếp chặt) thì rắn; béo không no <i>cis</i> (gấp khúc) thì lỏng.</td></tr>
               <tr><td><b>Protein</b></td><td>20 amino acid</td><td><b>Liên kết peptide</b> (amide)</td><td>Làm gần như mọi việc: xúc tác, vận chuyển, cấu trúc, tín hiệu. Chuỗi tự cuộn thành hình 3D duy nhất — và <b>hình đó quyết định chức năng</b>. Đun nóng làm mất hình (biến tính) ⇒ trứng luộc không trở lại lỏng được.</td></tr>
               <tr><td><b>Acid nucleic</b></td><td>4 nucleotide (A, T/U, G, C)</td><td>Liên kết phosphodiester</td><td>Lưu và truyền thông tin. Hai mạch bám nhau bằng <b>liên kết hydro</b> — đủ mạnh để giữ, đủ yếu để tách ra khi sao chép. A–T có 2 liên kết hydro, G–C có 3, nên vùng giàu G–C khó tách hơn.</td></tr>
@@ -2466,19 +2483,19 @@ nitro hoá (HNO₃/H₂SO₄) · halogen hoá (Br₂/FeBr₃) · sulfo hoá (SO�
         <div class="ch-formula"><b>Ba khoản chi tiêu năng lượng của tế bào — và đơn vị chung là ATP</b>
 Thuỷ phân ATP → ADP + Pi        ΔG°' = <b>−30,5 kJ/mol</b>   <span class="c">— “đồng tiền” chung</span>
 Oxi hoá hoàn toàn 1 glucose     ΔG°' ≈ <b>−2870 kJ/mol</b>  <span class="c">— thu về khoảng 30–32 ATP</span>
-Hiệu suất chuyển hoá            ≈ 32 × 30,5 / 2870 ≈ <b>34%</b>  <span class="c">— phần còn lại thành nhiệt, và đó chính là</span>
-                                                        <span class="c">lý do thân nhiệt bạn là 37 °C.</span></div>
+Hiệu suất chuyển hoá            ≈ 32 × 30,5 / 2870 ≈ <b>34%</b>  <span class="c">— phần còn lại thành nhiệt, và đó là</span>
+                                                        <span class="c">nguồn nhiệt giữ cho bạn ấm.</span></div>
       </section>
 
       <section id="s-inorg">
         <p class="ch-eyebrow-sec"><b>7.2</b> — khối d, nơi màu sắc và xúc tác đến từ</p>
-        <h2 class="ch-sec-title">Kim loại chuyển tiếp &amp; phức chất: vì sao ruby đỏ, máu đỏ, và lá xanh</h2>
+        <h2 class="ch-sec-title">Kim loại chuyển tiếp &amp; phức chất: vì sao ruby đỏ, và vì sao máu đỏ lá xanh lại là chuyện khác</h2>
 
-        <p class="ch-lede">Ba màu sắc kể trên đến từ cùng một cơ chế. Ở nguyên tử tự do, năm orbital d có <b>cùng năng lượng</b>. Khi các phối tử (ligand) vây quanh ion kim loại, chúng đẩy các orbital d không đều nhau và <b>tách chúng thành hai mức</b>. Khoảng cách giữa hai mức đó tình cờ nằm đúng vùng ánh sáng khả kiến — nên electron nhảy mức bằng cách <b>hấp thụ một màu</b>, và ta nhìn thấy màu bù.</p>
+        <p class="ch-lede">Màu của ruby đến từ chính ion kim loại. Ở nguyên tử tự do, năm orbital d có <b>cùng năng lượng</b>. Khi các phối tử (ligand) vây quanh ion kim loại, chúng đẩy các orbital d không đều nhau và <b>tách chúng thành hai mức</b>. Khoảng cách giữa hai mức đó tình cờ nằm đúng vùng ánh sáng khả kiến — nên electron nhảy mức bằng cách <b>hấp thụ một màu</b>, và ta nhìn thấy màu bù.</p>
 
         <div class="ch-formula"><b>Thuyết trường tinh thể, rút gọn</b>
 5 orbital d cùng mức  →  <span class="c">có phối tử</span>  →  tách thành 2 mức, cách nhau <b>Δ</b>
-E = hc/λ  ⇒  <b>Δ quyết định màu</b>. Δ lớn ⇒ hấp thụ ánh sáng bước sóng ngắn (tím/xanh) ⇒ ta thấy màu cam/đỏ.
+E = hc/λ  ⇒  <b>Δ quyết định màu</b>. Δ lớn ⇒ hấp thụ ánh sáng bước sóng ngắn (tím/xanh) ⇒ ta thấy màu bù: vàng/cam.
 
 <span class="c">Dãy phổ hoá (ligand làm Δ tăng dần):  I⁻ &lt; Br⁻ &lt; Cl⁻ &lt; F⁻ &lt; H₂O &lt; NH₃ &lt; CN⁻ &lt; CO</span>
 <span class="c">Chỉ cần đổi phối tử là đổi màu: [Cu(H₂O)₆]²⁺ xanh nhạt → thêm NH₃ → [Cu(NH₃)₄]²⁺ xanh đậm.</span></div>
@@ -2490,7 +2507,7 @@ E = hc/λ  ⇒  <b>Δ quyết định màu</b>. Δ lớn ⇒ hấp thụ ánh s�
           </div>
           <div class="ch-mini">
             <h4>Vì sao CO độc</h4>
-            <p>Hemoglobin mang oxy bằng ion <b>Fe²⁺</b> trong vòng heme. CO nằm cuối dãy phổ hoá — nó gắn vào Fe²⁺ <b>mạnh gấp ~200 lần</b> O₂ và không chịu nhả ra. Ghế bị chiếm, máu hết chỗ chở oxy. Diệp lục có cấu trúc gần giống hệt, chỉ thay Fe²⁺ bằng <b>Mg²⁺</b> — và điều đó đủ đổi từ đỏ sang xanh.</p>
+            <p>Hemoglobin mang oxy bằng ion <b>Fe²⁺</b> trong vòng heme. CO nằm cuối dãy phổ hoá — nó gắn vào Fe²⁺ <b>mạnh gấp ~200 lần</b> O₂ và không chịu nhả ra. Ghế bị chiếm, máu hết chỗ chở oxy. Diệp lục dùng một vòng họ hàng với heme và mang <b>Mg²⁺</b> ở giữa — nhưng đừng nghĩ chỉ cần thay ion là đỏ thành xanh: Mg²⁺ <b>không có electron d nào</b> (d⁰) nên không thể tách mức d. Màu của cả heme lẫn diệp lục sinh ra từ <b>hệ liên hợp π của chính cái vòng</b>, không phải từ ion ở giữa; ion kim loại chỉ chỉnh sắc thái. Đó là cơ chế màu thứ hai, mạnh hơn hẳn kiểu tách mức d — và là lý do máu với lá đậm màu hơn nhiều so với dung dịch phức kim loại thường.</p>
           </div>
         </div>
 
@@ -2505,7 +2522,7 @@ E = hc/λ  ⇒  <b>Δ quyết định màu</b>. Δ lớn ⇒ hấp thụ ánh s�
         <p class="ch-eyebrow-sec"><b>7.3</b> — chương duy nhất mà hạt nhân mới là nhân vật chính</p>
         <h2 class="ch-sec-title">Hoá hạt nhân: nơi nguyên tố đổi thành nguyên tố khác, và khối lượng thật sự biến mất</h2>
 
-        <p class="ch-lede">Toàn bộ giáo trình tới đây dựa trên một giả định: hạt nhân không đổi. Mục này gỡ giả định đó. Khi hạt nhân biến đổi, <b>nguyên tố đổi danh tính</b>, và năng lượng giải phóng lớn hơn phản ứng hoá học khoảng <b>một triệu lần</b> — vì lực hạt nhân mạnh hơn lực điện từ ngần ấy.</p>
+        <p class="ch-lede">Toàn bộ giáo trình tới đây dựa trên một giả định: hạt nhân không đổi. Mục này gỡ giả định đó. Khi hạt nhân biến đổi, <b>nguyên tố đổi danh tính</b>, và năng lượng giải phóng lớn hơn phản ứng hoá học khoảng <b>một triệu lần</b>. Không phải vì lực hạt nhân mạnh gấp một triệu lần lực điện từ — nó chỉ mạnh hơn cỡ trăm lần. Khoảng cách mới là phần còn lại: liên kết hoá học dài cỡ ångström, còn hạt nhân bó lại trong vài femtomet, nhỏ hơn khoảng mười vạn lần.</p>
 
         <div class="ch-tw">
           <table class="wb-table">
@@ -2528,7 +2545,7 @@ N = N₀ · (½)^(t/t½)     <span class="c">t½ không phụ thuộc nhiệt đ
 <b>E = mc²</b>  <span class="c">— phần khối lượng “hụt” khi hạt nhân hình thành chính là năng lượng liên kết hạt nhân.</span>
 <span class="c">Phân hạch ¹ g ²³⁵U giải phóng ≈ 8×10⁷ kJ — bằng đốt khoảng 3 tấn than đá.</span></div>
 
-        <p class="ch-p"><b>Phân hạch</b> (tách hạt nhân nặng) và <b>nhiệt hạch</b> (ghép hạt nhân nhẹ) đều toả năng lượng, và điều đó thoạt nghe mâu thuẫn. Lời giải nằm ở đường cong năng lượng liên kết trên mỗi nucleon: nó đạt <b>cực đại tại sắt-56</b>. Mọi hạt nhân đều “muốn” tiến về phía sắt — nặng hơn sắt thì tách ra có lợi, nhẹ hơn sắt thì ghép lại có lợi. Đó cũng là lý do các ngôi sao tổng hợp được nguyên tố tới sắt rồi dừng, và mọi nguyên tố nặng hơn trong cơ thể bạn đều sinh ra từ vụ nổ siêu tân tinh hoặc va chạm sao neutron.</p>
+        <p class="ch-p"><b>Phân hạch</b> (tách hạt nhân nặng) và <b>nhiệt hạch</b> (ghép hạt nhân nhẹ) đều toả năng lượng, và điều đó thoạt nghe mâu thuẫn. Lời giải nằm ở đường cong năng lượng liên kết trên mỗi nucleon: nó đạt <b>cực đại tại sắt-56</b>. Mọi hạt nhân đều “muốn” tiến về phía sắt — nặng hơn sắt thì tách ra có lợi, nhẹ hơn sắt thì ghép lại có lợi. Đó cũng là lý do các ngôi sao tổng hợp được nguyên tố tới sắt rồi dừng, và các nguyên tố nặng hơn trong cơ thể bạn sinh ra ở nơi khác: một phần trong các sao già đốt hết nhiên liệu (quá trình s, rồi thổi ra theo gió sao), phần còn lại từ vụ nổ siêu tân tinh và va chạm sao neutron.</p>
       </section>
 
       <section id="s-analytic">
@@ -2543,7 +2560,7 @@ N = N₀ · (½)^(t/t½)     <span class="c">t½ không phụ thuộc nhiệt đ
             <tbody>
               <tr><td><b>IR</b> — hồng ngoại</td><td>Dao động của liên kết</td><td><b>Có nhóm chức nào?</b></td><td>Đỉnh nhọn mạnh ở 1700 cm⁻¹ ⇒ có C=O. Đỉnh rộng ở 3300 cm⁻¹ ⇒ có O–H (ancol hoặc acid).</td></tr>
               <tr><td><b>NMR</b> — cộng hưởng từ hạt nhân</td><td>Môi trường của ¹H và ¹³C</td><td><b>Bộ khung nối thế nào?</b></td><td>Công cụ mạnh nhất. Số tín hiệu = số loại H khác nhau; diện tích = số H mỗi loại; tách vạch = số H ở carbon bên cạnh. Cùng nguyên lý với máy MRI trong bệnh viện.</td></tr>
-              <tr><td><b>MS</b> — khối phổ</td><td>Tỉ số khối lượng / điện tích</td><td><b>Khối lượng phân tử bao nhiêu?</b></td><td>Cho khối lượng chính xác tới 4 chữ số ⇒ suy ra công thức phân tử. Mảnh vỡ cho manh mối về cấu trúc.</td></tr>
+              <tr><td><b>MS</b> — khối phổ</td><td>Tỉ số khối lượng / điện tích</td><td><b>Khối lượng phân tử bao nhiêu?</b></td><td>Cho khối lượng chính xác tới 4 chữ số sau dấu phẩy ⇒ chỉ một công thức phân tử khớp được. Mảnh vỡ cho manh mối về cấu trúc.</td></tr>
               <tr><td><b>UV-Vis</b></td><td>Chuyển mức electron</td><td><b>Có hệ liên hợp không, và bao nhiêu?</b></td><td>Định lượng theo <b>định luật Beer: A = ε·l·c</b> — độ hấp thụ tỉ lệ thuận nồng độ. Đây là cơ sở của gần như mọi phép đo nồng độ trong phòng xét nghiệm.</td></tr>
             </tbody>
           </table>
@@ -2592,7 +2609,8 @@ N = N₀ · (½)^(t/t½)     <span class="c">t½ không phụ thuộc nhiệt đ
 N_A = 6,022×10²³ /mol      R = 8,314 J/(mol·K) = 0,08206 L·atm/(mol·K)
 F   = 96485 C/mol          k_B = 1,381×10⁻²³ J/K       0 °C = 273,15 K
 1 atm = 101,325 kPa = 760 mmHg          V_m (khí, đktc 0 °C 1 atm) = 22,4 L/mol
-K_w = 1,0×10⁻¹⁴ (25 °C)    c(H₂O) = 4,18 J/(g·K)</div>
+K_w = 1,0×10⁻¹⁴ (25 °C)    c(H₂O) = 4,18 J/(g·K)
+h   = 6,626×10⁻³⁴ J·s      c = 2,998×10⁸ m/s          <span class="c">— dùng trong E = hc/λ ở mục 7.2 và 7.4</span></div>
 
         <div class="ch-formula"><b>PHẦN 3 — LƯỢNG CHẤT</b>
 n = m/M          N = n·N_A          n = V/22,4 <span class="c">(khí, đktc)</span>
@@ -2621,6 +2639,13 @@ pH = pK_a + log([A⁻]/[HA])         <span class="c">(Henderson–Hasselbalch)</
 Acid yếu: [H⁺] ≈ √(K_a·C)          K_sp = [A^x+]^m[B^y−]^n
 E°_pin = E°_cathode − E°_anode      ΔG° = −nFE°
 E = E° − (0,0592/n)·log Q  <span class="c">(Nernst, ở 25 °C)</span></div>
+
+        <div class="ch-formula"><b>PHẦN 7 — ÁP DỤNG</b>
+E = hc/λ                    <span class="c">năng lượng của một photon — dùng cho màu phức chất và cho phổ</span>
+A = ε·l·C                   <span class="c">(Beer–Lambert) độ hấp thụ tỉ lệ với nồng độ</span>
+N = N₀·(½)^(t/t½)           <span class="c">phân rã phóng xạ</span>
+E = mc²                     <span class="c">độ hụt khối ⇒ năng lượng hạt nhân</span>
+(P + an²/V²)(V − nb) = nRT  <span class="c">(van der Waals) khí thật, khi mô hình lý tưởng gãy</span></div>
 
         <div class="ch-formula"><b>NHẬN DIỆN NHANH — dùng khi bí</b>
 Dấu ΔS?      → đếm mol KHÍ hai vế. Tăng ⇒ ΔS dương.
@@ -2655,7 +2680,7 @@ Nhanh hay chậm? → nhìn Ea, không nhìn ΔG. Hai chuyện khác nhau.</div>
           <table class="wb-table wb-table--striped">
             <thead><tr><th style="width:64px">#</th><th style="width:260px">Hợp chất chứa</th><th style="width:110px">Kết luận</th><th>Ngoại lệ</th></tr></thead>
             <tbody>
-              <tr><td>1</td><td>Kim loại kiềm (Li⁺, Na⁺, K⁺…) hoặc NH₄⁺</td><td><b>Tan</b></td><td>Không có ngoại lệ — quy tắc chắc chắn nhất bảng.</td></tr>
+              <tr><td>1</td><td>Kim loại kiềm (Li⁺, Na⁺, K⁺…) hoặc NH₄⁺</td><td><b>Tan</b></td><td>Chắc chắn nhất bảng. Ngoại lệ hiếm và đều là muối lithium: Li₂CO₃, Li₃PO₄, LiF chỉ tan ít.</td></tr>
               <tr><td>2</td><td>NO₃⁻, CH₃COO⁻, ClO₃⁻</td><td><b>Tan</b></td><td>Không có ngoại lệ đáng kể. <b>Mọi muối nitrat đều tan.</b></td></tr>
               <tr><td>3</td><td>Cl⁻, Br⁻, I⁻</td><td>Tan</td><td>Trừ <b>Ag⁺, Pb²⁺, Hg₂²⁺</b> — đây là cơ sở phép thử AgNO₃ nhận biết ion halide.</td></tr>
               <tr><td>4</td><td>SO₄²⁻</td><td>Tan</td><td>Trừ <b>Ba²⁺, Pb²⁺, Ca²⁺, Sr²⁺</b> (Ca tan ít). BaSO₄ không tan nên uống được làm thuốc cản quang chụp X-quang.</td></tr>
@@ -2672,7 +2697,8 @@ Nhanh hay chậm? → nhìn Ea, không nhìn ΔG. Hai chuyện khác nhau.</div>
 <span class="c">Đứng TRƯỚC H  ⇒ tan trong acid loãng và giải phóng H₂.  Zn + 2HCl → ZnCl₂ + H₂↑</span>
 <span class="c">Đứng SAU  H  ⇒ không phản ứng với acid loãng.          Cu + HCl → không phản ứng</span>
 <span class="c">K, Ba, Ca, Na phản ứng với NƯỚC ngay ở nhiệt độ thường.</span>
-<span class="c">Bảng này chính là <a href="#s-electro">thế khử chuẩn E°</a> xếp theo thứ tự — hai cách nói của cùng một thông tin.</span></div>
+<span class="c">Bảng này gần như chính là <a href="#s-electro">thế khử chuẩn E°</a> xếp theo thứ tự — hai cách nói của cùng một thông tin.
+Duy chỗ Hg và Ag thì hai bảng đảo nhau tuỳ tra E° của Hg²⁺ hay Hg₂²⁺; phần còn lại khớp.</span></div>
 
         <h3 class="ch-h3">pKa — độ mạnh acid, càng nhỏ càng mạnh</h3>
         <div class="ch-tw">
@@ -2714,7 +2740,7 @@ Nhanh hay chậm? → nhìn Ea, không nhìn ΔG. Hai chuyện khác nhau.</div>
               <tr><td><b>9</b></td><td><a href="#s-kinetics">5.1</a> – <a href="#s-equil">5.2</a></td><td>Xúc tác đổi cái gì và không đổi cái gì? Với Haber, vì sao không chạy ở nhiệt độ thấp dù cân bằng thuận lợi hơn?</td></tr>
               <tr><td><b>10</b></td><td><a href="#s-acid">5.3</a> – <a href="#s-rxntypes">5.6</a></td><td>Vì sao chuẩn độ acid acetic bằng NaOH có điểm tương đương ở pH 8,7 chứ không phải 7? Cân bằng phản ứng MnO₄⁻ + C₂O₄²⁻ trong môi trường acid.</td></tr>
               <tr><td><b>11</b></td><td><a href="#s-carbon">6.1</a> – <a href="#s-mech">6.4</a></td><td>Vẽ mọi đồng phân của C₅H₁₂. Chỉ ra nucleophile và electrophile trong phản ứng OH⁻ + CH₃Br.</td></tr>
-              <tr><td><b>12</b></td><td><a href="#s-subst">6.5</a> – <a href="#p7">phần 7</a></td><td>t-butyl bromide + NaOH loãng trong nước cho sản phẩm gì, cơ chế nào, và vì sao thu được hỗn hợp hai đối quang?</td></tr>
+              <tr><td><b>12</b></td><td><a href="#s-subst">6.5</a> – <a href="#p7">phần 7</a></td><td>3-bromo-3-methylhexane + NaOH loãng trong nước cho sản phẩm gì, cơ chế nào, và vì sao thu được hỗn hợp hai đối quang?</td></tr>
             </tbody>
           </table>
         </div>
@@ -2779,15 +2805,25 @@ function txt(parent, x, y, s, style, anchor) {
    thái được qua chip, nên nếu chúng không tới được bằng Tab thì người dùng bàn
    phím mất hẳn phần tương tác của trang. aria-pressed để trình đọc màn hình biết
    chip nào đang bật. */
-function chips(box, items, current, onPick) {
+function chips(box, items, current, onPick, momentary) {
   clear(box);
   items.forEach(function (it, i) {
     var b = document.createElement('button');
     b.type = 'button';
     b.className = 'ch-chip' + (i === current ? ' on' : '');
-    b.setAttribute('aria-pressed', i === current ? 'true' : 'false');
+    /* aria-pressed chỉ dành cho chip BẬT/TẮT. Hàng nút "nạp số liệu mẫu" là nút bấm một
+       lần, không có trạng thái — gắn aria-pressed="false" vĩnh viễn vào đó chỉ khiến
+       trình đọc màn hình đọc sai. */
+    if (!momentary) b.setAttribute('aria-pressed', i === current ? 'true' : 'false');
     b.textContent = it;
-    b.addEventListener('click', function () { onPick(i); });
+    /* Cả hàng chip bị dựng lại sau mỗi lần bấm, nên tiêu điểm rơi về <body>. Người dùng
+       bàn phím bấm Enter một cái là phải Tab lại từ đầu trang — trả tiêu điểm về đúng
+       chip vừa bấm. */
+    b.addEventListener('click', function () {
+      var had = document.activeElement === b;
+      onPick(i);
+      if (had && box.children[i]) box.children[i].focus();
+    });
     box.appendChild(b);
   });
 }
@@ -2823,15 +2859,15 @@ var EL = ('H|Hydrogen|1.008|nm|2.20|25|1312;He|Helium|4.003|ng|0|31|2372;Li|Lith
 'Os|Osmium|190.23|tm|2.20|130|840;Ir|Iridium|192.22|tm|2.20|135|880;Pt|Platinum|195.08|tm|2.28|135|870;' +
 'Au|Gold|196.97|tm|2.54|135|890;Hg|Mercury|200.59|tm|2.00|150|1007;Tl|Thallium|204.38|pt|1.62|190|589;' +
 'Pb|Lead|207.2|pt|2.33|180|716;Bi|Bismuth|208.98|pt|2.02|160|703;Po|Polonium|209|pt|2.00|190|812;' +
-'At|Astatine|210|hg|2.20|127|899;Rn|Radon|222|ng|0|120|1037;Fr|Francium|223|am|0.70|260|393;' +
+'At|Astatine|210|hg|2.20|140|899;Rn|Radon|222|ng|2.20|120|1037;Fr|Francium|223|am|0.70|260|393;' +
 'Ra|Radium|226|ae|0.90|215|509;Ac|Actinium|227|an|1.10|195|499;Th|Thorium|232.04|an|1.30|180|587;' +
 'Pa|Protactinium|231.04|an|1.50|180|568;U|Uranium|238.03|an|1.38|175|598;Np|Neptunium|237|an|1.36|175|605;' +
 'Pu|Plutonium|244|an|1.28|175|585;Am|Americium|243|an|1.13|175|578;Cm|Curium|247|an|1.28|176|581;' +
 'Bk|Berkelium|247|an|1.30|0|601;Cf|Californium|251|an|1.30|0|608;Es|Einsteinium|252|an|1.30|0|619;' +
 'Fm|Fermium|257|an|1.30|0|627;Md|Mendelevium|258|an|1.30|0|635;No|Nobelium|259|an|1.30|0|642;' +
-'Lr|Lawrencium|266|an|1.30|0|470;Rf|Rutherfordium|267|tm|0|0|580;Db|Dubnium|268|tm|0|0|0;' +
+'Lr|Lawrencium|266|an|1.30|0|479;Rf|Rutherfordium|267|tm|0|0|580;Db|Dubnium|268|tm|0|0|0;' +
 'Sg|Seaborgium|269|tm|0|0|0;Bh|Bohrium|270|tm|0|0|0;Hs|Hassium|269|tm|0|0|0;Mt|Meitnerium|278|un|0|0|0;' +
-'Ds|Darmstadtium|281|un|0|0|0;Rg|Roentgenium|282|un|0|0|0;Cn|Copernicium|285|tm|0|0|0;Nh|Nihonium|286|un|0|0|0;' +
+'Ds|Darmstadtium|281|un|0|0|0;Rg|Roentgenium|282|un|0|0|0;Cn|Copernicium|285|un|0|0|0;Nh|Nihonium|286|un|0|0|0;' +
 'Fl|Flerovium|289|un|0|0|0;Mc|Moscovium|290|un|0|0|0;Lv|Livermorium|293|un|0|0|0;Ts|Tennessine|294|un|0|0|0;' +
 'Og|Oganesson|294|un|0|0|0').split(';').map(function (row, i) {
   var p = row.split('|');
@@ -2941,6 +2977,12 @@ function periodOfZ(z) {
   });
 
   var menu = document.querySelector('.wb-navbar__menu');
+  var navBtn = document.querySelector('[data-navbar-toggle]');
+  /* Nút toggle phải khai báo trạng thái mở/đóng, không chỉ đổi hình: trình đọc màn
+     hình không thấy class .is-open. */
+  function syncMenu() {
+    if (navBtn) navBtn.setAttribute('aria-expanded', menu && menu.classList.contains('is-open') ? 'true' : 'false');
+  }
   document.addEventListener('click', function (e) {
     if (!menu || !e.target.closest) return;
     if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
@@ -2948,10 +2990,16 @@ function periodOfZ(z) {
        che mất phần đầu bài và không có cách nào đóng lại ngoài nút toggle. */
     else if (e.target.closest('.wb-navbar__menu .wb-nav__link') || !e.target.closest('.wb-navbar__menu'))
       menu.classList.remove('is-open');
+    syncMenu();
   });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && menu) menu.classList.remove('is-open');
+    if (e.key === 'Escape' && menu && menu.classList.contains('is-open')) {
+      menu.classList.remove('is-open');
+      syncMenu();
+      if (navBtn) navBtn.focus();
+    }
   });
+  syncMenu();
 
   var links = Array.prototype.slice.call(document.querySelectorAll('#toc .wb-sidenav__link'));
   var byId = {}, targets = [];
@@ -3031,10 +3079,19 @@ function periodOfZ(z) {
         ' electron chuyển từ ' + ex[0] + ' sang ' + ex[1] + '.');
       /* Không phải ngoại lệ nào cũng do "đầy một nửa": La, Ce, Ac, Th, U… lệch vì ở đầu
          khối f thì phân lớp d còn thấp hơn f, và Lr lệch vì hiệu ứng tương đối. */
+      /* Lý do phải đọc từ CẤU HÌNH THẬT, không đọc từ chữ 's'/'f' của phân lớp nguồn:
+         chỉ Cr, Mo, Cu, Ag, Pd, Au mới thật sự là ca "d⁵ / d¹⁰ bền bất thường". Nb (d⁴),
+         Ru (d⁷), Rh (d⁸), Pt (d⁹) lệch vì s và d gần nhau tới mức thứ tự điền không còn
+         cố định; Gd và Cm lệch vì f⁷ đầy một nửa, chứ không vì "ở đầu khối f". */
+      var nd = c.occ[ex[1]] || 0, nf = c.occ[ex[0]] || 0;
       lines.push('   Lý do: ' + (ex[0][1] === 's'
-        ? 'phân lớp d đầy một nửa (d⁵) hay đầy hẳn (d¹⁰) là cấu hình bền bất thường, đủ bền để "vay" 1 electron của phân lớp s.'
+        ? (nd === 5 || nd === 10
+          ? 'phân lớp d đầy một nửa (d⁵) hay đầy hẳn (d¹⁰) là cấu hình bền bất thường, đủ bền để "vay" electron của phân lớp s.'
+          : 'phân lớp d và s ở đây gần nhau tới mức thứ tự điền không còn cố định — cấu hình đo được chỉ để 1 electron ở s, và đó KHÔNG phải ca d⁵/d¹⁰.')
         : (ex[0][1] === 'f'
-          ? 'ở đầu khối f, phân lớp d vẫn còn nằm THẤP hơn phân lớp f, nên electron vào d trước.'
+          ? (nf === 7
+            ? 'phân lớp f đầy một nửa (f⁷) bền bất thường, nên 1 electron ở lại d thay vì ghép vào f.'
+            : 'ở đầu khối f, phân lớp d vẫn còn nằm THẤP hơn phân lớp f, nên electron vào d trước.')
           : 'ở nguyên tố siêu nặng, hiệu ứng tương đối kéo 7p xuống dưới 6d.')));
     }
     out.textContent = lines.join('\n');
@@ -3133,7 +3190,10 @@ function periodOfZ(z) {
         var v = valueOf(e);
         if (v > 0) {
           var t = (v - lo) / (hi - lo);
-          bg = 'rgba(' + ink + ',' + (0.05 + 0.55 * t).toFixed(3) + ')';
+          /* Trần 0,41 chứ không phải 0,60: đậm hơn nữa thì nền tổng hợp rơi vào dải mà
+             cả --wb-fg lẫn --wb-canvas đều không đạt 4,5:1 với chữ trên ô, ở cả hai nền
+             sáng và tối. Đo được: 6,6:1 (sáng) và 4,6:1 (tối) ở ô đậm nhất. */
+          bg = 'rgba(' + ink + ',' + (0.05 + 0.36 * t).toFixed(3) + ')';
           label = mode === 2 ? fx(v, 2) : String(Math.round(v));
         } else { d.classList.add('dim'); label = '—'; }
       }
@@ -3162,7 +3222,7 @@ function periodOfZ(z) {
       var unit = mode === 2 ? '' : (mode === 3 ? ' pm' : ' kJ/mol');
       add('nhạt = thấp');
       for (var i = 0; i <= 5; i++)
-        add('<span class="sw" style="background:rgba(' + ink + ',' + (0.05 + 0.55 * (i / 5)).toFixed(3) + ')"></span>');
+        add('<span class="sw" style="background:rgba(' + ink + ',' + (0.05 + 0.36 * (i / 5)).toFixed(3) + ')"></span>');
       add('đậm = cao  ·  ' + (mode === 2 ? fx(lo, 2) : Math.round(lo)) + unit + ' → ' +
           (mode === 2 ? fx(hi, 2) : Math.round(hi)) + unit);
       add('<span style="opacity:.5">ô mờ = không có số liệu đáng tin</span>');
@@ -3233,7 +3293,9 @@ function periodOfZ(z) {
     }
     svgEl(svg, 'circle', { cx: xa, cy: y, r: 26 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.6');
     svgEl(svg, 'circle', { cx: xb, cy: y, r: 26 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.6');
-    var A = PAIRS[pick][1], B = PAIRS[pick][2];
+    /* pick = −1 nghĩa là ΔEN đã bị kéo ra khỏi giá trị của cặp nào cả — vẽ hai nguyên tử
+       vô danh thay vì gán bừa ký hiệu nguyên tố cho một ΔEN không phải của chúng. */
+    var A = pick >= 0 ? PAIRS[pick][1] : 'A', B = pick >= 0 ? PAIRS[pick][2] : 'B';
     /* Vế PHẢI luôn phải là nguyên tử âm điện hơn — đám mây lệch về phía đó và nhãn δ−
        cũng đặt ở đó. Không sắp lại thì cặp C–H (C âm điện hơn H) bị vẽ ngược dấu. */
     var eA = bySym(A), eB = bySym(B);
@@ -3284,7 +3346,16 @@ function periodOfZ(z) {
       pick = i; wire(); setPair(i); render();
     });
   }
-  rng.addEventListener('input', render);
+  /* Kéo thanh ΔEN thì cặp đang chọn không còn đúng nữa: giữ chip sáng sẽ khiến mô hình
+     nói "electron bị O lấy hẳn" cho cặp H–O ở ΔEN 3,3. Tắt chip, quay về nhãn A/B. */
+  rng.addEventListener('input', function () {
+    var d = parseInt(rng.value, 10);
+    if (pick >= 0) {
+      var a = bySym(PAIRS[pick][1]), b = bySym(PAIRS[pick][2]);
+      if (Math.abs(Math.round(Math.abs(a.en - b.en) * 100) - d) > 1) { pick = -1; wire(); }
+    }
+    render();
+  });
   /* Cặp mặc định phải khớp ΔEN mặc định, nếu không lần vẽ đầu tiên sẽ hiện chip
      H–O đang sáng mà thanh trượt lại nằm ở một giá trị khác. */
   wire(); setPair(pick); render();
@@ -3309,7 +3380,7 @@ function periodOfZ(z) {
     53: { n: 'Thẳng', ang: '180°', ex: 'XeF₂, I₃⁻', eg: 'Lưỡng chóp tam giác', b: [[-90,L],[90,L]], p: [[180],[35],[-35]] },
     60: { n: 'Bát diện', ang: '90°', ex: 'SF₆, [Fe(CN)₆]³⁻', eg: 'Bát diện', b: [[-90,L],[90,L],[180,L],[0,L],[40,W],[220,D]], p: [] },
     61: { n: 'Chóp vuông', ang: '~85°', ex: 'BrF₅', eg: 'Bát diện', b: [[-90,L],[180,L],[0,L],[40,W],[220,D]], p: [[90]] },
-    62: { n: 'Vuông phẳng', ang: '90°', ex: 'XeF₄, [Ni(CN)₄]²⁻', eg: 'Bát diện', b: [[180,L],[0,L],[40,W],[220,D]], p: [[-90],[90]] }
+    62: { n: 'Vuông phẳng', ang: '90°', ex: 'XeF₄, ICl₄⁻', eg: 'Bát diện', b: [[180,L],[0,L],[40,W],[220,D]], p: [[-90],[90]] }
   };
   var MAXLONE = { 2: 0, 3: 1, 4: 2, 5: 3, 6: 2 };
   var st = 4, lo = 2;
@@ -3402,7 +3473,14 @@ function periodOfZ(z) {
       svgEl(svg, 'rect', { x: x0, y: y, width: w, height: 15, rx: 3 }, 'fill:var(--wb-neutral-weak)');
       var fw = Math.max(2, w * clamp(val / max, 0, 1));
       svgEl(svg, 'rect', { x: x0, y: y, width: fw, height: 15, rx: 3 }, 'fill:rgba(' + ink + ',.72)');
-      txt(svg, x0 + fw + 8, y + 12, val + unit, 'font-size:10.5px;fill:var(--wb-fg);font-family:var(--wb-font-mono)');
+      /* Giá trị vượt trần (NaCl sôi ở 1465 °C so với trần 120) làm thanh chạy hết chiều
+         rộng, và số đặt sau thanh thì tràn ra ngoài khung SVG. Lúc đó đặt số vào TRONG
+         thanh, căn phải, đổi màu chữ cho đọc được trên nền đậm. */
+      if (fw > w - 64)
+        txt(svg, x0 + fw - 8, y + 12, val + unit,
+          'font-size:10.5px;fill:var(--wb-canvas);font-weight:650;font-family:var(--wb-font-mono)', 'end');
+      else
+        txt(svg, x0 + fw + 8, y + 12, val + unit, 'font-size:10.5px;fill:var(--wb-fg);font-family:var(--wb-font-mono)');
     }
     bar(14, 'khối lượng mol', m[2], 100, ' g/mol');
     bar(48, 'nhiệt độ sôi', m[3], 120, ' °C');
@@ -3628,7 +3706,7 @@ function periodOfZ(z) {
     txt(svg, 320, 116, 'V = ' + fx(V, 2) + ' L', 'font-size:20px;font-weight:720;fill:var(--wb-fg);font-family:var(--wb-font-mono)');
     txt(svg, 320, 146, 'mật độ ' + fx(n / V * 1000, 1) + ' mmol/L  ·  ' + fx(n * 6.022, 2) + '×10²³ hạt',
       'font-size:11px;fill:var(--wb-fg-subtle);font-family:var(--wb-font-mono)');
-    txt(svg, 320, 168, 'tốc độ trung bình của N₂ ở ' + T + ' K ≈ ' + Math.round(Math.sqrt(3 * 8.314 * T / 0.028)) + ' m/s',
+    txt(svg, 320, 168, 'tốc độ căn quân phương của N₂ ở ' + T + ' K ≈ ' + Math.round(Math.sqrt(3 * 8.314 * T / 0.028)) + ' m/s',
       'font-size:11px;fill:var(--wb-fg-subtle);font-family:var(--wb-font-mono)');
 
     out.textContent =
@@ -3646,8 +3724,15 @@ function periodOfZ(z) {
   var rh = $('gb-h'); if (!rh) return;
   var rs = $('gb-s'), rt = $('gb-t'), hv = $('gb-hv'), sv = $('gb-sv'), tv = $('gb-tv');
   var svg = $('gb-svg'), out = $('gb-out'), pbox = $('gb-presets');
-  var PRE = [['Đá tan', 6, 22], ['Nước sôi', 41, 109], ['Nung vôi CaCO₃', 178, 161],
-    ['NH₄NO₃ tan', 26, 108], ['Haber (NH₃)', -92, -198], ['Đốt methane', -890, -243]];
+  /* ΔS của "Nước sôi" là 110 chứ không phải 109: cả điểm của preset này là chỗ giao rơi
+     ĐÚNG vào 100 °C, mà ΔH trên thanh trượt chỉ nhận số nguyên (giá trị thật 40,66
+     kJ/mol). 41/0,110 = 373 K; lấy 109 thì ra 376 K = 103 °C và preset tự bác chính nó. */
+  var PRE = [['Đá tan', 6, 22], ['Nước sôi', 41, 110], ['Nung vôi CaCO₃', 178, 161],
+    ['NH₄NO₃ tan', 26, 108], ['Haber (NH₃)', -92, -198], ['Đốt methane', -890, -243],
+    /* Ô ΔH− ΔS+ cần một ví dụ thật. Đốt methane KHÔNG phải: 2 mol khí đầu → 1 mol khí
+       cuối (nước ngưng tụ), nên ΔS của nó âm — chính preset ở trên cho −243. Phân huỷ
+       oxy già thì đúng: 2H₂O₂(l) → 2H₂O(l) + O₂(g), sinh thêm một mol khí. */
+    ['Phân huỷ H₂O₂', -98, 63]];
 
   function render() {
     var H = parseInt(rh.value, 10), S = parseInt(rs.value, 10), T = parseInt(rt.value, 10);
@@ -3694,7 +3779,7 @@ function periodOfZ(z) {
     txt(svg, (X0 + X1) / 2, Y1 + 34, 'nhiệt độ (K)', 'font-size:10px;fill:var(--wb-fg-subtle);font-family:var(--wb-font)', 'middle');
 
     var quad, note;
-    if (H <= 0 && S >= 0) { quad = 'ΔH ≤ 0, ΔS ≥ 0'; note = 'Tự xảy ra ở MỌI nhiệt độ — cả hai động lực cùng chiều. Ví dụ: phản ứng cháy.'; }
+    if (H <= 0 && S >= 0) { quad = 'ΔH ≤ 0, ΔS ≥ 0'; note = 'Tự xảy ra ở MỌI nhiệt độ — cả hai động lực cùng chiều. Ví dụ: phân huỷ H₂O₂ (oxy già).'; }
     else if (H >= 0 && S <= 0) { quad = 'ΔH ≥ 0, ΔS ≤ 0'; note = 'KHÔNG BAO GIỜ tự xảy ra — cả hai động lực cùng chống lại. Muốn chạy phải bơm năng lượng từ ngoài (quang hợp dùng ánh sáng).'; }
     else if (H < 0 && S < 0) { quad = 'ΔH < 0, ΔS < 0'; note = 'Chỉ tự xảy ra khi ĐỦ LẠNH (T < T giao) — enthalpy thắng khi TΔS còn nhỏ. Ví dụ: nước đóng băng.'; }
     else { quad = 'ΔH > 0, ΔS > 0'; note = 'Chỉ tự xảy ra khi ĐỦ NÓNG (T > T giao) — entropy cần nhiệt độ cao mới đủ nặng ký. Ví dụ: đá tan, nung vôi.'; }
@@ -3713,7 +3798,7 @@ function periodOfZ(z) {
       var tc = PRE[i][2] !== 0 ? PRE[i][1] / (PRE[i][2] / 1000) : 298;
       rt.value = clamp(Math.round(tc > 0 && tc < 1200 ? tc : 298), 100, 1200);
       render();
-    });
+    }, true);
   }
   [rh, rs, rt].forEach(function (el) { el.addEventListener('input', render); });
   wire(); render();
@@ -3859,7 +3944,7 @@ function periodOfZ(z) {
     var realEa = 50, k1 = Math.exp(-realEa / (R * 298)), k2 = Math.exp(-realEa / (R * 308));
     out.textContent =
       'TRÊN ĐƯỜNG CONG ĐANG VẼ (thang năng lượng đã phóng đại ' + MAG + ' lần cho nhìn thấy được):\n' +
-      '  ở ' + T + ' K, phần diện tích bên phải vạch Eₐ ≈ ' + fx(f * 100, 2) + ' % tổng diện tích\n' +
+      '  ở ' + T + ' K, tỉ lệ phân tử có động năng vượt Eₐ ≈ ' + fx(f * 100, 2) + ' %\n' +
       '  lên ' + (T + 10) + ' K thì thành ' + fx(f2 * 100, 2) + ' %  →  gấp ' + fx(f2 / f, 2) + ' lần\n' +
       'Con số này CHỈ đúng cho hình vẽ. Với năng lượng hoạt hoá thật, tỉ lệ nhỏ hơn nhiều bậc\n' +
       'và mức tăng khi thêm 10 K thì lớn hơn nhiều — đó mới là điều đáng nhớ.\n\n' +
@@ -3966,7 +4051,12 @@ function periodOfZ(z) {
       var t = i < 7 ? (1 - i / 7) : ((i - 6) / 8);
       svgEl(svg, 'rect', { x: X0 + (X1 - X0) * i / 14, y: y, width: (X1 - X0) / 14, height: h2 },
         'fill:rgba(' + ink + ',' + (0.07 + 0.30 * t).toFixed(3) + ')');
-      txt(svg, X0 + (X1 - X0) * (i + 0.5) / 14, y + h2 + 14, String(i),
+    }
+    /* Số phải đứng ở MÉP ô, không ở giữa ô: mũi chỉ và các vạch mốc đều đặt theo pH/14,
+       nên nhãn đặt ở (i+0,5)/14 làm cả thang lệch nửa ô — vạch "trung tính" rơi vào giữa
+       số 6 và số 7, và mọi giá trị đọc ra bị lệch 0,5 đơn vị pH. 15 nhãn cho 14 ô. */
+    for (var i = 0; i <= 14; i++) {
+      txt(svg, X0 + (X1 - X0) * i / 14, y + h2 + 14, String(i),
         'font-size:9.5px;fill:var(--wb-fg-subtle);font-family:var(--wb-font-mono)', 'middle');
     }
     svgEl(svg, 'line', { x1: X0 + (X1 - X0) / 2, y1: y - 6, x2: X0 + (X1 - X0) / 2, y2: y + h2 + 4 },
@@ -3993,7 +4083,7 @@ function periodOfZ(z) {
     lines.push(s[0] + '  ·  ' + kindName + '  ·  nồng độ ' + (C >= 0.01 ? fx(C, 4) : C.toExponential(2)) + ' M');
     if (s[1] === 'sa') {
       lines.push('Phân ly hoàn toàn ⇒ [H⁺] ≈ C = ' + h.toExponential(3) + ' M ⇒ pH = ' + fx(pH, 2));
-      lines.push('(Ở nồng độ dưới 10⁻⁶ M, phải tính thêm H⁺ do nước tự phân ly — nếu không sẽ ra pH > 7 cho một acid, điều vô lý.)');
+      lines.push('(Ở nồng độ rất loãng, máy vẫn cộng thêm H⁺ do nước tự phân ly — không cộng thì một acid loãng sẽ ra pH > 7, điều vô lý.)');
     } else if (s[1] === 'wa') {
       var alpha = h / C;
       lines.push('Kₐ = ' + s[2].toExponential(2) + '  ⇒  pKₐ = ' + fx(-Math.log(s[2]) / Math.LN10, 2));
@@ -4100,7 +4190,7 @@ function periodOfZ(z) {
         ? 'Acid yếu: điểm tương đương ở pH ' + fx(pEq, 2) + ' > 7 vì lúc đó dung dịch chỉ còn base liên hợp A⁻.\n' +
           'Chọn chỉ thị phenolphtalein (đổi màu 8,3–10,0) — methyl da cam sẽ đổi màu quá sớm và cho kết quả sai.'
         : 'Acid mạnh: điểm tương đương đúng pH 7 vì sản phẩm NaCl hoàn toàn trung tính.\n' +
-          'Bước nhảy pH ở đây rất dốc (từ ~3 lên ~11 chỉ trong khoảng 0,1 mL) nên chỉ thị nào cũng dùng được.');
+          'Bước nhảy pH ở đây rất dốc (từ ~4 lên ~10 chỉ trong khoảng 0,1 mL quanh điểm tương đương) nên chỉ thị nào cũng dùng được.');
   }
   function wire() {
     chips(box, ACIDS.map(function (a) { return a[0]; }), pick, function (i) { pick = i; wire(); render(); });
@@ -4139,6 +4229,14 @@ function periodOfZ(z) {
   function render() {
     var A = HALF[+sa.value], B = HALF[+sb.value];
     if (A === B) { out.textContent = 'Chọn hai điện cực khác nhau — hai nửa giống hệt nhau thì E°pin = 0 và không có dòng nào chạy.'; return; }
+    /* Đảo chiều nửa phản ứng để viết dạng oxi hoá. Phải bóc phần chú thích trong ngoặc
+       ra trước: nửa phản ứng mốc chuẩn ghi '2H⁺ + 2e⁻ → H₂  (mốc chuẩn)', đảo thẳng thì
+       chú thích rơi vào giữa phương trình. */
+    function flip(eq) {
+      var note = '', m = eq.match(/\s*\([^)]*\)\s*$/);
+      if (m) { note = '  ' + m[0].trim(); eq = eq.slice(0, m.index); }
+      return eq.split(' → ').reverse().join(' → ').trim() + note;
+    }
     var cath = A[1] >= B[1] ? A : B, anod = A[1] >= B[1] ? B : A;
     var E = cath[1] - anod[1];
     var n = cath[2] * anod[2] / gcd(cath[2], anod[2]);
@@ -4146,11 +4244,12 @@ function periodOfZ(z) {
     var K = Math.exp(n * E / 0.02569);
     out.textContent =
       'CATHODE (cực dương, xảy ra sự KHỬ, E° cao hơn)\n  ' + cath[0] + '        E° = ' + (cath[1] >= 0 ? '+' : '') + fx(cath[1], 2) + ' V\n' +
-      'ANODE (cực âm, xảy ra sự OXI HOÁ, viết ngược lại)\n  ' + anod[0].split(' → ').reverse().join(' → ') + '        E° = ' + (anod[1] >= 0 ? '+' : '') + fx(anod[1], 2) + ' V\n' +
+      'ANODE (cực âm, xảy ra sự OXI HOÁ, viết ngược lại)\n  ' + flip(anod[0]) + '        E° = ' + (anod[1] >= 0 ? '+' : '') + fx(anod[1], 2) + ' V\n' +
       '\n' +
       'E°pin = E°(cathode) − E°(anode) = ' + fx(cath[1], 2) + ' − (' + fx(anod[1], 2) + ') = ' + fx(E, 2) + ' V\n' +
       'Số electron trao đổi n = ' + n + '   (bội chung nhỏ nhất của hai nửa)\n' +
-      'ΔG° = −nFE° = −' + n + ' × 96485 × ' + fx(E, 2) + ' = ' + fx(dG, 1) + ' kJ/mol   ⇒ ' +
+      'ΔG° = −nFE° = −' + n + ' × 96485 × ' + fx(E, 2) + ' = ' + Math.round(dG * 1000) +
+      ' J/mol = ' + fx(dG, 1) + ' kJ/mol   ⇒ ' +
         (dG < 0 ? 'ÂM ⇒ pin tự phóng điện được' : 'DƯƠNG ⇒ phải cấp điện từ ngoài') + '\n' +
       'K = e^(nE°/0,02569) ≈ ' + (K > 1e6 ? K.toExponential(2) : fx(K, 1)) +
         (K > 1e3 ? '   ⇒ cân bằng lệch hẳn về phía sản phẩm' : '   ⇒ K chỉ hơn 1 chút, cân bằng dừng lại khi hai bên còn lượng đáng kể') + '\n' +
@@ -4210,7 +4309,7 @@ function periodOfZ(z) {
       svgEl(svg, 'rect', { x: x0, y: y, width: Math.max(w * t, 2), height: 17, rx: 3 },
         'fill:rgba(' + ink + ',' + (i === best ? '.85' : '.35') + ')');
       txt(svg, x0 + Math.max(w * t, 2) + 8, y + 13,
-        s[i] <= -5 ? 'gần như không xảy ra' : (i === best ? 'CHIẾM ƯU THẾ' : 'có thể có ít'),
+        s[i] <= -4 ? 'gần như không xảy ra' : (i === best ? 'CHIẾM ƯU THẾ' : 'có thể có ít'),
         'font-size:10px;fill:var(--wb-fg-muted);font-family:var(--wb-font)');
     }
     var second = -1;
@@ -4219,8 +4318,8 @@ function periodOfZ(z) {
       'Điều kiện: ' + DEG[d] + '  ·  ' + NUC[nu] + '  ·  ' + SOLV[so] + '  ·  ' + TEMP[te] + '\n\n' +
       '⇒ Cơ chế chính: ' + NAMES[best] + '\n' + WHY[NAMES[best]] +
       (second >= 0 ? '\n\nKèm theo một phần ' + NAMES[second] + ' — trong phòng thí nghiệm bạn sẽ thu được hỗn hợp, không phải một sản phẩm sạch.' : '') +
-      (d === 0 && s[0] <= -5 ? '\n\nLưu ý: bậc 1 gần như không bao giờ đi SN1/E1 — carbocation bậc 1 quá kém bền để tồn tại.' : '') +
-      (d === 2 && s[1] <= -5 ? '\n\nLưu ý: bậc 3 gần như không bao giờ đi SN2 — ba nhóm alkyl chặn kín đường tấn công từ phía sau.' : '');
+      (d === 0 && s[0] <= -4 ? '\n\nLưu ý: bậc 1 gần như không bao giờ đi SN1/E1 — carbocation bậc 1 quá kém bền để tồn tại.' : '') +
+      (d === 2 && s[1] <= -4 ? '\n\nLưu ý: bậc 3 gần như không bao giờ đi SN2 — ba nhóm alkyl chặn kín đường tấn công từ phía sau.' : '');
   }
   function wire() {
     chips(dBox, ['1°', '2°', '3°'], d, function (i) { d = i; wire(); render(); });
@@ -4252,6 +4351,10 @@ function periodOfZ(z) {
     list.forEach(function (el) {
       var over = el.scrollWidth - el.clientWidth > 4;
       el.classList.toggle('has-xscroll', over);
+      /* Chuột và ngón tay cuộn được khối này; bàn phím thì không, vì <div> không tự
+         nhận tiêu điểm — cột bên phải của 35 bảng thành vùng không tới được. Chỉ thêm
+         chặng tab ở khối THẬT SỰ tràn, để khối vừa khung không sinh chặng tab vô ích. */
+      el.tabIndex = over ? 0 : -1;
       if (over) edges(el);
       else { el.classList.remove('at-start'); el.classList.remove('at-end'); }
     });
