@@ -1,8 +1,8 @@
 # Repo này — luật chung cho mọi agent
 
 Đây là một repo chứa **nhiều project con độc lập**, mỗi project có luật riêng trong
-`CLAUDE.md` của chính nó. File này chỉ nói về hai thứ vắt ngang tất cả: **cổng chất lượng
-và cách chúng chạy tự động**, và **luật về chữ viết trên trang**.
+`CLAUDE.md` của chính nó. File này chỉ nói về thứ vắt ngang tất cả: **cổng chất lượng và
+cách chúng chạy tự động**.
 
 | Project | Luật riêng | Cổng | Lớp đang nối |
 |---|---|---|---|
@@ -14,9 +14,8 @@ và cách chúng chạy tự động**, và **luật về chữ viết trên tra
 | các project khác | xem thư mục | — | — |
 
 `pages/` và `cooking/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự chứa,
-nên luật nội dung duy nhất áp cho cả repo nằm ở mục *Chữ trên trang* dưới đây. Cổng của
-chúng chỉ kiểm thứ đúng/sai khách quan — id trùng, anchor gãy, asset thiếu, thẻ lệch;
-giá trị của một câu thì máy không đo được, đó là việc của người viết. `cooking/` gồm bốn trang công thức (Việt, Hàn,
+không có luật nội dung chung để viết ra. Cổng của chúng chỉ kiểm thứ đúng/sai khách quan —
+id trùng, anchor gãy, asset thiếu, thẻ lệch. `cooking/` gồm bốn trang công thức (Việt, Hàn,
 Âu mặn, Bánh Âu) dùng chung một khung filter/modal, cộng một trang kiến thức nền
 (`food-fundamentals` — explainer tĩnh, sơ đồ SVG thịt/bò, nhiệt độ, kỹ thuật, rượu); tách
 khỏi `pages/` để gom một chỗ, nên có cổng cùng bộ kiểm nhưng riêng thư mục.
@@ -66,42 +65,6 @@ không đi qua tool Edit/Write nên nó không thấy. Lớp 2 bịt lỗ đó. 
 
 `git commit --no-verify` và `git push --no-verify` vẫn dùng được, và đôi khi đúng là cần.
 Nhưng bỏ qua rồi thì phải sửa ngay sau đó — cổng bị tắt lâu là cổng đã chết.
-
----
-
-## Chữ trên trang: mỗi chữ phải trả giá vé
-
-Mọi chữ hiện ra trên bất kỳ trang nào trong repo này — mô tả ô ở `index.html`, nhãn, caption,
-tiêu đề section, meta description, chú thích SVG — phải **ít nhất** và **đáng giá nhất**.
-Ít chữ không phải mục tiêu; **mật độ giá trị** mới là. Một câu dài mà câu nào cũng đắt thì giữ;
-một cụm ba chữ không giúp gì thì cắt.
-
-**Test để cắt** — bỏ thứ đang nói tới ra khỏi trang, câu mô tả có trở thành **sai** không?
-
-| Câu | Bỏ đi thì | Phán |
-|---|---|---|
-| "…giải thích từ số không **(Anh/Việt)**" | trang vẫn "giải thích thuyết tương đối từ số không" | **cắt** — nói về cái nút, không nói về kiến thức |
-| "…**7 phần từ hạt nhân tới hoá hữu cơ**" | câu thành sai về phạm vi | giữ |
-| "…**16 mô hình nghịch tại chỗ**" | câu thành sai về hình thức của phần kiến thức | giữ |
-
-Lỗi hay gặp nhất là **mô tả bao bì**: ghi tính năng UI của trang vào chỗ dành cho nội dung của
-trang. `(Anh/Việt)`, "responsive", "có dark mode", "click để xem" đều trượt test trên. Người đọc
-quét danh sách để quyết định *có mở trang không* — chủ đề, phạm vi, độ sâu giúp quyết định; một
-cái nút thì không.
-
-Sự cố có thật ngày 08/09/2026: ô Relativity ở `index.html` ghi *"Thuyết tương đối hẹp & rộng,
-giải thích từ số không **(Anh/Việt)** — đồng hồ chạy chậm…"*. Cụm đó vừa vô dụng vừa chen vào
-giữa mệnh đề chính làm ngắt câu. Chủ repo bắt được, không phải cổng.
-
-Ba thứ suy ra:
-
-1. **Không lint được bằng blacklist từ khoá.** Đã đo: chặn chuỗi `"Anh/Việt"` sẽ báo giả trên ô
-   *English From the Ground Up*, nơi song ngữ đúng là nội dung. Cổng ở đây là con mắt.
-2. **Đọc lại câu mình vừa viết như người chưa biết trang này.** Không cầm được gì thì viết lại,
-   đừng thêm chữ.
-3. **Trang dựng bằng `web-builder`** còn một cổng nữa cùng nội dung này: gate *G10 · Copy pays
-   rent* trong `references/page-review.md` của skill đó. Hai chỗ nói cùng một luật là chủ ý —
-   agent nào không nạp skill vẫn đọc được ở đây.
 
 ---
 
