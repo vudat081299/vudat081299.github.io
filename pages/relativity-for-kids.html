@@ -1,0 +1,2200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Relativity for Kids — light, time, gravity &amp; the Doppler effect, with moving pictures</title>
+<meta name="description" content="Special and general relativity explained for primary-school readers, in English: why speed is always compared to something, why light always travels at the same speed, why moving clocks and clocks near heavy things tick slower, and why a siren changes its song. Nine animated labs you can play with, and a Detail popup on every part with the real equations for older readers.">
+
+<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+<link rel="stylesheet" href="../web-builder/web-builder.css">
+<script>
+  /* Theme before first paint: saved choice first, otherwise follow the OS. */
+  try {
+    var t = localStorage.getItem('hub-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   Page-local styles. Structure, spacing and the colour accents live here;
+   every surface, border and shadow still comes from the wb-* tokens so the
+   page flips light/dark with the rest of the site.
+
+   One deliberate break from the kit's white-black-grey rule: this page is
+   written for eight-year-olds, and colour is doing real work — each of the
+   four parts owns a hue, and every figure re-uses that hue so a reader can
+   tell at a glance which idea a picture belongs to.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
+::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+
+/* Drawing palette — canvases read these, so one theme flip repaints every figure. */
+:root {
+  --rl-ink:     #18181b;
+  --rl-dim:     #52525b;
+  --rl-faint:   #a1a1aa;
+  --rl-line:    #d4d4d8;
+  --rl-stage:   #ffffff;
+  --rl-stage-2: #f4f4f5;
+  --rl-sky:     #eef2ff;
+  --rl-ground:  #e4e4e7;
+}
+.dark {
+  --rl-ink:     #f4f4f5;
+  --rl-dim:     #a1a1aa;
+  --rl-faint:   #71717a;
+  --rl-line:    #3f3f46;
+  --rl-stage:   #141417;
+  --rl-stage-2: #1c1c20;
+  --rl-sky:     #14141c;
+  --rl-ground:  #27272a;
+}
+
+/* The four parts, each with a hue. --sec is the strong ink, --sec-soft the tint. */
+.p-move { --sec: #b45309; --sec-soft: rgba(217, 119, 6, .13); }
+.p-fast { --sec: #6d28d9; --sec-soft: rgba(124, 58, 237, .13); }
+.p-wave { --sec: #0f766e; --sec-soft: rgba(13, 148, 136, .14); }
+.p-bend { --sec: #be123c; --sec-soft: rgba(225, 29, 72, .12); }
+.dark .p-move { --sec: #fbbf24; --sec-soft: rgba(251, 191, 36, .16); }
+.dark .p-fast { --sec: #a78bfa; --sec-soft: rgba(167, 139, 250, .17); }
+.dark .p-wave { --sec: #2dd4bf; --sec-soft: rgba(45, 212, 191, .16); }
+.dark .p-bend { --sec: #fb7185; --sec-soft: rgba(251, 113, 133, .16); }
+
+/* ---- page frame -------------------------------------------------------- */
+.rl-wrap  { max-width: 940px; margin: 0 auto; padding: 0 20px 90px; }
+.rl-prose { max-width: 700px; }
+section[id] { scroll-margin-top: 78px; }
+
+/* ---- hero -------------------------------------------------------------- */
+.rl-hero { padding: 34px 0 8px; }
+.rl-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--wb-fg-muted); margin: 0 0 12px; }
+.rl-title { font-size: clamp(30px, 6vw, 50px); font-weight: 780; letter-spacing: -.025em; line-height: 1.1; margin: 0 0 16px; max-width: 16ch; }
+.rl-title u { text-decoration: none; background: linear-gradient(transparent 62%, rgba(124, 58, 237, .28) 62%); }
+.dark .rl-title u { background: linear-gradient(transparent 62%, rgba(167, 139, 250, .3) 62%); }
+.rl-lede { font-size: 19px; line-height: 1.65; color: var(--wb-fg); max-width: 62ch; margin: 0 0 14px; }
+.rl-lede b { font-weight: 680; }
+.rl-hero-meta { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .05em; color: var(--wb-fg-muted); line-height: 1.7; margin: 18px 0 0; }
+
+/* ---- the three rules on the cover ------------------------------------- */
+.rl-rules { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 26px 0 8px; }
+@media (max-width: 720px) { .rl-rules { grid-template-columns: 1fr; } }
+.rl-rule { padding: 16px 18px; border-radius: var(--wb-radius-lg); background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-top: 4px solid var(--sec); }
+.rl-rule__n { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--sec); font-weight: 700; margin: 0 0 6px; }
+.rl-rule__t { font-size: 16px; font-weight: 660; line-height: 1.4; margin: 0; }
+
+/* ---- part divider ------------------------------------------------------ */
+.rl-part { margin: 62px 0 26px; padding-top: 22px; border-top: 2px solid var(--sec); }
+.rl-part__k { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--sec); font-weight: 700; margin: 0 0 6px; }
+.rl-part__t { font-size: clamp(22px, 3.6vw, 30px); font-weight: 740; letter-spacing: -.02em; margin: 0 0 8px; }
+.rl-part__s { font-size: 16px; line-height: 1.6; color: var(--wb-fg-muted); max-width: 66ch; margin: 0; }
+
+/* ---- one idea = one section ------------------------------------------- */
+.rl-sec { margin: 40px 0 0; }
+.rl-sec__head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
+.rl-sec__num {
+  flex: none; width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center;
+  background: var(--sec-soft); color: var(--sec); font-weight: 780; font-size: 18px;
+  font-family: var(--wb-font-mono); border: var(--wb-bw) solid var(--sec-soft);
+}
+.rl-sec__t { font-size: clamp(20px, 3vw, 26px); font-weight: 720; letter-spacing: -.015em; margin: 4px 0 0; line-height: 1.25; }
+.rl-p { font-size: 17px; line-height: 1.72; margin: 0 0 14px; max-width: 62ch; }
+.rl-p b { font-weight: 680; }
+.rl-p em { font-style: italic; color: var(--wb-fg-muted); }
+.rl-ul { font-size: 17px; line-height: 1.7; margin: 0 0 14px; max-width: 62ch; padding-left: 22px; }
+.rl-ul li { margin-bottom: 8px; }
+.rl-ul b { font-weight: 670; }
+
+/* A "say it once, simply" pull-out — the sentence a child should carry away. */
+.rl-key {
+  display: flex; gap: 14px; align-items: flex-start; margin: 20px 0; padding: 16px 18px;
+  border-radius: var(--wb-radius-lg); background: var(--sec-soft); border: var(--wb-bw) solid transparent;
+}
+.rl-key__ico { flex: none; font-size: 24px; line-height: 1.2; }
+.rl-key__b { font-size: 17px; font-weight: 660; line-height: 1.55; margin: 0; color: var(--wb-fg); }
+
+/* Story box — the everyday scene that carries the physics. */
+.rl-story { margin: 18px 0; padding: 16px 18px 4px; border-left: 4px solid var(--sec); background: var(--wb-surface); border-radius: 0 var(--wb-radius) var(--wb-radius) 0; }
+.rl-story h4 { font-size: 14px; font-weight: 700; margin: 0 0 8px; color: var(--sec); letter-spacing: .01em; }
+.rl-story .rl-p { font-size: 16px; }
+
+/* ---- lab: the interactive figure --------------------------------------- */
+.rl-lab { margin: 24px 0 26px; padding: 0; background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-lg); overflow: hidden; box-shadow: var(--wb-shadow-sm); }
+.rl-lab__bar { display: flex; align-items: center; gap: 9px; padding: 11px 16px; border-bottom: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface-2); }
+.rl-lab__tag { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--sec); white-space: nowrap; }
+.rl-lab__name { font-size: 13.5px; font-weight: 620; color: var(--wb-fg); }
+.rl-lab__stage { position: relative; background: var(--rl-stage); }
+.rl-canvas { display: block; width: 100%; height: auto; aspect-ratio: 16 / 8; }
+.rl-canvas--tall { aspect-ratio: 16 / 10; }
+/* On a phone the stage is ~333 px wide; at 16:8 that leaves 166 px of height,
+   which is not enough for any of these scenes. Squarer frames there, and the
+   draw code scales its type down to match (see CURK in the script). */
+@media (max-width: 640px) {
+  .rl-canvas { aspect-ratio: 5 / 4; }
+  .rl-canvas--tall { aspect-ratio: 1 / 1; }
+}
+.rl-lab__ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; padding: 13px 16px; border-top: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface-2); }
+.rl-ctrl { display: flex; align-items: center; gap: 10px; flex: 1 1 240px; min-width: 0; }
+.rl-ctrl__lab { font-size: 13px; font-weight: 600; color: var(--wb-fg-muted); white-space: nowrap; }
+.rl-ctrl input[type="range"] { flex: 1 1 auto; min-width: 90px; }
+.rl-ctrl__val { font-family: var(--wb-font-mono); font-size: 13px; font-weight: 700; color: var(--sec); min-width: 74px; text-align: right; }
+.rl-lab__cap { padding: 12px 16px 15px; font-size: 14px; line-height: 1.6; color: var(--wb-fg-muted); border-top: var(--wb-bw) solid var(--wb-border); }
+.rl-lab__cap b { color: var(--wb-fg); font-weight: 640; }
+
+/* readouts under a stage: three or four big numbers */
+.rl-read { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1px; background: var(--wb-border); border-top: var(--wb-bw) solid var(--wb-border); }
+.rl-read__c { background: var(--wb-surface); padding: 11px 14px; }
+.rl-read__l { font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--wb-fg-muted); font-weight: 600; margin: 0 0 3px; }
+.rl-read__v { font-family: var(--wb-font-mono); font-size: 19px; font-weight: 720; color: var(--wb-fg); margin: 0; line-height: 1.2; }
+.rl-read__v.is-accent { color: var(--sec); }
+
+/* ---- the Detail button + popup ----------------------------------------- */
+.rl-detail-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 16px 0 4px; }
+.rl-detail-btn { border-color: var(--sec); color: var(--sec); font-weight: 640; }
+.rl-detail-btn:hover { background: var(--sec-soft); border-color: var(--sec); }
+.rl-detail-btn .wb-ico { font-size: 18px; }
+.rl-detail-hint { font-size: 13px; color: var(--wb-fg-muted); }
+
+.rl-modal { max-width: 760px; max-height: 88vh; display: flex; flex-direction: column; }
+.rl-modal .wb-modal__body { overflow-y: auto; }
+.rl-modal__kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--sec); font-weight: 700; margin: 0 0 4px; }
+.rl-src { display: none; }
+
+/* prose inside the popup — grown-up density, not kid density */
+.rl-sci { font-size: 14.5px; line-height: 1.7; }
+.rl-sci h5 { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-muted); margin: 22px 0 8px; padding-top: 12px; border-top: var(--wb-bw) solid var(--wb-border); }
+.rl-sci h5:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.rl-sci p { margin: 0 0 11px; }
+.rl-sci ul { margin: 0 0 12px; padding-left: 20px; }
+.rl-sci li { margin-bottom: 6px; }
+.rl-sci b { font-weight: 660; }
+.rl-eq { background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 16px; margin: 12px 0; overflow-x: auto; text-align: center; }
+.rl-eq__note { display: block; font-size: 12px; color: var(--wb-fg-muted); margin-top: 8px; text-align: center; font-family: var(--wb-font); }
+.rl-num { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 10px 0 14px; }
+.rl-num th, .rl-num td { text-align: left; padding: 7px 10px; border-bottom: var(--wb-bw) solid var(--wb-border); vertical-align: top; }
+.rl-num th { font-size: 11.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-muted); font-weight: 650; }
+.rl-num td:first-child { font-weight: 620; }
+.rl-num code { font-family: var(--wb-font-mono); font-size: .93em; }
+
+/* ---- wrap-up ------------------------------------------------------------ */
+.rl-take { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 20px 0 8px; }
+.rl-take__c { padding: 16px 18px; border-radius: var(--wb-radius-lg); background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-left: 4px solid var(--sec); }
+.rl-take__c h4 { font-size: 15px; font-weight: 690; margin: 0 0 6px; }
+.rl-take__c p { font-size: 14.5px; line-height: 1.6; color: var(--wb-fg-muted); margin: 0; }
+
+.rl-words { width: 100%; border-collapse: collapse; font-size: 15px; margin: 16px 0 8px; }
+.rl-words th, .rl-words td { text-align: left; padding: 10px 12px; border-bottom: var(--wb-bw) solid var(--wb-border); }
+.rl-words th { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-muted); font-weight: 650; }
+.rl-words td:first-child { font-weight: 640; width: 38%; }
+.rl-words td:nth-child(2) { color: var(--sec); font-weight: 620; }
+.rl-words td:last-child { font-family: var(--wb-font-mono); font-size: 14px; color: var(--wb-fg-muted); }
+
+/* ---- quiz --------------------------------------------------------------- */
+.rl-quiz { margin: 18px 0; }
+.rl-q { padding: 16px 18px; border-radius: var(--wb-radius-lg); background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); margin-bottom: 12px; }
+.rl-q__q { font-size: 16px; font-weight: 660; margin: 0 0 12px; line-height: 1.5; }
+.rl-q__opts { display: flex; flex-direction: column; gap: 8px; }
+.rl-opt {
+  text-align: left; font: inherit; font-size: 15px; cursor: pointer; padding: 11px 14px;
+  border-radius: var(--wb-radius); background: var(--wb-surface-2); color: var(--wb-fg);
+  border: var(--wb-bw) solid var(--wb-border); transition: background .12s ease, border-color .12s ease;
+}
+.rl-opt:hover { border-color: var(--sec); }
+.rl-opt.is-right { background: var(--wb-success-soft); border-color: var(--wb-success); color: var(--wb-success-text); font-weight: 640; }
+.rl-opt.is-wrong { background: var(--wb-danger-soft); border-color: var(--wb-danger); color: var(--wb-danger-text); }
+.dark .rl-opt.is-right { color: #86efac; }
+.dark .rl-opt.is-wrong { color: #fca5a5; }
+.rl-q__why { font-size: 14px; line-height: 1.6; color: var(--wb-fg-muted); margin: 12px 0 0; display: none; }
+.rl-q.is-done .rl-q__why { display: block; }
+.rl-q.is-done .rl-opt { cursor: default; pointer-events: none; }
+.rl-score { font-size: 15px; font-weight: 650; color: var(--wb-fg-muted); margin: 4px 0 0; }
+
+/* ---- back to top -------------------------------------------------------- */
+.rl-top { position: fixed; right: 18px; bottom: 18px; z-index: 60; opacity: 0; pointer-events: none; transition: opacity .18s ease; }
+.rl-top.is-on { opacity: 1; pointer-events: auto; }
+
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body class="wb-app">
+
+<header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
+  <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
+          aria-label="Open menu"><span class="wb-ico">menu</span></button>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🚀</span> Relativity</a>
+  <nav class="wb-nav wb-navbar__menu">
+    <a class="wb-nav__link" href="#p1">Moving</a>
+    <a class="wb-nav__link" href="#p2">Fast</a>
+    <a class="wb-nav__link" href="#p3">Doppler</a>
+    <a class="wb-nav__link" href="#p4">Gravity</a>
+    <a class="wb-nav__link" href="#recap">Recap</a>
+    <a class="wb-nav__link" href="#quiz">Quiz</a>
+  </nav>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <a class="wb-btn wb-btn--ghost wb-btn--icon" href="../index.html" aria-label="Home"><span class="wb-ico">home</span></a>
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Light / dark">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</header>
+
+<main class="rl-wrap">
+
+  <header class="rl-hero p-fast">
+    <p class="rl-eyebrow">Relativity · for young readers · every picture moves</p>
+    <h1 class="rl-title">Time is not the same for <u>everybody</u>.</h1>
+    <p class="rl-lede">A clock on a fast rocket really does tick more slowly than a clock in your bedroom. A clock on the floor ticks more slowly than a clock on a high shelf. This is not a trick and it is not a story — engineers have to correct for it every day, or the map on a phone would send people to the wrong street.</p>
+    <p class="rl-lede">All of it comes from <b>one surprising fact about light</b>. This page starts there, then follows that one fact wherever it leads: to slow clocks, to squashed rockets, to a siren that changes its song, and finally to gravity — which turns out not to be a pull at all.</p>
+
+    <div class="rl-rules">
+      <div class="rl-rule p-move">
+        <p class="rl-rule__n">Rule 1</p>
+        <p class="rl-rule__t">Speed only means something <b>compared to something else</b>.</p>
+      </div>
+      <div class="rl-rule p-fast">
+        <p class="rl-rule__n">Rule 2</p>
+        <p class="rl-rule__t">Light always travels at <b>the same speed</b>, for everyone, always.</p>
+      </div>
+      <div class="rl-rule p-bend">
+        <p class="rl-rule__n">Rule 3</p>
+        <p class="rl-rule__t">Because of Rule 2, <b>time bends</b> — for fast things, and near heavy things.</p>
+      </div>
+    </div>
+
+    <p class="rl-hero-meta">FOUR PARTS · NINE SECTIONS · NINE MOVING PICTURES YOU CAN CONTROL<br>EVERY SECTION HAS A “DETAIL” BUTTON WITH THE REAL EQUATIONS FOR OLDER READERS</p>
+  </header>
+
+  <!-- ═══════════════ PART 1 ═══════════════ -->
+  <div class="rl-part p-move" id="p1">
+    <p class="rl-part__k">Part 1 · Warm-up</p>
+    <h2 class="rl-part__t">Everything is moving, so nothing is “still”</h2>
+    <p class="rl-part__s">Before we can talk about fast things, we have to fix a word everybody uses wrongly: <b>speed</b>. It is never a single number. It is always a comparison.</p>
+  </div>
+
+  <section class="rl-sec p-move" id="s1">
+    <div class="rl-sec__head">
+      <div class="rl-sec__num">1</div>
+      <h3 class="rl-sec__t">Are you sitting still right now?</h3>
+    </div>
+
+    <p class="rl-p">You probably think you are. Your chair is not moving. The floor is not moving. Nothing is wobbling.</p>
+    <p class="rl-p">But you are sitting on the Earth, and the Earth is racing around the Sun at about <b>30 kilometres every second</b>. In the two seconds it takes to read this line, you have travelled about 60 kilometres.</p>
+    <p class="rl-p">So which is true? Are you still, or are you fast? <b>Both are true.</b> Still compared to your chair. Fast compared to the Sun. Speed is never one number on its own — it is always “how fast <em>compared to what</em>”.</p>
+
+    <div class="rl-story">
+      <h4>The girl on the train</h4>
+      <p class="rl-p">A girl on a fast train throws a ball straight up in the air and catches it again. To her, the ball goes up, stops, and comes straight back down. Easy.</p>
+      <p class="rl-p">You are standing on the platform watching through the window. You see the very same ball fly in a long curve, because while it was in the air the train carried it forward past you.</p>
+      <p class="rl-p">One ball. One throw. Two completely different paths — and <b>neither of you is wrong</b>. You just measured from two different places.</p>
+    </div>
+
+    <figure class="rl-lab">
+      <div class="rl-lab__bar">
+        <span class="rl-lab__tag">Lab 1</span>
+        <span class="rl-lab__name">The same ball, watched from two places</span>
+      </div>
+      <div class="rl-lab__stage"><canvas id="cv-frames" class="rl-canvas" aria-label="A train rolls past a platform while a girl inside throws a ball straight up. Switching the viewpoint changes the shape of the ball's path from a straight line to a curve."></canvas></div>
+      <div class="rl-lab__ctrl">
+        <div class="wb-tabs wb-tabs--pill" id="seg-frames">
+          <button class="wb-tab is-active" data-view="ground" type="button">I am on the platform</button>
+          <button class="wb-tab" data-view="train" type="button">I am on the train</button>
+        </div>
+        <div class="rl-ctrl">
+          <span class="rl-ctrl__lab">Train speed</span>
+          <input type="range" class="wb-range" id="r-frames" min="0" max="100" value="55" aria-label="Train speed">
+          <span class="rl-ctrl__val" id="v-frames">55 km/h</span>
+        </div>
+      </div>
+      <figcaption class="rl-lab__cap">The dotted line is the path the ball actually traces <b>for you</b>. Switch the viewpoint and watch it change from a straight up-and-down line into a curve — while the ball itself does exactly the same thing. Slide the train speed down to zero and the two viewpoints agree again.</figcaption>
+    </figure>
+
+    <div class="rl-key">
+      <span class="rl-key__ico">🎯</span>
+      <p class="rl-key__b">The path you see depends on where you are watching from. But the <em>rules</em> — throw a ball, gravity pulls it back — are the same for everybody.</p>
+    </div>
+
+    <div class="rl-detail-row">
+      <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d1" type="button">
+        <span class="wb-ico">functions</span> Detail — for scientists
+      </button>
+      <span class="rl-detail-hint">Inertial frames, the Galilean boost, and the crack that Maxwell put in it.</span>
+    </div>
+
+    <div class="rl-src" id="d1"
+         data-title="Inertial frames and the Galilean transformation"
+         data-sub="Why two observers disagree about a trajectory but never about a law">
+      <div class="rl-sci">
+        <h5>Frames, and which ones are special</h5>
+        <p>An <b>inertial frame</b> is a coordinate system in which a body with no net force on it moves with constant velocity — Newton's first law, promoted from a statement about bodies to a definition of good coordinates. Any frame translating at constant velocity with respect to an inertial frame is itself inertial; there is no experiment inside a sealed carriage that can pick out which one is “really” at rest. That is <b>Galileo's principle of relativity</b>, stated in 1632 with a ship, a bowl of fish and some dripping water, three centuries before Einstein needed it.</p>
+
+        <h5>The transformation</h5>
+        <p>For a frame $S'$ moving at velocity $v$ along $x$ relative to $S$:</p>
+        <div class="rl-eq">$$x' = x - vt,\qquad y' = y,\qquad z' = z,\qquad t' = t$$</div>
+        <p>Differentiating once gives the familiar velocity addition, and twice gives the reason mechanics does not notice the change of frame at all:</p>
+        <div class="rl-eq">$$\mathbf{u}' = \mathbf{u} - \mathbf{v}, \qquad \mathbf{a}' = \mathbf{a}$$
+          <span class="rl-eq__note">Acceleration is invariant, so $\mathbf{F} = m\mathbf{a}$ keeps its form. Velocities are not invariant — which is exactly why the two observers draw different curves.</span></div>
+
+        <h5>The ball in the lab above</h5>
+        <p>Take the throw to happen at $t=0$ from height $h$ with vertical speed $u_0$. In the carriage frame the ball has no horizontal velocity, so it traces a vertical segment. In the platform frame it inherits the train's velocity:</p>
+        <div class="rl-eq">$$x(t) = vt, \qquad y(t) = h + u_0 t - \tfrac{1}{2} g t^2$$</div>
+        <p>Eliminating $t$ gives $y = h + (u_0/v)x - (g/2v^2)x^2$: a parabola whose <em>width</em> is set by $v$ and whose <em>height</em> is not. Both observers measure the same flight time, the same maximum height above the carriage floor, and the same $g$. The disagreement is entirely about the shape of a path, never about a law.</p>
+
+        <h5>Where this stops working</h5>
+        <p>Galilean relativity is not a small idea that Einstein replaced; it is the idea Einstein kept. What he replaced was the transformation. Maxwell's equations, written down in the 1860s, predict electromagnetic waves travelling at</p>
+        <div class="rl-eq">$$c = \frac{1}{\sqrt{\varepsilon_0 \mu_0}} \approx 2.998 \times 10^{8}\ \mathrm{m\,s^{-1}}$$</div>
+        <p>with no reference to any frame. Apply the Galilean boost to those equations and they change form — light would have to travel at $c \pm v$ for a moving observer. So one of three things had to be wrong: Maxwell, the principle of relativity, or $x' = x - vt$. Nineteenth-century physics bet on an <b>aether</b>, a medium whose rest frame would be the one where Maxwell held exactly. Experiment said otherwise, and the third option won.</p>
+        <p>The Galilean rule survives as an excellent approximation because the correction is second order in $\beta = v/c$:</p>
+        <div class="rl-eq">$$\gamma = \left(1 - \beta^2\right)^{-1/2} \approx 1 + \tfrac{1}{2}\beta^{2}$$</div>
+        <table class="rl-num">
+          <tr><th>Moving object</th><th>Speed</th><th>β</th><th>γ − 1</th></tr>
+          <tr><td>Person walking</td><td>1.4 m/s</td><td><code>4.7 × 10⁻⁹</code></td><td><code>1.1 × 10⁻¹⁷</code></td></tr>
+          <tr><td>Airliner</td><td>250 m/s</td><td><code>8.3 × 10⁻⁷</code></td><td><code>3.5 × 10⁻¹³</code></td></tr>
+          <tr><td>Earth around the Sun</td><td>29.8 km/s</td><td><code>9.9 × 10⁻⁵</code></td><td><code>4.9 × 10⁻⁹</code></td></tr>
+          <tr><td>GPS satellite</td><td>3.87 km/s</td><td><code>1.3 × 10⁻⁵</code></td><td><code>8.3 × 10⁻¹¹</code></td></tr>
+        </table>
+        <p>The last row is the smallest number on the list and still matters: multiplied by 86 400 seconds it becomes 7.2 microseconds a day, which is the subject of section 9.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PART 2 ═══════════════ -->
+  <div class="rl-part p-fast" id="p2">
+    <p class="rl-part__k">Part 2 · Special relativity</p>
+    <h2 class="rl-part__t">What happens when things go really, really fast</h2>
+    <p class="rl-part__s">“Special” just means <b>no gravity yet</b> — straight lines and steady speeds only. Albert Einstein worked this part out in 1905, and everything in it grows out of one stubborn fact about light.</p>
+  </div>
+
+  <section class="rl-sec p-fast" id="s2">
+    <div class="rl-sec__head">
+      <div class="rl-sec__num">2</div>
+      <h3 class="rl-sec__t">Light does not care how fast you are going</h3>
+    </div>
+
+    <p class="rl-p">Light is fast. In <b>one single second</b>, a flash of light could go all the way around the Earth about seven and a half times. It takes light 8 minutes and 20 seconds to reach us from the Sun, and only 1.3 seconds to reach us from the Moon.</p>
+    <p class="rl-p">Now here is the part nobody expects.</p>
+    <p class="rl-p">Throw a ball forward from a moving bus and the ball goes <em>faster</em> — the bus speed plus the throw speed. That is just common sense, and for balls it is completely correct.</p>
+    <p class="rl-p">Shine a torch forward from a moving rocket and… the light does <b>not</b> go faster. It leaves at exactly the same speed as always. Chase after a beam of light as fast as you like and it still runs away from you at the full speed. Run <em>towards</em> it and it still arrives at the same speed.</p>
+    <p class="rl-p">Everyone who has ever measured the speed of light gets the same answer: <b>299,792,458 metres every second</b>. Scientists gave it the short name <b>c</b>. Nobody decided this. The universe simply works that way, and every experiment that has tried to catch it out has failed.</p>
+
+    <figure class="rl-lab">
+      <div class="rl-lab__bar">
+        <span class="rl-lab__tag">Lab 2</span>
+        <span class="rl-lab__name">A torch on a rocket: what you expect vs what happens</span>
+      </div>
+      <div class="rl-lab__stage"><canvas id="cv-light" class="rl-canvas" aria-label="Two lanes. In the top lane light behaves like a thrown ball and gets faster as the rocket speeds up. In the bottom lane real light always crosses at the same speed."></canvas></div>
+      <div class="rl-lab__ctrl">
+        <div class="rl-ctrl">
+          <span class="rl-ctrl__lab">Rocket speed</span>
+          <input type="range" class="wb-range" id="r-light" min="0" max="90" value="50" aria-label="Rocket speed as a percentage of the speed of light">
+          <span class="rl-ctrl__val" id="v-light">0.50 c</span>
+        </div>
+      </div>
+      <div class="rl-read">
+        <div class="rl-read__c"><p class="rl-read__l">If light were a ball</p><p class="rl-read__v" id="o-light-ball">1.50 c</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">What we really measure</p><p class="rl-read__v is-accent">1.00 c</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Difference this makes</p><p class="rl-read__v" id="o-light-gap">−33%</p></div>
+      </div>
+      <figcaption class="rl-lab__cap">Both rockets are flying at the speed you choose. In the top lane the flash rides along and arrives early, which is what a ball would do. In the bottom lane — the real one — the flash always takes exactly the same time to cross, no matter how fast the rocket that fired it was moving. <b>Speed the rocket up and the bottom flash does not budge.</b></figcaption>
+    </figure>
+
+    <div class="rl-key">
+      <span class="rl-key__ico">💡</span>
+      <p class="rl-key__b">Light has one speed and everybody measures the same one. Since speed is distance divided by time, and everybody must get the same answer — something has to give. It turns out to be <b>time itself</b>.</p>
+    </div>
+
+    <div class="rl-detail-row">
+      <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d2" type="button">
+        <span class="wb-ico">functions</span> Detail — for scientists
+      </button>
+      <span class="rl-detail-hint">Michelson–Morley, the two postulates, and the Lorentz transformation.</span>
+    </div>
+
+    <div class="rl-src" id="d2"
+         data-title="The invariance of c and the Lorentz transformation"
+         data-sub="One experimental null result, two postulates, and a new set of coordinates">
+      <div class="rl-sci">
+        <h5>The experiment that had no result</h5>
+        <p>If light propagated in an aether, Earth's motion through it would make the round-trip light speed depend on direction. Michelson and Morley (1887) floated an interferometer with 11 m effective arms on a bed of mercury and looked for the fringe shift as they rotated it. For Earth's orbital speed the predicted shift was about <b>0.4 fringes</b>; the measured upper bound was about <b>0.01 fringes</b>. Repeated with growing precision ever since — most recently with cryogenic optical resonators — the anisotropy is bounded below one part in $10^{17}$.</p>
+
+        <h5>Einstein's two postulates (1905)</h5>
+        <ul>
+          <li><b>P1 — Relativity.</b> The laws of physics take the same form in every inertial frame. Not just mechanics this time: <em>all</em> of physics, electromagnetism included.</li>
+          <li><b>P2 — Invariance of $c$.</b> Light propagates in vacuum at a speed $c$ that is independent of the motion of its source, and of the observer.</li>
+        </ul>
+        <p>P2 is not an extra assumption bolted on; it is what P1 forces once you accept Maxwell, because $c = 1/\sqrt{\varepsilon_0\mu_0}$ contains only constants of the vacuum and no velocity parameter. Keeping both postulates costs you the Galilean transformation.</p>
+
+        <h5>The replacement</h5>
+        <p>The transformation that leaves the wave equation — and the quantity $c^2t^2 - x^2 - y^2 - z^2$ — unchanged is the <b>Lorentz boost</b>:</p>
+        <div class="rl-eq">$$x' = \gamma\left(x - vt\right), \qquad t' = \gamma\left(t - \frac{vx}{c^{2}}\right), \qquad \gamma = \frac{1}{\sqrt{1 - v^{2}/c^{2}}}$$
+          <span class="rl-eq__note">$y' = y$ and $z' = z$: only the boost direction is affected. Set $c \to \infty$ and this collapses back to $x' = x - vt,\ t' = t$.</span></div>
+        <p>The second equation is the strange one. It mixes position into time, which means <b>simultaneity is not shared</b>: two events at different places that are simultaneous in $S$ are separated by $\Delta t' = -\gamma v \Delta x / c^{2}$ in $S'$. Almost every apparent paradox in special relativity is this term being forgotten.</p>
+
+        <h5>Velocities no longer just add</h5>
+        <div class="rl-eq">$$u = \frac{u' + v}{1 + u'v/c^{2}}$$
+          <span class="rl-eq__note">Put $u' = c$: the numerator is $c + v$, the denominator $1 + v/c$, and the quotient is exactly $c$. The invariance of light speed is built into the arithmetic.</span></div>
+        <p>Two objects approaching at $0.9c$ each in your frame close at $1.8c$ <em>in your coordinates</em> — a legal closing rate — but each measures the other's speed as $1.8c/1.81 = 0.994c$. Nothing overtakes light.</p>
+
+        <h5>How well is P2 tested?</h5>
+        <ul>
+          <li><b>Source-independence.</b> Alväger and colleagues (1964) measured the speed of $\gamma$ rays from $\pi^{0}$ mesons decaying at $0.99975c$ and found $c$ unchanged to within $10^{-4}$. If light took on its source's speed, those photons would have arrived enormously early.</li>
+          <li><b>Astronomical.</b> De Sitter's binary-star argument: if emitted light carried the source velocity, orbiting stars would appear to move in impossible ways and multiple images would appear. They do not.</li>
+          <li><b>By definition.</b> Since the 17th CGPM in 1983 the metre <em>is defined</em> as the distance light travels in $1/299\,792\,458$ of a second. $c$ is now an exact number by convention, and measuring "the speed of light" has become measuring a length standard.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="rl-sec p-fast" id="s3">
+    <div class="rl-sec__head">
+      <div class="rl-sec__num">3</div>
+      <h3 class="rl-sec__t">A clock made of light — and why moving clocks fall behind</h3>
+    </div>
+
+    <p class="rl-p">Let us build the simplest clock in the universe. Two mirrors, one facing the other, and a single tiny flash of light bouncing between them. Every time the flash arrives at a mirror, that is one <b>tick</b>.</p>
+    <p class="rl-p">Tick. Tick. Tick. It is a perfect clock, because light always travels at the same speed, so every tick takes exactly the same time.</p>
+    <p class="rl-p">Now put that clock on a rocket and fly it past you.</p>
+    <p class="rl-p">The pilot on the rocket sees nothing unusual. To her, the flash goes straight up and straight down, just like always.</p>
+    <p class="rl-p">But <b>you</b> see something different. While the flash is travelling from the bottom mirror to the top one, the whole rocket slides forward. So from where you stand, the flash does not go straight up — it goes up <em>and</em> sideways, along a longer slanted path.</p>
+
+    <div class="rl-story">
+      <h4>Longer path, same speed, slower tick</h4>
+      <p class="rl-p">The flash has further to travel. It is not allowed to go any faster, because light only has one speed. So the tick <b>takes longer</b>.</p>
+      <p class="rl-p">The moving clock ticks more slowly. Not because it is broken, not because it got shaken. Because time really does run slower for things that move fast. Scientists call this <b>time dilation</b> — “dilation” just means stretching.</p>
+    </div>
+
+    <figure class="rl-lab">
+      <div class="rl-lab__bar">
+        <span class="rl-lab__tag">Lab 3</span>
+        <span class="rl-lab__name">Two light clocks — one parked, one flying</span>
+      </div>
+      <div class="rl-lab__stage"><canvas id="cv-clock" class="rl-canvas rl-canvas--tall" aria-label="Two light clocks. In the parked clock the flash bounces straight up and down. In the flying clock it traces a long zig-zag, and its tick counter falls behind."></canvas></div>
+      <div class="rl-lab__ctrl">
+        <div class="rl-ctrl">
+          <span class="rl-ctrl__lab">Rocket speed</span>
+          <input type="range" class="wb-range" id="r-clock" min="0" max="99" value="80" aria-label="Rocket speed as a percentage of the speed of light">
+          <span class="rl-ctrl__val" id="v-clock">0.80 c</span>
+        </div>
+        <button class="wb-btn wb-btn--secondary wb-btn--sm" id="b-clock-reset" type="button">
+          <span class="wb-ico">restart_alt</span> Start both again
+        </button>
+      </div>
+      <div class="rl-read">
+        <div class="rl-read__c"><p class="rl-read__l">Parked clock ticks</p><p class="rl-read__v" id="o-clock-a">0</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Flying clock ticks</p><p class="rl-read__v is-accent" id="o-clock-b">0</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Stretch factor</p><p class="rl-read__v" id="o-clock-g">1.67×</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">1 rocket second is</p><p class="rl-read__v" id="o-clock-s">1.67 s</p></div>
+      </div>
+      <figcaption class="rl-lab__cap">Both flashes move at exactly the same speed — watch them. The flying one simply has a longer, slanted road to travel, so its counter falls behind. At <b>0.87 c</b> the flying clock ticks half as often. Push the slider to 0.99 c and it nearly stops.</figcaption>
+    </figure>
+
+    <div class="rl-key">
+      <span class="rl-key__ico">⏳</span>
+      <p class="rl-key__b">This is real and it has been measured. Tiny particles called <b>muons</b> rain down on us from the sky. They fall apart so quickly that they should never reach the ground — but they move so fast that their clocks run slow, and they arrive anyway.</p>
+    </div>
+
+    <div class="rl-detail-row">
+      <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d3" type="button">
+        <span class="wb-ico">functions</span> Detail — for scientists
+      </button>
+      <span class="rl-detail-hint">The light-clock derivation of γ, proper time, and four experiments.</span>
+    </div>
+
+    <div class="rl-src" id="d3"
+         data-title="Time dilation, proper time and the invariant interval"
+         data-sub="Deriving γ from the light clock, then checking it against the laboratory">
+      <div class="rl-sci">
+        <h5>The derivation, in full</h5>
+        <p>Let the mirrors be separated by $L$ transverse to the motion — transverse, so that no length contraction enters and the argument stays honest. In the clock's rest frame a round trip takes</p>
+        <div class="rl-eq">$$\Delta t_{0} = \frac{2L}{c}$$</div>
+        <p>In a frame where the clock moves at $v$, the light traverses two hypotenuses while the clock advances $v\,\Delta t$. Applying Pythagoras to half the round trip:</p>
+        <div class="rl-eq">$$\left(\frac{c\,\Delta t}{2}\right)^{2} = L^{2} + \left(\frac{v\,\Delta t}{2}\right)^{2}$$</div>
+        <p>Solving for $\Delta t$ and substituting $\Delta t_0 = 2L/c$:</p>
+        <div class="rl-eq">$$\Delta t = \frac{2L}{\sqrt{c^{2} - v^{2}}} = \frac{2L/c}{\sqrt{1 - v^{2}/c^{2}}} = \gamma\,\Delta t_{0}$$
+          <span class="rl-eq__note">$L$ cancels: the result is a property of spacetime, not of the apparatus. Any clock — caesium, biological, radioactive — must agree, or you could compare it against the light clock and detect your own uniform motion, violating P1.</span></div>
+
+        <h5>Proper time</h5>
+        <p>$\Delta t_0$ is the <b>proper time</b> $\Delta\tau$: the time read by a clock carried along the worldline. Differentially,</p>
+        <div class="rl-eq">$$d\tau^{2} = dt^{2}\left(1 - \frac{v^{2}}{c^{2}}\right), \qquad \tau = \int \sqrt{1 - \frac{v^{2}(t)}{c^{2}}}\; dt$$</div>
+        <p>It descends from the <b>invariant interval</b>, the quantity all inertial observers agree on where they no longer agree on lengths or durations:</p>
+        <div class="rl-eq">$$ds^{2} = -c^{2}dt^{2} + dx^{2} + dy^{2} + dz^{2}, \qquad d\tau = \frac{\sqrt{-ds^{2}}}{c}$$</div>
+        <p>Note the symmetry that trips people up: each inertial observer sees the <em>other's</em> clock running slow, and both are right, because they are comparing different pairs of events using different lines of simultaneity. An asymmetric, absolute comparison requires the worldlines to meet twice — which is section 5.</p>
+
+        <h5>The measurements</h5>
+        <table class="rl-num">
+          <tr><th>Test</th><th>Setup</th><th>Result</th></tr>
+          <tr><td>Rossi &amp; Hall, 1941</td><td>Cosmic-ray muons, Mount Washington (1917 m) vs sea level</td><td>Survival fraction far above the non-relativistic prediction; $\tau = 2.197\ \mu$s at rest, but $\gamma \approx 5$ in flight</td></tr>
+          <tr><td>Bailey <em>et al.</em>, CERN 1977</td><td>Muons stored at $\gamma = 29.3$ in a magnetic ring</td><td>Dilated lifetime agrees with $\gamma\tau$ to about 0.1%</td></tr>
+          <tr><td>Hafele &amp; Keating, 1971</td><td>Caesium clocks flown around the world both ways</td><td>Eastward $-59 \pm 10$ ns, westward $+273 \pm 7$ ns — both as predicted once the gravitational term is included</td></tr>
+          <tr><td>Chou <em>et al.</em>, NIST 2010</td><td>Al⁺ optical clocks, $\sim10^{-17}$ fractional stability</td><td>Velocity dilation resolved at walking speed (&lt; 10 m/s); gravitational shift resolved over 33 cm of height</td></tr>
+        </table>
+
+        <h5>Worked number: the muon</h5>
+        <p>A muon has a mean proper lifetime $\tau = 2.197\ \mu\mathrm{s}$, so travelling at $0.98c$ it would cover only $c\tau \approx 646$ m before decaying if time were absolute — nowhere near the 15 km of atmosphere. With $\gamma = (1 - 0.98^{2})^{-1/2} = 5.03$, its lifetime in the ground frame is 11.0 $\mu$s and its mean flight distance becomes 3.2 km. In the muon's own frame nothing about its lifetime changes; instead the atmosphere is contracted to 3 km. <b>Both descriptions give the same survival count</b> — which is the point.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="rl-sec p-fast" id="s4">
+    <div class="rl-sec__head">
+      <div class="rl-sec__num">4</div>
+      <h3 class="rl-sec__t">Fast things get shorter — and impossible to push any faster</h3>
+    </div>
+
+    <p class="rl-p">Slow clocks are not the only surprise. A rocket flying past you at nearly the speed of light also looks <b>squashed</b> — shorter from nose to tail than it was sitting on the launch pad. Not squeezed by anything. Space itself is measured differently when you are moving through it.</p>
+    <p class="rl-p">The pilot inside notices nothing. Her rocket is the same length it always was, her ruler is the same, her sandwich is the same. It is only <em>you</em>, watching it fly past, who measures it short. And she would say the same about you.</p>
+    <p class="rl-p">There is one more twist, and it is the reason the speed of light is a wall and not a target. The faster something already goes, the <b>harder it becomes to speed it up any more</b>. A push that would easily add ten kilometres per hour to a parked car adds almost nothing to a rocket already at 99% of light speed.</p>
+    <p class="rl-p">To actually <em>reach</em> the speed of light, you would need an endless amount of push. Not a very large amount — an endless one. That is why nothing that has any weight ever gets there. Light itself can travel at light speed only because light weighs nothing at all.</p>
+
+    <figure class="rl-lab">
+      <div class="rl-lab__bar">
+        <span class="rl-lab__tag">Lab 4</span>
+        <span class="rl-lab__name">The squashed rocket and the wall at the end of the speed dial</span>
+      </div>
+      <div class="rl-lab__stage"><canvas id="cv-fast" class="rl-canvas" aria-label="A rocket becomes shorter as its speed rises, while a bar showing the push needed climbs towards a wall at the speed of light."></canvas></div>
+      <div class="rl-lab__ctrl">
+        <div class="rl-ctrl">
+          <span class="rl-ctrl__lab">Rocket speed</span>
+          <input type="range" class="wb-range" id="r-fast" min="0" max="995" value="800" aria-label="Rocket speed as a fraction of the speed of light">
+          <span class="rl-ctrl__val" id="v-fast">0.800 c</span>
+        </div>
+      </div>
+      <div class="rl-read">
+        <div class="rl-read__c"><p class="rl-read__l">Length you measure</p><p class="rl-read__v is-accent" id="o-fast-len">60%</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Clock slowed by</p><p class="rl-read__v" id="o-fast-gam">1.67×</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Push spent so far (× mc²)</p><p class="rl-read__v" id="o-fast-e">0.67×</p></div>
+      </div>
+      <figcaption class="rl-lab__cap">Drag the slider all the way to the right. The rocket flattens towards nothing and the bar shoots up off the top of the chart — but it <b>never</b> touches the wall. That wall is the speed of light, and it is not a rule anybody made up. It is what the arithmetic does.</figcaption>
+    </figure>
+
+    <div class="rl-key">
+      <span class="rl-key__ico">🧱</span>
+      <p class="rl-key__b">The speed of light is not a speed limit sign. It is more like the edge of a map: you can get closer and closer forever, and never arrive.</p>
+    </div>
+
+    <div class="rl-detail-row">
+      <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d4" type="button">
+        <span class="wb-ico">functions</span> Detail — for scientists
+      </button>
+      <span class="rl-detail-hint">Length contraction, relativistic momentum, and E = γmc².</span>
+    </div>
+
+    <div class="rl-src" id="d4"
+         data-title="Length contraction, momentum and energy"
+         data-sub="Why γ appears in three places at once, and why it forbids the boundary">
+      <div class="rl-sci">
+        <h5>Contraction</h5>
+        <p>A rod of rest length $L_{0}$ lying along the boost direction is measured, by a frame in which it moves at $v$, to have length</p>
+        <div class="rl-eq">$$L = \frac{L_{0}}{\gamma} = L_{0}\sqrt{1 - \frac{v^{2}}{c^{2}}}$$</div>
+        <p>“Measured” has to mean: note both ends <em>at the same time in the measuring frame</em>. Because simultaneity is frame-dependent, the other observer will say you noted the two ends at different moments — which is exactly how the two accounts stay consistent. Transverse dimensions are untouched, so a fast sphere is an oblate spheroid in your coordinates. Its <em>photographic</em> appearance is a separate question: light travel time from different parts of the object adds an apparent rotation, the Penrose–Terrell effect, so a fast sphere still photographs as a circle.</p>
+
+        <h5>Momentum and energy</h5>
+        <p>Requiring momentum conservation to hold in every inertial frame forces the Newtonian definition to be replaced:</p>
+        <div class="rl-eq">$$\mathbf{p} = \gamma m \mathbf{v}, \qquad E = \gamma m c^{2}, \qquad E_{k} = (\gamma - 1)mc^{2}$$</div>
+        <p>Here $m$ is the invariant (rest) mass. The older habit of writing $m_{\text{rel}} = \gamma m$ and saying “mass increases with speed” reproduces $\mathbf{p} = m_\text{rel}\mathbf{v}$ but breaks $\mathbf{F} = m_\text{rel}\mathbf{a}$, because for a longitudinal push the useful coefficient is $\gamma^{3}m$, not $\gamma m$. Keep $m$ invariant and put the $\gamma$ where it belongs.</p>
+        <p>Expanding for $v \ll c$ recovers the classical limit and, as a bonus, the rest energy:</p>
+        <div class="rl-eq">$$E = mc^{2}\left(1 + \tfrac{1}{2}\beta^{2} + \tfrac{3}{8}\beta^{4} + \cdots\right) = \underbrace{mc^{2}}_{\text{rest}} + \underbrace{\tfrac{1}{2}mv^{2}}_{\text{Newton}} + \cdots$$</div>
+
+        <h5>The energy–momentum relation, and why $c$ is unreachable</h5>
+        <div class="rl-eq">$$E^{2} = (pc)^{2} + (mc^{2})^{2}$$
+          <span class="rl-eq__note">For $m = 0$ this reduces to $E = pc$, satisfied only by something moving at exactly $c$. Massless particles have no choice of speed.</span></div>
+        <p>For $m \neq 0$, $E = \gamma mc^{2} \to \infty$ as $v \to c$. Reaching $c$ would require infinite work, which is not a large engineering problem but a categorical one. Concretely, accelerating 1 kg to $0.99c$ needs</p>
+        <div class="rl-eq">$$E_{k} = (\gamma - 1)mc^{2} = (7.089 - 1)(1\ \mathrm{kg})c^{2} \approx 5.5 \times 10^{17}\ \mathrm{J}$$
+          <span class="rl-eq__note">About the annual output of twenty 1 GW power stations — to move a single kilogram, and still leaving 1% of the gap.</span></div>
+
+        <h5>How close do we actually get?</h5>
+        <p>LHC protons at 6.8 TeV have $\gamma = E/mc^{2} = 6800/0.938 \approx 7250$. Since $1 - \beta \approx 1/(2\gamma^{2})$, that is $\beta \approx 0.999\,999\,990$ — the protons lag light by roughly <b>3 metres per second</b>, after being pushed by the largest machine ever built. The last decimal places are expensive.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="rl-sec p-fast" id="s5">
+    <div class="rl-sec__head">
+      <div class="rl-sec__num">5</div>
+      <h3 class="rl-sec__t">The twin who came home younger</h3>
+    </div>
+
+    <p class="rl-p">Two twins, born on the same day. One climbs into a rocket, flies to a distant star and comes back. The other stays at home and waters the plants.</p>
+    <p class="rl-p">When the rocket lands, the twins hug — and they are <b>not the same age any more</b>. The traveller's clock ticked slowly for the whole journey, so less time passed for her. She might have been away for one year while her sister waited seven.</p>
+    <p class="rl-p">She did not skip anything and she did not sleep through it. She lived every second of her own year. It is simply that her year and her sister's seven years are both the honest answer to “how much time went by?” — asked along two different paths.</p>
+
+    <div class="rl-story">
+      <h4>Why isn't it the other way round?</h4>
+      <p class="rl-p">Good question, and it is the one physicists argued about for years. If moving clocks run slow, why does the rocket twin not say <em>her sister</em> was the one moving, and come home to find her sister younger?</p>
+      <p class="rl-p">Because the two journeys are not the same shape. The twin at home went in a straight line the whole time. The traveller had to <b>turn around</b> — she felt herself pressed into her seat when the rocket slowed down and came back. That turn is real, she can feel it, and it is what makes her path different. Straight paths through time are always the longest ones.</p>
+    </div>
+
+    <figure class="rl-lab">
+      <div class="rl-lab__bar">
+        <span class="rl-lab__tag">Lab 5</span>
+        <span class="rl-lab__name">Send one twin away and watch both clocks</span>
+      </div>
+      <div class="rl-lab__stage"><canvas id="cv-twin" class="rl-canvas" aria-label="A rocket flies from Earth to a star and back while two age counters, one for each twin, climb at different rates."></canvas></div>
+      <div class="rl-lab__ctrl">
+        <div class="rl-ctrl">
+          <span class="rl-ctrl__lab">Rocket speed</span>
+          <input type="range" class="wb-range" id="r-twin" min="100" max="999" value="990" aria-label="Rocket speed as a fraction of the speed of light">
+          <span class="rl-ctrl__val" id="v-twin">0.990 c</span>
+        </div>
+        <div class="rl-ctrl">
+          <span class="rl-ctrl__lab">Star distance</span>
+          <input type="range" class="wb-range" id="r-twin-d" min="1" max="20" value="4" aria-label="Distance to the star in light years">
+          <span class="rl-ctrl__val" id="v-twin-d">4 ly</span>
+        </div>
+      </div>
+      <div class="rl-read">
+        <div class="rl-read__c"><p class="rl-read__l">Twin at home ages</p><p class="rl-read__v" id="o-twin-e">8.1 yr</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Twin in the rocket ages</p><p class="rl-read__v is-accent" id="o-twin-r">1.1 yr</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Difference at the hug</p><p class="rl-read__v" id="o-twin-d">7.0 yr</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Stretch factor</p><p class="rl-read__v" id="o-twin-g">7.09×</p></div>
+      </div>
+      <figcaption class="rl-lab__cap">Set the star to <b>4 light-years</b> — about as far as the nearest star to the Sun — and the speed to 0.99 c. The rocket twin is gone for a little over a year of her own life and comes back to a sister eight years older. Slow the rocket down and the two counters creep back together.</figcaption>
+    </figure>
+
+    <div class="rl-detail-row">
+      <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d5" type="button">
+        <span class="wb-ico">functions</span> Detail — for scientists
+      </button>
+      <span class="rl-detail-hint">Why the paradox is not one: proper time along worldlines.</span>
+    </div>
+
+    <div class="rl-src" id="d5"
+         data-title="The twin “paradox” and the geometry that resolves it"
+         data-sub="Elapsed time is a property of a path, not of a pair of endpoints">
+      <div class="rl-sci">
+        <h5>Statement</h5>
+        <p>Twin B leaves Earth at speed $v$, travels a distance $D$ (measured in Earth's frame), turns around and returns. In Earth's frame the round trip takes $T = 2D/v$. Twin B's accumulated proper time is</p>
+        <div class="rl-eq">$$\tau_{B} = \int\sqrt{1 - \frac{v^{2}(t)}{c^{2}}}\;dt = \frac{T}{\gamma} \quad\text{(for an idealised instantaneous turnaround)}$$</div>
+        <p>With $D = 4.24$ ly (Proxima Centauri) and $v = 0.99c$: $T = 8.57$ yr, $\gamma = 7.089$, $\tau_{B} = 1.21$ yr.</p>
+
+        <h5>Why the situation is not symmetric</h5>
+        <p>The usual objection — “from B's point of view, A is the one moving” — assumes B has a single inertial frame. She does not. B occupies one inertial frame outbound and a <em>different</em> one inbound, and the switch is physically detectable: an accelerometer on board reads non-zero at the turn, while A's reads zero throughout. Only A can use one global inertial frame for the whole story.</p>
+        <p>Worked from B's side, the accounting still balances. On each leg B does see A's clock running slow by $1/\gamma$. But at the turnaround B's line of simultaneity swings across Earth's worldline, and events on Earth that were "now" for outbound-B are far in Earth's past compared with what is "now" for inbound-B. That jump is</p>
+        <div class="rl-eq">$$\Delta t_{\text{jump}} = \frac{2vD}{c^{2}}$$</div>
+        <p>and adding it to the two dilated legs reproduces $T$ exactly.</p>
+
+        <h5>The geometric statement</h5>
+        <p>In Euclidean geometry the straight line is the <em>shortest</em> path between two points. In Minkowski spacetime the metric signature flips one sign, and for timelike worldlines the inertial (straight) path is the one of <b>maximal</b> proper time:</p>
+        <div class="rl-eq">$$\tau = \frac{1}{c}\int \sqrt{-ds^{2}} \quad\text{is stationary and maximal along a geodesic}$$</div>
+        <p>Every detour through space costs time. The twin paradox is that single sentence in costume, and in general relativity it becomes the statement that free fall — not standing still — maximises the time on your watch.</p>
+
+        <h5>It has been flown</h5>
+        <p>Hafele and Keating (1971) carried caesium clocks on scheduled commercial flights, eastward and westward, and compared them against the US Naval Observatory ensemble on return. The eastward clocks lost $59 \pm 10$ ns, the westward gained $273 \pm 7$ ns, matching the combined kinematic and gravitational prediction. The effect is small only because aircraft are slow; it is not conditional. Every clock in every satellite is corrected for it continuously.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PART 3 ═══════════════ -->
+  <div class="rl-part p-wave" id="p3">
+    <p class="rl-part__k">Part 3 · The Doppler effect</p>
+    <h2 class="rl-part__t">Why moving things change their sound — and their colour</h2>
+    <p class="rl-part__s">Sound is a wave. Light is a wave too. When the thing making the wave is moving, the wave arrives <b>squashed up</b> or <b>stretched out</b> — and that changes what you hear, and what you see.</p>
+  </div>
+
+  <section class="rl-sec p-wave" id="s6">
+    <div class="rl-sec__head">
+      <div class="rl-sec__num">6</div>
+      <h3 class="rl-sec__t">Why an ambulance changes its song as it passes</h3>
+    </div>
+
+    <p class="rl-p">You have heard this a hundred times. An ambulance races towards you and its siren sounds <b>high</b>. The instant it goes past, the sound drops to a <b>lower</b> note. Neeee-oowwww.</p>
+    <p class="rl-p">The driver did not touch anything. Inside the ambulance the siren sounds exactly the same all the way through. So what changed?</p>
+
+    <div class="rl-story">
+      <h4>The ambulance chases its own sound</h4>
+      <p class="rl-p">Sound leaves the siren as ripples, like the rings you get when you drop a stone in a pond. Each ring spreads outwards at the speed of sound — about <b>343 metres every second</b> in ordinary air.</p>
+      <p class="rl-p">While the rings are spreading, the ambulance keeps driving forward. So it partly catches up with the rings it already made. In front of the ambulance the rings get <b>bunched together</b> — squashed. Behind it, the rings get <b>spread apart</b> — stretched.</p>
+      <p class="rl-p">Bunched-up ripples reaching your ear means more of them arrive each second, and that is what your ear calls a <b>high note</b>. Spread-out ripples mean fewer per second: a <b>low note</b>.</p>
+    </div>
+
+    <p class="rl-p">This is called the <b>Doppler effect</b>, after Christian Doppler, who worked it out in 1842 — long before anyone had recorded a siren.</p>
+    <p class="rl-p">And if the ambulance could go <em>faster than its own sound</em>, it would run right into the front of its own ripples and pile them all into one enormous ring. That pile-up is a <b>sonic boom</b>, the bang you hear from a very fast jet.</p>
+
+    <figure class="rl-lab">
+      <div class="rl-lab__bar">
+        <span class="rl-lab__tag">Lab 6</span>
+        <span class="rl-lab__name">Sound ripples from a moving siren</span>
+      </div>
+      <div class="rl-lab__stage"><canvas id="cv-sound" class="rl-canvas" aria-label="An ambulance drives past while circular sound waves spread out. The circles bunch together in front of it and spread apart behind it, and at high speed they pile up into a cone."></canvas></div>
+      <div class="rl-lab__ctrl">
+        <div class="rl-ctrl">
+          <span class="rl-ctrl__lab">Siren speed</span>
+          <input type="range" class="wb-range" id="r-sound" min="0" max="160" value="55" aria-label="Speed of the sound source, as a percentage of the speed of sound">
+          <span class="rl-ctrl__val" id="v-sound">189 m/s</span>
+        </div>
+      </div>
+      <div class="rl-read">
+        <div class="rl-read__c"><p class="rl-read__l">Note you hear in front</p><p class="rl-read__v is-accent" id="o-sound-f">1556 Hz</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Note you hear behind</p><p class="rl-read__v" id="o-sound-b">452 Hz</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Siren's own note</p><p class="rl-read__v">700 Hz</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Compared to sound</p><p class="rl-read__v" id="o-sound-m">Mach 0.55</p></div>
+      </div>
+      <figcaption class="rl-lab__cap">Watch the circles, not the ambulance. They are all growing at exactly the same speed and they all started as perfect rings — the moving siren just keeps leaving them behind at different places. A real ambulance drives at about Mach 0.06 — far too slow for the bunching to show up on this scale — so the slider here exaggerates, and past halfway you are watching a jet. Push it past <b>Mach 1</b> and the rings stack into a V-shaped wall: that is the sonic boom.</figcaption>
+    </figure>
+
+    <div class="rl-detail-row">
+      <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d6" type="button">
+        <span class="wb-ico">functions</span> Detail — for scientists
+      </button>
+      <span class="rl-detail-hint">The classical formula, why source and observer motion are not equivalent, and the Mach cone.</span>
+    </div>
+
+    <div class="rl-src" id="d6"
+         data-title="The classical (acoustic) Doppler effect"
+         data-sub="A medium with a rest frame, and the asymmetry that gives it away">
+      <div class="rl-sci">
+        <h5>The general formula</h5>
+        <p>With $v$ the wave speed in the medium, $v_{o}$ the observer's speed and $v_{s}$ the source's speed — both measured <b>with respect to the medium</b>, positive when directed from observer towards source:</p>
+        <div class="rl-eq">$$f' = f\,\frac{v + v_{o}}{v - v_{s}}$$
+          <span class="rl-eq__note">Approach raises $f'$, recession lowers it. In still air at 20 °C, $v = 331.3 + 0.606\,T[^\circ\mathrm{C}] \approx 343\ \mathrm{m\,s^{-1}}$.</span></div>
+        <p>The mechanism is geometric, not physiological. Between two emissions separated by $T = 1/f$ the source advances $v_{s}T$, so the wavelength ahead of it is compressed to $\lambda' = (v - v_{s})T$ and behind it stretched to $(v + v_{s})T$. Frequency is $v/\lambda'$.</p>
+
+        <h5>Worked example — the lab above</h5>
+        <p>A 700 Hz siren at $v_{s} = 20\ \mathrm{m\,s^{-1}}$ (72 km/h), stationary listener:</p>
+        <div class="rl-eq">$$f'_{\text{approach}} = 700\cdot\frac{343}{343-20} = 743\ \mathrm{Hz}, \qquad f'_{\text{recede}} = 700\cdot\frac{343}{343+20} = 661\ \mathrm{Hz}$$</div>
+        <p>A ratio of 1.124 — a little over two semitones, and instantly audible. The jump happens over the second or so during which the ambulance passes, which is why the change sounds abrupt rather than gradual.</p>
+
+        <h5>Source motion ≠ observer motion</h5>
+        <p>Expand both cases to second order in $\beta_{\text{rel}} = v_{s}/v$ or $v_{o}/v$:</p>
+        <div class="rl-eq">$$\frac{f'}{f}\bigg|_{\text{source moves}} = \frac{1}{1-\beta} = 1 + \beta + \beta^{2} + \cdots, \qquad \frac{f'}{f}\bigg|_{\text{observer moves}} = 1 + \beta$$</div>
+        <p>They agree to first order and differ at $\beta^{2}$. That difference is a real, measurable thing, and it is the fingerprint of a <b>medium with a preferred frame</b>: air knows which of the two is moving through it. This is precisely what the optical case cannot have, and it is why the relativistic Doppler formula in section 7 depends only on the <em>relative</em> velocity.</p>
+
+        <h5>Beyond Mach 1</h5>
+        <p>When $v_{s} > v$ the denominator changes sign and the formula stops describing a listener ahead of the source — no sound reaches there before the source does. The wavefronts instead envelope a cone:</p>
+        <div class="rl-eq">$$\sin\theta = \frac{v}{v_{s}} = \frac{1}{M}$$
+          <span class="rl-eq__note">$M$ is the Mach number; $\theta$ is the half-angle of the shock cone. At $M = 2$, $\theta = 30^{\circ}$.</span></div>
+        <p>The boom is not an event at the moment of "breaking the sound barrier" — it is a continuous trailing shock that sweeps across the ground as long as the aircraft stays supersonic.</p>
+
+        <h5>Where it is used</h5>
+        <ul>
+          <li><b>Doppler weather radar.</b> Frequency shift of the return pulse gives the radial wind speed inside a storm, which is how rotation — and therefore tornado risk — is detected.</li>
+          <li><b>Medical ultrasound.</b> Doppler echocardiography maps blood velocity and direction from the shift off moving red cells.</li>
+          <li><b>Speed enforcement.</b> Radar guns use the electromagnetic version at microwave frequencies; a 10.5 GHz gun sees about 70 Hz of shift per m/s, or 31 Hz per mph.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="rl-sec p-wave" id="s7">
+    <div class="rl-sec__head">
+      <div class="rl-sec__num">7</div>
+      <h3 class="rl-sec__t">Colours change too — and that is how we found out the universe is growing</h3>
+    </div>
+
+    <p class="rl-p">Light is a wave as well, so the very same thing happens to it. But instead of hearing a higher or lower <em>note</em>, we see a bluer or redder <b>colour</b>.</p>
+    <p class="rl-p">Put simply:</p>
+    <ul class="rl-ul">
+      <li>A star racing <b>away</b> from us has its light <b>stretched</b>. Stretched light is redder. Astronomers call it <b>redshift</b>.</li>
+      <li>A star racing <b>towards</b> us has its light <b>squashed</b>. Squashed light is bluer: <b>blueshift</b>.</li>
+    </ul>
+    <p class="rl-p">This is far too small to notice with cars and aeroplanes. You would have to drive at about a fifth of the speed of light — over 200 million kilometres per hour — before a red traffic light looked green. But stars and galaxies really do move that fast.</p>
+
+    <div class="rl-story">
+      <h4>The clue hiding in starlight</h4>
+      <p class="rl-p">Every kind of atom leaves its own pattern of dark lines in the light that passes through it — a barcode. Hydrogen always makes the same barcode, whether it is in a lamp on a table or in a star a billion years away.</p>
+      <p class="rl-p">So astronomers photograph a faraway galaxy, find the hydrogen barcode, and check where it landed. If the whole pattern has slid towards the red end, the galaxy is moving away, and how far it slid tells you how fast.</p>
+      <p class="rl-p">In the 1920s Edwin Hubble did this for galaxy after galaxy. Nearly every one was shifted red. And the further away a galaxy was, the more its light was stretched. There is only one tidy explanation: <b>the whole universe is getting bigger</b>, carrying the galaxies apart as it grows.</p>
+    </div>
+
+    <figure class="rl-lab">
+      <div class="rl-lab__bar">
+        <span class="rl-lab__tag">Lab 7</span>
+        <span class="rl-lab__name">Move a star and watch its barcode slide</span>
+      </div>
+      <div class="rl-lab__stage"><canvas id="cv-red" class="rl-canvas" aria-label="A star moves towards or away from Earth. Below it a rainbow spectrum shows three dark lines that slide towards blue or towards red as the speed changes."></canvas></div>
+      <div class="rl-lab__ctrl">
+        <div class="rl-ctrl">
+          <span class="rl-ctrl__lab">Star's motion</span>
+          <input type="range" class="wb-range" id="r-red" min="-60" max="60" value="35" aria-label="Star velocity, negative towards Earth and positive away from Earth">
+          <span class="rl-ctrl__val" id="v-red">away 0.35 c</span>
+        </div>
+      </div>
+      <div class="rl-read">
+        <div class="rl-read__c"><p class="rl-read__l">Stretch of the light</p><p class="rl-read__v is-accent" id="o-red-z">z = 0.44</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">A 486 nm line lands at</p><p class="rl-read__v" id="o-red-l">701 nm</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">What you see</p><p class="rl-read__v" id="o-red-w">Redder</p></div>
+      </div>
+      <figcaption class="rl-lab__cap">The three dark lines are the star's barcode. Their <b>real</b> positions are marked by the small ticks above the rainbow — the gap between tick and line is the whole measurement. Drag left and the barcode slides towards blue; drag right and it slides towards red and eventually straight out of the rainbow into infrared, where only a camera can follow it.</figcaption>
+    </figure>
+
+    <div class="rl-key">
+      <span class="rl-key__ico">🔭</span>
+      <p class="rl-key__b">Nobody has ever visited another galaxy. We know they are rushing away because their <b>colours</b> told us — the Doppler effect, read off a photograph.</p>
+    </div>
+
+    <div class="rl-detail-row">
+      <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d7" type="button">
+        <span class="wb-ico">functions</span> Detail — for scientists
+      </button>
+      <span class="rl-detail-hint">Relativistic Doppler, the transverse term, and why cosmological redshift is not this.</span>
+    </div>
+
+    <div class="rl-src" id="d7"
+         data-title="Relativistic Doppler shift and cosmological redshift"
+         data-sub="Two different things that produce the same-looking spectrum">
+      <div class="rl-sci">
+        <h5>The relativistic formula</h5>
+        <p>Light has no medium, so only the relative velocity can appear. For a source receding along the line of sight at $\beta = v/c$:</p>
+        <div class="rl-eq">$$\frac{f_{\text{obs}}}{f_{\text{src}}} = \sqrt{\frac{1-\beta}{1+\beta}}, \qquad 1 + z \equiv \frac{\lambda_{\text{obs}}}{\lambda_{\text{src}}} = \sqrt{\frac{1+\beta}{1-\beta}}$$
+          <span class="rl-eq__note">Approach is the same expression with $\beta \to -\beta$. To first order $z \approx \beta$, which is why the Newtonian formula survives for stellar velocities of a few hundred km/s.</span></div>
+        <p>At a general angle $\theta$ between the source's velocity and the line of sight, measured in the observer's frame:</p>
+        <div class="rl-eq">$$f_{\text{obs}} = \frac{f_{\text{src}}}{\gamma\left(1 + \beta\cos\theta\right)}$$</div>
+
+        <h5>The transverse term, and why it settles the argument</h5>
+        <p>Set $\theta = 90^{\circ}$ — the source is at closest approach, moving neither towards nor away. Classically there is no shift at all. Relativistically:</p>
+        <div class="rl-eq">$$f_{\text{obs}} = \frac{f_{\text{src}}}{\gamma}$$
+          <span class="rl-eq__note">A pure redshift, and pure time dilation: the moving source's oscillator is simply ticking slow. This term has no classical analogue whatsoever.</span></div>
+        <p>Ives and Stilwell (1938) measured it on hydrogen canal rays by observing both forward and backward emission and taking the mean, which cancels the first-order term and leaves the $\gamma$ factor exposed. It remains one of the cleanest direct confirmations of time dilation, and it was performed by two physicists who were trying to disprove relativity.</p>
+
+        <h5>Cosmological redshift is a different mechanism</h5>
+        <p>Distant galaxies are not, for the most part, moving <em>through</em> space away from us. The metric itself expands, and the wavelength of light in transit expands with it:</p>
+        <div class="rl-eq">$$1 + z = \frac{a(t_{\text{obs}})}{a(t_{\text{emit}})}$$
+          <span class="rl-eq__note">$a$ is the scale factor of the FLRW metric. This is a ratio of sizes of the universe, not a velocity — which is how $z > 1$ is possible without anything travelling faster than light.</span></div>
+        <p>For small $z$ it degenerates into Hubble's law and the distinction stops mattering:</p>
+        <div class="rl-eq">$$v \approx cz \approx H_{0}d, \qquad H_{0} \approx 70\ \mathrm{km\,s^{-1}\,Mpc^{-1}}$$
+          <span class="rl-eq__note">The two best measurements of $H_0$ — from the cosmic microwave background (≈ 67.4) and from the local distance ladder (≈ 73) — disagree by more than their stated errors. That is the “Hubble tension”, and it is unresolved.</span></div>
+        <p>Galaxies also have <b>peculiar velocities</b> on top of the expansion, which is why Andromeda is blueshifted: it is falling towards the Milky Way at about 110 km/s, and at 2.5 million light-years the expansion term is far too small to beat that.</p>
+
+        <h5>What gets built with it</h5>
+        <ul>
+          <li><b>Exoplanets.</b> A planet makes its star wobble; the radial-velocity method reads the wobble as a periodic Doppler shift. 51 Pegasi b (1995) showed a semi-amplitude of roughly 59 m/s — a shift of about $2\times10^{-7}$ in wavelength.</li>
+          <li><b>Galaxy rotation curves.</b> One side of a spiral is redshifted, the other blueshifted; the resulting rotation speeds are what revealed dark matter.</li>
+          <li><b>Redshift surveys.</b> $z$ doubles as a distance and as a clock, which is how the three-dimensional map of large-scale structure was built.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ PART 4 ═══════════════ -->
+  <div class="rl-part p-bend" id="p4">
+    <p class="rl-part__k">Part 4 · General relativity</p>
+    <h2 class="rl-part__t">Gravity is not a pull. It is a bend.</h2>
+    <p class="rl-part__s">Ten years after the fast-things part, Einstein finished the hard part: what happens when heavy things are around. His answer changed what gravity <em>is</em>.</p>
+  </div>
+
+  <section class="rl-sec p-bend" id="s8">
+    <div class="rl-sec__head">
+      <div class="rl-sec__num">8</div>
+      <h3 class="rl-sec__t">The trampoline, the bowling ball and the marble</h3>
+    </div>
+
+    <p class="rl-p">Isaac Newton said the Sun pulls the Earth with an invisible force, like a rope you cannot see. That idea works beautifully — we still use it to fly spacecraft. But Einstein noticed it never explains <em>how</em>. How does the Sun reach across 150 million kilometres of empty nothing and tug on us?</p>
+    <p class="rl-p">His answer: it does not reach across anything. Try this instead.</p>
+
+    <div class="rl-story">
+      <h4>Put a bowling ball on a trampoline</h4>
+      <p class="rl-p">The stretchy cloth sags into a big dip. Now roll a marble across the trampoline, off to one side. The marble curves around the dip. If you roll it just right, it will circle the bowling ball for a while before it finally spirals in.</p>
+      <p class="rl-p">The bowling ball never touched the marble. There is no rope, no magnet, no pull. The marble is <b>rolling as straight as it knows how</b> — but the floor underneath it is bent.</p>
+      <p class="rl-p">Einstein said that is what gravity actually is. Heavy things bend the space and time around them, and everything else just goes straight — on a bent floor.</p>
+    </div>
+
+    <p class="rl-p">The Earth is not being tugged by the Sun. The Earth is going straight ahead through a part of the universe that the Sun has curved. It has been going straight for four and a half billion years, and “straight” keeps bringing it back around.</p>
+    <p class="rl-p">One more thing follows immediately, and it is the test that made Einstein famous. Light has no weight, so Newton's rope should not touch it. But if <em>space itself</em> is bent, light must follow the bend too. In 1919 astronomers photographed stars during a total eclipse of the Sun and found them shifted slightly out of place — exactly as much as Einstein had calculated. Starlight had been bent by the Sun on its way to us.</p>
+
+    <figure class="rl-lab">
+      <div class="rl-lab__bar">
+        <span class="rl-lab__tag">Lab 8</span>
+        <span class="rl-lab__name">Bend the sheet and see what the ball does</span>
+      </div>
+      <div class="rl-lab__stage"><canvas id="cv-well" class="rl-canvas rl-canvas--tall" aria-label="A grid representing space is dented by a heavy star at the centre. A small ball crosses the grid and its path curves more strongly as the star's mass is increased."></canvas></div>
+      <div class="rl-lab__ctrl">
+        <div class="rl-ctrl">
+          <span class="rl-ctrl__lab">Star's mass</span>
+          <input type="range" class="wb-range" id="r-well" min="0" max="100" value="46" aria-label="Mass of the central star">
+          <span class="rl-ctrl__val" id="v-well">46</span>
+        </div>
+        <button class="wb-btn wb-btn--secondary wb-btn--sm" id="b-well-reset" type="button">
+          <span class="wb-ico">restart_alt</span> Send a new ball
+        </button>
+      </div>
+      <div class="rl-read">
+        <div class="rl-read__c"><p class="rl-read__l">Dip in the sheet</p><p class="rl-read__v is-accent" id="o-well-d">Deep</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">The ball's path</p><p class="rl-read__v" id="o-well-p">Orbiting</p></div>
+      </div>
+      <figcaption class="rl-lab__cap">Slide the mass to <b>zero</b>: the grid flattens and the ball crosses in a perfectly straight line, because there is nothing to bend. Add mass and the same ball, launched the same way, starts to curve — first a gentle swerve, then a loop, then a fall. Nothing ever pulls it. <b>The grid is what changed.</b></figcaption>
+    </figure>
+
+    <div class="rl-key">
+      <span class="rl-key__ico">🌍</span>
+      <p class="rl-key__b">A trampoline is only a picture — real space bends in three directions at once, and time bends with it. But the important part of the picture is exactly right: <b>nothing is pulling. The floor is bent.</b></p>
+    </div>
+
+    <div class="rl-detail-row">
+      <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d8" type="button">
+        <span class="wb-ico">functions</span> Detail — for scientists
+      </button>
+      <span class="rl-detail-hint">Equivalence principle, geodesics, the field equations, and four classical tests.</span>
+    </div>
+
+    <div class="rl-src" id="d8"
+         data-title="Curvature, geodesics and the Einstein field equations"
+         data-sub="From a thought about a falling lift to a tensor equation, and what it predicted">
+      <div class="rl-sci">
+        <h5>The starting point</h5>
+        <p>The <b>equivalence principle</b>: in a freely falling laboratory, small enough and for a short enough time, the laws of physics are those of special relativity. Gravity can be transformed away locally. Equivalently, inertial mass and gravitational mass are the same thing — tested by Eötvös-type and modern torsion-balance experiments to about one part in $10^{13}$, and by the MICROSCOPE satellite to $10^{-15}$.</p>
+        <p>“Locally” carries the whole content. Over a large enough region you <em>can</em> tell gravity from acceleration, because real gravitational fields converge: two balls dropped side by side in a falling lift drift together. That residual, unremovable effect is <b>tidal</b>, and tidal effects are curvature.</p>
+
+        <h5>Free fall as straight motion</h5>
+        <p>A free particle follows a geodesic of the spacetime metric $g_{\mu\nu}$ — the straightest available worldline:</p>
+        <div class="rl-eq">$$\frac{d^{2}x^{\mu}}{d\tau^{2}} + \Gamma^{\mu}_{\ \alpha\beta}\,\frac{dx^{\alpha}}{d\tau}\frac{dx^{\beta}}{d\tau} = 0$$
+          <span class="rl-eq__note">No force term. The Christoffel symbols $\Gamma$ are built from derivatives of the metric; in a locally inertial frame they vanish and the equation becomes $d^{2}x^{\mu}/d\tau^{2}=0$.</span></div>
+        <p>Note which curvature is doing the work for everyday gravity. An apple falls at 9.8 m/s², but it moves through <em>time</em> at $c$; the dominant term in the geodesic equation for slow bodies is $\Gamma^{i}_{\ tt}$, i.e. the curvature of the <b>time</b> direction. Newtonian gravity is very nearly the statement of section 9 — that clocks run slower lower down — in disguise.</p>
+
+        <h5>The field equations (1915)</h5>
+        <div class="rl-eq">$$G_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^{4}}\,T_{\mu\nu}, \qquad G_{\mu\nu} \equiv R_{\mu\nu} - \tfrac{1}{2}R\,g_{\mu\nu}$$
+          <span class="rl-eq__note">Left: geometry. Right: energy, momentum, pressure and stress. Ten coupled non-linear partial differential equations for the metric. $8\pi G/c^{4} \approx 2.08\times10^{-43}\ \mathrm{N^{-1}}$ — spacetime is extraordinarily stiff, which is why it takes a star to make a noticeable bend.</span></div>
+
+        <h5>The vacuum solution around a spherical mass</h5>
+        <p>Schwarzschild found it within weeks, while serving on the Russian front:</p>
+        <div class="rl-eq">$$ds^{2} = -\left(1 - \frac{r_{s}}{r}\right)c^{2}dt^{2} + \frac{dr^{2}}{1 - r_{s}/r} + r^{2}d\Omega^{2}, \qquad r_{s} = \frac{2GM}{c^{2}}$$
+          <span class="rl-eq__note">$r_{s}$ is the Schwarzschild radius: 2.95 km for the Sun, 8.87 mm for the Earth. Both are buried far inside the body, so the exterior solution is all that applies — unless the object collapses.</span></div>
+
+        <h5>What it predicted, and what was found</h5>
+        <table class="rl-num">
+          <tr><th>Prediction</th><th>Value</th><th>Status</th></tr>
+          <tr><td>Mercury's perihelion advance</td><td>43″ per century beyond Newton</td><td>Already an unexplained anomaly in 1915; GR gives 42.98″</td></tr>
+          <tr><td>Light deflection $\theta = 4GM/c^{2}b$</td><td>1.75″ at the solar limb — twice the Newtonian guess</td><td>Eddington's 1919 eclipse; now measured by VLBI to ~0.01%</td></tr>
+          <tr><td>Gravitational lensing</td><td>Multiple images, arcs, Einstein rings</td><td>Routine; used to weigh clusters and find dark matter</td></tr>
+          <tr><td>Gravitational waves</td><td>Strain $h \sim 10^{-21}$ from merging black holes</td><td>GW150914, detected 14 September 2015 by LIGO</td></tr>
+          <tr><td>Black holes</td><td>An event horizon at $r = r_{s}$, casting a shadow</td><td>Event Horizon Telescope: M87* in 2019, Sgr A* in 2022</td></tr>
+          <tr><td>Frame dragging</td><td>A rotating mass drags inertial frames</td><td>Gravity Probe B, 2011; LARES/LAGEOS</td></tr>
+        </table>
+
+        <h5>Honest limits of the trampoline picture</h5>
+        <ul>
+          <li>It embeds a 2-surface in 3-space, and needs an external "down" — the very thing it claims to explain.</li>
+          <li>It shows curved <em>space</em>. For non-relativistic orbits, curved <em>time</em> dominates, and the rubber sheet does not show it at all.</li>
+          <li>It draws a spatial slice of the Schwarzschild geometry (Flamm's paraboloid), which is a legitimate object — but a slice, not the spacetime.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="rl-sec p-bend" id="s9">
+    <div class="rl-sec__head">
+      <div class="rl-sec__num">9</div>
+      <h3 class="rl-sec__t">Heavy things slow time down — and your phone knows it</h3>
+    </div>
+
+    <p class="rl-p">Here is the strangest result of the whole page, and the easiest one to check.</p>
+    <p class="rl-p">Time runs <b>slower</b> when you are closer to something heavy. Not the clock — <em>time</em>. A clock on your kitchen floor really does run slower than a clock on the top shelf, because the floor is a little bit closer to the centre of the Earth.</p>
+    <p class="rl-p">The difference is unbelievably small. For a shelf two metres up, the two clocks would drift apart by about <b>one second every 150 million years</b>. But it is not zero, and scientists now have clocks good enough to see it over a height of just <b>33 centimetres</b>.</p>
+
+    <div class="rl-story">
+      <h4>The satellites that have to lie about the time</h4>
+      <p class="rl-p">When your phone shows a map, it is listening to about 30 satellites, each shouting the time from 20,000 kilometres up. Your phone works out where it is by comparing how long each message took to arrive. Timing is everything: being wrong by one millionth of a second means being wrong by 300 metres.</p>
+      <p class="rl-p">Those satellites are far from the Earth, so gravity is weaker up there and their clocks run <b>fast</b> — about 46 millionths of a second gained per day. They are also moving quickly, so time dilation from Part 2 makes them run <b>slow</b> — about 7 millionths of a second lost per day. The two effects do not cancel. What is left is about <b>38 millionths of a second gained every day</b>.</p>
+      <p class="rl-p">If engineers ignored that, your map would be wrong by about <b>10 kilometres after a single day</b>. So the satellite clocks are deliberately built to run at the wrong rate on the ground, so that they run at the right rate in orbit. Einstein is in your pocket, every time you look up a route.</p>
+    </div>
+
+    <p class="rl-p">Go somewhere much heavier and the effect stops being tiny. Near a <b>black hole</b> — an object so heavy that not even light can climb away from it — time crawls. Hover close to the edge and you could watch a hundred years go by outside while you lived through one.</p>
+
+    <figure class="rl-lab">
+      <div class="rl-lab__bar">
+        <span class="rl-lab__tag">Lab 9</span>
+        <span class="rl-lab__name">Two clocks: one far away, one close to a black hole</span>
+      </div>
+      <div class="rl-lab__stage"><canvas id="cv-grav" class="rl-canvas" aria-label="A black hole with a clock hovering near it and a second clock far away. The nearby clock's hand turns visibly more slowly and its year counter falls behind."></canvas></div>
+      <div class="rl-lab__ctrl">
+        <div class="rl-ctrl">
+          <span class="rl-ctrl__lab">How close is the clock?</span>
+          <input type="range" class="wb-range" id="r-grav" min="102" max="1200" value="200" aria-label="Distance of the near clock from the black hole, in units of the hole's radius">
+          <span class="rl-ctrl__val" id="v-grav">2.00 ×</span>
+        </div>
+      </div>
+      <div class="rl-read">
+        <div class="rl-read__c"><p class="rl-read__l">Far-away clock counts</p><p class="rl-read__v" id="o-grav-f">0.0 yr</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Near clock counts</p><p class="rl-read__v is-accent" id="o-grav-n">0.0 yr</p></div>
+        <div class="rl-read__c"><p class="rl-read__l">Near clock runs at</p><p class="rl-read__v" id="o-grav-r">71%</p></div>
+      </div>
+      <figcaption class="rl-lab__cap">The dashed circle is the <b>edge</b> — the point of no return. Slide the clock right up against it and its hand almost stops while the far clock spins on. Slide it far away and the two clocks agree again, which is why nobody noticed any of this for three hundred years.</figcaption>
+    </figure>
+
+    <div class="rl-key">
+      <span class="rl-key__ico">📡</span>
+      <p class="rl-key__b">Both parts of this page are needed at once for satellites: speed makes their clocks slow, height makes them fast, and the leftover has to be corrected every single day.</p>
+    </div>
+
+    <div class="rl-detail-row">
+      <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d9" type="button">
+        <span class="wb-ico">functions</span> Detail — for scientists
+      </button>
+      <span class="rl-detail-hint">The metric term, the weak-field limit, Pound–Rebka, and the GPS error budget.</span>
+    </div>
+
+    <div class="rl-src" id="d9"
+         data-title="Gravitational time dilation and the GPS budget"
+         data-sub="One term of the Schwarzschild metric, and its consequences down to the nanosecond">
+      <div class="rl-sci">
+        <h5>Where it comes from</h5>
+        <p>Take the Schwarzschild metric and set $dr = d\Omega = 0$ — a clock held at fixed $r$. Then $ds^{2} = -(1-r_{s}/r)c^{2}dt^{2}$, and proper time relates to coordinate time (which is the time kept by a clock at infinity) by</p>
+        <div class="rl-eq">$$\frac{d\tau}{dt} = \sqrt{1 - \frac{r_{s}}{r}} = \sqrt{1 - \frac{2GM}{rc^{2}}}$$
+          <span class="rl-eq__note">$\to 0$ as $r \to r_{s}$: from far away, an infalling clock appears to freeze at the horizon. The infalling observer crosses in finite proper time and notices nothing locally special there.</span></div>
+
+        <h5>Weak field</h5>
+        <p>For $2GM/rc^{2} \ll 1$, expand and write the result in terms of Newtonian potential $\Phi$:</p>
+        <div class="rl-eq">$$\frac{\Delta f}{f} \approx \frac{\Delta\Phi}{c^{2}} \approx \frac{g\,\Delta h}{c^{2}} = 1.09\times10^{-16}\ \text{per metre of height on Earth}$$</div>
+        <table class="rl-num">
+          <tr><th>Height difference</th><th>Fractional rate</th><th>Accumulated</th></tr>
+          <tr><td>2 m (floor to shelf)</td><td><code>2.2 × 10⁻¹⁶</code></td><td>1 s in ≈ 150 million years</td></tr>
+          <tr><td>33 cm</td><td><code>3.6 × 10⁻¹⁷</code></td><td>Resolved by NIST Al⁺ clocks, 2010</td></tr>
+          <tr><td>22.5 m (Pound–Rebka tower)</td><td><code>2.45 × 10⁻¹⁵</code></td><td>Measured 1959 via the Mössbauer effect on ⁵⁷Fe</td></tr>
+          <tr><td>8 849 m (Everest vs sea level)</td><td><code>9.6 × 10⁻¹³</code></td><td>≈ 30 μs per year</td></tr>
+          <tr><td>Sun's surface vs infinity</td><td><code>2.12 × 10⁻⁶</code></td><td>≈ 67 s per year</td></tr>
+        </table>
+
+        <h5>The GPS budget</h5>
+        <p>A GPS satellite orbits at $r = 26\,560$ km with $v = 3.87$ km/s. Both effects are computed relative to a clock on the rotating geoid:</p>
+        <div class="rl-eq">$$\underbrace{-\frac{v^{2}}{2c^{2}}}_{\text{kinematic}} \;+\; \underbrace{\frac{GM}{c^{2}}\left(\frac{1}{R_{\oplus}} - \frac{1}{r}\right)}_{\text{gravitational}} \;\Rightarrow\; -7.2 + 45.9 = +38.7\ \mu\mathrm{s\ per\ day}$$</div>
+        <p>Left uncorrected, $c \times 38.7\ \mu\mathrm{s} \approx 11.6$ km of position error accumulates per day. The fix is built into the hardware: the satellite oscillators are set to 10.229 999 995 43 MHz on the ground so that they read 10.23 MHz in orbit. There is a further periodic term of up to 46 ns from orbital eccentricity, applied in the receiver.</p>
+
+        <h5>Consequences at the extreme</h5>
+        <ul>
+          <li><b>Redshift of escaping light.</b> Photons climbing out of a well lose frequency by the same factor — the gravitational redshift measured for white dwarfs (Sirius B) and, at $z \approx 6.7\times10^{-4}$ (about 200 km/s in velocity units), for the S2 star at its closest approach to Sgr A*.</li>
+          <li><b>The horizon.</b> $r_{s} = 2GM/c^{2}$ is not a surface of matter but the radius at which the escape speed reaches $c$ and $d\tau/dt$ vanishes. For Sgr A* (4.3 × 10⁶ $M_\odot$) it is about 12.7 million km, roughly a tenth of the Earth–Sun distance.</li>
+          <li><b>Relativistic geodesy.</b> Optical clocks at $10^{-18}$ stability resolve 1 cm of height. Comparing two clocks now measures a geopotential difference directly, which is a survey instrument, not a physics demonstration.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ RECAP ═══════════════ -->
+  <div class="rl-part p-fast" id="recap">
+    <p class="rl-part__k">Recap</p>
+    <h2 class="rl-part__t">Five things worth remembering</h2>
+    <p class="rl-part__s">If everything else fades, these five sentences are the page.</p>
+  </div>
+
+  <div class="rl-take">
+    <div class="rl-take__c p-move">
+      <h4>1 · Speed is a comparison</h4>
+      <p>There is no such thing as “really standing still”. You are always moving relative to <em>something</em>, and every one of those answers is correct.</p>
+    </div>
+    <div class="rl-take__c p-fast">
+      <h4>2 · Light has one speed</h4>
+      <p>Everybody who measures light gets 299,792,458 metres per second — running towards it, running away, it makes no difference.</p>
+    </div>
+    <div class="rl-take__c p-fast">
+      <h4>3 · Fast clocks fall behind</h4>
+      <p>Because light's speed cannot change, time has to. Move fast and your clock, your heartbeat and your whole life run slow — as measured by someone you left behind.</p>
+    </div>
+    <div class="rl-take__c p-wave">
+      <h4>4 · Movement changes waves</h4>
+      <p>Coming towards you, waves bunch up: higher notes, bluer light. Going away, they stretch: lower notes, redder light. That is how we know the universe is growing.</p>
+    </div>
+    <div class="rl-take__c p-bend">
+      <h4>5 · Gravity is bent spacetime</h4>
+      <p>Heavy things dent the space and time around them. Everything else travels straight — and “straight” on a dented floor is a curve. Time runs slow down in the dent.</p>
+    </div>
+  </div>
+
+  <section class="rl-sec p-fast" id="glossary">
+    <div class="rl-sec__head">
+      <div class="rl-sec__num">✳</div>
+      <h3 class="rl-sec__t">The same ideas, in grown-up words</h3>
+    </div>
+    <p class="rl-p">Every idea on this page has a proper name. Here they are side by side, so the Detail popups stop looking like a foreign language.</p>
+    <table class="rl-words">
+      <tr><th>What this page said</th><th>What scientists call it</th><th>Written as</th></tr>
+      <tr><td>Where you are watching from</td><td>Frame of reference</td><td>S, S′</td></tr>
+      <tr><td>The speed of light</td><td>c</td><td>299 792 458 m/s</td></tr>
+      <tr><td>How much time stretches</td><td>Lorentz factor</td><td>γ = 1/√(1−v²/c²)</td></tr>
+      <tr><td>Moving clocks run slow</td><td>Time dilation</td><td>Δt = γΔt₀</td></tr>
+      <tr><td>Fast things look shorter</td><td>Length contraction</td><td>L = L₀/γ</td></tr>
+      <tr><td>Your own personal time</td><td>Proper time</td><td>τ</td></tr>
+      <tr><td>Sound and colour change with motion</td><td>Doppler shift</td><td>f′ = f (v+v₀)/(v−v_s)</td></tr>
+      <tr><td>Light stretched towards red</td><td>Redshift</td><td>z</td></tr>
+      <tr><td>Going straight on a bent floor</td><td>Geodesic</td><td>—</td></tr>
+      <tr><td>The edge of a black hole</td><td>Event horizon</td><td>r_s = 2GM/c²</td></tr>
+    </table>
+  </section>
+
+  <!-- ═══════════════ QUIZ ═══════════════ -->
+  <section class="rl-sec p-bend" id="quiz">
+    <div class="rl-sec__head">
+      <div class="rl-sec__num">?</div>
+      <h3 class="rl-sec__t">Check yourself</h3>
+    </div>
+    <p class="rl-p">Five questions. Pick an answer and it will tell you straight away whether it was right, and why.</p>
+
+    <div class="rl-quiz" id="quiz-box">
+      <div class="rl-q" data-answer="1">
+        <p class="rl-q__q">1. You are sitting perfectly still on a chair. Are you moving?</p>
+        <div class="rl-q__opts">
+          <button class="rl-opt" type="button">No — nothing about me is moving.</button>
+          <button class="rl-opt" type="button">It depends what you compare me with.</button>
+          <button class="rl-opt" type="button">Yes — everybody is always moving at the same speed.</button>
+        </div>
+        <p class="rl-q__why">Still compared to your chair, and about 30 km/s compared to the Sun. Both answers are true at once, which is exactly why speed always needs a “compared to what”.</p>
+      </div>
+
+      <div class="rl-q" data-answer="2">
+        <p class="rl-q__q">2. A rocket flying at half the speed of light switches on its headlights. How fast does that light travel?</p>
+        <div class="rl-q__opts">
+          <button class="rl-opt" type="button">One and a half times the speed of light.</button>
+          <button class="rl-opt" type="button">Half the speed of light.</button>
+          <button class="rl-opt" type="button">Exactly the speed of light — same as always.</button>
+        </div>
+        <p class="rl-q__why">Light never inherits the speed of whatever made it. This is the one fact that everything else on the page is built on.</p>
+      </div>
+
+      <div class="rl-q" data-answer="0">
+        <p class="rl-q__q">3. A clock races past you at 87% of the speed of light. Compared with your clock, it ticks…</p>
+        <div class="rl-q__opts">
+          <button class="rl-opt" type="button">At half the rate — it falls behind.</button>
+          <button class="rl-opt" type="button">At exactly the same rate.</button>
+          <button class="rl-opt" type="button">Twice as fast — it races ahead.</button>
+        </div>
+        <p class="rl-q__why">At 0.87 c the stretch factor γ is 2, so one of its ticks takes two of yours. The pilot carrying that clock notices nothing at all — to her, yours is the slow one.</p>
+      </div>
+
+      <div class="rl-q" data-answer="2">
+        <p class="rl-q__q">4. An ambulance has just passed you and is driving away. Its siren sounds…</p>
+        <div class="rl-q__opts">
+          <button class="rl-opt" type="button">Exactly as it does to the driver.</button>
+          <button class="rl-opt" type="button">Higher than it really is.</button>
+          <button class="rl-opt" type="button">Lower than it really is.</button>
+        </div>
+        <p class="rl-q__why">Driving away stretches the sound ripples out, so fewer of them reach your ear each second — and fewer per second is what your ear calls a lower note.</p>
+      </div>
+
+      <div class="rl-q" data-answer="1">
+        <p class="rl-q__q">5. Two identical clocks: one on the kitchen floor, one on a high shelf. After many years…</p>
+        <div class="rl-q__opts">
+          <button class="rl-opt" type="button">They still agree exactly — height cannot matter.</button>
+          <button class="rl-opt" type="button">The shelf clock is slightly ahead.</button>
+          <button class="rl-opt" type="button">The floor clock is slightly ahead.</button>
+        </div>
+        <p class="rl-q__why">Further from the Earth means weaker gravity means faster time. It is about one second in 150 million years for a two-metre shelf — tiny, but satellites have to correct for the same effect every day.</p>
+      </div>
+    </div>
+    <p class="rl-score" id="quiz-score">Answered 0 of 5.</p>
+  </section>
+
+  <section class="rl-sec p-move" id="sources">
+    <div class="rl-sec__head">
+      <div class="rl-sec__num">§</div>
+      <h3 class="rl-sec__t">Where the numbers come from</h3>
+    </div>
+    <p class="rl-p">Constants follow CODATA and the SI definitions: <em>c</em> = 299 792 458 m/s exactly, <em>G</em> = 6.674 × 10⁻¹¹ m³ kg⁻¹ s⁻², muon mean lifetime 2.1969811 μs.</p>
+    <p class="rl-p">The experiments named in the Detail popups are Michelson &amp; Morley (1887), Ives &amp; Stilwell (1938), Rossi &amp; Hall (1941), Pound &amp; Rebka (1959), Alväger <em>et al.</em> (1964), Hafele &amp; Keating (1971), Bailey <em>et al.</em> at CERN (1977), Chou <em>et al.</em> at NIST (2010), Gravity Probe B (2011), LIGO GW150914 (2015), the Event Horizon Telescope (2019, 2022) and MICROSCOPE (2022). The GPS figures are the standard budget: −7.2 μs/day kinematic, +45.9 μs/day gravitational.</p>
+    <p class="rl-p">Values shown in the moving pictures are rounded for reading, and the trampoline in section 8 is a picture, not a calculation — its honest limits are listed in that section's Detail popup.</p>
+  </section>
+
+</main>
+
+<button class="wb-btn wb-btn--secondary wb-btn--icon rl-top" id="toTop" aria-label="Back to top"><span class="wb-ico">arrow_upward</span></button>
+
+<div class="wb-overlay" id="rl-overlay">
+  <div class="wb-modal rl-modal" role="dialog" aria-modal="true" aria-labelledby="rl-modal-title">
+    <div class="wb-modal__head">
+      <div>
+        <p class="rl-modal__kicker" id="rl-modal-kicker">Detail · for scientists</p>
+        <h4 class="wb-modal__title" id="rl-modal-title">—</h4>
+        <p class="wb-modal__sub" id="rl-modal-sub">—</p>
+      </div>
+      <!-- .wb-close draws its own × via ::before — an inner icon span would render a second one -->
+      <button class="wb-close" id="rl-modal-close" aria-label="Close"></button>
+    </div>
+    <div class="wb-modal__body" id="rl-modal-body"></div>
+    <div class="wb-modal__foot">
+      <button class="wb-btn wb-btn--secondary wb-btn--sm" id="rl-modal-done" type="button">Back to the pictures</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════════
+   Everything below is hand-written: no chart library, no physics engine.
+   Each lab is a <canvas> plus one draw function. A single requestAnimationFrame
+   loop drives the ones that are on screen; the rest sleep, so a long page of
+   nine animations costs about what one costs.
+   Colours are read from CSS custom properties at draw time, which is what makes
+   a theme flip repaint every figure without any per-figure bookkeeping.
+   ══════════════════════════════════════════════════════════════════════════ */
+(function () {
+'use strict';
+
+function $(id) { return document.getElementById(id); }
+var reduced = false;
+try { reduced = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+
+/* ---------- palette ------------------------------------------------------ */
+var P = {};
+var PKEYS = ['ink', 'dim', 'faint', 'line', 'stage', 'stage-2', 'sky', 'ground'];
+function readPal() {
+  var cs = getComputedStyle(document.documentElement);
+  for (var i = 0; i < PKEYS.length; i++) P[PKEYS[i]] = cs.getPropertyValue('--rl-' + PKEYS[i]).trim();
+}
+readPal();
+
+/* ---------- tiny canvas helpers ----------------------------------------- */
+function rr(c, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  c.beginPath();
+  c.moveTo(x + r, y);
+  c.lineTo(x + w - r, y); c.quadraticCurveTo(x + w, y, x + w, y + r);
+  c.lineTo(x + w, y + h - r); c.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  c.lineTo(x + r, y + h); c.quadraticCurveTo(x, y + h, x, y + h - r);
+  c.lineTo(x, y + r); c.quadraticCurveTo(x, y, x + r, y);
+  c.closePath();
+}
+/* Every canvas label goes through these two, so one factor set per scene in the
+   loop scales the whole page's figure type for narrow stages. */
+var CURK = 1;
+function txt(c, s, x, y, size, col, align, weight) {
+  c.fillStyle = col; c.textAlign = align || 'left'; c.textBaseline = 'middle';
+  c.font = (weight || 600) + ' ' + (size * CURK).toFixed(1) + 'px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif';
+  c.fillText(s, x, y);
+}
+function mono(c, s, x, y, size, col, align) {
+  c.fillStyle = col; c.textAlign = align || 'left'; c.textBaseline = 'middle';
+  c.font = '700 ' + (size * CURK).toFixed(1) + 'px ui-monospace, SFMono-Regular, Menlo, monospace';
+  c.fillText(s, x, y);
+}
+/* Shorter wording once a caption would run past the edge of the stage. */
+function pick(W, long, short) { return W < 560 ? short : long; }
+function dash(c, pts, col, w, pattern) {
+  c.save(); c.setLineDash(pattern || [5, 5]); c.strokeStyle = col; c.lineWidth = w || 1;
+  c.beginPath(); c.moveTo(pts[0][0], pts[0][1]);
+  for (var i = 1; i < pts.length; i++) c.lineTo(pts[i][0], pts[i][1]);
+  c.stroke(); c.restore();
+}
+function gam(b) { return 1 / Math.sqrt(1 - b * b); }
+
+/* ---------- scene manager ------------------------------------------------ */
+var scenes = [];
+function scene(id, draw, state) {
+  var cv = $(id); if (!cv) return null;
+  var s = { cv: cv, ctx: cv.getContext('2d'), w: 0, h: 0, t: 0, warm: 0, on: false, draw: draw, st: state || {}, acc: '#666', soft: 'rgba(0,0,0,.1)' };
+  s.fit = function () {
+    var r = cv.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    s.w = r.width; s.h = r.height;
+    cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+    s.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+  s.sync = function () {
+    var cs = getComputedStyle(cv);
+    s.acc = cs.getPropertyValue('--sec').trim() || P.ink;
+    s.soft = cs.getPropertyValue('--sec-soft').trim() || 'rgba(0,0,0,.1)';
+  };
+  scenes.push(s);
+  return s;
+}
+function fitAll() { for (var i = 0; i < scenes.length; i++) { scenes[i].fit(); scenes[i].sync(); } }
+
+var last = 0;
+function loop(now) {
+  var dt = last ? Math.min(0.05, (now - last) / 1000) : 0;
+  last = now;
+  for (var i = 0; i < scenes.length; i++) {
+    var s = scenes[i];
+    if (!s.on) continue;
+    /* With reduced motion asked for, nothing may keep moving — but a frozen
+       scene at t = 0 is useless (no sound rings emitted yet, no ticks counted).
+       Run each scene forward to a representative moment once, then hold it. */
+    var d = dt;
+    if (reduced) { if (s.warm < 160) { d = 0.02; s.warm++; } else d = 0; }
+    /* A canvas that was not laid out when boot ran keeps the default 300x150 and
+       would never draw again. Re-measure until it has a real box. */
+    if (!s.w) { s.fit(); if (!s.w) continue; }
+    CURK = Math.max(0.66, Math.min(1, s.w / 700));
+    s.t += d;
+    s.ctx.clearRect(0, 0, s.w, s.h);
+    s.ctx.fillStyle = P.stage; s.ctx.fillRect(0, 0, s.w, s.h);
+    s.draw(s.ctx, s.w, s.h, s.t, d, s);
+  }
+  requestAnimationFrame(loop);
+}
+
+/* ---------- page frame --------------------------------------------------- */
+(function frame() {
+  var root = document.documentElement, saved = null;
+  try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
+  root.classList.toggle('dark', saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
+
+  var toggle = $('theme-toggle');
+  if (toggle) toggle.addEventListener('click', function () {
+    var dark = !root.classList.contains('dark');
+    root.classList.toggle('dark', dark);
+    try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+    setTimeout(function () { readPal(); for (var i = 0; i < scenes.length; i++) scenes[i].sync(); }, 30);
+  });
+
+  var menu = document.querySelector('.wb-navbar__menu');
+  document.addEventListener('click', function (e) {
+    if (!menu || !e.target.closest) return;
+    if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
+    else if (e.target.closest('.wb-navbar__menu .wb-nav__link') || !e.target.closest('.wb-navbar__menu'))
+      menu.classList.remove('is-open');
+  });
+
+  var top = $('toTop');
+  function onScroll() { top.classList.toggle('is-on', window.scrollY > 700); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+
+/* ---------- the Detail popup --------------------------------------------- */
+(function detail() {
+  var ov = $('rl-overlay'), box = ov.querySelector('.rl-modal'), body = $('rl-modal-body'), back = null;
+
+  function open(id, btn) {
+    var src = $(id); if (!src || !src.firstElementChild) return;
+    var cs = getComputedStyle(src);
+    box.style.setProperty('--sec', cs.getPropertyValue('--sec'));
+    box.style.setProperty('--sec-soft', cs.getPropertyValue('--sec-soft'));
+    $('rl-modal-title').textContent = src.getAttribute('data-title') || 'Detail';
+    $('rl-modal-sub').textContent = src.getAttribute('data-sub') || '';
+    body.innerHTML = '';
+    body.appendChild(src.firstElementChild.cloneNode(true));
+    body.scrollTop = 0;
+    ov.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    back = btn || null;
+    $('rl-modal-close').focus();
+  }
+  function close() {
+    ov.classList.remove('is-open');
+    document.body.style.overflow = '';
+    body.innerHTML = '';
+    if (back && back.focus) back.focus();
+    back = null;
+  }
+
+  var btns = document.querySelectorAll('[data-detail]');
+  for (var i = 0; i < btns.length; i++) (function (b) {
+    b.addEventListener('click', function () { open(b.getAttribute('data-detail'), b); });
+  })(btns[i]);
+
+  $('rl-modal-close').addEventListener('click', close);
+  $('rl-modal-done').addEventListener('click', close);
+  ov.addEventListener('click', function (e) { if (e.target === ov) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ov.classList.contains('is-open')) close(); });
+})();
+
+/* ---------- the quiz ------------------------------------------------------ */
+(function quiz() {
+  var box = $('quiz-box'); if (!box) return;
+  var qs = box.querySelectorAll('.rl-q'), done = 0, right = 0;
+  function refresh() {
+    $('quiz-score').textContent = done === 0 ? 'Answered 0 of ' + qs.length + '.'
+      : 'Answered ' + done + ' of ' + qs.length + ' — ' + right + ' correct.';
+  }
+  for (var i = 0; i < qs.length; i++) (function (q) {
+    var want = parseInt(q.getAttribute('data-answer'), 10);
+    var opts = q.querySelectorAll('.rl-opt');
+    for (var j = 0; j < opts.length; j++) (function (o, idx) {
+      o.addEventListener('click', function () {
+        if (q.classList.contains('is-done')) return;
+        q.classList.add('is-done');
+        opts[want].classList.add('is-right');
+        if (idx !== want) o.classList.add('is-wrong'); else right++;
+        done++; refresh();
+      });
+    })(opts[j], j);
+  })(qs[i]);
+  refresh();
+})();
+
+/* ═════════════ Lab 1 — one thrown ball, two viewpoints ═════════════ */
+(function lab1() {
+  var st = { view: 'ground', kmh: 55, tx: null, bp: 0, trail: [] };
+  var sc = scene('cv-frames', function (c, W, H, t, dt, s) {
+    var groundY = H * 0.76, TL = Math.min(W * 0.46, 320), TH = H * 0.40;
+    var xFixed = (W - TL) * 0.42, SP = Math.max(150, W * 0.30);
+    var v = (st.kmh / 100) * W * 0.30;
+    if (st.tx === null) st.tx = xFixed;
+    if (dt > 0) {
+      st.tx += v * dt;
+      if (st.tx > W + TL * 0.3) { st.tx = -TL; st.trail.length = 0; }
+      st.bp += dt / 1.5;
+    }
+    var cam = st.view === 'train' ? st.tx - xFixed : 0;
+    var tsx = st.tx - cam;
+
+    /* sky + ground */
+    c.fillStyle = P.sky; c.fillRect(0, 0, W, groundY);
+    c.fillStyle = P.ground; c.fillRect(0, groundY, W, H - groundY);
+    c.strokeStyle = P.line; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(0, groundY + 0.5); c.lineTo(W, groundY + 0.5); c.stroke();
+
+    /* line-side scenery, so motion is visible from either seat */
+    var k0 = Math.floor((cam - SP) / SP), k1 = Math.ceil((cam + W + SP) / SP);
+    for (var k = k0; k <= k1; k++) {
+      var px = k * SP - cam;
+      c.strokeStyle = P.faint; c.lineWidth = 3;
+      c.beginPath(); c.moveTo(px, groundY); c.lineTo(px, groundY - H * 0.16); c.stroke();
+      c.fillStyle = P.faint;
+      c.beginPath(); c.arc(px, groundY - H * 0.19, H * 0.045, 0, 6.2832); c.fill();
+    }
+    /* the watcher on the platform stands at a fixed place in the world */
+    var wx = W * 0.10 - cam;
+    c.fillStyle = P.dim;
+    c.beginPath(); c.arc(wx, groundY - H * 0.115, H * 0.032, 0, 6.2832); c.fill();
+    rr(c, wx - H * 0.026, groundY - H * 0.085, H * 0.052, H * 0.085, 4); c.fill();
+    txt(c, 'you', wx, groundY + H * 0.075, 11, P.dim, 'center');
+
+    /* rails */
+    c.strokeStyle = P.line; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(0, groundY - 2); c.lineTo(W, groundY - 2); c.stroke();
+
+    /* carriage */
+    var bodyY = groundY - TH - 6;
+    /* two fills: an opaque one first, or the line-side trees show through the
+       carriage and the two depth planes stop reading as separate things. */
+    c.fillStyle = P.sky; rr(c, tsx, bodyY, TL, TH, 12); c.fill();
+    c.fillStyle = s.soft; c.strokeStyle = s.acc; c.lineWidth = 2;
+    rr(c, tsx, bodyY, TL, TH, 12); c.fill(); c.stroke();
+    c.fillStyle = P.stage;
+    for (var wnd = 0; wnd < 3; wnd++) { rr(c, tsx + 14 + wnd * (TL - 28) / 3, bodyY + 12, (TL - 28) / 3 - 10, TH * 0.42, 5); c.fill(); }
+    c.fillStyle = s.acc;
+    c.beginPath(); c.arc(tsx + TL * 0.24, groundY - 3, 7, 0, 6.2832); c.fill();
+    c.beginPath(); c.arc(tsx + TL * 0.76, groundY - 3, 7, 0, 6.2832); c.fill();
+
+    /* the thrower */
+    var bx = TL * 0.44, hy = bodyY + TH * 0.80;
+    c.fillStyle = P.dim;
+    c.beginPath(); c.arc(tsx + bx, hy - 20, 7, 0, 6.2832); c.fill();
+    rr(c, tsx + bx - 6, hy - 13, 12, 18, 4); c.fill();
+
+    /* the ball, and the trail it draws for whoever is watching */
+    var u = st.bp % 1, hMax = TH * 0.52;
+    var ballWX = st.tx + bx, ballY = hy - 22 - 4 * hMax * u * (1 - u);
+    st.trail.push({ wx: ballWX, y: ballY });
+    if (st.trail.length > 105) st.trail.shift();
+    c.save(); c.setLineDash([3, 5]); c.strokeStyle = s.acc; c.lineWidth = 2; c.globalAlpha = .75;
+    c.beginPath();
+    for (var i = 0; i < st.trail.length; i++) {
+      var sx = st.view === 'train' ? xFixed + bx : st.trail[i].wx;
+      if (i === 0) c.moveTo(sx, st.trail[i].y); else c.lineTo(sx, st.trail[i].y);
+    }
+    c.stroke(); c.restore();
+    var bsx = st.view === 'train' ? xFixed + bx : ballWX;
+    c.fillStyle = s.acc; c.strokeStyle = P.stage; c.lineWidth = 2;
+    c.beginPath(); c.arc(bsx, ballY, 8, 0, 6.2832); c.fill(); c.stroke();
+
+    /* labels */
+    txt(c, st.view === 'train' ? 'Watching from inside the train' : 'Watching from the platform', 14, 18, 13, P.ink, 'left', 700);
+    txt(c, st.view === 'train' ? 'the ball goes straight up and straight down' : 'the ball flies in a long curve',
+        14, 36, 12.5, P.dim, 'left', 500);
+  }, st);
+
+  function draw() {
+    $('v-frames').textContent = st.kmh + ' km/h';
+  }
+  $('r-frames').addEventListener('input', function () { st.kmh = +this.value; st.trail.length = 0; draw(); });
+  var seg = $('seg-frames').querySelectorAll('.wb-tab');
+  for (var i = 0; i < seg.length; i++) (function (b) {
+    b.addEventListener('click', function () {
+      for (var j = 0; j < seg.length; j++) seg[j].classList.remove('is-active');
+      b.classList.add('is-active');
+      st.view = b.getAttribute('data-view');
+    });
+  })(seg[i]);
+  draw();
+})();
+
+/* ═════════════ Lab 2 — a torch on a moving rocket ═════════════ */
+(function lab2() {
+  var st = { b: 0.50 };
+  var LP = 3.0;
+  scene('cv-light', function (c, W, H, t, dt, s) {
+    var pad = Math.max(40, W * 0.06), track = W - pad * 2;
+    var u = (t % LP) / LP;
+    var lanes = [
+      { y: H * 0.26, name: 'If light behaved like a thrown ball', ph: Math.min(1, u * (1 + st.b)), col: P.dim },
+      { y: H * 0.62, name: 'Real light', ph: u, col: s.acc }
+    ];
+    for (var L = 0; L < 2; L++) {
+      var ln = lanes[L], y = ln.y;
+      c.fillStyle = P['stage-2']; c.strokeStyle = P.line; c.lineWidth = 1;
+      rr(c, pad - 12, y - H * 0.115, track + 24, H * 0.23, 12); c.fill(); c.stroke();
+      txt(c, ln.name, pad - 6, y - H * 0.155, 12.5, L ? s.acc : P.dim, 'left', 700);
+      dash(c, [[pad, y + 2], [W - pad, y + 2]], P.line, 1, [4, 6]);
+
+      /* finish line */
+      c.fillStyle = P.faint;
+      for (var q = 0; q < 6; q++) { if (q % 2 === 0) c.fillRect(W - pad, y - 24 + q * 8, 7, 8); }
+      c.strokeStyle = P.faint; c.lineWidth = 1;
+      c.beginPath(); c.moveTo(W - pad, y - 26); c.lineTo(W - pad, y + 26); c.stroke();
+
+      /* rocket */
+      var rx = pad + u * track * st.b;
+      c.fillStyle = L ? s.soft : P['stage-2']; c.strokeStyle = L ? s.acc : P.faint; c.lineWidth = 2;
+      c.beginPath(); c.moveTo(rx + 30, y); c.lineTo(rx + 6, y - 11); c.lineTo(rx - 12, y - 11);
+      c.lineTo(rx - 12, y + 11); c.lineTo(rx + 6, y + 11); c.closePath(); c.fill(); c.stroke();
+      if (st.b > 0.02) {
+        c.fillStyle = '#f59e0b'; c.globalAlpha = .55 + .35 * Math.sin(t * 22);
+        c.beginPath(); c.moveTo(rx - 12, y - 6); c.lineTo(rx - 12 - 16 * st.b - 6, y); c.lineTo(rx - 12, y + 6); c.closePath(); c.fill();
+        c.globalAlpha = 1;
+      }
+
+      /* the flash it fired */
+      var fx = pad + ln.ph * track;
+      var grd = c.createLinearGradient(fx - 46, 0, fx, 0);
+      grd.addColorStop(0, 'rgba(250,204,21,0)'); grd.addColorStop(1, 'rgba(250,204,21,.85)');
+      c.strokeStyle = grd; c.lineWidth = 4; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(Math.max(pad, fx - 46), y - 16); c.lineTo(fx, y - 16); c.stroke();
+      c.fillStyle = '#facc15';
+      c.beginPath(); c.arc(fx, y - 16, 6, 0, 6.2832); c.fill();
+      if (ln.ph >= 1) {
+        c.strokeStyle = '#facc15'; c.lineWidth = 2; c.globalAlpha = .8;
+        c.beginPath(); c.arc(W - pad, y - 16, 10 + 12 * ((t % LP) / LP), 0, 6.2832); c.stroke();
+        c.globalAlpha = 1;
+      }
+    }
+
+    /* the arrival strip: one tick per lane, and a "now" marker */
+    var sy = H * 0.90;
+    c.strokeStyle = P.line; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(pad, sy); c.lineTo(W - pad, sy); c.stroke();
+    var xb = pad + track / (1 + st.b);
+    c.strokeStyle = P.dim; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(xb, sy - 9); c.lineTo(xb, sy + 9); c.stroke();
+    txt(c, 'ball-like arrives', xb, sy + 20, 11, P.dim, 'center', 600);
+    c.strokeStyle = s.acc; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(W - pad, sy - 9); c.lineTo(W - pad, sy + 9); c.stroke();
+    txt(c, 'real light arrives', W - pad, sy + 20, 11, s.acc, 'center', 600);
+    c.fillStyle = P.ink;
+    c.beginPath(); c.arc(pad + u * track, sy, 4.5, 0, 6.2832); c.fill();
+  }, st);
+
+  function draw() {
+    $('v-light').textContent = st.b.toFixed(2) + ' c';
+    $('o-light-ball').textContent = (1 + st.b).toFixed(2) + ' c';
+    $('o-light-gap').textContent = st.b === 0 ? 'none' : '−' + Math.round(100 * (1 - 1 / (1 + st.b))) + '%';
+  }
+  $('r-light').addEventListener('input', function () { st.b = +this.value / 100; draw(); });
+  draw();
+})();
+
+/* ═════════════ Lab 3 — two light clocks ═════════════ */
+(function lab3() {
+  var st = { b: 0.80, pA: 0, pB: 0, bx: null, trail: [], fA: 0, fB: 0 };
+  var T0 = 0.9;
+  scene('cv-clock', function (c, W, H, t, dt, s) {
+    var g = gam(st.b);
+    var half = W / 2, pad = 12;
+    var yTop = H * 0.30, L = H * 0.40, yBot = yTop + L;
+    var xA = half * 0.5;
+    var lo = half + pad + 34, hi = W - pad - 34;
+    if (st.bx === null) st.bx = lo;
+    if (dt > 0) {
+      st.pA += dt / T0;
+      st.pB += dt / (g * T0);
+      st.fA = Math.max(0, st.fA - dt * 4);
+      st.bx += (L * st.b / T0) * dt;
+      if (st.bx > hi) { st.bx = lo; st.trail.length = 0; }
+      st.fB = Math.max(0, st.fB - dt * 4);
+      if (Math.floor(st.pA) !== st.lastA) { st.fA = 1; st.lastA = Math.floor(st.pA); }
+      if (Math.floor(st.pB) !== st.lastB) { st.fB = 1; st.lastB = Math.floor(st.pB); }
+    }
+    function py(p) {
+      var n = Math.floor(p), f = p - n;
+      return (n % 2 === 0) ? yBot - f * L : yTop + f * L;
+    }
+
+    /* divider */
+    dash(c, [[half, 8], [half, H - 8]], P.line, 1, [4, 6]);
+
+    /* --- parked clock --- */
+    txt(c, 'Parked clock', xA, 20, 13, P.ink, 'center', 700);
+    txt(c, pick(W, 'the flash goes straight up and down', 'straight up and down'), xA, 38, 11.5, P.dim, 'center', 500);
+    dash(c, [[xA, yTop], [xA, yBot]], P.faint, 1.5, [3, 5]);
+    drawMirrors(c, xA, yTop, yBot, P.dim, st.fA, s);
+    var yA = py(st.pA);
+    flash(c, xA, yA, '#facc15');
+    mono(c, plural(Math.floor(st.pA)), xA, yBot + 30, 15, P.ink, 'center');
+
+    /* --- flying clock --- */
+    txt(c, 'Flying clock', half + (W - half) / 2, 20, 13, s.acc, 'center', 700);
+    txt(c, pick(W, 'same flash — but a longer, slanted road', 'a longer, slanted road'), half + (W - half) / 2, 38, 11.5, P.dim, 'center', 500);
+    var yB = py(st.pB);
+    st.trail.push({ x: st.bx, y: yB });
+    if (st.trail.length > 260) st.trail.shift();
+    c.strokeStyle = s.acc; c.lineWidth = 2; c.globalAlpha = .55;
+    c.beginPath();
+    for (var i = 0; i < st.trail.length; i++) { if (i === 0) c.moveTo(st.trail[i].x, st.trail[i].y); else c.lineTo(st.trail[i].x, st.trail[i].y); }
+    c.stroke(); c.globalAlpha = 1;
+    drawMirrors(c, st.bx, yTop, yBot, s.acc, st.fB, s);
+    flash(c, st.bx, yB, '#facc15');
+    mono(c, plural(Math.floor(st.pB)), half + (W - half) / 2, yBot + 30, 15, s.acc, 'center');
+    if (st.b > 0.02) {
+      c.strokeStyle = P.faint; c.lineWidth = 1.5;
+      for (var k = 1; k <= 3; k++) {
+        c.beginPath(); c.moveTo(st.bx - 40 - k * 12, yTop + L * 0.5 - 10 + k * 8);
+        c.lineTo(st.bx - 22 - k * 12, yTop + L * 0.5 - 10 + k * 8); c.stroke();
+      }
+    }
+  }, st);
+
+  function plural(n) { return n + (n === 1 ? ' tick' : ' ticks'); }
+  function drawMirrors(c, x, yTop, yBot, col, fl, s) {
+    c.strokeStyle = col; c.lineWidth = 4; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x - 26, yTop); c.lineTo(x + 26, yTop); c.stroke();
+    c.beginPath(); c.moveTo(x - 26, yBot); c.lineTo(x + 26, yBot); c.stroke();
+    if (fl > 0) {
+      c.globalAlpha = fl; c.strokeStyle = '#facc15'; c.lineWidth = 2;
+      c.beginPath(); c.arc(x, yBot, 14 + 10 * (1 - fl), 0, 6.2832); c.stroke();
+      c.globalAlpha = 1;
+    }
+  }
+  function flash(c, x, y, col) {
+    var g = c.createRadialGradient(x, y, 0, x, y, 16);
+    g.addColorStop(0, 'rgba(250,204,21,.9)'); g.addColorStop(1, 'rgba(250,204,21,0)');
+    c.fillStyle = g; c.beginPath(); c.arc(x, y, 16, 0, 6.2832); c.fill();
+    c.fillStyle = col; c.beginPath(); c.arc(x, y, 5.5, 0, 6.2832); c.fill();
+  }
+
+  function tickOut() {
+    $('o-clock-a').textContent = Math.floor(st.pA);
+    $('o-clock-b').textContent = Math.floor(st.pB);
+  }
+  setInterval(tickOut, 120);
+  function draw() {
+    var g = gam(st.b);
+    $('v-clock').textContent = st.b.toFixed(2) + ' c';
+    $('o-clock-g').textContent = g.toFixed(2) + '×';
+    $('o-clock-s').textContent = g.toFixed(2) + ' s';
+  }
+  $('r-clock').addEventListener('input', function () { st.b = +this.value / 100; draw(); });
+  $('b-clock-reset').addEventListener('click', function () {
+    st.pA = 0; st.pB = 0; st.lastA = -1; st.lastB = -1; st.trail.length = 0; st.bx = null; tickOut();
+  });
+  draw();
+})();
+
+/* ═════════════ Lab 4 — contraction, and the wall at c ═════════════ */
+(function lab4() {
+  var st = { b: 0.800 };
+  scene('cv-fast', function (c, W, H, t, dt, s) {
+    var g = gam(st.b);
+    /* --- upper: the rocket, at rest and as measured --- */
+    var x0 = Math.max(30, W * 0.10), L0 = W * 0.52, hR = H * 0.14, yR = H * 0.17;
+    c.save(); c.setLineDash([5, 5]); c.strokeStyle = P.faint; c.lineWidth = 1.5;
+    rocketPath(c, x0, yR, L0, hR); c.stroke(); c.restore();
+    txt(c, 'length sitting on the launch pad', x0, yR - hR / 2 - 13, 11.5, P.dim, 'left', 600);
+
+    var Lc = L0 / g, yM = yR + hR * 1.7;
+    c.fillStyle = s.soft; c.strokeStyle = s.acc; c.lineWidth = 2.5;
+    rocketPath(c, x0, yM, Lc, hR); c.fill(); c.stroke();
+    txt(c, 'length you measure as it flies past', x0 + L0 * 0.62, yM, 11.5, s.acc, 'left', 600);
+    for (var q = 0; q < 4; q++) {
+      var sp = ((t * (0.6 + st.b * 2.4) + q * 0.25) % 1);
+      c.strokeStyle = P.faint; c.lineWidth = 1.5; c.globalAlpha = .8 * (1 - sp);
+      var lx = x0 - 8 - sp * W * 0.08;
+      c.beginPath(); c.moveTo(lx, yM - 8 + q * 6); c.lineTo(lx - 16, yM - 8 + q * 6); c.stroke();
+      c.globalAlpha = 1;
+    }
+    /* the bracket that carries the number */
+    c.strokeStyle = s.acc; c.lineWidth = 1.5;
+    var by = yM + hR * 0.5 + 9;
+    c.beginPath(); c.moveTo(x0, by - 5); c.lineTo(x0, by); c.lineTo(x0 + Lc, by); c.lineTo(x0 + Lc, by - 5); c.stroke();
+    mono(c, Math.round(100 / g) + '%', x0 + Lc / 2, by + 12, 13, s.acc, 'center');
+
+    /* --- lower: how much push it takes --- */
+    var xa = Math.max(44, W * 0.12), xb = W - Math.max(30, W * 0.07);
+    var ya = H * 0.62, yb = H * 0.93, GMAX = 8;
+    c.strokeStyle = P.line; c.lineWidth = 1.5;
+    c.beginPath(); c.moveTo(xa, ya); c.lineTo(xa, yb); c.lineTo(xb, yb); c.stroke();
+    txt(c, 'push needed to go this fast', xa, ya - 12, 11.5, P.dim, 'left', 650);
+    txt(c, 'speed →', xa + 4, yb + 14, 11, P.dim, 'left', 600);
+    dash(c, [[xb, ya - 8], [xb, yb]], P.faint, 1.5, [4, 5]);
+    txt(c, 'the speed of light', xb - 6, ya - 12, 11.5, P.dim, 'right', 700);
+
+    c.strokeStyle = s.acc; c.lineWidth = 2.5; c.beginPath();
+    for (var i = 0; i <= 240; i++) {
+      var bb = i / 240 * 0.999, gg = gam(bb);
+      if (gg > GMAX) break;
+      var px = xa + bb * (xb - xa), pyy = yb - (gg - 1) / (GMAX - 1) * (yb - ya);
+      if (i === 0) c.moveTo(px, pyy); else c.lineTo(px, pyy);
+    }
+    c.stroke();
+    var mx = xa + st.b * (xb - xa);
+    var my = yb - (Math.min(g, GMAX) - 1) / (GMAX - 1) * (yb - ya);
+    dash(c, [[mx, my], [mx, yb]], P.faint, 1, [3, 4]);
+    c.fillStyle = s.acc; c.strokeStyle = P.stage; c.lineWidth = 2.5;
+    c.beginPath(); c.arc(mx, my, 7, 0, 6.2832); c.fill(); c.stroke();
+    if (g > GMAX) txt(c, 'off the top of the chart ↑', mx - 10, ya - 6, 11.5, s.acc, 'right', 700);
+  }, st);
+
+  function rocketPath(c, x, ymid, len, h) {
+    c.beginPath();
+    c.moveTo(x, ymid + h / 2);
+    c.lineTo(x + len * 0.78, ymid + h / 2);
+    c.quadraticCurveTo(x + len, ymid + h / 2, x + len, ymid);
+    c.quadraticCurveTo(x + len, ymid - h / 2, x + len * 0.78, ymid - h / 2);
+    c.lineTo(x, ymid - h / 2);
+    c.closePath();
+  }
+  function draw() {
+    var g = gam(st.b);
+    $('v-fast').textContent = st.b.toFixed(3) + ' c';
+    $('o-fast-len').textContent = (100 / g).toFixed(g > 5 ? 1 : 0) + '%';
+    $('o-fast-gam').textContent = g.toFixed(2) + '×';
+    $('o-fast-e').textContent = (g - 1).toFixed(2) + '×';
+  }
+  $('r-fast').addEventListener('input', function () { st.b = +this.value / 1000; draw(); });
+  draw();
+})();
+
+/* ═════════════ Lab 5 — the twin trip ═════════════ */
+(function lab5() {
+  var st = { b: 0.990, D: 4 };
+  var LP = 9.0;
+  scene('cv-twin', function (c, W, H, t, dt, s) {
+    var g = gam(st.b), T = 2 * st.D / st.b, tau = T / g;
+    var u = (t % LP) / LP, frac = u < 0.5 ? u * 2 : (1 - u) * 2;
+    var pad = Math.max(38, W * 0.09), xE = pad, xS = W - pad, lane = H * 0.26;
+
+    /* starfield */
+    for (var i = 0; i < 26; i++) {
+      var sxp = ((i * 97) % 100) / 100 * W, syp = ((i * 53) % 100) / 100 * H * 0.46;
+      c.fillStyle = P.faint; c.globalAlpha = .35 + .3 * Math.sin(t * 1.6 + i);
+      c.fillRect(sxp, syp, 2, 2); c.globalAlpha = 1;
+    }
+    dash(c, [[xE, lane], [xS, lane]], P.line, 1.5, [5, 6]);
+
+    /* Earth and the far star */
+    c.fillStyle = '#3b82f6'; c.beginPath(); c.arc(xE, lane, 15, 0, 6.2832); c.fill();
+    c.fillStyle = '#22c55e';
+    c.beginPath(); c.arc(xE - 4, lane - 4, 6, 0, 6.2832); c.fill();
+    c.beginPath(); c.arc(xE + 6, lane + 4, 4, 0, 6.2832); c.fill();
+    txt(c, 'home', xE, lane + 30, 11.5, P.dim, 'center', 600);
+    var pulse = 13 + 2 * Math.sin(t * 3);
+    var sg = c.createRadialGradient(xS, lane, 0, xS, lane, pulse + 10);
+    sg.addColorStop(0, '#fde047'); sg.addColorStop(1, 'rgba(253,224,71,0)');
+    c.fillStyle = sg; c.beginPath(); c.arc(xS, lane, pulse + 10, 0, 6.2832); c.fill();
+    c.fillStyle = '#facc15'; c.beginPath(); c.arc(xS, lane, 10, 0, 6.2832); c.fill();
+    txt(c, st.D + pick(W, ' light-years away', ' ly away'), xS, lane + 30, 11.5, P.dim, 'center', 600);
+
+    /* the rocket */
+    var rx = xE + frac * (xS - xE), dir = u < 0.5 ? 1 : -1;
+    c.save(); c.translate(rx, lane - 26); c.scale(dir, 1);
+    c.fillStyle = s.soft; c.strokeStyle = s.acc; c.lineWidth = 2;
+    c.beginPath(); c.moveTo(20, 0); c.lineTo(2, -9); c.lineTo(-14, -9); c.lineTo(-14, 9); c.lineTo(2, 9); c.closePath();
+    c.fill(); c.stroke();
+    c.fillStyle = '#f59e0b'; c.globalAlpha = .5 + .4 * Math.sin(t * 24);
+    c.beginPath(); c.moveTo(-14, -5); c.lineTo(-30, 0); c.lineTo(-14, 5); c.closePath(); c.fill();
+    c.globalAlpha = 1; c.restore();
+
+    /* the two twins, on one shared scale */
+    var barY = H * 0.60, barH = H * 0.11, bw = (W - pad * 2 - 26) / 2;
+    var pairs = [
+      { x: pad, lab: pick(W, 'Twin who stayed at home', 'At home'), val: T * u, tot: T, col: P.dim, face: '#60a5fa' },
+      { x: pad + bw + 26, lab: pick(W, 'Twin in the rocket', 'In the rocket'), val: tau * u, tot: T, col: s.acc, face: '#f472b6' }
+    ];
+    for (var q = 0; q < 2; q++) {
+      var p = pairs[q];
+      c.fillStyle = p.face;
+      c.beginPath(); c.arc(p.x + 14, barY - 20, 13, 0, 6.2832); c.fill();
+      c.fillStyle = P.stage;
+      c.beginPath(); c.arc(p.x + 10, barY - 23, 2.2, 0, 6.2832); c.fill();
+      c.beginPath(); c.arc(p.x + 18, barY - 23, 2.2, 0, 6.2832); c.fill();
+      c.strokeStyle = P.stage; c.lineWidth = 1.8;
+      c.beginPath(); c.arc(p.x + 14, barY - 18, 6, 0.35, Math.PI - 0.35); c.stroke();
+      txt(c, p.lab, p.x + 34, barY - 20, 12, P.ink, 'left', 650);
+      c.fillStyle = P['stage-2']; c.strokeStyle = P.line; c.lineWidth = 1;
+      rr(c, p.x, barY, bw, barH, 8); c.fill(); c.stroke();
+      c.fillStyle = p.col;
+      var fw = Math.max(2, bw * Math.min(1, p.val / p.tot));
+      rr(c, p.x, barY, fw, barH, 8); c.fill();
+      mono(c, p.val.toFixed(1) + pick(W, ' years older', ' yr'), p.x + 10, barY + barH + 18, 14, p.col, 'left');
+    }
+    txt(c, u < 0.5 ? 'flying out…' : 'coming home…', W / 2, lane + H * 0.14, 12.5, P.dim, 'center', 600);
+  }, st);
+
+  function draw() {
+    var g = gam(st.b), T = 2 * st.D / st.b, tau = T / g;
+    $('v-twin').textContent = st.b.toFixed(3) + ' c';
+    $('v-twin-d').textContent = st.D + ' ly';
+    $('o-twin-e').textContent = T.toFixed(1) + ' yr';
+    $('o-twin-r').textContent = tau.toFixed(tau < 10 ? 2 : 1) + ' yr';
+    $('o-twin-d').textContent = (T - tau).toFixed(1) + ' yr';
+    $('o-twin-g').textContent = g.toFixed(2) + '×';
+  }
+  $('r-twin').addEventListener('input', function () { st.b = +this.value / 1000; draw(); });
+  $('r-twin-d').addEventListener('input', function () { st.D = +this.value; draw(); });
+  draw();
+})();
+
+/* ═════════════ Lab 6 — sound ripples from a moving siren ═════════════ */
+(function lab6() {
+  var st = { M: 0.55, x: null, waves: [], acc: 0 };
+  var F0 = 700;
+  scene('cv-sound', function (c, W, H, t, dt, s) {
+    var cs = W * 0.22, vs = st.M * cs, roadY = H * 0.80, sy = roadY - H * 0.10;
+    if (st.x === null) st.x = -40;
+    if (dt > 0) {
+      st.x += vs * dt;
+      st.acc += dt;
+      if (st.acc >= 0.40) { st.acc = 0; st.waves.push({ x: st.x, y: sy, r: 0 }); }
+      for (var i = st.waves.length - 1; i >= 0; i--) {
+        st.waves[i].r += cs * dt;
+        if (st.waves[i].r > W * 1.5) st.waves.splice(i, 1);
+      }
+      if (st.x > W + 60) { st.x = -50; st.waves.length = 0; }
+    }
+
+    c.fillStyle = P.sky; c.fillRect(0, 0, W, roadY);
+    c.fillStyle = P.ground; c.fillRect(0, roadY, W, H - roadY);
+    dash(c, [[0, roadY + (H - roadY) / 2], [W, roadY + (H - roadY) / 2]], P.faint, 2, [16, 14]);
+
+    /* the ripples: all the same speed, all started as circles */
+    c.save(); c.beginPath(); c.rect(0, 0, W, roadY); c.clip();
+    for (var j = 0; j < st.waves.length; j++) {
+      var wv = st.waves[j], a = Math.max(0, 1 - wv.r / (W * 0.9));
+      c.globalAlpha = 0.15 + 0.6 * a; c.strokeStyle = s.acc; c.lineWidth = 1.6;
+      c.beginPath(); c.arc(wv.x, wv.y, wv.r, 0, 6.2832); c.stroke();
+    }
+    c.globalAlpha = 1; c.restore();
+
+    /* the source */
+    c.fillStyle = P.stage; c.strokeStyle = P.ink; c.lineWidth = 2;
+    rr(c, st.x - 26, sy - 12, 52, 26, 6); c.fill(); c.stroke();
+    c.fillStyle = st.M >= 1 ? '#ef4444' : s.acc;
+    rr(c, st.x - 7, sy - 20, 14, 8, 3); c.fill();
+    c.fillStyle = P.ink;
+    c.beginPath(); c.arc(st.x - 14, sy + 14, 5, 0, 6.2832); c.fill();
+    c.beginPath(); c.arc(st.x + 14, sy + 14, 5, 0, 6.2832); c.fill();
+
+    /* two listeners */
+    listener(c, W - 26, roadY - H * 0.34, 'in front', s.acc);
+    listener(c, 26, roadY - H * 0.34, 'behind', P.dim);
+
+    if (st.M >= 1) {
+      var th = Math.asin(Math.min(1, 1 / st.M));
+      c.strokeStyle = '#ef4444'; c.lineWidth = 2.5; c.globalAlpha = .85;
+      var Ln = W * 0.9;
+      c.beginPath(); c.moveTo(st.x, sy); c.lineTo(st.x - Ln * Math.cos(th), sy - Ln * Math.sin(th)); c.stroke();
+      c.beginPath(); c.moveTo(st.x, sy); c.lineTo(st.x - Ln * Math.cos(th), sy + Ln * Math.sin(th)); c.stroke();
+      c.globalAlpha = 1;
+      txt(c, 'SONIC BOOM — the ripples have piled into a wall', W / 2, 20, 13, '#ef4444', 'center', 750);
+    }
+  }, st);
+
+  function listener(c, x, y, label, col) {
+    c.strokeStyle = col; c.lineWidth = 2.2;
+    c.beginPath(); c.arc(x, y, 9, 0.6, 5.0); c.stroke();
+    c.beginPath(); c.arc(x, y, 4, 0.6, 5.0); c.stroke();
+    txt(c, label, x, y + 24, 11, col, 'center', 600);
+  }
+
+  function draw() {
+    var cS = 343, v = st.M * cS;
+    $('v-sound').textContent = Math.round(v) + ' m/s';
+    $('o-sound-m').textContent = 'Mach ' + st.M.toFixed(2);
+    $('o-sound-b').textContent = Math.round(F0 * cS / (cS + v)) + ' Hz';
+    $('o-sound-f').textContent = st.M >= 1 ? 'boom' : Math.round(F0 * cS / (cS - v)) + ' Hz';
+  }
+  $('r-sound').addEventListener('input', function () { st.M = +this.value / 100; st.waves.length = 0; draw(); });
+  draw();
+})();
+
+/* ═════════════ Lab 7 — the barcode that slides ═════════════ */
+(function lab7() {
+  var st = { b: 0.35 };
+  var LINES = [434.0, 486.1, 656.3];
+  var STOPS = [[380, '#4c1d95'], [430, '#3b1fd0'], [460, '#1d4ed8'], [485, '#0ea5e9'], [505, '#10b981'],
+               [530, '#22c55e'], [560, '#a3e635'], [580, '#facc15'], [600, '#fb923c'], [640, '#ef4444'],
+               [700, '#b91c1c'], [750, '#5b1111']];
+  function zOf(b) { return Math.sqrt((1 + b) / (1 - b)) - 1; }
+
+  scene('cv-red', function (c, W, H, t, dt, s) {
+    var z = zOf(st.b), pad = Math.max(26, W * 0.06);
+    var bx = pad, bw = W - pad * 2, byT = H * 0.56, bh = H * 0.20;
+
+    /* starfield + the star itself */
+    for (var i = 0; i < 20; i++) {
+      c.fillStyle = P.faint; c.globalAlpha = .3 + .3 * Math.sin(t + i * 1.3);
+      c.fillRect(((i * 89) % 100) / 100 * W, ((i * 41) % 100) / 100 * H * 0.42, 2, 2);
+    }
+    c.globalAlpha = 1;
+    var earthX = pad + 26, starX = W - pad - 60, cy = H * 0.24;
+    c.fillStyle = '#3b82f6'; c.beginPath(); c.arc(earthX, cy, 13, 0, 6.2832); c.fill();
+    txt(c, 'us', earthX, cy + 26, 11, P.dim, 'center', 600);
+    dash(c, [[earthX + 18, cy], [starX - 26, cy]], P.line, 1.2, [4, 6]);
+
+    var col = st.b >= 0 ? mix('#fff6e8', '#f97316', Math.min(1, st.b / 0.6))
+                        : mix('#fff6e8', '#7dd3fc', Math.min(1, -st.b / 0.6));
+    var gg = c.createRadialGradient(starX, cy, 0, starX, cy, 34);
+    gg.addColorStop(0, col); gg.addColorStop(1, 'rgba(0,0,0,0)');
+    c.fillStyle = gg; c.beginPath(); c.arc(starX, cy, 34, 0, 6.2832); c.fill();
+    c.fillStyle = col; c.beginPath(); c.arc(starX, cy, 17, 0, 6.2832); c.fill();
+
+    /* which way is it going */
+    if (Math.abs(st.b) > 0.01) {
+      var d = st.b > 0 ? 1 : -1, ax = starX + d * 34, aw = 30 + 26 * Math.abs(st.b);
+      c.strokeStyle = P.ink; c.lineWidth = 2.2;
+      c.beginPath(); c.moveTo(ax, cy); c.lineTo(ax + d * aw, cy); c.stroke();
+      c.beginPath(); c.moveTo(ax + d * aw, cy); c.lineTo(ax + d * (aw - 9), cy - 6);
+      c.lineTo(ax + d * (aw - 9), cy + 6); c.closePath(); c.fillStyle = P.ink; c.fill();
+      txt(c, st.b > 0 ? 'racing away' : 'racing towards us', starX, cy + 44, 12, P.ink, 'center', 650);
+    } else txt(c, 'not moving towards or away', starX, cy + 44, 12, P.dim, 'center', 600);
+
+    /* the rainbow, and the barcode on it */
+    var grd = c.createLinearGradient(bx, 0, bx + bw, 0);
+    for (var q = 0; q < STOPS.length; q++) grd.addColorStop((STOPS[q][0] - 380) / 370, STOPS[q][1]);
+    c.fillStyle = grd; rr(c, bx, byT, bw, bh, 8); c.fill();
+    c.strokeStyle = P.line; c.lineWidth = 1; rr(c, bx, byT, bw, bh, 8); c.stroke();
+    txt(c, 'blue', bx + 4, byT + bh + 16, 11, P.dim, 'left', 600);
+    txt(c, 'red', bx + bw - 4, byT + bh + 16, 11, P.dim, 'right', 600);
+
+    function xOf(lam) { return bx + (lam - 380) / 370 * bw; }
+    for (var i2 = 0; i2 < LINES.length; i2++) {
+      var l0 = LINES[i2], l1 = l0 * (1 + z), x0 = xOf(l0);
+      c.strokeStyle = P.faint; c.lineWidth = 2;
+      c.beginPath(); c.moveTo(x0, byT - 12); c.lineTo(x0, byT - 3); c.stroke();
+      if (l1 >= 380 && l1 <= 750) {
+        var x1 = xOf(l1);
+        c.fillStyle = 'rgba(0,0,0,.82)'; c.fillRect(x1 - 2.5, byT, 5, bh);
+        c.strokeStyle = P.ink; c.lineWidth = 1.4;
+        c.beginPath(); c.moveTo(x0, byT - 7); c.lineTo(x1, byT - 7); c.stroke();
+        c.beginPath(); c.moveTo(x1, byT - 7); c.lineTo(x1 - Math.sign(x1 - x0) * 6, byT - 11);
+        c.lineTo(x1 - Math.sign(x1 - x0) * 6, byT - 3); c.closePath(); c.fillStyle = P.ink; c.fill();
+      } else {
+        var edge = l1 > 750 ? bx + bw + 8 : bx - 8;
+        txt(c, l1 > 750 ? '→' : '←', edge, byT + bh / 2, 16, P.ink, l1 > 750 ? 'left' : 'right', 800);
+      }
+    }
+    txt(c, pick(W, 'small ticks = where the lines should be · dark bars = where they landed',
+                   'ticks = should be · bars = landed'),
+        W / 2, byT + bh + 34, 11.5, P.dim, 'center', 500);
+    if (Math.abs(z) > 0.001)
+      txt(c, z > 0 ? 'past red, into infrared →' : '← into ultraviolet', W / 2, byT - 26, 11.5, P.dim, 'center', 500);
+  }, st);
+
+  function mix(a, b, u) {
+    function h(x) { return [parseInt(x.slice(1, 3), 16), parseInt(x.slice(3, 5), 16), parseInt(x.slice(5, 7), 16)]; }
+    var A = h(a), B = h(b);
+    return 'rgb(' + Math.round(A[0] + (B[0] - A[0]) * u) + ',' + Math.round(A[1] + (B[1] - A[1]) * u) + ',' +
+           Math.round(A[2] + (B[2] - A[2]) * u) + ')';
+  }
+  function draw() {
+    var z = zOf(st.b);
+    $('v-red').textContent = st.b === 0 ? 'still' : (st.b > 0 ? 'away ' : 'towards ') + Math.abs(st.b).toFixed(2) + ' c';
+    $('o-red-z').textContent = 'z = ' + z.toFixed(2);
+    $('o-red-l').textContent = Math.round(486.1 * (1 + z)) + ' nm';
+    $('o-red-w').textContent = st.b === 0 ? 'No change' : (st.b > 0 ? 'Redder' : 'Bluer');
+  }
+  $('r-red').addEventListener('input', function () { st.b = +this.value / 100; draw(); });
+  draw();
+})();
+
+/* ═════════════ Lab 8 — the dented sheet ═════════════ */
+(function lab8() {
+  var st = { M: 0.46, u: 0, v: 0, vu: 0, vv: 0, ang: 0, turn: 0, life: 0, trail: [], mode: 'Curving' };
+  function spawn() {
+    st.u = -1.28; st.v = 0.40; st.vu = 0.55; st.vv = 0;
+    st.ang = Math.atan2(st.v, st.u); st.turn = 0; st.life = 0; st.trail.length = 0;
+  }
+  spawn();
+
+  scene('cv-well', function (c, W, H, t, dt, s) {
+    var cx = W / 2, cy = H * 0.40, SX = W * 0.44, SY = H * 0.34, K = H * 0.11 * st.M;
+    function proj(u, v) {
+      var r = Math.sqrt(u * u + v * v);
+      var d = K * (1 / (r + 0.24) - 1 / 1.75);
+      return [cx + u * SX, cy + v * SY + Math.max(0, d)];
+    }
+
+    /* physics: no force in the drawing, a real one in the maths */
+    if (dt > 0) {
+      var h = dt / 4, GM = 0.34 * st.M;
+      for (var q = 0; q < 4; q++) {
+        var r2 = st.u * st.u + st.v * st.v, r = Math.sqrt(r2);
+        var inv = GM / ((r2 + 0.02) * Math.max(r, 1e-4));
+        st.vu -= st.u * inv * h; st.vv -= st.v * inv * h;
+        st.u += st.vu * h; st.v += st.vv * h;
+      }
+      var na = Math.atan2(st.v, st.u), da = na - st.ang;
+      while (da > Math.PI) da -= 6.2832; while (da < -Math.PI) da += 6.2832;
+      st.turn += Math.abs(da); st.ang = na; st.life += dt;
+      st.trail.push([st.u, st.v]);
+      if (st.trail.length > 420) st.trail.shift();
+      var rr2 = Math.sqrt(st.u * st.u + st.v * st.v);
+      if (rr2 < 0.07) st.mode = 'Falling in';
+      else if (st.M < 0.03) st.mode = 'Straight';
+      else if (st.turn > 4.0) st.mode = 'Orbiting';
+      else if (st.turn > 0.45) st.mode = 'Curving';
+      else st.mode = 'Almost straight';
+      /* respawn close to the drawn sheet, or an escaping ball trails a long line
+         through empty space outside the grid */
+      if (Math.abs(st.u) > 1.45 || Math.abs(st.v) > 1.15 || rr2 < 0.055 || st.life > 26) spawn();
+    }
+
+    /* the sheet */
+    var NU = 17, NV = 13, S = 44;
+    c.lineWidth = 1;
+    for (var i = 0; i < NV; i++) {
+      var v0 = -1 + 2 * i / (NV - 1);
+      c.strokeStyle = P.faint; c.beginPath();
+      for (var j = 0; j <= S; j++) {
+        var u0 = -1.3 + 2.6 * j / S, p = proj(u0, v0);
+        if (j === 0) c.moveTo(p[0], p[1]); else c.lineTo(p[0], p[1]);
+      }
+      c.stroke();
+    }
+    for (var i2 = 0; i2 < NU; i2++) {
+      var uu = -1.3 + 2.6 * i2 / (NU - 1);
+      c.strokeStyle = P.faint; c.beginPath();
+      for (var j2 = 0; j2 <= S; j2++) {
+        var vv0 = -1 + 2 * j2 / S, p2 = proj(uu, vv0);
+        if (j2 === 0) c.moveTo(p2[0], p2[1]); else c.lineTo(p2[0], p2[1]);
+      }
+      c.stroke();
+    }
+
+    /* the heavy thing at the bottom of the dent */
+    var pc = proj(0, 0), R = 9 + 26 * st.M;
+    var gr = c.createRadialGradient(pc[0], pc[1] - R * 0.3, R * 0.2, pc[0], pc[1], R * 1.9);
+    gr.addColorStop(0, s.acc); gr.addColorStop(0.55, s.acc); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    c.fillStyle = gr; c.beginPath(); c.arc(pc[0], pc[1], R * 1.9, 0, 6.2832); c.fill();
+
+    /* the ball, and the road it has already taken */
+    c.strokeStyle = P.ink; c.lineWidth = 2; c.globalAlpha = .45;
+    c.beginPath();
+    for (var k = 0; k < st.trail.length; k++) {
+      var pt = proj(st.trail[k][0], st.trail[k][1]);
+      if (k === 0) c.moveTo(pt[0], pt[1] - 5); else c.lineTo(pt[0], pt[1] - 5);
+    }
+    c.stroke(); c.globalAlpha = 1;
+    var pb = proj(st.u, st.v);
+    c.fillStyle = P.ink; c.strokeStyle = P.stage; c.lineWidth = 2;
+    c.beginPath(); c.arc(pb[0], pb[1] - 5, 7, 0, 6.2832); c.fill(); c.stroke();
+
+    txt(c, st.M < 0.03 ? pick(W, 'flat sheet — nothing bends, so the ball goes straight', 'flat sheet — the ball goes straight')
+                       : pick(W, 'the ball is going as straight as it can · the sheet is what bends', 'the ball goes straight · the sheet bends'),
+        W / 2, H - 14, 12, P.dim, 'center', 550);
+  }, st);
+
+  function draw() {
+    $('v-well').textContent = Math.round(st.M * 100);
+    $('o-well-d').textContent = st.M < 0.03 ? 'None' : st.M < 0.3 ? 'Shallow' : st.M < 0.65 ? 'Deep' : 'Very deep';
+  }
+  setInterval(function () { $('o-well-p').textContent = st.mode; }, 200);
+  $('r-well').addEventListener('input', function () { st.M = +this.value / 100; draw(); });
+  $('b-well-reset').addEventListener('click', spawn);
+  draw();
+})();
+
+/* ═════════════ Lab 9 — two clocks, one of them near a black hole ═════════════ */
+(function lab9() {
+  var st = { k: 2.00, yf: 0, yn: 0 };
+  scene('cv-grav', function (c, W, H, t, dt, s) {
+    var f = Math.sqrt(1 - 1 / st.k);
+    if (dt > 0) {
+      st.yf += dt; st.yn += dt * f;
+      if (st.yf >= 20) { st.yf = 0; st.yn = 0; }
+    }
+    var xh = W * 0.11, Rh = W * 0.52 / 12, cy = H * 0.44;
+    var nx = xh + Rh * st.k, fx = Math.min(W * 0.87, W - 46);
+
+    /* the well, drawn as a darkening of the background */
+    var bg = c.createRadialGradient(xh, cy, Rh, xh, cy, W * 0.72);
+    bg.addColorStop(0, 'rgba(120,120,140,.30)'); bg.addColorStop(1, 'rgba(0,0,0,0)');
+    c.fillStyle = bg; c.fillRect(0, 0, W, H);
+
+    /* the hole */
+    var ag = c.createRadialGradient(xh, cy, Rh * 0.9, xh, cy, Rh * 2.4);
+    ag.addColorStop(0, 'rgba(251,146,60,.55)'); ag.addColorStop(1, 'rgba(251,146,60,0)');
+    c.fillStyle = ag; c.beginPath(); c.arc(xh, cy, Rh * 2.4, 0, 6.2832); c.fill();
+    c.fillStyle = '#050507'; c.beginPath(); c.arc(xh, cy, Rh, 0, 6.2832); c.fill();
+    c.save(); c.setLineDash([5, 4]); c.strokeStyle = '#f97316'; c.lineWidth = 2.4;
+    c.beginPath(); c.arc(xh, cy, Rh + 2.5, 0, 6.2832); c.stroke(); c.restore();
+    txt(c, 'black hole', 14, 18, 12.5, P.ink, 'left', 700);
+    txt(c, pick(W, 'the dashed ring is the edge — nothing gets back out', 'the ring is the edge'), 14, 34, 11, '#fb923c', 'left', 550);
+
+    /* the measuring line out from the hole */
+    c.strokeStyle = P.line; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(xh, cy + Rh + 34); c.lineTo(xh + Rh * 12, cy + Rh + 34); c.stroke();
+    for (var i = 1; i <= 12; i++) {
+      c.strokeStyle = P.faint; c.lineWidth = 1;
+      c.beginPath(); c.moveTo(xh + Rh * i, cy + Rh + 30); c.lineTo(xh + Rh * i, cy + Rh + 38); c.stroke();
+    }
+    dash(c, [[nx, cy + 26], [nx, cy + Rh + 30]], s.acc, 1.4, [3, 4]);
+
+    clock(c, nx, cy, Math.min(26, W * 0.045), st.yn, s.acc, 'near clock');
+    clock(c, fx, cy, Math.min(26, W * 0.045), st.yf, P.ink, 'clock far away');
+    mono(c, st.yn.toFixed(1) + ' yr', nx, cy + Rh + 62, 14, s.acc, 'center');
+    mono(c, st.yf.toFixed(1) + ' yr', fx, cy + Rh + 62, 14, P.ink, 'center');
+    txt(c, pick(W, 'both hands turn once a year — for whoever is standing next to them',
+                   'each hand turns once a year'),
+        W / 2, H - 12, 11.5, P.dim, 'center', 500);
+  }, st);
+
+  function clock(c, x, y, R, yr, col, label) {
+    c.fillStyle = P.stage; c.strokeStyle = col; c.lineWidth = 2.5;
+    c.beginPath(); c.arc(x, y, R, 0, 6.2832); c.fill(); c.stroke();
+    for (var i = 0; i < 12; i++) {
+      var a = i / 12 * 6.2832;
+      c.strokeStyle = P.faint; c.lineWidth = 1.4;
+      c.beginPath(); c.moveTo(x + Math.cos(a) * R * 0.82, y + Math.sin(a) * R * 0.82);
+      c.lineTo(x + Math.cos(a) * R * 0.95, y + Math.sin(a) * R * 0.95); c.stroke();
+    }
+    var ha = -Math.PI / 2 + yr * 6.2832;
+    c.strokeStyle = col; c.lineWidth = 3; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x, y); c.lineTo(x + Math.cos(ha) * R * 0.7, y + Math.sin(ha) * R * 0.7); c.stroke();
+    c.fillStyle = col; c.beginPath(); c.arc(x, y, 3, 0, 6.2832); c.fill();
+    txt(c, label, x, y - R - 14, 11, P.dim, 'center', 600);
+  }
+
+  function draw() {
+    var f = Math.sqrt(1 - 1 / st.k);
+    $('v-grav').textContent = st.k.toFixed(2) + ' ×';
+    $('o-grav-r').textContent = Math.round(f * 100) + '%';
+  }
+  setInterval(function () {
+    $('o-grav-f').textContent = st.yf.toFixed(1) + ' yr';
+    $('o-grav-n').textContent = st.yn.toFixed(1) + ' yr';
+  }, 140);
+  $('r-grav').addEventListener('input', function () { st.k = +this.value / 100; draw(); });
+  draw();
+})();
+
+/* ---------- boot ---------------------------------------------------------- */
+fitAll();
+if ('IntersectionObserver' in window) {
+  var io = new IntersectionObserver(function (entries) {
+    for (var i = 0; i < entries.length; i++) {
+      for (var j = 0; j < scenes.length; j++) if (scenes[j].cv === entries[i].target) scenes[j].on = entries[i].isIntersecting;
+    }
+  }, { rootMargin: '160px 0px' });
+  for (var i = 0; i < scenes.length; i++) io.observe(scenes[i].cv);
+} else for (var n = 0; n < scenes.length; n++) scenes[n].on = true;
+
+/* ResizeObserver is the precise signal: it fires for a container that changes
+   width, for a canvas revealed after boot, and for the first real layout pass.
+   The window listener stays as a fallback where RO is missing. */
+if ('ResizeObserver' in window) {
+  var ro = new ResizeObserver(function (entries) {
+    for (var a = 0; a < entries.length; a++) {
+      for (var b = 0; b < scenes.length; b++) {
+        if (scenes[b].cv === entries[a].target) { scenes[b].fit(); scenes[b].sync(); }
+      }
+    }
+  });
+  for (var m = 0; m < scenes.length; m++) ro.observe(scenes[m].cv);
+}
+var rz;
+window.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(fitAll, 120); });
+window.addEventListener('load', fitAll);
+requestAnimationFrame(loop);
+})();
+</script>
+
+</body>
+</html>
