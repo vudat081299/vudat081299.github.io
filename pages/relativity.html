@@ -146,6 +146,36 @@ section[id] { scroll-margin-top: 78px; }
 @media (max-width: 640px) {
   .rl-canvas { aspect-ratio: 5 / 4; }
   .rl-canvas--tall { aspect-ratio: 1 / 1; }
+
+  /* Hàng điều khiển của lab không co được dưới ~347px: input có min-width:90px
+     và .rl-ctrl__val có min-width:74px, cộng nhãn thành một sàn cứng — trong khi
+     .rl-lab là overflow:hidden nên phần tràn bị CẮT MẤT, không cuộn tới được.
+     Cho nhãn xuống dòng riêng rồi hạ sàn của hai phần tử kia. */
+  .rl-ctrl { flex-wrap: wrap; gap: 5px 10px; }
+  .rl-ctrl__lab { flex: 1 1 100%; }
+  .rl-ctrl input[type="range"] { min-width: 0; flex: 1 1 110px; }
+  .rl-ctrl__val { min-width: 52px; }
+
+  /* Vùng chạm thanh trượt. .wb-range của kit là height:4px + box-sizing:border-box
+     nên padding-block đơn thuần bị chặn ở 22px — phải đổi content-box mới cộng
+     thật. background-clip giữ vệt track vẫn đúng 4px. */
+  .rl-lab .wb-range {
+    box-sizing: content-box; height: 4px; padding-block: 16px; margin-block: 0;
+    background-clip: content-box;
+  }
+  .rl-lang { min-height: 36px; }
+}
+
+/* Ở 320px cụm nút phải của navbar (EN·VI + home + theme = 161px) cộng toggle và
+   brand đẩy thanh nav rộng 369px. Cho brand co lại và nhả gap + padding. */
+@media (max-width: 400px) {
+  .wb-navbar { gap: 10px; padding-inline: 12px; }
+  .wb-navbar__brand { flex: 0 1 auto; min-width: 0; overflow: hidden; }
+  .rl-brand-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* Chỉ co brand thì tên trang còn 30px trên 67px cần thiết. Nút home trùng đúng
+     đích với brand (cả hai ../index.html), nên bỏ bản trùng ở màn hẹp — nhả 40px
+     cho tên trang hiện trọn, không mất đường nào. */
+  .rl-home { display: none; }
 }
 .rl-lab__ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; padding: 13px 16px; border-top: var(--wb-bw) solid var(--wb-border); background: var(--wb-surface-2); }
 .rl-ctrl { display: flex; align-items: center; gap: 10px; flex: 1 1 240px; min-width: 0; }
@@ -196,6 +226,7 @@ section[id] { scroll-margin-top: 78px; }
 .rl-take__c h4 { font-size: 15px; font-weight: 690; margin: 0 0 6px; }
 .rl-take__c p { font-size: 14.5px; line-height: 1.6; color: var(--wb-fg-muted); margin: 0; }
 
+.rl-tw { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .rl-words { width: 100%; border-collapse: collapse; font-size: 15px; margin: 16px 0 8px; }
 .rl-words th, .rl-words td { text-align: left; padding: 10px 12px; border-bottom: var(--wb-bw) solid var(--wb-border); }
 .rl-words th { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-muted); font-weight: 650; }
@@ -252,7 +283,7 @@ section[id] { scroll-margin-top: 78px; }
 <header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
           aria-label="Open menu"><span class="wb-ico">menu</span></button>
-  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🚀</span> Relativity</a>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🚀</span><span class="rl-brand-text">Relativity</span></a>
   <nav class="wb-nav wb-navbar__menu">
     <a class="wb-nav__link" href="#p1"><span class="t-en">Moving</span><span class="t-vi">Chuyển động</span></a>
     <a class="wb-nav__link" href="#p2"><span class="t-en">Fast</span><span class="t-vi">Tốc độ</span></a>
@@ -266,7 +297,7 @@ section[id] { scroll-margin-top: 78px; }
     <button class="wb-btn wb-btn--ghost rl-lang" id="lang-toggle" type="button" aria-label="English / Tiếng Việt">
       <span class="rl-lang__en">EN</span><span class="sep">·</span><span class="rl-lang__vi">VI</span>
     </button>
-    <a class="wb-btn wb-btn--ghost wb-btn--icon" href="../index.html" aria-label="Home"><span class="wb-ico">home</span></a>
+    <a class="wb-btn wb-btn--ghost wb-btn--icon rl-home" href="../index.html" aria-label="Home"><span class="wb-ico">home</span></a>
     <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Light / dark">
       <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
       <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
@@ -1574,6 +1605,7 @@ section[id] { scroll-margin-top: 78px; }
     </div>
     <p class="rl-p t-en">Every idea on this page has a proper name. Here they are side by side, so the Detail popups stop looking like a foreign language.</p>
     <p class="rl-p t-vi">Mọi ý trên trang này đều có một cái tên chính thức. Đặt cạnh nhau ở đây, để các popup Chi tiết thôi trông như tiếng nước ngoài.</p>
+    <div class="rl-tw">
     <table class="rl-words">
       <tr><th><span class="t-en">What this page said</span><span class="t-vi">Trang này gọi là</span></th><th><span class="t-en">What scientists call it</span><span class="t-vi">Nhà khoa học gọi là</span></th><th><span class="t-en">Written as</span><span class="t-vi">Viết là</span></th></tr>
       <tr><td><span class="t-en">Where you are watching from</span><span class="t-vi">Chỗ bạn đứng nhìn</span></td><td><span class="t-en">Frame of reference</span><span class="t-vi">Hệ quy chiếu</span></td><td>S, S′</td></tr>
@@ -1587,6 +1619,7 @@ section[id] { scroll-margin-top: 78px; }
       <tr><td><span class="t-en">Going straight on a bent floor</span><span class="t-vi">Đi thẳng trên một cái sàn cong</span></td><td><span class="t-en">Geodesic</span><span class="t-vi">Đường trắc địa</span></td><td>—</td></tr>
       <tr><td><span class="t-en">The edge of a black hole</span><span class="t-vi">Bờ vực của lỗ đen</span></td><td><span class="t-en">Event horizon</span><span class="t-vi">Chân trời sự kiện</span></td><td>r_s = 2GM/c²</td></tr>
     </table>
+    </div>
   </section>
 
   <!-- ═══════════════ QUIZ ═══════════════ -->
