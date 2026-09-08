@@ -1,6 +1,6 @@
 {
   "updated": "2026-09-08",
-  "note": "Nội dung của index.html. Thêm một trang = thêm một item vào section đúng chỗ; phím tắt `key` phải chưa ai dùng. Số 'n page' của subject được tính từ files, đừng ghi tay.",
+  "note": "Nội dung của index.html. LUẬT (chủ trang chốt 08/09/2026): mô tả CHỈ nói chủ đề của trang — không kể bộ phận hay tính năng của trang. Cắt: 'Interactive', 'Searchable', 'filter by', 'pop-ups', 'side drawer', 'tracked progress', '(Anh/Việt)', và mọi số đếm bộ phận trang ('4 acts', '16 mô hình tương tác', '7 phần'). Giữ: số đếm NỘI DUNG ('~79 lối ngụy biện', '50 nguyên tắc') vì đó là chủ đề. Trang công cụ (Loto, Cashy, JSON Analysis, Web Builder) thì việc nó làm chính là chủ đề — cứ tả. Thêm một trang = thêm một item, `key` phải chưa ai dùng. Số 'n page' của subject tính từ files, đừng ghi tay.",
   "sections": [
     {
       "id": "tiles",
@@ -48,7 +48,7 @@
           "key": "6",
           "icon": "account_balance",
           "name": "Economics Handbook",
-          "desc": "Interactive rulebook — economic & financial \"if-then\" rules",
+          "desc": "Rulebook — economic & financial \"if-then\" rules",
           "href": "pages/finance-econ-rulebook.html"
         },
         {
@@ -62,28 +62,28 @@
           "key": "9",
           "icon": "record_voice_over",
           "name": "Structured Speaking",
-          "desc": "Pick the right speaking framework — decision tool, drills & drafting pad",
+          "desc": "Pick the right speaking framework — seven families, the shared skeleton (anchor → tension → exit), and when a framework backfires",
           "href": "pages/structured-speaking.html"
         },
         {
           "key": "7",
           "icon": "gavel",
           "name": "Debate & Argumentation",
-          "desc": "Giáo trình tự học tranh biện — lập luận, phản bác, cân tác động, các thể thức & 5 công cụ luyện tại chỗ",
+          "desc": "Giáo trình tự học tranh biện — lập luận, phản bác, cân tác động, các thể thức",
           "href": "pages/debate-argumentation.html"
         },
         {
           "key": "g",
           "icon": "translate",
           "name": "English From the Ground Up",
-          "desc": "Giáo trình tự học tiếng Anh — âm thanh, ngữ pháp, từ vựng, kỹ năng, lộ trình 12 tháng & 10 mô hình nghịch tại chỗ",
+          "desc": "Giáo trình tự học tiếng Anh — âm thanh, ngữ pháp, từ vựng, kỹ năng, lộ trình 12 tháng",
           "href": "pages/english-from-the-ground-up.html"
         },
         {
           "key": "y",
           "icon": "neurology",
           "name": "Psychology",
-          "desc": "Giáo trình tự học tâm lý học — 6 phần từ nơ-ron tới xã hội, 11 mô hình tương tác, nhãn độ vững của từng phát hiện",
+          "desc": "Giáo trình tự học tâm lý học — từ nơ-ron tới xã hội, kèm độ vững của từng phát hiện",
           "href": "pages/psychology.html"
         }
       ]
@@ -99,14 +99,14 @@
           "key": "x",
           "icon": "encrypted",
           "name": "Cryptography",
-          "desc": "Dan Boneh's two courses, retold in Vietnamese — 4 acts, 10 interactive models",
+          "desc": "Dan Boneh's two courses, retold in Vietnamese — keeping secrets, proving integrity, combining the two without breaking either, and how two strangers agree on a key",
           "href": "pages/cryptography-boneh.html"
         },
         {
           "key": "n",
           "icon": "model_training",
           "name": "Machine Learning & Deep Learning",
-          "desc": "Andrew Ng's 8 courses, retold in Vietnamese — 5 acts, 13 interactive models",
+          "desc": "Andrew Ng's 8 courses, retold in Vietnamese — regression & gradient descent, neural nets & backprop, tuning, and diagnosing a model that doesn't work",
           "href": "pages/machine-learning-ng.html"
         },
         {
@@ -136,14 +136,14 @@
           "key": "m",
           "icon": "science",
           "name": "Chemistry",
-          "desc": "Giáo trình tự học hoá học — 7 phần từ hạt nhân tới hoá hữu cơ, bảng tuần hoàn tương tác & 16 mô hình nghịch tại chỗ",
+          "desc": "Giáo trình tự học hoá học — từ hạt nhân tới hoá hữu cơ: orbital, cấu hình electron, hình dáng bảng tuần hoàn, và sáu niềm tin nghe rất hợp lý mà làm hỏng phần sau",
           "href": "pages/chemistry.html"
         },
         {
           "key": "u",
           "icon": "rocket_launch",
           "name": "Relativity",
-          "desc": "Thuyết tương đối hẹp & rộng, giải thích từ số không — đồng hồ chạy chậm, Doppler, không-thời gian cong; 9 hình động & phương trình thật sau mỗi phần",
+          "desc": "Thuyết tương đối hẹp & rộng, giải thích từ số không — đồng hồ chạy chậm, Doppler, không-thời gian cong, kèm phương trình thật",
           "href": "pages/relativity.html"
         }
       ]
@@ -166,7 +166,7 @@
           "key": "v",
           "icon": "soup_kitchen",
           "name": "Vietnamese Home Cooking",
-          "desc": "Searchable Vietnamese home-cooking recipes, by region & dipping sauce",
+          "desc": "Vietnamese home-cooking recipes, by region & dipping sauce",
           "href": "cooking/vietnamese-home-cooking.html"
         },
         {
@@ -239,7 +239,7 @@
               "icon": "school",
               "href": "masters-degree/data-science-roadmap/data-science-roadmap.html",
               "title": "Data Science — zero to master's",
-              "sub": "Tracked progress · main thread stays clean — math in pop-ups, tool comparisons in a side drawer · a browser-only path for weak machines · pandas, SQL & Colab, feature engineering, transformers, shipping a real product, thesis & defense"
+              "sub": "A browser-only path for weak machines · pandas, SQL & Colab, feature engineering, transformers, shipping a real product, thesis & defense"
             }
           ]
         },
@@ -281,7 +281,7 @@
               "icon": "checklist",
               "href": "masters-degree/thesis-topic-selector/thesis-topic-selector.html",
               "title": "Thesis Topic Selector",
-              "sub": "Candidate topics ranked by real-world impact · filter by impact, difficulty, data risk"
+              "sub": "Candidate topics rated on real-world impact, difficulty & data risk"
             }
           ]
         },
