@@ -102,6 +102,19 @@ Ba thứ phải nhớ khi làm:
 - **Số liệu suy ra được thì đừng ghi trong data** — `subj__count` ("3 pages") tính từ
   `files.length`, không ai phải sửa tay khi thêm một dòng.
 
+**Luật nội dung đã chốt cho `index.html` (08/09/2026):** mô tả **chỉ nói chủ đề của trang**,
+không kể bộ phận hay tính năng của trang. Ba đường biên, đo được:
+
+| Cắt | Giữ |
+|---|---|
+| tính năng & bộ phận: `Interactive`, `Searchable`, `filter by`, `pop-ups`, `side drawer`, `tracked progress`, `(Anh/Việt)` | chủ đề: `từ hạt nhân tới hoá hữu cơ`, `pandas, SQL & Colab` |
+| **đếm bộ phận trang**: `4 acts`, `16 mô hình tương tác`, `7 phần` | **đếm nội dung**: `~79 lối ngụy biện`, `50 nguyên tắc` |
+| — | trang **công cụ** (Loto, Cashy, JSON Analysis, Web Builder): việc nó làm chính là chủ đề |
+
+Luật này cũng nằm ở trường `note` trong `data/collection.json` — ngay chỗ người viết mục tiếp
+theo đang gõ, vì **ai viết mục thứ 32 cũng bắt chước mục 1–31**. Đó là lý do bộ mẫu quan trọng
+hơn luật: đã rà cả 31 mô tả và sửa 12 cái vi phạm, để cái được bắt chước là cái đúng.
+
 Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Nó **không**
 kiểm độ dài mô tả: đã đo, 31 mô tả đang chạy dài 24→235 ký tự, mọi ngưỡng chung đều là số bịa.
 Câu có sát việc của cái ô hay không là việc của người viết.
