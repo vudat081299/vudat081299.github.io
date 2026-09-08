@@ -71,9 +71,14 @@ Nhưng bỏ qua rồi thì phải sửa ngay sau đó — cổng bị tắt lâu
 
 ## Thứ tự làm một trang: nội dung trước, UI sau
 
-Sai thứ tự là nguồn của một lớp lỗi thật: viết chữ ngay trong HTML thì **cái ô dẫn dắt câu
-chữ**. Một cái tile trông như danh sách thuộc tính, nên người viết liệt kê thuộc tính — và
-`(Anh/Việt)`, tên một cái nút, lọt vào mô tả nội dung đúng theo đường đó (08/09/2026).
+**Tách file không làm câu sau tốt hơn — nói rõ để không ai trông đợi sai.** Đã đo trên chính
+trang này: **12 trong 31 mô tả** đã nói về bộ máy của trang ("4 acts", "11 interactive models",
+"Searchable", "decision tool"). `(Anh/Việt)` không phải ngoại lệ, nó **khớp giọng láng giềng** —
+và trong file data láng giềng nằm sát nhau hơn nên áp lực bắt chước còn tăng.
+
+Cái tách file mua được là **cả tập đọc được cùng lúc** (một màn hình, thay vì phải viết script
+mới dump nổi 31 mô tả ra khỏi HTML) và **linter kiểm được cấu trúc**. Cần, nhưng chưa đủ: thứ
+giữ chất lượng là **bộ mẫu nhất quán**, vì ai viết mục thứ 32 cũng bắt chước mục 1–31.
 
 Ba bước, đúng thứ tự:
 
