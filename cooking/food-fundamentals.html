@@ -18,6 +18,15 @@
 </script>
 
 <style>
+  /* =========================================================================
+     TƯƠNG PHẢN — --wb-fg-subtle của kit là gray-400 (#a1a1aa), chỉ đạt 2,6:1 trên
+     nền sáng, dưới ngưỡng WCAG AA 4,5:1. Trang này dùng token đó cho chữ mang
+     thông tin thật — nhãn bộ lọc, số món tìm được, tên phần thịt tiếng Anh, chú
+     thích sơ đồ, đơn vị trong bảng — ở cỡ 11–12px, nên không được miễn theo luật
+     chữ lớn. Nâng token lên mức đạt chuẩn ở cả hai theme; mọi màu khác giữ nguyên.
+     ====================================================================== */
+  :root { --wb-fg-subtle: #6d6d72; }  /* 5,15:1 trên trắng · 4,56:1 trên #f1f1f3 */
+  .dark { --wb-fg-subtle: #888891; }  /* 5,60:1 trên #0b0b0d · 4,56:1 trên #212127 */
   /* Page-local layout only — mọi màu / bo / bóng đến từ token wb-*. */
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
@@ -262,7 +271,7 @@
       <h3 class="fk-sub-title">Con lợn (heo) — bấm vào từng vùng để xem tính chất</h3>
       <div class="fk-meat" id="meat-pig">
         <div class="fk-meat__stage">
-          <svg viewBox="0 0 760 360" role="img" aria-label="Sơ đồ các phần thịt lợn — bấm vào một vùng để xem chi tiết">
+          <svg viewBox="0 0 760 360" role="group" aria-label="Sơ đồ các phần thịt lợn — bấm vào một vùng để xem chi tiết">
             <defs><clipPath id="clip-pig"><path d="M70 232 C60 214 70 186 96 176 C104 150 132 146 156 156 C210 138 320 128 440 130 C540 132 606 142 640 168 C666 188 664 216 642 232 C650 250 642 268 626 272 C540 288 400 292 268 288 C210 286 150 280 116 268 C96 262 80 252 74 242 C71 238 70 235 70 232 Z"/></clipPath></defs>
 
             <!-- chân (xa, tĩnh) -->
@@ -325,7 +334,7 @@
       <h3 class="fk-sub-title">Con bò — bấm vào từng vùng để xem tính chất</h3>
       <div class="fk-meat" id="meat-cow">
         <div class="fk-meat__stage">
-          <svg viewBox="0 0 760 360" role="img" aria-label="Sơ đồ các phần thịt bò — bấm vào một vùng để xem chi tiết">
+          <svg viewBox="0 0 760 360" role="group" aria-label="Sơ đồ các phần thịt bò — bấm vào một vùng để xem chi tiết">
             <defs><clipPath id="clip-cow"><path d="M64 236 C54 216 66 192 92 186 C98 160 128 156 150 166 C210 146 330 140 450 142 C560 144 626 152 660 176 C682 194 680 220 656 234 C662 252 654 268 638 270 C540 284 400 288 262 284 C206 282 150 278 118 268 C98 262 78 252 70 244 C67 240 65 238 64 236 Z"/></clipPath></defs>
 
             <!-- chân (xa) -->

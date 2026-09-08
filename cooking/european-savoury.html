@@ -18,6 +18,15 @@
 </script>
 
 <style>
+  /* =========================================================================
+     TƯƠNG PHẢN — --wb-fg-subtle của kit là gray-400 (#a1a1aa), chỉ đạt 2,6:1 trên
+     nền sáng, dưới ngưỡng WCAG AA 4,5:1. Trang này dùng token đó cho chữ mang
+     thông tin thật — nhãn bộ lọc, số món tìm được, tên phần thịt tiếng Anh, chú
+     thích sơ đồ, đơn vị trong bảng — ở cỡ 11–12px, nên không được miễn theo luật
+     chữ lớn. Nâng token lên mức đạt chuẩn ở cả hai theme; mọi màu khác giữ nguyên.
+     ====================================================================== */
+  :root { --wb-fg-subtle: #6d6d72; }  /* 5,15:1 trên trắng · 4,56:1 trên #f1f1f3 */
+  .dark { --wb-fg-subtle: #888891; }  /* 5,60:1 trên #0b0b0d · 4,56:1 trên #212127 */
   /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
@@ -419,14 +428,15 @@
 
       <h3 class="mc-sub-title">Độ chín của thịt bò — bảng duy nhất cần thuộc</h3>
       <div class="wb-card"><div class="wb-card__body">
-        <p class="wb-help" style="margin:0 0 10px">Nhiệt độ đo ở <b>giữa miếng thịt</b>, ngay khi rút ra khỏi chảo hoặc lò. Thịt còn chín thêm 2–4 °C trong lúc nghỉ, nên luôn rút ra <b>sớm hơn đích 3 °C</b>. Không có nhiệt kế thì dùng cột dấu hiệu — nhưng một cái nhiệt kế đầu dò rẻ hơn một miếng thăn bò hỏng.</p>
+        <p class="wb-help" style="margin:0 0 10px">Nhiệt độ đo ở <b>giữa miếng thịt</b>, ngay khi rút ra khỏi chảo hoặc lò. Thịt còn chín thêm 2–4 °C trong lúc nghỉ, nên luôn rút ra <b>sớm hơn đích 3 °C</b>. Không có nhiệt kế thì dùng cột dấu hiệu — nhưng một cái nhiệt kế đầu dò rẻ hơn một miếng thăn bò hỏng. Các mốc tái dưới đây là mốc <b>ngon</b> cho <b>miếng bò nguyên khối</b>, không phải mốc an toàn: chúng dựa trên việc vi khuẩn chỉ nằm ở bề mặt và bị nhiệt xém diệt. Chúng <b>không áp dụng</b> cho thịt xay, thịt đã xăm/dần, hay gia cầm — và thai phụ, trẻ nhỏ, người già, người suy giảm miễn dịch thì nên ăn từ mức chín tới (60–63 °C) trở lên.</p>
         <div class="ma-done"><span class="ma-done__n">Rare</span><span class="ma-done__t">50–52 °C</span><span class="ma-done__c">Lõi <b>đỏ tươi và mát</b>. Ấn vào rất mềm, gần như không có sức bật. Chỉ hợp thăn lưng và thăn nội.</span></div>
         <div class="ma-done"><span class="ma-done__n">Medium rare</span><span class="ma-done__t">54–57 °C</span><span class="ma-done__c">Lõi <b>hồng đỏ ấm, nước thịt ứa ra khi cắt</b>. Đây là mốc mặc định của gần như mọi nhà hàng, và là mốc ngon nhất cho ribeye.</span></div>
         <div class="ma-done"><span class="ma-done__n">Medium</span><span class="ma-done__t">60–63 °C</span><span class="ma-done__c">Lõi <b>hồng nhạt, thịt săn nhưng còn mọng</b>. Hợp miếng dày nhiều mỡ giắt.</span></div>
         <div class="ma-done"><span class="ma-done__n">Medium well</span><span class="ma-done__t">65–68 °C</span><span class="ma-done__c">Chỉ còn <b>một vệt hồng mảnh ở giữa</b>. Từ mốc này trở đi thịt bắt đầu khô rõ.</span></div>
         <div class="ma-done"><span class="ma-done__n">Well done</span><span class="ma-done__t">71 °C+</span><span class="ma-done__c">Không còn màu hồng. Muốn ăn chín kỹ mà không khô thì đừng dùng thăn — dùng <b>nạm hoặc bắp hầm</b>, chúng càng chín lâu càng mềm.</span></div>
         <div class="ma-done"><span class="ma-done__n">Gà &amp; gia cầm</span><span class="ma-done__t">74 °C</span><span class="ma-done__c">Không thoả hiệp. Đo ở chỗ dày nhất, <b>không chạm xương</b>. Nước chảy ra phải trong, không hồng.</span></div>
-        <div class="ma-done"><span class="ma-done__n">Cá</span><span class="ma-done__t">50–54 °C</span><span class="ma-done__c">Thịt <b>vừa tách thành lát khi gẩy nĩa, lõi còn hơi trong</b>. Cá là món hỏng vì nấu quá chứ hầu như không bao giờ vì nấu thiếu.</span></div>
+        <div class="ma-done"><span class="ma-done__n">Thịt xay</span><span class="ma-done__t">71 °C</span><span class="ma-done__c">Máy xay trộn bề mặt vào giữa khối thịt, nên <b>mọi mốc tái ở trên không áp dụng cho thịt xay</b> — burger, bò băm, ragù đều phải tới 71 °C.</span></div>
+        <div class="ma-done"><span class="ma-done__n">Cá</span><span class="ma-done__t">50–54 °C · an toàn 63 °C</span><span class="ma-done__c">Thịt <b>vừa tách thành lát khi gẩy nĩa, lõi còn hơi trong</b>. Cá là món hỏng vì nấu quá chứ hầu như không bao giờ vì nấu thiếu. Nhưng 50–54 °C là mốc <b>ngon</b>, không phải mốc an toàn: mốc <b>an toàn là 63 °C</b> — chỉ hạ xuống 50–54 với cá thật tươi, và <b>luôn nấu tới 63 °C</b> cho thai phụ, trẻ nhỏ, người già, người suy giảm miễn dịch.</span></div>
       </div></div>
     </section>
 
@@ -888,7 +898,8 @@ RECIPES.push(
     { n: 'Rượu vang trắng khô', q: 120, u: 'ml', r: 'season' },
     { n: 'Bơ lạt', q: 60, u: 'g', note: 'Lạnh, cắt hạt lựu — cho ở bước cuối.', r: 'main' },
     { n: 'Parmesan', q: 80, u: 'g', r: 'main' },
-    { n: 'Mùi tây', q: 1, u: 'nắm', r: 'herb' }
+    { n: 'Mùi tây', q: 1, u: 'nắm', r: 'herb' },
+    { n: 'Dầu ô liu', q: 2, u: 'thìa canh', note: 'Để áp chảo nấm.', r: 'season' }
   ],
   steps: [
     { t: 'Áp chảo nấm riêng', d: 'Chảo thật nóng, ít dầu, xếp nấm một lớp, <b>không đảo trong 2 phút đầu</b>, nêm muối ở cuối.', m: 8, heat: 'Lửa to', cue: 'Nấm <b>vàng nâu ở mặt tiếp chảo và đã bay hết nước</b>. Nêm muối sớm là nấm ra nước và luộc chứ không áp chảo. Múc riêng ra bát.' },
@@ -1032,7 +1043,8 @@ RECIPES.push(
     { n: 'Rượu vang trắng khô', q: 120, u: 'ml', note: 'Thay bằng nước dùng gà cũng được.', r: 'season' },
     { n: 'Nước dùng gà', q: 150, u: 'ml', r: 'main' },
     { n: 'Nụ bạch hoa (capers)', q: 2, u: 'thìa canh', note: 'Rửa qua nếu ngâm muối. Bỏ được nhưng nó là thứ làm món đậm.', r: 'season' },
-    { n: 'Mùi tây', q: 1, u: 'nắm', r: 'herb' }
+    { n: 'Mùi tây', q: 1, u: 'nắm', r: 'herb' },
+    { n: 'Dầu ô liu', q: 2, u: 'thìa canh', r: 'season' }
   ],
   steps: [
     { t: 'Dần mỏng và áo bột', d: 'Lạng ức gà thành lát 1 cm, dần cho dày đều 7 mm, nêm muối tiêu rồi áo một lớp bột mỏng, phủi bớt.', m: 8, heat: '—', cue: 'Lát thịt <b>dày đều và phủ một lớp bột mờ như phấn</b>. Bột dày là sốt bị bột.' },
@@ -1293,7 +1305,8 @@ RECIPES.push(
     { n: 'Cà chua cô đặc', q: 2, u: 'thìa canh', r: 'season' },
     { n: 'Bột mì', q: 30, u: 'g', note: 'Áo gà — vừa tạo vỏ vừa làm sánh nước hầm.', r: 'main' },
     { n: 'Nước dùng gà', q: 400, u: 'ml', r: 'main' },
-    { n: 'Lá nguyệt quế + húng tây', q: 3, u: 'lá', r: 'herb' }
+    { n: 'Lá nguyệt quế + húng tây', q: 3, u: 'lá', r: 'herb' },
+    { n: 'Dầu ô liu', q: 2, u: 'thìa canh', note: 'Để áp chảo nấm và gà.', r: 'season' }
   ],
   steps: [
     { t: 'Ướp gà trong rượu qua đêm', d: 'Ướp gà với rượu vang, tỏi đập, thảo mộc trong ngăn mát 12 tiếng. Vớt gà ra, <b>giữ lại rượu</b>.', m: 720, heat: 'Ngăn mát', cue: 'Thịt gà <b>chuyển màu tím sẫm</b>. Bỏ bước này thì món vẫn ngon nhưng nông hơn rõ rệt.' },
@@ -1600,7 +1613,7 @@ RECIPES.push(
     { t: 'Rót bơ thành dòng nhỏ', d: 'Nhấc âu ra khỏi nồi, vừa đánh vừa rót bơ ấm thành <b>dòng thật nhỏ</b>.', m: 5, heat: '—', cue: 'Sốt <b>đặc dần, bóng và chảy chậm khỏi phới</b>. Nếu thấy tách dầu: dừng rót, thêm 1 thìa nước ấm và đánh mạnh — thường cứu được.' },
     { t: 'Nêm và giữ ấm', d: 'Cho chanh, muối, cayenne. Giữ ấm trong âu đặt trên nước ấm 40 °C, tối đa 1 tiếng.', m: 2, heat: '—', cue: 'Sốt <b>mượt như satin, màu vàng nhạt</b>. Trên 60 °C là trứng đông; dưới 25 °C là bơ đặc lại — cả hai đều làm sốt tách.' }
   ],
-  tips: ['Nếu sốt tách: đánh một lòng đỏ mới với 1 thìa nước ấm rồi rót sốt tách vào <b>từ từ như rót bơ</b>. Đây là cách cứu chắc ăn nhất.', 'Thêm ngải giấm (tarragon) và hành tím rim giấm là thành sốt béarnaise — cặp cổ điển của steak.'],
+  tips: ['Nếu sốt tách: đánh một lòng đỏ mới với 1 thìa nước ấm rồi rót sốt tách vào <b>từ từ như rót bơ</b>. Đây là cách cứu chắc ăn nhất.', 'Thêm ngải giấm (tarragon) và hành tím rim giấm là thành sốt béarnaise — cặp cổ điển của steak.', 'Đây là sốt <b>lòng đỏ chưa chín hẳn</b>: 65 °C trong lúc đánh không phải là tiệt trùng. Dùng <b>trứng tiệt trùng (pasteurized)</b> nếu mua được. Thai phụ, trẻ nhỏ, người già và người suy giảm miễn dịch thì đừng ăn.', 'Mốc "tối đa 1 tiếng" ở bước giữ ấm là <b>giới hạn cứng, không phải gợi ý</b>: 40 °C nằm giữa vùng nguy hiểm 5–60 °C, nơi vi khuẩn sinh sôi nhanh nhất. Hết 1 tiếng thì bỏ — <b>đừng để nguội rồi hâm lại</b>, và đừng giữ phần còn lại sang bữa sau.'],
   serveWith: 'Trứng chần (eggs Benedict), măng tây luộc, cá hồi áp chảo, bông cải xanh.'
 },
 {
@@ -1968,10 +1981,12 @@ var LABELS = {
     var b = el('button', 'wb-cap mc-chip wb-cap--dashed');
     b.innerHTML = (icon ? '<span class="wb-ico wb-ico--xs">' + icon + '</span> ' : '') + label;
     b.setAttribute('data-on', 'false');
+    b.setAttribute('aria-pressed', 'false');
     return b;
   }
   function paintChip(b) {
     var on = b.getAttribute('data-on') === 'true';
+    b.setAttribute('aria-pressed', String(on));
     b.classList.toggle('wb-cap--dashed', !on);
     b.classList.toggle('wb-cap--solid', on);
   }
