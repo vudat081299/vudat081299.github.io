@@ -100,7 +100,7 @@
           "icon": "encrypted",
           "name": "Cryptography",
           "desc": "Dan Boneh's two courses, retold in Vietnamese — keeping secrets, proving integrity, combining the two without breaking either, and how two strangers agree on a key",
-          "href": "pages/cryptography-boneh.html"
+          "href": "pages/cryptography.html"
         },
         {
           "key": "n",
