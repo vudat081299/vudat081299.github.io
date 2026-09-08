@@ -1,20 +1,26 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
 <title>Relativity — light, time, gravity &amp; the Doppler effect, with moving pictures</title>
-<meta name="description" content="Special and general relativity explained in plain language, in English: why speed is always compared to something, why light always travels at the same speed, why moving clocks and clocks near heavy things tick slower, and why a siren changes its song. Nine animated labs you can play with, and a Detail popup on every part with the real equations for older readers.">
+<meta name="description" content="Special and general relativity explained in plain language, in English and Vietnamese: why speed is always compared to something, why light always travels at the same speed, why moving clocks and clocks near heavy things tick slower, and why a siren changes its song. Nine animated labs you can play with, and a Detail popup on every part with the real equations for older readers.">
 
 <!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
 <link rel="stylesheet" href="../web-builder/web-builder.css">
 <script>
-  /* Theme before first paint: saved choice first, otherwise follow the OS. */
+  /* Theme before first paint: saved choice first, otherwise follow the OS.
+     Language likewise — but the DEFAULT is English, which is what the static
+     markup already says, so a failed read simply leaves the page as authored. */
   try {
     var t = localStorage.getItem('hub-theme');
     if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
       document.documentElement.classList.add('dark');
+    if (localStorage.getItem('rl-lang') === 'vi') {
+      document.documentElement.setAttribute('data-lang', 'vi');
+      document.documentElement.lang = 'vi';
+    }
   } catch (e) {}
 </script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -221,6 +227,23 @@ section[id] { scroll-margin-top: 78px; }
 .rl-top { position: fixed; right: 18px; bottom: 18px; z-index: 60; opacity: 0; pointer-events: none; transition: opacity .18s ease; }
 .rl-top.is-on { opacity: 1; pointer-events: auto; }
 
+/* ---- two languages in one document ------------------------------------- */
+/* Both versions are in the markup; one is hidden. The rules only ever HIDE, so
+   nothing has to restore a display value — a .t-vi <td>, <li> or <span> keeps
+   its own natural display when it is the visible one. English is the default,
+   so a browser with no stored choice (or no localStorage at all) gets English. */
+:root:not([data-lang="vi"]) .t-vi { display: none !important; }
+:root[data-lang="vi"] .t-en { display: none !important; }
+
+.rl-lang {
+  font-family: var(--wb-font-mono); font-size: 11.5px; font-weight: 700;
+  letter-spacing: .04em; padding: 7px 9px; gap: 0;
+}
+.rl-lang span { opacity: .34; transition: opacity .13s ease; }
+.rl-lang .sep { opacity: .28; margin: 0 4px; }
+:root:not([data-lang="vi"]) .rl-lang__en { opacity: 1; color: var(--wb-fg); }
+:root[data-lang="vi"] .rl-lang__vi { opacity: 1; color: var(--wb-fg); }
+
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
 </style>
 </head>
@@ -231,15 +254,18 @@ section[id] { scroll-margin-top: 78px; }
           aria-label="Open menu"><span class="wb-ico">menu</span></button>
   <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🚀</span> Relativity</a>
   <nav class="wb-nav wb-navbar__menu">
-    <a class="wb-nav__link" href="#p1">Moving</a>
-    <a class="wb-nav__link" href="#p2">Fast</a>
+    <a class="wb-nav__link" href="#p1"><span class="t-en">Moving</span><span class="t-vi">Chuyển động</span></a>
+    <a class="wb-nav__link" href="#p2"><span class="t-en">Fast</span><span class="t-vi">Tốc độ</span></a>
     <a class="wb-nav__link" href="#p3">Doppler</a>
-    <a class="wb-nav__link" href="#p4">Gravity</a>
-    <a class="wb-nav__link" href="#recap">Recap</a>
-    <a class="wb-nav__link" href="#quiz">Quiz</a>
+    <a class="wb-nav__link" href="#p4"><span class="t-en">Gravity</span><span class="t-vi">Hấp dẫn</span></a>
+    <a class="wb-nav__link" href="#recap"><span class="t-en">Recap</span><span class="t-vi">Tóm tắt</span></a>
+    <a class="wb-nav__link" href="#quiz"><span class="t-en">Quiz</span><span class="t-vi">Tự kiểm</span></a>
   </nav>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
+    <button class="wb-btn wb-btn--ghost rl-lang" id="lang-toggle" type="button" aria-label="English / Tiếng Việt">
+      <span class="rl-lang__en">EN</span><span class="sep">·</span><span class="rl-lang__vi">VI</span>
+    </button>
     <a class="wb-btn wb-btn--ghost wb-btn--icon" href="../index.html" aria-label="Home"><span class="wb-ico">home</span></a>
     <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Light / dark">
       <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
@@ -251,89 +277,114 @@ section[id] { scroll-margin-top: 78px; }
 <main class="rl-wrap">
 
   <header class="rl-hero p-fast">
-    <p class="rl-eyebrow">Relativity · start from zero · every picture moves</p>
-    <h1 class="rl-title">Time is not the same for <u>everybody</u>.</h1>
-    <p class="rl-lede">A clock on a fast rocket really does tick more slowly than a clock in your bedroom. A clock on the floor ticks more slowly than a clock on a high shelf. This is not a trick and it is not a story — engineers have to correct for it every day, or the map on a phone would send people to the wrong street.</p>
-    <p class="rl-lede">All of it comes from <b>one surprising fact about light</b>. This page starts there, then follows that one fact wherever it leads: to slow clocks, to squashed rockets, to a siren that changes its song, and finally to gravity — which turns out not to be a pull at all.</p>
+    <p class="rl-eyebrow t-en">Relativity · start from zero · every picture moves</p>
+    <p class="rl-eyebrow t-vi">Thuyết tương đối · bắt đầu từ số không · mọi hình đều động</p>
+    <h1 class="rl-title t-en">Time is not the same for <u>everybody</u>.</h1>
+    <h1 class="rl-title t-vi">Thời gian không giống nhau với <u>mọi người</u>.</h1>
+    <p class="rl-lede t-en">A clock on a fast rocket really does tick more slowly than a clock in your bedroom. A clock on the floor ticks more slowly than a clock on a high shelf. This is not a trick and it is not a story — engineers have to correct for it every day, or the map on a phone would send people to the wrong street.</p>
+    <p class="rl-lede t-vi">Một chiếc đồng hồ trên tên lửa bay nhanh chạy chậm hơn thật — chậm hơn chiếc đồng hồ trong phòng ngủ của bạn. Một chiếc đồng hồ đặt dưới sàn nhà chạy chậm hơn chiếc đặt trên nóc tủ. Đây không phải trò ảo thuật, cũng không phải chuyện cổ tích: các kỹ sư phải chỉnh lại nó mỗi ngày, nếu không bản đồ trên điện thoại sẽ chỉ bạn sang nhầm phố.</p>
+    <p class="rl-lede t-en">All of it comes from <b>one surprising fact about light</b>. This page starts there, then follows that one fact wherever it leads: to slow clocks, to squashed rockets, to a siren that changes its song, and finally to gravity — which turns out not to be a pull at all.</p>
+    <p class="rl-lede t-vi">Tất cả đều bắt nguồn từ <b>một điều bất ngờ về ánh sáng</b>. Trang này bắt đầu từ đó, rồi đi theo điều ấy tới bất cứ chỗ nào nó dẫn: tới những chiếc đồng hồ chạy chậm, những tên lửa bị ép ngắn lại, tiếng còi xe cứu thương đổi giọng, và cuối cùng là lực hấp dẫn — hoá ra chẳng phải một lực kéo nào cả.</p>
 
     <div class="rl-rules">
       <div class="rl-rule p-move">
-        <p class="rl-rule__n">Rule 1</p>
-        <p class="rl-rule__t">Speed only means something <b>compared to something else</b>.</p>
+        <p class="rl-rule__n"><span class="t-en">Rule 1</span><span class="t-vi">Luật 1</span></p>
+        <p class="rl-rule__t t-en">Speed only means something <b>compared to something else</b>.</p>
+        <p class="rl-rule__t t-vi">Nhanh hay chậm chỉ có nghĩa khi <b>so với một thứ khác</b>.</p>
       </div>
       <div class="rl-rule p-fast">
-        <p class="rl-rule__n">Rule 2</p>
-        <p class="rl-rule__t">Light always travels at <b>the same speed</b>, for everyone, always.</p>
+        <p class="rl-rule__n"><span class="t-en">Rule 2</span><span class="t-vi">Luật 2</span></p>
+        <p class="rl-rule__t t-en">Light always travels at <b>the same speed</b>, for everyone, always.</p>
+        <p class="rl-rule__t t-vi">Ánh sáng luôn đi <b>cùng một tốc độ</b>, với mọi người, mọi lúc.</p>
       </div>
       <div class="rl-rule p-bend">
-        <p class="rl-rule__n">Rule 3</p>
-        <p class="rl-rule__t">Because of Rule 2, <b>time bends</b> — for fast things, and near heavy things.</p>
+        <p class="rl-rule__n"><span class="t-en">Rule 3</span><span class="t-vi">Luật 3</span></p>
+        <p class="rl-rule__t t-en">Because of Rule 2, <b>time bends</b> — for fast things, and near heavy things.</p>
+        <p class="rl-rule__t t-vi">Vì Luật 2, <b>thời gian bị bẻ cong</b> — với vật đi nhanh, và ở gần vật nặng.</p>
       </div>
     </div>
 
-    <p class="rl-hero-meta">FOUR PARTS · NINE SECTIONS · NINE MOVING PICTURES YOU CAN CONTROL<br>EVERY SECTION HAS A “DETAIL” BUTTON WITH THE REAL EQUATIONS FOR OLDER READERS</p>
+    <p class="rl-hero-meta t-en">FOUR PARTS · NINE SECTIONS · NINE MOVING PICTURES YOU CAN CONTROL<br>EVERY SECTION HAS A “DETAIL” BUTTON WITH THE REAL EQUATIONS FOR OLDER READERS</p>
+    <p class="rl-hero-meta t-vi">BỐN PHẦN · CHÍN MỤC · CHÍN HÌNH ĐỘNG BẠN ĐIỀU KHIỂN ĐƯỢC<br>MỖI MỤC CÓ NÚT “CHI TIẾT” KÈM PHƯƠNG TRÌNH THẬT CHO NGƯỜI ĐỌC LỚN HƠN</p>
   </header>
 
   <!-- ═══════════════ PART 1 ═══════════════ -->
   <div class="rl-part p-move" id="p1">
-    <p class="rl-part__k">Part 1 · Warm-up</p>
-    <h2 class="rl-part__t">Everything is moving, so nothing is “still”</h2>
-    <p class="rl-part__s">Before we can talk about fast things, we have to fix a word everybody uses wrongly: <b>speed</b>. It is never a single number. It is always a comparison.</p>
+    <p class="rl-part__k t-en">Part 1 · Warm-up</p>
+    <p class="rl-part__k t-vi">Phần 1 · Khởi động</p>
+    <h2 class="rl-part__t t-en">Everything is moving, so nothing is “still”</h2>
+    <h2 class="rl-part__t t-vi">Mọi thứ đều đang chuyển động, nên chẳng có gì “đứng yên”</h2>
+    <p class="rl-part__s t-en">Before we can talk about fast things, we have to fix a word everybody uses wrongly: <b>speed</b>. It is never a single number. It is always a comparison.</p>
+    <p class="rl-part__s t-vi">Trước khi nói về những thứ đi nhanh, phải chỉnh lại một từ mà ai cũng dùng sai: <b>tốc độ</b>. Nó không bao giờ là một con số đứng một mình. Nó luôn là một phép so sánh.</p>
   </div>
 
   <section class="rl-sec p-move" id="s1">
     <div class="rl-sec__head">
       <div class="rl-sec__num">1</div>
-      <h3 class="rl-sec__t">Are you sitting still right now?</h3>
+      <h3 class="rl-sec__t t-en">Are you sitting still right now?</h3>
+      <h3 class="rl-sec__t t-vi">Bây giờ bạn có đang ngồi yên không?</h3>
     </div>
 
-    <p class="rl-p">You probably think you are. Your chair is not moving. The floor is not moving. Nothing is wobbling.</p>
-    <p class="rl-p">But you are sitting on the Earth, and the Earth is racing around the Sun at about <b>30 kilometres every second</b>. In the two seconds it takes to read this line, you have travelled about 60 kilometres.</p>
-    <p class="rl-p">So which is true? Are you still, or are you fast? <b>Both are true.</b> Still compared to your chair. Fast compared to the Sun. Speed is never one number on its own — it is always “how fast <em>compared to what</em>”.</p>
+    <p class="rl-p t-en">You probably think you are. Your chair is not moving. The floor is not moving. Nothing is wobbling.</p>
+    <p class="rl-p t-vi">Chắc bạn nghĩ là có. Cái ghế không nhúc nhích. Sàn nhà không nhúc nhích. Chẳng có gì rung cả.</p>
+    <p class="rl-p t-en">But you are sitting on the Earth, and the Earth is racing around the Sun at about <b>30 kilometres every second</b>. In the two seconds it takes to read this line, you have travelled about 60 kilometres.</p>
+    <p class="rl-p t-vi">Nhưng bạn đang ngồi trên Trái Đất, và Trái Đất đang lao quanh Mặt Trời với tốc độ khoảng <b>30 ki-lô-mét mỗi giây</b>. Trong hai giây bạn đọc xong dòng này, bạn đã đi được chừng 60 ki-lô-mét.</p>
+    <p class="rl-p t-en">So which is true? Are you still, or are you fast? <b>Both are true.</b> Still compared to your chair. Fast compared to the Sun. Speed is never one number on its own — it is always “how fast <em>compared to what</em>”.</p>
+    <p class="rl-p t-vi">Vậy điều nào đúng? Bạn đang yên, hay đang rất nhanh? <b>Cả hai đều đúng.</b> Yên so với cái ghế. Nhanh so với Mặt Trời. Tốc độ không bao giờ là một con số đứng một mình — nó luôn là “nhanh so với <em>cái gì</em>”.</p>
 
     <div class="rl-story">
-      <h4>The girl on the train</h4>
-      <p class="rl-p">A girl on a fast train throws a ball straight up in the air and catches it again. To her, the ball goes up, stops, and comes straight back down. Easy.</p>
-      <p class="rl-p">You are standing on the platform watching through the window. You see the very same ball fly in a long curve, because while it was in the air the train carried it forward past you.</p>
-      <p class="rl-p">One ball. One throw. Two completely different paths — and <b>neither of you is wrong</b>. You just measured from two different places.</p>
+      <h4><span class="t-en">The girl on the train</span><span class="t-vi">Cô bé trên tàu hoả</span></h4>
+      <p class="rl-p t-en">A girl on a fast train throws a ball straight up in the air and catches it again. To her, the ball goes up, stops, and comes straight back down. Easy.</p>
+      <p class="rl-p t-vi">Một cô bé trên chuyến tàu chạy nhanh tung quả bóng thẳng lên trời rồi bắt lại. Với cô bé, quả bóng đi lên, dừng một nhịp, rồi rơi thẳng xuống. Đơn giản.</p>
+      <p class="rl-p t-en">You are standing on the platform watching through the window. You see the very same ball fly in a long curve, because while it was in the air the train carried it forward past you.</p>
+      <p class="rl-p t-vi">Bạn đứng dưới sân ga, nhìn qua cửa sổ toa tàu. Bạn thấy đúng quả bóng ấy bay thành một vòng cung dài, vì trong lúc bóng còn ở trên không, con tàu đã mang nó tiến về phía trước, ngang qua bạn.</p>
+      <p class="rl-p t-en">One ball. One throw. Two completely different paths — and <b>neither of you is wrong</b>. You just measured from two different places.</p>
+      <p class="rl-p t-vi">Một quả bóng. Một cú tung. Hai đường đi khác hẳn nhau — và <b>không ai trong hai người sai cả</b>. Chỉ là hai người đo từ hai chỗ khác nhau.</p>
     </div>
 
     <figure class="rl-lab">
       <div class="rl-lab__bar">
         <span class="rl-lab__tag">Lab 1</span>
-        <span class="rl-lab__name">The same ball, watched from two places</span>
+        <span class="rl-lab__name t-en">The same ball, watched from two places</span>
+        <span class="rl-lab__name t-vi">Cùng một quả bóng, nhìn từ hai chỗ</span>
       </div>
       <div class="rl-lab__stage"><canvas id="cv-frames" class="rl-canvas" aria-label="A train rolls past a platform while a girl inside throws a ball straight up. Switching the viewpoint changes the shape of the ball's path from a straight line to a curve."></canvas></div>
       <div class="rl-lab__ctrl">
         <div class="wb-tabs wb-tabs--pill" id="seg-frames">
-          <button class="wb-tab is-active" data-view="ground" type="button">I am on the platform</button>
-          <button class="wb-tab" data-view="train" type="button">I am on the train</button>
+          <button class="wb-tab is-active" data-view="ground" type="button"><span class="t-en">I am on the platform</span><span class="t-vi">Tôi đứng dưới sân ga</span></button>
+          <button class="wb-tab" data-view="train" type="button"><span class="t-en">I am on the train</span><span class="t-vi">Tôi ngồi trên tàu</span></button>
         </div>
         <div class="rl-ctrl">
-          <span class="rl-ctrl__lab">Train speed</span>
+          <span class="rl-ctrl__lab t-en">Train speed</span>
+          <span class="rl-ctrl__lab t-vi">Tốc độ tàu</span>
           <input type="range" class="wb-range" id="r-frames" min="0" max="100" value="55" aria-label="Train speed">
           <span class="rl-ctrl__val" id="v-frames">55 km/h</span>
         </div>
       </div>
-      <figcaption class="rl-lab__cap">The dotted line is the path the ball actually traces <b>for you</b>. Switch the viewpoint and watch it change from a straight up-and-down line into a curve — while the ball itself does exactly the same thing. Slide the train speed down to zero and the two viewpoints agree again.</figcaption>
+      <figcaption class="rl-lab__cap t-en">The dotted line is the path the ball actually traces <b>for you</b>. Switch the viewpoint and watch it change from a straight up-and-down line into a curve — while the ball itself does exactly the same thing. Slide the train speed down to zero and the two viewpoints agree again.</figcaption>
+      <figcaption class="rl-lab__cap t-vi">Đường chấm chấm là quỹ đạo mà quả bóng thật sự vạch ra <b>với bạn</b>. Đổi chỗ đứng rồi xem nó biến từ một đường lên-xuống thẳng đứng thành một vòng cung — trong khi quả bóng vẫn làm đúng một việc như cũ. Kéo tốc độ tàu về không thì hai chỗ đứng lại nhìn thấy giống nhau.</figcaption>
     </figure>
 
     <div class="rl-key">
       <span class="rl-key__ico">🎯</span>
-      <p class="rl-key__b">The path you see depends on where you are watching from. But the <em>rules</em> — throw a ball, gravity pulls it back — are the same for everybody.</p>
+      <p class="rl-key__b t-en">The path you see depends on where you are watching from. But the <em>rules</em> — throw a ball, gravity pulls it back — are the same for everybody.</p>
+      <p class="rl-key__b t-vi">Đường bạn nhìn thấy phụ thuộc vào chỗ bạn đứng. Nhưng <em>các quy luật</em> — tung bóng lên, trọng lực kéo nó xuống — thì giống hệt nhau với tất cả mọi người.</p>
     </div>
 
     <div class="rl-detail-row">
       <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d1" type="button">
-        <span class="wb-ico">functions</span> Detail — for scientists
+        <span class="wb-ico">functions</span><span class="t-en">Detail — for scientists</span><span class="t-vi">Chi tiết — cho nhà khoa học</span>
       </button>
-      <span class="rl-detail-hint">Inertial frames, the Galilean boost, and the crack that Maxwell put in it.</span>
+      <span class="rl-detail-hint t-en">Inertial frames, the Galilean boost, and the crack that Maxwell put in it.</span>
+      <span class="rl-detail-hint t-vi">Hệ quy chiếu quán tính, phép biến đổi Galilei, và vết nứt mà Maxwell tạo ra.</span>
     </div>
 
     <div class="rl-src" id="d1"
          data-title="Inertial frames and the Galilean transformation"
-         data-sub="Why two observers disagree about a trajectory but never about a law">
-      <div class="rl-sci">
+         data-sub="Why two observers disagree about a trajectory but never about a law"
+         data-title-vi="Hệ quy chiếu quán tính và phép biến đổi Galilei"
+         data-sub-vi="Vì sao hai người quan sát bất đồng về một quỹ đạo nhưng không bao giờ bất đồng về một định luật">
+      <div class="rl-sci t-en">
         <h5>Frames, and which ones are special</h5>
         <p>An <b>inertial frame</b> is a coordinate system in which a body with no net force on it moves with constant velocity — Newton's first law, promoted from a statement about bodies to a definition of good coordinates. Any frame translating at constant velocity with respect to an inertial frame is itself inertial; there is no experiment inside a sealed carriage that can pick out which one is “really” at rest. That is <b>Galileo's principle of relativity</b>, stated in 1632 with a ship, a bowl of fish and some dripping water, three centuries before Einstein needed it.</p>
 
@@ -364,65 +415,115 @@ section[id] { scroll-margin-top: 78px; }
         </table>
         <p>The last row is the smallest number on the list and still matters: multiplied by 86 400 seconds it becomes 7.2 microseconds a day, which is the subject of section 9.</p>
       </div>
+      <div class="rl-sci t-vi">
+        <h5>Hệ quy chiếu, và hệ nào là đặc biệt</h5>
+        <p>Một <b>hệ quy chiếu quán tính</b> là hệ toạ độ trong đó vật không chịu hợp lực nào sẽ chuyển động với vận tốc không đổi — định luật I Newton, được nâng từ một phát biểu về vật thành một định nghĩa cho toạ độ tốt. Mọi hệ tịnh tiến đều so với một hệ quán tính thì bản thân nó cũng quán tính; không có thí nghiệm nào bên trong một toa tàu kín chỉ ra được hệ nào “thật sự” đứng yên. Đó là <b>nguyên lý tương đối của Galilei</b>, phát biểu năm 1632 với một con tàu, một bát cá và mấy giọt nước nhỏ tí tách — ba thế kỷ trước khi Einstein cần tới nó.</p>
+
+        <h5>Phép biến đổi</h5>
+        <p>Với hệ $S'$ chuyển động vận tốc $v$ dọc trục $x$ so với $S$:</p>
+        <div class="rl-eq">$$x' = x - vt,\qquad y' = y,\qquad z' = z,\qquad t' = t$$</div>
+        <p>Lấy đạo hàm một lần cho ra quy tắc cộng vận tốc quen thuộc; lấy hai lần cho ra lý do vì sao cơ học chẳng hề nhận ra việc đổi hệ:</p>
+        <div class="rl-eq">$$\mathbf{u}' = \mathbf{u} - \mathbf{v}, \qquad \mathbf{a}' = \mathbf{a}$$
+          <span class="rl-eq__note">Gia tốc là bất biến, nên $\mathbf{F} = m\mathbf{a}$ giữ nguyên dạng. Vận tốc thì không bất biến — và đó chính là lý do hai người quan sát vẽ ra hai đường cong khác nhau.</span></div>
+
+        <h5>Quả bóng trong hình động phía trên</h5>
+        <p>Cho cú tung xảy ra tại $t=0$ từ độ cao $h$ với vận tốc thẳng đứng $u_0$. Trong hệ của toa tàu, quả bóng không có vận tốc ngang nên nó vạch ra một đoạn thẳng đứng. Trong hệ của sân ga, nó thừa hưởng vận tốc con tàu:</p>
+        <div class="rl-eq">$$x(t) = vt, \qquad y(t) = h + u_0 t - \tfrac{1}{2} g t^2$$</div>
+        <p>Khử $t$ được $y = h + (u_0/v)x - (g/2v^2)x^2$: một parabol có <em>bề rộng</em> do $v$ quyết định, còn <em>độ cao</em> thì không. Hai người quan sát đo được cùng một thời gian bay, cùng một độ cao cực đại so với sàn toa, cùng một $g$. Bất đồng nằm trọn ở hình dạng của một quỹ đạo, không bao giờ nằm ở một định luật.</p>
+
+        <h5>Chỗ này hỏng ở đâu</h5>
+        <p>Tương đối Galilei không phải một ý nhỏ bị Einstein thay thế; nó là ý mà Einstein giữ lại. Thứ ông thay là phép biến đổi. Hệ phương trình Maxwell, viết ra những năm 1860, tiên đoán sóng điện từ đi với tốc độ</p>
+        <div class="rl-eq">$$c = \frac{1}{\sqrt{\varepsilon_0 \mu_0}} \approx 2{,}998 \times 10^{8}\ \mathrm{m\,s^{-1}}$$</div>
+        <p>mà không nhắc tới một hệ quy chiếu nào. Áp phép biến đổi Galilei lên hệ đó thì nó đổi dạng — ánh sáng sẽ phải đi với tốc độ $c \pm v$ đối với người quan sát đang chuyển động. Vậy một trong ba thứ phải sai: Maxwell, nguyên lý tương đối, hoặc $x' = x - vt$. Vật lý thế kỷ 19 đặt cược vào <b>ê-te</b>, một môi trường mà hệ đứng yên của nó là nơi Maxwell đúng chính xác. Thí nghiệm nói khác, và lựa chọn thứ ba thắng.</p>
+        <p>Quy tắc Galilei sống sót như một phép xấp xỉ rất tốt vì số hiệu chỉnh là bậc hai theo $\beta = v/c$:</p>
+        <div class="rl-eq">$$\gamma = \left(1 - \beta^2\right)^{-1/2} \approx 1 + \tfrac{1}{2}\beta^{2}$$</div>
+        <table class="rl-num">
+          <tr><th>Vật chuyển động</th><th>Tốc độ</th><th>β</th><th>γ − 1</th></tr>
+          <tr><td>Người đi bộ</td><td>1,4 m/s</td><td><code>4,7 × 10⁻⁹</code></td><td><code>1,1 × 10⁻¹⁷</code></td></tr>
+          <tr><td>Máy bay hành khách</td><td>250 m/s</td><td><code>8,3 × 10⁻⁷</code></td><td><code>3,5 × 10⁻¹³</code></td></tr>
+          <tr><td>Trái Đất quanh Mặt Trời</td><td>29,8 km/s</td><td><code>9,9 × 10⁻⁵</code></td><td><code>4,9 × 10⁻⁹</code></td></tr>
+          <tr><td>Vệ tinh GPS</td><td>3,87 km/s</td><td><code>1,3 × 10⁻⁵</code></td><td><code>8,3 × 10⁻¹¹</code></td></tr>
+        </table>
+        <p>Dòng cuối là con số nhỏ nhất trong bảng mà vẫn quan trọng: nhân với 86 400 giây, nó thành 7,2 micro-giây một ngày — chính là chủ đề của mục 9.</p>
+      </div>
     </div>
   </section>
 
   <!-- ═══════════════ PART 2 ═══════════════ -->
   <div class="rl-part p-fast" id="p2">
-    <p class="rl-part__k">Part 2 · Special relativity</p>
-    <h2 class="rl-part__t">What happens when things go really, really fast</h2>
-    <p class="rl-part__s">“Special” just means <b>no gravity yet</b> — straight lines and steady speeds only. Albert Einstein worked this part out in 1905, and everything in it grows out of one stubborn fact about light.</p>
+    <p class="rl-part__k t-en">Part 2 · Special relativity</p>
+    <p class="rl-part__k t-vi">Phần 2 · Thuyết tương đối hẹp</p>
+    <h2 class="rl-part__t t-en">What happens when things go really, really fast</h2>
+    <h2 class="rl-part__t t-vi">Chuyện gì xảy ra khi vật đi thật, thật nhanh</h2>
+    <p class="rl-part__s t-en">“Special” just means <b>no gravity yet</b> — straight lines and steady speeds only. Albert Einstein worked this part out in 1905, and everything in it grows out of one stubborn fact about light.</p>
+    <p class="rl-part__s t-vi">“Hẹp” chỉ có nghĩa là <b>chưa có lực hấp dẫn</b> — chỉ đường thẳng và tốc độ đều. Albert Einstein nghĩ ra phần này năm 1905, và mọi thứ trong đó đều mọc lên từ một sự thật cứng đầu về ánh sáng.</p>
   </div>
 
   <section class="rl-sec p-fast" id="s2">
     <div class="rl-sec__head">
       <div class="rl-sec__num">2</div>
-      <h3 class="rl-sec__t">Light does not care how fast you are going</h3>
+      <h3 class="rl-sec__t t-en">Light does not care how fast you are going</h3>
+      <h3 class="rl-sec__t t-vi">Ánh sáng chẳng quan tâm bạn đi nhanh cỡ nào</h3>
     </div>
 
-    <p class="rl-p">Light is fast. In <b>one single second</b>, a flash of light could go all the way around the Earth about seven and a half times. It takes light 8 minutes and 20 seconds to reach us from the Sun, and only 1.3 seconds to reach us from the Moon.</p>
-    <p class="rl-p">Now here is the part nobody expects.</p>
-    <p class="rl-p">Throw a ball forward from a moving bus and the ball goes <em>faster</em> — the bus speed plus the throw speed. That is just common sense, and for balls it is completely correct.</p>
-    <p class="rl-p">Shine a torch forward from a moving rocket and… the light does <b>not</b> go faster. It leaves at exactly the same speed as always. Chase after a beam of light as fast as you like and it still runs away from you at the full speed. Run <em>towards</em> it and it still arrives at the same speed.</p>
-    <p class="rl-p">Everyone who has ever measured the speed of light gets the same answer: <b>299,792,458 metres every second</b>. Scientists gave it the short name <b>c</b>. Nobody decided this. The universe simply works that way, and every experiment that has tried to catch it out has failed.</p>
+    <p class="rl-p t-en">Light is fast. In <b>one single second</b>, a flash of light could go all the way around the Earth about seven and a half times. It takes light 8 minutes and 20 seconds to reach us from the Sun, and only 1.3 seconds to reach us from the Moon.</p>
+    <p class="rl-p t-vi">Ánh sáng nhanh lắm. Trong <b>đúng một giây</b>, một tia chớp sáng đi vòng quanh Trái Đất được chừng bảy lần rưỡi. Ánh sáng mất 8 phút 20 giây để từ Mặt Trời tới chỗ ta, và chỉ 1,3 giây để từ Mặt Trăng tới đây.</p>
+    <p class="rl-p t-en">Now here is the part nobody expects.</p>
+    <p class="rl-p t-vi">Còn đây là chỗ không ai ngờ tới.</p>
+    <p class="rl-p t-en">Throw a ball forward from a moving bus and the ball goes <em>faster</em> — the bus speed plus the throw speed. That is just common sense, and for balls it is completely correct.</p>
+    <p class="rl-p t-vi">Ném quả bóng về phía trước từ một chiếc xe buýt đang chạy thì bóng đi <em>nhanh hơn</em> — tốc độ xe cộng tốc độ ném. Đó là lẽ thường, và với quả bóng thì hoàn toàn đúng.</p>
+    <p class="rl-p t-en">Shine a torch forward from a moving rocket and… the light does <b>not</b> go faster. It leaves at exactly the same speed as always. Chase after a beam of light as fast as you like and it still runs away from you at the full speed. Run <em>towards</em> it and it still arrives at the same speed.</p>
+    <p class="rl-p t-vi">Chiếu đèn pin về phía trước từ một tên lửa đang bay thì… ánh sáng <b>không</b> nhanh lên. Nó rời khỏi đèn với đúng tốc độ như mọi khi. Đuổi theo một tia sáng nhanh cỡ nào tuỳ bạn, nó vẫn chạy khỏi bạn với trọn tốc độ ấy. Chạy <em>ngược lại</em> phía nó, nó vẫn tới với đúng tốc độ ấy.</p>
+    <p class="rl-p t-en">Everyone who has ever measured the speed of light gets the same answer: <b>299,792,458 metres every second</b>. Scientists gave it the short name <b>c</b>. Nobody decided this. The universe simply works that way, and every experiment that has tried to catch it out has failed.</p>
+    <p class="rl-p t-vi">Ai từng đo tốc độ ánh sáng cũng ra cùng một đáp số: <b>299.792.458 mét mỗi giây</b>. Các nhà khoa học đặt cho nó cái tên ngắn là <b>c</b>. Không ai quy định điều này cả. Vũ trụ đơn giản vận hành như thế, và mọi thí nghiệm định bắt lỗi nó đều đã thất bại.</p>
 
     <figure class="rl-lab">
       <div class="rl-lab__bar">
         <span class="rl-lab__tag">Lab 2</span>
-        <span class="rl-lab__name">A torch on a rocket: what you expect vs what happens</span>
+        <span class="rl-lab__name t-en">A torch on a rocket: what you expect vs what happens</span>
+        <span class="rl-lab__name t-vi">Đèn pin trên tên lửa: điều bạn tưởng và điều thật sự xảy ra</span>
       </div>
       <div class="rl-lab__stage"><canvas id="cv-light" class="rl-canvas" aria-label="Two lanes. In the top lane light behaves like a thrown ball and gets faster as the rocket speeds up. In the bottom lane real light always crosses at the same speed."></canvas></div>
       <div class="rl-lab__ctrl">
         <div class="rl-ctrl">
-          <span class="rl-ctrl__lab">Rocket speed</span>
+          <span class="rl-ctrl__lab t-en">Rocket speed</span>
+          <span class="rl-ctrl__lab t-vi">Tốc độ tên lửa</span>
           <input type="range" class="wb-range" id="r-light" min="0" max="90" value="50" aria-label="Rocket speed as a percentage of the speed of light">
           <span class="rl-ctrl__val" id="v-light">0.50 c</span>
         </div>
       </div>
       <div class="rl-read">
-        <div class="rl-read__c"><p class="rl-read__l">If light were a ball</p><p class="rl-read__v" id="o-light-ball">1.50 c</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">What we really measure</p><p class="rl-read__v is-accent">1.00 c</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Difference this makes</p><p class="rl-read__v" id="o-light-gap">−33%</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">If light were a ball</p>
+        <p class="rl-read__l t-vi">Nếu ánh sáng là quả bóng</p><p class="rl-read__v" id="o-light-ball">1.50 c</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">What we really measure</p>
+        <p class="rl-read__l t-vi">Điều ta thật sự đo được</p><p class="rl-read__v is-accent">1.00 c</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Difference this makes</p>
+        <p class="rl-read__l t-vi">Chênh lệch do chuyện đó</p><p class="rl-read__v" id="o-light-gap">−33%</p></div>
       </div>
-      <figcaption class="rl-lab__cap">Both rockets are flying at the speed you choose. In the top lane the flash rides along and arrives early, which is what a ball would do. In the bottom lane — the real one — the flash always takes exactly the same time to cross, no matter how fast the rocket that fired it was moving. <b>Speed the rocket up and the bottom flash does not budge.</b></figcaption>
+      <figcaption class="rl-lab__cap t-en">Both rockets are flying at the speed you choose. In the top lane the flash rides along and arrives early, which is what a ball would do. In the bottom lane — the real one — the flash always takes exactly the same time to cross, no matter how fast the rocket that fired it was moving. <b>Speed the rocket up and the bottom flash does not budge.</b></figcaption>
+      <figcaption class="rl-lab__cap t-vi">Hai tên lửa đều bay với tốc độ bạn chọn. Ở làn trên, tia chớp được chở theo nên tới đích sớm — đó là điều một quả bóng sẽ làm. Ở làn dưới — làn thật — tia chớp luôn mất đúng bằng ấy thời gian để băng qua, bất kể tên lửa bắn ra nó đang bay nhanh cỡ nào. <b>Tăng tốc tên lửa và tia ở làn dưới không hề nhúc nhích.</b></figcaption>
     </figure>
 
     <div class="rl-key">
       <span class="rl-key__ico">💡</span>
-      <p class="rl-key__b">Light has one speed and everybody measures the same one. Since speed is distance divided by time, and everybody must get the same answer — something has to give. It turns out to be <b>time itself</b>.</p>
+      <p class="rl-key__b t-en">Light has one speed and everybody measures the same one. Since speed is distance divided by time, and everybody must get the same answer — something has to give. It turns out to be <b>time itself</b>.</p>
+      <p class="rl-key__b t-vi">Ánh sáng có một tốc độ, và ai đo cũng ra cùng con số ấy. Mà tốc độ là quãng đường chia cho thời gian, và ai cũng phải ra cùng một đáp số — vậy phải có thứ nhường bước. Hoá ra thứ nhường bước là <b>chính thời gian</b>.</p>
     </div>
 
     <div class="rl-detail-row">
       <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d2" type="button">
-        <span class="wb-ico">functions</span> Detail — for scientists
+        <span class="wb-ico">functions</span><span class="t-en">Detail — for scientists</span><span class="t-vi">Chi tiết — cho nhà khoa học</span>
       </button>
-      <span class="rl-detail-hint">Michelson–Morley, the two postulates, and the Lorentz transformation.</span>
+      <span class="rl-detail-hint t-en">Michelson–Morley, the two postulates, and the Lorentz transformation.</span>
+      <span class="rl-detail-hint t-vi">Michelson–Morley, hai tiên đề, và phép biến đổi Lorentz.</span>
     </div>
 
     <div class="rl-src" id="d2"
          data-title="The invariance of c and the Lorentz transformation"
-         data-sub="One experimental null result, two postulates, and a new set of coordinates">
-      <div class="rl-sci">
+         data-sub="One experimental null result, two postulates, and a new set of coordinates"
+         data-title-vi="Tính bất biến của c và phép biến đổi Lorentz"
+         data-sub-vi="Một kết quả rỗng của thí nghiệm, hai tiên đề, và một bộ toạ độ mới">
+      <div class="rl-sci t-en">
         <h5>The experiment that had no result</h5>
         <p>If light propagated in an aether, Earth's motion through it would make the round-trip light speed depend on direction. Michelson and Morley (1887) floated an interferometer with 11 m effective arms on a bed of mercury and looked for the fringe shift as they rotated it. For Earth's orbital speed the predicted shift was about <b>0.4 fringes</b>; the measured upper bound was about <b>0.01 fringes</b>. Repeated with growing precision ever since — most recently with cryogenic optical resonators — the anisotropy is bounded below one part in $10^{17}$.</p>
 
@@ -451,68 +552,116 @@ section[id] { scroll-margin-top: 78px; }
           <li><b>By definition.</b> Since the 17th CGPM in 1983 the metre <em>is defined</em> as the distance light travels in $1/299\,792\,458$ of a second. $c$ is now an exact number by convention, and measuring "the speed of light" has become measuring a length standard.</li>
         </ul>
       </div>
+      <div class="rl-sci t-vi">
+        <h5>Thí nghiệm không cho ra kết quả nào</h5>
+        <p>Nếu ánh sáng lan truyền trong ê-te, chuyển động của Trái Đất qua ê-te sẽ làm tốc độ ánh sáng khứ hồi phụ thuộc vào hướng. Michelson và Morley (1887) thả nổi một giao thoa kế có cánh tay hiệu dụng 11 m trên một bể thuỷ ngân rồi tìm độ dịch vân khi xoay nó. Với tốc độ quỹ đạo của Trái Đất, độ dịch tiên đoán là khoảng <b>0,4 vân</b>; cận trên đo được là khoảng <b>0,01 vân</b>. Lặp lại với độ chính xác ngày càng cao từ đó tới nay — gần đây nhất bằng hốc cộng hưởng quang học đông lạnh — tính bất đẳng hướng bị chặn dưới một phần $10^{17}$.</p>
+
+        <h5>Hai tiên đề của Einstein (1905)</h5>
+        <ul>
+          <li><b>T1 — Tương đối.</b> Các định luật vật lý có cùng một dạng trong mọi hệ quán tính. Lần này không chỉ cơ học: <em>toàn bộ</em> vật lý, kể cả điện từ.</li>
+          <li><b>T2 — Bất biến của $c$.</b> Ánh sáng lan truyền trong chân không với tốc độ $c$ không phụ thuộc chuyển động của nguồn, cũng không phụ thuộc người quan sát.</li>
+        </ul>
+        <p>T2 không phải một giả thiết bắt thêm vào; nó là thứ T1 ép ra một khi bạn chấp nhận Maxwell, vì $c = 1/\sqrt{\varepsilon_0\mu_0}$ chỉ chứa hằng số của chân không, không có tham số vận tốc nào. Giữ cả hai tiên đề thì bạn mất phép biến đổi Galilei.</p>
+
+        <h5>Thứ thay thế</h5>
+        <p>Phép biến đổi giữ nguyên phương trình sóng — và giữ nguyên đại lượng $c^2t^2 - x^2 - y^2 - z^2$ — là <b>phép đẩy Lorentz</b>:</p>
+        <div class="rl-eq">$$x' = \gamma\left(x - vt\right), \qquad t' = \gamma\left(t - \frac{vx}{c^{2}}\right), \qquad \gamma = \frac{1}{\sqrt{1 - v^{2}/c^{2}}}$$
+          <span class="rl-eq__note">$y' = y$ và $z' = z$: chỉ phương đẩy bị ảnh hưởng. Cho $c \to \infty$ thì nó sập về đúng $x' = x - vt,\ t' = t$.</span></div>
+        <p>Phương trình thứ hai mới là cái lạ. Nó trộn vị trí vào thời gian, nghĩa là <b>tính đồng thời không được chia sẻ</b>: hai biến cố ở hai chỗ khác nhau mà đồng thời trong $S$ thì lệch nhau $\Delta t' = -\gamma v \Delta x / c^{2}$ trong $S'$. Gần như mọi nghịch lý biểu kiến của thuyết tương đối hẹp đều là số hạng này bị bỏ quên.</p>
+
+        <h5>Vận tốc không còn cộng thẳng</h5>
+        <div class="rl-eq">$$u = \frac{u' + v}{1 + u'v/c^{2}}$$
+          <span class="rl-eq__note">Đặt $u' = c$: tử số là $c + v$, mẫu số là $1 + v/c$, thương đúng bằng $c$. Tính bất biến của tốc độ ánh sáng nằm sẵn trong phép tính.</span></div>
+        <p>Hai vật lao vào nhau, mỗi vật $0,9c$ trong hệ của bạn, khép lại khoảng cách với nhịp $1,8c$ <em>trong toạ độ của bạn</em> — một tốc độ tiếp cận hợp lệ — nhưng mỗi vật đo tốc độ của vật kia là $1,8c/1,81 = 0,994c$. Không gì vượt qua ánh sáng.</p>
+
+        <h5>T2 đã được kiểm tới đâu?</h5>
+        <ul>
+          <li><b>Không phụ thuộc nguồn.</b> Alväger và cộng sự (1964) đo tốc độ tia $\gamma$ phát ra từ meson $\pi^{0}$ đang phân rã ở $0,99975c$ và thấy $c$ không đổi trong phạm vi $10^{-4}$. Nếu ánh sáng mang theo tốc độ của nguồn, những photon đó đã tới sớm hơn rất nhiều.</li>
+          <li><b>Thiên văn.</b> Lập luận sao đôi của de Sitter: nếu ánh sáng phát ra mang theo vận tốc nguồn, các sao đang quay trên quỹ đạo sẽ trông như chuyển động theo những cách bất khả và sẽ xuất hiện nhiều ảnh. Điều đó không xảy ra.</li>
+          <li><b>Theo định nghĩa.</b> Từ Đại hội CGPM lần thứ 17 năm 1983, mét <em>được định nghĩa</em> là quãng đường ánh sáng đi trong $1/299\,792\,458$ giây. $c$ giờ là một con số đúng theo quy ước, và “đo tốc độ ánh sáng” đã trở thành đo một chuẩn độ dài.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <section class="rl-sec p-fast" id="s3">
     <div class="rl-sec__head">
       <div class="rl-sec__num">3</div>
-      <h3 class="rl-sec__t">A clock made of light — and why moving clocks fall behind</h3>
+      <h3 class="rl-sec__t t-en">A clock made of light — and why moving clocks fall behind</h3>
+      <h3 class="rl-sec__t t-vi">Một chiếc đồng hồ làm bằng ánh sáng — và vì sao đồng hồ đang chạy lại tụt lại</h3>
     </div>
 
-    <p class="rl-p">Let us build the simplest clock in the universe. Two mirrors, one facing the other, and a single tiny flash of light bouncing between them. Every time the flash arrives at a mirror, that is one <b>tick</b>.</p>
-    <p class="rl-p">Tick. Tick. Tick. It is a perfect clock, because light always travels at the same speed, so every tick takes exactly the same time.</p>
-    <p class="rl-p">Now put that clock on a rocket and fly it past you.</p>
-    <p class="rl-p">The pilot on the rocket sees nothing unusual. To her, the flash goes straight up and straight down, just like always.</p>
-    <p class="rl-p">But <b>you</b> see something different. While the flash is travelling from the bottom mirror to the top one, the whole rocket slides forward. So from where you stand, the flash does not go straight up — it goes up <em>and</em> sideways, along a longer slanted path.</p>
+    <p class="rl-p t-en">Let us build the simplest clock in the universe. Two mirrors, one facing the other, and a single tiny flash of light bouncing between them. Every time the flash arrives at a mirror, that is one <b>tick</b>.</p>
+    <p class="rl-p t-vi">Ta hãy dựng chiếc đồng hồ đơn giản nhất vũ trụ. Hai tấm gương quay mặt vào nhau, và một tia chớp sáng tí xíu nảy qua nảy lại giữa chúng. Mỗi lần tia chớp chạm tới một tấm gương là một <b>nhịp</b>.</p>
+    <p class="rl-p t-en">Tick. Tick. Tick. It is a perfect clock, because light always travels at the same speed, so every tick takes exactly the same time.</p>
+    <p class="rl-p t-vi">Tích. Tích. Tích. Đó là chiếc đồng hồ hoàn hảo, vì ánh sáng luôn đi cùng một tốc độ, nên nhịp nào cũng dài đúng bằng nhịp nào.</p>
+    <p class="rl-p t-en">Now put that clock on a rocket and fly it past you.</p>
+    <p class="rl-p t-vi">Bây giờ đặt chiếc đồng hồ ấy lên một tên lửa, rồi cho nó bay ngang qua bạn.</p>
+    <p class="rl-p t-en">The pilot on the rocket sees nothing unusual. To her, the flash goes straight up and straight down, just like always.</p>
+    <p class="rl-p t-vi">Cô phi công trên tên lửa chẳng thấy gì lạ. Với cô, tia chớp vẫn đi thẳng lên rồi thẳng xuống, y như mọi khi.</p>
+    <p class="rl-p t-en">But <b>you</b> see something different. While the flash is travelling from the bottom mirror to the top one, the whole rocket slides forward. So from where you stand, the flash does not go straight up — it goes up <em>and</em> sideways, along a longer slanted path.</p>
+    <p class="rl-p t-vi">Nhưng <b>bạn</b> thấy khác. Trong lúc tia chớp đi từ gương dưới lên gương trên, cả con tên lửa đã trượt về phía trước. Nên từ chỗ bạn đứng, tia chớp không đi thẳng lên — nó đi lên <em>và</em> đi ngang, theo một đường xiên dài hơn.</p>
 
     <div class="rl-story">
-      <h4>Longer path, same speed, slower tick</h4>
-      <p class="rl-p">The flash has further to travel. It is not allowed to go any faster, because light only has one speed. So the tick <b>takes longer</b>.</p>
-      <p class="rl-p">The moving clock ticks more slowly. Not because it is broken, not because it got shaken. Because time really does run slower for things that move fast. Scientists call this <b>time dilation</b> — “dilation” just means stretching.</p>
+      <h4><span class="t-en">Longer path, same speed, slower tick</span><span class="t-vi">Đường dài hơn, tốc độ vẫn thế, nhịp chậm lại</span></h4>
+      <p class="rl-p t-en">The flash has further to travel. It is not allowed to go any faster, because light only has one speed. So the tick <b>takes longer</b>.</p>
+      <p class="rl-p t-vi">Tia chớp phải đi xa hơn. Nó không được phép đi nhanh hơn, vì ánh sáng chỉ có một tốc độ. Vậy nên mỗi nhịp <b>lâu hơn</b>.</p>
+      <p class="rl-p t-en">The moving clock ticks more slowly. Not because it is broken, not because it got shaken. Because time really does run slower for things that move fast. Scientists call this <b>time dilation</b> — “dilation” just means stretching.</p>
+      <p class="rl-p t-vi">Chiếc đồng hồ đang bay đập chậm hơn. Không phải vì nó hỏng, không phải vì nó bị xóc. Mà vì thời gian thật sự trôi chậm hơn với những vật đi nhanh. Các nhà khoa học gọi đó là <b>sự giãn thời gian</b> — “giãn” chỉ có nghĩa là kéo dài ra.</p>
     </div>
 
     <figure class="rl-lab">
       <div class="rl-lab__bar">
         <span class="rl-lab__tag">Lab 3</span>
-        <span class="rl-lab__name">Two light clocks — one parked, one flying</span>
+        <span class="rl-lab__name t-en">Two light clocks — one parked, one flying</span>
+        <span class="rl-lab__name t-vi">Hai đồng hồ ánh sáng — một đứng yên, một đang bay</span>
       </div>
       <div class="rl-lab__stage"><canvas id="cv-clock" class="rl-canvas rl-canvas--tall" aria-label="Two light clocks. In the parked clock the flash bounces straight up and down. In the flying clock it traces a long zig-zag, and its tick counter falls behind."></canvas></div>
       <div class="rl-lab__ctrl">
         <div class="rl-ctrl">
-          <span class="rl-ctrl__lab">Rocket speed</span>
+          <span class="rl-ctrl__lab t-en">Rocket speed</span>
+          <span class="rl-ctrl__lab t-vi">Tốc độ tên lửa</span>
           <input type="range" class="wb-range" id="r-clock" min="0" max="99" value="80" aria-label="Rocket speed as a percentage of the speed of light">
           <span class="rl-ctrl__val" id="v-clock">0.80 c</span>
         </div>
         <button class="wb-btn wb-btn--secondary wb-btn--sm" id="b-clock-reset" type="button">
-          <span class="wb-ico">restart_alt</span> Start both again
+          <span class="wb-ico">restart_alt</span><span class="t-en">Start both again</span><span class="t-vi">Cho cả hai chạy lại</span>
         </button>
       </div>
       <div class="rl-read">
-        <div class="rl-read__c"><p class="rl-read__l">Parked clock ticks</p><p class="rl-read__v" id="o-clock-a">0</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Flying clock ticks</p><p class="rl-read__v is-accent" id="o-clock-b">0</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Stretch factor</p><p class="rl-read__v" id="o-clock-g">1.67×</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">1 rocket second is</p><p class="rl-read__v" id="o-clock-s">1.67 s</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Parked clock ticks</p>
+        <p class="rl-read__l t-vi">Nhịp đồng hồ đứng yên</p><p class="rl-read__v" id="o-clock-a">0</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Flying clock ticks</p>
+        <p class="rl-read__l t-vi">Nhịp đồng hồ đang bay</p><p class="rl-read__v is-accent" id="o-clock-b">0</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Stretch factor</p>
+        <p class="rl-read__l t-vi">Hệ số giãn</p><p class="rl-read__v" id="o-clock-g">1.67×</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">1 rocket second is</p>
+        <p class="rl-read__l t-vi">1 giây trên tên lửa bằng</p><p class="rl-read__v" id="o-clock-s">1.67 s</p></div>
       </div>
-      <figcaption class="rl-lab__cap">Both flashes move at exactly the same speed — watch them. The flying one simply has a longer, slanted road to travel, so its counter falls behind. At <b>0.87 c</b> the flying clock ticks half as often. Push the slider to 0.99 c and it nearly stops.</figcaption>
+      <figcaption class="rl-lab__cap t-en">Both flashes move at exactly the same speed — watch them. The flying one simply has a longer, slanted road to travel, so its counter falls behind. At <b>0.87 c</b> the flying clock ticks half as often. Push the slider to 0.99 c and it nearly stops.</figcaption>
+      <figcaption class="rl-lab__cap t-vi">Hai tia chớp đi với đúng một tốc độ — bạn cứ nhìn mà xem. Tia đang bay chỉ đơn giản là có một con đường xiên dài hơn phải đi, nên bộ đếm của nó tụt lại. Ở <b>0,87 c</b>, đồng hồ đang bay đập chậm bằng một nửa. Đẩy thanh trượt lên 0,99 c thì nó gần như đứng lại.</figcaption>
     </figure>
 
     <div class="rl-key">
       <span class="rl-key__ico">⏳</span>
-      <p class="rl-key__b">This is real and it has been measured. Tiny particles called <b>muons</b> rain down on us from the sky. They fall apart so quickly that they should never reach the ground — but they move so fast that their clocks run slow, and they arrive anyway.</p>
+      <p class="rl-key__b t-en">This is real and it has been measured. Tiny particles called <b>muons</b> rain down on us from the sky. They fall apart so quickly that they should never reach the ground — but they move so fast that their clocks run slow, and they arrive anyway.</p>
+      <p class="rl-key__b t-vi">Điều này có thật và đã được đo. Những hạt tí hon tên là <b>muon</b> rơi xuống chúng ta từ bầu trời. Chúng rã ra nhanh tới mức lẽ ra không bao giờ tới nổi mặt đất — nhưng vì đi quá nhanh nên đồng hồ của chúng chạy chậm, và chúng vẫn tới nơi.</p>
     </div>
 
     <div class="rl-detail-row">
       <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d3" type="button">
-        <span class="wb-ico">functions</span> Detail — for scientists
+        <span class="wb-ico">functions</span><span class="t-en">Detail — for scientists</span><span class="t-vi">Chi tiết — cho nhà khoa học</span>
       </button>
-      <span class="rl-detail-hint">The light-clock derivation of γ, proper time, and four experiments.</span>
+      <span class="rl-detail-hint t-en">The light-clock derivation of γ, proper time, and four experiments.</span>
+      <span class="rl-detail-hint t-vi">Dẫn γ từ đồng hồ ánh sáng, thời gian riêng, và bốn thí nghiệm.</span>
     </div>
 
     <div class="rl-src" id="d3"
          data-title="Time dilation, proper time and the invariant interval"
-         data-sub="Deriving γ from the light clock, then checking it against the laboratory">
-      <div class="rl-sci">
+         data-sub="Deriving γ from the light clock, then checking it against the laboratory"
+         data-title-vi="Giãn thời gian, thời gian riêng và khoảng bất biến"
+         data-sub-vi="Dẫn γ từ đồng hồ ánh sáng, rồi đối chiếu với phòng thí nghiệm">
+      <div class="rl-sci t-en">
         <h5>The derivation, in full</h5>
         <p>Let the mirrors be separated by $L$ transverse to the motion — transverse, so that no length contraction enters and the argument stays honest. In the clock's rest frame a round trip takes</p>
         <div class="rl-eq">$$\Delta t_{0} = \frac{2L}{c}$$</div>
@@ -541,57 +690,101 @@ section[id] { scroll-margin-top: 78px; }
         <h5>Worked number: the muon</h5>
         <p>A muon has a mean proper lifetime $\tau = 2.197\ \mu\mathrm{s}$, so travelling at $0.98c$ it would cover only $c\tau \approx 646$ m before decaying if time were absolute — nowhere near the 15 km of atmosphere. With $\gamma = (1 - 0.98^{2})^{-1/2} = 5.03$, its lifetime in the ground frame is 11.0 $\mu$s and its mean flight distance becomes 3.2 km. In the muon's own frame nothing about its lifetime changes; instead the atmosphere is contracted to 3 km. <b>Both descriptions give the same survival count</b> — which is the point.</p>
       </div>
+      <div class="rl-sci t-vi">
+        <h5>Dẫn đầy đủ</h5>
+        <p>Cho hai gương cách nhau $L$ theo phương vuông góc với chuyển động — vuông góc, để không có sự co độ dài chen vào và lập luận giữ được tính trung thực. Trong hệ đứng yên của đồng hồ, một chu trình khứ hồi mất</p>
+        <div class="rl-eq">$$\Delta t_{0} = \frac{2L}{c}$$</div>
+        <p>Trong hệ mà đồng hồ chuyển động với vận tốc $v$, ánh sáng đi hết hai cạnh huyền trong khi đồng hồ tiến được $v\,\Delta t$. Áp Pythagoras cho nửa chu trình:</p>
+        <div class="rl-eq">$$\left(\frac{c\,\Delta t}{2}\right)^{2} = L^{2} + \left(\frac{v\,\Delta t}{2}\right)^{2}$$</div>
+        <p>Giải ra $\Delta t$ rồi thay $\Delta t_0 = 2L/c$:</p>
+        <div class="rl-eq">$$\Delta t = \frac{2L}{\sqrt{c^{2} - v^{2}}} = \frac{2L/c}{\sqrt{1 - v^{2}/c^{2}}} = \gamma\,\Delta t_{0}$$
+          <span class="rl-eq__note">$L$ triệt tiêu: kết quả là một tính chất của không-thời gian, không phải của thiết bị. Mọi đồng hồ — caesium, sinh học, phóng xạ — đều buộc phải nhất trí, nếu không bạn có thể đem nó so với đồng hồ ánh sáng để phát hiện chuyển động đều của chính mình, tức là vi phạm T1.</span></div>
+
+        <h5>Thời gian riêng</h5>
+        <p>$\Delta t_0$ chính là <b>thời gian riêng</b> $\Delta\tau$: thời gian mà một chiếc đồng hồ mang theo dọc đường thế giới đọc được. Dạng vi phân:</p>
+        <div class="rl-eq">$$d\tau^{2} = dt^{2}\left(1 - \frac{v^{2}}{c^{2}}\right), \qquad \tau = \int \sqrt{1 - \frac{v^{2}(t)}{c^{2}}}\; dt$$</div>
+        <p>Nó sinh ra từ <b>khoảng bất biến</b>, đại lượng mà mọi người quan sát quán tính đều nhất trí ở chỗ họ đã không còn nhất trí về độ dài hay khoảng thời gian:</p>
+        <div class="rl-eq">$$ds^{2} = -c^{2}dt^{2} + dx^{2} + dy^{2} + dz^{2}, \qquad d\tau = \frac{\sqrt{-ds^{2}}}{c}$$</div>
+        <p>Chú ý tính đối xứng hay làm người ta vấp: mỗi người quan sát quán tính đều thấy đồng hồ của <em>người kia</em> chạy chậm, và cả hai đều đúng, vì họ đang so những cặp biến cố khác nhau bằng những đường đồng thời khác nhau. Muốn có một phép so bất đối xứng, tuyệt đối, thì hai đường thế giới phải gặp nhau hai lần — đó là mục 5.</p>
+
+        <h5>Các phép đo</h5>
+        <table class="rl-num">
+          <tr><th>Kiểm chứng</th><th>Bố trí</th><th>Kết quả</th></tr>
+          <tr><td>Rossi &amp; Hall, 1941</td><td>Muon tia vũ trụ, đỉnh Mount Washington (1917 m) so với mực nước biển</td><td>Tỉ lệ sống sót cao hơn hẳn tiên đoán phi tương đối tính; $\tau = 2{,}197\ \mu$s lúc đứng yên, nhưng $\gamma \approx 5$ khi bay</td></tr>
+          <tr><td>Bailey <em>và cộng sự</em>, CERN 1977</td><td>Muon lưu giữ ở $\gamma = 29{,}3$ trong một vòng từ</td><td>Thời gian sống đã giãn khớp với $\gamma\tau$ trong khoảng 0,1%</td></tr>
+          <tr><td>Hafele &amp; Keating, 1971</td><td>Đồng hồ caesium bay vòng quanh Trái Đất theo cả hai chiều</td><td>Chiều đông $-59 \pm 10$ ns, chiều tây $+273 \pm 7$ ns — đúng như tiên đoán khi tính cả số hạng hấp dẫn</td></tr>
+          <tr><td>Chou <em>và cộng sự</em>, NIST 2010</td><td>Đồng hồ quang học Al⁺, độ ổn định tương đối $\sim10^{-17}$</td><td>Phân giải được giãn thời gian do vận tốc ở tốc độ đi bộ (&lt; 10 m/s); phân giải được dịch chuyển hấp dẫn qua 33 cm độ cao</td></tr>
+        </table>
+
+        <h5>Ví dụ tính bằng số: hạt muon</h5>
+        <p>Muon có thời gian sống riêng trung bình $\tau = 2{,}197\ \mu\mathrm{s}$, nên khi bay ở $0{,}98c$ nó chỉ đi được $c\tau \approx 646$ m trước khi phân rã nếu thời gian là tuyệt đối — chẳng thấm vào đâu so với 15 km khí quyển. Với $\gamma = (1 - 0{,}98^{2})^{-1/2} = 5{,}03$, thời gian sống của nó trong hệ mặt đất thành 11,0 $\mu$s và quãng đường bay trung bình thành 3,2 km. Trong hệ của chính muon thì thời gian sống chẳng đổi chút nào; thay vào đó, khí quyển bị co lại còn 3 km. <b>Hai cách mô tả cho cùng một số hạt sống sót</b> — và đó mới là điểm chính.</p>
+      </div>
     </div>
   </section>
 
   <section class="rl-sec p-fast" id="s4">
     <div class="rl-sec__head">
       <div class="rl-sec__num">4</div>
-      <h3 class="rl-sec__t">Fast things get shorter — and impossible to push any faster</h3>
+      <h3 class="rl-sec__t t-en">Fast things get shorter — and impossible to push any faster</h3>
+      <h3 class="rl-sec__t t-vi">Vật đi nhanh thì ngắn lại — và đẩy cho nhanh thêm thì không nổi</h3>
     </div>
 
-    <p class="rl-p">Slow clocks are not the only surprise. A rocket flying past you at nearly the speed of light also looks <b>squashed</b> — shorter from nose to tail than it was sitting on the launch pad. Not squeezed by anything. Space itself is measured differently when you are moving through it.</p>
-    <p class="rl-p">The pilot inside notices nothing. Her rocket is the same length it always was, her ruler is the same, her sandwich is the same. It is only <em>you</em>, watching it fly past, who measures it short. And she would say the same about you.</p>
-    <p class="rl-p">There is one more twist, and it is the reason the speed of light is a wall and not a target. The faster something already goes, the <b>harder it becomes to speed it up any more</b>. A push that would easily add ten kilometres per hour to a parked car adds almost nothing to a rocket already at 99% of light speed.</p>
-    <p class="rl-p">To actually <em>reach</em> the speed of light, you would need an endless amount of push. Not a very large amount — an endless one. That is why nothing that has any weight ever gets there. Light itself can travel at light speed only because light weighs nothing at all.</p>
+    <p class="rl-p t-en">Slow clocks are not the only surprise. A rocket flying past you at nearly the speed of light also looks <b>squashed</b> — shorter from nose to tail than it was sitting on the launch pad. Not squeezed by anything. Space itself is measured differently when you are moving through it.</p>
+    <p class="rl-p t-vi">Đồng hồ chạy chậm không phải bất ngờ duy nhất. Một tên lửa bay ngang qua bạn với tốc độ gần bằng ánh sáng còn trông <b>bị ép ngắn lại</b> — ngắn hơn tính từ mũi tới đuôi so với lúc nó còn nằm ở bệ phóng. Không phải bị vật gì bóp cả. Chính không gian được đo khác đi khi bạn đang đi xuyên qua nó.</p>
+    <p class="rl-p t-en">The pilot inside notices nothing. Her rocket is the same length it always was, her ruler is the same, her sandwich is the same. It is only <em>you</em>, watching it fly past, who measures it short. And she would say the same about you.</p>
+    <p class="rl-p t-vi">Cô phi công bên trong chẳng thấy gì lạ. Tên lửa của cô vẫn dài đúng như xưa nay, cây thước của cô vẫn thế, ổ bánh mì của cô vẫn thế. Chỉ có <em>bạn</em>, người đứng nhìn nó bay qua, mới đo ra nó ngắn. Và cô ấy cũng sẽ nói y như vậy về bạn.</p>
+    <p class="rl-p t-en">There is one more twist, and it is the reason the speed of light is a wall and not a target. The faster something already goes, the <b>harder it becomes to speed it up any more</b>. A push that would easily add ten kilometres per hour to a parked car adds almost nothing to a rocket already at 99% of light speed.</p>
+    <p class="rl-p t-vi">Còn một khúc quanh nữa, và đó là lý do tốc độ ánh sáng là một bức tường chứ không phải một cái đích. Thứ gì đã đi nhanh sẵn thì <b>càng khó đẩy cho nhanh thêm</b>. Một cú đẩy thừa sức cộng thêm mười ki-lô-mét mỗi giờ cho chiếc ô tô đang đỗ thì gần như chẳng thêm được gì cho tên lửa đã ở 99% tốc độ ánh sáng.</p>
+    <p class="rl-p t-en">To actually <em>reach</em> the speed of light, you would need an endless amount of push. Not a very large amount — an endless one. That is why nothing that has any weight ever gets there. Light itself can travel at light speed only because light weighs nothing at all.</p>
+    <p class="rl-p t-vi">Muốn thật sự <em>chạm tới</em> tốc độ ánh sáng, bạn cần một lượng đẩy vô tận. Không phải rất lớn — mà vô tận. Đó là lý do không một thứ gì có khối lượng tới được đó. Bản thân ánh sáng đi được với tốc độ ánh sáng chỉ vì ánh sáng chẳng nặng chút nào.</p>
 
     <figure class="rl-lab">
       <div class="rl-lab__bar">
         <span class="rl-lab__tag">Lab 4</span>
-        <span class="rl-lab__name">The squashed rocket and the wall at the end of the speed dial</span>
+        <span class="rl-lab__name t-en">The squashed rocket and the wall at the end of the speed dial</span>
+        <span class="rl-lab__name t-vi">Tên lửa bị ép ngắn, và bức tường ở cuối bảng tốc độ</span>
       </div>
       <div class="rl-lab__stage"><canvas id="cv-fast" class="rl-canvas" aria-label="A rocket becomes shorter as its speed rises, while a bar showing the push needed climbs towards a wall at the speed of light."></canvas></div>
       <div class="rl-lab__ctrl">
         <div class="rl-ctrl">
-          <span class="rl-ctrl__lab">Rocket speed</span>
+          <span class="rl-ctrl__lab t-en">Rocket speed</span>
+          <span class="rl-ctrl__lab t-vi">Tốc độ tên lửa</span>
           <input type="range" class="wb-range" id="r-fast" min="0" max="995" value="800" aria-label="Rocket speed as a fraction of the speed of light">
           <span class="rl-ctrl__val" id="v-fast">0.800 c</span>
         </div>
       </div>
       <div class="rl-read">
-        <div class="rl-read__c"><p class="rl-read__l">Length you measure</p><p class="rl-read__v is-accent" id="o-fast-len">60%</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Clock slowed by</p><p class="rl-read__v" id="o-fast-gam">1.67×</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Push spent so far (× mc²)</p><p class="rl-read__v" id="o-fast-e">0.67×</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Length you measure</p>
+        <p class="rl-read__l t-vi">Chiều dài bạn đo được</p><p class="rl-read__v is-accent" id="o-fast-len">60%</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Clock slowed by</p>
+        <p class="rl-read__l t-vi">Đồng hồ chậm đi</p><p class="rl-read__v" id="o-fast-gam">1.67×</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Push spent so far (× mc²)</p>
+        <p class="rl-read__l t-vi">Sức đẩy đã tốn (× mc²)</p><p class="rl-read__v" id="o-fast-e">0.67×</p></div>
       </div>
-      <figcaption class="rl-lab__cap">Drag the slider all the way to the right. The rocket flattens towards nothing and the bar shoots up off the top of the chart — but it <b>never</b> touches the wall. That wall is the speed of light, and it is not a rule anybody made up. It is what the arithmetic does.</figcaption>
+      <figcaption class="rl-lab__cap t-en">Drag the slider all the way to the right. The rocket flattens towards nothing and the bar shoots up off the top of the chart — but it <b>never</b> touches the wall. That wall is the speed of light, and it is not a rule anybody made up. It is what the arithmetic does.</figcaption>
+      <figcaption class="rl-lab__cap t-vi">Kéo thanh trượt hết sang phải. Tên lửa bẹp dần về không và đường biểu diễn vọt lên khỏi đỉnh biểu đồ — nhưng nó <b>không bao giờ</b> chạm tới bức tường. Bức tường đó là tốc độ ánh sáng, và nó không phải một luật do ai đặt ra. Nó là điều mà phép tính tự làm.</figcaption>
     </figure>
 
     <div class="rl-key">
       <span class="rl-key__ico">🧱</span>
-      <p class="rl-key__b">The speed of light is not a speed limit sign. It is more like the edge of a map: you can get closer and closer forever, and never arrive.</p>
+      <p class="rl-key__b t-en">The speed of light is not a speed limit sign. It is more like the edge of a map: you can get closer and closer forever, and never arrive.</p>
+      <p class="rl-key__b t-vi">Tốc độ ánh sáng không phải một tấm biển giới hạn tốc độ. Nó giống mép bản đồ hơn: bạn có thể tiến lại gần mãi mãi, mà không bao giờ tới nơi.</p>
     </div>
 
     <div class="rl-detail-row">
       <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d4" type="button">
-        <span class="wb-ico">functions</span> Detail — for scientists
+        <span class="wb-ico">functions</span><span class="t-en">Detail — for scientists</span><span class="t-vi">Chi tiết — cho nhà khoa học</span>
       </button>
-      <span class="rl-detail-hint">Length contraction, relativistic momentum, and E = γmc².</span>
+      <span class="rl-detail-hint t-en">Length contraction, relativistic momentum, and E = γmc².</span>
+      <span class="rl-detail-hint t-vi">Sự co độ dài, động lượng tương đối tính, và E = γmc².</span>
     </div>
 
     <div class="rl-src" id="d4"
          data-title="Length contraction, momentum and energy"
-         data-sub="Why γ appears in three places at once, and why it forbids the boundary">
-      <div class="rl-sci">
+         data-sub="Why γ appears in three places at once, and why it forbids the boundary"
+         data-title-vi="Sự co độ dài, động lượng và năng lượng"
+         data-sub-vi="Vì sao γ xuất hiện ở ba chỗ cùng lúc, và vì sao nó cấm cửa cái biên">
+      <div class="rl-sci t-en">
         <h5>Contraction</h5>
         <p>A rod of rest length $L_{0}$ lying along the boost direction is measured, by a frame in which it moves at $v$, to have length</p>
         <div class="rl-eq">$$L = \frac{L_{0}}{\gamma} = L_{0}\sqrt{1 - \frac{v^{2}}{c^{2}}}$$</div>
@@ -614,63 +807,103 @@ section[id] { scroll-margin-top: 78px; }
         <h5>How close do we actually get?</h5>
         <p>LHC protons at 6.8 TeV have $\gamma = E/mc^{2} = 6800/0.938 \approx 7250$. Since $1 - \beta \approx 1/(2\gamma^{2})$, that is $\beta \approx 0.999\,999\,990$ — the protons lag light by roughly <b>3 metres per second</b>, after being pushed by the largest machine ever built. The last decimal places are expensive.</p>
       </div>
+      <div class="rl-sci t-vi">
+        <h5>Sự co</h5>
+        <p>Một thanh có độ dài riêng $L_{0}$ nằm dọc phương đẩy sẽ được một hệ, trong đó nó chuyển động với vận tốc $v$, đo ra độ dài</p>
+        <div class="rl-eq">$$L = \frac{L_{0}}{\gamma} = L_{0}\sqrt{1 - \frac{v^{2}}{c^{2}}}$$</div>
+        <p>“Đo” ở đây bắt buộc phải hiểu là: ghi lại hai đầu thanh <em>cùng một lúc trong hệ đang đo</em>. Vì tính đồng thời phụ thuộc hệ, người quan sát kia sẽ nói bạn ghi hai đầu vào hai thời điểm khác nhau — và đó chính là cách hai lời kể giữ được tính nhất quán. Kích thước theo phương ngang không đổi, nên một quả cầu bay nhanh là một phỏng cầu dẹt trong toạ độ của bạn. <em>Ảnh chụp</em> của nó lại là chuyện khác: thời gian ánh sáng đi từ các phần khác nhau của vật cộng thêm một hiệu ứng quay biểu kiến — hiệu ứng Penrose–Terrell — nên quả cầu bay nhanh vẫn chụp ra một hình tròn.</p>
+
+        <h5>Động lượng và năng lượng</h5>
+        <p>Đòi hỏi bảo toàn động lượng phải đúng trong mọi hệ quán tính buộc phải thay định nghĩa Newton:</p>
+        <div class="rl-eq">$$\mathbf{p} = \gamma m \mathbf{v}, \qquad E = \gamma m c^{2}, \qquad E_{k} = (\gamma - 1)mc^{2}$$</div>
+        <p>Ở đây $m$ là khối lượng bất biến (khối lượng nghỉ). Thói quen cũ viết $m_{\text{tđ}} = \gamma m$ rồi bảo “khối lượng tăng theo tốc độ” thì tái tạo được $\mathbf{p} = m_\text{tđ}\mathbf{v}$ nhưng làm hỏng $\mathbf{F} = m_\text{tđ}\mathbf{a}$, vì với một cú đẩy dọc thì hệ số dùng được là $\gamma^{3}m$, không phải $\gamma m$. Cứ giữ $m$ bất biến và đặt $\gamma$ vào đúng chỗ của nó.</p>
+        <p>Khai triển cho $v \ll c$ vừa lấy lại giới hạn cổ điển, vừa tặng thêm năng lượng nghỉ:</p>
+        <div class="rl-eq">$$E = mc^{2}\left(1 + \tfrac{1}{2}\beta^{2} + \tfrac{3}{8}\beta^{4} + \cdots\right) = \underbrace{mc^{2}}_{\text{nghỉ}} + \underbrace{\tfrac{1}{2}mv^{2}}_{\text{Newton}} + \cdots$$</div>
+
+        <h5>Hệ thức năng lượng–động lượng, và vì sao không chạm tới $c$</h5>
+        <div class="rl-eq">$$E^{2} = (pc)^{2} + (mc^{2})^{2}$$
+          <span class="rl-eq__note">Với $m = 0$ nó rút về $E = pc$, chỉ thoả mãn được bởi thứ đang đi với đúng tốc độ $c$. Hạt không khối lượng không có quyền chọn tốc độ.</span></div>
+        <p>Với $m \neq 0$, $E = \gamma mc^{2} \to \infty$ khi $v \to c$. Chạm tới $c$ đòi hỏi công vô hạn — không phải một bài toán kỹ thuật lớn, mà là một điều bất khả về nguyên tắc. Cụ thể, tăng tốc 1 kg lên $0{,}99c$ cần</p>
+        <div class="rl-eq">$$E_{k} = (\gamma - 1)mc^{2} = (7{,}089 - 1)(1\ \mathrm{kg})c^{2} \approx 5{,}5 \times 10^{17}\ \mathrm{J}$$
+          <span class="rl-eq__note">Xấp xỉ sản lượng cả năm của hai mươi nhà máy điện 1 GW — để đẩy đúng một ki-lô-gam, mà vẫn còn thiếu 1% quãng đường.</span></div>
+
+        <h5>Thực tế ta tới gần cỡ nào?</h5>
+        <p>Proton ở LHC năng lượng 6,8 TeV có $\gamma = E/mc^{2} = 6800/0{,}938 \approx 7250$. Vì $1 - \beta \approx 1/(2\gamma^{2})$, ta có $\beta \approx 0{,}999\,999\,990$ — các proton chậm hơn ánh sáng chừng <b>3 mét mỗi giây</b>, sau khi được đẩy bởi cỗ máy lớn nhất từng được xây. Mấy chữ số thập phân cuối cùng rất đắt.</p>
+      </div>
     </div>
   </section>
 
   <section class="rl-sec p-fast" id="s5">
     <div class="rl-sec__head">
       <div class="rl-sec__num">5</div>
-      <h3 class="rl-sec__t">The twin who came home younger</h3>
+      <h3 class="rl-sec__t t-en">The twin who came home younger</h3>
+      <h3 class="rl-sec__t t-vi">Người chị em trở về trẻ hơn</h3>
     </div>
 
-    <p class="rl-p">Two twins, born on the same day. One climbs into a rocket, flies to a distant star and comes back. The other stays at home and waters the plants.</p>
-    <p class="rl-p">When the rocket lands, the twins hug — and they are <b>not the same age any more</b>. The traveller's clock ticked slowly for the whole journey, so less time passed for her. She might have been away for one year while her sister waited seven.</p>
-    <p class="rl-p">She did not skip anything and she did not sleep through it. She lived every second of her own year. It is simply that her year and her sister's seven years are both the honest answer to “how much time went by?” — asked along two different paths.</p>
+    <p class="rl-p t-en">Two twins, born on the same day. One climbs into a rocket, flies to a distant star and comes back. The other stays at home and waters the plants.</p>
+    <p class="rl-p t-vi">Hai chị em sinh đôi, ra đời cùng một ngày. Một người leo lên tên lửa, bay tới một ngôi sao xa rồi quay về. Người kia ở nhà tưới cây.</p>
+    <p class="rl-p t-en">When the rocket lands, the twins hug — and they are <b>not the same age any more</b>. The traveller's clock ticked slowly for the whole journey, so less time passed for her. She might have been away for one year while her sister waited seven.</p>
+    <p class="rl-p t-vi">Lúc tên lửa hạ cánh, hai chị em ôm nhau — và họ <b>không còn bằng tuổi nhau nữa</b>. Đồng hồ của người đi chạy chậm suốt hành trình, nên với cô ấy trôi qua ít thời gian hơn. Có thể cô đi vắng một năm trong khi chị gái đã chờ bảy năm.</p>
+    <p class="rl-p t-en">She did not skip anything and she did not sleep through it. She lived every second of her own year. It is simply that her year and her sister's seven years are both the honest answer to “how much time went by?” — asked along two different paths.</p>
+    <p class="rl-p t-vi">Cô không bỏ lỡ đoạn nào và cũng không ngủ quên. Cô đã sống trọn từng giây của năm ấy. Chỉ là một năm của cô và bảy năm của chị gái đều là câu trả lời thành thật cho câu hỏi “đã trôi qua bao nhiêu thời gian?” — hỏi dọc theo hai con đường khác nhau.</p>
 
     <div class="rl-story">
-      <h4>Why isn't it the other way round?</h4>
-      <p class="rl-p">Good question, and it is the one physicists argued about for years. If moving clocks run slow, why does the rocket twin not say <em>her sister</em> was the one moving, and come home to find her sister younger?</p>
-      <p class="rl-p">Because the two journeys are not the same shape. The twin at home went in a straight line the whole time. The traveller had to <b>turn around</b> — she felt herself pressed into her seat when the rocket slowed down and came back. That turn is real, she can feel it, and it is what makes her path different. Straight paths through time are always the longest ones.</p>
+      <h4><span class="t-en">Why isn't it the other way round?</span><span class="t-vi">Sao không phải là ngược lại?</span></h4>
+      <p class="rl-p t-en">Good question, and it is the one physicists argued about for years. If moving clocks run slow, why does the rocket twin not say <em>her sister</em> was the one moving, and come home to find her sister younger?</p>
+      <p class="rl-p t-vi">Câu hỏi hay, và đó đúng là câu các nhà vật lý cãi nhau nhiều năm. Nếu đồng hồ đang chuyển động thì chạy chậm, sao người trên tên lửa không nói rằng <em>chị gái mình</em> mới là người đang chuyển động, rồi về nhà thấy chị trẻ hơn?</p>
+      <p class="rl-p t-en">Because the two journeys are not the same shape. The twin at home went in a straight line the whole time. The traveller had to <b>turn around</b> — she felt herself pressed into her seat when the rocket slowed down and came back. That turn is real, she can feel it, and it is what makes her path different. Straight paths through time are always the longest ones.</p>
+      <p class="rl-p t-vi">Vì hai hành trình không cùng hình dạng. Người ở nhà đi thẳng một mạch suốt thời gian đó. Người đi phải <b>quay đầu</b> — cô cảm thấy mình bị ép vào ghế lúc tên lửa hãm lại rồi trở về. Cú quay đầu ấy là có thật, cô cảm nhận được, và chính nó làm con đường của cô khác đi. Đường thẳng xuyên qua thời gian luôn là đường dài nhất.</p>
     </div>
 
     <figure class="rl-lab">
       <div class="rl-lab__bar">
         <span class="rl-lab__tag">Lab 5</span>
-        <span class="rl-lab__name">Send one twin away and watch both clocks</span>
+        <span class="rl-lab__name t-en">Send one twin away and watch both clocks</span>
+        <span class="rl-lab__name t-vi">Tiễn một người đi, rồi nhìn cả hai đồng hồ</span>
       </div>
       <div class="rl-lab__stage"><canvas id="cv-twin" class="rl-canvas" aria-label="A rocket flies from Earth to a star and back while two age counters, one for each twin, climb at different rates."></canvas></div>
       <div class="rl-lab__ctrl">
         <div class="rl-ctrl">
-          <span class="rl-ctrl__lab">Rocket speed</span>
+          <span class="rl-ctrl__lab t-en">Rocket speed</span>
+          <span class="rl-ctrl__lab t-vi">Tốc độ tên lửa</span>
           <input type="range" class="wb-range" id="r-twin" min="100" max="999" value="990" aria-label="Rocket speed as a fraction of the speed of light">
           <span class="rl-ctrl__val" id="v-twin">0.990 c</span>
         </div>
         <div class="rl-ctrl">
-          <span class="rl-ctrl__lab">Star distance</span>
+          <span class="rl-ctrl__lab t-en">Star distance</span>
+          <span class="rl-ctrl__lab t-vi">Khoảng cách tới sao</span>
           <input type="range" class="wb-range" id="r-twin-d" min="1" max="20" value="4" aria-label="Distance to the star in light years">
           <span class="rl-ctrl__val" id="v-twin-d">4 ly</span>
         </div>
       </div>
       <div class="rl-read">
-        <div class="rl-read__c"><p class="rl-read__l">Twin at home ages</p><p class="rl-read__v" id="o-twin-e">8.1 yr</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Twin in the rocket ages</p><p class="rl-read__v is-accent" id="o-twin-r">1.1 yr</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Difference at the hug</p><p class="rl-read__v" id="o-twin-d">7.0 yr</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Stretch factor</p><p class="rl-read__v" id="o-twin-g">7.09×</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Twin at home ages</p>
+        <p class="rl-read__l t-vi">Người ở nhà già thêm</p><p class="rl-read__v" id="o-twin-e">8.1 yr</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Twin in the rocket ages</p>
+        <p class="rl-read__l t-vi">Người trên tên lửa già thêm</p><p class="rl-read__v is-accent" id="o-twin-r">1.1 yr</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Difference at the hug</p>
+        <p class="rl-read__l t-vi">Chênh lệch lúc gặp lại</p><p class="rl-read__v" id="o-twin-d">7.0 yr</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Stretch factor</p>
+        <p class="rl-read__l t-vi">Hệ số giãn</p><p class="rl-read__v" id="o-twin-g">7.09×</p></div>
       </div>
-      <figcaption class="rl-lab__cap">Set the star to <b>4 light-years</b> — about as far as the nearest star to the Sun — and the speed to 0.99 c. The rocket twin is gone for a little over a year of her own life and comes back to a sister eight years older. Slow the rocket down and the two counters creep back together.</figcaption>
+      <figcaption class="rl-lab__cap t-en">Set the star to <b>4 light-years</b> — about as far as the nearest star to the Sun — and the speed to 0.99 c. The rocket twin is gone for a little over a year of her own life and comes back to a sister eight years older. Slow the rocket down and the two counters creep back together.</figcaption>
+      <figcaption class="rl-lab__cap t-vi">Đặt ngôi sao ở <b>4 năm ánh sáng</b> — xấp xỉ ngôi sao gần Mặt Trời nhất — và tốc độ 0,99 c. Người trên tên lửa đi vắng hơn một năm của đời mình một chút, rồi về gặp chị gái đã già thêm tám tuổi. Giảm tốc độ tên lửa xuống thì hai bộ đếm bò lại gần nhau.</figcaption>
     </figure>
 
     <div class="rl-detail-row">
       <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d5" type="button">
-        <span class="wb-ico">functions</span> Detail — for scientists
+        <span class="wb-ico">functions</span><span class="t-en">Detail — for scientists</span><span class="t-vi">Chi tiết — cho nhà khoa học</span>
       </button>
-      <span class="rl-detail-hint">Why the paradox is not one: proper time along worldlines.</span>
+      <span class="rl-detail-hint t-en">Why the paradox is not one: proper time along worldlines.</span>
+      <span class="rl-detail-hint t-vi">Vì sao nghịch lý không phải nghịch lý: thời gian riêng dọc đường thế giới.</span>
     </div>
 
     <div class="rl-src" id="d5"
          data-title="The twin “paradox” and the geometry that resolves it"
-         data-sub="Elapsed time is a property of a path, not of a pair of endpoints">
-      <div class="rl-sci">
+         data-sub="Elapsed time is a property of a path, not of a pair of endpoints"
+         data-title-vi="Nghịch lý anh em sinh đôi và hình học gỡ nó ra"
+         data-sub-vi="Thời gian trôi qua là tính chất của một con đường, không phải của một cặp đầu mút">
+      <div class="rl-sci t-en">
         <h5>Statement</h5>
         <p>Twin B leaves Earth at speed $v$, travels a distance $D$ (measured in Earth's frame), turns around and returns. In Earth's frame the round trip takes $T = 2D/v$. Twin B's accumulated proper time is</p>
         <div class="rl-eq">$$\tau_{B} = \int\sqrt{1 - \frac{v^{2}(t)}{c^{2}}}\;dt = \frac{T}{\gamma} \quad\text{(for an idealised instantaneous turnaround)}$$</div>
@@ -690,68 +923,109 @@ section[id] { scroll-margin-top: 78px; }
         <h5>It has been flown</h5>
         <p>Hafele and Keating (1971) carried caesium clocks on scheduled commercial flights, eastward and westward, and compared them against the US Naval Observatory ensemble on return. The eastward clocks lost $59 \pm 10$ ns, the westward gained $273 \pm 7$ ns, matching the combined kinematic and gravitational prediction. The effect is small only because aircraft are slow; it is not conditional. Every clock in every satellite is corrected for it continuously.</p>
       </div>
+      <div class="rl-sci t-vi">
+        <h5>Phát biểu</h5>
+        <p>Người B rời Trái Đất với tốc độ $v$, đi hết quãng đường $D$ (đo trong hệ Trái Đất), quay đầu rồi trở về. Trong hệ Trái Đất, chuyến khứ hồi mất $T = 2D/v$. Thời gian riêng B tích luỹ được là</p>
+        <div class="rl-eq">$$\tau_{B} = \int\sqrt{1 - \frac{v^{2}(t)}{c^{2}}}\;dt = \frac{T}{\gamma} \quad\text{(với cú quay đầu lý tưởng, tức thời)}$$</div>
+        <p>Với $D = 4{,}24$ năm ánh sáng (Proxima Centauri) và $v = 0{,}99c$: $T = 8{,}57$ năm, $\gamma = 7{,}089$, $\tau_{B} = 1{,}21$ năm.</p>
+
+        <h5>Vì sao tình huống không đối xứng</h5>
+        <p>Phản bác quen thuộc — “theo cách nhìn của B thì A mới là người chuyển động” — giả định rằng B có một hệ quán tính duy nhất. Cô ấy không có. B ở trong một hệ quán tính lúc đi và một hệ <em>khác</em> lúc về, và cú chuyển hệ ấy phát hiện được bằng vật lý: gia tốc kế trên tàu khác không tại chỗ quay đầu, trong khi gia tốc kế của A bằng không suốt hành trình. Chỉ A mới dùng được một hệ quán tính toàn cục cho toàn bộ câu chuyện.</p>
+        <p>Tính từ phía B thì sổ sách vẫn cân. Trên mỗi chặng, B đúng là thấy đồng hồ của A chạy chậm đi $1/\gamma$ lần. Nhưng tại chỗ quay đầu, đường đồng thời của B quét ngang qua đường thế giới của Trái Đất, và những biến cố trên Trái Đất vốn là “bây giờ” với B-lúc-đi lại nằm sâu trong quá khứ so với “bây giờ” của B-lúc-về. Bước nhảy đó bằng</p>
+        <div class="rl-eq">$$\Delta t_{\text{nhảy}} = \frac{2vD}{c^{2}}$$</div>
+        <p>và cộng nó vào hai chặng đã giãn thì tái tạo lại đúng $T$.</p>
+
+        <h5>Phát biểu hình học</h5>
+        <p>Trong hình học Euclid, đường thẳng là đường <em>ngắn nhất</em> nối hai điểm. Trong không-thời gian Minkowski, metric đảo dấu một số hạng, và với những đường thế giới kiểu thời gian thì đường quán tính (đường thẳng) lại là đường có thời gian riêng <b>lớn nhất</b>:</p>
+        <div class="rl-eq">$$\tau = \frac{1}{c}\int \sqrt{-ds^{2}} \quad\text{dừng và cực đại dọc theo một đường trắc địa}$$</div>
+        <p>Mọi khúc vòng qua không gian đều phải trả bằng thời gian. Nghịch lý sinh đôi chỉ là câu vừa rồi hoá trang, và trong thuyết tương đối rộng nó trở thành phát biểu: rơi tự do — chứ không phải đứng yên — mới là thứ làm đồng hồ của bạn chạy được nhiều nhất.</p>
+
+        <h5>Và nó đã được bay thật</h5>
+        <p>Hafele và Keating (1971) mang đồng hồ caesium lên các chuyến bay thương mại theo lịch, một vòng về phía đông và một vòng về phía tây, rồi so lại với cụm đồng hồ của Đài Thiên văn Hải quân Hoa Kỳ khi trở về. Nhóm bay về phía đông mất $59 \pm 10$ ns, nhóm bay về phía tây được thêm $273 \pm 7$ ns, khớp với tiên đoán gộp cả phần động học lẫn phần hấp dẫn. Hiệu ứng nhỏ chỉ vì máy bay chậm; nó không hề có điều kiện kèm theo. Mọi chiếc đồng hồ trên mọi vệ tinh đều được hiệu chỉnh vì nó, liên tục.</p>
+      </div>
     </div>
   </section>
 
   <!-- ═══════════════ PART 3 ═══════════════ -->
   <div class="rl-part p-wave" id="p3">
-    <p class="rl-part__k">Part 3 · The Doppler effect</p>
-    <h2 class="rl-part__t">Why moving things change their sound — and their colour</h2>
-    <p class="rl-part__s">Sound is a wave. Light is a wave too. When the thing making the wave is moving, the wave arrives <b>squashed up</b> or <b>stretched out</b> — and that changes what you hear, and what you see.</p>
+    <p class="rl-part__k t-en">Part 3 · The Doppler effect</p>
+    <p class="rl-part__k t-vi">Phần 3 · Hiệu ứng Doppler</p>
+    <h2 class="rl-part__t t-en">Why moving things change their sound — and their colour</h2>
+    <h2 class="rl-part__t t-vi">Vì sao vật chuyển động đổi cả tiếng lẫn màu</h2>
+    <p class="rl-part__s t-en">Sound is a wave. Light is a wave too. When the thing making the wave is moving, the wave arrives <b>squashed up</b> or <b>stretched out</b> — and that changes what you hear, and what you see.</p>
+    <p class="rl-part__s t-vi">Âm thanh là sóng. Ánh sáng cũng là sóng. Khi thứ tạo ra sóng đang chuyển động, sóng tới nơi trong trạng thái <b>bị dồn lại</b> hoặc <b>bị kéo giãn</b> — và điều đó làm đổi thứ bạn nghe, cũng như thứ bạn nhìn.</p>
   </div>
 
   <section class="rl-sec p-wave" id="s6">
     <div class="rl-sec__head">
       <div class="rl-sec__num">6</div>
-      <h3 class="rl-sec__t">Why an ambulance changes its song as it passes</h3>
+      <h3 class="rl-sec__t t-en">Why an ambulance changes its song as it passes</h3>
+      <h3 class="rl-sec__t t-vi">Vì sao xe cứu thương đổi giọng lúc chạy ngang qua</h3>
     </div>
 
-    <p class="rl-p">You have heard this a hundred times. An ambulance races towards you and its siren sounds <b>high</b>. The instant it goes past, the sound drops to a <b>lower</b> note. Neeee-oowwww.</p>
-    <p class="rl-p">The driver did not touch anything. Inside the ambulance the siren sounds exactly the same all the way through. So what changed?</p>
+    <p class="rl-p t-en">You have heard this a hundred times. An ambulance races towards you and its siren sounds <b>high</b>. The instant it goes past, the sound drops to a <b>lower</b> note. Neeee-oowwww.</p>
+    <p class="rl-p t-vi">Bạn nghe chuyện này cả trăm lần rồi. Xe cứu thương lao về phía bạn và tiếng còi nghe <b>cao</b>. Đúng lúc nó vượt qua, tiếng còi tụt xuống một nốt <b>thấp</b> hơn. Neee-ooooo.</p>
+    <p class="rl-p t-en">The driver did not touch anything. Inside the ambulance the siren sounds exactly the same all the way through. So what changed?</p>
+    <p class="rl-p t-vi">Bác tài chẳng đụng vào cái gì cả. Ngồi trong xe thì tiếng còi vẫn y hệt từ đầu tới cuối. Vậy cái gì đã đổi?</p>
 
     <div class="rl-story">
-      <h4>The ambulance chases its own sound</h4>
-      <p class="rl-p">Sound leaves the siren as ripples, like the rings you get when you drop a stone in a pond. Each ring spreads outwards at the speed of sound — about <b>343 metres every second</b> in ordinary air.</p>
-      <p class="rl-p">While the rings are spreading, the ambulance keeps driving forward. So it partly catches up with the rings it already made. In front of the ambulance the rings get <b>bunched together</b> — squashed. Behind it, the rings get <b>spread apart</b> — stretched.</p>
-      <p class="rl-p">Bunched-up ripples reaching your ear means more of them arrive each second, and that is what your ear calls a <b>high note</b>. Spread-out ripples mean fewer per second: a <b>low note</b>.</p>
+      <h4><span class="t-en">The ambulance chases its own sound</span><span class="t-vi">Chiếc xe đuổi theo chính tiếng của nó</span></h4>
+      <p class="rl-p t-en">Sound leaves the siren as ripples, like the rings you get when you drop a stone in a pond. Each ring spreads outwards at the speed of sound — about <b>343 metres every second</b> in ordinary air.</p>
+      <p class="rl-p t-vi">Âm thanh rời khỏi còi thành những gợn sóng, giống các vòng tròn khi bạn thả hòn sỏi xuống ao. Mỗi vòng lan ra với tốc độ âm thanh — khoảng <b>343 mét mỗi giây</b> trong không khí thường.</p>
+      <p class="rl-p t-en">While the rings are spreading, the ambulance keeps driving forward. So it partly catches up with the rings it already made. In front of the ambulance the rings get <b>bunched together</b> — squashed. Behind it, the rings get <b>spread apart</b> — stretched.</p>
+      <p class="rl-p t-vi">Trong lúc các vòng đang lan ra, chiếc xe vẫn chạy tới. Nên nó đuổi kịp một phần những vòng chính nó vừa tạo ra. Ở phía trước xe, các vòng bị <b>dồn sát lại</b> — bị nén. Ở phía sau, các vòng bị <b>giãn xa nhau</b> — bị kéo dài.</p>
+      <p class="rl-p t-en">Bunched-up ripples reaching your ear means more of them arrive each second, and that is what your ear calls a <b>high note</b>. Spread-out ripples mean fewer per second: a <b>low note</b>.</p>
+      <p class="rl-p t-vi">Gợn sóng dồn sát nhau chạm tới tai bạn nghĩa là mỗi giây có nhiều gợn hơn tới nơi, và tai bạn gọi đó là <b>nốt cao</b>. Gợn giãn xa nhau nghĩa là mỗi giây ít gợn hơn: một <b>nốt thấp</b>.</p>
     </div>
 
-    <p class="rl-p">This is called the <b>Doppler effect</b>, after Christian Doppler, who worked it out in 1842 — long before anyone had recorded a siren.</p>
-    <p class="rl-p">And if the ambulance could go <em>faster than its own sound</em>, it would run right into the front of its own ripples and pile them all into one enormous ring. That pile-up is a <b>sonic boom</b>, the bang you hear from a very fast jet.</p>
+    <p class="rl-p t-en">This is called the <b>Doppler effect</b>, after Christian Doppler, who worked it out in 1842 — long before anyone had recorded a siren.</p>
+    <p class="rl-p t-vi">Người ta gọi đây là <b>hiệu ứng Doppler</b>, theo tên Christian Doppler, người tìm ra nó năm 1842 — rất lâu trước khi có ai thu âm được một tiếng còi.</p>
+    <p class="rl-p t-en">And if the ambulance could go <em>faster than its own sound</em>, it would run right into the front of its own ripples and pile them all into one enormous ring. That pile-up is a <b>sonic boom</b>, the bang you hear from a very fast jet.</p>
+    <p class="rl-p t-vi">Và nếu chiếc xe có thể chạy <em>nhanh hơn chính tiếng của nó</em>, nó sẽ đâm thẳng vào mặt trước của những gợn sóng ấy và dồn tất cả vào một vòng khổng lồ. Cú dồn đó là một <b>tiếng nổ siêu thanh</b>, tiếng “ầm” bạn nghe từ một chiếc phản lực rất nhanh.</p>
 
     <figure class="rl-lab">
       <div class="rl-lab__bar">
         <span class="rl-lab__tag">Lab 6</span>
-        <span class="rl-lab__name">Sound ripples from a moving siren</span>
+        <span class="rl-lab__name t-en">Sound ripples from a moving siren</span>
+        <span class="rl-lab__name t-vi">Sóng âm toả ra từ một chiếc còi đang chạy</span>
       </div>
       <div class="rl-lab__stage"><canvas id="cv-sound" class="rl-canvas" aria-label="An ambulance drives past while circular sound waves spread out. The circles bunch together in front of it and spread apart behind it, and at high speed they pile up into a cone."></canvas></div>
       <div class="rl-lab__ctrl">
         <div class="rl-ctrl">
-          <span class="rl-ctrl__lab">Siren speed</span>
+          <span class="rl-ctrl__lab t-en">Siren speed</span>
+          <span class="rl-ctrl__lab t-vi">Tốc độ còi</span>
           <input type="range" class="wb-range" id="r-sound" min="0" max="160" value="55" aria-label="Speed of the sound source, as a percentage of the speed of sound">
           <span class="rl-ctrl__val" id="v-sound">189 m/s</span>
         </div>
       </div>
       <div class="rl-read">
-        <div class="rl-read__c"><p class="rl-read__l">Note you hear in front</p><p class="rl-read__v is-accent" id="o-sound-f">1556 Hz</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Note you hear behind</p><p class="rl-read__v" id="o-sound-b">452 Hz</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Siren's own note</p><p class="rl-read__v">700 Hz</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Compared to sound</p><p class="rl-read__v" id="o-sound-m">Mach 0.55</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Note you hear in front</p>
+        <p class="rl-read__l t-vi">Nốt nghe được phía trước</p><p class="rl-read__v is-accent" id="o-sound-f">1556 Hz</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Note you hear behind</p>
+        <p class="rl-read__l t-vi">Nốt nghe được phía sau</p><p class="rl-read__v" id="o-sound-b">452 Hz</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Siren's own note</p>
+        <p class="rl-read__l t-vi">Nốt thật của còi</p><p class="rl-read__v">700 Hz</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Compared to sound</p>
+        <p class="rl-read__l t-vi">So với tốc độ âm thanh</p><p class="rl-read__v" id="o-sound-m">Mach 0.55</p></div>
       </div>
-      <figcaption class="rl-lab__cap">Watch the circles, not the ambulance. They are all growing at exactly the same speed and they all started as perfect rings — the moving siren just keeps leaving them behind at different places. A real ambulance drives at about Mach 0.06 — far too slow for the bunching to show up on this scale — so the slider here exaggerates, and past halfway you are watching a jet. Push it past <b>Mach 1</b> and the rings stack into a V-shaped wall: that is the sonic boom.</figcaption>
+      <figcaption class="rl-lab__cap t-en">Watch the circles, not the ambulance. They are all growing at exactly the same speed and they all started as perfect rings — the moving siren just keeps leaving them behind at different places. A real ambulance drives at about Mach 0.06 — far too slow for the bunching to show up on this scale — so the slider here exaggerates, and past halfway you are watching a jet. Push it past <b>Mach 1</b> and the rings stack into a V-shaped wall: that is the sonic boom.</figcaption>
+      <figcaption class="rl-lab__cap t-vi">Hãy nhìn các vòng tròn, đừng nhìn chiếc xe. Chúng nở ra với đúng một tốc độ và đều bắt đầu là những vòng tròn hoàn hảo — chiếc còi đang chạy chỉ là bỏ lại mỗi vòng ở một chỗ khác nhau. Xe cứu thương thật chạy khoảng Mach 0,06, quá chậm để thấy các vòng dồn lại ở tỉ lệ này, nên thanh trượt ở đây phóng đại lên, và quá nửa thang là bạn đang xem một chiếc phản lực. Đẩy quá <b>Mach 1</b> thì các vòng chồng lên nhau thành một bức tường hình chữ V: đó là tiếng nổ siêu thanh.</figcaption>
     </figure>
 
     <div class="rl-detail-row">
       <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d6" type="button">
-        <span class="wb-ico">functions</span> Detail — for scientists
+        <span class="wb-ico">functions</span><span class="t-en">Detail — for scientists</span><span class="t-vi">Chi tiết — cho nhà khoa học</span>
       </button>
-      <span class="rl-detail-hint">The classical formula, why source and observer motion are not equivalent, and the Mach cone.</span>
+      <span class="rl-detail-hint t-en">The classical formula, why source and observer motion are not equivalent, and the Mach cone.</span>
+      <span class="rl-detail-hint t-vi">Công thức cổ điển, vì sao nguồn chạy khác với người nghe chạy, và nón Mach.</span>
     </div>
 
     <div class="rl-src" id="d6"
          data-title="The classical (acoustic) Doppler effect"
-         data-sub="A medium with a rest frame, and the asymmetry that gives it away">
-      <div class="rl-sci">
+         data-sub="A medium with a rest frame, and the asymmetry that gives it away"
+         data-title-vi="Hiệu ứng Doppler cổ điển (âm học)"
+         data-sub-vi="Một môi trường có hệ đứng yên riêng, và sự bất đối xứng tố cáo điều đó">
+      <div class="rl-sci t-en">
         <h5>The general formula</h5>
         <p>With $v$ the wave speed in the medium, $v_{o}$ the observer's speed and $v_{s}$ the source's speed — both measured <b>with respect to the medium</b>, positive when directed from observer towards source:</p>
         <div class="rl-eq">$$f' = f\,\frac{v + v_{o}}{v - v_{s}}$$
@@ -781,67 +1055,118 @@ section[id] { scroll-margin-top: 78px; }
           <li><b>Speed enforcement.</b> Radar guns use the electromagnetic version at microwave frequencies; a 10.5 GHz gun sees about 70 Hz of shift per m/s, or 31 Hz per mph.</li>
         </ul>
       </div>
+      <div class="rl-sci t-vi">
+        <h5>Công thức tổng quát</h5>
+        <p>Với $v$ là tốc độ sóng trong môi trường, $v_{o}$ là tốc độ người nghe và $v_{s}$ là tốc độ nguồn — cả hai đều đo <b>so với môi trường</b>, dương khi hướng từ người nghe về phía nguồn:</p>
+        <div class="rl-eq">$$f' = f\,\frac{v + v_{o}}{v - v_{s}}$$
+          <span class="rl-eq__note">Lại gần thì $f'$ tăng, ra xa thì giảm. Trong không khí lặng ở 20 °C, $v = 331{,}3 + 0{,}606\,T[^\circ\mathrm{C}] \approx 343\ \mathrm{m\,s^{-1}}$.</span></div>
+        <p>Cơ chế là hình học chứ không phải sinh lý. Giữa hai lần phát cách nhau $T = 1/f$, nguồn tiến được $v_{s}T$, nên bước sóng ở phía trước nó bị nén còn $\lambda' = (v - v_{s})T$ và ở phía sau bị giãn thành $(v + v_{s})T$. Tần số là $v/\lambda'$.</p>
+
+        <h5>Ví dụ tính bằng số — đúng hình động phía trên</h5>
+        <p>Còi 700 Hz chạy $v_{s} = 20\ \mathrm{m\,s^{-1}}$ (72 km/h), người nghe đứng yên:</p>
+        <div class="rl-eq">$$f'_{\text{lại gần}} = 700\cdot\frac{343}{343-20} = 743\ \mathrm{Hz}, \qquad f'_{\text{ra xa}} = 700\cdot\frac{343}{343+20} = 661\ \mathrm{Hz}$$</div>
+        <p>Tỉ số 1,124 — hơn hai nửa cung một chút, và tai nghe ra ngay. Cú đổi diễn ra trong khoảng một giây lúc chiếc xe vượt qua, nên nó nghe như một bước nhảy chứ không phải một chuyển dần.</p>
+
+        <h5>Nguồn chạy ≠ người nghe chạy</h5>
+        <p>Khai triển cả hai trường hợp tới bậc hai theo $\beta_{\text{tđ}} = v_{s}/v$ hoặc $v_{o}/v$:</p>
+        <div class="rl-eq">$$\frac{f'}{f}\bigg|_{\text{nguồn chạy}} = \frac{1}{1-\beta} = 1 + \beta + \beta^{2} + \cdots, \qquad \frac{f'}{f}\bigg|_{\text{người nghe chạy}} = 1 + \beta$$</div>
+        <p>Hai vế trùng nhau ở bậc một và lệch nhau từ $\beta^{2}$. Chênh lệch đó là thật, đo được, và nó là dấu vân tay của một <b>môi trường có hệ quy chiếu ưu tiên</b>: không khí biết ai trong hai bên đang chuyển động xuyên qua nó. Đó đúng là thứ mà trường hợp quang học không thể có, và là lý do công thức Doppler tương đối tính ở mục 7 chỉ phụ thuộc vận tốc <em>tương đối</em>.</p>
+
+        <h5>Vượt Mach 1</h5>
+        <p>Khi $v_{s} > v$, mẫu số đổi dấu và công thức thôi mô tả được người nghe đứng phía trước nguồn — không có âm thanh nào tới đó trước khi bản thân nguồn tới. Thay vào đó, các mặt sóng bao lấy một hình nón:</p>
+        <div class="rl-eq">$$\sin\theta = \frac{v}{v_{s}} = \frac{1}{M}$$
+          <span class="rl-eq__note">$M$ là số Mach; $\theta$ là nửa góc ở đỉnh nón sốc. Ở $M = 2$ thì $\theta = 30^{\circ}$.</span></div>
+        <p>Tiếng nổ không phải một biến cố xảy ra đúng lúc “vượt rào âm thanh” — nó là một sóng sốc kéo theo liên tục, quét ngang mặt đất suốt thời gian máy bay còn bay siêu thanh.</p>
+
+        <h5>Người ta dùng nó ở đâu</h5>
+        <ul>
+          <li><b>Radar thời tiết Doppler.</b> Độ dịch tần của xung phản hồi cho ra tốc độ gió theo phương xuyên tâm bên trong một cơn bão, và đó là cách người ta phát hiện sự xoáy — tức nguy cơ lốc.</li>
+          <li><b>Siêu âm y tế.</b> Siêu âm tim Doppler dựng bản đồ tốc độ và hướng dòng máu từ độ dịch tần phản xạ trên hồng cầu đang chuyển động.</li>
+          <li><b>Bắn tốc độ.</b> Súng radar dùng phiên bản điện từ ở tần số vi ba; súng 10,5 GHz cho khoảng 70 Hz độ dịch trên mỗi m/s, tức 31 Hz trên mỗi dặm/giờ.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <section class="rl-sec p-wave" id="s7">
     <div class="rl-sec__head">
       <div class="rl-sec__num">7</div>
-      <h3 class="rl-sec__t">Colours change too — and that is how we found out the universe is growing</h3>
+      <h3 class="rl-sec__t t-en">Colours change too — and that is how we found out the universe is growing</h3>
+      <h3 class="rl-sec__t t-vi">Màu sắc cũng đổi — và đó là cách ta biết vũ trụ đang lớn lên</h3>
     </div>
 
-    <p class="rl-p">Light is a wave as well, so the very same thing happens to it. But instead of hearing a higher or lower <em>note</em>, we see a bluer or redder <b>colour</b>.</p>
-    <p class="rl-p">Put simply:</p>
-    <ul class="rl-ul">
+    <p class="rl-p t-en">Light is a wave as well, so the very same thing happens to it. But instead of hearing a higher or lower <em>note</em>, we see a bluer or redder <b>colour</b>.</p>
+    <p class="rl-p t-vi">Ánh sáng cũng là sóng, nên chuyện y hệt xảy ra với nó. Chỉ khác là thay vì nghe một <em>nốt</em> cao hơn hay thấp hơn, ta nhìn thấy một <b>màu</b> xanh hơn hay đỏ hơn.</p>
+    <p class="rl-p t-en">Put simply:</p>
+    <p class="rl-p t-vi">Nói gọn lại:</p>
+    <ul class="rl-ul t-en">
       <li>A star racing <b>away</b> from us has its light <b>stretched</b>. Stretched light is redder. Astronomers call it <b>redshift</b>.</li>
       <li>A star racing <b>towards</b> us has its light <b>squashed</b>. Squashed light is bluer: <b>blueshift</b>.</li>
     </ul>
-    <p class="rl-p">This is far too small to notice with cars and aeroplanes. You would have to drive at about a fifth of the speed of light — over 200 million kilometres per hour — before a red traffic light looked green. But stars and galaxies really do move that fast.</p>
+    <ul class="rl-ul t-vi">
+      <li>Ngôi sao đang lao <b>ra xa</b> chúng ta thì ánh sáng của nó bị <b>kéo giãn</b>. Ánh sáng bị giãn thì đỏ hơn. Các nhà thiên văn gọi đó là <b>dịch chuyển đỏ</b>.</li>
+      <li>Ngôi sao đang lao <b>về phía</b> chúng ta thì ánh sáng của nó bị <b>nén lại</b>. Ánh sáng bị nén thì xanh hơn: <b>dịch chuyển xanh</b>.</li>
+    </ul>
+    <p class="rl-p t-en">This is far too small to notice with cars and aeroplanes. You would have to drive at about a fifth of the speed of light — over 200 million kilometres per hour — before a red traffic light looked green. But stars and galaxies really do move that fast.</p>
+    <p class="rl-p t-vi">Với ô tô hay máy bay thì hiệu ứng này quá nhỏ để nhận ra. Bạn phải chạy với tốc độ chừng một phần năm tốc độ ánh sáng — hơn 200 triệu ki-lô-mét mỗi giờ — thì đèn đỏ mới trông thành xanh. Nhưng các ngôi sao và thiên hà thì đi nhanh đúng cỡ đó thật.</p>
 
     <div class="rl-story">
-      <h4>The clue hiding in starlight</h4>
-      <p class="rl-p">Every kind of atom leaves its own pattern of dark lines in the light that passes through it — a barcode. Hydrogen always makes the same barcode, whether it is in a lamp on a table or in a star a billion years away.</p>
-      <p class="rl-p">So astronomers photograph a faraway galaxy, find the hydrogen barcode, and check where it landed. If the whole pattern has slid towards the red end, the galaxy is moving away, and how far it slid tells you how fast.</p>
-      <p class="rl-p">In the 1920s Edwin Hubble did this for galaxy after galaxy. Nearly every one was shifted red. And the further away a galaxy was, the more its light was stretched. There is only one tidy explanation: <b>the whole universe is getting bigger</b>, carrying the galaxies apart as it grows.</p>
+      <h4><span class="t-en">The clue hiding in starlight</span><span class="t-vi">Manh mối giấu trong ánh sao</span></h4>
+      <p class="rl-p t-en">Every kind of atom leaves its own pattern of dark lines in the light that passes through it — a barcode. Hydrogen always makes the same barcode, whether it is in a lamp on a table or in a star a billion years away.</p>
+      <p class="rl-p t-vi">Mỗi loại nguyên tử để lại một hoa văn vạch tối riêng trong ánh sáng đi xuyên qua nó — một cái mã vạch. Hydro luôn tạo ra đúng một mã vạch, dù nó nằm trong cái đèn trên bàn hay trong một ngôi sao cách đây một tỉ năm ánh sáng.</p>
+      <p class="rl-p t-en">So astronomers photograph a faraway galaxy, find the hydrogen barcode, and check where it landed. If the whole pattern has slid towards the red end, the galaxy is moving away, and how far it slid tells you how fast.</p>
+      <p class="rl-p t-vi">Thế là các nhà thiên văn chụp ảnh một thiên hà xa, tìm mã vạch của hydro, rồi xem nó rơi vào đâu. Nếu cả hoa văn đã trượt về phía đầu đỏ thì thiên hà ấy đang đi ra xa, và nó trượt bao nhiêu sẽ cho biết nó đi nhanh cỡ nào.</p>
+      <p class="rl-p t-en">In the 1920s Edwin Hubble did this for galaxy after galaxy. Nearly every one was shifted red. And the further away a galaxy was, the more its light was stretched. There is only one tidy explanation: <b>the whole universe is getting bigger</b>, carrying the galaxies apart as it grows.</p>
+      <p class="rl-p t-vi">Những năm 1920, Edwin Hubble làm việc đó với hết thiên hà này tới thiên hà khác. Gần như cái nào cũng dịch về phía đỏ. Và thiên hà càng xa thì ánh sáng của nó càng bị kéo giãn nhiều. Chỉ có một cách giải thích gọn ghẽ: <b>cả vũ trụ đang lớn dần lên</b>, mang các thiên hà rời xa nhau trong lúc nó lớn.</p>
     </div>
 
     <figure class="rl-lab">
       <div class="rl-lab__bar">
         <span class="rl-lab__tag">Lab 7</span>
-        <span class="rl-lab__name">Move a star and watch its barcode slide</span>
+        <span class="rl-lab__name t-en">Move a star and watch its barcode slide</span>
+        <span class="rl-lab__name t-vi">Cho ngôi sao chuyển động và xem mã vạch của nó trượt</span>
       </div>
       <div class="rl-lab__stage"><canvas id="cv-red" class="rl-canvas" aria-label="A star moves towards or away from Earth. Below it a rainbow spectrum shows three dark lines that slide towards blue or towards red as the speed changes."></canvas></div>
       <div class="rl-lab__ctrl">
         <div class="rl-ctrl">
-          <span class="rl-ctrl__lab">Star's motion</span>
+          <span class="rl-ctrl__lab t-en">Star's motion</span>
+          <span class="rl-ctrl__lab t-vi">Sao chuyển động</span>
           <input type="range" class="wb-range" id="r-red" min="-60" max="60" value="35" aria-label="Star velocity, negative towards Earth and positive away from Earth">
           <span class="rl-ctrl__val" id="v-red">away 0.35 c</span>
         </div>
       </div>
       <div class="rl-read">
-        <div class="rl-read__c"><p class="rl-read__l">Stretch of the light</p><p class="rl-read__v is-accent" id="o-red-z">z = 0.44</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">A 486 nm line lands at</p><p class="rl-read__v" id="o-red-l">701 nm</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">What you see</p><p class="rl-read__v" id="o-red-w">Redder</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Stretch of the light</p>
+        <p class="rl-read__l t-vi">Độ giãn của ánh sáng</p><p class="rl-read__v is-accent" id="o-red-z">z = 0.44</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">A 486 nm line lands at</p>
+        <p class="rl-read__l t-vi">Vạch 486 nm rơi vào</p><p class="rl-read__v" id="o-red-l">701 nm</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">What you see</p>
+        <p class="rl-read__l t-vi">Bạn nhìn thấy</p><p class="rl-read__v" id="o-red-w">Redder</p></div>
       </div>
-      <figcaption class="rl-lab__cap">The three dark lines are the star's barcode. Their <b>real</b> positions are marked by the small ticks above the rainbow — the gap between tick and line is the whole measurement. Drag left and the barcode slides towards blue; drag right and it slides towards red and eventually straight out of the rainbow into infrared, where only a camera can follow it.</figcaption>
+      <figcaption class="rl-lab__cap t-en">The three dark lines are the star's barcode. Their <b>real</b> positions are marked by the small ticks above the rainbow — the gap between tick and line is the whole measurement. Drag left and the barcode slides towards blue; drag right and it slides towards red and eventually straight out of the rainbow into infrared, where only a camera can follow it.</figcaption>
+      <figcaption class="rl-lab__cap t-vi">Ba vạch đen là mã vạch của ngôi sao. Vị trí <b>thật</b> của chúng được đánh dấu bằng những vạch nhỏ phía trên dải cầu vồng — khoảng cách giữa vạch nhỏ và vạch đen chính là toàn bộ phép đo. Kéo sang trái thì mã vạch trượt về phía xanh; kéo sang phải thì nó trượt về phía đỏ, rồi ra hẳn khỏi cầu vồng vào vùng hồng ngoại, nơi chỉ máy ảnh mới theo được.</figcaption>
     </figure>
 
     <div class="rl-key">
       <span class="rl-key__ico">🔭</span>
-      <p class="rl-key__b">Nobody has ever visited another galaxy. We know they are rushing away because their <b>colours</b> told us — the Doppler effect, read off a photograph.</p>
+      <p class="rl-key__b t-en">Nobody has ever visited another galaxy. We know they are rushing away because their <b>colours</b> told us — the Doppler effect, read off a photograph.</p>
+      <p class="rl-key__b t-vi">Chưa ai từng đặt chân sang một thiên hà khác. Ta biết chúng đang lao ra xa là nhờ <b>màu sắc</b> của chúng — hiệu ứng Doppler, đọc được ngay trên một tấm ảnh.</p>
     </div>
 
     <div class="rl-detail-row">
       <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d7" type="button">
-        <span class="wb-ico">functions</span> Detail — for scientists
+        <span class="wb-ico">functions</span><span class="t-en">Detail — for scientists</span><span class="t-vi">Chi tiết — cho nhà khoa học</span>
       </button>
-      <span class="rl-detail-hint">Relativistic Doppler, the transverse term, and why cosmological redshift is not this.</span>
+      <span class="rl-detail-hint t-en">Relativistic Doppler, the transverse term, and why cosmological redshift is not this.</span>
+      <span class="rl-detail-hint t-vi">Doppler tương đối tính, số hạng ngang, và vì sao dịch chuyển đỏ vũ trụ không phải cái này.</span>
     </div>
 
     <div class="rl-src" id="d7"
          data-title="Relativistic Doppler shift and cosmological redshift"
-         data-sub="Two different things that produce the same-looking spectrum">
-      <div class="rl-sci">
+         data-sub="Two different things that produce the same-looking spectrum"
+         data-title-vi="Dịch chuyển Doppler tương đối tính và dịch chuyển đỏ vũ trụ"
+         data-sub-vi="Hai cơ chế khác nhau cho ra hai quang phổ trông giống hệt nhau">
+      <div class="rl-sci t-en">
         <h5>The relativistic formula</h5>
         <p>Light has no medium, so only the relative velocity can appear. For a source receding along the line of sight at $\beta = v/c$:</p>
         <div class="rl-eq">$$\frac{f_{\text{obs}}}{f_{\text{src}}} = \sqrt{\frac{1-\beta}{1+\beta}}, \qquad 1 + z \equiv \frac{\lambda_{\text{obs}}}{\lambda_{\text{src}}} = \sqrt{\frac{1+\beta}{1-\beta}}$$
@@ -871,74 +1196,124 @@ section[id] { scroll-margin-top: 78px; }
           <li><b>Redshift surveys.</b> $z$ doubles as a distance and as a clock, which is how the three-dimensional map of large-scale structure was built.</li>
         </ul>
       </div>
+      <div class="rl-sci t-vi">
+        <h5>Công thức tương đối tính</h5>
+        <p>Ánh sáng không có môi trường, nên chỉ vận tốc tương đối được phép xuất hiện. Với nguồn lùi ra xa dọc đường ngắm với $\beta = v/c$:</p>
+        <div class="rl-eq">$$\frac{f_{\text{thu}}}{f_{\text{phát}}} = \sqrt{\frac{1-\beta}{1+\beta}}, \qquad 1 + z \equiv \frac{\lambda_{\text{thu}}}{\lambda_{\text{phát}}} = \sqrt{\frac{1+\beta}{1-\beta}}$$
+          <span class="rl-eq__note">Lại gần thì vẫn biểu thức ấy với $\beta \to -\beta$. Tới bậc một, $z \approx \beta$ — và đó là lý do công thức Newton vẫn dùng được cho vận tốc sao cỡ vài trăm km/s.</span></div>
+        <p>Với góc $\theta$ bất kỳ giữa vận tốc nguồn và đường ngắm, đo trong hệ người quan sát:</p>
+        <div class="rl-eq">$$f_{\text{thu}} = \frac{f_{\text{phát}}}{\gamma\left(1 + \beta\cos\theta\right)}$$</div>
+
+        <h5>Số hạng ngang, và vì sao nó khép lại tranh cãi</h5>
+        <p>Đặt $\theta = 90^{\circ}$ — nguồn đang ở điểm gần nhất, không lại gần cũng không ra xa. Theo cổ điển thì không có dịch chuyển nào cả. Theo tương đối tính:</p>
+        <div class="rl-eq">$$f_{\text{thu}} = \frac{f_{\text{phát}}}{\gamma}$$
+          <span class="rl-eq__note">Một dịch chuyển đỏ thuần tuý, và là giãn thời gian thuần tuý: bộ dao động của nguồn đang chuyển động đơn giản là đập chậm. Số hạng này không có đối ứng cổ điển nào hết.</span></div>
+        <p>Ives và Stilwell (1938) đo được nó trên tia kênh hydro bằng cách quan sát cả bức xạ tới và bức xạ lui rồi lấy trung bình, thao tác này triệt tiêu số hạng bậc một và để lộ hệ số $\gamma$. Đây vẫn là một trong những xác nhận trực tiếp sạch nhất cho giãn thời gian — và nó được thực hiện bởi hai nhà vật lý đang cố bác bỏ thuyết tương đối.</p>
+
+        <h5>Dịch chuyển đỏ vũ trụ là một cơ chế khác</h5>
+        <p>Phần lớn các thiên hà xa không phải đang chuyển động <em>xuyên qua</em> không gian để rời xa ta. Chính metric giãn nở, và bước sóng của ánh sáng đang trên đường đi giãn theo:</p>
+        <div class="rl-eq">$$1 + z = \frac{a(t_{\text{thu}})}{a(t_{\text{phát}})}$$
+          <span class="rl-eq__note">$a$ là hệ số tỉ lệ của metric FLRW. Đây là tỉ số kích thước của vũ trụ, không phải một vận tốc — và đó là cách $z > 1$ có thể xảy ra mà không thứ gì đi nhanh hơn ánh sáng.</span></div>
+        <p>Với $z$ nhỏ, nó suy biến thành định luật Hubble và sự phân biệt thôi quan trọng:</p>
+        <div class="rl-eq">$$v \approx cz \approx H_{0}d, \qquad H_{0} \approx 70\ \mathrm{km\,s^{-1}\,Mpc^{-1}}$$
+          <span class="rl-eq__note">Hai phép đo $H_0$ tốt nhất — từ bức xạ nền vi sóng vũ trụ (≈ 67,4) và từ thang khoảng cách địa phương (≈ 73) — lệch nhau nhiều hơn sai số công bố của chúng. Đó là “căng thẳng Hubble”, và nó chưa được giải quyết.</span></div>
+        <p>Các thiên hà còn có <b>vận tốc riêng</b> chồng lên trên giãn nở, và đó là lý do Andromeda bị dịch chuyển xanh: nó đang rơi về phía Ngân Hà với tốc độ chừng 110 km/s, và ở khoảng cách 2,5 triệu năm ánh sáng thì số hạng giãn nở quá nhỏ để thắng nổi.</p>
+
+        <h5>Người ta dựng được gì từ nó</h5>
+        <ul>
+          <li><b>Ngoại hành tinh.</b> Hành tinh làm ngôi sao của nó lắc lư; phương pháp vận tốc xuyên tâm đọc cái lắc ấy thành một dịch chuyển Doppler tuần hoàn. 51 Pegasi b (1995) cho biên độ chừng 59 m/s — tức một độ dịch bước sóng cỡ $2\times10^{-7}$.</li>
+          <li><b>Đường cong quay của thiên hà.</b> Một bên của thiên hà xoắn ốc bị dịch đỏ, bên kia bị dịch xanh; các tốc độ quay rút ra từ đó chính là thứ đã hé lộ vật chất tối.</li>
+          <li><b>Khảo sát dịch chuyển đỏ.</b> $z$ vừa đóng vai khoảng cách vừa đóng vai đồng hồ, và đó là cách bản đồ ba chiều của cấu trúc quy mô lớn được dựng lên.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <!-- ═══════════════ PART 4 ═══════════════ -->
   <div class="rl-part p-bend" id="p4">
-    <p class="rl-part__k">Part 4 · General relativity</p>
-    <h2 class="rl-part__t">Gravity is not a pull. It is a bend.</h2>
-    <p class="rl-part__s">Ten years after the fast-things part, Einstein finished the hard part: what happens when heavy things are around. His answer changed what gravity <em>is</em>.</p>
+    <p class="rl-part__k t-en">Part 4 · General relativity</p>
+    <p class="rl-part__k t-vi">Phần 4 · Thuyết tương đối rộng</p>
+    <h2 class="rl-part__t t-en">Gravity is not a pull. It is a bend.</h2>
+    <h2 class="rl-part__t t-vi">Hấp dẫn không phải một lực kéo. Nó là một chỗ cong.</h2>
+    <p class="rl-part__s t-en">Ten years after the fast-things part, Einstein finished the hard part: what happens when heavy things are around. His answer changed what gravity <em>is</em>.</p>
+    <p class="rl-part__s t-vi">Mười năm sau phần nói về vật đi nhanh, Einstein làm xong phần khó: chuyện gì xảy ra khi quanh đó có vật nặng. Câu trả lời của ông đã đổi luôn <em>bản chất</em> của lực hấp dẫn.</p>
   </div>
 
   <section class="rl-sec p-bend" id="s8">
     <div class="rl-sec__head">
       <div class="rl-sec__num">8</div>
-      <h3 class="rl-sec__t">The trampoline, the bowling ball and the marble</h3>
+      <h3 class="rl-sec__t t-en">The trampoline, the bowling ball and the marble</h3>
+      <h3 class="rl-sec__t t-vi">Tấm bạt nhún, quả bóng bowling và viên bi</h3>
     </div>
 
-    <p class="rl-p">Isaac Newton said the Sun pulls the Earth with an invisible force, like a rope you cannot see. That idea works beautifully — we still use it to fly spacecraft. But Einstein noticed it never explains <em>how</em>. How does the Sun reach across 150 million kilometres of empty nothing and tug on us?</p>
-    <p class="rl-p">His answer: it does not reach across anything. Try this instead.</p>
+    <p class="rl-p t-en">Isaac Newton said the Sun pulls the Earth with an invisible force, like a rope you cannot see. That idea works beautifully — we still use it to fly spacecraft. But Einstein noticed it never explains <em>how</em>. How does the Sun reach across 150 million kilometres of empty nothing and tug on us?</p>
+    <p class="rl-p t-vi">Isaac Newton nói Mặt Trời kéo Trái Đất bằng một lực vô hình, như một sợi dây bạn không nhìn thấy. Ý đó chạy rất tốt — tới giờ ta vẫn dùng nó để lái tàu vũ trụ. Nhưng Einstein để ý rằng nó chẳng bao giờ giải thích <em>bằng cách nào</em>. Làm sao Mặt Trời với tay qua 150 triệu ki-lô-mét trống rỗng để giật chúng ta?</p>
+    <p class="rl-p t-en">His answer: it does not reach across anything. Try this instead.</p>
+    <p class="rl-p t-vi">Câu trả lời của ông: nó chẳng với qua cái gì cả. Hãy thử hình dung thế này.</p>
 
     <div class="rl-story">
-      <h4>Put a bowling ball on a trampoline</h4>
-      <p class="rl-p">The stretchy cloth sags into a big dip. Now roll a marble across the trampoline, off to one side. The marble curves around the dip. If you roll it just right, it will circle the bowling ball for a while before it finally spirals in.</p>
-      <p class="rl-p">The bowling ball never touched the marble. There is no rope, no magnet, no pull. The marble is <b>rolling as straight as it knows how</b> — but the floor underneath it is bent.</p>
-      <p class="rl-p">Einstein said that is what gravity actually is. Heavy things bend the space and time around them, and everything else just goes straight — on a bent floor.</p>
+      <h4><span class="t-en">Put a bowling ball on a trampoline</span><span class="t-vi">Đặt quả bóng bowling lên tấm bạt nhún</span></h4>
+      <p class="rl-p t-en">The stretchy cloth sags into a big dip. Now roll a marble across the trampoline, off to one side. The marble curves around the dip. If you roll it just right, it will circle the bowling ball for a while before it finally spirals in.</p>
+      <p class="rl-p t-vi">Tấm vải co giãn võng xuống thành một cái hố lớn. Giờ lăn một viên bi ngang qua tấm bạt, chệch sang một bên. Viên bi cong vòng quanh cái hố. Nếu bạn lăn vừa khéo, nó sẽ vòng quanh quả bóng bowling một lúc trước khi cuối cùng xoáy vào trong.</p>
+      <p class="rl-p t-en">The bowling ball never touched the marble. There is no rope, no magnet, no pull. The marble is <b>rolling as straight as it knows how</b> — but the floor underneath it is bent.</p>
+      <p class="rl-p t-vi">Quả bóng bowling chưa hề chạm vào viên bi. Không dây, không nam châm, không lực kéo nào cả. Viên bi đang <b>lăn thẳng hết mức nó biết</b> — chỉ có điều cái sàn dưới nó bị cong.</p>
+      <p class="rl-p t-en">Einstein said that is what gravity actually is. Heavy things bend the space and time around them, and everything else just goes straight — on a bent floor.</p>
+      <p class="rl-p t-vi">Einstein bảo lực hấp dẫn thật ra chính là như vậy. Vật nặng bẻ cong không gian và thời gian quanh chúng, còn mọi thứ khác chỉ việc đi thẳng — trên một cái sàn bị cong.</p>
     </div>
 
-    <p class="rl-p">The Earth is not being tugged by the Sun. The Earth is going straight ahead through a part of the universe that the Sun has curved. It has been going straight for four and a half billion years, and “straight” keeps bringing it back around.</p>
-    <p class="rl-p">One more thing follows immediately, and it is the test that made Einstein famous. Light has no weight, so Newton's rope should not touch it. But if <em>space itself</em> is bent, light must follow the bend too. In 1919 astronomers photographed stars during a total eclipse of the Sun and found them shifted slightly out of place — exactly as much as Einstein had calculated. Starlight had been bent by the Sun on its way to us.</p>
+    <p class="rl-p t-en">The Earth is not being tugged by the Sun. The Earth is going straight ahead through a part of the universe that the Sun has curved. It has been going straight for four and a half billion years, and “straight” keeps bringing it back around.</p>
+    <p class="rl-p t-vi">Trái Đất không bị Mặt Trời giật. Trái Đất đang đi thẳng về phía trước, xuyên qua một vùng vũ trụ mà Mặt Trời đã làm cong. Nó đi thẳng như thế suốt bốn tỉ rưỡi năm, và “thẳng” cứ đưa nó vòng trở lại.</p>
+    <p class="rl-p t-en">One more thing follows immediately, and it is the test that made Einstein famous. Light has no weight, so Newton's rope should not touch it. But if <em>space itself</em> is bent, light must follow the bend too. In 1919 astronomers photographed stars during a total eclipse of the Sun and found them shifted slightly out of place — exactly as much as Einstein had calculated. Starlight had been bent by the Sun on its way to us.</p>
+    <p class="rl-p t-vi">Một điều nữa suy ra ngay lập tức, và đó là phép thử làm Einstein nổi tiếng. Ánh sáng không có khối lượng, nên sợi dây của Newton lẽ ra chẳng chạm được vào nó. Nhưng nếu <em>chính không gian</em> bị cong thì ánh sáng buộc phải đi theo chỗ cong ấy. Năm 1919, các nhà thiên văn chụp ảnh những ngôi sao trong một lần nhật thực toàn phần và thấy chúng lệch khỏi chỗ cũ một chút — lệch đúng bằng con số Einstein đã tính. Ánh sao đã bị Mặt Trời bẻ cong trên đường tới chỗ ta.</p>
 
     <figure class="rl-lab">
       <div class="rl-lab__bar">
         <span class="rl-lab__tag">Lab 8</span>
-        <span class="rl-lab__name">Bend the sheet and see what the ball does</span>
+        <span class="rl-lab__name t-en">Bend the sheet and see what the ball does</span>
+        <span class="rl-lab__name t-vi">Làm lõm tấm lưới rồi xem quả bóng đi thế nào</span>
       </div>
       <div class="rl-lab__stage"><canvas id="cv-well" class="rl-canvas rl-canvas--tall" aria-label="A grid representing space is dented by a heavy star at the centre. A small ball crosses the grid and its path curves more strongly as the star's mass is increased."></canvas></div>
       <div class="rl-lab__ctrl">
         <div class="rl-ctrl">
-          <span class="rl-ctrl__lab">Star's mass</span>
+          <span class="rl-ctrl__lab t-en">Star's mass</span>
+          <span class="rl-ctrl__lab t-vi">Khối lượng ngôi sao</span>
           <input type="range" class="wb-range" id="r-well" min="0" max="100" value="46" aria-label="Mass of the central star">
           <span class="rl-ctrl__val" id="v-well">46</span>
         </div>
         <button class="wb-btn wb-btn--secondary wb-btn--sm" id="b-well-reset" type="button">
-          <span class="wb-ico">restart_alt</span> Send a new ball
+          <span class="wb-ico">restart_alt</span><span class="t-en">Send a new ball</span><span class="t-vi">Thả một quả bóng mới</span>
         </button>
       </div>
       <div class="rl-read">
-        <div class="rl-read__c"><p class="rl-read__l">Dip in the sheet</p><p class="rl-read__v is-accent" id="o-well-d">Deep</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">The ball's path</p><p class="rl-read__v" id="o-well-p">Orbiting</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Dip in the sheet</p>
+        <p class="rl-read__l t-vi">Độ lõm của tấm lưới</p><p class="rl-read__v is-accent" id="o-well-d">Deep</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">The ball's path</p>
+        <p class="rl-read__l t-vi">Đường đi của quả bóng</p><p class="rl-read__v" id="o-well-p">Orbiting</p></div>
       </div>
-      <figcaption class="rl-lab__cap">Slide the mass to <b>zero</b>: the grid flattens and the ball crosses in a perfectly straight line, because there is nothing to bend. Add mass and the same ball, launched the same way, starts to curve — first a gentle swerve, then a loop, then a fall. Nothing ever pulls it. <b>The grid is what changed.</b></figcaption>
+      <figcaption class="rl-lab__cap t-en">Slide the mass to <b>zero</b>: the grid flattens and the ball crosses in a perfectly straight line, because there is nothing to bend. Add mass and the same ball, launched the same way, starts to curve — first a gentle swerve, then a loop, then a fall. Nothing ever pulls it. <b>The grid is what changed.</b></figcaption>
+      <figcaption class="rl-lab__cap t-vi">Kéo khối lượng về <b>không</b>: tấm lưới phẳng ra và quả bóng băng qua theo một đường thẳng tắp, vì chẳng có gì để bẻ cong. Thêm khối lượng thì vẫn quả bóng ấy, vẫn phóng đi hệt như thế, mà bắt đầu cong — đầu tiên là chệch nhẹ, rồi thành vòng, rồi rơi hẳn vào. Chẳng có gì kéo nó cả. <b>Thứ thay đổi là tấm lưới.</b></figcaption>
     </figure>
 
     <div class="rl-key">
       <span class="rl-key__ico">🌍</span>
-      <p class="rl-key__b">A trampoline is only a picture — real space bends in three directions at once, and time bends with it. But the important part of the picture is exactly right: <b>nothing is pulling. The floor is bent.</b></p>
+      <p class="rl-key__b t-en">A trampoline is only a picture — real space bends in three directions at once, and time bends with it. But the important part of the picture is exactly right: <b>nothing is pulling. The floor is bent.</b></p>
+      <p class="rl-key__b t-vi">Tấm bạt nhún chỉ là một bức tranh — không gian thật bị cong theo ba hướng cùng lúc, và thời gian cong theo. Nhưng phần quan trọng của bức tranh thì đúng y: <b>chẳng có gì kéo cả. Cái sàn bị cong.</b></p>
     </div>
 
     <div class="rl-detail-row">
       <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d8" type="button">
-        <span class="wb-ico">functions</span> Detail — for scientists
+        <span class="wb-ico">functions</span><span class="t-en">Detail — for scientists</span><span class="t-vi">Chi tiết — cho nhà khoa học</span>
       </button>
-      <span class="rl-detail-hint">Equivalence principle, geodesics, the field equations, and four classical tests.</span>
+      <span class="rl-detail-hint t-en">Equivalence principle, geodesics, the field equations, and four classical tests.</span>
+      <span class="rl-detail-hint t-vi">Nguyên lý tương đương, đường trắc địa, phương trình trường, và bốn kiểm chứng cổ điển.</span>
     </div>
 
     <div class="rl-src" id="d8"
          data-title="Curvature, geodesics and the Einstein field equations"
-         data-sub="From a thought about a falling lift to a tensor equation, and what it predicted">
-      <div class="rl-sci">
+         data-sub="From a thought about a falling lift to a tensor equation, and what it predicted"
+         data-title-vi="Độ cong, đường trắc địa và phương trình trường Einstein"
+         data-sub-vi="Từ một ý nghĩ về chiếc thang máy rơi tới một phương trình tensor, và những gì nó tiên đoán">
+      <div class="rl-sci t-en">
         <h5>The starting point</h5>
         <p>The <b>equivalence principle</b>: in a freely falling laboratory, small enough and for a short enough time, the laws of physics are those of special relativity. Gravity can be transformed away locally. Equivalently, inertial mass and gravitational mass are the same thing — tested by Eötvös-type and modern torsion-balance experiments to about one part in $10^{13}$, and by the MICROSCOPE satellite to $10^{-15}$.</p>
         <p>“Locally” carries the whole content. Over a large enough region you <em>can</em> tell gravity from acceleration, because real gravitational fields converge: two balls dropped side by side in a falling lift drift together. That residual, unremovable effect is <b>tidal</b>, and tidal effects are curvature.</p>
@@ -976,65 +1351,121 @@ section[id] { scroll-margin-top: 78px; }
           <li>It draws a spatial slice of the Schwarzschild geometry (Flamm's paraboloid), which is a legitimate object — but a slice, not the spacetime.</li>
         </ul>
       </div>
+      <div class="rl-sci t-vi">
+        <h5>Điểm xuất phát</h5>
+        <p><b>Nguyên lý tương đương</b>: trong một phòng thí nghiệm rơi tự do, đủ nhỏ và trong khoảng thời gian đủ ngắn, các định luật vật lý đúng là các định luật của thuyết tương đối hẹp. Hấp dẫn có thể bị biến mất một cách cục bộ. Tương đương với điều đó, khối lượng quán tính và khối lượng hấp dẫn là cùng một thứ — được kiểm bằng các thí nghiệm kiểu Eötvös và cân xoắn hiện đại tới khoảng một phần $10^{13}$, và bằng vệ tinh MICROSCOPE tới $10^{-15}$.</p>
+        <p>Chữ “cục bộ” mang toàn bộ nội dung. Trên một vùng đủ lớn thì bạn <em>có thể</em> phân biệt hấp dẫn với gia tốc, vì trường hấp dẫn thật thì hội tụ: hai quả bóng thả cạnh nhau trong thang máy rơi sẽ trôi lại gần nhau. Hiệu ứng dư ra, không xoá được ấy là <b>hiệu ứng thuỷ triều</b>, và hiệu ứng thuỷ triều chính là độ cong.</p>
+
+        <h5>Rơi tự do chính là chuyển động thẳng</h5>
+        <p>Một hạt tự do đi theo đường trắc địa của metric không-thời gian $g_{\mu\nu}$ — đường thế giới thẳng nhất mà nó có:</p>
+        <div class="rl-eq">$$\frac{d^{2}x^{\mu}}{d\tau^{2}} + \Gamma^{\mu}_{\ \alpha\beta}\,\frac{dx^{\alpha}}{d\tau}\frac{dx^{\beta}}{d\tau} = 0$$
+          <span class="rl-eq__note">Không có số hạng lực nào. Các ký hiệu Christoffel $\Gamma$ dựng từ đạo hàm của metric; trong một hệ quán tính cục bộ chúng triệt tiêu và phương trình thành $d^{2}x^{\mu}/d\tau^{2}=0$.</span></div>
+        <p>Chú ý xem độ cong nào mới thật sự làm việc trong hấp dẫn đời thường. Quả táo rơi với gia tốc 9,8 m/s², nhưng nó đi xuyên qua <em>thời gian</em> với tốc độ $c$; số hạng trội trong phương trình trắc địa cho vật chậm là $\Gamma^{i}_{\ tt}$, tức là độ cong của phương <b>thời gian</b>. Hấp dẫn Newton gần như đúng là phát biểu của mục 9 — rằng đồng hồ ở thấp chạy chậm hơn — trong một bộ đồ hoá trang.</p>
+
+        <h5>Phương trình trường (1915)</h5>
+        <div class="rl-eq">$$G_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^{4}}\,T_{\mu\nu}, \qquad G_{\mu\nu} \equiv R_{\mu\nu} - \tfrac{1}{2}R\,g_{\mu\nu}$$
+          <span class="rl-eq__note">Vế trái: hình học. Vế phải: năng lượng, động lượng, áp suất và ứng suất. Mười phương trình đạo hàm riêng phi tuyến liên kết nhau cho metric. $8\pi G/c^{4} \approx 2{,}08\times10^{-43}\ \mathrm{N^{-1}}$ — không-thời gian cứng tới mức phi thường, và đó là lý do phải cỡ một ngôi sao mới bẻ cong được thấy rõ.</span></div>
+
+        <h5>Nghiệm chân không quanh một khối cầu</h5>
+        <p>Schwarzschild tìm ra nó chỉ trong vài tuần, khi đang phục vụ ở mặt trận Nga:</p>
+        <div class="rl-eq">$$ds^{2} = -\left(1 - \frac{r_{s}}{r}\right)c^{2}dt^{2} + \frac{dr^{2}}{1 - r_{s}/r} + r^{2}d\Omega^{2}, \qquad r_{s} = \frac{2GM}{c^{2}}$$
+          <span class="rl-eq__note">$r_{s}$ là bán kính Schwarzschild: 2,95 km với Mặt Trời, 8,87 mm với Trái Đất. Cả hai đều nằm sâu bên trong thiên thể, nên nghiệm ngoài là tất cả những gì áp dụng được — trừ khi vật sụp đổ.</span></div>
+
+        <h5>Nó tiên đoán gì, và người ta tìm thấy gì</h5>
+        <table class="rl-num">
+          <tr><th>Tiên đoán</th><th>Giá trị</th><th>Tình trạng</th></tr>
+          <tr><td>Tiến động điểm cận nhật của Sao Thuỷ</td><td>43″ mỗi thế kỷ, ngoài phần Newton</td><td>Vốn đã là dị thường chưa giải thích được năm 1915; GR cho 42,98″</td></tr>
+          <tr><td>Độ lệch ánh sáng $\theta = 4GM/c^{2}b$</td><td>1,75″ sát rìa Mặt Trời — gấp đôi ước lượng Newton</td><td>Nhật thực 1919 của Eddington; nay đo bằng VLBI tới ~0,01%</td></tr>
+          <tr><td>Thấu kính hấp dẫn</td><td>Nhiều ảnh, cung sáng, vòng Einstein</td><td>Thường quy; dùng để cân đám thiên hà và tìm vật chất tối</td></tr>
+          <tr><td>Sóng hấp dẫn</td><td>Biến dạng $h \sim 10^{-21}$ từ các lỗ đen sáp nhập</td><td>GW150914, phát hiện ngày 14/09/2015 bởi LIGO</td></tr>
+          <tr><td>Lỗ đen</td><td>Một chân trời sự kiện tại $r = r_{s}$, đổ bóng</td><td>Event Horizon Telescope: M87* năm 2019, Sgr A* năm 2022</td></tr>
+          <tr><td>Kéo lê hệ quy chiếu</td><td>Khối lượng đang quay kéo theo các hệ quán tính</td><td>Gravity Probe B, 2011; LARES/LAGEOS</td></tr>
+        </table>
+
+        <h5>Giới hạn thành thật của hình ảnh tấm bạt nhún</h5>
+        <ul>
+          <li>Nó nhúng một mặt hai chiều vào không gian ba chiều, và cần một hướng “xuống” từ bên ngoài — đúng thứ mà nó tự nhận là đang giải thích.</li>
+          <li>Nó cho thấy <em>không gian</em> cong. Với quỹ đạo phi tương đối tính thì <em>thời gian</em> cong mới là phần trội, và tấm bạt chẳng thể hiện điều đó chút nào.</li>
+          <li>Nó vẽ một lát cắt không gian của hình học Schwarzschild (paraboloid Flamm), một đối tượng hoàn toàn chính đáng — nhưng là một lát cắt, không phải cả không-thời gian.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <section class="rl-sec p-bend" id="s9">
     <div class="rl-sec__head">
       <div class="rl-sec__num">9</div>
-      <h3 class="rl-sec__t">Heavy things slow time down — and your phone knows it</h3>
+      <h3 class="rl-sec__t t-en">Heavy things slow time down — and your phone knows it</h3>
+      <h3 class="rl-sec__t t-vi">Vật nặng làm thời gian chậm lại — và điện thoại của bạn biết điều đó</h3>
     </div>
 
-    <p class="rl-p">Here is the strangest result of the whole page, and the easiest one to check.</p>
-    <p class="rl-p">Time runs <b>slower</b> when you are closer to something heavy. Not the clock — <em>time</em>. A clock on your kitchen floor really does run slower than a clock on the top shelf, because the floor is a little bit closer to the centre of the Earth.</p>
-    <p class="rl-p">The difference is unbelievably small. For a shelf two metres up, the two clocks would drift apart by about <b>one second every 150 million years</b>. But it is not zero, and scientists now have clocks good enough to see it over a height of just <b>33 centimetres</b>.</p>
+    <p class="rl-p t-en">Here is the strangest result of the whole page, and the easiest one to check.</p>
+    <p class="rl-p t-vi">Đây là kết quả lạ nhất của cả trang này, và cũng là kết quả dễ kiểm tra nhất.</p>
+    <p class="rl-p t-en">Time runs <b>slower</b> when you are closer to something heavy. Not the clock — <em>time</em>. A clock on your kitchen floor really does run slower than a clock on the top shelf, because the floor is a little bit closer to the centre of the Earth.</p>
+    <p class="rl-p t-vi">Thời gian trôi <b>chậm hơn</b> khi bạn ở gần một vật nặng. Không phải cái đồng hồ chậm — mà <em>thời gian</em> chậm. Chiếc đồng hồ đặt dưới sàn bếp nhà bạn thật sự chạy chậm hơn chiếc đặt trên nóc tủ, vì cái sàn ở gần tâm Trái Đất hơn một chút.</p>
+    <p class="rl-p t-en">The difference is unbelievably small. For a shelf two metres up, the two clocks would drift apart by about <b>one second every 150 million years</b>. But it is not zero, and scientists now have clocks good enough to see it over a height of just <b>33 centimetres</b>.</p>
+    <p class="rl-p t-vi">Chênh lệch nhỏ tới mức khó tin. Với cái kệ cao hai mét, hai chiếc đồng hồ phải mất chừng <b>một giây trong 150 triệu năm</b> mới lệch nhau. Nhưng nó không bằng không, và các nhà khoa học giờ đã có đồng hồ đủ tốt để thấy nó chỉ với chênh lệch độ cao <b>33 xăng-ti-mét</b>.</p>
 
     <div class="rl-story">
-      <h4>The satellites that have to lie about the time</h4>
-      <p class="rl-p">When your phone shows a map, it is listening to about 30 satellites, each shouting the time from 20,000 kilometres up. Your phone works out where it is by comparing how long each message took to arrive. Timing is everything: being wrong by one millionth of a second means being wrong by 300 metres.</p>
-      <p class="rl-p">Those satellites are far from the Earth, so gravity is weaker up there and their clocks run <b>fast</b> — about 46 millionths of a second gained per day. They are also moving quickly, so time dilation from Part 2 makes them run <b>slow</b> — about 7 millionths of a second lost per day. The two effects do not cancel. What is left is about <b>38 millionths of a second gained every day</b>.</p>
-      <p class="rl-p">If engineers ignored that, your map would be wrong by about <b>10 kilometres after a single day</b>. So the satellite clocks are deliberately built to run at the wrong rate on the ground, so that they run at the right rate in orbit. Einstein is in your pocket, every time you look up a route.</p>
+      <h4><span class="t-en">The satellites that have to lie about the time</span><span class="t-vi">Những vệ tinh buộc phải nói dối về giờ</span></h4>
+      <p class="rl-p t-en">When your phone shows a map, it is listening to about 30 satellites, each shouting the time from 20,000 kilometres up. Your phone works out where it is by comparing how long each message took to arrive. Timing is everything: being wrong by one millionth of a second means being wrong by 300 metres.</p>
+      <p class="rl-p t-vi">Khi điện thoại của bạn hiện bản đồ, nó đang nghe chừng 30 vệ tinh, mỗi cái hô giờ từ độ cao 20.000 ki-lô-mét. Điện thoại tính ra mình đang ở đâu bằng cách so xem mỗi tin nhắn mất bao lâu mới tới nơi. Giờ giấc là tất cả: sai một phần triệu giây là sai 300 mét.</p>
+      <p class="rl-p t-en">Those satellites are far from the Earth, so gravity is weaker up there and their clocks run <b>fast</b> — about 46 millionths of a second gained per day. They are also moving quickly, so time dilation from Part 2 makes them run <b>slow</b> — about 7 millionths of a second lost per day. The two effects do not cancel. What is left is about <b>38 millionths of a second gained every day</b>.</p>
+      <p class="rl-p t-vi">Các vệ tinh ấy ở xa Trái Đất, nên trên đó hấp dẫn yếu hơn và đồng hồ của chúng chạy <b>nhanh</b> — nhanh thêm chừng 46 phần triệu giây mỗi ngày. Chúng cũng bay rất nhanh, nên sự giãn thời gian ở Phần 2 làm chúng chạy <b>chậm</b> — chậm đi chừng 7 phần triệu giây mỗi ngày. Hai hiệu ứng không triệt tiêu nhau. Phần còn lại là khoảng <b>38 phần triệu giây nhanh thêm mỗi ngày</b>.</p>
+      <p class="rl-p t-en">If engineers ignored that, your map would be wrong by about <b>10 kilometres after a single day</b>. So the satellite clocks are deliberately built to run at the wrong rate on the ground, so that they run at the right rate in orbit. Einstein is in your pocket, every time you look up a route.</p>
+      <p class="rl-p t-vi">Nếu các kỹ sư lờ đi chuyện đó, bản đồ của bạn sẽ sai chừng <b>10 ki-lô-mét chỉ sau một ngày</b>. Vậy nên đồng hồ vệ tinh được cố ý chế tạo để chạy sai nhịp khi còn ở mặt đất, sao cho lên tới quỹ đạo thì chúng chạy đúng nhịp. Einstein nằm trong túi bạn, mỗi lần bạn tra đường.</p>
     </div>
 
-    <p class="rl-p">Go somewhere much heavier and the effect stops being tiny. Near a <b>black hole</b> — an object so heavy that not even light can climb away from it — time crawls. Hover close to the edge and you could watch a hundred years go by outside while you lived through one.</p>
+    <p class="rl-p t-en">Go somewhere much heavier and the effect stops being tiny. Near a <b>black hole</b> — an object so heavy that not even light can climb away from it — time crawls. Hover close to the edge and you could watch a hundred years go by outside while you lived through one.</p>
+    <p class="rl-p t-vi">Đi tới chỗ nặng hơn nhiều thì hiệu ứng thôi bé tí. Ở gần một <b>lỗ đen</b> — vật nặng tới mức ngay cả ánh sáng cũng không leo ra nổi — thời gian bò lê. Lơ lửng sát bờ vực, bạn có thể nhìn một trăm năm trôi qua bên ngoài trong lúc mình chỉ sống hết một năm.</p>
 
     <figure class="rl-lab">
       <div class="rl-lab__bar">
         <span class="rl-lab__tag">Lab 9</span>
-        <span class="rl-lab__name">Two clocks: one far away, one close to a black hole</span>
+        <span class="rl-lab__name t-en">Two clocks: one far away, one close to a black hole</span>
+        <span class="rl-lab__name t-vi">Hai đồng hồ: một ở thật xa, một sát lỗ đen</span>
       </div>
       <div class="rl-lab__stage"><canvas id="cv-grav" class="rl-canvas" aria-label="A black hole with a clock hovering near it and a second clock far away. The nearby clock's hand turns visibly more slowly and its year counter falls behind."></canvas></div>
       <div class="rl-lab__ctrl">
         <div class="rl-ctrl">
-          <span class="rl-ctrl__lab">How close is the clock?</span>
+          <span class="rl-ctrl__lab t-en">How close is the clock?</span>
+          <span class="rl-ctrl__lab t-vi">Đồng hồ ở gần cỡ nào?</span>
           <input type="range" class="wb-range" id="r-grav" min="102" max="1200" value="200" aria-label="Distance of the near clock from the black hole, in units of the hole's radius">
           <span class="rl-ctrl__val" id="v-grav">2.00 ×</span>
         </div>
       </div>
       <div class="rl-read">
-        <div class="rl-read__c"><p class="rl-read__l">Far-away clock counts</p><p class="rl-read__v" id="o-grav-f">0.0 yr</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Near clock counts</p><p class="rl-read__v is-accent" id="o-grav-n">0.0 yr</p></div>
-        <div class="rl-read__c"><p class="rl-read__l">Near clock runs at</p><p class="rl-read__v" id="o-grav-r">71%</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Far-away clock counts</p>
+        <p class="rl-read__l t-vi">Đồng hồ ở xa đếm được</p><p class="rl-read__v" id="o-grav-f">0.0 yr</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Near clock counts</p>
+        <p class="rl-read__l t-vi">Đồng hồ ở gần đếm được</p><p class="rl-read__v is-accent" id="o-grav-n">0.0 yr</p></div>
+        <div class="rl-read__c"><p class="rl-read__l t-en">Near clock runs at</p>
+        <p class="rl-read__l t-vi">Đồng hồ ở gần chạy bằng</p><p class="rl-read__v" id="o-grav-r">71%</p></div>
       </div>
-      <figcaption class="rl-lab__cap">The dashed circle is the <b>edge</b> — the point of no return. Slide the clock right up against it and its hand almost stops while the far clock spins on. Slide it far away and the two clocks agree again, which is why nobody noticed any of this for three hundred years.</figcaption>
+      <figcaption class="rl-lab__cap t-en">The dashed circle is the <b>edge</b> — the point of no return. Slide the clock right up against it and its hand almost stops while the far clock spins on. Slide it far away and the two clocks agree again, which is why nobody noticed any of this for three hundred years.</figcaption>
+      <figcaption class="rl-lab__cap t-vi">Vòng tròn nét đứt là <b>bờ vực</b> — điểm không quay lại được. Kéo đồng hồ sát vào đó thì kim của nó gần như đứng lại, trong khi đồng hồ ở xa vẫn quay đều. Kéo nó ra thật xa thì hai đồng hồ lại khớp nhau — và đó là lý do suốt ba trăm năm không ai nhận ra chuyện này.</figcaption>
     </figure>
 
     <div class="rl-key">
       <span class="rl-key__ico">📡</span>
-      <p class="rl-key__b">Both parts of this page are needed at once for satellites: speed makes their clocks slow, height makes them fast, and the leftover has to be corrected every single day.</p>
+      <p class="rl-key__b t-en">Both parts of this page are needed at once for satellites: speed makes their clocks slow, height makes them fast, and the leftover has to be corrected every single day.</p>
+      <p class="rl-key__b t-vi">Vệ tinh cần cả hai phần của trang này cùng một lúc: tốc độ làm đồng hồ của chúng chạy chậm, độ cao làm chúng chạy nhanh, và phần dư ra phải được chỉnh lại mỗi ngày.</p>
     </div>
 
     <div class="rl-detail-row">
       <button class="wb-btn wb-btn--outline wb-btn--sm rl-detail-btn" data-detail="d9" type="button">
-        <span class="wb-ico">functions</span> Detail — for scientists
+        <span class="wb-ico">functions</span><span class="t-en">Detail — for scientists</span><span class="t-vi">Chi tiết — cho nhà khoa học</span>
       </button>
-      <span class="rl-detail-hint">The metric term, the weak-field limit, Pound–Rebka, and the GPS error budget.</span>
+      <span class="rl-detail-hint t-en">The metric term, the weak-field limit, Pound–Rebka, and the GPS error budget.</span>
+      <span class="rl-detail-hint t-vi">Số hạng metric, giới hạn trường yếu, Pound–Rebka, và ngân sách sai số GPS.</span>
     </div>
 
     <div class="rl-src" id="d9"
          data-title="Gravitational time dilation and the GPS budget"
-         data-sub="One term of the Schwarzschild metric, and its consequences down to the nanosecond">
-      <div class="rl-sci">
+         data-sub="One term of the Schwarzschild metric, and its consequences down to the nanosecond"
+         data-title-vi="Giãn thời gian hấp dẫn và ngân sách GPS"
+         data-sub-vi="Một số hạng của metric Schwarzschild, và hệ quả của nó xuống tới từng nano-giây">
+      <div class="rl-sci t-en">
         <h5>Where it comes from</h5>
         <p>Take the Schwarzschild metric and set $dr = d\Omega = 0$ — a clock held at fixed $r$. Then $ds^{2} = -(1-r_{s}/r)c^{2}dt^{2}$, and proper time relates to coordinate time (which is the time kept by a clock at infinity) by</p>
         <div class="rl-eq">$$\frac{d\tau}{dt} = \sqrt{1 - \frac{r_{s}}{r}} = \sqrt{1 - \frac{2GM}{rc^{2}}}$$
@@ -1064,57 +1495,97 @@ section[id] { scroll-margin-top: 78px; }
           <li><b>Relativistic geodesy.</b> Optical clocks at $10^{-18}$ stability resolve 1 cm of height. Comparing two clocks now measures a geopotential difference directly, which is a survey instrument, not a physics demonstration.</li>
         </ul>
       </div>
+      <div class="rl-sci t-vi">
+        <h5>Nó tới từ đâu</h5>
+        <p>Lấy metric Schwarzschild rồi đặt $dr = d\Omega = 0$ — một đồng hồ giữ cố định ở bán kính $r$. Khi đó $ds^{2} = -(1-r_{s}/r)c^{2}dt^{2}$, và thời gian riêng liên hệ với thời gian toạ độ (chính là thời gian của một đồng hồ ở vô cực) bởi</p>
+        <div class="rl-eq">$$\frac{d\tau}{dt} = \sqrt{1 - \frac{r_{s}}{r}} = \sqrt{1 - \frac{2GM}{rc^{2}}}$$
+          <span class="rl-eq__note">$\to 0$ khi $r \to r_{s}$: nhìn từ xa, một chiếc đồng hồ đang rơi vào có vẻ đóng băng ngay tại chân trời. Người quan sát rơi cùng nó thì vượt qua trong một khoảng thời gian riêng hữu hạn và không thấy có gì đặc biệt xảy ra tại chỗ đó.</span></div>
+
+        <h5>Trường yếu</h5>
+        <p>Với $2GM/rc^{2} \ll 1$, khai triển rồi viết kết quả theo thế Newton $\Phi$:</p>
+        <div class="rl-eq">$$\frac{\Delta f}{f} \approx \frac{\Delta\Phi}{c^{2}} \approx \frac{g\,\Delta h}{c^{2}} = 1{,}09\times10^{-16}\ \text{trên mỗi mét độ cao trên Trái Đất}$$</div>
+        <table class="rl-num">
+          <tr><th>Chênh lệch độ cao</th><th>Tỉ lệ nhịp</th><th>Tích luỹ</th></tr>
+          <tr><td>2 m (sàn lên kệ)</td><td><code>2,2 × 10⁻¹⁶</code></td><td>1 s trong ≈ 150 triệu năm</td></tr>
+          <tr><td>33 cm</td><td><code>3,6 × 10⁻¹⁷</code></td><td>Phân giải được bằng đồng hồ Al⁺ của NIST, 2010</td></tr>
+          <tr><td>22,5 m (tháp Pound–Rebka)</td><td><code>2,45 × 10⁻¹⁵</code></td><td>Đo năm 1959 bằng hiệu ứng Mössbauer trên ⁵⁷Fe</td></tr>
+          <tr><td>8 849 m (Everest so với mực nước biển)</td><td><code>9,6 × 10⁻¹³</code></td><td>≈ 30 μs mỗi năm</td></tr>
+          <tr><td>Bề mặt Mặt Trời so với vô cực</td><td><code>2,12 × 10⁻⁶</code></td><td>≈ 67 s mỗi năm</td></tr>
+        </table>
+
+        <h5>Ngân sách GPS</h5>
+        <p>Một vệ tinh GPS bay ở $r = 26\,560$ km với $v = 3{,}87$ km/s. Cả hai hiệu ứng đều tính so với một đồng hồ trên geoid đang quay:</p>
+        <div class="rl-eq">$$\underbrace{-\frac{v^{2}}{2c^{2}}}_{\text{động học}} \;+\; \underbrace{\frac{GM}{c^{2}}\left(\frac{1}{R_{\oplus}} - \frac{1}{r}\right)}_{\text{hấp dẫn}} \;\Rightarrow\; -7{,}2 + 45{,}9 = +38{,}7\ \mu\mathrm{s\ mỗi\ ngày}$$</div>
+        <p>Nếu không hiệu chỉnh, mỗi ngày tích luỹ $c \times 38{,}7\ \mu\mathrm{s} \approx 11{,}6$ km sai số vị trí. Cách sửa được ghép sẵn vào phần cứng: bộ dao động trên vệ tinh được đặt ở 10,229 999 995 43 MHz khi còn dưới mặt đất, để lên quỹ đạo nó đọc đúng 10,23 MHz. Còn một số hạng tuần hoàn nữa, tới 46 ns, do độ lệch tâm quỹ đạo, được máy thu tự bù.</p>
+
+        <h5>Hệ quả ở vùng cực đoan</h5>
+        <ul>
+          <li><b>Dịch chuyển đỏ của ánh sáng leo ra.</b> Photon leo ra khỏi giếng thế mất tần số đúng theo hệ số ấy — chính là dịch chuyển đỏ hấp dẫn đã đo được ở các sao lùn trắng (Sirius B) và, ở mức $z \approx 6{,}7\times10^{-4}$ (khoảng 200 km/s quy theo vận tốc), ở ngôi sao S2 lúc nó tới gần Sgr A* nhất.</li>
+          <li><b>Chân trời.</b> $r_{s} = 2GM/c^{2}$ không phải một mặt vật chất mà là bán kính tại đó tốc độ thoát đạt tới $c$ và $d\tau/dt$ triệt tiêu. Với Sgr A* (4,3 × 10⁶ $M_\odot$) nó vào khoảng 12,7 triệu km, tức chừng một phần mười khoảng cách Trái Đất – Mặt Trời.</li>
+          <li><b>Trắc địa tương đối tính.</b> Đồng hồ quang học độ ổn định $10^{-18}$ phân giải được 1 cm độ cao. So hai chiếc đồng hồ giờ đây là đo trực tiếp một hiệu thế trọng trường — tức là một thiết bị trắc địa, không còn là một màn trình diễn vật lý.</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <!-- ═══════════════ RECAP ═══════════════ -->
   <div class="rl-part p-fast" id="recap">
-    <p class="rl-part__k">Recap</p>
-    <h2 class="rl-part__t">Five things worth remembering</h2>
-    <p class="rl-part__s">If everything else fades, these five sentences are the page.</p>
+    <p class="rl-part__k t-en">Recap</p>
+    <p class="rl-part__k t-vi">Tóm tắt</p>
+    <h2 class="rl-part__t t-en">Five things worth remembering</h2>
+    <h2 class="rl-part__t t-vi">Năm điều đáng nhớ</h2>
+    <p class="rl-part__s t-en">If everything else fades, these five sentences are the page.</p>
+    <p class="rl-part__s t-vi">Nếu mọi thứ khác phai đi, năm câu này chính là cả trang.</p>
   </div>
 
   <div class="rl-take">
     <div class="rl-take__c p-move">
-      <h4>1 · Speed is a comparison</h4>
-      <p>There is no such thing as “really standing still”. You are always moving relative to <em>something</em>, and every one of those answers is correct.</p>
+      <h4><span class="t-en">1 · Speed is a comparison</span><span class="t-vi">1 · Tốc độ là một phép so sánh</span></h4>
+      <p class="t-en">There is no such thing as “really standing still”. You are always moving relative to <em>something</em>, and every one of those answers is correct.</p>
+      <p class="t-vi">Không có cái gọi là “thật sự đứng yên”. Bạn luôn chuyển động so với <em>một thứ nào đó</em>, và mọi đáp án kiểu ấy đều đúng.</p>
     </div>
     <div class="rl-take__c p-fast">
-      <h4>2 · Light has one speed</h4>
-      <p>Everybody who measures light gets 299,792,458 metres per second — running towards it, running away, it makes no difference.</p>
+      <h4><span class="t-en">2 · Light has one speed</span><span class="t-vi">2 · Ánh sáng chỉ có một tốc độ</span></h4>
+      <p class="t-en">Everybody who measures light gets 299,792,458 metres per second — running towards it, running away, it makes no difference.</p>
+      <p class="t-vi">Ai đo ánh sáng cũng ra 299.792.458 mét mỗi giây — chạy về phía nó hay chạy khỏi nó cũng chẳng khác gì.</p>
     </div>
     <div class="rl-take__c p-fast">
-      <h4>3 · Fast clocks fall behind</h4>
-      <p>Because light's speed cannot change, time has to. Move fast and your clock, your heartbeat and your whole life run slow — as measured by someone you left behind.</p>
+      <h4><span class="t-en">3 · Fast clocks fall behind</span><span class="t-vi">3 · Đồng hồ đi nhanh thì tụt lại</span></h4>
+      <p class="t-en">Because light's speed cannot change, time has to. Move fast and your clock, your heartbeat and your whole life run slow — as measured by someone you left behind.</p>
+      <p class="t-vi">Vì tốc độ ánh sáng không được phép đổi, thời gian phải đổi. Đi nhanh thì đồng hồ, nhịp tim và cả cuộc đời bạn chạy chậm — theo phép đo của người bạn bỏ lại phía sau.</p>
     </div>
     <div class="rl-take__c p-wave">
-      <h4>4 · Movement changes waves</h4>
-      <p>Coming towards you, waves bunch up: higher notes, bluer light. Going away, they stretch: lower notes, redder light. That is how we know the universe is growing.</p>
+      <h4><span class="t-en">4 · Movement changes waves</span><span class="t-vi">4 · Chuyển động làm đổi sóng</span></h4>
+      <p class="t-en">Coming towards you, waves bunch up: higher notes, bluer light. Going away, they stretch: lower notes, redder light. That is how we know the universe is growing.</p>
+      <p class="t-vi">Đi về phía bạn thì sóng dồn lại: nốt cao hơn, ánh sáng xanh hơn. Đi ra xa thì sóng giãn ra: nốt thấp hơn, ánh sáng đỏ hơn. Đó là cách ta biết vũ trụ đang lớn lên.</p>
     </div>
     <div class="rl-take__c p-bend">
-      <h4>5 · Gravity is bent spacetime</h4>
-      <p>Heavy things dent the space and time around them. Everything else travels straight — and “straight” on a dented floor is a curve. Time runs slow down in the dent.</p>
+      <h4><span class="t-en">5 · Gravity is bent spacetime</span><span class="t-vi">5 · Hấp dẫn là không-thời gian bị cong</span></h4>
+      <p class="t-en">Heavy things dent the space and time around them. Everything else travels straight — and “straight” on a dented floor is a curve. Time runs slow down in the dent.</p>
+      <p class="t-vi">Vật nặng làm lõm không gian và thời gian quanh chúng. Mọi thứ khác chỉ đi thẳng — mà “thẳng” trên một cái sàn bị lõm là một đường cong. Dưới đáy chỗ lõm, thời gian trôi chậm.</p>
     </div>
   </div>
 
   <section class="rl-sec p-fast" id="glossary">
     <div class="rl-sec__head">
       <div class="rl-sec__num">✳</div>
-      <h3 class="rl-sec__t">The same ideas, in grown-up words</h3>
+      <h3 class="rl-sec__t t-en">The same ideas, in grown-up words</h3>
+      <h3 class="rl-sec__t t-vi">Vẫn những ý đó, bằng chữ của người lớn</h3>
     </div>
-    <p class="rl-p">Every idea on this page has a proper name. Here they are side by side, so the Detail popups stop looking like a foreign language.</p>
+    <p class="rl-p t-en">Every idea on this page has a proper name. Here they are side by side, so the Detail popups stop looking like a foreign language.</p>
+    <p class="rl-p t-vi">Mọi ý trên trang này đều có một cái tên chính thức. Đặt cạnh nhau ở đây, để các popup Chi tiết thôi trông như tiếng nước ngoài.</p>
     <table class="rl-words">
-      <tr><th>What this page said</th><th>What scientists call it</th><th>Written as</th></tr>
-      <tr><td>Where you are watching from</td><td>Frame of reference</td><td>S, S′</td></tr>
-      <tr><td>The speed of light</td><td>c</td><td>299 792 458 m/s</td></tr>
-      <tr><td>How much time stretches</td><td>Lorentz factor</td><td>γ = 1/√(1−v²/c²)</td></tr>
-      <tr><td>Moving clocks run slow</td><td>Time dilation</td><td>Δt = γΔt₀</td></tr>
-      <tr><td>Fast things look shorter</td><td>Length contraction</td><td>L = L₀/γ</td></tr>
-      <tr><td>Your own personal time</td><td>Proper time</td><td>τ</td></tr>
-      <tr><td>Sound and colour change with motion</td><td>Doppler shift</td><td>f′ = f (v+v₀)/(v−v_s)</td></tr>
-      <tr><td>Light stretched towards red</td><td>Redshift</td><td>z</td></tr>
-      <tr><td>Going straight on a bent floor</td><td>Geodesic</td><td>—</td></tr>
-      <tr><td>The edge of a black hole</td><td>Event horizon</td><td>r_s = 2GM/c²</td></tr>
+      <tr><th><span class="t-en">What this page said</span><span class="t-vi">Trang này gọi là</span></th><th><span class="t-en">What scientists call it</span><span class="t-vi">Nhà khoa học gọi là</span></th><th><span class="t-en">Written as</span><span class="t-vi">Viết là</span></th></tr>
+      <tr><td><span class="t-en">Where you are watching from</span><span class="t-vi">Chỗ bạn đứng nhìn</span></td><td><span class="t-en">Frame of reference</span><span class="t-vi">Hệ quy chiếu</span></td><td>S, S′</td></tr>
+      <tr><td><span class="t-en">The speed of light</span><span class="t-vi">Tốc độ ánh sáng</span></td><td>c</td><td>299 792 458 m/s</td></tr>
+      <tr><td><span class="t-en">How much time stretches</span><span class="t-vi">Thời gian giãn bao nhiêu</span></td><td><span class="t-en">Lorentz factor</span><span class="t-vi">Hệ số Lorentz</span></td><td>γ = 1/√(1−v²/c²)</td></tr>
+      <tr><td><span class="t-en">Moving clocks run slow</span><span class="t-vi">Đồng hồ chuyển động chạy chậm</span></td><td><span class="t-en">Time dilation</span><span class="t-vi">Sự giãn thời gian</span></td><td>Δt = γΔt₀</td></tr>
+      <tr><td><span class="t-en">Fast things look shorter</span><span class="t-vi">Vật đi nhanh trông ngắn hơn</span></td><td><span class="t-en">Length contraction</span><span class="t-vi">Sự co độ dài</span></td><td>L = L₀/γ</td></tr>
+      <tr><td><span class="t-en">Your own personal time</span><span class="t-vi">Thời gian của riêng bạn</span></td><td><span class="t-en">Proper time</span><span class="t-vi">Thời gian riêng</span></td><td>τ</td></tr>
+      <tr><td><span class="t-en">Sound and colour change with motion</span><span class="t-vi">Tiếng và màu đổi theo chuyển động</span></td><td><span class="t-en">Doppler shift</span><span class="t-vi">Dịch chuyển Doppler</span></td><td>f′ = f (v+v₀)/(v−v_s)</td></tr>
+      <tr><td><span class="t-en">Light stretched towards red</span><span class="t-vi">Ánh sáng bị kéo về phía đỏ</span></td><td><span class="t-en">Redshift</span><span class="t-vi">Dịch chuyển đỏ</span></td><td>z</td></tr>
+      <tr><td><span class="t-en">Going straight on a bent floor</span><span class="t-vi">Đi thẳng trên một cái sàn cong</span></td><td><span class="t-en">Geodesic</span><span class="t-vi">Đường trắc địa</span></td><td>—</td></tr>
+      <tr><td><span class="t-en">The edge of a black hole</span><span class="t-vi">Bờ vực của lỗ đen</span></td><td><span class="t-en">Event horizon</span><span class="t-vi">Chân trời sự kiện</span></td><td>r_s = 2GM/c²</td></tr>
     </table>
   </section>
 
@@ -1122,59 +1593,71 @@ section[id] { scroll-margin-top: 78px; }
   <section class="rl-sec p-bend" id="quiz">
     <div class="rl-sec__head">
       <div class="rl-sec__num">?</div>
-      <h3 class="rl-sec__t">Check yourself</h3>
+      <h3 class="rl-sec__t t-en">Check yourself</h3>
+      <h3 class="rl-sec__t t-vi">Tự kiểm tra</h3>
     </div>
-    <p class="rl-p">Five questions. Pick an answer and it will tell you straight away whether it was right, and why.</p>
+    <p class="rl-p t-en">Five questions. Pick an answer and it will tell you straight away whether it was right, and why.</p>
+    <p class="rl-p t-vi">Năm câu hỏi. Chọn một đáp án là nó nói ngay đúng hay sai, và vì sao.</p>
 
     <div class="rl-quiz" id="quiz-box">
       <div class="rl-q" data-answer="1">
-        <p class="rl-q__q">1. You are sitting perfectly still on a chair. Are you moving?</p>
+        <p class="rl-q__q t-en">1. You are sitting perfectly still on a chair. Are you moving?</p>
+        <p class="rl-q__q t-vi">1. Bạn đang ngồi im re trên ghế. Bạn có đang chuyển động không?</p>
         <div class="rl-q__opts">
-          <button class="rl-opt" type="button">No — nothing about me is moving.</button>
-          <button class="rl-opt" type="button">It depends what you compare me with.</button>
-          <button class="rl-opt" type="button">Yes — everybody is always moving at the same speed.</button>
+          <button class="rl-opt" type="button"><span class="t-en">No — nothing about me is moving.</span><span class="t-vi">Không — chẳng có gì ở tôi đang chuyển động cả.</span></button>
+          <button class="rl-opt" type="button"><span class="t-en">It depends what you compare me with.</span><span class="t-vi">Còn tuỳ bạn so tôi với cái gì.</span></button>
+          <button class="rl-opt" type="button"><span class="t-en">Yes — everybody is always moving at the same speed.</span><span class="t-vi">Có — ai cũng luôn chuyển động với cùng một tốc độ.</span></button>
         </div>
-        <p class="rl-q__why">Still compared to your chair, and about 30 km/s compared to the Sun. Both answers are true at once, which is exactly why speed always needs a “compared to what”.</p>
+        <p class="rl-q__why t-en">Still compared to your chair, and about 30 km/s compared to the Sun. Both answers are true at once, which is exactly why speed always needs a “compared to what”.</p>
+        <p class="rl-q__why t-vi">Yên so với cái ghế, và khoảng 30 km/s so với Mặt Trời. Cả hai đáp án đều đúng cùng lúc, và đó chính là lý do tốc độ luôn cần một vế “so với cái gì”.</p>
       </div>
 
       <div class="rl-q" data-answer="2">
-        <p class="rl-q__q">2. A rocket flying at half the speed of light switches on its headlights. How fast does that light travel?</p>
+        <p class="rl-q__q t-en">2. A rocket flying at half the speed of light switches on its headlights. How fast does that light travel?</p>
+        <p class="rl-q__q t-vi">2. Một tên lửa đang bay với nửa tốc độ ánh sáng bật đèn pha. Ánh sáng đó đi nhanh cỡ nào?</p>
         <div class="rl-q__opts">
-          <button class="rl-opt" type="button">One and a half times the speed of light.</button>
-          <button class="rl-opt" type="button">Half the speed of light.</button>
-          <button class="rl-opt" type="button">Exactly the speed of light — same as always.</button>
+          <button class="rl-opt" type="button"><span class="t-en">One and a half times the speed of light.</span><span class="t-vi">Gấp một lần rưỡi tốc độ ánh sáng.</span></button>
+          <button class="rl-opt" type="button"><span class="t-en">Half the speed of light.</span><span class="t-vi">Bằng nửa tốc độ ánh sáng.</span></button>
+          <button class="rl-opt" type="button"><span class="t-en">Exactly the speed of light — same as always.</span><span class="t-vi">Đúng bằng tốc độ ánh sáng — như mọi khi.</span></button>
         </div>
-        <p class="rl-q__why">Light never inherits the speed of whatever made it. This is the one fact that everything else on the page is built on.</p>
+        <p class="rl-q__why t-en">Light never inherits the speed of whatever made it. This is the one fact that everything else on the page is built on.</p>
+        <p class="rl-q__why t-vi">Ánh sáng không bao giờ thừa hưởng tốc độ của thứ tạo ra nó. Đây là sự thật duy nhất mà mọi thứ còn lại trên trang này được dựng lên từ đó.</p>
       </div>
 
       <div class="rl-q" data-answer="0">
-        <p class="rl-q__q">3. A clock races past you at 87% of the speed of light. Compared with your clock, it ticks…</p>
+        <p class="rl-q__q t-en">3. A clock races past you at 87% of the speed of light. Compared with your clock, it ticks…</p>
+        <p class="rl-q__q t-vi">3. Một chiếc đồng hồ lao qua bạn với 87% tốc độ ánh sáng. So với đồng hồ của bạn, nó đập…</p>
         <div class="rl-q__opts">
-          <button class="rl-opt" type="button">At half the rate — it falls behind.</button>
-          <button class="rl-opt" type="button">At exactly the same rate.</button>
-          <button class="rl-opt" type="button">Twice as fast — it races ahead.</button>
+          <button class="rl-opt" type="button"><span class="t-en">At half the rate — it falls behind.</span><span class="t-vi">Chậm bằng một nửa — nó tụt lại.</span></button>
+          <button class="rl-opt" type="button"><span class="t-en">At exactly the same rate.</span><span class="t-vi">Đúng bằng nhịp cũ.</span></button>
+          <button class="rl-opt" type="button"><span class="t-en">Twice as fast — it races ahead.</span><span class="t-vi">Nhanh gấp đôi — nó vượt lên.</span></button>
         </div>
-        <p class="rl-q__why">At 0.87 c the stretch factor γ is 2, so one of its ticks takes two of yours. The pilot carrying that clock notices nothing at all — to her, yours is the slow one.</p>
+        <p class="rl-q__why t-en">At 0.87 c the stretch factor γ is 2, so one of its ticks takes two of yours. The pilot carrying that clock notices nothing at all — to her, yours is the slow one.</p>
+        <p class="rl-q__why t-vi">Ở 0,87 c, hệ số giãn γ bằng 2, nên một nhịp của nó mất hai nhịp của bạn. Cô phi công cầm chiếc đồng hồ ấy chẳng thấy gì lạ — với cô, đồng hồ của bạn mới là cái chạy chậm.</p>
       </div>
 
       <div class="rl-q" data-answer="2">
-        <p class="rl-q__q">4. An ambulance has just passed you and is driving away. Its siren sounds…</p>
+        <p class="rl-q__q t-en">4. An ambulance has just passed you and is driving away. Its siren sounds…</p>
+        <p class="rl-q__q t-vi">4. Xe cứu thương vừa vượt qua bạn và đang chạy ra xa. Tiếng còi của nó nghe…</p>
         <div class="rl-q__opts">
-          <button class="rl-opt" type="button">Exactly as it does to the driver.</button>
-          <button class="rl-opt" type="button">Higher than it really is.</button>
-          <button class="rl-opt" type="button">Lower than it really is.</button>
+          <button class="rl-opt" type="button"><span class="t-en">Exactly as it does to the driver.</span><span class="t-vi">Đúng như bác tài nghe thấy.</span></button>
+          <button class="rl-opt" type="button"><span class="t-en">Higher than it really is.</span><span class="t-vi">Cao hơn tiếng thật của nó.</span></button>
+          <button class="rl-opt" type="button"><span class="t-en">Lower than it really is.</span><span class="t-vi">Thấp hơn tiếng thật của nó.</span></button>
         </div>
-        <p class="rl-q__why">Driving away stretches the sound ripples out, so fewer of them reach your ear each second — and fewer per second is what your ear calls a lower note.</p>
+        <p class="rl-q__why t-en">Driving away stretches the sound ripples out, so fewer of them reach your ear each second — and fewer per second is what your ear calls a lower note.</p>
+        <p class="rl-q__why t-vi">Chạy ra xa làm các gợn sóng âm giãn ra, nên mỗi giây có ít gợn hơn tới tai bạn — và ít gợn hơn mỗi giây là thứ tai bạn gọi là nốt thấp.</p>
       </div>
 
       <div class="rl-q" data-answer="1">
-        <p class="rl-q__q">5. Two identical clocks: one on the kitchen floor, one on a high shelf. After many years…</p>
+        <p class="rl-q__q t-en">5. Two identical clocks: one on the kitchen floor, one on a high shelf. After many years…</p>
+        <p class="rl-q__q t-vi">5. Hai chiếc đồng hồ giống hệt nhau: một đặt dưới sàn bếp, một trên cái kệ cao. Sau nhiều năm…</p>
         <div class="rl-q__opts">
-          <button class="rl-opt" type="button">They still agree exactly — height cannot matter.</button>
-          <button class="rl-opt" type="button">The shelf clock is slightly ahead.</button>
-          <button class="rl-opt" type="button">The floor clock is slightly ahead.</button>
+          <button class="rl-opt" type="button"><span class="t-en">They still agree exactly — height cannot matter.</span><span class="t-vi">Chúng vẫn khớp nhau y hệt — độ cao thì liên quan gì.</span></button>
+          <button class="rl-opt" type="button"><span class="t-en">The shelf clock is slightly ahead.</span><span class="t-vi">Đồng hồ trên kệ nhỉnh hơn một chút.</span></button>
+          <button class="rl-opt" type="button"><span class="t-en">The floor clock is slightly ahead.</span><span class="t-vi">Đồng hồ dưới sàn nhỉnh hơn một chút.</span></button>
         </div>
-        <p class="rl-q__why">Further from the Earth means weaker gravity means faster time. It is about one second in 150 million years for a two-metre shelf — tiny, but satellites have to correct for the same effect every day.</p>
+        <p class="rl-q__why t-en">Further from the Earth means weaker gravity means faster time. It is about one second in 150 million years for a two-metre shelf — tiny, but satellites have to correct for the same effect every day.</p>
+        <p class="rl-q__why t-vi">Xa Trái Đất hơn thì hấp dẫn yếu hơn, mà hấp dẫn yếu hơn thì thời gian nhanh hơn. Với cái kệ hai mét, chênh lệch cỡ một giây trong 150 triệu năm — bé xíu, nhưng vệ tinh phải chỉnh đúng hiệu ứng ấy mỗi ngày.</p>
       </div>
     </div>
     <p class="rl-score" id="quiz-score">Answered 0 of 5.</p>
@@ -1183,11 +1666,15 @@ section[id] { scroll-margin-top: 78px; }
   <section class="rl-sec p-move" id="sources">
     <div class="rl-sec__head">
       <div class="rl-sec__num">§</div>
-      <h3 class="rl-sec__t">Where the numbers come from</h3>
+      <h3 class="rl-sec__t t-en">Where the numbers come from</h3>
+      <h3 class="rl-sec__t t-vi">Số liệu lấy từ đâu</h3>
     </div>
-    <p class="rl-p">Constants follow CODATA and the SI definitions: <em>c</em> = 299 792 458 m/s exactly, <em>G</em> = 6.674 × 10⁻¹¹ m³ kg⁻¹ s⁻², muon mean lifetime 2.1969811 μs.</p>
-    <p class="rl-p">The experiments named in the Detail popups are Michelson &amp; Morley (1887), Ives &amp; Stilwell (1938), Rossi &amp; Hall (1941), Pound &amp; Rebka (1959), Alväger <em>et al.</em> (1964), Hafele &amp; Keating (1971), Bailey <em>et al.</em> at CERN (1977), Chou <em>et al.</em> at NIST (2010), Gravity Probe B (2011), LIGO GW150914 (2015), the Event Horizon Telescope (2019, 2022) and MICROSCOPE (2022). The GPS figures are the standard budget: −7.2 μs/day kinematic, +45.9 μs/day gravitational.</p>
-    <p class="rl-p">Values shown in the moving pictures are rounded for reading, and the trampoline in section 8 is a picture, not a calculation — its honest limits are listed in that section's Detail popup.</p>
+    <p class="rl-p t-en">Constants follow CODATA and the SI definitions: <em>c</em> = 299 792 458 m/s exactly, <em>G</em> = 6.674 × 10⁻¹¹ m³ kg⁻¹ s⁻², muon mean lifetime 2.1969811 μs.</p>
+    <p class="rl-p t-vi">Hằng số theo CODATA và các định nghĩa SI: <em>c</em> = 299 792 458 m/s đúng bằng, <em>G</em> = 6,674 × 10⁻¹¹ m³ kg⁻¹ s⁻², thời gian sống trung bình của muon 2,1969811 μs.</p>
+    <p class="rl-p t-en">The experiments named in the Detail popups are Michelson &amp; Morley (1887), Ives &amp; Stilwell (1938), Rossi &amp; Hall (1941), Pound &amp; Rebka (1959), Alväger <em>et al.</em> (1964), Hafele &amp; Keating (1971), Bailey <em>et al.</em> at CERN (1977), Chou <em>et al.</em> at NIST (2010), Gravity Probe B (2011), LIGO GW150914 (2015), the Event Horizon Telescope (2019, 2022) and MICROSCOPE (2022). The GPS figures are the standard budget: −7.2 μs/day kinematic, +45.9 μs/day gravitational.</p>
+    <p class="rl-p t-vi">Các thí nghiệm được nhắc tên trong popup Chi tiết: Michelson &amp; Morley (1887), Ives &amp; Stilwell (1938), Rossi &amp; Hall (1941), Pound &amp; Rebka (1959), Alväger <em>và cộng sự</em> (1964), Hafele &amp; Keating (1971), Bailey <em>và cộng sự</em> tại CERN (1977), Chou <em>và cộng sự</em> tại NIST (2010), Gravity Probe B (2011), LIGO GW150914 (2015), Event Horizon Telescope (2019, 2022) và MICROSCOPE (2022). Số liệu GPS là ngân sách chuẩn: −7,2 μs/ngày do tốc độ, +45,9 μs/ngày do hấp dẫn.</p>
+    <p class="rl-p t-en">Values shown in the moving pictures are rounded for reading, and the trampoline in section 8 is a picture, not a calculation — its honest limits are listed in that section's Detail popup.</p>
+    <p class="rl-p t-vi">Các giá trị hiện trong hình động được làm tròn cho dễ đọc, và tấm bạt nhún ở mục 8 là một bức tranh chứ không phải một phép tính — giới hạn thành thật của nó được liệt kê trong popup Chi tiết của mục đó.</p>
   </section>
 
 </main>
@@ -1198,7 +1685,7 @@ section[id] { scroll-margin-top: 78px; }
   <div class="wb-modal rl-modal" role="dialog" aria-modal="true" aria-labelledby="rl-modal-title">
     <div class="wb-modal__head">
       <div>
-        <p class="rl-modal__kicker" id="rl-modal-kicker">Detail · for scientists</p>
+        <p class="rl-modal__kicker" id="rl-modal-kicker"><span class="t-en">Detail · for scientists</span><span class="t-vi">Chi tiết · cho nhà khoa học</span></p>
         <h4 class="wb-modal__title" id="rl-modal-title">—</h4>
         <p class="wb-modal__sub" id="rl-modal-sub">—</p>
       </div>
@@ -1207,7 +1694,7 @@ section[id] { scroll-margin-top: 78px; }
     </div>
     <div class="wb-modal__body" id="rl-modal-body"></div>
     <div class="wb-modal__foot">
-      <button class="wb-btn wb-btn--secondary wb-btn--sm" id="rl-modal-done" type="button">Back to the pictures</button>
+      <button class="wb-btn wb-btn--secondary wb-btn--sm" id="rl-modal-done" type="button"><span class="t-en">Back to the pictures</span><span class="t-vi">Quay lại với hình</span></button>
     </div>
   </div>
 </div>
@@ -1263,6 +1750,12 @@ function mono(c, s, x, y, size, col, align) {
 }
 /* Shorter wording once a caption would run past the edge of the stage. */
 function pick(W, long, short) { return W < 560 ? short : long; }
+/* Canvas labels are drawn, not marked up, so they cannot use the .t-en/.t-vi
+   rule — they go through tr() instead. `relabel` collects every function that
+   writes language-dependent text into the DOM, so one switch refreshes them. */
+var LANG = document.documentElement.getAttribute('data-lang') === 'vi' ? 'vi' : 'en';
+function tr(en, vi) { return LANG === 'vi' ? vi : en; }
+var relabel = [];
 function dash(c, pts, col, w, pattern) {
   c.save(); c.setLineDash(pattern || [5, 5]); c.strokeStyle = col; c.lineWidth = w || 1;
   c.beginPath(); c.moveTo(pts[0][0], pts[0][1]);
@@ -1332,6 +1825,16 @@ function loop(now) {
     setTimeout(function () { readPal(); for (var i = 0; i < scenes.length; i++) scenes[i].sync(); }, 30);
   });
 
+  var lang = $('lang-toggle');
+  if (lang) lang.addEventListener('click', function () {
+    var vi = root.getAttribute('data-lang') !== 'vi';
+    LANG = vi ? 'vi' : 'en';
+    root.setAttribute('data-lang', LANG);
+    root.lang = LANG;
+    try { localStorage.setItem('rl-lang', LANG); } catch (e) {}
+    for (var i = 0; i < relabel.length; i++) { try { relabel[i](); } catch (e) {} }
+  });
+
   var menu = document.querySelector('.wb-navbar__menu');
   document.addEventListener('click', function (e) {
     if (!menu || !e.target.closest) return;
@@ -1351,15 +1854,26 @@ function loop(now) {
 (function detail() {
   var ov = $('rl-overlay'), box = ov.querySelector('.rl-modal'), body = $('rl-modal-body'), back = null;
 
+  var cur = null;
+  function retitle() {
+    if (!cur) return;
+    $('rl-modal-title').textContent =
+      (LANG === 'vi' && cur.getAttribute('data-title-vi')) || cur.getAttribute('data-title') || 'Detail';
+    $('rl-modal-sub').textContent =
+      (LANG === 'vi' && cur.getAttribute('data-sub-vi')) || cur.getAttribute('data-sub') || '';
+  }
+  relabel.push(retitle);
+
   function open(id, btn) {
     var src = $(id); if (!src || !src.firstElementChild) return;
     var cs = getComputedStyle(src);
     box.style.setProperty('--sec', cs.getPropertyValue('--sec'));
     box.style.setProperty('--sec-soft', cs.getPropertyValue('--sec-soft'));
-    $('rl-modal-title').textContent = src.getAttribute('data-title') || 'Detail';
-    $('rl-modal-sub').textContent = src.getAttribute('data-sub') || '';
+    cur = src; retitle();
     body.innerHTML = '';
-    body.appendChild(src.firstElementChild.cloneNode(true));
+    /* Both language versions are cloned in; the stylesheet hides the other one,
+       so switching language while the popup is open just works. */
+    for (var k = 0; k < src.children.length; k++) body.appendChild(src.children[k].cloneNode(true));
     body.scrollTop = 0;
     ov.classList.add('is-open');
     document.body.style.overflow = 'hidden';
@@ -1370,6 +1884,7 @@ function loop(now) {
     ov.classList.remove('is-open');
     document.body.style.overflow = '';
     body.innerHTML = '';
+    cur = null;
     if (back && back.focus) back.focus();
     back = null;
   }
@@ -1390,9 +1905,12 @@ function loop(now) {
   var box = $('quiz-box'); if (!box) return;
   var qs = box.querySelectorAll('.rl-q'), done = 0, right = 0;
   function refresh() {
-    $('quiz-score').textContent = done === 0 ? 'Answered 0 of ' + qs.length + '.'
-      : 'Answered ' + done + ' of ' + qs.length + ' — ' + right + ' correct.';
+    $('quiz-score').textContent = done === 0
+      ? tr('Answered 0 of ' + qs.length + '.', 'Đã trả lời 0 trên ' + qs.length + '.')
+      : tr('Answered ' + done + ' of ' + qs.length + ' — ' + right + ' correct.',
+           'Đã trả lời ' + done + ' trên ' + qs.length + ' — đúng ' + right + '.');
   }
+  relabel.push(refresh);
   for (var i = 0; i < qs.length; i++) (function (q) {
     var want = parseInt(q.getAttribute('data-answer'), 10);
     var opts = q.querySelectorAll('.rl-opt');
@@ -1445,7 +1963,7 @@ function loop(now) {
     c.fillStyle = P.dim;
     c.beginPath(); c.arc(wx, groundY - H * 0.115, H * 0.032, 0, 6.2832); c.fill();
     rr(c, wx - H * 0.026, groundY - H * 0.085, H * 0.052, H * 0.085, 4); c.fill();
-    txt(c, 'you', wx, groundY + H * 0.075, 11, P.dim, 'center');
+    txt(c, tr('you', 'bạn'), wx, groundY + H * 0.075, 11, P.dim, 'center');
 
     /* rails */
     c.strokeStyle = P.line; c.lineWidth = 2;
@@ -1487,8 +2005,10 @@ function loop(now) {
     c.beginPath(); c.arc(bsx, ballY, 8, 0, 6.2832); c.fill(); c.stroke();
 
     /* labels */
-    txt(c, st.view === 'train' ? 'Watching from inside the train' : 'Watching from the platform', 14, 18, 13, P.ink, 'left', 700);
-    txt(c, st.view === 'train' ? 'the ball goes straight up and straight down' : 'the ball flies in a long curve',
+    txt(c, st.view === 'train' ? tr('Watching from inside the train', 'Nhìn từ trong toa tàu')
+                              : tr('Watching from the platform', 'Nhìn từ dưới sân ga'), 14, 18, 13, P.ink, 'left', 700);
+    txt(c, st.view === 'train' ? tr('the ball goes straight up and straight down', 'quả bóng đi thẳng lên rồi thẳng xuống')
+                              : tr('the ball flies in a long curve', 'quả bóng bay thành một vòng cung dài'),
         14, 36, 12.5, P.dim, 'left', 500);
   }, st);
 
@@ -1504,6 +2024,7 @@ function loop(now) {
       st.view = b.getAttribute('data-view');
     });
   })(seg[i]);
+  relabel.push(draw);
   draw();
 })();
 
@@ -1515,8 +2036,8 @@ function loop(now) {
     var pad = Math.max(40, W * 0.06), track = W - pad * 2;
     var u = (t % LP) / LP;
     var lanes = [
-      { y: H * 0.26, name: 'If light behaved like a thrown ball', ph: Math.min(1, u * (1 + st.b)), col: P.dim },
-      { y: H * 0.62, name: 'Real light', ph: u, col: s.acc }
+      { y: H * 0.26, name: tr('If light behaved like a thrown ball', 'Nếu ánh sáng hành xử như quả bóng ném'), ph: Math.min(1, u * (1 + st.b)), col: P.dim },
+      { y: H * 0.62, name: tr('Real light', 'Ánh sáng thật'), ph: u, col: s.acc }
     ];
     for (var L = 0; L < 2; L++) {
       var ln = lanes[L], y = ln.y;
@@ -1564,10 +2085,10 @@ function loop(now) {
     var xb = pad + track / (1 + st.b);
     c.strokeStyle = P.dim; c.lineWidth = 2;
     c.beginPath(); c.moveTo(xb, sy - 9); c.lineTo(xb, sy + 9); c.stroke();
-    txt(c, 'ball-like arrives', xb, sy + 20, 11, P.dim, 'center', 600);
+    txt(c, tr('ball-like arrives', 'kiểu quả bóng tới'), xb, sy + 20, 11, P.dim, 'center', 600);
     c.strokeStyle = s.acc; c.lineWidth = 2;
     c.beginPath(); c.moveTo(W - pad, sy - 9); c.lineTo(W - pad, sy + 9); c.stroke();
-    txt(c, 'real light arrives', W - pad, sy + 20, 11, s.acc, 'center', 600);
+    txt(c, tr('real light arrives', 'ánh sáng thật tới'), W - pad, sy + 20, 11, s.acc, 'center', 600);
     c.fillStyle = P.ink;
     c.beginPath(); c.arc(pad + u * track, sy, 4.5, 0, 6.2832); c.fill();
   }, st);
@@ -1575,9 +2096,10 @@ function loop(now) {
   function draw() {
     $('v-light').textContent = st.b.toFixed(2) + ' c';
     $('o-light-ball').textContent = (1 + st.b).toFixed(2) + ' c';
-    $('o-light-gap').textContent = st.b === 0 ? 'none' : '−' + Math.round(100 * (1 - 1 / (1 + st.b))) + '%';
+    $('o-light-gap').textContent = st.b === 0 ? tr('none', 'không') : '−' + Math.round(100 * (1 - 1 / (1 + st.b))) + '%';
   }
   $('r-light').addEventListener('input', function () { st.b = +this.value / 100; draw(); });
+  relabel.push(draw);
   draw();
 })();
 
@@ -1611,8 +2133,9 @@ function loop(now) {
     dash(c, [[half, 8], [half, H - 8]], P.line, 1, [4, 6]);
 
     /* --- parked clock --- */
-    txt(c, 'Parked clock', xA, 20, 13, P.ink, 'center', 700);
-    txt(c, pick(W, 'the flash goes straight up and down', 'straight up and down'), xA, 38, 11.5, P.dim, 'center', 500);
+    txt(c, tr('Parked clock', 'Đồng hồ đứng yên'), xA, 20, 13, P.ink, 'center', 700);
+    txt(c, tr(pick(W, 'the flash goes straight up and down', 'straight up and down'),
+              pick(W, 'tia chớp đi thẳng lên rồi thẳng xuống', 'thẳng lên rồi thẳng xuống')), xA, 38, 11.5, P.dim, 'center', 500);
     dash(c, [[xA, yTop], [xA, yBot]], P.faint, 1.5, [3, 5]);
     drawMirrors(c, xA, yTop, yBot, P.dim, st.fA, s);
     var yA = py(st.pA);
@@ -1620,8 +2143,9 @@ function loop(now) {
     mono(c, plural(Math.floor(st.pA)), xA, yBot + 30, 15, P.ink, 'center');
 
     /* --- flying clock --- */
-    txt(c, 'Flying clock', half + (W - half) / 2, 20, 13, s.acc, 'center', 700);
-    txt(c, pick(W, 'same flash — but a longer, slanted road', 'a longer, slanted road'), half + (W - half) / 2, 38, 11.5, P.dim, 'center', 500);
+    txt(c, tr('Flying clock', 'Đồng hồ đang bay'), half + (W - half) / 2, 20, 13, s.acc, 'center', 700);
+    txt(c, tr(pick(W, 'same flash — but a longer, slanted road', 'a longer, slanted road'),
+              pick(W, 'vẫn tia chớp ấy — nhưng đường xiên dài hơn', 'đường xiên dài hơn')), half + (W - half) / 2, 38, 11.5, P.dim, 'center', 500);
     var yB = py(st.pB);
     st.trail.push({ x: st.bx, y: yB });
     if (st.trail.length > 260) st.trail.shift();
@@ -1641,7 +2165,7 @@ function loop(now) {
     }
   }, st);
 
-  function plural(n) { return n + (n === 1 ? ' tick' : ' ticks'); }
+  function plural(n) { return n + tr(n === 1 ? ' tick' : ' ticks', ' nhịp'); }
   function drawMirrors(c, x, yTop, yBot, col, fl, s) {
     c.strokeStyle = col; c.lineWidth = 4; c.lineCap = 'round';
     c.beginPath(); c.moveTo(x - 26, yTop); c.lineTo(x + 26, yTop); c.stroke();
@@ -1668,12 +2192,13 @@ function loop(now) {
     var g = gam(st.b);
     $('v-clock').textContent = st.b.toFixed(2) + ' c';
     $('o-clock-g').textContent = g.toFixed(2) + '×';
-    $('o-clock-s').textContent = g.toFixed(2) + ' s';
+    $('o-clock-s').textContent = g.toFixed(2) + tr(' s', ' giây');
   }
   $('r-clock').addEventListener('input', function () { st.b = +this.value / 100; draw(); });
   $('b-clock-reset').addEventListener('click', function () {
     st.pA = 0; st.pB = 0; st.lastA = -1; st.lastB = -1; st.trail.length = 0; st.bx = null; tickOut();
   });
+  relabel.push(draw);
   draw();
 })();
 
@@ -1686,12 +2211,12 @@ function loop(now) {
     var x0 = Math.max(30, W * 0.10), L0 = W * 0.52, hR = H * 0.14, yR = H * 0.17;
     c.save(); c.setLineDash([5, 5]); c.strokeStyle = P.faint; c.lineWidth = 1.5;
     rocketPath(c, x0, yR, L0, hR); c.stroke(); c.restore();
-    txt(c, 'length sitting on the launch pad', x0, yR - hR / 2 - 13, 11.5, P.dim, 'left', 600);
+    txt(c, tr('length sitting on the launch pad', 'chiều dài lúc nằm trên bệ phóng'), x0, yR - hR / 2 - 13, 11.5, P.dim, 'left', 600);
 
     var Lc = L0 / g, yM = yR + hR * 1.7;
     c.fillStyle = s.soft; c.strokeStyle = s.acc; c.lineWidth = 2.5;
     rocketPath(c, x0, yM, Lc, hR); c.fill(); c.stroke();
-    txt(c, 'length you measure as it flies past', x0 + L0 * 0.62, yM, 11.5, s.acc, 'left', 600);
+    txt(c, tr('length you measure as it flies past', 'chiều dài bạn đo lúc nó bay qua'), x0 + L0 * 0.62, yM, 11.5, s.acc, 'left', 600);
     for (var q = 0; q < 4; q++) {
       var sp = ((t * (0.6 + st.b * 2.4) + q * 0.25) % 1);
       c.strokeStyle = P.faint; c.lineWidth = 1.5; c.globalAlpha = .8 * (1 - sp);
@@ -1710,10 +2235,10 @@ function loop(now) {
     var ya = H * 0.62, yb = H * 0.93, GMAX = 8;
     c.strokeStyle = P.line; c.lineWidth = 1.5;
     c.beginPath(); c.moveTo(xa, ya); c.lineTo(xa, yb); c.lineTo(xb, yb); c.stroke();
-    txt(c, 'push needed to go this fast', xa, ya - 12, 11.5, P.dim, 'left', 650);
-    txt(c, 'speed →', xa + 4, yb + 14, 11, P.dim, 'left', 600);
+    txt(c, tr('push needed to go this fast', 'sức đẩy cần để đi nhanh cỡ này'), xa, ya - 12, 11.5, P.dim, 'left', 650);
+    txt(c, tr('speed →', 'tốc độ →'), xa + 4, yb + 14, 11, P.dim, 'left', 600);
     dash(c, [[xb, ya - 8], [xb, yb]], P.faint, 1.5, [4, 5]);
-    txt(c, 'the speed of light', xb - 6, ya - 12, 11.5, P.dim, 'right', 700);
+    txt(c, tr('the speed of light', 'tốc độ ánh sáng'), xb - 6, ya - 12, 11.5, P.dim, 'right', 700);
 
     c.strokeStyle = s.acc; c.lineWidth = 2.5; c.beginPath();
     for (var i = 0; i <= 240; i++) {
@@ -1728,7 +2253,7 @@ function loop(now) {
     dash(c, [[mx, my], [mx, yb]], P.faint, 1, [3, 4]);
     c.fillStyle = s.acc; c.strokeStyle = P.stage; c.lineWidth = 2.5;
     c.beginPath(); c.arc(mx, my, 7, 0, 6.2832); c.fill(); c.stroke();
-    if (g > GMAX) txt(c, 'off the top of the chart ↑', mx - 10, ya - 6, 11.5, s.acc, 'right', 700);
+    if (g > GMAX) txt(c, tr('off the top of the chart ↑', 'vọt khỏi đỉnh biểu đồ ↑'), mx - 10, ya - 6, 11.5, s.acc, 'right', 700);
   }, st);
 
   function rocketPath(c, x, ymid, len, h) {
@@ -1748,6 +2273,7 @@ function loop(now) {
     $('o-fast-e').textContent = (g - 1).toFixed(2) + '×';
   }
   $('r-fast').addEventListener('input', function () { st.b = +this.value / 1000; draw(); });
+  relabel.push(draw);
   draw();
 })();
 
@@ -1773,13 +2299,13 @@ function loop(now) {
     c.fillStyle = '#22c55e';
     c.beginPath(); c.arc(xE - 4, lane - 4, 6, 0, 6.2832); c.fill();
     c.beginPath(); c.arc(xE + 6, lane + 4, 4, 0, 6.2832); c.fill();
-    txt(c, 'home', xE, lane + 30, 11.5, P.dim, 'center', 600);
+    txt(c, tr('home', 'nhà'), xE, lane + 30, 11.5, P.dim, 'center', 600);
     var pulse = 13 + 2 * Math.sin(t * 3);
     var sg = c.createRadialGradient(xS, lane, 0, xS, lane, pulse + 10);
     sg.addColorStop(0, '#fde047'); sg.addColorStop(1, 'rgba(253,224,71,0)');
     c.fillStyle = sg; c.beginPath(); c.arc(xS, lane, pulse + 10, 0, 6.2832); c.fill();
     c.fillStyle = '#facc15'; c.beginPath(); c.arc(xS, lane, 10, 0, 6.2832); c.fill();
-    txt(c, st.D + pick(W, ' light-years away', ' ly away'), xS, lane + 30, 11.5, P.dim, 'center', 600);
+    txt(c, st.D + tr(pick(W, ' light-years away', ' ly away'), ' năm ánh sáng'), xS, lane + 30, 11.5, P.dim, 'center', 600);
 
     /* the rocket */
     var rx = xE + frac * (xS - xE), dir = u < 0.5 ? 1 : -1;
@@ -1794,8 +2320,8 @@ function loop(now) {
     /* the two twins, on one shared scale */
     var barY = H * 0.60, barH = H * 0.11, bw = (W - pad * 2 - 26) / 2;
     var pairs = [
-      { x: pad, lab: pick(W, 'Twin who stayed at home', 'At home'), val: T * u, tot: T, col: P.dim, face: '#60a5fa' },
-      { x: pad + bw + 26, lab: pick(W, 'Twin in the rocket', 'In the rocket'), val: tau * u, tot: T, col: s.acc, face: '#f472b6' }
+      { x: pad, lab: tr(pick(W, 'Twin who stayed at home', 'At home'), pick(W, 'Người ở nhà', 'Ở nhà')), val: T * u, tot: T, col: P.dim, face: '#60a5fa' },
+      { x: pad + bw + 26, lab: tr(pick(W, 'Twin in the rocket', 'In the rocket'), pick(W, 'Người trên tên lửa', 'Trên tên lửa')), val: tau * u, tot: T, col: s.acc, face: '#f472b6' }
     ];
     for (var q = 0; q < 2; q++) {
       var p = pairs[q];
@@ -1812,22 +2338,23 @@ function loop(now) {
       c.fillStyle = p.col;
       var fw = Math.max(2, bw * Math.min(1, p.val / p.tot));
       rr(c, p.x, barY, fw, barH, 8); c.fill();
-      mono(c, p.val.toFixed(1) + pick(W, ' years older', ' yr'), p.x + 10, barY + barH + 18, 14, p.col, 'left');
+      mono(c, p.val.toFixed(1) + tr(pick(W, ' years older', ' yr'), ' năm'), p.x + 10, barY + barH + 18, 14, p.col, 'left');
     }
-    txt(c, u < 0.5 ? 'flying out…' : 'coming home…', W / 2, lane + H * 0.14, 12.5, P.dim, 'center', 600);
+    txt(c, u < 0.5 ? tr('flying out…', 'đang bay đi…') : tr('coming home…', 'đang trở về…'), W / 2, lane + H * 0.14, 12.5, P.dim, 'center', 600);
   }, st);
 
   function draw() {
     var g = gam(st.b), T = 2 * st.D / st.b, tau = T / g;
     $('v-twin').textContent = st.b.toFixed(3) + ' c';
     $('v-twin-d').textContent = st.D + ' ly';
-    $('o-twin-e').textContent = T.toFixed(1) + ' yr';
-    $('o-twin-r').textContent = tau.toFixed(tau < 10 ? 2 : 1) + ' yr';
-    $('o-twin-d').textContent = (T - tau).toFixed(1) + ' yr';
+    $('o-twin-e').textContent = T.toFixed(1) + tr(' yr', ' năm');
+    $('o-twin-r').textContent = tau.toFixed(tau < 10 ? 2 : 1) + tr(' yr', ' năm');
+    $('o-twin-d').textContent = (T - tau).toFixed(1) + tr(' yr', ' năm');
     $('o-twin-g').textContent = g.toFixed(2) + '×';
   }
   $('r-twin').addEventListener('input', function () { st.b = +this.value / 1000; draw(); });
   $('r-twin-d').addEventListener('input', function () { st.D = +this.value; draw(); });
+  relabel.push(draw);
   draw();
 })();
 
@@ -1872,8 +2399,8 @@ function loop(now) {
     c.beginPath(); c.arc(st.x + 14, sy + 14, 5, 0, 6.2832); c.fill();
 
     /* two listeners */
-    listener(c, W - 26, roadY - H * 0.34, 'in front', s.acc);
-    listener(c, 26, roadY - H * 0.34, 'behind', P.dim);
+    listener(c, W - 26, roadY - H * 0.34, tr('in front', 'phía trước'), s.acc);
+    listener(c, 26, roadY - H * 0.34, tr('behind', 'phía sau'), P.dim);
 
     if (st.M >= 1) {
       var th = Math.asin(Math.min(1, 1 / st.M));
@@ -1882,7 +2409,7 @@ function loop(now) {
       c.beginPath(); c.moveTo(st.x, sy); c.lineTo(st.x - Ln * Math.cos(th), sy - Ln * Math.sin(th)); c.stroke();
       c.beginPath(); c.moveTo(st.x, sy); c.lineTo(st.x - Ln * Math.cos(th), sy + Ln * Math.sin(th)); c.stroke();
       c.globalAlpha = 1;
-      txt(c, 'SONIC BOOM — the ripples have piled into a wall', W / 2, 20, 13, '#ef4444', 'center', 750);
+      txt(c, tr('SONIC BOOM — the ripples have piled into a wall', 'NỔ SIÊU THANH — các gợn sóng đã chồng thành một bức tường'), W / 2, 20, 13, '#ef4444', 'center', 750);
     }
   }, st);
 
@@ -1898,9 +2425,10 @@ function loop(now) {
     $('v-sound').textContent = Math.round(v) + ' m/s';
     $('o-sound-m').textContent = 'Mach ' + st.M.toFixed(2);
     $('o-sound-b').textContent = Math.round(F0 * cS / (cS + v)) + ' Hz';
-    $('o-sound-f').textContent = st.M >= 1 ? 'boom' : Math.round(F0 * cS / (cS - v)) + ' Hz';
+    $('o-sound-f').textContent = st.M >= 1 ? tr('boom', 'nổ') : Math.round(F0 * cS / (cS - v)) + ' Hz';
   }
   $('r-sound').addEventListener('input', function () { st.M = +this.value / 100; st.waves.length = 0; draw(); });
+  relabel.push(draw);
   draw();
 })();
 
@@ -1925,7 +2453,7 @@ function loop(now) {
     c.globalAlpha = 1;
     var earthX = pad + 26, starX = W - pad - 60, cy = H * 0.24;
     c.fillStyle = '#3b82f6'; c.beginPath(); c.arc(earthX, cy, 13, 0, 6.2832); c.fill();
-    txt(c, 'us', earthX, cy + 26, 11, P.dim, 'center', 600);
+    txt(c, tr('us', 'ta'), earthX, cy + 26, 11, P.dim, 'center', 600);
     dash(c, [[earthX + 18, cy], [starX - 26, cy]], P.line, 1.2, [4, 6]);
 
     var col = st.b >= 0 ? mix('#fff6e8', '#f97316', Math.min(1, st.b / 0.6))
@@ -1942,16 +2470,16 @@ function loop(now) {
       c.beginPath(); c.moveTo(ax, cy); c.lineTo(ax + d * aw, cy); c.stroke();
       c.beginPath(); c.moveTo(ax + d * aw, cy); c.lineTo(ax + d * (aw - 9), cy - 6);
       c.lineTo(ax + d * (aw - 9), cy + 6); c.closePath(); c.fillStyle = P.ink; c.fill();
-      txt(c, st.b > 0 ? 'racing away' : 'racing towards us', starX, cy + 44, 12, P.ink, 'center', 650);
-    } else txt(c, 'not moving towards or away', starX, cy + 44, 12, P.dim, 'center', 600);
+      txt(c, st.b > 0 ? tr('racing away', 'đang lao ra xa') : tr('racing towards us', 'đang lao về phía ta'), starX, cy + 44, 12, P.ink, 'center', 650);
+    } else txt(c, tr('not moving towards or away', 'không lại gần cũng không ra xa'), starX, cy + 44, 12, P.dim, 'center', 600);
 
     /* the rainbow, and the barcode on it */
     var grd = c.createLinearGradient(bx, 0, bx + bw, 0);
     for (var q = 0; q < STOPS.length; q++) grd.addColorStop((STOPS[q][0] - 380) / 370, STOPS[q][1]);
     c.fillStyle = grd; rr(c, bx, byT, bw, bh, 8); c.fill();
     c.strokeStyle = P.line; c.lineWidth = 1; rr(c, bx, byT, bw, bh, 8); c.stroke();
-    txt(c, 'blue', bx + 4, byT + bh + 16, 11, P.dim, 'left', 600);
-    txt(c, 'red', bx + bw - 4, byT + bh + 16, 11, P.dim, 'right', 600);
+    txt(c, tr('blue', 'xanh'), bx + 4, byT + bh + 16, 11, P.dim, 'left', 600);
+    txt(c, tr('red', 'đỏ'), bx + bw - 4, byT + bh + 16, 11, P.dim, 'right', 600);
 
     function xOf(lam) { return bx + (lam - 380) / 370 * bw; }
     for (var i2 = 0; i2 < LINES.length; i2++) {
@@ -1970,11 +2498,13 @@ function loop(now) {
         txt(c, l1 > 750 ? '→' : '←', edge, byT + bh / 2, 16, P.ink, l1 > 750 ? 'left' : 'right', 800);
       }
     }
-    txt(c, pick(W, 'small ticks = where the lines should be · dark bars = where they landed',
-                   'ticks = should be · bars = landed'),
+    txt(c, tr(pick(W, 'small ticks = where the lines should be · dark bars = where they landed',
+                      'ticks = should be · bars = landed'),
+              pick(W, 'vạch nhỏ = chỗ lẽ ra phải nằm · vạch đen = chỗ nó rơi vào', 'vạch nhỏ = lẽ ra · vạch đen = thực tế')),
         W / 2, byT + bh + 34, 11.5, P.dim, 'center', 500);
     if (Math.abs(z) > 0.001)
-      txt(c, z > 0 ? 'past red, into infrared →' : '← into ultraviolet', W / 2, byT - 26, 11.5, P.dim, 'center', 500);
+      txt(c, z > 0 ? tr('past red, into infrared →', 'qua khỏi đỏ, vào hồng ngoại →')
+                   : tr('← into ultraviolet', '← vào tử ngoại'), W / 2, byT - 26, 11.5, P.dim, 'center', 500);
   }, st);
 
   function mix(a, b, u) {
@@ -1985,12 +2515,15 @@ function loop(now) {
   }
   function draw() {
     var z = zOf(st.b);
-    $('v-red').textContent = st.b === 0 ? 'still' : (st.b > 0 ? 'away ' : 'towards ') + Math.abs(st.b).toFixed(2) + ' c';
+    $('v-red').textContent = st.b === 0 ? tr('still', 'đứng yên')
+      : tr(st.b > 0 ? 'away ' : 'towards ', st.b > 0 ? 'ra xa ' : 'lại gần ') + Math.abs(st.b).toFixed(2) + ' c';
     $('o-red-z').textContent = 'z = ' + z.toFixed(2);
     $('o-red-l').textContent = Math.round(486.1 * (1 + z)) + ' nm';
-    $('o-red-w').textContent = st.b === 0 ? 'No change' : (st.b > 0 ? 'Redder' : 'Bluer');
+    $('o-red-w').textContent = st.b === 0 ? tr('No change', 'Không đổi')
+      : tr(st.b > 0 ? 'Redder' : 'Bluer', st.b > 0 ? 'Đỏ hơn' : 'Xanh hơn');
   }
   $('r-red').addEventListener('input', function () { st.b = +this.value / 100; draw(); });
+  relabel.push(draw);
   draw();
 })();
 
@@ -2076,18 +2609,26 @@ function loop(now) {
     c.fillStyle = P.ink; c.strokeStyle = P.stage; c.lineWidth = 2;
     c.beginPath(); c.arc(pb[0], pb[1] - 5, 7, 0, 6.2832); c.fill(); c.stroke();
 
-    txt(c, st.M < 0.03 ? pick(W, 'flat sheet — nothing bends, so the ball goes straight', 'flat sheet — the ball goes straight')
-                       : pick(W, 'the ball is going as straight as it can · the sheet is what bends', 'the ball goes straight · the sheet bends'),
+    txt(c, st.M < 0.03
+        ? tr(pick(W, 'flat sheet — nothing bends, so the ball goes straight', 'flat sheet — the ball goes straight'),
+             pick(W, 'lưới phẳng — chẳng có gì cong, nên quả bóng đi thẳng', 'lưới phẳng — quả bóng đi thẳng'))
+        : tr(pick(W, 'the ball is going as straight as it can · the sheet is what bends', 'the ball goes straight · the sheet bends'),
+             pick(W, 'quả bóng đang đi thẳng hết mức có thể · thứ bị cong là tấm lưới', 'quả bóng đi thẳng · tấm lưới cong')),
         W / 2, H - 14, 12, P.dim, 'center', 550);
   }, st);
 
   function draw() {
     $('v-well').textContent = Math.round(st.M * 100);
-    $('o-well-d').textContent = st.M < 0.03 ? 'None' : st.M < 0.3 ? 'Shallow' : st.M < 0.65 ? 'Deep' : 'Very deep';
+    $('o-well-d').textContent = st.M < 0.03 ? tr('None', 'Không có')
+      : st.M < 0.3 ? tr('Shallow', 'Nông') : st.M < 0.65 ? tr('Deep', 'Sâu') : tr('Very deep', 'Rất sâu');
   }
-  setInterval(function () { $('o-well-p').textContent = st.mode; }, 200);
+  /* st.mode stays an English key so the physics test and the label do not drift. */
+  var MODE_VI = { 'Falling in': 'Đang rơi vào', 'Straight': 'Thẳng', 'Orbiting': 'Đang quay vòng',
+                  'Curving': 'Đang cong', 'Almost straight': 'Gần như thẳng' };
+  setInterval(function () { $('o-well-p').textContent = tr(st.mode, MODE_VI[st.mode] || st.mode); }, 200);
   $('r-well').addEventListener('input', function () { st.M = +this.value / 100; draw(); });
   $('b-well-reset').addEventListener('click', spawn);
+  relabel.push(draw);
   draw();
 })();
 
@@ -2115,8 +2656,9 @@ function loop(now) {
     c.fillStyle = '#050507'; c.beginPath(); c.arc(xh, cy, Rh, 0, 6.2832); c.fill();
     c.save(); c.setLineDash([5, 4]); c.strokeStyle = '#f97316'; c.lineWidth = 2.4;
     c.beginPath(); c.arc(xh, cy, Rh + 2.5, 0, 6.2832); c.stroke(); c.restore();
-    txt(c, 'black hole', 14, 18, 12.5, P.ink, 'left', 700);
-    txt(c, pick(W, 'the dashed ring is the edge — nothing gets back out', 'the ring is the edge'), 14, 34, 11, '#fb923c', 'left', 550);
+    txt(c, tr('black hole', 'lỗ đen'), 14, 18, 12.5, P.ink, 'left', 700);
+    txt(c, tr(pick(W, 'the dashed ring is the edge — nothing gets back out', 'the ring is the edge'),
+              pick(W, 'vòng nét đứt là bờ vực — không gì ra lại được', 'vòng nét đứt là bờ vực')), 14, 34, 11, '#fb923c', 'left', 550);
 
     /* the measuring line out from the hole */
     c.strokeStyle = P.line; c.lineWidth = 1;
@@ -2127,12 +2669,13 @@ function loop(now) {
     }
     dash(c, [[nx, cy + 26], [nx, cy + Rh + 30]], s.acc, 1.4, [3, 4]);
 
-    clock(c, nx, cy, Math.min(26, W * 0.045), st.yn, s.acc, 'near clock');
-    clock(c, fx, cy, Math.min(26, W * 0.045), st.yf, P.ink, 'clock far away');
-    mono(c, st.yn.toFixed(1) + ' yr', nx, cy + Rh + 62, 14, s.acc, 'center');
-    mono(c, st.yf.toFixed(1) + ' yr', fx, cy + Rh + 62, 14, P.ink, 'center');
-    txt(c, pick(W, 'both hands turn once a year — for whoever is standing next to them',
-                   'each hand turns once a year'),
+    clock(c, nx, cy, Math.min(26, W * 0.045), st.yn, s.acc, tr('near clock', 'đồng hồ ở gần'));
+    clock(c, fx, cy, Math.min(26, W * 0.045), st.yf, P.ink, tr('clock far away', 'đồng hồ ở xa'));
+    mono(c, st.yn.toFixed(1) + tr(' yr', ' năm'), nx, cy + Rh + 62, 14, s.acc, 'center');
+    mono(c, st.yf.toFixed(1) + tr(' yr', ' năm'), fx, cy + Rh + 62, 14, P.ink, 'center');
+    txt(c, tr(pick(W, 'both hands turn once a year — for whoever is standing next to them',
+                      'each hand turns once a year'),
+              pick(W, 'cả hai kim quay một vòng mỗi năm — với người đứng ngay cạnh nó', 'mỗi kim quay một vòng mỗi năm')),
         W / 2, H - 12, 11.5, P.dim, 'center', 500);
   }, st);
 
@@ -2158,10 +2701,11 @@ function loop(now) {
     $('o-grav-r').textContent = Math.round(f * 100) + '%';
   }
   setInterval(function () {
-    $('o-grav-f').textContent = st.yf.toFixed(1) + ' yr';
-    $('o-grav-n').textContent = st.yn.toFixed(1) + ' yr';
+    $('o-grav-f').textContent = st.yf.toFixed(1) + tr(' yr', ' năm');
+    $('o-grav-n').textContent = st.yn.toFixed(1) + tr(' yr', ' năm');
   }, 140);
   $('r-grav').addEventListener('input', function () { st.k = +this.value / 100; draw(); });
+  relabel.push(draw);
   draw();
 })();
 
