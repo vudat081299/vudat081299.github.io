@@ -9,6 +9,7 @@ cách chúng chạy tự động**.
 | `facts/` | [facts/CLAUDE.md](facts/CLAUDE.md) | `facts/tools/factlint.py check` + `verify` | 1, 2, 3 |
 | `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3 |
 | `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2 |
+| `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` | 2 |
 | `pages/` | — | `python3 pages/tools/lint-pages.py` | 2 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2 |
 | các project khác | xem thư mục | — | — |
@@ -65,6 +66,40 @@ không đi qua tool Edit/Write nên nó không thấy. Lớp 2 bịt lỗ đó. 
 
 `git commit --no-verify` và `git push --no-verify` vẫn dùng được, và đôi khi đúng là cần.
 Nhưng bỏ qua rồi thì phải sửa ngay sau đó — cổng bị tắt lâu là cổng đã chết.
+
+---
+
+## Thứ tự làm một trang: nội dung trước, UI sau
+
+Sai thứ tự là nguồn của một lớp lỗi thật: viết chữ ngay trong HTML thì **cái ô dẫn dắt câu
+chữ**. Một cái tile trông như danh sách thuộc tính, nên người viết liệt kê thuộc tính — và
+`(Anh/Việt)`, tên một cái nút, lọt vào mô tả nội dung đúng theo đường đó (08/09/2026).
+
+Ba bước, đúng thứ tự:
+
+1. **Nội dung ra file dữ liệu riêng** (`data/*.json`), chữ thuần, chưa có thẻ nào. Viết ở đây
+   thì 31 mô tả nằm cạnh nhau và cái lệch tự lộ — đó là toàn bộ lý do tách file.
+2. **Rồi mới dựng UI**, và UI *đọc* dữ liệu bằng vòng lặp / query theo key.
+3. **Ghép, chạy cổng, ship.**
+
+**Luật chia chỗ — đếm được, không tranh luận được:** khối **lặp** → chữ ở data; khối **độc
+nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 6 section + 31 ô đều lặp nên nằm ở
+`data/collection.json`; tiêu đề trang chỉ có một nên ở lại HTML. Trang văn xuôi độc nhất
+(`pages/chemistry.html`, `how-money-works`…) **không** tách — chữ ở đó không lặp, JSON hoá chỉ
+thêm một lớp indirection.
+
+Ba thứ phải nhớ khi làm:
+
+- **`fetch` cần HTTP.** Mở bằng `file://` là trang rỗng, nên mỗi trang đọc data phải có đường
+  lỗi tử tế chỉ người dùng chạy `python3 -m http.server` (xem `index.html` và `facts/app.js`).
+- **Chỉ trường có hậu tố `_html` được `innerHTML`**, còn lại `textContent` / escape. Mặc định
+  data là chữ thuần.
+- **Số liệu suy ra được thì đừng ghi trong data** — `subj__count` ("3 pages") tính từ
+  `files.length`, không ai phải sửa tay khi thêm một dòng.
+
+Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Nó **không**
+kiểm độ dài mô tả: đã đo, 31 mô tả đang chạy dài 24→235 ký tự, mọi ngưỡng chung đều là số bịa.
+Câu có sát việc của cái ô hay không là việc của người viết.
 
 ---
 
