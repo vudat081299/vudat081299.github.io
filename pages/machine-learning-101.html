@@ -488,7 +488,7 @@ footer a { color:var(--muted); }
     <div class="stat"><b>3 bộ phận</b><span>mọi máy trong trang, từ cái đơn giản nhất tới cái đứng sau ChatGPT, đều chỉ có ba: đoán bằng gì · sai thì trừ bao nhiêu · vặn núm ra sao</span></div>
     <div class="stat"><b>0 dòng toán bắt buộc</b><span>công thức nào cũng có bản tiếng Việt đứng ngay bên; bỏ qua phần ký hiệu vẫn hiểu trọn ý</span></div>
     <div class="stat"><b>13 thứ nghịch được</b><span>kéo cho máy nhảy văng khỏi đáy, tắt một mắt xích cho mạng bốn lớp sập về một đường thẳng, trượt kính lúp qua từng ô ảnh, kéo γ cho cả chiến lược lật ngược</span></div>
-    <div class="stat"><b>212 tên thật</b><span>đủ toàn bộ thuật ngữ của tám khoá gốc — mỗi phép ví von kèm đúng cái tên mà sách và khoá học dùng</span></div>
+    <div class="stat"><b><span id="stat-terms">215</span> tên thật</b><span>đủ toàn bộ thuật ngữ của tám khoá gốc — mỗi phép ví von kèm đúng cái tên mà sách và khoá học dùng</span></div>
   </div>
 
   <div class="acts">
@@ -1280,6 +1280,16 @@ footer a { color:var(--muted); }
         </div>
 
         <p><b>Câu hỏi quyết định:</b> bạn có đủ dữ liệu cho đúng cặp đầu-cuối không? Nếu không, hãy chia thành các bài con mà bạn <i>có</i> dữ liệu. Đây là quyết định về <b>dữ liệu</b>, không phải về thẩm mỹ kỹ thuật.</p>
+
+        <h3>Ba cái bẫy làm con số đo được không còn là con số thật</h3>
+
+        <p>Cả chương này dựa vào hai con số. Có ba cách rất hay gặp làm hai con số ấy nói dối, và không cách nào hiện ra dưới dạng lỗi — máy vẫn chạy, bảng vẫn ra số đẹp.</p>
+
+        <div class="steps">
+          <div class="step"><div class="n">1</div><div class="b"><p><b>Dữ liệu có thứ tự thời gian mà chia bài ngẫu nhiên.</b> Doanh số theo ngày, giá, hành vi người dùng — chia ngẫu nhiên thì tháng Năm rơi vào đề ôn còn tháng Ba rơi vào đề thi. Bạn vừa cho máy xem tương lai rồi bắt nó đoán quá khứ. Điểm đẹp bất thường, đem ra dùng thật thì sập. Phải cắt theo mốc thời gian: học trên phần trước, thi trên phần sau. Tên thật: <span class="nm">time-based split</span>. Đây là một dạng <a href="#s-overfit">rò rỉ dữ liệu</a>, chỉ khó thấy hơn vì không có bài nào bị trùng.</p></div></div>
+          <div class="step"><div class="n">2</div><div class="b"><p><b>Không có mốc so sánh.</b> "Máy đạt 82%" — tốt hay tệ? Câu ấy chưa có nghĩa, cho tới khi có ba cái mốc: đoán bừa theo lớp đông nhất, một cái máy đơn giản nhất có thể (một đường thẳng, một cây), và mức người làm sai ở bảng phía trên. 82% mà đoán bừa cũng được 80% thì máy gần như vô dụng; 82% mà người chỉ được 75% thì rất tốt. Tên thật của những cái mốc ấy là <span class="nm">baseline</span>, và phải dựng chúng <b>trước</b> — dựng sau thì bạn đã biết con số mình muốn thấy.</p></div></div>
+          <div class="step"><div class="n">3</div><div class="b"><p><b>So hai cấu hình bằng một lần chạy.</b> Khởi tạo ngẫu nhiên, thứ tự lô ngẫu nhiên, dropout ngẫu nhiên — cùng một cấu hình chạy hai lần đã ra hai con số khác nhau. A hơn B 0,3% có thể chỉ là tiếng ồn đó. Chạy mỗi cấu hình vài lần, so trung bình, và nhìn cả biên độ dao động; chênh nhau ít hơn biên độ ấy thì chưa kết luận được gì. Cố định <span class="nm">random seed</span> để lần sau chạy lại ra đúng số cũ.</p></div></div>
+        </div>
 
         <h3>Máy học từ dữ liệu lệch thì đoán lệch</h3>
 
@@ -3560,6 +3570,9 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['dữ liệu học khác dữ liệu thật', 'data mismatch', 'không phải lỗi thuộc lòng, và khó chữa hơn'],
     ['tập thứ tư, cắt ra miễn phí', 'train-dev set', 'tách được thuộc lòng khỏi lệch phân phối'],
     ['mượn mạng đã học bài khác', 'transfer learning', 'các lớp đầu đã biết vạch, góc, kết cấu'],
+    ['chia bài theo mốc thời gian', 'time-based split', 'chia ngẫu nhiên là cho máy xem tương lai'],
+    ['ba cái mốc để biết 82% là tốt hay tệ', 'baseline', 'đoán bừa · máy đơn giản nhất · mức con người'],
+    ['số ngẫu nhiên cố định để chạy lại được', 'random seed', 'không có nó thì hai lần chạy ra hai số'],
     ['học tiếp trên dữ liệu của mình', 'fine-tuning', 'ít dữ liệu thì chỉ mở lớp cuối'],
     ['một mạng làm nhiều việc', 'multi-task learning', 'mỗi việc được lợi từ dữ liệu việc kia'],
     ['một mạng làm tất', 'end-to-end learning', 'ăn khi có nhiều dữ liệu đầu-cuối; bẫy khi không'],
@@ -3679,6 +3692,9 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     return '<tr data-s="' + esc((g[0] + ' ' + g[1] + ' ' + g[2]).toLowerCase()) + '">' +
       '<td>' + esc(g[0]) + '</td><td>' + esc(g[1]) + '</td><td>' + esc(g[2]) + '</td></tr>';
   }).join('');
+
+  var stat = $('stat-terms');
+  if (stat) stat.textContent = GLOSS.length;
 
   var q = $('gl-q'), cnt = $('gl-count');
   var rows = Array.prototype.slice.call(body.children);
