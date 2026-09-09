@@ -526,6 +526,7 @@ footer a { color:var(--muted); }
       <a href="#s-rl"><span class="num">13</span>Học từ phần thưởng</a>
 
       <h4>Mang theo</h4>
+      <a href="#s-cheat">Bảng tra cứu</a>
       <a href="#s-end">Năm câu mang theo</a>
       <a href="#s-names">Bảng tên thật</a>
     </nav>
@@ -1809,6 +1810,101 @@ footer a { color:var(--muted); }
         <div class="take">
           <span class="k">Mang theo</span>
           <p>Học tăng cường là cỗ máy ba bộ phận với đúng một chỗ đổi: nhãn không do người đưa, mà do <b>chính mô hình tự sinh</b> từ phương trình Bellman. Mọi cái khó của nó đều mọc từ chỗ đổi ấy.</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════ BẢNG TRA CỨU ═══════════════════ -->
+      <section id="s-cheat">
+        <p class="sechead"><b>Tra cứu</b> — bốn bảng để dán lên tường</p>
+        <h2 class="st">Bảng tra cứu</h2>
+
+        <p class="lede">Mười ba chương ở trên giải thích <i>vì sao</i>. Bốn bảng dưới đây chỉ trả lời <i>chọn cái nào</i> — thứ bạn cần lúc đang ngồi trước máy, không phải lúc đang học. Mọi con số ở đây là <b>chỗ để bắt đầu</b>, không phải chỗ để dừng.</p>
+
+        <h3>1 · Đáp án trông thế nào thì trừ điểm bằng gì</h3>
+
+        <p>Đây là bộ phận 2 của <a href="#s-machine">cỗ máy ba bộ phận</a>. Chọn sai bảng này thì mọi thứ phía sau đều vô nghĩa, vì máy đang tối ưu một thứ khác với thứ bạn muốn.</p>
+
+        <div class="tw">
+          <table>
+            <thead><tr><th>Đáp án là gì</th><th>Lớp cuối</th><th>Điểm trừ</th></tr></thead>
+            <tbody>
+              <tr><td>Một số thực bất kỳ — giá nhà, số cốc</td><td>tuyến tính, 1 nơ-ron</td><td>bình phương sai lệch — <span class="nm">mean squared error</span></td></tr>
+              <tr><td>Một số thực, nhưng dữ liệu có ca dị thường</td><td>tuyến tính, 1 nơ-ron</td><td><span class="nm">Huber loss</span> hoặc sai số tuyệt đối — ít bị một ca dị kéo lệch cả đường</td></tr>
+              <tr><td>Có hay không</td><td><span class="nm">sigmoid</span>, 1 nơ-ron</td><td><span class="nm">binary cross-entropy</span>, cũng chính là <span class="nm">log loss</span></td></tr>
+              <tr><td>Một trong k loại, mỗi bài đúng một loại</td><td><span class="nm">softmax</span>, k nơ-ron</td><td><span class="nm">cross-entropy</span> — đưa vào <span class="nm">logits</span> chưa qua softmax, đừng đưa số đã bóp hai lần</td></tr>
+              <tr><td>Nhiều nhãn cùng lúc — ảnh có cả mèo lẫn chó</td><td>k sigmoid độc lập</td><td>tổng của k binary cross-entropy</td></tr>
+              <tr><td>Không phải nhãn, mà là "giống nhau bao nhiêu"</td><td>vector <span class="nm">embedding</span></td><td><span class="nm">triplet loss</span> — nhớ đặt biên, thiếu biên thì mọi vector co về một điểm</td></tr>
+              <tr><td>Điểm thưởng đến muộn</td><td>k giá trị Q</td><td>bình phương sai lệch với đích <span class="nm">Bellman equation</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2 · Núm bắt đầu từ đâu</h3>
+
+        <p>Những con số này là mặc định của cả lĩnh vực, không phải kết quả đo trên bài toán của bạn. Đặt chúng vào, cho máy chạy được đã, rồi mới <a href="#s-deep">dò</a> — và dò đúng cái đứng đầu bảng trước.</p>
+
+        <div class="tw">
+          <table>
+            <thead><tr><th>Núm</th><th>Bắt đầu từ</th><th>Ghi chú</th></tr></thead>
+            <tbody>
+              <tr><td>bước chân α — <span class="nm">learning rate</span></td><td>0,001 nếu dùng Adam</td><td>Quan trọng nhất trong bảng. Dò theo bội số 3 trên thang log: 0,001 → 0,003 → 0,01.</td></tr>
+              <tr><td>bộ vặn núm — <span class="nm">optimizer</span></td><td><span class="nm">Adam</span></td><td>β₁ = 0,9 · β₂ = 0,999 · ε = 10⁻⁸. Gần như không ai đổi ba số này.</td></tr>
+              <tr><td>mỗi lần xem bao nhiêu bài — <span class="nm">mini-batch</span></td><td>64–512</td><td>Luỹ thừa của 2; giới hạn thật là RAM. Dưới ~2.000 bài thì bỏ hẳn, chạy cả tập một lượt.</td></tr>
+              <tr><td>hàm kích hoạt lớp giữa</td><td><span class="nm">ReLU</span></td><td>Không phân vân thì chọn cái này.</td></tr>
+              <tr><td>đặt núm ban đầu</td><td><span class="nm">He initialization</span> với ReLU</td><td>Mặc định của thư viện đã đúng. Chỉ cần đừng đặt tất cả bằng 0.</td></tr>
+              <tr><td>phạt núm to λ — <span class="nm">L2 regularization</span></td><td>0, rồi tăng nếu đang thuộc lòng</td><td>Dò 0,01 → 0,1 → 1 → 10.</td></tr>
+              <tr><td><span class="nm">dropout</span></td><td>0,2–0,5 ở lớp dày</td><td>Chỉ bật khi thật sự đang thuộc lòng. Đang <span class="nm">bias</span> mà bật là làm nặng thêm.</td></tr>
+              <tr><td>bề rộng chùm — <span class="nm">beam width</span></td><td>3–10</td><td>Lợi ích giảm rất nhanh sau 10.</td></tr>
+              <tr><td>chiết khấu γ</td><td>0,9–0,99</td><td>Càng cao càng nhìn xa. Đổi nó là đổi cả chiến lược, không phải chỉnh cho mượt.</td></tr>
+              <tr><td>ε — <span class="nm">epsilon-greedy</span></td><td>1,0 rồi giảm dần về 0,01</td><td>Làm bừa nhiều lúc đầu, ít dần về sau.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>3 · Thấy triệu chứng này thì nghi cái gì</h3>
+
+        <p>Cột giữa là chỗ đúng để nhìn <b>trước</b>, vì nó là nguyên nhân hay gặp nhất — không phải nguyên nhân duy nhất. Đọc hết cột phải trước khi đổi kiến trúc.</p>
+
+        <div class="tw">
+          <table>
+            <thead><tr><th>Bạn thấy</th><th>Nghi trước tiên</th><th>Rồi mới tới</th></tr></thead>
+            <tbody>
+              <tr><td>Điểm trừ ra <span class="mono">NaN</span></td><td>bước chân quá dài</td><td>log(0) trong công thức trừ điểm · gradient nổ · chia cho 0</td></tr>
+              <tr><td>Điểm trừ tăng đều lên</td><td>bước chân quá dài</td><td>sai dấu ở đạo hàm · nhãn và lời đoán bị đảo chỗ</td></tr>
+              <tr><td>Điểm trừ giảm rồi phẳng lì ở mức cao</td><td>máy quá nghèo — <span class="nm">bias</span></td><td>chưa chuẩn hoá đầu vào · bước chân quá ngắn · <span class="nm">vanishing gradient</span></td></tr>
+              <tr><td>Gần như hoàn hảo ở đề ôn, tệ ở đề thử</td><td>thuộc lòng — <span class="nm">variance</span></td><td>đề thử quá nhỏ · <span class="nm">data leakage</span></td></tr>
+              <tr><td>Bảng số rất đẹp, đem ra dùng thật thì thất bại</td><td>đề thử không lấy từ dữ liệu thật</td><td>rò rỉ dữ liệu · dữ liệu thật trôi dần theo thời gian</td></tr>
+              <tr><td>Điểm trừ răng cưa lên xuống</td><td>bình thường với mini-batch</td><td>biên độ quá lớn thì giảm bước chân, hoặc tăng cỡ lô</td></tr>
+              <tr><td>Chạy hai lần ra hai kết quả</td><td>bình thường — mặt đất có nhiều đáy</td><td>chênh quá lớn thì khởi tạo sai thang · dữ liệu quá ít</td></tr>
+              <tr><td>Mọi nơ-ron trong một lớp cho cùng một số</td><td>khởi tạo tất cả bằng 0</td><td>bước chân lớn tới mức mọi ReLU chết hẳn</td></tr>
+              <tr><td>Máy luôn đoán đúng một loại</td><td><span class="nm">skewed dataset</span> cộng số đo sai</td><td>mốc chốt đặt sai · lớp ít có quá ít bài</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>4 · Tám khoá gốc nằm ở chương nào</h3>
+
+        <p>Dùng bảng này khi bạn muốn nghe chính Andrew Ng nói về một ý vừa đọc: nó chỉ ra đúng khoá và đúng tuần để tìm.</p>
+
+        <div class="tw">
+          <table>
+            <thead><tr><th>Khoá gốc</th><th>Nội dung</th><th>Ở trang này</th></tr></thead>
+            <tbody>
+              <tr><td>MLS C1 — Supervised ML: Regression &amp; Classification</td><td>hồi quy tuyến tính, tụt dốc, chuẩn hoá đầu vào, logistic, thuộc lòng, phạt núm</td><td><a href="#s-what">chương 1</a> → <a href="#s-overfit">5</a></td></tr>
+              <tr><td>MLS C2 — Advanced Learning Algorithms</td><td>mạng nơ-ron, hàm kích hoạt, softmax, Adam, lời khuyên thực hành, cây quyết định</td><td><a href="#s-nn">chương 6</a>, <a href="#s-deep">7</a>, <a href="#s-trees">9</a> · softmax ở <a href="#s-classify">4</a></td></tr>
+              <tr><td>MLS C3 — Unsupervised Learning, Recommenders, RL</td><td>k-means, bắt cái khác thường, PCA, gợi ý phim, học từ phần thưởng</td><td><a href="#s-nolabel">chương 12</a>, <a href="#s-rl">13</a></td></tr>
+              <tr><td>DLS C1 — Neural Networks &amp; Deep Learning</td><td>logistic như một nơ-ron, mạng nông, mạng sâu</td><td><a href="#s-nn">chương 6</a></td></tr>
+              <tr><td>DLS C2 — Improving Deep Neural Networks</td><td>chia ba tập, phạt núm, khởi tạo, bộ vặn núm, batch norm, dò siêu tham số</td><td><a href="#s-overfit">chương 5</a>, <a href="#s-deep">7</a></td></tr>
+              <tr><td>DLS C3 — Structuring ML Projects</td><td>số đo, mức con người, phân tích lỗi, lệch phân phối, chuyển giao, học đầu-cuối</td><td><a href="#s-diagnose">chương 8</a></td></tr>
+              <tr><td>DLS C4 — Convolutional Neural Networks</td><td>tích chập, kiến trúc kinh điển, phát hiện vật thể, U-Net, nhận diện mặt, chuyển phong cách</td><td><a href="#s-image">chương 10</a></td></tr>
+              <tr><td>DLS C5 — Sequence Models</td><td>RNN, LSTM, embedding, seq2seq, beam search, attention, Transformer</td><td><a href="#s-text">chương 11</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="take">
+          <span class="k">Mang theo</span>
+          <p>Bảng 2 là chỗ để bắt đầu, bảng 3 là chỗ để nhìn khi máy không chịu chạy. Nếu phải bỏ ba bảng và giữ một, giữ bảng 1 — chọn sai điểm trừ thì máy vẫn học rất giỏi, chỉ là học sai việc.</p>
         </div>
       </section>
 
@@ -3463,6 +3559,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['đáp án là một loại', 'classification', 'ở đây "gần đúng" vô nghĩa'],
     ['điểm trừ', 'loss function', 'một con số duy nhất: đang sai tới mức nào'],
     ['điểm trừ trên cả tập', 'cost function', 'trung bình điểm trừ của mọi ví dụ'],
+    ['điểm trừ không sợ ca dị thường', 'Huber loss', 'bình phương ở gần, tuyến tính ở xa'],
     ['nhân với chính nó', 'mean squared error', 'điểm trừ cho câu hỏi "bao nhiêu"'],
     ['vặn núm', 'optimizer', 'cách đi tìm bộ núm tốt nhất'],
     ['giải thẳng ra đáp án', 'normal equation', 'có với đường thẳng, KHÔNG có với mạng nơ-ron'],
