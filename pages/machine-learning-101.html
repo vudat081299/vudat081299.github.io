@@ -1289,7 +1289,7 @@ footer a { color:var(--muted); }
 
         <div class="steps">
           <div class="step"><div class="n">1</div><div class="b"><p><b>Dữ liệu có thứ tự thời gian mà chia bài ngẫu nhiên.</b> Doanh số theo ngày, giá, hành vi người dùng — chia ngẫu nhiên thì tháng Năm rơi vào đề ôn còn tháng Ba rơi vào đề thi. Bạn vừa cho máy xem tương lai rồi bắt nó đoán quá khứ. Điểm đẹp bất thường, đem ra dùng thật thì sập. Phải cắt theo mốc thời gian: học trên phần trước, thi trên phần sau. Tên thật: <span class="nm">time-based split</span>. Đây là một dạng <a href="#s-overfit">rò rỉ dữ liệu</a>, chỉ khó thấy hơn vì không có bài nào bị trùng.</p></div></div>
-          <div class="step"><div class="n">2</div><div class="b"><p><b>Không có mốc so sánh.</b> "Máy đạt 82%" — tốt hay tệ? Câu ấy chưa có nghĩa, cho tới khi có ba cái mốc: đoán bừa theo lớp đông nhất, một cái máy đơn giản nhất có thể (một đường thẳng, một cây), và mức người làm sai ở bảng phía trên. 82% mà đoán bừa cũng được 80% thì máy gần như vô dụng; 82% mà người chỉ được 75% thì rất tốt. Tên thật của những cái mốc ấy là <span class="nm">baseline</span>, và phải dựng chúng <b>trước</b> — dựng sau thì bạn đã biết con số mình muốn thấy.</p></div></div>
+          <div class="step"><div class="n">2</div><div class="b"><p><b>Không có mốc so sánh.</b> "Máy đạt 82%" — tốt hay tệ? Câu ấy chưa có nghĩa, cho tới khi có ba cái mốc: đoán bừa theo lớp đông nhất, một cái máy đơn giản nhất có thể (một đường thẳng, một cây), và mức người làm sai đã nói ở đầu chương này. 82% mà đoán bừa cũng được 80% thì máy gần như vô dụng; 82% mà người chỉ được 75% thì rất tốt. Tên thật của những cái mốc ấy là <span class="nm">baseline</span>, và phải dựng chúng <b>trước</b> — dựng sau thì bạn đã biết con số mình muốn thấy.</p></div></div>
           <div class="step"><div class="n">3</div><div class="b"><p><b>So hai cấu hình bằng một lần chạy.</b> Khởi tạo ngẫu nhiên, thứ tự lô ngẫu nhiên, dropout ngẫu nhiên — cùng một cấu hình chạy hai lần đã ra hai con số khác nhau. A hơn B 0,3% có thể chỉ là tiếng ồn đó. Chạy mỗi cấu hình vài lần, so trung bình, và nhìn cả biên độ dao động; chênh nhau ít hơn biên độ ấy thì chưa kết luận được gì. Cố định <span class="nm">random seed</span> để lần sau chạy lại ra đúng số cũ.</p></div></div>
         </div>
 
@@ -1832,7 +1832,7 @@ footer a { color:var(--muted); }
               <tr><td>Một số thực bất kỳ — giá nhà, số cốc</td><td>tuyến tính, 1 nơ-ron</td><td>bình phương sai lệch — <span class="nm">mean squared error</span></td></tr>
               <tr><td>Một số thực, nhưng dữ liệu có ca dị thường</td><td>tuyến tính, 1 nơ-ron</td><td><span class="nm">Huber loss</span> hoặc sai số tuyệt đối — ít bị một ca dị kéo lệch cả đường</td></tr>
               <tr><td>Có hay không</td><td><span class="nm">sigmoid</span>, 1 nơ-ron</td><td><span class="nm">binary cross-entropy</span>, cũng chính là <span class="nm">log loss</span></td></tr>
-              <tr><td>Một trong k loại, mỗi bài đúng một loại</td><td><span class="nm">softmax</span>, k nơ-ron</td><td><span class="nm">cross-entropy</span> — đưa vào <span class="nm">logits</span> chưa qua softmax, đừng đưa số đã bóp hai lần</td></tr>
+              <tr><td>Một trong k loại, mỗi bài đúng một loại</td><td><span class="nm">softmax</span>, k nơ-ron</td><td><span class="nm">cross-entropy</span> — đưa vào <span class="nm">logits</span> chưa qua softmax, đừng đưa số đã bóp hai lần: trong thư viện là <span class="mono">from_logits=True</span></td></tr>
               <tr><td>Nhiều nhãn cùng lúc — ảnh có cả mèo lẫn chó</td><td>k sigmoid độc lập</td><td>tổng của k binary cross-entropy</td></tr>
               <tr><td>Không phải nhãn, mà là "giống nhau bao nhiêu"</td><td>vector <span class="nm">embedding</span></td><td><span class="nm">triplet loss</span> — nhớ đặt biên, thiếu biên thì mọi vector co về một điểm</td></tr>
               <tr><td>Điểm thưởng đến muộn</td><td>k giá trị Q</td><td>bình phương sai lệch với đích <span class="nm">Bellman equation</span></td></tr>
@@ -1850,7 +1850,7 @@ footer a { color:var(--muted); }
             <tbody>
               <tr><td>bước chân α — <span class="nm">learning rate</span></td><td>0,001 nếu dùng Adam</td><td>Quan trọng nhất trong bảng. Dò theo bội số 3 trên thang log: 0,001 → 0,003 → 0,01.</td></tr>
               <tr><td>bộ vặn núm — <span class="nm">optimizer</span></td><td><span class="nm">Adam</span></td><td>β₁ = 0,9 · β₂ = 0,999 · ε = 10⁻⁸. Gần như không ai đổi ba số này.</td></tr>
-              <tr><td>mỗi lần xem bao nhiêu bài — <span class="nm">mini-batch</span></td><td>64–512</td><td>Luỹ thừa của 2; giới hạn thật là RAM. Dưới ~2.000 bài thì bỏ hẳn, chạy cả tập một lượt.</td></tr>
+              <tr><td>mỗi lần xem bao nhiêu bài — <span class="nm">mini-batch</span></td><td>32–512</td><td>Luỹ thừa của 2; giới hạn thật là RAM. Dưới ~2.000 bài thì bỏ hẳn, chạy cả tập một lượt.</td></tr>
               <tr><td>hàm kích hoạt lớp giữa</td><td><span class="nm">ReLU</span></td><td>Không phân vân thì chọn cái này.</td></tr>
               <tr><td>đặt núm ban đầu</td><td><span class="nm">He initialization</span> với ReLU</td><td>Mặc định của thư viện đã đúng. Chỉ cần đừng đặt tất cả bằng 0.</td></tr>
               <tr><td>phạt núm to λ — <span class="nm">L2 regularization</span></td><td>0, rồi tăng nếu đang thuộc lòng</td><td>Dò 0,01 → 0,1 → 1 → 10.</td></tr>
@@ -1872,27 +1872,27 @@ footer a { color:var(--muted); }
             <tbody>
               <tr><td>Điểm trừ ra <span class="mono">NaN</span></td><td>bước chân quá dài</td><td>log(0) trong công thức trừ điểm · gradient nổ · chia cho 0</td></tr>
               <tr><td>Điểm trừ tăng đều lên</td><td>bước chân quá dài</td><td>sai dấu ở đạo hàm · nhãn và lời đoán bị đảo chỗ</td></tr>
-              <tr><td>Điểm trừ giảm rồi phẳng lì ở mức cao</td><td>máy quá nghèo — <span class="nm">bias</span></td><td>chưa chuẩn hoá đầu vào · bước chân quá ngắn · <span class="nm">vanishing gradient</span></td></tr>
+              <tr><td>Điểm trừ giảm rồi phẳng lì ở mức cao</td><td>chưa học đủ — <span class="nm">bias</span></td><td>chưa chuẩn hoá đầu vào · bước chân quá ngắn · <span class="nm">vanishing gradient</span></td></tr>
               <tr><td>Gần như hoàn hảo ở đề ôn, tệ ở đề thử</td><td>thuộc lòng — <span class="nm">variance</span></td><td>đề thử quá nhỏ · <span class="nm">data leakage</span></td></tr>
               <tr><td>Bảng số rất đẹp, đem ra dùng thật thì thất bại</td><td>đề thử không lấy từ dữ liệu thật</td><td>rò rỉ dữ liệu · dữ liệu thật trôi dần theo thời gian</td></tr>
               <tr><td>Điểm trừ răng cưa lên xuống</td><td>bình thường với mini-batch</td><td>biên độ quá lớn thì giảm bước chân, hoặc tăng cỡ lô</td></tr>
               <tr><td>Chạy hai lần ra hai kết quả</td><td>bình thường — mặt đất có nhiều đáy</td><td>chênh quá lớn thì khởi tạo sai thang · dữ liệu quá ít</td></tr>
               <tr><td>Mọi nơ-ron trong một lớp cho cùng một số</td><td>khởi tạo tất cả bằng 0</td><td>bước chân lớn tới mức mọi ReLU chết hẳn</td></tr>
-              <tr><td>Máy luôn đoán đúng một loại</td><td><span class="nm">skewed dataset</span> cộng số đo sai</td><td>mốc chốt đặt sai · lớp ít có quá ít bài</td></tr>
+              <tr><td>Máy luôn đoán đúng một loại</td><td><span class="nm">skewed dataset</span> cộng số đo sai</td><td>mốc để chốt đặt sai · lớp ít có quá ít bài</td></tr>
             </tbody>
           </table>
         </div>
 
         <h3>4 · Tám khoá gốc nằm ở chương nào</h3>
 
-        <p>Dùng bảng này khi bạn muốn nghe chính Andrew Ng nói về một ý vừa đọc: nó chỉ ra đúng khoá và đúng tuần để tìm.</p>
+        <p>Dùng bảng này khi bạn muốn nghe chính Andrew Ng nói về một ý vừa đọc: nó chỉ ra đúng khoá để tìm, còn số tuần thì <a href="machine-learning.html">bản đầy đủ</a> ghi ở đầu mỗi mục.</p>
 
         <div class="tw">
           <table>
             <thead><tr><th>Khoá gốc</th><th>Nội dung</th><th>Ở trang này</th></tr></thead>
             <tbody>
               <tr><td>MLS C1 — Supervised ML: Regression &amp; Classification</td><td>hồi quy tuyến tính, tụt dốc, chuẩn hoá đầu vào, logistic, thuộc lòng, phạt núm</td><td><a href="#s-what">chương 1</a> → <a href="#s-overfit">5</a></td></tr>
-              <tr><td>MLS C2 — Advanced Learning Algorithms</td><td>mạng nơ-ron, hàm kích hoạt, softmax, Adam, lời khuyên thực hành, cây quyết định</td><td><a href="#s-nn">chương 6</a>, <a href="#s-deep">7</a>, <a href="#s-trees">9</a> · softmax ở <a href="#s-classify">4</a></td></tr>
+              <tr><td>MLS C2 — Advanced Learning Algorithms</td><td>mạng nơ-ron, hàm kích hoạt, softmax, Adam, lời khuyên thực hành, cây quyết định</td><td><a href="#s-nn">chương 6</a>, <a href="#s-deep">7</a>, <a href="#s-diagnose">8</a>, <a href="#s-trees">9</a> · softmax ở <a href="#s-classify">4</a></td></tr>
               <tr><td>MLS C3 — Unsupervised Learning, Recommenders, RL</td><td>k-means, bắt cái khác thường, PCA, gợi ý phim, học từ phần thưởng</td><td><a href="#s-nolabel">chương 12</a>, <a href="#s-rl">13</a></td></tr>
               <tr><td>DLS C1 — Neural Networks &amp; Deep Learning</td><td>logistic như một nơ-ron, mạng nông, mạng sâu</td><td><a href="#s-nn">chương 6</a></td></tr>
               <tr><td>DLS C2 — Improving Deep Neural Networks</td><td>chia ba tập, phạt núm, khởi tạo, bộ vặn núm, batch norm, dò siêu tham số</td><td><a href="#s-overfit">chương 5</a>, <a href="#s-deep">7</a></td></tr>
@@ -1914,18 +1914,18 @@ footer a { color:var(--muted); }
         <p class="sechead"><b>Tra cứu</b> — tuổi của tài liệu, nói thẳng</p>
         <h2 class="st">Cái gì còn đúng nguyên, cái gì đã trôi, và khoảng cách còn lại tới hôm nay</h2>
 
-        <p class="lede">Tám khoá gốc dạy xong khoảng năm 2018–2022. Đọc một tài liệu cũ mà không biết chỗ nào của nó đã cũ là cách chắc chắn nhất để tự tin sai. Mục này chia làm ba: thứ còn đúng lâu, thứ đã trôi, và thứ chưa bao giờ có trong khoá.</p>
+        <p class="lede">Deep Learning Specialization được quay năm 2017–2018 (phần về ảnh có cập nhật một phần năm 2021), Machine Learning Specialization làm lại năm 2022. Đọc một tài liệu cũ mà không biết chỗ nào của nó đã cũ là cách chắc chắn nhất để tự tin sai. Mục này chia làm ba: thứ còn đúng lâu, thứ đã trôi, và thứ chưa bao giờ có trong khoá. <b>Bản thân nó cũng không có trong khoá gốc</b> — đây là đánh giá từ bên ngoài, không phải lời của Andrew Ng.</p>
 
         <div class="box good-box">
           <p class="box__k">Vẫn đúng nguyên, và sẽ còn đúng lâu</p>
-          <p><a href="#s-machine">Cỗ máy ba bộ phận</a> · <a href="#s-descent">tụt dốc</a> và cả họ bộ vặn núm · <a href="#s-nn">đi ngược để chia trách nhiệm</a> · <a href="#s-overfit">thuộc lòng và cách phạt</a> · <b>toàn bộ <a href="#s-diagnose">chương 8</a></b> (chia ba tập, hai con số, số đo, ngồi xem máy sai, lệch phân phối) · <a href="#s-image">nguyên lý kính lúp trượt</a> · <a href="#s-text">cơ chế attention</a> · chuẩn hoá · <span class="nm">skip connection</span> · <span class="nm">transfer learning</span>.</p>
+          <p><a href="#s-machine">Cỗ máy ba bộ phận</a> · <a href="#s-descent">tụt dốc</a> và cả họ bộ vặn núm · <a href="#s-nn">đi ngược để chia trách nhiệm</a> · <a href="#s-overfit">thuộc lòng và cách phạt</a> · <b>toàn bộ <a href="#s-diagnose">chương 8</a></b> (hai con số, số đo, ngồi xem máy sai, lệch phân phối) và cách <a href="#s-overfit">chia ba tập</a> ở chương 5 · <a href="#s-image">nguyên lý kính lúp trượt</a> · <a href="#s-text">cơ chế attention</a> · chuẩn hoá · <span class="nm">skip connection</span> · <span class="nm">transfer learning</span>.</p>
           <p>Đây là vật lý của lĩnh vực, không phải thời trang. Chương 8 bền nhất, vì nó nói về <b>quy trình làm việc</b> — và quy trình không đổi khi kiến trúc đổi.</p>
         </div>
 
         <h3>Đã trôi — biết để đi đọc thêm bên ngoài</h3>
 
         <div class="steps">
-          <div class="step"><div class="n">1</div><div class="b"><p><b>Tỉ trọng.</b> Transformer chỉ là tuần cuối của khoá thứ năm. Hôm nay nó là trung tâm của gần như mọi thứ. Khung "một bên đọc, một bên viết" cho dịch máy ở <a href="#s-text">chương 11</a> đã nhường chỗ cho loại máy chỉ có bên viết, chạy bằng đúng một việc: đoán từ kế tiếp. Tên thật: <span class="nm">decoder-only model</span>.</p></div></div>
+          <div class="step"><div class="n">1</div><div class="b"><p><b>Tỉ trọng.</b> Transformer chỉ chiếm tuần cuối của khoá cuối — DLS C5 ở <a href="#s-cheat">bảng 4</a> phía trên. Hôm nay nó là trung tâm của gần như mọi thứ. Khung "một bên đọc, một bên viết" cho dịch máy ở <a href="#s-text">chương 11</a> đã nhường chỗ cho loại máy chỉ có bên viết, chạy bằng đúng một việc: đoán từ kế tiếp. Tên thật: <span class="nm">decoder-only model</span>.</p></div></div>
           <div class="step"><div class="n">2</div><div class="b"><p><b>Quy mô đổi chất.</b> Khoá có dạy mượn mạng đã học bài khác, nhưng chuyện huấn luyện <i>một lần</i> ở cỡ cực lớn rồi cả thế giới dùng lại — bằng cách học tiếp một ít, hoặc chỉ bằng cách viết yêu cầu ra chữ — thì không có trong khoá. Tên thật: <span class="nm">foundation model</span>, và luật đằng sau nó là <span class="nm">scaling laws</span>.</p></div></div>
           <div class="step"><div class="n">3</div><div class="b"><p><b>Thị giác.</b> Cắt tấm ảnh thành các ô rồi đối xử với chúng như một câu — <span class="nm">Vision Transformer</span> — và loại máy sinh ảnh bằng cách gỡ nhiễu dần từ một tấm nhiễu trắng — <span class="nm">diffusion model</span> — đều ra đời sau khoá học. Cả loại máy nối ảnh với chữ vào cùng một không gian vector cũng vậy.</p></div></div>
           <div class="step"><div class="n">4</div><div class="b"><p><b>Cuốn sổ nhớ.</b> RNN và LSTM ở <a href="#s-text">chương 11</a> vẫn nên hiểu, vì chúng dạy ý tưởng cổng và trí nhớ rõ hơn bất cứ thứ gì. Nhưng hiếm khi còn là lựa chọn để bắt đầu một dự án về câu chữ.</p></div></div>
@@ -1942,7 +1942,7 @@ footer a { color:var(--muted); }
         <h3>Ba thứ chưa bao giờ có trong khoá, mà dự án thật luôn cần</h3>
 
         <div class="steps">
-          <div class="step"><div class="n">1</div><div class="b"><p><b>Nuôi cái máy sau khi nó đã chạy.</b> Đem ra dùng thật, theo dõi dữ liệu thật trôi dần khỏi dữ liệu lúc học, đánh phiên bản cho từng cái máy, học lại định kỳ, kiểm thử. Khoá dừng ở chỗ máy đạt điểm tốt; ngoài đời đó mới là giữa dự án. Tên thật của mảng việc này: <span class="nm">MLOps</span>.</p></div></div>
+          <div class="step"><div class="n">1</div><div class="b"><p><b>Nuôi cái máy sau khi nó đã chạy.</b> Đem ra dùng thật, theo dõi dữ liệu thật trôi dần khỏi dữ liệu lúc học, đánh phiên bản cho từng cái máy, học lại định kỳ, kiểm thử. Khoá dừng ở chỗ máy đạt điểm tốt; ngoài đời đó mới là giữa dự án. Tên thật của mảng việc này: <span class="nm">MLOps</span>, và Ng có một khoá riêng cho nó — <i>Machine Learning Engineering for Production</i>.</p></div></div>
           <div class="step"><div class="n">2</div><div class="b"><p><b>Dữ liệu ở đâu ra.</b> Khoá luôn cho sẵn tập dữ liệu. Ngoài đời đây là khâu tốn nhất: định nghĩa nhãn sao cho hai người gán ra cùng kết quả, đo mức họ đồng thuận, xử lý ca mơ hồ. Chính Ng sau này chuyển trọng tâm sang hướng sửa dữ liệu thay vì sửa mô hình — <span class="nm">data-centric AI</span>.</p></div></div>
           <div class="step"><div class="n">3</div><div class="b"><p><b>Chấm điểm máy sinh.</b> Mọi số đo trong trang này — độ chính xác, F1, <span class="nm">BLEU</span> — đều cần một đáp án đúng để so. Với máy sinh chữ hay sinh ảnh thì không có đáp án đúng duy nhất, và việc chấm điểm trở thành một bài toán nghiên cứu riêng. Đây là khoảng trống lớn nhất giữa khoá học và hôm nay.</p></div></div>
         </div>
@@ -3604,7 +3604,6 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['đáp án là một loại', 'classification', 'ở đây "gần đúng" vô nghĩa'],
     ['điểm trừ', 'loss function', 'một con số duy nhất: đang sai tới mức nào'],
     ['điểm trừ trên cả tập', 'cost function', 'trung bình điểm trừ của mọi ví dụ'],
-    ['điểm trừ không sợ ca dị thường', 'Huber loss', 'bình phương ở gần, tuyến tính ở xa'],
     ['nhân với chính nó', 'mean squared error', 'điểm trừ cho câu hỏi "bao nhiêu"'],
     ['vặn núm', 'optimizer', 'cách đi tìm bộ núm tốt nhất'],
     ['giải thẳng ra đáp án', 'normal equation', 'có với đường thẳng, KHÔNG có với mạng nơ-ron'],
@@ -3827,6 +3826,10 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['rút ngẫu nhiên từ sổ kinh nghiệm', 'replay buffer', 'các bước liền nhau giống nhau quá'],
     ['nhích bản sao về từng chút', 'soft update', 'đích đứng yên hơn thì học ổn định hơn'],
     ['thắng ở cuối thì công về đâu', 'credit assignment', 'toàn bộ độ khó của học tăng cường'],
+
+    /* ── Tra cứu · tên chỉ xuất hiện ở hai mục tra cứu cuối trang ─────────── */
+    ['điểm trừ không sợ ca dị thường', 'Huber loss', 'bình phương ở gần, tuyến tính ở xa'],
+    ['bề rộng chùm B', 'beam width', '3–10; lợi ích giảm rất nhanh sau 10'],
 
     /* ── Tra cứu · những tên ra đời sau tám khoá gốc ──────────────────────── */
     ['máy chỉ có bên viết, đoán từ kế tiếp', 'decoder-only model', 'thay khung một-bên-đọc-một-bên-viết ở chương 11'],
