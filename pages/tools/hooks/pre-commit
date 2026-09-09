@@ -44,4 +44,25 @@ MSG
   exit 1
 fi
 
+# Cổng kiến thức cho trang toán: nó nói ~90 con số cụ thể, và lint-pages không biết
+# 0,0546875 có phải P(X≥8 | n=10, p=0,5) hay không. Chỉ chạy khi trang ấy bị chạm.
+if echo "$CHANGED" | grep -q "mathematics-for-machine-learning.html"; then
+  if ! python3 "$DIR/tools/verify-math-for-ml.py"; then
+    cat >&2 <<'MSG'
+
+──────────────────────────────────────────────────────────────────────
+Commit bị chặn: có con số trong trang toán không tính lại được.
+
+Trang mathematics-for-machine-learning.html tự nhận là mọi con số
+trong đó đều kiểm được bằng máy. Nếu bạn vừa sửa một con số thì phải
+sửa cả phép tính tương ứng trong pages/tools/verify-math-for-ml.py —
+hoặc con số mới là sai.
+
+Xem chi tiết:  python3 pages/tools/verify-math-for-ml.py
+──────────────────────────────────────────────────────────────────────
+MSG
+    exit 1
+  fi
+fi
+
 echo "pre-commit: cổng $DIR qua."
