@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
 <title>Toán cho Học máy &amp; Khoa học dữ liệu — diễn giải trọn bộ 3 khoá của DeepLearning.AI</title>
-<meta name="description" content="Diễn giải bằng tiếng Việt trọn bộ Mathematics for Machine Learning and Data Science (3 khoá, 11 tuần, DeepLearning.AI) — đại số tuyến tính, giải tích, xác suất &amp; thống kê. Mỗi ý kể ba lần: một trò chơi trẻ con hiểu được, cùng một điều viết bằng ký hiệu chuẩn, rồi chỗ nó xuất hiện trong học máy. Hệ phương trình, định thức, hạng, vector, nhân vô hướng, ma trận như máy biến hình, nghịch đảo, trị riêng, PCA, đạo hàm, gradient, gradient descent, quy tắc chuỗi, Newton, Bayes, nhị thức, phân phối chuẩn, hiệp phương sai, định lý giới hạn trung tâm, MLE, MAP, khoảng tin cậy, p-value, A/B test — kèm 17 mô hình nghịch trực tiếp trên trang.">
+<meta name="description" content="Diễn giải bằng tiếng Việt trọn bộ Mathematics for Machine Learning and Data Science (3 khoá, 11 tuần, DeepLearning.AI) — đại số tuyến tính, giải tích, xác suất &amp; thống kê. Mỗi ý kể ba lần: một trò chơi trẻ con hiểu được, cùng một điều viết bằng ký hiệu chuẩn, rồi chỗ nó xuất hiện trong học máy. Hệ phương trình, định thức, hạng, vector, nhân vô hướng, ma trận như máy biến hình, chuyển vị, ma trận đối xứng, nghịch đảo, trị riêng, PCA, đạo hàm, gradient, gradient descent, quy tắc chuỗi, Newton, Bayes, nhị thức, phân phối chuẩn, hiệp phương sai, định lý giới hạn trung tâm, MLE, MAP, khoảng tin cậy, p-value, A/B test — kèm 18 mô hình nghịch trực tiếp trên trang.">
 
 <script>
   /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành.
@@ -609,12 +609,12 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
     <div class="stats">
       <div class="stat"><b>3 câu hỏi</b><span>ba khoá học chỉ là ba cách trả lời ba câu đó</span></div>
       <div class="stat"><b>11 tuần</b><span>4 đại số tuyến tính · 3 giải tích · 4 xác suất &amp; thống kê</span></div>
-      <div class="stat"><b>17 mô hình</b><span>kéo, bấm, thả — nhìn thấy cơ chế thay vì tin lời</span></div>
+      <div class="stat"><b>18 mô hình</b><span>kéo, bấm, thả — nhìn thấy cơ chế thay vì tin lời</span></div>
       <div class="stat"><b>0 thứ phải cài</b><span>mọi phép tính chạy trong trình duyệt của bạn</span></div>
     </div>
 
     <div class="acts">
-      <a class="ch-a" href="#act1"><div class="n">CHẶNG 1 · KHOÁ 1</div><div class="t">Nhiều số đi cùng nhau</div><div class="d">Hệ phương trình, định thức, hạng, vector, ma trận như cái máy biến hình, trị riêng, PCA.</div></a>
+      <a class="ch-a" href="#act1"><div class="n">CHẶNG 1 · KHOÁ 1</div><div class="t">Nhiều số đi cùng nhau</div><div class="d">Hệ phương trình, định thức, hạng, vector, ma trận như cái máy biến hình, chuyển vị, trị riêng, PCA.</div></a>
       <a class="ch-c" href="#act2"><div class="n">CHẶNG 2 · KHOÁ 2</div><div class="t">Đi hướng nào thì tốt hơn</div><div class="d">Đạo hàm, cực tiểu, đạo hàm riêng, gradient descent, quy tắc chuỗi, Newton.</div></a>
       <a class="ch-p" href="#act3"><div class="n">CHẶNG 3 · KHOÁ 3</div><div class="t">Tin được tới đâu</div><div class="d">Xác suất, Bayes, biến ngẫu nhiên, nhị thức, phân phối chuẩn, phương sai, tương quan.</div></a>
       <a class="ch-p" href="#act4"><div class="n">CHẶNG 4 · KHOÁ 3</div><div class="t">Từ mẫu nhỏ nói về cả thế giới</div><div class="d">Lấy mẫu, giới hạn trung tâm, MLE, MAP, khoảng tin cậy, p-value, A/B test.</div></a>
@@ -637,9 +637,10 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-vector">1.4 Vector: mũi tên có độ dài</a>
       <a href="#s-dot">1.5 Nhân vô hướng: cùng hướng tới đâu</a>
       <a href="#s-matrix">1.6 Ma trận là cái máy biến hình</a>
-      <a href="#s-inverse">1.7 Nghịch đảo: đi ngược lại được không</a>
-      <a href="#s-eigen">1.8 Mũi tên không chịu đổi hướng</a>
-      <a href="#s-pca">1.9 PCA: giữ trục kể được nhiều nhất</a>
+      <a href="#s-transpose">1.7 Chuyển vị: lật bảng qua đường chéo</a>
+      <a href="#s-inverse">1.8 Nghịch đảo: đi ngược lại được không</a>
+      <a href="#s-eigen">1.9 Mũi tên không chịu đổi hướng</a>
+      <a href="#s-pca">1.10 PCA: giữ trục kể được nhiều nhất</a>
 
       <h4>2 · Giải tích</h4>
       <a href="#s-slope">2.1 Đạo hàm là độ nghiêng dưới chân</a>
@@ -946,7 +947,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Ba người kể chuyện. Người thứ ba chỉ <b>nhắc lại lời hai người trước cộng vào</b>. Bạn nghe ba lời khai nhưng chỉ có hai nguồn tin.</div></div>
           <div class="r-math"><div class="lbl">Toán</div><div class="v"><b>Hạng</b> = số hàng độc lập tuyến tính = số trụ trong dạng bậc thang. Với ma trận <b>vuông</b>: hạng &lt; số ẩn ⟹ det = 0 ⟹ không có nghiệm duy nhất. (Ma trận không vuông thì không có định thức.)</div></div>
-          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Hạng của ma trận dữ liệu cho biết <b>số chiều thật sự</b> của dữ liệu. 100 cột mà hạng 12 nghĩa là 88 cột kia không thêm gì — đó là lý do PCA (mục 1.9) nén được mà gần như không mất mát.</div></div>
+          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Hạng của ma trận dữ liệu cho biết <b>số chiều thật sự</b> của dữ liệu. 100 cột mà hạng 12 nghĩa là 88 cột kia không thêm gì — đó là lý do PCA (mục 1.10) nén được mà gần như không mất mát.</div></div>
         </div>
 
         <details class="q">
@@ -1131,8 +1132,106 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <div class="take"><div class="k">Mang theo</div><p>Ma trận là <b>động từ</b>, không phải bảng số. <b>Cột</b> nói mũi tên đơn vị bay đi đâu. <b>Định thức</b> nói diện tích bị phóng bao nhiêu lần — và bằng 0 nghĩa là bóp phẳng, hết đường về.</p></div>
       </section>
 
+      <section id="s-transpose" class="ch-a">
+        <p class="sechead">1.7 · <b>Chuyển vị</b></p>
+        <h2 class="st">Chuyển vị chỉ là lật bảng qua đường chéo — và đó là lý do chữ X<sup>T</sup> có mặt ở gần như mọi công thức học máy</h2>
+        <p class="map">Bổ sung · <b>C1 · Tuần 3</b> · Matrix operations — syllabus công bố không nêu tên phép chuyển vị, nhưng các mục sau của trang này đã dùng nó, nên nó phải được nói ra</p>
+
+        <p class="ask">Có một bảng điểm: <span>mỗi hàng một học sinh, mỗi cột một môn.</span> Giờ tôi muốn đọc ngược lại — mỗi hàng một môn, mỗi cột một học sinh. Có phải chép lại cả bảng không?</p>
+
+        <p class="lede">Không. Chỉ cần <b>lật bảng qua đường chéo</b>: con số ở <b>hàng 2 cột 3</b> sang <b>hàng 3 cột 2</b>. Không con số nào bị đổi, chỉ đổi chỗ. Phép lật ấy tên là <b>chuyển vị</b>, viết <b>A<sup>T</sup></b> — chữ T nhỏ ở góc trên, đọc &ldquo;A chuyển vị&rdquo;.</p>
+
+        <p>Cả định nghĩa gói trong một dòng: <b>đổi chỗ hai chỉ số</b>. Hai hệ quả nhìn thấy ngay. Một: bảng <b>4 hàng 3 cột</b> lật thành <b>3 hàng 4 cột</b> — hàng thành cột. Hai: ô nào <b>nằm trên đường chéo</b> thì đứng im, vì đổi chỗ hai chỉ số giống nhau vẫn ra chính nó.</p>
+
+        <div class="fx">
+          <p class="fx__line">A <span class="op">=</span> <span class="mx mx--k" style="--cols:3"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></span> <span class="op">→</span> <span class="tm" data-n="A chuyển vị. Hàng của A thành cột của Aᵀ. A cỡ 2×3 nên Aᵀ cỡ 3×2 — hai số kích thước đổi chỗ, đúng như hai chỉ số.">A<sup>T</sup></span> <span class="op">=</span> <span class="mx mx--k" style="--cols:2"><span>1</span><span>4</span><span>2</span><span>5</span><span>3</span><span>6</span></span></p>
+          <p class="fx__note">Hàng đầu của A — <b>1 2 3</b> — thành <b>cột đầu</b> của A<sup>T</sup>. Số 1 nằm trên đường chéo nên không đi đâu. Số 2 đi từ hàng 1 cột 2 sang hàng 2 cột 1: <b>(1,2) → (2,1)</b>.</p>
+        </div>
+
+        <div class="lab" id="m4">
+          <div class="lab__h">
+            <p class="lab__k">Mô hình 4 · một thanh trượt</p>
+            <p class="lab__t">Lật bảng qua đường chéo</p>
+            <p class="lab__hint">Kéo thanh trượt để lật. Nhìn <b>đường chéo</b>: ô nằm trên nó đứng im, ô càng xa nó càng đi xa. Hãy thử hình <b>đối xứng</b> — lật xong bảng trông y nguyên, và đó chính là định nghĩa của chữ &ldquo;đối xứng&rdquo;.</p>
+          </div>
+          <div class="lab__b">
+            <div class="chips" id="m4-shape" role="group" aria-label="Chọn hình dạng bảng số" style="margin-bottom:12px">
+              <span class="chip on" data-s="0">Bảng 4×3</span>
+              <span class="chip" data-s="1">Đối xứng 3×3</span>
+              <span class="chip" data-s="2">Vector 3×1</span>
+            </div>
+            <div class="row"><label for="m4-t">Tiến trình lật</label><div class="inline"><input type="range" id="m4-t" min="0" max="100" step="1" value="0"><span class="val" id="m4-tv">0%</span></div></div>
+            <svg class="viz" id="m4-svg" viewBox="0 0 620 300" role="img" aria-label="Các ô của bảng số đổi chỗ khi lật qua đường chéo chính"></svg>
+            <div class="lgd">
+              <span><i style="background:var(--a-bg)"></i> ô trên đường chéo — đứng im</span>
+              <span><i class="ln" style="background:var(--border-2)"></i> khung trước khi lật</span>
+              <span><i class="ln" style="background:var(--a)"></i> khung sau khi lật</span>
+            </div>
+            <div class="reads">
+              <div class="read"><div class="k">Cỡ ban đầu</div><div class="v" id="m4-dim">4×3</div></div>
+              <div class="read"><div class="k">Cỡ sau khi lật</div><div class="v" id="m4-dim2">3×4</div></div>
+              <div class="read"><div class="k">Ô đứng im</div><div class="v" id="m4-fix">3</div></div>
+              <div class="read hi"><div class="k">Đối xứng?</div><div class="v" id="m4-sym" style="font-size:14px">không</div></div>
+            </div>
+            <p class="lab__f" id="m4-say">Bảng 4 hàng 3 cột.</p>
+          </div>
+        </div>
+
+        <h3>Bốn luật, và một luật hay bị nhớ sai</h3>
+
+        <p>Ba luật đầu dễ đoán, vì lật hai lần thì về chỗ cũ và lật không làm hỏng phép cộng:</p>
+
+        <ul>
+          <li><b>(A<sup>T</sup>)<sup>T</sup> = A</b> — lật rồi lật lại là không làm gì.</li>
+          <li><b>(A + B)<sup>T</sup> = A<sup>T</sup> + B<sup>T</sup></b> — cộng trước hay lật trước đều thế.</li>
+          <li><b>det(A<sup>T</sup>) = det(A)</b> — lật không đổi hệ số phóng diện tích. Thử: A = <span class="mono">[[3,1],[4,2]]</span> có det = 3·2 − 1·4 = <b>2</b>; A<sup>T</sup> = <span class="mono">[[3,4],[1,2]]</span> có det = 3·2 − 4·1 = <b>2</b>. Cùng một số.</li>
+          <li><b>Trị riêng của A<sup>T</sup> giống hệt của A</b> — vì det(A − λI) và det(A<sup>T</sup> − λI) là cùng một đa thức, theo đúng luật trên. Nhưng <i>vector</i> riêng thì thường khác.</li>
+        </ul>
+
+        <p>Luật thứ tư là chỗ gần như ai cũng nhớ sai lần đầu: <b>nhân rồi lật thì thứ tự bị đảo</b>.</p>
+
+        <div class="fx">
+          <p class="fx__line">(A <span class="op">·</span> B)<sup>T</sup> <span class="op">=</span> <span class="tm" data-n="Đảo thứ tự. Không phải AᵀBᵀ. Lý do kích thước: A cỡ m×n, B cỡ n×p thì (AB)ᵀ cỡ p×m — chỉ BᵀAᵀ (p×n rồi n×m) ghép được, còn AᵀBᵀ là n×m nhân p×n, không khớp chiều.">B<sup>T</sup> <span class="op">·</span> A<sup>T</sup></span></p>
+          <p class="fx__note">Ví von cho dễ nhớ: mặc <b>áo</b> rồi mặc <b>khoác</b>; muốn về trạng thái đầu thì phải cởi <b>khoác</b> trước rồi mới cởi <b>áo</b>. Làm ngược thì phải tháo theo thứ tự ngược.</p>
+        </div>
+
+        <div class="box mis">
+          <p class="box__k">Chỗ dễ nhầm</p>
+          <div class="row">
+            <div class="k">Tưởng là</div><div>&ldquo;(AB)<sup>T</sup> = A<sup>T</sup>B<sup>T</sup>, vì lật thì lật hết.&rdquo;</div>
+            <div class="k">Thật ra</div><div>Thử bằng số, A = <span class="mono">[[1,2],[3,4]]</span> và B = <span class="mono">[[5,6],[7,8]]</span>. Ta có AB = <span class="mono">[[19,22],[43,50]]</span>, nên <b>(AB)<sup>T</sup> = [[19,43],[22,50]]</b>. Còn B<sup>T</sup>A<sup>T</sup> = <span class="mono">[[19,43],[22,50]]</span> — <b>khớp</b>. Nhưng A<sup>T</sup>B<sup>T</sup> = <span class="mono">[[23,31],[34,46]]</span> — <b>khác hẳn</b>. Với ma trận không vuông thì cái sai còn lộ sớm hơn: A<sup>T</sup>B<sup>T</sup> thường không nhân được vì lệch chiều.</div>
+          </div>
+        </div>
+
+        <h3>Đối xứng: chữ mà trang này đã dùng, giờ mới định nghĩa được</h3>
+
+        <p>Ma trận <b>đối xứng</b> nghĩa là <b>A<sup>T</sup> = A</b>: lật xong không có gì đổi. Nói bằng ô: giá trị ở (i,j) luôn bằng giá trị ở (j,i), nên bảng là ảnh trong gương của chính nó qua đường chéo. Chỉ ma trận <b>vuông</b> mới có thể đối xứng.</p>
+
+        <p>Có một điểm tinh tế mà mô hình 4 cho thấy: với ma trận đối xứng, các ô <b>vẫn đổi chỗ</b> — chúng chỉ tình cờ gặp một ô sinh đôi mang đúng con số của mình, nên <i>bức tranh</i> trông không đổi. Đối xứng không phải &ldquo;không có gì di chuyển&rdquo;, mà là <b>di chuyển xong thì không phân biệt được</b>.</p>
+
+        <p>Vì sao đáng quan tâm: <b>ma trận hiệp phương sai luôn đối xứng</b> (mục 3.10), và ma trận đối xứng luôn có <b>hệ vector riêng vuông góc nhau</b> với mọi λ là số thực (mục 1.9). Ghép hai điều ấy lại chính là <b>PCA</b> (mục 1.10). Nói cách khác: PCA chạy được là <i>nhờ</i> một tính chất của phép chuyển vị.</p>
+
+        <div class="fx">
+          <p class="fx__line sm">X <span class="op">=</span> <span class="mx mx--sm" style="--cols:2"><span>1</span><span>2</span><span>3</span><span>1</span><span>2</span><span>4</span></span> <span class="op">→</span> X<sup>T</sup>X <span class="op">=</span> <span class="mx mx--sm mx--k" style="--cols:2"><span>14</span><span>13</span><span>13</span><span>21</span></span></p>
+          <p class="fx__note">X là <b>3 mẫu × 2 đặc trưng</b>. X<sup>T</sup>X luôn <b>vuông theo số đặc trưng</b> (2×2) và luôn <b>đối xứng</b> — hai số 13 ở hai bên đường chéo bằng nhau, và điều đó <i>không</i> phải tình cờ: ô (1,2) là &ldquo;cột 1 nhân cột 2&rdquo;, ô (2,1) là &ldquo;cột 2 nhân cột 1&rdquo;, mà nhân vô hướng thì không quan tâm thứ tự.</p>
+        </div>
+
+        <div class="tri">
+          <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Lật bảng điểm qua đường chéo. Số ở hàng 2 cột 3 sang hàng 3 cột 2. Không số nào bị sửa, chỉ đổi chỗ ngồi. Ô trên đường chéo <b>không phải đi đâu</b>.</div></div>
+          <div class="r-math"><div class="lbl">Toán</div><div class="v"><b>(A<sup>T</sup>)<sub>ij</sub> = A<sub>ji</sub></b>. Cỡ m×n thành n×m. Luật: (A<sup>T</sup>)<sup>T</sup> = A · (A+B)<sup>T</sup> = A<sup>T</sup>+B<sup>T</sup> · <b>(AB)<sup>T</sup> = B<sup>T</sup>A<sup>T</sup></b> (đảo thứ tự) · det(A<sup>T</sup>) = det(A). <b>Đối xứng ⟺ A<sup>T</sup> = A</b>.</div></div>
+          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Ba chỗ, tất cả đều không đọc được nếu thiếu mục này. <b>(1)</b> Nhân vô hướng viết gọn là <b>a<sup>T</sup>b</b>: lật vector cột thành hàng rồi nhân. <b>(2)</b> Hồi quy tuyến tính có nghiệm <b>w = (X<sup>T</sup>X)<sup>−1</sup>X<sup>T</sup>y</b> — X<sup>T</sup> ở đây là bắt buộc, vì X cỡ &ldquo;số mẫu × số đặc trưng&rdquo; mà ta cần một ma trận vuông theo <i>đặc trưng</i>. <b>(3)</b> Trong lan truyền ngược, tín hiệu đi xuôi qua một lớp là nhân với <b>W</b>, còn gradient đi ngược qua lớp ấy là nhân với <b>W<sup>T</sup></b> — cùng bộ trọng số, đọc theo chiều kia.</div></div>
+        </div>
+
+        <details class="q">
+          <summary>a = (2, 3) và b = (4, 5). Tính a<sup>T</sup>b, rồi cho biết a b<sup>T</sup> là cái gì.</summary>
+          <div class="a"><p><b>a<sup>T</sup>b</b> = hàng (2 3) nhân cột (4 5) = 2·4 + 3·5 = <b>23</b> — một <b>con số</b>, đúng bằng nhân vô hướng ở mục 1.5. Còn <b>a b<sup>T</sup></b> = cột (2 3) nhân hàng (4 5) = <span class="mono">[[8,10],[12,15]]</span> — một <b>ma trận 2×2</b>. Cùng hai vector ấy, đổi chỗ dấu T thì một bên ra số, một bên ra bảng. Đó là lý do đặt dấu T đúng chỗ không phải chuyện hình thức.</p></div>
+        </details>
+
+        <div class="take"><div class="k">Mang theo</div><p>Chuyển vị = <b>đổi chỗ hai chỉ số</b>, m×n thành n×m, đường chéo đứng im. <b>(AB)<sup>T</sup> = B<sup>T</sup>A<sup>T</sup></b> — đảo thứ tự, đây là chỗ hay sai. <b>A<sup>T</sup> = A</b> là định nghĩa của đối xứng, và đó là cửa vào PCA.</p></div>
+      </section>
+
       <section id="s-inverse" class="ch-a">
-        <p class="sechead">1.7 · <b>Nghịch đảo</b></p>
+        <p class="sechead">1.8 · <b>Nghịch đảo</b></p>
         <h2 class="st">Nghịch đảo là cái máy đi ngược — và máy bóp phẳng thì không có máy đi ngược</h2>
         <p class="map">Bản gốc · <b>C1 · Tuần 2–4</b> · Matrix inverse, singular matrices</p>
 
@@ -1164,7 +1263,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       </section>
 
       <section id="s-eigen" class="ch-a">
-        <p class="sechead">1.8 · <b>Trị riêng &amp; vector riêng</b></p>
+        <p class="sechead">1.9 · <b>Trị riêng &amp; vector riêng</b></p>
         <h2 class="st">Trong mọi mũi tên bị cái máy làm quay, có vài mũi tên cứng đầu không chịu đổi hướng</h2>
         <p class="map">Bản gốc · <b>C1 · Tuần 4</b> · Determinants, eigenvalues and eigenvectors</p>
 
@@ -1184,33 +1283,33 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="fx__note">Hướng <b>(1, 1)</b> — đường chéo lên — bị kéo dài <b>4 lần</b>. Hướng <b>(1, −1)</b> — đường chéo xuống — chỉ dài <b>2 lần</b>. Mọi hướng khác đều bị quay ít nhiều. Hai hướng ấy là <i>bộ xương</i> của cái máy này.</p>
         </div>
 
-        <div class="lab" id="m4">
+        <div class="lab" id="m5">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 4 · quay mũi tên đi tìm</p>
+            <p class="lab__k">Mô hình 5 · quay mũi tên đi tìm</p>
             <p class="lab__t">Đi tìm mũi tên không chịu đổi hướng</p>
             <p class="lab__hint">Kéo thanh trượt để quay mũi tên <b>v</b> quanh gốc. Mũi tên <b>Av</b> là chỗ cái máy đưa nó tới. Khi hai mũi tên <b>nằm trên cùng một đường</b>, bạn đã tìm được một vector riêng — và trang sẽ nói λ bằng bao nhiêu.</p>
           </div>
           <div class="lab__b">
-            <div class="chips" id="m4-pre" style="margin-bottom:12px">
+            <div class="chips" id="m5-pre" style="margin-bottom:12px">
               <span class="chip on" data-p="0">A = [[3,1],[1,3]]</span>
               <span class="chip" data-p="1">Giãn theo trục</span>
               <span class="chip" data-p="2">Trượt nghiêng</span>
               <span class="chip" data-p="3">Xoay 90°</span>
             </div>
-            <div class="row"><label for="m4-t">Góc của v</label><div class="inline"><input type="range" id="m4-t" min="0" max="360" step="1" value="20"><span class="val" id="m4-tv">20°</span></div></div>
-            <div class="inline" style="margin-bottom:12px"><button class="btn btn--solid" id="m4-snap">Bắt lấy mũi tên riêng gần nhất</button></div>
-            <svg class="viz" id="m4-svg" viewBox="0 0 620 340" role="img" aria-label="Vector v và ảnh của nó qua ma trận A"></svg>
+            <div class="row"><label for="m5-t">Góc của v</label><div class="inline"><input type="range" id="m5-t" min="0" max="360" step="1" value="20"><span class="val" id="m5-tv">20°</span></div></div>
+            <div class="inline" style="margin-bottom:12px"><button class="btn btn--solid" id="m5-snap">Bắt lấy mũi tên riêng gần nhất</button></div>
+            <svg class="viz" id="m5-svg" viewBox="0 0 620 340" role="img" aria-label="Vector v và ảnh của nó qua ma trận A"></svg>
             <div class="lgd">
               <span><i class="ln" style="background:var(--a)"></i> v (mũi tên bạn quay)</span>
               <span><i class="ln" style="background:var(--c)"></i> Av (chỗ máy đưa nó tới)</span>
               <span><i class="ln" style="background:var(--good)"></i> hướng riêng</span>
             </div>
             <div class="reads">
-              <div class="read"><div class="k">Lệch hướng</div><div class="v" id="m4-off">11,9<span class="u">°</span></div></div>
-              <div class="read hi"><div class="k">Trạng thái</div><div class="v" id="m4-st" style="font-size:14px">chưa trùng</div></div>
-              <div class="read"><div class="k">λ của máy này</div><div class="v" id="m4-lam" style="font-size:15px">4 và 2</div></div>
+              <div class="read"><div class="k">Lệch hướng</div><div class="v" id="m5-off">11,9<span class="u">°</span></div></div>
+              <div class="read hi"><div class="k">Trạng thái</div><div class="v" id="m5-st" style="font-size:14px">chưa trùng</div></div>
+              <div class="read"><div class="k">λ của máy này</div><div class="v" id="m5-lam" style="font-size:15px">4 và 2</div></div>
             </div>
-            <p class="lab__f" id="m4-say">Quay v đến khi &ldquo;lệch hướng&rdquo; về 0°.</p>
+            <p class="lab__f" id="m5-say">Quay v đến khi &ldquo;lệch hướng&rdquo; về 0°.</p>
             <p class="lab__f"><b>Ba chuyện đáng biết:</b> ma trận <b>xoay</b> một góc khác 0° và 180° không có vector riêng thật nào (mũi tên nào cũng bị đổi hướng — trị riêng của nó là số phức); ma trận <b>trượt</b> chỉ có <b>một</b> hướng riêng thay vì hai; ma trận <b>đối xứng</b> (a[i][j] = a[j][i]) thì luôn có đủ hướng riêng và chúng <b>vuông góc</b> với nhau — và đó chính là lý do PCA ở mục sau chạy được, vì ma trận hiệp phương sai luôn đối xứng.</p>
           </div>
         </div>
@@ -1225,7 +1324,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       </section>
 
       <section id="s-pca" class="ch-a">
-        <p class="sechead">1.9 · <b>PCA</b></p>
+        <p class="sechead">1.10 · <b>PCA</b></p>
         <h2 class="st">PCA: nếu phải bỏ một chiều, hãy bỏ chiều kể được ít chuyện nhất</h2>
         <p class="map">Bản gốc · <b>C1 · Tuần 4</b> · Principal Component Analysis</p>
 
@@ -1250,17 +1349,17 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p>17,89 so với 0,44 — trục thứ nhất &ldquo;kể&rdquo; nhiều hơn trục thứ hai <b>40 lần</b>. Nên vứt trục thứ hai đi: mỗi bạn từ hai con số còn một con số, mà vẫn giữ được <b>97,6%</b> lượng biến thiên. Đó là nén dữ liệu <i>có ý thức</i>, khác hẳn nén bừa.</p>
 
-        <div class="lab" id="m5">
+        <div class="lab" id="m6">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 5 · kéo hai thanh trượt</p>
+            <p class="lab__k">Mô hình 6 · kéo hai thanh trượt</p>
             <p class="lab__t">PCA tự tìm hướng của đám điểm</p>
             <p class="lab__hint">Xoay đám điểm, và làm nó <b>dày</b> hay <b>mỏng</b> hơn. Hai trục chính luôn tự bám theo — <b>không ai chỉ hướng cho chúng</b>. Làm đám điểm thật dày rồi xem tỉ lệ &ldquo;giữ lại được&rdquo; tụt xuống thế nào.</p>
           </div>
           <div class="lab__b">
-            <div class="row"><label for="m5-rot">Hướng của đám</label><div class="inline"><input type="range" id="m5-rot" min="0" max="180" step="1" value="35"><span class="val" id="m5-rotv">35°</span></div></div>
-            <div class="row"><label for="m5-thick">Độ dày của đám</label><div class="inline"><input type="range" id="m5-thick" min="2" max="100" step="1" value="18"><span class="val" id="m5-thickv">0,18</span></div></div>
-            <div class="row"><span class="k">Hiện thêm</span><div class="chips" id="m5-mode"><span class="chip on" data-m="axes">Hai trục chính</span><span class="chip" data-m="proj">Nén xuống 1 chiều</span></div></div>
-            <svg class="viz" id="m5-svg" viewBox="0 0 620 360" role="img" aria-label="Đám điểm hai chiều với hai trục chính của nó"></svg>
+            <div class="row"><label for="m6-rot">Hướng của đám</label><div class="inline"><input type="range" id="m6-rot" min="0" max="180" step="1" value="35"><span class="val" id="m6-rotv">35°</span></div></div>
+            <div class="row"><label for="m6-thick">Độ dày của đám</label><div class="inline"><input type="range" id="m6-thick" min="2" max="100" step="1" value="18"><span class="val" id="m6-thickv">0,18</span></div></div>
+            <div class="row"><span class="k">Hiện thêm</span><div class="chips" id="m6-mode"><span class="chip on" data-m="axes">Hai trục chính</span><span class="chip" data-m="proj">Nén xuống 1 chiều</span></div></div>
+            <svg class="viz" id="m6-svg" viewBox="0 0 620 360" role="img" aria-label="Đám điểm hai chiều với hai trục chính của nó"></svg>
             <div class="lgd">
               <span><i style="background:var(--muted)"></i> 120 điểm dữ liệu</span>
               <span><i class="ln" style="background:var(--a)"></i> trục chính 1</span>
@@ -1268,19 +1367,19 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <span><i style="background:var(--good)"></i> điểm sau khi nén</span>
             </div>
             <div class="reads">
-              <div class="read"><div class="k">λ₁</div><div class="v" id="m5-l1">—</div></div>
-              <div class="read"><div class="k">λ₂</div><div class="v" id="m5-l2">—</div></div>
-              <div class="read hi"><div class="k">Giữ lại được</div><div class="v" id="m5-keep">—</div></div>
-              <div class="read"><div class="k">Góc trục 1</div><div class="v" id="m5-ang">—</div></div>
+              <div class="read"><div class="k">λ₁</div><div class="v" id="m6-l1">—</div></div>
+              <div class="read"><div class="k">λ₂</div><div class="v" id="m6-l2">—</div></div>
+              <div class="read hi"><div class="k">Giữ lại được</div><div class="v" id="m6-keep">—</div></div>
+              <div class="read"><div class="k">Góc trục 1</div><div class="v" id="m6-ang">—</div></div>
             </div>
-            <p class="lab__f" id="m5-say">Trục chính 1 luôn nằm dọc theo chiều dài của đám điểm.</p>
+            <p class="lab__f" id="m6-say">Trục chính 1 luôn nằm dọc theo chiều dài của đám điểm.</p>
             <p class="lab__f"><b>Hai điều PCA <span class="c-bad">không</span> làm:</b> nó <b>không</b> chọn ra &ldquo;những cột quan trọng&rdquo; — mỗi trục mới là một <i>trộn lẫn</i> của mọi cột cũ, nên khó giải thích cho người ngoài; và nó <b>không</b> biết bạn định dự đoán gì, nên trục nó bỏ đi có thể lại là trục duy nhất phân biệt được hai nhóm bạn cần phân biệt. Thêm nữa, khi các cột <b>lệch thang đo</b> thì phải chuẩn hoá trước, nếu không cột &ldquo;thu nhập tính bằng đồng&rdquo; sẽ nuốt hết mọi cột khác chỉ vì con số nó to.</p>
           </div>
         </div>
 
         <details class="q">
           <summary>Vì sao trục chính thứ hai luôn vuông góc với trục thứ nhất?</summary>
-          <div class="a"><p>Vì ma trận hiệp phương sai <b>đối xứng</b>, và ma trận đối xứng luôn có hệ vector riêng vuông góc nhau (mục 1.8). Nhìn theo nghĩa dữ liệu thì cũng hợp lý: sau khi đã dùng hướng thứ nhất để kể phần lớn câu chuyện, phần <i>còn lại chưa kể</i> nằm đúng ở hướng vuông góc — nếu nó còn dính vào hướng đầu thì phần dính ấy đã bị kể rồi.</p></div>
+          <div class="a"><p>Vì ma trận hiệp phương sai <b>đối xứng</b>, và ma trận đối xứng luôn có hệ vector riêng vuông góc nhau (mục 1.9). Nhìn theo nghĩa dữ liệu thì cũng hợp lý: sau khi đã dùng hướng thứ nhất để kể phần lớn câu chuyện, phần <i>còn lại chưa kể</i> nằm đúng ở hướng vuông góc — nếu nó còn dính vào hướng đầu thì phần dính ấy đã bị kể rồi.</p></div>
         </details>
 
         <div class="take"><div class="k">Mang theo</div><p>PCA = <b>quay trục toạ độ về đúng hướng dữ liệu tãi rộng nhất</b>, rồi bỏ những hướng gần như không tãi. Trị riêng lớn = trục kể nhiều. Đó là lý do một tấm ảnh 4.096 con số thường nén xuống 50 con số mà mắt người không thấy khác.</p></div>
@@ -1323,33 +1422,33 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="fx__note">Đây là cả định nghĩa. Phần còn lại của giải tích chỉ là <b>mẹo để không phải làm phép giới hạn này mỗi lần</b>.</p>
         </div>
 
-        <div class="lab" id="m6">
+        <div class="lab" id="m7">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 6 · kéo điểm, thu nhỏ h</p>
+            <p class="lab__k">Mô hình 7 · kéo điểm, thu nhỏ h</p>
             <p class="lab__t">Dây cung co lại thành tiếp tuyến</p>
             <p class="lab__hint">Kéo điểm chạy trên đường cong và đọc độ nghiêng. Rồi thu <b>h</b> nhỏ dần: đường xám (đi qua hai điểm) sẽ trùng dần vào đường màu (tiếp tuyến). Hãy tìm chỗ độ nghiêng <b>bằng 0</b> — đó là đáy hoặc đỉnh.</p>
           </div>
           <div class="lab__b">
-            <div class="chips" id="m6-fn" style="margin-bottom:12px">
+            <div class="chips" id="m7-fn" style="margin-bottom:12px">
               <span class="chip on" data-f="0">f = x²</span>
               <span class="chip" data-f="1">f = x³ − 3x</span>
               <span class="chip" data-f="2">f = sin x</span>
               <span class="chip" data-f="3">f = sigmoid</span>
             </div>
-            <div class="row"><label for="m6-x">Chỗ đang đứng x</label><div class="inline"><input type="range" id="m6-x" min="-30" max="30" step="1" value="15"><span class="val" id="m6-xv">1,50</span></div></div>
-            <div class="row"><label for="m6-h">Bước thử h</label><div class="inline"><input type="range" id="m6-h" min="1" max="150" step="1" value="100"><span class="val" id="m6-hv">1,00</span></div></div>
-            <svg class="viz" id="m6-svg" viewBox="0 0 620 340" role="img" aria-label="Đường cong với dây cung và tiếp tuyến tại điểm đang chọn"></svg>
+            <div class="row"><label for="m7-x">Chỗ đang đứng x</label><div class="inline"><input type="range" id="m7-x" min="-30" max="30" step="1" value="15"><span class="val" id="m7-xv">1,50</span></div></div>
+            <div class="row"><label for="m7-h">Bước thử h</label><div class="inline"><input type="range" id="m7-h" min="1" max="150" step="1" value="100"><span class="val" id="m7-hv">1,00</span></div></div>
+            <svg class="viz" id="m7-svg" viewBox="0 0 620 340" role="img" aria-label="Đường cong với dây cung và tiếp tuyến tại điểm đang chọn"></svg>
             <div class="lgd">
               <span><i class="ln" style="background:var(--c)"></i> đường cong f</span>
               <span><i class="ln" style="background:var(--muted)"></i> dây cung qua hai điểm cách nhau h</span>
               <span><i class="ln" style="background:var(--a)"></i> tiếp tuyến (h = 0)</span>
             </div>
             <div class="reads">
-              <div class="read"><div class="k">Đo với h này</div><div class="v" id="m6-sec">4,00</div></div>
-              <div class="read hi"><div class="k">Đạo hàm f′(x)</div><div class="v" id="m6-der">3,00</div></div>
-              <div class="read"><div class="k">Lệch</div><div class="v" id="m6-gap">1,00</div></div>
+              <div class="read"><div class="k">Đo với h này</div><div class="v" id="m7-sec">4,00</div></div>
+              <div class="read hi"><div class="k">Đạo hàm f′(x)</div><div class="v" id="m7-der">3,00</div></div>
+              <div class="read"><div class="k">Lệch</div><div class="v" id="m7-gap">1,00</div></div>
             </div>
-            <p class="lab__f" id="m6-say">Đang ở chỗ mặt đất nghiêng lên: bước sang phải là đi lên, sang trái là đi xuống.</p>
+            <p class="lab__f" id="m7-say">Đang ở chỗ mặt đất nghiêng lên: bước sang phải là đi lên, sang trái là đi xuống.</p>
           </div>
         </div>
 
@@ -1452,32 +1551,32 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="fx__note">Cách tính dễ đến mức đáng ngờ: <b>coi mọi biến khác như hằng số</b> rồi đạo hàm bình thường. Ở đây nhích y đáng giá hơn nhích x (6 so với 4), nên hướng dốc nhất nghiêng về phía y.</p>
         </div>
 
-        <div class="lab" id="m7">
+        <div class="lab" id="m8">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 7 · bấm vào bản đồ</p>
+            <p class="lab__k">Mô hình 8 · bấm vào bản đồ</p>
             <p class="lab__t">Bản đồ đường đồng mức và mũi tên gradient</p>
             <p class="lab__hint">Các vòng là <b>đường đồng mức</b> — như bản đồ núi, mỗi vòng là một độ cao. Bấm hoặc kéo trên bản đồ để đứng ở chỗ khác (bàn phím: bấm vào hình rồi dùng mũi tên). Mũi tên là gradient. Hãy để ý: <b>mũi tên luôn vuông góc với đường đồng mức</b>, và nó dài ở chỗ các vòng chen chúc.</p>
           </div>
           <div class="lab__b">
-            <div class="chips" id="m7-sf" style="margin-bottom:12px">
+            <div class="chips" id="m8-sf" style="margin-bottom:12px">
               <span class="chip on" data-s="0">Cái bát: x² + 3y²</span>
               <span class="chip" data-s="1">Máng hẹp: x² + 12y²</span>
               <span class="chip" data-s="2">Yên ngựa: x² − y²</span>
             </div>
-            <svg class="viz viz--drag" id="m7-svg" viewBox="0 0 620 360" role="img" aria-label="Bản đồ đường đồng mức với mũi tên gradient tại điểm đang chọn. Bấm vào hình rồi dùng mũi tên bàn phím để đổi chỗ đứng."></svg>
+            <svg class="viz viz--drag" id="m8-svg" viewBox="0 0 620 360" role="img" aria-label="Bản đồ đường đồng mức với mũi tên gradient tại điểm đang chọn. Bấm vào hình rồi dùng mũi tên bàn phím để đổi chỗ đứng."></svg>
             <div class="lgd">
               <span><i class="ln" style="background:var(--border-2)"></i> đường đồng mức</span>
               <span><i class="ln" style="background:var(--c)"></i> gradient (hướng LÊN dốc nhất)</span>
               <span><i class="ln" style="background:var(--a)"></i> ngược gradient (hướng đi xuống)</span>
             </div>
             <div class="reads">
-              <div class="read"><div class="k">Chỗ đứng</div><div class="v" id="m7-pos" style="font-size:15px">(2,0; 1,0)</div></div>
-              <div class="read"><div class="k">Độ cao f</div><div class="v" id="m7-f">7,00</div></div>
-              <div class="read"><div class="k">∂f/∂x</div><div class="v" id="m7-gx">4,00</div></div>
-              <div class="read"><div class="k">∂f/∂y</div><div class="v" id="m7-gy">6,00</div></div>
-              <div class="read hi"><div class="k">Độ dốc ‖∇f‖</div><div class="v" id="m7-gn">7,21</div></div>
+              <div class="read"><div class="k">Chỗ đứng</div><div class="v" id="m8-pos" style="font-size:15px">(2,0; 1,0)</div></div>
+              <div class="read"><div class="k">Độ cao f</div><div class="v" id="m8-f">7,00</div></div>
+              <div class="read"><div class="k">∂f/∂x</div><div class="v" id="m8-gx">4,00</div></div>
+              <div class="read"><div class="k">∂f/∂y</div><div class="v" id="m8-gy">6,00</div></div>
+              <div class="read hi"><div class="k">Độ dốc ‖∇f‖</div><div class="v" id="m8-gn">7,21</div></div>
             </div>
-            <p class="lab__f" id="m7-say">Bấm vào bản đồ để đổi chỗ đứng.</p>
+            <p class="lab__f" id="m8-say">Bấm vào bản đồ để đổi chỗ đứng.</p>
             <p class="lab__f"><b>Chọn &ldquo;máng hẹp&rdquo; và để ý:</b> gradient gần như chỉ thẳng vào tường máng chứ không chỉ dọc theo máng về đáy. Đó là nguyên nhân gốc của việc gradient descent đi <b>zíc-zắc</b>, và là lý do người ta chuẩn hoá đặc trưng — chuẩn hoá làm cái máng hẹp phình lại thành cái bát tròn.</p>
           </div>
         </div>
@@ -1522,32 +1621,32 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p>Đây là lý do khi huấn luyện mà thấy sai số <b>tăng theo cấp số nhân rồi ra NaN</b>, việc đầu tiên phải làm là <b>giảm α</b>, không phải đổi mô hình.</p>
 
-        <div class="lab" id="m8">
+        <div class="lab" id="m9">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 8 · bấm từng bước hoặc chạy tự động</p>
+            <p class="lab__k">Mô hình 9 · bấm từng bước hoặc chạy tự động</p>
             <p class="lab__t">Quả bóng lăn xuống đồi — và lúc nó bay ra khỏi đồi</p>
             <p class="lab__hint">Bấm vào bản đồ để chọn <b>chỗ xuất phát</b>, rồi bấm <b>Bước</b> nhiều lần. Trên <b>cái bát</b>, đổi α lên cao dần: quá <b>0,17</b> đường đi bắt đầu zíc-zắc, và quá <b>0,33</b> thì <b>phân kỳ</b>. Rồi đổi sang <b>máng hẹp</b> — cùng cái đồi, cùng cách đi, nhưng nó phân kỳ ngay từ <b>0,08</b>.</p>
           </div>
           <div class="lab__b">
-            <div class="chips" id="m8-sf" style="margin-bottom:12px">
+            <div class="chips" id="m9-sf" style="margin-bottom:12px">
               <span class="chip on" data-s="0">Cái bát: x² + 3y²</span>
               <span class="chip" data-s="1">Máng hẹp: x² + 12y²</span>
               <span class="chip" data-s="2">Hai đáy</span>
             </div>
-            <div class="row"><label for="m8-a">Bước học α</label><div class="inline"><input type="range" id="m8-a" min="1" max="60" step="1" value="10"><span class="val" id="m8-av">0,100</span></div></div>
+            <div class="row"><label for="m9-a">Bước học α</label><div class="inline"><input type="range" id="m9-a" min="1" max="60" step="1" value="10"><span class="val" id="m9-av">0,100</span></div></div>
             <div class="inline" style="margin-bottom:12px">
-              <button class="btn btn--solid" id="m8-step">Bước</button>
-              <button class="btn" id="m8-run">Chạy 40 bước</button>
-              <button class="btn" id="m8-reset">Về chỗ cũ</button>
+              <button class="btn btn--solid" id="m9-step">Bước</button>
+              <button class="btn" id="m9-run">Chạy 40 bước</button>
+              <button class="btn" id="m9-reset">Về chỗ cũ</button>
             </div>
-            <svg class="viz viz--drag" id="m8-svg" viewBox="0 0 620 360" role="img" aria-label="Đường đi của gradient descent trên bản đồ đường đồng mức"></svg>
+            <svg class="viz viz--drag" id="m9-svg" viewBox="0 0 620 360" role="img" aria-label="Đường đi của gradient descent trên bản đồ đường đồng mức"></svg>
             <div class="reads">
-              <div class="read"><div class="k">Số bước</div><div class="v" id="m8-n">0</div></div>
-              <div class="read"><div class="k">Chỗ đứng</div><div class="v" id="m8-pos" style="font-size:14px">(2,50; 1,60)</div></div>
-              <div class="read hi"><div class="k">Sai số f</div><div class="v" id="m8-f">13,93</div></div>
-              <div class="read" id="m8-vbox"><div class="k">Trạng thái</div><div class="v" id="m8-st" style="font-size:14px">chưa chạy</div></div>
+              <div class="read"><div class="k">Số bước</div><div class="v" id="m9-n">0</div></div>
+              <div class="read"><div class="k">Chỗ đứng</div><div class="v" id="m9-pos" style="font-size:14px">(2,50; 1,60)</div></div>
+              <div class="read hi"><div class="k">Sai số f</div><div class="v" id="m9-f">13,93</div></div>
+              <div class="read" id="m9-vbox"><div class="k">Trạng thái</div><div class="v" id="m9-st" style="font-size:14px">chưa chạy</div></div>
             </div>
-            <p class="lab__f" id="m8-say">Chọn chỗ xuất phát rồi bấm Bước.</p>
+            <p class="lab__f" id="m9-say">Chọn chỗ xuất phát rồi bấm Bước.</p>
             <p class="lab__f"><b>Đây là lý do thật của việc chuẩn hoá đặc trưng.</b> Cái bát chịu được α tới 0,33; cái máng hẹp nổ ngay từ 0,08 — <b>chênh nhau bốn lần</b>, mà hai mặt chỉ khác nhau ở chỗ một trục dốc gấp bốn trục kia. Với dữ liệu thật, &ldquo;một trục dốc gấp nghìn lần trục kia&rdquo; là chuyện thường (thu nhập tính bằng đồng, số phòng tính bằng cái), và khi đó <b>không có α nào dùng được</b>: đủ nhỏ để trục dốc không nổ thì trục thoải bò cả ngày. Chuẩn hoá làm cái máng phình lại thành cái bát, và bài toán biến mất.</p>
             <p class="lab__f"><b>Ba biến thể bạn sẽ gặp, và cả ba chỉ sửa đúng dòng công thức trên:</b> <b>SGD</b> tính gradient trên một nhúm nhỏ dữ liệu thay vì cả tập (nhanh hơn, đường đi lắc hơn); <b>quán tính</b> cộng thêm một phần bước trước (đỡ zíc-zắc, như quả bóng có đà thật); <b>Adam</b> tự chỉnh độ dài bước riêng cho từng tham số. Không cái nào đổi ý tưởng, chúng chỉ đổi cách chọn hướng và độ dài.</p>
           </div>
@@ -1577,23 +1676,23 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="fx__note">Hai chữ du &ldquo;triệt tiêu&rdquo; nhau về mặt hình thức — đó là mẹo nhớ, không phải chứng minh. Nghĩa thật: <b>nhân các tỉ số dọc theo chuỗi</b>.</p>
         </div>
 
-        <div class="lab" id="m9">
+        <div class="lab" id="m10">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 9 · kéo ba tỉ số</p>
+            <p class="lab__k">Mô hình 10 · kéo ba tỉ số</p>
             <p class="lab__t">Dây chuyền nhân lên — và vì sao mạng sâu học chậm</p>
             <p class="lab__hint">Ba khâu nối tiếp, mỗi khâu một tỉ số. Đọc con số cuối. Rồi đặt cả ba tỉ số về <b>0,25</b> và nhìn cột &ldquo;10 khâu&rdquo;: tín hiệu còn lại gần như bằng không. Đặt cả ba về <b>2</b> và xem chuyện ngược lại.</p>
           </div>
           <div class="lab__b">
-            <div class="row"><label for="m9-g1">Khâu 1</label><div class="inline"><input type="range" id="m9-g1" min="1" max="80" step="1" value="40"><span class="val" id="m9-g1v">2,00</span></div></div>
-            <div class="row"><label for="m9-g2">Khâu 2</label><div class="inline"><input type="range" id="m9-g2" min="1" max="80" step="1" value="60"><span class="val" id="m9-g2v">3,00</span></div></div>
-            <div class="row"><label for="m9-g3">Khâu 3</label><div class="inline"><input type="range" id="m9-g3" min="1" max="80" step="1" value="10"><span class="val" id="m9-g3v">0,50</span></div></div>
-            <svg class="viz" id="m9-svg" viewBox="0 0 620 250" role="img" aria-label="Sơ đồ dây chuyền ba khâu và tỉ số nhân dồn"></svg>
+            <div class="row"><label for="m10-g1">Khâu 1</label><div class="inline"><input type="range" id="m10-g1" min="1" max="80" step="1" value="40"><span class="val" id="m10-g1v">2,00</span></div></div>
+            <div class="row"><label for="m10-g2">Khâu 2</label><div class="inline"><input type="range" id="m10-g2" min="1" max="80" step="1" value="60"><span class="val" id="m10-g2v">3,00</span></div></div>
+            <div class="row"><label for="m10-g3">Khâu 3</label><div class="inline"><input type="range" id="m10-g3" min="1" max="80" step="1" value="10"><span class="val" id="m10-g3v">0,50</span></div></div>
+            <svg class="viz" id="m10-svg" viewBox="0 0 620 250" role="img" aria-label="Sơ đồ dây chuyền ba khâu và tỉ số nhân dồn"></svg>
             <div class="reads">
-              <div class="read hi"><div class="k">Tỉ số cả chuỗi</div><div class="v" id="m9-tot">3,00</div></div>
-              <div class="read"><div class="k">Nhích đầu vào 1 đơn vị</div><div class="v" id="m9-nudge">+3,00</div></div>
-              <div class="read" id="m9-b10"><div class="k">Nếu 10 khâu giống nhau</div><div class="v" id="m9-ten" style="font-size:15px">—</div></div>
+              <div class="read hi"><div class="k">Tỉ số cả chuỗi</div><div class="v" id="m10-tot">3,00</div></div>
+              <div class="read"><div class="k">Nhích đầu vào 1 đơn vị</div><div class="v" id="m10-nudge">+3,00</div></div>
+              <div class="read" id="m10-b10"><div class="k">Nếu 10 khâu giống nhau</div><div class="v" id="m10-ten" style="font-size:15px">—</div></div>
             </div>
-            <p class="lab__f" id="m9-say">Ba tỉ số nhân vào nhau.</p>
+            <p class="lab__f" id="m10-say">Ba tỉ số nhân vào nhau.</p>
             <p class="lab__f"><b>Đây là gốc của hai cái tên bạn sẽ gặp suốt học sâu.</b> Đạo hàm sigmoid không bao giờ vượt <b>0,25</b> (mục 2.2). Mười lớp sigmoid nối tiếp: 0,25¹⁰ ≈ <b>0,00000095</b> — gradient về tới lớp đầu thì gần như bằng 0, các lớp đầu <b>không học được gì</b>. Đó là <i>gradient tan biến</i>. Ngược lại, tỉ số 2 qua 10 khâu cho 2¹⁰ = <b>1.024</b> lần, và đó là <i>gradient nổ</i>. ReLU (đạo hàm bằng đúng 1 ở nửa dương) và kết nối tắt của ResNet ra đời để chữa đúng phép nhân này.</p>
           </div>
         </div>
@@ -1638,31 +1737,31 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p>Số chữ số đúng <b>gấp đôi mỗi bước</b> — gọi là hội tụ bậc hai. Bốn bước từ một phỏng đoán tệ tới mười chữ số. Gradient descent cần hàng trăm bước cho cùng độ chính xác.</p>
 
-        <div class="lab" id="m10">
+        <div class="lab" id="m11">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 10 · bấm từng bước</p>
+            <p class="lab__k">Mô hình 11 · bấm từng bước</p>
             <p class="lab__t">Newton so với tụt dốc, trên cùng một đường cong</p>
             <p class="lab__hint">Bấm <b>Bước</b> và xem hai chấm chạy: <span class="c-a">xanh</span> là tụt dốc, <span class="c-c">nâu</span> là Newton. Đổi chỗ xuất phát sang phía xa rồi thử lại — có chỗ Newton <b>bay đi hướng ngược</b>, và mục dưới nói vì sao.</p>
           </div>
           <div class="lab__b">
-            <div class="chips" id="m10-fn" style="margin-bottom:12px">
+            <div class="chips" id="m11-fn" style="margin-bottom:12px">
               <span class="chip on" data-f="0">Tìm đáy: x⁴ − 3x²</span>
               <span class="chip" data-f="1">Tìm đáy: x²</span>
             </div>
-            <div class="row"><label for="m10-x0">Chỗ xuất phát</label><div class="inline"><input type="range" id="m10-x0" min="-200" max="200" step="1" value="200"><span class="val" id="m10-x0v">2,00</span></div></div>
-            <div class="row"><label for="m10-a">α của tụt dốc</label><div class="inline"><input type="range" id="m10-a" min="1" max="30" step="1" value="5"><span class="val" id="m10-av">0,050</span></div></div>
+            <div class="row"><label for="m11-x0">Chỗ xuất phát</label><div class="inline"><input type="range" id="m11-x0" min="-200" max="200" step="1" value="200"><span class="val" id="m11-x0v">2,00</span></div></div>
+            <div class="row"><label for="m11-a">α của tụt dốc</label><div class="inline"><input type="range" id="m11-a" min="1" max="30" step="1" value="5"><span class="val" id="m11-av">0,050</span></div></div>
             <div class="inline" style="margin-bottom:12px">
-              <button class="btn btn--solid" id="m10-step">Bước</button>
-              <button class="btn" id="m10-reset">Về chỗ xuất phát</button>
+              <button class="btn btn--solid" id="m11-step">Bước</button>
+              <button class="btn" id="m11-reset">Về chỗ xuất phát</button>
             </div>
-            <svg class="viz" id="m10-svg" viewBox="0 0 620 340" role="img" aria-label="So sánh đường đi của tụt dốc và phương pháp Newton"></svg>
+            <svg class="viz" id="m11-svg" viewBox="0 0 620 340" role="img" aria-label="So sánh đường đi của tụt dốc và phương pháp Newton"></svg>
             <div class="reads">
-              <div class="read"><div class="k">Bước đã đi</div><div class="v" id="m10-n">0</div></div>
-              <div class="read"><div class="k">Tụt dốc: x</div><div class="v" id="m10-gx">2,000</div></div>
-              <div class="read hi"><div class="k">Newton: x</div><div class="v" id="m10-nx">2,000</div></div>
-              <div class="read"><div class="k">Đáy thật</div><div class="v" id="m10-true">1,2247</div></div>
+              <div class="read"><div class="k">Bước đã đi</div><div class="v" id="m11-n">0</div></div>
+              <div class="read"><div class="k">Tụt dốc: x</div><div class="v" id="m11-gx">2,000</div></div>
+              <div class="read hi"><div class="k">Newton: x</div><div class="v" id="m11-nx">2,000</div></div>
+              <div class="read"><div class="k">Đáy thật</div><div class="v" id="m11-true">1,2247</div></div>
             </div>
-            <p class="lab__f" id="m10-say">Bấm Bước để so hai cách đi.</p>
+            <p class="lab__f" id="m11-say">Bấm Bước để so hai cách đi.</p>
             <p class="lab__f"><b>Vậy vì sao học sâu vẫn dùng tụt dốc?</b> Vì với n tham số, Newton cần ma trận đạo hàm bậc hai — <b>Hessian</b> — cỡ n×n, rồi phải nghịch đảo nó. Với n = 10 triệu thì riêng bảng số ấy đã là 10¹⁴ ô: không có máy nào chứa nổi. Thêm nữa, ở chỗ f″ &lt; 0 Newton <b>đi ngược lên đỉnh</b> thay vì xuống đáy, và mặt lỗi của mạng nơ-ron đầy những chỗ như thế. Nên người ta lấy <i>ý</i> của Newton mà không lấy Hessian: Adam xấp xỉ độ cong bằng thống kê gradient đã đi qua.</p>
           </div>
         </div>
@@ -1784,17 +1883,17 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="fx__note"><b>P(bệnh)</b> — tỉ lệ mắc trong dân số — là nhân vật quyết định, và cũng là con số hay bị bỏ quên nhất. Bấm vào từng phần để xem nó lấy số ở đâu.</p>
         </div>
 
-        <div class="lab" id="m11">
+        <div class="lab" id="m12">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 11 · 1.000 người, đếm bằng mắt</p>
+            <p class="lab__k">Mô hình 12 · 1.000 người, đếm bằng mắt</p>
             <p class="lab__t">Vì sao &ldquo;xét nghiệm chính xác 99%&rdquo; vẫn báo sai phần lớn số lần</p>
             <p class="lab__hint">Mỗi ô vuông là một người. Kéo <b>tỉ lệ mắc</b> lên xuống và nhìn hai nhóm ô màu đổi cỡ. Hãy tìm chỗ tỉ lệ mắc <b>1%</b>: ở đó, một xét nghiệm đúng 99% cho kết quả dương tính <b>đúng đúng một nửa số lần</b> — như tung đồng xu.</p>
           </div>
           <div class="lab__b">
-            <div class="row"><label for="m11-prev">Tỉ lệ mắc</label><div class="inline"><input type="range" id="m11-prev" min="1" max="500" step="1" value="1"><span class="val" id="m11-prevv">0,1%</span></div></div>
-            <div class="row"><label for="m11-sens">Bắt đúng người bệnh</label><div class="inline"><input type="range" id="m11-sens" min="50" max="100" step="1" value="99"><span class="val" id="m11-sensv">99%</span></div></div>
-            <div class="row"><label for="m11-spec">Bỏ đúng người lành</label><div class="inline"><input type="range" id="m11-spec" min="50" max="100" step="1" value="99"><span class="val" id="m11-specv">99%</span></div></div>
-            <svg class="viz" id="m11-svg" viewBox="0 0 620 300" role="img" aria-label="Lưới 1000 ô, mỗi ô một người, tô màu theo kết quả xét nghiệm"></svg>
+            <div class="row"><label for="m12-prev">Tỉ lệ mắc</label><div class="inline"><input type="range" id="m12-prev" min="1" max="500" step="1" value="1"><span class="val" id="m12-prevv">0,1%</span></div></div>
+            <div class="row"><label for="m12-sens">Bắt đúng người bệnh</label><div class="inline"><input type="range" id="m12-sens" min="50" max="100" step="1" value="99"><span class="val" id="m12-sensv">99%</span></div></div>
+            <div class="row"><label for="m12-spec">Bỏ đúng người lành</label><div class="inline"><input type="range" id="m12-spec" min="50" max="100" step="1" value="99"><span class="val" id="m12-specv">99%</span></div></div>
+            <svg class="viz" id="m12-svg" viewBox="0 0 620 300" role="img" aria-label="Lưới 1000 ô, mỗi ô một người, tô màu theo kết quả xét nghiệm"></svg>
             <div class="lgd">
               <span><i style="background:var(--bad);outline:1.5px solid var(--ink)"></i> bệnh &amp; máy báo dương (dương thật)</span>
               <span><i style="background:var(--c)"></i> lành &amp; máy báo dương (<b>dương giả</b>)</span>
@@ -1802,12 +1901,12 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <span><i style="background:var(--border-2)"></i> lành &amp; máy báo âm</span>
             </div>
             <div class="reads">
-              <div class="read hi"><div class="k">Báo dương → bệnh thật</div><div class="v" id="m11-post">9,0<span class="u">%</span></div></div>
-              <div class="read bad"><div class="k">Dương giả / 1.000</div><div class="v" id="m11-fp">10,0</div></div>
-              <div class="read"><div class="k">Dương thật / 1.000</div><div class="v" id="m11-tp">1,0</div></div>
-              <div class="read"><div class="k">Bỏ sót / 1.000</div><div class="v" id="m11-fn">0,0</div></div>
+              <div class="read hi"><div class="k">Báo dương → bệnh thật</div><div class="v" id="m12-post">9,0<span class="u">%</span></div></div>
+              <div class="read bad"><div class="k">Dương giả / 1.000</div><div class="v" id="m12-fp">10,0</div></div>
+              <div class="read"><div class="k">Dương thật / 1.000</div><div class="v" id="m12-tp">1,0</div></div>
+              <div class="read"><div class="k">Bỏ sót / 1.000</div><div class="v" id="m12-fn">0,0</div></div>
             </div>
-            <p class="lab__f" id="m11-say">Bệnh càng hiếm, một kết quả dương tính càng ít nghĩa.</p>
+            <p class="lab__f" id="m12-say">Bệnh càng hiếm, một kết quả dương tính càng ít nghĩa.</p>
             <p class="lab__f"><b>Đây không phải chuyện y tế.</b> Cùng phép toán, cùng cái bẫy: máy phát hiện gian lận thẻ (gian lận ~0,1% giao dịch), máy lọc thư rác, máy chấm điểm rủi ro, mô hình dự đoán bỏ học. Mỗi lần bạn thấy &ldquo;độ chính xác 99%&rdquo; trên một lớp <b>hiếm</b>, hãy hỏi ngay: <b>trong 100 lần báo động, bao nhiêu lần là thật?</b> Con số đó — <i>precision</i> — mới là con số phải xem, và nó chính là ô lớn màu xanh ở trên.</p>
           </div>
         </div>
@@ -1887,29 +1986,29 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="lede">5 ngửa: <b>24,6%</b>. 10 ngửa: <b>0,098%</b> — khoảng một lần trong 1.024 lượt. Lý do không phải &ldquo;5 dễ hơn&rdquo;, mà là <b>có nhiều cách hơn để ra 5 ngửa</b>: 252 cách, so với đúng 1 cách để ra 10 ngửa. Lại là phép đếm ở mục 3.1.</p>
 
-        <div class="lab" id="m12">
+        <div class="lab" id="m13">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 12 · tăng số lần tung</p>
+            <p class="lab__k">Mô hình 13 · tăng số lần tung</p>
             <p class="lab__t">Cột nhị thức, và cái chuông tự hiện ra</p>
             <p class="lab__hint">Kéo <b>số lần tung</b> từ 1 lên 200 và nhìn dãy cột: nó tự mọc thành <b>hình chuông</b> mà không ai vẽ hộ. Kéo <b>độ thiên vị</b> để làm đồng xu lệch — chuông nghiêng sang một bên nhưng vẫn là chuông.</p>
           </div>
           <div class="lab__b">
-            <div class="row"><label for="m12-n">Số lần tung n</label><div class="inline"><input type="range" id="m12-n" min="1" max="200" step="1" value="10"><span class="val" id="m12-nv">10</span></div></div>
-            <div class="row"><label for="m12-p">Xác suất ngửa p</label><div class="inline"><input type="range" id="m12-p" min="5" max="95" step="1" value="50"><span class="val" id="m12-pv">0,50</span></div></div>
-            <div class="row"><label for="m12-k">Đếm từ k trở lên</label><div class="inline"><input type="range" id="m12-k" min="0" max="10" step="1" value="8"><span class="val" id="m12-kv">8</span></div></div>
-            <svg class="viz" id="m12-svg" viewBox="0 0 620 300" role="img" aria-label="Biểu đồ cột của phân phối nhị thức"></svg>
+            <div class="row"><label for="m13-n">Số lần tung n</label><div class="inline"><input type="range" id="m13-n" min="1" max="200" step="1" value="10"><span class="val" id="m13-nv">10</span></div></div>
+            <div class="row"><label for="m13-p">Xác suất ngửa p</label><div class="inline"><input type="range" id="m13-p" min="5" max="95" step="1" value="50"><span class="val" id="m13-pv">0,50</span></div></div>
+            <div class="row"><label for="m13-k">Đếm từ k trở lên</label><div class="inline"><input type="range" id="m13-k" min="0" max="10" step="1" value="8"><span class="val" id="m13-kv">8</span></div></div>
+            <svg class="viz" id="m13-svg" viewBox="0 0 620 300" role="img" aria-label="Biểu đồ cột của phân phối nhị thức"></svg>
             <div class="lgd">
               <span><i style="background:var(--p)"></i> mọi số mặt ngửa có thể</span>
               <span><i style="background:var(--bad)"></i> phần từ k trở lên</span>
               <span><i class="ln" style="background:var(--ink)"></i> đường chuẩn xấp xỉ</span>
             </div>
             <div class="reads">
-              <div class="read"><div class="k">P(đúng k)</div><div class="v" id="m12-pk">4,39<span class="u">%</span></div></div>
-              <div class="read hi"><div class="k">P(từ k trở lên)</div><div class="v" id="m12-pge">5,47<span class="u">%</span></div></div>
-              <div class="read"><div class="k">Trung bình np</div><div class="v" id="m12-mean">5,0</div></div>
-              <div class="read"><div class="k">Độ lệch chuẩn</div><div class="v" id="m12-sd">1,58</div></div>
+              <div class="read"><div class="k">P(đúng k)</div><div class="v" id="m13-pk">4,39<span class="u">%</span></div></div>
+              <div class="read hi"><div class="k">P(từ k trở lên)</div><div class="v" id="m13-pge">5,47<span class="u">%</span></div></div>
+              <div class="read"><div class="k">Trung bình np</div><div class="v" id="m13-mean">5,0</div></div>
+              <div class="read"><div class="k">Độ lệch chuẩn</div><div class="v" id="m13-sd">1,58</div></div>
             </div>
-            <p class="lab__f" id="m12-say">Với n = 10, p = 0,5: ra 8 mặt ngửa hoặc hơn xảy ra 5,47% số lượt.</p>
+            <p class="lab__f" id="m13-say">Với n = 10, p = 0,5: ra 8 mặt ngửa hoặc hơn xảy ra 5,47% số lượt.</p>
             <p class="lab__f"><b>Con số 5,47% ấy là một p-value.</b> Nếu ai đó tung 10 lần được 8 ngửa và bảo &ldquo;đồng xu này gian&rdquo;, bạn tính được ngay: một đồng xu <i>thật thà</i> vẫn cho kết quả như thế 5,47% số lượt. Đủ lạ để chú ý, chưa đủ lạ để buộc tội. Mục 4.7 chỉ là chuyện này viết cho tử tế.</p>
           </div>
         </div>
@@ -2005,32 +2104,32 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </table>
         </div>
 
-        <div class="lab" id="m13">
+        <div class="lab" id="m14">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 13 · kéo hai thanh trượt</p>
+            <p class="lab__k">Mô hình 14 · kéo hai thanh trượt</p>
             <p class="lab__t">Cùng một con số r, những đám điểm rất khác nhau</p>
             <p class="lab__hint">Kéo <b>độ nghiêng</b> và <b>độ nhiễu</b>, xem r đổi. Rồi bấm hai kịch bản cuối: <b>hình chữ U</b> có r ≈ 0 nhưng quan hệ rõ như ban ngày, và <b>một điểm lạc</b> đủ để lôi r từ gần 0 lên hơn <b>0,6</b>. Đó là lý do <b>phải vẽ hình trước khi tin r</b>.</p>
           </div>
           <div class="lab__b">
-            <div class="chips" id="m13-mode" style="margin-bottom:12px">
+            <div class="chips" id="m14-mode" style="margin-bottom:12px">
               <span class="chip on" data-m="lin">Quan hệ thẳng</span>
               <span class="chip" data-m="u">Hình chữ U</span>
               <span class="chip" data-m="out">Một điểm lạc</span>
             </div>
-            <div class="row"><label for="m13-slope">Độ nghiêng</label><div class="inline"><input type="range" id="m13-slope" min="-20" max="20" step="1" value="10"><span class="val" id="m13-slopev">1,00</span></div></div>
-            <div class="row"><label for="m13-noise">Độ nhiễu</label><div class="inline"><input type="range" id="m13-noise" min="0" max="100" step="1" value="25"><span class="val" id="m13-noisev">0,25</span></div></div>
-            <svg class="viz" id="m13-svg" viewBox="0 0 620 320" role="img" aria-label="Đám điểm và hệ số tương quan của nó"></svg>
+            <div class="row"><label for="m14-slope">Độ nghiêng</label><div class="inline"><input type="range" id="m14-slope" min="-20" max="20" step="1" value="10"><span class="val" id="m14-slopev">1,00</span></div></div>
+            <div class="row"><label for="m14-noise">Độ nhiễu</label><div class="inline"><input type="range" id="m14-noise" min="0" max="100" step="1" value="25"><span class="val" id="m14-noisev">0,25</span></div></div>
+            <svg class="viz" id="m14-svg" viewBox="0 0 620 320" role="img" aria-label="Đám điểm và hệ số tương quan của nó"></svg>
             <div class="reads">
-              <div class="read hi"><div class="k">Tương quan r</div><div class="v" id="m13-r">0,94</div></div>
-              <div class="read"><div class="k">Hiệp phương sai</div><div class="v" id="m13-cov">1,40</div></div>
-              <div class="read"><div class="k">r²</div><div class="v" id="m13-r2">0,87</div></div>
+              <div class="read hi"><div class="k">Tương quan r</div><div class="v" id="m14-r">0,94</div></div>
+              <div class="read"><div class="k">Hiệp phương sai</div><div class="v" id="m14-cov">1,40</div></div>
+              <div class="read"><div class="k">r²</div><div class="v" id="m14-r2">0,87</div></div>
             </div>
-            <p class="lab__f" id="m13-say">Quan hệ thẳng, nhiễu vừa phải: r cao.</p>
+            <p class="lab__f" id="m14-say">Quan hệ thẳng, nhiễu vừa phải: r cao.</p>
             <p class="lab__f"><b>Và câu quan trọng nhất của cả mục:</b> <b>tương quan không phải nhân quả</b>. Số kem bán ra tương quan chặt với số ca đuối nước — vì cả hai đều tăng vào mùa hè. Trong học máy, chuyện này hiện ra dưới dạng &ldquo;đặc trưng rò rỉ&rdquo;: mô hình dự đoán bệnh cực chính xác vì nó học được rằng bệnh nhân nặng thường đã được chuyển sang <i>một loại máy chụp khác</i> — nó đọc tên máy, không đọc bệnh.</p>
           </div>
         </div>
 
-        <p>Với nhiều biến, các Cov gom lại thành <b>ma trận hiệp phương sai</b>: đường chéo là phương sai từng biến, ngoài đường chéo là mức đi cùng nhau. Ma trận này <b>luôn đối xứng</b> — và mục 1.8 đã nói ma trận đối xứng thì có hệ vector riêng vuông góc. <b>Đó chính xác là PCA</b>, và đó là chỗ khoá 1 với khoá 3 bắt tay nhau.</p>
+        <p>Với nhiều biến, các Cov gom lại thành <b>ma trận hiệp phương sai</b>: đường chéo là phương sai từng biến, ngoài đường chéo là mức đi cùng nhau. Ma trận này <b>luôn đối xứng</b> — và mục 1.9 đã nói ma trận đối xứng thì có hệ vector riêng vuông góc. <b>Đó chính xác là PCA</b>, và đó là chỗ khoá 1 với khoá 3 bắt tay nhau.</p>
 
         <div class="take"><div class="k">Mang theo</div><p>Cov nói <b>chiều</b>, r nói <b>chiều và độ mạnh</b> trên thang cố định −1…+1. <b>r = 0 không có nghĩa là không liên quan</b> — chỉ nghĩa là không liên quan <i>theo đường thẳng</i>. Vẽ hình trước, tin số sau.</p></div>
       </section>
@@ -2074,32 +2173,32 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p>Cụ thể hơn — và đây là phần dùng được: nếu dữ liệu gốc có trung bình μ và độ lệch chuẩn σ, thì trung bình của n mẫu có trung bình vẫn là <b>μ</b>, nhưng độ lệch chuẩn chỉ còn <b>σ/√n</b>. Với xúc xắc (σ = 1,708) và n = 30: 1,708/√30 = <b>0,312</b>. Mô phỏng 200.000 lần cho <b>0,312</b>.</p>
 
-        <div class="lab" id="m14">
+        <div class="lab" id="m15">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 14 · đổi hình dữ liệu gốc</p>
+            <p class="lab__k">Mô hình 15 · đổi hình dữ liệu gốc</p>
             <p class="lab__t">Dữ liệu méo tới đâu, trung bình vẫn thành chuông</p>
             <p class="lab__hint">Cột trên là <b>dữ liệu gốc</b> — chọn hình méo nhất bạn thấy. Cột dưới là <b>trung bình của n mẫu</b>, lặp 3.000 lần. Kéo n từ 1 lên 50 và xem cột dưới <b>gom lại thành chuông và hẹp dần</b>, dù cột trên vẫn méo như cũ.</p>
           </div>
           <div class="lab__b">
-            <div class="chips" id="m14-src" style="margin-bottom:12px">
+            <div class="chips" id="m15-src" style="margin-bottom:12px">
               <span class="chip on" data-s="0">Xúc xắc (đều)</span>
               <span class="chip" data-s="1">Lệch phải nặng</span>
               <span class="chip" data-s="2">Hai đỉnh</span>
               <span class="chip" data-s="3">Tung xu 0/1</span>
             </div>
-            <div class="row"><label for="m14-n">Mỗi lần lấy n mẫu</label><div class="inline"><input type="range" id="m14-n" min="1" max="50" step="1" value="1"><span class="val" id="m14-nv">1</span></div></div>
-            <svg class="viz" id="m14-svg" viewBox="0 0 620 360" role="img" aria-label="Phân phối gốc ở trên và phân phối của trung bình mẫu ở dưới"></svg>
+            <div class="row"><label for="m15-n">Mỗi lần lấy n mẫu</label><div class="inline"><input type="range" id="m15-n" min="1" max="50" step="1" value="1"><span class="val" id="m15-nv">1</span></div></div>
+            <svg class="viz" id="m15-svg" viewBox="0 0 620 360" role="img" aria-label="Phân phối gốc ở trên và phân phối của trung bình mẫu ở dưới"></svg>
             <div class="lgd">
               <span><i style="background:var(--border-2)"></i> dữ liệu gốc</span>
               <span><i style="background:var(--p)"></i> trung bình của n mẫu</span>
               <span><i class="ln" style="background:var(--ink)"></i> chuẩn với σ/√n</span>
             </div>
             <div class="reads">
-              <div class="read"><div class="k">σ của dữ liệu gốc</div><div class="v" id="m14-s0">1,71</div></div>
-              <div class="read hi"><div class="k">σ/√n dự đoán</div><div class="v" id="m14-pred">1,71</div></div>
-              <div class="read"><div class="k">σ đo được</div><div class="v" id="m14-obs">1,69</div></div>
+              <div class="read"><div class="k">σ của dữ liệu gốc</div><div class="v" id="m15-s0">1,71</div></div>
+              <div class="read hi"><div class="k">σ/√n dự đoán</div><div class="v" id="m15-pred">1,71</div></div>
+              <div class="read"><div class="k">σ đo được</div><div class="v" id="m15-obs">1,69</div></div>
             </div>
-            <p class="lab__f" id="m14-say">Với n = 1, &ldquo;trung bình của 1 mẫu&rdquo; chính là dữ liệu gốc — hai hình giống nhau.</p>
+            <p class="lab__f" id="m15-say">Với n = 1, &ldquo;trung bình của 1 mẫu&rdquo; chính là dữ liệu gốc — hai hình giống nhau.</p>
             <p class="lab__f"><b>Vì sao đây là định lý quan trọng nhất của thống kê ứng dụng:</b> nó cho phép bạn dùng công thức của phân phối chuẩn <b>mà không cần dữ liệu gốc phân phối chuẩn</b>. Mọi khoảng tin cậy và mọi kiểm định ở hai mục sau đứng trên đúng cái cầu này. Nhưng để ý <b>σ/√n</b>: muốn khoảng hẹp đi <b>một nửa</b> thì phải lấy mẫu <b>gấp bốn</b>. Đó là lý do thăm dò ý kiến luôn kẹt ở sai số ±3%.</p>
           </div>
         </div>
@@ -2123,23 +2222,23 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="fx__note">Trong thực tế người ta cực đại <b>log</b> của L, vì log biến dây phép nhân dài thành phép cộng — dễ đạo hàm hơn, và không bị tràn số khi nhân 10.000 xác suất nhỏ với nhau.</p>
         </div>
 
-        <div class="lab" id="m15">
+        <div class="lab" id="m16">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 15 · kéo chuông cho khớp</p>
+            <p class="lab__k">Mô hình 16 · kéo chuông cho khớp</p>
             <p class="lab__t">Đi tìm cái chuông làm dữ liệu đỡ bất ngờ nhất</p>
             <p class="lab__hint">Năm điểm dữ liệu cố định ở dưới (chiều cao 5 bạn). Kéo <b>μ</b> và <b>σ</b> để đặt cái chuông. Mỗi que dọc là <b>độ hợp lý</b> của một điểm — que càng cao càng &ldquo;đỡ bất ngờ&rdquo;. Hãy tìm chỗ tổng log-hợp-lý <b>lớn nhất</b>, rồi so μ bạn tìm được với trung bình của 5 số.</p>
           </div>
           <div class="lab__b">
-            <div class="row"><label for="m15-mu">μ (đỉnh chuông)</label><div class="inline"><input type="range" id="m15-mu" min="1600" max="1840" step="1" value="1650"><span class="val" id="m15-muv">165,0</span></div></div>
-            <div class="row"><label for="m15-sd">σ (bề rộng)</label><div class="inline"><input type="range" id="m15-sd" min="10" max="120" step="1" value="80"><span class="val" id="m15-sdv">8,0</span></div></div>
-            <div class="inline" style="margin-bottom:12px"><button class="btn btn--solid" id="m15-best">Đặt vào chỗ tốt nhất</button></div>
-            <svg class="viz" id="m15-svg" viewBox="0 0 620 320" role="img" aria-label="Đường chuẩn đặt trên 5 điểm dữ liệu, với que hợp lý của từng điểm"></svg>
+            <div class="row"><label for="m16-mu">μ (đỉnh chuông)</label><div class="inline"><input type="range" id="m16-mu" min="1600" max="1840" step="1" value="1650"><span class="val" id="m16-muv">165,0</span></div></div>
+            <div class="row"><label for="m16-sd">σ (bề rộng)</label><div class="inline"><input type="range" id="m16-sd" min="10" max="120" step="1" value="80"><span class="val" id="m16-sdv">8,0</span></div></div>
+            <div class="inline" style="margin-bottom:12px"><button class="btn btn--solid" id="m16-best">Đặt vào chỗ tốt nhất</button></div>
+            <svg class="viz" id="m16-svg" viewBox="0 0 620 320" role="img" aria-label="Đường chuẩn đặt trên 5 điểm dữ liệu, với que hợp lý của từng điểm"></svg>
             <div class="reads">
-              <div class="read hi"><div class="k">Tổng log-hợp-lý</div><div class="v" id="m15-ll">—</div></div>
-              <div class="read"><div class="k">Trung bình 5 số</div><div class="v" id="m15-mean">171,0</div></div>
-              <div class="read"><div class="k">σ theo MLE</div><div class="v" id="m15-sdmle">3,41</div></div>
+              <div class="read hi"><div class="k">Tổng log-hợp-lý</div><div class="v" id="m16-ll">—</div></div>
+              <div class="read"><div class="k">Trung bình 5 số</div><div class="v" id="m16-mean">171,0</div></div>
+              <div class="read"><div class="k">σ theo MLE</div><div class="v" id="m16-sdmle">3,41</div></div>
             </div>
-            <p class="lab__f" id="m15-say">Kéo μ và σ để làm tổng log-hợp-lý lớn nhất.</p>
+            <p class="lab__f" id="m16-say">Kéo μ và σ để làm tổng log-hợp-lý lớn nhất.</p>
             <p class="lab__f"><b>Kết quả có thể kiểm bằng tay:</b> với dữ liệu 167, 170, 172, 169, 177 thì MLE cho <b>μ̂ = 171,0</b> — đúng bằng trung bình cộng — và <b>σ̂ = 3,41</b> (lệch bình phương trung bình, chia cho n). Nếu chia cho n − 1 thì ra 3,81; bản chia cho n − 1 là bản <i>không chệch</i> và là bản mọi thư viện dùng làm mặc định. Chênh lệch ấy nhỏ dần khi n lớn, và biến mất trong thực tế với n từ vài trăm.</p>
           </div>
         </div>
@@ -2192,7 +2291,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </table>
         </div>
 
-        <p>Vậy nên λ trong dòng &ldquo;<span class="mono">Ridge(alpha=1.0)</span>&rdquo; không phải một núm tuỳ tiện. Nó là <b>độ mạnh của niềm tin</b> bạn đặt vào trước khi xem dữ liệu, tính bằng đơn vị &ldquo;bao nhiêu dữ liệu thì đủ để tôi đổi ý&rdquo;. Và nó chữa đúng cái bệnh ở mục 1.7: ma trận điều kiện xấu, trọng số nổ to và đổi dấu loạn xạ.</p>
+        <p>Vậy nên λ trong dòng &ldquo;<span class="mono">Ridge(alpha=1.0)</span>&rdquo; không phải một núm tuỳ tiện. Nó là <b>độ mạnh của niềm tin</b> bạn đặt vào trước khi xem dữ liệu, tính bằng đơn vị &ldquo;bao nhiêu dữ liệu thì đủ để tôi đổi ý&rdquo;. Và nó chữa đúng cái bệnh ở mục 1.8: ma trận điều kiện xấu, trọng số nổ to và đổi dấu loạn xạ.</p>
 
         <div class="take"><div class="k">Mang theo</div><p><b>MAP = MLE + niềm tin ban đầu.</b> Mọi số hạng chính quy hoá là một niềm tin ban đầu viết bằng toán, và λ là độ mạnh của niềm tin đó.</p></div>
       </section>
@@ -2219,23 +2318,23 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </div>
         </div>
 
-        <div class="lab" id="m16">
+        <div class="lab" id="m17">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 16 · lấy mẫu 100 lần</p>
+            <p class="lab__k">Mô hình 17 · lấy mẫu 100 lần</p>
             <p class="lab__t">Đếm xem bao nhiêu khoảng bắn trượt</p>
             <p class="lab__hint">Đường dọc là <b>trung bình thật</b> (170 cm) — thứ mà ngoài đời bạn không bao giờ biết. Mỗi vạch ngang là một khoảng tin cậy từ một lần lấy mẫu. Bấm <b>Lấy mẫu lại</b> vài lần: số vạch <span class="c-bad">đỏ</span> (trượt) luôn dao động quanh <b>5 trên 100</b>. Đó là toàn bộ nghĩa của chữ &ldquo;95%&rdquo;.</p>
           </div>
           <div class="lab__b">
-            <div class="row"><label for="m16-n">Cỡ mẫu n</label><div class="inline"><input type="range" id="m16-n" min="4" max="200" step="1" value="25"><span class="val" id="m16-nv">25</span></div></div>
-            <div class="row"><span class="k">Mức tin cậy</span><div class="chips" id="m16-lv"><span class="chip" data-l="80">80%</span><span class="chip on" data-l="95">95%</span><span class="chip" data-l="99">99%</span></div></div>
-            <div class="inline" style="margin-bottom:12px"><button class="btn btn--solid" id="m16-again">Lấy mẫu lại</button></div>
-            <svg class="viz" id="m16-svg" viewBox="0 0 620 340" role="img" aria-label="Một trăm khoảng tin cậy so với giá trị thật"></svg>
+            <div class="row"><label for="m17-n">Cỡ mẫu n</label><div class="inline"><input type="range" id="m17-n" min="4" max="200" step="1" value="25"><span class="val" id="m17-nv">25</span></div></div>
+            <div class="row"><span class="k">Mức tin cậy</span><div class="chips" id="m17-lv"><span class="chip" data-l="80">80%</span><span class="chip on" data-l="95">95%</span><span class="chip" data-l="99">99%</span></div></div>
+            <div class="inline" style="margin-bottom:12px"><button class="btn btn--solid" id="m17-again">Lấy mẫu lại</button></div>
+            <svg class="viz" id="m17-svg" viewBox="0 0 620 340" role="img" aria-label="Một trăm khoảng tin cậy so với giá trị thật"></svg>
             <div class="reads">
-              <div class="read good"><div class="k">Khoảng chứa đúng</div><div class="v" id="m16-hit">95</div></div>
-              <div class="read bad"><div class="k">Khoảng bắn trượt</div><div class="v" id="m16-miss">5</div></div>
-              <div class="read hi"><div class="k">Bề rộng trung bình</div><div class="v" id="m16-w">6,3<span class="u">cm</span></div></div>
+              <div class="read good"><div class="k">Khoảng chứa đúng</div><div class="v" id="m17-hit">95</div></div>
+              <div class="read bad"><div class="k">Khoảng bắn trượt</div><div class="v" id="m17-miss">5</div></div>
+              <div class="read hi"><div class="k">Bề rộng trung bình</div><div class="v" id="m17-w">6,3<span class="u">cm</span></div></div>
             </div>
-            <p class="lab__f" id="m16-say">Khoảng nào không cắt đường dọc là khoảng bắn trượt.</p>
+            <p class="lab__f" id="m17-say">Khoảng nào không cắt đường dọc là khoảng bắn trượt.</p>
             <p class="lab__f"><b>Hai cái đánh đổi thấy được ngay:</b> tăng mức tin cậy lên 99% thì gần như không còn vạch đỏ — nhưng mọi vạch <b>dài hẳn ra</b>, tức câu trả lời nhạt hơn (&ldquo;trung bình nằm đâu đó từ 160 tới 180&rdquo; thì đúng mà vô dụng). Tăng n thì vạch ngắn lại <b>mà tỉ lệ trượt không đổi</b> — chỉ có <b>σ/√n</b> nhỏ đi. Không có cách nào vừa hẹp vừa chắc mà không tốn thêm dữ liệu.</p>
           </div>
         </div>
@@ -2267,29 +2366,29 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </table>
         </div>
 
-        <div class="lab" id="m17">
+        <div class="lab" id="m18">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 17 · kéo bốn con số</p>
+            <p class="lab__k">Mô hình 18 · kéo bốn con số</p>
             <p class="lab__t">A/B test: cùng một chênh lệch, hai kết luận trái ngược</p>
             <p class="lab__hint">Giữ nguyên tỉ lệ 10% so với 13% nhưng kéo <b>cỡ mẫu</b> xuống 200: p-value vọt lên trên 0,05 và kết luận đảo chiều — <b>cùng một chênh lệch, không còn kết luận được gì</b>. Đó là lý do phải tính cỡ mẫu <i>trước khi</i> chạy thử nghiệm, không phải sau.</p>
           </div>
           <div class="lab__b">
-            <div class="row"><label for="m17-n">Người xem mỗi bản</label><div class="inline"><input type="range" id="m17-n" min="50" max="5000" step="50" value="1000"><span class="val" id="m17-nv">1000</span></div></div>
-            <div class="row"><label for="m17-pa">Bản A mua (%)</label><div class="inline"><input type="range" id="m17-pa" min="1" max="40" step="1" value="10"><span class="val" id="m17-pav">10%</span></div></div>
-            <div class="row"><label for="m17-pb">Bản B mua (%)</label><div class="inline"><input type="range" id="m17-pb" min="1" max="40" step="1" value="13"><span class="val" id="m17-pbv">13%</span></div></div>
-            <svg class="viz" id="m17-svg" viewBox="0 0 620 300" role="img" aria-label="Phân phối của chênh lệch dưới giả thuyết không, với vùng p-value được tô"></svg>
+            <div class="row"><label for="m18-n">Người xem mỗi bản</label><div class="inline"><input type="range" id="m18-n" min="50" max="5000" step="50" value="1000"><span class="val" id="m18-nv">1000</span></div></div>
+            <div class="row"><label for="m18-pa">Bản A mua (%)</label><div class="inline"><input type="range" id="m18-pa" min="1" max="40" step="1" value="10"><span class="val" id="m18-pav">10%</span></div></div>
+            <div class="row"><label for="m18-pb">Bản B mua (%)</label><div class="inline"><input type="range" id="m18-pb" min="1" max="40" step="1" value="13"><span class="val" id="m18-pbv">13%</span></div></div>
+            <svg class="viz" id="m18-svg" viewBox="0 0 620 300" role="img" aria-label="Phân phối của chênh lệch dưới giả thuyết không, với vùng p-value được tô"></svg>
             <div class="lgd">
               <span><i style="background:var(--border-2)"></i> thế giới &ldquo;hai nút như nhau&rdquo;</span>
               <span><i style="background:var(--bad)"></i> lạ bằng hoặc hơn cái đã thấy (p-value)</span>
               <span><i class="ln" style="background:var(--p)"></i> chênh lệch đo được</span>
             </div>
             <div class="reads">
-              <div class="read"><div class="k">Chênh lệch</div><div class="v" id="m17-diff">+3,0<span class="u">điểm %</span></div></div>
-              <div class="read"><div class="k">z</div><div class="v" id="m17-z">2,10</div></div>
-              <div class="read hi"><div class="k">p-value</div><div class="v" id="m17-p">0,035</div></div>
-              <div class="read" id="m17-vbox"><div class="k">Kết luận ở mức 5%</div><div class="v" id="m17-verdict" style="font-size:14px">bác bỏ H₀</div></div>
+              <div class="read"><div class="k">Chênh lệch</div><div class="v" id="m18-diff">+3,0<span class="u">điểm %</span></div></div>
+              <div class="read"><div class="k">z</div><div class="v" id="m18-z">2,10</div></div>
+              <div class="read hi"><div class="k">p-value</div><div class="v" id="m18-p">0,035</div></div>
+              <div class="read" id="m18-vbox"><div class="k">Kết luận ở mức 5%</div><div class="v" id="m18-verdict" style="font-size:14px">bác bỏ H₀</div></div>
             </div>
-            <p class="lab__f" id="m17-say">Khoảng tin cậy 95% của chênh lệch: [0,2; 5,8] điểm phần trăm.</p>
+            <p class="lab__f" id="m18-say">Khoảng tin cậy 95% của chênh lệch: [0,2; 5,8] điểm phần trăm.</p>
             <p class="lab__f"><b>Nên báo cáo khoảng tin cậy, đừng chỉ báo cáo p-value.</b> &ldquo;p = 0,035&rdquo; chỉ nói &ldquo;có gì đó&rdquo;. &ldquo;Nút đỏ tăng 0,2 tới 5,8 điểm phần trăm&rdquo; nói cả <b>hướng</b>, cả <b>độ lớn</b>, cả <b>mức không chắc</b> — và cho người quyết định thấy rằng đầu dưới của khoảng có thể bé tới mức không đáng làm.</p>
           </div>
         </div>
@@ -2358,7 +2457,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
       <section id="s-mistakes">
         <p class="sechead">Kết · <b>Nhầm lẫn</b></p>
-        <h2 class="st">Mười hai chỗ mà người học hay đi sai, xếp theo chặng</h2>
+        <h2 class="st">Mười ba chỗ mà người học hay đi sai, xếp theo chặng</h2>
 
         <div class="tw">
           <table>
@@ -2366,6 +2465,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <tbody>
               <tr><td>det = 0 nghĩa là vô nghiệm</td><td>Nghĩa là <b>không có nghiệm duy nhất</b> — vô nghiệm <i>hoặc</i> vô số nghiệm. det không đọc cột bên phải.</td></tr>
               <tr><td>Nhân ma trận đổi chỗ được</td><td><b>AB ≠ BA</b> nói chung. Nhưng det(AB) = det(BA) — vì phóng diện tích thì thứ tự không đổi kết quả.</td></tr>
+              <tr><td>Lật thì lật hết: (AB)ᵀ = AᵀBᵀ</td><td><b>(AB)ᵀ = BᵀAᵀ</b> — thứ tự bị đảo. Thử A = [[1,2],[3,4]], B = [[5,6],[7,8]]: (AB)ᵀ = [[19,43],[22,50]] khớp BᵀAᵀ, còn AᵀBᵀ = [[23,31],[34,46]]. Với ma trận không vuông thì AᵀBᵀ thường không nhân được vì lệch chiều.</td></tr>
               <tr><td>Giải hệ thì nên tính A⁻¹</td><td>Trên máy tính, <b>khử Gauss</b> nhanh hơn và ít sai số hơn. Nghịch đảo là để hiểu, không phải để tính.</td></tr>
               <tr><td>Ma trận nào cũng có vector riêng</td><td>Ma trận <b>xoay</b> (góc khác 0° và 180°) không có vector riêng thực; ma trận <b>trượt</b> chỉ có một hướng. Ma trận <b>đối xứng</b> thì luôn đủ và vuông góc.</td></tr>
               <tr><td>PCA chọn ra các cột quan trọng</td><td>PCA <b>trộn</b> mọi cột thành trục mới. Nó cũng không biết bạn định dự đoán gì, nên có thể bỏ đúng trục bạn cần.</td></tr>
@@ -2402,6 +2502,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                 <tr><td>Chuẩn L2</td><td>√(x₁² + x₂² + &hellip;)</td><td>Bay thẳng. Vector (3,4) dài 5.</td></tr>
                 <tr><td>Chuẩn L1</td><td>|x₁| + |x₂| + &hellip;</td><td>Đi theo phố. Vector (3,4) dài 7.</td></tr>
                 <tr><td>Nhân vô hướng</td><td>Σ uᵢvᵢ = ‖u‖‖v‖cos θ</td><td>Đo cùng hướng. Bằng 0 = vuông góc.</td></tr>
+                <tr><td>Chuyển vị</td><td>(Aᵀ)ᵢⱼ = Aⱼᵢ &nbsp;·&nbsp; (AB)ᵀ = BᵀAᵀ</td><td>Lật qua đường chéo. Cỡ m×n thành n×m. Nhân rồi lật thì <b>đảo thứ tự</b>.</td></tr>
+                <tr><td>Đối xứng</td><td>Aᵀ = A</td><td>Lật xong y nguyên. Trị riêng đều thực, vector riêng vuông góc. Hiệp phương sai luôn thế.</td></tr>
                 <tr><td>Hạng</td><td>số trụ trong dạng bậc thang</td><td>Số tin tức thật sự, sau khi bỏ những dòng nhắc lại.</td></tr>
                 <tr><td>Trị riêng</td><td>det(A − λI) = 0</td><td>Hệ số dài ra theo hướng không bị quay.</td></tr>
                 <tr><td>PCA</td><td>vector riêng của ma trận hiệp phương sai</td><td>Quay trục về hướng dữ liệu tãi rộng nhất, rồi bỏ hướng hẹp.</td></tr>
@@ -2492,12 +2594,12 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <div class="box">
           <p class="box__k">Nguồn của phần nội dung</p>
           <p>Tên khoá, số tuần và tiêu đề từng tuần được đối chiếu với <b>trang khoá học chính thức</b> của chuyên ngành trên Coursera và DeepLearning.AI: 3 khoá, <b>11 tuần</b> (4 + 3 + 4), khoảng <b>94 giờ</b>, giảng viên <b>Luis Serrano</b>. Mọi con số <b>tính được</b> trong trang — định thức, trị riêng, tỉ lệ PCA, dãy Newton, xác suất nhị thức, mốc 68–95–99,7, kết quả Bayes, phân vị t, p-value — đều được <b>tính lại bằng máy</b> và kiểm bằng một script nằm cùng repo, nên nếu ai sửa một con số mà không sửa phép tính thì cổng kiểm sẽ chặn. Vài con số <i>không</i> tính được — số giờ của khoá, con số của cuộc thăm dò năm 1936 — thì được dẫn từ nguồn, không phải từ phép tính.</p>
-          <p>Cách sắp xếp lại thành 4 chặng, khuôn ba ô <i>trò chơi / toán / dùng ở đâu</i>, 17 mô hình tương tác, phần &ldquo;bốn cái bẫy&rdquo; và mọi phép ví von là <b>diễn giải thêm</b> — không có trong bản gốc, và nên đọc như quan điểm chứ không phải như lời của giảng viên.</p>
+          <p>Cách sắp xếp lại thành 4 chặng, khuôn ba ô <i>trò chơi / toán / dùng ở đâu</i>, 18 mô hình tương tác, phần &ldquo;bốn cái bẫy&rdquo; và mọi phép ví von là <b>diễn giải thêm</b> — không có trong bản gốc, và nên đọc như quan điểm chứ không phải như lời của giảng viên.</p>
         </div>
 
         <div class="box">
-          <p class="box__k">Về 17 mô hình trong trang</p>
-          <p>Chúng dùng dữ liệu cỡ nhỏ, viết ra để nhìn thấy cơ chế trong một màn hình. <b>Mọi phép tính là thật</b> — định thức thật, gradient thật, phân phối nhị thức tính bằng công thức chính xác, phân phối chuẩn tính bằng hàm lỗi, khoảng tin cậy sinh từ mẫu ngẫu nhiên thật. Nhưng quy mô thì nhỏ hơn thực tế hàng nghìn lần, và vài chỗ được đơn giản hoá có chủ ý: mô hình 14 lấy 3.000 lần lặp thay vì hàng trăm nghìn, và mọi mô hình dùng bộ sinh ngẫu nhiên có hạt giống nên ai mở trang cũng thấy đúng một bộ dữ liệu.</p>
+          <p class="box__k">Về 18 mô hình trong trang</p>
+          <p>Chúng dùng dữ liệu cỡ nhỏ, viết ra để nhìn thấy cơ chế trong một màn hình. <b>Mọi phép tính là thật</b> — định thức thật, gradient thật, phân phối nhị thức tính bằng công thức chính xác, phân phối chuẩn tính bằng hàm lỗi, khoảng tin cậy sinh từ mẫu ngẫu nhiên thật. Nhưng quy mô thì nhỏ hơn thực tế hàng nghìn lần, và vài chỗ được đơn giản hoá có chủ ý: mô hình 15 lấy 3.000 lần lặp thay vì hàng trăm nghìn, và mọi mô hình dùng bộ sinh ngẫu nhiên có hạt giống nên ai mở trang cũng thấy đúng một bộ dữ liệu.</p>
         </div>
 
         <p><b>Đọc và làm tiếp</b></p>
@@ -2601,7 +2703,7 @@ function svgPt(svg, e) {
   return { x: (e.clientX - r.left) / r.width * vb.width, y: (e.clientY - r.top) / r.height * vb.height };
 }
 /* Mũi tên bàn phím cho những ô vẽ mà tương tác CHÍNH là kéo chuột. Không có nó thì
-   mô hình 2 và mô hình 7 hoàn toàn không dùng được bằng bàn phím — mà kéo mới là
+   mô hình 2 và mô hình 8 hoàn toàn không dùng được bằng bàn phím — mà kéo mới là
    phần dạy, chip chỉ đổi chế độ. Shift = bước lớn; ô vẽ tự nhận tiêu điểm được. */
 function arrowKeys(svg, handler) {
   svg.setAttribute('tabindex', '0');
@@ -2761,6 +2863,9 @@ Array.prototype.slice.call(document.querySelectorAll('[data-tabs]')).forEach(fun
      không thì trình đọc màn hình đọc ra một chuỗi nút rời rạc không rõ để làm gì. */
   Array.prototype.slice.call(document.querySelectorAll('.chips')).forEach(function (bar) {
     bar.setAttribute('role', 'group');
+    /* Dải chip nào đã tự khai aria-label thì giữ nguyên: nhãn viết tay bao giờ
+       cũng nói rõ hơn nhãn suy ra. Chỉ suy khi không có gì. */
+    if (bar.hasAttribute('aria-label')) return;
     var row = bar.closest('.row');
     var k = row ? row.querySelector('.k, label') : null;
     bar.setAttribute('aria-label', k ? k.textContent.trim() : 'Chọn kịch bản cho mô hình');
@@ -3070,9 +3175,125 @@ function eig2(a, b, c, d) {
   redraws.push(draw); draw();
 })();
 
-/* ═══════════════════ mô hình 4 · vector riêng ═══════════════════ */
+/* ═══════════════════ mô hình 4 · chuyển vị ═══════════════════ */
 (function () {
   var svg = $('m4-svg'); if (!svg) return;
+  /* Ba hình có chủ ý. Bảng chữ nhật: thấy cỡ đổi chỗ 4×3 → 3×4. Ma trận đối xứng: lật
+     xong KHÔNG phân biệt được — chính là định nghĩa, và cho thấy các ô vẫn di chuyển
+     chứ không phải đứng yên. Vector cột: lật thành hàng, đúng chữ aᵀ trong aᵀb.
+     Đánh số 1..12 để mắt theo dõi được từng ô đi đâu. */
+  var SHAPES = [
+    { r: 4, c: 3, v: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] },
+    { r: 3, c: 3, v: [4, 1, 2, 1, 5, 3, 2, 3, 6] },
+    { r: 3, c: 1, v: [2, 3, 4] }
+  ];
+  var idx = 0, CELL = 42, GAP = 5, ST = 47, W = 620, H = 300;
+
+  function isSym(S) {
+    if (S.r !== S.c) return false;
+    for (var i = 0; i < S.r; i++)
+      for (var j = 0; j < S.c; j++)
+        if (S.v[i * S.c + j] !== S.v[j * S.c + i]) return false;
+    return true;
+  }
+
+  function draw() {
+    var S = SHAPES[idx], t = +$('m4-t').value / 100, i, j;
+    $('m4-tv').textContent = Math.round(t * 100) + '%';
+    var D = Math.max(S.r, S.c), m = Math.min(S.r, S.c);
+    /* Gốc toạ độ KHÔNG phụ thuộc t — nếu nó chạy theo cỡ hiện tại thì đường chéo
+       trôi và cả phép lật mất trục, tức là mất đúng thứ cần nhìn. */
+    var ox = 200 - D * ST / 2, oy = (H - D * ST) / 2 + 4;
+    var A = css('--a'), ABG = css('--a-bg'), B2 = css('--border-2');
+    clear(svg);
+    var g = el(svg, 'g');
+
+    /* khung trước (nét đứt) và sau (nét liền) — hai số kích thước đổi chỗ */
+    el(g, 'rect', { x: (ox - 5).toFixed(1), y: (oy - 5).toFixed(1),
+      width: S.c * ST + 3, height: S.r * ST + 3, rx: 4,
+      fill: 'none', stroke: B2, 'stroke-width': 1.4, 'stroke-dasharray': '4 3' });
+    el(g, 'rect', { x: (ox - 5).toFixed(1), y: (oy - 5).toFixed(1),
+      width: S.r * ST + 3, height: S.c * ST + 3, rx: 4,
+      fill: 'none', stroke: A, 'stroke-width': 1.6, opacity: 0.85 });
+
+    /* đường chéo chính: trục của phép lật */
+    el(g, 'line', { x1: (ox + CELL / 2 - 14).toFixed(1), y1: (oy + CELL / 2 - 14).toFixed(1),
+      x2: (ox + (m - 1) * ST + CELL / 2 + 14).toFixed(1),
+      y2: (oy + (m - 1) * ST + CELL / 2 + 14).toFixed(1),
+      stroke: A, 'stroke-width': 1.6, 'stroke-dasharray': '5 4', opacity: 0.7 });
+
+    /* ô xa đường chéo nhất = ô đi xa nhất, dùng làm ô để mắt theo dõi */
+    var ti = 0, tj = 0, best = -1;
+    for (i = 0; i < S.r; i++)
+      for (j = 0; j < S.c; j++)
+        if (Math.abs(i - j) > best) { best = Math.abs(i - j); ti = i; tj = j; }
+
+    /* vệt đường đi của ô theo dõi */
+    if (best > 0) {
+      el(g, 'line', { x1: (ox + tj * ST + CELL / 2).toFixed(1), y1: (oy + ti * ST + CELL / 2).toFixed(1),
+        x2: (ox + ti * ST + CELL / 2).toFixed(1), y2: (oy + tj * ST + CELL / 2).toFixed(1),
+        stroke: A, 'stroke-width': 1.2, 'stroke-dasharray': '2 3', opacity: 0.5 });
+    }
+
+    for (i = 0; i < S.r; i++) {
+      for (j = 0; j < S.c; j++) {
+        var onDiag = i === j, tracked = i === ti && j === tj;
+        var x = ox + (j + (i - j) * t) * ST, y = oy + (i + (j - i) * t) * ST;
+        el(g, 'rect', { x: x.toFixed(1), y: y.toFixed(1), width: CELL, height: CELL, rx: 5,
+          fill: onDiag ? ABG : css('--surface'),
+          stroke: tracked ? A : B2, 'stroke-width': tracked ? 2.4 : 1.1 });
+        txt(g, x + CELL / 2, y + CELL / 2 + 5.5, String(S.v[i * S.c + j]), 'vs', 'middle',
+          'font-size:16px;fill:var(--ink);font-weight:' + (tracked || onDiag ? '700' : '500'));
+      }
+    }
+
+
+    /* Bảng chú giải bên phải. Không phải để lấp chỗ: nó nói ra phép đổi chỗ chỉ số
+       bằng chữ, và bám theo ĐÚNG ô đang được viền đậm, nên mắt nối được hình với luật. */
+    var px = 372, pv = S.v[ti * S.c + tj];
+    el(g, 'rect', { x: px - 14, y: 52, width: 234, height: 196, rx: 8,
+      fill: css('--k-bg', svg), stroke: css('--k-line', svg), 'stroke-width': 1 });
+    txt(g, px, 76, 'ĐỔI CHỖ HAI CHỈ SỐ', 'vs', 'start', 'font-size:10px;letter-spacing:.08em');
+    txt(g, px, 102, 'ô (hàng i, cột j)', 'vs', 'start', 'font-size:14px;fill:var(--ink)');
+    txt(g, px + 24, 124, '↓', 'vs', 'start', 'font-size:15px;fill:' + A);
+    txt(g, px, 146, 'ô (hàng j, cột i)', 'vs', 'start', 'font-size:14px;fill:var(--ink)');
+    txt(g, px, 178, 'Ô ĐANG THEO DÕI — SỐ ' + pv, 'vs', 'start', 'font-size:10px;letter-spacing:.08em');
+    txt(g, px, 200, 'hàng ' + (ti + 1) + ', cột ' + (tj + 1) + '  →  hàng ' + (tj + 1) + ', cột ' + (ti + 1),
+      'vs', 'start', 'font-size:13px;fill:var(--ink)');
+    txt(g, px, 230, 'cỡ:  ' + S.r + '×' + S.c + '  →  ' + S.c + '×' + S.r,
+      'vs', 'start', 'font-size:13px;fill:' + A + ';font-weight:700');
+
+    $('m4-dim').textContent = S.r + '×' + S.c;
+    $('m4-dim2').textContent = S.c + '×' + S.r;
+    $('m4-fix').textContent = String(m);
+    var sym = isSym(S);
+    $('m4-sym').textContent = sym ? 'có — lật xong y nguyên' : 'không';
+    $('m4-sym').parentElement.className = 'read ' + (sym ? 'good' : 'hi');
+
+    var say;
+    if (S.c === 1) {
+      if (t < 0.02) say = 'Vector cột 3×1: ba số xếp dọc. Kéo thanh trượt để lật nó thành hàng.';
+      else if (t > 0.98) say = 'Lật xong: vector nằm ngang 1×3. Đây đúng là chữ aᵀ trong aᵀb — viết vector ngang rồi nhân với một vector dọc thì ra MỘT CON SỐ, chính là nhân vô hướng ở mục 1.5.';
+      else say = 'Đang lật. Chỉ ô đầu (số 2) nằm trên đường chéo nên đứng im; số 4 ở cuối đi xa nhất.';
+    } else if (sym) {
+      if (t > 0.98) say = 'Lật xong mà bảng TRÔNG Y NGUYÊN. Các ô vẫn đổi chỗ thật — số 2 ở hàng 1 cột 3 đã sang hàng 3 cột 1 — nhưng chỗ nó đến cũng đang giữ số 2, nên không ai phân biệt được. Aᵀ = A: đó là định nghĩa của chữ “đối xứng”.';
+      else say = 'Ma trận đối xứng: mỗi ô ngoài đường chéo có một ô sinh đôi ở bên kia mang đúng con số của mình. Kéo hết thanh trượt để thấy bảng về đúng như cũ.';
+    } else {
+      if (t < 0.02) say = 'Bảng 4 hàng 3 cột. Số 10 đang ở hàng 4 cột 1 — kéo thanh trượt và nhìn nó bay sang hàng 1 cột 4.';
+      else if (t > 0.98) say = 'Lật xong: bảng 3 hàng 4 cột. Số 10 giờ ở hàng 1 cột 4 — hai chỉ số đã đổi chỗ. Ba ô trên đường chéo (1, 5, 9) không đi đâu cả.';
+      else say = 'Đang lật. Ô càng xa đường chéo càng đi xa; ô nằm trên đường chéo thì đứng im tại chỗ.';
+    }
+    $('m4-say').textContent = say;
+  }
+
+  $('m4-t').addEventListener('input', draw);
+  chipGroup('m4-shape', 's', function (v) { idx = +v; draw(); });
+  redraws.push(draw); draw();
+})();
+
+/* ═══════════════════ mô hình 5 · vector riêng ═══════════════════ */
+(function () {
+  var svg = $('m5-svg'); if (!svg) return;
   var MATS = [[3, 1, 1, 3], [2, 0, 0, 3], [1, 1, 0, 1], [0, -1, 1, 0]];
   var NAMES = ['A = [[3,1],[1,3]] — đối xứng', 'giãn theo trục', 'trượt nghiêng', 'xoay 90°'];
   var mi = 0;
@@ -3080,8 +3301,8 @@ function eig2(a, b, c, d) {
   var X = function (x) { return cx + x * S; }, Y = function (y) { return cy - y * S; };
   function draw() {
     var m = MATS[mi], a = m[0], b = m[1], c = m[2], d = m[3];
-    var th = +$('m4-t').value * Math.PI / 180;
-    $('m4-tv').textContent = $('m4-t').value + '°';
+    var th = +$('m5-t').value * Math.PI / 180;
+    $('m5-tv').textContent = $('m5-t').value + '°';
     var v = [2 * Math.cos(th), 2 * Math.sin(th)];
     var Av = [a * v[0] + b * v[1], c * v[0] + d * v[1]];
     var E = eig2(a, b, c, d);
@@ -3117,22 +3338,22 @@ function eig2(a, b, c, d) {
       var cosv = Math.abs(v[0] * Av[0] + v[1] * Av[1]) / (nv * na);
       off = Math.acos(Math.max(0, Math.min(1, cosv))) * 180 / Math.PI;
     }
-    $('m4-off').innerHTML = fmt(off, 1) + '<span class="u">°</span>';
-    $('m4-lam').textContent = E.real ? (fmt(E.lam[0], 2) + ' và ' + fmt(E.lam[1], 2)) : 'không có (số phức)';
+    $('m5-off').innerHTML = fmt(off, 1) + '<span class="u">°</span>';
+    $('m5-lam').textContent = E.real ? (fmt(E.lam[0], 2) + ' và ' + fmt(E.lam[1], 2)) : 'không có (số phức)';
     var hit = off < 1.2 && na > 1e-9;
     var lam = (v[0] * Av[0] + v[1] * Av[1]) / (nv * nv);
-    $('m4-st').textContent = hit ? 'TRÙNG HƯỚNG' : 'chưa trùng';
-    $('m4-st').parentElement.className = 'read ' + (hit ? 'good' : 'hi');
+    $('m5-st').textContent = hit ? 'TRÙNG HƯỚNG' : 'chưa trùng';
+    $('m5-st').parentElement.className = 'read ' + (hit ? 'good' : 'hi');
     var say;
     if (!E.real) say = NAMES[mi] + ': mũi tên nào cũng bị quay, không có hướng riêng thực nào. Một phép xoay không để lại hướng nào yên — trị riêng của nó là số phức.';
     else if (hit) say = 'Trùng hướng! Av nằm đúng trên đường của v, dài gấp ' + fmt(lam, 2) + ' lần. Vậy v là một VECTOR RIÊNG và λ = ' + fmt(lam, 2) + '.';
     else say = 'Còn lệch ' + fmt(off, 1) + '°. Quay tiếp cho tới khi hai mũi tên nằm trên cùng một đường — hoặc bấm nút bắt lấy.';
-    $('m4-say').textContent = say;
+    $('m5-say').textContent = say;
   }
-  $('m4-snap').addEventListener('click', function () {
+  $('m5-snap').addEventListener('click', function () {
     var m = MATS[mi], E = eig2(m[0], m[1], m[2], m[3]);
-    if (!E.real) { $('m4-say').textContent = 'Máy này không có hướng riêng thực nào để bắt — mọi mũi tên đều bị quay.'; return; }
-    var cur = +$('m4-t').value, best = cur, bd = 1e9;
+    if (!E.real) { $('m5-say').textContent = 'Máy này không có hướng riêng thực nào để bắt — mọi mũi tên đều bị quay.'; return; }
+    var cur = +$('m5-t').value, best = cur, bd = 1e9;
     E.vec.forEach(function (w) {
       [0, 180].forEach(function (add) {
         var ang = (Math.atan2(w[1], w[0]) * 180 / Math.PI + add + 360) % 360;
@@ -3140,16 +3361,16 @@ function eig2(a, b, c, d) {
         if (dd < bd) { bd = dd; best = Math.round(ang); }
       });
     });
-    $('m4-t').value = best; draw();
+    $('m5-t').value = best; draw();
   });
-  $('m4-t').addEventListener('input', draw);
-  chipGroup('m4-pre', 'p', function (v) { mi = +v; draw(); });
+  $('m5-t').addEventListener('input', draw);
+  chipGroup('m5-pre', 'p', function (v) { mi = +v; draw(); });
   redraws.push(draw); draw();
 })();
 
-/* ═══════════════════ mô hình 5 · PCA ═══════════════════ */
+/* ═══════════════════ mô hình 6 · PCA ═══════════════════ */
 (function () {
-  var svg = $('m5-svg'); if (!svg) return;
+  var svg = $('m6-svg'); if (!svg) return;
   var mode = 'axes', N = 120;
   var base = (function () {
     var r = rng(20260909), out = [];
@@ -3159,9 +3380,9 @@ function eig2(a, b, c, d) {
   var W = 620, H = 360, cx = W / 2, cy = H / 2, S = 52;
   var X = function (x) { return cx + x * S; }, Y = function (y) { return cy - y * S; };
   function draw() {
-    var rot = +$('m5-rot').value * Math.PI / 180, th = +$('m5-thick').value / 100;
-    $('m5-rotv').textContent = $('m5-rot').value + '°';
-    $('m5-thickv').textContent = fmt(th, 2);
+    var rot = +$('m6-rot').value * Math.PI / 180, th = +$('m6-thick').value / 100;
+    $('m6-rotv').textContent = $('m6-rot').value + '°';
+    $('m6-thickv').textContent = fmt(th, 2);
     var co = Math.cos(rot), si = Math.sin(rot);
     var pts = base.map(function (p) {
       var x = p[0] * 1.35, y = p[1] * th * 1.35;
@@ -3212,22 +3433,22 @@ function eig2(a, b, c, d) {
 
     var keep = l1 / (l1 + l2);
     var ang = ((Math.atan2(v1[1], v1[0]) * 180 / Math.PI) + 180) % 180;
-    $('m5-l1').textContent = fmt(l1);
-    $('m5-l2').textContent = fmt(l2);
-    $('m5-keep').textContent = pct(keep, 1);
-    $('m5-ang').innerHTML = fmt(ang, 0) + '<span class="u">°</span>';
+    $('m6-l1').textContent = fmt(l1);
+    $('m6-l2').textContent = fmt(l2);
+    $('m6-keep').textContent = pct(keep, 1);
+    $('m6-ang').innerHTML = fmt(ang, 0) + '<span class="u">°</span>';
     var say;
     if (keep > 0.97) say = 'Đám điểm gần như nằm trên một đường: trục 1 giữ ' + pct(keep, 1) + '. Bỏ trục 2 đi thì mỗi điểm chỉ còn MỘT con số mà gần như không mất gì.';
     else if (keep > 0.75) say = 'Trục 1 giữ ' + pct(keep, 1) + '. Nén xuống một chiều vẫn dùng được, nhưng đã bắt đầu mất chi tiết.';
     else say = 'Đám điểm gần như tròn: trục 1 chỉ giữ ' + pct(keep, 1) + ', tức là KHÔNG có hướng nào đáng ưu tiên. Ở đây PCA không giúp gì — nén xuống một chiều là mất thật.';
-    $('m5-say').textContent = say;
+    $('m6-say').textContent = say;
   }
-  ['m5-rot', 'm5-thick'].forEach(function (id) { $(id).addEventListener('input', draw); });
-  chipGroup('m5-mode', 'm', function (m) { mode = m; draw(); });
+  ['m6-rot', 'm6-thick'].forEach(function (id) { $(id).addEventListener('input', draw); });
+  chipGroup('m6-mode', 'm', function (m) { mode = m; draw(); });
   redraws.push(draw); draw();
 })();
 
-/* ═══════════════════ đường đồng mức, dùng cho mô hình 7 & 8 ═══════════════════
+/* ═══════════════════ đường đồng mức, dùng cho mô hình 8 & 8 ═══════════════════
    Marching squares: chia khung thành lưới, ở mỗi ô nội suy tuyến tính trên các
    cạnh để tìm chỗ đường mức cắt qua, rồi nối các điểm ấy. Đủ cho cả mặt lồi
    (ellipse) và mặt yên ngựa (hyperbola) mà không phải viết công thức riêng. */
@@ -3272,9 +3493,9 @@ var SURF = [
     lv: [0.3, 1, 2, 4, 7, 11, 16] }
 ];
 
-/* ═══════════════════ mô hình 6 · dây cung → tiếp tuyến ═══════════════════ */
+/* ═══════════════════ mô hình 7 · dây cung → tiếp tuyến ═══════════════════ */
 (function () {
-  var svg = $('m6-svg'); if (!svg) return;
+  var svg = $('m7-svg'); if (!svg) return;
   var FN = [
     { f: function (x) { return x * x; }, d: function (x) { return 2 * x; }, n: 'x²', y0: -1, y1: 9 },
     { f: function (x) { return x * x * x - 3 * x; }, d: function (x) { return 3 * x * x - 3; }, n: 'x³ − 3x', y0: -6, y1: 6 },
@@ -3283,8 +3504,8 @@ var SURF = [
   ];
   var fi = 0, W = 620, H = 340;
   function draw() {
-    var F = FN[fi], x = +$('m6-x').value / 10, h = +$('m6-h').value / 100;
-    $('m6-xv').textContent = fmt(x); $('m6-hv').textContent = fmt(h);
+    var F = FN[fi], x = +$('m7-x').value / 10, h = +$('m7-h').value / 100;
+    $('m7-xv').textContent = fmt(x); $('m7-hv').textContent = fmt(h);
     var x0 = -3.2, x1 = 3.2, y0 = F.y0, y1 = F.y1;
     var ml = 44, mr = 14, mt = 14, mb = 30;
     var X = function (v) { return ml + (v - x0) / (x1 - x0) * (W - ml - mr); };
@@ -3322,30 +3543,30 @@ var SURF = [
     el(g, 'circle', { cx: X(x2), cy: Y(f2), r: 4.5, fill: css('--muted') });
     el(g, 'circle', { cx: X(x), cy: Y(fx), r: 6.5, fill: css('--a'), stroke: css('--surface'), 'stroke-width': 2 });
 
-    $('m6-sec').textContent = fmt(sec);
-    $('m6-der').textContent = fmt(der);
-    $('m6-gap').textContent = fmt(Math.abs(sec - der));
+    $('m7-sec').textContent = fmt(sec);
+    $('m7-der').textContent = fmt(der);
+    $('m7-gap').textContent = fmt(Math.abs(sec - der));
     var say;
     if (Math.abs(der) < 0.05) say = 'Độ nghiêng ≈ 0: mặt đất phẳng ở đây. Đây là đáy, đỉnh, hoặc một chỗ phẳng tạm — mục 2.3 nói cách phân biệt.';
     else if (der > 0) say = 'Nghiêng LÊN (' + fmt(der) + '): bước sang phải là đi lên, nên muốn xuống thì đi sang TRÁI.';
     else say = 'Nghiêng XUỐNG (' + fmt(der) + '): bước sang phải là đi xuống, nên muốn xuống thì đi sang PHẢI.';
     if (Math.abs(sec - der) < 0.02 && h > 0.02) say += ' Dây cung đã trùng gần khít tiếp tuyến vì h nhỏ.';
-    $('m6-say').textContent = say;
+    $('m7-say').textContent = say;
   }
-  ['m6-x', 'm6-h'].forEach(function (id) { $(id).addEventListener('input', draw); });
-  chipGroup('m6-fn', 'f', function (v) { fi = +v; draw(); });
+  ['m7-x', 'm7-h'].forEach(function (id) { $(id).addEventListener('input', draw); });
+  chipGroup('m7-fn', 'f', function (v) { fi = +v; draw(); });
   redraws.push(draw); draw();
 })();
 
-/* ═══════════════════ mô hình 7 · bản đồ đồng mức & gradient ═══════════════════ */
+/* ═══════════════════ mô hình 8 · bản đồ đồng mức & gradient ═══════════════════ */
 (function () {
-  var svg = $('m7-svg'); if (!svg) return;
+  var svg = $('m8-svg'); if (!svg) return;
   var si = 0, px = 2, py = 1;
   var W = 620, H = 360, x0 = -4, x1 = 4, y0 = -2.3, y1 = 2.3;
   var X = function (x) { return 20 + (x - x0) / (x1 - x0) * (W - 40); };
   var Y = function (y) { return H - 20 - (y - y0) / (y1 - y0) * (H - 40); };
   function draw() {
-    var S = SURF[si];  /* m7 chỉ có 3 mặt đầu; m8 mới cần map vì mặt thứ tư */
+    var S = SURF[si];  /* m8 chỉ có 3 mặt đầu; m9 mới cần map vì mặt thứ tư */
     clear(svg);
     var g = el(svg, 'g');
     S.lv.forEach(function (L) { contour(g, S.f, L, x0, x1, y0, y1, X, Y, css('--border-2'), 1.1); });
@@ -3368,17 +3589,17 @@ var SURF = [
     txt(g, X(px) + 10, Y(py) + 19, 'bạn ở đây', 'vs');
     txt(g, 24, 20, S.name + ': f = ' + (si === 0 ? 'x² + 3y²' : si === 1 ? 'x² + 12y²' : 'x² − y²'), 'vt');
 
-    $('m7-pos').textContent = '(' + fmt(px, 1) + '; ' + fmt(py, 1) + ')';
-    $('m7-f').textContent = fmt(S.f(px, py));
-    $('m7-gx').textContent = fmt(gx);
-    $('m7-gy').textContent = fmt(gy);
-    $('m7-gn').textContent = fmt(gn);
+    $('m8-pos').textContent = '(' + fmt(px, 1) + '; ' + fmt(py, 1) + ')';
+    $('m8-f').textContent = fmt(S.f(px, py));
+    $('m8-gx').textContent = fmt(gx);
+    $('m8-gy').textContent = fmt(gy);
+    $('m8-gn').textContent = fmt(gn);
     var say;
     if (gn < 0.15) say = 'Gradient gần bằng 0: mặt đất phẳng theo cả hai hướng. Ở cái bát thì đây là ĐÁY; ở yên ngựa thì đây là chỗ phẳng mà vẫn tuột được — chỉ cần lệch một chút.';
     else if (si === 1) say = 'Máng hẹp: ∂f/∂y = ' + fmt(gy) + ' lớn hơn ∂f/∂x = ' + fmt(gx) + ' rất nhiều, nên mũi tên gần như chỉ ngang vào tường máng chứ không dọc theo máng về đáy.';
     else if (si === 2) say = 'Yên ngựa: một hướng đi lên, hướng kia đi xuống. Dấu của hai đạo hàm riêng khác nhau — và đó là chỗ &ldquo;nghiêng bằng 0&rdquo; lừa được người ta.';
     else say = 'Mũi tên nâu chỉ hướng LÊN dốc nhất, mũi tên xanh là hướng đi xuống. Cả hai luôn vuông góc với đường đồng mức tại chỗ bạn đứng.';
-    $('m7-say').innerHTML = say;
+    $('m8-say').innerHTML = say;
   }
   onDrag(svg, function (p) {
     px = Math.max(x0, Math.min(x1, x0 + (p.x - 20) / (W - 40) * (x1 - x0)));
@@ -3391,20 +3612,20 @@ var SURF = [
     py = Math.max(y0, Math.min(y1, py + dy * k));
     draw();
   });
-  chipGroup('m7-sf', 's', function (v) { si = +v; draw(); });
+  chipGroup('m8-sf', 's', function (v) { si = +v; draw(); });
   redraws.push(draw); draw();
 })();
 
-/* ═══════════════════ mô hình 8 · gradient descent ═══════════════════ */
+/* ═══════════════════ mô hình 9 · gradient descent ═══════════════════ */
 (function () {
-  var svg = $('m8-svg'); if (!svg) return;
+  var svg = $('m9-svg'); if (!svg) return;
   var si = 0, start = [2.5, 1.6], path = [start.slice()], timer = null, f0 = 0;
   var W = 620, H = 360, x0 = -4, x1 = 4, y0 = -2.3, y1 = 2.3;
   var X = function (x) { return 20 + (x - x0) / (x1 - x0) * (W - 40); };
   var Y = function (y) { return H - 20 - (y - y0) / (y1 - y0) * (H - 40); };
   function surf() { return si === 2 ? SURF[3] : SURF[si]; }
   function step() {
-    var S = surf(), a = +$('m8-a').value / 100;
+    var S = surf(), a = +$('m9-a').value / 100;
     var p = path[path.length - 1];
     var nx = p[0] - a * S.gx(p[0]), ny = p[1] - a * S.gy(p[1]);
     if (!isFinite(nx) || Math.abs(nx) > 1e6) nx = Math.sign(nx || 1) * 1e6;
@@ -3414,8 +3635,8 @@ var SURF = [
     draw();
   }
   function draw() {
-    var S = surf(), a = +$('m8-a').value / 100;
-    $('m8-av').textContent = fmt(a, 3);
+    var S = surf(), a = +$('m9-a').value / 100;
+    $('m9-av').textContent = fmt(a, 3);
     clear(svg);
     var g = el(svg, 'g');
     S.lv.forEach(function (L) { contour(g, S.f, L, x0, x1, y0, y1, X, Y, css('--border-2'), 1.1); });
@@ -3443,9 +3664,9 @@ var SURF = [
     txt(g, 24, 20, S.name + ' · α = ' + fmt(a, 3), 'vt');
 
     var f = S.f(last[0], last[1]);
-    $('m8-n').textContent = path.length - 1;
-    $('m8-pos').textContent = Math.abs(last[0]) > 999 ? 'bay ra ngoài' : '(' + fmt(last[0]) + '; ' + fmt(last[1]) + ')';
-    $('m8-f').textContent = f > 1e6 ? '∞' : fmt(f);
+    $('m9-n').textContent = path.length - 1;
+    $('m9-pos').textContent = Math.abs(last[0]) > 999 ? 'bay ra ngoài' : '(' + fmt(last[0]) + '; ' + fmt(last[1]) + ')';
+    $('m9-f').textContent = f > 1e6 ? '∞' : fmt(f);
     var st, cls, say;
     /* So với sai số ở chỗ XUẤT PHÁT (chốt lúc reset), không so với path[0] — path bị
        shift() sau 400 bước nên path[0] trôi thành một điểm giữa đường. Và phải có sàn
@@ -3462,23 +3683,23 @@ var SURF = [
       st = 'đang đi'; cls = 'hi';
       say = 'Mỗi bước đi ngược gradient một đoạn α. Bước càng gần đáy càng ngắn, vì gradient càng nhỏ — không ai phải hãm lại, nó tự hãm.';
     }
-    $('m8-st').textContent = st;
-    $('m8-vbox').className = 'read ' + cls;
-    $('m8-say').textContent = say;
+    $('m9-st').textContent = st;
+    $('m9-vbox').className = 'read ' + cls;
+    $('m9-say').textContent = say;
   }
   function reset() {
     path = [start.slice()];
     f0 = surf().f(start[0], start[1]);
     if (timer) {
       clearInterval(timer); timer = null;
-      $('m8-run').textContent = 'Chạy 40 bước';
-      $('m8-run').setAttribute('aria-pressed', 'false');
+      $('m9-run').textContent = 'Chạy 40 bước';
+      $('m9-run').setAttribute('aria-pressed', 'false');
     }
     draw();
   }
-  $('m8-step').addEventListener('click', step);
-  $('m8-reset').addEventListener('click', reset);
-  $('m8-run').addEventListener('click', function () {
+  $('m9-step').addEventListener('click', step);
+  $('m9-reset').addEventListener('click', reset);
+  $('m9-run').addEventListener('click', function () {
     var btn = this;
     /* Nút này bật/tắt, nên nhãn phải nói nó đang ở trạng thái nào — không thì bấm
        lần hai để dừng là chuyện chỉ người viết code biết. */
@@ -3496,7 +3717,7 @@ var SURF = [
       if (++n >= 40) { clearInterval(timer); timer = null; label(false); }
     }, 60);
   });
-  $('m8-a').addEventListener('input', draw);
+  $('m9-a').addEventListener('input', draw);
   onDrag(svg, function (p) {
     start = [Math.max(x0, Math.min(x1, x0 + (p.x - 20) / (W - 40) * (x1 - x0))),
              Math.max(y0, Math.min(y1, y0 + (H - 20 - p.y) / (H - 40) * (y1 - y0)))];
@@ -3505,9 +3726,9 @@ var SURF = [
   /* Mỗi mặt có một khoảng α riêng để nói được điều nó dạy: máng hẹp phân kỳ từ 0,083
      (hệ số theo y là 1 − 24α) nên giữ nguyên α = 0,10 của cái bát là người đọc bấm
      sang máng hẹp và chỉ thấy nổ, không bao giờ thấy zíc-zắc kinh điển. */
-  chipGroup('m8-sf', 's', function (v) {
+  chipGroup('m9-sf', 's', function (v) {
     si = +v;
-    $('m8-a').value = si === 1 ? 6 : 10;
+    $('m9-a').value = si === 1 ? 6 : 10;
     reset();
   });
   /* reset() chứ không phải draw(): nó là chỗ duy nhất chốt f0 (sai số ở chỗ xuất
@@ -3515,14 +3736,14 @@ var SURF = [
   redraws.push(draw); reset();
 })();
 
-/* ═══════════════════ mô hình 9 · quy tắc chuỗi ═══════════════════ */
+/* ═══════════════════ mô hình 10 · quy tắc chuỗi ═══════════════════ */
 (function () {
-  var svg = $('m9-svg'); if (!svg) return;
+  var svg = $('m10-svg'); if (!svg) return;
   function draw() {
     /* chia 20, không chia 10: lời dẫn bảo người đọc đặt cả ba tỉ số về 0,25 —
        con số ấy phải đặt được, mà bước 0,1 thì không chạm tới. */
-    var g1 = +$('m9-g1').value / 20, g2 = +$('m9-g2').value / 20, g3 = +$('m9-g3').value / 20;
-    $('m9-g1v').textContent = fmt(g1); $('m9-g2v').textContent = fmt(g2); $('m9-g3v').textContent = fmt(g3);
+    var g1 = +$('m10-g1').value / 20, g2 = +$('m10-g2').value / 20, g3 = +$('m10-g3').value / 20;
+    $('m10-g1v').textContent = fmt(g1); $('m10-g2v').textContent = fmt(g2); $('m10-g3v').textContent = fmt(g3);
     var tot = g1 * g2 * g3;
     clear(svg);
     var g = el(svg, 'g');
@@ -3559,24 +3780,24 @@ var SURF = [
       : ten > 50 ? 'Tín hiệu nhân lên ' + tenTxt + ' lần — nổ mất kiểm soát (gradient nổ).'
       : 'Tín hiệu còn ×' + tenTxt + ' — vẫn dùng được sau 10 khâu.', 'vs');
 
-    $('m9-tot').textContent = fmt(tot);
+    $('m10-tot').textContent = fmt(tot);
     /* Đây là dy/dx: nhích đầu vào một ĐƠN VỊ thì đầu ra nhích bấy nhiêu đơn vị.
        Đừng viết thành phần trăm — với một dây nhân thuần thì nhích 1% đầu vào luôn
        cho đúng 1% đầu ra, bất kể tỉ số là 3 hay 300. Đó là độ co giãn, không phải
        đạo hàm, và lẫn hai thứ ấy ngay trong mô hình dạy quy tắc chuỗi thì tệ. */
-    $('m9-nudge').textContent = (tot >= 0 ? '+' : '') + fmt(tot);
-    $('m9-ten').textContent = tenTxt;
-    $('m9-b10').className = 'read ' + (ten < 0.01 ? 'bad' : ten > 50 ? 'bad' : 'good');
-    $('m9-say').textContent = 'Ba tỉ số nhân vào nhau: ' + fmt(g1) + ' × ' + fmt(g2) + ' × ' + fmt(g3) + ' = ' + fmt(tot) +
+    $('m10-nudge').textContent = (tot >= 0 ? '+' : '') + fmt(tot);
+    $('m10-ten').textContent = tenTxt;
+    $('m10-b10').className = 'read ' + (ten < 0.01 ? 'bad' : ten > 50 ? 'bad' : 'good');
+    $('m10-say').textContent = 'Ba tỉ số nhân vào nhau: ' + fmt(g1) + ' × ' + fmt(g2) + ' × ' + fmt(g3) + ' = ' + fmt(tot) +
       '. Nhích đầu vào thêm 1 thì đầu ra nhích thêm ' + fmt(tot) + '.';
   }
-  ['m9-g1', 'm9-g2', 'm9-g3'].forEach(function (id) { $(id).addEventListener('input', draw); });
+  ['m10-g1', 'm10-g2', 'm10-g3'].forEach(function (id) { $(id).addEventListener('input', draw); });
   redraws.push(draw); draw();
 })();
 
-/* ═══════════════════ mô hình 10 · Newton so với tụt dốc ═══════════════════ */
+/* ═══════════════════ mô hình 11 · Newton so với tụt dốc ═══════════════════ */
 (function () {
-  var svg = $('m10-svg'); if (!svg) return;
+  var svg = $('m11-svg'); if (!svg) return;
   var FN = [
     { f: function (x) { return x * x * x * x - 3 * x * x; }, d1: function (x) { return 4 * x * x * x - 6 * x; },
       d2: function (x) { return 12 * x * x - 6; }, n: 'x⁴ − 3x²', y0: -3, y1: 6, min: Math.sqrt(1.5), x: 2.05 },
@@ -3592,8 +3813,8 @@ var SURF = [
     var ml = 44, mr = 14, mt = 14, mb = 30;
     var X = function (v) { return ml + (v - x0) / (x1 - x0) * (W - ml - mr); };
     var Y = function (v) { return H - mb - (v - y0) / (y1 - y0) * (H - mt - mb); };
-    $('m10-x0v').textContent = fmt(+$('m10-x0').value / 100);
-    $('m10-av').textContent = fmt(+$('m10-a').value / 100, 3);
+    $('m11-x0v').textContent = fmt(+$('m11-x0').value / 100);
+    $('m11-av').textContent = fmt(+$('m11-a').value / 100, 3);
     clear(svg);
     var g = el(svg, 'g');
     for (var k = -2; k <= 2; k++) {
@@ -3621,23 +3842,23 @@ var SURF = [
     dot(gx, css('--a'), 'tụt dốc', -8);
     dot(nx, css('--c'), 'Newton', 18);
 
-    $('m10-n').textContent = n;
-    $('m10-gx').textContent = fmt(gx, 3);
-    $('m10-nx').textContent = Math.abs(nx) > 999 ? 'bay đi' : fmt(nx, 3);
-    $('m10-true').textContent = fmt(F.min, 4);
+    $('m11-n').textContent = n;
+    $('m11-gx').textContent = fmt(gx, 3);
+    $('m11-nx').textContent = Math.abs(nx) > 999 ? 'bay đi' : fmt(nx, 3);
+    $('m11-true').textContent = fmt(F.min, 4);
     var dg = Math.abs(Math.abs(gx) - F.min), dn = Math.abs(Math.abs(nx) - F.min);
     var say;
     if (warn) say = warn;
     else if (n === 0) say = 'Hai chấm cùng xuất phát từ ' + fmt(gx, 2) + '. Bấm Bước để so tốc độ.';
     else if (dn < 1e-4 && dg > 1e-3) say = 'Sau ' + n + ' bước: Newton đã tới đáy (lệch ' + dn.toExponential(1).replace('.', ',') + '), tụt dốc còn lệch ' + fmt(dg, 4) + '. Newton dùng thêm ĐỘ CONG nên nó tự biết bước dài bao nhiêu.';
     else say = 'Sau ' + n + ' bước: tụt dốc lệch ' + fmt(dg, 4) + ', Newton lệch ' + fmt(dn, 4) + '.';
-    $('m10-say').textContent = say;
+    $('m11-say').textContent = say;
   }
   function reset() {
-    gx = nx = +$('m10-x0').value / 100; n = 0; warn = ''; draw();
+    gx = nx = +$('m11-x0').value / 100; n = 0; warn = ''; draw();
   }
-  $('m10-step').addEventListener('click', function () {
-    var F = FN[fi], a = +$('m10-a').value / 100;
+  $('m11-step').addEventListener('click', function () {
+    var F = FN[fi], a = +$('m11-a').value / 100;
     gx = gx - a * F.d1(gx);
     var h = F.d2(nx);
     if (Math.abs(h) < 0.05) {
@@ -3652,10 +3873,10 @@ var SURF = [
     if (!isFinite(nx) || Math.abs(nx) > 1e6) nx = Math.sign(nx || 1) * 1e6;
     n++; draw();
   });
-  $('m10-reset').addEventListener('click', reset);
-  $('m10-x0').addEventListener('input', reset);
-  $('m10-a').addEventListener('input', draw);
-  chipGroup('m10-fn', 'f', function (v) { fi = +v; reset(); });
+  $('m11-reset').addEventListener('click', reset);
+  $('m11-x0').addEventListener('input', reset);
+  $('m11-a').addEventListener('input', draw);
+  chipGroup('m11-fn', 'f', function (v) { fi = +v; reset(); });
   redraws.push(draw); reset();
 })();
 
@@ -3700,9 +3921,9 @@ function tcrit(conf, df) {
   return (lo + hi) / 2;
 }
 
-/* ═══════════════════ mô hình 11 · Bayes trên 1.000 người ═══════════════════ */
+/* ═══════════════════ mô hình 12 · Bayes trên 1.000 người ═══════════════════ */
 (function () {
-  var svg = $('m11-svg'); if (!svg) return;
+  var svg = $('m12-svg'); if (!svg) return;
   var COLS = 50, ROWS = 20, STEP = 12, CELL = 10.4;
   /* 1.000 ô KHÔNG bao giờ đổi vị trí, chỉ đổi màu — nên dựng một lần rồi mỗi lần vẽ
      chỉ setAttribute('fill'). Xoá và dựng lại cả nghìn hình mỗi lần kéo thanh trượt
@@ -3716,12 +3937,12 @@ function tcrit(conf, df) {
     }
   }
   function draw() {
-    var prev = +$('m11-prev').value / 1000;
-    var sens = +$('m11-sens').value / 100;
-    var spec = +$('m11-spec').value / 100;
-    $('m11-prevv').textContent = fmt(prev * 100, 1) + '%';
-    $('m11-sensv').textContent = fmt(sens * 100, 0) + '%';
-    $('m11-specv').textContent = fmt(spec * 100, 0) + '%';
+    var prev = +$('m12-prev').value / 1000;
+    var sens = +$('m12-sens').value / 100;
+    var spec = +$('m12-spec').value / 100;
+    $('m12-prevv').textContent = fmt(prev * 100, 1) + '%';
+    $('m12-sensv').textContent = fmt(sens * 100, 0) + '%';
+    $('m12-specv').textContent = fmt(spec * 100, 0) + '%';
     /* số người trên đúng 1.000, làm tròn để lấp lưới; con số đọc ra thì dùng giá trị thật */
     var nD = Math.round(1000 * prev);
     var tp = Math.round(nD * sens), fn = nD - tp;
@@ -3766,33 +3987,33 @@ function tcrit(conf, df) {
         np + ' người bị máy báo dương (trong viền nét đứt) — trong đó ' + tp + ' người bệnh thật', 'vt');
     }
     var post = (prev * sens) / (prev * sens + (1 - prev) * (1 - spec));
-    $('m11-post').innerHTML = fmt(post * 100, 1) + '<span class="u">%</span>';
-    $('m11-fp').textContent = fmt((1 - prev) * (1 - spec) * 1000, 1);
-    $('m11-tp').textContent = fmt(prev * sens * 1000, 1);
-    $('m11-fn').textContent = fmt(prev * (1 - sens) * 1000, 1);
+    $('m12-post').innerHTML = fmt(post * 100, 1) + '<span class="u">%</span>';
+    $('m12-fp').textContent = fmt((1 - prev) * (1 - spec) * 1000, 1);
+    $('m12-tp').textContent = fmt(prev * sens * 1000, 1);
+    $('m12-fn').textContent = fmt(prev * (1 - sens) * 1000, 1);
     var ratio = post > 0 ? 1 / post : 0;
     var say;
     if (post < 0.2) say = 'Trong ' + fmt(np, 0) + ' người bị báo dương, chỉ khoảng ' + fmt(prev * sens * 1000, 1) +
       ' người bệnh thật — tức 1 trên ' + fmt(ratio, 1) + '. Máy không tệ; bệnh quá hiếm.';
     else if (post < 0.6) say = 'Xác suất bệnh thật là ' + pct(post, 1) + ' — gần như tung đồng xu. Cùng cái máy ấy, chỉ đổi tỉ lệ mắc.';
     else say = 'Xác suất bệnh thật ' + pct(post, 1) + ': bệnh đã đủ phổ biến để một kết quả dương tính đáng tin. Tỉ lệ mắc làm gần hết việc này, không phải độ chính xác của máy.';
-    $('m11-say').textContent = say;
+    $('m12-say').textContent = say;
   }
-  ['m11-prev', 'm11-sens', 'm11-spec'].forEach(function (id) { $(id).addEventListener('input', draw); });
+  ['m12-prev', 'm12-sens', 'm12-spec'].forEach(function (id) { $(id).addEventListener('input', draw); });
   redraws.push(draw); draw();
 })();
 
-/* ═══════════════════ mô hình 12 · nhị thức ═══════════════════ */
+/* ═══════════════════ mô hình 13 · nhị thức ═══════════════════ */
 (function () {
-  var svg = $('m12-svg'); if (!svg) return;
+  var svg = $('m13-svg'); if (!svg) return;
   var W = 620, H = 300;
   function draw() {
-    var n = +$('m12-n').value, p = +$('m12-p').value / 100;
-    var ks = $('m12-k');
+    var n = +$('m13-n').value, p = +$('m13-p').value / 100;
+    var ks = $('m13-k');
     ks.max = n;
     if (+ks.value > n) ks.value = n;
     var k = +ks.value;
-    $('m12-nv').textContent = n; $('m12-pv').textContent = fmt(p); $('m12-kv').textContent = k;
+    $('m13-nv').textContent = n; $('m13-pv').textContent = fmt(p); $('m13-kv').textContent = k;
     var ml = 42, mr = 12, mt = 16, mb = 44;
     var probs = [], max = 0, i;
     for (i = 0; i <= n; i++) { probs.push(binompmf(n, i, p)); if (probs[i] > max) max = probs[i]; }
@@ -3824,26 +4045,26 @@ function tcrit(conf, df) {
     }
     var pk = probs[k] || 0, pge = 0;
     for (i = k; i <= n; i++) pge += probs[i];
-    $('m12-pk').innerHTML = fmt(pk * 100, 2) + '<span class="u">%</span>';
-    $('m12-pge').innerHTML = fmt(pge * 100, 2) + '<span class="u">%</span>';
-    $('m12-mean').textContent = fmt(mu, 1);
-    $('m12-sd').textContent = fmt(sd);
+    $('m13-pk').innerHTML = fmt(pk * 100, 2) + '<span class="u">%</span>';
+    $('m13-pge').innerHTML = fmt(pge * 100, 2) + '<span class="u">%</span>';
+    $('m13-mean').textContent = fmt(mu, 1);
+    $('m13-sd').textContent = fmt(sd);
     var say = 'Với n = ' + n + ', p = ' + fmt(p) + ': ra ' + k + ' mặt ngửa hoặc hơn xảy ra ' + fmt(pge * 100, 2) + '% số lượt.';
     if (n >= 30) say += ' Dãy cột đã thành hình chuông — đường đen là phân phối chuẩn với μ = ' + fmt(mu, 1) + ' và σ = ' + fmt(sd) + ', khớp gần như hoàn toàn.';
     if (pge < 0.01) say += ' Dưới 1%: nếu thấy chuyện này thật thì nên nghi đồng xu, không nghi may rủi.';
-    $('m12-say').textContent = say;
+    $('m13-say').textContent = say;
   }
-  ['m12-n', 'm12-p', 'm12-k'].forEach(function (id) { $(id).addEventListener('input', draw); });
+  ['m13-n', 'm13-p', 'm13-k'].forEach(function (id) { $(id).addEventListener('input', draw); });
   redraws.push(draw); draw();
 })();
 
-/* ═══════════════════ mô hình 13 · tương quan ═══════════════════ */
+/* ═══════════════════ mô hình 14 · tương quan ═══════════════════ */
 (function () {
-  var svg = $('m13-svg'); if (!svg) return;
+  var svg = $('m14-svg'); if (!svg) return;
   var mode = 'lin', W = 620, H = 320;
   var noise = (function () { var r = rng(770077), o = []; for (var i = 0; i < 41; i++) o.push(gauss(r)); return o; })();
   function pts() {
-    var slope = +$('m13-slope').value / 10, nz = +$('m13-noise').value / 100;
+    var slope = +$('m14-slope').value / 10, nz = +$('m14-noise').value / 100;
     var out = [], i, x;
     if (mode === 'lin') {
       for (i = 0; i < 40; i++) { x = -2 + 4 * i / 39; out.push([x, slope * x + nz * noise[i] * 2]); }
@@ -3856,8 +4077,8 @@ function tcrit(conf, df) {
     return out;
   }
   function draw() {
-    $('m13-slopev').textContent = fmt(+$('m13-slope').value / 10);
-    $('m13-noisev').textContent = fmt(+$('m13-noise').value / 100);
+    $('m14-slopev').textContent = fmt(+$('m14-slope').value / 10);
+    $('m14-noisev').textContent = fmt(+$('m14-noise').value / 100);
     var P = pts(), n = P.length, i;
     var mx = 0, my = 0;
     P.forEach(function (q) { mx += q[0]; my += q[1]; });
@@ -3888,25 +4109,25 @@ function tcrit(conf, df) {
     P.forEach(function (q) {
       el(g, 'circle', { cx: X(q[0]), cy: Y(Math.max(y0, Math.min(y1, q[1]))), r: 4, fill: css('--p'), opacity: 0.8 });
     });
-    $('m13-r').textContent = fmt(r);
-    $('m13-cov').textContent = fmt(cov);
-    $('m13-r2').textContent = fmt(r * r);
+    $('m14-r').textContent = fmt(r);
+    $('m14-cov').textContent = fmt(cov);
+    $('m14-r2').textContent = fmt(r * r);
     var say;
     if (mode === 'u') say = 'r = ' + fmt(r) + ' — gần bằng 0, mà quan hệ thì rõ như ban ngày. r chỉ đo quan hệ THEO ĐƯỜNG THẲNG, và ở đây không có đường thẳng nào tả được hình chữ U.';
     else if (mode === 'out') say = 'r = ' + fmt(r) + ' — 39 điểm đầu chẳng liên quan gì nhau, nhưng MỘT điểm lạc ở góc trên đủ để đẩy r lên cao. Một điểm trên 40 đã lái được kết luận.';
     else if (Math.abs(r) > 0.9) say = 'r = ' + fmt(r) + ': gần như thẳng hàng. r² = ' + fmt(r * r) + ' nghĩa là đường thẳng giải thích được ' + pct(r * r, 0) + ' biến thiên của y.';
     else if (Math.abs(r) > 0.4) say = 'r = ' + fmt(r) + ': có xu hướng nhưng nhiễu nhiều. Nhìn đám điểm thì thấy ngay điều mà con số r không nói hết.';
     else say = 'r = ' + fmt(r) + ': gần như không có quan hệ thẳng nào.';
-    $('m13-say').textContent = say;
+    $('m14-say').textContent = say;
   }
-  ['m13-slope', 'm13-noise'].forEach(function (id) { $(id).addEventListener('input', draw); });
-  chipGroup('m13-mode', 'm', function (m) { mode = m; draw(); });
+  ['m14-slope', 'm14-noise'].forEach(function (id) { $(id).addEventListener('input', draw); });
+  chipGroup('m14-mode', 'm', function (m) { mode = m; draw(); });
   redraws.push(draw); draw();
 })();
 
-/* ═══════════════════ mô hình 14 · giới hạn trung tâm ═══════════════════ */
+/* ═══════════════════ mô hình 15 · giới hạn trung tâm ═══════════════════ */
 (function () {
-  var svg = $('m14-svg'); if (!svg) return;
+  var svg = $('m15-svg'); if (!svg) return;
   var si = 0, W = 620, H = 360, REP = 3000, rawCache = {};
   var SRC = [
     { n: 'xúc xắc (đều)', lo: 1, hi: 6, pick: function (r) { return 1 + Math.floor(r() * 6); } },
@@ -3931,8 +4152,8 @@ function tcrit(conf, df) {
     });
   }
   function draw() {
-    var S = SRC[si], n = +$('m14-n').value;
-    $('m14-nv').textContent = n;
+    var S = SRC[si], n = +$('m15-n').value;
+    $('m15-nv').textContent = n;
     /* 40.000 mẫu cho σ gốc: với 6.000 thì sai số lấy mẫu làm nó hiện 1,72 trong khi
        mục 4.2 nói σ của xúc xắc là 1,708 — người đọc so hai chỗ sẽ tưởng có lỗi.
        Nhưng cột TRÊN chỉ phụ thuộc phân phối đã chọn, không phụ thuộc n — nên nhớ lại
@@ -3980,30 +4201,30 @@ function tcrit(conf, df) {
       var tv = lo + (hi - lo) * i / 5;
       txt(g, X(tv), 336, fmt(tv, 1), 'vm', 'middle');
     }
-    $('m14-s0').textContent = fmt(sd0);
-    $('m14-pred').textContent = fmt(pred);
-    $('m14-obs').textContent = fmt(sdm);
+    $('m15-s0').textContent = fmt(sd0);
+    $('m15-pred').textContent = fmt(pred);
+    $('m15-obs').textContent = fmt(sdm);
     var say;
     if (n === 1) say = 'Với n = 1, "trung bình của 1 mẫu" chính là dữ liệu gốc — hai hình giống nhau, kể cả khi hình ấy méo.';
     else if (n < 6) say = 'n = ' + n + ': hình dưới đã bắt đầu gom về giữa và bớt méo, dù dữ liệu gốc không đổi gì.';
     else say = 'n = ' + n + ': hình dưới là cái chuông, và σ đo được (' + fmt(sdm) + ') khớp với σ/√n dự đoán (' + fmt(pred) +
       '). Dữ liệu gốc vẫn méo y như cũ — định lý không cần nó đẹp.';
-    $('m14-say').textContent = say;
+    $('m15-say').textContent = say;
   }
-  $('m14-n').addEventListener('input', draw);
-  chipGroup('m14-src', 's', function (v) { si = +v; draw(); });
+  $('m15-n').addEventListener('input', draw);
+  chipGroup('m15-src', 's', function (v) { si = +v; draw(); });
   redraws.push(draw); draw();
 })();
 
-/* ═══════════════════ mô hình 15 · MLE ═══════════════════ */
+/* ═══════════════════ mô hình 16 · MLE ═══════════════════ */
 (function () {
-  var svg = $('m15-svg'); if (!svg) return;
+  var svg = $('m16-svg'); if (!svg) return;
   var DATA = [167, 170, 172, 169, 177], W = 620, H = 320;
   var mean = DATA.reduce(function (a, b) { return a + b; }, 0) / DATA.length;
   var sdMLE = Math.sqrt(DATA.reduce(function (a, b) { return a + (b - mean) * (b - mean); }, 0) / DATA.length);
   function draw() {
-    var mu = +$('m15-mu').value / 10, sd = +$('m15-sd').value / 10;
-    $('m15-muv').textContent = fmt(mu, 1); $('m15-sdv').textContent = fmt(sd, 1);
+    var mu = +$('m16-mu').value / 10, sd = +$('m16-sd').value / 10;
+    $('m16-muv').textContent = fmt(mu, 1); $('m16-sdv').textContent = fmt(sd, 1);
     var x0 = 155, x1 = 190, ml = 46, mr = 14, mt = 16, mb = 34;
     var X = function (v) { return ml + (v - x0) / (x1 - x0) * (W - ml - mr); };
     var top = normpdf(mu, mu, Math.max(1, sd));
@@ -4033,9 +4254,9 @@ function tcrit(conf, df) {
     });
     el(g, 'line', { x1: X(mu), y1: mt, x2: X(mu), y2: H - mb, stroke: css('--p'), 'stroke-width': 1, 'stroke-dasharray': '4 4' });
     txt(g, X(mu) + 6, mt + 12, 'μ = ' + fmt(mu, 1), 'vt');
-    $('m15-ll').textContent = fmt(ll, 2);
-    $('m15-mean').textContent = fmt(mean, 1);
-    $('m15-sdmle').textContent = fmt(sdMLE);
+    $('m16-ll').textContent = fmt(ll, 2);
+    $('m16-mean').textContent = fmt(mean, 1);
+    $('m16-sdmle').textContent = fmt(sdMLE);
     var best = 0;
     DATA.forEach(function (v) { best += Math.log(normpdf(v, mean, sdMLE)); });
     var gap = best - ll;
@@ -4046,24 +4267,24 @@ function tcrit(conf, df) {
     else if (sd > sdMLE * 1.8) say = 'Chuông quá BÉO: nó không loại trừ gì cả nên mỗi điểm chỉ được một chút mật độ. Hợp lý kém chỗ tốt nhất ' + fmt(gap, 2) + '.';
     else if (sd < sdMLE * 0.6) say = 'Chuông quá GẦY: những điểm ở xa bị trả giá rất đắt. Hợp lý kém chỗ tốt nhất ' + fmt(gap, 2) + '.';
     else say = 'Gần chỗ tốt nhất rồi — còn kém ' + fmt(gap, 2) + '. Bấm nút để nhảy tới đúng nghiệm MLE.';
-    $('m15-say').textContent = say;
+    $('m16-say').textContent = say;
   }
-  $('m15-best').addEventListener('click', function () {
-    $('m15-mu').value = Math.round(mean * 10);
-    $('m15-sd').value = Math.round(sdMLE * 10);
+  $('m16-best').addEventListener('click', function () {
+    $('m16-mu').value = Math.round(mean * 10);
+    $('m16-sd').value = Math.round(sdMLE * 10);
     draw();
   });
-  ['m15-mu', 'm15-sd'].forEach(function (id) { $(id).addEventListener('input', draw); });
+  ['m16-mu', 'm16-sd'].forEach(function (id) { $(id).addEventListener('input', draw); });
   redraws.push(draw); draw();
 })();
 
-/* ═══════════════════ mô hình 16 · khoảng tin cậy ═══════════════════ */
+/* ═══════════════════ mô hình 17 · khoảng tin cậy ═══════════════════ */
 (function () {
-  var svg = $('m16-svg'); if (!svg) return;
+  var svg = $('m17-svg'); if (!svg) return;
   var MU = 170, SD = 8, K = 100, level = 95, seed = 12345, W = 620, H = 340;
   function draw() {
-    var n = +$('m16-n').value;
-    $('m16-nv').textContent = n;
+    var n = +$('m17-n').value;
+    $('m17-nv').textContent = n;
     var conf = level / 100, tc = tcrit(conf, n - 1);
     var r = rng(seed), rows = [], i, j, hit = 0, wsum = 0;
     for (i = 0; i < K; i++) {
@@ -4095,28 +4316,28 @@ function tcrit(conf, df) {
       el(g, 'line', { x1: xa, y1: y, x2: xb, y2: y, stroke: c, 'stroke-width': row[2] ? 1.5 : 2.2, opacity: row[2] ? 0.62 : 1 });
       el(g, 'circle', { cx: X(row[0]), cy: y, r: 1.7, fill: c });
     });
-    $('m16-hit').textContent = hit;
-    $('m16-miss').textContent = K - hit;
-    $('m16-w').innerHTML = fmt(wsum / K, 1) + '<span class="u">cm</span>';
-    $('m16-say').textContent = 'Mức ' + level + '%, n = ' + n + ': ' + (K - hit) + ' trên 100 khoảng bắn trượt (lý thuyết chờ khoảng ' +
+    $('m17-hit').textContent = hit;
+    $('m17-miss').textContent = K - hit;
+    $('m17-w').innerHTML = fmt(wsum / K, 1) + '<span class="u">cm</span>';
+    $('m17-say').textContent = 'Mức ' + level + '%, n = ' + n + ': ' + (K - hit) + ' trên 100 khoảng bắn trượt (lý thuyết chờ khoảng ' +
       fmt(K * (1 - conf), 0) + '), bề rộng trung bình ' + fmt(wsum / K, 1) + ' cm. Hệ số t* = ' + fmt(tc, 3) +
       ' (với n lớn nó tiến về ' + (level === 95 ? '1,960' : level === 99 ? '2,576' : '1,282') + ').';
   }
-  $('m16-n').addEventListener('input', draw);
-  $('m16-again').addEventListener('click', function () { seed = (seed * 1103515245 + 12345) >>> 0; draw(); });
-  chipGroup('m16-lv', 'l', function (v) { level = +v; draw(); });
+  $('m17-n').addEventListener('input', draw);
+  $('m17-again').addEventListener('click', function () { seed = (seed * 1103515245 + 12345) >>> 0; draw(); });
+  chipGroup('m17-lv', 'l', function (v) { level = +v; draw(); });
   redraws.push(draw); draw();
 })();
 
-/* ═══════════════════ mô hình 17 · A/B test ═══════════════════ */
+/* ═══════════════════ mô hình 18 · A/B test ═══════════════════ */
 (function () {
-  var svg = $('m17-svg'); if (!svg) return;
+  var svg = $('m18-svg'); if (!svg) return;
   var W = 620, H = 300;
   function draw() {
-    var n = +$('m17-n').value, pa = +$('m17-pa').value / 100, pb = +$('m17-pb').value / 100;
-    $('m17-nv').textContent = n;
-    $('m17-pav').textContent = fmt(pa * 100, 0) + '%';
-    $('m17-pbv').textContent = fmt(pb * 100, 0) + '%';
+    var n = +$('m18-n').value, pa = +$('m18-pa').value / 100, pb = +$('m18-pb').value / 100;
+    $('m18-nv').textContent = n;
+    $('m18-pav').textContent = fmt(pa * 100, 0) + '%';
+    $('m18-pbv').textContent = fmt(pb * 100, 0) + '%';
     /* Làm tròn TRƯỚC rồi lấy tỉ lệ từ số người: nếu tính bằng tỉ lệ thô mà hiển thị
        số người đã làm tròn thì hai chỗ lệch nhau — n = 50 với 33% sẽ ghi "17/50 so với
        17/50" (tức 34%) mà vẫn báo chênh lệch 0. */
@@ -4171,18 +4392,18 @@ function tcrit(conf, df) {
     }
     txt(g, ml, mt + 12, 'nếu hai bản THẬT SỰ như nhau, chênh lệch hay rơi vào đâu', 'vs');
 
-    $('m17-diff').innerHTML = (diff >= 0 ? '+' : '') + fmt(diff * 100, 1) + '<span class="u">điểm %</span>';
-    $('m17-z').textContent = fmt(z);
-    $('m17-p').textContent = pv < 0.0001 ? '<0,0001' : fmt(pv, 4);
+    $('m18-diff').innerHTML = (diff >= 0 ? '+' : '') + fmt(diff * 100, 1) + '<span class="u">điểm %</span>';
+    $('m18-z').textContent = fmt(z);
+    $('m18-p').textContent = pv < 0.0001 ? '<0,0001' : fmt(pv, 4);
     var sig = pv < 0.05;
-    $('m17-verdict').textContent = sig ? 'bác bỏ H₀' : 'chưa bác bỏ được';
-    $('m17-vbox').className = 'read ' + (sig ? 'good' : 'bad');
-    $('m17-say').textContent = 'Khoảng tin cậy 95% của chênh lệch: [' + fmt(lo * 100, 1) + '; ' + fmt(hi * 100, 1) + '] điểm phần trăm' +
+    $('m18-verdict').textContent = sig ? 'bác bỏ H₀' : 'chưa bác bỏ được';
+    $('m18-vbox').className = 'read ' + (sig ? 'good' : 'bad');
+    $('m18-say').textContent = 'Khoảng tin cậy 95% của chênh lệch: [' + fmt(lo * 100, 1) + '; ' + fmt(hi * 100, 1) + '] điểm phần trăm' +
       (sig ? '. Khoảng này không chứa 0, khớp với kết luận bác bỏ H₀.'
            : '. Khoảng này CHỨA 0 — nên chưa loại trừ được khả năng hai bản như nhau. Cùng chênh lệch ấy với cỡ mẫu lớn hơn thì kết luận có thể đổi.') +
       ' Mỗi bản: ' + cA + '/' + n + ' so với ' + cB + '/' + n + ' người mua.';
   }
-  ['m17-n', 'm17-pa', 'm17-pb'].forEach(function (id) { $(id).addEventListener('input', draw); });
+  ['m18-n', 'm18-pa', 'm18-pb'].forEach(function (id) { $(id).addEventListener('input', draw); });
   redraws.push(draw); draw();
 })();
 
@@ -4207,6 +4428,8 @@ var GLOSS = [
 ['linear independence','độc lập tuyến tính','Không hàng nào (hay vector nào) viết được thành tổ hợp của các hàng khác. Mất tính này là det = 0.','#s-khu','độc lập tuyến tính'],
 ['vector','vector','Một danh sách số có thứ tự, hình dung được như mũi tên &ldquo;sang phải bao nhiêu, lên trên bao nhiêu&rdquo;.','#s-vector',''],
 ['norm','chuẩn','Độ dài của vector. L2 là bay thẳng (√Σx²), L1 là đi theo phố (Σ|x|).','#s-vector','chuẩn L1|chuẩn L2'],
+['transpose','chuyển vị','Lật ma trận qua đường chéo chính: ô ở hàng i cột j sang hàng j cột i, nên cỡ m×n thành n×m. Viết Aᵀ. Nhân rồi lật thì ĐẢO thứ tự: (AB)ᵀ = BᵀAᵀ.','#s-transpose','chuyển vị'],
+['symmetric matrix','ma trận đối xứng','Ma trận vuông bằng đúng chuyển vị của chính nó: Aᵀ = A. Mọi trị riêng là số thực và các vector riêng vuông góc nhau — chỗ PCA dựa vào. Ma trận hiệp phương sai luôn đối xứng.','#s-transpose','ma trận đối xứng'],
 ['dot product','nhân vô hướng','Nhân từng cặp thành phần rồi cộng. Đo &ldquo;cùng hướng tới mức nào&rdquo;. Bằng 0 = vuông góc.','#s-dot','nhân vô hướng'],
 ['cosine similarity','độ tương đồng cosine','Nhân vô hướng chia cho hai độ dài. Thước &ldquo;hai thứ giống nhau bao nhiêu&rdquo; dùng khắp tìm kiếm và gợi ý.','#s-dot','độ tương đồng cosine'],
 ['orthogonal','vuông góc','Nhân vô hướng bằng 0. Trong dữ liệu: biết cái này không nói gì về cái kia.','#s-dot','vuông góc'],

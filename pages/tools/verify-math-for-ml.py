@@ -50,6 +50,16 @@ def num(label, value, d=2, ctx=''):
 
 
 # ─────────────────────────────── đại số tuyến tính ───────────────────────────
+def claim(label, ok, why=''):
+    """Đòi một LUẬT phải đúng, không phải một chuỗi phải có mặt. Dùng cho những
+    khẳng định mà bài phát biểu bằng lời — ví dụ (AB)ᵀ = BᵀAᵀ. need() bắt được
+    chuyện ai sửa con số; claim() bắt được chuyện chính cái luật bị viết sai."""
+    global checks
+    checks += 1
+    if not ok:
+        fails.append(f'{label}: {why or "luật trong bài không đúng"}')
+
+
 def det2(m):
     return m[0][0] * m[1][1] - m[0][1] * m[1][0]
 
@@ -103,6 +113,26 @@ def eig2(a, b, c, d):
         return None
     s = math.sqrt(disc)
     return tr / 2 + s, tr / 2 - s
+
+
+def T(M):
+    """Chuyển vị: đổi chỗ hai chỉ số."""
+    return [list(r) for r in zip(*M)]
+
+
+def matmul(A, B):
+    return [[sum(A[i][k] * B[k][j] for k in range(len(B))) for j in range(len(B[0]))]
+            for i in range(len(A))]
+
+
+def mono(M):
+    """Ma trận nguyên, viết đúng lối trang dùng trong <span class="mono">."""
+    return '[[' + '],['.join(','.join(str(x) for x in r) for r in M) + ']]'
+
+
+def mxspans(M):
+    """Ma trận trong khối .mx: mỗi ô một <span>, đọc theo hàng."""
+    return ''.join(f'<span>{x}</span>' for r in M for x in r)
 
 
 def run_algebra():
@@ -180,41 +210,88 @@ def run_algebra():
     M = [[3, 1], [1, 2]]
     dt = det2(M)
     inv = [[M[1][1] / dt, -M[0][1] / dt], [-M[1][0] / dt, M[0][0] / dt]]
-    assert_close('1.7 nghịch đảo', [inv[0][0], inv[0][1], inv[1][0], inv[1][1]], [0.4, -0.2, -0.2, 0.6])
-    need('1.7 det = 5', 'det A = 5')
+    assert_close('1.8 nghịch đảo', [inv[0][0], inv[0][1], inv[1][0], inv[1][1]], [0.4, -0.2, -0.2, 0.6])
+    need('1.8 det = 5', 'det A = 5')
     for cell in ['0,4', '−0,2', '0,6']:
-        need('1.7 ô nghịch đảo ' + cell, '>' + cell + '<')
+        need('1.8 ô nghịch đảo ' + cell, '>' + cell + '<')
 
     # 1.8 — trị riêng
     lam = eig2(3, 1, 1, 3)
-    assert_close('1.8 trị riêng [[3,1],[1,3]]', list(lam), [4, 2])
-    need('1.8 λ = 4', '<b>4 lần</b>')
-    need('1.8 λ = 2', '<b>2 lần</b>')
+    assert_close('1.9 trị riêng [[3,1],[1,3]]', list(lam), [4, 2])
+    need('1.9 λ = 4', '<b>4 lần</b>')
+    need('1.9 λ = 2', '<b>2 lần</b>')
 
     # 1.9 — PCA trên đúng 10 điểm của bảng
     X = [(1, 2), (2, 3), (3, 5), (4, 4), (5, 7), (6, 6), (7, 9), (8, 8), (9, 11), (10, 10)]
     n = len(X)
     mx = sum(p[0] for p in X) / n
     my = sum(p[1] for p in X) / n
-    assert_close('1.9 trung bình', [mx, my], [5.5, 6.5])
+    assert_close('1.10 trung bình', [mx, my], [5.5, 6.5])
     sxx = sum((p[0] - mx) ** 2 for p in X) / (n - 1)
     syy = sum((p[1] - my) ** 2 for p in X) / (n - 1)
     sxy = sum((p[0] - mx) * (p[1] - my) for p in X) / (n - 1)
     l1, l2 = eig2(sxx, sxy, sxy, syy)
-    num('1.9 λ1', l1, 2)
-    num('1.9 λ2', l2, 2)
-    num('1.9 giữ lại được', l1 / (l1 + l2) * 100, 1, ctx='<b>')
+    num('1.10 λ1', l1, 2)
+    num('1.10 λ2', l2, 2)
+    num('1.10 giữ lại được', l1 / (l1 + l2) * 100, 1, ctx='<b>')
     r = sxy / math.sqrt(sxx * syy)
-    num('1.9 tương quan', r, 2, ctx='r = ')
+    num('1.10 tương quan', r, 2, ctx='r = ')
     # trục chính nằm đúng 45° vì hai phương sai bằng nhau
     ang = math.degrees(math.atan2(1, 1))
     if abs(ang - 45) > 1e-9 or abs(sxx - syy) > 1e-9:
         fails.append('1.9: trục chính chỉ đúng 45° khi hai phương sai bằng nhau')
-    need('1.9 góc trục', 'đúng 45°')
+    need('1.10 góc trục', 'đúng 45°')
     ratio = l1 / l2
     if not 39.5 <= ratio <= 40.5:
         fails.append(f'1.9: tỉ số λ1/λ2 = {ratio:.2f}, trang nói "40 lần"')
-    need('1.9 gấp 40 lần', '<b>40 lần</b>')
+    need('1.10 gấp 40 lần', '<b>40 lần</b>')
+
+    # ── 1.7 chuyển vị ────────────────────────────────────────────────────────
+    # Lật bảng: hàng thành cột. Kiểm cả chuỗi hiển thị lẫn CHÍNH LUẬT mà mục dạy.
+    A23 = [[1, 2, 3], [4, 5, 6]]
+    need('1.7 A cỡ 2×3', mxspans(A23), A23)
+    need('1.7 Aᵀ cỡ 3×2', mxspans(T(A23)), T(A23))
+    claim('1.7 lật hai lần', T(T(A23)) == A23, '(Aᵀ)ᵀ phải bằng A')
+    claim('1.7 cỡ đổi chỗ', (len(T(A23)), len(T(A23)[0])) == (len(A23[0]), len(A23)),
+          'm×n phải lật thành n×m')
+
+    # det(Aᵀ) = det(A) — lật không đổi hệ số phóng diện tích
+    Ad = [[3, 1], [4, 2]]
+    num('1.7 det A', det2(Ad), 0, ctx='det = 3·2 \u2212 1·4 = <b>')
+    num('1.7 det Aᵀ', det2(T(Ad)), 0, ctx='det = 3·2 \u2212 4·1 = <b>')
+    claim('1.7 det bất biến', det2(Ad) == det2(T(Ad)), 'det(Aᵀ) phải bằng det(A)')
+
+    # (AB)ᵀ = BᵀAᵀ, còn AᵀBᵀ thì KHÁC — chỗ mục này nói ai cũng nhớ sai lần đầu
+    A2, B2 = [[1, 2], [3, 4]], [[5, 6], [7, 8]]
+    AB = matmul(A2, B2)
+    need('1.7 AB', mono(AB), AB)
+    need('1.7 (AB)ᵀ', mono(T(AB)), T(AB))
+    need('1.7 BᵀAᵀ', mono(matmul(T(B2), T(A2))), matmul(T(B2), T(A2)))
+    need('1.7 AᵀBᵀ (khác)', mono(matmul(T(A2), T(B2))), matmul(T(A2), T(B2)))
+    claim('1.7 đảo thứ tự', matmul(T(B2), T(A2)) == T(AB),
+          '(AB)ᵀ = BᵀAᵀ không đúng với ví dụ đang in trong bài')
+    claim('1.7 phản chứng', matmul(T(A2), T(B2)) != T(AB),
+          'ví dụ phản chứng vô dụng — AᵀBᵀ lại trùng (AB)ᵀ')
+
+    # aᵀb ra một SỐ, abᵀ ra một MA TRẬN
+    av, bv = [2, 3], [4, 5]
+    num('1.7 aᵀb', sum(x * y for x, y in zip(av, bv)), 0, ctx='2·4 + 3·5 = <b>')
+    outer = [[x * y for y in bv] for x in av]
+    need('1.7 abᵀ', mono(outer), outer)
+
+    # XᵀX: vuông theo số đặc trưng, và luôn đối xứng
+    Xg = [[1, 2], [3, 1], [2, 4]]
+    G = matmul(T(Xg), Xg)
+    need('1.7 X cỡ 3×2', mxspans(Xg), Xg)
+    need('1.7 XᵀX', mxspans(G), G)
+    claim('1.7 XᵀX đối xứng', G == T(G), 'XᵀX phải đối xứng')
+    claim('1.7 XᵀX vuông', len(G) == len(G[0]) == len(Xg[0]),
+          'XᵀX phải vuông theo số đặc trưng')
+
+    # hình mà mô hình 4 gán nhãn "đối xứng 3×3" phải thật sự đối xứng
+    SYM = [[4, 1, 2], [1, 5, 3], [2, 3, 6]]
+    claim('mô hình 4 nhãn đối xứng', SYM == T(SYM),
+          'hình gán nhãn "đối xứng 3×3" nhưng lật ra khác')
 
 
 # ─────────────────────────────────── giải tích ───────────────────────────────
