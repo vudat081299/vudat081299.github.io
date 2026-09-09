@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-08",
+  "updated": "2026-09-09",
   "note": "Nội dung của index.html. LUẬT (chủ trang chốt 08/09/2026): mô tả CHỈ nói chủ đề của trang — không kể bộ phận hay tính năng của trang. Cắt: 'Interactive', 'Searchable', 'filter by', 'pop-ups', 'side drawer', 'tracked progress', '(Anh/Việt)', và mọi số đếm bộ phận trang ('4 acts', '16 mô hình tương tác', '7 phần'). Giữ: số đếm NỘI DUNG ('~79 lối ngụy biện', '50 nguyên tắc') vì đó là chủ đề. Trang công cụ (Loto, Cashy, JSON Analysis, Web Builder) thì việc nó làm chính là chủ đề — cứ tả. Thêm một trang = thêm một item, `key` phải chưa ai dùng. Số 'n page' của subject tính từ files, đừng ghi tay.",
   "sections": [
     {
@@ -92,7 +92,7 @@
       "id": "technology",
       "icon": "memory",
       "label": "Technology",
-      "desc": "Cryptography, machine learning, AI workflow & the UI kit these pages are built with.",
+      "desc": "Cryptography, the maths under machine learning, machine learning & deep learning, AI workflow & the UI kit these pages are built with.",
       "kind": "tiles",
       "items": [
         {
@@ -101,6 +101,13 @@
           "name": "Cryptography",
           "desc": "Dan Boneh's two courses, retold in Vietnamese — keeping secrets, proving integrity, combining the two without breaking either, and how two strangers agree on a key",
           "href": "pages/cryptography.html"
+        },
+        {
+          "key": "q",
+          "icon": "functions",
+          "name": "Mathematics for ML & Data Science",
+          "desc": "Luis Serrano's 3 courses, retold in Vietnamese — determinants & eigenvectors, gradients & gradient descent, Bayes & distributions, maximum likelihood, confidence intervals & p-values",
+          "href": "pages/mathematics-for-machine-learning.html"
         },
         {
           "key": "n",
