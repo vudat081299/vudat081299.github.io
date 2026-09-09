@@ -527,6 +527,7 @@ footer a { color:var(--muted); }
 
       <h4>Mang theo</h4>
       <a href="#s-cheat">Bảng tra cứu</a>
+      <a href="#s-dated">Cái gì đã trôi</a>
       <a href="#s-end">Năm câu mang theo</a>
       <a href="#s-names">Bảng tên thật</a>
     </nav>
@@ -1905,6 +1906,50 @@ footer a { color:var(--muted); }
         <div class="take">
           <span class="k">Mang theo</span>
           <p>Bảng 2 là chỗ để bắt đầu, bảng 3 là chỗ để nhìn khi máy không chịu chạy. Nếu phải bỏ ba bảng và giữ một, giữ bảng 1 — chọn sai điểm trừ thì máy vẫn học rất giỏi, chỉ là học sai việc.</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════ CÁI GÌ ĐÃ TRÔI ═══════════════════ -->
+      <section id="s-dated">
+        <p class="sechead"><b>Tra cứu</b> — tuổi của tài liệu, nói thẳng</p>
+        <h2 class="st">Cái gì còn đúng nguyên, cái gì đã trôi, và khoảng cách còn lại tới hôm nay</h2>
+
+        <p class="lede">Tám khoá gốc dạy xong khoảng năm 2018–2022. Đọc một tài liệu cũ mà không biết chỗ nào của nó đã cũ là cách chắc chắn nhất để tự tin sai. Mục này chia làm ba: thứ còn đúng lâu, thứ đã trôi, và thứ chưa bao giờ có trong khoá.</p>
+
+        <div class="box good-box">
+          <p class="box__k">Vẫn đúng nguyên, và sẽ còn đúng lâu</p>
+          <p><a href="#s-machine">Cỗ máy ba bộ phận</a> · <a href="#s-descent">tụt dốc</a> và cả họ bộ vặn núm · <a href="#s-nn">đi ngược để chia trách nhiệm</a> · <a href="#s-overfit">thuộc lòng và cách phạt</a> · <b>toàn bộ <a href="#s-diagnose">chương 8</a></b> (chia ba tập, hai con số, số đo, ngồi xem máy sai, lệch phân phối) · <a href="#s-image">nguyên lý kính lúp trượt</a> · <a href="#s-text">cơ chế attention</a> · chuẩn hoá · <span class="nm">skip connection</span> · <span class="nm">transfer learning</span>.</p>
+          <p>Đây là vật lý của lĩnh vực, không phải thời trang. Chương 8 bền nhất, vì nó nói về <b>quy trình làm việc</b> — và quy trình không đổi khi kiến trúc đổi.</p>
+        </div>
+
+        <h3>Đã trôi — biết để đi đọc thêm bên ngoài</h3>
+
+        <div class="steps">
+          <div class="step"><div class="n">1</div><div class="b"><p><b>Tỉ trọng.</b> Transformer chỉ là tuần cuối của khoá thứ năm. Hôm nay nó là trung tâm của gần như mọi thứ. Khung "một bên đọc, một bên viết" cho dịch máy ở <a href="#s-text">chương 11</a> đã nhường chỗ cho loại máy chỉ có bên viết, chạy bằng đúng một việc: đoán từ kế tiếp. Tên thật: <span class="nm">decoder-only model</span>.</p></div></div>
+          <div class="step"><div class="n">2</div><div class="b"><p><b>Quy mô đổi chất.</b> Khoá có dạy mượn mạng đã học bài khác, nhưng chuyện huấn luyện <i>một lần</i> ở cỡ cực lớn rồi cả thế giới dùng lại — bằng cách học tiếp một ít, hoặc chỉ bằng cách viết yêu cầu ra chữ — thì không có trong khoá. Tên thật: <span class="nm">foundation model</span>, và luật đằng sau nó là <span class="nm">scaling laws</span>.</p></div></div>
+          <div class="step"><div class="n">3</div><div class="b"><p><b>Thị giác.</b> Cắt tấm ảnh thành các ô rồi đối xử với chúng như một câu — <span class="nm">Vision Transformer</span> — và loại máy sinh ảnh bằng cách gỡ nhiễu dần từ một tấm nhiễu trắng — <span class="nm">diffusion model</span> — đều ra đời sau khoá học. Cả loại máy nối ảnh với chữ vào cùng một không gian vector cũng vậy.</p></div></div>
+          <div class="step"><div class="n">4</div><div class="b"><p><b>Cuốn sổ nhớ.</b> RNN và LSTM ở <a href="#s-text">chương 11</a> vẫn nên hiểu, vì chúng dạy ý tưởng cổng và trí nhớ rõ hơn bất cứ thứ gì. Nhưng hiếm khi còn là lựa chọn để bắt đầu một dự án về câu chữ.</p></div></div>
+          <div class="step"><div class="n">5</div><div class="b"><p><b>Chỗ ngồi cố định của mỗi từ.</b> <span class="nm">word2vec</span> và <span class="nm">GloVe</span> gán cho mỗi từ đúng một vector, nên "con chuột" trong "bắt chuột" và trong "bấm chuột" ngồi cùng một chỗ. Cách làm bây giờ là vector đổi theo câu chứa nó: <span class="nm">contextual embedding</span>.</p></div></div>
+          <div class="step"><div class="n">6</div><div class="b"><p><b>Công cụ.</b> Khoá dạy TensorFlow; phần lớn nghiên cứu hôm nay viết bằng PyTorch. Ý tưởng chuyển được nguyên vẹn, cú pháp thì không — và cú pháp là phần dễ học lại nhất.</p></div></div>
+        </div>
+
+        <div class="box">
+          <p class="box__k">Nhưng nhìn kỹ thì "đã trôi" ít hơn nó trông</p>
+          <p>Gần như mọi thứ trong danh sách trên là <b>lắp lại các mảnh ở trang này</b>, không phải nguyên lý mới. Mô hình nền = mượn mạng đã học ở quy mô cực lớn. Máy chỉ-có-bên-viết = máy đoán từ kế tiếp của <a href="#s-text">chương 11</a>, với khối lặp đổi thành attention. Vision Transformer = cắt ảnh thành ô rồi coi như chuỗi từ. Dạy máy theo phản hồi của người = <a href="#s-rl">học từ phần thưởng</a> ở chương 13, với điểm thưởng do người chấm; tên thật là <span class="nm">RLHF</span>.</p>
+          <p>Bạn không phải học lại từ đầu. Bạn đọc một bài báo mới và <b>nhận ra các mảnh</b>. Đó là toàn bộ giá trị của việc học phần nền cho tử tế.</p>
+        </div>
+
+        <h3>Ba thứ chưa bao giờ có trong khoá, mà dự án thật luôn cần</h3>
+
+        <div class="steps">
+          <div class="step"><div class="n">1</div><div class="b"><p><b>Nuôi cái máy sau khi nó đã chạy.</b> Đem ra dùng thật, theo dõi dữ liệu thật trôi dần khỏi dữ liệu lúc học, đánh phiên bản cho từng cái máy, học lại định kỳ, kiểm thử. Khoá dừng ở chỗ máy đạt điểm tốt; ngoài đời đó mới là giữa dự án. Tên thật của mảng việc này: <span class="nm">MLOps</span>.</p></div></div>
+          <div class="step"><div class="n">2</div><div class="b"><p><b>Dữ liệu ở đâu ra.</b> Khoá luôn cho sẵn tập dữ liệu. Ngoài đời đây là khâu tốn nhất: định nghĩa nhãn sao cho hai người gán ra cùng kết quả, đo mức họ đồng thuận, xử lý ca mơ hồ. Chính Ng sau này chuyển trọng tâm sang hướng sửa dữ liệu thay vì sửa mô hình — <span class="nm">data-centric AI</span>.</p></div></div>
+          <div class="step"><div class="n">3</div><div class="b"><p><b>Chấm điểm máy sinh.</b> Mọi số đo trong trang này — độ chính xác, F1, <span class="nm">BLEU</span> — đều cần một đáp án đúng để so. Với máy sinh chữ hay sinh ảnh thì không có đáp án đúng duy nhất, và việc chấm điểm trở thành một bài toán nghiên cứu riêng. Đây là khoảng trống lớn nhất giữa khoá học và hôm nay.</p></div></div>
+        </div>
+
+        <div class="take">
+          <span class="k">Mang theo</span>
+          <p>Tám khoá này cho bạn phần nền và bộ từ vựng — đủ để đọc bài báo và nói chuyện kỹ thuật. Nó không cho bạn trạng thái hiện tại của lĩnh vực, cũng không cho bạn kỹ năng nuôi một cái máy đang chạy. Biết rõ ranh giới đó thì tài liệu cũ vẫn là tài liệu tốt.</p>
         </div>
       </section>
 
@@ -3781,7 +3826,16 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['ε phần trăm số lần làm bừa', 'epsilon-greedy', 'không thăm dò thì không phát hiện mình tưởng sai'],
     ['rút ngẫu nhiên từ sổ kinh nghiệm', 'replay buffer', 'các bước liền nhau giống nhau quá'],
     ['nhích bản sao về từng chút', 'soft update', 'đích đứng yên hơn thì học ổn định hơn'],
-    ['thắng ở cuối thì công về đâu', 'credit assignment', 'toàn bộ độ khó của học tăng cường']
+    ['thắng ở cuối thì công về đâu', 'credit assignment', 'toàn bộ độ khó của học tăng cường'],
+
+    /* ── Tra cứu · những tên ra đời sau tám khoá gốc ──────────────────────── */
+    ['máy chỉ có bên viết, đoán từ kế tiếp', 'decoder-only model', 'thay khung một-bên-đọc-một-bên-viết ở chương 11'],
+    ['cắt ảnh thành ô rồi coi như chuỗi từ', 'Vision Transformer', 'attention của chương 11, đem sang ảnh'],
+    ['sinh ảnh bằng cách gỡ nhiễu dần', 'diffusion model', 'ra đời sau khoá học'],
+    ['vector của một từ đổi theo câu chứa nó', 'contextual embedding', 'thay chỗ ngồi cố định của word2vec'],
+    ['dạy máy theo phản hồi của người', 'RLHF', 'chương 13, với điểm thưởng do người chấm'],
+    ['nuôi cái máy sau khi nó đã chạy', 'MLOps', 'triển khai, theo dõi trôi, học lại định kỳ'],
+    ['sửa dữ liệu thay vì sửa mô hình', 'data-centric AI', 'hướng Ng chuyển sang sau tám khoá']
   ];
 
   function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
