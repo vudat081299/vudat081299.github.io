@@ -12,10 +12,11 @@ cách chúng chạy tự động**.
 | `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` | 2 |
 | `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` | 2 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2 |
+| `shop/` | — | `python3 shop/tools/lint-shop.py` | 2 |
 | các project khác | xem thư mục | — | — |
 
-`pages/` và `cooking/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự chứa,
-không có luật nội dung chung để viết ra. Cổng của chúng chỉ kiểm thứ đúng/sai khách quan —
+`pages/`, `cooking/` và `shop/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự
+chứa, không có luật nội dung chung để viết ra. Cổng của chúng chỉ kiểm thứ đúng/sai khách quan —
 id trùng, anchor gãy, asset thiếu, thẻ lệch.
 
 Ngoại lệ duy nhất trong `pages/`: `verify-math-for-ml.py` là cổng **kiến thức**, chỉ chạy khi
@@ -24,7 +25,14 @@ trị riêng, tỉ lệ PCA, dãy Newton, xác suất nhị thức, phân vị t
 đọc là mọi con số tính được đều kiểm được bằng máy — nên phải có một script tính lại thật, chứ
 không phải một lời hứa. `lint-pages.py` kiểm được thẻ lệch nhưng không biết `0,0546875` có phải
 là P(X≥8 | n=10, p=0,5) hay không. Trang nào sau này cũng nói số cụ thể thì làm thêm một cổng
-cùng kiểu, đừng nới cổng này ra thành cổng chung: mỗi trang có bộ số riêng. `cooking/` gồm bốn trang công thức (Việt, Hàn,
+cùng kiểu, đừng nới cổng này ra thành cổng chung: mỗi trang có bộ số riêng. `shop/` cũng có một cổng riêng cùng kiểu vì cùng lý do: đó là một storefront, nơi sai một con
+số thì khách trả nhầm tiền. `lint-shop.py` soi thẳng vào `shop/data/shop.json` — giá phải là số
+nguyên dương, giá gạch phải lớn hơn giá bán, `cat` phải trỏ vào danh mục có thật, tag của bộ chọn
+mùi phải khớp `mood` của ít nhất một sản phẩm, và `labels.ship_fee`/`free_ship` phải khớp con số
+viết trong đoạn văn `shipping`. Nó còn kiểm chiều ngược lại: chữ của khối lặp KHÔNG được nằm trong
+`index.html` (so theo text node, ngưỡng 0,40 — số đo được, xem comment trong file).
+
+`cooking/` gồm bốn trang công thức (Việt, Hàn,
 Âu mặn, Bánh Âu) dùng chung một khung filter/modal, cộng một trang kiến thức nền
 (`food-fundamentals` — explainer tĩnh, sơ đồ SVG thịt/bò, nhiệt độ, kỹ thuật, rượu); tách
 khỏi `pages/` để gom một chỗ, nên có cổng cùng bộ kiểm nhưng riêng thư mục.
