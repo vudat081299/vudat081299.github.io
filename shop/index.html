@@ -1,0 +1,1943 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>Lặng · Nến thơm thủ công</title>
+<meta name="description" content="Nến thơm sáp đậu nành rót tay từng mẻ nhỏ ở Sài Gòn. Bảy mùi lấy từ những chỗ có thật, tinh dầu, bình khuếch tán và phụ kiện." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,200..600,0..1,-50..0&display=swap" />
+
+<!-- Chọn nền TRƯỚC khi vẽ khung hình đầu tiên: nếu để JS cuối trang quyết định, người dùng
+     hệ tối sẽ thấy một nháy trắng. Lần đầu vào thì theo hệ, sau đó theo lựa chọn đã lưu. -->
+<script>
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('lang-theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') {
+    t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', t);
+  // Mọi khối hiện-dần mặc định trong suốt. Nếu JS bị chặn thì không ai bật chúng lên và
+  // trang thành một tờ giấy trắng. Nên trạng thái ẩn chỉ có hiệu lực khi lớp .js có mặt.
+  document.documentElement.classList.add('js');
+})();
+</script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOKEN — mọi màu, bo góc, bóng đổ của trang đều lấy từ đây.
+   Sáng là "giấy ngà + than ấm"; tối là "đêm + than hồng". Hero luôn tối: nó tự
+   khai lại token trong phạm vi của mình nên chữ bên trong tự đổi theo, không
+   phải viết lại từng màu.
+   ═══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --paper:      #FBF7F0;
+  --paper-2:    #F3EADC;
+  --card:       #FFFDF9;
+  --card-2:     #F8F1E6;
+  --ink:        #1C1815;
+  --ink-2:      #59504A;
+  --ink-3:      #8C8178;
+  --line:       rgba(28,24,21,.11);
+  --line-2:     rgba(28,24,21,.055);
+  --ember:      #B0511E;
+  --ember-2:    #D97B34;
+  --ember-soft: #F2BE84;
+  --gold:       #A2833C;
+  --night:      #120F0C;
+  --on-ember:   #FFF8EF;
+
+  --shadow-sm: 0 1px 2px rgba(48,32,18,.05), 0 6px 18px -10px rgba(48,32,18,.18);
+  --shadow-md: 0 2px 6px rgba(48,32,18,.06), 0 18px 40px -22px rgba(48,32,18,.30);
+  --shadow-lg: 0 4px 12px rgba(48,32,18,.07), 0 40px 90px -40px rgba(48,32,18,.45);
+
+  --r-lg: 22px; --r-md: 16px; --r-sm: 10px; --r-xs: 6px;
+  --f-display: "Cormorant Garamond", "Iowan Old Style", Georgia, "Times New Roman", serif;
+  --f-sans: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  --ease: cubic-bezier(.22,1,.36,1);
+  --ease-soft: cubic-bezier(.4,0,.2,1);
+  --maxw: 1200px;
+  --gut: clamp(20px, 5vw, 56px);
+  color-scheme: light;
+}
+
+html[data-theme="dark"] {
+  --paper:      #110E0C;
+  --paper-2:    #191411;
+  --card:       #191513;
+  --card-2:     #211B17;
+  --ink:        #F4ECE2;
+  --ink-2:      #C1B4A8;
+  --ink-3:      #8F8478;
+  --line:       rgba(244,236,226,.13);
+  --line-2:     rgba(244,236,226,.065);
+  --ember:      #E58A45;
+  --ember-2:    #F0A25E;
+  --ember-soft: #F7CE9C;
+  --gold:       #C9A45C;
+  --on-ember:   #1A1310;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.4), 0 6px 18px -10px rgba(0,0,0,.6);
+  --shadow-md: 0 2px 6px rgba(0,0,0,.45), 0 18px 40px -22px rgba(0,0,0,.75);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,.5), 0 40px 90px -40px rgba(0,0,0,.9);
+  color-scheme: dark;
+}
+
+/* ── nền tảng ─────────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--f-sans); font-size: 16px; font-weight: 350; line-height: 1.7;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+body.is-locked { overflow: hidden; }
+img, svg { display: block; max-width: 100%; }
+button, input, textarea, select { font: inherit; color: inherit; }
+a { color: inherit; }
+::selection { background: var(--ember); color: var(--on-ember); }
+
+:focus-visible {
+  outline: 2px solid var(--ember); outline-offset: 3px; border-radius: var(--r-xs);
+}
+
+/* Hạt giấy: một lớp nhiễu rất mỏng phủ toàn trang. Nó là thứ tách "màu phẳng trên
+   màn hình" khỏi "giấy". Để pointer-events:none kẻo nuốt mất cú bấm. */
+.grain {
+  position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: .5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+}
+html[data-theme="dark"] .grain { mix-blend-mode: screen; opacity: .22; }
+
+.ms {
+  font-family: "Material Symbols Rounded"; font-weight: normal; font-style: normal;
+  line-height: 1; letter-spacing: normal; text-transform: none; white-space: nowrap;
+  word-wrap: normal; direction: ltr; -webkit-font-feature-settings: "liga";
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24;
+  font-size: 22px; user-select: none;
+}
+.ms--sm { font-size: 18px; }
+.ms--lg { font-size: 30px; }
+
+.wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gut); }
+
+/* ── chữ ──────────────────────────────────────────────────────────────────── */
+.eyebrow {
+  font-size: 11px; font-weight: 500; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--ink-3); margin: 0 0 18px; display: flex; align-items: center; gap: 12px;
+}
+.eyebrow::before {
+  content: ""; width: 26px; height: 1px; background: currentColor; opacity: .5; flex: none;
+}
+.display {
+  font-family: var(--f-display); font-weight: 500; letter-spacing: -.015em;
+  line-height: .98; margin: 0; font-size: clamp(42px, 8.2vw, 96px);
+}
+.h2 {
+  font-family: var(--f-display); font-weight: 500; letter-spacing: -.012em;
+  line-height: 1.04; margin: 0; font-size: clamp(30px, 4.6vw, 54px);
+}
+.h3 {
+  font-family: var(--f-display); font-weight: 600; letter-spacing: -.01em;
+  line-height: 1.15; margin: 0; font-size: clamp(21px, 2.4vw, 27px);
+}
+.lede { color: var(--ink-2); font-size: clamp(15px, 1.5vw, 17.5px); line-height: 1.75; margin: 18px 0 0; }
+.muted { color: var(--ink-3); }
+em.ital { font-family: var(--f-display); font-style: italic; font-weight: 400; }
+
+.sec { padding: clamp(72px, 11vw, 140px) 0; position: relative; }
+.sec__head { max-width: 680px; margin-bottom: clamp(36px, 5vw, 64px); }
+.sec__head--center { margin-inline: auto; text-align: center; }
+.sec__head--center .eyebrow { justify-content: center; }
+.rule { height: 1px; background: var(--line); border: 0; margin: 0; }
+</style>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   THANH ĐIỀU HƯỚNG
+   Nó nằm đè lên hero tối, nên trước khi cuộn phải là chữ sáng. Thay vì viết hai
+   bộ màu cho từng phần tử, thanh tự khai --nav-fg và đổi đúng một biến khi dính.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.nav {
+  position: fixed; inset: 0 0 auto; z-index: 300;
+  --nav-fg: #F7F1E8; --nav-fg-2: rgba(247,241,232,.62); --nav-line: rgba(247,241,232,.16);
+  color: var(--nav-fg); padding: 20px 0;
+  border-bottom: 1px solid transparent;
+  transition: padding .45s var(--ease), background-color .45s var(--ease-soft),
+              border-color .45s, backdrop-filter .45s;
+}
+.nav.is-stuck {
+  --nav-fg: var(--ink); --nav-fg-2: var(--ink-3); --nav-line: var(--line);
+  padding: 11px 0; border-bottom-color: var(--line);
+  background: color-mix(in srgb, var(--paper) 84%, transparent);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+}
+.nav__in { display: flex; align-items: center; gap: 20px; }
+.nav__brand {
+  display: flex; align-items: center; gap: 11px; text-decoration: none; flex: none;
+  font-family: var(--f-display); font-size: 25px; font-weight: 600; letter-spacing: .01em;
+}
+.nav__mark { width: 34px; height: 34px; flex: none; }
+.nav__kind {
+  font-family: var(--f-sans); font-size: 9.5px; font-weight: 500; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--nav-fg-2); display: block; margin-top: -3px;
+}
+.nav__links { display: flex; gap: 4px; margin-inline: auto; }
+.nav__link {
+  position: relative; text-decoration: none; font-size: 13.5px; font-weight: 400;
+  padding: 8px 14px; border-radius: 999px; color: var(--nav-fg-2);
+  transition: color .25s, background-color .25s;
+}
+.nav__link:hover { color: var(--nav-fg); background: color-mix(in srgb, currentColor 9%, transparent); }
+.nav__link.is-active { color: var(--nav-fg); }
+.nav__link.is-active::after {
+  content: ""; position: absolute; left: 14px; right: 14px; bottom: 3px; height: 1px;
+  background: var(--ember-2);
+}
+.nav__acts { display: flex; align-items: center; gap: 8px; flex: none; }
+.iconbtn {
+  display: grid; place-items: center; width: 38px; height: 38px; border-radius: 999px;
+  background: transparent; border: 1px solid var(--nav-line, var(--line)); color: inherit; cursor: pointer;
+  transition: background-color .25s, border-color .25s, transform .3s var(--ease);
+}
+.iconbtn:hover { background: color-mix(in srgb, currentColor 10%, transparent); transform: translateY(-1px); }
+.nav__cart { width: auto; padding: 0 16px 0 13px; gap: 8px; font-size: 13.5px; font-weight: 500; }
+.nav__count {
+  min-width: 19px; height: 19px; padding: 0 5px; border-radius: 999px; font-size: 11px;
+  font-weight: 600; display: grid; place-items: center; background: var(--ember);
+  color: var(--on-ember); font-variant-numeric: tabular-nums;
+}
+.nav__count.is-zero { opacity: .28; background: currentColor; color: transparent; }
+.nav__count.is-pop { animation: pop .45s var(--ease); }
+@keyframes pop { 0% { transform: scale(1); } 38% { transform: scale(1.45); } 100% { transform: scale(1); } }
+.nav__burger { display: none; }
+
+/* bảng menu cho màn hình hẹp */
+.sheet {
+  position: fixed; inset: 0 0 auto; z-index: 290; padding: 92px var(--gut) 26px;
+  background: var(--paper); border-bottom: 1px solid var(--line);
+  transform: translateY(-102%); transition: transform .5s var(--ease); visibility: hidden;
+}
+.sheet.is-open { transform: none; visibility: visible; }
+.sheet a {
+  display: block; padding: 14px 0; text-decoration: none; border-bottom: 1px solid var(--line-2);
+  font-family: var(--f-display); font-size: 26px; font-weight: 500;
+}
+@media (max-width: 940px) {
+  .nav__links { display: none; }
+  .nav__burger { display: grid; }
+  .nav__in { justify-content: space-between; }
+  .nav__acts { margin-left: auto; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HERO — luôn là ban đêm, vì ngọn lửa chỉ đẹp khi xung quanh tối.
+   Phần còn lại của trang theo sáng/tối của người dùng; riêng khối này khai lại
+   token trong phạm vi của nó nên chữ bên trong tự đúng màu.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.hero {
+  position: relative; overflow: hidden; background: var(--night);
+  min-height: min(100svh, 940px); display: flex; align-items: center;
+  padding: clamp(112px, 16vh, 160px) 0 clamp(56px, 9vh, 96px);
+  --ink: #F8F2E9; --ink-2: rgba(248,242,233,.74); --ink-3: rgba(248,242,233,.5);
+  --line: rgba(248,242,233,.15); --line-2: rgba(248,242,233,.08);
+  color: var(--ink);
+}
+/* quầng sáng lớn quanh ngọn nến */
+.hero__amber {
+  position: absolute; left: 72%; top: 46%; width: 132vmax; height: 132vmax;
+  transform: translate(-50%, -50%); pointer-events: none;
+  background: radial-gradient(circle,
+    rgba(255,170,80,.30) 0%, rgba(255,140,55,.15) 22%,
+    rgba(190,90,35,.06) 42%, transparent 66%);
+  animation: breathe 7.5s ease-in-out infinite;
+}
+@keyframes breathe { 0%,100% { opacity: .86; transform: translate(-50%,-50%) scale(1); }
+                     50%     { opacity: 1;   transform: translate(-50%,-50%) scale(1.05); } }
+.hero__vignette {
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 90% 78% at 60% 44%, transparent 34%, rgba(8,6,4,.66) 100%);
+}
+/* vệt sáng ấm chạy theo con trỏ — chỉ bật khi có chuột thật */
+.hero__cursor {
+  position: absolute; width: 460px; height: 460px; left: 0; top: 0; pointer-events: none;
+  margin: -230px 0 0 -230px; opacity: 0; mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(255,186,110,.14) 0%, transparent 62%);
+  transition: opacity .6s;
+}
+@media (hover: hover) and (pointer: fine) { .hero:hover .hero__cursor { opacity: 1; } }
+
+.hero__grid {
+  position: relative; display: grid; align-items: center; gap: clamp(28px, 5vw, 72px);
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, .86fr); width: 100%;
+}
+.hero__copy { max-width: 600px; }
+.hero__title { font-size: clamp(46px, 8.6vw, 104px); }
+.hero__title .ln { display: block; overflow: hidden; }
+.hero__title .ln > span { display: block; }
+html.js .hero__title .ln > span {
+  transform: translateY(112%); animation: lineUp 1.15s var(--ease) forwards;
+}
+.hero__title .ln:nth-child(2) > span { animation-delay: .13s; }
+@keyframes lineUp { to { transform: none; } }
+html.js .hero__fade { opacity: 0; animation: fadeUp .95s var(--ease) forwards; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.hero__acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+.hero__trust {
+  display: flex; flex-wrap: wrap; gap: 10px 26px; margin: 40px 0 0; padding: 0; list-style: none;
+  font-size: 12.5px; color: var(--ink-3);
+}
+.hero__trust li { display: flex; align-items: center; gap: 8px; }
+.hero__trust .ms { font-size: 17px; color: var(--ember-soft); }
+
+.hero__cue {
+  position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-size: 10px; letter-spacing: .24em; text-transform: uppercase; color: var(--ink-3);
+  text-decoration: none;
+}
+.hero__cue i { display: block; width: 1px; height: 34px; background: linear-gradient(var(--ink-3), transparent); }
+.hero__cue i::after {
+  content: ""; display: block; width: 1px; height: 12px; background: var(--ember-2);
+  animation: cue 2.4s var(--ease-soft) infinite;
+}
+@keyframes cue { 0% { transform: translateY(-12px); opacity: 0; }
+                 35% { opacity: 1; } 100% { transform: translateY(34px); opacity: 0; } }
+
+@media (max-width: 900px) {
+  .hero__grid { grid-template-columns: 1fr; }
+  .hero__stage { order: -1; }
+  .hero__cue { display: none; }
+  .hero { padding-top: clamp(86px, 12vh, 112px); min-height: 0; }
+  .hero__grid { gap: 20px; }
+  .hero__acts { margin-top: 26px; }
+  .hero__trust { margin-top: 26px; }
+  .hero__title { font-size: clamp(40px, 11vw, 62px); }
+}
+@media (max-width: 420px) {
+  /* dòng phụ dưới tên thương hiệu là thứ đầu tiên bỏ được khi thanh trên cùng chật */
+  .nav__kind { display: none; }
+  .nav__brand { font-size: 22px; }
+}
+
+/* ── NGỌN NẾN ─────────────────────────────────────────────────────────────
+   Ba lớp lửa chồng lên nhau, mỗi lớp một chu kỳ lẻ (2,3s / 1,7s / 3,1s). Vì ba số
+   đó không chia hết cho nhau nên mắt không bao giờ bắt được điểm lặp — đó là toàn
+   bộ mẹo để lửa trông như lửa chứ không như một ảnh GIF. */
+.hero__stage { position: relative; display: grid; place-items: center; }
+.candle { width: min(100%, 440px); overflow: visible; }
+/* Phải đứng SAU quy tắc trên, không phải trong khối @media ở đầu file: cùng độ đặc hiệu
+   thì cái viết sau thắng. Trên điện thoại, để nguyên cỡ là cây nến ăn hết màn hình đầu và
+   câu tiêu đề — thứ nói trang này bán gì — rơi xuống dưới nếp gấp. */
+@media (max-width: 900px) { .candle { width: min(62vw, 232px); } }
+.cd-flame { transform-box: fill-box; transform-origin: 50% 100%; }
+.cd-flame--out  { animation: flick1 2.3s ease-in-out infinite; }
+.cd-flame--mid  { animation: flick2 1.7s ease-in-out infinite; }
+.cd-flame--core { animation: flick3 3.1s ease-in-out infinite; }
+@keyframes flick1 {
+  0%,100% { transform: scale(1,1)     translateX(0); }
+  22%     { transform: scale(.95,1.07) translateX(-1.1px); }
+  48%     { transform: scale(1.05,.94) translateX(.9px); }
+  71%     { transform: scale(.97,1.04) translateX(-.5px); }
+}
+@keyframes flick2 {
+  0%,100% { transform: scale(1,1)      translateX(0) rotate(0deg); }
+  30%     { transform: scale(1.06,.93) translateX(.8px) rotate(1.6deg); }
+  62%     { transform: scale(.93,1.08) translateX(-.9px) rotate(-1.9deg); }
+}
+@keyframes flick3 {
+  0%,100% { transform: scale(1,1) translateY(0); opacity: .95; }
+  40%     { transform: scale(.9,1.1) translateY(-1px); opacity: 1; }
+  75%     { transform: scale(1.08,.92) translateY(.6px); opacity: .88; }
+}
+.cd-halo { transform-box: fill-box; transform-origin: 50% 62%; animation: halo 4.3s ease-in-out infinite; }
+@keyframes halo { 0%,100% { opacity: .58; transform: scale(1); }
+                  43%     { opacity: .86; transform: scale(1.08); } }
+.cd-pool { animation: halo 4.3s ease-in-out infinite; }
+.cd-smoke { transform-box: fill-box; transform-origin: 50% 100%; opacity: 0; }
+.cd-smoke--1 { animation: smoke 7s linear infinite; }
+.cd-smoke--2 { animation: smoke 9s linear infinite 2.4s; }
+.cd-smoke--3 { animation: smoke 8s linear infinite 4.8s; }
+@keyframes smoke {
+  0%   { opacity: 0;   transform: translate(0,0) scale(.5); }
+  14%  { opacity: .26; }
+  55%  { opacity: .13; transform: translate(11px,-58px) scale(1.5); }
+  100% { opacity: 0;   transform: translate(-7px,-128px) scale(2.4); }
+}
+
+/* bụi sáng bay lên — số lượng và quỹ đạo do JS rải, ở đây chỉ là quy luật chuyển động */
+.motes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.mote {
+  position: absolute; width: 3px; height: 3px; border-radius: 999px;
+  background: radial-gradient(circle, rgba(255,205,145,.95), rgba(255,170,90,0) 70%);
+  animation: mote linear infinite;
+}
+@keyframes mote {
+  0%   { transform: translate3d(0,0,0) scale(.5); opacity: 0; }
+  12%  { opacity: 1; }
+  78%  { opacity: .5; }
+  100% { transform: translate3d(var(--dx), -78vh, 0) scale(1.3); opacity: 0; }
+}
+</style>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   NÚT, THẺ, DẢI CHỮ CHẠY
+   ═══════════════════════════════════════════════════════════════════════════ */
+.btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  padding: 14px 26px; border-radius: 999px; border: 1px solid transparent; cursor: pointer;
+  font-size: 13.5px; font-weight: 500; letter-spacing: .012em; text-decoration: none;
+  background: none; color: inherit; overflow: hidden; white-space: nowrap;
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease),
+              background-color .3s, border-color .3s, color .3s;
+}
+.btn .ms { font-size: 19px; }
+.btn--primary { background: var(--ember); color: var(--on-ember); box-shadow: 0 12px 30px -14px var(--ember); }
+.btn--primary:hover { transform: translateY(-2px); box-shadow: 0 20px 44px -16px var(--ember); }
+/* vệt sáng quét ngang khi rê chuột — một chi tiết, không phải một hiệu ứng */
+.btn--primary::after {
+  content: ""; position: absolute; inset: 0; transform: translateX(-120%);
+  background: linear-gradient(100deg, transparent 12%, rgba(255,255,255,.32) 50%, transparent 88%);
+  transition: transform .75s var(--ease);
+}
+.btn--primary:hover::after { transform: translateX(120%); }
+.btn--ghost { border-color: var(--line); color: var(--ink); }
+.btn--ghost:hover { border-color: var(--ink-3); background: color-mix(in srgb, var(--ink) 5%, transparent); transform: translateY(-2px); }
+.btn--full { width: 100%; }
+.btn--sm { padding: 10px 18px; font-size: 12.5px; }
+.btn[disabled] { opacity: .45; pointer-events: none; }
+
+.tag {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px;
+  font-size: 11px; font-weight: 500; letter-spacing: .04em; border: 1px solid var(--line);
+  color: var(--ink-2); background: var(--card-2);
+}
+.tag--ember { background: color-mix(in srgb, var(--ember) 13%, transparent);
+              border-color: color-mix(in srgb, var(--ember) 30%, transparent); color: var(--ember); }
+
+/* dải chữ chạy: nội dung nhân đôi rồi kéo đúng 50% — nối liền không thấy mối */
+.marquee {
+  border-block: 1px solid var(--line); padding: 20px 0; overflow: hidden;
+  background: var(--paper-2); -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+}
+.marquee__track { display: flex; width: max-content; animation: slide 34s linear infinite; }
+.marquee:hover .marquee__track { animation-play-state: paused; }
+@keyframes slide { to { transform: translateX(-50%); } }
+.marquee__item {
+  display: flex; align-items: center; gap: 14px; padding-inline: 26px;
+  font-family: var(--f-display); font-size: 21px; font-style: italic; color: var(--ink-2); white-space: nowrap;
+}
+.marquee__item::after { content: ""; width: 5px; height: 5px; border-radius: 999px; background: var(--ember); opacity: .55; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GIÁ TRỊ + QUY TRÌNH + SỐ LIỆU
+   ═══════════════════════════════════════════════════════════════════════════ */
+.vals { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+.val { background: var(--paper); padding: clamp(24px, 3vw, 34px); transition: background-color .4s; }
+.val:hover { background: var(--card-2); }
+.val__ico {
+  display: grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; margin-bottom: 18px;
+  background: color-mix(in srgb, var(--ember) 11%, transparent); color: var(--ember);
+  transition: transform .5s var(--ease);
+}
+.val:hover .val__ico { transform: translateY(-3px) rotate(-5deg); }
+.val h3 { font-size: 17px; font-weight: 500; margin: 0 0 8px; }
+.val p { margin: 0; font-size: 13.8px; color: var(--ink-2); line-height: 1.65; }
+
+.steps { display: grid; gap: 0; }
+.step {
+  display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: clamp(18px, 3vw, 40px);
+  padding: 30px 0; border-top: 1px solid var(--line); align-items: start;
+  transition: background-color .4s;
+}
+.step:last-child { border-bottom: 1px solid var(--line); }
+.step:hover { background: color-mix(in srgb, var(--ember) 3.5%, transparent); }
+.step__n {
+  font-family: var(--f-display); font-size: clamp(38px, 5vw, 58px); line-height: .9; font-weight: 400;
+  color: var(--line); transition: color .45s var(--ease); font-variant-numeric: lining-nums;
+}
+.step:hover .step__n { color: var(--ember); }
+.step__b h3 { font-size: 19px; font-weight: 500; margin: 0 0 7px; }
+.step__b p { margin: 0; color: var(--ink-2); font-size: 14.5px; max-width: 64ch; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: clamp(20px, 3vw, 36px); }
+.stat__n {
+  font-family: var(--f-display); font-size: clamp(40px, 6vw, 68px); line-height: 1; font-weight: 500;
+  letter-spacing: -.02em; font-variant-numeric: lining-nums tabular-nums;
+}
+.stat__l { font-size: 12.5px; color: var(--ink-3); margin-top: 8px; max-width: 22ch; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SẢN PHẨM — tab lọc + lưới thẻ
+   ═══════════════════════════════════════════════════════════════════════════ */
+.shopbar { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-bottom: 34px; }
+.tabs {
+  position: relative; display: inline-flex; gap: 2px; padding: 5px; border-radius: 999px;
+  background: var(--card-2); border: 1px solid var(--line); max-width: 100%; overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tabs__ink {
+  position: absolute; top: 5px; bottom: 5px; left: 0; border-radius: 999px; background: var(--paper);
+  box-shadow: var(--shadow-sm); transition: transform .55s var(--ease), width .55s var(--ease);
+}
+.tab {
+  position: relative; z-index: 1; border: 0; background: none; cursor: pointer; white-space: nowrap;
+  padding: 9px 17px; border-radius: 999px; font-size: 13.5px; font-weight: 450; color: var(--ink-3);
+  transition: color .3s; display: inline-flex; align-items: center; gap: 7px;
+}
+.tab.is-on { color: var(--ink); }
+.tab small { font-size: 10.5px; opacity: .6; font-variant-numeric: tabular-nums; }
+.shopbar__note { font-size: 13px; color: var(--ink-3); margin-left: auto; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(262px, 1fr)); gap: clamp(14px, 1.7vw, 24px); }
+.pcard {
+  position: relative; display: flex; flex-direction: column; text-align: left; cursor: pointer;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: 0; overflow: hidden; color: inherit;
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .4s;
+}
+.pcard:hover { transform: translateY(-5px); box-shadow: var(--shadow-md);
+               border-color: color-mix(in srgb, var(--ember) 32%, var(--line)); }
+.pcard__art {
+  position: relative; aspect-ratio: 1 / .92; display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(ellipse 70% 60% at 50% 106%, color-mix(in srgb, var(--glass) 17%, transparent), transparent 70%), var(--card-2);
+  perspective: 900px;
+}
+.pcard__svg {
+  width: 74%; overflow: visible;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(0);
+  transition: transform .5s var(--ease);
+}
+.pcard:hover .pcard__svg { transform: rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-7px) scale(1.045); }
+.pa-flame { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; transition: opacity .5s var(--ease); }
+.pcard:hover .pa-flame { opacity: 1; animation: flick2 1.7s ease-in-out infinite; }
+.pa-glow { opacity: 0; transition: opacity .6s var(--ease); }
+.pcard:hover .pa-glow { opacity: 1; animation: halo 4.3s ease-in-out infinite; }
+.pcard__badge { position: absolute; top: 13px; left: 13px; }
+.pcard__add {
+  position: absolute; right: 12px; bottom: 12px; width: 42px; height: 42px; border-radius: 999px;
+  display: grid; place-items: center; border: 0; cursor: pointer; background: var(--ember);
+  color: var(--on-ember); box-shadow: var(--shadow-sm);
+  opacity: 0; transform: translateY(10px) scale(.85);
+  transition: opacity .4s var(--ease), transform .4s var(--ease), background-color .3s;
+}
+.pcard:hover .pcard__add, .pcard:focus-within .pcard__add { opacity: 1; transform: none; }
+.pcard__add:hover { transform: scale(1.09); }
+@media (hover: none) { .pcard__add { opacity: 1; transform: none; } }
+.pcard__b { padding: 17px 18px 19px; display: flex; flex-direction: column; gap: 5px; flex: 1; }
+.pcard__name { font-family: var(--f-display); font-size: 23px; font-weight: 600; line-height: 1.15; }
+.pcard__sub { font-size: 12.8px; color: var(--ink-3); line-height: 1.5; flex: 1; }
+.pcard__foot { display: flex; align-items: baseline; gap: 9px; margin-top: 11px; }
+.price { font-size: 15.5px; font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: .01em; }
+.price--was { font-size: 12.5px; color: var(--ink-3); text-decoration: line-through; font-weight: 350; }
+.pcard__low { margin-left: auto; font-size: 11px; color: var(--ember); }
+.grid__empty { grid-column: 1 / -1; padding: 60px 0; text-align: center; color: var(--ink-3); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LỚP PHỦ: cửa sổ sản phẩm & ngăn kéo giỏ hàng
+   ═══════════════════════════════════════════════════════════════════════════ */
+.veil {
+  position: fixed; inset: 0; z-index: 400; background: rgba(16,12,9,.55);
+  backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px);
+  opacity: 0; visibility: hidden; transition: opacity .45s var(--ease-soft), visibility .45s;
+}
+.veil.is-open { opacity: 1; visibility: visible; }
+
+.modalwrap { position: fixed; inset: 0; z-index: 410; display: grid; place-items: center;
+             padding: clamp(12px, 3vw, 28px); pointer-events: none; }
+.modal {
+  width: min(1000px, 100%); max-height: min(92svh, 860px); overflow: auto; pointer-events: auto;
+  background: var(--paper); border: 1px solid var(--line); border-radius: clamp(18px, 2.4vw, 28px);
+  box-shadow: var(--shadow-lg); opacity: 0; transform: translateY(28px) scale(.975);
+  visibility: hidden; transition: opacity .45s var(--ease), transform .6s var(--ease), visibility .5s;
+  scrollbar-width: thin;
+}
+.modal.is-open { opacity: 1; transform: none; visibility: visible; }
+.modal__grid { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); }
+.modal__art {
+  position: relative; display: grid; place-items: center; min-height: 320px; overflow: hidden;
+  background: radial-gradient(ellipse 74% 60% at 50% 58%, color-mix(in srgb, var(--glow) 24%, transparent), transparent 68%), var(--night);
+}
+.modal__art svg { width: 62%; overflow: visible; }
+.modal__art .pa-flame { opacity: 1; animation: flick2 1.7s ease-in-out infinite; }
+.modal__art .pa-glow { opacity: 1; animation: halo 4.3s ease-in-out infinite; }
+.modal__b { padding: clamp(22px, 3vw, 40px); }
+.modal__close {
+  position: absolute; top: 14px; right: 14px; z-index: 2; width: 38px; height: 38px; border-radius: 999px;
+  display: grid; place-items: center; cursor: pointer; border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper) 80%, transparent); backdrop-filter: blur(8px); color: var(--ink);
+  transition: transform .35s var(--ease), background-color .3s;
+}
+.modal__close:hover { transform: rotate(90deg); }
+.modal__name { font-family: var(--f-display); font-size: clamp(32px, 4.4vw, 46px); font-weight: 600; line-height: 1.04; margin: 10px 0 6px; }
+.modal__sub { color: var(--ink-2); font-size: 14.5px; margin: 0 0 18px; }
+.modal__price { display: flex; align-items: baseline; gap: 11px; margin-bottom: 20px; }
+.modal__price .price { font-size: 25px; font-weight: 500; }
+.modal__story { color: var(--ink-2); font-size: 14.6px; line-height: 1.78; margin: 0 0 22px; }
+
+/* tháp hương: đầu → giữa → cuối, đọc từ trên xuống đúng thứ tự mũi cảm nhận */
+.notes { margin: 0 0 24px; padding: 0 0 0 20px; border-left: 1px solid var(--line); position: relative; }
+.notes::before {
+  content: ""; position: absolute; left: -1px; top: 0; bottom: 0; width: 1px;
+  background: linear-gradient(var(--ember), color-mix(in srgb, var(--ember) 22%, transparent));
+}
+.notes__row { padding: 9px 0; }
+.notes__k { font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 7px; }
+.notes__v { display: flex; flex-wrap: wrap; gap: 6px; }
+.notes__v .tag { opacity: 0; transform: translateY(6px); animation: fadeUp .55s var(--ease) forwards; }
+
+.specs { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13.6px; }
+.specs tr { border-bottom: 1px solid var(--line-2); }
+.specs tr:last-child { border-bottom: 0; }
+.specs td { padding: 9px 0; vertical-align: top; }
+.specs td:first-child { color: var(--ink-3); width: 42%; }
+.specs td:last-child { text-align: right; }
+
+.qty { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.qty button {
+  width: 40px; height: 44px; border: 0; background: none; cursor: pointer; color: var(--ink-2);
+  display: grid; place-items: center; transition: background-color .25s, color .25s;
+}
+.qty button:hover { background: var(--card-2); color: var(--ink); }
+.qty span { min-width: 36px; text-align: center; font-size: 15px; font-variant-numeric: tabular-nums; }
+/* Nội dung một sản phẩm dài hơn một màn hình, nên nút mua phải đi theo chứ không nằm
+   dưới đáy chờ người ta cuộn tới. Dính vào đáy khung cuộn của chính cửa sổ. */
+.modal__buy {
+  display: flex; gap: 11px; align-items: center; flex-wrap: wrap;
+  position: sticky; bottom: 0; z-index: 2;
+  padding: 16px 0 2px; margin-top: 6px; background: var(--paper);
+}
+/* vệt mờ phía trên thanh mua: vừa che chữ chạy ngang dưới nó, vừa nói "còn nội dung nữa" */
+.modal__buy::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: 30px;
+  background: linear-gradient(to top, var(--paper), transparent); pointer-events: none;
+}
+.modal__buy .btn { flex: 1; min-width: 190px; }
+.modal__care { margin: 18px 0 0; font-size: 12.6px; color: var(--ink-3); display: flex; gap: 9px; align-items: flex-start; }
+.modal__care .ms { font-size: 17px; color: var(--ember); flex: none; }
+@media (max-width: 820px) {
+  .modal__grid { grid-template-columns: 1fr; }
+  .modal__art { min-height: 260px; }
+}
+
+/* ── ngăn kéo giỏ hàng ────────────────────────────────────────────────────── */
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(432px, 100%); z-index: 430;
+  background: var(--paper); border-left: 1px solid var(--line); box-shadow: var(--shadow-lg);
+  transform: translateX(101%); transition: transform .6s var(--ease);
+  display: flex; flex-direction: column; visibility: hidden;
+}
+.drawer.is-open { transform: none; visibility: visible; }
+.drawer__head { display: flex; align-items: center; gap: 12px; padding: 20px 22px; border-bottom: 1px solid var(--line); }
+.drawer__head h2 { font-family: var(--f-display); font-size: 26px; font-weight: 600; margin: 0; flex: 1; }
+.drawer__body { flex: 1; overflow: auto; padding: 6px 22px; }
+.drawer__foot { border-top: 1px solid var(--line); padding: 18px 22px 22px; background: var(--card-2); }
+.line {
+  display: grid; grid-template-columns: 58px minmax(0,1fr) auto; gap: 13px; align-items: center;
+  padding: 15px 0; border-bottom: 1px solid var(--line-2);
+}
+.line__art { width: 58px; height: 58px; border-radius: 12px; display: grid; place-items: center;
+             background: var(--card-2); border: 1px solid var(--line); overflow: hidden; }
+.line__art svg { width: 94%; overflow: visible; }
+.line__n { font-size: 14px; font-weight: 450; }
+.line__m { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.line__x { border: 0; background: none; cursor: pointer; color: var(--ink-3); padding: 4px; transition: color .25s; }
+.line__x:hover { color: var(--ember); }
+.line__q { display: inline-flex; align-items: center; gap: 2px; margin-top: 6px; }
+.line__q button { width: 24px; height: 24px; border: 1px solid var(--line); background: none; border-radius: 999px;
+                  cursor: pointer; display: grid; place-items: center; color: var(--ink-2); }
+.line__q button:hover { border-color: var(--ink-3); color: var(--ink); }
+.line__q span { min-width: 26px; text-align: center; font-size: 12.5px; font-variant-numeric: tabular-nums; }
+
+.ship { margin-bottom: 14px; }
+.ship__bar { height: 4px; border-radius: 999px; background: var(--line); overflow: hidden; margin-top: 8px; }
+.ship__fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--ember), var(--ember-2));
+              width: 0; transition: width .7s var(--ease); }
+.sum { display: flex; justify-content: space-between; font-size: 13.5px; color: var(--ink-2); padding: 4px 0; }
+.sum--total { font-size: 17px; color: var(--ink); font-weight: 500; padding-top: 10px; margin-top: 6px; border-top: 1px solid var(--line); }
+.sum b { font-variant-numeric: tabular-nums; font-weight: 500; }
+.drawer__note { font-size: 11.5px; color: var(--ink-3); line-height: 1.55; margin: 12px 0 0; }
+.order {
+  margin-top: 14px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--paper);
+  padding: 14px; font-size: 12.5px; white-space: pre-wrap; max-height: 210px; overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; line-height: 1.6;
+}
+.drawer__empty { text-align: center; padding: 60px 16px; color: var(--ink-3); font-size: 14px; }
+.drawer__empty .ms { font-size: 46px; color: var(--line); display: block; margin: 0 auto 14px; }
+
+/* viên bay vào giỏ khi bấm thêm — chi tiết nhỏ nhưng nó nói "đã nhận" nhanh hơn mọi dòng chữ */
+.fly {
+  position: fixed; z-index: 500; width: 13px; height: 13px; border-radius: 999px; pointer-events: none;
+  background: var(--ember); box-shadow: 0 0 0 5px color-mix(in srgb, var(--ember) 22%, transparent);
+}
+.toast {
+  position: fixed; left: 50%; bottom: 26px; z-index: 520; transform: translate(-50%, 20px);
+  background: var(--ink); color: var(--paper); padding: 12px 20px; border-radius: 999px;
+  font-size: 13px; opacity: 0; visibility: hidden; box-shadow: var(--shadow-md);
+  transition: opacity .35s, transform .45s var(--ease), visibility .4s;
+  display: flex; align-items: center; gap: 9px;
+}
+.toast.is-on { opacity: 1; transform: translate(-50%, 0); visibility: visible; }
+</style>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   BỘ CHỌN MÙI, ĐÁNH GIÁ, HỎI ĐÁP, CHÂN TRANG
+   ═══════════════════════════════════════════════════════════════════════════ */
+.quiz {
+  max-width: 780px; margin-inline: auto; background: var(--card); overflow: hidden;
+  border: 1px solid var(--line); border-radius: clamp(18px, 2.4vw, 28px); box-shadow: var(--shadow-sm);
+}
+.quiz__bar { height: 3px; background: var(--line); }
+.quiz__bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--ember), var(--ember-2)); transition: width .65s var(--ease); }
+.quiz__stage { padding: clamp(24px, 4vw, 46px); }
+.quiz__step { animation: fadeUp .6s var(--ease) both; }
+.quiz__n { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 14px; }
+.quiz__q { font-family: var(--f-display); font-size: clamp(25px, 3.6vw, 38px); font-weight: 500; line-height: 1.1; margin: 0 0 26px; }
+.opt {
+  display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; cursor: pointer;
+  padding: 15px 18px; margin-bottom: 9px; border-radius: 14px; border: 1px solid var(--line);
+  background: var(--paper); font-size: 15px; color: inherit;
+  transition: transform .35s var(--ease), border-color .3s, background-color .3s;
+}
+.opt:hover { transform: translateX(5px); border-color: color-mix(in srgb, var(--ember) 55%, var(--line));
+             background: color-mix(in srgb, var(--ember) 5%, var(--paper)); }
+.opt__k {
+  width: 27px; height: 27px; flex: none; border-radius: 999px; display: grid; place-items: center;
+  border: 1px solid var(--line); font-size: 11px; color: var(--ink-3); transition: all .3s;
+}
+.opt:hover .opt__k { background: var(--ember); color: var(--on-ember); border-color: var(--ember); }
+.quiz__res { display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: clamp(18px, 3vw, 30px); align-items: center; }
+.quiz__resart {
+  border-radius: 18px; display: grid; place-items: center; aspect-ratio: 1 / 1.02; overflow: hidden;
+  background: radial-gradient(ellipse 70% 58% at 50% 56%, color-mix(in srgb, var(--glow) 26%, transparent), transparent 70%), var(--night);
+}
+.quiz__resart svg { width: 66%; overflow: visible; }
+.quiz__resart .pa-flame { opacity: 1; animation: flick2 1.7s ease-in-out infinite; }
+.quiz__resart .pa-glow { opacity: 1; animation: halo 4.3s ease-in-out infinite; }
+@media (max-width: 620px) { .quiz__res { grid-template-columns: 1fr; } .quiz__resart { max-width: 190px; } }
+
+.revs {
+  display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 16px;
+  margin-inline: calc(var(--gut) * -1); padding-inline: var(--gut); scrollbar-width: thin;
+  /* Không có dòng này thì scroll-snap canh thẻ đầu vào mép BORDER BOX, trình duyệt tự cuộn
+     đúng một lần bằng padding-left và lề trái biến mất. Đo được: scrollLeft = 51px. */
+  scroll-padding-inline: var(--gut);
+}
+.rev {
+  flex: 0 0 min(392px, 83vw); scroll-snap-align: start; display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: clamp(22px, 2.6vw, 30px); transition: border-color .4s, transform .5s var(--ease);
+}
+.rev:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--ember) 30%, var(--line)); }
+.rev__stars { display: flex; gap: 2px; color: var(--ember); margin-bottom: 14px; }
+.rev__stars .ms { font-size: 17px; font-variation-settings: "FILL" 1, "wght" 300; }
+.rev__stars .ms.is-off { color: var(--line); }
+.rev__t { font-family: var(--f-display); font-size: 20px; line-height: 1.45; font-style: italic; margin: 0 0 20px; flex: 1; }
+.rev__w { display: flex; align-items: center; gap: 11px; font-size: 12.6px; }
+.rev__av { width: 34px; height: 34px; border-radius: 999px; display: grid; place-items: center; flex: none;
+           background: color-mix(in srgb, var(--ember) 13%, transparent); color: var(--ember);
+           font-family: var(--f-display); font-size: 16px; font-weight: 600; }
+.rev__p { color: var(--ink-3); }
+
+.faq { border-top: 1px solid var(--line); }
+.faq__i { border-bottom: 1px solid var(--line); }
+.faq__q {
+  width: 100%; display: flex; align-items: center; gap: 16px; padding: 22px 0; cursor: pointer;
+  background: none; border: 0; text-align: left; font-size: clamp(15.5px, 1.8vw, 17.5px); font-weight: 450;
+  transition: color .3s;
+}
+.faq__q:hover { color: var(--ember); }
+.faq__q .ms { margin-left: auto; flex: none; color: var(--ink-3); transition: transform .5s var(--ease), color .3s; }
+.faq__i.is-open .faq__q .ms { transform: rotate(180deg); color: var(--ember); }
+.faq__a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .55s var(--ease); }
+.faq__i.is-open .faq__a { grid-template-rows: 1fr; }
+.faq__a > div { overflow: hidden; }
+.faq__a p { margin: 0 0 24px; color: var(--ink-2); font-size: 14.6px; line-height: 1.75; max-width: 74ch; }
+
+/* Chân trang tối để khép lại đúng chỗ hero mở ra. Cũng khai lại token trong phạm vi. */
+.foot {
+  background: var(--night); color: #F8F2E9; padding: clamp(60px, 8vw, 100px) 0 34px; position: relative; overflow: hidden;
+  --ink: #F8F2E9; --ink-2: rgba(248,242,233,.72); --ink-3: rgba(248,242,233,.48);
+  --line: rgba(248,242,233,.14); --line-2: rgba(248,242,233,.07); --card: rgba(248,242,233,.035);
+}
+.foot__glow {
+  position: absolute; left: 50%; bottom: -42vmax; width: 92vmax; height: 92vmax; transform: translateX(-50%);
+  pointer-events: none; background: radial-gradient(circle, rgba(255,165,75,.14) 0%, transparent 62%);
+}
+.foot__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) repeat(auto-fit, minmax(180px, 1fr)); gap: clamp(26px, 4vw, 54px); }
+.foot h4 { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 16px; font-weight: 500; }
+.foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 11px; font-size: 13.8px; }
+.foot a { text-decoration: none; color: var(--ink-2); transition: color .25s; }
+.foot a:hover { color: var(--ember-soft); }
+.foot__ship { display: grid; gap: 12px; }
+.foot__ship div { border: 1px solid var(--line); border-radius: var(--r-md); padding: 13px 15px; background: var(--card); }
+.foot__ship b { display: block; font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.foot__ship span { font-size: 12.4px; color: var(--ink-3); line-height: 1.6; }
+.foot__bar {
+  position: relative; margin-top: clamp(40px, 6vw, 70px); padding-top: 22px; border-top: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; gap: 10px 22px; justify-content: space-between;
+  font-size: 12px; color: var(--ink-3);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NHỮNG LỚP CÒN LẠI — dải nền xen kẽ, vùng bấm của thẻ, huy hiệu phụ kiện
+   ═══════════════════════════════════════════════════════════════════════════ */
+.sec--band { background: var(--paper-2); border-block: 1px solid var(--line); }
+.craft-stats { margin-top: clamp(44px, 6vw, 78px); }
+
+/* Cả thẻ là một vùng bấm, nhưng nút "thêm vào giỏ" phải nằm trên nó — nếu lồng
+   button trong button thì HTML sai và bàn phím đi lạc. Tách thành hai lớp. */
+.pcard__open {
+  position: absolute; inset: 0; z-index: 1; border: 0; background: none; cursor: pointer;
+  border-radius: inherit;
+}
+.pcard__add { z-index: 3; }
+.pcard__badge { z-index: 2; pointer-events: none; }
+
+/* Phụ kiện không có ngọn lửa để khoe, nên nó đeo huy hiệu: một đĩa men màu
+   riêng của món, sáng lên khi rê chuột. */
+.emblem {
+  width: 62%; aspect-ratio: 1 / 1; border-radius: 999px; display: grid; place-items: center;
+  color: #FCF6EC; border: 1px solid rgba(255,255,255,.18);
+  background: radial-gradient(circle at 36% 30%, color-mix(in srgb, var(--glass) 62%, #FFFFFF 38%), var(--glass) 72%);
+  box-shadow: inset 0 -10px 24px rgba(0,0,0,.30), 0 14px 30px -16px rgba(0,0,0,.6);
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
+}
+.emblem .ms { font-variation-settings: "FILL" 0, "wght" 250, "GRAD" 0, "opsz" 40; font-size: 34px; }
+.pcard:hover .emblem {
+  transform: rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-7px) scale(1.05);
+  box-shadow: inset 0 -10px 24px rgba(0,0,0,.30), 0 0 46px 6px color-mix(in srgb, var(--glow) 40%, transparent);
+}
+.modal__art .emblem { width: 44%; }
+.quiz__resart .emblem { width: 50%; }
+.line__art .emblem { width: 74%; border-radius: 999px; }
+.line__art .emblem .ms { font-size: 20px; }
+
+.modal { position: relative; }
+
+.foot__me { list-style: none; margin: 24px 0 0; padding: 0; display: grid; gap: 11px; font-size: 13.6px; }
+.foot__me li { display: flex; align-items: flex-start; gap: 11px; color: var(--ink-2); }
+.foot__me .ms { color: var(--ember-soft); flex: none; margin-top: 1px; }
+.foot__me a { color: var(--ink-2); }
+@media (max-width: 760px) { .foot__grid { grid-template-columns: 1fr; } }
+
+/* ── hiện dần khi cuộn tới ────────────────────────────────────────────────── */
+html.js .rv {
+  opacity: 0; transform: translateY(26px);
+  transition: opacity .95s var(--ease) var(--d, 0s), transform .95s var(--ease) var(--d, 0s);
+}
+html.js .rv.is-in { opacity: 1; transform: none; }
+
+/* Lỗi tải dữ liệu — trang đọc data/shop.json bằng fetch nên mở bằng file:// sẽ rơi vào đây. */
+.oops {
+  margin: 28px 0; padding: 22px 24px; border-radius: var(--r-md); border: 1px solid var(--line);
+  background: var(--card-2); font-size: 14px; color: var(--ink-2); line-height: 1.7;
+}
+.oops b { color: var(--ink); font-weight: 500; }
+.oops code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+             background: var(--paper); padding: 2px 7px; border-radius: 6px; border: 1px solid var(--line); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TÔN TRỌNG NGƯỜI TẮT CHUYỂN ĐỘNG
+   Trang này sống bằng animation, nên chỗ này không phải thủ tục: tắt hết chuyển
+   động, giữ nguyên mọi thứ ở trạng thái cuối, để không ai phải chóng mặt mới
+   mua được một ngọn nến.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important; scroll-behavior: auto !important;
+  }
+  html.js .rv { opacity: 1; transform: none; }
+  html.js .hero__title .ln > span { transform: none; }
+  html.js .hero__fade { opacity: 1; }
+  .motes, .cd-smoke, .hero__cursor { display: none; }
+  .pa-flame { opacity: 1; }
+}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a class="nav__brand" href="#top" aria-label="Lặng — về đầu trang">
+      <svg class="nav__mark" viewBox="0 0 34 34" aria-hidden="true">
+        <circle cx="17" cy="17" r="16" fill="none" stroke="currentColor" stroke-opacity=".32" />
+        <path d="M17 25.6c4.6 0 6.7-3.2 6.7-6.3 0-4.3-4.2-6.4-5.3-10.1-.2-.7-1.1-.8-1.4-.1-1 2.1-2.1 2.9-3.4 4.3-1.5 1.6-3.6 3.5-3.6 5.9 0 3.1 2 6.3 7 6.3Z" fill="#E08A3C" />
+        <path d="M17 25.6c2.2 0 3.2-1.6 3.2-3.1 0-2.3-2.5-3.1-2.5-5.4 0-.5-.7-.6-.9-.2-.7 1.3-3 2.5-3 5.2 0 1.8 1 3.5 3.2 3.5Z" fill="#FFE1AC" />
+      </svg>
+      <span>Lặng<span class="nav__kind">nến thơm thủ công</span></span>
+    </a>
+    <nav class="nav__links" id="navLinks" aria-label="Điều hướng chính">
+      <a class="nav__link" href="#san-pham">Sản phẩm</a>
+      <a class="nav__link" href="#chon-mui">Chọn mùi</a>
+      <a class="nav__link" href="#cach-lam">Cách làm</a>
+      <a class="nav__link" href="#danh-gia">Đánh giá</a>
+      <a class="nav__link" href="#hoi-dap">Hỏi đáp</a>
+    </nav>
+    <div class="nav__acts">
+      <button class="iconbtn" id="themeBtn" aria-label="Đổi nền sáng / tối"><span class="ms ms--sm" id="themeIco">dark_mode</span></button>
+      <button class="iconbtn nav__cart" id="cartBtn" aria-label="Mở giỏ hàng">
+        <span class="ms ms--sm">shopping_bag</span>
+        <span class="nav__count is-zero" id="cartCount">0</span>
+      </button>
+      <button class="iconbtn nav__burger" id="burger" aria-label="Mở menu" aria-expanded="false"><span class="ms ms--sm" id="burgerIco">menu</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="sheet" id="sheet">
+  <a href="#san-pham">Sản phẩm</a>
+  <a href="#chon-mui">Chọn mùi</a>
+  <a href="#cach-lam">Cách làm</a>
+  <a href="#danh-gia">Đánh giá</a>
+  <a href="#hoi-dap">Hỏi đáp</a>
+  <a href="#lien-he">Liên hệ</a>
+</div>
+
+<main id="top">
+
+  <!-- ══ HERO ══ Khối độc nhất: chữ ở đây, không ở data. ═══════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero__amber" aria-hidden="true"></div>
+    <div class="hero__vignette" aria-hidden="true"></div>
+    <div class="hero__cursor" id="heroCursor" aria-hidden="true"></div>
+    <div class="motes" id="motes" aria-hidden="true"></div>
+
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <p class="eyebrow hero__fade" style="animation-delay:.5s">Rót tay ở Sài Gòn từ 2021</p>
+        <h1 class="display hero__title">
+          <span class="ln"><span>Thắp một ngọn nến,</span></span>
+          <span class="ln"><span>tắt bớt một ngày ồn.</span></span>
+        </h1>
+        <p class="lede hero__fade" style="animation-delay:.64s">
+          Chúng tôi nấu sáp đậu nành, pha hương rồi rót tay từng mẻ bốn mươi ly.
+          Mỗi mùi là một chỗ có thật mà ai đó từng đứng: một con phố tháng Mười,
+          một sân gạch sau mưa, một quán cà phê mở cửa lúc sáu giờ.
+        </p>
+        <div class="hero__acts hero__fade" style="animation-delay:.76s">
+          <a class="btn btn--primary" href="#san-pham"><span class="ms">storefront</span> Xem sản phẩm</a>
+          <a class="btn btn--ghost" href="#chon-mui"><span class="ms">auto_awesome</span> Tìm mùi hợp với bạn</a>
+        </div>
+        <ul class="hero__trust hero__fade" style="animation-delay:.88s">
+          <li><span class="ms">local_shipping</span> Nội thành giao trong ngày</li>
+          <li><span class="ms">replay</span> Đổi trả 7 ngày</li>
+          <li><span class="ms">eco</span> Sáp đậu nành 100%</li>
+        </ul>
+      </div>
+
+      <div class="hero__stage">
+        <svg class="candle" viewBox="0 0 420 580" role="img" aria-label="Một ngọn nến trong ly thuỷ tinh đang cháy">
+          <defs>
+            <radialGradient id="cHalo">
+              <stop offset="0%"   stop-color="#FFCB86" stop-opacity=".62" />
+              <stop offset="38%"  stop-color="#FF9F45" stop-opacity=".20" />
+              <stop offset="100%" stop-color="#FF8A2E" stop-opacity="0" />
+            </radialGradient>
+            <linearGradient id="cGlass" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%"   stop-color="#1F2536" stop-opacity=".96" />
+              <stop offset="22%"  stop-color="#5E6C8C" stop-opacity=".80" />
+              <stop offset="55%"  stop-color="#36405A" stop-opacity=".92" />
+              <stop offset="100%" stop-color="#1B2132" stop-opacity=".97" />
+            </linearGradient>
+            <linearGradient id="cWax" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stop-color="#FBF3E2" />
+              <stop offset="55%"  stop-color="#EADCC0" />
+              <stop offset="100%" stop-color="#C9B593" />
+            </linearGradient>
+            <linearGradient id="cFl1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stop-color="#FFDCA4" stop-opacity=".08" />
+              <stop offset="38%"  stop-color="#FFA245" stop-opacity=".62" />
+              <stop offset="100%" stop-color="#E1521A" stop-opacity=".26" />
+            </linearGradient>
+            <linearGradient id="cFl2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stop-color="#FFF3D2" />
+              <stop offset="46%"  stop-color="#FFC061" />
+              <stop offset="100%" stop-color="#FF8A2B" stop-opacity=".7" />
+            </linearGradient>
+            <linearGradient id="cFl3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%"   stop-color="#FFFDF6" />
+              <stop offset="60%"  stop-color="#CFE2FF" stop-opacity=".85" />
+              <stop offset="100%" stop-color="#8FB6F0" stop-opacity=".35" />
+            </linearGradient>
+            <filter id="cSoft"  x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7" /></filter>
+            <filter id="cSoft2" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.6" /></filter>
+            <filter id="cSmoke" x="-90%" y="-90%" width="280%" height="280%"><feGaussianBlur stdDeviation="4.5" /></filter>
+          </defs>
+
+          <!-- vũng sáng hắt xuống mặt bàn -->
+          <ellipse class="cd-pool" cx="210" cy="528" rx="168" ry="26" fill="url(#cHalo)" />
+          <ellipse cx="210" cy="530" rx="96" ry="13" fill="#000" opacity=".38" filter="url(#cSoft)" />
+
+          <!-- quầng lửa -->
+          <circle class="cd-halo" cx="210" cy="290" r="205" fill="url(#cHalo)" />
+
+          <!-- khói: ba sợi lệch pha nhau, không sợi nào trùng chu kỳ sợi nào -->
+          <g fill="none" stroke="#E8D9C6" stroke-width="3" stroke-linecap="round" filter="url(#cSmoke)">
+            <path class="cd-smoke cd-smoke--1" d="M210 214c-9-14 8-24 1-38" />
+            <path class="cd-smoke cd-smoke--2" d="M210 214c10-12-7-23 2-36" />
+            <path class="cd-smoke cd-smoke--3" d="M210 214c-5-16 6-22 0-34" />
+          </g>
+
+          <!-- ba lớp lửa -->
+          <g filter="url(#cSoft2)">
+            <path class="cd-flame cd-flame--out" fill="url(#cFl1)"
+                  d="M210 318c28-13 32-48 18-72-9-15-16-24-18-32-2 8-9 17-18 32-14 24-10 59 18 72Z" />
+          </g>
+          <path class="cd-flame cd-flame--mid" fill="url(#cFl2)"
+                d="M210 318c17-9 20-33 11-49-6-10-10-17-11-22-1 5-5 12-11 22-9 16-6 40 11 49Z" />
+          <path class="cd-flame cd-flame--core" fill="url(#cFl3)"
+                d="M210 318c7-5 8-17 4-26-2-5-4-8-4-11 0 3-2 6-4 11-4 9-3 21 4 26Z" />
+
+          <!-- ly, sáp, nhãn -->
+          <rect x="128" y="300" width="164" height="222" rx="22" fill="url(#cGlass)" />
+          <rect x="137" y="338" width="146" height="176" rx="14" fill="url(#cWax)" opacity=".97" />
+          <ellipse cx="210" cy="338" rx="73" ry="9.5" fill="#FCF5E6" />
+          <ellipse cx="210" cy="339" rx="44" ry="6" fill="#E4CFA6" />
+          <ellipse cx="210" cy="336" rx="58" ry="9" fill="#FFB46A" opacity=".55" filter="url(#cSoft2)" />
+          <path d="M210 338v-22" stroke="#3A2E24" stroke-width="3.4" stroke-linecap="round" />
+          <ellipse cx="210" cy="300" rx="82" ry="12" fill="none" stroke="#FFE6C2" stroke-opacity=".45" stroke-width="1.6" />
+          <rect x="147" y="322" width="13" height="178" rx="6.5" fill="#FFFFFF" opacity=".15" />
+          <rect x="268" y="336" width="6" height="152" rx="3" fill="#FFFFFF" opacity=".08" />
+          <rect x="128" y="398" width="164" height="66" fill="#F3E8D2" opacity=".95" />
+          <text x="210" y="429" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif"
+                font-size="27" font-weight="600" fill="#2B2420">Lặng</text>
+          <text x="210" y="447" text-anchor="middle" font-family="Be Vietnam Pro, sans-serif"
+                font-size="8" letter-spacing="3.2" fill="#8D8170">SÀI GÒN</text>
+        </svg>
+      </div>
+    </div>
+
+    <a class="hero__cue" href="#vi-sao">Cuộn<i></i></a>
+  </section>
+
+  <div class="marquee"><div class="marquee__track" id="marquee"></div></div>
+
+  <!-- ══ VÌ SAO ══ -->
+  <section class="sec" id="vi-sao">
+    <div class="wrap">
+      <div class="sec__head rv">
+        <p class="eyebrow">Vì sao cháy khác</p>
+        <h2 class="h2">Bốn thứ chúng tôi không rút ngắn</h2>
+        <p class="lede">
+          Một ngọn nến rẻ ít khi sai ở mùi. Nó sai ở chỗ cháy: mùi bốc hết trong nửa giờ đầu
+          rồi im, ngọn lửa khoét một cái lỗ xuống giữa, và đáy ly còn nguyên hai đốt ngón tay sáp
+          không bao giờ dùng tới.
+        </p>
+      </div>
+      <div class="vals rv" id="vals"></div>
+    </div>
+  </section>
+
+  <!-- ══ CỬA HÀNG ══ -->
+  <section class="sec sec--band" id="san-pham">
+    <div class="wrap">
+      <div class="sec__head rv">
+        <p class="eyebrow">Cửa hàng</p>
+        <h2 class="h2">Chọn một mùi để mang về nhà</h2>
+        <p class="lede">
+          Bấm vào một sản phẩm để đọc câu chuyện của nó, xem ba tầng hương và thông số.
+          Chưa biết bắt đầu từ đâu thì để <em class="ital">bộ chọn mùi</em> ở ngay dưới hỏi bạn ba câu.
+        </p>
+      </div>
+      <div class="shopbar rv">
+        <div class="tabs" id="tabs" role="tablist" aria-label="Lọc theo danh mục"><span class="tabs__ink" id="tabsInk"></span></div>
+        <p class="shopbar__note" id="shopNote"></p>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <!-- ══ BỘ CHỌN MÙI ══ -->
+  <section class="sec" id="chon-mui">
+    <div class="wrap">
+      <div class="sec__head sec__head--center rv">
+        <p class="eyebrow">Bộ chọn mùi</p>
+        <h2 class="h2">Chưa biết hợp mùi nào?</h2>
+        <p class="lede" id="quizIntro"></p>
+      </div>
+      <div class="quiz rv" id="quiz">
+        <div class="quiz__bar"><i id="quizBar"></i></div>
+        <div class="quiz__stage" id="quizStage"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CÁCH LÀM ══ -->
+  <section class="sec sec--band" id="cach-lam">
+    <div class="wrap">
+      <div class="sec__head rv">
+        <p class="eyebrow">Trong xưởng</p>
+        <h2 class="h2">Năm bước, mười bốn ngày</h2>
+        <p class="lede">
+          Không có bước nào trong đây là bí mật. Chỉ có bước thứ tư là bước không ai rút ngắn được,
+          và đó cũng là lý do chúng tôi không bao giờ có hàng để bán ngay trong tuần đầu của một mùi mới.
+        </p>
+      </div>
+      <div class="steps rv" id="steps"></div>
+      <div class="stats craft-stats rv" id="stats"></div>
+    </div>
+  </section>
+
+  <!-- ══ ĐÁNH GIÁ ══ -->
+  <section class="sec" id="danh-gia">
+    <div class="wrap">
+      <div class="sec__head rv">
+        <p class="eyebrow">Khách nói</p>
+        <h2 class="h2">Người đã đốt hết ly đầu tiên</h2>
+      </div>
+    </div>
+    <div class="wrap"><div class="revs rv" id="revs"></div></div>
+  </section>
+
+  <!-- ══ HỎI ĐÁP ══ -->
+  <section class="sec sec--band" id="hoi-dap">
+    <div class="wrap">
+      <div class="sec__head rv">
+        <p class="eyebrow">Hỏi đáp</p>
+        <h2 class="h2">Sáu câu được hỏi nhiều nhất</h2>
+        <p class="lede">
+          Gần hết những chuyện "nến nhà mình bị làm sao ấy" đều nằm ở một trong sáu câu dưới đây,
+          và hầu hết sửa được bằng một nhát kéo cắt bấc.
+        </p>
+      </div>
+      <div class="faq rv" id="faq"></div>
+    </div>
+  </section>
+</main>
+
+<!-- ══ CHÂN TRANG ══ -->
+<footer class="foot" id="lien-he">
+  <div class="foot__glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="foot__grid">
+      <div>
+        <p class="eyebrow">Lặng</p>
+        <p class="h3" style="font-weight:500;max-width:19ch">Một ngọn nến không sửa được ngày hôm nay. Nó chỉ làm căn phòng dễ ở hơn một chút.</p>
+        <div class="foot__contact" id="footContact"></div>
+      </div>
+      <div>
+        <h4>Cửa hàng</h4>
+        <ul>
+          <li><a href="#san-pham">Tất cả sản phẩm</a></li>
+          <li><a href="#chon-mui">Bộ chọn mùi</a></li>
+          <li><a href="#cach-lam">Cách làm nến</a></li>
+          <li><a href="#hoi-dap">Hỏi đáp</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Giao hàng &amp; đổi trả</h4>
+        <div class="foot__ship" id="footShip"></div>
+      </div>
+    </div>
+    <div class="foot__bar">
+      <span>© <span id="year">2026</span> Lặng · Nến thơm thủ công</span>
+      <span>Trang mẫu — thay thông tin liên hệ thật trước khi phát hành.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══ LỚP PHỦ ══ -->
+<div class="veil" id="veil"></div>
+<div class="modalwrap"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Chi tiết sản phẩm"></div></div>
+
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Giỏ hàng">
+  <div class="drawer__head">
+    <h2>Giỏ hàng</h2>
+    <button class="iconbtn" id="cartClose" aria-label="Đóng giỏ hàng"><span class="ms ms--sm">close</span></button>
+  </div>
+  <div class="drawer__body" id="cartBody"></div>
+  <div class="drawer__foot" id="cartFoot"></div>
+</aside>
+
+<div class="toast" id="toast"><span class="ms ms--sm">check_circle</span><span id="toastText"></span></div>
+
+<script>
+(function () {
+'use strict';
+
+/* ═════════════════════════════════════════════════════════════════════════
+   Trang này KHÔNG giữ chữ trong mã. Mọi khối lặp — sản phẩm, giá trị, quy
+   trình, đánh giá, hỏi đáp, bộ chọn mùi — đọc từ data/shop.json. Thêm một
+   loại hàng mới chỉ là thêm một mục vào `categories` rồi thêm sản phẩm; không
+   ai phải mở file này ra sửa.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+var $  = function (s, r) { return (r || document).querySelector(s); };
+var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function esc(t) {
+  return String(t == null ? '' : t)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+var CUR = '₫';
+function money(n) { return Number(n).toLocaleString('vi-VN') + ' ' + CUR; }
+
+/* ── nền sáng / tối ──────────────────────────────────────────────────────── */
+var root = document.documentElement, themeIco = $('#themeIco');
+function paintTheme() { themeIco.textContent = root.getAttribute('data-theme') === 'dark' ? 'light_mode' : 'dark_mode'; }
+paintTheme();
+$('#themeBtn').addEventListener('click', function () {
+  var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  try { localStorage.setItem('lang-theme', next); } catch (e) {}
+  paintTheme();
+});
+
+/* ── thanh điều hướng: dính, đổi màu, và sáng mục đang xem ───────────────── */
+var nav = $('#nav'), sheet = $('#sheet'), burger = $('#burger'), burgerIco = $('#burgerIco');
+function onScroll() { nav.classList.toggle('is-stuck', window.scrollY > 40); }
+onScroll();
+window.addEventListener('scroll', onScroll, { passive: true });
+
+function closeSheet() {
+  sheet.classList.remove('is-open');
+  burger.setAttribute('aria-expanded', 'false');
+  burgerIco.textContent = 'menu';
+}
+burger.addEventListener('click', function () {
+  var open = sheet.classList.toggle('is-open');
+  burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  burgerIco.textContent = open ? 'close' : 'menu';
+});
+$$('#sheet a').forEach(function (a) { a.addEventListener('click', closeSheet); });
+
+var spy = new IntersectionObserver(function (es) {
+  es.forEach(function (e) {
+    if (!e.isIntersecting) return;
+    $$('.nav__link').forEach(function (a) {
+      a.classList.toggle('is-active', a.getAttribute('href') === '#' + e.target.id);
+    });
+  });
+}, { rootMargin: '-45% 0px -50% 0px' });
+$$('main section[id]').forEach(function (s) { spy.observe(s); });
+
+/* ── hiện dần khi cuộn tới ───────────────────────────────────────────────── */
+var revealer = new IntersectionObserver(function (es) {
+  es.forEach(function (e) {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('is-in');
+    revealer.unobserve(e.target);
+  });
+}, { rootMargin: '0px 0px -8% 0px', threshold: .08 });
+/* Không quan sát được thì hiện thẳng, đừng để nội dung kẹt ở opacity 0. Hai trường hợp
+   thật: trình duyệt không có IntersectionObserver, và khung nhìn cao 0px (trang nhúng
+   trong một ô bị thu lại) — lúc đó không phần tử nào từng "giao" với khung nhìn cả. */
+function watch(el) {
+  if (!el) return;
+  if (!('IntersectionObserver' in window) || document.documentElement.clientHeight < 1) {
+    el.classList.add('is-in');
+    return;
+  }
+  revealer.observe(el);
+}
+$$('.rv').forEach(watch);
+
+/* ── bụi sáng trong hero ─────────────────────────────────────────────────── */
+if (!REDUCED) {
+  var motes = $('#motes'), frag = document.createDocumentFragment();
+  for (var i = 0; i < 26; i++) {
+    var d = document.createElement('span');
+    d.className = 'mote';
+    d.style.left = (8 + Math.random() * 84) + '%';
+    d.style.bottom = (-6 - Math.random() * 16) + '%';
+    d.style.setProperty('--dx', (Math.random() * 90 - 45) + 'px');
+    d.style.animationDuration = (11 + Math.random() * 13) + 's';
+    d.style.animationDelay = (-Math.random() * 20) + 's';
+    d.style.opacity = (.35 + Math.random() * .55).toFixed(2);
+    var sz = (2 + Math.random() * 3.4).toFixed(1);
+    d.style.width = sz + 'px'; d.style.height = sz + 'px';
+    frag.appendChild(d);
+  }
+  motes.appendChild(frag);
+
+  /* vệt sáng đuổi theo con trỏ — đuổi chậm (hệ số .12) nên nó trôi chứ không giật */
+  var hero = $('#hero'), cur = $('#heroCursor'), cx = 0, cy = 0, tx = 0, ty = 0, raf = 0;
+  hero.addEventListener('pointermove', function (e) {
+    var r = hero.getBoundingClientRect();
+    tx = e.clientX - r.left; ty = e.clientY - r.top;
+    if (!raf) raf = requestAnimationFrame(follow);
+  });
+  function follow() {
+    cx += (tx - cx) * .12; cy += (ty - cy) * .12;
+    cur.style.transform = 'translate(' + cx + 'px,' + cy + 'px)';
+    raf = (Math.abs(tx - cx) > .5 || Math.abs(ty - cy) > .5) ? requestAnimationFrame(follow) : 0;
+  }
+}
+
+$('#year').textContent = new Date().getFullYear();
+
+/* ═════════════════════════════════════════════════════════════════════════
+   HÌNH SẢN PHẨM
+   Không có ảnh chụp nên mỗi món tự vẽ lấy, dùng đúng ba màu khai trong
+   data (`art.glass` / `art.wax` / `art.glow`). Đổi lại: cả cửa hàng trông
+   như một bộ, và không bao giờ có ô ảnh vỡ.
+   ═════════════════════════════════════════════════════════════════════════ */
+var uid = 0;
+function artSVG(p, crop) {
+  var a = p.art || {}, u = 'x' + (++uid);
+  var glass = esc(a.glass || '#555'), wax = esc(a.wax || '#EEE'), glow = esc(a.glow || '#FFB25A');
+  var defs =
+    '<defs>' +
+      '<radialGradient id="h' + u + '">' +
+        '<stop offset="0%" stop-color="' + glow + '" stop-opacity=".62"/>' +
+        '<stop offset="42%" stop-color="' + glow + '" stop-opacity=".18"/>' +
+        '<stop offset="100%" stop-color="' + glow + '" stop-opacity="0"/></radialGradient>' +
+      /* Dải sáng hẹp ở 16% cộng hai mép tối — trên nền giấy ngà, gradient rộng làm hũ
+         bẹt như một vệt màu; hẹp lại thì nó có khối. */
+      '<linearGradient id="g' + u + '" x1="0" y1="0" x2="1" y2="0">' +
+        '<stop offset="0%" stop-color="#000000" stop-opacity=".34"/>' +
+        '<stop offset="9%" stop-color="' + glass + '" stop-opacity=".97"/>' +
+        '<stop offset="18%" stop-color="#FFFFFF" stop-opacity=".38"/>' +
+        '<stop offset="32%" stop-color="' + glass + '" stop-opacity=".93"/>' +
+        '<stop offset="74%" stop-color="' + glass + '" stop-opacity=".97"/>' +
+        '<stop offset="92%" stop-color="#000000" stop-opacity=".22"/>' +
+        '<stop offset="100%" stop-color="#000000" stop-opacity=".40"/></linearGradient>' +
+      '<linearGradient id="w' + u + '" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0%" stop-color="' + wax + '"/>' +
+        '<stop offset="100%" stop-color="' + wax + '" stop-opacity=".62"/></linearGradient>' +
+      '<linearGradient id="f' + u + '" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0%" stop-color="#FFF6DF"/><stop offset="52%" stop-color="' + glow + '"/>' +
+        '<stop offset="100%" stop-color="' + glow + '" stop-opacity=".45"/></linearGradient>' +
+      '<filter id="b' + u + '" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="2.2"/></filter>' +
+    '</defs>';
+
+  var halo = '<circle class="pa-glow" cx="100" cy="108" r="82" fill="url(#h' + u + ')"/>';
+  var flame =
+    '<g class="pa-flame" filter="url(#b' + u + ')">' +
+      '<path fill="url(#f' + u + ')" d="M100 123c10-4.6 11.4-17 6.4-25.6-3.2-5.4-5.7-8.6-6.4-11.4-.7 2.8-3.2 6-6.4 11.4-5 8.6-3.6 21 6.4 25.6Z"/>' +
+      '<path fill="#FFFDF3" opacity=".9" d="M100 123c3.4-2.3 3.8-7.9 2-11.9-.9-2.3-1.9-3.7-2-5.1-.1 1.4-1.1 2.8-2 5.1-1.8 4-1.4 9.6 2 11.9Z"/>' +
+    '</g>';
+  var base = '<ellipse cx="100" cy="216" rx="62" ry="9" fill="#000" opacity=".18"/>';
+
+  var body;
+  if (p.form === 'set') {
+    body =
+      '<g>' +
+        '<rect x="24" y="152" width="46" height="58" rx="9" fill="url(#g' + u + ')"/>' +
+        '<rect x="29" y="166" width="36" height="40" rx="6" fill="url(#w' + u + ')"/>' +
+        '<ellipse cx="47" cy="166" rx="18" ry="3.4" fill="' + wax + '"/>' +
+        '<rect x="130" y="152" width="46" height="58" rx="9" fill="url(#g' + u + ')"/>' +
+        '<rect x="135" y="166" width="36" height="40" rx="6" fill="url(#w' + u + ')"/>' +
+        '<ellipse cx="153" cy="166" rx="18" ry="3.4" fill="' + wax + '"/>' +
+        '<rect x="74" y="136" width="52" height="74" rx="10" fill="url(#g' + u + ')"/>' +
+        '<rect x="79" y="152" width="42" height="54" rx="7" fill="url(#w' + u + ')"/>' +
+        '<ellipse cx="100" cy="152" rx="21" ry="3.8" fill="' + wax + '"/>' +
+        '<path d="M100 152v-9" stroke="#3A2E24" stroke-width="2.2" stroke-linecap="round"/>' +
+      '</g>';
+    flame = flame.replace(/123c/g, '143c').replace(/M100 123/g, 'M100 143');
+    return wrapSVG(defs + halo.replace('cy="108"', 'cy="126"') + flame + base + body, 'set', crop);
+  }
+  if (p.form === 'bottle') {
+    var reeds = '';
+    [-30, -18, -7, 5, 17, 29].forEach(function (dx, k) {
+      reeds += '<path d="M100 128 L' + (100 + dx) + ' ' + (60 + Math.abs(dx) * .5) + '" stroke="#C6A87E" stroke-width="2.6" stroke-linecap="round" opacity="' + (k % 2 ? '.85' : '1') + '"/>';
+    });
+    body =
+      '<g>' + reeds +
+        '<rect x="66" y="140" width="68" height="76" rx="13" fill="url(#g' + u + ')" stroke="#000" stroke-opacity=".16"/>' +
+        '<rect x="72" y="164" width="56" height="46" rx="8" fill="url(#w' + u + ')" opacity=".85"/>' +
+        '<rect x="88" y="120" width="24" height="24" rx="4" fill="url(#g' + u + ')"/>' +
+        '<rect x="84" y="114" width="32" height="11" rx="4" fill="#9A7B52"/>' +
+        '<rect x="74" y="150" width="8" height="56" rx="4" fill="#FFFFFF" opacity=".16"/>' +
+      '</g>';
+    return wrapSVG(defs + halo.replace('cy="108"', 'cy="150"') + base + body, 'bottle', crop);
+  }
+  if (p.form === 'vial') {
+    body =
+      '<g>' +
+        '<rect x="82" y="112" width="36" height="16" rx="5" fill="#8E7550"/>' +
+        '<rect x="92" y="126" width="16" height="20" fill="url(#g' + u + ')"/>' +
+        '<rect x="76" y="144" width="48" height="66" rx="11" fill="url(#g' + u + ')" stroke="#000" stroke-opacity=".16"/>' +
+        '<rect x="82" y="166" width="36" height="38" rx="7" fill="url(#w' + u + ')" opacity=".9"/>' +
+        '<rect x="84" y="154" width="6" height="48" rx="3" fill="#FFFFFF" opacity=".18"/>' +
+      '</g>';
+    return wrapSVG(defs + halo.replace('cy="108"', 'cy="158"') + base + body, 'vial', crop);
+  }
+  /* mặc định: ly nến */
+  body =
+    '<g>' +
+      '<rect x="54" y="118" width="92" height="96" rx="13" fill="url(#g' + u + ')" stroke="#000" stroke-opacity=".16"/>' +
+      '<rect x="60" y="136" width="80" height="72" rx="9" fill="url(#w' + u + ')"/>' +
+      '<ellipse cx="100" cy="136" rx="40" ry="5.4" fill="' + wax + '"/>' +
+      '<ellipse cx="100" cy="136" rx="24" ry="3.4" fill="' + glow + '" opacity=".35"/>' +
+      '<path d="M100 136v-12" stroke="#3A2E24" stroke-width="2.6" stroke-linecap="round"/>' +
+      '<ellipse cx="100" cy="118" rx="46" ry="6" fill="none" stroke="#FFFFFF" stroke-opacity=".3" stroke-width="1.2"/>' +
+      '<rect x="62" y="128" width="8" height="78" rx="4" fill="#FFFFFF" opacity=".17"/>' +
+      '<rect x="54" y="162" width="92" height="30" fill="#F5EBD6" opacity=".95"/>' +
+      '<text x="100" y="183" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="17" font-weight="600" fill="#33291F">' + esc((p.name || '?').trim().charAt(0)) + '</text>' +
+    '</g>';
+  return wrapSVG(defs + halo + flame + base + body, 'jar', crop);
+}
+/* Khung 200×230 vừa cho ô sản phẩm, nhưng thu xuống 58px trong giỏ thì món hàng chỉ còn
+   một chấm. Ảnh nhỏ dùng khung cắt sát từng dáng — cùng một hình vẽ, không vẽ lại. */
+var CROP = { jar: '42 108 116 116', set: '18 110 164 132', bottle: '48 38 104 192', vial: '62 100 76 120' };
+
+function wrapSVG(inner, form, crop) {
+  var vb = (crop && CROP[form]) ? CROP[form] : '0 0 200 230';
+  return '<svg class="pcard__svg" viewBox="' + vb + '" aria-hidden="true">' + inner + '</svg>';
+}
+function artHTML(p, crop) {
+  if (p.form === 'emblem') {
+    return '<div class="emblem" style="--glass:' + esc(p.art.glass) + ';--glow:' + esc(p.art.glow) + '">' +
+           '<span class="ms ms--lg">' + esc(p.icon) + '</span></div>';
+  }
+  return artSVG(p, crop);
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   NẠP DỮ LIỆU
+   fetch cần HTTP: mở file này bằng file:// sẽ rơi thẳng vào nhánh lỗi, và
+   thông báo ở đó phải nói đúng cách chạy chứ không chỉ nói "không tải được".
+   ═════════════════════════════════════════════════════════════════════════ */
+var D = null;
+
+fetch('data/shop.json', { cache: 'no-cache' })
+  .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status + ' khi đọc data/shop.json'); return r.json(); })
+  .then(boot)
+  .catch(function (err) {
+    ['#vi-sao', '#san-pham', '#chon-mui', '#cach-lam', '#danh-gia', '#hoi-dap'].forEach(function (s) {
+      var el = $(s); if (el) el.style.display = 'none';
+    });
+    $('#footContact').innerHTML = '';
+    $('#footShip').innerHTML = '';
+    var box = document.createElement('div');
+    box.className = 'wrap';
+    box.innerHTML = '<div class="oops"><b>Chưa nạp được nội dung cửa hàng.</b><br>' + esc(err.message) +
+      ' — trang đọc <code>data/shop.json</code> bằng fetch nên phải chạy qua HTTP. ' +
+      'Mở terminal ở thư mục gốc của repo, chạy <code>python3 -m http.server</code> ' +
+      'rồi vào <code>http://localhost:8000/shop/</code>.</div>';
+    $('#top').appendChild(box);
+  });
+
+function boot(d) {
+  D = d;
+  CUR = (d.labels && d.labels.currency) || CUR;
+
+  /* dải chữ chạy — nhân đôi để vòng lặp nối liền, không thấy mối */
+  var row = d.marquee.map(function (t) { return '<span class="marquee__item">' + esc(t) + '</span>'; }).join('');
+  $('#marquee').innerHTML = row + row;
+
+  /* giá trị */
+  $('#vals').innerHTML = d.values.map(function (v) {
+    return '<div class="val"><div class="val__ico"><span class="ms">' + esc(v.icon) + '</span></div>' +
+      '<h3>' + esc(v.title) + '</h3><p>' + esc(v.desc) + '</p></div>';
+  }).join('');
+
+  /* quy trình */
+  $('#steps').innerHTML = d.steps.map(function (s) {
+    return '<div class="step"><div class="step__n">' + esc(s.n) + '</div>' +
+      '<div class="step__b"><h3>' + esc(s.title) + '</h3><p>' + esc(s.desc) + '</p></div></div>';
+  }).join('');
+
+  /* số liệu — đếm lên khi cuộn tới */
+  $('#stats').innerHTML = d.stats.map(function (s) {
+    return '<div class="stat"><div class="stat__n" data-to="' + Number(s.n) + '" data-sfx="' + esc(s.suffix || '') + '">0</div>' +
+      '<div class="stat__l">' + esc(s.label) + '</div></div>';
+  }).join('');
+  countUp();
+
+  /* đánh giá */
+  $('#revs').innerHTML = d.reviews.map(function (r) {
+    var stars = '';
+    for (var i = 1; i <= 5; i++) stars += '<span class="ms' + (i > r.stars ? ' is-off' : '') + '">star</span>';
+    var p = byId(r.product);
+    return '<article class="rev"><div class="rev__stars">' + stars + '</div>' +
+      '<p class="rev__t">“' + esc(r.text) + '”</p>' +
+      '<div class="rev__w"><span class="rev__av">' + esc(r.name.trim().charAt(0)) + '</span>' +
+      '<span><b style="font-weight:500">' + esc(r.name) + '</b><span class="rev__p"> · ' + esc(r.city) +
+      (p ? ' · ' + esc(p.name) : '') + '</span></span></div></article>';
+  }).join('');
+
+  /* hỏi đáp */
+  $('#faq').innerHTML = d.faqs.map(function (f, i) {
+    return '<div class="faq__i"><button class="faq__q" aria-expanded="false" data-i="' + i + '">' +
+      esc(f.q) + '<span class="ms">expand_more</span></button>' +
+      '<div class="faq__a"><div><p>' + esc(f.a) + '</p></div></div></div>';
+  }).join('');
+  $$('#faq .faq__q').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var item = b.parentNode, open = item.classList.toggle('is-open');
+      b.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+
+  /* chân trang */
+  var b = d.brand;
+  $('#footContact').innerHTML =
+    '<ul class="foot__me">' +
+      '<li><span class="ms ms--sm">call</span><a href="tel:' + esc(b.phone.replace(/\s/g, '')) + '">' + esc(b.phone) + '</a></li>' +
+      '<li><span class="ms ms--sm">mail</span><a href="mailto:' + esc(b.email) + '">' + esc(b.email) + '</a></li>' +
+      '<li><span class="ms ms--sm">schedule</span>' + esc(b.hours) + '</li>' +
+      '<li><span class="ms ms--sm">location_on</span>' + esc(b.address) + ', ' + esc(b.city) + '</li>' +
+    '</ul>';
+  $('#footShip').innerHTML = d.shipping.map(function (s) {
+    return '<div><b>' + esc(s.title) + '</b><span>' + esc(s.desc) + '</span></div>';
+  }).join('');
+
+  buildTabs();
+  buildGrid();
+  buildQuiz();
+  renderCart();
+  $$('.rv').forEach(watch);
+}
+
+function byId(id) {
+  if (!D) return null;
+  for (var i = 0; i < D.products.length; i++) if (D.products[i].id === id) return D.products[i];
+  return null;
+}
+
+/* ── số đếm lên ──────────────────────────────────────────────────────────── */
+function countUp() {
+  $$('#stats .stat__n').forEach(function (el) {
+    var to = Number(el.dataset.to), sfx = el.dataset.sfx || '';
+    if (REDUCED) { el.textContent = to.toLocaleString('vi-VN') + sfx; return; }
+    var seen = new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting) return;
+      seen.disconnect();
+      var t0 = performance.now(), dur = 1500;
+      (function tick(now) {
+        var k = Math.min(1, (now - t0) / dur);
+        var e = 1 - Math.pow(1 - k, 4);                 /* chậm dần ở cuối */
+        el.textContent = Math.round(to * e).toLocaleString('vi-VN') + sfx;
+        if (k < 1) requestAnimationFrame(tick);
+      })(t0);
+    }, { threshold: .4 });
+    seen.observe(el);
+  });
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   TAB LỌC + LƯỚI SẢN PHẨM
+   Số món mỗi danh mục KHÔNG ghi trong data — đếm từ products, để thêm một
+   sản phẩm không phải sửa hai chỗ.
+   ═════════════════════════════════════════════════════════════════════════ */
+var curCat = '*';
+
+function buildTabs() {
+  var tabs = $('#tabs'), ink = $('#tabsInk');
+  var html = '<button class="tab is-on" data-k="*" role="tab">Tất cả <small>' + D.products.length + '</small></button>';
+  D.categories.forEach(function (c) {
+    var n = D.products.filter(function (p) { return p.cat === c.k; }).length;
+    html += '<button class="tab" data-k="' + esc(c.k) + '" role="tab">' + esc(c.name) + ' <small>' + n + '</small></button>';
+  });
+  tabs.insertAdjacentHTML('beforeend', html);
+  $$('.tab', tabs).forEach(function (t) {
+    t.addEventListener('click', function () {
+      $$('.tab', tabs).forEach(function (x) { x.classList.remove('is-on'); });
+      t.classList.add('is-on');
+      moveInk(t);
+      filter(t.dataset.k);
+    });
+  });
+  function place() { moveInk($('.tab.is-on', tabs)); }
+  requestAnimationFrame(place);
+  window.addEventListener('resize', place);
+  document.fonts && document.fonts.ready.then(place);
+  function moveInk(t) {
+    if (!t) return;
+    ink.style.width = t.offsetWidth + 'px';
+    ink.style.transform = 'translateX(' + t.offsetLeft + 'px)';
+  }
+}
+
+function buildGrid() {
+  var grid = $('#grid');
+  grid.innerHTML = D.products.map(function (p, i) {
+    var badge = p.badge ? '<span class="tag tag--ember pcard__badge">' + esc(p.badge) + '</span>' : '';
+    var was = p.compare ? '<span class="price--was">' + money(p.compare) + '</span>' : '';
+    var low = p.stock <= 10 ? '<span class="pcard__low">Còn ' + p.stock + '</span>' : '';
+    return '<article class="pcard rv" data-id="' + esc(p.id) + '" data-cat="' + esc(p.cat) + '"' +
+        ' style="--glass:' + esc(p.art.glass) + ';--glow:' + esc(p.art.glow) + ';--d:' + ((i % 12) * .045).toFixed(3) + 's">' +
+        '<div class="pcard__art">' + artHTML(p) + '</div>' + badge +
+        '<button class="pcard__add" data-add="' + esc(p.id) + '" aria-label="Thêm ' + esc(p.name) + ' vào giỏ">' +
+          '<span class="ms ms--sm">add</span></button>' +
+        '<div class="pcard__b">' +
+          '<button class="pcard__open" data-open="' + esc(p.id) + '" aria-label="Xem chi tiết ' + esc(p.name) + '"></button>' +
+          '<span class="pcard__name">' + esc(p.name) + '</span>' +
+          '<span class="pcard__sub">' + esc(p.sub) + '</span>' +
+          '<div class="pcard__foot"><span class="price">' + money(p.price) + '</span>' + was + low + '</div>' +
+        '</div>' +
+      '</article>';
+  }).join('');
+
+  grid.addEventListener('click', function (e) {
+    var add = e.target.closest('[data-add]');
+    if (add) { addToCart(add.dataset.add, 1, add); return; }
+    var open = e.target.closest('[data-open]');
+    if (open) openProduct(open.dataset.open);
+  });
+
+  /* nghiêng nhẹ theo con trỏ — 6 độ là ngưỡng còn thấy "có chiều sâu" mà chưa thấy "đồ chơi" */
+  if (!REDUCED) $$('.pcard__art', grid).forEach(function (box) {
+    var svg = $('svg, .emblem', box);
+    if (!svg) return;
+    box.addEventListener('pointermove', function (e) {
+      var r = box.getBoundingClientRect();
+      svg.style.setProperty('--ry', (((e.clientX - r.left) / r.width - .5) * 12).toFixed(2) + 'deg');
+      svg.style.setProperty('--rx', (((e.clientY - r.top) / r.height - .5) * -9).toFixed(2) + 'deg');
+    });
+    box.addEventListener('pointerleave', function () {
+      svg.style.setProperty('--ry', '0deg'); svg.style.setProperty('--rx', '0deg');
+    });
+  });
+
+  filter('*', true);
+}
+
+/* Lọc bằng FLIP: đo vị trí trước, đổi hiển thị, đo lại, rồi cho từng thẻ chạy
+   từ chỗ cũ về chỗ mới. Không có bước này thì lưới nhảy giật một cái. */
+function filter(k, silent) {
+  curCat = k;
+  var grid = $('#grid'), cards = $$('.pcard', grid);
+  var before = new Map();
+  if (!REDUCED && !silent) cards.forEach(function (c) {
+    if (c.style.display !== 'none') before.set(c, c.getBoundingClientRect());
+  });
+
+  var shown = 0;
+  cards.forEach(function (c) {
+    var on = (k === '*' || c.dataset.cat === k);
+    c.style.display = on ? '' : 'none';
+    if (on) shown++;
+  });
+
+  var cat = D.categories.filter(function (c) { return c.k === k; })[0];
+  $('#shopNote').textContent = shown + ' món' + (cat ? ' · ' + cat.desc : '');
+
+  if (REDUCED || silent) return;
+  cards.forEach(function (c) {
+    if (c.style.display === 'none') return;
+    var now = c.getBoundingClientRect(), was = before.get(c);
+    if (was) {
+      var dx = was.left - now.left, dy = was.top - now.top;
+      if (dx || dy) c.animate(
+        [{ transform: 'translate(' + dx + 'px,' + dy + 'px)' }, { transform: 'none' }],
+        { duration: 520, easing: 'cubic-bezier(.22,1,.36,1)' });
+    } else {
+      c.animate([{ opacity: 0, transform: 'scale(.93)' }, { opacity: 1, transform: 'none' }],
+        { duration: 460, easing: 'cubic-bezier(.22,1,.36,1)' });
+    }
+  });
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   CỬA SỔ SẢN PHẨM
+   ═════════════════════════════════════════════════════════════════════════ */
+var veil = $('#veil'), modal = $('#modal'), drawer = $('#drawer');
+
+function lock(on) { document.body.classList.toggle('is-locked', on); }
+function closeAll() {
+  closeSheet();                 /* menu điện thoại cũng là một lớp phủ — đóng chung một cửa */
+  modal.classList.remove('is-open');
+  drawer.classList.remove('is-open');
+  veil.classList.remove('is-open');
+  drawer.setAttribute('aria-hidden', 'true');
+  lock(false);
+}
+veil.addEventListener('click', closeAll);
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
+
+function openProduct(id) {
+  var p = byId(id); if (!p) return;
+  var tiers = [['top', 'Hương đầu'], ['heart', 'Hương giữa'], ['base', 'Hương cuối']];
+  var notes = '';
+  if (p.notes && Object.keys(p.notes).length) {
+    var k = 0;
+    notes = '<div class="notes">' + tiers.map(function (t) {
+      var list = p.notes[t[0]]; if (!list || !list.length) return '';
+      return '<div class="notes__row"><div class="notes__k">' + t[1] + '</div><div class="notes__v">' +
+        list.map(function (n) { return '<span class="tag" style="animation-delay:' + (.05 * (++k)).toFixed(2) + 's">' + esc(n) + '</span>'; }).join('') +
+        '</div></div>';
+    }).join('') + '</div>';
+  }
+  var specs = '<table class="specs"><tbody>' + (p.specs || []).map(function (s) {
+    return '<tr><td>' + esc(s.k) + '</td><td>' + esc(s.v) + '</td></tr>';
+  }).join('') + '</tbody></table>';
+
+  modal.innerHTML =
+    '<button class="modal__close" id="modalClose" aria-label="Đóng"><span class="ms ms--sm">close</span></button>' +
+    '<div class="modal__grid">' +
+      '<div class="modal__art" style="--glass:' + esc(p.art.glass) + ';--glow:' + esc(p.art.glow) + '">' + artHTML(p) + '</div>' +
+      '<div class="modal__b">' +
+        (p.badge ? '<span class="tag tag--ember">' + esc(p.badge) + '</span>' : '') +
+        '<h2 class="modal__name">' + esc(p.name) + '</h2>' +
+        '<p class="modal__sub">' + esc(p.sub) + '</p>' +
+        '<div class="modal__price"><span class="price">' + money(p.price) + '</span>' +
+          (p.compare ? '<span class="price--was">' + money(p.compare) + '</span>' : '') +
+          '<span class="tag">' + (p.stock > 0 ? 'Còn ' + p.stock : 'Tạm hết') + '</span></div>' +
+        '<p class="modal__story">' + esc(p.story) + '</p>' + notes + specs +
+        '<div class="modal__buy">' +
+          '<div class="qty"><button data-q="-1" aria-label="Bớt một"><span class="ms ms--sm">remove</span></button>' +
+          '<span id="qtyN">1</span>' +
+          '<button data-q="1" aria-label="Thêm một"><span class="ms ms--sm">add</span></button></div>' +
+          '<button class="btn btn--primary" id="modalAdd"' + (p.stock > 0 ? '' : ' disabled') + '>' +
+            '<span class="ms">shopping_bag</span> Thêm vào giỏ</button>' +
+        '</div>' +
+        (p.care ? '<p class="modal__care"><span class="ms ms--sm">tips_and_updates</span>' + esc(p.care) + '</p>' : '') +
+      '</div>' +
+    '</div>';
+
+  var q = 1, qn = $('#qtyN');
+  $$('[data-q]', modal).forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      q = Math.max(1, Math.min(p.stock || 1, q + Number(btn.dataset.q)));
+      qn.textContent = q;
+    });
+  });
+  $('#modalAdd').addEventListener('click', function () { addToCart(p.id, q, this); });
+  $('#modalClose').addEventListener('click', closeAll);
+
+  closeSheet();
+  drawer.classList.remove('is-open');
+  modal.classList.add('is-open');
+  veil.classList.add('is-open');
+  lock(true);
+  modal.scrollTop = 0;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   GIỎ HÀNG
+   Không có máy chủ: giỏ nằm ở localStorage, còn nút đặt hàng chỉ soạn sẵn
+   nội dung đơn để người mua gửi đi. Nói thẳng điều đó trong ngăn kéo thay vì
+   giả vờ có thanh toán.
+   ═════════════════════════════════════════════════════════════════════════ */
+var cart = [];
+try { cart = JSON.parse(localStorage.getItem('lang-cart') || '[]'); } catch (e) { cart = []; }
+if (!Array.isArray(cart)) cart = [];
+var orderOpen = false;
+
+function saveCart() { try { localStorage.setItem('lang-cart', JSON.stringify(cart)); } catch (e) {} }
+
+function addToCart(id, n, from) {
+  var p = byId(id); if (!p) return;
+  var line = cart.filter(function (c) { return c.id === id; })[0];
+  if (line) line.q = Math.min(p.stock, line.q + n); else cart.push({ id: id, q: Math.min(p.stock, n) });
+  saveCart(); renderCart();
+  if (from) fly(from);
+  toast('Đã thêm ' + p.name);
+  var badge = $('#cartCount');
+  badge.classList.remove('is-pop'); void badge.offsetWidth; badge.classList.add('is-pop');
+}
+function setQty(id, n) {
+  var p = byId(id);
+  cart = cart.map(function (c) { return c.id === id ? { id: id, q: Math.max(0, Math.min(p ? p.stock : 99, n)) } : c; })
+             .filter(function (c) { return c.q > 0; });
+  saveCart(); renderCart();
+}
+function subtotal() {
+  return cart.reduce(function (s, c) { var p = byId(c.id); return s + (p ? p.price * c.q : 0); }, 0);
+}
+
+function renderCart() {
+  if (!D) return;
+  cart = cart.filter(function (c) { return byId(c.id); });          /* bỏ món đã gỡ khỏi data */
+  var n = cart.reduce(function (s, c) { return s + c.q; }, 0);
+  var badge = $('#cartCount');
+  badge.textContent = n; badge.classList.toggle('is-zero', n === 0);
+
+  var body = $('#cartBody'), foot = $('#cartFoot');
+  if (!cart.length) {
+    body.innerHTML = '<div class="drawer__empty"><span class="ms">shopping_bag</span>' + esc(D.labels.cart_empty) + '</div>';
+    foot.innerHTML = '<a class="btn btn--ghost btn--full" href="#san-pham" id="cartGo">Xem sản phẩm</a>';
+    $('#cartGo').addEventListener('click', closeAll);
+    orderOpen = false;
+    return;
+  }
+
+  body.innerHTML = cart.map(function (c) {
+    var p = byId(c.id);
+    return '<div class="line" style="--glass:' + esc(p.art.glass) + ';--glow:' + esc(p.art.glow) + '">' +
+      '<div class="line__art">' + artHTML(p, true) + '</div>' +
+      '<div><div class="line__n">' + esc(p.name) + '</div>' +
+      '<div class="line__m">' + money(p.price) + '</div>' +
+      '<div class="line__q"><button data-d="-1" data-id="' + esc(p.id) + '" aria-label="Bớt một"><span class="ms" style="font-size:15px">remove</span></button>' +
+      '<span>' + c.q + '</span>' +
+      '<button data-d="1" data-id="' + esc(p.id) + '" aria-label="Thêm một"><span class="ms" style="font-size:15px">add</span></button></div></div>' +
+      '<button class="line__x" data-x="' + esc(p.id) + '" aria-label="Bỏ ' + esc(p.name) + ' khỏi giỏ"><span class="ms ms--sm">close</span></button>' +
+    '</div>';
+  }).join('');
+
+  var sub = subtotal(), free = D.labels.free_ship, fee = sub >= free ? 0 : D.labels.ship_fee;
+  var pct = Math.min(100, sub / free * 100);
+  foot.innerHTML =
+    '<div class="ship"><div class="sum" style="padding:0">' +
+      (sub >= free
+        ? '<span>Đơn này được miễn phí giao hàng.</span>'
+        : '<span>Mua thêm <b>' + money(free - sub) + '</b> để miễn phí giao.</span>') +
+    '</div><div class="ship__bar"><i class="ship__fill" style="width:' + pct.toFixed(1) + '%"></i></div></div>' +
+    '<div class="sum"><span>Tạm tính</span><b>' + money(sub) + '</b></div>' +
+    '<div class="sum"><span>Phí giao (nội thành)</span><b>' + (fee ? money(fee) : 'Miễn phí') + '</b></div>' +
+    '<div class="sum sum--total"><span>Tổng</span><b>' + money(sub + fee) + '</b></div>' +
+    '<button class="btn btn--primary btn--full" id="orderBtn" style="margin-top:14px">' +
+      '<span class="ms">receipt_long</span> ' + (orderOpen ? 'Ẩn nội dung đơn' : 'Đặt hàng') + '</button>' +
+    (orderOpen
+      ? '<div class="order" id="orderText">' + esc(orderText(sub, fee)) + '</div>' +
+        '<button class="btn btn--ghost btn--full" id="copyBtn" style="margin-top:10px">' +
+          '<span class="ms">content_copy</span> Sao chép nội dung đơn</button>'
+      : '') +
+    '<p class="drawer__note">' + esc(D.labels.order_note) + '</p>';
+
+  $('#orderBtn').addEventListener('click', function () { orderOpen = !orderOpen; renderCart(); });
+  var copy = $('#copyBtn');
+  if (copy) copy.addEventListener('click', function () {
+    var txt = orderText(subtotal(), subtotal() >= free ? 0 : D.labels.ship_fee);
+    if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { toast('Đã sao chép nội dung đơn'); },
+      function () { toast('Không sao chép được — hãy bôi đen rồi copy tay'); });
+    else toast('Trình duyệt không cho sao chép tự động — bôi đen rồi copy tay');
+  });
+
+  body.onclick = function (e) {
+    var d = e.target.closest('[data-d]');
+    if (d) { var line = cart.filter(function (c) { return c.id === d.dataset.id; })[0];
+             setQty(d.dataset.id, (line ? line.q : 0) + Number(d.dataset.d)); return; }
+    var x = e.target.closest('[data-x]');
+    if (x) setQty(x.dataset.x, 0);
+  };
+}
+
+function orderText(sub, fee) {
+  var b = D.brand;
+  var L = ['ĐƠN HÀNG — Lặng', '───────────────'];
+  cart.forEach(function (c) {
+    var p = byId(c.id);
+    L.push(c.q + ' × ' + p.name + '   ' + money(p.price * c.q));
+  });
+  L.push('───────────────');
+  L.push('Tạm tính: ' + money(sub));
+  L.push('Phí giao: ' + (fee ? money(fee) : 'miễn phí'));
+  L.push('TỔNG:     ' + money(sub + fee));
+  L.push('');
+  L.push('Họ tên:');
+  L.push('Số điện thoại:');
+  L.push('Địa chỉ giao:');
+  L.push('Ghi chú (lời nhắn trên thiệp…):');
+  L.push('');
+  L.push('Gửi tới ' + b.phone + ' hoặc ' + b.email);
+  return L.join('\n');
+}
+
+function openCart() {
+  renderCart();
+  closeSheet();
+  modal.classList.remove('is-open');
+  drawer.classList.add('is-open');
+  drawer.setAttribute('aria-hidden', 'false');
+  veil.classList.add('is-open');
+  lock(true);
+}
+$('#cartBtn').addEventListener('click', openCart);
+$('#cartClose').addEventListener('click', closeAll);
+
+/* viên sáng bay từ nút bấm vào giỏ — nói "đã nhận" nhanh hơn mọi dòng chữ */
+function fly(from) {
+  if (REDUCED || !from.animate) return;
+  var a = from.getBoundingClientRect(), b = $('#cartBtn').getBoundingClientRect();
+  var dot = document.createElement('div');
+  dot.className = 'fly';
+  dot.style.left = (a.left + a.width / 2 - 6) + 'px';
+  dot.style.top = (a.top + a.height / 2 - 6) + 'px';
+  document.body.appendChild(dot);
+  var dx = (b.left + b.width / 2) - (a.left + a.width / 2);
+  var dy = (b.top + b.height / 2) - (a.top + a.height / 2);
+  dot.animate([
+    { transform: 'translate(0,0) scale(1)', opacity: 1 },
+    { transform: 'translate(' + (dx * .5) + 'px,' + (dy * .5 - 90) + 'px) scale(1.3)', opacity: 1, offset: .55 },
+    { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(.2)', opacity: .15 }
+  ], { duration: 760, easing: 'cubic-bezier(.32,.06,.2,1)' }).onfinish = function () { dot.remove(); };
+}
+
+var toastT = 0;
+function toast(msg) {
+  var t = $('#toast');
+  $('#toastText').textContent = msg;
+  t.classList.add('is-on');
+  clearTimeout(toastT);
+  toastT = setTimeout(function () { t.classList.remove('is-on'); }, 2400);
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
+   BỘ CHỌN MÙI
+   Chấm điểm bằng `mood` của sản phẩm; cổng lint bắt mọi tag trong quiz phải
+   khớp ít nhất một sản phẩm, nên không bao giờ có câu trả lời rỗng.
+   ═════════════════════════════════════════════════════════════════════════ */
+var qIdx = 0, qPicks = [];
+
+function buildQuiz() {
+  $('#quizIntro').textContent = D.quiz.intro;
+  qIdx = 0; qPicks = [];
+  renderQuiz();
+}
+
+function renderQuiz() {
+  var qs = D.quiz.questions, stage = $('#quizStage'), bar = $('#quizBar');
+
+  if (qIdx < qs.length) {
+    bar.style.width = (qIdx / qs.length * 100) + '%';
+    var q = qs[qIdx];
+    stage.innerHTML = '<div class="quiz__step"><div class="quiz__n">Câu ' + (qIdx + 1) + ' trên ' + qs.length + '</div>' +
+      '<h3 class="quiz__q">' + esc(q.q) + '</h3>' +
+      q.options.map(function (o, i) {
+        return '<button class="opt" data-tag="' + esc(o.tag) + '" data-label="' + esc(o.label) + '">' +
+          '<span class="opt__k">' + String.fromCharCode(65 + i) + '</span>' + esc(o.label) + '</button>';
+      }).join('') + '</div>';
+    $$('.opt', stage).forEach(function (b2) {
+      b2.addEventListener('click', function () {
+        qPicks.push({ tag: b2.dataset.tag, label: b2.dataset.label });
+        qIdx++; renderQuiz();
+      });
+    });
+    return;
+  }
+
+  bar.style.width = '100%';
+  var best = null, bestScore = -1, firstCat = D.categories[0].k;
+  D.products.forEach(function (p) {
+    var s = qPicks.filter(function (k) { return (p.mood || []).indexOf(k.tag) >= 0; }).length;
+    var better = s > bestScore ||
+      (s === bestScore && best && best.cat !== firstCat && p.cat === firstCat);
+    if (better) { best = p; bestScore = s; }
+  });
+
+  var hit = qPicks.filter(function (k) { return (best.mood || []).indexOf(k.tag) >= 0; })
+                  .map(function (k) { return k.label.toLowerCase(); });
+  var why = hit.length
+    ? 'Bạn chọn ' + hit.join(', ') + ' — mùi này khớp ' + hit.length + ' trên ' + qPicks.length + ' câu.'
+    : 'Không câu nào khớp hẳn, nên đây là chỗ dễ bắt đầu nhất.';
+
+  stage.innerHTML = '<div class="quiz__step"><div class="quiz__n">Gợi ý cho bạn</div>' +
+    '<div class="quiz__res">' +
+      '<div class="quiz__resart" style="--glass:' + esc(best.art.glass) + ';--glow:' + esc(best.art.glow) + '">' + artHTML(best) + '</div>' +
+      '<div><h3 class="h3">' + esc(best.name) + '</h3>' +
+      '<p class="muted" style="font-size:14px;margin:5px 0 12px">' + esc(best.sub) + '</p>' +
+      '<p style="font-size:14.5px;color:var(--ink-2);margin:0 0 18px">' + esc(why) + '</p>' +
+      '<div class="modal__buy">' +
+        '<button class="btn btn--primary" id="quizOpen"><span class="ms">visibility</span> Xem chi tiết</button>' +
+        '<button class="btn btn--ghost btn--sm" id="quizAgain">Làm lại</button>' +
+      '</div></div>' +
+    '</div></div>';
+  $('#quizOpen').addEventListener('click', function () { openProduct(best.id); });
+  $('#quizAgain').addEventListener('click', buildQuiz);
+}
+
+})();
+</script>
+</body>
+</html>

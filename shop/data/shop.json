@@ -1,0 +1,982 @@
+{
+  "updated": "2026-09-14",
+  "note": "Nội dung của shop/index.html. LUẬT: (1) Mọi chữ người đọc thấy trong khối LẶP (sản phẩm, giá trị, quy trình, đánh giá, FAQ, quiz) nằm ở đây; chữ của khối ĐỘC NHẤT (hero, tiêu đề section) ở lại HTML. (2) Data là chữ thuần — không thẻ HTML, UI tự escape. (3) Thêm loại hàng mới = thêm một mục vào `categories` rồi thêm sản phẩm có `cat` trỏ tới nó; KHÔNG phải sửa code. (4) `form` quyết định hình vẽ SVG của sản phẩm: jar | set | bottle | vial | emblem — emblem thì phải có `icon` (tên Material Symbols). (5) `mood` là từ khoá để quiz chấm điểm; mọi tag trong quiz phải khớp ít nhất một sản phẩm, nếu không quiz trả về rỗng. (6) Giá là số nguyên đồng, UI tự chấm phân cách. (7) Số liệu suy ra được thì đừng ghi tay (số sản phẩm mỗi danh mục tính từ products). (8) Chữ của khối độc nhất — tên thương hiệu, câu tagline, đoạn giới thiệu, tiêu đề từng section — nằm ở index.html, KHÔNG chép sang đây. `brand` ở dưới chỉ giữ thông tin liên hệ vì nó hiện ở hai chỗ (chân trang + form đặt hàng) và hay đổi. (9) labels.ship_fee / labels.free_ship là số để giỏ hàng tính; `shipping` là câu chữ cho người đọc — cổng bắt hai chỗ phải khớp số.",
+  "brand": {
+    "name": "Lặng",
+    "city": "TP. Hồ Chí Minh",
+    "phone": "0900 000 000",
+    "email": "xin-chao@lang.example",
+    "address": "Thay bằng địa chỉ thật trước khi đưa trang lên mạng",
+    "hours": "9:00 – 20:00, thứ Hai đến Chủ nhật",
+    "contact_note": "Số điện thoại, email và địa chỉ ở trên là chỗ để trống — thay bằng thông tin thật trước khi phát hành. Trang không có máy chủ: nút đặt hàng chỉ soạn sẵn nội dung đơn để bạn gửi qua tin nhắn hoặc email."
+  },
+  "stats": [
+    {
+      "n": 4200,
+      "suffix": "+",
+      "label": "ngọn nến đã rót tay"
+    },
+    {
+      "n": 38,
+      "suffix": "",
+      "label": "công thức hương đã thử"
+    },
+    {
+      "n": 14,
+      "suffix": " ngày",
+      "label": "ủ sáp trước khi bán"
+    },
+    {
+      "n": 96,
+      "suffix": "%",
+      "label": "khách mua lại lần hai"
+    }
+  ],
+  "marquee": [
+    "sáp đậu nành nguyên chất",
+    "bấc cotton không lõi chì",
+    "rót tay từng mẻ nhỏ",
+    "ly thuỷ tinh dùng lại được",
+    "không phẩm màu",
+    "giao trong ngày ở nội thành"
+  ],
+  "categories": [
+    {
+      "k": "nen",
+      "name": "Nến thơm",
+      "desc": "Sáp đậu nành, bấc cotton, rót tay trong ly thuỷ tinh dày.",
+      "icon": "local_fire_department"
+    },
+    {
+      "k": "huong",
+      "name": "Tinh dầu & khuếch tán",
+      "desc": "Cho những phòng không tiện để lửa: phòng ngủ trẻ nhỏ, văn phòng, xe.",
+      "icon": "humidity_low"
+    },
+    {
+      "k": "phu-kien",
+      "name": "Phụ kiện",
+      "desc": "Mấy món nhỏ quyết định ngọn nến cháy đẹp hay cháy hỏng.",
+      "icon": "content_cut"
+    }
+  ],
+  "products": [
+    {
+      "id": "dem-ha-noi",
+      "cat": "nen",
+      "form": "jar",
+      "name": "Đêm Hà Nội",
+      "sub": "Hoa sữa, trầm & hổ phách",
+      "price": 350000,
+      "compare": 0,
+      "badge": "Bán chạy nhất",
+      "story": "Mùi này bắt đầu từ một đêm tháng Mười, đoạn Nguyễn Du có hàng hoa sữa nở gắt đến mức phải đi chậm lại. Chúng tôi kéo hoa sữa xuống cho vừa mũi, rồi đặt lên nền trầm và hổ phách để nó ở lại lâu hơn một cơn gió.",
+      "care": "Thắp 2–3 tiếng mỗi lần là đủ cho phòng 20 m².",
+      "burn": "45–50 giờ",
+      "room": "18–25 m²",
+      "specs": [
+        {
+          "k": "Trọng lượng",
+          "v": "200 g"
+        },
+        {
+          "k": "Thời gian cháy",
+          "v": "45–50 giờ"
+        },
+        {
+          "k": "Sáp",
+          "v": "Đậu nành nguyên chất"
+        },
+        {
+          "k": "Bấc",
+          "v": "Cotton bện, không lõi kim loại"
+        },
+        {
+          "k": "Ly",
+          "v": "Thuỷ tinh dày, đường kính 8 cm"
+        }
+      ],
+      "notes": {
+        "top": [
+          "Hoa sữa",
+          "Lá xanh",
+          "Quýt"
+        ],
+        "heart": [
+          "Nhài",
+          "Hoa cam"
+        ],
+        "base": [
+          "Trầm",
+          "Hổ phách",
+          "Xạ hương trắng"
+        ]
+      },
+      "mood": [
+        "dem",
+        "hoa",
+        "tinh",
+        "am"
+      ],
+      "art": {
+        "glass": "#3B4763",
+        "wax": "#F2E7D3",
+        "glow": "#FFB258"
+      },
+      "stock": 24
+    },
+    {
+      "id": "mua-thang-sau",
+      "cat": "nen",
+      "form": "jar",
+      "name": "Mưa Tháng Sáu",
+      "sub": "Đất sau mưa, cỏ hương bài & rêu",
+      "price": 350000,
+      "compare": 0,
+      "badge": "",
+      "story": "Cái mùi bốc lên từ sân gạch ngay sau cơn mưa đầu mùa — đất ẩm, lá dập, một chút kim loại. Chúng tôi mất chín mẻ mới giữ được nó mà không biến thành mùi ẩm mốc.",
+      "care": "Hợp buổi chiều và những ngày cần ngồi yên một chỗ.",
+      "burn": "45–50 giờ",
+      "room": "18–25 m²",
+      "specs": [
+        {
+          "k": "Trọng lượng",
+          "v": "200 g"
+        },
+        {
+          "k": "Thời gian cháy",
+          "v": "45–50 giờ"
+        },
+        {
+          "k": "Sáp",
+          "v": "Đậu nành nguyên chất"
+        },
+        {
+          "k": "Bấc",
+          "v": "Cotton bện, không lõi kim loại"
+        },
+        {
+          "k": "Ly",
+          "v": "Thuỷ tinh dày, đường kính 8 cm"
+        }
+      ],
+      "notes": {
+        "top": [
+          "Đất ẩm",
+          "Lá dương xỉ",
+          "Bạc hà"
+        ],
+        "heart": [
+          "Rêu",
+          "Cỏ hương bài"
+        ],
+        "base": [
+          "Gỗ tuyết tùng",
+          "Da thuộc"
+        ]
+      },
+      "mood": [
+        "tinh",
+        "go",
+        "tuoi"
+      ],
+      "art": {
+        "glass": "#47584C",
+        "wax": "#F0E9D8",
+        "glow": "#FFC070"
+      },
+      "stock": 18
+    },
+    {
+      "id": "san-nha-ngoai",
+      "cat": "nen",
+      "form": "jar",
+      "name": "Sân Nhà Ngoại",
+      "sub": "Ngọc lan, dừa & nắng trưa",
+      "price": 340000,
+      "compare": 0,
+      "badge": "",
+      "story": "Ngọc lan rụng trên nền xi măng nóng, cạnh cái chõng tre và rổ dừa nạo. Mùi ngọt nhưng khô, không phải ngọt kiểu bánh — chúng tôi giữ nắng lại bằng một chút gạo rang.",
+      "care": "Hợp phòng khách và những buổi có khách tới nhà.",
+      "burn": "45–50 giờ",
+      "room": "18–25 m²",
+      "specs": [
+        {
+          "k": "Trọng lượng",
+          "v": "200 g"
+        },
+        {
+          "k": "Thời gian cháy",
+          "v": "45–50 giờ"
+        },
+        {
+          "k": "Sáp",
+          "v": "Đậu nành nguyên chất"
+        },
+        {
+          "k": "Bấc",
+          "v": "Cotton bện, không lõi kim loại"
+        },
+        {
+          "k": "Ly",
+          "v": "Thuỷ tinh dày, đường kính 8 cm"
+        }
+      ],
+      "notes": {
+        "top": [
+          "Ngọc lan",
+          "Lá chuối"
+        ],
+        "heart": [
+          "Dừa nạo",
+          "Hoa đại"
+        ],
+        "base": [
+          "Gạo rang",
+          "Vani"
+        ]
+      },
+      "mood": [
+        "hoa",
+        "ngot",
+        "am",
+        "sang"
+      ],
+      "art": {
+        "glass": "#A8956B",
+        "wax": "#F6EFDD",
+        "glow": "#FFC46B"
+      },
+      "stock": 12
+    },
+    {
+      "id": "ca-phe-som",
+      "cat": "nen",
+      "form": "jar",
+      "name": "Cà Phê Sớm",
+      "sub": "Cà phê rang, ca cao & sữa đặc",
+      "price": 360000,
+      "compare": 0,
+      "badge": "Mới",
+      "story": "Quán mở lúc sáu giờ, phin nhỏ giọt, ly sữa đặc chưa khuấy nằm dưới đáy. Chúng tôi rang mùi cà phê tới mức đậm nhưng chưa cháy khét, rồi kéo xuống bằng ca cao cho đỡ gắt.",
+      "care": "Thắp buổi sáng trong bếp hoặc góc làm việc.",
+      "burn": "45–50 giờ",
+      "room": "15–22 m²",
+      "specs": [
+        {
+          "k": "Trọng lượng",
+          "v": "200 g"
+        },
+        {
+          "k": "Thời gian cháy",
+          "v": "45–50 giờ"
+        },
+        {
+          "k": "Sáp",
+          "v": "Đậu nành nguyên chất"
+        },
+        {
+          "k": "Bấc",
+          "v": "Cotton bện, không lõi kim loại"
+        },
+        {
+          "k": "Ly",
+          "v": "Thuỷ tinh dày, đường kính 8 cm"
+        }
+      ],
+      "notes": {
+        "top": [
+          "Cà phê rang",
+          "Cam khô"
+        ],
+        "heart": [
+          "Ca cao",
+          "Hạt phỉ"
+        ],
+        "base": [
+          "Sữa đặc",
+          "Đường nâu",
+          "Gỗ đàn hương"
+        ]
+      },
+      "mood": [
+        "sang",
+        "ngot",
+        "am"
+      ],
+      "art": {
+        "glass": "#5E4636",
+        "wax": "#F3E8D4",
+        "glow": "#FFA94D"
+      },
+      "stock": 30
+    },
+    {
+      "id": "go-va-khoi",
+      "cat": "nen",
+      "form": "jar",
+      "name": "Gỗ & Khói",
+      "sub": "Tuyết tùng, khói bạch đàn & da thuộc",
+      "price": 520000,
+      "compare": 590000,
+      "badge": "Ly lớn 320 g",
+      "story": "Mùi của căn phòng vừa tắt lửa: gỗ còn ấm, khói mỏng, một chút da thuộc từ cái ghế cũ. Đây là mùi nam tính nhất trong nhà, và cũng là mùi bán chạy nhất vào mùa lạnh.",
+      "care": "Ly hai bấc — cháy đều và toả nhanh hơn cho phòng rộng.",
+      "burn": "70–80 giờ",
+      "room": "25–40 m²",
+      "specs": [
+        {
+          "k": "Trọng lượng",
+          "v": "320 g"
+        },
+        {
+          "k": "Thời gian cháy",
+          "v": "70–80 giờ"
+        },
+        {
+          "k": "Bấc",
+          "v": "Hai bấc cotton bện"
+        },
+        {
+          "k": "Sáp",
+          "v": "Đậu nành nguyên chất"
+        },
+        {
+          "k": "Ly",
+          "v": "Thuỷ tinh dày, đường kính 10 cm"
+        }
+      ],
+      "notes": {
+        "top": [
+          "Tiêu đen",
+          "Bạch đàn"
+        ],
+        "heart": [
+          "Tuyết tùng",
+          "Khói gỗ"
+        ],
+        "base": [
+          "Da thuộc",
+          "Hoắc hương",
+          "Nhựa thông"
+        ]
+      },
+      "mood": [
+        "go",
+        "am",
+        "dem",
+        "tinh"
+      ],
+      "art": {
+        "glass": "#403A34",
+        "wax": "#EFE4CE",
+        "glow": "#FF9F45"
+      },
+      "stock": 9
+    },
+    {
+      "id": "vo-buoi",
+      "cat": "nen",
+      "form": "jar",
+      "name": "Vỏ Bưởi",
+      "sub": "Bưởi, sả & lá chanh",
+      "price": 280000,
+      "compare": 0,
+      "badge": "",
+      "story": "Nồi nước gội đầu của bà: vỏ bưởi, sả đập dập, lá chanh. Mùi sạch tới mức nghe xong muốn mở hết cửa sổ. Ly nhỏ 160 g, hợp phòng tắm và bếp.",
+      "care": "Mùi tươi nên bay nhanh — đóng bớt cửa khi thắp.",
+      "burn": "32–36 giờ",
+      "room": "10–16 m²",
+      "specs": [
+        {
+          "k": "Trọng lượng",
+          "v": "160 g"
+        },
+        {
+          "k": "Thời gian cháy",
+          "v": "32–36 giờ"
+        },
+        {
+          "k": "Sáp",
+          "v": "Đậu nành nguyên chất"
+        },
+        {
+          "k": "Bấc",
+          "v": "Cotton bện, không lõi kim loại"
+        },
+        {
+          "k": "Ly",
+          "v": "Thuỷ tinh dày, đường kính 7 cm"
+        }
+      ],
+      "notes": {
+        "top": [
+          "Vỏ bưởi",
+          "Chanh xanh"
+        ],
+        "heart": [
+          "Sả",
+          "Lá chanh"
+        ],
+        "base": [
+          "Gừng",
+          "Xạ hương trắng"
+        ]
+      },
+      "mood": [
+        "tuoi",
+        "citrus",
+        "sang"
+      ],
+      "art": {
+        "glass": "#7E8F62",
+        "wax": "#F4EEDA",
+        "glow": "#FFD07A"
+      },
+      "stock": 40
+    },
+    {
+      "id": "tra-sen-tay-ho",
+      "cat": "nen",
+      "form": "jar",
+      "name": "Trà Sen Tây Hồ",
+      "sub": "Trà xanh, sen & gạo rang",
+      "price": 380000,
+      "compare": 0,
+      "badge": "Làm theo mùa",
+      "story": "Sen ướp trà phải thay gạo sen bảy lần. Chúng tôi không làm được điều đó với sáp, nhưng giữ được cái mạch của nó: trà chát nhẹ trước, sen mở ra sau, gạo rang ở lại cuối cùng.",
+      "care": "Chỉ làm từ tháng Sáu tới tháng Tám, hết mẻ là hết mùa.",
+      "burn": "45–50 giờ",
+      "room": "18–25 m²",
+      "specs": [
+        {
+          "k": "Trọng lượng",
+          "v": "200 g"
+        },
+        {
+          "k": "Thời gian cháy",
+          "v": "45–50 giờ"
+        },
+        {
+          "k": "Sáp",
+          "v": "Đậu nành nguyên chất"
+        },
+        {
+          "k": "Bấc",
+          "v": "Cotton bện, không lõi kim loại"
+        },
+        {
+          "k": "Ly",
+          "v": "Thuỷ tinh dày, đường kính 8 cm"
+        }
+      ],
+      "notes": {
+        "top": [
+          "Trà xanh",
+          "Lá sen"
+        ],
+        "heart": [
+          "Hoa sen",
+          "Nhài"
+        ],
+        "base": [
+          "Gạo rang",
+          "Gỗ đàn hương"
+        ]
+      },
+      "mood": [
+        "hoa",
+        "tinh",
+        "tuoi"
+      ],
+      "art": {
+        "glass": "#8C7C8E",
+        "wax": "#F5EEDC",
+        "glow": "#FFC98A"
+      },
+      "stock": 6
+    },
+    {
+      "id": "hop-ba-mua",
+      "cat": "nen",
+      "form": "set",
+      "name": "Hộp Ba Mùa",
+      "sub": "Ba nến mini 90 g: Đêm Hà Nội, Vỏ Bưởi, Gỗ & Khói",
+      "price": 520000,
+      "compare": 620000,
+      "badge": "Quà tặng",
+      "story": "Ba mùi đứng cách nhau xa nhất trong nhà, để người nhận tự tìm ra mình hợp cái nào. Hộp giấy tái chế, có thiệp viết tay nếu bạn nhắn nội dung khi đặt.",
+      "care": "Mỗi ly mini cháy 20–22 giờ.",
+      "burn": "3 × 20–22 giờ",
+      "room": "10–18 m²",
+      "specs": [
+        {
+          "k": "Gồm",
+          "v": "3 ly mini 90 g"
+        },
+        {
+          "k": "Thời gian cháy",
+          "v": "20–22 giờ mỗi ly"
+        },
+        {
+          "k": "Hộp",
+          "v": "Giấy tái chế, dập chìm"
+        },
+        {
+          "k": "Thiệp",
+          "v": "Viết tay theo yêu cầu"
+        }
+      ],
+      "notes": {
+        "top": [
+          "Hoa sữa",
+          "Vỏ bưởi",
+          "Tiêu đen"
+        ],
+        "heart": [
+          "Nhài",
+          "Sả",
+          "Tuyết tùng"
+        ],
+        "base": [
+          "Trầm",
+          "Gừng",
+          "Da thuộc"
+        ]
+      },
+      "mood": [
+        "am",
+        "tuoi",
+        "go",
+        "hoa"
+      ],
+      "art": {
+        "glass": "#6B5647",
+        "wax": "#F3E9D6",
+        "glow": "#FFB765"
+      },
+      "stock": 15
+    },
+    {
+      "id": "tinh-dau-sa-chanh",
+      "cat": "huong",
+      "form": "vial",
+      "name": "Tinh dầu Sả Chanh",
+      "sub": "Nguyên chất 10 ml, chưng cất hơi nước",
+      "price": 180000,
+      "compare": 0,
+      "badge": "",
+      "story": "Sả trồng ở Bến Tre, chưng cất hơi nước, không pha loãng. Nhỏ 3–5 giọt vào máy khuếch tán, hoặc pha với dầu nền để xoa bóp.",
+      "care": "Không bôi trực tiếp lên da khi chưa pha loãng.",
+      "burn": "",
+      "room": "15–25 m²",
+      "specs": [
+        {
+          "k": "Dung tích",
+          "v": "10 ml"
+        },
+        {
+          "k": "Chiết xuất",
+          "v": "Chưng cất hơi nước"
+        },
+        {
+          "k": "Nguồn",
+          "v": "Sả chanh Bến Tre"
+        },
+        {
+          "k": "Dùng với",
+          "v": "Máy khuếch tán, đèn xông, dầu nền"
+        }
+      ],
+      "notes": {
+        "top": [
+          "Sả",
+          "Chanh"
+        ],
+        "heart": [
+          "Gừng"
+        ],
+        "base": [
+          "Cỏ xanh"
+        ]
+      },
+      "mood": [
+        "tuoi",
+        "citrus",
+        "sang"
+      ],
+      "art": {
+        "glass": "#6F8A5C",
+        "wax": "#E9DFBF",
+        "glow": "#FFD98F"
+      },
+      "stock": 55
+    },
+    {
+      "id": "khuech-tan-tram-cam",
+      "cat": "huong",
+      "form": "bottle",
+      "name": "Bình Khuếch Tán Trầm & Cam",
+      "sub": "100 ml, 8 que mây, thơm 10–12 tuần",
+      "price": 420000,
+      "compare": 480000,
+      "badge": "",
+      "story": "Cho phòng ngủ có trẻ nhỏ hoặc văn phòng không được để lửa. Trở đầu que mỗi tuần một lần là mùi mở lại như ngày đầu.",
+      "care": "Đặt xa cửa sổ và máy lạnh thổi thẳng.",
+      "burn": "",
+      "room": "12–20 m²",
+      "specs": [
+        {
+          "k": "Dung tích",
+          "v": "100 ml"
+        },
+        {
+          "k": "Que mây",
+          "v": "8 que, dài 22 cm"
+        },
+        {
+          "k": "Thời gian thơm",
+          "v": "10–12 tuần"
+        },
+        {
+          "k": "Bình",
+          "v": "Thuỷ tinh mờ, nắp gỗ"
+        }
+      ],
+      "notes": {
+        "top": [
+          "Cam ngọt",
+          "Quế"
+        ],
+        "heart": [
+          "Nhũ hương"
+        ],
+        "base": [
+          "Trầm",
+          "Hổ phách"
+        ]
+      },
+      "mood": [
+        "am",
+        "dem",
+        "tinh"
+      ],
+      "art": {
+        "glass": "#8A6A4F",
+        "wax": "#EFE2C6",
+        "glow": "#FFB566"
+      },
+      "stock": 21
+    },
+    {
+      "id": "keo-cat-bac",
+      "cat": "phu-kien",
+      "form": "emblem",
+      "icon": "content_cut",
+      "name": "Kéo Cắt Bấc",
+      "sub": "Thép không gỉ, đầu cong lấy được bấc sát đáy",
+      "price": 190000,
+      "compare": 0,
+      "badge": "Nên có",
+      "story": "Bấc dài quá 5 mm là ngọn lửa cao, khói đen và ly bị ám. Cắt trước mỗi lần thắp, đúng một nhát, là xong chuyện đó mãi mãi.",
+      "care": "Lau khô sau khi cắt để không gỉ ở khớp.",
+      "burn": "",
+      "room": "",
+      "specs": [
+        {
+          "k": "Chất liệu",
+          "v": "Thép không gỉ 304"
+        },
+        {
+          "k": "Chiều dài",
+          "v": "17 cm"
+        },
+        {
+          "k": "Đầu kéo",
+          "v": "Cong 90°, có khay hứng"
+        }
+      ],
+      "notes": {},
+      "mood": [
+        "tinh"
+      ],
+      "art": {
+        "glass": "#5A6169",
+        "wax": "#E7E2D6",
+        "glow": "#FFC98A"
+      },
+      "stock": 33
+    },
+    {
+      "id": "chup-tat-nen",
+      "cat": "phu-kien",
+      "form": "emblem",
+      "icon": "wb_incandescent",
+      "name": "Chụp Tắt Nến",
+      "sub": "Đồng thau, tắt bằng cách chặn khí thay vì thổi",
+      "price": 160000,
+      "compare": 0,
+      "badge": "",
+      "story": "Thổi nến làm sáp nóng bắn ra và để lại một cột khói khét. Úp chụp xuống, đếm ba giây, nhấc lên: hết lửa, gần như không khói.",
+      "care": "Để nguội hẳn rồi mới cất.",
+      "burn": "",
+      "room": "",
+      "specs": [
+        {
+          "k": "Chất liệu",
+          "v": "Đồng thau, cán gỗ"
+        },
+        {
+          "k": "Đường kính chụp",
+          "v": "4,5 cm"
+        },
+        {
+          "k": "Chiều dài cán",
+          "v": "24 cm"
+        }
+      ],
+      "notes": {},
+      "mood": [
+        "tinh"
+      ],
+      "art": {
+        "glass": "#977445",
+        "wax": "#EDE3CB",
+        "glow": "#FFCE8C"
+      },
+      "stock": 27
+    },
+    {
+      "id": "diem-dai",
+      "cat": "phu-kien",
+      "form": "emblem",
+      "icon": "local_fire_department",
+      "name": "Diêm Dài",
+      "sub": "Hộp 40 que, dài 10 cm, có sọc quẹt ở cạnh hộp",
+      "price": 60000,
+      "compare": 0,
+      "badge": "",
+      "story": "Que dài để tay không phải chui vào lòng ly khi sáp đã lõm sâu. Hộp giấy in một màu, để ngửa trên bàn cũng đẹp.",
+      "care": "Cất nơi khô ráo, tránh xa tầm tay trẻ em.",
+      "burn": "",
+      "room": "",
+      "specs": [
+        {
+          "k": "Số lượng",
+          "v": "40 que"
+        },
+        {
+          "k": "Chiều dài que",
+          "v": "10 cm"
+        },
+        {
+          "k": "Hộp",
+          "v": "Giấy kraft, sọc quẹt hai cạnh"
+        }
+      ],
+      "notes": {},
+      "mood": [
+        "am"
+      ],
+      "art": {
+        "glass": "#8F5B4A",
+        "wax": "#EFE5D0",
+        "glow": "#FFB871"
+      },
+      "stock": 64
+    }
+  ],
+  "values": [
+    {
+      "icon": "eco",
+      "title": "Sáp đậu nành nguyên chất",
+      "desc": "Cháy mát hơn sáp dầu mỏ nên toả mùi từ từ, và khi rơi ra bàn thì lau được bằng nước ấm."
+    },
+    {
+      "icon": "air",
+      "title": "Bấc cotton, không lõi chì",
+      "desc": "Bấc bện từ cotton, không lõi kim loại. Cắt còn 5 mm trước mỗi lần thắp là gần như không có muội đen."
+    },
+    {
+      "icon": "back_hand",
+      "title": "Rót tay từng mẻ nhỏ",
+      "desc": "Mỗi mẻ 40 ly. Sáp rót ở 52 °C, để nguội tự nhiên qua đêm, không dùng quạt cho nhanh."
+    },
+    {
+      "icon": "hourglass_bottom",
+      "title": "Ủ đủ 14 ngày",
+      "desc": "Sáp mới rót chưa ngậm hết hương. Chúng tôi để yên hai tuần rồi mới đốt thử và đóng gói."
+    }
+  ],
+  "steps": [
+    {
+      "n": "01",
+      "title": "Dựng mùi",
+      "desc": "Bắt đầu từ một ký ức có thật, rồi dịch nó thành ba tầng hương trên giấy thử."
+    },
+    {
+      "n": "02",
+      "title": "Nấu & pha",
+      "desc": "Sáp đậu nành nấu tới 78 °C, hạ xuống 62 °C mới cho hương vào, khuấy hai phút đúng một chiều."
+    },
+    {
+      "n": "03",
+      "title": "Rót tay",
+      "desc": "Rót ở 52 °C vào ly đã hơ ấm — chênh nhiệt là nguyên nhân của những vết rỗ trên mặt sáp."
+    },
+    {
+      "n": "04",
+      "title": "Ủ 14 ngày",
+      "desc": "Để trong phòng 24 °C, không xê dịch. Đây là bước không rút ngắn được."
+    },
+    {
+      "n": "05",
+      "title": "Đốt thử",
+      "desc": "Mỗi mẻ lấy ngẫu nhiên một ly đốt 4 tiếng, đo vũng sáp và nhìn màu khói trước khi dán nhãn."
+    }
+  ],
+  "reviews": [
+    {
+      "name": "Ngọc Anh",
+      "city": "Hà Nội",
+      "stars": 5,
+      "product": "dem-ha-noi",
+      "text": "Mua vì tò mò cái tên, giữ lại vì đúng là mùi đoạn phố đó thật. Đốt hai tiếng là cả phòng ngủ có mùi, tắt rồi vẫn còn."
+    },
+    {
+      "name": "Trung Hiếu",
+      "city": "Đà Nẵng",
+      "stars": 5,
+      "product": "go-va-khoi",
+      "text": "Ly hai bấc cháy đều, không bị khoét lỗ ở giữa như mấy ly tôi mua trước. Phòng khách 30 m² vẫn đủ mùi."
+    },
+    {
+      "name": "Mai Phương",
+      "city": "TP. Hồ Chí Minh",
+      "stars": 4,
+      "product": "vo-buoi",
+      "text": "Mùi sạch, hợp phòng tắm. Trừ nửa sao vì ly nhỏ nên hết hơi nhanh, lần sau sẽ lấy ly to."
+    },
+    {
+      "name": "Quốc Bảo",
+      "city": "Cần Thơ",
+      "stars": 5,
+      "product": "hop-ba-mua",
+      "text": "Đặt làm quà cưới cho bạn, có thiệp viết tay đúng nội dung mình nhắn. Hộp đẹp tới mức không cần gói thêm."
+    },
+    {
+      "name": "Thu Hà",
+      "city": "Hải Phòng",
+      "stars": 5,
+      "product": "keo-cat-bac",
+      "text": "Không nghĩ một cái kéo lại đổi được nhiều thế. Cắt bấc trước mỗi lần thắp, ly sạch hẳn, không còn viền đen."
+    }
+  ],
+  "faqs": [
+    {
+      "q": "Lần đầu thắp nên để cháy bao lâu?",
+      "a": "Đủ lâu để lớp sáp chảy lỏng chạm tới thành ly — thường là 2–3 tiếng với ly 200 g. Nếu tắt sớm, sáp sẽ nhớ cái vũng nhỏ đó và những lần sau chỉ khoét sâu xuống giữa."
+    },
+    {
+      "q": "Vì sao nến của tôi có muội đen?",
+      "a": "Gần như luôn là do bấc dài. Cắt còn 5 mm trước mỗi lần thắp. Ngoài ra đừng đặt nến chỗ có gió lùa hay máy lạnh thổi thẳng — ngọn lửa chao là sinh khói."
+    },
+    {
+      "q": "Thắp liên tục được mấy tiếng?",
+      "a": "Tối đa 4 tiếng một lần. Lâu hơn thì ly nóng quá, sáp bắt đầu bay hương nhanh và bấc nghiêng. Tắt, để nguội 2 tiếng, rồi thắp lại nếu muốn."
+    },
+    {
+      "q": "Nhà có thú cưng hoặc trẻ nhỏ thì dùng được không?",
+      "a": "Sáp đậu nành và bấc cotton không thải chất độc khi cháy, nhưng lửa thì vẫn là lửa. Nếu không trông chừng được, chọn bình khuếch tán hoặc tinh dầu ở mục Tinh dầu & khuếch tán."
+    },
+    {
+      "q": "Ly hết sáp rồi bỏ đi à?",
+      "a": "Đổ nước sôi vào cho sáp thừa nổi lên, chờ nguội rồi lấy ra, rửa xà phòng. Ly thành hũ đựng bút, cắm hoa khô, hoặc mang lại cửa hàng nhận giảm 30.000 đ cho ly tiếp theo."
+    },
+    {
+      "q": "Giao hàng và đổi trả thế nào?",
+      "a": "Nội thành TP. Hồ Chí Minh giao trong ngày nếu đặt trước 15:00; tỉnh khác 2–4 ngày. Ly vỡ hoặc sai mùi thì chụp ảnh gửi lại trong 7 ngày, chúng tôi gửi bù, không cần trả hàng."
+    }
+  ],
+  "quiz": {
+    "intro": "Ba câu, chừng hai mươi giây. Không có câu trả lời sai.",
+    "questions": [
+      {
+        "q": "Bạn hay thắp nến vào lúc nào?",
+        "options": [
+          {
+            "label": "Sáng, khi vừa mở mắt",
+            "tag": "sang"
+          },
+          {
+            "label": "Tối muộn, lúc nhà đã yên",
+            "tag": "dem"
+          },
+          {
+            "label": "Cuối tuần, khi không phải đi đâu",
+            "tag": "tinh"
+          }
+        ]
+      },
+      {
+        "q": "Mùi nào làm bạn thấy dễ chịu nhất?",
+        "options": [
+          {
+            "label": "Gỗ, khói, thứ gì đó trầm",
+            "tag": "go"
+          },
+          {
+            "label": "Hoa",
+            "tag": "hoa"
+          },
+          {
+            "label": "Cam, chanh, bưởi",
+            "tag": "citrus"
+          },
+          {
+            "label": "Ngọt ấm kiểu bánh mới ra lò",
+            "tag": "ngot"
+          }
+        ]
+      },
+      {
+        "q": "Bạn muốn căn phòng cảm thấy thế nào?",
+        "options": [
+          {
+            "label": "Ấm và có người ở",
+            "tag": "am"
+          },
+          {
+            "label": "Sạch và tỉnh táo",
+            "tag": "tuoi"
+          },
+          {
+            "label": "Yên, gần như trống",
+            "tag": "tinh"
+          }
+        ]
+      }
+    ]
+  },
+  "shipping": [
+    {
+      "title": "Nội thành TP. HCM",
+      "desc": "Giao trong ngày nếu đặt trước 15:00. Phí 25.000 đ, miễn phí từ 500.000 đ."
+    },
+    {
+      "title": "Các tỉnh khác",
+      "desc": "2–4 ngày qua chuyển phát nhanh. Phí 35.000 đ, miễn phí từ 700.000 đ."
+    },
+    {
+      "title": "Đổi trả",
+      "desc": "Ly vỡ hoặc sai mùi: chụp ảnh gửi trong 7 ngày, gửi bù ngay, không cần trả hàng."
+    }
+  ],
+  "labels": {
+    "currency": "₫",
+    "cart_empty": "Giỏ còn trống. Chọn một mùi ở phần Sản phẩm nhé.",
+    "order_note": "Trang này không có máy chủ nên nút dưới đây chỉ soạn sẵn nội dung đơn — bạn sao chép rồi gửi qua tin nhắn hoặc email cho cửa hàng.",
+    "ship_fee": 25000,
+    "free_ship": 500000
+  }
+}
