@@ -178,13 +178,19 @@ em.ital { font-family: var(--f-display); font-style: italic; font-weight: 400; }
   background: var(--ember-2);
 }
 .nav__acts { display: flex; align-items: center; gap: 8px; flex: none; }
+/* inline-flex chứ KHÔNG phải grid. `display:grid` + `place-items:center` chỉ căn giữa
+   đúng khi bên trong có một con; đưa vào hai con là nó xếp thành hai HÀNG và `gap` thành
+   khoảng cách dọc. Đúng lỗi đó đã làm nút giỏ hàng (icon + số đếm) bị nhồi trong 38px,
+   trong khi ba nút một-con còn lại vẫn đẹp nên không ai thấy. Một nút dùng chung thì phải
+   đúng với N con, không chỉ với một. */
 .iconbtn {
-  display: grid; place-items: center; width: 38px; height: 38px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 38px; height: 38px; border-radius: 999px;
   background: transparent; border: 1px solid var(--nav-line, var(--line)); color: inherit; cursor: pointer;
   transition: background-color .25s, border-color .25s, transform .3s var(--ease);
 }
 .iconbtn:hover { background: color-mix(in srgb, currentColor 10%, transparent); transform: translateY(-1px); }
-.nav__cart { width: auto; padding: 0 16px 0 13px; gap: 8px; font-size: 13.5px; font-weight: 500; }
+.nav__cart { width: auto; padding: 0 15px 0 12px; font-size: 13.5px; font-weight: 500; }
 .nav__count {
   min-width: 19px; height: 19px; padding: 0 5px; border-radius: 999px; font-size: 11px;
   font-weight: 600; display: grid; place-items: center; background: var(--ember);
@@ -208,7 +214,7 @@ em.ital { font-family: var(--f-display); font-style: italic; font-weight: 400; }
 }
 @media (max-width: 940px) {
   .nav__links { display: none; }
-  .nav__burger { display: grid; }
+  .nav__burger { display: inline-flex; }   /* khớp .iconbtn, đừng đưa grid trở lại */
   .nav__in { justify-content: space-between; }
   .nav__acts { margin-left: auto; }
 }

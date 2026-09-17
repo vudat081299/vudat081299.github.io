@@ -348,6 +348,70 @@ CSS_BLOCKS = ('nav', 'hero', 'candle', 'veil', 'drawer', 'line', 'toast', 'fly',
               'marquee', 'tag', 'btn', 'wrap', 'grain', 'sheet', 'iconbtn', 'crumb', 'phead')
 
 
+RE_RULE = re.compile(r'^([.#][^\n{]+)\{([^}]*)\}', re.M)
+
+
+def centring_classes(css):
+    """Lớp nào căn giữa bằng grid mà KHÔNG khai hướng cột.
+
+    Loại rule này chỉ đúng khi bên trong có một con: grid mặc định xếp theo HÀNG, nên con
+    thứ hai rơi xuống dưới thay vì đứng cạnh. Nó im lặng — mọi chỗ dùng một con vẫn đẹp.
+    """
+    out = set()
+    for m in RE_RULE.finditer(css):
+        sel, body = m.group(1).strip(), m.group(2)
+        if not sel.startswith('.') or ' ' in sel or ':' in sel or ',' in sel:
+            continue
+        if 'display: grid' not in body or 'place-items: center' not in body:
+            continue
+        if 'grid-auto-flow: column' in body or 'grid-template-columns' in body:
+            continue
+        out.add(sel[1:])
+    return out
+
+
+RE_TAG = re.compile(r'<(\w+)([^>]*)>', re.S)
+
+
+def check_centring(pages, css):
+    """Phần tử nào mang lớp "căn giữa bằng grid" mà có nhiều hơn một con.
+
+    Đây là cổng sinh ra từ một lỗi có thật: .iconbtn viết bằng display:grid + place-items,
+    ba nút một-con thì đẹp, riêng nút giỏ hàng có hai con (icon + số đếm) nên bị xếp thành
+    hai hàng nhồi trong 38px. Chỉ soi HTML tĩnh — chỗ đếm được số con.
+    """
+    names = centring_classes(css)
+    if not names:
+        return []
+    err = []
+    for path in pages:
+        raw = strip_code(path.read_text(encoding='utf-8', errors='replace'))
+        for m in re.finditer(r'<(\w+)\s[^>]*class="([^"]*)"[^>]*>', raw):
+            classes = set(m.group(2).split())
+            hit = classes & names
+            if not hit:
+                continue
+            tag = m.group(1)
+            # đếm con trực tiếp: quét từ sau thẻ mở tới thẻ đóng cùng cấp
+            rest, depth, kids = raw[m.end():], 0, 0
+            for t in re.finditer(r'<(/?)(\w+)([^>]*?)(/?)>', rest):
+                closing, name, attrs, self_close = t.group(1), t.group(2), t.group(3), t.group(4)
+                if closing:
+                    if depth == 0:
+                        break
+                    depth -= 1
+                    continue
+                if depth == 0:
+                    kids += 1
+                if not self_close and name.lower() not in ('br', 'img', 'input', 'hr', 'meta', 'link'):
+                    depth += 1
+            if kids > 1:
+                err.append('%s: <%s class="%s"> có %d con nhưng lớp .%s căn giữa bằng grid '
+                           'không khai hướng cột — con thứ hai sẽ rơi xuống hàng dưới'
+                           % (path.name, tag, m.group(2), kids, sorted(hit)[0]))
+    return err
+
+
 def check_css(path):
     """Soi CSS dùng chung: thiếu quy tắc gốc, và selector gốc bị khai hai lần."""
     err, note = [], []
@@ -405,6 +469,7 @@ def main(argv):
         print('\nassets/shop.css — LỖI: thiếu file CSS dùng chung')
     else:
         ce, cn = check_css(css)
+        ce += check_centring(pages, css.read_text(encoding='utf-8'))
         total_err += len(ce); total_note += len(cn)
         if ce:
             print('\nassets/shop.css — LỖI (%d):' % len(ce))
