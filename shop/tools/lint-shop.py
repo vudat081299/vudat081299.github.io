@@ -76,124 +76,121 @@ def check_data(path):
     except Exception as e:
         return ['JSON không đọc được — %s' % e], []
 
-    need(d, ('brand', 'categories', 'products', 'values', 'steps',
-             'reviews', 'faqs', 'quiz', 'stats', 'marquee', 'shipping', 'labels'), 'gốc', err)
+    need(d, ('brand', 'scents', 'products', 'payment', 'values', 'faqs',
+             'shipping', 'labels', 'marquee', 'placeholder_banner'), 'gốc', err)
 
     brand = d.get('brand') or {}
     need(brand, ('name', 'city', 'phone', 'email', 'address', 'hours'), 'brand', err)
 
-    # danh mục
-    cats, cat_names = {}, {}
-    for i, c in enumerate(d.get('categories') or []):
-        w = 'categories[%d]' % i
-        need(c, ('k', 'name', 'desc', 'icon'), w, err)
+    # ── mùi hương: trục phân loại của trang sản phẩm ───────────────────────────
+    scents, used = {}, collections.Counter()
+    for i, c in enumerate(d.get('scents') or []):
+        w = 'scents[%d]' % i
+        need(c, ('k', 'n', 'name', 'slot', 'tagline', 'feel', 'when', 'notes', 'mood', 'art'), w, err)
+        w = 'mùi "%s"' % c.get('name', i)
         k = c.get('k')
-        if k in cats:
-            err.append('%s: k "%s" trùng với %s' % (w, k, cats[k]))
-        cats[k] = c.get('name', w)
-        cat_names[k] = c.get('name', '')
+        if k in scents:
+            err.append('%s: k "%s" trùng với %s' % (w, k, scents[k]))
+        scents[k] = w
 
-    # sản phẩm
-    ids, moods, used_cats = {}, set(), collections.Counter()
-    for i, p in enumerate(d.get('products') or []):
-        w = 'products[%d]' % i
-        need(p, ('id', 'cat', 'form', 'name', 'sub', 'story', 'specs', 'mood', 'art'), w, err)
-        w = 'sản phẩm "%s"' % p.get('name', i)
-
-        pid = p.get('id', '')
-        if pid in ids:
-            err.append('%s: id "%s" trùng với %s' % (w, pid, ids[pid]))
-        elif pid and not SLUG.match(pid):
-            err.append('%s: id "%s" phải là slug thường, nối bằng dấu gạch' % (w, pid))
-        ids[pid] = w
-
-        if p.get('cat') not in cats:
-            err.append('%s: cat "%s" không có trong categories' % (w, p.get('cat')))
-        else:
-            used_cats[p['cat']] += 1
-
-        form = p.get('form')
-        if form not in FORMS:
-            err.append('%s: form "%s" phải là một trong %s' % (w, form, '/'.join(sorted(FORMS))))
-        if form == 'emblem' and not str(p.get('icon', '')).strip():
-            err.append('%s: form "emblem" phải có "icon" (tên Material Symbols)' % w)
-
-        # tiền — chỗ sai đắt nhất của một storefront
-        price = p.get('price')
-        if not isinstance(price, int) or isinstance(price, bool) or price <= 0:
-            err.append('%s: price phải là số nguyên dương, đang là %r' % (w, price))
-        cmp_ = p.get('compare', 0)
-        if not isinstance(cmp_, int) or isinstance(cmp_, bool) or cmp_ < 0:
-            err.append('%s: compare phải là số nguyên >= 0 (0 = không gạch giá), đang là %r' % (w, cmp_))
-        elif cmp_ and isinstance(price, int) and cmp_ <= price:
-            err.append('%s: compare %d không lớn hơn price %d — giá gạch thành ra rẻ hơn giá bán'
-                       % (w, cmp_, price))
-        stock = p.get('stock')
-        if not isinstance(stock, int) or isinstance(stock, bool) or stock < 0:
-            err.append('%s: stock phải là số nguyên >= 0, đang là %r' % (w, stock))
-
-        art = p.get('art') or {}
+        art = c.get('art') or {}
         for key in ('glass', 'wax', 'glow'):
             v = art.get(key)
             if not isinstance(v, str) or not HEX.match(v):
                 err.append('%s: art.%s phải là mã màu #rrggbb, đang là %r' % (w, key, v))
 
-        for si, s in enumerate(p.get('specs') or []):
-            need(s, ('k', 'v'), '%s › specs[%d]' % (w, si), err)
-
-        nt = p.get('notes')
-        if nt is None:
-            err.append('%s: thiếu "notes" (dùng {} nếu sản phẩm không có tầng hương)' % w)
-        elif nt:
+        nt = c.get('notes')
+        if not isinstance(nt, dict) or not nt:
+            err.append('%s: thiếu "notes" (top/heart/base)' % w)
+        else:
             for tier, lst in nt.items():
                 if tier not in NOTE_TIERS:
                     err.append('%s: tầng hương "%s" phải là top/heart/base' % (w, tier))
                 if not isinstance(lst, list) or not lst or any(not str(x).strip() for x in lst):
                     err.append('%s: notes.%s phải là danh sách không rỗng' % (w, tier))
 
-        md = p.get('mood') or []
-        if not isinstance(md, list) or not md:
-            err.append('%s: mood phải là danh sách không rỗng — quiz chấm điểm bằng nó' % w)
-        moods.update(md)
+    # ── sản phẩm ───────────────────────────────────────────────────────────────
+    ids = {}
+    for i, pr in enumerate(d.get('products') or []):
+        w = 'products[%d]' % i
+        need(pr, ('id', 'scent', 'form', 'name', 'sub', 'story', 'specs'), w, err)
+        w = 'sản phẩm "%s"' % pr.get('name', i)
 
-    # danh mục rỗng = một tab lọc bấm vào không ra gì
-    for k, name in cats.items():
-        if not used_cats[k]:
-            err.append('danh mục "%s": không có sản phẩm nào — tab lọc sẽ rỗng' % name)
+        pid = pr.get('id', '')
+        if pid in ids:
+            err.append('%s: id "%s" trùng với %s' % (w, pid, ids[pid]))
+        elif pid and not SLUG.match(pid):
+            err.append('%s: id "%s" phải là slug thường, nối bằng dấu gạch' % (w, pid))
+        ids[pid] = w
 
-    # quiz: tag không khớp mood nào thì bộ chọn mùi trả về rỗng
-    qs = (d.get('quiz') or {}).get('questions') or []
-    if not qs:
-        err.append('quiz: không có câu hỏi nào')
-    for qi, q in enumerate(qs):
-        w = 'quiz › câu %d' % (qi + 1)
-        need(q, ('q', 'options'), w, err)
-        for oi, o in enumerate(q.get('options') or []):
-            need(o, ('label', 'tag'), '%s › lựa chọn %d' % (w, oi + 1), err)
-            t = o.get('tag')
-            if t and t not in moods:
-                err.append('%s: tag "%s" không khớp mood của sản phẩm nào' % (w, t))
+        if pr.get('scent') not in scents:
+            err.append('%s: scent "%s" không có trong scents' % (w, pr.get('scent')))
+        else:
+            used[pr['scent']] += 1
 
-    # đánh giá trỏ vào sản phẩm có thật
-    for ri, r in enumerate(d.get('reviews') or []):
-        w = 'reviews[%d]' % ri
-        need(r, ('name', 'city', 'stars', 'product', 'text'), w, err)
-        if r.get('product') and r['product'] not in ids:
-            err.append('%s: product "%s" không khớp sản phẩm nào' % (w, r['product']))
-        st = r.get('stars')
-        if not isinstance(st, int) or isinstance(st, bool) or not 1 <= st <= 5:
-            err.append('%s: stars phải là số nguyên 1–5, đang là %r' % (w, st))
+        if pr.get('form') not in FORMS:
+            err.append('%s: form "%s" phải là một trong %s' % (w, pr.get('form'), '/'.join(sorted(FORMS))))
+        if pr.get('form') == 'emblem' and not str(pr.get('icon', '')).strip():
+            err.append('%s: form "emblem" phải có "icon"' % w)
+
+        price = pr.get('price')
+        if not isinstance(price, int) or isinstance(price, bool) or price <= 0:
+            err.append('%s: price phải là số nguyên dương, đang là %r' % (w, price))
+        cmp_ = pr.get('compare', 0)
+        if not isinstance(cmp_, int) or isinstance(cmp_, bool) or cmp_ < 0:
+            err.append('%s: compare phải là số nguyên >= 0, đang là %r' % (w, cmp_))
+        elif cmp_ and isinstance(price, int) and cmp_ <= price:
+            err.append('%s: compare %d không lớn hơn price %d — giá gạch thành ra rẻ hơn giá bán'
+                       % (w, cmp_, price))
+        stock = pr.get('stock')
+        if not isinstance(stock, int) or isinstance(stock, bool) or stock < 0:
+            err.append('%s: stock phải là số nguyên >= 0, đang là %r' % (w, stock))
+
+        for si, sp in enumerate(pr.get('specs') or []):
+            need(sp, ('k', 'v'), '%s › specs[%d]' % (w, si), err)
+
+    # Mùi không có sản phẩm nào = một section ở trang sản phẩm không có gì để mua.
+    for k, w in scents.items():
+        if not used[k]:
+            err.append('%s: không có sản phẩm nào trỏ vào — section sẽ không có nút mua' % w)
+
+    # ── thanh toán ─────────────────────────────────────────────────────────────
+    pay = d.get('payment') or {}
+    methods = pay.get('methods') or []
+    if not methods:
+        err.append('payment: không có cách thanh toán nào')
+    seen_m = set()
+    for i, m in enumerate(methods):
+        w = 'payment.methods[%d]' % i
+        need(m, ('k', 'name', 'icon', 'desc'), w, err)
+        w = 'cách thanh toán "%s"' % m.get('name', i)
+        if m.get('k') in seen_m:
+            err.append('%s: k "%s" trùng' % (w, m.get('k')))
+        seen_m.add(m.get('k'))
+        if 'ready' not in m:
+            err.append('%s: thiếu "ready" (true/false)' % w)
+        # Một cách CHƯA bật mà không nói thiếu gì thì trang chỉ hiện "chưa cấu hình"
+        # rỗng không — người đọc không biết phải làm gì tiếp.
+        if m.get('ready') is False and not (m.get('need') or []):
+            err.append('%s: ready=false thì "need" phải liệt kê thứ còn thiếu' % w)
+        if m.get('k') == 'bank' and m.get('ready'):
+            bank = m.get('bank') or {}
+            for f in ('name', 'bin', 'account', 'holder'):
+                if not str(bank.get(f, '')).strip():
+                    err.append('%s: ready=true nhưng bank.%s còn rỗng — mã VietQR sẽ sai' % (w, f))
+            if not re.fullmatch(r'\d{6}', str(bank.get('bin', ''))):
+                err.append('%s: bank.bin phải là 6 chữ số (mã ngân hàng của Napas)' % w)
+            if not re.fullmatch(r'\d{6,20}', str(bank.get('account', ''))):
+                err.append('%s: bank.account phải là 6–20 chữ số' % w)
 
     for fi, f in enumerate(d.get('faqs') or []):
         need(f, ('q', 'a'), 'faqs[%d]' % fi, err)
     for vi, v in enumerate(d.get('values') or []):
         need(v, ('icon', 'title', 'desc'), 'values[%d]' % vi, err)
-    for si, s in enumerate(d.get('steps') or []):
-        need(s, ('n', 'title', 'desc'), 'steps[%d]' % si, err)
-    for si, s in enumerate(d.get('stats') or []):
-        need(s, ('n', 'label'), 'stats[%d]' % si, err)
-    for si, s in enumerate(d.get('shipping') or []):
-        need(s, ('title', 'desc'), 'shipping[%d]' % si, err)
+    for ti, t in enumerate(d.get('hero_trust') or []):
+        need(t, ('icon', 'text'), 'hero_trust[%d]' % ti, err)
+    for si, sh in enumerate(d.get('shipping') or []):
+        need(sh, ('title', 'desc'), 'shipping[%d]' % si, err)
 
     # Giỏ hàng tính bằng số, khách đọc bằng chữ. Hai chỗ lệch nhau thì thanh "mua thêm bao
     # nhiêu nữa được miễn phí ship" nói một đằng, đoạn Giao hàng nói một nẻo.
@@ -207,8 +204,15 @@ def check_data(path):
             err.append('labels.%s = %s nhưng không có chỗ nào trong `shipping` nói con số đó — '
                        'giỏ hàng và đoạn Giao hàng đang nói hai giá khác nhau' % (key, vnd(v)))
 
-    if 'Thay bằng' in str(brand.get('address', '')) or 'example' in str(brand.get('email', '')):
-        note.append('brand: điện thoại/email/địa chỉ vẫn là chỗ để trống — thay trước khi phát hành')
+    # ── nội dung mẫu còn lại ───────────────────────────────────────────────────
+    n = 1 if brand.get('placeholder') else 0
+    for key in ('scents', 'products', 'values', 'faqs', 'shipping'):
+        n += sum(1 for x in (d.get(key) or []) if x.get('placeholder'))
+    n += sum(1 for m in methods if m.get('placeholder'))
+    n += sum(1 for x in (d.get('hero_trust') or []) if x.get('placeholder'))
+    if n:
+        note.append('còn %d mục mang cờ placeholder — nội dung máy dựng, thay trước khi bán thật '
+                    '(dải cảnh báo trên trang sẽ tự tắt khi hạ hết cờ)' % n)
 
     return err, note
 
@@ -218,23 +222,26 @@ def check_data(path):
 def repeated_text(d):
     """Chữ thuộc khối LẶP — thứ bắt buộc phải sống ở data, không được nằm trong HTML.
 
-    KHÔNG kiểm tên danh mục. Đã đo: hai trong ba lần báo oan đầu tiên đến từ chúng, vì
-    "Nến thơm" / "Phụ kiện" là danh từ hai chữ trùng với tiếng Việt bình thường của trang
-    ("Lặng · Nến thơm thủ công"). Đổi lại, rủi ro bỏ sót gần như không có: dải tab danh mục
-    được sinh từ data kèm số đếm, không ai ngồi gõ tay ra.
+    KHÔNG kiểm tên mùi hương dạng ngắn. Đã đo ở bản trước: danh từ hai chữ kiểu
+    "Nến thơm" trùng với tiếng Việt bình thường của trang và báo oan. Chỉ kiểm chuỗi
+    đủ dài để không thể trùng ngẫu nhiên.
     """
     out = []
     for p in d.get('products') or []:
         out.append(('tên sản phẩm', p.get('name', '')))
+        out.append(('mô tả sản phẩm', p.get('story', '')))
+    for c in d.get('scents') or []:
+        out.append(('cảm giác của mùi', c.get('feel', '')))
+        out.append(('câu một dòng của mùi', c.get('tagline', '')))
     for f in d.get('faqs') or []:
         out.append(('câu hỏi FAQ', f.get('q', '')))
     for v in d.get('values') or []:
         out.append(('tiêu đề giá trị', v.get('title', '')))
-    for s in d.get('steps') or []:
-        out.append(('tiêu đề bước', s.get('title', '')))
-    for r in d.get('reviews') or []:
-        out.append(('đánh giá', (r.get('text', '') or '')[:40]))
-    return [(kind, t) for kind, t in out if len(t.strip()) >= 4]
+    for t in d.get('hero_trust') or []:
+        out.append(('dòng tin cậy ở hero', t.get('text', '')))
+    for m in (d.get('payment') or {}).get('methods') or []:
+        out.append(('mô tả cách thanh toán', m.get('desc', '')))
+    return [(kind, t) for kind, t in out if len(t.strip()) >= 8]
 
 
 def check_page(path, data):
@@ -294,9 +301,70 @@ def check_page(path, data):
         note.append('thiếu <title> có nội dung')
     if not re.search(r'charset', raw, re.I):
         note.append('thiếu khai báo charset — tiếng Việt dễ vỡ dấu')
-    if 'prefers-reduced-motion' not in raw:
-        note.append('không thấy @media (prefers-reduced-motion) — trang nhiều animation nên phải có')
 
+    return err, note
+
+
+RE_NAV = re.compile(r'<header class="nav[^"]*".*?</header>', re.S)
+RE_FOOT = re.compile(r'<footer class="foot".*?</footer>', re.S)
+RE_SHEET = re.compile(r'<div class="sheet".*?</div>\s*\n', re.S)
+
+
+def check_shell(pages):
+    """Thanh điều hướng, menu và chân trang phải giống hệt nhau ở cả ba trang.
+
+    Shop có ba trang tĩnh, không có build step nào ghép shell hộ. Sửa menu ở một trang
+    rồi quên hai trang kia là cách hỏng phổ biến nhất của web tĩnh nhiều trang — và nó
+    im lặng, vì mỗi trang mở riêng vẫn trông đúng. Lớp `is-active` được bỏ ra trước khi
+    so, vì nó ĐƯỢC PHÉP khác nhau: đó là mục đang đứng.
+    """
+    err = []
+    shots = {}
+    for path in pages:
+        raw = path.read_text(encoding='utf-8', errors='replace')
+        for name, rx in (('thanh điều hướng', RE_NAV), ('menu điện thoại', RE_SHEET), ('chân trang', RE_FOOT)):
+            m = rx.search(raw)
+            if not m:
+                err.append('%s: không tìm thấy %s' % (path.name, name))
+                continue
+            shots.setdefault(name, {})[path.name] = m.group(0).replace(' is-active', '').replace(' nav--over', '')
+
+    for name, by_page in shots.items():
+        vals = set(by_page.values())
+        if len(vals) > 1:
+            names = ', '.join(sorted(by_page))
+            err.append('%s lệch nhau giữa các trang (%s) — ba trang phải dùng chung một shell, '
+                       'sửa một trang thì sửa cả ba' % (name, names))
+    return err
+
+
+# Thành phần khối — mỗi cái phải có một quy tắc gốc ".<tên> {" trong CSS dùng chung.
+# Danh sách này tồn tại vì một lần dọn CSS bằng regex đã nuốt mất ".drawer { }" mà vẫn để
+# lại ".drawer.is-open": ngăn kéo giỏ hàng thành một khối nằm chình ình cuối trang, không
+# ai thấy cho tới lúc chụp ảnh. Lỗi kiểu đó im lặng, nên nó cần một phép đếm.
+CSS_BLOCKS = ('nav', 'hero', 'candle', 'veil', 'drawer', 'line', 'toast', 'fly', 'ship', 'sum',
+              'order', 'notes', 'specs', 'scent', 'rail', 'scard', 'strip', 'buy', 'co', 'pay',
+              'paypanel', 'qr', 'todo', 'phb', 'emblem', 'field', 'faq', 'foot', 'val', 'vals',
+              'marquee', 'tag', 'btn', 'wrap', 'grain', 'sheet', 'iconbtn', 'crumb', 'phead')
+
+
+def check_css(path):
+    """Soi CSS dùng chung: thiếu quy tắc gốc, và selector gốc bị khai hai lần."""
+    err, note = [], []
+    css = path.read_text(encoding='utf-8')
+
+    for name in CSS_BLOCKS:
+        if not re.search(r'^\.%s\s*\{' % re.escape(name), css, re.M):
+            err.append('thiếu quy tắc gốc ".%s { }" — thành phần này sẽ hiện ra không có kiểu' % name)
+
+    sels = re.findall(r'^(\.[A-Za-z][\w-]*(?:__[\w-]+)?)\s*\{', css, re.M)
+    for sel, cnt in sorted(collections.Counter(sels).items()):
+        if cnt > 1:
+            err.append('selector gốc "%s" khai %d lần — một trong hai bản đang bị bản kia đè, '
+                       'gần như luôn là dấu vết của một lần cắt-dán hỏng' % (sel, cnt))
+
+    if 'prefers-reduced-motion' not in css:
+        note.append('không có @media (prefers-reduced-motion) — trang nhiều animation nên phải có')
     return err, note
 
 
@@ -309,7 +377,10 @@ def main(argv):
     except Exception:
         data = {}
 
-    pages = sorted(SHOP.glob('*.html'))
+    pages = sorted(p for p in SHOP.glob('*.html') if not p.name.startswith('__'))
+    skipped = sorted(p.name for p in SHOP.glob('__*.html'))
+    if skipped:
+        print('bỏ qua file tạm: %s' % ', '.join(skipped))
     total_err, total_note = len(data_err), len(data_note)
 
     if data_err:
@@ -320,6 +391,29 @@ def main(argv):
         print('\ndata/shop.json — XEM (%d):' % len(data_note))
         for n in data_note:
             print('    %s' % n)
+
+    shell_err = check_shell(pages)
+    total_err += len(shell_err)
+    if shell_err:
+        print('\nshell chung — LỖI (%d):' % len(shell_err))
+        for x in shell_err:
+            print('    %s' % x)
+
+    css = SHOP / 'assets' / 'shop.css'
+    if not css.exists():
+        total_err += 1
+        print('\nassets/shop.css — LỖI: thiếu file CSS dùng chung')
+    else:
+        ce, cn = check_css(css)
+        total_err += len(ce); total_note += len(cn)
+        if ce:
+            print('\nassets/shop.css — LỖI (%d):' % len(ce))
+            for x in ce:
+                print('    %s' % x)
+        if cn and verbose:
+            print('\nassets/shop.css — XEM (%d):' % len(cn))
+            for x in cn:
+                print('    %s' % x)
 
     for p in pages:
         e, n = check_page(p, data)
@@ -340,8 +434,9 @@ def main(argv):
     if total_err:
         print('shop: %d LỖI.' % total_err)
         return 1
-    print('shop: OK (%d sản phẩm, %d danh mục, %d trang).'
-          % (len(data.get('products') or []), len(data.get('categories') or []), len(pages)))
+    print('shop: OK (%d mùi hương, %d sản phẩm, %d cách thanh toán, %d trang).'
+          % (len(data.get('scents') or []), len(data.get('products') or []),
+             len(((data.get('payment') or {}).get('methods')) or []), len(pages)))
     return 0
 
 

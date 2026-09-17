@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>Thanh toán · scentsitive.vn</title>
+<meta name="description" content="Xem lại đơn, điền thông tin nhận hàng và chọn cách thanh toán: chuyển khoản VietQR, Apple Pay hoặc trả khi nhận hàng." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,200..600,0..1,-50..0&display=swap" />
+<link rel="stylesheet" href="assets/shop.css" />
+
+<!-- Chọn nền TRƯỚC khi vẽ khung hình đầu tiên: nếu để JS cuối trang quyết định, người dùng
+     hệ tối sẽ thấy một nháy trắng. Lần đầu vào thì theo hệ, sau đó theo lựa chọn đã lưu. -->
+<script>
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('scentsitive-theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') {
+    t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', t);
+  // Mọi khối hiện-dần mặc định trong suốt. Nếu JS bị chặn thì không ai bật chúng lên và
+  // trang thành một tờ giấy trắng. Nên trạng thái ẩn chỉ có hiệu lực khi lớp .js có mặt.
+  document.documentElement.classList.add('js');
+})();
+</script>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<div class="phb" id="phBanner" hidden></div>
+
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a class="nav__brand" href="index.html" aria-label="scentsitive.vn — về trang chủ">
+      <svg class="nav__mark" viewBox="0 0 34 34" aria-hidden="true">
+        <circle cx="17" cy="17" r="16" fill="none" stroke="currentColor" stroke-opacity=".32" />
+        <path d="M17 25.6c4.6 0 6.7-3.2 6.7-6.3 0-4.3-4.2-6.4-5.3-10.1-.2-.7-1.1-.8-1.4-.1-1 2.1-2.1 2.9-3.4 4.3-1.5 1.6-3.6 3.5-3.6 5.9 0 3.1 2 6.3 7 6.3Z" fill="#E08A3C" />
+        <path d="M17 25.6c2.2 0 3.2-1.6 3.2-3.1 0-2.3-2.5-3.1-2.5-5.4 0-.5-.7-.6-.9-.2-.7 1.3-3 2.5-3 5.2 0 1.8 1 3.5 3.2 3.5Z" fill="#FFE1AC" />
+      </svg>
+      <span>scentsitive<span class="nav__kind">nến thơm thủ công</span></span>
+    </a>
+    <nav class="nav__links" aria-label="Điều hướng chính">
+      <a class="nav__link" href="products.html">Mùi hương</a>
+      <a class="nav__link" href="index.html#ve-chung-toi">Về chúng tôi</a>
+      <a class="nav__link" href="index.html#hoi-dap">Hỏi đáp</a>
+      <a class="nav__link is-active" href="checkout.html">Thanh toán</a>
+    </nav>
+    <div class="nav__acts">
+      <button class="iconbtn" id="themeBtn" aria-label="Đổi nền sáng / tối"><span class="ms ms--sm" id="themeIco">dark_mode</span></button>
+      <button class="iconbtn nav__cart" id="cartBtn" aria-label="Mở giỏ hàng">
+        <span class="ms ms--sm">shopping_bag</span>
+        <span class="nav__count is-zero" id="cartCount">0</span>
+      </button>
+      <button class="iconbtn nav__burger" id="burger" aria-label="Mở menu" aria-expanded="false"><span class="ms ms--sm" id="burgerIco">menu</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="sheet" id="sheet">
+  <a href="products.html">Mùi hương</a>
+  <a href="index.html#ve-chung-toi">Về chúng tôi</a>
+  <a href="index.html#hoi-dap">Hỏi đáp</a>
+  <a href="checkout.html">Thanh toán</a>
+  <a href="index.html#lien-he">Liên hệ</a>
+</div>
+
+<main id="top">
+  <div class="wrap phead">
+    <p class="crumb"><a href="index.html">Trang chủ</a> <span class="ms ms--sm">chevron_right</span> <a href="products.html">Mùi hương</a> <span class="ms ms--sm">chevron_right</span> <span>Thanh toán</span></p>
+    <h1 class="display" style="font-size:clamp(36px,6vw,68px)">Thanh toán</h1>
+    <div id="dataError"></div>
+  </div>
+
+  <div class="wrap" style="padding-bottom:clamp(60px,9vw,110px)">
+    <div class="co">
+      <div>
+        <section class="co__box">
+          <h2>Đơn hàng</h2>
+          <div id="coLines" data-needs-data></div>
+        </section>
+
+        <section class="co__box">
+          <h2>Thông tin nhận hàng</h2>
+          <p class="todo__n" style="margin:0 0 16px">
+            Trang chưa có máy chủ nên phần này chưa gửi đi đâu cả — nó đi vào nội dung đơn
+            bạn sao chép ở dưới. Khi nối cổng thanh toán thật thì nó thành form thật.
+          </p>
+          <label class="field"><span>Họ và tên</span><input type="text" name="name" autocomplete="name" placeholder="Nguyễn Văn A" /></label>
+          <label class="field"><span>Số điện thoại</span><input type="tel" name="phone" autocomplete="tel" placeholder="09xx xxx xxx" /></label>
+          <label class="field"><span>Địa chỉ giao hàng</span><textarea name="address" rows="3" autocomplete="street-address" placeholder="Số nhà, đường, phường, quận"></textarea></label>
+          <label class="field"><span>Ghi chú</span><input type="text" name="note" placeholder="Lời nhắn trên thiệp, giờ giao mong muốn…" /></label>
+        </section>
+
+        <section class="co__box">
+          <h2>Cách thanh toán</h2>
+          <div id="coPay" data-needs-data></div>
+        </section>
+      </div>
+
+      <aside class="co__side">
+        <div class="co__box">
+          <h2>Tổng cộng</h2>
+          <div id="coSum" data-needs-data></div>
+          <p class="todo__n">
+            Chưa có cổng thanh toán tự động, nên bước cuối vẫn là gửi đơn cho shop
+            hoặc chuyển khoản theo mã QR. Trạng thái từng cách nằm ở khối bên trái.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+<footer class="foot" id="lien-he">
+  <div class="foot__glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="foot__grid">
+      <div>
+        <p class="eyebrow">scentsitive.vn</p>
+        <p class="h3" style="font-weight:500;max-width:19ch">Một ngọn nến không sửa được ngày hôm nay. Nó chỉ làm căn phòng dễ ở hơn một chút.</p>
+        <div class="foot__contact" id="footContact"></div>
+      </div>
+      <div>
+        <h4>Cửa hàng</h4>
+        <ul>
+          <li><a href="products.html">Năm mùi hương</a></li>
+          <li><a href="checkout.html">Giỏ hàng &amp; thanh toán</a></li>
+          <li><a href="index.html#ve-chung-toi">Về chúng tôi</a></li>
+          <li><a href="index.html#hoi-dap">Hỏi đáp</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Giao hàng &amp; đổi trả</h4>
+        <div class="foot__ship" id="footShip"></div>
+      </div>
+    </div>
+    <div class="foot__bar">
+      <span>© <span id="year">2026</span> scentsitive.vn</span>
+      <span>Trang mẫu — thay thông tin liên hệ và nội dung thật trước khi phát hành.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="veil" id="veil"></div>
+
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Giỏ hàng" aria-hidden="true">
+  <div class="drawer__head">
+    <h2>Giỏ hàng</h2>
+    <button class="iconbtn" id="cartClose" aria-label="Đóng giỏ hàng"><span class="ms ms--sm">close</span></button>
+  </div>
+  <div class="drawer__body" id="cartBody"></div>
+  <div class="drawer__foot" id="cartFoot"></div>
+</aside>
+
+<div class="toast" id="toast"><span class="ms ms--sm">check_circle</span><span id="toastText"></span></div>
+<script src="assets/shop.js"></script>
+</body>
+</html>
