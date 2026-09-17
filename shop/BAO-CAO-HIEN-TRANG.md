@@ -71,6 +71,8 @@ Ba lỗi đầu tìm bằng cách chạy thật rồi đo, không phải bằng 
 | 4 | Lưới "Về chúng tôi" không có kiểu | Cổng CSS mới báo thiếu `.vals`/`.val` | Cùng nguyên nhân với #3 — khôi phục. |
 | 5 | Thanh điều hướng chữ trắng trên nền giấy ở 2 trang mới | Ảnh chụp trang thanh toán: nav gần như vô hình | Nav mặc định chữ mực; chỉ trang chủ — nơi nav đè lên hero tối — mới thêm `.nav--over`. |
 | 6 | Nhãn trên ly nến của cả 5 sản phẩm đều là chữ "N" | 5 sản phẩm đều tên "Nến thơm 0x" | Nhãn lấy **số thứ tự mùi** (01–05) thay vì chữ cái đầu của tên. |
+| 7 | Nút giỏ hàng bị xếp hai hàng, ba nút cùng lớp thì đẹp | `#cartBtn` 2 con → 50×38 nhồi hai hàng; `#themeBtn`/`#burger`/`#cartClose` 1 con → 38×38 đẹp | `.iconbtn` viết bằng `display:grid; place-items:center` — grid mặc định xếp theo HÀNG nên chỉ đúng với một con. Chuyển sang `inline-flex`. Đo lại: hai con cùng hàng, nút giãn 50→74px, badge hai chữ số vẫn một hàng ở 77px. |
+| 8 | Dải cảnh báo đè lên thanh nav khi chưa cuộn | Dải 0–56px (hai dòng ở màn 1000px), nav `fixed` 0–79px | Dải cuộn đi như thông báo thường; JS **đo** chiều cao thật của nó rồi hạ `--nav-top`, trừ dần theo `scrollY` để nav trượt lên. Chiều cao dải đổi theo bề rộng màn nên không có số nào hardcode được. |
 
 Lỗi #3 và #4 là cùng một lớp lỗi và nó **im lặng** — trang vẫn chạy, chỉ là xấu. Nên tôi làm
 thêm một cổng cho nó (xem §5).
@@ -172,6 +174,11 @@ thanh toán `ready: false` **bắt buộc** phải liệt kê thứ còn thiếu
 3. **CSS không được mất quy tắc gốc.** 40 thành phần khối phải có quy tắc `.<tên> { }`, và không
    selector gốc nào được khai hai lần. Cổng này sinh ra ngay trong phiên: nó tìm ra bug #4 mà mắt
    tôi đã bỏ sót.
+4. **Lớp căn giữa bằng grid không được nhận quá một con.** Cổng lấy ra mọi lớp khai
+   `display:grid` + `place-items:center` mà không khai hướng cột, rồi đếm số con của từng phần tử
+   mang lớp đó trong HTML tĩnh. Sinh ra từ bug #7. Luật đầu tôi định dùng — "rule nào vừa grid vừa
+   `gap` mà không khai cột" — đã **đo trước khi nhận** và bị bác: khớp 3 rule, cả 3 đều đúng, 0 lỗi
+   thật.
 
 Mỗi cổng đều đã thử ngược — cố tình phá rồi xem nó có kêu không.
 
@@ -192,3 +199,7 @@ Khi hạ hết cờ, dải cảnh báo màu cam trên đầu trang cũng tự t�
   ngoài, tôi sinh QR ngay trong trình duyệt được, nhưng tốn thêm code.
 - **Chưa đo hiệu năng** (Lighthouse) và **chưa kiểm với trình đọc màn hình**.
 - **Chưa có ảnh OG** cho lúc chia sẻ link lên Facebook/Zalo.
+- **`shop.css` / `shop.js` chưa có version trong đường dẫn.** GitHub Pages đặt `max-age=600`
+  cho asset, nên sau mỗi lần deploy khách đã vào trước đó có thể còn dùng bản cũ khoảng 10 phút.
+  Chấp nhận được với tần suất sửa hiện tại; muốn hết hẳn thì phải thêm một bước build gắn hash
+  vào tên file.
