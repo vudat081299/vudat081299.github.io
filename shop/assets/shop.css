@@ -135,7 +135,7 @@ em.ital { font-family: var(--f-display); font-style: italic; font-weight: 400; }
    bộ màu cho từng phần tử, thanh tự khai --nav-fg và đổi đúng một biến khi dính.
    ═══════════════════════════════════════════════════════════════════════════ */
 .nav {
-  position: fixed; inset: 0 0 auto; z-index: 300;
+  position: fixed; inset: var(--nav-top, 0px) 0 auto; z-index: 300;
   /* Mặc định là chữ mực, vì hai trong ba trang có nền sáng. CHỈ trang chủ — nơi thanh này
      nằm đè lên hero tối — mới thêm .nav--over để đảo sang chữ sáng. Để mặc định ngược lại
      là trang Mùi hương và Thanh toán có một thanh chữ trắng trên nền giấy: gần như vô hình. */
@@ -612,12 +612,15 @@ html.js .hero__fade { opacity: 0; animation: fadeUp .95s var(--ease) forwards; }
    Tự tắt khi mọi cờ `placeholder` trong data đã hạ. Nó xấu có chủ ý: mục đích
    là không ai lỡ đưa nội dung máy dựng lên bán thật.
    ═══════════════════════════════════════════════════════════════════════════ */
-.phb { background: #A8600F; color: #FFF6E8; font-size: 12.5px; position: relative; z-index: 310; }
+/* Dải nằm trong luồng và cuộn đi như một thông báo bình thường; nav là fixed nên nếu để
+   nguyên top:0 thì lúc chưa cuộn nó nằm ĐÈ lên dải (đo được: dải 0–56px, nav 0–79px, và
+   dải xuống hai dòng ở màn hẹp nên con số này không cố định). JS đo chiều cao dải rồi hạ
+   --nav-top xuống, và trừ dần theo scrollY để nav trượt lên đúng lúc dải trôi khỏi màn. */
+.phb { position: relative; z-index: 310; background: #A8600F; color: #FFF6E8; font-size: 12.5px; }
 html[data-theme="dark"] .phb { background: #6B3D08; }
 .phb__in { display: flex; align-items: center; gap: 10px; padding: 9px 0; line-height: 1.5; }
 .phb .ms { flex: none; opacity: .85; }
 .phb b { font-weight: 600; white-space: nowrap; }
-body:has(.phb:not([hidden])) .nav { top: 0; }
 
 /* ═══════════════════════════════════════════════════════════════════════════
    MÀU THEO MÙI HƯƠNG
@@ -684,7 +687,8 @@ html[data-theme="dark"] #scentWash { opacity: .42; }
    TRANG MÙI HƯƠNG — mỗi mùi một màn hình, mang bộ màu riêng
    ═══════════════════════════════════════════════════════════════════════════ */
 .scent {
-  position: relative; padding: clamp(56px, 9vh, 104px) 0; scroll-margin-top: 78px;
+  position: relative; padding: clamp(56px, 9vh, 104px) 0;
+  scroll-margin-top: 78px;
   border-top: 1px solid var(--line);
 }
 .scent:first-child { border-top: 0; }

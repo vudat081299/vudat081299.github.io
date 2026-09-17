@@ -40,8 +40,19 @@ if (themeBtn) themeBtn.addEventListener('click', function () {
 
 /* ── thanh điều hướng ────────────────────────────────────────────────────── */
 var nav = $('#nav'), sheet = $('#sheet'), burger = $('#burger'), burgerIco = $('#burgerIco');
+var bannerH = 0;
+function measureBanner() {
+  var b = $('#phBanner');
+  bannerH = (b && !b.hidden) ? b.offsetHeight : 0;
+  onScroll();
+}
+function onScroll() {
+  if (!nav) return;
+  nav.classList.toggle('is-stuck', window.scrollY > 40);
+  /* nav bắt đầu ngay dưới dải cảnh báo, rồi trượt lên đúng bằng lượng dải đã cuộn khỏi màn */
+  root.style.setProperty('--nav-top', Math.max(0, bannerH - window.scrollY) + 'px');
+}
 if (nav) {
-  var onScroll = function () { nav.classList.toggle('is-stuck', window.scrollY > 40); };
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
 }
@@ -434,6 +445,10 @@ function boot(d) {
       '<span>' + esc(d.placeholder_banner) + ' <b>(' + flags + ' mục)</b></span></div>';
     ph.hidden = false;
   }
+  /* Dải cao bao nhiêu thì nav phải bắt đầu thấp bấy nhiêu — và nó xuống hai dòng ở màn
+     hẹp, nên con số phải ĐO chứ không đoán. */
+  measureBanner();
+  window.addEventListener('resize', measureBanner);
 
   var b = d.brand, fc = $('#footContact');
   if (fc) fc.innerHTML =
