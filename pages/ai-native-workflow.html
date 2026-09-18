@@ -344,6 +344,27 @@
           </div>
           <p class="hw-src">Hai trục quyết định MỌI thứ nằm ở đâu. Đa số tri thức đáng giá rơi vào <b>cột trái</b> (dùng chung → commit). Mỗi khi phân vân “ghi ở đâu, có commit không”, bạn chỉ đang đặt nó vào một trong bốn ô này.</p>
         </div>
+
+        <h3 class="hw-h3" id="ban-o-tang-nao">Bạn đang cầm cần điều khiển ở tầng nào — và vì thế nên đọc mục nào</h3>
+
+        <p class="hw-p">Còn một cách xếp hay được nhắc: <b>prompt → context → harness → loop</b>. Nó <i>không</i> phải thang “bao nhiêu agent cùng làm” (thang đó ở <a href="#multi-agent">phần 2</a>) mà là thang <b>bạn can thiệp sâu tới đâu vào cỗ máy</b>. Điểm dùng được của nó: mỗi tầng chữa một loại hỏng mà tầng dưới chịu thua — nên định vị được mình đang đứng đâu thì biết ngay nên đọc mục nào.</p>
+
+        <div class="hw-tw">
+          <table class="wb-table">
+            <thead>
+              <tr><th>Tầng</th><th>Bạn chỉnh cái gì</th><th>Loại hỏng chỉ tầng này chữa được</th><th>Đọc mục</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><b>1 · Prompt</b></td><td>câu bạn vừa gõ</td><td>nói mơ hồ → AI đoán sai ý bạn</td><td>— xem đoạn ngay dưới</td></tr>
+              <tr><td><b>2 · Context</b></td><td>cái gì được nạp vào cửa sổ ngữ cảnh</td><td>nạp thiếu hoặc nhồi thừa → prompt hay mấy cũng vô ích</td><td><a href="#cua-so-ngu-canh">1</a> · <a href="#tu-dien">3</a> · <a href="#skill-plugin">4</a></td></tr>
+              <tr><td><b>3 · Harness</b></td><td>tool, quyền, hook bọc quanh model</td><td>AI không chạy được test thì không tự biết mình sai</td><td><a href="#vong-lap">1</a> · <a href="#hook-gate">11</a></td></tr>
+              <tr><td><b>4 · Loop</b></td><td>cách lặp, ai soát ai, cổng nào chặn</td><td>thiếu vòng phản hồi → cùng một lỗi lặp lại mãi</td><td><a href="#multi-agent">2</a> · <a href="#pipeline">5</a> · <a href="#hook-gate">11</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-src">Hai thang này <b>cắt nhau</b>, đừng gộp: thang trên hỏi <i>bạn can thiệp ở tầng nào</i>, thang ở phần 2 hỏi <i>bao nhiêu agent cùng làm</i>. Vì vậy harness là một <b>tầng</b> ở đây (bạn sửa được nó) nhưng <b>không</b> phải một <b>cấp</b> ở phần 2 (nó chạy cả bốn cấp).</p>
+
+        <p class="hw-p">Tầng 1 là tầng duy nhất trang này không dành mục riêng, và đó là chủ ý chứ không phải bỏ sót: <b>thứ bạn gõ trong chat sống đúng một lượt rồi mất</b> — đúng cái sự thật gốc ở đầu mục này. Một câu prompt giỏi chỉ cứu được lượt đó. Muốn nó còn tác dụng ở phiên sau, ở máy đồng nghiệp, thì phải <b>đẩy nó lên tầng 2–4</b>: viết thành file rồi commit. Phần còn lại của trang chính là hướng dẫn đẩy lên đó — mỗi mục một chỗ cất.</p>
       </section>
 
       <!-- ══════════════ 1 · VÒNG LẶP ══════════════ -->
