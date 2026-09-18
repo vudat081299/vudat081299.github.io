@@ -415,6 +415,50 @@
           <p class="hw-src">Vòng lặp “agentic”: điều làm AI trở thành một tác nhân (agent) — không chỉ trả lời một câu, mà tự lặp quan sát → hành động cho tới khi hoàn thành mục tiêu.</p>
         </div>
 
+        <h3 class="hw-h3" id="cua-so-ngu-canh">Cửa sổ ngữ cảnh — “bộ nhớ” của AI gồm đúng những gì</h3>
+
+        <p class="hw-p">Vòng lặp trên chạy được nhờ một thứ có thật và <b>có trần</b>: <b>cửa sổ ngữ cảnh</b> (context window). Đó là <b>toàn bộ</b> những gì model nhìn thấy trong một lượt — nằm ngoài cửa sổ thì với model là <i>không tồn tại</i>. Và mỗi vòng lặp, harness <b>dựng lại từ đầu</b> rồi đưa sang: model không tự giữ gì giữa hai lượt. Câu “AI không có trí nhớ” ở đầu trang vì thế không phải phép ví von — nó tả đúng cơ chế này.</p>
+
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg" viewBox="0 0 620 296" role="img" aria-label="Cửa sổ ngữ cảnh là một hộp có trần cố định, chia hai cột: cột luôn có mặt gồm system prompt và định nghĩa tool, CLAUDE.md và README, mô tả ngắn của mọi skill; cột chỉ có khi cần gồm yêu cầu vừa gõ, file vừa đọc và kết quả lệnh, nội dung skill vừa nạp, lịch sử các lượt trước. Chạm trần thì lượt cũ bị nén hoặc rơi mất.">
+              <text class="hw-vk" x="20" y="18" text-anchor="start">Mỗi vòng lặp, harness dựng lại TOÀN BỘ cái dưới đây rồi đưa sang model</text>
+
+              <rect class="hw-vbox" x="14" y="30" width="592" height="228" rx="8"></rect>
+              <text class="hw-vk" x="28" y="50" text-anchor="start">CỬA SỔ NGỮ CẢNH · trần cố định — hết chỗ thì phải cắt bớt</text>
+
+              <text class="hw-vk" x="28"  y="72" text-anchor="start">LUÔN CÓ MẶT · tốn chỗ ở MỌI lượt</text>
+              <text class="hw-vk" x="320" y="72" text-anchor="start">CHỈ CÓ KHI CẦN · phình theo việc</text>
+
+              <rect class="hw-vpanel" x="28" y="82"  width="278" height="46" rx="7"></rect>
+              <rect class="hw-vpanel" x="28" y="137" width="278" height="46" rx="7"></rect>
+              <rect class="hw-vpanel" x="28" y="192" width="278" height="46" rx="7"></rect>
+
+              <text class="hw-vt" x="167" y="104" text-anchor="middle">System prompt + định nghĩa tool</text>
+              <text class="hw-vs" x="167" y="120" text-anchor="middle">harness tự nạp — bạn ít đụng tới</text>
+              <text class="hw-vt" x="167" y="159" text-anchor="middle">CLAUDE.md · README</text>
+              <text class="hw-vs" x="167" y="175" text-anchor="middle">nội quy luôn-bật — nên NGẮN</text>
+              <text class="hw-vt" x="167" y="214" text-anchor="middle">Mô tả ngắn của MỌI skill</text>
+              <text class="hw-vs" x="167" y="230" text-anchor="middle">thực đơn — mỗi skill một dòng</text>
+
+              <rect class="hw-vpanel" x="320" y="82"  width="272" height="33" rx="7"></rect>
+              <rect class="hw-vpanel" x="320" y="123" width="272" height="33" rx="7"></rect>
+              <rect class="hw-vpanel" x="320" y="164" width="272" height="33" rx="7"></rect>
+              <rect class="hw-vpanel" x="320" y="205" width="272" height="33" rx="7"></rect>
+
+              <text class="hw-vt" x="456" y="103" text-anchor="middle">Yêu cầu bạn vừa gõ</text>
+              <text class="hw-vt" x="456" y="144" text-anchor="middle">File vừa đọc · kết quả lệnh</text>
+              <text class="hw-vt" x="456" y="185" text-anchor="middle">Nội dung skill vừa nạp</text>
+              <text class="hw-vt" x="456" y="226" text-anchor="middle">Lịch sử các lượt trước</text>
+
+              <text class="hw-vk" x="310" y="280" text-anchor="middle">chạm trần → lượt cũ bị nén lại hoặc rơi mất · đóng phiên = dựng lại từ số 0</text>
+            </svg>
+          </div>
+          <p class="hw-src">Hình vẽ các <b>khoản mục</b>, không vẽ tỉ lệ: khoản nào chiếm bao nhiêu thì tuỳ việc bạn đang làm. Điều cố định là cái trần — và việc cột trái đã ăn mất một phần trần <i>trước khi</i> bạn kịp gõ gì.</p>
+        </div>
+
+        <p class="hw-p">Hai hệ quả, và cả trang này xoay quanh chúng. <b>Một</b>: trần cố định nên mọi thứ bạn nhét vào đều <b>chiếm chỗ của thứ khác</b> — đó chính là cái các phần sau gọi là “ngân sách ngữ cảnh”. <b>Hai</b>: cột trái tốn chỗ ở <i>mọi</i> lượt kể cả lượt chẳng liên quan, còn cột phải chỉ tốn khi thật sự dùng. Nên một quy trình dài phải nằm ở chỗ <b>nạp-khi-cần</b> chứ không phải chỗ luôn-bật — đúng <b>trục 1</b> ở mục mở đầu, và cơ chế của hai chỗ đó là nội dung <a href="#skill-plugin">phần 4</a>.</p>
+
         <p class="hw-p">Nhưng đó mới là <b>một</b> agent. Việc lớn cần <b>nhiều agent phối hợp</b> — và thực ra có cả một thang “cấp” làm việc với AI (<b>subagent · orchestrator · workflow</b> nằm ở đâu) để phần 2 ngay dưới mổ kỹ.</p>
 
         <h3 class="hw-h3">Phép ví bếp ăn — dùng suốt trang này</h3>
@@ -538,7 +582,7 @@
             </thead>
             <tbody>
               <tr><td><b>Harness</b></td><td>Bộ khung chạy model, cấp công cụ &amp; ngữ cảnh, lặp vòng.</td><td>Cái bếp</td><td>Là chính Claude Code (không phải file trong repo)</td></tr>
-              <tr><td><b>Context</b> (luôn-bật)</td><td>Info AI đọc <i>mọi lúc</i>: quy ước, tổng quan — khác <i>cửa sổ ngữ cảnh</i> (bộ nhớ mỗi lượt, xem mục Skill vs Rules).</td><td>Nội quy trên tường</td><td><code>CLAUDE.md</code>, <code>README.md</code>, memory</td></tr>
+              <tr><td><b>Context</b> (luôn-bật)</td><td>Info AI đọc <i>mọi lúc</i>: quy ước, tổng quan — khác <i>cửa sổ ngữ cảnh</i> (bộ nhớ mỗi lượt — xem <a href="#cua-so-ngu-canh">phần 1</a>).</td><td>Nội quy trên tường</td><td><code>CLAUDE.md</code>, <code>README.md</code>, memory</td></tr>
               <tr><td><b>Skill</b></td><td>Một quy trình đóng gói, chỉ nạp <i>khi cần</i>.</td><td>Tờ công thức</td><td><code>skills/&lt;tên&gt;/SKILL.md</code></td></tr>
               <tr><td><b>Plugin</b></td><td>Cái hộp gói &amp; phát skill + hook + command + MCP cho cả team.</td><td>Hộp công thức</td><td>Một thư mục có <code>plugin.json</code></td></tr>
               <tr><td><b>MCP</b></td><td>Chuẩn cắm AI vào công cụ/dữ liệu ngoài (Jira, DB, Figma…).</td><td>Cửa giao hàng</td><td><code>.mcp.json</code></td></tr>
@@ -644,7 +688,7 @@
           <p class="hw-src">Cùng là chữ. Khác ở CƠ CHẾ NẠP: rules do harness nhét theo luật tĩnh; skill do MODEL tự chọn theo mô tả (như gọi một tool) và kèm được script. Bạn CÓ THỂ làm rules bắt chước on-demand — chính vì ai cũng phải bắt chước nên “skill” ra đời làm cái chuẩn gọn cho việc đó.</p>
         </div>
 
-        <p class="hw-p">Vì sao khác biệt đó quan trọng? Vì <b>cửa sổ ngữ cảnh</b> (context window — “bộ nhớ làm việc” của AI mỗi lượt) <b>có hạn</b>. Rules always-on chiếm chỗ mọi lúc: có 300 luật thì 300 luật cùng chen vào và AI đọc lướt. Skill chỉ tốn một dòng mô tả cho tới khi thật sự cần — nên bạn giữ được <b>hàng trăm skill</b> mà ngữ cảnh vẫn gọn. Ba chỗ khác biệt cốt lõi, gom trong bảng:</p>
+        <p class="hw-p">Vì sao khác biệt đó quan trọng? Vì <a href="#cua-so-ngu-canh">cửa sổ ngữ cảnh</a> <b>có trần</b> — và rules always-on nằm đúng ở cột “luôn có mặt” của cái trần đó: có 300 luật thì cả 300 cùng chen vào <i>mọi</i> lượt, kể cả lượt chẳng dính gì, rồi AI đọc lướt. Skill chỉ tốn một dòng mô tả cho tới khi thật sự cần — nên bạn giữ được <b>hàng trăm skill</b> mà ngữ cảnh vẫn gọn. Ba chỗ khác biệt cốt lõi, gom trong bảng:</p>
 
         <div class="hw-tw">
           <table class="wb-table">
