@@ -9,7 +9,7 @@ cách chúng chạy tự động**.
 | `facts/` | [facts/CLAUDE.md](facts/CLAUDE.md) | `facts/tools/factlint.py check` + `verify` | 1, 2, 3, 4 |
 | `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3, 4 |
 | `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2, 4 |
-| `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` | 2, 4 |
+| `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` (kiểm cả trang mồ côi trong `pages/`, `cooking/`) | 2, 4 |
 | `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` | 2, 4 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2, 4 |
 | `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `sh shop/tools/check.sh` | 1, 2, 3, 4 + chạy thật |
@@ -125,8 +125,10 @@ Ba bước, đúng thứ tự:
 3. **Ghép, chạy cổng, ship.**
 
 **Luật chia chỗ — đếm được, không tranh luận được:** khối **lặp** → chữ ở data; khối **độc
-nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 6 section + 31 ô đều lặp nên nằm ở
-`data/collection.json`; tiêu đề trang chỉ có một nên ở lại HTML. Trang văn xuôi độc nhất
+nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 8 section + 31 ô + 6 dòng môn học đều lặp nên nằm ở
+`data/collection.json`; tiêu đề trang chỉ có một nên ở lại HTML. Rail bên trái và ba cột
+chân trang cũng dựng từ chính mảng `sections` ấy — không có danh sách mục thứ hai để quên
+cập nhật. Trang văn xuôi độc nhất
 (`pages/chemistry.html`, `how-money-works`…) **không** tách — chữ ở đó không lặp, JSON hoá chỉ
 thêm một lớp indirection.
 
@@ -152,9 +154,33 @@ Luật này cũng nằm ở trường `note` trong `data/collection.json` — ng
 theo đang gõ, vì **ai viết mục thứ 32 cũng bắt chước mục 1–31**. Đó là lý do bộ mẫu quan trọng
 hơn luật: đã rà cả 31 mô tả và sửa 12 cái vi phạm, để cái được bắt chước là cái đúng.
 
-Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Nó **không**
-kiểm độ dài mô tả: đã đo, 31 mô tả đang chạy dài 24→235 ký tự, mọi ngưỡng chung đều là số bịa.
-Câu có sát việc của cái ô hay không là việc của người viết.
+**Mở rộng 20/09/2026 — luật áp cho cả `desc` của section, và một luật sắp xếp.** `desc` của
+section trước đây tự do hơn mục con nên vi phạm chính luật ấy ở ba chỗ: `lọc theo nguyên liệu,
+loại món, độ khó` (Cooking), `each with interactive models` (Science), `Each subject is a card —
+its rows are the pages inside that subject's folder` (Master's) — câu cuối còn tả cách trang
+được vẽ. `desc` nói **cái gì gom nhóm ấy lại**, không nói trang có bộ phận gì.
+
+Luật sắp xếp: **một section = một trục duy nhất.** `Tools` là thứ bạn *dùng*; bảy section còn
+lại là chủ đề bạn *đọc*. Bản trước trộn hai trục — một ô `Pages` 12 mục chứa lẫn công cụ
+(Loto, Cashy, JSON) với giáo trình (Debate, Psychology, English), cạnh những section chia theo
+chủ đề. **Đừng dựng lại một ô `Pages` chứa mọi thứ:** trang nào không biết xếp đâu là dấu hiệu
+thiếu một section, không phải cớ để có một cái thùng.
+
+**Phím tắt: keyspace đã hết, và đã phải xử lý thật.** 36 ô phím (`0-9` + `a-z`) dùng hết ngày
+20/09/2026; đúng hôm ấy `pages/wealth-roadmap.html` là mục thứ 37. Cách xử lý đã chốt: **`key`
+là trường tuỳ chọn.** Mục không có `key` thì không vẽ chip phím (không vẽ chip rỗng), và mở bằng
+chuột hoặc ô tìm kiếm — `/` nhảy vào ô, `↵` mở kết quả đầu. Linter chỉ kiểm định dạng và trùng
+lặp **khi** có `key`. **Đừng ép hai mục dùng chung một phím** để giữ cho đủ bộ.
+
+Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Từ 20/09/2026 nó kiểm thêm
+một chiều nữa: mọi `.html` trong `pages/` và `cooking/` phải có một mục trỏ tới, vì
+`family-insurance-benefits.html` và `jazz-piano-theory.html` đã viết xong mà nằm ngoài danh mục
+nhiều tháng — trang vẫn mở được bằng URL trực tiếp nên không gì tự lộ ra. Muốn cố ý không niêm
+yết thì ghi vào `ALLOW_UNLISTED` kèm lý do, đừng xoá cổng.
+
+Nó **không** kiểm độ dài mô tả: đã đo lại 20/09/2026, 37 mô tả đang chạy dài 24→193 ký tự
+(trung vị 78), mọi ngưỡng chung đều là số bịa. Câu có sát việc của cái ô hay không là việc của
+người viết.
 
 ---
 
