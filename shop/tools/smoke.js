@@ -22,23 +22,39 @@ catch (e) {
   process.exit(2);
 }
 
-/* Tìm Chromium: biến môi trường trước, rồi các chỗ Playwright hay đặt. */
+/* Tìm Chromium: biến môi trường trước, rồi các chỗ Playwright hay đặt.
+ *
+ * Phải nhận CẢ hai dạng. `playwright install chromium` ở bản mới chỉ tải
+ * `chromium_headless_shell-<rev>/chrome-linux/headless_shell` chứ không tải bản đầy đủ —
+ * đo được trên CI ngày 20/09/2026: bản đầu của hàm này chỉ nhận thư mục tên `chromium-<rev>`
+ * với file tên `chrome`, nên nó báo "không tìm thấy" giữa lúc trình duyệt nằm ngay đó.
+ * Ta chạy headless nên headless_shell dùng tốt; chỉ ưu tiên bản đầy đủ nếu có mặt. */
 function findChrome() {
   const fs = require('fs'), path = require('path');
   if (process.env.CHROME_PATH && fs.existsSync(process.env.CHROME_PATH)) return process.env.CHROME_PATH;
+
   const roots = [process.env.PLAYWRIGHT_BROWSERS_PATH, '/opt/pw-browsers',
-                 path.join(process.env.HOME || '', '.cache/ms-playwright')].filter(Boolean);
+                 path.join(process.env.HOME || '', '.cache/ms-playwright'),
+                 path.join(process.env.LOCALAPPDATA || '', 'ms-playwright')].filter(Boolean);
+  const rels = ['chrome-linux/chrome', 'chrome-linux64/chrome',
+                'chrome-mac/Chromium.app/Contents/MacOS/Chromium',
+                'chrome-linux/headless_shell', 'chrome-linux64/headless_shell',
+                'chrome-mac/headless_shell'];
+  const hits = [];
   for (const root of roots) {
     let dirs = [];
     try { dirs = fs.readdirSync(root); } catch (e) { continue; }
-    for (const d of dirs.filter(x => x.startsWith('chromium-'))) {
-      for (const rel of ['chrome-linux/chrome', 'chrome-mac/Chromium.app/Contents/MacOS/Chromium']) {
+    for (const d of dirs) {
+      if (!/^chromium(_headless_shell)?-/.test(d)) continue;
+      for (const rel of rels) {
         const p = path.join(root, d, rel);
-        if (fs.existsSync(p)) return p;
+        if (fs.existsSync(p)) hits.push(p);
       }
     }
   }
-  return null;
+  if (!hits.length) return null;
+  /* bản đầy đủ trước, headless shell sau */
+  return hits.find(p => !p.includes('headless_shell')) || hits[0];
 }
 
 const checks = [];
@@ -49,7 +65,13 @@ function check(name, ok, detail) {
 
 (async () => {
   const exe = findChrome();
-  if (!exe) { console.log('BỎ QUA: không tìm thấy Chromium của Playwright.'); process.exit(2); }
+  if (!exe) {
+    console.log('BỎ QUA: không tìm thấy Chromium của Playwright.');
+    console.log('  Đã tìm ở: PLAYWRIGHT_BROWSERS_PATH, /opt/pw-browsers, ~/.cache/ms-playwright');
+    console.log('  Cài bằng: npx playwright install chromium');
+    process.exit(2);
+  }
+  console.log('trình duyệt: ' + exe);
 
   const browser = await chromium.launch({ executablePath: exe, args: ['--no-sandbox'] });
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
