@@ -82,6 +82,9 @@ Xem phễu ở `/shop/measure/`.
   thúc bằng `if ($('#coLines')) renderCheckout();`. Một lần neo nhầm khiến hộp quà bị trả về
   mặc định sau mỗi lần giỏ đổi — cổng **không** bắt được vì cú pháp vẫn đúng.
 - **Đừng thêm liên kết markdown tới file chưa tồn tại.** Có cổng; markdown gãy thì im lặng.
+- **Đừng đặt đường dẫn có dấu sao kiểu `thư-mục-*/file` trong block comment JS.** Chuỗi `*/`
+  đóng comment sớm và node sẽ báo SyntaxError ở một dòng cách đó rất xa. Đã xảy ra một lần
+  trong chính `tools/smoke.js`.
 - **`pitch/` và `measure/` không dùng shell và không dùng lớp `.ms`.** Chúng nằm trong thư mục
   con nên cổng shell không quét tới — sửa thì phải tự mở xem.
 
