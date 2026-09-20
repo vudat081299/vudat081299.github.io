@@ -114,13 +114,26 @@ Phần nào chưa bắt được gì thì chưa cần tồn tại.
 
 | Lớp | Chạy khi | Bắt được gì |
 |---|---|---|
-| `PostToolUse` | sau mỗi Edit/Write | sửa bằng công cụ sửa file |
-| `pre-commit` | `git commit` | mọi thay đổi, kể cả viết bằng script |
-| `pre-push` | `git push` | trạng thái cuối, kể cả sau `--no-verify` |
+| 1. `PostToolUse` | sau mỗi Edit/Write | sửa bằng công cụ sửa file |
+| 2. `pre-commit` | `git commit` | mọi thay đổi, kể cả viết bằng script |
+| 3. `pre-push` | `git push` | trạng thái cuối, kể cả sau `--no-verify` |
+| 4. GitHub Actions | push lên `main`, mọi PR | thứ ba lớp kia bỏ sót vì chúng sống trên máy người sửa |
 
 Lớp 1 có lỗ: thay đổi viết bằng `python3 - <<EOF` không đi qua tool Edit nên nó không thấy.
 Lớp 2 bịt lỗ đó. **Phiên 20/09/2026 sửa gần như toàn bộ bằng heredoc Python, nên lớp 2 là lớp
 duy nhất thật sự làm việc.** Đó là bằng chứng nó cần tồn tại.
+
+### Và một thứ không lớp nào trong bốn lớp trên bắt được: hành vi
+
+Cổng lint đọc cú pháp và dữ liệu. Nó **không bấm nút**. Hai lỗi nặng nhất của thư mục này —
+hộp quà bị trả về mặc định sau mỗi lần giỏ đổi, và trần tồn kho hộp quà không được tôn trọng —
+đều đi qua lint sạch sẽ.
+
+Đã đo lại để chắc, không phải suy luận: tái tạo đúng lỗi cũ rồi chạy cả hai tầng.
+`lint-shop.py` in ra **OK**; `smoke.js` in ra **2/12 LỖI**, kèm đúng câu chẩn đoán
+("số lượng dừng ở 1, toast cuối: Đã thêm hộp quà vào giỏ").
+
+Nên `shop/tools/check.sh` chạy cả hai tầng, và đó là lệnh trả lời "đã xong chưa".
 
 ### Cổng phải thử ngược
 
@@ -141,8 +154,12 @@ một mùi không bao giờ được giới thiệu cho ai.
 
 ### Làm việc với AI trong thư mục này
 
-Đầu phiên, đưa cho agent đúng bốn thứ: `shop/CLAUDE.md`, file này, `HANDOFF.md`, và lệnh chạy
-cổng. Đừng dán cả repo.
+Có **skill riêng** ở `.claude/skills/shop/` — quy trình viết thành chữ, để phiên nào cũng theo
+cùng một lối thay vì mỗi phiên tự nghĩ ra một lối. Nó đi theo git (xem ngoại lệ trong
+`.gitignore`), nên nó có mặt ở mọi máy chứ không chỉ máy đã dựng ra nó.
+
+Đầu phiên, đưa cho agent đúng bốn thứ: skill đó, `shop/CLAUDE.md`, `HANDOFF.md`, và
+`sh shop/tools/check.sh`. Đừng dán cả repo.
 
 Ba thói quen đã trả giá để có:
 
@@ -159,9 +176,14 @@ Ba thói quen đã trả giá để có:
 
 ### Chỗ dừng lại
 
-Quy trình này **đã đủ** cho quy mô hiện tại. Chưa cần: CI trên GitHub Actions, bộ test tự động,
-TypeScript, bước build, hệ quản trị nội dung. Mỗi thứ ấy chỉ nên thêm khi có một lỗi thật mà ba
+Quy trình này **đã đủ** cho quy mô hiện tại. Chưa cần: bộ test đơn vị, TypeScript, bước build,
+hệ quản trị nội dung, môi trường staging. Mỗi thứ ấy chỉ nên thêm khi có một lỗi thật mà bốn
 lớp cổng hiện tại không bắt được — và lúc đó thì lỗi ấy chính là lý do để thêm.
+
+Bản trước của mục này còn liệt kê "CI trên GitHub Actions" vào diện chưa cần. Đã đổi ý, và lý
+do đổi đáng ghi lại: ba lớp đầu đều sống trên **máy** người sửa, nên một phiên chạy ở môi
+trường khác — hoặc một commit tạo từ giao diện web — đi lọt hết. Đó không phải giả thuyết về
+tương lai; repo này có nhiều phiên agent chạy song song và cùng push thẳng lên `main`.
 
 ---
 

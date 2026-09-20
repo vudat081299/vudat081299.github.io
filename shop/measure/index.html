@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>Phễu · scentsitive.vn</title>
+<meta name="description" content="Đọc các sự kiện mà trang đã ghi lại trong máy này — dùng để kiểm xem đo đạc có chạy đúng không." />
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Cormorant+Garamond:wght@500;600&display=swap" />
+<link rel="stylesheet" href="../assets/shop.css" />
+<script>
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('scentsitive-theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+/* Trang nội bộ. Không nav, không giỏ hàng, không .ms — chỉ mượn token của shop.css. */
+.m-wrap { max-width: 980px; margin: 0 auto; padding: 46px var(--gut) 90px; }
+.m-h1 { font-family: var(--f-display); font-weight: 500; font-size: clamp(30px, 4.6vw, 48px); margin: 0 0 10px; letter-spacing: -.014em; }
+.m-lede { color: var(--ink-2); line-height: 1.75; max-width: 64ch; margin: 0 0 8px; }
+.m-warn { border-left: 3px solid var(--ember); background: color-mix(in srgb, var(--ember) 7%, transparent);
+  padding: 16px 19px; border-radius: 0 var(--r-sm) var(--r-sm) 0; margin: 22px 0 34px; }
+.m-warn b { display: block; margin-bottom: 5px; font-weight: 500; }
+.m-warn p { margin: 0 0 8px; font-size: 13.5px; line-height: 1.7; color: var(--ink-2); }
+.m-warn p:last-child { margin-bottom: 0; }
+
+.m-eye { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--ink-3); margin: 34px 0 14px; }
+.m-card { border: 1px solid var(--line); border-radius: var(--r-md); background: var(--card); padding: 22px; }
+
+/* phễu: mỗi bậc một thanh, rộng theo tỉ lệ so với bậc đầu */
+.m-step { display: grid; grid-template-columns: 190px 1fr 108px; gap: 14px; align-items: center; padding: 7px 0; font-size: 13.5px; }
+.m-step__l { color: var(--ink-2); }
+.m-step__b { height: 26px; border-radius: 7px; background: var(--line-2); overflow: hidden; }
+.m-step__f { height: 100%; background: var(--ember); border-radius: 7px; transition: width .5s var(--ease); min-width: 2px; }
+.m-step__n { text-align: right; font-variant-numeric: tabular-nums; }
+.m-step__n i { font-style: normal; color: var(--ink-3); font-size: 12px; }
+.m-drop { color: var(--ember); font-size: 12px; }
+
+.m-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(168px, 1fr)); }
+.m-kpi { border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; background: var(--card); }
+.m-kpi__v { font-family: var(--f-display); font-size: 31px; font-weight: 600; line-height: 1; }
+.m-kpi__l { font-size: 12.5px; color: var(--ink-3); margin-top: 6px; line-height: 1.45; }
+
+table.m-t { width: 100%; border-collapse: collapse; font-size: 13px; }
+.m-t th { text-align: left; font-weight: 500; color: var(--ink-3); font-size: 11.5px; letter-spacing: .1em;
+  text-transform: uppercase; padding: 0 10px 9px 0; border-bottom: 1px solid var(--line); }
+.m-t td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line-2); vertical-align: top; }
+.m-t td:last-child { color: var(--ink-3); font-size: 12px; }
+.m-t code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+
+.m-acts { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
+.m-empty { color: var(--ink-3); padding: 30px 0; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<main class="m-wrap">
+  <h1 class="m-h1">Phễu</h1>
+  <p class="m-lede">
+    Mọi sự kiện mà trang đã ghi lại <b>trong trình duyệt này</b>. Trang tồn tại để trả lời một
+    câu hỏi rất hẹp: đo đạc có bắn đúng chỗ không, và khách rụng ở bậc nào.
+  </p>
+
+  <div class="m-warn">
+    <b>Đây không phải số của khách thật</b>
+    <p>
+      Sự kiện nằm trong <code>localStorage</code> của đúng máy này. Shop không thấy được gì,
+      và số của hai máy khác nhau không cộng lại được. Muốn gộp số của khách thật thì phải có
+      một endpoint nhận sự kiện — đổi <code>SINK</code> trong <code>assets/shop.js</code> thành
+      một URL là xong phần trang, phần còn lại cần một hàm serverless (chặng 1 của lộ trình).
+    </p>
+    <p>
+      Không cookie, không id theo dõi giữa các phiên, không gửi đi đâu. <code>sid</code> chỉ
+      sống trong một tab, và chỉ để nối các sự kiện của cùng một lượt xem.
+    </p>
+  </div>
+
+  <div id="out"></div>
+
+  <div class="m-acts">
+    <button class="btn btn--ghost" id="exp">Tải về JSON</button>
+    <button class="btn btn--ghost" id="clr">Xoá hết</button>
+    <a class="btn btn--ghost" href="../scent-finder.html">Sang Tìm mùi để tạo dữ liệu</a>
+  </div>
+</main>
+
+<script>
+(function () {
+  var KEY = 'scentsitive-events';
+  var $ = function (s) { return document.querySelector(s); };
+  function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+  function load() {
+    try { var v = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(v) ? v : []; }
+    catch (e) { return []; }
+  }
+
+  function render() {
+    var log = load(), box = $('#out');
+    if (!log.length) {
+      box.innerHTML = '<p class="m-empty">Chưa có sự kiện nào. Mở cửa hàng, làm thử Tìm mùi hoặc gói một hộp quà, rồi quay lại đây.</p>';
+      return;
+    }
+
+    var n = function (ev) { return log.filter(function (r) { return r.e === ev; }).length; };
+    /* Đếm theo LƯỢT (sid) chứ không theo lần bấm: một người bấm "làm lại" ba lần không phải
+       ba người. Phễu tính bằng số lượt có ít nhất một sự kiện thuộc bậc đó. */
+    var sids = function (pred) {
+      var s = {};
+      log.forEach(function (r) { if (pred(r)) s[r.s] = 1; });
+      return Object.keys(s).length;
+    };
+    var totalSid = sids(function () { return true; });
+
+    // ── phễu Tìm mùi ────────────────────────────────────────────────────────
+    var maxQ = 0;
+    log.forEach(function (r) { if (r.e === 'quiz_answer' && r.p && r.p.i > maxQ) maxQ = r.p.i; });
+    var steps = [{ l: 'Mở trang Tìm mùi', v: sids(function (r) { return r.e === 'view' && r.p && r.p.page === 'scent-finder'; }) },
+                 { l: 'Bấm bắt đầu', v: sids(function (r) { return r.e === 'quiz_start'; }) }];
+    for (var i = 1; i <= maxQ; i++) {
+      (function (k) {
+        steps.push({ l: 'Trả lời câu ' + k, v: sids(function (r) { return r.e === 'quiz_answer' && r.p && r.p.i === k; }) });
+      })(i);
+    }
+    steps.push({ l: 'Ra kết quả', v: sids(function (r) { return r.e === 'quiz_done'; }) });
+    steps.push({ l: 'Thêm vào giỏ sau đó', v: sids(function (r) { return r.e === 'cart_add' && r.p && r.p.from === 'scent-finder'; }) });
+
+    var base = steps[0].v || 1;
+    var funnel = steps.map(function (s, i) {
+      var prev = i ? steps[i - 1].v : s.v;
+      var drop = prev && s.v < prev ? Math.round((prev - s.v) / prev * 100) : 0;
+      return '<div class="m-step"><span class="m-step__l">' + esc(s.l) + '</span>' +
+        '<span class="m-step__b"><i class="m-step__f" style="display:block;width:' +
+          (base ? Math.max(0, s.v / base * 100) : 0).toFixed(1) + '%"></i></span>' +
+        '<span class="m-step__n">' + s.v + (drop ? ' <i class="m-drop">−' + drop + '%</i>' : '') + '</span></div>';
+    }).join('');
+
+    // ── mùi nào thắng thật ──────────────────────────────────────────────────
+    var byScent = {}, byIntent = {};
+    log.forEach(function (r) {
+      if (r.e !== 'quiz_done' || !r.p) return;
+      byScent[r.p.scent] = (byScent[r.p.scent] || 0) + 1;
+      byIntent[r.p.intent] = (byIntent[r.p.intent] || 0) + 1;
+    });
+    var scentRows = Object.keys(byScent).sort(function (a, b) { return byScent[b] - byScent[a]; })
+      .map(function (k) { return '<tr><td><code>' + esc(k) + '</code></td><td>' + byScent[k] + '</td><td>kết quả quiz</td></tr>'; }).join('');
+    var intentRows = Object.keys(byIntent).map(function (k) {
+      return '<tr><td><code>' + esc(k) + '</code></td><td>' + byIntent[k] + '</td><td>ý định khi làm quiz</td></tr>'; }).join('');
+
+    // ── bảng sự kiện thô, mới nhất trước ────────────────────────────────────
+    var rows = log.slice(-40).reverse().map(function (r) {
+      var d = new Date(r.t);
+      var hh = function (x) { return (x < 10 ? '0' : '') + x; };
+      return '<tr><td>' + hh(d.getHours()) + ':' + hh(d.getMinutes()) + ':' + hh(d.getSeconds()) + '</td>' +
+        '<td><code>' + esc(r.e) + '</code></td>' +
+        '<td>' + esc(r.p ? JSON.stringify(r.p) : '') + '</td></tr>';
+    }).join('');
+
+    box.innerHTML =
+      '<div class="m-grid">' +
+        '<div class="m-kpi"><div class="m-kpi__v">' + log.length + '</div><div class="m-kpi__l">sự kiện đã ghi</div></div>' +
+        '<div class="m-kpi"><div class="m-kpi__v">' + totalSid + '</div><div class="m-kpi__l">lượt xem (tab)</div></div>' +
+        '<div class="m-kpi"><div class="m-kpi__v">' + n('quiz_done') + '</div><div class="m-kpi__l">lần ra kết quả Tìm mùi</div></div>' +
+        '<div class="m-kpi"><div class="m-kpi__v">' + n('quiz_leave') + '</div><div class="m-kpi__l">lần bỏ giữa chừng</div></div>' +
+        '<div class="m-kpi"><div class="m-kpi__v">' + n('gift_add') + '</div><div class="m-kpi__l">hộp quà vào giỏ</div></div>' +
+        '<div class="m-kpi"><div class="m-kpi__v">' + n('order_copy') + '</div><div class="m-kpi__l">lần sao chép đơn</div></div>' +
+      '</div>' +
+      '<p class="m-eye">Phễu Tìm mùi — tính theo lượt, không theo lần bấm</p>' +
+      '<div class="m-card">' + funnel +
+        (n('quiz_leave') ? '<p class="m-lede" style="margin:16px 0 0;font-size:13px">' +
+          'Có ' + n('quiz_leave') + ' lượt đóng trang khi đang giữa chừng. Câu bị bỏ nhiều nhất là chỗ nên cắt bớt.</p>' : '') +
+      '</div>' +
+      (scentRows || intentRows ? '<p class="m-eye">Kết quả quiz ra mùi nào</p><div class="m-card">' +
+        '<table class="m-t"><thead><tr><th>Khoá</th><th>Lần</th><th>Loại</th></tr></thead><tbody>' +
+        scentRows + intentRows + '</tbody></table></div>' : '') +
+      '<p class="m-eye">40 sự kiện gần nhất</p>' +
+      '<div class="m-card"><table class="m-t"><thead><tr><th>Giờ</th><th>Sự kiện</th><th>Kèm theo</th></tr></thead>' +
+      '<tbody>' + rows + '</tbody></table></div>';
+  }
+
+  $('#exp').addEventListener('click', function () {
+    var blob = new Blob([JSON.stringify(load(), null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'scentsitive-events.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+  $('#clr').addEventListener('click', function () {
+    if (!confirm('Xoá toàn bộ sự kiện đã ghi trong máy này?')) return;
+    try { localStorage.removeItem('scentsitive-events'); } catch (e) {}
+    render();
+  });
+  render();
+})();
+</script>
+</body>
+</html>

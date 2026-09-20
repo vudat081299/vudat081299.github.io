@@ -1,0 +1,141 @@
+/* Kiểm nhanh bằng trình duyệt thật cho shop/.
+ *
+ * Vì sao cần, khi đã có lint: cổng lint bắt được cú pháp và dữ liệu, KHÔNG bắt được hành vi.
+ * Hai lỗi nặng nhất của thư mục này — hộp quà bị trả về mặc định sau mỗi lần giỏ đổi, và
+ * trần tồn kho hộp quà không được tôn trọng — đều đi qua lint sạch sẽ. Cái bắt được chúng là
+ * mở trình duyệt, bấm, rồi đọc localStorage.
+ *
+ * Chạy:  node shop/tools/smoke.js [base-url]
+ * Mặc định base-url là http://localhost:8000/shop/
+ *
+ * Cần playwright-core và một bản Chromium. Không có thì thoát với mã 2 (BỎ QUA), không phải
+ * mã 1 — thiếu công cụ không đồng nghĩa với trang hỏng.
+ */
+'use strict';
+
+const BASE = (process.argv[2] || 'http://localhost:8000/shop/').replace(/\/?$/, '/');
+
+let chromium;
+try { ({ chromium } = require('playwright-core')); }
+catch (e) {
+  console.log('BỎ QUA: chưa có playwright-core. Cài bằng `npm i -g playwright-core` rồi chạy lại.');
+  process.exit(2);
+}
+
+/* Tìm Chromium: biến môi trường trước, rồi các chỗ Playwright hay đặt. */
+function findChrome() {
+  const fs = require('fs'), path = require('path');
+  if (process.env.CHROME_PATH && fs.existsSync(process.env.CHROME_PATH)) return process.env.CHROME_PATH;
+  const roots = [process.env.PLAYWRIGHT_BROWSERS_PATH, '/opt/pw-browsers',
+                 path.join(process.env.HOME || '', '.cache/ms-playwright')].filter(Boolean);
+  for (const root of roots) {
+    let dirs = [];
+    try { dirs = fs.readdirSync(root); } catch (e) { continue; }
+    for (const d of dirs.filter(x => x.startsWith('chromium-'))) {
+      for (const rel of ['chrome-linux/chrome', 'chrome-mac/Chromium.app/Contents/MacOS/Chromium']) {
+        const p = path.join(root, d, rel);
+        if (fs.existsSync(p)) return p;
+      }
+    }
+  }
+  return null;
+}
+
+const checks = [];
+function check(name, ok, detail) {
+  checks.push({ name, ok, detail });
+  console.log(`${ok ? '  ok  ' : '  LỖI'} ${name}${detail ? '  — ' + detail : ''}`);
+}
+
+(async () => {
+  const exe = findChrome();
+  if (!exe) { console.log('BỎ QUA: không tìm thấy Chromium của Playwright.'); process.exit(2); }
+
+  const browser = await chromium.launch({ executablePath: exe, args: ['--no-sandbox'] });
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const jsErrors = [];
+  ctx.on('page', p => {
+    p.on('pageerror', e => jsErrors.push(`${p.url().split('/').pop() || 'index'}: ${e.message}`));
+  });
+
+  try {
+    /* 1. Năm trang nạp được, không lỗi JS, không tràn ngang, không kẹt ở màn báo lỗi dữ liệu. */
+    for (const name of ['index.html', 'products.html', 'scent-finder.html', 'gift.html', 'checkout.html']) {
+      const pg = await ctx.newPage();
+      await pg.goto(BASE + name, { waitUntil: 'networkidle' });
+      await pg.waitForTimeout(500);
+      const st = await pg.evaluate(() => ({
+        dataErr: !!document.querySelector('#dataError')?.textContent.trim(),
+        h: document.body.scrollHeight,
+        overflow: document.documentElement.scrollWidth > window.innerWidth + 2,
+      }));
+      check(`nạp ${name}`, !st.dataErr && st.h > 500 && !st.overflow,
+            st.dataErr ? 'không đọc được data/shop.json' : st.overflow ? 'tràn ngang' : '');
+      await pg.close();
+    }
+
+    /* 2. Tìm mùi: đi hết một lượt phải ra kết quả có mùi và có phần trăm. */
+    const q = await ctx.newPage();
+    await q.goto(BASE + 'scent-finder.html', { waitUntil: 'networkidle' });
+    await q.waitForTimeout(400);
+    await q.click('#sfStart'); await q.waitForTimeout(250);
+    for (const n of [1, 3, 3, 1, 1]) { await q.keyboard.press(String(n)); await q.waitForTimeout(280); }
+    await q.waitForTimeout(400);
+    const res = await q.evaluate(() => ({
+      on: document.querySelector('#sfR')?.classList.contains('is-on'),
+      name: document.querySelector('.sfname')?.textContent,
+      pct: document.querySelector('.sfmatch__pct')?.textContent,
+      why: document.querySelectorAll('.sfwhy li').length,
+    }));
+    check('Tìm mùi ra kết quả', !!(res.on && res.name && /^\d+%$/.test(res.pct || '')), `${res.name} ${res.pct}`);
+    check('kết quả có nói lý do', res.why > 0, `${res.why} dòng`);
+
+    /* 3. Hộp quà: TRẦN TỒN KHO phải được tôn trọng, và toast phải nói thật.
+          Đây là phép đo sinh ra từ một lỗi có thật — bấm 8 lần vào hộp chỉ gói được 6 mà
+          cả 8 lần đều báo "đã thêm". */
+    const g = await ctx.newPage();
+    await g.goto(BASE + 'gift.html', { waitUntil: 'networkidle' });
+    await g.waitForTimeout(500);
+    await g.evaluate(() => localStorage.removeItem('scentsitive-cart'));
+    await g.reload({ waitUntil: 'networkidle' }); await g.waitForTimeout(500);
+    await g.click('[data-box="b3"]'); await g.waitForTimeout(250);
+    for (const i of [0, 1, 2]) { await g.click(`[data-slot="${i}"][data-scent="s1"]`); await g.waitForTimeout(160); }
+    const cap = await g.evaluate(() => {
+      const m = document.body.innerHTML.match(/Còn (\d+)/);
+      return m ? +m[1] : null;
+    });
+    let lastToast = '';
+    for (let i = 0; i < 9; i++) {
+      await g.click('#gbAdd'); await g.waitForTimeout(170);
+      lastToast = await g.evaluate(() => document.querySelector('#toastText')?.textContent || '');
+    }
+    const qty = await g.evaluate(() => (JSON.parse(localStorage.getItem('scentsitive-cart') || '[]')[0] || {}).q);
+    const blocked = /Chỉ gói được/.test(lastToast);
+    check('hộp quà tôn trọng trần tồn kho', qty <= 7 && blocked, `số lượng dừng ở ${qty}, toast cuối: "${lastToast}"`);
+    check('giỏ giữ đúng một dòng hộp quà', await g.evaluate(() =>
+      JSON.parse(localStorage.getItem('scentsitive-cart') || '[]').length) === 1);
+
+    /* 4. Cấu hình hộp phải sống sót qua việc giỏ vẽ lại. */
+    await g.click('#cartBtn'); await g.waitForTimeout(400);
+    const cfg = await g.evaluate(() => {
+      const c = JSON.parse(localStorage.getItem('scentsitive-cart') || '[]')[0];
+      return c && c.g ? c.g.scents.length : 0;
+    });
+    check('cấu hình hộp không bị mất khi giỏ vẽ lại', cfg === 3, `${cfg} ngăn`);
+
+    /* 5. Đo đạc có bắn không. */
+    const evs = await g.evaluate(() => {
+      const l = JSON.parse(localStorage.getItem('scentsitive-events') || '[]');
+      return [...new Set(l.map(r => r.e))];
+    });
+    check('lớp đo có ghi sự kiện', evs.length >= 3, evs.join(', '));
+
+    check('không có lỗi JS trên trang nào', jsErrors.length === 0, jsErrors.slice(0, 2).join(' | '));
+  } finally {
+    await browser.close();
+  }
+
+  const bad = checks.filter(c => !c.ok);
+  console.log(bad.length ? `\nsmoke: ${bad.length}/${checks.length} LỖI.` : `\nsmoke: OK (${checks.length} phép đo).`);
+  process.exit(bad.length ? 1 : 0);
+})().catch(e => { console.error('smoke: hỏng —', e.message); process.exit(1); });

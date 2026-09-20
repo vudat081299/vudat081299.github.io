@@ -4,18 +4,34 @@
 [docs/05-KIEN-TRUC.md](docs/05-KIEN-TRUC.md). Mục lục đầy đủ:
 [docs/00-DOC-CAI-NAY-TRUOC.md](docs/00-DOC-CAI-NAY-TRUOC.md).
 
-## Chạy thử trong 30 giây
+## Quy trình — ba lệnh, không phải ba trang hướng dẫn
 
 ```bash
-sh facts/tools/install-hooks.sh          # từ gốc repo
-python3 -m http.server 8000
-python3 shop/tools/lint-shop.py -v
+sh facts/tools/install-hooks.sh     # 1. đầu phiên: dựng lại hook. Chạy nhiều lần vô hại.
+python3 -m http.server 8000         # 2. fetch cần HTTP; mở file:// là trang rỗng
+sh shop/tools/check.sh              # 3. cuối phiên: "đã xong chưa"
 ```
+
+Giữa bước 2 và 3 thì cứ sửa — **cổng tự chạy**, không phải nhớ:
+
+| Khi nào | Cái gì chạy | Nó bắt gì |
+|---|---|---|
+| Ngay sau mỗi lần Edit/Write | `shop/tools/hooks/post-edit.sh` | cú pháp, dữ liệu, shell, liên kết |
+| Lúc `git commit` | `shop/tools/hooks/pre-commit` | như trên, **kể cả** thay đổi viết bằng script |
+| Lúc `git push` | `pre-push` | trạng thái cuối, kể cả sau `--no-verify` |
+| Lúc lên `main` / mở PR | `.github/workflows/gates.yml` | cổng của **mọi** project, cộng chạy thật trong trình duyệt |
+
+`check.sh` là lệnh duy nhất cần nhớ. Nó chạy hai tầng: cổng lint, rồi mở trình duyệt thật và
+bấm. Tầng hai mới là tầng bắt được hành vi — đã đo: tái tạo lỗi cũ thì lint in **OK** còn
+smoke in **2/12 LỖI**.
+
+Phiên AI thì nạp `.claude/skills/shop/` trước khi sửa; nó là quy trình trên viết dài ra.
 
 - Cửa hàng: `http://localhost:8000/shop/`
 - Tìm mùi: `/shop/scent-finder.html`
 - Hộp quà: `/shop/gift.html`
 - **Bản đề xuất mang đi gặp chủ shop: `/shop/pitch/`**
+- Phễu (nội bộ): `/shop/measure/`
 
 ## Phiên này đã thêm gì
 
@@ -25,15 +41,22 @@ python3 shop/tools/lint-shop.py -v
 | Trang **Hộp quà** — chọn hộp/mùi/thiệp/cách gói, xem trước trực tiếp, thêm vào giỏ như một món ghép | `gift.html` |
 | **Bản đề xuất** có máy tính phí sàn để chủ shop tự kéo số của mình | `pitch/index.html` |
 | Dữ liệu `quiz` + `gift` | `data/shop.json` |
-| 10 phép kiểm mới, đều đã thử ngược | `tools/lint-shop.py` |
+| 11 phép kiểm mới, đều đã thử ngược | `tools/lint-shop.py` |
 | Luật dự án, kiến trúc, 5 ADR, sổ nợ | `CLAUDE.md`, `docs/` |
+| **Lớp đo** — 12 sự kiện + trang phễu | `assets/shop.js`, `measure/` |
+| **Chạy thật trong trình duyệt** — 12 phép đo hành vi | `tools/smoke.js`, `tools/check.sh` |
+| **Cổng lớp 1** cho shop (trước chỉ có lớp 2) | `tools/hooks/post-edit.sh`, `.claude/settings.json` |
+| **Cổng lớp 4** — CI chạy cổng của mọi project | `.github/workflows/gates.yml` |
+| **Skill riêng cho repo** | `.claude/skills/shop/` |
 
 Shell của **cả 5 trang** đã được sinh lại từ một nguồn — đừng sửa tay từng file.
 
 ## Trạng thái cổng
 
 ```
-shop: OK (5 mùi hương, 5 sản phẩm, 5 câu hỏi Tìm mùi, 3 cỡ hộp quà, 3 cách thanh toán, 5 trang).
+shop: OK (5 mùi hương, 5 sản phẩm, 5 câu hỏi Tìm mùi, 3 cỡ hộp quà, 3 cách thanh toán,
+          5 trang, 15 tài liệu).
+smoke: OK (12 phép đo).
 ```
 
 Ba mục mức XEM, đều cố ý:
@@ -59,6 +82,17 @@ Ba mục mức XEM, đều cố ý:
 - **Đừng tin con số "quiz tăng chuyển đổi 40%"** hay bất kỳ số uplift nào đang lưu hành —
   tất cả đều do chính công ty bán phần mềm quiz công bố, không có nhóm đối chứng. Đã truy
   câu "McKinsey: bundling tăng AOV 20–35%": **không có ấn phẩm McKinsey nào đứng sau.**
+
+## Cái lớp đo dùng để làm gì
+
+Mọi tiêu chí "bỏ tính năng này khi nào" trong [docs/02-LO-TRINH.md](docs/02-LO-TRINH.md) cần một
+con số. Trước phiên này trang không đếm gì cả, nên những tiêu chí ấy chỉ là chữ. Giờ `/shop/measure/`
+dựng được phễu: mở trang → bấm bắt đầu → từng câu → ra kết quả → thêm vào giỏ, kèm tỉ lệ rụng ở
+mỗi bậc.
+
+**Nhưng số đó là của máy đang mở, không phải của khách.** `localStorage` nằm ở từng trình duyệt;
+shop không thấy gì. Muốn gộp số thật thì đổi `SINK` trong `assets/shop.js` thành một URL và dựng
+một hàm serverless nhận — nợ #10b trong sổ.
 
 ## Điều quan trọng nhất phải nhớ
 

@@ -12,7 +12,7 @@ cách chúng chạy tự động**.
 | `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` | 2 |
 | `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` | 2 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2 |
-| `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `python3 shop/tools/lint-shop.py` | 2 |
+| `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `sh shop/tools/check.sh` | 1, 2, 3, 4 |
 | các project khác | xem thư mục | — | — |
 
 `pages/` và `cooking/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự
@@ -64,17 +64,29 @@ Chạy được nhiều lần, không hại gì. Nó dựng lại `.git/hooks/pr
 | 1. `PostToolUse` | ngay sau mỗi Edit/Write | sửa bằng công cụ sửa file | có — `.claude/settings.json` |
 | 2. `pre-commit` | lúc `git commit` | **mọi** thay đổi, kể cả viết bằng script | có — `*/tools/hooks/pre-commit` |
 | 3. `pre-push` | lúc `git push` | trạng thái cuối của thứ sắp lên public | có |
+| 4. GitHub Actions | lúc push lên `main` và mọi PR | thứ ba lớp trên bỏ sót vì chúng chạy trên **máy** người sửa | có — `.github/workflows/gates.yml` |
 
 Lớp 1 phản hồi nhanh nhất nhưng **có lỗ**: thay đổi viết bằng `python3 - <<EOF` hay `sed`
 không đi qua tool Edit/Write nên nó không thấy. Lớp 2 bịt lỗ đó. Lớp 3 bịt trường hợp
-`--no-verify`, commit merge, và commit cũ được cherry-pick vào.
+`--no-verify`, commit merge, và commit cũ được cherry-pick vào. Lớp 4 bịt cái mà cả ba lớp
+kia không bịt được: chúng sống trên **máy** người sửa, nên chúng biến mất khi ai đó quên chạy
+`install-hooks.sh`, khi commit tạo từ giao diện web của GitHub, hoặc khi một phiên agent chạy
+ở môi trường khác. Lớp 4 chạy cổng của **mọi** project con chứ không chỉ project vừa sửa —
+repo này có nhiều phiên chạy song song, và một thay đổi ở đây làm hỏng chỗ kia là chuyện đã xảy ra.
+
+**Một thứ cả bốn lớp đều không bắt được: hành vi.** Cổng lint đọc cú pháp và dữ liệu; nó không
+bấm nút. Hai lỗi nặng nhất từng xảy ra ở `shop/` đều đi qua lint sạch sẽ và chỉ lộ ra khi mở
+trình duyệt thật rồi đo — nên `shop/` có thêm `tools/smoke.js`, và `check.sh` chạy cả hai tầng.
+Project nào có logic chạy trong trình duyệt thì nên làm cùng kiểu.
 
 ## Quy tắc bất di bất dịch
 
 1. **Cổng mới phải nằm trong repo, không nằm trong đầu ai.** Viết ra một script chạy được,
    đặt trong `<project>/tools/`, rồi nối vào một trong ba lớp trên.
-2. **`.claude/settings.json` được theo dõi bởi git** (xem `.gitignore`). Thêm hook mới thì
-   commit file đó, đừng chỉ sửa trên máy mình. Phần còn lại của `.claude/` vẫn là cục bộ.
+2. **`.claude/settings.json` và `.claude/skills/` được theo dõi bởi git** (xem `.gitignore`).
+   Thêm hook mới hay skill mới thì commit, đừng chỉ sửa trên máy mình — nếu không thì quy trình
+   chỉ chạy trên đúng một máy. Phần còn lại của `.claude/` vẫn là cục bộ.
+   Hiện có một skill: `.claude/skills/shop/` — quy trình làm việc trong `shop/`.
 3. **Bộ điều phối gọi mọi `*/tools/hooks/pre-commit`** trong repo, và mỗi hook con tự lọc
    theo đường dẫn của nó. Thêm project mới thì chỉ cần đặt file đúng chỗ, không phải sửa
    bộ điều phối.

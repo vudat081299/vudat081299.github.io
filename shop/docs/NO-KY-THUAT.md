@@ -30,12 +30,13 @@ Cập nhật lần cuối: 20/09/2026.
 
 | # | Nợ | Ghi chú |
 |---|---|---|
+| 10b | **Sự kiện đo đạc chỉ nằm trong máy khách, chưa gộp được** | Ngay khi muốn biết khách THẬT rụng ở đâu | `SINK` trong `assets/shop.js` đang là `null`. Đổi thành URL là phần trang xong; còn phải dựng một hàm serverless nhận và một trang nói rõ thu thập gì. Đi cùng nợ #3. |
 | 11 | Chưa đo hiệu năng (Lighthouse) | Trang nhiều animation và SVG, đáng đo trước khi đẩy quảng cáo vào. |
 | 12 | Chưa kiểm với trình đọc màn hình | Có `aria-label`, có bẫy tiêu điểm, có `prefers-reduced-motion` — nhưng **chưa ai thật sự nghe thử**. |
 | 13 | Chưa có ảnh OG khi chia sẻ link | Link dán lên Facebook/Zalo hiện ra trơ trụi. Rẻ, đáng làm trước khi chạy quảng cáo. |
 | 14 | Chưa nối tên miền | Đang chạy dưới đường dẫn `/shop/` của GitHub Pages. |
 | 15 | Chưa có ảnh chụp thật của nến | Đang vẽ bằng SVG từ ba màu của mùi. Đồng bộ và không bao giờ vỡ ảnh, nhưng ảnh thật bán tốt hơn. |
-| 16 | Trang `pitch/` không nằm trong cổng shell | Cố ý — nó không phải trang cửa hàng. Nhưng cũng nghĩa là **không cổng nào soi nó**; sửa thì phải tự mở xem. |
+| 16 | Trang `pitch/` và `measure/` không nằm trong cổng shell | Cố ý — nó không phải trang cửa hàng. Nhưng cũng nghĩa là **không cổng nào soi nó**; sửa thì phải tự mở xem. |
 
 ## Nợ đã trả trong phiên 20/09/2026
 
@@ -48,3 +49,4 @@ Giữ lại để phiên sau biết lớp lỗi nào từng xảy ra ở đây.
 | Icon ligature hiện thành chữ thô khi font Google bị chặn | Chụp màn hình thật | Ẩn cho tới khi font về — [adr/0005](adr/0005-an-icon-cho-toi-khi-font-ve.md). |
 | Câu hỏi Tìm mùi xuống 4 dòng, nửa phải màn hình trống trơn | Chụp màn hình ở 1280px | Căn giữa khối câu hỏi, hạ cỡ chữ từ 55px xuống 46px. |
 | Bản đề xuất cộng "phí sàn giữ lại" (tiền thật) với "doanh thu hộp quà" (chưa trừ giá vốn) thành một con số lãi | Tự soát lại phép tính | Tách làm hai khối, kèm một đoạn giải thích vì sao không cộng được. |
+| **Tài liệu bảo "đo bằng gì / bỏ khi nào" nhưng sản phẩm không đếm gì cả** — mọi tiêu chí bỏ tính năng trong lộ trình đều không chạy được | Tự soát lại thứ đã giao | Thêm `track()` và 12 sự kiện, cộng trang `measure/` đọc phễu. Đo lại: bỏ quiz giữa chừng ở câu 3 thì phễu hiện đúng rụng −50% ở bậc đó. |

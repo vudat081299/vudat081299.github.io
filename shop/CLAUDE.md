@@ -13,10 +13,23 @@ trong repo: đây là nơi **sai một con số thì khách trả nhầm tiền*
 ```bash
 sh facts/tools/install-hooks.sh          # từ gốc repo, dựng lại bộ điều phối hook
 python3 -m http.server 8000              # fetch cần HTTP, mở file:// là trang rỗng
-python3 shop/tools/lint-shop.py -v       # cổng, chạy trước và sau khi sửa
+cat shop/HANDOFF.md                      # phiên trước để lại gì
 ```
 
 Rồi mở `http://localhost:8000/shop/`.
+
+## Việc cuối của mọi phiên
+
+```bash
+sh shop/tools/check.sh
+```
+
+Một lệnh, hai tầng: cổng lint (cú pháp, dữ liệu, shell, liên kết) rồi **chạy thật trong trình
+duyệt** (hành vi). Tầng hai mới là tầng bắt được hai lỗi nặng nhất từng xảy ra ở đây — cả hai
+đều đi qua tầng một sạch sẽ. Xanh hết thì cập nhật `HANDOFF.md` rồi commit.
+
+Có skill riêng cho thư mục này ở `.claude/skills/shop/` — phiên AI nào cũng nên nạp nó trước
+khi sửa.
 
 ---
 
@@ -80,11 +93,27 @@ rồi đo, không phải bằng đọc code** — xem `BAO-CAO-HIEN-TRANG.md` m�
 | `gift.html` | hộp quà, xem trước trực tiếp | có |
 | `checkout.html` | giỏ, VietQR, COD | có |
 | `pitch/index.html` | **bản đề xuất mang đi gặp chủ shop, không phải trang cửa hàng** | không — nó không dùng shell |
+| `measure/index.html` | đọc phễu từ các sự kiện đã ghi trong máy — trang nội bộ | không — cùng lý do |
 
-`pitch/` nằm trong thư mục con nên `SHOP.glob('*.html')` không quét tới. Cố ý: nó mượn token
-màu của `assets/shop.css` để cùng một họ, nhưng không có nav, không có giỏ hàng, và **không
-dùng lớp `.ms`** — một trang đem đi thuyết trình không được phụ thuộc vào việc font icon của
-Google có về kịp hay không.
+`pitch/` và `measure/` nằm trong thư mục con nên `SHOP.glob('*.html')` không quét tới. Cố ý:
+chúng mượn token màu của `assets/shop.css` để cùng một họ, nhưng không có nav, không có giỏ
+hàng, và **không dùng lớp `.ms`** — một trang đem đi thuyết trình không được phụ thuộc vào việc
+font icon của Google có về kịp hay không. Đổi lại: **không cổng nào soi hai trang đó**, sửa thì
+phải tự mở xem.
+
+---
+
+## Đo đạc
+
+`track(ev, props)` trong `assets/shop.js`. Thêm một sự kiện là thêm **một lời gọi**, đừng thêm
+một hệ thống. Hiện có 12 sự kiện, đủ để dựng phễu Tìm mùi và biết khách rụng ở câu mấy — mà đó
+đúng là con số mọi tiêu chí "bỏ tính năng này khi nào" trong `docs/02-LO-TRINH.md` cần tới.
+
+Dữ liệu nằm trong `localStorage` của **từng máy khách**; shop không thấy gì, hai máy không cộng
+lại được. Muốn gộp số thật thì đổi `SINK` thành một URL — một dòng, đúng một chỗ — và dựng một
+hàm serverless nhận nó. Đừng bật `SINK` khi chưa có trang nói rõ trang thu thập gì.
+
+Xem phễu ở `/shop/measure/`.
 
 ---
 

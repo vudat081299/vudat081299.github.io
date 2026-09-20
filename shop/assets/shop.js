@@ -108,6 +108,68 @@ var yearEl = $('#year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 /* ═════════════════════════════════════════════════════════════════════════
+   LỚP ĐO
+   Đây là một CÁI MỐI NỐI, không phải một hệ analytics. Lý do nó tồn tại: mọi
+   tiêu chí "bỏ tính năng này khi nào" trong docs/02-LO-TRINH.md đều cần một
+   con số, mà trang thì không đếm gì cả — tài liệu bảo đo, sản phẩm không đo
+   được. Đó là mâu thuẫn, và đây là chỗ vá.
+
+   Ba giới hạn phải nói thẳng, kẻo đọc số rồi tin nhầm:
+
+   1. DỮ LIỆU NẰM LẠI TRONG MÁY KHÁCH. localStorage là của từng trình duyệt.
+      Shop KHÔNG thấy được gì. Muốn gộp số của khách thật thì phải có một
+      endpoint — xem `SINK` bên dưới và chặng 1 của lộ trình.
+   2. Vì thế các con số ở /shop/measure/ chỉ là hành vi của CHÍNH máy đang mở,
+      dùng để kiểm xem sự kiện có bắn đúng không, và để demo phễu.
+   3. Không có id theo dõi giữa các phiên, không gửi đi đâu, không cookie.
+      `sid` chỉ sống trong một tab và chỉ để nối các sự kiện của cùng một lượt.
+
+   Thêm một sự kiện thì thêm một lời gọi track(), đừng thêm một hệ thống.
+   ═════════════════════════════════════════════════════════════════════════ */
+var EV_KEY = 'scentsitive-events', EV_MAX = 500;
+
+/* Đổi SINK thành một URL là mọi sự kiện đi ra ngoài — một dòng, đúng một chỗ.
+   Để null thì chỉ ghi vào máy. KHÔNG bật khi chưa hỏi ý người dùng về quyền
+   riêng tư và chưa có trang nói rõ trang thu thập gì. */
+var SINK = null;
+
+var sid = (function () {
+  try {
+    var v = sessionStorage.getItem('scentsitive-sid');
+    if (!v) { v = Date.now().toString(36) + Math.random().toString(36).slice(2, 7); sessionStorage.setItem('scentsitive-sid', v); }
+    return v;
+  } catch (e) { return 'nosid'; }
+})();
+
+function track(ev, props) {
+  var row = { t: Date.now(), s: sid, e: ev };
+  if (props) row.p = props;
+  try {
+    var log = JSON.parse(localStorage.getItem(EV_KEY) || '[]');
+    if (!Array.isArray(log)) log = [];
+    log.push(row);
+    /* Vòng đệm: giữ EV_MAX sự kiện gần nhất. Không cắt thì localStorage đầy
+       (giới hạn ~5MB) và ném lỗi ở một chỗ chẳng liên quan gì tới đo đạc. */
+    if (log.length > EV_MAX) log = log.slice(log.length - EV_MAX);
+    localStorage.setItem(EV_KEY, JSON.stringify(log));
+  } catch (e) { /* chế độ riêng tư chặn localStorage — đo đạc không được phép làm hỏng trang */ }
+
+  if (SINK) {
+    try {
+      /* sendBeacon sống sót được lúc trang đang đóng; fetch thì không. */
+      if (navigator.sendBeacon) navigator.sendBeacon(SINK, JSON.stringify(row));
+      else fetch(SINK, { method: 'POST', body: JSON.stringify(row), keepalive: true });
+    } catch (e) {}
+  }
+}
+
+/* Trang nào đang xem — lấy từ đường dẫn, không hardcode ở từng trang. */
+function pageName() {
+  var f = (location.pathname.split('/').pop() || 'index.html').replace('.html', '');
+  return f || 'index';
+}
+
+/* ═════════════════════════════════════════════════════════════════════════
    HÌNH SẢN PHẨM
    Chưa có ảnh chụp nên mỗi món tự vẽ lấy, dùng đúng ba màu khai trong data
    (`art.glass` / `art.wax` / `art.glow` của mùi hương). Đổi lại: cả cửa hàng
@@ -359,6 +421,7 @@ function addToCart(id, n, from) {
     if (line) line.q = got; else cart.push({ id: id, q: got });
     saveCart(); renderCart();
     if (from) fly(from);
+    track('cart_add', { id: id, n: delta, from: pageName() });
     toast('Đã thêm ' + p.name);
     var badge = $('#cartCount');
     if (badge) { badge.classList.remove('is-pop'); void badge.offsetWidth; badge.classList.add('is-pop'); }
@@ -382,6 +445,8 @@ function addGift(g, from) {
   if (line) line.q = got; else cart.push({ id: id, q: got, g: g });
   saveCart(); renderCart();
   if (from) fly(from);
+  track('gift_add', { box: g.box, scents: (g.scents || []).join(','),
+                      card: g.card, wrap: g.wrap, msg: !!g.msg, total: giftPrice(g).total });
   toast('Đã thêm hộp quà vào giỏ');
   var badge = $('#cartCount');
   if (badge) { badge.classList.remove('is-pop'); void badge.offsetWidth; badge.classList.add('is-pop'); }
@@ -460,6 +525,7 @@ function openCart() {
   closeSheet();
   drawer.classList.add('is-open');
   drawer.setAttribute('aria-hidden', 'false');
+  track('cart_open', { n: cartCount(), sub: subtotal() });
   if (veil) veil.classList.add('is-open');
   lock(true);
   document.addEventListener('keydown', trapKey, true);
@@ -600,6 +666,7 @@ function boot(d) {
   renderGift();
   renderCart();
   $$('.rv').forEach(watch);
+  track('view', { page: pageName() });
 }
 
 function countPlaceholders(d) {
@@ -795,7 +862,7 @@ function renderCheckout() {
   }).join('') + '<div class="paypanel" id="payPanel"></div>';
 
   $$('[data-pay]', pay).forEach(function (b) {
-    b.addEventListener('click', function () { payPick = b.dataset.pay; renderCheckout(); });
+    b.addEventListener('click', function () { payPick = b.dataset.pay; track('pay_pick', { k: payPick }); renderCheckout(); });
   });
   renderPayPanel(total);
 }
@@ -840,6 +907,7 @@ function renderPayPanel(total) {
     '<p class="todo__n">' + esc(D.labels.order_note) + '</p>';
   $('#copyBtn').addEventListener('click', function () {
     var txt = orderText(subtotal() + shipFee(subtotal()));
+    track('order_copy', { total: subtotal() + shipFee(subtotal()), n: cartCount() });
     if (navigator.clipboard) navigator.clipboard.writeText(txt).then(
       function () { toast('Đã sao chép nội dung đơn'); },
       function () { toast('Không sao chép được — bôi đen rồi copy tay'); });
@@ -1088,6 +1156,7 @@ function fQuestion(q, i) {
   $$('#sfQ [data-o]').forEach(function (b) {
     b.addEventListener('click', function () {
       FAns[q.k] = b.dataset.o;
+      track('quiz_answer', { i: i + 1, q: q.k, opt: b.dataset.o });
       /* Chờ 170ms trước khi sang câu sau: người ta cần thấy ô mình vừa bấm sáng lên,
          nếu không thì cảm giác như lỡ tay bấm nhầm. */
       b.classList.add('is-picked');
@@ -1123,6 +1192,8 @@ function fResult() {
     ? '<a class="btn btn--primary" href="' + href + '"><span class="ms">arrow_forward</span>' + esc(out.t) + '</a>'
     : '<button class="btn btn--primary" id="sfAdd"' + (pr && pr.stock > 0 ? '' : ' disabled') + '>' +
         '<span class="ms">shopping_bag</span>' + esc(pr && pr.stock > 0 ? out.t : 'Mùi này đang tạm hết') + '</button>';
+
+  track('quiz_done', { scent: win.s.k, pct: pct, intent: go, alt: alt ? alt.s.k : '' });
 
   var C = 2 * Math.PI * 22;
   $('#sfR').innerHTML =
@@ -1160,7 +1231,7 @@ function fResult() {
   fShow('sfR');
   var addBtn = $('#sfAdd');
   if (addBtn && pr) addBtn.addEventListener('click', function () { addToCart(pr.id, 1, addBtn); });
-  $('#sfAgain').addEventListener('click', function () { FAns = {}; fGo(-1); });
+  $('#sfAgain').addEventListener('click', function () { track('quiz_again'); FAns = {}; fGo(-1); });
   var st = $('#sfStage'); if (st) st.scrollIntoView({ block: 'start' });
 }
 
@@ -1170,7 +1241,11 @@ function renderFinder() {
   $('#sfIntroLede').textContent = D.quiz.intro || '';
   $('#sfPrivacy').textContent = D.quiz.privacy || '';
   $('#sfStartT').textContent = D.quiz.cta || 'Bắt đầu';
-  $('#sfStart').addEventListener('click', function () { fGo(0); });
+  $('#sfStart').addEventListener('click', function () { track('quiz_start'); fGo(0); });
+
+  window.addEventListener('pagehide', function () {
+    if (FStep >= 0 && FStep < FQ.length) track('quiz_leave', { at: FStep + 1 });
+  });
 
   /* Bàn phím: 1–9 chọn đáp án, Backspace lùi một câu. Bộ câu hỏi nào cũng nên bấm
      được bằng bàn phím — người dùng bàn phím đi qua đây nhiều lần thì chuột là cực hình. */
@@ -1291,11 +1366,15 @@ function gWire() {
   var set = function (sel, attr, fn) {
     $$(sel).forEach(function (b) { b.addEventListener('click', function () { fn(b.dataset[attr], b); gRender(); }); });
   };
-  set('[data-box]',  'box',  function (v) { G.box = v; });
-  set('[data-card]', 'card', function (v) { G.card = v; });
-  set('[data-wrap]', 'wrap', function (v) { G.wrap = v; });
+  set('[data-box]',  'box',  function (v) { G.box = v; track('gift_change', { f: 'box', v: v }); });
+  set('[data-card]', 'card', function (v) { G.card = v; track('gift_change', { f: 'card', v: v }); });
+  set('[data-wrap]', 'wrap', function (v) { G.wrap = v; track('gift_change', { f: 'wrap', v: v }); });
   $$('[data-slot]').forEach(function (b) {
-    b.addEventListener('click', function () { G.scents[Number(b.dataset.slot)] = b.dataset.scent; gRender(); });
+    b.addEventListener('click', function () {
+      G.scents[Number(b.dataset.slot)] = b.dataset.scent;
+      track('gift_change', { f: 'scent', v: b.dataset.scent, slot: Number(b.dataset.slot) });
+      gRender();
+    });
   });
 
   var msg = $('#gbMsg');

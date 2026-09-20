@@ -22,6 +22,17 @@
             "command": "IN=$(cat); F=$(printf \"%s\" \"$IN\" | jq -r \".tool_input.file_path // .tool_response.filePath // empty\"); case \"$F\" in */data-science-roadmap/*) R=${F%%/data-science-roadmap/*}/data-science-roadmap; if [ -x \"$R/tools/hooks/post-edit.sh\" ]; then printf \"%s\" \"$IN\" | \"$R/tools/hooks/post-edit.sh\"; exit $?; fi;; esac; exit 0"
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "statusMessage": "Chạy cổng shop…",
+            "timeout": 60,
+            "command": "IN=$(cat); F=$(printf \"%s\" \"$IN\" | jq -r \".tool_input.file_path // .tool_response.filePath // empty\"); case \"$F\" in */shop/*) R=${F%%/shop/*}/shop; if [ -x \"$R/tools/hooks/post-edit.sh\" ]; then printf \"%s\" \"$IN\" | \"$R/tools/hooks/post-edit.sh\"; exit $?; fi;; esac; exit 0"
+          }
+        ]
       }
     ]
   }
