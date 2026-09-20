@@ -12,12 +12,17 @@ cách chúng chạy tự động**.
 | `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` | 2 |
 | `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` | 2 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2 |
-| `shop/` | — | `python3 shop/tools/lint-shop.py` | 2 |
+| `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `python3 shop/tools/lint-shop.py` | 2 |
 | các project khác | xem thư mục | — | — |
 
-`pages/`, `cooking/` và `shop/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự
+`pages/` và `cooking/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự
 chứa, không có luật nội dung chung để viết ra. Cổng của chúng chỉ kiểm thứ đúng/sai khách quan —
 id trùng, anchor gãy, asset thiếu, thẻ lệch.
+
+`shop/` thì **có** (từ 20/09/2026), vì nó không còn là một trang tự chứa: năm trang dùng chung
+một shell, toàn bộ nội dung nằm ở `data/shop.json`, và giá tiền được suy ra chứ không ghi tay —
+ba thứ ấy là luật, và luật thì phải viết ra. Kèm theo là `shop/docs/`: lộ trình, ADR, sổ nợ, và
+một bộ tài liệu định hướng kinh doanh cho việc đàm phán với chủ shop.
 
 Ngoại lệ duy nhất trong `pages/`: `verify-math-for-ml.py` là cổng **kiến thức**, chỉ chạy khi
 commit chạm `mathematics-for-machine-learning.html`. Trang ấy nói ~90 con số cụ thể (định thức,

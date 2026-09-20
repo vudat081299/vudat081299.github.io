@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="vi" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<title>Đề xuất hợp tác · scentsitive.vn</title>
+<meta name="description" content="Một bản đề xuất: tôi đã dựng thử gì, con số nào đáng chú ý, và bốn cách chúng ta có thể làm việc cùng nhau." />
+<meta name="robots" content="noindex" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" />
+<link rel="stylesheet" href="../assets/shop.css" />
+<script>
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('scentsitive-theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') {
+    t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+/* Trang này KHÔNG phải một trang của cửa hàng — nó là bản đề xuất mang đi gặp chủ shop.
+   Nó mượn token màu/chữ của shop.css để nhìn cùng một họ, nhưng không dùng shell, không
+   dùng giỏ hàng, và không dùng lớp .ms (icon ligature) — một trang đem đi thuyết trình
+   không được phép phụ thuộc vào việc font của Google có về kịp hay không. */
+.p-hero {
+  position: relative; overflow: hidden; background: var(--night); color: #F4ECE2;
+  padding: clamp(80px, 13vh, 150px) 0 clamp(60px, 9vh, 104px);
+}
+.p-hero::after {
+  content: ""; position: absolute; width: 74vw; height: 74vw; left: 56%; top: -32%;
+  background: radial-gradient(circle, rgba(224,138,60,.36) 0%, transparent 62%);
+  filter: blur(34px); pointer-events: none; animation: pGlow 7.5s var(--ease-soft) infinite;
+}
+@keyframes pGlow { 0%,100% { opacity: .72; transform: scale(1); } 50% { opacity: 1; transform: scale(1.07); } }
+.p-hero .wrap { position: relative; z-index: 1; }
+.p-kicker { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: var(--ember-soft); margin: 0 0 22px; }
+.p-hero h1 { font-family: var(--f-display); font-weight: 500; letter-spacing: -.018em; line-height: 1.02; margin: 0; font-size: clamp(38px, 6.6vw, 82px); max-width: 17ch; }
+.p-hero p { color: #CFC1B2; max-width: 56ch; margin: 24px 0 0; line-height: 1.8; font-size: 16.5px; }
+.p-sig { margin-top: 34px; font-size: 13.5px; color: #9E9084; }
+
+.p-sec { padding: clamp(60px, 9vh, 104px) 0; border-top: 1px solid var(--line); }
+.p-sec--tint { background: var(--paper-2); }
+.p-h2 { font-family: var(--f-display); font-weight: 500; letter-spacing: -.014em; line-height: 1.06; margin: 0 0 16px; font-size: clamp(28px, 4.2vw, 48px); max-width: 21ch; }
+.p-lede { color: var(--ink-2); line-height: 1.8; max-width: 62ch; margin: 0 0 34px; }
+.p-eye { font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 14px; }
+
+.p-grid3 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.p-card {
+  padding: 24px; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--card);
+  text-decoration: none; display: block; transition: transform .4s var(--ease), box-shadow .4s var(--ease), border-color .3s;
+}
+a.p-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--ember); }
+.p-card h3 { font-family: var(--f-display); font-size: 23px; font-weight: 600; margin: 0 0 8px; }
+.p-card p { color: var(--ink-2); font-size: 14px; line-height: 1.65; margin: 0; }
+.p-card__go { display: inline-block; margin-top: 14px; font-size: 12.5px; color: var(--ember); }
+
+/* ── máy tính: chị ấy tự kéo số của mình ───────────────────────────────────── */
+.p-calc { display: grid; gap: clamp(26px, 3.6vw, 52px); grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); align-items: start; }
+.p-in { margin-bottom: 22px; }
+.p-in__t { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
+.p-in__l { font-size: 13.5px; color: var(--ink-2); }
+.p-in__v { font-family: var(--f-display); font-size: 25px; font-weight: 600; }
+.p-in input[type=range] { width: 100%; accent-color: var(--ember); height: 22px; cursor: pointer; }
+.p-in__n { font-size: 12px; color: var(--ink-3); margin: 5px 0 0; line-height: 1.55; }
+.p-guess { color: var(--ember); font-weight: 500; }
+
+.p-out { padding: 26px; border-radius: var(--r-lg); border: 1px solid var(--line); background: var(--card); box-shadow: var(--shadow-sm); }
+.p-row { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; padding: 9px 0; font-size: 14px; border-bottom: 1px solid var(--line-2); }
+.p-row:last-child { border-bottom: 0; }
+.p-row span { color: var(--ink-2); }
+.p-row b { font-variant-numeric: tabular-nums; }
+.p-row--big { font-size: 17px; padding-top: 15px; }
+.p-row--big b { font-family: var(--f-display); font-size: 27px; font-weight: 600; color: var(--ember); }
+
+/* thanh so sánh: phần sàn giữ vs phần shop giữ */
+.p-bar { display: flex; height: 40px; border-radius: 10px; overflow: hidden; margin: 18px 0 10px; border: 1px solid var(--line); }
+.p-bar i { display: flex; align-items: center; justify-content: center; font-size: 11.5px; font-style: normal; color: #FFF8EF; transition: width .6s var(--ease); white-space: nowrap; overflow: hidden; }
+.p-bar__fee { background: var(--ember); }
+.p-bar__keep { background: #5C7C63; }
+.p-legend { display: flex; gap: 18px; font-size: 12px; color: var(--ink-3); flex-wrap: wrap; }
+.p-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+
+.p-warn {
+  border-left: 3px solid var(--ember); background: color-mix(in srgb, var(--ember) 7%, transparent);
+  padding: 17px 20px; border-radius: 0 var(--r-sm) var(--r-sm) 0; margin: 26px 0;
+}
+.p-warn b { display: block; margin-bottom: 6px; font-weight: 500; }
+.p-warn p { margin: 0; font-size: 13.5px; line-height: 1.7; color: var(--ink-2); }
+
+.p-no { list-style: none; padding: 0; margin: 0; display: grid; gap: 11px; }
+.p-no li { display: grid; grid-template-columns: 22px 1fr; gap: 12px; align-items: baseline; font-size: 14.5px; line-height: 1.6; }
+.p-no li::before { content: "✕"; color: var(--ink-3); font-size: 13px; }
+.p-no b { font-weight: 500; }
+.p-no span { display: block; color: var(--ink-3); font-size: 13px; margin-top: 2px; }
+
+/* ── lộ trình theo điều kiện, không theo ngày tháng ────────────────────────── */
+.p-road { list-style: none; padding: 0; margin: 0; position: relative; }
+.p-road::before { content: ""; position: absolute; left: 13px; top: 8px; bottom: 8px; width: 1px; background: var(--line); }
+.p-road li { position: relative; padding: 0 0 30px 46px; }
+.p-road__d { position: absolute; left: 6px; top: 5px; width: 15px; height: 15px; border-radius: 50%; background: var(--paper); border: 2px solid var(--line); }
+.p-road li.is-now .p-road__d { background: var(--ember); border-color: var(--ember); }
+.p-road h4 { margin: 0 0 3px; font-size: 16.5px; font-weight: 500; }
+.p-road__w { font-size: 12.5px; color: var(--ember); margin: 0 0 7px; }
+.p-road p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.65; max-width: 58ch; }
+
+.p-deal { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); }
+.p-deal__c { padding: 22px; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--card); }
+.p-deal__c h4 { font-family: var(--f-display); font-size: 21px; font-weight: 600; margin: 0 0 4px; }
+.p-deal__p { font-size: 13px; color: var(--ember); margin: 0 0 12px; }
+.p-deal__c p { font-size: 13.5px; color: var(--ink-2); line-height: 1.65; margin: 0 0 10px; }
+.p-deal__c dl { margin: 0; font-size: 12.5px; line-height: 1.6; }
+.p-deal__c dt { color: var(--ink-3); margin-top: 8px; }
+.p-deal__c dd { margin: 0; color: var(--ink-2); }
+
+.p-ask { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; counter-reset: q; }
+.p-ask li { display: grid; grid-template-columns: 26px 1fr; gap: 13px; align-items: baseline; font-size: 15px; line-height: 1.6; padding-bottom: 10px; border-bottom: 1px solid var(--line-2); }
+.p-ask li::before { counter-increment: q; content: counter(q, decimal-leading-zero); font-size: 11.5px; color: var(--ember); }
+.p-ask span { display: block; color: var(--ink-3); font-size: 13px; margin-top: 3px; }
+
+.p-end { background: var(--night); color: #F4ECE2; padding: clamp(60px, 9vh, 100px) 0; }
+.p-end h2 { font-family: var(--f-display); font-weight: 500; font-size: clamp(27px, 3.8vw, 44px); margin: 0 0 18px; max-width: 20ch; line-height: 1.1; }
+.p-end p { color: #CFC1B2; max-width: 58ch; line-height: 1.8; margin: 0 0 14px; }
+
+@media (max-width: 880px) { .p-calc { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .p-hero::after { animation: none; } .p-bar i { transition: none; } }
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="p-hero">
+  <div class="wrap">
+    <p class="p-kicker">Bản đề xuất · không phải hợp đồng</p>
+    <h1>Tôi dựng thử một cửa hàng cho chị, trước khi hỏi chị có cần không.</h1>
+    <p>
+      Chị chưa thuê tôi và tôi chưa tính tiền ai. Tôi làm cái này để có một thứ cụ thể mà nói chuyện,
+      thay vì ngồi mô tả. Trang chị đang đọc có ba phần: thứ tôi đã dựng, vài con số đáng nhìn,
+      và bốn cách chúng ta có thể làm việc cùng nhau — kể cả cách &ldquo;không làm gì cả&rdquo;.
+    </p>
+    <p>
+      Và nói trước một câu để khỏi hiểu nhầm: <b>cái tôi dựng không phải lập luận.</b>
+      Nó chỉ chứng minh tôi làm được, chứ không chứng minh chị cần. Tôi chưa gặp chị,
+      chưa xem một đơn hàng nào của chị, chưa biết một cây nến tốn bao nhiêu tiền nguyên liệu.
+      Mọi thứ dưới đây vẫn là <b>giả thuyết</b> cho tới khi chị chỉnh lại bằng số thật.
+    </p>
+    <p class="p-sig">Mọi con số dưới đây đều ghi rõ lấy từ đâu. Chỗ nào tôi đoán, tôi viết là tôi đoán.</p>
+  </div>
+</header>
+
+<section class="p-sec">
+  <div class="wrap">
+    <p class="p-eye">Phần một</p>
+    <h2 class="p-h2">Cái cớ để nói chuyện, không phải bản đề xuất</h2>
+    <p class="p-lede">
+      Ba trang dưới đây chạy thật, thêm được vào giỏ, tính đúng tiền. Nhưng mỗi cái chỉ là
+      <b>một câu hỏi được viết thành phần mềm</b> — và câu hỏi nào cũng có thể sai.
+      Dòng &ldquo;đang đoán rằng&rdquo; ở mỗi ô là giả định tôi đang đặt cược. Chị đọc và bác bỏ giúp tôi
+      cái nào sai; chị bác được một cái là chị tiết kiệm cho tôi vài tuần.
+    </p>
+    <div class="p-grid3">
+      <a class="p-card" href="../index.html">
+        <h3>Trang bán hàng</h3>
+        <p>Trang chủ, năm mùi hương, giỏ hàng, thanh toán bằng mã VietQR hoặc trả khi nhận hàng. Chạy trên nền miễn phí, không tốn phí máy chủ.</p>
+        <p style="margin-top:10px;color:var(--ink-3);font-size:13px"><b>Đang đoán rằng:</b> có một chỗ riêng của thương hiệu thì khách tin hơn và chốt dễ hơn. <em>Chưa ai chứng minh điều này cho shop cỡ của chị.</em></p>
+        <span class="p-card__go">Mở thử →</span>
+      </a>
+      <a class="p-card" href="../scent-finder.html">
+        <h3>Tìm mùi</h3>
+        <p>Năm câu hỏi về phòng, về giờ, về một mùi khách còn nhớ — rồi trang nói mùi nào hợp, và nói luôn vì sao.</p>
+        <p style="margin-top:10px;color:var(--ink-3);font-size:13px"><b>Đang đoán rằng:</b> &ldquo;mùi nào thơm nhất&rdquo; là câu chị bị hỏi nhiều nhất, và việc không chọn được mùi đang chặn khách mua. <em>Nếu câu hay bị hỏi lại là chuyện khác, tôi làm sai chỗ.</em></p>
+        <span class="p-card__go">Làm thử →</span>
+      </a>
+      <a class="p-card" href="../gift.html">
+        <h3>Hộp quà</h3>
+        <p>Khách tự chọn hộp một, hai hay ba ngọn, chọn mùi từng ngăn, viết lời nhắn lên thiệp. Thấy cái hộp đổi ngay khi bấm.</p>
+        <p style="margin-top:10px;color:var(--ink-3);font-size:13px"><b>Đang đoán rằng:</b> nhiều khách mua nến làm quà, và họ sẽ trả nhiều hơn cho một hộp gói sẵn. <em>Cái này thử được trên Shopee trước, không cần website — xem phần bốn.</em></p>
+        <span class="p-card__go">Gói thử →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="p-sec p-sec--tint">
+  <div class="wrap">
+    <p class="p-eye">Phần hai</p>
+    <h2 class="p-h2">Con số duy nhất tôi thấy đáng bàn</h2>
+    <p class="p-lede">
+      Không phải &ldquo;website đẹp thì bán chạy hơn&rdquo; — tôi không chứng minh được câu đó.
+      Cái chứng minh được là <b>sàn đang lấy bao nhiêu</b>. Chị kéo ba thanh dưới đây theo số thật của chị;
+      phép tính hiện ngay bên phải và chị kiểm lại được bằng máy tính bỏ túi.
+    </p>
+
+    <div class="p-calc">
+      <div>
+        <div class="p-in">
+          <div class="p-in__t"><span class="p-in__l">Số đơn mỗi ngày</span><span class="p-in__v" id="vDon">7</span></div>
+          <input type="range" id="don" min="1" max="60" step="1" value="7" aria-label="Số đơn mỗi ngày" />
+          <p class="p-in__n">Tôi nghe nói khoảng 5–10. Chị kéo về đúng số của mình.</p>
+        </div>
+        <div class="p-in">
+          <div class="p-in__t"><span class="p-in__l">Giá trung bình một đơn</span><span class="p-in__v" id="vGia">300.000 ₫</span></div>
+          <input type="range" id="gia" min="100000" max="800000" step="10000" value="300000" aria-label="Giá trung bình một đơn" />
+          <p class="p-in__n">Theo dữ liệu ngành nến thơm quà năm 2025 trên ba sàn, khoảng giá bán chạy nhất là 200.000–500.000 ₫ <em>[đã kiểm: metric.vn]</em>. Giá của chị nằm giữa vùng đó.</p>
+        </div>
+        <div class="p-in">
+          <div class="p-in__t"><span class="p-in__l">Phí cố định theo ngành hàng</span><span class="p-in__v" id="vCd">10%</span></div>
+          <input type="range" id="cd" min="0" max="20" step="0.5" value="10" aria-label="Phí cố định theo ngành hàng" />
+          <p class="p-in__n"><span class="p-guess">Chỗ này tôi phải đoán.</span> Ba nguồn tôi đọc cho ba khoảng khác nhau, nên tôi không dám lấy cái nào. Chỉ Seller Centre của chị mới nói đúng — mở ra xem rồi kéo về đúng số.</p>
+        </div>
+      </div>
+
+      <div class="p-out">
+        <p class="p-eye" style="margin-bottom:12px">Một tháng, bán toàn bộ qua sàn</p>
+        <div class="p-row"><span>Doanh thu</span><b id="oDoanhThu">—</b></div>
+        <div class="p-row"><span>Phí xử lý giao dịch 6% <em>[đã kiểm, từ 01/05/2026]</em></span><b id="oGd">—</b></div>
+        <div class="p-row"><span>Phí hạ tầng 3.000 ₫/đơn <em>[đã kiểm, từ 01/07/2025]</em></span><b id="oHt">—</b></div>
+        <div class="p-row"><span>Phí cố định theo ngành <em>[chị tự điền]</em></span><b id="oCd">—</b></div>
+        <div class="p-row p-row--big"><span>Sàn giữ lại mỗi tháng</span><b id="oTong">—</b></div>
+
+        <div class="p-bar" aria-hidden="true">
+          <i class="p-bar__fee" id="barFee"></i><i class="p-bar__keep" id="barKeep"></i>
+        </div>
+        <div class="p-legend">
+          <span><i style="background:var(--ember)"></i>Sàn giữ <b id="lFee">—</b></span>
+          <span><i style="background:#5C7C63"></i>Về shop <b id="lKeep">—</b></span>
+        </div>
+        <p class="p-in__n" style="margin-top:14px">
+          Chưa tính tiền quảng cáo, tiền voucher, và thuế sàn khấu trừ tại nguồn (VAT 1–5% và
+          thuế thu nhập cá nhân 0,5–5% tuỳ ngành, từ 01/07/2025 <em>[đã kiểm]</em>).
+        </p>
+      </div>
+    </div>
+
+    <div class="p-warn">
+      <b>Chỗ này tôi phải nói thẳng</b>
+      <p>
+        Một trang riêng <em>không</em> làm phí sàn biến mất — nó chỉ áp dụng cho phần đơn đi qua trang riêng.
+        Và tôi không biết trước phần đó là bao nhiêu. Có shop chuyển được một phần ba, có shop gần như bằng không
+        vì khách quen bấm vào giỏ Shopee rồi. Đừng tin ai nói chắc con số ấy, kể cả tôi.
+        Thứ tôi dám nói chắc chỉ là: mỗi đơn đi thẳng thì phần phí ở trên ở lại với chị.
+      </p>
+    </div>
+
+    <div class="p-calc" style="margin-top:8px">
+      <div>
+        <div class="p-in">
+          <div class="p-in__t"><span class="p-in__l">Giả sử bao nhiêu phần trăm đơn đi thẳng</span><span class="p-in__v" id="vTh">25%</span></div>
+          <input type="range" id="th" min="0" max="100" step="5" value="25" aria-label="Phần trăm đơn đi thẳng" />
+          <p class="p-in__n"><span class="p-guess">Đây là giả định của chị, không phải lời hứa của tôi.</span> Kéo về 0 để xem trường hợp xấu nhất.</p>
+        </div>
+        <div class="p-in">
+          <div class="p-in__t"><span class="p-in__l">Bao nhiêu phần trăm đơn thành hộp hai ngọn</span><span class="p-in__v" id="vQua">10%</span></div>
+          <input type="range" id="qua" min="0" max="60" step="5" value="10" aria-label="Phần trăm đơn thành hộp quà" />
+          <p class="p-in__n"><span class="p-guess">Cũng là giả định.</span> Hộp đôi đang để giảm 8%, nên một đơn hộp đôi bằng khoảng 1,84 lần đơn lẻ.</p>
+        </div>
+      </div>
+      <div class="p-out">
+        <p class="p-eye" style="margin-bottom:12px">Nếu hai giả định trên đúng</p>
+        <div class="p-row"><span>Phí sàn không phải trả</span><b id="oGiu">—</b></div>
+        <div class="p-row"><span>Trừ phí báo-có tự động <em>[đã kiểm: SePay, gói ~120.000 ₫/tháng]</em></span><b id="oSepay">—</b></div>
+        <div class="p-row p-row--big"><span>Tiền thật giữ lại mỗi tháng</span><b id="oLoi">—</b></div>
+        <div class="p-row"><span>Một năm</span><b id="oNam">—</b></div>
+
+        <p class="p-eye" style="margin:22px 0 10px">Khoản thứ hai, không cộng được vào trên</p>
+        <div class="p-row"><span>Doanh thu tăng thêm nhờ hộp quà</span><b id="oQua">—</b></div>
+        <p class="p-in__n" style="margin-top:12px">
+          <b>Vì sao tôi không cộng hai con số này lại:</b> khoản phí sàn giữ lại là <em>tiền thật</em> —
+          nó vào túi chị nguyên vẹn. Còn doanh thu tăng thêm nhờ hộp quà thì vẫn phải trừ tiền sáp,
+          tinh dầu, ly và hộp cho cây nến thứ hai. Cộng chúng vào nhau là cách làm cho một bản đề xuất
+          trông đẹp hơn sự thật. Khi nào chị nói cho tôi biết giá vốn một cây nến, dòng dưới mới
+          quy ra tiền lãi được — và đó là lý do câu hỏi ấy đứng đầu danh sách ở phần sau.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="p-sec">
+  <div class="wrap">
+    <p class="p-eye">Phần ba</p>
+    <h2 class="p-h2">Bốn việc đáng thử trước khi nghĩ tới website</h2>
+    <p class="p-lede">
+      Tôi là người viết phần mềm, nên tôi có thiên kiến nghề nghiệp: cái gì tôi cũng thấy giải được bằng
+      phần mềm. Nên tôi tự ép mình viết mục này. <b>Nếu một trong bốn việc dưới đây làm tăng doanh số
+      nhiều hơn một cái website, thì về mặt kinh doanh nó có giá trị hơn cái website</b> — và nó rẻ hơn,
+      nhanh hơn, trả lời câu hỏi sớm hơn.
+    </p>
+    <ul class="p-no" style="margin-bottom:26px">
+      <li style="grid-template-columns:22px 1fr"><div><b>Nhắn lại khách cũ.</b>
+        <span>Một cây nến cháy hết trong khoảng 30–50 giờ. Đó là một chu kỳ mua lại có sẵn, không cần ai phát minh ra.
+        Chị có danh sách khách sáu tháng qua không? Nhắn cho họ một tin vào đúng lúc nến sắp hết là việc của một buổi chiều,
+        không phải của một dự án phần mềm. Nếu việc đó ăn, chị vừa biết được điều quan trọng nhất về shop mình.</span></div></li>
+      <li style="grid-template-columns:22px 1fr"><div><b>Bán bộ quà ngay trên Shopee, không cần web.</b>
+        <span>Tạo một SKU &ldquo;hộp đôi&rdquo; và một SKU &ldquo;hộp ba&rdquo; trên chính sàn đang bán. Nếu không ai mua thì giả định
+        &ldquo;khách mua nến làm quà và chịu trả nhiều hơn&rdquo; đã sai — và chị biết điều đó sau hai tuần, thay vì sau khi
+        tôi dựng xong trang Hộp quà.</span></div></li>
+      <li style="grid-template-columns:22px 1fr"><div><b>Viết sẵn câu trả lời cho việc chọn mùi.</b>
+        <span>Nếu &ldquo;mùi nào thơm nhất&rdquo; đúng là câu bị hỏi nhiều nhất, thì một đoạn trả lời mẫu dán vào tin nhắn
+        đã giải quyết phần lớn. Trang Tìm mùi chỉ đáng dựng khi số lần bị hỏi nhiều tới mức trả lời tay không xuể.</span></div></li>
+      <li style="grid-template-columns:22px 1fr"><div><b>Sửa ảnh và mô tả trên listing đang có.</b>
+        <span>Khách đang ở trên sàn. Cải thiện chỗ họ đang đứng thường rẻ hơn và chắc ăn hơn là dựng một chỗ mới rồi tìm cách kéo họ sang.</span></div></li>
+    </ul>
+    <div class="p-warn">
+      <b>Vì sao tôi vẫn dựng trang, dù vừa viết mục này</b>
+      <p>
+        Vì tôi chưa gặp chị, nên tôi không hỏi được bốn câu trên trước. Dựng trang là cách rẻ nhất tôi nghĩ ra
+        để có một buổi nói chuyện cụ thể — không phải vì tôi tin trang là câu trả lời.
+        Nếu sau buổi gặp hoá ra việc nhắn lại khách cũ mới là thứ đáng làm, thì tôi đã làm thừa một trang web,
+        và chị không mất đồng nào cho việc thừa ấy.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="p-sec p-sec--tint">
+  <div class="wrap">
+    <p class="p-eye">Phần bốn</p>
+    <h2 class="p-h2">Lập luận ngược: vì sao một trang riêng có thể là sai lầm</h2>
+    <p class="p-lede">
+      Mục này không phải để làm màu khiêm tốn. Đây là lý do mạnh nhất để <em>không</em> làm việc với tôi,
+      và chị nên cân nhắc nó thật.
+    </p>
+    <div class="p-grid3">
+      <div class="p-card">
+        <h3>Khách đang ở trên sàn</h3>
+        <p>Trong ngành nến thơm quà năm 2025, Shopee chiếm 77,3% và TikTok 22,0% doanh thu <em>[đã kiểm: metric.vn]</em>.
+        Nghĩa là gần như toàn bộ người mua đang đứng sẵn trên sàn.</p>
+      </div>
+      <div class="p-card">
+        <h3>Kéo họ ra là thêm một bước</h3>
+        <p>Khách xem một video TikTok rồi bấm mua ngay trong TikTok Shop — đã đăng nhập, đã có địa chỉ, đã có thẻ.
+        Dẫn họ sang một trang lạ là bắt họ nhập lại từ đầu. Đó là <b>thêm ma sát</b>, không phải bớt.</p>
+      </div>
+      <div class="p-card">
+        <h3>Nên điều kiện là gì</h3>
+        <p>Một trang riêng chỉ đáng tồn tại nếu nó làm được một việc mà sàn làm chưa tốt — chọn mùi, gói quà theo ý,
+        kể chuyện thương hiệu — <b>và việc đó đo được</b>. Nếu không đo được thì không nên tin.</p>
+      </div>
+    </div>
+    <p class="p-lede" style="margin:26px 0 0">
+      Cách tôi tự trả lời: phí sàn ở phần hai là thứ duy nhất tôi cầm chắc. Phần còn lại —
+      trang đẹp hơn thì chốt tốt hơn, có Tìm mùi thì đỡ nhắn tin hơn — <b>tôi không chứng minh được,
+      và tôi không tìm thấy một nghiên cứu độc lập nào chứng minh hộ.</b> Mọi con số kiểu
+      &ldquo;quiz tăng chuyển đổi 40%&rdquo; đang lưu hành trên mạng đều do chính công ty bán phần mềm quiz công bố,
+      không có nhóm đối chứng. Tôi không dùng chúng ở đây và chị đừng tin ai dùng chúng.
+    </p>
+  </div>
+</section>
+
+<section class="p-sec">
+  <div class="wrap">
+    <p class="p-eye">Phần năm</p>
+    <h2 class="p-h2">Những thứ tôi sẽ không làm cho chị</h2>
+    <p class="p-lede">
+      Danh sách này quan trọng ngang danh sách tính năng. Có những thứ đã có người làm tốt và rẻ hơn
+      tôi rất nhiều — tôi mà nhận làm thì là tôi lấy tiền của chị để dựng lại một thứ chị mua được
+      với vài trăm nghìn một tháng.
+    </p>
+    <ul class="p-no">
+      <li><div><b>Phần mềm quản lý bán hàng, kho, công nợ, máy in đơn.</b>
+        <span>KiotViet 270.000–490.000 ₫/tháng, Nhanh.vn 350.000 ₫/tháng, Sapo từ 170.000 ₫/tháng <em>[đã kiểm: bảng giá chính thức, 09/2026]</em>. Khi nào chị cần thứ này, tôi bảo chị mua, không bảo chị thuê tôi viết.</span></div></li>
+      <li><div><b>Đồng bộ đơn và tồn kho với Shopee.</b>
+        <span>Shopee giới hạn quyền dùng API theo vùng và theo hạng người bán — nhiều nơi đòi số đơn tối thiểu hoặc hạng Mall/Preferred. Shop cỡ hiện tại <em>có thể không đủ điều kiện</em>, và tôi chưa xác minh được ngưỡng của Việt Nam. Hứa trước là hứa liều.</span></div></li>
+      <li><div><b>Cổng thanh toán thẻ.</b>
+        <span>VNPAY và OnePay bắt buộc có giấy phép kinh doanh <em>[đã kiểm]</em>. Nếu chị đang bán với tư cách cá nhân thì mã VietQR cộng dịch vụ báo-có tự động làm được việc tương đương, rẻ hơn nhiều.</span></div></li>
+      <li><div><b>Ứng dụng điện thoại.</b>
+        <span>Tôi làm nghề này năm năm, nên tôi biết: shop cỡ này mà làm app thì app sẽ không có ai tải. Trang web mở bằng link trong bio là đúng chỗ khách đang đứng.</span></div></li>
+      <li><div><b>Đánh giá của khách bịa ra.</b>
+        <span>Trang mẫu tôi dựng cố tình để trống mục đánh giá. Khi nào có khách thật nói thật thì mới có mục đó.</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="p-sec p-sec--tint">
+  <div class="wrap">
+    <p class="p-eye">Phần sáu</p>
+    <h2 class="p-h2">Làm gì trước, và điều gì mở khoá bước sau</h2>
+    <p class="p-lede">
+      Không có mốc thời gian nào trong danh sách này, vì mốc thời gian là thứ dễ hứa nhất và dễ trượt nhất.
+      Thay vào đó mỗi bước có một <b>điều kiện mở</b>: chưa xảy ra thì chưa làm.
+    </p>
+    <ul class="p-road">
+      <li class="is-now"><span class="p-road__d"></span>
+        <h4>Đang ở đây — trang bán hàng, Tìm mùi, Hộp quà</h4>
+        <p class="p-road__w">Đã chạy. Còn chờ nội dung thật của năm mùi hương.</p>
+        <p>Chi phí lưu trữ bằng không. Cái còn thiếu là chữ, không phải mã: tên mùi, đoạn mô tả, tầng hương, giá thật, và số tài khoản để bật mã VietQR.</p></li>
+      <li><span class="p-road__d"></span>
+        <h4>Tự động xác nhận chuyển khoản</h4>
+        <p class="p-road__w">Mở khi: chị bắt đầu thấy mệt vì phải tự soi sao kê để đối chiếu từng đơn.</p>
+        <p>Mã VietQR chỉ hiện số tiền, nó không báo cho trang biết tiền đã về. Dịch vụ báo-có gắn vào tài khoản cá nhân được, khoảng 120.000 ₫/tháng ở mức đơn hiện tại <em>[đã kiểm: bảng giá SePay]</em>.</p></li>
+      <li><span class="p-road__d"></span>
+        <h4>Nối đơn vị vận chuyển</h4>
+        <p class="p-road__w">Mở khi: số đơn đủ nhiều để việc tự nhập địa chỉ sang app giao hàng thành việc mất giờ mỗi ngày.</p>
+        <p>Đây là phần dễ nhất cả dự án: GHN và GHTK cho lấy khoá ngay trong trang quản trị của shop, không cần hợp đồng, gọi được trong ngày <em>[đã kiểm: tài liệu của hai bên]</em>.</p></li>
+      <li><span class="p-road__d"></span>
+        <h4>Quản lý đơn và tồn kho</h4>
+        <p class="p-road__w">Mở khi: chị bán hụt hàng một lần, hoặc quên mất một đơn.</p>
+        <p>Và lúc đó câu hỏi đầu tiên vẫn là <em>mua sẵn hay tự xây</em>. Nếu nghiệp vụ của chị giống mọi shop khác thì mua sẵn rẻ hơn. Tự xây chỉ đáng khi quy trình của chị thật sự khác.</p></li>
+      <li><span class="p-road__d"></span>
+        <h4>Nguyên vật liệu và mẻ sản xuất</h4>
+        <p class="p-road__w">Mở khi: chị hết sáp hoặc hết tinh dầu giữa lúc đang có đơn.</p>
+        <p>Đây mới là chỗ một phần mềm riêng thắng phần mềm bán sẵn: bán một cây nến thì trừ đi bao nhiêu gam sáp, bao nhiêu ml tinh dầu, còn đủ cho mấy mẻ nữa. Không phần mềm bán lẻ đại trà nào biết công thức của chị.</p></li>
+      <li><span class="p-road__d"></span>
+        <h4>Gom nhiều kênh về một chỗ</h4>
+        <p class="p-road__w">Mở khi: đã xác minh được shop đủ điều kiện dùng API của sàn.</p>
+        <p>Đặt cuối cùng không phải vì nó khó nhất, mà vì nó là bước duy nhất phụ thuộc vào quyết định của một công ty khác.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="p-sec">
+  <div class="wrap">
+    <p class="p-eye">Phần bảy — phần quan trọng nhất trang này</p>
+    <h2 class="p-h2">Thứ tôi cần ở chị, nhiều hơn là tiền</h2>
+    <p class="p-lede">
+      Bảy phần trên là thứ tôi <em>nghĩ</em>. Phần này là thứ tôi <em>không biết</em> — và nó quyết định
+      mọi phần trên đúng hay sai. Buổi gặp đầu tôi muốn nghe nhiều hơn nói: nếu hôm đó tôi nói nhiều hơn chị
+      thì buổi gặp coi như hỏng, kể cả khi chị gật đầu. Chị xem trước mấy câu này để khỏi phải nhớ tại chỗ.
+    </p>
+    <ul class="p-ask">
+      <li><div>Một cây nến 300.000 ₫ thì tiền sáp, tinh dầu, ly, bấc, hộp hết bao nhiêu?
+        <span>Đây là con số tôi thiếu nhất. Không có nó thì mọi phép tính ở trên chỉ nói về doanh thu, mà doanh thu không phải là tiền chị mang về.</span></div></li>
+      <li><div>Trong mười đơn gần nhất, mấy đơn từ Instagram, mấy từ TikTok, mấy từ Shopee?
+        <span>Cho tôi xem thẳng mười đơn ấy thì tốt hơn một con số ước lượng.</span></div></li>
+      <li><div>Một ngày chị mất bao lâu để trả lời tin nhắn, và câu nào bị hỏi đi hỏi lại nhiều nhất?
+        <span>Nếu câu đó là &ldquo;mùi nào thơm nhất&rdquo; thì trang Tìm mùi đang nhắm đúng chỗ. Nếu là câu khác, tôi làm sai và cần biết sớm.</span></div></li>
+      <li><div>Từ lúc khách chốt đơn đến lúc hàng đi, chị làm những bước nào?
+        <span>Tôi muốn nghe từng thao tác, kể cả thao tác chị thấy vụn vặt. Chỗ mất giờ thường nằm ở đấy.</span></div></li>
+      <li><div>Bao nhiêu phần trăm khách quay lại mua lần hai?
+        <span>Nến cháy hết trong 30–50 giờ. Nếu khách không quay lại thì đó là lỗ hổng lớn nhất, và nó rẻ hơn nhiều so với đi tìm khách mới.</span></div></li>
+      <li><div>Chị đã thử gì rồi mà không ăn thua?
+        <span>Để tôi khỏi đề xuất lại đúng thứ chị đã làm hỏng một lần.</span></div></li>
+      <li><div>Tháng 12 năm ngoái bán gấp mấy lần tháng 11?
+        <span>Dữ liệu ngành cho thấy tháng 12/2025 tăng 37,23% so với tháng 11 <em>[đã kiểm: metric.vn]</em>. Nếu shop chị cũng vậy thì mọi việc nên xong trước tháng 11.</span></div></li>
+      <li><div>Chị đang bán với tư cách cá nhân hay đã có đăng ký kinh doanh?
+        <span>Câu này quyết định thanh toán làm được tới đâu — và nó liên quan tới mục cảnh báo ngay bên dưới.</span></div></li>
+    </ul>
+
+    <div class="p-warn">
+      <b>Một việc phải hỏi luật sư, không hỏi tôi</b>
+      <p>
+        Luật Thương mại điện tử số 122/2025/QH15 có hiệu lực từ 01/07/2026, kèm Nghị định 248/2026/NĐ-CP.
+        Theo quy định cũ, website có chức năng đặt hàng phải thông báo với Bộ Công Thương trước khi bán,
+        không thông báo thì phạt 10–20 triệu đồng. Tôi đọc được <b>hai nguồn luật nói ngược nhau</b> về việc
+        thủ tục ấy còn hay đã bỏ sau 01/07/2026, và tôi không đủ tư cách kết luận.
+        Trước khi mở bán trên tên miền riêng, chị hỏi một người làm luật. Tiền phạt nếu có rơi vào chị, không rơi vào tôi —
+        nên tôi thà nói ra lúc này còn hơn để chị biết sau.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="p-sec p-sec--tint">
+  <div class="wrap">
+    <p class="p-eye">Phần tám</p>
+    <h2 class="p-h2">Bốn cách làm việc, kể cả cách không làm gì</h2>
+    <p class="p-lede">
+      Tôi không có ý ép chị chọn hôm nay. Bốn cách này khác nhau ở chỗ ai chịu rủi ro —
+      đọc cột &ldquo;hỏng khi nào&rdquo; trước cột giá.
+    </p>
+    <div class="p-deal">
+      <div class="p-deal__c">
+        <h4>Mua đứt trang</h4>
+        <p class="p-deal__p">So với agency: 2–7 triệu ₫ <em>[đã kiểm: bảng giá công bố]</em></p>
+        <p>Chị trả một lần, trang là của chị, mã nguồn giao lại hết. Tôi hết trách nhiệm.</p>
+        <dl><dt>Hợp khi</dt><dd>Chị chỉ cần một chỗ tử tế để dẫn link, không định đi xa hơn.</dd>
+        <dt>Hỏng khi</dt><dd>Sáu tháng sau cần sửa mà tôi đã bận việc khác. Trang tĩnh nên không chết, nhưng cũng không tự lớn.</dd></dl>
+      </div>
+      <div class="p-deal__c">
+        <h4>Thuê theo tháng</h4>
+        <p class="p-deal__p">So với phần mềm bán sẵn: 250.000–750.000 ₫/tháng</p>
+        <p>Tôi giữ trang chạy, sửa và thêm theo việc phát sinh. Dừng lúc nào cũng được.</p>
+        <dl><dt>Hợp khi</dt><dd>Chị muốn có người lo phần kỹ thuật mà không phải cam kết dài.</dd>
+        <dt>Hỏng khi</dt><dd>Tháng nào không có việc chị vẫn thấy mất tiền, còn tháng nhiều việc tôi thấy thiệt. Phải nói rõ mỗi tháng gồm bao nhiêu giờ.</dd></dl>
+      </div>
+      <div class="p-deal__c">
+        <h4>Ăn chia trên kênh trực tiếp</h4>
+        <p class="p-deal__p">Không trả trước</p>
+        <p>Tôi không lấy tiền mặt. Tôi lấy một phần doanh thu của những đơn đi qua trang riêng, trong một khoảng thời gian có hạn.</p>
+        <dl><dt>Hợp khi</dt><dd>Chị chưa muốn bỏ tiền, và cả hai đều tin kênh riêng sẽ chạy.</dd>
+        <dt>Hỏng khi</dt><dd>Cãi nhau về việc đơn nào tính là &ldquo;đi qua trang riêng&rdquo;. Phải chốt cách đo <em>trước</em>, bằng chữ, trước khi viết dòng mã nào.</dd></dl>
+      </div>
+      <div class="p-deal__c">
+        <h4>Làm cùng nhau lâu dài</h4>
+        <p class="p-deal__p">Cần thời gian, không cần tiền</p>
+        <p>Tôi nhận phần công nghệ của thương hiệu như một phần việc của mình, không phải như một nhà cung cấp.</p>
+        <dl><dt>Hợp khi</dt><dd>Sau vài tháng làm thử, cả hai thấy làm việc với nhau dễ chịu.</dd>
+        <dt>Hỏng khi</dt><dd>Bàn chuyện này ở buổi gặp đầu. Chúng ta chưa gặp nhau bao giờ — tôi nghĩ nên để dành câu này lại sau.</dd></dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="p-end">
+  <div class="wrap">
+    <h2>Việc duy nhất tôi mong ở buổi gặp đầu</h2>
+    <p>
+      Không phải chị gật đầu. Là chị mở Seller Centre ra, đọc cho tôi nghe con số phí cố định thật,
+      nói cho tôi biết một cây nến tốn bao nhiêu tiền nguyên liệu, rồi cả hai cùng nhìn lại phép tính ở trên
+      với số thật thay cho số tôi đoán.
+    </p>
+    <p>
+      Nếu tính xong mà con số không bõ, tôi sẽ nói thẳng là không bõ. Một người bảo chị đừng thuê mình
+      thì đáng tin hơn một người bảo chị nên thuê.
+    </p>
+    <p class="p-sig" style="margin-top:26px">Đạt · bản dựng ngày 20/09/2026</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  function money(n) { return Math.round(n).toLocaleString('vi-VN') + ' ₫'; }
+
+  var els = ['don', 'gia', 'cd', 'th', 'qua'].map(function (id) { return $('#' + id); });
+
+  function paint() {
+    var don = +$('#don').value, gia = +$('#gia').value, cd = +$('#cd').value;
+    var th = +$('#th').value, qua = +$('#qua').value;
+
+    $('#vDon').textContent = don;
+    $('#vGia').textContent = money(gia);
+    $('#vCd').textContent = cd + '%';
+    $('#vTh').textContent = th + '%';
+    $('#vQua').textContent = qua + '%';
+
+    var donThang = don * 30, doanhThu = donThang * gia;
+    var fGd = doanhThu * 0.06;          /* phí xử lý giao dịch 6%, từ 01/05/2026 */
+    var fHt = donThang * 3000;          /* phí hạ tầng 3.000 ₫/đơn, từ 01/07/2025 */
+    var fCd = doanhThu * cd / 100;      /* phí cố định theo ngành — người đọc tự điền */
+    var tong = fGd + fHt + fCd;
+
+    $('#oDoanhThu').textContent = money(doanhThu);
+    $('#oGd').textContent = money(fGd);
+    $('#oHt').textContent = money(fHt);
+    $('#oCd').textContent = money(fCd);
+    $('#oTong').textContent = money(tong);
+
+    var pFee = doanhThu ? Math.min(100, tong / doanhThu * 100) : 0;
+    $('#barFee').style.width = pFee.toFixed(1) + '%';
+    $('#barKeep').style.width = (100 - pFee).toFixed(1) + '%';
+    $('#barFee').textContent = pFee >= 12 ? pFee.toFixed(0) + '%' : '';
+    $('#barKeep').textContent = (100 - pFee) >= 12 ? (100 - pFee).toFixed(0) + '%' : '';
+    $('#lFee').textContent = pFee.toFixed(1) + '%';
+    $('#lKeep').textContent = (100 - pFee).toFixed(1) + '%';
+
+    /* Phí báo-có là phí CỐ ĐỊNH theo tháng, không theo đơn. Kéo "đơn đi thẳng" về 0 thì coi như
+       chị không mở kênh riêng, nên cũng không đăng ký dịch vụ ấy — vì thế trừ 0 chứ không trừ
+       120.000. Điểm hoà vốn nằm ở khoảng 1,1% số đơn đi thẳng (120.000 / 10.710.000 ở mức mặc
+       định), tức là rất thấp: phí báo-có không phải thứ quyết định việc này có bõ hay không. */
+    var giu = tong * th / 100;
+    var sepay = th > 0 ? 120000 : 0;
+    /* CỐ Ý KHÔNG cộng doanh thu hộp quà vào dòng tổng. Phí sàn giữ lại là tiền thật, còn doanh
+       thu hộp quà chưa trừ giá vốn cây nến thứ hai — mà giá vốn thì tôi chưa biết. Cộng hai thứ
+       khác bản chất vào một con số là cách một bản đề xuất tự nói dối. */
+    var loi = giu - sepay;
+    /* Hộp đôi giảm 8%: một đơn hộp đôi = 2 × 0,92 = 1,84 lần đơn lẻ, tức tăng thêm 0,84 lần. */
+    var themQua = donThang * (qua / 100) * gia * 0.84;
+
+    $('#oGiu').textContent = money(giu);
+    $('#oSepay').textContent = sepay ? '−' + money(sepay) : money(0);
+    $('#oQua').textContent = money(themQua);
+    $('#oLoi').textContent = (loi < 0 ? '−' : '') + money(Math.abs(loi));
+    $('#oLoi').style.color = loi < 0 ? 'var(--ink-2)' : '';
+    $('#oNam').textContent = (loi < 0 ? '−' : '') + money(Math.abs(loi) * 12);
+  }
+
+  els.forEach(function (el) { el.addEventListener('input', paint); });
+  paint();
+})();
+</script>
+</body>
+</html>
