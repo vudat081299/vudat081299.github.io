@@ -941,12 +941,20 @@
             <thead><tr><th>Vụ</th><th>Năm</th><th>Thủ đoạn</th><th>Thiệt hại</th></tr></thead>
             <tbody>
               <tr><td><b>Enron</b></td><td>2001</td><td>Nợ khổng lồ giấu ngoài bảng cân đối, không khai báo</td><td>Cổ đông mất ~$74 tỷ</td></tr>
-              <tr><td><b>WorldCom</b></td><td>2006</td><td>Bút toán giả cho các thương vụ không hề tồn tại → thổi phồng tài sản</td><td>Có thể tới $11 tỷ tài sản ảo</td></tr>
+              <tr><td><b>WorldCom</b></td><td>2002 <span class="wb-cell-muted">(sách in 2006)</span></td><td>Bút toán giả cho các thương vụ không hề tồn tại → thổi phồng tài sản</td><td>Có thể tới $11 tỷ tài sản ảo</td></tr>
               <tr><td><b>Lehman Brothers</b></td><td>2008</td><td>$50 tỷ thua lỗ dưới dạng tài sản vô giá trị nằm trên bảng cân đối</td><td>Phá sản; nhân tố chính của khủng hoảng toàn cầu</td></tr>
               <tr><td><b>Bernie Madoff</b></td><td>2008</td><td>Trả lợi nhuận cho nhà đầu tư bằng chính tiền của họ; duy trì bằng người mới (Ponzi)</td><td>Nhà đầu tư mất ~$65 tỷ</td></tr>
             </tbody>
           </table>
         </div>
+        <div class="wb-alert wb-alert--warning">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Một mốc trong bảng lệch — nêu ra để bạn đừng học thuộc số sai</p>
+            <p class="wb-alert__msg"><b>WorldCom không phải 2006.</b> Kiểm toán nội bộ phát hiện bút toán giả tháng <b>6/2002</b>, và công ty nộp đơn phá sản tháng <b>7/2002</b> — vụ phá sản lớn nhất nước Mỹ tính tới thời điểm đó. Năm 2006 là năm hãng (khi ấy đã đổi tên thành MCI) bị Verizon mua lại — một sự kiện khác hẳn, xảy ra sau khi bê bối đã khép lại. Ba mốc còn lại khớp: Enron nộp đơn phá sản tháng 12/2001, Lehman tháng 9/2008, Madoff bị bắt tháng 12/2008.</p>
+          </div>
+        </div>
+
         <p class="hw-p"><b>Dấu hiệu đỏ mà kiểm toán viên tìm:</b> dòng tiền âm bỗng dưng dương năm sau · doanh thu ghi nhận trước khi bán thật · biên lợi nhuận gộp tăng bất thường.</p>
 
         <h3 class="hw-h3">Dòng tiền — thứ giết doanh nghiệp nhanh nhất</h3>
@@ -1895,14 +1903,21 @@
               <text class="hw-vs" x="78" y="209" text-anchor="middle">dự trữ 5%</text>
             </svg>
           </div>
-          <p class="hw-src">Nguồn: “The multiplier effect of the fractional reserve cycle”, tr.90–91. Kiểm tra: tổng tiền gửi $3.709,87 + tổng cho vay $3.524,37 = <b>$7.234,24</b> quyền đòi tiền, trên $185,50 tiền mặt.</p>
+          <p class="hw-src">Nguồn: “The multiplier effect of the fractional reserve cycle”, tr.90–91. Kiểm tra từng dòng: mỗi khoản cho vay bằng đúng tiền gửi trừ dự trữ (1.000 − 50 = 950; 950 − 47,50 = 902,50; …), và tổng cộng lại đúng như bảng.</p>
         </div></div>
         <div class="hw-figs">
-          <div class="hw-fig"><span class="n">$185,50</span><span class="l">toàn bộ tiền mặt thật trong chuỗi bốn ngân hàng</span></div>
-          <div class="hw-fig"><span class="n">$7.234,24</span><span class="l">tổng quyền đòi tiền được tạo ra từ khoản gửi $1.000 ban đầu</span></div>
-          <div class="hw-fig"><span class="n">39 lần</span><span class="l">quyền đòi tiền chia cho tiền mặt thật — và đó chỉ mới bốn vòng</span></div>
+          <div class="hw-fig"><span class="n">$1.000</span><span class="l">tiền mặt thật — không có thêm một đồng nào vào chuỗi sau bước đầu tiên</span></div>
+          <div class="hw-fig"><span class="n">$3.709,87</span><span class="l">tổng tiền gửi bốn ngân hàng đang ghi nợ với người gửi</span></div>
+          <div class="hw-fig"><span class="n">3,7 lần</span><span class="l">số nhân đạt được sau bốn vòng — trần lý thuyết của chuỗi vô hạn là 20 lần</span></div>
         </div>
-        <p class="hw-p">Khoản gửi ban đầu <b>$1.000</b> cuối cùng tạo ra tổng quyền đòi tiền (tất cả tiền gửi và khoản vay) là <b>$7.234,24</b>, với dự trữ tiền mặt gộp chỉ <b>$185,50</b>. <em>Sách nói rõ đây là bản giải thích đơn giản hoá của hiệu ứng số nhân.</em></p>
+        <p class="hw-p">Khoản gửi ban đầu <b>$1.000</b> đi hết bốn vòng thì bốn ngân hàng cộng lại đang ghi nợ người gửi <b>$3.709,87</b> — gấp <b>3,7 lần</b> số tiền mặt từng bước vào chuỗi. Tiền mặt ấy không nhân lên: $185,50 nằm trong két bốn ngân hàng, $814,50 còn lại đang ở tay người vay của ngân hàng D, cộng đúng $1.000. Cái nhân lên là <b>quyền đòi</b>. <em>Sách nói rõ đây là bản giải thích đơn giản hoá của hiệu ứng số nhân.</em></p>
+        <div class="wb-alert wb-alert--warning">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Đừng cộng cột “tiền gửi” với cột “cho vay”</p>
+            <p class="wb-alert__msg">Hai cột ấy là <b>hai mặt của cùng một đồng tiền</b>, không phải hai khoản tiền khác nhau: khoản ngân hàng A cho vay $950 <i>chính là</i> khoản tiền gửi $950 của ngân hàng B, chỉ nhìn từ hai phía bảng cân đối. Cộng chúng lại là đếm hai lần. Thước đo đúng của “tiền được tạo ra” là <b>tổng tiền gửi</b>, tức cột giữa — và nó bị chặn trên bởi con số ở đoạn dưới.</p>
+          </div>
+        </div>
         <p class="hw-p"><b>Chuỗi này chưa dừng ở ngân hàng D.</b> Sách cắt ở bốn vòng cho gọn, nhưng phép tính không dừng: với dự trữ 5%, giới hạn lý thuyết của cả chuỗi vô hạn là <b>1 ÷ 0,05 = 20 lần</b> khoản gửi ban đầu, tức khoảng <b>$20.000</b> tiền gửi được tạo ra từ $1.000. Bốn vòng mới đi được $3.709 — <em>chưa tới một phần năm đường</em>.</p>
         <div class="wb-alert wb-alert--warning">
           <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
