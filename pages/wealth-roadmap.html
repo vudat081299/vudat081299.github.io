@@ -75,7 +75,10 @@
   .rm-calc__title { font-size: 14px; font-weight: 660; margin: 0; }
   .rm-calc__hint { font-size: 12px; color: var(--wb-fg-subtle); }
   .rm-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 12px; }
-  .rm-inp label { display: block; font-size: 11.5px; color: var(--wb-fg-muted); margin-bottom: 5px; letter-spacing: .01em; }
+  /* Nhãn dài quấn hai dòng làm ô nhập tụt xuống lệch hàng với ô bên cạnh.
+     Cột flex + đẩy phần tử cuối xuống đáy → mọi input thẳng hàng bất kể nhãn. */
+  .rm-inp { display: flex; flex-direction: column; justify-content: flex-end; }
+  .rm-inp label { display: block; font-size: 11.5px; color: var(--wb-fg-muted); margin-bottom: 5px; letter-spacing: .01em; line-height: 1.35; }
   .rm-inp input { width: 100%; font-variant-numeric: tabular-nums; }
   .rm-out { margin-top: 16px; padding-top: 14px; border-top: var(--wb-bw) solid var(--wb-border); }
 
@@ -232,8 +235,9 @@
   </div>
 
   <div class="rm-lead">
-    <p>Con số đáng chú ý nhất trên bảng này không phải tài sản ròng. Nó là <b>tỷ lệ tích lũy 75%</b> và <b>gần 50 tháng sống được mà không cần thu nhập</b>.</p>
-    <p>Tỷ lệ tích lũy 75% là cực kỳ hiếm — tôi không có số liệu để nói chính xác nó nằm ở phân vị nào, nhưng tỷ lệ tiết kiệm hộ gia đình ở hầu hết nền kinh tế nằm trong khoảng một chữ số đến khoảng 20%, nên 75% là ngoại lệ lớn. Phần lớn người có thu nhập gấp ba bạn vẫn tích lũy ít hơn bạn về số tuyệt đối. Và 50 tháng runway nghĩa là bạn có thể mất việc hôm nay, không làm gì suốt hơn bốn năm, và vẫn ổn. Rất ít người ở tuổi 26 có điều đó. <b>Bạn đang lo lắng ở một vị trí mà đa số người sẽ thấy là an toàn.</b> Điều này quan trọng, vì nó nói cho ta biết vấn đề không nằm ở chỗ bạn tưởng.</p>
+    <p>Con số đáng chú ý nhất trên bảng này không phải tài sản ròng. Nó là <b>tỷ lệ tích lũy 75%</b> và <b>44 tháng sống được mà không cần thu nhập</b>.</p>
+    <p>Tỷ lệ tích lũy 75% là cực kỳ hiếm — tôi không có số liệu để nói chính xác nó nằm ở phân vị nào, nhưng tỷ lệ tiết kiệm hộ gia đình ở hầu hết nền kinh tế nằm trong khoảng một chữ số đến khoảng 20%, nên 75% là ngoại lệ lớn. Phần lớn người có thu nhập gấp ba bạn vẫn tích lũy ít hơn bạn về số tuyệt đối. Và 44 tháng runway nghĩa là bạn có thể mất việc hôm nay, không làm gì suốt gần bốn năm, và vẫn ổn. Rất ít người ở tuổi 26 có điều đó. <b>Bạn đang lo lắng ở một vị trí mà đa số người sẽ thấy là an toàn.</b></p>
+    <p><b>Nhưng cả hai con số đều đứng trên một chân duy nhất, và nó sắp bị rút:</b> tỷ lệ 75% cao được <em>vì</em> bạn đang ở nhà gia đình. Khi nhà bị thu hồi và bạn phải trả tiền ở, chi tiêu đi từ 10 lên khoảng 23 triệu — tỷ lệ tích lũy tụt xuống <b>42%</b> và runway tụt xuống <b>19 tháng</b>, nếu lúc đó thu nhập vẫn là 40 triệu. Đó không phải lý do để hoảng; đó là lý do vì sao Phần 5 gấp hơn bạn tưởng, và vì sao việc đầu tiên trong danh sách 90 ngày là gọi điện làm rõ chuyện cái nhà.</p>
   </div>
 
   <h3 class="rm-h3">Ba chỗ rò rỉ nhìn thấy ngay</h3>
@@ -302,7 +306,7 @@
 
   <div class="rm-do">
     <div class="rm-do__t">Hệ quả</div>
-    <p>Mỗi giờ bỏ vào <b>nâng giá lao động</b> (tiếng Anh, portfolio, phỏng vấn, kỹ năng hiếm) đáng giá gấp <b>hơn mười lần</b> mỗi giờ bỏ vào <b>chọn cổ phiếu</b>. Tỷ lệ này chỉ đảo chiều khi tài sản của bạn vượt khoảng <b>8 tỷ</b> — dự kiến năm 2033.</p>
+    <p>Mỗi giờ bỏ vào <b>nâng giá lao động</b> (tiếng Anh, portfolio, phỏng vấn, kỹ năng hiếm) đáng giá gấp <b>hơn mười lần</b> mỗi giờ bỏ vào <b>chọn cổ phiếu</b>. Tỷ lệ này chỉ đảo chiều khi tài sản của bạn vượt khoảng <b>8 tỷ</b> — dự kiến năm 2036 theo kịch bản cơ sở.</p>
     <p>Một điều kiện phải nói kèm, nếu không con số 15,6× bị thổi phồng: <b>46 triệu kia là thu nhập thụ động, còn 720 triệu đòi bạn phải đi làm.</b> Chúng không cùng loại. Phép so chỉ đúng trong khung “bạn dù sao cũng đang đi làm tám tiếng mỗi ngày trong mười năm tới” — mà đúng là vậy. Ngày bạn muốn <em>ngừng</em> làm việc, chỉ còn cột bên trái tồn tại, và đó chính là lý do cột bên phải phải được chuyển thành cột bên trái càng nhanh càng tốt.</p>
     <p>Nghĩa là trong sáu năm tới, câu trả lời đúng cho mọi câu hỏi dạng "tôi nên làm gì tiếp theo" gần như luôn là: <b>thứ làm tăng thu nhập, không phải thứ làm tăng lợi suất.</b> Và danh mục đầu tư nên được thiết kế để <em>không cần bạn chú ý</em>, chính xác vì sự chú ý của bạn có giá cao hơn ở chỗ khác.</p>
   </div>
@@ -408,9 +412,9 @@
         <tr>
           <td><b>A · Két an toàn</b></td>
           <td class="rm-num">150 tr</td>
-          <td class="rm-num">0</td>
+          <td class="rm-num">0 → xem ghi chú</td>
           <td>Tiết kiệm kỳ hạn 6 tháng, chia 3 sổ 50 tr</td>
-          <td>15 tháng chi tiêu. Không bao giờ đụng vào trừ khi mất thu nhập. Chia 3 sổ để rút một sổ không mất lãi hai sổ kia.</td>
+          <td><b>Quy tắc, không phải con số cứng: rổ A luôn bằng 12–15 tháng chi tiêu <em>hiện tại</em>.</b> Hôm nay 150 tr là 15 tháng. Ngày bạn phải tự lo chỗ ở, chi tiêu lên ~23 tr nên rổ A phải lên <b>~276 tr</b> — nạp thêm từ rổ B hoặc từ khoản cho vay khi về, <em>trước</em> khi việc đó xảy ra, không phải sau. Không bao giờ đụng vào trừ khi mất thu nhập.</td>
         </tr>
         <tr>
           <td><b>B · Cỗ máy tích sản</b></td>
@@ -470,17 +474,17 @@
       </div>
     </div>
     <div class="wb-card">
-      <div class="wb-card__head"><div><div class="wb-card__title">Mốc 2 · 2034 · tuổi 34</div><div class="wb-card__sub">ĐỘC LẬP TÀI CHÍNH MỀM</div></div><span class="wb-cap wb-cap--sm">~8 năm</span></div>
+      <div class="wb-card__head"><div><div class="wb-card__title">Mốc 2 · 2035 · tuổi 35</div><div class="wb-card__sub">ĐỘC LẬP TÀI CHÍNH MỀM</div></div><span class="wb-cap wb-cap--sm">~9 năm</span></div>
       <div class="wb-card__body">
         <p class="rm-p" style="margin-bottom:10px"><b>~7,5 tỷ · thụ động ~25 tr/tháng</b></p>
         <p class="rm-p" style="font-size:13.8px;margin-bottom:0">Quyền bạn mua được: <b>lương trở thành tuỳ chọn.</b> Rút 4%/năm cho 300 triệu — đủ cho mức sống hiện tại <em>cộng tiền thuê nhà</em>, vì từ 2030 bạn phải tự lo chỗ ở. Bạn chưa giàu, nhưng đã ra khỏi trò chơi bắt buộc: nghỉ một năm làm sản phẩm, đổi sang việc lương thấp hơn mà học nhiều hơn, hoặc từ chối một sếp tệ mà không cần tính toán.</p>
       </div>
     </div>
     <div class="wb-card">
-      <div class="wb-card__head"><div><div class="wb-card__title">Mốc 3 · 2038 · tuổi 38</div><div class="wb-card__sub">GIÀU THẬT</div></div><span class="wb-cap wb-cap--sm">~12 năm</span></div>
+      <div class="wb-card__head"><div><div class="wb-card__title">Mốc 3 · 2039 · tuổi 39</div><div class="wb-card__sub">GIÀU THẬT</div></div><span class="wb-cap wb-cap--sm">~13 năm</span></div>
       <div class="wb-card__body">
         <p class="rm-p" style="margin-bottom:10px"><b>12 tỷ theo giá hôm nay · thụ động ~40 tr/tháng</b></p>
-        <p class="rm-p" style="font-size:13.8px;margin-bottom:0">Quyền bạn mua được: <b>vốn của bạn kiếm bằng bạn hôm nay, mãi mãi, không cần bạn đi làm.</b> Mua đứt một căn nhà tử tế bằng tiền mặt vẫn còn 8 tỷ chạy. Đây là định nghĩa “giàu” khả thi và đáng tin duy nhất mà một người làm công ăn lương đến được — và bạn đến được ở tuổi 38, <em>sau khi</em> đã trừ cả lạm phát lẫn chi phí chỗ ở.</p>
+        <p class="rm-p" style="font-size:13.8px;margin-bottom:0">Quyền bạn mua được: <b>vốn của bạn kiếm bằng bạn hôm nay, mãi mãi, không cần bạn đi làm.</b> Mua đứt một căn nhà tử tế bằng tiền mặt vẫn còn 8 tỷ chạy. Đây là định nghĩa “giàu” khả thi và đáng tin duy nhất mà một người làm công ăn lương đến được — và bạn đến được ở tuổi 39, <em>sau khi</em> đã trừ cả lạm phát lẫn chi phí chỗ ở.</p>
       </div>
     </div>
   </div>
@@ -489,7 +493,9 @@
 
   <p class="rm-p">Mô hình tính theo năm, lãi kép trên vốn đầu kỳ, tiền nạp trong năm được tính nửa kỳ lãi. <b>Mọi con số dưới đây tính bằng sức mua hôm nay</b>, không phải tiền danh nghĩa của năm tương lai — chạy bằng lợi suất thực 5,3%/năm (9% danh nghĩa trừ 3,5% lạm phát), nên “12 tỷ ở 2038” nghĩa là 12 tỷ <em>mua được như 12 tỷ hôm nay</em>.</p>
 
-  <p class="rm-p">Hai ô quan trọng nhất: <b>tích lũy sau khi nhân thu nhập</b> (hạ về 30 để thấy điều gì xảy ra nếu bạn không làm gì ở Phần 5) và <b>năm phải tự lo chỗ ở</b> — đặt về 0 nếu việc thu hồi nhà có đền bù hoặc tái định cư, và xem ba cái mốc nhảy về sớm bao nhiêu.</p>
+  <p class="rm-p">Hai ô quan trọng nhất: <b>tích lũy sau nhảy việc</b> và <b>năm phải tự lo chỗ ở</b>. Ô thứ hai đặt về 0 nếu việc thu hồi nhà có đền bù hoặc tái định cư — xem ba cái mốc nhảy về sớm bao nhiêu.</p>
+
+  <p class="rm-p">Ô thứ nhất là <b>trung bình cả giai đoạn, không phải mức hợp đồng đầu tiên</b>. Mặc định 65 được chọn để tái tạo đúng đường thu nhập ba nấc ở Phần 5: khoảng <b>55</b> trong 3–4 năm đầu ở mức hợp đồng ~3.500 USD, rồi khoảng <b>80</b> khi lên senior hoặc chạy hai hợp đồng. Muốn xem kịch bản bi quan — nhảy được việc nhưng không bao giờ lên nấc 3 — hạ về <b>55</b>. Muốn xem điều gì xảy ra nếu bạn không làm gì ở Phần 5, hạ về <b>30</b>.</p>
 
   <div class="rm-calc">
     <div class="rm-calc__head">
@@ -498,7 +504,7 @@
     </div>
     <div class="rm-inputs">
       <div class="rm-inp"><label for="i-p-save0">Tích lũy năm 1 (tr/tháng)</label><input class="wb-input" type="number" id="i-p-save0" value="30" step="1"></div>
-      <div class="rm-inp"><label for="i-p-save1">Tích lũy sau khi nhân thu nhập</label><input class="wb-input" type="number" id="i-p-save1" value="72" step="2"></div>
+      <div class="rm-inp"><label for="i-p-save1">Tích lũy sau nhảy việc, trung bình</label><input class="wb-input" type="number" id="i-p-save1" value="65" step="2"></div>
       <div class="rm-inp"><label for="i-p-year">Năm đạt mức tích lũy mới</label><input class="wb-input" type="number" id="i-p-year" value="3" step="1" min="1" max="10"></div>
       <div class="rm-inp"><label for="i-p-r">Lợi suất danh mục (%/năm)</label><input class="wb-input" type="number" id="i-p-r" value="9" step="0.5"></div>
       <div class="rm-inp"><label for="i-p-infl">Lạm phát (%/năm)</label><input class="wb-input" type="number" id="i-p-infl" value="3.5" step="0.5"></div>
@@ -560,9 +566,9 @@
         <tr>
           <td><b>2 · Remote toàn thời gian</b></td>
           <td class="rm-num">4–9 tháng</td>
-          <td class="rm-num rm-pos"><b>90–155 tr/th</b></td>
+          <td class="rm-num rm-pos"><b>78–155 tr/th</b></td>
           <td class="rm-num">~50%</td>
-          <td>3.500–6.000 USD/tháng từ công ty Mỹ / EU / Singapore / Úc tuyển remote. Đây là <b>mục tiêu chính</b>. Kênh: Wellfound, RemoteOK, Otta, Arc.dev, Toptal, Turing, và các startup dùng Deel/Remote.com để thuê toàn cầu.</td>
+          <td><b>Dải thường gặp cho người ở Việt Nam: 3.000–4.000 USD</b> (78–104 tr gộp) ở công ty áp lương theo địa điểm. Dải cao 4.500–6.000 USD (117–155 tr) thuộc nhóm trả lương không phụ thuộc địa điểm — có thật nhưng hiếm và cạnh tranh gắt hơn. Đây là <b>mục tiêu chính</b>. Kênh: Wellfound, RemoteOK, Otta, Arc.dev, Toptal, Turing, và các startup dùng Deel/Remote.com để thuê toàn cầu.</td>
         </tr>
         <tr>
           <td><b>3 · Senior/lead hoặc consultant</b></td>
@@ -757,7 +763,7 @@
         <div class="rm-fig"><div class="rm-fig__k">Nhà phải tăng giá</div><div class="rm-fig__v" id="o-h-be">—</div><div class="rm-fig__n">mỗi năm, để mua hoà với thuê ở mốc thời gian bạn chọn</div></div>
       </div>
       <div class="rm-figs" style="margin-bottom:0">
-        <div class="rm-fig"><div class="rm-fig__k">Nếu MUA — tài sản ròng</div><div class="rm-fig__v" id="o-h-buy">—</div><div class="rm-fig__n">vốn chủ trong nhà (giá trị trừ dư nợ) cộng phần tích lũy còn lại đem đầu tư</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Nếu MUA — tài sản ròng</div><div class="rm-fig__v" id="o-h-buy">—</div><div class="rm-fig__n" id="o-h-real-n">—</div></div>
         <div class="rm-fig"><div class="rm-fig__k">Nếu THUÊ — tài sản ròng</div><div class="rm-fig__v" id="o-h-rentnw">—</div><div class="rm-fig__n">tiền trả trước cộng phần chênh lệch hằng tháng, tất cả đem đầu tư</div></div>
         <div class="rm-fig"><div class="rm-fig__k">Chênh lệch</div><div class="rm-fig__v" id="o-h-diff">—</div><div class="rm-fig__n" id="o-h-diff-n">—</div></div>
         <div class="rm-fig"><div class="rm-fig__k">Tích lũy còn lại nếu mua</div><div class="rm-fig__v" id="o-h-left">—</div><div class="rm-fig__n" id="o-h-left-n">—</div></div>
@@ -765,7 +771,7 @@
     </div>
   </div>
 
-  <p class="rm-p">Kết quả trung thực, và bạn nên tự kiểm bằng máy tính ở trên: điểm hoà nằm ở mức tăng giá nhà khoảng <b>6,6%/năm</b>. Dưới mức đó thuê thắng, trên mức đó mua thắng. <b>Ở giả định mặc định (nhà tăng 7%/năm), mua thắng — nhỉnh hơn khoảng 97 triệu sau 5 năm.</b> Tôi để nguyên con số đó thay vì chỉnh giả định cho hợp kết luận, vì đó chính là điều cần thấy: <b>xét thuần về tiền, hai phương án gần như hoà, và mọi kết luận dứt khoát chỉ là một dự đoán về giá bất động sản mười năm tới đội lốt phân tích.</b> Không ai biết con số đó.</p>
+  <p class="rm-p">Kết quả trung thực, và bạn nên tự kiểm bằng máy tính ở trên: điểm hoà nằm ở mức tăng giá nhà khoảng <b>6,6%/năm</b>. Dưới mức đó thuê thắng, trên mức đó mua thắng. <b>Ở giả định mặc định (nhà tăng 7%/năm), mua thắng — nhỉnh hơn khoảng 82 triệu sau 5 năm, tính theo giá hôm nay.</b> Tôi để nguyên con số đó thay vì chỉnh giả định cho hợp kết luận, vì đó chính là điều cần thấy: <b>xét thuần về tiền, hai phương án gần như hoà, và mọi kết luận dứt khoát chỉ là một dự đoán về giá bất động sản mười năm tới đội lốt phân tích.</b> Không ai biết con số đó.</p>
 
   <p class="rm-p">Nếu tiền hoà nhau, quyết định phải dựa vào thứ khác. Và thứ khác đó không hoà chút nào.</p>
 
@@ -958,13 +964,13 @@
         </tr>
         <tr>
           <td><b>Cơ sở</b></td><td class="rm-num"><b>55%</b></td>
-          <td>Remote thành công trong năm thứ hai. Thu nhập 90–115 triệu. Thị trường 9%/năm. Sản phẩm không thành nhưng không tốn nhiều.</td>
-          <td class="rm-num"><b>~4,0 tỷ</b></td><td class="rm-num"><b>~9,2 tỷ</b></td><td class="rm-num"><b>~14,5 tỷ</b></td>
+          <td>Remote thành công trong năm thứ hai ở mức ~3.500 USD, lên senior sau 3–4 năm. Thị trường 9%/năm. Sản phẩm không thành nhưng không tốn nhiều.</td>
+          <td class="rm-num"><b>~3,7 tỷ</b></td><td class="rm-num"><b>~8,4 tỷ</b></td><td class="rm-num"><b>~13,1 tỷ</b></td>
         </tr>
         <tr>
           <td><b>Tốt</b></td><td class="rm-num">20%</td>
           <td>Remote sớm và lên senior nhanh. Thu nhập 130–180 triệu. Sản phẩm có doanh thu 3.000–5.000 USD/tháng từ năm thứ ba.</td>
-          <td class="rm-num"><b>~5,2 tỷ</b></td><td class="rm-num"><b>~13,2 tỷ</b></td><td class="rm-num"><b>~21,5 tỷ</b></td>
+          <td class="rm-num"><b>~5,0 tỷ</b></td><td class="rm-num"><b>~12,5 tỷ</b></td><td class="rm-num"><b>~20,5 tỷ</b></td>
         </tr>
         <tr>
           <td><b>Rất tốt</b></td><td class="rm-num">5%</td>
@@ -1027,14 +1033,27 @@
 
   <div class="rm-lead">
     <p>Nhóm (b) là nhóm duy nhất sao chép được. Và tin tốt là <b>bạn đang ở giữa nhóm đó mà không nhận ra</b>: năm năm mobile đã tích lũy xong, chín tháng nền toán đã tích lũy được một nửa.</p>
-    <p>Cái "nhanh" thật sự khả dĩ cho bạn là <b>nhân ba thu nhập trong 12–18 tháng</b>. Nghe kém hấp dẫn hơn "nhân mười vốn trong hai năm", nhưng nó có ba thuộc tính mà lời hứa kia không có: <b>xác suất khoảng 50%</b>, <b>rủi ro mất vốn bằng không</b>, và <b>phần tăng là vĩnh viễn</b>. Nhân ba thu nhập giữ trong mười năm đáng giá hơn phần lớn những vụ trúng đậm một lần — vì nó không đảo ngược.</p>
+    <p>Cái "nhanh" thật sự khả dĩ cho bạn là <b>nhân hai đến ba lần thu nhập trong 12–24 tháng</b> — gần ba lần tính trên lương gộp, khoảng hai lần rưỡi sau thuế. Nghe kém hấp dẫn hơn "nhân mười vốn trong hai năm", nhưng nó có ba thuộc tính mà lời hứa kia không có: <b>xác suất khoảng 50%</b>, <b>rủi ro mất vốn bằng không</b>, và <b>phần tăng là vĩnh viễn</b>. Nhân hai lần rưỡi thu nhập rồi giữ nó trong mười năm đáng giá hơn phần lớn những vụ trúng đậm một lần — vì nó không đảo ngược.</p>
   </div>
 
   <h3 class="rm-h3">Phép tính để bạn thấy "chậm" nhanh đến mức nào</h3>
 
-  <p class="rm-p">Tỷ lệ tích lũy 75% có một hệ quả mà ít người tính ra: <b>mỗi năm bạn đi làm mua cho bạn khoảng ba năm tự do.</b> Bạn tích lũy 9 tháng chi phí sống chỉ trong 3 tháng làm việc. Với tỷ lệ này, thời gian tới điểm mà đầu tư nuôi được chi tiêu chỉ khoảng 7 năm — <em>bất kể</em> bạn bắt đầu với bao nhiêu tiền.</p>
+  <p class="rm-p">Tỷ lệ tích lũy có một hệ quả mà ít người tính ra: nó quyết định thời gian tới độc lập tài chính <em>gần như hoàn toàn</em>, và <b>bất kể bạn bắt đầu với bao nhiêu tiền</b>. Đây là bảng, ở lợi suất thực 5%/năm:</p>
 
-  <p class="rm-p">So sánh: một người tích lũy 20% thu nhập cần <b>khoảng 37 năm</b> để tới cùng điểm đó. Bạn đang đi nhanh gấp năm lần người bình thường và cảm thấy mình chậm, vì bạn không so với người bình thường — bạn so với một hình ảnh trong đầu.</p>
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Tình huống</th><th class="rm-num">Tỷ lệ tích lũy</th><th class="rm-num">Năm tới độc lập</th><th class="rm-num">1 năm làm mua được</th></tr></thead>
+      <tbody>
+        <tr><td><b>Bạn hôm nay</b> — còn ở nhà gia đình</td><td class="rm-num rm-pos">75%</td><td class="rm-num rm-pos"><b>7,1 năm</b></td><td class="rm-num">3,0 năm tự do</td></tr>
+        <tr><td><b>Mất nhà, chưa nhảy việc</b> — chi 23 tr</td><td class="rm-num rm-neg">42%</td><td class="rm-num rm-neg"><b>20,3 năm</b></td><td class="rm-num">0,7 năm</td></tr>
+        <tr><td><b>Mất nhà, đã nhảy việc</b> — thực nhận 90, chi 33</td><td class="rm-num">63%</td><td class="rm-num"><b>11,2 năm</b></td><td class="rm-num">1,7 năm</td></tr>
+        <tr><td>Người tích lũy 20% — mức phổ biến</td><td class="rm-num">20%</td><td class="rm-num">36,7 năm</td><td class="rm-num">0,25 năm</td></tr>
+      </tbody>
+      <caption class="rm-cap">Con số 7,1 năm ở hàng đầu là thứ dễ trích dẫn nhất và dễ hiểu sai nhất — nó chỉ đúng <em>chừng nào bạn còn ở nhà miễn phí</em>. So hàng hai với hàng ba: mất nhà mà không nhảy việc thì mất chín năm cuộc đời; mất nhà mà đã nhảy việc thì chỉ mất bốn. <b>Đó là toàn bộ lý do Phần 5 đứng trước mọi thứ khác.</b></caption>
+    </table>
+  </div>
+
+  <p class="rm-p">Dù ở hàng nào, bạn vẫn nhanh hơn hẳn mức phổ biến — nhanh gấp năm lần ở hàng đầu, gấp gần hai lần ở hàng tệ nhất. Bạn cảm thấy mình chậm không phải vì so với người bình thường, mà vì so với một hình ảnh trong đầu.</p>
 
   <div class="rm-do">
     <div class="rm-do__t">Công thức của cái nhanh thật</div>
@@ -1079,7 +1098,7 @@
   <h3 class="rm-h4">Về bản thân</h3>
 
   <ul class="rm-ul">
-    <li class="rm-li"><b>10 · Ở tuổi 26, đồng hồ năng lực chạy nhanh hơn đồng hồ vốn.</b> Vốn của bạn sinh 46 triệu một năm. Một nấc năng lực sinh 400–700 triệu một năm. Tỷ lệ 1:10 này chỉ đảo khi tài sản vượt khoảng 8 tỷ, khoảng năm 2033. Cho đến lúc đó, khi phân vân giữa "đầu tư tiền" và "đầu tư vào mình", câu trả lời gần như luôn là vế sau — và nó sẽ không còn đúng mãi, nên hãy dùng nó trong lúc còn đúng.</li>
+    <li class="rm-li"><b>10 · Ở tuổi 26, đồng hồ năng lực chạy nhanh hơn đồng hồ vốn.</b> Vốn của bạn sinh 46 triệu một năm. Một nấc năng lực sinh 400–700 triệu một năm. Tỷ lệ 1:10 này chỉ đảo khi tài sản vượt khoảng 8 tỷ, khoảng năm 2036. Cho đến lúc đó, khi phân vân giữa "đầu tư tiền" và "đầu tư vào mình", câu trả lời gần như luôn là vế sau — và nó sẽ không còn đúng mãi, nên hãy dùng nó trong lúc còn đúng.</li>
     <li class="rm-li"><b>11 · So sánh đúng người: bạn-hôm-nay với bạn-mười-hai-tháng-trước.</b> So với người cùng tuổi đã có nhà là so với một mẫu đã bị lọc — bạn không thấy những người cùng tuổi đang gánh nợ mà không kể, và bạn không biết ai được gia đình cho bao nhiêu. Còn so với bạn-của-năm-ngoái thì luôn là một phép so công bằng, luôn có dữ liệu, và luôn nằm trong tầm kiểm soát.</li>
     <li class="rm-li"><b>12 · Bạn không đang thua. Bạn đang ở một vị trí tốt và đang hỏi sai câu hỏi.</b> Tỷ lệ tích lũy top 1% thế giới, 50 tháng runway, 5 năm kinh nghiệm trong một nghề được trả cao, một nửa bằng thạc sĩ, và mới 26 tuổi. Cảm giác mông lung không đến từ vị trí của bạn — nó đến từ việc chưa có ai đặt các con số ấy cạnh nhau trên cùng một màn hình. <b>Giờ thì có rồi.</b></li>
   </ul>
@@ -1176,7 +1195,7 @@
         <tr><td>Lạm phát</td><td class="rm-num">3,5%/năm</td><td>Mức trung hạn hợp lý cho Việt Nam. Lợi suất <b>thực</b> còn 5,3%/năm, và đó là con số máy tính dự phóng dùng. <b>Mọi số tỷ đồng trên trang này là sức mua HÔM NAY</b>, không phải tiền danh nghĩa của năm tương lai. Bản đầu tiên tính danh nghĩa và vì thế nói “thụ động 42 triệu ở 2036 bằng lương hiện tại” — sai, 42 triệu năm 2036 chỉ mua được bằng 30 triệu hôm nay. Đã sửa toàn bộ.</td></tr>
         <tr><td>Quy tắc rút 4%</td><td class="rm-num">4%/năm</td><td>Ngưỡng rút an toàn kinh điển, từ dữ liệu thị trường Mỹ thế kỷ 20. <b>Dùng như thước đo quy mô, không phải lời hứa.</b> Với thị trường Việt Nam và thời gian rút 50+ năm, 3–3,5% thận trọng hơn — và trang vẫn dùng 4% để định nghĩa mốc 2 và mốc 3, nên <b>hai mốc đó đang lạc quan khoảng một năm</b>. Ở mức 3,5% thì mốc 2 cần 8,6 tỷ thay vì 7,5 tỷ.</td></tr>
         <tr><td>Tỷ giá</td><td class="rm-num">26.000 đ/USD</td><td>Dùng để quy đổi mức lương remote, giữ cố định theo thời gian cho đơn giản. Đồng Việt Nam có xu hướng mất giá dần so với USD trong quá khứ, điều đó <em>có lợi</em> cho người nhận thu nhập USD — nhưng quá khứ không phải một cam kết, nên tôi không đưa nó vào mô hình như một nguồn lợi nhuận.</td></tr>
-        <tr><td>Tích lũy 72 tr/tháng sau khi nhân thu nhập</td><td class="rm-num">giả định ghép</td><td>Con số này chỉ đúng nếu <b>gộp ~117 triệu, thuế ~23%, thực nhận ~90, chi tiêu ~18</b>. Đó là một chuỗi ba điều kiện chứ không phải một con số. Nó cũng giữ nguyên theo giá hôm nay suốt mười năm, tức giả định lương danh nghĩa tăng kịp lạm phát. <b>Giả định dễ sai nhất trên cả trang</b>, và nằm hoàn toàn trong tay bạn — lạm phát lối sống là cách phổ biến nhất khiến một lần tăng lương không tạo ra tài sản nào.</td></tr>
+        <tr><td>Tích lũy 65 tr/tháng sau khi nhảy việc</td><td class="rm-num">giả định ghép</td><td>Không phải một mức lương, mà là <b>trung bình hai nấc</b>: khoảng 55 trong 3–4 năm đầu ở hợp đồng ~3.500 USD (gộp 91 tr, thuế ~20%, thực nhận 73, chi phi-nhà-ở 18), rồi khoảng 80 khi lên senior. Con số 65 được chọn vì nó tái tạo đúng năm chạm ba mốc của đường ba nấc đó. Nó cũng giữ nguyên theo giá hôm nay, tức giả định lương danh nghĩa tăng kịp lạm phát. <b>Giả định dễ sai nhất trên cả trang</b>, và nằm hoàn toàn trong tay bạn — lạm phát lối sống là cách phổ biến nhất khiến một lần tăng lương không tạo ra tài sản nào.</td></tr>
         <tr><td>Vàng</td><td class="rm-num">15 tr/chỉ</td><td>Giá trị giữ chỗ trong bảng tài sản, <b>không phải giá thị trường</b>. Sửa ô này theo giá thực tế lúc bạn đọc.</td></tr>
         <tr><td>Chiết khấu vốn cửa hàng</td><td class="rm-num">60%</td><td>Vốn góp bán lẻ nhỏ, không kiểm soát, không rút được gốc, chỉ có dòng tiền 5 triệu/năm. Chiết khấu ở tỷ lệ 25%/năm cho giá trị hiện tại khoảng 20 triệu. <b>Con số phán đoán</b> — ô chiết khấu trong bảng chỉnh được.</td></tr>
       </tbody>
@@ -1383,7 +1402,7 @@
      thước đo, và con số đọc ra hiểu được ngay không cần quy đổi trong đầu.
      Tích lũy cũng giữ nguyên theo giá hôm nay, tức giả định lương danh nghĩa
      tăng kịp lạm phát — mức tối thiểu hợp lý cho một người có nghề. */
-  var HORIZON = 14;
+  var HORIZON = 16;
 
   function project(v0, save0, save1, switchYear, rReal, rent, rentYear) {
     var out = [v0], v = v0, half = Math.pow(1 + rReal, 0.5);
@@ -1499,7 +1518,15 @@
   /* ── 7 · THUÊ HAY MUA ────────────────────────────────────────────────── */
   /* Mô hình chạy theo THÁNG: khấu hao gốc thật, nhà tăng giá thật, tiền thuê
      tăng 4%/năm, và cả hai bên đem phần dư của cùng một mức tích lũy đi đầu tư.
-     Phí quản lý + bảo trì lấy 0,5%/năm trên giá trị nhà. */
+     Phí quản lý + bảo trì lấy 0,5%/năm trên giá trị nhà.
+
+     CƠ CHẾ giữ nguyên tiền DANH NGHĨA, dù Phần 4 đã chuyển sang tiền thực, và
+     đó là cố ý: khoản trả góp cố định theo tiền danh nghĩa, nên lạm phát bào
+     mòn nó thật — 25 triệu/tháng của năm 2046 nhẹ hơn hẳn 25 triệu hôm nay.
+     Đó là lợi ích có thật của việc vay cố định, và quy mô hình sang tiền thực
+     sẽ xoá mất nó. Chỉ KẾT QUẢ cuối được giảm phát về giá hôm nay, để so được
+     với phần còn lại của trang. Hai bên cùng chia một hệ số nên điểm hoà
+     không đổi. */
   var MAINT = 0.005, RENT_INFL = 0.04;
 
   function rentVsBuy(o) {
@@ -1529,10 +1556,11 @@
       rentPot = rentPot * (1 + mi) + (o.save - rent);
       rent *= (1 + mr);
     }
+    var defl = Math.pow(1 + o.infl / 100, o.years);   /* → sức mua hôm nay */
     return {
-      pmt: pmt, bal: bal, hv: hv,
-      buyNW: (hv - bal) + buyPot,
-      rentNW: rentPot,
+      pmt: pmt, bal: bal, hv: hv, defl: defl,
+      buyNW: ((hv - bal) + buyPot) / defl,
+      rentNW: rentPot / defl,
       y1Cost: y1Interest + y1Maint + o.down * o.inv / 100,
       leftover: o.save - pmt - o.price * MAINT / 12
     };
@@ -1542,7 +1570,8 @@
     return {
       price: num('i-h-price'), down: num('i-h-down'), rate: num('i-h-rate'),
       term: Math.max(1, num('i-h-term')), rent: num('i-h-rent'), app: num('i-h-app'),
-      inv: num('i-h-inv'), years: Math.max(1, num('i-h-years')), save: assets().save
+      inv: num('i-h-inv'), years: Math.max(1, num('i-h-years')), save: assets().save,
+      infl: num('i-p-infl')   /* dùng chung ô lạm phát với Phần 4 — một nguồn sự thật */
     };
   }
 
@@ -1576,6 +1605,8 @@
     set('o-h-be', be === null ? '> 40%/năm' : pct(be, 1) + '/năm');
     set('o-h-buy', money(r.buyNW));
     set('o-h-rentnw', money(r.rentNW));
+    set('o-h-real-n', 'cả hai con số đã giảm phát về giá hôm nay (chia ' + nf2.format(r.defl)
+      + '). Tiền danh nghĩa của năm ' + (2026 + Math.round(o.years)) + ' sẽ lớn hơn, nhưng mua được ít hơn.');
 
     var diff = r.rentNW - r.buyNW;
     var el = document.getElementById('o-h-diff');
