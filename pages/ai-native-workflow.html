@@ -480,7 +480,7 @@
 
         <p class="hw-p">Hai hệ quả, và cả trang này xoay quanh chúng. <b>Một</b>: trần cố định nên mọi thứ bạn nhét vào đều <b>chiếm chỗ của thứ khác</b> — đó chính là cái các phần sau gọi là “ngân sách ngữ cảnh”. <b>Hai</b>: cột trái tốn chỗ ở <i>mọi</i> lượt kể cả lượt chẳng liên quan, còn cột phải chỉ tốn khi thật sự dùng. Nên một quy trình dài phải nằm ở chỗ <b>nạp-khi-cần</b> chứ không phải chỗ luôn-bật — đúng <b>trục 1</b> ở mục mở đầu, và cơ chế của hai chỗ đó là nội dung <a href="#skill-plugin">phần 4</a>.</p>
 
-        <p class="hw-p">Nhưng đó mới là <b>một</b> agent. Việc lớn cần <b>nhiều agent phối hợp</b> — và thực ra có cả một thang “cấp” làm việc với AI (<b>subagent · orchestrator · workflow</b> nằm ở đâu) để phần 2 ngay dưới mổ kỹ.</p>
+        <p class="hw-p">Nhưng đó mới là <b>một</b> agent. Việc lớn cần <b>nhiều agent phối hợp</b> — và có hẳn một cái thang xếp theo số agent cùng làm, nơi <b>subagent · orchestrator · workflow</b> mỗi thứ đứng một bậc. Thang đó là nội dung của phần 2 ngay dưới.</p>
 
         <h3 class="hw-h3">Phép ví bếp ăn — dùng suốt trang này</h3>
         <p class="hw-p">Để đỡ trừu tượng, hình dung một <b>nhà bếp</b>. Nó khớp gần hết các khái niệm bạn sắp gặp:</p>
@@ -1029,7 +1029,7 @@
               <text class="hw-vk" x="535" y="102" text-anchor="middle">chốt chặn cuối</text>
             </svg>
           </div>
-          <p class="hw-src">Ba cổng nối tiếp, mỗi cổng bịt lỗ của cổng trước; ra khỏi cổng 3 mới lên <b>main / public</b>. “Cài gate lúc pre-push” là đúng — nhưng đừng chỉ pre-push.</p>
+          <p class="hw-src">Ba cổng nối tiếp, mỗi cổng bịt lỗ của cổng trước; ra khỏi cổng 3 mới lên <b>main / public</b>. Ba cổng cùng gọi chung một bộ gate — khác nhau ở <i>lúc nào chạy</i>, không phải ở <i>kiểm cái gì</i>.</p>
         </div>
 
         <p class="hw-p"><b>Vậy “cài gate lúc pre-push” — đúng.</b> Nhưng đừng chỉ pre-push: lớp 1 cho phản hồi tức thì, lớp 2 bắt mọi thay đổi, lớp 3 là lưới chặn cuối. Một chi tiết đáng làm ngay từ đầu nếu repo có nhiều project con: cho hook gọi một <b>bộ điều phối</b> thay vì gọi thẳng từng gate. Thêm project mới thì chỉ cần đặt file gate đúng chỗ là nó tự được gọi — không phải sửa tay chỗ khác, và cũng không ai vô tình ghi đè gate của project bên cạnh.</p>
