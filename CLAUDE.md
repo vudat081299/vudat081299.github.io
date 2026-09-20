@@ -10,7 +10,7 @@ cách chúng chạy tự động**.
 | `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3 |
 | `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2 |
 | `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` | 2 |
-| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` | 2 |
+| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` + `verify-ml.py` | 2 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2 |
 | `shop/` | — | `python3 shop/tools/lint-shop.py` | 2 |
 | các project khác | xem thư mục | — | — |
@@ -19,13 +19,22 @@ cách chúng chạy tự động**.
 chứa, không có luật nội dung chung để viết ra. Cổng của chúng chỉ kiểm thứ đúng/sai khách quan —
 id trùng, anchor gãy, asset thiếu, thẻ lệch.
 
-Ngoại lệ duy nhất trong `pages/`: `verify-math-for-ml.py` là cổng **kiến thức**, chỉ chạy khi
-commit chạm `mathematics-for-machine-learning.html`. Trang ấy nói ~90 con số cụ thể (định thức,
+Hai ngoại lệ trong `pages/`, đều là cổng **kiến thức**. Cái thứ nhất, `verify-math-for-ml.py`,
+chỉ chạy khi commit chạm `mathematics-for-machine-learning.html`. Trang ấy nói ~90 con số cụ thể (định thức,
 trị riêng, tỉ lệ PCA, dãy Newton, xác suất nhị thức, phân vị t, p-value) và tự nhận với người
 đọc là mọi con số tính được đều kiểm được bằng máy — nên phải có một script tính lại thật, chứ
 không phải một lời hứa. `lint-pages.py` kiểm được thẻ lệch nhưng không biết `0,0546875` có phải
 là P(X≥8 | n=10, p=0,5) hay không. Trang nào sau này cũng nói số cụ thể thì làm thêm một cổng
-cùng kiểu, đừng nới cổng này ra thành cổng chung: mỗi trang có bộ số riêng. `shop/` cũng có một cổng riêng cùng kiểu vì cùng lý do: đó là một storefront, nơi sai một con
+cùng kiểu, đừng nới cổng này ra thành cổng chung: mỗi trang có bộ số riêng.
+
+Cái thứ hai, `verify-ml.py` (77 phép kiểm), làm đúng theo luật vừa nói cho hai trang học máy —
+`machine-learning.html` và `machine-learning-101.html` — vốn nói ~270 con số có đơn vị mà trước
+đó không cổng nào kiểm. Nó tính lại những con số *suy ra được*: `896 = 32×(3·3·3+1)` tham số của
+một lớp tích chập, `(32+2−3)/1+1 = 32` cỡ đầu ra sau padding/stride, precision/recall/F1 đọc ra
+từ ma trận nhầm lẫn 15/15/5/965, `28·28·32×(5·5·192) ≈ 120 triệu` phép nhân của khối Inception
+so với `12,4 triệu` khi chèn nút thắt 1×1. Nó gộp hai trang vào một file mà **không** vi phạm
+luật trên: hai bộ số viết tay riêng, mỗi bộ đọc đúng file của nó, không phép kiểm nào dùng chung —
+gộp chỉ để hai trang anh em khỏi chép lại cùng một đoạn hàm trợ giúp. `shop/` cũng có một cổng riêng cùng kiểu vì cùng lý do: đó là một storefront, nơi sai một con
 số thì khách trả nhầm tiền. `lint-shop.py` soi thẳng vào `shop/data/shop.json` — giá phải là số
 nguyên dương, giá gạch phải lớn hơn giá bán, `cat` phải trỏ vào danh mục có thật, tag của bộ chọn
 mùi phải khớp `mood` của ít nhất một sản phẩm, và `labels.ship_fee`/`free_ship` phải khớp con số
