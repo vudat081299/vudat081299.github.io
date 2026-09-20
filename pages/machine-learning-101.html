@@ -479,7 +479,7 @@ footer a { color:var(--muted); }
     <p>Bạn nhìn một con mèo và biết ngay đó là mèo. Giờ thử <i>viết ra</i> cách bạn biết. Không phải kể bằng lời — mà viết thành những câu "nếu… thì…", chạy trên từng ô màu nhỏ của tấm ảnh. Bạn sẽ bỏ cuộc trong năm phút. Mắt bạn vừa làm xong việc đó trong một phần mười giây.</p>
     <p><b>Khoảng cách giữa "tôi nhận ra được" và "tôi viết được quy tắc" chính là chỗ máy học chen vào.</b> Trang này đi hết chặng đường ấy: từ một đường thẳng vẽ qua mấy cái điểm, tới cái máy đứng sau những thứ bạn nghe tên hôm nay.</p>
 
-    <p>Cách kể: mỗi ý một phép ví von và một hình để nghịch — nhưng <b>không thuật ngữ nào bị lược</b>. Mỗi cái tên tiếng Anh thật được ghi ngay cạnh phép ví von, trong một cái ô như thế này: <span class="nm">convolution</span>. Đó là chỗ quan trọng nhất. Hiểu "cái kính lúp trượt khắp ảnh" mà không biết nó tên gì thì kiến thức nằm lại trong trang này, không đi cùng bạn ra ngoài.</p>
+    <p>Cách kể: mỗi ý một phép ví von, và <b>mười ba chỗ nghịch được</b> rải dọc trang — nhưng <b>không thuật ngữ nào bị lược</b>. Mỗi cái tên tiếng Anh thật được ghi ngay cạnh phép ví von, trong một cái ô như thế này: <span class="nm">convolution</span>. Đó là chỗ quan trọng nhất. Hiểu "cái kính lúp trượt khắp ảnh" mà không biết nó tên gì thì kiến thức nằm lại trong trang này, không đi cùng bạn ra ngoài.</p>
     <p class="meta">MỌI CON SỐ TRONG TRANG ĐƯỢC TÍNH NGAY TRONG TRÌNH DUYỆT CỦA BẠN<br>KHÔNG CÓ DỮ LIỆU NÀO RỜI KHỎI TRANG · KHÔNG CẦN CÀI GÌ</p>
   </header>
 
@@ -1052,7 +1052,7 @@ footer a { color:var(--muted); }
       <!-- ═══════════════════ CHƯƠNG 7 ═══════════════════ -->
       <section id="s-deep">
         <p class="sechead"><b>Chương 7</b> — khởi tạo, gradient, bộ vặn núm, và dò siêu tham số</p>
-        <h2 class="st">Bảy thứ nghe như tiểu tiết. Thiếu chúng thì mạng sâu không học được gì cả.</h2>
+        <h2 class="st">Năm thứ nghe như tiểu tiết. Thiếu chúng thì mạng sâu không học được gì cả.</h2>
 
         <p class="lede">Chương 6 dựng xong cái máy. Chương này là những thứ phải làm đúng để nó <b>chịu chạy</b>. Không ai gọi chúng là kiến thức chính, nhưng một mạng thiếu chúng thì đứng im, và người mới thường kết luận sai rằng "học sâu không hiệu quả".</p>
 
@@ -1130,7 +1130,7 @@ footer a { color:var(--muted); }
 
         <div class="take">
           <span class="k">Mang theo</span>
-          <p>Mạng không chạy thường không phải vì ý tưởng sai, mà vì một trong bảy chi tiết này bị bỏ. Và trong bảy cái, bước chân α là cái đáng dành thời gian nhất.</p>
+          <p>Mạng không chạy thường không phải vì ý tưởng sai, mà vì một trong năm chi tiết này bị bỏ. Và trong năm cái, bước chân α là cái đáng dành thời gian nhất.</p>
         </div>
       </section>
 
@@ -1152,7 +1152,7 @@ footer a { color:var(--muted); }
               <tr class="d-bias"><td>cao</td><td>cao</td><td><b>Chưa học đủ</b><br><span class="nm">high bias</span></td><td>Máy to hơn, học lâu hơn, thêm con số đầu vào, giảm mức phạt.</td></tr>
               <tr class="d-var"><td>thấp</td><td>cao</td><td><b>Học thuộc lòng</b><br><span class="nm">high variance</span></td><td>Thêm dữ liệu, phạt núm nặng hơn, làm máy nhỏ lại, dropout.</td></tr>
               <tr class="d-ok"><td>thấp</td><td>thấp</td><td><b>Xong</b></td><td>Đi làm việc khác.</td></tr>
-              <tr class="d-bug"><td>cao</td><td>thấp</td><td><b>Gần như chắc là lỗi code</b></td><td>Đi đọc lại đoạn chia dữ liệu — hai tập đang lẫn vào nhau.</td></tr>
+              <tr class="d-bug"><td>cao</td><td>thấp</td><td><b>Bất thường — đi kiểm cách đo</b></td><td>Đề thử quá nhỏ hoặc tình cờ dễ hơn; hoặc bạn đo sai số đề ôn khi dropout còn bật, còn đề thử đo ở chế độ suy luận.</td></tr>
             </tbody>
           </table>
         </div>
@@ -1221,7 +1221,7 @@ footer a { color:var(--muted); }
 
         <p>Lấy đúng một trăm ca máy làm sai. Mở từng ca ra xem. Đếm: bao nhiêu ca là ảnh mờ, bao nhiêu ca là ảnh chụp ban đêm, bao nhiêu ca là nhãn dán sai từ đầu.</p>
 
-        <p>Nếu ảnh mờ chiếm 5% và ảnh ban đêm chiếm 43%, bạn biết ngay phải đi sửa cái nào, và biết sửa xong thì được lợi <b>nhiều nhất</b> bao nhiêu — vì sửa hết ảnh ban đêm cũng chỉ lấy lại được 43% chỗ sai, không hơn. Phép tính trần lợi ích ấy có tên riêng: <span class="nm">ceiling analysis</span>. Hai tiếng ngồi xem thay thế được hai tháng đoán mò.</p>
+        <p>Nếu ảnh mờ chiếm 5% và ảnh ban đêm chiếm 43%, bạn biết ngay phải đi sửa cái nào, và biết sửa xong thì được lợi <b>nhiều nhất</b> bao nhiêu — vì sửa hết ảnh ban đêm cũng chỉ lấy lại được 43% chỗ sai, không hơn. Chính phép tính trần lợi ích ấy mới là thứ đáng giá — nó cho bạn biết mức lợi tối đa <em>trước</em> khi bỏ công ra sửa. Hai tiếng ngồi xem thay thế được hai tháng đoán mò.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
@@ -1581,7 +1581,7 @@ footer a { color:var(--muted); }
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v"><span class="nm">gate</span> — cổng. Máy ba cổng là <span class="nm">LSTM</span> (long short-term memory); bản gọn hai cổng, chạy nhanh hơn và thường gần bằng, là <span class="nm">GRU</span>. Còn <span class="nm">bidirectional RNN</span> đọc câu <b>cả hai chiều</b> rồi ghép lại — vì "con <i>ruồi</i>" và "máy bay đang <i>ruồi</i>" chỉ phân biệt được nhờ những từ đứng <i>sau</i>. Dùng được khi đã có cả câu, không dùng được khi phải trả lời tức thì.</span>
+          <span class="v"><span class="nm">gate</span> — cổng. Máy ba cổng là <span class="nm">LSTM</span> (long short-term memory); bản gọn hai cổng, chạy nhanh hơn và thường gần bằng, là <span class="nm">GRU</span>. Còn <span class="nm">bidirectional RNN</span> đọc câu <b>cả hai chiều</b> rồi ghép lại — vì đọc tới chữ <i>sen</i> trong “hồ Sen…” thì chưa biết đó là tên riêng hay cái hồ có sen; phải thấy mấy từ đứng <i>sau</i> (“…kẹt xe suốt buổi sáng” là tên đường, “…nở trắng cả mặt nước” là cái hồ) mới chốt được. Dùng được khi đã có cả câu, không dùng được khi phải trả lời tức thì.</span>
         </div>
 
         <h3>Sinh ra cả một câu, không phải một nhãn</h3>
@@ -3712,7 +3712,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['gộp recall với precision', 'F1 score', 'chỉ cao khi CẢ HAI đều cao'],
     ['một lớp áp đảo lớp kia', 'skewed dataset', 'ở đây đừng bao giờ dùng độ chính xác'],
     ['ngồi xem 100 ca sai', 'error analysis', 'đếm loại lỗi bằng mắt trước khi sửa'],
-    ['sửa xong được lợi nhất bao nhiêu', 'ceiling analysis', 'để không đi sửa cái chỉ đáng 5%'],
+    ['tính trước xem sửa hết một chặng thì lợi bao nhiêu', 'ceiling analysis', 'kỹ thuật KHÁC: dùng cho hệ nhiều chặng, thay đầu ra từng chặng bằng đáp án đúng rồi đo'],
     ['dữ liệu học khác dữ liệu thật', 'data mismatch', 'không phải lỗi thuộc lòng, và khó chữa hơn'],
     ['tập thứ tư, cắt ra miễn phí', 'train-dev set', 'tách được thuộc lòng khỏi lệch phân phối'],
     ['mượn mạng đã học bài khác', 'transfer learning', 'các lớp đầu đã biết vạch, góc, kết cấu'],
