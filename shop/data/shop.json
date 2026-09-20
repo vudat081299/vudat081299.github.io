@@ -347,6 +347,350 @@
       "placeholder": true
     }
   ],
+  "quiz": {
+    "note": "Bộ câu hỏi của Tìm mùi. LUẬT: (1) `w` là trọng số cộng dồn trên khoá mùi — khoá phải có thật trong `scents`. (2) Số càng lớn càng nghiêng; 3 là 'câu này nói thẳng về mùi đó', 1 là 'hơi nghiêng'. (3) Câu có `scoring: false` KHÔNG chấm điểm — nó chỉ hỏi ý định để biết dẫn khách đi đâu sau khi có kết quả. (4) Sửa trọng số thì chạy lại cổng: nó duyệt hết tổ hợp và báo nếu có mùi không bao giờ thắng được, hoặc một mùi thắng quá nửa số tổ hợp. (5) Hoà ở đỉnh thì phân xử bằng trọng số của câu ghi trong `tiebreak` — câu ký ức, câu nặng nhất; vẫn hoà thì theo thứ tự trong `scents`.",
+    "intro": "Năm câu, khoảng bốn mươi giây. Không có câu nào hỏi bạn thích mùi gì — nếu biết rồi thì bạn đã không cần trang này. Chúng tôi hỏi về phòng, về giờ, và về một mùi ngoài đời bạn còn nhớ.",
+    "privacy": "Câu trả lời nằm lại trong máy bạn. Không gửi đi đâu, không tài khoản, không email.",
+    "cta": "Bắt đầu",
+    "again": "Làm lại",
+    "result_lede": "Đây là mùi hợp nhất với những gì bạn vừa chọn.",
+    "why_title": "Vì sao lại là mùi này",
+    "alt_title": "Nếu bạn muốn thử hướng khác",
+    "questions": [
+      {
+        "k": "q-phong",
+        "q": "Bạn sẽ thắp nó ở phòng nào nhiều nhất?",
+        "hint": "Phòng quyết định nhiều hơn người ta tưởng: phòng kín giữ mùi lâu, phòng thoáng thì mùi nhẹ bay mất trước khi ai kịp ngửi.",
+        "options": [
+          {
+            "k": "ngu",
+            "t": "Phòng ngủ",
+            "s": "nơi cuối ngày",
+            "w": {
+              "s1": 2,
+              "s3": 2,
+              "s4": 1,
+              "s5": 1
+            }
+          },
+          {
+            "k": "khach",
+            "t": "Phòng khách",
+            "s": "nơi có khách",
+            "w": {
+              "s1": 2,
+              "s4": 3,
+              "s3": 1
+            }
+          },
+          {
+            "k": "ban",
+            "t": "Bàn làm việc",
+            "s": "nơi cần tỉnh",
+            "w": {
+              "s2": 3,
+              "s5": 2
+            }
+          },
+          {
+            "k": "tam",
+            "t": "Phòng tắm, chỗ thay đồ",
+            "s": "nơi cần sạch",
+            "w": {
+              "s5": 3,
+              "s2": 2,
+              "s3": 1
+            }
+          }
+        ]
+      },
+      {
+        "k": "q-gio",
+        "q": "Bạn hay thắp vào lúc nào?",
+        "hint": "Mũi người nhạy nhất vào buổi sáng và mệt dần về đêm — nên mùi hợp buổi sáng thường nhẹ hơn mùi hợp lúc khuya.",
+        "options": [
+          {
+            "k": "sang",
+            "t": "Sáng, khi vừa mở cửa sổ",
+            "s": "",
+            "w": {
+              "s2": 3,
+              "s5": 2
+            }
+          },
+          {
+            "k": "chieu",
+            "t": "Chiều muộn, lúc việc vừa xong",
+            "s": "",
+            "w": {
+              "s3": 2,
+              "s4": 2,
+              "s1": 1
+            }
+          },
+          {
+            "k": "dem",
+            "t": "Đêm khuya, đèn đã tắt bớt",
+            "s": "",
+            "w": {
+              "s1": 3,
+              "s4": 2
+            }
+          },
+          {
+            "k": "cuoi",
+            "t": "Cuối tuần, không theo giờ nào",
+            "s": "",
+            "w": {
+              "s3": 2,
+              "s5": 1,
+              "s2": 1
+            }
+          }
+        ]
+      },
+      {
+        "k": "q-kyuc",
+        "q": "Mùi nào ngoài đời từng làm bạn dừng lại?",
+        "hint": "Đây là câu nặng ký nhất. Người ta chọn nước hoa bằng ký ức chứ không bằng danh sách nốt hương — hỏi thẳng vào ký ức thì câu trả lời thật hơn.",
+        "options": [
+          {
+            "k": "go",
+            "t": "Gỗ ẩm sau cơn mưa",
+            "s": "",
+            "w": {
+              "s1": 4
+            }
+          },
+          {
+            "k": "cam",
+            "t": "Vỏ cam vừa bóc",
+            "s": "",
+            "w": {
+              "s2": 4
+            }
+          },
+          {
+            "k": "banh",
+            "t": "Tiệm bánh lúc sáng sớm",
+            "s": "",
+            "w": {
+              "s4": 4
+            }
+          },
+          {
+            "k": "nang",
+            "t": "Áo vừa phơi nắng đem vào",
+            "s": "",
+            "w": {
+              "s5": 4
+            }
+          },
+          {
+            "k": "hoa",
+            "t": "Bó hoa để quên trong bếp",
+            "s": "",
+            "w": {
+              "s3": 4
+            }
+          }
+        ]
+      },
+      {
+        "k": "q-sau",
+        "q": "Sau hai mươi phút, bạn muốn căn phòng thấy thế nào?",
+        "hint": "Nến không đổi được căn phòng. Nó chỉ đổi cảm giác về căn phòng — nên câu này hỏi cảm giác, không hỏi mùi.",
+        "options": [
+          {
+            "k": "am",
+            "t": "Ấm và kín hơn",
+            "s": "",
+            "w": {
+              "s1": 3,
+              "s4": 2
+            }
+          },
+          {
+            "k": "tinh",
+            "t": "Tỉnh và sáng hơn",
+            "s": "",
+            "w": {
+              "s2": 3,
+              "s5": 1
+            }
+          },
+          {
+            "k": "diu",
+            "t": "Dịu và mềm hơn",
+            "s": "",
+            "w": {
+              "s3": 3,
+              "s4": 1
+            }
+          },
+          {
+            "k": "sach",
+            "t": "Sạch và rộng hơn",
+            "s": "",
+            "w": {
+              "s5": 3,
+              "s2": 1
+            }
+          }
+        ]
+      },
+      {
+        "k": "q-cho-ai",
+        "q": "Lần này bạn mua cho ai?",
+        "hint": "Câu này không chấm điểm mùi. Nó chỉ quyết định trang kết quả dẫn bạn đi đâu tiếp.",
+        "scoring": false,
+        "options": [
+          {
+            "k": "minh",
+            "t": "Cho mình",
+            "s": "",
+            "go": "product"
+          },
+          {
+            "k": "qua",
+            "t": "Làm quà cho người khác",
+            "s": "",
+            "go": "gift"
+          },
+          {
+            "k": "xem",
+            "t": "Chưa biết, xem thử đã",
+            "s": "",
+            "go": "browse"
+          }
+        ]
+      }
+    ],
+    "outro": [
+      {
+        "k": "product",
+        "t": "Thêm vào giỏ",
+        "d": "Mùi này đang có sẵn. Thêm vào giỏ rồi xem tiếp bốn mùi còn lại nếu bạn muốn so."
+      },
+      {
+        "k": "gift",
+        "t": "Gói thành hộp quà",
+        "d": "Bạn đang mua làm quà — hộp quà cho chọn tới ba mùi, kèm thiệp viết tay và cách gói."
+      },
+      {
+        "k": "browse",
+        "t": "Xem cả năm mùi",
+        "d": "Chưa vội. Trang mùi hương kể kỹ từng mùi, cuộn một lượt là đủ để biết bạn thuộc về đâu."
+      }
+    ],
+    "tiebreak": "q-kyuc"
+  },
+  "gift": {
+    "note": "Hộp quà. LUẬT: (1) `n` là số nến trong hộp; `off` là phần trăm giảm trên tổng tiền nến, số nguyên 0–50. (2) Thiệp và cách gói tính thêm tiền theo `price` (0 là miễn phí) — mỗi nhóm phải có ít nhất một lựa chọn 0 đồng để hộp rẻ nhất không bị ép mua thêm. (3) Giá hộp tính từ giá sản phẩm thật, KHÔNG ghi tay ở đây.",
+    "intro": "Chọn hộp, chọn mùi, viết lời nhắn. Bạn thấy hộp thay đổi ngay khi chọn, và thấy luôn giá — không có phí nào hiện ra ở bước cuối.",
+    "msg_max": 140,
+    "msg_label": "Lời nhắn viết lên thiệp",
+    "msg_hint": "Shop chép tay lên thiệp. Để trống cũng được — nhiều người thích tự viết.",
+    "msg_placeholder": "Chúc mừng sinh nhật. Mong năm nay nhà mình thơm hơn năm ngoái.",
+    "boxes": [
+      {
+        "k": "b1",
+        "n": 1,
+        "name": "Hộp một ngọn",
+        "desc": "Một mùi, hộp giấy gấp tay, nơ vải.",
+        "off": 0
+      },
+      {
+        "k": "b2",
+        "n": 2,
+        "name": "Hộp đôi",
+        "desc": "Hai mùi khác nhau — thường là một ấm một tươi, để người nhận chọn theo ngày.",
+        "off": 8
+      },
+      {
+        "k": "b3",
+        "n": 3,
+        "name": "Hộp ba",
+        "desc": "Ba mùi. Hộp này hay được mua làm quà tân gia và quà công ty.",
+        "off": 14
+      }
+    ],
+    "cards": [
+      {
+        "k": "c0",
+        "name": "Không cần thiệp",
+        "desc": "Chỉ hộp và nến.",
+        "price": 0
+      },
+      {
+        "k": "c1",
+        "name": "Thiệp giấy mộc",
+        "desc": "Giấy tái chế màu ngà, chữ viết tay mực nâu.",
+        "price": 0
+      },
+      {
+        "k": "c2",
+        "name": "Thiệp ép hoa khô",
+        "desc": "Một nhánh hoa khô ép sau lớp giấy can. Làm từng cái một.",
+        "price": 25000
+      }
+    ],
+    "wraps": [
+      {
+        "k": "w1",
+        "name": "Giấy kraft, nơ đay",
+        "desc": "Mặc định. Mộc, hợp hầu hết dịp.",
+        "price": 0,
+        "paper": "#C9A87C",
+        "ribbon": "#8A7350"
+      },
+      {
+        "k": "w2",
+        "name": "Giấy ngà, nơ lụa",
+        "desc": "Sáng hơn, hợp cưới hỏi và quà cảm ơn.",
+        "price": 20000,
+        "paper": "#F0E4CE",
+        "ribbon": "#C08A4A"
+      },
+      {
+        "k": "w3",
+        "name": "Giấy than, nơ đồng",
+        "desc": "Tối, hợp quà cho nam và quà cuối năm.",
+        "price": 20000,
+        "paper": "#3A332C",
+        "ribbon": "#B9884A"
+      }
+    ],
+    "steps": [
+      {
+        "k": "box",
+        "t": "Chọn hộp",
+        "d": "Bao nhiêu ngọn trong một hộp"
+      },
+      {
+        "k": "scent",
+        "t": "Chọn mùi",
+        "d": "Mỗi ngọn một mùi, trùng nhau cũng được"
+      },
+      {
+        "k": "card",
+        "t": "Thiệp & lời nhắn",
+        "d": "Shop chép tay lên thiệp"
+      },
+      {
+        "k": "wrap",
+        "t": "Cách gói",
+        "d": "Giấy và nơ"
+      }
+    ],
+    "labels": {
+      "save": "Rẻ hơn mua lẻ",
+      "sum_title": "Hộp của bạn",
+      "add": "Thêm hộp vào giỏ",
+      "empty_scent": "Chọn đủ mùi cho hộp rồi mới thêm được vào giỏ.",
+      "cart_name": "Hộp quà"
+    }
+  },
   "payment": {
     "intro": "Trang này là trang tĩnh trên GitHub Pages, không có máy chủ. Hai cách dưới đây chạy được không cần máy chủ khi bạn điền thông tin thật; Apple Pay thì bắt buộc phải có bên xử lý thanh toán.",
     "methods": [

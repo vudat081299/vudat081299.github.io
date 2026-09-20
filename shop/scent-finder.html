@@ -4,8 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="color-scheme" content="light dark" />
-<title>Năm mùi hương · scentsitive.vn</title>
-<meta name="description" content="Năm mùi hương của scentsitive.vn — cảm giác, tầng hương, thời điểm hợp nhất và giá của từng mùi." />
+<title>Tìm mùi của bạn · scentsitive.vn</title>
+<meta name="description" content="Năm câu hỏi về phòng, về giờ và về một mùi bạn còn nhớ — rồi chúng tôi nói mùi nào trong năm mùi hợp với bạn nhất, và vì sao." />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,8 +22,6 @@
     t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
   document.documentElement.setAttribute('data-theme', t);
-  // Mọi khối hiện-dần mặc định trong suốt. Nếu JS bị chặn thì không ai bật chúng lên và
-  // trang thành một tờ giấy trắng. Nên trạng thái ẩn chỉ có hiệu lực khi lớp .js có mặt.
   document.documentElement.classList.add('js');
 })();
 </script>
@@ -43,8 +41,8 @@
       <span>scentsitive<span class="nav__kind">nến thơm thủ công</span></span>
     </a>
     <nav class="nav__links" aria-label="Điều hướng chính">
-      <a class="nav__link is-active" href="products.html">Mùi hương</a>
-      <a class="nav__link" href="scent-finder.html">Tìm mùi</a>
+      <a class="nav__link" href="products.html">Mùi hương</a>
+      <a class="nav__link is-active" href="scent-finder.html">Tìm mùi</a>
       <a class="nav__link" href="gift.html">Hộp quà</a>
       <a class="nav__link" href="index.html#ve-chung-toi">Về chúng tôi</a>
       <a class="nav__link" href="checkout.html">Thanh toán</a>
@@ -70,21 +68,29 @@
   <a href="index.html#lien-he">Liên hệ</a>
 </div>
 
-<div id="scentWash" aria-hidden="true"></div>
+<div class="sf__wash" id="sfWash" aria-hidden="true"></div>
 
 <main id="top">
-  <div class="wrap phead">
-    <p class="crumb"><a href="index.html">Trang chủ</a> <span class="ms ms--sm">chevron_right</span> <span>Mùi hương</span></p>
-    <h1 class="display" style="font-size:clamp(40px,7vw,86px)">Năm mùi hương</h1>
-    <p class="lede" style="max-width:62ch">
-      Cuộn xuống để đi qua từng mùi. Màu của cả trang đổi theo mùi bạn đang đọc —
-      mỗi mùi có một không khí riêng, và đó là cách nhanh nhất để thấy chúng khác nhau chỗ nào.
-    </p>
+  <section class="wrap sf" id="sfStage" aria-live="polite">
     <div id="dataError"></div>
-  </div>
 
-  <nav class="rail" id="scentRail" aria-label="Chuyển nhanh giữa các mùi" data-needs-data></nav>
-  <div id="scentSections" data-needs-data></div>
+    <!-- Ba loại màn — giới thiệu, câu hỏi, kết quả — do JS bật tắt. Câu hỏi và đáp án
+         nằm ở data/shop.json, không nằm ở đây: thêm một câu là thêm một mục vào `quiz`. -->
+    <div class="sfstep is-on" id="sfIntro">
+      <p class="eyebrow">Tìm mùi</p>
+      <h1 class="display" style="font-size:clamp(40px,7.4vw,88px);max-width:14ch">Bạn chưa ngửi được qua màn hình.</h1>
+      <p class="lede" id="sfIntroLede" style="max-width:56ch;margin-top:18px"></p>
+      <div class="sfacts" style="margin-top:30px">
+        <button class="btn btn--primary" id="sfStart"><span class="ms">arrow_forward</span><span id="sfStartT"></span></button>
+        <a class="btn btn--ghost" href="products.html">Bỏ qua, xem cả năm mùi</a>
+      </div>
+      <p class="sfhint" id="sfPrivacy" style="margin-top:34px;max-width:46ch"></p>
+    </div>
+
+    <div class="sfstep" id="sfQ" data-needs-data></div>
+
+    <div class="sfstep" id="sfR"></div>
+  </section>
 </main>
 
 <footer class="foot" id="lien-he">
