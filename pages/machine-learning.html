@@ -2360,7 +2360,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <p>Huấn luyện một RNN với đúng một nhiệm vụ: <b>cho các từ đã có, đoán từ kế tiếp</b>. Nhãn có sẵn miễn phí — chính là từ kế tiếp trong văn bản. Không cần ai gán nhãn gì cả, nên dữ liệu là <i>toàn bộ chữ viết của loài người</i>.</p>
         <p>Sau khi huấn luyện, bạn <b>lấy mẫu</b> từ nó: đưa vào một từ mở đầu, mạng cho phân phối xác suất của từ kế tiếp, bạn <i>bốc ngẫu nhiên</i> theo phân phối đó, đưa từ vừa bốc vào làm đầu vào bước sau, lặp lại. Kết quả là văn bản mới chưa từng tồn tại.</p>
         <div class="box note">
-          <p class="box__k">Đây là chỗ trang này chạm vào hiện tại</p>
+          <p class="box__k">Từ đây tới ChatGPT không còn bước nguyên lý nào</p>
           <p>Ba câu vừa rồi <b>chính là cơ chế của ChatGPT và mọi mô hình ngôn ngữ lớn</b>, không thiếu bước nào về nguyên tắc. Khác biệt nằm ở ba chỗ: khối lặp lại là <b>Transformer</b> chứ không phải RNN (mục <a href="#s-transformer">cuối chặng</a>); quy mô lớn hơn hàng triệu lần; và có thêm giai đoạn tinh chỉnh theo phản hồi con người. Nhưng "đoán từ tiếp theo, rồi bốc ngẫu nhiên theo phân phối" thì y nguyên.</p>
         </div>
 
@@ -2746,7 +2746,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <p><b>Danh mục lớn</b> — Netflix có hàng chục nghìn phim, YouTube hàng tỉ video; không thể chấm điểm tất cả cho mỗi lần tải trang. Giải pháp thực tế chia hai giai đoạn: <b>truy hồi</b> (retrieval) — lấy nhanh vài trăm ứng viên khả dĩ bằng cách rẻ tiền; rồi <b>xếp hạng</b> (ranking) — chạy mô hình đắt tiền chỉ trên vài trăm ứng viên đó. Đây là kiến trúc chuẩn của mọi hệ gợi ý quy mô lớn.</p>
 
         <div class="box mis">
-          <p class="box__k">Ng dành hẳn một bài giảng cho chuyện này, và trang này giữ nguyên</p>
+          <p class="box__k">Vấn đề đi kèm mọi hệ gợi ý, không phải phần phụ lục</p>
           <p class="box__t">Hệ gợi ý tối ưu hoá <i>số đo</i>, không phải lợi ích của người dùng.</p>
           <div class="row">
             <span class="k">Cơ chế</span><span>nếu bạn đo bằng "thời gian xem", hệ sẽ tìm ra nội dung <b>giữ chân lâu nhất</b> — và nội dung gây phẫn nộ, cực đoan hay giật gân thường thắng ở số đo đó. Hệ không có ý đồ gì; nó chỉ làm đúng điều bạn bảo nó làm.</span>
@@ -2814,7 +2814,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         </div>
 
         <div class="box good-box">
-          <p class="box__k">Ng nói thẳng, và trang này giữ nguyên</p>
+          <p class="box__k">Khoảng cách giữa tiếng vang và mức thật sự được dùng</p>
           <p>Học tăng cường được <b>báo chí nhắc nhiều hơn nhiều so với mức nó được dùng trong sản phẩm thật</b>. Nó rực rỡ trong game và mô phỏng — nơi bạn chạy được hàng triệu lượt thử miễn phí. Trong robot thật và hệ thống thật, nó khó hơn hẳn: mỗi lần thử tốn thời gian, tốn tiền, có khi làm hỏng thiết bị. Ng khuyên hiểu nó vì nó là hướng nghiên cứu quan trọng, nhưng <b>đừng chọn nó khi bạn có thể giải bài toán bằng học có giám sát</b>.</p>
         </div>
 
@@ -2883,7 +2883,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <tr><td><b>10</b></td><td><b>Nhảy vào tinh chỉnh trước khi phân tích lỗi</b></td><td>Ba tuần dò siêu tham số cho 0,4%, trong khi 43% lỗi đến từ một nguyên nhân bạn chưa nhìn. <b>Xem 100 ca sai trước.</b></td></tr>
               <tr><td><b>11</b></td><td><b>Thêm dữ liệu khi bài toán là bias</b></td><td>Tốn tiền gán nhãn mà đường cong không nhúc nhích. <b>Chẩn đoán trước bằng đường cong học.</b></td></tr>
               <tr><td><b>12</b></td><td><b>Dùng học sâu cho dữ liệu bảng</b></td><td>Ba tuần công, thua một XGBoost chạy trong bốn phút. <b>Bảng thì thử cây trước.</b></td></tr>
-              <tr><td><b>13</b></td><td><b>So hai mô hình bằng một lần chạy</b></td><td>Chênh lệch 0,6% có thể chỉ là hạt giống ngẫu nhiên khác nhau — bề mặt chi phí không lồi, xem <a href="#s-deep">mô hình 7</a>. <b>Chạy nhiều hạt giống, báo cáo trung bình và độ lệch.</b></td></tr>
+              <tr><td><b>13</b></td><td><b>So hai mô hình bằng một lần chạy</b></td><td>Chênh lệch 0,6% có thể chỉ là hạt giống ngẫu nhiên khác nhau — bề mặt chi phí không lồi, xem tab “hàm không lồi” ở <a href="#s-gd">mô hình 2</a>. <b>Chạy nhiều hạt giống, báo cáo trung bình và độ lệch.</b></td></tr>
               <tr><td><b>14</b></td><td><b>Tối ưu một số đo không phải điều bạn muốn</b></td><td>Số đo đẹp, người dùng khổ. Đây là sai lầm nghiêm trọng nhất trong danh sách vì nó <b>không hiện ra trong bất kỳ biểu đồ nào</b>. Định kỳ hỏi lại: số đo này còn đại diện cho điều ta cần không?</td></tr>
             </tbody>
           </table>
