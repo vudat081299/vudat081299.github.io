@@ -71,7 +71,11 @@
 <div class="sf__wash" id="sfWash" aria-hidden="true"></div>
 
 <main id="top">
-  <section class="wrap sf" id="sfStage" aria-live="polite">
+  <!-- KHÔNG đặt aria-live ở đây. Bản trước phủ aria-live="polite" lên cả khối, nên mỗi
+       lần đổi câu trình đọc màn hình đọc lại trọn 726 ký tự. Cách đúng với luồng
+       một-câu-một-màn là dời TIÊU ĐIỂM sang tiêu đề câu mới — trình đọc tự đọc chỗ
+       vừa nhận tiêu điểm, và người dùng bàn phím không bị văng về đầu trang. -->
+  <section class="wrap sf" id="sfStage">
     <div id="dataError"></div>
 
     <!-- Ba loại màn — giới thiệu, câu hỏi, kết quả — do JS bật tắt. Câu hỏi và đáp án

@@ -1140,7 +1140,7 @@ function fQuestion(q, i) {
   $('#sfQ').innerHTML = '<div class="sfmid">' +
     '<div class="sfbar"><div class="sfbar__pips">' + pips + '</div>' +
       '<span class="sfbar__n">Câu ' + (i + 1) + ' / ' + tot + '</span></div>' +
-    '<div class="sfhead"><h2 class="sfq">' + esc(q.q) + '</h2></div>' +
+    '<div class="sfhead"><h2 class="sfq" id="sfQH" tabindex="-1">' + esc(q.q) + '</h2></div>' +
     '<p class="sfhint">' + esc(q.hint) + '</p>' +
     '<div class="sfopts">' + q.options.map(function (o, j) {
       return '<button class="sfopt' + (picked === o.k ? ' is-picked' : '') + '" data-o="' + esc(o.k) + '"' +
@@ -1153,6 +1153,13 @@ function fQuestion(q, i) {
     '</div>';
 
   fShow('sfQ');
+  /* Đổi câu là thay sạch innerHTML, nên nút vừa bấm bị huỷ và tiêu điểm rơi về <body> —
+     đo được: sau câu 1, document.activeElement là BODY. Người dùng bàn phím phải Tab lại
+     từ đầu trang, mỗi câu một lần. Dời tiêu điểm sang tiêu đề câu mới vừa sửa việc đó vừa
+     khiến trình đọc màn hình đọc đúng câu hỏi, không đọc lại cả khối. */
+  var qh = $('#sfQH');
+  if (qh) qh.focus({ preventScroll: true });
+
   $$('#sfQ [data-o]').forEach(function (b) {
     b.addEventListener('click', function () {
       FAns[q.k] = b.dataset.o;
@@ -1209,7 +1216,7 @@ function fResult() {
           '<span class="sfmatch__t">' + esc((D.quiz || {}).result_lede || '') + '</span>' +
         '</div>' +
         '<p class="sfslot">' + esc(win.s.slot) + '</p>' +
-        '<h2 class="sfname">' + esc(win.s.name) + '</h2>' +
+        '<h2 class="sfname" id="sfRH" tabindex="-1">' + esc(win.s.name) + '</h2>' +
         '<p class="sffeel">' + esc(win.s.feel) + '</p>' +
         '<div class="sfwhy"><h3>' + esc((D.quiz || {}).why_title || '') + '</h3><ul>' +
           why.map(function (x) {
@@ -1229,6 +1236,8 @@ function fResult() {
     '</div>';
 
   fShow('sfR');
+  var rh = $('#sfRH');
+  if (rh) rh.focus({ preventScroll: true });
   var addBtn = $('#sfAdd');
   if (addBtn && pr) addBtn.addEventListener('click', function () { addToCart(pr.id, 1, addBtn); });
   $('#sfAgain').addEventListener('click', function () { track('quiz_again'); FAns = {}; fGo(-1); });
@@ -1289,6 +1298,17 @@ function gFitScents() {
 function gRender() {
   var gi = D.gift, L = gi.labels || {};
   gFitScents();
+  /* Nhớ nút nào đang giữ tiêu điểm TRƯỚC khi thay DOM, để trả lại sau. Cùng lớp lỗi với
+     trang Tìm mùi: bấm một chấm mùi là cả khối bị vẽ lại, nút vừa bấm bị huỷ, tiêu điểm
+     rơi về <body>. Nhận dạng bằng bộ data-* chứ không bằng tham chiếu phần tử — phần tử
+     cũ đã không còn tồn tại. */
+  var a = document.activeElement, keep = null;
+  if (a && a.dataset) {
+    if (a.dataset.slot != null) keep = '[data-slot="' + a.dataset.slot + '"][data-scent="' + a.dataset.scent + '"]';
+    else if (a.dataset.box) keep = '[data-box="' + a.dataset.box + '"]';
+    else if (a.dataset.card) keep = '[data-card="' + a.dataset.card + '"]';
+    else if (a.dataset.wrap) keep = '[data-wrap="' + a.dataset.wrap + '"]';
+  }
 
   var opt = function (on, t, d, price) {
     return '<span class="gbopt__t">' + esc(t) +
@@ -1360,6 +1380,7 @@ function gRender() {
     '<p class="gbnote">' + esc(D.labels.order_note) + '</p>';
 
   gWire();
+  if (keep) { var back = $(keep); if (back) back.focus({ preventScroll: true }); }
 }
 
 function gWire() {

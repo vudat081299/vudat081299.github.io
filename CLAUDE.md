@@ -6,14 +6,18 @@ cách chúng chạy tự động**.
 
 | Project | Luật riêng | Cổng | Lớp đang nối |
 |---|---|---|---|
-| `facts/` | [facts/CLAUDE.md](facts/CLAUDE.md) | `facts/tools/factlint.py check` + `verify` | 1, 2, 3 |
-| `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3 |
-| `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2 |
-| `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` | 2 |
-| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` | 2 |
-| `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2 |
-| `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `sh shop/tools/check.sh` | 1, 2, 3, 4 |
-| các project khác | xem thư mục | — | — |
+| `facts/` | [facts/CLAUDE.md](facts/CLAUDE.md) | `facts/tools/factlint.py check` + `verify` | 1, 2, 3, 4 |
+| `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3, 4 |
+| `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2, 4 |
+| `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` | 2, 4 |
+| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` | 2, 4 |
+| `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2, 4 |
+| `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `sh shop/tools/check.sh` | 1, 2, 3, 4 + chạy thật |
+| các project khác | xem thư mục | — | 4 |
+
+Lớp 4 phủ **mọi** project vì `.github/workflows/gates.yml` chạy tất cả các cổng trên, không
+chỉ cổng của project vừa sửa. Riêng `shop/` có thêm một tầng mà cổng lint không có: `check.sh`
+mở trình duyệt thật và bấm (`shop/tools/smoke.js`) — xem mục dưới.
 
 `pages/` và `cooking/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự
 chứa, không có luật nội dung chung để viết ra. Cổng của chúng chỉ kiểm thứ đúng/sai khách quan —

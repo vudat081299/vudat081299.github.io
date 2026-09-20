@@ -33,6 +33,11 @@ Phiên AI thì nạp `.claude/skills/shop/` trước khi sửa; nó là quy trì
 - **Bản đề xuất mang đi gặp chủ shop: `/shop/pitch/`**
 - Phễu (nội bộ): `/shop/measure/`
 
+**Cái gì lên public, cái gì không.** `shop/docs/` và mọi `shop/*.md` bị loại khỏi bản deploy:
+`docs/04-DAM-PHAN.md` là kịch bản đàm phán với một người có thật, và GitHub Pages phục vụ
+markdown nguyên văn ở URL đoán được. Có cổng chặn nếu hai dòng loại trừ trong `deploy.yml`
+biến mất. `shop/pitch/` **cố ý** vẫn công khai — đó là trang cần gửi link cho chị ấy.
+
 ## Phiên này đã thêm gì
 
 | Thứ | Ở đâu |

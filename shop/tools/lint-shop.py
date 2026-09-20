@@ -627,6 +627,32 @@ def check_docs(shop):
     return err
 
 
+def check_publish(shop):
+    """Tài liệu nội bộ của shop/ KHÔNG được lên public.
+
+    Sinh ra từ một ca thật ngày 20/09/2026: `shop/docs/04-DAM-PHAN.md` — kịch bản đàm phán
+    với một người có thật, gồm cả mục "dấu hiệu nên rút" và mức giá định chào — đã nằm trên
+    GitHub Pages ở một URL đoán được, trả HTTP 200. Không ai cố ý publish nó; workflow deploy
+    rsync cả repo và chẳng ai nghĩ tới thư mục mới.
+
+    Markdown trên GitHub Pages phục vụ nguyên văn, không cần render, nên chỉ cần biết đường
+    dẫn là đọc được. Với một tài liệu đàm phán thì đó là trao cả thế bài cho phía bên kia.
+
+    `shop/pitch/` CỐ Ý vẫn công khai: trang đó viết CHO chị ấy và cần một đường link để gửi.
+    """
+    err = []
+    wf = shop.parent / '.github' / 'workflows' / 'deploy.yml'
+    if not wf.exists():
+        return err
+    body = wf.read_text(encoding='utf-8', errors='replace')
+    for pat in ("--exclude 'shop/docs'", "--exclude 'shop/*.md'"):
+        if pat not in body:
+            err.append("deploy.yml thiếu %s — tài liệu nội bộ của shop/ sẽ lên public. "
+                       "docs/04-DAM-PHAN.md là kịch bản đàm phán với một người có thật; "
+                       "publish nó là đưa thế bài cho phía bên kia." % pat)
+    return err
+
+
 def main(argv):
     verbose = '-v' in argv or '--verbose' in argv
 
@@ -675,7 +701,7 @@ def main(argv):
             for x in cn:
                 print('    %s' % x)
 
-    doc_err = check_docs(SHOP)
+    doc_err = check_docs(SHOP) + check_publish(SHOP)
     total_err += len(doc_err)
     if doc_err:
         print('\ntài liệu — LỖI (%d):' % len(doc_err))

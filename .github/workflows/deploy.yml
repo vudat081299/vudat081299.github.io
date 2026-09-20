@@ -9,6 +9,14 @@ name: Deploy site (build Cashy)
 # never published. `cashy/` is excluded from the rsync because it is built
 # separately, which also keeps its dev docs (docs/, features/) off the web.
 #
+# `shop/docs` and `shop/*.md` are excluded for a sharper reason: they are internal
+# strategy, and one of them (docs/04-DAM-PHAN.md) is a negotiation playbook about a
+# specific real person the site owner is about to meet. GitHub Pages serves markdown as
+# plain text at a guessable URL, so publishing it would hand her his whole position —
+# what he will not promise, and when he should walk away. `shop/pitch/` stays published
+# on purpose: that page is written FOR her and he needs a link to send.
+# `shop/tools/lint-shop.py` fails the build if these two excludes go missing.
+#
 # One-time setup: repo Settings → Pages → Build and deployment → Source =
 # "GitHub Actions" (instead of "Deploy from a branch").
 
@@ -66,6 +74,8 @@ jobs:
             --exclude 'stuff' \
             --exclude '.DS_Store' \
             --exclude 'masters-degree/data-science-roadmap/LEARNING-LOG.md' \
+            --exclude 'shop/docs' \
+            --exclude 'shop/*.md' \
             ./ _site/
           mkdir -p _site/cashy
           cp -r cashy/dist/. _site/cashy/
