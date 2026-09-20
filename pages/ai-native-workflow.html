@@ -660,7 +660,7 @@
               <text class="hw-vs" x="507" y="135" text-anchor="middle">cửa ra ngoài</text>
             </svg>
           </div>
-          <p class="hw-src">Setup thật của bạn: <code>marketplace.json</code> liệt kê <b>3 plugin</b> (thư mục <code>example-plugin</code> có trên đĩa nhưng CHƯA đăng ký trong manifest — đúng một vệt “drift” nho nhỏ). Plugin <code>kv-engineering</code> gói ~32 skill + hooks + 21 command + 1 MCP (codebase-memory); command chỉ là “cửa gọi tay” mỏng, mỗi cái uỷ thác cho một skill.</p>
+          <p class="hw-src">Setup thật của bạn: <code>marketplace.json</code> liệt kê <b>3 plugin</b>. Plugin <code>kv-engineering</code> gói ~32 skill + hooks + 21 command + 1 MCP (codebase-memory); command chỉ là “cửa gọi tay” mỏng, mỗi cái uỷ thác cho một skill.</p>
         </div>
 
         <h3 class="hw-h3">“Cùng là text mà — vậy khác nhau ở cơ chế gì?”</h3>
@@ -996,7 +996,7 @@
 
         <p class="hw-p">Ví dụ ghép cả hai: một <b>hook</b> bắt sự kiện “sắp commit” (pre-commit) sẽ <b>chạy</b> một <b>gate</b> là lệnh lint/test; nếu gate báo lỗi, commit bị chặn. Đổi cảm biến (pre-commit → pre-push) mà vẫn gate đó — hoặc đổi gate mà vẫn cảm biến đó — đều được. Đó là lý do phải tách khái niệm.</p>
 
-        <h3 class="hw-h3">Ba lớp cổng — và vì sao cần cả ba (lấy từ chính repo này)</h3>
+        <h3 class="hw-h3">Ba lớp cổng — và vì sao cần cả ba</h3>
         <p class="hw-p">Mỗi lớp là một <b>hook</b> bắt một sự kiện khác nhau, cùng chạy các <b>gate</b>. Cần cả ba vì mỗi lớp bịt lỗ của lớp trước:</p>
 
         <div class="hw-viz">
@@ -1032,12 +1032,12 @@
           <p class="hw-src">Ba cổng nối tiếp, mỗi cổng bịt lỗ của cổng trước; ra khỏi cổng 3 mới lên <b>main / public</b>. “Cài gate lúc pre-push” là đúng — nhưng đừng chỉ pre-push.</p>
         </div>
 
-        <p class="hw-p"><b>Vậy “cài gate lúc pre-push” — đúng.</b> Nhưng đừng chỉ pre-push: lớp 1 cho phản hồi tức thì, lớp 2 bắt mọi thay đổi, lớp 3 là lưới chặn cuối. Repo này còn có một <b>bộ điều phối</b> để, khi thêm project con mới, chỉ cần đặt file gate đúng chỗ là nó tự được gọi — không phải sửa tay chỗ khác.</p>
+        <p class="hw-p"><b>Vậy “cài gate lúc pre-push” — đúng.</b> Nhưng đừng chỉ pre-push: lớp 1 cho phản hồi tức thì, lớp 2 bắt mọi thay đổi, lớp 3 là lưới chặn cuối. Một chi tiết đáng làm ngay từ đầu nếu repo có nhiều project con: cho hook gọi một <b>bộ điều phối</b> thay vì gọi thẳng từng gate. Thêm project mới thì chỉ cần đặt file gate đúng chỗ là nó tự được gọi — không phải sửa tay chỗ khác, và cũng không ai vô tình ghi đè gate của project bên cạnh.</p>
 
         <h3 class="hw-h3">Đặt ở đâu</h3>
         <ul class="hw-ul">
           <li><b>Hook</b>: khai báo trong <code>.claude/settings.json</code> (cho hook của Claude Code, <b>có commit</b>) và trong <code>hooks.json</code> của plugin; còn hook git nằm ở <code>.git/hooks/</code> (cục bộ máy) nên cần một script cài lại chúng cho mọi người.</li>
-          <li><b>Gate</b>: là một <b>script chạy được</b> đặt trong <code>&lt;project&gt;/tools/</code> (ví dụ repo này có <code>pages/tools/lint-pages.py</code>). Hook chỉ việc gọi nó.</li>
+          <li><b>Gate</b>: là một <b>script chạy được</b> đặt trong <code>&lt;project&gt;/tools/</code> — nhận vào danh sách file đang đổi, in ra chỗ sai, và trả mã thoát khác 0 khi có lỗi. Hook chỉ việc gọi nó.</li>
         </ul>
         <p class="hw-p">Trong plugin <code>kv-engineering</code>, hook còn làm nhiều hơn kiểm lint: mỗi lần sửa file nó tự kiểm “spec còn sạch không”, “code có truy vết về BDD không”, và cập-nhật-lại bộ nhớ đồ thị code. Đó vẫn là cùng một ý: <b>tự động, không trông vào việc ai đó nhớ chạy tay</b>.</p>
 
