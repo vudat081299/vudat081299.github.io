@@ -62,6 +62,22 @@ def claim(label, ok, why=''):
         fails.append(f'{label}: {why or "luật trong bài không đúng"}')
 
 
+def gloss_records(pattern):
+    """Bóc các bản ghi từ điển ra khỏi ĐÚNG khối GLOSS của trang đang xét.
+
+    Phải cắt khối trước khi tìm: quét cả trang thì dính cả những mảng ba phần tử
+    khác (một cặp biến CSS, một cặp đặc điểm mèo trong mô hình tương tác) và đếm
+    thừa 2 mục — đúng loại lỗi làm cổng báo sai rồi mất tin."""
+    import re
+    i = HTML.find('GLOSS = [')
+    if i < 0:
+        return []
+    j = HTML.find('\n  ];', i)
+    if j < 0:
+        j = HTML.find('\n];', i)
+    return re.findall(pattern, HTML[i:j + 6] if j > i else HTML[i:])
+
+
 # ══════════════════════════ machine-learning.html ══════════════════════════
 def run_ml():
     # ── kích thước đầu vào & số tham số ────────────────────────────────────
@@ -173,6 +189,20 @@ def run_ml():
     need('chiết khấu γ=0,3', '2,7%')
     claim('γ=0,99 gần như không giảm', 0.99 ** 3 > 0.97, f'0,99³ = {0.99 ** 3:.4f}')
 
+    # ── từ điển EN↔VI: mỗi mục trỏ tới một mục CÓ THẬT trên trang ──────────
+    # lint-pages.py kiểm href="#x" trong HTML, nhưng anchor của từ điển nằm
+    # trong chuỗi JS nên nó không thấy. Đây là điểm mù, và cổng này bịt.
+    import re as _re
+    recs = gloss_records(r"\['([^']{2,70})','([^']{0,70})','.*?','(#[^']*)'")
+    claim('từ điển ML bóc được', len(recs) > 150, f'chỉ bóc được {len(recs)} mục')
+    ids = set(_re.findall(r'\bid="([^"]+)"', HTML))
+    broken = sorted({a for _, _, a in recs if a not in ('', '#') and a.lstrip('#') not in ids})
+    claim('anchor từ điển ML', not broken, f'trỏ vào mục không tồn tại: {broken}')
+    en = [r[0] for r in recs]
+    dup = sorted({t for t in en if en.count(t) > 1})
+    claim('từ điển ML không trùng tên EN', not dup, f'trùng: {dup}')
+
+
 
 # ════════════════════════ machine-learning-101.html ════════════════════════
 def run_101():
@@ -223,6 +253,15 @@ def run_101():
     claim('lưới 5×5 chỉ cho 5 giá trị mỗi núm', 5 < 25,
           'đó là toàn bộ luận điểm: cùng 25 lần thử, rút thăm cho 25 giá trị mỗi núm')
     need('kẻ lưới', 'kẻ lưới 5×5')
+
+    # ── từ điển: số mục phải đúng bằng con số trang tự khai ────────────────
+    recs = gloss_records(r"\['([^']*)',\s*'([^']*)',\s*'[^']*'\]")
+    claim('từ điển ML-101 bóc được', len(recs) > 150, f'chỉ bóc được {len(recs)} mục')
+    need('trang tự khai số tên thật', f'{len(recs)}</span> tên thật')
+    en = [r[1] for r in recs]
+    dup = sorted({t for t in en if en.count(t) > 1})
+    claim('từ điển ML-101 không trùng tên EN', not dup, f'trùng: {dup}')
+
 
 
 def main():
