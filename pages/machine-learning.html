@@ -550,7 +550,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
     <h1>Tám khoá học, hàng trăm bài giảng, nhưng chỉ có <u>một cỗ máy ba bộ phận</u> — được lắp lại theo những cách ngày càng khéo.</h1>
     <p>Trang này diễn giải bằng tiếng Việt <b>toàn bộ nội dung 8 khoá</b> của Andrew Ng: 3 khoá <i>Machine Learning Specialization</i> và 5 khoá <i>Deep Learning Specialization</i>. Nhưng nó không kể theo thứ tự tuần. Nó kể theo <b>thứ tự các bức tường</b>: mỗi chặng bắt đầu bằng một thứ mà chặng trước <i>không biểu diễn nổi</i>, rồi dựng đúng công cụ để vượt qua.</p>
     <p>Sợi chỉ xuyên suốt là một câu: <b>mọi thuật toán ở đây — từ hồi quy tuyến tính tới Transformer — đều là ba lựa chọn</b>. Chọn <b class="c-m">một hàm để đoán</b>, chọn <b class="c-l">một cách đo sai</b>, chọn <b class="c-o">một cách sửa</b>. Ba màu ấy đi suốt trang và không bao giờ đổi vai: thấy chúng ở Transformer cũng đúng như thấy chúng ở đường thẳng đầu tiên.</p>
-    <p><b>Mười ba mô hình nghịch được ngay trên trang.</b> Mỗi cái dựng lên để giết một hiểu nhầm cụ thể, không phải để trang trí: kéo thanh trượt cho gradient descent phân kỳ, tắt hàm kích hoạt để thấy mạng 5 lớp sập về một đường thẳng, bấm từng bước lan truyền ngược, xem attention thật ra chỉ là một phép tra cứu mềm.</p>
+    <p><b>Mười ba mô hình nghịch được ngay trên trang.</b> Mỗi cái dựng lên để giết một hiểu nhầm cụ thể, không phải để trang trí: kéo thanh trượt cho gradient descent phân kỳ, tắt hàm kích hoạt để thấy mạng 4 lớp sập về một đường thẳng, bấm từng bước lan truyền ngược, xem attention thật ra chỉ là một phép tra cứu mềm.</p>
     <p class="meta">THUẬT NGỮ GẠCH CHÂN CHẤM LÀ BẤM ĐƯỢC — HIỆN TÊN TIẾNG ANH CHÍNH THỨC KÈM GIẢI THÍCH NGẮN<br>MỤC NÀO CÓ TRONG BẢN GỐC ĐỀU MANG CHIP GHI RÕ KHOÁ NÀO · TUẦN NÀO, ĐỂ BẠN TÌM ĐÚNG BÀI GIẢNG<br>MỌI TÍNH TOÁN CHẠY TRONG TRÌNH DUYỆT CỦA BẠN — KHÔNG CÓ DỮ LIỆU NÀO RỜI KHỎI TRANG</p>
   </header>
 
@@ -791,7 +791,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p>Ba câu trên có ở mọi giáo trình. Câu thứ tư thì không: <b>khi kết quả tệ, làm sao biết nên sửa bộ phận nào trong ba bộ phận trên?</b> Thêm dữ liệu? Đổi mô hình? Chỉnh learning rate? Sửa nhãn? Đoán mò ở đây tốn hàng tháng. Ng gọi bộ công cụ trả lời câu này là <i>chẩn đoán</i> (diagnostics), và nó chiếm trọn khoá 3 của DL Specialization cùng tuần 3 khoá 2 của ML Specialization. Trang này gom lại thành <a href="#act3">chặng 3</a>.</p>
         </div>
 
-        <p>Ba màu trong trang tương ứng ba câu hỏi, và <b>không bao giờ dùng vào việc khác</b>: <b class="c-m">xanh dương = mô hình</b>, <b class="c-l">cam = mất mát</b>, <b class="c-o">xanh lục = tối ưu</b>. Đầu mỗi thuật toán có một dải ba ô đúng ba màu ấy, điền sẵn ba câu trả lời. Đọc dải đó trước khi đọc văn xuôi — nó là bản tóm tắt trung thực nhất của thuật toán.</p>
+        <p>Ba màu trong trang tương ứng ba câu hỏi, và <b>không bao giờ dùng vào việc khác</b>: <b class="c-m">xanh dương = mô hình</b>, <b class="c-l">cam = mất mát</b>, <b class="c-o">xanh lục = tối ưu</b>. Tám thuật toán trụ của trang mở đầu bằng một dải ba ô đúng ba màu ấy, điền sẵn ba câu trả lời: hồi quy tuyến tính, hồi quy logistic, cây quyết định, CNN, RNN, Transformer, k-means, học tăng cường. Các mục còn lại chỉ đổi <em>một</em> trong ba ô nên đi thẳng vào chỗ đổi, không lặp lại cả dải. Đọc dải đó trước khi đọc văn xuôi — nó là bản tóm tắt trung thực nhất của thuật toán.</p>
 
         <div class="take"><span class="k">Mang theo</span><p>Gặp thuật toán lạ, đừng hỏi "nó là gì". Hỏi ba câu: nó vẽ được hình dạng nào, nó đo sai bằng thước nào, nó dò xuống bằng cách nào.</p></div>
       </section>
@@ -969,7 +969,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               </div>
             </div>
             <p class="lab__f"><b>Thứ đáng để ý:</b> bản đồ không tròn mà <b>dẹt và nghiêng</b>. Nghĩa là w và b không độc lập — tăng độ dốc thì phải hạ độ chệch để bù. Cái hình elip nghiêng ấy sẽ hành hạ gradient descent ở mô hình 3, và là toàn bộ lý do người ta phải chuẩn hoá đặc trưng.</p>
-            <p class="lab__f"><b>Và thứ dễ bỏ qua:</b> bản đồ này chỉ vẽ được vì mô hình có <i>đúng hai</i> tham số. Với ba tham số đã phải vẽ trong không gian bốn chiều. Từ mô hình 6 trở đi, <b>bạn vĩnh viễn mất khả năng nhìn thấy bề mặt chi phí</b> — và phải thay bằng các công cụ chẩn đoán gián tiếp ở chặng 3.</p>
+            <p class="lab__f"><b>Và thứ dễ bỏ qua:</b> bản đồ này chỉ vẽ được vì mô hình có <i>đúng hai</i> tham số. Với ba tham số đã phải vẽ trong không gian bốn chiều. Ngay từ mô hình 4, <b>bạn vĩnh viễn mất khả năng nhìn thấy bề mặt chi phí</b> — và phải thay bằng các công cụ chẩn đoán gián tiếp ở chặng 3.</p>
           </div>
         </div>
 
@@ -1226,7 +1226,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="box note">
           <p class="box__k">Chi tiết đẹp mà Ng chỉ nói lướt</p>
-          <p>Sau khi lấy đạo hàm, công thức cập nhật của hồi quy logistic <b>trông giống hệt</b> hồi quy tuyến tính: <span class="mono">w := w − α · (1/m) Σ (f(x)−y) x</span>. Cùng một dòng, chữ nào cũng như nhau. Cái khác duy nhất nằm bên trong <span class="mono">f</span>. Đây không phải trùng hợp — cả hai đều thuộc họ <b>mô hình tuyến tính tổng quát</b>, và mỗi cặp (phân phối, hàm liên kết) trong họ ấy đều cho ra đúng dạng cập nhật này. Biết vậy thì bạn khỏi phải nhớ hai công thức.</p>
+          <p>Sau khi lấy đạo hàm, công thức cập nhật của hồi quy logistic <b>trông giống hệt</b> hồi quy tuyến tính: <span class="mono">w := w − α · (1/m) Σ (f(x)−y) x</span>. Cùng một dòng, chữ nào cũng như nhau. Cái khác duy nhất nằm bên trong <span class="mono">f</span>. Đây không phải trùng hợp — cả hai đều thuộc họ <b>mô hình tuyến tính tổng quát</b>, và mỗi phân phối trong họ ấy có một <b>hàm liên kết chính tắc</b> riêng — dùng đúng cái đó thì công thức cập nhật luôn rút về đúng dạng này. Biết vậy thì bạn khỏi phải nhớ hai công thức.</p>
         </div>
 
         <div class="take"><span class="k">Mang theo</span><p>Ba bộ phận không độc lập. Đổi mô hình mà quên đổi thước đo thì thuật toán tối ưu lãnh đủ — và triệu chứng (kẹt, học chậm) trông y hệt lỗi của learning rate. Khi chẩn đoán, luôn hỏi cả ba.</p></div>
@@ -1379,7 +1379,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__h">
             <p class="lab__k">Mô hình 6 / 13 · giết hiểu nhầm “càng nhiều lớp thì càng mạnh”</p>
             <p class="lab__t">Tắt phi tuyến, và xem mạng 4 lớp sập về một đường thẳng</p>
-            <p class="lab__hint">Cùng một mạng, cùng số lớp, cùng dữ liệu. Chỉ đổi <b>hàm kích hoạt</b>. Với <span class="mono">g(z) = z</span> (tuyến tính), thêm lớp <b>không đổi được gì</b> — ranh giới vẫn là một đường thẳng dù bạn kéo lên 6 lớp. Bật ReLU lên là nó gấp khúc ngay.</p>
+            <p class="lab__hint">Cùng một mạng, cùng số lớp, cùng dữ liệu. Chỉ đổi <b>hàm kích hoạt</b>. Với <span class="mono">g(z) = z</span> (tuyến tính), thêm lớp <b>không đổi được gì</b> — ranh giới vẫn là một đường thẳng dù bạn kéo hết bốn lớp. Bật ReLU lên là nó gấp khúc ngay.</p>
           </div>
           <div class="lab__b">
             <svg class="viz" id="m6-plane" viewBox="0 0 340 260" style="max-width:400px;margin:0 auto"></svg>
@@ -2282,7 +2282,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="box note">
           <p class="box__k">Nhận diện mẫu hình</p>
-          <p>Ba lần trong mục này, giải pháp là "<b>nối tắt một thứ vòng qua phần giữa</b>": ResNet (gradient), U-Net (chi tiết không gian), và sắp tới là attention trong <a href="#s-attn">mục attention</a> (thông tin từ xa trong câu). Khi bạn thấy một kiến trúc mới, hãy hỏi <i>nó nối tắt cái gì, vòng qua cái gì</i> — câu hỏi ấy thường lộ ra ý tưởng chính nhanh hơn đọc công thức.</p>
+          <p>Bốn lần trong trang này, giải pháp là "<b>nối tắt một thứ vòng qua phần giữa</b>": ResNet (gradient), U-Net (chi tiết không gian), rồi sắp tới là cổng của <a href="#s-lstm">LSTM</a> (trí nhớ xa) và <a href="#s-attn">attention</a> (thông tin từ xa trong câu). Khi bạn thấy một kiến trúc mới, hãy hỏi <i>nó nối tắt cái gì, vòng qua cái gì</i> — câu hỏi ấy thường lộ ra ý tưởng chính nhanh hơn đọc công thức.</p>
         </div>
 
         <div class="take"><span class="k">Mang theo</span><p>Phát hiện vật thể = phân loại + bốn số toạ độ, nhân lên khắp ảnh bằng lưới, rồi dọn dẹp bằng NMS. Phân đoạn = giữ độ phân giải bằng đường tắt hình chữ U. Không có phép màu nào ở đây, chỉ có kế toán cẩn thận về việc thông tin nào bị mất ở đâu.</p></div>
@@ -2539,7 +2539,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                 <div class="row"><span class="k">Kết quả</span><pre class="out" id="m11-out"></pre></div>
               </div>
               <p class="lab__f"><b>Kéo nhiệt độ về sát 0</b> và xem: một cột lên gần 100%, các cột khác về 0. Đó chính xác là <span class="mono">dict[key]</span> — phép tra cứu cứng. <b>Kéo lên 3</b>: mọi cột gần bằng nhau, kết quả là trung bình vô nghĩa của cả câu. Attention thật sống ở khoảng giữa, và <b>chính vì nó ở giữa nên nó lấy đạo hàm được</b>.</p>
-              <p class="lab__f"><b>Trong mô hình thật</b>, bạn không kéo thanh trượt: truy vấn được <i>sinh ra</i> từ từ hiện tại qua một ma trận W<sub>Q</sub> học được, và khoá, giá trị cũng vậy với W<sub>K</sub>, W<sub>V</sub>. Bốn chiều ở đây (người/vật/hành động/nơi chốn) là do tôi đặt tên cho dễ hiểu; trong mô hình thật là vài trăm chiều <b>không có tên</b>.</p>
+              <p class="lab__f"><b>Trong mô hình thật</b>, bạn không kéo thanh trượt: truy vấn được <i>sinh ra</i> từ từ hiện tại qua một ma trận W<sub>Q</sub> học được, và khoá, giá trị cũng vậy với W<sub>K</sub>, W<sub>V</sub>. Bốn chiều ở đây (người/vật/hành động/nơi chốn) được đặt tên cho dễ hiểu; trong mô hình thật là vài trăm chiều <b>không có tên</b>.</p>
             </div>
 
             <div data-panel="b" hidden>
@@ -2605,7 +2605,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p>Bài giảng cuối cùng của Deep Learning Specialization là Transformer, và nó dừng đúng ở kiến trúc gốc 2017. Những gì xảy ra sau đó — BERT, GPT, mở rộng lên hàng trăm tỉ tham số, huấn luyện chỉ với decoder, tinh chỉnh theo phản hồi con người, mô hình đa phương thức — <b>đều đứng trên đúng khối này</b>. Bạn học xong tám khoá thì chưa biết những thứ đó, nhưng bạn <b>có đủ nền để đọc bài báo về chúng</b>. Đó là mức mà một khoá học nên đưa bạn tới, và <a href="#s-dated">mục "chỗ nào đã cũ"</a> nói rõ hơn khoảng cách còn lại.</p>
         </div>
 
-        <div class="take"><span class="k">Mang theo</span><p>Transformer = self-attention nhiều đầu + mạng thường + nối tắt + chuẩn hoá, xếp chồng, cộng mã hoá vị trí để bù cho việc đã vứt bỏ thứ tự. Một mảnh mới, sáu mảnh cũ. Và nó thắng phần lớn nhờ chạy song song được, chứ không phải nhờ "thông minh hơn".</p></div>
+        <div class="take"><span class="k">Mang theo</span><p>Transformer = self-attention nhiều đầu + mạng thường + nối tắt + chuẩn hoá, xếp chồng, cộng mã hoá vị trí để bù cho việc đã vứt bỏ thứ tự. Bảy mảnh cũ, hai mảnh mới — và mảnh mới đáng kể chỉ có self-attention. Và nó thắng phần lớn nhờ chạy song song được, chứ không phải nhờ "thông minh hơn".</p></div>
       </section>
 
       <!-- ═══════════════════════ CHẶNG 5 ═══════════════════════ -->
@@ -2953,7 +2953,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <thead><tr><th>Khoá gốc</th><th>Nội dung</th><th>Ở đây</th></tr></thead>
             <tbody>
               <tr><td><b>MLS C1</b> — Supervised ML: Regression &amp; Classification</td><td>Hồi quy tuyến tính, gradient descent, feature scaling, logistic, quá khớp, regularization</td><td><a href="#act1">Chặng 1</a> trọn vẹn</td></tr>
-              <tr><td><b>MLS C2</b> — Advanced Learning Algorithms</td><td>Mạng nơ-ron, activation, softmax, Adam · lời khuyên thực hành · cây quyết định</td><td><a href="#act2">Chặng 2</a> + <a href="#s-bias">3.2</a>, <a href="#s-error">3.4</a>, <a href="#s-trees">3.7</a></td></tr>
+              <tr><td><b>MLS C2</b> — Advanced Learning Algorithms</td><td>Mạng nơ-ron, activation, softmax, Adam · lời khuyên thực hành · cây quyết định</td><td><a href="#act2">Chặng 2</a> + <a href="#s-bias">3.2</a>, <a href="#s-metric">3.3</a>, <a href="#s-trees">3.7</a></td></tr>
               <tr><td><b>MLS C3</b> — Unsupervised, Recommenders, RL</td><td>K-means, bất thường, PCA, hệ gợi ý, học tăng cường</td><td><a href="#act5">Chặng 5</a> trọn vẹn</td></tr>
               <tr><td><b>DLS C1</b> — Neural Networks &amp; Deep Learning</td><td>Logistic như một nơ-ron, vector hoá, mạng nông, mạng sâu</td><td><a href="#s-nn">2.1</a> → <a href="#s-backprop">2.4</a></td></tr>
               <tr><td><b>DLS C2</b> — Improving Deep Neural Networks</td><td>Chia dữ liệu, regularization, khởi tạo, optimizer, batch norm, tinh chỉnh</td><td><a href="#s-init">2.6</a> → <a href="#s-regdl">2.8</a> + <a href="#s-split">3.1</a></td></tr>
@@ -2963,7 +2963,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             </tbody>
           </table>
         </div>
-        <p class="dim" style="font-size:13px">Hai chủ đề trong bản gốc được nhắc gọn trong trang này thay vì có mục riêng, vì chúng là ứng dụng chứ không phải nguyên lý mới: <b>nhận dạng giọng nói &amp; CTC</b> và <b>phát hiện từ khoá kích hoạt</b> (DLS C5 Tuần 3) — cả hai đều là RNN/attention áp lên chuỗi âm thanh; và <b>1D/3D generalizations của tích chập</b> (DLS C4 Tuần 4) — cùng công thức, đổi số chiều.</p>
+        <p class="dim" style="font-size:13px">Ba chủ đề trong bản gốc được nhắc gọn trong trang này thay vì có mục riêng, vì chúng là ứng dụng chứ không phải nguyên lý mới: <b>nhận dạng giọng nói &amp; CTC</b> và <b>phát hiện từ khoá kích hoạt</b> (DLS C5 Tuần 3) — cả hai đều là RNN/attention áp lên chuỗi âm thanh; và <b>1D/3D generalizations của tích chập</b> (DLS C4 Tuần 4) — cùng công thức, đổi số chiều.</p>
       </section>
 
       <section id="s-glossary">
