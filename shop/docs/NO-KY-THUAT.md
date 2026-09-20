@@ -23,6 +23,7 @@ Cập nhật lần cuối: 20/09/2026.
 | 7 | **`shop.css` / `shop.js` chưa gắn hash vào tên** | Sau mỗi lần deploy, khách cũ dùng bản cache tới ~10 phút | Thêm một bước build gắn hash. Chỉ đáng khi tần suất sửa tăng. |
 | 8 | **Mã VietQR gọi ảnh từ `img.vietqr.io`** (dịch vụ ngoài) | Nếu dịch vụ ấy chết hoặc đổi giá | Sinh QR ngay trong trình duyệt. Chuẩn VietQR là chuẩn mở của NAPAS nên làm được. Hiện chỉ đẩy số tiền và mã đơn, **không** đẩy tên/số điện thoại/địa chỉ khách. |
 | 9 | **Một mùi có hai sản phẩm thì hộp quà lặng lẽ lấy cái đầu** | Khi thêm sản phẩm thứ hai cho cùng một mùi | Cho `gift` chỉ định sản phẩm, hoặc cho khách chọn. Cổng đang cảnh báo ở mức XEM. |
+| 9b | **Mức giảm 8% và 14% của hộp quà là số dựng tạm** | Ngay khi biết giá vốn một cây nến | Ở giá vốn cao, khoản giảm 8% (48.000₫ mỗi hộp đôi) có thể ăn sạch phần doanh thu tăng thêm. Quyết lại sau khi biết `V` — xem [01-BOI-CANH-VA-CO-HOI.md](01-BOI-CANH-VA-CO-HOI.md) đòn bẩy 2. |
 | 10 | **Trọng số Tìm mùi do người đặt, chưa học từ dữ liệu** | Khi có đủ lượt làm quiz thật và biết khách mua gì sau đó | Xem [adr/0002](adr/0002-cham-diem-tim-mui.md). **Chưa có dữ liệu thì đừng đụng vào.** |
 
 ## Chưa làm, và biết là chưa làm
