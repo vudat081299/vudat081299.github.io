@@ -1677,7 +1677,7 @@ footer a { color:var(--muted); }
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v">việc chia nhóm là <span class="nm">clustering</span> — phân cụm; thuật toán này là <span class="nm">k-means</span>, và chữ k là số nhóm mà <b>bạn</b> phải chọn. Cái điểm giữa mỗi nhóm là <span class="nm">centroid</span> — tâm cụm. Điểm trừ của nó, tổng khoảng cách từ mỗi điểm tới tâm của mình, có tên riêng: <span class="nm">distortion</span> — độ méo.</span>
+          <span class="v">việc chia nhóm là <span class="nm">clustering</span> — phân cụm; thuật toán này là <span class="nm">k-means</span>, và chữ k là số nhóm mà <b>bạn</b> phải chọn. Cái điểm giữa mỗi nhóm là <span class="nm">centroid</span> — tâm cụm. Điểm trừ của nó — <b>tổng bình phương</b> khoảng cách từ mỗi điểm tới tâm của mình — có tên riêng: <span class="nm">distortion</span> — độ méo. Chữ “bình phương” không phải bắt bẻ; đoạn dưới cho thấy bỏ nó đi thì mất luôn lý do thuật toán dừng.</span>
         </div>
 
         <p>Hai điều đáng nhớ về nó:</p>
@@ -1700,7 +1700,7 @@ footer a { color:var(--muted); }
               <div class="row"><span class="k">Hoặc</span><div class="inline"><button class="btn btn--solid" id="m9-run">Chạy tới khi dừng</button><button class="btn" id="m9-seed">Đổi chỗ xuất phát</button></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m9-out"></pre></div>
             </div>
-            <p class="lab__f">Con số <b>tổng khoảng cách</b> là điểm trừ của k-means. Nó chỉ giảm, không bao giờ tăng — và đó là lý do thuật toán này chắc chắn dừng.</p>
+            <p class="lab__f">Con số <b>tổng bình phương</b> là điểm trừ của k-means. Cả hai bước đều làm nó giảm hoặc giữ nguyên, không bao giờ tăng — và đó là lý do thuật toán này chắc chắn dừng. Bình phương là chỗ mấu chốt: bước “dời tâm” lấy <b>trung bình</b>, mà trung bình chỉ là điểm cực tiểu của tổng <b>bình phương</b> khoảng cách. Đo bằng khoảng cách trần thì điểm cực tiểu là trung vị, và dời tâm về trung bình có thể làm con số ấy <em>tăng</em>.</p>
           </div>
         </div>
 
@@ -3137,7 +3137,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     var s = 0;
     P.forEach(function (p, i) {
       var c = C[asg[i]], dx = p[0] - c[0], dy = p[1] - c[1];
-      s += Math.sqrt(dx * dx + dy * dy);
+      s += dx * dx + dy * dy;   /* BÌNH PHƯƠNG: đúng đại lượng mà move() tối thiểu hoá */
     });
     return s;
   }
@@ -3172,7 +3172,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     if (asg) asg.forEach(function (v) { sizes[v]++; });
     out.textContent =
       'vòng đã lặp     ' + pad(iter, 5) + '\n' +
-      'tổng khoảng cách ' + pad(q === null ? '—' : vi(q, 3), 5) + '\n' +
+      'tổng bình phương ' + pad(q === null ? '—' : vi(q, 3), 5) + '\n' +
       'số điểm mỗi nhóm ' + (sizes ? sizes.join(' · ') : '—') + '\n' +
       (!asg ? '→ bấm bước 1'
         : done ? (sizes.some(function (s) { return s === 0; })
@@ -3806,7 +3806,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['chia nhóm', 'clustering', 'câu hỏi đổi thành "trong đống này có cấu trúc gì"'],
     ['hai bước lặp lại', 'k-means', 'k là số nhóm mà BẠN chọn'],
     ['điểm giữa mỗi nhóm', 'centroid', 'dấu × trong mô hình 12'],
-    ['tổng khoảng cách tới tâm', 'distortion', 'điểm trừ của k-means; chỉ giảm, nên nó chắc chắn dừng'],
+    ['tổng bình phương khoảng cách tới tâm', 'distortion', 'điểm trừ của k-means; cả hai bước đều làm nó giảm, nên nó chắc chắn dừng'],
     ['tìm chỗ đường gấp khúc', 'elbow method', 'Ng thẳng thắn: thường không có cái khuỷu nào rõ'],
     ['bắt cái khác thường', 'anomaly detection', 'học "bình thường", báo động khi lệch'],
     ['hình chuông', 'Gaussian distribution', 'khớp trung bình và độ lệch cho từng con số'],

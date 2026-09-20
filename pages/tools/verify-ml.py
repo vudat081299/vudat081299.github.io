@@ -263,6 +263,19 @@ def run_101():
     claim('từ điển ML-101 không trùng tên EN', not dup, f'trùng: {dup}')
 
 
+    # ── k-means: điểm trừ phải là BÌNH PHƯƠNG khoảng cách ─────────────────
+    # move() dời tâm về TRUNG BÌNH, mà trung bình chỉ cực tiểu hoá tổng bình
+    # phương. Nếu inertia() cộng Math.sqrt(...) thì con số in ra không phải đại
+    # lượng thuật toán đang giảm — và nó TĂNG thật ở 2/12 vị trí xuất phát mà
+    # nút "Đổi chỗ xuất phát" sinh ra, phá đúng câu trang hứa "không bao giờ tăng".
+    i = HTML.find('function inertia()')
+    body = HTML[i:i + 420] if i >= 0 else ''
+    claim('k-means đo bình phương', bool(body) and 'Math.sqrt' not in body
+          and 'dx * dx + dy * dy' in body,
+          'inertia() phải cộng dx*dx + dy*dy, không được lấy căn')
+    need('nhãn điểm trừ k-means', "'tổng bình phương '")
+
+
 
 def main():
     global HTML
