@@ -23,6 +23,30 @@
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
 
+  /* ---- chữ mờ phải đọc được ----
+     Bậc --wb-fg-subtle của kit là gray-400: đo bằng trình duyệt chỉ 2,39:1 trên nền
+     canvas và 2,56:1 trên nền thẻ — dưới ngưỡng 4,5:1 cho chữ thường. Trang này dùng
+     đúng bậc đó cho .hw-eyebrow, .hw-meta, .kicker (mang số thứ tự phần), .hw-src
+     (dòng nguồn dưới mỗi hình), <cite> và .wb-sidenav__section của mục lục — toàn thứ
+     phải đọc. Nâng một bậc: 4,97:1 sáng, 7,34:1 tối. Định nghĩa ở CẢ HAI nhánh theme,
+     nếu không nhánh còn lại rơi về giá trị kit. */
+  :root { --wb-fg-subtle: var(--wb-gray-500); }
+  .dark { --wb-fg-subtle: var(--wb-gray-400); }
+
+  /* .wb-alert__msg của kit là --wb-fg-muted (gray-500) — đủ trên nền trắng nhưng chỉ
+     3,82:1 trên nền đã nhuộm màu của hộp cảnh báo. Đậm thêm một bậc CHỈ bên trong hộp
+     cảnh báo (6,0:1). Nhánh tối giữ nguyên gray-400, vốn đã đạt chuẩn ở đó. */
+  .wb-alert { --wb-fg-muted: var(--wb-gray-600); }
+  .dark .wb-alert { --wb-fg-muted: var(--wb-gray-400); }
+
+  /* Chip số liệu (64%, 21,2%…) là chữ phải đọc, không phải trang trí. Cặp màu của kit —
+     --wb-warning-text / --wb-success-text trên nền *-soft — đo được 4,32:1 và 4,39:1,
+     dưới 4,5:1. Đậm thêm bằng cách pha chính token đó với --wb-fg (không thêm mã hex
+     mới). Đặt thẳng trên class con, KHÔNG định nghĩa lại chính token: `--x: color-mix(…
+     var(--x)…)` là vòng lặp, Chromium bỏ cả khai báo và chip mất luôn màu. */
+  .wb-cap--warning { color: color-mix(in srgb, var(--wb-warning-text) 80%, var(--wb-fg)); }
+  .wb-cap--success { color: color-mix(in srgb, var(--wb-success-text) 85%, var(--wb-fg)); }
+
   /* ---- hero ---- */
   .hw-hero { padding: 30px 0 20px; }
   .hw-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
@@ -40,7 +64,10 @@
 
   /* ---- section rhythm ---- */
   section[id] { scroll-margin-top: 76px; }
-  .hw-part-head { padding: 4px 0 2px; border-top: var(--wb-bw) solid var(--wb-border); padding-top: 22px; }
+  /* Bảy đích của mục lục (#p1…#p6, #ket) nằm trên .hw-part-head chứ không phải <section>,
+     nên quy tắc section[id] bên dưới không với tới: đo được cả bảy dừng ở top = 0, khuất
+     sau thanh header dính cao 56px. */
+  .hw-part-head { padding: 4px 0 2px; border-top: var(--wb-bw) solid var(--wb-border); padding-top: 22px; scroll-margin-top: 76px; }
   .hw-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
   .hw-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
   .hw-part-head p { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.65; margin: 0; max-width: 76ch; }
