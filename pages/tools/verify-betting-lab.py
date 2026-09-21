@@ -41,6 +41,17 @@ def vi(x, d=2):
     return s.replace(',', '\x00').replace('.', ',').replace('\x00', '.').replace('-', '−')
 
 
+SUP = '\u2070\u00b9\u00b2\u00b3\u2074\u2075\u2076\u2077\u2078\u2079'
+
+
+def sci(x, d=2):
+    """Dạng 5,76 × 10¹⁸ — đúng hàm sci() của trang, tới từng ký tự chữ số mũ."""
+    import math
+    e = math.floor(math.log10(abs(x)))
+    return vi(x / 10 ** e, d) + ' \u00d7 10' + ''.join(SUP[int(c)] if c.isdigit() else '\u207b'
+                                                       for c in str(e))
+
+
 def need(label, text, expect=None):
     """Đòi `text` phải có mặt trong trang."""
     global checks
@@ -93,6 +104,20 @@ def tong_diem(n, pw, b0=B0, step=STEP):
 
 
 S100 = tong_diem(VONG, P1)
+NHAN = 2                          # hệ số của luật nhân đôi
+
+
+def tong_diem_nhan(n, pw, m, b0=B0):
+    """Tổng điểm kỳ vọng khi THUA thì nhân m. Đặt x = E[m^chuỗi thua hiện tại]:
+    chuỗi sau bằng 0 (thắng) hoặc dài thêm 1 (thua), nên x sau = p + q·m·x."""
+    x, s = 1.0, 0.0
+    for _ in range(n):
+        s += b0 * x
+        x = pw + (1 - pw) * m * x
+    return s
+
+
+S100_NHAN = tong_diem_nhan(VONG, P1, NHAN)
 
 
 def p_chuoi_trong(n, k, pw):
@@ -152,6 +177,36 @@ def phan_A():
     need('tiền phải đặt ở vòng thứ 16', vi(16 * GIA, 0) + ' đ')
     need('công thức tam giác', 'k(k+1)/2')
 
+    # ── Luật NHÂN ĐÔI ────────────────────────────────────────────────────────
+    # Điểm đặt kỳ vọng nhân lên (1−p)·m mỗi vòng. Số ấy > 1 nên tổng phân kỳ — và đó
+    # là toàn bộ chuyện của chiến lược này, nên nó phải nằm trong bài bằng chữ.
+    need('hệ số phình mỗi vòng', vi((1 - P1) * NHAN, 4))                    # 1,5247
+    need('… viết rõ thành phép nhân', vi(1 - P1, 4) + ' × ' + str(NHAN) + ' = ' + vi((1 - P1) * NHAN, 4))
+    need('tổng điểm sau 100 vòng khi nhân đôi', sci(S100_NHAN) + ' điểm')   # 5,76 × 10¹⁸
+    need('… và trong bảng so ba cách đặt', sci(S100_NHAN))
+    need('lỗ kỳ vọng khi nhân đôi, mức ngoài đời', sci(EV_NHAY_THAT * S100_NHAN) + ' đ')
+    need('điểm đặt kỳ vọng của luật cộng thì dừng lại', vi(1 + (1 - P1) / P1, 2) + ' điểm')
+
+    # Chuỗi thua khi nhân đôi: tổng là 2^k − 1 điểm, vòng kế tiếp đúng 2^k điểm.
+    need('chuỗi 10 vòng đen ngốn mất', vi((2 ** 10 - 1) * GIA, 0) + ' đ')   # 23.529.000
+    need('… và vòng thứ 11 đòi thêm', vi(2 ** 10 * GIA, 0) + ' đ')          # 23.552.000
+    need('khả năng gặp chuỗi 10 vòng', vi(p_chuoi_trong(VONG, 10, P1) * 100, 1) + '%')
+    need('công thức cấp số nhân', '2^k − 1')
+
+    # Cùng 50 triệu, hai luật đi được xa khác hẳn nhau — chỗ so sánh đáng giá nhất.
+    von = 50_000_000
+    k_cong = max(k for k in range(1, 400) if k * (k + 1) // 2 * GIA <= von)
+    k_nhan = max(k for k in range(1, 40) if (2 ** k - 1) * GIA <= von)
+    need('vốn 50 triệu, luật cộng chịu được', str(k_cong) + ' vòng đen')     # 65
+    need('… tổng tiền', vi(k_cong * (k_cong + 1) // 2 * GIA, 0) + ' đ')      # 49.335.000
+    need('vốn 50 triệu, luật nhân chịu được', str(k_nhan) + ' vòng đen')     # 11
+    need('… tổng tiền', vi((2 ** k_nhan - 1) * GIA, 0) + ' đ')               # 47.081.000
+    need('… vòng kế tiếp đòi thêm', vi(2 ** k_nhan * GIA, 0) + ' đ')         # 47.104.000
+    need('khả năng cháy túi của luật nhân',
+         vi(p_chuoi_trong(VONG, k_nhan + 1, P1) * 100, 1) + '%')             # 61,5%
+    claim('luật cộng đi xa hơn luật nhân rất nhiều', k_cong > 5 * k_nhan,
+          'cùng một số vốn mà cấp số cộng chịu được nhiều vòng đen hơn hẳn cấp số nhân')
+
     need('trang khai đúng tên cổng của nó', 'verify-betting-lab.py')
 
 
@@ -177,10 +232,19 @@ def phan_B():
           0 < i_stake < i_draw,
           'phải cộng điểm vào sổ trước khi bốc số; ngược lại thì kỳ vọng không còn tách ra được '
           'thành e × tổng điểm, và toàn bộ mục “Vì sao” sai')
-    claim('thua thì cộng thêm, thắng thì về mức mở đầu',
-          'if (win) { pts = p.b0; streak = 0; }' in sim
-          and 'pts = p.cap ? Math.min(pts + p.step, p.cap) : pts + p.step;' in sim,
+    claim('thua thì tăng, thắng thì về mức mở đầu',
+          'if (win) { pts = p.b0; streak = 0; }' in sim and 'nextStake(p, pts)' in sim,
           'đây chính là chiến lược mà trang nhận là đang thí nghiệm')
+    claim('hai luật tăng định nghĩa ở đúng một chỗ',
+          "(p.grow === 'mul') ? p.b0 * Math.pow(p.step, j) : p.b0 + p.step * j" in HTML
+          and "(p.grow === 'mul') ? pts * p.step : pts + p.step" in HTML,
+          'cộng là cấp số cộng, nhân là cấp số nhân; bàn chơi và mô phỏng phải dùng chung một định nghĩa')
+    claim('tổng điểm của luật nhân dùng đúng hệ thức x sau = p + q·m·x',
+          'x = pw + q * p.step * x' in HTML,
+          'E[m^r] thoả hệ thức tuyến tính ấy — viết sai thì cả cột "nhân đôi" sai')
+    claim('trang cảnh báo khi chuỗi nhân phân kỳ',
+          "p.step * (1 - pw) >= 1" in HTML,
+          '(1−p)·m ≥ 1 thì tổng điểm kỳ vọng không hội tụ, và con số in ra không phải tiền ai trả nổi')
     claim('mô phỏng dùng số ngẫu nhiên có hạt giống',
           'Math.random' not in sim and 'mulberry32(p.seed' in sim,
           'Math.random() thì hai lần chạy ra hai kết quả, và không con số nào trên trang tái lập được')
@@ -264,7 +328,46 @@ def phan_C():
     claim('và dấu ấy là âm khi luật chơi bất lợi', tb < 0 and ev_that < 0,
           'ở mức 23 ăn 80 thì mọi cách chia tiền đặt đều lỗ về dài hạn')
 
-    # 4. Tiền một chuỗi thua ngốn mất là tổng cấp số cộng.
+    # 4. Luật NHÂN: hệ thức một biến x = p + q·m·x phải trùng với phép tính đi qua CẢ
+    #    phân phối của chuỗi thua. Không mô phỏng được chỗ này ở m = 2: trung bình bị
+    #    vài đường hiếm chi phối, chạy bao nhiêu cũng không hội tụ — chính là điều trang
+    #    nói. Nên đối chiếu bằng một phép tính chính xác khác.
+    def tong_diem_nhan_vector(n, pw, m, b0=B0):
+        dist = [1.0]                      # dist[j] = xác suất chuỗi thua hiện dài j
+        s = 0.0
+        for _ in range(n):
+            s += b0 * sum(v * m ** j for j, v in enumerate(dist))
+            nd = [sum(dist) * pw] + [v * (1 - pw) for v in dist]
+            dist = nd
+        return s
+
+    for m in (1.2, 1.5, 2.0, 3.0):
+        a1 = tong_diem_nhan(VONG, P1, m)
+        a2 = tong_diem_nhan_vector(VONG, P1, m)
+        near(f'tổng điểm luật nhân (m={m})', a1, a2, abs(a2) * 1e-9,
+             'hệ thức một biến và phép tính qua cả phân phối phải ra cùng một số')
+
+    # Ở m = 1,2 thì (1−p)·m = 0,915 < 1, tổng hội tụ và mô phỏng mới có nghĩa — dùng
+    # đúng chỗ ấy để kiểm cả hệ thức lẫn cách hiểu "nhân sau mỗi thua".
+    rng = random.Random(1986)
+    runs, tot = 40000, 0.0
+    for _ in range(runs):
+        b = float(B0)
+        for _ in range(VONG):
+            tot += b
+            b = B0 if rng.random() < P1 else b * 1.2
+    near('tổng điểm luật nhân, mô phỏng ở m=1,2', tot / runs, tong_diem_nhan(VONG, P1, 1.2), 6.0,
+         'mô phỏng chỉ dùng được khi (1−p)·m < 1; ở m = 2 thì trung bình mẫu không hội tụ')
+    claim('m = 2 làm tổng điểm phân kỳ', (1 - P1) * NHAN > 1,
+          '(1−p)·m phải lớn hơn 1 ở bộ số mặc định — đó là lý do cột "nhân đôi" lớn đến thế')
+
+    # 5. Chuỗi thua khi nhân đôi: tổng là 2^k − 1, vòng kế tiếp một mình lớn hơn cả tổng ấy.
+    for k in (5, 10, 15):
+        near(f'tổng chuỗi nhân đôi {k} vòng', sum(B0 * NHAN ** j for j in range(k)), 2 ** k - 1, 1e-9)
+        claim(f'vòng kế tiếp đắt hơn cả chuỗi {k} vòng trước nó', NHAN ** k > 2 ** k - 1,
+              'đây là câu trang nói bằng chữ, và nó phải đúng bằng số')
+
+    # 6. Tiền một chuỗi thua ngốn mất là tổng cấp số cộng.
     for k in (10, 15, 20):
         near(f'tam giác {k} vòng', sum(B0 + STEP * j for j in range(k)), k * (k + 1) / 2, 1e-9)
 

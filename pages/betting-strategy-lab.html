@@ -254,7 +254,7 @@ footer { border-top:1px solid var(--border); padding:30px 0 60px; color:var(--su
 <div class="wrap hero">
   <p class="eyebrow">Thí nghiệm · xác suất · quản lý vốn</p>
   <h1>Thua thì cược thêm một điểm. Sau <u>n vòng</u> là lỗ hay lãi?</h1>
-  <p class="lede">Mỗi vòng mở 27 số trong khoảng 00–99. Bạn đặt điểm vào một con: trúng thì ăn, trượt thì mất sạch phần đặt. Chiến lược muốn thử: vòng đầu đặt 1 điểm, thua thì vòng sau cộng thêm 1 điểm, thắng thì quay về 1 điểm.</p>
+  <p class="lede">Mỗi vòng mở 27 số trong khoảng 00–99. Bạn đặt điểm vào một con: trúng thì ăn, trượt thì mất sạch phần đặt. Chiến lược muốn thử: vòng đầu đặt 1 điểm, thua thì vòng sau cộng thêm 1 điểm, thắng thì quay về 1 điểm. Và biến thể nặng hơn của cùng một ý: thua thì <b>nhân đôi</b> điểm. Cả hai đều là ô chọn, và hai đường đi khác nhau xa hơn nhiều người tưởng.</p>
   <p class="lede">Trang này trả lời bằng ba lớp chồng lên nhau: <b>kỳ vọng tính chính xác</b> (không mô phỏng, ra một con số duy nhất), <b>mô phỏng nhiều đường</b> (cho thấy con số ấy được chia cho ai), và <b>một bàn chơi</b> để tự quay từng vòng. Mọi con số trong luật chơi đều là ô nhập.</p>
 </div>
 
@@ -320,8 +320,16 @@ footer { border-top:1px solid var(--border); padding:30px 0 60px; color:var(--su
           <input type="number" id="in-b0" value="1" min="1" max="10000" step="1">
         </div>
         <div class="f">
-          <label for="in-step">Thua thì cộng thêm (điểm)</label>
+          <label for="in-grow">Thua rồi thì</label>
+          <select id="in-grow">
+            <option value="add" selected>Cộng thêm điểm</option>
+            <option value="mul">Nhân điểm lên</option>
+          </select>
+        </div>
+        <div class="f">
+          <label for="in-step" id="lab-step">Cộng thêm (điểm)</label>
           <input type="number" id="in-step" value="1" min="0" max="10000" step="1">
+          <span class="hint" id="hint-step">Nhân đôi là nhân, không phải cộng — đổi ô trên rồi nhập 2.</span>
         </div>
         <div class="f">
           <label for="in-cap">Trần điểm mỗi vòng</label>
@@ -531,8 +539,13 @@ footer { border-top:1px solid var(--border); padding:30px 0 60px; color:var(--su
       <tbody>
         <tr><td>Phẳng, 1 điểm mỗi vòng</td><td class="n">100,0</td><td class="n neg">−140.000 đ</td></tr>
         <tr><td>Gấp thếp, thua cộng 1 điểm</td><td class="n">407,3</td><td class="n neg">−570.187 đ</td></tr>
+        <tr><td>Gấp thếp, thua nhân đôi điểm</td><td class="n">5,76 × 10¹⁸</td><td class="n neg">−8,06 × 10²¹ đ</td></tr>
       </tbody>
     </table></div>
+    <h3>Cộng thêm và nhân đôi: cùng một ý, hai tốc độ</h3>
+    <p>Dòng thứ ba trong bảng không phải lỗi đánh máy. Với luật nhân, điểm đặt kỳ vọng của vòng sau bằng <span class="k">(1−p) × m</span> lần vòng trước — ở bộ số mặc định là <b>0,7623 × 2 = 1,5247</b>. Lớn hơn 1, nên nó nhân lên mãi không dừng: sau 100 vòng, tổng điểm kỳ vọng là <b>5,76 × 10¹⁸ điểm</b>. Đó không phải một khoản tiền ai sắp trả; đó là cách toán học nói rằng <b>nhân đôi đòi vốn không giới hạn</b>.</p>
+    <p>Luật cộng thì không thế. Điểm đặt kỳ vọng của nó dừng lại ở <span class="k">1 + q/p = 4,21 điểm</span> và không đi xa hơn, dù chơi bao nhiêu vòng. Cùng một câu “thua thì cược mạnh hơn”, nhưng một bên là cấp số cộng còn một bên là cấp số nhân — và cấp số nhân thì lớn hơn mọi cái ví.</p>
+    <p>Đem 50 triệu đồng ra bàn là khác biệt ấy thành con số đếm được. <b>Cộng 1 điểm:</b> chịu được 65 vòng đen liên tiếp (49.335.000 đ) — chuỗi dài thế không xảy ra trong 100 vòng. <b>Nhân đôi:</b> chịu được 11 vòng đen (47.081.000 đ), và vòng thứ 12 đòi thêm 47.104.000 đ nữa mới được chơi tiếp; chuỗi 12 vòng đen ấy gặp phải trong <b>61,5%</b> số ván 100 vòng, và gặp là hết tiền trừ khi trước đó đã lãi đủ bù. Cùng số tiền, cùng luật chơi, cùng số vòng — một bên gần như không bao giờ chạm đáy túi, bên kia chạm với xác suất quá nửa. Bật ô <b>Vốn mang theo</b> lên 50.000.000 rồi chạy mô phỏng là đọc được tỉ lệ cháy túi thật của từng luật.</p>
     <p>Cảm giác “gỡ được” là có thật, nhưng nó đến từ chỗ khác: gấp thếp biến <b>nhiều lần thắng nhỏ</b> thành <b>vài lần thua rất lớn</b>. Trung vị đẹp lên, phần đuôi xấu đi, và trung bình giữ nguyên dấu. Biểu đồ dải ở mục mô phỏng vẽ đúng hiện tượng này: đường trung vị và đường trung bình tách nhau ra.</p>
 
     <h3>Một điều kiện nữa, ít người để ý: túi phải không đáy</h3>
@@ -555,6 +568,7 @@ footer { border-top:1px solid var(--border); padding:30px 0 60px; color:var(--su
       <tbody id="streak-rows"></tbody>
     </table></div>
     <p style="margin-top:16px">Cột thứ tư lớn nhanh vì nó là tổng của một cấp số cộng: thua k vòng liên tiếp thì đã bỏ ra <span class="k">1+2+…+k = k(k+1)/2</span> điểm. Với bộ số mặc định, một chuỗi 15 vòng đen — chuyện gặp phải trong <b>31,9%</b> số ván 100 vòng — đã ngốn <b>120 điểm, tức 2.760.000 đ</b>, và vòng thứ 16 còn đòi thêm <b>368.000 đ</b> nữa mới được chơi tiếp.</p>
+    <p>Đổi sang luật nhân đôi thì cột ấy đổi công thức: thua k vòng liên tiếp đã bỏ ra <span class="k">1+2+4+…+2^(k−1) = 2^k − 1</span> điểm, còn vòng kế tiếp đòi đúng <span class="k">2^k</span> điểm — tức là <b>một mình vòng sau đắt hơn cả chuỗi thua trước nó cộng lại</b>. Chuỗi 10 vòng đen, thứ gặp phải trong <b>83,4%</b> số ván 100 vòng, đã ngốn <b>23.529.000 đ</b> và đòi thêm <b>23.552.000 đ</b> cho một vòng duy nhất.</p>
     <p>Đó là lý do trần điểm tồn tại. Nhưng đặt trần vào là chiến lược gãy đúng chỗ nó cần nhất: tới trần rồi thì không “gỡ” được nữa, chuỗi lỗ nằm lại vĩnh viễn. Trần điểm không cứu kỳ vọng — nó chỉ đổi hình dạng của thua.</p>
   </div>
 </section>
@@ -571,6 +585,7 @@ footer { border-top:1px solid var(--border); padding:30px 0 60px; color:var(--su
           <li>Số luôn viết đủ hai chữ số: 9 là <b>09</b>, ở cả lưới chọn lẫn quả mở ra. Kho to hơn 100 thì số chữ số tự nới theo.</li>
           <li>Mặc định 27 quả bốc <b>có thể trùng</b> — giống xổ số thật, nơi hai giải có thể cùng đuôi. Đổi sang “khác nhau” thì xác suất một con trúng nhích từ 23,77% lên đúng 27,00%.</li>
           <li>Trúng thì mặc định <b>ăn một lần</b>, dù con ấy về mấy nháy. Luật ăn từng nháy có trong ô chọn.</li>
+          <li>Chiến lược chỉ nhìn vào quá khứ: điểm đặt của một vòng tính xong trước khi vòng ấy quay. Cả hai luật tăng — cộng thêm và nhân lên — đều vậy.</li>
         </ul>
       </div>
       <div class="card">
@@ -613,7 +628,16 @@ function viNum(x, d) {
   s = s.replace(/[.,]/g, function (c) { return c === ',' ? '.' : ','; });
   return (x < 0 ? '−' : '') + s;
 }
-function money(x) { return viNum(Math.round(x), 0) + ' đ'; }
+var SUP = ['\u2070', '\u00b9', '\u00b2', '\u00b3', '\u2074', '\u2075', '\u2076', '\u2077', '\u2078', '\u2079'];
+function sci(x) {
+  var e = Math.floor(Math.log10(Math.abs(x))), m = x / Math.pow(10, e);
+  return viNum(m, 2) + ' \u00d7 10' + String(e).split('').map(function (c) { return c === '-' ? '\u207b' : SUP[+c]; }).join('');
+}
+/* Trên nghìn tỉ thì đọc từng chữ số là vô ích — mà gấp đôi thì chạm ngưỡng ấy rất nhanh. */
+function big(x, d) { return !isFinite(x) ? 'vượt tầm số học' : (Math.abs(x) >= 1e15 ? sci(x) : viNum(x, d || 0)); }
+function money(x) { return !isFinite(x) ? 'vượt tầm số học' : (Math.abs(x) >= 1e15 ? sci(x) + ' đ' : viNum(Math.round(x), 0) + ' đ'); }
+/* Điểm đặt có thể lẻ khi hệ số nhân lẻ — đừng in "2,00 điểm" cho một con số tròn. */
+function diem(x) { return big(x, Math.abs(x) < 1e15 && x % 1 ? 2 : 0); }
 function signed(x) { return (x > 0 ? '+' : '') + money(x); }
 function pct(x, d) { return viNum(x * 100, d === undefined ? 2 : d) + '%'; }
 function cls(x) { return x > 0 ? 'pos' : (x < 0 ? 'neg' : ''); }
@@ -658,14 +682,15 @@ function params() {
   }
   var a = Math.min(rd('in-a', 1, 1, 20, 1), N);
   var b0 = rd('in-b0', 1, 1, 10000, 1);
-  var cap = rd('in-cap', 0, 0, 100000, 1);
+  var grow = $('in-grow').value;
+  var cap = rd('in-cap', 0, 0, 1e9, 1);
   if (cap > 0 && cap < b0) { cap = b0; WARN.push('Trần điểm thấp hơn điểm đặt vòng đầu — đang tính với trần ' + b0 + '.'); }
   var p = {
     N: N, K: K, a: a, draw: draw,
     g: rd('in-g', 23000, 0, 1e9, 1),
     w: rd('in-w', 99000, 0, 1e9, 1),
     pay: $('in-pay').value,
-    b0: b0, step: rd('in-step', 1, 0, 10000, 1), cap: cap,
+    b0: b0, grow: grow, step: rd('in-step', grow === 'mul' ? 2 : 1, 0, 10000, grow !== 'mul'), cap: cap,
     reset: $('in-reset').value,
     n: rd('in-n', 100, 1, 20000, 1),
     bank: rd('in-bank', 0, 0, 1e12, 1),
@@ -673,7 +698,8 @@ function params() {
     seed: rd('in-seed', 7, 0, 999999, 1)
   };
   p.digits = String(p.N - 1).length;
-  if (p.step === 0) WARN.push('Bước tăng bằng 0 nghĩa là cược phẳng — không còn là gấp thếp nữa.');
+  if (p.grow === 'add' && p.step === 0) WARN.push('Cộng thêm 0 điểm nghĩa là cược phẳng — không còn là gấp thếp nữa.');
+  if (p.grow === 'mul' && p.step <= 1) WARN.push('Nhân 1 lần cũng là cược phẳng. Muốn gấp đôi thì nhập 2.');
   if (p.a > 1 && p.draw === 'uniq' && p.K > p.N - p.a) WARN.push('Số quả mở gần bằng cả kho: gần như vòng nào cũng trúng.');
   return p;
 }
@@ -747,17 +773,27 @@ function pWin(p) {
 function stakeSum(p, pw) {
   var q = 1 - pw, i, s = 0;
   if (!p.cap) {
+    if (p.grow === 'mul') {
+      /* x = E[m^r]. Từ r sau = 0 (thắng) hoặc r+1 (thua): x sau = p + q·m·x.
+         Khi q·m ≥ 1 thì x tăng không giới hạn — đó chính là chỗ chiến lược nhân đòi
+         vốn vô hạn, và trang nói thẳng điều ấy thay vì in ra một con số đẹp. */
+      var x = 1;
+      for (i = 0; i < p.n; i++) { s += p.b0 * x; x = pw + q * p.step * x; if (!isFinite(s)) return Infinity; }
+      return s;
+    }
     var Er = 0;
     for (i = 0; i < p.n; i++) { s += p.b0 + p.step * Er; Er = q * (Er + 1); }
     return s;
   }
-  var J = p.step > 0 ? Math.ceil((p.cap - p.b0) / p.step) : 1;
+  var J = (p.grow === 'mul')
+    ? (p.step > 1 ? Math.ceil(Math.log(p.cap / p.b0) / Math.log(p.step)) : 1)
+    : (p.step > 0 ? Math.ceil((p.cap - p.b0) / p.step) : 1);
   J = Math.max(1, Math.min(J, 4000));
   var d = new Float64Array(J + 1), nd = new Float64Array(J + 1), j, eb, wsum;
   d[0] = 1;
   for (i = 0; i < p.n; i++) {
     eb = 0; wsum = 0;
-    for (j = 0; j <= J; j++) if (d[j]) eb += d[j] * Math.min(p.b0 + p.step * j, p.cap);
+    for (j = 0; j <= J; j++) if (d[j]) eb += d[j] * stakeAt(p, j);
     s += eb;
     nd.fill(0);
     for (j = 0; j <= J; j++) { if (!d[j]) continue; wsum += d[j] * pw; nd[Math.min(j + 1, J)] += d[j] * q; }
@@ -767,8 +803,17 @@ function stakeSum(p, pw) {
   return s;
 }
 
-/* Điểm phải đặt ở vòng ngay sau một chuỗi thua dài j. */
-function stakeAt(p, j) { var v = p.b0 + p.step * j; return p.cap ? Math.min(v, p.cap) : v; }
+/* Điểm phải đặt ở vòng ngay sau một chuỗi thua dài j. Hai luật tăng, một chỗ định nghĩa:
+   cộng thì b0 + step·j (cấp số cộng), nhân thì b0 · step^j (cấp số nhân). */
+function stakeAt(p, j) {
+  var v = (p.grow === 'mul') ? p.b0 * Math.pow(p.step, j) : p.b0 + p.step * j;
+  return p.cap ? Math.min(v, p.cap) : v;
+}
+/* Cùng luật ấy, viết theo lối bước-một-bước để vòng chơi và mô phỏng dùng chung. */
+function nextStake(p, pts) {
+  var v = (p.grow === 'mul') ? pts * p.step : pts + p.step;
+  return p.cap ? Math.min(v, p.cap) : v;
+}
 
 /* Xác suất gặp ít nhất một chuỗi thua dài ≥ k trong n vòng. */
 function pStreakIn(n, k, pw) {
@@ -935,7 +980,7 @@ function renderExact() {
   $('st-ev1').className = cls(e);
   $('st-bien').textContent = p.g > 0 ? (e > 0 ? '+' : '') + pct(e / p.g) : '—';
   $('st-bien').className = cls(e);
-  $('st-eb').textContent = viNum(S / p.n, 2) + ' điểm';
+  $('st-eb').textContent = big(S / p.n, 2) + ' điểm';
   $('st-turn').textContent = money(S * p.a * p.g);
 
   $('be-price').textContent = money(units * p.w);
@@ -956,13 +1001,18 @@ function renderExact() {
     ['Tiền ăn kỳ vọng của một điểm', f2],
     ['Trừ đi giá một điểm', money(units * p.w) + ' − ' + money(p.g) + ' = ' + signed(e)],
     ['Xác suất một vòng được tính là thắng', pct(pw)],
-    ['Tổng điểm sẽ đặt qua ' + viNum(p.n, 0) + ' vòng', viNum(S, 2) + ' điểm × ' + p.a + ' con'],
-    ['Nhân lại', signed(e) + ' × ' + p.a + ' × ' + viNum(S, 2) + ' ≈ ' + signed(total)]
+    ['Tổng điểm sẽ đặt qua ' + viNum(p.n, 0) + ' vòng', big(S, 2) + ' điểm × ' + p.a + ' con'],
+    ['Nhân lại', signed(e) + ' × ' + p.a + ' × ' + big(S, 2) + ' ≈ ' + signed(total)]
   ];
   $('math-rows').innerHTML = rows.map(function (r, i) {
     return '<tr><td>' + esc(r[0]) + '</td><td class="n"' + (i === rows.length - 1 ? ' style="font-weight:700"' : '') + '>' + esc(r[1]) + '</td></tr>';
   }).join('');
 
+  if (p.grow === 'mul' && p.step * (1 - pw) >= 1 && !p.cap)
+    WARN.push('Nhân ' + diem(p.step) + ' sau mỗi thua, mà thua tới ' + pct(1 - pw, 1)
+      + ' số vòng: mỗi vòng điểm đặt kỳ vọng nhân lên ' + viNum(p.step * (1 - pw), 4)
+      + ' lần, nên tổng điểm kỳ vọng tăng không giới hạn. Con số dưới đây đúng về toán '
+      + 'nhưng không ai đủ tiền đi hết — đặt trần điểm hoặc vốn mang theo để thấy chuyện thật sự xảy ra.');
   $('warnbox').innerHTML = WARN.length ? '⚠ ' + WARN.map(esc).join(' · ') : '';
   renderStreak(p, pw);
 }
@@ -1028,7 +1078,7 @@ function simulate(p) {
       cum += net;
       var win = (p.reset === 'hit') ? (D > 0) : (net > 0);
       if (win) { pts = p.b0; streak = 0; }
-      else { pts = p.cap ? Math.min(pts + p.step, p.cap) : pts + p.step; streak++; if (streak > maxStreak) maxStreak = streak; }
+      else { pts = nextStake(p, pts); streak++; if (streak > maxStreak) maxStreak = streak; }
       if (r < store) paths[r * n + i] = cum;
       sumR[i] += cum;
     }
@@ -1065,7 +1115,7 @@ function runSim() {
     $('sm-ruin').textContent = p.bank > 0 ? pct(s.ruin / s.runs, 1) : 'không có vốn trần';
     $('sm-p5').textContent = signed(quant(fin, 0.05)); $('sm-p5').className = cls(quant(fin, 0.05));
     $('sm-p95').textContent = signed(quant(fin, 0.95)); $('sm-p95').className = cls(quant(fin, 0.95));
-    $('sm-maxstake').textContent = viNum(s.maxPts, 0) + ' điểm = ' + money(s.maxPts * p.a * p.g);
+    $('sm-maxstake').textContent = diem(s.maxPts) + ' điểm = ' + money(s.maxPts * p.a * p.g);
     $('sm-streak').textContent = s.maxStreak + ' vòng';
 
     drawHist(s.finals, EXACT.total);
@@ -1079,7 +1129,14 @@ function runSim() {
     $('sim-check').innerHTML = 'Trung bình ' + viNum(s.runs, 0) + ' đường: <b class="' + cls(mean) + '">' + signed(mean)
       + '</b>. Lấy lãi kỳ vọng mỗi điểm (' + signed(EXACT.e) + ') nhân với số điểm các đường ấy đã thật sự đặt: <b class="'
       + cls(invMean) + '">' + signed(invMean) + '</b> — lệch ' + viNum(sig, 2) + ' lần sai số chuẩn, '
-      + (sig < 4 ? 'tức khớp nhau trong khoảng nhiễu.' : 'lệch bất thường, xem lại tham số.')
+      + (sig >= 4 ? 'lệch bất thường, xem lại tham số.'
+         : (Math.abs(mean - invMean) > 0.25 * Math.abs(invMean)
+            ? 'nhưng hai con số vẫn chênh nhau ' + viNum(Math.abs(mean / (invMean || 1)), 1)
+              + ' lần: sai số chuẩn ở đây lớn tới mức phép so theo nó không còn nói lên gì. Đuôi phân '
+              + 'phối quá nặng — vài đường hiếm át cả phần còn lại — nên trung bình mẫu chưa hội tụ dù '
+              + 'đã chạy chừng này đường. Đó là dấu hiệu của một chiến lược mà chữ “trung bình” gần như '
+              + 'vô nghĩa với người chơi.'
+            : 'tức khớp nhau trong khoảng nhiễu.'))
       + ' Đó chính là luật ở mục “Vì sao”, đo trên dữ liệu vừa chạy. '
       + (p.bank > 0 && s.ruin > 0
           ? 'Kỳ vọng ' + signed(EXACT.total) + ' ở mục trên tính cho người đi hết ' + viNum(p.n, 0) + ' vòng, còn ở đây '
@@ -1158,7 +1215,7 @@ function spin() {
   var cost = p.a * g.pts * p.g;
   if (p.bank > 0 && p.bank + g.cum < cost) {
     g.dead = true;
-    g.msg = 'Cháy túi ở vòng ' + (g.round + 1) + ': chiến lược đòi đặt ' + viNum(g.pts, 0) + ' điểm = ' + money(cost)
+    g.msg = 'Cháy túi ở vòng ' + (g.round + 1) + ': chiến lược đòi đặt ' + diem(g.pts) + ' điểm = ' + money(cost)
       + ', trong khi còn ' + money(p.bank + g.cum) + '. Ván dừng ở đây, và mọi lần gỡ về sau không tồn tại.';
     renderGame(); return false;
   }
@@ -1185,7 +1242,7 @@ function spin() {
   g.path.push(g.cum);
   var win = (p.reset === 'hit') ? (D > 0) : (net > 0);
   if (win) { g.pts = p.b0; g.streak = 0; }
-  else { g.pts = p.cap ? Math.min(g.pts + p.step, p.cap) : g.pts + p.step; g.streak++; }
+  else { g.pts = nextStake(p, g.pts); g.streak++; }
   g.msg = '';
   renderGame();
   return true;
@@ -1194,7 +1251,7 @@ function spin() {
 function renderGame() {
   var g = game, p = g.p;
   $('g-round').textContent = viNum(g.round, 0) + ' / ' + viNum(p.n, 0);
-  $('g-stake').textContent = g.dead ? 'dừng' : viNum(g.pts, 0) + ' điểm = ' + money(p.a * g.pts * p.g);
+  $('g-stake').textContent = g.dead ? 'dừng' : diem(g.pts) + ' điểm = ' + money(p.a * g.pts * p.g);
   $('g-streak').textContent = g.streak + ' vòng';
   $('g-cum').textContent = signed(g.cum);
   $('g-cum').className = cls(g.cum);
@@ -1206,7 +1263,7 @@ function renderGame() {
   }).join('');
 
   var rows = g.log.slice(-12).reverse().map(function (L) {
-    return '<tr><td class="n">' + L.r + '</td><td class="n">' + viNum(L.pts, 0) + '</td><td class="n">' + money(L.cost)
+    return '<tr><td class="n">' + L.r + '</td><td class="n">' + diem(L.pts) + '</td><td class="n">' + money(L.cost)
       + '</td><td class="n">' + (L.nhay || '—') + '</td><td class="n">' + (L.back ? money(L.back) : '—')
       + '</td><td class="n ' + cls(L.net) + '">' + signed(L.net) + '</td><td class="n ' + cls(L.cum) + '">' + signed(L.cum) + '</td></tr>';
   }).join('');
@@ -1232,10 +1289,22 @@ $('panel').addEventListener('change', onParams);
 function onParams() {
   var p = params();
   $('hint-N').textContent = viNum(p.N, 0) + ' số: ' + padNum(0, p) + ' → ' + padNum(p.N - 1, p);
+  $('lab-step').textContent = p.grow === 'mul' ? 'Nhân lên (lần)' : 'Cộng thêm (điểm)';
+  $('hint-step').textContent = p.grow === 'mul'
+    ? 'Chuỗi nhân: ' + diem(p.b0) + ' → ' + diem(p.b0 * p.step) + ' → ' + diem(p.b0 * p.step * p.step) + ' → ' + diem(p.b0 * Math.pow(p.step, 3)) + ' …'
+    : 'Chuỗi cộng: ' + diem(p.b0) + ' → ' + diem(p.b0 + p.step) + ' → ' + diem(p.b0 + 2 * p.step) + ' → ' + diem(p.b0 + 3 * p.step) + ' …';
   renderExact();
   newGame();
   invalidateSim();
 }
+
+/* Đổi sang kiểu nhân mà bước vẫn là 1 thì chiến lược thành cược phẳng — sửa giúp một lần,
+   chứ không im lặng để người dùng tưởng mình đang gấp đôi. */
+$('in-grow').addEventListener('change', function () {
+  var st = $('in-step');
+  if ($('in-grow').value === 'mul' && parseFloat(st.value) <= 1) { st.value = 2; st.step = '0.5'; onParams(); }
+  if ($('in-grow').value === 'add') st.step = '1';
+});
 
 $('grid').addEventListener('click', function (ev) {
   var b = ev.target.closest('button[data-v]');

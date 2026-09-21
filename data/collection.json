@@ -203,7 +203,7 @@
           "key": "z",
           "icon": "experiment",
           "name": "Betting Lab",
-          "desc": "Thí nghiệm chiến lược gấp thếp trên trò 27 số — xác suất trúng, điểm hoà vốn, chuỗi thua dài tới đâu và vốn cần để đi hết",
+          "desc": "Thí nghiệm chiến lược gấp thếp trên trò 27 số — cộng thêm hay nhân đôi sau mỗi lần thua, xác suất trúng, điểm hoà vốn, chuỗi thua dài tới đâu và vốn cần để đi hết",
           "href": "pages/betting-strategy-lab.html"
         }
       ]
