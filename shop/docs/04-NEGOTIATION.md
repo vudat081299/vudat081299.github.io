@@ -363,8 +363,9 @@ hỏng vì kéo dài quá thì không có buổi hai.
 1. **Một buổi hai đã có ngày**, không phải "để em nhắn lại chị sau".
 2. **Số thật trong tay**: giá vốn (A1), tổng đơn tháng trước (A3), **chia theo kênh (A4)**, và
    phí sàn trên một đơn thật (A6). Riêng A4 quyết định luôn là chặng 1 có nên mở không.
-3. **Nội dung 5 mùi thật** — tên, mô tả, ba tầng hương. Nó gỡ được **24 mục placeholder** trong
-   `shop/data/shop.json`, không tốn gì.
+3. **Nội dung 5 mùi thật** — tên, mô tả, ba tầng hương. Nó gỡ được **10 trong 28 mục placeholder** của
+   `shop/data/shop.json`, không tốn gì. (18 cờ kia — ship, thanh toán, cam kết thương hiệu —
+   nằm ở những câu hỏi khác trong danh sách này.)
 4. **Biết chị ấy muốn shop này thành cái gì** (D1). Nếu câu trả lời là "vừa vừa thôi" thì đó là
    phát hiện giá trị nhất của cả buổi, dù nó phá kế hoạch.
 5. **Ba thử nghiệm ở §4 đã được đồng ý chạy.** Kết quả của chúng là nội dung của buổi hai.

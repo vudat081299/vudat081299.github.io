@@ -122,7 +122,7 @@ COD song song, rồi mới tính Apple Pay khi đơn đủ nhiều để bõ cô
 
 Xếp theo mức chặn. Cứ gửi cho tôi, tôi điền vào `data/shop.json` và hạ cờ placeholder.
 
-### Chặn nhất — 5 mùi hương (24 mục placeholder đang chờ cái này)
+### Chặn nhất — 5 mùi hương (10 trong 28 mục placeholder chờ cái này)
 
 Không có cách nào đọc nội dung 5 mùi ở dạng máy đọc được: Instagram trả HTTP 403 cho mọi truy
 cập không đăng nhập, kể cả link có `stkn`. Nên chỗ này chờ **chủ shop chép ra**. Với **mỗi** mùi:

@@ -141,7 +141,9 @@ Ba mục mức XEM, đều cố ý:
 1. **Đọc [docs/04-NEGOTIATION.md](docs/04-NEGOTIATION.md) trước buổi gặp.** Mục tiêu buổi gặp đầu là
    *khám phá*, không phải trình diễn. Nếu hôm đó nói nhiều hơn nghe thì buổi gặp hỏng.
 2. **Hỏi cho được giá vốn một cây nến.** Thiếu nó thì mọi phép tính chỉ nói về doanh thu.
-3. Xin nội dung 5 mùi → điền vào `data/shop.json` → hạ 28 cờ `placeholder`.
+3. Xin nội dung 5 mùi → điền vào `data/shop.json` → hạ **10** cờ `placeholder`
+   (`scents` 5 + `products` 5). 18 cờ còn lại là chính sách ship, thanh toán và cam kết
+   thương hiệu — phải hỏi riêng, đừng tưởng xin xong 5 mùi là hết cờ.
 4. Xin số tài khoản → bật VietQR (5 phút, không mất phí cổng).
 5. Mở `https://banhang.shopee.vn/edu/article/8450` và `/8451` **bằng trình duyệt** để biết shop
    có đủ điều kiện dùng API Shopee không. Máy không đọc được hai trang đó.
