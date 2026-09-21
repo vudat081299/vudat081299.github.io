@@ -39,7 +39,7 @@ shop/
     smoke.js          290 dòng — cổng tầng 2, mở Chromium thật rồi bấm và đo
     check.sh          chạy cả hai tầng; đây là lệnh "đã xong chưa"
     hooks/            post-edit.sh (sau mỗi Edit/Write) + pre-commit
-  docs/               8 tài liệu + 5 ADR — nội bộ, KHÔNG lên web
+  docs/               8 tài liệu + 5 ADR + một trang đọc; công khai từ 21/09/2026
 ```
 
 `pitch/` và `measure/` nằm trong thư mục con nên **không dùng shell chung và không dùng lớp
@@ -65,7 +65,7 @@ Hai tầng, và **tầng hai mới là tầng bắt được hành vi**:
 
 | Tầng | Chạy gì | Bắt gì |
 |---|---|---|
-| 1 | `lint-shop.py` | giá âm, giá gạch ngược, `ship_fee` ≥ `free_ship`, chữ khối lặp lọt vào HTML, phân bố quiz lệch, tương phản dưới AA, liên kết markdown gãy, `deploy.yml` mất `--exclude` |
+| 1 | `lint-shop.py` | giá âm, giá gạch ngược, `ship_fee` ≥ `free_ship`, chữ khối lặp lọt vào HTML, phân bố quiz lệch, tương phản dưới AA, liên kết markdown gãy, `deploy.yml` **mọc lại** `--exclude` cho `shop/docs` |
 | 2 | `smoke.js` | giỏ, tồn kho, hộp quà, quiz — bấm thật trong Chromium, kể cả khi chặn font và chặn localStorage |
 
 Tầng 2 cần Chromium. Thiếu thì nó **thoát mã 2 và nói rõ là đã bỏ qua**, *không* làm cổng đỏ —
@@ -87,18 +87,16 @@ npm i -g playwright-core playwright && npx playwright install chromium
 
 ## Cái gì lên web, cái gì không
 
-`.github/workflows/deploy.yml` rsync cả cây thư mục, nên **mặc định là công khai**. Hai dòng
-loại trừ giữ `docs/` và `shop/*.md` (kể cả file này) ở lại trong repo:
+`.github/workflows/deploy.yml` rsync cả cây thư mục, nên **mặc định là công khai** — và từ
+21/09/2026 thì **mọi thứ trong `shop/` đều công khai**, kể cả `docs/` và file này.
 
-```
---exclude 'shop/docs'
---exclude 'shop/*.md'
-```
+Trước đó `docs/` và `shop/*.md` bị loại trừ; chủ repo đã gỡ hai dòng ấy vì anh muốn đọc bộ tài
+liệu trên web và coi nó là kế hoạch chứ không phải bí mật. `check_publish` trong `lint-shop.py`
+**không biến mất theo, nó đảo chiều**: giờ nó làm đỏ build nếu `--exclude 'shop/docs'` hoặc
+`--exclude 'shop/*.md'` **quay lại**. Cùng khuôn với `UNLISTED` ở `tools/lint-collection.py` —
+khai rằng một thứ phải sống ở URL trực tiếp thì không ai giấu lại nó trong im lặng được.
 
-`check_publish` trong `lint-shop.py` làm đỏ build nếu một trong hai dòng ấy biến mất — đó là
-cổng, không phải lời nhắc. `pitch/` thì **cố ý** vẫn công khai: trang đó viết cho chủ shop và
-cần một đường link để gửi.
-
-Một giới hạn phải nói thẳng: repo này **public**, nên loại trừ khỏi deploy chỉ chặn
-`vudat081299.github.io/shop/…`. Các file trong `docs/` vẫn đọc được trên github.com và qua
-`raw.githubusercontent.com`. Muốn kín thật thì phải chuyển chúng ra khỏi repo public.
+**Hệ quả phải biết trước khi viết thêm vào `docs/`:** `04-NEGOTIATION.md` có mục §7 *"Dấu hiệu
+nên rút"* và `01-CONTEXT-AND-OPPORTUNITY.md` mở đầu bằng *"Không đưa tài liệu này cho chị ấy"* —
+cả hai giờ ở trên web. Viết gì vào đây thì viết như thể chủ shop sẽ đọc. Muốn đảo lại thì hỏi
+chủ repo, đừng tự thêm dòng loại trừ.

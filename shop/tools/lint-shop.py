@@ -768,17 +768,27 @@ def check_docs(shop):
 
 
 def check_publish(shop):
-    """Tài liệu nội bộ của shop/ KHÔNG được lên public.
+    """Tài liệu nội bộ của shop/ PHẢI lên public — và phải ở nguyên như thế.
 
-    Sinh ra từ một ca thật ngày 20/09/2026: `shop/docs/04-NEGOTIATION.md` — kịch bản đàm phán
-    với một người có thật, gồm cả mục "dấu hiệu nên rút" và mức giá định chào — đã nằm trên
-    GitHub Pages ở một URL đoán được, trả HTTP 200. Không ai cố ý publish nó; workflow deploy
-    rsync cả repo và chẳng ai nghĩ tới thư mục mới.
+    Cổng này từng chạy đúng chiều ngược lại, và lịch sử ấy đáng giữ lại nguyên văn:
+    ngày 20/09/2026 phát hiện `shop/docs/04-NEGOTIATION.md` — kịch bản đàm phán với một
+    người có thật, gồm cả mục "dấu hiệu nên rút" — trả HTTP 200 trên GitHub Pages ở một
+    URL đoán được. Không ai cố ý publish nó; workflow rsync cả repo. Nên `deploy.yml`
+    thêm hai dòng loại trừ và cổng này bắt chúng không được biến mất.
 
-    Markdown trên GitHub Pages phục vụ nguyên văn, không cần render, nên chỉ cần biết đường
-    dẫn là đọc được. Với một tài liệu đàm phán thì đó là trao cả thế bài cho phía bên kia.
+    Ngày 21/09/2026 chủ repo đảo quyết định: anh muốn đọc bộ tài liệu này trên web, và
+    coi nó là kế hoạch chứ không phải bí mật. Hai dòng loại trừ đã gỡ.
 
-    `shop/pitch/` CỐ Ý vẫn công khai: trang đó viết CHO chị ấy và cần một đường link để gửi.
+    Cổng vì thế **đảo chiều** thay vì biến mất — cùng khuôn với `UNLISTED` trong
+    `tools/lint-collection.py`: khai rằng một thứ PHẢI sống ở URL trực tiếp, thì ai thêm
+    `--exclude` cho nó là cổng đỏ. Cần chiều này vì lý do rất cụ thể: một phiên agent sau
+    đọc thấy `04-NEGOTIATION.md` nói về một người có thật sẽ "sửa giúp" bằng cách thêm lại
+    dòng loại trừ — đúng kiểu việc đã xảy ra một lần với `WITHHELD` ở cổng danh mục — và
+    quyết định của chủ repo im lặng biến mất.
+
+    Chủ repo đã được nói rõ trước khi đổi: `01-CONTEXT-AND-OPPORTUNITY.md` tự mở đầu bằng
+    "Không đưa tài liệu này cho chị ấy", và `04-NEGOTIATION.md` có mục §7 "Dấu hiệu nên
+    rút". Muốn đảo lại thì **hỏi chủ repo**, đừng tự suy từ nội dung file.
     """
     err = []
     wf = shop.parent / '.github' / 'workflows' / 'deploy.yml'
@@ -786,10 +796,16 @@ def check_publish(shop):
         return err
     body = wf.read_text(encoding='utf-8', errors='replace')
     for pat in ("--exclude 'shop/docs'", "--exclude 'shop/*.md'"):
-        if pat not in body:
-            err.append("deploy.yml thiếu %s — tài liệu nội bộ của shop/ sẽ lên public. "
-                       "docs/04-NEGOTIATION.md là kịch bản đàm phán với một người có thật; "
-                       "publish nó là đưa thế bài cho phía bên kia." % pat)
+        # chỉ bắt dòng lệnh thật trong khối rsync, không bắt chữ trong comment
+        for line in body.splitlines():
+            t = line.strip()
+            if t.startswith('#'):
+                continue
+            if pat in t:
+                err.append("deploy.yml có %s — chủ repo quyết ngày 21/09/2026 rằng tài liệu "
+                           "shop/ phải đọc được trên web. Gỡ dòng ấy, hoặc hỏi chủ repo trước "
+                           "khi đảo lại quyết định." % pat)
+                break
     return err
 
 

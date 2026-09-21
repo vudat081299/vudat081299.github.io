@@ -15,7 +15,7 @@ Live: <https://vudat081299.github.io>
 | `cooking/` | Trang bếp, mỗi trang một file HTML tự chứa. **Bốn trang công thức** (korean-home-cooking, vietnamese-home-cooking, european-savoury, european-baking) dùng chung khung filter/modal/hẹn-giờ; **một trang kiến thức nền** (food-fundamentals — sơ đồ thịt, hải sản, nhiệt độ, kỹ thuật, rượu, kết hợp vị) dạng explainer tĩnh. Style bằng `../web-builder/web-builder.css`, có cổng kiểm `tools/lint-cooking.py` riêng. Tách khỏi `pages/` 2026-09-02 nên URL cũ `/pages/<tên>.html` giờ **404** — vào từ hub |
 | `cashy/` | App quản lý chi tiêu — **React 19 + TS + Vite**, thứ duy nhất trong repo cần build. Có `CLAUDE.md` + `docs/` riêng, đọc từ đó |
 | `web-builder/` | Design system `wb-*` (CSS thuần, token-based, có dark mode) + trang docs component. **Các trang trong `pages/` và `cooking/` dùng CSS này; hub thì KHÔNG còn, từ 2026-09-21** |
-| `shop/` | **Storefront** nến thơm thủ công (Scentsitive) — 5 trang tĩnh dùng chung một shell, toàn bộ chữ và số ở `data/shop.json`. Có `README.md` + `CLAUDE.md` + `docs/` riêng, và cổng hai tầng `sh shop/tools/check.sh` (tầng 2 mở Chromium thật). `shop/docs` + `shop/*.md` **không publish** |
+| `shop/` | **Storefront** nến thơm thủ công (Scentsitive) — 5 trang tĩnh dùng chung một shell, toàn bộ chữ và số ở `data/shop.json`. Có `README.md` + `CLAUDE.md` + `docs/` riêng, và cổng hai tầng `sh shop/tools/check.sh` (tầng 2 mở Chromium thật). `shop/docs` + `shop/*.md` **công khai từ 2026-09-21** (trước đó bị loại trừ; chủ trang đảo quyết định) |
 | `facts/` | Thư viện fact có kiểm chứng (HTML + `data/` JSON) |
 | `json-analysis/` | Công cụ xem/sửa/so sánh JSON |
 | `loto/`, `read-excel-file-to-table/` | Công cụ nhỏ, một trang |
@@ -44,17 +44,18 @@ Live: <https://vudat081299.github.io>
 1. `pnpm build` trong `cashy/` → `_site/cashy/`
 2. `pnpm build:wb` trong `cashy/` → `_site/cashy-wb/` (gallery component)
 3. rsync toàn bộ root vào `_site/`, **trừ** `.git`, `.github`, `.claude`, `cashy`,
-   `stuff`, `.DS_Store`, `shop/docs`, `shop/*.md`,
-   `masters-degree/data-science-roadmap/LEARNING-LOG.md`,
+   `stuff`, `.DS_Store`, `masters-degree/data-science-roadmap/LEARNING-LOG.md`,
    `pages/family-insurance-benefits.html`, `pages/wealth-roadmap.html`
 4. Đẩy `_site/` lên GitHub Pages
 
 Nghĩa là: mọi thứ ở root **mặc định là công khai**. Muốn giữ riêng thì để trong
 `stuff/`, `cashy/`, hoặc thêm `--exclude` vào workflow.
 
-Danh sách `--exclude` ấy **có cổng giữ**, đừng dọn nó: `shop/tools/lint-shop.py` làm đỏ build
-nếu mất hai dòng `shop/…`, và `tools/lint-collection.py` giữ hai dòng `pages/…` — cộng chiều
-ngược lại, tức là báo lỗi nếu ai thêm `--exclude` cho một trang thuộc danh sách `UNLISTED`.
+Danh sách `--exclude` ấy **có cổng giữ hai chiều**, đừng dọn nó. `tools/lint-collection.py`
+làm đỏ build nếu mất hai dòng `pages/…`, và ngược lại nếu ai *thêm* `--exclude` cho một trang
+thuộc danh sách `UNLISTED`. `shop/tools/lint-shop.py` chỉ còn chiều thứ hai: `shop/docs` và
+`shop/*.md` từng bị loại trừ, chủ trang gỡ ngày 2026-09-21, nên cổng giờ đỏ nếu chúng **quay
+lại** — quyết định ấy không được âm thầm đảo ngược.
 
 Và một giới hạn phải nói thẳng: repo này **public**, nên `--exclude` chỉ chặn
 `vudat081299.github.io/…`. File vẫn đọc được trên github.com và qua `raw.githubusercontent.com`.
