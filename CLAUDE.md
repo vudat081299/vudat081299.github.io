@@ -125,7 +125,7 @@ Ba bước, đúng thứ tự:
 3. **Ghép, chạy cổng, ship.**
 
 **Luật chia chỗ — đếm được, không tranh luận được:** khối **lặp** → chữ ở data; khối **độc
-nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 8 section + 30 ô + 6 dòng môn học đều lặp nên nằm ở
+nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 8 section + 29 ô + 6 dòng môn học đều lặp nên nằm ở
 `data/collection.json`; tiêu đề trang chỉ có một nên ở lại HTML. Rail bên trái và ba cột
 chân trang cũng dựng từ chính mảng `sections` ấy — không có danh sách mục thứ hai để quên
 cập nhật. Trang văn xuôi độc nhất
@@ -196,21 +196,32 @@ là trường tuỳ chọn.** Mục không có `key` thì không vẽ chip phím
 chuột hoặc ô tìm kiếm — `/` nhảy vào ô, `↵` mở kết quả đầu. Linter chỉ kiểm định dạng và trùng
 lặp **khi** có `key`. **Đừng ép hai mục dùng chung một phím** để giữ cho đủ bộ.
 
-Ngày 21/09 gỡ một mục nên đang là **35/36**, ô `z` trống. `wealth-roadmap` vẫn **cố ý** không có
-`key`: đừng xáo lại phím mỗi lần thêm/bớt một trang — phím tắt là thứ người dùng học thuộc, đổi
-nó là phá trí nhớ cơ bắp. Ô trống dành cho trang tiếp theo.
+Ngày 21/09 chủ trang cho gỡ hai mục (Family Insurance, rồi chính `wealth-roadmap`) nên đang là
+**35/36**, ô `z` trống — và **mọi mục đang niêm yết đều có phím trở lại**. Nghĩa là luật "`key`
+tuỳ chọn" vừa mất **ví dụ sống duy nhất** của nó: người viết mục thứ 36 sẽ thấy 35 mục đều có
+phím rồi bắt chước, lấy nốt `z`; **mục thứ 37 mới là mục đầu tiên buộc phải bỏ trường `key`**, và
+lúc ấy trên trang không còn cái nào để nhìn theo. Linter vẫn cho thiếu `key` nên không ai bị chặn
+nhầm, nhưng đoạn này là chỗ duy nhất còn ghi — xem mục *Thứ tự làm một trang* ở trên: bộ mẫu
+mạnh hơn luật, và bộ mẫu cho nhánh này hiện bằng không. Dù vậy **đừng xáo lại phím của mục cũ**
+để lấp chỗ: phím tắt là thứ người dùng học thuộc, đổi nó là phá trí nhớ cơ bắp.
 
 Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Từ 20/09/2026 nó kiểm thêm
 một chiều nữa: mọi `.html` trong `pages/` và `cooking/` phải có một mục trỏ tới, vì
 `family-insurance-benefits.html` và `jazz-piano-theory.html` đã viết xong mà nằm ngoài danh mục
 nhiều tháng — trang vẫn mở được bằng URL trực tiếp nên không gì tự lộ ra. Muốn cố ý không niêm
-yết thì ghi vào `ALLOW_UNLISTED` kèm lý do, đừng xoá cổng — `family-insurance-benefits.html`
-quay lại danh sách ấy ngày 21/09 vì chủ trang cho gỡ: nó nói về hai hợp đồng bảo hiểm **có thật**
-của gia đình, không thuộc về một trang chủ công khai. **Gỡ khỏi danh mục không phải là gỡ khỏi
-web**: file vẫn deploy và vẫn mở được bằng URL trực tiếp. Muốn nó thật sự riêng tư thì phải loại
-trừ trong `.github/workflows/deploy.yml`, đúng cách `shop/docs` đã làm.
+yết thì ghi vào `ALLOW_UNLISTED` kèm lý do, đừng xoá cổng. Ngày 21/09 có **hai** trang quay lại
+danh sách ấy vì chủ trang cho gỡ, cùng một lý do: `family-insurance-benefits.html` nói về hai hợp
+đồng bảo hiểm nhân thọ **có thật** của gia đình, và `wealth-roadmap.html` là kế hoạch tài chính &
+sự nghiệp 10 năm của **chính chủ trang** — thu nhập, danh mục đầu tư, thuê hay mua nhà. Không
+trang nào thuộc về một trang chủ công khai.
 
-Nó **không** kiểm độ dài mô tả: đã đo lại 21/09/2026, 36 mô tả đang chạy dài 24→193 ký tự
+**Gỡ khỏi danh mục không phải là gỡ khỏi web.** Cả hai file vẫn được deploy và vẫn mở được bằng
+URL trực tiếp — đã đo ngày 21/09, cả hai trả HTTP 200 sau khi gỡ khỏi danh mục. Danh mục chỉ bỏ
+cái **link**. Muốn chúng thật sự riêng tư thì phải loại trừ trong `.github/workflows/deploy.yml`,
+đúng cách `shop/docs` đã làm — và nhớ rằng repo này public nên **lịch sử git vẫn giữ nội dung
+cũ**; xoá thật thì phải viết lại lịch sử, việc đó phải hỏi chủ repo.
+
+Nó **không** kiểm độ dài mô tả: đã đo lại 21/09/2026, 35 mô tả đang chạy dài 24→193 ký tự
 (trung vị 77), mọi ngưỡng chung đều là số bịa. Câu có sát việc của cái ô hay không là việc của
 người viết.
 

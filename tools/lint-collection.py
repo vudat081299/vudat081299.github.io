@@ -2,9 +2,10 @@
 """Cổng cho data/collection.json — nội dung của index.html.
 
 Chỉ kiểm thứ đúng/sai khách quan: JSON hợp lệ, trường bắt buộc có mặt và không rỗng,
-phím tắt không trùng, href trỏ tới thứ tồn tại. KHÔNG kiểm độ dài mô tả: đã đo, 31 mô tả
-đang chạy dài từ 24 tới 235 ký tự (trung vị 72), nên mọi ngưỡng chung đều là số bịa và sẽ
-đánh trượt nội dung thật. Chất lượng một câu là việc của người viết, không phải của regex.
+phím tắt không trùng, href trỏ tới thứ tồn tại. KHÔNG kiểm độ dài mô tả: đã đo lại
+21/09/2026, 35 mô tả đang chạy dài từ 24 tới 193 ký tự (trung vị 77), nên mọi ngưỡng chung
+đều là số bịa và sẽ đánh trượt nội dung thật. Chất lượng một câu là việc của người viết,
+không phải của regex.
 
 Kiểm cả chiều ngược lại: mọi .html trong pages/ và cooking/ phải được một mục trỏ tới.
 Thiếu chiều này thì một trang viết xong vẫn có thể vô hình — đã xảy ra hai lần.
@@ -102,6 +103,10 @@ ALLOW_UNLISTED = {
     # URL trực tiếp; muốn nó thật sự không công khai thì phải loại trừ trong
     # .github/workflows/deploy.yml, y như shop/docs.
     'pages/family-insurance-benefits.html': 'riêng tư — chủ trang cho gỡ 21/09/2026',
+    # Cùng ngày, cùng lý do: kế hoạch tài chính & sự nghiệp 10 năm của CHÍNH chủ trang —
+    # thu nhập, danh mục đầu tư, thuê hay mua nhà. Cũng không thuộc về một trang chủ công
+    # khai, và cũng vẫn đang được deploy: xem đoạn trên.
+    'pages/wealth-roadmap.html': 'riêng tư — chủ trang cho gỡ 21/09/2026',
 }
 
 listed = set()
