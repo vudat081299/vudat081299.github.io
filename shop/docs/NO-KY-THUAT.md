@@ -13,7 +13,8 @@ Cập nhật lần cuối: 20/09/2026.
 | 2 | **Chưa có số tài khoản** nên VietQR chưa bật | Ngay khi muốn nhận chuyển khoản | Điền `payment.methods[bank].bank` (tên NH, mã BIN 6 số, số TK, chủ TK) rồi đặt `ready: true`. Cổng kiểm định dạng. |
 | 3 | **Form nhận hàng không gửi đi đâu** — chỉ chảy vào nội dung đơn để sao chép | Khi khách tưởng bấm xong là shop đã nhận đơn | Một hàm serverless, hoặc dịch vụ form (Formspree/Basin). Xem [adr/0001](adr/0001-trang-tinh.md). |
 | 4 | **Chưa có trang cảm ơn** sau khi đặt | Cùng lúc với #3 | Đi kèm #3. |
-| 5 | **Chưa rõ nghĩa vụ pháp lý** với Bộ Công Thương sau 01/07/2026 | Trước khi mở bán trên tên miền riêng | **Hỏi luật sư.** Hai nguồn luật nói ngược nhau; phạt 10–20 triệu rơi vào chủ shop. Xem [03-DOI-THU-VA-TICH-HOP.md](03-DOI-THU-VA-TICH-HOP.md). |
+| 5 | **Chưa làm thủ tục thông báo theo NĐ 248/2026** | Trước khi mở bán trên tên miền riêng | Thủ tục **vẫn còn** (đã tra lại 21/09/2026), chỉ đổi tên gọi: "nền tảng TMĐT kinh doanh trực tiếp có chức năng đặt hàng trực tuyến", phải được xác nhận **trước khi vận hành**. Nộp ở đâu thì chưa kiểm được. **Hỏi luật sư một câu hẹp**; phạt rơi vào chủ shop. Xem [03](03-DOI-THU-VA-TICH-HOP.md). |
+| 6 | **Chưa có thông báo quyền riêng tư và chưa có cơ chế đồng ý** — trong khi `checkout.html` đã thu tên, số điện thoại, địa chỉ | **Ngay khi form nhận đơn thật** (tức cùng lúc với #3, không phải sau) | Một trang chính sách riêng tư + ô đồng ý, chiếu theo **Luật Bảo vệ dữ liệu cá nhân** (hiệu lực 01/01/2026) và **NĐ 356/2025/NĐ-CP** *[nguồn thứ cấp — chưa kiểm]*. Cả 15 tài liệu trước đây chỉ nhắc dữ liệu cá nhân đúng một lần và không gọi tên được văn bản nào. Liên quan: câu E1 ở [04](04-DAM-PHAN.md) xin xem "10 đơn gần nhất" của chị ấy — đó là dữ liệu cá nhân của khách bên thứ ba, nên xin theo kiểu **nhìn và đếm, không chụp, không xin xuất file**. |
 
 ## Sẽ cắn khi lớn hơn
 

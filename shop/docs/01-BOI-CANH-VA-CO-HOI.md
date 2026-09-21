@@ -180,7 +180,7 @@ Không đo lượt truy cập thì không được kéo đòn bẩy này.
 
 ### Đòn bẩy 2 — giá trị mỗi đơn (AOV)
 
-Đây là đòn bẩy rẻ nhất ở quy mô này, vì nó **không cần thêm một lượt truy cập nào**.
+Đây là đòn bẩy rẻ nhất ở quy mô này, vì nó **không cần thêm một lượt truy cập nào** — nhưng chỉ rẻ trên **kênh trực tiếp**; bán qua sàn thì sàn ăn 21% của phần tăng, xem bảng ngay dưới.
 
 Minh hoạ, dùng đúng hộp quà đang có sẵn trong `shop/data/shop.json` (Hộp đôi, giảm 8%):
 
@@ -194,14 +194,26 @@ Minh hoạ, dùng đúng hộp quà đang có sẵn trong `shop/data/shop.json` 
 
 Nhưng con số đó là **doanh thu, không phải lời**. Nó đòi làm thêm 52 cây nến mỗi tháng:
 
-| Nếu giá vốn `V` là | Chi phí 52 cây thêm | Còn lại |
-|---|---|---|
-| 150.000₫ | 7.800.000₫ | +5.304.000₫/tháng |
-| 200.000₫ | 10.400.000₫ | +2.704.000₫/tháng |
+…và nếu 52 hộp ấy vẫn bán **qua sàn** thì sàn ăn tiếp ~21% của phần doanh thu tăng thêm:
+13.104.000 × 21% = **2.751.840₫/tháng**.
 
-Hai mức giá vốn trên là **số bịa để cho thấy độ nhạy**, không phải ước lượng. Nếu `V` cao hơn
-nữa, khoản giảm 8% (2 × 300.000 × 8% = 48.000₫ mỗi hộp, × 52 hộp = 2.496.000₫/tháng) có thể ăn
-sạch phần tăng.
+| Nếu giá vốn `V` là | Chi phí 52 cây thêm | Phí sàn trên phần tăng | Còn lại, **chưa tính công** |
+|---|---|---|---|
+| 150.000₫ | 7.800.000₫ | 2.751.840₫ | +2.552.160₫/tháng |
+| 200.000₫ | 10.400.000₫ | 2.751.840₫ | **−47.840₫/tháng** |
+| 250.000₫ | 13.000.000₫ | 2.751.840₫ | **−2.647.840₫/tháng** |
+
+**Đọc kỹ dòng giữa: nó ÂM.** Bản trước của bảng này chỉ trừ giá vốn, không trừ phí sàn, nên cùng
+mức `V = 200.000₫` nó ghi *+2.704.000₫* — dương, và dùng con số ấy để kết luận AOV là đòn bẩy rẻ
+nhất. Đó đúng là lớp lỗi mà sổ nợ ghi là "đã sửa ở bản đề xuất" (cộng tiền thật với doanh thu
+chưa trừ giá vốn), chỉ là nó còn sống ở đây — và đây mới là tài liệu Đạt dùng để tự thuyết phục
+mình.
+
+Ba mức giá vốn trên là **số bịa để cho thấy độ nhạy**, không phải ước lượng: `V` thật thì chỉ chị
+ấy biết, và đó là câu hỏi A2. Nhưng hình dạng của bảng thì không phụ thuộc vào `V`: bán hộp quà
+**qua sàn** thì lời bị bóp từ hai đầu — giảm giá 8% cho khách, rồi sàn ăn 21% của phần còn lại.
+Đòn bẩy AOV chỉ thật sự rẻ **trên kênh trực tiếp**, nơi không có 21% kia. Mà kênh trực tiếp lại
+đúng là thứ chưa tồn tại. Hai điều này phải đọc cùng nhau, đừng đọc riêng.
 
 **Kết luận dùng được ngay:** hai con số giảm giá 8% và 14% đang nằm trong `shop/data/shop.json`
 là **số dựng tạm**, và phải quyết lại sau khi biết `V`. Ghi vào [NO-KY-THUAT.md](NO-KY-THUAT.md).
@@ -225,7 +237,7 @@ mình. Đây là lý do chiến lược để sở hữu kênh, và nó là lý 
 
 ### Thứ tự kéo
 
-1. **AOV** — rẻ nhất, không cần thêm traffic, và cơ chế đã dựng sẵn trong repo.
+1. **AOV** — rẻ nhất **nếu bán qua kênh trực tiếp**, không cần thêm traffic, cơ chế đã dựng sẵn trong repo. Bán qua sàn thì sàn ăn 21% của phần tăng và ở giá vốn cao nó có thể **âm**.
 2. **Chuyển đổi** — mạnh nhất, nhưng phải đo lượt truy cập trước, nếu không là bắn vào bóng tối.
 3. **Mua lại** — chậm nhất nhưng cộng dồn, và là lý do thật để sở hữu kênh trực tiếp.
 
@@ -392,7 +404,11 @@ Ba kết luận rút ra được:
 2. **Lazada không đáng tích hợp.** 0,7% doanh thu. Nó lại là sàn dễ nối API nhất
    (xem [03](03-DOI-THU-VA-TICH-HOP.md)) — dễ nhất lại ít đáng nhất. Đừng để cái dễ dẫn dắt việc.
 3. **744 shop cùng bán** nghĩa là khác biệt không phải điều xa xỉ. Một listing Shopee của chị ấy
-   trông giống 743 listing khác. Đó là toàn bộ lý do tồn tại của một storefront riêng.
+   trông giống 743 listing khác. Nhưng cách rẻ nhất để khác đi là **sửa chính cái listing ấy**
+   (thử nghiệm 3, §5), không phải dựng một chỗ mới — §7 vừa nói mặc định phải là *trang riêng
+   làm tăng ma sát cho tới khi chứng minh được ngược lại*. Storefront riêng chỉ hơn ở những
+   hành vi sàn **không cho làm**: bộ chọn mùi, hộp quà ghép, nhắn lại khách theo chu kỳ nến
+   cháy. Đó mới là lý do tồn tại của nó — không phải con số 744.
 
 ---
 

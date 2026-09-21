@@ -106,10 +106,16 @@ Nỗi lo "tích hợp sàn chậm và khó" là **đúng**, và không nên tr�
 2. **Lazada dễ nhất lại ít đáng nhất.** Lazada chiếm **0,7%** doanh thu ngành nến thơm quà trên
    ba sàn [đã kiểm: metric.vn 2025]. Duyệt trong 1–3 ngày, nhưng để lấy 0,7%. Đừng để cái dễ dẫn
    dắt thứ tự công việc.
-3. **Cách rẻ nhất để biết là tự đăng ký thử.** Với TikTok Shop, đường in-house developer có thể
-   đăng ký trong một buổi chiều. Một buổi chiều đổi lấy một câu trả lời chắc chắn thì rẻ hơn mọi
-   suy đoán. Làm việc này **trước buổi gặp** nếu kịp — khi đó anh nói được "em thử rồi" thay vì
-   "em nghĩ là".
+3. **Việc này anh KHÔNG tự làm được — sửa lại 21/09/2026.** Bản trước ghi "tự đăng ký thử một
+   buổi chiều, rẻ hơn mọi suy đoán" và giao cho anh. Nhưng đường in-house developer đòi một
+   **tài khoản TikTok Shop đã kích hoạt** để liên kết, và anh không có shop nến. Muốn thử thì
+   phải mượn tài khoản của chị ấy — đúng thứ [04](04-DAM-PHAN.md) §7 đặt làm lằn ranh đỏ ở
+   chiều ngược lại.
+
+   Việc của anh ở buổi gặp không phải là "em thử rồi", mà là **hỏi chị ấy có sẵn lòng bỏ ra 15
+   phút trong Seller Centre để thử không**. Bài học chung: cột "ai đóng, bằng cách nào" trong
+   bảng câu hỏi mở phải được **thử lại một lần**, chứ không phải viết ra rồi tin. Đây là dòng
+   duy nhất trong bảng ấy giao cho anh một việc anh không có quyền làm.
 
 ---
 
@@ -221,7 +227,7 @@ Mỗi dòng có cách đóng cụ thể. Xếp theo mức ảnh hưởng.
 | 2 | Phí cố định theo ngành hàng của Shopee là bao nhiêu? Ba nguồn cho ba khoảng khác nhau | **Mở Seller Centre, chọn một đơn đã hoàn tất, xem dòng khấu trừ. Hai phút.** | chị ấy, ngay tại buổi gặp |
 | 3 | Mức hoa hồng TikTok Shop thật của ngành nến? (dải 2–16%, mặc định 14%) | Xem trong back office TikTok Shop của chị ấy | chị ấy, ngay tại buổi gặp |
 | 4 | Shop 5–10 đơn/ngày có đủ điều kiện mở API Shopee ở VN không? | `https://banhang.shopee.vn/edu/article/8450` và `https://banhang.shopee.vn/edu/article/8451` — **là trang JS, không đọc được bằng máy, PHẢI MỞ BẰNG TRÌNH DUYỆT** | anh, 15 phút |
-| 5 | Cá nhân VN chỉ có CCCD đăng ký được "seller in-house developer" của TikTok Shop không? | **Tự đăng ký thử một buổi chiều.** Rẻ hơn mọi suy đoán | anh |
+| 5 | Cá nhân VN chỉ có CCCD đăng ký được "seller in-house developer" của TikTok Shop không? | Thử trong Seller Centre — **chỉ mở được từ shop đã kích hoạt**, nên anh không tự làm được | **chị ấy, sau buổi gặp** |
 | 6 | VN thuộc nhóm nào trong quy trình rà soát pháp lý của TikTok (bắt buộc / tuỳ trường hợp)? | Như trên, hỏi trong quá trình đăng ký | anh |
 | 7 | Thông tin Lazada "Seller In-house APP, duyệt 1–3 ngày" có đúng không? Nguồn hiện tại là một SDK bên thứ ba | Lazada Open Platform, trang chính thức | anh — **ưu tiên thấp, Lazada chỉ 0,7% doanh thu** |
 | 8 | Shopify Payments có dùng được ở VN không? | Trang Shopify Payments, chọn quốc gia VN | anh, 10 phút |

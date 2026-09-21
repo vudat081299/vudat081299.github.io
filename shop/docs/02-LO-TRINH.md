@@ -107,7 +107,7 @@ hạn đó. Xem [05-KIEN-TRUC.md](05-KIEN-TRUC.md).
 
 ## Chặng 1 — biến nó thành trang thật
 
-**Nỗi đau:** chị ấy không sở hữu kênh nào. Mỗi đơn qua sàn nộp một khoản phí (21% trên TikTok
+**Nỗi đau đang GIẢ ĐỊNH** (phải xác nhận ở buổi gặp, xem [04](04-DAM-PHAN.md) §2)**:** chị ấy không sở hữu kênh nào. Mỗi đơn qua sàn nộp một khoản phí (21% trên TikTok
 ở mức mặc định — [01](01-BOI-CANH-VA-CO-HOI.md) §2), và chị ấy không có bản ghi khách hàng của
 chính mình. Cái link trong bio Instagram đang trỏ vào một listing trông giống 743 shop khác
 [đã kiểm: metric.vn — 744 shop cùng ngành].
@@ -151,7 +151,7 @@ không có ai tới, hoặc tới rồi không tin. Hai cái đó không chữa 
 **Điều kiện mở:** chặng 1 qua được ngưỡng, **và** chị ấy nói ra rằng việc chép tay đơn đang mệt.
 Không mở vì "trang cần có backend".
 
-**Nỗi đau:** đơn đến dưới dạng một đoạn chữ khách tự sao chép rồi nhắn. Chị ấy phải chép lại.
+**Nỗi đau đang GIẢ ĐỊNH** (phải xác nhận ở buổi gặp, xem [04](04-DAM-PHAN.md) §2)**:** đơn đến dưới dạng một đoạn chữ khách tự sao chép rồi nhắn. Chị ấy phải chép lại.
 Tiền về thì kiểm bằng mắt trong app ngân hàng. Mã VietQR **chỉ hiển thị số tiền — nó không báo
 cho máy chủ biết tiền đã về** [đã kiểm: cơ chế Napas247]. Toàn bộ chặng này tồn tại để đóng
 đúng cái vòng lặp đó.
@@ -188,7 +188,7 @@ tại — không xây. Giữ tay, và quay lại chặng 3. Một hệ thống t
 **Điều kiện mở:** có đủ đơn trực tiếp để đo — ít nhất **100 đơn** làm nền, nếu không thì mọi
 phần trăm đọc được đều là nhiễu.
 
-**Nỗi đau:** mỗi đơn một cây nến. Ở 300.000₫ thì nến là **quà**, và quà thì mua theo hộp.
+**Nỗi đau đang GIẢ ĐỊNH** (phải xác nhận ở buổi gặp, xem [04](04-DAM-PHAN.md) §2)**:** mỗi đơn một cây nến. Ở 300.000₫ thì nến là **quà**, và quà thì mua theo hộp.
 
 **Giả thuyết:** hộp quà + thiệp viết tay nâng AOV mà không cần thêm một lượt truy cập nào.
 
@@ -218,7 +218,7 @@ Shopee — **không phải một ROI đã lượng hoá**.
 **Điều kiện mở:** đã có một danh sách khách trực tiếp đủ lớn để nhắn lại có nghĩa. Bao nhiêu là
 đủ thì phụ thuộc chặng 1–3 ra bao nhiêu đơn.
 
-**Nỗi đau:** nến cháy hết rồi thì khách mua ở đâu? Hiện tại: chỗ nào tình cờ thấy trước. Chị ấy
+**Nỗi đau đang GIẢ ĐỊNH** (phải xác nhận ở buổi gặp, xem [04](04-DAM-PHAN.md) §2)**:** nến cháy hết rồi thì khách mua ở đâu? Hiện tại: chỗ nào tình cờ thấy trước. Chị ấy
 không biết ai đã mua gì, nên không nhắc được ai.
 
 **Giả thuyết:** nến là hàng tiêu hao có **đồng hồ mua lại nằm sẵn trong sản phẩm** — trường
@@ -269,7 +269,7 @@ tệ hơn của phần mềm đã có sẵn.
 | **Đồng bộ sàn** (Shopee/TikTok/Lazada) | **Chưa biết có đủ điều kiện mở API không.** Tài liệu Odoo nói nhiều vùng đòi số đơn tối thiểu hoặc một hạng người bán [đã kiểm: tài liệu Odoo] — shop 5–10 đơn/ngày **có thể không đủ điều kiện**. Xây một thứ có thể không được phép chạy là cách hỏng đắt nhất. Xác minh trước, xem [03](03-DOI-THU-VA-TICH-HOP.md) §3. |
 | **App di động** | Một website chạy tốt trên điện thoại làm đúng việc đó, không cần ai cài gì. |
 | **Tích điểm / thẻ thành viên** | Cần lưu lượng mà chị ấy chưa có. Ở 210 đơn/tháng thì nhớ mặt khách còn nhanh hơn. |
-| **Chatbot / AI tư vấn** | Quiz tĩnh ở chặng 0 giải quyết phần lớn câu hỏi lặp lại, với chi phí vận hành bằng 0 và không bao giờ trả lời bịa. |
+| **Chatbot / AI tư vấn** | Chỉ đáng bàn **sau khi** biết mỗi ngày có bao nhiêu tin nhắn hỏi chọn mùi. Nếu quiz tĩnh đã cắt được phần lớn thì không cần; nếu quiz không cắt được gì thì chatbot cũng không. Hai đằng đều chờ **cùng một con số** — và con số ấy chưa ai đo. |
 | **Hộp đăng ký định kỳ (subscription)** | Cần tỉ lệ mua lại đã chứng minh. Đó là kết quả của chặng 4, không phải đầu vào. |
 | **Đa ngôn ngữ** | Không có bằng chứng nào về khách nước ngoài. |
 | **Đánh giá của khách — khi chưa có khách thật** | Repo đã có luật này rồi: **không bịa đánh giá**. Đánh giá giả trên một shop bán thật là lừa người mua. Có khách thật thì thêm thật. |

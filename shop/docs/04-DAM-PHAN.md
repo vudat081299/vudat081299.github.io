@@ -8,6 +8,65 @@ hỏi phải hỏi, vì ở buổi này **lắng nghe chính là sản phẩm**.
 
 ---
 
+## 0. Gọi cho người bạn chung trước, hai mươi phút
+
+**Đây là việc rẻ nhất trong cả bộ tài liệu, và nó đang bị bỏ trống hoàn toàn.** Mười lăm tài
+liệu, không một dòng nào về người đã giới thiệu — trong khi chính người đó là **nguồn của cả năm
+dữ kiện** ta đang có, và là người duy nhất trên đời có thể biến năm dữ kiện thành mười lăm,
+**miễn phí, trước buổi gặp**.
+
+Mọi thử nghiệm ở [01 §5](01-BOI-CANH-VA-CO-HOI.md) đều tốn thời gian của chị ấy. Cuộc gọi này
+không tốn gì của ai.
+
+Sáu câu, theo thứ tự này:
+
+1. **Chị ấy nghĩ buổi này là buổi gì?** — Cà phê nể bạn? Hay chị ấy đang thật sự tìm người làm
+   web? Hai kịch bản này cần hai cách mở đầu khác hẳn nhau, và đoán sai là hỏng ngay phút đầu.
+2. **Cậu đã nói gì về tôi?** — Nếu bạn đã lỡ dựng lên một kỳ vọng ("thằng này giỏi lắm, làm
+   được hết") thì phải biết để hạ xuống, chứ đừng để chị ấy tự phát hiện.
+3. **Chị ấy có hay than chuyện gì về việc bán hàng không?** — Một câu than thật đáng giá hơn cả
+   mục §2 dưới đây. Nó nói cho biết nút thắt nằm ở đâu **trước khi** phải hỏi.
+4. **Chị ấy muốn shop to lên hay giữ nhỏ?** — Đây là câu có thể **giết cả dự án**, và giết nó
+   trước khi tốn một buổi chiều thì tốt hơn nhiều. Người cố tình giữ nhỏ không cần đòn bẩy nào
+   trong tài liệu này.
+5. **Chị ấy đã thuê ai làm web bao giờ chưa? Có bị hớ không?** — Nếu từng bị một agency làm cho
+   một trang chết thì mọi câu của Đạt sẽ bị nghe qua cái lọc ấy.
+6. **Có chuyện gì không nên nhắc không?** — Chuyện riêng, chuyện làm ăn cũ, một người cũ.
+
+Và một câu cho chính mình sau cuộc gọi: **nếu bạn chung nói "chị ấy chỉ đi cho vui thôi", thì có
+còn nên đi không?** Câu trả lời có thể vẫn là có — nhưng khi ấy đi để làm quen, không phải đi để
+đàm phán, và hai việc đó chuẩn bị khác nhau.
+
+---
+
+## 0b. Đạt muốn gì từ việc này — trả lời trước khi đi
+
+Cả bộ tài liệu này nói rất kỹ về việc chị ấy cần gì. Nó **không** nói Đạt cần gì, và không ai
+đàm phán được khi chưa biết mình muốn gì.
+
+Ba câu, tự trả lời bằng chữ trước khi đi:
+
+- **Kết quả nào làm buổi này đáng?** Tiền? Một dự án thật để học? Một người bạn làm ăn? Một thứ
+  bỏ vào hồ sơ? Bốn câu trả lời này dẫn tới bốn cấu trúc hợp tác khác nhau ở §5, và **không có
+  câu nào sai** — chỉ có câu không được nói ra thì nguy hiểm.
+- **Mỗi tuần thật sự bỏ ra được bao nhiêu giờ?** Không phải con số nghe cho hay. Đạt đang đi làm
+  toàn thời gian và đang học cao học. Nếu con số thật là ba giờ một tuần thì cấu trúc (b) và (d)
+  ở §5 là hứa suông, và hứa suông với một người quen chung thì mất cả quan hệ chứ không chỉ mất
+  dự án.
+- **Nếu không có thoả thuận nào thì sao?** Trả lời được câu này thì mới có quyền nói không. Câu
+  trả lời ở đây khá dễ chịu: cái đã dựng vẫn còn, vẫn bỏ hồ sơ được, và Đạt vừa học được cách
+  một shop thật vận hành. **Đó là một phương án dự phòng tử tế** — người có phương án dự phòng
+  tử tế thì đàm phán bình tĩnh hơn hẳn.
+
+Một chuyện nữa, không phải chuyện đàm phán nhưng phải nghĩ trước: **Đạt đang làm cho một công ty
+phần mềm bán lẻ, và bộ tài liệu này khuyên chị ấy dùng KiotViet.** Hai điều cần tự kiểm:
+hợp đồng lao động có điều khoản nào về làm ngoài hoặc về sản phẩm cạnh tranh không; và nếu có
+khuyến nghị KiotViet thật thì **nói thẳng rằng mình làm ở đó**. Lời khuyên ấy vẫn đúng
+([adr/0004](adr/0004-khong-xay-lai-phan-mem-ban-hang.md)) — nhưng nó chỉ giữ được sức nặng khi
+người nghe biết ai đang nói. Để chị ấy tự phát hiện sau thì mất sạch.
+
+---
+
 ## 1. Tư thế: không bán phần mềm, mà thử việc làm cộng sự
 
 Anh không đến để bán một trang web. Anh đến với một thứ chạy được, **đã có sẵn, không tính tiền
@@ -201,7 +260,7 @@ website + đồng bộ sàn ([03](03-DOI-THU-VA-TICH-HOP.md) §2).
 | **Đúng khi** | Chị ấy cần đổi thường xuyên; anh muốn có lý do ở lại; và nó vừa với dòng tiền của chị ấy |
 | **Hỏng thế nào** | **Tháng nào chị ấy cũng sẽ so với Nhanh.vn.** Nếu thu hơn ~450k thì phải nói được phần chênh mua thêm cái gì. Và ở 500k/tháng, quy ra giờ thì thấp hơn mọi mức hợp lý cho trình độ của anh — ức chế đến vào khoảng tháng thứ tư và giết nó |
 | **Hỏng cho chị ấy thế nào** | Không có người trực hỗ trợ. Anh bận thi giữa kỳ thì trang đứng đó |
-| **Ghi vào giấy** | **Chốt trần**: bao nhiêu thay đổi nhỏ mỗi tháng, thế nào là "nhỏ". Thời gian phản hồi anh **thật sự giữ được**, không phải thời gian nghe cho hay. Thời hạn báo trước khi dừng. Dừng rồi chị ấy giữ lại được gì. Phí SePay ~120k/tháng tính vào hay tính riêng |
+| **Ghi vào giấy** | **Chốt trần**: bao nhiêu thay đổi nhỏ mỗi tháng, thế nào là "nhỏ". Thời gian phản hồi anh **thật sự giữ được**, không phải thời gian nghe cho hay. Thời hạn báo trước khi dừng. Dừng rồi chị ấy giữ lại được gì. Phí SePay ~120k/tháng tính vào hay tính riêng. **Và ai nhìn thấy dòng tiền**: để webhook báo-có chạy, tài khoản SePay phải nối vào tài khoản ngân hàng của chị ấy, và người dựng hệ thống sẽ thấy **mọi khoản tiền vào** của tài khoản đó — gồm cả khoản không liên quan shop. Với hai người **chưa từng gặp nhau** thì đó là mức tin cậy rất lớn, không phải một dòng chi phí. Mặc định đúng: **chị ấy tự tạo tài khoản SePay bằng số điện thoại của chị ấy**, rồi chỉ đưa khoá webhook — anh không có quyền xem lịch sử giao dịch. Nói ra trước khi bị hỏi, giống chuyện tên miền |
 
 ### (c) Ăn chia trên doanh thu kênh trực tiếp
 
@@ -281,6 +340,7 @@ Không ai bán landing page mà nhắc chuyện phạt 10–20 triệu. Đó ch�
 | Phút | Làm gì | Ghi chú |
 |---|---|---|
 | 0–10 | Chào hỏi. Một câu về việc anh là ai và vì sao đến | **Không phải bài chào hàng.** "Em làm phần mềm, em có làm thử một trang cho shop của chị, em muốn hỏi chị vài câu về cách chị đang bán" |
+| ↑ | **Học thuộc câu này**, vì chị ấy gần như chắc chắn hỏi giá ở phút thứ ba | *"Em chưa báo giá được đâu chị, thật lòng — em mới biết đúng năm thứ về shop của chị. Hôm nay em muốn hỏi đủ để biết cái em làm có đáng không đã; nếu không đáng thì em nói luôn là không đáng. Chốt tiền để buổi sau."* §6 cấm báo giá ở buổi một, nhưng cấm mà không có câu thay thế thì lúc bị hỏi sẽ ứng biến — và ứng biến dưới áp lực là lúc người ta buột miệng một con số |
 | 10–20 | **Đưa điện thoại cho chị ấy.** Mở trang ra, để chị ấy tự cuộn. **Im lặng** | Nhìn chỗ chị ấy dừng lại, chỗ chị ấy lướt qua, chỗ chị ấy nhíu mày. **Không giải thích tính năng** |
 | 20–25 | **"Cái gì sai ạ?"** | Chị ấy sẽ sửa ngay tên mùi và giá. Đó chính là lúc nội dung bắt đầu được bàn giao, miễn phí |
 | 25–60 | **Hỏi — nhóm A và nhóm B.** Ghi số ra giấy | **Đây là phần chính của buổi.** Nếu hết giờ thì cắt phần khác, đừng cắt phần này |
