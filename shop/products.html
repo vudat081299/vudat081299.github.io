@@ -80,7 +80,7 @@
       Cuộn xuống để đi qua từng mùi. Màu của cả trang đổi theo mùi bạn đang đọc —
       mỗi mùi có một không khí riêng, và đó là cách nhanh nhất để thấy chúng khác nhau chỗ nào.
     </p>
-    <div id="dataError"></div>
+    <div id="dataError" role="alert"></div>
   </div>
 
   <nav class="rail" id="scentRail" aria-label="Chuyển nhanh giữa các mùi" data-needs-data></nav>
@@ -129,7 +129,7 @@
   <div class="drawer__foot" id="cartFoot"></div>
 </aside>
 
-<div class="toast" id="toast"><span class="ms ms--sm">check_circle</span><span id="toastText"></span></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"><span class="ms ms--sm">check_circle</span><span id="toastText"></span></div>
 <script src="assets/shop.js"></script>
 </body>
 </html>

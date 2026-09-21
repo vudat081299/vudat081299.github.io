@@ -142,10 +142,6 @@ function check(name, ok, detail) {
     await g.reload({ waitUntil: 'networkidle' }); await g.waitForTimeout(500);
     await g.click('[data-box="b3"]'); await g.waitForTimeout(250);
     for (const i of [0, 1, 2]) { await g.click(`[data-slot="${i}"][data-scent="s1"]`); await g.waitForTimeout(160); }
-    const cap = await g.evaluate(() => {
-      const m = document.body.innerHTML.match(/Còn (\d+)/);
-      return m ? +m[1] : null;
-    });
     let lastToast = '';
     for (let i = 0; i < 9; i++) {
       await g.click('#gbAdd'); await g.waitForTimeout(170);
@@ -253,6 +249,35 @@ function check(name, ok, detail) {
     check('font hỏng thì không lộ chữ icon', !fs_.hasIcons && fs_.leaked.length === 0,
           fs_.leaked.length ? 'đang lộ: ' + fs_.leaked.join(', ') : 'icon ẩn, đúng như ADR 0005');
     await fp.close();
+
+    /* 9. localStorage bị chặn (Safari riêng tư trên iOS) thì giỏ không được bốc hơi im lặng.
+     * Lỗi gốc, đo 21/09/2026: bấm Thêm 3 lần, badge hiện 3, toast báo "Đã thêm" cả 3 lần;
+     * bấm "Tới thanh toán" thì giỏ trống trơn, không một lời nào. saveCart() nuốt lỗi.
+     * Cùng lớp với lỗi font: chỉ lộ khi môi trường hỏng, nên phải DỰNG LẠI môi trường ấy. */
+    const np = await ctx.newPage();
+    await np.addInitScript(() => {
+      const boom = () => { throw new Error('storage blocked'); };
+      try {
+        Object.defineProperty(window, 'localStorage', {
+          configurable: true,
+          get() { return { getItem: boom, setItem: boom, removeItem: boom, clear: boom }; },
+        });
+      } catch (e) {}
+    });
+    await np.goto(BASE + 'products.html', { waitUntil: 'networkidle' });
+    await np.waitForTimeout(600);
+    for (let i = 0; i < 2; i++) {
+      const btn = await np.$('[data-add="nen-01"]');
+      if (btn && (await btn.isEnabled())) { await btn.click(); await np.waitForTimeout(220); }
+    }
+    const warned = await np.evaluate(() =>
+      /chặn lưu trữ/.test(document.querySelector('#toastText')?.textContent || ''));
+    await np.goto(BASE + 'checkout.html', { waitUntil: 'networkidle' });
+    await np.waitForTimeout(600);
+    const kept = await np.evaluate(() => +(document.querySelector('#cartCount')?.textContent || 0));
+    check('localStorage bị chặn: giỏ không mất im lặng', warned || kept > 0,
+          kept > 0 ? 'giỏ sống qua trang nhờ sessionStorage (' + kept + ')' : 'không cảnh báo, giỏ về 0');
+    await np.close();
 
     check('không có lỗi JS trên trang nào', jsErrors.length === 0, jsErrors.slice(0, 2).join(' | '));
   } finally {

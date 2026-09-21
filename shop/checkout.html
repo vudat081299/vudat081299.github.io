@@ -74,7 +74,7 @@
   <div class="wrap phead">
     <p class="crumb"><a href="index.html">Trang chủ</a> <span class="ms ms--sm">chevron_right</span> <a href="products.html">Mùi hương</a> <span class="ms ms--sm">chevron_right</span> <span>Thanh toán</span></p>
     <h1 class="display" style="font-size:clamp(36px,6vw,68px)">Thanh toán</h1>
-    <div id="dataError"></div>
+    <div id="dataError" role="alert"></div>
   </div>
 
   <div class="wrap" style="padding-bottom:clamp(60px,9vw,110px)">
@@ -159,7 +159,7 @@
   <div class="drawer__foot" id="cartFoot"></div>
 </aside>
 
-<div class="toast" id="toast"><span class="ms ms--sm">check_circle</span><span id="toastText"></span></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"><span class="ms ms--sm">check_circle</span><span id="toastText"></span></div>
 <script src="assets/shop.js"></script>
 </body>
 </html>

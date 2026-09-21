@@ -315,19 +315,42 @@ function artHTML(p, crop) {
    GIỎ HÀNG — chung cho cả ba trang, nằm ở localStorage.
    ═════════════════════════════════════════════════════════════════════════ */
 var cart = [];
-try { cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch (e) { cart = []; }
+/* Đọc localStorage trước, rồi sessionStorage — cặp với saveCart() bên dưới, vốn rơi
+   xuống sessionStorage khi localStorage bị chặn. Thiếu nhánh thứ hai thì giỏ vẫn mất
+   khi sang trang, chỉ là mất chậm hơn một nhịp. */
+try {
+  cart = JSON.parse(localStorage.getItem(CART_KEY) || sessionStorage.getItem(CART_KEY) || '[]');
+} catch (e) {
+  try { cart = JSON.parse(sessionStorage.getItem(CART_KEY) || '[]'); } catch (e2) { cart = []; }
+}
 if (!Array.isArray(cart)) cart = [];
 /* Dòng số lượng <= 0 phải bị loại NGAY khi nạp. Bản trước chỉ lọc sản phẩm không còn
    tồn tại, nên một dòng q=0 vẫn hiện thành một món trong giỏ trong khi tổng tiền không
    tính nó — giỏ nói một đằng, hoá đơn nói một nẻo. */
 var rawLen = cart.length;
 cart = cart.filter(function (c) { return c && c.id && Number(c.q) > 0; });
-if (cart.length !== rawLen) {
-  try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {}
-}
+var needsResave = cart.length !== rawLen;
+
+if (needsResave) saveCart();
 
 var D = null;
-function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {} }
+/* Nuốt lỗi ở đây thì giỏ bốc hơi trong im lặng. Đo được 21/09/2026 với localStorage bị
+   chặn (đúng hành vi Safari riêng tư trên iOS): bấm Thêm 3 lần ở trang Mùi hương, badge
+   hiện 3, toast báo "Đã thêm" cả 3 lần — bấm "Tới thanh toán" thì giỏ trống trơn. Không
+   lỗi JS, trang vẫn đẹp, khách không hiểu vì sao.
+   Trang đã có đường lỗi tử tế cho fetch; storage phải có đường tương đương. Rơi xuống
+   sessionStorage để giỏ ít nhất sống hết phiên, và nói ra đúng một lần. */
+var storageWarned = false;
+function saveCart() {
+  var body = JSON.stringify(cart);
+  try { localStorage.setItem(CART_KEY, body); return true; } catch (e) {}
+  try { sessionStorage.setItem(CART_KEY, body); } catch (e2) {}
+  if (!storageWarned) {
+    storageWarned = true;
+    toast('Trình duyệt đang chặn lưu trữ — giỏ chỉ sống trong phiên này');
+  }
+  return false;
+}
 function byId(id) {
   if (!D) return null;
   /* Hộp quà là một món GHÉP: nó không có trong D.products, cấu hình của nó nằm ngay
@@ -399,10 +422,17 @@ function giftPrice(g) {
   (g.scents || []).forEach(function (k) {
     var pr = productOfScent(k); if (pr) candles += pr.price;
   });
-  /* Làm tròn tiền giảm xuống nghìn đồng: 8% của 552.000 là 44.160 và không ai viết
-     hoá đơn có số lẻ 160 đồng. Làm tròn XUỐNG nên khách không bao giờ trả nhiều hơn
-     con số phần trăm đã hứa. */
-  var off = Math.floor(candles * (box.off || 0) / 100 / 1000) * 1000;
+  /* Làm tròn tiền giảm LÊN nghìn đồng, và chiều làm tròn là chuyện của lời hứa chứ
+     không phải của thẩm mỹ hoá đơn.
+     Bản trước dùng Math.floor kèm comment "làm tròn XUỐNG nên khách không bao giờ trả
+     nhiều hơn con số phần trăm đã hứa" — nói ngược. Làm tròn TIỀN GIẢM xuống thì giảm
+     ít đi, tức khách trả NHIỀU hơn. Đo được ở giá 185.000: hộp ba hứa "rẻ hơn 14%"
+     nhưng trang tính 555.000 − 77.000 = 478.000, trong khi 14% đúng là 77.700 — khách
+     trả thừa 700 ₫ và tỉ lệ thật là 13,87%, thấp hơn con số đã in ra.
+     Với bộ giá hiện tại (300.000 chẵn) chưa cắn, nhưng đây là trang sẽ đổi giá.
+     Math.ceil làm con số phần trăm in trên thẻ thành SÀN: khách luôn được ít nhất
+     chừng ấy, không bao giờ ít hơn. */
+  var off = Math.ceil(candles * (box.off || 0) / 100 / 1000) * 1000;
   var card = giftCard(g.card), wrap = giftWrap(g.wrap);
   var extra = ((card && card.price) || 0) + ((wrap && wrap.price) || 0);
   return { candles: candles, off: off, extra: extra, total: candles - off + extra };
@@ -708,10 +738,20 @@ fetch('data/shop.json', { cache: 'no-cache' })
     $$('[data-needs-data]').forEach(function (el) { el.style.display = 'none'; });
     var host = $('#dataError');
     if (!host) return;
-    host.innerHTML = '<div class="oops"><b>Chưa nạp được nội dung cửa hàng.</b><br>' + esc(err.message) +
-      ' — trang đọc <code>data/shop.json</code> bằng fetch nên phải chạy qua HTTP. ' +
-      'Mở terminal ở thư mục gốc của repo, chạy <code>python3 -m http.server</code> ' +
-      'rồi vào <code>http://localhost:8000/shop/</code>.</div>';
+    /* Lời khuyên phải khớp LOẠI lỗi. Bản trước khuyên "chạy qua HTTP" cho mọi trường
+       hợp — kể cả khi máy chủ trả HTTP 500, tức là đang chạy qua HTTP rồi. Một cổng nói
+       sai nguyên nhân làm người đọc đi sửa nhầm chỗ. */
+    var m = String(err.message || '');
+    var tip = /^HTTP /.test(m)
+      ? ' — máy chủ có trả lời, nhưng không trả được file. Kiểm tra <code>shop/data/shop.json</code> ' +
+        'có tồn tại và đọc được không.'
+      : /JSON|Unexpected|parse/i.test(m)
+      ? ' — file có đó nhưng sai cú pháp JSON. Chạy <code>python3 -m json.tool shop/data/shop.json</code> ' +
+        'để xem hỏng ở ký tự nào.'
+      : ' — trang đọc <code>data/shop.json</code> bằng fetch nên phải chạy qua HTTP. ' +
+        'Mở terminal ở thư mục gốc của repo, chạy <code>python3 -m http.server</code> ' +
+        'rồi vào <code>http://localhost:8000/shop/</code>.';
+    host.innerHTML = '<div class="oops"><b>Chưa nạp được nội dung cửa hàng.</b><br>' + esc(m) + tip + '</div>';
   });
 
 function boot(d) {
@@ -823,11 +863,6 @@ function renderLanding() {
     });
   }
 }
-function productOfScent(k) {
-  for (var i = 0; i < D.products.length; i++) if (D.products[i].scent === k) return D.products[i];
-  return null;
-}
-
 /* ═════════════════════════════════════════════════════════════════════════
    TRANG MÙI HƯƠNG
    Mỗi mùi là một section chiếm trọn màn hình và mang bộ màu riêng. Khi cuộn
@@ -1368,6 +1403,13 @@ function renderFinder() {
   document.addEventListener('keydown', function (e) {
     if (FStep < 0 || FStep >= FQ.length) return;
     if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+    /* Ngăn kéo giỏ là aria-modal="true" — đang mở thì nó là toàn bộ thế giới của người
+       dùng, và phím ở đây không được với qua lớp phủ. Đo được 21/09/2026: đang ở Câu 1/5,
+       mở giỏ, gõ "2" → quiz nhảy sang Câu 2/5 sau lưng lớp phủ. Một câu trả lời được ghi
+       mà khách chưa từng nhìn thấy, rồi kết quả cuối dựa lên nó. */
+    var over = $('#drawer'), menu = $('#sheet');
+    if ((over && over.classList.contains('is-open')) ||
+        (menu && menu.classList.contains('is-open'))) return;
     if (e.key === 'Backspace' && FStep > 0) { e.preventDefault(); fGo(FStep - 1); return; }
     var n = parseInt(e.key, 10);
     if (!n) return;

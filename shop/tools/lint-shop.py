@@ -397,6 +397,14 @@ def check_data(path):
     # 600.000 ₫ thì k = 1, cổng im, nhưng k = 1 nghĩa là MỘT cây nến đã vượt ngưỡng — tức đơn
     # nào cũng miễn ship và thanh "mua thêm bao nhiêu nữa" không bao giờ hiện gì. Đó đúng là
     # ca hỏng mà phép kiểm này sinh ra để bắt, nên chặn dưới phải là 2.
+    # Hai số này bị hoán đổi thì cổng cũ vẫn xanh: nó chỉ hỏi "số này có xuất hiện trong
+    # đoạn Giao hàng không", mà đoạn ấy nhắc cả hai số nên hoán vị vẫn khớp. Hậu quả: đơn
+    # 300.000 ₫ phải trả 500.000 ₫ tiền ship. Quan hệ giữa hai trường mới là chỗ tiền nằm.
+    if isinstance(lb.get('ship_fee'), int) and isinstance(lb.get('free_ship'), int) \
+       and lb['ship_fee'] >= lb['free_ship']:
+        err.append('phí ship %s >= ngưỡng miễn phí ship %s — hai con số đang bị hoán đổi'
+                   % (vnd(lb['ship_fee']), vnd(lb['free_ship'])))
+
     prices = [x.get('price') for x in (d.get('products') or []) if isinstance(x.get('price'), int)]
     fs = lb.get('free_ship')
     if prices and isinstance(fs, int) and fs > 0:
@@ -448,7 +456,37 @@ def repeated_text(d):
         out.append(('dòng tin cậy ở hero', t.get('text', '')))
     for m in (d.get('payment') or {}).get('methods') or []:
         out.append(('mô tả cách thanh toán', m.get('desc', '')))
-    return [(kind, t) for kind, t in out if len(t.strip()) >= 8]
+
+    # Bổ sung 21/09/2026. Trước đó phép kiểm này chỉ soi 7 họ chuỗi trên, tức là luật số 1
+    # của thư mục ("chữ của khối lặp nằm ở data") chỉ được canh trên khoảng một phần ba nội
+    # dung. Thử phá: chép nguyên một câu hỏi Tìm mùi + mô tả Hộp đôi + đoạn Giao hàng vào
+    # gift.html → cổng vẫn xanh, exit 0. Hai khối lớn nhất thêm vào sau này (quiz, hộp quà)
+    # lại là hai khối không ai canh.
+    for q in (d.get('quiz') or {}).get('questions') or []:
+        out.append(('câu hỏi Tìm mùi', q.get('q', '')))
+        out.append(('gợi ý câu hỏi', q.get('hint', '')))
+        for a in q.get('answers') or []:
+            out.append(('đáp án Tìm mùi', a.get('t', '')))
+            out.append(('phụ đề đáp án', a.get('s', '')))
+    gi = d.get('gift') or {}
+    for key, label in (('boxes', 'cỡ hộp quà'), ('cards', 'thiệp'), ('wraps', 'cách gói')):
+        for x in gi.get(key) or []:
+            out.append(('tên ' + label, x.get('name', '')))
+            out.append(('mô tả ' + label, x.get('desc', '')))
+    for st in gi.get('steps') or []:
+        out.append(('bước gói quà', st.get('t', '')))
+        out.append(('mô tả bước gói quà', st.get('d', '')))
+    for sh in d.get('shipping') or []:
+        out.append(('tiêu đề giao hàng', sh.get('title', '')))
+        out.append(('đoạn giao hàng', sh.get('desc', '')))
+    for c in d.get('scents') or []:
+        out.append(('chỗ dùng của mùi', c.get('slot', '')))
+        out.append(('lúc dùng của mùi', c.get('when', '')))
+    for pr in d.get('products') or []:
+        out.append(('phụ đề sản phẩm', pr.get('sub', '')))
+        out.append(('hướng dẫn giữ nến', pr.get('care', '')))
+
+    return [(kind, t) for kind, t in out if isinstance(t, str) and len(t.strip()) >= 8]
 
 
 def check_page(path, data):
@@ -527,6 +565,19 @@ def check_shell(pages):
     """
     err = []
     shots = {}
+
+    # Năm trang phải nạp ĐỦ bộ tài nguyên khung. Không phép kiểm nào bắt buộc điều này
+    # trước 21/09/2026 — thử phá bằng cách xoá hẳn <script src="assets/shop.js"> khỏi
+    # checkout.html thì cổng vẫn xanh, exit 0. Hậu quả nặng hơn "thiếu tính năng": khối
+    # inline vẫn gắn class `js` lên <html>, mà quy tắc `html.js .rv { opacity: 0 }` chờ
+    # shop.js gỡ ra — nên trang trắng bong và cổng im.
+    for path in pages:
+        raw = path.read_text(encoding='utf-8', errors='replace')
+        for asset in ('assets/shop.css', 'assets/shop.js'):
+            if asset not in raw:
+                err.append('%s: không nạp %s — trang sẽ hỏng và không cổng nào khác thấy'
+                           % (path.name, asset))
+
     for path in pages:
         raw = path.read_text(encoding='utf-8', errors='replace')
         for name, rx in (('thanh điều hướng', RE_NAV), ('menu điện thoại', RE_SHEET), ('chân trang', RE_FOOT)):

@@ -76,7 +76,7 @@
        một-câu-một-màn là dời TIÊU ĐIỂM sang tiêu đề câu mới — trình đọc tự đọc chỗ
        vừa nhận tiêu điểm, và người dùng bàn phím không bị văng về đầu trang. -->
   <section class="wrap sf" id="sfStage">
-    <div id="dataError"></div>
+    <div id="dataError" role="alert"></div>
 
     <!-- Ba loại màn — giới thiệu, câu hỏi, kết quả — do JS bật tắt. Câu hỏi và đáp án
          nằm ở data/shop.json, không nằm ở đây: thêm một câu là thêm một mục vào `quiz`. -->
@@ -139,7 +139,7 @@
   <div class="drawer__foot" id="cartFoot"></div>
 </aside>
 
-<div class="toast" id="toast"><span class="ms ms--sm">check_circle</span><span id="toastText"></span></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"><span class="ms ms--sm">check_circle</span><span id="toastText"></span></div>
 <script src="assets/shop.js"></script>
 </body>
 </html>
