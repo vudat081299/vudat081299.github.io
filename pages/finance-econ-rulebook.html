@@ -101,6 +101,11 @@
 
   .rb-filterbar { position: sticky; top: 68px; z-index: 5; background: color-mix(in srgb, var(--wb-canvas) 92%, transparent); backdrop-filter: blur(6px); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 14px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 10px; }
   .rb-chip { cursor: pointer; user-select: none; }
+  /* Chip lọc cao 25px — dưới ngưỡng 32px cho một vùng bấm bằng ngón tay. Chỉ nâng chiều
+     cao vùng bấm ở khổ điện thoại; chữ và nền giữ nguyên nên desktop không đổi. */
+  @media (max-width: 480px) {
+    .rb-chip { min-height: 32px; display: inline-flex; align-items: center; }
+  }
   .rb-chip[data-active="false"] { opacity: .6; }
 
   .rb-mini-fanout .wb-card__foot { color: var(--wb-fg-muted); font-size: 12.5px; }
