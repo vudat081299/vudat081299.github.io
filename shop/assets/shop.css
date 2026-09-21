@@ -15,7 +15,12 @@
   --card-2:     #F8F1E6;
   --ink:        #1C1815;
   --ink-2:      #59504A;
-  --ink-3:      #8C8178;
+  /* #8C8178 cũ chỉ đạt 3,56:1 trên --paper, dưới ngưỡng WCAG AA 4,5:1 cho chữ nhỏ — mà
+     --ink-3 dùng đúng cho chữ nhỏ: .gbstep__d 13px, .gbnote 12px, .sfopt__s 12,5px,
+     .sfbar__n và .gbcount 11,5px. Không mục nào được hưởng ngoại lệ "chữ lớn".
+     #756C63 cho 4,82:1 trên paper và 5,06:1 trên card. Có cổng kiểm — xem check_contrast
+     trong tools/lint-shop.py. Nền tối (#8F8478) đo được 5,26:1 và 4,96:1, giữ nguyên. */
+  --ink-3:      #756C63;
   --line:       rgba(28,24,21,.11);
   --line-2:     rgba(28,24,21,.055);
   --ember:      #B0511E;

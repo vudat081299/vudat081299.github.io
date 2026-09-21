@@ -555,6 +555,50 @@ RE_FOOT = re.compile(r'<footer class="foot".*?</footer>', re.S)
 RE_SHEET = re.compile(r'<div class="sheet".*?</div>\s*\n', re.S)
 
 
+def _lum(h):
+    h = h.lstrip('#')
+    c = [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
+    c = [x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+
+
+def _ratio(a, b):
+    l1, l2 = sorted([_lum(a), _lum(b)], reverse=True)
+    return (l1 + 0.05) / (l2 + 0.05)
+
+
+def check_contrast(css):
+    """Chữ thân bài phải đạt WCAG AA 4,5:1 trên nền của nó, ở CẢ HAI chế độ nền.
+
+    Vì sao cần một cổng chứ không phải một lần soi: màu là thứ người ta chỉnh bằng mắt, và
+    mắt trên màn hình tốt trong phòng sáng thì không thấy 3,5:1 khác 4,5:1 ở đâu. Máy thì
+    thấy. Đo được 21/09/2026: --ink-3 để #8C8178, ra 3,56:1 trên --paper — dưới ngưỡng, và
+    nó đang dùng cho toàn chữ 11,5-13px (.gbstep__d, .gbnote, .sfopt__s, .sfbar__n, .gbcount)
+    nên không mục nào được hưởng ngoại lệ "chữ lớn".
+
+    Chỉ kiểm --ink-2 và --ink-3: --ink-1 là chữ chính (luôn dư), còn --ember là màu nhấn
+    dùng cho chữ to và cho nền nút, kiểm chung một ngưỡng sẽ báo oan.
+    """
+    err = []
+    blocks = {}
+    for name, rx in (('sáng', r':root\s*\{([^}]*)\}'),
+                     ('tối', r'\[data-theme=["\']dark["\']\]\s*\{([^}]*)\}')):
+        m = re.search(rx, css)
+        if m:
+            blocks[name] = dict(re.findall(r'--([\w-]+)\s*:\s*(#[0-9A-Fa-f]{6})', m.group(1)))
+
+    for mode, v in blocks.items():
+        for fg in ('ink-2', 'ink-3'):
+            for bg in ('paper', 'card'):
+                if fg not in v or bg not in v:
+                    continue
+                r = _ratio(v[fg], v[bg])
+                if r < 4.5:
+                    err.append('nền %s: --%s (%s) trên --%s (%s) chỉ đạt %.2f:1, dưới ngưỡng '
+                               'WCAG AA 4,5:1 cho chữ nhỏ' % (mode, fg, v[fg], bg, v[bg], r))
+    return err
+
+
 def check_shell(pages):
     """Thanh điều hướng, menu và chân trang phải giống hệt nhau ở cả ba trang.
 
@@ -787,6 +831,7 @@ def main(argv):
     else:
         ce, cn = check_css(css)
         ce += check_centring(pages, css.read_text(encoding='utf-8'))
+        ce += check_contrast(css.read_text(encoding='utf-8'))
         total_err += len(ce); total_note += len(cn)
         if ce:
             print('\nassets/shop.css — LỖI (%d):' % len(ce))
