@@ -44,7 +44,10 @@ jobs:
       - name: pages/
         run: python3 pages/tools/lint-pages.py
       - name: pages/ — cổng kiến thức
-        run: python3 pages/tools/verify-betting-lab.py
+        run: |
+          python3 pages/tools/verify-math-for-ml.py
+          python3 pages/tools/verify-ml.py
+          python3 pages/tools/verify-betting-lab.py
       - name: cooking/
         run: python3 cooking/tools/lint-cooking.py
       - name: shop/

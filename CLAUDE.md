@@ -62,7 +62,14 @@ hình — nặng nhất là **điểm đặt phải được chốt TRƯỚC khi
 không tách được thành `e × tổng điểm` và cả mục "Vì sao" sai mà trang vẫn hiện số đẹp; và dựng lại
 phân phối bằng một lối suy luận **khác** lối trang dùng (xích Markov đối chiếu với công thức bù
 trừ), cộng một lần mô phỏng cả trò chơi bằng Python. Đã thử ngược: sửa lệch một con số thì đỏ, dời
-dòng chốt điểm đặt xuống sau vòng quay thì đỏ. `shop/` cũng có một cổng riêng cùng kiểu vì cùng lý do: đó là một storefront, nơi sai một con
+dòng chốt điểm đặt xuống sau vòng quay thì đỏ.
+
+Nhân tiện, một cái đã sửa cùng lúc: `.github/workflows/gates.yml` trước đó chỉ chạy
+`lint-pages.py`, trong khi bảng ở đầu file này nói lớp 4 chạy cổng của mọi project con.
+Hai cổng `verify-*` cũ vì thế sống duy nhất trên **máy người sửa** suốt từ lúc chúng được
+viết: ai commit từ giao diện web của GitHub, hoặc quên chạy `install-hooks.sh`, thì không
+có gì kiểm lại ~270 con số của hai trang học máy và ~90 con số của trang toán. Nay cả ba
+đều nằm trong gates.yml. `shop/` cũng có một cổng riêng cùng kiểu vì cùng lý do: đó là một storefront, nơi sai một con
 số thì khách trả nhầm tiền. `lint-shop.py` soi thẳng vào `shop/data/shop.json` — giá phải là số
 nguyên dương, giá gạch phải lớn hơn giá bán, và `labels.ship_fee`/`free_ship` phải khớp con số
 viết trong đoạn văn `shipping`. Từ 21/09/2026 nó kiểm thêm **quan hệ giữa hai trường** — chỗ tiền
