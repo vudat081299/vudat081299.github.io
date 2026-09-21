@@ -40,6 +40,37 @@ BALANCED_TAGS = ('div', 'section', 'table', 'ul', 'ol')
 # Anchor tới các đích này luôn hợp lệ, không cần id tương ứng.
 ANCHOR_WHITELIST = {'', 'top'}
 
+# ── Nợ kỹ thuật, ghi thẳng vào repo thay vì để trong đầu ai ────────────────────
+# Ba phép kiểm dưới đây (LỖI 5, 6, 7) đã sạch trên phần lớn trang. Vài trang cũ còn nợ;
+# ghi đúng số đang nợ ở đây để cổng hoạt động như một bánh cóc: trang KHÔNG có tên trong
+# bảng thì phải bằng 0, trang có tên thì chỉ được phép giữ nguyên hoặc giảm — tăng là LỖI.
+# Dọn xong một trang thì xoá dòng của nó đi, đừng nới số lên.
+DEBT = {
+    'svg_vo_danh': {'scooter-maintenance-guide.html': 63, 'jazz-piano-theory.html': 1},
+    'hut_cap':     {'cryptography.html': 15, 'relativity.html': 3,
+                    'scooter-maintenance-guide.html': 2, 'jazz-piano-theory.html': 1},
+    'nhan_tieng_anh': {'cryptography.html': 3},
+}
+
+# Ký tự có dấu tiếng Việt — dùng để biết một chuỗi có phải tiếng Việt hay không.
+VN_CHARS = set('àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ')
+
+RE_SVG_OPEN = re.compile(r'<svg\b[^>]*>', re.I)
+RE_HEADING = re.compile(r'<(h[1-6])\b', re.I)
+RE_ARIA_LABEL = re.compile(r'aria-label="([^"]{3,60})"')
+# Nhãn "chỉ toàn chữ Latin không dấu" — đủ để bắt Home / Open menu / Light / dark,
+# mà không đụng vào tên riêng tiếng Anh nằm trong một câu tiếng Việt.
+RE_PLAIN_LATIN = re.compile(r'[\w\s\-/&().,:0-9×+%]+$')
+
+
+def ratchet(kind, page_name, found, errors, notes):
+    """Bánh cóc: trang chưa có nợ phải bằng 0; trang đang nợ chỉ được giảm."""
+    allowed = DEBT[kind].get(page_name, 0)
+    if found > allowed:
+        errors.append(f'{kind}: {found} chỗ, mức cho phép của trang này là {allowed}')
+    elif found < allowed:
+        notes.append(f'{kind}: còn {found}/{allowed} — đã dọn bớt, hạ số trong DEBT xuống {found}')
+
 
 def strip_code(html: str) -> str:
     """Trả về phần markup thuần — không script, không style, không comment."""
@@ -85,6 +116,42 @@ def check_page(path: pathlib.Path):
         closed = len(re.findall(rf'</{tag}\s*>', markup, re.I))
         if opened != closed:
             errors.append(f'<{tag}> lệch: mở {opened} / đóng {closed}')
+
+    # ── LỖI 5: <svg> không có tên tiếp cận ─────────────────────────────────────
+    # Trang ở đây dạy bằng biểu đồ. Một <svg> không có aria-label / <title> / aria-labelledby
+    # thì trình đọc màn hình bỏ qua hẳn, và nội dung hình biến mất với người dùng đó. Icon
+    # trang trí nằm trong nút đã có nhãn thì đánh aria-hidden="true" — cũng tính là đã xử lý.
+    bare_svg = 0
+    for m in RE_SVG_OPEN.finditer(markup):
+        tag = m.group(0)
+        if any(a in tag for a in ('aria-label', 'aria-labelledby', 'aria-hidden')):
+            continue
+        end = markup.find('</svg>', m.end())
+        if end > 0 and '<title' in markup[m.end():end]:
+            continue
+        bare_svg += 1
+    ratchet('svg_vo_danh', path.name, bare_svg, errors, notes)
+
+    # ── LỖI 6: cây tiêu đề hụt cấp ─────────────────────────────────────────────
+    # h2 nhảy thẳng xuống h4 làm người duyệt trang bằng phím theo cấp tiêu đề mất phương
+    # hướng. Chỉ bắt chiều đi XUỐNG quá một bậc; đi ngược lên bao nhiêu bậc cũng hợp lệ.
+    levels = [int(t[1]) for t in RE_HEADING.findall(markup)]
+    jumps = sum(1 for i in range(1, len(levels)) if levels[i] > levels[i - 1] + 1)
+    ratchet('hut_cap', path.name, jumps, errors, notes)
+
+    # ── LỖI 7: nhãn điều khiển còn tiếng Anh trên trang lang="vi" ──────────────
+    # aria-label là thứ người dùng NGHE. Trang tiếng Việt mà nút đọc lên thành "Open menu"
+    # là lệch ngôn ngữ. Chỉ soi nhãn thuần chữ Latin không dấu, nên "Sáng / Tối" hay một câu
+    # tiếng Việt có kèm tên riêng tiếng Anh đều không bị bắt nhầm.
+    en_labels = 0
+    if re.search(r'<html[^>]*lang="vi"', raw, re.I):
+        for m in RE_ARIA_LABEL.finditer(markup):
+            value = m.group(1)
+            if VN_CHARS & set(value.lower()):
+                continue
+            if RE_PLAIN_LATIN.match(value) and re.search(r'[A-Za-z]{3}', value):
+                en_labels += 1
+    ratchet('nhan_tieng_anh', path.name, en_labels, errors, notes)
 
     # ── XEM: khung trang ───────────────────────────────────────────────────────
     # Cả 8 trang hiện có đủ. Để mức XEM để trang MỚI thiếu thì được nhắc, không bị chặn.

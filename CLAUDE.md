@@ -10,7 +10,7 @@ cách chúng chạy tự động**.
 | `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3, 4 |
 | `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2, 4 |
 | `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` (kiểm cả trang mồ côi trong `pages/`, `cooking/`, và danh sách không công khai) | 2, 4 |
-| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` | 2, 4 |
+| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` + `verify-ml.py` | 2, 4 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2, 4 |
 | `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `sh shop/tools/check.sh` | 1, 2, 3, 4 + chạy thật |
 | các project khác | xem thư mục | — | 4 |
@@ -21,20 +21,38 @@ mở trình duyệt thật và bấm (`shop/tools/smoke.js`) — xem mục dư�
 
 `pages/` và `cooking/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự
 chứa, không có luật nội dung chung để viết ra. Cổng của chúng chỉ kiểm thứ đúng/sai khách quan —
-id trùng, anchor gãy, asset thiếu, thẻ lệch.
+id trùng, anchor gãy, asset thiếu, thẻ lệch — cộng ba thứ nữa thêm ngày 21/09/2026: `<svg>`
+không có tên tiếp cận, cây tiêu đề nhảy quá một bậc, và `aria-label` thuần tiếng Anh trên trang
+`lang="vi"`. Cả ba đều đo được, không phải chuyện thẩm mỹ: một `<svg>` không tên thì trình đọc
+màn hình bỏ qua hẳn, mà mấy trang này dạy bằng biểu đồ.
+
+Ba phép kiểm ấy chạy theo kiểu **bánh cóc**, vì 4 trang cũ còn nợ mà dọn hết thì ngoài phạm vi
+lúc đó. Bảng `DEBT` trong `lint-pages.py` ghi đúng số đang nợ của từng trang: trang **không** có
+tên trong bảng thì phải bằng 0, trang có tên thì chỉ được giữ nguyên hoặc giảm — tăng là LỖI.
+Dọn xong một trang thì **xoá dòng của nó đi, đừng nới số lên**. Nợ nằm trong repo, không nằm
+trong đầu ai — và không trang sạch nào tụt lại được.
 
 `shop/` thì **có** (từ 20/09/2026), vì nó không còn là một trang tự chứa: năm trang dùng chung
 một shell, toàn bộ nội dung nằm ở `data/shop.json`, và giá tiền được suy ra chứ không ghi tay —
 ba thứ ấy là luật, và luật thì phải viết ra. Kèm theo là `shop/docs/`: lộ trình, ADR, sổ nợ, và
 một bộ tài liệu định hướng kinh doanh cho việc đàm phán với chủ shop.
 
-Ngoại lệ duy nhất trong `pages/`: `verify-math-for-ml.py` là cổng **kiến thức**, chỉ chạy khi
-commit chạm `mathematics-for-machine-learning.html`. Trang ấy nói ~90 con số cụ thể (định thức,
+Hai ngoại lệ trong `pages/`, đều là cổng **kiến thức**. Cái thứ nhất, `verify-math-for-ml.py`,
+chỉ chạy khi commit chạm `mathematics-for-machine-learning.html`. Trang ấy nói ~90 con số cụ thể (định thức,
 trị riêng, tỉ lệ PCA, dãy Newton, xác suất nhị thức, phân vị t, p-value) và tự nhận với người
 đọc là mọi con số tính được đều kiểm được bằng máy — nên phải có một script tính lại thật, chứ
 không phải một lời hứa. `lint-pages.py` kiểm được thẻ lệch nhưng không biết `0,0546875` có phải
 là P(X≥8 | n=10, p=0,5) hay không. Trang nào sau này cũng nói số cụ thể thì làm thêm một cổng
-cùng kiểu, đừng nới cổng này ra thành cổng chung: mỗi trang có bộ số riêng. `shop/` cũng có một cổng riêng cùng kiểu vì cùng lý do: đó là một storefront, nơi sai một con
+cùng kiểu, đừng nới cổng này ra thành cổng chung: mỗi trang có bộ số riêng.
+
+Cái thứ hai, `verify-ml.py` (85 phép kiểm), làm đúng theo luật vừa nói cho hai trang học máy —
+`machine-learning.html` và `machine-learning-101.html` — vốn nói ~270 con số có đơn vị mà trước
+đó không cổng nào kiểm. Nó tính lại những con số *suy ra được*: `896 = 32×(3·3·3+1)` tham số của
+một lớp tích chập, `(32+2−3)/1+1 = 32` cỡ đầu ra sau padding/stride, precision/recall/F1 đọc ra
+từ ma trận nhầm lẫn 15/15/5/965, `28·28·32×(5·5·192) ≈ 120 triệu` phép nhân của khối Inception
+so với `12,4 triệu` khi chèn nút thắt 1×1. Nó gộp hai trang vào một file mà **không** vi phạm
+luật trên: hai bộ số viết tay riêng, mỗi bộ đọc đúng file của nó, không phép kiểm nào dùng chung —
+gộp chỉ để hai trang anh em khỏi chép lại cùng một đoạn hàm trợ giúp. `shop/` cũng có một cổng riêng cùng kiểu vì cùng lý do: đó là một storefront, nơi sai một con
 số thì khách trả nhầm tiền. `lint-shop.py` soi thẳng vào `shop/data/shop.json` — giá phải là số
 nguyên dương, giá gạch phải lớn hơn giá bán, và `labels.ship_fee`/`free_ship` phải khớp con số
 viết trong đoạn văn `shipping`. Từ 21/09/2026 nó kiểm thêm **quan hệ giữa hai trường** — chỗ tiền

@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="color-scheme" content="light dark" />
 <title>Structured Speaking — pick a framework per situation</title>
-<meta name="description" content="Không học thuộc 20 khung giao tiếp. Một câu hỏi duy nhất chọn ra khung đúng: sau khi nghe xong, bạn muốn người kia làm gì? Kèm bộ chọn khung, 7 nhóm tình huống, bài luyện tập và trình soạn nháp." />
+<meta name="description" content="Không học thuộc 21 khung giao tiếp. Một câu hỏi duy nhất chọn ra khung đúng: sau khi nghe xong, bạn muốn người kia làm gì? Kèm bộ chọn khung, 7 nhóm tình huống, bài luyện tập và trình soạn nháp." />
 
 <link rel="stylesheet" href="../web-builder/web-builder.css" />
 <script>
@@ -20,6 +20,31 @@
 
 <style>
   /* Page-local: only things the kit has no equivalent for. No hex, no hand-picked greys. */
+
+  /* ---- chữ mờ phải đọc được ----
+     Bậc --wb-fg-subtle của kit là gray-400: chỉ 2,56:1 trên nền sáng, dưới ngưỡng
+     4,5:1 cho chữ thường. CSS của trang này tránh dùng nó (xem .ct-goal__n bên dưới),
+     nhưng ba thành phần của kit vẫn dùng: .wb-eyebrow (nhãn trên tiêu đề), .wb-label__opt
+     (mô tả từng lựa chọn của bộ chọn khung) và .wb-footer__copy — đều là chữ phải đọc.
+     Đo bằng trình duyệt: 2,39:1 / 2,56:1 sáng, 3,84:1 tối. Nâng một bậc ở CẢ HAI nhánh
+     theme, nếu không nhánh còn lại rơi về giá trị kit. */
+  :root { --wb-fg-subtle: var(--wb-gray-500); }
+  .dark { --wb-fg-subtle: var(--wb-gray-400); }
+
+  /* Header dính cao 56px che mất tiêu đề khi nhảy từ mục lục — đo bằng trình duyệt:
+     cả 6 đích #chon-khung…#gioi-han đều dừng ở top = 0, nằm dưới thanh header. */
+  /* Ở khổ 360px trang tràn ngang 5px, ở 320px tràn 45px. Cộng lại thì thấy ngay vì sao:
+     đệm 18+18, nút mở mục lục 44, cụm nút phải 76, bốn khe 16 — hết 220px, chỉ còn 140px
+     cho tên trang mà tên cần 179px. Nút và tên đều flex-shrink:0 nên không co được, và
+     đặt max-width cho tên cũng vô ích vì nó đã dưới ngưỡng. Thu đệm và khe lại ở khổ nhỏ
+     là chỗ duy nhất còn nới được — lấy về 44px, thừa cho cả 320px. */
+  @media (max-width: 480px) { .wb-navbar { padding-left: 12px; padding-right: 12px; gap: 8px; } }
+  /* Nền thanh điều hướng hơi ngả xám (246,246,248) chứ không trắng hẳn, nên --wb-fg-muted
+     của kit (gray-500) chỉ cho 4,48:1 ở đó — thiếu 0,02 so với ngưỡng 4,5:1. Đậm thêm một
+     bậc CHỈ trong thanh. Nhánh tối giữ gray-400, vốn đã đạt (đo được 0 chỗ vi phạm). */
+  .wb-navbar { --wb-fg-muted: var(--wb-gray-600); }
+  .dark .wb-navbar { --wb-fg-muted: var(--wb-gray-400); }
+  section[id] { scroll-margin-top: 76px; }
 
   /* Prose measure — a teaching page reads as text, so paragraphs get a line length. */
   .ct-prose { max-width: var(--wb-measure); }
@@ -126,7 +151,7 @@
   <!-- ========================= 1 · CÂU TRẢ LỜI ========================= -->
   <div class="wb-page-head wb-page-head--lg">
     <p class="wb-eyebrow">Kỹ năng trình bày</p>
-    <h1>Bạn không cần thuộc 20 khung</h1>
+    <h1>Bạn không cần thuộc 21 khung</h1>
     <p>Tất cả các khung giao tiếp — PREP, SCQA, STAR, SBI, NVC… — chỉ đang trả lời <b>một</b> câu hỏi:
     <b>người nghe cần biết gì trước, để phần còn lại có nghĩa?</b> Trả lời được câu đó thì khung tự hiện
     ra. Trang này dạy cách trả lời nó trong khoảng mười giây, rồi mới dạy từng khung.</p>
@@ -139,7 +164,7 @@
       <div class="wb-alert__body">
         <p class="wb-alert__title">Nếu bạn chỉ đọc một đoạn, đọc đoạn này</p>
         <p class="wb-alert__msg">Trước khi mở miệng, hỏi: <b>“Nói xong, tôi muốn người kia LÀM gì?”</b>
-        Hiểu ý tôi · Chọn một cách làm · Đồng ý bỏ tiền-công · Hình dung chuyện đã xảy ra · Đổi hành vi ·
+        Hiểu ý tôi · Chọn một cách làm · Đồng ý bỏ tiền, công, uy tín · Hình dung chuyện đã xảy ra · Đổi hành vi ·
         Hạ căng thẳng · Giúp tôi một việc. Bảy câu trả lời đó chính là bảy nhóm khung bên dưới — chọn
         nhóm trước, chọn khung sau.</p>
       </div>
@@ -318,7 +343,7 @@
   <!-- ========================= 5 · BỘ XƯƠNG =========================== -->
   <section class="wb-section" id="bo-xuong">
     <h2>Bộ xương chung: Neo → Căng → Lối ra</h2>
-    <p class="wb-section__desc">Hai mươi khung không phải hai mươi thứ khác nhau — chúng là các cách
+    <p class="wb-section__desc">Hai mươi mốt khung không phải hai mươi mốt thứ khác nhau — chúng là các cách
     đặt tên khác nhau cho cùng ba mảnh.</p>
 
     <ol class="wb-steps wb-steps--horizontal">
@@ -350,8 +375,10 @@
 
     <div class="wb-block">
       <h3>Chiếu các khung về ba cột</h3>
-      <p class="wb-block__desc">Đọc bảng này một lần rồi quên tên khung cũng được — cái cần nhớ là mọi
-      dòng đều có đủ ba cột.</p>
+      <p class="wb-block__desc">Đọc bảng này một lần rồi quên tên khung cũng được — cái cần nhớ là dòng nào cũng
+      đủ ba mảnh. Năm dòng không <em>nói ra</em> cả ba: hai dòng để Neo ngầm vì người nghe đã đứng
+      sẵn ở đó, PAS dùng một câu làm cả Neo lẫn Căng, BAB để phần Căng nằm trong khoảng cách giữa
+      Before và After, còn BLUF nói Lối ra ngay câu đầu nên cuối bài không còn gì để nói. Mảnh vẫn có mặt — chỉ là không mảnh nào bắt buộc phải thành một câu riêng.</p>
       <div class="wb-card">
         <div class="wb-table-scroll">
           <table class="wb-table wb-table--compact">
@@ -372,7 +399,7 @@
               <tr><td class="wb-cell-strong">Monroe</td><td>Attention</td><td>Need</td><td>Satisfaction + Visualization + Action</td><td class="wb-cell-muted">3</td></tr>
               <tr><td class="wb-cell-strong">STAR</td><td>Situation</td><td>Task</td><td>Action + Result</td><td class="wb-cell-muted">4</td></tr>
               <tr><td class="wb-cell-strong">Context – Conflict – Resolution</td><td>Context</td><td>Conflict</td><td>Resolution</td><td class="wb-cell-muted">4</td></tr>
-              <tr><td class="wb-cell-strong">Pixar</td><td>Ngày xưa… Mỗi ngày…</td><td>Cho đến một hôm… Vì thế mà…</td><td>Cuối cùng thì…</td><td class="wb-cell-muted">4</td></tr>
+              <tr><td class="wb-cell-strong">Pixar</td><td>Ngày xưa… Mỗi ngày…</td><td>Cho đến một hôm… Vì thế mà… Vì thế mà…</td><td>Cuối cùng thì…</td><td class="wb-cell-muted">4</td></tr>
               <tr><td class="wb-cell-strong">SBI</td><td>Situation</td><td>Behavior</td><td>Impact</td><td class="wb-cell-muted">5</td></tr>
               <tr><td class="wb-cell-strong">COIN</td><td>Context</td><td>Observation + Impact</td><td>Next steps</td><td class="wb-cell-muted">5</td></tr>
               <tr><td class="wb-cell-strong">Start / Stop / Continue</td><td class="wb-cell-muted">kỳ vừa rồi (ngầm)</td><td>Stop</td><td>Start + Continue</td><td class="wb-cell-muted">5</td></tr>
@@ -416,8 +443,9 @@
   <!-- ========================= 6 · BẢY NHÓM =========================== -->
   <section class="wb-section" id="bay-nhom">
     <h2>Bảy nhóm, chi tiết</h2>
-    <p class="wb-section__desc">Mỗi nhóm: khi nào dùng, khung chính, một câu nói thật, lỗi hay gặp, và
-    khi nào <i>đừng</i> dùng. Mở nhóm bạn đang cần, đừng đọc hết một lượt.</p>
+    <p class="wb-section__desc">Mỗi nhóm: khi nào dùng, khung chính, một câu nói thật, và lỗi hay gặp.
+    Chỗ khung <i>phản tác dụng</i> gom riêng ở <a href="#gioi-han">mục “Khi nào khung phản tác dụng”</a>, vì bốn cái bẫy ở đó
+    đúng cho cả bảy nhóm. Mở nhóm bạn đang cần, đừng đọc hết một lượt.</p>
 
     <div class="wb-accordion">
 
@@ -433,13 +461,14 @@
             <p><b>Khung chính — PREP.</b> Nêu ý chính → lý do → một ví dụ có thật → chốt lại ý chính.</p>
           </div>
           <p class="ct-say">“Nên tách module thanh toán ra khỏi app chính <b>(Point)</b> vì mỗi lần sửa
-          nó đang bắt cả team chờ build lại 12 phút <b>(Reason)</b> — sprint trước có 3 hotfix, mất gần
-          4 tiếng chỉ để ngồi chờ <b>(Example)</b>. Nên em đề xuất tách trước khi thêm tính năng mới
+          nó đang bắt cả team chờ build lại 12 phút <b>(Reason)</b> — sprint trước có 3 hotfix, cả nhóm
+          mất gần 4 tiếng công chỉ để ngồi chờ <b>(Example)</b>. Nên em đề xuất tách trước khi thêm tính năng mới
           <b>(Point)</b>.”</p>
           <div class="ct-prose">
             <p><b>Biến thể:</b> <b>Ai – Như thế nào – Rồi làm sao</b> khi đối tượng là một người hoặc một
             thứ cụ thể (“bạn này có năng lực nhưng trình bày còn yếu, nên cần kèm phần thuyết trình”).
-            <b>OREO</b> khi bạn cần nói rõ đây là quan điểm riêng chứ không phải kết luận của nhóm.
+            <b>OREO</b> (Opinion – Reason – Example – Opinion) chính là PREP đổi tên, dùng khi bạn cần
+            nói rõ đây là quan điểm riêng chứ không phải kết luận của nhóm.
             <b>What – So What – Now What</b> khi rút bài học sau một sự việc.</p>
             <p><b>Lỗi hay gặp:</b> kể hết lý do rồi mới kết luận. Suốt lúc đó người nghe không biết bạn
             đang bênh hay chống, nên họ phải nghe lại lần hai trong đầu.</p>
@@ -724,7 +753,7 @@
 <footer class="wb-footer wb-footer--slim">
   <div class="wb-footer__inner">
     <div class="wb-footer__bottom">
-      <span class="wb-footer__copy">Nói có cấu trúc · một trang trong <a href="../index.html">Collection</a></span>
+      <span class="wb-footer__copy">Structured Speaking — chọn khung nói theo tình huống · mục đích học tập</span>
       <div class="wb-footer__social">
         <a class="wb-btn wb-btn--ghost wb-btn--icon" href="../index.html" aria-label="Về trang chủ"><span class="wb-ico">home</span></a>
       </div>
@@ -763,7 +792,7 @@
       parts: [
         { k: 'Point',   hint: 'Ý chính, một câu, nói thẳng',       ph: 'Nên tách module thanh toán ra khỏi app chính.' },
         { k: 'Reason',  hint: 'Vì sao — một lý do mạnh, không ba', ph: 'Mỗi lần sửa nó bắt cả team chờ build lại 12 phút.' },
-        { k: 'Example', hint: 'Một ca có thật, có số',             ph: 'Sprint trước 3 hotfix, mất gần 4 tiếng chỉ để chờ.' },
+        { k: 'Example', hint: 'Một ca có thật, có số',             ph: 'Sprint trước 3 hotfix, cả nhóm mất gần 4 tiếng công chỉ để chờ.' },
         { k: 'Point',   hint: 'Chốt lại, thêm bước tiếp theo',     ph: 'Nên em đề xuất tách trước khi thêm tính năng mới.' }
       ]
     },

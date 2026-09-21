@@ -23,6 +23,30 @@
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
 
+  /* ---- chữ mờ phải đọc được ----
+     Bậc --wb-fg-subtle của kit là gray-400: đo bằng trình duyệt chỉ 2,39:1 trên nền
+     canvas và 2,56:1 trên nền thẻ — dưới ngưỡng 4,5:1 cho chữ thường. Trang này dùng
+     đúng bậc đó cho .hw-eyebrow, .hw-meta, .kicker (mang số thứ tự phần), .hw-src
+     (dòng nguồn dưới mỗi hình), <cite> và .wb-sidenav__section của mục lục — toàn thứ
+     phải đọc. Nâng một bậc: 4,97:1 sáng, 7,34:1 tối. Định nghĩa ở CẢ HAI nhánh theme,
+     nếu không nhánh còn lại rơi về giá trị kit. */
+  :root { --wb-fg-subtle: var(--wb-gray-500); }
+  .dark { --wb-fg-subtle: var(--wb-gray-400); }
+
+  /* .wb-alert__msg của kit là --wb-fg-muted (gray-500) — đủ trên nền trắng nhưng chỉ
+     3,82:1 trên nền đã nhuộm màu của hộp cảnh báo. Đậm thêm một bậc CHỈ bên trong hộp
+     cảnh báo (6,0:1). Nhánh tối giữ nguyên gray-400, vốn đã đạt chuẩn ở đó. */
+  .wb-alert { --wb-fg-muted: var(--wb-gray-600); }
+  .dark .wb-alert { --wb-fg-muted: var(--wb-gray-400); }
+
+  /* Chip số liệu (64%, 21,2%…) là chữ phải đọc, không phải trang trí. Cặp màu của kit —
+     --wb-warning-text / --wb-success-text trên nền *-soft — đo được 4,32:1 và 4,39:1,
+     dưới 4,5:1. Đậm thêm bằng cách pha chính token đó với --wb-fg (không thêm mã hex
+     mới). Đặt thẳng trên class con, KHÔNG định nghĩa lại chính token: `--x: color-mix(…
+     var(--x)…)` là vòng lặp, Chromium bỏ cả khai báo và chip mất luôn màu. */
+  .wb-cap--warning { color: color-mix(in srgb, var(--wb-warning-text) 80%, var(--wb-fg)); }
+  .wb-cap--success { color: color-mix(in srgb, var(--wb-success-text) 85%, var(--wb-fg)); }
+
   /* ---- hero ---- */
   .hw-hero { padding: 30px 0 20px; }
   .hw-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
@@ -40,7 +64,10 @@
 
   /* ---- section rhythm ---- */
   section[id] { scroll-margin-top: 76px; }
-  .hw-part-head { padding: 4px 0 2px; border-top: var(--wb-bw) solid var(--wb-border); padding-top: 22px; }
+  /* Bảy đích của mục lục (#p1…#p6, #ket) nằm trên .hw-part-head chứ không phải <section>,
+     nên quy tắc section[id] bên dưới không với tới: đo được cả bảy dừng ở top = 0, khuất
+     sau thanh header dính cao 56px. */
+  .hw-part-head { padding: 4px 0 2px; border-top: var(--wb-bw) solid var(--wb-border); padding-top: 22px; scroll-margin-top: 76px; }
   .hw-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
   .hw-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
   .hw-part-head p { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.65; margin: 0; max-width: 76ch; }
@@ -190,7 +217,7 @@
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">1</span>
         <div class="wb-media__body">
           <p class="wb-media__title">Nền tảng về tiền</p>
-          <p class="wb-media__text">Tiền ra đời vì hàng đổi hàng bế tắc. Bảy đặc tính, ba chức năng, các mốc lịch sử, và năm trường phái kinh tế bất đồng ở đâu.</p>
+          <p class="wb-media__text">Tiền ra đời vì hàng đổi hàng bế tắc. Bảy đặc tính, ba chức năng, các mốc lịch sử, và sáu trường phái kinh tế bất đồng ở đâu.</p>
         </div>
       </div>
     </a>
@@ -467,7 +494,7 @@
         </div>
 
         <h3 class="hw-h3">Định luật Gresham — “tiền xấu đuổi tiền tốt”</h3>
-        <p class="hw-p">Do nhà tài chính người Anh <b>Sir Thomas Gresham (1519–71)</b> phát biểu. Khi nhà nước pha loãng kim loại quý trong đồng xu, đồng xu đáng giá ít hơn kim loại nó chứa; dân sẽ <b>tiêu đồng “xấu” và cất giữ đồng “tốt”</b>. Kết quả: chỉ đồng xấu lưu thông. Ví dụ thật: Henry VIII của Anh (1542–1551) pha ba phần tư đồng bạc bằng đồng đỏ — lạm phát tăng vì niềm tin giảm.</p>
+        <p class="hw-p">Do nhà tài chính người Anh <b>Sir Thomas Gresham (1519–79)</b> phát biểu. Khi nhà nước pha loãng kim loại quý trong đồng xu, đồng xu đáng giá ít hơn kim loại nó chứa; dân sẽ <b>tiêu đồng “xấu” và cất giữ đồng “tốt”</b>. Kết quả: chỉ đồng xấu lưu thông. Ví dụ thật: cuộc phá giá lớn ở Anh <b>1542–1551</b>, mở đầu dưới thời Henry VIII, pha tới ba phần tư đồng bạc bằng đồng đỏ — lạm phát tăng vì niềm tin giảm.</p>
 
         <h3 class="hw-h3">Simmel và mặt xã hội của tiền</h3>
         <p class="hw-p">Trong <em>The Philosophy of Money</em> (1900), nhà xã hội học Đức Georg Simmel nhận xét rằng trước khi có tiền, giá trị của một vật được đánh giá bằng những hệ đo <b>không tương thích nhau</b> — danh dự, thời gian, công sức. Tiền làm việc gán giá trị nhất quán trở nên dễ dàng, và theo Simmel, điều đó <b>giải phóng con người khỏi các ràng buộc cá nhân</b>, cho họ nhiều lựa chọn hơn.</p>
@@ -587,7 +614,7 @@
       <!-- ─────────── 1.4 ─────────── -->
       <section id="s1-4">
         <p class="hw-eyebrow-sec"><b>1.4</b> — Các trường phái</p>
-        <h2 class="hw-sec-title">Mọi tranh luận chính sách tiền tệ hôm nay đều là biến thể của năm câu trả lời cho cùng một câu hỏi</h2>
+        <h2 class="hw-sec-title">Mọi tranh luận chính sách tiền tệ hôm nay đều là biến thể của sáu câu trả lời cho cùng một câu hỏi</h2>
         <p class="hw-lede">Câu hỏi đó là: <b>lượng tiền trong nền kinh tế ảnh hưởng thế nào tới giá cả và hành vi của người dân, doanh nghiệp?</b></p>
 
         <h3 class="hw-h3">Adam Smith và “bàn tay vô hình” (1776)</h3>
@@ -941,12 +968,20 @@
             <thead><tr><th>Vụ</th><th>Năm</th><th>Thủ đoạn</th><th>Thiệt hại</th></tr></thead>
             <tbody>
               <tr><td><b>Enron</b></td><td>2001</td><td>Nợ khổng lồ giấu ngoài bảng cân đối, không khai báo</td><td>Cổ đông mất ~$74 tỷ</td></tr>
-              <tr><td><b>WorldCom</b></td><td>2006</td><td>Bút toán giả cho các thương vụ không hề tồn tại → thổi phồng tài sản</td><td>Có thể tới $11 tỷ tài sản ảo</td></tr>
+              <tr><td><b>WorldCom</b></td><td>2002 <span class="wb-cell-muted">(sách in 2006)</span></td><td>Bút toán giả cho các thương vụ không hề tồn tại → thổi phồng tài sản</td><td>Có thể tới $11 tỷ tài sản ảo</td></tr>
               <tr><td><b>Lehman Brothers</b></td><td>2008</td><td>$50 tỷ thua lỗ dưới dạng tài sản vô giá trị nằm trên bảng cân đối</td><td>Phá sản; nhân tố chính của khủng hoảng toàn cầu</td></tr>
               <tr><td><b>Bernie Madoff</b></td><td>2008</td><td>Trả lợi nhuận cho nhà đầu tư bằng chính tiền của họ; duy trì bằng người mới (Ponzi)</td><td>Nhà đầu tư mất ~$65 tỷ</td></tr>
             </tbody>
           </table>
         </div>
+        <div class="wb-alert wb-alert--warning">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Một mốc trong bảng lệch — nêu ra để bạn đừng học thuộc số sai</p>
+            <p class="wb-alert__msg"><b>WorldCom không phải 2006.</b> Kiểm toán nội bộ phát hiện bút toán giả tháng <b>6/2002</b>, và công ty nộp đơn phá sản tháng <b>7/2002</b> — vụ phá sản lớn nhất nước Mỹ tính tới thời điểm đó. Năm 2006 là năm hãng (khi ấy đã đổi tên thành MCI) bị Verizon mua lại — một sự kiện khác hẳn, xảy ra sau khi bê bối đã khép lại. Ba mốc còn lại khớp: Enron nộp đơn phá sản tháng 12/2001, Lehman tháng 9/2008, Madoff bị bắt tháng 12/2008.</p>
+          </div>
+        </div>
+
         <p class="hw-p"><b>Dấu hiệu đỏ mà kiểm toán viên tìm:</b> dòng tiền âm bỗng dưng dương năm sau · doanh thu ghi nhận trước khi bán thật · biên lợi nhuận gộp tăng bất thường.</p>
 
         <h3 class="hw-h3">Dòng tiền — thứ giết doanh nghiệp nhanh nhất</h3>
@@ -1459,10 +1494,10 @@
             <li class="wb-steps__item is-done"><span class="wb-steps__marker">3</span><div class="wb-steps__content">
               <p class="wb-steps__title">A mua <b>€100.000</b> với £79.000 từ nhà đầu tư B</p>
               <p class="wb-steps__desc">Qua một sàn môi giới — <b>cả hai đều bị thu hoa hồng</b>.</p></div></li>
-            <li class="wb-steps__item is-active"><span class="wb-steps__marker">A</span><div class="wb-steps__content">
+            <li class="wb-steps__item is-active"><span class="wb-steps__marker">4a</span><div class="wb-steps__content">
               <p class="wb-steps__title">Kết cục đúng — bảng giảm, giá bán mới £0,81/€1</p>
               <p class="wb-steps__desc">A bán cho nhà đầu tư C được <b>£81.000</b> → <b>lãi £2.000</b>, sau khi trả hoa hồng.</p></div></li>
-            <li class="wb-steps__item is-active"><span class="wb-steps__marker">B</span><div class="wb-steps__content">
+            <li class="wb-steps__item is-active"><span class="wb-steps__marker">4b</span><div class="wb-steps__content">
               <p class="wb-steps__title">Kết cục sai — bảng tăng, giá bán mới £0,76/€1</p>
               <p class="wb-steps__desc">A bán được <b>£76.000</b> → <b>lỗ £3.000</b> — và <b>vẫn phải trả hoa hồng cho môi giới dù đã lỗ</b>.</p></div></li>
           </ol>
@@ -1520,7 +1555,7 @@
         <h3 class="hw-h3">Arbitrage — kinh doanh chênh lệch giá</h3>
         <p class="hw-p">Mua ở nơi rẻ, bán gần như đồng thời ở nơi đắt — <b>lãi trên mỗi đơn vị cực nhỏ</b>, nên chỉ có ý nghĩa khi giao dịch khối lượng khổng lồ với tốc độ mili giây.</p>
         <div class="wb-card wb-card--pad">
-          <p class="wb-media__text">Với tỷ giá $1 = £0,76: mua cổ phiếu Công ty A trên sàn Mỹ giá <b>$2,99</b> → bán trên sàn Anh giá <b>£2,30</b>, tương đương <b>$3,013</b> → <b>lãi ~$0,02/cổ phiếu</b>.</p>
+          <p class="wb-media__text">Với tỷ giá $1 = £0,76: mua cổ phiếu Công ty A trên sàn Mỹ giá <b>$2,99</b> → bán trên sàn Anh giá <b>£2,30</b>, tương đương <b>$3,03</b> → <b>lãi ~$0,04/cổ phiếu</b>.</p>
         </div>
         <p class="hw-p" style="margin-top:12px"><b>Giao dịch tần suất cao (HFT):</b> chương trình máy tính tự động đánh giá và thực hiện lượng lớn lệnh ở tốc độ không người nào theo kịp. <b>Lợi nhuận lớn nhất thuộc về tổ chức có máy tính nhanh nhất.</b> Ở đỉnh điểm năm 2009, ước tính <b>60% giao dịch cổ phiếu Mỹ là HFT</b>.</p>
         <div class="wb-alert wb-alert--danger">
@@ -1895,14 +1930,21 @@
               <text class="hw-vs" x="78" y="209" text-anchor="middle">dự trữ 5%</text>
             </svg>
           </div>
-          <p class="hw-src">Nguồn: “The multiplier effect of the fractional reserve cycle”, tr.90–91. Kiểm tra: tổng tiền gửi $3.709,87 + tổng cho vay $3.524,37 = <b>$7.234,24</b> quyền đòi tiền, trên $185,50 tiền mặt.</p>
+          <p class="hw-src">Nguồn: “The multiplier effect of the fractional reserve cycle”, tr.90–91. Kiểm tra từng dòng: mỗi khoản cho vay bằng đúng tiền gửi trừ dự trữ (1.000 − 50 = 950; 950 − 47,50 = 902,50; …), và tổng cộng lại đúng như bảng.</p>
         </div></div>
         <div class="hw-figs">
-          <div class="hw-fig"><span class="n">$185,50</span><span class="l">toàn bộ tiền mặt thật trong chuỗi bốn ngân hàng</span></div>
-          <div class="hw-fig"><span class="n">$7.234,24</span><span class="l">tổng quyền đòi tiền được tạo ra từ khoản gửi $1.000 ban đầu</span></div>
-          <div class="hw-fig"><span class="n">39 lần</span><span class="l">quyền đòi tiền chia cho tiền mặt thật — và đó chỉ mới bốn vòng</span></div>
+          <div class="hw-fig"><span class="n">$1.000</span><span class="l">tiền mặt thật — không có thêm một đồng nào vào chuỗi sau bước đầu tiên</span></div>
+          <div class="hw-fig"><span class="n">$3.709,87</span><span class="l">tổng tiền gửi bốn ngân hàng đang ghi nợ với người gửi</span></div>
+          <div class="hw-fig"><span class="n">3,7 lần</span><span class="l">số nhân đạt được sau bốn vòng — trần lý thuyết của chuỗi vô hạn là 20 lần</span></div>
         </div>
-        <p class="hw-p">Khoản gửi ban đầu <b>$1.000</b> cuối cùng tạo ra tổng quyền đòi tiền (tất cả tiền gửi và khoản vay) là <b>$7.234,24</b>, với dự trữ tiền mặt gộp chỉ <b>$185,50</b>. <em>Sách nói rõ đây là bản giải thích đơn giản hoá của hiệu ứng số nhân.</em></p>
+        <p class="hw-p">Khoản gửi ban đầu <b>$1.000</b> đi hết bốn vòng thì bốn ngân hàng cộng lại đang ghi nợ người gửi <b>$3.709,87</b> — gấp <b>3,7 lần</b> số tiền mặt từng bước vào chuỗi. Tiền mặt ấy không nhân lên: $185,50 nằm trong két bốn ngân hàng, $814,50 còn lại đang ở tay người vay của ngân hàng D, cộng đúng $1.000. Cái nhân lên là <b>quyền đòi</b>. <em>Sách nói rõ đây là bản giải thích đơn giản hoá của hiệu ứng số nhân.</em></p>
+        <div class="wb-alert wb-alert--warning">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Đừng cộng cột “tiền gửi” với cột “cho vay”</p>
+            <p class="wb-alert__msg">Hai cột ấy là <b>hai mặt của cùng một đồng tiền</b>, không phải hai khoản tiền khác nhau: khoản ngân hàng A cho vay $950 <i>chính là</i> khoản tiền gửi $950 của ngân hàng B, chỉ nhìn từ hai phía bảng cân đối. Cộng chúng lại là đếm hai lần. Thước đo đúng của “tiền được tạo ra” là <b>tổng tiền gửi</b>, tức cột giữa — và nó bị chặn trên bởi con số ở đoạn dưới.</p>
+          </div>
+        </div>
         <p class="hw-p"><b>Chuỗi này chưa dừng ở ngân hàng D.</b> Sách cắt ở bốn vòng cho gọn, nhưng phép tính không dừng: với dự trữ 5%, giới hạn lý thuyết của cả chuỗi vô hạn là <b>1 ÷ 0,05 = 20 lần</b> khoản gửi ban đầu, tức khoảng <b>$20.000</b> tiền gửi được tạo ra từ $1.000. Bốn vòng mới đi được $3.709 — <em>chưa tới một phần năm đường</em>.</p>
         <div class="wb-alert wb-alert--warning">
           <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
@@ -1968,7 +2010,7 @@
               <p class="wb-steps__title">Tháng 10/1929 — sáu ngày sụp đổ trên NYSE</p>
               <p class="wb-steps__desc"><b>$25 tỷ bốc hơi</b>, kéo theo niềm tin vào thị trường. Nhiều nhà đầu tư phá sản, ngân hàng mất tiền, thương mại đình trệ.</p></div></li>
             <li class="wb-steps__item is-done"><span class="wb-steps__marker">4</span><div class="wb-steps__content">
-              <p class="wb-steps__title">Rút tiền hàng loạt — tới 1933 <b>hơn một nửa ngân hàng đóng cửa</b></p>
+              <p class="wb-steps__title">Rút tiền hàng loạt — tới 1933 <b>khoảng 10.000 ngân hàng — gần một nửa cả nước — đã đóng cửa</b></p>
               <p class="wb-steps__desc">Ngân hàng co hẹp cho vay, và cùng với nó là lượng tiền gửi được tạo ra — <b>cung tiền Mỹ tiếp tục giảm</b>.</p></div></li>
             <li class="wb-steps__item is-done"><span class="wb-steps__marker">5</span><div class="wb-steps__content">
               <p class="wb-steps__title">Mất niềm tin + ít tiền + chi phí vay cao → chi tiêu và cầu giảm</p>
@@ -2012,7 +2054,7 @@
         <p class="hw-p">Chi tiêu chính phủ ngày nay chủ yếu để đáp ứng nhu cầu xã hội và thường chiếm <b>khoảng một phần ba</b> nền kinh tế của một nước (ở Bắc Âu còn cao hơn nhiều). Hầu hết chính phủ đều vay một phần; <b>điều quan trọng không phải là vay hay không, mà là mức vay có được kiểm soát để dân tin rằng nợ sẽ luôn được trả hay không.</b></p>
         <p class="hw-p"><b>Về in tiền:</b> chính phủ có thể phát hành tiền, in hoặc tạo điện tử. Nhưng vì tiền dựa vào niềm tin, khi chính phủ phát hành ngày càng nhiều, dân có thể mất tin vào giá trị của nó. Nếu niềm tin sụp hoàn toàn → <b>siêu lạm phát</b>, như nước Đức thập niên 1920.</p>
         <div class="hw-figs">
-          <div class="hw-fig"><span class="n">6,7 nghìn tỷ $</span><span class="l">chính phủ Mỹ chi trong năm 2016</span></div>
+          <div class="hw-fig"><span class="n">6,7 nghìn tỷ $</span><span class="l">tổng chi của chính phủ Mỹ cả ba cấp — liên bang, bang, địa phương — năm 2016</span></div>
           <div class="hw-fig"><span class="n">75% GDP</span><span class="l">thâm hụt ngân sách của Libya — tệ nhất thế giới</span></div>
         </div>
 
@@ -2369,7 +2411,7 @@
           </div>
         </div>
         <p class="hw-p"><b>Trường hợp Anh:</b> BOE bắt đầu QE đầu năm <b>2009</b>, sau khi lãi suất đã cắt về gần 0. Phần lớn tiền mới được dùng mua nợ chính phủ. Hiệu quả của QE <b>phụ thuộc vào việc người bán tài sản làm gì với tiền nhận được, và ngân hàng làm gì với thanh khoản thêm</b>. BOE tin QE đã thúc đẩy tăng trưởng — <b>nhưng với cái giá là lạm phát cao hơn và bất bình đẳng tài sản gia tăng</b>, khi giá tài sản lên.</p>
-        <p class="hw-p"><b>Mức độ chắc chắn:</b> sách gọi QE là <b>“một thí nghiệm chính sách tiền tệ đang diễn ra”</b>. Vẫn còn bất đồng về việc liệu nó có kích thích được kinh tế mà không mang quá nhiều rủi ro hay không, và người phản đối chỉ ra rằng <b>lợi ích chỉ đến với một số khu vực nhất định của nền kinh tế</b>. Neo: chính phủ Mỹ đã chi <b>3,5 nghìn tỷ USD</b> cho các đợt mua tài sản QE.</p>
+        <p class="hw-p"><b>Mức độ chắc chắn:</b> sách gọi QE là <b>“một thí nghiệm chính sách tiền tệ đang diễn ra”</b>. Vẫn còn bất đồng về việc liệu nó có kích thích được kinh tế mà không mang quá nhiều rủi ro hay không, và người phản đối chỉ ra rằng <b>lợi ích chỉ đến với một số khu vực nhất định của nền kinh tế</b>. Neo: Fed đã tạo và bơm ra <b>3,5 nghìn tỷ USD</b> qua các đợt mua tài sản QE — Fed chứ không phải chính phủ, và là tiền tạo mới chứ không phải tiền ngân sách.</p>
 
         <h3 class="hw-h3">Chi tiêu chính phủ</h3>
         <p class="hw-p">Chính phủ hiện đại tiêu một phần rất lớn của nền kinh tế, và <b>cách tiêu phản ánh ưu tiên chính trị</b> chứ không phải công thức kỹ thuật.</p>
@@ -2620,7 +2662,7 @@
         <div class="hw-figs">
           <div class="hw-fig"><span class="n">×1,2 tỷ</span><span class="l">giá ổ bánh mì tăng bấy nhiêu lần trong khoảng 22 tháng (200 tỷ ÷ 163)</span></div>
           <div class="hw-fig"><span class="n">2 triệu tờ</span><span class="l">số tờ 100.000 mark cần để mua <b>một</b> ổ bánh mì vào 11/1923 — in tiền to hơn không đuổi kịp</span></div>
-          <div class="hw-fig"><span class="n">460 septillion</span><span class="l">số pengő Hungary đổi 1 USD ở đỉnh siêu lạm phát tháng 7/1946 — trường hợp tệ hơn Đức rất nhiều</span></div>
+          <div class="hw-fig"><span class="n">4,6 × 10<sup>29</sup></span><span class="l">số pengő Hungary đổi 1 USD ở đỉnh siêu lạm phát tháng 7/1946 — tức 460 tỉ tỉ tỉ đồng pengő cho một đô la, trường hợp tệ hơn Đức rất nhiều</span></div>
         </div>
         <p class="hw-p"><b>Đây là chỗ trực giác hỏng.</b> Phản ứng tự nhiên của một chính phủ trong cảnh này là in tờ mệnh giá lớn hơn cho tiện. Nhưng hình trên cho thấy vì sao việc đó vô nghĩa: hai đường nét đứt là <b>đứng yên</b> trong khi giá cả bay thẳng lên. In tờ to hơn không đuổi theo lạm phát — <b>nó là bằng chứng công khai rằng chính phủ đã bỏ cuộc</b>, và chính bằng chứng đó lại đẩy kỳ vọng lạm phát lên tiếp.</p>
 
@@ -2660,7 +2702,7 @@
         </div>
         <p class="hw-p" style="margin-top:12px">Công thức chuyển thu nhập thành của cải rất đơn giản nhưng đòi hỏi kiên nhẫn và kỷ luật: <b>chi ra trong kỳ phải thấp hơn thu vào trong cùng kỳ, và phần chênh lệch phải được tiết kiệm rồi đầu tư càng sớm càng tốt.</b></p>
 
-        <h3 class="hw-h3">Bảng giá trị ròng — bốn nhóm tài sản, bốn nhóm nợ</h3>
+        <h3 class="hw-h3">Bảng giá trị ròng — ba nhóm tài sản, ba nhóm nợ</h3>
         <div class="wb-grid wb-grid--2">
           <div class="wb-card">
             <div class="wb-card__head"><p class="wb-media__title">Tài sản</p></div>
@@ -2829,7 +2871,7 @@
                 <li>Có <b>lịch sử trả cổ tức tiền mặt tử tế</b>, không tăng vọt hay giảm sốc.</li>
                 <li><b>Tỷ lệ chi trả cổ tức</b> (phần thu nhập dùng trả cổ tức) ổn định.</li>
                 <li>Cổ tức đã <b>tăng trên 5% mỗi năm</b>.</li>
-                <li><b>Tỷ suất cổ tức</b> (giá cổ tức ÷ giá cổ phiếu) <b>trên 2%</b>.</li>
+                <li><b>Tỷ suất cổ tức</b> (cổ tức một năm ÷ giá cổ phiếu) <b>trên 2%</b>.</li>
                 <li><b>Biên lợi nhuận thoải mái</b> — đủ trả cổ tức mà không phải đi vay.</li>
                 <li><b>Dự trữ tiền mặt lành mạnh</b> để dựa vào.</li>
                 <li>Lợi nhuận tăng thêm đủ để <b>giữ mức cổ tức hiện tại</b>.</li>
@@ -3274,7 +3316,7 @@
         <p class="hw-p">Thay vì đoán đáy thị trường, hãy <b>chia nhỏ tiền và mua đều</b> — khi giá thấp bạn tự động mua được nhiều đơn vị hơn, khi giá cao thì ít hơn.</p>
         <div class="hw-viz wb-card wb-chart-scheme--mono wb-chart-ramp--2" style="--hw-chart-max:600px"><div class="wb-card__body">
           <p class="wb-chart__title">Cùng $200 mỗi tháng, nhưng mỗi tháng mua được số cổ phiếu khác nhau</p>
-          <p class="wb-chart__sub">Đường nét đứt là mức <b>10 cổ phiếu</b> — đúng bằng mức nhà đầu tư A mua được khi bỏ một lần ở giá $20. Cột <b>cao hơn</b> đường đó là tháng giá rẻ; cột <b>thấp hơn</b> là tháng giá đắt.</p>
+          <p class="wb-chart__sub">Đường nét đứt là mức <b>10 cổ phiếu</b> — số cổ phiếu mà $200 mua được ở đúng giá $20 của nhà đầu tư A. (A bỏ một lần $1.400 nên mua được 70, không phải 10.) Cột <b>cao hơn</b> đường đó là tháng giá rẻ; cột <b>thấp hơn</b> là tháng giá đắt.</p>
           <div class="wb-chart">
             <svg class="wb-chart__svg" viewBox="0 0 440 228" role="img"
                  aria-label="Bảy cột số cổ phiếu mua được mỗi tháng với 200 đô la: 12, 13, 6, 10, 10, 12, 10. Bốn tháng ở hoặc trên mức 10, một tháng chỉ 6.">
@@ -3976,7 +4018,7 @@
         <p class="hw-p">P2P là <b>“công ty mai mối ảo”</b> giữa người có tiền nhàn rỗi và người cần vay — bỏ qua ngân hàng, nên cả hai bên được giá tốt hơn, đổi lại <b>mất đi lớp bảo vệ mà ngân hàng có</b>. Một môi giới crowdlending chuyên trách <b>thẩm định người vay</b>, chạy kiểm tra tín dụng, và <b>giữ một quỹ dự phòng (safeguard) để bù nợ xấu</b>. Nó <b>thu phí của cả hai bên</b>.</p>
         <div class="wb-card wb-card--pad">
           <p class="wb-media__text"><b>Ví dụ chạy đủ số:</b> người cho vay nhận <b>6%</b> lợi nhuận · người vay trả lại gốc + <b>9%</b> lãi · website lấy <b>1% từ phía người cho vay + 2% từ phía người vay</b>.</p>
-          <p class="wb-media__text" style="margin-top:8px"><em>3 điểm phần trăm chênh lệch giữa 9% và 6% cộng với phí chính là mô hình kinh doanh của nền tảng — đúng cùng logic biên lãi của ngân hàng ở Phần 2, chỉ mỏng hơn.</em></p>
+          <p class="wb-media__text" style="margin-top:8px"><em>3 điểm phần trăm chênh lệch giữa 9% và 6% <b>chính là</b> toàn bộ phí nền tảng thu (1% + 2%), không phải chênh lệch <b>cộng thêm</b> phí — đúng cùng logic biên lãi của ngân hàng ở Phần 2, chỉ mỏng hơn.</em></p>
         </div>
         <div class="wb-grid wb-grid--2" style="margin-top:12px">
           <div class="wb-card wb-card--pad">
@@ -4019,7 +4061,7 @@
         <p class="hw-eyebrow-sec"><b>5.1</b> — Tài chính doanh nghiệp</p>
         <h2 class="hw-sec-title">Các sàn giao dịch, chỉ số, và bộ máy quản lý</h2>
         <h3 class="hw-h3">NYSE — thị trường đấu giá</h3>
-        <p class="hw-p">Trung tâm của thế giới tài chính Mỹ, trên phố Wall. Sàn lớn nhất thế giới tính theo vốn hoá: <b>19,3 nghìn tỷ USD</b> (6/2016). Được gọi là <b>“the Big Board”</b>, niêm yết gần <b>1.900 công ty</b>, trong đó khoảng <b>400 công ty ngoài nước Mỹ</b>. Chủ sở hữu là Intercontinental Exchange.</p>
+        <p class="hw-p">Trung tâm của thế giới tài chính Mỹ, trên phố Wall. Sàn lớn nhất thế giới tính theo vốn hoá: <b>19,3 nghìn tỷ USD</b> (6/2016) — biểu đồ mười sàn ở Phần 2 dùng con số <b>14,14 nghìn tỷ</b> của một thời điểm khác, nên đừng so hai chỗ với nhau. Được gọi là <b>“the Big Board”</b>, niêm yết gần <b>1.900 công ty</b>, trong đó khoảng <b>400 công ty ngoài nước Mỹ</b>. Chủ sở hữu là Intercontinental Exchange.</p>
         <p class="hw-p"><b>Cơ chế đặc trưng:</b> NYSE là <b>thị trường đấu giá</b> — môi giới mua bán thay nhà đầu tư, mục tiêu là <b>khớp giá chào mua cao nhất với giá chào bán thấp nhất</b>. Ngoài cổ phiếu, NYSE còn bán quyền chọn, quỹ tương hỗ, trái phiếu, phái sinh, ETF, chứng quyền, hàng hoá, và trái phiếu Kho bạc Mỹ.</p>
         <div class="wb-card wb-card--pad">
           <p class="wb-media__title">Điều kiện niêm yết NYSE</p>
@@ -4098,7 +4140,7 @@
           <div class="wb-alert__body">
             <p class="wb-alert__title">Thuế bang — điểm thực dụng nhất</p>
             <p class="wb-alert__msg">Tính tới 2016, <b>43 bang thu thuế thu nhập, 7 bang không</b>. 41 bang đánh thuế thu nhập từ lương; 2 bang chỉ đánh thuế cổ tức và lãi. Chênh lệch rất lớn: <b>Florida không có thuế thu nhập, còn California là 13,3%</b>.</p>
-            <p class="wb-alert__msg">Thuế bán hàng: <b>5 bang không áp thuế bán hàng toàn bang</b> — Alaska, Delaware, Montana, New Hampshire, Oregon — dù <b>Montana và Alaska cho phép thu ở cấp địa phương</b>. <b>45 bang thu thuế bán hàng toàn bang và 38 bang chỉ áp thuế bán hàng địa phương.</b> Năm bang cao nhất: Tennessee 9,45% · Arkansas 9,26% · Alabama 8,91% · Louisiana 8,91% · Washington 8,89%.</p>
+            <p class="wb-alert__msg">Thuế bán hàng: <b>5 bang không áp thuế bán hàng toàn bang</b> — Alaska, Delaware, Montana, New Hampshire, Oregon — dù <b>Montana và Alaska cho phép thu ở cấp địa phương</b>. <b>45 bang thu thuế bán hàng toàn bang, và 38 bang có thu thuế bán hàng ở cấp địa phương</b> — hai nhóm chồng lên nhau chứ không rời nhau, nên đừng cộng chúng lại. Năm bang cao nhất: Tennessee 9,45% · Arkansas 9,26% · Alabama 8,91% · Louisiana 8,91% · Washington 8,89%.</p>
             <p class="wb-alert__msg">Bài học: <b>phải hiểu hệ thống thuế của chính bang mình sống</b> — khác biệt không chỉ ở loại thuế, mà cả ở <b>cấp nào thu (bang hay địa phương)</b>.</p>
           </div>
         </div>
@@ -4133,7 +4175,7 @@
         </div>
 
         <h3 class="hw-h3">Fed và nền kinh tế Mỹ</h3>
-        <p class="hw-p">Fed được lập năm <b>13/12/1913</b> để đối phó với một giai đoạn bất ổn và hoảng loạn tài chính; Đạo luật Dự trữ Liên bang do Tổng thống Woodrow Wilson ký, tạo ra một <b>ngân hàng phi tập trung</b> có thể xử lý các lợi ích cạnh tranh giữa dư luận và các định chế tài chính. <b>Mỗi lần khủng hoảng lớn sau đó lại đẻ ra một luật mới định hình lại nó.</b></p>
+        <p class="hw-p">Fed ra đời ngày <b>23/12/1913</b> để đối phó với một giai đoạn bất ổn và hoảng loạn tài chính; Đạo luật Dự trữ Liên bang do Tổng thống Woodrow Wilson ký, tạo ra một <b>ngân hàng phi tập trung</b> có thể xử lý các lợi ích cạnh tranh giữa dư luận và các định chế tài chính. <b>Mỗi lần khủng hoảng lớn sau đó lại đẻ ra một luật mới định hình lại nó.</b></p>
         <div class="wb-card"><div class="wb-card__body">
           <ol class="wb-steps">
             <li class="wb-steps__item is-done"><span class="wb-steps__marker">1</span><div class="wb-steps__content"><p class="wb-steps__title">1929 — thị trường sụp, rồi <b>10.000 ngân hàng phá sản trong vài năm sau đó</b></p><p class="wb-steps__desc"><b>Fed bị chỉ trích vì không hành động để ngăn cú sụp.</b></p></div></li>
@@ -4146,7 +4188,7 @@
           <div class="wb-alert__body">
             <p class="wb-alert__title">Hai lãi suất — và cơ chế khéo léo giữa chúng</p>
             <p class="wb-alert__msg"><b>Federal funds rate</b> = lãi suất các ngân hàng cho nhau vay qua đêm. <b>Discount rate</b> = lãi suất Fed tính khi cho ngân hàng vay.</p>
-            <p class="wb-alert__msg"><b>Cách Fed dùng cái sau để điều khiển cái trước:</b> Fed <b>hạ discount rate xuống dưới federal funds rate</b>, khiến ngân hàng muốn vay từ Fed thay vì vay ngân hàng khác — điều này <b>tạo áp lực buộc các ngân hàng hạ lãi suất qua đêm của họ</b>. Nền của cơ chế: luật buộc ngân hàng phải luôn giữ dự trữ, và vì <b>ngân hàng không được trả lãi trên dự trữ của chính mình</b>, họ thích cho ngân hàng khác vay để kiếm chút lãi. Con số tại thời điểm sách: <b>0,50%</b>.</p>
+            <p class="wb-alert__msg"><b>Cách Fed dùng cái sau để điều khiển cái trước:</b> Fed <b>hạ discount rate xuống dưới federal funds rate</b>, khiến ngân hàng muốn vay từ Fed thay vì vay ngân hàng khác — điều này <b>tạo áp lực buộc các ngân hàng hạ lãi suất qua đêm của họ</b>. Nền của cơ chế: luật buộc ngân hàng phải luôn giữ dự trữ, và vì <b>phần dự trữ dôi ra chỉ sinh lãi rất thấp</b>, họ thích cho ngân hàng khác vay để kiếm thêm. Con số tại thời điểm sách: <b>0,50%</b>.</p>
           </div>
         </div>
         <div class="wb-card wb-card--pad">
@@ -4238,7 +4280,7 @@
         <p class="hw-p">Hầu hết người Mỹ nhận ra rằng họ <b>cần quỹ hưu của riêng mình để bổ sung cho khoản An sinh Xã hội</b> — nghĩa là An sinh Xã hội là <b>sàn, không phải mục tiêu</b>.</p>
         <div class="wb-card wb-card--pad">
           <p class="wb-media__title">An sinh Xã hội</p>
-          <p class="wb-media__text">Người Mỹ nộp một khoản thuế đặc biệt theo <b>FICA</b>, dùng tài trợ các chương trình xã hội — bao gồm cả <b>thuế Medicare</b>. <b>Trần thu nhập chịu FICA năm 2016 là $118.500.</b> Thuế An sinh Xã hội <b>6,2%</b> trên phần đầu tiên đó; thuế Medicare <b>1,45% trên $200.000 đầu tiên và 2,35% cho phần trên $200.000</b>.</p>
+          <p class="wb-media__text">Người Mỹ nộp một khoản thuế đặc biệt theo <b>FICA</b>, dùng tài trợ các chương trình xã hội — bao gồm cả <b>thuế Medicare</b>. <b>Trần chỉ áp cho phần An sinh Xã hội</b> — năm 2016 là $118.500, và thuế An sinh Xã hội <b>6,2%</b> chỉ đánh tới mốc đó. <b>Medicare thì không có trần:</b> thuế Medicare <b>1,45% trên $200.000 đầu tiên và 2,35% cho phần trên $200.000</b>.</p>
           <p class="wb-media__text" style="margin-top:8px"><b>Cách tính trợ cấp:</b> dựa trên <b>tổng thu nhập trong quá khứ</b>, theo công thức dùng <b>Average Indexed Monthly Earnings (AIME)</b>. <b>Công thức này ưu ái người thu nhập thấp.</b> Hệ thống cũng tính theo <b>tuổi bắt đầu nhận tiền</b> — <b>làm càng lâu thì trợ cấp hằng tháng càng có khả năng cao hơn</b>. Trợ cấp cũng <b>được điều chỉnh theo lạm phát</b>.</p>
           <p class="wb-media__text" style="margin-top:8px"><b>Vợ/chồng đã ly hôn</b> có thể đủ điều kiện nhận <b>trợ cấp tử tuất nếu hôn nhân kéo dài ít nhất 10 năm</b> — người còn sống phải <b>chưa tái hôn và đủ 60 tuổi</b> cho trợ cấp tử tuất, và <b>ít nhất 62 tuổi</b> cho trợ cấp vợ/chồng. <b>Có thể theo dõi trợ cấp của mình trực tuyến</b> — biết trước con số giúp lập kế hoạch cần thêm bao nhiêu thu nhập từ nguồn khác.</p>
         </div>
@@ -4274,7 +4316,7 @@
             <p class="wb-alert__msg">Kế hoạch tiết kiệm do một bang hoặc cơ sở giáo dục vận hành. <b>Lợi nhuận được miễn thuế, và không bị đánh thuế khi rút ra để trả chi phí đại học</b> — nhưng <b>tiền phải được dùng cho đại học thì mới được miễn thuế</b>. Nên bắt đầu càng sớm càng tốt. <b>Có thể chọn kế hoạch của một bang mà bạn không cư trú.</b> Thường thấy: <b>ông bà lập tài khoản để góp cho việc học đại học của cháu</b>.</p>
           </div>
         </div>
-        <p class="hw-p"><b>Thuế tài sản:</b> do <b>cơ quan quản lý nơi có bất động sản</b> đặt và thu. Theo báo cáo RealtyTrac 2014, <b>thuế suất tài sản hiệu dụng trung bình cho nhà đơn lập là 1,29%</b>. Điều thú vị: <b>chủ nhà cao cấp và chủ nhà giá thấp có xu hướng chịu thuế suất cao nhất</b>. Chênh lệch địa lý rất lớn — cao nhất: <b>New York ($15.625), New Jersey ($8.108), New Hampshire ($5.795), Connecticut ($5.646), Hawaii ($5.024)</b>; thấp nhất: <b>Alabama ($618), West Virginia ($931), New Mexico ($1.096), Tennessee ($1.116), Indiana ($1.418)</b>.</p>
+        <p class="hw-p"><b>Thuế tài sản:</b> do <b>cơ quan quản lý nơi có bất động sản</b> đặt và thu. Theo báo cáo RealtyTrac 2014, <b>thuế suất tài sản hiệu dụng trung bình cho nhà đơn lập là 1,29%</b>. <b>Chủ nhà cao cấp và chủ nhà giá thấp có xu hướng chịu thuế suất cao nhất</b>. Chênh lệch địa lý rất lớn — cao nhất: <b>New York ($15.625), New Jersey ($8.108), New Hampshire ($5.795), Connecticut ($5.646), Hawaii ($5.024)</b>; thấp nhất: <b>Alabama ($618), West Virginia ($931), New Mexico ($1.096), Tennessee ($1.116), Indiana ($1.418)</b>.</p>
         <div class="hw-tw">
           <table class="wb-table wb-table--compact">
             <thead><tr><th></th><th>Inheritance tax (thuế thừa kế)</th><th>Estate tax (thuế di sản)</th></tr></thead>
@@ -4307,7 +4349,7 @@
       <section id="s6-1">
         <p class="hw-eyebrow-sec"><b>A1</b> — LSE &amp; FTSE</p>
         <h2 class="hw-sec-title">Sàn London và hệ chỉ số FTSE</h2>
-        <p class="hw-p">LSE là một trong những sàn lâu đời nhất thế giới, <b>xếp thứ ba toàn cầu về vốn hoá</b>, và là <b>một trong những sàn quốc tế nhất</b> với công ty từ <b>hơn 60 nước</b>. Ngoài cổ phiếu, LSE bán trái phiếu, phái sinh, quỹ, chứng quyền, hàng hoá, và <b>gilts</b> (chủ yếu là trái phiếu chính phủ Anh).</p>
+        <p class="hw-p">LSE là một trong những sàn lâu đời nhất thế giới, <b>lớn nhất châu Âu và nằm trong nhóm năm sàn lớn nhất toàn cầu</b> về vốn hoá, và là <b>một trong những sàn quốc tế nhất</b> với công ty từ <b>hơn 60 nước</b>. Ngoài cổ phiếu, LSE bán trái phiếu, phái sinh, quỹ, chứng quyền, hàng hoá, và <b>gilts</b> (chủ yếu là trái phiếu chính phủ Anh).</p>
         <div class="hw-figs">
           <div class="hw-fig"><span class="n">2.600</span><span class="l">công ty niêm yết trên LSE</span></div>
           <div class="hw-fig"><span class="n">£3 nghìn tỷ</span><span class="l">tổng giá trị — và <b>100 công ty hàng đầu chiếm gần 80%</b> con số đó</span></div>
@@ -4337,7 +4379,7 @@
             </tbody>
           </table>
         </div>
-        <p class="hw-p"><b>Quản lý:</b> hoạt động trên LSE do <b>UK Listing Authority (UKLA)</b> — một nhánh của Financial Services Authority — điều tiết. Nguyên tắc: <b>niêm yết càng cao cấp thì quy trình xét duyệt càng nghiêm ngặt</b>. <b>LSE Group</b> còn cho tiếp cận <b>Borsa Italiana</b> (Milan), <b>MTS</b> (thị trường thu nhập cố định hàng đầu châu Âu), và <b>Turquoise</b> (giao dịch chứng khoán từ 19 nước châu Âu).</p>
+        <p class="hw-p"><b>Quản lý:</b> hoạt động trên LSE do cơ quan quản lý niêm yết <b>UK Listing Authority (UKLA)</b> điều tiết. <span class="wb-cell-muted">(Sách ghi UKLA là một nhánh của <i>Financial Services Authority</i>; FSA đã bị giải thể ngày 1/4/2013 — bốn năm trước khi sách in — và chức năng chia cho <b>FCA</b> cùng PRA, với UKLA nằm trong FCA. Chính mục A4 bên dưới gọi đúng tên FCA khi nói về Mortgage Market Review.)</span> Nguyên tắc: <b>niêm yết càng cao cấp thì quy trình xét duyệt càng nghiêm ngặt</b>. <b>LSE Group</b> còn cho tiếp cận <b>Borsa Italiana</b> (Milan), <b>MTS</b> (thị trường thu nhập cố định hàng đầu châu Âu), và <b>Turquoise</b> (giao dịch chứng khoán từ 19 nước châu Âu).</p>
 
         <h3 class="hw-h3">Quỹ đầu cơ (hedge fund)</h3>
         <p class="hw-p">Khác biệt cốt lõi giữa quỹ đầu cơ và các quỹ khác <b>không nằm ở tài sản, mà ở <em>mục tiêu</em></b> — quỹ thường cố vượt một chỉ số, quỹ đầu cơ <b>chỉ nhắm tạo ra lợi nhuận, bất kể thị trường thế nào</b>.</p>
@@ -4362,7 +4404,7 @@
         <p class="hw-p"><b>Nghĩa vụ đăng ký:</b> bất kỳ công ty nào có cơ sở kinh doanh vật lý ở Anh phải đăng ký. <b>Công ty nước ngoài phải đăng ký trong vòng một tháng</b> kể từ khi mở cơ sở, nhưng <b>một số loại hình nước ngoài như partnership, limited partnership, hoặc cơ quan chính phủ thì không đăng ký được ở Anh</b>. Sau đăng ký: nộp <b>tờ khai thuế hằng năm cho Companies House</b>, cùng <b>báo cáo quý và báo cáo năm cho HMRC</b>, và nộp thuế doanh nghiệp hằng năm với lợi nhuận tới <b>£1,5 triệu</b>, hoặc <b>trả góp nhiều đợt với lợi nhuận trên £1,5 triệu</b>.</p>
         <p class="hw-p"><b>Ba loại đối tượng phải nộp thuế doanh nghiệp:</b> công ty Anh · công ty nước ngoài đăng ký tại Anh · và câu lạc bộ, hợp tác xã, hoặc hiệp hội khác như nhóm cộng đồng hay câu lạc bộ thể thao. <b>Partnership không đăng ký với Companies House và không phải nộp báo cáo cho HMRC</b> — ngoài tờ khai thuế thu nhập cá nhân của từng thành viên.</p>
         <p class="hw-p"><b>Chuẩn kế toán Anh:</b> do <b>Financial Reporting Council (FRC)</b> ban hành. <b>UK GAAP</b> quy định cách lập và công bố báo cáo, gồm cả chuẩn kế toán lẫn luật công ty. Khung kế toán gồm <b>sáu chuẩn, FRS 100 tới FRS 105</b>, mỗi chuẩn cho một loại công ty (công ty mẹ, công ty chưa niêm yết, công ty bảo hiểm…).</p>
-        <p class="hw-p"><b>Năm kế toán:</b> bắt đầu <b>1/6 và kết thúc 31/5</b> — nhưng khác ở năm đầu tiên, vì công ty bắt đầu kỳ kế toán đầu <b>từ ngày thành lập, không phải ngày bắt đầu kinh doanh</b>; mốc này gọi là <b>Accounting Reference Date (ARD)</b>.</p>
+        <p class="hw-p"><b>Năm kế toán:</b> mỗi công ty có ngày kết thúc riêng, vì công ty bắt đầu kỳ kế toán đầu <b>từ ngày thành lập, không phải ngày bắt đầu kinh doanh</b>; mốc này gọi là <b>Accounting Reference Date (ARD)</b>.</p>
         <div class="hw-tw">
           <table class="wb-table wb-table--compact">
             <thead><tr><th>Việc</th><th>Hạn</th></tr></thead>
@@ -4464,7 +4506,7 @@
         </div>
         <p class="hw-p">Thay vào đó, chính phủ gửi đóng góp NI vào <b>Call Notice Deposit Account</b> do Debt Management Office quản lý — tiền đặt trong tài khoản qua đêm, cho vay để hưởng lãi theo mức thị trường; số dư điều chỉnh từng ngày để rút ra khi cần trả lương hưu. <b>Vì không có hạn chế rút, lãi kiếm được rất thấp, chỉ đóng góp một khoản nhỏ vào quỹ NI.</b></p>
         <p class="hw-p"><b>Xu hướng đáng lo:</b> từ thập niên 1990, quỹ NI luôn thặng dư. <b>Nhưng thặng dư đang teo lại vì tăng trưởng thu nhập giảm.</b> Khủng hoảng 2007–2008 kích hoạt <b>mức giảm hơn 10% của lương thực tế trong chín năm tính tới 2016</b>. Chừng nào lương thực tế chưa hồi phục, thặng dư NI sẽ tiếp tục giảm. <b>Một số dự báo của chính phủ cho rằng nếu xu hướng này kéo dài, quỹ sẽ cạn kiệt vào 2035–36.</b></p>
-        <p class="hw-p"><b>Phản ứng chính sách:</b> giới thiệu <b>New State Pension năm 2016</b> và <b>dần nâng tuổi nghỉ hưu</b>. Người nghỉ hưu sau 2021 nhận <b>mức cố định £145–£155/tuần</b>, với điều kiện <b>đã đóng NI 35 năm</b>. Mức tăng tính theo cơ chế <b>“triple lock”</b> — tăng theo mức cao nhất trong ba: <b>lạm phát, mức tăng thu nhập trung bình, hoặc 2,5%</b>.</p>
+        <p class="hw-p"><b>Phản ứng chính sách:</b> giới thiệu <b>New State Pension năm 2016</b> và <b>dần nâng tuổi nghỉ hưu</b>. Người <b>đạt tuổi nghỉ hưu từ 6/4/2016</b> nhận mức cố định tối đa <b>£155,65/tuần</b>, với điều kiện <b>đã đóng NI 35 năm</b>. Mức tăng tính theo cơ chế <b>“triple lock”</b> — tăng theo mức cao nhất trong ba: <b>lạm phát, mức tăng thu nhập trung bình, hoặc 2,5%</b>.</p>
 
         <h3 class="hw-h3">VAT và các thuế gián thu</h3>
         <p class="hw-p"><b>VAT</b> chiếm khoảng <b>18%</b> nguồn thu. Trả trên mọi giao dịch bán tại Anh; <b>người bán có trách nhiệm nộp phần VAT đã thu, trừ đi phần VAT chính họ đã trả</b>. Doanh nghiệp <b>phải đăng ký VAT nếu doanh thu trên £83.000 trong 12 tháng</b>.</p>
@@ -4518,14 +4560,14 @@
 
         <h3 class="hw-h3">Thuế thừa kế (IHT)</h3>
         <p class="hw-p">Mấu chốt của IHT ở Anh <b>không phải thuế suất, mà là <em>ngưỡng miễn</em></b> — và ngưỡng này được thiết kế xoay quanh <b>ngôi nhà gia đình</b>. Từ <b>tháng 4/2020</b>: người thừa kế bất động sản <b>chỉ phải trả IHT nếu bất động sản trị giá trên £500.000</b>; nếu thừa kế <b>từ một cặp vợ chồng hoặc bạn đời dân sự, con số này tăng lên £1 triệu</b>.</p>
-        <p class="hw-p"><b>Cấu tạo ngưỡng:</b> đưa vào <b>family home allowance £175.000 mỗi người</b>, cộng với <b>mức miễn hiện có £375.000</b>, tạo thành ngưỡng <b>£500.000</b>. <b>Thuế suất:</b> vượt ngưỡng thì áp <b>IHT 40%</b>; <b>giảm xuống 36% nếu từ 10% giá trị ròng của khối di sản trở lên được để lại cho từ thiện</b>. Thuế được <b>trả trực tiếp từ khối di sản cho HMRC bởi người thi hành di chúc</b>.</p>
+        <p class="hw-p"><b>Cấu tạo ngưỡng:</b> đưa vào <b>family home allowance £175.000 mỗi người</b>, cộng với <b>mức miễn hiện có £325.000</b>, tạo thành ngưỡng <b>£500.000</b>. <b>Thuế suất:</b> vượt ngưỡng thì áp <b>IHT 40%</b>; <b>giảm xuống 36% nếu từ 10% giá trị ròng của khối di sản trở lên được để lại cho từ thiện</b>. Thuế được <b>trả trực tiếp từ khối di sản cho HMRC bởi người thi hành di chúc</b>.</p>
         <div class="hw-tw">
           <table class="wb-table wb-table--compact">
             <thead><tr><th>Tài sản khác</th><th>Nhà gia đình</th><th>Tổng di sản</th><th>IHT — độc thân</th><th>IHT — cặp vợ chồng</th></tr></thead>
             <tbody>
               <tr><td>£175.000</td><td>£175.000</td><td>£350.000</td><td><b>0</b></td><td><b>0</b></td></tr>
               <tr><td>£200.000</td><td>£300.000</td><td>£500.000</td><td><b>0</b></td><td><b>0</b></td></tr>
-              <tr><td>£250.000</td><td>£400.000</td><td>£600.000 / £650.000</td><td>£60.000</td><td><b>0</b></td></tr>
+              <tr><td>£250.000</td><td>£400.000</td><td>£650.000</td><td>£60.000</td><td><b>0</b></td></tr>
               <tr><td>£400.000</td><td>£600.000</td><td>£1.000.000</td><td>£200.000</td><td><b>0</b></td></tr>
               <tr><td>£750.000</td><td>£750.000</td><td>£1.500.000</td><td>£400.000</td><td>£200.000</td></tr>
               <tr><td>£1.000.000</td><td>£1.000.000</td><td>£2.000.000</td><td>£600.000</td><td>£400.000</td></tr>
@@ -4651,7 +4693,7 @@
           </div>
           <div class="wb-card wb-card--pad">
             <p class="wb-media__title">4 · Thời gian mạnh hơn số tiền</p>
-            <p class="wb-media__text">Cùng mục tiêu hưu trí, bắt đầu ở tuổi 25 cần <b>$165/tháng</b>; bắt đầu ở tuổi 45 cần <b>$322</b>. Lãi kép không có “chân dốc” nào chặn nó lại.</p>
+            <p class="wb-media__text">Cùng mục tiêu hưu trí, bắt đầu ở tuổi 25 cần <b>$165/tháng</b>; để tới sau tuổi 50 mới bắt đầu thì cần khoảng <b>$322</b> — gần gấp đôi, cho đúng một khoản lương hưu ấy. Lãi kép không có “chân dốc” nào chặn nó lại.</p>
           </div>
           <div class="wb-card wb-card--pad">
             <p class="wb-media__title">5 · Có lãi vẫn có thể chết</p>

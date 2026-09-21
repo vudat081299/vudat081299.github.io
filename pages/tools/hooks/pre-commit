@@ -65,4 +65,24 @@ MSG
   fi
 fi
 
+# Cổng kiến thức cho hai trang học máy: chúng nói ~270 con số có đơn vị, phần lớn
+# tính lại được (896 = 32×(3·3·3+1), F1 đọc từ ma trận nhầm lẫn, chi phí nhân của
+# khối Inception, cỡ đầu ra sau padding/stride). Chỉ chạy khi một trong hai bị chạm.
+if echo "$CHANGED" | grep -qE "(^|/)machine-learning(-101)?\.html$"; then
+  if ! python3 "$DIR/tools/verify-ml.py"; then
+    cat >&2 <<'MSG'
+
+──────────────────────────────────────────────────────────────────────
+Commit bị chặn: có con số trong trang học máy không tính lại được.
+
+Nếu bạn vừa sửa một con số thì phải sửa cả phép tính tương ứng trong
+pages/tools/verify-ml.py — hoặc con số mới là sai.
+
+Xem chi tiết:  python3 pages/tools/verify-ml.py
+──────────────────────────────────────────────────────────────────────
+MSG
+    exit 1
+  fi
+fi
+
 echo "pre-commit: cổng $DIR qua."

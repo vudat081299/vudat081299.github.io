@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
 <title>Toán cho Học máy &amp; Khoa học dữ liệu — diễn giải trọn bộ 3 khoá của DeepLearning.AI</title>
-<meta name="description" content="Diễn giải bằng tiếng Việt trọn bộ Mathematics for Machine Learning and Data Science (3 khoá, 11 tuần, DeepLearning.AI) — đại số tuyến tính, giải tích, xác suất &amp; thống kê. Mỗi ý kể ba lần: một trò chơi trẻ con hiểu được, cùng một điều viết bằng ký hiệu chuẩn, rồi chỗ nó xuất hiện trong học máy. Hệ phương trình, định thức, hạng, vector, nhân vô hướng, ma trận như máy biến hình, chuyển vị, ma trận đối xứng, nghịch đảo, trị riêng, PCA, đạo hàm, gradient, gradient descent, quy tắc chuỗi, Newton, Bayes, nhị thức, phân phối chuẩn, hiệp phương sai, định lý giới hạn trung tâm, MLE, MAP, khoảng tin cậy, p-value, A/B test — kèm 18 mô hình nghịch trực tiếp trên trang.">
+<meta name="description" content="Diễn giải bằng tiếng Việt trọn bộ Mathematics for Machine Learning and Data Science (3 khoá, 11 tuần, DeepLearning.AI) — đại số tuyến tính, giải tích, xác suất &amp; thống kê. Mỗi vật mới kể ba lần: một trò chơi trẻ con hiểu được, cùng một điều viết bằng ký hiệu chuẩn, rồi chỗ nó xuất hiện trong học máy. Hệ phương trình, định thức, hạng, vector, nhân vô hướng, ma trận như máy biến hình, chuyển vị, ma trận đối xứng, nghịch đảo, trị riêng, PCA, đạo hàm, gradient, gradient descent, quy tắc chuỗi, Newton, Bayes, nhị thức, phân phối chuẩn, hiệp phương sai, định lý giới hạn trung tâm, MLE, MAP, khoảng tin cậy, p-value, A/B test — kèm 18 mô hình nghịch trực tiếp trên trang.">
 
 <script>
   /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành.
@@ -38,7 +38,7 @@
   --canvas:#fbfbf9; --surface:#ffffff; --surface-2:#f4f4f1; --sunk:#f7f7f4;
   /* --subtle dùng cho chữ thường cỡ 10–13px (nhãn mono, .dim, th, caption), nên nó phải
      đạt 4.5:1 với cả --canvas, --surface, --surface-2 và --sunk. #8b91a0 cũ chỉ được 2.8:1. */
-  --ink:#15171c; --muted:#575d6b; --subtle:#676e80; --border:#e5e4de; --border-2:#d6d5cd;
+  --ink:#15171c; --muted:#575d6b; --subtle:#646b7d;  /* #676e80 cho 4,45:1 trên nền ô đã nhuộm — dưới 4,5:1; đậm thêm một nấc */ --border:#e5e4de; --border-2:#d6d5cd;
   --a:#3450c8; --a-bg:#eceffc; --a-line:#c3cdf3;
   --c:#a2560b; --c-bg:#fbf1e4; --c-line:#eed4ac;
   --p:#0d6b60; --p-bg:#e6f3f0; --p-line:#b3ddd5;
@@ -86,9 +86,13 @@ a { color:inherit; }
 @media (max-width:600px) { .bar__in { padding:0 16px; gap:9px; } }
 .bar__brand { font-weight:700; font-size:14.5px; letter-spacing:-.01em; text-decoration:none; white-space:nowrap; display:flex; align-items:center; gap:7px; }
 .bar__brand span.d { color:var(--subtle); font-weight:500; }
-@media (max-width:900px) { .bar__brand span.d { display:none; } }
+@media (max-width:1340px) { .bar__brand span.d { display:none; } }
 .bar__nav { display:flex; gap:2px; margin-left:auto; }
-@media (max-width:860px) { .bar__nav { display:none; } }
+/* Thanh điều hướng ngang chỉ hiện khi CÒN CHỖ, và dòng phụ của thương hiệu nhường
+     chỗ trước. Ngưỡng cũ làm trang tràn ngang suốt quãng màn hình vừa — đo được ở
+     mọi bề rộng từ 880 tới 1440px, lỗi có sẵn chứ không phải do đổi nhãn. Mục lục
+     cột bên vẫn còn nguyên nên ẩn thanh này không mất đường đi nào. */
+@media (max-width:1200px) { .bar__nav { display:none; } }
 .bar__nav a {
   font-size:12.5px; color:var(--muted); text-decoration:none; padding:5px 9px;
   border-radius:var(--radius-sm); white-space:nowrap;
@@ -144,8 +148,8 @@ html.dark .ic-moon { display:none; }
 .toc { position:sticky; top:68px; max-height:calc(100vh - 96px); overflow-y:auto; padding-right:6px; font-size:13px; }
 .toc::-webkit-scrollbar { width:7px; }
 .toc::-webkit-scrollbar-thumb { background:var(--border-2); border-radius:4px; }
-.toc h4 { font-family:var(--mono); font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--subtle); margin:16px 0 6px; font-weight:600; }
-.toc h4:first-child { margin-top:0; }
+.toc .toc__g { font-family:var(--mono); font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--subtle); margin:16px 0 6px; font-weight:600; }
+.toc .toc__g:first-child { margin-top:0; }
 .toc a { display:block; text-decoration:none; color:var(--muted); padding:4px 9px; border-radius:var(--radius-sm); line-height:1.45; border-left:2px solid transparent; }
 .toc a:hover { color:var(--ink); background:var(--surface-2); }
 .toc a.on { color:var(--ink); font-weight:640; border-left-color:var(--ink); background:var(--surface-2); }
@@ -573,25 +577,25 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
 <header class="bar">
   <div class="bar__in">
-    <button class="iconbtn" id="tocBtn" aria-label="Contents">
-      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    <button class="iconbtn" id="tocBtn" aria-label="Mở mục lục">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-    <a class="bar__brand" href="../index.html">Maths for ML <span class="d">&amp; Data Science · DeepLearning.AI · 3 courses</span></a>
+    <a class="bar__brand" href="../index.html">Maths for ML <span class="d">&amp; Data Science · DeepLearning.AI · 3 khoá</span></a>
     <nav class="bar__nav">
-      <a href="#mo-dau">Start Here</a>
-      <a href="#act1">1 · Linear Algebra</a>
-      <a href="#act2">2 · Calculus</a>
-      <a href="#act3">3 · Probability</a>
-      <a href="#act4">4 · Statistics</a>
-      <a href="#ket">Reference</a>
+      <a href="#mo-dau">Mở đầu</a>
+      <a href="#act1">1 · Đại số tuyến tính</a>
+      <a href="#act2">2 · Giải tích</a>
+      <a href="#act3">3 · Xác suất</a>
+      <a href="#act4">4 · Thống kê</a>
+      <a href="#ket">Tra cứu</a>
     </nav>
     <div class="bar__act">
-      <a class="iconbtn" href="../index.html" aria-label="Home">
-        <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+      <a class="iconbtn" href="../index.html" aria-label="Trang chủ">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
       </a>
-      <button class="iconbtn" id="themeBtn" aria-label="Light / dark">
-        <svg class="ic-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8"/></svg>
-        <svg class="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <button class="iconbtn" id="themeBtn" aria-label="Sáng / Tối">
+        <svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8"/></svg>
+        <svg class="ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       </button>
     </div>
   </div>
@@ -620,17 +624,17 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a class="ch-p" href="#act4"><div class="n">CHẶNG 4 · KHOÁ 3</div><div class="t">Từ mẫu nhỏ nói về cả thế giới</div><div class="d">Lấy mẫu, giới hạn trung tâm, MLE, MAP, khoảng tin cậy, p-value, A/B test.</div></a>
     </div>
 
-    <p class="meta">THUẬT NGỮ GẠCH CHÂN CHẤM LÀ BẤM ĐƯỢC — HIỆN TÊN TIẾNG ANH CHÍNH THỨC KÈM GIẢI THÍCH NGẮN<br>MỖI MỤC CÓ CHIP GHI RÕ NÓ ỨNG VỚI KHOÁ NÀO · TUẦN NÀO CỦA BẢN GỐC<br>MÀU LÀ ĐIỀU HƯỚNG: <span class="c-a">XANH = ĐẠI SỐ TUYẾN TÍNH</span> · <span class="c-c">NÂU = GIẢI TÍCH</span> · <span class="c-p">XANH LỤC = XÁC SUẤT &amp; THỐNG KÊ</span></p>
+    <p class="meta">THUẬT NGỮ GẠCH CHÂN CHẤM LÀ BẤM ĐƯỢC — HIỆN TÊN TIẾNG ANH CHÍNH THỨC KÈM GIẢI THÍCH NGẮN<br>MỤC NÀO CÓ TRONG BẢN GỐC ĐỀU MANG CHIP GHI RÕ KHOÁ NÀO · TUẦN NÀO<br>MÀU LÀ ĐIỀU HƯỚNG: <span class="c-a">XANH = ĐẠI SỐ TUYẾN TÍNH</span> · <span class="c-c">NÂU = GIẢI TÍCH</span> · <span class="c-p">XANH LỤC = XÁC SUẤT &amp; THỐNG KÊ</span></p>
   </header>
 
   <div class="layout">
     <nav class="toc" id="toc" aria-label="Mục lục">
-      <h4>Mở đầu</h4>
+      <p class="toc__g">Mở đầu</p>
       <a href="#s-ba-cau">Ba câu hỏi, ba khoá</a>
-      <a href="#s-doc-sao">Cách đọc: mỗi ý kể ba lần</a>
+      <a href="#s-doc-sao">Cách đọc: vật mới kể ba lần</a>
       <a href="#s-kyhieu">Đọc ký hiệu như đọc chữ</a>
 
-      <h4>1 · Đại số tuyến tính</h4>
+      <p class="toc__g">1 · Đại số tuyến tính</p>
       <a href="#s-hept">1.1 Hai câu đố cùng một lúc</a>
       <a href="#s-singular">1.2 Câu đố hỏi trùng: định thức</a>
       <a href="#s-khu">1.3 Giải máy móc: khử &amp; hạng</a>
@@ -642,7 +646,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-eigen">1.9 Mũi tên không chịu đổi hướng</a>
       <a href="#s-pca">1.10 PCA: giữ trục kể được nhiều nhất</a>
 
-      <h4>2 · Giải tích</h4>
+      <p class="toc__g">2 · Giải tích</p>
       <a href="#s-slope">2.1 Đạo hàm là độ nghiêng dưới chân</a>
       <a href="#s-rules">2.2 Bốn quy tắc là đủ dùng</a>
       <a href="#s-min">2.3 Đáy, đỉnh, và yên ngựa</a>
@@ -652,7 +656,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-newton">2.7 Newton: dùng độ cong để nhảy tới đáy</a>
       <a href="#s-losses">2.8 Chỗ toán gặp học máy</a>
 
-      <h4>3 · Xác suất</h4>
+      <p class="toc__g">3 · Xác suất</p>
       <a href="#s-prob">3.1 Xác suất là đếm số cách</a>
       <a href="#s-prules">3.2 Cộng, nhân, và chữ &ldquo;độc lập&rdquo;</a>
       <a href="#s-cond">3.3 Biết thêm một tin thì đổi ý</a>
@@ -664,7 +668,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-ev">3.9 Kỳ vọng, phương sai, độ lệch chuẩn</a>
       <a href="#s-cov">3.10 Hiệp phương sai &amp; tương quan</a>
 
-      <h4>4 · Thống kê</h4>
+      <p class="toc__g">4 · Thống kê</p>
       <a href="#s-sample">4.1 Tổng thể, mẫu, luật số lớn</a>
       <a href="#s-clt">4.2 Giới hạn trung tâm: chuông ở khắp nơi</a>
       <a href="#s-mle">4.3 MLE: chọn tham số đỡ bất ngờ nhất</a>
@@ -674,7 +678,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-test">4.7 Kiểm định giả thuyết &amp; p-value</a>
       <a href="#s-traps">4.8 Bốn cái bẫy đếm được</a>
 
-      <h4>Tra cứu</h4>
+      <p class="toc__g">Tra cứu</p>
       <a href="#s-carry">Tám câu mang theo</a>
       <a href="#s-mistakes">Nhầm lẫn thường gặp</a>
       <a href="#s-cheat">Bảng tra cứu</a>
@@ -720,9 +724,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
       <section id="s-doc-sao">
         <p class="sechead">0.2 · <b>Cách đọc</b></p>
-        <h2 class="st">Mỗi ý được kể ba lần, và ba lần ấy luôn đứng cùng một chỗ</h2>
+        <h2 class="st">Mỗi vật mới được kể ba lần, và ba lần ấy luôn đứng cùng một chỗ</h2>
 
-        <p class="lede">Khối ba ô dưới đây quay lại ở gần như mọi mục. Nó tồn tại vì hai người đọc trang này cần hai thứ khác nhau, và không nên bắt ai phải đọc phần của người kia.</p>
+        <p class="lede">Khối ba ô dưới đây quay lại ở <b>mười hai mục</b> — đúng những mục đặt lên bàn một vật mới: hệ hai phương trình, định thức, khử Gauss, vector, ma trận, chuyển vị, trị riêng, đạo hàm, đạo hàm riêng, quy tắc chuỗi, xác suất, Bayes. Mục nào chỉ dùng lại thứ đã dựng xong thì đi thẳng vào việc, không lặp lại khối này. Nó tồn tại vì hai người đọc trang này cần hai thứ khác nhau, và không nên bắt ai phải đọc phần của người kia.</p>
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Một chuyện sờ được: kẹo, xúc xắc, cầu tuột, đi chợ. <b>Không có ký hiệu nào.</b> Đọc riêng ô này vẫn hiểu ý — trẻ cấp một đọc được.</div></div>
@@ -1463,7 +1467,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
       <section id="s-rules" class="ch-c">
         <p class="sechead">2.2 · <b>Quy tắc tính</b></p>
-        <h2 class="st">Không ai đi tính giới hạn mỗi lần — có bốn cái mẹo, và bốn cái là đủ</h2>
+        <h2 class="st">Không ai đi tính giới hạn mỗi lần — bốn quy tắc gánh gần hết, cộng một cái dự phòng</h2>
         <p class="map">Bản gốc · <b>C2 · Tuần 1</b> · Derivative rules, common derivatives</p>
 
         <p class="lede">Bốn quy tắc dưới đây, cộng một bảng ngắn các hàm hay gặp, đủ để đạo hàm mọi thứ xuất hiện trong 11 tuần này — kể cả công thức lan truyền ngược của mạng nơ-ron.</p>
@@ -2435,7 +2439,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
       <div class="acthead" id="ket">
         <p class="k">Kết · thứ để mang đi và thứ để tra lại</p>
-        <h2>Tám câu để nhớ, những chỗ dễ nhầm, và ba bảng tra cứu</h2>
+        <h2>Tám câu để nhớ, những chỗ dễ nhầm, và bốn bảng tra cứu</h2>
         <p>Phần này không có ý tưởng mới. Nó là chỗ quay lại sau ba tháng, khi bạn cần &ldquo;định thức để làm gì&rdquo; trong mười giây chứ không phải đọc lại cả chặng.</p>
       </div>
 
@@ -2593,7 +2597,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="box">
           <p class="box__k">Nguồn của phần nội dung</p>
-          <p>Tên khoá, số tuần và tiêu đề từng tuần được đối chiếu với <b>trang khoá học chính thức</b> của chuyên ngành trên Coursera và DeepLearning.AI: 3 khoá, <b>11 tuần</b> (4 + 3 + 4), khoảng <b>94 giờ</b>, giảng viên <b>Luis Serrano</b>. Mọi con số <b>tính được</b> trong trang — định thức, trị riêng, tỉ lệ PCA, dãy Newton, xác suất nhị thức, mốc 68–95–99,7, kết quả Bayes, phân vị t, p-value — đều được <b>tính lại bằng máy</b> và kiểm bằng một script nằm cùng repo, nên nếu ai sửa một con số mà không sửa phép tính thì cổng kiểm sẽ chặn. Vài con số <i>không</i> tính được — số giờ của khoá, con số của cuộc thăm dò năm 1936 — thì được dẫn từ nguồn, không phải từ phép tính.</p>
+          <p>Tên khoá, số tuần và tiêu đề từng tuần được đối chiếu với <b>trang khoá học chính thức</b> của chuyên ngành trên Coursera và DeepLearning.AI: 3 khoá, <b>11 tuần</b> (4 + 3 + 4), khoảng <b>94 giờ</b>, giảng viên <b>Luis Serrano</b>. Mọi con số <b>tính được</b> trong trang — định thức, trị riêng, tỉ lệ PCA, dãy Newton, xác suất nhị thức, mốc 68–95–99,7, kết quả Bayes, phân vị t, p-value — đều được <b>tính lại bằng máy</b> và kiểm tự động, nên một con số bị sửa mà phép tính không sửa theo sẽ bị chặn lại trước khi trang được đăng. Vài con số <i>không</i> tính được — số giờ của khoá, con số của cuộc thăm dò năm 1936 — thì được dẫn từ nguồn, không phải từ phép tính.</p>
           <p>Cách sắp xếp lại thành 4 chặng, khuôn ba ô <i>trò chơi / toán / dùng ở đâu</i>, 18 mô hình tương tác, phần &ldquo;bốn cái bẫy&rdquo; và mọi phép ví von là <b>diễn giải thêm</b> — không có trong bản gốc, và nên đọc như quan điểm chứ không phải như lời của giảng viên.</p>
         </div>
 
@@ -2606,7 +2610,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <ul>
           <li><b>Chính chuyên ngành gốc</b> — <span class="mono">coursera.org/specializations/mathematics-for-machine-learning-and-data-science</span>. Trang này diễn giải nó, không thay thế: <b>bài tập lập trình mới là chỗ kiến thức thành kỹ năng</b>. Đọc hiểu định thức khác xa việc tự cài khử Gauss chạy đúng trên ma trận suy biến.</li>
           <li><b>Nếu chỉ có thời gian cho một khoá</b>: chọn <b>khoá 3 (Probability &amp; Statistics)</b>. Đại số tuyến tính và giải tích đã được thư viện làm hộ gần hết; còn cái bẫy Bayes ở mục 3.4 và cái bẫy p-value ở mục 4.7 thì <b>không thư viện nào cứu được bạn</b>.</li>
-          <li><b>Bước tiếp theo</b>: chuyên ngành <i>Machine Learning</i> và <i>Deep Learning</i> của Andrew Ng — có <a href="machine-learning.html">bản diễn giải tiếng Việt trọn bộ 8 khoá</a> trong cùng site này. Toán ở đây là phần nền cho đúng những công thức bên đó.</li>
+          <li><b>Bước tiếp theo</b>: hai chuyên ngành <i>Machine Learning</i> và <i>Deep Learning</i> của Andrew Ng trên Coursera. Toán ở đây là phần nền cho đúng những công thức bên đó — gradient ở mục 2.4 là gradient trong lan truyền ngược, và log-loss ở mục 4.4 là hàm mất mát của bài phân loại.</li>
           <li><b>Để nhìn thấy hình</b>: kênh <i>3Blue1Brown</i>, loạt <i>Essence of Linear Algebra</i> — cách nhìn ma trận như biến đổi ở mục 1.6 lấy cảm hứng trực tiếp từ đó. Và <i>Seeing Theory</i> (<span class="mono">seeing-theory.brown.edu</span>) cho phần xác suất.</li>
           <li><b>Ba việc đáng làm hơn đọc thêm ba cuốn sách</b>: (1) tự cài PCA bằng numpy chỉ với <span class="mono">cov</span> và <span class="mono">eigh</span>, rồi so với sklearn; (2) tự viết gradient descent cho hồi quy logistic, không dùng thư viện, và cố tình đặt α quá lớn để thấy phân kỳ tận mắt; (3) lấy một A/B test thật ở chỗ bạn làm, tính lại p-value và khoảng tin cậy bằng tay, rồi xem kết luận có đổi không.</li>
         </ul>
@@ -2624,7 +2628,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 </footer>
 
 <button class="totop" id="toTop" aria-label="Lên đầu trang">
-  <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
 <script>
@@ -4550,7 +4554,7 @@ var GLOSS = [
   pop.className = 'pop';
   pop.setAttribute('role', 'dialog');
   pop.setAttribute('aria-label', 'Giải thích thuật ngữ');
-  pop.innerHTML = '<button class="pop__x" aria-label="Đóng"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
+  pop.innerHTML = '<button class="pop__x" aria-label="Đóng"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
     '<p class="pop__en"></p><p class="pop__vi"></p><p class="pop__d"></p><a class="pop__go" href="#"></a>';
   document.body.appendChild(pop);
   var pEn = pop.querySelector('.pop__en'), pVi = pop.querySelector('.pop__vi'),

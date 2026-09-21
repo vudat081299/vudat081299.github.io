@@ -33,6 +33,12 @@
   :root { --wb-fg-subtle: var(--wb-gray-500); }
   .dark { --wb-fg-subtle: var(--wb-gray-400); }
 
+  /* .wb-alert__msg của kit là --wb-fg-muted (gray-500) — đủ trên nền trắng nhưng chỉ
+     3,89–3,91:1 trên nền đã nhuộm màu của hộp cảnh báo. Đậm thêm một bậc CHỈ bên trong
+     hộp cảnh báo (6,0:1). Nhánh tối giữ nguyên gray-400, vốn đã đạt chuẩn ở đó. */
+  .wb-alert { --wb-fg-muted: var(--wb-gray-600); }
+  .dark .wb-alert { --wb-fg-muted: var(--wb-gray-400); }
+
   /* long brand text must not overflow on phones */
   @media (max-width: 480px) { .wb-navbar__brand { max-width: calc(100vw - 132px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
 
@@ -64,6 +70,9 @@
 
   /* ---- section rhythm ---- */
   section[id] { scroll-margin-top: 76px; }
+  /* #cua-so-ngu-canh là <h3 class="hw-h3">, không phải <section>: quy tắc trên không với
+     tới, đo được nó dừng ở top = 0, khuất sau header dính 56px. */
+  h3.hw-h3[id] { scroll-margin-top: 76px; }
   .hw-part-head { padding-top: 22px; border-top: var(--wb-bw) solid var(--wb-border); }
   .hw-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
   .hw-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
@@ -102,7 +111,7 @@
   .hw-two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0 14px; }
   @media (max-width: 640px) { .hw-two { grid-template-columns: 1fr; } }
   .hw-col { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 15px 16px; background: var(--wb-surface); }
-  .hw-col h4 { margin: 0 0 8px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+  .hw-col h3 { margin: 0 0 8px; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
   .hw-col ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.62; color: var(--wb-fg-muted); }
   .hw-col ul li { margin-bottom: 5px; }
   .hw-col ul b { color: var(--wb-fg); font-weight: 640; }
@@ -187,7 +196,7 @@
   <header class="hw-hero">
     <p class="hw-eyebrow">Hướng dẫn nội bộ · làm việc với AI trong kỹ thuật phần mềm</p>
     <h1 class="hw-title">AI <u>quên sạch</u> sau mỗi phiên làm việc. Vì thế cả cái nghề “làm việc với AI” rút về đúng một việc: <u>viết ra file, rồi commit</u> — chứ không dặn miệng trong khung chat.</h1>
-    <p class="hw-sub">Bạn đã dùng plugin, skill, workflow hằng ngày và thấy chúng chạy được. Trang này không dạy lại từng nút bấm — nó nối các khái niệm rời rạc thành <b>một sợi chỉ</b>, để bạn hiểu vì sao mọi thứ được đặt ở đó, và tự đánh giá được một cấu trúc là đúng hay sai. Mọi ví dụ đều lấy từ chính setup của bạn: marketplace <b>kv-claude-plugins</b> và meta repo <b>kvfnb-ai-workspace</b>.</p>
+    <p class="hw-sub">Bạn đã dùng plugin, skill, workflow hằng ngày và thấy chúng chạy được. Trang này không dạy lại từng nút bấm — nó nối các khái niệm rời rạc thành <b>một sợi chỉ</b>, để bạn hiểu vì sao mọi thứ được đặt ở đó, và tự đánh giá được một cấu trúc là đúng hay sai. Ví dụ cụ thể trong trang lấy từ chính setup của bạn: marketplace <b>kv-claude-plugins</b> và meta repo <b>kvfnb-ai-workspace</b>.</p>
     <p class="hw-sub">Đọc theo thứ tự thì mạch nhất, nhưng mỗi phần <b>tự đứng được</b> — nhảy thẳng tới câu hỏi bạn đang vướng cũng không sao. Viết cho cả người đã quen lẫn người <b>chưa biết code</b> nhưng sắp phải vào một project và làm được việc.</p>
   </header>
 
@@ -480,7 +489,7 @@
 
         <p class="hw-p">Hai hệ quả, và cả trang này xoay quanh chúng. <b>Một</b>: trần cố định nên mọi thứ bạn nhét vào đều <b>chiếm chỗ của thứ khác</b> — đó chính là cái các phần sau gọi là “ngân sách ngữ cảnh”. <b>Hai</b>: cột trái tốn chỗ ở <i>mọi</i> lượt kể cả lượt chẳng liên quan, còn cột phải chỉ tốn khi thật sự dùng. Nên một quy trình dài phải nằm ở chỗ <b>nạp-khi-cần</b> chứ không phải chỗ luôn-bật — đúng <b>trục 1</b> ở mục mở đầu, và cơ chế của hai chỗ đó là nội dung <a href="#skill-plugin">phần 4</a>.</p>
 
-        <p class="hw-p">Nhưng đó mới là <b>một</b> agent. Việc lớn cần <b>nhiều agent phối hợp</b> — và thực ra có cả một thang “cấp” làm việc với AI (<b>subagent · orchestrator · workflow</b> nằm ở đâu) để phần 2 ngay dưới mổ kỹ.</p>
+        <p class="hw-p">Nhưng đó mới là <b>một</b> agent. Việc lớn cần <b>nhiều agent phối hợp</b> — và có hẳn một cái thang xếp theo số agent cùng làm, nơi <b>subagent · orchestrator · workflow</b> mỗi thứ đứng một bậc. Thang đó là nội dung của phần 2 ngay dưới.</p>
 
         <h3 class="hw-h3">Phép ví bếp ăn — dùng suốt trang này</h3>
         <p class="hw-p">Để đỡ trừu tượng, hình dung một <b>nhà bếp</b>. Nó khớp gần hết các khái niệm bạn sắp gặp:</p>
@@ -660,7 +669,7 @@
               <text class="hw-vs" x="507" y="135" text-anchor="middle">cửa ra ngoài</text>
             </svg>
           </div>
-          <p class="hw-src">Setup thật của bạn: <code>marketplace.json</code> liệt kê <b>3 plugin</b> (thư mục <code>example-plugin</code> có trên đĩa nhưng CHƯA đăng ký trong manifest — đúng một vệt “drift” nho nhỏ). Plugin <code>kv-engineering</code> gói ~32 skill + hooks + 21 command + 1 MCP (codebase-memory); command chỉ là “cửa gọi tay” mỏng, mỗi cái uỷ thác cho một skill.</p>
+          <p class="hw-src">Setup thật của bạn: <code>marketplace.json</code> liệt kê <b>3 plugin</b>. Plugin <code>kv-engineering</code> gói ~32 skill + hooks + 21 command + 1 MCP (codebase-memory); command chỉ là “cửa gọi tay” mỏng, mỗi cái uỷ thác cho một skill.</p>
         </div>
 
         <h3 class="hw-h3">“Cùng là text mà — vậy khác nhau ở cơ chế gì?”</h3>
@@ -901,7 +910,7 @@
 
         <div class="hw-two">
           <div class="hw-col">
-            <h4><span class="wb-ico wb-ico--sm">groups</span> Dùng chung — PHẢI commit</h4>
+            <h3><span class="wb-ico wb-ico--sm">groups</span> Dùng chung — PHẢI commit</h3>
             <ul>
               <li><b>Quy ước code</b> của repo (đặt tên, cấu trúc) → <code>CLAUDE.md</code></li>
               <li><b>Quy trình lặp lại</b> (cách thêm API) → skill</li>
@@ -911,7 +920,7 @@
             </ul>
           </div>
           <div class="hw-col">
-            <h4><span class="wb-ico wb-ico--sm">person</span> Của riêng — KHÔNG commit</h4>
+            <h3><span class="wb-ico wb-ico--sm">person</span> Của riêng — KHÔNG commit</h3>
             <ul>
               <li><b>Gu làm việc cá nhân</b> (thích giải thích dài/ngắn) → memory cá nhân (<code>~/.claude</code>)</li>
               <li><b>Phím tắt, alias</b> của riêng bạn</li>
@@ -996,7 +1005,7 @@
 
         <p class="hw-p">Ví dụ ghép cả hai: một <b>hook</b> bắt sự kiện “sắp commit” (pre-commit) sẽ <b>chạy</b> một <b>gate</b> là lệnh lint/test; nếu gate báo lỗi, commit bị chặn. Đổi cảm biến (pre-commit → pre-push) mà vẫn gate đó — hoặc đổi gate mà vẫn cảm biến đó — đều được. Đó là lý do phải tách khái niệm.</p>
 
-        <h3 class="hw-h3">Ba lớp cổng — và vì sao cần cả ba (lấy từ chính repo này)</h3>
+        <h3 class="hw-h3">Ba lớp cổng — và vì sao cần cả ba</h3>
         <p class="hw-p">Mỗi lớp là một <b>hook</b> bắt một sự kiện khác nhau, cùng chạy các <b>gate</b>. Cần cả ba vì mỗi lớp bịt lỗ của lớp trước:</p>
 
         <div class="hw-viz">
@@ -1029,15 +1038,15 @@
               <text class="hw-vk" x="535" y="102" text-anchor="middle">chốt chặn cuối</text>
             </svg>
           </div>
-          <p class="hw-src">Ba cổng nối tiếp, mỗi cổng bịt lỗ của cổng trước; ra khỏi cổng 3 mới lên <b>main / public</b>. “Cài gate lúc pre-push” là đúng — nhưng đừng chỉ pre-push.</p>
+          <p class="hw-src">Ba cổng nối tiếp, mỗi cổng bịt lỗ của cổng trước; ra khỏi cổng 3 mới lên <b>main / public</b>. Ba cổng cùng gọi chung một bộ gate — khác nhau ở <i>lúc nào chạy</i>, không phải ở <i>kiểm cái gì</i>.</p>
         </div>
 
-        <p class="hw-p"><b>Vậy “cài gate lúc pre-push” — đúng.</b> Nhưng đừng chỉ pre-push: lớp 1 cho phản hồi tức thì, lớp 2 bắt mọi thay đổi, lớp 3 là lưới chặn cuối. Repo này còn có một <b>bộ điều phối</b> để, khi thêm project con mới, chỉ cần đặt file gate đúng chỗ là nó tự được gọi — không phải sửa tay chỗ khác.</p>
+        <p class="hw-p"><b>Vậy “cài gate lúc pre-push” — đúng.</b> Nhưng đừng chỉ pre-push: lớp 1 cho phản hồi tức thì, lớp 2 bắt mọi thay đổi, lớp 3 là lưới chặn cuối. Một chi tiết đáng làm ngay từ đầu nếu repo có nhiều project con: cho hook gọi một <b>bộ điều phối</b> thay vì gọi thẳng từng gate. Thêm project mới thì chỉ cần đặt file gate đúng chỗ là nó tự được gọi — không phải sửa tay chỗ khác, và cũng không ai vô tình ghi đè gate của project bên cạnh.</p>
 
         <h3 class="hw-h3">Đặt ở đâu</h3>
         <ul class="hw-ul">
           <li><b>Hook</b>: khai báo trong <code>.claude/settings.json</code> (cho hook của Claude Code, <b>có commit</b>) và trong <code>hooks.json</code> của plugin; còn hook git nằm ở <code>.git/hooks/</code> (cục bộ máy) nên cần một script cài lại chúng cho mọi người.</li>
-          <li><b>Gate</b>: là một <b>script chạy được</b> đặt trong <code>&lt;project&gt;/tools/</code> (ví dụ repo này có <code>pages/tools/lint-pages.py</code>). Hook chỉ việc gọi nó.</li>
+          <li><b>Gate</b>: là một <b>script chạy được</b> đặt trong <code>&lt;project&gt;/tools/</code> — nhận vào danh sách file đang đổi, in ra chỗ sai, và trả mã thoát khác 0 khi có lỗi. Hook chỉ việc gọi nó.</li>
         </ul>
         <p class="hw-p">Trong plugin <code>kv-engineering</code>, hook còn làm nhiều hơn kiểm lint: mỗi lần sửa file nó tự kiểm “spec còn sạch không”, “code có truy vết về BDD không”, và cập-nhật-lại bộ nhớ đồ thị code. Đó vẫn là cùng một ý: <b>tự động, không trông vào việc ai đó nhớ chạy tay</b>.</p>
 
@@ -1139,7 +1148,7 @@
 
         <div class="hw-two">
           <div class="hw-col">
-            <h4><span class="wb-ico wb-ico--sm">check_circle</span> Dấu hiệu tốt</h4>
+            <h3><span class="wb-ico wb-ico--sm">check_circle</span> Dấu hiệu tốt</h3>
             <ul>
               <li><b>Có một điểm vào rõ ràng</b> (INDEX/README “chỉ trỏ”), không phải mò khắp nơi</li>
               <li><b>SOT nằm trong repo</b> (markdown), công cụ ngoài chỉ soi lại</li>
@@ -1150,7 +1159,7 @@
             </ul>
           </div>
           <div class="hw-col">
-            <h4><span class="wb-ico wb-ico--sm">warning</span> Mùi hôi thường gặp</h4>
+            <h3><span class="wb-ico wb-ico--sm">warning</span> Mùi hôi thường gặp</h3>
             <ul>
               <li><b>Tài liệu lệch thực tế</b> (docs drift) — README tả một thư mục không còn tồn tại</li>
               <li><b>Một thông tin ở hai nơi</b> và hai nơi lệch nhau (ví dụ số version)</li>
@@ -1189,7 +1198,7 @@
         <div class="wb-alert wb-alert--plain" style="margin-top:18px">
           <div class="wb-alert__body">
             <p class="wb-alert__title">Về trang này</p>
-            <p class="wb-alert__msg">Mọi ví dụ lấy từ setup thật: marketplace <code>kv-claude-plugins</code> và meta repo <code>kvfnb-ai-workspace</code> — nên có thể lệch chút theo thời gian khi các repo đó đổi. Đây là tài liệu học khái niệm, không phải tài liệu tham chiếu API.</p>
+            <p class="wb-alert__msg">Ví dụ cụ thể lấy từ setup thật: marketplace <code>kv-claude-plugins</code> và meta repo <code>kvfnb-ai-workspace</code> — nên có thể lệch chút theo thời gian khi các repo đó đổi. Đây là tài liệu học khái niệm, không phải tài liệu tham chiếu API.</p>
           </div>
         </div>
       </section>
