@@ -131,7 +131,7 @@ có thật, và nó được quyết ở buổi gặp đầu tiên chứ không 
 | Số tài khoản + mã BIN để bật VietQR | **chị ấy** | 5 phút, không mất phí cổng |
 | Điền vào `shop.json`, hạ cờ placeholder | anh | |
 | Tên miền + DNS + CNAME | chia | tên miền phải đứng tên **chị ấy** — xem [04](04-DAM-PHAN.md) |
-| Thông báo online.gov.vn nếu còn bắt buộc | **chị ấy, sau khi hỏi luật sư** | xem [03](03-DOI-THU-VA-TICH-HOP.md) §5 — **phạt rơi vào chị ấy** |
+| Thông báo theo NĐ 248/2026 — **thủ tục vẫn còn**, phải được xác nhận trước khi vận hành | **chị ấy, sau khi hỏi luật sư** | xem [03](03-DOI-THU-VA-TICH-HOP.md) §5. Nộp ở đâu thì **chưa kiểm được** — đừng chỉ chị ấy sang `online.gov.vn` rồi để chị ấy tưởng đã nộp xong. **Phạt rơi vào chị ấy** |
 
 **Công sức:** nhỏ về phía anh — một hai cuối tuần, phần lớn là điền dữ liệu. Đường găng là nội
 dung, và nó nằm ở chị ấy.

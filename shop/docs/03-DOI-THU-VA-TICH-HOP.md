@@ -17,7 +17,7 @@ cho chị ấy đọc.
 Tách làm hai lớp. Trộn hai lớp này là nguồn gốc của nỗi lo.
 
 **Lớp commodity — đã giải quyết, và rẻ.** Tồn kho, đơn hàng, POS, đồng bộ kênh, in vận đơn, báo
-cáo doanh thu. Có ít nhất năm công ty VN bán thứ này ở mức **250.000–750.000₫/tháng**, có người
+cáo doanh thu. Có ít nhất năm công ty VN bán thứ này ở mức **170.000–999.000₫/tháng** tuỳ gói; khoảng thực tế cho một shop cỡ này là **250.000–450.000₫**, có người
 trực hỗ trợ, có app, chạy được ngay hôm nay. **Không được cạnh tranh ở đây.** Xây lại lớp này
 là bỏ hàng trăm giờ để ra một sản phẩm tệ hơn thứ mua được trong một buổi chiều — đó là phá huỷ
 giá trị, không phải tạo giá trị.
@@ -59,7 +59,7 @@ vào. Cộng với việc nó **cắt bớt số tin nhắn phải trả**, th�
 lời hứa.
 
 Chuẩn chuyển đổi duy nhất dùng được, để tham chiếu: Littledata, 2.800 cửa hàng Shopify, 2023 —
-trung vị 1,4%, top 20% trên 3,2%, top 10% trên 4,7% [đã kiểm: Littledata 2023]. **Không có số
+trung bình 1,4%, top 20% trên 3,2%, top 10% trên 4,7% [đã kiểm: Littledata 2023]. **Không có số
 riêng cho nến, không có số riêng cho Việt Nam.**
 
 ---
@@ -171,15 +171,28 @@ Tình hình hiện tại:
 - Theo chế độ cũ (NĐ 52/2013 sửa bởi 85/2021): website có chức năng đặt hàng online **phải thông
   báo với Bộ Công Thương tại `online.gov.vn` trước khi bán**; không thông báo phạt **10–20
   triệu₫** [đã kiểm].
-- **HAI NGUỒN LUẬT MÂU THUẪN NHAU** về việc thủ tục này còn hay đã bỏ sau 01/07/2026. Một nguồn
-  nói đã bãi bỏ; một nguồn khác **cũng của năm 2026** vẫn mô tả thủ tục kèm mức phạt. **Trang của
-  Bộ Công Thương không giải quyết được.**
+- **Đã tra lại 21/09/2026, và câu "hai nguồn mâu thuẫn" trước đây là SAI — thủ tục KHÔNG bị bỏ.**
+  NĐ 248/2026 thay thế hoàn toàn NĐ 52/2013 và NĐ 85/2021 từ 01/07/2026, nhưng đổi **tên gọi**
+  chứ không bỏ nghĩa vụ: loại trang như thế này nay gọi là *"nền tảng thương mại điện tử kinh
+  doanh trực tiếp có chức năng đặt hàng trực tuyến"*, và chủ quản **phải được xác nhận thông báo
+  TRƯỚC KHI vận hành**; đổi thông tin thì phải sửa đổi thông báo trong 20 ngày làm việc
+  *[đã kiểm: luatvietnam.vn về NĐ 248/2026; baochinhphu.vn 07/2026]*. Tìm thấy trong ~15 phút
+  tra cứu — nói "không ai biết" về một thứ tra được là tự hạ uy tín ở đúng mục dùng để xây uy tín.
+- **Chưa kiểm được, và đừng đoán:** cơ quan nào nhận hồ sơ và nộp qua cổng nào. Chế độ cũ là Bộ
+  Công Thương qua `online.gov.vn`; có nguồn nói đã chuyển sang UBND cấp tỉnh qua Cổng Dịch vụ
+  công Quốc gia, nhưng cũng có bài hướng dẫn 2026 vẫn ghi Bộ Công Thương. **Hai nguồn này mâu
+  thuẫn thật** — khác với câu ở trên, vốn chỉ là chưa tra. Mức phạt 10–20 triệu₫ là mức của chế
+  độ cũ (NĐ 98/2020); mức dưới chế độ mới **[chưa kiểm]**, đừng đọc con số đó lên như hiện hành.
 - Nghĩa vụ với người bán cá nhân theo luật mới [nguồn thứ cấp — chưa kiểm]: cung cấp dữ liệu định
   danh điện tử; hiển thị đúng tên và địa chỉ đã đăng ký; **dùng chính tài khoản ngân hàng cá nhân
   của mình**.
 
-**Kết luận: PHẢI HỎI LUẬT SƯ trước khi mở bán.** Đây là mục chưa giải quyết được quan trọng nhất
-trong cả bốn tài liệu. Hai nguồn mâu thuẫn thì không được chọn nguồn nào hợp ý mà tin.
+**Kết luận: PHẢI HỎI LUẬT SƯ trước khi mở bán** — nhưng nay là hỏi **một câu hẹp**, không phải
+hỏi mù: *"Trang bán hàng của một cá nhân chưa đăng ký kinh doanh có phải làm thủ tục thông báo
+theo NĐ 248/2026 không, nộp ở đâu, và mức phạt hiện hành là bao nhiêu?"* Một câu hẹp thì luật sư
+trả lời trong mười phút; một câu mù thì thành một buổi tư vấn tính tiền.
+
+**Phạt rơi vào chị ấy, không rơi vào anh.** Đó là lý do mục này không được đoán.
 
 Ba điều nên làm với phát hiện này:
 

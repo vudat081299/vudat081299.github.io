@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="color-scheme" content="light dark" />
-<title>Đề xuất hợp tác · scentsitive.vn</title>
+<title>Đề xuất hợp tác</title>
 <meta name="description" content="Một bản đề xuất: tôi đã dựng thử gì, con số nào đáng chú ý, và bốn cách chúng ta có thể làm việc cùng nhau." />
 <meta name="robots" content="noindex" />
 
@@ -108,7 +108,10 @@ a.p-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); bord
 .p-road__w { font-size: 12.5px; color: var(--ember); margin: 0 0 7px; }
 .p-road p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.65; max-width: 58ch; }
 
-.p-deal { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); }
+/* minmax 300px chứ không phải 258px: với NĂM ô thì 258 cho ra bốn cột, và ô thứ năm
+   ("không làm gì với tôi") đứng trơ một mình ở hàng hai như thể bị thêm vào sau. Đúng ô
+   ấy mới là ô trung thực nhất, nên nó không được trông như phần phụ. 300 cho ra 3 + 2. */
+.p-deal { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
 .p-deal__c { padding: 22px; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--card); }
 .p-deal__c h4 { font-family: var(--f-display); font-size: 21px; font-weight: 600; margin: 0 0 4px; }
 .p-deal__p { font-size: 13px; color: var(--ember); margin: 0 0 12px; }
@@ -140,13 +143,19 @@ a.p-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); bord
     <p>
       Chị chưa thuê tôi và tôi chưa tính tiền ai. Tôi làm cái này để có một thứ cụ thể mà nói chuyện,
       thay vì ngồi mô tả. Trang chị đang đọc có ba phần: thứ tôi đã dựng, vài con số đáng nhìn,
-      và bốn cách chúng ta có thể làm việc cùng nhau — kể cả cách &ldquo;không làm gì cả&rdquo;.
+      và năm cách chúng ta có thể làm việc cùng nhau — kể cả cách &ldquo;không làm gì cả&rdquo;.
     </p>
     <p>
       Và nói trước một câu để khỏi hiểu nhầm: <b>cái tôi dựng không phải lập luận.</b>
       Nó chỉ chứng minh tôi làm được, chứ không chứng minh chị cần. Tôi chưa gặp chị,
       chưa xem một đơn hàng nào của chị, chưa biết một cây nến tốn bao nhiêu tiền nguyên liệu.
       Mọi thứ dưới đây vẫn là <b>giả thuyết</b> cho tới khi chị chỉnh lại bằng số thật.
+    </p>
+    <p>
+      Một chuyện nhỏ nhưng nên nói ngay: cái tên <b>&ldquo;scentsitive&rdquo;</b> trên trang mẫu
+      là tên tôi đặt tạm để trang có chữ gì đó hiển thị. Tên thật là tên của chị — chị nói, tôi
+      đổi trong hai phút. Ảnh, mô tả năm mùi, giá cũng đều là chỗ để trống có đánh dấu, không
+      phải tôi quyết hộ.
     </p>
     <p class="p-sig">Mọi con số dưới đây đều ghi rõ lấy từ đâu. Chỗ nào tôi đoán, tôi viết là tôi đoán.</p>
   </div>
@@ -230,8 +239,16 @@ a.p-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); bord
           <span><i style="background:#5C7C63"></i>Về shop <b id="lKeep">—</b></span>
         </div>
         <p class="p-in__n" style="margin-top:14px">
-          Chưa tính tiền quảng cáo, tiền voucher, và thuế sàn khấu trừ tại nguồn (VAT 1–5% và
-          thuế thu nhập cá nhân 0,5–5% tuỳ ngành, từ 01/07/2025 <em>[nguồn ngành]</em>).
+          Chưa tính tiền quảng cáo và tiền voucher. Còn VAT 1–5% và thuế thu nhập cá nhân
+          0,5–5% thì sàn chỉ <b>giữ hộ</b> (từ 01/07/2025 <em>[nguồn ngành]</em>) — đó là thuế
+          của chị, bán thẳng không xoá được, chỉ chuyển việc kê khai sang chị tự làm. Con số
+          ở trên không gồm thuế, và cũng không hứa gì về thuế.
+        </p>
+        <p class="p-in__n">
+          Và một phần phí sàn là <b>tiền mua khách</b>: cái feed TikTok đẩy người lạ tới chỗ
+          chị. Khoản tiết kiệm ở trên chỉ có thật với khách chị <b>đã có sẵn</b> — người theo
+          dõi Instagram, khách cũ, người được bạn bè giới thiệu. Với khách mới thì không.
+          Tôi nói trước câu này để chị không phải hỏi.
         </p>
         <p class="p-in__n">
           <b>Về chữ &ldquo;nguồn ngành&rdquo;:</b> hai khoản 6% và 3.000 ₫ tôi đọc từ bản tin ngành
@@ -256,8 +273,10 @@ a.p-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); bord
       <div>
         <div class="p-in">
           <div class="p-in__t"><span class="p-in__l">Giả sử bao nhiêu phần trăm đơn đi thẳng</span><span class="p-in__v" id="vTh">25%</span></div>
-          <input type="range" id="th" min="0" max="100" step="5" value="25" aria-label="Phần trăm đơn đi thẳng" />
-          <p class="p-in__n"><span class="p-guess">Đây là giả định của chị, không phải lời hứa của tôi.</span> Kéo về 0 để xem trường hợp xấu nhất.</p>
+          <input type="range" id="th" min="0" max="100" step="5" value="0" aria-label="Phần trăm đơn đi thẳng" />
+          <p class="p-in__n"><span class="p-guess">Đây là giả định của chị, không phải lời hứa của tôi.</span>
+          Tôi để mặc định ở <b>0</b> vì đó là thứ tôi biết chắc: trước khi có đơn thật đi qua trang
+          riêng thì khoản tiết kiệm bằng không. Chị kéo lên để xem nếu nó chạy thì đáng bao nhiêu.</p>
         </div>
         <div class="p-in">
           <div class="p-in__t"><span class="p-in__l">Bao nhiêu phần trăm đơn thành hộp hai ngọn</span><span class="p-in__v" id="vQua">10%</span></div>
@@ -298,7 +317,8 @@ a.p-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); bord
     </p>
     <ul class="p-no" style="margin-bottom:26px">
       <li style="grid-template-columns:22px 1fr"><div><b>Nhắn lại khách cũ.</b>
-        <span>Một cây nến cháy hết trong khoảng 30–50 giờ. Đó là một chu kỳ mua lại có sẵn, không cần ai phát minh ra.
+        <span>Nến ly thường cháy vài chục giờ — con số thật phụ thuộc khối lượng sáp và loại bấc, chị mới biết,
+        tôi thì không. Nhưng dù là bao nhiêu thì nó là một chu kỳ mua lại có sẵn, không cần ai phát minh ra.
         Chị có danh sách khách sáu tháng qua không? Nhắn cho họ một tin vào đúng lúc nến sắp hết là việc của một buổi chiều,
         không phải của một dự án phần mềm. Nếu việc đó ăn, chị vừa biết được điều quan trọng nhất về shop mình.</span></div></li>
       <li style="grid-template-columns:22px 1fr"><div><b>Bán bộ quà ngay trên Shopee, không cần web.</b>
@@ -402,7 +422,7 @@ a.p-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); bord
       <li><span class="p-road__d"></span>
         <h4>Nối đơn vị vận chuyển</h4>
         <p class="p-road__w">Mở khi: số đơn đủ nhiều để việc tự nhập địa chỉ sang app giao hàng thành việc mất giờ mỗi ngày.</p>
-        <p>Đây là phần dễ nhất cả dự án: GHN và GHTK cho lấy khoá ngay trong trang quản trị của shop, không cần hợp đồng, gọi được trong ngày <em>[đã kiểm: tài liệu của hai bên]</em>.</p></li>
+        <p>Đây là phần dễ nhất cả dự án: GHN và GHTK cho lấy khoá ngay trong trang quản trị của shop, gọi được trong ngày. Tôi đọc tài liệu của cả hai bên và <b>không thấy</b> chỗ nào đòi hợp đồng — nhưng tôi chưa đăng ký thử, nên nói cho đúng: tôi không thấy, chứ chưa chắc là không có.</p></li>
       <li><span class="p-road__d"></span>
         <h4>Quản lý đơn và tồn kho</h4>
         <p class="p-road__w">Mở khi: chị bán hụt hàng một lần, hoặc quên mất một đơn.</p>
@@ -438,7 +458,7 @@ a.p-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); bord
       <li><div>Từ lúc khách chốt đơn đến lúc hàng đi, chị làm những bước nào?
         <span>Tôi muốn nghe từng thao tác, kể cả thao tác chị thấy vụn vặt. Chỗ mất giờ thường nằm ở đấy.</span></div></li>
       <li><div>Bao nhiêu phần trăm khách quay lại mua lần hai?
-        <span>Nến cháy hết trong 30–50 giờ. Nếu khách không quay lại thì đó là lỗ hổng lớn nhất, và nó rẻ hơn nhiều so với đi tìm khách mới.</span></div></li>
+        <span>Nến rồi cũng cháy hết — chị biết chính xác là bao lâu, tôi thì không. Nếu khách không quay lại khi nến hết thì đó là lỗ hổng lớn nhất, và bịt nó rẻ hơn nhiều so với đi tìm khách mới.</span></div></li>
       <li><div>Chị đã thử gì rồi mà không ăn thua?
         <span>Để tôi khỏi đề xuất lại đúng thứ chị đã làm hỏng một lần.</span></div></li>
       <li><div>Tháng 12 năm ngoái bán gấp mấy lần tháng 11?
@@ -464,39 +484,56 @@ a.p-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); bord
 <section class="p-sec p-sec--tint">
   <div class="wrap">
     <p class="p-eye">Phần tám</p>
-    <h2 class="p-h2">Bốn cách làm việc, kể cả cách không làm gì</h2>
+    <h2 class="p-h2">Năm cách làm việc, kể cả cách không làm gì</h2>
     <p class="p-lede">
       Tôi không có ý ép chị chọn hôm nay. Bốn cách này khác nhau ở chỗ ai chịu rủi ro —
       đọc cột &ldquo;hỏng khi nào&rdquo; trước cột giá.
     </p>
+    <p class="p-warn" style="margin-bottom:22px">
+      Bốn ô dưới đây <b>không có con số nào</b>, và đó là cố ý. Tôi mới biết đúng năm thứ về shop
+      của chị — báo giá bây giờ là báo mù: cao quá thì chị bỏ ngay, thấp quá thì ba tháng nữa tôi
+      làm cho xong chuyện. Cái đáng đọc ở đây là cột <b>hỏng khi</b>, vì mỗi cách đều có một kiểu
+      hỏng riêng và tôi muốn chị thấy trước.
+    </p>
     <div class="p-deal">
       <div class="p-deal__c">
         <h4>Mua đứt trang</h4>
-        <p class="p-deal__p">So với agency: 2–7 triệu ₫ <em>[đã kiểm: bảng giá công bố]</em></p>
+        <p class="p-deal__p">Giá: bàn sau khi cùng nhìn số thật</p>
         <p>Chị trả một lần, trang là của chị, mã nguồn giao lại hết. Tôi hết trách nhiệm.</p>
         <dl><dt>Hợp khi</dt><dd>Chị chỉ cần một chỗ tử tế để dẫn link, không định đi xa hơn.</dd>
         <dt>Hỏng khi</dt><dd>Sáu tháng sau cần sửa mà tôi đã bận việc khác. Trang tĩnh nên không chết, nhưng cũng không tự lớn.</dd></dl>
       </div>
       <div class="p-deal__c">
         <h4>Thuê theo tháng</h4>
-        <p class="p-deal__p">So với phần mềm bán sẵn: 250.000–750.000 ₫/tháng</p>
+        <p class="p-deal__p">Giá: bàn sau khi cùng nhìn số thật</p>
         <p>Tôi giữ trang chạy, sửa và thêm theo việc phát sinh. Dừng lúc nào cũng được.</p>
         <dl><dt>Hợp khi</dt><dd>Chị muốn có người lo phần kỹ thuật mà không phải cam kết dài.</dd>
         <dt>Hỏng khi</dt><dd>Tháng nào không có việc chị vẫn thấy mất tiền, còn tháng nhiều việc tôi thấy thiệt. Phải nói rõ mỗi tháng gồm bao nhiêu giờ.</dd></dl>
       </div>
       <div class="p-deal__c">
         <h4>Ăn chia trên kênh trực tiếp</h4>
-        <p class="p-deal__p">Không trả trước</p>
+        <p class="p-deal__p">Giá: bàn sau khi cùng nhìn số thật</p>
         <p>Tôi không lấy tiền mặt. Tôi lấy một phần doanh thu của những đơn đi qua trang riêng, trong một khoảng thời gian có hạn.</p>
         <dl><dt>Hợp khi</dt><dd>Chị chưa muốn bỏ tiền, và cả hai đều tin kênh riêng sẽ chạy.</dd>
         <dt>Hỏng khi</dt><dd>Cãi nhau về việc đơn nào tính là &ldquo;đi qua trang riêng&rdquo;. Phải chốt cách đo <em>trước</em>, bằng chữ, trước khi viết dòng mã nào.</dd></dl>
       </div>
       <div class="p-deal__c">
         <h4>Làm cùng nhau lâu dài</h4>
-        <p class="p-deal__p">Cần thời gian, không cần tiền</p>
+        <p class="p-deal__p">Giá: bàn sau khi cùng nhìn số thật</p>
         <p>Tôi nhận phần công nghệ của thương hiệu như một phần việc của mình, không phải như một nhà cung cấp.</p>
         <dl><dt>Hợp khi</dt><dd>Sau vài tháng làm thử, cả hai thấy làm việc với nhau dễ chịu.</dd>
         <dt>Hỏng khi</dt><dd>Bàn chuyện này ở buổi gặp đầu. Chúng ta chưa gặp nhau bao giờ — tôi nghĩ nên để dành câu này lại sau.</dd></dl>
+      </div>
+      <div class="p-deal__c">
+        <h4>Không làm gì với tôi</h4>
+        <p class="p-deal__p">Giá: 0 ₫, và tôi nói thật lòng</p>
+        <p>Chị chạy ba thử nghiệm ở phần ba — chúng không cần một dòng mã nào — rồi bốn tuần nữa
+        mình cùng đọc kết quả. Nếu chúng ăn, chị đã có thứ mình cần mà không trả tôi đồng nào.
+        Còn nếu chị cần phần mềm bán hàng và website <em>ngay tuần này</em> thì mua sẵn đi:
+        KiotViet hoặc Nhanh.vn. Tôi không thắng được họ về giá, về tốc độ, hay về hỗ trợ lúc
+        mười giờ tối.</p>
+        <dl><dt>Hợp khi</dt><dd>Chị chưa chắc vấn đề của shop nằm ở đâu — và thành thật thì tôi cũng chưa chắc.</dd>
+        <dt>Hỏng khi</dt><dd>Không ai đo gì cả, rồi ba tháng sau vẫn đứng đúng chỗ này. Cái này hỏng âm thầm, nên nó là cái đáng sợ nhất trong năm ô.</dd></dl>
       </div>
     </div>
   </div>

@@ -147,7 +147,7 @@ nữa không". Phải hỏi.
 
 ### Đòn bẩy 1 — chuyển đổi
 
-Chuẩn duy nhất dùng được: Littledata, 2.800 cửa hàng Shopify, 2023 — trung vị **1,4%**, top 20%
+Chuẩn duy nhất dùng được: Littledata, 2.800 cửa hàng Shopify, 2023 — **trung bình 1,4%**, top 20%
 trên **3,2%**, top 10% trên **4,7%**, mobile **1,2%**, desktop **1,9%** [đã kiểm: Littledata 2023].
 **Không có số riêng cho nến và không có số riêng cho Việt Nam.** Đây là cửa hàng Shopify, phần
 lớn phương Tây, và có thể không chuyển sang được bối cảnh mua sắm qua mạng xã hội ở VN.
@@ -156,15 +156,23 @@ Không biết lượt truy cập của chị ấy, nên chỉ tính ngược đ�
 
 | Nếu chuyển đổi là | Để có 7 đơn/ngày cần | Phép tính |
 |---|---|---|
-| 1,2% (mobile, trung vị) | 583 lượt/ngày | 7 ÷ 0,012 |
-| 1,4% (trung vị chung) | 500 lượt/ngày | 7 ÷ 0,014 |
+| 1,2% (mobile, trung bình) | 583 lượt/ngày | 7 ÷ 0,012 |
+| 1,4% (trung bình chung) | 500 lượt/ngày | 7 ÷ 0,014 |
 | 3,2% (ngưỡng top 20%) | 219 lượt/ngày | 7 ÷ 0,032 |
 
 Đây là câu hỏi quyết định phải hỏi chị ấy: **một ngày có bao nhiêu người xem?** Con số đó có
 sẵn trong Seller Centre và trong TikTok analytics.
 
-- Nếu là 500+ lượt/ngày mà chỉ 7 đơn → chuyển đổi đang ở mức trung vị, **trang là đòn bẩy**.
-  Đẩy từ 1,4% lên 2,8% là gấp đôi số đơn mà không cần thêm một người xem nào.
+- Nếu là 500+ lượt/ngày mà chỉ 7 đơn → chuyển đổi đang quanh mức **trung bình** của bộ Littledata,
+  **trang có thể là đòn bẩy**. Đẩy từ 1,4% lên 2,8% là gấp đôi số đơn mà không cần thêm một người
+  xem nào.
+
+  Một lưu ý phải nói ra, vì nó đổi cách đọc cả bảng trên: Littledata công bố **trung bình**, không
+  công bố trung vị — bản trước của tài liệu này ghi nhầm thành "trung vị" ở bốn chỗ. Phân phối tỉ
+  lệ chuyển đổi lệch phải mạnh (vài cửa hàng rất cao kéo đuôi dài), nên **trung bình nằm cao hơn
+  trung vị**. Nghĩa là 1,4% có lẽ đã cao hơn cửa hàng điển hình, và cột "cần bao nhiêu lượt xem"
+  ở trên là **ước lượng dè dặt** chứ không phải mốc trung tâm. Không kết luận được shop của chị ấy
+  đang trên hay dưới mức điển hình — nguồn không cho phép nói câu đó.
 - Nếu là 80 lượt/ngày → chuyển đổi đã rất cao rồi, vấn đề là **không ai biết đến shop**. Không
   trang nào chữa được cái đó, và xây trang là làm sai việc.
 

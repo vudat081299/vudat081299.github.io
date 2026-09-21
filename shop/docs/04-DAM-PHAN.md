@@ -193,7 +193,7 @@ giao dịch thật**].
 
 ### (b) Thuê theo tháng
 
-**Mốc giá:** SaaS VN 250.000–750.000₫/tháng [đã kiểm]. Nhanh.vn ≈ **450k** đã có POS Pro +
+**Mốc giá:** SaaS VN 170.000–999.000₫/tháng tuỳ gói [đã kiểm]; khoảng thực tế cho shop cỡ này 250.000–450.000₫. Đừng đọc cận dưới cao hơn thực tế — chị ấy tra ra 170k thì con số của anh trông như đã được uốn. Nhanh.vn ≈ **450k** đã có POS Pro +
 website + đồng bộ sàn ([03](03-DOI-THU-VA-TICH-HOP.md) §2).
 
 | | |
