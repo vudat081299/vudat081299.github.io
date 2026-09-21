@@ -17,7 +17,16 @@ cách chúng chạy tự động**.
 
 `pages/`, `cooking/` và `shop/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự
 chứa, không có luật nội dung chung để viết ra. Cổng của chúng chỉ kiểm thứ đúng/sai khách quan —
-id trùng, anchor gãy, asset thiếu, thẻ lệch.
+id trùng, anchor gãy, asset thiếu, thẻ lệch — cộng ba thứ nữa thêm ngày 21/09/2026: `<svg>`
+không có tên tiếp cận, cây tiêu đề nhảy quá một bậc, và `aria-label` thuần tiếng Anh trên trang
+`lang="vi"`. Cả ba đều đo được, không phải chuyện thẩm mỹ: một `<svg>` không tên thì trình đọc
+màn hình bỏ qua hẳn, mà mấy trang này dạy bằng biểu đồ.
+
+Ba phép kiểm ấy chạy theo kiểu **bánh cóc**, vì 4 trang cũ còn nợ mà dọn hết thì ngoài phạm vi
+lúc đó. Bảng `DEBT` trong `lint-pages.py` ghi đúng số đang nợ của từng trang: trang **không** có
+tên trong bảng thì phải bằng 0, trang có tên thì chỉ được giữ nguyên hoặc giảm — tăng là LỖI.
+Dọn xong một trang thì **xoá dòng của nó đi, đừng nới số lên**. Nợ nằm trong repo, không nằm
+trong đầu ai — và không trang sạch nào tụt lại được.
 
 Hai ngoại lệ trong `pages/`, đều là cổng **kiến thức**. Cái thứ nhất, `verify-math-for-ml.py`,
 chỉ chạy khi commit chạm `mathematics-for-machine-learning.html`. Trang ấy nói ~90 con số cụ thể (định thức,
