@@ -125,7 +125,7 @@ Ba bước, đúng thứ tự:
 3. **Ghép, chạy cổng, ship.**
 
 **Luật chia chỗ — đếm được, không tranh luận được:** khối **lặp** → chữ ở data; khối **độc
-nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 8 section + 31 ô + 6 dòng môn học đều lặp nên nằm ở
+nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 8 section + 30 ô + 6 dòng môn học đều lặp nên nằm ở
 `data/collection.json`; tiêu đề trang chỉ có một nên ở lại HTML. Rail bên trái và ba cột
 chân trang cũng dựng từ chính mảng `sections` ấy — không có danh sách mục thứ hai để quên
 cập nhật. Trang văn xuôi độc nhất
@@ -190,20 +190,28 @@ nhiên — đã cân nhắc và giữ, vì đổi thì phải đổi tên sectio
 Luật này **không có cổng máy kiểm**, và đó là chủ ý: "cửa vào" không đo được bằng regex, y như
 độ dài mô tả ở dưới. Cổng bịa ra cho nó sẽ đánh trượt nội dung thật.
 
-**Phím tắt: keyspace đã hết, và đã phải xử lý thật.** 36 ô phím (`0-9` + `a-z`) dùng hết ngày
+**Phím tắt: keyspace từng hết, và đã phải xử lý thật.** 36 ô phím (`0-9` + `a-z`) dùng hết ngày
 20/09/2026; đúng hôm ấy `pages/wealth-roadmap.html` là mục thứ 37. Cách xử lý đã chốt: **`key`
 là trường tuỳ chọn.** Mục không có `key` thì không vẽ chip phím (không vẽ chip rỗng), và mở bằng
 chuột hoặc ô tìm kiếm — `/` nhảy vào ô, `↵` mở kết quả đầu. Linter chỉ kiểm định dạng và trùng
 lặp **khi** có `key`. **Đừng ép hai mục dùng chung một phím** để giữ cho đủ bộ.
 
+Ngày 21/09 gỡ một mục nên đang là **35/36**, ô `z` trống. `wealth-roadmap` vẫn **cố ý** không có
+`key`: đừng xáo lại phím mỗi lần thêm/bớt một trang — phím tắt là thứ người dùng học thuộc, đổi
+nó là phá trí nhớ cơ bắp. Ô trống dành cho trang tiếp theo.
+
 Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Từ 20/09/2026 nó kiểm thêm
 một chiều nữa: mọi `.html` trong `pages/` và `cooking/` phải có một mục trỏ tới, vì
 `family-insurance-benefits.html` và `jazz-piano-theory.html` đã viết xong mà nằm ngoài danh mục
 nhiều tháng — trang vẫn mở được bằng URL trực tiếp nên không gì tự lộ ra. Muốn cố ý không niêm
-yết thì ghi vào `ALLOW_UNLISTED` kèm lý do, đừng xoá cổng.
+yết thì ghi vào `ALLOW_UNLISTED` kèm lý do, đừng xoá cổng — `family-insurance-benefits.html`
+quay lại danh sách ấy ngày 21/09 vì chủ trang cho gỡ: nó nói về hai hợp đồng bảo hiểm **có thật**
+của gia đình, không thuộc về một trang chủ công khai. **Gỡ khỏi danh mục không phải là gỡ khỏi
+web**: file vẫn deploy và vẫn mở được bằng URL trực tiếp. Muốn nó thật sự riêng tư thì phải loại
+trừ trong `.github/workflows/deploy.yml`, đúng cách `shop/docs` đã làm.
 
-Nó **không** kiểm độ dài mô tả: đã đo lại 20/09/2026, 37 mô tả đang chạy dài 24→193 ký tự
-(trung vị 78), mọi ngưỡng chung đều là số bịa. Câu có sát việc của cái ô hay không là việc của
+Nó **không** kiểm độ dài mô tả: đã đo lại 21/09/2026, 36 mô tả đang chạy dài 24→193 ký tự
+(trung vị 77), mọi ngưỡng chung đều là số bịa. Câu có sát việc của cái ô hay không là việc của
 người viết.
 
 ---

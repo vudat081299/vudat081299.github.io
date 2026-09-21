@@ -96,7 +96,12 @@ for si, sec in enumerate(d.get('sections', [])):
 WATCHED = ('pages', 'cooking')
 # Cố ý không niêm yết — mỗi dòng phải kèm lý do, đừng thêm chỉ để cổng xanh.
 ALLOW_UNLISTED = {
-    # 'pages/vi-du.html': 'bản nháp, chưa xong',
+    # Chủ trang cho gỡ khỏi danh mục ngày 21/09/2026. Trang nói về hai hợp đồng bảo
+    # hiểm nhân thọ CÓ THẬT của gia đình — quyền lợi, phí, dòng tiền — nên không
+    # thuộc về một trang chủ công khai. File vẫn nằm trong repo và vẫn mở được bằng
+    # URL trực tiếp; muốn nó thật sự không công khai thì phải loại trừ trong
+    # .github/workflows/deploy.yml, y như shop/docs.
+    'pages/family-insurance-benefits.html': 'riêng tư — chủ trang cho gỡ 21/09/2026',
 }
 
 listed = set()
