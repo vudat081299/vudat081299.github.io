@@ -21,6 +21,20 @@
 <style>
   /* Page-local: only things the kit has no equivalent for. No hex, no hand-picked greys. */
 
+  /* ---- chữ mờ phải đọc được ----
+     Bậc --wb-fg-subtle của kit là gray-400: chỉ 2,56:1 trên nền sáng, dưới ngưỡng
+     4,5:1 cho chữ thường. CSS của trang này tránh dùng nó (xem .ct-goal__n bên dưới),
+     nhưng ba thành phần của kit vẫn dùng: .wb-eyebrow (nhãn trên tiêu đề), .wb-label__opt
+     (mô tả từng lựa chọn của bộ chọn khung) và .wb-footer__copy — đều là chữ phải đọc.
+     Đo bằng trình duyệt: 2,39:1 / 2,56:1 sáng, 3,84:1 tối. Nâng một bậc ở CẢ HAI nhánh
+     theme, nếu không nhánh còn lại rơi về giá trị kit. */
+  :root { --wb-fg-subtle: var(--wb-gray-500); }
+  .dark { --wb-fg-subtle: var(--wb-gray-400); }
+
+  /* Header dính cao 56px che mất tiêu đề khi nhảy từ mục lục — đo bằng trình duyệt:
+     cả 6 đích #chon-khung…#gioi-han đều dừng ở top = 0, nằm dưới thanh header. */
+  section[id] { scroll-margin-top: 76px; }
+
   /* Prose measure — a teaching page reads as text, so paragraphs get a line length. */
   .ct-prose { max-width: var(--wb-measure); }
   .ct-prose p { margin: 0 0 12px; }
@@ -139,7 +153,7 @@
       <div class="wb-alert__body">
         <p class="wb-alert__title">Nếu bạn chỉ đọc một đoạn, đọc đoạn này</p>
         <p class="wb-alert__msg">Trước khi mở miệng, hỏi: <b>“Nói xong, tôi muốn người kia LÀM gì?”</b>
-        Hiểu ý tôi · Chọn một cách làm · Đồng ý bỏ tiền-công · Hình dung chuyện đã xảy ra · Đổi hành vi ·
+        Hiểu ý tôi · Chọn một cách làm · Đồng ý bỏ tiền, công, uy tín · Hình dung chuyện đã xảy ra · Đổi hành vi ·
         Hạ căng thẳng · Giúp tôi một việc. Bảy câu trả lời đó chính là bảy nhóm khung bên dưới — chọn
         nhóm trước, chọn khung sau.</p>
       </div>
@@ -351,9 +365,9 @@
     <div class="wb-block">
       <h3>Chiếu các khung về ba cột</h3>
       <p class="wb-block__desc">Đọc bảng này một lần rồi quên tên khung cũng được — cái cần nhớ là dòng nào cũng
-      đủ ba mảnh. Bốn dòng không <em>nói ra</em> cả ba: hai dòng để Neo ngầm vì người nghe đã đứng
-      sẵn ở đó, PAS dùng một câu làm cả Neo lẫn Căng, còn BLUF nói Lối ra ngay câu đầu nên cuối bài
-      không còn gì để nói. Mảnh vẫn có mặt — chỉ là không mảnh nào bắt buộc phải thành một câu riêng.</p>
+      đủ ba mảnh. Năm dòng không <em>nói ra</em> cả ba: hai dòng để Neo ngầm vì người nghe đã đứng
+      sẵn ở đó, PAS dùng một câu làm cả Neo lẫn Căng, BAB để phần Căng nằm trong khoảng cách giữa
+      Before và After, còn BLUF nói Lối ra ngay câu đầu nên cuối bài không còn gì để nói. Mảnh vẫn có mặt — chỉ là không mảnh nào bắt buộc phải thành một câu riêng.</p>
       <div class="wb-card">
         <div class="wb-table-scroll">
           <table class="wb-table wb-table--compact">
@@ -436,13 +450,14 @@
             <p><b>Khung chính — PREP.</b> Nêu ý chính → lý do → một ví dụ có thật → chốt lại ý chính.</p>
           </div>
           <p class="ct-say">“Nên tách module thanh toán ra khỏi app chính <b>(Point)</b> vì mỗi lần sửa
-          nó đang bắt cả team chờ build lại 12 phút <b>(Reason)</b> — sprint trước có 3 hotfix, mất gần
-          4 tiếng chỉ để ngồi chờ <b>(Example)</b>. Nên em đề xuất tách trước khi thêm tính năng mới
+          nó đang bắt cả team chờ build lại 12 phút <b>(Reason)</b> — sprint trước có 3 hotfix, cả nhóm
+          mất gần 4 tiếng công chỉ để ngồi chờ <b>(Example)</b>. Nên em đề xuất tách trước khi thêm tính năng mới
           <b>(Point)</b>.”</p>
           <div class="ct-prose">
             <p><b>Biến thể:</b> <b>Ai – Như thế nào – Rồi làm sao</b> khi đối tượng là một người hoặc một
             thứ cụ thể (“bạn này có năng lực nhưng trình bày còn yếu, nên cần kèm phần thuyết trình”).
-            <b>OREO</b> khi bạn cần nói rõ đây là quan điểm riêng chứ không phải kết luận của nhóm.
+            <b>OREO</b> (Opinion – Reason – Example – Opinion) chính là PREP đổi tên, dùng khi bạn cần
+            nói rõ đây là quan điểm riêng chứ không phải kết luận của nhóm.
             <b>What – So What – Now What</b> khi rút bài học sau một sự việc.</p>
             <p><b>Lỗi hay gặp:</b> kể hết lý do rồi mới kết luận. Suốt lúc đó người nghe không biết bạn
             đang bênh hay chống, nên họ phải nghe lại lần hai trong đầu.</p>
@@ -766,7 +781,7 @@
       parts: [
         { k: 'Point',   hint: 'Ý chính, một câu, nói thẳng',       ph: 'Nên tách module thanh toán ra khỏi app chính.' },
         { k: 'Reason',  hint: 'Vì sao — một lý do mạnh, không ba', ph: 'Mỗi lần sửa nó bắt cả team chờ build lại 12 phút.' },
-        { k: 'Example', hint: 'Một ca có thật, có số',             ph: 'Sprint trước 3 hotfix, mất gần 4 tiếng chỉ để chờ.' },
+        { k: 'Example', hint: 'Một ca có thật, có số',             ph: 'Sprint trước 3 hotfix, cả nhóm mất gần 4 tiếng công chỉ để chờ.' },
         { k: 'Point',   hint: 'Chốt lại, thêm bước tiếp theo',     ph: 'Nên em đề xuất tách trước khi thêm tính năng mới.' }
       ]
     },
