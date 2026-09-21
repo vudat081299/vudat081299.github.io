@@ -3696,7 +3696,7 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
   /* ── popover cách dùng ─────────────────────────────────────────────────── */
   var pop = el('div', 'evp');
   pop.setAttribute('role', 'dialog');
-  pop.innerHTML = '<button class="evp__x" type="button" aria-label="Đóng"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
+  pop.innerHTML = '<button class="evp__x" type="button" aria-label="Đóng"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
     '<p class="evp__en"></p><p class="evp__vi"></p><p class="evp__d"></p>';
   document.body.appendChild(pop);
   var pEn = pop.querySelector('.evp__en'), pVi = pop.querySelector('.evp__vi'), pD = pop.querySelector('.evp__d');
