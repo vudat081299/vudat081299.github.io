@@ -9,6 +9,9 @@ không phải của regex.
 
 Kiểm cả chiều ngược lại: mọi .html trong pages/ và cooking/ phải được một mục trỏ tới.
 Thiếu chiều này thì một trang viết xong vẫn có thể vô hình — đã xảy ra hai lần.
+
+Và một chiều nữa, ngược lại lần nữa: vài trang chủ trang chốt là KHÔNG công khai
+(xem WITHHELD). Với chúng, cổng cấm niêm yết lại và bắt deploy.yml loại trừ.
 """
 import json, sys, os
 
@@ -95,19 +98,27 @@ for si, sec in enumerate(d.get('sections', [])):
 # định nghĩa. KHÔNG soi masters-degree/, portfolio/, stuff/, poem/: ở đó một thư
 # mục có thể chứa file phụ, bản nháp hoặc trang con, nên vắng mặt không phải lỗi.
 WATCHED = ('pages', 'cooking')
-# Cố ý không niêm yết — mỗi dòng phải kèm lý do, đừng thêm chỉ để cổng xanh.
-ALLOW_UNLISTED = {
-    # Chủ trang cho gỡ khỏi danh mục ngày 21/09/2026. Trang nói về hai hợp đồng bảo
-    # hiểm nhân thọ CÓ THẬT của gia đình — quyền lợi, phí, dòng tiền — nên không
-    # thuộc về một trang chủ công khai. File vẫn nằm trong repo và vẫn mở được bằng
-    # URL trực tiếp; muốn nó thật sự không công khai thì phải loại trừ trong
-    # .github/workflows/deploy.yml, y như shop/docs.
-    'pages/family-insurance-benefits.html': 'riêng tư — chủ trang cho gỡ 21/09/2026',
-    # Cùng ngày, cùng lý do: kế hoạch tài chính & sự nghiệp 10 năm của CHÍNH chủ trang —
-    # thu nhập, danh mục đầu tư, thuê hay mua nhà. Cũng không thuộc về một trang chủ công
-    # khai, và cũng vẫn đang được deploy: xem đoạn trên.
-    'pages/wealth-roadmap.html': 'riêng tư — chủ trang cho gỡ 21/09/2026',
-}
+# --- Trang chủ trang chốt KHÔNG công khai ---------------------------------------
+# Khai một đường dẫn ở đây thì cổng làm BA việc, không phải một:
+#
+#   1. miễn cho nó khỏi cổng trang mồ côi ngay dưới — nó được phép không có mục
+#      nào trỏ tới;
+#   2. CẤM nó quay lại collection.json. Chỉ miễn trừ thôi là không đủ: ngày
+#      21/09/2026 một phiên agent thấy file nằm ngoài danh mục liền "sửa giúp"
+#      bằng cách niêm yết nó lên trang chủ. Cổng phải chặn cả chiều ngược lại,
+#      không thì lần sau lại thế;
+#   3. bắt .github/workflows/deploy.yml có --exclude cho nó. Gỡ khỏi danh mục
+#      CHỈ bỏ cái link: rsync vẫn chép file lên Pages và URL trực tiếp vẫn trả
+#      HTTP 200 — đã đo đúng ngày ấy.
+#
+# Danh sách này CỐ Ý không ghi lý do từng trang, và đừng ai thêm vào: repo public,
+# nên một dòng lý do nằm cạnh đường dẫn thì chính nó là tấm biển chỉ đường. Đây là
+# quyết định của chủ trang (21/09/2026); muốn bỏ một dòng ra thì HỎI chủ trang,
+# đừng tự suy từ nội dung file.
+WITHHELD = (
+    'pages/family-insurance-benefits.html',
+    'pages/wealth-roadmap.html',
+)
 
 listed = set()
 for sec in d.get('sections', []):
@@ -125,10 +136,25 @@ for folder in WATCHED:
         if not name.endswith('.html'):
             continue
         rel = os.path.normpath(os.path.join(folder, name))
-        if rel in listed or rel in ALLOW_UNLISTED:
+        if rel in listed or rel in WITHHELD:
             continue
         err.append('%s: có file nhưng không mục nào trong collection.json trỏ tới '
-                   '— thêm một item, hoặc ghi vào ALLOW_UNLISTED kèm lý do' % rel)
+                   '— thêm một item, hoặc khai vào WITHHELD' % rel)
+
+# Chiều ngược lại của WITHHELD: đã chốt không công khai thì không được niêm yết lại.
+for h in WITHHELD:
+    if os.path.normpath(h) in listed:
+        err.append('%s: nằm trong WITHHELD nhưng collection.json vẫn có mục trỏ tới '
+                   '— gỡ mục ấy đi; đừng bỏ đường dẫn khỏi WITHHELD để cổng xanh' % h)
+
+# ...và deploy.yml phải loại trừ, nếu không file vẫn lên GitHub Pages.
+WORKFLOW = os.path.join(ROOT, '.github', 'workflows', 'deploy.yml')
+if os.path.isfile(WORKFLOW):
+    wf = open(WORKFLOW, encoding='utf-8').read()
+    for h in WITHHELD:
+        if ("--exclude '%s'" % h) not in wf:
+            err.append("deploy.yml thiếu --exclude '%s' — rsync sẽ chép file lên Pages "
+                       "và URL trực tiếp mở được, dù trang chủ không còn link" % h)
 
 if err:
     print('collection: %d lỗi' % len(err))
@@ -138,5 +164,6 @@ if err:
 
 n = sum(len(s['items']) if s['kind'] == 'tiles'
         else sum(len(i['files']) for i in s['items']) for s in d['sections'])
-print('collection: OK (%d section, %d mục, %d/36 phím tắt; %s không có trang mồ côi).'
-      % (len(d['sections']), n, len(keys), '/'.join(WATCHED)))
+print('collection: OK (%d section, %d mục, %d/36 phím tắt; %s không có trang mồ côi; '
+      '%d trang không công khai, deploy.yml có đủ --exclude).'
+      % (len(d['sections']), n, len(keys), '/'.join(WATCHED), len(WITHHELD)))

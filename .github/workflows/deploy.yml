@@ -17,6 +17,13 @@ name: Deploy site (build Cashy)
 # on purpose: that page is written FOR her and he needs a link to send.
 # `shop/tools/lint-shop.py` fails the build if these two excludes go missing.
 #
+# Two pages under `pages/` are excluded as well. They stay in the repo for the site
+# owner to read; they just do not go on the web. Delisting them from the homepage was
+# not enough on its own — rsync copies the whole tree, so the files kept resolving at
+# their direct URLs. `tools/lint-collection.py` holds the list and fails the build if
+# either `--exclude` disappears, and also blocks the pages from being put back on the
+# homepage. Do not drop a line without asking the site owner.
+#
 # One-time setup: repo Settings → Pages → Build and deployment → Source =
 # "GitHub Actions" (instead of "Deploy from a branch").
 
@@ -76,6 +83,8 @@ jobs:
             --exclude 'masters-degree/data-science-roadmap/LEARNING-LOG.md' \
             --exclude 'shop/docs' \
             --exclude 'shop/*.md' \
+            --exclude 'pages/family-insurance-benefits.html' \
+            --exclude 'pages/wealth-roadmap.html' \
             ./ _site/
           mkdir -p _site/cashy
           cp -r cashy/dist/. _site/cashy/
