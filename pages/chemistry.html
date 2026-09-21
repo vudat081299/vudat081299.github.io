@@ -269,7 +269,7 @@
   .ch-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 12px 0 16px; }
   @media (max-width: 720px) { .ch-grid2 { grid-template-columns: minmax(0, 1fr); } }
   .ch-mini { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 13px 15px; }
-  .ch-mini h4 { font-size: 13.5px; font-weight: 690; margin: 0 0 6px; }
+  .ch-mini h3, .ch-mini h4 { font-size: 13.5px; font-weight: 690; margin: 0 0 6px; }
   .ch-mini p { font-size: 13px; line-height: 1.62; color: var(--wb-fg-muted); margin: 0 0 6px; }
   .ch-mini p:last-child { margin-bottom: 0; }
   .ch-mini p b { color: var(--wb-fg); font-weight: 640; }
@@ -307,7 +307,7 @@
 
 <header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
-          aria-label="Open menu" aria-expanded="false" aria-controls="nav-menu"><span class="wb-ico">menu</span></button>
+          aria-label="Mở mục lục" aria-expanded="false" aria-controls="nav-menu"><span class="wb-ico">menu</span></button>
   <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">⚗️</span> Chemistry</a>
   <nav class="wb-nav wb-navbar__menu" id="nav-menu">
     <a class="wb-nav__link" href="#p1">Atoms</a>
@@ -321,8 +321,8 @@
   </nav>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
-    <a class="wb-btn wb-btn--ghost wb-btn--icon" href="../index.html" aria-label="Home"><span class="wb-ico">home</span></a>
-    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Light / dark">
+    <a class="wb-btn wb-btn--ghost wb-btn--icon" href="../index.html" aria-label="Trang chủ"><span class="wb-ico">home</span></a>
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
       <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
       <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
     </button>
@@ -503,12 +503,12 @@
 
         <div class="ch-grid2">
           <div class="ch-mini">
-            <h4>Câu hỏi 1 — Cấu trúc: electron đang ở đâu?</h4>
+            <h3>Câu hỏi 1 — Cấu trúc: electron đang ở đâu?</h3>
             <p>Hạt nhân có bao nhiêu proton thì hút được bấy nhiêu electron. Electron xếp vào các <b>vùng năng lượng</b> có sức chứa cố định. Lớp ngoài cùng đầy hay thiếu bao nhiêu quyết định nguyên tử đó <b>bắt tay với ai</b> và bắt kiểu gì.</p>
             <p>Từ đó suy ra <b>liên kết</b> → <b>hình dạng phân tử</b> → <b>tính chất</b>: tan hay không, sôi ở nhiệt độ nào, dẫn điện hay cách điện, có mùi hay không, thuốc có gắn vừa vào thụ thể hay không.</p>
           </div>
           <div class="ch-mini">
-            <h4>Câu hỏi 2 — Biến đổi: năng lượng chảy về đâu?</h4>
+            <h3>Câu hỏi 2 — Biến đổi: năng lượng chảy về đâu?</h3>
             <p>Một phản ứng chỉ tự xảy ra khi nó làm <b>tổng độ hỗn loạn của vũ trụ tăng lên</b>. Cách gói gọn điều đó thành một phép tính chỉ dùng số liệu của hệ là <b>ΔG = ΔH − TΔS</b>. Âm thì được phép xảy ra.</p>
             <p>Nhưng “được phép” khác “sẽ xảy ra ngay”. Tốc độ do <b>rào năng lượng hoạt hoá</b> quyết định — một đại lượng hoàn toàn khác. Kim cương <i>được phép</i> biến thành than chì; nó chỉ không bao giờ làm thế trong đời bạn.</p>
           </div>
@@ -785,7 +785,7 @@ Ar = 34,969 × 0,7576 + 36,966 × 0,2424 = <b>35,45</b>  <span class="c">— kh�
             </div>
             <div class="ch-lab__row">
               <span class="k">Lớp electron</span>
-              <div><svg id="cfg-svg" class="ch-svg" viewBox="0 0 520 96" style="max-width:520px;border:0;background:none"></svg></div>
+              <div><svg id="cfg-svg" role="img" aria-label="Số electron ở từng lớp của nguyên tử đang chọn, mỗi cột là một lớp" class="ch-svg" viewBox="0 0 520 96" style="max-width:520px;border:0;background:none"></svg></div>
             </div>
             <pre class="ch-out" id="cfg-out"></pre>
             <p class="ch-lab__foot"><b>Hai ngoại lệ đáng nhớ nhất:</b> Cr là 3d⁵4s¹ chứ không phải 3d⁴4s², và Cu là 3d¹⁰4s¹ chứ không phải 3d⁹4s². Lý do: phân lớp d <b>đầy một nửa</b> (5 electron, mỗi orbital một cái) hoặc <b>đầy hẳn</b> (10) là những cấu hình bền bất thường, đủ bền để “vay” một electron từ 4s. Có tổng cộng khoảng 20 ngoại lệ như vậy, gần hết nằm ở khối d và f — nhưng chúng là ngoại lệ có lý do, không phải để học thuộc.</p>
@@ -874,11 +874,11 @@ Ar = 34,969 × 0,7576 + 36,966 × 0,2424 = <b>35,45</b>  <span class="c">— kh�
             <div class="wb-chart__title">Năng lượng ion hoá thứ nhất, Z = 1 → 20</div>
             <div class="wb-chart__sub">Đỉnh nhọn = khí hiếm (rất khó giật electron). Đáy = kim loại kiềm (rất dễ). Hai chỗ tụt bất thường: <b>Al</b> là bằng chứng đo được của việc phân lớp s và p khác mức năng lượng, <b>S</b> là bằng chứng của quy tắc Hund.</div>
             <svg class="wb-chart__svg" viewBox="0 0 700 240" role="img" aria-label="Đồ thị năng lượng ion hoá thứ nhất từ hydrogen tới calcium, hình răng cưa với đỉnh ở helium, neon, argon và đáy ở lithium, sodium, potassium">
-              <line class="ch-vdash" x1="40" y1="31.98" x2="668" y2="31.98"></line>
-              <line class="ch-vdash" x1="40" y1="115.9" x2="668" y2="115.9"></line>
+              <line class="ch-vdash" x1="40" y1="30.02" x2="668" y2="30.02"></line>
+              <line class="ch-vdash" x1="40" y1="115.01" x2="668" y2="115.01"></line>
               <line class="ch-vline" x1="40" y1="200" x2="668" y2="200" style="stroke:var(--wb-border)"></line>
-              <text class="ch-vs" x="8" y="35">2400</text>
-              <text class="ch-vs" x="8" y="119">1200</text>
+              <text class="ch-vs" x="8" y="33">2400</text>
+              <text class="ch-vs" x="8" y="118">1200</text>
               <text class="ch-vs" x="24" y="204">0</text>
               <text class="ch-vs" x="8" y="16">kJ/mol</text>
 
@@ -1025,7 +1025,7 @@ Tạo:  2×(C=O) + 4×(O–H) = 2×799 + 4×463 = <b>3450 kJ</b>   <span class="
                 <span class="ch-mono" id="bp-dv" style="min-width:44px"></span>
               </div>
             </div>
-            <svg id="bp-svg" class="ch-svg ch-svg--md" viewBox="0 0 520 190"></svg>
+            <svg id="bp-svg" role="img" aria-label="Đám mây electron giữa hai nguyên tử lệch dần từ chia đều sang cướp hẳn khi chênh lệch độ âm điện tăng" class="ch-svg ch-svg--md" viewBox="0 0 520 190"></svg>
             <pre class="ch-out" id="bp-out" style="margin-top:12px"></pre>
             <p class="ch-lab__foot"><b>Vì sao con số này quan trọng đến thế:</b> nó dự đoán gần như mọi tính chất vĩ mô. ΔEN lớn ⇒ ion ⇒ tinh thể cứng, nóng chảy rất cao, và nếu tan thì dung dịch dẫn điện — nhưng “ion” không đồng nghĩa với “tan”: xem <a href="#s-tables">quy tắc tan</a>. ΔEN nhỏ ⇒ cộng hoá trị ⇒ phân tử rời, sôi thấp, tan trong dầu, không dẫn điện. NaCl nóng chảy ở 801 °C; CCl₄ có khối lượng phân tử lớn hơn nhiều nhưng sôi ở 77 °C.</p>
           </div>
@@ -1126,7 +1126,7 @@ Kết quả: một liên kết N=O và hai liên kết N–O⁻ …
               <span class="k">Cặp riêng</span>
               <div class="ch-chips" id="vs-lone"></div>
             </div>
-            <svg id="vs-svg" class="ch-svg ch-svg--sm" viewBox="0 0 320 260"></svg>
+            <svg id="vs-svg" role="img" aria-label="Hình ba chiều của phân tử ứng với số nhóm electron và số cặp riêng đang chọn" class="ch-svg ch-svg--sm" viewBox="0 0 320 260"></svg>
             <pre class="ch-out" id="vs-out" style="margin-top:12px"></pre>
             <p class="ch-lab__foot"><b>Phân biệt hai chữ “hình dạng”:</b> <b>hình dạng nhóm electron</b> tính cả cặp riêng; <b>hình dạng phân tử</b> chỉ tính nguyên tử nhìn thấy được. H₂O có nhóm electron <i>tứ diện</i> nhưng phân tử <i>gấp khúc</i> — vì hai cặp riêng vô hình. Đề bài hỏi cái nào thì phải đọc kỹ; đây là bẫy quen thuộc nhất của chương này.</p>
             <p class="ch-lab__foot"><b>Vì sao nên bận tâm:</b> góc 104,5° của nước là lý do nước <b>có cực</b>, mà nước có cực là lý do nó hoà tan muối, có sức căng bề mặt cao, nở ra khi đóng băng, và giữ nhiệt độ Trái Đất ổn định. Nếu nước thẳng như CO₂, hai đầu lưỡng cực sẽ triệt tiêu, nước sẽ không phân cực, sẽ sôi ở khoảng −80 °C, và sự sống như ta biết sẽ không có.</p>
@@ -1284,7 +1284,7 @@ tính trên từng liên kết hydro thì chỉ ~20 kJ/mol, khớp với dải 1
           </div>
           <div class="ch-lab__body">
             <div class="ch-chips" id="imf-chips" style="margin-bottom:12px"></div>
-            <svg id="imf-svg" class="ch-svg" viewBox="0 0 640 150" style="border:0;background:none"></svg>
+            <svg id="imf-svg" role="img" aria-label="Các lực liên phân tử đang giữ chất được chọn, vẽ thành thanh theo độ mạnh" class="ch-svg" viewBox="0 0 640 150" style="border:0;background:none"></svg>
             <pre class="ch-out" id="imf-out" style="margin-top:10px"></pre>
             <p class="ch-lab__foot"><b>Quy tắc “giống tan trong giống”</b> chính là bảng này áp dụng ngược: chất tan được khi lực nó tạo với dung môi <i>bù lại</i> được lực nó phải phá. Nước (liên kết hydro mạnh) không chịu buông nhau để nhường chỗ cho hexane (chỉ có London yếu) ⇒ dầu và nước tách lớp. Đây không phải “dầu ghét nước” — đúng hơn là <b>nước quá thích nước</b>.</p>
           </div>
@@ -1451,7 +1451,7 @@ gam chất đầu → <b>÷ M</b> → mol chất đầu → <b>× tỉ lệ hệ
                 <span class="ch-mono" id="st-yv" style="min-width:52px"></span>
               </div>
             </div>
-            <svg id="st-svg" class="ch-svg" viewBox="0 0 640 170" style="border:0;background:none"></svg>
+            <svg id="st-svg" role="img" aria-label="Lượng N₂ và H₂ đã dùng cùng lượng NH₃ thu được, cho thấy chất nào cạn trước" class="ch-svg" viewBox="0 0 640 170" style="border:0;background:none"></svg>
             <pre class="ch-out" id="st-out" style="margin-top:8px"></pre>
             <p class="ch-lab__foot"><b>Vì sao hiệu suất không bao giờ đạt 100% trong thực tế:</b> phản ứng thuận nghịch dừng ở <a href="#s-equil">cân bằng</a> chứ không chạy hết; có phản ứng phụ tạo chất khác; và một phần sản phẩm mất khi lọc, chuyển bình, kết tinh. Nhà máy Haber thật chạy ở hiệu suất một lượt chỉ 10–15%, nhưng <b>tuần hoàn khí chưa phản ứng trở lại</b> nên hiệu suất tổng lên trên 97%.</p>
           </div>
@@ -1513,7 +1513,7 @@ R = 0,08206 L·atm/(mol·K)  hoặc  8,314 J/(mol·K)     T: nhiệt độ <b>tu
                 <span class="ch-mono" id="gs-nv" style="min-width:60px"></span>
               </div>
             </div>
-            <svg id="gs-svg" class="ch-svg" viewBox="0 0 640 200" style="border:0;background:none"></svg>
+            <svg id="gs-svg" role="img" aria-label="Xy-lanh có piston: thể tích khí đổi theo áp suất, nhiệt độ và số mol, kèm phép tính PV = nRT" class="ch-svg" viewBox="0 0 640 200" style="border:0;background:none"></svg>
             <pre class="ch-out" id="gs-out" style="margin-top:8px"></pre>
             <p class="ch-lab__foot"><b>Thuyết động học phân tử — bốn giả định làm nên “lý tưởng”:</b> (1) phân tử là chấm không có thể tích, (2) chúng không hút nhau, (3) va chạm hoàn toàn đàn hồi, (4) động năng trung bình chỉ phụ thuộc nhiệt độ. Giả định (4) có hệ quả đẹp: <b>ở cùng nhiệt độ, mọi khí có cùng động năng trung bình</b> — nên phân tử nhẹ phải chạy nhanh hơn. Ở 25 °C, tốc độ căn quân phương của H₂ là 1920 m/s còn của O₂ chỉ 482 m/s. Đó là lý do bóng bay heli xẹp nhanh hơn bóng bay không khí: heli chui qua lỗ nhỏ nhanh hơn.</p>
             <p class="ch-lab__foot"><b>Khi nào mô hình lý tưởng gãy:</b> ở <b>áp suất rất cao</b> (phân tử bị ép sát, thể tích riêng của chúng không còn bỏ qua được) và <b>nhiệt độ rất thấp</b> (chúng đủ chậm để lực hút kéo lại). Hiệu chỉnh chuẩn là phương trình van der Waals <code>(P + an²/V²)(V − nb) = nRT</code>: <code>a</code> vá lực hút, <code>b</code> vá thể tích riêng. Không có mô hình nào đúng ở mọi điều kiện — biết chỗ gãy quan trọng ngang biết công thức.</p>
@@ -1540,11 +1540,11 @@ N₂ 78,1% → 0,781 atm      O₂ 20,9% → 0,209 atm      Ar 0,93%      CO₂ 
 
         <div class="ch-grid2">
           <div class="ch-mini">
-            <h4>NaCl tan trong nước — thu bù được chi</h4>
+            <h3>NaCl tan trong nước — thu bù được chi</h3>
             <p>Phá mạng tinh thể NaCl tốn <b>+788 kJ/mol</b>, rất đắt. Nhưng mỗi Na⁺ và Cl⁻ được nước vây quanh và ổn định hoá (hydrate hoá), thu về <b>−784 kJ/mol</b>. Chênh lệch chỉ +4 kJ/mol — gần như hoà, và <b>entropy tăng mạnh</b> khi ion phân tán ra khắp dung dịch đã đủ đẩy quá trình đi. Nên NaCl tan, và tan hơi thu nhiệt (dung dịch mát đi một chút).</p>
           </div>
           <div class="ch-mini">
-            <h4>Dầu không tan trong nước — thu không bù nổi chi</h4>
+            <h3>Dầu không tan trong nước — thu không bù nổi chi</h3>
             <p>Phân tử dầu chỉ có lực London yếu, tách chúng ra rất rẻ. Vấn đề nằm ở phía nước: để chen dầu vào, phải <b>cắt đứt mạng liên kết hydro</b> rất mạnh, mà dầu lại chẳng trả lại được gì tương đương. Nước bèn khép lại quanh giọt dầu và đẩy nó ra. Chính xác hơn thì đây là <b>hiệu ứng kỵ nước</b> — chủ yếu do entropy của nước, không phải do dầu “sợ” nước — và nó là lực gấp màng tế bào và cuộn protein.</p>
           </div>
         </div>
@@ -1708,7 +1708,7 @@ W = số cách sắp xếp vi mô cho ra cùng trạng thái vĩ mô;  k<sub>B</
               <span class="k">Ví dụ có sẵn</span>
               <div class="ch-chips" id="gb-presets"></div>
             </div>
-            <svg id="gb-svg" class="ch-svg" viewBox="0 0 640 230" style="border:0;background:none"></svg>
+            <svg id="gb-svg" role="img" aria-label="Đường ΔG theo nhiệt độ, cắt trục không tại nhiệt độ phản ứng đổi chiều tự phát" class="ch-svg" viewBox="0 0 640 230" style="border:0;background:none"></svg>
             <pre class="ch-out" id="gb-out" style="margin-top:8px"></pre>
             <p class="ch-lab__foot"><b>Bốn tình huống, và cả bốn đều gặp ngoài đời:</b> ΔH− ΔS+ ⇒ <b>luôn xảy ra ở mọi nhiệt độ</b> (phân huỷ oxy già thành nước và khí O₂); ΔH+ ΔS− ⇒ <b>không bao giờ</b> (quang hợp — nên nó cần ánh sáng bơm vào); ΔH− ΔS− ⇒ chỉ khi <b>lạnh</b> (nước đóng băng); ΔH+ ΔS+ ⇒ chỉ khi <b>nóng</b> (đá tan, nước sôi, nung vôi CaCO₃ ở trên ~835 °C).</p>
             <p class="ch-lab__foot"><b>Cách sự sống lách luật:</b> tế bào cần tổng hợp protein — ΔG dương, bị cấm. Nó <b>ghép</b> phản ứng đó với thuỷ phân ATP (ΔG° = −30,5 kJ/mol) qua một enzyme chung, và <b>tổng</b> ΔG của cặp ghép trở thành âm. Đây không phải mẹo vặt sinh học mà là chiến lược trung tâm của mọi sinh vật: dùng một phản ứng rất âm để kéo một phản ứng dương đi theo.</p>
@@ -1771,7 +1771,7 @@ W = số cách sắp xếp vi mô cho ra cùng trạng thái vĩ mô;  k<sub>B</
               <span class="k">Xúc tác</span>
               <div class="ch-chips" id="rc-cat"></div>
             </div>
-            <svg id="rc-svg" class="ch-svg" viewBox="0 0 640 230" style="border:0;background:none"></svg>
+            <svg id="rc-svg" role="img" aria-label="Giản đồ toạ độ phản ứng: quả đồi năng lượng hoạt hoá và độ sâu hố sản phẩm, kèm đường thấp hơn khi có xúc tác" class="ch-svg" viewBox="0 0 640 230" style="border:0;background:none"></svg>
             <pre class="ch-out" id="rc-out" style="margin-top:8px"></pre>
             <p class="ch-lab__foot"><b>Đọc được ba thứ từ một giản đồ:</b> <b>chiều cao đồi tính từ trái</b> = Eₐ thuận (quyết định tốc độ thuận); <b>chiều cao tính từ phải</b> = Eₐ nghịch; <b>chênh lệch hai đầu</b> = ΔH. Từ đó suy ra một quan hệ luôn đúng: <b>E<sub>a,thuận</sub> − E<sub>a,nghịch</sub> = ΔH</b>.</p>
           </div>
@@ -1807,7 +1807,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
                 <span class="ch-mono" id="mb-eav" style="min-width:56px"></span>
               </div>
             </div>
-            <svg id="mb-svg" class="ch-svg" viewBox="0 0 640 236" style="border:0;background:none"></svg>
+            <svg id="mb-svg" role="img" aria-label="Phân bố Maxwell–Boltzmann với vạch năng lượng hoạt hoá; phần đuôi bên phải vạch là tỉ lệ phân tử đủ mạnh để phản ứng" class="ch-svg" viewBox="0 0 640 236" style="border:0;background:none"></svg>
             <pre class="ch-out" id="mb-out" style="margin-top:8px"></pre>
             <p class="ch-lab__foot"><b>Điều hình này dạy mà công thức không dạy nổi:</b> ở nhiệt độ phòng, chỉ một tỉ lệ <i>rất nhỏ</i> phân tử có đủ năng lượng — thường dưới một phần triệu. Nên phản ứng không phải “mọi phân tử phản ứng chậm”, mà là <b>đại đa số không phản ứng gì cả, chỉ vài kẻ ở đuôi phải làm hết việc</b>. Tăng nhiệt độ không làm mọi phân tử nhanh hơn đều — nó làm đuôi phải đông hơn hẳn.</p>
           </div>
@@ -1870,7 +1870,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
           </div>
           <div class="ch-lab__body">
             <div class="ch-chips" id="lc-acts" style="margin-bottom:12px"></div>
-            <svg id="lc-svg" class="ch-svg" viewBox="0 0 640 190" style="border:0;background:none"></svg>
+            <svg id="lc-svg" role="img" aria-label="Cân bằng phản ứng Haber dịch sang trái hay sang phải sau tác động đang chọn" class="ch-svg" viewBox="0 0 640 190" style="border:0;background:none"></svg>
             <pre class="ch-out" id="lc-out" style="margin-top:8px"></pre>
             <p class="ch-lab__foot"><b>Phát biểu chuẩn:</b> khi một hệ đang cân bằng bị tác động, nó dịch chuyển theo chiều <b>làm giảm bớt tác động đó</b>. Nói kiểu đời thường: hệ bướng bỉnh, bạn đẩy nó thì nó đẩy lại.</p>
             <p class="ch-lab__foot"><b>Chỉ có nhiệt độ đổi được K.</b> Thêm chất và đổi áp suất làm hệ dịch chuyển nhưng <b>K giữ nguyên</b> — hệ chỉ trở về đúng tỉ lệ K cũ bằng cách đổi các nồng độ. Thêm xúc tác thì <b>không dịch chuyển gì cả</b>: nó tăng đều cả hai chiều nên tới cân bằng nhanh hơn, còn điểm dừng vẫn y nguyên. Nhiệt độ thì khác: nó đổi bản thân giá trị K. Mẹo nhớ: coi <b>nhiệt như một chất</b> — phản ứng toả nhiệt thì viết “+ nhiệt” ở vế sản phẩm, rồi áp Le Chatelier như với chất bình thường.</p>
@@ -1924,7 +1924,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
                 <span class="ch-mono" id="ph-cv" style="min-width:76px"></span>
               </div>
             </div>
-            <svg id="ph-svg" class="ch-svg" viewBox="0 0 640 150" style="border:0;background:none"></svg>
+            <svg id="ph-svg" role="img" aria-label="Thang pH từ 0 tới 14, đánh dấu vị trí của dung dịch đang chọn" class="ch-svg" viewBox="0 0 640 150" style="border:0;background:none"></svg>
             <pre class="ch-out" id="ph-out" style="margin-top:8px"></pre>
             <p class="ch-lab__foot"><b>“Mạnh” và “đặc” là hai chuyện khác nhau — lẫn hai chữ này là lỗi ngôn ngữ nguy hiểm nhất của chương.</b> <i>Mạnh</i> = phân ly hoàn toàn (bản chất của chất). <i>Đặc</i> = nhiều mol trên lít (bạn pha ra). Acid acetic <b>băng</b> (17,4 M, gần như nguyên chất) là acid <i>yếu</i> mà rất <i>đặc</i>; HCl 0,0001 M là acid <i>mạnh</i> mà rất <i>loãng</i>, và pH của nó cao hơn.</p>
           </div>
@@ -1959,7 +1959,7 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
                 <span class="ch-mono" id="ti-vv" style="min-width:64px"></span>
               </div>
             </div>
-            <svg id="ti-svg" class="ch-svg" viewBox="0 0 640 240" style="border:0;background:none"></svg>
+            <svg id="ti-svg" role="img" aria-label="Đường cong chuẩn độ pH theo thể tích NaOH đã nhỏ, kèm điểm nửa tương đương và điểm tương đương" class="ch-svg" viewBox="0 0 640 240" style="border:0;background:none"></svg>
             <pre class="ch-out" id="ti-out" style="margin-top:8px"></pre>
             <p class="ch-lab__foot"><b>Vì sao điểm tương đương của acid yếu không ở pH 7:</b> tại đó toàn bộ CH₃COOH đã thành CH₃COO⁻ — mà đó là một <b>base yếu</b>, nó lấy proton của nước và đẩy pH lên khoảng 8,7. Hệ quả thực hành: chọn chỉ thị theo pH của <i>điểm tương đương</i>, không phải mặc định pH 7. Phenolphtalein (đổi màu 8,3–10) hợp cho acid yếu; methyl da cam (3,1–4,4) hợp cho chuẩn độ base yếu bằng acid mạnh.</p>
             <p class="ch-lab__foot"><b>Đọc được gì từ đường cong:</b> <b>điểm nửa tương đương</b> cho pH = pK<sub>a</sub> ⇒ đây là cách đo pK<sub>a</sub> của một acid lạ bằng thí nghiệm. <b>Điểm tương đương</b> là chỗ dốc đứng nhất, và thể tích tại đó cho biết nồng độ acid ban đầu.</p>
@@ -2074,11 +2074,11 @@ k: hằng số tốc độ    A: hệ số tần số va chạm    Eₐ: năng l
 
         <div class="ch-grid2">
           <div class="ch-mini">
-            <h4>Pin galvanic — phản ứng đẩy dòng điện</h4>
+            <h3>Pin galvanic — phản ứng đẩy dòng điện</h3>
             <p>ΔG âm, E° dương. Phản ứng tự xảy ra và <b>sinh</b> điện. Pin AA (Zn/MnO₂), pin lithium-ion (Li⁺ chạy qua lại giữa hai điện cực), pin nhiên liệu hydro (H₂ + O₂ → H₂O, sản phẩm duy nhất là nước).</p>
           </div>
           <div class="ch-mini">
-            <h4>Điện phân — dòng điện đẩy phản ứng</h4>
+            <h3>Điện phân — dòng điện đẩy phản ứng</h3>
             <p>ΔG dương, E° âm. Phải <b>bơm</b> điện vào để ép phản ứng chạy ngược. Mạ kim loại, luyện nhôm từ Al₂O₃ (riêng ngành này ngốn vài phần trăm điện năng của cả một quốc gia công nghiệp), điều chế Cl₂ và NaOH từ nước muối, sạc lại pin.</p>
           </div>
         </div>
@@ -2354,7 +2354,7 @@ alkane → ancol → aldehyde → acid carboxylic → CO₂
               <span class="k">Nhiệt độ</span>
               <div class="ch-chips" id="sn-temp"></div>
             </div>
-            <svg id="sn-svg" class="ch-svg" viewBox="0 0 640 120" style="border:0;background:none"></svg>
+            <svg id="sn-svg" role="img" aria-label="Mức chiếm ưu thế của bốn cơ chế SN1, SN2, E1 và E2 theo điều kiện đang chọn" class="ch-svg" viewBox="0 0 640 120" style="border:0;background:none"></svg>
             <pre class="ch-out" id="sn-out" style="margin-top:8px"></pre>
             <p class="ch-lab__foot"><b>Vì sao bậc carbon lại đảo ngược ưu tiên:</b> SN2 cần nucleophile <b>đâm thẳng từ phía sau</b>, nên càng nhiều nhóm cồng kềnh quanh carbon thì càng khó — bậc ba gần như không SN2 được. Ngược lại SN1 phải tạo <b>carbocation trung gian</b>, mà carbocation bậc ba ổn định hơn hẳn — bromide bậc ba thuỷ phân nhanh hơn bậc một cỡ <b>một triệu lần</b> nhờ ba nhóm alkyl đẩy electron vào. Cùng một yếu tố cấu trúc, hai hiệu ứng ngược chiều.</p>
           </div>
@@ -2440,11 +2440,11 @@ nitro hoá (HNO₃/H₂SO₄) · halogen hoá (Br₂/FeBr₃) · sulfo hoá (SO�
 
         <div class="ch-grid2">
           <div class="ch-mini">
-            <h4>Nhựa nhiệt dẻo — nấu chảy lại được</h4>
+            <h3>Nhựa nhiệt dẻo — nấu chảy lại được</h3>
             <p>Các mạch <b>rời nhau</b>, chỉ dính bằng lực liên phân tử. Đun nóng thì chúng trượt ra và chảy ⇒ <b>tái chế được</b>. PE, PP, PET, PS. Đây là lý do chai nước tái chế được còn vỏ ổ cắm điện thì không.</p>
           </div>
           <div class="ch-mini">
-            <h4>Nhựa nhiệt rắn — chỉ định hình một lần</h4>
+            <h3>Nhựa nhiệt rắn — chỉ định hình một lần</h3>
             <p>Các mạch <b>nối chéo bằng liên kết cộng hoá trị</b> thành một mạng lưới khổng lồ — về mặt hoá học, cả món đồ là <i>một phân tử</i>. Đun nóng thì phân huỷ chứ không chảy. Bakelite, epoxy, cao su lưu hoá, vỏ ổ điện.</p>
           </div>
         </div>
@@ -2502,11 +2502,11 @@ E = hc/λ  ⇒  <b>Δ quyết định màu</b>. Δ lớn ⇒ hấp thụ ánh s�
 
         <div class="ch-grid2">
           <div class="ch-mini">
-            <h4>Vì sao ruby đỏ mà emerald xanh</h4>
+            <h3>Vì sao ruby đỏ mà emerald xanh</h3>
             <p>Cả hai đều là tinh thể không màu bị pha một lượng nhỏ <b>Cr³⁺</b>. Ruby là nhôm oxit, emerald là beryl — hai mạng tinh thể khác nhau nên ép Cr³⁺ ở khoảng cách khác nhau, Δ khác nhau, màu hấp thụ khác nhau. <b>Cùng một ion tạp chất, hai viên đá quý khác hẳn.</b></p>
           </div>
           <div class="ch-mini">
-            <h4>Vì sao CO độc</h4>
+            <h3>Vì sao CO độc</h3>
             <p>Hemoglobin mang oxy bằng ion <b>Fe²⁺</b> trong vòng heme. CO nằm cuối dãy phổ hoá — nó gắn vào Fe²⁺ <b>mạnh gấp ~200 lần</b> O₂ và không chịu nhả ra. Ghế bị chiếm, máu hết chỗ chở oxy. Diệp lục dùng một vòng họ hàng với heme và mang <b>Mg²⁺</b> ở giữa — nhưng đừng nghĩ chỉ cần thay ion là đỏ thành xanh: Mg²⁺ <b>không có electron d nào</b> (d⁰) nên không thể tách mức d. Màu của cả heme lẫn diệp lục sinh ra từ <b>hệ liên hợp π của chính cái vòng</b>, không phải từ ion ở giữa; ion kim loại chỉ chỉnh sắc thái. Đó là cơ chế màu thứ hai, mạnh hơn hẳn kiểu tách mức d — và là lý do máu với lá đậm màu hơn nhiều so với dung dịch phức kim loại thường.</p>
           </div>
         </div>
