@@ -10,7 +10,7 @@ name: Deploy site (build Cashy)
 # separately, which also keeps its dev docs (docs/, features/) off the web.
 #
 # `shop/docs` and `shop/*.md` are excluded for a sharper reason: they are internal
-# strategy, and one of them (docs/04-DAM-PHAN.md) is a negotiation playbook about a
+# strategy, and one of them (docs/04-NEGOTIATION.md) is a negotiation playbook about a
 # specific real person the site owner is about to meet. GitHub Pages serves markdown as
 # plain text at a guessable URL, so publishing it would hand her his whole position —
 # what he will not promise, and when he should walk away. `shop/pitch/` stays published

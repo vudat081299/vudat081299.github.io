@@ -23,7 +23,7 @@ cat shop/HANDOFF.md                  # phiên trước để lại gì
 2. **Rồi mới dựng UI**, và UI *đọc* dữ liệu bằng vòng lặp.
 3. **Chạy cổng.**
 4. **Mở trình duyệt thật, bấm, rồi ĐO.** Không bỏ bước này (xem *Chạy thật* bên dưới).
-5. **Cập nhật tài liệu** — `HANDOFF.md` luôn luôn; `docs/NO-KY-THUAT.md` nếu để lại nợ;
+5. **Cập nhật tài liệu** — `HANDOFF.md` luôn luôn; `docs/TECH-DEBT.md` nếu để lại nợ;
    `docs/adr/` nếu vừa quyết một thứ mà người sau có thể muốn hỏi "vì sao".
 
 ## Bốn luật không thương lượng
@@ -109,7 +109,7 @@ Xem phễu ở `/shop/measure/`.
   phẩm nào đứng sau.
 - **Đừng bịa đánh giá của khách.**
 - **Đừng thêm CI, test tự động, TypeScript hay bước build** chỉ vì thấy nên có. Thêm khi có một
-  lỗi thật mà ba lớp cổng hiện tại không bắt được — xem mục *Chỗ dừng lại* trong `docs/05-KIEN-TRUC.md`.
+  lỗi thật mà ba lớp cổng hiện tại không bắt được — xem mục *Chỗ dừng lại* trong `docs/05-ARCHITECTURE.md`.
 
 ## Xong một việc thì làm gì
 

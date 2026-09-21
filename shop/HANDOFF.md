@@ -1,8 +1,42 @@
 # Bàn giao — phiên 20/09/2026, rà lại 21/09/2026
 
 Đọc file này trước, rồi tới [shop/CLAUDE.md](CLAUDE.md) và
-[docs/05-KIEN-TRUC.md](docs/05-KIEN-TRUC.md). Mục lục đầy đủ:
-[docs/00-DOC-CAI-NAY-TRUOC.md](docs/00-DOC-CAI-NAY-TRUOC.md).
+[docs/05-ARCHITECTURE.md](docs/05-ARCHITECTURE.md). Mục lục đầy đủ:
+[docs/00-READ-THIS-FIRST.md](docs/00-READ-THIS-FIRST.md).
+
+## Tên file tài liệu đổi sang tiếng Anh — 21/09/2026
+
+13 file markdown trong `shop/` đổi tên theo yêu cầu chủ repo. **Nội dung vẫn tiếng Việt** —
+chỉ cái tên đổi. Ai còn nhớ đường dẫn cũ thì tra bảng này:
+
+| Cũ | Mới |
+|---|---|
+| `BAO-CAO-HIEN-TRANG.md` | `STATUS-REPORT.md` |
+| `docs/00-DOC-CAI-NAY-TRUOC.md` | `docs/00-READ-THIS-FIRST.md` |
+| `docs/01-BOI-CANH-VA-CO-HOI.md` | `docs/01-CONTEXT-AND-OPPORTUNITY.md` |
+| `docs/02-LO-TRINH.md` | `docs/02-ROADMAP.md` |
+| `docs/03-DOI-THU-VA-TICH-HOP.md` | `docs/03-COMPETITORS-AND-INTEGRATIONS.md` |
+| `docs/04-DAM-PHAN.md` | `docs/04-NEGOTIATION.md` |
+| `docs/05-KIEN-TRUC.md` | `docs/05-ARCHITECTURE.md` |
+| `docs/NO-KY-THUAT.md` | `docs/TECH-DEBT.md` |
+| `docs/adr/0001-trang-tinh.md` | `docs/adr/0001-static-site.md` |
+| `docs/adr/0002-cham-diem-tim-mui.md` | `docs/adr/0002-scent-finder-scoring.md` |
+| `docs/adr/0003-hop-qua-trong-gio.md` | `docs/adr/0003-gift-box-in-cart.md` |
+| `docs/adr/0004-khong-xay-lai-phan-mem-ban-hang.md` | `docs/adr/0004-dont-rebuild-retail-software.md` |
+| `docs/adr/0005-an-icon-cho-toi-khi-font-ve.md` | `docs/adr/0005-hide-icons-until-font-loads.md` |
+
+196 chỗ trỏ tới tên cũ đã sửa theo — không chỉ liên kết markdown mà cả comment trong
+`tools/lint-shop.py`, `assets/shop.js`, `.github/workflows/deploy.yml` và
+`.claude/skills/shop/SKILL.md`.
+
+Chỗ dựa để biết không sót cái nào là cổng `check_docs` (liên kết markdown phải trỏ tới file có
+thật). **Đã thử ngược:** để đúng một link trỏ về tên cũ thì cổng in `liên kết gãy` và đỏ.
+
+Hai cổng dễ tưởng là bị ảnh hưởng nhưng **không**: `check_publish` so `--exclude 'shop/docs'` và
+`--exclude 'shop/*.md'` trong `deploy.yml` — cả hai là glob theo thư mục và đuôi file, nên đổi
+tên không mở ra lỗ nào. Đã kiểm lại sau khi đổi: cổng vẫn xanh.
+
+---
 
 ## Quy trình — ba lệnh, không phải ba trang hướng dẫn
 
@@ -29,7 +63,7 @@ lỗi cũ nào thì lint in **OK** còn smoke in **LỖI**.
 
 ## Vòng rà 21/09/2026 — tìm ra 15 lỗi, trong đó 6 lỗi tiền
 
-Đọc [docs/NO-KY-THUAT.md](docs/NO-KY-THUAT.md) để có danh sách đầy đủ. Bốn cái đáng nhớ nhất:
+Đọc [docs/TECH-DEBT.md](docs/TECH-DEBT.md) để có danh sách đầy đủ. Bốn cái đáng nhớ nhất:
 
 1. **Tồn kho không có nguồn sự thật duy nhất.** Gói 6 hộp ba cùng mùi 01 rồi bấm thêm nến 01 ở
    trang Mùi hương → giỏ giữ **38 cây trên tồn 20**. `addToCart` và `giftStock` kẹp theo hai con
@@ -52,8 +86,8 @@ lớp khác, không phải sự hỏng của cổng.
 
 `shop/docs/` đã được loại khỏi bản deploy nên **không còn** lên `vudat081299.github.io`. Nhưng
 **repo này là public**, nên toàn văn vẫn đọc được trên `github.com` và `raw.githubusercontent.com`
-— gồm `04-DAM-PHAN.md` với mục *"dấu hiệu nên rút"*, ước lượng doanh thu của chị ấy, và
-`01-BOI-CANH-VA-CO-HOI.md` vốn tự ghi *"không đưa tài liệu này cho chị ấy"*.
+— gồm `04-NEGOTIATION.md` với mục *"dấu hiệu nên rút"*, ước lượng doanh thu của chị ấy, và
+`01-CONTEXT-AND-OPPORTUNITY.md` vốn tự ghi *"không đưa tài liệu này cho chị ấy"*.
 
 Chưa đụng vào vì gỡ khỏi lịch sử git cần force-push lên `main`, mà luật repo bắt phải hỏi trước.
 **Đây là việc cần quyết trước buổi gặp.**
@@ -67,7 +101,7 @@ Phiên AI thì nạp `.claude/skills/shop/` trước khi sửa; nó là quy trì
 - Phễu (nội bộ): `/shop/measure/`
 
 **Cái gì lên public, cái gì không.** `shop/docs/` và mọi `shop/*.md` bị loại khỏi bản deploy:
-`docs/04-DAM-PHAN.md` là kịch bản đàm phán với một người có thật, và GitHub Pages phục vụ
+`docs/04-NEGOTIATION.md` là kịch bản đàm phán với một người có thật, và GitHub Pages phục vụ
 markdown nguyên văn ở URL đoán được. Có cổng chặn nếu hai dòng loại trừ trong `deploy.yml`
 biến mất. `shop/pitch/` **cố ý** vẫn công khai — đó là trang cần gửi link cho chị ấy.
 
@@ -104,7 +138,7 @@ Ba mục mức XEM, đều cố ý:
 
 ## Việc tiếp theo, theo thứ tự
 
-1. **Đọc [docs/04-DAM-PHAN.md](docs/04-DAM-PHAN.md) trước buổi gặp.** Mục tiêu buổi gặp đầu là
+1. **Đọc [docs/04-NEGOTIATION.md](docs/04-NEGOTIATION.md) trước buổi gặp.** Mục tiêu buổi gặp đầu là
    *khám phá*, không phải trình diễn. Nếu hôm đó nói nhiều hơn nghe thì buổi gặp hỏng.
 2. **Hỏi cho được giá vốn một cây nến.** Thiếu nó thì mọi phép tính chỉ nói về doanh thu.
 3. Xin nội dung 5 mùi → điền vào `data/shop.json` → hạ 24 cờ `placeholder`.
@@ -115,7 +149,7 @@ Ba mục mức XEM, đều cố ý:
 
 ## Ba thứ đừng làm
 
-- **Đừng xây phần mềm quản lý bán hàng.** [adr/0004](docs/adr/0004-khong-xay-lai-phan-mem-ban-hang.md).
+- **Đừng xây phần mềm quản lý bán hàng.** [adr/0004](docs/adr/0004-dont-rebuild-retail-software.md).
 - **Đừng hứa đồng bộ Shopee** trước khi xác minh xong điều kiện ở việc số 5.
 - **Đừng tin con số "quiz tăng chuyển đổi 40%"** hay bất kỳ số uplift nào đang lưu hành —
   tất cả đều do chính công ty bán phần mềm quiz công bố, không có nhóm đối chứng. Đã truy
@@ -123,7 +157,7 @@ Ba mục mức XEM, đều cố ý:
 
 ## Cái lớp đo dùng để làm gì
 
-Mọi tiêu chí "bỏ tính năng này khi nào" trong [docs/02-LO-TRINH.md](docs/02-LO-TRINH.md) cần một
+Mọi tiêu chí "bỏ tính năng này khi nào" trong [docs/02-ROADMAP.md](docs/02-ROADMAP.md) cần một
 con số. Trước phiên này trang không đếm gì cả, nên những tiêu chí ấy chỉ là chữ. Giờ `/shop/measure/`
 dựng được phễu: mở trang → bấm bắt đầu → từng câu → ra kết quả → thêm vào giỏ, kèm tỉ lệ rụng ở
 mỗi bậc.

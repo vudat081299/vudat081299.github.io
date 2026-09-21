@@ -4,7 +4,7 @@
 trong repo: đây là nơi **sai một con số thì khách trả nhầm tiền**. Mọi luật dưới đây sinh ra từ
 đó chứ không từ sở thích.
 
-Đọc thêm: [docs/00-DOC-CAI-NAY-TRUOC.md](docs/00-DOC-CAI-NAY-TRUOC.md) — mục lục toàn bộ tài liệu.
+Đọc thêm: [docs/00-READ-THIS-FIRST.md](docs/00-READ-THIS-FIRST.md) — mục lục toàn bộ tài liệu.
 
 ---
 
@@ -60,7 +60,7 @@ Nav, menu điện thoại, chân trang phải giống hệt nhau ở cả năm t
 `nav--over` được phép khác. Cổng so từng ký tự.
 
 Sửa shell thì **đừng sửa tay năm file**. Sửa một file rồi chạy lại script đồng bộ (xem
-[docs/05-KIEN-TRUC.md](docs/05-KIEN-TRUC.md) mục *Shell sinh ra thế nào*).
+[docs/05-ARCHITECTURE.md](docs/05-ARCHITECTURE.md) mục *Shell sinh ra thế nào*).
 
 ### 4. Cổng mới phải nằm trong repo, không nằm trong đầu ai
 
@@ -78,8 +78,8 @@ Mọi cổng trong file đó đều đã thử ngược. Giữ nguyên tập qu�
 3. Ghép, chạy cổng, chụp màn hình bằng trình duyệt thật, rồi mới ship.
 
 Bước 3 không phải thủ tục. **Ba lỗi nặng nhất của thư mục này đều tìm ra bằng cách chạy thật
-rồi đo, không phải bằng đọc code** — xem `BAO-CAO-HIEN-TRANG.md` mục 2 và
-[docs/NO-KY-THUAT.md](docs/NO-KY-THUAT.md).
+rồi đo, không phải bằng đọc code** — xem `STATUS-REPORT.md` mục 2 và
+[docs/TECH-DEBT.md](docs/TECH-DEBT.md).
 
 ---
 
@@ -107,7 +107,7 @@ phải tự mở xem.
 
 `track(ev, props)` trong `assets/shop.js`. Thêm một sự kiện là thêm **một lời gọi**, đừng thêm
 một hệ thống. Hiện có 12 sự kiện, đủ để dựng phễu Tìm mùi và biết khách rụng ở câu mấy — mà đó
-đúng là con số mọi tiêu chí "bỏ tính năng này khi nào" trong `docs/02-LO-TRINH.md` cần tới.
+đúng là con số mọi tiêu chí "bỏ tính năng này khi nào" trong `docs/02-ROADMAP.md` cần tới.
 
 Dữ liệu nằm trong `localStorage` của **từng máy khách**; shop không thấy gì, hai máy không cộng
 lại được. Muốn gộp số thật thì đổi `SINK` thành một URL — một dòng, đúng một chỗ — và dựng một

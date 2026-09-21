@@ -5,7 +5,7 @@ một mô hình kinh tế đơn vị từ năm dữ kiện ta có, đánh dấu 
 rồi chỉ ra ba đòn bẩy đáng kéo và mỗi đòn bẩy đáng bao nhiêu tiền. Hai mục quan trọng nhất
 là §5 — **những việc đáng thử mà không cần viết một dòng mã nào** — và §7, lập luận ngược cho
 thấy một trang riêng có thể là sai lầm. Đọc trước khi đọc
-[02-LO-TRINH.md](02-LO-TRINH.md), vì lộ trình chỉ có nghĩa khi đã đồng ý với chẩn đoán ở đây.
+[02-ROADMAP.md](02-ROADMAP.md), vì lộ trình chỉ có nghĩa khi đã đồng ý với chẩn đoán ở đây.
 Người đọc: Đạt, trước buổi gặp đầu tiên. Không đưa tài liệu này cho chị ấy — nó nói thẳng
 những chỗ đang đoán về việc làm ăn của chị ấy, và đọc lên sẽ giống như bị phán xét.
 
@@ -26,7 +26,7 @@ những chỗ đang đoán về việc làm ăn của chị ấy, và đọc lê
 Những thứ **không biết** và mỗi thứ đều đủ sức lật ngược kết luận của tài liệu này:
 
 - **Giá vốn một cây nến.** Không biết. Đây là biến quan trọng nhất trong cả tài liệu và nó
-  đứng đầu danh sách câu hỏi ở [04-DAM-PHAN.md](04-DAM-PHAN.md).
+  đứng đầu danh sách câu hỏi ở [04-NEGOTIATION.md](04-NEGOTIATION.md).
 - **Giá trị trung bình một đơn (AOV).** Một đơn là một cây hay hai cây? Không biết.
 - **Tỉ lệ đơn theo kênh.** Nếu 90% đơn đến từ Instagram thì lập luận về phí sàn ở §5 yếu đi rất nhiều.
 - **Tiền quảng cáo.** Không biết có chạy ads không.
@@ -134,7 +134,7 @@ không ngửi được qua màn hình nên phải hỏi người bán.
 
 Cái này đáng làm, và nó đáng làm vì hai lý do cùng lúc: giảm giờ trả tin nhắn, và tăng tỉ lệ
 người quyết định mua mà không cần hỏi. Đó là lý do câu hỏi "một ngày chị trả bao nhiêu tin
-nhắn, phần lớn hỏi gì" nằm ở nhóm ưu tiên cao nhất trong [04-DAM-PHAN.md](04-DAM-PHAN.md).
+nhắn, phần lớn hỏi gì" nằm ở nhóm ưu tiên cao nhất trong [04-NEGOTIATION.md](04-NEGOTIATION.md).
 
 Và một chỗ nữa: **năng lực sản xuất là một trần vận hành có thật**, chỉ là nó chưa chạm tới.
 Nến làm thủ công có nhịp mẻ. Nếu một mẻ ra 20 cây và mất một ngày rưỡi, thì 50 đơn/ngày không
@@ -216,7 +216,7 @@ Ba mức giá vốn trên là **số bịa để cho thấy độ nhạy**, khô
 đúng là thứ chưa tồn tại. Hai điều này phải đọc cùng nhau, đừng đọc riêng.
 
 **Kết luận dùng được ngay:** hai con số giảm giá 8% và 14% đang nằm trong `shop/data/shop.json`
-là **số dựng tạm**, và phải quyết lại sau khi biết `V`. Ghi vào [NO-KY-THUAT.md](NO-KY-THUAT.md).
+là **số dựng tạm**, và phải quyết lại sau khi biết `V`. Ghi vào [TECH-DEBT.md](TECH-DEBT.md).
 
 ### Đòn bẩy 3 — mua lại
 
@@ -316,7 +316,7 @@ không ăn.
 - **Thuế thì không thoát được.** Khoản VAT 1–5% và TNCN 0,5–5% sàn khấu trừ là **thuế của chị
   ấy**, sàn chỉ giữ hộ tại nguồn. Bán trực tiếp không xoá được nghĩa vụ đó — nó chỉ chuyển việc
   kê khai sang cho chị ấy tự làm, và đó là thêm việc chứ không phải bớt tiền.
-- **Kênh trực tiếp không miễn phí.** Xem chi phí thật ở [03-DOI-THU-VA-TICH-HOP.md](03-DOI-THU-VA-TICH-HOP.md)
+- **Kênh trực tiếp không miễn phí.** Xem chi phí thật ở [03-COMPETITORS-AND-INTEGRATIONS.md](03-COMPETITORS-AND-INTEGRATIONS.md)
   — riêng SePay đã khoảng 120.000₫/tháng, chưa kể tên miền và công của anh.
 
 ---
@@ -402,7 +402,7 @@ Ba kết luận rút ra được:
    Mục tiêu "mở rộng dải sản phẩm" của anh đáng hoãn lại: thêm SKU vào một shop chưa đủ người
    xem là thêm việc, không phải thêm doanh thu. Bán hết 5 mùi trước đã.
 2. **Lazada không đáng tích hợp.** 0,7% doanh thu. Nó lại là sàn dễ nối API nhất
-   (xem [03](03-DOI-THU-VA-TICH-HOP.md)) — dễ nhất lại ít đáng nhất. Đừng để cái dễ dẫn dắt việc.
+   (xem [03](03-COMPETITORS-AND-INTEGRATIONS.md)) — dễ nhất lại ít đáng nhất. Đừng để cái dễ dẫn dắt việc.
 3. **744 shop cùng bán** nghĩa là khác biệt không phải điều xa xỉ. Một listing Shopee của chị ấy
    trông giống 743 listing khác. Nhưng cách rẻ nhất để khác đi là **sửa chính cái listing ấy**
    (thử nghiệm 3, §5), không phải dựng một chỗ mới — §7 vừa nói mặc định phải là *trang riêng
@@ -434,7 +434,7 @@ nhất. Cần một tháng 11 để đơn thật chạy qua và lỗi thật l�
 24 mục còn cờ placeholder và tất cả đều chờ chị ấy.
 
 Nghĩa là buổi gặp đầu tiên nên diễn ra **sớm**, và mục tiêu số một của nó là lấy được nội dung
-5 mùi, chứ không phải chốt giá. Đúng như kết luận của [04-DAM-PHAN.md](04-DAM-PHAN.md).
+5 mùi, chứ không phải chốt giá. Đúng như kết luận của [04-NEGOTIATION.md](04-NEGOTIATION.md).
 
 Mặt trái, nói luôn cho công bằng: nếu tháng 12 đúng là đỉnh thì tháng 12 cũng là tháng chị ấy
 bận nhất và **ít sẵn sàng thử cái mới nhất**. Đẩy nhau chạy nước rút vào tháng 11 có thể phản
@@ -454,7 +454,7 @@ Tám đường, xếp theo mức nguy hiểm.
    tài liệu này phải viết lại. **Hỏi ngay ở buổi một.**
 2. **Vận hành đúng là nút thắt.** Nếu chị ấy đang ở 10 đơn/ngày, làm một mình, và ngày nào cũng
    chép tay đơn từ ba kênh vào một quyển sổ — thì câu trả lời đúng là bảo chị ấy mua Nhanh.vn,
-   không phải xây gì cả. Xem mục "khi nào nên khuyên mua SaaS" ở [02-LO-TRINH.md](02-LO-TRINH.md).
+   không phải xây gì cả. Xem mục "khi nào nên khuyên mua SaaS" ở [02-ROADMAP.md](02-ROADMAP.md).
 3. **Biên lợi nhuận mỏng.** Nếu giá vốn `V` chiếm phần lớn giá bán, thì 13 triệu/tháng phí sàn
    vẫn là 13 triệu, nhưng phần tăng AOV ở §4 teo lại gần bằng không, và chị ấy không có tiền
    mặt để trả cho bất cứ ai. Không biết `V` là không biết gì cả.
@@ -465,7 +465,7 @@ Tám đường, xếp theo mức nguy hiểm.
    vấn đề chưa bao giờ là phần mềm. Xây thêm một cái nữa là lặp lại sai lầm đắt hơn.
 6. **Rào pháp lý chặn.** Nếu Luật TMĐT 122/2025 khiến một người bán cá nhân mở website bán hàng
    gặp rủi ro thật, mọi thứ dừng cho tới khi có luật sư trả lời. Xem
-   [03-DOI-THU-VA-TICH-HOP.md](03-DOI-THU-VA-TICH-HOP.md) §5. **Tiền phạt rơi vào chị ấy.**
+   [03-COMPETITORS-AND-INTEGRATIONS.md](03-COMPETITORS-AND-INTEGRATIONS.md) §5. **Tiền phạt rơi vào chị ấy.**
 7. **Cả hướng đi sai vì trang riêng thêm ma sát chứ không bớt.** Đây là phản biện mạnh nhất và
    nó có mục riêng ở §7. Nếu gần như mọi đơn đến từ khám phá trên TikTok thì một trang riêng
    không có nguồn khách và chỉ chèn thêm bước vào một đường mua vốn đã ngắn.
@@ -474,10 +474,10 @@ Tám đường, xếp theo mức nguy hiểm.
    đổ theo nếu chuẩn này sai.
 
 Điểm chung của tám đường trên: **bảy trong tám được giải quyết bằng cách hỏi chị ấy hoặc chạy
-một thử nghiệm ở §5, chứ không bằng cách viết thêm code.** Đó là lý do [04-DAM-PHAN.md](04-DAM-PHAN.md) dài hơn
-[02-LO-TRINH.md](02-LO-TRINH.md).
+một thử nghiệm ở §5, chứ không bằng cách viết thêm code.** Đó là lý do [04-NEGOTIATION.md](04-NEGOTIATION.md) dài hơn
+[02-ROADMAP.md](02-ROADMAP.md).
 
 ---
 
-Đọc tiếp: [02-LO-TRINH.md](02-LO-TRINH.md) · [03-DOI-THU-VA-TICH-HOP.md](03-DOI-THU-VA-TICH-HOP.md) ·
-[04-DAM-PHAN.md](04-DAM-PHAN.md) · quay lại [00-DOC-CAI-NAY-TRUOC.md](00-DOC-CAI-NAY-TRUOC.md)
+Đọc tiếp: [02-ROADMAP.md](02-ROADMAP.md) · [03-COMPETITORS-AND-INTEGRATIONS.md](03-COMPETITORS-AND-INTEGRATIONS.md) ·
+[04-NEGOTIATION.md](04-NEGOTIATION.md) · quay lại [00-READ-THIS-FIRST.md](00-READ-THIS-FIRST.md)

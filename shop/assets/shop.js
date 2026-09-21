@@ -126,7 +126,7 @@ if (yearEl) yearEl.textContent = new Date().getFullYear();
 /* ═════════════════════════════════════════════════════════════════════════
    LỚP ĐO
    Đây là một CÁI MỐI NỐI, không phải một hệ analytics. Lý do nó tồn tại: mọi
-   tiêu chí "bỏ tính năng này khi nào" trong docs/02-LO-TRINH.md đều cần một
+   tiêu chí "bỏ tính năng này khi nào" trong docs/02-ROADMAP.md đều cần một
    con số, mà trang thì không đếm gì cả — tài liệu bảo đo, sản phẩm không đo
    được. Đó là mâu thuẫn, và đây là chỗ vá.
 

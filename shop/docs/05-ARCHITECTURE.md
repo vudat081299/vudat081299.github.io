@@ -31,7 +31,7 @@ chu cho một sản phẩm chưa ai chứng minh là cần tồn tại.
 | Quản lý nguyên vật liệu | Trong đầu chủ shop | Xa. Nhưng đây là chỗ phần mềm riêng thắng phần mềm bán sẵn. |
 
 Bảng này quan trọng hơn mọi sơ đồ lớp trong tài liệu. Đọc nó theo cột cuối: **phần lớn câu trả
-lời là "không" hoặc "chưa"**. Xem [02-LO-TRINH.md](02-LO-TRINH.md) để biết điều gì mở khoá từng bước.
+lời là "không" hoặc "chưa"**. Xem [02-ROADMAP.md](02-ROADMAP.md) để biết điều gì mở khoá từng bước.
 
 ### Thứ đã dựng, và giả định nó đang đặt cược
 
@@ -73,7 +73,7 @@ Ba quy tắc, mỗi cái có một cổng đo được — chi tiết ở [../CL
 ### Vì sao tĩnh, và khi nào thì bỏ
 
 Chọn trang tĩnh trên GitHub Pages không phải vì nó "hiện đại" — xem
-[adr/0001-trang-tinh.md](adr/0001-trang-tinh.md). Tóm tắt: chi phí lưu trữ bằng không, không có
+[adr/0001-static-site.md](adr/0001-static-site.md). Tóm tắt: chi phí lưu trữ bằng không, không có
 bước build nào để hỏng, và một đường link gửi được ngay cho chủ shop mà không cần ai deploy.
 
 **Điều kiện bỏ trang tĩnh** — chạm một trong bốn thì đổi, chưa chạm thì đừng:
@@ -97,7 +97,7 @@ Năm trang phải có nav/menu/chân trang giống hệt nhau. Không có build 
 Món thường là `{id, q}`. Hộp quà là `{id, q, g}` với `g` là **cấu hình, không phải giá**.
 `byId()` nhận ra tiền tố `gift-` và dựng tạm một "sản phẩm" từ cấu hình đó, nên mọi thứ phía
 sau — tính tiền, vẽ dòng, soạn nội dung đơn — chạy y như với món thường và không cần biết hộp
-quà tồn tại. Xem [adr/0003-hop-qua-trong-gio.md](adr/0003-hop-qua-trong-gio.md).
+quà tồn tại. Xem [adr/0003-gift-box-in-cart.md](adr/0003-gift-box-in-cart.md).
 
 ---
 
@@ -160,7 +160,7 @@ một mùi không bao giờ được giới thiệu cho ai.
 
 ### Sổ nợ, ADR, bàn giao
 
-- **[NO-KY-THUAT.md](NO-KY-THUAT.md)** — nợ kỹ thuật ghi ra giấy. Nợ không ghi là nợ sẽ quên.
+- **[TECH-DEBT.md](TECH-DEBT.md)** — nợ kỹ thuật ghi ra giấy. Nợ không ghi là nợ sẽ quên.
 - **[adr/](adr/)** — mỗi quyết định một file: bối cảnh, chọn gì, đánh đổi, **điều kiện xét lại**.
   Điều kiện xét lại là phần quan trọng nhất; thiếu nó thì ADR chỉ là một lời biện hộ.
 - **[../HANDOFF.md](../HANDOFF.md)** — trạng thái cuối mỗi phiên: đã làm, đang dở, việc tiếp theo.
@@ -186,7 +186,7 @@ Ba thói quen đã trả giá để có:
    bắt được vì cú pháp vẫn đúng. Cái bắt được là chạy thật.
 3. **Số nào cũng phải đo, đừng để agent bịa một ngưỡng.** Ngưỡng 0,40 của cổng rò nội dung là
    số đo được. Trọng số Tìm mùi cũng vậy: bốn phương án đã được chạy thử và so phân bố trước
-   khi chọn — xem [adr/0002-cham-diem-tim-mui.md](adr/0002-cham-diem-tim-mui.md).
+   khi chọn — xem [adr/0002-scent-finder-scoring.md](adr/0002-scent-finder-scoring.md).
 
 ### Chỗ dừng lại
 

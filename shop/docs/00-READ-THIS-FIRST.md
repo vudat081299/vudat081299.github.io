@@ -11,15 +11,15 @@ Viết ngày 20/09/2026. Người đọc chính là Đạt; người đọc th�
 
 | Bạn đang… | Đọc |
 |---|---|
-| Chuẩn bị đi gặp chủ shop | [04-DAM-PHAN.md](04-DAM-PHAN.md), rồi mở `../pitch/` trên điện thoại |
-| Muốn biết có nên làm việc này không | [01-BOI-CANH-VA-CO-HOI.md](01-BOI-CANH-VA-CO-HOI.md) |
-| Lo rằng KiotViet đã giải quyết rồi | [03-DOI-THU-VA-TICH-HOP.md](03-DOI-THU-VA-TICH-HOP.md) |
-| Lo tích hợp sàn/vận chuyển/thanh toán khó | [03-DOI-THU-VA-TICH-HOP.md](03-DOI-THU-VA-TICH-HOP.md), mục tích hợp |
-| Muốn biết làm gì trước | [02-LO-TRINH.md](02-LO-TRINH.md) |
-| Sắp viết mã trong `shop/` | [../CLAUDE.md](../CLAUDE.md), rồi [05-KIEN-TRUC.md](05-KIEN-TRUC.md) |
+| Chuẩn bị đi gặp chủ shop | [04-NEGOTIATION.md](04-NEGOTIATION.md), rồi mở `../pitch/` trên điện thoại |
+| Muốn biết có nên làm việc này không | [01-CONTEXT-AND-OPPORTUNITY.md](01-CONTEXT-AND-OPPORTUNITY.md) |
+| Lo rằng KiotViet đã giải quyết rồi | [03-COMPETITORS-AND-INTEGRATIONS.md](03-COMPETITORS-AND-INTEGRATIONS.md) |
+| Lo tích hợp sàn/vận chuyển/thanh toán khó | [03-COMPETITORS-AND-INTEGRATIONS.md](03-COMPETITORS-AND-INTEGRATIONS.md), mục tích hợp |
+| Muốn biết làm gì trước | [02-ROADMAP.md](02-ROADMAP.md) |
+| Sắp viết mã trong `shop/` | [../CLAUDE.md](../CLAUDE.md), rồi [05-ARCHITECTURE.md](05-ARCHITECTURE.md) |
 | Vừa mở một phiên mới | [../HANDOFF.md](../HANDOFF.md) |
 | Muốn biết vì sao chọn thế này | [adr/](adr/) |
-| Muốn biết còn nợ gì | [NO-KY-THUAT.md](NO-KY-THUAT.md) |
+| Muốn biết còn nợ gì | [TECH-DEBT.md](TECH-DEBT.md) |
 
 ---
 
@@ -36,7 +36,7 @@ Bất định về business đang lớn hơn bất định về công nghệ r�
 **3. Phần lớn nghiệp vụ bán hàng là hàng hoá phổ thông.** KiotViet 270–490 nghìn/tháng,
 Nhanh.vn 450 nghìn/tháng cho cả POS lẫn website lẫn đồng bộ sàn *[đã kiểm: bảng giá chính thức,
 09/2026]*. Tự xây lại những thứ đó là lấy tiền của người khác để dựng một bản kém hơn. Xem
-[adr/0004](adr/0004-khong-xay-lai-phan-mem-ban-hang.md).
+[adr/0004](adr/0004-dont-rebuild-retail-software.md).
 
 **4. Con số duy nhất cầm chắc là phí sàn.** Shopee thu 6% phí xử lý giao dịch cộng 3.000 ₫/đơn
 cộng phí cố định theo ngành *[nguồn ngành — xem cảnh báo ở 01 §2]*; tổng chi phí nền tảng của
@@ -70,5 +70,5 @@ Năm trang chạy thật trong `shop/`, cộng một bản đề xuất ở `sho
 
 Nhắc lại cho rõ, vì đây là chỗ dễ tự lừa mình nhất: **ba tính năng đã dựng đều là giả thuyết
 viết thành phần mềm.** Việc chúng chạy được không chứng minh là chúng cần thiết. Bảng "đang
-đoán rằng" ở [05-KIEN-TRUC.md](05-KIEN-TRUC.md) ghi rõ mỗi cái đang đặt cược vào điều gì và
+đoán rằng" ở [05-ARCHITECTURE.md](05-ARCHITECTURE.md) ghi rõ mỗi cái đang đặt cược vào điều gì và
 làm sao biết mình sai.

@@ -33,7 +33,7 @@ mùi ấy được dùng trong hộp. Hộp ba ngọn cùng một mùi, tồn 20
 - `byId()` quét tuyến tính trong giỏ cho dòng hộp quà. Giỏ có vài chục dòng là cùng, không đáng
   tối ưu.
 - Cấu hình hộp nằm trong `localStorage` nên đổi cấu trúc `g` sẽ làm hỏng giỏ cũ của khách. Chưa
-  có phiên bản hoá; đã ghi vào [sổ nợ](../NO-KY-THUAT.md).
+  có phiên bản hoá; đã ghi vào [sổ nợ](../TECH-DEBT.md).
 - Một mùi có hai sản phẩm thì hộp quà lặng lẽ lấy cái đầu tiên. Cổng đã cảnh báo ở mức XEM.
 
 ## Xét lại khi

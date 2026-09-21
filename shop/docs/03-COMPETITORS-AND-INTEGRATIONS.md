@@ -31,7 +31,7 @@ giá trị, không phải tạo giá trị.
 2. **Bài toán chọn mùi.** Khách **không ngửi được qua màn hình**. Đây là đặc thù của ngành hàng
    này, không phải của phần mềm bán hàng nói chung, nên không nhà cung cấp POS nào giải. Nó hiện
    ra dưới hai dạng đo được: tỉ lệ khách bỏ giữa chừng, và số giờ chị ấy ngồi trả tin nhắn
-   ([01](01-BOI-CANH-VA-CO-HOI.md) §3).
+   ([01](01-CONTEXT-AND-OPPORTUNITY.md) §3).
 3. **Quà tặng.** Nến 300.000₫ là quà. Quà thì mua theo hộp, có thiệp, và dồn vào cuối năm —
    tháng 12/2025 cao hơn tháng 11 **37,23%** [đã kiểm: metric.vn].
 
@@ -81,7 +81,7 @@ Giá đọc từ trang giá chính thức, 09/2026 [đã kiểm], trừ dòng cu
 **Mốc giá trong đầu chủ shop:** agency làm landing page một lần — phổ biến **2–6 triệu₫**; cơ bản
 500k–3tr; custom UI/UX 3–7tr; sâu hơn 8tr+. Đây là **bảng giá agency công bố, tức giá chào, không
 phải giá giao dịch thật** [đã kiểm: bảng giá agency công bố]. Dùng nó ở
-[04-DAM-PHAN.md](04-DAM-PHAN.md) §3.
+[04-NEGOTIATION.md](04-NEGOTIATION.md) §3.
 
 **Bảng giá trên đã gồm VAT chưa: [chưa kiểm] cho cả năm nhà cung cấp.** Đừng đọc con số 450k lên
 như thể đó là con số cuối cùng chị ấy trả.
@@ -101,7 +101,7 @@ Nỗi lo "tích hợp sàn chậm và khó" là **đúng**, và không nên tr�
 ### Ba kết luận
 
 1. **Shop 5–10 đơn/ngày có thể không đủ điều kiện mở API Shopee.** Đây là lý do
-   [02-LO-TRINH.md](02-LO-TRINH.md) §6 xếp đồng bộ sàn vào danh sách không xây: xây một thứ có
+   [02-ROADMAP.md](02-ROADMAP.md) §6 xếp đồng bộ sàn vào danh sách không xây: xây một thứ có
    thể không được phép chạy là cách hỏng đắt nhất trong dự án.
 2. **Lazada dễ nhất lại ít đáng nhất.** Lazada chiếm **0,7%** doanh thu ngành nến thơm quà trên
    ba sàn [đã kiểm: metric.vn 2025]. Duyệt trong 1–3 ngày, nhưng để lấy 0,7%. Đừng để cái dễ dẫn
@@ -109,7 +109,7 @@ Nỗi lo "tích hợp sàn chậm và khó" là **đúng**, và không nên tr�
 3. **Việc này anh KHÔNG tự làm được — sửa lại 21/09/2026.** Bản trước ghi "tự đăng ký thử một
    buổi chiều, rẻ hơn mọi suy đoán" và giao cho anh. Nhưng đường in-house developer đòi một
    **tài khoản TikTok Shop đã kích hoạt** để liên kết, và anh không có shop nến. Muốn thử thì
-   phải mượn tài khoản của chị ấy — đúng thứ [04](04-DAM-PHAN.md) §7 đặt làm lằn ranh đỏ ở
+   phải mượn tài khoản của chị ấy — đúng thứ [04](04-NEGOTIATION.md) §7 đặt làm lằn ranh đỏ ở
    chiều ngược lại.
 
    Việc của anh ở buổi gặp không phải là "em thử rồi", mà là **hỏi chị ấy có sẵn lòng bỏ ra 15
@@ -151,8 +151,8 @@ giá tự ký. Nếu vậy thì tự nối API vận chuyển là làm cho đắ
 
 **Điểm kiến trúc quan trọng nhất trong cả tài liệu này:** mã VietQR **chỉ hiển thị số tiền** —
 nó **không báo cho máy chủ biết tiền đã về**. Toàn bộ SePay / payOS / Casso tồn tại để đóng đúng
-cái vòng lặp đó. Đó là lý do chặng 2 ở [02-LO-TRINH.md](02-LO-TRINH.md) cần một máy chủ, còn
-chặng 0–1 thì không. Chi tiết ở [05-KIEN-TRUC.md](05-KIEN-TRUC.md).
+cái vòng lặp đó. Đó là lý do chặng 2 ở [02-ROADMAP.md](02-ROADMAP.md) cần một máy chủ, còn
+chặng 0–1 thì không. Chi tiết ở [05-ARCHITECTURE.md](05-ARCHITECTURE.md).
 
 **Kết luận dùng được:** nếu chị ấy **chưa có đăng ký kinh doanh** thì VNPAY và OnePay đều đóng
 cửa, nhưng **VietQR + SePay (hoặc payOS) vẫn mở** — và đó là con đường đủ dùng. Lớp trông có vẻ
@@ -204,7 +204,7 @@ Ba điều nên làm với phát hiện này:
 
 1. **Nói ra ở buổi gặp, sớm, không đợi bị hỏi.** Không ai bán landing page mà nhắc chuyện phạt
    10–20 triệu. Nói ra là cách nhanh nhất chứng minh anh đứng về phía chị ấy chứ không phải đứng
-   bán hàng. Xem [04-DAM-PHAN.md](04-DAM-PHAN.md).
+   bán hàng. Xem [04-NEGOTIATION.md](04-NEGOTIATION.md).
 2. **Đừng tự trả lời câu hỏi luật.** Anh không phải luật sư và câu này hai nguồn còn cãi nhau.
    Nói "em không biết, và đây là chỗ nên hỏi luật sư" là câu trả lời đúng.
 3. **Không nhận trách nhiệm tuân thủ pháp lý trong bất kỳ thoả thuận nào.** Ghi rõ: việc thông
@@ -239,7 +239,7 @@ Mỗi dòng có cách đóng cụ thể. Xếp theo mức ảnh hưởng.
 | 14 | Tên miền `.vn` giá bao nhiêu, cá nhân đăng ký được không | Nhà đăng ký tên miền VN | anh, 10 phút |
 | 15 | Quy định gửi tin nhắn tiếp thị (Zalo/email) ở VN | Hỏi cùng lúc với câu #1 | chị ấy |
 | 16 | GHN/GHTK thật sự không cần hợp đồng, hay chỉ là tài liệu không nhắc? | Đăng ký thử, hoặc hỏi hỗ trợ | anh, cùng buổi với #5 |
-| 17 | Chị ấy đã có sẵn tài khoản SaaS / website nào chưa? | **Hỏi chị ấy** | buổi gặp — xem [04](04-DAM-PHAN.md) |
+| 17 | Chị ấy đã có sẵn tài khoản SaaS / website nào chưa? | **Hỏi chị ấy** | buổi gặp — xem [04](04-NEGOTIATION.md) |
 
 **Bốn dòng đầu là đủ cho buổi gặp đầu tiên.** #2 và #3 chị ấy đóng được ngay tại chỗ trong hai
 phút, và việc cùng nhau mở màn hình ra xem có giá trị gấp nhiều lần việc anh đọc con số lên.
@@ -260,13 +260,13 @@ vào một bản chào.
 
 **Loại thứ ba không làm sản phẩm giá trị hơn với chị ấy.** Nó làm cho **chi phí sửa về sau** rẻ
 hơn và làm cho sai sót ít đi — đó là lý do repo này có cổng `lint-shop.py` và có
-[NO-KY-THUAT.md](NO-KY-THUAT.md). Nhưng nó là **công cụ của người làm**, không phải giá trị của
+[TECH-DEBT.md](TECH-DEBT.md). Nhưng nó là **công cụ của người làm**, không phải giá trị của
 người mua. Mang nó vào buổi gặp là tiêu thời gian của chị ấy để nói về công việc nội bộ của mình.
 
 Cách dùng đúng: nói về **loại một** ở buổi gặp; nói **hệ quả** của loại hai khi bị hỏi giá và
 tốc độ; giữ loại ba trong repo. Cụ thể: tài liệu này và ba tài liệu kia làm việc của loại một;
-[05-KIEN-TRUC.md](05-KIEN-TRUC.md) đi qua cả ba tầng và nói rõ tầng nào đang trống;
-[NO-KY-THUAT.md](NO-KY-THUAT.md) thuần loại ba — nó là sổ nợ, không phải thứ mang đi chào hàng.
+[05-ARCHITECTURE.md](05-ARCHITECTURE.md) đi qua cả ba tầng và nói rõ tầng nào đang trống;
+[TECH-DEBT.md](TECH-DEBT.md) thuần loại ba — nó là sổ nợ, không phải thứ mang đi chào hàng.
 
 Một hệ quả thực tế: **đừng tính tiền cho loại ba.** Nếu bảng chào ghi "thiết lập quy trình kiểm
 thử tự động — 2 triệu", chị ấy đang trả tiền để công việc của anh dễ hơn. Chi phí đó nằm trong
@@ -274,6 +274,6 @@ giá của thứ giao được, không đứng thành một dòng riêng.
 
 ---
 
-Đọc tiếp: [04-DAM-PHAN.md](04-DAM-PHAN.md) · quay lại [01-BOI-CANH-VA-CO-HOI.md](01-BOI-CANH-VA-CO-HOI.md) ·
-[02-LO-TRINH.md](02-LO-TRINH.md) · kiến trúc ở [05-KIEN-TRUC.md](05-KIEN-TRUC.md) ·
-mục lục ở [00-DOC-CAI-NAY-TRUOC.md](00-DOC-CAI-NAY-TRUOC.md)
+Đọc tiếp: [04-NEGOTIATION.md](04-NEGOTIATION.md) · quay lại [01-CONTEXT-AND-OPPORTUNITY.md](01-CONTEXT-AND-OPPORTUNITY.md) ·
+[02-ROADMAP.md](02-ROADMAP.md) · kiến trúc ở [05-ARCHITECTURE.md](05-ARCHITECTURE.md) ·
+mục lục ở [00-READ-THIS-FIRST.md](00-READ-THIS-FIRST.md)

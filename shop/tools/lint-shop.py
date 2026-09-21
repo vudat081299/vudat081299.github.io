@@ -374,7 +374,7 @@ def check_data(path):
     # Dải cảnh báo cam vì thế không phủ chúng.
     #
     # "bấc cotton không lõi chì" đã bị gỡ hẳn: đó là một tuyên bố AN TOÀN SẢN PHẨM, và
-    # 04-DAM-PHAN.md tự đặt lằn ranh "không ghi 100% thiên nhiên khi không đúng". Tuyên bố
+    # 04-NEGOTIATION.md tự đặt lằn ranh "không ghi 100% thiên nhiên khi không đúng". Tuyên bố
     # an toàn hộ người khác thì chỉ chủ shop mới xác nhận được, không phải người dựng trang.
     for i, m in enumerate(d.get('marquee') or []):
         if not isinstance(m, dict):
@@ -770,7 +770,7 @@ def check_docs(shop):
 def check_publish(shop):
     """Tài liệu nội bộ của shop/ KHÔNG được lên public.
 
-    Sinh ra từ một ca thật ngày 20/09/2026: `shop/docs/04-DAM-PHAN.md` — kịch bản đàm phán
+    Sinh ra từ một ca thật ngày 20/09/2026: `shop/docs/04-NEGOTIATION.md` — kịch bản đàm phán
     với một người có thật, gồm cả mục "dấu hiệu nên rút" và mức giá định chào — đã nằm trên
     GitHub Pages ở một URL đoán được, trả HTTP 200. Không ai cố ý publish nó; workflow deploy
     rsync cả repo và chẳng ai nghĩ tới thư mục mới.
@@ -788,7 +788,7 @@ def check_publish(shop):
     for pat in ("--exclude 'shop/docs'", "--exclude 'shop/*.md'"):
         if pat not in body:
             err.append("deploy.yml thiếu %s — tài liệu nội bộ của shop/ sẽ lên public. "
-                       "docs/04-DAM-PHAN.md là kịch bản đàm phán với một người có thật; "
+                       "docs/04-NEGOTIATION.md là kịch bản đàm phán với một người có thật; "
                        "publish nó là đưa thế bài cho phía bên kia." % pat)
     return err
 

@@ -15,7 +15,7 @@ liệu, không một dòng nào về người đã giới thiệu — trong khi 
 dữ kiện** ta đang có, và là người duy nhất trên đời có thể biến năm dữ kiện thành mười lăm,
 **miễn phí, trước buổi gặp**.
 
-Mọi thử nghiệm ở [01 §5](01-BOI-CANH-VA-CO-HOI.md) đều tốn thời gian của chị ấy. Cuộc gọi này
+Mọi thử nghiệm ở [01 §5](01-CONTEXT-AND-OPPORTUNITY.md) đều tốn thời gian của chị ấy. Cuộc gọi này
 không tốn gì của ai.
 
 Sáu câu, theo thứ tự này:
@@ -62,7 +62,7 @@ Một chuyện nữa, không phải chuyện đàm phán nhưng phải nghĩ tr�
 phần mềm bán lẻ, và bộ tài liệu này khuyên chị ấy dùng KiotViet.** Hai điều cần tự kiểm:
 hợp đồng lao động có điều khoản nào về làm ngoài hoặc về sản phẩm cạnh tranh không; và nếu có
 khuyến nghị KiotViet thật thì **nói thẳng rằng mình làm ở đó**. Lời khuyên ấy vẫn đúng
-([adr/0004](adr/0004-khong-xay-lai-phan-mem-ban-hang.md)) — nhưng nó chỉ giữ được sức nặng khi
+([adr/0004](adr/0004-dont-rebuild-retail-software.md)) — nhưng nó chỉ giữ được sức nặng khi
 người nghe biết ai đang nói. Để chị ấy tự phát hiện sau thì mất sạch.
 
 ---
@@ -79,7 +79,7 @@ Vì sao tư thế này thắng ở đúng tình huống này:
    tiếng ồn. Một trang đã dựng sẵn, mở trên điện thoại là chạy, có đúng chỗ cho 5 mùi của chị
    ấy — thì không phải tiếng ồn.
 2. **Anh không thắng được bằng giá hay bằng tốc độ.** Agency đẹp hơn, SaaS rẻ hơn và có người
-   trực hỗ trợ ([03](03-DOI-THU-VA-TICH-HOP.md) §2). Lợi thế duy nhất của anh là **đã làm trước
+   trực hỗ trợ ([03](03-COMPETITORS-AND-INTEGRATIONS.md) §2). Lợi thế duy nhất của anh là **đã làm trước
    khi hỏi xin gì**.
 3. **Nó đổi chủ đề cuộc nói chuyện.** Từ "bao nhiêu tiền" sang "**chị thấy cái gì sai**" — và
    đó chính là cuộc nói chuyện sinh ra dữ liệu ở §2.
@@ -95,10 +95,10 @@ Vì sao tư thế này thắng ở đúng tình huống này:
 Nó chứng minh anh làm được và anh chịu khó. Nó **không** chứng minh:
 
 - rằng anh hiểu việc làm ăn của chị ấy — anh có năm dữ kiện;
-- rằng một trang riêng là thứ chị ấy cần — xem [01](01-BOI-CANH-VA-CO-HOI.md) §7, một trang
+- rằng một trang riêng là thứ chị ấy cần — xem [01](01-CONTEXT-AND-OPPORTUNITY.md) §7, một trang
   riêng **có thể đang thêm ma sát** chứ không bớt;
 - rằng Tìm mùi hay Hộp quà giải đúng bài toán — cả hai vẫn là giả thuyết chưa kiểm
-  ([02](02-LO-TRINH.md), mục chặng 0).
+  ([02](02-ROADMAP.md), mục chặng 0).
 
 > **Cảnh báo, nói thẳng:** đến buổi gặp mà **thuyết trình sản phẩm là hỏng**. Nếu anh nói nhiều
 > hơn nghe thì buổi gặp đã thất bại — **kể cả khi chị ấy gật đầu suốt**. Gật đầu là phép lịch
@@ -120,10 +120,10 @@ việc tự nhớ sai.
 
 | # | Hỏi gì | Vì sao nó quan trọng |
 |---|---|---|
-| A1 | **Giá vốn một cây nến là bao nhiêu?** Sáp, tinh dầu, bấc, ly, nhãn, hộp, thiệp — cộng lại | Biến quan trọng nhất trong cả bộ tài liệu. Không biết nó thì mọi phép tính ở [01](01-BOI-CANH-VA-CO-HOI.md) đều treo |
+| A1 | **Giá vốn một cây nến là bao nhiêu?** Sáp, tinh dầu, bấc, ly, nhãn, hộp, thiệp — cộng lại | Biến quan trọng nhất trong cả bộ tài liệu. Không biết nó thì mọi phép tính ở [01](01-CONTEXT-AND-OPPORTUNITY.md) đều treo |
 | A2 | **Chị có tính công của chị vào đó không?** | Người làm handmade thường không tính. Nếu không tính thì "lời" đang là một con số khác thật rất xa — và đây là con số quyết định việc mở rộng có đáng không |
 | A3 | Tháng trước **tổng bao nhiêu đơn?** Con số thật, không phải "khoảng" | |
-| A4 | **Chia theo kênh thế nào?** Instagram bao nhiêu, TikTok Shop bao nhiêu, Shopee bao nhiêu | **Câu này một mình quyết định trang riêng có đáng làm không** — xem [01](01-BOI-CANH-VA-CO-HOI.md) §7 |
+| A4 | **Chia theo kênh thế nào?** Instagram bao nhiêu, TikTok Shop bao nhiêu, Shopee bao nhiêu | **Câu này một mình quyết định trang riêng có đáng làm không** — xem [01](01-CONTEXT-AND-OPPORTUNITY.md) §7 |
 | A5 | **Trung bình một đơn mấy cây? Bao nhiêu tiền?** | Ta đang giả định 1 cây/đơn. Nếu đã là 1,6 thì đòn bẩy AOV yếu hơn tưởng |
 | A6 | **Tháng trước sàn giữ lại bao nhiêu?** — rồi mở Seller Centre ra xem cùng | Xem §3 |
 | A7 | Tháng trước **chạy quảng cáo hết bao nhiêu?** | Nếu đang đốt tiền ads thì bài toán khác hẳn |
@@ -135,7 +135,7 @@ việc tự nhớ sai.
 | # | Hỏi gì | Vì sao |
 |---|---|---|
 | B1 | **"Một ngày của chị trông thế nào?"** — hỏi mở, rồi **im lặng** | Câu quan trọng nhất cả buổi. Đừng ngắt lời. Đừng gợi ý. Chỗ chị ấy dừng lại lâu là chỗ đau |
-| B2 | **Một ngày chị trả bao nhiêu tin nhắn? Phần lớn hỏi gì?** | Nếu phần lớn là "mùi này thơm thế nào" thì bài toán chọn mùi được **lượng hoá bằng giờ** — xem [01](01-BOI-CANH-VA-CO-HOI.md) §3 |
+| B2 | **Một ngày chị trả bao nhiêu tin nhắn? Phần lớn hỏi gì?** | Nếu phần lớn là "mùi này thơm thế nào" thì bài toán chọn mùi được **lượng hoá bằng giờ** — xem [01](01-CONTEXT-AND-OPPORTUNITY.md) §3 |
 | B3 | **Từ lúc khách nhắn tới lúc gói xong, chị làm những bước gì?** Bảo chị ấy kể ra từng bước | Đếm số bước. Chỗ nào lặp lại mà máy làm được thì đó là chỗ duy nhất phần mềm có lý |
 | B4 | **Chị làm nến lúc nào? Một mẻ bao nhiêu cây, mất bao lâu?** | **Đây là trần thật của việc mở rộng.** Nếu một mẻ 20 cây mất một ngày rưỡi thì 50 đơn/ngày là bài toán xưởng chứ không phải bài toán phần mềm |
 | B5 | **Chỗ nào mất thời gian nhất mà chị thấy vô lý nhất?** | |
@@ -154,7 +154,7 @@ việc tự nhớ sai.
 | # | Hỏi gì | Vì sao |
 |---|---|---|
 | D1 | **Chị muốn shop này to đến đâu?** Nếu mai có 100 đơn/ngày, chị làm nổi không — và chị **có muốn** không? | Mục tiêu 500 đơn/ngày là **của anh**. 500 đơn/ngày nến thủ công là một nhà máy. Nếu chị ấy muốn dừng ở 15 đơn và giữ cuối tuần thì gần như mọi thứ trong bốn tài liệu phải viết lại |
-| D2 | **Chị có đăng ký kinh doanh chưa?** | Quyết định toàn bộ phần thanh toán và pháp lý — [03](03-DOI-THU-VA-TICH-HOP.md) §4, §5 |
+| D2 | **Chị có đăng ký kinh doanh chưa?** | Quyết định toàn bộ phần thanh toán và pháp lý — [03](03-COMPETITORS-AND-INTEGRATIONS.md) §4, §5 |
 | D3 | **Chị định thêm sản phẩm gì?** | Với 2.449 SKU / 744 shop ≈ 3,3 SKU mỗi shop [đã kiểm: metric.vn], 5 mùi đã trên mức thường. Thêm SKU khi chưa đủ người xem là thêm việc |
 | D4 | **Ai đang làm cùng chị?** Một mình, hay có người phụ | |
 
@@ -188,7 +188,7 @@ những gì."* Hai phút.
 
 Vì sao đây là đoạn mạnh nhất cả buổi: **con số hiện ra là của chị ấy, không phải của anh.** Anh
 không phải thuyết phục ai. Tham chiếu để anh biết mình đang nhìn gì
-([01](01-BOI-CANH-VA-CO-HOI.md) §2, §6):
+([01](01-CONTEXT-AND-OPPORTUNITY.md) §2, §6):
 
 - TikTok Shop, trên một cây 300.000₫: hoa hồng mặc định 14% = 42.000₫ + phí giao dịch 6% =
   18.000₫ + phí xử lý đơn 3.000₫ → **63.000₫, tức 21%** [đã kiểm: TikTok Seller University].
@@ -198,7 +198,7 @@ không phải thuyết phục ai. Tham chiếu để anh biết mình đang nhì
 
 **Không đọc những con số này lên trước.** Để chị ấy đọc con số của chị ấy trước, rồi mới đối
 chiếu. Nếu con số của chị ấy khác hẳn, thì anh vừa học được điều quan trọng nhất trong buổi, và
-phải sửa lại [01](01-BOI-CANH-VA-CO-HOI.md).
+phải sửa lại [01](01-CONTEXT-AND-OPPORTUNITY.md).
 
 **Và nói luôn hai chỗ trung thực, trước khi bị hỏi:** phí sàn một phần là **tiền mua nhu cầu** —
 cái feed TikTok đẩy khách tới; khoản tiết kiệm chỉ có thật với khách chị ấy **đã sở hữu**. Và
@@ -210,7 +210,7 @@ chị ấy**, bán trực tiếp không xoá được, chỉ chuyển việc kê
 ## 4. Việc đáng đề nghị ngay, mà không cần ai trả tiền ai
 
 Trước khi nói tới bất kỳ cấu trúc hợp tác nào, đề nghị chạy vài thử nghiệm **không cần code** —
-danh sách đầy đủ ở [01](01-BOI-CANH-VA-CO-HOI.md) §5. Ba cái hợp nhất để đề nghị tại buổi:
+danh sách đầy đủ ở [01](01-CONTEXT-AND-OPPORTUNITY.md) §5. Ba cái hợp nhất để đề nghị tại buổi:
 
 1. **Nhắn lại khách cũ mua cách đây 2–3 tháng.** Một buổi tối. Đo: bao nhiêu người mua lại.
 2. **Dựng hai listing bộ quà ngay trên Shopee/TikTok.** Đo: tỉ lệ đơn từ 2 cây trở lên.
@@ -247,13 +247,13 @@ giao dịch thật**].
 |---|---|
 | **Đúng khi** | Chị ấy muốn một món đồ, không muốn một mối quan hệ. Anh muốn tiền mặt, một sản phẩm bỏ hồ sơ, rồi đi tiếp |
 | **Hỏng thế nào** | Một shop nến **không phải dự án một lần**: thêm mùi, đổi giá, Tết, hết hàng. Bán đứt xong thì hoặc anh hỗ trợ miễn phí mãi, hoặc chị ấy mắc kẹt với một trang không ai sửa được. Và ở mức 2–7 triệu, anh đang bán rẻ đúng thứ đáng giá nhất: **mối quan hệ** |
-| **Hỏng cho chị ấy thế nào** | Trả tiền cho một thứ chưa chứng minh được là đúng. Xem [01](01-BOI-CANH-VA-CO-HOI.md) §7 |
+| **Hỏng cho chị ấy thế nào** | Trả tiền cho một thứ chưa chứng minh được là đúng. Xem [01](01-CONTEXT-AND-OPPORTUNITY.md) §7 |
 | **Ghi vào giấy** | Gồm những gì, **không** gồm những gì, mấy vòng sửa, **tên miền đứng tên chị ấy** (nói ra trước khi bị hỏi — nó mua được lòng tin ngay), ai giữ mã nguồn, hỏng thì sao, và một trang hướng dẫn bàn giao |
 
 ### (b) Thuê theo tháng
 
 **Mốc giá:** SaaS VN 170.000–999.000₫/tháng tuỳ gói [đã kiểm]; khoảng thực tế cho shop cỡ này 250.000–450.000₫. Đừng đọc cận dưới cao hơn thực tế — chị ấy tra ra 170k thì con số của anh trông như đã được uốn. Nhanh.vn ≈ **450k** đã có POS Pro +
-website + đồng bộ sàn ([03](03-DOI-THU-VA-TICH-HOP.md) §2).
+website + đồng bộ sàn ([03](03-COMPETITORS-AND-INTEGRATIONS.md) §2).
 
 | | |
 |---|---|
@@ -270,7 +270,7 @@ website + đồng bộ sàn ([03](03-DOI-THU-VA-TICH-HOP.md) §2).
 | **Hỏng thế nào** | **Bốn chỗ, đều nặng.** (i) **Quy đơn cho ai là ác mộng** — đơn đó "trực tiếp" nhờ trang của anh hay nhờ cái reel chị ấy đăng? (ii) **Chia trên doanh thu GỘP có thể tàn nhẫn với chị ấy**: nếu giá vốn cao, 10% doanh thu có thể là 30–50% lợi nhuận thật. **Anh không biết giá vốn, nên anh không biết mình đang xin bao nhiêu.** (iii) Phải tin số của nhau, mà hai người **chưa từng gặp**. (iv) Lập luận "tiết kiệm phí sàn" mờ đi khi chính anh cũng lấy một phần |
 | **Cách nói cho công bằng** | Sàn lấy ~21–24% [đã kiểm ba khoản của TikTok; con số tổng là nguồn thứ cấp]. Nếu anh lấy 10% doanh thu trực tiếp thì anh là **một cái sàn rẻ hơn**. Đó là cách đặt vấn đề trung thực — nhưng nó chỉ đúng nếu kênh trực tiếp ra được đơn mà nếu không có nó thì đã không có |
 | **Biến thể tốt hơn** | Chỉ chia trên **phần tăng thêm** so với một mốc nền ghi bằng giấy trắng mực đen ở buổi hai, lấy từ số thật của chị ấy. Khó lách hơn và công bằng hơn cho cả hai |
-| **Ghi vào giấy** | Đơn nào được tính, **đếm bằng cách nào** (trang phải ghi lại được — đó là yêu cầu của chặng 2, [02](02-LO-TRINH.md), tức là cấu trúc này **phụ thuộc** vào một chặng chưa làm), mốc nền, thời hạn, và điều khoản mua đứt để kết thúc |
+| **Ghi vào giấy** | Đơn nào được tính, **đếm bằng cách nào** (trang phải ghi lại được — đó là yêu cầu của chặng 2, [02](02-ROADMAP.md), tức là cấu trúc này **phụ thuộc** vào một chặng chưa làm), mốc nền, thời hạn, và điều khoản mua đứt để kết thúc |
 
 ### (d) Hợp tác / cổ phần
 
@@ -298,12 +298,12 @@ anh được một lời giới thiệu và một sản phẩm bỏ hồ sơ đ�
 | Không hứa | Vì sao |
 |---|---|
 | **Đồng bộ sàn** | Chưa biết shop 5–10 đơn/ngày có đủ điều kiện mở API Shopee không. Tài liệu Odoo nói nhiều vùng đòi số đơn tối thiểu hoặc một hạng người bán; ngưỡng VN **không xác minh được** [đã kiểm: tài liệu Odoo]. Hứa một thứ có thể không được phép chạy là cách mất uy tín nhanh nhất |
-| **Apple Pay** | Cần cổng thanh toán + chứng chỉ Apple + xác thực tên miền + một endpoint máy chủ [đã kiểm: [BAO-CAO-HIEN-TRANG.md](../BAO-CAO-HIEN-TRANG.md) §3] |
+| **Apple Pay** | Cần cổng thanh toán + chứng chỉ Apple + xác thực tên miền + một endpoint máy chủ [đã kiểm: [STATUS-REPORT.md](../STATUS-REPORT.md) §3] |
 | **Bất cứ thứ gì có ngày tháng kèm theo** | Anh chưa làm việc này bao giờ, và đường găng là **nội dung của chị ấy** chứ không phải code của anh |
 | **Một con số doanh thu** | Không bao giờ nói "cái này sẽ tăng gấp đôi doanh số của chị" |
 | **Các con số về quiz và bundling** | "+40% chuyển đổi", "+25% AOV", "McKinsey nói bundling tăng AOV 20–35%" — **tất cả đều do chính công ty bán phần mềm quiz/bundling phát ra, không có nhóm đối chứng**, và câu "McKinsey 2025" đã truy ngược: **không có ấn phẩm McKinsey nào đứng sau**. Nói ra là nói sai, bằng văn bản |
 | **Hỗ trợ miễn phí trọn đời** | |
-| **Lo thuế và thủ tục pháp lý hộ chị ấy** | Anh không phải luật sư, và hai nguồn luật còn mâu thuẫn nhau ([03](03-DOI-THU-VA-TICH-HOP.md) §5) |
+| **Lo thuế và thủ tục pháp lý hộ chị ấy** | Anh không phải luật sư, và hai nguồn luật còn mâu thuẫn nhau ([03](03-COMPETITORS-AND-INTEGRATIONS.md) §5) |
 | **Thứ hạng tìm kiếm** | |
 
 **Thứ nên nói thay vào đó, và nói sớm:** Luật TMĐT 122/2025/QH15 hiệu lực 01/07/2026 cùng NĐ
@@ -345,7 +345,7 @@ Không ai bán landing page mà nhắc chuyện phạt 10–20 triệu. Đó ch�
 | 20–25 | **"Cái gì sai ạ?"** | Chị ấy sẽ sửa ngay tên mùi và giá. Đó chính là lúc nội dung bắt đầu được bàn giao, miễn phí |
 | 25–60 | **Hỏi — nhóm A và nhóm B.** Ghi số ra giấy | **Đây là phần chính của buổi.** Nếu hết giờ thì cắt phần khác, đừng cắt phần này |
 | 60–70 | **Seller Centre.** Mở cùng nhau, xem một đơn thật | §3 |
-| 70–80 | Anh làm gì tiếp, và **anh sẽ không xây gì** — kể cả "ba chỗ này chị mua SaaS đi" | [02](02-LO-TRINH.md) §6 và §7. Và nếu số ở A4 nói trang riêng là sai, **nói ra tại chỗ** |
+| 70–80 | Anh làm gì tiếp, và **anh sẽ không xây gì** — kể cả "ba chỗ này chị mua SaaS đi" | [02](02-ROADMAP.md) §6 và §7. Và nếu số ở A4 nói trang riêng là sai, **nói ra tại chỗ** |
 | 80–90 | Đề nghị ba thử nghiệm ở §4. Chốt buổi hai, **có ngày cụ thể**, kèm việc của mỗi bên | |
 
 **Bản rút gọn 40 phút**, nếu chị ấy bận: điện thoại cho chị ấy cầm (10) → nhóm A (15) → Seller
@@ -386,6 +386,6 @@ rủi ro lớn nhất của cả buổi.
 
 ---
 
-Quay lại: [01-BOI-CANH-VA-CO-HOI.md](01-BOI-CANH-VA-CO-HOI.md) · [02-LO-TRINH.md](02-LO-TRINH.md) ·
-[03-DOI-THU-VA-TICH-HOP.md](03-DOI-THU-VA-TICH-HOP.md) · mục lục ở
-[00-DOC-CAI-NAY-TRUOC.md](00-DOC-CAI-NAY-TRUOC.md)
+Quay lại: [01-CONTEXT-AND-OPPORTUNITY.md](01-CONTEXT-AND-OPPORTUNITY.md) · [02-ROADMAP.md](02-ROADMAP.md) ·
+[03-COMPETITORS-AND-INTEGRATIONS.md](03-COMPETITORS-AND-INTEGRATIONS.md) · mục lục ở
+[00-READ-THIS-FIRST.md](00-READ-THIS-FIRST.md)
