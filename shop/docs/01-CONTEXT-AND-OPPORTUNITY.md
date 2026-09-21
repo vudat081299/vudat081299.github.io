@@ -431,7 +431,7 @@ Cái này quyết định lịch, và phép tính rất ngắn:
 **Ý nghĩa:** một kênh bán mới mở vào tháng 12 với checkout chưa ai chạy thật là mở đúng lúc sai
 nhất. Cần một tháng 11 để đơn thật chạy qua và lỗi thật lộ ra. Mà nội dung — tên 5 mùi, mô tả,
 ảnh, số tài khoản — **nằm trên đường găng của chị ấy chứ không phải của anh**. Trang hiện tại có
-24 mục còn cờ placeholder và tất cả đều chờ chị ấy.
+28 mục còn cờ placeholder và tất cả đều chờ chị ấy.
 
 Nghĩa là buổi gặp đầu tiên nên diễn ra **sớm**, và mục tiêu số một của nó là lấy được nội dung
 5 mùi, chứ không phải chốt giá. Đúng như kết luận của [04-NEGOTIATION.md](04-NEGOTIATION.md).

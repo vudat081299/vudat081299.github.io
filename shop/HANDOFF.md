@@ -134,14 +134,14 @@ smoke: OK (12 phép đo).
 Ba mục mức XEM, đều cố ý:
 1. phân bố mùi thắng của Tìm mùi (17,2% → 23,8%);
 2. 2,2% tổ hợp hoà mà câu phân xử không gỡ được;
-3. còn 24 mục mang cờ `placeholder`.
+3. còn 28 mục mang cờ `placeholder`.
 
 ## Việc tiếp theo, theo thứ tự
 
 1. **Đọc [docs/04-NEGOTIATION.md](docs/04-NEGOTIATION.md) trước buổi gặp.** Mục tiêu buổi gặp đầu là
    *khám phá*, không phải trình diễn. Nếu hôm đó nói nhiều hơn nghe thì buổi gặp hỏng.
 2. **Hỏi cho được giá vốn một cây nến.** Thiếu nó thì mọi phép tính chỉ nói về doanh thu.
-3. Xin nội dung 5 mùi → điền vào `data/shop.json` → hạ 24 cờ `placeholder`.
+3. Xin nội dung 5 mùi → điền vào `data/shop.json` → hạ 28 cờ `placeholder`.
 4. Xin số tài khoản → bật VietQR (5 phút, không mất phí cổng).
 5. Mở `https://banhang.shopee.vn/edu/article/8450` và `/8451` **bằng trình duyệt** để biết shop
    có đủ điều kiện dùng API Shopee không. Máy không đọc được hai trang đó.

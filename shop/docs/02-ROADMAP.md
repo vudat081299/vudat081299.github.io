@@ -72,7 +72,7 @@ Không phải kế hoạch. Đây là thứ chạy được ở `shop/` lúc nà
 | Thanh toán | `shop/checkout.html` | Khung xong. COD chạy thật; VietQR chờ số tài khoản; Apple Pay khoá |
 | Tìm mùi (quiz) | `shop/scent-finder.html` | Xong. 5 câu, tính điểm theo trọng số trên 5 mùi |
 | Dựng hộp quà | `shop/gift.html` | Xong. 3 cỡ hộp, chọn mùi, thiệp, lời nhắn |
-| Nội dung | `shop/data/shop.json` | **24 mục còn cờ placeholder** — chờ chị ấy |
+| Nội dung | `shop/data/shop.json` | **28 mục còn cờ placeholder** — chờ chị ấy |
 | Cổng chất lượng | `shop/tools/lint-shop.py` | Chạy trước mỗi commit chạm `shop/` |
 
 ### Mỗi thứ đã dựng đang kiểm giả định nào — và bỏ nó khi nào

@@ -9,7 +9,7 @@ Cập nhật lần cuối: 20/09/2026.
 
 | # | Nợ | Cắn khi | Trả bằng cách |
 |---|---|---|---|
-| 1 | **24 mục còn cờ `placeholder`** — tên và mô tả 5 mùi, giá, thông số, tồn kho, liên hệ | Ngay khi có người thật vào xem | Chủ shop gửi nội dung → điền vào `data/shop.json` → hạ cờ. Dải cảnh báo cam tự tắt. |
+| 1 | **28 mục còn cờ `placeholder`** — tên và mô tả 5 mùi, giá, thông số, tồn kho, liên hệ | Ngay khi có người thật vào xem | Chủ shop gửi nội dung → điền vào `data/shop.json` → hạ cờ. Dải cảnh báo cam tự tắt. |
 | 2 | **Chưa có số tài khoản** nên VietQR chưa bật | Ngay khi muốn nhận chuyển khoản | Điền `payment.methods[bank].bank` (tên NH, mã BIN 6 số, số TK, chủ TK) rồi đặt `ready: true`. Cổng kiểm định dạng. |
 | 3 | **Form nhận hàng không gửi đi đâu** — chỉ chảy vào nội dung đơn để sao chép | Khi khách tưởng bấm xong là shop đã nhận đơn | Một hàm serverless, hoặc dịch vụ form (Formspree/Basin). Xem [adr/0001](adr/0001-static-site.md). |
 | 4 | **Chưa có trang cảm ơn** sau khi đặt | Cùng lúc với #3 | Đi kèm #3. |

@@ -10,17 +10,19 @@ Live: <https://vudat081299.github.io>
 
 | Đường dẫn | Là gì |
 |---|---|
-| `index.html` | **Hub** — trang chủ, liệt kê mọi thứ đáng vào. Có tìm kiếm + phím tắt. Style bằng `web-builder/web-builder.css` |
+| `index.html` | **Hub** — trang chủ, liệt kê mọi thứ đáng vào. Có tìm kiếm + phím tắt. **Tự chứa từ 2026-09-21**: một `<style>` riêng, prefix `ix-`, **không** link `web-builder.css`. Nội dung (8 section + 29 ô) nằm ở `data/collection.json`; cổng `sh tools/check-index.sh` |
 | `pages/` | Các trang nội dung dài, một file HTML tự chứa mỗi trang (how-money-works, finance-econ-rulebook, structured-speaking, scooter-maintenance-guide, jazz-piano-theory). Trước 2026-08-02 chúng nằm ở root, nên URL cũ dạng `/<tên>.html` giờ **404** — vào từ hub |
 | `cooking/` | Trang bếp, mỗi trang một file HTML tự chứa. **Bốn trang công thức** (korean-home-cooking, vietnamese-home-cooking, european-savoury, european-baking) dùng chung khung filter/modal/hẹn-giờ; **một trang kiến thức nền** (food-fundamentals — sơ đồ thịt, hải sản, nhiệt độ, kỹ thuật, rượu, kết hợp vị) dạng explainer tĩnh. Style bằng `../web-builder/web-builder.css`, có cổng kiểm `tools/lint-cooking.py` riêng. Tách khỏi `pages/` 2026-09-02 nên URL cũ `/pages/<tên>.html` giờ **404** — vào từ hub |
 | `cashy/` | App quản lý chi tiêu — **React 19 + TS + Vite**, thứ duy nhất trong repo cần build. Có `CLAUDE.md` + `docs/` riêng, đọc từ đó |
-| `web-builder/` | Design system `wb-*` (CSS thuần, token-based, có dark mode) + trang docs component. **Hub và các trang trong `pages/` đều dùng CSS này** |
+| `web-builder/` | Design system `wb-*` (CSS thuần, token-based, có dark mode) + trang docs component. **Các trang trong `pages/` và `cooking/` dùng CSS này; hub thì KHÔNG còn, từ 2026-09-21** |
+| `shop/` | **Storefront** nến thơm thủ công (Scentsitive) — 5 trang tĩnh dùng chung một shell, toàn bộ chữ và số ở `data/shop.json`. Có `README.md` + `CLAUDE.md` + `docs/` riêng, và cổng hai tầng `sh shop/tools/check.sh` (tầng 2 mở Chromium thật). `shop/docs` + `shop/*.md` **không publish** |
 | `facts/` | Thư viện fact có kiểm chứng (HTML + `data/` JSON) |
 | `json-analysis/` | Công cụ xem/sửa/so sánh JSON |
 | `loto/`, `read-excel-file-to-table/` | Công cụ nhỏ, một trang |
 | `masters-degree/` | Tài liệu môn cao học, chia theo môn. **`data-science-roadmap/` là trang dạy Data Science 84 bài — một file HTML 0,9 MB, và nó có `CLAUDE.md` + `TOC.md` + bộ cổng kiểm `tools/gate.mjs` riêng. ĐỌC `CLAUDE.md` TRƯỚC; đừng mở file HTML để tìm hiểu (tốn ~250k token), dùng `TOC.md` và `node tools/gate.mjs --show <id>`** |
 | `poem/` | 7 bài thơ Việt. Tự chứa hoàn toàn: `main.js` (engine Truyện Kiều) + `style.css` + `assets/` nằm ngay trong thư mục |
 | `portfolio/` | Portfolio + vài component thí nghiệm (GlassCard, ClockComponent, Universe…) |
+| `data/`, `tools/` | Của **hub**, không phải dùng chung: `data/collection.json` là danh mục trang chủ; `tools/lint-collection.py` + `tools/smoke-index.js` kiểm nó |
 | `stuff/` | **Gác xép.** Template Bootstrap gốc chưa sửa và thí nghiệm cũ (`app/`, `swift-docs-factory/`, `archive/`, `SRE.html`). Giữ trong git nhưng **không publish** — không link tới từ đâu cả |
 
 ## Quy ước
@@ -42,11 +44,20 @@ Live: <https://vudat081299.github.io>
 1. `pnpm build` trong `cashy/` → `_site/cashy/`
 2. `pnpm build:wb` trong `cashy/` → `_site/cashy-wb/` (gallery component)
 3. rsync toàn bộ root vào `_site/`, **trừ** `.git`, `.github`, `.claude`, `cashy`,
-   `stuff`, `.DS_Store`
+   `stuff`, `.DS_Store`, `shop/docs`, `shop/*.md`,
+   `masters-degree/data-science-roadmap/LEARNING-LOG.md`,
+   `pages/family-insurance-benefits.html`, `pages/wealth-roadmap.html`
 4. Đẩy `_site/` lên GitHub Pages
 
 Nghĩa là: mọi thứ ở root **mặc định là công khai**. Muốn giữ riêng thì để trong
 `stuff/`, `cashy/`, hoặc thêm `--exclude` vào workflow.
+
+Danh sách `--exclude` ấy **có cổng giữ**, đừng dọn nó: `shop/tools/lint-shop.py` làm đỏ build
+nếu mất hai dòng `shop/…`, và `tools/lint-collection.py` giữ hai dòng `pages/…` — cộng chiều
+ngược lại, tức là báo lỗi nếu ai thêm `--exclude` cho một trang thuộc danh sách `UNLISTED`.
+
+Và một giới hạn phải nói thẳng: repo này **public**, nên `--exclude` chỉ chặn
+`vudat081299.github.io/…`. File vẫn đọc được trên github.com và qua `raw.githubusercontent.com`.
 
 ## Nợ kỹ thuật đã biết
 
@@ -60,3 +71,7 @@ Link tương đối gãy sẵn, chưa sửa vì nằm ngoài phạm vi dọn c�
 - `web-builder/pages/layout.html` thiếu `bien-lai.jpg`; vài `href="…"` trong trang docs
   là placeholder cố ý. Xem thêm `web-builder/PENDING-FIXES.md`.
 - Mọi thứ trong `stuff/` gãy tứ tung — đúng bản chất của nó, không cần sửa.
+- **8 project con chưa có `README.md`**: `cooking/`, `json-analysis/`, `loto/`,
+  `masters-degree/`, `pages/`, `poem/`, `read-excel-file-to-table/`, `web-builder/` —
+  mở thư mục đó trên GitHub thì chỉ thấy danh sách file, không thấy một dòng nói nó là gì.
+  (`shop/` vừa có, 2026-09-21. Đã có sẵn: root, `cashy/`, `facts/`, `portfolio/`.)
