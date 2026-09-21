@@ -39,8 +39,20 @@
   .ec-toc .wb-sidenav__link { font-size: 13px; padding-top: 5px; padding-bottom: 5px; }
   .ec-toc .wb-sidenav__link.is-current { background: var(--wb-surface-hover); font-weight: 620; color: var(--wb-fg); }
 
+  /* ---- chữ mờ phải đọc được ----
+     Bậc --wb-fg-subtle của kit là gray-400: 2,56:1 trên nền thẻ, dưới ngưỡng 4,5:1.
+     Hai thành phần của kit dùng đúng bậc đó cho chữ phải đọc — .wb-sidenav__section
+     (nhãn nhóm của mục lục) và .wb-footer__copy. Nâng một bậc: 4,97:1 sáng, 7,34:1 tối.
+     Định nghĩa ở CẢ HAI nhánh theme, nếu không nhánh còn lại rơi về giá trị kit. */
+  :root { --wb-fg-subtle: var(--wb-gray-500); }
+  .dark { --wb-fg-subtle: var(--wb-gray-400); }
+
   /* ---- section rhythm ---- */
   section[id] { scroll-margin-top: 76px; }
+  /* Tám tiêu đề h3 cũng là đích của link chéo trong bài (#v-causative, #o-tags…) —
+     đo bằng trình duyệt: không có scroll-margin thì chúng dừng ở top = 0, khuất sau
+     thanh header dính cao 56px. */
+  h3.ec-h3[id] { scroll-margin-top: 76px; }
   .ec-part-head { border-top: var(--wb-bw) solid var(--wb-border); padding: 24px 0 2px; scroll-margin-top: 76px; }
   .ec-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-muted); margin: 0 0 6px; }
   .ec-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
