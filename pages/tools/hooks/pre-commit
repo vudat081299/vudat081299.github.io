@@ -85,4 +85,25 @@ MSG
   fi
 fi
 
+# Cổng kiến thức cho trang thí nghiệm cược: nó nói ~30 con số (xác suất trúng, điểm hoà
+# vốn, tiền một chuỗi thua ngốn mất) VÀ một luật — "gấp thếp không đổi được dấu của kỳ
+# vọng". Cổng dựng lại cả hai, kể cả bằng một lối suy luận khác lối trang dùng.
+if echo "$CHANGED" | grep -q "betting-strategy-lab.html"; then
+  if ! python3 "$DIR/tools/verify-betting-lab.py"; then
+    cat >&2 <<'MSG'
+
+──────────────────────────────────────────────────────────────────────
+Commit bị chặn: trang thí nghiệm cược có chỗ không dựng lại được.
+
+Hoặc một con số trong bài vừa lệch khỏi phép tính của nó, hoặc một dòng
+JS then chốt đã đổi — ví dụ điểm đặt không còn được chốt TRƯỚC khi quả
+ra, và lúc ấy cả mục "Vì sao gấp thếp không đổi được dấu" là sai.
+
+Xem chi tiết:  python3 pages/tools/verify-betting-lab.py
+──────────────────────────────────────────────────────────────────────
+MSG
+    exit 1
+  fi
+fi
+
 echo "pre-commit: cổng $DIR qua."

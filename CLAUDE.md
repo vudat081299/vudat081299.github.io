@@ -10,7 +10,7 @@ cách chúng chạy tự động**.
 | `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3, 4 |
 | `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2, 4 |
 | `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` (kiểm cả trang mồ côi trong `pages/`, `cooking/`, và danh sách không công khai) | 2, 4 |
-| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` + `verify-ml.py` | 2, 4 |
+| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` + `verify-ml.py` + `verify-betting-lab.py` | 2, 4 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2, 4 |
 | `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `sh shop/tools/check.sh` | 1, 2, 3, 4 + chạy thật |
 | các project khác | xem thư mục | — | 4 |
@@ -37,7 +37,7 @@ một shell, toàn bộ nội dung nằm ở `data/shop.json`, và giá tiền �
 ba thứ ấy là luật, và luật thì phải viết ra. Kèm theo là `shop/docs/`: lộ trình, ADR, sổ nợ, và
 một bộ tài liệu định hướng kinh doanh cho việc đàm phán với chủ shop.
 
-Hai ngoại lệ trong `pages/`, đều là cổng **kiến thức**. Cái thứ nhất, `verify-math-for-ml.py`,
+Ba ngoại lệ trong `pages/`, đều là cổng **kiến thức**. Cái thứ nhất, `verify-math-for-ml.py`,
 chỉ chạy khi commit chạm `mathematics-for-machine-learning.html`. Trang ấy nói ~90 con số cụ thể (định thức,
 trị riêng, tỉ lệ PCA, dãy Newton, xác suất nhị thức, phân vị t, p-value) và tự nhận với người
 đọc là mọi con số tính được đều kiểm được bằng máy — nên phải có một script tính lại thật, chứ
@@ -52,7 +52,17 @@ một lớp tích chập, `(32+2−3)/1+1 = 32` cỡ đầu ra sau padding/strid
 từ ma trận nhầm lẫn 15/15/5/965, `28·28·32×(5·5·192) ≈ 120 triệu` phép nhân của khối Inception
 so với `12,4 triệu` khi chèn nút thắt 1×1. Nó gộp hai trang vào một file mà **không** vi phạm
 luật trên: hai bộ số viết tay riêng, mỗi bộ đọc đúng file của nó, không phép kiểm nào dùng chung —
-gộp chỉ để hai trang anh em khỏi chép lại cùng một đoạn hàm trợ giúp. `shop/` cũng có một cổng riêng cùng kiểu vì cùng lý do: đó là một storefront, nơi sai một con
+gộp chỉ để hai trang anh em khỏi chép lại cùng một đoạn hàm trợ giúp.
+
+Cái thứ ba, `verify-betting-lab.py` (60 phép kiểm), cho `betting-strategy-lab.html` — trang thí
+nghiệm chiến lược cược. Nó khác hai cổng trên ở một chỗ đáng nói: trang ấy không chỉ nói con số,
+nó nói một **luật** ("gấp thếp không đổi được dấu của kỳ vọng"), và luật thì hỏng được mà con số
+vẫn đúng. Nên cổng có ba phần: tính lại ~30 con số trong bài; đòi vài dòng JS then chốt còn nguyên
+hình — nặng nhất là **điểm đặt phải được chốt TRƯỚC khi quả ra**, vì đảo thứ tự ấy thì kỳ vọng
+không tách được thành `e × tổng điểm` và cả mục "Vì sao" sai mà trang vẫn hiện số đẹp; và dựng lại
+phân phối bằng một lối suy luận **khác** lối trang dùng (xích Markov đối chiếu với công thức bù
+trừ), cộng một lần mô phỏng cả trò chơi bằng Python. Đã thử ngược: sửa lệch một con số thì đỏ, dời
+dòng chốt điểm đặt xuống sau vòng quay thì đỏ. `shop/` cũng có một cổng riêng cùng kiểu vì cùng lý do: đó là một storefront, nơi sai một con
 số thì khách trả nhầm tiền. `lint-shop.py` soi thẳng vào `shop/data/shop.json` — giá phải là số
 nguyên dương, giá gạch phải lớn hơn giá bán, và `labels.ship_fee`/`free_ship` phải khớp con số
 viết trong đoạn văn `shipping`. Từ 21/09/2026 nó kiểm thêm **quan hệ giữa hai trường** — chỗ tiền
@@ -227,14 +237,14 @@ là trường tuỳ chọn.** Mục không có `key` thì không vẽ chip phím
 chuột hoặc ô tìm kiếm — `/` nhảy vào ô, `↵` mở kết quả đầu. Linter chỉ kiểm định dạng và trùng
 lặp **khi** có `key`. **Đừng ép hai mục dùng chung một phím** để giữ cho đủ bộ.
 
-Ngày 21/09 chủ trang cho gỡ hai mục khỏi danh mục nên đang là **35/36**, ô `z` trống — và **mọi
-mục đang niêm yết đều có phím trở lại**. Nghĩa là luật "`key` tuỳ chọn" vừa mất **ví dụ sống
-duy nhất** của nó: người viết mục thứ 36 sẽ thấy 35 mục đều có
-phím rồi bắt chước, lấy nốt `z`; **mục thứ 37 mới là mục đầu tiên buộc phải bỏ trường `key`**, và
-lúc ấy trên trang không còn cái nào để nhìn theo. Linter vẫn cho thiếu `key` nên không ai bị chặn
-nhầm, nhưng đoạn này là chỗ duy nhất còn ghi — xem mục *Thứ tự làm một trang* ở trên: bộ mẫu
-mạnh hơn luật, và bộ mẫu cho nhánh này hiện bằng không. Dù vậy **đừng xáo lại phím của mục cũ**
-để lấp chỗ: phím tắt là thứ người dùng học thuộc, đổi nó là phá trí nhớ cơ bắp.
+Ngày 21/09 chủ trang cho gỡ hai mục khỏi danh mục nên còn đúng ô `z`; **`Betting Lab` lấy nốt ô
+ấy cùng ngày, nên hiện là 36/36 — hết sạch.** Bản trước đoạn này đoán trúng chuyện sẽ xảy ra:
+người viết mục thứ 36 thấy 35 mục đều có phím nên bắt chước, và lấy `z`. Vậy **mục kế tiếp là mục
+đầu tiên buộc phải bỏ hẳn trường `key`**, giữa một danh mục mà cả 36 mục đều có phím — tức là
+không còn cái nào để nhìn theo. Linter cho thiếu `key` nên không ai bị chặn nhầm; đoạn này với
+trường `note` trong `data/collection.json` là hai chỗ duy nhất còn ghi. Xem mục *Thứ tự làm một
+trang* ở trên: bộ mẫu mạnh hơn luật, và bộ mẫu cho nhánh này bằng không. **Đừng xáo lại phím của
+mục cũ** để lấp chỗ: phím tắt là thứ người dùng học thuộc, đổi nó là phá trí nhớ cơ bắp.
 
 Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Từ 20/09/2026 nó kiểm thêm
 một chiều nữa: mọi `.html` trong `pages/` và `cooking/` phải có một mục trỏ tới, vì
