@@ -54,6 +54,13 @@
   .wb-cap--warning { color: color-mix(in srgb, var(--wb-warning-text) 80%, var(--wb-fg)); }
   .wb-cap--success { color: color-mix(in srgb, var(--wb-success-text) 85%, var(--wb-fg)); }
 
+  /* Thanh lọc dính có nền TRONG SUỐT 92% canvas, nên chữ --wb-fg-muted không nằm trên
+     nền trắng mà trên nền pha: đo bằng canvas 1×1 được rgb(246,246,247) → 4,48:1, thiếu
+     0,02 so với 4,5:1 (và còn đổi theo thứ đang cuộn bên dưới). Đậm thêm một bậc trong
+     phạm vi thanh lọc: 7,05:1. Cả hai nhánh theme, nếu không nhánh tối rơi về giá trị kit. */
+  .rb-filterbar { --wb-fg-muted: var(--wb-gray-600); }
+  .dark .rb-filterbar { --wb-fg-muted: var(--wb-gray-400); }
+
   /* Thanh trượt của kit cao đúng 4px: trên điện thoại đó là vùng bấm 4px, không nắm nổi.
      Giữ nguyên hình (vệt 4px, núm 18px) bằng cách đệm trên/dưới rồi cắt nền về content-box,
      nên chỉ HỘP BẤM to ra 32px. Chỉ áp ở khổ điện thoại để bố cục desktop không đổi. */
