@@ -38,7 +38,7 @@
   --canvas:#fbfbf9; --surface:#ffffff; --surface-2:#f4f4f1; --sunk:#f7f7f4;
   /* --subtle dùng cho chữ thường cỡ 10–13px (nhãn mono, .dim, th, caption), nên nó phải
      đạt 4.5:1 với cả --canvas, --surface, --surface-2 và --sunk. #8b91a0 cũ chỉ được 2.8:1. */
-  --ink:#15171c; --muted:#575d6b; --subtle:#676e80; --border:#e5e4de; --border-2:#d6d5cd;
+  --ink:#15171c; --muted:#575d6b; --subtle:#646b7d;  /* #676e80 cho 4,45:1 trên nền ô đã nhuộm — dưới 4,5:1; đậm thêm một nấc */ --border:#e5e4de; --border-2:#d6d5cd;
   --a:#3450c8; --a-bg:#eceffc; --a-line:#c3cdf3;
   --c:#a2560b; --c-bg:#fbf1e4; --c-line:#eed4ac;
   --p:#0d6b60; --p-bg:#e6f3f0; --p-line:#b3ddd5;
@@ -86,9 +86,13 @@ a { color:inherit; }
 @media (max-width:600px) { .bar__in { padding:0 16px; gap:9px; } }
 .bar__brand { font-weight:700; font-size:14.5px; letter-spacing:-.01em; text-decoration:none; white-space:nowrap; display:flex; align-items:center; gap:7px; }
 .bar__brand span.d { color:var(--subtle); font-weight:500; }
-@media (max-width:900px) { .bar__brand span.d { display:none; } }
+@media (max-width:1340px) { .bar__brand span.d { display:none; } }
 .bar__nav { display:flex; gap:2px; margin-left:auto; }
-@media (max-width:860px) { .bar__nav { display:none; } }
+/* Thanh điều hướng ngang chỉ hiện khi CÒN CHỖ, và dòng phụ của thương hiệu nhường
+     chỗ trước. Ngưỡng cũ làm trang tràn ngang suốt quãng màn hình vừa — đo được ở
+     mọi bề rộng từ 880 tới 1440px, lỗi có sẵn chứ không phải do đổi nhãn. Mục lục
+     cột bên vẫn còn nguyên nên ẩn thanh này không mất đường đi nào. */
+@media (max-width:1200px) { .bar__nav { display:none; } }
 .bar__nav a {
   font-size:12.5px; color:var(--muted); text-decoration:none; padding:5px 9px;
   border-radius:var(--radius-sm); white-space:nowrap;
@@ -576,14 +580,14 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
     <button class="iconbtn" id="tocBtn" aria-label="Mở mục lục">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-    <a class="bar__brand" href="../index.html">Maths for ML <span class="d">&amp; Data Science · DeepLearning.AI · 3 courses</span></a>
+    <a class="bar__brand" href="../index.html">Maths for ML <span class="d">&amp; Data Science · DeepLearning.AI · 3 khoá</span></a>
     <nav class="bar__nav">
-      <a href="#mo-dau">Start Here</a>
-      <a href="#act1">1 · Linear Algebra</a>
-      <a href="#act2">2 · Calculus</a>
-      <a href="#act3">3 · Probability</a>
-      <a href="#act4">4 · Statistics</a>
-      <a href="#ket">Reference</a>
+      <a href="#mo-dau">Mở đầu</a>
+      <a href="#act1">1 · Đại số tuyến tính</a>
+      <a href="#act2">2 · Giải tích</a>
+      <a href="#act3">3 · Xác suất</a>
+      <a href="#act4">4 · Thống kê</a>
+      <a href="#ket">Tra cứu</a>
     </nav>
     <div class="bar__act">
       <a class="iconbtn" href="../index.html" aria-label="Trang chủ">

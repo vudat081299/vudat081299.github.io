@@ -78,9 +78,13 @@ a { color:inherit; }
 @media (max-width:600px) { .bar__in { padding:0 16px; gap:9px; } }
 .bar__brand { font-weight:700; font-size:14.5px; letter-spacing:-.01em; text-decoration:none; white-space:nowrap; display:flex; align-items:center; gap:7px; }
 .bar__brand span.d { color:var(--subtle); font-weight:500; }
-@media (max-width:900px) { .bar__brand span.d { display:none; } }
+@media (max-width:1340px) { .bar__brand span.d { display:none; } }
 .bar__nav { display:flex; gap:2px; margin-left:auto; }
-@media (max-width:860px) { .bar__nav { display:none; } }
+/* Thanh điều hướng ngang chỉ hiện khi CÒN CHỖ, và dòng phụ của thương hiệu nhường
+     chỗ trước. Ngưỡng cũ làm trang tràn ngang suốt quãng màn hình vừa — đo được ở
+     mọi bề rộng từ 880 tới 1440px, lỗi có sẵn chứ không phải do đổi nhãn. Mục lục
+     cột bên vẫn còn nguyên nên ẩn thanh này không mất đường đi nào. */
+@media (max-width:1200px) { .bar__nav { display:none; } }
 .bar__nav a {
   font-size:12.5px; color:var(--muted); text-decoration:none; padding:5px 9px;
   border-radius:var(--radius-sm); white-space:nowrap;
@@ -521,15 +525,15 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
     <button class="iconbtn" id="tocBtn" aria-label="Mở mục lục">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-    <a class="bar__brand" href="../index.html">Machine Learning <span class="d">&amp; Deep Learning · Andrew Ng · 8 courses</span></a>
+    <a class="bar__brand" href="../index.html">Machine Learning <span class="d">&amp; Deep Learning · Andrew Ng · 8 khoá</span></a>
     <nav class="bar__nav">
-      <a href="#mo-dau">Foundations</a>
-      <a href="#act1">1 · One Line</a>
-      <a href="#act2">2 · Stacking</a>
-      <a href="#act3">3 · Diagnostics</a>
-      <a href="#act4">4 · Structure</a>
-      <a href="#act5">5 · Unsupervised</a>
-      <a href="#ket">Reference</a>
+      <a href="#mo-dau">Mở đầu</a>
+      <a href="#act1">1 · Một đường thẳng</a>
+      <a href="#act2">2 · Xếp chồng</a>
+      <a href="#act3">3 · Khi nó không chạy</a>
+      <a href="#act4">4 · Dữ liệu có hình dạng</a>
+      <a href="#act5">5 · Không có nhãn</a>
+      <a href="#ket">Kết &amp; tra cứu</a>
     </nav>
     <div class="bar__act">
       <a class="iconbtn" href="../index.html" aria-label="Trang chủ">
