@@ -172,7 +172,67 @@ function check(name, ok, detail) {
     });
     check('lớp đo có ghi sự kiện', evs.length >= 3, evs.join(', '));
 
-    /* 6. Font icon bị chặn thì KHÔNG được lộ chữ ligature.
+    /* 6. Tồn kho là MỘT con số, dù bán qua hai đường.
+     *
+     * Lỗi gốc, đo 21/09/2026: `addToCart` kẹp theo `p.stock`, `giftStock` kẹp theo
+     * `pr.stock`, hai bên không biết nhau. Gói 6 hộp ba cùng mùi 01 (18 cây) rồi bấm
+     * thêm nến 01 ở trang Mùi hương — giỏ nhận thêm 20 cây nữa, tổng 38 trên tồn 20.
+     * Cả hai lần chặn đều "đúng" so với con số chúng đọc; cái sai là hai con số.
+     *
+     * Đây là phép đo đầu tiên của bộ này SO HAI CON SỐ PHẢI KHỚP NHAU, thay vì hỏi một
+     * trường có đúng kiểu không. Sáu lỗi tiền nặng nhất ở đây đều lọt cả bốn lớp cổng
+     * vì không lớp nào làm việc ấy. */
+    const sp = await ctx.newPage();
+    await sp.goto(BASE + 'gift.html', { waitUntil: 'networkidle' });
+    await sp.waitForTimeout(700);
+    const declared = await sp.evaluate(async () => {
+      const d = await (await fetch('data/shop.json')).json();
+      return d.products.filter(p => p.scent === 's1').map(p => p.stock)[0];
+    });
+    await sp.click('[data-box="b3"]'); await sp.waitForTimeout(300);
+    for (const i of [0, 1, 2]) {
+      const el = await sp.$(`[data-slot="${i}"][data-scent="s1"]`);
+      if (el) { await el.click(); await sp.waitForTimeout(200); }
+    }
+    for (let i = 0; i < 12; i++) {
+      const btn = await sp.$('#gbAdd');
+      if (!btn || !(await btn.isEnabled())) break;
+      await btn.click(); await sp.waitForTimeout(70);
+    }
+    await sp.goto(BASE + 'products.html', { waitUntil: 'networkidle' });
+    await sp.waitForTimeout(700);
+    for (let i = 0; i < 30; i++) {
+      const btn = await sp.$('[data-add="nen-01"]');
+      if (!btn || !(await btn.isEnabled())) break;
+      await btn.click(); await sp.waitForTimeout(60);
+    }
+    const held = await sp.evaluate(() =>
+      JSON.parse(localStorage.getItem('scentsitive-cart') || '[]').reduce((n, c) =>
+        n + (c.g ? c.q * (c.g.scents || []).filter(k => k === 's1').length
+                 : (c.id === 'nen-01' ? c.q : 0)), 0));
+    check('hộp quà và nến lẻ cùng mùi không bán quá tồn', held <= declared,
+          held + ' cây mùi 01 trong giỏ / tồn khai báo ' + declared);
+
+    /* 7. Chọn "Không cần thiệp" thì lời nhắn phải mất theo — đơn gửi shop là kênh duy
+     * nhất, nên một đơn vừa nói "không cần thiệp" vừa mang lời nhắn là đơn không thi
+     * hành được. Ô nhập bị ẩn chứ G.msg vẫn còn; ẩn không phải là xoá. */
+    await sp.goto(BASE + 'gift.html', { waitUntil: 'networkidle' });
+    await sp.evaluate(() => localStorage.removeItem('scentsitive-cart'));
+    await sp.reload({ waitUntil: 'networkidle' }); await sp.waitForTimeout(800);
+    const cds = await sp.$$('[data-card]');
+    if (cds[1]) { await cds[1].click(); await sp.waitForTimeout(350); }
+    const box = await sp.$('#gbMsg');
+    if (box) { await box.fill('loi nhan thu'); await sp.waitForTimeout(300); }
+    const first = await sp.$('[data-card]');
+    if (first) { await first.click(); await sp.waitForTimeout(350); }
+    await sp.click('#gbAdd'); await sp.waitForTimeout(250);
+    const line = await sp.evaluate(() =>
+      (JSON.parse(localStorage.getItem('scentsitive-cart') || '[]')[0] || {}).g || {});
+    check('bỏ thiệp thì lời nhắn mất theo', !line.msg,
+          'thiệp: ' + line.card + ' · lời nhắn: ' + JSON.stringify(line.msg || ''));
+    await sp.close();
+
+    /* 8. Font icon bị chặn thì KHÔNG được lộ chữ ligature.
      *
      * Lỗi gốc, đo ngày 21/09/2026: chặn fonts.googleapis.com rồi chụp lại, hero đọc thành
      * "storefront Xem 5 mùi hương" và nút giỏ đọc thành "dark_modeshopping_bag". Nguyên nhân:

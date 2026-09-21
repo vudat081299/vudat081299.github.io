@@ -756,12 +756,11 @@
     }
   ],
   "marquee": [
-    "sáp thực vật",
-    "bấc cotton không lõi chì",
-    "rót tay từng mẻ nhỏ",
-    "ly thuỷ tinh dùng lại được",
-    "chuyển khoản VietQR",
-    "giao trong ngày ở nội thành"
+    {"text": "sáp thực vật", "placeholder": true},
+    {"text": "rót tay từng mẻ nhỏ", "placeholder": true},
+    {"text": "ly thuỷ tinh dùng lại được", "placeholder": true},
+    {"text": "chuyển khoản VietQR", "placeholder": false},
+    {"text": "giao trong ngày ở nội thành", "placeholder": true}
   ],
   "values": [
     {

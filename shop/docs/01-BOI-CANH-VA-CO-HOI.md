@@ -101,12 +101,12 @@ vì nó cộng được từ ba khoản kiểm được.** Lưu ý mức hoa h�
 
 | Khoản | Mức | Trên 300.000₫ |
 |---|---|---|
-| Phí xử lý giao dịch | 6% từ 01/05/2026 (trước là 4,91%), áp cho **mọi** hình thức gồm cả COD, đã gồm VAT [đã kiểm: Shopee] | 18.000₫ |
-| Phí hạ tầng | 3.000₫/đơn, từ 01/07/2025 [đã kiểm: Shopee] | 3.000₫ |
+| Phí xử lý giao dịch | 6% từ 01/05/2026 (trước là 4,91%), áp cho **mọi** hình thức gồm cả COD, đã gồm VAT [nguồn ngành — chưa đối chiếu trang chính thức] | 18.000₫ |
+| Phí hạ tầng | 3.000₫/đơn, từ 01/07/2025 [nguồn ngành — chưa đối chiếu trang chính thức] | 3.000₫ |
 | Phí cố định theo ngành hàng | **không trích được** — ba nguồn cho ba khoảng khác nhau (1,5–17% / 8,8–11,7% / 1,21–8,1%) | ? |
 | **Cộng phần biết được** | | **≥ 21.000₫ = 7,0%** |
 
-Ngoài ra sàn khấu trừ thuế VAT 1–5% và TNCN 0,5–5% từ 01/07/2025 [đã kiểm: Shopee].
+Ngoài ra sàn khấu trừ thuế VAT 1–5% và TNCN 0,5–5% từ 01/07/2025 [nguồn ngành — chưa đối chiếu trang chính thức].
 
 **Ba nguồn mâu thuẫn nhau về phí cố định thì không được chọn một nguồn mà tin.** Cách đúng là
 bảo chị ấy mở Seller Centre lên xem — mất hai phút, xem §6.
@@ -421,7 +421,7 @@ quan sát** và mở bán thật sau Tết — nói trước điều này thay v
 
 ## 10. Cái gì sẽ chứng minh là tôi sai
 
-Bảy đường, xếp theo mức nguy hiểm.
+Tám đường, xếp theo mức nguy hiểm.
 
 1. **Chị ấy không muốn to.** Mục tiêu 50 → 100 → 200 → 500 đơn/ngày là mục tiêu **của anh**.
    Rất nhiều người làm handmade cố tình giữ shop nhỏ, vì to lên nghĩa là thuê người, thuê xưởng,

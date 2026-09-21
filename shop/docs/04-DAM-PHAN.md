@@ -135,7 +135,7 @@ không phải thuyết phục ai. Tham chiếu để anh biết mình đang nhì
   18.000₫ + phí xử lý đơn 3.000₫ → **63.000₫, tức 21%** [đã kiểm: TikTok Seller University].
 - Shopee: phí xử lý giao dịch 6% = 18.000₫ + phí hạ tầng 3.000₫ → **ít nhất 21.000₫**, cộng một
   khoản phí cố định theo ngành hàng mà **ba nguồn cho ba khoảng khác nhau nên không được trích**
-  [đã kiểm: Shopee].
+  [nguồn ngành — chưa đối chiếu trang chính thức].
 
 **Không đọc những con số này lên trước.** Để chị ấy đọc con số của chị ấy trước, rồi mới đối
 chiếu. Nếu con số của chị ấy khác hẳn, thì anh vừa học được điều quan trọng nhất trong buổi, và
@@ -143,7 +143,7 @@ phải sửa lại [01](01-BOI-CANH-VA-CO-HOI.md).
 
 **Và nói luôn hai chỗ trung thực, trước khi bị hỏi:** phí sàn một phần là **tiền mua nhu cầu** —
 cái feed TikTok đẩy khách tới; khoản tiết kiệm chỉ có thật với khách chị ấy **đã sở hữu**. Và
-khoản thuế sàn khấu trừ (VAT 1–5%, TNCN 0,5–5% từ 01/07/2025 [đã kiểm: Shopee]) là **thuế của
+khoản thuế sàn khấu trừ (VAT 1–5%, TNCN 0,5–5% từ 01/07/2025 [nguồn ngành — chưa đối chiếu trang chính thức]) là **thuế của
 chị ấy**, bán trực tiếp không xoá được, chỉ chuyển việc kê khai sang chị ấy tự làm.
 
 ---

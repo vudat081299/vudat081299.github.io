@@ -366,6 +366,23 @@ def check_data(path):
             err.append('labels.%s = %s nhưng không có chỗ nào trong `shipping` nói con số đó — '
                        'giỏ hàng và đoạn Giao hàng đang nói hai giá khác nhau' % (key, vnd(v)))
 
+    # Băng chữ chạy ở trang chủ là lời khẳng định về SẢN PHẨM CỦA NGƯỜI KHÁC, nên mỗi mục
+    # phải khai rõ đã xác nhận hay đang đoán. Trước 21/09/2026 `marquee` là mảng chuỗi thuần,
+    # không có chỗ nào để khai, và phép đếm placeholder ở dưới bỏ qua nó — nên trang chạy
+    # băng "sáp thực vật · bấc cotton không lõi chì · rót tay từng mẻ nhỏ" bằng giọng chắc
+    # nịch trong khi ĐÚNG NHỮNG CHỮ ẤY ở `hero_trust` và `values` đều mang cờ placeholder.
+    # Dải cảnh báo cam vì thế không phủ chúng.
+    #
+    # "bấc cotton không lõi chì" đã bị gỡ hẳn: đó là một tuyên bố AN TOÀN SẢN PHẨM, và
+    # 04-DAM-PHAN.md tự đặt lằn ranh "không ghi 100% thiên nhiên khi không đúng". Tuyên bố
+    # an toàn hộ người khác thì chỉ chủ shop mới xác nhận được, không phải người dựng trang.
+    for i, m in enumerate(d.get('marquee') or []):
+        if not isinstance(m, dict):
+            err.append('marquee[%d] còn là chuỗi thuần — phải là {"text", "placeholder"} để '
+                       'khai rõ đã xác nhận hay đang đoán' % i)
+        else:
+            need(m, ('text', 'placeholder'), 'marquee[%d]' % i, err)
+
     # Ngưỡng miễn phí ship phải quy ra được một SỐ CÂY NẾN hợp lý. Đây là phép kiểm
     # liên-trường: `free_ship` và `products[].price` sống ở hai chỗ khác nhau trong file, và
     # đổi một cái mà quên cái kia thì không có gì kêu — trang vẫn chạy, chỉ là lời hứa "mua
@@ -396,8 +413,8 @@ def check_data(path):
 
     # ── nội dung mẫu còn lại ───────────────────────────────────────────────────
     n = 1 if brand.get('placeholder') else 0
-    for key in ('scents', 'products', 'values', 'faqs', 'shipping'):
-        n += sum(1 for x in (d.get(key) or []) if x.get('placeholder'))
+    for key in ('scents', 'products', 'values', 'faqs', 'shipping', 'marquee'):
+        n += sum(1 for x in (d.get(key) or []) if isinstance(x, dict) and x.get('placeholder'))
     n += sum(1 for m in methods if m.get('placeholder'))
     n += sum(1 for x in (d.get('hero_trust') or []) if x.get('placeholder'))
     if n:

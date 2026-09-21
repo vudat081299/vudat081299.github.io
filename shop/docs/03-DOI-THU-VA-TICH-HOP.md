@@ -191,7 +191,7 @@ Ba điều nên làm với phát hiện này:
 3. **Không nhận trách nhiệm tuân thủ pháp lý trong bất kỳ thoả thuận nào.** Ghi rõ: việc thông
    báo/đăng ký với cơ quan nhà nước và nghĩa vụ thuế thuộc về chủ shop.
 
-Liên quan: sàn đang khấu trừ **VAT 1–5%** và **TNCN 0,5–5%** từ 01/07/2025 [đã kiểm: Shopee].
+Liên quan: sàn đang khấu trừ **VAT 1–5%** và **TNCN 0,5–5%** từ 01/07/2025 [nguồn ngành — chưa đối chiếu trang chính thức].
 Đó là **thuế của chị ấy**, sàn chỉ giữ hộ tại nguồn. Bán trực tiếp **không xoá** nghĩa vụ đó, nó
 chỉ chuyển việc kê khai sang cho chị ấy tự làm — tức là thêm việc. Nói rõ chỗ này, vì nếu để chị
 ấy tự hiểu nhầm rằng bán trực tiếp là "khỏi thuế" thì đó là một hiểu nhầm anh gây ra.
