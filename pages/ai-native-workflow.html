@@ -33,6 +33,12 @@
   :root { --wb-fg-subtle: var(--wb-gray-500); }
   .dark { --wb-fg-subtle: var(--wb-gray-400); }
 
+  /* .wb-alert__msg của kit là --wb-fg-muted (gray-500) — đủ trên nền trắng nhưng chỉ
+     3,89–3,91:1 trên nền đã nhuộm màu của hộp cảnh báo. Đậm thêm một bậc CHỈ bên trong
+     hộp cảnh báo (6,0:1). Nhánh tối giữ nguyên gray-400, vốn đã đạt chuẩn ở đó. */
+  .wb-alert { --wb-fg-muted: var(--wb-gray-600); }
+  .dark .wb-alert { --wb-fg-muted: var(--wb-gray-400); }
+
   /* long brand text must not overflow on phones */
   @media (max-width: 480px) { .wb-navbar__brand { max-width: calc(100vw - 132px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
 
@@ -64,6 +70,9 @@
 
   /* ---- section rhythm ---- */
   section[id] { scroll-margin-top: 76px; }
+  /* #cua-so-ngu-canh là <h3 class="hw-h3">, không phải <section>: quy tắc trên không với
+     tới, đo được nó dừng ở top = 0, khuất sau header dính 56px. */
+  h3.hw-h3[id] { scroll-margin-top: 76px; }
   .hw-part-head { padding-top: 22px; border-top: var(--wb-bw) solid var(--wb-border); }
   .hw-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
   .hw-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
