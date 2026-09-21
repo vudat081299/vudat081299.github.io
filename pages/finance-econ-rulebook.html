@@ -27,6 +27,40 @@
   body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
 
+  /* ---- chữ mờ phải đọc được ----
+     Bậc --wb-fg-subtle của kit là gray-400: đo bằng trình duyệt chỉ 2,39:1 trên nền
+     canvas và 2,56:1 trên nền thẻ — dưới ngưỡng 4,5:1 cho chữ thường. Trang này dùng
+     đúng bậc đó cho .rb-eyebrow, .rb-meta, .rb-sec-eyebrow (mang mã mục A1, A2…),
+     .rb-out__label, .rb-lag và .wb-sidenav__section của mục lục — toàn thứ phải đọc.
+     Nâng một bậc: 4,97:1 sáng, 7,34:1 tối. Định nghĩa ở CẢ HAI nhánh theme, nếu không
+     nhánh còn lại rơi về giá trị kit. */
+  :root { --wb-fg-subtle: var(--wb-gray-500); }
+  .dark { --wb-fg-subtle: var(--wb-gray-400); }
+
+  /* .wb-alert__msg của kit là --wb-fg-muted (gray-500) — đủ trên nền trắng nhưng chỉ
+     3,82:1 trên nền đã nhuộm màu của hộp cảnh báo. Đậm thêm một bậc CHỈ bên trong hộp
+     cảnh báo (6,0:1). Nhánh tối giữ nguyên gray-400, vốn đã đạt chuẩn ở đó. */
+  .wb-alert { --wb-fg-muted: var(--wb-gray-600); }
+  .dark .wb-alert { --wb-fg-muted: var(--wb-gray-400); }
+
+  /* Chip mã quy tắc (R-B08, T0…T3) là chữ phải đọc, không phải trang trí. Cặp màu của
+     kit — --wb-warning-text / --wb-success-text trên nền *-soft — đo được 3,50–4,39:1,
+     dưới 4,5:1; chip nằm trong hộp cảnh báo còn bị nhuộm hai lần nên tệ nhất là 3,50:1.
+     Đậm thêm bằng cách pha chính token đó với --wb-fg (không thêm mã hex mới), và chỉ
+     trong phạm vi .wb-cap. Pha theo token nên tự đúng ở cả hai theme: nhánh tối có
+     --wb-fg sáng nên chip sáng thêm, tương phản cũng tăng. Đo lại: ≥ 4,58:1 sáng.
+     Đặt thẳng trên class con, KHÔNG định nghĩa lại chính token: `--x: color-mix(…var(--x)…)`
+     là vòng lặp, Chromium bỏ cả khai báo và chip mất luôn màu (đã đo thấy). */
+  .wb-cap--warning { color: color-mix(in srgb, var(--wb-warning-text) 80%, var(--wb-fg)); }
+  .wb-cap--success { color: color-mix(in srgb, var(--wb-success-text) 85%, var(--wb-fg)); }
+
+  /* Thanh trượt của kit cao đúng 4px: trên điện thoại đó là vùng bấm 4px, không nắm nổi.
+     Giữ nguyên hình (vệt 4px, núm 18px) bằng cách đệm trên/dưới rồi cắt nền về content-box,
+     nên chỉ HỘP BẤM to ra 32px. Chỉ áp ở khổ điện thoại để bố cục desktop không đổi. */
+  @media (max-width: 480px) {
+    .wb-range { box-sizing: content-box; padding: 14px 0; margin: 0; background-clip: content-box; }
+  }
+
   .rb-hero { padding: 28px 0 20px; }
   .rb-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
   .rb-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 10px; line-height: 1.15; }
@@ -599,7 +633,7 @@
         <p class="rb-prose">Nhân hai thứ đó lại thì ra giá. Câu này <b>không thể sai</b>, kiểu như "tiền chợ = số cân thịt × giá mỗi cân" — vì giá mỗi cân vốn được định nghĩa là tiền chợ chia số cân. Chính vì không thể sai nên nó hữu dụng: khi giá đổi, chỉ cần hỏi <b>bộ phận nào vừa đổi</b>. EPS đổi thì chuyện nằm ở doanh nghiệp. P/E đổi thì chuyện nằm ở giá của việc chờ — tức quay về <a href="#a2-laisuat-thuc">A2</a>, không liên quan gì tới doanh nghiệp.</p>
 
         <div class="wb-card">
-          <div class="wb-card__head"><h4 class="wb-card__title">Ví dụ có số — lợi nhuận tăng 20%, giá vẫn giảm 10%</h4></div>
+          <div class="wb-card__head"><h3 class="wb-card__title">Ví dụ có số — lợi nhuận tăng 20%, giá vẫn giảm 10%</h3></div>
           <div class="wb-table-scroll"><table class="wb-table">
             <thead><tr><th>Thời điểm</th><th>EPS</th><th>P/E</th><th>Giá</th></tr></thead>
             <tbody>
@@ -1081,7 +1115,7 @@
           <div class="wb-table-scroll" style="margin-top:10px"><table class="wb-table wb-table--compact">
             <thead><tr><th style="min-width:140px">Mục</th><th>Dành cho</th><th style="min-width:120px">Cần gì trước</th></tr></thead>
             <tbody>
-              <tr><td><b><a href="#s0-cach-doc">00 · Cách đọc</a></b></td><td>Ai cũng nên đọc — 2 phút. Nó dạy cách <b>không tin quá mức</b> vào 59 quy tắc còn lại.</td><td><span class="wb-cap wb-cap--success wb-cap--sm">không cần gì</span></td></tr>
+              <tr><td><b><a href="#s0-cach-doc">00 · Cách đọc</a></b></td><td>Ai cũng nên đọc — 2 phút. Nó dạy cách <b>không tin quá mức</b> vào toàn bộ quy tắc còn lại.</td><td><span class="wb-cap wb-cap--success wb-cap--sm">không cần gì</span></td></tr>
               <tr><td><b><a href="#s3-quytac">03 · Danh mục quy tắc</a></b></td><td>Tra cứu. Gõ từ khoá ("vàng", "Fed") hoặc bấm nhãn để lọc. <b>Đừng đọc từ trên xuống.</b></td><td class="wb-cell-muted">Phần A</td></tr>
               <tr><td><b><a href="#s4-chedo">04 · Bốn tình huống</a></b></td><td>Hữu ích và dễ: bốn ô vuông thay cho sáu mươi biến. Nhiều người thấy đây là mục đáng giá nhất.</td><td class="wb-cell-muted">Phần A</td></tr>
               <tr><td><b><a href="#s6-meta">06 · Tám cái bẫy</a></b></td><td>Phần sâu nhất: vì sao một quy tắc <em>đúng</em> vẫn làm bạn mất tiền. Đọc nếu bạn <b>đang tự nghĩ ra chiến lược</b>.</td><td class="wb-cell-muted">Phần A</td></tr>
@@ -1115,27 +1149,27 @@
         <div class="wb-grid wb-grid--auto">
           <div class="wb-card wb-card--flat"><div class="wb-card__body">
             <span class="wb-cap wb-cap--success wb-cap--lg">T0</span>
-            <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Phép cộng trừ — luôn đúng</h4>
+            <h3 class="wb-card__title" style="margin-top:10px;font-size:14px">Phép cộng trừ — luôn đúng</h3>
             <p class="wb-help">Đúng theo <b>cách các con số được định nghĩa</b>, như "đường một chiều". Nếu một lập luận vi phạm nó thì lập luận sai, khỏi cần kiểm tra thêm.</p>
           </div></div>
           <div class="wb-card wb-card--flat"><div class="wb-card__body">
             <span class="wb-cap wb-cap--info wb-cap--lg">T1</span>
-            <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Không có bữa trưa miễn phí</h4>
+            <h3 class="wb-card__title" style="margin-top:10px;font-size:14px">Không có bữa trưa miễn phí</h3>
             <p class="wb-help">Có thể lệch tạm, nhưng người ta sẽ kiếm lời từ chỗ lệch đó cho tới khi nó đóng lại. <b>Trừ khi có ai đó bị cấm không cho làm</b> — lúc ấy nó thành T2.</p>
           </div></div>
           <div class="wb-card wb-card--flat"><div class="wb-card__body">
             <span class="wb-cap wb-cap--lg">T2</span>
-            <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Đúng ở đúng chỗ đó</h4>
+            <h3 class="wb-card__title" style="margin-top:10px;font-size:14px">Đúng ở đúng chỗ đó</h3>
             <p class="wb-help">Rất chắc chắn <em>chừng nào cái cơ chế sinh ra nó còn tồn tại</em> — một quy định, một cách vận hành của một thị trường. Đổi luật là nó biến mất. <b>Không bê sang nước khác được.</b></p>
           </div></div>
           <div class="wb-card wb-card--flat"><div class="wb-card__body">
             <span class="wb-cap wb-cap--warning wb-cap--lg">T3</span>
-            <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Thường đúng, không luôn đúng</h4>
+            <h3 class="wb-card__title" style="margin-top:10px;font-size:14px">Thường đúng, không luôn đúng</h3>
             <p class="wb-help">Quan sát từ quá khứ. Có thể <b>quay ngược 180°</b> khi hoàn cảnh đổi. Đây là loại <b>nguy hiểm nhất</b>, vì nó nghe chắc nịch y như T1.</p>
           </div></div>
           <div class="wb-card wb-card--flat"><div class="wb-card__body">
             <span class="wb-cap wb-cap--danger wb-cap--lg">T4</span>
-            <h4 class="wb-card__title" style="margin-top:10px;font-size:14px">Khi nào mọi thứ trên hỏng</h4>
+            <h3 class="wb-card__title" style="margin-top:10px;font-size:14px">Khi nào mọi thứ trên hỏng</h3>
             <p class="wb-help">Không nói thị trường thế nào — nói <b>lúc nào thì đừng tin mấy nhãn kia nữa</b>. Toàn bộ nằm ở <a href="#s6-meta">mục 06</a>.</p>
           </div></div>
         </div>
@@ -1422,7 +1456,7 @@
         <p class="rb-sec-intro">Cụm "<b>hơn mức người ta đã nghĩ</b>" là toàn bộ trọng lượng của câu trên. Không phải lạm phát cao hay thấp — mà là <b>cao hơn hay thấp hơn con số thị trường đã tin</b>. Hai câu hỏi, mỗi câu hai hướng, thành bốn ô. Mỗi ô là một kiểu thị trường khác hẳn nhau:</p>
 
         <div class="wb-cluster wb-cluster--between" style="font-family:var(--wb-font-mono);font-size:11px;color:var(--wb-fg-subtle);text-transform:uppercase;letter-spacing:.04em">
-          <span>← Lạm phát dưới kỳ vọng</span><span>Lạm phát trên kỳ vọng →</span>
+          <span>← Tăng trưởng dưới kỳ vọng</span><span>Tăng trưởng trên kỳ vọng →</span>
         </div>
         <div class="wb-grid wb-grid--2" style="margin-top:8px">
           <div class="wb-alert wb-alert--danger"><div class="wb-alert__body">
@@ -1578,7 +1612,7 @@
       <section id="s6-meta" data-part="b">
         <p class="rb-sec-eyebrow"><b>06</b> — Tám cái bẫy</p>
         <h2 class="rb-sec-title">Tám lý do khiến một quy tắc đúng vẫn làm bạn mất tiền</h2>
-        <p class="rb-sec-intro">Bảy mục trước nói thị trường vận hành ra sao. Mục này nói <b>khi nào thì đừng tin bảy mục trước</b>. Nếu bạn đang tự nghĩ ra một cách chơi cho riêng mình, đây là mục đáng đọc nhất trang, và nó không đòi hỏi nền thống kê nào.</p>
+        <p class="rb-sec-intro">Sáu mục trước nói thị trường vận hành ra sao. Mục này nói <b>khi nào thì đừng tin sáu mục trước</b>. Nếu bạn đang tự nghĩ ra một cách chơi cho riêng mình, đây là mục đáng đọc nhất trang, và nó không đòi hỏi nền thống kê nào.</p>
 
         <div class="wb-alert wb-alert--plain">
           <div class="wb-alert__body">
@@ -1734,7 +1768,7 @@
 
         <div class="wb-alert wb-alert--success" style="margin-top:14px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">check</span></span><div class="wb-alert__body">
           <p class="wb-alert__title">Một câu tóm cả mục 06</p>
-          <p class="wb-alert__msg">Bảy mục trước giúp bạn <b>đoán đúng hướng thường xuyên hơn</b>. Mục này nói rằng đoán đúng hướng <b>vẫn chưa đủ</b>: bạn còn phải sống sót qua những phiên mà mô hình bảo là không thể xảy ra, và phải đặt cỡ tiền đủ nhỏ để một chuỗi xui không xoá sổ mình. Nói theo ngôn ngữ chính thức: bạn không tối đa hoá <b>số tiền trung bình</b>, bạn tối đa hoá <b>tốc độ lớn lên của số tiền trên đường đời duy nhất mà bạn thực sự đi</b>.</p>
+          <p class="wb-alert__msg">Sáu mục trước giúp bạn <b>đoán đúng hướng thường xuyên hơn</b>. Mục này nói rằng đoán đúng hướng <b>vẫn chưa đủ</b>: bạn còn phải sống sót qua những phiên mà mô hình bảo là không thể xảy ra, và phải đặt cỡ tiền đủ nhỏ để một chuỗi xui không xoá sổ mình. Nói theo ngôn ngữ chính thức: bạn không tối đa hoá <b>số tiền trung bình</b>, bạn tối đa hoá <b>tốc độ lớn lên của số tiền trên đường đời duy nhất mà bạn thực sự đi</b>.</p>
         </div></div>
       </section>
 
@@ -1896,7 +1930,7 @@
       <div class="wb-alert wb-alert--plain">
         <div class="wb-alert__body">
           <p class="wb-alert__title">Về tài liệu này</p>
-          <p class="wb-alert__msg">Tổng hợp phục vụ <b>mục đích học tập</b> — không phải khuyến nghị đầu tư. Các mốc chính sách và con số thị trường nên được kiểm tra lại tại thời điểm sử dụng; cách tự kiểm chứng bằng dữ liệu nằm ở <a href="#s9-kiemchung">Phần 09</a>. Nguồn: <code>so-tay-quy-tac-kinh-te-tai-chinh.md</code> · cập nhật 31/7/2026, số liệu đến phiên 29/7/2026.</p>
+          <p class="wb-alert__msg">Tổng hợp phục vụ <b>mục đích học tập</b> — không phải khuyến nghị đầu tư. Các mốc chính sách và con số thị trường nên được kiểm tra lại tại thời điểm sử dụng; cách tự kiểm chứng bằng dữ liệu nằm ở <a href="#s9-kiemchung">Phần 09</a>. Cập nhật 31/7/2026, số liệu đến phiên 29/7/2026.</p>
         </div>
       </div>
 
