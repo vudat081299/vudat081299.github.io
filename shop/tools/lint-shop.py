@@ -366,6 +366,34 @@ def check_data(path):
             err.append('labels.%s = %s nhưng không có chỗ nào trong `shipping` nói con số đó — '
                        'giỏ hàng và đoạn Giao hàng đang nói hai giá khác nhau' % (key, vnd(v)))
 
+    # Ngưỡng miễn phí ship phải quy ra được một SỐ CÂY NẾN hợp lý. Đây là phép kiểm
+    # liên-trường: `free_ship` và `products[].price` sống ở hai chỗ khác nhau trong file, và
+    # đổi một cái mà quên cái kia thì không có gì kêu — trang vẫn chạy, chỉ là lời hứa "mua
+    # thêm X nữa được miễn phí ship" thành vô nghĩa.
+    #
+    # Lỗi gốc, 21/09/2026: giá mẫu để 100.000 ₫ trong khi ngưỡng để 500.000 ₫, tức là khách
+    # phải mua NĂM cây nến thủ công mới được miễn ship. Cùng lúc đó bản đề xuất ở pitch/ lại
+    # tính toàn bộ lập luận trên giá 300.000 ₫ — con số thật duy nhất biết về shop này. Mở
+    # bản đề xuất rồi bấm sang cửa hàng là thấy hai giá lệch nhau ba lần.
+    #
+    # Ngưỡng phải nằm trong 2–4 cây. Khoảng này từng viết là 1–4 và thử ngược đã bác: để giá
+    # 600.000 ₫ thì k = 1, cổng im, nhưng k = 1 nghĩa là MỘT cây nến đã vượt ngưỡng — tức đơn
+    # nào cũng miễn ship và thanh "mua thêm bao nhiêu nữa" không bao giờ hiện gì. Đó đúng là
+    # ca hỏng mà phép kiểm này sinh ra để bắt, nên chặn dưới phải là 2.
+    prices = [x.get('price') for x in (d.get('products') or []) if isinstance(x.get('price'), int)]
+    fs = lb.get('free_ship')
+    if prices and isinstance(fs, int) and fs > 0:
+        lo = min(prices)
+        k = -(-fs // lo)
+        if k < 2:
+            err.append('ngưỡng miễn phí ship %s <= giá nến rẻ nhất %s — đơn nào cũng được miễn '
+                       'ship, nên thanh "mua thêm bao nhiêu nữa" không bao giờ hiện gì. Bỏ hẳn '
+                       'phí ship, hoặc nâng ngưỡng lên' % (vnd(fs), vnd(lo)))
+        elif k > 4:
+            err.append('ngưỡng miễn phí ship %s / nến rẻ nhất %s = phải mua %d cây mới được '
+                       'miễn ship — gần như không ai với tới, một lời hứa để trưng chứ không '
+                       'để dùng' % (vnd(fs), vnd(lo), k))
+
     # ── nội dung mẫu còn lại ───────────────────────────────────────────────────
     n = 1 if brand.get('placeholder') else 0
     for key in ('scents', 'products', 'values', 'faqs', 'shipping'):
