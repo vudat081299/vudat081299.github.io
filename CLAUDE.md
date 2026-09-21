@@ -9,15 +9,15 @@ cách chúng chạy tự động**.
 | `facts/` | [facts/CLAUDE.md](facts/CLAUDE.md) | `facts/tools/factlint.py check` + `verify` | 1, 2, 3, 4 |
 | `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3, 4 |
 | `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2, 4 |
-| `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` (kiểm cả trang mồ côi trong `pages/`, `cooking/`, và hai danh sách không niêm yết) | 2, 4 |
+| `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `sh tools/check-index.sh` (lint dữ liệu + đo trong trình duyệt) | 2, 4 + chạy thật |
 | `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` + `verify-ml.py` + `verify-betting-lab.py` | 2, 4 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2, 4 |
 | `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `sh shop/tools/check.sh` | 1, 2, 3, 4 + chạy thật |
 | các project khác | xem thư mục | — | 4 |
 
 Lớp 4 phủ **mọi** project vì `.github/workflows/gates.yml` chạy tất cả các cổng trên, không
-chỉ cổng của project vừa sửa. Riêng `shop/` có thêm một tầng mà cổng lint không có: `check.sh`
-mở trình duyệt thật và bấm (`shop/tools/smoke.js`) — xem mục dưới.
+chỉ cổng của project vừa sửa. `shop/` và `index.html` có thêm một tầng mà cổng lint không có:
+mở trình duyệt thật rồi bấm/đo (`shop/tools/smoke.js`, `tools/smoke-index.js`) — xem mục dưới.
 
 `pages/` và `cooking/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự
 chứa, không có luật nội dung chung để viết ra. Cổng của chúng chỉ kiểm thứ đúng/sai khách quan —
@@ -186,6 +186,35 @@ Ba thứ phải nhớ khi làm:
   data là chữ thuần.
 - **Số liệu suy ra được thì đừng ghi trong data** — `subj__count` ("3 pages") tính từ
   `files.length`, không ai phải sửa tay khi thêm một dòng.
+
+**Trang chủ KHÔNG còn dựng trên bộ web-builder (21/09/2026).** Bản trước ráp từ part của
+skill `web-builder` (`wb-shell` + `wb-navbar` + `wb-card`…); chủ trang yêu cầu thiết kế lại
+mà không dùng bộ ấy. `index.html` giờ **tự chứa**: một `<style>` riêng, prefix `ix-`, không
+`<link>` tới `web-builder.css`, không mặt chữ icon. **Đừng "sửa giúp" bằng cách ráp lại vào
+bộ** — đó là quyết định, không phải thiếu sót. Hai chỗ dễ hiểu nhầm: thư mục `web-builder/`
+vẫn còn và vẫn là một mục trong danh mục (nó là project riêng — trang tài liệu của bộ), và
+10 trang khác trong repo vẫn `<link>` tới `web-builder.css`, không đụng gì tới chúng.
+
+Rời bộ thì mất luôn bộ cổng G1–G9 của `references/page-review.md`, nên phải thay bằng cổng
+của chính repo — luật số 1 ở trên: cổng nằm trong repo, không nằm trong đầu ai.
+`tools/smoke-index.js` mở trình duyệt thật và đo 29 thứ: tràn ngang ở 11 bề rộng
+(1440→320), mép trái của gạch section / mô tả / hàng có thẳng nhau không, tương phản chữ ở
+cả hai nền, lọc tìm kiếm có còn trơ lại tiêu đề rỗng không, bàn phím (`/`, `Esc`, phím của
+từng mục), 35 href có mở được không, và trang có lặng lẽ quay về `wb-*` không.
+`sh tools/check-index.sh` chạy cả hai tầng một lệnh, cùng khuôn với `shop/tools/check.sh`.
+
+Bốn lỗi dưới đây là lỗi THẬT của bản thiết kế lại, cổng lint mù hoàn toàn với cả bốn, và
+chính script trên bắt được — đó là lý do nó tồn tại: `margin-left` âm kéo theo `border-bottom`
+làm gạch của hàng thò ra ngoài gạch section 8px; `padding: 9px 0 11px` trong media query xoá
+mất lề ngang nên chữ chạm sát mép màn ở 390px; `flex-basis: auto` của ô tìm kiếm làm thanh
+trên gãy thành bốn hàng ở 320px (flex xếp dòng theo basis **trước** khi co); và một bậc chữ
+xám chỉ đạt 2,79:1, dưới ngưỡng AA 4,5:1.
+
+Một điều nữa đã đo, vì nó là thứ dễ phình mà không ai để ý: **xin font thì xin đúng thứ
+dùng.** `Fraunces:opsz,wght@9..144,600..700` nặng 65 KB chỉ riêng subset `latin`; bỏ dải nét
+600..700 (trang chỉ dùng 600) còn 34 KB. Nhưng **đừng ghim `opsz`** cho rẻ hơn nữa — `opsz@144`
+còn 16 KB mà 144 là bản khắc cho cỡ chữ rất lớn, tiêu đề section 23–31px hoá ra mảnh như sợi
+tóc. Tổng font lần mở đầu ~100 KB.
 
 **Luật nội dung đã chốt cho `index.html` (08/09/2026):** mô tả **chỉ nói chủ đề của trang**,
 không kể bộ phận hay tính năng của trang. Ba đường biên, đo được:

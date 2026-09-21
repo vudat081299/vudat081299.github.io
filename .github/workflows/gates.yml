@@ -59,7 +59,7 @@ jobs:
         run: node cashy/scripts/check-layers.mjs
 
   smoke:
-    name: shop/ — chạy thật trong trình duyệt
+    name: shop/ + trang chủ — chạy thật trong trình duyệt
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -82,3 +82,10 @@ jobs:
             sleep 0.25
           done
           node shop/tools/smoke.js http://127.0.0.1:8347/shop/
+
+      # Trang chủ từ 21/09/2026 không còn dựng trên bộ web-builder nên mất luôn bộ cổng
+      # G1–G9 của skill ấy; đây là cái thay vào. Nó đo bề ngang, mép, tương phản và bàn
+      # phím — bốn lớp lỗi mà lint-collection.py mù hoàn toàn. Chạy chung job vì đã có
+      # sẵn Chromium ở đây; dựng riêng một job nữa là tải lại trình duyệt lần hai.
+      - name: Chạy smoke trang chủ
+        run: node tools/smoke-index.js http://127.0.0.1:8347/index.html
