@@ -445,8 +445,8 @@ footer a { color:var(--muted); }
 
 <header class="bar">
   <div class="bar__in">
-    <button class="iconbtn" id="tocBtn" aria-label="Contents">
-      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    <button class="iconbtn" id="tocBtn" aria-label="Mở mục lục">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
     <a class="bar__brand" href="../index.html">Machine Learning 101 <span class="d">· 13 chapters · no high-school math</span></a>
     <nav class="bar__nav">
@@ -460,12 +460,12 @@ footer a { color:var(--muted); }
       <a href="#s-names">Real names</a>
     </nav>
     <div class="bar__act">
-      <a class="iconbtn" href="../index.html" aria-label="Home">
-        <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+      <a class="iconbtn" href="../index.html" aria-label="Trang chủ">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
       </a>
-      <button class="iconbtn" id="themeBtn" aria-label="Light / dark">
-        <svg class="ic-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8"/></svg>
-        <svg class="ic-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <button class="iconbtn" id="themeBtn" aria-label="Sáng / Tối">
+        <svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8"/></svg>
+        <svg class="ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       </button>
     </div>
   </div>
@@ -677,11 +677,11 @@ footer a { color:var(--muted); }
           <div class="lab__b">
             <div class="pair">
               <figure>
-                <svg class="viz" id="m1-fit" viewBox="0 0 340 250"></svg>
+                <svg class="viz" id="m1-fit" role="img" aria-label="Biểu đồ phân tán ba mươi ngày bán nước chanh và đường thẳng bạn đang chọn đi qua đám điểm." viewBox="0 0 340 250"></svg>
                 <figcaption>Ba mươi ngày bán nước chanh, và đường thẳng bạn đang chọn.</figcaption>
               </figure>
               <figure>
-                <svg class="viz" id="m1-bar" viewBox="0 0 340 250"></svg>
+                <svg class="viz" id="m1-bar" role="img" aria-label="Hai thanh so điểm trừ: đường bạn đang chọn so với đường tốt nhất mà máy tìm được." viewBox="0 0 340 250"></svg>
                 <figcaption>Điểm trừ của <b>đường bạn đang chọn</b> so với đường tốt nhất mà máy tìm được.</figcaption>
               </figure>
             </div>
@@ -734,7 +734,7 @@ footer a { color:var(--muted); }
             <p class="lab__hint">Kéo <b>bước chân</b> lên quá mức rồi bấm Thả. Chú ý điểm trừ ở dòng kết quả: nó không chỉ ngừng giảm, <b>nó tăng vọt</b>.</p>
           </div>
           <div class="lab__b">
-            <div class="vscroll"><svg class="viz" id="m2-viz" viewBox="0 0 660 280" style="max-width:660px;margin:0 auto"></svg></div>
+            <div class="vscroll"><svg class="viz" id="m2-viz" role="img" aria-label="Mặt cắt một thung lũng chi phí với quả bóng lăn xuống đáy; bước chân càng dài thì bóng nảy càng mạnh và có thể văng hẳn ra ngoài." viewBox="0 0 660 280" style="max-width:660px;margin:0 auto"></svg></div>
             <div style="margin-top:16px">
               <div class="row"><label for="m2-a">Bước chân · α</label><div class="inline"><input type="range" id="m2-a" min="0.02" max="1.4" step="0.01" value="0.20"><span class="val" id="m2-av"></span></div></div>
               <div class="row"><label for="m2-x">Chỗ thả bóng</label><div class="inline"><input type="range" id="m2-x" min="-3.2" max="3.2" step="0.05" value="-2.60"><span class="val" id="m2-xv"></span></div></div>
@@ -811,7 +811,7 @@ footer a { color:var(--muted); }
             <p class="lab__hint">Đặt sự thật là <b>có</b>, rồi kéo lời đoán về gần 0. Xem điểm trừ của hai thước đo: cái cũ đứng gần như im, cái mới bay lên trời.</p>
           </div>
           <div class="lab__b">
-            <div class="vscroll"><svg class="viz" id="m3-viz" viewBox="0 0 660 260" style="max-width:660px;margin:0 auto"></svg></div>
+            <div class="vscroll"><svg class="viz" id="m3-viz" role="img" aria-label="Đường phạt của log loss theo mức tự tin của máy, vẽ cho cả hai trường hợp sự thật là có và là không." viewBox="0 0 660 260" style="max-width:660px;margin:0 auto"></svg></div>
             <div style="margin-top:16px">
               <div class="row"><span class="k">Sự thật</span><div class="chips" id="m3-y"><span class="chip on" data-y="1">bán hết (y = 1)</span><span class="chip" data-y="0">không (y = 0)</span></div></div>
               <div class="row"><label for="m3-p">Máy tin</label><div class="inline"><input type="range" id="m3-p" min="0.01" max="0.99" step="0.01" value="0.30"><span class="val" id="m3-pv"></span></div></div>
@@ -914,11 +914,11 @@ footer a { color:var(--muted); }
           <div class="lab__b">
             <div class="pair">
               <figure>
-                <svg class="viz" id="m4-fit" viewBox="0 0 340 250"></svg>
+                <svg class="viz" id="m4-fit" role="img" aria-label="Biểu đồ phân tán dữ liệu đề ôn (chấm đầy) và đề thử (vòng rỗng), kèm đường mà mô hình đang khớp qua chúng." viewBox="0 0 340 250"></svg>
                 <figcaption><b class="c-m">Điểm đầy</b> là đề ôn, <b>vòng rỗng</b> là đề thử — máy chưa từng thấy chúng.</figcaption>
               </figure>
               <figure>
-                <svg class="viz" id="m4-err" viewBox="0 0 340 250"></svg>
+                <svg class="viz" id="m4-err" role="img" aria-label="Hai đường điểm trừ theo độ vặn vẹo của mô hình: đường đề ôn đi xuống đều, đường đề thử chạm đáy rồi vọt lên." viewBox="0 0 340 250"></svg>
                 <figcaption>Điểm trừ theo độ vặn vẹo. Đường dưới là đề ôn, đường trên là đề thử.</figcaption>
               </figure>
             </div>
@@ -1001,11 +1001,11 @@ footer a { color:var(--muted); }
           <div class="lab__b">
             <div class="pair">
               <figure>
-                <svg class="viz" id="m5-plane" viewBox="0 0 300 300"></svg>
+                <svg class="viz" id="m5-plane" role="img" aria-label="Mặt phẳng hai chiều tô màu theo lời đoán của máy ở mọi vị trí, kèm các điểm dữ liệu thuộc hai nhãn." viewBox="0 0 300 300"></svg>
                 <figcaption>Vùng nền là <b>lời đoán của máy</b> ở mọi chỗ trên mặt phẳng.</figcaption>
               </figure>
               <figure>
-                <svg class="viz" id="m5-curve" viewBox="0 0 300 300"></svg>
+                <svg class="viz" id="m5-curve" role="img" aria-label="Đường cong học: điểm trừ tụt dần theo số vòng huấn luyện." viewBox="0 0 300 300"></svg>
                 <figcaption>Điểm trừ tụt dần trong lúc huấn luyện.</figcaption>
               </figure>
             </div>
@@ -1180,7 +1180,7 @@ footer a { color:var(--muted); }
           <div class="lab__b">
             <div class="pair">
               <figure>
-                <svg class="viz" id="m6-bars" viewBox="0 0 340 250"></svg>
+                <svg class="viz" id="m6-bars" role="img" aria-label="Bốn mức xếp chồng và ba khoảng cách giữa chúng; khoảng rộng nhất chỉ ra chỗ phải sửa trước." viewBox="0 0 340 250"></svg>
                 <figcaption>Ba khoảng cách. Cái nào rộng thì bệnh nằm ở đó.</figcaption>
               </figure>
               <figure>
@@ -1327,6 +1327,12 @@ footer a { color:var(--muted); }
 
         <p>Dừng tách khi nhóm đã thuần, hoặc quá nhỏ, hoặc cây đã quá sâu. Ba cái ngưỡng ấy chính là <span class="nm">hyperparameter</span> của cây, và chúng làm đúng việc của <span class="nm">regularization</span>: cây càng sâu càng học thuộc lòng.</p>
 
+        <!-- Từ đây tới mô hình 12, id "mN" của khối KHÔNG trùng số hiển thị: khối này là
+             id="m10" nhưng in ra "mô hình 7". Cặp lệch: m10↔7 · m7↔8 · m11↔9 · m12↔10 ·
+             m8↔11 · m9↔12. Các id ấy là tay nắm nội bộ — mọi id con (m10-viz, m10-go…)
+             và mọi tham chiếu JS đều bám theo CHÚNG, không theo số hiển thị, nên đổi id
+             là phải đổi cả cụm. Hôm nay không anchor nào trỏ tới chúng; nếu sau này cần
+             một liên kết "nhảy tới mô hình 8" thì tra bảng trên, đừng đoán theo số. -->
         <div class="lab" id="m10">
           <div class="lab__h">
             <p class="lab__k">Nghịch được · mô hình 7 / 13</p>
@@ -1334,7 +1340,7 @@ footer a { color:var(--muted); }
             <p class="lab__hint">Mười con vật, năm con là mèo. Thử cả ba câu hỏi: câu nào chẻ được đám lẫn lộn thành hai nhóm <b>thuần</b> nhất thì <b>information gain</b> lớn nhất — và đó chính là câu hỏi mà cây sẽ chọn.</p>
           </div>
           <div class="lab__b">
-            <div class="vscroll"><svg class="viz" id="m10-viz" viewBox="0 0 660 300" style="max-width:660px;margin:0 auto"></svg></div>
+            <div class="vscroll"><svg class="viz" id="m10-viz" role="img" aria-label="Một nhóm dữ liệu được tách theo câu hỏi bạn chọn, kèm lượng thông tin thu được của từng cách tách." viewBox="0 0 660 300" style="max-width:660px;margin:0 auto"></svg></div>
             <div style="margin-top:16px">
               <div class="row"><span class="k">Tách theo</span><div class="chips" id="m10-f">
                 <span class="chip on" data-f="0">tai vểnh?</span>
@@ -1408,7 +1414,7 @@ footer a { color:var(--muted); }
             <p class="lab__hint">Chọn <b>vạch dọc</b> và để ý: chỗ nào trong ảnh có mép dọc thì ô kết quả sáng lên, chỗ nào phẳng thì xám. Cùng tấm ảnh ấy, đổi sang <b>vạch ngang</b> — sáng tối đổi hẳn chỗ.</p>
           </div>
           <div class="lab__b">
-            <div class="vscroll"><svg class="viz" id="m7-viz" viewBox="0 0 660 320" style="max-width:660px;margin:0 auto"></svg></div>
+            <div class="vscroll"><svg class="viz" id="m7-viz" role="img" aria-label="Kính lúp ba nhân ba trượt qua từng ô của tấm ảnh, và bản đồ đặc trưng hiện dần ra bên cạnh." viewBox="0 0 660 320" style="max-width:660px;margin:0 auto"></svg></div>
             <div style="margin-top:16px">
               <div class="row"><span class="k">Chín cái núm</span><div class="chips" id="m7-k">
                 <span class="chip on" data-k="vd">vạch dọc</span>
@@ -1490,11 +1496,11 @@ footer a { color:var(--muted); }
           <div class="lab__b">
             <div class="pair">
               <figure>
-                <svg class="viz" id="m11-iou" viewBox="0 0 320 260"></svg>
+                <svg class="viz" id="m11-iou" role="img" aria-label="Hai khung chữ nhật chồng nhau: phần tô đậm là giao, cả vùng viền là hợp, và tỉ số IoU giữa hai phần đó." viewBox="0 0 320 260"></svg>
                 <figcaption>Phần <b class="c-l">tô đậm</b> là giao, cả vùng viền là hợp. IoU = giao ÷ hợp.</figcaption>
               </figure>
               <figure>
-                <svg class="viz" id="m11-nms" viewBox="0 0 320 260"></svg>
+                <svg class="viz" id="m11-nms" role="img" aria-label="Nhiều khung dự đoán chồng lên nhau kèm độ tự tin của từng khung, và kết quả sau khi dọn bớt khung trùng." viewBox="0 0 320 260"></svg>
                 <figcaption>Số trên mỗi khung là độ tự tin của nó.</figcaption>
               </figure>
             </div>
@@ -1609,7 +1615,7 @@ footer a { color:var(--muted); }
             <p class="lab__hint">B = 1 là <b>chọn tham lam</b>: mỗi bước lấy từ có xác suất cao nhất. Nó chọn "is" ngay bước đầu vì "is" phổ biến — rồi <b>không quay lại được nữa</b>. B = 3 giữ "visits" sống thêm một bước, và câu hay hơn nằm ở nhánh đó.</p>
           </div>
           <div class="lab__b">
-            <div class="vscroll"><svg class="viz" id="m12-viz" viewBox="0 0 660 330" style="max-width:660px;margin:0 auto"></svg></div>
+            <div class="vscroll"><svg class="viz" id="m12-viz" role="img" aria-label="Cây tìm kiếm chùm tia: mỗi bước giữ lại B câu dở dang tốt nhất, và câu dịch cuối cùng đổi theo B." viewBox="0 0 660 330" style="max-width:660px;margin:0 auto"></svg></div>
             <div style="margin-top:16px">
               <div class="row"><label for="m12-b">B · giữ mấy phương án</label><div class="inline"><input type="range" id="m12-b" min="1" max="4" step="1" value="1"><span class="val" id="m12-bv"></span></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m12-out"></pre></div>
@@ -1641,7 +1647,7 @@ footer a { color:var(--muted); }
           </div>
           <div class="lab__b">
             <div class="toks" id="m8-toks"></div>
-            <div class="vscroll"><svg class="viz" id="m8-viz" viewBox="0 0 660 288" style="max-width:660px;margin:0 auto"></svg></div>
+            <div class="vscroll"><svg class="viz" id="m8-viz" role="img" aria-label="Bảng sức nhìn của attention: bấm một từ để thấy nó dồn trọng số về những từ nào trong câu." viewBox="0 0 660 288" style="max-width:660px;margin:0 auto"></svg></div>
             <p class="lab__f">Các con số ở đây được đặt ra để cho thấy <b>cơ chế</b>, không lấy từ một máy đã huấn luyện. Trong máy thật, chúng được tính từ ba bộ núm và không ai đặt tay vào.</p>
           </div>
         </div>
@@ -1694,7 +1700,7 @@ footer a { color:var(--muted); }
             <p class="lab__hint">Bấm <b>Đổi chỗ xuất phát</b> vài lần rồi chạy lại. Có lần nó chia đúng ba cụm; có lần hai tâm giành nhau một cụm và bỏ trống một cụm. Đó là <b>cái bẫy, không phải lỗi</b>.</p>
           </div>
           <div class="lab__b">
-            <svg class="viz" id="m9-viz" viewBox="0 0 330 300" style="max-width:400px;margin:0 auto"></svg>
+            <svg class="viz" id="m9-viz" role="img" aria-label="Các điểm dữ liệu và hai tâm cụm; mỗi lần bấm là một bước gán điểm rồi dời tâm, cho tới khi không đổi nữa." viewBox="0 0 330 300" style="max-width:400px;margin:0 auto"></svg>
             <div style="margin-top:16px">
               <div class="row"><span class="k">Hai bước</span><div class="inline"><button class="btn" id="m9-assign">1 · Gán về tâm gần nhất</button><button class="btn" id="m9-move">2 · Dời tâm</button></div></div>
               <div class="row"><span class="k">Hoặc</span><div class="inline"><button class="btn btn--solid" id="m9-run">Chạy tới khi dừng</button><button class="btn" id="m9-seed">Đổi chỗ xuất phát</button></div></div>
@@ -1781,7 +1787,7 @@ footer a { color:var(--muted); }
             <p class="lab__hint">Xe tự hành trên sáu ô. Ô 1 đáng <b>100 điểm</b> nhưng ở xa; ô 6 chỉ đáng <b>40 điểm</b> nhưng ở ngay bên. Kéo <b>γ</b> qua mốc 0,74 và xem mũi tên ở ô 5 quay đầu.</p>
           </div>
           <div class="lab__b">
-            <div class="vscroll"><svg class="viz" id="m13-viz" viewBox="0 0 660 260" style="max-width:660px;margin:0 auto"></svg></div>
+            <div class="vscroll"><svg class="viz" id="m13-viz" role="img" aria-label="Sáu ô của xe thăm dò với mũi tên chỉ hành động tối ưu ở mỗi ô; kéo γ thì mũi tên ở ô 5 lật chiều." viewBox="0 0 660 260" style="max-width:660px;margin:0 auto"></svg></div>
             <div style="margin-top:16px">
               <div class="row"><label for="m13-g">γ · độ kiên nhẫn</label><div class="inline"><input type="range" id="m13-g" min="0.1" max="0.99" step="0.01" value="0.50"><span class="val" id="m13-gv"></span></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m13-out"></pre></div>
@@ -2013,7 +2019,7 @@ footer a { color:var(--muted); }
 </footer>
 
 <button class="totop" id="toTop" aria-label="Lên đầu trang">
-  <svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
 
