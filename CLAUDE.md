@@ -178,9 +178,14 @@ trong khi `Data & AI` xếp ngược chiều học và `Thinking` để kho tra 
 2. Section là **cái kệ** (`Tools`, `Everyday`, `Books`): **cái hay với tay tới nhất trước.**
 3. Cùng một mức, không phân được đâu là cửa vào (`Science`): **cái gần việc chủ trang nhất
    trước** — vì vậy `Cryptography` đứng trước `Chemistry` / `Relativity`.
-4. **Thứ tự 8 section phục vụ chủ trang, không phải khách.** Đây là bảng nhảy việc mở hằng
-   ngày nên `Tools` đứng đầu; nếu trang đổi vai thành portfolio thì đảo lại thứ tự này *trước*,
-   đừng vá từng mục.
+4. **Thứ tự 8 section là quyết định của chủ trang, không suy ra được từ nội dung.** Chốt
+   21/09/2026: `Everyday` · `Cooking` · `Book Summaries` · `Thinking & Communication` ·
+   `Tools` · `Science` · `Data & AI` · `Master's Degree`. Trục **đọc được** từ chính thứ tự
+   ấy là *đời thường trước, chuyên sâu sau*: bốn section đầu là thứ dùng ngoài giờ làm, bốn
+   section cuối nặng dần tới `Master's`, `Tools` nằm đúng chỗ bản lề giữa hai nửa. Nói rõ
+   để người sau không hiểu nhầm: **đó là cách đọc thứ tự, không phải lý do chủ trang nói
+   ra.** Bản 20/09 xếp `Tools` đầu vì coi trang là bảng nhảy việc mở hằng ngày; chủ trang
+   đổi ý ngày 21/09. Muốn đổi nữa thì đảo lại *cả dòng này* trước, đừng vá từng mục.
 
 Hai chỗ **cố ý** không có luật, đừng đi tìm: **ba môn cao học xếp tuỳ ý** (repo không có tín
 hiệu học kỳ nào, cả bốn thư mục commit cùng ngày 08/09; chủ trang chốt giữ nguyên 21/09/2026),
