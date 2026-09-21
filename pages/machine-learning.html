@@ -136,8 +136,8 @@ html.dark .ic-moon { display:none; }
 .toc { position:sticky; top:68px; max-height:calc(100vh - 96px); overflow-y:auto; padding-right:6px; font-size:13px; }
 .toc::-webkit-scrollbar { width:7px; }
 .toc::-webkit-scrollbar-thumb { background:var(--border-2); border-radius:4px; }
-.toc h4 { font-family:var(--mono); font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--subtle); margin:16px 0 6px; font-weight:600; }
-.toc h4:first-child { margin-top:0; }
+.toc .toc__g { font-family:var(--mono); font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--subtle); margin:16px 0 6px; font-weight:600; }
+.toc .toc__g:first-child { margin-top:0; }
 .toc a { display:block; text-decoration:none; color:var(--muted); padding:4px 9px; border-radius:var(--radius-sm); line-height:1.45; border-left:2px solid transparent; }
 .toc a:hover { color:var(--ink); background:var(--surface-2); }
 .toc a.on { color:var(--ink); font-weight:640; border-left-color:var(--ink); background:var(--surface-2); }
@@ -571,13 +571,13 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
   <div class="layout">
     <div class="scrim" id="scrim"></div>
-    <nav class="toc" id="toc">
-      <h4>Mở đầu</h4>
+    <nav class="toc" id="toc" aria-label="Mục lục">
+      <p class="toc__g">Mở đầu</p>
       <a href="#s-why">Học máy giải bài toán gì</a>
       <a href="#s-machine">Cỗ máy ba bộ phận</a>
       <a href="#s-thread">Ví dụ xuyên suốt &amp; ký hiệu</a>
 
-      <h4>Chặng 1 — Một đường thẳng</h4>
+      <p class="toc__g">Chặng 1 — Một đường thẳng</p>
       <a href="#s-linreg">Hồi quy tuyến tính</a>
       <a href="#s-cost">Hàm mất mát &amp; mặt chi phí</a>
       <a href="#s-gd">Gradient descent</a>
@@ -585,7 +585,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-logistic">Phân loại &amp; hồi quy logistic</a>
       <a href="#s-overfit">Quá khớp &amp; regularization</a>
 
-      <h4>Chặng 2 — Xếp chồng</h4>
+      <p class="toc__g">Chặng 2 — Xếp chồng</p>
       <a href="#s-nn">Từ một nơ-ron tới một lớp</a>
       <a href="#s-act">Hàm kích hoạt: mắt xích sống còn</a>
       <a href="#s-deep">Mạng sâu &amp; vector hoá</a>
@@ -595,7 +595,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-optim">Mini-batch, momentum, Adam</a>
       <a href="#s-regdl">Dropout, batch norm, tinh chỉnh</a>
 
-      <h4>Chặng 3 — Khi nó không chạy</h4>
+      <p class="toc__g">Chặng 3 — Khi nó không chạy</p>
       <a href="#s-split">Chia dữ liệu cho đúng</a>
       <a href="#s-bias">Bias &amp; variance</a>
       <a href="#s-metric">Một số đo duy nhất</a>
@@ -604,7 +604,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-e2e">End-to-end hay chia khúc</a>
       <a href="#s-trees">Cây quyết định &amp; XGBoost</a>
 
-      <h4>Chặng 4 — Dữ liệu có hình dạng</h4>
+      <p class="toc__g">Chặng 4 — Dữ liệu có hình dạng</p>
       <a href="#s-cnn">Vì sao ảnh cần kiến trúc khác</a>
       <a href="#s-cnnparts">Padding, stride, pooling, kênh</a>
       <a href="#s-cnnarch">ResNet, Inception, MobileNet</a>
@@ -617,14 +617,14 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-attn">Attention</a>
       <a href="#s-transformer">Transformer</a>
 
-      <h4>Chặng 5 — Không có nhãn</h4>
+      <p class="toc__g">Chặng 5 — Không có nhãn</p>
       <a href="#s-kmeans">Phân cụm k-means</a>
       <a href="#s-anomaly">Phát hiện bất thường</a>
       <a href="#s-pca">PCA</a>
       <a href="#s-recsys">Hệ gợi ý</a>
       <a href="#s-rl">Học tăng cường</a>
 
-      <h4>Kết &amp; tra cứu</h4>
+      <p class="toc__g">Kết &amp; tra cứu</p>
       <a href="#s-dated">Chỗ nào của khoá đã cũ</a>
       <a href="#s-mistakes">14 sai lầm hay gặp</a>
       <a href="#s-cheat">Bảng tra cứu</a>
@@ -4032,6 +4032,8 @@ function accuracy(net, data) {
       var s = document.createElementNS(NS, 'svg');
       s.setAttribute('viewBox', '0 0 60 60');
       s.setAttribute('class', 'viz');
+      s.setAttribute('role', 'img');
+      s.setAttribute('aria-label', 'Vùng kích hoạt của nơ-ron ẩn thứ ' + (i + 1) + ': ô càng đậm thì nơ-ron càng kêu to ở chỗ đó trên mặt phẳng đầu vào.');
       s.style.width = '100%';
       (function (idx) {
         var n = 16, a, b;
