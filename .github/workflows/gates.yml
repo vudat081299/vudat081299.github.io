@@ -1,0 +1,79 @@
+name: Cổng chất lượng
+
+# Lớp cổng thứ tư. Ba lớp kia (PostToolUse, pre-commit, pre-push) chạy trên MÁY của người
+# sửa — nên chúng biến mất khi ai đó dùng `--no-verify`, khi commit được tạo từ giao diện
+# web của GitHub, hoặc khi một phiên quên chạy `install-hooks.sh`. Lớp này chạy trên máy
+# của GitHub và không ai tắt được.
+#
+# Nó cố ý chạy cổng của MỌI project con, không chỉ project vừa sửa: repo này có nhiều phiên
+# agent chạy song song và cùng push thẳng lên main, nên một thay đổi ở đây làm hỏng chỗ kia
+# là chuyện đã xảy ra.
+#
+# Việc "chạy thật trong trình duyệt" tách thành job riêng vì nó cần tải Chromium (~120MB).
+# Tách ra thì kết quả lint vẫn hiện trong vài chục giây kể cả khi job kia còn đang tải.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gates-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Cổng tĩnh
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Trang chủ
+        run: python3 tools/lint-collection.py
+      - name: facts/
+        run: |
+          python3 facts/tools/factlint.py check
+          python3 facts/tools/factlint.py verify
+      - name: pages/
+        run: python3 pages/tools/lint-pages.py
+      - name: cooking/
+        run: python3 cooking/tools/lint-cooking.py
+      - name: shop/
+        run: python3 shop/tools/lint-shop.py -v
+      - name: masters-degree/data-science-roadmap
+        working-directory: masters-degree/data-science-roadmap
+        run: node tools/gate.mjs
+      - name: cashy/ — ranh giới tầng
+        run: node cashy/scripts/check-layers.mjs
+
+  smoke:
+    name: shop/ — chạy thật trong trình duyệt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Cổng lint bắt được cú pháp và dữ liệu, KHÔNG bắt được hành vi. Hai lỗi nặng nhất
+      # từng xảy ra ở shop/ đều đi qua lint sạch sẽ — xem comment đầu shop/tools/smoke.js.
+      - name: Cài Chromium
+        run: |
+          npm install --no-save playwright-core@1
+          npx --yes playwright@1 install --with-deps chromium
+
+      - name: Chạy smoke
+        run: |
+          python3 -m http.server 8347 >/dev/null 2>&1 &
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null http://127.0.0.1:8347/shop/ && break
+            sleep 0.25
+          done
+          node shop/tools/smoke.js http://127.0.0.1:8347/shop/

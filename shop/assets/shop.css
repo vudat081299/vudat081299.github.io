@@ -98,6 +98,16 @@ html[data-theme="dark"] .grain { mix-blend-mode: screen; opacity: .22; }
 .ms--sm { font-size: 18px; }
 .ms--lg { font-size: 30px; }
 
+/* Icon là LIGATURE: chữ "shopping_bag" chỉ biến thành cái túi khi font đã về. Font ấy
+   nằm ở Google Fonts, tức là một máy chủ khác — mạng chậm, bị chặn, hoặc đứt giữa chừng
+   thì trang hiện nguyên chữ "shopping_bag" nằm giữa câu. Đo được trong phiên này: máy
+   không ra được fonts.googleapis.com, và nút giỏ hàng đọc thành "dark_modeshopping_bag".
+   Nên: giấu icon cho tới khi font thật sự nạp xong. Ô trống còn đỡ hơn một từ tiếng Anh
+   lạc giữa tiếng Việt, và nút nào cũng đã có aria-label nên máy đọc màn hình không mất gì.
+   Trình duyệt không có Font Loading API thì hiện luôn — thà chữ còn hơn không có gì. */
+html.js .ms { visibility: hidden; }
+html.js.icons .ms, html:not(.js) .ms { visibility: visible; }
+
 .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gut); }
 
 /* ── chữ ──────────────────────────────────────────────────────────────────── */
@@ -848,4 +858,234 @@ html.js .rv.is-in { opacity: 1; transform: none; }
   html { transition: none; }
   .rail__name { max-width: 190px; opacity: 1; }
   .pa-flame { opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TÌM MÙI (scent-finder.html)
+   Một câu một màn. Nền của cả trang nghiêng dần về màu của mùi đang dẫn điểm —
+   nên tới lúc ra kết quả, người ta đã nhìn màu đó một lúc rồi. Dùng lại
+   @property --scent-glow / --scent-glass khai ở trên, vì thế nó chuyển dần được.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.sf {
+  position: relative; min-height: calc(100svh - 96px);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 96px 0 72px;
+}
+.sf__wash {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .5;
+  background:
+    radial-gradient(64vw 52vh at 76% 16%, var(--scent-glow) 0%, transparent 62%),
+    radial-gradient(52vw 46vh at 14% 84%, var(--scent-glass) 0%, transparent 66%);
+  transition: opacity .9s var(--ease-soft);
+}
+html[data-theme="dark"] .sf__wash { opacity: .34; }
+
+/* Một màn — giới thiệu, một câu hỏi, hoặc kết quả. Chỉ màn mang .is-on được thấy.
+   Dùng visibility chứ không display:none: phần tử ẩn vẫn phải đo được chiều cao để
+   khung không giật một nhịp mỗi lần sang câu mới. */
+.sfstep {
+  position: absolute; inset-inline: 0; opacity: 0; visibility: hidden;
+  transform: translateY(18px); pointer-events: none;
+  transition: opacity .5s var(--ease), transform .55s var(--ease), visibility 0s .55s;
+}
+.sfstep.is-on {
+  position: relative; opacity: 1; visibility: visible; transform: none;
+  pointer-events: auto; transition-delay: 0s;
+}
+.sfstep.is-out { transform: translateY(-18px); }
+
+/* Một câu hỏi là một việc duy nhất trên màn hình, nên nó đứng giữa. Bản trước để lề
+   trái với `max-width:30ch`: ở màn 1280px câu hỏi xuống bốn dòng còn nửa phải trống trơn. */
+.sfmid { max-width: 800px; margin-inline: auto; }
+.sfhead { max-width: 26ch; }
+.sfq {
+  font-family: var(--f-display); font-weight: 500; letter-spacing: -.014em; line-height: 1.08;
+  margin: 0 0 14px; font-size: clamp(29px, 3.9vw, 46px);
+}
+.sfhint {
+  color: var(--ink-2); font-size: 14.5px; line-height: 1.7; margin: 0 0 30px; max-width: 54ch;
+  padding-left: 14px; border-left: 2px solid var(--line);
+}
+
+/* ── thanh tiến trình ──────────────────────────────────────────────────────── */
+.sfbar { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; }
+.sfbar__pips { display: flex; gap: 6px; flex: none; }
+.sfbar__pip {
+  width: 26px; height: 3px; border-radius: 999px; background: var(--line);
+  transition: background-color .45s var(--ease-soft), width .45s var(--ease);
+}
+.sfbar__pip.is-done { background: var(--ember); }
+.sfbar__pip.is-now { background: var(--ember); width: 44px; }
+.sfbar__n { font-size: 11.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); }
+
+/* ── ô đáp án ──────────────────────────────────────────────────────────────── */
+.sfopts { display: grid; gap: 11px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.sfopt {
+  position: relative; display: flex; align-items: center; gap: 14px; width: 100%;
+  padding: 19px 22px; text-align: left; cursor: pointer;
+  border-radius: var(--r-md); border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--card) 76%, transparent);
+  backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px);
+  transition: transform .4s var(--ease), border-color .3s, box-shadow .4s var(--ease),
+              background-color .3s;
+}
+.sfopt:hover { transform: translateY(-3px); border-color: var(--ember); box-shadow: var(--shadow-md); }
+.sfopt.is-picked { border-color: var(--ember); background: color-mix(in srgb, var(--ember) 9%, var(--card)); }
+.sfopt__k {
+  flex: none; width: 27px; height: 27px; border-radius: 8px; border: 1px solid var(--line);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11.5px; color: var(--ink-3); transition: background-color .3s, color .3s, border-color .3s;
+}
+.sfopt:hover .sfopt__k, .sfopt.is-picked .sfopt__k {
+  background: var(--ember); color: var(--on-ember); border-color: var(--ember);
+}
+.sfopt__t { font-size: 15.5px; font-weight: 400; line-height: 1.35; }
+.sfopt__s { display: block; font-size: 12.5px; color: var(--ink-3); margin-top: 3px; }
+
+/* Các ô rơi vào lần lượt chứ không hiện cùng một lúc — mắt đọc kịp từng dòng. */
+html.js .sfstep.is-on .sfopt { animation: sfIn .5s var(--ease) backwards; }
+@keyframes sfIn { from { opacity: 0; transform: translateY(14px); } }
+
+.sfback {
+  display: inline-flex; align-items: center; gap: 7px; margin-top: 26px; padding: 0;
+  background: none; border: 0; cursor: pointer; color: var(--ink-3); font-size: 13px;
+  transition: color .3s;
+}
+.sfback:hover { color: var(--ember); }
+
+/* ── kết quả ───────────────────────────────────────────────────────────────── */
+.sfres { display: grid; gap: clamp(28px, 4vw, 56px); grid-template-columns: minmax(0, .82fr) minmax(0, 1fr); align-items: center; }
+.sfres__art { position: relative; display: flex; align-items: center; justify-content: center; }
+.sfres__art .pcard__svg { width: min(100%, 330px); height: auto; }
+.sfres__halo {
+  position: absolute; inset: -8% -4% 4%; z-index: -1; border-radius: 50%;
+  background: radial-gradient(circle, var(--scent-glow) 0%, transparent 66%);
+  opacity: .34; filter: blur(22px); animation: sfBreathe 5.3s var(--ease-soft) infinite;
+}
+@keyframes sfBreathe { 0%, 100% { opacity: .28; transform: scale(1); } 50% { opacity: .44; transform: scale(1.06); } }
+
+.sfmatch { display: flex; align-items: center; gap: 13px; margin-bottom: 16px; }
+.sfmatch__ring { position: relative; width: 52px; height: 52px; flex: none; }
+.sfmatch__ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.sfmatch__ring circle { fill: none; stroke-width: 3.5; stroke-linecap: round; }
+.sfmatch__pct {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 500;
+}
+.sfmatch__t { font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+
+.sfname { font-family: var(--f-display); font-weight: 500; letter-spacing: -.016em; line-height: 1; margin: 0 0 10px; font-size: clamp(38px, 6vw, 68px); }
+.sfslot { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--ember); margin: 0 0 16px; }
+.sffeel { color: var(--ink-2); line-height: 1.75; margin: 0 0 24px; max-width: 48ch; }
+
+.sfwhy { border-top: 1px solid var(--line); padding-top: 18px; margin-bottom: 24px; }
+.sfwhy h3 { font-size: 11.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; margin: 0 0 12px; }
+.sfwhy ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.sfwhy li { display: flex; gap: 10px; align-items: baseline; font-size: 14px; line-height: 1.5; }
+.sfwhy li .ms { color: var(--ember); font-size: 15px; flex: none; transform: translateY(2px); }
+.sfwhy b { font-weight: 500; }
+.sfwhy em { font-style: normal; color: var(--ink-3); }
+
+.sfacts { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.sfalt {
+  display: flex; align-items: center; gap: 13px; margin-top: 30px; padding: 15px 18px;
+  border: 1px dashed var(--line); border-radius: var(--r-md); text-decoration: none;
+  transition: border-color .3s, transform .4s var(--ease);
+}
+.sfalt:hover { border-color: var(--ember); transform: translateX(3px); }
+.sfalt__sw { width: 34px; height: 34px; border-radius: 50%; flex: none; border: 1px solid var(--line-2); }
+.sfalt__t { font-size: 13.5px; line-height: 1.4; }
+.sfalt__t span { display: block; color: var(--ink-3); font-size: 12px; }
+
+@media (max-width: 860px) {
+  .sfres { grid-template-columns: 1fr; }
+  .sfres__art { order: -1; }
+  .sfres__art .pcard__svg { width: min(72%, 240px); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HỘP QUÀ (gift.html)
+   Trái là bốn bước, phải là cái hộp. Hộp vẽ lại mỗi lần chọn — người ta thấy
+   thứ mình đang mua chứ không đọc một danh sách dòng chữ.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.gb { display: grid; gap: clamp(28px, 4vw, 60px); grid-template-columns: minmax(0, 1fr) minmax(0, .78fr); align-items: start; padding-bottom: 96px; }
+
+.gbstep { margin-bottom: 38px; }
+.gbstep__h { display: flex; align-items: baseline; gap: 12px; margin: 0 0 4px; }
+.gbstep__n {
+  flex: none; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--line);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 11.5px; color: var(--ink-3);
+}
+.gbstep.is-done .gbstep__n { background: var(--ember); border-color: var(--ember); color: var(--on-ember); }
+.gbstep__t { font-family: var(--f-display); font-size: 25px; font-weight: 600; letter-spacing: -.01em; }
+.gbstep__d { color: var(--ink-3); font-size: 13px; margin: 0 0 16px 36px; }
+.gbstep__body { margin-left: 36px; }
+
+.gbpick { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(186px, 1fr)); }
+.gbopt {
+  position: relative; display: block; width: 100%; text-align: left; cursor: pointer;
+  padding: 15px 17px; border-radius: 14px; border: 1px solid var(--line); background: var(--card);
+  transition: transform .35s var(--ease), border-color .3s, box-shadow .35s var(--ease);
+}
+.gbopt:hover { transform: translateY(-2px); border-color: var(--ember); box-shadow: var(--shadow-sm); }
+.gbopt.is-picked { border-color: var(--ember); box-shadow: inset 0 0 0 1px var(--ember); }
+.gbopt__t { font-size: 14.5px; font-weight: 500; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.gbopt__d { font-size: 12.5px; color: var(--ink-3); line-height: 1.55; margin-top: 4px; }
+.gbopt__p { font-size: 12px; color: var(--ember); white-space: nowrap; }
+
+/* Chọn mùi cho từng ngăn: mỗi ngăn một hàng chấm màu. */
+.gbslot { border: 1px solid var(--line); border-radius: 14px; padding: 13px 15px; margin-bottom: 9px; background: var(--card); }
+.gbslot__h { font-size: 12px; color: var(--ink-3); margin-bottom: 9px; letter-spacing: .06em; }
+.gbdots { display: flex; flex-wrap: wrap; gap: 8px; }
+.gbdot {
+  position: relative; width: 38px; height: 38px; border-radius: 50%; cursor: pointer; padding: 0;
+  border: 1px solid var(--line); transition: transform .3s var(--ease), box-shadow .3s;
+}
+.gbdot:hover { transform: scale(1.1); }
+.gbdot.is-picked { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--ember); }
+.gbdot span {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 10.5px; font-weight: 600; color: #FFF8EF; text-shadow: 0 1px 3px rgba(0,0,0,.55);
+}
+
+.gbmsg { position: relative; }
+.gbmsg textarea { min-height: 92px; resize: vertical; font-family: var(--f-display); font-size: 17px; line-height: 1.6; }
+.gbcount { position: absolute; right: 12px; bottom: 9px; font-size: 11.5px; color: var(--ink-3); }
+.gbcount.is-over { color: var(--ember); }
+
+/* ── cái hộp ───────────────────────────────────────────────────────────────── */
+.gbside { position: sticky; top: 104px; }
+.gbbox {
+  position: relative; border-radius: var(--r-lg); border: 1px solid var(--line);
+  background: var(--card); box-shadow: var(--shadow-md); overflow: hidden;
+}
+.gbbox__art { position: relative; padding: 26px 22px 6px; }
+.gbbox__art svg { width: 100%; height: auto; }
+.gbbox__glow {
+  position: absolute; inset: 12% 8% 30%; z-index: 0; border-radius: 50%; filter: blur(26px); opacity: .4;
+  background: radial-gradient(circle, var(--scent-glow) 0%, transparent 68%);
+}
+.gbsum { padding: 4px 22px 22px; }
+.gbsum h3 { font-family: var(--f-display); font-size: 21px; font-weight: 600; margin: 0 0 12px; }
+.gbrow { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; font-size: 13.5px; padding: 6px 0; }
+.gbrow span:first-child { color: var(--ink-2); }
+.gbrow--save { color: var(--ember); }
+.gbrow--total { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 12px; font-size: 16px; font-weight: 500; }
+.gbnote { font-size: 12px; color: var(--ink-3); line-height: 1.6; margin: 12px 0 0; }
+
+@media (max-width: 940px) {
+  .gb { grid-template-columns: 1fr; }
+  .gbside { position: static; }
+  .gbstep__body, .gbstep__d { margin-left: 0; }
+}
+@media (max-width: 560px) {
+  .sfopt { padding: 16px 17px; }
+  .sfhint { margin-bottom: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sfstep { transition: none; }
+  html.js .sfstep.is-on .sfopt { animation: none; }
+  .sfres__halo { animation: none; }
 }

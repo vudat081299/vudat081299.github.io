@@ -23,6 +23,7 @@ Exit code: 1 nếu có LỖI, 0 nếu không.
 """
 import collections
 import html as htmlmod
+import itertools
 import json
 import pathlib
 import re
@@ -153,6 +154,167 @@ def check_data(path):
     for k, w in scents.items():
         if not used[k]:
             err.append('%s: không có sản phẩm nào trỏ vào — section sẽ không có nút mua' % w)
+
+    # ── Tìm mùi ────────────────────────────────────────────────────────────────
+    # Đây là cổng đáng giá nhất của trang này. Bộ câu hỏi chấm điểm bằng trọng số, mà
+    # trọng số thì sửa một con số là lệch cả kết quả — và lệch KHÔNG kêu: trang vẫn chạy,
+    # vẫn ra một mùi, chỉ là mùi ấy sai. Nên cổng duyệt TOÀN BỘ tổ hợp đáp án (vài trăm,
+    # máy làm trong mili-giây) rồi hỏi ba câu mà mắt người không tự trả lời được:
+    #   · mùi nào KHÔNG BAO GIỜ thắng? → cửa hàng có một mùi mà trang này không bao giờ
+    #     giới thiệu cho ai. Đó là lỗi, không phải lựa chọn thiết kế.
+    #   · mùi nào thắng QUÁ NỬA số tổ hợp? → bộ câu hỏi chỉ là một cái phễu đổ về một mùi.
+    #   · bao nhiêu tổ hợp hoà ở đỉnh mà câu phân xử cũng không gỡ được? → số đó rơi vào
+    #     thứ tự khai trong `scents`, tức là thiên vị mùi đứng trước.
+    quiz = d.get('quiz') or {}
+    qs = quiz.get('questions') or []
+    if not qs:
+        err.append('quiz: không có câu hỏi nào')
+    scoring, intent = [], []
+    seen_q = set()
+    for i, q in enumerate(qs):
+        w = 'quiz.questions[%d]' % i
+        need(q, ('k', 'q', 'hint', 'options'), w, err)
+        w = 'câu hỏi "%s"' % (q.get('k') or i)
+        if q.get('k') in seen_q:
+            err.append('%s: k trùng' % w)
+        seen_q.add(q.get('k'))
+        opts = q.get('options') or []
+        if len(opts) < 2:
+            err.append('%s: phải có ít nhất 2 đáp án' % w)
+        seen_o = set()
+        for j, o in enumerate(opts):
+            ow = '%s › đáp án[%d]' % (w, j)
+            need(o, ('k', 't'), ow, err)
+            if o.get('k') in seen_o:
+                err.append('%s: k "%s" trùng trong cùng câu' % (ow, o.get('k')))
+            seen_o.add(o.get('k'))
+            if q.get('scoring') is False:
+                if not str(o.get('go', '')).strip():
+                    err.append('%s: câu không chấm điểm thì mỗi đáp án phải có "go"' % ow)
+            else:
+                wt = o.get('w')
+                if not isinstance(wt, dict) or not wt:
+                    err.append('%s: thiếu trọng số "w"' % ow)
+                    continue
+                for k, v in wt.items():
+                    if k not in scents:
+                        err.append('%s: trọng số trỏ vào mùi "%s" không có trong scents' % (ow, k))
+                    if not isinstance(v, int) or isinstance(v, bool) or v <= 0:
+                        err.append('%s: trọng số của "%s" phải là số nguyên dương, đang là %r' % (ow, k, v))
+                # Đáp án không đẩy về mùi nào là một đáp án chết: bấm vào nó không đổi gì.
+                if not any(isinstance(v, int) and v > 0 for v in wt.values()):
+                    err.append('%s: mọi trọng số đều bằng 0 — chọn đáp án này không đổi kết quả' % ow)
+        (intent if q.get('scoring') is False else scoring).append(q)
+
+    # mỗi "go" phải có một mục outro tương ứng, nếu không trang kết quả không có nút nào
+    outro = {x.get('k') for x in (quiz.get('outro') or [])}
+    for oi, o in enumerate(quiz.get('outro') or []):
+        need(o, ('k', 't', 'd'), 'quiz.outro[%d]' % oi, err)
+    for q in intent:
+        for o in q.get('options') or []:
+            if o.get('go') and o['go'] not in outro:
+                err.append('câu ý định: "go": "%s" không có mục nào trong quiz.outro — '
+                           'trang kết quả sẽ không có nút dẫn đi đâu' % o['go'])
+
+    tb = quiz.get('tiebreak')
+    if qs and tb not in [q.get('k') for q in scoring]:
+        err.append('quiz.tiebreak "%s" phải là k của một câu CÓ chấm điểm — hoà ở đỉnh sẽ '
+                   'không có gì phân xử ngoài thứ tự khai trong scents' % tb)
+
+    if scoring and not err:
+        combos = 1
+        for q in scoring:
+            combos *= len(q.get('options') or [])
+        if combos > 200000:
+            note.append('quiz: %d tổ hợp, quá nhiều để duyệt hết — bỏ qua phần kiểm mùi thắng' % combos)
+        else:
+            order = {k: i for i, k in enumerate(scents)}
+            tw_q = [q for q in scoring if q.get('k') == tb]
+            tb_i = scoring.index(tw_q[0]) if tw_q else 0
+            wins = collections.Counter()
+            ties = unresolved = 0
+            for combo in itertools.product(*[q['options'] for q in scoring]):
+                sc = collections.Counter()
+                for o in combo:
+                    for k, v in (o.get('w') or {}).items():
+                        sc[k] += v
+                best = max(sc.values()) if sc else 0
+                top = [k for k in scents if sc.get(k, 0) == best]
+                if len(top) > 1:
+                    ties += 1
+                    tw = combo[tb_i].get('w') or {}
+                    m = max(tw.get(k, 0) for k in top)
+                    top2 = [k for k in top if tw.get(k, 0) == m]
+                    if len(top2) > 1:
+                        unresolved += 1
+                    top = top2
+                wins[sorted(top, key=lambda k: order[k])[0]] += 1
+
+            for k in scents:
+                if not wins[k]:
+                    err.append('quiz: %s KHÔNG BAO GIỜ thắng trong %d tổ hợp đáp án — '
+                               'trang Tìm mùi sẽ không bao giờ giới thiệu nó cho ai. Sửa trọng số '
+                               'hoặc bỏ mùi này khỏi cửa hàng.' % (scents[k], combos))
+                elif wins[k] * 2 > combos:
+                    err.append('quiz: %s thắng %d/%d tổ hợp (%.0f%%) — bộ câu hỏi đang là '
+                               'một cái phễu đổ về một mùi, không phải một phép chọn'
+                               % (scents[k], wins[k], combos, 100.0 * wins[k] / combos))
+            spread = (max(wins.values()) - min(wins.values())) * 100.0 / combos if wins else 0
+            names = {c.get('k'): (c.get('name') or c.get('k')) for c in (d.get('scents') or [])}
+            note.append('quiz: %d tổ hợp · %s · chênh lệch cao–thấp %.1f điểm phần trăm'
+                        % (combos, ' · '.join('%s %.0f%%' % (names.get(k, k), 100.0 * wins[k] / combos)
+                                              for k in scents), spread))
+            if unresolved:
+                note.append('quiz: %d/%d tổ hợp (%.1f%%) hoà ở đỉnh mà câu "%s" cũng không gỡ được — '
+                            'số này rơi vào thứ tự khai trong scents, tức là thiên vị mùi đứng trước'
+                            % (unresolved, combos, 100.0 * unresolved / combos, tb))
+
+    # ── hộp quà ────────────────────────────────────────────────────────────────
+    gift = d.get('gift') or {}
+    if gift:
+        need(gift, ('boxes', 'cards', 'wraps', 'steps', 'labels', 'msg_max'), 'gift', err)
+        mx = gift.get('msg_max')
+        if not isinstance(mx, int) or isinstance(mx, bool) or not (20 <= mx <= 500):
+            err.append('gift.msg_max phải là số nguyên 20–500, đang là %r' % mx)
+        sizes = set()
+        for i, b in enumerate(gift.get('boxes') or []):
+            w = 'gift.boxes[%d]' % i
+            need(b, ('k', 'n', 'name', 'desc'), w, err)
+            n = b.get('n')
+            if not isinstance(n, int) or isinstance(n, bool) or n < 1:
+                err.append('%s: n phải là số nguyên >= 1, đang là %r' % (w, n))
+            else:
+                sizes.add(n)
+            off = b.get('off', 0)
+            if not isinstance(off, int) or isinstance(off, bool) or not (0 <= off <= 50):
+                err.append('%s: off phải là số nguyên 0–50 (phần trăm), đang là %r' % (w, off))
+        if sizes and 1 not in sizes:
+            err.append('gift.boxes: không có hộp nào chứa 1 ngọn — hộp rẻ nhất phải mua được')
+        # Mỗi nhóm phụ kiện phải có một lựa chọn 0 đồng, nếu không hộp rẻ nhất bị ép mua thêm.
+        for key, label in (('cards', 'thiệp'), ('wraps', 'cách gói')):
+            items = gift.get(key) or []
+            for i, x in enumerate(items):
+                w = 'gift.%s[%d]' % (key, i)
+                need(x, ('k', 'name', 'desc'), w, err)
+                pr = x.get('price')
+                if not isinstance(pr, int) or isinstance(pr, bool) or pr < 0:
+                    err.append('%s: price phải là số nguyên >= 0, đang là %r' % (w, pr))
+                if key == 'wraps':
+                    for c in ('paper', 'ribbon'):
+                        v = x.get(c)
+                        if not isinstance(v, str) or not HEX.match(v):
+                            err.append('%s: %s phải là mã màu #rrggbb, đang là %r' % (w, c, v))
+            if items and not any(x.get('price') == 0 for x in items):
+                err.append('gift.%s: không có lựa chọn nào 0 đồng — hộp rẻ nhất bị ép mua thêm %s'
+                           % (key, label))
+        for i, st in enumerate(gift.get('steps') or []):
+            need(st, ('k', 't', 'd'), 'gift.steps[%d]' % i, err)
+        # Hộp quà lấy sản phẩm theo mùi và chỉ lấy CÁI ĐẦU TIÊN. Mùi có hai sản phẩm thì
+        # nó lặng lẽ chọn hộ, và không ai biết nó chọn cái nào.
+        for k, w in scents.items():
+            if used[k] > 1:
+                note.append('%s: có %d sản phẩm trỏ vào — hộp quà chỉ lấy sản phẩm ĐẦU TIÊN '
+                            'của mỗi mùi, hai cái còn lại không bao giờ vào được hộp' % (w, used[k]))
 
     # ── thanh toán ─────────────────────────────────────────────────────────────
     pay = d.get('payment') or {}
@@ -345,7 +507,13 @@ def check_shell(pages):
 CSS_BLOCKS = ('nav', 'hero', 'candle', 'veil', 'drawer', 'line', 'toast', 'fly', 'ship', 'sum',
               'order', 'notes', 'specs', 'scent', 'rail', 'scard', 'strip', 'buy', 'co', 'pay',
               'paypanel', 'qr', 'todo', 'phb', 'emblem', 'field', 'faq', 'foot', 'val', 'vals',
-              'marquee', 'tag', 'btn', 'wrap', 'grain', 'sheet', 'iconbtn', 'crumb', 'phead')
+              'marquee', 'tag', 'btn', 'wrap', 'grain', 'sheet', 'iconbtn', 'crumb', 'phead',
+              # Tìm mùi
+              'sf', 'sfmid', 'sfstep', 'sfhead', 'sfq', 'sfhint', 'sfbar', 'sfopts', 'sfopt',
+              'sfback', 'sfres', 'sfmatch', 'sfname', 'sfslot', 'sffeel', 'sfwhy', 'sfacts', 'sfalt',
+              # Hộp quà
+              'gb', 'gbstep', 'gbpick', 'gbopt', 'gbslot', 'gbdots', 'gbdot', 'gbmsg', 'gbcount',
+              'gbside', 'gbbox', 'gbsum', 'gbrow', 'gbnote')
 
 
 RE_RULE = re.compile(r'^([.#][^\n{]+)\{([^}]*)\}', re.M)
@@ -432,6 +600,59 @@ def check_css(path):
     return err, note
 
 
+# ── tài liệu ──────────────────────────────────────────────────────────────────
+
+RE_MDLINK = re.compile(r'\[([^\]]+)\]\(([^)\s]+)\)')
+
+
+def check_docs(shop):
+    """Liên kết markdown trong shop/ phải trỏ tới file có thật.
+
+    Thư mục docs/ có mười file trỏ chéo lẫn nhau, cộng năm ADR. Đổi tên một file là làm gãy
+    một nắm liên kết ở chỗ khác, và markdown gãy thì IM LẶNG — trên GitHub nó vẫn hiện ra
+    như một liên kết bình thường, bấm vào mới ra 404. Cổng này sinh ra vì một lần đúng như
+    vậy: 15 liên kết cùng trỏ vào một file chưa được viết.
+
+    Chỉ kiểm liên kết nội bộ; http và mailto bỏ qua vì cổng không nên phụ thuộc vào mạng.
+    """
+    err = []
+    for md in sorted(shop.rglob('*.md')):
+        for m in RE_MDLINK.finditer(md.read_text(encoding='utf-8', errors='replace')):
+            tgt = m.group(2).split('#', 1)[0]
+            if not tgt or tgt.startswith(('http://', 'https://', 'mailto:', 'tel:')):
+                continue
+            if not (md.parent / tgt).resolve().exists():
+                err.append('%s: liên kết gãy [%s](%s)'
+                           % (md.relative_to(shop), m.group(1)[:34], m.group(2)))
+    return err
+
+
+def check_publish(shop):
+    """Tài liệu nội bộ của shop/ KHÔNG được lên public.
+
+    Sinh ra từ một ca thật ngày 20/09/2026: `shop/docs/04-DAM-PHAN.md` — kịch bản đàm phán
+    với một người có thật, gồm cả mục "dấu hiệu nên rút" và mức giá định chào — đã nằm trên
+    GitHub Pages ở một URL đoán được, trả HTTP 200. Không ai cố ý publish nó; workflow deploy
+    rsync cả repo và chẳng ai nghĩ tới thư mục mới.
+
+    Markdown trên GitHub Pages phục vụ nguyên văn, không cần render, nên chỉ cần biết đường
+    dẫn là đọc được. Với một tài liệu đàm phán thì đó là trao cả thế bài cho phía bên kia.
+
+    `shop/pitch/` CỐ Ý vẫn công khai: trang đó viết CHO chị ấy và cần một đường link để gửi.
+    """
+    err = []
+    wf = shop.parent / '.github' / 'workflows' / 'deploy.yml'
+    if not wf.exists():
+        return err
+    body = wf.read_text(encoding='utf-8', errors='replace')
+    for pat in ("--exclude 'shop/docs'", "--exclude 'shop/*.md'"):
+        if pat not in body:
+            err.append("deploy.yml thiếu %s — tài liệu nội bộ của shop/ sẽ lên public. "
+                       "docs/04-DAM-PHAN.md là kịch bản đàm phán với một người có thật; "
+                       "publish nó là đưa thế bài cho phía bên kia." % pat)
+    return err
+
+
 def main(argv):
     verbose = '-v' in argv or '--verbose' in argv
 
@@ -480,6 +701,13 @@ def main(argv):
             for x in cn:
                 print('    %s' % x)
 
+    doc_err = check_docs(SHOP) + check_publish(SHOP)
+    total_err += len(doc_err)
+    if doc_err:
+        print('\ntài liệu — LỖI (%d):' % len(doc_err))
+        for x in doc_err:
+            print('    %s' % x)
+
     for p in pages:
         e, n = check_page(p, data)
         total_err += len(e)
@@ -499,9 +727,13 @@ def main(argv):
     if total_err:
         print('shop: %d LỖI.' % total_err)
         return 1
-    print('shop: OK (%d mùi hương, %d sản phẩm, %d cách thanh toán, %d trang).'
+    print('shop: OK (%d mùi hương, %d sản phẩm, %d câu hỏi Tìm mùi, %d cỡ hộp quà, '
+          '%d cách thanh toán, %d trang, %d tài liệu).'
           % (len(data.get('scents') or []), len(data.get('products') or []),
-             len(((data.get('payment') or {}).get('methods')) or []), len(pages)))
+             len(((data.get('quiz') or {}).get('questions')) or []),
+             len(((data.get('gift') or {}).get('boxes')) or []),
+             len(((data.get('payment') or {}).get('methods')) or []), len(pages),
+             len(list(SHOP.rglob('*.md')))))
     return 0
 
 

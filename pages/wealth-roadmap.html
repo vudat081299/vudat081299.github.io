@@ -1,0 +1,1746 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Bản đồ thoát mê cung — kế hoạch tài chính &amp; sự nghiệp 10 năm</title>
+<meta name="description" content="Kế hoạch tài chính và sự nghiệp 10 năm cho một kỹ sư mobile 26 tuổi: bảng tài sản tính được, ba đòn bẩy xếp theo kỳ vọng, quyết định thuê hay mua nhà, tái cơ cấu danh mục, ba mốc đích đến có con số, và 90 ngày đầu làm gì.">
+
+<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+<link rel="stylesheet" href="../web-builder/web-builder.css">
+<script>
+  /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành. */
+  try {
+    var t = localStorage.getItem('hub-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+
+<style>
+  /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
+  body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+
+  /* ---- hero ---- */
+  .rm-hero { padding: 30px 0 18px; }
+  .rm-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+  .rm-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 12px; line-height: 1.16; }
+  .rm-sub { color: var(--wb-fg-muted); font-size: 15.5px; max-width: 76ch; line-height: 1.65; margin: 0 0 12px; }
+  .rm-sub b { color: var(--wb-fg); font-weight: 640; }
+  .rm-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; }
+
+  /* ---- two-column reading layout ---- */
+  /* minmax(0,…) is load-bearing: a plain 1fr keeps min-width:auto and a wide table pushes the page sideways. */
+  .rm-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 34px; align-items: start; padding: 22px 0 60px; }
+  @media (max-width: 960px) { .rm-layout { grid-template-columns: minmax(0, 1fr); } .rm-toc { display: none; } }
+  .rm-toc { position: sticky; top: 72px; max-height: calc(100vh - 92px); overflow-y: auto; width: 236px; }
+  .rm-toc .wb-sidenav__link.is-current { background: var(--wb-surface-hover); font-weight: 620; color: var(--wb-fg); }
+  .rm-toc .wb-sidenav__link { font-size: 12.8px; padding-top: 5px; padding-bottom: 5px; }
+
+  /* ---- section rhythm ---- */
+  section[id] { scroll-margin-top: 78px; }
+  .rm-part { padding-top: 26px; margin-top: 10px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .rm-part:first-of-type { border-top: none; margin-top: 0; padding-top: 6px; }
+  .rm-kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 7px; }
+  .rm-kicker b { color: var(--wb-fg); font-weight: 650; }
+  .rm-h2 { font-size: 23px; font-weight: 720; letter-spacing: -.016em; margin: 0 0 9px; line-height: 1.25; }
+  .rm-h3 { font-size: 16px; font-weight: 680; letter-spacing: -.008em; margin: 26px 0 8px; }
+  .rm-h4 { font-size: 13.5px; font-weight: 660; margin: 18px 0 6px; }
+  .rm-p { font-size: 14.6px; line-height: 1.72; color: var(--wb-fg-muted); max-width: 74ch; margin: 0 0 12px; }
+  .rm-p b, .rm-li b { color: var(--wb-fg); font-weight: 640; }
+  .rm-p code, .rm-li code { font-family: var(--wb-font-mono); font-size: .88em; background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-sm); padding: 1px 5px; color: var(--wb-fg); }
+  .rm-ul { margin: 0 0 14px; padding-left: 20px; max-width: 74ch; }
+  .rm-li { font-size: 14.4px; line-height: 1.68; color: var(--wb-fg-muted); margin-bottom: 7px; }
+  .rm-ul--tight .rm-li { margin-bottom: 3px; }
+
+  /* ---- the "lead" callout: one idea the section turns on ---- */
+  .rm-lead { border-left: 3px solid var(--wb-fg); background: var(--wb-surface-2); border-radius: 0 var(--wb-radius) var(--wb-radius) 0; padding: 14px 18px; margin: 0 0 18px; max-width: 76ch; }
+  .rm-lead p { margin: 0; font-size: 15px; line-height: 1.66; color: var(--wb-fg); font-weight: 520; }
+  .rm-lead p + p { margin-top: 8px; color: var(--wb-fg-muted); font-weight: 420; font-size: 14.2px; }
+
+  /* ---- number strip: the figure that carries an argument ---- */
+  .rm-figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--wb-border); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); overflow: hidden; margin: 0 0 18px; }
+  .rm-fig { background: var(--wb-surface); padding: 14px 16px; }
+  .rm-fig__k { font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin-bottom: 6px; font-family: var(--wb-font-mono); }
+  .rm-fig__v { font-size: 22px; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1.15; }
+  .rm-fig__n { font-size: 12.2px; color: var(--wb-fg-muted); margin-top: 5px; line-height: 1.5; }
+  .rm-fig--pos .rm-fig__v { color: var(--wb-success-text); }
+  .rm-fig--neg .rm-fig__v { color: var(--wb-danger-text); }
+
+  /* ---- calculators ---- */
+  .rm-calc { background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius-lg); padding: 18px; margin: 0 0 18px; }
+  .rm-calc__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .rm-calc__title { font-size: 14px; font-weight: 660; margin: 0; }
+  .rm-calc__hint { font-size: 12px; color: var(--wb-fg-subtle); }
+  .rm-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: 12px; }
+  /* Nhãn dài quấn hai dòng làm ô nhập tụt xuống lệch hàng với ô bên cạnh.
+     Cột flex + đẩy phần tử cuối xuống đáy → mọi input thẳng hàng bất kể nhãn. */
+  .rm-inp { display: flex; flex-direction: column; justify-content: flex-end; }
+  .rm-inp label { display: block; font-size: 11.5px; color: var(--wb-fg-muted); margin-bottom: 5px; letter-spacing: .01em; line-height: 1.35; }
+  .rm-inp input { width: 100%; font-variant-numeric: tabular-nums; }
+  .rm-out { margin-top: 16px; padding-top: 14px; border-top: var(--wb-bw) solid var(--wb-border); }
+
+  /* ---- tables ---- */
+  .rm-tw { overflow-x: auto; margin: 0 0 16px; }
+  .rm-tw table { min-width: 460px; }
+  .rm-num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+  .rm-neg { color: var(--wb-danger-text); }
+  .rm-pos { color: var(--wb-success-text); }
+  caption.rm-cap { caption-side: bottom; text-align: left; font-size: 12.2px; color: var(--wb-fg-subtle); padding-top: 8px; line-height: 1.55; }
+
+  /* ---- verdict box: what to actually do ---- */
+  .rm-do { border: var(--wb-bw) solid var(--wb-fg); border-radius: var(--wb-radius); padding: 15px 17px; margin: 18px 0; background: var(--wb-surface); max-width: 76ch; }
+  .rm-do__t { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--wb-fg-subtle); margin-bottom: 8px; }
+  .rm-do p { margin: 0 0 8px; font-size: 14.4px; line-height: 1.68; color: var(--wb-fg); }
+  .rm-do p:last-child { margin-bottom: 0; }
+
+  /* ---- chart ---- */
+  .rm-chart { width: 100%; display: block; overflow: visible; }
+  .rm-chart text { font-family: var(--wb-font); font-size: 10.5px; fill: var(--wb-fg-subtle); }
+  .rm-chart .gl { stroke: var(--wb-border); stroke-width: 1; }
+  .rm-chart .ax { stroke: var(--wb-border-strong); stroke-width: 1; }
+
+  /* ---- checklist ---- */
+  .rm-check { list-style: none; margin: 0 0 6px; padding: 0; }
+  .rm-check li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border-radius: var(--wb-radius-sm); }
+  .rm-check li:hover { background: var(--wb-surface-hover); }
+  .rm-check input { margin-top: 3px; flex: none; }
+  .rm-check label { font-size: 14px; line-height: 1.6; color: var(--wb-fg-muted); cursor: pointer; }
+  .rm-check input:checked + label { color: var(--wb-fg-subtle); text-decoration: line-through; }
+  .rm-check label b { color: var(--wb-fg); font-weight: 620; }
+  .rm-check input:checked + label b { color: inherit; font-weight: 500; }
+
+  /* ---- misc ---- */
+  .rm-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; margin-bottom: 18px; }
+  .rm-quiet { font-size: 12.6px; color: var(--wb-fg-subtle); line-height: 1.6; max-width: 74ch; }
+  .rm-foot { border-top: var(--wb-bw) solid var(--wb-border); padding: 22px 0 50px; margin-top: 28px; }
+</style>
+</head>
+<body class="wb-app">
+
+<header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
+  <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
+          aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">◈</span> Bản đồ thoát mê cung</a>
+  <!-- Part links live in __menu, the slot that collapses. __actions stays icon-only by kit
+       contract. Doubles as the mobile TOC, since .rm-toc is hidden under 960px. -->
+  <nav class="wb-nav wb-navbar__menu">
+    <a class="wb-nav__link" href="#hien-trang">Hiện trạng</a>
+    <a class="wb-nav__link" href="#ba-su-that">3 sự thật</a>
+    <a class="wb-nav__link" href="#phuong-an">Phương án</a>
+    <a class="wb-nav__link" href="#dich-den">Đích đến</a>
+    <a class="wb-nav__link" href="#thu-nhap">Thu nhập</a>
+    <a class="wb-nav__link" href="#danh-muc">Danh mục</a>
+    <a class="wb-nav__link" href="#nha">Nhà</a>
+    <a class="wb-nav__link" href="#mindset">Tư duy</a>
+    <a class="wb-nav__link" href="#chin-muoi-ngay">90 ngày</a>
+    <a class="wb-nav__link" href="#khong-mo-hinh">Chưa tính</a>
+    <span class="wb-navbar__spacer"></span>
+    <a class="wb-nav__link" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Trang chủ</a>
+  </nav>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</header>
+
+<main class="wb-container wb-container--wide">
+
+  <header class="rm-hero">
+    <p class="rm-eyebrow">Kế hoạch riêng · Đạt · 26 tuổi · lập 20/09/2026</p>
+    <h1 class="rm-title">Bạn không mông lung vì thiếu tiền. Bạn mông lung vì <u>đang giữ tám câu hỏi mở cùng lúc</u> mà chưa câu nào có tiêu chí đóng.</h1>
+    <p class="rm-sub">Trang này đóng từng câu một. Nó bắt đầu bằng con số thật, rồi xếp mọi lựa chọn — cổ phiếu, nhà, sản phẩm, bằng master, bảo hiểm — theo đúng một thước đo: <b>cái nào đổi được bao nhiêu tiền, trong bao lâu, với xác suất bao nhiêu</b>. Cái nào thắng thước đo đó thì làm trước, phần còn lại xếp hàng.</p>
+    <p class="rm-sub">Kết luận đi trước, để bạn biết phần sau đang chứng minh điều gì: <b>với số vốn hiện tại, mỗi giờ bạn bỏ vào việc nâng giá lao động của mình đáng giá gấp hơn mười lần mỗi giờ bỏ vào việc chọn cổ phiếu.</b> Và sàn của con đường bạn đang đi — kể cả khi mọi thứ diễn ra tệ, kể cả sau khi trừ lạm phát — vẫn là khoảng 4,7 tỷ ở tuổi 36 và 6,7 tỷ ở tuổi 40, tính theo giá hôm nay. Bạn không đang thua. Bạn đang hỏi sai câu hỏi.</p>
+    <p class="rm-meta">MỌI CON SỐ TÍNH ĐƯỢC TRÊN TRANG NÀY ĐỀU CHỈNH ĐƯỢC · GIẢ ĐỊNH GHI Ở MỤC CUỐI · ĐÂY LÀ PHÂN TÍCH CÁ NHÂN, KHÔNG PHẢI TƯ VẤN ĐẦU TƯ CÓ GIẤY PHÉP</p>
+  </header>
+
+  <div class="rm-layout">
+    <aside class="rm-toc">
+      <nav class="wb-sidenav" aria-label="Mục lục">
+        <div class="wb-sidenav__section">Chẩn đoán</div>
+        <a class="wb-sidenav__link" href="#hien-trang">1 · Bạn đang ở đâu</a>
+        <a class="wb-sidenav__link" href="#ba-su-that">2 · Ba sự thật bị bỏ sót</a>
+        <div class="wb-sidenav__section">Phương án</div>
+        <a class="wb-sidenav__link" href="#phuong-an">3 · Sáu trụ cột</a>
+        <a class="wb-sidenav__link" href="#dich-den">4 · Ba mốc đích đến</a>
+        <div class="wb-sidenav__section">Từng mặt trận</div>
+        <a class="wb-sidenav__link" href="#thu-nhap">5 · Nhân thu nhập</a>
+        <a class="wb-sidenav__link" href="#danh-muc">6 · Danh mục chứng khoán</a>
+        <a class="wb-sidenav__link" href="#nha">7 · Nhà: thuê hay mua</a>
+        <a class="wb-sidenav__link" href="#san-pham">8 · Sản phẩm riêng</a>
+        <a class="wb-sidenav__link" href="#hoc">9 · Bằng master dùng sao</a>
+        <a class="wb-sidenav__link" href="#don-dep">10 · Bảo hiểm · cửa hàng · nợ</a>
+        <div class="wb-sidenav__section">Đóng lại</div>
+        <a class="wb-sidenav__link" href="#kich-ban">11 · Bốn kịch bản</a>
+        <a class="wb-sidenav__link" href="#nhanh">12 · Có cách nào nhanh không</a>
+        <a class="wb-sidenav__link" href="#mindset">13 · Mười hai nguyên tắc</a>
+        <a class="wb-sidenav__link" href="#chin-muoi-ngay">14 · 90 ngày đầu</a>
+        <a class="wb-sidenav__link" href="#gia-dinh">15 · Giả định &amp; công thức</a>
+        <a class="wb-sidenav__link" href="#khong-mo-hinh">16 · Cái chưa tính đến</a>
+      </nav>
+    </aside>
+
+    <div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     1 · HIỆN TRẠNG
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="hien-trang" class="rm-part">
+  <p class="rm-kicker">Phần 1 · <b>Chẩn đoán</b></p>
+  <h2 class="rm-h2">Bạn đang ở đâu — bằng số, không bằng cảm giác</h2>
+
+  <p class="rm-p">Cảm giác "mông lung" gần như luôn có một nguyên nhân cơ học: <b>bạn chưa bao giờ nhìn toàn bộ tài sản của mình trên cùng một màn hình.</b> Tiền mặt ở một app, cổ phiếu ở app khác, vàng trong két, 50 triệu cho vay trong tin nhắn, 50 triệu cửa hàng trong trí nhớ. Não phải giữ sáu con số rời rạc và tự cộng lại mỗi lần bạn lo — nên lần nào cộng cũng ra một kết quả hơi khác, và cảm giác bất an không bao giờ tắt.</p>
+
+  <p class="rm-p">Bảng dưới đây là màn hình đó. <b>Sửa bất kỳ ô nào, mọi con số trên trang này tính lại theo.</b> Đơn vị: triệu đồng.</p>
+
+  <div class="rm-calc">
+    <div class="rm-calc__head">
+      <h3 class="rm-calc__title">Bảng tài sản</h3>
+      <span class="rm-calc__hint">Số mặc định lấy từ mô tả của bạn · sửa thoải mái</span>
+    </div>
+    <div class="rm-inputs">
+      <div class="rm-inp"><label for="i-cash">Tiền mặt / tài khoản</label><input class="wb-input" type="number" id="i-cash" value="250" step="5"></div>
+      <div class="rm-inp"><label for="i-hpg">HPG — thị giá</label><input class="wb-input" type="number" id="i-hpg" value="28.75" step="0.5"></div>
+      <div class="rm-inp"><label for="i-tcb">TCB — thị giá</label><input class="wb-input" type="number" id="i-tcb" value="36.75" step="0.5"></div>
+      <div class="rm-inp"><label for="i-vib">VIB — thị giá</label><input class="wb-input" type="number" id="i-vib" value="52.5" step="0.5"></div>
+      <div class="rm-inp"><label for="i-gold-n">Vàng — số chỉ</label><input class="wb-input" type="number" id="i-gold-n" value="5" step="0.5"></div>
+      <div class="rm-inp"><label for="i-gold-p">Vàng — triệu/chỉ</label><input class="wb-input" type="number" id="i-gold-p" value="15" step="0.5"></div>
+      <div class="rm-inp"><label for="i-loan">Cho vay (cuối năm đòi)</label><input class="wb-input" type="number" id="i-loan" value="50" step="5"></div>
+      <div class="rm-inp"><label for="i-shop">Cửa hàng — vốn góp</label><input class="wb-input" type="number" id="i-shop" value="50" step="5"></div>
+      <div class="rm-inp"><label for="i-shop-d">Cửa hàng — chiết khấu %</label><input class="wb-input" type="number" id="i-shop-d" value="60" step="5"></div>
+      <div class="rm-inp"><label for="i-inc">Thu nhập / tháng</label><input class="wb-input" type="number" id="i-inc" value="40" step="1"></div>
+      <div class="rm-inp"><label for="i-save">Tích lũy / tháng</label><input class="wb-input" type="number" id="i-save" value="30" step="1"></div>
+      <div class="rm-inp"><label for="i-ins">Bảo hiểm / năm</label><input class="wb-input" type="number" id="i-ins" value="30" step="1"></div>
+    </div>
+
+    <div class="rm-out">
+      <div class="rm-figs" style="margin-bottom:14px">
+        <div class="rm-fig"><div class="rm-fig__k">Tài sản lỏng</div><div class="rm-fig__v" id="o-liquid">—</div><div class="rm-fig__n">tiền mặt + cổ phiếu + vàng + khoản cho vay — thứ đổi được ra tiền trong 12 tháng</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Tài sản ròng</div><div class="rm-fig__v" id="o-net">—</div><div class="rm-fig__n">cộng thêm vốn cửa hàng đã ghi giảm theo mức chiết khấu bạn đặt</div></div>
+        <div class="rm-fig rm-fig--pos"><div class="rm-fig__k">Tỷ lệ tích lũy</div><div class="rm-fig__v" id="o-rate">—</div><div class="rm-fig__n" id="o-rate-n">—</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Số tháng sống được</div><div class="rm-fig__v" id="o-runway">—</div><div class="rm-fig__n" id="o-runway-n">—</div></div>
+      </div>
+      <div class="rm-figs">
+        <div class="rm-fig rm-fig--neg"><div class="rm-fig__k">Ngân hàng trong danh mục</div><div class="rm-fig__v" id="o-bank">—</div><div class="rm-fig__n">TCB + VIB trên tổng cổ phiếu — mọi con số trên 40% là rủi ro không ai trả công cho bạn</div></div>
+        <div class="rm-fig rm-fig--neg"><div class="rm-fig__k">Vốn đang ngủ</div><div class="rm-fig__v" id="o-idle">—</div><div class="rm-fig__n" id="o-idle-n">—</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Nạp thêm mỗi năm</div><div class="rm-fig__v" id="o-annual">—</div><div class="rm-fig__n" id="o-annual-n">—</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Bảo hiểm chiếm</div><div class="rm-fig__v" id="o-inspct">—</div><div class="rm-fig__n">phần trăm thu nhập. Khoảng hợp lý cho tổng bảo vệ: 5–8%</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rm-lead">
+    <p>Con số đáng chú ý nhất trên bảng này không phải tài sản ròng. Nó là <b>tỷ lệ tích lũy 75%</b> và <b>44 tháng sống được mà không cần thu nhập</b>.</p>
+    <p>Tỷ lệ tích lũy 75% là cực kỳ hiếm — tôi không có số liệu để nói chính xác nó nằm ở phân vị nào, nhưng tỷ lệ tiết kiệm hộ gia đình ở hầu hết nền kinh tế nằm trong khoảng một chữ số đến khoảng 20%, nên 75% là ngoại lệ lớn. Phần lớn người có thu nhập gấp ba bạn vẫn tích lũy ít hơn bạn về số tuyệt đối. Và 44 tháng runway nghĩa là bạn có thể mất việc hôm nay, không làm gì suốt gần bốn năm, và vẫn ổn. Rất ít người ở tuổi 26 có điều đó. <b>Bạn đang lo lắng ở một vị trí mà đa số người sẽ thấy là an toàn.</b></p>
+    <p><b>Nhưng cả hai con số đều đứng trên một chân, và chân đó là chỗ ở miễn phí:</b> tỷ lệ 75% cao được <em>vì</em> bạn đang ở nhà gia đình. Tiền đền bù 2–3 tỷ nhiều khả năng giữ được cái chân ấy — nếu nó mua được một căn thay thế. Nếu không, chi tiêu đi từ 10 lên khoảng 23 triệu, tỷ lệ tích lũy tụt xuống <b>42%</b> và runway tụt còn <b>19 tháng</b>. Khoảng cách giữa hai khả năng đó là <b>1,3 tỷ và ba năm</b>, và nó được quyết bởi những câu hỏi ở <a href="#nha">Phần 7</a> mà bạn chưa hỏi ai.</p>
+  </div>
+
+  <h3 class="rm-h3">Ba chỗ rò rỉ nhìn thấy ngay</h3>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead>
+        <tr><th>Chỗ rò</th><th class="rm-num">Đang mất</th><th>Vì sao</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>250 triệu tiền mặt nằm im</b></td>
+          <td class="rm-num rm-neg">~9 tr/năm</td>
+          <td>Lạm phát 3,5%/năm ăn mòn sức mua. Kể cả gửi tiết kiệm kỳ hạn 6 tháng cũng bù lại được 5–6%/năm — chênh lệch so với để trong tài khoản thanh toán là khoảng <b>13 triệu mỗi năm</b> bạn đang tặng cho ngân hàng.</td>
+        </tr>
+        <tr>
+          <td><b>Danh mục 100% hai ngành chu kỳ</b></td>
+          <td class="rm-num rm-neg">rủi ro không được trả công</td>
+          <td>Ngân hàng 76% + thép 24%. Rủi ro riêng lẻ của một ngành là loại rủi ro mà thị trường <em>không</em> trả thêm lợi nhuận để bạn gánh — bạn chịu biến động của một ngành nhưng chỉ nhận lợi suất trung bình của thị trường.</td>
+        </tr>
+        <tr>
+          <td><b>50 triệu vốn cửa hàng</b></td>
+          <td class="rm-num rm-neg">~30 tr giá trị ảo</td>
+          <td>Bạn đang ghi sổ 50 triệu nhưng thực chất sở hữu một dòng tiền 5 triệu/năm không rút gốc được. Với mức chiết khấu rủi ro hợp lý cho vốn góp bán lẻ nhỏ không kiểm soát (25%/năm), giá trị kinh tế thật khoảng <b>20 triệu</b>.</td>
+        </tr>
+      </tbody>
+      <caption class="rm-cap">Ba con số này không cộng chung được, và đáng để phân biệt: chỗ rò thứ nhất là <b>dòng chảy mỗi năm</b> (khoảng 13 triệu), chỗ thứ hai là <b>rủi ro</b> chưa thành tiền, chỗ thứ ba là <b>một lần ghi giảm sổ sách</b> (30 triệu) chứ không lặp lại. Không chỗ nào là thảm họa — nhưng sửa cả ba chỉ tốn một buổi chiều, nên không có lý do gì để không sửa.</caption>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     2 · BA SỰ THẬT
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="ba-su-that" class="rm-part">
+  <p class="rm-kicker">Phần 2 · <b>Chẩn đoán</b></p>
+  <h2 class="rm-h2">Ba sự thật mà bảng tài sản của bạn đang nói, nhưng bạn chưa nghe</h2>
+
+  <h3 class="rm-h3">Sự thật 1 — Ở quy mô vốn của bạn, lương là đòn bẩy. Đầu tư thì chưa.</h3>
+
+  <p class="rm-p">Đây là phép tính quan trọng nhất trên cả trang, và nó giải thích tại sao bạn đang bỏ công sức vào sai chỗ.</p>
+
+  <p class="rm-p">Tài sản của bạn khoảng <b>513 triệu</b>. Một danh mục tốt, kỷ luật, không sai lầm nào, sinh lời 9%/năm sẽ cho bạn khoảng <b>46 triệu một năm</b>. Đó là phần thưởng tối đa cho toàn bộ năng lượng bạn bỏ vào việc chọn mã, canh giá, đọc báo cáo tài chính.</p>
+
+  <p class="rm-p">Bây giờ so với việc khác: một kỹ sư mobile 5 năm kinh nghiệm chuyển từ công ty Việt Nam sang hợp đồng remote với công ty Mỹ/Âu/Singapore thường đi từ 40 triệu lên <b>90–140 triệu một tháng</b>. Lấy mức giữa: thu nhập tăng <b>60 triệu/tháng = 720 triệu/năm</b>.</p>
+
+  <div class="rm-calc">
+    <div class="rm-calc__head">
+      <h3 class="rm-calc__title">Cần bao nhiêu vốn để đầu tư đuổi kịp một lần nhảy việc?</h3>
+      <span class="rm-calc__hint">chỉnh để xem điểm cắt dịch đi thế nào</span>
+    </div>
+    <div class="rm-inputs">
+      <div class="rm-inp"><label for="i-lev-jump">Thu nhập tăng thêm (tr/tháng)</label><input class="wb-input" type="number" id="i-lev-jump" value="60" step="5"></div>
+      <div class="rm-inp"><label for="i-lev-r">Lợi suất danh mục (%/năm)</label><input class="wb-input" type="number" id="i-lev-r" value="9" step="0.5"></div>
+    </div>
+    <div class="rm-out">
+      <div class="rm-figs" style="margin-bottom:0">
+        <div class="rm-fig"><div class="rm-fig__k">Vốn hiện tại sinh ra</div><div class="rm-fig__v" id="o-lev-cap">—</div><div class="rm-fig__n">mỗi năm, nếu danh mục chạy đúng kỳ vọng và bạn không sai lầm nào</div></div>
+        <div class="rm-fig rm-fig--pos"><div class="rm-fig__k">Nhảy việc sinh ra</div><div class="rm-fig__v" id="o-lev-inc">—</div><div class="rm-fig__n">mỗi năm, bắt đầu từ tháng đầu tiên của hợp đồng mới</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Tỷ lệ</div><div class="rm-fig__v" id="o-lev-x">—</div><div class="rm-fig__n">một lần nhảy việc bằng bao nhiêu lần toàn bộ lợi nhuận đầu tư của bạn</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Vốn cần để hoà</div><div class="rm-fig__v" id="o-lev-need">—</div><div class="rm-fig__n" id="o-lev-need-n">—</div></div>
+      </div>
+      <svg id="lev-chart" class="rm-chart" viewBox="0 0 640 132" role="img" aria-label="So sánh lợi nhuận đầu tư hằng năm và mức tăng thu nhập hằng năm"></svg>
+    </div>
+  </div>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Hệ quả</div>
+    <p>Mỗi giờ bỏ vào <b>nâng giá lao động</b> (tiếng Anh, portfolio, phỏng vấn, kỹ năng hiếm) đáng giá gấp <b>hơn mười lần</b> mỗi giờ bỏ vào <b>chọn cổ phiếu</b>. Tỷ lệ này chỉ đảo chiều khi tài sản của bạn vượt khoảng <b>8 tỷ</b> — dự kiến năm 2035 theo kịch bản cơ sở.</p>
+    <p>Một điều kiện phải nói kèm, nếu không con số 15,6× bị thổi phồng: <b>46 triệu kia là thu nhập thụ động, còn 720 triệu đòi bạn phải đi làm.</b> Chúng không cùng loại. Phép so chỉ đúng trong khung “bạn dù sao cũng đang đi làm tám tiếng mỗi ngày trong mười năm tới” — mà đúng là vậy. Ngày bạn muốn <em>ngừng</em> làm việc, chỉ còn cột bên trái tồn tại, và đó chính là lý do cột bên phải phải được chuyển thành cột bên trái càng nhanh càng tốt.</p>
+    <p>Nghĩa là trong sáu năm tới, câu trả lời đúng cho mọi câu hỏi dạng "tôi nên làm gì tiếp theo" gần như luôn là: <b>thứ làm tăng thu nhập, không phải thứ làm tăng lợi suất.</b> Và danh mục đầu tư nên được thiết kế để <em>không cần bạn chú ý</em>, chính xác vì sự chú ý của bạn có giá cao hơn ở chỗ khác.</p>
+  </div>
+
+  <h3 class="rm-h3">Sự thật 2 — Sàn của bạn đã là khá giả. Bạn đang hỏi sai câu hỏi.</h3>
+
+  <p class="rm-p">Giả sử mọi thứ diễn ra <b>tệ</b>: bạn không nhảy được ra remote, thu nhập đứng yên suốt mười năm, thị trường chỉ cho 6%/năm thay vì 9%, không sản phẩm nào thành công, không may mắn nào. Chỗ ở được lo bằng tiền đền bù, nhưng bạn không nhận phần dư nào. Kịch bản tệ nhất hợp lý.</p>
+
+  <p class="rm-p">Kết quả ở tuổi 36: <b>khoảng 4,7 tỷ theo giá hôm nay</b>, thụ động 15,6 triệu/tháng — đủ mức sống hiện tại. Ở tuổi 40: khoảng 6,7 tỷ. Đó là <em>cái sàn</em>, không phải mục tiêu.</p>
+
+  <div class="rm-lead">
+    <p>Bạn đã đảm bảo được việc "có giàu không". Câu hỏi đang giày vò bạn thực ra là "<b>có giàu nhanh không</b>" — và hai câu hỏi đó có câu trả lời rất khác nhau.</p>
+    <p>Phân biệt được hai câu này là chỗ hết mông lung. Câu thứ nhất đã xong: một tỷ lệ tích lũy 75% duy trì mười năm gần như không thể không dẫn tới giàu có, trừ khi bạn tự phá. Câu thứ hai thì mở, và nó có giá — phần lớn trang này là về giá đó.</p>
+  </div>
+
+  <h3 class="rm-h3">Sự thật 3 — "Nhanh" luôn được mua bằng xác suất phá sản, trừ đúng một ngoại lệ.</h3>
+
+  <p class="rm-p">Bạn có nền xác suất thống kê, nên nói thẳng bằng ngôn ngữ đó. Mọi cách làm giàu nhanh đều là một dạng <b>đòn bẩy</b>: margin, phái sinh, crypto, vay mua bất động sản lướt sóng, dồn vốn vào một cược. Đòn bẩy nhân cả lãi lẫn lỗ — nhưng hai phía không đối xứng.</p>
+
+  <p class="rm-p">Lỗ có <b>sàn cứng tại 0</b>. Lãi không có trần. Nghe thì có vẻ đòn bẩy có lợi, nhưng chính cái sàn cứng đó là vấn đề: <b>0 là trạng thái hấp thụ</b> — rơi vào là không ra được. Trong một trò chơi lặp lại, xác suất chạm 0 tiến tới 1 nếu bạn cược đủ lớn đủ nhiều lần, kể cả khi mỗi ván đều có kỳ vọng dương.</p>
+
+  <p class="rm-p">Đây là lý do tiêu chuẩn Kelly tối đa hoá <b>kỳ vọng của logarit tài sản</b>, không phải kỳ vọng của tài sản. Cùng một cược, tối đa hoá tài sản kỳ vọng bảo bạn all-in; tối đa hoá log tài sản bảo bạn cược một phần nhỏ. Người tối đa hoá log sống sót; người tối đa hoá kỳ vọng phá sản với xác suất 1 khi số ván tiến tới vô cùng.</p>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Cách "nhanh"</th><th class="rm-num">Kỳ vọng thật</th><th class="rm-num">Rủi ro mất &gt;50% vốn</th><th>Ghi chú</th></tr></thead>
+      <tbody>
+        <tr><td>Phái sinh VN30, margin cao</td><td class="rm-num rm-neg">âm sau phí</td><td class="rm-num">rất cao</td><td>Trò chơi tổng âm: phí + thuế + spread. Thống kê từ các sở giao dịch phái sinh toàn cầu cho thấy 70–90% tài khoản cá nhân lỗ.</td></tr>
+        <tr><td>Margin cổ phiếu 1:2, 1:3</td><td class="rm-num">≈ 0</td><td class="rm-num">cao</td><td>Nhân lợi suất thị trường lên, nhưng call margin buộc bán đúng đáy — chuyển biến động tạm thời thành mất mát vĩnh viễn.</td></tr>
+        <tr><td>Crypto altcoin</td><td class="rm-num">không xác định</td><td class="rm-num">rất cao</td><td>Không có dòng tiền để định giá, nên không có "giá đúng" để neo vào. Biến động 70–90%/năm.</td></tr>
+        <tr><td>Bot / tín hiệu forex</td><td class="rm-num rm-neg">âm</td><td class="rm-num">gần chắc chắn</td><td>Nếu nó hoạt động, người bán đã không bán nó.</td></tr>
+        <tr><td>Góp vốn "lãi 3%/tháng"</td><td class="rm-num rm-neg">âm</td><td class="rm-num">gần chắc chắn</td><td>36%/năm bền vững không tồn tại. Đây là mô tả của một mô hình Ponzi, bất kể họ gọi nó là gì.</td></tr>
+        <tr><td><b>Nhân giá lao động</b></td><td class="rm-num rm-pos"><b>+50…150%</b></td><td class="rm-num"><b>bằng không</b></td><td><b>Ngoại lệ duy nhất.</b> Không có đòn bẩy và không có khả năng mất <em>vốn</em> — nhưng có rủi ro <em>thu nhập</em>: hợp đồng nước ngoài chấm dứt bằng một email, không có trợ cấp thôi việc, không có BHXH bắt buộc. Rủi ro đó có thật nhưng thuộc loại chịu được; rủi ro phá sản thì không.</td></tr>
+      </tbody>
+      <caption class="rm-cap">Hàng cuối là toàn bộ nội dung của Phần 5. Nó là cách "nhanh" duy nhất có kỳ vọng dương <em>và</em> rủi ro phá sản bằng không — bạn không thể mất tiền vì đi phỏng vấn.</caption>
+    </table>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     3 · PHƯƠNG ÁN
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="phuong-an" class="rm-part">
+  <p class="rm-kicker">Phần 3 · <b>Phương án</b></p>
+  <h2 class="rm-h2">Phương án: <u>nhân giá lao động trước, nhân vốn sau</u></h2>
+
+  <p class="rm-p">Bạn hỏi "một phương án tốt nhất". Đây là nó. Tên của nó mô tả toàn bộ nội dung: <b>trong sáu năm tới, thu nhập là mặt trận chính và vốn là hậu cần.</b> Vốn phải được sắp xếp để tự chạy mà không cần bạn nhìn, chính xác vì mắt bạn cần ở chỗ khác.</p>
+
+  <p class="rm-p">Sáu trụ cột. Mỗi trụ có một câu "đang sai gì", một việc phải làm, và một tiêu chí biết là xong.</p>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th style="width:26px">#</th><th>Trụ cột</th><th>Việc phải làm</th><th>Xong khi</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>1</b></td>
+          <td><b>Nhân thu nhập</b><br><span class="wb-cell-sub">60% năng lượng ngoài giờ</span></td>
+          <td>Đi từ 40 tr/tháng lên 90–140 tr/tháng qua hợp đồng remote hoặc công ty sản phẩm quốc tế. Ngách: <b>kỹ sư mobile làm được ML chạy trên thiết bị</b>.</td>
+          <td>Có offer ≥ 3.500 USD/tháng, hoặc 2 hợp đồng contract song song ≥ 60 tr/tháng. Mốc: <b>tháng 6/2027</b>.</td>
+        </tr>
+        <tr>
+          <td><b>2</b></td>
+          <td><b>Hoãn mua nhà</b><br><span class="wb-cell-sub">quyết định đắt nhất trong 5 năm</span></td>
+          <td>Thuê, không mua, cho đến khi hai điều kiện cùng đúng: thu nhập ≥ 80 tr/tháng ổn định 12 tháng <b>và</b> trả trước ≥ 50% giá trị căn nhà.</td>
+          <td>Hiện tại: chưa đủ cả hai. Đánh giá lại mỗi 12 tháng. Dự kiến đủ điều kiện <b>2030–2031</b>.</td>
+        </tr>
+        <tr>
+          <td><b>3</b></td>
+          <td><b>Vốn chạy tự động</b><br><span class="wb-cell-sub">3 rổ, 0 quyết định/tháng</span></td>
+          <td>Bỏ chọn cổ phiếu đơn lẻ. Gộp về ba rổ có quy tắc viết sẵn, chuyển tiền tự động <b>ngày 11 hằng tháng</b> — ngay sau ngày lương 10.</td>
+          <td>Cổ phiếu đơn lẻ ≤ 15% danh mục, lệnh định kỳ đã đặt, một trang "chính sách đầu tư" đã viết. Mốc: <b>tháng 12/2026</b>.</td>
+        </tr>
+        <tr>
+          <td><b>4</b></td>
+          <td><b>Một sản phẩm, ngân sách cố định</b><br><span class="wb-cell-sub">6 giờ/tuần, không hơn</span></td>
+          <td>Một micro-SaaS B2B, bán trước khi xây, deadline 90 ngày tới đồng doanh thu đầu tiên. Giữ như một quyền chọn, không như một kế hoạch.</td>
+          <td>Có doanh thu đầu tiên trong 90 ngày kể từ dòng code đầu, hoặc giết và làm cái khác. Không gia hạn.</td>
+        </tr>
+        <tr>
+          <td><b>5</b></td>
+          <td><b>Bằng master dùng đúng cách</b><br><span class="wb-cell-sub">đủ qua môn, không tối ưu điểm</span></td>
+          <td>Không đổi nghề sang data scientist. Ghép DS vào nghề đang có. Luận văn làm về <b>ML trên thiết bị di động</b> để một mũi tên trúng ba đích.</td>
+          <td>Tốt nghiệp đúng hạn, có 1 dự án mobile × ML công khai có người dùng thật.</td>
+        </tr>
+        <tr>
+          <td><b>6</b></td>
+          <td><b>Dọn phần rò</b><br><span class="wb-cell-sub">một buổi chiều, xong vĩnh viễn</span></td>
+          <td>Bảo hiểm: đòi số liệu rồi quyết theo ngưỡng. Cửa hàng: ghi giảm sổ sách + đàm phán lịch thoái. Khoản cho vay: xác nhận bằng văn bản.</td>
+          <td>Có bảng giá trị tài khoản từ AIA, có tin nhắn xác nhận nợ, có thoả thuận cửa hàng bằng chữ. Mốc: <b>31/10/2026</b>.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="rm-h3">Ba rổ — và tiền đi đâu mỗi tháng</h3>
+
+  <p class="rm-p">Cấu trúc dưới đây có một thuộc tính quan trọng: <b>nó không yêu cầu bạn ra quyết định nào sau khi thiết lập xong.</b> Đó không phải là hạn chế, đó là mục đích. Mỗi quyết định đầu tư bạn phải ra hằng tháng là một lần rút năng lượng khỏi mặt trận chính.</p>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Rổ</th><th class="rm-num">Vốn hiện có</th><th class="rm-num">Nạp / tháng</th><th>Công cụ</th><th>Nhiệm vụ</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>A · Két an toàn</b></td>
+          <td class="rm-num">150 tr</td>
+          <td class="rm-num">0 → xem ghi chú</td>
+          <td>Tiết kiệm kỳ hạn 6 tháng, chia 3 sổ 50 tr</td>
+          <td><b>Quy tắc, không phải con số cứng: rổ A luôn bằng 12–15 tháng chi tiêu <em>hiện tại</em>.</b> Hôm nay 150 tr là 15 tháng. Ngày bạn phải tự lo chỗ ở, chi tiêu lên ~23 tr nên rổ A phải lên <b>~276 tr</b> — nạp thêm từ rổ B hoặc từ khoản cho vay khi về, <em>trước</em> khi việc đó xảy ra, không phải sau. Không bao giờ đụng vào trừ khi mất thu nhập.</td>
+        </tr>
+        <tr>
+          <td><b>B · Cỗ máy tích sản</b></td>
+          <td class="rm-num">100 tr tiền mặt<br>+ 118 tr cổ phiếu</td>
+          <td class="rm-num">20 tr</td>
+          <td>60% ETF chỉ số · 25% quỹ mở cổ phiếu · ≤ 15% cổ phiếu tự chọn</td>
+          <td>Toàn bộ tăng trưởng dài hạn nằm ở đây. Mua đều, không canh thời điểm, không bán khi thị trường giảm.</td>
+        </tr>
+        <tr>
+          <td><b>C · Neo phòng thủ</b></td>
+          <td class="rm-num">5 chỉ vàng</td>
+          <td class="rm-num">0</td>
+          <td>Giữ nguyên, không mua thêm</td>
+          <td>Bảo hiểm cho kịch bản tiền tệ xấu. Đủ rồi — vàng không sinh dòng tiền nên tăng thêm là giảm lợi suất dài hạn.</td>
+        </tr>
+        <tr>
+          <td><b>D · Cược vào chính mình</b></td>
+          <td class="rm-num">—</td>
+          <td class="rm-num">4 tr</td>
+          <td>Tiếng Anh, khoá học, thiết bị, hạ tầng sản phẩm</td>
+          <td>Rổ có kỳ vọng cao nhất trong cả bảng. 50 tr/năm đổi lấy xác suất nhân đôi thu nhập là một cược rẻ đến vô lý.</td>
+        </tr>
+        <tr>
+          <td><b>E · Đang kẹt</b></td>
+          <td class="rm-num">50 tr cho vay<br>+ 50 tr cửa hàng</td>
+          <td class="rm-num">0</td>
+          <td>Thoái dần, không tái đầu tư</td>
+          <td>Tiền cho vay về thì vào rổ A và B theo tỷ lệ 40/60. Vốn cửa hàng coi như đã tiêu, mọi đồng thu được là tiền thưởng.</td>
+        </tr>
+      </tbody>
+      <caption class="rm-cap">Tổng nạp mỗi tháng: 24 triệu vào rổ B và D. Sáu triệu còn lại của mức tích lũy 30 triệu là đệm cho chi phí bất thường — nếu tháng nào không dùng, dồn vào rổ B cuối quý.</caption>
+    </table>
+  </div>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Nếu chỉ đọc một đoạn trên cả trang này</div>
+    <p>Trong 18 tháng tới, hãy đối xử với <b>việc nâng thu nhập</b> như công việc thứ hai được trả lương cao nhất bạn từng có — vì đúng là như vậy. Mọi thứ khác trên trang này (danh mục, nhà, sản phẩm, bảo hiểm) chỉ cần được <b>sắp đúng một lần rồi để yên</b>, để không ăn mất sự chú ý của bạn.</p>
+    <p>Lỗi phổ biến nhất của người ở đúng vị trí của bạn không phải chọn sai cổ phiếu. Nó là <b>dàn đều năng lượng ra tám việc</b> và làm tám việc đó ở mức trung bình, trong khi một trong tám việc ấy có kỳ vọng gấp mười bảy việc kia cộng lại.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     4 · ĐÍCH ĐẾN
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="dich-den" class="rm-part">
+  <p class="rm-kicker">Phần 4 · <b>Phương án</b></p>
+  <h2 class="rm-h2">Ba mốc đích đến — có năm, có con số, có thứ bạn mua được bằng nó</h2>
+
+  <p class="rm-p">Bạn yêu cầu đích đến cụ thể. Ba mốc dưới đây định nghĩa bằng <b>quyền bạn có được</b>, không bằng con số — vì con số là phương tiện, quyền mới là thứ bạn thực sự đang mua. Mỗi mốc kèm số tiền cần và năm dự kiến theo kịch bản cơ sở.</p>
+
+  <div class="rm-two">
+    <div class="wb-card">
+      <div class="wb-card__head"><div><div class="wb-card__title">Mốc 1 · 2028 · tuổi 28</div><div class="wb-card__sub">TỰ DO NGHỀ NGHIỆP</div></div><span class="wb-cap wb-cap--sm">~18 tháng</span></div>
+      <div class="wb-card__body">
+        <p class="rm-p" style="margin-bottom:10px"><b>1,5 tỷ · thu nhập gộp 90–120 tr/tháng</b></p>
+        <p class="rm-p" style="font-size:13.8px;margin-bottom:0">Quyền bạn mua được: <b>không bao giờ phải nhận một công việc vì sợ.</b> Với 15 tháng chi tiêu trong két và một hồ sơ mà thị trường quốc tế muốn, việc mất việc chuyển từ khủng hoảng thành phiền phức. Đây là mốc thay đổi <em>cảm giác</em> nhiều nhất — vì nó giết đúng cái nỗi sợ đang làm bạn mông lung.</p>
+      </div>
+    </div>
+    <div class="wb-card">
+      <div class="wb-card__head"><div><div class="wb-card__title">Mốc 2 · 2032 · tuổi 32</div><div class="wb-card__sub">ĐỘC LẬP TÀI CHÍNH MỀM</div></div><span class="wb-cap wb-cap--sm">~6 năm</span></div>
+      <div class="wb-card__body">
+        <p class="rm-p" style="margin-bottom:10px"><b>~4,8 tỷ · thụ động ~16 tr/tháng</b></p>
+        <p class="rm-p" style="font-size:13.8px;margin-bottom:0">Quyền bạn mua được: <b>lương trở thành tuỳ chọn.</b> Rút 4%/năm cho 192 triệu — đủ mức sống hiện tại, <em>với điều kiện chỗ ở đã được lo bằng tiền đền bù</em>. Nếu không, mốc này cần 7,5 tỷ và lùi sang 2035; đó là ba năm cuộc đời phụ thuộc vào một câu hỏi bạn chưa trả lời. Bạn chưa giàu, nhưng đã ra khỏi trò chơi bắt buộc.</p>
+      </div>
+    </div>
+    <div class="wb-card">
+      <div class="wb-card__head"><div><div class="wb-card__title">Mốc 3 · 2038 · tuổi 38</div><div class="wb-card__sub">GIÀU THẬT</div></div><span class="wb-cap wb-cap--sm">~12 năm</span></div>
+      <div class="wb-card__body">
+        <p class="rm-p" style="margin-bottom:10px"><b>12 tỷ theo giá hôm nay · thụ động ~40 tr/tháng</b></p>
+        <p class="rm-p" style="font-size:13.8px;margin-bottom:0">Quyền bạn mua được: <b>vốn của bạn kiếm bằng bạn hôm nay, mãi mãi, không cần bạn đi làm.</b> Mua đứt một căn nhà tử tế bằng tiền mặt vẫn còn 8 tỷ chạy. Đây là định nghĩa “giàu” khả thi và đáng tin duy nhất mà một người làm công ăn lương đến được — và bạn đến được ở tuổi 38, <em>sau khi</em> đã trừ lạm phát.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="rm-h3">Máy tính dự phóng — chỉnh giả định, xem đích dịch đi</h3>
+
+  <p class="rm-p">Mô hình tính theo năm, lãi kép trên vốn đầu kỳ, tiền nạp trong năm được tính nửa kỳ lãi. <b>Mọi con số dưới đây tính bằng sức mua hôm nay</b>, không phải tiền danh nghĩa của năm tương lai — chạy bằng lợi suất thực 5,3%/năm (9% danh nghĩa trừ 3,5% lạm phát), nên “12 tỷ ở 2038” nghĩa là 12 tỷ <em>mua được như 12 tỷ hôm nay</em>.</p>
+
+  <p class="rm-p"><b>Ba ô về chỗ ở đang đặt ở kịch bản khả dĩ nhất theo thông tin mới:</b> nhà bị thu hồi năm thứ 4, tiền đền bù 2–3 tỷ được dùng mua một căn thay thế nên bạn không mất tiền thuê (<code>tiền ở = 0</code>), và bạn không nhận phần dư nào (<code>đền bù ròng về tay bạn = 0</code>) vì tiền ấy nhiều khả năng thuộc về người đứng tên. Đây không phải giả định lạc quan — nó là giả định <em>trung dung</em>: chỗ ở được lo, nhưng bạn không giàu thêm đồng nào.</p>
+
+  <p class="rm-p">Hai cách kiểm độ nhạy, nên làm cả hai. Kịch bản xấu (<b>kết cục A</b> ở Phần 7): đặt <b>tiền ở = 13</b> <em>và</em> <b>chi tiêu khi nghỉ = 25</b> — phải đổi cả hai, vì thuê nhà làm tăng cả chi phí hằng tháng lẫn số vốn cần để nghỉ; mốc 2 lùi từ 2032 sang 2035. Kịch bản tốt (<b>kết cục C</b>): đặt <b>đền bù ròng = 1.000</b>, mốc 2 về 2031. Ô “nếu đền bù không lo được chỗ ở” bên dưới là con số đối chứng cố định — nó không đổi theo ô nhập, nên cảnh báo luôn hiện dù bạn để mặc định nào.</p>
+
+  <p class="rm-p">Ô thứ nhất là <b>trung bình cả giai đoạn, không phải mức hợp đồng đầu tiên</b>. Mặc định 65 được chọn để tái tạo đúng đường thu nhập ba nấc ở Phần 5: khoảng <b>55</b> trong 3–4 năm đầu ở mức hợp đồng ~3.500 USD, rồi khoảng <b>80</b> khi lên senior hoặc chạy hai hợp đồng. Muốn xem kịch bản bi quan — nhảy được việc nhưng không bao giờ lên nấc 3 — hạ về <b>55</b>. Muốn xem điều gì xảy ra nếu bạn không làm gì ở Phần 5, hạ về <b>30</b>.</p>
+
+  <div class="rm-calc">
+    <div class="rm-calc__head">
+      <h3 class="rm-calc__title">Dự phóng 10 năm</h3>
+      <span class="rm-calc__hint">vốn khởi điểm lấy từ bảng tài sản ở Phần 1</span>
+    </div>
+    <div class="rm-inputs">
+      <div class="rm-inp"><label for="i-p-save0">Tích lũy năm 1 (tr/tháng)</label><input class="wb-input" type="number" id="i-p-save0" value="30" step="1"></div>
+      <div class="rm-inp"><label for="i-p-save1">Tích lũy sau nhảy việc, trung bình</label><input class="wb-input" type="number" id="i-p-save1" value="65" step="2"></div>
+      <div class="rm-inp"><label for="i-p-year">Năm đạt mức tích lũy mới</label><input class="wb-input" type="number" id="i-p-year" value="3" step="1" min="1" max="10"></div>
+      <div class="rm-inp"><label for="i-p-r">Lợi suất danh mục (%/năm)</label><input class="wb-input" type="number" id="i-p-r" value="9" step="0.5"></div>
+      <div class="rm-inp"><label for="i-p-infl">Lạm phát (%/năm)</label><input class="wb-input" type="number" id="i-p-infl" value="3.5" step="0.5"></div>
+      <div class="rm-inp"><label for="i-p-exp">Chi tiêu khi nghỉ, gồm chỗ ở</label><input class="wb-input" type="number" id="i-p-exp" value="16" step="1"></div>
+      <div class="rm-inp"><label for="i-p-rentyear">Năm nhà bị thu hồi (0 = không)</label><input class="wb-input" type="number" id="i-p-rentyear" value="4" step="1" min="0" max="16"></div>
+      <div class="rm-inp"><label for="i-p-rent">Tiền ở sau đó (tr/th)</label><input class="wb-input" type="number" id="i-p-rent" value="0" step="1"></div>
+      <div class="rm-inp"><label for="i-p-comp">Đền bù ròng về tay bạn (tr)</label><input class="wb-input" type="number" id="i-p-comp" value="0" step="100"></div>
+    </div>
+    <div class="rm-out">
+      <div class="rm-figs" style="margin-bottom:14px">
+        <div class="rm-fig"><div class="rm-fig__k">Mốc 1 · 1,5 tỷ</div><div class="rm-fig__v" id="o-m1">—</div><div class="rm-fig__n">tự do nghề nghiệp — không phải nhận việc vì sợ</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Mốc 2 · độc lập mềm</div><div class="rm-fig__v" id="o-m2">—</div><div class="rm-fig__n" id="o-m2-n">—</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Mốc 3 · thụ động = lương nay</div><div class="rm-fig__v" id="o-m3">—</div><div class="rm-fig__n" id="o-m3-n">—</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Tài sản năm 2036</div><div class="rm-fig__v" id="o-p10">—</div><div class="rm-fig__n" id="o-p10-n">—</div></div>
+      </div>
+      <div class="rm-figs" style="margin-bottom:14px">
+        <div class="rm-fig rm-fig--neg"><div class="rm-fig__k">Nếu đền bù không lo được chỗ ở</div><div class="rm-fig__v" id="o-rentcost">—</div><div class="rm-fig__n" id="o-rentcost-n">—</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Nếu không nhân thu nhập</div><div class="rm-fig__v" id="o-flat10">—</div><div class="rm-fig__n">tài sản 2036 nếu tích lũy đứng yên ở mức hiện tại suốt mười năm</div></div>
+      </div>
+      <svg id="proj-chart" class="rm-chart" viewBox="0 0 660 260" role="img" aria-label="Đường tài sản dự phóng 10 năm theo ba kịch bản"></svg>
+      <div class="wb-legend" style="margin-top:10px">
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-fg)"></span> Kịch bản của bạn</span>
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-neutral)"></span> Nếu không nhân thu nhập</span>
+        <span class="wb-legend__item"><span class="wb-legend__dot" style="background:var(--wb-neutral-weak)"></span> Ba mốc đích đến</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="rm-lead">
+    <p>Khoảng cách giữa hai đường trên biểu đồ chính là <b>giá của Phần 5</b>.</p>
+    <p>Ở giả định hiện tại, nó là <b id="o-gap">—</b> sau mười năm — chênh lệch giữa việc nhân được thu nhập và việc đứng yên.</p>
+    <p>Một cách nói phổ biến là chia số đó cho 390 giờ tìm việc và tuyên bố mỗi giờ đáng <b id="o-gap-h">—</b>. <b>Phép chia đó sai và tôi không muốn bán nó cho bạn:</b> 390 giờ không <em>sinh ra</em> khoản tiền đó — nó <em>mở khoá</em> một mức giá mà bạn còn phải đi làm tám năm nữa mới thu về. Cách nói đúng, và vẫn đủ mạnh: <b>390 giờ đổi giá của mọi giờ bạn làm việc trong cả thập kỷ tới.</b> Đó là lý do nó đứng trước mọi việc khác, chứ không phải vì một con số mỗi giờ nghe kêu.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     5 · NHÂN THU NHẬP
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="thu-nhap" class="rm-part">
+  <p class="rm-kicker">Phần 5 · <b>Mặt trận chính</b></p>
+  <h2 class="rm-h2">Nhân thu nhập — việc duy nhất xứng đáng với 60% năng lượng của bạn</h2>
+
+  <p class="rm-p">Bạn có một tài sản chưa được định giá đúng: <b>5 năm iOS Swift + 2 năm Flutter, cộng một nửa bằng thạc sĩ Data Science.</b> Trên thị trường Việt Nam, tổ hợp này được trả 40 triệu. Trên thị trường quốc tế, nó được trả gấp ba. Chênh lệch đó không phản ánh năng lực — nó phản ánh <b>bạn đang bán cho ai</b>.</p>
+
+  <p class="rm-p">Đây là điều duy nhất trong cả kế hoạch này xứng với chữ "nhanh": nó có kỳ vọng dương lớn, hiệu lực trong 3–12 tháng, <b>không có khả năng mất vốn</b>, và phần tăng là vĩnh viễn — lương mới trở thành sàn mới cho mọi lần thương lượng sau đó.</p>
+
+  <h3 class="rm-h3">Ba nấc, xếp theo thời gian tới tiền</h3>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Nấc</th><th class="rm-num">Thời gian</th><th class="rm-num">Thu nhập</th><th class="rm-num">Xác suất</th><th>Làm gì</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>1 · Contract ngoài giờ</b></td>
+          <td class="rm-num">1–3 tháng</td>
+          <td class="rm-num">+10–35 tr/th</td>
+          <td class="rm-num rm-pos">~70%</td>
+          <td>Một dự án 10 giờ/tuần ở mức 25–35 USD/giờ qua Upwork, mạng lưới cá nhân, hoặc agency Việt làm outsourcing cho nước ngoài. Mục đích thật không phải tiền — là <b>bằng chứng bạn làm việc được với khách nước ngoài</b>, thứ mà nấc 2 sẽ hỏi.</td>
+        </tr>
+        <tr>
+          <td><b>2 · Remote toàn thời gian</b></td>
+          <td class="rm-num">4–9 tháng</td>
+          <td class="rm-num rm-pos"><b>78–155 tr/th</b></td>
+          <td class="rm-num">~50%</td>
+          <td><b>Dải thường gặp cho người ở Việt Nam: 3.000–4.000 USD</b> (78–104 tr gộp) ở công ty áp lương theo địa điểm. Dải cao 4.500–6.000 USD (117–155 tr) thuộc nhóm trả lương không phụ thuộc địa điểm — có thật nhưng hiếm và cạnh tranh gắt hơn. Đây là <b>mục tiêu chính</b>. Kênh: Wellfound, RemoteOK, Otta, Arc.dev, Toptal, Turing, và các startup dùng Deel/Remote.com để thuê toàn cầu.</td>
+        </tr>
+        <tr>
+          <td><b>3 · Senior/lead hoặc consultant</b></td>
+          <td class="rm-num">18–36 tháng</td>
+          <td class="rm-num rm-pos">155–260 tr/th</td>
+          <td class="rm-num">~35%</td>
+          <td>Lên senior/staff ở công ty sản phẩm quốc tế, hoặc chạy 2 hợp đồng song song ở 60–90 USD/giờ. Nấc này mở ra <em>sau khi</em> nấc 2 chạy 12–18 tháng, không trước.</td>
+        </tr>
+      </tbody>
+      <caption class="rm-cap">Quy đổi 26.000 đ/USD — sửa theo tỷ giá lúc bạn đọc. <b>Mọi con số là lương GỘP, trước thuế</b> (xem hai đoạn ngay dưới). Xác suất là ước lượng chủ quan của tôi cho một người có hồ sơ của bạn <em>và làm đủ 390 giờ</em> — không làm thì xác suất là 0, và đó là điểm đáng nói nhất của bảng.</caption>
+    </table>
+  </div>
+
+  <h3 class="rm-h3">Hai chỗ bảng trên đang lạc quan — biết trước để không hụt hẫng</h3>
+
+  <p class="rm-p"><b>Một · dải 3.500–6.000 USD là đầu cao của phân phối, không phải mức trung bình.</b> Phần lớn công ty tuyển toàn cầu áp <em>lương điều chỉnh theo địa điểm</em>: cùng một vị trí, người ở Việt Nam nhận một dải thấp hơn hẳn người ở Berlin hay Austin, và dải Việt Nam thường rơi vào 2.000–4.000 USD. Nhóm trả <em>lương không phụ thuộc địa điểm</em> có tồn tại nhưng hiếm và cạnh tranh gắt hơn nhiều. Hệ quả thực tế: hãy lập kế hoạch quanh <b>3.000–4.000 USD</b> cho hợp đồng đầu tiên và coi mọi thứ trên đó là phần thưởng. Nếu con số thật là 3.000 thay vì 4.500, mọi mốc trên trang này lùi khoảng hai năm — vẫn đáng làm, nhưng đừng để nó làm bạn bất ngờ.</p>
+
+  <p class="rm-p"><b>Hai · thuế thu nhập cá nhân lấy một phần lớn hơn bạn nghĩ.</b> Biểu thuế luỹ tiến của Việt Nam lên tới 35%, và ở mức 117 triệu/tháng gộp thì thuế hiệu dụng khoảng <b>23%</b> — thực nhận còn chừng 90 triệu. Ở 156 triệu gộp, thuế hiệu dụng khoảng 26%. Con số “tích lũy 72 triệu/tháng” dùng trong máy tính dự phóng chỉ đúng nếu bạn <b>gộp khoảng 117 triệu, thực nhận 90, và chi tiêu quanh 18 triệu</b> — một chuỗi điều kiện, không phải một con số hiển nhiên. Hãy tự kiểm lại biểu thuế hiện hành, vì nó thay đổi theo thời gian.</p>
+
+  <h3 class="rm-h3">Ngách nên đóng đinh: kỹ sư mobile chạy được ML trên thiết bị</h3>
+
+  <p class="rm-p">Đừng cạnh tranh ở ô "mobile developer" — ô đó có hàng trăm nghìn người và lợi thế của bạn bị pha loãng. Cũng đừng cạnh tranh ở ô "data scientist" — bạn nói đúng, ở đó bạn thua người có 5 năm kinh nghiệm DS.</p>
+
+  <div class="rm-lead">
+    <p>Hãy cạnh tranh ở <b>giao điểm</b>: nơi chỉ có bạn và vài nghìn người khác trên thế giới.</p>
+    <p>"Kỹ sư mobile triển khai được mô hình ML chạy trực tiếp trên thiết bị" là một hồ sơ mà các công ty sản phẩm rất muốn và rất khó tìm — vì người giỏi ML thường không biết build iOS, và người giỏi iOS thường không hiểu quantization. Bạn đang ở giữa, và bạn đang trả tiền học phí thạc sĩ để ở giữa cho chắc.</p>
+  </div>
+
+  <p class="rm-p">Cụ thể, đây là những thứ nên có trong hồ sơ trong 6 tháng tới. Không cần giỏi cả — cần <b>làm xong và cho xem được</b>:</p>
+
+  <ul class="rm-ul">
+    <li class="rm-li"><b>Core ML + Create ML</b> (iOS) và <b>TensorFlow Lite / LiteRT</b> (Flutter, Android). Chuyển một mô hình PyTorch qua ONNX rồi qua Core ML, đo độ trễ trước và sau.</li>
+    <li class="rm-li"><b>Quantization và pruning</b> — giảm mô hình từ 400 MB xuống 40 MB mà chỉ mất 2% độ chính xác. Đây là con số mà người phỏng vấn sẽ hỏi, và là chỗ toán của bạn có đất dùng.</li>
+    <li class="rm-li"><b>Suy luận thời gian thực trên camera</b> — phát hiện vật thể 30 khung hình/giây trên điện thoại tầm trung, không làm nóng máy. Bài toán này cần cả ML lẫn kỹ năng tối ưu mobile.</li>
+    <li class="rm-li"><b>Mô hình ngôn ngữ nhỏ chạy offline</b> trên điện thoại (llama.cpp, MLC, Core ML Stable Diffusion). Đang rất nóng, rất ít người làm được, và demo thì cực kỳ ấn tượng.</li>
+    <li class="rm-li"><b>Một repo GitHub công khai</b> làm đúng một trong bốn thứ trên, có README viết tử tế bằng tiếng Anh, có ảnh GIF chạy thật, có số đo. Một repo như vậy giá trị hơn mười dòng trong CV.</li>
+  </ul>
+
+  <h3 class="rm-h3">Cái thật sự chặn bạn không phải kỹ thuật</h3>
+
+  <p class="rm-p">Đây là phần người ta hay đoán sai. Với 5 năm kinh nghiệm, kỹ thuật của bạn đã đủ cho phần lớn vị trí remote. Ba thứ dưới đây mới là cổng thật, xếp theo mức độ chặn:</p>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Cổng</th><th class="rm-num">Mức chặn</th><th>Chữa thế nào</th></tr></thead>
+      <tbody>
+        <tr><td><b>Tiếng Anh nói</b></td><td class="rm-num rm-neg">cao nhất</td><td>Không phải ngữ pháp — là <b>nói liên tục 45 phút về kiến trúc và trả lời câu hỏi đuổi</b>. Chữa bằng 3 buổi/tuần × 45 phút với người bản xứ (italki, Cambly, Preply) trong 6 tháng. Chi phí ~2 triệu/tháng. Đây là khoản đầu tư có tỷ suất sinh lời cao nhất trong toàn bộ trang này.</td></tr>
+        <tr><td><b>Bằng chứng công khai</b></td><td class="rm-num">cao</td><td>Người tuyển ở Mỹ không gọi được sếp cũ của bạn ở Việt Nam để xác minh. Họ thay thế bằng thứ tự xác minh được: GitHub, app trên store có tên bạn, bài viết kỹ thuật, đóng góp mã nguồn mở. Một trong bốn là đủ.</td></tr>
+        <tr><td><b>Chịu được 40 lần từ chối</b></td><td class="rm-num">trung bình</td><td>Tỷ lệ chuyển đổi thật: khoảng 60 đơn → 8 phỏng vấn → 1–2 offer. Người bỏ cuộc gần như luôn bỏ ở đơn thứ 15–25, tức là <em>trước</em> khi thống kê kịp có ý nghĩa. Ghi sổ từng đơn để thấy mình đang ở đâu trên đường cong, thay vì cảm thấy mình đang thất bại.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="rm-h3">Ba điều cần biết trước khi nhận lương nước ngoài</h3>
+
+  <ul class="rm-ul">
+    <li class="rm-li"><b>Thuế thu nhập cá nhân vẫn phải khai ở Việt Nam.</b> Cá nhân cư trú tại Việt Nam chịu thuế trên thu nhập toàn cầu. Hợp đồng contractor nước ngoài không có ai khấu trừ hộ, nên nghĩa vụ tự khai là của bạn. Tra cứu quy định hiện hành hoặc hỏi một kế toán thuế <b>trước</b> khi ký, không phải sau — chi phí tư vấn một lần rẻ hơn nhiều so với truy thu và phạt.</li>
+    <li class="rm-li"><b>Mất bảo hiểm xã hội bắt buộc.</b> Contractor nước ngoài không đóng BHXH Việt Nam. Cân nhắc BHXH tự nguyện, và nhớ rằng bạn đã có thẻ y tế AIA — nên khoảng trống lớn nhất là lương hưu, thứ mà với tỷ lệ tích lũy của bạn thì danh mục đầu tư thay thế được dễ dàng.</li>
+    <li class="rm-li"><b>Rủi ro tập trung khách hàng.</b> Một hợp đồng contract chiếm 100% thu nhập thì đó là một công việc có rủi ro cao hơn công việc thường, không thấp hơn — vì nó chấm dứt được bằng một email. Mốc an toàn: két rổ A phải đủ <b>12 tháng chi tiêu</b> trước khi bạn nghỉ việc chính thức để làm contract toàn thời gian.</li>
+  </ul>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Tiêu chí thành / bại, viết trước</div>
+    <p>Trong <b>90 ngày</b> kể từ hôm nay: nộp ≥ 50 đơn, vào ≥ 3 vòng phỏng vấn cuối. Trong <b>9 tháng</b>: có ít nhất một offer ≥ 3.500 USD/tháng.</p>
+    <p>Nếu 9 tháng trôi qua mà không có offer nào, <b>không kết luận là "tôi không đủ giỏi"</b> — đó gần như luôn là kết luận sai. Hãy tìm chỗ hỏng trong phễu: nộp quá ít đơn (dưới 60), hồ sơ không qua vòng lọc (dưới 10% được gọi), hay trượt ở vòng nói (vào phỏng vấn nhiều nhưng không qua). Mỗi chỗ hỏng có một cách chữa khác nhau, và không cái nào là "cố gắng nhiều hơn".</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     6 · DANH MỤC
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="danh-muc" class="rm-part">
+  <p class="rm-kicker">Phần 6 · <b>Hậu cần</b></p>
+  <h2 class="rm-h2">Danh mục chứng khoán — sửa cấu trúc, không phải sửa lỗ</h2>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Mã</th><th>Ngành</th><th class="rm-num">Vốn</th><th class="rm-num">Lãi/lỗ</th><th class="rm-num">Thị giá</th><th class="rm-num">% danh mục</th></tr></thead>
+      <tbody>
+        <tr><td><b>HPG</b></td><td>Thép — chu kỳ</td><td class="rm-num">33,75</td><td class="rm-num rm-neg">−5,00</td><td class="rm-num">28,75</td><td class="rm-num">24,4%</td></tr>
+        <tr><td><b>TCB</b></td><td>Ngân hàng</td><td class="rm-num">33,75</td><td class="rm-num rm-pos">+3,00</td><td class="rm-num">36,75</td><td class="rm-num">31,1%</td></tr>
+        <tr><td><b>VIB</b></td><td>Ngân hàng</td><td class="rm-num">67,50</td><td class="rm-num rm-neg">−15,00</td><td class="rm-num">52,50</td><td class="rm-num"><b>44,5%</b></td></tr>
+        <tr><td colspan="2"><b>Tổng</b></td><td class="rm-num"><b>135,00</b></td><td class="rm-num rm-neg"><b>−17,00</b></td><td class="rm-num"><b>118,00</b></td><td class="rm-num"><b>100%</b></td></tr>
+      </tbody>
+      <caption class="rm-cap">Đơn vị: triệu đồng. Ngân hàng chiếm 75,6% · thép 24,4% · phần còn lại của nền kinh tế Việt Nam: 0%.</caption>
+    </table>
+  </div>
+
+  <h3 class="rm-h3">Vấn đề không phải là lỗ 17 triệu</h3>
+
+  <p class="rm-p">Lỗ 17 triệu là chuyện đã xảy ra, và không có hành động nào hôm nay thay đổi được nó. Vấn đề thật là ba thứ khác, và cả ba đều <em>sửa được</em>:</p>
+
+  <ul class="rm-ul">
+    <li class="rm-li"><b>Một mã chiếm 44,5%.</b> Nếu VIB giảm thêm 30% — hoàn toàn bình thường với một cổ phiếu ngân hàng trong một chu kỳ xấu — bạn mất thêm 15,7 triệu, tức 13% toàn bộ danh mục, từ <em>một</em> quyết định.</li>
+    <li class="rm-li"><b>Ba mã nằm trong hai ngành nhạy cùng một chu kỳ.</b> Thép và ngân hàng đều lên xuống theo tín dụng và đầu tư công. Bạn tưởng mình đa dạng hoá vì có ba mã, nhưng ba mã này rơi cùng lúc — bạn thực chất đang có <b>một</b> cược, đặt ba lần.</li>
+    <li class="rm-li"><b>Đây là rủi ro mà thị trường không trả công.</b> Lý thuyết danh mục có một kết luận ít người dùng đúng: phần rủi ro <em>riêng</em> của một mã có thể triệt tiêu bằng cách nắm nhiều mã, nên thị trường không trả thêm lợi nhuận cho ai chịu nó. Bạn đang chịu biến động của một ngành nhưng chỉ nhận kỳ vọng lợi nhuận của thị trường chung. Đó là một giao dịch bạn thua ngay từ đầu, bất kể giá chạy hướng nào.</li>
+  </ul>
+
+  <div class="rm-lead">
+    <p>Câu hỏi đúng không phải "<em>bao giờ VIB về bờ</em>". Câu hỏi đúng là: <b>nếu sáng mai tôi có 118 triệu tiền mặt và chưa sở hữu cổ phiếu nào, tôi có mua đúng ba mã này, với đúng tỷ trọng này không?</b></p>
+    <p>Nếu câu trả lời là không, thì bạn đang giữ danh mục này không phải vì phân tích, mà vì <b>giá mua của bạn</b>. Và giá mua của bạn không phải một biến số trong tương lai của cổ phiếu — thị trường không biết bạn mua giá nào và không có lý do gì để đưa bạn về đó.</p>
+  </div>
+
+  <p class="rm-p">Một điểm hay bị hiểu nhầm và đáng nói rõ: <b>bán một cổ phiếu đang lỗ không "hiện thực hoá" thêm mất mát nào.</b> Khoản lỗ đã xảy ra từ lúc giá giảm; tài sản của bạn hôm nay là 118 triệu dù bạn bán hay giữ. Việc bán chỉ đổi <em>hình dạng rủi ro</em> của 118 triệu đó. Cảm giác "bán là chốt lỗ" là một lỗi nhận thức có tên — <b>hiệu ứng ác cảm mất mát</b> — và nó khiến người ta giữ thứ đang giảm lâu hơn hẳn thứ đang tăng.</p>
+
+  <h3 class="rm-h3">Cơ cấu đích, và cách chuyển trong 3 tháng</h3>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Lớp</th><th class="rm-num">Tỷ trọng</th><th class="rm-num">Số tiền</th><th>Công cụ ở Việt Nam</th><th>Vì sao</th></tr></thead>
+      <tbody>
+        <tr><td><b>Lõi chỉ số</b></td><td class="rm-num">60%</td><td class="rm-num">~131 tr</td><td>ETF mô phỏng VN30 hoặc VN Diamond, mua qua tài khoản chứng khoán như mua cổ phiếu thường</td><td>Bắt lợi suất chung của thị trường với phí rất thấp và <b>không cần bạn theo dõi</b>. Đây là điểm quan trọng nhất, không phải lợi suất.</td></tr>
+        <tr><td><b>Quỹ mở cổ phiếu</b></td><td class="rm-num">25%</td><td class="rm-num">~55 tr</td><td>Quỹ mở cổ phiếu của các công ty quản lý quỹ lớn, mua qua nền tảng phân phối hoặc trực tiếp</td><td>Tiếp cận nhóm vốn hoá vừa mà chỉ số bỏ sót, và có người quản lý chuyên nghiệp. Phí cao hơn ETF, nên chỉ một phần tư.</td></tr>
+        <tr><td><b>Cổ phiếu tự chọn</b></td><td class="rm-num">≤ 15%</td><td class="rm-num">≤ 33 tr</td><td>Tối đa 3 mã, mỗi mã ≤ 5% danh mục</td><td>Giữ lại để còn học và còn vui. Giới hạn 5% mỗi mã nghĩa là một mã về 0 chỉ làm bạn mất 5% — chịu được, và học được.</td></tr>
+      </tbody>
+      <caption class="rm-cap">Số tiền tính trên 218 triệu (118 triệu cổ phiếu hiện có + 100 triệu chuyển từ tiền mặt sang rổ B). Cân bằng lại mỗi năm một lần, vào tháng 1, không cần thường xuyên hơn.</caption>
+    </table>
+  </div>
+
+  <h3 class="rm-h4">Lịch chuyển — chia nhỏ, không làm một ngày</h3>
+
+  <ul class="rm-ul rm-ul--tight">
+    <li class="rm-li"><b>Tháng 1:</b> bán 1/3 VIB và 1/3 HPG. Mua ETF bằng đúng số tiền thu được.</li>
+    <li class="rm-li"><b>Tháng 2:</b> bán 1/3 tiếp của cả ba mã. Chia: 60% ETF, 40% quỹ mở.</li>
+    <li class="rm-li"><b>Tháng 3:</b> bán phần còn lại, giữ lại đúng một mã bạn hiểu rõ nhất ở mức ≤ 5%.</li>
+    <li class="rm-li"><b>Song song:</b> chuyển 100 triệu tiền mặt vào rổ B theo 5 đợt, mỗi đợt 20 triệu, cách nhau 3 tuần.</li>
+  </ul>
+
+  <p class="rm-p">Chia nhỏ không phải vì nó tối ưu về mặt toán — <b>gộp một lần có kỳ vọng cao hơn một chút</b>, vì thị trường tăng nhiều hơn giảm. Chia nhỏ là vì nó tối ưu về mặt <em>bạn sẽ thực sự làm</em>: nếu bạn dồn hết vào một ngày và thị trường giảm 8% tuần sau, xác suất bạn hoảng và phá kế hoạch là rất cao. Một kế hoạch tốt mà bạn bỏ dở thua một kế hoạch khá mà bạn theo hết.</p>
+
+  <p class="rm-p">Chi phí của toàn bộ việc này: thuế 0,1% trên giá trị bán cộng phí môi giới khoảng 0,15–0,25%. Bán khoảng 100 triệu tốn <b>250–350 nghìn đồng</b>. So với việc mang 44,5% danh mục trong một mã ngân hàng thêm ba năm nữa, đây là món hời.</p>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Viết một trang "chính sách đầu tư" và dán lên tường</div>
+    <p>Bốn dòng là đủ: <b>(1)</b> tỷ trọng mục tiêu của ba lớp; <b>(2)</b> ngày 11 hằng tháng chuyển 20 triệu, không xét thị trường đang thế nào; <b>(3)</b> cân bằng lại mỗi tháng 1; <b>(4)</b> <b>không bán khi thị trường giảm — trừ khi cần tiền sống, và tiền sống nằm ở rổ A</b>.</p>
+    <p>Lý do viết ra: bạn viết nó lúc bình tĩnh, và bạn sẽ đọc nó lúc hoảng. Đó là toàn bộ công dụng. Một quy tắc quyết định trước loại bỏ phần lớn giá trị mà cảm xúc phá được.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     7 · NHÀ
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="nha" class="rm-part">
+  <p class="rm-kicker">Phần 7 · <b>Quyết định đắt nhất</b></p>
+  <h2 class="rm-h2">Nhà — quyết định một chiều duy nhất trên cả trang này</h2>
+
+  <p class="rm-p">Nhà bị thu hồi trong 3–5 năm tới, và <b>đền bù dự kiến 2–3 tỷ cho cả nhà lẫn đất</b>. Con số đó thay đổi bài toán nhiều hơn bất cứ thứ gì khác trên trang này — nó biến một mất mát thành một câu hỏi phân bổ. Nhưng nó cũng mở ra ba câu hỏi mới, và <b>cả ba đều chưa có câu trả lời</b>.</p>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Ba câu hỏi quyết định 2–3 tỷ này nghĩa là gì với riêng bạn</div>
+    <p><b>1 · Ai đứng tên nhà và đất?</b> Đây là câu quan trọng nhất và dễ bị bỏ qua nhất. Tiền đền bù về tay người đứng tên. Nếu đó là bố mẹ bạn thì 2–3 tỷ là tài sản của bố mẹ, không phải vốn của bạn — và điều đó hoàn toàn bình thường, chỉ cần bạn <em>biết</em> để không lập kế hoạch quanh một khoản tiền không phải của mình. Nếu có anh chị em, hỏi luôn chuyện chia.</p>
+    <p><b>2 · Đền bù có mua nổi một căn thay thế không?</b> Đền bù giải phóng mặt bằng ở Việt Nam thường thấp hơn giá thị trường của một căn tương đương. 2–3 tỷ có thể đủ mua một căn hộ xa trung tâm hơn, hoặc không đủ cho một chỗ tương đương chỗ đang ở. <b>Hãy tự khảo giá ba căn thật</b> trong khu vực gia đình có thể chuyển tới, trước khi tin vào con số đền bù.</p>
+    <p><b>3 · Có suất tái định cư không?</b> Một suất tái định cư thường có giá trị hơn tiền mặt tương ứng, vì nó được bán theo giá quy định chứ không giá thị trường. Nếu có, nó có thể là phương án tốt nhất — và nó cũng thường đi kèm điều kiện về thời gian giữ, nên hỏi kỹ.</p>
+  </div>
+
+  <h3 class="rm-h3">Ba kết cục, và cái giá của mỗi cái</h3>
+
+  <p class="rm-p">Tuỳ ba câu trên trả lời ra sao mà bạn rơi vào một trong ba ô dưới đây. Chênh lệch giữa ô tốt nhất và ô tệ nhất là <b>khoảng 2,7 tỷ</b> ở năm 2036 — lớn hơn toàn bộ tài sản hiện tại của bạn, và lớn hơn mọi thứ khác trên trang này cộng lại. Đó là lý do ba cuộc điện thoại đứng đầu danh sách 90 ngày.</p>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Kết cục</th><th>Nghĩa là gì với bạn</th><th class="rm-num">Tài sản 2036</th><th class="rm-num">Mốc 2</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>A · Đền bù không đến được với bạn</b><br><span class="wb-cell-sub">tiền về tay người đứng tên, bạn ra ở riêng</span></td>
+          <td>Bạn tự thuê từ 2030, khoảng 13 triệu/tháng. Chi tiêu lên 23 triệu, tỷ lệ tích lũy tụt từ 75% xuống 42%, và mốc độc lập tài chính cần 7,5 tỷ thay vì 4,8 tỷ.</td>
+          <td class="rm-num rm-neg"><b>8,4 tỷ</b></td><td class="rm-num rm-neg">2035</td>
+        </tr>
+        <tr>
+          <td><b>B · Đền bù mua được căn thay thế</b><br><span class="wb-cell-sub">bạn vẫn có chỗ ở, không nhận phần dư</span></td>
+          <td><b>Đây là mặc định của trang, và là kết cục khả dĩ nhất.</b> Chỗ ở được lo, bạn không giàu thêm đồng nào, nhưng cũng không mất gì. Chi tiêu giữ nguyên, mốc độc lập chỉ cần 4,8 tỷ.</td>
+          <td class="rm-num"><b>9,7 tỷ</b></td><td class="rm-num"><b>2032</b></td>
+        </tr>
+        <tr>
+          <td><b>C · Bạn nhận được một phần</b><br><span class="wb-cell-sub">ví dụ 1 tỷ sau khi mua căn thay thế</span></td>
+          <td>Phần dư vào rổ B và chạy lãi kép suốt phần còn lại. Đáng chú ý: 1 tỷ nhận năm 2030 thành khoảng 1,4 tỷ ở 2036 và 2,3 tỷ ở 2040 — nhưng nó <em>không</em> rút ngắn mốc 2 thêm nữa, vì mốc 2 đã ở 2031.</td>
+          <td class="rm-num rm-pos"><b>11,1 tỷ</b></td><td class="rm-num rm-pos">2031</td>
+        </tr>
+      </tbody>
+      <caption class="rm-cap">Tính bằng sức mua hôm nay, kịch bản cơ sở. Máy tính ở Phần 4 dựng được cả ba, nhưng <b>kết cục A cần đổi hai ô chứ không phải một</b>: <code>tiền ở sau đó = 13</code> <em>và</em> <code>chi tiêu khi nghỉ = 25</code> — vì nếu phải thuê suốt đời thì mức chi tiêu lúc nghỉ cũng phải gánh tiền thuê, nên đích cần 7,5 tỷ thay vì 4,8 tỷ. Kết cục C chỉ cần đổi ô <code>đền bù ròng về tay bạn</code> thành 1.000. Điều đáng chú ý nhất trong bảng: khoảng cách A→B <em>lớn hơn</em> khoảng cách B→C. <b>Việc có chỗ ở đáng giá hơn việc nhận tiền mặt</b> — vì chỗ ở cắt chi phí suốt đời, còn tiền mặt chỉ là một lần.</caption>
+    </table>
+  </div>
+
+  <div class="rm-lead">
+    <p>Thông tin này sửa cái lỗi nặng nhất mà bản trước của trang mắc phải — và tôi muốn nói rõ nó đã sai ở đâu.</p>
+    <p>Bản trước giả định bạn mất nhà và <b>không nhận được gì</b>, nên nó tính cái sàn ở 3,5 tỷ và đặt mốc 2 ở 2035. Với 2–3 tỷ đền bù, sàn lên <b>4,7 tỷ</b> và mốc 2 về <b>2032</b>. <b>Con số đổi vì bạn cho thêm dữ kiện, không phải vì tôi tính sai</b> — nhưng nó cho thấy một điều đáng nhớ hơn cả con số: <b>một ẩn số chưa được trả lời đắt hơn một câu trả lời xấu.</b> Ba năm cuộc đời nằm trong khoảng cách giữa ô A và ô B, và cái ngăn bạn biết mình ở ô nào chỉ là vài cuộc điện thoại.</p>
+  </div>
+
+  <h3 class="rm-h3">Còn nếu bạn muốn dùng tiền đó mua nhà riêng?</h3>
+
+  <p class="rm-p">Nếu bạn thực sự nhận được 1 tỷ trở lên, điều kiện mua nhà ở cuối phần này đến sớm hơn nhiều. Nhưng phần dưới đây vẫn phải đọc, vì nó giải thích vì sao <b>vay lớn để mua nhà trong ba năm bản lề là quyết định tệ nhất bạn có thể ra</b> — và điều đó đúng bất kể bạn có 1 tỷ hay không. Có 1 tỷ chỉ đổi <em>khi nào</em> bạn mua, không đổi <em>có nên vay nhiều hay không</em>.</p>
+
+  <h3 class="rm-h3">Mua nhà bây giờ sẽ giết chiến lược</h3>
+
+  <p class="rm-p">Giả sử căn hộ 4 tỷ, trả trước 1,5 tỷ, vay 2,5 tỷ trong 20 năm với lãi thả nổi khoảng 10,5%/năm. Khoản trả góp là <b>khoảng 25 triệu/tháng</b>. Mức tích lũy hiện tại của bạn là 30 triệu/tháng.</p>
+
+  <p class="rm-p">Nghĩa là: <b>tích lũy của bạn rơi từ 30 triệu xuống khoảng 3 triệu một tháng — giảm gần 90%.</b> Toàn bộ cỗ máy làm giàu ở Phần 4 dừng lại. Và tệ hơn con số, là thứ nó lấy mất:</p>
+
+  <ul class="rm-ul">
+    <li class="rm-li">Không thể nghỉ 3 tháng không lương để dồn sức xây sản phẩm.</li>
+    <li class="rm-li">Không thể nhận một offer lương thấp hơn ở công ty tốt hơn để học nhanh hơn.</li>
+    <li class="rm-li">Không thể chuyển thành phố hay ra nước ngoài nếu cơ hội đến.</li>
+    <li class="rm-li">Không thể chịu được 4 tháng thất nghiệp mà không bán tài sản.</li>
+  </ul>
+
+  <p class="rm-p">Tất cả những thứ vừa liệt kê chính là <b>nguyên liệu của Phần 5</b> — mặt trận có kỳ vọng cao nhất. Một khoản trả góp 25 triệu/tháng không chỉ lấy tiền, nó lấy <b>quyền linh hoạt</b>, đúng lúc quyền linh hoạt là tài sản đáng giá nhất bạn có.</p>
+
+  <h3 class="rm-h3">Máy tính: thuê hay mua</h3>
+
+  <div class="rm-calc">
+    <div class="rm-calc__head">
+      <h3 class="rm-calc__title">So sánh tài sản ròng sau N năm</h3>
+      <span class="rm-calc__hint">giả định người thuê đầu tư toàn bộ phần chênh lệch</span>
+    </div>
+    <div class="rm-inputs">
+      <div class="rm-inp"><label for="i-h-price">Giá nhà (triệu)</label><input class="wb-input" type="number" id="i-h-price" value="4000" step="100"></div>
+      <div class="rm-inp"><label for="i-h-down">Trả trước (triệu)</label><input class="wb-input" type="number" id="i-h-down" value="1500" step="100"></div>
+      <div class="rm-inp"><label for="i-h-rate">Lãi vay (%/năm)</label><input class="wb-input" type="number" id="i-h-rate" value="10.5" step="0.25"></div>
+      <div class="rm-inp"><label for="i-h-term">Kỳ hạn vay (năm)</label><input class="wb-input" type="number" id="i-h-term" value="20" step="1"></div>
+      <div class="rm-inp"><label for="i-h-rent">Thuê tương đương (tr/tháng)</label><input class="wb-input" type="number" id="i-h-rent" value="13" step="0.5"></div>
+      <div class="rm-inp"><label for="i-h-app">Nhà tăng giá (%/năm)</label><input class="wb-input" type="number" id="i-h-app" value="7" step="0.5"></div>
+      <div class="rm-inp"><label for="i-h-inv">Lợi suất đầu tư (%/năm)</label><input class="wb-input" type="number" id="i-h-inv" value="9" step="0.5"></div>
+      <div class="rm-inp"><label for="i-h-years">So sánh sau (năm)</label><input class="wb-input" type="number" id="i-h-years" value="5" step="1" min="1" max="25"></div>
+    </div>
+    <div class="rm-out">
+      <div class="rm-figs" style="margin-bottom:14px">
+        <div class="rm-fig"><div class="rm-fig__k">Trả góp / tháng</div><div class="rm-fig__v" id="o-h-pmt">—</div><div class="rm-fig__n" id="o-h-pmt-n">—</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Chi phí sở hữu năm 1</div><div class="rm-fig__v" id="o-h-cost">—</div><div class="rm-fig__n">lãi vay + phí quản lý và bảo trì + chi phí cơ hội của tiền trả trước</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Giá / tiền thuê năm</div><div class="rm-fig__v" id="o-h-ptr">—</div><div class="rm-fig__n" id="o-h-ptr-n">—</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Nhà phải tăng giá</div><div class="rm-fig__v" id="o-h-be">—</div><div class="rm-fig__n">mỗi năm, để mua hoà với thuê ở mốc thời gian bạn chọn</div></div>
+      </div>
+      <div class="rm-figs" style="margin-bottom:0">
+        <div class="rm-fig"><div class="rm-fig__k">Nếu MUA — tài sản ròng</div><div class="rm-fig__v" id="o-h-buy">—</div><div class="rm-fig__n" id="o-h-real-n">—</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Nếu THUÊ — tài sản ròng</div><div class="rm-fig__v" id="o-h-rentnw">—</div><div class="rm-fig__n">tiền trả trước cộng phần chênh lệch hằng tháng, tất cả đem đầu tư</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Chênh lệch</div><div class="rm-fig__v" id="o-h-diff">—</div><div class="rm-fig__n" id="o-h-diff-n">—</div></div>
+        <div class="rm-fig"><div class="rm-fig__k">Tích lũy còn lại nếu mua</div><div class="rm-fig__v" id="o-h-left">—</div><div class="rm-fig__n" id="o-h-left-n">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="rm-p">Kết quả trung thực, và bạn nên tự kiểm bằng máy tính ở trên: điểm hoà nằm ở mức tăng giá nhà khoảng <b>6,6%/năm</b>. Dưới mức đó thuê thắng, trên mức đó mua thắng. <b>Ở giả định mặc định (nhà tăng 7%/năm), mua thắng — nhỉnh hơn khoảng 82 triệu sau 5 năm, tính theo giá hôm nay.</b> Tôi để nguyên con số đó thay vì chỉnh giả định cho hợp kết luận, vì đó chính là điều cần thấy: <b>xét thuần về tiền, hai phương án gần như hoà, và mọi kết luận dứt khoát chỉ là một dự đoán về giá bất động sản mười năm tới đội lốt phân tích.</b> Không ai biết con số đó.</p>
+
+  <p class="rm-p">Nếu tiền hoà nhau, quyết định phải dựa vào thứ khác. Và thứ khác đó không hoà chút nào.</p>
+
+  <div class="rm-lead">
+    <p>Nhưng phép so sánh tiền không phải lý do chính. Lý do chính là <b>bất đối xứng của sai lầm</b>.</p>
+    <p>Thuê ba năm rồi phát hiện mình sai: bạn mất một phần lợi nhuận và mua nhà muộn hơn ba năm, với nhiều tiền hơn và thu nhập cao hơn. Mua bây giờ rồi phát hiện mình sai: bạn bị khoá vào một khoản nợ 20 năm, mất khả năng đổi việc và đổi thành phố, đúng trong ba năm bản lề của sự nghiệp — và bán một căn hộ ở Việt Nam khi cần tiền gấp thường mất 5–10% giá trị cộng nhiều tháng chờ. <b>Một sai lầm sửa được trong một tháng; sai lầm kia mất ba năm.</b></p>
+  </div>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Quy tắc, viết một lần và không bàn lại cho đến khi chạm điều kiện</div>
+    <p>Mua nhà khi <b>cả hai</b> điều kiện cùng đúng, không phải một: <b>(a)</b> thu nhập ≥ 80 triệu/tháng đã ổn định 12 tháng, và <b>(b)</b> tiền trả trước ≥ 50% giá trị căn nhà, sau khi trả trước vẫn còn nguyên 12 tháng chi tiêu trong rổ A.</p>
+    <p>Với kịch bản cơ sở, bạn chạm cả hai vào khoảng <b>2030–2031</b>. Trong lúc chờ, hãy thuê một chỗ <em>tốt hơn mức bạn nghĩ mình xứng đáng</em> — chênh lệch 3–4 triệu một tháng cho một chỗ ở khiến bạn sống dễ chịu và làm việc tốt hơn là khoản chi có tỷ suất sinh lời cao, không phải là hoang phí. Kỷ luật tài chính đúng chỗ, không phải ở mọi chỗ.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     8 · SẢN PHẨM
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="san-pham" class="rm-part">
+  <p class="rm-kicker">Phần 8 · <b>Quyền chọn</b></p>
+  <h2 class="rm-h2">Sản phẩm riêng — chơi như mua quyền chọn, không như đặt cược</h2>
+
+  <p class="rm-p">Bạn hỏi về làm một app hoặc web để bán, hoặc thu phí thuê bao. Câu trả lời là <b>có, nhưng với ngân sách cố định và tiêu chí giết viết sẵn.</b> Lý do không phải vì sản phẩm là ý tồi — mà vì phân phối xác suất của nó rất khác với thứ bạn đang hình dung.</p>
+
+  <p class="rm-p">Xác suất một micro-SaaS của một người làm ngoài giờ đạt doanh thu đủ sống trong 24 tháng: <b>khoảng 10–15%</b>. Nhưng cái đuôi của phân phối rất dài — nhánh thành công không bị chặn trên. Đó chính là hình dạng của một <b>quyền chọn</b>: mất mát bị chặn (thời gian và tiền bạn đã định trước), lợi ích không chặn. Quyền chọn thì đáng mua, miễn là bạn trả đúng giá và <b>không trả thêm sau khi nó hết hạn</b>.</p>
+
+  <div class="rm-lead">
+    <p>Cách thua ở đây không phải là sản phẩm thất bại. Là <b>sản phẩm thất bại chậm</b>.</p>
+    <p>Một sản phẩm chết trong 90 ngày tốn của bạn 80 giờ và vài triệu đồng — rẻ, và bạn học được. Một sản phẩm lay lắt 3 năm vì "sắp có khách rồi" tốn 1.200 giờ và ăn mất đúng khoảng thời gian lẽ ra dùng để nhân thu nhập lên gấp ba. <b>Chi phí thật của sản phẩm không phải tiền, là sự chú ý bị rút khỏi Phần 5.</b></p>
+  </div>
+
+  <h3 class="rm-h3">Năm luật, không có ngoại lệ</h3>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th style="width:26px">#</th><th>Luật</th><th>Vì sao</th></tr></thead>
+      <tbody>
+        <tr><td><b>1</b></td><td><b>Ngân sách cố định: 6 giờ/tuần và 20 triệu/năm.</b> Vượt là dừng, không phải là cố thêm.</td><td>Đây là cái làm nó thành quyền chọn thay vì cược. Không có trần chi phí thì mất mát không còn bị chặn, và toàn bộ lý do để chơi biến mất.</td></tr>
+        <tr><td><b>2</b></td><td><b>Bán cho người có tiền và có nỗi đau đo được.</b> Doanh nghiệp nhỏ, người làm nghề tự do, đội kỹ thuật — không làm app tiêu dùng miễn phí chờ quảng cáo.</td><td>200 khách trả 25 USD/tháng là 5.000 USD/tháng. Để có từng ấy tiền từ quảng cáo, bạn cần vài trăm nghìn người dùng — một bài toán phân phối khác hẳn và bạn không có lợi thế nào trong đó.</td></tr>
+        <tr><td><b>3</b></td><td><b>Bán trước khi xây.</b> 20 cuộc nói chuyện với khách hàng tiềm năng trước dòng code đầu tiên.</td><td>Lỗi phổ biến nhất của kỹ sư: xây thứ không ai cần, rất đẹp, rất đúng kiến trúc. 20 cuộc nói chuyện tốn hai tuần và loại bỏ 80% khả năng đó.</td></tr>
+        <tr><td><b>4</b></td><td><b>Deadline 90 ngày tới đồng doanh thu đầu tiên,</b> tính từ dòng code đầu. Không có khách trả tiền sau 90 ngày thì giết, không gia hạn.</td><td>Đồng đầu tiên là tín hiệu rẻ nhất và đáng tin nhất về việc có ai đó thực sự cần thứ này. Lời khen không phải tín hiệu. Đăng ký dùng thử miễn phí không phải tín hiệu.</td></tr>
+        <tr><td><b>5</b></td><td><b>Chỉ làm thứ mà 5 năm mobile + DS cho bạn lợi thế không công bằng.</b></td><td>Không làm CRM, không làm ứng dụng ghi chú, không làm công cụ quản lý công việc. Những ô đó có hàng nghìn đối thủ và bạn không hơn ai. Lợi thế không công bằng là toàn bộ lý do bạn có cửa thắng.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="rm-h3">Chỗ bắt đầu — bạn đang sở hữu một phòng thí nghiệm mà chưa dùng</h3>
+
+  <p class="rm-p">Bạn góp 50 triệu vào một cửa hàng quần áo và không rút được vốn. Về mặt tài chính đó là tiền chết. Nhưng nó đi kèm một thứ có giá mà hầu hết người muốn làm sản phẩm không có: <b>quyền ra vào một doanh nghiệp thật, nhìn nó vận hành, và hỏi chủ nó bất cứ điều gì.</b></p>
+
+  <p class="rm-p">Phần lớn người làm SaaS thất bại vì không tiếp cận được khách hàng đầu tiên. Bạn có sẵn một người. Hãy dành một buổi chiều ngồi ở đó và ghi lại: họ đếm hàng tồn thế nào, ghi doanh thu ra đâu, mất bao lâu để biết mẫu nào bán chạy, xử lý đổi trả ra sao, tính lương nhân viên bằng gì. Rồi hỏi cùng những câu đó với mười chủ cửa hàng khác trong cùng khu.</p>
+
+  <p class="rm-p">Ba hướng khớp với kỹ năng của bạn — <em>gợi ý để bạn có chỗ bắt đầu nghĩ, không phải chỉ định</em>:</p>
+
+  <ul class="rm-ul">
+    <li class="rm-li"><b>Công cụ cho chính dân mobile.</b> Bạn hiểu nỗi đau này hơn bất kỳ ai: phân tích kích thước gói cài đặt, chẩn đoán crash sâu hơn công cụ sẵn có, đóng gói mô hình ML cho ứng dụng di động. Khách hàng là đội kỹ thuật — họ có ngân sách và mua nhanh.</li>
+    <li class="rm-li"><b>Camera điện thoại làm việc của một thiết bị đắt tiền.</b> Đếm và kiểm kho bằng camera, nhận dạng hoá đơn và phiếu nhập, đo đạc. Đây đúng là giao điểm mobile × ML của bạn, và khách hàng là các hộ kinh doanh xung quanh bạn.</li>
+    <li class="rm-li"><b>Một mô hình nhỏ chạy offline trên điện thoại,</b> bán dưới dạng thư viện hoặc ứng dụng cho ngành có yêu cầu bảo mật dữ liệu — y tế, pháp lý, tài chính — nơi gửi dữ liệu lên máy chủ là điều không được phép.</li>
+  </ul>
+
+  <p class="rm-p rm-quiet">Thời điểm bắt đầu: <b>không phải bây giờ.</b> Tuần 6–12 của kế hoạch 90 ngày chỉ dành cho việc nói chuyện với khách hàng, chưa viết dòng code nào. Việc viết code bắt đầu sau khi bạn có <b>ba vấn đề mà có người nói rõ rằng họ sẵn sàng trả tiền để giải quyết</b> — câu "hay đấy" không tính.</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     9 · HỌC
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="hoc" class="rm-part">
+  <p class="rm-kicker">Phần 9 · <b>Hậu cần</b></p>
+  <h2 class="rm-h2">Bằng master Data Science — bạn đánh giá đúng, nhưng kết luận sai một nửa</h2>
+
+  <p class="rm-p">Bạn nói: học xong mà đi làm data scientist thì không cạnh tranh nổi với người có nhiều năm kinh nghiệm. <b>Điều này đúng, và bạn nên tin vào nó.</b> Ở vị trí data scientist thuần, một người mới tốt nghiệp thạc sĩ ở tuổi 27 cạnh tranh với người đã làm 5 năm là một trận đấu không cân sức, và bạn sẽ phải bắt đầu lại ở mức lương thấp hơn mức bạn đang có.</p>
+
+  <p class="rm-p">Kết luận sai là ở chỗ tiếp theo: từ đó bạn suy ra rằng việc học <em>chỉ để nâng cao kiến thức</em>. Không phải. Nó có ba giá trị đo được, và không cái nào là "làm data scientist":</p>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Giá trị</th><th>Dùng vào đâu</th><th>Cách lấy tối đa</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>1 · Tấm bằng là chìa khoá qua cổng</b></td>
+          <td>Bộ lọc tự động của phòng nhân sự quốc tế, hồ sơ xin visa lao động tay nghề cao ở nhiều nước, và điều kiện dự tuyển của một số công ty lớn.</td>
+          <td>Tốt nghiệp <b>đúng hạn</b>. Điểm số gần như không ai hỏi. Bằng có hay không mới là câu hỏi nhị phân người ta thực sự kiểm.</td>
+        </tr>
+        <tr>
+          <td><b>2 · Nền toán đủ để không bị lừa</b></td>
+          <td>Đọc được bài báo khoa học, hiểu vì sao mô hình hỏng, biết khi nào một chỉ số đang nói dối. Đây là thứ phân biệt kỹ sư dùng được thư viện với kỹ sư hiểu mình đang làm gì.</td>
+          <td>Bạn đã mạnh xác suất thống kê. Phần đáng đầu tư thêm: <b>tối ưu hoá, đại số tuyến tính, và vi phân nhiều biến</b> — đúng phần bạn đang học. Phần học vừa đủ qua môn: lý thuyết học sâu hàn lâm, phương pháp nghiên cứu.</td>
+        </tr>
+        <tr>
+          <td><b>3 · Luận văn là một sản phẩm portfolio được trả công bằng tín chỉ</b></td>
+          <td>Đây là giá trị lớn nhất và bị bỏ phí nhiều nhất. Bạn phải làm nó dù sao đi nữa — nên hãy làm nó thành thứ mà nhà tuyển dụng muốn xem.</td>
+          <td>Chọn đề tài về <b>học máy chạy trên thiết bị di động</b>: nén mô hình, suy luận thời gian thực trên điện thoại, đánh đổi giữa độ trễ và độ chính xác. Một mũi tên trúng ba đích: qua môn, làm hồ sơ, và có thể thành sản phẩm.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Chế độ học: đủ tốt, không tối ưu</div>
+    <p>Chênh lệch giữa điểm khá giỏi và điểm xuất sắc tốn khoảng <b>150 giờ mỗi năm</b> và có giá thị trường gần bằng <b>không</b> — không nhà tuyển dụng remote nào hỏi điểm trung bình của bạn. Cũng 150 giờ đó đổ vào tiếng Anh và hồ sơ ở Phần 5 có kỳ vọng hàng trăm triệu đồng mỗi năm.</p>
+    <p>Đây không phải lời khuyên học ẩu. Là lời khuyên <b>đặt nỗ lực xuất sắc đúng chỗ</b>: xuất sắc ở luận văn và ở ba môn nền toán, đủ tốt ở phần còn lại.</p>
+  </div>
+
+  <p class="rm-p">Và câu định vị để bạn dùng trong mọi buổi phỏng vấn từ giờ: <b>bạn không phải một mobile dev đang học chuyển sang data science. Bạn là một kỹ sư mobile 5 năm kinh nghiệm đang xây nền toán để đưa mô hình học máy lên thiết bị.</b> Câu thứ nhất mô tả một người đang bỏ dở lợi thế. Câu thứ hai mô tả một người đang cộng dồn hai lợi thế. Cùng một sự thật, hai câu chuyện, và chỉ một trong hai được trả tiền.</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     10 · DỌN DẸP
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="don-dep" class="rm-part">
+  <p class="rm-kicker">Phần 10 · <b>Hậu cần</b></p>
+  <h2 class="rm-h2">Bảo hiểm, cửa hàng, khoản cho vay — một buổi chiều, xong vĩnh viễn</h2>
+
+  <h3 class="rm-h3">Bảo hiểm AIA — 30 triệu/năm, đã đóng 8 năm, tổng 240 triệu</h3>
+
+  <p class="rm-p">Đây là khoản chi lớn thứ hai của bạn sau chi phí sinh hoạt: <b>30 triệu/năm là 2,5 triệu/tháng, chiếm 6,3% thu nhập</b>. Khoảng hợp lý cho toàn bộ chi phí bảo vệ là 5–8% thu nhập, nên con số này <em>không</em> bất thường. Câu hỏi không phải "có đắt không", mà là <b>bạn đang mua gì bằng số tiền đó</b>.</p>
+
+  <p class="rm-p">Nguyên tắc nền, và là thứ giải thích gần như mọi băn khoăn về bảo hiểm nhân thọ: <b>bảo hiểm mua để đền bù thảm hoạ, không phải để tích lũy.</b> Một hợp đồng gộp cả bảo vệ và đầu tư thường làm cả hai việc kém hơn hai sản phẩm riêng — nhưng gộp lại thì khó so sánh giá, và đó chính là lý do nó được bán theo cách đó.</p>
+
+  <p class="rm-p"><b>Việc phải làm trong 30 ngày</b> — gọi AIA và yêu cầu bằng văn bản ba thứ:</p>
+
+  <ul class="rm-ul rm-ul--tight">
+    <li class="rm-li"><b>Giá trị tài khoản / giá trị hoàn lại hiện tại</b> — con số bạn nhận được nếu dừng hôm nay.</li>
+    <li class="rm-li"><b>Bảng minh hoạ quyền lợi cập nhật</b> — dòng tiền dự kiến các năm tới.</li>
+    <li class="rm-li"><b>Cơ cấu phí đang bị trừ hằng năm</b> — phí ban đầu, phí quản lý hợp đồng, phí bảo hiểm rủi ro, phí quản lý quỹ. Tách bạch từng khoản.</li>
+  </ul>
+
+  <p class="rm-p">Rồi quyết theo ngưỡng — viết ngưỡng ra <em>trước</em> khi nhìn số, để con số không kéo bạn đi:</p>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Giá trị tài khoản / 240 tr đã đóng</th><th>Kết luận</th><th>Hành động</th></tr></thead>
+      <tbody>
+        <tr><td class="rm-num"><b>≥ 85%</b></td><td class="rm-pos">Sản phẩm chấp nhận được</td><td>Giữ nguyên. Giai đoạn phí cao nhất đã qua, các năm tới hiệu quả hơn hẳn tám năm đầu.</td></tr>
+        <tr><td class="rm-num"><b>60–85%</b></td><td>Bảo vệ tốt, đầu tư kém</td><td>Giữ toàn bộ phần bảo vệ. Giảm phí đóng thêm về mức tối thiểu duy trì hợp đồng, chuyển phần dư (khoảng 15–20 triệu/năm) sang rổ B.</td></tr>
+        <tr><td class="rm-num"><b>&lt; 60%</b></td><td class="rm-neg">Phần đầu tư đang ăn mòn</td><td>Nghiêm túc xét chuyển sang đóng giảm, tách phần bảo vệ ra thành bảo hiểm tử kỳ thuần cộng thẻ sức khoẻ riêng. Hỏi ít nhất hai nguồn độc lập trước khi ký bất cứ gì.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Đừng huỷ toàn bộ — hai lý do cụ thể</div>
+    <p><b>Một:</b> thẻ y tế có giá trị thật và không thay thế dễ. Mua lại ở tuổi cao hơn thì đắt hơn, và bất kỳ bệnh nào phát sinh trong tám năm qua đều có thể bị loại trừ khỏi hợp đồng mới. Đây là thứ bạn <em>không</em> muốn mất.</p>
+    <p><b>Hai:</b> bạn đã trả xong phần đắt nhất. Hợp đồng liên kết đầu tư trừ phí nặng nhất ở những năm đầu; huỷ ở năm thứ tám là chịu toàn bộ chi phí mà bỏ đi đúng giai đoạn nó bắt đầu hiệu quả. Sai lầm đã ở quá khứ — quyết định hôm nay chỉ nên nhìn về phía trước.</p>
+  </div>
+
+  <h3 class="rm-h3">50 triệu vốn cửa hàng — gọi đúng tên rồi mới xử lý được</h3>
+
+  <p class="rm-p">Sự thật: bạn không sở hữu 50 triệu. Bạn sở hữu <b>một dòng tiền 5 triệu một năm, không rút được gốc, rủi ro cao, không có quyền kiểm soát</b>. Nếu dòng tiền đó chắc chắn và vĩnh viễn thì giá trị là 50 triệu ở mức chiết khấu 10%. Nhưng nó không chắc chắn — một cửa hàng quần áo nhỏ có thể đóng cửa bất cứ năm nào. Với mức chiết khấu hợp lý cho loại rủi ro này (25%/năm), giá trị kinh tế thật khoảng <b>20 triệu</b>.</p>
+
+  <p class="rm-p"><b>Ghi sổ về 20 triệu ngay hôm nay.</b> Không phải để bi quan — để ngừng ra quyết định dựa trên một con số sai. Mọi đồng thu được từ đây coi như tiền thưởng, và bạn sẽ không bao giờ phải thất vọng về nó nữa.</p>
+
+  <p class="rm-p">Ba việc, theo thứ tự:</p>
+
+  <ul class="rm-ul rm-ul--tight">
+    <li class="rm-li">Xin <b>thoả thuận góp vốn bằng văn bản</b> nếu chưa có — ghi rõ tỷ lệ sở hữu, cách chia lợi nhuận, điều kiện thoái vốn.</li>
+    <li class="rm-li">Đề nghị một <b>lịch thoái vốn có lộ trình</b>: ví dụ 10 triệu mỗi năm trong 5 năm, thay cho 5 triệu cổ tức mãi mãi. Nhiều chủ cửa hàng sẽ đồng ý vì nó rõ ràng cho cả hai bên.</li>
+    <li class="rm-li">Yêu cầu <b>báo cáo doanh thu và lợi nhuận mỗi quý</b>. Đây là thứ bạn nên có ngay từ đầu, và nó cũng là dữ liệu cho Phần 8.</li>
+  </ul>
+
+  <p class="rm-p"><b>Bài học viết ra để không lặp lại:</b> không góp vốn vào việc bạn không kiểm soát, không có quyền rút theo điều kiện rõ ràng, và không nhận được báo cáo định kỳ. Thiếu một trong ba thì đó không phải đầu tư, đó là cho vay không lãi suất với rủi ro của chủ sở hữu.</p>
+
+  <h3 class="rm-h3">50 triệu cho vay — một tin nhắn là đủ</h3>
+
+  <ul class="rm-ul rm-ul--tight">
+    <li class="rm-li"><b>Hôm nay:</b> nhắn người vay một câu xác nhận số tiền, ngày trả dự kiến, hình thức trả. Một tin nhắn họ trả lời "đúng rồi" là bằng chứng có giá trị. Không cần trang trọng, cần có chữ.</li>
+    <li class="rm-li"><b>Ghi sổ ở mức 40 triệu</b> (chiết khấu 20% cho rủi ro không đòi được) cho tới khi tiền thực sự về tài khoản.</li>
+    <li class="rm-li"><b>Khi tiền về:</b> không để nằm trong tài khoản thanh toán quá một tuần. Vào rổ A và rổ B theo tỷ lệ 40/60 ngay.</li>
+    <li class="rm-li"><b>Nguyên tắc từ nay:</b> cho vay cá nhân là một khoản quyên góp có xác suất được hoàn lại. Chỉ cho vay số tiền bạn sẵn sàng mất mà vẫn giữ được quan hệ.</li>
+  </ul>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     11 · KỊCH BẢN
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="kich-ban" class="rm-part">
+  <p class="rm-kicker">Phần 11 · <b>Đóng lại</b></p>
+  <h2 class="rm-h2">Bốn kịch bản — bao gồm cả kịch bản bạn đang sợ</h2>
+
+  <p class="rm-p">Bạn yêu cầu nghĩ về tất cả trường hợp khả dĩ. Dưới đây là bốn, kèm xác suất chủ quan của tôi và kết quả ở hai mốc. Điểm cần nhìn không phải hàng nào đẹp nhất — là <b>hàng xấu nhất</b>.</p>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Kịch bản</th><th class="rm-num">Xác suất</th><th>Diễn biến</th><th class="rm-num">2031</th><th class="rm-num">2036</th><th class="rm-num">2040</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>Xấu</b></td><td class="rm-num">20%</td>
+          <td>Không nhảy được ra remote. Thu nhập đứng ở 40–50 triệu suốt mười năm. Thị trường chỉ cho 6%/năm. Không sản phẩm nào chạy. Chỗ ở được lo bằng tiền đền bù.</td>
+          <td class="rm-num"><b>~2,5 tỷ</b></td><td class="rm-num"><b>~4,7 tỷ</b></td><td class="rm-num"><b>~6,7 tỷ</b></td>
+        </tr>
+        <tr>
+          <td><b>Cơ sở</b></td><td class="rm-num"><b>55%</b></td>
+          <td>Remote thành công trong năm thứ hai ở mức ~3.500 USD, lên senior sau 3–4 năm. Thị trường 9%/năm. Sản phẩm không thành nhưng không tốn nhiều.</td>
+          <td class="rm-num"><b>~4,1 tỷ</b></td><td class="rm-num"><b>~9,7 tỷ</b></td><td class="rm-num"><b>~15,4 tỷ</b></td>
+        </tr>
+        <tr>
+          <td><b>Tốt</b></td><td class="rm-num">20%</td>
+          <td>Remote sớm và lên senior nhanh. Thu nhập 130–180 triệu. Sản phẩm có doanh thu 3.000–5.000 USD/tháng từ năm thứ ba.</td>
+          <td class="rm-num"><b>~5,3 tỷ</b></td><td class="rm-num"><b>~13,9 tỷ</b></td><td class="rm-num"><b>~22,9 tỷ</b></td>
+        </tr>
+        <tr>
+          <td><b>Rất tốt</b></td><td class="rm-num">5%</td>
+          <td>Sản phẩm thành công thật, hoặc cổ phần ở một startup có thanh khoản. Cái đuôi dài mà bạn không lập kế hoạch được, chỉ có thể đứng ở chỗ nó có thể xảy ra.</td>
+          <td class="rm-num">—</td><td class="rm-num">—</td><td class="rm-num"><b>35 tỷ+</b></td>
+        </tr>
+      </tbody>
+      <caption class="rm-cap"><b>Tất cả tính bằng sức mua hôm nay</b>, và giả định tiền đền bù 2–3 tỷ mua được một căn thay thế nên bạn không mất tiền thuê (kết cục B ở Phần 7). Nếu rơi vào kết cục A — đền bù không đến được với bạn — trừ khoảng <b>1,3 tỷ</b> khỏi mọi ô cột 2036. Bảng này đã sai hai lần: bản đầu tính bằng tiền danh nghĩa và cho hàng “xấu” là 6,1 tỷ; bản thứ hai sửa sang tiền thực nhưng giả định không có đền bù nên cho 3,5 tỷ. Xác suất là ước lượng chủ quan, dùng để so các hàng với nhau chứ không phải để dự báo.</caption>
+    </table>
+  </div>
+
+  <div class="rm-lead">
+    <p>Nhìn hàng trên cùng: <b>kịch bản xấu nhất của bạn là khoảng 4,7 tỷ ở tuổi 36, và 6,7 tỷ ở tuổi 40 — theo giá hôm nay.</b></p>
+    <p>Đó là kết quả khi mọi thứ đi sai: không nhảy việc, thị trường chỉ 6%/năm, sản phẩm chết, không may mắn nào. Bạn vẫn có 4,7 tỷ ở tuổi 36 và thụ động khoảng 15,6 triệu/tháng — <b>đủ nuôi mức sống hiện tại của bạn</b>, với điều kiện chỗ ở đã được lo bằng tiền đền bù. Nghĩa là ngay cả ở kịch bản tệ nhất, bạn chạm độc lập tài chính mềm quanh tuổi 36, chỉ là chậm bốn năm so với kịch bản cơ sở.</p>
+    <p>Đoạn này đã phải sửa hai lần và tôi ghi lại cả hai để bạn biết con số nào đáng tin: bản đầu nói 6 tỷ vì tính bằng tiền danh nghĩa; bản hai nói 3,5 tỷ vì giả định mất nhà mà không có đền bù. <b>Cả hai đều sai theo hai hướng ngược nhau, và cái sai thứ hai là do tôi thiếu dữ kiện chứ không do tính nhầm.</b> Bài học đáng giữ: nếu rơi vào kết cục A ở Phần 7, sàn quay lại 3,5 tỷ — nên câu hỏi “ai đứng tên” vẫn đáng ba cuộc điện thoại hơn bất cứ việc gì khác trong tháng này.</p>
+  </div>
+
+  <h3 class="rm-h3">Cách duy nhất phá được cái sàn đó</h3>
+
+  <p class="rm-p">Bảng trên có một điều nó không nói: <b>không kịch bản nào trong bốn cái đó là nghèo.</b> Để thực sự thua, bạn phải làm một việc không có trong bảng — <b>mất vốn lớn một lần</b>. Danh sách đầy đủ những cách làm được điều đó:</p>
+
+  <ul class="rm-ul rm-ul--tight">
+    <li class="rm-li">Dùng margin hoặc phái sinh với tỷ trọng lớn.</li>
+    <li class="rm-li">Dồn một phần đáng kể tài sản vào một tài sản không có dòng tiền để định giá.</li>
+    <li class="rm-li">Góp vốn lớn vào một việc kinh doanh bạn không kiểm soát — <b>bạn đã làm việc này một lần với 50 triệu; lần sau có thể là 500 triệu.</b></li>
+    <li class="rm-li">Mua bất động sản vượt khả năng rồi buộc phải bán trong một chu kỳ xấu.</li>
+    <li class="rm-li">Tin một khoản "lãi 3%/tháng".</li>
+    <li class="rm-li">Bảo lãnh hoặc vay hộ người khác.</li>
+  </ul>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Cách đúng để nghĩ về việc này</div>
+    <p>Việc số một của bạn trong mười năm tới <b>không phải là tăng tốc. Là không chết.</b> Cỗ máy đã chạy — tỷ lệ tích lũy 75% duy trì mười năm gần như không thể không dẫn tới giàu có. Vai trò của bạn không phải đẩy nó nhanh hơn bằng đòn bẩy, mà là <b>không để nó nổ</b>.</p>
+    <p>Chính cái "chấp niệm muốn kiếm tiền nhanh" là thứ nguy hiểm nhất trong toàn bộ hồ sơ này — không phải vì nó sai về mặt đạo đức, mà vì nó là <b>đúng cái tâm lý khiến người ta chấp nhận rủi ro phá sản</b>. Nó không đe doạ các kịch bản tốt. Nó đe doạ cái sàn.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     12 · CÓ CÁCH NÀO NHANH KHÔNG
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="nhanh" class="rm-part">
+  <p class="rm-kicker">Phần 12 · <b>Đóng lại</b></p>
+  <h2 class="rm-h2">Bạn hỏi có cách nào làm giàu nhanh — đây là câu trả lời thẳng</h2>
+
+  <p class="rm-p">Có. Nhưng nó không giống thứ bạn đang hình dung, nên hãy nói rõ cả hai.</p>
+
+  <h3 class="rm-h3">Cái không tồn tại</h3>
+
+  <p class="rm-p">Không tồn tại một cách biến 500 triệu thành 5 tỷ trong hai năm mà có kỳ vọng dương. Không phải vì chưa ai tìm ra — mà vì cấu trúc toán học của thị trường không cho phép. Nếu một chiến lược cho 100%/năm một cách đáng tin, vốn sẽ đổ vào cho đến khi lợi suất của nó tụt về mức bình thường. Mọi lợi suất phi thường bền vững đều được trả bằng một trong ba thứ: <b>rủi ro phá sản, thông tin nội bộ, hoặc một lợi thế thật mà người khác không sao chép được</b>. Hai cái đầu bạn không nên và không thể dùng. Cái thứ ba mới là cửa.</p>
+
+  <h3 class="rm-h3">Cái tồn tại — và bạn đã có nguyên liệu</h3>
+
+  <p class="rm-p">Người thực sự làm giàu nhanh gần như luôn rơi vào một trong ba nhóm:</p>
+
+  <ul class="rm-ul">
+    <li class="rm-li"><b>(a) May mắn cực độ</b> — mua đúng thứ đúng lúc. Không lặp lại được, không học được, và chúng ta chỉ nghe kể về những người trúng.</li>
+    <li class="rm-li"><b>(b) Đã tích lũy 5–10 năm lợi thế trước khi người ngoài nhìn thấy</b> — họ có vẻ nhanh vì ta chỉ thấy khúc cuối. Khúc đầu không ai quay phim.</li>
+    <li class="rm-li"><b>(c) Chấp nhận rủi ro phá sản và sống sót</b> — cùng một chiến lược, mười người chơi, chín người biến mất, người thứ mười viết sách. Chúng ta chỉ đọc sách của người thứ mười.</li>
+  </ul>
+
+  <div class="rm-lead">
+    <p>Nhóm (b) là nhóm duy nhất sao chép được. Và tin tốt là <b>bạn đang ở giữa nhóm đó mà không nhận ra</b>: năm năm mobile đã tích lũy xong, chín tháng nền toán đã tích lũy được một nửa.</p>
+    <p>Cái "nhanh" thật sự khả dĩ cho bạn là <b>nhân hai đến ba lần thu nhập trong 12–24 tháng</b> — gần ba lần tính trên lương gộp, khoảng hai lần rưỡi sau thuế. Nghe kém hấp dẫn hơn "nhân mười vốn trong hai năm", nhưng nó có ba thuộc tính mà lời hứa kia không có: <b>xác suất khoảng 50%</b>, <b>rủi ro mất vốn bằng không</b>, và <b>phần tăng là vĩnh viễn</b>. Nhân hai lần rưỡi thu nhập rồi giữ nó trong mười năm đáng giá hơn phần lớn những vụ trúng đậm một lần — vì nó không đảo ngược.</p>
+  </div>
+
+  <h3 class="rm-h3">Phép tính để bạn thấy "chậm" nhanh đến mức nào</h3>
+
+  <p class="rm-p">Tỷ lệ tích lũy có một hệ quả mà ít người tính ra: nó quyết định thời gian tới độc lập tài chính <em>gần như hoàn toàn</em>, và <b>bất kể bạn bắt đầu với bao nhiêu tiền</b>. Đây là bảng, ở lợi suất thực 5%/năm:</p>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Tình huống</th><th class="rm-num">Tỷ lệ tích lũy</th><th class="rm-num">Năm tới độc lập</th><th class="rm-num">1 năm làm mua được</th></tr></thead>
+      <tbody>
+        <tr><td><b>Bạn hôm nay</b> — còn ở nhà gia đình</td><td class="rm-num rm-pos">75%</td><td class="rm-num rm-pos"><b>7,1 năm</b></td><td class="rm-num">3,0 năm tự do</td></tr>
+        <tr><td><b>Kết cục A, chưa nhảy việc</b> — chi 23 tr</td><td class="rm-num rm-neg">42%</td><td class="rm-num rm-neg"><b>20,3 năm</b></td><td class="rm-num">0,7 năm</td></tr>
+        <tr><td><b>Kết cục A, đã nhảy việc</b> — thực nhận 90, chi 33</td><td class="rm-num">63%</td><td class="rm-num"><b>11,2 năm</b></td><td class="rm-num">1,7 năm</td></tr>
+        <tr><td>Người tích lũy 20% — mức phổ biến</td><td class="rm-num">20%</td><td class="rm-num">36,7 năm</td><td class="rm-num">0,25 năm</td></tr>
+      </tbody>
+      <caption class="rm-cap">Con số 7,1 năm ở hàng đầu là thứ dễ trích dẫn nhất và dễ hiểu sai nhất — nó chỉ đúng <em>chừng nào bạn còn có chỗ ở không phải trả tiền</em>, tức kết cục B ở <a href="#nha">Phần 7</a>. So hàng hai với hàng ba: rơi vào kết cục A mà không nhảy việc thì mất chín năm cuộc đời; rơi vào A mà đã nhảy việc thì chỉ mất bốn. <b>Nhảy việc không ngăn được kết cục A, nhưng nó trả được giá của kết cục A.</b> Đó là toàn bộ lý do Phần 5 đứng trước mọi thứ khác.</caption>
+    </table>
+  </div>
+
+  <p class="rm-p">Dù ở hàng nào, bạn vẫn nhanh hơn hẳn mức phổ biến — nhanh gấp năm lần ở hàng đầu, gấp gần hai lần ở hàng tệ nhất. Bạn cảm thấy mình chậm không phải vì so với người bình thường, mà vì so với một hình ảnh trong đầu.</p>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Công thức của cái nhanh thật</div>
+    <p><b>Nhanh = (nhân thu nhập) × (giữ nguyên chi tiêu) × (không mất vốn) × (thời gian).</b></p>
+    <p>Bốn thừa số. Bạn đã tối ưu hai: chi tiêu và thời gian — bạn mới 26. Thừa số thứ ba là kỷ luật, và trang này đã đưa cho bạn danh sách những cách vi phạm nó. Còn lại đúng <b>một</b> thừa số chưa động tới: <b>nhân thu nhập</b>. Đó là lý do cả kế hoạch này chỉ có một mặt trận chính.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     13 · MINDSET
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="mindset" class="rm-part">
+  <p class="rm-kicker">Phần 13 · <b>Đóng lại</b></p>
+  <h2 class="rm-h2">Mười hai nguyên tắc — cho phần lộn xộn trong đầu</h2>
+
+  <p class="rm-p">Bạn nói tư duy đang lộn xộn, không sắp xếp được, và có chấp niệm lớn về tiền. Phần này là về chỗ đó. Nó không phải động viên — mỗi nguyên tắc là một công cụ có việc cụ thể để làm.</p>
+
+  <h3 class="rm-h4">Về sự mông lung</h3>
+
+  <ul class="rm-ul">
+    <li class="rm-li"><b>1 · Mông lung là triệu chứng của quá nhiều câu hỏi mở, không phải của thiếu thông tin.</b> Bạn đang giữ tám câu cùng lúc: cổ phiếu, nhà, sản phẩm, bằng master, bảo hiểm, cửa hàng, nghề mới, kiếm nhanh. Mỗi câu chiếm một phần bộ nhớ làm việc và không câu nào đóng được. Chữa: <b>chuyển mỗi câu hỏi thành một thí nghiệm có deadline và tiêu chí viết trước.</b> "Tôi có nên làm sản phẩm không" là vô hạn; "6 giờ/tuần trong 90 ngày, không có doanh thu thì dừng" là hữu hạn. Câu hỏi mở làm kiệt sức; thí nghiệm thì không.</li>
+    <li class="rm-li"><b>2 · Phân biệt quyết định một chiều và hai chiều.</b> Bán cổ phiếu, thử một công việc, học một kỹ năng, dựng một sản phẩm — <b>hai chiều</b>, sai thì sửa trong vài tuần, nên quyết nhanh và quyết bằng 70% thông tin. Mua nhà, vay lớn, góp vốn lớn — <b>một chiều</b>, quyết chậm và cần 90% thông tin. Phần lớn thứ đang làm bạn nát óc là quyết định hai chiều đang bị xử lý như một chiều. Đó là lý do đầu bạn kẹt: bạn đang trả giá của một quyết định đời người cho một quyết định sửa được trong một tháng.</li>
+    <li class="rm-li"><b>3 · Một việc lớn mỗi quý, không hơn.</b> Não bị quá tải vì đang giữ tám việc ở chế độ chờ. Quý này: <b>nhân thu nhập</b>. Không phải sản phẩm, không phải nghiên cứu cổ phiếu, không phải bất động sản. Những việc kia không bị huỷ, chúng được <em>xếp hàng</em> — và biết chúng đang có chỗ trong hàng là đủ để đầu ngừng nhắc.</li>
+  </ul>
+
+  <h3 class="rm-h4">Về chấp niệm với tiền</h3>
+
+  <ul class="rm-ul">
+    <li class="rm-li"><b>4 · Chấp niệm về tiền hầu như luôn là chấp niệm về an toàn.</b> Và an toàn không đo bằng số dư, nó đo bằng <b>số tháng sống được nếu mất hết thu nhập</b>. Bạn có <b>44 tháng</b> nếu không tính khoản cho vay chưa về — và <b>19 tháng</b> nếu tính cả việc phải tự lo chỗ ở. Con số thứ nhất là rất tốt; con số thứ hai là lý do Phần 7 xếp việc làm rõ chuyện thu hồi nhà lên đầu danh sách. Nếu 44 tháng vẫn chưa làm bạn yên thì thêm tiền cũng sẽ không — vì con số không phải chỗ hỏng. Cái chữa được là <b>biết chính xác mình đang ở đâu</b>, và đó là việc của Phần 1.</li>
+    <li class="rm-li"><b>5 · Lo lắng không dẫn tới hành động là thuế đánh vào sự chú ý.</b> Thử nghiệm: mỗi lần lo về tiền, hỏi "có việc gì tôi làm được trong 10 phút tới không?" Có thì làm ngay. Không thì <b>ghi vào một danh sách có ngày xem lại</b> và đóng lại. Phần lớn nỗi lo về nhà bị thu hồi thuộc loại thứ hai — và nó sẽ chuyển sang loại thứ nhất ngay khi bạn gọi vài cuộc điện thoại ở Phần 7.</li>
+    <li class="rm-li"><b>6 · Sàn quan trọng hơn trần.</b> Bạn đã đảm bảo được sàn khoảng 4,7 tỷ ở tuổi 36 theo giá hôm nay — 3,5 tỷ nếu rơi vào kết cục A ở Phần 7. Việc còn lại của đời bạn về mặt tài chính là <b>nâng trần mà không hạ sàn</b>. Đây là một bộ lọc dùng được cho mọi cơ hội gặp từ nay: "cái này có thể làm hỏng sàn không?" Nếu có, câu trả lời là không, bất kể phần thưởng hấp dẫn thế nào.</li>
+  </ul>
+
+  <h3 class="rm-h4">Về giàu</h3>
+
+  <ul class="rm-ul">
+    <li class="rm-li"><b>7 · Giàu không phải một con số, là một tỷ lệ.</b> Tỷ lệ giữa <b>thu nhập không cần bạn làm việc</b> và <b>chi phí sống của bạn</b>. Dưới 1 là đang đi làm. Bằng 1 là tự do. Trên 2 là giàu. Định nghĩa này có ưu điểm lớn: nó cho bạn hai cần gạt thay vì một, và cần gạt chi tiêu thì bạn kiểm soát được ngay hôm nay.</li>
+    <li class="rm-li"><b>8 · Giàu là quyền nói không.</b> Ba mốc ở Phần 4 chính là ba quyền: nói không với một công việc tệ (mốc 1), nói không với việc đi làm nói chung (mốc 2), nói không với việc dùng thời gian của mình cho thứ mình không chọn (mốc 3). Khi bạn thấy mông lung về mục tiêu, hỏi "tôi đang mua quyền nói không với cái gì" — nó cụ thể hơn "tôi muốn giàu" rất nhiều.</li>
+    <li class="rm-li"><b>9 · Thu nhập là cỗ máy, chi tiêu là van, vốn là bình chứa.</b> Sửa theo thứ tự đó. Bạn đang cố sửa <em>bình</em> — chọn cổ phiếu, tối ưu danh mục — trong khi đòn bẩy nằm ở <em>cỗ máy</em>. Van của bạn đã chỉnh gần tối ưu rồi (75% tích lũy), nên siết thêm chẳng còn gì để lấy.</li>
+  </ul>
+
+  <h3 class="rm-h4">Về bản thân</h3>
+
+  <ul class="rm-ul">
+    <li class="rm-li"><b>10 · Ở tuổi 26, đồng hồ năng lực chạy nhanh hơn đồng hồ vốn.</b> Vốn của bạn sinh 46 triệu một năm. Một nấc năng lực sinh 400–700 triệu một năm. Tỷ lệ 1:10 này chỉ đảo khi tài sản vượt khoảng 8 tỷ, khoảng năm 2035. Cho đến lúc đó, khi phân vân giữa "đầu tư tiền" và "đầu tư vào mình", câu trả lời gần như luôn là vế sau — và nó sẽ không còn đúng mãi, nên hãy dùng nó trong lúc còn đúng.</li>
+    <li class="rm-li"><b>11 · So sánh đúng người: bạn-hôm-nay với bạn-mười-hai-tháng-trước.</b> So với người cùng tuổi đã có nhà là so với một mẫu đã bị lọc — bạn không thấy những người cùng tuổi đang gánh nợ mà không kể, và bạn không biết ai được gia đình cho bao nhiêu. Còn so với bạn-của-năm-ngoái thì luôn là một phép so công bằng, luôn có dữ liệu, và luôn nằm trong tầm kiểm soát.</li>
+    <li class="rm-li"><b>12 · Bạn không đang thua. Bạn đang ở một vị trí tốt và đang hỏi sai câu hỏi.</b> Tỷ lệ tích lũy 75% — cực kỳ hiếm ở bất kỳ mức thu nhập nào, 44 tháng runway, 5 năm kinh nghiệm trong một nghề được trả cao, một nửa bằng thạc sĩ, và mới 26 tuổi. Cảm giác mông lung không đến từ vị trí của bạn — nó đến từ việc chưa có ai đặt các con số ấy cạnh nhau trên cùng một màn hình. <b>Giờ thì có rồi.</b></li>
+  </ul>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     14 · 90 NGÀY
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="chin-muoi-ngay" class="rm-part">
+  <p class="rm-kicker">Phần 14 · <b>Bắt đầu</b></p>
+  <h2 class="rm-h2">90 ngày đầu — việc cụ thể, theo thứ tự, tick được</h2>
+
+  <p class="rm-p">Trạng thái tick lưu trong trình duyệt này, nên bạn quay lại là thấy nguyên. Tổng thời gian của toàn bộ phần “dọn dẹp”: khoảng <b>10 giờ</b>, làm một lần rồi thôi. Phần “mặt trận chính” là 10 giờ mỗi tuần và đó là phần thật sự tính tiền.</p>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Đọc kỹ chỗ này trước khi bắt đầu — nó mâu thuẫn với nguyên tắc 3</div>
+    <p>Nguyên tắc 3 ở Phần 13 nói <b>một việc lớn mỗi quý</b>. Nhưng nếu bạn làm cả bốn khối dưới đây cùng lúc, cộng việc chính và chương trình thạc sĩ, tổng là <b>65–70 giờ một tuần</b>. Đó không bền quá vài tháng, và tôi để mâu thuẫn này lộ ra thay vì giấu nó.</p>
+    <p>Cách giải: <b>chỉ khối “mặt trận chính” là bắt buộc đúng lịch.</b> Hai khối dọn dẹp làm một lần rồi xong vĩnh viễn — đừng để chúng chiếm đầu. Khối thăm dò sản phẩm là <b>tuỳ chọn ở quý này</b>: nếu tuần nào cũng thấy mình đang chọn giữa nó và tiếng Anh, hãy bỏ nó sang quý sau, không phải làm cả hai ở mức nửa vời. Và nếu bạn kiệt sức, <b>cắt trước ở khối sản phẩm, rồi mới đến điểm số môn học</b> — không bao giờ cắt ở tiếng Anh hay số đơn nộp.</p>
+  </div>
+
+  <div class="wb-cluster wb-cluster--between wb-cluster--middle" style="margin-bottom:14px">
+    <div><span class="wb-cap" id="chk-count">0 / 0</span> <span class="rm-quiet" style="margin-left:8px">đã xong</span></div>
+    <button class="wb-btn wb-btn--ghost wb-btn--sm" id="chk-reset"><span class="wb-ico wb-ico--sm">restart_alt</span> Xoá hết tick</button>
+  </div>
+  <div class="wb-progress" style="margin-bottom:22px"><div class="wb-progress__bar" id="chk-bar" style="width:0%"></div></div>
+
+  <h3 class="rm-h3">Tuần 1 — dọn thông tin <span class="wb-cap wb-cap--sm">~4 giờ</span></h3>
+  <ul class="rm-check" data-chk>
+    <li><input type="checkbox" class="wb-check" id="c1"><label for="c1"><b>Điền bảng tài sản ở Phần 1</b> bằng số thật của bạn, chụp màn hình lưu lại. Đây là lần đầu tiên bạn nhìn toàn bộ tài sản trên một màn hình.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c2"><label for="c2"><b>Hỏi ai đứng tên nhà và đất.</b> Tiền đền bù 2–3 tỷ về tay người đứng tên. Nếu là bố mẹ thì đó là tài sản của bố mẹ — bình thường, chỉ cần bạn biết. Có anh chị em thì hỏi luôn chuyện chia. <b>Đây là việc quan trọng nhất trong cả danh sách:</b> nó đáng 1,3 tỷ và ba năm.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c3"><label for="c3"><b>Khảo giá ba căn thay thế thật</b> trong khu vực gia đình có thể chuyển tới. Đền bù giải phóng mặt bằng thường thấp hơn giá thị trường của một căn tương đương — 2–3 tỷ đủ hay không đủ là chuyện phải đo, không phải chuyện đoán.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c4"><label for="c4"><b>Hỏi phường/xã có suất tái định cư không</b>, và mốc thời gian thu hồi thật. Suất tái định cư thường có giá trị hơn tiền mặt tương ứng vì bán theo giá quy định — nếu có, nó có thể là phương án tốt nhất.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c5"><label for="c5"><b>Gọi AIA</b> xin giá trị tài khoản hiện tại, bảng minh hoạ quyền lợi cập nhật, cơ cấu phí đang bị trừ — bằng văn bản. Rồi <b>nhắn người vay 50 triệu</b> xác nhận số tiền và ngày trả, và <b>nhắn chủ cửa hàng</b> xin báo cáo doanh thu cùng một lộ trình thoái vốn có lịch.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c6"><label for="c6"><b>Ghi sổ lại theo giá trị thận trọng:</b> cửa hàng 20 triệu, khoản cho vay 40 triệu. Ngừng ra quyết định dựa trên con số danh nghĩa.</label></li>
+  </ul>
+
+  <h3 class="rm-h3">Tuần 2–4 — dọn vốn <span class="wb-cap wb-cap--sm">~6 giờ</span></h3>
+  <ul class="rm-check" data-chk>
+    <li><input type="checkbox" class="wb-check" id="c7"><label for="c7"><b>Gửi 150 triệu tiết kiệm kỳ hạn 6 tháng,</b> chia làm 3 sổ 50 triệu. Đây là rổ A — két an toàn, không đụng vào.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c8"><label for="c8"><b>Mở tài khoản mua quỹ mở</b> và chọn sẵn ETF chỉ số trên tài khoản chứng khoán đang có.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c9"><label for="c9"><b>Đặt lệnh chuyển tiền tự động ngày 11 hằng tháng:</b> 20 triệu vào rổ B. Ngày 11 vì lương về ngày 10 — tiền đi trước khi bạn kịp nghĩ.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c10"><label for="c10"><b>Bán đợt 1:</b> 1/3 vị thế VIB và 1/3 HPG, mua ETF bằng đúng số tiền thu được.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c11"><label for="c11"><b>Viết một trang "chính sách đầu tư"</b> — bốn dòng: tỷ trọng mục tiêu, lịch nạp, lịch cân bằng lại, và điều kiện duy nhất được phép bán. Dán lên tường.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c12"><label for="c12"><b>Quyết bảo hiểm theo ngưỡng đã viết ở Phần 10</b>, sau khi có số từ AIA. Quyết trong một buổi, không để treo.</label></li>
+  </ul>
+
+  <h3 class="rm-h3">Tuần 2–12 — mặt trận chính <span class="wb-cap wb-cap--sm">10 giờ/tuần</span></h3>
+  <ul class="rm-check" data-chk>
+    <li><input type="checkbox" class="wb-check" id="c13"><label for="c13"><b>Viết lại CV tiếng Anh theo chuẩn tác động:</b> mỗi dòng là hành động + số liệu + kết quả, không phải danh sách công nghệ. "Giảm thời gian khởi động app 40% bằng cách…" chứ không phải "Sử dụng Swift, Flutter, Firebase".</label></li>
+    <li><input type="checkbox" class="wb-check" id="c14"><label for="c14"><b>Dọn GitHub:</b> một repo demo ML chạy trên thiết bị, README tiếng Anh tử tế, ảnh động chạy thật, có số đo độ trễ và dung lượng mô hình.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c15"><label for="c15"><b>LinkedIn tiếng Anh,</b> tiêu đề định vị đúng ngách: kỹ sư mobile triển khai ML trên thiết bị. Bật trạng thái sẵn sàng nhận việc remote.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c16"><label for="c16"><b>Tiếng Anh nói: 3 buổi/tuần × 45 phút</b> với người bản xứ. Đặt lịch cố định vào lịch, như một cuộc họp không được huỷ. <b>Đây là khoản có tỷ suất sinh lời cao nhất trong cả trang.</b></label></li>
+    <li><input type="checkbox" class="wb-check" id="c17"><label for="c17"><b>Nộp 5 đơn mỗi tuần</b> → 60 đơn trong 12 tuần. Giữ một bảng tính: công ty, ngày nộp, kênh, kết quả, vòng dừng lại.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c18"><label for="c18"><b>Một buổi phỏng vấn thử bằng tiếng Anh mỗi 2 tuần</b> — bạn bè, đồng nghiệp cũ, hoặc dịch vụ trả phí. Ghi âm lại và nghe lại, dù khó chịu.</label></li>
+  </ul>
+
+  <h3 class="rm-h3">Tuần 6–12 — thăm dò sản phẩm <span class="wb-cap wb-cap--sm">4 giờ/tuần</span></h3>
+  <ul class="rm-check" data-chk>
+    <li><input type="checkbox" class="wb-check" id="c19"><label for="c19"><b>Một buổi chiều ngồi ở cửa hàng bạn góp vốn,</b> ghi lại từng bước vận hành: kiểm kho, ghi doanh thu, xử lý đổi trả, tính lương.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c20"><label for="c20"><b>20 cuộc nói chuyện</b> với chủ cửa hàng hoặc hộ kinh doanh khác về cùng những vấn đề đó. Nghe, không bán.</label></li>
+    <li><input type="checkbox" class="wb-check" id="c21"><label for="c21"><b>Viết ra 3 vấn đề có người nói rõ rằng họ sẵn sàng trả tiền để giải quyết.</b> "Hay đấy" không tính. <b>Chưa viết dòng code nào.</b></label></li>
+  </ul>
+
+  <h3 class="rm-h3">Ngày 90 — kiểm điểm <span class="wb-cap wb-cap--sm">2 giờ</span></h3>
+  <p class="rm-p">Tiêu chí viết trước, để bạn không tự chấm điểm bằng cảm giác vào hôm đó:</p>
+  <ul class="rm-check" data-chk>
+    <li><input type="checkbox" class="wb-check" id="c22"><label for="c22">Đã nộp <b>≥ 50 đơn</b> việc remote</label></li>
+    <li><input type="checkbox" class="wb-check" id="c23"><label for="c23">Đã vào <b>≥ 3 vòng phỏng vấn cuối</b></label></li>
+    <li><input type="checkbox" class="wb-check" id="c24"><label for="c24">Danh mục đã về <b>≤ 15% cổ phiếu đơn lẻ</b>, lệnh nạp tự động đang chạy</label></li>
+    <li><input type="checkbox" class="wb-check" id="c25"><label for="c25">Đã có <b>số liệu AIA</b> và đã ra quyết định theo ngưỡng</label></li>
+    <li><input type="checkbox" class="wb-check" id="c26"><label for="c26">Đã biết <b>ai đứng tên, đền bù có đủ mua căn thay thế không, và có suất tái định cư không</b></label></li>
+    <li><input type="checkbox" class="wb-check" id="c27"><label for="c27">Đã có <b>3 vấn đề khách hàng sẵn sàng trả tiền</b></label></li>
+  </ul>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Cách đọc kết quả ngày 90</div>
+    <p><b>Đạt ≥ 5/6:</b> tiếp tục nguyên kế hoạch, không đổi gì. <b>Đạt &lt; 5/6:</b> tìm chỗ hỏng cụ thể trong phễu — nộp quá ít đơn, hồ sơ không qua vòng lọc, hay trượt ở vòng nói — rồi sửa đúng chỗ đó. <b>Không đổi kế hoạch vì kết quả 90 ngày đầu.</b></p>
+    <p>Chín mươi ngày quá ngắn để bác bỏ một chiến lược mà đủ dài để bộc lộ chỗ thực thi hỏng. Nhầm hai thứ này là cách phổ biến nhất khiến người ta nhảy từ kế hoạch này sang kế hoạch khác trong nhiều năm mà không cái nào chạy đủ lâu để có kết quả.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     15 · GIẢ ĐỊNH
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="gia-dinh" class="rm-part">
+  <p class="rm-kicker">Phần 15 · <b>Phụ lục</b></p>
+  <h2 class="rm-h2">Giả định &amp; công thức — mọi con số trên trang này lấy từ đâu</h2>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Giả định</th><th class="rm-num">Giá trị</th><th>Cơ sở và độ tin cậy</th></tr></thead>
+      <tbody>
+        <tr><td>Lợi suất danh mục</td><td class="rm-num">9%/năm</td><td>Danh mục 70% cổ phiếu / 30% thu nhập cố định. Cổ phiếu Việt Nam dài hạn trong khoảng 10–12%/năm danh nghĩa, tiền gửi và trái phiếu 5–6%. <b>Độ tin cậy trung bình</b> — sai số ±3 điểm phần trăm là bình thường, và mọi con số 10 năm đều nên đọc như một khoảng chứ không phải một điểm.</td></tr>
+        <tr><td>Lạm phát</td><td class="rm-num">3,5%/năm</td><td>Mức trung hạn hợp lý cho Việt Nam. Lợi suất <b>thực</b> còn 5,3%/năm, và đó là con số máy tính dự phóng dùng. <b>Mọi số tỷ đồng trên trang này là sức mua HÔM NAY</b>, không phải tiền danh nghĩa của năm tương lai. Bản đầu tiên tính danh nghĩa và vì thế nói “thụ động 42 triệu ở 2036 bằng lương hiện tại” — sai, 42 triệu năm 2036 chỉ mua được bằng 30 triệu hôm nay. Đã sửa toàn bộ.</td></tr>
+        <tr><td>Quy tắc rút 4%</td><td class="rm-num">4%/năm</td><td>Ngưỡng rút an toàn kinh điển, từ dữ liệu thị trường Mỹ thế kỷ 20. <b>Dùng như thước đo quy mô, không phải lời hứa.</b> Với thị trường Việt Nam và thời gian rút 50+ năm, 3–3,5% thận trọng hơn — và trang vẫn dùng 4% để định nghĩa mốc 2 và mốc 3, nên <b>hai mốc đó đang lạc quan khoảng một năm</b>. Ở mức 3,5% thì mốc 2 cần 8,6 tỷ thay vì 7,5 tỷ.</td></tr>
+        <tr><td>Tỷ giá</td><td class="rm-num">26.000 đ/USD</td><td>Dùng để quy đổi mức lương remote, giữ cố định theo thời gian cho đơn giản. Đồng Việt Nam có xu hướng mất giá dần so với USD trong quá khứ, điều đó <em>có lợi</em> cho người nhận thu nhập USD — nhưng quá khứ không phải một cam kết, nên tôi không đưa nó vào mô hình như một nguồn lợi nhuận.</td></tr>
+        <tr><td>Tích lũy 65 tr/tháng sau khi nhảy việc</td><td class="rm-num">giả định ghép</td><td>Không phải một mức lương, mà là <b>trung bình hai nấc</b>: khoảng 55 trong 3–4 năm đầu ở hợp đồng ~3.500 USD (gộp 91 tr, thuế ~20%, thực nhận 73, chi phi-nhà-ở 18), rồi khoảng 80 khi lên senior. Con số 65 được chọn vì nó tái tạo đúng năm chạm ba mốc của đường ba nấc đó. Nó cũng giữ nguyên theo giá hôm nay, tức giả định lương danh nghĩa tăng kịp lạm phát. <b>Giả định dễ sai nhất trên cả trang</b>, và nằm hoàn toàn trong tay bạn — lạm phát lối sống là cách phổ biến nhất khiến một lần tăng lương không tạo ra tài sản nào.</td></tr>
+        <tr><td>Vàng</td><td class="rm-num">15 tr/chỉ</td><td>Giá trị giữ chỗ trong bảng tài sản, <b>không phải giá thị trường</b>. Sửa ô này theo giá thực tế lúc bạn đọc.</td></tr>
+        <tr><td>Chiết khấu vốn cửa hàng</td><td class="rm-num">60%</td><td>Vốn góp bán lẻ nhỏ, không kiểm soát, không rút được gốc, chỉ có dòng tiền 5 triệu/năm. Chiết khấu ở tỷ lệ 25%/năm cho giá trị hiện tại khoảng 20 triệu. <b>Con số phán đoán</b> — ô chiết khấu trong bảng chỉnh được.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="rm-h3">Công thức</h3>
+
+  <ul class="rm-ul rm-ul--tight">
+    <li class="rm-li"><b>Lãi kép có nạp thêm:</b> <code>V(n+1) = V(n)·(1+r) + C·(1+r)^0.5</code> — tiền nạp trong năm tính nửa kỳ lãi, xấp xỉ việc nạp đều hằng tháng.</li>
+    <li class="rm-li"><b>Lợi suất thực:</b> <code>r_thực = (1 + r_danh_nghĩa)/(1 + lạm_phát) − 1</code>. Ở 9% và 3,5% cho <b>5,31%</b>. Dùng phép chia, không phải phép trừ — trừ là xấp xỉ và lệch dần khi hai con số lớn lên.</li>
+    <li class="rm-li"><b>Chi phí chỗ ở:</b> từ năm bạn đặt, tích lũy hằng năm bị trừ đi <code>tiền_thuê × 12</code>. Đây là phần bản đầu tiên của trang bỏ sót hoàn toàn, và là lỗi lớn nhất đã sửa.</li>
+    <li class="rm-li"><b>Trả góp:</b> <code>PMT = P·i / (1 − (1+i)^(−n))</code> với <code>i</code> là lãi tháng và <code>n</code> là số kỳ.</li>
+    <li class="rm-li"><b>Số tháng sống được:</b> <code>tài sản lỏng / chi tiêu tháng</code>, không tính lợi nhuận đầu tư trong thời gian đó.</li>
+    <li class="rm-li"><b>Vốn cần để đầu tư bằng một lần tăng lương:</b> <code>C = ΔI / r</code> — dòng tiền vĩnh viễn chia lợi suất.</li>
+    <li class="rm-li"><b>Thời gian tới độc lập tài chính từ số không:</b> <code>n = ln(1 + 25·(1−s)·r / s) / ln(1+r)</code> với <code>s</code> là tỷ lệ tích lũy. Ở <code>s = 0,75</code> và <code>r = 5%</code> thực: <b>7,1 năm</b>. Ở <code>s = 0,20</code>: <b>36,7 năm</b>.</li>
+    <li class="rm-li"><b>Điểm hoà mua/thuê:</b> giải số cho tốc độ tăng giá nhà làm tài sản ròng hai phương án bằng nhau tại mốc năm đã chọn.</li>
+  </ul>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Giới hạn của trang này</div>
+    <p>Đây là <b>phân tích cá nhân dựa trên số liệu bạn cung cấp</b>, không phải tư vấn đầu tư có giấy phép. Mọi con số 5–10 năm là ước lượng dưới giả định ghi ở trên, không phải dự báo. Tên các loại công cụ được nhắc đến (ETF chỉ số, quỹ mở cổ phiếu, tiền gửi kỳ hạn) là <b>loại sản phẩm</b>, không phải khuyến nghị một sản phẩm cụ thể nào — việc chọn quỹ nào, ngân hàng nào là của bạn, và nên so ít nhất ba lựa chọn về phí và hiệu quả dài hạn.</p>
+    <p>Hai quyết định trên trang này nên hỏi thêm chuyên gia trước khi thực hiện: <b>thay đổi hợp đồng bảo hiểm</b> (hỏi ít nhất hai nguồn độc lập, không chỉ tư vấn viên bán hợp đồng đó) và <b>nghĩa vụ thuế với thu nhập từ nước ngoài</b> (hỏi kế toán thuế trước khi ký hợp đồng đầu tiên).</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     16 · NHỮNG GÌ KẾ HOẠCH NÀY KHÔNG MÔ HÌNH HOÁ
+     ══════════════════════════════════════════════════════════════════════════ -->
+<section id="khong-mo-hinh" class="rm-part">
+  <p class="rm-kicker">Phần 16 · <b>Phụ lục</b></p>
+  <h2 class="rm-h2">Năm thứ kế hoạch này <u>không</u> mô hình hoá — và cái nào có thể làm hỏng nó</h2>
+
+  <p class="rm-p">Một kế hoạch chỉ đáng tin bằng đúng danh sách những thứ nó thừa nhận là chưa tính. Năm mục dưới đây đều có xác suất xảy ra đáng kể trong mười năm tới, đều làm các con số xấu đi, và không mục nào nằm trong máy tính ở các phần trên.</p>
+
+  <div class="rm-tw">
+    <table class="wb-table wb-table--bordered">
+      <thead><tr><th>Chưa tính</th><th class="rm-num">Khả năng</th><th>Ảnh hưởng, và việc cần làm</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>1 · Nghĩa vụ với bố mẹ</b></td>
+          <td class="rm-num rm-neg">cao</td>
+          <td>Tiền đền bù 2–3 tỷ trả lời được <em>một nửa</em> câu hỏi này: cả nhà nhiều khả năng mua được căn thay thế. Nửa còn lại chưa có câu trả lời — <b>nếu đền bù không đủ, ai bù phần thiếu?</b> Nếu gia đình cần bạn góp 300–500 triệu để mua được một chỗ tử tế, đó là khoản chưa nằm trong bất kỳ ô nào trên trang này, và nó đến đúng lúc bạn cần vốn nhất. Hỏi thẳng trong tháng này thay vì để nó tự hiện ra năm 2030.</td>
+        </tr>
+        <tr>
+          <td><b>2 · Kết hôn và con cái</b></td>
+          <td class="rm-num rm-neg">cao</td>
+          <td>Bạn 26 tuổi và mô hình chạy tới 40. Xác suất chi tiêu hộ gia đình thay đổi lớn trong khoảng đó là rất cao. Một đứa trẻ ở thành phố lớn thêm 8–15 triệu/tháng trong nhiều năm. Điều này <b>không</b> làm kế hoạch sai — nó làm mốc 2 và mốc 3 lùi thêm 2–4 năm, và làm quỹ khẩn cấp ở rổ A quan trọng hơn hẳn. Cũng có chiều ngược lại: thu nhập hai người.</td>
+        </tr>
+        <tr>
+          <td><b>3 · Nghề mobile bị nén bởi công cụ AI</b></td>
+          <td class="rm-num">trung bình</td>
+          <td>Cái sàn ở Phần 11 giả định thu nhập 40–50 triệu <b>duy trì được mười năm</b>. Đó không hiển nhiên: công cụ sinh mã đang nén phần việc lặp lại của nghề phần mềm, và tầng bị nén trước là tầng giữa. Đây thực ra là <b>lập luận mạnh nhất ủng hộ Phần 5</b> mà trang chưa dùng: nhảy sang ngách mobile × ML không chỉ để kiếm nhiều hơn, mà để đứng ở chỗ khó tự động hoá hơn.</td>
+        </tr>
+        <tr>
+          <td><b>4 · Học phí và thời gian còn lại của bằng thạc sĩ</b></td>
+          <td class="rm-num">chắc chắn</td>
+          <td>Tôi chưa bao giờ hỏi bạn chương trình này tốn bao nhiêu. Nếu còn 150–400 triệu học phí phải đóng trong 9–18 tháng tới thì đó là một khoản lớn chưa nằm trong bảng tài sản, và nó cạnh tranh trực tiếp với rổ A. <b>Thêm nó vào bảng ở Phần 1</b> như một khoản nợ phải trả, đừng để nó là con số trong trí nhớ.</td>
+        </tr>
+        <tr>
+          <td><b>5 · Sức khoẻ và kiệt sức</b></td>
+          <td class="rm-num">trung bình</td>
+          <td>Kế hoạch này đòi 65–70 giờ/tuần nếu làm hết các luồng cùng lúc (xem cảnh báo ở đầu Phần 14). Một đợt kiệt sức không chỉ làm chậm kế hoạch — nó thường kết thúc bằng việc bỏ hẳn, và đó là cách phổ biến nhất khiến kế hoạch mười năm chết ở tháng thứ tám. <b>Cắt theo thứ tự đã ghi</b>: sản phẩm trước, rồi điểm số, không bao giờ cắt tiếng Anh hay số đơn nộp.</td>
+        </tr>
+      </tbody>
+      <caption class="rm-cap">Bốn trong năm mục làm các con số <em>xấu đi</em>, không phải tốt lên. Đó là điều bình thường ở mọi dự phóng tài chính cá nhân: rủi ro có đuôi dày về phía dưới, còn phần tốt lên thì đã nằm trong kịch bản “tốt” rồi. Cách đọc đúng: <b>coi kịch bản cơ sở là trần chứ không phải trung vị</b>, và lấy kịch bản xấu làm mức bạn thật sự lập kế hoạch quanh nó.</caption>
+    </table>
+  </div>
+
+  <div class="rm-do">
+    <div class="rm-do__t">Điều này có làm kế hoạch sai không</div>
+    <p>Không. Nó làm kế hoạch <b>chậm hơn</b>, và nó làm <b>thứ tự ưu tiên đúng hơn chứ không sai đi</b>: mọi rủi ro vừa liệt kê đều được giảm nhẹ bởi cùng một việc — thu nhập cao hơn và một nghề khó thay thế hơn. Nghĩa vụ gia đình, con cái, nghề bị nén, học phí, kiệt sức: bốn trong năm cái đó dễ chịu hơn hẳn ở mức 110 triệu/tháng so với 40 triệu/tháng.</p>
+    <p>Cái nó thay đổi là <b>giọng của mốc 2 và mốc 3</b>. Đừng lập kế hoạch cuộc đời quanh “2032 là tự do”. Hãy lập kế hoạch quanh “2028 là hết sợ”, vì mốc 1 là mốc duy nhất đủ gần để các ẩn số trên chưa kịp làm nó lệch — và nó cũng là mốc mua được nhiều bình yên nhất cho mỗi đồng.</p>
+  </div>
+</section>
+
+<footer class="rm-foot">
+  <p class="rm-quiet">Lập ngày 20/09/2026 cho Đạt, 26 tuổi · Trang này không nằm trong mục lục trang chủ. Mọi ô số đều chỉnh được và mọi kết luận sẽ tính lại theo — <b>hãy dùng nó như một công cụ, đừng đọc nó như một bài báo.</b></p>
+  <p class="rm-quiet" style="margin-top:10px">Nếu quay lại đây sau sáu tháng và chỉ có thời gian đọc một phần: <a href="#thu-nhap">Phần 5</a>. Mọi thứ khác là hậu cần.</p>
+</footer>
+
+    </div><!-- /column -->
+  </div><!-- /rm-layout -->
+</main>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════════
+   Mọi con số hiển thị trên trang đều tính từ các ô nhập ở Phần 1, 2, 4 và 7.
+   Không có con số nào được viết cứng trong HTML ngoài phần văn xuôi — nên
+   sửa một ô là cả trang tính lại, và không có chỗ nào để hai con số lệch nhau.
+   ══════════════════════════════════════════════════════════════════════════ */
+(function () {
+  'use strict';
+
+  /* ── định dạng số ────────────────────────────────────────────────────── */
+  var nf0 = new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 });
+  var nf1 = new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 1, minimumFractionDigits: 1 });
+  var nf2 = new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+
+  /* Tiền tính bằng TRIỆU trong toàn bộ file. Trên 1.000 triệu thì đọc bằng tỷ
+     cho dễ hình dung — người ta không nghĩ bằng "12.680 triệu". */
+  function money(m) {
+    if (!isFinite(m)) return '—';
+    if (Math.abs(m) >= 1000) return nf2.format(m / 1000) + ' tỷ';
+    return nf0.format(m) + ' tr';
+  }
+  function pct(x, d) { return (d === 1 ? nf1 : nf0).format(x) + '%'; }
+  function num(id) { var el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; }
+  function set(id, txt) { var el = document.getElementById(id); if (el) el.textContent = txt; }
+
+  /* ── 1 · BẢNG TÀI SẢN ────────────────────────────────────────────────── */
+  function assets() {
+    var stocks = num('i-hpg') + num('i-tcb') + num('i-vib');
+    var gold = num('i-gold-n') * num('i-gold-p');
+    var cash = num('i-cash'), loan = num('i-loan');
+    var shop = num('i-shop') * (1 - num('i-shop-d') / 100);
+    var inc = num('i-inc'), save = num('i-save');
+    return {
+      cash: cash, stocks: stocks, gold: gold, loan: loan, shop: shop,
+      liquid: cash + stocks + gold + loan,
+      net: cash + stocks + gold + loan + shop,
+      inc: inc, save: save, spend: Math.max(inc - save, 0),
+      bank: stocks > 0 ? (num('i-tcb') + num('i-vib')) / stocks * 100 : 0,
+      ins: num('i-ins')
+    };
+  }
+
+  function renderAssets() {
+    var a = assets();
+    set('o-liquid', money(a.liquid));
+    set('o-net', money(a.net));
+    set('o-rate', a.inc > 0 ? pct(a.save / a.inc * 100) : '—');
+    set('o-rate-n', a.inc > 0
+      ? 'giữ lại ' + money(a.save) + ' trên ' + money(a.inc) + ' mỗi tháng — mỗi năm đi làm mua khoảng '
+        + nf1.format(a.spend > 0 ? a.save / a.spend : 0) + ' năm tự do'
+      : '—');
+    /* Runway PHÒNG THỦ ĐƯỢC: bỏ khoản cho vay ra, vì tiền chưa về tài khoản
+       thì không phải đệm khủng hoảng. Và nói luôn con số sau khi mất chỗ ở —
+       đó mới là con số đáng lo, và là con số trang này suýt bỏ sót. */
+    var safe = a.liquid - a.loan;
+    set('o-runway', a.spend > 0 ? nf0.format(safe / a.spend) + ' tháng' : '∞');
+    var rentAdd = num('i-p-rent');
+    set('o-runway-n', a.spend > 0
+      ? 'không tính ' + money(a.loan) + ' cho vay chưa về tài khoản. Nếu phải tự lo chỗ ở (+'
+        + money(rentAdd) + '/tháng) thì tụt còn ' + nf0.format(safe / (a.spend + rentAdd)) + ' tháng.'
+      : '—');
+    set('o-bank', pct(a.bank, 1));
+
+    /* "Vốn đang ngủ" = tiền mặt + vàng: không sinh lãi kép, chỉ giữ chỗ.
+       Khoản cho vay không tính vào đây — nó đang ngủ nhưng sắp thức. */
+    var idle = a.cash + a.gold;
+    set('o-idle', a.net > 0 ? pct(idle / a.net * 100) : '—');
+    set('o-idle-n', 'tiền mặt và vàng: ' + money(idle) + ' không sinh lãi kép. Ở lạm phát 3,5% đó là '
+      + money(idle * 0.035) + ' sức mua mất đi mỗi năm');
+    set('o-annual', money(a.save * 12));
+    set('o-annual-n', 'bằng ' + pct(a.net > 0 ? a.save * 12 / a.net * 100 : 0)
+      + ' tài sản hiện có — dòng nạp này là động cơ thật, không phải lợi suất');
+    set('o-inspct', a.inc > 0 ? pct(a.ins / (a.inc * 12) * 100, 1) : '—');
+  }
+
+  /* ── 2 · ĐÒN BẨY: VỐN vs THU NHẬP ────────────────────────────────────── */
+  function renderLeverage() {
+    var a = assets();
+    var r = num('i-lev-r') / 100;
+    var capYear = a.net * r;                 // lợi nhuận đầu tư mỗi năm
+    var incYear = num('i-lev-jump') * 12;    // thu nhập tăng thêm mỗi năm
+    var need = r > 0 ? incYear / r : Infinity;
+
+    set('o-lev-cap', money(capYear));
+    set('o-lev-inc', money(incYear));
+    set('o-lev-x', capYear > 0 ? nf1.format(incYear / capYear) + '×' : '—');
+    set('o-lev-need', money(need));
+    set('o-lev-need-n', 'bạn cần ' + money(need) + ' vốn để đầu tư tạo ra bằng một lần nhảy việc — gấp '
+      + nf1.format(a.net > 0 ? need / a.net : 0) + ' lần tài sản hiện tại của bạn');
+
+    drawLeverage(capYear, incYear);
+  }
+
+  function drawLeverage(cap, inc) {
+    var svg = document.getElementById('lev-chart');
+    if (!svg) return;
+    var W = 640, L = 132, x0 = 150, x1 = 596, max = Math.max(cap, inc, 1);
+    var bars = [
+      { y: 26, w: (cap / max) * (x1 - x0), lab: 'Lợi nhuận đầu tư', val: cap, fill: 'var(--wb-neutral)' },
+      { y: 76, w: (inc / max) * (x1 - x0), lab: 'Tăng thu nhập', val: inc, fill: 'var(--wb-fg)' }
+    ];
+    var s = '';
+    bars.forEach(function (b) {
+      s += '<text x="' + (x0 - 12) + '" y="' + (b.y + 21) + '" text-anchor="end" style="fill:var(--wb-fg);font-size:12px;font-weight:600">' + b.lab + '</text>';
+      s += '<rect x="' + x0 + '" y="' + b.y + '" width="' + Math.max(b.w, 2) + '" height="30" rx="3" fill="' + b.fill + '"></rect>';
+      var inside = b.w > 110;
+      s += '<text x="' + (x0 + (inside ? b.w - 10 : b.w + 10)) + '" y="' + (b.y + 20) + '" text-anchor="' + (inside ? 'end' : 'start')
+        + '" style="font-size:12.5px;font-weight:700;fill:' + (inside ? 'var(--wb-canvas)' : 'var(--wb-fg)') + '">' + money(b.val) + ' / năm</text>';
+    });
+    svg.innerHTML = s;
+  }
+
+  /* ── 4 · DỰ PHÓNG ────────────────────────────────────────────────────── */
+  /* Mọi con số trong khối này tính bằng SỨC MUA HÔM NAY, không phải tiền danh
+     nghĩa của năm tương lai. Bản dựng đầu tiên tính danh nghĩa rồi so với mốc
+     "thụ động thay thế lương hiện tại" — một phép so sai, vì 42 tr của năm 2036
+     chỉ mua được bằng 30 tr hôm nay. Chạy bằng lợi suất THỰC
+     r = (1+r_danh_nghĩa)/(1+lạm_phát) − 1 thì đường và mốc dùng chung một
+     thước đo, và con số đọc ra hiểu được ngay không cần quy đổi trong đầu.
+     Tích lũy cũng giữ nguyên theo giá hôm nay, tức giả định lương danh nghĩa
+     tăng kịp lạm phát — mức tối thiểu hợp lý cho một người có nghề. */
+  var HORIZON = 16;
+
+  function project(v0, save0, save1, switchYear, rReal, rent, rentYear, comp) {
+    var out = [v0], v = v0, half = Math.pow(1 + rReal, 0.5);
+    for (var y = 1; y <= HORIZON; y++) {
+      var s = (y < switchYear ? save0 : save1);
+      if (rentYear > 0 && y >= rentYear) s -= rent;   /* nếu đền bù không lo nổi chỗ ở */
+      v = v * (1 + rReal) + s * 12 * half;
+      /* Đền bù ròng về tay BẠN, nhận một lần ở năm thu hồi. Mặc định 0: khả năng
+         cao nhất là tiền đền bù được dùng mua nhà thay thế cho cả gia đình chứ
+         không thành vốn riêng của bạn. Chỉ nâng lên khi đã biết chắc. */
+      if (rentYear > 0 && y === rentYear) v += comp;
+      if (v < 0) v = 0;
+      out.push(v);
+    }
+    return out;
+  }
+
+  /* Năm (có phần thập phân) mà đường cắt ngưỡng — nội suy tuyến tính trong năm. */
+  function crossYear(series, target) {
+    for (var i = 1; i < series.length; i++) {
+      if (series[i] >= target) {
+        var d = series[i] - series[i - 1];
+        return (i - 1) + (d > 0 ? (target - series[i - 1]) / d : 0);
+      }
+    }
+    return null;
+  }
+  var BASE_YEAR = 2026;
+  function yearLabel(y) { return y === null ? 'sau ' + (BASE_YEAR + HORIZON) : String(BASE_YEAR + Math.round(y)); }
+
+  function renderProjection() {
+    var a = assets();
+    var infl = num('i-p-infl') / 100;
+    var rReal = (1 + num('i-p-r') / 100) / (1 + infl) - 1;
+    var s0 = num('i-p-save0'), s1 = num('i-p-save1'), sw = Math.max(1, num('i-p-year'));
+    var rent = num('i-p-rent'), ry = Math.max(0, num('i-p-rentyear')), comp = num('i-p-comp');
+
+    var mine = project(a.liquid, s0, s1, sw, rReal, rent, ry, comp);
+    var flat = project(a.liquid, s0, s0, 99, rReal, rent, ry, comp);   /* không nhân thu nhập */
+    /* Hai đường đối chứng cố định, không phụ thuộc ô nhập — để cảnh báo về chỗ ở
+       luôn hiện dù người đọc đặt mặc định lạc quan. */
+    var housed = project(a.liquid, s0, s1, sw, rReal, 0, 0, 0);        /* đền bù lo xong chỗ ở */
+    var renting = project(a.liquid, s0, s1, sw, rReal, 13, 4, 0);      /* phải thuê 13 tr từ năm 4 */
+
+    /* Ba mốc, định nghĩa bằng QUYỀN chứ không bằng con số tròn — và tất cả
+       tính bằng tiền hôm nay, nên "25× chi tiêu" đúng nghĩa là mức sống đó. */
+    var m1 = 1500;
+    var m2 = num('i-p-exp') * 12 * 25;
+    var m3 = a.inc * 12 * 25;
+
+    set('o-m1', yearLabel(crossYear(mine, m1)));
+    set('o-m2', yearLabel(crossYear(mine, m2)));
+    set('o-m2-n', 'cần ' + money(m2) + ' để rút 4%/năm nuôi mức chi tiêu ' + money(num('i-p-exp'))
+      + '/tháng — tất cả theo giá hôm nay');
+    set('o-m3', yearLabel(crossYear(mine, m3)));
+    set('o-m3-n', 'cần ' + money(m3) + ' để thụ động 4% thay thế đúng mức lương '
+      + money(a.inc) + '/tháng bạn đang có — theo sức mua hôm nay, không phải tiền danh nghĩa');
+
+    set('o-p10', money(mine[10]));
+    set('o-p10-n', 'theo sức mua hôm nay. Tiền danh nghĩa của năm 2036 sẽ là '
+      + money(mine[10] * Math.pow(1 + infl, 10)) + ', nhưng con số đó mua được ít hơn.');
+
+    set('o-rentcost', money(housed[10] - renting[10]));
+    set('o-rentcost-n', 'phần tài sản 2036 bạn mất nếu tiền đền bù KHÔNG lo được chỗ ở cho bạn — '
+      + 'vì nó về tay người đứng tên, hoặc vì không đủ mua một căn thay thế. Đây là con số đối chứng '
+      + 'cố định, không đổi theo ô nhập, để cảnh báo luôn hiện.');
+
+    var gap = mine[10] - flat[10];
+    set('o-gap', money(gap));
+    set('o-gap-h', money(gap / 390) + '/giờ');
+    set('o-flat10', money(flat[10]));
+
+    drawProjection(mine, flat, [
+      { v: m1, lab: 'Mốc 1' }, { v: m2, lab: 'Mốc 2' }, { v: m3, lab: 'Mốc 3' }
+    ]);
+  }
+
+  function drawProjection(mine, flat, marks) {
+    var svg = document.getElementById('proj-chart');
+    if (!svg) return;
+    var W = 660, H = 260, ml = 54, mr = 14, mt = 12, mb = 28;
+    var pw = W - ml - mr, ph = H - mt - mb;
+    var top = Math.max(mine[HORIZON], marks[2].v) * 1.08;
+    var X = function (i) { return ml + (i / HORIZON) * pw; };
+    var Y = function (v) { return mt + ph - (v / top) * ph; };
+
+    var s = '';
+    var step = top > 16000 ? 4000 : top > 8000 ? 2000 : top > 4000 ? 1000 : 500;
+    for (var g = 0; g <= top; g += step) {
+      s += '<line class="gl" x1="' + ml + '" y1="' + Y(g) + '" x2="' + (W - mr) + '" y2="' + Y(g) + '"></line>';
+      s += '<text x="' + (ml - 8) + '" y="' + (Y(g) + 3.5) + '" text-anchor="end">' + nf0.format(g / 1000) + ' tỷ</text>';
+    }
+    for (var i = 0; i <= HORIZON; i += 2) {
+      s += '<text x="' + X(i) + '" y="' + (H - 8) + '" text-anchor="middle">' + (BASE_YEAR + i) + '</text>';
+    }
+    s += '<line class="ax" x1="' + ml + '" y1="' + Y(0) + '" x2="' + (W - mr) + '" y2="' + Y(0) + '"></line>';
+
+    marks.forEach(function (m) {
+      if (m.v > top) return;
+      s += '<line x1="' + ml + '" y1="' + Y(m.v) + '" x2="' + (W - mr) + '" y2="' + Y(m.v)
+        + '" stroke="var(--wb-neutral-weak)" stroke-width="1" stroke-dasharray="3 3"></line>';
+      /* Nhãn bám mép TRÁI: mốc trên cùng nằm sát đỉnh đường, nên nhãn bám phải
+         sẽ đè lên chấm cuối. Bên trái luôn trống vì đường xuất phát từ đáy. */
+      s += '<text x="' + (ml + 6) + '" y="' + (Y(m.v) - 5) + '" text-anchor="start" style="font-size:9.5px">'
+        + m.lab + ' · ' + nf1.format(m.v / 1000) + ' tỷ</text>';
+    });
+
+    function path(arr) {
+      return arr.map(function (v, i) { return (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1); }).join(' ');
+    }
+    s += '<path d="' + path(flat) + '" fill="none" stroke="var(--wb-neutral)" stroke-width="2" stroke-dasharray="5 4"></path>';
+    s += '<path d="' + path(mine) + '" fill="none" stroke="var(--wb-fg)" stroke-width="2.4" stroke-linejoin="round"></path>';
+    s += '<circle cx="' + X(HORIZON) + '" cy="' + Y(mine[HORIZON]) + '" r="4" fill="var(--wb-fg)"></circle>';
+
+    svg.innerHTML = s;
+  }
+
+  /* ── 7 · THUÊ HAY MUA ────────────────────────────────────────────────── */
+  /* Mô hình chạy theo THÁNG: khấu hao gốc thật, nhà tăng giá thật, tiền thuê
+     tăng 4%/năm, và cả hai bên đem phần dư của cùng một mức tích lũy đi đầu tư.
+     Phí quản lý + bảo trì lấy 0,5%/năm trên giá trị nhà.
+
+     CƠ CHẾ giữ nguyên tiền DANH NGHĨA, dù Phần 4 đã chuyển sang tiền thực, và
+     đó là cố ý: khoản trả góp cố định theo tiền danh nghĩa, nên lạm phát bào
+     mòn nó thật — 25 triệu/tháng của năm 2046 nhẹ hơn hẳn 25 triệu hôm nay.
+     Đó là lợi ích có thật của việc vay cố định, và quy mô hình sang tiền thực
+     sẽ xoá mất nó. Chỉ KẾT QUẢ cuối được giảm phát về giá hôm nay, để so được
+     với phần còn lại của trang. Hai bên cùng chia một hệ số nên điểm hoà
+     không đổi. */
+  var MAINT = 0.005, RENT_INFL = 0.04;
+
+  function rentVsBuy(o) {
+    var i = o.rate / 100 / 12, n = Math.round(o.term * 12), L = o.price - o.down;
+    var pmt = i > 0 ? L * i / (1 - Math.pow(1 + i, -n)) : (n > 0 ? L / n : 0);
+    var mi = Math.pow(1 + o.inv / 100, 1 / 12) - 1;
+    var ma = Math.pow(1 + o.app / 100, 1 / 12) - 1;
+    var mr = Math.pow(1 + RENT_INFL, 1 / 12) - 1;
+    var months = Math.round(o.years * 12);
+
+    var bal = L, hv = o.price, buyPot = 0, rentPot = o.down, rent = o.rent;
+    var y1Interest = 0, y1Maint = 0;
+
+    for (var m = 0; m < months; m++) {
+      var pay = 0;
+      if (m < n && bal > 1e-9) {
+        var interest = bal * i;
+        var principal = Math.min(pmt - interest, bal);
+        pay = interest + principal;
+        bal -= principal;
+        if (m < 12) y1Interest += interest;
+      }
+      var maint = hv * MAINT / 12;
+      if (m < 12) y1Maint += maint;
+      buyPot = buyPot * (1 + mi) + (o.save - pay - maint);
+      hv *= (1 + ma);
+      rentPot = rentPot * (1 + mi) + (o.save - rent);
+      rent *= (1 + mr);
+    }
+    var defl = Math.pow(1 + o.infl / 100, o.years);   /* → sức mua hôm nay */
+    return {
+      pmt: pmt, bal: bal, hv: hv, defl: defl,
+      buyNW: ((hv - bal) + buyPot) / defl,
+      rentNW: rentPot / defl,
+      y1Cost: y1Interest + y1Maint + o.down * o.inv / 100,
+      leftover: o.save - pmt - o.price * MAINT / 12
+    };
+  }
+
+  function houseInputs() {
+    return {
+      price: num('i-h-price'), down: num('i-h-down'), rate: num('i-h-rate'),
+      term: Math.max(1, num('i-h-term')), rent: num('i-h-rent'), app: num('i-h-app'),
+      inv: num('i-h-inv'), years: Math.max(1, num('i-h-years')), save: assets().save,
+      infl: num('i-p-infl')   /* dùng chung ô lạm phát với Phần 4 — một nguồn sự thật */
+    };
+  }
+
+  /* Điểm hoà: tìm tốc độ tăng giá nhà làm hai phương án bằng nhau. Chia đôi
+     khoảng vì buyNW tăng đơn điệu theo app còn rentNW không phụ thuộc app. */
+  function breakEvenApp(o) {
+    var lo = -10, hi = 40;
+    var f = function (a) { var c = Object.assign({}, o, { app: a }); var r = rentVsBuy(c); return r.buyNW - r.rentNW; };
+    if (f(lo) > 0) return lo;
+    if (f(hi) < 0) return null;
+    for (var k = 0; k < 60; k++) { var mid = (lo + hi) / 2; if (f(mid) < 0) lo = mid; else hi = mid; }
+    return (lo + hi) / 2;
+  }
+
+  function renderHouse() {
+    var o = houseInputs();
+    var r = rentVsBuy(o);
+    var a = assets();
+
+    set('o-h-pmt', money(r.pmt));
+    set('o-h-pmt-n', 'trên mức tích lũy ' + money(a.save) + '/tháng — khoản này ăn '
+      + pct(a.save > 0 ? Math.min(r.pmt / a.save * 100, 999) : 0) + ' toàn bộ khả năng tích lũy của bạn');
+    set('o-h-cost', money(r.y1Cost));
+    var ptr = o.rent > 0 ? o.price / (o.rent * 12) : 0;
+    set('o-h-ptr', nf1.format(ptr) + '×');
+    set('o-h-ptr-n', ptr > 20 ? 'trên 20 lần — ngưỡng kinh điển nói thuê rẻ hơn mua'
+      : ptr > 15 ? 'giữa 15 và 20 lần — vùng lưỡng lự, quyết bằng lý do ngoài tiền'
+        : 'dưới 15 lần — vùng mà mua thường thắng');
+
+    var be = breakEvenApp(o);
+    set('o-h-be', be === null ? '> 40%/năm' : pct(be, 1) + '/năm');
+    set('o-h-buy', money(r.buyNW));
+    set('o-h-rentnw', money(r.rentNW));
+    set('o-h-real-n', 'cả hai con số đã giảm phát về giá hôm nay (chia ' + nf2.format(r.defl)
+      + '). Tiền danh nghĩa của năm ' + (2026 + Math.round(o.years)) + ' sẽ lớn hơn, nhưng mua được ít hơn.');
+
+    var diff = r.rentNW - r.buyNW;
+    var el = document.getElementById('o-h-diff');
+    set('o-h-diff', (diff >= 0 ? 'thuê +' : 'mua +') + money(Math.abs(diff)).replace('-', ''));
+    if (el) el.style.color = 'var(--wb-fg)';
+    set('o-h-diff-n', diff >= 0
+      ? 'thuê và đầu tư phần chênh cho tài sản ròng cao hơn ở mốc ' + o.years + ' năm, với giả định hiện tại'
+      : 'mua cho tài sản ròng cao hơn ở mốc ' + o.years + ' năm — vì bạn đang giả định nhà tăng '
+        + pct(o.app, 1) + '/năm, trên điểm hoà');
+    set('o-h-left', money(r.leftover));
+    set('o-h-left-n', r.leftover < a.save * 0.35
+      ? 'so với ' + money(a.save) + '/tháng hiện tại — cỗ máy tích sản ở Phần 4 gần như dừng hẳn'
+      : 'so với ' + money(a.save) + '/tháng hiện tại');
+  }
+
+  /* ── 14 · CHECKLIST ──────────────────────────────────────────────────── */
+  var CHK_KEY = 'roadmap-90d';
+  function boxes() { return Array.prototype.slice.call(document.querySelectorAll('[data-chk] input[type=checkbox]')); }
+
+  function saveChecks() {
+    var done = boxes().filter(function (b) { return b.checked; }).map(function (b) { return b.id; });
+    try { localStorage.setItem(CHK_KEY, JSON.stringify(done)); } catch (e) { /* riêng tư / hết chỗ — bỏ qua */ }
+    renderChecks();
+  }
+  function loadChecks() {
+    var done = [];
+    try { done = JSON.parse(localStorage.getItem(CHK_KEY) || '[]'); } catch (e) { done = []; }
+    boxes().forEach(function (b) { b.checked = done.indexOf(b.id) !== -1; });
+    renderChecks();
+  }
+  function renderChecks() {
+    var all = boxes(), n = all.filter(function (b) { return b.checked; }).length;
+    set('chk-count', n + ' / ' + all.length);
+    var bar = document.getElementById('chk-bar');
+    if (bar) bar.style.width = (all.length ? n / all.length * 100 : 0) + '%';
+  }
+
+  /* ── khởi động ───────────────────────────────────────────────────────── */
+  function renderAll() { renderAssets(); renderLeverage(); renderProjection(); renderHouse(); }
+
+  document.addEventListener('input', function (e) {
+    if (e.target.matches('.rm-calc input[type=number]')) renderAll();
+  });
+  document.addEventListener('change', function (e) {
+    if (e.target.matches('[data-chk] input[type=checkbox]')) saveChecks();
+  });
+
+  var reset = document.getElementById('chk-reset');
+  if (reset) reset.addEventListener('click', function () {
+    boxes().forEach(function (b) { b.checked = false; });
+    saveChecks();
+  });
+
+  renderAll();
+  loadChecks();
+
+  /* ── chrome: theme, navbar, scrollspy ────────────────────────────────── */
+  var toggle = document.getElementById('theme-toggle');
+  if (toggle) toggle.addEventListener('click', function () {
+    var dark = document.documentElement.classList.toggle('dark');
+    try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+    renderAll();   /* biểu đồ vẽ bằng biến màu → vẽ lại cho đúng tông */
+  });
+
+  var menu = document.querySelector('.wb-navbar__menu');
+  document.addEventListener('click', function (e) {
+    if (!menu) return;
+    if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
+    else if (e.target.closest('.wb-navbar__menu .wb-nav__link')) menu.classList.remove('is-open');
+  });
+
+  /* Mục lục bên trái sáng theo phần đang đọc. rootMargin đẩy vùng quan sát
+     xuống dưới thanh nav dính, nếu không phần trên cùng không bao giờ sáng. */
+  var links = Array.prototype.slice.call(document.querySelectorAll('.rm-toc .wb-sidenav__link'));
+  var sections = links.map(function (l) { return document.querySelector(l.getAttribute('href')); }).filter(Boolean);
+  if ('IntersectionObserver' in window && sections.length) {
+    var seen = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { seen[en.target.id] = en.isIntersecting; });
+      var current = null;
+      for (var i = 0; i < sections.length; i++) if (seen[sections[i].id]) { current = sections[i].id; break; }
+      links.forEach(function (l) {
+        l.classList.toggle('is-current', current !== null && l.getAttribute('href') === '#' + current);
+      });
+    }, { rootMargin: '-80px 0px -60% 0px' });
+    sections.forEach(function (s) { io.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
