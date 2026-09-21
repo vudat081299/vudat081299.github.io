@@ -48,6 +48,12 @@
   .ps-toc .wb-sidenav__link.is-current { background: var(--wb-surface-hover); font-weight: 620; color: var(--wb-fg); }
 
   /* ---- section rhythm ---- */
+  /* Dòng chú dưới mỗi mô hình (.ps-lab__foot) là chữ xám gray-500, và ô <code> trong đó
+     lại thêm nền ngả xám của kit — cộng hai thứ thì còn 4,28:1, dưới ngưỡng 4,5:1. Mà chữ
+     ở đấy là ký hiệu phải đọc được (h², d′, r). Đậm thêm một bậc đúng trong ngữ cảnh ấy;
+     nhánh tối giữ gray-400 vì đo được đã đạt. */
+  .ps-lab__foot code { color: var(--wb-gray-600); }
+  .dark .ps-lab__foot code { color: var(--wb-gray-400); }
   section[id] { scroll-margin-top: 76px; }
   .ps-part-head { border-top: var(--wb-bw) solid var(--wb-border); padding: 22px 0 2px; scroll-margin-top: 76px; }
   .ps-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }

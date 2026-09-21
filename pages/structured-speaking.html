@@ -39,6 +39,11 @@
      đặt max-width cho tên cũng vô ích vì nó đã dưới ngưỡng. Thu đệm và khe lại ở khổ nhỏ
      là chỗ duy nhất còn nới được — lấy về 44px, thừa cho cả 320px. */
   @media (max-width: 480px) { .wb-navbar { padding-left: 12px; padding-right: 12px; gap: 8px; } }
+  /* Nền thanh điều hướng hơi ngả xám (246,246,248) chứ không trắng hẳn, nên --wb-fg-muted
+     của kit (gray-500) chỉ cho 4,48:1 ở đó — thiếu 0,02 so với ngưỡng 4,5:1. Đậm thêm một
+     bậc CHỈ trong thanh. Nhánh tối giữ gray-400, vốn đã đạt (đo được 0 chỗ vi phạm). */
+  .wb-navbar { --wb-fg-muted: var(--wb-gray-600); }
+  .dark .wb-navbar { --wb-fg-muted: var(--wb-gray-400); }
   section[id] { scroll-margin-top: 76px; }
 
   /* Prose measure — a teaching page reads as text, so paragraphs get a line length. */
