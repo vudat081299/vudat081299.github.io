@@ -9,7 +9,7 @@ cách chúng chạy tự động**.
 | `facts/` | [facts/CLAUDE.md](facts/CLAUDE.md) | `facts/tools/factlint.py check` + `verify` | 1, 2, 3, 4 |
 | `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3, 4 |
 | `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2, 4 |
-| `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` (kiểm cả trang mồ côi trong `pages/`, `cooking/`, và danh sách không công khai) | 2, 4 |
+| `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` (kiểm cả trang mồ côi trong `pages/`, `cooking/`, và hai danh sách không niêm yết) | 2, 4 |
 | `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` + `verify-ml.py` + `verify-betting-lab.py` | 2, 4 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2, 4 |
 | `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `sh shop/tools/check.sh` | 1, 2, 3, 4 + chạy thật |
@@ -54,15 +54,18 @@ so với `12,4 triệu` khi chèn nút thắt 1×1. Nó gộp hai trang vào m�
 luật trên: hai bộ số viết tay riêng, mỗi bộ đọc đúng file của nó, không phép kiểm nào dùng chung —
 gộp chỉ để hai trang anh em khỏi chép lại cùng một đoạn hàm trợ giúp.
 
-Cái thứ ba, `verify-betting-lab.py` (60 phép kiểm), cho `betting-strategy-lab.html` — trang thí
-nghiệm chiến lược cược. Nó khác hai cổng trên ở một chỗ đáng nói: trang ấy không chỉ nói con số,
-nó nói một **luật** ("gấp thếp không đổi được dấu của kỳ vọng"), và luật thì hỏng được mà con số
-vẫn đúng. Nên cổng có ba phần: tính lại ~30 con số trong bài; đòi vài dòng JS then chốt còn nguyên
-hình — nặng nhất là **điểm đặt phải được chốt TRƯỚC khi quả ra**, vì đảo thứ tự ấy thì kỳ vọng
-không tách được thành `e × tổng điểm` và cả mục "Vì sao" sai mà trang vẫn hiện số đẹp; và dựng lại
-phân phối bằng một lối suy luận **khác** lối trang dùng (xích Markov đối chiếu với công thức bù
-trừ), cộng một lần mô phỏng cả trò chơi bằng Python. Đã thử ngược: sửa lệch một con số thì đỏ, dời
-dòng chốt điểm đặt xuống sau vòng quay thì đỏ.
+Cái thứ ba, `verify-betting-lab.py` (92 phép kiểm), cho `betting-strategy-lab.html` — trang thí
+nghiệm chiến lược cược, thử cả luật cộng thêm lẫn luật nhân đôi sau mỗi lần thua. Nó khác hai cổng
+trên ở một chỗ đáng nói: trang ấy không chỉ nói con số, nó nói một **luật** ("gấp thếp không đổi
+được dấu của kỳ vọng"), và luật thì hỏng được mà con số vẫn đúng. Nên cổng có ba phần: tính lại
+~40 con số trong bài; đòi vài dòng JS then chốt còn nguyên hình — nặng nhất là **điểm đặt phải
+được chốt TRƯỚC khi quả ra**, vì đảo thứ tự ấy thì kỳ vọng không tách được thành `e × tổng điểm`
+và cả mục "Vì sao" sai mà trang vẫn hiện số đẹp; và dựng lại phân phối bằng một lối suy luận
+**khác** lối trang dùng (xích Markov đối chiếu với công thức bù trừ), cộng một lần mô phỏng cả trò
+chơi bằng Python. Nhánh nhân đôi không kiểm được bằng mô phỏng — ở hệ số 2 thì trung bình mẫu
+không hội tụ, đúng điều trang nói — nên nó đối chiếu hệ thức một biến với một phép tính chính xác
+khác đi qua cả phân phối chuỗi thua. Đã thử ngược: sửa lệch một con số thì đỏ, dời dòng chốt điểm
+đặt xuống sau vòng quay thì đỏ, bỏ nhánh nhân khỏi `nextStake` thì đỏ.
 
 Nhân tiện, một cái đã sửa cùng lúc: `.github/workflows/gates.yml` trước đó chỉ chạy
 `lint-pages.py`, trong khi bảng ở đầu file này nói lớp 4 chạy cổng của mọi project con.
@@ -244,14 +247,14 @@ là trường tuỳ chọn.** Mục không có `key` thì không vẽ chip phím
 chuột hoặc ô tìm kiếm — `/` nhảy vào ô, `↵` mở kết quả đầu. Linter chỉ kiểm định dạng và trùng
 lặp **khi** có `key`. **Đừng ép hai mục dùng chung một phím** để giữ cho đủ bộ.
 
-Ngày 21/09 chủ trang cho gỡ hai mục khỏi danh mục nên còn đúng ô `z`; **`Betting Lab` lấy nốt ô
-ấy cùng ngày, nên hiện là 36/36 — hết sạch.** Bản trước đoạn này đoán trúng chuyện sẽ xảy ra:
-người viết mục thứ 36 thấy 35 mục đều có phím nên bắt chước, và lấy `z`. Vậy **mục kế tiếp là mục
-đầu tiên buộc phải bỏ hẳn trường `key`**, giữa một danh mục mà cả 36 mục đều có phím — tức là
-không còn cái nào để nhìn theo. Linter cho thiếu `key` nên không ai bị chặn nhầm; đoạn này với
-trường `note` trong `data/collection.json` là hai chỗ duy nhất còn ghi. Xem mục *Thứ tự làm một
-trang* ở trên: bộ mẫu mạnh hơn luật, và bộ mẫu cho nhánh này bằng không. **Đừng xáo lại phím của
-mục cũ** để lấp chỗ: phím tắt là thứ người dùng học thuộc, đổi nó là phá trí nhớ cơ bắp.
+Ngày 21/09 chủ trang cho gỡ hai mục khỏi danh mục nên đang là **35/36**, ô `z` trống — và **mọi
+mục đang niêm yết đều có phím trở lại**. Nghĩa là luật "`key` tuỳ chọn" vừa mất **ví dụ sống
+duy nhất** của nó: người viết mục thứ 36 sẽ thấy 35 mục đều có phím rồi bắt chước, lấy nốt `z`;
+**mục thứ 37 mới là mục đầu tiên buộc phải bỏ trường `key`**, và lúc ấy trên trang không còn cái
+nào để nhìn theo. Linter vẫn cho thiếu `key` nên không ai bị chặn nhầm, nhưng đoạn này là chỗ duy
+nhất còn ghi — xem mục *Thứ tự làm một trang* ở trên: bộ mẫu mạnh hơn luật, và bộ mẫu cho nhánh
+này hiện bằng không. Dù vậy **đừng xáo lại phím của mục cũ** để lấp chỗ: phím tắt là thứ người
+dùng học thuộc, đổi nó là phá trí nhớ cơ bắp.
 
 Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Từ 20/09/2026 nó kiểm thêm
 một chiều nữa: mọi `.html` trong `pages/` và `cooking/` phải có một mục trỏ tới, vì
@@ -268,7 +271,27 @@ vì `rsync` chép cả cây thư mục; danh mục chỉ bỏ cái *link*. Và c
 trang chủ. Cả ba chiều đều đã thử ngược: bỏ dòng `--exclude` ra thì cổng đỏ, niêm yết lại thì
 cổng đỏ, khai đúng thì xanh.
 
-Danh sách ấy **cố ý không ghi lý do từng trang** — repo này public, nên một dòng lý do nằm cạnh
+**`UNLISTED` — cùng cổng ấy, ngược lại đúng một chiều (21/09/2026).** `WITHHELD` trộn hai quyết
+định vào một: *không có link ở trang chủ* và *không lên web*. Chủ trang chốt ngày 21/09 rằng
+`pages/betting-strategy-lab.html` chỉ cần cái thứ nhất — push thẳng lên `main` như mọi trang, chỉ
+là trang chủ đừng trỏ tới. Ép nó vào `WITHHELD` thì cổng sẽ bắt `--exclude` và trang biến mất
+khỏi web, tức là làm nhiều hơn điều được yêu cầu; nên tách hẳn một danh sách thứ hai thay vì nới
+`WITHHELD` ra cho lỏng.
+
+Khai vào `UNLISTED` thì cổng cũng làm ba việc, hai giống và một ngược: miễn cổng trang mồ côi,
+**cấm** quay lại `collection.json` (y hệt, và vì lý do y hệt), nhưng **đòi `deploy.yml` KHÔNG có
+`--exclude`** cho nó. Chiều thứ ba ấy mới là chỗ đáng giá: khai vào đây là nói "trang này phải
+sống ở URL trực tiếp", nên ai đó thêm dòng loại trừ vào là cổng đỏ — lời khai và thực tế không
+lệch nhau âm thầm được. Một đường dẫn chỉ được nằm ở đúng một trong hai danh sách, và cổng kiểm
+cả điều đó. Cả bốn chiều đều đã thử ngược: bỏ khỏi `UNLISTED` thì đỏ, niêm yết lại thì đỏ, thêm
+`--exclude` thì đỏ, khai vào cả hai danh sách thì đỏ.
+
+Nói thẳng hệ quả để không ai hiểu nhầm: trang trong `UNLISTED` **vẫn công khai** —
+`vudat081299.github.io/pages/…` mở được, Google index được. Nó chỉ không có đường dẫn nào từ
+trang chủ. Muốn giấu thật thì là `WITHHELD`, và ngay cả thế thì file vẫn đọc được trên github.com
+vì repo này public.
+
+Danh sách `WITHHELD` **cố ý không ghi lý do từng trang** — repo này public, nên một dòng lý do nằm cạnh
 đường dẫn thì chính nó là tấm biển chỉ đường. Các dòng trong đó nằm đấy theo quyết định của chủ
 trang; muốn bỏ một dòng ra thì **hỏi chủ trang**, đừng tự suy từ nội dung file.
 

@@ -10,8 +10,13 @@ không phải của regex.
 Kiểm cả chiều ngược lại: mọi .html trong pages/ và cooking/ phải được một mục trỏ tới.
 Thiếu chiều này thì một trang viết xong vẫn có thể vô hình — đã xảy ra hai lần.
 
-Và một chiều nữa, ngược lại lần nữa: vài trang chủ trang chốt là KHÔNG công khai
-(xem WITHHELD). Với chúng, cổng cấm niêm yết lại và bắt deploy.yml loại trừ.
+Và một chiều nữa, ngược lại lần nữa: vài trang cố ý không có mục trong danh mục. Hai
+danh sách, khác nhau đúng ở chỗ trang có lên web hay không:
+
+  · WITHHELD — không link, và KHÔNG deploy. Cổng bắt deploy.yml phải `--exclude`.
+  · UNLISTED — không link, nhưng VẪN deploy. Cổng bắt deploy.yml KHÔNG được `--exclude`.
+
+Cả hai đều cấm trang quay lại collection.json, vì lý do y hệt nhau.
 """
 import json, sys, os
 
@@ -120,6 +125,25 @@ WITHHELD = (
     'pages/wealth-roadmap.html',
 )
 
+# --- Trang cố ý không có link ở trang chủ, nhưng VẪN lên web --------------------
+# Khác WITHHELD ở đúng một chiều, và đúng cái chiều đáng tiền: trang ở đây vẫn được
+# rsync đẩy lên Pages và vẫn mở được bằng URL trực tiếp — chỉ là trang chủ không trỏ
+# tới. Khai một đường dẫn vào đây thì cổng làm ba việc:
+#
+#   1. miễn cho nó khỏi cổng trang mồ côi ngay dưới;
+#   2. CẤM nó xuất hiện trong collection.json. Cần y như WITHHELD và vì lý do y hệt:
+#      một phiên agent thấy file nằm ngoài danh mục là muốn "sửa giúp" bằng cách
+#      niêm yết nó lên trang chủ (đã xảy ra 21/09/2026);
+#   3. ĐÒI deploy.yml KHÔNG có `--exclude` cho nó — chiều ngược hẳn với WITHHELD.
+#      Khai vào đây là nói "trang này phải sống ở URL trực tiếp", nên ai thêm dòng
+#      loại trừ vào thì cổng phải đỏ; không thì lời khai và thực tế lệch nhau mà
+#      không ai biết, đúng cái bệnh mà hai danh sách này sinh ra để chữa.
+#
+# Một đường dẫn chỉ được nằm ở ĐÚNG MỘT trong hai danh sách — kiểm ở dưới.
+UNLISTED = (
+    'pages/betting-strategy-lab.html',
+)
+
 listed = set()
 for sec in d.get('sections', []):
     for it in sec.get('items', []):
@@ -136,16 +160,22 @@ for folder in WATCHED:
         if not name.endswith('.html'):
             continue
         rel = os.path.normpath(os.path.join(folder, name))
-        if rel in listed or rel in WITHHELD:
+        if rel in listed or rel in WITHHELD or rel in UNLISTED:
             continue
         err.append('%s: có file nhưng không mục nào trong collection.json trỏ tới '
-                   '— thêm một item, hoặc khai vào WITHHELD' % rel)
+                   '— thêm một item, hoặc khai vào WITHHELD (không deploy) / '
+                   'UNLISTED (vẫn deploy)' % rel)
 
-# Chiều ngược lại của WITHHELD: đã chốt không công khai thì không được niêm yết lại.
-for h in WITHHELD:
+# Một đường dẫn không được vừa "không lên web" vừa "vẫn lên web".
+for h in set(WITHHELD) & set(UNLISTED):
+    err.append('%s: nằm trong CẢ WITHHELD lẫn UNLISTED — hai danh sách nói ngược nhau '
+               'về chuyện trang có được deploy hay không; chọn một' % h)
+
+# Chiều ngược lại của cả hai danh sách: đã chốt không niêm yết thì không niêm yết lại.
+for h in WITHHELD + UNLISTED:
     if os.path.normpath(h) in listed:
-        err.append('%s: nằm trong WITHHELD nhưng collection.json vẫn có mục trỏ tới '
-                   '— gỡ mục ấy đi; đừng bỏ đường dẫn khỏi WITHHELD để cổng xanh' % h)
+        err.append('%s: nằm trong danh sách không niêm yết nhưng collection.json vẫn có mục '
+                   'trỏ tới — gỡ mục ấy đi; đừng bỏ đường dẫn khỏi danh sách để cổng xanh' % h)
 
 # ...và deploy.yml phải loại trừ, nếu không file vẫn lên GitHub Pages.
 WORKFLOW = os.path.join(ROOT, '.github', 'workflows', 'deploy.yml')
@@ -155,6 +185,11 @@ if os.path.isfile(WORKFLOW):
         if ("--exclude '%s'" % h) not in wf:
             err.append("deploy.yml thiếu --exclude '%s' — rsync sẽ chép file lên Pages "
                        "và URL trực tiếp mở được, dù trang chủ không còn link" % h)
+    for h in UNLISTED:
+        if ("--exclude '%s'" % h) in wf:
+            err.append("deploy.yml có --exclude '%s', nhưng đường dẫn ấy khai trong UNLISTED "
+                       "— tức là CỐ Ý vẫn cho lên web, chỉ bỏ link ở trang chủ. Muốn gỡ hẳn "
+                       "khỏi web thì chuyển nó sang WITHHELD, đừng để hai chỗ nói ngược nhau" % h)
 
 if err:
     print('collection: %d lỗi' % len(err))
@@ -165,5 +200,5 @@ if err:
 n = sum(len(s['items']) if s['kind'] == 'tiles'
         else sum(len(i['files']) for i in s['items']) for s in d['sections'])
 print('collection: OK (%d section, %d mục, %d/36 phím tắt; %s không có trang mồ côi; '
-      '%d trang không công khai, deploy.yml có đủ --exclude).'
-      % (len(d['sections']), n, len(keys), '/'.join(WATCHED), len(WITHHELD)))
+      '%d trang gỡ khỏi web, %d trang vẫn lên web mà không niêm yết).'
+      % (len(d['sections']), n, len(keys), '/'.join(WATCHED), len(WITHHELD), len(UNLISTED)))
