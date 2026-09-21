@@ -32,11 +32,27 @@ var root = document.documentElement, themeIco = $('#themeIco');
    Đã thử bản có hẹn giờ 2,5 giây và chụp lại — nút giỏ hàng đọc thành
    "dark_modeshopping_bag", xấu hơn hẳn một nút tròn trống. Mọi nút icon đều đã có
    aria-label nên máy đọc màn hình không mất gì khi icon ẩn.
-   `.then(ok, ok)` bắt cả nhánh hỏng, nên trường hợp mạng lỗi vẫn chốt. */
+
+   HAI CÁCH KIỂM SAI, đo bằng trình duyệt thật ngày 21/09/2026 với stylesheet Google bị chặn:
+
+     `.then(ok, ok)`        — SAI. fonts.load() KHÔNG reject khi tải hỏng. Stylesheet không về
+                              thì document.fonts rỗng, promise vẫn RESOLVE với mảng rỗng, `ok`
+                              vẫn chạy, và cả trang hiện chữ "storefront", "local_shipping",
+                              "qr_code_2" ngay trên hero. Đúng cái ADR 0005 định chặn.
+     `document.fonts.check()` — CŨNG SAI. Không có face nào khớp thì nó trả `true`, vì chữ vẫn
+                              vẽ được bằng font thay thế. Đo được: check === true trong khi
+                              document.fonts rỗng hoàn toàn.
+
+   Dấu hiệu đúng duy nhất: mảng trả về phải CÓ phần tử, và mọi phần tử phải `status === 'loaded'`.
+   Có cổng chặn hồi quy — xem phép đo "font hỏng thì không lộ chữ icon" trong tools/smoke.js. */
 (function () {
-  if (!document.fonts || !document.fonts.load) { root.classList.add('icons'); return; }
-  var ok = function () { root.classList.add('icons'); };
-  document.fonts.load('24px "Material Symbols Rounded"', 'shopping_bag').then(ok, ok);
+  var F = document.fonts;
+  if (!F || !F.load) { root.classList.add('icons'); return; }
+  F.load('24px "Material Symbols Rounded"', 'shopping_bag').then(function (faces) {
+    if (faces.length && faces.every(function (f) { return f.status === 'loaded'; })) {
+      root.classList.add('icons');
+    }
+  }, function () {});
 })();
 function paintTheme() {
   if (themeIco) themeIco.textContent = root.getAttribute('data-theme') === 'dark' ? 'light_mode' : 'dark_mode';

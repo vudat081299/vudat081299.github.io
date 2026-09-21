@@ -54,8 +54,16 @@ Ba phép đo tối thiểu sau khi sửa:
 | Hộp quà | Gói một hộp, thêm vào giỏ, rồi đọc `localStorage.getItem('scentsitive-cart')` — cấu hình phải còn nguyên. |
 | Tìm mùi | Làm hết một lượt, xem `/shop/measure/` có bắn đủ sự kiện không. |
 
-Playwright có sẵn ở `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`.
-Đừng chạy `playwright install`.
+`smoke.js` tự dò Chromium, không cần cấu hình: nó xem `CHROME_PATH`, `PLAYWRIGHT_BROWSERS_PATH`,
+`/opt/pw-browsers`, rồi cache của Playwright trên cả ba hệ điều hành. Máy chưa có thì:
+
+```bash
+npm i -g playwright-core playwright && npx playwright install chromium
+```
+
+Trong container agent (`/opt/pw-browsers` đã có sẵn) thì **đừng** chạy `playwright install` —
+trình duyệt nằm đó rồi. Thiếu công cụ thì tầng 2 thoát mã 2 và nói rõ là đã bỏ qua; nó **không**
+làm cổng đỏ, nên đọc kỹ dòng cuối chứ đừng chỉ nhìn "XONG".
 
 ## Tìm mùi: đụng vào trọng số thì phải đọc lại phân bố
 
@@ -85,6 +93,10 @@ Xem phễu ở `/shop/measure/`.
 - **Đừng đặt đường dẫn có dấu sao kiểu `thư-mục-*/file` trong block comment JS.** Chuỗi `*/`
   đóng comment sớm và node sẽ báo SyntaxError ở một dòng cách đó rất xa. Đã xảy ra một lần
   trong chính `tools/smoke.js`.
+- **Lời khuyên một cổng in ra cũng là một lời hứa — phải thử làm theo nó một lần.** `smoke.js`
+  từng bảo "cài bằng `npm i -g playwright-core` rồi chạy lại"; làm đúng thế thì lần sau vẫn ra
+  đúng câu ấy, vì `require()` không tìm trong `npm root -g`. Cổng sai kiểu này nguy hơn cổng đỏ:
+  nó **im lặng bỏ qua** và người đọc tưởng đã kiểm.
 - **`pitch/` và `measure/` không dùng shell và không dùng lớp `.ms`.** Chúng nằm trong thư mục
   con nên cổng shell không quét tới — sửa thì phải tự mở xem.
 

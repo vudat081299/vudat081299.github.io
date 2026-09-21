@@ -15,9 +15,25 @@
 
 const BASE = (process.argv[2] || 'http://localhost:8000/shop/').replace(/\/?$/, '/');
 
-let chromium;
-try { ({ chromium } = require('playwright-core')); }
-catch (e) {
+/* Nạp playwright-core: thử cách thường trước, rồi mới tới thư mục global của npm.
+ *
+ * Phải có nhánh thứ hai, và đây là lý do: `require()` KHÔNG tìm trong `npm root -g`.
+ * Bản đầu của file này chỉ có nhánh một rồi in ra lời khuyên "cài bằng npm i -g
+ * playwright-core rồi chạy lại" — làm đúng y như thế thì lần chạy sau vẫn ra đúng thông báo
+ * ấy, vì gói nằm ở /opt/node22/lib/node_modules chứ không nằm trên đường tìm của script.
+ * Đo được ngày 21/09/2026. Bài học: lời khuyên in ra từ một cổng cũng là một lời hứa —
+ * phải thử làm theo nó một lần rồi mới được viết ra. */
+let chromium = (function () {
+  try { return require('playwright-core').chromium; } catch (e) {}
+  try {
+    var path = require('path');
+    var root = require('child_process')
+      .execSync('npm root -g', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    if (root) return require(path.join(root, 'playwright-core')).chromium;
+  } catch (e) {}
+  return null;
+})();
+if (!chromium) {
   console.log('BỎ QUA: chưa có playwright-core. Cài bằng `npm i -g playwright-core` rồi chạy lại.');
   process.exit(2);
 }
@@ -33,8 +49,12 @@ function findChrome() {
   const fs = require('fs'), path = require('path');
   if (process.env.CHROME_PATH && fs.existsSync(process.env.CHROME_PATH)) return process.env.CHROME_PATH;
 
+  /* Ba hệ điều hành ba chỗ khác nhau, và macOS KHÔNG phải ~/.cache — Playwright đặt ở
+   * ~/Library/Caches/ms-playwright. Thiếu dòng ấy thì trên máy Mac cổng luôn báo "không tìm
+   * thấy trình duyệt" dù vừa cài xong, mà máy Linux trên CI vẫn xanh nên không ai thấy. */
   const roots = [process.env.PLAYWRIGHT_BROWSERS_PATH, '/opt/pw-browsers',
                  path.join(process.env.HOME || '', '.cache/ms-playwright'),
+                 path.join(process.env.HOME || '', 'Library/Caches/ms-playwright'),
                  path.join(process.env.LOCALAPPDATA || '', 'ms-playwright')].filter(Boolean);
   const rels = ['chrome-linux/chrome', 'chrome-linux64/chrome',
                 'chrome-mac/Chromium.app/Contents/MacOS/Chromium',
@@ -151,6 +171,28 @@ function check(name, ok, detail) {
       return [...new Set(l.map(r => r.e))];
     });
     check('lớp đo có ghi sự kiện', evs.length >= 3, evs.join(', '));
+
+    /* 6. Font icon bị chặn thì KHÔNG được lộ chữ ligature.
+     *
+     * Lỗi gốc, đo ngày 21/09/2026: chặn fonts.googleapis.com rồi chụp lại, hero đọc thành
+     * "storefront Xem 5 mùi hương" và nút giỏ đọc thành "dark_modeshopping_bag". Nguyên nhân:
+     * document.fonts.load() resolve với mảng RỖNG khi tải hỏng chứ không reject, nên nhánh
+     * `.then(ok, ok)` vẫn gắn class `icons`. Đây là lớp lỗi chỉ lộ ra khi mạng hỏng — mạng
+     * tốt thì mãi mãi xanh — nên phải dựng lại tình huống ấy chứ không đợi nó tự xảy ra.
+     * Mong đợi: không có class `icons`, mọi .ms vẫn visibility:hidden, chữ không đọc được. */
+    const fp = await ctx.newPage();
+    await fp.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
+    await fp.goto(BASE + 'index.html', { waitUntil: 'domcontentloaded' });
+    await fp.waitForTimeout(1200);
+    const fs_ = await fp.evaluate(() => ({
+      hasIcons: document.documentElement.classList.contains('icons'),
+      leaked: [...document.querySelectorAll('.ms')]
+        .filter(e => getComputedStyle(e).visibility !== 'hidden')
+        .map(e => e.textContent.trim()).slice(0, 3),
+    }));
+    check('font hỏng thì không lộ chữ icon', !fs_.hasIcons && fs_.leaked.length === 0,
+          fs_.leaked.length ? 'đang lộ: ' + fs_.leaked.join(', ') : 'icon ẩn, đúng như ADR 0005');
+    await fp.close();
 
     check('không có lỗi JS trên trang nào', jsErrors.length === 0, jsErrors.slice(0, 2).join(' | '));
   } finally {
