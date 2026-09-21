@@ -1,178 +1,193 @@
 <!doctype html>
-<html lang="en">
+<!-- =============================================================================
+     TRANG CHỦ — danh mục mọi trang trong repo.
+
+     Khung là part có sẵn của Web Builder (skill web-builder, v0.6): wb-shell +
+     wb-navbar + wb-shell__side + wb-container + wb-footer. Bản trước tự dựng
+     khung bằng 97 dòng CSS riêng (.hub, .tile, .sec, .subj, .kbd, .hub-foot) —
+     tất cả đã có sẵn trong bộ: wb-card--pad, wb-media, wb-section, wb-kbd,
+     wb-footer. Đừng dựng lại; sửa token nếu thấy lệch.
+
+     KHÔNG có template nào của bộ đúng hình dạng "trang danh mục", nên khung lấy
+     từ templates/dashboard.html (shell + rail), ô tìm kiếm từ templates/list.html
+     (wb-filterbar) và lưới thẻ từ templates/landing.html (wb-grid--auto +
+     wb-card--pad). Ghi ra đây vì cổng G1 của page-review.md bắt phải nói rõ.
+
+     Nội dung nằm ở data/collection.json — sửa nội dung thì sửa file đó, đừng viết
+     thẳng vào đây. Trang đọc bằng fetch nên phải chạy qua HTTP:
+     `python3 -m http.server` rồi mở localhost, mở bằng file:// sẽ rơi vào catch.
+     ========================================================================== -->
+<html lang="en" class="wb-scrollbars">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
     <title>vudat081299 · Collection</title>
-    <meta name="description" content="A collection of small web pages: tools, notes and graduate course material." />
+    <meta name="description" content="A collection of small web pages: tools, self-study courses, recipes, book summaries and graduate course material." />
 
-    <!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+    <!-- Web Builder — bộ UI tối giản dựng phần còn lại của site. File duy nhất. -->
     <link rel="stylesheet" href="web-builder/web-builder.css" />
 
+    <script>
+      /* Theme trước lần vẽ đầu, để người dùng nền tối không thấy chớp trắng.
+         Khoá 'hub-theme' — 40 trang khác trong repo đang dùng đúng khoá này, đổi
+         sang 'theme' của template là mất lựa chọn đã lưu của người đọc. */
+      try {
+        if (localStorage.getItem('hub-theme') === 'dark') document.documentElement.classList.add('dark');
+      } catch (e) {}
+    </script>
+
     <style>
-      /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens. */
-      body {
-        background: var(--wb-canvas); color: var(--wb-fg); margin: 0;
-        font-family: var(--wb-font); -webkit-font-smoothing: antialiased;
-      }
+      /* Năm luật, mỗi luật một lý do đo được. Mọi thứ khác là part + token của bộ
+         — không bịa class wb-*. Bản trước: 97 dòng. */
 
-      /* crisp selection: black block / white text in light, inverts in dark */
-      ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
-      ::-moz-selection { background: var(--wb-fg); color: var(--wb-canvas); }
-
-      /* icons: lighter than the kit default (600) — regular weight reads calmer here */
+      /* 1. Icon nhẹ hơn mặc định của bộ (600): weight thường đọc êm hơn ở đây.
+            Chỉnh token, không chỉnh từng icon. */
       body { --wb-ico-weight: 400; }
 
-      .hub { max-width: 1000px; margin: 0 auto; padding: 28px 20px 64px; }
+      /* 2. Bộ chưa có biến thể "card là một link" — .wb-card không tắt gạch chân.
+            (Ứng viên đưa ngược lên skill: wb-card--link.) */
+      a.wb-card { text-decoration: none; color: inherit; }
 
-      /* page head */
-      .hub-head { padding: 10px 0 22px; border-bottom: var(--wb-bw) solid var(--wb-border); }
-      .hub-eyebrow {
-        font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .16em;
-        text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 8px;
-      }
-      .hub-title { font-size: clamp(28px, 5vw, 40px); font-weight: 720; letter-spacing: -.02em; margin: 0; }
-      .hub-sub { color: var(--wb-fg-muted); margin: 6px 0 0; font-size: 15px; }
-      .hub-head__row { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-      .hub-search { max-width: 280px; width: 100%; }
+      /* 3. Lọc bằng thuộc tính `hidden` chuẩn, không bịa .is-hidden. Cần !important
+            vì .wb-card/.wb-list__item khai display:flex, thắng [hidden] của UA. */
+      [hidden] { display: none !important; }
 
-      /* section heading */
-      .sec { margin-top: 40px; }
-      .sec__head { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-      .sec__ico {
-        display: grid; place-items: center; width: 30px; height: 30px; flex: none;
-        border-radius: var(--wb-radius-sm); background: var(--wb-surface-2);
-        border: var(--wb-bw) solid var(--wb-border); color: var(--wb-fg);
-      }
-      .sec__ico .wb-ico { font-size: 19px; }
-      .sec__label { font-size: 17px; font-weight: 640; }
-      .sec__desc { color: var(--wb-fg-muted); font-size: 13px; margin: 1px 0 0; }
+      /* 4. Rail nhảy tới #section: chừa chỗ cho thanh nav dính. Bộ không ship
+            scroll-margin nên khai ở đây, đo bằng token chiều cao thanh nav. */
+      .wb-section[id] { scroll-margin-top: calc(var(--wb-navbar-h) + 16px); }
 
-      /* standalone-page tiles */
-      .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-      @media (max-width: 760px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-      @media (max-width: 520px) { .tiles { grid-template-columns: 1fr; } }
-      .tile {
-        display: flex; align-items: flex-start; gap: 12px; padding: 15px;
-        text-decoration: none; color: var(--wb-fg);
-      }
-      .tile__ico {
-        display: grid; place-items: center; width: 42px; height: 42px; flex: none;
-        border-radius: var(--wb-radius); background: var(--wb-surface-2);
-        border: var(--wb-bw) solid var(--wb-border);
-      }
-      .tile__ico .wb-ico { font-size: 23px; color: var(--wb-fg); }
-      .tile__text { flex: 1 1 auto; min-width: 0; }
-      /* span, không phải block — phải khai display:block, không thì tên và mô tả chạy chung một dòng */
-      .tile__name { display: block; font-size: 14.5px; font-weight: 650; margin: 1px 0 0; }
-      .tile__desc { display: block; font-size: 12.5px; color: var(--wb-fg-muted); margin: 3px 0 0; line-height: 1.45; }
-      .kbd {
-        flex: none; align-self: flex-start; font-family: var(--wb-font-mono); font-size: 11px;
-        min-width: 20px; text-align: center; padding: 1px 6px; color: var(--wb-fg-muted);
-        background: var(--wb-surface-2); border: var(--wb-bw) solid var(--wb-border);
-        border-bottom-width: 2px; border-radius: var(--wb-radius-sm);
-      }
+      /* 5. Trang ngắn — ví dụ tìm không ra kết quả nào. .wb-shell__main là
+            `flex: 1 1 auto` nhưng vẫn là block, nên chân trang bám ngay dưới nội
+            dung và để trống 152px canvas bên dưới (đo ở màn 1400×1000). Cột hoá
+            cột nội dung rồi đẩy chân trang xuống đáy; `auto` ở đây là "đẩy xuống
+            cuối", không phải một khoảng cách bịa.
+            (Ứng viên đưa ngược lên skill: sửa thẳng trong web-builder.css.) */
+      .wb-shell__main { display: flex; flex-direction: column; }
+      .wb-shell__main > .wb-footer { margin-top: auto; }
 
-      /* master's subject = one full-width row card */
-      .subjects { display: flex; flex-direction: column; gap: 14px; }
-      .subj__head { display: flex; align-items: center; gap: 12px; }
-      .subj__ico {
-        display: grid; place-items: center; width: 38px; height: 38px; flex: none;
-        border-radius: var(--wb-radius); background: var(--wb-surface-2);
-        border: var(--wb-bw) solid var(--wb-border);
-      }
-      .subj__ico .wb-ico { font-size: 22px; color: var(--wb-fg); }
-      .subj__title { font-size: 16px; font-weight: 680; margin: 0; }
-      .subj__meta { font-size: 12.5px; color: var(--wb-fg-muted); margin: 1px 0 0; }
-      .subj__count { margin-left: auto; }
-
-      .file__ico {
-        display: grid; place-items: center; width: 28px; height: 28px; flex: none;
-        border-radius: var(--wb-radius-sm); background: var(--wb-surface-2);
-        border: var(--wb-bw) solid var(--wb-border); color: var(--wb-fg-muted);
-      }
-      .file__ico .wb-ico { font-size: 17px; }
-      /* rows fill the card edge-to-edge; inset lives on the row so hover bleeds full width */
-      .subj__files .wb-list__item { padding: 13px 18px; }
-      .wb-list__item--link .wb-list__end .wb-ico { font-size: 20px; transition: transform .12s ease; }
-      .wb-list__item--link:hover .wb-list__end .wb-ico { transform: translateX(2px); color: var(--wb-fg); }
-
-      .hub-foot {
-        display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
-        gap: 10px; margin-top: 44px; padding-top: 18px; border-top: var(--wb-bw) solid var(--wb-border);
-        color: var(--wb-fg-muted); font-size: 13px;
-      }
-      .hub-foot a { color: var(--wb-fg-muted); text-decoration: none; }
-      .hub-foot a:hover { color: var(--wb-fg); }
-      .is-hidden { display: none !important; }
+      /* Chọn chữ: khối đen / chữ trắng, tự đảo ở nền tối. */
+      ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+      ::-moz-selection { background: var(--wb-fg); color: var(--wb-canvas); }
     </style>
   </head>
-  <body>
-    <div class="wb-navbar wb-navbar--sticky">
-      <a class="wb-navbar__brand" href="index.html">
-        <span class="wb-navbar__mark">V</span> vudat081299
-      </a>
-      <span class="wb-navbar__spacer"></span>
-      <div class="wb-navbar__actions">
-        <a class="wb-btn wb-btn--ghost wb-btn--sm" href="https://github.com/vudat081299" target="_blank" rel="noopener">GitHub ↗</a>
-        <button class="wb-btn wb-btn--ghost wb-btn--icon" id="theme-toggle" aria-label="Toggle light / dark">
-          <span class="wb-ico" id="theme-ico">dark_mode</span>
-        </button>
+
+  <body class="wb-app">
+    <div class="wb-shell">
+
+      <!-- ============================ THANH TRÊN ============================ -->
+      <header class="wb-navbar wb-navbar--sticky wb-navbar--glass">
+        <!-- Mở rail khi nó gập thành ngăn kéo (≤900px); trên mức đó nút tự ẩn. -->
+        <button class="wb-btn wb-btn--ghost wb-btn--icon wb-shell__side-toggle" data-side-toggle
+                aria-label="Open section list"><span class="wb-ico">menu</span></button>
+        <a class="wb-navbar__brand" href="index.html">
+          <span class="wb-navbar__mark">V</span> vudat081299
+        </a>
+        <span class="wb-navbar__spacer"></span>
+        <!-- __actions chỉ chứa nút icon, và chỉ HAI nút. Slot này flex:none và
+             KHÔNG bao giờ gập, nên mỗi thứ đặt vào đây là bề ngang cố định ở mọi
+             máy: bản cũ để "GitHub ↗" dạng chữ (đúng cái bảng mùi của page-review
+             cấm), bản nháp này còn thêm nút kính lúp — đo ra tràn ngang 43px ở máy
+             320px, 3px ở máy 360px. Kính lúp bỏ hẳn vì nó chỉ nhảy tới ô tìm kiếm
+             nằm ngay dưới tiêu đề; phím / làm đúng việc đó và chân trang có nhắc. -->
+        <div class="wb-navbar__actions">
+          <a class="wb-btn wb-btn--ghost wb-btn--icon" href="https://github.com/vudat081299"
+             target="_blank" rel="noopener" aria-label="vudat081299 on GitHub" title="GitHub">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+            </svg>
+          </a>
+          <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle"
+                  aria-label="Toggle light / dark" title="Light / Dark">
+            <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+            <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="wb-shell__body">
+
+        <!-- ============================== RAIL ============================== -->
+        <!-- Slot tự lo mặt nền, vị trí dính, cuộn riêng và ngăn kéo trên mobile.
+             wb-sidenav bên trong chỉ góp phần tạo kiểu cho link. Nội dung rail
+             dựng từ cùng data/collection.json — không có danh sách mục thứ hai
+             để quên cập nhật. -->
+        <aside class="wb-shell__side wb-scrollbars">
+          <nav class="wb-sidenav" id="rail" aria-label="Sections"></nav>
+        </aside>
+
+        <div class="wb-shell__main">
+          <main class="wb-container wb-container--pad">
+
+            <div class="wb-page-head">
+              <p class="wb-eyebrow">vudat081299 / collection</p>
+              <h1>Collection</h1>
+              <p>Small web pages, tools and graduate course notes — all in one place.</p>
+            </div>
+
+            <div class="wb-filterbar">
+              <div class="wb-input-group wb-filterbar__search">
+                <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
+                <input class="wb-input" type="search" id="q" placeholder="Search pages…"
+                       aria-label="Search pages" aria-describedby="count" autocomplete="off" />
+              </div>
+              <span class="wb-filterbar__count" id="count"></span>
+            </div>
+
+            <div id="sections"></div>
+
+            <div class="wb-empty" id="empty" hidden>
+              <div class="wb-empty__icon" aria-hidden="true">🔍</div>
+              <p class="wb-empty__title">No page matches that</p>
+              <p class="wb-empty__msg">Try a shorter word, or clear the search to see the whole collection.</p>
+              <button class="wb-btn" data-clear-search>Clear search</button>
+            </div>
+
+          </main>
+
+          <!-- ============================= CHÂN TRANG ======================= -->
+          <footer class="wb-footer">
+            <div class="wb-footer__inner">
+              <div class="wb-footer__top">
+                <div class="wb-footer__brand">
+                  <span class="wb-footer__mark">V</span>
+                  <div>
+                    <div class="wb-footer__name">vudat081299</div>
+                    <p class="wb-footer__tagline">Tools, self-study courses and graduate notes, written to be re-read.</p>
+                  </div>
+                </div>
+                <nav class="wb-footer__cols" id="foot-cols" aria-label="Sections"></nav>
+              </div>
+              <div class="wb-footer__bottom">
+                <span class="wb-footer__copy" id="foot-hint"></span>
+                <div class="wb-footer__social">
+                  <a class="wb-btn wb-btn--ghost wb-btn--icon" href="https://github.com/vudat081299"
+                     target="_blank" rel="noreferrer" aria-label="GitHub">
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </footer>
+
+        </div>
       </div>
     </div>
 
-    <main class="hub">
-      <!-- page head -->
-      <div class="hub-head">
-        <div class="hub-head__row">
-          <div>
-            <p class="hub-eyebrow">vudat081299 / collection</p>
-            <h1 class="hub-title">Collection</h1>
-            <p class="hub-sub">Small web pages, tools & graduate course notes — all in one place.</p>
-          </div>
-          <div class="wb-input-group hub-search">
-            <span class="wb-input-group__addon"><span class="wb-ico wb-ico--sm">search</span></span>
-            <input class="wb-input" type="search" placeholder="Quick search…" aria-label="Search"
-                   oninput="filterItems(this.value)" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Nội dung nằm ở data/collection.json; JS dưới đây dựng section + ô từ đó.
-           Sửa nội dung thì sửa file JSON, đừng viết thẳng vào đây. -->
-      <div id="sections"></div>
-
-      <footer class="hub-foot">
-        <span>Press <kbd class="kbd">1</kbd>–<kbd class="kbd">9</kbd>, <kbd class="kbd">B</kbd>, <kbd class="kbd">W</kbd> to open a page.</span>
-        <a href="https://github.com/vudat081299" target="_blank" rel="noopener">github.com/vudat081299 ↗</a>
-      </footer>
-    </main>
-
     <script>
       (function () {
-        /* ---- theme: default light (house style), remember choice ---- */
-        var root = document.documentElement;
-        var ico = document.getElementById('theme-ico');
-        function applyTheme(dark) {
-          root.classList.toggle('dark', dark);
-          if (ico) ico.textContent = dark ? 'light_mode' : 'dark_mode';
-        }
-        var saved = null;
-        try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
-        applyTheme(saved === 'dark');
-        var toggle = document.getElementById('theme-toggle');
-        if (toggle) toggle.addEventListener('click', function () {
-          var dark = !root.classList.contains('dark');
-          applyTheme(dark);
-          try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
-        });
+        'use strict';
 
-        /* ---- render nội dung từ data/collection.json ----
-           Mỗi section là một khối lặp nên markup ở đây, chữ ở file JSON. Trang này
-           đọc bằng fetch nên phải chạy qua HTTP — mở bằng file:// sẽ rơi vào catch. */
-        var host = document.getElementById('sections');
-        var items = [];
+        var host   = document.getElementById('sections');
+        var rail   = document.getElementById('rail');
+        var input  = document.getElementById('q');
+        var count  = document.getElementById('count');
+        var empty  = document.getElementById('empty');
+        var cols   = document.getElementById('foot-cols');
+        var hint   = document.getElementById('foot-hint');
+        var items  = [];      /* mọi ô/dòng mở được — dùng cho phím tắt + tìm kiếm */
 
         function esc(t) {
           return String(t == null ? '' : t)
@@ -180,55 +195,138 @@
             .replace(/"/g, '&quot;');
         }
 
+        /* ---------- dựng markup: chỉ part của bộ, không class tự chế ---------- */
+
+        /* `key` là tuỳ chọn: 36 ô phím (0-9 + a-z) đã dùng hết, mục thêm sau không
+           có phím riêng. Không có key thì KHÔNG vẽ chip rỗng — mở bằng chuột hoặc
+           ô tìm kiếm. */
+        function kbd(k) {
+          return k ? '<kbd class="wb-kbd">' + esc(k).toUpperCase() + '</kbd>' : '';
+        }
+
         function tile(it) {
-          return '<a class="wb-card wb-card--hover tile launch-item" href="' + esc(it.href) +
-            '" data-key="' + esc(it.key) + '">' +
-            '<span class="tile__ico"><span class="wb-ico">' + esc(it.icon) + '</span></span>' +
-            '<span class="tile__text">' +
-              '<span class="tile__name">' + esc(it.name) + '</span>' +
-              '<span class="tile__desc">' + esc(it.desc) + '</span>' +
-            '</span>' +
-            '<kbd class="kbd">' + esc(it.key).toUpperCase() + '</kbd>' +
+          return '<a class="wb-card wb-card--pad wb-card--hover" href="' + esc(it.href) +
+                 '" data-item data-key="' + esc(it.key) + '">' +
+            '<div class="wb-media">' +
+              '<span class="wb-avatar wb-avatar--square" aria-hidden="true">' +
+                '<span class="wb-ico">' + esc(it.icon) + '</span></span>' +
+              '<div class="wb-media__body">' +
+                '<p class="wb-media__title">' + esc(it.name) + '</p>' +
+                '<p class="wb-media__text">' + esc(it.desc) + '</p>' +
+              '</div>' +
+              kbd(it.key) +
+            '</div>' +
           '</a>';
         }
 
         function subject(su) {
           var n = su.files.length;
-          return '<div class="wb-card subject">' +
-            '<div class="wb-card__head subj__head">' +
-              '<span class="subj__ico"><span class="wb-ico">' + esc(su.icon) + '</span></span>' +
-              '<div><h3 class="subj__title">' + esc(su.title) + '</h3>' +
-              '<p class="subj__meta">' + esc(su.meta) + '</p></div>' +
-              '<span class="subj__count"><span class="wb-cap wb-cap--sm">' + n +
-                ' page' + (n === 1 ? '' : 's') + '</span></span>' +
+          return '<div class="wb-card" data-subject>' +
+            '<div class="wb-card__head">' +
+              '<span class="wb-avatar wb-avatar--square" aria-hidden="true">' +
+                '<span class="wb-ico">' + esc(su.icon) + '</span></span>' +
+              '<div class="wb-grow">' +
+                '<h3 class="wb-card__title">' + esc(su.title) + '</h3>' +
+                '<p class="wb-card__sub">' + esc(su.meta) + '</p>' +
+              '</div>' +
+              /* "n page" suy ra từ files.length — không ghi tay trong data. */
+              '<span class="wb-cap wb-cap--sm">' + n + ' page' + (n === 1 ? '' : 's') + '</span>' +
             '</div>' +
-            '<ul class="wb-list wb-list--flush subj__files">' +
-              su.files.map(function (f) {
-                return '<a class="wb-list__item wb-list__item--link launch-item" href="' +
-                  esc(f.href) + '" data-key="' + esc(f.key) + '">' +
-                  '<span class="file__ico"><span class="wb-ico">' + esc(f.icon) + '</span></span>' +
-                  '<span class="wb-list__title">' + esc(f.title) + ' ' +
-                    '<span class="wb-list__sub">' + esc(f.sub) + '</span>' +
-                  '</span>' +
-                  '<span class="wb-list__end"><span class="wb-ico">chevron_right</span></span>' +
-                '</a>';
-              }).join('') +
-            '</ul>' +
+            '<div class="wb-card__body">' +
+              '<div class="wb-list wb-list--flush">' +
+                su.files.map(function (f) {
+                  return '<a class="wb-list__item wb-list__item--link" href="' + esc(f.href) +
+                         '" data-item data-key="' + esc(f.key) + '">' +
+                    '<span class="wb-avatar wb-avatar--square wb-avatar--sm" aria-hidden="true">' +
+                      '<span class="wb-ico wb-ico--sm">' + esc(f.icon) + '</span></span>' +
+                    '<span class="wb-list__title">' + esc(f.title) +
+                      '<span class="wb-list__sub">' + esc(f.sub) + '</span></span>' +
+                    '<span class="wb-list__end">' + kbd(f.key) + '</span>' +
+                  '</a>';
+                }).join('') +
+              '</div>' +
+            '</div>' +
           '</div>';
         }
 
         function section(sec) {
+          /* Môn học xếp một cột (wb-stack): dòng file có `sub` dài tới ~200 ký tự,
+             chia cột là ép chữ xuống thành tháp. Cũng tránh luôn bẫy của
+             wb-grid--auto: minmax(<min>, 1fr) KHÔNG co xuống dưới <min>, nên một
+             --wb-grid-min:380px tràn ngang 10px ở máy 390px (đo được).
+             Ô thường dùng 260px — nhỏ hơn bề ngang khả dụng của cả máy 320px. */
           var body = sec.kind === 'subjects'
-            ? '<div class="subjects" id="' + esc(sec.id) + '">' + sec.items.map(subject).join('') + '</div>'
-            : '<div class="tiles" id="' + esc(sec.id) + '">' + sec.items.map(tile).join('') + '</div>';
-          return '<section class="sec">' +
-            '<div class="sec__head">' +
-              '<span class="sec__ico"><span class="wb-ico">' + esc(sec.icon) + '</span></span>' +
-              '<div><div class="sec__label">' + esc(sec.label) + '</div>' +
-              '<p class="sec__desc">' + esc(sec.desc) + '</p></div>' +
-            '</div>' + body +
+            ? '<div class="wb-stack">' + sec.items.map(subject).join('') + '</div>'
+            : '<div class="wb-grid wb-grid--auto" style="--wb-grid-min:260px">' +
+                sec.items.map(tile).join('') + '</div>';
+          return '<section class="wb-section" id="' + esc(sec.id) + '" data-section>' +
+            '<h2>' + esc(sec.label) + '</h2>' +
+            '<p class="wb-section__desc">' + esc(sec.desc) + '</p>' +
+            body +
           '</section>';
         }
+
+        /* Rail và chân trang đọc cùng một mảng sections, nên không có danh sách
+           mục thứ hai để lệch. Badge = số mục, suy ra chứ không ghi tay. */
+        function railLink(sec) {
+          return '<a class="wb-sidenav__link" href="#' + esc(sec.id) + '" data-rail="' + esc(sec.id) + '">' +
+            '<span class="wb-ico">' + esc(sec.icon) + '</span> ' + esc(sec.label) +
+            '<span class="wb-sidenav__badge">' + countOf(sec) + '</span></a>';
+        }
+
+        function countOf(sec) {
+          return sec.kind === 'subjects'
+            ? sec.items.reduce(function (n, s) { return n + s.files.length; }, 0)
+            : sec.items.length;
+        }
+
+        function footCols(secs) {
+          /* Ba cột, chia đều theo thứ tự — không ghim tay section nào vào cột nào. */
+          var per = Math.ceil(secs.length / 3), out = '';
+          for (var i = 0; i < secs.length; i += per) {
+            out += '<div class="wb-footer__col">' +
+              secs.slice(i, i + per).map(function (s) {
+                return '<a class="wb-footer__link" href="#' + esc(s.id) + '">' + esc(s.label) + '</a>';
+              }).join('') + '</div>';
+          }
+          return out;
+        }
+
+        /* ---------------------------- tìm kiếm ---------------------------- */
+
+        function filter(q) {
+          q = (q || '').trim().toLowerCase();
+          var shown = 0;
+          items.forEach(function (a) {
+            var hit = !q || a.textContent.toLowerCase().indexOf(q) >= 0;
+            a.hidden = !hit;
+            if (hit) shown++;
+          });
+          /* Thẻ môn rỗng thì ẩn cả thẻ… */
+          each('[data-subject]', function (card) {
+            card.hidden = !card.querySelector('[data-item]:not([hidden])');
+          });
+          /* …và section rỗng thì ẩn cả section. Bản trước thiếu đúng bước này:
+             gõ "loto" còn lại 5 tiêu đề section trống trơ trên màn hình. */
+          each('[data-section]', function (sec) {
+            var on = !!sec.querySelector('[data-item]:not([hidden])');
+            sec.hidden = !on;
+            var link = rail.querySelector('[data-rail="' + sec.id + '"]');
+            if (link) link.hidden = !on;
+          });
+          /* Lọc sạch thì nhãn "Sections" của rail cũng phải đi theo — nếu không nó
+             là đúng cái lỗi vừa sửa ở cột chính, chỉ là ở rail. */
+          var head = rail.querySelector('[data-rail-head]');
+          if (head) head.hidden = !rail.querySelector('[data-rail]:not([hidden])');
+          empty.hidden = shown > 0;
+          count.textContent = q
+            ? shown + ' / ' + items.length + ' pages'
+            : items.length + ' pages · ' + document.querySelectorAll('[data-section]').length + ' sections';
+        }
+
+        function each(sel, fn) { Array.prototype.forEach.call(document.querySelectorAll(sel), fn); }
+
+        /* --------------------------- nạp nội dung --------------------------- */
 
         fetch('data/collection.json', { cache: 'no-cache' })
           .then(function (r) {
@@ -237,7 +335,14 @@
           })
           .then(function (d) {
             host.innerHTML = d.sections.map(section).join('');
-            items = Array.prototype.slice.call(document.querySelectorAll('.launch-item[data-key]'));
+            rail.innerHTML = '<div class="wb-sidenav__section" data-rail-head>Sections</div>' +
+                             d.sections.map(railLink).join('');
+            cols.innerHTML = footCols(d.sections);
+            items = Array.prototype.slice.call(document.querySelectorAll('[data-item]'));
+            hint.innerHTML = 'Press <kbd class="wb-kbd">/</kbd> to search, <kbd class="wb-kbd">↵</kbd> to open the' +
+                             ' first hit — or the key shown on any tile to open it directly.';
+            filter('');
+            spy();
           })
           .catch(function (err) {
             host.innerHTML =
@@ -246,34 +351,71 @@
               '<p class="wb-alert__msg">' + esc(err.message) +
               ' — trang này đọc data/collection.json bằng fetch nên phải chạy qua HTTP. ' +
               'Chạy <code>python3 -m http.server</code> ở thư mục gốc rồi mở lại.</p></div></div>';
+            count.textContent = '';
           });
 
-        /* ---- keyboard shortcuts ---- */
+        /* ------------------------ rail: mục đang xem ------------------------ */
+
+        function spy() {
+          if (!('IntersectionObserver' in window)) return;
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              var link = rail.querySelector('[data-rail="' + e.target.id + '"]');
+              if (link) link.classList.toggle('is-active', e.isIntersecting);
+            });
+          }, { rootMargin: '-25% 0px -70% 0px' });
+          each('[data-section]', function (s) { io.observe(s); });
+        }
+
+        /* ------------------------------ điều khiển ------------------------------ */
+
+        var shell = document.querySelector('.wb-shell');
+
+        function closeDrawer() { shell.classList.remove('is-side-open'); }
+
+        document.addEventListener('click', function (e) {
+          if (e.target.closest('[data-side-toggle]')) {
+            var narrow = window.matchMedia('(max-width: 900px)').matches;
+            shell.classList.toggle(narrow ? 'is-side-open' : 'is-side-collapsed');
+          } else if (e.target.closest('.wb-theme-toggle')) {
+            var dark = document.documentElement.classList.toggle('dark');
+            try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (err) {}
+          } else if (e.target.closest('[data-clear-search]')) {
+            input.value = ''; filter(''); input.focus();
+          } else if (e.target.closest('[data-rail]')) {
+            closeDrawer();      /* trên mobile: chọn mục xong thì đóng ngăn kéo */
+          }
+        });
+
+        input.addEventListener('input', function () { filter(this.value); });
+
         document.addEventListener('keydown', function (e) {
           if (e.metaKey || e.ctrlKey || e.altKey) return;
           var t = (e.target && e.target.tagName) || '';
-          if (t === 'INPUT' || t === 'TEXTAREA') return;
+          var typing = t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT';
+
+          if (typing) {
+            if (e.key === 'Escape') { input.value = ''; filter(''); input.blur(); }
+            if (e.key === 'Enter') {
+              /* Enter mở kết quả đầu tiên còn hiện — cách đi nhanh khi đã có 36 mục. */
+              var first = document.querySelector('[data-item]:not([hidden])');
+              if (first) { e.preventDefault(); window.location.href = first.getAttribute('href'); }
+            }
+            return;
+          }
+
+          if (e.key === '/') { e.preventDefault(); input.focus(); input.select(); return; }
+          if (e.key === 'Escape') { closeDrawer(); return; }
+
           for (var i = 0; i < items.length; i++) {
-            if (items[i].getAttribute('data-key') === e.key.toLowerCase()) {
+            var k = items[i].getAttribute('data-key');
+            if (k && !items[i].hidden && k === e.key.toLowerCase()) {
               e.preventDefault();
               window.location.href = items[i].getAttribute('href');
               return;
             }
           }
         });
-
-        /* ---- quick search: filter tiles + subject rows, hide empty subjects ---- */
-        window.filterItems = function (q) {
-          q = (q || '').trim().toLowerCase();
-          items.forEach(function (a) {
-            var hit = a.textContent.toLowerCase().indexOf(q) >= 0;
-            a.classList.toggle('is-hidden', !hit);
-          });
-          Array.prototype.forEach.call(document.querySelectorAll('.subject'), function (card) {
-            var anyVisible = card.querySelector('.launch-item:not(.is-hidden)');
-            card.classList.toggle('is-hidden', !anyVisible);
-          });
-        };
       })();
     </script>
   </body>

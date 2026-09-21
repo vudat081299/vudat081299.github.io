@@ -1,9 +1,15 @@
 #!/bin/sh
 # Cổng lớp 2 cho nội dung trang chủ. Bộ điều phối gọi mọi */tools/hooks/pre-commit;
-# hook này tự lọc — chỉ chạy khi commit có chạm data/collection.json hoặc index.html.
+# hook này tự lọc — chỉ chạy khi commit có chạm thứ liên quan tới danh mục.
+#
+# Bộ lọc bao cả pages/*.html và cooking/*.html, không chỉ data/collection.json:
+# cổng "trang mồ côi" trong lint-collection.py bắt đúng trường hợp thêm một trang
+# MÀ KHÔNG sửa collection.json — nếu chỉ lọc theo collection.json thì hook không
+# bao giờ chạy đúng lúc nó cần chạy nhất. D trong diff-filter để xoá một trang
+# đang được niêm yết cũng bị bắt (href chết).
 set -eu
 ROOT=$(git rev-parse --show-toplevel)
-CHANGED=$(git diff --cached --name-only --diff-filter=ACM)
+CHANGED=$(git diff --cached --name-only --diff-filter=ACMRD)
 
-echo "$CHANGED" | grep -qE '^(data/collection\.json|index\.html|tools/lint-collection\.py)$' || exit 0
+echo "$CHANGED" | grep -qE '^(data/collection\.json|index\.html|tools/lint-collection\.py|pages/[^/]+\.html|cooking/[^/]+\.html)$' || exit 0
 python3 "$ROOT/tools/lint-collection.py"

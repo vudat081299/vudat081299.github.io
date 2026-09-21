@@ -9,7 +9,7 @@ cách chúng chạy tự động**.
 | `facts/` | [facts/CLAUDE.md](facts/CLAUDE.md) | `facts/tools/factlint.py check` + `verify` | 1, 2, 3, 4 |
 | `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3, 4 |
 | `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2, 4 |
-| `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` | 2, 4 |
+| `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `python3 tools/lint-collection.py` (kiểm cả trang mồ côi trong `pages/`, `cooking/`, và danh sách không công khai) | 2, 4 |
 | `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` | 2, 4 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2, 4 |
 | `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `sh shop/tools/check.sh` | 1, 2, 3, 4 + chạy thật |
@@ -125,8 +125,10 @@ Ba bước, đúng thứ tự:
 3. **Ghép, chạy cổng, ship.**
 
 **Luật chia chỗ — đếm được, không tranh luận được:** khối **lặp** → chữ ở data; khối **độc
-nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 6 section + 31 ô đều lặp nên nằm ở
-`data/collection.json`; tiêu đề trang chỉ có một nên ở lại HTML. Trang văn xuôi độc nhất
+nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 8 section + 29 ô + 6 dòng môn học đều lặp nên nằm ở
+`data/collection.json`; tiêu đề trang chỉ có một nên ở lại HTML. Rail bên trái và ba cột
+chân trang cũng dựng từ chính mảng `sections` ấy — không có danh sách mục thứ hai để quên
+cập nhật. Trang văn xuôi độc nhất
 (`pages/chemistry.html`, `how-money-works`…) **không** tách — chữ ở đó không lặp, JSON hoá chỉ
 thêm một lớp indirection.
 
@@ -152,9 +154,88 @@ Luật này cũng nằm ở trường `note` trong `data/collection.json` — ng
 theo đang gõ, vì **ai viết mục thứ 32 cũng bắt chước mục 1–31**. Đó là lý do bộ mẫu quan trọng
 hơn luật: đã rà cả 31 mô tả và sửa 12 cái vi phạm, để cái được bắt chước là cái đúng.
 
-Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Nó **không**
-kiểm độ dài mô tả: đã đo, 31 mô tả đang chạy dài 24→235 ký tự, mọi ngưỡng chung đều là số bịa.
-Câu có sát việc của cái ô hay không là việc của người viết.
+**Mở rộng 20/09/2026 — luật áp cho cả `desc` của section, và một luật sắp xếp.** `desc` của
+section trước đây tự do hơn mục con nên vi phạm chính luật ấy ở ba chỗ: `lọc theo nguyên liệu,
+loại món, độ khó` (Cooking), `each with interactive models` (Science), `Each subject is a card —
+its rows are the pages inside that subject's folder` (Master's) — câu cuối còn tả cách trang
+được vẽ. `desc` nói **cái gì gom nhóm ấy lại**, không nói trang có bộ phận gì.
+
+Luật sắp xếp: **một section = một trục duy nhất.** `Tools` là thứ bạn *dùng*; bảy section còn
+lại là chủ đề bạn *đọc*. Bản trước trộn hai trục — một ô `Pages` 12 mục chứa lẫn công cụ
+(Loto, Cashy, JSON) với giáo trình (Debate, Psychology, English), cạnh những section chia theo
+chủ đề. **Đừng dựng lại một ô `Pages` chứa mọi thứ:** trang nào không biết xếp đâu là dấu hiệu
+thiếu một section, không phải cớ để có một cái thùng.
+
+**Luật thứ tự (21/09/2026) — viết ra vì thiếu nó là thiếu thứ để bắt chước.** Bản 20/09 đã gom
+nhóm đúng nhưng **không** nói gì về thứ tự, nên thứ tự trong section lệch nhau ngay trong cùng
+một trang: `Cooking` xếp đúng (món hay nấu trước, `Food Fundamentals` — kho tra cứu — chốt hậu)
+trong khi `Data & AI` xếp ngược chiều học và `Thinking` để kho tra cứu dẫn đầu. Bốn dòng:
+
+1. Section là **lộ trình học** (`Data & AI`, `Science`, `Thinking`, `Cooking`, `Master's`):
+   **cửa vào trước, kho tra cứu / đào sâu cuối.** `Machine Learning 101` tự mô tả *"cho người
+   mới, không cần biết toán cấp ba"* → nó mở màn `Data & AI`, không phải ba khoá toán của
+   Serrano. `Fact` và `Food Fundamentals` là kho tra cứu → chốt hậu section của chúng.
+2. Section là **cái kệ** (`Tools`, `Everyday`, `Books`): **cái hay với tay tới nhất trước.**
+3. Cùng một mức, không phân được đâu là cửa vào (`Science`): **cái gần việc chủ trang nhất
+   trước** — vì vậy `Cryptography` đứng trước `Chemistry` / `Relativity`.
+4. **Thứ tự 8 section là quyết định của chủ trang, không suy ra được từ nội dung.** Chốt
+   21/09/2026: `Everyday` · `Cooking` · `Book Summaries` · `Thinking & Communication` ·
+   `Tools` · `Science` · `Data & AI` · `Master's Degree`. Trục **đọc được** từ chính thứ tự
+   ấy là *đời thường trước, chuyên sâu sau*: bốn section đầu là thứ dùng ngoài giờ làm, bốn
+   section cuối nặng dần tới `Master's`, `Tools` nằm đúng chỗ bản lề giữa hai nửa. Nói rõ
+   để người sau không hiểu nhầm: **đó là cách đọc thứ tự, không phải lý do chủ trang nói
+   ra.** Bản 20/09 xếp `Tools` đầu vì coi trang là bảng nhảy việc mở hằng ngày; chủ trang
+   đổi ý ngày 21/09. Muốn đổi nữa thì đảo lại *cả dòng này* trước, đừng vá từng mục.
+
+Hai chỗ **cố ý** không có luật, đừng đi tìm: **ba môn cao học xếp tuỳ ý** (repo không có tín
+hiệu học kỳ nào, cả bốn thư mục commit cùng ngày 08/09; chủ trang chốt giữ nguyên 21/09/2026),
+và **`Cryptography` nằm trong `Science`** dù nó là toán rời rạc/CS chứ không phải khoa học tự
+nhiên — đã cân nhắc và giữ, vì đổi thì phải đổi tên section.
+
+Luật này **không có cổng máy kiểm**, và đó là chủ ý: "cửa vào" không đo được bằng regex, y như
+độ dài mô tả ở dưới. Cổng bịa ra cho nó sẽ đánh trượt nội dung thật.
+
+**Phím tắt: keyspace từng hết, và đã phải xử lý thật.** 36 ô phím (`0-9` + `a-z`) dùng hết ngày
+20/09/2026; đúng hôm ấy `pages/wealth-roadmap.html` là mục thứ 37. Cách xử lý đã chốt: **`key`
+là trường tuỳ chọn.** Mục không có `key` thì không vẽ chip phím (không vẽ chip rỗng), và mở bằng
+chuột hoặc ô tìm kiếm — `/` nhảy vào ô, `↵` mở kết quả đầu. Linter chỉ kiểm định dạng và trùng
+lặp **khi** có `key`. **Đừng ép hai mục dùng chung một phím** để giữ cho đủ bộ.
+
+Ngày 21/09 chủ trang cho gỡ hai mục khỏi danh mục nên đang là **35/36**, ô `z` trống — và **mọi
+mục đang niêm yết đều có phím trở lại**. Nghĩa là luật "`key` tuỳ chọn" vừa mất **ví dụ sống
+duy nhất** của nó: người viết mục thứ 36 sẽ thấy 35 mục đều có
+phím rồi bắt chước, lấy nốt `z`; **mục thứ 37 mới là mục đầu tiên buộc phải bỏ trường `key`**, và
+lúc ấy trên trang không còn cái nào để nhìn theo. Linter vẫn cho thiếu `key` nên không ai bị chặn
+nhầm, nhưng đoạn này là chỗ duy nhất còn ghi — xem mục *Thứ tự làm một trang* ở trên: bộ mẫu
+mạnh hơn luật, và bộ mẫu cho nhánh này hiện bằng không. Dù vậy **đừng xáo lại phím của mục cũ**
+để lấp chỗ: phím tắt là thứ người dùng học thuộc, đổi nó là phá trí nhớ cơ bắp.
+
+Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Từ 20/09/2026 nó kiểm thêm
+một chiều nữa: mọi `.html` trong `pages/` và `cooking/` phải có một mục trỏ tới, vì
+`family-insurance-benefits.html` và `jazz-piano-theory.html` đã viết xong mà nằm ngoài danh mục
+nhiều tháng — trang vẫn mở được bằng URL trực tiếp nên không gì tự lộ ra. Muốn cố ý không niêm
+yết thì khai vào `WITHHELD` trong chính cổng ấy, đừng xoá cổng.
+
+**`WITHHELD` không phải một miễn trừ suông (21/09/2026).** Khai một đường dẫn vào đó là cổng làm
+ba việc: miễn nó khỏi kiểm trang mồ côi, **cấm** nó quay lại `collection.json`, và **bắt**
+`.github/workflows/deploy.yml` phải có `--exclude` cho nó. Cần cả ba vì **gỡ khỏi danh mục không
+phải là gỡ khỏi web** — đã đo 21/09: một trang gỡ khỏi danh mục vẫn trả HTTP 200 ở URL trực tiếp,
+vì `rsync` chép cả cây thư mục; danh mục chỉ bỏ cái *link*. Và cần chiều "cấm niêm yết lại" vì
+đúng hôm ấy một phiên agent thấy file nằm ngoài danh mục liền "sửa giúp" bằng cách đưa nó lên
+trang chủ. Cả ba chiều đều đã thử ngược: bỏ dòng `--exclude` ra thì cổng đỏ, niêm yết lại thì
+cổng đỏ, khai đúng thì xanh.
+
+Danh sách ấy **cố ý không ghi lý do từng trang** — repo này public, nên một dòng lý do nằm cạnh
+đường dẫn thì chính nó là tấm biển chỉ đường. Các dòng trong đó nằm đấy theo quyết định của chủ
+trang; muốn bỏ một dòng ra thì **hỏi chủ trang**, đừng tự suy từ nội dung file.
+
+Hai giới hạn phải nói thẳng vì cổng không làm được: repo này **public**, nên loại trừ khỏi deploy
+chỉ chặn `vudat081299.github.io/…` chứ file vẫn đọc được trên github.com; và **lịch sử git vẫn
+giữ nội dung cũ**, muốn xoá thật thì phải viết lại lịch sử — việc đó phải hỏi chủ repo.
+
+Nó **không** kiểm độ dài mô tả: đã đo lại 21/09/2026, 35 mô tả đang chạy dài 24→193 ký tự
+(trung vị 77), mọi ngưỡng chung đều là số bịa. Câu có sát việc của cái ô hay không là việc của
+người viết.
 
 ---
 
