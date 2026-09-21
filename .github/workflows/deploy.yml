@@ -24,6 +24,11 @@ name: Deploy site (build Cashy)
 # either `--exclude` disappears, and also blocks the pages from being put back on the
 # homepage. Do not drop a line without asking the site owner.
 #
+# Careful with the opposite case: a page can be off the homepage and still belong on the
+# web. Those are declared in `UNLISTED` in the same linter, and it fails the build if an
+# `--exclude` shows up for one of them. So do not "tidy up" by excluding a page just
+# because the homepage no longer links to it — check which of the two lists it is in.
+#
 # One-time setup: repo Settings → Pages → Build and deployment → Source =
 # "GitHub Actions" (instead of "Deploy from a branch").
 
