@@ -125,7 +125,7 @@ có thật, và nó được quyết ở buổi gặp đầu tiên chứ không 
 
 | Việc | Ai làm | Ghi chú |
 |---|---|---|
-| Nội dung 5 mùi (tên, mô tả, 3 tầng hương, lúc hợp) | **chị ấy** | đường găng — 24 placeholder chờ cái này |
+| Nội dung 5 mùi (tên, mô tả, 3 tầng hương, lúc hợp) | **chị ấy** | đường găng — gỡ 10 trong 28 cờ placeholder (`scents` + `products`); 18 cờ kia hỏi riêng |
 | Giá thật, khối lượng, thời gian cháy, tồn kho | **chị ấy** | |
 | Ảnh chụp thật | **chị ấy** | hiện đang vẽ SVG — dùng tạm được, ảnh thật bán tốt hơn |
 | Số tài khoản + mã BIN để bật VietQR | **chị ấy** | 5 phút, không mất phí cổng |

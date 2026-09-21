@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scentsitive — toàn bộ tri thức dự án</title>
+<meta name="description" content="Bản đọc gộp của 13 tài liệu trong shop/docs: chẩn đoán kinh doanh, lộ trình, đối thủ, pháp lý, kịch bản đàm phán, quyết định kiến trúc và sổ nợ.">
+
+<!-- Trang này tự chứa hoàn toàn: không link CSS ngoài, không gọi font ngoài.
+     Cố ý, và lý do nằm ngay trong chính bộ tài liệu nó tóm tắt — xem ADR 0005:
+     một trang phụ thuộc font của máy chủ khác thì khi máy chủ ấy không với tới
+     được, trang lộ nguyên chữ thô. Trang này đem đi đọc offline cũng phải chạy. -->
+<style>
+:root{
+  color-scheme: light;
+  --bg:#fbf9f6; --surface:#ffffff; --surface-2:#f5f2ec; --surface-3:#efeae1;
+  --ink:#191714; --ink-2:#4a453d; --ink-3:#736c60;
+  --line:#e2dbcf; --line-2:#cfc6b5;
+  --accent:#a8571f; --accent-soft:#f6ece1;
+  --ok:#1f6b45; --ok-soft:#e6f2ea;
+  --warn:#8a5a04; --warn-soft:#fbf0d9;
+  --risk:#a33330; --risk-soft:#fbe9e7;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --neg:#e34948; --bar:#2a78d6;
+  --shadow:0 1px 2px rgba(25,23,20,.05), 0 8px 24px -12px rgba(25,23,20,.18);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#15140f; --surface:#1d1c17; --surface-2:#24231d; --surface-3:#2c2a23;
+    --ink:#f4f1ea; --ink-2:#c4beb1; --ink-3:#938d80;
+    --line:#332f27; --line-2:#443f34;
+    --accent:#e3a06a; --accent-soft:#2c231a;
+    --ok:#6cc194; --ok-soft:#18271f;
+    --warn:#dfae4e; --warn-soft:#2a2316;
+    --risk:#ef8e88; --risk-soft:#2b1b19;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --neg:#e66767; --bar:#3987e5;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#15140f; --surface:#1d1c17; --surface-2:#24231d; --surface-3:#2c2a23;
+  --ink:#f4f1ea; --ink-2:#c4beb1; --ink-3:#938d80;
+  --line:#332f27; --line-2:#443f34;
+  --accent:#e3a06a; --accent-soft:#2c231a;
+  --ok:#6cc194; --ok-soft:#18271f;
+  --warn:#dfae4e; --warn-soft:#2a2316;
+  --risk:#ef8e88; --risk-soft:#2b1b19;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --neg:#e66767; --bar:#3987e5;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth; scroll-padding-top:20px}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:400 17px/1.66 ui-sans-serif,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+h1,h2,h3,h4{line-height:1.22; letter-spacing:-.018em; margin:0}
+a{color:var(--accent); text-decoration-thickness:1px; text-underline-offset:2px}
+a:hover{text-decoration-thickness:2px}
+code{
+  font:500 .88em/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  background:var(--surface-3); padding:.1em .38em; border-radius:4px;
+  border:1px solid var(--line); white-space:nowrap;
+}
+strong{font-weight:650; color:var(--ink)}
+
+/* ─── layout ─────────────────────────────────────────────── */
+.wrap{max-width:1320px; margin:0 auto; padding:0 16px; display:grid; gap:40px}
+@media (min-width:1080px){
+  .wrap{grid-template-columns:252px minmax(0,1fr); align-items:start; padding:0 28px}
+}
+main{min-width:0; padding-bottom:90px}
+
+/* ─── header ─────────────────────────────────────────────── */
+.top{border-bottom:1px solid var(--line); background:var(--surface); margin-bottom:40px}
+.top-in{max-width:1320px; margin:0 auto; padding:34px 16px 30px}
+@media (min-width:1080px){.top-in{padding:44px 28px 36px}}
+.eyebrow{
+  font-size:12.5px; font-weight:650; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:14px;
+}
+h1{font-size:clamp(30px,5.4vw,50px); font-weight:700; max-width:19ch}
+.lede{margin:18px 0 0; font-size:clamp(17px,2.2vw,20px); line-height:1.58; color:var(--ink-2); max-width:62ch}
+.meta{
+  margin-top:24px; display:flex; flex-wrap:wrap; gap:8px 20px;
+  font-size:13.5px; color:var(--ink-3); align-items:center;
+}
+.theme-btn{
+  font:inherit; font-size:13px; cursor:pointer; background:var(--surface-2);
+  border:1px solid var(--line-2); color:var(--ink-2); border-radius:999px; padding:5px 13px;
+}
+.theme-btn:hover{border-color:var(--accent); color:var(--accent)}
+
+/* ─── sidebar nav ────────────────────────────────────────── */
+nav.toc{font-size:14px}
+@media (min-width:1080px){
+  nav.toc{position:sticky; top:20px; max-height:calc(100vh - 40px); overflow-y:auto; padding-right:6px}
+}
+nav.toc > b{
+  display:block; font-size:11.5px; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--ink-3); margin:0 0 12px;
+}
+nav.toc ol{list-style:none; margin:0 0 20px; padding:0}
+nav.toc .part{
+  font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; font-weight:650;
+  color:var(--accent); margin:20px 0 8px; padding-top:14px; border-top:1px solid var(--line);
+}
+nav.toc .part:first-of-type{margin-top:0; padding-top:0; border-top:0}
+nav.toc a{
+  display:block; padding:5px 10px; border-radius:7px; color:var(--ink-2);
+  text-decoration:none; line-height:1.4; border-left:2px solid transparent;
+}
+nav.toc a:hover{background:var(--surface-2); color:var(--ink)}
+nav.toc a.on{background:var(--accent-soft); color:var(--accent); font-weight:600; border-left-color:var(--accent)}
+details.mnav{
+  margin-bottom:8px; background:var(--surface); border:1px solid var(--line);
+  border-radius:12px; padding:4px 14px;
+}
+details.mnav > summary{cursor:pointer; padding:11px 0; font-weight:600; font-size:15px}
+@media (min-width:1080px){details.mnav{display:none}}
+@media (max-width:1079px){nav.toc{display:none} details.mnav nav.toc{display:block; padding-bottom:10px}}
+
+/* ─── sections ───────────────────────────────────────────── */
+section{margin:0 0 54px; scroll-margin-top:20px}
+.part-head{
+  margin:0 0 30px; padding:26px 0 0; border-top:2px solid var(--ink);
+}
+.part-head span{
+  display:block; font-size:11.5px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-3); margin-bottom:8px;
+}
+.part-head h2{font-size:clamp(23px,3.4vw,31px); font-weight:700}
+section > h3{
+  font-size:clamp(20px,2.7vw,25px); font-weight:670; margin-bottom:8px;
+  display:flex; gap:12px; align-items:baseline;
+}
+section > h3 .n{
+  font-size:13px; font-weight:650; color:var(--ink-3); font-variant-numeric:tabular-nums;
+  flex:none; padding-top:3px;
+}
+.src{
+  font-size:12.5px; color:var(--ink-3); margin:0 0 18px 0; padding-left:34px;
+}
+section p{margin:0 0 15px; max-width:74ch}
+section > h4{font-size:17px; font-weight:650; margin:26px 0 10px; color:var(--ink)}
+ul,ol{margin:0 0 15px; padding-left:22px; max-width:74ch}
+li{margin-bottom:7px}
+li::marker{color:var(--ink-3)}
+
+/* ─── callouts ───────────────────────────────────────────── */
+.box{
+  margin:20px 0; padding:17px 19px; border-radius:12px; border:1px solid var(--line);
+  background:var(--surface); font-size:16px; line-height:1.6;
+}
+.box > :last-child{margin-bottom:0}
+.box p{max-width:none}
+.box.key{background:var(--accent-soft); border-color:color-mix(in oklab, var(--accent) 34%, transparent)}
+.box.warn{background:var(--warn-soft); border-color:color-mix(in oklab, var(--warn) 34%, transparent)}
+.box.risk{background:var(--risk-soft); border-color:color-mix(in oklab, var(--risk) 36%, transparent)}
+.box.ok{background:var(--ok-soft); border-color:color-mix(in oklab, var(--ok) 34%, transparent)}
+.box b.tag{
+  display:block; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:7px;
+}
+.box.key b.tag{color:var(--accent)} .box.warn b.tag{color:var(--warn)}
+.box.risk b.tag{color:var(--risk)} .box.ok b.tag{color:var(--ok)}
+
+/* ─── source chips ───────────────────────────────────────── */
+.c{
+  display:inline-block; font-size:11.5px; font-weight:600; line-height:1.5;
+  padding:1px 7px; border-radius:5px; white-space:nowrap; vertical-align:baseline;
+  border:1px solid;
+}
+.c-ok{background:var(--ok-soft); color:var(--ok); border-color:color-mix(in oklab,var(--ok) 32%,transparent)}
+.c-mid{background:var(--warn-soft); color:var(--warn); border-color:color-mix(in oklab,var(--warn) 32%,transparent)}
+.c-no{background:var(--surface-3); color:var(--ink-3); border-color:var(--line-2)}
+
+/* ─── tables ─────────────────────────────────────────────── */
+.tw{overflow-x:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:15px; min-width:460px}
+th,td{padding:11px 14px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line)}
+thead th{
+  background:var(--surface-2); font-size:12px; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:650; white-space:nowrap; position:sticky; top:0;
+}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--surface-2)}
+td.num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+td.neg{color:var(--neg); font-weight:650}
+td.pos{color:var(--ok); font-weight:650}
+caption{caption-side:bottom; padding:10px 14px; font-size:13px; color:var(--ink-3); text-align:left}
+
+/* ─── stat tiles ─────────────────────────────────────────── */
+.tiles{display:grid; gap:12px; margin:22px 0; grid-template-columns:repeat(auto-fit,minmax(168px,1fr))}
+.tile{
+  background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:15px 16px;
+}
+.tile .v{font-size:clamp(23px,3.3vw,30px); font-weight:700; letter-spacing:-.03em; font-variant-numeric:tabular-nums; line-height:1.1}
+.tile .k{font-size:13px; color:var(--ink-2); margin-top:6px; line-height:1.42}
+.tile .s{font-size:11.5px; color:var(--ink-3); margin-top:5px}
+
+/* ─── charts (CSS bars, direct-labelled) ─────────────────── */
+figure{margin:24px 0; padding:18px 19px; background:var(--surface); border:1px solid var(--line); border-radius:12px}
+figure figcaption{font-size:13px; color:var(--ink-3); margin-top:14px; line-height:1.5}
+.ct{font-size:15px; font-weight:650; margin-bottom:4px}
+.cs{font-size:13px; color:var(--ink-3); margin-bottom:16px}
+
+.stack{display:flex; gap:2px; height:44px; margin-bottom:14px}
+.stack > span{
+  border-radius:2px; position:relative; min-width:3px;
+}
+.stack > span:first-child{border-radius:4px 2px 2px 4px}
+.stack > span:last-child{border-radius:2px 4px 4px 2px}
+.legend{display:flex; flex-wrap:wrap; gap:6px 18px; font-size:13.5px}
+.legend span{display:flex; align-items:center; gap:7px; color:var(--ink-2)}
+.legend i{width:11px; height:11px; border-radius:3px; flex:none; display:block}
+.legend b{font-variant-numeric:tabular-nums; color:var(--ink); font-weight:650}
+
+.rows{display:grid; gap:9px}
+.row{display:grid; grid-template-columns:minmax(74px,auto) 1fr minmax(52px,auto); gap:12px; align-items:center; font-size:14px}
+.row .lbl{color:var(--ink-2); text-align:right}
+.row .track{background:var(--surface-3); border-radius:4px; height:20px; position:relative; overflow:hidden}
+/* display:block là bắt buộc — <span> mặc định là inline, và width/height KHÔNG áp
+   lên phần tử inline. Bỏ dòng này thì cả 9 cột có bề rộng 0px: cái track xám vẫn
+   hiện nên biểu đồ trông "gần đúng", chỉ là không có cột nào. Đo mới thấy. */
+.row .fill{display:block; height:100%; border-radius:4px; background:var(--bar)}
+.row .val{font-variant-numeric:tabular-nums; font-weight:650; text-align:left}
+
+/* Giá trị nằm ở CỘT RIÊNG, không phải một nhãn thả nổi cạnh đầu cột.
+   Bản đầu đặt nhãn bằng left:calc(50% + <độ dài cột> + 8px); ở 320px nó đẩy chữ
+   ra ngoài mép màn 10px. Cột riêng thì không tràn được ở bề rộng nào. */
+.div-rows{display:grid; gap:11px}
+.div-row{
+  display:grid; grid-template-columns:minmax(80px,auto) minmax(0,1fr) minmax(88px,auto);
+  gap:10px; align-items:center; font-size:14px;
+}
+.div-row .lbl{color:var(--ink-2); text-align:right}
+.div-row .val{
+  font-size:13px; font-weight:650; font-variant-numeric:tabular-nums; white-space:nowrap;
+}
+.div-plot{position:relative; height:26px; background:var(--surface-3); border-radius:5px}
+.div-plot .zero{position:absolute; left:50%; top:-3px; bottom:-3px; width:1px; background:var(--line-2)}
+.div-plot .b{position:absolute; top:3px; bottom:3px; border-radius:4px}
+@media (max-width:420px){
+  .div-row{grid-template-columns:minmax(0,1fr) minmax(84px,auto); gap:8px}
+  .div-row .lbl{grid-column:1 / -1; text-align:left; font-size:13px}
+}
+
+/* ─── misc blocks ────────────────────────────────────────── */
+.two{display:grid; gap:14px; margin:20px 0}
+@media (min-width:720px){.two{grid-template-columns:1fr 1fr}}
+.pane{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px 18px}
+.pane h4{margin:0 0 11px; font-size:15px; font-weight:650; display:flex; align-items:center; gap:8px}
+.pane h4 .dot{width:8px; height:8px; border-radius:50%; flex:none}
+.pane ul{margin:0; padding-left:19px; font-size:15px}
+.pane li{margin-bottom:6px; color:var(--ink-2)}
+
+.adr{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:17px 19px; margin-bottom:14px}
+.adr h4{margin:0 0 4px; font-size:16.5px; font-weight:650}
+.adr .no{font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--accent); font-weight:650; margin-bottom:8px}
+.adr dl{margin:12px 0 0; display:grid; gap:9px; font-size:15px}
+.adr dt{font-size:11.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-3); font-weight:650}
+.adr dd{margin:3px 0 0; color:var(--ink-2)}
+
+.steps{counter-reset:s; list-style:none; padding:0; margin:20px 0; display:grid; gap:11px; max-width:none}
+.steps li{
+  counter-increment:s; position:relative; padding:15px 18px 15px 56px; margin:0;
+  background:var(--surface); border:1px solid var(--line); border-radius:12px; font-size:15.5px;
+}
+.steps li::before{
+  content:counter(s); position:absolute; left:17px; top:15px; width:25px; height:25px;
+  border-radius:7px; background:var(--accent-soft); color:var(--accent);
+  font-size:13px; font-weight:700; display:grid; place-content:center;
+}
+.steps li b{display:block; margin-bottom:3px; color:var(--ink)}
+
+hr{border:0; border-top:1px solid var(--line); margin:34px 0}
+footer{
+  border-top:1px solid var(--line); margin-top:40px; padding:26px 0 0;
+  font-size:14px; color:var(--ink-3);
+}
+footer p{max-width:74ch}
+.skip{position:absolute; left:-9999px}
+.skip:focus{left:12px; top:12px; z-index:9; background:var(--surface); padding:9px 14px; border-radius:8px; border:1px solid var(--accent)}
+@media print{nav.toc,details.mnav,.theme-btn{display:none} body{font-size:11pt} .box,figure,.tw,.tile,.pane,.adr{break-inside:avoid}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Sang nội dung chính</a>
+
+<header class="top">
+  <div class="top-in">
+    <div class="eyebrow">Scentsitive · tài liệu dự án</div>
+    <h1>Tiền của shop này đang kẹt ở đâu</h1>
+    <p class="lede">
+      Bản đọc gộp của 13 tài liệu trong <code>shop/docs</code>. Nó không phải bản chào hàng —
+      nó là một bộ lập luận về việc <strong>có nên dựng cái storefront này hay không</strong>,
+      kèm đủ chỗ mà lập luận ấy có thể sai.
+    </p>
+    <div class="meta">
+      <span>Nguồn: 8 tài liệu + 5 ADR · viết 20/09/2026, rà lại 21/09/2026</span>
+      <button class="theme-btn" id="tt" type="button">Đổi nền sáng/tối</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<details class="mnav"><summary>Mục lục</summary>
+  <nav class="toc" aria-label="Mục lục (điện thoại)" id="nav-m"></nav>
+</details>
+
+<nav class="toc" aria-label="Mục lục" id="nav-d"></nav>
+
+<main id="main">
+
+<!-- ══════════════ 0 ══════════════ -->
+<section id="s0">
+  <div class="part-head"><span>Mở đầu</span><h2>Bốn điều toàn bộ bộ tài liệu này xoay quanh</h2></div>
+
+  <div class="box risk">
+    <b class="tag">Đọc cái này trước khi tin bất cứ con số nào</b>
+    <p>Toàn bộ dữ kiện về shop gồm đúng <strong>năm thứ</strong>, và cả năm đều nghe kể lại từ
+    người thứ ba. <strong>Chưa ai gặp chủ shop.</strong> Mọi đề xuất trong đây là giả thuyết,
+    và chỗ nào là giả thuyết thì có ghi.</p>
+  </div>
+
+  <ol class="steps">
+    <li><b>Chúng ta biết rất ít.</b> Năm dữ kiện: ~5–10 đơn/ngày, 5 mùi, giá quanh 300.000 ₫,
+      làm thủ công, bán trên Instagram / TikTok / Shopee.</li>
+    <li><b>Rủi ro lớn nhất là xây nhầm, không phải xây sai.</b> Kiến trúc đẹp, mã sạch, cổng chặt
+      đều gần như vô nghĩa nếu thứ được xây không chạm vào nút thắt thật. Bất định về business
+      đang lớn hơn bất định về công nghệ rất nhiều — và người làm đang mạnh ở đúng cái vế bất
+      định nhỏ hơn.</li>
+    <li><b>Phần lớn nghiệp vụ bán hàng là hàng hoá phổ thông.</b> KiotViet 270–490 nghìn/tháng,
+      Nhanh.vn 450 nghìn/tháng cho cả POS lẫn website lẫn đồng bộ sàn <span class="c c-ok">đã kiểm</span>.
+      Tự xây lại là lấy tiền của người khác để dựng một bản kém hơn.</li>
+    <li><b>Con số duy nhất cầm chắc là phí sàn.</b> Mọi con số kiểu “website đẹp thì chuyển đổi
+      cao hơn” hay “quiz tăng chuyển đổi 40%” thì <strong>không</strong> cầm chắc — đã truy,
+      tất cả đều do chính công ty bán phần mềm ấy công bố, không có nhóm đối chứng.</li>
+  </ol>
+
+  <h4>Quy ước ghi nguồn — quan trọng hơn bản thân con số</h4>
+  <p>Mọi con số trong trang này mang một dấu. Một con số sai nói ra bằng giọng chắc chắn trong
+  buổi đàm phán còn tệ hơn một chỗ để trống.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Dấu</th><th>Nghĩa</th></tr></thead>
+    <tbody>
+      <tr><td><span class="c c-ok">đã kiểm</span></td><td>đã mở đúng trang nguồn ấy và đọc được con số</td></tr>
+      <tr><td><span class="c c-mid">chưa kiểm</span></td><td>có thấy ở đâu đó nhưng chưa xác minh — <strong>không nói ra trong đàm phán</strong></td></tr>
+      <tr><td><span class="c c-no">đoán</span></td><td>không biết, và đây là chỗ cần hỏi chủ shop</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ══════════════ PHẦN I ══════════════ -->
+<section id="s1">
+  <div class="part-head"><span>Phần I</span><h2>Chẩn đoán — tiền đang kẹt ở đâu</h2></div>
+
+  <h3><span class="n">1.1</span> Ta biết gì, và đang đoán gì</h3>
+  <p class="src">Nguồn: 01 §1</p>
+
+  <div class="two">
+    <div class="pane">
+      <h4><span class="dot" style="background:var(--ink-3)"></span>Năm dữ kiện — tất cả đều là <span class="c c-no">đoán</span></h4>
+      <ul>
+        <li>~5–10 đơn/ngày <em>(“khoảng” của người thứ ba)</em></li>
+        <li>~300.000 ₫/sản phẩm — đây là <strong>giá một sản phẩm</strong>, không phải giá trị một đơn</li>
+        <li>5 mùi hương</li>
+        <li>Làm thủ công</li>
+        <li>Bán trên Instagram, TikTok, Shopee — <strong>không biết kênh nào ra bao nhiêu đơn</strong></li>
+      </ul>
+    </div>
+    <div class="pane">
+      <h4><span class="dot" style="background:var(--risk)"></span>Bảy thứ không biết — mỗi thứ đủ sức lật ngược kết luận</h4>
+      <ul>
+        <li><strong>Giá vốn một cây nến</strong> — biến quan trọng nhất trong cả bộ</li>
+        <li>Giá trị trung bình một đơn (AOV)</li>
+        <li>Tỉ lệ đơn theo kênh</li>
+        <li>Tiền quảng cáo</li>
+        <li>Tỉ lệ hoàn/huỷ — COD hoàn đơn là mất ship hai chiều</li>
+        <li>Năng lực sản xuất — trần thật của việc mở rộng</li>
+        <li><strong>Chị ấy có muốn to không</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box key">
+    <b class="tag">Cảnh báo về hướng suy nghĩ</b>
+    <p>Câu hỏi tự nhiên với một người viết phần mềm là “mình xây được gì cho shop này”. Đó là
+    câu hỏi <strong>sai thứ tự</strong>. Câu đúng là “<strong>business này đang bị chặn bởi cái
+    gì</strong>”, và phần mềm chỉ là một trong nhiều câu trả lời có thể — thường không phải câu
+    rẻ nhất, và gần như không bao giờ là câu nhanh nhất.</p>
+  </div>
+
+  <h3><span class="n">1.2</span> Mô hình kinh tế đơn vị</h3>
+  <p class="src">Nguồn: 01 §2</p>
+
+  <div class="tiles">
+    <div class="tile"><div class="v">45–90 tr</div><div class="k">Doanh thu gộp một tháng</div><div class="s">ở 5 / 7 / 10 đơn mỗi ngày × 300k × 30</div></div>
+    <div class="tile"><div class="v">V</div><div class="k">Giá vốn một cây — <strong>không biết</strong></div><div class="s">không biết V là không biết gì cả</div></div>
+    <div class="tile"><div class="v">21,0%</div><div class="k">Sàn giữ lại trên một cây 300k (TikTok)</div><div class="s">cộng được từ ba khoản <span class="c c-ok">đã kiểm</span></div></div>
+  </div>
+
+  <p>Đây là <strong>doanh thu</strong>, không phải tiền cầm về. Tiền cầm về = doanh thu − phí sàn
+  − giá vốn × số cây − ship − quảng cáo − thuế − công của chính chị ấy. Không biết <code>V</code>
+  nên <strong>không biết</strong> chị ấy thực sự kiếm được bao nhiêu. Tuyệt đối không nói với chị
+  ấy một con số lợi nhuận nào.</p>
+
+  <figure>
+    <div class="ct">Một cây nến 300.000 ₫ bán qua TikTok Shop</div>
+    <div class="cs">Ba khoản phí đều <span class="c c-ok">đã kiểm</span> từ TikTok Seller University, và cả ba đều đổi trong 2025–2026</div>
+    <div class="stack" role="img" aria-label="Trên 300.000 đồng: hoa hồng 42.000, phí giao dịch 18.000, phí xử lý đơn 3.000, còn lại 237.000 đồng">
+      <span style="background:var(--s1); width:14%"  title="Hoa hồng nền tảng 14% — 42.000 ₫"></span>
+      <span style="background:var(--s2); width:6%"   title="Phí giao dịch 6% — 18.000 ₫"></span>
+      <span style="background:var(--s3); width:1%"   title="Phí xử lý đơn — 3.000 ₫"></span>
+      <span style="background:var(--surface-3); width:79%; border:1px solid var(--line)" title="Còn lại 237.000 ₫ — chưa trừ giá vốn"></span>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--s1)"></i>Hoa hồng nền tảng 14% · <b>42.000 ₫</b></span>
+      <span><i style="background:var(--s2)"></i>Phí giao dịch 6% · <b>18.000 ₫</b></span>
+      <span><i style="background:var(--s3)"></i>Phí xử lý đơn · <b>3.000 ₫</b></span>
+      <span><i style="background:var(--surface-3); border:1px solid var(--line-2)"></i>Còn lại · <b>237.000 ₫</b></span>
+    </div>
+    <figcaption>
+      Cộng lại <strong>63.000 ₫ = 21,0%</strong>, trước khi tính một đồng quảng cáo nào. Ở 210
+      đơn/tháng là <strong>13.230.000 ₫/tháng về sàn</strong>. Một nguồn thứ cấp tính tổng chi
+      phí nền tảng ≈ 23–24% <span class="c c-mid">chưa kiểm</span> — dùng con số 63.000 ₫ khi nói
+      chuyện, vì nó cộng được từ ba khoản kiểm được. Mức hoa hồng thật của ngành nến thì
+      <strong>không biết</strong>: dải 2–16%, mặc định 14%, chỉ Seller Centre của chị ấy mới nói đúng.
+    </figcaption>
+  </figure>
+
+  <p><strong>Shopee thì chỉ cộng được một phần.</strong> Phí xử lý giao dịch 6% (18.000 ₫) cộng
+  phí hạ tầng 3.000 ₫ → ít nhất 21.000 ₫ = 7,0% <span class="c c-mid">nguồn ngành</span>. Còn phí
+  cố định theo ngành hàng thì <strong>không trích được</strong>: ba nguồn cho ba khoảng khác nhau
+  (1,5–17% / 8,8–11,7% / 1,21–8,1%). Ba nguồn mâu thuẫn thì không được chọn một nguồn mà tin.</p>
+
+  <h3><span class="n">1.3</span> Nút thắt không nằm ở vận hành</h3>
+  <p class="src">Nguồn: 01 §3</p>
+
+  <div class="box key">
+    <p>Nếu chị ấy có một phần mềm quản lý đơn hoàn hảo, miễn phí, cài xong trong một buổi chiều —
+    thì tháng sau chị ấy vẫn bán <strong>5–10 đơn/ngày</strong>. Không thêm một đơn nào.
+    <strong>Đó là định nghĩa của “không phải nút thắt”.</strong></p>
+  </div>
+
+  <p>Nút thắt là <strong>nhu cầu, chuyển đổi, và giá trị mỗi đơn</strong>. Nhưng có hai chỗ phải
+  nói ngược lại luận điểm đó:</p>
+  <ul>
+    <li><strong>Thời gian trả tin nhắn</strong> trông giống vận hành nhưng thật ra là bài toán
+      chuyển đổi. Nếu mỗi ngày mất hai ba tiếng trả “mùi này thơm thế nào chị ơi”, thì đó là
+      <strong>bài toán chọn mùi đang hiện ra dưới dạng lao động</strong> — vì khách không ngửi
+      được qua màn hình nên phải hỏi người bán.</li>
+    <li><strong>Năng lực sản xuất là một trần vận hành có thật</strong>, chỉ là chưa chạm tới.
+      Nếu một mẻ ra 20 cây và mất một ngày rưỡi, thì 50 đơn/ngày không phải bài toán phần mềm
+      mà là bài toán xưởng, thuê người, và có thể là bài toán “còn là handmade nữa không”.</li>
+  </ul>
+
+  <h3><span class="n">1.4</span> Ba đòn bẩy, và mỗi cái đáng bao nhiêu</h3>
+  <p class="src">Nguồn: 01 §4</p>
+
+  <h4>Đòn bẩy 1 — chuyển đổi</h4>
+  <p>Chuẩn duy nhất dùng được: Littledata, 2.800 cửa hàng Shopify, 2023 — trung bình
+  <strong>1,4%</strong>, top 20% trên 3,2%, top 10% trên 4,7% <span class="c c-ok">đã kiểm</span>.
+  <strong>Không có số riêng cho nến và không có số riêng cho Việt Nam.</strong></p>
+
+  <div class="tw"><table>
+    <caption>Littledata công bố <strong>trung bình</strong>, không phải trung vị. Phân phối lệch phải mạnh nên trung bình nằm cao hơn trung vị — cột bên phải là <strong>ước lượng dè dặt</strong>, không phải mốc trung tâm.</caption>
+    <thead><tr><th>Nếu chuyển đổi là</th><th>Để có 7 đơn/ngày cần</th><th>Phép tính</th></tr></thead>
+    <tbody>
+      <tr><td>1,2% (mobile, trung bình)</td><td class="num">583 lượt/ngày</td><td>7 ÷ 0,012</td></tr>
+      <tr><td>1,4% (trung bình chung)</td><td class="num">500 lượt/ngày</td><td>7 ÷ 0,014</td></tr>
+      <tr><td>3,2% (ngưỡng top 20%)</td><td class="num">219 lượt/ngày</td><td>7 ÷ 0,032</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="two">
+    <div class="pane"><h4><span class="dot" style="background:var(--ok)"></span>Nếu 500+ lượt/ngày mà chỉ 7 đơn</h4>
+      <p style="margin:0; font-size:15px; color:var(--ink-2)">Chuyển đổi quanh mức trung bình →
+      <strong>trang có thể là đòn bẩy</strong>. Đẩy 1,4% lên 2,8% là gấp đôi số đơn mà không cần
+      thêm một người xem nào.</p></div>
+    <div class="pane"><h4><span class="dot" style="background:var(--risk)"></span>Nếu 80 lượt/ngày</h4>
+      <p style="margin:0; font-size:15px; color:var(--ink-2)">Chuyển đổi đã rất cao rồi, vấn đề là
+      <strong>không ai biết đến shop</strong>. Không trang nào chữa được cái đó, và xây trang là
+      làm sai việc.</p></div>
+  </div>
+  <p><strong>Không đo lượt truy cập thì không được kéo đòn bẩy này.</strong></p>
+
+  <h4>Đòn bẩy 2 — giá trị mỗi đơn (AOV), và chỗ nó âm</h4>
+  <p>Nếu 1/4 số đơn thành hộp đôi (giảm 8%), doanh thu tăng <strong>+13.104.000 ₫/tháng
+  (+20,8%)</strong>. Nhưng đó là <strong>doanh thu, không phải lời</strong>: nó đòi làm thêm 52
+  cây nến mỗi tháng, và nếu vẫn bán qua sàn thì sàn ăn tiếp ~21% của phần tăng thêm.</p>
+
+  <figure>
+    <div class="ct">Còn lại thật sự mỗi tháng, sau khi trừ giá vốn 52 cây và phí sàn trên phần tăng</div>
+    <div class="cs">Ba mức giá vốn là <span class="c c-no">số bịa để cho thấy độ nhạy</span>, không phải ước lượng — V thật chỉ chủ shop biết</div>
+    <div class="div-rows" role="img" aria-label="Giá vốn 150 nghìn: cộng 2.552.160 đồng. Giá vốn 200 nghìn: âm 47.840 đồng. Giá vốn 250 nghìn: âm 2.647.840 đồng.">
+      <div class="div-row"><span class="lbl">V = 150.000 ₫</span>
+        <div class="div-plot"><span class="zero"></span>
+          <span class="b" style="left:50%; width:24.1%; background:var(--s3)"></span>
+        </div><span class="val" style="color:var(--ok)">+2.552.160 ₫</span></div>
+      <div class="div-row"><span class="lbl">V = 200.000 ₫</span>
+        <div class="div-plot"><span class="zero"></span>
+          <span class="b" style="right:50%; width:0.5%; min-width:3px; background:var(--neg)"></span>
+        </div><span class="val" style="color:var(--neg)">−47.840 ₫</span></div>
+      <div class="div-row"><span class="lbl">V = 250.000 ₫</span>
+        <div class="div-plot"><span class="zero"></span>
+          <span class="b" style="right:50%; width:25%; background:var(--neg)"></span>
+        </div><span class="val" style="color:var(--neg)">−2.647.840 ₫</span></div>
+    </div>
+    <figcaption>
+      <strong>Đọc kỹ dòng giữa: nó âm.</strong> Bản trước của bảng này chỉ trừ giá vốn, không trừ
+      phí sàn, nên cùng mức V = 200.000 ₫ nó ghi <em>+2.704.000 ₫</em> — dương, và dùng con số ấy
+      để kết luận AOV là đòn bẩy rẻ nhất. Hình dạng của bảng không phụ thuộc V: bán hộp quà
+      <strong>qua sàn</strong> thì lời bị bóp từ hai đầu — giảm 8% cho khách, rồi sàn ăn 21% của
+      phần còn lại.
+    </figcaption>
+  </figure>
+
+  <div class="box warn">
+    <p>Đòn bẩy AOV chỉ thật sự rẻ <strong>trên kênh trực tiếp</strong>, nơi không có 21% kia. Mà
+    kênh trực tiếp lại đúng là thứ chưa tồn tại. <strong>Hai điều này phải đọc cùng nhau.</strong></p>
+  </div>
+
+  <h4>Đòn bẩy 3 — mua lại</h4>
+  <p>Không có số nào. Nhưng nến là hàng tiêu hao — nó cháy hết, và đó là một cái <strong>đồng hồ
+  mua lại có sẵn trong bản chất sản phẩm</strong>. Điều kiện thì rõ: <strong>muốn khách quay lại
+  thì phải biết khách là ai.</strong> Đây là lý do chiến lược để sở hữu kênh, và là lý do
+  <strong>chậm nhất</strong> trong ba đòn bẩy.</p>
+
+  <div class="box key">
+    <b class="tag">Thứ tự kéo</b>
+    <p><strong>1. AOV</strong> — rẻ nhất <em>nếu</em> bán qua kênh trực tiếp; qua sàn thì có thể âm.
+    <strong>2. Chuyển đổi</strong> — mạnh nhất, nhưng phải đo lượt truy cập trước, nếu không là
+    bắn vào bóng tối. <strong>3. Mua lại</strong> — chậm nhất nhưng cộng dồn.</p>
+  </div>
+
+  <h3><span class="n">1.5</span> Sáu thử nghiệm không cần một dòng mã</h3>
+  <p class="src">Nguồn: 01 §5 — mục quan trọng nhất của cả bộ tài liệu</p>
+
+  <div class="box ok">
+    <b class="tag">Luật</b>
+    <p>Nếu một thay đổi không cần code mà làm tăng doanh số nhiều hơn một website, thì nó
+    <strong>có giá trị hơn</strong> website. Không phải “cũng tốt” — hơn. Rẻ hơn, nhanh hơn, và
+    bỏ đi cũng không tiếc.</p>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Thử cái gì</th><th>Kiểm giả định nào</th><th>Chi phí</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><strong>Nhắn lại khách cũ</strong> mua cách đây 2–3 tháng, nhắn tay từng người</td><td>Đòn bẩy mua lại có thật không — cũng là <strong>lý do thật để sở hữu kênh trực tiếp</strong></td><td>Một buổi tối</td></tr>
+      <tr><td>2</td><td><strong>Bán bộ quà ngay trên Shopee/TikTok</strong> — listing “hộp 2 cây”, “hộp 3 cây”</td><td>Toàn bộ giả thuyết quà tặng mà trang Hộp quà được xây dựa trên — <strong>kiểm mà không cần trang</strong></td><td>Một buổi</td></tr>
+      <tr><td>3</td><td><strong>Viết lại mô tả và thay ảnh</strong> trên listing đang có</td><td>Chuyển đổi trên sàn có cải thiện được bằng nội dung không</td><td>Một buổi chiều</td></tr>
+      <tr><td>4</td><td><strong>Một câu trả lời mẫu cho câu hỏi chọn mùi</strong>, lưu sẵn để dán</td><td>Đúng giả định mà <strong>Tìm mùi</strong> được xây dựa trên</td><td>30 phút</td></tr>
+      <tr><td>5</td><td><strong>Thử tăng giá</strong> một mùi từ 300k lên 330k trong hai tuần</td><td>Giá hiện tại có phải mức tối ưu không</td><td>0 ₫</td></tr>
+      <tr><td>6</td><td><strong>Thử bán kèm bằng tay</strong> lúc khách chốt đơn</td><td>Đòn bẩy AOV — kiểm trước khi xây bất cứ cơ chế bundling nào</td><td>0 ₫</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><strong>Thử nghiệm 4 là cái nên chạy trước tiên</strong>, vì nó kiểm giả định của thứ đã tốn
+  nhiều công nhất. Nếu một đoạn chữ dán sẵn đã giải quyết được phần lớn câu hỏi chọn mùi, thì bộ
+  quiz chưa chứng minh được nó thêm được gì — và điều đó cần biết <strong>trước</strong> khi ai
+  trả tiền cho nó.</p>
+
+  <div class="box warn">
+    <b class="tag">Cảnh báo về thống kê</b>
+    <p>Ở 5–10 đơn/ngày, hai tuần chỉ có khoảng 70–140 đơn. Với cỡ mẫu đó, các thử nghiệm trên
+    <strong>chỉ phát hiện được hiệu ứng lớn</strong>, và chúng bị nhiễu bởi mùa vụ cùng nhịp đăng
+    bài. Đừng đọc chênh lệch 10% như một kết quả.</p>
+  </div>
+
+  <p>Và nếu <strong>không cái nào ăn</strong>, đó cũng là thông tin — thông tin quan trọng nhất có
+  thể có. Nó cảnh báo rằng nhu cầu, chứ không phải công cụ, mới là chỗ đang tắc, và rằng một phần
+  mềm cũng sẽ không ăn.</p>
+
+  <h3><span class="n">1.6</span> Lập luận ngược: vì sao một trang riêng có thể là sai lầm</h3>
+  <p class="src">Nguồn: 01 §7 — phản biện mạnh nhất với toàn bộ hướng đi</p>
+
+  <p>Trong ngành nến thơm quà 2025, Shopee chiếm 77,3% và TikTok 22,0% doanh thu
+  <span class="c c-ok">đã kiểm</span>. Tức là <strong>99,3% doanh thu của thị trường đo được này
+  xảy ra bên trong hai cái app.</strong></p>
+
+  <div class="two">
+    <div class="pane"><h4><span class="dot" style="background:var(--ok)"></span>Đường mua trong app</h4>
+      <p style="margin:0; font-size:15px; color:var(--ink-2)">xem video → bấm giỏ → địa chỉ đã lưu
+      sẵn → thanh toán đã lưu sẵn → xong.</p></div>
+    <div class="pane"><h4><span class="dot" style="background:var(--risk)"></span>Đường mua qua trang riêng</h4>
+      <p style="margin:0; font-size:15px; color:var(--ink-2)">rời app → mở trình duyệt → một trang
+      lạ, thương hiệu chưa từng nghe → nhập lại địa chỉ → chưa lưu thanh toán → quét QR → sang app
+      ngân hàng → quay lại.</p></div>
+  </div>
+
+  <div class="box risk">
+    <p><strong>Mỗi mũi tên là một chỗ mất khách.</strong> Nghĩa là giả định mặc định phải là
+    <strong>trang riêng làm TĂNG ma sát</strong>, cho tới khi chứng minh được điều ngược lại — chứ
+    không phải ngược lại. Hệ quả trực tiếp: <strong>21% tiết kiệm trên một đơn không xảy ra thì
+    bằng 0.</strong> Không được cộng khoản tiết kiệm trước khi có đơn.</p>
+  </div>
+
+  <h4>Vậy khi nào trang riêng mới đáng?</h4>
+  <div class="tw"><table>
+    <thead><tr><th>Hành vi</th><th>Sàn làm chưa tốt ở chỗ nào</th><th>Bằng chứng cần có trước khi tin</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Chọn mùi</strong></td><td>Listing sàn không có chỗ đặt 5 mùi cạnh nhau và giải thích</td><td>Số tin nhắn hỏi chọn mùi mỗi ngày — thử nghiệm 4 đo được</td></tr>
+      <tr><td><strong>Quà tặng</strong></td><td>Sàn bán một SKU; không bán một hộp có thiệp viết tay</td><td><strong>Thử nghiệm 2 kiểm được mà không cần trang</strong></td></tr>
+      <tr><td><strong>Khách cũ</strong></td><td>Sàn cho nhắn lại khách cũ tới mức nào <span class="c c-mid">chưa kiểm</span></td><td>Thử nghiệm 1</td></tr>
+      <tr><td><strong>Người theo dõi Instagram</strong></td><td><strong>Instagram không có giỏ hàng.</strong> Khách phải nhắn tin, chờ trả lời, rồi chuyển khoản tay</td><td>Bao nhiêu phần trăm đơn đến từ Instagram</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box key">
+    <p><strong>Dòng cuối lật ngược lập luận ma sát.</strong> Với tệp Instagram, một trang bán hàng
+    là <strong>ÍT ma sát hơn</strong> — vì con đường hiện tại của họ đang là nhắn tin và chờ. Đó có
+    thể là lý do mạnh nhất để có trang riêng, và nó phụ thuộc hoàn toàn vào một con số ta
+    <strong>không biết</strong>: tỉ lệ đơn đến từ Instagram.</p>
+  </div>
+
+  <p><strong>Điều này định nghĩa lại storefront đang là cái gì:</strong> nó không phải sản phẩm,
+  nó là <strong>một mũi thăm dò</strong>. Việc của nó là được đưa ra cho chị ấy xem, gây phản ứng,
+  và moi ra các con số còn thiếu. Nếu các con số nói đừng phát hành, thì nó vẫn đã làm xong việc
+  của nó.</p>
+
+  <h3><span class="n">1.7</span> Thị trường: crowded, và chị ấy đang đứng đúng vùng giá</h3>
+  <p class="src">Nguồn: 01 §8 — metric.vn, ngành “nến thơm quà”, ba sàn, cả năm 2025 <span class="c c-ok">đã kiểm</span></p>
+
+  <div class="tiles">
+    <div class="tile"><div class="v">2.449</div><div class="k">SKU đang bán</div></div>
+    <div class="tile"><div class="v">744</div><div class="k">Shop cùng bán</div><div class="s">≈ 3,3 SKU mỗi shop</div></div>
+    <div class="tile"><div class="v">200–500k</div><div class="k">Khoảng giá bán chạy nhất</div><div class="s">300k nằm đúng giữa vùng ngọt</div></div>
+    <div class="tile"><div class="v">+37,23%</div><div class="k">Tháng 12/2025 so với tháng 11</div></div>
+  </div>
+
+  <figure>
+    <div class="ct">Thị phần doanh thu ngành nến thơm quà, ba sàn, 2025</div>
+    <div class="cs">Không tính Instagram, Facebook hay bán trực tiếp — tức là bỏ qua đúng cái kênh có thể đang nuôi shop này</div>
+    <div class="stack" role="img" aria-label="Shopee 77,3 phần trăm; TikTok 22,0 phần trăm; Lazada 0,7 phần trăm">
+      <span style="background:var(--s1); width:77.3%" title="Shopee 77,3%"></span>
+      <span style="background:var(--s2); width:22.0%" title="TikTok 22,0%"></span>
+      <span style="background:var(--s3); width:0.7%"  title="Lazada 0,7%"></span>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--s1)"></i>Shopee · <b>77,3%</b></span>
+      <span><i style="background:var(--s2)"></i>TikTok · <b>22,0%</b></span>
+      <span><i style="background:var(--s3)"></i>Lazada · <b>0,7%</b></span>
+    </div>
+    <figcaption>Thương hiệu dẫn đầu: heny garden, le cadeau, kilig charm, chillme, cohome — năm cái tên để đi xem người ta làm gì. Con số doanh thu tuyệt đối nằm sau paywall, <strong>không có</strong>.</figcaption>
+  </figure>
+
+  <ol>
+    <li><strong>Chị ấy không thiếu sản phẩm.</strong> 5 mùi so với trung bình 3,3 SKU/shop là trên
+      mức thường. Thêm SKU vào một shop chưa đủ người xem là thêm việc, không phải thêm doanh thu.</li>
+    <li><strong>Lazada không đáng tích hợp.</strong> 0,7% doanh thu, mà lại là sàn dễ nối API nhất —
+      <strong>dễ nhất lại ít đáng nhất. Đừng để cái dễ dẫn dắt việc.</strong></li>
+    <li><strong>744 shop cùng bán</strong> nghĩa là khác biệt không phải điều xa xỉ. Nhưng cách rẻ
+      nhất để khác đi là <strong>sửa chính cái listing ấy</strong>, không phải dựng một chỗ mới.</li>
+  </ol>
+
+  <h3><span class="n">1.8</span> Mùa vụ: tháng 12, và hôm nay là 20/09</h3>
+  <p class="src">Nguồn: 01 §9</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Mốc</th><th>Ngày</th><th>Còn</th></tr></thead>
+    <tbody>
+      <tr><td>Hôm nay</td><td>20/09/2026</td><td></td></tr>
+      <tr><td>Nội dung phải xong</td><td>cuối 10/2026</td><td class="num">~6 tuần</td></tr>
+      <tr><td>Tháng chạy thử thật</td><td>11/2026</td><td></td></tr>
+      <tr><td>Đỉnh mùa</td><td>12/2026</td><td class="num">~10 tuần</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Một kênh bán mới mở vào tháng 12 với checkout chưa ai chạy thật là mở đúng lúc sai nhất. Cần
+  một tháng 11 để đơn thật chạy qua và lỗi thật lộ ra. Mà nội dung — tên 5 mùi, mô tả, ảnh, số tài
+  khoản — <strong>nằm trên đường găng của chị ấy chứ không phải của người làm</strong>.</p>
+
+  <div class="box warn">
+    <p><strong>Mặt trái, nói luôn cho công bằng:</strong> nếu tháng 12 đúng là đỉnh thì tháng 12
+    cũng là tháng chị ấy bận nhất và ít sẵn sàng thử cái mới nhất. Nếu đến giữa tháng 10 nội dung
+    chưa xong, phương án đúng là <strong>nhắm tháng 12 làm tháng quan sát</strong> và mở bán thật
+    sau Tết — nói trước điều này thay vì để nó tự xảy ra rồi đổ lỗi.</p>
+  </div>
+
+  <h3><span class="n">1.9</span> Tám đường chứng minh cả bộ tài liệu này sai</h3>
+  <p class="src">Nguồn: 01 §10 — xếp theo mức nguy hiểm</p>
+
+  <ol>
+    <li><strong>Chị ấy không muốn to.</strong> Rất nhiều người làm handmade cố tình giữ shop nhỏ,
+      vì to lên nghĩa là thuê người, thuê xưởng, và thôi tự tay làm — tức là mất đúng thứ khiến họ
+      bắt đầu. 500 đơn/ngày nến thủ công là một nhà máy. <strong>Hỏi ngay ở buổi một.</strong></li>
+    <li><strong>Vận hành đúng là nút thắt.</strong> Khi đó câu trả lời đúng là bảo chị ấy mua
+      Nhanh.vn, không phải xây gì cả.</li>
+    <li><strong>Biên lợi nhuận mỏng.</strong> Không biết <code>V</code> là không biết gì cả.</li>
+    <li><strong>Đơn đến từ khám phá, không từ người theo dõi.</strong> Website chỉ đáng xây khi đã
+      có tệp khách sở hữu được.</li>
+    <li><strong>Chị ấy đã có sẵn một website bỏ không.</strong> Nếu đã mua Haravan hay Sapo rồi
+      không dùng, thì vấn đề chưa bao giờ là phần mềm.</li>
+    <li><strong>Rào pháp lý chặn.</strong> Tiền phạt rơi vào chị ấy.</li>
+    <li><strong>Cả hướng đi sai vì trang riêng thêm ma sát chứ không bớt.</strong></li>
+    <li><strong>Chuẩn Littledata không chuyển sang được.</strong> 2.800 cửa hàng Shopify phương Tây
+      năm 2023 không hứa gì về một shop nến ở TP.HCM bán qua Instagram năm 2026.</li>
+  </ol>
+
+  <div class="box ok">
+    <p><strong>Bảy trong tám đường trên được giải quyết bằng cách hỏi chị ấy hoặc chạy một thử
+    nghiệm, chứ không bằng cách viết thêm code.</strong> Đó là lý do tài liệu đàm phán dài hơn
+    tài liệu lộ trình.</p>
+  </div>
+</section>
+
+<!-- ══════════════ PHẦN II ══════════════ -->
+<section id="s2">
+  <div class="part-head"><span>Phần II</span><h2>Kế hoạch — xây gì, và xây khi nào</h2></div>
+
+  <h3><span class="n">2.1</span> MVP thật sự là gì</h3>
+  <p class="src">Nguồn: 02, mục MVP</p>
+
+  <p>Cái bẫy phổ biến nhất: coi MVP là <strong>bản nhỏ của thứ cuối cùng mình muốn xây</strong>.
+  Theo cách đó thì MVP của một cửa hàng là một cửa hàng ít tính năng hơn, và ta chỉ xây chậm hơn
+  chứ không học được gì nhanh hơn.</p>
+
+  <div class="box key">
+    <p><strong>MVP là thử nghiệm rẻ nhất kiểm được giả định rủi ro nhất.</strong> Đổi giả định thì
+    đổi luôn MVP.</p>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th>Nếu giả định rủi ro nhất là…</th><th>Thì MVP đúng là…</th><th>Và những thứ này <strong>không thuộc</strong> MVP</th></tr></thead>
+    <tbody>
+      <tr><td>Khách không chọn được mùi, và điều đó chặn mua hàng</td><td>Một đoạn trả lời mẫu dán vào tin nhắn. Không đủ thì mới tới <strong>Tìm mùi</strong> — một trang, không giỏ, không thanh toán</td><td>Landing page, giỏ hàng, checkout, hộp quà</td></tr>
+      <tr><td>Khách không đủ tin một shop lạ để chuyển khoản trước</td><td>Một trang campaign cho <strong>một</strong> mùi, nội dung thật và ảnh thật</td><td>5 mùi, quiz, hộp quà, tồn kho</td></tr>
+      <tr><td>AOV thấp vì không ai nghĩ tới việc mua nhiều cây</td><td>Hai listing bộ quà <strong>ngay trên Shopee/TikTok</strong>. <strong>Không cần web</strong></td><td>Toàn bộ storefront</td></tr>
+      <tr><td>Khách mua rồi không quay lại</td><td>Một danh sách khách cũ và một tin nhắn nhắn tay</td><td>CRM, email marketing, tài khoản khách hàng</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box risk">
+    <p><strong>Ba trong bốn MVP ở trên không cần đến storefront.</strong> Cái đã dựng chỉ là MVP
+    đúng cho đúng một giả định trong bốn — và <strong>chưa ai biết giả định nào là rủi ro
+    nhất</strong>. Nghĩa là <strong>buổi gặp đầu tiên chính là việc chọn MVP</strong>.</p>
+  </div>
+
+  <h3><span class="n">2.2</span> Sáu luật của lộ trình</h3>
+  <p class="src">Nguồn: 02, mục luật</p>
+  <ol>
+    <li><strong>Không có ngày tháng nào là điều kiện mở chặng.</strong> Điều kiện là sự kiện.
+      “Tháng thứ ba” không phải điều kiện.</li>
+    <li><strong>Mỗi tính năng phải có một nỗi đau đứng trước nó.</strong> Không có nỗi đau thì
+      không xây, kể cả khi xây rất nhanh.</li>
+    <li><strong>Ngưỡng giết phải chọn TRƯỚC khi chạy.</strong> Chọn sau là tự lừa mình. Các ngưỡng
+      ở đây là <strong>số thoả thuận, không phải chuẩn ngành</strong>.</li>
+    <li><strong>Chưa có gì được xây khi chưa biết giá vốn.</strong></li>
+    <li><strong>Thử cái không cần code trước.</strong></li>
+    <li><strong>MVP là thử nghiệm rẻ nhất cho giả định rủi ro nhất.</strong></li>
+  </ol>
+
+  <h3><span class="n">2.3</span> Sáu chặng, và điều kiện mở/giết từng chặng</h3>
+  <p class="src">Nguồn: 02, chặng 0–5</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Chặng</th><th>Mở khi sự kiện này xảy ra</th><th>Giết khi</th></tr></thead>
+    <tbody>
+      <tr><td><strong>0</strong> — cái đang có</td><td>đã xong, miễn phí, trước khi gặp</td><td>—</td></tr>
+      <tr><td><strong>1</strong> — trang thật</td><td>chị ấy đưa nội dung 5 mùi và số tài khoản</td><td>&lt;10 đơn trực tiếp sau 4 tuần có link + 8 bài đăng</td></tr>
+      <tr><td><strong>2</strong> — đóng vòng thanh toán</td><td>chị ấy <em>nói ra</em> rằng việc chép tay đơn đang mệt</td><td>xử lý tay vẫn dưới 10 phút/ngày</td></tr>
+      <tr><td><strong>3</strong> — AOV</td><td>đã có ≥100 đơn trực tiếp để làm nền đo</td><td>100 đơn sau đó, tỉ lệ đơn nhiều cây không đổi</td></tr>
+      <tr><td><strong>4</strong> — mua lại</td><td>đã có danh sách khách trực tiếp đủ lớn</td><td>2 chu kỳ nhắc, tỉ lệ mua lần hai không đổi</td></tr>
+      <tr><td><strong>5</strong> — vận hành</td><td>bán hụt hàng <strong>một lần thật</strong>, hoặc &gt;1 giờ/ngày hành chính</td><td>— chặng này là <strong>mua</strong>, không phải xây</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>Mỗi thứ đã dựng đang kiểm giả định nào — và bỏ nó khi nào</h4>
+  <p><strong>Cả bốn thứ dưới đây đều là giả thuyết chưa được xác nhận, kể cả khi chúng đã chạy
+  được.</strong> Chạy được là một sự thật về code, không phải một sự thật về khách hàng.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Đã dựng</th><th>Giả định nó đang kiểm</th><th>Bỏ khi nào</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Landing page</strong></td><td>Một trang thương hiệu tạo đủ tin để người lạ chuyển khoản trước</td><td>Sau 4 tuần có link trong bio + 8 bài đăng, dưới 10 đơn trực tiếp</td></tr>
+      <tr><td><strong>Tìm mùi</strong></td><td>Khách không biết chọn mùi nào, và <strong>việc đó đang chặn mua hàng</strong></td><td>Sau 4 tuần tỉ lệ tin nhắn hỏi chọn mùi <strong>không giảm</strong>. Bỏ sớm hơn nếu một đoạn chữ dán sẵn đã đủ</td></tr>
+      <tr><td><strong>Hộp quà</strong></td><td>Khách mua nến để tặng, và sẽ mua nhiều cây hơn nếu có hộp + thiệp</td><td>Sau 100 đơn trực tiếp mà tỉ lệ đơn nhiều cây không đổi. <strong>Kiểm trên sàn trước</strong></td></tr>
+      <tr><td><strong>Giỏ + VietQR/COD</strong></td><td>Khách chịu chuyển khoản trước cho một shop nhỏ</td><td>Nếu gần như 100% chọn COD thì VietQR không sai, chỉ là không đáng đầu tư thêm</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box warn">
+    <p><strong>Hai trong bốn dòng trên kiểm được rẻ hơn mà không cần code</strong>, và lẽ ra nên
+    kiểm theo cách đó trước. Cái đã xây rồi thì không hoàn lại được, nhưng nó đổi nghĩa của
+    storefront: nó không phải sản phẩm đã chọn, nó là <strong>một mũi thăm dò</strong>.</p>
+  </div>
+
+  <h4>Điểm yếu thật của chặng 0, phải nói ra</h4>
+  <p>Nội dung là nội dung mẫu, VietQR chưa bật, không có máy chủ nên đơn hàng <strong>không được
+  lưu ở đâu cả</strong> — nó chỉ được soạn thành chữ để khách sao chép gửi cho shop.</p>
+
+  <h4>Chi phí thật của chặng 2</h4>
+  <div class="tw"><table>
+    <thead><tr><th>Khoản</th><th>Giá</th><th>Ghi chú</th></tr></thead>
+    <tbody>
+      <tr><td>SePay FREE</td><td>0 ₫ / 50 giao dịch tháng</td><td><strong>Có</strong> webhook + API <span class="c c-ok">đã kiểm</span></td></tr>
+      <tr><td>SePay STARTUP</td><td>từ 120.000 ₫/tháng</td><td>~180 giao dịch <span class="c c-ok">đã kiểm</span></td></tr>
+      <tr><td>SePay SHOP</td><td>99.000 ₫/tháng</td><td><strong>KHÔNG CÓ API — cái bẫy, đừng mua nhầm</strong></td></tr>
+      <tr><td>Serverless</td><td>0 ₫ bản miễn phí</td><td><span class="c c-mid">chưa kiểm</span> ở mức lưu lượng thật</td></tr>
+    </tbody>
+  </table></div>
+  <p>Ở 5–10 đơn/ngày ≈ 150–300 giao dịch/tháng — <strong>vượt gói free ngay</strong>, rơi vào
+  STARTUP ~120k. Một hệ thống tiết kiệm 10 phút/ngày không bù nổi 120k/tháng cộng một backend
+  phải nuôi.</p>
+
+  <h3><span class="n">2.4</span> Mười ba thứ sẽ KHÔNG xây</h3>
+  <p class="src">Nguồn: 02 §6 — quan trọng ngang phần chặng</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Không xây</th><th>Vì sao</th></tr></thead>
+    <tbody>
+      <tr><td><strong>POS / ERP đầy đủ</strong></td><td>Đã giải quyết trọn vẹn ở 250.000–750.000 ₫/tháng. Xây lại là <strong>phá huỷ giá trị</strong></td></tr>
+      <tr><td>Nhiều kho / nhiều chi nhánh</td><td>Một người làm thủ công có một chỗ để hàng</td></tr>
+      <tr><td>CRM chung chung</td><td>CRM không có việc gì làm khi chưa có tệp khách</td></tr>
+      <tr><td>Kế toán, hoá đơn điện tử</td><td>Ngành riêng, quy định riêng, làm sai thì <strong>chị ấy chịu phạt</strong></td></tr>
+      <tr><td><strong>Đồng bộ sàn</strong></td><td><strong>Chưa biết có đủ điều kiện mở API không.</strong> Xây một thứ có thể không được phép chạy là cách hỏng đắt nhất</td></tr>
+      <tr><td>App di động</td><td>Một website chạy tốt trên điện thoại làm đúng việc đó</td></tr>
+      <tr><td>Tích điểm / thẻ thành viên</td><td>Ở 210 đơn/tháng thì nhớ mặt khách còn nhanh hơn</td></tr>
+      <tr><td>Chatbot / AI tư vấn</td><td>Nếu quiz tĩnh đã cắt được phần lớn thì không cần; nếu quiz không cắt được gì thì chatbot cũng không. Hai đằng đều chờ <strong>cùng một con số</strong></td></tr>
+      <tr><td>Hộp đăng ký định kỳ</td><td>Cần tỉ lệ mua lại đã chứng minh — đó là kết quả của chặng 4, không phải đầu vào</td></tr>
+      <tr><td>Đa ngôn ngữ</td><td>Không có bằng chứng nào về khách nước ngoài</td></tr>
+      <tr><td><strong>Đánh giá của khách khi chưa có khách thật</strong></td><td>Đánh giá giả trên một shop bán thật là lừa người mua. Đây là lằn ranh</td></tr>
+      <tr><td>Apple Pay</td><td>Bốn thứ phải có cho một cách trả tiền mà VietQR đã làm được, miễn phí</td></tr>
+      <tr><td>SEO như một chặng riêng</td><td>Không hứa thứ tự xếp hạng. Viết nội dung tử tế rồi đo, thế thôi</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="n">2.5</span> Chỗ mà câu trả lời đúng là “chị đi mua đi”</h3>
+  <p class="src">Nguồn: 02 §7 · giá <span class="c c-ok">đã kiểm</span> từ bảng giá chính thức, 09/2026</p>
+
+  <div class="box ok">
+    <p><strong>Nói thẳng chuyện này ra là thứ làm cho phần còn lại đáng tin.</strong> Ai bán hàng
+    cũng nói cái mình bán là cần thiết; người nói “chỗ này chị đừng mua của em” thì hiếm, và được nhớ.</p>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th>Nếu chị ấy cần</th><th>Câu trả lời đúng</th><th>Giá</th></tr></thead>
+    <tbody>
+      <tr><td>Quản lý tồn kho, đơn, POS — <strong>ngay hôm nay</strong></td><td>KiotViet hoặc Nhanh.vn POS</td><td class="num">250–350k/tháng</td></tr>
+      <tr><td>Website <strong>+</strong> đồng bộ sàn <strong>+</strong> POS, một chỗ</td><td>Nhanh.vn: POS Pro 350k + Website 200k + Ecom 100k</td><td class="num">≈ 450k/tháng</td></tr>
+      <tr><td>Website bán hàng chuẩn, có API để nối thêm</td><td>Haravan Omni Pro (API chỉ có từ gói này trở lên)</td><td class="num">680k/tháng</td></tr>
+      <tr><td>Landing page để chạy quảng cáo, đổi nhanh, tự sửa</td><td>LadiPage — có bản Starter <strong>miễn phí</strong></td><td class="num">0 / 280k/tháng</td></tr>
+      <tr><td>Website + POS trong một gói có sẵn</td><td>Sapo ADVANCED</td><td class="num">600k/tháng</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Nếu chị ấy cần <strong>bất kỳ dòng nào ở trên, và cần nó trong tuần này</strong> — người làm
+  không thắng được. Không thắng về giá, không thắng về thời gian, không thắng về việc có người
+  trực hỗ trợ. <strong>Nói ra.</strong></p>
+
+  <div class="box key">
+    <p><strong>Chỗ làm được mà họ không làm:</strong> cái storefront cụ thể của thương hiệu này,
+    bộ quiz gắn với đúng 5 mùi của chị ấy, trình dựng hộp quà, và việc trang không trông giống một
+    listing sàn. Cách nói gọn nhất: <strong>SaaS bán cho chị cái đường ống; em làm cái căn phòng.</strong></p>
+  </div>
+</section>
+
+<!-- ══════════════ PHẦN III ══════════════ -->
+<section id="s3">
+  <div class="part-head"><span>Phần III</span><h2>Đối thủ, tích hợp, pháp lý</h2></div>
+
+  <h3><span class="n">3.1</span> Có phải KiotViet đã giải quyết rồi không?</h3>
+  <p class="src">Nguồn: 03 §1 — tách làm hai lớp; trộn hai lớp này là nguồn gốc của nỗi lo</p>
+
+  <div class="two">
+    <div class="pane"><h4><span class="dot" style="background:var(--ink-3)"></span>Lớp commodity — đã giải quyết, và rẻ</h4>
+      <p style="margin:0 0 8px; font-size:15px; color:var(--ink-2)">Tồn kho, đơn hàng, POS, đồng bộ
+      kênh, in vận đơn, báo cáo doanh thu. Ít nhất năm công ty VN bán ở mức 170.000–999.000 ₫/tháng,
+      có người trực hỗ trợ, chạy được ngay hôm nay.</p>
+      <p style="margin:0; font-size:15px"><strong>Không được cạnh tranh ở đây.</strong></p></div>
+    <div class="pane"><h4><span class="dot" style="background:var(--accent)"></span>Lớp khác biệt — chưa giải quyết</h4>
+      <ul>
+        <li>Một storefront không trông giống listing sàn</li>
+        <li><strong>Bài toán chọn mùi</strong> — khách không ngửi được qua màn hình; đặc thù ngành hàng, không nhà cung cấp POS nào giải</li>
+        <li><strong>Quà tặng</strong> — nến 300k là quà; quà mua theo hộp, có thiệp, dồn cuối năm</li>
+      </ul></div>
+  </div>
+
+  <p>Câu hỏi đúng không phải “KiotViet có làm được không” mà là <strong>“chị ấy đang thua ở lớp
+  nào”</strong>. Thua ở lớp commodity thì đi mua. Thua ở lớp khác biệt thì mua gì cũng không chữa được.</p>
+
+  <div class="box risk">
+    <b class="tag">Còn cái quiz thì sao — có phải lợi thế không?</b>
+    <p><strong>Không, và phải trung thực chỗ này.</strong> Otherland, Jo Malone London, Boy Smells,
+    Scentbird, Yankee Candle đều có quiz chọn mùi. Nhiều brand nến nhỏ dùng <strong>chung một app
+    quiz của Shopify</strong>. Và <strong>không có một nghiên cứu độc lập nào chứng minh quiz chọn
+    mùi làm tăng chuyển đổi</strong> — mọi con số đang lưu hành đều xuất phát từ chính công ty bán
+    phần mềm quiz. Câu “McKinsey nói bundling tăng AOV 20–35%” đã truy ngược: <strong>không có ấn
+    phẩm McKinsey nào đứng sau.</strong></p>
+    <p>Cái thật sự khác biệt hẹp hơn nhiều: quiz gắn với <strong>đúng 5 mùi của chị ấy</strong>,
+    viết bằng giọng của chị ấy, trọng số do chị ấy quyết — cộng với việc nó cắt bớt số tin nhắn
+    phải trả, thứ đo được bằng đồng hồ chứ không bằng lời hứa.</p>
+  </div>
+
+  <h3><span class="n">3.2</span> Ba loại tích hợp, ba mức khó rất khác nhau</h3>
+  <p class="src">Nguồn: 03 §3–§4</p>
+
+  <div class="two">
+    <div class="pane"><h4><span class="dot" style="background:var(--ok)"></span>Vận chuyển — dễ nhất trong cả dự án</h4>
+      <p style="margin:0 0 8px; font-size:15px; color:var(--ink-2)"><strong>GHN</strong> và
+      <strong>GHTK</strong> tự phục vụ, có môi trường thử, <strong>gọi được API trong ngày</strong>.
+      Viettel Post và J&amp;T phải ký hợp đồng trước. BEST Express không tìm thấy API công khai.</p>
+      <p style="margin:0; font-size:14px; color:var(--ink-3)">Một câu phải hỏi: chị ấy có thể
+      <strong>đã có giá ship ưu đãi</strong> qua sàn rẻ hơn giá tự ký.</p></div>
+    <div class="pane"><h4><span class="dot" style="background:var(--ok)"></span>Thanh toán — tin tốt nhất của cả bộ nghiên cứu</h4>
+      <p style="margin:0 0 8px; font-size:15px; color:var(--ink-2)"><strong>VietQR/Napas247</strong>
+      cá nhân dùng được, 0 ₫, chỉ cần mã BIN + số tài khoản. <strong>SePay</strong> hỗ trợ cả tài
+      khoản cá nhân, đồng bộ 0–5 giây.</p>
+      <p style="margin:0; font-size:15px; color:var(--ink-2)">VNPAY và OnePay <strong>bắt buộc giấy
+      phép kinh doanh</strong> — nhưng VietQR + SePay vẫn mở, và đó là con đường đủ dùng.</p></div>
+  </div>
+
+  <div class="box risk">
+    <b class="tag">Tích hợp sàn — đây là chỗ nỗi lo có cơ sở, và không nên trấn an</b>
+    <ul style="margin-bottom:0">
+      <li><strong>Shopee:</strong> có thể cần thêm một điều kiện về hạng hoặc số đơn. Nguồn duy nhất
+        là tài liệu của <strong>Odoo</strong> (bên thứ ba). <strong>Ngưỡng cụ thể của VN: không xác
+        minh được.</strong> Shop 5–10 đơn/ngày <strong>có thể không đủ điều kiện</strong>.</li>
+      <li><strong>TikTok Shop:</strong> có đường “seller in-house developer”. Rà soát pháp lý có thể
+        <strong>3+ tuần</strong>. VN thuộc nhóm nào thì không rõ.</li>
+      <li><strong>Lazada:</strong> duyệt 1–3 ngày — nhưng để lấy 0,7% doanh thu.</li>
+    </ul>
+  </div>
+
+  <div class="box warn">
+    <b class="tag">Một bài học về chính bảng “ai đóng câu hỏi này” — sửa 21/09/2026</b>
+    <p>Bản trước ghi “tự đăng ký thử một buổi chiều, rẻ hơn mọi suy đoán”. Nhưng đường in-house
+    developer đòi một <strong>tài khoản TikTok Shop đã kích hoạt</strong>, mà người làm không có
+    shop nến. Muốn thử thì phải mượn tài khoản của chị ấy — đúng thứ mà mục “dấu hiệu nên rút” đặt
+    làm lằn ranh đỏ ở chiều ngược lại. <strong>Bài học chung: cột “ai đóng, bằng cách nào” phải
+    được thử lại một lần, chứ không phải viết ra rồi tin.</strong></p>
+  </div>
+
+  <h3><span class="n">3.3</span> Pháp lý — và tiền phạt rơi vào CHỊ ẤY</h3>
+  <p class="src">Nguồn: 03 §5</p>
+
+  <div class="box risk">
+    <p><strong>Website sẽ đứng tên chị ấy, bán sản phẩm của chị ấy, nhận tiền vào tài khoản của chị
+    ấy.</strong> Phải nói câu này ra <strong>bằng miệng ở buổi gặp và bằng chữ trong bất kỳ thứ gì
+    ký</strong>, trước khi chị ấy trả một đồng nào.</p>
+  </div>
+
+  <ul>
+    <li><strong>Luật TMĐT 122/2025/QH15</strong> thông qua 10/12/2025, hiệu lực <strong>01/07/2026</strong>,
+      cùng <strong>NĐ 248/2026/NĐ-CP</strong> <span class="c c-ok">đã kiểm</span>.</li>
+    <li>Theo chế độ cũ: website có chức năng đặt hàng online phải thông báo với Bộ Công Thương
+      trước khi bán; không thông báo phạt <strong>10–20 triệu ₫</strong> <span class="c c-ok">đã kiểm</span>.</li>
+    <li><strong>Đã tra lại 21/09/2026: thủ tục KHÔNG bị bỏ.</strong> NĐ 248/2026 thay thế hoàn toàn
+      chế độ cũ nhưng đổi <strong>tên gọi</strong> chứ không bỏ nghĩa vụ — loại trang như thế này
+      nay gọi là “nền tảng thương mại điện tử kinh doanh trực tiếp có chức năng đặt hàng trực
+      tuyến”, và chủ quản <strong>phải được xác nhận thông báo TRƯỚC KHI vận hành</strong>
+      <span class="c c-ok">đã kiểm</span>.</li>
+    <li><strong>Chưa kiểm được, và đừng đoán:</strong> cơ quan nào nhận hồ sơ và nộp qua cổng nào.
+      Hai nguồn mâu thuẫn thật ở chỗ này. Mức phạt dưới chế độ mới <span class="c c-mid">chưa kiểm</span>.</li>
+  </ul>
+
+  <div class="box ok">
+    <p><strong>Kết luận: phải hỏi luật sư trước khi mở bán</strong> — nhưng nay là hỏi <strong>một
+    câu hẹp</strong>: <em>“Trang bán hàng của một cá nhân chưa đăng ký kinh doanh có phải làm thủ
+    tục thông báo theo NĐ 248/2026 không, nộp ở đâu, và mức phạt hiện hành là bao nhiêu?”</em> Một
+    câu hẹp thì luật sư trả lời trong mười phút; một câu mù thì thành một buổi tư vấn tính tiền.</p>
+  </div>
+
+  <p><strong>Và một hiểu nhầm phải chặn trước:</strong> khoản VAT 1–5% và TNCN 0,5–5% mà sàn khấu
+  trừ là <strong>thuế của chị ấy</strong>, sàn chỉ giữ hộ tại nguồn. Bán trực tiếp <strong>không
+  xoá</strong> nghĩa vụ đó — nó chỉ chuyển việc kê khai sang cho chị ấy tự làm, tức là thêm việc
+  chứ không phải bớt tiền.</p>
+
+  <h3><span class="n">3.4</span> Mười bảy câu chưa trả lời được</h3>
+  <p class="src">Nguồn: 03 §6 — mỗi dòng có cách đóng cụ thể</p>
+
+  <p><strong>Bốn dòng đầu là đủ cho buổi gặp đầu tiên</strong>, và hai trong bốn chị ấy đóng được
+  ngay tại chỗ trong hai phút:</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Câu chưa trả lời được</th><th>Đóng bằng cách nào</th><th>Ai</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Thủ tục thông báo nộp ở cơ quan nào sau 01/07/2026?</td><td>Hỏi luật sư, một câu hẹp</td><td>chị ấy</td></tr>
+      <tr><td>2</td><td>Phí cố định theo ngành hàng của Shopee là bao nhiêu? Ba nguồn cho ba khoảng</td><td><strong>Mở Seller Centre, xem một đơn đã hoàn tất. Hai phút</strong></td><td>chị ấy, tại buổi gặp</td></tr>
+      <tr><td>3</td><td>Mức hoa hồng TikTok thật của ngành nến? (dải 2–16%)</td><td>Xem trong back office của chị ấy</td><td>chị ấy, tại buổi gặp</td></tr>
+      <tr><td>4</td><td>Shop 5–10 đơn/ngày có đủ điều kiện mở API Shopee ở VN không?</td><td>Hai trang hướng dẫn của Shopee — <strong>là trang JS, phải mở bằng trình duyệt</strong></td><td>người làm, 15 phút</td></tr>
+      <tr><td>5</td><td>Cá nhân VN chỉ có CCCD đăng ký được “in-house developer” TikTok không?</td><td>Thử trong Seller Centre — chỉ mở được từ shop đã kích hoạt</td><td><strong>chị ấy</strong></td></tr>
+      <tr><td>8–16</td><td>Shopify Payments ở VN · KiotViet có kèm website không · SePay đếm giao dịch thế nào · giá SaaS đã gồm VAT chưa · giá tên miền .vn · GHN/GHTK có cần hợp đồng không</td><td>Mỗi câu 10–15 phút tra cứu</td><td>người làm</td></tr>
+      <tr><td>17</td><td>Chị ấy đã có sẵn tài khoản SaaS / website nào chưa?</td><td><strong>Hỏi chị ấy</strong></td><td>buổi gặp</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ══════════════ PHẦN IV ══════════════ -->
+<section id="s4">
+  <div class="part-head"><span>Phần IV</span><h2>Buổi gặp đầu tiên</h2></div>
+
+  <div class="box key">
+    <p>Luận điểm của cả tài liệu đàm phán chỉ có một câu: <strong>mục tiêu của buổi gặp là KHÁM
+    PHÁ, không phải trình diễn.</strong> Cái đã dựng là <strong>cái cớ để mở cuộc nói chuyện</strong>,
+    không phải bằng chứng rằng giải pháp đúng. Ở buổi này, <strong>lắng nghe chính là sản phẩm</strong>.</p>
+  </div>
+
+  <h3><span class="n">4.1</span> Hai việc phải làm TRƯỚC khi đi</h3>
+  <p class="src">Nguồn: 04 §0 và §0b</p>
+
+  <h4>Gọi cho người bạn chung — hai mươi phút, và nó rẻ nhất trong cả bộ</h4>
+  <p>Người đã giới thiệu chính là <strong>nguồn của cả năm dữ kiện</strong> đang có, và là người
+  duy nhất có thể biến năm dữ kiện thành mười lăm, <strong>miễn phí, trước buổi gặp</strong>. Sáu
+  câu, theo thứ tự:</p>
+  <ol>
+    <li><strong>Chị ấy nghĩ buổi này là buổi gì?</strong> Cà phê nể bạn, hay đang thật sự tìm người
+      làm web? Hai kịch bản cần hai cách mở đầu khác hẳn nhau.</li>
+    <li><strong>Cậu đã nói gì về tôi?</strong> Nếu đã lỡ dựng lên một kỳ vọng thì phải biết để hạ
+      xuống, chứ đừng để chị ấy tự phát hiện.</li>
+    <li><strong>Chị ấy có hay than chuyện gì không?</strong> Một câu than thật đáng giá hơn cả danh
+      sách câu hỏi bên dưới.</li>
+    <li><strong>Chị ấy muốn shop to lên hay giữ nhỏ?</strong> Câu này có thể <strong>giết cả dự
+      án</strong> — và giết nó trước khi tốn một buổi chiều thì tốt hơn nhiều.</li>
+    <li><strong>Đã thuê ai làm web bao giờ chưa? Có bị hớ không?</strong></li>
+    <li><strong>Có chuyện gì không nên nhắc không?</strong></li>
+  </ol>
+
+  <h4>Trả lời bằng chữ: mình muốn gì từ việc này</h4>
+  <p>Cả bộ tài liệu nói rất kỹ về việc chị ấy cần gì. Nó <strong>không</strong> nói người làm cần
+  gì, và không ai đàm phán được khi chưa biết mình muốn gì.</p>
+  <ul>
+    <li><strong>Kết quả nào làm buổi này đáng?</strong> Tiền? Một dự án thật để học? Một người bạn
+      làm ăn? Một thứ bỏ vào hồ sơ? Bốn câu trả lời dẫn tới bốn cấu trúc hợp tác khác nhau, và
+      <strong>không có câu nào sai</strong> — chỉ có câu không được nói ra thì nguy hiểm.</li>
+    <li><strong>Mỗi tuần thật sự bỏ ra được bao nhiêu giờ?</strong> Không phải con số nghe cho hay.
+      Nếu con số thật là ba giờ một tuần thì hai trong bốn cấu trúc là hứa suông — và hứa suông với
+      một người quen chung thì mất cả quan hệ chứ không chỉ mất dự án.</li>
+    <li><strong>Nếu không có thoả thuận nào thì sao?</strong> Trả lời được câu này thì mới có quyền
+      nói không. Câu trả lời ở đây khá dễ chịu, và <strong>người có phương án dự phòng tử tế thì
+      đàm phán bình tĩnh hơn hẳn</strong>.</li>
+  </ul>
+
+  <div class="box warn">
+    <b class="tag">Một xung đột lợi ích phải tự khai</b>
+    <p>Người làm đang làm cho một công ty phần mềm bán lẻ, và bộ tài liệu này khuyên chị ấy dùng
+    KiotViet. Hai điều cần tự kiểm: hợp đồng lao động có điều khoản nào về làm ngoài không; và nếu
+    có khuyến nghị thật thì <strong>nói thẳng rằng mình làm ở đó</strong>. Lời khuyên ấy vẫn đúng —
+    nhưng nó chỉ giữ được sức nặng khi người nghe biết ai đang nói. <strong>Để chị ấy tự phát hiện
+    sau thì mất sạch.</strong></p>
+  </div>
+
+  <h3><span class="n">4.2</span> Tư thế, và điều món đồ đã dựng KHÔNG chứng minh</h3>
+  <p class="src">Nguồn: 04 §1</p>
+
+  <p>Không đến để bán một trang web. Đến với một thứ chạy được, <strong>đã có sẵn, không tính tiền
+  ai</strong>, và đến để tìm hiểu xem việc làm ăn của chị ấy đang tắc ở đâu. Vì sao tư thế này
+  thắng ở đúng tình huống này: chị ấy đã bị chào hàng nhiều rồi; người làm <strong>không thắng
+  được bằng giá hay bằng tốc độ</strong>; và lợi thế duy nhất là <strong>đã làm trước khi hỏi xin
+  gì</strong>.</p>
+
+  <div class="box risk">
+    <b class="tag">Nó không chứng minh điều người làm tưởng nó chứng minh</b>
+    <p>Nó chứng minh làm được và chịu khó. Nó <strong>không</strong> chứng minh: rằng hiểu việc làm
+    ăn của chị ấy (có năm dữ kiện); rằng một trang riêng là thứ chị ấy cần; rằng Tìm mùi hay Hộp
+    quà giải đúng bài toán.</p>
+    <p><strong>Đến buổi gặp mà thuyết trình sản phẩm là hỏng.</strong> Nói nhiều hơn nghe thì buổi
+    gặp đã thất bại — <strong>kể cả khi chị ấy gật đầu suốt</strong>. Gật đầu là phép lịch sự, không
+    phải dữ liệu.</p>
+    <p><strong>Luật đo được:</strong> trong 90 phút, không được nói quá <strong>20 phút</strong>.
+    Phần demo không quá 10 phút, và trong 10 phút đó phần lớn thời gian là <strong>chị ấy cầm điện
+    thoại</strong>.</p>
+  </div>
+
+  <h3><span class="n">4.3</span> Câu hỏi phải hỏi — phần quan trọng nhất</h3>
+  <p class="src">Nguồn: 04 §2 · mang một quyển sổ, ghi số ngay trước mặt chị ấy, rồi <strong>đọc lại cho chị ấy nghe</strong></p>
+
+  <h4>Nhóm A — tiền. Không có nhóm này thì không quyết được gì</h4>
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Hỏi gì</th><th>Vì sao</th></tr></thead>
+    <tbody>
+      <tr><td>A1</td><td><strong>Giá vốn một cây nến?</strong> Sáp, tinh dầu, bấc, ly, nhãn, hộp, thiệp</td><td>Biến quan trọng nhất trong cả bộ tài liệu</td></tr>
+      <tr><td>A2</td><td><strong>Chị có tính công của chị vào đó không?</strong></td><td>Người làm handmade thường không tính. Nếu không tính thì “lời” đang là một con số khác thật rất xa</td></tr>
+      <tr><td>A3</td><td>Tháng trước tổng bao nhiêu đơn? Con số thật, không phải “khoảng”</td><td></td></tr>
+      <tr><td>A4</td><td><strong>Chia theo kênh thế nào?</strong></td><td><strong>Câu này một mình quyết định trang riêng có đáng làm không</strong></td></tr>
+      <tr><td>A5</td><td>Trung bình một đơn mấy cây? Bao nhiêu tiền?</td><td>Đang giả định 1 cây/đơn. Nếu đã là 1,6 thì đòn bẩy AOV yếu hơn tưởng</td></tr>
+      <tr><td>A6</td><td>Tháng trước sàn giữ lại bao nhiêu? — rồi mở Seller Centre xem cùng</td><td></td></tr>
+      <tr><td>A7</td><td>Tháng trước chạy quảng cáo hết bao nhiêu?</td><td>Nếu đang đốt tiền ads thì bài toán khác hẳn</td></tr>
+      <tr><td>A8</td><td>Tỉ lệ hoàn/huỷ?</td><td>COD hoàn đơn là mất tiền ship hai chiều</td></tr>
+      <tr><td>A9</td><td>Năm ngoái tháng nào bán nhiều nhất?</td><td>Kiểm chéo với đỉnh tháng 12. Số của chị ấy đáng tin hơn</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>Nhóm B — thời gian. Sản phẩm thật hay nấp ở đây</h4>
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Hỏi gì</th><th>Vì sao</th></tr></thead>
+    <tbody>
+      <tr><td>B1</td><td><strong>“Một ngày của chị trông thế nào?”</strong> — hỏi mở, rồi <strong>im lặng</strong></td><td><strong>Câu quan trọng nhất cả buổi.</strong> Đừng ngắt lời. Đừng gợi ý. Chỗ chị ấy dừng lại lâu là chỗ đau</td></tr>
+      <tr><td>B2</td><td>Một ngày chị trả bao nhiêu tin nhắn? Phần lớn hỏi gì?</td><td>Nếu phần lớn là “mùi này thơm thế nào” thì bài toán chọn mùi được <strong>lượng hoá bằng giờ</strong></td></tr>
+      <tr><td>B3</td><td>Từ lúc khách nhắn tới lúc gói xong, chị làm những bước gì?</td><td>Đếm số bước. Chỗ nào lặp lại mà máy làm được thì đó là chỗ duy nhất phần mềm có lý</td></tr>
+      <tr><td>B4</td><td><strong>Chị làm nến lúc nào? Một mẻ bao nhiêu cây, mất bao lâu?</strong></td><td><strong>Đây là trần thật của việc mở rộng</strong></td></tr>
+      <tr><td>B5</td><td>Chỗ nào mất thời gian nhất mà chị thấy vô lý nhất?</td><td></td></tr>
+      <tr><td>B6</td><td>Chị đang dùng công cụ gì?</td><td>Nếu đã mua SaaS rồi không dùng thì vấn đề chưa bao giờ là phần mềm</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>Nhóm C, D — đã thử gì, và chị ấy muốn gì</h4>
+  <ul>
+    <li><strong>C1 · Chị đã thử cái gì rồi mà không ăn thua?</strong> Tránh đề xuất lại đúng thứ đã hỏng.</li>
+    <li><strong>C2 · Đã có ai chào chị làm website chưa? Giá bao nhiêu?</strong> Câu này đưa thẳng
+      mốc giá trong đầu chị ấy cho mình, miễn phí.</li>
+    <li><strong>D1 · Chị muốn shop này to đến đâu?</strong> Nếu mai có 100 đơn/ngày, chị làm nổi
+      không — và chị <em>có muốn</em> không? <strong>Nhóm này có thể giết cả dự án, nên phải hỏi.</strong></li>
+    <li><strong>D2 · Chị có đăng ký kinh doanh chưa?</strong> Quyết định toàn bộ phần thanh toán và pháp lý.</li>
+    <li><strong>D3 · Chị định thêm sản phẩm gì?</strong> 5 mùi đã trên mức thường của ngành.</li>
+  </ul>
+
+  <div class="box ok">
+    <b class="tag">Nhóm E — xin xem, đừng chỉ hỏi</b>
+    <p>Ba lời xin này có giá trị hơn cả 22 câu ở trên cộng lại, vì chúng cho <strong>dữ liệu thật
+    thay vì trí nhớ</strong>:</p>
+    <ul style="margin-bottom:8px">
+      <li><strong>“Chị cho em xem 10 đơn gần nhất được không?”</strong> — nói trước: em không cần tên
+        và số điện thoại khách, em chỉ cần con số.</li>
+      <li><strong>“Chị cho em xem hộp tin nhắn hôm nay?”</strong> — bằng chứng trực tiếp cho hoặc
+        chống lại Tìm mùi.</li>
+      <li><strong>“Mình mở Seller Centre xem một đơn đã hoàn tất nhé?”</strong></li>
+    </ul>
+    <p style="margin-bottom:0">Cách xin cho khỏi kỳ: <strong>cùng xem trên điện thoại của chị
+    ấy</strong>, không xin xuất file, không chụp màn hình trừ khi chị ấy tự đề nghị.</p>
+  </div>
+
+  <h4>Nghe, không chỉ hỏi</h4>
+  <ul>
+    <li>Chỗ chị ấy <strong>ngập ngừng</strong> khi nói về một con số — thường là chỗ chị ấy chưa từng tính.</li>
+    <li>Thứ chị ấy <strong>than phiền mà không ai hỏi</strong> — đó là nỗi đau thật, khác với nỗi đau mình đoán.</li>
+    <li>Chị ấy nói nhiều hơn về <strong>sản phẩm</strong> hay về <strong>tiền</strong>? Hai kiểu
+      người này cần hai cách hợp tác khác nhau, và ký nhầm kiểu là nguồn gốc của mọi đổ vỡ về sau.</li>
+  </ul>
+
+  <h3><span class="n">4.4</span> Khoảnh khắc Seller Centre — đoạn mạnh nhất cả buổi</h3>
+  <p class="src">Nguồn: 04 §3</p>
+  <div class="box key">
+    <p>Giữa buổi, đề nghị: <em>“Chị mở Seller Centre lên, mình xem thử một đơn đã hoàn tất xem sàn
+    trừ những gì.”</em> Hai phút.</p>
+    <p><strong>Con số hiện ra là của chị ấy, không phải của mình.</strong> Không phải thuyết phục
+    ai. <strong>Không đọc con số của mình lên trước</strong> — để chị ấy đọc con số của chị ấy
+    trước, rồi mới đối chiếu. Nếu con số của chị ấy khác hẳn, thì mình vừa học được điều quan trọng
+    nhất trong buổi.</p>
+  </div>
+
+  <h3><span class="n">4.5</span> Bốn cấu trúc hợp tác</h3>
+  <p class="src">Nguồn: 04 §5</p>
+
+  <div class="box warn">
+    <p>Điều kiện ràng buộc phải nhớ suốt: ở ~7 đơn/ngày × 300k, chị ấy có khoảng <strong>60–70 triệu
+    ₫ DOANH THU</strong> một tháng <span class="c c-no">đoán</span>, và tiền thật cầm về chỉ là một
+    phần trong đó. <strong>Một bản chào giả định dự án 50 triệu là chết ngay tại chỗ.</strong></p>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th>Cấu trúc</th><th>Đúng khi</th><th>Hỏng thế nào</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>(a) Bán đứt trang</strong><br><span style="font-size:13px;color:var(--ink-3)">mốc agency 2–6 triệu ₫ <span class="c c-ok">giá chào</span></span></td>
+        <td>Chị ấy muốn một món đồ, không muốn một mối quan hệ</td>
+        <td>Một shop nến <strong>không phải dự án một lần</strong>. Bán đứt xong thì hoặc hỗ trợ miễn phí mãi, hoặc chị ấy mắc kẹt với một trang không ai sửa được. Và ở mức 2–7 triệu là bán rẻ đúng thứ đáng giá nhất: <strong>mối quan hệ</strong></td>
+      </tr>
+      <tr>
+        <td><strong>(b) Thuê theo tháng</strong><br><span style="font-size:13px;color:var(--ink-3)">so với SaaS 250–450k</span></td>
+        <td>Chị ấy cần đổi thường xuyên; mình muốn có lý do ở lại</td>
+        <td><strong>Tháng nào chị ấy cũng sẽ so với Nhanh.vn.</strong> Thu hơn ~450k thì phải nói được phần chênh mua thêm cái gì. Ở 500k/tháng, quy ra giờ thì thấp hơn mọi mức hợp lý — ức chế đến vào khoảng tháng thứ tư và giết nó</td>
+      </tr>
+      <tr>
+        <td><strong>(c) Ăn chia doanh thu kênh trực tiếp</strong></td>
+        <td>Tin kênh trực tiếp sẽ ra đơn, và chị ấy không trả trước được</td>
+        <td><strong>Bốn chỗ, đều nặng.</strong> Quy đơn cho ai là ác mộng; chia trên doanh thu <strong>gộp</strong> có thể tàn nhẫn (10% doanh thu có thể là 30–50% lợi nhuận thật, mà <strong>mình không biết giá vốn nên không biết mình đang xin bao nhiêu</strong>); phải tin số của nhau khi <strong>chưa từng gặp</strong>; và lập luận “tiết kiệm phí sàn” mờ đi khi chính mình cũng lấy một phần</td>
+      </tr>
+      <tr>
+        <td><strong>(d) Hợp tác / cổ phần</strong></td>
+        <td>Gần như <strong>không bao giờ đúng ở buổi một</strong></td>
+        <td>Cổ phần trong một cơ sở <strong>chưa có pháp nhân</strong> chỉ là một cái bắt tay. <strong>Ghi vào giấy: không gì cả ở buổi một.</strong></td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="box risk">
+    <b class="tag">Một điều khoản mà hầu như không ai nghĩ tới — và nó là chuyện lòng tin, không phải chi phí</b>
+    <p>Để webhook báo-có chạy, tài khoản SePay phải nối vào tài khoản ngân hàng của chị ấy, và người
+    dựng hệ thống sẽ thấy <strong>mọi khoản tiền vào</strong> của tài khoản đó — gồm cả khoản không
+    liên quan shop. Với hai người <strong>chưa từng gặp nhau</strong> thì đó là mức tin cậy rất lớn.
+    <strong>Mặc định đúng: chị ấy tự tạo tài khoản SePay bằng số điện thoại của chị ấy</strong>, rồi
+    chỉ đưa khoá webhook. Nói ra trước khi bị hỏi, giống chuyện tên miền đứng tên ai.</p>
+  </div>
+
+  <p><strong>Khuyến nghị:</strong> (a) một khoản nhỏ cho chặng 1, hoặc một giai đoạn thử có trả công
+  — rồi mới tới (b) hoặc (c) khi đã có số thật. Và cấu trúc rẻ nhất, trung thực nhất để bắt đầu có
+  thể <strong>không phải cấu trúc phần mềm nào cả</strong>: bốn tuần cùng chạy ba thử nghiệm, rồi
+  cùng nhìn kết quả.</p>
+
+  <h3><span class="n">4.6</span> Không hứa gì ở buổi một</h3>
+  <p class="src">Nguồn: 04 §6</p>
+  <ul>
+    <li><strong>Đồng bộ sàn</strong> — chưa biết có đủ điều kiện mở API không.</li>
+    <li><strong>Apple Pay</strong> — bốn thứ phải có cho một cách trả tiền mà VietQR đã làm được.</li>
+    <li><strong>Bất cứ thứ gì có ngày tháng kèm theo</strong> — đường găng là nội dung của chị ấy.</li>
+    <li><strong>Một con số doanh thu</strong> — không bao giờ nói “cái này sẽ tăng gấp đôi doanh số của chị”.</li>
+    <li><strong>Các con số về quiz và bundling</strong> — nói ra là nói sai, bằng văn bản.</li>
+    <li><strong>Hỗ trợ miễn phí trọn đời</strong>, <strong>lo thuế và thủ tục pháp lý hộ</strong>,
+      <strong>thứ hạng tìm kiếm</strong>.</li>
+  </ul>
+  <p><strong>Thứ nên nói thay vào đó, và nói sớm:</strong> chuyện nghĩa vụ thông báo và mức phạt
+  10–20 triệu ₫. Không ai bán landing page mà nhắc chuyện phạt. <strong>Đó chính là lý do nên nhắc.</strong></p>
+
+  <h3><span class="n">4.7</span> Chín dấu hiệu nên rút</h3>
+  <p class="src">Nguồn: 04 §7</p>
+  <div class="tw"><table>
+    <thead><tr><th>Dấu hiệu</th><th>Vì sao nó nghiêm trọng</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Không cho xem số nào cả</strong></td><td>Cả bốn cấu trúc hợp tác đều cần số chung</td></tr>
+      <tr><td>Muốn một hệ thống vận hành đầy đủ với giá 3 triệu</td><td>Kỳ vọng lệch quá xa, và nó sẽ không tự khớp lại</td></tr>
+      <tr><td><strong>Muốn đánh giá giả, hoặc muốn ghi “100% thiên nhiên / trị liệu” khi không đúng</strong></td><td>Đây là lằn ranh, không phải điểm thương lượng</td></tr>
+      <tr><td>Đã qua 2+ người làm web và “ai cũng tệ”</td><td>Có thể đúng. Cũng có thể mình là người thứ ba</td></tr>
+      <tr><td>“Làm xong, bán được thì trả” mà không có gì ghi lại</td><td>Đây là cấu trúc (c) nhưng bỏ hết phần bảo vệ</td></tr>
+      <tr><td><strong>Muốn dùng tài khoản ngân hàng hoặc tên của mình</strong></td><td>Đó là rủi ro pháp lý mình gánh cho việc của chị ấy. <strong>Từ chối thẳng</strong></td></tr>
+      <tr><td>Chưa đăng ký kinh doanh và không muốn nghe chuyện pháp lý</td><td>Khi đó mình đang xây đúng cái thứ khiến chị ấy bị phạt</td></tr>
+      <tr><td>Người trung gian nói thay</td><td>Phải nói chuyện trực tiếp với chị ấy</td></tr>
+      <tr><td>Phạm vi phình ra giữa buổi một và buổi hai mà không có tiền đi kèm</td><td>Nó sẽ không dừng lại</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="n">4.8</span> Chương trình 90 phút</h3>
+  <p class="src">Nguồn: 04 §8</p>
+  <div class="tw"><table>
+    <thead><tr><th>Phút</th><th>Làm gì</th><th>Ghi chú</th></tr></thead>
+    <tbody>
+      <tr><td class="num">0–10</td><td>Chào hỏi. Một câu về mình là ai và vì sao đến</td><td><strong>Không phải bài chào hàng</strong></td></tr>
+      <tr><td class="num">~3</td><td><strong>Câu học thuộc</strong>, vì chị ấy gần như chắc chắn hỏi giá ở phút thứ ba</td><td><em>“Em chưa báo giá được đâu chị, thật lòng — em mới biết đúng năm thứ về shop của chị. Hôm nay em muốn hỏi đủ để biết cái em làm có đáng không đã; nếu không đáng thì em nói luôn là không đáng. Chốt tiền để buổi sau.”</em> Cấm báo giá mà không có câu thay thế thì lúc bị hỏi sẽ ứng biến — và ứng biến dưới áp lực là lúc người ta buột miệng một con số</td></tr>
+      <tr><td class="num">10–20</td><td><strong>Đưa điện thoại cho chị ấy.</strong> Để chị ấy tự cuộn. <strong>Im lặng</strong></td><td>Nhìn chỗ chị ấy dừng lại, lướt qua, nhíu mày. <strong>Không giải thích tính năng</strong></td></tr>
+      <tr><td class="num">20–25</td><td><strong>“Cái gì sai ạ?”</strong></td><td>Chị ấy sẽ sửa ngay tên mùi và giá. Đó chính là lúc nội dung bắt đầu được bàn giao, miễn phí</td></tr>
+      <tr><td class="num">25–60</td><td><strong>Hỏi — nhóm A và nhóm B.</strong> Ghi số ra giấy</td><td><strong>Phần chính của buổi.</strong> Hết giờ thì cắt phần khác, đừng cắt phần này</td></tr>
+      <tr><td class="num">60–70</td><td><strong>Seller Centre.</strong> Mở cùng nhau, xem một đơn thật</td><td></td></tr>
+      <tr><td class="num">70–80</td><td>Làm gì tiếp, và <strong>sẽ không xây gì</strong> — kể cả “ba chỗ này chị mua SaaS đi”</td><td>Nếu số ở A4 nói trang riêng là sai, <strong>nói ra tại chỗ</strong></td></tr>
+      <tr><td class="num">80–90</td><td>Đề nghị ba thử nghiệm. Chốt buổi hai, <strong>có ngày cụ thể</strong></td><td></td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Bản rút gọn 40 phút</strong> nếu chị ấy bận: điện thoại cho chị ấy cầm (10) → nhóm A
+  (15) → Seller Centre (5) → ba thử nghiệm + hẹn buổi hai (10). <strong>Nếu chị ấy có vẻ mệt trước
+  phút 60, dừng.</strong> Buổi gặp hỏng vì kéo dài quá thì không có buổi hai.</p>
+
+  <h3><span class="n">4.9</span> Buổi một thành công là thế nào</h3>
+  <p class="src">Nguồn: 04 §9</p>
+  <p><strong>Không phải một hợp đồng đã ký.</strong> Là năm thứ này:</p>
+  <ol class="steps">
+    <li><b>Một buổi hai đã có ngày</b>không phải “để em nhắn lại chị sau”.</li>
+    <li><b>Số thật trong tay</b>giá vốn, tổng đơn tháng trước, <strong>chia theo kênh</strong>, và phí sàn trên một đơn thật. Riêng con số chia theo kênh quyết định luôn là chặng 1 có nên mở không.</li>
+    <li><b>Nội dung 5 mùi thật</b>tên, mô tả, ba tầng hương. Nó gỡ được <strong>10 trong 28 mục placeholder</strong>, không tốn gì. 18 cờ kia — ship, thanh toán, cam kết thương hiệu — nằm ở những câu hỏi khác.</li>
+    <li><b>Biết chị ấy muốn shop này thành cái gì</b>Nếu câu trả lời là “vừa vừa thôi” thì đó là phát hiện giá trị nhất của cả buổi, dù nó phá kế hoạch.</li>
+    <li><b>Ba thử nghiệm đã được đồng ý chạy</b>Kết quả của chúng là nội dung của buổi hai.</li>
+  </ol>
+
+  <div class="box ok">
+    <p><strong>Một thói quen đáng giá hơn mọi câu nói trong phòng:</strong> trong vòng 24 giờ, gửi
+    lại một bản tóm tắt viết tay gồm <strong>các con số đã ghi</strong>, để chị ấy sửa nếu mình nghe
+    nhầm. <strong>Gần như không ai làm việc này.</strong></p>
+  </div>
+
+  <p><strong>Nếu chị ấy nói không:</strong> vẫn ra về với một sản phẩm bỏ hồ sơ, một phương pháp đã
+  viết ra, và một tập dữ kiện có kiểm chứng về thương mại điện tử VN dùng lại được cho shop tiếp
+  theo. Biết trước điều này là một công cụ thật — <strong>nó hạ áp lực phải hứa quá lời ở buổi
+  một</strong>, đúng cái rủi ro lớn nhất của cả buổi.</p>
+</section>
+
+<!-- ══════════════ PHẦN V ══════════════ -->
+<section id="s5">
+  <div class="part-head"><span>Phần V</span><h2>Quyết định, nợ, và bài học</h2></div>
+
+  <h3><span class="n">5.1</span> Ba loại “kiến trúc”, và loại nào chủ shop trả tiền cho</h3>
+  <p class="src">Nguồn: 03 §7 và 05</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Loại</th><th>Nó trả lời câu gì</th><th>Chị ấy có quan tâm không</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Kiến trúc sản phẩm</strong></td><td>Business cần <strong>năng lực</strong> gì: chọn mùi, đóng gói quà, giữ khách cũ, nhận tiền, biết còn bao nhiêu hàng</td><td><strong>Có.</strong> Đây là thứ duy nhất chị ấy thật sự mua</td></tr>
+      <tr><td><strong>Kiến trúc phần mềm</strong></td><td>Hệ thống tổ chức ra sao</td><td><strong>Gián tiếp.</strong> Chị ấy quan tâm hệ quả — chi phí hàng tháng, sửa nhanh hay chậm — chứ không quan tâm sơ đồ</td></tr>
+      <tr><td><strong>Quy trình phát triển</strong></td><td>Bàn giao, ADR, cổng chất lượng, cách điều khiển công cụ AI</td><td><strong>Không.</strong></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box key">
+    <p><strong>Đừng tính tiền cho loại ba.</strong> Nếu bảng chào ghi “thiết lập quy trình kiểm thử
+    tự động — 2 triệu”, chị ấy đang trả tiền để công việc của mình dễ hơn. Chi phí đó nằm trong giá
+    của thứ giao được, không đứng thành một dòng riêng.</p>
+  </div>
+
+  <h4>Năng lực mà một shop bán nến cần, và ai đang lo</h4>
+  <p>Đọc bảng này theo cột cuối: <strong>phần lớn câu trả lời là “không” hoặc “chưa”</strong>.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Năng lực</th><th>Ai lo hiện tại</th><th>Có nên tự xây không</th></tr></thead>
+    <tbody>
+      <tr><td>Kéo người lạ tới</td><td>TikTok, Instagram</td><td>Không. Đây là việc marketing</td></tr>
+      <tr><td>Cho khách chọn được món</td><td>Sàn + nhắn tin tay</td><td><strong>Có thể</strong> — chỗ Tìm mùi đang thử. Chưa xác nhận</td></tr>
+      <tr><td>Nhận tiền</td><td>Sàn, COD, chuyển khoản</td><td>Một phần. VietQR + báo-có tự động là đủ</td></tr>
+      <tr><td>Giao hàng</td><td>Sàn, hoặc đặt tay</td><td>Chưa. Nối khi việc nhập tay thành gánh nặng</td></tr>
+      <tr><td>Biết còn bao nhiêu hàng</td><td>Trong đầu chủ shop</td><td>Chưa. Xây khi bán hụt lần đầu, không xây trước</td></tr>
+      <tr><td><strong>Giữ khách quay lại</strong></td><td>Gần như chưa ai lo</td><td><strong>Chỗ trống lớn nhất, và nó không cần phần mềm để thử</strong></td></tr>
+      <tr><td>Quản lý nguyên vật liệu</td><td>Trong đầu chủ shop</td><td>Xa. Nhưng đây là chỗ phần mềm riêng thắng phần mềm bán sẵn</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="n">5.2</span> Năm quyết định đã ghi lại, và điều kiện xét lại từng cái</h3>
+  <p class="src">Nguồn: 5 ADR · phần quan trọng nhất của một ADR là <strong>điều kiện xét lại</strong> — thiếu nó thì ADR chỉ là một lời biện hộ</p>
+
+  <div class="adr">
+    <div class="no">ADR 0001 · đang áp dụng</div>
+    <h4>Giữ trang tĩnh, không dựng framework</h4>
+    <dl>
+      <dt>Vì sao</dt><dd>Việc cần làm là một bản demo để mang đi đàm phán. Một đường link mở được ngay trên điện thoại của chủ shop có giá trị hơn một kiến trúc đẹp. Chi phí lưu trữ bằng không, và nếu thương vụ không thành thì không ai phải trả tiền duy trì một thứ chẳng ai dùng.</dd>
+      <dt>Đánh đổi chấp nhận</dt><dd>SEO yếu hơn (lưu lượng đến từ mạng xã hội, không từ tìm kiếm); không giữ được bí mật nào trong mã.</dd>
+      <dt>Xét lại khi</dt><dd>Chạm <strong>một</strong> trong bốn: cần giữ bí mật · cần nhận webhook báo-có · cần trạng thái chung nhiều người cùng thấy · sửa dữ liệu bằng tay thành việc khổ sở. <strong>Ba cái đầu giải được bằng một hàm serverless, không cần viết lại.</strong></dd>
+    </dl>
+  </div>
+
+  <div class="adr">
+    <div class="no">ADR 0002 · đang áp dụng</div>
+    <h4>Tìm mùi chấm điểm bằng trọng số, phân xử bằng câu ký ức</h4>
+    <dl>
+      <dt>Vì sao không so tag</dt><dd>Tag là chữ, chữ thì mờ, và “ấm” khớp với mấy mùi cùng lúc. Trọng số <strong>cộng được</strong> và quan trọng hơn: <strong>kiểm được bằng máy</strong> — cổng duyệt toàn bộ 320 tổ hợp đáp án và chặn nếu có mùi không bao giờ thắng, hoặc một mùi thắng quá nửa. Với so tag thì không có gì để duyệt.</dd>
+      <dt>Con số đã đo trước khi chọn</dt><dd>Bốn phương án chạy thử trên cả 320 tổ hợp. Phương án chọn: hoà ở đỉnh 15,0%, phân bố mùi thắng 15,9% → 25,0%; sau khi thêm phép phân xử còn <strong>17,2% → 23,8%</strong>, và chỉ 2,2% tổ hợp rơi xuống mức phải dùng thứ tự khai báo. <em>Vì sao phải nâng mùi ngọt: ở bản đầu nó chỉ thắng 9,7%, trong khi mùi ngọt bán chạy ngoài đời — một bộ câu hỏi ít giới thiệu đúng thứ dễ bán là một bộ câu hỏi sai.</em></dd>
+      <dt>Đánh đổi chấp nhận</dt><dd><strong>Trọng số do người viết đặt, không phải học từ dữ liệu.</strong> Không có gì bảo đảm nó khớp khẩu vị khách thật.</dd>
+      <dt>Xét lại khi</dt><dd>Có nội dung thật của năm mùi → chỉnh trọng số rồi <strong>chạy lại cổng và đọc dòng phân bố, đừng đoán</strong>. Có đủ lượt quiz thật <em>và</em> biết khách mua gì sau đó → lúc ấy mới nói tới học từ dữ liệu.</dd>
+    </dl>
+  </div>
+
+  <div class="adr">
+    <div class="no">ADR 0003 · đang áp dụng</div>
+    <h4>Hộp quà là một dòng ghép trong giỏ, giá tính lại mỗi lần đọc</h4>
+    <dl>
+      <dt>Vì sao không lưu giá trong giỏ</dt><dd>Số suy ra được thì đừng ghi. Nếu lưu giá, shop đổi giá nến xong thì cái hộp nằm sẵn trong giỏ của khách vẫn giữ giá cũ, và <strong>không ai biết là cũ</strong>. Tính lại mỗi lần đọc thì không có trạng thái nào để lệch. Tồn kho cũng vậy: hộp bán được bao nhiêu cái là do món <strong>khan nhất</strong> quyết định.</dd>
+      <dt>Đánh đổi chấp nhận</dt><dd>Cấu hình hộp nằm trong trình duyệt khách nên đổi cấu trúc sẽ làm hỏng giỏ cũ — chưa có phiên bản hoá, đã ghi vào sổ nợ.</dd>
+      <dt>Xét lại khi</dt><dd>Cần cho khách sửa lại hộp đã nằm trong giỏ; hoặc cần lưu đơn lên máy chủ.</dd>
+    </dl>
+  </div>
+
+  <div class="adr">
+    <div class="no">ADR 0004 · đang áp dụng</div>
+    <h4>Không tự xây phần mềm quản lý bán hàng</h4>
+    <dl>
+      <dt>Vì sao</dt><dd>Với khoảng <strong>450.000 ₫/tháng</strong>, Nhanh.vn cho POS + website + đồng bộ sàn, <strong>có sẵn hôm nay</strong>. Tự xây lại nghĩa là bỏ hàng trăm giờ để có một bản kém hoàn thiện hơn. Phần lớn nghiệp vụ bán lẻ là hàng hoá phổ thông — đó chính là lý do những phần mềm ấy tồn tại và sống được.</dd>
+      <dt>Chỗ ngoại lệ, và điều kiện của nó</dt><dd>Phần mềm riêng chỉ thắng ở workflow <strong>thật sự đặc thù</strong>. Với shop nến, ứng viên rõ nhất là <strong>nguyên vật liệu và mẻ sản xuất</strong> — không phần mềm bán lẻ đại trà nào biết công thức của shop. Nhưng <strong>chỉ xây khi chủ shop đã hết sáp giữa lúc đang có đơn ít nhất một lần</strong>.</dd>
+      <dt>Xét lại khi</dt><dd>Chủ shop đã dùng phần mềm có sẵn và chỉ ra được cụ thể chỗ nó không làm được, <strong>kèm thiệt hại đo được bằng tiền hoặc bằng giờ</strong>. <em>Nghe mô tả rồi tưởng tượng ra nút thắt thì không tính.</em></dd>
+    </dl>
+  </div>
+
+  <div class="adr">
+    <div class="no">ADR 0005 · đang áp dụng · đã sửa 21/09/2026</div>
+    <h4>Ẩn icon cho tới khi font nạp xong — và bản đầu của quyết định này KHÔNG chạy</h4>
+    <dl>
+      <dt>Bối cảnh</dt><dd>Toàn bộ icon dùng ligature: chữ <code>shopping_bag</code> chỉ biến thành cái túi khi font đã về. Font ấy nằm ở một máy chủ khác. Đo được: máy không ra được Google Fonts thì nút giỏ hàng đọc thành <code>dark_modeshopping_bag</code>.</dd>
+      <dt>Vì sao không có hẹn giờ dự phòng</dt><dd>Đã thử bản hẹn giờ 2,5 giây rồi chụp lại: hết giờ, icon hiện ra thành chữ tiếng Anh nằm giữa câu tiếng Việt. Xấu hơn hẳn một nút tròn trống.</dd>
+      <dt>Chỗ nó từng sai</dt><dd>Bản đầu khẳng định rằng cách kiểm của nó “bắt cả nhánh hỏng, nên mạng lỗi vẫn chốt và icon vẫn hiện” — coi đó là điểm mạnh. Câu ấy <strong>sai, và sai theo hướng phá đúng thứ ADR này lập ra để chặn</strong>: khi font không về thì phép kiểm resolve với <strong>mảng rỗng</strong>, nhánh thành công vẫn chạy, và trang hiện nguyên chữ thô. Dấu hiệu đúng duy nhất là mảng trả về <strong>có</strong> phần tử và mọi phần tử đã nạp xong.</dd>
+      <dt>Hai điều rút ra, quan trọng hơn chính cái bug</dt><dd><strong>(1)</strong> Lỗi này chỉ lộ khi mạng hỏng, nên mạng tốt thì nó xanh mãi mãi — phải <strong>dựng lại</strong> tình huống hỏng chứ không đợi nó tự xảy ra. <strong>(2)</strong> <strong>Một ADR có thể tự mâu thuẫn mà không ai thấy:</strong> phần “Quyết định” nói ẩn icon khi font không về; phần “Vì sao” lại khoe rằng mạng lỗi thì icon <em>vẫn hiện</em>. Hai câu ấy cách nhau sáu dòng trong cùng một file và đã sống một ngày.</dd>
+    </dl>
+  </div>
+
+  <h3><span class="n">5.3</span> Sổ nợ: cái gì đang chặn việc bán thật</h3>
+  <p class="src">Nguồn: TECH-DEBT · cột “cắn khi nào” là cột quan trọng — một khoản nợ chưa bao giờ cắn thì chưa cần trả</p>
+
+  <figure>
+    <div class="ct">28 mục còn cờ <code>placeholder</code>, theo nhóm</div>
+    <div class="cs">Chừng nào chưa hạ hết thì trang tự hiện một dải cảnh báo cam ở đầu</div>
+    <div class="rows" role="img" aria-label="scents 5, products 5, marquee 4, values 4, shipping 3, payment 2, hero_trust 2, faqs 2, brand 1">
+      <div class="row"><span class="lbl">scents</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">5</span></div>
+      <div class="row"><span class="lbl">products</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="val">5</span></div>
+      <div class="row"><span class="lbl">marquee</span><span class="track"><span class="fill" style="width:80%"></span></span><span class="val">4</span></div>
+      <div class="row"><span class="lbl">values</span><span class="track"><span class="fill" style="width:80%"></span></span><span class="val">4</span></div>
+      <div class="row"><span class="lbl">shipping</span><span class="track"><span class="fill" style="width:60%"></span></span><span class="val">3</span></div>
+      <div class="row"><span class="lbl">payment</span><span class="track"><span class="fill" style="width:40%"></span></span><span class="val">2</span></div>
+      <div class="row"><span class="lbl">hero_trust</span><span class="track"><span class="fill" style="width:40%"></span></span><span class="val">2</span></div>
+      <div class="row"><span class="lbl">faqs</span><span class="track"><span class="fill" style="width:40%"></span></span><span class="val">2</span></div>
+      <div class="row"><span class="lbl">brand</span><span class="track"><span class="fill" style="width:20%"></span></span><span class="val">1</span></div>
+    </div>
+    <figcaption>
+      <strong>Nội dung 5 mùi chỉ gỡ được 10 trong số đó</strong> (scents + products). 18 cờ còn lại
+      là chính sách ship, thanh toán và cam kết thương hiệu — phải hỏi riêng. Đừng mang vào buổi gặp
+      kỳ vọng rằng xin xong 5 mùi là sạch cờ.
+    </figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <thead><tr><th>Nợ chặn việc bán thật</th><th>Cắn khi</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Chưa có số tài khoản</strong> nên VietQR chưa bật</td><td>Ngay khi muốn nhận chuyển khoản. <em>Chỉ mất 5 phút khi có mã BIN + số tài khoản</em></td></tr>
+      <tr><td><strong>Form nhận hàng không gửi đi đâu</strong> — chỉ chảy vào nội dung đơn để sao chép</td><td>Khi khách tưởng bấm xong là shop đã nhận đơn</td></tr>
+      <tr><td>Chưa có trang cảm ơn sau khi đặt</td><td>Cùng lúc với trên</td></tr>
+      <tr><td><strong>Chưa làm thủ tục thông báo</strong> theo NĐ 248/2026</td><td>Trước khi mở bán trên tên miền riêng. <strong>Phạt rơi vào chủ shop</strong></td></tr>
+      <tr><td><strong>Chưa có thông báo quyền riêng tư và cơ chế đồng ý</strong> — trong khi checkout đã thu tên, số điện thoại, địa chỉ</td><td><strong>Ngay khi form nhận đơn thật</strong>, không phải sau. Chiếu theo Luật Bảo vệ dữ liệu cá nhân (hiệu lực 01/01/2026)</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><strong>Nợ sẽ cắn khi lớn hơn:</strong> cấu hình hộp quà chưa có số phiên bản · tài nguyên
+  chưa gắn hash nên khách cũ dùng bản cache tới ~10 phút · mã QR gọi ảnh từ một dịch vụ ngoài ·
+  một mùi có hai sản phẩm thì hộp quà lặng lẽ lấy cái đầu · <strong>hai mức giảm 8% và 14% của hộp
+  quà là số dựng tạm, phải quyết lại sau khi biết giá vốn</strong> · trọng số Tìm mùi do người đặt,
+  chưa học từ dữ liệu — <em>chưa có dữ liệu thì đừng đụng vào</em>.</p>
+
+  <h3><span class="n">5.4</span> Bài học — phần dùng lại được cho mọi dự án sau</h3>
+  <p class="src">Nguồn: 05 tầng 3, ADR 0005, và sổ nợ đã trả</p>
+
+  <ol class="steps">
+    <li><b>Cổng lint đọc cú pháp; nó không bấm nút.</b>
+      <strong>Mọi lỗi nặng của thư mục này đều đi qua lint sạch sẽ</strong> — hộp quà bị trả về mặc
+      định sau mỗi lần giỏ đổi; bán quá tồn kho 38 cây trên tồn 20; lời nhắn sống sót sau khi khách
+      bỏ thiệp; giỏ bốc hơi im lặng khi trình duyệt chặn lưu trữ. Không cái nào lộ ra khi đọc code.</li>
+    <li><b>Lỗi chỉ hiện khi môi trường hỏng thì môi trường tốt sẽ xanh mãi mãi.</b>
+      Font bị chặn, storage bị chặn, giỏ đã có sẵn hàng. Cổng phải <strong>dựng lại</strong> tình
+      huống hỏng chứ không đợi nó tự xảy ra.</li>
+    <li><b>Cổng phải thử ngược — và thử ngược một lớp phòng thủ khi có nhiều lớp thì đo ra sự im lặng của lớp khác.</b>
+      Phá riêng một chỗ thì cổng tồn kho không kêu vì một lớp kẹp khác che mất. Phải phá đúng cái
+      hàm mà cả ba lớp cùng dùng, nó mới kêu.</li>
+    <li><b>Lời khuyên một cổng in ra cũng là một lời hứa — phải thử làm theo nó một lần.</b>
+      Cổng từng bảo “cài bằng lệnh này rồi chạy lại”; làm đúng thế thì lần sau vẫn ra đúng câu ấy.
+      <strong>Cổng sai kiểu này nguy hơn cổng đỏ: nó im lặng bỏ qua và người đọc tưởng đã kiểm.</strong></li>
+    <li><b>Có giá trị nhất là loại cổng tính ra thứ mắt người không tự thấy.</b>
+      Duyệt toàn bộ 320 tổ hợp đáp án để chắc rằng không mùi nào không bao giờ thắng. Không ai ngồi
+      thử 320 tổ hợp bằng tay, và lỗi ấy hoàn toàn im lặng — cửa hàng có một mùi không bao giờ được
+      giới thiệu cho ai.</li>
+    <li><b>Số nào cũng phải đo, đừng bịa một ngưỡng.</b>
+      Ngưỡng của cổng rò nội dung là số đo được. Trọng số Tìm mùi cũng vậy: bốn phương án đã được
+      chạy thử và so phân bố trước khi chọn.</li>
+    <li><b>Một tài liệu có thể tự mâu thuẫn mà không ai thấy.</b>
+      Viết xong một quyết định thì đọc ngược phần lý do xem nó có đang bênh đúng cái quyết định bên
+      trên không. Và <strong>tài liệu hứa nhiều hơn cổng làm là cách một cổng chết mà không ai biết</strong>.</li>
+    <li><b>Đầu tư vào quy trình: đúng về hướng, nhưng giá phải đo.</b>
+      Phê bình cho rằng làm quy trình quá sớm là lãng phí khi sản phẩm chưa chứng minh được. Ở đây
+      nó tốn khoảng 200 dòng, và ngay trong phiên dựng nó đã chặn hai lỗi thật <strong>rơi vào tiền
+      của khách</strong>. Với giá đó thì nó không phải tối ưu sớm — nó là bảo hiểm rẻ. Kết luận đúng
+      không phải “bỏ quy trình” mà là <strong>“đừng cho nó phình thêm”</strong>.</li>
+  </ol>
+
+  <h3><span class="n">5.5</span> Bản phê bình đã nhận và đã sửa theo</h3>
+  <p class="src">Nguồn: 05, phụ lục · ghi lại vì chúng đúng, và vì người đọc sau cần biết tài liệu này đã bị uốn theo cái gì</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Phê bình</th><th>Sửa thế nào</th></tr></thead>
+    <tbody>
+      <tr><td>Nghĩ từ “tôi xây được phần mềm” rồi đi tìm chỗ dùng, thay vì từ “business bị chặn ở đâu”</td><td>Bảng năng lực để cột “có nên tự xây” trả lời “không/chưa” ở phần lớn dòng</td></tr>
+      <tr><td>Coi demo đẹp là bằng chứng hiểu business</td><td>Đổi tiêu đề thành “cái cớ để nói chuyện, không phải bản đề xuất”; mỗi tính năng ghi rõ “đang đoán rằng…”</td></tr>
+      <tr><td>Đồng nhất product với software product</td><td>Thêm hẳn một phần “những việc đáng thử trước khi nghĩ tới website”</td></tr>
+      <tr><td>Landing page có thể <strong>thêm</strong> ma sát trong social commerce</td><td>Thêm phần “lập luận ngược”, dùng chính số liệu Shopee 77,3% / TikTok 22,0% để chống lại đề xuất của mình</td></tr>
+      <tr><td>Trộn ba loại kiến trúc</td><td>Tách hẳn thành ba tầng, và nói rõ tầng nào chủ shop trả tiền cho</td></tr>
+      <tr><td>MVP đang là “bản nhỏ của tầm nhìn lớn”</td><td>Mỗi thứ đã dựng gắn một giả định và một cách biết mình sai</td></tr>
+      <tr><td>Nhảy tới 500 đơn/ngày</td><td>Lộ trình bỏ hết mốc thời gian, chỉ còn điều kiện mở</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<footer>
+  <p><strong>Trang này là bản đọc, không phải nguồn.</strong> Nguồn là 13 file markdown trong
+  <code>shop/docs</code> cộng <code>shop/HANDOFF.md</code> và <code>shop/STATUS-REPORT.md</code>.
+  Chỗ nào hai bên lệch nhau thì <strong>file markdown đúng</strong> — sửa ở đó trước, rồi mới sửa
+  trang này.</p>
+  <p>Mọi con số mang dấu <span class="c c-no">đoán</span> là giả định dựng để tính, không phải sự
+  thật về một doanh nghiệp có thật. Chưa ai gặp chủ shop.</p>
+  <p style="margin-bottom:0">Viết 20/09/2026 · rà lại 21/09/2026 · <a href="../">về cửa hàng</a> · <a href="00-READ-THIS-FIRST.md">mục lục bản markdown</a></p>
+</footer>
+
+</main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  // Mục lục dựng từ chính các <section>/<h3> có trong trang, nên thêm một mục
+  // là sửa đúng một chỗ — không có danh sách thứ hai để quên cập nhật.
+  var parts = [], secs = document.querySelectorAll("main > section");
+  for (var i = 0; i < secs.length; i++) {
+    var s = secs[i], head = s.querySelector(".part-head");
+    if (!head) continue;
+    var items = [], h3s = s.querySelectorAll(":scope > h3");
+    for (var j = 0; j < h3s.length; j++) {
+      var h = h3s[j];
+      if (!h.id) h.id = s.id + "-" + (j + 1);
+      var n = h.querySelector(".n"), t = h.textContent;
+      if (n) t = t.replace(n.textContent, "").trim();
+      items.push({ id: h.id, text: t });
+    }
+    parts.push({ label: head.querySelector("h2").textContent, id: s.id, items: items });
+  }
+
+  function build(nav){
+    var frag = document.createDocumentFragment();
+    var b = document.createElement("b"); b.textContent = "Mục lục"; frag.appendChild(b);
+    parts.forEach(function(p){
+      var d = document.createElement("div"); d.className = "part";
+      var pa = document.createElement("a"); pa.href = "#" + p.id; pa.textContent = p.label;
+      pa.style.padding = "0"; pa.style.color = "inherit"; pa.style.fontWeight = "650";
+      d.appendChild(pa); frag.appendChild(d);
+      var ol = document.createElement("ol");
+      p.items.forEach(function(it){
+        var li = document.createElement("li"), a = document.createElement("a");
+        a.href = "#" + it.id; a.textContent = it.text; li.appendChild(a); ol.appendChild(li);
+      });
+      if (p.items.length) frag.appendChild(ol);
+    });
+    nav.appendChild(frag);
+  }
+  var nd = document.getElementById("nav-d"), nm = document.getElementById("nav-m");
+  if (nd) build(nd);
+  if (nm) build(nm);
+
+  // đánh dấu mục đang đọc
+  var links = nd ? nd.querySelectorAll("ol a") : [];
+  if (links.length && "IntersectionObserver" in window) {
+    var map = {};
+    for (var k = 0; k < links.length; k++) map[links[k].getAttribute("href").slice(1)] = links[k];
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        var a = map[e.target.id];
+        if (!a) return;
+        if (e.isIntersecting) {
+          for (var m = 0; m < links.length; m++) links[m].classList.remove("on");
+          a.classList.add("on");
+        }
+      });
+    }, { rootMargin: "0px 0px -72% 0px", threshold: 0 });
+    Object.keys(map).forEach(function(id){
+      var el = document.getElementById(id); if (el) io.observe(el);
+    });
+  }
+
+  // nền sáng/tối — localStorage có thể ném (chế độ riêng tư), nên bọc hết
+  var root = document.documentElement, btn = document.getElementById("tt");
+  try { var saved = localStorage.getItem("scentsitive-docs-theme"); if (saved) root.setAttribute("data-theme", saved); } catch (e) {}
+  if (btn) btn.addEventListener("click", function(){
+    var cur = root.getAttribute("data-theme");
+    var dark = cur ? cur === "dark"
+      : (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    var next = dark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("scentsitive-docs-theme", next); } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>

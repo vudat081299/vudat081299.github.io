@@ -39,7 +39,10 @@ shop/
     smoke.js          290 dòng — cổng tầng 2, mở Chromium thật rồi bấm và đo
     check.sh          chạy cả hai tầng; đây là lệnh "đã xong chưa"
     hooks/            post-edit.sh (sau mỗi Edit/Write) + pre-commit
-  docs/               8 tài liệu + 5 ADR + một trang đọc; công khai từ 21/09/2026
+  docs/
+    index.html        TRANG ĐỌC — gộp toàn bộ tri thức của bộ dưới đây, không có code
+    00…05, TECH-DEBT  8 tài liệu định hướng — đây mới là NGUỒN
+    adr/              5 quyết định + điều kiện xét lại từng cái
 ```
 
 `pitch/` và `measure/` nằm trong thư mục con nên **không dùng shell chung và không dùng lớp

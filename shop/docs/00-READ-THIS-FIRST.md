@@ -5,6 +5,11 @@ lập luận về việc **có nên dựng nó hay không**.
 
 Viết ngày 20/09/2026. Người đọc chính là Đạt; người đọc thứ hai là mọi phiên AI làm việc ở đây.
 
+> **Muốn đọc liền một mạch thay vì nhảy giữa 13 file?** Có [index.html](index.html) — một trang
+> gộp toàn bộ tri thức của bộ này, có mục lục, biểu đồ và nền tối. Mở ở
+> <https://vudat081299.github.io/shop/docs/>. **Nó là bản đọc, không phải nguồn:** chỗ nào nó
+> lệch với file markdown thì **file markdown đúng**, sửa ở đó trước rồi mới sửa trang.
+
 ---
 
 ## Đọc theo việc bạn đang cần làm

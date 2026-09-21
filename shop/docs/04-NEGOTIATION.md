@@ -307,9 +307,15 @@ anh được một lời giới thiệu và một sản phẩm bỏ hồ sơ đ�
 | **Thứ hạng tìm kiếm** | |
 
 **Thứ nên nói thay vào đó, và nói sớm:** Luật TMĐT 122/2025/QH15 hiệu lực 01/07/2026 cùng NĐ
-248/2026/NĐ-CP; theo chế độ cũ, website có chức năng đặt hàng phải thông báo với Bộ Công Thương
-tại `online.gov.vn`, không thông báo phạt **10–20 triệu₫**; **hai nguồn mâu thuẫn nhau** về việc
-thủ tục này còn hay đã bỏ [đã kiểm mức phạt và mốc luật; **mâu thuẫn là mâu thuẫn thật**].
+248/2026/NĐ-CP. **Thủ tục thông báo KHÔNG bị bỏ** — đã tra lại 21/09/2026: NĐ 248/2026 thay thế
+chế độ cũ nhưng đổi *tên gọi* chứ không bỏ nghĩa vụ, và chủ quản phải được xác nhận thông báo
+**trước khi vận hành** [đã kiểm]. Theo chế độ cũ, không thông báo phạt **10–20 triệu₫** [đã kiểm];
+mức dưới chế độ mới thì **[chưa kiểm]**, đừng đọc con số cũ lên như hiện hành. Chỗ còn mâu thuẫn
+thật là **nộp ở đâu** — Bộ Công Thương hay UBND cấp tỉnh; xem [03](03-COMPETITORS-AND-INTEGRATIONS.md) §5.
+
+*(Bản trước của đoạn này ghi "hai nguồn mâu thuẫn nhau về việc thủ tục này còn hay đã bỏ" — câu ấy
+đã bị rút lại ở 03 §5 cùng ngày, nhưng còn sống ở đây thêm một vòng. Đây là tài liệu được đọc to
+lên trong buổi gặp, nên nó là chỗ tệ nhất để một câu đã rút lại còn sót.)*
 
 > **Và phải nói rõ: tiền phạt rơi vào CHỊ ẤY, không phải anh.** Website đứng tên chị ấy, bán
 > hàng của chị ấy, nhận tiền vào tài khoản của chị ấy. Nói câu này **bằng miệng ở buổi gặp** và
