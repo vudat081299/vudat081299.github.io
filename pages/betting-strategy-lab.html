@@ -171,6 +171,11 @@ th { font-size:12.5px; letter-spacing:.04em; text-transform:uppercase; color:var
 td.n, th.n { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
 tbody tr:last-child td { border-bottom:0; }
 .scroll { overflow-x:auto; }
+/* Sổ giữ đủ mọi vòng đã chơi, nên nó phải cuộn trong một hộp — thả tự do thì một ván
+   20.000 vòng đẩy cả trang dài ra vô tận. Tiêu đề cột dính lại, không thì cuộn xuống
+   vài trăm dòng là mất hết nhãn. */
+.logbox { max-height:min(56vh, 460px); overflow:auto; }
+.logbox thead th { position:sticky; top:0; background:var(--surface); z-index:1; box-shadow:0 1px 0 var(--border); }
 
 /* ── lưới số 00–99 ───────────────────────────────────────────────────────── */
 .grid100 { display:grid; grid-template-columns:repeat(10, minmax(0,1fr)); gap:4px; }
@@ -509,8 +514,8 @@ footer { border-top:1px solid var(--border); padding:30px 0 60px; color:var(--su
     </div>
 
     <div class="card" style="margin-top:14px">
-      <p class="cardhead">Sổ từng vòng</p>
-      <div class="scroll"><table>
+      <p class="cardhead">Sổ từng vòng <span id="log-count" style="text-transform:none; font-weight:500"></span></p>
+      <div class="scroll logbox"><table>
         <thead><tr>
           <th class="n">Vòng</th><th class="n">Điểm</th><th class="n">Bỏ ra</th>
           <th class="n">Nháy</th><th class="n">Ăn về</th><th class="n">Lãi lỗ vòng</th><th class="n">Luỹ kế</th>
@@ -1203,10 +1208,11 @@ function newGame() {
     round: 0, cum: 0, pts: p.b0, streak: 0, log: [], path: [0], drawn: [], dead: false, msg: ''
   };
   if (p.draw === 'uniq') { game.idx = new Int32Array(p.N); for (var i = 0; i < p.N; i++) game.idx[i] = i; }
+  logRendered = 0;
   buildGrid(p); syncGrid(p); renderGame();
 }
 
-function spin() {
+function spin(quiet) {
   var g = game, p = g.p, t, j, v;
   if (g.round >= p.n) { g.msg = 'Đã chạy đủ ' + viNum(p.n, 0) + ' vòng. Bấm “Chơi lại” để mở ván mới.'; renderGame(); return false; }
   if (g.dead) { renderGame(); return false; }
@@ -1244,8 +1250,35 @@ function spin() {
   if (win) { g.pts = p.b0; g.streak = 0; }
   else { g.pts = nextStake(p, g.pts); g.streak++; }
   g.msg = '';
-  renderGame();
+  if (!quiet) renderGame();
   return true;
+}
+
+/* Số dòng sổ đang có trong DOM. Giữ lại để vẽ THÊM những vòng mới thay vì dựng lại cả
+   bảng sau mỗi vòng — dựng lại là O(n²) và "Chạy hết n vòng" sẽ đứng hình. */
+var logRendered = 0;
+
+function logRow(L) {
+  return '<tr><td class="n">' + L.r + '</td><td class="n">' + diem(L.pts) + '</td><td class="n">' + money(L.cost)
+    + '</td><td class="n">' + (L.nhay || '—') + '</td><td class="n">' + (L.back ? money(L.back) : '—')
+    + '</td><td class="n ' + cls(L.net) + '">' + signed(L.net) + '</td><td class="n ' + cls(L.cum) + '">' + signed(L.cum) + '</td></tr>';
+}
+
+function renderLog() {
+  var log = game.log, i, out = [];
+  $('log-count').textContent = log.length ? '· ' + viNum(log.length, 0) + ' vòng, mới nhất trên cùng' : '';
+  if (logRendered > 0 && logRendered < log.length) {      /* chỉ có thêm vòng mới */
+    for (i = log.length - 1; i >= logRendered; i--) out.push(logRow(log[i]));
+    $('log').insertAdjacentHTML('afterbegin', out.join(''));
+    logRendered = log.length;
+    return;
+  }
+  /* logRendered === 0 nghĩa là ván mới: phải dựng lại, kể cả khi sổ rỗng — nếu không
+     thì sổ của ván trước nằm lại trên màn hình sau khi bấm "Chơi lại". */
+  if (logRendered > 0 && logRendered === log.length) return;
+  for (i = log.length - 1; i >= 0; i--) out.push(logRow(log[i]));
+  $('log').innerHTML = out.join('') || '<tr><td colspan="7" style="color:var(--subtle)">Chưa có vòng nào.</td></tr>';
+  logRendered = log.length;
 }
 
 function renderGame() {
@@ -1262,12 +1295,7 @@ function renderGame() {
     return '<span class="ball' + (chosen.indexOf(v) >= 0 ? ' ball--hit' : '') + '">' + padNum(v, p) + '</span>';
   }).join('');
 
-  var rows = g.log.slice(-12).reverse().map(function (L) {
-    return '<tr><td class="n">' + L.r + '</td><td class="n">' + diem(L.pts) + '</td><td class="n">' + money(L.cost)
-      + '</td><td class="n">' + (L.nhay || '—') + '</td><td class="n">' + (L.back ? money(L.back) : '—')
-      + '</td><td class="n ' + cls(L.net) + '">' + signed(L.net) + '</td><td class="n ' + cls(L.cum) + '">' + signed(L.cum) + '</td></tr>';
-  }).join('');
-  $('log').innerHTML = rows || '<tr><td colspan="7" style="color:var(--subtle)">Chưa có vòng nào.</td></tr>';
+  renderLog();
   drawEquity(g.path, p.n);
   syncGrid(p);
 }
@@ -1318,10 +1346,11 @@ $('pickRand').addEventListener('click', function () { var p = params(); chosen =
 $('pickClear').addEventListener('click', function () { chosen = []; syncGrid(params()); });
 
 $('spin1').addEventListener('click', function () { spin(); });
-$('spin10').addEventListener('click', function () { for (var i = 0; i < 10; i++) if (!spin()) break; });
+$('spin10').addEventListener('click', function () { for (var i = 0; i < 10; i++) if (!spin(true)) break; renderGame(); });
 $('spinAll').addEventListener('click', function () {
   var guard = 0;
-  while (game.round < game.p.n && !game.dead && guard++ < 20000) if (!spin()) break;
+  while (game.round < game.p.n && !game.dead && guard++ < 20000) if (!spin(true)) break;
+  renderGame();
 });
 $('gReset').addEventListener('click', newGame);
 $('runSim').addEventListener('click', runSim);
