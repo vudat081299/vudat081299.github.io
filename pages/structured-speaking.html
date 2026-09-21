@@ -33,6 +33,12 @@
 
   /* Header dính cao 56px che mất tiêu đề khi nhảy từ mục lục — đo bằng trình duyệt:
      cả 6 đích #chon-khung…#gioi-han đều dừng ở top = 0, nằm dưới thanh header. */
+  /* Ở khổ 360px trang tràn ngang 5px, ở 320px tràn 45px. Cộng lại thì thấy ngay vì sao:
+     đệm 18+18, nút mở mục lục 44, cụm nút phải 76, bốn khe 16 — hết 220px, chỉ còn 140px
+     cho tên trang mà tên cần 179px. Nút và tên đều flex-shrink:0 nên không co được, và
+     đặt max-width cho tên cũng vô ích vì nó đã dưới ngưỡng. Thu đệm và khe lại ở khổ nhỏ
+     là chỗ duy nhất còn nới được — lấy về 44px, thừa cho cả 320px. */
+  @media (max-width: 480px) { .wb-navbar { padding-left: 12px; padding-right: 12px; gap: 8px; } }
   section[id] { scroll-margin-top: 76px; }
 
   /* Prose measure — a teaching page reads as text, so paragraphs get a line length. */
