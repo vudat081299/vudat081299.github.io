@@ -144,8 +144,8 @@ html.dark .ic-moon { display:none; }
 .toc { position:sticky; top:68px; max-height:calc(100vh - 96px); overflow-y:auto; padding-right:6px; font-size:13px; }
 .toc::-webkit-scrollbar { width:7px; }
 .toc::-webkit-scrollbar-thumb { background:var(--border-2); border-radius:4px; }
-.toc h4 { font-family:var(--mono); font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--subtle); margin:16px 0 6px; font-weight:600; }
-.toc h4:first-child { margin-top:0; }
+.toc .toc__g { font-family:var(--mono); font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--subtle); margin:16px 0 6px; font-weight:600; }
+.toc .toc__g:first-child { margin-top:0; }
 .toc a { display:block; text-decoration:none; color:var(--muted); padding:4px 9px; border-radius:var(--radius-sm); line-height:1.45; border-left:2px solid transparent; }
 .toc a:hover { color:var(--ink); background:var(--surface-2); }
 .toc a.on { color:var(--ink); font-weight:640; border-left-color:var(--ink); background:var(--surface-2); }
@@ -625,12 +625,12 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
   <div class="layout">
     <nav class="toc" id="toc" aria-label="Mục lục">
-      <h4>Mở đầu</h4>
+      <p class="toc__g">Mở đầu</p>
       <a href="#s-ba-cau">Ba câu hỏi, ba khoá</a>
       <a href="#s-doc-sao">Cách đọc: vật mới kể ba lần</a>
       <a href="#s-kyhieu">Đọc ký hiệu như đọc chữ</a>
 
-      <h4>1 · Đại số tuyến tính</h4>
+      <p class="toc__g">1 · Đại số tuyến tính</p>
       <a href="#s-hept">1.1 Hai câu đố cùng một lúc</a>
       <a href="#s-singular">1.2 Câu đố hỏi trùng: định thức</a>
       <a href="#s-khu">1.3 Giải máy móc: khử &amp; hạng</a>
@@ -642,7 +642,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-eigen">1.9 Mũi tên không chịu đổi hướng</a>
       <a href="#s-pca">1.10 PCA: giữ trục kể được nhiều nhất</a>
 
-      <h4>2 · Giải tích</h4>
+      <p class="toc__g">2 · Giải tích</p>
       <a href="#s-slope">2.1 Đạo hàm là độ nghiêng dưới chân</a>
       <a href="#s-rules">2.2 Bốn quy tắc là đủ dùng</a>
       <a href="#s-min">2.3 Đáy, đỉnh, và yên ngựa</a>
@@ -652,7 +652,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-newton">2.7 Newton: dùng độ cong để nhảy tới đáy</a>
       <a href="#s-losses">2.8 Chỗ toán gặp học máy</a>
 
-      <h4>3 · Xác suất</h4>
+      <p class="toc__g">3 · Xác suất</p>
       <a href="#s-prob">3.1 Xác suất là đếm số cách</a>
       <a href="#s-prules">3.2 Cộng, nhân, và chữ &ldquo;độc lập&rdquo;</a>
       <a href="#s-cond">3.3 Biết thêm một tin thì đổi ý</a>
@@ -664,7 +664,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-ev">3.9 Kỳ vọng, phương sai, độ lệch chuẩn</a>
       <a href="#s-cov">3.10 Hiệp phương sai &amp; tương quan</a>
 
-      <h4>4 · Thống kê</h4>
+      <p class="toc__g">4 · Thống kê</p>
       <a href="#s-sample">4.1 Tổng thể, mẫu, luật số lớn</a>
       <a href="#s-clt">4.2 Giới hạn trung tâm: chuông ở khắp nơi</a>
       <a href="#s-mle">4.3 MLE: chọn tham số đỡ bất ngờ nhất</a>
@@ -674,7 +674,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-test">4.7 Kiểm định giả thuyết &amp; p-value</a>
       <a href="#s-traps">4.8 Bốn cái bẫy đếm được</a>
 
-      <h4>Tra cứu</h4>
+      <p class="toc__g">Tra cứu</p>
       <a href="#s-carry">Tám câu mang theo</a>
       <a href="#s-mistakes">Nhầm lẫn thường gặp</a>
       <a href="#s-cheat">Bảng tra cứu</a>

@@ -140,8 +140,8 @@ html.dark .ic-moon { display:none; }
 .toc { position:sticky; top:68px; max-height:calc(100vh - 96px); overflow-y:auto; padding-right:6px; font-size:13.5px; }
 .toc::-webkit-scrollbar { width:7px; }
 .toc::-webkit-scrollbar-thumb { background:var(--border-2); border-radius:4px; }
-.toc h4 { font-family:var(--mono); font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--subtle); margin:16px 0 6px; font-weight:600; }
-.toc h4:first-child { margin-top:0; }
+.toc .toc__g { font-family:var(--mono); font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--subtle); margin:16px 0 6px; font-weight:600; }
+.toc .toc__g:first-child { margin-top:0; }
 .toc a { display:block; text-decoration:none; color:var(--muted); padding:5px 9px; border-radius:var(--radius-sm); line-height:1.45; border-left:2px solid transparent; }
 .toc a:hover { color:var(--ink); background:var(--surface-2); }
 .toc a.on { color:var(--ink); font-weight:640; border-left-color:var(--ink); background:var(--surface-2); }
@@ -508,8 +508,8 @@ footer a { color:var(--muted); }
 
   <div class="layout">
     <div class="scrim" id="scrim"></div>
-    <nav class="toc" id="toc">
-      <h4>Mười ba chương</h4>
+    <nav class="toc" id="toc" aria-label="Mục lục">
+      <p class="toc__g">Mười ba chương</p>
       <a href="#s-what"><span class="num">1</span>Máy đoán là gì</a>
       <a href="#s-machine"><span class="num">2</span>Ba bộ phận</a>
       <a href="#s-descent"><span class="num">3</span>Máy tự vặn núm</a>
@@ -524,7 +524,7 @@ footer a { color:var(--muted); }
       <a href="#s-nolabel"><span class="num">12</span>Không ai nói đáp án</a>
       <a href="#s-rl"><span class="num">13</span>Học từ phần thưởng</a>
 
-      <h4>Mang theo</h4>
+      <p class="toc__g">Mang theo</p>
       <a href="#s-cheat">Bảng tra cứu</a>
       <a href="#s-dated">Cái gì đã trôi</a>
       <a href="#s-end">Năm câu mang theo</a>
