@@ -17,7 +17,7 @@ cho chị ấy đọc.
 Tách làm hai lớp. Trộn hai lớp này là nguồn gốc của nỗi lo.
 
 **Lớp commodity — đã giải quyết, và rẻ.** Tồn kho, đơn hàng, POS, đồng bộ kênh, in vận đơn, báo
-cáo doanh thu. Có ít nhất năm công ty VN bán thứ này ở mức **250.000–750.000₫/tháng**, có người
+cáo doanh thu. Có ít nhất năm công ty VN bán thứ này ở mức **170.000–999.000₫/tháng** tuỳ gói; khoảng thực tế cho một shop cỡ này là **250.000–450.000₫**, có người
 trực hỗ trợ, có app, chạy được ngay hôm nay. **Không được cạnh tranh ở đây.** Xây lại lớp này
 là bỏ hàng trăm giờ để ra một sản phẩm tệ hơn thứ mua được trong một buổi chiều — đó là phá huỷ
 giá trị, không phải tạo giá trị.
@@ -59,7 +59,7 @@ vào. Cộng với việc nó **cắt bớt số tin nhắn phải trả**, th�
 lời hứa.
 
 Chuẩn chuyển đổi duy nhất dùng được, để tham chiếu: Littledata, 2.800 cửa hàng Shopify, 2023 —
-trung vị 1,4%, top 20% trên 3,2%, top 10% trên 4,7% [đã kiểm: Littledata 2023]. **Không có số
+trung bình 1,4%, top 20% trên 3,2%, top 10% trên 4,7% [đã kiểm: Littledata 2023]. **Không có số
 riêng cho nến, không có số riêng cho Việt Nam.**
 
 ---
@@ -106,10 +106,16 @@ Nỗi lo "tích hợp sàn chậm và khó" là **đúng**, và không nên tr�
 2. **Lazada dễ nhất lại ít đáng nhất.** Lazada chiếm **0,7%** doanh thu ngành nến thơm quà trên
    ba sàn [đã kiểm: metric.vn 2025]. Duyệt trong 1–3 ngày, nhưng để lấy 0,7%. Đừng để cái dễ dẫn
    dắt thứ tự công việc.
-3. **Cách rẻ nhất để biết là tự đăng ký thử.** Với TikTok Shop, đường in-house developer có thể
-   đăng ký trong một buổi chiều. Một buổi chiều đổi lấy một câu trả lời chắc chắn thì rẻ hơn mọi
-   suy đoán. Làm việc này **trước buổi gặp** nếu kịp — khi đó anh nói được "em thử rồi" thay vì
-   "em nghĩ là".
+3. **Việc này anh KHÔNG tự làm được — sửa lại 21/09/2026.** Bản trước ghi "tự đăng ký thử một
+   buổi chiều, rẻ hơn mọi suy đoán" và giao cho anh. Nhưng đường in-house developer đòi một
+   **tài khoản TikTok Shop đã kích hoạt** để liên kết, và anh không có shop nến. Muốn thử thì
+   phải mượn tài khoản của chị ấy — đúng thứ [04](04-DAM-PHAN.md) §7 đặt làm lằn ranh đỏ ở
+   chiều ngược lại.
+
+   Việc của anh ở buổi gặp không phải là "em thử rồi", mà là **hỏi chị ấy có sẵn lòng bỏ ra 15
+   phút trong Seller Centre để thử không**. Bài học chung: cột "ai đóng, bằng cách nào" trong
+   bảng câu hỏi mở phải được **thử lại một lần**, chứ không phải viết ra rồi tin. Đây là dòng
+   duy nhất trong bảng ấy giao cho anh một việc anh không có quyền làm.
 
 ---
 
@@ -171,15 +177,28 @@ Tình hình hiện tại:
 - Theo chế độ cũ (NĐ 52/2013 sửa bởi 85/2021): website có chức năng đặt hàng online **phải thông
   báo với Bộ Công Thương tại `online.gov.vn` trước khi bán**; không thông báo phạt **10–20
   triệu₫** [đã kiểm].
-- **HAI NGUỒN LUẬT MÂU THUẪN NHAU** về việc thủ tục này còn hay đã bỏ sau 01/07/2026. Một nguồn
-  nói đã bãi bỏ; một nguồn khác **cũng của năm 2026** vẫn mô tả thủ tục kèm mức phạt. **Trang của
-  Bộ Công Thương không giải quyết được.**
+- **Đã tra lại 21/09/2026, và câu "hai nguồn mâu thuẫn" trước đây là SAI — thủ tục KHÔNG bị bỏ.**
+  NĐ 248/2026 thay thế hoàn toàn NĐ 52/2013 và NĐ 85/2021 từ 01/07/2026, nhưng đổi **tên gọi**
+  chứ không bỏ nghĩa vụ: loại trang như thế này nay gọi là *"nền tảng thương mại điện tử kinh
+  doanh trực tiếp có chức năng đặt hàng trực tuyến"*, và chủ quản **phải được xác nhận thông báo
+  TRƯỚC KHI vận hành**; đổi thông tin thì phải sửa đổi thông báo trong 20 ngày làm việc
+  *[đã kiểm: luatvietnam.vn về NĐ 248/2026; baochinhphu.vn 07/2026]*. Tìm thấy trong ~15 phút
+  tra cứu — nói "không ai biết" về một thứ tra được là tự hạ uy tín ở đúng mục dùng để xây uy tín.
+- **Chưa kiểm được, và đừng đoán:** cơ quan nào nhận hồ sơ và nộp qua cổng nào. Chế độ cũ là Bộ
+  Công Thương qua `online.gov.vn`; có nguồn nói đã chuyển sang UBND cấp tỉnh qua Cổng Dịch vụ
+  công Quốc gia, nhưng cũng có bài hướng dẫn 2026 vẫn ghi Bộ Công Thương. **Hai nguồn này mâu
+  thuẫn thật** — khác với câu ở trên, vốn chỉ là chưa tra. Mức phạt 10–20 triệu₫ là mức của chế
+  độ cũ (NĐ 98/2020); mức dưới chế độ mới **[chưa kiểm]**, đừng đọc con số đó lên như hiện hành.
 - Nghĩa vụ với người bán cá nhân theo luật mới [nguồn thứ cấp — chưa kiểm]: cung cấp dữ liệu định
   danh điện tử; hiển thị đúng tên và địa chỉ đã đăng ký; **dùng chính tài khoản ngân hàng cá nhân
   của mình**.
 
-**Kết luận: PHẢI HỎI LUẬT SƯ trước khi mở bán.** Đây là mục chưa giải quyết được quan trọng nhất
-trong cả bốn tài liệu. Hai nguồn mâu thuẫn thì không được chọn nguồn nào hợp ý mà tin.
+**Kết luận: PHẢI HỎI LUẬT SƯ trước khi mở bán** — nhưng nay là hỏi **một câu hẹp**, không phải
+hỏi mù: *"Trang bán hàng của một cá nhân chưa đăng ký kinh doanh có phải làm thủ tục thông báo
+theo NĐ 248/2026 không, nộp ở đâu, và mức phạt hiện hành là bao nhiêu?"* Một câu hẹp thì luật sư
+trả lời trong mười phút; một câu mù thì thành một buổi tư vấn tính tiền.
+
+**Phạt rơi vào chị ấy, không rơi vào anh.** Đó là lý do mục này không được đoán.
 
 Ba điều nên làm với phát hiện này:
 
@@ -191,7 +210,7 @@ Ba điều nên làm với phát hiện này:
 3. **Không nhận trách nhiệm tuân thủ pháp lý trong bất kỳ thoả thuận nào.** Ghi rõ: việc thông
    báo/đăng ký với cơ quan nhà nước và nghĩa vụ thuế thuộc về chủ shop.
 
-Liên quan: sàn đang khấu trừ **VAT 1–5%** và **TNCN 0,5–5%** từ 01/07/2025 [đã kiểm: Shopee].
+Liên quan: sàn đang khấu trừ **VAT 1–5%** và **TNCN 0,5–5%** từ 01/07/2025 [nguồn ngành — chưa đối chiếu trang chính thức].
 Đó là **thuế của chị ấy**, sàn chỉ giữ hộ tại nguồn. Bán trực tiếp **không xoá** nghĩa vụ đó, nó
 chỉ chuyển việc kê khai sang cho chị ấy tự làm — tức là thêm việc. Nói rõ chỗ này, vì nếu để chị
 ấy tự hiểu nhầm rằng bán trực tiếp là "khỏi thuế" thì đó là một hiểu nhầm anh gây ra.
@@ -208,7 +227,7 @@ Mỗi dòng có cách đóng cụ thể. Xếp theo mức ảnh hưởng.
 | 2 | Phí cố định theo ngành hàng của Shopee là bao nhiêu? Ba nguồn cho ba khoảng khác nhau | **Mở Seller Centre, chọn một đơn đã hoàn tất, xem dòng khấu trừ. Hai phút.** | chị ấy, ngay tại buổi gặp |
 | 3 | Mức hoa hồng TikTok Shop thật của ngành nến? (dải 2–16%, mặc định 14%) | Xem trong back office TikTok Shop của chị ấy | chị ấy, ngay tại buổi gặp |
 | 4 | Shop 5–10 đơn/ngày có đủ điều kiện mở API Shopee ở VN không? | `https://banhang.shopee.vn/edu/article/8450` và `https://banhang.shopee.vn/edu/article/8451` — **là trang JS, không đọc được bằng máy, PHẢI MỞ BẰNG TRÌNH DUYỆT** | anh, 15 phút |
-| 5 | Cá nhân VN chỉ có CCCD đăng ký được "seller in-house developer" của TikTok Shop không? | **Tự đăng ký thử một buổi chiều.** Rẻ hơn mọi suy đoán | anh |
+| 5 | Cá nhân VN chỉ có CCCD đăng ký được "seller in-house developer" của TikTok Shop không? | Thử trong Seller Centre — **chỉ mở được từ shop đã kích hoạt**, nên anh không tự làm được | **chị ấy, sau buổi gặp** |
 | 6 | VN thuộc nhóm nào trong quy trình rà soát pháp lý của TikTok (bắt buộc / tuỳ trường hợp)? | Như trên, hỏi trong quá trình đăng ký | anh |
 | 7 | Thông tin Lazada "Seller In-house APP, duyệt 1–3 ngày" có đúng không? Nguồn hiện tại là một SDK bên thứ ba | Lazada Open Platform, trang chính thức | anh — **ưu tiên thấp, Lazada chỉ 0,7% doanh thu** |
 | 8 | Shopify Payments có dùng được ở VN không? | Trang Shopify Payments, chọn quốc gia VN | anh, 10 phút |

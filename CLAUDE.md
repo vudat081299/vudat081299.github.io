@@ -54,9 +54,17 @@ so với `12,4 triệu` khi chèn nút thắt 1×1. Nó gộp hai trang vào m�
 luật trên: hai bộ số viết tay riêng, mỗi bộ đọc đúng file của nó, không phép kiểm nào dùng chung —
 gộp chỉ để hai trang anh em khỏi chép lại cùng một đoạn hàm trợ giúp. `shop/` cũng có một cổng riêng cùng kiểu vì cùng lý do: đó là một storefront, nơi sai một con
 số thì khách trả nhầm tiền. `lint-shop.py` soi thẳng vào `shop/data/shop.json` — giá phải là số
-nguyên dương, giá gạch phải lớn hơn giá bán, `cat` phải trỏ vào danh mục có thật, tag của bộ chọn
-mùi phải khớp `mood` của ít nhất một sản phẩm, và `labels.ship_fee`/`free_ship` phải khớp con số
-viết trong đoạn văn `shipping`. Nó còn kiểm chiều ngược lại: chữ của khối lặp KHÔNG được nằm trong
+nguyên dương, giá gạch phải lớn hơn giá bán, và `labels.ship_fee`/`free_ship` phải khớp con số
+viết trong đoạn văn `shipping`. Từ 21/09/2026 nó kiểm thêm **quan hệ giữa hai trường** — chỗ tiền
+thật sự nằm, và là chỗ mọi phép kiểm trước đó bỏ trống: `ship_fee` phải nhỏ hơn `free_ship` (hoán
+đổi hai số thì cổng cũ vẫn xanh vì đoạn văn nhắc cả hai), ngưỡng miễn phí ship quy ra phải nằm
+trong 2–4 cây nến (dưới 2 thì đơn nào cũng miễn phí, trên 4 thì không ai với tới), mỗi mục của
+băng chữ trang chủ phải khai rõ đã xác nhận hay đang đoán, và cả năm trang phải nạp đủ
+`assets/shop.css` + `assets/shop.js`.
+
+Bản trước của đoạn này hứa hai phép kiểm **không tồn tại** ("`cat` phải trỏ vào danh mục có thật",
+"tag của bộ chọn mùi phải khớp `mood`") — `cat` thậm chí không phải một trường trong `shop.json`.
+Tài liệu hứa nhiều hơn cổng làm là cách một cổng chết mà không ai biết. Nó còn kiểm chiều ngược lại: chữ của khối lặp KHÔNG được nằm trong
 `index.html` (so theo text node, ngưỡng 0,40 — số đo được, xem comment trong file).
 
 `cooking/` gồm bốn trang công thức (Việt, Hàn,

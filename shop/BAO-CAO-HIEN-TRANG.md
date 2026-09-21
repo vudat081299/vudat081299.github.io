@@ -1,9 +1,14 @@
 # scentsitive.vn — báo cáo hiện trạng
 
-**Ngày:** 17/09/2026 · **Thư mục:** `shop/` · **Cổng:** `python3 shop/tools/lint-shop.py`
+**Ngày:** 21/09/2026 · **Thư mục:** `shop/` · **Cổng:** `sh shop/tools/check.sh`
+
+> **Xưng hô:** file này viết ở ngôi "tôi → chủ shop", nhưng **chủ shop chưa đọc nó và chưa
+> đồng ý gì cả** — chưa ai gặp ai. Nó là bản kiểm kê nội bộ, không phải báo cáo tiến độ
+> cho một việc đã được đặt. Bản trước xưng "chủ shop" và viết "link Instagram chủ shop gửi", đọc lên
+> như thể đã có một quan hệ làm việc đang chạy.
 
 Trang chạy được ngay bây giờ, nhưng **chưa bán được thật**. Lý do nằm ở mục
-[Tôi đang chờ bạn](#tôi-đang-chờ-bạn) — chủ yếu là nội dung 5 mùi hương và thông tin
+[Đang chờ nội dung từ chủ shop](#4-đang-chờ-nội-dung-từ-chủ-shop) — chủ yếu là nội dung 5 mùi hương và thông tin
 thanh toán. Mọi chỗ chưa có đều là placeholder có đánh dấu, không phải chỗ bỏ trống im lặng.
 
 Chạy thử:
@@ -22,8 +27,12 @@ rồi mở `http://localhost:8000/shop/`.
 |---|---|---|
 | Landing | `shop/index.html` | Xong. Hero có nến cháy, 5 ô mùi dẫn thẳng sang trang mùi hương, nút "Giỏ hàng", khối giá trị, hỏi đáp. |
 | Xem hàng theo mùi | `shop/products.html` | Xong. Mỗi mùi một section chiếm màn hình, có thanh mùi dính bên trái, màu cả trang đổi theo mùi đang đọc. |
+| Tìm mùi | `shop/scent-finder.html` | Xong. Năm câu hỏi → một mùi kèm tỉ lệ khớp và lý do. Chấm bằng trọng số trong data; cổng duyệt cả 320 tổ hợp. |
+| Hộp quà | `shop/gift.html` | Xong. Chọn cỡ hộp, mùi từng ngăn, thiệp, cách gói — hộp vẽ lại ngay và giá hiện đủ từ bước một. |
 | Thanh toán | `shop/checkout.html` | Khung xong. Đơn hàng, form nhận hàng, 3 cách thanh toán — nhưng **chỉ 1 trong 3 cách chạy thật** (xem §3). |
-| Giỏ hàng | ngăn kéo ở cả 3 trang | Xong. Lưu ở `localStorage`, dùng chung giữa 3 trang. |
+| Giỏ hàng | ngăn kéo ở cả 5 trang | Xong. Lưu ở `localStorage` (rơi xuống `sessionStorage` nếu bị chặn), dùng chung giữa 5 trang. |
+| Bản đề xuất | `shop/pitch/index.html` | Xong. Trang mang đi gặp chủ shop — không phải trang cửa hàng. |
+| Xem phễu | `shop/measure/index.html` | Xong. Trang nội bộ, đọc sự kiện đã ghi trong máy. |
 
 Cấu trúc file:
 
@@ -48,7 +57,7 @@ trang, section mới, và ô ở trang chủ tự mọc theo.
 - **Ngọn nến cháy thật** ở hero: ba lớp lửa chu kỳ 2,3s / 1,7s / 3,1s. Ba số không chia hết cho
   nhau nên mắt không bao giờ bắt được điểm lặp. Kèm khói, quầng sáng thở, bụi sáng bay lên, và
   một vệt sáng ấm đuổi theo con trỏ.
-- **Mỗi mùi một bộ màu.** Trang mùi hương đổi màu *toàn trang* khi bạn cuộn sang mùi khác —
+- **Mỗi mùi một bộ màu.** Trang mùi hương đổi màu *toàn trang* khi chủ shop cuộn sang mùi khác —
   không phải đổi một cái nhãn, mà là nền, quầng sáng và số thứ tự cùng chuyển dần. Làm được là
   nhờ khai biến màu bằng `@property`; trình duyệt cũ không hỗ trợ thì màu vẫn đúng, chỉ đổi tức thì.
 - **Chưa có ảnh chụp** nên mỗi sản phẩm tự vẽ bằng SVG từ ba màu của mùi. Đổi lại: cả cửa hàng
@@ -109,24 +118,24 @@ COD song song, rồi mới tính Apple Pay khi đơn đủ nhiều để bõ cô
 
 ---
 
-## 4. Tôi đang chờ bạn
+## 4. Đang chờ nội dung từ chủ shop
 
 Xếp theo mức chặn. Cứ gửi cho tôi, tôi điền vào `data/shop.json` và hạ cờ placeholder.
 
 ### Chặn nhất — 5 mùi hương (24 mục placeholder đang chờ cái này)
 
-Link Instagram bạn gửi **tôi không đọc được** — Instagram trả HTTP 403 cho mọi truy cập
-không đăng nhập, kể cả link có `stkn`. Nên tôi cần bạn chép nội dung ra. Với **mỗi** mùi:
+Không có cách nào đọc nội dung 5 mùi ở dạng máy đọc được: Instagram trả HTTP 403 cho mọi truy
+cập không đăng nhập, kể cả link có `stkn`. Nên chỗ này chờ **chủ shop chép ra**. Với **mỗi** mùi:
 
 - **Tên mùi** (ví dụ "Đêm Hà Nội")
 - **Một câu mô tả ngắn** — dòng hiện dưới tên ở ô sản phẩm
-- **Đoạn cảm giác** — 2–4 câu, thứ bạn đã viết trong bài post
+- **Đoạn cảm giác** — 2–4 câu, thứ chủ shop đã viết trong bài post
 - **Ba tầng hương**: nốt đầu / nốt giữa / nốt cuối (mỗi tầng 2–3 nốt)
 - **Lúc nào hợp nhất** — ví dụ "tối muộn, phòng đã tắt bớt đèn"
-- **Màu đại diện** nếu bạn có ý — không có thì tôi giữ bộ màu đang dựng sẵn
+- **Màu đại diện** nếu chủ shop có ý — không có thì tôi giữ bộ màu đang dựng sẵn
 
-Trong data tôi đã đánh sẵn 5 "chỗ" theo phổ hương để bạn dễ xếp: **01 ấm/gỗ · 02 tươi/cam quýt ·
-03 hoa · 04 ngọt/vani · 05 sạch/khoáng**. Nếu 5 mùi thật của bạn không rơi vào 5 chỗ này thì cứ
+Trong data tôi đã đánh sẵn 5 "chỗ" theo phổ hương để chủ shop dễ xếp: **01 ấm/gỗ · 02 tươi/cam quýt ·
+03 hoa · 04 ngọt/vani · 05 sạch/khoáng**. Nếu 5 mùi thật của chủ shop không rơi vào 5 chỗ này thì cứ
 nói, tôi đổi bộ màu theo mùi thật.
 
 ### Chặn việc bán
@@ -163,12 +172,12 @@ thanh toán `ready: false` **bắt buộc** phải liệt kê thứ còn thiếu
 
 **Trang** — id trùng, anchor gãy, asset thiếu, thẻ lệch.
 
-**Ba thứ riêng của shop này, mỗi thứ sinh ra từ một lỗi có thật:**
+**Bốn thứ riêng của shop này, mỗi thứ sinh ra từ một lỗi có thật:**
 
 1. **Nội dung không được rò từ data lên HTML.** So theo text node, ngưỡng 0,40 — số đo được chứ
    không bịa (trùng hợp lệ cao nhất 28%, một mục cố tình chép vào đo được 44%). Nó đã bắt được một
    ca thật trong lần này: chữ "Sáp thực vật" nằm cả ở hero lẫn ở data.
-2. **Ba trang phải dùng chung một shell.** Nav, menu và chân trang phải giống hệt nhau ở cả ba
+2. **Năm trang phải dùng chung một shell.** Nav, menu và chân trang phải giống hệt nhau ở cả năm
    trang; chỉ `is-active` và `nav--over` được phép khác. Sửa menu một trang rồi quên hai trang kia
    là cách hỏng phổ biến nhất của web tĩnh nhiều trang, và nó im lặng.
 3. **CSS không được mất quy tắc gốc.** 40 thành phần khối phải có quy tắc `.<tên> { }`, và không
@@ -195,7 +204,7 @@ Khi hạ hết cờ, dải cảnh báo màu cam trên đầu trang cũng tự t�
   form thật thì cần cùng cái serverless của §3, hoặc một dịch vụ form (Formspree, Basin).
 - **Chưa có trang cảm ơn sau khi đặt** — vì chưa có bước "đặt" thật.
 - **Mã VietQR gọi ảnh từ `img.vietqr.io`** (dịch vụ ngoài). Tôi chỉ đẩy số tiền và **mã đơn**
-  lên URL đó, không đẩy tên/số điện thoại/địa chỉ của khách. Nếu bạn không muốn phụ thuộc bên
+  lên URL đó, không đẩy tên/số điện thoại/địa chỉ của khách. Nếu chủ shop không muốn phụ thuộc bên
   ngoài, tôi sinh QR ngay trong trình duyệt được, nhưng tốn thêm code.
 - **Chưa đo hiệu năng** (Lighthouse) và **chưa kiểm với trình đọc màn hình**.
 - **Chưa có ảnh OG** cho lúc chia sẻ link lên Facebook/Zalo.

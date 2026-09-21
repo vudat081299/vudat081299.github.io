@@ -32,11 +32,27 @@ var root = document.documentElement, themeIco = $('#themeIco');
    Đã thử bản có hẹn giờ 2,5 giây và chụp lại — nút giỏ hàng đọc thành
    "dark_modeshopping_bag", xấu hơn hẳn một nút tròn trống. Mọi nút icon đều đã có
    aria-label nên máy đọc màn hình không mất gì khi icon ẩn.
-   `.then(ok, ok)` bắt cả nhánh hỏng, nên trường hợp mạng lỗi vẫn chốt. */
+
+   HAI CÁCH KIỂM SAI, đo bằng trình duyệt thật ngày 21/09/2026 với stylesheet Google bị chặn:
+
+     `.then(ok, ok)`        — SAI. fonts.load() KHÔNG reject khi tải hỏng. Stylesheet không về
+                              thì document.fonts rỗng, promise vẫn RESOLVE với mảng rỗng, `ok`
+                              vẫn chạy, và cả trang hiện chữ "storefront", "local_shipping",
+                              "qr_code_2" ngay trên hero. Đúng cái ADR 0005 định chặn.
+     `document.fonts.check()` — CŨNG SAI. Không có face nào khớp thì nó trả `true`, vì chữ vẫn
+                              vẽ được bằng font thay thế. Đo được: check === true trong khi
+                              document.fonts rỗng hoàn toàn.
+
+   Dấu hiệu đúng duy nhất: mảng trả về phải CÓ phần tử, và mọi phần tử phải `status === 'loaded'`.
+   Có cổng chặn hồi quy — xem phép đo "font hỏng thì không lộ chữ icon" trong tools/smoke.js. */
 (function () {
-  if (!document.fonts || !document.fonts.load) { root.classList.add('icons'); return; }
-  var ok = function () { root.classList.add('icons'); };
-  document.fonts.load('24px "Material Symbols Rounded"', 'shopping_bag').then(ok, ok);
+  var F = document.fonts;
+  if (!F || !F.load) { root.classList.add('icons'); return; }
+  F.load('24px "Material Symbols Rounded"', 'shopping_bag').then(function (faces) {
+    if (faces.length && faces.every(function (f) { return f.status === 'loaded'; })) {
+      root.classList.add('icons');
+    }
+  }, function () {});
 })();
 function paintTheme() {
   if (themeIco) themeIco.textContent = root.getAttribute('data-theme') === 'dark' ? 'light_mode' : 'dark_mode';
@@ -299,19 +315,42 @@ function artHTML(p, crop) {
    GIỎ HÀNG — chung cho cả ba trang, nằm ở localStorage.
    ═════════════════════════════════════════════════════════════════════════ */
 var cart = [];
-try { cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch (e) { cart = []; }
+/* Đọc localStorage trước, rồi sessionStorage — cặp với saveCart() bên dưới, vốn rơi
+   xuống sessionStorage khi localStorage bị chặn. Thiếu nhánh thứ hai thì giỏ vẫn mất
+   khi sang trang, chỉ là mất chậm hơn một nhịp. */
+try {
+  cart = JSON.parse(localStorage.getItem(CART_KEY) || sessionStorage.getItem(CART_KEY) || '[]');
+} catch (e) {
+  try { cart = JSON.parse(sessionStorage.getItem(CART_KEY) || '[]'); } catch (e2) { cart = []; }
+}
 if (!Array.isArray(cart)) cart = [];
 /* Dòng số lượng <= 0 phải bị loại NGAY khi nạp. Bản trước chỉ lọc sản phẩm không còn
    tồn tại, nên một dòng q=0 vẫn hiện thành một món trong giỏ trong khi tổng tiền không
    tính nó — giỏ nói một đằng, hoá đơn nói một nẻo. */
 var rawLen = cart.length;
 cart = cart.filter(function (c) { return c && c.id && Number(c.q) > 0; });
-if (cart.length !== rawLen) {
-  try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {}
-}
+var needsResave = cart.length !== rawLen;
+
+if (needsResave) saveCart();
 
 var D = null;
-function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {} }
+/* Nuốt lỗi ở đây thì giỏ bốc hơi trong im lặng. Đo được 21/09/2026 với localStorage bị
+   chặn (đúng hành vi Safari riêng tư trên iOS): bấm Thêm 3 lần ở trang Mùi hương, badge
+   hiện 3, toast báo "Đã thêm" cả 3 lần — bấm "Tới thanh toán" thì giỏ trống trơn. Không
+   lỗi JS, trang vẫn đẹp, khách không hiểu vì sao.
+   Trang đã có đường lỗi tử tế cho fetch; storage phải có đường tương đương. Rơi xuống
+   sessionStorage để giỏ ít nhất sống hết phiên, và nói ra đúng một lần. */
+var storageWarned = false;
+function saveCart() {
+  var body = JSON.stringify(cart);
+  try { localStorage.setItem(CART_KEY, body); return true; } catch (e) {}
+  try { sessionStorage.setItem(CART_KEY, body); } catch (e2) {}
+  if (!storageWarned) {
+    storageWarned = true;
+    toast('Trình duyệt đang chặn lưu trữ — giỏ chỉ sống trong phiên này');
+  }
+  return false;
+}
 function byId(id) {
   if (!D) return null;
   /* Hộp quà là một món GHÉP: nó không có trong D.products, cấu hình của nó nằm ngay
@@ -343,16 +382,57 @@ function productOfScent(k) {
   return null;
 }
 
+/* MỘT nguồn sự thật cho tồn kho. Phải có, và đây là lý do đo được ngày 21/09/2026:
+   trước đó `addToCart` kẹp theo `p.stock` còn `giftStock` kẹp theo `pr.stock`, hai bên
+   không biết nhau. Gói 6 hộp ba cùng mùi 01 (18 cây) rồi sang trang Mùi hương bấm thêm
+   nến 01 — giỏ nhận thêm 20 cây nữa, tổng 38 cây trên tồn kho khai báo 20. Cả hai lần
+   chặn đều "đúng" so với con số chúng đọc; cái sai là chúng đọc hai con số khác nhau.
+
+   Cùng lớp lỗi với luật "số suy ra được thì không ghi trong data": GIÁ thì suy ra,
+   nhưng TỒN KHO còn lại thì vẫn bị đọc thẳng từ data ở bốn chỗ khác nhau. Tồn còn lại
+   cũng là số suy ra được — suy từ tồn khai báo trừ đi phần giỏ đang giữ. */
+
+/* Bao nhiêu cây nến mùi `k` giỏ đang giữ, tính cả nến lẻ lẫn nến nằm trong hộp quà.
+   `skipId` bỏ qua đúng một dòng — dùng khi đang tính lại trần cho chính dòng ấy. */
+function heldOf(k, skipId) {
+  return cart.reduce(function (n, c) {
+    if (skipId && c.id === skipId) return n;
+    if (c.g) {
+      var t = 0;
+      (c.g.scents || []).forEach(function (x) { if (x === k) t++; });
+      return n + c.q * t;
+    }
+    var p = byId(c.id);
+    return n + (p && p.scent === k ? c.q : 0);
+  }, 0);
+}
+
+/* Còn bán được bao nhiêu cây mùi `k` sau khi trừ phần giỏ đang giữ. */
+function remaining(k, skipId) {
+  var pr = productOfScent(k);
+  return Math.max(0, (pr ? pr.stock : 0) - heldOf(k, skipId));
+}
+
 function giftPrice(g) {
-  var box = giftBox(g.box); if (!box) return { candles: 0, off: 0, extra: 0, total: 0 };
+  /* Trả `null`, KHÔNG trả 0 đồng. Nếu shop đổi tên hay bỏ một cỡ hộp trong shop.json
+     trong lúc giỏ của khách đang có hộp ấy thì bản cũ hiện "Hộp quà · 0 ₫ ×2" và vẫn
+     cho thanh toán. Im lặng bán 0 đồng tệ hơn hẳn việc bỏ dòng và nói ra. */
+  var box = giftBox(g.box); if (!box) return null;
   var candles = 0;
   (g.scents || []).forEach(function (k) {
     var pr = productOfScent(k); if (pr) candles += pr.price;
   });
-  /* Làm tròn tiền giảm xuống nghìn đồng: 8% của 552.000 là 44.160 và không ai viết
-     hoá đơn có số lẻ 160 đồng. Làm tròn XUỐNG nên khách không bao giờ trả nhiều hơn
-     con số phần trăm đã hứa. */
-  var off = Math.floor(candles * (box.off || 0) / 100 / 1000) * 1000;
+  /* Làm tròn tiền giảm LÊN nghìn đồng, và chiều làm tròn là chuyện của lời hứa chứ
+     không phải của thẩm mỹ hoá đơn.
+     Bản trước dùng Math.floor kèm comment "làm tròn XUỐNG nên khách không bao giờ trả
+     nhiều hơn con số phần trăm đã hứa" — nói ngược. Làm tròn TIỀN GIẢM xuống thì giảm
+     ít đi, tức khách trả NHIỀU hơn. Đo được ở giá 185.000: hộp ba hứa "rẻ hơn 14%"
+     nhưng trang tính 555.000 − 77.000 = 478.000, trong khi 14% đúng là 77.700 — khách
+     trả thừa 700 ₫ và tỉ lệ thật là 13,87%, thấp hơn con số đã in ra.
+     Với bộ giá hiện tại (300.000 chẵn) chưa cắn, nhưng đây là trang sẽ đổi giá.
+     Math.ceil làm con số phần trăm in trên thẻ thành SÀN: khách luôn được ít nhất
+     chừng ấy, không bao giờ ít hơn. */
+  var off = Math.ceil(candles * (box.off || 0) / 100 / 1000) * 1000;
   var card = giftCard(g.card), wrap = giftWrap(g.wrap);
   var extra = ((card && card.price) || 0) + ((wrap && wrap.price) || 0);
   return { candles: candles, off: off, extra: extra, total: candles - off + extra };
@@ -360,7 +440,19 @@ function giftPrice(g) {
 
 /* Hộp bán được bao nhiêu cái là do món KHAN nhất trong hộp quyết định. Một hộp ba ngọn
    dùng hai lần cùng một mùi thì mùi đó phải còn gấp đôi — nên đếm theo số lần dùng. */
-function giftStock(g) {
+function giftStock(g, skipId) {
+  var used = {}, cap = 99;
+  (g.scents || []).forEach(function (k) { used[k] = (used[k] || 0) + 1; });
+  for (var k in used) {
+    if (!Object.prototype.hasOwnProperty.call(used, k)) continue;
+    cap = Math.min(cap, Math.floor(remaining(k, skipId) / used[k]));
+  }
+  return Math.max(0, cap);
+}
+
+/* Trần theo tồn KHAI BÁO, không trừ giỏ — chỉ để phân biệt "shop hết hàng" với
+   "giỏ của bạn đang giữ hết", hai câu phải nói khác nhau. */
+function giftStockRaw(g) {
   var used = {}, cap = 99;
   (g.scents || []).forEach(function (k) { used[k] = (used[k] || 0) + 1; });
   for (var k in used) {
@@ -373,6 +465,10 @@ function giftStock(g) {
 
 function giftProduct(g, id) {
   var box = giftBox(g.box), L = (D.gift && D.gift.labels) || {};
+  /* Cỡ hộp không còn trong dữ liệu → không dựng nổi món hàng, trả null. renderCart()
+     vốn đã lọc `byId(c.id)` null ra khỏi giỏ, nên dòng ấy biến mất thay vì đứng đó với
+     giá 0 đồng. */
+  var pz = giftPrice(g); if (!box || !pz) return null;
   var names = (g.scents || []).map(function (k) {
     var s = null;
     for (var i = 0; i < D.scents.length; i++) if (D.scents[i].k === k) s = D.scents[i];
@@ -382,7 +478,7 @@ function giftProduct(g, id) {
     id: id, gift: g, form: 'gift', scent: (g.scents || [])[0] || (D.scents[0] || {}).k,
     name: (L.cart_name || 'Hộp quà') + ' · ' + ((box && box.name) || ''),
     sub: names.join(' · '),
-    price: giftPrice(g).total, compare: 0, stock: giftStock(g), specs: []
+    price: pz.total, compare: 0, stock: giftStock(g, id), specs: []
   };
 }
 
@@ -413,8 +509,11 @@ function addToCart(id, n, from) {
   var line = null;
   for (var i = 0; i < cart.length; i++) if (cart[i].id === id) line = cart[i];
   var had = line ? line.q : 0;
-  var want = had + n;
-  var got = Math.max(0, Math.min(p.stock, want));
+  /* Trần = tồn khai báo trừ phần MỌI DÒNG KHÁC trong giỏ đang giữ (kể cả nến nằm
+     trong hộp quà), chứ không phải tồn khai báo. Bỏ qua chính dòng này vì `had` của
+     nó đã nằm trong `want`. */
+  var cap = remaining(p.scent, id);
+  var got = Math.max(0, Math.min(cap, had + n));
   var delta = got - had;
 
   if (delta > 0) {
@@ -427,16 +526,24 @@ function addToCart(id, n, from) {
     if (badge) { badge.classList.remove('is-pop'); void badge.offsetWidth; badge.classList.add('is-pop'); }
   } else if (p.stock <= 0) {
     toast(p.name + ' đang tạm hết hàng');
+  } else if (cap <= had) {
+    /* Hai câu này phải khác nhau: "shop hết hàng" và "giỏ bạn đang giữ hết chỗ còn
+       lại" là hai chuyện, và câu sau thường do hộp quà trong giỏ ăn mất. */
+    toast('Giỏ đang giữ hết ' + p.stock + ' cây ' + p.name + ' còn lại');
   } else {
-    toast('Chỉ còn ' + p.stock + ' cái ' + p.name);
+    toast('Chỉ còn ' + cap + ' cái ' + p.name);
   }
   return delta;
 }
 /* Hộp quà không đi qua addToCart được: addToCart chỉ mang theo `id`, còn hộp thì phải
    mang theo cả cấu hình. Cùng cấu hình thì cộng dồn số lượng, khác thì thành dòng mới. */
 function addGift(g, from) {
-  var id = giftId(g), cap = giftStock(g);
-  if (cap <= 0) { toast('Một mùi trong hộp đang tạm hết'); return 0; }
+  var id = giftId(g), cap = giftStock(g, id);
+  if (cap <= 0) {
+    toast(giftStockRaw(g) <= 0 ? 'Một mùi trong hộp đang tạm hết'
+                               : 'Giỏ đang giữ hết số nến còn lại của hộp này');
+    return 0;
+  }
   var line = null;
   for (var i = 0; i < cart.length; i++) if (cart[i].id === id) line = cart[i];
   var had = line ? line.q : 0;
@@ -446,7 +553,8 @@ function addGift(g, from) {
   saveCart(); renderCart();
   if (from) fly(from);
   track('gift_add', { box: g.box, scents: (g.scents || []).join(','),
-                      card: g.card, wrap: g.wrap, msg: !!g.msg, total: giftPrice(g).total });
+                      card: g.card, wrap: g.wrap, msg: !!g.msg,
+                      total: (giftPrice(g) || {}).total || 0 });
   toast('Đã thêm hộp quà vào giỏ');
   var badge = $('#cartCount');
   if (badge) { badge.classList.remove('is-pop'); void badge.offsetWidth; badge.classList.add('is-pop'); }
@@ -455,7 +563,11 @@ function addGift(g, from) {
 
 function setQty(id, n) {
   var p = byId(id);
-  var cap = p ? p.stock : 0;
+  /* Trần phải trừ phần các dòng KHÁC đang giữ. Dòng hộp quà thì byId() đã trả về trần
+     đã trừ sẵn (giftProduct gọi giftStock(g, id)); dòng nến lẻ thì tính ở đây. */
+  var self = null;
+  for (var si = 0; si < cart.length; si++) if (cart[si].id === id) self = cart[si];
+  var cap = !p ? 0 : (self && self.g ? p.stock : remaining(p.scent, id));
   cart = cart.map(function (c) {
     if (c.id !== id) return c;
     var line = { id: id, q: Math.max(0, Math.min(cap, n)) };
@@ -567,6 +679,26 @@ function wireLines(box) {
 function renderCart() {
   if (!D) return;
   cart = cart.filter(function (c) { return byId(c.id) && c.q > 0; });
+
+  /* Kẹp lại số lượng theo tồn kho HIỆN TẠI, mỗi lần vẽ.
+     Vì sao cần: giỏ sống trong localStorage nhiều ngày, còn tồn kho nằm trong
+     shop.json và shop sửa nó bất cứ lúc nào. Đo được 21/09/2026: giỏ giữ 20 cây, shop
+     hạ tồn xuống 3, khách mở lại trang thanh toán và vẫn thấy "×20 · 2.000.000 ₫" rồi
+     chuyển khoản đủ 2 triệu cho 3 cây nến. Không một dòng cảnh báo nào.
+     Cũng ép q về số nguyên ở đây: q phân số hay q khổng lồ do sửa tay localStorage
+     trước nay đi thẳng vào subtotal(). */
+  var cut = 0;
+  cart = cart.map(function (c) {
+    var p = byId(c.id);
+    var cap = p ? (c.g ? p.stock : remaining(p.scent, c.id)) : 0;
+    var q = Math.max(0, Math.min(cap, Math.floor(Number(c.q) || 0)));
+    if (q !== c.q) cut++;
+    if (q === c.q) return c;
+    var line = { id: c.id, q: q };
+    if (c.g) line.g = c.g;
+    return line;
+  }).filter(function (c) { return c.q > 0; });
+  if (cut) { saveCart(); toast('Có món vừa hết bớt hàng — giỏ đã chỉnh lại số lượng'); }
   var n = cartCount(), badge = $('#cartCount');
   if (badge) { badge.textContent = n; badge.classList.toggle('is-zero', n === 0); }
 
@@ -606,10 +738,20 @@ fetch('data/shop.json', { cache: 'no-cache' })
     $$('[data-needs-data]').forEach(function (el) { el.style.display = 'none'; });
     var host = $('#dataError');
     if (!host) return;
-    host.innerHTML = '<div class="oops"><b>Chưa nạp được nội dung cửa hàng.</b><br>' + esc(err.message) +
-      ' — trang đọc <code>data/shop.json</code> bằng fetch nên phải chạy qua HTTP. ' +
-      'Mở terminal ở thư mục gốc của repo, chạy <code>python3 -m http.server</code> ' +
-      'rồi vào <code>http://localhost:8000/shop/</code>.</div>';
+    /* Lời khuyên phải khớp LOẠI lỗi. Bản trước khuyên "chạy qua HTTP" cho mọi trường
+       hợp — kể cả khi máy chủ trả HTTP 500, tức là đang chạy qua HTTP rồi. Một cổng nói
+       sai nguyên nhân làm người đọc đi sửa nhầm chỗ. */
+    var m = String(err.message || '');
+    var tip = /^HTTP /.test(m)
+      ? ' — máy chủ có trả lời, nhưng không trả được file. Kiểm tra <code>shop/data/shop.json</code> ' +
+        'có tồn tại và đọc được không.'
+      : /JSON|Unexpected|parse/i.test(m)
+      ? ' — file có đó nhưng sai cú pháp JSON. Chạy <code>python3 -m json.tool shop/data/shop.json</code> ' +
+        'để xem hỏng ở ký tự nào.'
+      : ' — trang đọc <code>data/shop.json</code> bằng fetch nên phải chạy qua HTTP. ' +
+        'Mở terminal ở thư mục gốc của repo, chạy <code>python3 -m http.server</code> ' +
+        'rồi vào <code>http://localhost:8000/shop/</code>.';
+    host.innerHTML = '<div class="oops"><b>Chưa nạp được nội dung cửa hàng.</b><br>' + esc(m) + tip + '</div>';
   });
 
 function boot(d) {
@@ -650,7 +792,9 @@ function boot(d) {
   var mq = $('#marquee');
   if (mq) {
     /* nhân đôi để vòng lặp nối liền, không thấy mối */
-    var row = d.marquee.map(function (t) { return '<span class="marquee__item">' + esc(t) + '</span>'; }).join('');
+    var row = d.marquee.map(function (t) {
+      return '<span class="marquee__item">' + esc(typeof t === 'string' ? t : t.text) + '</span>';
+    }).join('');
     mq.innerHTML = row + row;
   }
 
@@ -719,11 +863,6 @@ function renderLanding() {
     });
   }
 }
-function productOfScent(k) {
-  for (var i = 0; i < D.products.length; i++) if (D.products[i].scent === k) return D.products[i];
-  return null;
-}
-
 /* ═════════════════════════════════════════════════════════════════════════
    TRANG MÙI HƯƠNG
    Mỗi mùi là một section chiếm trọn màn hình và mang bộ màu riêng. Khi cuộn
@@ -735,6 +874,7 @@ function renderProducts() {
 
   host.innerHTML = D.scents.map(function (s) {
     var p = productOfScent(s.k);
+    var left = p ? remaining(s.k) : 0;
     var tiers = [['top', 'Hương đầu'], ['heart', 'Hương giữa'], ['base', 'Hương cuối']];
     var k = 0;
     var notes = '<div class="notes">' + tiers.map(function (t) {
@@ -757,8 +897,10 @@ function renderProducts() {
           return '<tr><td>' + esc(sp.k) + '</td><td>' + esc(sp.v) + '</td></tr>';
         }).join('') + '</tbody></table>' +
         '<div class="buy__row">' +
-          '<span class="tag">' + (p.stock > 0 ? 'Còn ' + p.stock : 'Tạm hết') + '</span>' +
-          '<button class="btn btn--primary" data-add="' + esc(p.id) + '"' + (p.stock > 0 ? '' : ' disabled') + '>' +
+          /* Số hiện ra phải là số khách còn mua được, không phải số shop còn trong kho:
+             giỏ đã giữ hết 20 cây mà trang vẫn ghi "Còn 20" là nói dối người đang đọc. */
+          '<span class="tag">' + (left > 0 ? 'Còn ' + left : (p.stock > 0 ? 'Giỏ đang giữ hết' : 'Tạm hết')) + '</span>' +
+          '<button class="btn btn--primary" data-add="' + esc(p.id) + '"' + (left > 0 ? '' : ' disabled') + '>' +
             '<span class="ms">shopping_bag</span> Thêm vào giỏ</button>' +
         '</div>' +
         (p.care ? '<p class="modal__care"><span class="ms ms--sm">tips_and_updates</span>' + esc(p.care) + '</p>' : '') +
@@ -1261,6 +1403,13 @@ function renderFinder() {
   document.addEventListener('keydown', function (e) {
     if (FStep < 0 || FStep >= FQ.length) return;
     if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+    /* Ngăn kéo giỏ là aria-modal="true" — đang mở thì nó là toàn bộ thế giới của người
+       dùng, và phím ở đây không được với qua lớp phủ. Đo được 21/09/2026: đang ở Câu 1/5,
+       mở giỏ, gõ "2" → quiz nhảy sang Câu 2/5 sau lưng lớp phủ. Một câu trả lời được ghi
+       mà khách chưa từng nhìn thấy, rồi kết quả cuối dựa lên nó. */
+    var over = $('#drawer'), menu = $('#sheet');
+    if ((over && over.classList.contains('is-open')) ||
+        (menu && menu.classList.contains('is-open'))) return;
     if (e.key === 'Backspace' && FStep > 0) { e.preventDefault(); fGo(FStep - 1); return; }
     var n = parseInt(e.key, 10);
     if (!n) return;
@@ -1293,6 +1442,16 @@ function gFitScents() {
   var n = (giftBox(G.box) || { n: 1 }).n;
   while (G.scents.length > n) G.scents.pop();
   while (G.scents.length < n) G.scents.push((D.scents[G.scents.length % D.scents.length] || D.scents[0]).k);
+
+  /* Chọn "Không cần thiệp" thì lời nhắn phải mất theo. Ô nhập chỉ bị ẨN chứ G.msg vẫn
+     còn, nên bản trước gửi cho shop một đơn tự mâu thuẫn:
+         thiệp: Không cần thiệp
+         lời nhắn: "Chuc mung sinh nhat em nhe"
+     Đơn ấy là kênh DUY NHẤT shop nhận được (trang không có máy chủ), nên shop đọc xong
+     không biết có phải viết thiệp hay không. Dọn ở đây chứ không ở chỗ bấm nút, để mọi
+     đường vào — bấm, khôi phục từ localStorage, dựng mặc định — đều đi qua. */
+  var cards = (D.gift || {}).cards || [];
+  if (cards.length && G.card === cards[0].k) G.msg = '';
 }
 
 function gRender() {
@@ -1358,7 +1517,8 @@ function gRender() {
   $('#gbSteps').innerHTML = steps;
 
   /* hộp + tổng tiền */
-  var pz = giftPrice(G), stock = giftStock(G);
+  var pz = giftPrice(G) || { candles: 0, off: 0, extra: 0, total: 0 };
+  var stock = giftStock(G, giftId(G));
   var first = null;
   for (var i = 0; i < D.scents.length; i++) if (D.scents[i].k === G.scents[0]) first = D.scents[i];
   if (first) {

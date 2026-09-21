@@ -1,4 +1,4 @@
-# Bàn giao — phiên 20/09/2026
+# Bàn giao — phiên 20/09/2026, rà lại 21/09/2026
 
 Đọc file này trước, rồi tới [shop/CLAUDE.md](CLAUDE.md) và
 [docs/05-KIEN-TRUC.md](docs/05-KIEN-TRUC.md). Mục lục đầy đủ:
@@ -22,8 +22,41 @@ Giữa bước 2 và 3 thì cứ sửa — **cổng tự chạy**, không phải
 | Lúc lên `main` / mở PR | `.github/workflows/gates.yml` | cổng của **mọi** project, cộng chạy thật trong trình duyệt |
 
 `check.sh` là lệnh duy nhất cần nhớ. Nó chạy hai tầng: cổng lint, rồi mở trình duyệt thật và
-bấm. Tầng hai mới là tầng bắt được hành vi — đã đo: tái tạo lỗi cũ thì lint in **OK** còn
-smoke in **2/12 LỖI**.
+bấm (**16 phép đo**). Tầng hai mới là tầng bắt được hành vi — đã đo nhiều lần: tái tạo bất kỳ
+lỗi cũ nào thì lint in **OK** còn smoke in **LỖI**.
+
+---
+
+## Vòng rà 21/09/2026 — tìm ra 15 lỗi, trong đó 6 lỗi tiền
+
+Đọc [docs/NO-KY-THUAT.md](docs/NO-KY-THUAT.md) để có danh sách đầy đủ. Bốn cái đáng nhớ nhất:
+
+1. **Tồn kho không có nguồn sự thật duy nhất.** Gói 6 hộp ba cùng mùi 01 rồi bấm thêm nến 01 ở
+   trang Mùi hương → giỏ giữ **38 cây trên tồn 20**. `addToCart` và `giftStock` kẹp theo hai con
+   số khác nhau. Nay có `remaining(k, skipId)`, mọi chỗ gọi nó.
+2. **Ba lỗi chỉ hiện ra khi môi trường hỏng** — font bị chặn thì cả trang lộ chữ `storefront`;
+   localStorage bị chặn thì giỏ bốc hơi không một lời nào. Môi trường tốt thì chúng xanh mãi
+   mãi, nên cổng phải **dựng lại** tình huống hỏng. Nay `smoke.js` tự chặn tên miền font và tự
+   chặn localStorage rồi đo.
+3. **Cửa hàng mẫu bán 100.000 ₫ trong khi bản đề xuất lập luận trên 300.000 ₫** — mà `docs/00`
+   lại dặn mở bản đề xuất trước rồi bấm sang cửa hàng.
+4. **Bảng đòn bẩy AOV trong `docs/01` ra dấu ngược** vì quên trừ phí sàn trên phần doanh thu
+   tăng thêm: ở giá vốn 200.000 ₫ con số thật là **−47.840 ₫**, bản cũ ghi +2.704.000 ₫.
+
+**Một bài học về chính cách thử ngược:** phá riêng `addToCart` thì cổng tồn kho không kêu, vì
+lớp kẹp ở `renderCart` che mất. Phải phá `remaining()` — thứ cả ba lớp cùng dùng — nó mới kêu
+đúng "38 cây / tồn 20". Thử ngược một lớp phòng thủ khi có nhiều lớp thì đo ra sự im lặng của
+lớp khác, không phải sự hỏng của cổng.
+
+## Một việc CHƯA làm, đang chờ Đạt quyết
+
+`shop/docs/` đã được loại khỏi bản deploy nên **không còn** lên `vudat081299.github.io`. Nhưng
+**repo này là public**, nên toàn văn vẫn đọc được trên `github.com` và `raw.githubusercontent.com`
+— gồm `04-DAM-PHAN.md` với mục *"dấu hiệu nên rút"*, ước lượng doanh thu của chị ấy, và
+`01-BOI-CANH-VA-CO-HOI.md` vốn tự ghi *"không đưa tài liệu này cho chị ấy"*.
+
+Chưa đụng vào vì gỡ khỏi lịch sử git cần force-push lên `main`, mà luật repo bắt phải hỏi trước.
+**Đây là việc cần quyết trước buổi gặp.**
 
 Phiên AI thì nạp `.claude/skills/shop/` trước khi sửa; nó là quy trình trên viết dài ra.
 
@@ -46,7 +79,7 @@ biến mất. `shop/pitch/` **cố ý** vẫn công khai — đó là trang cầ
 | Trang **Hộp quà** — chọn hộp/mùi/thiệp/cách gói, xem trước trực tiếp, thêm vào giỏ như một món ghép | `gift.html` |
 | **Bản đề xuất** có máy tính phí sàn để chủ shop tự kéo số của mình | `pitch/index.html` |
 | Dữ liệu `quiz` + `gift` | `data/shop.json` |
-| 11 phép kiểm mới, đều đã thử ngược | `tools/lint-shop.py` |
+| Mọi phép kiểm đều đã thử ngược — đó là luật, không phải con số | `tools/lint-shop.py`, `tools/smoke.js` |
 | Luật dự án, kiến trúc, 5 ADR, sổ nợ | `CLAUDE.md`, `docs/` |
 | **Lớp đo** — 12 sự kiện + trang phễu | `assets/shop.js`, `measure/` |
 | **Chạy thật trong trình duyệt** — 12 phép đo hành vi | `tools/smoke.js`, `tools/check.sh` |

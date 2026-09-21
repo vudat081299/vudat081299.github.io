@@ -39,8 +39,10 @@ Nhanh.vn 450 nghìn/tháng cho cả POS lẫn website lẫn đồng bộ sàn *[
 [adr/0004](adr/0004-khong-xay-lai-phan-mem-ban-hang.md).
 
 **4. Con số duy nhất cầm chắc là phí sàn.** Shopee thu 6% phí xử lý giao dịch cộng 3.000 ₫/đơn
-cộng phí cố định theo ngành; tổng chi phí nền tảng của TikTok Shop được ghi nhận khoảng 23–24%
-doanh thu *[đã kiểm]*. Mọi con số về "website đẹp thì chuyển đổi cao hơn" hay "quiz tăng
+cộng phí cố định theo ngành *[nguồn ngành — xem cảnh báo ở 01 §2]*; tổng chi phí nền tảng của
+TikTok Shop được ghi nhận khoảng 23–24% doanh thu *[nguồn thứ cấp — chưa kiểm, xem 01 §2]*.
+Con số cộng được từ các khoản kiểm được là **21%**. Hai nhãn này trước đây ghi *[đã kiểm]* —
+sai, và sai ngay phía trên chính cái bảng định nghĩa nhãn ở cuối file này. Mọi con số về "website đẹp thì chuyển đổi cao hơn" hay "quiz tăng
 chuyển đổi 40%" thì **không** cầm chắc — đã truy, tất cả đều do chính công ty bán phần mềm ấy
 công bố, không có nhóm đối chứng.
 

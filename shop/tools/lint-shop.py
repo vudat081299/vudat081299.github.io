@@ -366,10 +366,63 @@ def check_data(path):
             err.append('labels.%s = %s nhưng không có chỗ nào trong `shipping` nói con số đó — '
                        'giỏ hàng và đoạn Giao hàng đang nói hai giá khác nhau' % (key, vnd(v)))
 
+    # Băng chữ chạy ở trang chủ là lời khẳng định về SẢN PHẨM CỦA NGƯỜI KHÁC, nên mỗi mục
+    # phải khai rõ đã xác nhận hay đang đoán. Trước 21/09/2026 `marquee` là mảng chuỗi thuần,
+    # không có chỗ nào để khai, và phép đếm placeholder ở dưới bỏ qua nó — nên trang chạy
+    # băng "sáp thực vật · bấc cotton không lõi chì · rót tay từng mẻ nhỏ" bằng giọng chắc
+    # nịch trong khi ĐÚNG NHỮNG CHỮ ẤY ở `hero_trust` và `values` đều mang cờ placeholder.
+    # Dải cảnh báo cam vì thế không phủ chúng.
+    #
+    # "bấc cotton không lõi chì" đã bị gỡ hẳn: đó là một tuyên bố AN TOÀN SẢN PHẨM, và
+    # 04-DAM-PHAN.md tự đặt lằn ranh "không ghi 100% thiên nhiên khi không đúng". Tuyên bố
+    # an toàn hộ người khác thì chỉ chủ shop mới xác nhận được, không phải người dựng trang.
+    for i, m in enumerate(d.get('marquee') or []):
+        if not isinstance(m, dict):
+            err.append('marquee[%d] còn là chuỗi thuần — phải là {"text", "placeholder"} để '
+                       'khai rõ đã xác nhận hay đang đoán' % i)
+        else:
+            need(m, ('text', 'placeholder'), 'marquee[%d]' % i, err)
+
+    # Ngưỡng miễn phí ship phải quy ra được một SỐ CÂY NẾN hợp lý. Đây là phép kiểm
+    # liên-trường: `free_ship` và `products[].price` sống ở hai chỗ khác nhau trong file, và
+    # đổi một cái mà quên cái kia thì không có gì kêu — trang vẫn chạy, chỉ là lời hứa "mua
+    # thêm X nữa được miễn phí ship" thành vô nghĩa.
+    #
+    # Lỗi gốc, 21/09/2026: giá mẫu để 100.000 ₫ trong khi ngưỡng để 500.000 ₫, tức là khách
+    # phải mua NĂM cây nến thủ công mới được miễn ship. Cùng lúc đó bản đề xuất ở pitch/ lại
+    # tính toàn bộ lập luận trên giá 300.000 ₫ — con số thật duy nhất biết về shop này. Mở
+    # bản đề xuất rồi bấm sang cửa hàng là thấy hai giá lệch nhau ba lần.
+    #
+    # Ngưỡng phải nằm trong 2–4 cây. Khoảng này từng viết là 1–4 và thử ngược đã bác: để giá
+    # 600.000 ₫ thì k = 1, cổng im, nhưng k = 1 nghĩa là MỘT cây nến đã vượt ngưỡng — tức đơn
+    # nào cũng miễn ship và thanh "mua thêm bao nhiêu nữa" không bao giờ hiện gì. Đó đúng là
+    # ca hỏng mà phép kiểm này sinh ra để bắt, nên chặn dưới phải là 2.
+    # Hai số này bị hoán đổi thì cổng cũ vẫn xanh: nó chỉ hỏi "số này có xuất hiện trong
+    # đoạn Giao hàng không", mà đoạn ấy nhắc cả hai số nên hoán vị vẫn khớp. Hậu quả: đơn
+    # 300.000 ₫ phải trả 500.000 ₫ tiền ship. Quan hệ giữa hai trường mới là chỗ tiền nằm.
+    if isinstance(lb.get('ship_fee'), int) and isinstance(lb.get('free_ship'), int) \
+       and lb['ship_fee'] >= lb['free_ship']:
+        err.append('phí ship %s >= ngưỡng miễn phí ship %s — hai con số đang bị hoán đổi'
+                   % (vnd(lb['ship_fee']), vnd(lb['free_ship'])))
+
+    prices = [x.get('price') for x in (d.get('products') or []) if isinstance(x.get('price'), int)]
+    fs = lb.get('free_ship')
+    if prices and isinstance(fs, int) and fs > 0:
+        lo = min(prices)
+        k = -(-fs // lo)
+        if k < 2:
+            err.append('ngưỡng miễn phí ship %s <= giá nến rẻ nhất %s — đơn nào cũng được miễn '
+                       'ship, nên thanh "mua thêm bao nhiêu nữa" không bao giờ hiện gì. Bỏ hẳn '
+                       'phí ship, hoặc nâng ngưỡng lên' % (vnd(fs), vnd(lo)))
+        elif k > 4:
+            err.append('ngưỡng miễn phí ship %s / nến rẻ nhất %s = phải mua %d cây mới được '
+                       'miễn ship — gần như không ai với tới, một lời hứa để trưng chứ không '
+                       'để dùng' % (vnd(fs), vnd(lo), k))
+
     # ── nội dung mẫu còn lại ───────────────────────────────────────────────────
     n = 1 if brand.get('placeholder') else 0
-    for key in ('scents', 'products', 'values', 'faqs', 'shipping'):
-        n += sum(1 for x in (d.get(key) or []) if x.get('placeholder'))
+    for key in ('scents', 'products', 'values', 'faqs', 'shipping', 'marquee'):
+        n += sum(1 for x in (d.get(key) or []) if isinstance(x, dict) and x.get('placeholder'))
     n += sum(1 for m in methods if m.get('placeholder'))
     n += sum(1 for x in (d.get('hero_trust') or []) if x.get('placeholder'))
     if n:
@@ -403,7 +456,37 @@ def repeated_text(d):
         out.append(('dòng tin cậy ở hero', t.get('text', '')))
     for m in (d.get('payment') or {}).get('methods') or []:
         out.append(('mô tả cách thanh toán', m.get('desc', '')))
-    return [(kind, t) for kind, t in out if len(t.strip()) >= 8]
+
+    # Bổ sung 21/09/2026. Trước đó phép kiểm này chỉ soi 7 họ chuỗi trên, tức là luật số 1
+    # của thư mục ("chữ của khối lặp nằm ở data") chỉ được canh trên khoảng một phần ba nội
+    # dung. Thử phá: chép nguyên một câu hỏi Tìm mùi + mô tả Hộp đôi + đoạn Giao hàng vào
+    # gift.html → cổng vẫn xanh, exit 0. Hai khối lớn nhất thêm vào sau này (quiz, hộp quà)
+    # lại là hai khối không ai canh.
+    for q in (d.get('quiz') or {}).get('questions') or []:
+        out.append(('câu hỏi Tìm mùi', q.get('q', '')))
+        out.append(('gợi ý câu hỏi', q.get('hint', '')))
+        for a in q.get('answers') or []:
+            out.append(('đáp án Tìm mùi', a.get('t', '')))
+            out.append(('phụ đề đáp án', a.get('s', '')))
+    gi = d.get('gift') or {}
+    for key, label in (('boxes', 'cỡ hộp quà'), ('cards', 'thiệp'), ('wraps', 'cách gói')):
+        for x in gi.get(key) or []:
+            out.append(('tên ' + label, x.get('name', '')))
+            out.append(('mô tả ' + label, x.get('desc', '')))
+    for st in gi.get('steps') or []:
+        out.append(('bước gói quà', st.get('t', '')))
+        out.append(('mô tả bước gói quà', st.get('d', '')))
+    for sh in d.get('shipping') or []:
+        out.append(('tiêu đề giao hàng', sh.get('title', '')))
+        out.append(('đoạn giao hàng', sh.get('desc', '')))
+    for c in d.get('scents') or []:
+        out.append(('chỗ dùng của mùi', c.get('slot', '')))
+        out.append(('lúc dùng của mùi', c.get('when', '')))
+    for pr in d.get('products') or []:
+        out.append(('phụ đề sản phẩm', pr.get('sub', '')))
+        out.append(('hướng dẫn giữ nến', pr.get('care', '')))
+
+    return [(kind, t) for kind, t in out if isinstance(t, str) and len(t.strip()) >= 8]
 
 
 def check_page(path, data):
@@ -482,6 +565,19 @@ def check_shell(pages):
     """
     err = []
     shots = {}
+
+    # Năm trang phải nạp ĐỦ bộ tài nguyên khung. Không phép kiểm nào bắt buộc điều này
+    # trước 21/09/2026 — thử phá bằng cách xoá hẳn <script src="assets/shop.js"> khỏi
+    # checkout.html thì cổng vẫn xanh, exit 0. Hậu quả nặng hơn "thiếu tính năng": khối
+    # inline vẫn gắn class `js` lên <html>, mà quy tắc `html.js .rv { opacity: 0 }` chờ
+    # shop.js gỡ ra — nên trang trắng bong và cổng im.
+    for path in pages:
+        raw = path.read_text(encoding='utf-8', errors='replace')
+        for asset in ('assets/shop.css', 'assets/shop.js'):
+            if asset not in raw:
+                err.append('%s: không nạp %s — trang sẽ hỏng và không cổng nào khác thấy'
+                           % (path.name, asset))
+
     for path in pages:
         raw = path.read_text(encoding='utf-8', errors='replace')
         for name, rx in (('thanh điều hướng', RE_NAV), ('menu điện thoại', RE_SHEET), ('chân trang', RE_FOOT)):

@@ -125,9 +125,15 @@ duy nhất thật sự làm việc.** Đó là bằng chứng nó cần tồn t�
 
 ### Và một thứ không lớp nào trong bốn lớp trên bắt được: hành vi
 
-Cổng lint đọc cú pháp và dữ liệu. Nó **không bấm nút**. Hai lỗi nặng nhất của thư mục này —
-hộp quà bị trả về mặc định sau mỗi lần giỏ đổi, và trần tồn kho hộp quà không được tôn trọng —
-đều đi qua lint sạch sẽ.
+Cổng lint đọc cú pháp và dữ liệu. Nó **không bấm nút**. **Mọi lỗi nặng của thư mục này đều đi
+qua lint sạch sẽ** — hộp quà bị trả về mặc định sau mỗi lần giỏ đổi; trần tồn kho hộp quà không
+được tôn trọng; hộp quà và nến lẻ cùng một mùi bán quá tồn 18 cây; lời nhắn sống sót sau khi
+khách bỏ thiệp; font icon không về thì cả trang lộ chữ `storefront`; giỏ bốc hơi im lặng khi
+trình duyệt chặn lưu trữ. Không cái nào lộ ra khi đọc code.
+
+Ba cái cuối còn thêm một tính chất nữa, và đó là điều đáng nhớ nhất ở đây: **chúng chỉ hiện ra
+khi môi trường hỏng** — font bị chặn, storage bị chặn, giỏ đã có sẵn hàng. Môi trường tốt thì
+chúng xanh mãi mãi. Nên cổng phải **dựng lại** tình huống hỏng chứ không đợi nó tự xảy ra.
 
 Đã đo lại để chắc, không phải suy luận: tái tạo đúng lỗi cũ rồi chạy cả hai tầng.
 `lint-shop.py` in ra **OK**; `smoke.js` in ra **2/12 LỖI**, kèm đúng câu chẩn đoán
@@ -138,7 +144,14 @@ Nên `shop/tools/check.sh` chạy cả hai tầng, và đó là lệnh trả l�
 ### Cổng phải thử ngược
 
 Viết cổng xong thì **cố tình phá rồi xem nó có kêu không**. Cổng không thử ngược là cổng chưa
-biết có chạy hay không. Mười phép kiểm mới thêm ngày 20/09/2026 đều đã thử ngược từng cái.
+biết có chạy hay không. **Mọi phép kiểm trong `tools/lint-shop.py` và `tools/smoke.js` đều đã
+thử ngược** — đó là luật, không phải một con số đếm được ở một ngày cụ thể (đếm thì sẽ lệch, và
+đã lệch: hai tài liệu từng ghi "mười" và "11" cho cùng một tập).
+
+Một lần thử ngược ngày 21/09/2026 đáng ghi lại vì nó suýt cho kết luận sai về chính cổng vừa
+viết: phá riêng `addToCart` thì cổng tồn kho **không kêu** — lớp kẹp ở `renderCart` che mất. Phải
+phá `remaining()`, thứ cả ba lớp cùng dùng, nó mới kêu. **Thử ngược một lớp phòng thủ khi có
+nhiều lớp thì đo ra sự im lặng của lớp khác, không phải sự hỏng của cổng.**
 
 Có giá trị nhất là loại cổng **tính ra thứ mắt người không tự thấy**: cổng Tìm mùi duyệt toàn
 bộ 320 tổ hợp đáp án để chắc rằng không mùi nào không bao giờ thắng. Không ai ngồi thử 320 tổ
@@ -163,9 +176,10 @@ cùng một lối thay vì mỗi phiên tự nghĩ ra một lối. Nó đi theo 
 
 Ba thói quen đã trả giá để có:
 
-1. **Bắt agent chạy thật rồi đo, đừng để nó đọc code rồi kết luận.** Ba lỗi nặng nhất của thư
-   mục này đều tìm ra bằng cách mở trình duyệt, bấm, rồi đọc `localStorage` — không lỗi nào lộ
-   ra khi đọc code.
+1. **Bắt agent chạy thật rồi đo, đừng để nó đọc code rồi kết luận.** Mọi lỗi nặng của thư mục
+   này đều tìm ra bằng cách mở trình duyệt, bấm, rồi đọc `localStorage` — không lỗi nào lộ ra
+   khi đọc code. Với ba lỗi gần nhất còn phải **chặn font, chặn storage, đổ sẵn hàng vào giỏ**
+   rồi mới đo.
 2. **Đừng neo tìm-thay vào một dòng có thể xuất hiện ở hai hàm.** Phiên 20/09/2026 neo vào
    `if ($('#coLines')) renderCheckout();` — dòng ấy kết thúc cả `renderCart()` lẫn `boot()`.
    Móc nhầm hàm khiến hộp quà bị trả về mặc định sau mỗi lần giỏ đổi, và cổng lint **không**

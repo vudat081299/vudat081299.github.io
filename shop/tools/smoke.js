@@ -15,9 +15,25 @@
 
 const BASE = (process.argv[2] || 'http://localhost:8000/shop/').replace(/\/?$/, '/');
 
-let chromium;
-try { ({ chromium } = require('playwright-core')); }
-catch (e) {
+/* Nạp playwright-core: thử cách thường trước, rồi mới tới thư mục global của npm.
+ *
+ * Phải có nhánh thứ hai, và đây là lý do: `require()` KHÔNG tìm trong `npm root -g`.
+ * Bản đầu của file này chỉ có nhánh một rồi in ra lời khuyên "cài bằng npm i -g
+ * playwright-core rồi chạy lại" — làm đúng y như thế thì lần chạy sau vẫn ra đúng thông báo
+ * ấy, vì gói nằm ở /opt/node22/lib/node_modules chứ không nằm trên đường tìm của script.
+ * Đo được ngày 21/09/2026. Bài học: lời khuyên in ra từ một cổng cũng là một lời hứa —
+ * phải thử làm theo nó một lần rồi mới được viết ra. */
+let chromium = (function () {
+  try { return require('playwright-core').chromium; } catch (e) {}
+  try {
+    var path = require('path');
+    var root = require('child_process')
+      .execSync('npm root -g', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+    if (root) return require(path.join(root, 'playwright-core')).chromium;
+  } catch (e) {}
+  return null;
+})();
+if (!chromium) {
   console.log('BỎ QUA: chưa có playwright-core. Cài bằng `npm i -g playwright-core` rồi chạy lại.');
   process.exit(2);
 }
@@ -33,8 +49,12 @@ function findChrome() {
   const fs = require('fs'), path = require('path');
   if (process.env.CHROME_PATH && fs.existsSync(process.env.CHROME_PATH)) return process.env.CHROME_PATH;
 
+  /* Ba hệ điều hành ba chỗ khác nhau, và macOS KHÔNG phải ~/.cache — Playwright đặt ở
+   * ~/Library/Caches/ms-playwright. Thiếu dòng ấy thì trên máy Mac cổng luôn báo "không tìm
+   * thấy trình duyệt" dù vừa cài xong, mà máy Linux trên CI vẫn xanh nên không ai thấy. */
   const roots = [process.env.PLAYWRIGHT_BROWSERS_PATH, '/opt/pw-browsers',
                  path.join(process.env.HOME || '', '.cache/ms-playwright'),
+                 path.join(process.env.HOME || '', 'Library/Caches/ms-playwright'),
                  path.join(process.env.LOCALAPPDATA || '', 'ms-playwright')].filter(Boolean);
   const rels = ['chrome-linux/chrome', 'chrome-linux64/chrome',
                 'chrome-mac/Chromium.app/Contents/MacOS/Chromium',
@@ -122,10 +142,6 @@ function check(name, ok, detail) {
     await g.reload({ waitUntil: 'networkidle' }); await g.waitForTimeout(500);
     await g.click('[data-box="b3"]'); await g.waitForTimeout(250);
     for (const i of [0, 1, 2]) { await g.click(`[data-slot="${i}"][data-scent="s1"]`); await g.waitForTimeout(160); }
-    const cap = await g.evaluate(() => {
-      const m = document.body.innerHTML.match(/Còn (\d+)/);
-      return m ? +m[1] : null;
-    });
     let lastToast = '';
     for (let i = 0; i < 9; i++) {
       await g.click('#gbAdd'); await g.waitForTimeout(170);
@@ -151,6 +167,117 @@ function check(name, ok, detail) {
       return [...new Set(l.map(r => r.e))];
     });
     check('lớp đo có ghi sự kiện', evs.length >= 3, evs.join(', '));
+
+    /* 6. Tồn kho là MỘT con số, dù bán qua hai đường.
+     *
+     * Lỗi gốc, đo 21/09/2026: `addToCart` kẹp theo `p.stock`, `giftStock` kẹp theo
+     * `pr.stock`, hai bên không biết nhau. Gói 6 hộp ba cùng mùi 01 (18 cây) rồi bấm
+     * thêm nến 01 ở trang Mùi hương — giỏ nhận thêm 20 cây nữa, tổng 38 trên tồn 20.
+     * Cả hai lần chặn đều "đúng" so với con số chúng đọc; cái sai là hai con số.
+     *
+     * Đây là phép đo đầu tiên của bộ này SO HAI CON SỐ PHẢI KHỚP NHAU, thay vì hỏi một
+     * trường có đúng kiểu không. Sáu lỗi tiền nặng nhất ở đây đều lọt cả bốn lớp cổng
+     * vì không lớp nào làm việc ấy. */
+    const sp = await ctx.newPage();
+    await sp.goto(BASE + 'gift.html', { waitUntil: 'networkidle' });
+    await sp.waitForTimeout(700);
+    const declared = await sp.evaluate(async () => {
+      const d = await (await fetch('data/shop.json')).json();
+      return d.products.filter(p => p.scent === 's1').map(p => p.stock)[0];
+    });
+    await sp.click('[data-box="b3"]'); await sp.waitForTimeout(300);
+    for (const i of [0, 1, 2]) {
+      const el = await sp.$(`[data-slot="${i}"][data-scent="s1"]`);
+      if (el) { await el.click(); await sp.waitForTimeout(200); }
+    }
+    for (let i = 0; i < 12; i++) {
+      const btn = await sp.$('#gbAdd');
+      if (!btn || !(await btn.isEnabled())) break;
+      await btn.click(); await sp.waitForTimeout(70);
+    }
+    await sp.goto(BASE + 'products.html', { waitUntil: 'networkidle' });
+    await sp.waitForTimeout(700);
+    for (let i = 0; i < 30; i++) {
+      const btn = await sp.$('[data-add="nen-01"]');
+      if (!btn || !(await btn.isEnabled())) break;
+      await btn.click(); await sp.waitForTimeout(60);
+    }
+    const held = await sp.evaluate(() =>
+      JSON.parse(localStorage.getItem('scentsitive-cart') || '[]').reduce((n, c) =>
+        n + (c.g ? c.q * (c.g.scents || []).filter(k => k === 's1').length
+                 : (c.id === 'nen-01' ? c.q : 0)), 0));
+    check('hộp quà và nến lẻ cùng mùi không bán quá tồn', held <= declared,
+          held + ' cây mùi 01 trong giỏ / tồn khai báo ' + declared);
+
+    /* 7. Chọn "Không cần thiệp" thì lời nhắn phải mất theo — đơn gửi shop là kênh duy
+     * nhất, nên một đơn vừa nói "không cần thiệp" vừa mang lời nhắn là đơn không thi
+     * hành được. Ô nhập bị ẩn chứ G.msg vẫn còn; ẩn không phải là xoá. */
+    await sp.goto(BASE + 'gift.html', { waitUntil: 'networkidle' });
+    await sp.evaluate(() => localStorage.removeItem('scentsitive-cart'));
+    await sp.reload({ waitUntil: 'networkidle' }); await sp.waitForTimeout(800);
+    const cds = await sp.$$('[data-card]');
+    if (cds[1]) { await cds[1].click(); await sp.waitForTimeout(350); }
+    const box = await sp.$('#gbMsg');
+    if (box) { await box.fill('loi nhan thu'); await sp.waitForTimeout(300); }
+    const first = await sp.$('[data-card]');
+    if (first) { await first.click(); await sp.waitForTimeout(350); }
+    await sp.click('#gbAdd'); await sp.waitForTimeout(250);
+    const line = await sp.evaluate(() =>
+      (JSON.parse(localStorage.getItem('scentsitive-cart') || '[]')[0] || {}).g || {});
+    check('bỏ thiệp thì lời nhắn mất theo', !line.msg,
+          'thiệp: ' + line.card + ' · lời nhắn: ' + JSON.stringify(line.msg || ''));
+    await sp.close();
+
+    /* 8. Font icon bị chặn thì KHÔNG được lộ chữ ligature.
+     *
+     * Lỗi gốc, đo ngày 21/09/2026: chặn fonts.googleapis.com rồi chụp lại, hero đọc thành
+     * "storefront Xem 5 mùi hương" và nút giỏ đọc thành "dark_modeshopping_bag". Nguyên nhân:
+     * document.fonts.load() resolve với mảng RỖNG khi tải hỏng chứ không reject, nên nhánh
+     * `.then(ok, ok)` vẫn gắn class `icons`. Đây là lớp lỗi chỉ lộ ra khi mạng hỏng — mạng
+     * tốt thì mãi mãi xanh — nên phải dựng lại tình huống ấy chứ không đợi nó tự xảy ra.
+     * Mong đợi: không có class `icons`, mọi .ms vẫn visibility:hidden, chữ không đọc được. */
+    const fp = await ctx.newPage();
+    await fp.route(/fonts\.(googleapis|gstatic)\.com/, r => r.abort());
+    await fp.goto(BASE + 'index.html', { waitUntil: 'domcontentloaded' });
+    await fp.waitForTimeout(1200);
+    const fs_ = await fp.evaluate(() => ({
+      hasIcons: document.documentElement.classList.contains('icons'),
+      leaked: [...document.querySelectorAll('.ms')]
+        .filter(e => getComputedStyle(e).visibility !== 'hidden')
+        .map(e => e.textContent.trim()).slice(0, 3),
+    }));
+    check('font hỏng thì không lộ chữ icon', !fs_.hasIcons && fs_.leaked.length === 0,
+          fs_.leaked.length ? 'đang lộ: ' + fs_.leaked.join(', ') : 'icon ẩn, đúng như ADR 0005');
+    await fp.close();
+
+    /* 9. localStorage bị chặn (Safari riêng tư trên iOS) thì giỏ không được bốc hơi im lặng.
+     * Lỗi gốc, đo 21/09/2026: bấm Thêm 3 lần, badge hiện 3, toast báo "Đã thêm" cả 3 lần;
+     * bấm "Tới thanh toán" thì giỏ trống trơn, không một lời nào. saveCart() nuốt lỗi.
+     * Cùng lớp với lỗi font: chỉ lộ khi môi trường hỏng, nên phải DỰNG LẠI môi trường ấy. */
+    const np = await ctx.newPage();
+    await np.addInitScript(() => {
+      const boom = () => { throw new Error('storage blocked'); };
+      try {
+        Object.defineProperty(window, 'localStorage', {
+          configurable: true,
+          get() { return { getItem: boom, setItem: boom, removeItem: boom, clear: boom }; },
+        });
+      } catch (e) {}
+    });
+    await np.goto(BASE + 'products.html', { waitUntil: 'networkidle' });
+    await np.waitForTimeout(600);
+    for (let i = 0; i < 2; i++) {
+      const btn = await np.$('[data-add="nen-01"]');
+      if (btn && (await btn.isEnabled())) { await btn.click(); await np.waitForTimeout(220); }
+    }
+    const warned = await np.evaluate(() =>
+      /chặn lưu trữ/.test(document.querySelector('#toastText')?.textContent || ''));
+    await np.goto(BASE + 'checkout.html', { waitUntil: 'networkidle' });
+    await np.waitForTimeout(600);
+    const kept = await np.evaluate(() => +(document.querySelector('#cartCount')?.textContent || 0));
+    check('localStorage bị chặn: giỏ không mất im lặng', warned || kept > 0,
+          kept > 0 ? 'giỏ sống qua trang nhờ sessionStorage (' + kept + ')' : 'không cảnh báo, giỏ về 0');
+    await np.close();
 
     check('không có lỗi JS trên trang nào', jsErrors.length === 0, jsErrors.slice(0, 2).join(' | '));
   } finally {
