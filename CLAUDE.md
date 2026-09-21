@@ -166,6 +166,30 @@ lại là chủ đề bạn *đọc*. Bản trước trộn hai trục — một
 chủ đề. **Đừng dựng lại một ô `Pages` chứa mọi thứ:** trang nào không biết xếp đâu là dấu hiệu
 thiếu một section, không phải cớ để có một cái thùng.
 
+**Luật thứ tự (21/09/2026) — viết ra vì thiếu nó là thiếu thứ để bắt chước.** Bản 20/09 đã gom
+nhóm đúng nhưng **không** nói gì về thứ tự, nên thứ tự trong section lệch nhau ngay trong cùng
+một trang: `Cooking` xếp đúng (món hay nấu trước, `Food Fundamentals` — kho tra cứu — chốt hậu)
+trong khi `Data & AI` xếp ngược chiều học và `Thinking` để kho tra cứu dẫn đầu. Bốn dòng:
+
+1. Section là **lộ trình học** (`Data & AI`, `Science`, `Thinking`, `Cooking`, `Master's`):
+   **cửa vào trước, kho tra cứu / đào sâu cuối.** `Machine Learning 101` tự mô tả *"cho người
+   mới, không cần biết toán cấp ba"* → nó mở màn `Data & AI`, không phải ba khoá toán của
+   Serrano. `Fact` và `Food Fundamentals` là kho tra cứu → chốt hậu section của chúng.
+2. Section là **cái kệ** (`Tools`, `Everyday`, `Books`): **cái hay với tay tới nhất trước.**
+3. Cùng một mức, không phân được đâu là cửa vào (`Science`): **cái gần việc chủ trang nhất
+   trước** — vì vậy `Cryptography` đứng trước `Chemistry` / `Relativity`.
+4. **Thứ tự 8 section phục vụ chủ trang, không phải khách.** Đây là bảng nhảy việc mở hằng
+   ngày nên `Tools` đứng đầu; nếu trang đổi vai thành portfolio thì đảo lại thứ tự này *trước*,
+   đừng vá từng mục.
+
+Hai chỗ **cố ý** không có luật, đừng đi tìm: **ba môn cao học xếp tuỳ ý** (repo không có tín
+hiệu học kỳ nào, cả bốn thư mục commit cùng ngày 08/09; chủ trang chốt giữ nguyên 21/09/2026),
+và **`Cryptography` nằm trong `Science`** dù nó là toán rời rạc/CS chứ không phải khoa học tự
+nhiên — đã cân nhắc và giữ, vì đổi thì phải đổi tên section.
+
+Luật này **không có cổng máy kiểm**, và đó là chủ ý: "cửa vào" không đo được bằng regex, y như
+độ dài mô tả ở dưới. Cổng bịa ra cho nó sẽ đánh trượt nội dung thật.
+
 **Phím tắt: keyspace đã hết, và đã phải xử lý thật.** 36 ô phím (`0-9` + `a-z`) dùng hết ngày
 20/09/2026; đúng hôm ấy `pages/wealth-roadmap.html` là mục thứ 37. Cách xử lý đã chốt: **`key`
 là trường tuỳ chọn.** Mục không có `key` thì không vẽ chip phím (không vẽ chip rỗng), và mở bằng
