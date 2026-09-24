@@ -245,8 +245,17 @@ def run_101():
     # ── bảng đếm nguyên nhân lỗi ───────────────────────────────────────────
     need('ảnh mờ', 'ảnh mờ chiếm 5%')
     need('ảnh ban đêm', 'ảnh ban đêm chiếm 43%')
-    claim('sửa hết ban đêm lấy lại tối đa 43% chỗ sai', 5 + 43 <= 100,
-          'hai nguyên nhân cộng lại không được vượt 100% số lỗi')
+    # Trần lợi ích: máy sai 12% (đầu chương); sửa hết một nhóm lỗi thì lấy lại đúng phần
+    # của nhóm ấy, không hơn. Nhóm lỗi được phép CHỒNG nhau (một ảnh vừa mờ vừa chụp đêm,
+    # nên các phần trăm có thể cộng quá 100%), vì vậy ở đây không kiểm tổng.
+    base, night, blur = 12, 0.43, 0.05
+    claim('trần ban đêm: 12% × (1 − 0,43) = 6,84%', abs(base * (1 - night) - 6.84) < 1e-9,
+          f'tính ra {base * (1 - night):.4f}')
+    claim('trần ảnh mờ: 12% × (1 − 0,05) = 11,4%', abs(base * (1 - blur) - 11.4) < 1e-9,
+          f'tính ra {base * (1 - blur):.4f}')
+    need('máy sai 12% ở đầu chương', 'Máy của bạn sai 12%')
+    need('trần ban đêm', 'xuống tốt nhất 6,8%')
+    need('trần ảnh mờ', 'chỉ xuống được 11,4%')
 
     # ── rút thăm ngẫu nhiên thắng kẻ lưới ──────────────────────────────────
     claim('lưới 5×5 = 25 lần thử', 5 * 5 == 25)
