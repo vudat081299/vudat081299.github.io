@@ -226,10 +226,23 @@ def run_101():
     claim('stride 2 làm nhanh gấp bốn', out(32, 3, 1, 1) ** 2 / out(32, 3, 1, 2) ** 2 == 4.0,
           f'tỉ lệ ô ra thật: {out(32, 3, 1, 1) ** 2 / out(32, 3, 1, 2) ** 2}')
     need('stride 2', 'nhanh gấp bốn')
+    # công thức bỏ phần lẻ: stride 2 trên ảnh 32 ô ra 16 ô, không phải 16,5
+    claim('stride 2 → 16 ô (bỏ phần lẻ)', out(32, 3, 1, 2) == 16, f'tính ra {out(32, 3, 1, 2)}')
+    need('ví dụ stride 2', 'cộng 1 = <b>16 ô</b>')
+    # mô hình kính lúp: ảnh 10 ô, kính 3, không viền → tấm kết quả 8×8
+    claim('mô hình 10 ô, kính 3, không viền → 8 ô', out(10, 3, 0, 1) == 8, f'tính ra {out(10, 3, 0, 1)}')
+    need('mô hình 8×8', '(10 − 3)/1 + 1 = 8')
 
     # ── kính lúp 3×3 có đúng chín núm ──────────────────────────────────────
     claim('3×3 = chín núm', 3 * 3 == 9)
     need('kính lúp 3×3', 'chín cái núm')
+    # kính của lớp sau dày bằng cả chồng kênh
+    claim('kính 3×3 trên chồng 32 tầng = 288 núm', 3 * 3 * 32 == 288)
+    need('kính dày bằng cả chồng', '3×3×32 = 288 cái núm')
+    # tách theo chiều sâu: chi phí còn 1/(số kênh ra) + 1/9 → rẻ hơn tới 8–9 lần, không bao giờ tới 9
+    claim('tách chiều sâu rẻ hơn tới tám, chín lần', 8 < 1 / (1 / 512 + 1 / 9) < 9,
+          f'512 kênh ra: rẻ hơn {1 / (1 / 512 + 1 / 9):.2f} lần')
+    need('tách chiều sâu', 'Rẻ hơn tới tám, chín lần')
 
     # ── mốc kiến trúc ──────────────────────────────────────────────────────
     need('LeNet-5', 'LeNet-5</span> (1998, 60 nghìn núm')
@@ -262,6 +275,109 @@ def run_101():
     claim('lưới 5×5 chỉ cho 5 giá trị mỗi núm', 5 < 25,
           'đó là toàn bộ luận điểm: cùng 25 lần thử, rút thăm cho 25 giá trị mỗi núm')
     need('kẻ lưới', 'kẻ lưới 5×5')
+
+    # ── mô hình 9 (dẹp khung trùng): lời hứa về ngưỡng phải đúng với BOX0 ────
+    # Bản cũ đặt xe thứ hai không chạm khung 0,93 (IoU 0), nên câu "hạ ngưỡng xuống 0,1
+    # thì hai xe bị dẹp còn một" sai ở mọi ngưỡng — và nút "Dẹp hết" in cứng "đúng bằng
+    # số xe" kể cả khi còn 6 khung. Dựng lại đúng thuật toán của nmsStep().
+    import math
+    import re
+    m = re.search(r'var BOX0 = \[(.*?)\];', HTML, re.S)
+    boxes = [tuple(float(v) for v in t) for t in re.findall(
+        r'x: ([\d.]+), y: ([\d.]+), w: ([\d.]+), h: ([\d.]+), c: ([\d.]+)', m.group(1))] if m else []
+
+    def iou(a, b):
+        ix = max(0, min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0]))
+        iy = max(0, min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1]))
+        return ix * iy / (a[2] * a[3] + b[2] * b[3] - ix * iy)
+
+    def nms(th):
+        alive, kept = sorted(boxes, key=lambda b: -b[4]), 0
+        while alive:
+            best = alive.pop(0)
+            kept += 1
+            alive = [b for b in alive if iou(best, b) <= th]
+        return kept
+    claim('NMS bóc được sáu khung', len(boxes) == 6, f'bóc được {len(boxes)}')
+    if boxes:
+        claim('NMS ngưỡng 0,5 → 2 khung cho 2 xe', nms(0.5) == 2, f'còn {nms(0.5)}')
+        claim('NMS ngưỡng 0,1 dẹp oan còn 1', nms(0.1) == 1, f'còn {nms(0.1)}')
+        claim('NMS: 0,70 vẫn 2, từ 0,75 khung trùng sống sót', nms(0.7) == 2 and nms(0.75) > 2,
+              f'0,70 → {nms(0.7)}, 0,75 → {nms(0.75)}')
+    need('lời hứa ngưỡng thấp', 'Hạ ngưỡng dẹp xuống 0,1 thì hai chiếc xe đứng cạnh nhau sẽ bị dẹp còn một')
+    need('lời hứa ngưỡng cao', 'đẩy lên từ 0,75')
+
+    # ── mô hình 13 (γ): hai mốc lật nước đi phải đúng với solveQ() ─────────
+    need('phần thưởng sáu ô', 'var N = 6, R = [100, 0, 0, 0, 0, 40];')
+
+    def policy(g):
+        R, Q = [100, 0, 0, 0, 0, 40], [[0, 0] for _ in range(6)]
+        for _ in range(400):
+            for i in range(6):
+                for a in (0, 1):
+                    if i in (0, 5):
+                        Q[i][a] = R[i]
+                        continue
+                    j = max(0, i - 1) if a == 0 else min(5, i + 1)
+                    Q[i][a] = R[i] + g * max(Q[j])
+        return ''.join('←' if Q[k][0] >= Q[k][1] else '→' for k in range(1, 5))
+    claim('γ 0,39: ô 4 và ô 5 sang phải', policy(0.39) == '←←→→', policy(0.39))
+    claim('γ 0,40–0,73: chỉ ô 5 sang phải', policy(0.40) == policy(0.73) == '←←←→', f'{policy(0.40)} / {policy(0.73)}')
+    claim('γ 0,74: mọi ô sang trái', policy(0.74) == '←←←←', policy(0.74))
+    claim('ô 5 lật khi γ³ = 0,4 → 0,737', abs(0.4 ** (1 / 3) - 0.737) < 5e-4)
+    need('mốc ô 5', 'qua mốc 0,74')
+    need('mốc ô 4', 'dưới 0,40')
+
+    # ── mô hình 12 (k-means): nút "Đổi chỗ xuất phát" phải cho thấy CẢ hai kết cục ──
+    # Với đám điểm rng(31337), rút ba tâm bừa thì chỉ ~2/100 lần kẹt (lần đầu ở lần bấm
+    # thứ 33), nên trang xen sẵn SEEDS. Dựng lại đúng rng/gauss/init/assign/move của trang.
+    need('k-means dữ liệu', 'var r = rng(31337), cen = [[.28, .30], [.72, .33], [.50, .76]]')
+    need('k-means độ toả', 'gauss(r) * .085')
+    need('k-means cỡ cụm', 'for (k = 0; k < 3; k++) for (i = 0; i < 22; i++)')
+    ms = re.search(r'SEEDS = \[([\d,\s]+)\]', HTML)
+    seeds = [int(s) for s in ms.group(1).split(',')] if ms else []
+
+    def rng(seed):
+        st = [seed % 2 ** 32]
+
+        def nxt():
+            st[0] = (st[0] * 1664525 + 1013904223) % 2 ** 32
+            return st[0] / 4294967296
+        return nxt
+
+    def gauss(r):
+        u = v = 0
+        while u == 0:
+            u = r()
+        while v == 0:
+            v = r()
+        return math.sqrt(-2 * math.log(u)) * math.cos(2 * math.pi * v)
+    r = rng(31337)
+    cen = [[.28, .30], [.72, .33], [.50, .76]]
+    pts = [[cen[k][0] + gauss(r) * .085, cen[k][1] + gauss(r) * .085] for k in range(3) for _ in range(22)]
+
+    def kmeans(seed):
+        r, used, C = rng(seed), set(), []
+        while len(C) < 3:
+            i = math.floor(r() * len(pts))
+            if i in used:
+                continue
+            used.add(i)
+            C.append(list(pts[i]))
+        asg = None
+        for _ in range(26):
+            new = [min(range(3), key=lambda k: ((p[0] - C[k][0]) ** 2 + (p[1] - C[k][1]) ** 2, k)) for p in pts]
+            if new == asg:
+                break
+            asg = new
+            for k in range(3):
+                mine = [p for p, a in zip(pts, asg) if a == k]
+                if mine:
+                    C[k] = [sum(p[0] for p in mine) / len(mine), sum(p[1] for p in mine) / len(mine)]
+        return sorted(asg.count(k) for k in range(3))
+    ends = [kmeans(s) for s in seeds]
+    claim('k-means: SEEDS có cả lần chia đúng lẫn lần kẹt',
+          [22, 22, 22] in ends and any(e != [22, 22, 22] for e in ends), f'kết cục: {ends}')
 
     # ── từ điển: số mục phải đúng bằng con số trang tự khai ────────────────
     recs = gloss_records(r"\['([^']*)',\s*'([^']*)',\s*'[^']*'\]")

@@ -492,8 +492,8 @@ footer a { color:var(--muted); }
   <div class="stats">
     <div class="stat"><b>3 bộ phận</b><span>mọi máy trong trang, từ cái đơn giản nhất tới cái đứng sau ChatGPT, đều chỉ có ba: đoán bằng gì · sai thì trừ bao nhiêu · vặn núm ra sao</span></div>
     <div class="stat"><b>0 dòng toán bắt buộc</b><span>công thức nào cũng có bản tiếng Việt đứng ngay bên; bỏ qua phần ký hiệu vẫn hiểu trọn ý</span></div>
-    <div class="stat"><b>13 thứ nghịch được</b><span>kéo cho máy nhảy văng khỏi đáy, tắt một mắt xích cho mạng nhiều lớp sập về một đường thẳng, trượt kính lúp qua từng ô ảnh, kéo γ cho cả chiến lược lật ngược</span></div>
-    <div class="stat"><b><span id="stat-terms">228</span> tên thật</b><span>thuật ngữ của tám khoá gốc — mỗi phép ví von kèm đúng cái tên mà sách và khoá học dùng</span></div>
+    <div class="stat"><b>13 thứ nghịch được</b><span>kéo cho máy nhảy văng khỏi đáy, tắt một mắt xích cho mạng nhiều lớp sập về một đường thẳng, trượt kính lúp qua từng ô ảnh, kéo γ cho nước đi lật ngược</span></div>
+    <div class="stat"><b><span id="stat-terms">233</span> tên thật</b><span>thuật ngữ của tám khoá gốc — mỗi phép ví von kèm đúng cái tên mà sách và khoá học dùng</span></div>
   </div>
 
   <div class="acts">
@@ -1398,7 +1398,7 @@ footer a { color:var(--muted); }
 
         <p class="lede">Đến giờ máy nhận vào <b>một danh sách số</b>, và thứ tự trong danh sách không quan trọng — đổi chỗ "diện tích" với "số phòng" thì máy chỉ cần đổi chỗ hai cái núm là xong. Với ảnh thì thứ tự là tất cả: đảo lộn các ô màu của một tấm ảnh là <b>mất tấm ảnh</b>. Cái làm nên con mắt là mấy chục ô màu <i>nằm cạnh nhau theo một kiểu nhất định</i>.</p>
 
-        <p>Máy phải <b>biết trước</b> điều đó. Nếu bắt nó học lại từ số 0 rằng "ô cạnh nhau thì liên quan", nó sẽ học được — sau khi tiêu tốn gấp hàng nghìn lần dữ liệu, và vẫn kém hơn.</p>
+        <p>Máy phải <b>biết trước</b> điều đó. Nếu bắt nó học lại từ số 0 rằng "ô cạnh nhau thì liên quan", nó sẽ học được — sau khi tiêu tốn nhiều dữ liệu hơn hẳn, và vẫn kém hơn.</p>
 
         <h3>Một cái kính lúp nhỏ trượt khắp tấm ảnh</h3>
 
@@ -1406,18 +1406,18 @@ footer a { color:var(--muted); }
 
         <p>Nên đổi cách: làm một <b>cái kính lúp bé, 3×3 ô</b>, có đúng chín cái núm. Đặt nó lên góc trên trái, nhân chín ô dưới kính với chín cái núm, cộng lại, ghi ra một con số. Trượt kính sang phải. Làm lại. Chín cái núm ấy <b>dùng chung cho toàn bộ tấm ảnh</b>.</p>
 
-        <p>Điều hay: <b>núm sắp thế nào thì kính lúp bắt cái đó.</b> Núm âm bên trái, dương bên phải → kính bắt vạch dọc. Xoay chín cái núm ấy đi → bắt vạch ngang. Và không ai đi sắp tay chúng — máy tự vặn ra, vì đó là cách rẻ nhất để giảm điểm trừ.</p>
+        <p>Điều hay: <b>núm sắp thế nào thì kính lúp bắt cái đó.</b> Núm dương bên trái, âm bên phải → kính bắt vạch dọc. Xoay chín cái núm ấy đi → bắt vạch ngang. Và không ai đi sắp tay chúng — máy tự vặn ra, vì đó là cách rẻ nhất để giảm điểm trừ.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v">phép kính lúp trượt là <span class="nm">convolution</span> — tích chập. Việc dùng chung chín cái núm khắp ảnh là <span class="nm">parameter sharing</span> — chia sẻ tham số, và hệ quả của nó là <span class="nm">translation invariance</span>: con mèo dịch sang phải 50 ô thì máy vẫn nhận ra, vì cùng bộ núm đã trượt qua đó.</span>
+          <span class="v">phép kính lúp trượt là <span class="nm">convolution</span> — tích chập. Việc dùng chung chín cái núm khắp ảnh là <span class="nm">parameter sharing</span> — chia sẻ tham số. Hệ quả trực tiếp: con mèo dịch sang phải 50 ô thì chỗ sáng trên tấm kết quả cũng dịch sang phải đúng 50 ô, vì cùng bộ núm đã trượt qua đó. Cộng thêm phép thu nhỏ ở đoạn dưới, câu trả lời cuối cùng <i>gần như</i> không đổi — cái "gần như không đổi" ấy tên là <span class="nm">translation invariance</span>, và nó không tuyệt đối.</span>
         </div>
 
         <div class="lab" id="m7">
           <div class="lab__h">
             <p class="lab__k">Nghịch được · mô hình 8 / 13</p>
             <p class="lab__t">Chọn một bộ chín cái núm, rồi xem kính lúp trượt qua từng ô</p>
-            <p class="lab__hint">Chọn <b>vạch dọc</b> và để ý: chỗ nào trong ảnh có mép dọc thì ô kết quả sáng lên, chỗ nào phẳng thì xám. Cùng tấm ảnh ấy, đổi sang <b>vạch ngang</b> — sáng tối đổi hẳn chỗ.</p>
+            <p class="lab__hint">Chọn <b>vạch dọc</b> và để ý: chỗ nào trong ảnh có mép dọc thì ô kết quả sáng hẳn lên hoặc tối hẳn đi — nhìn từ trái sang phải, chỗ đổi từ sáng sang tối thành trắng, chỗ đổi từ tối sang sáng thành đen — còn chỗ phẳng thì xám. Cùng tấm ảnh ấy, đổi sang <b>vạch ngang</b> — sáng tối đổi hẳn chỗ.</p>
           </div>
           <div class="lab__b">
             <div class="vscroll"><svg class="viz" id="m7-viz" role="img" aria-label="Kính lúp ba nhân ba trượt qua từng ô của tấm ảnh, và bản đồ đặc trưng hiện dần ra bên cạnh." viewBox="0 0 660 320" style="max-width:660px;margin:0 auto"></svg></div>
@@ -1442,18 +1442,20 @@ footer a { color:var(--muted); }
             <tbody>
               <tr><td>cỡ kính lúp</td><td><span class="nm">filter / kernel size</span></td><td>3×3 là mặc định gần như mọi nơi. Lớn hơn thì nhìn rộng hơn nhưng đắt hơn.</td></tr>
               <tr><td>viền thêm</td><td><span class="nm">padding</span></td><td>Đắp một vành số 0 quanh ảnh, để ô ở mép cũng được kính lúp phủ đủ, và để ảnh ra <b>không bị co nhỏ</b>.</td></tr>
-              <tr><td>bước trượt</td><td><span class="nm">stride</span></td><td>Trượt 1 ô mỗi lần, hay nhảy 2 ô? Nhảy 2 thì ảnh ra bé đi một nửa, tính nhanh gấp bốn.</td></tr>
+              <tr><td>bước trượt</td><td><span class="nm">stride</span></td><td>Trượt 1 ô mỗi lần, hay nhảy 2 ô? Nhảy 2 thì ảnh ra hẹp đi một nửa mỗi chiều, tính nhanh gấp bốn.</td></tr>
               <tr><td>số kính lúp</td><td><span class="nm">channel</span></td><td>Mỗi kính bắt một loại chi tiết, chạy song song. Kết quả của một kính là một <span class="nm">feature map</span> — bản đồ đặc trưng.</td></tr>
             </tbody>
           </table>
         </div>
 
+        <p>Một chi tiết mà mô hình ở trên giấu đi: tấm ảnh của nó chỉ có một tầng xám. Ảnh màu có ba tầng — đỏ, lục, lam — và sau một lớp 32 kính lúp thì là một chồng 32 bản đồ. Kính lúp của lớp kế tiếp vì vậy <b>dày bằng cả chồng</b>: kính 3×3 đặt lên chồng 32 tầng có 3×3×32 = 288 cái núm, nhân rồi cộng qua mọi tầng cùng lúc, ra đúng một con số.</p>
+
         <div class="fx">
-          <div class="fx__line sm">cỡ ra = (cỡ vào + 2·padding − cỡ kính) / stride + 1</div>
-          <div class="fx__vi">Công thức duy nhất của cả chương. Ảnh 32 ô, kính 3, padding 1, stride 1 → (32 + 2 − 3)/1 + 1 = <b>32 ô</b>: padding 1 với kính 3 giữ nguyên cỡ, và đó là lý do cặp ấy được dùng ở khắp nơi.</div>
+          <div class="fx__line sm">cỡ ra = (cỡ vào + 2·padding − cỡ kính) / stride, bỏ phần lẻ, rồi + 1</div>
+          <div class="fx__vi">Công thức duy nhất của cả chương. Ảnh 32 ô, kính 3, padding 1, stride 1 → (32 + 2 − 3)/1 + 1 = <b>32 ô</b>: padding 1 với kính 3 giữ nguyên cỡ, và đó là lý do cặp ấy được dùng ở khắp nơi. Cùng ảnh ấy mà stride 2: (32 + 2 − 3)/2 = 15,5, bỏ lẻ còn 15, cộng 1 = <b>16 ô</b> — đúng "hẹp đi một nửa". Phần lẻ bỏ đi vì kính lúp thò ra ngoài ảnh thì không được tính. Mô hình ở trên không đắp viền: (10 − 3)/1 + 1 = 8 — đúng tấm kết quả 8×8.</div>
         </div>
 
-        <p>Thêm một bước nữa sau mỗi lượt: <b>thu nhỏ ảnh lại.</b> Trong từng ô vuông 2×2, giữ con số lớn nhất, bỏ ba cái kia. Vì chi tiết nằm ở đâu <i>chính xác</i> không quan trọng bằng chi tiết ấy <b>có hay không</b>. Tên thật: <span class="nm">pooling</span>. Nó không có cái núm nào để học — chỉ là một phép chọn.</p>
+        <p>Thêm một bước nữa sau mỗi lượt: <b>thu nhỏ ảnh lại.</b> Trong từng ô vuông 2×2, giữ con số lớn nhất, bỏ ba cái kia. Vì chi tiết nằm ở đâu <i>chính xác</i> không quan trọng bằng chi tiết ấy <b>có hay không</b>. Tên thật: <span class="nm">max pooling</span> — một kiểu pooling; kiểu kia lấy trung bình. Nó không có cái núm nào để học — chỉ là một phép chọn.</p>
 
         <p>Xếp nhiều lượt kính lúp + thu nhỏ lên nhau, cuối cùng nối vào vài lớp thường để ra đáp án. Cả cái máy này tên là <span class="nm">convolutional neural network</span> — mạng tích chập, viết tắt <span class="nm">CNN</span>.</p>
 
@@ -1463,16 +1465,16 @@ footer a { color:var(--muted); }
 
         <div class="steps">
           <div class="step"><div class="n">1</div><div class="b"><p><b>Xếp thẳng, cho tới khi hết xếp được.</b> <span class="nm">LeNet-5</span> (1998, 60 nghìn núm, đọc số viết tay) → <span class="nm">AlexNet</span> (2012, 60 triệu núm, cùng ý tưởng nhưng to hơn và có ReLU) → <span class="nm">VGG</span> (2014, chỉ dùng kính 3×3 và pooling 2×2, lặp lại đều tăm tắp — đơn giản đến mức đẹp, nhưng 138 triệu núm).</p></div></div>
-          <div class="step"><div class="n">2</div><div class="b"><p><b>Rồi phát hiện: xếp thêm lớp làm mạng học <i>kém</i> đi.</b> Không phải "hết cải thiện" — mà tệ hơn mạng ít lớp hơn, kể cả trên đề ôn. Lý do: phần trách nhiệm truyền ngược qua năm mươi lớp bị nhân đi nhân lại và tan gần hết trước khi tới lớp đầu.</p></div></div>
-          <div class="step"><div class="n">3</div><div class="b"><p><b>Cách chữa gọn đến mức đẹp: cho tín hiệu một đường tắt.</b> Lấy đầu vào của một khối và <b>cộng thẳng</b> nó vào đầu ra của khối ấy. Giờ tín hiệu sửa lỗi có một con đường không bị nhân đi để chạy về đầu mạng. Thêm nữa: nếu một khối chẳng học được gì có ích, đường tắt cho phép nó <b>học cách không làm gì</b> — trả lại y nguyên đầu vào — nên thêm lớp không bao giờ còn làm hại. Tên thật: <span class="nm">skip connection</span>, mạng dùng nó là <span class="nm">ResNet</span>. Nó là lý do mạng 152 lớp chịu học.</p></div></div>
+          <div class="step"><div class="n">2</div><div class="b"><p><b>Rồi phát hiện: xếp thêm lớp làm mạng học <i>kém</i> đi.</b> Không phải "hết cải thiện" — mà tệ hơn mạng ít lớp hơn, kể cả trên đề ôn. Lời giải thích quen tai là phần trách nhiệm truyền ngược qua năm mươi lớp bị nhân đi nhân lại và tan hết trước khi tới lớp đầu. Nhưng chính nhóm làm ra ResNet đo tận nơi: mạng thẳng của họ đã có batch normalization ở <a href="#s-deep">chương 7</a>, độ nghiêng về tới lớp đầu vẫn khoẻ — vậy mà mạng sâu vẫn tệ hơn. Chỗ khó có vẻ nằm ở việc khác: một chồng lớp thường rất khó học nổi ngay cả việc đơn giản nhất là <b>trả lại y nguyên đầu vào</b>.</p></div></div>
+          <div class="step"><div class="n">3</div><div class="b"><p><b>Cách chữa gọn đến mức đẹp: cho tín hiệu một đường tắt.</b> Lấy đầu vào của một khối và <b>cộng thẳng</b> nó vào đầu ra của khối ấy. Giờ nếu một khối chẳng học được gì có ích, nó chỉ cần vặn phần của mình về 0 là <b>không làm gì</b> — đường tắt tự trả lại y nguyên đầu vào — nên thêm lớp khó còn làm hại. Kèm theo, tín hiệu sửa lỗi có một con đường không bị nhân đi để chạy về đầu mạng. Tên thật: <span class="nm">skip connection</span>, mạng dùng nó là <span class="nm">ResNet</span>. Nó là lý do mạng 152 lớp chịu học.</p></div></div>
         </div>
 
         <p>Ba mẹo tiết kiệm đi kèm, mỗi cái một dòng:</p>
 
         <ul>
-          <li><span class="nm">1x1 convolution</span> — kính lúp 1×1. Nghe vô nghĩa (nhân một ô với một số?), nhưng nó trộn <i>các kênh</i> với nhau, nên dùng để <b>giảm số kênh</b> từ 192 xuống 32 trước khi làm phép đắt. Còn gọi là "network in network".</li>
+          <li><span class="nm">1x1 convolution</span> — kính lúp 1×1. Nghe vô nghĩa (nhân một ô với một số?), nhưng kính ấy cũng dày bằng cả chồng: ở mỗi chỗ nó đọc 192 con số của 192 kênh rồi trộn thành một. Ba mươi hai kính như thế biến chồng 192 kênh thành 32 kênh — <b>giảm số kênh</b> trước khi làm phép đắt. Còn gọi là "network in network".</li>
           <li><span class="nm">Inception</span> — thay vì chọn kính 3×3 hay 5×5, <b>chạy hết rồi ghép lại</b>, để máy tự quyết cái nào có ích. Cái 1×1 ở trên chính là thứ làm nó đủ rẻ để chạy được.</li>
-          <li><span class="nm">depthwise separable convolution</span> — chẻ một phép tích chập thành hai phép rẻ hơn: lọc từng kênh riêng, rồi mới trộn kênh bằng 1×1. Rẻ hơn khoảng mười lần với kết quả gần như bằng. Đây là nền của <span class="nm">MobileNet</span> — mạng chạy được trên điện thoại. Còn <span class="nm">EfficientNet</span> thì tìm cách mở rộng cả ba chiều — sâu, rộng, độ phân giải ảnh — theo một tỉ lệ phối hợp, chứ không tăng bừa một chiều.</li>
+          <li><span class="nm">depthwise separable convolution</span> — chẻ một phép tích chập thành hai phép rẻ hơn: lọc từng kênh riêng, rồi mới trộn kênh bằng 1×1. Rẻ hơn tới tám, chín lần (với kính 3×3) mà kết quả gần như bằng. Đây là nền của <span class="nm">MobileNet</span> — mạng chạy được trên điện thoại. Còn <span class="nm">EfficientNet</span> thì tìm cách mở rộng cả ba chiều — sâu, rộng, độ phân giải ảnh — theo một tỉ lệ phối hợp, chứ không tăng bừa một chiều.</li>
         </ul>
 
         <h3>Không chỉ "cái gì" mà còn "ở đâu, mấy cái"</h3>
@@ -1480,7 +1482,7 @@ footer a { color:var(--muted); }
         <p>Phân loại trả lời "ảnh này có gì". <span class="nm">object detection</span> — phát hiện vật thể — trả lời "<b>có những gì, mỗi cái ở đâu, có bao nhiêu cái</b>". Lời giải đi qua bốn bước nâng cấp, mỗi bước sửa đúng một điểm yếu của bước trước.</p>
 
         <div class="steps">
-          <div class="step"><div class="n">1</div><div class="b"><p><b>Định vị một vật.</b> Vẫn là mạng phân loại, chỉ thêm bốn số đầu ra: tâm khung (bx, by) và cao rộng (bh, bw), cộng một số "có vật hay không". Cái khung ấy tên là <span class="nm">bounding box</span>. Bốn số đó được học y như mọi cái núm khác — không có gì đặc biệt.</p></div></div>
+          <div class="step"><div class="n">1</div><div class="b"><p><b>Định vị một vật.</b> Vẫn là mạng phân loại, chỉ thêm bốn số đầu ra: tâm khung (bx, by) và cao rộng (bh, bw), cộng một số "có vật hay không". Cái khung ấy tên là <span class="nm">bounding box</span>. Bốn số đó chỉ là thêm bốn đầu ra để đoán, chấm điểm bằng bình phương sai lệch với khung thật y như đoán số cốc nước chanh ở <a href="#s-machine">chương 2</a> — không có gì đặc biệt.</p></div></div>
           <div class="step"><div class="n">2</div><div class="b"><p><b>Trượt cửa sổ.</b> Cắt từng ô nhỏ khắp ảnh, hỏi mạng "trong ô này có xe không". Đúng, nhưng <b>chậm khủng khiếp</b>: hàng nghìn lần chạy mạng cho một tấm ảnh. Mẹo cứu: biến các lớp thường ở cuối thành lớp tích chập, khi đó chạy <b>một lần</b> trên cả ảnh cho ra kết quả của mọi vị trí cùng lúc, vì các vùng chồng nhau dùng chung phép tính.</p></div></div>
           <div class="step"><div class="n">3</div><div class="b"><p><b>YOLO.</b> Chia ảnh thành lưới (19×19), <b>mỗi ô lưới chịu trách nhiệm những vật có tâm rơi vào ô đó</b>: có vật không, khung to bằng bao nhiêu, loại gì. Một lần chạy mạng, ra hết — nhanh tới mức xử lý được video trực tiếp. Tên đầy đủ là "you only look once", và cái tên nói đúng ý tưởng.</p></div></div>
           <div class="step"><div class="n">4</div><div class="b"><p><b>Hai vật cùng tâm một ô thì sao?</b> Cho mỗi ô vài cái khung mẫu sẵn với hình dạng khác nhau — một cái cao gầy cho người, một cái thấp bè cho xe — rồi mỗi khung mẫu tự trả lời riêng. Tên thật: <span class="nm">anchor box</span>.</p></div></div>
@@ -1497,13 +1499,13 @@ footer a { color:var(--muted); }
           <div class="lab__h">
             <p class="lab__k">Nghịch được · mô hình 9 / 13</p>
             <p class="lab__t">Kéo khung máy đoán cho trùng khung thật, rồi dẹp sáu khung chồng nhau</p>
-            <p class="lab__hint">Bên trái: kéo cho <b>IoU</b> vượt 0,5 — dưới mức đó thì theo quy ước, cú đoán ấy bị tính là <b>sai</b> dù khung đã gần đúng. Bên phải: sáu ô lưới cùng thấy một chiếc xe, bấm <b>Dẹp</b> để giữ lại một khung.</p>
+            <p class="lab__hint">Bên trái: kéo cho <b>IoU</b> vượt 0,5 — dưới mức đó thì theo quy ước, cú đoán ấy bị tính là <b>sai</b> dù khung đã gần đúng. Bên phải: năm ô lưới cùng thấy một chiếc xe, ô thứ sáu thấy chiếc xe đỗ sát bên; bấm <b>Dẹp</b> để mỗi xe còn đúng một khung.</p>
           </div>
           <div class="lab__b">
             <div class="pair">
               <figure>
                 <svg class="viz" id="m11-iou" role="img" aria-label="Hai khung chữ nhật chồng nhau: phần tô đậm là giao, cả vùng viền là hợp, và tỉ số IoU giữa hai phần đó." viewBox="0 0 320 260"></svg>
-                <figcaption>Phần <b class="c-l">tô đậm</b> là giao, cả vùng viền là hợp. IoU = giao ÷ hợp.</figcaption>
+                <figcaption>Phần <b class="c-m">tô đậm</b> là giao, cả vùng viền là hợp. IoU = giao ÷ hợp.</figcaption>
               </figure>
               <figure>
                 <svg class="viz" id="m11-nms" role="img" aria-label="Nhiều khung dự đoán chồng lên nhau kèm độ tự tin của từng khung, và kết quả sau khi dọn bớt khung trùng." viewBox="0 0 320 260"></svg>
@@ -1511,17 +1513,17 @@ footer a { color:var(--muted); }
               </figure>
             </div>
             <div style="margin-top:16px">
-              <div class="row"><label for="m11-x">Khung đoán · ngang</label><div class="inline"><input type="range" id="m11-x" min="-60" max="60" step="1" value="34"><span class="val" id="m11-xv"></span></div></div>
+              <div class="row"><label for="m11-x">Khung đoán · ngang</label><div class="inline"><input type="range" id="m11-x" min="-60" max="60" step="1" value="44"><span class="val" id="m11-xv"></span></div></div>
               <div class="row"><label for="m11-s">Khung đoán · cỡ</label><div class="inline"><input type="range" id="m11-s" min="50" max="160" step="1" value="118"><span class="val" id="m11-sv"></span></div></div>
               <div class="row"><label for="m11-t">Ngưỡng dẹp khung</label><div class="inline"><input type="range" id="m11-t" min="0.1" max="0.9" step="0.05" value="0.5"><span class="val" id="m11-tv"></span></div></div>
               <div class="row"><span class="k">Dẹp trùng</span><div class="inline"><button class="btn btn--solid" id="m11-step">Dẹp một bước</button><button class="btn" id="m11-all">Dẹp hết</button><button class="btn" id="m11-reset">Đặt lại</button></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m11-out"></pre></div>
             </div>
-            <p class="lab__f">Ngưỡng 0,5 ở cả hai chỗ là <b>quy ước của con người</b>, không phải kết quả toán học. Hạ ngưỡng dẹp xuống 0,1 thì hai chiếc xe đứng cạnh nhau sẽ bị dẹp còn một — đó là cái giá của việc đặt ngưỡng thấp.</p>
+            <p class="lab__f">Ngưỡng 0,5 ở cả hai chỗ là <b>quy ước của con người</b>, không phải kết quả toán học. Hạ ngưỡng dẹp xuống 0,1 thì hai chiếc xe đứng cạnh nhau sẽ bị dẹp còn một — đó là cái giá của việc đặt ngưỡng thấp; đẩy lên từ 0,75 thì ngược lại, khung trùng bắt đầu sống sót.</p>
           </div>
         </div>
 
-        <p>Bước cuối của loạt này: <b>không cần khung chữ nhật nữa, tô màu từng ô ảnh một.</b> "Ô này thuộc con mèo, ô kia thuộc cái sofa." Tên thật: <span class="nm">semantic segmentation</span> — phân đoạn ngữ nghĩa. Vấn đề kỹ thuật: tích chập và pooling chỉ làm ảnh <i>nhỏ</i> đi, mà đầu ra phải <b>to bằng ảnh gốc</b>. Nên cần một phép làm ảnh <i>to</i> ra, tên là <span class="nm">transpose convolution</span> — tích chập chuyển vị. Kiến trúc ghép cả hai nhánh, co nhỏ rồi nở lại, cộng thêm các đường tắt nối ngang từ nhánh co sang nhánh nở để lấy lại chi tiết đã mất, trông như chữ U — nên tên nó là <span class="nm">U-Net</span>.</p>
+        <p>Bước cuối của loạt này: <b>không cần khung chữ nhật nữa, tô màu từng ô ảnh một.</b> "Ô này thuộc con mèo, ô kia thuộc cái sofa." Tên thật: <span class="nm">semantic segmentation</span> — phân đoạn ngữ nghĩa. Vấn đề kỹ thuật: tích chập và pooling chỉ làm ảnh <i>nhỏ</i> đi, mà đầu ra phải <b>to bằng ảnh gốc</b>. Nên cần một phép làm ảnh <i>to</i> ra, tên là <span class="nm">transpose convolution</span> — tích chập chuyển vị. Kiến trúc ghép cả hai nhánh, co nhỏ rồi nở lại, kèm các đường tắt nối ngang từ nhánh co sang nhánh nở để lấy lại chi tiết đã mất (ở đây bản đồ được xếp chồng lên nhau, không cộng như ResNet), trông như chữ U — nên tên nó là <span class="nm">U-Net</span>.</p>
 
         <h3>Nhận diện mặt: học một hàm "giống nhau bao nhiêu" thay vì học các lớp</h3>
 
@@ -1534,19 +1536,19 @@ footer a { color:var(--muted); }
           <span class="v">học từ đúng một ví dụ mỗi lớp là <span class="nm">one-shot learning</span>. Cách cài là <span class="nm">Siamese network</span> — mạng song sinh: cho cả hai ảnh chạy qua <b>cùng một mạng, cùng bộ núm</b>, lấy vector 128 số ở lớp gần cuối (gọi là <span class="nm">embedding</span>), rồi đo khoảng cách giữa hai vector.</span>
         </div>
 
-        <p>Huấn luyện nó bằng một hàm mất mát nhìn <b>ba</b> tấm ảnh cùng lúc: một tấm neo, một tấm khác của cùng người ấy, và một tấm của người khác. Yêu cầu: khoảng cách tới "cùng người" phải nhỏ hơn khoảng cách tới "người khác", <b>và nhỏ hơn một khoảng biên α thật sự</b>. Không có α, mạng gian lận được bằng cách cho mọi embedding bằng 0 — khi đó mọi khoảng cách bằng nhau và điều kiện thoả một cách vô nghĩa. Tên thật: <span class="nm">triplet loss</span>.</p>
+        <p>Huấn luyện nó bằng một hàm mất mát nhìn <b>ba</b> tấm ảnh cùng lúc: một tấm neo, một tấm khác của cùng người ấy, và một tấm của người khác. Yêu cầu: khoảng cách tới "cùng người" phải nhỏ hơn khoảng cách tới "người khác" <b>ít nhất một khoảng biên α</b> (α ở đây là biên, không phải bước chân ở <a href="#s-descent">chương 3</a>). Không có α — chỉ đòi "không lớn hơn" — mạng gian lận được bằng cách cho mọi embedding bằng nhau: mọi khoảng cách bằng 0, và 0 không lớn hơn 0. Tên thật: <span class="nm">triplet loss</span>.</p>
 
         <p>Chọn bộ ba cũng quan trọng ngang công thức: nếu lấy ngẫu nhiên thì hai người ngẫu nhiên vốn đã rất khác nhau, điều kiện thoả sẵn, độ nghiêng bằng 0, mạng không học gì. Phải chủ động chọn những bộ ba <b>khó</b> — hai người trông giống nhau.</p>
 
         <h3>Chuyển phong cách: khi cái được vặn không phải núm mà là tấm ảnh</h3>
 
-        <p>Cho một tấm ảnh chụp và một bức tranh Van Gogh, sinh ra tấm ảnh của bạn vẽ theo lối Van Gogh. Điều lạ nhất: <b>mạng không được huấn luyện gì cả</b>. Núm giữ nguyên; thứ bị tụt dốc vặn dần là <b>chính các ô màu của tấm ảnh đang sinh ra</b>.</p>
+        <p>Cho một tấm ảnh chụp và một bức tranh Van Gogh, sinh ra tấm ảnh của bạn vẽ theo lối Van Gogh. Điều lạ nhất: <b>mạng không được huấn luyện thêm gì cả</b> — lấy một mạng xem ảnh đã học xong từ trước, giữ nguyên núm; thứ bị tụt dốc vặn dần là <b>chính các ô màu của tấm ảnh đang sinh ra</b>.</p>
 
-        <p>Điểm trừ gồm hai phần: giống ảnh gốc về <i>nội dung</i> (so các con số ở lớp giữa), và giống bức tranh về <i>phong cách</i>. Đo "phong cách" bằng cách nào: xem trong một lớp, <b>kênh nào hay sáng cùng kênh nào</b> — ví dụ "nét xoáy" hay đi cùng "màu vàng". Bảng tương quan giữa các kênh ấy tên là <span class="nm">Gram matrix</span>, và nó bỏ hết thông tin <i>ở đâu</i>, chỉ giữ <i>đi cùng nhau</i> — đúng định nghĩa của phong cách. Cả việc này tên là <span class="nm">neural style transfer</span>.</p>
+        <p>Điểm trừ gồm hai phần: giống ảnh gốc về <i>nội dung</i> (so các con số ở lớp giữa), và giống bức tranh về <i>phong cách</i>. Đo "phong cách" bằng cách nào: xem trong một lớp, <b>kênh nào hay sáng cùng kênh nào</b> — ví dụ "nét xoáy" hay đi cùng "màu vàng". Bảng tương quan giữa các kênh ấy tên là <span class="nm">Gram matrix</span>, và nó bỏ hết thông tin <i>ở đâu</i>, chỉ giữ <i>đi cùng nhau</i> — đúng cái mà cách làm này gọi là phong cách. Cả việc này tên là <span class="nm">neural style transfer</span>.</p>
 
         <div class="take">
           <span class="k">Mang theo</span>
-          <p>Đừng bắt máy học lại thứ bạn đã biết: ô cạnh nhau thì liên quan, và một cái góc giống nhau ở mọi chỗ. Xây hai điều đó vào hình dáng của máy, và bạn tiết kiệm được hàng nghìn lần dữ liệu.</p>
+          <p>Đừng bắt máy học lại thứ bạn đã biết: ô cạnh nhau thì liên quan, và một cái góc giống nhau ở mọi chỗ. Xây hai điều đó vào hình dáng của máy, và bạn tiết kiệm được rất nhiều dữ liệu.</p>
         </div>
       </section>
 
@@ -1565,7 +1567,7 @@ footer a { color:var(--muted); }
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v"><span class="nm">word embedding</span> — biểu diễn từ. Hai cách học nổi tiếng: <span class="nm">word2vec</span> (đoán từ ngữ cảnh, và để khỏi phải tính tổng trên cả 10.000 từ mỗi bước thì chỉ lấy vài từ sai làm đối chứng — mẹo ấy tên <span class="nm">negative sampling</span>) và <span class="nm">GloVe</span> (khớp trực tiếp bảng đếm "từ nào đứng cạnh từ nào"). Đo hai từ gần nhau bằng <span class="nm">cosine similarity</span> — góc giữa hai dãy số, không phải khoảng cách.</span>
+          <span class="v"><span class="nm">word embedding</span> — biểu diễn từ. Hai cách học nổi tiếng: <span class="nm">word2vec</span> (đoán từ ngữ cảnh, và để khỏi phải tính tổng trên cả 10.000 từ mỗi bước thì chỉ lấy vài từ sai làm đối chứng — mẹo ấy tên <span class="nm">negative sampling</span>) và <span class="nm">GloVe</span> (khớp trực tiếp bảng đếm "từ nào đứng cạnh từ nào"). Đo hai từ gần nhau bằng <span class="nm">cosine similarity</span> — hai dãy số cùng hướng tới đâu (đọc từ góc giữa chúng), không phải cách nhau bao xa.</span>
         </div>
 
         <div class="box mis">
@@ -1585,11 +1587,11 @@ footer a { color:var(--muted); }
 
         <p>Một RNN đoán "từ kế tiếp là gì" gọi là <span class="nm">language model</span> — mô hình ngôn ngữ, và nó là gốc của mọi máy trò chuyện hôm nay. Muốn nó <i>viết</i> thay vì chỉ đoán: rút thăm một từ theo đúng phân phối nó vừa cho ra, đưa từ đó lại làm đầu vào bước sau, lặp lại. Phép rút thăm ấy tên là <span class="nm">sampling</span> — và đó là lý do hỏi cùng một câu hai lần có thể được hai câu trả lời khác nhau.</p>
 
-        <p><b>Chỗ yếu:</b> cuốn sổ bị <b>ghi đè</b> mỗi bước. Đọc tới cuối một câu dài thì đầu câu đã mờ hết — trong "Cô gái mà tôi gặp hôm qua ở cái quán cà phê gần trường… <b>đã</b> đi rồi", máy không còn nhớ chủ ngữ là số ít. Về mặt số học đây đúng là <span class="nm">vanishing gradient</span> ở <a href="#s-deep">chương 7</a>, chỉ trải theo thời gian.</p>
+        <p><b>Chỗ yếu:</b> cuốn sổ bị <b>ghi đè</b> mỗi bước. Đọc tới cuối một câu dài thì đầu câu đã mờ hết — trong "Cô gái mà tôi gặp hôm qua ở cái quán cà phê gần trường… đã để quên ví của <b>cô ấy</b>", tới chữ cuối máy phải chọn "cô ấy" hay "anh ấy" — mà người được nói tới đã nằm tít ở đầu câu. Về mặt số học đây đúng là <span class="nm">vanishing gradient</span> ở <a href="#s-deep">chương 7</a>, chỉ trải theo thời gian.</p>
 
         <h3>Đời 2 — học xem khi nào nên ghi sổ</h3>
 
-        <p>Thêm mấy cái <b>cổng</b>. Mỗi cổng là một con số từ 0 tới 1, do một sigmoid nhỏ tự học ra, và nó nhân vào luồng thông tin như một cái van: một cổng quyết định <b>giữ lại gì</b> trong sổ, một cổng quyết định <b>ghi thêm gì</b>, một cổng quyết định <b>đọc ra gì</b>. Nhờ vậy một thông tin quan trọng ở đầu câu <b>sống được tới cuối</b> — vì cổng giữ có thể học cách để nguyên, đúng kiểu đường tắt của ResNet.</p>
+        <p>Thêm mấy cái <b>cổng</b>. Mỗi cổng là một dãy số từ 0 tới 1, mỗi ô trong sổ một số, do một sigmoid nhỏ tự học ra, và nó nhân vào luồng thông tin như một cái van: một cổng quyết định <b>giữ lại gì</b> trong sổ, một cổng quyết định <b>ghi thêm gì</b>, một cổng quyết định <b>đọc ra gì</b>. Nhờ vậy một thông tin quan trọng ở đầu câu <b>sống được tới cuối</b> — vì cổng giữ có thể học cách để nguyên, đúng kiểu đường tắt của ResNet.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
@@ -1603,22 +1605,22 @@ footer a { color:var(--muted); }
         <p>Nhưng nó đẻ ra một bài toán mới. Mỗi bước, decoder cho ra xác suất của từ kế tiếp. Bạn cần <b>cả câu</b> có xác suất cao nhất, <b>không phải từng từ</b> có xác suất cao nhất. Hai thứ đó khác nhau — và đây là chỗ trực giác hay sai nhất.</p>
 
         <div class="box warn-box">
-          <p class="box__k">Ví dụ của Ng</p>
-          <p>Sau khi chọn "Jane is", từ có xác suất cao nhất kế tiếp là "going", vì "is going" cực kỳ phổ biến trong tiếng Anh. Nhưng câu tổng thể tốt nhất lại là "Jane <b>visits</b> Africa in September". Chọn tham lam từng bước <b>khoá bạn vào một nhánh tệ mà không quay lại được</b>.</p>
+          <p class="box__k">Phỏng theo ví dụ của Ng</p>
+          <p>Bước đầu, "is" có xác suất cao nhất vì "Jane is…" là cách mở câu cực kỳ phổ biến; sau "Jane is", từ cao nhất lại là "going", vì "is going" cũng phổ biến. Chọn tham lam cứ thế đi tới "Jane is going to Africa" — nghe được, nhưng xác suất cả câu thấp hơn hẳn "Jane <b>visits</b> Africa in September", câu đi qua đúng cái từ đã bị bỏ ở bước đầu. Chọn tham lam từng bước <b>khoá bạn vào một nhánh tệ mà không quay lại được</b>.</p>
         </div>
 
         <p>Lối đi giữa: thay vì giữ 1 phương án (tham lam) hay tất cả (bất khả thi — 10.000¹⁰ câu), <b>giữ B phương án tốt nhất ở mỗi bước</b>. B = 3 nghĩa là luôn có ba câu dở dang trong tay, mở rộng cả ba, rồi giữ ba tốt nhất trong số các mở rộng. B = 1 chính là tham lam. Sản phẩm thật dùng B = 3 tới 10; lợi ích giảm rất nhanh sau đó.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v"><span class="nm">beam search</span> — tìm kiếm chùm tia. Kèm một chi tiết <b>bắt buộc</b>: xác suất là tích của nhiều số nhỏ hơn 1, nên câu dài luôn có xác suất thấp hơn, và beam search sẽ thiên vị câu ngắn cụt lủn. Cách chữa là cộng log xác suất rồi <b>chia cho số từ</b> — tên là <span class="nm">length normalization</span>.</span>
+          <span class="v"><span class="nm">beam search</span> — tìm kiếm chùm tia. Kèm một chi tiết <b>bắt buộc</b>: xác suất là tích của nhiều số nhỏ hơn 1, nên mỗi từ thêm vào lại kéo xác suất xuống, và beam search sẽ thiên vị câu ngắn cụt lủn. Cách chữa là cộng log xác suất rồi <b>chia cho số từ</b> — tên là <span class="nm">length normalization</span>.</span>
         </div>
 
         <div class="lab" id="m12">
           <div class="lab__h">
             <p class="lab__k">Nghịch được · mô hình 10 / 13</p>
             <p class="lab__t">Kéo B từ 1 lên 3, và xem câu dịch đổi hẳn</p>
-            <p class="lab__hint">B = 1 là <b>chọn tham lam</b>: mỗi bước lấy từ có xác suất cao nhất. Nó chọn "is" ngay bước đầu vì "is" phổ biến — rồi <b>không quay lại được nữa</b>. B = 3 giữ "visits" sống thêm một bước, và câu hay hơn nằm ở nhánh đó.</p>
+            <p class="lab__hint">B = 1 là <b>chọn tham lam</b>: mỗi bước lấy từ có xác suất cao nhất. Nó chọn "is" ngay bước đầu vì "is" phổ biến — rồi <b>không quay lại được nữa</b>. Từ B = 2 trở lên, "visits" được giữ sống thêm một bước, và câu hay hơn nằm ở nhánh đó.</p>
           </div>
           <div class="lab__b">
             <div class="vscroll"><svg class="viz" id="m12-viz" role="img" aria-label="Cây tìm kiếm chùm tia: mỗi bước giữ lại B câu dở dang tốt nhất, và câu dịch cuối cùng đổi theo B." viewBox="0 0 660 330" style="max-width:660px;margin:0 auto"></svg></div>
@@ -1636,9 +1638,9 @@ footer a { color:var(--muted); }
 
         <p>Cả hai đời trên có chung hai chỗ yếu: mọi thứ phải đi qua <b>một</b> dãy số ở giữa (encoder nén cả câu vào đó — câu càng dài càng chật), và <b>phải đọc lần lượt</b> nên không chia việc cho nhiều chip được.</p>
 
-        <p>Cách sửa: bỏ cái nút thắt. Cho <b>mỗi từ tự hỏi</b>: "trong câu này, từ nào liên quan tới tôi?" Rồi nó lấy về thông tin từ đúng những từ đó, nhiều hay ít tuỳ mức liên quan. Trong câu "Con mèo không ăn con cá vì <b>nó</b> đã no", chữ "nó" phải nhìn về "mèo", không nhìn về "cá".</p>
+        <p>Cách sửa đến qua hai bước. Bước đầu vẫn giữ RNN, chỉ bỏ cái nút thắt: mỗi lần viết một từ tiếng Anh, decoder được nhìn lại <b>mọi</b> từ tiếng Việt và tự chọn nhìn từ nào nhiều. Bước sau bỏ luôn việc đọc lần lượt: cho <b>mỗi từ tự hỏi</b>: "trong câu này, từ nào liên quan tới tôi?" Rồi nó lấy về thông tin từ đúng những từ đó, nhiều hay ít tuỳ mức liên quan. Trong câu "Con mèo không ăn con cá vì <b>nó</b> đã no", chữ "nó" phải nhìn về "mèo", không nhìn về "cá".</p>
 
-        <p>Cơ chế đúng ba bước, và đáng nhớ vì nó y như tra từ điển: mỗi từ phát ra một <b>câu hỏi</b>, một <b>nhãn</b> để người khác tìm thấy nó, và một <b>nội dung</b> để đưa ra. Ghép câu hỏi của tôi với nhãn của mọi từ → ra điểm liên quan; bóp qua softmax → ra phần trăm cộng lại 100%; lấy nội dung của mọi từ trộn theo phần trăm ấy. <b>Attention chỉ là một phép tra cứu mềm</b> — mềm vì thay vì lấy đúng một mục, nó lấy một chút của mọi mục.</p>
+        <p>Cơ chế đúng ba bước, và đáng nhớ vì nó y như tra từ điển: mỗi từ phát ra một <b>câu hỏi</b>, một <b>nhãn</b> để người khác tìm thấy nó, và một <b>nội dung</b> để đưa ra. Đem câu hỏi của tôi nhân từng cặp rồi cộng với nhãn của từng từ — đúng phép của một nơ-ron ở <a href="#s-nn">chương 6</a>, hai dãy số càng cùng hướng thì kết quả càng lớn — ra điểm liên quan; bóp qua softmax → ra phần trăm cộng lại 100%; lấy nội dung của mọi từ trộn theo phần trăm ấy. <b>Attention chỉ là một phép tra cứu mềm</b> — mềm vì thay vì lấy đúng một mục, nó lấy một chút của mọi mục.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
@@ -1649,7 +1651,7 @@ footer a { color:var(--muted); }
           <div class="lab__h">
             <p class="lab__k">Nghịch được · mô hình 11 / 13</p>
             <p class="lab__t">Bấm một từ, xem nó đang nhìn về những từ nào</p>
-            <p class="lab__hint">Bấm chữ <b>nó</b>. Phần lớn sức nhìn dồn về "mèo" — đó là cách máy biết "nó" chỉ con mèo chứ không chỉ con cá.</p>
+            <p class="lab__hint">Bấm chữ <b>nó</b>. Sức nhìn dồn về "mèo" nhiều hơn hẳn mọi từ khác — đó là cách máy biết "nó" chỉ con mèo chứ không chỉ con cá.</p>
           </div>
           <div class="lab__b">
             <div class="toks" id="m8-toks"></div>
@@ -1658,17 +1660,17 @@ footer a { color:var(--muted); }
           </div>
         </div>
 
-        <p>Một phép nhìn thì chỉ bắt được một loại quan hệ. Nên chạy <b>tám phép nhìn song song</b>, mỗi phép học một loại — một đầu lo "ai làm gì ai", một đầu lo "từ này thuộc cụm nào" — rồi ghép kết quả. Tên thật: <span class="nm">multi-head attention</span>, và "head" là mỗi phép nhìn.</p>
+        <p>Một phép nhìn thì chỉ bắt được một loại quan hệ. Nên chạy <b>tám phép nhìn song song</b>, mỗi phép tự học lấy một kiểu nhìn — không ai giao việc, nhưng mở ra xem thì có đầu trông như lo "ai làm gì ai", có đầu lo "từ này thuộc cụm nào" — rồi ghép kết quả. Tên thật: <span class="nm">multi-head attention</span>, và "head" là mỗi phép nhìn.</p>
 
         <p>Cái máy chỉ dùng attention và <b>bỏ hẳn</b> việc đọc lần lượt tên là <span class="nm">Transformer</span>. Chữ "T" trong "GPT" là chữ đó. Ba chi tiết làm nó chạy được:</p>
 
         <div class="steps">
           <div class="step"><div class="n">1</div><div class="b"><p><b>Dán số thứ tự vào từng từ.</b> Bỏ việc đọc lần lượt thì mất luôn thông tin thứ tự — với máy, "mèo đuổi chuột" và "chuột đuổi mèo" lại trông y như nhau. Nên phải cộng thêm vào mỗi từ một dãy số mã hoá vị trí của nó. Tên thật: <span class="nm">positional encoding</span>.</p></div></div>
-          <div class="step"><div class="n">2</div><div class="b"><p><b>Đường tắt và chuẩn hoá ở mọi khối.</b> Đúng cái <span class="nm">skip connection</span> của ResNet, cộng một phép cùng cỡ — nhưng chuẩn hoá theo <i>từng từ trên mọi chiều của nó</i>, không theo cả lô như batch norm, vì câu dài ngắn khác nhau. Tên thật: <span class="nm">layer normalization</span>.</p></div></div>
-          <div class="step"><div class="n">3</div><div class="b"><p><b>Attention chạy song song được</b> — mọi từ nhìn mọi từ cùng một lượt, nên chia được cho hàng nghìn chip. Đây mới là lý do thật khiến Transformer thắng: không phải nó thông minh hơn LSTM, mà nó <b>huấn luyện được ở cỡ lớn hơn hàng trăm lần</b>.</p></div></div>
+          <div class="step"><div class="n">2</div><div class="b"><p><b>Đường tắt và chuẩn hoá ở mọi khối.</b> Đúng cái <span class="nm">skip connection</span> của ResNet, kèm một phép "cùng cỡ" — nhưng chuẩn hoá theo <i>từng từ trên mọi chiều của nó</i>, không theo cả lô như batch norm, vì câu dài ngắn khác nhau. Tên thật: <span class="nm">layer normalization</span>.</p></div></div>
+          <div class="step"><div class="n">3</div><div class="b"><p><b>Attention chạy song song được</b> — mọi từ nhìn mọi từ cùng một lượt, nên chia được cho hàng nghìn chip. Đây là lý do lớn nhất khiến Transformer thắng: với cùng số chip và cùng thời gian, nó <b>huấn luyện được ở cỡ lớn hơn hẳn</b>. Cộng thêm một lợi thế về hình dáng: từ đầu câu tới từ cuối câu chỉ cách nhau một lượt nhìn, không phải đi qua cả chục lần ghi sổ.</p></div></div>
         </div>
 
-        <p>Và điều đó dẫn tới phát hiện làm nên thời này: <b>cứ tăng đều dữ liệu, số núm và sức tính, thì chất lượng cải thiện theo một đường trơn và dự đoán được</b> — không có tường nào ở giữa. Tên thật: <span class="nm">scaling laws</span> — quy luật mở rộng. Một mạng huấn luyện một lần ở cỡ ấy rồi đem dùng cho hàng trăm việc khác nhau gọi là <span class="nm">foundation model</span> — mô hình nền. Cả hai khái niệm này <b>ra đời sau khoá học</b>, nhưng chúng là hệ quả trực tiếp của chương này.</p>
+        <p>Và điều đó dẫn tới phát hiện làm nên thời này: <b>cứ tăng đều dữ liệu, số núm và sức tính, thì chất lượng cải thiện theo một đường trơn và dự đoán được</b> — không có tường nào ở giữa. Tên thật: <span class="nm">scaling laws</span> — quy luật mở rộng. Một mạng huấn luyện một lần ở cỡ ấy rồi đem dùng cho hàng trăm việc khác nhau gọi là <span class="nm">foundation model</span> — mô hình nền. Cả hai khái niệm này <b>không có trong khoá học</b>, nhưng chúng là hệ quả trực tiếp của chương này.</p>
 
         <div class="take">
           <span class="k">Mang theo</span>
@@ -1681,7 +1683,7 @@ footer a { color:var(--muted); }
         <p class="sechead"><b>Chương 12</b> — k-means, bắt cái khác thường, PCA, hệ gợi ý</p>
         <h2 class="st">Không nhãn, không đáp án — chỉ có một đống dữ liệu và câu hỏi "trong đây có gì?"</h2>
 
-        <p class="lede">Mọi ví dụ từ chương 1 tới chương 11 đều có đáp án kèm theo: tấm ảnh này <i>là mèo</i>, ngày đó bán <i>42 cốc</i>. Cách học ấy tên là <span class="nm">supervised learning</span> — học có giám sát. Nhưng phần lớn dữ liệu trên đời <b>không có đáp án</b> — không ai đi dán nhãn cho một tỉ tấm ảnh, và với nhiều câu hỏi thì chẳng có nhãn nào để dán. Học từ dữ liệu không nhãn gọi là <span class="nm">unsupervised learning</span> — học không giám sát.</p>
+        <p class="lede">Gần như mọi ví dụ từ chương 1 tới chương 11 đều có đáp án kèm theo: tấm ảnh này <i>là mèo</i>, ngày đó bán <i>42 cốc</i> — kể cả mô hình ngôn ngữ, chỉ có điều đáp án của nó (từ kế tiếp) nằm sẵn trong câu chữ, không cần ai dán. Cách học ấy, như chương 1 đã gọi, là <span class="nm">supervised learning</span> — học có giám sát. Nhưng phần lớn dữ liệu trên đời <b>không có đáp án</b> — không ai đi dán nhãn cho một tỉ tấm ảnh, và với nhiều câu hỏi thì chẳng có nhãn nào để dán. Học từ dữ liệu không nhãn gọi là <span class="nm">unsupervised learning</span> — học không giám sát.</p>
 
         <h3>Chia nhóm</h3>
 
@@ -1696,23 +1698,23 @@ footer a { color:var(--muted); }
 
         <ul>
           <li><b>Kết quả phụ thuộc vào chỗ đặt tâm lúc đầu.</b> Đặt xấu thì hai tâm dính vào cùng một cụm và cụm thứ ba không ai nhận. Nên người ta chạy 50–100 lần từ nhiều chỗ xuất phát rồi <b>lấy lần có distortion nhỏ nhất</b>. Đây là một trong ít chỗ mà "chạy lại nhiều lần" đúng là cách làm chuẩn.</li>
-          <li><b>Chọn k bằng cách nào?</b> Vẽ distortion theo k. Nó luôn giảm khi k tăng (k = số điểm thì distortion bằng 0), nên không thể chỉ lấy k nhỏ nhất. Cách hay được nhắc là tìm chỗ đường gấp khúc như cái khuỷu tay — tên là <span class="nm">elbow method</span>. Ng thẳng thắn: <b>thường thì không có cái khuỷu nào rõ ràng</b>, và nên chọn k theo việc bạn định dùng nó làm gì (may ba cỡ áo hay năm cỡ áo?) hơn là theo đồ thị.</li>
+          <li><b>Chọn k bằng cách nào?</b> Vẽ distortion theo k. Nó giảm dần khi k tăng (k = số điểm thì distortion bằng 0), nên không thể chỉ lấy k nhỏ nhất. Cách hay được nhắc là tìm chỗ đường gấp khúc như cái khuỷu tay — tên là <span class="nm">elbow method</span>. Ng thẳng thắn: <b>thường thì không có cái khuỷu nào rõ ràng</b>, và nên chọn k theo việc bạn định dùng nó làm gì (may ba cỡ áo hay năm cỡ áo?) hơn là theo đồ thị.</li>
         </ul>
 
         <div class="lab" id="m9">
           <div class="lab__h">
             <p class="lab__k">Nghịch được · mô hình 12 / 13</p>
             <p class="lab__t">Hai bước, bấm từng bước một, và xem nó dừng</p>
-            <p class="lab__hint">Bấm <b>Đổi chỗ xuất phát</b> vài lần rồi chạy lại. Có lần nó chia đúng ba cụm; có lần hai tâm giành nhau một cụm và bỏ trống một cụm. Đó là <b>cái bẫy, không phải lỗi</b>.</p>
+            <p class="lab__hint">Bấm <b>Đổi chỗ xuất phát</b> vài lần rồi chạy lại. Có lần nó chia đúng ba cụm; có lần hai tâm giành nhau một cụm, còn hai cụm kia phải chung một tâm. Đó là <b>cái bẫy, không phải lỗi</b> — và tổng bình phương lúc dừng của lần kẹt luôn lớn hơn hẳn lần chia đúng, nên "chạy nhiều lần, giữ lần nhỏ nhất" chữa được nó.</p>
           </div>
           <div class="lab__b">
-            <svg class="viz" id="m9-viz" role="img" aria-label="Các điểm dữ liệu và hai tâm cụm; mỗi lần bấm là một bước gán điểm rồi dời tâm, cho tới khi không đổi nữa." viewBox="0 0 330 300" style="max-width:400px;margin:0 auto"></svg>
+            <svg class="viz" id="m9-viz" role="img" aria-label="Các điểm dữ liệu và ba tâm cụm; mỗi lần bấm là một bước gán điểm rồi dời tâm, cho tới khi không đổi nữa." viewBox="0 0 330 300" style="max-width:400px;margin:0 auto"></svg>
             <div style="margin-top:16px">
               <div class="row"><span class="k">Hai bước</span><div class="inline"><button class="btn" id="m9-assign">1 · Gán về tâm gần nhất</button><button class="btn" id="m9-move">2 · Dời tâm</button></div></div>
               <div class="row"><span class="k">Hoặc</span><div class="inline"><button class="btn btn--solid" id="m9-run">Chạy tới khi dừng</button><button class="btn" id="m9-seed">Đổi chỗ xuất phát</button></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m9-out"></pre></div>
             </div>
-            <p class="lab__f">Con số <b>tổng bình phương</b> là điểm trừ của k-means. Cả hai bước đều làm nó giảm hoặc giữ nguyên, không bao giờ tăng — và đó là lý do thuật toán này chắc chắn dừng. Bình phương là chỗ mấu chốt: bước “dời tâm” lấy <b>trung bình</b>, mà trung bình chỉ là điểm cực tiểu của tổng <b>bình phương</b> khoảng cách. Đo bằng khoảng cách trần thì điểm cực tiểu là trung vị, và dời tâm về trung bình có thể làm con số ấy <em>tăng</em>.</p>
+            <p class="lab__f">Con số <b>tổng bình phương</b> là điểm trừ của k-means. Cả hai bước đều làm nó giảm hoặc giữ nguyên, không bao giờ tăng. Mà số cách chia các điểm vào ba nhóm là hữu hạn, nên nó không thể giảm mãi — tới lúc phép gán không đổi nữa thì dừng. Đó là lý do thuật toán này chắc chắn dừng. Bình phương là chỗ mấu chốt: bước “dời tâm” lấy <b>trung bình</b>, mà trung bình chỉ là điểm cực tiểu của tổng <b>bình phương</b> khoảng cách. Đo bằng khoảng cách trần thì điểm cực tiểu là trung vị (bản nhiều chiều của nó), và dời tâm về trung bình có thể làm con số ấy <em>tăng</em>. Với đám điểm này, phần lớn chỗ xuất phát rút bừa vẫn tự gỡ ra được; nút <b>Đổi chỗ xuất phát</b> cố ý xen vào những lần kẹt thật để bạn khỏi phải bấm vài chục lần mới gặp.</p>
           </div>
         </div>
 
@@ -1720,7 +1722,7 @@ footer a { color:var(--muted); }
 
         <p>Học xem "bình thường" trông thế nào, rồi báo động khi có cái lệch xa. Dùng để bắt máy sắp hỏng, bắt giao dịch gian, bắt sản phẩm lỗi trên băng chuyền.</p>
 
-        <p>Cách làm gọn: với mỗi con số đo được, tính giá trị trung bình và độ lệch của nó trên đám dữ liệu bình thường — tức khớp một <span class="nm">Gaussian distribution</span>, phân phối chuẩn, cái hình chuông. Rồi với một mẫu mới, nhân xác suất của mọi con số lại; nếu tích ấy nhỏ hơn một ngưỡng ε thì báo động. Chọn ε bằng cách nào: dùng một tập <b>đề thử có nhãn</b> gồm vài ca gian đã biết — đúng cái tập ở <a href="#s-overfit">chương 5</a>.</p>
+        <p>Cách làm gọn: với mỗi con số đo được, tính giá trị trung bình và độ lệch chuẩn của nó trên đám dữ liệu bình thường — tức khớp một <span class="nm">Gaussian distribution</span>, phân phối chuẩn, cái hình chuông (<a href="mathematics-for-machine-learning.html#s-normal">trang Toán cho học máy, mục 3.8</a>). Rồi với một mẫu mới, đọc chiều cao của từng cái chuông tại đúng con số của mẫu ấy — cao là thường gặp, sát đáy là hiếm — rồi nhân tất cả lại; nếu tích ấy nhỏ hơn một ngưỡng ε thì báo động. Nhân như thế là ngầm coi các con số không dính gì tới nhau; sai một chút thì thường vẫn chạy, nhưng hai con số hay đi cặp mà lệch nhau theo kiểu lạ thì có thể lọt, vì từng số riêng lẻ vẫn trông bình thường. Chọn ε bằng cách nào: dùng một tập <b>đề thử có nhãn</b> gồm vài ca gian đã biết — đúng cái tập ở <a href="#s-overfit">chương 5</a>.</p>
 
         <div class="box good-box">
           <p class="box__k">Câu hỏi hay</p>
@@ -1733,7 +1735,20 @@ footer a { color:var(--muted); }
 
         <p>Một thứ được mô tả bằng năm mươi con số, nhưng nhiều con số trong đó nói gần như cùng một điều — chiều cao tính bằng mét và chiều cao tính bằng inch là hai cột khác nhau, cùng một thông tin. Tìm vài <b>trục mới</b> giữ lại được nhiều khác biệt nhất, rồi bỏ phần còn lại. Trục mới không phải một cột cũ nào cả; nó là một pha trộn của các cột cũ.</p>
 
-        <p>Để làm gì: để <b>vẽ được lên giấy</b> (từ năm mươi chiều về hai chiều thì mắt người xem được — và đây là công dụng chính), và để chạy nhanh hơn. Tên thật: <span class="nm">PCA</span>. Một cảnh báo của Ng: <b>đừng dùng PCA để chống học thuộc lòng</b> — nghe hợp lý vì nó giảm số núm, nhưng nó bỏ thông tin một cách mù quáng, còn <a href="#s-overfit">phạt núm to</a> thì không. Bắt buộc phải <a href="#s-descent">kéo các con số về cùng cỡ</a> trước khi chạy PCA, nếu không cột nào đo bằng đơn vị lớn sẽ chiếm hết trục đầu tiên.</p>
+        <svg class="viz" role="img" aria-label="Một đám điểm dẹt nằm chéo. Trục mới thứ nhất chạy dọc chiều dài của đám và giữ gần hết khác biệt giữa các điểm; trục thứ hai vuông góc với nó, đám điểm gần như không trải ra theo trục ấy. Bốn nét đứt ngắn hạ vuông góc từ bốn điểm xuống trục thứ nhất." viewBox="25 0 325 230" style="max-width:400px;margin:18px auto">
+          <line x1="40" y1="205" x2="340" y2="205" stroke="var(--border-2)"/><line x1="40" y1="205" x2="40" y2="15" stroke="var(--border-2)"/>
+          <text x="340" y="222" text-anchor="end" class="vs">cột A</text><text x="46" y="24" class="vs">cột B</text>
+          <g stroke="var(--subtle)" stroke-width="1.2" stroke-dasharray="2.5 2"><line x1="120" y1="163" x2="115.65" y2="154.84"/><line x1="137" y1="132" x2="141.75" y2="140.91"/><line x1="198" y1="100" x2="202.52" y2="108.47"/><line x1="245" y1="97" x2="240.35" y2="88.28"/></g>
+          <line x1="67.67" y1="180.45" x2="314.68" y2="48.61" stroke="var(--ink)" stroke-width="2"/>
+          <line x1="178.93" y1="91.59" x2="203.42" y2="137.47" stroke="var(--ink)" stroke-width="2" stroke-dasharray="5 3"/>
+          <g fill="var(--k1)"><circle cx="89" cy="176" r="3.6"/><circle cx="99" cy="156" r="3.6"/><circle cx="120" cy="163" r="3.6"/><circle cx="127" cy="145" r="3.6"/><circle cx="137" cy="132" r="3.6"/><circle cx="156" cy="137" r="3.6"/><circle cx="171" cy="134" r="3.6"/><circle cx="177" cy="115" r="3.6"/><circle cx="191" cy="117" r="3.6"/><circle cx="198" cy="100" r="3.6"/><circle cx="217" cy="107" r="3.6"/><circle cx="226" cy="92" r="3.6"/><circle cx="245" cy="97" r="3.6"/><circle cx="250" cy="74" r="3.6"/><circle cx="269" cy="77" r="3.6"/><circle cx="279" cy="61" r="3.6"/><circle cx="299" cy="64" r="3.6"/></g>
+          <text x="310" y="40" text-anchor="end" class="vs">trục 1 · giữ gần hết khác biệt</text>
+          <text x="209" y="148" class="vs">trục 2</text><text x="209" y="160" class="vs">gần như không còn gì</text>
+        </svg>
+
+        <p>Chiếu mỗi điểm xuống trục 1 — theo các nét đứt — thì mỗi điểm chỉ còn một con số thay vì hai. Phần bị bỏ đi đúng bằng mấy nét đứt ngắn ấy, tức độ lệch theo trục 2, nên gần như không mất gì.</p>
+
+        <p>Để làm gì: để <b>vẽ được lên giấy</b> (từ năm mươi chiều về hai chiều thì mắt người xem được — và đây là công dụng chính), và để chạy nhanh hơn. Tên thật: <span class="nm">PCA</span>; toán đứng sau nó ở <a href="mathematics-for-machine-learning.html#s-pca">trang Toán cho học máy, mục 1.10</a>. Một cảnh báo của Ng: <b>đừng dùng PCA để chống học thuộc lòng</b> — nghe hợp lý vì nó giảm số núm, nhưng nó bỏ thông tin mà không nhìn đáp án — chiều bị bỏ có thể chính là chiều quyết định đáp án, còn <a href="#s-overfit">phạt núm to</a> thì không. Bắt buộc phải <a href="#s-descent">kéo các con số về cùng cỡ</a> trước khi chạy PCA, nếu không cột nào đo bằng đơn vị lớn sẽ chiếm hết trục đầu tiên.</p>
 
         <h3>Gợi ý phim</h3>
 
@@ -1741,7 +1756,7 @@ footer a { color:var(--muted); }
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v">cả bài toán là <span class="nm">recommender system</span> — hệ gợi ý. Cách vừa nói, học từ điểm của <i>những người khác</i>, là <span class="nm">collaborative filtering</span>. Cách còn lại, dùng <i>thuộc tính có sẵn</i> của phim và của người (thể loại, năm, tuổi người xem), là <span class="nm">content-based filtering</span> — và nó là cách duy nhất dùng được cho phim mới ra hoặc người mới đăng ký.</span>
+          <span class="v">cả bài toán là <span class="nm">recommender system</span> — hệ gợi ý. Cách vừa nói, học từ điểm của <i>những người khác</i>, là <span class="nm">collaborative filtering</span>. Cách còn lại, dùng <i>thuộc tính có sẵn</i> của phim và của người (thể loại, năm, tuổi người xem), là <span class="nm">content-based filtering</span> — và nó là cách duy nhất cá nhân hoá được cho phim mới ra hoặc người mới đăng ký.</span>
         </div>
 
         <p>Ba chi tiết thực dụng, mỗi cái một dòng:</p>
@@ -1765,23 +1780,23 @@ footer a { color:var(--muted); }
 
         <p class="lede">Dạy con chó ngồi: bạn không giải thích được cho nó, bạn chỉ thưởng khi nó ngồi. Dạy trực thăng tự bay cũng vậy — bạn <b>không thể</b> gán nhãn "ở trạng thái này, góc lái đúng là 12,4 độ", vì chính bạn cũng không biết. Nhưng bạn biết khi nào nó bay tốt và khi nào nó rơi.</p>
 
-        <p>Học tăng cường thay <b>nhãn</b> bằng <span class="nm">reward</span> — phần thưởng: một con số nói kết quả tốt hay tệ, đến <i>sau</i> một chuỗi hành động, và <b>không nói hành động nào trong chuỗi đã đúng</b>. Thắng ở nước thứ ba mươi thì nước thứ mười hai được công bao nhiêu? Đó là <span class="nm">credit assignment</span>, và nó là toàn bộ độ khó của chương này.</p>
+        <p>Học tăng cường — <span class="nm">reinforcement learning</span> — thay <b>nhãn</b> bằng <span class="nm">reward</span> — phần thưởng: một con số nói kết quả tốt hay tệ, đến <i>sau</i> một chuỗi hành động, và <b>không nói hành động nào trong chuỗi đã đúng</b>. Thắng ở nước thứ ba mươi thì nước thứ mười hai được công bao nhiêu? Đó là <span class="nm">credit assignment</span>, và nó là cái khó lớn nhất của chương này.</p>
 
         <h3>Ba khái niệm phải có trước khi nói tới công thức</h3>
 
         <div class="steps">
           <div class="step"><div class="n">1</div><div class="b"><p><b>Tổng thưởng, có chiết khấu.</b> Không phải phần thưởng nhận ngay, mà tổng cả chuỗi về sau — nhưng phần thưởng càng xa càng bị nhân nhỏ đi: R₁ + γR₂ + γ²R₃ + … Tên thật: <span class="nm">return</span>.</p></div></div>
-          <div class="step"><div class="n">2</div><div class="b"><p><b>γ (gamma) nói bạn kiên nhẫn tới mức nào.</b> Một con số từ 0 tới 1. γ = 0,3 nghĩa là phần thưởng sau ba bước chỉ còn 2,7% giá trị — máy chỉ nhìn thấy trước mũi. γ = 0,99 nghĩa là gần như không giảm — máy chịu đi đường dài. Tên thật: <span class="nm">discount factor</span>, và nó là siêu tham số quan trọng nhất ở đây: <b>đổi γ là lật ngược cả chiến lược</b>, không phải chỉ tinh chỉnh chút ít.</p></div></div>
+          <div class="step"><div class="n">2</div><div class="b"><p><b>γ (gamma) nói bạn kiên nhẫn tới mức nào.</b> Một con số từ 0 tới 1. γ = 0,3 nghĩa là phần thưởng sau ba bước chỉ còn 2,7% giá trị — máy chỉ nhìn thấy trước mũi. γ = 0,99 nghĩa là gần như không giảm — máy chịu đi đường dài. Tên thật: <span class="nm">discount factor</span>, và nó là siêu tham số quan trọng nhất ở đây: <b>đổi γ có thể lật ngược nước đi</b> ở cả một vùng chỗ đứng, không phải chỉ tinh chỉnh chút ít.</p></div></div>
           <div class="step"><div class="n">3</div><div class="b"><p><b>Đích đến là một cuốn sổ "ở đâu thì làm gì".</b> Tên thật: <span class="nm">policy</span> — chính sách, ký hiệu π. Toàn bộ việc học là để có được nó.</p></div></div>
         </div>
 
         <h3>Hàm Q, và mẹo tự nhìn vào chính mình</h3>
 
-        <p>Thay vì học chính sách trực tiếp, học một hàm trả lời câu hỏi này: <b>"nếu đang ở chỗ s, làm hành động a, rồi từ đó về sau chơi tối ưu, thì tôi được tổng bao nhiêu?"</b> Tên thật: <span class="nm">Q-function</span>. Có Q rồi thì chính sách tối ưu chỉ còn là "ở mỗi chỗ, chọn hành động làm Q lớn nhất" — không phải nghĩ gì thêm.</p>
+        <p>Thay vì học chính sách trực tiếp, học một hàm trả lời câu hỏi này: <b>"nếu đang ở chỗ s, làm hành động a, rồi từ đó về sau chơi tối ưu, thì tôi được tổng thưởng có chiết khấu bao nhiêu?"</b> Tên thật: chỗ đứng là <span class="nm">state</span>, hành động là <span class="nm">action</span>, còn cả hàm là <span class="nm">Q-function</span>. Có Q rồi thì chính sách tối ưu chỉ còn là "ở mỗi chỗ, chọn hành động làm Q lớn nhất" — không phải nghĩ gì thêm.</p>
 
         <div class="fx">
           <div class="fx__line sm">Q(s, a) = R(s) + γ · max<sub>a′</sub> Q(s′, a′)</div>
-          <div class="fx__vi">Đọc thành lời: <b>giá trị của việc làm a bây giờ = phần thưởng nhận ngay + γ lần giá trị của nước đi tốt nhất ở chỗ kế tiếp.</b> Tên thật: <span class="nm">Bellman equation</span>. Nó không phải một công thức để tính, nó là một <b>điều kiện nhất quán</b>: Q phải khớp với chính nó ở bước sau.</div>
+          <div class="fx__vi">Đọc thành lời: <b>giá trị của việc làm a bây giờ = phần thưởng nhận ngay + γ lần giá trị của nước đi tốt nhất ở chỗ kế tiếp.</b> Tên thật: <span class="nm">Bellman equation</span>. Q nằm ở cả hai vế, nên đây không phải công thức cắm số vào là ra: nó là một <b>điều kiện nhất quán</b> — Q phải khớp với chính nó ở bước sau. Cách giải là đoán Q bừa, tính vế phải, lấy làm Q mới, lặp lại cho tới khi hai vế khớp; mô hình dưới đây làm đúng như thế. (Viết như trên là coi mỗi hành động đưa tới đúng một chỗ kế tiếp; nếu xe có thể trượt sang chỗ khác thì vế sau lấy trung bình trên các chỗ có thể tới.)</div>
         </div>
 
         <p>Và đó là mẹo lạ nhất của cả chương: <b>máy tự sinh nhãn cho chính mình</b>. Điểm trừ là bình phương sai lệch giữa Q hiện tại và vế phải của phương trình trên; vặn núm vẫn là tụt dốc như mọi chương trước. Cái mới là <b>nhãn đổi khi mô hình đổi</b> — bạn đang chạy theo một cái đích tự di chuyển, và đó là lý do học tăng cường khó ổn định hơn mọi cách học ở trên.</p>
@@ -1789,11 +1804,11 @@ footer a { color:var(--muted); }
         <div class="lab" id="m13">
           <div class="lab__h">
             <p class="lab__k">Nghịch được · mô hình 13 / 13</p>
-            <p class="lab__t">Kéo γ, và xem cả chiến lược lật ngược</p>
-            <p class="lab__hint">Xe tự hành trên sáu ô. Ô 1 đáng <b>100 điểm</b> nhưng ở xa; ô 6 chỉ đáng <b>40 điểm</b> nhưng ở ngay bên. Kéo <b>γ</b> qua mốc 0,74 và xem mũi tên ở ô 5 quay đầu.</p>
+            <p class="lab__t">Kéo γ, và xem nước đi lật ngược</p>
+            <p class="lab__hint">Xe tự hành trên sáu ô. Ô 1 đáng <b>100 điểm</b> nhưng ở xa; ô 6 chỉ đáng <b>40 điểm</b> nhưng ở ngay bên. Kéo <b>γ</b> qua mốc 0,74 và xem mũi tên ở ô 5 quay đầu. Kéo xuống dưới 0,40 thì tới lượt ô 4 cũng quay sang ô 6.</p>
           </div>
           <div class="lab__b">
-            <div class="vscroll"><svg class="viz" id="m13-viz" role="img" aria-label="Sáu ô của xe thăm dò với mũi tên chỉ hành động tối ưu ở mỗi ô; kéo γ thì mũi tên ở ô 5 lật chiều." viewBox="0 0 660 260" style="max-width:660px;margin:0 auto"></svg></div>
+            <div class="vscroll"><svg class="viz" id="m13-viz" role="img" aria-label="Sáu ô của xe tự hành với mũi tên chỉ hành động tối ưu ở mỗi ô; kéo γ thì mũi tên ở ô 5 lật chiều." viewBox="0 0 660 260" style="max-width:660px;margin:0 auto"></svg></div>
             <div style="margin-top:16px">
               <div class="row"><label for="m13-g">γ · độ kiên nhẫn</label><div class="inline"><input type="range" id="m13-g" min="0.1" max="0.99" step="0.01" value="0.50"><span class="val" id="m13-gv"></span></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m13-out"></pre></div>
@@ -1806,10 +1821,10 @@ footer a { color:var(--muted); }
 
         <p>Với sáu chỗ đứng thì Q là một cái bảng. Với một chiếc trực thăng — độ cao, tốc độ, ba góc nghiêng, đều là số thực — thì có <b>vô hạn</b> chỗ đứng, không kẻ bảng nào được. Nên thay cái bảng bằng <b>một mạng nơ-ron</b>: đưa vào (chỗ đứng, hành động), trả ra một con số Q. Tên thật: <span class="nm">DQN</span> — deep Q-network.</p>
 
-        <p>Ba mảnh ghép nữa mới chạy được, và cả ba đều là cách đối phó với cái đích tự di chuyển:</p>
+        <p>Ba mảnh ghép nữa mới chạy được — một mảnh để máy chịu thử nước mới, hai mảnh để việc chạy theo cái đích tự di chuyển bớt chao đảo:</p>
 
         <ul>
-          <li><span class="nm">epsilon-greedy</span> — thăm dò ngẫu nhiên. Nếu luôn chọn nước tốt nhất theo Q hiện tại, máy sẽ không bao giờ thử nước mà nó <i>đang tưởng</i> là tệ, nên không bao giờ phát hiện mình tưởng sai. Cách chữa: ε phần trăm số lần thì <b>làm bừa</b>. Thường bắt đầu ở ε = 1,0 (làm bừa hết) rồi giảm dần về 0,01.</li>
+          <li><span class="nm">epsilon-greedy</span> — thăm dò ngẫu nhiên. Nếu luôn chọn nước tốt nhất theo Q hiện tại, máy sẽ không bao giờ thử nước mà nó <i>đang tưởng</i> là tệ, nên không bao giờ phát hiện mình tưởng sai. Cách chữa: mỗi lần chọn, với xác suất ε thì <b>làm bừa</b>. Thường bắt đầu ở ε = 1,0 (lần nào cũng làm bừa) rồi giảm dần về 0,01.</li>
           <li><span class="nm">replay buffer</span> — bộ đệm kinh nghiệm. Ghi lại chục nghìn lượt đã trải qua, rồi <b>rút ngẫu nhiên</b> ra mà học, thay vì học theo đúng thứ tự vừa xảy ra. Lý do: các bước liền nhau giống nhau quá, học theo thứ tự thì như luyện thi bằng một bài duy nhất lặp lại.</li>
           <li><span class="nm">soft update</span> — cập nhật mềm. Giữ một bản sao của mạng làm "đích", và mỗi bước chỉ nhích bản sao ấy về phía mạng thật một chút. Đích đứng yên hơn thì việc học ổn định hơn.</li>
         </ul>
@@ -1867,7 +1882,7 @@ footer a { color:var(--muted); }
               <tr><td>phạt núm to λ — <span class="nm">L2 regularization</span></td><td>0, rồi tăng nếu đang thuộc lòng</td><td>Dò 0,01 → 0,1 → 1 → 10.</td></tr>
               <tr><td><span class="nm">dropout</span></td><td>0,2–0,5 ở lớp dày</td><td>Chỉ bật khi thật sự đang thuộc lòng. Đang <span class="nm">bias</span> mà bật là làm nặng thêm.</td></tr>
               <tr><td>bề rộng chùm — <span class="nm">beam width</span></td><td>3–10</td><td>Lợi ích giảm rất nhanh sau 10.</td></tr>
-              <tr><td>chiết khấu γ</td><td>0,9–0,99</td><td>Càng cao càng nhìn xa. Đổi nó là đổi cả chiến lược, không phải chỉnh cho mượt.</td></tr>
+              <tr><td>chiết khấu γ</td><td>0,9–0,99</td><td>Càng cao càng nhìn xa. Đổi nó có thể lật ngược nước đi ở cả một vùng chỗ đứng, không phải chỉnh cho mượt.</td></tr>
               <tr><td>ε — <span class="nm">epsilon-greedy</span></td><td>1,0 rồi giảm dần về 0,01</td><td>Làm bừa nhiều lúc đầu, ít dần về sau.</td></tr>
             </tbody>
           </table>
@@ -2973,8 +2988,8 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
   })();
 
   var KER = {
-    vd: { n: 'vạch dọc', k: [[1, 0, -1], [1, 0, -1], [1, 0, -1]], d: 'trái dương, phải âm → chỗ nào đổi sáng theo chiều NGANG thì sáng lên' },
-    vn: { n: 'vạch ngang', k: [[1, 1, 1], [0, 0, 0], [-1, -1, -1]], d: 'trên dương, dưới âm → chỗ nào đổi sáng theo chiều DỌC thì sáng lên' },
+    vd: { n: 'vạch dọc', k: [[1, 0, -1], [1, 0, -1], [1, 0, -1]], d: 'trái dương, phải âm → nhìn từ trái sang phải: sáng sang tối thì trắng, tối sang sáng thì đen' },
+    vn: { n: 'vạch ngang', k: [[1, 1, 1], [0, 0, 0], [-1, -1, -1]], d: 'trên dương, dưới âm → nhìn từ trên xuống: sáng sang tối thì trắng, tối sang sáng thì đen' },
     mo: { n: 'làm mờ', k: [[1 / 9, 1 / 9, 1 / 9], [1 / 9, 1 / 9, 1 / 9], [1 / 9, 1 / 9, 1 / 9]], d: 'chín cái núm bằng nhau → lấy trung bình, mép nào cũng nhoè đi' },
     net: { n: 'làm nét', k: [[0, -1, 0], [-1, 5, -1], [0, -1, 0]], d: 'giữa dương mạnh, bốn bên âm → đẩy ô giữa xa khỏi các ô cạnh nó' }
   };
@@ -3025,23 +3040,25 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
       rect.setAttribute('data-i', i);
       rect.setAttribute('data-j', j);
     }
+    /* ô kết quả: 0,5 + số/(2·lớn nhất) — dương ra trắng, âm ra đen; nói thẳng ra để khỏi đoán */
+    if (cur !== 'mo') txt(svg, ox, oy + M * cell + 16, 'trắng = dương · xám = 0 · đen = âm', 'vs', 'start');
 
     /* khung kính lúp đang đặt ở đâu */
     var hi = hover || [0, 0];
     el(svg, 'rect', { x: ix + hi[1] * cell - 1, y: iy + hi[0] * cell - 1, width: cell * 3 + 2, height: cell * 3 + 2, rx: 2 },
-      'fill:none;stroke:var(--l);stroke-width:2.6');
+      'fill:none;stroke:var(--ink);stroke-width:2.6');
     el(svg, 'rect', { x: ox + hi[1] * cell - 1, y: oy + hi[0] * cell - 1, width: cell + 2, height: cell + 2, rx: 2 },
-      'fill:none;stroke:var(--l);stroke-width:2.6');
+      'fill:none;stroke:var(--ink);stroke-width:2.6');
     el(svg, 'path', {
       d: 'M' + (ix + hi[1] * cell + cell * 3 + 4) + ' ' + (iy + hi[0] * cell + cell * 1.5) +
         ' C' + (fx - 30) + ' ' + (iy + hi[0] * cell + cell * 1.5) + ', ' + (fx - 30) + ' ' + (fy + cell * 1.5) + ', ' + (fx - 6) + ' ' + (fy + cell * 1.5),
       fill: 'none'
-    }, 'stroke:var(--l);stroke-width:1.4;opacity:.55;stroke-dasharray:3 3');
+    }, 'stroke:var(--ink);stroke-width:1.4;opacity:.55;stroke-dasharray:3 3');
     el(svg, 'path', {
       d: 'M' + (fx + cell * 3 + 6) + ' ' + (fy + cell * 1.5) +
         ' C' + (ox - 30) + ' ' + (fy + cell * 1.5) + ', ' + (ox - 30) + ' ' + (oy + hi[0] * cell + cell / 2) + ', ' + (ox + hi[1] * cell - 4) + ' ' + (oy + hi[0] * cell + cell / 2),
       fill: 'none'
-    }, 'stroke:var(--l);stroke-width:1.4;opacity:.55;stroke-dasharray:3 3');
+    }, 'stroke:var(--ink);stroke-width:1.4;opacity:.55;stroke-dasharray:3 3');
 
     txt(svg, 24, 300, K.d, 'vs', 'start');
     report(hi, O);
@@ -3125,7 +3142,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
       var cx = L + cw * (i + 0.5), h = row[i] / mx * 140;
       var isSel = i === sel, isTop = row[i] >= 0.15 && !isSel;
       el(svg, 'rect', { x: cx - cw * 0.32, y: base - h, width: cw * 0.64, height: h, rx: 3 },
-        'fill:var(' + (isSel ? '--subtle' : isTop ? '--l' : '--border-2') + ');opacity:' + (isSel ? .55 : isTop ? .85 : .7));
+        'fill:var(' + (isSel ? '--subtle' : isTop ? '--k1' : '--border-2') + ');opacity:' + (isSel ? .55 : isTop ? .85 : .7));
       txt(svg, cx, base - h - 7, Math.round(row[i] * 100) + '%', 'vm', 'middle',
         row[i] >= 0.15 ? 'fill:var(--ink)' : 'fill:var(--subtle)');
       txt(svg, cx, base + 20, w, isSel || isTop ? 'vt' : 'vs', 'middle');
@@ -3142,7 +3159,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
   var svg = $('m9-viz');
   if (!svg) return;
   var out = $('m9-out');
-  var K = 3, seed = 7, P = [], C = [], asg = null, iter = 0, done = false, timer = null;
+  var K = 3, SEEDS = [7, 1538, 62, 9757, 447, 9454], si = 0, seed = SEEDS[0], P = [], C = [], asg = null, iter = 0, done = false, timer = null;
 
   (function () {
     var r = rng(31337), cen = [[.28, .30], [.72, .33], [.50, .76]], i, k;
@@ -3155,7 +3172,10 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     var r = rng(seed), used = {}, i;
     C = [];
     /* tâm xuất phát = ba điểm dữ liệu lấy ngẫu nhiên. Đây đúng là cách hay dùng nhất,
-       và cũng đúng là chỗ sinh ra cái bẫy: có lần ba điểm rơi vào cùng một cụm. */
+       và cũng đúng là chỗ sinh ra cái bẫy: có lần hai điểm rơi vào cùng một cụm.
+       Với đám điểm này phần lớn lần rút vẫn tự gỡ được — chỉ khoảng 2/100 kẹt thật, lần
+       đầu ở lần bấm thứ 33 — nên SEEDS xen sẵn ba lần kẹt (1538, 9757, 9454) giữa ba lần
+       chia đúng. verify-ml.py dựng lại đúng phép rút này và đòi đủ cả hai kết cục. */
     while (C.length < K) {
       i = Math.floor(r() * P.length);
       if (used[i]) continue;
@@ -3240,7 +3260,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
   }
   $('m9-assign').addEventListener('click', function () { assign(); draw(); });
   $('m9-move').addEventListener('click', function () { move(); draw(); });
-  $('m9-seed').addEventListener('click', function () { seed = (seed * 7 + 13) % 9973; init(); });
+  $('m9-seed').addEventListener('click', function () { si = (si + 1) % SEEDS.length; seed = SEEDS[si]; init(); });
   $('m9-run').addEventListener('click', function () {
     if (timer) { clearInterval(timer); timer = null; return; }
     var k = 0;
@@ -3362,15 +3382,16 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
   var sx = $('m11-x'), ss = $('m11-s'), st = $('m11-t');
   var vx = $('m11-xv'), vs = $('m11-sv'), vt = $('m11-tv'), out = $('m11-out');
 
-  var TRUE = { x: 100, y: 90, w: 120, h: 110 };
-  /* sáu ô lưới cạnh nhau cùng thấy một chiếc xe — đúng tình huống sinh ra khung trùng */
+  var TRUE = { x: 100, y: 90, w: 120, h: 108 };
+  /* năm ô lưới cùng thấy một chiếc xe, ô thứ sáu thấy chiếc xe đỗ sát bên — đúng tình huống sinh ra khung trùng.
+     Xe thứ hai chồng lên khung 0,93 một chút (IoU 0,163): ngưỡng dẹp ≤ 0,15 dẹp oan nó, từ 0,75 khung trùng sống sót. */
   var BOX0 = [
     { x: 88, y: 84, w: 124, h: 112, c: 0.93 },
     { x: 100, y: 96, w: 118, h: 104, c: 0.88 },
     { x: 76, y: 74, w: 132, h: 122, c: 0.71 },
     { x: 112, y: 88, w: 112, h: 108, c: 0.64 },
     { x: 92, y: 104, w: 126, h: 100, c: 0.55 },
-    { x: 214, y: 96, w: 84, h: 96, c: 0.81 }   /* chiếc xe THỨ HAI, đứng cạnh */
+    { x: 180, y: 96, w: 84, h: 96, c: 0.81 }   /* chiếc xe THỨ HAI, đứng cạnh */
   ];
   var boxes = null, killed = null, keptOrder = null;
 
@@ -3401,12 +3422,12 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     var x1 = Math.max(TRUE.x, P.x), y1 = Math.max(TRUE.y, P.y);
     var x2 = Math.min(TRUE.x + TRUE.w, P.x + P.w), y2 = Math.min(TRUE.y + TRUE.h, P.y + P.h);
     if (x2 > x1 && y2 > y1)
-      el(svgI, 'rect', { x: x1, y: y1, width: x2 - x1, height: y2 - y1 }, 'fill:var(--l);opacity:.42');
+      el(svgI, 'rect', { x: x1, y: y1, width: x2 - x1, height: y2 - y1 }, 'fill:var(--m);opacity:.28');
     el(svgI, 'rect', { x: TRUE.x, y: TRUE.y, width: TRUE.w, height: TRUE.h },
-      'fill:none;stroke:var(--o);stroke-width:2.4;stroke-dasharray:6 4');
-    el(svgI, 'rect', { x: P.x, y: P.y, width: P.w, height: P.h }, 'fill:none;stroke:var(--k1);stroke-width:2.4');
-    txt(svgI, TRUE.x, TRUE.y - 6, 'khung THẬT', 'vm', 'start', 'fill:var(--o)');
-    txt(svgI, P.x, P.y + P.h + 14, 'khung ĐOÁN', 'vm', 'start', 'fill:var(--k1)');
+      'fill:none;stroke:var(--ink);stroke-width:2.4;stroke-dasharray:6 4');
+    el(svgI, 'rect', { x: P.x, y: P.y, width: P.w, height: P.h }, 'fill:none;stroke:var(--m);stroke-width:2.4');
+    txt(svgI, TRUE.x, TRUE.y - 6, 'khung THẬT', 'vm', 'start', 'fill:var(--ink)');
+    txt(svgI, P.x, P.y + P.h + 14, 'khung ĐOÁN', 'vm', 'start', 'fill:var(--m)');
     txt(svgI, 160, 246, 'IoU = ' + vi(v, 3) + (v >= 0.5 ? '  →  tính là ĐÚNG' : '  →  tính là SAI'),
       'vt', 'middle', 'fill:var(' + (v >= 0.5 ? '--good' : '--bad') + ')');
     return v;
@@ -3462,7 +3483,9 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     var g = 0;
     while (nmsStep() && g++ < 20) {}
     drawN();
-    report(drawI(), '→ xong: ' + keptOrder.length + ' khung, đúng bằng số xe trong ảnh');
+    var n = keptOrder.length;
+    report(drawI(), '→ xong: ' + n + ' khung cho 2 chiếc xe — ' +
+      (n === 2 ? 'đúng bằng số xe' : n < 2 ? 'ngưỡng thấp quá, một xe bị dẹp oan' : 'ngưỡng cao quá, còn khung trùng'));
   });
   $('m11-reset').addEventListener('click', function () { reset(); report(drawI()); });
   reset(); report(drawI());
@@ -3475,7 +3498,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
   if (!svg) return;
   var sb = $('m12-b'), vb = $('m12-bv'), out = $('m12-out');
 
-  /* Ví dụ của Ng. Xác suất do người đặt: "is" phổ biến nhất ở bước 1, nhưng câu tổng thể
+  /* Phỏng theo ví dụ của Ng. Xác suất do người đặt: "is" phổ biến nhất ở bước 1, nhưng câu tổng thể
      tốt nhất lại đi qua "visits" — nên chọn tham lam (B=1) trượt. */
   var NEXT = {
     'Jane': { is: .55, visits: .32, went: .13 },
@@ -3490,7 +3513,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     'Jane visits the': { city: 1 },
     'Jane went to': { Africa: .50, school: .50 },
     'Jane went home': { early: 1 },
-    'Jane is going to': { Africa: .30, school: .70 },
+    'Jane is going to': { Africa: .70, school: .30 },
     'Jane is going home': { early: 1 },
     'Jane is a teacher': { now: 1 },
     'Jane is a doctor': { now: 1 },
@@ -3539,12 +3562,12 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
       h.cand.slice(0, 7).forEach(function (c, i) {
         var y = 48 + i * 36, on = h.kept.indexOf(c) >= 0;
         el(svg, 'rect', { x: x, y: y, width: colW - 12, height: 30, rx: 5 },
-          'fill:var(' + (on ? '--surface' : '--sunk') + ');stroke:var(' + (on ? '--o' : '--border') + ');stroke-width:' + (on ? 1.8 : 1) +
+          'fill:var(' + (on ? '--surface' : '--sunk') + ');stroke:var(' + (on ? '--m' : '--border') + ');stroke-width:' + (on ? 1.8 : 1) +
           ';opacity:' + (on ? 1 : .6));
         var short = c.s.replace('Jane ', '');
         txt(svg, x + 7, y + 13, short.length > 20 ? short.slice(0, 19) + '…' : short, 'vm', 'start',
           on ? 'fill:var(--ink)' : 'fill:var(--subtle)');
-        txt(svg, x + 7, y + 25, vi(c.p, 4), 'vs', 'start', on ? 'fill:var(--o)' : 'fill:var(--subtle)');
+        txt(svg, x + 7, y + 25, vi(c.p, 4), 'vs', 'start', on ? 'fill:var(--m)' : 'fill:var(--subtle)');
       });
       if (h.cand.length > 7) txt(svg, x + 7, 48 + 7 * 36 + 12, '… và ' + (h.cand.length - 7) + ' nữa', 'vs', 'start');
     });
@@ -3598,12 +3621,12 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     for (var i = 0; i < N; i++) {
       var x = x0 + i * w;
       el(svg, 'rect', { x: x, y: y, width: w - 8, height: 62, rx: 7 },
-        'fill:var(' + (TERM[i] ? (i === 0 ? '--good-bg' : '--l-bg') : '--surface') + ');stroke:var(' +
-        (TERM[i] ? (i === 0 ? '--good' : '--l') : '--border-2') + ');stroke-width:' + (TERM[i] ? 2 : 1.2));
+        'fill:var(' + (TERM[i] ? '--good-bg' : '--surface') + ');stroke:var(' +
+        (TERM[i] ? '--good' : '--border-2') + ');stroke-width:' + (TERM[i] ? 2 : 1.2));
       txt(svg, x + (w - 8) / 2, y - 10, 'ô ' + (i + 1), 'vs', 'middle');
       if (TERM[i]) {
         txt(svg, x + (w - 8) / 2, y + 30, R[i] + ' điểm', 'vt', 'middle',
-          'fill:var(' + (i === 0 ? '--good' : '--l') + ')');
+          'fill:var(--good)');
         txt(svg, x + (w - 8) / 2, y + 48, 'về đích', 'vs', 'middle');
         continue;
       }
@@ -3613,10 +3636,10 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
       el(svg, 'path', {
         d: goLeft ? ('M' + (cx + 16) + ' ' + ay + ' L' + (cx - 16) + ' ' + ay)
                   : ('M' + (cx - 16) + ' ' + ay + ' L' + (cx + 16) + ' ' + ay), fill: 'none'
-      }, 'stroke:var(--o);stroke-width:3');
+      }, 'stroke:var(--ink);stroke-width:3');
       el(svg, 'path', {
         d: goLeft ? ('M' + (cx - 9) + ' ' + (ay - 6) + ' l-7 6 7 6') : ('M' + (cx + 9) + ' ' + (ay - 6) + ' l7 6 -7 6'), fill: 'none'
-      }, 'stroke:var(--o);stroke-width:3');
+      }, 'stroke:var(--ink);stroke-width:3');
       txt(svg, cx, y + 50, vi(Math.max(left, right), 1), 'vm', 'middle');
     }
     txt(svg, 40, 158, 'Mũi tên = nước đi tốt nhất. Số dưới = Q của nước ấy.', 'vs', 'start');
@@ -3626,9 +3649,9 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     var flip = Math.pow(0.4, 1 / 3);
     txt(svg, 40, 186, 'Ở ô 5, máy so hai con đường:', 'vt', 'start');
     txt(svg, 40, 206, 'sang phải, 1 bước tới 40 điểm   →  γ¹ × 40 = ' + vi(a, 2), 'vm', 'start',
-      'fill:var(' + (a >= b ? '--o' : '--subtle') + ')');
+      'fill:var(' + (a >= b ? '--ink' : '--subtle') + ')');
     txt(svg, 40, 224, 'sang trái, 4 bước tới 100 điểm  →  γ⁴ × 100 = ' + vi(b, 2), 'vm', 'start',
-      'fill:var(' + (b > a ? '--o' : '--subtle') + ')');
+      'fill:var(' + (b > a ? '--ink' : '--subtle') + ')');
     txt(svg, 40, 246, 'Hai bên bằng nhau đúng tại γ = ' + vi(flip, 3) + '.', 'vs', 'start');
 
     var pol = [];
@@ -3639,6 +3662,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
       'γ¹ × 40           ' + pad(vi(a, 2), 6) + '\n' +
       'γ⁴ × 100          ' + pad(vi(b, 2), 6) + '\n' +
       (b > a ? '→ kiên nhẫn: mọi ô đều đi về phía 100 điểm'
+        : g < 0.4 ? '→ rất nóng vội: cả ô 4 lẫn ô 5 quay sang lấy 40 điểm'
         : '→ nóng vội: ô 5 quay sang lấy 40 điểm ở ngay bên');
   }
   sg.addEventListener('input', draw);
@@ -3802,16 +3826,19 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['kết quả của một filter', 'feature map', 'chỗ nào trong ảnh có chi tiết đó'],
     ['số loại chi tiết chạy song song', 'channel', 'nhiều kính lúp cùng một lượt'],
     ['đắp vành số 0 quanh ảnh', 'padding', 'để ô ở mép cũng được phủ, và ảnh không co lại'],
-    ['trượt mấy ô một lần', 'stride', 'nhảy 2 thì ảnh ra bé một nửa'],
-    ['thu nhỏ ảnh', 'pooling', 'giữ cái lớn nhất; không có núm nào để học'],
+    ['trượt mấy ô một lần', 'stride', 'nhảy 2 thì mỗi chiều của ảnh còn một nửa'],
+    ['thu nhỏ ảnh', 'max pooling', 'giữ cái lớn nhất; không có núm nào để học'],
     ['chín cái núm dùng chung cả ảnh', 'parameter sharing', 'lý do CNN rẻ hơn mạng thường hàng nghìn lần'],
-    ['mèo dịch sang phải vẫn là mèo', 'translation invariance', 'hệ quả của việc dùng chung núm'],
+    ['mèo dịch sang phải vẫn là mèo', 'translation invariance', 'dùng chung núm làm kết quả dịch theo mèo; thu nhỏ làm đáp án gần như không đổi'],
     ['máy xem ảnh', 'convolutional neural network (CNN)', 'kính lúp + thu nhỏ, xếp nhiều lượt'],
+    ['mạng đọc số viết tay', 'LeNet-5', '1998, 60 nghìn núm — xếp thẳng kính lúp và thu nhỏ'],
+    ['cùng ý tưởng, to hơn, có ReLU', 'AlexNet', '2012, 60 triệu núm'],
+    ['chỉ kính 3×3 và thu nhỏ 2×2', 'VGG', '2014, 138 triệu núm — đơn giản đến mức đẹp'],
     ['đường tắt', 'skip connection', 'cộng thẳng đầu vào của khối vào đầu ra'],
     ['mạng dùng đường tắt', 'ResNet', 'lý do mạng 152 lớp chịu học'],
     ['kính lúp 1×1', '1x1 convolution', 'trộn các KÊNH, dùng để giảm số kênh cho rẻ'],
     ['chạy hết mọi cỡ kính rồi ghép', 'Inception', 'để máy tự quyết cỡ nào có ích'],
-    ['lọc từng kênh rồi mới trộn', 'depthwise separable convolution', 'rẻ hơn khoảng mười lần'],
+    ['lọc từng kênh rồi mới trộn', 'depthwise separable convolution', 'rẻ hơn tới tám, chín lần với kính 3×3'],
     ['mạng chạy trên điện thoại', 'MobileNet', 'xây trên tích chập tách theo chiều sâu'],
     ['mở rộng cả ba chiều cùng lúc', 'EfficientNet', 'sâu, rộng, độ phân giải — theo một tỉ lệ'],
     ['có gì, ở đâu, mấy cái', 'object detection', 'khó hơn phân loại hẳn một bậc'],
@@ -3828,7 +3855,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['dãy số đại diện cho một thứ', 'embedding', '128 số cho một khuôn mặt'],
     ['nhìn ba ảnh cùng lúc', 'triplet loss', 'biên α là chi tiết chống gian lận'],
     ['vẽ ảnh theo lối Van Gogh', 'neural style transfer', 'thứ bị vặn là TẤM ẢNH, không phải núm'],
-    ['kênh nào hay sáng cùng kênh nào', 'Gram matrix', 'bỏ hết "ở đâu", giữ "đi cùng nhau" — đúng là phong cách'],
+    ['kênh nào hay sáng cùng kênh nào', 'Gram matrix', 'bỏ hết "ở đâu", giữ "đi cùng nhau" — cái cách này gọi là phong cách'],
 
     /* ── Chương 11 · câu ─────────────────────────────────────────────────── */
     ['toàn số 0, một số 1', 'one-hot vector', 'mọi cặp từ đều cách nhau đúng bằng nhau'],
@@ -3858,11 +3885,11 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['nhãn để người khác tìm thấy tôi', 'key', 'K trong attention'],
     ['nội dung tôi đưa ra', 'value', 'V trong attention'],
     ['các từ trong cùng câu nhìn nhau', 'self-attention', 'attention trong nội bộ một câu'],
-    ['tám phép nhìn song song', 'multi-head attention', 'mỗi đầu học một loại quan hệ'],
+    ['tám phép nhìn song song', 'multi-head attention', 'mỗi đầu tự học một kiểu nhìn'],
     ['dán số thứ tự vào từng từ', 'positional encoding', 'thiếu nó thì mất thông tin thứ tự'],
     ['chuẩn hoá theo từng từ', 'layer normalization', 'không theo cả lô, vì câu dài ngắn khác nhau'],
     ['bỏ đọc lần lượt', 'Transformer', 'chỉ dùng attention; chữ T trong GPT'],
-    ['tăng đều thì tốt đều', 'scaling laws', 'không có tường nào ở giữa — ra đời SAU khoá học'],
+    ['tăng đều thì tốt đều', 'scaling laws', 'không có tường nào ở giữa — không có trong khoá'],
     ['học một lần, dùng trăm việc', 'foundation model', 'hệ quả trực tiếp của quy luật mở rộng'],
 
     /* ── Chương 12 · không ai nói đáp án ─────────────────────────────────── */
@@ -3870,14 +3897,14 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['chia nhóm', 'clustering', 'câu hỏi đổi thành "trong đống này có cấu trúc gì"'],
     ['hai bước lặp lại', 'k-means', 'k là số nhóm mà BẠN chọn'],
     ['điểm giữa mỗi nhóm', 'centroid', 'dấu × trong mô hình 12'],
-    ['tổng bình phương khoảng cách tới tâm', 'distortion', 'điểm trừ của k-means; không bước nào làm nó tăng, nên nó chắc chắn dừng'],
+    ['tổng bình phương khoảng cách tới tâm', 'distortion', 'điểm trừ của k-means; hai bước không bao giờ làm nó tăng, số cách chia lại hữu hạn, nên nó chắc chắn dừng'],
     ['tìm chỗ đường gấp khúc', 'elbow method', 'Ng thẳng thắn: thường không có cái khuỷu nào rõ'],
     ['bắt cái khác thường', 'anomaly detection', 'học "bình thường", báo động khi lệch'],
-    ['hình chuông', 'Gaussian distribution', 'khớp trung bình và độ lệch cho từng con số'],
+    ['hình chuông', 'Gaussian distribution', 'khớp trung bình và độ lệch chuẩn cho từng con số'],
     ['bỏ bớt chiều', 'PCA', 'để vẽ được lên giấy; ĐỪNG dùng để chống thuộc lòng'],
     ['gợi ý phim', 'recommender system', 'máy chưa bao giờ xem phim; nó chỉ khớp bảng điểm'],
     ['học từ điểm của người khác', 'collaborative filtering', 'học sở thích và tính chất phim CÙNG LÚC'],
-    ['dùng thuộc tính có sẵn', 'content-based filtering', 'cách duy nhất dùng được cho phim mới ra'],
+    ['dùng thuộc tính có sẵn', 'content-based filtering', 'cách duy nhất cá nhân hoá được cho phim mới ra'],
     ['trừ điểm trung bình từng phim', 'mean normalization', 'không có nó, người mới bị gợi ý ngẫu nhiên'],
     ['phim mới, người mới', 'cold start', 'lọc cộng tác bó tay; phải mượn lọc theo nội dung'],
     ['lọc rẻ trước, xếp hạng đắt sau', 'retrieval and ranking', 'hình dáng của gần như mọi hệ gợi ý thật'],
@@ -3886,15 +3913,17 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['dạy chó ngồi', 'reinforcement learning', 'chỉ có điểm ở cuối, không ai chỉ từng bước'],
     ['điểm được thưởng', 'reward', 'thay cho nhãn'],
     ['tổng thưởng, chiết khấu dần', 'return', 'R₁ + γR₂ + γ²R₃ + …'],
-    ['độ kiên nhẫn γ', 'discount factor', 'đổi γ là LẬT NGƯỢC cả chiến lược'],
+    ['độ kiên nhẫn γ', 'discount factor', 'đổi γ có thể LẬT NGƯỢC nước đi'],
     ['sổ tay "ở đâu thì làm gì"', 'policy', 'đích đến của cả việc học'],
+    ['chỗ đứng', 'state', 'ký hiệu s; trực thăng thì là độ cao, tốc độ, ba góc nghiêng'],
+    ['hành động', 'action', 'ký hiệu a; ở mỗi chỗ đứng chọn một cái'],
     ['giá trị của một nước đi', 'Q-function', 'có Q rồi thì chính sách chỉ là "chọn Q lớn nhất"'],
-    ['Q phải khớp với chính nó', 'Bellman equation', 'một điều kiện nhất quán, không phải phép tính'],
+    ['Q phải khớp với chính nó', 'Bellman equation', 'điều kiện nhất quán; giải bằng cách lặp tới khi hai vế khớp'],
     ['thay bảng Q bằng một mạng', 'DQN', 'khi chỗ đứng là số thực, vô hạn'],
-    ['ε phần trăm số lần làm bừa', 'epsilon-greedy', 'không thăm dò thì không phát hiện mình tưởng sai'],
+    ['với xác suất ε thì làm bừa', 'epsilon-greedy', 'không thăm dò thì không phát hiện mình tưởng sai'],
     ['rút ngẫu nhiên từ sổ kinh nghiệm', 'replay buffer', 'các bước liền nhau giống nhau quá'],
     ['nhích bản sao về từng chút', 'soft update', 'đích đứng yên hơn thì học ổn định hơn'],
-    ['thắng ở cuối thì công về đâu', 'credit assignment', 'toàn bộ độ khó của học tăng cường'],
+    ['thắng ở cuối thì công về đâu', 'credit assignment', 'cái khó lớn nhất của học tăng cường'],
 
     /* ── Tra cứu · tên chỉ xuất hiện ở hai mục tra cứu cuối trang ─────────── */
     ['điểm trừ không sợ ca dị thường', 'Huber loss', 'bình phương ở gần, tuyến tính ở xa'],
