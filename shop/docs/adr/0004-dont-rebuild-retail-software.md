@@ -1,6 +1,6 @@
 # ADR 0004 — Không tự xây phần mềm quản lý bán hàng
 
-**Ngày:** 20/09/2026 · **Trạng thái:** đang áp dụng
+**Ngày:** 20/09/2026 · **Trạng thái:** đang áp dụng · **Sửa:** 24/09/2026 — xem mục cuối
 
 ## Bối cảnh
 
@@ -29,17 +29,37 @@ phần mềm ấy tồn tại và sống được.
 
 ## Chỗ ngoại lệ, và điều kiện của nó
 
-Phần mềm riêng chỉ thắng ở chỗ workflow **thật sự đặc thù**. Với shop nến, ứng viên rõ nhất là
-**nguyên vật liệu và mẻ sản xuất**: bán một cây nến thì trừ bao nhiêu gam sáp, bao nhiêu ml tinh
-dầu, còn đủ cho mấy mẻ nữa. Không phần mềm bán lẻ đại trà nào biết công thức của shop.
+Phần mềm riêng chỉ thắng ở chỗ workflow **thật sự đặc thù**. Với shop nến, ứng viên duy nhất
+còn lại là **nửa chất lượng của sổ mẻ**: nhiệt độ lúc pha hương và lúc rót, mẻ nào hỏng mấy cây
+và vì sao, cây nào ủ đủ ngày, mẻ nào dùng lô tinh dầu nào. Nửa **định lượng** — bán một cây thì
+trừ bao nhiêu gam sáp, bao nhiêu ml tinh dầu, còn đủ cho mấy mẻ — **đã có người bán**, xem mục
+sửa ở cuối.
 
-Nhưng **chỉ xây khi chủ shop đã hết sáp giữa lúc đang có đơn ít nhất một lần.** Chưa xảy ra thì
-đó vẫn là một câu chuyện hay chứ chưa phải một vấn đề.
+Và ngay cả nửa chất lượng, ở 5–10 đơn/ngày, là một tờ giấy ở bàn đổ cộng vài cột trong sheet,
+không phải một phần mềm. Chỉ nghĩ tới phần mềm khi chủ shop đã
+**hết sáp giữa lúc đang có đơn** ít nhất một lần, hoặc sổ giấy đã chạy và vướng ở một chỗ cụ thể.
+Chưa xảy ra thì đó vẫn là một câu chuyện hay chứ chưa phải một vấn đề.
 
 ## Xét lại khi
 
 - Chủ shop đã dùng phần mềm có sẵn và chỉ ra được cụ thể chỗ nó không làm được, kèm thiệt hại
   đo được bằng tiền hoặc bằng giờ.
-- Hoặc phần đặc thù (công thức, mẻ sản xuất) trở thành nút thắt thật.
+- Hoặc nửa chất lượng của sổ mẻ trở thành nút thắt thật.
 
 Nghe mô tả rồi tưởng tượng ra nút thắt thì **không** tính.
+
+## Sửa ngày 24/09/2026 — "không phần mềm bán lẻ nào biết công thức" là SAI
+
+Bản viết ngày 20/09 ghi: *"Không phần mềm bán lẻ đại trà nào biết công thức của shop."* Câu ấy
+được chép sang bảng năng lực ở [05](../05-ARCHITECTURE.md) và sang **bản đề xuất mang đi gặp chủ
+shop**.
+
+KiotViet — cái tên đầu tiên trong bảng giá ở trên — có tính năng *Hàng sản xuất*: khai nguyên
+vật liệu và số lượng cho một thành phẩm; khi hoàn thành phiếu sản xuất thì *"tự động trừ tồn kho
+nguyên vật liệu và cộng tồn kho thành phẩm"*; giá vốn thành phẩm tính từ tổng giá vốn nguyên vật
+liệu; báo khi không đủ nguyên liệu [đã kiểm: hướng dẫn sử dụng KiotViet, đọc 24/09/2026]. Tức là
+làm đúng thứ đoạn ngoại lệ bảo không ai làm.
+
+Điều rút ra: **một ngoại lệ cho phép tự xây phải được kiểm kỹ bằng đúng mức với quy tắc nó phá.**
+Quy tắc "đừng xây" dựa trên bảng giá chính thức đã kiểm; còn câu ngoại lệ không mang nhãn nguồn
+nào — câu duy nhất trong ADR này như thế.

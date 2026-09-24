@@ -1297,9 +1297,9 @@ footer p{max-width:74ch}
       <tr><td>Cho khách chọn được món</td><td>Sàn + nhắn tin tay</td><td><strong>Có thể</strong> — chỗ Tìm mùi đang thử. Chưa xác nhận</td></tr>
       <tr><td>Nhận tiền</td><td>Sàn, COD, chuyển khoản</td><td>Một phần. VietQR + báo-có tự động là đủ</td></tr>
       <tr><td>Giao hàng</td><td>Sàn, hoặc đặt tay</td><td>Chưa. Nối khi việc nhập tay thành gánh nặng</td></tr>
-      <tr><td>Biết còn bao nhiêu hàng</td><td>Trong đầu chủ shop</td><td>Chưa. Xây khi bán hụt lần đầu, không xây trước</td></tr>
+      <tr><td>Biết còn bao nhiêu hàng</td><td>Trong đầu chủ shop</td><td>Chưa. Khi bán hụt lần đầu thì <strong>mua</strong>, không xây</td></tr>
       <tr><td><strong>Giữ khách quay lại</strong></td><td>Gần như chưa ai lo</td><td><strong>Chỗ trống lớn nhất, và nó không cần phần mềm để thử</strong></td></tr>
-      <tr><td>Quản lý nguyên vật liệu</td><td>Trong đầu chủ shop</td><td>Xa. Nhưng đây là chỗ phần mềm riêng thắng phần mềm bán sẵn</td></tr>
+      <tr><td>Quản lý nguyên vật liệu</td><td>Trong đầu chủ shop</td><td>Không. Nửa định lượng <strong>đã có người bán</strong>; nửa chất lượng, ở quy mô này, là một tờ giấy. <em>Bản trước ghi “đây là chỗ phần mềm riêng thắng” — sai, sửa 24/09/2026</em></td></tr>
     </tbody>
   </table></div>
 
@@ -1338,11 +1338,12 @@ footer p{max-width:74ch}
   </div>
 
   <div class="adr">
-    <div class="no">ADR 0004 · đang áp dụng</div>
+    <div class="no">ADR 0004 · đang áp dụng · đã sửa 24/09/2026</div>
     <h4>Không tự xây phần mềm quản lý bán hàng</h4>
     <dl>
       <dt>Vì sao</dt><dd>Với khoảng <strong>450.000 ₫/tháng</strong>, Nhanh.vn cho POS + website + đồng bộ sàn, <strong>có sẵn hôm nay</strong>. Tự xây lại nghĩa là bỏ hàng trăm giờ để có một bản kém hoàn thiện hơn. Phần lớn nghiệp vụ bán lẻ là hàng hoá phổ thông — đó chính là lý do những phần mềm ấy tồn tại và sống được.</dd>
-      <dt>Chỗ ngoại lệ, và điều kiện của nó</dt><dd>Phần mềm riêng chỉ thắng ở workflow <strong>thật sự đặc thù</strong>. Với shop nến, ứng viên rõ nhất là <strong>nguyên vật liệu và mẻ sản xuất</strong> — không phần mềm bán lẻ đại trà nào biết công thức của shop. Nhưng <strong>chỉ xây khi chủ shop đã hết sáp giữa lúc đang có đơn ít nhất một lần</strong>.</dd>
+      <dt>Chỗ ngoại lệ, và điều kiện của nó</dt><dd>Phần mềm riêng chỉ thắng ở workflow <strong>thật sự đặc thù</strong>. Với shop nến, ứng viên duy nhất còn lại là <strong>nửa chất lượng của sổ mẻ</strong> — nhiệt độ, cây lỗi, ngày ủ, lô nào vào mẻ nào — và ở 5–10 đơn/ngày nửa đó là một tờ giấy, không phải một phần mềm. Chỉ nghĩ tới phần mềm khi chủ shop đã <strong>hết sáp giữa lúc đang có đơn</strong> ít nhất một lần.</dd>
+      <dt>Chỗ nó từng sai</dt><dd>Bản đầu ghi “<strong>không phần mềm bán lẻ đại trà nào biết công thức của shop</strong>”, và câu ấy được chép sang bảng năng lực lẫn bản đề xuất mang đi gặp chủ shop. <strong>Sai:</strong> KiotViet có <em>Hàng sản xuất</em> — khai công thức, phiếu sản xuất tự trừ nguyên liệu và cộng thành phẩm, giá vốn tính từ nguyên liệu, báo khi thiếu <span class="c c-ok">đã kiểm</span>. Bài học: <strong>một ngoại lệ cho phép tự xây phải được kiểm kỹ bằng đúng mức với quy tắc nó phá</strong> — quy tắc dựa trên bảng giá đã kiểm, còn câu ngoại lệ là câu duy nhất trong ADR không mang nhãn nguồn.</dd>
       <dt>Xét lại khi</dt><dd>Chủ shop đã dùng phần mềm có sẵn và chỉ ra được cụ thể chỗ nó không làm được, <strong>kèm thiệt hại đo được bằng tiền hoặc bằng giờ</strong>. <em>Nghe mô tả rồi tưởng tượng ra nút thắt thì không tính.</em></dd>
     </dl>
   </div>

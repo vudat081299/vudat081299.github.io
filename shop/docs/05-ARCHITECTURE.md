@@ -26,9 +26,9 @@ chu cho một sản phẩm chưa ai chứng minh là cần tồn tại.
 | Cho khách chọn được món | Sàn + nhắn tin tay | **Có thể** — đây là chỗ Tìm mùi đang thử. Chưa xác nhận. |
 | Nhận tiền | Sàn, COD, chuyển khoản | Một phần. VietQR + báo-có tự động là đủ cho quy mô này. |
 | Giao hàng | Sàn, hoặc đặt tay | Chưa. Nối GHN/GHTK khi việc nhập tay thành gánh nặng. |
-| Biết còn bao nhiêu hàng | Trong đầu chủ shop | Chưa. Xây khi bán hụt lần đầu, không xây trước. |
+| Biết còn bao nhiêu hàng | Trong đầu chủ shop | Chưa. Khi bán hụt lần đầu thì **mua**, không xây — [adr/0004](adr/0004-dont-rebuild-retail-software.md). |
 | Giữ khách quay lại | Gần như chưa ai lo | **Chỗ trống lớn nhất, và nó không cần phần mềm để thử.** |
-| Quản lý nguyên vật liệu | Trong đầu chủ shop | Xa. Nhưng đây là chỗ phần mềm riêng thắng phần mềm bán sẵn. |
+| Quản lý nguyên vật liệu | Trong đầu chủ shop | Không. Nửa định lượng — trừ nguyên liệu theo công thức — **đã có người bán** ([adr/0004](adr/0004-dont-rebuild-retail-software.md)); nửa chất lượng, ở quy mô này, là một tờ giấy. *Bản trước ghi "đây là chỗ phần mềm riêng thắng phần mềm bán sẵn" — sai, sửa 24/09/2026.* |
 
 Bảng này quan trọng hơn mọi sơ đồ lớp trong tài liệu. Đọc nó theo cột cuối: **phần lớn câu trả
 lời là "không" hoặc "chưa"**. Xem [02-ROADMAP.md](02-ROADMAP.md) để biết điều gì mở khoá từng bước.
