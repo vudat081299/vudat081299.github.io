@@ -394,6 +394,18 @@ def run_calculus():
     if grad != (4, 6):
         fails.append('2.4: gradient của x²+3y² tại (2,1) phải là (4,6)')
     need('2.4 gradient', 'tại (2, 1)')
+    # 2.4 — vì sao ∇f là hướng dốc nhất: dốc theo hướng ∇f bằng ‖∇f‖, hơn cả hai trục
+    num('2.4 dốc theo ∇f', math.hypot(4, 6), 2, ctx='√(4² + 6²) ≈ ')
+    claim('2.4 dốc nhất theo ∇f', math.hypot(4, 6) > max(grad),
+          'dốc theo hướng ∇f phải lớn hơn dốc dọc từng trục')
+    # 2.4 — Hessian: dấu các trị riêng phân loại điểm dừng, và nhìn hai trục là chưa đủ
+    assert_close('2.4 Hessian của x² − y²', eig2(2, 0, 0, -2), (2, -2))
+    assert_close('2.4 Hessian của x² + 3xy + y²', eig2(2, 3, 3, 2), (5, -1))
+    q = lambda x, y: x * x + 3 * x * y + y * y
+    claim('2.4 x² + 3xy + y² là yên ngựa', q(1, 0) > 0 and q(0, 1) > 0 and q(1, -1) < 0,
+          'phải cong lên dọc hai trục mà cong xuống dọc y = −x')
+    need('2.4 trị riêng yên ngựa', 'trị riêng 2 và −2')
+    need('2.4 trị riêng yên ngựa xoay', 'trị riêng 5 và −1')
 
     # 2.5 — bảng gradient descent
     for a, x10 in [(0.1, None), (0.5, None), (0.9, None), (1.0, None), (1.1, None)]:
@@ -411,6 +423,17 @@ def run_calculus():
         fails.append('2.5: α=0,1 sau 3 bước phải là 2,56')
     need('2.5 đường đi α=0,1', '5 → 4 → 3,2 → 2,56')
     need('2.5 phân kỳ', '5 → −6 → 7,2 → −8,64')
+    # 2.5 — ngưỡng của mô hình 9, đọc trên thanh trượt (bước 0,01). Theo trục y, mỗi bước
+    # nhân chỗ đứng với (1 − 6α) trên cái bát và (1 − 24α) trên máng hẹp.
+    grid = [k / 100 for k in range(1, 61)]
+    zig_bat = next(a for a in grid if 1 - 6 * a < 0)
+    div_bat = next(a for a in grid if abs(1 - 6 * a) > 1)
+    div_mang = next(a for a in grid if abs(1 - 24 * a) > 1)
+    need('2.5 bát zíc-zắc', f'từ <b>{vi(zig_bat)}</b> đường đi bắt đầu zíc-zắc', zig_bat)
+    need('2.5 bát phân kỳ', f'từ <b>{vi(div_bat)}</b> thì <b>phân kỳ</b>', div_bat)
+    need('2.5 máng phân kỳ', f'phân kỳ ngay từ <b>{vi(div_mang)}</b>', div_mang)
+    need('2.5 ngưỡng bát', 'α tới 1/3 ≈ ' + vi(1 / 3))
+    need('2.5 ngưỡng máng', 'α vượt 1/12 ≈ ' + vi(1 / 12, 3))
 
     # 2.6 — quy tắc chuỗi
     h3 = lambda x: (2 * x + 1) ** 3
@@ -446,6 +469,35 @@ def run_calculus():
         fails.append('2.7: Newton phải hội tụ về căn 2')
     # đáy của x⁴−3x² nằm ở căn 1,5
     num('2.7 đáy x⁴−3x²', math.sqrt(1.5), 4)
+    # 2.7 — cột "chữ số thập phân đúng": k lớn nhất để |x − √2| ≤ 0,5·10⁻ᵏ, cắt ở 10
+    # chữ số đang hiện. Bản trước trộn hai cách đếm nên dãy không gấp đôi như bài nói.
+    x = 1.0
+    for i in range(5):
+        k = min(10, max(0, math.floor(-math.log10(2 * abs(x - math.sqrt(2))))))
+        cell = (f'<td>{vi(x, 10)}</td><td>{k}</td>' if i < 4
+                else f'<td><b>{vi(x, 10)}</b></td><td><b>{k}</b></td>')
+        need(f'2.7 chữ số đúng bước {i}', cell, k)
+        x = x - (x * x - 2) / (2 * x)
+    need('2.7 gần gấp đôi', 'gần gấp đôi mỗi bước</b> (2 → 5 → 10)')
+    # 2.7 — vùng hỏng của Newton trên x⁴ − 3x², chạy đúng vòng lặp của mô hình 11
+    # (độ cong dưới 0,05 thì chia cho ±0,05). Lời gợi ý của mô hình nói vùng ấy.
+    def newton_m11(x0, steps=60):
+        x = x0
+        for _ in range(steps):
+            h = 12 * x * x - 6
+            if abs(h) < 0.05:
+                h = 0.05 if h >= 0 else -0.05
+            x = x - (4 * x ** 3 - 6 * x) / h
+        return x
+    hong = [k / 100 for k in range(-200, 201)
+            if abs(newton_m11(k / 100) - math.copysign(math.sqrt(1.5), k / 100)) > 1e-6]
+    rong = max(abs(v) for v in hong) if hong else None
+    claim('2.7 vùng hỏng của Newton', rong == 0.70,
+          f'Newton phải chỉ hỏng khi |x0| ≤ 0,70, tính ra tới {rong}')
+    nhay = 0.71 - (4 * 0.71 ** 3 - 6 * 0.71) / 0.05
+    claim('2.7 sát ±0,71 thì nhảy xa', abs(nhay) > 10, f'x0 = 0,71 nhảy tới {nhay}')
+    need('2.7 vùng hỏng', 'khoảng từ −0,7 tới 0,7')
+    need('2.7 nhảy xa', 'sát ±0,71')
 
     # 2.8 — đạo hàm hai hàm mất mát
     xx, yy, w = 2.0, 5.0, 1.0
@@ -456,6 +508,15 @@ def run_calculus():
     z = w * xx
     num('2.8 σ(2)', sig(z), 4)
     num('2.8 đạo hàm log-loss', (sig(z) - 1) * xx, 4, ctx='<b>')
+    # 2.8 — công thức log-loss viết trong bài, và phép rút gọn, kiểm bằng đạo hàm số
+    need('2.8 công thức log-loss', 'L = −[y·ln p + (1 − y)·ln(1 − p)]')
+    num('2.8 phạt khi tin p = 0,1', -math.log(0.1), 2, ctx='−ln 0,1 ≈ ')
+    num('2.8 phạt khi tin p = 0,9', -math.log(0.9), 2, ctx='chỉ bị phạt ')
+    L = lambda w_: -(yl * math.log(sig(w_ * xl)) + (1 - yl) * math.log(1 - sig(w_ * xl)))
+    xl, yl = 2.0, 1.0
+    so = (L(1 + 1e-6) - L(1 - 1e-6)) / 2e-6
+    claim('2.8 rút gọn log-loss', abs(so - (sig(2) - 1) * 2) < 1e-6,
+          f'đạo hàm số {so} không khớp (σ(z) − y)·x')
 
 
 # ───────────────────────────── xác suất & thống kê ───────────────────────────
