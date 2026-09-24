@@ -1848,22 +1848,22 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="ask">Một con xúc xắc sáu mặt. <span>Ra mặt 6 thì &ldquo;thường xuyên&rdquo; tới mức nào?</span></p>
 
-        <p class="lede">Có <b>6 cách</b> xúc xắc rơi, trong đó <b>1 cách</b> ra mặt 6. Vậy 1 chia 6, tức khoảng <b>16,7%</b>. Không có gì hơn thế. Mọi công thức xác suất trong khoá 3 đều mọc ra từ phép chia này.</p>
+        <p class="lede">Có <b>6 cách</b> xúc xắc rơi, trong đó <b>1 cách</b> ra mặt 6. Vậy 1 chia 6, tức khoảng <b>16,7%</b>. Không có gì hơn thế. Mọi quy tắc ở mấy mục sau đều thử lại được bằng phép chia này — miễn là các kết cục đồng khả năng. Đồng xu lệch hay chiều cao người thì xác suất không còn là phép đếm, nhưng các quy tắc vẫn giữ nguyên.</p>
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Đếm số cách <b>được</b>, đếm số cách <b>tất cả</b>, rồi chia. Xúc xắc: 1 trên 6. Hai xúc xắc ra tổng 7: đếm được <b>6 cách</b> trên <b>36</b>, cũng ra 1/6.</div></div>
           <div class="r-math"><div class="lbl">Toán</div><div class="v"><span class="fml">P(A) = |A| / |Ω|</span> khi mọi kết cục đồng khả năng. Ω là <b>không gian mẫu</b> — danh sách mọi chuyện có thể xảy ra. Luôn: 0 ≤ P ≤ 1, và P(mọi thứ) = 1.</div></div>
-          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Mọi mô hình phân loại đều xuất ra <b>xác suất</b>, không phải nhãn. &ldquo;Ảnh này 92% là mèo&rdquo;. Ngưỡng cắt 92% thành &ldquo;mèo&rdquo; là quyết định của <i>bạn</i>, không phải của mô hình.</div></div>
+          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Phần lớn mô hình phân loại — hồi quy logistic, mạng nơ-ron có sigmoid hay softmax ở cuối — xuất ra <b>xác suất</b>, không phải nhãn. &ldquo;Ảnh này 92% là mèo&rdquo;. Ngưỡng cắt 92% thành &ldquo;mèo&rdquo; là quyết định của <i>bạn</i>, không phải của mô hình.</div></div>
         </div>
 
-        <p>Chỗ dễ sai duy nhất ở mục này: <b>đếm cho đủ</b>. Hai xúc xắc có 36 cách rơi, không phải 12 — vì &ldquo;xúc xắc A ra 2, B ra 5&rdquo; khác với &ldquo;A ra 5, B ra 2&rdquo;. Đếm thiếu là nguồn của gần như mọi lời giải sai trong xác suất sơ cấp.</p>
+        <p>Chỗ dễ sai duy nhất ở mục này: <b>đếm cho đủ</b>. Hai xúc xắc có 36 cách rơi, không phải 21 — vì &ldquo;xúc xắc A ra 2, B ra 5&rdquo; khác với &ldquo;A ra 5, B ra 2&rdquo;. Gộp hai cách ấy làm một thì còn 21 cặp, nhưng 21 cặp ấy <b>không</b> đồng khả năng: cặp {2, 5} ra được bằng 2 cách, cặp {3, 3} chỉ bằng 1 — mà phép chia chỉ đúng khi mọi kết cục đồng khả năng. Đếm thiếu là nguồn của gần như mọi lời giải sai trong xác suất sơ cấp.</p>
 
-        <div class="take"><div class="k">Mang theo</div><p>Xác suất = <b>đếm cách được / đếm cách tất cả</b>. Việc khó không phải phép chia, mà là <b>liệt kê cho đủ</b> mẫu số.</p></div>
+        <div class="take"><div class="k">Mang theo</div><p>Khi mọi kết cục đồng khả năng, xác suất = <b>đếm cách được / đếm cách tất cả</b>. Việc khó không phải phép chia, mà là <b>liệt kê cho đủ</b> mẫu số.</p></div>
       </section>
 
       <section id="s-prules" class="ch-p">
         <p class="sechead">3.2 · <b>Cộng &amp; nhân</b></p>
-        <h2 class="st">&ldquo;Hoặc&rdquo; thì cộng, &ldquo;và&rdquo; thì nhân — nhưng chỉ khi hai chuyện không dính nhau</h2>
+        <h2 class="st">&ldquo;Hoặc&rdquo; thì cộng, &ldquo;và&rdquo; thì nhân — mỗi phép chỉ đúng dưới một điều kiện riêng</h2>
         <p class="map">Bản gốc · <b>C3 · Tuần 1</b> · Sum rule, product rule, independence</p>
 
         <p class="ask">Tung xúc xắc hai lần. <span>Ra sáu cả hai lần?</span> Rồi: rút hai viên bi trong túi có 3 đỏ 2 xanh, <span>đỏ cả hai viên?</span></p>
@@ -1884,11 +1884,13 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </table>
         </div>
 
+        <p>Hai điều kiện ở cột cuối hay bị lẫn làm một, mà thật ra gần như ngược nhau. <b>Loại trừ nhau</b> là không thể cùng xảy ra; <b>độc lập</b> là biết cái này không đổi gì về cái kia. Hai chuyện loại trừ nhau thì biết A đã xảy ra là biết chắc B không xảy ra — tức là dính nhau hết mức. Rút một lá bài: &ldquo;ra cơ&rdquo; và &ldquo;ra rô&rdquo; loại trừ nhau nhưng không độc lập; &ldquo;ra cơ&rdquo; và &ldquo;ra quân át&rdquo; độc lập (1/4 × 1/13 = 1/52, đúng bằng xác suất rút được át cơ) nhưng không loại trừ nhau.</p>
+
         <div class="box mis">
           <p class="box__k">Chỗ tốn tiền thật</p>
           <div class="row">
             <div class="k">Nghe thấy</div><div>&ldquo;Mỗi khoản vay có 1% xác suất mất. Gộp 1.000 khoản thì mất cả gói gần như bằng 0.&rdquo;</div>
-            <div class="k">Thật ra</div><div>Phép nhân ấy chỉ đúng nếu 1.000 khoản vay <b>độc lập</b>. Nhưng khi kinh tế xuống thì <i>tất cả</i> cùng xấu một lúc — chúng dính nhau. Giả định độc lập sai là một trong những nguyên nhân kỹ thuật của khủng hoảng 2008. Trong học máy, phiên bản nhẹ hơn của lỗi này là chia tập train/test <b>ngẫu nhiên trên dữ liệu theo thời gian</b>: các dòng dính nhau, nên điểm test đẹp giả.</div>
+            <div class="k">Thật ra</div><div>Phép nhân ấy chỉ đúng nếu 1.000 khoản vay <b>độc lập</b>. Nhưng khi kinh tế xuống thì <i>tất cả</i> cùng xấu một lúc — chúng dính nhau. Đánh giá thấp mức dính nhau ấy là một trong những nguyên nhân kỹ thuật của khủng hoảng 2008. Trong học máy, phiên bản nhẹ hơn của lỗi này là chia tập train/test <b>ngẫu nhiên trên dữ liệu theo thời gian</b>: các dòng dính nhau, nên điểm test đẹp giả.</div>
           </div>
         </div>
 
@@ -1902,11 +1904,12 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="ask">Trong lớp 30 bạn, 10 bạn đi học vẽ. Chọn bừa một bạn: 10/30. <span>Nhưng nếu tôi nói thêm &ldquo;bạn ấy mang theo hộp màu&rdquo; thì sao?</span></p>
 
-        <p class="lede">Thì bạn <b>thu hẹp lớp lại</b>: chỉ xét những bạn mang hộp màu, rồi đếm trong nhóm nhỏ ấy. Đó là toàn bộ ý của xác suất có điều kiện — <b>đổi mẫu số</b>.</p>
+        <p class="lede">Thì bạn <b>thu hẹp lớp lại</b>: chỉ xét những bạn mang hộp màu, rồi đếm trong nhóm nhỏ ấy. Đó là toàn bộ ý của xác suất có điều kiện — <b>đổi mẫu số</b>. Giả sử 12 bạn mang hộp màu, và 8 trong số đó đi học vẽ. Mẫu số đổi từ 30 thành 12: P(học vẽ | mang hộp màu) = 8/12 ≈ 67% — gấp đôi con số 1/3 lúc chưa biết gì.</p>
 
         <div class="fx">
           <p class="fx__line"><span class="tm" data-n="P(A|B) — &ldquo;xác suất A, BIẾT rằng B đã xảy ra&rdquo;. Gạch dọc đọc là &ldquo;biết&rdquo;, không phải phép chia.">P(A | B)</span> <span class="op">=</span> <span style="display:inline-block;text-align:center;vertical-align:middle"><span style="border-bottom:1.5px solid currentColor;padding:0 5px"><span class="tm" data-n="Tử số: số trường hợp có CẢ HAI — vừa A vừa B.">P(A ∩ B)</span></span><br><span class="tm" data-n="Mẫu số ĐÃ ĐỔI: không còn là cả lớp, mà chỉ còn nhóm B. Đây là chỗ &ldquo;biết thêm tin&rdquo; phát huy tác dụng.">P(B)</span></span></p>
-          <p class="fx__note">Toàn bộ phép &ldquo;học&rdquo; từ dữ liệu là chuyện này: <b>trước</b> khi thấy dữ liệu tôi tin thế này, <b>sau</b> khi thấy thì tôi tin thế kia.</p>
+          <p class="fx__note">Thử lên lớp ở trên: P(A ∩ B) = 8/30, P(B) = 12/30, chia ra 8/12 — con số 30 triệt tiêu, đúng như việc &ldquo;thu hẹp lớp&rdquo; bỏ những bạn không mang hộp màu ra khỏi mẫu số. Dấu ∩ đọc là &ldquo;và&rdquo;: cả A lẫn B cùng xảy ra.</p>
+          <p class="fx__note">Rất nhiều phép &ldquo;học&rdquo; từ dữ liệu là chuyện này: <b>trước</b> khi thấy dữ liệu tôi tin thế này, <b>sau</b> khi thấy thì tôi tin thế kia.</p>
         </div>
 
         <div class="take"><div class="k">Mang theo</div><p>Có điều kiện = <b>thu nhỏ mẫu số về đúng nhóm mà bạn vừa biết</b>. P(A|B) và P(B|A) là <b>hai con số khác nhau</b> — lẫn chúng là nội dung của mục sau.</p></div>
@@ -1921,7 +1924,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="lede">Trong <b>11 bạn</b> bị gọi tên, chỉ <b>1 bạn</b> thật sự bị. Vậy khả năng bạn bị bệnh là <b>1 trên 11</b>, khoảng <b>9%</b>. Không phải 99%. Và không có phép toán nào ở trên — chỉ có <b>đếm người</b>.</p>
 
-        <p>Đây là kết quả quan trọng nhất của cả chuyên ngành, vì nó là chỗ trực giác con người sai <i>một cách hệ thống</i>. Con số &ldquo;đúng 99%&rdquo; ở đây gộp <i>hai</i> chuyện — bắt đúng 99% người bệnh <b>và</b> bỏ đúng 99% người lành — và chuyện thứ nhất trả lời câu <b>P(dương tính | có bệnh)</b>. Cái bạn cần biết là <b>P(có bệnh | dương tính)</b>. Hai câu ấy nghe gần giống nhau và cách nhau <b>mười lần</b>.</p>
+        <p>Đây là chỗ trực giác con người sai <i>một cách hệ thống</i>. Con số &ldquo;đúng 99%&rdquo; ở đây gộp <i>hai</i> chuyện — bắt đúng 99% người bệnh (<b>độ nhạy</b>) <b>và</b> bỏ đúng 99% người lành (<b>độ đặc hiệu</b>) — và chuyện thứ nhất trả lời câu <b>P(dương tính | có bệnh)</b>. Cái bạn cần biết là <b>P(có bệnh | dương tính)</b>. Hai câu ấy nghe gần giống nhau và cách nhau <b>hơn mười lần</b>.</p>
 
         <p>Vì sao lệch thế? Vì 1% sai của máy được nhân với <b>999 người lành</b>, còn 99% đúng của máy chỉ được nhân với <b>1 người bệnh</b>. Nhóm lành đông đến mức &ldquo;một phần trăm nhỏ của nhóm đông&rdquo; vẫn lớn hơn &ldquo;gần như toàn bộ nhóm bé&rdquo;.</p>
 
@@ -1934,10 +1937,11 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__h">
             <p class="lab__k">Mô hình 12 · 1.000 người, đếm bằng mắt</p>
             <p class="lab__t">Vì sao &ldquo;xét nghiệm chính xác 99%&rdquo; vẫn báo sai phần lớn số lần</p>
-            <p class="lab__hint">Mỗi ô vuông là một người. Kéo <b>tỉ lệ mắc</b> lên xuống và nhìn hai nhóm ô màu đổi cỡ. Hãy tìm chỗ tỉ lệ mắc <b>1%</b>: ở đó, một xét nghiệm đúng 99% cho kết quả dương tính <b>đúng đúng một nửa số lần</b> — như tung đồng xu.</p>
+            <p class="lab__hint">Mỗi ô vuông là một người. Kéo <b>tỉ lệ mắc</b> lên xuống và nhìn hai nhóm ô màu đổi cỡ. Hãy tìm chỗ tỉ lệ mắc <b>1%</b> (chip &ldquo;1%&rdquo; nhảy thẳng tới đó): ở đó, trong những người bị một xét nghiệm đúng 99% báo dương, <b>đúng một nửa</b> là bệnh thật — như tung đồng xu.</p>
           </div>
           <div class="lab__b">
             <div class="row"><label for="m12-prev">Tỉ lệ mắc</label><div class="inline"><input type="range" id="m12-prev" min="1" max="500" step="1" value="1"><span class="val" id="m12-prevv">0,1%</span></div></div>
+            <div class="row"><span class="k">Nhảy tới</span><div class="chips" id="m12-jump"><span class="chip" data-v="10">1%</span></div></div>
             <div class="row"><label for="m12-sens">Bắt đúng người bệnh</label><div class="inline"><input type="range" id="m12-sens" min="50" max="100" step="1" value="99"><span class="val" id="m12-sensv">99%</span></div></div>
             <div class="row"><label for="m12-spec">Bỏ đúng người lành</label><div class="inline"><input type="range" id="m12-spec" min="50" max="100" step="1" value="99"><span class="val" id="m12-specv">99%</span></div></div>
             <svg class="viz" id="m12-svg" viewBox="0 0 620 300" role="img" aria-label="Lưới 1000 ô, mỗi ô một người, tô màu theo kết quả xét nghiệm"></svg>
@@ -1960,7 +1964,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Đếm người trong 1.000 người: <b>1 bạn bệnh bị gọi tên</b>, <b>10 bạn lành bị gọi nhầm</b>. Ai bị gọi tên thì có 1/11 khả năng là bệnh thật.</div></div>
-          <div class="r-math"><div class="lbl">Toán</div><div class="v"><span class="fml">P(A|B) = P(B|A)·P(A) / P(B)</span><br>Đảo chiều một xác suất có điều kiện, và <b>xác suất tiên nghiệm P(A)</b> là thứ không được bỏ.</div></div>
+          <div class="r-math"><div class="lbl">Toán</div><div class="v"><span class="fml">P(A|B) = P(B|A)·P(A) / P(B)</span><br>Đảo chiều một xác suất có điều kiện, và <b>xác suất tiên nghiệm P(A)</b> là thứ không được bỏ.<br>Mẫu số tính bằng cách cộng mọi đường dẫn tới B: <span class="fml">P(B) = P(B|A)·P(A) + P(B|không A)·P(không A)</span>. Với máy đo, đó là dương thật cộng dương giả; với bộ lọc thư ở mục sau, đó là dòng &ldquo;chia cho tổng&rdquo;. Kết quả P(A|B) gọi là xác suất <b>hậu nghiệm</b>.</div></div>
           <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Bộ lọc thư rác, chẩn đoán, phát hiện gian lận — mọi bài toán <b>lớp mất cân bằng</b>. Và ở mục 4.5, Bayes quay lại làm nền cho <b>chính quy hoá</b>.</div></div>
         </div>
 
@@ -1990,9 +1994,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </table>
         </div>
 
-        <p>Chữ <b>naive</b> (&ldquo;hồn nhiên&rdquo;) là lời thú nhận: mô hình nhân xác suất các chữ với nhau <i>như thể</i> chúng độc lập, trong khi thực tế &ldquo;trúng&rdquo; và &ldquo;thưởng&rdquo; luôn đi cùng nhau. Giả định ấy <b>sai</b>. Nhưng nó <b>thường</b> sai theo cách không đổi trật tự giữa hai giả thuyết — nên mô hình vẫn phân loại tốt, chỉ là con số &ldquo;80%&rdquo; đừng tin quá. Khi nhiều đặc trưng trùng tin nhau (&ldquo;trúng&rdquo; và &ldquo;thưởng&rdquo; luôn đi cùng) thì cùng một bằng chứng bị đếm nhiều lần, và lúc ấy trật tự <i>có thể</i> đảo.</p>
+        <p>Chữ <b>naive</b> (&ldquo;hồn nhiên&rdquo;) là lời thú nhận: mô hình nhân xác suất các chữ với nhau <i>như thể</i> chúng độc lập <b>khi đã biết thư thuộc loại nào</b> — độc lập <i>có điều kiện</i>. Trên cả hòm thư thì &ldquo;trúng thưởng&rdquo; và &ldquo;họp&rdquo; vẫn dính nhau qua loại thư, và mô hình không chối điều đó; cái nó giả vờ là bên trong riêng đám thư rác, thấy chữ này không nói thêm gì về chữ kia. Mà nếu tách từng chữ đơn thì &ldquo;trúng&rdquo; và &ldquo;thưởng&rdquo; luôn đi cùng nhau ngay trong thư rác. Giả định ấy <b>sai</b>. Nhưng nó <b>thường</b> sai theo cách không đổi trật tự giữa hai giả thuyết — nên mô hình vẫn phân loại tốt, chỉ là con số &ldquo;80%&rdquo; đừng tin quá. Khi nhiều đặc trưng trùng tin nhau (&ldquo;trúng&rdquo; và &ldquo;thưởng&rdquo; luôn đi cùng) thì cùng một bằng chứng bị đếm nhiều lần, và lúc ấy trật tự <i>có thể</i> đảo.</p>
 
-        <div class="take"><div class="k">Mang theo</div><p>Naive Bayes = <b>Bayes + giả vờ độc lập</b>. Một mô hình có giả định sai vẫn hữu ích, miễn là bạn biết nó sai ở đâu và không đọc con số xác suất của nó như thánh chỉ.</p></div>
+        <div class="take"><div class="k">Mang theo</div><p>Naive Bayes = <b>Bayes + giả vờ các đặc trưng độc lập trong từng lớp</b>. Một mô hình có giả định sai vẫn hữu ích, miễn là bạn biết nó sai ở đâu và không đọc con số xác suất của nó như thánh chỉ.</p></div>
       </section>
 
       <section id="s-rv" class="ch-p">
@@ -2010,6 +2014,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <tr><td>Mô tả bằng</td><td><b>PMF</b> — bảng &ldquo;mỗi giá trị có xác suất bao nhiêu&rdquo;</td><td><b>PDF</b> — đường cong &ldquo;mật độ&rdquo;</td></tr>
               <tr><td>P(đúng một giá trị)</td><td>Có nghĩa: P(ra 6) = 1/6</td><td><b>Bằng 0</b> — không ai cao đúng 170,000&hellip;0 cm</td></tr>
               <tr><td>Câu hỏi hợp lệ</td><td>P(X = 6)</td><td>P(169 &lt; X &lt; 171) = <b>diện tích</b> dưới đường cong</td></tr>
+              <tr><td>Cộng hết lại</td><td>mọi ô của PMF cộng lại = 1</td><td>toàn bộ diện tích dưới PDF = 1</td></tr>
               <tr><td><b>CDF</b></td><td colspan="2">Cả hai đều có: &ldquo;xác suất X <b>nhỏ hơn hoặc bằng</b> một mốc&rdquo;. Luôn đi từ 0 lên 1, không bao giờ giảm.</td></tr>
             </tbody>
           </table>
@@ -2019,7 +2024,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="box__k">Chỗ dễ nhầm</p>
           <div class="row">
             <div class="k">Tưởng là</div><div>&ldquo;PDF tại một điểm là xác suất tại điểm đó.&rdquo;</div>
-            <div class="k">Thật ra</div><div>Đó là <b>mật độ</b>, và nó có thể lớn hơn 1. Xác suất là <b>diện tích</b>, nên phải có một khoảng mới nói được. Ví như tỉ trọng của một mẩu sắt: nói &ldquo;tỉ trọng tại đây&rdquo; thì được, nhưng muốn ra khối lượng thì phải nhân với một thể tích.</div>
+            <div class="k">Thật ra</div><div>Đó là <b>mật độ</b>, và nó có thể lớn hơn 1: một biến rơi đều trong khoảng 0 tới 0,5 có đường mật độ phẳng ở độ cao <b>2</b> — đáy chỉ rộng 0,5, nên phải cao 2 thì diện tích mới bằng 1. Xác suất là <b>diện tích</b>, nên phải có một khoảng mới nói được. Ví như khối lượng riêng của sắt, 7,87 g/cm³: nói &ldquo;khối lượng riêng tại đây&rdquo; thì được, lớn hơn 1 cũng chẳng ai thấy lạ, nhưng muốn ra khối lượng thì phải nhân với một thể tích.</div>
           </div>
         </div>
       </section>
@@ -2037,7 +2042,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__h">
             <p class="lab__k">Mô hình 13 · tăng số lần tung</p>
             <p class="lab__t">Cột nhị thức, và cái chuông tự hiện ra</p>
-            <p class="lab__hint">Kéo <b>số lần tung</b> từ 1 lên 200 và nhìn dãy cột: nó tự mọc thành <b>hình chuông</b> mà không ai vẽ hộ. Kéo <b>độ thiên vị</b> để làm đồng xu lệch — chuông nghiêng sang một bên nhưng vẫn là chuông.</p>
+            <p class="lab__hint">Kéo <b>số lần tung</b> từ 1 lên 200 và nhìn dãy cột: nó tự mọc thành <b>hình chuông</b> mà không ai vẽ hộ. Kéo <b>độ thiên vị</b> để làm đồng xu lệch — đỉnh dời tới np, và khi n còn nhỏ thì dãy cột lệch hẳn về một phía; tăng n thêm thì nó lại tròn thành chuông.</p>
           </div>
           <div class="lab__b">
             <div class="row"><label for="m13-n">Số lần tung n</label><div class="inline"><input type="range" id="m13-n" min="1" max="200" step="1" value="10"><span class="val" id="m13-nv">10</span></div></div>
@@ -2056,13 +2061,14 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read"><div class="k">Độ lệch chuẩn</div><div class="v" id="m13-sd">1,58</div></div>
             </div>
             <p class="lab__f" id="m13-say">Với n = 10, p = 0,5: ra 8 mặt ngửa hoặc hơn xảy ra 5,47% số lượt.</p>
-            <p class="lab__f"><b>Con số 5,47% ấy là một p-value.</b> Nếu ai đó tung 10 lần được 8 ngửa và bảo &ldquo;đồng xu này gian&rdquo;, bạn tính được ngay: một đồng xu <i>thật thà</i> vẫn cho kết quả như thế 5,47% số lượt. Đủ lạ để chú ý, chưa đủ lạ để buộc tội. Mục 4.7 chỉ là chuyện này viết cho tử tế.</p>
+            <p class="lab__f"><b>Con số 5,47% ấy là một p-value.</b> Nếu ai đó tung 10 lần được 8 ngửa và bảo &ldquo;đồng xu này thiên về mặt ngửa&rdquo;, bạn tính được ngay: một đồng xu <i>thật thà</i> vẫn cho 8 ngửa trở lên 5,47% số lượt. Còn nếu chỉ bảo &ldquo;gian&rdquo; mà không nói gian về phía nào, thì 2 ngửa trở xuống cũng lạ ngang thế, phải đếm cả hai đuôi: 10,9%. Đủ lạ để chú ý, chưa đủ lạ để buộc tội. Mục 4.7 chỉ là chuyện này viết cho tử tế.</p>
           </div>
         </div>
 
         <div class="fx">
           <p class="fx__line sm">P(X = k) <span class="op">=</span> <span class="tm" data-n="Số CÁCH chọn k lần ngửa trong n lần tung — &ldquo;n chọn k&rdquo;. Với n=10, k=5 thì bằng 252. Đây là phần &ldquo;đếm&rdquo;.">C(n, k)</span> <span class="op">·</span> <span class="tm" data-n="Xác suất của MỘT dãy cụ thể có k ngửa và n−k sấp. Với xu công bằng thì mọi dãy đều xác suất (1/2)^n = 1/1024.">p<sup>k</sup>(1 − p)<sup>n−k</sup></span></p>
           <p class="fx__note">Hai phần: <b>đếm số cách</b> nhân <b>xác suất mỗi cách</b>. Trung bình là <b>np</b>, độ lệch chuẩn là <b>√(np(1−p))</b> — với 10 lần tung xu công bằng: trung bình 5, lệch chuẩn 1,58.</p>
+          <p class="fx__note">C(n, k) = n! / (k!·(n − k)!), với n! = 1·2·…·n. Ở cỡ nhỏ thì đếm tay được: 4 lần tung ra 2 ngửa có C(4, 2) = 24/(2·2) = 6 cách — NNSS, NSNS, NSSN, SNNS, SNSN, SSNN. Với n = 10, k = 5: 3.628.800/(120·120) = 252. Còn np và np(1 − p): số mặt ngửa là tổng của n lần tung, mỗi lần góp 1 với xác suất p, tức kỳ vọng p và phương sai p(1 − p); cộng n lần độc lập thì cả hai nhân lên n (mục 3.9).</p>
         </div>
 
         <div class="take"><div class="k">Mang theo</div><p>Nhị thức = <b>đếm số cách × xác suất mỗi cách</b>. Kết quả &ldquo;cân bằng&rdquo; thường gặp hơn không phải vì trời thương, mà vì <b>có nhiều đường dẫn tới nó hơn</b>.</p></div>
@@ -2073,7 +2079,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <h2 class="st">Cái chuông xuất hiện ở mọi nơi vì nó là hình của phép cộng nhiều thứ nhỏ</h2>
         <p class="map">Bản gốc · <b>C3 · Tuần 1–2</b> · Normal (Gaussian) distribution</p>
 
-        <p class="ask">Đo chiều cao cả trường. <span>Vì sao vẽ ra lại thành hình cái chuông, chứ không phải hình gì khác?</span></p>
+        <p class="ask">Đo chiều cao một nghìn nam thanh niên cùng tuổi. <span>Vì sao vẽ ra lại thành hình cái chuông, chứ không phải hình gì khác?</span></p>
 
         <p class="lede">Vì chiều cao là <b>tổng của rất nhiều chuyện nhỏ</b> — hàng trăm gen, dinh dưỡng, giấc ngủ, bệnh tật lúc bé. Mỗi chuyện đẩy lên hoặc kéo xuống một chút. Cộng nhiều thứ nhỏ độc lập lại thì ra cái chuông, bất kể từng thứ nhỏ có hình gì — miễn là mỗi thứ có <b>phương sai hữu hạn</b>. Đó là định lý giới hạn trung tâm ở mục 4.2, và nó là lý do sâu xa của cả mục này.</p>
 
@@ -2093,11 +2099,17 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p>Ví dụ đọc bảng: chiều cao nam giới Việt Nam quanh μ = 168 cm với σ = 6 cm. Vậy khoảng 68% nam giới cao 162–174 cm, và cao trên 186 cm (μ + 3σ) là chuyện của <b>khoảng 1 trên 740 người</b>.</p>
 
+        <div class="fx">
+          <p class="fx__line sm">f(x) = 1/(σ√(2π))</p>
+          <p class="fx__line sm"><span class="op">·</span> e<sup>−(x − μ)²/(2σ²)</sup></p>
+          <p class="fx__note">Đó là hình của cái chuông, viết bằng đúng hai con số ấy. (x − μ)² là khoảng cách tới đỉnh, bình phương lên nên chuông đối xứng; chia cho 2σ² là đo khoảng cách ấy bằng đơn vị σ; còn 1/(σ√(2π)) chỉ để tổng diện tích bằng 1.</p>
+        </div>
+
         <div class="box mis">
           <p class="box__k">Đừng cho chuông vào mọi chỗ</p>
           <div class="row">
-            <div class="k">Không chuông</div><div><b>Thu nhập</b> (lệch phải nặng — vài người rất giàu kéo cái đuôi ra), <b>giá nhà</b>, <b>số lần bấm</b>, <b>thời gian chờ</b>. Với những cái này, <i>trung bình</i> là con số dễ gây hiểu sai và <i>trung vị</i> mới nói đúng chuyện.</div>
-            <div class="k">Hậu quả</div><div>Rất nhiều công thức thống kê được chứng minh <b>với giả định chuẩn</b>. Dùng chúng trên dữ liệu lệch nặng thì con số vẫn hiện ra, vẫn có ba chữ số sau dấu phẩy, và vẫn <b>sai</b>.</div>
+            <div class="k">Không chuông</div><div><b>chiều cao cả nam lẫn nữ</b> (giới tính là một thứ lớn, không phải nhiều thứ nhỏ), <b>thu nhập</b> (lệch phải nặng — vài người rất giàu kéo cái đuôi ra), <b>giá nhà</b>, <b>số lần bấm</b>, <b>thời gian chờ</b>. Với những cái này, <i>trung bình</i> là con số dễ gây hiểu sai và <i>trung vị</i> mới nói đúng chuyện.</div>
+            <div class="k">Hậu quả</div><div>Rất nhiều công thức thống kê được chứng minh <b>với giả định chuẩn</b>. Dùng chúng trên dữ liệu lệch nặng thì con số vẫn hiện ra, vẫn có ba chữ số sau dấu phẩy, và vẫn <b>sai</b>. Nhất là những công thức nói về <i>từng điểm dữ liệu</i> — luật 68–95–99,7, ngưỡng &ldquo;ngoài 3σ là bất thường&rdquo;. Công thức nói về <i>trung bình</i> thì được mục 4.2 cứu khi mẫu đủ lớn.</div>
           </div>
         </div>
 
@@ -2116,7 +2128,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <div class="fx">
           <p class="fx__line sm"><span class="tm" data-n="E[X] — kỳ vọng, cũng viết là μ. &ldquo;Trung bình dài hạn nếu lặp lại vô số lần&rdquo;.">E[X]</span> = Σ x·P(x) = <span class="mono">(1+2+3+4+5+6)/6 = <b>3,5</b></span></p>
           <p class="fx__line sm"><span class="tm" data-n="Var(X) — phương sai. Bình phương của khoảng lệch, nên nó KHÔNG cùng đơn vị với dữ liệu. Đó là lý do phải khai căn ra σ.">Var(X)</span> = E[(X − μ)²] = <span class="mono">35/12 = <b>2,9167</b></span> &nbsp;&nbsp;<span class="op">→</span>&nbsp; <span class="tm" data-n="σ — độ lệch chuẩn = căn của phương sai. Cùng đơn vị với dữ liệu, nên đây là con số nói được với người khác.">σ</span> = √2,9167 = <b>1,708</b></p>
-          <p class="fx__note">Vì sao bình phương rồi lại khai căn, thay vì lấy trị tuyệt đối cho gọn? Vì bình phương <b>có đạo hàm trơn ở mọi chỗ</b> — và chặng 2 vừa cho biết tại sao điều đó đáng giá.</p>
+          <p class="fx__note">Vì sao bình phương rồi lại khai căn, thay vì lấy trị tuyệt đối cho gọn? Hai lý do. Bình phương <b>có đạo hàm trơn ở mọi chỗ</b> — chặng 2 vừa cho biết tại sao điều đó đáng giá. Và phương sai của tổng các biến độc lập bằng tổng các phương sai (tính chất thứ ba dưới đây); trị tuyệt đối không có tính chất ấy, mà mục 4.2 cần đúng nó. Tính tay 35/12: sáu mặt lệch khỏi 3,5 một khoảng ±2,5, ±1,5, ±0,5; bình phương lên được 6,25, 2,25, 0,25, mỗi số hai lần; trung bình (2·6,25 + 2·2,25 + 2·0,25)/6 = 17,5/6.</p>
         </div>
 
         <p>Ba tính chất dùng suốt, và cái thứ ba là chỗ có bẫy:</p>
@@ -2124,7 +2136,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <ul>
           <li><b>E[X + Y] = E[X] + E[Y]</b> — luôn đúng, kể cả khi X và Y dính nhau.</li>
           <li><b>E[aX] = a·E[X]</b>, còn <b>Var(aX) = a²·Var(X)</b> — phương sai bị nhân với <i>bình phương</i>, vì nó sống trong đơn vị bình phương.</li>
-          <li><b>Var(X + Y) = Var(X) + Var(Y)</b> — <span class="c-bad">chỉ khi độc lập</span>. Dính nhau thì phải cộng thêm <b>2·Cov(X,Y)</b>, và đó là mục sau.</li>
+          <li><b>Var(X + Y) = Var(X) + Var(Y)</b> — <span class="c-bad">chỉ khi Cov(X, Y) = 0</span>, mà hay gặp nhất là khi X và Y độc lập. Tổng quát phải cộng thêm <b>2·Cov(X,Y)</b>, và đó là mục sau.</li>
         </ul>
 
         <div class="take"><div class="k">Mang theo</div><p>Kỳ vọng = <b>trung bình dài hạn</b> (có thể là số không thể xảy ra). Phương sai = <b>lệch bình phương trung bình</b>; khai căn ra <b>σ</b> để nói được bằng đơn vị gốc.</p></div>
@@ -2151,11 +2163,17 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </table>
         </div>
 
+        <div class="fx">
+          <p class="fx__line sm">Cov(X, Y) = E[(X − μ<sub>X</sub>)(Y − μ<sub>Y</sub>)]</p>
+          <p class="fx__line sm"><span class="op">→</span>&nbsp; r = Cov(X, Y) / (σ<sub>X</sub> · σ<sub>Y</sub>)</p>
+          <p class="fx__note">Mỗi bạn góp một tích: cao hơn trung bình <i>và</i> nặng hơn trung bình thì tích dương; lệch ngược chiều nhau thì tích âm. Trung bình các tích ra dương nghĩa là hai thứ &ldquo;cùng lên xuống&rdquo;. Chia cho hai độ lệch chuẩn là bỏ đơn vị đi, nên r kẹt trong −1…+1. Tám bạn ở trên (cm/kg): 120/22, 125/25, 130/26, 135/30, 140/31, 145/35, 150/38, 155/40. Tính từ mẫu thì chia cho n − 1 = 7 (lý do ở mục 4.3): Cov = 78,21 cm·kg, σ = 12,25 cm và 6,42 kg, r = 78,21 / (12,25 × 6,42) = 0,99. Còn r², ô thứ ba của mô hình dưới, là phần biến thiên của Y mà một đường thẳng giải thích được.</p>
+        </div>
+
         <div class="lab" id="m14">
           <div class="lab__h">
             <p class="lab__k">Mô hình 14 · kéo hai thanh trượt</p>
             <p class="lab__t">Cùng một con số r, những đám điểm rất khác nhau</p>
-            <p class="lab__hint">Kéo <b>độ nghiêng</b> và <b>độ nhiễu</b>, xem r đổi. Rồi bấm hai kịch bản cuối: <b>hình chữ U</b> có r ≈ 0 nhưng quan hệ rõ như ban ngày, và <b>một điểm lạc</b> đủ để lôi r từ gần 0 lên hơn <b>0,6</b>. Đó là lý do <b>phải vẽ hình trước khi tin r</b>.</p>
+            <p class="lab__hint">Kéo <b>độ nghiêng</b> và <b>độ nhiễu</b>, xem r đổi. Rồi bấm hai kịch bản cuối: <b>hình chữ U</b> có r ≈ 0 nhưng quan hệ rõ như ban ngày, và <b>một điểm lạc</b> đủ để lôi r từ gần 0 lên hơn <b>0,6</b> (ở độ nhiễu mặc định 0,25). Đó là lý do <b>phải vẽ hình trước khi tin r</b>.</p>
           </div>
           <div class="lab__b">
             <div class="chips" id="m14-mode" style="margin-bottom:12px">
@@ -2172,13 +2190,13 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read"><div class="k">r²</div><div class="v" id="m14-r2">0,87</div></div>
             </div>
             <p class="lab__f" id="m14-say">Quan hệ thẳng, nhiễu vừa phải: r cao.</p>
-            <p class="lab__f"><b>Và câu quan trọng nhất của cả mục:</b> <b>tương quan không phải nhân quả</b>. Số kem bán ra tương quan chặt với số ca đuối nước — vì cả hai đều tăng vào mùa hè. Trong học máy, chuyện này hiện ra dưới dạng &ldquo;đặc trưng rò rỉ&rdquo;: mô hình dự đoán bệnh cực chính xác vì nó học được rằng bệnh nhân nặng thường đã được chuyển sang <i>một loại máy chụp khác</i> — nó đọc tên máy, không đọc bệnh.</p>
+            <p class="lab__f"><b>Tương quan không phải nhân quả.</b> Số kem bán ra tương quan chặt với số ca đuối nước — vì cả hai đều tăng vào mùa hè. Trong học máy, chuyện này hiện ra dưới dạng &ldquo;đặc trưng rò rỉ&rdquo;: mô hình dự đoán bệnh cực chính xác vì nó học được rằng bệnh nhân nặng thường đã được chuyển sang <i>một loại máy chụp khác</i> — nó đọc tên máy, không đọc bệnh.</p>
           </div>
         </div>
 
         <p>Với nhiều biến, các Cov gom lại thành <b>ma trận hiệp phương sai</b>: đường chéo là phương sai từng biến, ngoài đường chéo là mức đi cùng nhau. Ma trận này <b>luôn đối xứng</b> — và mục 1.9 đã nói ma trận đối xứng thì có hệ vector riêng vuông góc. <b>Đó chính xác là PCA</b>, và đó là chỗ khoá 1 với khoá 3 bắt tay nhau.</p>
 
-        <div class="take"><div class="k">Mang theo</div><p>Cov nói <b>chiều</b>, r nói <b>chiều và độ mạnh</b> trên thang cố định −1…+1. <b>r = 0 không có nghĩa là không liên quan</b> — chỉ nghĩa là không liên quan <i>theo đường thẳng</i>. Vẽ hình trước, tin số sau.</p></div>
+        <div class="take"><div class="k">Mang theo</div><p>Cov nói <b>chiều</b>, r nói <b>chiều và độ mạnh</b> trên thang cố định −1…+1. <b>r = 0 không có nghĩa là không liên quan</b> (độc lập thì chắc chắn r = 0, nhưng r = 0 chưa chắc độc lập) — chỉ nghĩa là không liên quan <i>theo đường thẳng</i>. Vẽ hình trước, tin số sau.</p></div>
       </section>
 
       <div class="acthead ch-p" id="act4">
@@ -2199,9 +2217,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <p><b>Luật số lớn</b> nói: mẫu càng lớn thì trung bình mẫu càng sát trung bình thật. Tung xu 10 lần có thể ra 7 ngửa (70%); tung 10.000 lần thì tỉ lệ ngửa gần như chắc chắn nằm quanh 50%. Nhưng luật ấy có <b>một điều kiện</b> mà thực tế phá vỡ liên tục: mẫu phải <b>đại diện</b>.</p>
 
         <div class="box mis">
-          <p class="box__k">Sai số lấy mẫu không phải cứ tăng cỡ mẫu là hết</p>
+          <p class="box__k">Thiên lệch lấy mẫu không phải cứ tăng cỡ mẫu là hết</p>
           <div class="row">
-            <div class="k">Ví dụ kinh điển</div><div>Năm 1936, một tạp chí Mỹ gửi <b>10 triệu</b> phiếu thăm dò, nhận về <b>2,4 triệu</b> phiếu trả lời — rồi dự đoán sai kết quả bầu cử. Cùng lúc, một cuộc thăm dò chỉ <b>50.000 người</b> — nhưng chọn <i>cân theo cơ cấu dân số</i> — dự đoán đúng. Danh sách gửi phiếu lấy từ chủ xe hơi và chủ điện thoại, tức là <b>người giàu</b>.</div>
+            <div class="k">Ví dụ kinh điển</div><div>Năm 1936, một tạp chí Mỹ gửi <b>10 triệu</b> phiếu thăm dò, nhận về <b>2,4 triệu</b> phiếu trả lời — rồi dự đoán sai kết quả bầu cử. Cùng lúc, một cuộc thăm dò chỉ <b>50.000 người</b> — nhưng chọn <i>cân theo cơ cấu dân số</i> — dự đoán đúng. Danh sách gửi phiếu lấy từ chủ xe hơi và chủ điện thoại — nghiêng hẳn về <b>người giàu</b> — và chỉ khoảng một phần tư số người nhận chịu gửi lại.</div>
             <div class="k">Trong học máy</div><div>Dữ liệu huấn luyện lấy từ nhóm người dùng hiện tại, rồi mô hình được đem dùng cho <b>mọi người</b>. Mô hình không sai — <b>cái thìa múc sai chỗ</b>. Và không có siêu tham số nào chữa được chuyện đó.</div>
           </div>
         </div>
@@ -2216,9 +2234,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="ask">Dữ liệu gốc méo mó, hai đỉnh, lệch hẳn sang một bên. <span>Trung bình của 30 mẫu lấy từ nó thì hình gì?</span></p>
 
-        <p class="lede"><b>Hình chuông.</b> Gần như luôn luôn, và đó là kết quả kỳ lạ nhất trong cả chuyên ngành: <b>hình của dữ liệu gốc gần như không quan trọng</b>. Chỉ cần bạn lấy trung bình của đủ nhiều mẫu độc lập, thì trung bình ấy phân phối chuẩn.</p>
+        <p class="lede"><b>Hình chuông.</b> Gần như luôn luôn: <b>hình của dữ liệu gốc gần như không quan trọng</b>. Chỉ cần bạn lấy trung bình của đủ nhiều mẫu độc lập, thì trung bình ấy gần như phân phối chuẩn — càng gần khi n càng lớn.</p>
 
-        <p>Cụ thể hơn — và đây là phần dùng được: nếu dữ liệu gốc có trung bình μ và độ lệch chuẩn σ, thì trung bình của n mẫu có trung bình vẫn là <b>μ</b>, nhưng độ lệch chuẩn chỉ còn <b>σ/√n</b>. Với xúc xắc (σ = 1,708) và n = 30: 1,708/√30 = <b>0,312</b>. Mô phỏng 200.000 lần cho <b>0,312</b>.</p>
+        <p>Cụ thể hơn — và đây là phần dùng được: nếu dữ liệu gốc có trung bình μ và độ lệch chuẩn σ, thì trung bình của n mẫu có trung bình vẫn là <b>μ</b>, nhưng độ lệch chuẩn chỉ còn <b>σ/√n</b>. Vì sao lại là √n: phương sai của tổng n mẫu độc lập là n·σ² (tính chất thứ ba ở mục 3.9); chia tổng cho n thì phương sai chia cho n² (tính chất thứ hai), còn σ²/n; khai căn ra σ/√n. Với xúc xắc (σ = 1,708) và n = 30: 1,708/√30 = <b>0,312</b>. Mô phỏng 200.000 lần cho <b>0,312</b>.</p>
 
         <div class="lab" id="m15">
           <div class="lab__h">
@@ -2246,7 +2264,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read"><div class="k">σ đo được</div><div class="v" id="m15-obs">1,69</div></div>
             </div>
             <p class="lab__f" id="m15-say">Với n = 1, &ldquo;trung bình của 1 mẫu&rdquo; chính là dữ liệu gốc — hai hình giống nhau.</p>
-            <p class="lab__f"><b>Vì sao đây là định lý quan trọng nhất của thống kê ứng dụng:</b> nó cho phép bạn dùng công thức của phân phối chuẩn <b>mà không cần dữ liệu gốc phân phối chuẩn</b>. Mọi khoảng tin cậy và mọi kiểm định ở hai mục sau đứng trên đúng cái cầu này. Nhưng để ý <b>σ/√n</b>: muốn khoảng hẹp đi <b>một nửa</b> thì phải lấy mẫu <b>gấp bốn</b>. Đó là lý do thăm dò ý kiến luôn kẹt ở sai số ±3%.</p>
+            <p class="lab__f"><b>Định lý này là một cây cầu:</b> nó cho phép bạn dùng công thức của phân phối chuẩn <b>mà không cần dữ liệu gốc phân phối chuẩn</b>. Mọi khoảng tin cậy và mọi kiểm định ở mục 4.6 và 4.7 đứng trên đúng cái cầu này. Nhưng để ý <b>σ/√n</b>: muốn khoảng hẹp đi <b>một nửa</b> thì phải lấy mẫu <b>gấp bốn</b>. Đó là lý do thăm dò ý kiến luôn kẹt ở sai số ±3%.</p>
           </div>
         </div>
 
@@ -2264,9 +2282,12 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p>Thử từng giả thuyết. Nếu đồng xu công bằng (p = 0,5), khả năng ra đúng 7 ngửa là 11,7%. Nếu p = 0,7, khả năng ấy là 26,7%. Nếu p = 0,9, chỉ còn 5,7%. Vẽ khả năng ấy theo p, ta được một đường cong có <b>đỉnh đúng tại p = 0,7</b>. Chọn cái đỉnh đó — đó là <b>ước lượng hợp lý cực đại</b>.</p>
 
+        <p>Ba con số ấy <b>không</b> phải &ldquo;xác suất để p bằng 0,5, 0,7, 0,9&rdquo;. Chúng là xác suất của <i>dữ liệu</i> khi <i>giả sử</i> p bằng từng giá trị, nên cộng lại cũng chẳng cần ra 1. Nhìn con số ấy như một hàm của p thì gọi là <b>độ hợp lý</b>. Muốn có xác suất cho chính p thì phải qua Bayes, và phải có một niềm tin ban đầu — mục 4.5.</p>
+
         <div class="fx">
-          <p class="fx__line sm"><span class="tm" data-n="Hợp lý (likelihood): xác suất thấy ĐÚNG dữ liệu này, NẾU tham số là θ. Chú ý chiều: dữ liệu đã cố định, θ là cái đang thay đổi.">L(θ)</span> = P(dữ liệu | <span class="tm" data-n="θ — bộ tham số đang thử. Với đồng xu chỉ có một: p. Với một mạng nơ-ron: hàng triệu.">θ</span>) &nbsp;&nbsp;<span class="op">→</span>&nbsp;&nbsp; chọn <span class="tm" data-n="Cái mũ ^ nghĩa là &ldquo;ước lượng từ dữ liệu&rdquo;, để phân biệt với giá trị thật mà ta không bao giờ biết.">θ̂</span> làm L lớn nhất</p>
-          <p class="fx__note">Trong thực tế người ta cực đại <b>log</b> của L, vì log biến dây phép nhân dài thành phép cộng — dễ đạo hàm hơn, và không bị tràn số khi nhân 10.000 xác suất nhỏ với nhau.</p>
+          <p class="fx__line sm"><span class="tm" data-n="Hợp lý (likelihood): xác suất thấy ĐÚNG dữ liệu này, NẾU tham số là θ. Chú ý chiều: dữ liệu đã cố định, θ là cái đang thay đổi. Với dữ liệu liên tục, như chiều cao ở mô hình dưới, thì dùng mật độ thay cho xác suất (mục 3.6).">L(θ)</span> = P(dữ liệu | <span class="tm" data-n="θ — bộ tham số đang thử. Với đồng xu chỉ có một: p. Với một mạng nơ-ron: hàng triệu.">θ</span>) &nbsp;&nbsp;<span class="op">→</span>&nbsp;&nbsp; chọn <span class="tm" data-n="Cái mũ ^ nghĩa là &ldquo;ước lượng từ dữ liệu&rdquo;, để phân biệt với giá trị thật mà ta không bao giờ biết.">θ̂</span> làm L lớn nhất</p>
+          <p class="fx__note">Với n điểm dữ liệu độc lập, L(θ) = Π P(xᵢ | θ). Phép nhân ấy là quy tắc &ldquo;và&rdquo; của mục 3.2, nên nó cần giả định các điểm độc lập. Trong thực tế người ta cực đại <b>log</b> của L. Làm thế được vì log là hàm đồng biến: θ nào làm L lớn nhất thì cũng làm log L lớn nhất. Cái lợi là log biến dây phép nhân dài thành phép cộng — dễ đạo hàm hơn, và không bị tràn số dưới (máy làm tròn về 0) khi nhân 10.000 xác suất nhỏ với nhau.</p>
+          <p class="fx__note">Đỉnh nằm đúng ở 0,7, không cần thử: log L(p) = log C(10, 7) + 7·log p + 3·log(1 − p). Đạo hàm theo p là 7/p − 3/(1 − p); ở đỉnh nó bằng 0 (mục 2.3), nên 7(1 − p) = 3p, tức p = 0,7. Tổng quát: k ngửa trong n lần thì p̂ = k/n.</p>
         </div>
 
         <div class="lab" id="m16">
@@ -2286,7 +2307,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read"><div class="k">σ theo MLE</div><div class="v" id="m16-sdmle">3,41</div></div>
             </div>
             <p class="lab__f" id="m16-say">Kéo μ và σ để làm tổng log-hợp-lý lớn nhất.</p>
-            <p class="lab__f"><b>Kết quả có thể kiểm bằng tay:</b> với dữ liệu 167, 170, 172, 169, 177 thì MLE cho <b>μ̂ = 171,0</b> — đúng bằng trung bình cộng — và <b>σ̂ = 3,41</b> (lệch bình phương trung bình, chia cho n). Nếu chia cho n − 1 thì ra 3,81; bản chia cho n − 1 là bản <i>không chệch</i> và là bản mọi thư viện dùng làm mặc định. Chênh lệch ấy nhỏ dần khi n lớn, và biến mất trong thực tế với n từ vài trăm.</p>
+            <p class="lab__f"><b>Kết quả có thể kiểm bằng tay:</b> với dữ liệu 167, 170, 172, 169, 177 thì MLE cho <b>μ̂ = 171,0</b> — đúng bằng trung bình cộng — và <b>σ̂ = 3,41</b> (căn của lệch bình phương trung bình, chia cho n). Nếu chia cho n − 1 thì ra 3,81.</p>
+            <p class="lab__f"><b>Bản n − 1 có lý do.</b> Các độ lệch ở đây đo tới trung bình 171 của <i>chính</i> 5 số ấy, mà trung bình mẫu luôn nằm giữa đám số, nên tổng bình phương độ lệch tới nó không bao giờ lớn hơn tổng tới trung bình thật. Chia cho n thì phương sai ra thấp đều đặn; chia cho n − 1 bù đúng phần hụt ấy. <b>Phương sai</b> chia n − 1 (ở đây 14,5) là ước lượng <i>không chệch</i> của σ² — &ldquo;chệch&rdquo; ở đây là lệch có hệ thống của một ước lượng, không dính gì tới &ldquo;độ chệch&rdquo; b trong <a href="#s-kyhieu">bảng ký hiệu</a> ở đầu trang. Khai căn ra 3,81 thì vẫn hơi thấp, nhưng ít hơn. Các thư viện không thống nhất: <span class="mono">np.std</span> của NumPy mặc định chia n, còn pandas và R chia n − 1 — hai dòng code trông như nhau có thể cho 3,41 và 3,81. Chênh lệch ấy nhỏ dần khi n lớn, và biến mất trong thực tế với n từ vài trăm.</p>
           </div>
         </div>
 
@@ -2298,20 +2320,32 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <h2 class="st">MSE và log-loss không phải do ai chọn cho hay — chúng rơi ra từ MLE</h2>
         <p class="map">Bản gốc · <b>C3 · Tuần 3</b> · MLE, linear regression and log loss</p>
 
-        <p class="lede">Đây là mục nối cả trang lại thành một vòng. Chặng 2 đưa cho bạn hai hàm mất mát như thể chúng là quy ước. Không phải. Cả hai <b>suy ra được</b> từ mục vừa rồi.</p>
+        <p class="lede">Chặng 2 đưa cho bạn hai hàm mất mát như thể chúng là quy ước. Không phải. Cả hai <b>suy ra được</b> từ mục vừa rồi.</p>
 
         <div class="grid2">
           <div class="mini">
             <p class="t">Sai số bình phương ← nhiễu chuẩn</p>
-            <p class="d">Giả sử đáp án thật = đường thẳng <b>cộng nhiễu phân phối chuẩn</b>. Viết độ hợp lý của cả tập dữ liệu, lấy log, bỏ mấy hằng số — cái còn lại đúng là <b>tổng bình phương sai lệch</b>, có dấu trừ ở trước. <b>Cực đại hợp lý = cực tiểu MSE.</b> Hai việc là một.</p>
+            <p class="d">Giả sử đáp án thật = đường thẳng <b>cộng nhiễu phân phối chuẩn</b>, cùng một độ rộng σ ở mọi điểm, các điểm độc lập với nhau. Viết độ hợp lý của cả tập dữ liệu, lấy log, bỏ mấy hằng số — cái còn lại đúng là <b>tổng bình phương sai lệch</b>, có dấu trừ ở trước. <b>Cực đại hợp lý = cực tiểu MSE.</b> Hai việc là một.</p>
           </div>
           <div class="mini">
             <p class="t">Log-loss ← kết quả có/không</p>
-            <p class="d">Giả sử mỗi nhãn là một lần tung xu thiên vị với xác suất σ(z). Độ hợp lý của cả tập là <b>tích</b> các xác suất; lấy log biến thành <b>tổng</b>; đặt dấu trừ ra ngoài — đó chính là <b>log-loss</b>, từng chữ một.</p>
+            <p class="d">Giả sử mỗi nhãn là một lần tung xu thiên vị với xác suất σ(z) — hàm sigmoid của chặng 2, không phải độ lệch chuẩn. Độ hợp lý của cả tập là <b>tích</b> các xác suất; lấy log biến thành <b>tổng</b>; đặt dấu trừ ra ngoài — đó chính là <b>log-loss</b>, từng chữ một.</p>
           </div>
         </div>
 
-        <p>Cái được: bạn thôi phải nhớ &ldquo;hồi quy dùng MSE, phân loại dùng log-loss&rdquo; như hai điều luật. Bạn chỉ cần hỏi <b>&ldquo;dữ liệu của tôi sinh ra kiểu gì?&rdquo;</b> và hàm mất mát tự rơi ra. Số thực có nhiễu đối xứng → bình phương. Có/không → log-loss. Dữ liệu đếm (số cuộc gọi mỗi giờ) → hợp lý Poisson, và hàm mất mát trông khác cả hai cái trên. Đó là cách người ta chọn hàm mất mát cho một bài toán mới, chứ không phải bằng cách thử.</p>
+        <div class="fx">
+          <p class="fx__line sm">P(yᵢ) = 1/(σ√(2π))</p>
+          <p class="fx__line sm"><span class="op">·</span> e<sup>−(yᵢ − ŷᵢ)²/(2σ²)</sup></p>
+          <p class="fx__line sm">log L = −n·log(σ√(2π))</p>
+          <p class="fx__line sm"><span class="op">−</span> <b>Σ(yᵢ − ŷᵢ)²</b> / (2σ²)</p>
+          <p class="fx__note">Hai dòng đầu là cái chuông của mục 3.8, đặt đỉnh tại ŷᵢ; với dữ liệu liên tục, P ở đây là mật độ (mục 3.6). Các điểm độc lập nên độ hợp lý của cả tập là tích các P(yᵢ), và log L là tổng các log — ra hai dòng sau. Số hạng đầu và mẫu số 2σ² không chứa trọng số nào, nên tìm w làm log L lớn nhất cũng là tìm w làm Σ(yᵢ − ŷᵢ)² nhỏ nhất. Nếu mỗi điểm có một σᵢ riêng thì mẫu số không rút ra ngoài được nữa, và kết quả là bình phương <i>có trọng số</i>, không còn là MSE.</p>
+          <p class="fx__line sm">P(yᵢ) = pᵢ<sup>yᵢ</sup> · (1 − pᵢ)<sup>1 − yᵢ</sup></p>
+          <p class="fx__line sm">log L = Σ[ yᵢ·log pᵢ</p>
+          <p class="fx__line sm"><span class="op">+</span> (1 − yᵢ)·log(1 − pᵢ) ]</p>
+          <p class="fx__note">Cái mũ yᵢ chỉ để bật tắt: nhãn 1 thì còn pᵢ, nhãn 0 thì còn 1 − pᵢ. Log-loss chính là −log L chia cho n. Với pᵢ = σ(zᵢ), đạo hàm của nó theo w là (σ(z) − y)·x — đúng công thức ở mục 2.8. Log-loss phạt một câu đoán tự tin mà sai nặng tới đâu thì có hình vẽ ở <a href="machine-learning-101.html#s-classify">Machine Learning 101, chương 4</a>.</p>
+        </div>
+
+        <p>Cái được: bạn thôi phải nhớ &ldquo;hồi quy dùng MSE, phân loại dùng log-loss&rdquo; như hai điều luật. Bạn chỉ cần hỏi <b>&ldquo;dữ liệu của tôi sinh ra kiểu gì?&rdquo;</b> và hàm mất mát tự rơi ra. Số thực có nhiễu chuẩn, cùng độ rộng ở mọi điểm → bình phương. Nhiễu cũng đối xứng nhưng đuôi dày hơn, kiểu Laplace (thỉnh thoảng lệch rất xa) → trị tuyệt đối, tức MAE. Có/không → log-loss. Dữ liệu đếm (số cuộc gọi mỗi giờ) → hợp lý Poisson, và hàm mất mát trông khác cả hai cái trên. Đó là cách người ta chọn hàm mất mát cho một bài toán mới, chứ không phải bằng cách thử.</p>
 
         <div class="take"><div class="k">Mang theo</div><p>Hàm mất mát <b>không phải quy ước</b> — nó là <b>giả định của bạn về cách dữ liệu sinh ra</b>, viết lại dưới dạng thứ để đi giảm. Đổi giả định thì hàm mất mát đổi theo.</p></div>
       </section>
@@ -2325,20 +2359,22 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="lede">MLE trả lời <b>đúng thế: p̂ = 1,0</b> — và đó là câu trả lời tệ, vì bạn <i>biết trước</i> rằng đồng xu thường gần công bằng. MLE không có chỗ nào để nhét cái &ldquo;biết trước&rdquo; ấy vào. <b>MAP</b> thì có.</p>
 
-        <p>MAP nhân độ hợp lý với một <b>niềm tin ban đầu</b> — chính là định lý Bayes ở mục 3.4, dùng cho tham số thay vì cho bệnh. Niềm tin &ldquo;p có lẽ gần 0,5&rdquo; kéo kết quả từ 1,0 về khoảng 0,75; và khi dữ liệu nhiều lên, dữ liệu sẽ áp đảo niềm tin ban đầu — đúng như nó nên thế.</p>
+        <p>MAP nhân độ hợp lý với một <b>niềm tin ban đầu</b> — chính là định lý Bayes ở mục 3.4, dùng cho tham số thay vì cho bệnh. Một niềm tin cỡ &ldquo;như thể đã thấy trước 1 ngửa và 1 sấp&rdquo; kéo kết quả từ 1,0 về (2 + 1)/(2 + 2) = <b>0,75</b>; niềm tin chặt hơn, &ldquo;như thể đã thấy trước 10 ngửa 10 sấp&rdquo;, kéo về (2 + 10)/(2 + 20) = 0,55. Và khi dữ liệu nhiều lên, dữ liệu sẽ áp đảo niềm tin ban đầu — đúng như nó nên thế.</p>
+
+        <p>Vì sao niềm tin lại thành số hạng phạt: MAP tìm θ làm <b>hợp lý × tiên nghiệm</b> lớn nhất, tức làm −log(hợp lý) − log(tiên nghiệm) nhỏ nhất. Số hạng đầu là hàm mất mát của mục 4.4, số hạng sau là phần phạt. −log của một cái chuông quanh 0 chỉ còn w² nhân một hằng số (cộng thêm một hằng số không chứa w). −log của Laplace — một đỉnh nhọn ở 0, đuôi dày hơn chuông — chỉ còn |w| nhân một hằng số. Chuông càng hẹp, tức niềm tin càng chặt, thì λ càng lớn.</p>
 
         <div class="tw">
           <table>
             <thead><tr><th>Niềm tin ban đầu về trọng số</th><th>Thành số hạng phạt</th><th>Tên thường gặp</th><th>Tác dụng thấy được</th></tr></thead>
             <tbody>
               <tr><td>&ldquo;trọng số có lẽ <b>nhỏ</b>&rdquo; — chuẩn quanh 0</td><td>λ·Σw²</td><td><b>Ridge / L2</b></td><td>mọi trọng số co lại, ít cái nào về hẳn 0</td></tr>
-              <tr><td>&ldquo;<b>phần lớn</b> trọng số có lẽ <b>bằng 0</b>&rdquo; — Laplace</td><td>λ·Σ|w|</td><td><b>Lasso / L1</b></td><td>nhiều trọng số về <b>đúng 0</b> → tự chọn đặc trưng</td></tr>
+              <tr><td>&ldquo;trọng số có lẽ nhỏ, dồn sát 0 hơn cả chuông, thỉnh thoảng mới có cái lớn&rdquo; — Laplace (nhọn ở 0)</td><td>λ·Σ|w|</td><td><b>Lasso / L1</b></td><td>nhiều trọng số về <b>đúng 0</b> → tự chọn đặc trưng (do phép chọn đỉnh rơi đúng vào cái nhọn, không phải vì niềm tin cho số 0 một xác suất lớn)</td></tr>
               <tr><td>&ldquo;không có ý kiến gì&rdquo; — đều</td><td>không có</td><td>MLE trơn</td><td>khớp dữ liệu tối đa, kể cả khớp cả nhiễu</td></tr>
             </tbody>
           </table>
         </div>
 
-        <p>Vậy nên λ trong dòng &ldquo;<span class="mono">Ridge(alpha=1.0)</span>&rdquo; không phải một núm tuỳ tiện. Nó là <b>độ mạnh của niềm tin</b> bạn đặt vào trước khi xem dữ liệu, tính bằng đơn vị &ldquo;bao nhiêu dữ liệu thì đủ để tôi đổi ý&rdquo;. Và nó chữa đúng cái bệnh ở mục 1.8: ma trận điều kiện xấu, trọng số nổ to và đổi dấu loạn xạ.</p>
+        <p>Vậy nên λ trong dòng &ldquo;<span class="mono">Ridge(alpha=1.0)</span>&rdquo; không phải một núm tuỳ tiện. Nó là <b>độ mạnh của niềm tin</b> bạn đặt vào trước khi xem dữ liệu, tính bằng đơn vị &ldquo;bao nhiêu dữ liệu thì đủ để tôi đổi ý&rdquo;. Và nó chữa đúng cái bệnh ở mục 1.8: ma trận điều kiện xấu, trọng số nổ to và đổi dấu loạn xạ. Muốn thấy λ làm dịu một đường cong đang học thuộc lòng, kéo thanh λ ở <a href="machine-learning-101.html#s-overfit">Machine Learning 101, chương 5</a>.</p>
 
         <div class="take"><div class="k">Mang theo</div><p><b>MAP = MLE + niềm tin ban đầu.</b> Mọi số hạng chính quy hoá là một niềm tin ban đầu viết bằng toán, và λ là độ mạnh của niềm tin đó.</p></div>
       </section>
@@ -2348,17 +2384,17 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <h2 class="st">&ldquo;Tin cậy 95%&rdquo; là lời hứa về <i>quy trình</i>, không phải về con số bạn đang cầm</h2>
         <p class="map">Bản gốc · <b>C3 · Tuần 4</b> · Confidence intervals, margin of error</p>
 
-        <p class="ask">Đo 100 bạn, trung bình 170 cm. <span>Cả trường trung bình bao nhiêu?</span></p>
+        <p class="ask">Đo 100 bạn: trung bình 170 cm, độ lệch chuẩn 8 cm. <span>Cả trường trung bình bao nhiêu?</span></p>
 
         <p class="lede">Chắc chắn <b>không phải đúng 170</b> — 100 bạn khác sẽ cho số khác. Nhưng mục 4.2 cho biết trung bình mẫu lệch khoảng σ/√n, ở đây là 8/√100 = <b>0,8 cm</b>. Lấy 1,96 lần con số đó, ta được khoảng <b>170 ± 1,57</b>, tức <b>[168,4; 171,6]</b>.</p>
 
         <div class="fx">
           <p class="fx__line sm"><span class="tm" data-n="Trung bình MẪU — con số bạn đo được. Nó là điểm giữa của khoảng.">x̄</span> <span class="op">±</span> <span class="tm" data-n="1,96 — lấy từ bảng phân phối chuẩn: ±1,96σ bao đúng 95% diện tích. Muốn 99% thì đổi thành 2,576.">1,96</span> <span class="op">·</span> <span style="display:inline-block;text-align:center;vertical-align:middle"><span style="border-bottom:1.5px solid currentColor;padding:0 5px"><span class="tm" data-n="s — độ lệch chuẩn ĐO ĐƯỢC từ mẫu. Ở đây 8 cm.">s</span></span><br><span class="tm" data-n="√n — căn của cỡ mẫu. Đây là chỗ &ldquo;muốn hẹp một nửa thì phải lấy mẫu gấp bốn&rdquo;.">√n</span></span> &nbsp;&nbsp;<span class="op">=</span>&nbsp;&nbsp; 170 ± 1,96 · 0,8 <span class="op">=</span> <b>[168,4; 171,6]</b></p>
-          <p class="fx__note">Khi σ phải đo từ mẫu thì hệ số đúng <b>luôn</b> là t*, không phải 1,96 — vì s cũng là một con số đo được nên nó cũng có nhiễu. Chỉ là với n lớn thì t* ≈ 1,96 nên dùng 1,96 không sao. Với n = 100 thì t* = 1,984 — chênh 1,2%, không đáng kể. Với n = 5 thì t* = 2,776, chênh <b>42%</b>: bỏ qua là ra khoảng hẹp giả.</p>
+          <p class="fx__note">Khi σ phải đo từ mẫu thì hệ số đúng là t* chứ không phải 1,96 — vì s cũng là một con số đo được nên nó cũng có nhiễu. t* lấy từ <b>phân phối t</b> với n − 1 bậc tự do: một cái chuông đuôi dày hơn, dày càng nhiều khi n càng nhỏ, để bù cho cái nhiễu của s. (Nói cho đủ: t* đúng tuyệt đối khi dữ liệu gốc phân phối chuẩn; dữ liệu khác thì cả t* lẫn 1,96 đều chỉ gần đúng, và càng gần khi n càng lớn.) Chỉ là với n lớn thì t* ≈ 1,96 nên dùng 1,96 không sao. Với n = 100 thì t* = 1,984 — chênh 1,2%, không đáng kể. Với n = 5 thì t* = 2,776, chênh <b>42%</b>: bỏ qua là ra khoảng hẹp giả.</p>
         </div>
 
         <div class="box mis">
-          <p class="box__k">Câu bị hiểu sai nhiều nhất trong toàn bộ thống kê</p>
+          <p class="box__k">Câu hay bị hiểu sai</p>
           <div class="row">
             <div class="k">Nghe thấy</div><div>&ldquo;Có 95% khả năng trung bình thật nằm trong [168,4; 171,6].&rdquo;</div>
             <div class="k">Thật ra</div><div>Trung bình thật là <b>một con số cố định</b> — nó không có xác suất nào cả. Cái có xác suất là <b>cái khoảng</b>: nó nhảy chỗ mỗi lần bạn lấy mẫu mới. Lời hứa đúng là: <b>&ldquo;nếu lặp lại toàn bộ quy trình này rất nhiều lần, 95% các khoảng sinh ra sẽ chứa trung bình thật&rdquo;</b>. Với khoảng cụ thể bạn đang cầm, nó chứa hoặc không chứa — bạn không biết là cái nào.</div>
@@ -2379,7 +2415,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <div class="reads">
               <div class="read good"><div class="k">Khoảng chứa đúng</div><div class="v" id="m17-hit">95</div></div>
               <div class="read bad"><div class="k">Khoảng bắn trượt</div><div class="v" id="m17-miss">5</div></div>
-              <div class="read hi"><div class="k">Bề rộng trung bình</div><div class="v" id="m17-w">6,3<span class="u">cm</span></div></div>
+              <div class="read hi"><div class="k">Bề rộng trung bình</div><div class="v" id="m17-w">6,6<span class="u">cm</span></div></div>
             </div>
             <p class="lab__f" id="m17-say">Khoảng nào không cắt đường dọc là khoảng bắn trượt.</p>
             <p class="lab__f"><b>Hai cái đánh đổi thấy được ngay:</b> tăng mức tin cậy lên 99% thì gần như không còn vạch đỏ — nhưng mọi vạch <b>dài hẳn ra</b>, tức câu trả lời nhạt hơn (&ldquo;trung bình nằm đâu đó từ 160 tới 180&rdquo; thì đúng mà vô dụng). Tăng n thì vạch ngắn lại <b>mà tỉ lệ trượt không đổi</b> — chỉ có <b>σ/√n</b> nhỏ đi. Không có cách nào vừa hẹp vừa chắc mà không tốn thêm dữ liệu.</p>
@@ -2398,14 +2434,22 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="lede">Cách trả lời là <b>giả vờ nút màu gì cũng như nhau</b>, rồi hỏi: trong cái thế giới giả vờ đó, chênh lệch <b>lớn bằng hoặc hơn</b> khoảng cách 10% so với 13% xảy ra thường xuyên tới mức nào? Đáp án ở đây: <b>3,5% số lần</b>. Đủ lạ để <b>bác bỏ giả thuyết &ldquo;hai nút như nhau&rdquo;</b> theo chuẩn 5% mà phần lớn ngành chấp nhận — chú ý là bác bỏ H₀, không phải &ldquo;chứng minh nút đỏ tốt hơn&rdquo;.</p>
 
+        <div class="fx">
+          <p class="fx__line sm">SE = √(p̄ · (1 − p̄) · 2/n)</p>
+          <p class="fx__line sm"><span class="op">≈</span> <b>1,43</b> điểm %</p>
+          <p class="fx__line sm">z = 3,0 / 1,43 = <b>2,10</b></p>
+          <p class="fx__line sm"><span class="op">→</span>&nbsp; p = <b>0,035</b></p>
+          <p class="fx__note">Cả phép kiểm là thế. Trong thế giới H₀, tỉ lệ mua chung là p̄ = 230/2.000 = 11,5%, mỗi bản n = 1.000 người, nên độ lệch chuẩn của chênh lệch — gọi là <b>sai số chuẩn</b>, SE — là √(0,115 · 0,885 · 2/1.000) ≈ 1,43 điểm %. Căn thức ấy lấy từ mục 3.9: phương sai của hiệu hai tỉ lệ độc lập bằng tổng hai phương sai, mỗi cái p(1 − p)/n. Chênh lệch đã thấy, 3,0 điểm %, bằng 2,10 lần SE — con số ấy gọi là <b>z</b>. Rồi tra diện tích hai đuôi ngoài ±2,10 SE của cái chuông, như bảng ở mục 3.8: 0,035. 2,10 vượt mốc 1,96 một chút, nên hai đuôi còn dưới 5% một chút.</p>
+        </div>
+
         <div class="tw">
           <table>
             <thead><tr><th>Tên</th><th>Nghĩa trong ví dụ nút bấm</th></tr></thead>
             <tbody>
               <tr><td><b>Giả thuyết không</b> H₀</td><td>&ldquo;Hai nút y như nhau, chênh lệch chỉ do may rủi.&rdquo; Đây là cái ta <i>giả vờ tin</i> để tính.</td></tr>
               <tr><td><b>Giả thuyết đối</b> H₁</td><td>&ldquo;Hai nút khác nhau thật.&rdquo;</td></tr>
-              <tr><td><b>p-value</b></td><td>Nếu H₀ đúng, xác suất thấy chênh lệch <b>lớn bằng hoặc hơn</b> cái đã thấy. Ở đây <b>0,035</b>.</td></tr>
-              <tr><td><b>Mức α</b></td><td>Ngưỡng bạn <b>tự chọn trước</b>, thường 0,05. p &lt; α thì bác bỏ H₀.</td></tr>
+              <tr><td><b>p-value</b></td><td>Nếu H₀ đúng, xác suất thấy chênh lệch <b>lớn bằng hoặc hơn</b> cái đã thấy. Ở đây <b>0,035</b> — đếm cả hai phía, vì H₁ chỉ nói &ldquo;khác nhau&rdquo;, không nói bản nào hơn.</td></tr>
+              <tr><td><b>Mức ý nghĩa</b> α</td><td>Ngưỡng bạn <b>tự chọn trước</b>, thường 0,05. p &lt; α thì bác bỏ H₀.</td></tr>
               <tr><td><b>Sai lầm loại I</b></td><td>Bác bỏ H₀ khi H₀ đúng — <b>báo động giả</b>. Xác suất đúng bằng α.</td></tr>
               <tr><td><b>Sai lầm loại II</b></td><td>Không bác bỏ H₀ khi H₁ đúng — <b>bỏ sót</b>. Xác suất gọi là β.</td></tr>
               <tr><td><b>Độ mạnh</b></td><td>1 − β: khả năng phát hiện được cái khác biệt <i>nếu nó có thật</i>. Tăng cỡ mẫu là cách tăng nó.</td></tr>
@@ -2416,8 +2460,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <div class="lab" id="m18">
           <div class="lab__h">
             <p class="lab__k">Mô hình 18 · kéo bốn con số</p>
-            <p class="lab__t">A/B test: cùng một chênh lệch, hai kết luận trái ngược</p>
-            <p class="lab__hint">Giữ nguyên tỉ lệ 10% so với 13% nhưng kéo <b>cỡ mẫu</b> xuống 200: p-value vọt lên trên 0,05 và kết luận đảo chiều — <b>cùng một chênh lệch, không còn kết luận được gì</b>. Đó là lý do phải tính cỡ mẫu <i>trước khi</i> chạy thử nghiệm, không phải sau.</p>
+            <p class="lab__t">A/B test: cùng một chênh lệch, lúc kết luận được, lúc không</p>
+            <p class="lab__hint">Giữ nguyên tỉ lệ 10% so với 13% nhưng kéo <b>cỡ mẫu</b> xuống 200: p-value vọt lên trên 0,05 và kết luận biến mất — <b>cùng một chênh lệch, không còn kết luận được gì</b>. &ldquo;Chưa bác bỏ được&rdquo; không có nghĩa là &ldquo;hai nút như nhau&rdquo;; nó chỉ nói dữ liệu chưa đủ để phân biệt. Đó là lý do phải tính cỡ mẫu <i>trước khi</i> chạy thử nghiệm, không phải sau.</p>
           </div>
           <div class="lab__b">
             <div class="row"><label for="m18-n">Người xem mỗi bản</label><div class="inline"><input type="range" id="m18-n" min="50" max="5000" step="50" value="1000"><span class="val" id="m18-nv">1000</span></div></div>
@@ -2461,7 +2505,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <div class="grid2">
           <div class="mini">
             <p class="t">1 · Thử nhiều rồi báo cáo cái đẹp nhất</p>
-            <p class="d">Một kiểm định ở mức 5% có 5% khả năng báo động giả. Chạy <b>20</b> kiểm định thì khả năng có <b>ít nhất một</b> báo động giả là 1 − 0,95²⁰ = <b>64,2%</b>. Chạy 100 cái: <b>99,4%</b> — gần như chắc chắn tìm được &ldquo;phát hiện&rdquo; hoàn toàn rỗng. Cách chữa: định trước sẽ kiểm cái gì, hoặc chia α cho số kiểm định.</p>
+            <p class="d">Một kiểm định ở mức 5% có 5% khả năng báo động giả. Chạy <b>20</b> kiểm định độc lập thì khả năng có <b>ít nhất một</b> báo động giả là 1 − 0,95²⁰ = <b>64,2%</b>. Chạy 100 cái: <b>99,4%</b> — gần như chắc chắn tìm được &ldquo;phát hiện&rdquo; hoàn toàn rỗng. Tên của nó là <b>đa so sánh</b>; cố tình thử cho tới khi ra số đẹp thì gọi là <b>đào p-value</b>. Cách chữa: định trước sẽ kiểm cái gì, hoặc chia α cho số kiểm định.</p>
           </div>
           <div class="mini">
             <p class="t">2 · Dừng thử nghiệm khi thấy đẹp</p>
@@ -2469,11 +2513,11 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </div>
           <div class="mini">
             <p class="t">3 · Ý nghĩa thống kê ≠ ý nghĩa thực tế</p>
-            <p class="d">Với 10 triệu người dùng, chênh lệch <b>0,01%</b> vẫn cho p &lt; 0,001. Con số ấy &ldquo;có ý nghĩa thống kê&rdquo; và <b>không đáng để đổi một dòng code</b>. Luôn hỏi thêm: <b>lớn bao nhiêu</b>, và có bù nổi chi phí không.</p>
+            <p class="d">Với 10 triệu người dùng mỗi bản, tỉ lệ mua 10,00% so với 10,05% — chênh <b>0,05 điểm phần trăm</b> — vẫn cho p ≈ 0,0002. Con số ấy &ldquo;có ý nghĩa thống kê&rdquo; và <b>không đáng để đổi một dòng code</b>. Luôn hỏi thêm: <b>lớn bao nhiêu</b>, và có bù nổi chi phí không.</p>
           </div>
           <div class="mini">
             <p class="t">4 · Chỉ nhìn nhóm sống sót</p>
-            <p class="d">Thống kê trên khách hàng <b>còn lại</b> để kết luận về khách hàng nói chung, hay học từ những startup <b>đã thành công</b>. Nhóm đã biến mất không có mặt trong dữ liệu, nên mọi con số đều lệch — và không có công thức nào phát hiện ra được, vì <b>thứ thiếu thì không đo được</b>.</p>
+            <p class="d">Thống kê trên khách hàng <b>còn lại</b> để kết luận về khách hàng nói chung, hay học từ những startup <b>đã thành công</b>. Nhóm đã biến mất không có mặt trong dữ liệu, nên mọi con số đều lệch — và không có công thức nào phát hiện ra được, vì <b>thứ thiếu thì không đo được</b>. Tên của nó: <b>thiên lệch người sống sót</b>.</p>
           </div>
         </div>
 
@@ -4109,15 +4153,28 @@ function tcrit(conf, df) {
     $('m12-fp').textContent = fmt((1 - prev) * (1 - spec) * 1000, 1);
     $('m12-tp').textContent = fmt(prev * sens * 1000, 1);
     $('m12-fn').textContent = fmt(prev * (1 - sens) * 1000, 1);
-    var ratio = post > 0 ? 1 / post : 0;
+    /* Lời nhắc chỉ so hai con số đang hiện — dương thật và dương giả — nên đúng với mọi vị
+       trí của cả ba thanh. Bản trước quy công cho "tỉ lệ mắc" dù người dùng vừa kéo thanh
+       của máy: bỏ đúng 100% ở tỉ lệ mắc 0,1% thì post = 100% mà lời nhắc vẫn nói "bệnh đã đủ
+       phổ biến… không phải độ chính xác của máy". Câu "bệnh quá hiếm" chỉ giữ cho đúng ca của nó. */
+    var ratio = post > 0 ? 1 / post : 0, tpN = prev * sens * 1000, fpN = (1 - prev) * (1 - spec) * 1000;
     var say;
-    if (post < 0.2) say = 'Trong ' + fmt(np, 0) + ' người bị báo dương, chỉ khoảng ' + fmt(prev * sens * 1000, 1) +
-      ' người bệnh thật — tức 1 trên ' + fmt(ratio, 1) + '. Máy không tệ; bệnh quá hiếm.';
-    else if (post < 0.6) say = 'Xác suất bệnh thật là ' + pct(post, 1) + ' — gần như tung đồng xu. Cùng cái máy ấy, chỉ đổi tỉ lệ mắc.';
-    else say = 'Xác suất bệnh thật ' + pct(post, 1) + ': bệnh đã đủ phổ biến để một kết quả dương tính đáng tin. Tỉ lệ mắc làm gần hết việc này, không phải độ chính xác của máy.';
+    if (post < 0.2) say = 'Trong ' + fmt(np, 0) + ' người bị báo dương, chỉ khoảng ' + fmt(tpN, 1) +
+      ' người bệnh thật — tức 1 trên ' + fmt(ratio, 1) + '. Dương giả (' + fmt(fpN, 1) + ' người) đông hơn hẳn dương thật.' +
+      (spec >= 0.95 && prev <= 0.02 ? ' Máy không tệ; bệnh quá hiếm.' : '');
+    else if (post < 0.6) say = 'Xác suất bệnh thật là ' + pct(post, 1) + ': dương thật (' + fmt(tpN, 1) +
+      ' người) và dương giả (' + fmt(fpN, 1) + ' người) cùng một cỡ, nên một kết quả dương tính mới chỉ nói được “có thể”.';
+    else say = 'Xác suất bệnh thật ' + pct(post, 1) + ': dương thật (' + fmt(tpN, 1) + ' người) đã đông hơn dương giả (' +
+      fmt(fpN, 1) + ' người), nên một kết quả dương tính đáng tin.';
     $('m12-say').textContent = say;
+    /* chip "1%" sáng khi thanh đang đúng ở mốc ấy */
+    var jc = document.querySelector('#m12-jump .chip');
+    if (jc) { var at1 = +$('m12-prev').value === 10; jc.classList.toggle('on', at1); jc.setAttribute('aria-pressed', at1 ? 'true' : 'false'); }
   }
   ['m12-prev', 'm12-sens', 'm12-spec'].forEach(function (id) { $(id).addEventListener('input', draw); });
+  /* Mốc 1% mà lời hướng dẫn bảo tìm nằm ở 1,8% chiều dài thanh trượt 0,1–50%: bằng chuột
+     hay ngón tay gần như không trúng được, nên có một chip nhảy thẳng tới đó. */
+  chipGroup('m12-jump', 'v', function (v) { $('m12-prev').value = v; draw(); });
   redraws.push(draw); draw();
 })();
 
@@ -4151,6 +4208,8 @@ function tcrit(conf, df) {
     for (i = 0; i <= n; i += stepLbl) txt(g, X(i), H - mb + 15, i, 'vm', 'middle');
     /* nhãn trục xuống HÀNG DƯỚI vạch số, nếu không nó đè lên hai số cuối */
     txt(g, W - mr, H - mb + 33, 'số mặt ngửa →', 'vs', 'end');
+    /* trục đứng: chiều cao cột là xác suất — ghi ra, kèm cỡ của cột cao nhất để có thang */
+    txt(g, ml, 12, '↑ xác suất · cột cao nhất ' + fmt(max * 100, 1) + '%', 'vs');
     /* xấp xỉ chuẩn */
     var mu = n * p, sd = Math.sqrt(n * p * (1 - p));
     if (n >= 8 && sd > 0.6) {
@@ -4168,7 +4227,12 @@ function tcrit(conf, df) {
     $('m13-mean').textContent = fmt(mu, 1);
     $('m13-sd').textContent = fmt(sd);
     var say = 'Với n = ' + n + ', p = ' + fmt(p) + ': ra ' + k + ' mặt ngửa hoặc hơn xảy ra ' + fmt(pge * 100, 2) + '% số lượt.';
-    if (n >= 30) say += ' Dãy cột đã thành hình chuông — đường đen là phân phối chuẩn với μ = ' + fmt(mu, 1) + ' và σ = ' + fmt(sd) + ', khớp gần như hoàn toàn.';
+    /* "Khớp" chỉ khi cả np lẫn n(1 − p) từ 10 trở lên — không thì với p = 0,05 và n = 30
+       dãy cột còn lệch hẳn (cột ở 0 cao 21,5%, đường chuẩn tràn sang số âm) mà lời nhắc
+       vẫn báo "khớp gần như hoàn toàn". */
+    var fits = n * p >= 10 && n * (1 - p) >= 10;
+    if (n >= 30 && fits) say += ' Dãy cột đã thành hình chuông — đường đen là phân phối chuẩn với μ = ' + fmt(mu, 1) + ' và σ = ' + fmt(sd) + ', khớp gần như hoàn toàn.';
+    else if (n >= 30) say += ' Với p lệch cỡ này, n = ' + n + ' vẫn chưa đủ: dãy cột còn lệch về một phía và đường chuẩn chưa khớp — cần cả np lẫn n(1 − p) cỡ 10 trở lên.';
     if (pge < 0.01) say += ' Dưới 1%: nếu thấy chuyện này thật thì nên nghi đồng xu, không nghi may rủi.';
     $('m13-say').textContent = say;
   }
@@ -4193,6 +4257,15 @@ function tcrit(conf, df) {
       out.push([3.4, 3.4]);
     }
     return out;
+  }
+  /* r của một đám điểm bất kỳ — để kịch bản "một điểm lạc" in được r của 39 điểm đầu
+     cạnh r của cả 40 điểm: vế "từ gần 0" phải hiện trên màn hình, không chỉ nằm trong lời. */
+  function corr(Q) {
+    var k = Q.length, ax = 0, ay = 0, qxx = 0, qyy = 0, qxy = 0;
+    Q.forEach(function (q) { ax += q[0]; ay += q[1]; });
+    ax /= k; ay /= k;
+    Q.forEach(function (q) { var dx = q[0] - ax, dy = q[1] - ay; qxx += dx * dx; qyy += dy * dy; qxy += dx * dy; });
+    return (qxx > 1e-12 && qyy > 1e-12) ? qxy / Math.sqrt(qxx * qyy) : 0;
   }
   function draw() {
     $('m14-slopev').textContent = fmt(+$('m14-slope').value / 10);
@@ -4232,21 +4305,23 @@ function tcrit(conf, df) {
     $('m14-r2').textContent = fmt(r * r);
     var say;
     if (mode === 'u') say = 'r = ' + fmt(r) + ' — gần bằng 0, mà quan hệ thì rõ như ban ngày. r chỉ đo quan hệ THEO ĐƯỜNG THẲNG, và ở đây không có đường thẳng nào tả được hình chữ U.';
-    else if (mode === 'out') say = 'r = ' + fmt(r) + ' — 39 điểm đầu chẳng liên quan gì nhau, nhưng MỘT điểm lạc ở góc trên đủ để đẩy r lên cao. Một điểm trên 40 đã lái được kết luận.';
+    else if (mode === 'out') say = 'Riêng 39 điểm đầu thì r = ' + fmt(corr(P.slice(0, 39))) + ' — chẳng liên quan gì nhau. Thêm MỘT điểm lạc ở góc trên, r nhảy lên ' + fmt(r) + '. Một điểm trên 40 đã lái được kết luận.';
     else if (Math.abs(r) > 0.9) say = 'r = ' + fmt(r) + ': gần như thẳng hàng. r² = ' + fmt(r * r) + ' nghĩa là đường thẳng giải thích được ' + pct(r * r, 0) + ' biến thiên của y.';
     else if (Math.abs(r) > 0.4) say = 'r = ' + fmt(r) + ': có xu hướng nhưng nhiễu nhiều. Nhìn đám điểm thì thấy ngay điều mà con số r không nói hết.';
     else say = 'r = ' + fmt(r) + ': gần như không có quan hệ thẳng nào.';
     $('m14-say').textContent = say;
   }
   ['m14-slope', 'm14-noise'].forEach(function (id) { $(id).addEventListener('input', draw); });
-  chipGroup('m14-mode', 'm', function (m) { mode = m; draw(); });
+  /* Hai kịch bản cuối không dùng độ nghiêng: để thanh ấy kéo được mà không làm gì là nói
+     dối người đọc về "cái gì đổi được". */
+  chipGroup('m14-mode', 'm', function (m) { mode = m; $('m14-slope').disabled = m !== 'lin'; draw(); });
   redraws.push(draw); draw();
 })();
 
 /* ═══════════════════ mô hình 15 · giới hạn trung tâm ═══════════════════ */
 (function () {
   var svg = $('m15-svg'); if (!svg) return;
-  var si = 0, W = 620, H = 360, REP = 3000, rawCache = {};
+  var si = 0, W = 620, H = 360, REP = 3000, rawCache = {}, skCache = {};
   var SRC = [
     { n: 'xúc xắc (đều)', lo: 1, hi: 6, pick: function (r) { return 1 + Math.floor(r() * 6); } },
     { n: 'lệch phải nặng', lo: 0, hi: 8, pick: function (r) { return Math.min(8, -Math.log(1 - r()) * 1.4); } },
@@ -4301,16 +4376,31 @@ function tcrit(conf, df) {
     txt(g, ml, 18, 'Dữ liệu gốc: ' + S.n + ' · σ = ' + fmt(sd0), 'vt');
     el(g, 'line', { x1: ml, y1: 130, x2: W - mr, y2: 130, class: 'vaxis' });
     bars(g, h1, lo, hi, X, 130, 96, css('--border-2'), max1);
-    var h2 = hist(means, lo, hi, 60), max2 = Math.max.apply(null, h2);
+    /* Cột dưới. Với hai nguồn RỜI RẠC (xúc xắc, tung xu), trung bình của n mẫu chỉ nhận các
+       giá trị cách nhau đúng 1/n. Chia cứng 60 ngăn thì ngăn hẹp hơn khoảng cách ấy: hình
+       thành răng lược (tung xu, n = 10: 49 ngăn trống giữa dải), còn đường chuẩn — co theo
+       bề rộng ngăn — chỉ cao bằng 17% cột cao nhất. Nên với nguồn rời rạc, mỗi ngăn gom đúng
+       m giá trị liền nhau của lưới k/n (m nhỏ nhất để ngăn không hẹp hơn 1/60 trục), gốc lệch
+       nửa bước để không giá trị nào rơi đúng mép ngăn; ngăn ở hai đầu cắt theo trục. */
+    var disc = si === 0 || si === 3, step = 1 / n;
+    var bw2 = disc ? Math.max(1, Math.ceil((hi - lo) * n / 60 - 1e-9)) * step : (hi - lo) / 60;
+    var lo2 = disc ? lo - step / 2 : lo;
+    var nb2 = disc ? Math.ceil((hi - lo + step) / bw2 - 1e-9) : 60;
+    var h2 = hist(means, lo2, lo2 + nb2 * bw2, nb2), max2 = Math.max.apply(null, h2);
     txt(g, ml, 178, 'Trung bình của n = ' + n + ' mẫu, lặp ' + REP.toLocaleString('vi-VN') + ' lần · σ đo được = ' + fmt(sdm), 'vt');
     el(g, 'line', { x1: ml, y1: 320, x2: W - mr, y2: 320, class: 'vaxis' });
-    bars(g, h2, lo, hi, X, 320, 118, css('--p'), max2);
-    /* chuẩn với σ/√n, cùng thang với cột */
-    var pred = sd0 / Math.sqrt(n), d = '', binw = (hi - lo) / 60;
+    h2.forEach(function (c, k) {
+      var a = Math.max(lo, lo2 + k * bw2), b = Math.min(hi, lo2 + (k + 1) * bw2);
+      if (b <= a) return;
+      var y = 320 - (c / max2) * 118;
+      el(g, 'rect', { x: X(a) + 0.4, y: y, width: Math.max(0.8, X(b) - X(a) - 0.8), height: Math.max(0, 320 - y), fill: css('--p'), opacity: 0.9 });
+    });
+    /* chuẩn với σ/√n, cùng thang với cột: số lần rơi vào một ngăn ≈ REP × mật độ × bề rộng ngăn */
+    var pred = sd0 / Math.sqrt(n), d = '';
     if (n > 1) {
       for (i = 0; i <= 240; i++) {
         var xx = lo + (hi - lo) * i / 240;
-        var yy = normpdf(xx, m0, pred) * REP * binw;
+        var yy = normpdf(xx, m0, pred) * REP * bw2;
         d += (i ? 'L' : 'M') + X(xx).toFixed(1) + ' ' + (320 - Math.min(1.02, yy / max2) * 118).toFixed(1);
       }
       el(g, 'path', { d: d, fill: 'none', stroke: css('--ink'), 'stroke-width': 1.8, opacity: 0.8 });
@@ -4322,9 +4412,28 @@ function tcrit(conf, df) {
     $('m15-s0').textContent = fmt(sd0);
     $('m15-pred').textContent = fmt(pred);
     $('m15-obs').textContent = fmt(sdm);
+    /* Lời nhắc chỉ được gọi hình dưới là "cái chuông" khi nó thật sự khớp đường chuẩn.
+       Hai phép đo: (1) độ lệch của trung bình n mẫu = độ lệch của dữ liệu gốc / √n — tính
+       từ dữ liệu gốc nên không nhảy lung tung theo hạt giống của từng n; nguồn "lệch phải
+       nặng" còn lệch quá 0,5 tới n = 13. (2) khoảng cách tổng biến thiên giữa các cột và
+       đường chuẩn — bắt được nguồn "hai đỉnh", vốn không lệch mà vẫn còn gợn tới n ≈ 12.
+       Xúc xắc và tung xu (từ n = 6) không chạm ngưỡng nào. */
+    if (skCache[si] === undefined) {
+      skCache[si] = raw.reduce(function (a, b) { return a + Math.pow(b - m0, 3); }, 0) / raw.length / Math.pow(sd0, 3);
+    }
+    var skm = skCache[si] / Math.sqrt(n), tv = 0;
+    h2.forEach(function (c, k) {
+      var a = lo2 + k * bw2;
+      tv += Math.abs(c / REP - (Phi((a + bw2 - m0) / pred) - Phi((a - m0) / pred)));
+    });
+    tv /= 2;
+    var sdNote = ' Riêng σ đo được (' + fmt(sdm) + ') thì đã khớp σ/√n (' + fmt(pred) +
+      '): công thức ấy đúng với mọi n, chỉ hình chuông mới cần n lớn.';
     var say;
     if (n === 1) say = 'Với n = 1, "trung bình của 1 mẫu" chính là dữ liệu gốc — hai hình giống nhau, kể cả khi hình ấy méo.';
     else if (n < 6) say = 'n = ' + n + ': hình dưới đã bắt đầu gom về giữa và bớt méo, dù dữ liệu gốc không đổi gì.';
+    else if (Math.abs(skm) > 0.5) say = 'n = ' + n + ': hình dưới đã gom lại nhưng còn đuôi dài một bên — dữ liệu gốc càng méo thì càng cần n lớn.' + sdNote;
+    else if (tv > 0.07) say = 'n = ' + n + ': hình dưới đã gom về giữa nhưng chưa khớp hẳn đường chuẩn — hình của dữ liệu gốc vẫn còn in dấu.' + sdNote;
     else say = 'n = ' + n + ': hình dưới là cái chuông, và σ đo được (' + fmt(sdm) + ') khớp với σ/√n dự đoán (' + fmt(pred) +
       '). Dữ liệu gốc vẫn méo y như cũ — định lý không cần nó đẹp.';
     $('m15-say').textContent = say;
@@ -4399,7 +4508,10 @@ function tcrit(conf, df) {
 /* ═══════════════════ mô hình 17 · khoảng tin cậy ═══════════════════ */
 (function () {
   var svg = $('m17-svg'); if (!svg) return;
-  var MU = 170, SD = 8, K = 100, level = 95, seed = 12345, W = 620, H = 340;
+  /* Hạt giống 3554416254 là hạt sau đúng một lần "Lấy mẫu lại" kể từ 12345. Hạt 12345 cho
+     lần mở đầu 9 khoảng trượt trên 100 — đúng là dao động, nhưng người đọc vừa được hứa
+     "quanh 5" sẽ tưởng mô hình sai. Hạt này cho 95/5 ở n = 25, mức 95%. */
+  var MU = 170, SD = 8, K = 100, level = 95, seed = 3554416254, W = 620, H = 340;
   function draw() {
     var n = +$('m17-n').value;
     $('m17-nv').textContent = n;
@@ -4500,26 +4612,40 @@ function tcrit(conf, df) {
     var flip = dxp > W - 170;
     txt(g, dxp + (flip ? -7 : 7), mt + 12,
       'đo được: ' + (diff >= 0 ? '+' : '') + fmt(diff * 100, 1) + ' điểm %', 'vt', flip ? 'end' : 'start');
-    /* hai vạch σ cách nhau dưới 26px thì năm nhãn đè lên nhau — chỉ giữ vạch 0 */
+    /* Vạch chia theo SE — độ lệch chuẩn của CHÊNH LỆCH, không phải σ của dữ liệu; ghi "σ"
+       thì người đọc vừa qua mục 4.2 sẽ lẫn hai thứ. Hai vạch cách nhau dưới 36px thì năm
+       nhãn "−2 SE"… đè lên nhau — chỉ giữ vạch 0. */
     var gapPx = X(se) - X(0);
     for (i = -2; i <= 2; i++) {
       var tv = i * se;
       if (tv < x0 || tv > x1) continue;
-      if (i !== 0 && gapPx < 26) continue;
-      txt(g, X(tv), H - mb + 15, (i ? (i > 0 ? '+' : '') + i + 'σ' : '0'), 'vm', 'middle');
+      if (i !== 0 && gapPx < 36) continue;
+      txt(g, X(tv), H - mb + 15, (i ? (i > 0 ? '+' : '−') + Math.abs(i) + ' SE' : '0'), 'vm', 'middle');
     }
     txt(g, ml, mt + 12, 'nếu hai bản THẬT SỰ như nhau, chênh lệch hay rơi vào đâu', 'vs');
 
     $('m18-diff').innerHTML = (diff >= 0 ? '+' : '') + fmt(diff * 100, 1) + '<span class="u">điểm %</span>';
     $('m18-z').textContent = fmt(z);
-    $('m18-p').textContent = pv < 0.0001 ? '<0,0001' : fmt(pv, 4);
+    /* Ba chữ số như bài viết (0,035). Riêng sát ngưỡng thì bốn chữ số: ba chữ số sẽ in
+       "0,050" cho cả p = 0,0496 (bác bỏ) lẫn p = 0,0503 (chưa bác bỏ). */
+    $('m18-p').textContent = pv < 0.001 ? '<0,001' : fmt(pv, Math.abs(pv - 0.05) < 0.0005 ? 4 : 3);
     var sig = pv < 0.05;
     $('m18-verdict').textContent = sig ? 'bác bỏ H₀' : 'chưa bác bỏ được';
     $('m18-vbox').className = 'read ' + (sig ? 'good' : 'bad');
-    $('m18-say').textContent = 'Khoảng tin cậy 95% của chênh lệch: [' + fmt(lo * 100, 1) + '; ' + fmt(hi * 100, 1) + '] điểm phần trăm' +
-      (sig ? '. Khoảng này không chứa 0, khớp với kết luận bác bỏ H₀.'
-           : '. Khoảng này CHỨA 0 — nên chưa loại trừ được khả năng hai bản như nhau. Cùng chênh lệch ấy với cỡ mẫu lớn hơn thì kết luận có thể đổi.') +
-      ' Mỗi bản: ' + cA + '/' + n + ' so với ' + cB + '/' + n + ' người mua.';
+    /* Câu nhắc đọc từ CHÍNH cái khoảng in ra, không đọc từ p: khoảng dùng độ lệch chuẩn
+       riêng từng bản, phép kiểm dùng tỉ lệ gộp, nên sát ngưỡng hai cái có thể lệch nhau —
+       và trước đây có 54 trạng thái in ra một khoảng không chứa 0 kèm câu "CHỨA 0". */
+    var ciOut = lo > 0 || hi < 0;
+    var edge = Math.abs(lo) < 0.0005 || Math.abs(hi) < 0.0005;
+    var note;
+    if (edge) note = '. Một đầu khoảng chạm đúng 0 — kết luận nằm ngay trên ranh giới 5%.';
+    else if (ciOut && sig) note = '. Khoảng này không chứa 0, khớp với kết luận bác bỏ H₀.';
+    else if (!ciOut && !sig) note = '. Khoảng này CHỨA 0 — nên chưa loại trừ được khả năng hai bản như nhau. Cùng chênh lệch ấy với cỡ mẫu lớn hơn thì kết luận có thể đổi.';
+    else note = '. Khoảng này và phép kiểm lệch nhau đúng ở sát ngưỡng (khoảng dùng độ lệch chuẩn riêng từng bản, phép kiểm dùng tỉ lệ gộp) — kết luận nằm ngay trên ranh giới 5%.';
+    /* mép khoảng làm tròn về 0 thì in "0,0", không in "−0,0" */
+    var bound = function (v) { return Math.abs(v) < 0.0005 ? '0,0' : fmt(v * 100, 1); };
+    $('m18-say').textContent = 'Khoảng tin cậy 95% của chênh lệch: [' + bound(lo) + '; ' + bound(hi) + '] điểm phần trăm' +
+      note + ' Mỗi bản: ' + cA + '/' + n + ' so với ' + cB + '/' + n + ' người mua.';
   }
   ['m18-n', 'm18-pa', 'm18-pb'].forEach(function (id) { $(id).addEventListener('input', draw); });
   redraws.push(draw); draw();
@@ -4596,8 +4722,8 @@ var GLOSS = [
 ['logistic regression','hồi quy logistic','Đoán xác suất có/không: đưa tổng có trọng số qua sigmoid. Hàm mất mát là log-loss.','#s-losses','hồi quy logistic'],
 
 /* ── khoá 3, nửa đầu: xác suất ────────────────────────────────────────────── */
-['probability','xác suất','Số cách ra điều bạn muốn, chia tổng số cách. Luôn từ 0 tới 1.','#s-prob','xác suất'],
-['sample space','không gian mẫu','Danh sách mọi chuyện có thể xảy ra. Hai xúc xắc có 36 phần tử, không phải 12.','#s-prob','không gian mẫu'],
+['probability','xác suất','Khi mọi kết cục đồng khả năng: số cách ra điều bạn muốn, chia tổng số cách. Luôn từ 0 tới 1.','#s-prob','xác suất'],
+['sample space','không gian mẫu','Danh sách mọi chuyện có thể xảy ra. Hai xúc xắc có 36 phần tử, không phải 21.','#s-prob','không gian mẫu'],
 ['independence','độc lập','Biết A rồi mà không đổi ý gì về B. Chỉ khi độc lập thì P(A và B) = P(A)·P(B).','#s-prules','độc lập'],
 ['conditional probability','xác suất có điều kiện','P(A|B): xác suất A khi đã biết B. Về mặt phép tính là ĐỔI MẪU SỐ về đúng nhóm B.','#s-cond','xác suất có điều kiện'],
 ['Bayes theorem','định lý Bayes','Đảo chiều một xác suất có điều kiện: P(A|B) = P(B|A)·P(A)/P(B). Cái hay bị bỏ là P(A).','#s-bayes','định lý Bayes'],
@@ -4607,7 +4733,7 @@ var GLOSS = [
 ['specificity','độ đặc hiệu','P(báo âm | không bệnh) — máy bỏ đúng được bao nhiêu phần người lành.','#s-bayes','độ đặc hiệu'],
 ['false positive','dương giả','Báo động khi chẳng có gì. Với lớp hiếm, nhóm này áp đảo nhóm dương thật dù tỉ lệ sai chỉ 1%.','#s-bayes','dương giả'],
 ['precision','độ chính xác dương','Trong 100 lần báo động, bao nhiêu lần là thật. Đây là con số phải xem khi lớp cần tìm là lớp hiếm.','#s-bayes','precision'],
-['naive Bayes','Bayes hồn nhiên','Nhân xác suất từng đặc trưng như thể chúng độc lập. Giả định sai, nhưng thường không làm đổi trật tự giữa các giả thuyết.','#s-naive','naive Bayes'],
+['naive Bayes','Bayes hồn nhiên','Nhân xác suất từng đặc trưng như thể chúng độc lập khi đã biết lớp (độc lập có điều kiện). Giả định sai, nhưng thường không làm đổi trật tự giữa các giả thuyết.','#s-naive','naive Bayes'],
 ['random variable','biến ngẫu nhiên','Con số chưa biết nhưng biết nó hay ra bao nhiêu: mặt xúc xắc, chiều cao người tiếp theo.','#s-rv','biến ngẫu nhiên'],
 ['probability mass function','hàm khối xác suất','PMF — bảng &ldquo;mỗi giá trị có xác suất bao nhiêu&rdquo;, dùng cho biến rời rạc.','#s-rv','PMF'],
 ['probability density function','hàm mật độ xác suất','PDF — đường cong mật độ, dùng cho biến liên tục. Giá trị tại một điểm KHÔNG phải xác suất và có thể lớn hơn 1; xác suất là DIỆN TÍCH.','#s-rv','PDF'],

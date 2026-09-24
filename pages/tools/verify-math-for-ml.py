@@ -563,8 +563,27 @@ def run_stats():
     if C(2, 1) * 0 + sum(1 for a in range(1, 7) for b in range(1, 7) if a + b == 7) != 6:
         fails.append('3.1: tổng 7 phải có 6 cách trên 36')
     need('3.1 tổng 7', '<b>6 cách</b>')
+    # "36, không phải 21": 21 là số cặp KHÔNG kể thứ tự — và chúng không đồng khả năng
+    pairs = {tuple(sorted((a, b))) for a in range(1, 7) for b in range(1, 7)}
+    claim('3.1 cặp không thứ tự', len(pairs) == C(6, 2) + 6 == 21, f'đếm được {len(pairs)} cặp')
+    claim('3.1 {2,5} hai cách, {3,3} một cách',
+          sum(1 for a in range(1, 7) for b in range(1, 7) if {a, b} == {2, 5}) == 2
+          and sum(1 for a in range(1, 7) for b in range(1, 7) if (a, b) == (3, 3)) == 1)
+    need('3.1 21', '36 cách rơi, không phải 21')
+    need('3.1 21 trong GLOSS', '36 phần tử, không phải 21')
     num('3.2 hai mặt 6', 1 / 36 * 100, 1)
     num('3.2 hai bi đỏ', 3 / 5 * 2 / 4 * 100, 0, ctx='<b>')
+    # "cơ" và "át" độc lập mà không loại trừ nhau: đếm trên bộ 52 lá
+    deck = [(r_, su) for r_ in range(13) for su in range(4)]
+    p_co = sum(1 for d in deck if d[1] == 0) / 52
+    p_at = sum(1 for d in deck if d[0] == 0) / 52
+    p_atco = sum(1 for d in deck if d == (0, 0)) / 52
+    claim('3.2 át cơ', p_co == 1 / 4 and p_at == 1 / 13 and abs(p_co * p_at - p_atco) < 1e-15)
+    need('3.2 át cơ', '1/4 × 1/13 = 1/52')
+
+    # 3.3 lớp 30 bạn, 12 mang hộp màu, 8 trong số đó học vẽ
+    num('3.3 có điều kiện', 8 / 12 * 100, 0, ctx='8/12 ≈ ')
+    claim('3.3 gấp đôi 1/3', abs((8 / 12) / (10 / 30) - 2) < 1e-12)
 
     # 3.4 Bayes
     prev, sens, spec = 0.001, 0.99, 0.99
@@ -596,6 +615,14 @@ def run_stats():
     num('3.7 P(10 ngửa)', binom(10, 10, 0.5) * 100, 3, ctx='<b>')
     pge8 = sum(binom(10, k, 0.5) for k in (8, 9, 10))
     num('3.7 P(≥8)', pge8 * 100, 2)
+    pboth = pge8 + sum(binom(10, k, 0.5) for k in (0, 1, 2))
+    num('3.7 hai phía', pboth * 100, 1, ctx='hai đuôi: ')
+    # C(n, k) đếm tay ở cỡ nhỏ, và giai thừa của n = 10
+    seqs = sorted(''.join(t) for t in {tuple('N' if i in c else 'S' for i in range(4)) for c in combinations(range(4), 2)})
+    claim('3.7 sáu dãy 2 ngửa trong 4 lần', seqs == ['NNSS', 'NSNS', 'NSSN', 'SNNS', 'SNSN', 'SSNN'] and C(4, 2) == 24 // (2 * 2) == 6)
+    need('3.7 sáu dãy', 'C(4, 2) = 24/(2·2) = 6 cách — NNSS, NSNS, NSSN, SNNS, SNSN, SSNN')
+    claim('3.7 10!', math.factorial(10) == 3628800 and 3628800 // (120 * 120) == 252 and math.factorial(5) == 120)
+    need('3.7 10!', '3.628.800/(120·120) = 252')
     need('3.7 mẫu số', '1.024')
     num('3.7 độ lệch chuẩn', math.sqrt(10 * 0.25), 2, ctx='lệch chuẩn ')
 
@@ -623,6 +650,11 @@ def run_stats():
     if abs(var - 35 / 12) > 1e-12:
         fails.append('3.9: phương sai xúc xắc phải là 35/12')
     need('3.9 phân số', '35/12')
+    claim('3.9 tính tay 35/12', sum((v - ev) ** 2 for v in vals) == 17.5 and 2 * 6.25 + 2 * 2.25 + 2 * 0.25 == 17.5)
+    need('3.9 tính tay', '(2·6,25 + 2·2,25 + 2·0,25)/6 = 17,5/6')
+    # 3.6 mật độ lớn hơn 1: đều trên [0; 0,5] thì cao 2 để diện tích bằng 1
+    claim('3.6 mật độ 2', 2 * 0.5 == 1)
+    need('3.6 mật độ 2', 'độ cao <b>2</b>')
 
     # 3.10 tương quan
     hh = [120, 125, 130, 135, 140, 145, 150, 155]
@@ -637,6 +669,13 @@ def run_stats():
     if round(r, 2) != 0.99:
         fails.append(f'3.10: r = {r:.4f}, trang nói 0,99')
     need('3.10 r', '<b>r = 0,99</b>')
+    need('3.10 dữ liệu', ', '.join(f'{a}/{b}' for a, b in zip(hh, ww)))
+    sh, sw = math.sqrt(shh / (n - 1)), math.sqrt(sww / (n - 1))
+    num('3.10 Cov hai chữ số', shw / (n - 1), 2, ctx='Cov = ')
+    num('3.10 σ cao', sh, 2, ctx='σ = ')
+    num('3.10 σ nặng', sw, 2, ctx='cm và ')
+    # phép chia in trong bài dùng số đã làm tròn — nó cũng phải ra 0,99
+    claim('3.10 phép chia làm tròn', round(round(shw / (n - 1), 2) / (round(sh, 2) * round(sw, 2)), 2) == 0.99)
 
     # 4.2 giới hạn trung tâm
     sd_dice = math.sqrt(35 / 12)
@@ -655,6 +694,12 @@ def run_stats():
     num('4.3 μ̂', m, 1, ctx='<b>μ̂ = ')
     num('4.3 σ̂ chia n', sd_mle, 2, ctx='<b>σ̂ = ')
     num('4.3 σ chia n−1', sd_unb, 2)
+    num('4.3 phương sai chia n−1', sum((v - m) ** 2 for v in D) / (len(D) - 1), 1, ctx='(ở đây ')
+
+    # 4.5 MAP với tiên nghiệm Beta(a, a) — "như thể đã thấy trước a − 1 ngửa, a − 1 sấp"
+    for a, d, ctx in [(2, 2, '(2 + 1)/(2 + 2) = <b>'), (11, 2, '(2 + 10)/(2 + 20) = ')]:
+        k_, n_ = 2, 2
+        num(f'4.5 MAP a={a}', (k_ + a - 1) / (n_ + 2 * a - 2), d, ctx=ctx)
 
     # 4.6 khoảng tin cậy
     nn, xb, s = 100, 170.0, 8.0
@@ -691,21 +736,79 @@ def run_stats():
     num('4.7 CI trên', (0.03 + 1.96 * seU) * 100, 1)
     if not 2.09 <= z <= 2.11:
         fails.append(f'4.7: z = {z:.4f}')
+    need('4.7 tỉ lệ gộp', f'{cA + cB}/2.000 = ' + vi(pp * 100, 1) + '%')
+    num('4.7 SE gộp', se2 * 100, 2, ctx='<span class="op">≈</span> <b>')
+    num('4.7 z trong khối công thức', z, 2, ctx='z = 3,0 / ' + vi(se2 * 100, 2) + ' = <b>')
 
     # 4.8 nhiều so sánh
     for k, d in [(20, 1), (100, 1)]:
         num(f'4.8 {k} kiểm định', (1 - 0.95 ** k) * 100, d, ctx='<b>')
+    # 4.8 ý nghĩa thống kê ≠ ý nghĩa thực tế: 10 triệu mỗi bản, 10,00% so với 10,05%
+    mm_ = 10 ** 7
+    p1, p2 = 0.1000, 0.1005
+    pg = (p1 + p2) / 2
+    zz = (p2 - p1) / math.sqrt(pg * (1 - pg) * 2 / mm_)
+    pz = 2 * (1 - N.cdf(zz))
+    claim('4.8 ý nghĩa thực tế', pz < 0.001, f'p = {pz:.5f}')
+    num('4.8 p', pz, 4, ctx='p ≈ ')
+    need('4.8 ví dụ', '10,00% so với 10,05%')
 
     # ── hằng số nằm trong JS của các mô hình ──────────────────────────────────
-    # Mô hình 15 phải dùng ĐÚNG bộ dữ liệu mà mục 4.3 kể, nếu không hai chỗ nói
+    # Mô hình 16 (MLE) phải dùng ĐÚNG bộ dữ liệu mà mục 4.3 kể, nếu không hai chỗ nói
     # hai chuyện: bài viết bảo μ̂ = 171 mà mô hình lại đặt đỉnh ở chỗ khác.
-    need('mô hình 15 dùng đúng dữ liệu của mục 4.3', 'DATA = [167, 170, 172, 169, 177]')
-    # Mô hình 16 in ra phân vị chuẩn mà t* tiến tới khi n lớn — phải là phân vị thật.
+    need('mô hình 16 dùng đúng dữ liệu của mục 4.3', 'DATA = [167, 170, 172, 169, 177]')
+    # Mô hình 17 (khoảng tin cậy) in ra phân vị chuẩn mà t* tiến tới khi n lớn — phải là phân vị thật.
     for conf, lbl in [(0.95, '1,960'), (0.99, '2,576'), (0.80, '1,282')]:
         z = N.inv_cdf(1 - (1 - conf) / 2)
         if vi(z, 3) != lbl:
-            fails.append(f'mô hình 16: phân vị chuẩn cho mức {conf} là {vi(z, 3)}, JS ghi {lbl}')
-        need(f'mô hình 16 phân vị {conf}', "'" + lbl + "'")
+            fails.append(f'mô hình 17: phân vị chuẩn cho mức {conf} là {vi(z, 3)}, JS ghi {lbl}')
+        need(f'mô hình 17 phân vị {conf}', "'" + lbl + "'")
+    run_m17()
+
+
+def run_m17():
+    """Mô hình 17: ô tĩnh trong HTML (95 / 5 / 6,6 cm) phải là đúng cái mà JS vẽ ra ở lần mở
+    đầu. Chép rng/gauss của trang (cùng phép tính số nguyên 32 bit, cùng Box–Muller) rồi chạy
+    lại 100 khoảng với hạt giống đang ghi trong JS. Đổi hạt giống mà không đổi ô tĩnh — hoặc
+    ngược lại — là cổng đỏ."""
+    import re
+    m_seed = re.search(r'level = 95, seed = (\d+)', HTML)
+    m_n = re.search(r'id="m17-n" min="\d+" max="\d+" step="\d+" value="(\d+)"', HTML)
+    m_hit = re.search(r'id="m17-hit">(\d+)<', HTML)
+    m_miss = re.search(r'id="m17-miss">(\d+)<', HTML)
+    m_w = re.search(r'id="m17-w">([\d,]+)<', HTML)
+    claim('mô hình 17 đọc được hạt giống, n, ô tĩnh', all([m_seed, m_n, m_hit, m_miss, m_w]))
+    if not all([m_seed, m_n, m_hit, m_miss, m_w]):
+        return
+    seed, n = int(m_seed.group(1)), int(m_n.group(1))
+    # hạt giống này phải là hạt sau đúng một lần "Lấy mẫu lại" kể từ 12345, như comment nói
+    claim('mô hình 17 hạt giống = một lần lấy lại từ 12345', (12345 * 1103515245 + 12345) % 2 ** 32 == seed)
+    s = [seed % 2 ** 32]
+
+    def r():
+        s[0] = (s[0] * 1664525 + 1013904223) % 2 ** 32
+        return s[0] / 4294967296
+
+    def gauss():
+        u = v = 0.0
+        while u == 0:
+            u = r()
+        while v == 0:
+            v = r()
+        return math.sqrt(-2 * math.log(u)) * math.cos(2 * math.pi * v)
+
+    tc = tcrit(0.95, n - 1)
+    hit, wsum = 0, 0.0
+    for _ in range(100):
+        xs = [170 + 8 * gauss() for _ in range(n)]
+        mu = sum(xs) / n
+        sd = math.sqrt(sum((x - mu) ** 2 for x in xs) / (n - 1))
+        half = tc * sd / math.sqrt(n)
+        hit += abs(mu - 170) <= half
+        wsum += 2 * half
+    claim('mô hình 17 ô "chứa đúng"', int(m_hit.group(1)) == hit, f'JS cho {hit}, HTML ghi {m_hit.group(1)}')
+    claim('mô hình 17 ô "bắn trượt"', int(m_miss.group(1)) == 100 - hit, f'JS cho {100 - hit}, HTML ghi {m_miss.group(1)}')
+    claim('mô hình 17 ô bề rộng', m_w.group(1) == vi(wsum / 100, 1), f'JS cho {vi(wsum / 100, 1)}, HTML ghi {m_w.group(1)}')
 
 
 def assert_close(label, got, want, tol=1e-9):
