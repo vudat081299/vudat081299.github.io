@@ -643,7 +643,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a href="#s-matrix">1.6 Ma trận là cái máy biến hình</a>
       <a href="#s-transpose">1.7 Chuyển vị: lật bảng qua đường chéo</a>
       <a href="#s-inverse">1.8 Nghịch đảo: đi ngược lại được không</a>
-      <a href="#s-eigen">1.9 Mũi tên không chịu đổi hướng</a>
+      <a href="#s-eigen">1.9 Mũi tên không lệch khỏi đường</a>
       <a href="#s-pca">1.10 PCA: giữ trục kể được nhiều nhất</a>
 
       <p class="toc__g">2 · Giải tích</p>
@@ -804,8 +804,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Hai lần đi chợ, hai tờ hoá đơn, không nhớ giá từng thứ. So hai tờ với nhau: <b>khác nhau chỗ nào thì chỗ ấy nói giá</b>.</div></div>
-          <div class="r-math"><div class="lbl">Toán</div><div class="v">Một <b>hệ phương trình tuyến tính</b> hai ẩn:<br><span class="fml">x + y = 10</span><br><span class="fml">x + 2y = 13</span><br>&ldquo;Tuyến tính&rdquo; = mỗi ẩn chỉ nhân với một số rồi cộng vào, <b>không</b> có x², không có x·y.</div></div>
-          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Hồi quy tuyến tính giải đúng một hệ như thế, chỉ là <b>hàng nghìn ẩn</b> thay vì hai: mỗi ẩn là một trọng số w, mỗi phương trình là một dòng dữ liệu.</div></div>
+          <div class="r-math"><div class="lbl">Toán</div><div class="v">Một <b>hệ phương trình tuyến tính</b> hai ẩn:<br><span class="fml">x + y = 10</span><br><span class="fml">x + 2y = 13</span><br>&ldquo;Tuyến tính&rdquo; = mỗi ẩn chỉ nhân với một số rồi cộng vào, <b>không</b> có x², không có x·y. Ở chặng này x, y là hai <b>ẩn</b> — giá bánh, giá kẹo — chứ không phải dữ liệu đưa vào như ở bảng ký hiệu mục 0.3; trong hồi quy, vai ẩn thuộc về trọng số w.</div></div>
+          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Hồi quy tuyến tính dựng đúng một hệ như thế, chỉ là <b>hàng nghìn ẩn</b> thay vì hai: mỗi ẩn là một trọng số w, mỗi phương trình là một dòng dữ liệu. Có điều dòng thường nhiều hơn ẩn và hơi lệch nhau, nên không bộ w nào thoả khít — nó tìm bộ sai ít nhất (mục 1.3, chặng 2).</div></div>
         </div>
 
         <h3>Nhìn bằng mắt: mỗi câu đố là một đường thẳng</h3>
@@ -824,7 +824,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__h">
             <p class="lab__k">Mô hình 1 · kéo thanh trượt</p>
             <p class="lab__t">Hai đường thẳng, ba số phận</p>
-            <p class="lab__hint">Câu đố thứ nhất <b>đứng im</b>: 1 bánh + 1 kẹo = 10. Bạn chỉnh câu đố thứ hai. Hãy thử làm cho hai đường <b>trùng nhau</b>, rồi làm cho chúng <b>song song</b> — và để mắt vào con số <b>định thức</b> ở dưới khi bạn tới gần hai trạng thái ấy.</p>
+            <p class="lab__hint">Câu đố thứ nhất <b>đứng im</b>: 1 bánh + 1 kẹo = 10. Bạn chỉnh câu đố thứ hai. Hãy thử làm cho hai đường <b>trùng nhau</b>, rồi làm cho chúng <b>song song</b> — và để mắt vào con số <b>định thức</b> ở dưới — mục sau nói nó tính thế nào — khi bạn tới gần hai trạng thái ấy.</p>
           </div>
           <div class="lab__b">
             <div class="chips" id="m1-pre" style="margin-bottom:12px">
@@ -865,7 +865,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="lede">Không. Và cả khoá 1 xoay quanh việc <b>đo</b> cái &ldquo;không&rdquo; đó bằng một con số duy nhất. Con số ấy tên là <b>định thức</b>. Bằng 0 nghĩa là &ldquo;mấy câu đố này có câu hỏi trùng&rdquo; — hệ khi đó gọi là <b>suy biến</b>.</p>
 
-        <p>Xếp mấy con số bên trái của hệ thành một bảng vuông, gọi là <b>ma trận</b>. Với hệ hai ẩn, định thức tính bằng <b>chéo nhân trừ chéo</b>:</p>
+        <p>Xếp mấy con số bên trái của hệ thành một bảng — ở đây vuông, 2 hàng 2 cột — gọi là <b>ma trận</b>. Với hệ hai ẩn, định thức tính bằng <b>chéo nhân trừ chéo</b>:</p>
 
         <div class="fx">
           <p class="fx__line">det <span class="mx mx--k" style="--cols:2"><span><span class="tm" data-n="<b>a</b> — số bánh trong hoá đơn thứ nhất. Cùng hàng với b: một hàng = một hoá đơn.">a</span></span><span><span class="tm" data-n="<b>b</b> — số kẹo trong hoá đơn thứ nhất. Cùng cột với d: một cột = một món hàng.">b</span></span><span><span class="tm" data-n="<b>c</b> — số bánh trong hoá đơn thứ hai.">c</span></span><span><span class="tm" data-n="<b>d</b> — số kẹo trong hoá đơn thứ hai.">d</span></span></span> <span class="op">=</span> ad <span class="op">−</span> bc</p>
@@ -882,8 +882,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Hỏi &ldquo;bánh + kẹo bao nhiêu&rdquo; rồi hỏi &ldquo;<b>hai</b> bánh + <b>hai</b> kẹo bao nhiêu&rdquo; — câu thứ hai là câu thứ nhất <b>nhân đôi</b>. Không có tin nào mới.</div></div>
-          <div class="r-math"><div class="lbl">Toán</div><div class="v"><b>det = 0</b> ⟺ ma trận <b>suy biến</b> ⟺ các hàng <b>phụ thuộc tuyến tính</b> (hàng nọ là tổ hợp của hàng kia) ⟺ hệ <b>không</b> có nghiệm duy nhất.</div></div>
-          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Hai đặc trưng trùng tin nhau — &ldquo;chiều cao tính bằng cm&rdquo; và &ldquo;chiều cao tính bằng inch&rdquo; — làm ma trận suy biến, và hồi quy tuyến tính <b>không giải được</b>. Tên của bệnh này: <i>đa cộng tuyến</i>.</div></div>
+          <div class="r-math"><div class="lbl">Toán</div><div class="v"><b>det = 0</b> ⟺ ma trận <b>suy biến</b> ⟺ các hàng <b>phụ thuộc tuyến tính</b> (với hai hàng: hàng nọ là bội của hàng kia) ⟺ hệ <b>không</b> có nghiệm duy nhất.</div></div>
+          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Hai đặc trưng trùng tin nhau — &ldquo;chiều cao tính bằng cm&rdquo; và &ldquo;chiều cao tính bằng inch&rdquo; — giống hai món lúc nào cũng mua theo đúng một tỉ lệ: không hoá đơn nào tách được giá từng món. Hồi quy tuyến tính khi đó <b>mất nghiệm duy nhất</b>: tăng trọng số cột cm, bớt trọng số cột inch cho bù, dự đoán vẫn y nguyên. Tên của bệnh này: <i>đa cộng tuyến</i>.</div></div>
         </div>
 
         <div class="box mis">
@@ -899,7 +899,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="a"><p>det = 3·1 − 3·1 = 0, nên <b>không có đáp án duy nhất</b>. Chia câu đầu cho 3 được đúng câu sau, nên hai đường <b>trùng nhau</b>: <b>vô số đáp án</b>. Bánh 7 kẹo 3 thoả, bánh 4 kẹo 6 cũng thoả. Cần một hoá đơn <i>thật sự khác</i> mới chốt được giá.</p></div>
         </details>
 
-        <div class="take"><div class="k">Mang theo</div><p>Định thức = <b>máy đo tin tức mới</b>. Khác 0: mỗi phương trình nói một chuyện riêng. Bằng 0: có chuyện bị nói hai lần, và bạn <b>thiếu</b> thông tin dù trông như thừa phương trình.</p></div>
+        <div class="take"><div class="k">Mang theo</div><p>Định thức = <b>máy đo tin tức mới</b>. Khác 0: mỗi phương trình nói một chuyện riêng. Bằng 0: có chuyện bị nói hai lần, và bạn <b>thiếu</b> thông tin dù trông như đủ phương trình.</p></div>
       </section>
 
       <section id="s-khu" class="ch-a">
@@ -930,7 +930,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <li>Quay lại lần 1: táo + 3 + 5 = 9 → <b>táo 1 nghìn</b>.</li>
         </ul>
 
-        <p>Việc bạn vừa làm — &ldquo;lấy hàng này trừ hàng kia&rdquo; ba lần liên tiếp cho tới khi mỗi hàng chỉ còn một ẩn — chính là <b>khử Gauss</b>. Dạng cuối, khi bảng số chỉ còn số 0 ở dưới đường chéo, gọi là <b>dạng bậc thang</b>:</p>
+        <p>Việc bạn vừa làm — lấy hàng 1 trừ khỏi hàng 2 và hàng 3 cho táo rụng khỏi hai hàng dưới, rồi thế ngược lên hàng 1 — chính là <b>khử Gauss</b>. Tổng quát thì là &ldquo;trừ đi một <i>bội</i> của hàng kia&rdquo;; ở đây bội ấy tình cờ bằng 1. Dạng sau bước trừ, khi bảng số chỉ còn số 0 ở dưới đường chéo, gọi là <b>dạng bậc thang</b>:</p>
 
         <div class="fx">
           <p class="fx__line sm"><span class="mx mx--sm" style="--cols:4"><span>1</span><span>1</span><span>1</span><span class="sep">9</span><span>1</span><span>2</span><span>1</span><span class="sep">12</span><span>1</span><span>1</span><span>2</span><span class="sep">14</span></span> <span class="op">→</span> <span class="mx mx--sm mx--k" style="--cols:4"><span><b>1</b></span><span>1</span><span>1</span><span class="sep">9</span><span>0</span><span><b>1</b></span><span>0</span><span class="sep">3</span><span>0</span><span>0</span><span><b>1</b></span><span class="sep">5</span></span></p>
@@ -950,13 +950,13 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Ba người kể chuyện. Người thứ ba chỉ <b>nhắc lại lời hai người trước cộng vào</b>. Bạn nghe ba lời khai nhưng chỉ có hai nguồn tin.</div></div>
-          <div class="r-math"><div class="lbl">Toán</div><div class="v"><b>Hạng</b> = số hàng độc lập tuyến tính = số trụ trong dạng bậc thang. Với ma trận <b>vuông</b>: hạng &lt; số ẩn ⟹ det = 0 ⟹ không có nghiệm duy nhất. (Ma trận không vuông thì không có định thức.)</div></div>
-          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Hạng của ma trận dữ liệu cho biết <b>số chiều thật sự</b> của dữ liệu. 100 cột mà hạng 12 nghĩa là 88 cột kia không thêm gì — đó là lý do PCA (mục 1.10) nén được mà gần như không mất mát.</div></div>
+          <div class="r-math"><div class="lbl">Toán</div><div class="v"><b>Hạng</b> = số hàng độc lập tuyến tính nhiều nhất chọn được = số trụ trong dạng bậc thang. Với ma trận <b>vuông</b>: hạng &lt; số ẩn ⟹ det = 0 ⟹ không có nghiệm duy nhất. (Ma trận không vuông thì không có định thức.)</div></div>
+          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Hạng của ma trận dữ liệu cho biết <b>số chiều thật sự</b> của dữ liệu — và đếm theo hàng hay theo cột thì ra cùng một số, một định lý không hiển nhiên nhưng đúng với mọi ma trận. 100 cột mà hạng 12 nghĩa là 88 cột đều ghép được từ 12 cột kia bằng nhân với số rồi cộng lại, không thêm tin gì. Dữ liệu đo thật có nhiễu nên hạng gần như luôn đầy; cái hay gặp là <i>gần</i> như thế — 100 cột mà gần như nằm gọn trong 12 chiều — và PCA (mục 1.10) là cách đo cái &ldquo;gần như&rdquo; ấy.</div></div>
         </div>
 
         <details class="q">
           <summary>Bốn hoá đơn, ba loại quả, hạng 3. Giải được không?</summary>
-          <div class="a"><p><b>Được</b>, và hoá đơn thứ tư là thứ để <i>kiểm tra lại</i>. Hạng 3 = ba ẩn đều bị chốt. Nhiều phương trình hơn số ẩn không phải chuyện xấu — nó là chuyện <b>bình thường</b> trong học máy: 10.000 dòng dữ liệu, 20 trọng số. Chỉ có điều thực tế các dòng luôn hơi lệch nhau (đo có sai số), nên không có bộ w nào thoả <i>tất cả</i>, và ta chuyển sang câu hỏi của chặng 2: bộ nào <b>sai ít nhất</b>?</p></div>
+          <div class="a"><p><b>Được, nếu bốn tờ không cãi nhau</b> — và hoá đơn thứ tư là thứ để <i>kiểm tra lại</i>. Hạng 3 = ba ẩn đều bị chốt, nên có <b>nhiều nhất</b> một bộ giá. Có hay không thì phải nhìn cột tiền, y như định thức ở mục 1.2: nếu tờ thứ tư ghi &ldquo;1 táo, 1 chuối, 1 cam, hết 10 nghìn&rdquo; trong khi tờ một ghi 9, thì không bộ giá nào thoả cả bốn. Nhiều phương trình hơn số ẩn không phải chuyện xấu — nó là chuyện <b>bình thường</b> trong học máy: 10.000 dòng dữ liệu, 20 trọng số. Chỉ có điều thực tế các dòng luôn hơi lệch nhau (đo có sai số), nên đúng ca &ldquo;cãi nhau&rdquo; ấy xảy ra: không có bộ w nào thoả <i>tất cả</i>, và ta chuyển sang câu hỏi của chặng 2: bộ nào <b>sai ít nhất</b>?</p></div>
         </details>
 
         <div class="take"><div class="k">Mang theo</div><p>Khử = <b>trừ dần cho ẩn tự rụng</b>. Hạng = <b>đếm số tin tức thật</b>. Hạng bằng số ẩn thì chốt được mọi thứ; thiếu một hạng là thiếu một tin, dù bảng số trông đầy.</p></div>
@@ -973,7 +973,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Một mũi tên từ nhà tới trường. Nó chỉ cần hai con số để mô tả: <b>sang phải bao nhiêu</b>, <b>lên trên bao nhiêu</b>. Cộng hai mũi tên = đi cái này rồi đi tiếp cái kia.</div></div>
-          <div class="r-math"><div class="lbl">Toán</div><div class="v"><span class="fml">v = (3, 4)</span><br><span class="fml">‖v‖<sub>1</sub> = |3| + |4| = 7</span><br><span class="fml">‖v‖<sub>2</sub> = √(3² + 4²) = 5</span><br>Cộng vector: cộng theo từng thành phần.</div></div>
+          <div class="r-math"><div class="lbl">Toán</div><div class="v"><span class="fml">v = (3, 4)</span><br><span class="fml">‖v‖<sub>1</sub> = |3| + |4| = 7</span><br><span class="fml">‖v‖<sub>2</sub> = √(3² + 4²) = 5</span><br>Không ghi chỉ số thì ‖v‖ là chuẩn L2; với n chiều, ‖v‖<sub>2</sub> = √(v<sub>1</sub>² + &hellip; + v<sub>n</sub>²).<br>Cộng vector: cộng theo từng thành phần.</div></div>
           <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Một khách hàng, một tấm ảnh, một câu — tất cả được viết thành vector. Và L1 với L2 quay lại làm <b>hai kiểu chính quy hoá</b>: Lasso dùng L1, Ridge dùng L2 (mục 4.5).</div></div>
         </div>
 
@@ -981,7 +981,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p>Có hai đường đi u = (1, 3) và v = (3, 1). Đi u trước rồi đi v sau, bạn tới (4, 4). Đi v trước rồi u sau — cũng tới (4, 4). <b>Thứ tự không quan trọng</b>, và đó là lý do hai đường đi vẽ thành một <i>hình bình hành</i> với đường chéo là tổng.</p>
 
-        <p>Nhân một vector với một số thì mũi tên <b>dài ra hoặc ngắn lại mà không đổi hướng</b> — trừ khi số ấy âm, lúc đó nó quay ngược 180°. Chỉ hai phép này thôi — cộng, và nhân với một số — nhưng đủ để định nghĩa tất cả những gì còn lại của khoá 1.</p>
+        <p>Nhân một vector với một số thì mũi tên <b>dài ra hoặc ngắn lại mà không đổi hướng</b> — trừ khi số ấy âm, lúc đó nó quay ngược 180°. Chỉ hai phép này thôi — cộng, và nhân với một số. Ghép chúng lại được một <b>tổ hợp tuyến tính</b>: a·u + b·v, &ldquo;đi a lần u rồi b lần v&rdquo; — tờ hoá đơn thứ ba ở mục 1.3 chính là tờ một cộng tờ hai. Gần hết phần còn lại của khoá 1 dựng trên đúng hai phép ấy; chỉ <i>độ dài</i> và <i>góc</i> là cần thêm một phép nữa — nhân vô hướng, mục sau.</p>
 
         <div class="box ana">
           <p class="box__k">Ví như</p>
@@ -1001,7 +1001,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="ask">Hai bạn cùng đẩy một cái xe. <span>Đẩy cùng chiều thì xe đi nhanh, đẩy ngược chiều thì xe đứng yên.</span> Làm sao ra một con số nói được chuyện đó?</p>
 
-        <p class="lede">Nhân từng cặp rồi cộng lại. Số dương to = cùng hướng. Số 0 = <b>vuông góc</b>, hai người đẩy hai hướng chẳng liên quan gì nhau. Số âm = chọi nhau.</p>
+        <p class="lede">Nhân từng cặp rồi cộng lại. Số dương = cùng phía. Số 0 = <b>vuông góc</b>, hai người đẩy hai hướng chẳng liên quan gì nhau. Số âm = chọi nhau. Còn <i>độ lớn</i> của nó thì lẫn hai chuyện: mũi tên dài hơn cũng làm con số to ra, nên muốn đo riêng chuyện hướng phải chia cho hai độ dài — vế phải của dòng dưới đây.</p>
 
         <div class="fx">
           <p class="fx__line"><span class="tm" data-n="<b>u · v</b> — nhân vô hướng, đọc là &ldquo;u chấm v&rdquo;. Kết quả là MỘT con số, không phải một mũi tên. Đó là lý do có chữ &ldquo;vô hướng&rdquo;.">u · v</span> <span class="op">=</span> <span class="tm" data-n="Nhân từng cặp thành phần rồi cộng: (3,4)·(4,3) = 3·4 + 4·3 = 24. Chỉ có thế.">u<sub>1</sub>v<sub>1</sub> + u<sub>2</sub>v<sub>2</sub> + &hellip;</span> <span class="op">=</span> <span class="tm" data-n="Cùng một con số, nhìn theo cách khác: độ dài u, nhân độ dài v, nhân cos góc giữa chúng. Vế trái dễ TÍNH, vế phải dễ HIỂU.">‖u‖ ‖v‖ cos θ</span></p>
@@ -1021,6 +1021,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             </tbody>
           </table>
         </div>
+
+        <p><b>Hình chiếu</b> rơi ra từ đúng công thức này. Rọi đèn thẳng góc xuống đường thẳng chứa u: mũi tên v đổ lên đó một cái bóng dài <b>‖v‖ cos θ = u · v / ‖u‖</b> — âm khi góc tù, bằng 0 khi vuông góc. Nếu u dài đúng 1 thì cái bóng <i>chính là</i> u · v, chỉ một phép nhân-cộng. Chế độ &ldquo;Xem góc &amp; hình chiếu&rdquo; ở mô hình dưới vẽ đúng cái bóng ấy, và PCA (mục 1.10) nén dữ liệu bằng cách giữ lại của mỗi điểm đúng một cái bóng.</p>
 
         <div class="lab" id="m2">
           <div class="lab__h">
@@ -1052,6 +1054,11 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </div>
         </div>
 
+        <details class="q">
+          <summary>Vì sao nhân-cộng lại ra đúng ‖u‖ ‖v‖ cos θ?</summary>
+          <div class="a"><p>Nhìn tam giác có hai cạnh u, v và cạnh thứ ba u − v, rồi tính độ dài cạnh thứ ba bằng hai cách. Theo thành phần: ‖u − v‖² = (u<sub>1</sub> − v<sub>1</sub>)² + (u<sub>2</sub> − v<sub>2</sub>)² = ‖u‖² + ‖v‖² − 2(u<sub>1</sub>v<sub>1</sub> + u<sub>2</sub>v<sub>2</sub>). Theo định lý cos của tam giác: ‖u − v‖² = ‖u‖² + ‖v‖² − 2‖u‖‖v‖ cos θ. Hai vế trái là một, nên phần còn lại phải bằng nhau: u<sub>1</sub>v<sub>1</sub> + u<sub>2</sub>v<sub>2</sub> = ‖u‖‖v‖ cos θ. Nhiều chiều hơn cũng y hệt — ba mũi tên u, v, u − v luôn nằm trong một mặt phẳng.</p></div>
+        </details>
+
         <div class="take"><div class="k">Mang theo</div><p>Nhân vô hướng = <b>máy đo cùng hướng</b>. Dương: cùng phe. Bằng 0: vuông góc, không liên quan. Âm: chọi nhau. Chia cho hai độ dài thì ra <b>cos góc</b>, và đó là thước &ldquo;giống nhau&rdquo; dùng khắp học máy.</p></div>
       </section>
 
@@ -1062,13 +1069,13 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="ask">Có một tấm hình dẻo. <span>Kéo ngang cho rộng ra, đẩy nghiêng, lật gương, hoặc bóp bẹp thành một sợi.</span> Mỗi cách bóp cần ghi lại bằng mấy con số?</p>
 
-        <p class="lede">Bốn con số — cho hình phẳng. Và bốn con số ấy xếp thành một ô vuông 2×2 chính là <b>ma trận</b>. Ma trận <i>không</i> phải dữ liệu nằm im; nó là <b>động từ</b>: nó <i>làm</i> gì đó với mọi điểm cùng một lúc.</p>
+        <p class="lede">Bốn con số — cho hình phẳng, miễn là cách bóp giữ ba luật: gốc toạ độ đứng yên, đường thẳng vẫn thẳng, các vạch lưới song song và cách đều thì vẫn song song và cách đều. Uốn cong hay dời cả tấm hình sang chỗ khác đều phạm luật, và không ma trận nào làm được. Bốn con số ấy xếp thành một ô vuông 2×2 chính là <b>ma trận</b>. Ma trận <i>không</i> phải dữ liệu nằm im; nó là <b>động từ</b>: nó <i>làm</i> gì đó với mọi điểm cùng một lúc.</p>
 
         <p>Mẹo để không bao giờ quên: <b>cột của ma trận cho biết hai mũi tên đơn vị bị đưa đi đâu</b>. Cột đầu là chỗ mũi tên &ldquo;sang phải 1 bước&rdquo; hạ cánh; cột hai là chỗ mũi tên &ldquo;lên trên 1 bước&rdquo; hạ cánh. Biết hai chỗ ấy là biết cả cái máy, vì mọi điểm khác chỉ là tổ hợp của hai mũi tên đó.</p>
 
         <div class="fx">
           <p class="fx__line"><span class="mx mx--k" style="--cols:2"><span><span class="tm" data-n="Cột 1 = chỗ mũi tên (1,0) hạ cánh. Ở ma trận này nó bay tới (3,1).">3</span></span><span><span class="tm" data-n="Cột 2 = chỗ mũi tên (0,1) hạ cánh. Ở ma trận này nó bay tới (1,2).">1</span></span><span>1</span><span>2</span></span> <span class="op">·</span> <span class="mx mx--sm" style="--cols:1"><span>x</span><span>y</span></span> <span class="op">=</span> <span class="mx mx--sm" style="--cols:1"><span>3x + y</span><span>x + 2y</span></span></p>
-          <p class="fx__note">Bấm vào một số ở cột nào để xem cột ấy đang nói gì. Nhân ma trận với vector = <b>hỏi cái máy: điểm này bay đi đâu</b>.</p>
+          <p class="fx__note">Bấm vào một số ở cột nào để xem cột ấy đang nói gì. Dòng này không phải luật để thuộc: (x, y) = x·(1, 0) + y·(0, 1), và máy tuyến tính (khung Toán dưới) nên đưa nó tới x·(cột 1) + y·(cột 2) = x·(3, 1) + y·(1, 2) = (3x + y, x + 2y). Nhân ma trận với vector = <b>hỏi cái máy: điểm này bay đi đâu</b>. Giải hệ là hỏi ngược: hệ x + y = 10, x + 2y = 13 ở mục 1.1 chính là <span class="mono">[[1,1],[1,2]]</span>·(x, y) = (10, 13), viết gọn <b>Ax = b</b> — x giờ là cả cặp ẩn, b là cột tiền: điểm nào bay tới đúng b?</p>
         </div>
 
         <h3>Định thức, lần thứ hai: nó là hệ số phóng diện tích</h3>
@@ -1081,6 +1088,11 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <li>Máy <span class="mono">[[0,1],[1,0]]</span> là <b>gương</b>: diện tích giữ nguyên nhưng hình bị lật, nên det = <b>−1</b>. Dấu âm nghĩa là &ldquo;có lật&rdquo;.</li>
           <li>Máy <span class="mono">[[1,1],[2,2]]</span> <b>bóp cả mặt phẳng thành một sợi thẳng</b>. Diện tích còn 0, nên det = <b>0</b> — và đây là chỗ hai nghĩa của định thức gặp nhau: bóp phẳng rồi thì <b>không còn đường về</b>, đúng như hệ suy biến không cho bạn lần lại đáp án.</li>
         </ul>
+
+        <details class="q">
+          <summary>Vì sao diện tích lại đúng bằng ad − bc?</summary>
+          <div class="a"><p>Lấy trường hợp mọi số đều dương, cột 1 = (a, c) nằm dưới, cột 2 = (b, d) nằm trên. Hình bình hành nằm gọn trong một khung chữ nhật rộng a + b, cao c + d. Phần khung thừa ra gồm hai tam giác cạnh a, c (cộng lại: ac), hai tam giác cạnh b, d (cộng lại: bd) và hai hình chữ nhật b × c. Vậy diện tích = (a + b)(c + d) − ac − bd − 2bc = <b>ad − bc</b>. Đổi chỗ hai cột thì hình bị lật và ad − bc đổi dấu — dấu của det chính là dấu &ldquo;có lật hay không&rdquo;.</p></div>
+        </details>
 
         <div class="lab" id="m3">
           <div class="lab__h">
@@ -1118,14 +1130,21 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               </div>
             </div>
             <p class="lab__f" id="m3-say">Ma trận đơn vị: cái máy không làm gì cả. Mọi điểm ở nguyên chỗ của nó.</p>
-            <p class="lab__f"><b>Nhân hai ma trận = xếp hai cái máy liên tiếp.</b> Và thứ tự <b>có</b> quan trọng: giãn-rồi-trượt cho <span class="mono">[[2,1],[0,1]]</span>, trượt-rồi-giãn cho <span class="mono">[[2,2],[0,1]]</span> — hai hình khác nhau. Nhưng định thức thì nhân với nhau bất kể thứ tự: 2 × 1 = 2 ở cả hai cách, vì &ldquo;phóng diện tích&rdquo; thì thứ tự không đổi kết quả.</p>
+            <p class="lab__f"><b>Nhân hai ma trận = xếp hai cái máy liên tiếp.</b> Và thứ tự <b>có</b> quan trọng: giãn ngang <span class="mono">[[2,0],[0,1]]</span> rồi trượt <span class="mono">[[1,1],[0,1]]</span> cho <span class="mono">[[2,1],[0,1]]</span>; trượt rồi giãn ngang cho <span class="mono">[[2,2],[0,1]]</span> — hai hình khác nhau. (Chip &ldquo;Giãn 2×&rdquo; giãn <i>đều</i> cả hai chiều, mà giãn đều thì đổi chỗ với máy nào cũng được — nó chỉ phóng to.) Nhưng định thức thì nhân với nhau bất kể thứ tự: 2 × 1 = 2 ở cả hai cách, vì &ldquo;phóng diện tích&rdquo; thì thứ tự không đổi kết quả.</p>
           </div>
+        </div>
+
+        <p>Tính tích thì theo luật <b>hàng nhân cột</b>: ô ở hàng i, cột j của AB là nhân vô hướng (mục 1.5) của <b>hàng i của A</b> với <b>cột j của B</b>. Kèm hai quy ước. Một: trong AB thì <b>B chạy trước</b> — máy đứng sát vector tác động trước, vì ABx = A(Bx). Hai: <b>số cột của A phải bằng số hàng của B</b>, nên m×n nhân n×p ra m×p; lệch là không nhân được.</p>
+
+        <div class="fx">
+          <p class="fx__line sm">trượt · giãn ngang <span class="op">=</span> <span class="mx mx--sm" style="--cols:2"><span>1</span><span>1</span><span>0</span><span>1</span></span> <span class="op">·</span> <span class="mx mx--sm" style="--cols:2"><span>2</span><span>0</span><span>0</span><span>1</span></span> <span class="op">=</span> <span class="mx mx--sm mx--k" style="--cols:2"><span>2</span><span>1</span><span>0</span><span>1</span></span></p>
+          <p class="fx__note">Ô góc trên trái: hàng 1 của máy trượt, (1 1), nhân cột 1 của máy giãn, (2 0): 1·2 + 1·0 = 2. Ô góc trên phải: (1 1) nhân (0 1) = 1. Máy giãn đứng sát vector nên chạy trước — đây chính là &ldquo;giãn rồi trượt&rdquo; ở trên.</p>
         </div>
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Cái máy bóp hình. Bốn núm điều khiển. Bóp bẹp thành sợi rồi thì <b>không ai dựng lại được hình cũ</b> — vì vô số hình khác cũng bẹp thành đúng sợi ấy.</div></div>
           <div class="r-math"><div class="lbl">Toán</div><div class="v">Ma trận A là một <b>biến đổi tuyến tính</b>: A(u+v) = Au + Av và A(kv) = k·Av. <b>|det A|</b> = hệ số phóng diện tích; <b>det A &lt; 0</b> = có lật gương; <b>det A = 0</b> = bóp xuống chiều thấp hơn.</div></div>
-          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Một lớp của mạng nơ-ron <b>chính là</b> một ma trận nhân với vector đầu vào, cộng thêm độ chệch. Cả mạng sâu là một dây các máy biến hình, xen giữa là hàm kích hoạt để chúng không co lại thành một máy duy nhất.</div></div>
+          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Một lớp của mạng nơ-ron <b>chính là</b> một ma trận nhân với vector đầu vào, cộng thêm độ chệch — đúng phần &ldquo;dời chỗ&rdquo; mà một mình ma trận không làm được. Cả mạng sâu là một dây các máy biến hình, xen giữa là hàm kích hoạt để chúng không co lại thành một máy duy nhất.</div></div>
         </div>
 
         <details class="q">
@@ -1139,7 +1158,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <section id="s-transpose" class="ch-a">
         <p class="sechead">1.7 · <b>Chuyển vị</b></p>
         <h2 class="st">Chuyển vị chỉ là lật bảng qua đường chéo — và đó là lý do chữ X<sup>T</sup> có mặt ở gần như mọi công thức học máy</h2>
-        <p class="map">Bổ sung · <b>C1 · Tuần 3</b> · Matrix operations — syllabus công bố không nêu tên phép chuyển vị, nhưng các mục sau của trang này đã dùng nó, nên nó phải được nói ra</p>
+        <p class="map">Bổ sung · <b>C1 · Tuần 3</b> · Matrix operations — syllabus công bố không nêu tên phép chuyển vị, nhưng mục 1.9 và 1.10 cần nó</p>
 
         <p class="ask">Có một bảng điểm: <span>mỗi hàng một học sinh, mỗi cột một môn.</span> Giờ tôi muốn đọc ngược lại — mỗi hàng một môn, mỗi cột một học sinh. Có phải chép lại cả bảng không?</p>
 
@@ -1188,15 +1207,14 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <ul>
           <li><b>(A<sup>T</sup>)<sup>T</sup> = A</b> — lật rồi lật lại là không làm gì.</li>
           <li><b>(A + B)<sup>T</sup> = A<sup>T</sup> + B<sup>T</sup></b> — cộng trước hay lật trước đều thế.</li>
-          <li><b>det(A<sup>T</sup>) = det(A)</b> — lật không đổi hệ số phóng diện tích. Thử: A = <span class="mono">[[3,1],[4,2]]</span> có det = 3·2 − 1·4 = <b>2</b>; A<sup>T</sup> = <span class="mono">[[3,4],[1,2]]</span> có det = 3·2 − 4·1 = <b>2</b>. Cùng một số.</li>
-          <li><b>Trị riêng của A<sup>T</sup> giống hệt của A</b> — vì det(A − λI) và det(A<sup>T</sup> − λI) là cùng một đa thức, theo đúng luật trên. Nhưng <i>vector</i> riêng thì thường khác.</li>
+          <li><b>det(A<sup>T</sup>) = det(A)</b> — với 2×2 thì thấy ngay: lật xong, a và d vẫn nằm trên đường chéo chính, b và c chỉ đổi chỗ cho nhau, nên ad − bc giữ nguyên. Thử: A = <span class="mono">[[3,1],[4,2]]</span> có det = 3·2 − 1·4 = <b>2</b>; A<sup>T</sup> = <span class="mono">[[3,4],[1,2]]</span> có det = 3·2 − 4·1 = <b>2</b>. Cùng một số.</li>
         </ul>
 
         <p>Luật thứ tư là chỗ gần như ai cũng nhớ sai lần đầu: <b>nhân rồi lật thì thứ tự bị đảo</b>.</p>
 
         <div class="fx">
           <p class="fx__line">(A <span class="op">·</span> B)<sup>T</sup> <span class="op">=</span> <span class="tm" data-n="Đảo thứ tự. Không phải AᵀBᵀ. Lý do kích thước: A cỡ m×n, B cỡ n×p thì (AB)ᵀ cỡ p×m — chỉ BᵀAᵀ (p×n rồi n×m) ghép được, còn AᵀBᵀ là n×m nhân p×n, không khớp chiều.">B<sup>T</sup> <span class="op">·</span> A<sup>T</sup></span></p>
-          <p class="fx__note">Ví von cho dễ nhớ: mặc <b>áo</b> rồi mặc <b>khoác</b>; muốn về trạng thái đầu thì phải cởi <b>khoác</b> trước rồi mới cởi <b>áo</b>. Làm ngược thì phải tháo theo thứ tự ngược.</p>
+          <p class="fx__note">Cách nhớ không cần thuộc: nhìn kích thước. A cỡ 2×3, B cỡ 3×4 thì AB cỡ 2×4, nên (AB)<sup>T</sup> phải cỡ 4×2. B<sup>T</sup> (4×3) nhân A<sup>T</sup> (3×2) ra đúng 4×2; còn A<sup>T</sup> (3×2) nhân B<sup>T</sup> (4×3) thì không ráp được — 2 cột gặp 4 hàng.</p>
         </div>
 
         <div class="box mis">
@@ -1207,13 +1225,13 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </div>
         </div>
 
-        <h3>Đối xứng: chữ mà trang này đã dùng, giờ mới định nghĩa được</h3>
+        <h3>Đối xứng: lật xong mà không ai nhận ra</h3>
 
         <p>Ma trận <b>đối xứng</b> nghĩa là <b>A<sup>T</sup> = A</b>: lật xong không có gì đổi. Nói bằng ô: giá trị ở (i,j) luôn bằng giá trị ở (j,i), nên bảng là ảnh trong gương của chính nó qua đường chéo. Chỉ ma trận <b>vuông</b> mới có thể đối xứng.</p>
 
-        <p>Có một điểm tinh tế mà mô hình 4 cho thấy: với ma trận đối xứng, các ô <b>vẫn đổi chỗ</b> — chúng chỉ tình cờ gặp một ô sinh đôi mang đúng con số của mình, nên <i>bức tranh</i> trông không đổi. Đối xứng không phải &ldquo;không có gì di chuyển&rdquo;, mà là <b>di chuyển xong thì không phân biệt được</b>.</p>
+        <p>Có một điểm tinh tế mà mô hình 4 cho thấy: với ma trận đối xứng, các ô <b>vẫn đổi chỗ</b> — chúng gặp đúng một ô sinh đôi mang đúng con số của mình, nên <i>bức tranh</i> trông không đổi. Đối xứng không phải &ldquo;không có gì di chuyển&rdquo;, mà là <b>di chuyển xong thì không phân biệt được</b>.</p>
 
-        <p>Vì sao đáng quan tâm: <b>ma trận hiệp phương sai luôn đối xứng</b> (mục 3.10), và ma trận đối xứng luôn có <b>hệ vector riêng vuông góc nhau</b> với mọi λ là số thực (mục 1.9). Ghép hai điều ấy lại chính là <b>PCA</b> (mục 1.10). Nói cách khác: PCA chạy được là <i>nhờ</i> một tính chất của phép chuyển vị.</p>
+        <p>Vì sao đáng quan tâm: <b>ma trận hiệp phương sai luôn đối xứng</b> (mục 3.10), và ma trận đối xứng luôn có <b>hệ vector riêng vuông góc nhau</b> và mọi λ đều là số thực (mục 1.9). Ghép hai điều ấy lại chính là <b>PCA</b> (mục 1.10). Nói cách khác: PCA chạy được là <i>nhờ</i> một tính chất của phép chuyển vị.</p>
 
         <div class="fx">
           <p class="fx__line sm">X <span class="op">=</span> <span class="mx mx--sm" style="--cols:2"><span>1</span><span>2</span><span>3</span><span>1</span><span>2</span><span>4</span></span> <span class="op">→</span> X<sup>T</sup>X <span class="op">=</span> <span class="mx mx--sm mx--k" style="--cols:2"><span>14</span><span>13</span><span>13</span><span>21</span></span></p>
@@ -1223,7 +1241,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Lật bảng điểm qua đường chéo. Số ở hàng 2 cột 3 sang hàng 3 cột 2. Không số nào bị sửa, chỉ đổi chỗ ngồi. Ô trên đường chéo <b>không phải đi đâu</b>.</div></div>
           <div class="r-math"><div class="lbl">Toán</div><div class="v"><b>(A<sup>T</sup>)<sub>ij</sub> = A<sub>ji</sub></b>. Cỡ m×n thành n×m. Luật: (A<sup>T</sup>)<sup>T</sup> = A · (A+B)<sup>T</sup> = A<sup>T</sup>+B<sup>T</sup> · <b>(AB)<sup>T</sup> = B<sup>T</sup>A<sup>T</sup></b> (đảo thứ tự) · det(A<sup>T</sup>) = det(A). <b>Đối xứng ⟺ A<sup>T</sup> = A</b>.</div></div>
-          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Ba chỗ, tất cả đều không đọc được nếu thiếu mục này. <b>(1)</b> Nhân vô hướng viết gọn là <b>a<sup>T</sup>b</b>: lật vector cột thành hàng rồi nhân. <b>(2)</b> Hồi quy tuyến tính có nghiệm <b>w = (X<sup>T</sup>X)<sup>−1</sup>X<sup>T</sup>y</b> — X<sup>T</sup> ở đây là bắt buộc, vì X cỡ &ldquo;số mẫu × số đặc trưng&rdquo; mà ta cần một ma trận vuông theo <i>đặc trưng</i>. <b>(3)</b> Trong lan truyền ngược, tín hiệu đi xuôi qua một lớp là nhân với <b>W</b>, còn gradient đi ngược qua lớp ấy là nhân với <b>W<sup>T</sup></b> — cùng bộ trọng số, đọc theo chiều kia.</div></div>
+          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Ba chỗ, tất cả đều không đọc được nếu thiếu mục này. <b>(1)</b> Nhân vô hướng viết gọn là <b>a<sup>T</sup>b</b>: vector mặc định là một <i>cột</i> (viết (2, 3) nằm ngang chỉ cho gọn), lật nó thành hàng rồi nhân. <b>(2)</b> Hồi quy tuyến tính có nghiệm <b>w = (X<sup>T</sup>X)<sup>−1</sup>X<sup>T</sup>y</b> (mũ −1 là nghịch đảo, mục sau). X<sup>T</sup> ở đây không phải thêm vào cho vuông: nó rơi ra khi đặt đạo hàm của tổng bình phương sai số bằng 0 (chặng 2), và nhờ nó mà X<sup>T</sup>X vuông theo số <i>đặc trưng</i> — đúng cỡ để có nghịch đảo. <b>(3)</b> Trong lan truyền ngược, tín hiệu đi xuôi qua một lớp là nhân với <b>W</b>, còn gradient đi ngược qua lớp ấy là nhân với <b>W<sup>T</sup></b> — cùng bộ trọng số, đọc theo chiều kia.</div></div>
         </div>
 
         <details class="q">
@@ -1245,8 +1263,10 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="fx">
           <p class="fx__line sm"><span class="tm" data-n="A⁻¹ — cái máy làm ngược lại A. Nó tồn tại khi và chỉ khi det A ≠ 0.">A<sup>−1</sup></span> <span class="op">·</span> A <span class="op">=</span> A <span class="op">·</span> A<sup>−1</sup> <span class="op">=</span> <span class="tm" data-n="I — ma trận đơn vị: đường chéo toàn 1, còn lại toàn 0. Cái máy để mọi điểm ở nguyên chỗ. Nhân với nó thì không có gì đổi.">I</span> <span class="op">=</span> <span class="mx mx--sm" style="--cols:2"><span>1</span><span>0</span><span>0</span><span>1</span></span></p>
-          <p class="fx__note">Giải hệ Ax = b về mặt ý tưởng là nhân hai vế với A⁻¹: x = A⁻¹b. Trên máy tính thì <b>không ai làm thế</b> — khử Gauss nhanh hơn và ít sai số hơn. Nghịch đảo là để <i>hiểu</i>, khử là để <i>tính</i>.</p>
+          <p class="fx__note">Giải hệ Ax = b về mặt ý tưởng là nhân vào bên trái hai vế với A⁻¹: x = A⁻¹b. Trên máy tính thì <b>không ai làm thế</b> — khử Gauss nhanh hơn và ít sai số hơn. Nghịch đảo là để <i>hiểu</i>, khử là để <i>tính</i>.</p>
         </div>
+
+        <p>Nghịch đảo của một tích thì đảo thứ tự: <b>(AB)⁻¹ = B⁻¹A⁻¹</b>. Giống cởi đồ: mặc áo rồi mới khoác, thì phải cởi khoác trước rồi mới cởi áo — máy chạy sau cùng phải được gỡ trước.</p>
 
         <p>Với ma trận 2×2 có công thức gọn, và bạn thấy ngay tại sao det = 0 là tận thế: nó nằm ở <b>dưới mẫu số</b>.</p>
 
@@ -1259,25 +1279,25 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="box__k">Chỗ dễ nhầm</p>
           <div class="row">
             <div class="k">Tưởng là</div><div>&ldquo;det gần 0 thì cũng gần như tính được, chỉ hơi kém chính xác.&rdquo;</div>
-            <div class="k">Thật ra</div><div>det gần 0 nghĩa là chia cho một số bé xíu, nên <b>một nhiễu tí xíu trong dữ liệu bị phóng thành sai số khổng lồ</b> trong kết quả. Bệnh này có tên: ma trận <i>điều kiện xấu</i>. Trong hồi quy, nó hiện ra thành các trọng số to bất thường và đổi dấu loạn xạ khi thêm một dòng dữ liệu — và cách chữa là chính quy hoá (mục 4.5).</div>
+            <div class="k">Thật ra</div><div>Hệ <b>gần suy biến</b> — hai hàng gần như cùng hướng, hai đường thẳng gần như song song — thì <b>một nhiễu tí xíu trong dữ liệu bị phóng thành sai số khổng lồ</b> trong kết quả. Bệnh này có tên: ma trận <i>điều kiện xấu</i>. Nhưng đừng đo nó bằng det: nhân cả ma trận 2×2 với 0,01 thì det nhỏ đi 10.000 lần mà bài toán chẳng khó thêm chút nào. Thước đúng là <i>số điều kiện</i> — hệ số kéo dài lớn nhất mà cái máy áp lên một mũi tên, chia cho hệ số nhỏ nhất. Trong hồi quy, nó hiện ra thành các trọng số to bất thường và đổi dấu loạn xạ khi thêm một dòng dữ liệu — và cách chữa là chính quy hoá (mục 4.5).</div>
           </div>
         </div>
 
-        <div class="take"><div class="k">Mang theo</div><p>det ≠ 0 ⟺ có nghịch đảo ⟺ hệ có nghiệm duy nhất ⟺ không mất chiều nào. Bốn cách nói của <b>một</b> sự thật.</p></div>
+        <div class="take"><div class="k">Mang theo</div><p>det ≠ 0 ⟺ có nghịch đảo ⟺ hệ Ax = b có đúng một nghiệm với mọi b ⟺ không mất chiều nào. Bốn cách nói của <b>một</b> sự thật.</p></div>
       </section>
 
       <section id="s-eigen" class="ch-a">
         <p class="sechead">1.9 · <b>Trị riêng &amp; vector riêng</b></p>
-        <h2 class="st">Trong mọi mũi tên bị cái máy làm quay, có vài mũi tên cứng đầu không chịu đổi hướng</h2>
+        <h2 class="st">Trong mọi mũi tên bị cái máy làm quay, có vài mũi tên cứng đầu không chịu lệch khỏi đường thẳng của mình</h2>
         <p class="map">Bản gốc · <b>C1 · Tuần 4</b> · Determinants, eigenvalues and eigenvectors</p>
 
-        <p class="ask">Bóp một tấm hình dẻo. Hầu hết mũi tên vẽ trên hình đều bị <span>quay sang hướng khác</span>. Có mũi tên nào <span>chỉ dài ra hoặc ngắn lại mà vẫn nằm đúng hướng cũ</span> không?</p>
+        <p class="ask">Bóp một tấm hình dẻo. Hầu hết mũi tên vẽ trên hình đều bị <span>quay sang hướng khác</span>. Có mũi tên nào <span>chỉ dài ra, ngắn lại hoặc lật ngược, mà vẫn nằm trên đúng đường thẳng cũ</span> không?</p>
 
-        <p class="lede">Thường là có, và chúng là <b>vector riêng</b>. Con số cho biết mũi tên ấy dài ra bao nhiêu lần là <b>trị riêng</b>, viết λ. Cả mục này chỉ có một dòng công thức, và dòng ấy đọc thành đúng câu hỏi trên:</p>
+        <p class="lede">Thường là có, và chúng là <b>vector riêng</b>. Con số mà mũi tên ấy bị nhân lên là <b>trị riêng</b>, viết λ — âm nghĩa là bị lật: máy gương <span class="mono">[[0,1],[1,0]]</span> ở mục 1.6 đưa (1, −1) thành (−1, 1), nên (1, −1) là vector riêng với λ = −1. Cả mục này chỉ có một dòng công thức, và dòng ấy đọc thành đúng câu hỏi trên:</p>
 
         <div class="fx">
           <p class="fx__line"><span class="tm" data-n="A — cái máy biến hình. Cho trước, không phải cái đi tìm.">A</span> <span class="tm" data-n="v — mũi tên đang xét. Đây là một trong hai cái ĐI TÌM. Bỏ v = 0 đi vì mũi tên rỗng thì luôn thoả, mà chẳng nói gì.">v</span> <span class="op">=</span> <span class="tm" data-n="λ — lam-đa, một CON SỐ (không phải mũi tên). Cái đi tìm thứ hai: hệ số dài ra. λ = 2 là dài gấp đôi; λ = 1 là y nguyên; λ = −1 là quay ngược mà giữ độ dài; λ = 0 là bị bóp về gốc.">λ</span> <span class="tm" data-n="v — vẫn đúng mũi tên ấy. Đó là toàn bộ ý: máy tác động vào v mà chỉ ra CHÍNH v nhân một số, không phải một hướng khác.">v</span></p>
-          <p class="fx__note">Đọc thành lời: <b>&ldquo;cho cái máy A tác động vào mũi tên v, kết quả vẫn nằm trên đúng hướng v, chỉ dài ra λ lần&rdquo;</b>. Bấm từng ký hiệu để xem nó là gì.</p>
+          <p class="fx__note">Đọc thành lời: <b>&ldquo;cho cái máy A tác động vào mũi tên v, kết quả vẫn nằm trên đúng đường thẳng chứa v, chỉ bị nhân với λ&rdquo;</b> — dài ra, ngắn lại, hoặc lật ngược nếu λ âm. Bấm từng ký hiệu để xem nó là gì.</p>
         </div>
 
         <p>Ví dụ sạch nhất: máy <span class="mono">[[3,1],[1,3]]</span>.</p>
@@ -1287,10 +1307,15 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="fx__note">Hướng <b>(1, 1)</b> — đường chéo lên — bị kéo dài <b>4 lần</b>. Hướng <b>(1, −1)</b> — đường chéo xuống — chỉ dài <b>2 lần</b>. Mọi hướng khác đều bị quay ít nhiều. Hai hướng ấy là <i>bộ xương</i> của cái máy này.</p>
         </div>
 
+        <div class="fx">
+          <p class="fx__line sm">Av = λv, v ≠ 0 &nbsp;<span class="op">⟺</span>&nbsp; (A − λI)v = 0, v ≠ 0 &nbsp;<span class="op">⟺</span>&nbsp; det(A − λI) = 0</p>
+          <p class="fx__note">Vì sao lại là định thức: λv = λIv, chuyển sang trái được (A − λI)v = 0 — máy A − λI đưa một mũi tên <b>khác 0</b> về gốc, tức là nó bóp phẳng, và mục 1.6 đã nói bóp phẳng ⟺ det = 0. Với A = <span class="mono">[[3,1],[1,3]]</span>: det(A − λI) = (3 − λ)² − 1 = 0 ⟹ 3 − λ = ±1 ⟹ λ = 2 hoặc λ = 4 — đúng hai hệ số ở trên.</p>
+        </div>
+
         <div class="lab" id="m5">
           <div class="lab__h">
             <p class="lab__k">Mô hình 5 · quay mũi tên đi tìm</p>
-            <p class="lab__t">Đi tìm mũi tên không chịu đổi hướng</p>
+            <p class="lab__t">Đi tìm mũi tên không lệch khỏi đường</p>
             <p class="lab__hint">Kéo thanh trượt để quay mũi tên <b>v</b> quanh gốc. Mũi tên <b>Av</b> là chỗ cái máy đưa nó tới. Khi hai mũi tên <b>nằm trên cùng một đường</b>, bạn đã tìm được một vector riêng — và trang sẽ nói λ bằng bao nhiêu.</p>
           </div>
           <div class="lab__b">
@@ -1299,6 +1324,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <span class="chip" data-p="1">Giãn theo trục</span>
               <span class="chip" data-p="2">Trượt nghiêng</span>
               <span class="chip" data-p="3">Xoay 90°</span>
+              <span class="chip" data-p="4">Gương</span>
+              <span class="chip" data-p="5">Không đối xứng</span>
             </div>
             <div class="row"><label for="m5-t">Góc của v</label><div class="inline"><input type="range" id="m5-t" min="0" max="360" step="1" value="20"><span class="val" id="m5-tv">20°</span></div></div>
             <div class="inline" style="margin-bottom:12px"><button class="btn btn--solid" id="m5-snap">Bắt lấy mũi tên riêng gần nhất</button></div>
@@ -1314,17 +1341,17 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read"><div class="k">λ của máy này</div><div class="v" id="m5-lam" style="font-size:15px">4 và 2</div></div>
             </div>
             <p class="lab__f" id="m5-say">Quay v đến khi &ldquo;lệch hướng&rdquo; về 0°.</p>
-            <p class="lab__f"><b>Ba chuyện đáng biết:</b> ma trận <b>xoay</b> một góc khác 0° và 180° không có vector riêng thật nào (mũi tên nào cũng bị đổi hướng — trị riêng của nó là số phức); ma trận <b>trượt</b> chỉ có <b>một</b> hướng riêng thay vì hai; ma trận <b>đối xứng</b> (a[i][j] = a[j][i]) thì luôn có đủ hướng riêng và chúng <b>vuông góc</b> với nhau — và đó chính là lý do PCA ở mục sau chạy được, vì ma trận hiệp phương sai luôn đối xứng.</p>
+            <p class="lab__f"><b>Bốn chuyện đáng biết:</b> ma trận <b>xoay</b> một góc khác 0° và 180° không có vector riêng thật nào (mũi tên nào cũng bị đổi hướng — trị riêng của nó là số phức); ma trận <b>trượt</b> chỉ có <b>một</b> hướng riêng thay vì hai; ma trận <b>không đối xứng</b> như <span class="mono">[[2,1],[0,3]]</span> vẫn có thể có đủ hai hướng riêng — (1, 0) với λ = 2 và (1, 1) với λ = 3 — nhưng hai hướng ấy lệch nhau 45°, <b>không</b> vuông góc; chỉ ma trận <b>đối xứng</b> (A<sup>T</sup> = A, mục 1.7) mới luôn có đủ hướng riêng <b>vuông góc</b> với nhau — và đó chính là lý do PCA ở mục sau chạy được, vì ma trận hiệp phương sai luôn đối xứng.</p>
           </div>
         </div>
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Bóp tấm hình. Vài mũi tên <b>cứng đầu</b>: chỉ dài ra hay ngắn lại, không quay. Chúng cho biết cái máy này <b>thật sự</b> làm gì, tách khỏi chuyện bạn vẽ trục toạ độ ở đâu.</div></div>
-          <div class="r-math"><div class="lbl">Toán</div><div class="v"><span class="fml">Av = λv</span>, tìm λ bằng <span class="fml">det(A − λI) = 0</span>. Ma trận đối xứng: mọi λ là số thực, các v riêng vuông góc nhau.</div></div>
-          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v"><b>PCA</b> (mục sau) là bài toán trị riêng của ma trận hiệp phương sai. Trong huấn luyện mạng, trị riêng của <b>Hessian</b> cho biết mặt lỗi cong bao nhiêu theo từng hướng — tức là gradient descent sẽ đi zíc-zắc hay đi thẳng.</div></div>
+          <div class="r-math"><div class="lbl">Toán</div><div class="v"><span class="fml">Av = λv</span>, tìm λ bằng <span class="fml">det(A − λI) = 0</span>. Ma trận đối xứng: mọi λ là số thực, các v riêng vuông góc nhau. Luật det(A<sup>T</sup>) = det(A) ở mục 1.7 cho thêm: A<sup>T</sup> có cùng trị riêng với A, vì det(A<sup>T</sup> − λI) = det((A − λI)<sup>T</sup>) = det(A − λI) — nhưng vector riêng thì thường khác.</div></div>
+          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v"><b>PCA</b> (mục sau) là bài toán trị riêng của ma trận hiệp phương sai. Trong huấn luyện mạng, trị riêng của <b>Hessian</b> (ma trận độ cong, mục 2.4) cho biết mặt lỗi cong bao nhiêu theo từng hướng — chúng chênh nhau càng xa thì gradient descent càng đi zíc-zắc.</div></div>
         </div>
 
-        <div class="take"><div class="k">Mang theo</div><p>Vector riêng = <b>hướng mà cái máy không làm quay</b>. Trị riêng = <b>dài ra bao nhiêu lần theo hướng đó</b>. Tìm được chúng là biết bộ xương của ma trận, không cần nhìn 4 con số nữa.</p></div>
+        <div class="take"><div class="k">Mang theo</div><p>Vector riêng = <b>mũi tên mà cái máy không làm lệch khỏi đường thẳng của nó</b> — bị lật ngược vẫn tính, đó là khi λ âm. Trị riêng = <b>bị nhân lên bao nhiêu lần dọc theo đường đó</b>. Máy có đủ hướng riêng — ma trận đối xứng thì luôn có — thì tìm được chúng là biết bộ xương của ma trận, không cần nhìn 4 con số nữa.</p></div>
       </section>
 
       <section id="s-pca" class="ch-a">
@@ -1336,9 +1363,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="lede">Đo theo <b>hướng của cái hàng</b>. Nói &ldquo;bạn A ở đoạn thứ 3 của hàng&rdquo; là gần đúng chỗ đứng thật, vì cả lớp gần như nằm trên một đường. Đo theo hướng vuông góc thì vô nghĩa: mọi bạn đều ở &ldquo;khoảng giữa&rdquo;, con số ấy không phân biệt được ai với ai.</p>
 
-        <p>Đó là toàn bộ <b>PCA</b>. Nó đi tìm <b>hướng mà dữ liệu tãi ra rộng nhất</b>, gọi hướng ấy là <i>thành phần chính thứ nhất</i>, rồi hướng rộng nhì (vuông góc với hướng đầu), và cứ thế. Giữ vài hướng đầu, bỏ phần còn lại — dữ liệu nhẹ đi mà gần như không mất gì.</p>
+        <p>Đó là toàn bộ <b>PCA</b>. Nó đi tìm <b>hướng mà dữ liệu tãi ra rộng nhất</b>, gọi hướng ấy là <i>thành phần chính thứ nhất</i>, rồi hướng rộng nhì (vuông góc với hướng đầu), và cứ thế. Giữ vài hướng đầu, bỏ phần còn lại — dữ liệu nhẹ đi, và nếu các hướng bị bỏ gần như không tãi thì gần như không mất gì.</p>
 
-        <p>Nó nối lại đúng ba mục vừa rồi: &ldquo;tãi ra rộng bao nhiêu theo một hướng&rdquo; là <b>phương sai</b>; gom phương sai theo mọi hướng lại thành một ma trận là <b>ma trận hiệp phương sai</b> (mục 3.10); và hướng tãi rộng nhất chính là <b>vector riêng ứng với trị riêng lớn nhất</b> của ma trận ấy.</p>
+        <p>Muốn tính thì cần hai con số mà chặng 3 mới dạy kỹ (mục 3.9–3.10); đây là bản ngắn nhất. <b>Phương sai</b> của một cột: cộng bình phương khoảng cách từ mỗi số tới trung bình của cột, rồi chia cho n − 1 (quy ước của np.cov và scikit-learn; mục 4.3 nói vì sao không chia n) — nó đo &ldquo;tãi ra rộng bao nhiêu&rdquo;. <b>Hiệp phương sai</b> của hai cột: cũng thế, nhưng cộng <i>tích</i> hai khoảng cách — dương khi hai cột cùng lên cùng xuống. Phương sai xếp lên đường chéo, hiệp phương sai vào hai ô còn lại: đó là <b>ma trận hiệp phương sai</b>, và nó đối xứng. Hướng tãi rộng nhất chính là <b>vector riêng ứng với trị riêng lớn nhất</b> của ma trận ấy, và trị riêng là độ tãi theo đúng hướng đó.</p>
 
         <div class="tw">
           <table>
@@ -1351,7 +1378,14 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </table>
         </div>
 
+        <div class="fx">
+          <p class="fx__line sm">ma trận hiệp phương sai <span class="op">=</span> <span class="op">1/9</span> · <span class="mx mx--sm" style="--cols:2"><span>82,5</span><span>78,5</span><span>78,5</span><span>82,5</span></span></p>
+          <p class="fx__note">82,5 là tổng bình phương khoảng cách tới trung bình của cột x — cột y cũng ra đúng 82,5 — còn 78,5 là tổng các tích; chia cho n − 1 = 9. Ma trận dạng <span class="mono">[[a,b],[b,a]]</span> luôn có hướng riêng (1, 1) và (1, −1), trị riêng a + b và a − b — đúng như máy <span class="mono">[[3,1],[1,3]]</span> ở mục 1.9 cho 4 và 2. Nên trục chính nằm đúng 45°, và λ₁ = (82,5 + 78,5)/9 = 161/9 ≈ <b>17,89</b>, λ₂ = (82,5 − 78,5)/9 = 4/9 ≈ <b>0,44</b>. Chia cho n = 10 thay vì 9 thì ra 16,10 và 0,40 — nhỏ đi một chút, còn tỉ lệ 97,6% không đổi.</p>
+        </div>
+
         <p>17,89 so với 0,44 — trục thứ nhất &ldquo;kể&rdquo; nhiều hơn trục thứ hai <b>40 lần</b>. Nên vứt trục thứ hai đi: mỗi bạn từ hai con số còn một con số, mà vẫn giữ được <b>97,6%</b> lượng biến thiên. Đó là nén dữ liệu <i>có ý thức</i>, khác hẳn nén bừa.</p>
+
+        <p>Con số còn lại của mỗi bạn là <b>cái bóng</b> của bạn ấy trên trục chính 1, đo từ điểm trung bình μ = (5,5; 6,5): <b>z = u₁ · (p − μ)</b>, với p là chỗ đứng của bạn ấy và u₁ = (1, 1)/√2 ≈ (0,71; 0,71) dài đúng 1 — hình chiếu ở mục 1.5. Bạn 1 đứng ở (1; 2), lệch khỏi trung bình (−4,5; −4,5), nên z = (−4,5 − 4,5)/√2 ≈ <b>−6,36</b>. Làm thế cho cả mười bạn rồi tính phương sai của mười cái bóng, bạn được đúng <b>17,89</b>: trị riêng <i>chính là</i> độ tãi của dữ liệu dọc theo trục của nó, và 97,6% chỉ là 17,89 / (17,89 + 0,44). Bước trừ trung bình không bỏ được: quên nó thì trục 1 thành (0,66; 0,75) — chỉ về phía đám điểm nhìn từ gốc toạ độ, không còn nằm dọc theo đám.</p>
 
         <div class="lab" id="m6">
           <div class="lab__h">
@@ -1366,8 +1400,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <svg class="viz" id="m6-svg" viewBox="0 0 620 360" role="img" aria-label="Đám điểm hai chiều với hai trục chính của nó"></svg>
             <div class="lgd">
               <span><i style="background:var(--muted)"></i> 120 điểm dữ liệu</span>
-              <span><i class="ln" style="background:var(--a)"></i> trục chính 1</span>
-              <span><i class="ln" style="background:var(--c)"></i> trục chính 2</span>
+              <span><i class="ln" style="background:var(--a)"></i> trục chính 1 (dài 2√λ₁)</span>
+              <span><i class="ln" style="background:var(--c)"></i> trục chính 2 (dài 2√λ₂)</span>
               <span><i style="background:var(--good)"></i> điểm sau khi nén</span>
             </div>
             <div class="reads">
@@ -1386,7 +1420,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="a"><p>Vì ma trận hiệp phương sai <b>đối xứng</b>, và ma trận đối xứng luôn có hệ vector riêng vuông góc nhau (mục 1.9). Nhìn theo nghĩa dữ liệu thì cũng hợp lý: sau khi đã dùng hướng thứ nhất để kể phần lớn câu chuyện, phần <i>còn lại chưa kể</i> nằm đúng ở hướng vuông góc — nếu nó còn dính vào hướng đầu thì phần dính ấy đã bị kể rồi.</p></div>
         </details>
 
-        <div class="take"><div class="k">Mang theo</div><p>PCA = <b>quay trục toạ độ về đúng hướng dữ liệu tãi rộng nhất</b>, rồi bỏ những hướng gần như không tãi. Trị riêng lớn = trục kể nhiều. Đó là lý do một tấm ảnh 4.096 con số thường nén xuống 50 con số mà mắt người không thấy khác.</p></div>
+        <div class="take"><div class="k">Mang theo</div><p>PCA = <b>quay trục toạ độ về đúng hướng dữ liệu tãi rộng nhất</b>, rồi bỏ những hướng gần như không tãi. Trị riêng lớn = trục kể nhiều. Đó là lý do một bộ ảnh chân dung — mỗi ảnh vài nghìn con số điểm ảnh — có thể tả mỗi ảnh bằng vài chục con số mà vẫn nhận ra được là ai: mờ đi, nhưng đúng người.</p></div>
       </section>
 
       <div class="acthead ch-c" id="act2">
@@ -2654,12 +2688,21 @@ function txt(p, x, y, s, cls, anchor, style) {
   return n;
 }
 function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
-/* Trang viết số theo lối Việt (dấu phẩy thập phân) nên MỌI con số do JS sinh ra
-   cũng phải theo, nếu không cùng một trang có hai kiểu viết số. */
+/* Trang viết số theo lối Việt — dấu phẩy thập phân, chấm phân nhóm nghìn, dấu TRỪ
+   U+2212 — nên MỌI con số do JS sinh ra cũng phải theo, nếu không cùng một trang có hai
+   kiểu viết số. Chỉ dùng cho CHỮ hiển thị: thuộc tính SVG và .value của input phải
+   dùng toFixed, vì "1.024" hay "−1" không đọc ngược lại thành số được. */
 function fmt(n, d) {
   d = d === undefined ? 2 : d;
   if (!isFinite(n)) return '∞';
-  return Number(n).toFixed(d).replace('.', ',');
+  var s = Number(n).toFixed(d), neg = s.charAt(0) === '-';
+  if (neg) s = s.slice(1);
+  /* làm tròn ra 0 thì bỏ dấu: "−0,00" là một dấu trừ thừa */
+  if (!/[1-9]/.test(s)) neg = false;
+  var p = s.split('.'), i = p[0];
+  /* phần nguyên từ 4 chữ số thì chấm phân nhóm, như thân bài viết "4.096" */
+  if (i.length >= 4) i = i.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return (neg ? '\u2212' : '') + i + (p.length > 1 ? ',' + p[1] : '');
 }
 function pct(n, d) { return fmt(n * 100, d === undefined ? 1 : d) + '%'; }
 /* bộ sinh ngẫu nhiên có hạt giống — để mọi người thấy cùng một dữ liệu */
@@ -3065,8 +3108,11 @@ function eig2(a, b, c, d) {
       txt(g, X(pr[0]) + 6, Y(pr[1]) + 18, 'hình chiếu của v lên u', 'vs');
       var a1 = Math.atan2(u[1], u[0]), a2 = Math.atan2(v[1], v[0]), R = 34;
       var sweep = ((a2 - a1) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+      /* θ trong u·v = ‖u‖‖v‖cos θ luôn ≤ 180°. Quét ngược chiều kim đồng hồ từ u sang v mà
+         quá nửa vòng thì cung ấy là góc PHẢN XẠ — đổi đầu, quét từ v sang u. */
+      if (sweep > Math.PI) { var tmp = a1; a1 = a2; a2 = tmp; }
       el(g, 'path', { d: 'M ' + X(0) + ' ' + Y(0) + ' L ' + (X(0) + R * Math.cos(a1)) + ' ' + (Y(0) - R * Math.sin(a1)) +
-        ' A ' + R + ' ' + R + ' 0 ' + (sweep > Math.PI ? 1 : 0) + ' 0 ' +
+        ' A ' + R + ' ' + R + ' 0 0 0 ' +
         (X(0) + R * Math.cos(a2)) + ' ' + (Y(0) - R * Math.sin(a2)) + ' Z',
         fill: css('--k-bg', svg), stroke: css('--k', svg), 'stroke-width': 1 });
       $('m2-lgd').textContent = 'hình chiếu';
@@ -3087,9 +3133,11 @@ function eig2(a, b, c, d) {
     $('m2-l2').textContent = fmt(nv);
     $('m2-l1').textContent = fmt(Math.abs(v[0]) + Math.abs(v[1]));
     $('m2-dot').textContent = fmt(dot);
-    $('m2-ang').innerHTML = fmt(ang, 1) + '<span class="u">°</span>';
+    $('m2-ang').innerHTML = nu * nv > 1e-9 ? fmt(ang, 1) + '<span class="u">°</span>' : '—';
     var say;
-    if (Math.abs(dot) < 0.35) say = 'Nhân vô hướng gần 0: hai mũi tên gần như VUÔNG GÓC — biết cái này không nói gì về cái kia.';
+    /* Xét vuông góc theo GÓC, không theo |u·v|: hai mũi tên ngắn cho u·v nhỏ dù chỉ lệch nhau 45°. */
+    if (nu * nv < 1e-9) say = 'Một mũi tên dài 0 thì không có hướng: nhân vô hướng bằng 0, nhưng không phải vì vuông góc — góc ở đây không xác định.';
+    else if (Math.abs(ang - 90) < 3) say = 'Góc gần 90°: hai mũi tên gần như VUÔNG GÓC, nên nhân vô hướng gần 0 so với tích hai độ dài — biết cái này không nói gì về cái kia.';
     else if (dot > 0) say = 'Nhân vô hướng dương (' + fmt(dot) + '): hai mũi tên nghiêng về cùng một phía, góc dưới 90°.';
     else say = 'Nhân vô hướng âm (' + fmt(dot) + '): hai mũi tên chọi nhau, góc trên 90°.';
     $('m2-say').textContent = say;
@@ -3119,7 +3167,9 @@ function eig2(a, b, c, d) {
      là KHÔNG xảy ra khi xoay. Bước 0,05 chạm được 0,70 (det = 0,98). */
   var PRE = [[1, 0, 0, 1], [2, 0, 0, 2], [0.7, -0.7, 0.7, 0.7], [1, 1, 0, 1], [0, 1, 1, 0], [1, 1, 2, 2]];
   var HOUSE = [[0.1, 0], [0.9, 0], [0.9, 0.62], [0.5, 1.0], [0.1, 0.62]];
-  var DOOR = [[0.38, 0], [0.62, 0], [0.62, 0.4], [0.38, 0.4]];
+  /* Cửa lệch sang trái, cố ý: nhà đối xứng thì ảnh gương trùng với một ảnh xoay, và mô hình
+     không còn cách nào cho thấy chữ "lật". */
+  var DOOR = [[0.2, 0], [0.4, 0], [0.4, 0.4], [0.2, 0.4]];
   var W = 400, H = 340, cx = W / 2, cy = H / 2 + 34, S = 58;
   function draw() {
     var a = +$('m3-a').value, b = +$('m3-b').value, c = +$('m3-c').value, d = +$('m3-d').value;
@@ -3158,13 +3208,17 @@ function eig2(a, b, c, d) {
     txt(g, X(b) + 7, Y(d) - 5, 'cột 2', 'vs');
 
     $('m3-det').textContent = fmt(det);
-    $('m3-area').textContent = fmt(Math.abs(det));
+    /* Diện tích đo từ chính hình bình hành đã vẽ (công thức dây giày), không lấy lại |det|:
+       lấy lại thì hai ô luôn khớp chỉ vì chúng là một con số. */
+    var ar = 0;
+    for (var s = 0; s < 4; s++) { var pa = sq[s], pb = sq[(s + 1) % 4]; ar += pa[0] * pb[1] - pb[0] * pa[1]; }
+    $('m3-area').textContent = fmt(Math.abs(ar) / 2);
     $('m3-det').parentElement.className = 'read ' + (Math.abs(det) < 0.02 ? 'bad' : 'hi');
     var say;
     if (Math.abs(a) + Math.abs(b) + Math.abs(c) + Math.abs(d) < 0.02)
       say = 'Ma trận không: cả mặt phẳng bị nén về ĐÚNG MỘT ĐIỂM — gốc toạ độ. Ngôi nhà biến mất hẳn, không còn cả một sợi. Đây là trường hợp mất nhiều chiều nhất có thể.';
     else if (Math.abs(det) < 0.02) say = 'Định thức bằng 0: cả mặt phẳng bị BÓP PHẲNG thành một đường thẳng. Ngôi nhà biến thành một sợi, và không cái máy nào dựng lại được nó — hai cột của ma trận đã nằm trên cùng một đường.';
-    else if (det < 0) say = 'Định thức âm (' + fmt(det) + '): hình bị LẬT GƯƠNG. Diện tích phóng ' + fmt(Math.abs(det)) + ' lần, nhưng cửa nhà đổi sang bên kia.';
+    else if (det < 0) say = 'Định thức âm (' + fmt(det) + '): hình bị LẬT GƯƠNG. Diện tích phóng ' + fmt(Math.abs(det)) + ' lần, nhưng cửa nhà đổi sang bên kia, và đi từ cột 1 sang cột 2 giờ là quay theo chiều kim đồng hồ — xoay kiểu gì cũng không đưa hình về như cũ.';
     else if (Math.abs(a - 1) < 0.01 && Math.abs(b) < 0.01 && Math.abs(c) < 0.01 && Math.abs(d - 1) < 0.01) say = 'Ma trận đơn vị: cái máy không làm gì cả. Mọi điểm ở nguyên chỗ của nó.';
     else if (Math.abs(Math.abs(det) - 1) < 0.05) say = 'Định thức ≈ 1: hình bị xoay hoặc kéo méo, nhưng DIỆN TÍCH gần như không đổi. Hai mũi tên màu là hai CỘT của ma trận — chúng là chỗ hai mũi tên đơn vị hạ cánh.';
     else say = 'Diện tích phóng ' + fmt(Math.abs(det)) + ' lần, không lật. Hai mũi tên màu là hai CỘT của ma trận — chúng là chỗ hai mũi tên đơn vị hạ cánh.';
@@ -3298,8 +3352,8 @@ function eig2(a, b, c, d) {
 /* ═══════════════════ mô hình 5 · vector riêng ═══════════════════ */
 (function () {
   var svg = $('m5-svg'); if (!svg) return;
-  var MATS = [[3, 1, 1, 3], [2, 0, 0, 3], [1, 1, 0, 1], [0, -1, 1, 0]];
-  var NAMES = ['A = [[3,1],[1,3]] — đối xứng', 'giãn theo trục', 'trượt nghiêng', 'xoay 90°'];
+  var MATS = [[3, 1, 1, 3], [2, 0, 0, 3], [1, 1, 0, 1], [0, -1, 1, 0], [0, 1, 1, 0], [2, 1, 0, 3]];
+  var NAMES = ['A = [[3,1],[1,3]] — đối xứng', 'giãn theo trục', 'trượt nghiêng', 'xoay 90°', 'gương', 'không đối xứng'];
   var mi = 0;
   var W = 620, H = 340, cx = W / 2, cy = H / 2, S = 40;
   var X = function (x) { return cx + x * S; }, Y = function (y) { return cy - y * S; };
@@ -3307,7 +3361,9 @@ function eig2(a, b, c, d) {
     var m = MATS[mi], a = m[0], b = m[1], c = m[2], d = m[3];
     var th = +$('m5-t').value * Math.PI / 180;
     $('m5-tv').textContent = $('m5-t').value + '°';
-    var v = [2 * Math.cos(th), 2 * Math.sin(th)];
+    /* v dài 1,25 chứ không phải 2: v dài 2 thì với λ = 4 (máy mặc định) và λ = 3 (giãn theo
+       trục), đầu Av ra ngoài khung đúng lúc trùng hướng. */
+    var v = [1.25 * Math.cos(th), 1.25 * Math.sin(th)];
     var Av = [a * v[0] + b * v[1], c * v[0] + d * v[1]];
     var E = eig2(a, b, c, d);
     clear(svg);
@@ -3321,6 +3377,8 @@ function eig2(a, b, c, d) {
     /* hướng riêng: vẽ trước để nằm dưới hai mũi tên */
     if (E.real) {
       E.vec.forEach(function (w, i) {
+        /* máy trượt: nghiệm kép cho đúng một hướng — vẽ một lần, kẻo hai nhãn chồng lên nhau */
+        if (i === 1 && Math.abs(E.vec[0][0] * w[1] - E.vec[0][1] * w[0]) < 1e-9) return;
         var L = 7.4;
         el(g, 'line', { x1: X(-w[0] * L), y1: Y(-w[1] * L), x2: X(w[0] * L), y2: Y(w[1] * L),
           stroke: css('--good'), 'stroke-width': 1.6, 'stroke-dasharray': '6 4', opacity: 0.75 });
@@ -3333,7 +3391,9 @@ function eig2(a, b, c, d) {
     arrow(g, X(0), Y(0), X(Av[0]), Y(Av[1]), css('--c'), 3);
     arrow(g, X(0), Y(0), X(v[0]), Y(v[1]), css('--a'), 3);
     txt(g, X(v[0]) + 9, Y(v[1]) - 6, 'v', 'vt');
-    txt(g, X(Av[0]) + 9, Y(Av[1]) - 6, 'Av', 'vt');
+    /* nhãn Av nằm DƯỚI đầu mũi tên, nhãn v nằm trên: khi λ = 1 hai đầu trùng nhau mà hai
+       nhãn không chồng lên nhau, và ở mép trên nhãn Av không đè nhãn λ của đường riêng */
+    txt(g, X(Av[0]) + 9, Math.min(H - 6, Y(Av[1]) + 16), 'Av', 'vt');
 
     /* lệch hướng giữa hai ĐƯỜNG (nên 0° và 180° đều tính là trùng: λ có thể âm) */
     var nv = Math.hypot(v[0], v[1]), na = Math.hypot(Av[0], Av[1]);
@@ -3343,13 +3403,16 @@ function eig2(a, b, c, d) {
       off = Math.acos(Math.max(0, Math.min(1, cosv))) * 180 / Math.PI;
     }
     $('m5-off').innerHTML = fmt(off, 1) + '<span class="u">°</span>';
-    $('m5-lam').textContent = E.real ? (fmt(E.lam[0], 2) + ' và ' + fmt(E.lam[1], 2)) : 'không có (số phức)';
+    $('m5-lam').textContent = !E.real ? 'không có (số phức)'
+      : Math.abs(E.lam[0] - E.lam[1]) < 1e-9 ? fmt(E.lam[0], 2) + ' (nghiệm kép)'
+      : fmt(E.lam[0], 2) + ' và ' + fmt(E.lam[1], 2);
     var hit = off < 1.2 && na > 1e-9;
     var lam = (v[0] * Av[0] + v[1] * Av[1]) / (nv * nv);
-    $('m5-st').textContent = hit ? 'TRÙNG HƯỚNG' : 'chưa trùng';
+    $('m5-st').textContent = hit ? (lam < 0 ? 'CÙNG ĐƯỜNG, BỊ LẬT' : 'TRÙNG HƯỚNG') : 'chưa trùng';
     $('m5-st').parentElement.className = 'read ' + (hit ? 'good' : 'hi');
     var say;
     if (!E.real) say = NAMES[mi] + ': mũi tên nào cũng bị quay, không có hướng riêng thực nào. Một phép xoay không để lại hướng nào yên — trị riêng của nó là số phức.';
+    else if (hit && lam < 0) say = 'Cùng đường, nhưng Av chỉ ngược lại: máy lật v rồi nhân độ dài với ' + fmt(-lam, 2) + '. v vẫn là một VECTOR RIÊNG, với λ = ' + fmt(lam, 2) + ' — trị riêng âm nghĩa là lật.';
     else if (hit) say = 'Trùng hướng! Av nằm đúng trên đường của v, dài gấp ' + fmt(lam, 2) + ' lần. Vậy v là một VECTOR RIÊNG và λ = ' + fmt(lam, 2) + '.';
     else say = 'Còn lệch ' + fmt(off, 1) + '°. Quay tiếp cho tới khi hai mũi tên nằm trên cùng một đường — hoặc bấm nút bắt lấy.';
     $('m5-say').textContent = say;
@@ -3442,7 +3505,7 @@ function eig2(a, b, c, d) {
     $('m6-keep').textContent = pct(keep, 1);
     $('m6-ang').innerHTML = fmt(ang, 0) + '<span class="u">°</span>';
     var say;
-    if (keep > 0.97) say = 'Đám điểm gần như nằm trên một đường: trục 1 giữ ' + pct(keep, 1) + '. Bỏ trục 2 đi thì mỗi điểm chỉ còn MỘT con số mà gần như không mất gì.';
+    if (keep > 0.95) say = 'Đám điểm gần như nằm trên một đường: trục 1 giữ ' + pct(keep, 1) + '. Bỏ trục 2 đi thì mỗi điểm chỉ còn MỘT con số mà gần như không mất gì.';
     else if (keep > 0.75) say = 'Trục 1 giữ ' + pct(keep, 1) + '. Nén xuống một chiều vẫn dùng được, nhưng đã bắt đầu mất chi tiết.';
     else say = 'Đám điểm gần như tròn: trục 1 chỉ giữ ' + pct(keep, 1) + ', tức là KHÔNG có hướng nào đáng ưu tiên. Ở đây PCA không giúp gì — nén xuống một chiều là mất thật.';
     $('m6-say').textContent = say;

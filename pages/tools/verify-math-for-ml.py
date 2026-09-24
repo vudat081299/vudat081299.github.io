@@ -160,6 +160,12 @@ def run_algebra():
     need('1.3 hạng 2', 'hạng = 2')
     if 9 + 12 != 21:
         fails.append('1.3: 21 phải bằng 9 + 12')
+    # hạng 3 chỉ nói "nhiều nhất một bộ giá": tờ thứ tư cãi nhau thì hệ vô nghiệm
+    A4 = A3 + [[1, 1, 1]]
+    claim('1.3 tờ thứ tư cãi nhau',
+          rank(A4) == 3 and rank([r + [t] for r, t in zip(A4, [9, 12, 14, 10])]) == 4,
+          'tờ "1 táo, 1 chuối, 1 cam, hết 10 nghìn" phải giữ hạng 3 mà làm hệ vô nghiệm')
+    need('1.3 tờ thứ tư', 'hết 10 nghìn&rdquo; trong khi tờ một ghi 9')
 
     # 1.4 — chuẩn
     v = (3, 4)
@@ -203,10 +209,13 @@ def run_algebra():
     if prod2 != [[2, 2], [0, 1]]:
         fails.append(f'1.6: giãn∘trượt phải là [[2,2],[0,1]], tính ra {prod2}')
     need('1.6 tích đảo thứ tự', '[[2,2],[0,1]]')
+    # luật hàng nhân cột, in thành ví dụ tính tay; và chữ "giãn" phải chỉ đúng máy giãn ngang
+    need('1.6 luật hàng nhân cột', mxspans(prod))
+    need('1.6 giãn ngang', '[[2,0],[0,1]]')
     if det2([[3, 6], [1, 2]]) != 0:
         fails.append('1.6: det [[3,6],[1,2]] phải bằng 0')
 
-    # 1.7 — nghịch đảo
+    # 1.8 — nghịch đảo
     M = [[3, 1], [1, 2]]
     dt = det2(M)
     inv = [[M[1][1] / dt, -M[0][1] / dt], [-M[1][0] / dt, M[0][0] / dt]]
@@ -214,14 +223,35 @@ def run_algebra():
     need('1.8 det = 5', 'det A = 5')
     for cell in ['0,4', '−0,2', '0,6']:
         need('1.8 ô nghịch đảo ' + cell, '>' + cell + '<')
+    # det không đo điều kiện: nhân 0,01 thì det nhỏ 10.000 lần mà số điều kiện (M đối xứng:
+    # trị riêng lớn / trị riêng nhỏ) giữ nguyên
+    Ms = [[x / 100 for x in r] for r in M]
+    eb, es = eig2(*M[0], *M[1]), eig2(*Ms[0], *Ms[1])
+    claim('1.8 det không đo điều kiện',
+          abs(det2(Ms) - det2(M) / 10000) < 1e-12 and abs(eb[0] / eb[1] - es[0] / es[1]) < 1e-9,
+          'nhân 0,01: det phải nhỏ đi 10.000 lần, số điều kiện phải giữ nguyên')
+    need('1.8 ví dụ nhân 0,01', 'với 0,01 thì det nhỏ đi 10.000 lần')
 
-    # 1.8 — trị riêng
+    # 1.9 — trị riêng
     lam = eig2(3, 1, 1, 3)
     assert_close('1.9 trị riêng [[3,1],[1,3]]', list(lam), [4, 2])
     need('1.9 λ = 4', '<b>4 lần</b>')
     need('1.9 λ = 2', '<b>2 lần</b>')
+    # vì sao det(A − λI) = 0, giải tay cho đúng máy mặc định
+    need('1.9 phương trình đặc trưng', '(3 \u2212 λ)² \u2212 1 = 0')
+    # λ được phép âm: máy gương lật (1, −1)
+    claim('1.9 gương có λ = −1', eig2(0, 1, 1, 0) == (1.0, -1.0), 'máy gương phải có trị riêng 1 và −1')
+    need('1.9 gương', 'vector riêng với λ = \u22121')
+    # không đối xứng: đủ hai hướng riêng nhưng không vuông góc
+    ns = eig2(2, 1, 0, 3)
+    va, vb = (1, ns[0] - 2), (1, ns[1] - 2)
+    lech = math.degrees(math.acos((va[0] * vb[0] + va[1] * vb[1]) / (math.hypot(*va) * math.hypot(*vb))))
+    claim('1.9 không đối xứng', ns == (3.0, 2.0) and abs(lech - 45) < 1e-9,
+          '[[2,1],[0,3]] phải có trị riêng 3 và 2, hai hướng riêng lệch nhau 45°')
+    need('1.9 ví dụ không đối xứng', '[[2,1],[0,3]]')
+    need('1.9 lệch 45°', 'hai hướng ấy lệch nhau 45°')
 
-    # 1.9 — PCA trên đúng 10 điểm của bảng
+    # 1.10 — PCA trên đúng 10 điểm của bảng
     X = [(1, 2), (2, 3), (3, 5), (4, 4), (5, 7), (6, 6), (7, 9), (8, 8), (9, 11), (10, 10)]
     n = len(X)
     mx = sum(p[0] for p in X) / n
@@ -239,12 +269,38 @@ def run_algebra():
     # trục chính nằm đúng 45° vì hai phương sai bằng nhau
     ang = math.degrees(math.atan2(1, 1))
     if abs(ang - 45) > 1e-9 or abs(sxx - syy) > 1e-9:
-        fails.append('1.9: trục chính chỉ đúng 45° khi hai phương sai bằng nhau')
+        fails.append('1.10: trục chính chỉ đúng 45° khi hai phương sai bằng nhau')
     need('1.10 góc trục', 'đúng 45°')
     ratio = l1 / l2
     if not 39.5 <= ratio <= 40.5:
-        fails.append(f'1.9: tỉ số λ1/λ2 = {ratio:.2f}, trang nói "40 lần"')
+        fails.append(f'1.10: tỉ số λ1/λ2 = {ratio:.2f}, trang nói "40 lần"')
     need('1.10 gấp 40 lần', '<b>40 lần</b>')
+    # ma trận hiệp phương sai in ra trang: tổng bình phương, tổng tích, dạng [[a,b],[b,a]]
+    Sxx = sum((p[0] - mx) ** 2 for p in X)
+    Syy = sum((p[1] - my) ** 2 for p in X)
+    Sxy = sum((p[0] - mx) * (p[1] - my) for p in X)
+    claim('1.10 dạng [[a,b],[b,a]]', abs(Sxx - Syy) < 1e-9, 'hai tổng bình phương phải bằng nhau')
+    need('1.10 ma trận hiệp phương sai', ''.join('<span>' + vi(v, 1) + '</span>' for v in (Sxx, Sxy, Sxy, Syy)))
+    claim('1.10 λ = (a ± b)/(n − 1)',
+          abs(l1 - (Sxx + Sxy) / (n - 1)) < 1e-9 and abs(l2 - (Sxx - Sxy) / (n - 1)) < 1e-9,
+          'trị riêng của [[a,b],[b,a]] phải là a + b và a − b')
+    need('1.10 λ1 phân số', '= %d/9' % round(Sxx + Sxy))
+    need('1.10 λ2 phân số', '= %d/9' % round(Sxx - Sxy))
+    # "0,40" đứng một mình thì trang có sẵn ở chỗ khác — đòi cả cặp để phép kiểm bắt được
+    need('1.10 trị riêng chia n', 'ra ' + vi(l1 * (n - 1) / n) + ' và ' + vi(l2 * (n - 1) / n))
+    # bóng lên trục 1: phương sai của mười cái bóng đúng bằng λ1
+    z = [((p[0] - mx) + (p[1] - my)) / math.sqrt(2) for p in X]
+    num('1.10 bóng bạn 1', z[0], 2)
+    claim('1.10 phương sai của bóng = λ1', abs(sum(t * t for t in z) / (n - 1) - l1) < 1e-9,
+          'phương sai của bóng lên trục 1 phải bằng λ1')
+    # quên trừ trung bình thì trục 1 lệch khỏi 45°
+    Rxx = sum(p[0] ** 2 for p in X)
+    Ryy = sum(p[1] ** 2 for p in X)
+    Rxy = sum(p[0] * p[1] for p in X)
+    lr = eig2(Rxx, Rxy, Rxy, Ryy)[0]
+    vx, vy = Rxy, lr - Rxx
+    nr = math.hypot(vx, vy)
+    need('1.10 quên trừ trung bình', '(' + vi(vx / nr) + '; ' + vi(vy / nr) + ')')
 
     # ── 1.7 chuyển vị ────────────────────────────────────────────────────────
     # Lật bảng: hàng thành cột. Kiểm cả chuỗi hiển thị lẫn CHÍNH LUẬT mà mục dạy.
