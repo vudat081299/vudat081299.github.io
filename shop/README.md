@@ -41,7 +41,7 @@ shop/
     hooks/            post-edit.sh (sau mỗi Edit/Write) + pre-commit
   docs/
     index.html        TRANG ĐỌC — gộp toàn bộ tri thức của bộ dưới đây, không có code
-    00…05, TECH-DEBT  8 tài liệu định hướng — đây mới là NGUỒN
+    00…06, TECH-DEBT  8 tài liệu định hướng — đây mới là NGUỒN
     adr/              5 quyết định + điều kiện xét lại từng cái
 ```
 

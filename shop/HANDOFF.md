@@ -1,8 +1,36 @@
-# Bàn giao — phiên 20/09/2026, rà lại 21/09/2026
+# Bàn giao — phiên 20/09/2026, rà lại 21/09/2026, thêm 24/09/2026
 
 Đọc file này trước, rồi tới [shop/CLAUDE.md](CLAUDE.md) và
 [docs/05-ARCHITECTURE.md](docs/05-ARCHITECTURE.md). Mục lục đầy đủ:
 [docs/00-READ-THIS-FIRST.md](docs/00-READ-THIS-FIRST.md).
+
+## Phiên 24/09/2026 — dàn phẳng chuỗi nguyên liệu → khách quay lại
+
+Đạt hỏi: chị ấy dùng Excel từ lúc nhập nguyên liệu tới lúc bán — có mắt xích nào can thiệp được
+không? Kèm một bản brainstorm về sổ mẻ sản xuất. Kết quả nằm ở
+[docs/06-VALUE-CHAIN.md](docs/06-VALUE-CHAIN.md) và Phần VI của trang đọc `docs/index.html`.
+
+**Kết luận một dòng:** 18 mắt xích, 0 chỗ mà viết mã là lời giải tốt nhất; giá trị nằm ở **chỗ
+nối** giữa các mắt xích, và chỗ nối lớn nhất là giá vốn `V` — nếu file có sheet nhập thì `V` tính
+được từ số đã ghi, và tính được hai cách mà chỗ chênh chính là hao hụt không ai ghi (06 §4).
+
+**Một khẳng định sai, đã sửa ở bốn chỗ.** ADR 0004, bảng năng lực ở 05, trang đọc, và **bản đề
+xuất mang đi gặp chủ shop** cùng nói *"không phần mềm bán lẻ đại trà nào biết công thức của
+shop"*. Sai: KiotViet có *Hàng sản xuất* — định mức, phiếu sản xuất tự trừ nguyên liệu và cộng
+thành phẩm, giá vốn tính từ nguyên liệu, báo khi thiếu *[đã kiểm: hướng dẫn KiotViet, 24/09]*. Chỗ
+ngoại lệ của ADR 0004 co lại còn nửa *chất lượng* của sổ mẻ. Bản brainstorm cũng mắc đúng câu ấy.
+
+Thêm ba câu vào kịch bản buổi gặp ở 04: **A10** (tháng 12 năm ngoái có hết mùi không), **B7** (làm
+xong bao lâu mới bán được), **E4** (xin xem file Excel — cùng xem, không xin file, vì nó chứa
+thông tin khách). Tổng thành 24 câu và bốn lời xin.
+
+**Đã đo trong trình duyệt**, vì `pitch/` và `docs/` nằm ngoài tầm của cổng: Phần VI không tràn
+ngang ở 320, 390, 1280px; mục lục tự thêm Phần VI với 9 mục; cột xếp chồng đúng tỉ lệ 8:5:3:2.
+Phép đo tràn đã thử ngược — ép công thức V₂ về `nowrap` như một thẻ `<code>` thì trang tràn 511px.
+Đó cũng là lý do công thức nằm trong khối `.fx` chứ không trong `<code>`.
+
+**Chưa làm, cố ý:** chưa ai xem file Excel, nên §7 của 06 toàn là điều kiện "nếu file có…".
+Mọi con số minh hoạ ở 06 §4 và lịch ngược tháng 12 đều là số bịa để thấy độ nhạy, có nhãn.
 
 ## Tên file tài liệu đổi sang tiếng Anh — 21/09/2026
 
@@ -135,9 +163,12 @@ Shell của **cả 5 trang** đã được sinh lại từ một nguồn — đ�
 
 ```
 shop: OK (5 mùi hương, 5 sản phẩm, 5 câu hỏi Tìm mùi, 3 cỡ hộp quà, 3 cách thanh toán,
-          5 trang, 15 tài liệu).
-smoke: OK (12 phép đo).
+          5 trang, 17 tài liệu).
 ```
+
+Số trên đọc từ lần chạy 24/09/2026. Tầng 2 (`smoke.js`) lần ấy **BỎ QUA** — máy thiếu
+`playwright-core` cả ở Node mặc định (fnm v16) lẫn Node của Homebrew. Không ảnh hưởng tới phiên
+ấy vì nó không chạm trang nào smoke đo; phiên sau sửa trang cửa hàng thì phải cài rồi chạy lại.
 
 Ba mục mức XEM, đều cố ý:
 1. phân bố mùi thắng của Tìm mùi (17,2% → 23,8%);
@@ -148,7 +179,10 @@ Ba mục mức XEM, đều cố ý:
 
 1. **Đọc [docs/04-NEGOTIATION.md](docs/04-NEGOTIATION.md) trước buổi gặp.** Mục tiêu buổi gặp đầu là
    *khám phá*, không phải trình diễn. Nếu hôm đó nói nhiều hơn nghe thì buổi gặp hỏng.
-2. **Hỏi cho được giá vốn một cây nến.** Thiếu nó thì mọi phép tính chỉ nói về doanh thu.
+2. **Hỏi cho được giá vốn một cây nến.** Thiếu nó thì mọi phép tính chỉ nói về doanh thu. Từ
+   24/09: cách tốt hơn hỏi là **xin xem file Excel** (câu E4) rồi tính hai cách
+   ([docs/06-VALUE-CHAIN.md](docs/06-VALUE-CHAIN.md) §4) — câu trả lời từ trí nhớ nhiều khả năng
+   thiếu phần cây lỗi, cây thử, bao bì.
 3. Xin nội dung 5 mùi → điền vào `data/shop.json` → hạ **10** cờ `placeholder`
    (`scents` 5 + `products` 5). 18 cờ còn lại là chính sách ship, thanh toán và cam kết
    thương hiệu — phải hỏi riêng, đừng tưởng xin xong 5 mùi là hết cờ.
@@ -157,9 +191,11 @@ Ba mục mức XEM, đều cố ý:
    có đủ điều kiện dùng API Shopee không. Máy không đọc được hai trang đó.
 6. Hỏi luật sư về nghĩa vụ thông báo website sau 01/07/2026 — xem sổ nợ mục 5.
 
-## Ba thứ đừng làm
+## Bốn thứ đừng làm
 
 - **Đừng xây phần mềm quản lý bán hàng.** [adr/0004](docs/adr/0004-dont-rebuild-retail-software.md).
+- **Đừng nói "không phần mềm bán lẻ nào biết công thức nến"** — KiotViet biết
+  ([docs/06-VALUE-CHAIN.md](docs/06-VALUE-CHAIN.md) §5). Câu ấy từng nằm trong bản đề xuất.
 - **Đừng hứa đồng bộ Shopee** trước khi xác minh xong điều kiện ở việc số 5.
 - **Đừng tin con số "quiz tăng chuyển đổi 40%"** hay bất kỳ số uplift nào đang lưu hành —
   tất cả đều do chính công ty bán phần mềm quiz công bố, không có nhóm đối chứng. Đã truy

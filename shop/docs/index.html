@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scentsitive — toàn bộ tri thức dự án</title>
-<meta name="description" content="Bản đọc gộp của 13 tài liệu trong shop/docs: chẩn đoán kinh doanh, lộ trình, đối thủ, pháp lý, kịch bản đàm phán, quyết định kiến trúc và sổ nợ.">
+<meta name="description" content="Bản đọc gộp của 13 tài liệu trong shop/docs: chẩn đoán kinh doanh, lộ trình, đối thủ, pháp lý, kịch bản đàm phán, chuỗi từ nguyên liệu tới khách quay lại, quyết định kiến trúc và sổ nợ.">
 
 <!-- Trang này tự chứa hoàn toàn: không link CSS ngoài, không gọi font ngoài.
      Cố ý, và lý do nằm ngay trong chính bộ tài liệu nó tóm tắt — xem ADR 0005:
@@ -276,6 +276,22 @@ figure figcaption{font-size:13px; color:var(--ink-3); margin-top:14px; line-heig
 }
 .steps li b{display:block; margin-bottom:3px; color:var(--ink)}
 
+/* ─── phần VI: chuỗi mắt xích ────────────────────────────── */
+tr.grp td{
+  background:var(--surface-2); font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:650; padding:8px 14px;
+}
+td .dot{display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:7px; vertical-align:1px}
+table.chain td:nth-child(3){white-space:nowrap}
+/* Công thức dài KHÔNG được nằm trong <code>: code có white-space:nowrap, và dòng V₂ dài
+   ~85 ký tự sẽ đẩy trang tràn ngang ở 320px. Khối riêng, cho phép xuống dòng. */
+.fx{
+  font:500 14.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  background:var(--surface-3); border:1px solid var(--line); border-radius:8px;
+  padding:9px 12px; margin:0 0 10px; max-width:none; overflow-wrap:anywhere;
+}
+.pane .note{margin:0; font-size:15px; color:var(--ink-2); max-width:none}
+
 hr{border:0; border-top:1px solid var(--line); margin:34px 0}
 footer{
   border-top:1px solid var(--line); margin-top:40px; padding:26px 0 0;
@@ -300,7 +316,7 @@ footer p{max-width:74ch}
       kèm đủ chỗ mà lập luận ấy có thể sai.
     </p>
     <div class="meta">
-      <span>Nguồn: 8 tài liệu + 5 ADR · viết 20/09/2026, rà lại 21/09/2026</span>
+      <span>Nguồn: 8 tài liệu + 5 ADR · viết 20/09/2026, rà lại 21/09/2026, thêm phần VI 24/09/2026</span>
       <button class="theme-btn" id="tt" type="button">Đổi nền sáng/tối</button>
     </div>
   </div>
@@ -322,8 +338,9 @@ footer p{max-width:74ch}
 
   <div class="box risk">
     <b class="tag">Đọc cái này trước khi tin bất cứ con số nào</b>
-    <p>Toàn bộ dữ kiện về shop gồm đúng <strong>năm thứ</strong>, và cả năm đều nghe kể lại từ
-    người thứ ba. <strong>Chưa ai gặp chủ shop.</strong> Mọi đề xuất trong đây là giả thuyết,
+    <p>Toàn bộ dữ kiện về việc làm ăn của shop gồm đúng <strong>năm thứ</strong>, và cả năm đều
+    nghe kể lại từ người thứ ba. Ngày 24/09 có thêm một dữ kiện về công cụ — chị ấy dùng Excel từ
+    lúc nhập nguyên liệu tới lúc bán, xem <a href="#s6">Phần VI</a>. <strong>Chưa ai gặp chủ shop.</strong> Mọi đề xuất trong đây là giả thuyết,
     và chỗ nào là giả thuyết thì có ghi.</p>
   </div>
 
@@ -1043,6 +1060,8 @@ footer p{max-width:74ch}
     có khuyến nghị thật thì <strong>nói thẳng rằng mình làm ở đó</strong>. Lời khuyên ấy vẫn đúng —
     nhưng nó chỉ giữ được sức nặng khi người nghe biết ai đang nói. <strong>Để chị ấy tự phát hiện
     sau thì mất sạch.</strong></p>
+    <p>Từ 24/09/2026 lời khuyên ấy phủ thêm một khâu — nửa định lượng của sổ mẻ sản xuất (6.5) — và
+    bản đề xuất dẫn thẳng hướng dẫn sử dụng KiotViet làm nguồn. Nói ra càng phải sớm.</p>
   </div>
 
   <h3><span class="n">4.2</span> Tư thế, và điều món đồ đã dựng KHÔNG chứng minh</h3>
@@ -1083,6 +1102,7 @@ footer p{max-width:74ch}
       <tr><td>A7</td><td>Tháng trước chạy quảng cáo hết bao nhiêu?</td><td>Nếu đang đốt tiền ads thì bài toán khác hẳn</td></tr>
       <tr><td>A8</td><td>Tỉ lệ hoàn/huỷ?</td><td>COD hoàn đơn là mất tiền ship hai chiều</td></tr>
       <tr><td>A9</td><td>Năm ngoái tháng nào bán nhiều nhất?</td><td>Kiểm chéo với đỉnh tháng 12. Số của chị ấy đáng tin hơn</td></tr>
+      <tr><td>A10</td><td><strong>Tháng 12 năm ngoái có hết mùi nào giữa chừng không?</strong> Hay dư nhiều sau mùa?</td><td>Quyết định lịch ngược tháng 12 có đáng làm không (6.7). Chưa từng hết thì chị ấy đã biết cách lo mùa của mình</td></tr>
     </tbody>
   </table></div>
 
@@ -1095,7 +1115,8 @@ footer p{max-width:74ch}
       <tr><td>B3</td><td>Từ lúc khách nhắn tới lúc gói xong, chị làm những bước gì?</td><td>Đếm số bước. Chỗ nào lặp lại mà máy làm được thì đó là chỗ duy nhất phần mềm có lý</td></tr>
       <tr><td>B4</td><td><strong>Chị làm nến lúc nào? Một mẻ bao nhiêu cây, mất bao lâu?</strong></td><td><strong>Đây là trần thật của việc mở rộng</strong></td></tr>
       <tr><td>B5</td><td>Chỗ nào mất thời gian nhất mà chị thấy vô lý nhất?</td><td></td></tr>
-      <tr><td>B6</td><td>Chị đang dùng công cụ gì?</td><td>Nếu đã mua SaaS rồi không dùng thì vấn đề chưa bao giờ là phần mềm</td></tr>
+      <tr><td>B6</td><td>Chị đang dùng công cụ gì?</td><td>Nếu đã mua SaaS rồi không dùng thì vấn đề chưa bao giờ là phần mềm. <strong>Đã biết một nửa (24/09): Excel, từ nhập nguyên liệu tới bán.</strong> Nửa còn lại là file có gì — lời xin thứ tư ở dưới</td></tr>
+      <tr><td>B7</td><td><strong>Làm xong một mẻ thì bao lâu mới bán được? Cây đang chờ để ở đâu?</strong></td><td>Có ủ thì có hai con số tồn kho — “đã đổ” và “bán được”. Hỏi luôn: chỗ làm nến có điều hoà không (6.8)</td></tr>
     </tbody>
   </table></div>
 
@@ -1112,7 +1133,7 @@ footer p{max-width:74ch}
 
   <div class="box ok">
     <b class="tag">Nhóm E — xin xem, đừng chỉ hỏi</b>
-    <p>Ba lời xin này có giá trị hơn cả 22 câu ở trên cộng lại, vì chúng cho <strong>dữ liệu thật
+    <p>Bốn lời xin này có giá trị hơn cả 24 câu ở trên cộng lại, vì chúng cho <strong>dữ liệu thật
     thay vì trí nhớ</strong>:</p>
     <ul style="margin-bottom:8px">
       <li><strong>“Chị cho em xem 10 đơn gần nhất được không?”</strong> — nói trước: em không cần tên
@@ -1120,6 +1141,9 @@ footer p{max-width:74ch}
       <li><strong>“Chị cho em xem hộp tin nhắn hôm nay?”</strong> — bằng chứng trực tiếp cho hoặc
         chống lại Tìm mùi.</li>
       <li><strong>“Mình mở Seller Centre xem một đơn đã hoàn tất nhé?”</strong></li>
+      <li><strong>“Chị cho em xem file Excel chị đang dùng được không?”</strong> — cùng xem trên máy
+        chị ấy, không xin file. Tám thứ cần nhìn ở 6.6; file có sheet nhập thì giá vốn trả lời được
+        bằng số đã ghi.</li>
     </ul>
     <p style="margin-bottom:0">Cách xin cho khỏi kỳ: <strong>cùng xem trên điện thoại của chị
     ấy</strong>, không xin xuất file, không chụp màn hình trừ khi chị ấy tự đề nghị.</p>
@@ -1248,7 +1272,7 @@ footer p{max-width:74ch}
   <p><strong>Không phải một hợp đồng đã ký.</strong> Là năm thứ này:</p>
   <ol class="steps">
     <li><b>Một buổi hai đã có ngày</b>không phải “để em nhắn lại chị sau”.</li>
-    <li><b>Số thật trong tay</b>giá vốn, tổng đơn tháng trước, <strong>chia theo kênh</strong>, và phí sàn trên một đơn thật. Riêng con số chia theo kênh quyết định luôn là chặng 1 có nên mở không.</li>
+    <li><b>Số thật trong tay</b>giá vốn, tổng đơn tháng trước, <strong>chia theo kênh</strong>, và phí sàn trên một đơn thật. Riêng con số chia theo kênh quyết định luôn là chặng 1 có nên mở không. Chưa có giá vốn thì <strong>một buổi hẹn xem file Excel</strong> cũng tính — nó trả lời câu ấy tốt hơn trí nhớ.</li>
     <li><b>Nội dung 5 mùi thật</b>tên, mô tả, ba tầng hương. Nó gỡ được <strong>10 trong 28 mục placeholder</strong>, không tốn gì. 18 cờ kia — ship, thanh toán, cam kết thương hiệu — nằm ở những câu hỏi khác.</li>
     <li><b>Biết chị ấy muốn shop này thành cái gì</b>Nếu câu trả lời là “vừa vừa thôi” thì đó là phát hiện giá trị nhất của cả buổi, dù nó phá kế hoạch.</li>
     <li><b>Ba thử nghiệm đã được đồng ý chạy</b>Kết quả của chúng là nội dung của buổi hai.</li>
@@ -1297,9 +1321,10 @@ footer p{max-width:74ch}
       <tr><td>Cho khách chọn được món</td><td>Sàn + nhắn tin tay</td><td><strong>Có thể</strong> — chỗ Tìm mùi đang thử. Chưa xác nhận</td></tr>
       <tr><td>Nhận tiền</td><td>Sàn, COD, chuyển khoản</td><td>Một phần. VietQR + báo-có tự động là đủ</td></tr>
       <tr><td>Giao hàng</td><td>Sàn, hoặc đặt tay</td><td>Chưa. Nối khi việc nhập tay thành gánh nặng</td></tr>
-      <tr><td>Biết còn bao nhiêu hàng</td><td>Trong đầu chủ shop</td><td>Chưa. Khi bán hụt lần đầu thì <strong>mua</strong>, không xây</td></tr>
+      <tr><td>Biết còn bao nhiêu hàng</td><td>Excel, nếu dữ kiện 24/09 đúng</td><td>Không. File lệch kệ thật tới mức bán hụt một lần thì <strong>mua</strong>, không xây</td></tr>
       <tr><td><strong>Giữ khách quay lại</strong></td><td>Gần như chưa ai lo</td><td><strong>Chỗ trống lớn nhất, và nó không cần phần mềm để thử</strong></td></tr>
-      <tr><td>Quản lý nguyên vật liệu</td><td>Trong đầu chủ shop</td><td>Không. Nửa định lượng <strong>đã có người bán</strong>; nửa chất lượng, ở quy mô này, là một tờ giấy. <em>Bản trước ghi “đây là chỗ phần mềm riêng thắng” — sai, sửa 24/09/2026</em></td></tr>
+      <tr><td>Quản lý nguyên vật liệu</td><td>Excel, như trên</td><td>Không. Nửa định lượng <strong>đã có người bán</strong>; nửa chất lượng là một tờ giấy (6.5). <em>Bản trước ghi “đây là chỗ phần mềm riêng thắng” — sai, sửa 24/09/2026</em></td></tr>
+      <tr><td>Biết một cây nến thật sự tốn bao nhiêu</td><td>Chưa ai — đây là biến <code>V</code></td><td>Không cần xây: nếu file có sheet nhập thì <strong>tính được từ số đã ghi</strong>, hai cách (6.4)</td></tr>
     </tbody>
   </table></div>
 
@@ -1451,6 +1476,303 @@ footer p{max-width:74ch}
   </table></div>
 </section>
 
+<!-- ══════════════ PHẦN VI ══════════════ -->
+<section id="s6">
+  <div class="part-head"><span>Phần VI · thêm 24/09/2026</span><h2>Chuỗi từ nguyên liệu tới khách quay lại</h2></div>
+
+  <div class="box key">
+    <b class="tag">Câu hỏi của phần này</b>
+    <p>Chị ấy dùng Excel cho mọi thứ, từ lúc nhập nguyên liệu tới lúc bán. Có mắt xích nào trong
+    đó đáng can thiệp không? <strong>Về phía phần mềm: không</strong> — dàn ra 18 mắt xích thì không
+    chỗ nào viết mã là lời giải tốt nhất ở quy mô này. <strong>Về phía phân tích: có</strong>, và nó
+    không nằm ở mắt xích nào mà ở <strong>chỗ nối</strong> giữa chúng — chỗ nối lớn nhất chính là
+    giá vốn <code>V</code> mà cả bộ tài liệu đang treo vào.</p>
+  </div>
+
+  <h3><span class="n">6.1</span> Dữ kiện mới, và nó đổi gì</h3>
+  <p class="src">Nguồn: 06 §1 · Đạt ghi nhận 24/09/2026 <span class="c c-no">đoán</span> — file có những sheet nào thì chưa ai xem</p>
+
+  <ul>
+    <li><strong>Câu B6 ở buổi gặp đã có một nửa câu trả lời.</strong> Nửa còn lại — file có những
+      sheet nào, sheet nào còn sống — chỉ biết được khi nhìn (6.6).</li>
+    <li><strong>Thói quen ghi chép đã có sẵn.</strong> Mọi hệ thống ghi chép hỏng ở cùng một chỗ: bắt
+      người ta ghi. Chị ấy ghi rồi — cái đang có là <strong>dữ liệu</strong>, không phải vấn đề.
+      Không đề xuất công cụ nào trước khi đọc nó.</li>
+    <li><strong>Câu hỏi giá vốn không còn phải hỏi trí nhớ.</strong> Nếu file có sheet nhập, nó tính
+      được từ số đã ghi (6.4).</li>
+  </ul>
+
+  <div class="box warn">
+    <p>“Dùng Excel từ nhập tới bán” có thể là ba sheet nối nhau bằng công thức, cũng có thể là một
+    sheet đơn hàng cộng một sheet nhập bỏ dở từ tháng 3. Hai trường hợp dẫn tới hai kết luận khác
+    nhau. <strong>Mọi thứ trong phần này mang điều kiện “nếu file có…”.</strong></p>
+  </div>
+
+  <h3><span class="n">6.2</span> Dàn phẳng: 18 mắt xích, bốn loại lời giải</h3>
+  <p class="src">Nguồn: 06 §2</p>
+
+  <figure>
+    <div class="ct">18 mắt xích, xếp theo lời giải tốt nhất ở quy mô 5–10 đơn/ngày</div>
+    <div class="cs">“Mua” không có nghĩa là phải mua ngay — Excel còn chạy được thì cứ để nó chạy. Nó nghĩa là: khi đau thì mua, không xây</div>
+    <div class="stack" role="img" aria-label="18 mắt xích: Mua 8, Giấy 5, Phân tích 3, Người 2, Phần mềm riêng 0">
+      <span style="background:var(--s1); width:44.44%" title="Mua · 8"></span>
+      <span style="background:var(--s3); width:27.78%" title="Giấy · 5"></span>
+      <span style="background:var(--s2); width:16.67%" title="Phân tích · 3"></span>
+      <span style="background:var(--ink-3); width:11.11%" title="Người · 2"></span>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--s1)"></i>Mua — phần mềm bán sẵn hoặc sàn đã làm · <b>8</b></span>
+      <span><i style="background:var(--s3)"></i>Giấy — một quy ước, một tờ giấy · <b>5</b></span>
+      <span><i style="background:var(--s2)"></i>Phân tích — số đã có, thiếu người đọc · <b>3</b></span>
+      <span><i style="background:var(--ink-3)"></i>Người — tay nghề, gu, thương hiệu · <b>2</b></span>
+    </div>
+    <figcaption>Loại thứ năm — <strong>phần mềm riêng</strong>, chỗ mà viết mã là lời giải tốt nhất —
+    có <strong>0</strong> mắt xích. Bản trước của bộ tài liệu cho nó 1: nguyên vật liệu và mẻ sản
+    xuất. 6.5 giải thích vì sao con số ấy về 0.</figcaption>
+  </figure>
+
+  <div class="tw"><table class="chain">
+    <thead><tr><th>#</th><th>Mắt xích</th><th>Loại</th><th>Vì sao</th></tr></thead>
+    <tbody>
+      <tr class="grp"><td colspan="4">Nguyên liệu vào</td></tr>
+      <tr><td>1</td><td>Đặt nguyên liệu: sáp, tinh dầu, bấc, ly, nắp, nhãn, hộp</td><td><i class="dot" style="background:var(--s1)"></i>Mua</td><td>Nguồn của mọi đơn giá trong giá vốn. Giá nhập cũ nằm lại trong phần tính giá vốn là lỗi hay gặp nhất</td></tr>
+      <tr><td>2</td><td>Nhận hàng, ghi mã lô</td><td><i class="dot" style="background:var(--s3)"></i>Giấy</td><td>Điểm bắt đầu của mọi truy vết. Không ghi lô ở đây thì về sau không truy được gì</td></tr>
+      <tr><td>3</td><td>Kho nguyên liệu</td><td><i class="dot" style="background:var(--s1)"></i>Mua</td><td>Excel trừ tay nên lệch dần với kệ thật; phiếu sản xuất tự trừ và báo khi thiếu <span class="c c-ok">đã kiểm</span></td></tr>
+      <tr class="grp"><td colspan="4">Làm ra cây nến</td></tr>
+      <tr><td>4</td><td>Công thức, thử mùi mới</td><td><i class="dot" style="background:var(--ink-3)"></i>Người</td><td>Phần mềm lưu công thức hiện hành, không lưu vì sao đổi và đã thử gì. Cây đốt thử là chi phí không nằm trong định mức nào</td></tr>
+      <tr><td>5</td><td>Lên lịch đổ</td><td><i class="dot" style="background:var(--s2)"></i>Phân tích</td><td>Độ trễ = thời gian ủ + thời gian giao nguyên liệu. Tháng 12 phải quyết từ tháng 10</td></tr>
+      <tr><td>6a</td><td>Đổ mẻ — phần định lượng</td><td><i class="dot" style="background:var(--s1)"></i>Mua</td><td>Đúng việc phiếu sản xuất làm <span class="c c-ok">đã kiểm</span></td></tr>
+      <tr><td>6b</td><td>Đổ mẻ — phần chất lượng</td><td><i class="dot" style="background:var(--s3)"></i>Giấy</td><td>Nhiệt độ lúc pha hương, lúc rót là số đọc tức thời — mười phút sau không còn ở đâu. Phần mềm chỉ có ô ghi chú</td></tr>
+      <tr><td>7</td><td>Nguội và ủ</td><td><i class="dot" style="background:var(--s3)"></i>Giấy</td><td>Phần mềm có “không bán <em>sau</em> ngày X”, không có “không bán <em>trước</em> ngày X”. Ghi phiếu vào ngày ủ xong, cây đang ủ để kệ riêng</td></tr>
+      <tr><td>8</td><td>Kiểm lỗi, đốt thử</td><td><i class="dot" style="background:var(--s3)"></i>Giấy</td><td>Tỉ lệ lỗi là đầu vào của giá vốn thật. Đốt thử trước hết là chuyện an toàn, sau mới là chất lượng</td></tr>
+      <tr><td>9</td><td>Hoàn thiện: nhãn, nắp, hộp</td><td><i class="dot" style="background:var(--s1)"></i>Mua</td><td>Đưa bao bì vào định mức — bao bì hay bị quên khi tính giá vốn</td></tr>
+      <tr class="grp"><td colspan="4">Có hàng để bán</td></tr>
+      <tr><td>10</td><td>Kho thành phẩm</td><td><i class="dot" style="background:var(--s1)"></i>Mua</td><td>Ba kênh chung một kệ; đồng bộ nhiều kênh là lớp commodity (3.1)</td></tr>
+      <tr><td>11</td><td>Định giá</td><td><i class="dot" style="background:var(--s2)"></i>Phân tích</td><td>Cần giá vốn thật <strong>và</strong> phí từng kênh. Hai mức giảm của hộp quà đang là số dựng tạm</td></tr>
+      <tr class="grp"><td colspan="4">Bán và giao</td></tr>
+      <tr><td>12</td><td>Nội dung, listing</td><td><i class="dot" style="background:var(--ink-3)"></i>Người</td><td>Chỗ storefront đang đứng — Phần I–III đã bàn</td></tr>
+      <tr><td>13</td><td>Nhận đơn</td><td><i class="dot" style="background:var(--s1)"></i>Mua</td><td>Sàn lo đơn sàn. Đơn Instagram chỉ nằm trong tin nhắn và trong Excel — có cột kênh thì câu A4 trả lời bằng số</td></tr>
+      <tr><td>14</td><td>Thu tiền, đối soát</td><td><i class="dot" style="background:var(--s1)"></i>Mua</td><td>Báo-có tự động (3.2); cũng là chỗ nhìn thấy phí sàn thật</td></tr>
+      <tr><td>15</td><td>Gói và giao</td><td><i class="dot" style="background:var(--s1)"></i>Mua</td><td>Vỡ khi giao là chi phí ẩn thứ hai của giá vốn: một cây mới cộng một lần ship</td></tr>
+      <tr class="grp"><td colspan="4">Sau khi bán</td></tr>
+      <tr><td>16</td><td>Khiếu nại, đổi trả, đánh giá</td><td><i class="dot" style="background:var(--s3)"></i>Giấy</td><td>Không có mã mẻ trên đáy ly thì không có truy vết, sổ mẻ ghi kỹ đến đâu cũng vậy</td></tr>
+      <tr><td>17</td><td>Khách quay lại</td><td><i class="dot" style="background:var(--s2)"></i>Phân tích</td><td>Sheet đơn có số điện thoại thì tỉ lệ mua lại đo được từ số cũ, không phải chờ thử nghiệm</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Lần phân tích trước nhìn nửa <em>bán</em> của chuỗi và thấy hẹp; nhìn thêm nửa <em>làm</em>
+  cũng không đổi được điều đó — <strong>về phía phần mềm</strong>. Nhưng ba mắt xích loại Phân tích,
+  cộng năm chỗ nối ngay dưới, là chỗ duy nhất trong cả chuỗi mà người biết đọc số tạo ra được thứ
+  chị ấy chưa có.</p>
+
+  <h3><span class="n">6.3</span> Giá trị nằm ở chỗ nối, không nằm ở mắt xích</h3>
+  <p class="src">Nguồn: 06 §3</p>
+  <p>Câu hỏi có tiền đi kèm thì cần số từ <strong>nhiều</strong> mắt xích cùng lúc — đúng loại việc
+  Excel làm dở nhất: tra chéo giữa các sheet bằng tay, chép số sang sheet khác, mà số chép lại thì
+  không tự cập nhật.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Chỗ nối</th><th>Trả lời câu gì</th><th>File cần có gì</th></tr></thead>
+    <tbody>
+      <tr><td><strong>J1 · Giá vốn thật</strong><br>mắt xích 1, 4, 6a, 8, 9, 15</td><td>một cây <strong>bán được</strong> tốn bao nhiêu</td><td>sheet nhập có đơn giá; số cây làm ra hoặc bán ra</td></tr>
+      <tr><td><strong>J2 · Lãi theo kênh</strong><br>J1, 11, 13, 14</td><td>kênh nào thật sự có lời; hộp quà bán ở đâu thì còn lời</td><td>J1; cột kênh trong sheet đơn; phí thật của một đơn</td></tr>
+      <tr><td><strong>J3 · Mùa → lịch đổ → lịch nhập</strong><br>13, 5, 7, 1</td><td>tháng 12 mỗi mùi cần bao nhiêu cây, đổ từ ngày nào, đặt nguyên liệu ngày nào, cần bao nhiêu tiền mặt</td><td>sheet đơn có ngày và mùi, qua ít nhất tháng 11–12/2025</td></tr>
+      <tr><td><strong>J4 · Truy vết</strong><br>16, 10, 6b, 2</td><td>khách báo “không thơm” → mẻ nào → lô nào → còn bao nhiêu cây cùng lô ở ngoài</td><td>mã mẻ trên từng cây — <strong>không làm hồi tố được</strong>, chỉ bắt đầu được từ hôm nay</td></tr>
+      <tr><td><strong>J5 · Chu kỳ mua lại</strong><br>13, 17, 4</td><td>khách hết nến sau bao lâu; bao nhiêu người quay lại</td><td>sheet đơn có số điện thoại — chị ấy <strong>tự lọc trùng</strong>, không ai cần xem danh sách</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><strong>J1 đứng đầu</strong> vì mọi thứ khác đi qua nó: lãi theo kênh là giá bán trừ
+  <code>V</code> trừ phí; làm dư hay làm thiếu cho tháng 12 thì cả hai phía chi phí đều tính bằng
+  <code>V</code>; dấu của đòn bẩy AOV (1.4) và hai mức giảm của hộp quà cũng vậy.</p>
+
+  <h3><span class="n">6.4</span> Giá vốn tính hai cách — và chỗ chênh chính là câu trả lời</h3>
+  <p class="src">Nguồn: 06 §4</p>
+
+  <div class="two">
+    <div class="pane"><h4><span class="dot" style="background:var(--s1)"></span>Cách 1 · từ công thức</h4>
+      <p class="fx">V₁ = Σ (lượng trong công thức × đơn giá nhập)</p>
+      <p class="note">Con số chị ấy sẽ nói nếu được hỏi — và cũng là con số phần mềm in ra.</p></div>
+    <div class="pane"><h4><span class="dot" style="background:var(--s2)"></span>Cách 2 · từ tiền đã chi</h4>
+      <p class="fx">V₂ = (tiền nhập trong kỳ + tồn đầu kỳ − tồn cuối kỳ) ÷ số cây bán được làm ra trong kỳ</p>
+      <p class="note">Tiền đã chi thì không quên được: cây lỗi, cây thử, cây tặng, sáp hao khi rót, cây vỡ phải gửi lại đều nằm sẵn trong đó.</p></div>
+  </div>
+
+  <p><strong>Chỗ chênh g = V₂ ÷ V₁ − 1 là số đo của tất cả những thứ không ai ghi.</strong> Nó không
+  nói lỗ nằm ở đâu — nhưng nói có đáng đi tìm hay không, và đó là câu phải trả lời trước. Cây không
+  bán được không cộng theo đường thẳng: nếu một phần <code>L</code> số cây làm ra không bán được thì
+  giá vốn thật là V₁ ÷ (1 − L).</p>
+
+  <div class="tw"><table>
+    <caption>Mọi con số đầu vào đều bịa để thấy độ nhạy, không phải ước lượng: V₁ = 150.000 ₫ (mức thấp nhất đã dùng ở 1.4), 210 cây bán mỗi tháng <span class="c c-no">đoán</span>.</caption>
+    <thead><tr><th>Phần cây không bán được</th><th>Giá vốn thật</th><th>Chênh mỗi cây</th><th>Chênh mỗi tháng</th></tr></thead>
+    <tbody>
+      <tr><td>5%</td><td class="num">157.895 ₫</td><td class="num">7.895 ₫</td><td class="num">≈ 1,66 triệu ₫</td></tr>
+      <tr><td>10%</td><td class="num">166.667 ₫</td><td class="num">16.667 ₫</td><td class="num">3,5 triệu ₫</td></tr>
+      <tr><td>20%</td><td class="num">187.500 ₫</td><td class="num">37.500 ₫</td><td class="num">≈ 7,9 triệu ₫</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Dòng giữa: 3,5 triệu ₫ mỗi tháng trên doanh thu 63 triệu ₫ <span class="c c-no">đoán</span> là
+  <strong>5,6% doanh thu</strong> — cỡ phí xử lý giao dịch 6% của Shopee, chỉ khác là nó không hiện
+  ra trên màn hình nào.</p>
+
+  <h4>Ngưỡng — chọn TRƯỚC khi tính</h4>
+  <p>Số thoả thuận, không phải chuẩn ngành — chốt bằng miệng trước khi mở file.</p>
+  <div class="tw"><table>
+    <thead><tr><th>g</th><th>Nghĩa là</th><th>Làm gì</th></tr></thead>
+    <tbody>
+      <tr><td>dưới 5%</td><td>hao hụt không đáng lo</td><td>thêm đúng một cột “số cây lỗi”, rồi thôi. <strong>Không</strong> làm sổ mẻ phần chất lượng</td></tr>
+      <tr><td>5–15%</td><td>có lỗ, chưa biết ở đâu</td><td>thêm cột “lỗi gì” trong hai tháng, xem lỗi dồn vào mùi, tháng hay lô nào</td></tr>
+      <tr><td>từ 15%</td><td>lỗ đủ lớn để truy tới cùng</td><td>tờ giấy ba ô ở bàn đổ (6.5) có lý do tồn tại</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><strong>Chênh âm</strong> cũng là thông tin: có khoản nhập không được ghi, tức là file chưa đủ
+  để tin cho các phép tính còn lại. Bốn chỗ dễ sai: tồn đầu và cuối kỳ (chọn kỳ từ ba tháng, hoặc
+  đếm kho một lần), giá lên xuống (tính V₁ bằng giá trung bình của chính kỳ ấy), nguyên liệu dùng
+  chung (V₂ là trung bình cả shop), và công cùng phí kênh (cộng ở J2, không trộn vào đây).</p>
+
+  <h3><span class="n">6.5</span> Sổ mẻ: nửa đã có người bán, nửa còn trống</h3>
+  <p class="src">Nguồn: 06 §5 · sửa ADR 0004, bảng năng lực ở 5.1, và bản đề xuất</p>
+
+  <div class="box risk">
+    <b class="tag">Một khẳng định sai — sửa 24/09/2026</b>
+    <p>ADR 0004, bảng năng lực, và <strong>bản đề xuất mang đi gặp chị ấy</strong> cùng nói: nguyên
+    vật liệu và mẻ sản xuất là chỗ phần mềm riêng thắng, vì “không phần mềm bán lẻ đại trà nào biết
+    công thức của shop”. <strong>Câu ấy sai.</strong> KiotViet có tính năng <em>Hàng sản xuất</em>:
+    khai hàng thành phần — tức là công thức; hoàn thành phiếu sản xuất thì “tự động trừ tồn kho
+    nguyên vật liệu và cộng tồn kho thành phẩm”; giá vốn thành phẩm tính từ tổng giá vốn nguyên vật
+    liệu; báo khi không đủ nguyên liệu <span class="c c-ok">đã kiểm: hướng dẫn KiotViet</span>. Thêm
+    <em>Lô – hạn sử dụng</em>: tồn và giá vốn theo từng lô <span class="c c-ok">đã kiểm</span>; nối lô
+    nguyên liệu với lô thành phẩm thì <span class="c c-mid">chưa kiểm</span>.</p>
+    <p>Nặng hơn một lỗi thường vì hai lẽ: nó nằm trong thứ <strong>chị ấy sẽ đọc</strong>, và người
+    nói câu ấy làm ở chính công ty bán phần mềm đó (4.1).</p>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th>Nửa</th><th>Gồm</th><th>Ai lo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Định lượng</strong></td><td>công thức; mỗi mẻ trừ bao nhiêu nguyên liệu; còn đủ cho mấy mẻ; giá vốn theo công thức</td><td><strong>Mua</strong> — phiếu sản xuất làm đúng việc này</td></tr>
+      <tr><td><strong>Chất lượng</strong></td><td>nhiệt độ lúc pha hương, lúc rót; chuyện bất thường giữa chừng; số cây lỗi và lỗi gì; ngày ủ xong; kết quả đốt thử; mẻ nào dùng lô tinh dầu nào</td><td><strong>Giấy</strong> — phần mềm chỉ có một ô ghi chú</td></tr>
+    </tbody>
+  </table></div>
+
+  <p>Chỗ ngoại lệ duy nhất ADR 0004 dành cho phần mềm riêng co lại còn nửa chất lượng — và ở 5–10
+  đơn/ngày, nửa đó là một tờ giấy cộng vài cột trong sheet. <strong>Mua phần mềm làm V₁ tự động;
+  nó không làm g hiện ra</strong> — giá vốn nó in ra vẫn là giá của một cây đạt.</p>
+
+  <p>Tờ giấy, khi 6.4 cho thấy đáng làm, chỉ có <strong>ba ô</strong>: nhiệt độ lúc pha hương, nhiệt
+  độ lúc rót, và “có gì lạ không”. Luận điểm mạnh nhất của bản brainstorm giữ nguyên: mẻ <strong>có
+  chuyện</strong> thì kéo dài, mệt, và đúng hôm đó người ta bỏ qua sổ — nên dữ liệu thiếu lệch hẳn
+  về phía mẻ hỏng, và tập dữ liệu vô dụng đúng cho việc cần nó nhất. Tờ giấy phải nằm <strong>ở bàn
+  đổ, đúng lúc nhiệt kế đang chỉ số</strong>.</p>
+
+  <h3><span class="n">6.6</span> Nhìn file Excel: tám thứ, trước khi đề xuất bất cứ gì</h3>
+  <p class="src">Nguồn: 06 §6 · lời xin thứ tư ở 4.3</p>
+
+  <div class="box ok">
+    <p><strong>Cùng xem trên máy của chị ấy, không xin file.</strong> File có thể chứa tên, số điện
+    thoại, địa chỉ của mọi khách, và phép tính ở 6.4 không cần một dòng nào trong số đó. Cần mang về
+    tính thì xin <strong>bản đã xoá cột thông tin khách</strong>. Và đừng sửa gì trong file tại chỗ,
+    kể cả một công thức thấy rõ là sai — ghi lại, nói sau.</p>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Nhìn gì</th><th>Nó cho biết gì</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Có mấy sheet, mỗi sheet ứng với mắt xích nào</td><td>mắt xích không có sheet nào là đang nằm trong đầu chị ấy</td></tr>
+      <tr><td>2</td><td>Dòng cuối của mỗi sheet ghi ngày nào</td><td>sheet ngừng cập nhật thì hoặc hết đau, hoặc đau đến mức bỏ — hỏi là cái nào</td></tr>
+      <tr><td>3</td><td>Số giữa các sheet nối bằng công thức hay gõ lại</td><td>chỗ gõ lại là chỗ lệch</td></tr>
+      <tr><td>4</td><td>Đơn giá trong phần tính giá vốn là giá lần nhập nào</td><td>giá vốn đang cũ bao lâu</td></tr>
+      <tr><td>5</td><td>Có cột cây lỗi, cây hỏng không</td><td>không có thì giá vốn đang giả định mọi cây đều đạt</td></tr>
+      <tr><td>6</td><td>Tên mùi có viết thống nhất không</td><td>“Quế”, “quế”, “Cinnamon” là ba mùi với máy</td></tr>
+      <tr><td>7</td><td>Tồn trong file so với kệ thật — đếm <strong>một</strong> món</td><td>lệch bao nhiêu; lệch lớn thì mọi số tồn phải đọc kèm dấu hỏi</td></tr>
+      <tr><td>8</td><td>Sheet đơn có cột kênh, có số điện thoại không</td><td>có cột kênh thì <strong>câu A4 trả lời bằng số</strong>; có số điện thoại thì tỉ lệ mua lại đo được ngay</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3><span class="n">6.7</span> Việc đáng làm, và lịch ngược tháng 12</h3>
+  <p class="src">Nguồn: 06 §7 · mỗi việc mở bằng một sự kiện, không bằng một ngày</p>
+
+  <ol class="steps">
+    <li><b>Giá vốn hai cách (6.4)</b>Mở khi được xem file và file có sheet nhập. Một–hai buổi tối; chị ấy không phải đổi gì. Trả lời câu giá vốn bằng số, và trả lời luôn câu có cần sổ mẻ phần chất lượng không.</li>
+    <li><b>Lãi theo kênh (J2)</b>Sau việc 1, và sau khi cùng xem một đơn thật trong Seller Centre.</li>
+    <li><b>Lịch ngược tháng 12 (J3)</b>Khi file có đơn qua tháng 11–12/2025 <strong>và</strong> năm ngoái từng hết mùi giữa mùa (câu A10). Chưa từng hết thì bỏ qua: chị ấy đã biết cách lo mùa của mình.</li>
+    <li><b>Mã mẻ trên đáy ly</b>Ngay, không cần điều kiện — một con dấu ngày. Vô dụng cho tới ngày có khiếu nại; hôm ấy nó là cách duy nhất để truy.</li>
+    <li><b>Tờ giấy ba ô ở bàn đổ</b>Khi g từ 15%, hoặc có một mẻ hỏng cả mẻ, hoặc thuê người phụ đổ nến.</li>
+    <li><b>Quy ước ủ</b>Ghi phiếu sản xuất vào ngày ủ xong, cây đang ủ để kệ riêng có ghi ngày — khi chị ấy có ủ và đã từng bán cây chưa ủ đủ (câu B7).</li>
+    <li><b>Mua phần mềm cho nửa định lượng</b>Khi tồn trong file lệch kệ thật tới mức bán hụt một lần, hoặc có người thứ hai sửa file — và nói rõ mình làm ở đâu trước khi khuyên.</li>
+  </ol>
+  <p><strong>Không mở ở quy mô này:</strong> data logger nhiệt độ, app đốt thử, phần mềm truy vết. Mỗi
+  cái chờ một sự kiện riêng — lỗi bám theo nhiệt độ; một quy trình thử đang chạy bằng giấy mà vướng;
+  một lô nguyên liệu lỗi thật.</p>
+
+  <h4>Lịch ngược tháng 12, và vì sao nó gấp</h4>
+  <p>Minh hoạ với ba giả định, <strong>cả ba đều phải hỏi chị ấy</strong>: ủ 14 ngày <span class="c c-mid">chưa kiểm</span>,
+  số cây cần cho mùa đổ trải trong 3 tuần <span class="c c-no">đoán</span>, nhà cung cấp giao trong 7 ngày <span class="c c-no">đoán</span>.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Mốc</th><th>Ngày</th><th>Vì sao</th></tr></thead>
+    <tbody>
+      <tr><td>Đủ hàng cho mùa quà cuối năm</td><td class="num">01/12</td><td></td></tr>
+      <tr><td>Mẻ cuối phải đổ</td><td class="num">17/11</td><td>01/12 trừ 14 ngày ủ</td></tr>
+      <tr><td>Mẻ đầu phải đổ, nguyên liệu phải về</td><td class="num">27/10</td><td>trải 3 tuần trước mẻ cuối</td></tr>
+      <tr><td><strong>Đặt nguyên liệu</strong></td><td class="num"><strong>20/10</strong></td><td>trừ 7 ngày giao</td></tr>
+    </tbody>
+  </table></div>
+  <p>Với ba giả định ấy, <strong>cửa sổ đặt nguyên liệu cho tháng 12 đóng vào khoảng 20/10 — chưa tới
+  bốn tuần kể từ 24/09.</strong> Nó trùng đúng mốc “nội dung phải xong cuối tháng 10” của storefront
+  (1.8): hai đường găng gặp nhau trong cùng một tháng, và cả hai đều nằm trên thời gian của chị ấy.</p>
+
+  <div class="two">
+    <div class="pane"><h4><span class="dot" style="background:var(--risk)"></span>Thiếu một cây trong tháng 12</h4>
+      <ul><li>mất phần lời của cây ấy — giá bán trừ <code>V</code> trừ phí kênh</li><li>cộng khả năng mất luôn người khách</li></ul></div>
+    <div class="pane"><h4><span class="dot" style="background:var(--ok)"></span>Thừa một cây sau tháng 12</h4>
+      <ul><li>nến không hết hạn như thực phẩm — thừa thì bán tiếp sang đầu năm</li><li>mất tiền vốn nằm kệ vài tháng, cộng phần hương nhạt đi <span class="c c-mid">chưa kiểm</span></li></ul></div>
+  </div>
+  <p>Thiếu đắt hơn thừa, nên lời giải nghiêng về <strong>làm dư</strong> — trần thật là <strong>tiền
+  mặt ứng trước</strong> và <strong>chỗ để ủ</strong>, không phải công thức. Mỗi mùi chỉ có một tháng
+  12 để nhìn, quá ít để dự báo riêng: dự báo <strong>tổng</strong> trước (đối chiếu +37,23% của
+  ngành <span class="c c-ok">đã kiểm</span>), rồi chia theo tỉ phần từng mùi trong 3–6 tháng gần nhất.</p>
+
+  <h3><span class="n">6.8</span> Bản brainstorm về sổ mẻ: chỗ giữ, chỗ sửa</h3>
+  <p class="src">Nguồn: 06 §8</p>
+  <div class="two">
+    <div class="pane"><h4><span class="dot" style="background:var(--ok)"></span>Giữ</h4>
+      <ul>
+        <li>Shop này <strong>làm</strong> hàng, không chỉ bán — phần trước lúc rót là chỗ chưa ai chạm</li>
+        <li>Số đọc tức thời, và dữ liệu thiếu <strong>không ngẫu nhiên</strong> → giấy ở bàn đổ thắng app</li>
+        <li>Giá vốn chia cho số cây <strong>đạt</strong>, không phải số cây đổ</li>
+        <li>Ba trạng thái tồn kho: đang ủ, bán được, đã bán</li>
+        <li>Số liệu là của nhà cung cấp Mỹ; đừng phán “phải pha ở 85°C”; đừng mở lời bằng “số hoá sổ tay”</li>
+      </ul></div>
+    <div class="pane"><h4><span class="dot" style="background:var(--risk)"></span>Sửa</h4>
+      <ul>
+        <li>“Phần mềm 300–500k không làm sổ mẻ” → làm <strong>nửa định lượng</strong> (6.5)</li>
+        <li>Mẻ 4–6 cây, khoảng 4 tờ/tuần ≈ 70–100 cây/tháng — không khớp 150–300 cây/tháng của 5–10 đơn/ngày. Hỏi câu B4, đừng suy</li>
+        <li>ASTM F2417 là tiêu chuẩn <strong>an toàn cháy</strong> cho nến <span class="c c-ok">đã kiểm</span>, không phải giao thức đo độ toả hương — nên đốt thử trước hết vì an toàn</li>
+        <li>“Nhiệt độ phòng chênh theo mùa” → ở Việt Nam biến đáng nghi hơn là điều hoà bật hay tắt</li>
+        <li>Xếp hạng: <strong>đo lỗ trước</strong> (6.4), rồi mới quyết có cần sổ mẻ</li>
+        <li>Chặn bán cây chưa ủ bằng kệ riêng và ngày ghi phiếu, không bằng phần mềm</li>
+      </ul></div>
+  </div>
+
+  <h3><span class="n">6.9</span> Giá trị lớn đến đâu</h3>
+  <p class="src">Nguồn: 06 §9</p>
+  <div class="box ok">
+    <p><strong>Về phần mềm, cảm giác “hẹp” là đúng — và sau phần này còn hẹp hơn.</strong> Chỗ ngoại
+    lệ duy nhất dành cho phần mềm riêng hoá ra đã có người bán, trong đúng tầm giá chị ấy trả được.</p>
+    <p><strong>Về phân tích, có một việc có giá trị thật, rẻ, làm được ngay khi thấy file:</strong> giá
+    vốn hai cách → lãi theo kênh → lịch tháng 12. Ba việc ấy chạm vào những quyết định có tiền thật
+    đi kèm, và chúng dùng <strong>số của chị ấy</strong>.</p>
+    <p>Nhưng nó <strong>không phải một sản phẩm, và gần như không phải một nguồn tiền</strong> — vài
+    buổi tối một lần, rồi mỗi quý nhìn lại. Nếu điều Đạt muốn là tiền, đây không phải chỗ. Nếu là
+    học, một mối quan hệ làm ăn, hay một bài toán dữ liệu thật trên số thật, thì đây là <strong>cửa
+    vào tốt hơn storefront</strong>: nó trả lời một câu chị ấy thật sự chưa biết, trước khi xin chị
+    ấy đổi bất cứ thói quen nào.</p>
+  </div>
+</section>
+
 <footer>
   <p><strong>Trang này là bản đọc, không phải nguồn.</strong> Nguồn là 13 file markdown trong
   <code>shop/docs</code> cộng <code>shop/HANDOFF.md</code> và <code>shop/STATUS-REPORT.md</code>.
@@ -1458,7 +1780,7 @@ footer p{max-width:74ch}
   trang này.</p>
   <p>Mọi con số mang dấu <span class="c c-no">đoán</span> là giả định dựng để tính, không phải sự
   thật về một doanh nghiệp có thật. Chưa ai gặp chủ shop.</p>
-  <p style="margin-bottom:0">Viết 20/09/2026 · rà lại 21/09/2026 · <a href="../">về cửa hàng</a> · <a href="00-READ-THIS-FIRST.md">mục lục bản markdown</a></p>
+  <p style="margin-bottom:0">Viết 20/09/2026 · rà lại 21/09/2026 · thêm phần VI 24/09/2026 · <a href="../">về cửa hàng</a> · <a href="00-READ-THIS-FIRST.md">mục lục bản markdown</a></p>
 </footer>
 
 </main>

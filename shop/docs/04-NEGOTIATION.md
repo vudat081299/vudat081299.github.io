@@ -65,6 +65,10 @@ khuyến nghị KiotViet thật thì **nói thẳng rằng mình làm ở đó**
 ([adr/0004](adr/0004-dont-rebuild-retail-software.md)) — nhưng nó chỉ giữ được sức nặng khi
 người nghe biết ai đang nói. Để chị ấy tự phát hiện sau thì mất sạch.
 
+Từ 24/09/2026 lời khuyên ấy phủ thêm một khâu — nửa định lượng của sổ mẻ sản xuất
+([06](06-VALUE-CHAIN.md) §5) — và bản đề xuất dẫn thẳng hướng dẫn sử dụng KiotViet làm nguồn. Nói
+ra càng phải sớm.
+
 ---
 
 ## 1. Tư thế: không bán phần mềm, mà thử việc làm cộng sự
@@ -129,6 +133,7 @@ việc tự nhớ sai.
 | A7 | Tháng trước **chạy quảng cáo hết bao nhiêu?** | Nếu đang đốt tiền ads thì bài toán khác hẳn |
 | A8 | **Tỉ lệ hoàn/huỷ?** | COD hoàn đơn là mất tiền ship hai chiều |
 | A9 | **Năm ngoái tháng nào bán nhiều nhất?** | Kiểm chéo với đỉnh tháng 12 (+37,23%) [đã kiểm: metric.vn]. Số của chị ấy đáng tin hơn |
+| A10 | **Tháng 12 năm ngoái có hết mùi nào giữa chừng không?** Hay dư nhiều sau mùa? | Quyết định lịch ngược tháng 12 có đáng làm không — [06](06-VALUE-CHAIN.md) §7. Chưa từng hết thì chị ấy đã biết cách lo mùa của mình |
 
 ### Nhóm B — thời gian. Sản phẩm thật hay nấp ở đây
 
@@ -139,7 +144,8 @@ việc tự nhớ sai.
 | B3 | **Từ lúc khách nhắn tới lúc gói xong, chị làm những bước gì?** Bảo chị ấy kể ra từng bước | Đếm số bước. Chỗ nào lặp lại mà máy làm được thì đó là chỗ duy nhất phần mềm có lý |
 | B4 | **Chị làm nến lúc nào? Một mẻ bao nhiêu cây, mất bao lâu?** | **Đây là trần thật của việc mở rộng.** Nếu một mẻ 20 cây mất một ngày rưỡi thì 50 đơn/ngày là bài toán xưởng chứ không phải bài toán phần mềm |
 | B5 | **Chỗ nào mất thời gian nhất mà chị thấy vô lý nhất?** | |
-| B6 | **Chị đang dùng công cụ gì?** Excel, sổ tay, back office của sàn, hay một phần mềm nào | Nếu đã mua SaaS rồi không dùng thì vấn đề chưa bao giờ là phần mềm |
+| B6 | **Chị đang dùng công cụ gì?** Excel, sổ tay, back office của sàn, hay một phần mềm nào | Nếu đã mua SaaS rồi không dùng thì vấn đề chưa bao giờ là phần mềm. **Đã biết một nửa (24/09/2026): Excel, từ nhập nguyên liệu tới bán.** Nửa còn lại là file có gì — E4 |
+| B7 | **Làm xong một mẻ thì bao lâu mới bán được? Cây đang chờ để ở đâu?** | Có ủ thì có hai con số tồn kho — "đã đổ" và "bán được" — và bán nhầm cây chưa ủ đủ rơi thẳng vào đánh giá của khách. Hỏi luôn: chỗ làm nến có điều hoà không — [06](06-VALUE-CHAIN.md) §8 |
 
 ### Nhóm C — đã thử gì, hỏng ở đâu
 
@@ -160,7 +166,7 @@ việc tự nhớ sai.
 
 ### Nhóm E — xin xem, đừng chỉ hỏi
 
-Ba lời xin dưới đây có giá trị hơn cả 22 câu ở trên cộng lại, vì chúng cho **dữ liệu thật thay
+Bốn lời xin dưới đây có giá trị hơn cả 24 câu ở trên cộng lại, vì chúng cho **dữ liệu thật thay
 vì trí nhớ**.
 
 | # | Xin gì | Cách xin |
@@ -168,6 +174,7 @@ vì trí nhớ**.
 | E1 | **"Chị cho em xem 10 đơn gần nhất được không?"** | Nhìn: mấy cây một đơn, mùi nào, mua tặng hay mua dùng, có tên nào lặp lại không, trước khi mua khách hỏi gì. **Nói trước: em không cần tên và số điện thoại khách, em chỉ cần con số** |
 | E2 | **"Chị cho em xem hộp tin nhắn hôm nay?"** | Đếm bao nhiêu tin là câu hỏi lặp lại. Đây là bằng chứng trực tiếp cho hoặc chống lại Tìm mùi |
 | E3 | **"Mình mở Seller Centre xem một đơn đã hoàn tất nhé?"** | Xem §3 |
+| E4 | **"Chị cho em xem file Excel chị đang dùng được không?"** | Cùng xem trên máy chị ấy, không xin file — nó chứa thông tin khách. Tám thứ cần nhìn ở [06](06-VALUE-CHAIN.md) §6. File có sheet nhập thì câu A1 trả lời được **bằng số đã ghi**, không bằng trí nhớ |
 
 Cách xin cho khỏi kỳ: **cùng xem trên điện thoại của chị ấy**, không xin xuất file, không chụp
 màn hình trừ khi chị ấy tự đề nghị.
@@ -368,7 +375,8 @@ hỏng vì kéo dài quá thì không có buổi hai.
 
 1. **Một buổi hai đã có ngày**, không phải "để em nhắn lại chị sau".
 2. **Số thật trong tay**: giá vốn (A1), tổng đơn tháng trước (A3), **chia theo kênh (A4)**, và
-   phí sàn trên một đơn thật (A6). Riêng A4 quyết định luôn là chặng 1 có nên mở không.
+   phí sàn trên một đơn thật (A6). Riêng A4 quyết định luôn là chặng 1 có nên mở không. Chưa có A1
+   thì **một buổi hẹn xem file Excel (E4)** cũng tính — nó trả lời A1 tốt hơn trí nhớ.
 3. **Nội dung 5 mùi thật** — tên, mô tả, ba tầng hương. Nó gỡ được **10 trong 28 mục placeholder** của
    `shop/data/shop.json`, không tốn gì. (18 cờ kia — ship, thanh toán, cam kết thương hiệu —
    nằm ở những câu hỏi khác trong danh sách này.)

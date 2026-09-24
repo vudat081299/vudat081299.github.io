@@ -36,7 +36,7 @@ trừ bao nhiêu gam sáp, bao nhiêu ml tinh dầu, còn đủ cho mấy mẻ �
 sửa ở cuối.
 
 Và ngay cả nửa chất lượng, ở 5–10 đơn/ngày, là một tờ giấy ở bàn đổ cộng vài cột trong sheet,
-không phải một phần mềm. Chỉ nghĩ tới phần mềm khi chủ shop đã
+không phải một phần mềm ([06](../06-VALUE-CHAIN.md) §5). Chỉ nghĩ tới phần mềm khi chủ shop đã
 **hết sáp giữa lúc đang có đơn** ít nhất một lần, hoặc sổ giấy đã chạy và vướng ở một chỗ cụ thể.
 Chưa xảy ra thì đó vẫn là một câu chuyện hay chứ chưa phải một vấn đề.
 

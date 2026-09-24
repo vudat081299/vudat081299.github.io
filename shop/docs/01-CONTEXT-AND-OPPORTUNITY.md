@@ -13,7 +13,7 @@ những chỗ đang đoán về việc làm ăn của chị ấy, và đọc lê
 
 ## 1. Ta biết gì, và đang đoán gì
 
-Đây là toàn bộ dữ kiện. Năm dòng. Anh **chưa từng gặp chị ấy**.
+Đây là toàn bộ dữ kiện về việc làm ăn. Năm dòng. Anh **chưa từng gặp chị ấy**.
 
 | Dữ kiện | Nguồn | Mức chắc |
 |---|---|---|
@@ -22,6 +22,11 @@ những chỗ đang đoán về việc làm ăn của chị ấy, và đọc lê
 | 5 mùi | như trên | [đoán — phải hỏi chị ấy] |
 | Làm thủ công | như trên | [đoán — phải hỏi chị ấy] |
 | Bán trên Instagram, TikTok, Shopee | như trên | [đoán — phải hỏi chị ấy] — không biết kênh nào ra bao nhiêu đơn |
+
+*Thêm 24/09/2026:* một dữ kiện về **công cụ**, không phải về việc làm ăn — chị ấy dùng Excel từ
+lúc nhập nguyên liệu tới lúc bán [đoán — phải hỏi chị ấy: file có những sheet nào thì chưa ai
+xem]. Nó không đổi năm dòng trên, nhưng mở một đường khác tới biến quan trọng nhất ngay dưới đây:
+nếu file có sheet nhập thì giá vốn tính được từ số đã ghi — xem [06](06-VALUE-CHAIN.md).
 
 Những thứ **không biết** và mỗi thứ đều đủ sức lật ngược kết luận của tài liệu này:
 

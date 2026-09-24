@@ -26,9 +26,10 @@ chu cho một sản phẩm chưa ai chứng minh là cần tồn tại.
 | Cho khách chọn được món | Sàn + nhắn tin tay | **Có thể** — đây là chỗ Tìm mùi đang thử. Chưa xác nhận. |
 | Nhận tiền | Sàn, COD, chuyển khoản | Một phần. VietQR + báo-có tự động là đủ cho quy mô này. |
 | Giao hàng | Sàn, hoặc đặt tay | Chưa. Nối GHN/GHTK khi việc nhập tay thành gánh nặng. |
-| Biết còn bao nhiêu hàng | Trong đầu chủ shop | Chưa. Khi bán hụt lần đầu thì **mua**, không xây — [adr/0004](adr/0004-dont-rebuild-retail-software.md). |
+| Biết còn bao nhiêu hàng | Excel, nếu dữ kiện 24/09/2026 đúng ([06](06-VALUE-CHAIN.md) §1) | Không. File lệch kệ thật tới mức bán hụt một lần thì **mua**, không xây — [adr/0004](adr/0004-dont-rebuild-retail-software.md). |
 | Giữ khách quay lại | Gần như chưa ai lo | **Chỗ trống lớn nhất, và nó không cần phần mềm để thử.** |
-| Quản lý nguyên vật liệu | Trong đầu chủ shop | Không. Nửa định lượng — trừ nguyên liệu theo công thức — **đã có người bán** ([adr/0004](adr/0004-dont-rebuild-retail-software.md)); nửa chất lượng, ở quy mô này, là một tờ giấy. *Bản trước ghi "đây là chỗ phần mềm riêng thắng phần mềm bán sẵn" — sai, sửa 24/09/2026.* |
+| Quản lý nguyên vật liệu | Excel, như trên | Không. Nửa định lượng — trừ nguyên liệu theo công thức — **đã có người bán**; nửa chất lượng là một tờ giấy ([06](06-VALUE-CHAIN.md) §5). *Bản trước ghi "đây là chỗ phần mềm riêng thắng phần mềm bán sẵn" — sai, sửa 24/09/2026.* |
+| Biết một cây nến thật sự tốn bao nhiêu | Chưa ai — đây là biến `V` | Không cần xây gì: nếu file có sheet nhập thì **tính được từ số đã ghi**, và tính được hai cách ([06](06-VALUE-CHAIN.md) §4). |
 
 Bảng này quan trọng hơn mọi sơ đồ lớp trong tài liệu. Đọc nó theo cột cuối: **phần lớn câu trả
 lời là "không" hoặc "chưa"**. Xem [02-ROADMAP.md](02-ROADMAP.md) để biết điều gì mở khoá từng bước.

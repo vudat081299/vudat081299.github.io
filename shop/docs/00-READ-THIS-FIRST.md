@@ -18,6 +18,7 @@ Viết ngày 20/09/2026. Người đọc chính là Đạt; người đọc th�
 |---|---|
 | Chuẩn bị đi gặp chủ shop | [04-NEGOTIATION.md](04-NEGOTIATION.md), rồi mở `../pitch/` trên điện thoại |
 | Muốn biết có nên làm việc này không | [01-CONTEXT-AND-OPPORTUNITY.md](01-CONTEXT-AND-OPPORTUNITY.md) |
+| Muốn biết từ lúc nhập nguyên liệu tới lúc bán có mắt xích nào đáng can thiệp | [06-VALUE-CHAIN.md](06-VALUE-CHAIN.md) |
 | Lo rằng KiotViet đã giải quyết rồi | [03-COMPETITORS-AND-INTEGRATIONS.md](03-COMPETITORS-AND-INTEGRATIONS.md) |
 | Lo tích hợp sàn/vận chuyển/thanh toán khó | [03-COMPETITORS-AND-INTEGRATIONS.md](03-COMPETITORS-AND-INTEGRATIONS.md), mục tích hợp |
 | Muốn biết làm gì trước | [02-ROADMAP.md](02-ROADMAP.md) |
@@ -30,9 +31,11 @@ Viết ngày 20/09/2026. Người đọc chính là Đạt; người đọc th�
 
 ## Bốn điều toàn bộ bộ tài liệu này xoay quanh
 
-**1. Chúng ta biết rất ít.** Toàn bộ dữ kiện về shop gồm đúng năm thứ: khoảng 5–10 đơn/ngày,
-năm mùi hương, giá quanh 300.000 ₫, làm thủ công, bán trên Instagram / TikTok / Shopee. Chưa ai
-gặp chủ shop. Mọi đề xuất trong đây là **giả thuyết**, và chỗ nào là giả thuyết thì có ghi.
+**1. Chúng ta biết rất ít.** Toàn bộ dữ kiện về việc làm ăn của shop gồm đúng năm thứ: khoảng
+5–10 đơn/ngày, năm mùi hương, giá quanh 300.000 ₫, làm thủ công, bán trên Instagram / TikTok /
+Shopee. Ngày 24/09/2026 có thêm một dữ kiện về công cụ: chị ấy dùng Excel từ lúc nhập nguyên liệu
+tới lúc bán ([06](06-VALUE-CHAIN.md)). Chưa ai gặp chủ shop. Mọi đề xuất trong đây là
+**giả thuyết**, và chỗ nào là giả thuyết thì có ghi.
 
 **2. Rủi ro lớn nhất là xây nhầm, không phải xây sai.** Kiến trúc đẹp, mã sạch, cổng chặt và
 khả năng lên 500 đơn/ngày đều gần như vô nghĩa nếu thứ được xây không chạm vào nút thắt thật.
