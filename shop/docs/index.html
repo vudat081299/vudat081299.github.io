@@ -175,7 +175,9 @@ li::marker{color:var(--ink-3)}
 }
 .c-ok{background:var(--ok-soft); color:var(--ok); border-color:color-mix(in oklab,var(--ok) 32%,transparent)}
 .c-mid{background:var(--warn-soft); color:var(--warn); border-color:color-mix(in oklab,var(--warn) 32%,transparent)}
-.c-no{background:var(--surface-3); color:var(--ink-3); border-color:var(--line-2)}
+/* --ink-3 trên --surface-3 chỉ đạt 4,34:1 ở nền sáng (đo 24/09/2026, chữ 11,5px) — dưới ngưỡng AA
+   4,5:1. Chip này mang đúng cái nhãn quan trọng nhất trang ("đoán"), nên dùng --ink-2. */
+.c-no{background:var(--surface-3); color:var(--ink-2); border-color:var(--line-2)}
 
 /* ─── tables ─────────────────────────────────────────────── */
 .tw{overflow-x:auto; margin:20px 0; border:1px solid var(--line); border-radius:12px; background:var(--surface)}

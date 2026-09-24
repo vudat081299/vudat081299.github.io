@@ -24,6 +24,10 @@ Thêm ba câu vào kịch bản buổi gặp ở 04: **A10** (tháng 12 năm ngo
 xong bao lâu mới bán được), **E4** (xin xem file Excel — cùng xem, không xin file, vì nó chứa
 thông tin khách). Tổng thành 24 câu và bốn lời xin.
 
+Cộng một sửa nhỏ ngoài phạm vi, vì phiên này thêm năm chip nữa cùng loại: chip **"đoán"** của trang
+đọc chỉ đạt 4,34:1 ở nền sáng (chữ 11,5px, dưới ngưỡng AA 4,5:1). Đổi chữ sang `--ink-2`, đo lại:
+thấp nhất 7,93:1 nền sáng, 7,76:1 nền tối.
+
 **Đã đo trong trình duyệt**, vì `pitch/` và `docs/` nằm ngoài tầm của cổng: Phần VI không tràn
 ngang ở 320, 390, 1280px; mục lục tự thêm Phần VI với 9 mục; cột xếp chồng đúng tỉ lệ 8:5:3:2.
 Phép đo tràn đã thử ngược — ép công thức V₂ về `nowrap` như một thẻ `<code>` thì trang tràn 511px.
