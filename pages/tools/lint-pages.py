@@ -46,9 +46,9 @@ ANCHOR_WHITELIST = {'', 'top'}
 # bảng thì phải bằng 0, trang có tên thì chỉ được phép giữ nguyên hoặc giảm — tăng là LỖI.
 # Dọn xong một trang thì xoá dòng của nó đi, đừng nới số lên.
 DEBT = {
-    'svg_vo_danh': {'scooter-maintenance-guide.html': 63, 'jazz-piano-theory.html': 1},
+    'svg_vo_danh': {'scooter-maintenance-guide.html': 63},
     'hut_cap':     {'cryptography.html': 15, 'relativity.html': 3,
-                    'scooter-maintenance-guide.html': 2, 'jazz-piano-theory.html': 1},
+                    'scooter-maintenance-guide.html': 2},
     'nhan_tieng_anh': {'cryptography.html': 3},
 }
 
