@@ -496,7 +496,18 @@ def run_calculus():
           f'Newton phải chỉ hỏng khi |x0| ≤ 0,70, tính ra tới {rong}')
     nhay = 0.71 - (4 * 0.71 ** 3 - 6 * 0.71) / 0.05
     claim('2.7 sát ±0,71 thì nhảy xa', abs(nhay) > 10, f'x0 = 0,71 nhảy tới {nhay}')
-    need('2.7 vùng hỏng', 'khoảng từ −0,7 tới 0,7')
+    # Chia vùng hỏng cho đúng như lời gợi ý: leo về đỉnh tới |x0| = 0,54; từ 0,55 tới 0,70 bước đầu nhảy
+    # qua đỉnh và phần lớn lần dừng ở đáy bên kia (0,56 và 0,57 dội về cùng phía — lưu vực của Newton
+    # không liền một khối).
+    dinh = [k / 100 for k in range(0, 201) if abs(newton_m11(k / 100)) < 1e-6]
+    ben_kia = [k / 100 for k in range(0, 201)
+               if abs(newton_m11(k / 100) + math.sqrt(1.5)) < 1e-6]
+    claim('2.7 leo về đỉnh tới đúng 0,54', dinh and max(dinh) == 0.54 and min(dinh) == 0.0,
+          f'x0 về đỉnh: {dinh[:1]}…{dinh[-1:]}')
+    claim('2.7 đáy bên kia chỉ trong 0,55–0,70, và là phần lớn', ben_kia and min(ben_kia) == 0.55
+          and max(ben_kia) == 0.70 and len(ben_kia) > 16 / 2, f'đáy bên kia: {ben_kia}')
+    need('2.7 vùng leo đỉnh', 'Trong khoảng từ −0,54 tới 0,54')
+    need('2.7 vùng nhảy qua đỉnh', 'Từ 0,55 tới 0,70')
     need('2.7 nhảy xa', 'sát ±0,71')
 
     # 2.8 — đạo hàm hai hàm mất mát

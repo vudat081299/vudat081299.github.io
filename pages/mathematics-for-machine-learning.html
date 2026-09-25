@@ -1788,7 +1788,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__h">
             <p class="lab__k">Mô hình 11 · bấm từng bước</p>
             <p class="lab__t">Newton so với tụt dốc, trên cùng một đường cong</p>
-            <p class="lab__hint">Bấm <b>Bước</b> và xem hai chấm chạy: <span class="c-a">xanh</span> là tụt dốc, <span class="c-c">nâu</span> là Newton. Kéo chỗ xuất phát vào vùng giữa, khoảng từ −0,7 tới 0,7, rồi thử lại — ở đó Newton <b>leo về phía đỉnh</b> thay vì xuống đáy; sát ±0,71 thì nó nhảy vọt ra rất xa. Mục dưới nói vì sao.</p>
+            <p class="lab__hint">Bấm <b>Bước</b> và xem hai chấm chạy: <span class="c-a">xanh</span> là tụt dốc, <span class="c-c">nâu</span> là Newton. Kéo chỗ xuất phát vào vùng giữa rồi thử lại. Trong khoảng từ −0,54 tới 0,54, Newton <b>leo về phía đỉnh</b> thay vì xuống đáy. Từ 0,55 tới 0,70 (và khoảng đối xứng bên âm), bước đầu tiên của nó nhảy vọt qua đỉnh, và phần lớn lần nó dừng ở <b>đáy phía bên kia</b>; sát ±0,71 thì nó bay ra rất xa rồi mới quay về. Mục dưới nói vì sao.</p>
           </div>
           <div class="lab__b">
             <div class="chips" id="m11-fn" style="margin-bottom:12px">
@@ -4005,12 +4005,17 @@ function sci(v) {
     $('m11-nx').textContent = Math.abs(nx) > 999 ? 'bay đi' : fmt(nx, 3);
     $('m11-true').textContent = (F.min ? '±' : '') + fmt(F.min, 4);
     var dg = Math.abs(Math.abs(gx) - F.min), dn = Math.abs(Math.abs(nx) - F.min);
+    var x0v = +$('m11-x0').value / 100;
     var say;
     if (warn) say = warn;
     else if (n === 0) say = 'Hai chấm cùng xuất phát từ ' + fmt(gx, 2) + '. Bấm Bước để so tốc độ.';
     /* α = 0,10 từ x = 2 cho bước đầu 2 − 0,1·20 = 0: tụt dốc rơi đúng vào ĐỈNH, nơi f′ = 0,
        và đứng im mãi. Phải nói ra, không thì câu dưới làm như nó chỉ đang chậm. */
     else if (Math.abs(F.d1(gx)) < 1e-9 && dg > 1e-3) say = 'Sau ' + n + ' bước: tụt dốc đứng im ở x = ' + fmt(gx, 2) + ' — độ nghiêng ở đó bằng 0, nhưng đó là ĐỈNH, không phải đáy. Tụt dốc chỉ biết độ nghiêng nên không còn lý do để bước (mục 2.3).';
+    /* Từ 0,55 tới 0,70 độ cong ở chỗ xuất phát âm: bước Newton đầu tiên nhảy qua đỉnh, và phần lớn lần
+       nó dừng ở đáy phía BÊN KIA. Câu "đã tới đáy" đúng mà giấu mất đúng điều đáng thấy. */
+    else if (dn < 1e-4 && F.min > 0 && nx * x0v < 0) say = 'Sau ' + n + ' bước: Newton tới đáy — nhưng là đáy phía BÊN KIA (x = ' + fmt(nx, 4) + '), dù xuất phát ở phía ' + (x0v > 0 ? 'dương' : 'âm') + '.' +
+      (F.d2(x0v) < 0 ? ' Ở chỗ xuất phát độ cong âm (f″ < 0), nên bước đầu tiên của Newton nhảy vọt qua đỉnh.' : '') + ' Tụt dốc còn lệch ' + fmt(dg, 4) + '.';
     else if (dn < 1e-4 && dg > 1e-3) say = 'Sau ' + n + ' bước: Newton đã tới đáy (lệch ' + (dn < 1e-12 ? '0' : sci(dn)) + '), ' +
       (Math.abs(gx) > 999 ? 'còn tụt dốc đã bay đi vì α quá lớn' : 'tụt dốc còn lệch ' + fmt(dg, 4)) + '. Newton dùng thêm ĐỘ CONG nên nó tự biết bước dài bao nhiêu.';
     else say = 'Sau ' + n + ' bước: tụt dốc lệch ' + fmt(dg, 4) + ', Newton lệch ' + fmt(dn, 4) + '.';
