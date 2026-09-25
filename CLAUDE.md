@@ -45,7 +45,7 @@ không phải một lời hứa. `lint-pages.py` kiểm được thẻ lệch nh
 là P(X≥8 | n=10, p=0,5) hay không. Trang nào sau này cũng nói số cụ thể thì làm thêm một cổng
 cùng kiểu, đừng nới cổng này ra thành cổng chung: mỗi trang có bộ số riêng.
 
-Cái thứ hai, `verify-ml.py` (85 phép kiểm), làm đúng theo luật vừa nói cho hai trang học máy —
+Cái thứ hai, `verify-ml.py` (152 phép kiểm), làm đúng theo luật vừa nói cho hai trang học máy —
 `machine-learning.html` và `machine-learning-101.html` — vốn nói ~270 con số có đơn vị mà trước
 đó không cổng nào kiểm. Nó tính lại những con số *suy ra được*: `896 = 32×(3·3·3+1)` tham số của
 một lớp tích chập, `(32+2−3)/1+1 = 32` cỡ đầu ra sau padding/stride, precision/recall/F1 đọc ra
