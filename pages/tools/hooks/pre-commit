@@ -106,4 +106,26 @@ MSG
   fi
 fi
 
+# Cổng kiến thức cho trang nhạc lý → jazz: nó nói hàng trăm khẳng định về nốt (bậc 7 của Dm7
+# trượt nửa cung xuống bậc 3 của G7, G/B chỉ là G đổi bass, mỗi nốt thuộc đúng ba hợp âm ba…),
+# và năm trụ của nó đánh số "PHẦN NN" bằng tay — chèn một mục là mọi "phần NN" phía sau lệch.
+if echo "$CHANGED" | grep -q "jazz-piano-theory.html"; then
+  if ! python3 "$DIR/tools/verify-jazz-piano.py"; then
+    cat >&2 <<'MSG'
+
+──────────────────────────────────────────────────────────────────────
+Commit bị chặn: trang nhạc lý → jazz có chỗ không tính lại được.
+
+Hoặc một nốt trong dữ liệu (kho lick, sáu lớp đệm, hợp âm nối…) vừa
+lệch khỏi điều bài viết nói về nó, hoặc một tham chiếu "phần NN" trỏ
+sai mục sau khi bạn chèn/xóa một mục. Tham chiếu phải là
+<a class="xref" href="#id-mục">phần NN</a> — cổng tự so số với mục đích.
+
+Xem chi tiết:  python3 pages/tools/verify-jazz-piano.py
+──────────────────────────────────────────────────────────────────────
+MSG
+    exit 1
+  fi
+fi
+
 echo "pre-commit: cổng $DIR qua."

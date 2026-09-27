@@ -10,7 +10,7 @@ cách chúng chạy tự động**.
 | `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3, 4 |
 | `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2, 4 |
 | `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `sh tools/check-index.sh` (lint dữ liệu + đo trong trình duyệt) | 2, 4 + chạy thật |
-| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` + `verify-ml.py` + `verify-betting-lab.py` | 2, 4 |
+| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` + `verify-ml.py` + `verify-betting-lab.py` + `verify-jazz-piano.py` | 2, 4 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2, 4 |
 | `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `sh shop/tools/check.sh` | 1, 2, 3, 4 + chạy thật |
 | các project khác | xem thư mục | — | 4 |
@@ -37,7 +37,7 @@ một shell, toàn bộ nội dung nằm ở `data/shop.json`, và giá tiền �
 ba thứ ấy là luật, và luật thì phải viết ra. Kèm theo là `shop/docs/`: lộ trình, ADR, sổ nợ, và
 một bộ tài liệu định hướng kinh doanh cho việc đàm phán với chủ shop.
 
-Ba ngoại lệ trong `pages/`, đều là cổng **kiến thức**. Cái thứ nhất, `verify-math-for-ml.py`,
+Bốn ngoại lệ trong `pages/`, đều là cổng **kiến thức**. Cái thứ nhất, `verify-math-for-ml.py`,
 chỉ chạy khi commit chạm `mathematics-for-machine-learning.html`. Trang ấy nói ~90 con số cụ thể (định thức,
 trị riêng, tỉ lệ PCA, dãy Newton, xác suất nhị thức, phân vị t, p-value) và tự nhận với người
 đọc là mọi con số tính được đều kiểm được bằng máy — nên phải có một script tính lại thật, chứ
@@ -66,6 +66,23 @@ chơi bằng Python. Nhánh nhân đôi không kiểm được bằng mô phỏn
 không hội tụ, đúng điều trang nói — nên nó đối chiếu hệ thức một biến với một phép tính chính xác
 khác đi qua cả phân phối chuỗi thua. Đã thử ngược: sửa lệch một con số thì đỏ, dời dòng chốt điểm
 đặt xuống sau vòng quay thì đỏ, bỏ nhánh nhân khỏi `nextStake` thì đỏ.
+
+Cái thứ tư, `verify-jazz-piano.py` (1.441 phép kiểm, từ 27/09/2026), cho `jazz-piano-theory.html` —
+trang nhạc lý → đệm hát → cảm âm → đọc bản → jazz, năm trụ trong một file. Nó bắt hai loại lỗi mà
+lint mù. Một là **tham chiếu chéo**: năm trụ đánh số "PHẦN NN" bằng tay, nên chèn một mục là mọi chữ
+"phần 07" phía sau lệch âm thầm — lúc rà ngày 27/09 đã có hơn 20 chỗ trỏ sai, để lại từ những lần
+chèn mục trước. Nay mọi tham chiếu là `<a class="xref" href="#id-mục">phần NN</a>`; cổng so số trong
+chữ với số của mục đích, đòi số mục của từng trụ liền mạch, và **cấm** chữ "phần NN" trơn. Hai là
+**nốt nhạc**: dữ liệu của các demo (kho lick, sáu lớp đệm, hợp âm nối, fill, phòng tập, nốt mốc, bản
+đồ D.S./Coda) nằm trong các khối `<script type="application/json">` ngay trong trang — trang phải
+chạy cả khi mở bằng `file://` nên không tách ra `data/*.json` — và cổng đọc đúng các khối đó:
+voicing có đúng bộ nốt của ký hiệu không, nốt ở phách mạnh có thuộc hợp âm không, bậc 7 có thật
+trượt nửa cung xuống bậc 3 ở vạch nhịp như lời tả không, fill có xong trước khi ca sĩ vào lại không,
+thứ tự D.S. al Coda chạy lại bằng luật có ra đúng dãy ghi trong bài không. Nó cũng tính lại vài bảng
+cũ (mode, quãng, ký hiệu hợp âm, "mỗi nốt thuộc đúng ba hợp âm ba"). Đã thử ngược 14 kiểu — đổi một
+nốt lick, lệch số phần, thêm một chữ "phần 12" trơn, đánh số mục trùng, bấm E7 thiếu G♯, đặt sai
+bass gạch chéo, cho fill lấn câu hát, ghi sai thứ tự Coda, sai vị trí nốt mốc, sai một nốt trong
+bảng mode — lần nào cũng đỏ. Nằm trong cả pre-commit lẫn gates.yml.
 
 Nhân tiện, một cái đã sửa cùng lúc: `.github/workflows/gates.yml` trước đó chỉ chạy
 `lint-pages.py`, trong khi bảng ở đầu file này nói lớp 4 chạy cổng của mọi project con.

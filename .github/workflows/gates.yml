@@ -48,6 +48,7 @@ jobs:
           python3 pages/tools/verify-math-for-ml.py
           python3 pages/tools/verify-ml.py
           python3 pages/tools/verify-betting-lab.py
+          python3 pages/tools/verify-jazz-piano.py
       - name: cooking/
         run: python3 cooking/tools/lint-cooking.py
       - name: shop/
