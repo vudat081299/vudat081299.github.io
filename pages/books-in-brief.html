@@ -207,6 +207,16 @@
   #galef .gf-out { margin-top: 12px; }
   #galef .gf-pick > .wb-btn { min-width: 76px; }
   @media (max-width: 620px) { #galef .gf-pick { display: flex; } #galef .gf-pick > .wb-btn { flex: 1 1 0; } }
+
+  /* ---- cialdini ---- */
+  /* Mô hình dòng thác: hình dựng trên viewBox 360 px như hai mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
+  #cialdini .cd-svg { max-width: 520px; }
+  #cialdini .cd-svg .hw-vs { font-size: 12px; }
+  #cialdini .cd-svg .hw-vt { font-size: 13px; }
+  #cialdini .cd-val { display: inline-block; min-width: 40px; text-align: right; }
+  #cialdini .cd-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
+  #cialdini .cd-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; }
+  #cialdini .cd-run { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 10px 0 0; max-width: 72ch; min-height: 3.2em; }
 </style>
 </head>
 <body class="wb-app">
@@ -247,6 +257,10 @@
       <li><b>The Scout Mindset:</b> tên dịch giả ghi “Yên Du và Ngọc Dung” theo trang First News (“Biên dịch: Yên Du, Ngọc Dung”); nhà sách Khai Trí ghi “Yến Du”. Năm 2022 (tháng 3, theo nhà sách và Waka) chưa thấy trên trang NXB Dân Trí.</li>
       <li><b>The Scout Mindset:</b> Độ vững nói thẳng chỗ yếu nhất của sách là nhận định ở chương 7 rằng tự lừa không làm ta vui hơn, vì một phân tích tổng hợp năm 2019 trên 126.916 người thấy chiều ngược lại; và coi ví dụ Bezos là chuyện người sống sót. Đó là đánh giá của trang này.</li>
       <li><b>The Scout Mindset:</b> mục dài ≈3.200 tiếng (khoảng 2.200–2.300 từ tuỳ cách đếm, ~13 phút đọc), sát trần 2.200 từ. Bài tập hiệu chỉnh dùng mười câu đúng/sai trang tự soạn, có nguồn, không lấy câu nào từ bài 40 câu của tác giả.</li>
+      <li><b>Influence:</b> lần in đầu năm 1984 (William Morrow) mang tựa <i>Influence: How and Why People Agree to Things</i>, không phải tựa hiện nay như Wikipedia ghi; mục theo một bài điểm sách năm 1984. Bản tiếng Việt theo trang Alpha Books: Mai Hạnh dịch, NXB Lao Động (một nhà sách ghi thêm “Phí Mai”), chưa rõ năm in đầu; bản này dịch từ bản sáu nguyên tắc nên không có chương Đồng thuộc.</li>
+      <li><b>Influence:</b> bảy nguyên tắc được xếp theo ba nhóm Cialdini về sau tự gom (dựng quan hệ, gỡ bất định, thúc hành động), không theo thứ tự chương trong đề bài. Mục dài ≈2.900 tiếng, tức khoảng 2.000 từ, đúng trần; để giữ trần, đã bỏ hai thí nghiệm đã kiểm nguồn (y tá của Hofling, khăn tắm khách sạn).</li>
+      <li><b>Influence:</b> lượt mở đầu của mô hình dòng thác là một dòng người chọn sẵn, trong đó cả dòng đổ vào quán dở, điều mà ở mức mặc định chỉ xảy ra khoảng 16% số lần; trang ghi rõ ngay trong mô hình rằng lượt đầu được chọn sẵn.</li>
+      <li><b>Influence:</b> đoạn áo blouse chỉ dẫn mốc tháng 4/2025 (Bộ Y tế nhắc quy định cấm dùng hình ảnh, trang phục bác sĩ để quảng cáo thực phẩm), không khẳng định văn bản nào đang có hiệu lực hôm nay: quy định về quảng cáo thực phẩm đổi nhiều lần trong 2025–2026, có văn bản thay thế rồi bị tạm ngưng tháng 4/2026.</li>
     </ul>
   </aside>
 
@@ -290,7 +304,17 @@
         </div>
       </div>
     </a>
-    <!-- 04 cialdini · 05 haidt · 06 sagan · 07 tetlock · 08 rosling · 09 diamond · 10 acemoglu: chèn sau thẻ 03 -->
+    <a class="wb-card wb-card--hover wb-card--pad" href="#cialdini">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">04</span>
+        <div class="wb-media__body">
+          <p class="bb-card__k">Influence: The Psychology of Persuasion</p>
+          <p class="wb-media__title">Những đòn tâm lý trong thuyết phục</p>
+          <p class="wb-media__text">Vì sao ta nói “có” trước khi kịp nghĩ, bảy lối tắt người bán hàng hay bấm, và câu tự hỏi để nhận ra từng lối.</p>
+        </div>
+      </div>
+    </a>
+    <!-- 05 haidt · 06 sagan · 07 tetlock · 08 rosling · 09 diamond · 10 acemoglu: chèn sau thẻ 04 -->
   </div>
 
   <div class="hw-layout">
@@ -304,7 +328,8 @@
       <a class="wb-sidenav__link" href="#manson">The Subtle Art of Not Giving a F*ck</a>
 
       <div class="wb-sidenav__section" style="margin-top:12px">Other people</div>
-      <!-- 04 cialdini · 05 haidt -->
+      <a class="wb-sidenav__link" href="#cialdini">Influence</a>
+      <!-- 05 haidt -->
 
       <div class="wb-sidenav__section" style="margin-top:12px">Evidence &amp; the future</div>
       <!-- 06 sagan · 07 tetlock -->
@@ -829,7 +854,7 @@
 
         <div class="bb-next">
           <p><b>Bạn vừa có:</b> hai câu hỏi thay cho “làm sao hết khổ”: mình đang chấm mình bằng thước nào, và khổ vì cái gì thì đáng.</p>
-          <p><b>Nó dẫn đi đâu:</b> Manson bảo hãy nghi cái thước của mình, nhưng không kể ta tự lừa mình bằng những cách nào; trang <a href="psychology.html">Psychology</a> kể từng thiên kiến một. Nhóm tiếp theo quay ra ngoài: người khác gật đầu vì đâu, và vì sao họ không chịu đổi ý?</p>
+          <p><b>Nó dẫn đi đâu:</b> Manson bảo hãy nghi cái thước của mình, nhưng không kể ta tự lừa mình bằng những cách nào; trang <a href="psychology.html">Psychology</a> kể từng thiên kiến một. Nhóm tiếp theo quay ra ngoài: người khác khiến ta gật đầu bằng những lối tắt nào, bắt đầu từ mục <a href="#cialdini">Cialdini</a>, và vì sao họ không chịu đổi ý.</p>
         </div>
         <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/The_Subtle_Art_of_Not_Giving_a_Fuck">Wikipedia</a> (NXB HarperOne, 2016, chín chương) · <a href="https://markmanson.net/not-giving-a-fuck">bài blog gốc</a> (08/01/2015) · <a href="https://www.huyhoangbook.vn/products/nghe-thuat-tinh-te-cua-viec-dech-quan-tam-1">Huy Hoàng Bookstore</a> (bản tiếng Việt, mục lục) · <a href="https://dailystoic.com/mark-manson-interview/">Daily Stoic</a> (phỏng vấn, 2016) · Watts, <i>The Wisdom of Insecurity</i> (Pantheon, 1951) · <a href="https://en.wikipedia.org/wiki/The_Denial_of_Death">The Denial of Death</a> · <a href="https://en.wikipedia.org/wiki/Metallica:_Some_Kind_of_Monster">Some Kind of Monster</a> · <a href="https://en.wikipedia.org/wiki/Pete_Best">Pete Best</a> · <a href="https://www.irishtimes.com/culture/music/there-s-nothing-to-forgive-pete-best-on-being-sacked-from-the-beatles-1.4199732">Irish Times</a> · <a href="https://doi.org/10.1037/a0022010">Mauss và cs., 2011</a> · <a href="https://doi.org/10.5334/pb.1036">Hansenne, 2021</a> · <a href="https://doi.org/10.1037/xge0000108">Ford và cs., 2015</a> · <a href="https://doi.org/10.1037/pspp0000157">Ford và cs., 2018</a> · <a href="https://doi.org/10.1073/pnas.2016976118">Killingsworth, 2021</a> · <a href="https://doi.org/10.1073/pnas.2208661120">Killingsworth, Kahneman &amp; Mellers, 2023</a> · <a href="https://www.eyrie.org/~eagle/reviews/books/0-06-245773-X.html">Russ Allbery</a> (điểm sách). Chuyện Mustaine và Best: sách dẫn lời hai người từ những cuộc phỏng vấn mà trang chưa tìm được bản gốc, nên mục này dùng hai nguồn kiểm được ở trên.</p>
       </section>
@@ -841,7 +866,176 @@
         <p>Hai cuốn về người khác: <b>Cialdini</b> kể những lối tắt khiến ta nói “có” trước khi kịp nghĩ, còn <b>Haidt</b> giải thích vì sao tranh cãi chuyện đúng sai hiếm khi làm ai đổi ý — trực giác đi trước, lý lẽ chạy theo sau.</p>
       </div>
 
-      <!-- 04 cialdini · 05 haidt -->
+      <section class="bb-book" id="cialdini">
+        <p class="bb-book__eyebrow"><b>04</b> — Robert B. Cialdini · 1984</p>
+        <h3 class="bb-book__title">Những đòn tâm lý trong thuyết phục</h3>
+        <p class="bb-book__orig"><i>Influence: The Psychology of Persuasion</i> (1984, lần in đầu mang tựa <i>Influence: How and Why People Agree to Things</i>; bản mở rộng 2021) · bản tiếng Việt: Mai Hạnh dịch, NXB Lao Động, Alpha Books phát hành, dịch từ bản sáu nguyên tắc</p>
+        <p class="hw-lede">Nhiều khi nói “có”, ta không cân nhắc mà chạy theo lối tắt: được cho thì trả, đã hứa thì giữ, đông người chọn thì chắc đúng. Lối tắt ấy thường có lợi, nên <b>người muốn ta gật đầu chỉ cần làm giả cái tín hiệu bật nó lên</b>. Tự vệ là nhận ra tín hiệu giả, không phải bỏ lối tắt.</p>
+        <div class="bb-verdict">
+          <span class="bb-verdict__k">Đọc gì trong bản gốc</span><p class="bb-verdict__v"><b>Chương 1</b>, “Vũ khí” gây ảnh hưởng (<i>Weapons of Influence</i>): ngắn, chứa ý “click, whirr” và nguyên tắc tương phản. Rồi mục <b>cách nói không</b> (<i>How to Say No</i>) ở cuối mỗi chương 2–7. Bản 2021 thêm chương 8, đồng thuộc (<i>Unity</i>), không có trong bản tiếng Việt của Alpha Books.</p>
+          <span class="bb-verdict__k">Bỏ qua được</span><p class="bb-verdict__v">Phần lớn giai thoại giữa chương và các khung thư bạn đọc (<i>Reader's Report</i>): nhiều chuyện, cùng một cơ chế.</p>
+          <span class="bb-verdict__k">Mục này</span><p class="bb-verdict__v">~12 phút đọc, kèm một mô hình để kéo thử</p>
+        </div>
+
+        <h4 class="bb-h4" id="cialdini-khung">Bộ khung</h4>
+        <p class="hw-p"><b>Click, whirr.</b> Gà tây mẹ chăm con gần như chỉ theo một tín hiệu: tiếng “chiếp chiếp” của gà con. Nhà tập tính học M. W. Fox (1974) tả cảnh gà mẹ lao vào mổ con chồn nhồi bông, kẻ thù tự nhiên của nó; gắn vào con chồn một máy phát tiếng “chiếp chiếp”, gà mẹ ấp nó vào dưới mình. Tín hiệu bấm một cái (<i>click</i>), cả chuỗi hành vi tự chạy như cuộn băng (<i>whirr</i>).</p>
+        <p class="hw-p">Người cũng vậy. Năm 1978, nhóm của Ellen Langer cho người xin chen ngang máy photo ở một trường đại học tại New York. Xin sao 5 trang, hỏi trơn: 60% đồng ý; kèm lý do thật, “vì tôi đang vội”: 94%; kèm lý do rỗng, “vì tôi cần photo”: vẫn 93%. Chữ “vì” là cái nút. Với 20 trang, lý do rỗng hết tác dụng (24%), lý do thật vẫn giúp (42%). Lối tắt thường đúng nên đáng giữ; chỗ hiểm là người khác bấm được cái nút mà không cần lý do thật.</p>
+        <div class="hw-quote">
+          Lối tắt như ổ khoá: ai cầm đúng chìa là mở được, ổ khoá không hỏi người mở có phải chủ nhà.
+          <cite>Chỗ ví von hỏng: ổ khoá thật đòi đúng từng răng chìa; lối tắt trong đầu mở được cả bằng chìa làm phỏng chừng, như một chữ “vì” không kèm lý do nào.</cite>
+        </div>
+        <p class="hw-p"><b>Tương phản khuếch đại các đòn khác.</b> Cùng một thứ, đặt sau một thứ khác thì trông khác đi. Sách kể lá thư cô sinh viên Sharon gửi bố mẹ: ký túc xá cháy, con bị vỡ sọ, con đang có thai; cuối thư, không chuyện nào có thật, chỉ là con bị điểm D môn sử và F môn hoá. Ở mình: môi giới dẫn khách xem hai căn tồi trước căn “vừa tầm”, hay giá gạch 1.290.000đ đặt trên giá bán 399.000đ.</p>
+        <p class="hw-p">Sáu nguyên tắc của sách đã có trong bảng ở <a href="psychology.html#s-infl">trang Psychology</a>. Ở đây, cả sáu cùng nguyên tắc thứ bảy của bản 2021 được xếp theo ba nhóm mà Cialdini về sau tự gom: <b>dựng quan hệ</b>, <b>gỡ bất định</b>, <b>thúc hành động</b>. Mỗi thẻ giữ cơ chế, một biến thể ít người biết và cách tự vệ.</p>
+
+        <h4 class="bb-h4" id="cialdini-quan-he">Dựng quan hệ: có qua có lại, thiện cảm, đồng thuộc</h4>
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="cialdini-c1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 2</span><h5 class="hw-fal__name">Có qua có lại</h5><span class="wb-tag">reciprocation</span></div>
+            <p class="hw-fal__def">Nhận của ai thì thấy mắc nợ, kể cả món mình không xin, và một món quà nhỏ có thể đổi được cái gật đầu lớn. Quy tắc này gặp ở hầu khắp các nền văn hoá, vì nhờ nó người ta dám cho trước. Người bán chỉ việc cho trước.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Biến thể</span>
+              <div class="hw-fal__v"><b>Cửa đóng sập</b>: nhượng bộ cũng là quà. Năm 1975, nhóm Cialdini xin sinh viên làm cố vấn tình nguyện cho thiếu niên phạm pháp, hai giờ mỗi tuần, ít nhất hai năm; không ai nhận. Xin tiếp việc nhỏ, dẫn các em đi sở thú chừng hai tiếng: 50% đồng ý, so với 16,7% khi hỏi thẳng việc nhỏ.</div>
+              <span class="hw-fal__k">Tự vệ</span>
+              <div class="hw-fal__v">Sách khuyên cứ nhận quà như quà; nhưng khi nó hoá ra là bước mở đầu của lời chào hàng, gọi đúng tên nó: công cụ bán hàng, thứ không tạo ra món nợ nào.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="cialdini-c2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 5</span><h5 class="hw-fal__name">Thiện cảm</h5><span class="wb-tag">liking</span></div>
+            <p class="hw-fal__def">Ta dễ gật với người mình quý, và ta quý người ưa nhìn, người giống mình, người khen mình, người cùng làm việc với mình, người quen mặt.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Biến thể</span>
+              <div class="hw-fal__v">Điểm giống có thể nhỏ tới buồn cười: bảng hỏi kèm thư ký tên gần giống tên người nhận được gửi lại nhiều hơn (Garner, 2005). Thiện cảm còn lây theo liên tưởng, như chiếc xe đứng cạnh người mẫu.</div>
+              <span class="hw-fal__k">Tự vệ</span>
+              <div class="hw-fal__v">Sách khuyên canh kết quả thay vì canh từng mánh: thấy mình quý người bán quá mức sau vài phút quen, hãy tách người khỏi lời đề nghị và chỉ xét lời đề nghị.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="cialdini-c3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Bản 2021 · chương 8</span><h5 class="hw-fal__name">Đồng thuộc</h5><span class="wb-tag">unity</span></div>
+            <p class="hw-fal__def">Khác thiện cảm ở một chữ: không phải “người này giống mình” mà “người này là người của mình”. Theo Cialdini, ta có thể không ưa ai đó mà vẫn thấy họ cùng nhóm, và chữ “chúng ta” làm lời họ nặng hơn hẳn. Cảm giác ấy đến từ <b>ở cùng</b> (máu mủ, quê quán) và <b>làm cùng</b> (hát cùng, đi đều bước, cùng làm ra một thứ).</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Biến thể</span>
+              <div class="hw-fal__v">Xin lời khuyên là một cách làm cùng: được một quán ăn mới hỏi “anh chị khuyên chúng tôi nên làm gì”, khách thấy gần quán hơn, sẵn lòng ghé hơn; hỏi “anh chị mong đợi gì” thì ngược lại (Liu và Gal, 2011).</div>
+              <span class="hw-fal__k">Tự vệ</span>
+              <div class="hw-fal__v">Gợi ý của trang này: bỏ chữ “chúng ta” đi, lời đề nghị còn đáng nhận không?</div>
+            </div>
+          </article>
+        </div>
+
+        <h4 class="bb-h4" id="cialdini-bat-dinh">Gỡ bất định: bằng chứng xã hội, uy quyền</h4>
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="cialdini-c4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 4</span><h5 class="hw-fal__name">Bằng chứng xã hội</h5><span class="wb-tag">social proof</span></div>
+            <p class="hw-fal__def">Không chắc nên làm gì thì nhìn người khác, nhất là người giống mình. Nhưng khi ai cũng không chắc và cùng nhìn nhau, cả đám đông có thể cùng đứng yên. Sách minh hoạ bằng vụ Kitty Genovese (New York, 1964) và “38 nhân chứng không ai gọi cảnh sát”; năm 2016, chính báo <i>New York Times</i> thừa nhận bài gốc đã phóng đại số nhân chứng và những gì họ thấy (xem <a href="psychology.html#s-group">trang Psychology</a>).</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Biến thể</span>
+              <div class="hw-fal__v">Than rằng ai cũng làm sai là mời người khác làm theo. Biển ở vườn quốc gia Rừng Hoá Thạch (Arizona, Mỹ) than “mỗi năm mất 14 tấn gỗ”, tức là báo rằng ai cũng lấy. Nhóm Cialdini thử: sau biển vẽ ba người đang lấy gỗ, khách lấy trộm nhiều hơn gấp đôi so với trước; sau biển vẽ một kẻ lấy đơn độc, khả năng lấy trộm giảm gần một nửa.</div>
+              <span class="hw-fal__k">Tự vệ</span>
+              <div class="hw-fal__v">Sách khuyên soi bằng chứng giả (tiếng cười thu sẵn, “phỏng vấn ngẫu nhiên” dàn dựng, nay thêm bình luận ảo) và tự hỏi: đám đông này biết gì hơn mình, hay cũng chỉ đang nhìn nhau?</div>
+            </div>
+          </article>
+        </div>
+
+        <p class="hw-p"><b>Đông người chưa chắc là nhiều bằng chứng.</b> Một trăm người tự xét rồi mới chọn là một trăm lần kiểm; khi người sau nhìn người trước mà chọn, cả đám đông có khi chỉ chứa hiểu biết của vài người đầu. Các nhà kinh tế gọi đó là <b>dòng thác thông tin</b> (Bikhchandani, Hirshleifer và Welch, 1992; Banerjee, 1992).</p>
+
+        <div class="bb-lab" id="cialdini-lab">
+          <div class="bb-lab__head">
+            <p class="bb-lab__kick">Mô hình · dòng thác thông tin</p>
+            <p class="bb-lab__title">Quán đông cả trăm người, mà hiểu biết thật chỉ là của vài người đầu</p>
+            <p class="bb-lab__hint">Hai quán bún chả cạnh nhau, <b>quán A ngon hơn thật</b>. 100 người lần lượt đi qua. Mỗi người có một <b>gợi ý riêng</b> (mùi thơm, lời người quen) đúng với xác suất bạn chọn, và coi nó như một phiếu cộng với số người đang ngồi ở mỗi quán: bên nào hơn thì vào, hoà thì theo gợi ý. Lượt đầu là dòng người chọn sẵn; nút bên dưới rút dòng khác.</p>
+          </div>
+          <div class="bb-lab__body">
+            <div class="bb-lab__row">
+              <label for="cialdini-acc">Gợi ý riêng đúng</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="cialdini-acc" min="55" max="90" step="5" value="70" style="flex:1 1 180px"><span class="bb-mono cd-val" id="cialdini-acc-l">70%</span></div>
+            </div>
+            <div class="bb-lab__row">
+              <span class="k">Dòng người khác</span>
+              <div class="wb-cluster"><button class="wb-btn wb-btn--sm" type="button" id="cialdini-redraw">Cho 100 người khác đi qua</button></div>
+            </div>
+            <p class="cd-cap">Khả năng cả dòng người đổ vào quán dở</p>
+            <p class="bb-lab__big" id="cialdini-big">16% số lần</p>
+            <p class="cd-sub" id="cialdini-sub">Nếu 100 người tự chọn theo gợi ý riêng rồi đếm phiếu, khả năng đa số chọn nhầm chỉ là 0,0016%.</p>
+            <svg class="bb-svg cd-svg" id="cialdini-svg" viewBox="0 0 360 214" role="img" aria-label="Một trăm người theo thứ tự đến, mỗi người là một chấm: chấm đặc là vào quán A, chấm rỗng là vào quán B"></svg>
+            <p class="cd-run" id="cialdini-run" aria-live="polite">Lượt này: 4 người đầu chọn theo gợi ý riêng; từ người thứ 5, cả 96 người sau đều vào quán B, dù 69 người trong số đó có gợi ý riêng chỉ sang quán A. Cả dòng người vào quán dở.</p>
+            <p class="bb-lab__foot"><b>Điều cần thấy:</b> một quán hơn quán kia hai người là đủ để lá phiếu riêng của người đến sau không lật nổi cán cân; từ đó ai cũng vào theo, kể cả người có gợi ý ngược lại (chấm có nhân nhỏ). Ở mức 55%, cả dòng người vào nhầm quán khoảng 40% số lần; đếm phiếu độc lập chỉ sai khoảng 16%.</p>
+            <p class="bb-lab__foot">Mô hình giả định ai cũng tính đúng. Thử với sinh viên đoán bi được bốc từ bình nào (1997), người đến sau bỏ gợi ý riêng để theo số đông ở 41 trên 56 lượt mà cán cân đã lệch đủ, có lượt cả dãy đoán nhầm (Anderson và Holt).</p>
+          </div>
+        </div>
+
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="cialdini-c5">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 6</span><h5 class="hw-fal__name">Uy quyền</h5><span class="wb-tag">authority</span></div>
+            <p class="hw-fal__def">Dấu hiệu của chuyên môn, như chức danh, đồng phục, xe sang, được đón nhận như chính chuyên môn. Sách dựa nhiều vào thí nghiệm Milgram (1963): 26 trên 40 người bấm tới mức “điện giật” cao nhất theo yêu cầu của người điều khiển (xem Độ vững).</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Biến thể</span>
+              <div class="hw-fal__v">Nói trái lợi mình một lần để được tin về sau: Vincent, người phục vụ bàn mà Cialdini quan sát, hay chê nhẹ món khách vừa gọi, gợi ý món rẻ hơn; tới lúc anh gợi ý rượu và tráng miệng, khách nghe theo.</div>
+              <span class="hw-fal__k">Tự vệ</span>
+              <div class="hw-fal__v">Sách khuyên hỏi: người này có thật là chuyên gia về đúng việc này không, và họ có lý do gì để nói thật với mình lúc này?</div>
+            </div>
+          </article>
+        </div>
+
+        <h4 class="bb-h4" id="cialdini-hanh-dong">Thúc hành động: cam kết và nhất quán, khan hiếm</h4>
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="cialdini-c6">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 3</span><h5 class="hw-fal__name">Cam kết và nhất quán</h5><span class="wb-tag">commitment &amp; consistency</span></div>
+            <p class="hw-fal__def">Đã nói “có” thì ta muốn cư xử cho khớp, để giữ hình ảnh và để khỏi phải nghĩ lại. Cam kết càng chủ động, công khai, tốn công, tự nguyện thì càng dính. <b>Chân trong cửa</b>: ở Palo Alto (Mỹ) năm 1966, chỉ 17% chủ nhà chịu cắm trước sân một tấm biển lớn, xấu, ghi “Lái xe cẩn thận”; ở nhóm hai tuần trước được nhờ dán một mẩu giấy nhỏ “Hãy là người lái xe an toàn”, con số là 76%.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Biến thể</span>
+              <div class="hw-fal__v">Cái bị đổi là cách người ta nhìn mình: nhóm chỉ được nhờ ký kiến nghị giữ California sạch đẹp, khác cả việc lẫn chủ đề, cũng lên 47%. <b>Chào giá thấp</b> (<i>lowball</i>) thì để người ta quyết trước rồi mới lộ giá thật: mời sinh viên dự thí nghiệm lúc 7 giờ sáng, nói giờ ngay từ đầu thì 24% có mặt; hỏi “có tham gia không” trước rồi mới báo giờ thì 53% (1978).</div>
+              <span class="hw-fal__k">Tự vệ</span>
+              <div class="hw-fal__v">Sách chỉ hai tín hiệu: cảm giác thắt lại “ở bụng” khi biết mình đang bị đẩy vào việc không muốn, và câu hỏi “tận đáy lòng”: biết những gì biết bây giờ, nếu quay lại, mình có cam kết như thế không?</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="cialdini-c7">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 7</span><h5 class="hw-fal__name">Khan hiếm</h5><span class="wb-tag">scarcity</span></div>
+            <p class="hw-fal__def">Thứ sắp mất trở nên đáng muốn hơn, vì hai lẽ: thứ khó có thường là thứ tốt, nên “hiếm” được đọc như “quý”; và bị giới hạn là thấy mất tự do, liền muốn giành lại, điều nhà tâm lý Jack Brehm gọi là <b>phản kháng tâm lý</b> (1966). Cùng một loại bánh quy, lấy từ hũ còn hai chiếc được chấm là đáng muốn hơn lấy từ hũ mười chiếc (Worchel và cộng sự, 1975).</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Biến thể</span>
+              <div class="hw-fal__v">Mạnh nhất là khan hiếm mới xảy ra, và khan hiếm vì bị giành: bánh ở hũ vừa từ đầy thành vơi được chấm cao hơn bánh ở hũ lúc nào cũng vơi; vơi vì người khác đã lấy được chấm cao hơn vơi vì một sự cố.</div>
+              <span class="hw-fal__k">Tự vệ</span>
+              <div class="hw-fal__v">Sách khuyên coi cơn nôn nao “phải chốt ngay” là đèn đỏ. Dừng lại, rồi hỏi: mình muốn món này để dùng hay để có? Để dùng thì bánh trong hũ vơi không ngon hơn bánh trong hũ đầy.</div>
+            </div>
+          </article>
+        </div>
+
+        <h4 class="bb-h4" id="cialdini-dung">Dùng thế nào</h4>
+        <p class="hw-p">Các đòn hiếm khi đi lẻ. Một “hội thảo tặng quà” cho người già ở Hà Nội mà VTV ghi lại đầu năm 2026 có đủ: quà mỗi buổi (gói mì, chai dầu ăn), tập thể dục chung, “phó giám đốc” người nước ngoài giới thiệu, hoạt náo viên hô “nổ đơn”, điểm thưởng cho ai rủ thêm người. Một bà cụ kể đã chi gần 60 triệu đồng sau vài tháng; hộp “thiên sâm” bán 27 triệu, giá nhập của chính công ty khoảng 4 triệu.</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:96px">Đòn</th><th>Dấu hiệu gần mình</th><th>Câu tự hỏi</th></tr></thead>
+            <tbody>
+              <tr><td><b>Có qua có lại</b></td><td>“Không mua vẫn có quà”; người bán hạ từ gói 20 triệu xuống gói 5 triệu “vì quý chị”.</td><td>Quà thật, hay bước đầu của lời chào hàng? Con số đầu có thật không?</td></tr>
+              <tr><td><b>Thiện cảm</b></td><td>Người quen mời mua bảo hiểm; người nổi tiếng mình theo dõi lâu năm “dùng cho cả nhà”.</td><td>Một người lạ đưa đúng lời đề nghị này, mình có nhận không?</td></tr>
+              <tr><td><b>Đồng thuộc</b></td><td>“Anh em cùng quê cả”; “chị em mình ơi”; người quen rủ vào đa cấp để “cùng nhau thành công”.</td><td>Bỏ chữ “chúng ta” đi, điều khoản có gì khác?</td></tr>
+              <tr><td><b>Bằng chứng xã hội</b></td><td>“2.000 người đã chốt đơn”; bình luận “chốt” chạy liên tục.</td><td>Ai đếm con số này? Họ chọn vì biết, hay vì thấy người khác chọn?</td></tr>
+              <tr><td><b>Uy quyền</b></td><td>Áo blouse trắng quảng cáo thực phẩm chức năng; “chuyên gia nước ngoài” ở hội thảo.</td><td>Người này chuyên về đúng việc này chứ? Họ được gì nếu mình mua?</td></tr>
+              <tr><td><b>Cam kết</b></td><td>“Ai muốn giữ suất thì bình luận chữ ‘có’”; giá xe báo thấp, ký rồi mới thêm phí.</td><td>Biết những gì biết bây giờ, mình có nói “có” lần nữa không?</td></tr>
+              <tr><td><b>Khan hiếm</b></td><td>“Chỉ còn 5 suất”; “vừa có thêm 3 người đặt”; đồng hồ đếm ngược trong phiên livestream.</td><td>Mình cần nó để dùng, hay sợ mất nó? Hết suất thì mất gì thật?</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p">Về áo blouse: tháng 4/2025, sau vụ sữa giả mà nhiều bác sĩ, nguyên bác sĩ từng đứng ra giới thiệu, Bộ Y tế nhắc rằng quy định hướng dẫn Luật An toàn thực phẩm cấm dùng hình ảnh, trang phục của bác sĩ để quảng cáo thực phẩm.</p>
+        <p class="bb-key"><span class="k">Mang theo</span>Khi thấy mình sắp nói “có” nhanh hơn thường lệ, hỏi: <b>tín hiệu nào vừa bật, và nó có dính gì tới giá trị của thứ mình sắp nhận không?</b></p>
+
+        <h4 class="bb-h4" id="cialdini-vung">Độ vững</h4>
+        <p class="hw-p">Sách dựa phần lớn vào thí nghiệm tâm lý xã hội những năm 1960–1970 và ba năm Cialdini trà trộn học các lớp huấn luyện bán hàng, gây quỹ, quảng cáo. Các nguyên tắc đứng vững như một bảng kiểm; nhiều con số thì yếu hơn cách sách kể, một phần vì mẫu nhỏ: mỗi ô của thí nghiệm máy photo chỉ có 15–25 người.</p>
+        <ul class="hw-ul">
+          <li><b>Cửa đóng sập vững nhất.</b> Lặp lại đúng thủ tục năm 1975 với 391 người ở một trường đại học tại Cologne (2021): 51% nhận việc nhỏ sau khi từ chối việc lớn, so với 38% khi chỉ được hỏi việc nhỏ; thí nghiệm gốc tương ứng ra 54% và 33%.</li>
+          <li><b>Chân trong cửa yếu hơn lời đồn.</b> Một tổng hợp 120 nhóm thí nghiệm (1983) kết luận hiệu ứng có nhưng yếu, gần một nửa số nghiên cứu không thấy gì hoặc thấy ngược chiều. Chào giá thấp vững hơn (tổng hợp năm 2015), nhất là khi cái gật đầu đầu tiên công khai và giá thật chỉ nhỉnh hơn chút.</li>
+          <li><b>Chính thí nghiệm máy photo cũng lung lay.</b> Hai lần làm lại năm 1985 không ra kết quả của Langer, và lý do kiểu “vì tôi không muốn chờ” bị từ chối nhiều hơn (Folkes): người ta có nghe nội dung lý do.</li>
+          <li><b>Milgram: hiệu ứng có thật, cách kể chưa trọn.</b> Jerry Burger làm lại năm 2006 (công bố 2009), dừng ở mức 150 vôn cho an toàn: 70% người tham gia định bấm tiếp, so với 82,5% ở biến thể tương ứng của Milgram. Nhưng băng lưu trữ cho thấy người điều khiển hay ứng biến để thúc ép, và một phần người tham gia đã nghi điện là giả (Gina Perry, 2012; xem <a href="psychology.html#s-infl">trang Psychology</a>).</li>
+          <li><b>“Hiệu ứng Romeo và Juliet” đã đổ.</b> Chương khan hiếm kể rằng cha mẹ càng ngăn, đôi trẻ càng yêu (1972). Lặp lại với 396 người, đúng thang đo cũ, thấy ngược lại: bạn bè, gia đình càng phản đối, quan hệ càng kém (2014).</li>
+        </ul>
+
+        <div class="bb-next">
+          <p><b>Bạn vừa có:</b> bảy lối tắt xếp theo việc chúng làm, mỗi lối một câu tự hỏi, và một phép thử cho mọi đám đông: họ chọn vì biết, hay vì thấy người khác chọn?</p>
+          <p><b>Nó dẫn đi đâu:</b> Cialdini dừng ở chữ “chúng ta”: người cùng phe nói thì ta dễ gật. Vì sao chính cái “chúng ta” ấy khiến tranh cãi đúng sai hiếm khi làm ai đổi ý là câu hỏi của cuốn tiếp theo, của Jonathan Haidt.</p>
+        </div>
+        <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/Influence:_Science_and_Practice">Wikipedia</a> · <a href="https://doi.org/10.1002/mar.4220010317">điểm sách năm 1984</a> (tựa lần in đầu, William Morrow) ·<a href="https://www.harpercollins.ca/9780063097797/influence-new-and-expanded/">HarperCollins</a> (bản mở rộng, Harper Business, 4/5/2021; ba năm nghiên cứu thực địa) · <a href="https://www.alphabooks.vn/nhung-don-tam-ly-trong-thuyet-phuc-influence-the-psychology-of-persuas">Alpha Books</a> và <a href="https://shop.alphabooks.vn/nhung-don-tam-ly-trong-thuyet-phuc-tai-ban-moi-nhat-p24260175.html">cửa hàng Alpha Books</a> (bản tiếng Việt, mục lục bảy chương) · <a href="https://news.wpcarey.asu.edu/20250422-gentle-science-persuasion-part-seven-unity">ASU W. P. Carey News, 2025</a> (ba nhóm nguyên tắc; đồng thuộc) · <a href="https://doi.org/10.1037/0022-3514.36.6.635">Langer, Blank &amp; Chanowitz, 1978</a> · <a href="https://doi.org/10.1037/0022-3514.48.3.600">Folkes, 1985</a> · <a href="https://doi.org/10.1037/h0076284">Cialdini và cs., 1975</a> · <a href="https://doi.org/10.1037/pspa0000261">Genschow và cs., 2021</a> · <a href="https://doi.org/10.1207/s15327663jcp1502_3">Garner, 2005</a> · <a href="https://doi.org/10.1086/658884">Liu &amp; Gal, 2011</a> · <a href="https://doi.org/10.1037/0003-066X.62.6.555">Manning, Levine &amp; Collins, 2007</a> và <a href="https://www.nytimes.com/2016/04/05/nyregion/winston-moseley-81-killer-of-kitty-genovese-dies-in-prison.html">New York Times, 4/4/2016</a> (vụ Genovese) · <a href="https://doi.org/10.1111/1467-8721.01242">Cialdini, 2003</a>, <a href="https://doi.org/10.1080/15534510500181459">Cialdini và cs., 2006</a> và <a href="https://science.house.gov/sites/republicans.science.house.gov/files/documents/hearings/092507_cialdini.pdf">lời trình bày trước Hạ viện Mỹ, 2007</a> (Rừng Hoá Thạch) · <a href="https://doi.org/10.1086/261849">Bikhchandani, Hirshleifer &amp; Welch, 1992</a> · <a href="https://doi.org/10.2307/2118364">Banerjee, 1992</a> · Anderson &amp; Holt, <i>American Economic Review</i> 87(5), 1997 · <a href="https://doi.org/10.1037/h0040525">Milgram, 1963</a> · <a href="https://doi.org/10.1037/a0010932">Burger, 2009</a> · <a href="http://www.gina-perry.com/behind-the-shock/milgrams-obedience-experiments/">Gina Perry</a> (<i>Behind the Shock Machine</i>, 2012) · <a href="https://doi.org/10.1037/h0023552">Freedman &amp; Fraser, 1966</a> · <a href="https://doi.org/10.1177/0146167283092002">Beaman và cs., 1983</a> · <a href="https://doi.org/10.1037/0022-3514.36.5.463">Cialdini và cs., 1978</a> · <a href="https://doi.org/10.1080/15534510.2015.1049203">Burger &amp; Caputo, 2015</a> · <a href="https://doi.org/10.1037/0022-3514.32.5.906">Worchel, Lee &amp; Adewole, 1975</a> · Brehm, <i>A Theory of Psychological Reactance</i> (1966) · <a href="https://doi.org/10.1037/h0033373">Driscoll, Davis &amp; Lipetz, 1972</a> · <a href="https://doi.org/10.1027/1864-9335/a000181">Sinclair, Hood &amp; Wright, 2014</a> · <a href="https://vtv.vn/hoi-thao-tang-qua-va-chiec-bay-nham-vao-nguoi-cao-tuoi-100260103212837465.htm">VTV, 3/1/2026</a> (hội thảo tặng quà) · <a href="https://dantri.com.vn/kinh-doanh/ven-man-ma-tran-livestream-nhung-chieu-thuc-khien-khach-hang-chot-don-20260903082432876.htm">Dân trí, 3/9/2026</a> (chiêu thức livestream) · <a href="https://tuoitre.vn/bo-y-te-bac-si-duoc-si-khong-duoc-tham-gia-quang-cao-thuc-pham-thuc-pham-chuc-nang-20250417172020117.htm">Tuổi Trẻ, 17/4/2025</a> (bác sĩ và quảng cáo thực phẩm). Cách tự vệ của từng chương theo mục <i>How to Say No</i> của sách, đối chiếu qua nhiều bản tóm tắt.</p>
+      </section>
+
+      <!-- 05 haidt -->
 
       <!-- ══════════════════ NHÓM 3 ══════════════════ -->
       <div class="hw-part-head" id="g-evidence">
@@ -1226,6 +1420,164 @@
     else { idx = 0; log = []; ask(); }
   });
   ask();
+})();
+</script>
+
+<script>
+/* ---- cialdini: mô hình dòng thác thông tin ----
+   100 người lần lượt chọn giữa quán A (ngon hơn thật) và quán B. Mỗi người có một gợi ý riêng, đúng với
+   xác suất p, coi nó như một phiếu cộng với số người đang ngồi ở mỗi quán; hoà thì theo gợi ý riêng.
+   Luật ấy cho đúng hành vi của mô hình Bikhchandani–Hirshleifer–Welch (1992) khi người đang phân vân theo
+   gợi ý riêng: một quán hơn quán kia hai người là dòng thác bắt đầu, và từ đó không lá phiếu nào lật nổi.
+   Hai con số là xác suất tính đúng, không phải mô phỏng:
+     dòng thác sai = (1 − p)² / (p² + (1 − p)²)   (bỏ qua khả năng 100 người chưa thành dòng thác, dưới 1e-15);
+     100 người tự chọn rồi đếm phiếu mà đa số nhầm = P(Bin(100, p) < 50) + ½·P(Bin(100, p) = 50).
+   Hình là một lượt rút ngẫu nhiên; lượt mở đầu dùng hạt giống cố định để thấy một lần trượt. */
+(function () {
+  var root = document.getElementById('cialdini');
+  if (!root) return;
+  var box = root.querySelector('#cialdini-svg'), range = root.querySelector('#cialdini-acc');
+  if (!box || !range) return;
+  var lab = root.querySelector('#cialdini-acc-l'), big = root.querySelector('#cialdini-big'),
+      sub = root.querySelector('#cialdini-sub'), out = root.querySelector('#cialdini-run'),
+      btn = root.querySelector('#cialdini-redraw');
+  var NS = 'http://www.w3.org/2000/svg';
+  var N = 100, COLS = 20, X0 = 28, DX = 16, Y0 = 34, DY = 18, R = 5;
+  var SEED = 86;   /* ở 70%: người 1 đúng, người 2–4 sai, nên từ người thứ 5 cả dòng đổ vào quán B */
+
+  function rng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  /* Mỗi người một số ngẫu nhiên cố định; gợi ý đúng khi số ấy nhỏ hơn p. Kéo thanh trượt chỉ đổi p, không đổi người. */
+  function draw(seed) { var r = rng(seed), u = [], i; for (i = 0; i < N; i++) u.push(r()); return u; }
+  var u = draw(SEED);
+
+  function el(tag, attrs, style, text) {
+    var e = document.createElementNS(NS, tag), k;
+    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (style) e.setAttribute('style', style);
+    if (text != null) e.textContent = text;
+    box.appendChild(e);
+    return e;
+  }
+
+  /* Một lượt. k: số người đi trước dòng thác (họ chọn đúng theo gợi ý riêng). */
+  function simulate(p) {
+    var a = 0, b = 0, k = -1, ppl = [], i, hintA, v, pickA;
+    for (i = 0; i < N; i++) {
+      if (k < 0 && Math.abs(a - b) >= 2) k = i;
+      hintA = u[i] < p;
+      v = (a - b) + (hintA ? 1 : -1);
+      pickA = v > 0 ? true : (v < 0 ? false : hintA);
+      ppl.push({ a: pickA, h: hintA });
+      if (pickA) a++; else b++;
+    }
+    return { ppl: ppl, a: a, b: b, k: k < 0 ? N : k };
+  }
+  function wrongCascade(p) { var q = 1 - p; return q * q / (p * p + q * q); }
+  function wrongVote(p) {
+    var s = 0, lc = 0, lp = Math.log(p), lq = Math.log(1 - p), k, pk;
+    for (k = 0; k <= N; k++) {
+      if (k > 0) lc += Math.log((N - k + 1) / k);
+      pk = Math.exp(lc + k * lp + (N - k) * lq);
+      if (2 * k < N) s += pk; else if (2 * k === N) s += pk / 2;
+    }
+    return s;
+  }
+  /* Xác suất nhỏ: giữ hai chữ số có nghĩa để thấy đúng bậc độ lớn; dưới một phần triệu thì nói bằng chữ. */
+  function small(x) {
+    var v = x * 100, d;
+    if (!(x >= 1e-6)) return null;
+    if (v >= 10) return Math.round(v) + '%';
+    d = Math.max(1, 1 - Math.floor(Math.log(v) / Math.LN10));
+    return v.toFixed(d).replace('.', ',').replace(/,0$/, '') + '%';
+  }
+
+  function render() {
+    var pct = Math.max(55, Math.min(90, Math.round(+range.value || 70)));
+    var p = pct / 100, s = simulate(p), ign = 0, lead = s.k < N ? s.ppl[s.k].a : null, i, P, cx, cy;
+    for (i = s.k; i < N; i++) if (s.ppl[i].a !== s.ppl[i].h) ign++;
+
+    if (lab) lab.textContent = pct + '%';
+    if (big) big.textContent = Math.round(wrongCascade(p) * 100) + '% số lần';
+    if (sub) {
+      var sv = small(wrongVote(p));
+      sub.textContent = 'Nếu 100 người tự chọn theo gợi ý riêng rồi đếm phiếu, khả năng đa số chọn nhầm ' +
+        (sv ? 'chỉ là ' + sv : 'dưới một phần triệu') + '.';
+    }
+    if (out) {
+      var txt;
+      if (s.k >= N) txt = 'cả 100 người đều chọn theo gợi ý riêng, chưa thành dòng thác.';
+      else {
+        txt = s.k + ' người đầu chọn theo gợi ý riêng; từ người thứ ' + (s.k + 1) + ', cả ' + (N - s.k) +
+          ' người sau đều vào quán ' + (lead ? 'A' : 'B') +
+          (ign > 0 ? ', dù ' + ign + ' người trong số đó có gợi ý riêng chỉ sang quán ' + (lead ? 'B' : 'A') + '.' : '.');
+        if (!lead) txt += ' Cả dòng người vào quán dở.';
+      }
+      out.textContent = 'Lượt này: ' + txt;
+    }
+
+    while (box.firstChild) box.removeChild(box.firstChild);
+    el('text', { x: 20, y: 14, 'class': 'hw-vs' }, null, '100 người, đến lần lượt từ trái sang phải');
+    /* Khung nét đứt quanh những người chọn trước dòng thác; nếu dài quá một hàng thì vắt sang hàng sau. */
+    var start = 0, row, end, xa, xb;
+    while (start < s.k) {
+      row = Math.floor(start / COLS);
+      end = Math.min(s.k, (row + 1) * COLS) - 1;
+      xa = X0 + (start % COLS) * DX - 7.5; xb = X0 + (end % COLS) * DX + 7.5;
+      el('rect', { x: xa, y: Y0 + row * DY - 8, width: xb - xa, height: 16, rx: 4 },
+        'fill:none;stroke:var(--wb-fg-muted);stroke-width:1;stroke-dasharray:3 2');
+      start = end + 1;
+    }
+    /* Chấm đặc: vào quán A; chấm rỗng: vào quán B; nhân nhỏ màu ngược: gợi ý riêng chỉ quán kia. */
+    for (i = 0; i < N; i++) {
+      P = s.ppl[i]; cx = X0 + (i % COLS) * DX; cy = Y0 + Math.floor(i / COLS) * DY;
+      if (P.a) el('circle', { cx: cx, cy: cy, r: R }, 'fill:var(--wb-fg)');
+      else el('circle', { cx: cx, cy: cy, r: R - 0.7 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.4');
+      if (P.a !== P.h) el('circle', { cx: cx, cy: cy, r: 1.8 }, P.a ? 'fill:var(--wb-canvas)' : 'fill:var(--wb-fg)');
+    }
+    /* Hai thanh đếm người ở mỗi quán, vẽ cùng kiểu với chấm. */
+    var YB = 132, BX = 170, BW = 1.5;
+    el('circle', { cx: 26, cy: YB, r: R }, 'fill:var(--wb-fg)');
+    el('text', { x: 36, y: YB + 4, 'class': 'hw-vs' }, null, 'Quán A, ngon hơn thật');
+    el('rect', { x: BX, y: YB - 5, width: Math.max(s.a * BW, 1), height: 10, rx: 2 }, 'fill:var(--wb-fg)');
+    el('text', { x: BX + s.a * BW + 6, y: YB + 4, 'class': 'hw-vt' }, null, String(s.a));
+    el('circle', { cx: 26, cy: YB + 20, r: R - 0.7 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.4');
+    el('text', { x: 36, y: YB + 24, 'class': 'hw-vs' }, null, 'Quán B');
+    el('rect', { x: BX, y: YB + 15, width: Math.max(s.b * BW, 1), height: 10, rx: 2 },
+      'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.2');
+    el('text', { x: BX + s.b * BW + 6, y: YB + 24, 'class': 'hw-vt' }, null, String(s.b));
+    /* Chú giải: mẫu "nhân nhỏ" vẽ theo quán mà dòng thác đổ vào, vì phần lớn chấm có nhân ở đó. */
+    var YL = 178;
+    if (lead === false) {
+      el('circle', { cx: 26, cy: YL, r: R - 0.7 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.4');
+      el('circle', { cx: 26, cy: YL, r: 1.8 }, 'fill:var(--wb-fg)');
+    } else {
+      el('circle', { cx: 26, cy: YL, r: R }, 'fill:var(--wb-fg)');
+      el('circle', { cx: 26, cy: YL, r: 1.8 }, 'fill:var(--wb-canvas)');
+    }
+    el('text', { x: 36, y: YL + 4, 'class': 'hw-vs' }, null, 'nhân nhỏ: gợi ý chỉ quán kia, vẫn theo');
+    el('rect', { x: 18.5, y: YL + 12, width: 15, height: 16, rx: 4 },
+      'fill:none;stroke:var(--wb-fg-muted);stroke-width:1;stroke-dasharray:3 2');
+    el('text', { x: 36, y: YL + 24, 'class': 'hw-vs' }, null, 'nét đứt: chọn theo gợi ý riêng');
+    box.setAttribute('aria-label', 'Một trăm chấm theo thứ tự đến: ' + s.a + ' người vào quán A, ' + s.b +
+      ' người vào quán B' + (s.k < N ? '; từ người thứ ' + (s.k + 1) + ' mọi người theo đám đông' : '') + '.');
+  }
+
+  range.addEventListener('input', render);
+  /* Nút rút thật sự ngẫu nhiên: mỗi lần bấm là 100 người khác; chỉ lần mở đầu là cố định. */
+  if (btn) btn.addEventListener('click', function () {
+    u = draw(Math.floor(Math.random() * 4294967296));
+    render();
+  });
+  render();
 })();
 </script>
 </body>
