@@ -257,6 +257,19 @@
     #sagan .hw-tw .sg-stack tbody td { padding: 0; border: 0; }
     #sagan .sg-stack td[data-k]::before { content: attr(data-k); display: block; font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 7px 0 1px; }
   }
+
+  /* ---- tetlock ---- */
+  /* Máy chấm điểm Brier: hình dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
+  #tetlock .tl-svg { max-width: 520px; }
+  #tetlock .tl-svg .hw-vs { font-size: 11.5px; }
+  #tetlock .tl-svg .hw-vt { font-size: 12.5px; }
+  #tetlock .tl-val { display: inline-block; min-width: 84px; }
+  #tetlock .tl-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
+  #tetlock .tl-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; min-height: 3.2em; }
+  #tetlock .tl-out { margin-top: 12px; }
+  #tetlock .tl-no { display: block; font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .04em; color: var(--wb-fg-subtle); margin-top: 3px; }
+  #tetlock .hw-tw th { white-space: normal; }
+  @media (max-width: 620px) { #tetlock .tl-pick { display: flex; } #tetlock .tl-pick > .wb-btn { flex: 1 1 0; } }
 </style>
 </head>
 <body class="wb-app">
@@ -309,6 +322,9 @@
       <li><b>The Demon-Haunted World:</b> mục dài ≈3.200 tiếng phần chữ (khoảng 2.050–2.200 từ tuỳ cách đếm), cộng ≈260 tiếng trong mô hình (~13 phút đọc), nhỉnh hơn trần 2.000 từ; phần nặng nhất là hai bảng đề bài yêu cầu (đối chiếu hai mươi lỗi, soi quảng cáo). Chi tiết chương 1, 2, 10, 12 đối chiếu qua ghi chép từng chương và trích đoạn công khai, không qua bản đầy đủ của sách.</li>
       <li><b>The Demon-Haunted World:</b> bảng đối chiếu xếp chín lỗi “trùng hẳn”, sáu lỗi “gần”, năm lỗi Pirie không có: đó là đánh giá của trang này (ví dụ “biện hộ đặc biệt” của Sagan là cứu một thuyết bằng ngoại lệ đặt riêng, của Pirie là tiêu chuẩn kép). Ngoài đề bài, mục thêm chuyện Le Verrier và Sao Hải Vương để nói rõ khi nào thêm giả định là chính đáng.</li>
       <li><b>The Demon-Haunted World:</b> quảng cáo “viên xương khớp X” là ví dụ giả định. Dòng về Nghị định 15/2018 (cấm dùng hình ảnh bác sĩ và thư cảm ơn của người bệnh; buộc ghi “không phải là thuốc”) dựa trên tin Báo Chính phủ ngày 8/4/2026 rằng nghị định này tiếp tục có hiệu lực; quy định quảng cáo thực phẩm đổi nhiều lần trong 2025–2026, nên cần kiểm lại nếu có văn bản mới.</li>
+      <li><b>Superforecasting:</b> bản tiếng Việt ghi theo Alpha Books và NetaBooks (<i>Siêu Dự Báo – Superforecasting: Nghệ Thuật và Khoa Học Dự Đoán Tương Lai</i>, Lê Thiện Trí dịch, NXB Thế Giới, 382 trang, tháng 5/2026). Alpha còn một trang sách tựa phụ “Những phương pháp dự đoán trên tầm chuyên gia”, và Waka ghi một bản điện tử năm 2018 của NXB Lao Động Xã Hội; chưa kiểm được năm in đầu và dịch giả của bản cũ trên trang chính thức.</li>
+      <li><b>Superforecasting:</b> Độ vững sửa hai điều hay được trích về dự án: câu “hơn nhà phân tích có tin mật 30%” gốc là một bài báo năm 2013 (phân tích đầy đủ: phương pháp gộp của cả dự án, không phải từng siêu dự báo viên, tốt hơn chừng 35%); và một phân tích lại năm 2025 thấy tác dụng của huấn luyện và làm nhóm có thể mất đi khi kiểm soát thêm biến. Độ vững của mục Galef vẫn dẫn Mellers 2014 như bằng chứng tốt nhất; chủ trang có thể muốn thêm một câu ở đó.</li>
+      <li><b>Superforecasting:</b> mục dài ≈3.200 tiếng phần chữ (khoảng 2.200 từ), cộng ≈300 tiếng trong mô hình (~12 phút đọc), đúng trần; để giữ trần đã bỏ ví dụ “mắt chuồn chuồn”. Máy chấm điểm cho mười lời đoán cùng một mức chắc, để thấy điểm tốt nhất rơi đúng vào tỉ lệ đoán trúng; số chính theo thang 0–2 của sách, bản 0–1 ghi kèm. Ngoài đề bài, Độ vững thêm kết quả giải XPT (2022, đối chiếu năm 2025) về rủi ro AI.</li>
     </ul>
   </aside>
 
@@ -382,7 +398,17 @@
         </div>
       </div>
     </a>
-    <!-- 07 tetlock · 08 rosling · 09 diamond · 10 acemoglu: chèn sau thẻ 06 -->
+    <a class="wb-card wb-card--hover wb-card--pad" href="#tetlock">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">07</span>
+        <div class="wb-media__body">
+          <p class="bb-card__k">Superforecasting</p>
+          <p class="wb-media__title">Siêu dự báo</p>
+          <p class="wb-media__text">Vì sao phần đông chuyên gia đoán tương lai chẳng hơn may rủi bao nhiêu, cách chấm điểm một lời đoán, và những thói quen giúp một số người thường đoán giỏi hơn hẳn.</p>
+        </div>
+      </div>
+    </a>
+    <!-- 08 rosling · 09 diamond · 10 acemoglu: chèn sau thẻ 07 -->
   </div>
 
   <div class="hw-layout">
@@ -401,7 +427,7 @@
 
       <div class="wb-sidenav__section" style="margin-top:12px">Evidence &amp; the future</div>
       <a class="wb-sidenav__link" href="#sagan">The Demon-Haunted World</a>
-      <!-- 07 tetlock -->
+      <a class="wb-sidenav__link" href="#tetlock">Superforecasting</a>
 
       <div class="wb-sidenav__section" style="margin-top:12px">The world</div>
       <!-- 08 rosling · 09 diamond · 10 acemoglu -->
@@ -1407,12 +1433,165 @@ Câu dễ trượt khỏi tai bạn nhất (thiêng liêng): “Hẻm tối thà
 
         <div class="bb-next">
           <p><b>Bạn vừa có:</b> bốn câu hỏi để soi một lời khẳng định, một phép thử cho mọi lời hứa không bao giờ sai được, và một nghĩa đo được cho chữ “phi thường”.</p>
-          <p><b>Nó dẫn đi đâu:</b> Sagan dạy cân lời khẳng định về điều đang có. Còn lời đoán về điều chưa xảy ra, như giá nhà năm sau, thì chấm điểm thế nào, và ai đoán giỏi hơn ai? Đó là câu hỏi của cuốn tiếp theo trong nhóm, của Philip Tetlock.</p>
+          <p><b>Nó dẫn đi đâu:</b> Sagan dạy cân lời khẳng định về điều đang có. Còn lời đoán về điều chưa xảy ra, như giá nhà năm sau, thì chấm điểm thế nào, và ai đoán giỏi hơn ai? Đó là câu hỏi của mục <a href="#tetlock">Tetlock</a>, cuốn tiếp theo trong nhóm.</p>
         </div>
         <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/The_Demon-Haunted_World">Wikipedia</a> (Random House, 1995; 25 chương, bốn chương viết cùng Ann Druyan) · <a href="https://openlibrary.org/books/OL797905M">Open Library</a> (bản in đầu, 457 trang) · mục lục đối chiếu <a href="https://it.wikipedia.org/wiki/Il_mondo_infestato_dai_demoni">Wikipedia tiếng Ý</a> và <a href="https://christianjmills.com/posts/the-demon-haunted-world-book-notes/">ghi chép từng chương của Christian Mills</a> (chi tiết chương 1, 2, 10, 12) · bản tiếng Việt: <a href="https://waka.vn/ebook/the-gioi-bi-quy-am-khoa-hoc-nhu-ngon-nen-trong-dem-bLYmRW.html">Waka</a> (NXB Thế Giới, 3/2014), <a href="https://www.netabooks.vn/the-gioi-bi-quy-am">NetaBooks</a> (Alpha Books, 2014), <a href="https://vi.wikipedia.org/wiki/Th%E1%BA%BF_gi%E1%BB%9Bi_b%E1%BB%8B_qu%E1%BB%B7_%C3%A1m">Wikipedia tiếng Việt</a> · Sagan, <a href="https://skepticalinquirer.org/wp-content/uploads/sites/29/uploads/files/ParadeFeb11987.pdf">“The Fine Art of Baloney Detection”, <i>Parade</i>, 1/2/1987</a> · <a href="https://www.themarginalian.org/2014/01/03/baloney-detection-kit-carl-sagan/">The Marginalian</a> (chín công cụ và hai mươi lỗi kèm ví dụ) · <a href="https://skepticalinquirer.org/2026/06/the-fine-art-of-baloney-detection-sagans-essay-three-decades-later/">Pigliucci, <i>Skeptical Inquirer</i> 50(4), 2026</a> · <a href="https://en.wikipedia.org/wiki/Extraordinary_claims_require_extraordinary_evidence">Extraordinary claims require extraordinary evidence</a> (Wikipedia; phỏng vấn năm 1977, Hume năm 1748) · <a href="https://en.wikipedia.org/wiki/PSR_B1919%2B21">PSR B1919+21</a> (sao xung đầu tiên) · <a href="https://en.wikipedia.org/wiki/Discovery_of_Neptune">Discovery of Neptune</a> và <a href="https://en.wikipedia.org/wiki/Vulcan_(hypothetical_planet)">Vulcan</a> (Wikipedia) · <a href="https://nssdc.gsfc.nasa.gov/planetary/mgs_cydonia.html">NASA NSSDC</a> (ảnh Cydonia của Mars Global Surveyor) · <a href="https://www.nybooks.com/articles/1997/01/09/billions-and-billions-of-demons/">Lewontin, 1997</a> · <a href="https://doi.org/10.1007/s10503-015-9359-1">Boudry, Paglieri &amp; Pigliucci, 2015</a> · <a href="https://doi.org/10.1038/nclimate1547">Kahan và cs., 2012</a> · <a href="https://doi.org/10.1007/s11162-018-9513-3">Dyer &amp; Hall, 2019</a> · <a href="https://doi.org/10.1126/sciadv.abo6254">Roozenbeek và cs., 2022</a> (6 thử nghiệm ngẫu nhiên, 6.464 người, cộng một thử nghiệm trên YouTube, 22.632 người) · <a href="https://plato.stanford.edu/entries/pseudo-science/">Stanford Encyclopedia of Philosophy</a> (mục Science and Pseudo-Science) · <a href="https://doi.org/10.1007/s11406-016-9779-7">Deming, 2016</a> · <a href="https://www.nhs.uk/conditions/slipped-disc/">NHS</a> (thoát vị đĩa đệm) · Nghị định 15/2018/NĐ-CP, Điều 27, theo <a href="https://vfa.gov.vn/tin-tuc/khong-su-dung-hinh-anh-thiet-bi-trang-phuc-ten-thu-tin-cua-cac-don-vi-co-so-y-te-bac-sy-duoc-sy-nhan-vien-y-te-thu-cam-on-cua-nguoi-benh-bai-viet-cua-bac-sy-duoc-sy-nhan-vien-y-te-de-quang-cao-thuc-pham.html">Cục An toàn thực phẩm</a> và <a href="https://vcci.com.vn/legal-document/nghi-dinh-152018nd-cp-huong-dan-luat-an-toan-thuc-pham">VCCI</a> · <a href="https://baochinhphu.vn/tiep-tuc-ap-dung-nghi-dinh-15-2018-nd-cp-ve-an-toan-thuc-pham-cho-den-khi-co-quy-dinh-moi-102260408123934123.htm">Báo Chính phủ, 8/4/2026</a> (Nghị định 15/2018 tiếp tục có hiệu lực).</p>
       </section>
 
-      <!-- 07 tetlock -->
+      <section class="bb-book" id="tetlock">
+        <p class="bb-book__eyebrow"><b>07</b> — Philip E. Tetlock &amp; Dan Gardner · 2015</p>
+        <h3 class="bb-book__title">Siêu dự báo</h3>
+        <p class="bb-book__orig"><i>Superforecasting: The Art and Science of Prediction</i> (2015) · bản tiếng Việt: Lê Thiện Trí dịch, NXB Thế Giới, Alpha Books phát hành (bản in tháng 5/2026; Alpha Books đã phát hành cuốn này từ năm 2018)</p>
+        <p class="hw-lede">Đoán tương lai là một kỹ năng <b>đo được và luyện được</b>. Phần đông chuyên gia chỉ đoán nhỉnh hơn may rủi, nhưng một số người thường đoán giỏi hơn hẳn, nhờ cách nghĩ hơn là nhờ tin mật hay trí thông minh; điều kiện đầu tiên là nói lời đoán bằng <b>một con số, có hạn chót, và chịu chấm điểm</b>.</p>
+        <div class="bb-verdict">
+          <span class="bb-verdict__k">Đọc gì trong bản gốc</span><p class="bb-verdict__v"><b>Nửa đầu</b> (chương 1–6), nhất là <b>chương 3</b>, “Chấm điểm” (<i>Keeping Score</i>): lời đoán mơ hồ, điểm Brier, cáo và nhím; và <b>chương 5</b>, “Siêu thông minh?” (<i>Supersmart?</i>): chia nhỏ câu hỏi và bắt đầu từ tỉ lệ nền, qua từng ca có thật. Rồi <b>phụ lục</b> <i>Ten Commandments for Aspiring Superforecasters</i>, vài trang gói cả cuốn thành thói quen. Tên chương tiếng Việt do trang này dịch.</p>
+          <span class="bb-verdict__k">Bỏ qua được</span><p class="bb-verdict__v"><b>Chương 10</b>, “Thế khó của người lãnh đạo” (<i>The Leader's Dilemma</i>): dài về quân đội Phổ thời Moltke và tướng Mỹ David Petraeus, để nói một ý: người chỉ huy vừa quyết đoán vừa khiêm tốn được. Chương 9, về làm nhóm, đọc phần tóm dưới đây là đủ.</p>
+          <span class="bb-verdict__k">Mục này</span><p class="bb-verdict__v">~12 phút đọc, kèm một máy chấm điểm Brier để kéo thử</p>
+        </div>
+
+        <h4 class="bb-h4" id="tetlock-khung">Bộ khung</h4>
+        <p class="hw-p">Sáu bước: chuyên gia đoán kém mà ít ai hay, vì chẳng ai chấm điểm họ; muốn chấm thì lời đoán phải có con số và hạn chót; chấm bằng điểm Brier; một giải đấu lớn cho thấy có người đoán giỏi thật, và bền; họ giỏi nhờ thói quen học được; và thói quen ấy có giới hạn.</p>
+
+        <h4 class="bb-h4" id="tetlock-nhim">Tinh tinh ném phi tiêu, cáo và nhím</h4>
+        <p class="hw-p"><b>Hai mươi năm chấm điểm chuyên gia.</b> Từ năm 1984 tới 2003, Tetlock xin 284 người kiếm sống bằng nghề bình luận, tư vấn về chính trị và kinh tế đưa ra hàng chục nghìn lời đoán có xác suất. Kết quả in trong cuốn <i>Expert Political Judgment</i> (2005): trung bình, chuyên gia gần như không hơn người ngoài ngành chịu đọc báo, chỉ nhỉnh hơn may rủi, và thua cả những quy tắc máy móc như “mọi thứ cứ tiếp diễn như gần đây”, nhất là khi đoán xa ba tới năm năm. Câu đùa ai cũng nhớ là chuyên gia đoán ngang một con tinh tinh ném phi tiêu; theo Tetlock, nó làm người ta quên nửa sau của kết quả: có một nhóm đoán khá hơn hẳn.</p>
+        <p class="hw-p"><b>Cáo và nhím.</b> Tetlock mượn câu thơ Hy Lạp cổ mà Isaiah Berlin làm nổi tiếng: cáo biết nhiều điều, nhím biết một điều lớn. <b>Nhím</b> có một thuyết lớn, đem nó giải thích mọi chuyện, nói chắc, ít chịu sửa. <b>Cáo</b> gom ý từ nhiều nguồn, hay nói “tuy nhiên”, và sửa khi sai. Cáo đoán tốt hơn, nhưng nhím lên hình hay hơn: “giá nhà sang năm chắc chắn tăng” lọt tai hơn hẳn “khả năng tăng khoảng sáu phần mười, tuỳ lãi suất”.</p>
+        <div class="hw-quote">
+          Nhím như người thợ chỉ có một cái búa, nhìn đâu cũng thấy đinh; cáo xách theo cả hộp đồ nghề.
+          <cite>Chỗ ví von hỏng: có lúc cái búa trúng đúng đinh; nhím thỉnh thoảng đoán trúng những cú lớn mà cáo bỏ lỡ, và chính những lần ấy giữ họ trên sóng.</cite>
+        </div>
+
+        <h4 class="bb-h4" id="tetlock-ro">Lời đoán phải chấm được</h4>
+        <p class="hw-p"><b>Lời đoán mơ hồ thì khó mà sai.</b> “Giá vàng có thể còn tăng” đúng hay sai tuỳ người nghe hiểu “có thể” là bao nhiêu, và tới bao giờ. Không có con số và hạn chót thì không chấm được; không chấm được thì không ai biết ai đoán giỏi, kể cả chính người đoán.</p>
+        <p class="hw-p"><b>“Một khả năng nghiêm túc” là bao nhiêu?</b> Tháng 3/1951, một bản ước tính tình báo quốc gia của Mỹ gọi việc Liên Xô tấn công Nam Tư trong năm ấy là “một khả năng nghiêm túc” (<i>a serious possibility</i>). Sherman Kent, thành viên ban duyệt bản ước tính, nghĩ tới khoảng 65%; Bộ Ngoại giao hiểu thấp hơn nhiều; các thành viên khác trong ban thì nghĩ đủ mức, từ 20% tới 80%. Kent đề nghị gắn mỗi cụm từ với một khoảng số, như “có khả năng” quanh 75%, “gần như chắc chắn” quanh 93%; nhiều đồng nghiệp phản đối, và ông gọi họ là phe “thi sĩ”, đối lại phe “toán học”.</p>
+        <p class="hw-p">Mười năm sau, trước vụ Vịnh Con Heo, các tướng Mỹ viết rằng kế hoạch có một <i>fair chance</i> thành công, hiểu là “cơ hội khá” hay “tàm tạm” đều được. Người viết định cảnh báo, nội bộ ước chừng ba phần mười; Tổng thống Kennedy thì hiểu là các tướng tán thành. Thử với người quanh mình: hỏi năm người “khả năng cao” là bao nhiêu phần trăm, rồi so năm con số.</p>
+
+        <h4 class="bb-h4" id="tetlock-brier">Điểm Brier: chấm một lời đoán bằng xác suất</h4>
+        <p class="hw-p"><b>Cách tính.</b> Lời đoán là một xác suất p; chuyện xảy ra thì kết quả tính là 1, không xảy ra tính là 0. Điểm phạt là bình phương khoảng cách từ p tới kết quả; chấm cả chuỗi thì lấy trung bình, càng thấp càng tốt. Glenn W. Brier đặt ra cách chấm này năm 1950, cho dự báo thời tiết.</p>
+        <p class="hw-p"><b>Hai thang, cùng một thước.</b> Bản thường gặp chỉ tính một phía: nói 70% mà chuyện xảy ra thì bị phạt (1&nbsp;−&nbsp;0,7)²&nbsp;=&nbsp;0,09. Sách dùng bản gốc của Brier, cộng thêm phía “không xảy ra”: (1&nbsp;−&nbsp;0,7)²&nbsp;+ (0&nbsp;−&nbsp;0,3)²&nbsp;=&nbsp;0,18. Với câu hỏi có/không, bản gốc luôn bằng đúng hai lần bản thường gặp, nên nằm trên thang 0–2: 0 là hoàn hảo, 0,5 là nói 50% mọi lần, 2 là nói chắc 100% mà lần nào cũng trượt. Giải đấu của Tetlock, trang Good Judgment Open và mọi điểm Brier trong mục này dùng thang ấy.</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th>Lời đoán</th><th style="width:26%">Thang 0–1</th><th style="width:26%">Thang 0–2 (sách)</th></tr></thead>
+            <tbody>
+              <tr><td>Nói 70%, chuyện xảy ra</td><td>0,09</td><td>0,18</td></tr>
+              <tr><td>Nói 70%, chuyện không xảy ra</td><td>0,49</td><td>0,98</td></tr>
+              <tr><td>Nói 50% mọi lần</td><td>0,25</td><td>0,5</td></tr>
+              <tr><td>Nói chắc 100%, và trượt</td><td>1</td><td>2</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p"><b>Với người làm dữ liệu:</b> bản 0–1 chính là sai số bình phương trung bình (MSE) giữa xác suất và nhãn 0/1, và khác log-loss ở chỗ có trần: sai hết mức chỉ bị phạt 1 (<a href="machine-learning.html#s-logistic">hai đường phạt cạnh nhau</a>, <a href="mathematics-for-machine-learning.html#s-losses">phép tính</a>).</p>
+        <p class="hw-p"><b>Hiệu chỉnh và độ phân giải.</b> Điểm Brier gộp hai phẩm chất. <b>Hiệu chỉnh</b>: những lần nói 70% có xảy ra chừng 70% số lần không; mục Galef có <a href="#galef-lab">bài tập</a> cho việc này. <b>Độ phân giải</b>: có dám tách chuyện sắp xảy ra khỏi chuyện không, bằng những con số xa 50%. Ở nơi cứ mười ngày mưa ba, người ngày nào cũng báo “30% có mưa” hiệu chỉnh hoàn hảo mà chẳng giúp ai biết hôm nào mang áo mưa: 0,42 điểm. Người báo 80% cho ba hôm mưa, 10% cho bảy hôm nắng được 0,04, dù hiệu chỉnh chưa khớp.</p>
+
+        <div class="bb-lab" id="tetlock-lab">
+          <div class="bb-lab__head">
+            <p class="bb-lab__kick">Mô hình · điểm Brier</p>
+            <p class="bb-lab__title">Mười lời đoán, một con số: nói chắc bao nhiêu thì được điểm tốt nhất?</p>
+            <p class="bb-lab__hint">Một người đoán mười chuyện có/không. Lần nào họ cũng nghiêng về một phía và nói cùng một <b>mức chắc</b> cho phía ấy; trong mười lần, họ <b>nghiêng đúng</b> bao nhiêu lần thì bạn chọn. Máy chấm từng lời đoán theo thang 0–2 của sách rồi lấy trung bình; bản 0–1 ghi ngay bên dưới.</p>
+          </div>
+          <div class="bb-lab__body">
+            <div class="bb-lab__row">
+              <label for="tetlock-hit">Nghiêng đúng</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="tetlock-hit" min="5" max="10" step="1" value="7" style="flex:1 1 180px"><span class="bb-mono tl-val" id="tetlock-hit-l">7 / 10 lần</span></div>
+            </div>
+            <div class="bb-lab__row">
+              <label for="tetlock-conf">Mức chắc nói ra</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="tetlock-conf" min="50" max="100" step="5" value="90" style="flex:1 1 180px"><span class="bb-mono tl-val" id="tetlock-conf-l">90%</span></div>
+            </div>
+            <div class="bb-lab__row">
+              <span class="k">Thử nhanh</span>
+              <div class="wb-cluster tl-pick">
+                <button class="wb-btn wb-btn--sm" type="button" id="tetlock-p50">Nói 50% mọi lần</button>
+                <button class="wb-btn wb-btn--sm" type="button" id="tetlock-p100">Nói chắc 100%</button>
+                <button class="wb-btn wb-btn--sm" type="button" id="tetlock-pfit">Nói đúng tỉ lệ</button>
+              </div>
+            </div>
+            <p class="tl-cap">Điểm Brier trung bình của mười lời đoán · thang 0–2, thấp là tốt</p>
+            <p class="bb-lab__big" id="tetlock-big">0,50</p>
+            <p class="tl-sub" id="tetlock-sub" aria-live="polite">Bản 0–1: 0,25. Ngang người nói 50% mọi lần. Nghiêng đúng 7/10 thì nói 70% mới được điểm tốt nhất: 0,42.</p>
+            <svg class="bb-svg tl-svg" id="tetlock-svg" viewBox="0 0 360 312" role="img" aria-label="Hai biểu đồ: điểm phạt của mười lời đoán, và điểm trung bình theo mức chắc nói ra"></svg>
+            <pre class="bb-out tl-out" id="tetlock-out">Mỗi lần đúng: 2 × (1 − 0,9)² = 0,02
+Mỗi lần sai:  2 × 0,9² = 1,62
+7 × 0,02 + 3 × 1,62 = 5,00
+5,00 ÷ 10 = 0,50 · thang 0–1: 0,25</pre>
+            <p class="bb-lab__foot"><b>Điều cần thấy:</b> điểm thấp nhất nằm đúng ở mức chắc bằng tỉ lệ nghiêng đúng: đúng 7/10 thì nói 70%. Lệch khỏi đó, lên hay xuống, điểm phạt tăng theo bình phương khoảng lệch, nên với 7/10, nói 90% cũng tệ như nói 50% mọi lần. Brier thưởng cho việc nói thật mình chắc tới đâu, không thưởng cho giọng chắc nịch.</p>
+            <p class="bb-lab__foot">Cách tính: một lời đoán chắc c bị phạt 2&nbsp;×&nbsp;(1&nbsp;−&nbsp;c)² nếu trúng, 2&nbsp;×&nbsp;c² nếu trượt; bỏ số 2 là ra thang 0–1. Mô hình cho mọi lời đoán cùng một mức chắc để dễ thấy; người đoán thật chắc nhiều ở câu này, ít ở câu kia, và đó là chỗ độ phân giải kiếm thêm điểm.</p>
+          </div>
+        </div>
+
+        <h4 class="bb-h4" id="tetlock-giai">Giải đấu: có người đoán giỏi thật, và giỏi bền</h4>
+        <p class="hw-p"><b>Giải đấu của giới tình báo.</b> Năm 2011, IARPA, cơ quan tài trợ nghiên cứu của giới tình báo Mỹ, mở một giải dự báo kéo dài bốn năm: năm đội do các trường đại học dẫn dắt thi đoán những câu hỏi thời sự có hạn chót, kiểu “Trước ngày 1/1/2012, Thủ tướng Ý Silvio Berlusconi có rời chức không?”, và phải thắng lời đoán gộp của một nhóm đối chứng, cách biệt 20% ở năm đầu, tăng dần tới 50% ở năm thứ tư. Đội Good Judgment của Tetlock và Barbara Mellers tuyển tình nguyện viên qua mạng, năm đầu hơn 2.200 người; theo lời giới thiệu sách, có cả một nhà làm phim, một ông thợ lắp ống về hưu, một cựu vũ công.</p>
+        <p class="hw-p"><b>Kết quả.</b> Theo sách, Good Judgment hơn nhóm đối chứng 60% ngay năm đầu, 78% năm thứ hai, và hơn các đội đại học khác từ 30% tới 70%; từ hè 2013, IARPA chỉ còn tài trợ riêng đội này. Một phần công lớn nằm ở cách gộp: lấy trung bình lời đoán của nhiều người, người giỏi nặng ký hơn, rồi đẩy con số chung ra xa 50% một chút, vì mỗi người chỉ nắm một phần thông tin nên ai cũng dè dặt hơn mức cả nhóm cho phép.</p>
+        <p class="hw-p"><b>Siêu dự báo viên.</b> Cuối mỗi năm, dự án gom 2% người giỏi nhất thành những đội tinh hoa. Nếu họ chỉ gặp may, năm sau họ phải tụt về giữa bảng, như nhóm được khen trong <a href="#kahneman-lab">mô hình hồi quy</a> ở mục Kahneman. Không hẳn thế: thành tích của mỗi người năm này với năm sau tương quan khoảng 0,65, và chừng 70% siêu dự báo viên giữ được danh hiệu. Họ thông minh nhưng không phải thiên tài: điểm trắc nghiệm trí tuệ và hiểu biết cao hơn khoảng 80% dân số, so với 70% của người dự báo thường trong dự án. Theo sách, đoán theo nhóm chính xác hơn đoán một mình khoảng 23%; đội toàn siêu dự báo viên còn hơn chợ dự báo, nơi người chơi mua bán cược trên từng kết cục, từ 15% tới 30%.</p>
+
+        <h4 class="bb-h4" id="tetlock-nghi">Họ nghĩ thế nào</h4>
+        <p class="hw-p">Năm thói quen, theo thứ tự một lời đoán được dựng lên.</p>
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="tetlock-t1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Thói quen 1</span><h5 class="hw-fal__name">Chia nhỏ câu hỏi</h5><span class="wb-tag">Fermi-ize · chương 5</span></div>
+            <p class="hw-fal__def">Nhà vật lý Enrico Fermi hay đố sinh viên: Chicago có bao nhiêu thợ lên dây đàn piano? Bản gần mình: Hà Nội có bao nhiêu thợ sửa xe máy? Không ai biết ngay, nhưng tách ra thì đoán được từng phần: bao nhiêu chiếc xe, mỗi chiếc một năm vào tiệm mấy lần, một thợ một ngày sửa mấy chiếc. Mỗi phần có thể lệch, nhưng lệch lên lệch xuống thường bù nhau, và mình thấy rõ chỗ nào đang đoán.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Câu hỏi của giải: cuộc điều tra ở Pháp hay Thuỵ Sĩ có tìm thấy polonium vượt mức trong hài cốt Yasser Arafat (mất năm 2004) không? Hỏi “Israel có đầu độc ông không?” thì bế tắc; chia nhỏ thì hỏi được: polonium phân rã nhanh, sau ngần ấy năm còn đo được không, và còn đường nào đưa nó vào thi thể.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="tetlock-t2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Thói quen 2</span><h5 class="hw-fal__name">Tỉ lệ nền trước, chi tiết sau</h5><span class="wb-tag">outside view · chương 5</span></div>
+            <p class="hw-fal__def">Nhà Renzetti ở Mỹ: chồng làm kế toán, vợ làm ở nhà trẻ, con trai năm tuổi, bà nội sống cùng. Nhà ấy có nuôi thú cưng không? Đừng lao vào chi tiết; hỏi trước bao nhiêu hộ gia đình Mỹ nuôi thú cưng. Khoảng 62%: đó là điểm xuất phát, chi tiết chỉ để chỉnh lên xuống; rồi mới nghe thêm nhiều phía, kể cả người không đồng ý. Đây chính là <a href="#kahneman-c5">góc nhìn bên ngoài</a> ở mục Kahneman.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Người quen mở kênh livestream bán mỹ phẩm, tin ba tháng nữa có lãi. Trước khi nghe kế hoạch, hỏi: những người quen từng mở kênh như thế, sau ba tháng còn mấy người làm?</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="tetlock-t3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Thói quen 3</span><h5 class="hw-fal__name">Sửa từng chút khi có tin mới</h5><span class="wb-tag">belief updating</span></div>
+            <p class="hw-fal__def">Tin mới đến thì sửa con số, thường từng chút, và không bỏ qua tin trái ý; đừng lì vì đã lỡ nói ra, cũng đừng nhảy theo tin giật gân. Trong giải của Tetlock, lời đoán 100% đưa ra lúc câu hỏi mới mở chỉ đúng khoảng 70%; đưa ra lúc gần hạn chót thì đúng khoảng 90%. Mục Galef đã kể <a href="#galef-doi-y">thói quen này</a>; phép tính đằng sau là phép Bayes trong <a href="#sagan-lab">mô hình</a> của mục Sagan.</p>
+          </article>
+          <article class="hw-fal" id="tetlock-t4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Thói quen 4</span><h5 class="hw-fal__name">Phân biệt 60% với 65%</h5><span class="wb-tag">granularity</span></div>
+            <p class="hw-fal__def">Người chỉ nói theo bội số 10 đoán kém người dùng bội số 5, và kém nữa so với người phân biệt từng 1%. Làm tròn lời đoán của siêu dự báo viên về bội số 5 gần nhất đã làm họ kém chính xác đi; người dự báo thường làm tròn tới bội số 20 cũng ít mất gì. Phân tích 888.328 lời đoán về sau cũng thấy gom con số về vài nấc kiểu “có khả năng”, “khó xảy ra” làm mất độ chính xác, dù đo theo cách nào.</p>
+          </article>
+          <article class="hw-fal" id="tetlock-t5">
+            <div class="hw-fal__top"><span class="hw-fal__no">Thói quen 5</span><h5 class="hw-fal__name">Bản thử mãi mãi</h5><span class="wb-tag">perpetual beta · chương 8</span></div>
+            <p class="hw-fal__def">Theo sách, yếu tố đoán trước mạnh nhất ai lọt vào nhóm giỏi nhất là quyết tâm cập nhật niềm tin và tự sửa mình, mạnh gấp khoảng ba lần yếu tố đứng sau là trí thông minh. Sách gọi đó là “bản beta mãi mãi”, chữ của giới làm phần mềm cho sản phẩm lúc nào cũng đang chạy thử. Với họ, niềm tin là “hypotheses to be tested, not treasures to be guarded”: giả thuyết để kiểm, không phải báu vật để canh. Nên họ soát cả lần đoán trúng: trúng vì lý do đúng, hay nhờ may?</p>
+          </article>
+        </div>
+
+        <h4 class="bb-h4" id="tetlock-han">Giới hạn: tầm xa và thiên nga đen</h4>
+        <p class="hw-p"><b>Tầm xa.</b> Ở nghiên cứu đầu tiên của Tetlock, độ chính xác của chuyên gia tụt dần về mức may rủi khi đoán xa năm năm; câu hỏi trong giải thường đóng sau vài tháng, hiếm khi quá một năm, và điều răn đầu tiên của phụ lục chính là chọn câu hỏi vừa sức.</p>
+        <p class="hw-p"><b>Thiên nga đen.</b> Nassim Taleb cho rằng những biến cố thật sự đổi hướng lịch sử là loại hiếm, không ai lường trước, và một giải đấu gồm những câu hỏi có/không không đo được chúng. Tetlock đáp rằng nhiều “thiên nga đen” không mù mịt đến thế (trước vụ 11/9/2001, giới tình báo Mỹ đã có dấu hiệu), và lịch sử có lúc nhảy vọt nhưng phần lớn thời gian trôi từng bước, theo những cách đoán được. Ông cũng nhận có những câu hỏi quá khó, chủ yếu vì hạn chót quá xa.</p>
+
+        <h4 class="bb-h4" id="tetlock-dung">Dùng thế nào</h4>
+        <p class="hw-p">Phụ lục có mười một điều; bảng dưới gom tám điều đầu thành bốn việc, bằng lời của trang này, số điều ghi dưới tên mỗi việc. Ba điều cuối bàn về làm nhóm, về luyện bằng đoán thật, và dặn đừng coi các điều răn là luật cứng.</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:32%">Việc</th><th>Làm thế nào</th></tr></thead>
+            <tbody>
+              <tr><td><b>Chọn câu đáng đoán</b><span class="tl-no">điều 1</span></td><td>Bỏ câu ai cũng đoán đúng và câu mù mịt tới mức cố mấy cũng vô ích.</td></tr>
+              <tr><td><b>Dựng con số</b><span class="tl-no">điều 2, 3, 5</span></td><td>Chia nhỏ; lấy tỉ lệ nền làm gốc; rồi mới chỉnh theo chi tiết riêng, kể cả những lực kéo ngược chiều.</td></tr>
+              <tr><td><b>Nói rõ, sửa dần</b><span class="tl-no">điều 4, 6, 7</span></td><td>Ghi một con số, đừng ghi “có thể”; phân biệt 60 với 65 khi phân biệt được; sửa khi có tin mới, không lì mà cũng không nhảy; không rụt rè mà cũng không liều.</td></tr>
+              <tr><td><b>Chấm và soát lại</b><span class="tl-no">điều 8</span></td><td>Tới hạn thì chấm; soát cả lần sai lẫn lần trúng, nhưng coi chừng khôn sau: biết kết quả rồi, chuyện gì cũng có vẻ rõ.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p"><b>Sổ dự báo.</b> Trong một tháng, mỗi khi định nói “chắc là…”, ghi ra câu hỏi, con số và hạn chót, chẳng hạn: “Tới 31/12/2026, lãi suất tiết kiệm 12 tháng ở ngân hàng mình đang gửi cao hơn hôm nay: 40%.” Tới hạn thì chấm như ở <a href="#tetlock-brier">mục điểm Brier</a>; sau vài chục câu, điểm trung bình dưới 0,5 nghĩa là bạn đoán tốt hơn người nói 50% mọi lần. Muốn có câu hỏi sẵn và bảng xếp hạng: <a href="https://www.gjopen.com/">Good Judgment Open</a>, trang của công ty tách ra từ dự án, ai cũng tham gia được.</p>
+        <p class="bb-key"><span class="k">Mang theo</span>Trước một lời đoán, của mình hay của người khác, hỏi: <b>đến ngày nào, và bao nhiêu phần trăm?</b> Chưa trả lời được hai câu ấy thì đó mới là một ý kiến, chưa phải lời đoán.</p>
+
+        <h4 class="bb-h4" id="tetlock-vung">Độ vững</h4>
+        <p class="hw-p">Lõi của sách dựa trên dữ liệu thật; những con số hay được trích nhất thì cần đọc kỹ hơn lời đồn.</p>
+        <ul class="hw-ul">
+          <li><b>Có người đoán giỏi bền, và con số chi tiết có ích: đứng vững.</b> Cả hai đã đăng trên tạp chí có bình duyệt (Mellers và cộng sự, 2014; Friedman và cộng sự, 2018).</li>
+          <li><b>Câu “hơn nhà phân tích có tin mật 30%” cần đọc kỹ.</b> Nó xuất phát từ một bài bình luận trên báo Washington Post tháng 11/2013, khi chưa tới 20% lời đoán năm ấy được chấm. Phân tích đầy đủ trên 139 câu hỏi chung: phương pháp gộp tốt nhất của Good Judgment, chọn ra sau khi đã biết kết quả trong khoảng hai chục phương pháp, được 0,15 điểm Brier, tốt hơn chừng 35% so với 0,23 của chợ dự báo nội bộ giới tình báo; chợ dự báo của chính Good Judgment thì chỉ ngang giới tình báo (0,21). Không có dữ liệu so từng siêu dự báo viên với từng nhà phân tích.</li>
+          <li><b>Huấn luyện và làm nhóm: đang bị xem lại.</b> Năm 2025, nhóm của Clifford Hauenstein phân tích lại dữ liệu hai năm đầu, tính thêm những yếu tố lẽ ra phải kiểm soát, như ai trả lời câu nào, vào lúc nào; tác dụng của huấn luyện và làm nhóm khi ấy mất đi, nhỏ lại, có chỗ đảo chiều. Mục <a href="#galef-vung">Galef</a> dẫn kết quả gốc năm 2014.</li>
+          <li><b>Tầm xa và chuyện chưa từng có vẫn là chỗ yếu.</b> Năm 2022, 89 siêu dự báo viên và 80 chuyên gia cùng đoán rủi ro cho loài người tới năm 2100, và lệch nhau nhiều nhất về AI: khả năng loài người tuyệt chủng vì AI trước năm 2100, trung vị 0,38% ở siêu dự báo viên, 3% ở chuyên gia. Với những câu ngắn hạn đã có đáp án tới giữa năm 2025, hai nhóm chính xác ngang nhau, và cùng hụt về AI: chuyện AI đạt huy chương vàng Olympic Toán quốc tế, xảy ra tháng 7/2025, siêu dự báo viên chỉ cho 2,3%.</li>
+          <li><b>Đoán đúng chưa phải là thắng.</b> Taleb và Tetlock viết chung năm 2013: đời thật hiếm khi trả thưởng theo đúng hay sai, mà theo độ lớn của được mất, và thiên nga đen ra tay ở chỗ ấy. Đoán đúng hướng giá vàng bảy tháng trong mười vẫn có thể lỗ, nếu ba tháng sai rơi đúng những cú giảm sâu; điểm Brier chấm cái thứ nhất, không chấm cái thứ hai.</li>
+        </ul>
+
+        <div class="bb-next">
+          <p><b>Bạn vừa có:</b> một cách biến lời đoán thành thứ chấm được (con số, hạn chót, điểm Brier), và năm thói quen của người đoán giỏi: chia nhỏ, lấy tỉ lệ nền làm gốc, sửa từng chút, nói đúng mức chắc, soát lại cả lần trúng.</p>
+          <p><b>Nó dẫn đi đâu:</b> Tetlock đo xem ai đoán đúng tương lai. Nhưng nhiều người còn đoán sai cả hiện tại: thế giới hôm nay giàu lên hay nghèo đi, trẻ em được tiêm chủng nhiều hơn hay ít hơn? Nhóm cuối của trang, <a href="#g-world">Thế giới</a>, bắt đầu từ câu hỏi ấy.</p>
+        </div>
+        <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/The_Good_Judgment_Project">Wikipedia, The Good Judgment Project</a> (sách: Crown, 29/9/2015; dự án từ 7/2011; Good Judgment Open từ 9/2015) · <a href="https://www.penguinrandomhouse.com/books/227815/superforecasting-by-philip-e-tetlock-and-dan-gardner/">Penguin Random House</a> (352 trang, lời giới thiệu) · mục lục và nội dung từng chương đối chiếu qua ghi chép của <a href="https://lifeitself.org/blog/notes-on-tetlock-and-gardners-superforecasting">Life Itself</a> và <a href="https://rufuspollock.com/post/tetlock-gardner-2015-superforecasting-the-art-and-science-of-prediction/">Rufus Pollock</a>, <a href="https://www.supersummary.com/superforecasting/chapters-5-7-summary/">SuperSummary</a> (chương 5), <a href="https://www.shortform.com/blog/auftragstaktik/">Shortform</a> (chương 10) · bản tiếng Việt: <a href="https://shop.alphabooks.vn/sieu-du-bao-superforecasting-nghe-thuat-va-khoa-hoc-du-doan-tuong-lai-p12523309.html">Alpha Books</a> (Lê Thiện Trí dịch, NXB Thế Giới, 382 trang), <a href="https://www.netabooks.vn/sieu-du-bao-nghe-thuat-va-khoa-hoc-du-doan-tuong-lai-philip-e-tetlock-dan-gardner">NetaBooks</a> (5/2026), <a href="https://waka.vn/ebook/sieu-du-bao-philip-e-tetlock-dan-gardner-bmdgDW.html">Waka</a> (bản điện tử, 2018) · số liệu và đoạn trích trong sách đối chiếu qua <a href="https://slatestarcodex.com/2016/02/07/list-of-passages-i-highlighted-in-my-copy-of-superforecasting/">Scott Alexander, 2016</a>, <a href="https://aiimpacts.org/evidence-on-good-forecasting-practices-from-the-good-judgment-project/">AI Impacts</a> và <a href="https://aiimpacts.org/evidence-on-good-forecasting-practices-from-the-good-judgment-project-an-accompanying-blog-post/">bài đi kèm</a>, <a href="https://www.econlib.org/archives/2015/10/outside_first.html">Bryan Caplan, 2015</a> (nhà Renzetti), <a href="https://www.econlib.org/archives/2015/10/superforecastin.html">Caplan, 2015</a> (bản beta mãi mãi), <a href="https://commoncog.com/how-the-superforecasters-do-it/">Commoncog</a> (Fermi), <a href="https://blog.jcx.au/posts/tetlock-and-gardners-superforecasting-the-art-and-science-of-prediction">Jason Collins, 2016</a> (ca Arafat), <a href="https://www.shortform.com/blog/superforecasting-review/">Shortform</a> (lời đáp Taleb) · <a href="https://faculty.wharton.upenn.edu/wp-content/uploads/2012/08/Tetlock-16.pdf">Tschoegl &amp; Armstrong, 2007</a> (điểm sách <i>Expert Political Judgment</i>) · <a href="https://en.wikipedia.org/wiki/Philip_E._Tetlock">Wikipedia, Philip E. Tetlock</a> · <a href="https://press.princeton.edu/books/hardcover/9780691178288/expert-political-judgment">Princeton University Press</a> · <a href="https://www.cia.gov/resources/csi/static/Words-of-Estimative-Probability.pdf">Kent, 1964</a> (NIE 29-51 và bảng cụm từ) · <a href="https://bpb-us-e1.wpmucdn.com/sites.dartmouth.edu/dist/0/433/files/2014/06/Friedman-War-and-Chance-Introduction-1qzp5lr.pdf">Friedman, <i>War and Chance</i></a> (Vịnh Con Heo) · <a href="https://en.wikipedia.org/wiki/Brier_score">Wikipedia, Brier score</a> (Brier, 1950) · <a href="https://www.gjopen.com/faq">Good Judgment Open</a> (thang 0–2) · <a href="https://doi.org/10.1177/0956797614524255">Mellers và cs., 2014</a> · <a href="https://doi.org/10.1287/deca.2014.0293">Baron và cs., 2014</a> (đẩy trung bình ra xa 50%) · <a href="https://doi.org/10.1093/isq/sqx078">Friedman và cs., 2018</a> · <a href="https://goodjudgment.com/wp-content/uploads/2020/11/Goldstein-et-al-GJP-vs-ICPM.pdf">Goldstein và cs.</a> (MITRE, 2015) và <a href="https://forum.effectivealtruism.org/posts/JQaeuuWiFfXCGDKNp/comparing-superforecasting-and-the-intelligence-community">Urtubey De Césaris &amp; Koehler, 2022</a> (con số 30%) · <a href="https://doi.org/10.1177/09567976241266481">Hauenstein và cs., 2025</a> và <a href="https://corporate.jcx.au/better-forecasting">ghi chú của Jason Collins</a> · <a href="https://forecastingresearch.org/research/existential-risk-persuasion-tournament">Forecasting Research Institute, 2023</a> và <a href="https://forecastingresearch.org/research/near-term-xpt-accuracy">2025</a> · <a href="https://www.stat.berkeley.edu/~aldous/157/Papers/taleb_tetlock.pdf">Taleb &amp; Tetlock, 2013</a>.</p>
+      </section>
 
       <!-- ══════════════════ NHÓM 4 ══════════════════ -->
       <div class="hw-part-head" id="g-world">
@@ -2191,6 +2370,156 @@ Câu dễ trượt khỏi tai bạn nhất (thiêng liêng): “Hẻm tối thà
   rN.addEventListener('input', render);
   if (bInd) bInd.addEventListener('click', function () { setCopy(false); });
   if (bCopy) bCopy.addEventListener('click', function () { setCopy(true); });
+  render();
+})();
+</script>
+
+<script>
+/* ---- tetlock: máy chấm điểm Brier cho một chuỗi mười lời đoán ----
+   Mười câu có/không. Người đoán nghiêng đúng k lần (k = 5…10) và lần nào cũng nói cùng mức chắc c
+   (50…100%, bước 5) cho phía mình nghiêng. Thang 0–2 của sách, tức bản gốc Brier (1950) cộng cả hai phía:
+     trúng: (1 − c)² + (0 − (1 − c))² = 2(1 − c)²;   trượt: c² + c² = 2c²;   điểm = trung bình mười lời đoán.
+   Tính bằng số nguyên để khỏi lệch vì dấu phẩy động. Đặt c = m/20 (m = 10…20):
+     N = k(20 − m)² + (10 − k)m²,   điểm thang 0–2 = N/2000,   thang 0–1 = N/4000.
+   N luôn chẵn (hai bình phương cùng chẵn lẻ, k + (10 − k) = 10), nên thang 0–2 có tối đa 3 chữ số thập phân.
+   Điểm thấp nhất ở c = k/10, bằng k(10 − k)/50, và tăng thêm đúng 2(c − k/10)² khi lệch khỏi đó.
+   Nói 50% mọi lần luôn được 0,5. Giá trị đọc từ thanh trượt được kẹp về số nguyên hợp lệ, nên không bao giờ ra NaN. */
+(function () {
+  var root = document.getElementById('tetlock');
+  if (!root) return;
+  var box = root.querySelector('#tetlock-svg'), rHit = root.querySelector('#tetlock-hit'), rConf = root.querySelector('#tetlock-conf');
+  if (!box || !rHit || !rConf) return;
+  var lHit = root.querySelector('#tetlock-hit-l'), lConf = root.querySelector('#tetlock-conf-l'),
+      big = root.querySelector('#tetlock-big'), sub = root.querySelector('#tetlock-sub'), out = root.querySelector('#tetlock-out'),
+      b50 = root.querySelector('#tetlock-p50'), b100 = root.querySelector('#tetlock-p100'), bFit = root.querySelector('#tetlock-pfit');
+  var NS = 'http://www.w3.org/2000/svg';
+  /* Thứ tự các ô chuyển thành "sai" khi số lần nghiêng đúng giảm: chuỗi trông như thật, và kéo thanh trượt
+     thì chỉ một ô đổi, không xáo cả hàng. */
+  var MISS = [3, 7, 9, 1, 5];
+  var AX0 = 40, AX1 = 350, AY0 = 96, AUNIT = 33;          /* hình trên: mười cột, đáy 96, 33 px cho 1,0 điểm phạt */
+  var BX0 = 46, BX1 = 340, BY0 = 276, BY1 = 166;          /* hình dưới: ngang 50→100%, dọc 0→1,0 */
+
+  function clampInt(v, lo, hi, d) { v = Math.round(parseFloat(v)); return isFinite(v) ? Math.max(lo, Math.min(hi, v)) : d; }
+  /* n phần 10^d → số kiểu Việt (dấu phẩy thập phân), bỏ số 0 thừa ở đuôi nhưng giữ ít nhất 2 chữ số. */
+  function dec(n, d) {
+    var s = String(Math.round(Math.abs(n)));
+    while (s.length <= d) s = '0' + s;
+    var a = s.slice(0, s.length - d), b = s.slice(s.length - d);
+    while (b.length > 2 && b.charAt(b.length - 1) === '0') b = b.slice(0, -1);
+    return a + ',' + b;
+  }
+  function cTxt(m) { var v = 5 * m; return v === 100 ? '1' : '0,' + (v % 10 === 0 ? String(v / 10) : String(v)); }
+  function score(k, m) { return k * (20 - m) * (20 - m) + (10 - k) * m * m; }   /* = N */
+  function bx(c) { return BX0 + (c - 0.5) / 0.5 * (BX1 - BX0); }
+  function by(b) { return BY0 - Math.max(0, Math.min(1, b)) * (BY0 - BY1); }
+  function el(tag, attrs, style, text) {
+    var e = document.createElementNS(NS, tag), k;
+    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (style) e.setAttribute('style', style);
+    if (text != null) e.textContent = text;
+    box.appendChild(e);
+    return e;
+  }
+
+  function draw(k, m, N) {
+    var i, h = k / 10, c = m / 20, isMiss = {}, x, pen, hgt, halo = 'paint-order:stroke;stroke:var(--wb-canvas);stroke-width:3px;stroke-linejoin:round';
+    while (box.firstChild) box.removeChild(box.firstChild);
+    for (i = 0; i < 10 - k; i++) isMiss[MISS[i]] = true;
+
+    /* Hình trên: điểm phạt của từng lời đoán, thang 0–2. */
+    el('text', { x: 4, y: 14, 'class': 'hw-vs' }, null, 'Điểm phạt từng lời đoán · vạch đứt là trung bình');
+    [0, 1, 2].forEach(function (v) {
+      var y = AY0 - v * AUNIT;
+      el('line', { x1: AX0, y1: y, x2: AX1, y2: y }, v ? 'stroke:var(--wb-border);stroke-width:1' : 'stroke:var(--wb-border-strong);stroke-width:1');
+      el('text', { x: AX0 - 7, y: y + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, String(v));
+    });
+    for (i = 0; i < 10; i++) {
+      x = AX0 + i * 31 + 7;
+      pen = isMiss[i] ? 2 * c * c : 2 * (1 - c) * (1 - c);
+      hgt = Math.max(1.5, pen * AUNIT);
+      el('rect', { x: x, y: (AY0 - hgt).toFixed(1), width: 17, height: hgt.toFixed(1), rx: 2 },
+        isMiss[i] ? 'fill:var(--wb-fg)' : 'fill:var(--wb-neutral-strong)');
+      el('text', { x: x + 8.5, y: AY0 + 13, 'text-anchor': 'middle', 'class': isMiss[i] ? 'hw-vt' : 'hw-vs' }, null, isMiss[i] ? 'sai' : 'đúng');
+    }
+    var ym = AY0 - (N / 2000) * AUNIT;
+    el('line', { x1: AX0, y1: ym.toFixed(1), x2: AX1, y2: ym.toFixed(1) }, 'stroke:var(--wb-fg-muted);stroke-width:1.5;stroke-dasharray:5 4');
+
+    /* Hình dưới: điểm trung bình theo mức chắc nói ra, với số lần nghiêng đúng đang chọn. */
+    el('text', { x: 4, y: 136, 'class': 'hw-vs' }, null, 'Điểm trung bình theo mức chắc nói ra');
+    el('line', { x1: 6, y1: 150, x2: 24, y2: 150 }, 'stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4');
+    el('text', { x: 29, y: 154, 'class': 'hw-vs' }, null, 'nói 50% mọi lần');
+    el('circle', { cx: 146, cy: 150, r: 4 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.5');
+    el('text', { x: 155, y: 154, 'class': 'hw-vs' }, null, 'điểm tốt nhất có thể');
+    el('line', { x1: BX0, y1: BY1, x2: BX1, y2: BY1 }, 'stroke:var(--wb-border);stroke-width:1');
+    el('line', { x1: BX0, y1: BY0, x2: BX1, y2: BY0 }, 'stroke:var(--wb-border-strong);stroke-width:1');
+    el('line', { x1: BX0, y1: by(0.5), x2: BX1, y2: by(0.5) }, 'stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4');
+    [[0, '0'], [0.5, '0,5'], [1, '1']].forEach(function (t) {
+      el('text', { x: BX0 - 7, y: by(t[0]) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, t[1]);
+    });
+    for (i = 5; i <= 10; i++) {
+      el('text', { x: bx(i / 10).toFixed(1), y: BY0 + 15, 'text-anchor': 'middle', 'class': i === k ? 'hw-vt' : 'hw-vs' }, null, (i * 10) + '%');
+    }
+    el('text', { x: (BX0 + BX1) / 2, y: BY0 + 32, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, 'mức chắc nói ra');
+
+    var d = '', cc, bb;
+    for (i = 0; i <= 50; i++) {
+      cc = 0.5 + i / 100;
+      bb = 2 * (h * (1 - cc) * (1 - cc) + (1 - h) * cc * cc);
+      d += (i ? ' L' : 'M') + bx(cc).toFixed(1) + ' ' + by(bb).toFixed(1);
+    }
+    el('path', { d: d }, 'fill:none;stroke:var(--wb-fg);stroke-width:2.5;stroke-linejoin:round');
+    var xb = bx(h), yb = by(k * (10 - k) / 50);
+    el('line', { x1: xb.toFixed(1), y1: yb.toFixed(1), x2: xb.toFixed(1), y2: BY0 }, 'stroke:var(--wb-fg-muted);stroke-width:1;stroke-dasharray:1.5 3');
+    el('circle', { cx: xb.toFixed(1), cy: yb.toFixed(1), r: 4.5 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.5');
+
+    /* Điểm đang xem: chấm đặc, nhãn số đặt phía trên, viền chữ cùng màu nền để đọc được khi đè lên đường kẻ. */
+    var xc = bx(c), yc = by(N / 2000);
+    el('circle', { cx: xc.toFixed(1), cy: yc.toFixed(1), r: 5.5 }, 'fill:var(--wb-fg);stroke:var(--wb-canvas);stroke-width:2');
+    el('text', { x: Math.max(BX0 + 16, Math.min(BX1 - 14, xc)).toFixed(1), y: (yc - 10).toFixed(1), 'text-anchor': 'middle', 'class': 'hw-vt' },
+      halo, dec(N / 2, 3));
+  }
+
+  function render() {
+    var k = clampInt(rHit.value, 5, 10, 7), m = clampInt(parseFloat(rConf.value) / 5, 10, 20, 18);
+    var N = score(k, m), nBest = 40 * k * (10 - k), c = cTxt(m), s;
+    var hitPen = 5 * (20 - m) * (20 - m), missPen = 5 * m * m;      /* phần nghìn, thang 0–2 */
+    if (lHit) lHit.textContent = k + ' / 10 lần';
+    if (lConf) lConf.textContent = (5 * m) + '%';
+    if (big) big.textContent = dec(N / 2, 3);
+
+    s = 'Bản 0–1: ' + dec(5 * N / 2, 4) + '. ';
+    if (N < 1000) s += 'Tốt hơn người nói 50% mọi lần (0,50). ';
+    else if (N === 1000) s += (m === 10 ? 'Đây chính là người nói 50% mọi lần. ' : 'Ngang người nói 50% mọi lần. ');
+    else s += 'Tệ hơn cả người nói 50% mọi lần (0,50). ';
+    if (m === 2 * k) {
+      s += k === 10 ? 'Hoàn hảo: nói chắc 100% và lần nào cũng trúng; ngoài đời hiếm ai được thế.'
+         : k === 5 ? 'Nghiêng đúng 5/10 thì chẳng hơn tung đồng xu, nên nói 50% là tốt nhất.'
+         : 'Đây là điểm tốt nhất có được khi nghiêng đúng ' + k + '/10.';
+    } else {
+      s += 'Nghiêng đúng ' + k + '/10 thì nói ' + (10 * k) + '% mới được điểm tốt nhất: ' + dec(nBest / 2, 3) + '.';
+    }
+    if (sub) sub.textContent = s;
+
+    if (out) {
+      /* Dòng ngắn (dưới ~40 ký tự) để khỏi gãy dòng trên điện thoại. */
+      out.textContent =
+        'Mỗi lần đúng: 2 × (1 − ' + c + ')² = ' + dec(hitPen, 3) + '\n' +
+        'Mỗi lần sai:  2 × ' + c + '² = ' + dec(missPen, 3) + '\n' +
+        k + ' × ' + dec(hitPen, 3) + ' + ' + (10 - k) + ' × ' + dec(missPen, 3) + ' = ' + dec(5 * N, 3) + '\n' +
+        dec(5 * N, 3) + ' ÷ 10 = ' + dec(N / 2, 3) + ' · thang 0–1: ' + dec(5 * N / 2, 4);
+    }
+    draw(k, m, N);
+    box.setAttribute('aria-label', 'Hai biểu đồ. Trên: điểm phạt của mười lời đoán, ' + k + ' lần đúng, ' + (10 - k) +
+      ' lần sai. Dưới: điểm trung bình theo mức chắc nói ra; nói ' + (5 * m) + '% được ' + dec(N / 2, 3) +
+      ', tốt nhất là nói ' + (10 * k) + '%, được ' + dec(nBest / 2, 3) + '.');
+  }
+
+  function setConf(v) { rConf.value = String(v); render(); }
+  rHit.addEventListener('input', render);
+  rConf.addEventListener('input', render);
+  if (b50) b50.addEventListener('click', function () { setConf(50); });
+  if (b100) b100.addEventListener('click', function () { setConf(100); });
+  if (bFit) bFit.addEventListener('click', function () { setConf(10 * clampInt(rHit.value, 5, 10, 7)); });
   render();
 })();
 </script>
