@@ -191,6 +191,22 @@
   #kahneman .kh-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
   #kahneman .kh-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; }
   #kahneman .kh-sub b { color: var(--wb-fg); font-weight: 640; }
+
+  /* ---- galef ---- */
+  /* Bài tập hiệu chỉnh: hình dựng trên viewBox 360 px như mục kahneman, nên chặn bề rộng cho chữ SVG khỏi phình. */
+  #galef .gf-svg { max-width: 520px; }
+  #galef .gf-svg .hw-vs { font-size: 11.5px; }
+  #galef .gf-svg .hw-vt { font-size: 12.5px; }
+  #galef .gf-no { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 4px; }
+  #galef .gf-q { font-size: 15px; font-weight: 620; line-height: 1.5; margin: 0 0 12px; min-height: 3em; max-width: 60ch; }
+  #galef .gf-val { display: inline-block; min-width: 40px; text-align: right; }
+  #galef .gf-fb { font-size: 13px; line-height: 1.6; color: var(--wb-fg-muted); margin: 4px 0 0; min-height: 4.8em; max-width: 72ch; }
+  #galef .gf-fb b { color: var(--wb-fg); font-weight: 650; }
+  #galef .gf-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
+  #galef .gf-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; }
+  #galef .gf-out { margin-top: 12px; }
+  #galef .gf-pick > .wb-btn { min-width: 76px; }
+  @media (max-width: 620px) { #galef .gf-pick { display: flex; } #galef .gf-pick > .wb-btn { flex: 1 1 0; } }
 </style>
 </head>
 <body class="wb-app">
@@ -228,6 +244,9 @@
       <li><b>The Subtle Art of Not Giving a F*ck:</b> tên bản Việt theo trang nhà phát hành Huy Hoàng (bản in 2018 và 2021, NXB Văn Học, Thanh Hương dịch; chưa rõ năm in đầu). Độ dài ≈2.000 tiếng, tức khoảng 1.350–1.450 từ tuỳ cách đếm, sát trần 1.400.</li>
       <li><b>Thinking, Fast and Slow:</b> ví dụ tỉ lệ nền “giảng viên hay làm nông” dùng số thật (khoảng 84 nghìn giảng viên đại học, 13,8 triệu lao động nông, lâm, thủy sản), theo đúng khuôn câu hỏi “thủ thư hay nông dân” của chính sách. Nếu thấy dễ bị đọc thành định kiến nghề nghiệp thì nên đổi cặp nghề.</li>
       <li><b>Thinking, Fast and Slow:</b> mục dài ≈4.200 tiếng, tức khoảng 2.900 từ (~17 phút đọc), nhỉnh hơn trần ~2.800 của đề bài. Để giữ độ dài, mục bỏ ảo giác tiêu điểm và đoạn thu nhập–hạnh phúc (mục Manson đã có). Năm ra mắt bản tiếng Việt (đầu 2015) lấy theo báo Nhân Dân; chưa kiểm được năm in đầu trên trang Alpha Books.</li>
+      <li><b>The Scout Mindset:</b> tên dịch giả ghi “Yên Du và Ngọc Dung” theo trang First News (“Biên dịch: Yên Du, Ngọc Dung”); nhà sách Khai Trí ghi “Yến Du”. Năm 2022 (tháng 3, theo nhà sách và Waka) chưa thấy trên trang NXB Dân Trí.</li>
+      <li><b>The Scout Mindset:</b> Độ vững nói thẳng chỗ yếu nhất của sách là nhận định ở chương 7 rằng tự lừa không làm ta vui hơn, vì một phân tích tổng hợp năm 2019 trên 126.916 người thấy chiều ngược lại; và coi ví dụ Bezos là chuyện người sống sót. Đó là đánh giá của trang này.</li>
+      <li><b>The Scout Mindset:</b> mục dài ≈3.200 tiếng (khoảng 2.200–2.300 từ tuỳ cách đếm, ~13 phút đọc), sát trần 2.200 từ. Bài tập hiệu chỉnh dùng mười câu đúng/sai trang tự soạn, có nguồn, không lấy câu nào từ bài 40 câu của tác giả.</li>
     </ul>
   </aside>
 
@@ -251,7 +270,16 @@
         </div>
       </div>
     </a>
-    <!-- 02 galef: chèn thẻ vào đây, giữa thẻ 01 và thẻ 03 -->
+    <a class="wb-card wb-card--hover wb-card--pad" href="#galef">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">02</span>
+        <div class="wb-media__body">
+          <p class="bb-card__k">The Scout Mindset</p>
+          <p class="wb-media__title">Tư duy truy tìm sự thật</p>
+          <p class="wb-media__text">Vì sao ta hay bảo vệ điều mình muốn tin thay vì tìm xem điều gì đúng, cách bắt quả tang lối nghĩ ấy ở chính mình, và cách nói mình chắc tới đâu bằng một con số.</p>
+        </div>
+      </div>
+    </a>
     <a class="wb-card wb-card--hover wb-card--pad" href="#manson">
       <div class="wb-media">
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">03</span>
@@ -272,7 +300,7 @@
 
       <div class="wb-sidenav__section" style="margin-top:12px">Your own mind</div>
       <a class="wb-sidenav__link" href="#kahneman">Thinking, Fast and Slow</a>
-      <!-- 02 galef: chèn link vào đây, giữa link 01 và link 03 -->
+      <a class="wb-sidenav__link" href="#galef">The Scout Mindset</a>
       <a class="wb-sidenav__link" href="#manson">The Subtle Art of Not Giving a F*ck</a>
 
       <div class="wb-sidenav__section" style="margin-top:12px">Other people</div>
@@ -518,12 +546,191 @@
 
         <div class="bb-next">
           <p><b>Bạn vừa có:</b> ba câu hỏi đặt trước một phán đoán tự tin (tỉ lệ nền là bao nhiêu, việc cùng loại thật ra ra sao, nếu thất bại thì vì đâu) và một phép thử cho trực giác: môi trường có đều đặn không, phản hồi có nhanh và rõ không.</p>
-          <p><b>Nó dẫn đi đâu:</b> Kahneman tả giới hạn của bộ máy, ít nói tới động cơ: ta còn sai vì <i>muốn</i> tin điều dễ chịu, và câu hỏi ấy cần một cuốn sách khác. Còn cái tôi ghi nhớ, kẻ chấm điểm cuộc đời ta, dùng thước nào để chấm là chuyện của mục <a href="#manson">Manson</a>.</p>
+          <p><b>Nó dẫn đi đâu:</b> Kahneman tả giới hạn của bộ máy, ít nói tới động cơ: ta còn sai vì <i>muốn</i> tin điều dễ chịu, và câu hỏi ấy là chủ đề của mục <a href="#galef">Galef</a>. Còn cái tôi ghi nhớ, kẻ chấm điểm cuộc đời ta, dùng thước nào để chấm là chuyện của mục <a href="#manson">Manson</a>.</p>
         </div>
         <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/Thinking,_Fast_and_Slow">Wikipedia</a> (Farrar, Straus and Giroux, 2011) · <a href="https://www.litcharts.com/lit/thinking-fast-and-slow">LitCharts</a> (năm phần, 38 chương) · <a href="https://shop.alphabooks.vn/tu-duy-nhanh-va-cham-thinking-fast-and-slow-daniel-kahneman-p32415671.html">Alpha Books</a> và <a href="https://nhandan.vn/alphabooks-ra-mat-cuon-sach-tu-duy-nhanh-va-cham-post223573.html">Nhân Dân</a> (bản tiếng Việt, 22/01/2015) · <a href="https://www.nobelprize.org/prizes/economic-sciences/2002/kahneman/biographical/">tự truyện Nobel</a> (quân đội, phỏng vấn năm 1955, huấn luyện viên bay) · <a href="https://www.nobelprize.org/prizes/economic-sciences/2002/summary/">Nobel 2002</a> · <a href="https://www.scientificamerican.com/article/kahneman-excerpt-thinking-fast-and-slow/">Scientific American</a> (trích sách) · <a href="https://www.econlib.org/kahneman-henderson-and-hooper-on-biases-and-bases/">Econlib</a> (câu hỏi về Steve) · <a href="https://www.americanscientist.org/article/the-most-dangerous-equation">Wainer, 2007</a> · <a href="https://thanhnien.vn/quy-mo-giao-duc-dh-tang-hon-300000-sinh-vien-trong-nam-hoc-2023-2024-185250522162830238.htm">Thanh Niên</a> (giảng viên 2023–2024) · <a href="https://www.nso.gov.vn/du-lieu-va-so-lieu-thong-ke/2024/01/tinh-hinh-thi-truong-lao-dong-viet-nam-nam-2023/">Cục Thống kê</a> (lao động 2023) · <a href="https://rpc.cfainstitute.org/blogs/enterprising-investor/2011/daniel-kahneman-financial-advisers-arent-immune-from-the-illusion-of-skill">CFA Institute</a> (25 cố vấn) · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9997627/">về Meehl, 1954</a> · <a href="https://doi.org/10.1037/1040-3590.12.1.19">Grove và cs., 2000</a> · <a href="https://en.wikipedia.org/wiki/Apgar_score">Apgar</a> · <a href="https://doi.org/10.1037/a0016755">Kahneman &amp; Klein, 2009</a> · <a href="https://arxiv.org/abs/1302.3642">Flyvbjerg, 2006</a> (chuyện giáo trình theo Lovallo &amp; Kahneman, 2003; số liệu đường sắt) · <a href="https://vneconomy.vn/tuyen-metro-ben-thanh-suoi-tien-hanh-trinh-ve-dich.htm">VnEconomy</a> và <a href="https://nguoidothi.net.vn/metro-ben-thanh-suoi-tien-chinh-thuc-van-hanh-46582.html">Người Đô Thị</a> (metro số 1) · <a href="https://www.sciencedirect.com/science/article/abs/pii/0883902688900201">Cooper và cs., 1988</a> · <a href="https://hbr.org/2007/09/performing-a-project-premortem">Klein, 2007</a> · <a href="https://doi.org/10.1002/bdm.3960020103">Mitchell và cs., 1989</a> · <a href="https://idl.iscram.org/files/veinott/2010/1049_Veinott_etal2010.pdf">Veinott và cs., 2010</a> · <a href="https://doi.org/10.1126/science.7455683">Tversky &amp; Kahneman, 1981</a> · <a href="https://www.nber.org/papers/w18621">Barberis, 2012</a> (tham số năm 1992) · <a href="https://doi.org/10.1086/261737">Kahneman, Knetsch &amp; Thaler, 1990</a> · <a href="https://doi.org/10.1111/j.1467-9280.1993.tb00589.x">Kahneman và cs., 1993</a> · <a href="https://doi.org/10.1016/0304-3959(96)02994-6">Redelmeier &amp; Kahneman, 1996</a> · <a href="https://doi.org/10.1016/s0304-3959(03)00003-4">Redelmeier, Katz &amp; Kahneman, 2003</a> · <a href="https://replicationindex.com/2017/02/02/reconstruction-of-a-train-wreck-how-priming-research-went-of-the-rails/">Replicability-Index, 2017</a> và <a href="https://replicationindex.com/2017/02/02/reconstruction-of-a-train-wreck-how-priming-research-went-of-the-rails/comment-page-1/#comment-1454">bình luận của Kahneman</a> (14/02/2017) · <a href="https://doi.org/10.1027/1864-9335/a000178">Many Labs 1</a> · <a href="https://doi.org/10.1177/1745691616652873">Hagger và cs., 2016</a> · <a href="https://doi.org/10.1177/0956797621989733">Vohs và cs., 2021</a> · <a href="https://doi.org/10.1073/pnas.1018033108">Danziger và cs., 2011</a> · <a href="https://doi.org/10.1073/pnas.1110910108">Weinshall-Margel &amp; Shapard, 2011</a> · <a href="https://www.cambridge.org/core/journals/judgment-and-decision-making/article/irrational-hungry-judge-effect-revisited-simulations-reveal-that-the-magnitude-of-the-effect-is-overestimated/61CE825D4DC137675BB9CAD04571AE58">Glöckner, 2016</a> · <a href="https://doi.org/10.1038/s41562-020-0886-x">Ruggeri và cs., 2020</a> · <a href="https://doi.org/10.1257/jel.20221698">Brown và cs., 2024</a> · <a href="https://doi.org/10.1016/j.joep.2024.102740">Walasek và cs., 2024</a>.</p>
       </section>
 
-      <!-- 02 galef: chèn mục vào đây, giữa mục 01 (kahneman) và mục 03 (manson) -->
+      <section class="bb-book" id="galef">
+        <p class="bb-book__eyebrow"><b>02</b> — Julia Galef · 2021</p>
+        <h3 class="bb-book__title">Tư duy truy tìm sự thật</h3>
+        <p class="bb-book__orig"><i>The Scout Mindset</i> (2021) · bản tiếng Việt: Yên Du và Ngọc Dung dịch, NXB Dân Trí, First News phát hành (2022)</p>
+        <p class="hw-lede">Thứ cản ta nhìn rõ thường là thái độ hơn là thiếu hiểu biết: ta hay lập luận như <b>người lính</b>, tìm lý lẽ giữ điều mình muốn tin. Galef cho rằng yên lòng, động lực, sức thuyết phục, những thứ tự lừa đem lại, phần lớn lấy được theo đường khác, <b>không phải trả bằng một tấm bản đồ sai</b>.</p>
+        <div class="bb-verdict">
+          <span class="bb-verdict__k">Đọc gì trong bản gốc</span><p class="bb-verdict__v"><b>Chương 5</b>, “Nhận ra thiên kiến” (<i>Noticing Bias</i>), và <b>chương 6</b>, “Bạn chắc tới đâu?” (<i>How Sure Are You?</i>) mang phần công cụ của cả cuốn: năm phép thử bắt quả tang lập luận có động cơ, và cách gắn con số vào độ chắc. Bài hiệu chỉnh 40 câu đi kèm có trên <a href="https://juliagalef.com/calibration/">trang tác giả</a>.</p>
+          <span class="bb-verdict__k">Bỏ qua được</span><p class="bb-verdict__v"><b>Phần III</b> (chương 7–9): ba chương cùng một ý, rằng yên lòng, động lực hay sức thuyết phục đều không cần tự lừa. Ý chính có ở dưới; chứng cứ chủ yếu là chuyện người đã thành công.</p>
+          <span class="bb-verdict__k">Mục này</span><p class="bb-verdict__v">~13 phút đọc, kèm một bài tập hiệu chỉnh mười câu</p>
+        </div>
+
+        <h4 class="bb-h4" id="galef-khung">Bộ khung</h4>
+        <p class="hw-p"><b>Lính và trinh sát.</b> Người lính giữ đồn: lý lẽ trái ý thì đánh bật, lý lẽ thuận ý thì đắp thành công sự. Người trinh sát vẽ bản đồ, kể cả khi địa hình bất lợi cho phe mình. Người lính là hình ảnh của <b>lập luận có động cơ</b> (<i>motivated reasoning</i>): dồn sức bênh điều mình mong là đúng. Tư duy trinh sát, theo Galef, là “the motivation to see things as they are, not as you wish they were”: muốn thấy sự việc như nó là, không như mình mong.</p>
+        <div class="hw-quote">
+          Người lính giữ đồn; người trinh sát vẽ bản đồ.
+          <cite>Chỗ ví von hỏng: trinh sát ngoài đời vẫn thuộc một phe. Họ khác người lính ở chỗ bản đồ họ vẽ không được chiều theo mong muốn của phe mình.</cite>
+        </div>
+        <p class="hw-p"><b>“Có thể tin không?” và “có buộc phải tin không?”</b> Theo cách tả của nhà tâm lý Tom Gilovich, với điều muốn tin, ta hỏi câu đầu, và một lý do là đủ; với điều không muốn tin, ta hỏi câu sau, và một kẽ hở là đủ để bác. Người vừa đặt cọc căn hộ đọc tin chủ đầu tư được vay vốn thì chia sẻ ngay; đọc tin dự án chậm tiến độ thì đi tìm ai giật dây.</p>
+        <p class="hw-p"><b>Vụ Dreyfus, ví dụ mở đầu sách.</b> Năm 1894, đại uý người Do Thái Alfred Dreyfus bị kết tội bán tin mật cho Đức dựa trên một bản kê viết tay. Chữ không khớp hẳn; Alphonse Bertillon, người giám định vốn không chuyên về chữ viết, bảo Dreyfus đã tự giả nét chữ của mình. Năm 1896, trưởng phòng tình báo Georges Picquart thấy chữ của thiếu tá Esterhazy giống hệt bản kê. Bertillon công nhận đúng là chữ ấy, nhưng nghe nói thư mới viết thì bảo người Do Thái đã luyện một kẻ bắt chước. Picquart, dù theo nhiều tài liệu cũng bài Do Thái, vẫn theo bằng chứng tới cùng, rồi bị điều đi xa và bị bắt giam; Dreyfus được minh oan năm 1906. Điều Galef muốn chỉ ra: từng lời giải thích của phe buộc tội, nhìn riêng, đều nghe hợp lý.</p>
+
+        <h4 class="bb-h4" id="galef-linh">Người lính đang giữ gì</h4>
+        <p class="hw-p">Nhìn rõ có lợi, sao ta ít làm? Vì người lính giữ những thứ có thật (chương 2), và ta đánh giá chúng quá cao: phần thưởng đến ngay, cái giá đến muộn (chương 3).</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:46%">Người lính giữ</th><th>Thay bằng</th></tr></thead>
+            <tbody>
+              <tr><td><b>Yên lòng, tự trọng</b>: né cảm giác khó chịu, kể cả bằng bi quan kiểu “đằng nào cũng hỏng”.</td><td>Chống chọi trung thực: lập kế hoạch, tìm mặt tốt có thật (chương 7).</td></tr>
+              <tr><td><b>Tinh thần</b>: tin mình sẽ thắng để dám làm việc khó.</td><td>Làm vì việc đáng cược, không vì tin chắc sẽ thắng (chương 8).</td></tr>
+              <tr><td><b>Sức thuyết phục</b>: tự tin chắc trước để người khác tin theo.</td><td>Vững vàng trong cách nói, không cần chắc chắn giả (chương 9).</td></tr>
+              <tr><td><b>Hình ảnh, chỗ đứng trong nhóm</b>: chọn niềm tin làm mình trông ổn, hợp với nhóm.</td><td>Giữ bản sắc nhẹ tay, chọn nhóm thưởng cho việc nhìn rõ (chương 13–15).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p"><b>Tin chắc để thuyết phục lại làm yếu việc thuyết phục.</b> Ở bốn trường luật Mỹ, sinh viên thi phiên toà giả định được bốc thăm vào một bên của vụ kiện; sau cuộc thi, phần áp đảo tin lẽ phải thuộc về bên mình, và ai càng tự tin thái quá thì bài biện hộ càng bị chấm thấp (Eigen và Listokin, 2012).</p>
+
+        <h4 class="bb-h4" id="galef-dau-hieu">Dấu hiệu của người trinh sát</h4>
+        <p class="hw-p">Theo chương 4, rào cản lớn nhất là tin rằng mình đã là trinh sát. Thấy mình khách quan không chứng minh gì; thông minh, hiểu biết cũng không. Chỉ việc đã làm mới đếm được:</p>
+        <ul class="hw-ul">
+          <li>Khi nhận ra người khác đúng, bạn có nói với họ không?</li>
+          <li>Bạn từng sửa theo lời phê bình, hay đền đáp người phê bình mình chưa?</li>
+          <li>Bạn có bao giờ tự chứng minh mình sai?</li>
+          <li>Bạn có đề phòng tự lừa không, chẳng hạn định trước thế nào là thành, thế nào là bại?</li>
+          <li>Bạn có kể được tên một người phê bình mình mà bạn thấy có lý?</li>
+        </ul>
+        <p class="hw-p">Dấu hiệu lớn nhất: nhớ ra được lần mình đang nghĩ như lính, vì với Galef đó là trạng thái mặc định. Ví dụ trong sách: tháng 1/2018, nhà báo khoa học Bethany Brookshire viết trên Twitter rằng các nhà khoa học nam gọi cô là “Ms.”, còn nữ gọi “Dr.”. Rồi cô tự đếm 268 thư trả lời, thấy nam gọi “Dr.” 12 trên 142 lần, nữ 7 trên 126 lần, và một tuần sau đăng bài nhận sai.</p>
+
+        <h4 class="bb-h4" id="galef-thu">Năm phép thử</h4>
+        <p class="hw-p">Chương 5 mở bằng mẹo ép bài: bạn chỉ lá trái, ảo thuật gia nói “lá này của bạn”; chỉ lá phải, anh ta nói “bỏ lá này đi”. Bạn chỉ thấy một kịch bản nên không thấy mẹo. Não cũng thế: cử tri đảng Dân chủ dễ dãi với chính khách Dân chủ vì chưa từng thấy mình phản ứng ra sao nếu ông ta thuộc đảng Cộng hoà. Chỗ ví von hỏng: ảo thuật gia cố ý lừa, còn trong đầu ta không ai cố ý, nên phải tự dựng kịch bản kia mà nhìn. Năm phép thử dưới đây là năm cách dựng. Chúng không nói điều gì đúng, chỉ bắt quả tang phán đoán đổi theo chi tiết lẽ ra không liên quan.</p>
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="galef-t1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Phép thử 1</span><h5 class="hw-fal__name">Tiêu chuẩn kép</h5><span class="wb-tag">double standard test</span></div>
+            <p class="hw-fal__def">Mình có đang chấm người này bằng một cái thước mà mình không dùng cho người khác?</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Cầu thủ đội mình ngã trong vòng cấm là “phạt đền rõ ràng”; cầu thủ đội bạn ngã y hệt là “ăn vạ”.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="galef-t2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Phép thử 2</span><h5 class="hw-fal__name">Người ngoài cuộc</h5><span class="wb-tag">outsider test</span></div>
+            <p class="hw-fal__def">Một người khác, không vướng tình cảm và những gì mình đã bỏ ra, đứng vào chỗ mình thì sẽ làm gì?</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Năm 1985, chip nhớ của Intel lao dốc trước chip Nhật giá rẻ. Andy Grove hỏi Gordon Moore: nếu hội đồng quản trị thay hai ông bằng người mới, người ấy sẽ làm gì? Moore đáp ngay: bỏ chip nhớ. Hai ông tự làm việc ấy, và Intel chuyển sang bộ vi xử lý.</div>
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Quán cà phê lỗ sang tháng thứ tám: người mua lại quán hôm nay có giữ thực đơn và mặt bằng này không? Khác <a href="#kahneman-c5">góc nhìn bên ngoài</a> của Kahneman, vốn hỏi việc cùng loại thường ra sao.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="galef-t3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Phép thử 3</span><h5 class="hw-fal__name">A dua</h5><span class="wb-tag">conformity test</span></div>
+            <p class="hw-fal__def">Nếu những người mình nể đổi ý, mình có còn giữ quan điểm này không?</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Cả nhóm Zalo đầu tư nói đất vùng ven chắc chắn lên giá. Nếu mai cả nhóm đổi giọng, lý do của riêng bạn còn gì?</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="galef-t4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Phép thử 4</span><h5 class="hw-fal__name">Hoài nghi chọn lọc</h5><span class="wb-tag">selective skeptic test</span></div>
+            <p class="hw-fal__def">Nếu bằng chứng này ủng hộ phía bên kia, mình sẽ thấy nó đáng tin tới đâu?</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Bài “cà phê giúp sống lâu” thì chia sẻ ngay; bài “cà phê hại tim” thì hỏi mẫu bao nhiêu người, ai tài trợ. Hai câu ấy đáng hỏi cho cả hai bài.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="galef-t5">
+            <div class="hw-fal__top"><span class="hw-fal__no">Phép thử 5</span><h5 class="hw-fal__name">Hiện trạng</h5><span class="wb-tag">status quo bias test</span></div>
+            <p class="hw-fal__def">Nếu hoàn cảnh hiện tại không phải thứ sẵn có, mình có chủ động chọn nó không?</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Bạn thuê nhà xa chỗ làm, hai tiếng xe máy mỗi ngày, rẻ hơn căn gần 2 triệu một tháng. Nếu đang ở căn gần, bạn có dọn ra xa để lấy 2 triệu ấy không?</div>
+            </div>
+          </article>
+        </div>
+
+        <h4 class="bb-h4" id="galef-chac">Bạn chắc tới đâu</h4>
+        <p class="hw-p">Chương 6 đòi phân biệt cảm giác chắc 95% với 75% và 55%. Nói chắc 70% thì mười lần nói thế phải đúng chừng bảy lần; khớp được vậy gọi là <b>hiệu chỉnh</b> (<i>calibration</i>). Galef đếm những lần Spock, nhân vật trọng logic của phim <i>Star Trek</i>, nói ra xác suất: việc ông gọi là không thể xảy ra thì xảy ra tới 83% số lần.</p>
+        <p class="hw-p">Muốn biết mình chắc thật tới đâu, hãy đặt cược.</p>
+        <div class="hw-quote">
+          Trong đầu ta có một thư ký báo chí lo phát biểu cho hay, và một hội đồng quản trị phải bỏ tiền thật ra cược.
+          <cite>Hình ảnh của nhà tâm lý Robert Kurzban. Chỗ ví von hỏng: ở công ty, ta biết ai đang nói; trong đầu, thư ký báo chí nói bằng chính giọng của ta.</cite>
+        </div>
+        <p class="hw-p"><b>Phép cược tương đương</b>, Galef lấy từ chuyên gia đo lường Douglas Hubbard, đổi cảm giác thành con số. Bạn tin căn hộ đặt cọc sẽ bàn giao đúng hạn. Chọn một trong hai vé, trúng được 10 triệu: vé A trúng nếu bàn giao đúng hạn, vé B trúng nếu bốc được bi đỏ từ túi 10 viên có 8 viên đỏ. Chọn vé B nghĩa là bạn chắc chưa tới 80%. Bớt bi đỏ tới khi hai vé ngang nhau: đó là con số thật.</p>
+
+        <div class="bb-lab" id="galef-lab">
+          <div class="bb-lab__head">
+            <p class="bb-lab__kick">Mô hình · hiệu chỉnh</p>
+            <p class="bb-lab__title">Mười câu đúng hay sai: nói chắc 85% thì có đúng chừng 85% không?</p>
+            <p class="bb-lab__hint">Chọn <b>Đúng</b> hoặc <b>Sai</b>, kéo mức chắc từ 55% (gần như đoán mò) tới 95% (gần như chắc chắn), rồi <b>Chốt</b>. Câu hỏi do trang này soạn, nguồn ở cuối mục.</p>
+          </div>
+          <div class="bb-lab__body">
+            <p class="gf-no" id="galef-qno">Câu 1 / 10</p>
+            <p class="gf-q" id="galef-qtext">Nhật Bản đông dân hơn Việt Nam.</p>
+            <div class="bb-lab__row">
+              <span class="k">Trả lời</span>
+              <div class="wb-btn-group gf-pick" role="group" aria-label="Chọn đáp án cho câu đang hỏi">
+                <button class="wb-btn wb-btn--outline" type="button" id="galef-true" aria-pressed="false">Đúng</button>
+                <button class="wb-btn wb-btn--outline" type="button" id="galef-false" aria-pressed="false">Sai</button>
+              </div>
+            </div>
+            <div class="bb-lab__row">
+              <label for="galef-conf">Mức chắc</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="galef-conf" min="55" max="95" step="10" value="75" style="flex:1 1 180px"><span class="bb-mono gf-val" id="galef-conf-l">75%</span></div>
+            </div>
+            <div class="bb-lab__row">
+              <span class="k">Tiếp theo</span>
+              <div class="wb-cluster"><button class="wb-btn wb-btn--sm" type="button" id="galef-go" disabled>Chốt câu này</button></div>
+            </div>
+            <p class="gf-fb" id="galef-fb" aria-live="polite">Chọn Đúng hoặc Sai, kéo mức chắc, rồi bấm Chốt.</p>
+            <p class="gf-cap">Mức chắc trung bình · tỉ lệ đúng thật</p>
+            <p class="bb-lab__big" id="galef-big">Chưa chốt câu nào</p>
+            <p class="gf-sub" id="galef-sub">Đích là đường chéo: nói chắc 75% thì đúng chừng 75%.</p>
+            <svg class="bb-svg gf-svg" id="galef-svg" viewBox="0 0 360 250" role="img" aria-label="Biểu đồ hiệu chỉnh: mỗi mức chắc là một điểm, cao bằng tỉ lệ câu đúng; đường chéo là hiệu chỉnh khớp"></svg>
+            <pre class="bb-out gf-out" id="galef-out">Mỗi mức chắc sẽ hiện ở đây: số câu đúng trên số câu đã chốt.</pre>
+            <p class="bb-lab__foot"><b>Điều cần thấy:</b> điểm dưới đường chéo là nói chắc hơn mức mình thật sự đúng. Mỗi điểm chỉ dựa vào vài câu, nên lệch vài chục điểm phần trăm vẫn có thể do may rủi; theo Galef, vài giờ luyện thường đã thấy tiến bộ.</p>
+          </div>
+        </div>
+
+        <h4 class="bb-h4" id="galef-khong-lua">Không tự lừa vẫn yên lòng, vẫn có động lực</h4>
+        <p class="hw-p"><b>Yên lòng.</b> Có những cách chống chọi không bóp méo sự thật: lập kế hoạch cho trường hợp xấu, vì có kế hoạch rồi thì bớt hẳn nhu cầu chối bỏ; tìm một mặt tốt có thật, không tự nhủ cả chuyện là tốt; nhớ rằng mọi việc còn có thể tệ hơn.</p>
+        <p class="hw-p"><b>Động lực.</b> Người trinh sát không tự nhủ “việc này sẽ thành” mà “việc này đáng cược”. Jeff Bezos kể ông từng nói với cha mẹ rằng khả năng họ mất trắng khoản góp vào Amazon là 70%; theo ông, chấp nhận thất bại là kết cục dễ xảy ra nhất lại gỡ được áp lực tự nghi ngờ. Người lập nghiệp thường lạc quan tới đâu: xem <a href="#kahneman-c6">mục Kahneman</a>.</p>
+        <p class="hw-p"><b>Thuyết phục.</b> Chương 9 tách <b>tự tin về nhận thức</b> (chắc điều gì đúng tới đâu) khỏi <b>tự tin trong giao tiếp</b> (điềm tĩnh khi nói); theo các nghiên cứu Galef dẫn, người nghe chấm ta chủ yếu theo cái sau. Nói “chưa chắc” mà vẫn vững thì nêu lý do, đưa ước lượng, kèm kế hoạch: “khả năng lành tính khoảng bảy phần mười; thứ Sáu có kết quả sinh thiết; trong lúc chờ, chị làm hai việc này”.</p>
+
+        <h4 class="bb-h4" id="galef-doi-y">Đổi ý từng chút, thoát buồng vang, giữ bản sắc nhẹ tay</h4>
+        <p class="hw-p"><b>Đổi ý từng chút.</b> Người dự báo giỏi nhất trong các giải đấu của Philip Tetlock đổi ý thường xuyên, mỗi lần một chút, như từ 60% lên 70%. Galef đề nghị thay khung “nhận lỗi”, nghe như bị bẽ mặt, bằng khung “cập nhật”: tin mới đến thì con số đổi. Gặp chi tiết không khớp, đừng vội giải thích cho qua; chúng dồn lại có khi là dấu hiệu phải vẽ lại bức tranh (chương 11).</p>
+        <p class="hw-p"><b>Thoát buồng vang.</b> Nghe phía bên kia theo kiểu mặc định dễ hỏng. Một thí nghiệm công bố năm 2018 trả tiền cho người dùng Twitter ở Mỹ theo dõi, trong một tháng, một tài khoản tự động đăng lại phát ngôn của phe đối lập: người ủng hộ đảng Cộng hoà sau đó bảo thủ hơn rõ rệt, bên Dân chủ chỉ nhích nhẹ, không có ý nghĩa thống kê. Theo Galef, “phía bên kia” ta hay gặp là người thích gây sự và những giọng to nhất; nên nghe người mình thấy biết điều, có chung nền hiểu biết hoặc cùng mục tiêu. Ủng hộ hạn chế xe máy xăng trong nội đô thì đừng tìm hiểu phía phản đối qua bình luận chửi bới; hãy hỏi một người chạy xe ôm mà bạn nể.</p>
+        <p class="hw-p"><b>Giữ bản sắc nhẹ tay.</b> Niềm tin thành bản sắc khi ta thấy nó bị vây hãm, hoặc tự hào vì nó. Dấu hiệu, theo chương 13: mở miệng là “tôi tin rằng”, bực khi hệ tư tưởng của mình bị chê, giọng chính nghĩa, hả hê khi phe kia bẽ mặt. Sách lấy ví dụ cuộc khẩu chiến sữa mẹ hay sữa công thức, trận mà hội nhóm các mẹ ở Việt Nam cũng có. Galef không đòi bỏ bản sắc, chỉ đòi coi nó là lời mô tả, không phải lá cờ để phất. Phép thử là <b>bài kiểm tra Turing về hệ tư tưởng</b> của nhà kinh tế Bryan Caplan (2011): trình bày quan điểm phe kia tốt tới mức người phe ấy không nhận ra bạn là người ngoài. Trang <a href="debate-argumentation.html#s-steel">Debate &amp; Argumentation</a> luyện việc gần giống thế.</p>
+
+        <h4 class="bb-h4" id="galef-dung">Dùng thế nào</h4>
+        <p class="hw-p">Chọn một niềm tin bạn đang nắm chặt, như “mua nhà bây giờ lợi hơn đi thuê”. Viết ra giấy rồi đi qua năm phép thử; câu nào làm bạn khó chịu thường là chỗ người lính đang gác. Bảng dưới làm mẫu với niềm tin “chị Lan cùng phòng không ưa mình”.</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:112px">Phép thử</th><th>Tự hỏi</th></tr></thead>
+            <tbody>
+              <tr><td><b>Tiêu chuẩn kép</b></td><td>Anh Minh cũng trả lời tin nhắn chậm như chị Lan, sao mình nghĩ anh ấy bận?</td></tr>
+              <tr><td><b>Người ngoài cuộc</b></td><td>Một người mới vào phòng, chưa biết chuyện cũ, có thấy chị Lan “không ưa” mình không?</td></tr>
+              <tr><td><b>A dua</b></td><td>Mình nghĩ thế từ hôm cô bạn thân bảo “chị ấy ghét em ra mặt”. Nếu cô ấy rút lại câu đó, mình còn lý do riêng nào?</td></tr>
+              <tr><td><b>Hoài nghi chọn lọc</b></td><td>Chị Lan rủ đi ăn trưa, mình gạt đi là “xã giao thôi”. Nếu chị ấy từ chối lời rủ của mình, mình có gạt dễ vậy không?</td></tr>
+              <tr><td><b>Hiện trạng</b></td><td>Nếu hôm nay mới gặp chị Lan, với đúng những gì đã thấy, mình có đi tới kết luận này không?</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="bb-key"><span class="k">Mang theo</span>Khi thấy mình đang bảo vệ một niềm tin, hỏi: <b>mình đang hỏi “có thể tin không?” hay “có buộc phải tin không?”</b> Rồi hỏi nốt câu còn lại.</p>
+        <p class="hw-p"><b>Một cảnh báo.</b> Các công cụ này để soi chính mình. Đem soi người khác, chúng thành vũ khí của người lính: thuộc tên vài chục lối ngụy biện, ta bắt lỗi phe kia rất nhanh mà chẳng đếm lỗi phe mình, tức hoài nghi chọn lọc có học. Chính Pirie nhận cuốn sách của ông vào tay người xấu là vũ khí (<a href="how-to-win-every-argument.html#s-phong-thu">How to Win Every Argument</a>), và bác được một lối ngụy biện <a href="how-to-win-every-argument.html#s-la-gi">chưa chứng minh kết luận kia sai</a>. Tuần này, bạn gọi tên ngụy biện của phe mình mấy lần?</p>
+
+        <h4 class="bb-h4" id="galef-vung">Độ vững</h4>
+        <p class="hw-p">Sách tổng hợp nghiên cứu của người khác; theo Scott Alexander (2021), cái mới là coi nhìn rõ là chuyện cảm xúc hơn là kỹ thuật.</p>
+        <ul class="hw-ul">
+          <li><b>Lập luận có động cơ có thật</b> (tổng quan của Kunda, 1990). Người nhận kết quả xét nghiệm giả báo tin xấu hay đòi thử lại hơn và chấm xét nghiệm kém chính xác hơn người nhận tin tốt (Ditto và Lopez, 1992).</li>
+          <li><b>Nhưng phép thử tiêu chuẩn kép và hoài nghi chọn lọc không tách được hai nguyên nhân.</b> Thí nghiệm giữ phương pháp mà đổi kết luận, hay giữ thông tin mà đổi người ủng hộ, khó tách “muốn tin” khỏi “đã có lý do để tin từ trước” (Tappin, Pennycook và Rand, 2020). Một kết quả trái mười nghiên cứu trước đáng bị soi kỹ hơn, và soi thế là hợp lý.</li>
+          <li><b>Hiệu chỉnh và cập nhật từng bước có bằng chứng tốt nhất.</b> Trong giải dự báo địa chính trị của nhóm Tetlock và Mellers, huấn luyện xác suất cùng làm việc nhóm giúp dự báo chính xác hơn hẳn (Mellers và cs., 2014); qua hơn 400.000 dự báo, người giỏi nhất cập nhật thường xuyên, từng bước nhỏ (Atanasov và cs., 2020). Nhưng đó là câu hỏi có đáp án rõ sau thời gian ngắn.</li>
+          <li><b>Chỗ yếu nhất: “tự lừa không làm ta vui hơn”.</b> Chương 7 chê các nghiên cứu nói người tự lừa hạnh phúc hơn là đo “tự lừa” thiếu chuẩn khách quan. Nhưng một phân tích tổng hợp năm 2019 (299 mẫu, 126.916 người) thấy người tự đánh giá cao quá mức hài lòng với cuộc sống hơn, ít trầm cảm hơn, cả khi theo dõi qua thời gian; cái giá là người quen lâu không đánh giá họ cao như lúc mới gặp (Dufner và cs., 2019). Tự lừa có thể giúp vui thật; đáng đổi hay không là chuyện khác.</li>
+          <li><b>Ví dụ doanh nhân là chuyện người sống sót:</b> ta không nghe chuyện những ai cũng nhìn tỉ lệ thẳng thắn như Bezos rồi thất bại.</li>
+          <li><b>Buồng vang và bản sắc: lập luận nhiều hơn bằng chứng.</b> Thí nghiệm Twitter chỉ một nền tảng, một tháng. Cắt khoảng một phần ba nội dung cùng phe của 23.377 người dùng Facebook trong mùa bầu cử Mỹ 2020 không đổi được gì đo được về phân cực hay tin vào tin sai (Nyhan và cs., 2023). Còn lời khuyên chọn người để nghe và giữ bản sắc nhẹ tay thì trang này chưa thấy thử nghiệm nào đo trực tiếp.</li>
+        </ul>
+
+        <div class="bb-next">
+          <p><b>Bạn vừa có:</b> năm câu hỏi để bắt quả tang chính mình, và một cách đổi cảm giác chắc chắn thành con số rồi đem con số ấy đi kiểm.</p>
+          <p><b>Nó dẫn đi đâu:</b> Galef dạy nhìn rõ điều gì đang đúng; nhìn rõ rồi thì bận tâm tới điều gì, chấm mình bằng cái thước nào, là câu hỏi của mục <a href="#manson">Manson</a>.</p>
+        </div>
+        <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/The_Scout_Mindset">Wikipedia</a> (Portfolio, 13/04/2021, năm phần, 15 chương) · <a href="https://forum.effectivealtruism.org/posts/HDAXztEbjJsyHLKP7/outline-of-galef-s-scout-mindset">dàn ý từng chương của Rob Bensinger</a> · <a href="https://firstnews.com.vn/vi/tac-pham/tu-duy-truy-tim-su-that-p1488.html">First News</a> (bản tiếng Việt, 380 trang) · <a href="https://juliagalef.com/calibration/">juliagalef.com</a> (bài hiệu chỉnh 40 câu) · <a href="https://en.wikipedia.org/wiki/Dreyfus_affair">Dreyfus affair</a> và <a href="https://en.wikipedia.org/wiki/Georges_Picquart%27s_investigations_of_the_Dreyfus_affair">cuộc điều tra của Picquart</a> (Wikipedia) · <a href="https://www.newworldencyclopedia.org/entry/Dreyfus_Affair">New World Encyclopedia</a> (Picquart bài Do Thái) · <a href="https://doi.org/10.1086/667711">Eigen &amp; Listokin, 2012</a> · <a href="https://bethanybrookshire.com/i-went-viral-i-was-wrong/">Brookshire, 29/01/2018</a> · <a href="https://en.wikipedia.org/wiki/Andrew_Grove">Andrew Grove</a> (Intel rời mảng chip nhớ; lời kể trong <i>Only the Paranoid Survive</i>, 1996) · <a href="https://marginalrevolution.com/marginalrevolution/2021/04/how-rational-was-spock.html">trích đoạn về Spock</a> · Hubbard, <i>How to Measure Anything</i> (phép cược tương đương) · <a href="https://achievement.org/achiever/jeffrey-p-bezos/">Academy of Achievement</a> (phỏng vấn Bezos) · <a href="https://doi.org/10.1073/pnas.1804840115">Bail và cs., 2018</a> · <a href="https://www.econlib.org/archives/2011/06/the_ideological.html">Caplan, 2011</a> · <a href="https://www.astralcodexten.com/p/book-review-the-scout-mindset">Scott Alexander, 2021</a> · <a href="https://doi.org/10.1037/0033-2909.108.3.480">Kunda, 1990</a> · <a href="https://doi.org/10.1037/0022-3514.63.4.568">Ditto &amp; Lopez, 1992</a> · <a href="https://doi.org/10.1016/j.cobeha.2020.01.003">Tappin, Pennycook &amp; Rand, 2020</a> · <a href="https://doi.org/10.1177/0956797614524255">Mellers và cs., 2014</a> · <a href="https://doi.org/10.1016/j.obhdp.2020.02.001">Atanasov và cs., 2020</a> · <a href="https://doi.org/10.1177/1088868318756467">Dufner và cs., 2019</a> · <a href="https://doi.org/10.1038/s41586-023-06297-w">Nyhan và cs., 2023</a>. Bài hiệu chỉnh: <a href="https://data.worldbank.org/indicator/SP.POP.TOTL">World Bank</a> (dân số 2025, diện tích) · <a href="https://trungtamwto.vn/hiep-dinh-khac/28481-xuat-khau-gao-nam-2024-dat-ky-luc-ca-ve-luong-va-gia-tri">Trung tâm WTO – VCCI</a> (gạo 2024) · Wikipedia (<a href="https://en.wikipedia.org/wiki/Great_Pyramid_of_Giza">Kim Tự Tháp Giza</a>, <a href="https://en.wikipedia.org/wiki/Cleopatra">Cleopatra</a>, <a href="https://en.wikipedia.org/wiki/IPhone_(1st_generation)">iPhone</a>, <a href="https://en.wikipedia.org/wiki/Bitcoin">Bitcoin</a>, toạ độ <a href="https://en.wikipedia.org/wiki/Hanoi">Hà Nội</a> và <a href="https://en.wikipedia.org/wiki/Hong_Kong">Hồng Kông</a>) · <a href="https://www.nasa.gov/wp-content/uploads/static/history/PDFs/great_wall_less_great_from_space.pdf">NASA</a> (Vạn Lý Trường Thành) · <a href="https://www.weather.gov/safety/lightning-temperature">NWS/NOAA</a> (nhiệt độ tia sét) · Nghị quyết 202/2025/QH15 ngày 12/6/2025 (34 đơn vị hành chính cấp tỉnh) · <a href="https://wmo.int/news/media-centre/wmo-confirms-2024-warmest-year-record-about-155degc-above-pre-industrial-level">WMO</a> (nhiệt độ 2024).</p>
+      </section>
 
       <section class="bb-book" id="manson">
         <p class="bb-book__eyebrow"><b>03</b> — Mark Manson · 2016</p>
@@ -842,6 +1049,183 @@
     render();
   });
   render();
+})();
+</script>
+
+<script>
+/* ---- galef: bài tập hiệu chỉnh ----
+   Mười câu đúng/sai do trang này soạn (nguồn ở cuối mục). Mỗi câu: chọn đáp án, chọn mức chắc
+   55/65/75/85/95%, chốt thì hiện đáp án. Hình: mỗi mức chắc một điểm, cao bằng tỉ lệ câu đúng thật
+   ở mức ấy; đường chéo là khớp hoàn toàn. Không lưu gì: tải lại trang là làm lại từ đầu. */
+(function () {
+  var root = document.getElementById('galef');
+  if (!root) return;
+  var box = root.querySelector('#galef-svg'), range = root.querySelector('#galef-conf'),
+      go = root.querySelector('#galef-go');
+  if (!box || !range || !go) return;
+  var qNo = root.querySelector('#galef-qno'), qText = root.querySelector('#galef-qtext'),
+      bT = root.querySelector('#galef-true'), bF = root.querySelector('#galef-false'),
+      confL = root.querySelector('#galef-conf-l'), fb = root.querySelector('#galef-fb'),
+      big = root.querySelector('#galef-big'), sub = root.querySelector('#galef-sub'),
+      out = root.querySelector('#galef-out');
+  var NS = 'http://www.w3.org/2000/svg';
+  var Q = [
+    { s: 'Nhật Bản đông dân hơn Việt Nam.', a: true,
+      e: 'Năm 2025, Nhật Bản có khoảng 123,4 triệu người, Việt Nam khoảng 101,6 triệu (World Bank).' },
+    { s: 'Nữ hoàng Cleopatra sống gần thời Kim Tự Tháp Giza được xây hơn là gần thời chúng ta.', a: false,
+      e: 'Kim Tự Tháp lớn được xây khoảng năm 2600 TCN; Cleopatra mất năm 30 TCN, tức sau đó khoảng 2.570 năm, còn từ bà tới nay chưa tới 2.060 năm.' },
+    { s: 'Năm 2024, Việt Nam xuất khẩu nhiều gạo hơn Ấn Độ.', a: false,
+      e: 'Việt Nam lập kỷ lục khoảng 9 triệu tấn nhưng vẫn đứng thứ ba, sau Ấn Độ khoảng 17 triệu tấn và Thái Lan (Trung tâm WTO – VCCI).' },
+    { s: 'Diện tích Brazil lớn hơn diện tích Úc.', a: true,
+      e: 'Brazil khoảng 8,5 triệu km², Úc khoảng 7,7 triệu km² (World Bank).' },
+    { s: 'Chiếc iPhone đầu tiên được bán ra trước khi Bitcoin ra đời.', a: true,
+      e: 'iPhone lên kệ ở Mỹ ngày 29/6/2007; khối đầu tiên của Bitcoin được tạo ngày 3/1/2009.' },
+    { s: 'Hà Nội nằm xa về phía bắc hơn Hồng Kông.', a: false,
+      e: 'Hà Nội ở khoảng vĩ độ 21° Bắc, Hồng Kông khoảng 22,3° Bắc: Hồng Kông nằm ở phía bắc hơn.' },
+    { s: 'Từ Mặt Trăng có thể nhìn thấy Vạn Lý Trường Thành bằng mắt thường.', a: false,
+      e: 'Từ quỹ đạo thấp đã khó thấy bằng mắt thường; từ Mặt Trăng, cách khoảng 384.000 km, thì không (NASA).' },
+    { s: 'Tia sét nóng hơn bề mặt Mặt Trời.', a: true,
+      e: 'Tia sét có thể nung không khí tới gần 28.000°C, khoảng năm lần nhiệt độ bề mặt Mặt Trời (NOAA).' },
+    { s: 'Sau đợt sắp xếp năm 2025, Việt Nam có hơn 40 tỉnh, thành phố trực thuộc trung ương.', a: false,
+      e: 'Nghị quyết 202/2025/QH15 ngày 12/6/2025 sắp xếp lại còn 34 đơn vị: 28 tỉnh và 6 thành phố.' },
+    { s: 'Năm 2024, nhiệt độ trung bình toàn cầu cao hơn thời tiền công nghiệp trên 1,5°C.', a: true,
+      e: 'WMO ước tính năm 2024 cao hơn mức trung bình 1850–1900 khoảng 1,55°C, nhiều khả năng là năm đầu tiên vượt ngưỡng 1,5°C.' }
+  ];
+  var LV = [55, 65, 75, 85, 95];
+  var X0 = 58, X1 = 336, Y0 = 212, Y1 = 34;   /* vùng vẽ: ngang 50→100% (mức chắc), dọc 0→100% (tỉ lệ đúng) */
+  var idx = 0, pick = null, locked = false, log = [];
+
+  function px(c) { return (X0 + (c - 50) * (X1 - X0) / 50).toFixed(1); }
+  function py(p) { return (Y0 - p * (Y0 - Y1) / 100).toFixed(1); }
+  function el(tag, attrs, style, text) {
+    var e = document.createElementNS(NS, tag), k;
+    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (style) e.setAttribute('style', style);
+    if (text != null) e.textContent = text;
+    box.appendChild(e);
+    return e;
+  }
+  /* Thanh trượt bước 10 nên chỉ ra 55…95; vẫn chặn lại cho chắc, để không bao giờ ra số lạ. */
+  function level() {
+    var v = +range.value, best = 75, i;
+    if (!isFinite(v)) return best;
+    for (i = 0; i < LV.length; i++) if (Math.abs(LV[i] - v) < Math.abs(best - v)) best = LV[i];
+    return best;
+  }
+  function setPick(v) {
+    pick = v;
+    bT.classList.toggle('is-active', v === true);  bT.setAttribute('aria-pressed', v === true ? 'true' : 'false');
+    bF.classList.toggle('is-active', v === false); bF.setAttribute('aria-pressed', v === false ? 'true' : 'false');
+    if (!locked) go.disabled = (v === null);
+  }
+
+  function drawChart(rows) {
+    while (box.firstChild) box.removeChild(box.firstChild);
+    [0, 25, 50, 75, 100].forEach(function (p) {
+      el('line', { x1: X0, y1: py(p), x2: X1, y2: py(p) }, 'stroke:var(--wb-border);stroke-width:1');
+      el('text', { x: X0 - 6, y: +py(p) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, p + '%');
+    });
+    el('line', { x1: X0, y1: Y0, x2: X1, y2: Y0 }, 'stroke:var(--wb-border-strong);stroke-width:1');
+    LV.forEach(function (c) {
+      el('text', { x: px(c), y: Y0 + 15, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, c + '%');
+    });
+    el('text', { x: (X0 + X1) / 2, y: Y0 + 32, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, 'mức chắc bạn chọn');
+    /* Tên trục dọc và chú giải nằm trên vùng vẽ, để điểm ở mức 100% không đè lên chữ. */
+    el('text', { x: 4, y: 14, 'class': 'hw-vs' }, null, 'tỉ lệ đúng thật');
+    el('line', { x1: 238, y1: 10, x2: 258, y2: 10 }, 'stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4');
+    el('text', { x: 262, y: 14, 'class': 'hw-vs' }, null, 'khớp hoàn toàn');
+    el('line', { x1: px(50), y1: py(50), x2: px(100), y2: py(100) }, 'stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4');
+    /* Nhãn điểm: vòng tròn + "đúng/tổng". Tính trước hộp chiếm chỗ để nhãn vùng tránh ra. */
+    var marks = [];
+    rows.forEach(function (r) {
+      if (!r.n) return;
+      var cx = +px(r.c), cy = +py(100 * r.k / r.n), rad = 4 + 1.6 * Math.sqrt(r.n), t = r.k + '/' + r.n;
+      marks.push({ cx: cx, cy: cy, rad: rad, t: t, box: [cx - rad - 2, cy - rad - 2, cx + rad + 6 + 7.5 * t.length, cy + rad + 2] });
+    });
+    /* Nhãn vùng: chỉ vẽ khi không đụng điểm nào, nên lúc mở trang (chưa có điểm) luôn hiện đủ. */
+    [{ x: +px(90), y: +py(50), a: 'tự tin quá mức', b: '(dưới đường chéo)' },
+     { x: +px(60), y: +py(88), a: 'tự ti', b: '(trên đường chéo)' }].forEach(function (g) {
+      var bx = [g.x - 50, g.y - 13, g.x + 50, g.y + 18];
+      var hit = marks.some(function (m) { return m.box[0] < bx[2] && m.box[2] > bx[0] && m.box[1] < bx[3] && m.box[3] > bx[1]; });
+      if (hit) return;
+      el('text', { x: g.x, y: g.y, 'text-anchor': 'middle', 'class': 'hw-vt' }, null, g.a);
+      el('text', { x: g.x, y: g.y + 14, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, g.b);
+    });
+    marks.forEach(function (m) {
+      el('circle', { cx: m.cx, cy: m.cy.toFixed(1), r: m.rad.toFixed(1) }, 'fill:var(--wb-fg)');
+      /* Viền chữ cùng màu nền để nhãn điểm đọc được cả khi nằm sát đường kẻ. */
+      el('text', { x: (m.cx + m.rad + 4).toFixed(1), y: (m.cy + 4).toFixed(1), 'class': 'hw-vt' },
+        'paint-order:stroke;stroke:var(--wb-canvas);stroke-width:3px;stroke-linejoin:round', m.t);
+    });
+  }
+
+  function render() {
+    var rows = LV.map(function (c) { return { c: c, n: 0, k: 0 }; }), n = log.length, sumC = 0, ok = 0, i, r;
+    for (i = 0; i < n; i++) {
+      r = rows[LV.indexOf(log[i].c)];
+      if (r) { r.n++; if (log[i].ok) r.k++; }
+      sumC += log[i].c; if (log[i].ok) ok++;
+    }
+    if (confL) confL.textContent = level() + '%';
+    if (n === 0) {
+      if (big) big.textContent = 'Chưa chốt câu nào';
+      if (sub) sub.textContent = 'Đích là đường chéo: nói chắc 75% thì đúng chừng 75%.';
+      if (out) out.textContent = 'Mỗi mức chắc sẽ hiện ở đây: số câu đúng trên số câu đã chốt.';
+    } else {
+      var avg = Math.round(sumC / n), pct = Math.round(100 * ok / n), gap = avg - pct, verdict;
+      if (n < 4) verdict = 'còn quá ít câu để đọc ra điều gì.';
+      else if (gap >= 10) verdict = 'bạn đang nói chắc hơn mức mình đúng khoảng ' + gap + ' điểm phần trăm.';
+      else if (gap <= -10) verdict = 'bạn đúng nhiều hơn mức mình dám nói, khoảng ' + (-gap) + ' điểm phần trăm.';
+      else verdict = 'mức chắc và tỉ lệ đúng đang khá khớp.';
+      if (big) big.textContent = avg + '% chắc · ' + pct + '% đúng';
+      if (sub) sub.textContent = 'Sau ' + n + '/' + Q.length + ' câu: ' + verdict +
+        (n === Q.length ? ' Mười câu vẫn là ít, đừng coi đây là kết luận về bạn.' : '');
+      if (out) out.textContent = rows.map(function (x) {
+        return 'Nói ' + x.c + '%: ' + (x.n ? 'đúng ' + x.k + '/' + x.n + ' câu (' + Math.round(100 * x.k / x.n) + '%)' : 'chưa có câu nào');
+      }).join('\n');
+    }
+    drawChart(rows);
+  }
+
+  function say(head, tail) {
+    if (!fb) return;
+    fb.textContent = '';
+    if (head) { var b = document.createElement('b'); b.textContent = head; fb.appendChild(b); fb.appendChild(document.createTextNode(' ')); }
+    fb.appendChild(document.createTextNode(tail));
+  }
+  function ask() {
+    locked = false;
+    var q = Q[idx];
+    if (qNo) qNo.textContent = 'Câu ' + (idx + 1) + ' / ' + Q.length;
+    if (qText) qText.textContent = q.s;
+    bT.disabled = false; bF.disabled = false; range.disabled = false;
+    range.value = 75;
+    setPick(null);
+    go.textContent = 'Chốt câu này';
+    say('', 'Chọn Đúng hoặc Sai, kéo mức chắc, rồi bấm Chốt.');
+    render();
+  }
+  function lock() {
+    var q = Q[idx], c = level(), right = (pick === q.a);
+    locked = true;
+    log.push({ c: c, ok: right });
+    bT.disabled = true; bF.disabled = true; range.disabled = true;
+    go.disabled = false;
+    go.textContent = idx < Q.length - 1 ? 'Câu tiếp theo' : 'Làm lại từ đầu';
+    say(right ? 'Bạn đúng.' : 'Chưa đúng.', 'Đáp án: ' + (q.a ? 'Đúng' : 'Sai') + '. ' + q.e +
+      (idx === Q.length - 1 ? ' Làm lại thì bạn đã biết đáp án, nên lần hai không đo được gì nữa.' : ''));
+    render();
+  }
+
+  bT.addEventListener('click', function () { if (!locked) setPick(true); });
+  bF.addEventListener('click', function () { if (!locked) setPick(false); });
+  range.addEventListener('input', function () { if (confL) confL.textContent = level() + '%'; });
+  go.addEventListener('click', function () {
+    if (!locked) { if (pick !== null) lock(); return; }
+    if (idx < Q.length - 1) { idx++; ask(); }
+    else { idx = 0; log = []; ask(); }
+  });
+  ask();
 })();
 </script>
 </body>
