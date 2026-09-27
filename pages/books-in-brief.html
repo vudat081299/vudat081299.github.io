@@ -168,7 +168,7 @@
   .bb-lab__foot + .bb-lab__foot { border-top: 0; padding-top: 0; margin-top: 6px; }
   .bb-out { font-family: var(--wb-font-mono); font-size: 12px; line-height: 1.7; background: var(--wb-canvas); border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; padding: 9px 11px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; color: var(--wb-fg); margin: 0; }
   .bb-mono { font-family: var(--wb-font-mono); font-size: 12px; }
-  .bb-svg { width: 100%; height: auto; display: block; margin: 0 auto; touch-action: none; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
+  .bb-svg { width: 100%; height: auto; display: block; margin: 0 auto; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
   .bb-lab .wb-btn { white-space: normal; }
   @media (max-width: 620px) {
     .bb-lab .wb-btn { min-height: 40px; padding-top: 10px; padding-bottom: 10px; }
@@ -236,9 +236,8 @@
   #haidt .hd-out { margin-top: 12px; }
 
   /* ---- sagan ---- */
-  /* Mô hình bậc thang bằng chứng: hình dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình.
-     Hình này không kéo được, nên trả lại cử chỉ cuộn trang mặc định (.bb-svg của trang đặt touch-action:none). */
-  #sagan .sg-svg { max-width: 520px; touch-action: auto; }
+  /* Mô hình bậc thang bằng chứng: hình dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
+  #sagan .sg-svg { max-width: 520px; }
   #sagan .sg-svg .hw-vs { font-size: 11.5px; }
   #sagan .sg-svg .hw-vt { font-size: 12.5px; }
   #sagan .sg-val { display: inline-block; min-width: 118px; }
