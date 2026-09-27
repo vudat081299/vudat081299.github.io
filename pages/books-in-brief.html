@@ -177,6 +177,20 @@
   }
 
   /* ---- manson ---- */
+
+  /* ---- kahneman ---- */
+  /* Hai hình dựng trên viewBox 360 px: chặn bề rộng để chữ SVG không phình quá cỡ trên màn rộng. */
+  #kahneman .kh-vf { max-width: 480px; }
+  #kahneman .kh-vf .hw-vs { font-size: 11.5px; }
+  #kahneman .kh-vf .hw-vt { font-size: 12.5px; }
+  #kahneman .hw-viz .hw-src { max-width: 480px; }
+  #kahneman .kh-svg { max-width: 520px; }
+  #kahneman .kh-svg .hw-vs { font-size: 12px; }
+  #kahneman .kh-svg .hw-vt { font-size: 13px; }
+  #kahneman .kh-val { display: inline-block; min-width: 40px; text-align: right; }
+  #kahneman .kh-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
+  #kahneman .kh-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; }
+  #kahneman .kh-sub b { color: var(--wb-fg); font-weight: 640; }
 </style>
 </head>
 <body class="wb-app">
@@ -212,6 +226,8 @@
       <li><b>The Subtle Art of Not Giving a F*ck:</b> sách dẫn lời Mustaine và Best từ hai cuộc phỏng vấn không tìm được bản gốc; mục thay bằng nguồn kiểm được (phim <i>Some Kind of Monster</i>, 2004; Irish Times) và bỏ chi tiết “bị đuổi nên mới gặp vợ”, vì Wikipedia ghi Best gặp vợ ở một buổi diễn của chính The Beatles.</li>
       <li><b>The Subtle Art of Not Giving a F*ck:</b> Độ vững có hai ý ngoài đề bài: con số “đủ ăn rồi thì tiền không còn liên quan tới hạnh phúc” của sách đã bị dữ liệu 2021–2023 bác; và ý “sách không hợp với người hay tự trách” dựa trên một bài điểm sách cá nhân, không phải nghiên cứu.</li>
       <li><b>The Subtle Art of Not Giving a F*ck:</b> tên bản Việt theo trang nhà phát hành Huy Hoàng (bản in 2018 và 2021, NXB Văn Học, Thanh Hương dịch; chưa rõ năm in đầu). Độ dài ≈2.000 tiếng, tức khoảng 1.350–1.450 từ tuỳ cách đếm, sát trần 1.400.</li>
+      <li><b>Thinking, Fast and Slow:</b> ví dụ tỉ lệ nền “giảng viên hay làm nông” dùng số thật (khoảng 84 nghìn giảng viên đại học, 13,8 triệu lao động nông, lâm, thủy sản), theo đúng khuôn câu hỏi “thủ thư hay nông dân” của chính sách. Nếu thấy dễ bị đọc thành định kiến nghề nghiệp thì nên đổi cặp nghề.</li>
+      <li><b>Thinking, Fast and Slow:</b> mục dài ≈4.200 tiếng, tức khoảng 2.900 từ (~17 phút đọc), nhỉnh hơn trần ~2.800 của đề bài. Để giữ độ dài, mục bỏ ảo giác tiêu điểm và đoạn thu nhập–hạnh phúc (mục Manson đã có). Năm ra mắt bản tiếng Việt (đầu 2015) lấy theo báo Nhân Dân; chưa kiểm được năm in đầu trên trang Alpha Books.</li>
     </ul>
   </aside>
 
@@ -225,7 +241,17 @@
 
   <!-- Lưới thẻ: một thẻ một cuốn, xếp theo số thứ tự 01 → 10. -->
   <div class="bb-cards">
-    <!-- 01 kahneman · 02 galef: chèn thẻ vào trước thẻ 03 -->
+    <a class="wb-card wb-card--hover wb-card--pad" href="#kahneman">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">01</span>
+        <div class="wb-media__body">
+          <p class="bb-card__k">Thinking, Fast and Slow</p>
+          <p class="wb-media__title">Tư duy nhanh và chậm</p>
+          <p class="wb-media__text">Những chỗ trực giác sai có hệ thống, vì sao ta tự tin nhất đúng lúc đáng ngờ nhất, và ta cân được mất lệch khỏi phép tính ra sao.</p>
+        </div>
+      </div>
+    </a>
+    <!-- 02 galef: chèn thẻ vào đây, giữa thẻ 01 và thẻ 03 -->
     <a class="wb-card wb-card--hover wb-card--pad" href="#manson">
       <div class="wb-media">
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">03</span>
@@ -245,7 +271,8 @@
       <a class="wb-sidenav__link" href="#how">How to use this page</a>
 
       <div class="wb-sidenav__section" style="margin-top:12px">Your own mind</div>
-      <!-- 01 kahneman · 02 galef: chèn link vào trước link 03 -->
+      <a class="wb-sidenav__link" href="#kahneman">Thinking, Fast and Slow</a>
+      <!-- 02 galef: chèn link vào đây, giữa link 01 và link 03 -->
       <a class="wb-sidenav__link" href="#manson">The Subtle Art of Not Giving a F*ck</a>
 
       <div class="wb-sidenav__section" style="margin-top:12px">Other people</div>
@@ -290,7 +317,213 @@
         <p>Ba cuốn nhìn vào chính đầu mình: <b>Kahneman</b> chỉ ra những lối tắt khiến ta đoán sai mà vẫn tự tin, <b>Galef</b> hỏi vì sao ta hay bảo vệ điều mình muốn tin thay vì tìm xem điều gì đúng, còn <b>Manson</b> hỏi ta đang dùng cái thước nào để chấm chính mình.</p>
       </div>
 
-      <!-- 01 kahneman · 02 galef: chèn mục vào đây, trước mục 03 -->
+      <section class="bb-book" id="kahneman">
+        <p class="bb-book__eyebrow"><b>01</b> — Daniel Kahneman · 2011</p>
+        <h3 class="bb-book__title">Tư duy nhanh và chậm</h3>
+        <p class="bb-book__orig"><i>Thinking, Fast and Slow</i> (2011) · bản tiếng Việt: Hương Lan và Xuân Thanh dịch, NXB Thế Giới, Alpha Books phát hành (ra mắt đầu năm 2015)</p>
+        <p class="hw-lede">Trực giác dựng một câu chuyện mạch lạc từ chút dữ kiện có trong tay, và ta tin câu chuyện theo độ trơn tru của nó chứ không theo xác suất nó đúng. Lối tắt ấy đủ tốt cho việc thường ngày, nhưng sai có hệ thống ở những chỗ đoán trước được, và <b>đắt nhất đúng lúc ta tự tin nhất</b>: khi dự báo, khi đánh giá người, khi ước lượng dự án.</p>
+        <div class="bb-verdict">
+          <span class="bb-verdict__k">Đọc gì trong bản gốc</span><p class="bb-verdict__v"><b>Phần 3</b>, “Tự tin quá mức” (<i>Overconfidence</i>, chương 19–24): sáu chương ngắn về những chỗ lối tắt tốn tiền thật, như chọn cổ phiếu, tuyển người, ước lượng dự án. Chúng dựa vào hồ sơ đời thật nhiều hơn thí nghiệm với sinh viên, và kết bằng hai quy trình dùng được ngay: góc nhìn bên ngoài (chương 23) và premortem (cuối chương 24).</p>
+          <span class="bb-verdict__k">Bỏ qua được</span><p class="bb-verdict__v"><b>Phần 1</b> (chương 1–9) nếu đã đọc trang <a href="psychology.html#s-think">Psychology</a>: Hệ 1, Hệ 2 và các lối tắt cơ bản có ở đó, còn chương 3 và 4 dựa vào những nghiên cứu nay đã lung lay (xem Độ vững). Với mười chương của <b>Phần 4</b>, phần tóm dưới đây là đủ, trừ khi bạn làm tài chính hay bảo hiểm.</p>
+          <span class="bb-verdict__k">Mục này</span><p class="bb-verdict__v">~17 phút đọc, kèm một mô hình để kéo thử</p>
+        </div>
+
+        <h4 class="bb-h4" id="kahneman-khung">Bộ khung</h4>
+        <p class="hw-p"><b>Một ý chạy suốt năm phần.</b> Bộ máy nghĩ nhanh, sách gọi là <b>Hệ 1</b>, dựng câu chuyện mạch lạc nhất từ những gì đang ở trước mắt và không hỏi còn thiếu gì; Kahneman gọi tắt là <b>WYSIATI</b>, cái bạn thấy là tất cả những gì có (<i>what you see is all there is</i>). Cảm giác chắc chắn đo độ trơn của câu chuyện, không đo lượng bằng chứng: biết ít có khi còn dễ tin hơn, vì ít chi tiết thì ít chỗ vênh. <b>Hệ 2</b>, bộ máy nghĩ chậm, lẽ ra phải kiểm lại, nhưng nó lười và thường chỉ ký duyệt.</p>
+        <div class="hw-quote">
+          Hệ 1 như một người kể chuyện giỏi ở quán nước: nghe dăm chi tiết là dựng được cả câu chuyện có đầu có đuôi.
+          <cite>Chỗ ví von hỏng: người kể chuyện biết mình đang thêm thắt; Hệ 1 thì không. Câu chuyện nó dựng hiện ra như chính điều mình thấy.</cite>
+        </div>
+        <p class="hw-p">Hai hệ thống và các lối tắt như neo, đóng khung, né mất mát đã có ở mục <a href="psychology.html#s-think">tư duy và thiên kiến</a> của trang Psychology, kèm bài trắc nghiệm. Mục này dành chữ cho phần trang ấy chưa có; Phần 3 là trọng tâm.</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:200px">Phần</th><th>Câu hỏi của phần</th></tr></thead>
+            <tbody>
+              <tr><td><b>1 · Hai hệ thống</b> (<i>Two Systems</i>), ch. 1–9</td><td>Nghĩ nhanh, nghĩ chậm chia việc ra sao; vì sao gặp câu khó, ta lặng lẽ trả lời một câu dễ hơn.</td></tr>
+              <tr><td><b>2 · Lối tắt và thiên kiến</b> (<i>Heuristics and Biases</i>), ch. 10–18</td><td>Vì sao ta đoán xác suất sai: câu chuyện đè lên con số.</td></tr>
+              <tr><td><b>3 · Tự tin quá mức</b> (<i>Overconfidence</i>), ch. 19–24</td><td>Vì sao ta tin những dự đoán không đáng tin, và làm gì với nó.</td></tr>
+              <tr><td><b>4 · Lựa chọn</b> (<i>Choices</i>), ch. 25–34</td><td>Ta cân được và mất thế nào khi chưa biết kết quả.</td></tr>
+              <tr><td><b>5 · Hai cái tôi</b> (<i>Two Selves</i>), ch. 35–38</td><td>Cái tôi sống từng lúc và cái tôi nhớ lại: cái nào quyết định.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h4 class="bb-h4" id="kahneman-p2">Phần 2 · Khi câu chuyện đè lên con số</h4>
+        <p class="hw-p"><b>Tỉ lệ nền.</b> Ngay phần mở đầu, sách hỏi: Steve nhút nhát, ngăn nắp, mê chi tiết, là thủ thư hay nông dân? Phần đông chọn thủ thư, quên rằng ở Mỹ nam nông dân đông gấp hơn 20 lần nam thủ thư. Hai thí nghiệm Tom W và Linda ở Phần 2 cùng khuôn ấy: đoán theo độ <i>giống</i> khuôn mẫu, quên nhóm ấy ít hay nhiều người. Trang Psychology có bản Việt hoá câu Linda trong <a href="psychology.html#lab-bias">bài trắc nghiệm</a>, và phép tính tỉ lệ nền khi <a href="psychology.html#s-help">đọc kết quả sàng lọc</a>.</p>
+        <p class="hw-p">Bản gần mình: anh Tùng ít nói, đeo kính, tối nào cũng đọc sách; anh là giảng viên đại học hay làm nông? Cả nước có khoảng 84 nghìn giảng viên đại học (năm học 2023–2024) và 13,8 triệu lao động nông, lâm, thủy sản (2023). Kể cả khi chỉ 1% người làm nông hợp mô tả, còn giảng viên thì ai cũng hợp, số người làm nông hợp mô tả vẫn là 138 nghìn, đông hơn toàn bộ giảng viên.</p>
+        <p class="hw-p"><b>Luật số nhỏ.</b> Ở Mỹ, các hạt có tỉ lệ ung thư thận thấp nhất phần lớn là nông thôn thưa dân, dễ khiến người ta nghĩ tới không khí sạch, đồ ăn tươi. Nhưng các hạt có tỉ lệ <i>cao</i> nhất cũng vậy. Lý do chung chỉ là dân ít: vài ca bệnh đủ đẩy tỉ lệ lên đỉnh hay xuống đáy. Quán ăn 5,0 sao với ba lượt đánh giá chưa chắc ngon hơn quán 4,6 sao với hai nghìn lượt. Trang How to Lie with Statistics có <a href="how-to-lie-with-statistics.html#c3">mô hình</a> cho cơ chế này.</p>
+        <p class="hw-p"><b>Hồi quy về trung bình.</b> Có lần Kahneman giảng cho huấn luyện viên bay của không quân Israel rằng khen hiệu quả hơn phạt, và một người phản bác: học viên được khen sau pha bay đẹp thường bay kém đi ở lần sau, bị quát sau pha bay tệ thường khá lên. Quan sát đúng, kết luận sai: pha bay xuất sắc có phần nhờ may, lần sau may rủi rút lại thì kết quả tự lùi về mức thường, có khen hay không. Ông cho mỗi người quay lưng ném hai đồng xu vào một cái đích, không ai được nhận xét gì: ai ném gần nhất lượt đầu thì phần lớn ném xa hơn lượt sau, và ngược lại. Sách tóm bằng hai phương trình: thành công là tài năng cộng may mắn; thành công lớn là nhỉnh hơn chút tài năng và hơn hẳn về may mắn.</p>
+
+        <div class="bb-lab" id="kahneman-lab">
+          <div class="bb-lab__head">
+            <p class="bb-lab__kick">Mô hình · hồi quy về trung bình</p>
+            <p class="bb-lab__title">Khen nhóm giỏi nhất, tháng sau họ tụt — dù lời khen không làm gì cả</p>
+            <p class="bb-lab__hint">1.000 nhân viên bán hàng; doanh số mỗi tháng = <b>năng lực</b> (giữ nguyên) + <b>may rủi</b> (rút mới mỗi tháng). Cuối tháng 1, sếp khen 100 người cao nhất, nhắc nhở 100 người thấp nhất; trong mô hình, khen hay nhắc đều <b>không có tác dụng gì</b>. “Tỉ trọng may rủi”: phần chênh lệch doanh số giữa người với người do may rủi.</p>
+          </div>
+          <div class="bb-lab__body">
+            <div class="bb-lab__row">
+              <label for="kahneman-luck">Tỉ trọng may rủi</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="kahneman-luck" min="0" max="100" step="5" value="50" style="flex:1 1 180px"><span class="bb-mono kh-val" id="kahneman-luck-l">50%</span></div>
+            </div>
+            <div class="bb-lab__row">
+              <span class="k">Tháng khác</span>
+              <div class="wb-cluster"><button class="wb-btn wb-btn--sm" type="button" id="kahneman-redraw">Rút may rủi mới</button></div>
+            </div>
+            <p class="kh-cap">Nhóm được khen, hơn mức trung bình (triệu đồng) · tháng 1 → tháng 2</p>
+            <p class="bb-lab__big" id="kahneman-big">+37 → +18</p>
+            <p class="kh-sub" id="kahneman-sub">Giữ lại 50% khoảng cách. Trung bình qua rất nhiều tháng: 50%.</p>
+            <svg class="bb-svg kh-svg" id="kahneman-svg" viewBox="0 0 360 250" role="img" aria-label="Biểu đồ dốc: doanh số tháng 1 và tháng 2 của nhóm được khen và nhóm bị nhắc nhở, so với mức trung bình"></svg>
+            <p class="bb-lab__foot"><b>Điều cần thấy:</b> may rủi 0% thì tháng 2 y hệt tháng 1; 50% thì nhóm được khen chỉ giữ chừng một nửa khoảng cách, nhóm bị nhắc nhở “tiến bộ” gần chừng ấy; 100% thì cả hai về sát trung bình. Tính trung bình qua nhiều tháng, phần giữ lại đúng bằng phần năng lực.</p>
+          </div>
+        </div>
+
+        <h4 class="bb-h4" id="kahneman-p3">Phần 3 · Tự tin quá mức: phần đáng đọc nhất</h4>
+        <p class="hw-p">Phần 2 cho thấy ta đoán sai. Phần 3 hỏi tiếp: vì sao đoán sai mà vẫn chắc như đinh đóng cột, kể cả người trong nghề, và làm gì với điều đó.</p>
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="kahneman-c1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 19</span><h5 class="hw-fal__name">Ảo giác hiểu</h5><span class="wb-tag">illusion of understanding</span></div>
+            <p class="hw-fal__def">Biết kết quả rồi, ta dựng lại một câu chuyện nhân quả gọn gàng, tin rằng mình hiểu, và vì thế tin tương lai cũng đoán được. Đi cùng là <b>hậu nghiệm</b>, <b>thiên kiến kết quả</b> (chấm quyết định theo kết cục, không theo thông tin có lúc quyết định) và <b>hào quang</b> (công ty đang lên thì lãnh đạo trông sáng suốt). Phép tính của sách: cho tương quan giữa tài của giám đốc và thành công của công ty là 0,3, đã là rộng tay; lấy ngẫu nhiên hai công ty, công ty có giám đốc giỏi hơn chỉ thành công hơn ở khoảng 60% số cặp, so với 50% nếu tung đồng xu.</p>
+          </article>
+          <article class="hw-fal" id="kahneman-c2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 20</span><h5 class="hw-fal__name">Ảo giác giá trị</h5><span class="wb-tag">illusion of validity</span></div>
+            <p class="hw-fal__def">Cảm giác chắc chắn còn nguyên dù bằng chứng nói mình đoán chẳng hơn may rủi. Những năm 1950, trong ban tâm lý của quân đội Israel, Kahneman chấm ứng viên sĩ quan qua một bài thử: tám người đã bỏ quân hàm phải đưa một cây cột qua bức tường, cột không chạm đất, không chạm tường, người không chạm tường. Họ tin mình thấy rõ ai là thủ lĩnh. Khoảng mỗi tháng, trường sĩ quan gửi kết quả về: dự đoán gần như vô giá trị. Hôm sau họ lại chấm lứa mới với niềm tin y như cũ. Ông gọi đó là <b>ảo giác giá trị</b>.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Với tiền</span>
+              <div class="hw-fal__v">25 cố vấn tài chính của một công ty, 8 năm, 28 hệ số tương quan giữa thứ hạng các năm: trung bình 0,01, tức thứ hạng năm nay không nói gì về năm sau, trong khi công ty vẫn thưởng như thể đó là tài.</div>
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Nhóm chat “phím hàng” chứng khoán: người phím trúng ba mã liền trông như có tài. Có ai ghi đủ những mã phím trượt không?</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="kahneman-c3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 21</span><h5 class="hw-fal__name">Công thức đơn giản thắng chuyên gia</h5><span class="wb-tag">clinical vs statistical</span></div>
+            <p class="hw-fal__def">Năm 1954, nhà tâm lý Paul Meehl gom khoảng 20 nghiên cứu so dự đoán của chuyên gia lâm sàng với một quy tắc cộng điểm: gần như ở tất cả, quy tắc ngang hoặc hơn. Một tổng hợp năm 2000 trên 136 nghiên cứu cùng chiều: công thức hơn hẳn ở 33–47% số nghiên cứu, chuyên gia hơn hẳn chỉ ở 6–16%. Một lý do lớn là người không nhất quán: cùng hồ sơ, xem hai lần có thể chấm hai kiểu. Ở nơi nhiều nhiễu, nhất quán đáng giá hơn tinh tế. Sách kể kỹ điểm Apgar (1952): chấm trẻ sơ sinh theo năm tiêu chí như nhịp tim, nhịp thở, màu da, mỗi tiêu chí 0–2 điểm, ở phút thứ nhất và thứ năm; từ 7 điểm trở lên là bình thường.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trực giác sau kỷ luật</span>
+              <div class="hw-fal__v">Năm 1955, ở tuổi 21, Kahneman dựng lại cách phỏng vấn tân binh: chấm riêng sáu đặc điểm bằng câu hỏi cố định, xong mới cho điểm chung theo cảm nhận. Tương quan với kết quả thật tăng từ khoảng 0,1 lên gần 0,3, và điểm cảm nhận cuối buổi lại dự đoán tốt nhất: trực giác có giá trị khi đến <i>sau</i> kỷ luật.</div>
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Phỏng vấn tuyển người: định sẵn bốn đến sáu tiêu chí, hỏi mọi ứng viên cùng câu, chấm từng tiêu chí, rồi mới cho phép mình “thấy hợp”.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="kahneman-c4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 22</span><h5 class="hw-fal__name">Khi nào tin được trực giác chuyên gia</h5><span class="wb-tag">expert intuition</span></div>
+            <p class="hw-fal__def">Gary Klein nghiên cứu mặt ngược lại: những người quyết nhanh mà đúng như chỉ huy cứu hoả, y tá, kỳ thủ. Chuyện ông hay kể: một đội trưởng dẫn người vào dập đám cháy bếp, thấy lửa không phản ứng như mọi khi, phòng khách nóng và yên ắng bất thường, liền ra lệnh rút; sàn nhà sập ngay sau đó, vì lửa cháy từ tầng hầm. Kahneman và Klein, vốn ở hai phe, cùng viết một bài năm 2009 và đồng ý với nhau: trực giác là nhận ra mẫu quen, đáng tin khi có đủ hai điều kiện. Một là <b>môi trường đủ đều đặn</b> để có mẫu mà nhận. Hai là <b>luyện tập lâu với phản hồi nhanh, rõ</b> để học được mẫu ấy. Thiếu một trong hai, cảm giác chắc chắn không phải bằng chứng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Thợ sửa xe máy nghe tiếng máy đoán bệnh: việc đều đặn, sửa xong biết ngay đúng sai, nên đáng tin. Người phán “tuần sau VN-Index lên”: giá cổ phiếu ngắn hạn gần như không có mẫu ổn định, phản hồi chậm và nhiễu, nên đừng tin độ chắc trong giọng nói.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="kahneman-c5">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 23</span><h5 class="hw-fal__name">Góc nhìn bên ngoài và ngụy biện kế hoạch</h5><span class="wb-tag">outside view</span></div>
+            <p class="hw-fal__def">Kahneman từng dẫn một nhóm soạn giáo trình về phán đoán cho học sinh trung học Israel. Làm được một thời gian, mỗi người ghi ra còn bao nhiêu tháng nữa thì xong: từ 18 tới 30 tháng. Ông hỏi chuyên gia giáo trình trong nhóm: các nhóm tương tự anh biết đã mất bao lâu? Câu trả lời: khoảng 40% bỏ dở, số còn lại mất 7 đến 10 năm, và nhóm này không hơn họ. Cùng một người, hai con số: nhìn <b>từ trong</b> (kế hoạch, nguồn lực, trở ngại thấy trước) thì lạc quan; nhìn <b>từ ngoài</b> (việc cùng loại thật ra mất bao lâu) thì gần sự thật hơn nhiều. Cả nhóm vẫn làm tiếp; tám năm sau giáo trình mới xong, và gần như không được dùng. Theo Bent Flyvbjerg, dự án đường sắt vượt chi trung bình khoảng 45%, và lượng khách thực tế trung bình chỉ bằng chừng một nửa dự báo.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Metro số 1 TP.HCM: duyệt năm 2007 với 17.387 tỉ đồng, dự kiến chạy năm 2018; vốn chốt lại 43.757 tỉ, gấp khoảng 2,5 lần, tàu chạy thương mại ngày 22/12/2024.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="kahneman-c6">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 24</span><h5 class="hw-fal__name">Premortem: tưởng tượng thất bại trước khi làm</h5><span class="wb-tag">premortem</span></div>
+            <p class="hw-fal__def">Người lập nghiệp lạc quan tới mức nào: trong một khảo sát 2.994 chủ doanh nghiệp mới, 81% tự chấm khả năng thành công từ 7/10 trở lên, và 33% chấm 10/10. Cách chữa Kahneman mượn của Gary Klein: khi nhóm sắp chốt một quyết định lớn, người chủ trì yêu cầu mọi người tưởng tượng một năm đã qua, kế hoạch được làm đúng như bản hiện tại, và kết quả là thất bại nặng; mỗi người tự viết trong vài phút lịch sử ngắn của thất bại ấy. Cách này cho phép nghi ngờ đúng lúc cả nhóm đang hăng, khi phản biện dễ bị coi là không đồng lòng.</p>
+          </article>
+        </div>
+
+        <h4 class="bb-h4" id="kahneman-p4">Phần 4 · Cân được mất: thuyết triển vọng</h4>
+        <p class="hw-p">Kinh tế học cổ điển coi người ra quyết định như một cỗ máy: chọn phương án có kỳ vọng cao nhất, tính trên tổng tài sản. <b>Thuyết triển vọng</b> (Kahneman và Tversky, 1979) sửa bằng bốn điều.</p>
+        <p class="hw-p"><b>1. Điểm tham chiếu.</b> Ta cảm nhận thay đổi, không cảm nhận mức. Hai người cùng lương 20 triệu, một người vừa được tăng từ 15, một người vừa bị giảm từ 25: theo phép tính cũ họ như nhau, ngoài đời một người vui, một người khó chịu. Sách gọi việc bỏ quên điểm xuất phát là “sai lầm của Bernoulli” (chương 25).</p>
+        <p class="hw-p"><b>2. Né mất mát.</b> Tung đồng xu, sấp mất 100 đô, ngửa được 150 đô: phần đông từ chối, dù kỳ vọng là +25 đô. Độ lớn của hiện tượng còn tranh cãi (xem Độ vững).</p>
+        <p class="hw-p"><b>3. Độ nhạy giảm dần.</b> Càng xa điểm tham chiếu, mỗi khoản thêm càng nhẹ. Năm 1981, 68% người được hỏi chịu đi 20 phút để mua rẻ hơn 5 đô một chiếc máy tính giá 15 đô; với máy giá 125 đô, chỉ còn 29%. Bớt 100 nghìn cho cái áo 300 nghìn thì đáng ghé tiệm khác; bớt 100 nghìn cho chiếc xe máy 40 triệu thì ít ai buồn đi.</p>
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg kh-vf" viewBox="0 0 360 250" role="img" aria-label="Đường cong giá trị của thuyết triển vọng: nhánh được phẳng dần, nhánh mất dốc hơn nhánh được, cả hai đi qua điểm tham chiếu">
+              <line x1="20" y1="92" x2="340" y2="92" style="stroke:var(--wb-border-strong);stroke-width:1"/>
+              <line x1="180" y1="18" x2="180" y2="244" style="stroke:var(--wb-border-strong);stroke-width:1"/>
+              <line x1="330" y1="92" x2="330" y2="28.7" style="stroke:var(--wb-neutral);stroke-width:1;stroke-dasharray:2 3"/>
+              <line x1="30" y1="92" x2="30" y2="234.4" style="stroke:var(--wb-neutral);stroke-width:1;stroke-dasharray:2 3"/>
+              <path d="M180.0 92.0 L178.5 93.1 L177.0 94.0 L174.0 95.7 L169.5 98.1 L163.5 101.1 L156.0 104.6 L147.0 108.7 L135.0 113.9 L120.0 120.3 L102.0 127.6 L81.0 135.9 L57.0 145.2 L30.0 155.3" style="fill:none;stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4"/>
+              <path d="M180.0 92.0 L181.5 90.9 L183.0 90.0 L186.0 88.3 L190.5 85.9 L196.5 82.9 L204.0 79.4 L213.0 75.3 L225.0 70.1 L240.0 63.7 L258.0 56.4 L279.0 48.1 L303.0 38.8 L330.0 28.7" style="fill:none;stroke:var(--wb-fg);stroke-width:2.5;stroke-linejoin:round"/>
+              <path d="M180.0 92.0 L178.5 94.5 L177.0 96.6 L174.0 100.4 L169.5 105.7 L163.5 112.4 L156.0 120.4 L147.0 129.6 L135.0 141.4 L120.0 155.6 L102.0 172.1 L81.0 190.8 L57.0 211.6 L30.0 234.4" style="fill:none;stroke:var(--wb-fg);stroke-width:2.5;stroke-linejoin:round"/>
+              <circle cx="180" cy="92" r="3.5" style="fill:var(--wb-fg)"/>
+              <text x="186" y="25" class="hw-vs">vui</text>
+              <text x="186" y="241" class="hw-vs">đau</text>
+              <text x="330" y="106" text-anchor="middle" class="hw-vs">được 100</text>
+              <text x="36" y="106" class="hw-vs">mất 100</text>
+              <text x="190" y="108" class="hw-vt">điểm tham chiếu</text>
+              <text x="322" y="74" text-anchor="end" class="hw-vs">càng xa gốc</text>
+              <text x="322" y="87" text-anchor="end" class="hw-vs">càng phẳng dần</text>
+              <line x1="24" y1="30" x2="44" y2="30" style="stroke:var(--wb-fg);stroke-width:2.5"/>
+              <text x="50" y="34" class="hw-vs">cảm giác được–mất</text>
+              <line x1="24" y1="50" x2="44" y2="50" style="stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4"/>
+              <text x="50" y="54" class="hw-vs">nếu mất chỉ đau</text>
+              <text x="50" y="67" class="hw-vs">bằng được vui</text>
+            </svg>
+          </div>
+          <p class="hw-src">Vẽ theo tham số Tversky &amp; Kahneman ước lượng năm 1992 (độ cong 0,88, hệ số né mất mát 2,25): vạch đứt bên trái dài gấp 2,25 lần vạch bên phải, và khoảng hở giữa hai đường bên trái chính là né mất mát.</p>
+        </div>
+        <p class="hw-p"><b>4. Trọng số xác suất.</b> Khả năng rất nhỏ bị thổi phồng, còn chắc chắn được coi trọng hơn “gần chắc chắn” nhiều. Theo ước lượng năm 1992 của Tversky và Kahneman, với chuyện được, khả năng 1% được đối xử như chừng 5,5%, còn 99% như chừng 91%. Ghép điều này với hai nhánh của đường cong, ta được <b>mô hình bốn ô</b> (chương 29):</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:92px"></th><th>Khả năng cao (chừng 95%)</th><th>Khả năng thấp (chừng 5%)</th></tr></thead>
+            <tbody>
+              <tr><td><b>Chuyện được</b></td><td><b>Né rủi ro.</b> Sợ vuột mất: thà nhận chắc 90 triệu còn hơn 95% cơ hội được 100 triệu, dù kỳ vọng của cơ hội là 95 triệu. Ngoài đời: chốt lời quá sớm.</td><td><b>Tìm rủi ro.</b> Khả năng nhỏ được thổi phồng: mua vé số dù kỳ vọng âm.</td></tr>
+              <tr><td><b>Chuyện mất</b></td><td><b>Tìm rủi ro.</b> Mong gỡ: thà đánh cược còn hơn chịu mất chắc. Ngoài đời: ôm cổ phiếu lỗ chờ “về bờ”, đánh thêm để gỡ.</td><td><b>Né rủi ro.</b> Sợ mất lớn: mua bảo hiểm, mua gói bảo hành mở rộng cho điện thoại, với giá thường cao hơn thiệt hại kỳ vọng.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p"><b>Hiệu ứng sở hữu</b> (chương 27) là né mất mát áp vào đồ vật. Trong thí nghiệm năm 1990 của Kahneman, Knetsch và Thaler, người được phát cốc đòi trung vị 7,12 USD mới bán, người chỉ được chọn giữa cốc và tiền định giá nó 3,12 USD: vị trí như nhau, khác mỗi chữ “của mình”. Rao bán xe máy cũ cũng thế: giá mình rao thì hợp lý, giá người ta trả thì ép.</p>
+
+        <h4 class="bb-h4" id="kahneman-p5">Phần 5 · Hai cái tôi</h4>
+        <p class="hw-p"><b>Cái tôi trải nghiệm</b> sống qua từng khoảnh khắc; <b>cái tôi ghi nhớ</b> kể lại chuyện đã qua, và chỉ nó được hỏi khi ta chọn cho lần sau. Trong một thí nghiệm công bố năm 1993, 32 người nhúng một tay vào nước 14°C trong 60 giây; ở lượt khác, cũng 60 giây như thế rồi thêm 30 giây trong lúc nước ấm dần lên 15°C, vẫn đau nhưng đỡ hơn. Được chọn một lượt để làm lại, 22 người (69%) chọn lượt dài, tức chọn đau nhiều hơn.</p>
+        <p class="hw-p">Hai quy luật rút ra. <b>Đỉnh–kết</b>: ký ức về một trải nghiệm gần như là trung bình của lúc tệ nhất và lúc cuối. <b>Bỏ quên thời lượng</b>: dài gấp đôi không làm ký ức tệ gấp đôi. Với 154 người nội soi đại tràng, tổng đau nhớ lại đi theo đỉnh đau và ba phút cuối, không theo độ dài ca (1996). Một thử nghiệm ngẫu nhiên sau đó trên 682 bệnh nhân thêm vào cuối ca một quãng ngắn ít đau: nhóm này nhớ cả ca nhẹ hơn chút ít (4,4 so với 4,9 trên thước 10 cm) và quay lại nội soi nhiều hơn chút ít (2003). Nên chiều cái tôi nào, khi thêm vài phút đau thật để đổi lấy một ký ức dễ chịu hơn? Sách để ngỏ.</p>
+        <p class="hw-p">Gần mình: chuyến Đà Lạt ba ngày, mưa mất hai, tối cuối trời quang và nồi lẩu ngon; về kể lại, đó là một chuyến vui.</p>
+
+        <h4 class="bb-h4" id="kahneman-dung">Dùng thế nào</h4>
+        <p class="hw-p">Ba câu hỏi, mỗi câu nhắm một lỗi. Viết câu trả lời ra giấy: biết về thiên kiến không tắt được thiên kiến, nên cái sửa được phải nằm trong cách làm.</p>
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="kahneman-q1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 1</span><h5 class="hw-fal__name">Trong 100 trường hợp giống thế này, bao nhiêu cái thật sự là vậy?</h5><span class="wb-tag">tỉ lệ nền · phần 2</span></div>
+            <p class="hw-fal__def">Hỏi quy mô của từng khả năng trước, rồi mới xét mô tả khớp tới đâu. Gặp một kết quả cực đoan, đoán lần sau về gần trung bình trước khi gán công cho lời khen, tiếng mắng hay thứ vừa đổi.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Có người gọi báo bạn trúng thưởng một chiếc xe máy, giọng rất thật, đọc đúng tên bạn. Trong 100 cuộc gọi kiểu này, bao nhiêu cuộc là trúng thật? Con số ấy nặng hơn giọng nói.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="kahneman-q2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 2</span><h5 class="hw-fal__name">Những việc cùng loại thật ra mất bao lâu, tốn bao nhiêu?</h5><span class="wb-tag">góc nhìn bên ngoài · chương 23</span></div>
+            <p class="hw-fal__def">Chọn một lớp việc đủ giống; tìm xem chúng thật ra mất bao lâu, tốn bao nhiêu; lấy đó làm mốc; rồi mới chỉnh theo điểm riêng, và chỉnh ít thôi, vì ai cũng thấy việc của mình đặc biệt.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Bản báo cáo ước “hai ngày là xong” mà lần trước thành hai tuần: lấy thời gian thật của năm việc tương tự gần nhất làm mốc. Sửa nhà: hỏi ba nhà quen vừa sửa xem họ trễ bao lâu, vượt bao nhiêu tiền, trước khi nghe báo giá.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="kahneman-q3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 3</span><h5 class="hw-fal__name">Một năm nữa kế hoạch này đã thất bại. Vì sao?</h5><span class="wb-tag">premortem · chương 24</span></div>
+            <p class="hw-fal__def">Làm trước khi chốt. Mỗi người viết riêng rồi mới đọc lên, người chủ trì đọc trước, để ý kiến đầu tiên không kéo cả nhóm theo. Mục tiêu là sửa kế hoạch, không phải huỷ nó.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Hai vợ chồng định mở tiệm bánh. Mỗi người tự viết: tháng 12 năm sau tiệm đóng cửa, chuyện gì đã xảy ra? Hai tờ giấy có thể lộ ra những nỗi lo lúc bàn chung không ai nói: mặt bằng tăng giá, người làm nghỉ, một người kiệt sức.</div>
+            </div>
+          </article>
+        </div>
+        <p class="bb-key"><span class="k">Mang theo</span>Cảm giác chắc chắn không phải bằng chứng. Trước khi tin nó, hỏi: <b>việc này có mẫu lặp lại không, và mình đã được phản hồi nhanh, rõ bao nhiêu lần?</b></p>
+
+        <h4 class="bb-h4" id="kahneman-vung">Độ vững</h4>
+        <p class="hw-p">Sách ra năm 2011, đúng lúc tâm lý học bước vào <a href="psychology.html#s-repl">khủng hoảng lặp lại</a>. Phần dựa trên thí nghiệm của chính Kahneman và Tversky đứng tốt; phần dẫn nghiên cứu tâm lý xã hội của người khác, dồn nhiều ở Phần 1, có nhiều chỗ đã hỏng.</p>
+        <ul class="hw-ul">
+          <li><b>Chương 4, về hiệu ứng mồi, đổ phần lớn.</b> Sách viết rằng trước các nghiên cứu ấy, “disbelief is not an option” (không tin là không được). Năm 2017, một phân tích 31 nghiên cứu chương này dẫn chấm độ tin cậy thống kê của chúng 14 trên 100. Kahneman trả lời ngay dưới bài: “I placed too much faith in underpowered studies” (tôi đã quá tin những nghiên cứu mẫu quá nhỏ). Ông vẫn tin có hiệu ứng mồi, chỉ không lớn và vững như chương sách tả. Chỗ trớ trêu chính ông chỉ ra: bài đầu tiên ông viết với Tversky, năm 1971, là về thói tin mẫu nhỏ.</li>
+          <li><b>Chương 3 dựa vào hai phát hiện đã lung lay.</b> Suy kiệt ý chí: hai dự án lặp lại nhiều phòng thí nghiệm, với 2.141 người (2016) và 3.531 người (2021), không thấy hiệu ứng đáng kể; trang Psychology đã <a href="psychology.html#s-mot">xếp nó vào nhóm “đã đổ”</a>. “Thẩm phán đói” (tỉ lệ cho tạm tha rơi từ khoảng 65% xuống gần 0 trước mỗi bữa ăn, 2011) bị phản biện: thứ tự xét không ngẫu nhiên như sách tả, tù nhân không có luật sư thường vào cuối phiên, và một mô phỏng cho thấy riêng việc tránh mở ca dài ngay trước giờ nghỉ đã tạo ra được đường dốc tương tự. Tác giả gốc giữ kết luận; độ lớn hiệu ứng nhiều khả năng bị phóng đại.</li>
+          <li><b>Lõi của sách đứng vững.</b> Neo và đóng khung lặp lại mạnh ở dự án Many Labs 1 (36 mẫu, 6.344 người), trong khi hai thí nghiệm mồi cũng được thử ở đó thì không. Năm 2020, bộ câu hỏi gốc của thuyết triển vọng được làm lại với 4.098 người ở 19 nước: 94% câu cho kết quả cùng chiều, dù hiệu ứng yếu hơn. Kahneman nhận Nobel kinh tế năm 2002, chia với Vernon Smith; Tversky đã mất năm 1996. Kahneman mất ngày 27/3/2024, ở tuổi 90.</li>
+          <li><b>Hệ số né mất mát còn tranh cãi.</b> Sách nói mất thường nặng hơn được từ 1,5 tới 2,5 lần. Một tổng hợp 607 ước lượng (2024) ra trung bình khoảng 1,96; một tổng hợp khác, chỉ gồm lựa chọn có rủi ro (2024), ra 1,31. “Mất nặng hơn được” đứng vững; “gấp đôi” thì tuỳ cách đo.</li>
+          <li><b>Premortem có bằng chứng, nhưng mỏng hơn lời đồn.</b> Con số “nhận ra nguyên nhân đúng hơn 30%” hay được dẫn cho nó gốc từ một nghiên cứu năm 1989 chỉ xét độ dài và kiểu lời giải thích, không xét cái nào đúng. Một thử nghiệm với 178 người (2010) thấy premortem hạ độ tự tin quá mức nhiều hơn các cách phản biện khác; trang này chưa tìm thấy nghiên cứu đo xem nó có làm dự án thành công hơn không.</li>
+          <li><b>Hệ 1 và Hệ 2 là cách nói, không phải hai vùng não.</b> Chính sách gọi chúng là hai nhân vật hư cấu, đặt ra để dễ kể chuyện.</li>
+        </ul>
+
+        <div class="bb-next">
+          <p><b>Bạn vừa có:</b> ba câu hỏi đặt trước một phán đoán tự tin (tỉ lệ nền là bao nhiêu, việc cùng loại thật ra ra sao, nếu thất bại thì vì đâu) và một phép thử cho trực giác: môi trường có đều đặn không, phản hồi có nhanh và rõ không.</p>
+          <p><b>Nó dẫn đi đâu:</b> Kahneman tả giới hạn của bộ máy, ít nói tới động cơ: ta còn sai vì <i>muốn</i> tin điều dễ chịu, và câu hỏi ấy cần một cuốn sách khác. Còn cái tôi ghi nhớ, kẻ chấm điểm cuộc đời ta, dùng thước nào để chấm là chuyện của mục <a href="#manson">Manson</a>.</p>
+        </div>
+        <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/Thinking,_Fast_and_Slow">Wikipedia</a> (Farrar, Straus and Giroux, 2011) · <a href="https://www.litcharts.com/lit/thinking-fast-and-slow">LitCharts</a> (năm phần, 38 chương) · <a href="https://shop.alphabooks.vn/tu-duy-nhanh-va-cham-thinking-fast-and-slow-daniel-kahneman-p32415671.html">Alpha Books</a> và <a href="https://nhandan.vn/alphabooks-ra-mat-cuon-sach-tu-duy-nhanh-va-cham-post223573.html">Nhân Dân</a> (bản tiếng Việt, 22/01/2015) · <a href="https://www.nobelprize.org/prizes/economic-sciences/2002/kahneman/biographical/">tự truyện Nobel</a> (quân đội, phỏng vấn năm 1955, huấn luyện viên bay) · <a href="https://www.nobelprize.org/prizes/economic-sciences/2002/summary/">Nobel 2002</a> · <a href="https://www.scientificamerican.com/article/kahneman-excerpt-thinking-fast-and-slow/">Scientific American</a> (trích sách) · <a href="https://www.econlib.org/kahneman-henderson-and-hooper-on-biases-and-bases/">Econlib</a> (câu hỏi về Steve) · <a href="https://www.americanscientist.org/article/the-most-dangerous-equation">Wainer, 2007</a> · <a href="https://thanhnien.vn/quy-mo-giao-duc-dh-tang-hon-300000-sinh-vien-trong-nam-hoc-2023-2024-185250522162830238.htm">Thanh Niên</a> (giảng viên 2023–2024) · <a href="https://www.nso.gov.vn/du-lieu-va-so-lieu-thong-ke/2024/01/tinh-hinh-thi-truong-lao-dong-viet-nam-nam-2023/">Cục Thống kê</a> (lao động 2023) · <a href="https://rpc.cfainstitute.org/blogs/enterprising-investor/2011/daniel-kahneman-financial-advisers-arent-immune-from-the-illusion-of-skill">CFA Institute</a> (25 cố vấn) · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9997627/">về Meehl, 1954</a> · <a href="https://doi.org/10.1037/1040-3590.12.1.19">Grove và cs., 2000</a> · <a href="https://en.wikipedia.org/wiki/Apgar_score">Apgar</a> · <a href="https://doi.org/10.1037/a0016755">Kahneman &amp; Klein, 2009</a> · <a href="https://arxiv.org/abs/1302.3642">Flyvbjerg, 2006</a> (chuyện giáo trình theo Lovallo &amp; Kahneman, 2003; số liệu đường sắt) · <a href="https://vneconomy.vn/tuyen-metro-ben-thanh-suoi-tien-hanh-trinh-ve-dich.htm">VnEconomy</a> và <a href="https://nguoidothi.net.vn/metro-ben-thanh-suoi-tien-chinh-thuc-van-hanh-46582.html">Người Đô Thị</a> (metro số 1) · <a href="https://www.sciencedirect.com/science/article/abs/pii/0883902688900201">Cooper và cs., 1988</a> · <a href="https://hbr.org/2007/09/performing-a-project-premortem">Klein, 2007</a> · <a href="https://doi.org/10.1002/bdm.3960020103">Mitchell và cs., 1989</a> · <a href="https://idl.iscram.org/files/veinott/2010/1049_Veinott_etal2010.pdf">Veinott và cs., 2010</a> · <a href="https://doi.org/10.1126/science.7455683">Tversky &amp; Kahneman, 1981</a> · <a href="https://www.nber.org/papers/w18621">Barberis, 2012</a> (tham số năm 1992) · <a href="https://doi.org/10.1086/261737">Kahneman, Knetsch &amp; Thaler, 1990</a> · <a href="https://doi.org/10.1111/j.1467-9280.1993.tb00589.x">Kahneman và cs., 1993</a> · <a href="https://doi.org/10.1016/0304-3959(96)02994-6">Redelmeier &amp; Kahneman, 1996</a> · <a href="https://doi.org/10.1016/s0304-3959(03)00003-4">Redelmeier, Katz &amp; Kahneman, 2003</a> · <a href="https://replicationindex.com/2017/02/02/reconstruction-of-a-train-wreck-how-priming-research-went-of-the-rails/">Replicability-Index, 2017</a> và <a href="https://replicationindex.com/2017/02/02/reconstruction-of-a-train-wreck-how-priming-research-went-of-the-rails/comment-page-1/#comment-1454">bình luận của Kahneman</a> (14/02/2017) · <a href="https://doi.org/10.1027/1864-9335/a000178">Many Labs 1</a> · <a href="https://doi.org/10.1177/1745691616652873">Hagger và cs., 2016</a> · <a href="https://doi.org/10.1177/0956797621989733">Vohs và cs., 2021</a> · <a href="https://doi.org/10.1073/pnas.1018033108">Danziger và cs., 2011</a> · <a href="https://doi.org/10.1073/pnas.1110910108">Weinshall-Margel &amp; Shapard, 2011</a> · <a href="https://www.cambridge.org/core/journals/judgment-and-decision-making/article/irrational-hungry-judge-effect-revisited-simulations-reveal-that-the-magnitude-of-the-effect-is-overestimated/61CE825D4DC137675BB9CAD04571AE58">Glöckner, 2016</a> · <a href="https://doi.org/10.1038/s41562-020-0886-x">Ruggeri và cs., 2020</a> · <a href="https://doi.org/10.1257/jel.20221698">Brown và cs., 2024</a> · <a href="https://doi.org/10.1016/j.joep.2024.102740">Walasek và cs., 2024</a>.</p>
+      </section>
+
+      <!-- 02 galef: chèn mục vào đây, giữa mục 01 (kahneman) và mục 03 (manson) -->
 
       <section class="bb-book" id="manson">
         <p class="bb-book__eyebrow"><b>03</b> — Mark Manson · 2016</p>
@@ -489,6 +722,126 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
   top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+</script>
+
+<script>
+/* ---- kahneman: mô hình hồi quy về trung bình ----
+   Doanh số = năng lực (cố định) + may rủi (rút mới mỗi tháng), trộn theo tỉ trọng phương sai L.
+   Khi ấy tương quan giữa hai tháng là 1 − L, nên nhóm chọn theo tháng 1 giữ lại, tính trung bình,
+   đúng (1 − L) khoảng cách của mình ở tháng 2. Số hiện ra là của lần rút đang xem, không làm tròn cho đẹp. */
+(function () {
+  var root = document.getElementById('kahneman');
+  if (!root) return;
+  var box = root.querySelector('#kahneman-svg'), range = root.querySelector('#kahneman-luck');
+  if (!box || !range) return;
+  var lab = root.querySelector('#kahneman-luck-l'), big = root.querySelector('#kahneman-big'),
+      sub = root.querySelector('#kahneman-sub'), btn = root.querySelector('#kahneman-redraw');
+  var NS = 'http://www.w3.org/2000/svg';
+  var N = 1000, K = 100, MEAN = 100, SD = 20;           /* triệu đồng một tháng */
+  var SEED = 347;                                        /* chọn sẵn để lần mở đầu ra đúng giá trị kỳ vọng */
+  var XL = 110, XR = 250, Y0 = 240, Y1 = 26, VMIN = 20, VMAX = 185;
+
+  /* Bộ sinh số có hạt giống: kéo thanh trượt chỉ đổi tỉ trọng, không đổi người. */
+  function rng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function normals(n, rand) {
+    var out = [], i, u, v;
+    for (i = 0; i < n; i++) {
+      u = Math.max(rand(), 1e-12); v = rand();
+      out.push(Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v));
+    }
+    return out;
+  }
+  var r0 = rng(SEED), skill = normals(N, r0), luck1 = normals(N, r0), luck2 = normals(N, r0);
+
+  function el(tag, attrs, style, text) {
+    var e = document.createElementNS(NS, tag), k;
+    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (style) e.setAttribute('style', style);
+    if (text != null) e.textContent = text;
+    box.appendChild(e);
+    return e;
+  }
+  function y(v) { v = Math.max(VMIN, Math.min(VMAX, v)); return (Y0 - (v - VMIN) * (Y0 - Y1) / (VMAX - VMIN)).toFixed(1); }
+  function gap(v) { var r = Math.round(v); return r === 0 ? '0' : (r > 0 ? '+' : '−') + Math.abs(r); }
+  function avg(arr, ids) { var s = 0, i; for (i = 0; i < ids.length; i++) s += arr[ids[i]]; return s / Math.max(ids.length, 1); }
+
+  function render() {
+    var pct = Math.max(0, Math.min(100, Math.round(+range.value || 0)));
+    var L = pct / 100, a = Math.sqrt(1 - L), b = Math.sqrt(L), m1 = [], m2 = [], idx = [], i;
+    for (i = 0; i < N; i++) {
+      m1.push(MEAN + SD * (a * skill[i] + b * luck1[i]));
+      m2.push(MEAN + SD * (a * skill[i] + b * luck2[i]));
+      idx.push(i);
+    }
+    idx.sort(function (p, q) { return m1[q] - m1[p]; });
+    var top = idx.slice(0, K), bot = idx.slice(N - K);
+    var mean1 = avg(m1, idx), mean2 = avg(m2, idx);
+    var t1 = avg(m1, top) - mean1, t2 = avg(m2, top) - mean2;
+    var b1 = avg(m1, bot) - mean1, b2 = avg(m2, bot) - mean2;
+    /* "tiến bộ" tính từ hai số đã làm tròn đang hiện ra, để người đọc trừ nhẩm thì khớp. */
+    var keep = Math.round(t2 / t1 * 100), rise = Math.round(b2) - Math.round(b1);
+
+    if (lab) lab.textContent = pct + '%';
+    if (big) big.textContent = gap(t1) + ' → ' + gap(t2);
+    if (sub) {
+      var head = keep >= 3 ? 'Giữ lại ' + keep + '% khoảng cách.'
+               : keep > -3 ? 'Gần như mất hết khoảng cách.'
+               : 'Mất hết khoảng cách, còn tụt dưới mức trung bình một chút.';
+      var tail = rise > 0 ? ' triệu, tức “tiến bộ” ' + rise + ' triệu mà lời nhắc không góp phần nào.' : ' triệu, không đổi.';
+      sub.textContent = head + ' Trung bình qua rất nhiều tháng: ' + (100 - pct) + '%. Nhóm bị nhắc nhở: ' +
+        gap(b1) + ' → ' + gap(b2) + tail;
+    }
+
+    while (box.firstChild) box.removeChild(box.firstChild);
+    el('text', { x: XL, y: 16, 'text-anchor': 'middle', 'class': 'hw-vt' }, null, 'Tháng 1');
+    el('text', { x: XR, y: 16, 'text-anchor': 'middle', 'class': 'hw-vt' }, null, 'Tháng 2');
+    el('line', { x1: XL, y1: Y1, x2: XL, y2: Y0 }, 'stroke:var(--wb-border-strong);stroke-width:1');
+    el('line', { x1: XR, y1: Y1, x2: XR, y2: Y0 }, 'stroke:var(--wb-border-strong);stroke-width:1');
+    el('line', { x1: XL, y1: y(mean1), x2: XR, y2: y(mean2) }, 'stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:4 4');
+
+    /* Mỗi người một đường mảnh (một phần ba số người của mỗi nhóm, cho đỡ rối). */
+    for (i = 0; i < K; i += 3) {
+      el('line', { x1: XL, y1: y(m1[top[i]]), x2: XR, y2: y(m2[top[i]]) }, 'stroke:var(--wb-fg);stroke-width:1;opacity:.16');
+      el('line', { x1: XL, y1: y(m1[bot[i]]), x2: XR, y2: y(m2[bot[i]]) }, 'stroke:var(--wb-fg);stroke-width:1;opacity:.16');
+    }
+    var yt1 = +y(mean1 + t1), yt2 = +y(mean2 + t2), yb1 = +y(mean1 + b1), yb2 = +y(mean2 + b2);
+    el('line', { x1: XL, y1: yt1, x2: XR, y2: yt2 }, 'stroke:var(--wb-fg);stroke-width:3;stroke-linecap:round');
+    el('line', { x1: XL, y1: yb1, x2: XR, y2: yb2 }, 'stroke:var(--wb-fg);stroke-width:3;stroke-linecap:round;stroke-dasharray:7 5');
+    [[XL, yt1], [XR, yt2], [XL, yb1], [XR, yb2]].forEach(function (p) {
+      el('circle', { cx: p[0], cy: p[1], r: 3.5 }, 'fill:var(--wb-fg)');
+    });
+
+    /* Nhãn trái: tên nhóm + khoảng cách tháng 1; nhãn giữa: mức trung bình. */
+    el('text', { x: XL - 8, y: yt1 - 5, 'text-anchor': 'end', 'class': 'hw-vs' }, null, 'được khen');
+    el('text', { x: XL - 8, y: yt1 + 10, 'text-anchor': 'end', 'class': 'hw-vt' }, null, gap(t1));
+    el('text', { x: XL - 8, y: +y(mean1) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, 'trung bình');
+    el('text', { x: XL - 8, y: yb1 - 5, 'text-anchor': 'end', 'class': 'hw-vs' }, null, 'bị nhắc nhở');
+    el('text', { x: XL - 8, y: yb1 + 10, 'text-anchor': 'end', 'class': 'hw-vt' }, null, gap(b1));
+    /* Nhãn phải: khoảng cách tháng 2; khi hai nhóm cùng về gần trung bình thì đẩy hai nhãn ra cho khỏi đè. */
+    var lt = yt2 + 4, lb = yb2 + 4;
+    if (lb - lt < 15) { var mid = (lt + lb) / 2; lt = mid - 7.5; lb = mid + 7.5; }
+    el('text', { x: XR + 8, y: lt.toFixed(1), 'class': 'hw-vt' }, null, gap(t2));
+    el('text', { x: XR + 8, y: lb.toFixed(1), 'class': 'hw-vt' }, null, gap(b2));
+  }
+
+  range.addEventListener('input', render);
+  /* Nút rút thật sự ngẫu nhiên: mỗi người, mỗi lần bấm một tháng khác; chỉ lần mở đầu là cố định. */
+  if (btn) btn.addEventListener('click', function () {
+    var r = rng(Math.floor(Math.random() * 4294967296));
+    luck1 = normals(N, r); luck2 = normals(N, r);
+    render();
+  });
+  render();
 })();
 </script>
 </body>
