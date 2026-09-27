@@ -3670,9 +3670,9 @@ function setPlaying(btn,on){ if(btn) btn.classList.toggle('playing',on); }
   drawStaff(null);
   piano.addEventListener('pointerdown',e=>{ const k=e.target.closest('[data-midi]'); if(k){ e.preventDefault(); hit(+k.dataset.midi); } });
   window.addEventListener('keydown',e=>{
-    if(e.repeat||e.metaKey||e.ctrlKey||e.altKey) return;
+    if(e.repeat||e.metaKey||e.ctrlKey||e.altKey||e.defaultPrevented) return;   /* defaultPrevented: phím đã có chủ (máy luyện đọc ở ④) */
     if(document.activeElement&&/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) return;
-    const d1=document.getElementById('doc-intro'); if(d1&&!d1.classList.contains('on')) return;   /* trụ khác có bàn phím riêng */
+    const own=document.querySelector('.doc.on .piano'); if(own&&own!==piano) return;   /* chỉ nhường trụ có đàn riêng (⑤ phòng tập); ②③④ không có đàn nên phím ra tiếng qua cây này */
     const m=kmap[e.key.toLowerCase()]; if(m!=null){ hit(m); }
   });
 })();
@@ -5728,7 +5728,7 @@ function dName(d){ return VN7[d%7]+' '+Math.floor(d/7)+' ('+LET[d%7]+Math.floor(
     if(e.repeat||e.metaKey||e.ctrlKey||e.altKey||typing()||!docOn('doc-classical')||mode==='iv'||locked) return;
     const i=LET.indexOf(e.key.toUpperCase()); if(i<0||e.key.length!==1) return;
     const el=[].filter.call(opts.children,function(c){ return +c.dataset.v===i; })[0]; if(el){ e.preventDefault(); answer(i,el); }
-  });
+  },true);   /* capture: chạy trước cây đàn ở ① — đang chờ trả lời thì A D E F G là câu trả lời, không phát kèm nốt Đô/Mi/Rê♯/Fa/Sol của đàn */
   drawGrand(svg,[]); render();
 })();
 
