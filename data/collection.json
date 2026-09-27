@@ -103,6 +103,12 @@
           "name": "The Little Blue Reasoning Book",
           "desc": "Brandon Royal — 50 nguyên tắc tư duy rõ ràng, gom theo 5 chặng",
           "href": "pages/the-little-blue-reasoning-book.html"
+        },
+        {
+          "icon": "query_stats",
+          "name": "How to Lie with Statistics",
+          "desc": "Darrell Huff · 1954 — mẹo dùng số liệu và biểu đồ để đánh lừa, và cách nhận ra",
+          "href": "pages/how-to-lie-with-statistics.html"
         }
       ]
     },

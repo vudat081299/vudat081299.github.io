@@ -1,0 +1,1849 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>How to Lie with Statistics — con số đúng mà vẫn lừa</title>
+<meta name="description" content="Tóm tắt đầy đủ How to Lie with Statistics (Darrell Huff, 1954): lời giới thiệu và cả 10 chương — mẫu lệch, trung bình chọn khéo, con số vắng mặt, chênh lệch trong sai số, biểu đồ Gee-Whiz, hình một chiều, con số dính hờ, post hoc, mẹo phần trăm, và năm câu hỏi để cãi lại một con số. Mỗi mẹo kèm cơ chế, ví dụ của sách, ví dụ gần người Việt hôm nay và câu hỏi hỏi lại.">
+
+<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+<link rel="stylesheet" href="../web-builder/web-builder.css">
+<script>
+  /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành. */
+  try {
+    var t = localStorage.getItem('hub-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+
+<style>
+  /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens.
+     Khung (hw-*) chép từ the-little-blue-reasoning-book.html; phần riêng của trang dùng hl-*. */
+  body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+
+  /* Chữ mờ phải đọc được: --wb-fg-subtle của kit (gray-400) chỉ ~2,4:1 trên nền sáng.
+     Nâng một bậc ở cả hai nhánh theme, như psychology.html. */
+  :root { --wb-fg-subtle: var(--wb-gray-500); }
+  .dark { --wb-fg-subtle: var(--wb-gray-400); }
+
+  /* Navbar co được: kit đặt brand là flex:none, tên dài làm trang tràn ngang trên điện thoại. */
+  .wb-navbar__brand { flex: 0 1 auto; min-width: 0; }
+  .hw-brand-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ---- ghi chú cho chủ trang (xoá khi đã duyệt) ---- */
+  .pg-confirm { border: var(--wb-bw) dashed var(--wb-border-strong); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 10px 14px; margin: 18px 0 0; max-width: 90ch; }
+  .pg-confirm__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .pg-confirm__list { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.6; color: var(--wb-fg); }
+  .pg-confirm__list li { margin: 2px 0; }
+
+  /* ---- hero ---- */
+  .hw-hero { padding: 30px 0 20px; }
+  .hw-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+  .hw-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 12px; line-height: 1.16; }
+  .hw-sub { color: var(--wb-fg-muted); font-size: 15.5px; max-width: 74ch; line-height: 1.65; margin: 0 0 12px; }
+  .hw-sub b { color: var(--wb-fg); }
+  .hw-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; line-height: 1.6; }
+
+  /* ---- two-column reading layout ---- */
+  .hw-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 34px; align-items: start; padding: 26px 0 60px; }
+  @media (max-width: 900px) { .hw-layout { grid-template-columns: minmax(0, 1fr); } .hw-toc { display: none; } }
+  .hw-toc { max-height: calc(100vh - 92px); overflow-y: auto; width: 250px; }
+  .hw-toc .wb-sidenav__link.is-current { background: var(--wb-surface-hover); font-weight: 620; color: var(--wb-fg); }
+
+  /* ---- section rhythm ---- */
+  section[id] { scroll-margin-top: 76px; }
+  .hw-part-head { border-top: var(--wb-bw) solid var(--wb-border); padding: 22px 0 2px; scroll-margin-top: 76px; }
+  .hw-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .hw-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
+  .hw-part-head p { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.65; margin: 0; max-width: 78ch; }
+  .hw-part-head p b { color: var(--wb-fg); font-weight: 640; }
+
+  .hw-eyebrow-sec { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .hw-eyebrow-sec b { color: var(--wb-fg); font-weight: 650; }
+  .hw-sec-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 12px; line-height: 1.3; }
+  h3.hw-h3 { font-size: 15.5px; font-weight: 680; margin: 26px 0 10px; letter-spacing: -.005em; }
+
+  /* ---- prose ---- */
+  .hw-lede { font-size: 16px; line-height: 1.62; color: var(--wb-fg); max-width: 72ch; margin: 0 0 16px; font-weight: 500; }
+  .hw-lede b { font-weight: 700; }
+  .hw-p { font-size: 14.5px; line-height: 1.75; color: var(--wb-fg); max-width: 76ch; margin: 0 0 12px; }
+  .hw-p b { color: var(--wb-fg); font-weight: 650; }
+  .hw-p em { font-style: italic; color: var(--wb-fg-muted); }
+  .hw-ul { font-size: 14.5px; line-height: 1.72; color: var(--wb-fg); max-width: 76ch; margin: 0 0 14px; padding-left: 20px; }
+  .hw-ul li { margin-bottom: 6px; }
+  .hw-ul b { font-weight: 650; }
+
+  /* ---- pull quote: ví von + chỗ nó hỏng ---- */
+  .hw-quote { border-left: 2px solid var(--wb-neutral-strong); padding: 2px 0 2px 14px; margin: 16px 0; color: var(--wb-fg-muted); font-size: 14.5px; line-height: 1.6; max-width: 72ch; }
+  .hw-quote b { color: var(--wb-fg); }
+  .hw-quote cite { display: block; font-style: normal; font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-subtle); margin-top: 7px; line-height: 1.6; }
+
+  /* ---- number anchors ---- */
+  .hw-figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 14px 0 16px; }
+  .hw-fig { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; background: var(--wb-surface); }
+  .hw-fig .n { font-size: 19px; font-weight: 720; letter-spacing: -.02em; font-variant-numeric: tabular-nums; display: block; }
+  .hw-fig .l { font-size: 12px; color: var(--wb-fg-muted); line-height: 1.45; margin-top: 3px; display: block; }
+
+  /* ---- tables ---- */
+  .hw-tw { overflow-x: auto; margin: 4px 0 16px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); }
+  .hw-tw .wb-table { margin: 0; border: 0; }
+  .hw-tw .wb-table th, .hw-tw .wb-table td { font-size: 13.5px; line-height: 1.55; vertical-align: top; }
+
+  /* ---- part overview tiles ---- */
+  .hw-parts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 900px) { .hw-parts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .hw-parts { grid-template-columns: minmax(0, 1fr); } }
+  .hw-parts a { text-decoration: none; color: inherit; }
+
+  /* ---- trick cards: một mẹo một thẻ — cơ chế · trong sách · hôm nay · hỏi lại ---- */
+  .hw-fal-list { display: flex; flex-direction: column; gap: 14px; margin: 12px 0 6px; }
+  .hw-fal { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 16px 18px; scroll-margin-top: 76px; }
+  .hw-fal__top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 9px; margin-bottom: 8px; }
+  .hw-fal__no { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); font-weight: 600; }
+  .hw-fal__name { font-size: 15.5px; font-weight: 710; letter-spacing: -.01em; margin: 0; }
+  .hw-fal__def { font-size: 14px; line-height: 1.72; color: var(--wb-fg); margin: 0; max-width: 80ch; }
+  .hw-fal__def b { font-weight: 650; }
+  .hw-fal__def em { font-style: italic; color: var(--wb-fg-muted); }
+  .hw-fal__meta { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 8px 12px; margin-top: 13px; padding-top: 12px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .hw-fal__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); padding-top: 2px; line-height: 1.4; }
+  .hw-fal__v { font-size: 13.5px; line-height: 1.62; color: var(--wb-fg-muted); margin: 0; }
+  .hw-fal__v b { color: var(--wb-fg); font-weight: 640; }
+  .hw-fal__v em { font-style: italic; }
+  .hw-fal__v.is-ask { color: var(--wb-fg); font-weight: 600; }
+  @media (max-width: 560px) { .hw-fal__meta { grid-template-columns: minmax(0, 1fr); gap: 3px 0; } .hw-fal__k { padding-top: 8px; } }
+
+  /* ---- static diagrams ---- */
+  .hw-viz { margin: 16px 0 6px; }
+  .hw-viz .wb-chart__svg { max-width: 620px; width: 100%; height: auto; display: block; }
+  .hw-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .03em; color: var(--wb-fg-subtle); margin: 10px 0 0; line-height: 1.55; }
+  .hw-src a { color: inherit; }
+  .hw-vt { fill: var(--wb-fg); font-size: 12px; font-weight: 640; font-family: var(--wb-font); }
+  .hw-vs { fill: var(--wb-fg-muted); font-size: 10.5px; font-family: var(--wb-font); }
+  .hw-vpanel { fill: var(--wb-surface); stroke: var(--wb-border); stroke-width: 1; }
+
+  /* ---- "Bạn vừa có / Nó dẫn đi đâu" + dòng chốt ---- */
+  .hl-next { font-size: 13.5px; line-height: 1.7; background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; margin: 18px 0 4px; color: var(--wb-fg); max-width: 80ch; }
+  .hl-next p { margin: 0; }
+  .hl-next p + p { margin-top: 6px; }
+  .hl-next b { font-weight: 700; }
+  .hl-key { font-size: 13.5px; line-height: 1.72; border: var(--wb-bw) dashed var(--wb-border-strong); border-radius: var(--wb-radius); padding: 11px 14px; margin: 6px 0 16px; color: var(--wb-fg); max-width: 80ch; }
+  .hl-key .k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); display: block; margin-bottom: 4px; }
+  .hl-key b { font-weight: 700; }
+
+  /* ---- năm chặng một con số đi qua (HTML thay vì SVG để chữ không teo lại trên điện thoại) ---- */
+  .hl-flow { list-style: none; margin: 14px 0 18px; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+  .hl-flow li { position: relative; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 10px 12px; min-width: 0; }
+  .hl-flow li + li::before { content: "→"; position: absolute; left: -8px; top: 50%; transform: translate(-50%, -50%); color: var(--wb-fg-subtle); font-size: 14px; line-height: 1; }
+  .hl-flow .k { display: block; font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--wb-fg-subtle); }
+  .hl-flow b { display: block; font-size: 14px; font-weight: 700; margin: 2px 0 3px; }
+  .hl-flow .s { display: block; font-size: 12px; line-height: 1.45; color: var(--wb-fg-muted); }
+  @media (max-width: 760px) {
+    .hl-flow { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+    .hl-flow li + li::before { content: "↓"; left: 50%; top: -7px; }
+  }
+
+  /* ---- hình tĩnh vẽ hẹp để chữ không teo quá trên điện thoại ---- */
+  .hl-fig { margin: 14px 0 8px; }
+  .hl-fig svg { width: 100%; max-width: 460px; height: auto; display: block; }
+
+  /* ---- mức chắc chắn trong mục Độ vững: chỗ duy nhất màu mang nghĩa ---- */
+  .hl-evi { display: inline-flex; align-items: center; gap: 5px; font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: var(--wb-radius-pill); border: var(--wb-bw) solid var(--wb-border); color: var(--wb-fg-muted); background: var(--wb-canvas); white-space: nowrap; vertical-align: 1px; }
+  .hl-evi::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--wb-neutral); flex: none; }
+  .hl-evi--solid::before { background: var(--wb-success); }
+  .hl-evi--mixed::before { background: var(--wb-warning); }
+  .hl-evi--failed::before { background: var(--wb-danger); }
+
+  /* ---- lab: mô hình tương tác (khuôn .ps-lab của psychology.html, đổi tiền tố) ---- */
+  .hl-lab { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); margin: 18px 0; overflow: hidden; }
+  .hl-lab__head { padding: 12px 16px; border-bottom: var(--wb-bw) solid var(--wb-border); }
+  .hl-lab__kick { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 3px; }
+  .hl-lab__title { font-size: 14.5px; font-weight: 690; margin: 0; letter-spacing: -.005em; }
+  .hl-lab__hint { font-size: 12.5px; color: var(--wb-fg-muted); margin: 5px 0 0; line-height: 1.55; }
+  .hl-lab__hint b { color: var(--wb-fg); font-weight: 640; }
+  .hl-lab__body { padding: 14px 16px 16px; }
+  .hl-lab__row { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 8px 12px; align-items: center; margin-bottom: 10px; }
+  .hl-lab__row > label, .hl-lab__row > .k { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); line-height: 1.4; }
+  @media (max-width: 620px) { .hl-lab__row { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+  .hl-lab__foot { font-size: 12.5px; color: var(--wb-fg-muted); line-height: 1.62; margin: 12px 0 0; padding-top: 11px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .hl-lab__foot b { color: var(--wb-fg); font-weight: 640; }
+  .hl-lab__foot + .hl-lab__foot { border-top: 0; padding-top: 0; margin-top: 6px; }
+  .hl-lab .wb-btn { white-space: normal; }
+  .hl-mono { font-family: var(--wb-font-mono); font-size: 12px; min-width: 64px; text-align: right; }
+
+  /* Con số lớn: đứng giữa tay cầm và hình — đọc trước khi nhìn hình. */
+  .hl-read { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 8px; margin: 4px 0 12px; }
+  .hl-read > div { border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); padding: 8px 10px; min-width: 0; }
+  .hl-read .k { display: block; font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); line-height: 1.35; }
+  .hl-read .v { display: block; font-size: 21px; font-weight: 720; letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin-top: 2px; line-height: 1.2; overflow-wrap: anywhere; }
+  .hl-read .s { display: block; font-size: 11.5px; color: var(--wb-fg-muted); line-height: 1.4; margin-top: 2px; }
+  .hl-read > div.is-hi { border-color: var(--wb-neutral-strong); }
+
+  .hl-svg { width: 100%; max-width: 720px; height: auto; display: block; margin: 0 auto; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
+  .hl-t { fill: var(--wb-fg); font-size: 12px; font-family: var(--wb-font); }
+  .hl-t--b { font-weight: 680; }
+  .hl-t--s { fill: var(--wb-fg-muted); font-size: 11px; }
+  .hl-t--m { font-family: var(--wb-font-mono); font-size: 10.5px; fill: var(--wb-fg-muted); }
+  .hl-ax { stroke: var(--wb-neutral-strong); stroke-width: 1; fill: none; }
+  .hl-grid { stroke: var(--wb-neutral-weak); stroke-width: 1; fill: none; }
+
+  /* ---- back to top ---- */
+  .hw-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
+  .hw-top.is-on { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 620px) {
+    /* Vùng chạm ≥ 40px cho mọi thứ bấm/kéo được trong lab. Thanh trượt: content-box +
+       padding dọc để vùng chạm cao 40px mà vệt track vẫn dày 4px. */
+    .hl-lab .wb-btn { min-height: 40px; padding-top: 10px; padding-bottom: 10px; }
+    .hl-lab .wb-switch { min-height: 40px; }
+    .hl-lab .wb-range {
+      box-sizing: content-box; height: 4px; padding-block: 18px; margin: 0;
+      background-clip: content-box;
+    }
+    .hl-read .v { font-size: 19px; }
+  }
+</style>
+</head>
+<body class="wb-app">
+
+<header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
+  <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
+          aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">📉</span> <span class="hw-brand-text">How to Lie with Statistics</span></a>
+  <nav class="wb-nav wb-navbar__menu">
+    <a class="wb-nav__link" href="#start">Start</a>
+    <a class="wb-nav__link" href="#p1">1 · Samples</a>
+    <a class="wb-nav__link" href="#p2">2 · Framing</a>
+    <a class="wb-nav__link" href="#p3">3 · Charts</a>
+    <a class="wb-nav__link" href="#p4">4 · Claims</a>
+    <a class="wb-nav__link" href="#p5">5 · Talk back</a>
+    <a class="wb-nav__link" href="#robust">Robustness</a>
+    <a class="wb-nav__link" href="#ket">Take away</a>
+    <span class="wb-navbar__spacer"></span>
+    <a class="wb-nav__link" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Home</a>
+  </nav>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Đổi giao diện sáng / tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</header>
+
+<main class="wb-container wb-container--wide">
+
+  <aside class="pg-confirm" id="confirm" aria-label="Ghi chú cho chủ trang: những điểm cần xác nhận">
+    <p class="pg-confirm__k">Ghi chú cho chủ trang · cần xác nhận — duyệt xong thì xoá khối này</p>
+    <ul class="pg-confirm__list">
+      <li><b>Thứ tự chương:</b> trang sắp lại — chương 3, 4 đứng cạnh chương 1; chương 9 cạnh chương 2 (bảng đối chiếu ở mục 0.1). Muốn giữ đúng thứ tự sách thì chỉ cần dời ba section.</li>
+      <li><b>Nguồn của ví dụ trong sách:</b> không có bản sách đầy đủ trong tay; các con số của sách (25.111 USD, 9% / 2%, 31.108 vi trùng, 4.712 / 132…) được đối chiếu qua trích đoạn, bài điểm sách và ghi chú của người đọc khác, không qua chính cuốn sách.</li>
+      <li><b>Số bản bán:</b> Wikipedia ghi "hơn 1,5 triệu" và dẫn Steele (2005), nhưng bài Steele viết "hơn nửa triệu bản tiếng Anh". Trang dùng số của Steele và nói rõ chỗ lệch (mục 6.1).</li>
+      <li><b>Giọng về chuyện thuốc lá:</b> mục 6.2 kể Huff nhận tiền ngành thuốc lá và dẫn việc một chuyên gia khảo sát đã thôi giới thiệu sách, nhưng trang vẫn giữ các mẹo vì chúng đúng. Chủ trang xem giọng này có ổn không.</li>
+      <li><b>Độ dài, bản tiếng Việt:</b> trang ≈11.400 tiếng tính theo khoảng trắng (ước chừng 7.500–8.000 từ) — sát hoặc nhỉnh hơn khung 8.000 tuỳ cách đếm. Chưa tìm thấy bản tiếng Việt do một nhà xuất bản phát hành.</li>
+    </ul>
+  </aside>
+
+  <header class="hw-hero">
+    <p class="hw-eyebrow">Tóm tắt sách · Darrell Huff · How to Lie with Statistics · 1954</p>
+    <h1 class="hw-title">Phần lớn con số đánh lừa bạn <u>không hề sai</u> — chúng chỉ được chọn, cắt và vẽ sao cho chính bạn tự đi tới kết luận sai.</h1>
+    <p class="hw-sub">Bản tóm tắt đầy đủ cuốn <b>How to Lie with Statistics</b> của <b>Darrell Huff</b>, tranh <b>Irving Geis</b> (W. W. Norton, 1954). Sách mỏng, giá trị nằm ở từng mẹo, nên trang giữ <b>lời giới thiệu và cả 10 chương</b>. Mỗi mẹo có bốn phần: <b>cơ chế</b>, <b>ví dụ trong sách</b>, <b>một ví dụ hôm nay</b> gần người Việt, và <b>câu hỏi để hỏi lại</b>.</p>
+    <p class="hw-sub">Cái bỏ đi: chuyện đùa dài và những quảng cáo Mỹ thập niên 1950 chỉ lặp lại một ý đã rõ. Cái thêm vào: sáu mô hình để tự kéo và nhìn mẹo vận hành, và mục <b>Độ vững</b> kể điều sách không kể — kể cả chuyện tác giả về sau nhận tiền ngành thuốc lá.</p>
+    <p class="hw-meta">GIỮ ĐỦ LỜI GIỚI THIỆU + 10 CHƯƠNG · MỖI MẸO: CƠ CHẾ · TRONG SÁCH · HÔM NAY · HỎI LẠI<br>VIẾT LẠI BẰNG LỜI CỦA TRANG NÀY — KHÔNG CHÉP NGUYÊN VĂN SÁCH</p>
+  </header>
+
+  <div class="hw-figs" style="margin-bottom:20px">
+    <div class="hw-fig"><span class="n">1954</span><span class="l">in lần đầu ở New York, NXB W. W. Norton; tranh của Irving Geis</span></div>
+    <div class="hw-fig"><span class="n">142 trang</span><span class="l">sách mỏng, nhiều tranh; bốn chương đầu chỉ 49 trang</span></div>
+    <div class="hw-fig"><span class="n">10 chương</span><span class="l">cộng lời giới thiệu — trang giữ đủ, không bỏ chương nào</span></div>
+    <div class="hw-fig"><span class="n">5 câu hỏi</span><span class="l">chương cuối gói cả cuốn thành năm câu để hỏi lại mọi con số</span></div>
+  </div>
+
+  <div class="hw-parts">
+    <a class="wb-card wb-card--hover wb-card--pad" href="#p1">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">1</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Mẫu và độ tin</p>
+          <p class="wb-media__text">Con số sinh ra từ đâu: hỏi ai, bao nhiêu người, dao động bao nhiêu chỉ vì may rủi. Chương 1, 3, 4.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#p2">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">2</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Chọn con số để kể</p>
+          <p class="wb-media__text">Trung bình kiểu nào, phần trăm tính trên gốc nào. Cùng dữ liệu, nhiều câu chuyện. Chương 2, 9.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#p3">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">3</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Hình vẽ</p>
+          <p class="wb-media__text">Cắt đáy trục, bóp khung, phóng hình theo chiều cao để mắt đọc theo diện tích. Chương 5, 6.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#p4">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">4</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Từ số tới kết luận</p>
+          <p class="wb-media__text">Chứng minh một chuyện rồi kết luận chuyện khác; hai thứ đi cùng nhau bị kể thành nhân quả. Chương 7, 8.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#p5">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">5</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Cãi lại một con số</p>
+          <p class="wb-media__text">Năm câu hỏi của chương cuối, mỗi câu nối về những mẹo nó bắt được. Chương 10.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#start">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--sm">?</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Bắt đầu từ đây</p>
+          <p class="wb-media__text">Cách đọc trang, bảng đối chiếu chương sách với mục trên trang, và lời giới thiệu của sách.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="hw-layout">
+    <nav class="wb-sidenav hw-toc wb-sticky wb-scroll-y" style="--wb-sticky-gap:72px" id="toc" aria-label="Mục lục trang">
+      <div class="wb-sidenav__section">Start</div>
+      <a class="wb-sidenav__link" href="#s-read">0.1 How to read this page</a>
+      <a class="wb-sidenav__link" href="#s-intro">0.2 The book's introduction</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">1 · Samples</div>
+      <a class="wb-sidenav__link" href="#c1">1.1 Built-in bias · ch. 1</a>
+      <a class="wb-sidenav__link" href="#c3">1.2 The missing figures · ch. 3</a>
+      <a class="wb-sidenav__link" href="#c4">1.3 Ado about noise · ch. 4</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">2 · Framing</div>
+      <a class="wb-sidenav__link" href="#c2">2.1 The well-chosen average · ch. 2</a>
+      <a class="wb-sidenav__link" href="#c9">2.2 Statisticulation · ch. 9</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">3 · Charts</div>
+      <a class="wb-sidenav__link" href="#c5">3.1 The gee-whiz graph · ch. 5</a>
+      <a class="wb-sidenav__link" href="#c6">3.2 One-dimensional pictures · ch. 6</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">4 · Claims</div>
+      <a class="wb-sidenav__link" href="#c7">4.1 The semiattached figure · ch. 7</a>
+      <a class="wb-sidenav__link" href="#c8">4.2 Post hoc · ch. 8</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">5 · Talk back</div>
+      <a class="wb-sidenav__link" href="#c10">5.1 Five questions · ch. 10</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Robustness</div>
+      <a class="wb-sidenav__link" href="#s-huff">6.1 A journalist, not a statistician</a>
+      <a class="wb-sidenav__link" href="#s-tobacco">6.2 The tobacco manuscript</a>
+      <a class="wb-sidenav__link" href="#s-held">6.3 What held up, what changed</a>
+      <a class="wb-sidenav__link" href="#s-new">6.4 New tricks since 1954</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Take away</div>
+      <a class="wb-sidenav__link" href="#s-carry">7.1 Ten questions to carry</a>
+      <a class="wb-sidenav__link" href="#s-src">7.2 Sources</a>
+    </nav>
+
+    <div class="wb-stack" style="--wb-stack-gap:48px">
+
+      <!-- ══════════════════ MỞ ĐẦU ══════════════════ -->
+      <div class="hw-part-head" id="start" style="border-top:0;padding-top:0">
+        <p class="kicker">Mở đầu · Start</p>
+        <h2>Cách đọc trang này, và vì sao một cuốn sách lại dạy nói dối</h2>
+        <p>Hai mục ngắn: trang được xếp thế nào so với sách, và lời giới thiệu của Huff — nơi ông nói mình viết cho ai, để làm gì.</p>
+      </div>
+
+            <section id="s-read">
+        <p class="hw-eyebrow-sec"><b>0.1</b> — How to read this page</p>
+        <h2 class="hw-sec-title">Mỗi mẹo đi qua bốn câu hỏi, và các chương xếp theo đường đi của một con số</h2>
+        <p class="hw-lede">Trước mẹo đầu tiên, cần gỡ một hiểu nhầm: <b>lừa bằng số không có nghĩa là bịa số</b>.</p>
+        <p class="hw-p">Hiểu nhầm ấy nghe hợp lý: số sai mới lừa được. Nhưng gần như mọi mẹo trong sách dùng số thật; cái bị chỉnh là ai được hỏi, số nào được chọn, vẽ ra sao, gắn vào kết luận nào. Nên phải hỏi thêm: <b>con số đã đi qua những tay nào?</b></p>
+        <p class="hw-p">Mỗi mẹo có bốn phần: <b>Cơ chế</b>; <b>Trong sách</b> — ví dụ của Huff, phần lớn từ nước Mỹ thập niên 1930–1950; <b>Hôm nay</b> — ví dụ gần người Việt, đa số là tình huống dựng với <b>số minh hoạ</b> (số liệu thật thì có nguồn); và <b>Hỏi lại</b>.</p>
+        <p class="hw-p">Trang dời chương 3 và 4 lên cạnh chương 1 (cùng hỏi mẫu nói được bao nhiêu), chương 9 lên cạnh chương 2 (cùng là chọn con số để kể), thành năm phần theo đường đi của một con số:</p>
+
+        <ol class="hl-flow" aria-label="Năm chặng một con số đi qua trước khi tới tay bạn">
+          <li><span class="k">Phần 1 · sinh ra</span><b>Mẫu</b><span class="s">ai được hỏi, bao nhiêu người, dao động bao nhiêu · ch. 1, 3, 4</span></li>
+          <li><span class="k">Phần 2 · tóm lại</span><b>Một con số</b><span class="s">trung bình kiểu nào, phần trăm trên gốc nào · ch. 2, 9</span></li>
+          <li><span class="k">Phần 3 · vẽ ra</span><b>Một hình</b><span class="s">trục dọc, tỉ lệ khung, hình phóng to · ch. 5, 6</span></li>
+          <li><span class="k">Phần 4 · gắn vào</span><b>Một kết luận</b><span class="s">số về chuyện này, kết luận về chuyện khác · ch. 7, 8</span></li>
+          <li><span class="k">Phần 5 · tới tay bạn</span><b>Cãi lại</b><span class="s">năm câu hỏi của chương cuối · ch. 10</span></li>
+        </ol>
+
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:56px">Chương</th><th>Tên gốc</th><th style="width:72px">Mục</th></tr></thead>
+            <tbody>
+              <tr><td>Giới thiệu</td><td>Introduction</td><td><a href="#s-intro">0.2</a></td></tr>
+              <tr><td>1</td><td>The Sample with the Built-in Bias</td><td><a href="#c1">1.1</a></td></tr>
+              <tr><td>2</td><td>The Well-Chosen Average</td><td><a href="#c2">2.1</a><br><span class="hw-meta">dời xuống</span></td></tr>
+              <tr><td>3</td><td>The Little Figures That Are Not There</td><td><a href="#c3">1.2</a><br><span class="hw-meta">dời lên</span></td></tr>
+              <tr><td>4</td><td>Much Ado about Practically Nothing</td><td><a href="#c4">1.3</a><br><span class="hw-meta">dời lên</span></td></tr>
+              <tr><td>5</td><td>The Gee-Whiz Graph</td><td><a href="#c5">3.1</a></td></tr>
+              <tr><td>6</td><td>The One-Dimensional Picture</td><td><a href="#c6">3.2</a></td></tr>
+              <tr><td>7</td><td>The Semiattached Figure</td><td><a href="#c7">4.1</a></td></tr>
+              <tr><td>8</td><td>Post Hoc Rides Again</td><td><a href="#c8">4.2</a></td></tr>
+              <tr><td>9</td><td>How to Statisticulate</td><td><a href="#c9">2.2</a><br><span class="hw-meta">dời lên</span></td></tr>
+              <tr><td>10</td><td>How to Talk Back to a Statistic</td><td><a href="#c10">5.1</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-src">Tên và số chương đối chiếu với bản ghi mục lục trên Open Library (ấn bản Victor Gollancz, 1960) và bài của J. Michael Steele (2005). Xem mục <a href="#s-src">Nguồn</a>.</p>
+      </section>
+
+            <section id="s-intro">
+        <p class="hw-eyebrow-sec"><b>0.2</b> — Introduction · the book's opening</p>
+        <h2 class="hw-sec-title">Lời giới thiệu: một cuốn “dạy nói dối” viết cho người bị nói dối</h2>
+        <p class="hw-p">Huff biết tên sách nghe như cẩm nang lừa đảo và trả lời ngay trang đầu: <b>“kẻ gian đã thạo những mẹo này; người ngay phải học để tự vệ”</b> <span class="hw-meta">(Huff, lời giới thiệu)</span>. Sách viết cho người đọc báo, xem quảng cáo, gần như không có công thức.</p>
+        <p class="hw-p">Theo ông, thứ ngôn ngữ nghe rất khoa học của thống kê hấp dẫn một xã hội chuộng "sự thật bằng số", nên hay bị dùng để làm to chuyện, làm rối, làm quá đơn giản — và một con số gói khéo dẫn người đọc đi sai mà không ai bắt lỗi được người nói.</p>
+        <p class="hw-p">Ví dụ đầu tiên: lấy <b>số trang báo dành cho tin tội phạm</b> làm thước đo <b>mức độ tội phạm</b>. Báo đăng nhiều tin cướp giật có khi chỉ vì tin ấy dễ bán. Đó là khuôn của hầu hết mẹo phía sau: một con số thật, về một thứ <i>gần giống</i> thứ bạn quan tâm.</p>
+        <div class="hw-quote">
+          Một con số giống một bức ảnh chụp người thật: không ai sửa ảnh, người chụp chỉ chọn góc và cắt khung.
+          <cite>Chỗ ví von này hỏng: ảnh bị cắt còn để lộ mép cắt. Con số tóm tắt thì không — không tự hỏi, bạn không biết phần nào đã bị bỏ ra.</cite>
+        </div>
+        <div class="hl-next">
+          <p><b>Bạn vừa có:</b> cách nhìn mọi con số như một thứ đã đi qua nhiều tay, và năm chặng trang này đi theo.</p>
+          <p><b>Nó dẫn đi đâu:</b> phần lớn con số ra đời ở chặng đầu — một nhóm nhỏ được hỏi thay cho cả nhóm lớn. Nhóm nhỏ ấy được chọn thế nào, và ai đã vắng mặt?</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ PHẦN 1 ══════════════════ -->
+            <div class="hw-part-head" id="p1">
+        <p class="kicker">Phần 1 · Samples</p>
+        <h2>Mẫu và độ tin: con số sinh ra từ đâu</h2>
+        <p>Gần như mọi con số về "người Việt", "khách hàng", "người dùng" đến từ việc hỏi một nhóm nhỏ rồi suy ra nhóm lớn. Ba chương hỏi ba câu: nhóm nhỏ có giống nhóm lớn không (chương 1), nó lớn cỡ nào và so với ai (chương 3), và kết quả dao động bao nhiêu chỉ vì may rủi (chương 4).</p>
+      </div>
+
+            <section id="c1">
+        <p class="hw-eyebrow-sec"><b>1.1</b> — Chapter 1 · The Sample with the Built-in Bias</p>
+        <h2 class="hw-sec-title">Mẫu có sẵn độ lệch: hỏi sai người thì mẫu to mấy cũng vô ích</h2>
+        <p class="hw-lede">Khảo sát chỉ tốt bằng cách nó chọn người để hỏi. Mẫu lệch mà to thì cho ra <b>một câu trả lời sai rất chính xác</b>.</p>
+        <div class="hw-quote">
+          Huff ví mẫu với một nắm đậu bốc từ thùng; người Việt quen hơn với thìa canh nếm từ nồi. Một thìa đủ cho cả nồi — nếu nồi đã được khuấy đều.
+          <cite>Chỗ ví von này hỏng: nồi canh khuấy được, xã hội thì không. Người làm khảo sát phải chọn sao cho ai cũng có cơ hội được chọn như nhau — và vẫn còn những người được chọn mà không chịu trả lời.</cite>
+        </div>
+
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="t1-1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 1.1a</span><h3 class="hw-fal__name">Chỉ nghe được người muốn nói</h3><span class="wb-tag">self-selection · non-response</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Khảo sát chỉ nói về <b>người đã trả lời</b>. Nếu việc trả lời dính tới chính điều đang hỏi, con số lệch một phía — hỏi thêm bao nhiêu người cũng không sửa được.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Tạp chí <i>Time</i> dẫn tin của tờ <i>New York Sun</i>: cựu sinh viên Yale khoá 1924 kiếm <b>trung bình 25.111 USD một năm</b>. Con số chỉ tính từ những người trường còn giữ địa chỉ và chịu điền phiếu; người thất bại, mất liên lạc vắng mặt, còn người trả lời thì có lý do khai cao.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Nhóm Facebook dân lập trình làm "khảo sát lương": người lương cao hào hứng điền, người lương thấp lướt qua, rồi "lương trung bình 35 triệu" (số minh hoạ) được dẫn như lương cả ngành.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Ai đã không trả lời — họ có khác người đã trả lời không?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t1-2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 1.1b</span><h3 class="hw-fal__name">Danh sách để chọn người đã lệch sẵn</h3><span class="wb-tag">sampling frame</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Danh sách dùng để chọn người bỏ sót cả một nhóm thì mẫu lệch từ trước câu hỏi đầu tiên; danh sách càng dài, kết quả sai càng tự tin.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Năm 1936, tạp chí <i>Literary Digest</i> gửi khoảng 10 triệu phiếu, nhận về khoảng 2,4 triệu, và dự đoán ứng viên Cộng hoà Alf Landon thắng Tổng thống Roosevelt <b>370 phiếu đại cử tri so với 161</b>. Kết quả: <b>Roosevelt 523, Landon 8</b>. Danh sách lấy từ người đặt tạp chí, chủ xe hơi, chủ điện thoại — thời Đại khủng hoảng là nhóm khá giả. Huff chỉ ra: thăm dò thường lệch về người nhiều tiền, học cao, nếp sống ổn định hơn mức chung.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Ví điện tử khảo sát ngay trong ứng dụng: "72% người Việt quen thanh toán không tiền mặt" (số minh hoạ). Người chỉ dùng tiền mặt không có trong danh sách.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Danh sách lấy từ đâu — ai không có tên trong đó?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t1-3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 1.1c</span><h3 class="hw-fal__name">Người trả lời nói điều dễ nghe</h3><span class="wb-tag">response bias</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Người ta trả lời cho mình trông khá hơn, hoặc theo điều đoán người hỏi muốn nghe.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Nhiều gia đình khai đọc tạp chí trí thức <i>Harper's</i> hơn tạp chí bình dân <i>True Story</i>, dù <i>True Story</i> bán chạy hơn hẳn. Hỏi thu nhập thì lệch hai chiều: có người khai cao cho sang, có người khai thấp cho khớp tờ khai thuế.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Tập thể dục mấy buổi, đọc mấy cuốn sách, có phân loại rác không — câu tự khai thường đẹp hơn đời thật.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Con số đo việc người ta làm, hay điều người ta chịu khai?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t1-4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 1.1d</span><h3 class="hw-fal__name">Ai hỏi, hỏi ở đâu cũng đổi câu trả lời</h3><span class="wb-tag">interviewer effect</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Cùng một câu hỏi, câu trả lời xê dịch theo người hỏi, nơi hỏi, giờ hỏi.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Thời Thế chiến II, một cuộc thăm dò hỏi người da đen ở Mỹ: nếu Nhật chiếm nước Mỹ, họ sẽ được đối xử tốt hơn hay tệ hơn? Người phỏng vấn da đen ghi <b>9%</b> đáp "tốt hơn", người phỏng vấn da trắng chỉ <b>2%</b>; "tệ hơn" là 25% so với 45%. Hỏi ngoài phố thì thiếu người ở nhà; gõ cửa ban ngày thì thiếu người đi làm.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Nhân viên đứng ngay quầy hỏi "anh chị có hài lòng không?" — ít ai nỡ nói không.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Người trả lời có lý do gì để nói khác đi với người hỏi này?</div>
+            </div>
+          </article>
+        </div>
+
+        <h3 class="hw-h3">Cách chữa, và vì sao nó không bao giờ xong hẳn</h3>
+        <p class="hw-p">Cách chữa sách nêu là <b>mẫu ngẫu nhiên</b> — ai cũng có cơ hội được chọn như nhau — hoặc rẻ hơn, <b>mẫu phân tầng</b>: chia dân số theo tỉ lệ đã biết (tuổi, vùng, thu nhập) rồi chọn trong từng nhóm, dù tỉ lệ "đã biết" có thể sai. Với đề tài nhạy cảm như các báo cáo của Kinsey về tình dục, sách chỉ ra ba tầng mẫu: người được hỏi, bộ câu hỏi và câu trả lời — tầng nào cũng chỉ là một phần của cái thật. Huff kết: không tìm ra nguồn lệch thì vẫn nên hoài nghi một chút, vì lúc nào cũng có. Mô hình dưới đây cho thấy vì sao mẫu to không cứu được mẫu lệch.</p>
+
+        <div class="hl-lab" id="lab-resp">
+          <div class="hl-lab__head">
+            <p class="hl-lab__kick">Mô hình 1 / 6 · mẫu lệch</p>
+            <p class="hl-lab__title">Ai chịu trả lời một khảo sát lương?</p>
+            <p class="hl-lab__hint">Một ngành có mười mức lương, 8–100 triệu đồng/tháng (số minh hoạ). Trung bình 10 người được mời mới có 1 người trả lời. <b>×1,5</b> nghĩa là người lương gấp đôi thì khả năng trả lời gấp rưỡi.</p>
+          </div>
+          <div class="hl-lab__body">
+            <div class="hl-lab__row">
+              <label for="rs-h">Lương cao hào hứng hơn</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="rs-h" min="50" max="250" step="5" value="150" style="flex:1 1 180px"><span class="hl-mono" id="rs-h-l"></span></div>
+            </div>
+            <div class="hl-lab__row">
+              <label for="rs-n">Số người được mời</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="rs-n" min="0" max="6" step="1" value="1" style="flex:1 1 180px"><span class="hl-mono" id="rs-n-l"></span></div>
+            </div>
+            <div class="hl-read">
+              <div class="is-hi"><span class="k">Khảo sát nói</span><span class="v" id="rs-say">—</span><span class="s" id="rs-say-s"></span></div>
+              <div><span class="k">Sự thật</span><span class="v" id="rs-true">—</span><span class="s">trung bình của cả ngành</span></div>
+              <div><span class="k">Lệch do ai trả lời</span><span class="v" id="rs-bias">—</span><span class="s">không co lại khi mời thêm</span></div>
+              <div><span class="k">Sai số may rủi</span><span class="v" id="rs-moe">—</span><span class="s">co lại khi mời thêm</span></div>
+            </div>
+            <svg class="hl-svg" id="rs-svg" viewBox="0 0 560 250" role="img" aria-label="Biểu đồ cột: tỉ lệ mỗi mức lương trong cả ngành so với trong nhóm trả lời khảo sát, kèm vạch trung bình thật và trung bình khảo sát"></svg>
+            <p class="hl-lab__foot"><b>Điều cần thấy:</b> kéo số người được mời lên 1.000.000. Sai số may rủi co về gần 0, nhưng khoảng lệch do ai chịu trả lời vẫn nguyên — như <i>Literary Digest</i> với 2,4 triệu phiếu. Chỉ khi kéo về ×1,0, tức ai cũng trả lời như nhau, khảo sát mới nói đúng.</p>
+            <p class="hl-lab__foot">Dưới ×1,0 là chiều ngược lại: người lương thấp hăng hái than hơn, và khảo sát nói thấp hơn sự thật. Độ lệch đi được cả hai hướng; mẫu to không sửa được hướng nào.</p>
+          </div>
+        </div>
+      </section>
+
+            <section id="c3">
+        <p class="hw-eyebrow-sec"><b>1.2</b> — Chapter 3 · The Little Figures That Are Not There</p>
+        <h2 class="hw-sec-title">Những con số nhỏ vắng mặt: bao nhiêu người, so với ai, dao động cỡ nào</h2>
+        <p class="hw-lede">Con số in to thường là thật. Cái bị bỏ là những con số in nhỏ: <b>bao nhiêu người</b>, <b>so với ai</b>, <b>dao động cỡ nào</b>, và <b>khả năng tất cả chỉ là may rủi</b>.</p>
+
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="t3-1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 1.2a</span><h3 class="hw-fal__name">Nhóm thử quá nhỏ, thử đến khi may ra số đẹp</h3><span class="wb-tag">small sample · cherry-picking</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Nhóm nhỏ thì riêng may rủi đã tạo ra khác biệt lớn. Thử nhiều lượt rồi chỉ công bố lượt đẹp nhất là có "bằng chứng" mà không phải nói dối.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Kem đánh răng "Doakes" (tên bịa) quảng cáo <b>ít sâu răng hơn 23%</b>, với nhóm thử chừng một chục người. Cách làm Huff tả: kết quả xấu thì cất hồ sơ, thử nhóm khác, tới khi may rủi cho một nhóm "cải thiện rõ". Tự thử cũng được: tung đồng xu 10 lần ra 8 ngửa là thành "80% ra ngửa".</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Livestream bán trà giảm cân: "7 trên 10 chị em giảm 3 kg sau 2 tuần" (số minh hoạ) — mười người, không có nhóm so sánh.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Bao nhiêu người — và đã thử bao nhiêu lần?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t3-2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 1.2b</span><h3 class="hw-fal__name">Không có nhóm để so</h3><span class="wb-tag">no control group</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Nhiều thứ tự khỏi, tự lên xuống. Không có nhóm <i>không dùng</i> để so thì không biết phần nào do sản phẩm.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Thuốc cảm "khỏi trong một tuần" — không uống gì cũng khỏi chừng ấy. Một cuộc thử vắc-xin bại liệt (450 trẻ được tiêm, 680 trẻ không) chẳng chứng minh được gì, vì năm ấy bệnh ít tới mức số ca ở cả hai nhóm quá nhỏ để so.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Trung tâm luyện thi: "học viên tăng 1,5 điểm sau 3 tháng" (số minh hoạ). Học sinh nào ôn ba tháng cuối cũng tăng điểm.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">So với ai — không làm gì thì sao?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t3-3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 1.2c</span><h3 class="hw-fal__name">Chỉ nói mức trung bình, giấu khoảng dao động</h3><span class="wb-tag">missing range</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Mức trung bình không kèm độ rộng bị hiểu thành chuẩn phải đạt, dù một nửa số trường hợp nằm dưới nó.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Báo in "chuẩn Gesell" về phát triển trẻ em kiểu "trẻ biết ngồi vững lúc X tháng". Đó là tuổi trung bình, nên cứ hai trẻ có một trẻ chậm hơn; thiếu khoảng dao động, nhiều cha mẹ lo con chậm phát triển, có người còn ép con cho kịp.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Cha mẹ so con với "mốc" trên mạng: con nhà bên 10 tháng đã đi, con mình 13 tháng chưa.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Đây là mức trung bình hay tối thiểu — khoảng bình thường rộng bao nhiêu?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t3-4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 1.2d</span><h3 class="hw-fal__name">Giấu khả năng “chỉ là may rủi”</h3><span class="wb-tag">significance</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Kết quả rút từ mẫu có thể do may rủi. Con số cho biết khả năng ấy — <b>mức ý nghĩa</b>, thường dùng mức 5% — hay bị bỏ đi vì "người đọc không hiểu"; Huff mỉa: hoặc vì sợ người đọc hiểu quá rõ.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Huff dặn đòi mức ý nghĩa đi kèm kết quả — dù chính cách ông giải thích con số này có một lỗi (mục <a href="#s-huff">6.1</a>).</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Báo viết "khác biệt có ý nghĩa thống kê" mà không nói khác biệt lớn cỡ nào.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Kết quả này có thể chỉ là may rủi không?</div>
+            </div>
+          </article>
+        </div>
+
+        <p class="hw-p">Mô hình dưới đây dựng lại mẹo kem đánh răng; mức ý nghĩa được giảng kỹ ở <a href="mathematics-for-machine-learning.html#s-test">mục kiểm định &amp; p-value</a> của trang Toán cho học máy.</p>
+
+        <div class="hl-lab" id="lab-small">
+          <div class="hl-lab__head">
+            <p class="hl-lab__kick">Mô hình 2 / 6 · mẫu nhỏ</p>
+            <p class="hl-lab__title">Kem vô dụng vẫn “giảm 23% sâu răng” — nếu nhóm thử đủ nhỏ</p>
+            <p class="hl-lab__hint">Mỗi thử nghiệm có hai nhóm bằng nhau, một dùng kem mới, một dùng kem cũ. Kem mới <b>không có tác dụng gì</b>: ở cả hai nhóm, mỗi người có 50% khả năng bị sâu răng mới. Mô hình chạy <b>20 thử nghiệm</b>; kéo cỡ nhóm, bấm chạy lại vài lần.</p>
+          </div>
+          <div class="hl-lab__body">
+            <div class="hl-lab__row">
+              <label for="sm-n">Số người mỗi nhóm</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="sm-n" min="0" max="15" step="1" value="4" style="flex:1 1 180px"><span class="hl-mono" id="sm-n-l"></span></div>
+            </div>
+            <div class="hl-lab__row">
+              <span class="k">Mẫu mới</span>
+              <div class="wb-cluster"><button class="wb-btn wb-btn--sm" type="button" id="sm-re">Chạy lại 20 thử nghiệm</button></div>
+            </div>
+            <div class="hl-read">
+              <div class="is-hi"><span class="k">Thử nghiệm “ấn tượng”</span><span class="v" id="sm-hit">—</span><span class="s">giảm từ 23% trở lên</span></div>
+              <div><span class="k">Lượt đẹp nhất để quảng cáo</span><span class="v" id="sm-best">—</span><span class="s">các lượt khác cất vào tủ</span></div>
+              <div><span class="k">Sự thật</span><span class="v">0%</span><span class="s">kem mới không làm gì</span></div>
+            </div>
+            <svg class="hl-svg" id="sm-svg" viewBox="0 0 560 300" role="img" aria-label="Hai mươi thử nghiệm, mỗi chấm là mức giảm sâu răng quan sát được, so với ngưỡng 23% mà quảng cáo dùng"></svg>
+            <p class="hl-lab__foot"><b>Điều cần thấy:</b> với 12 người mỗi nhóm, cứ khoảng bốn lượt có một lượt vượt ngưỡng 23% dù kem vô dụng (tính chính xác: 26,6%). Mỗi lượt ấy đủ làm một quảng cáo. Với 100 người mỗi nhóm, khả năng ấy còn 3,4%; với 400 người, khoảng 0,01%. May rủi không biến mất, chỉ nhỏ đi khi mẫu lớn lên — nên "bao nhiêu người?" phải đi cùng "đã thử bao nhiêu lần?".</p>
+          </div>
+        </div>
+      </section>
+
+            <section id="c4">
+        <p class="hw-eyebrow-sec"><b>1.3</b> — Chapter 4 · Much Ado about Practically Nothing</p>
+        <h2 class="hw-sec-title">Chênh lệch nằm trong sai số: làm to chuyện một khác biệt không có thật</h2>
+        <p class="hw-lede">Mọi phép đo đều rung. Khác biệt <b>nhỏ hơn độ rung</b> chưa phải khác biệt; khác biệt có thật vẫn có thể <b>quá nhỏ để đáng kể</b>.</p>
+
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="t4-1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 1.3a</span><h3 class="hw-fal__name">So hai con số mà quên sai số</h3><span class="wb-tag">margin of error</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Mỗi con số đo được là một <b>khoảng</b>; hai khoảng chồng nhau thì chưa nói được bên nào hơn.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Peter có IQ 98, Linda 101. Sách dùng "sai số khả dĩ" ±3 điểm: Peter ở khoảng 95–101, Linda 98–104 — chồng nhau, nên nói Linda thông minh hơn là vô căn cứ. Huff thêm: "bình thường" là cả khoảng 90–110, và IQ vốn không đo nhiều thứ ta gọi là trí tuệ, như óc tưởng tượng hay sự chăm chỉ.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Xếp hạng đại học: trường A 78,4 điểm, trường B 78,1 (số minh hoạ), và báo viết "A vượt B". Thăm dò 51% – 49% với sai số ±3% thực chất là hoà.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Sai số mỗi bên bao nhiêu — hai khoảng có chồng nhau không?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t4-2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 1.3b</span><h3 class="hw-fal__name">Khác biệt có thật nhưng quá nhỏ để có nghĩa</h3><span class="wb-tag">trivial difference</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Khác biệt đo được nhưng nhỏ tới mức không ai cảm nhận — vẫn đủ in thành quảng cáo "số một".</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Tạp chí <i>Reader's Digest</i> cho phòng thí nghiệm đo nicotin trong khói của nhiều hãng thuốc lá và kết luận các hãng gần như y hệt. Nhưng phải có một hãng đứng cuối danh sách — Old Gold — và hãng này quảng cáo rầm rộ rằng khói của mình "ít nhất".</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Sạc nhanh nhất phân khúc": nhanh hơn máy kế bên hai phút cho một lần sạc (số minh hoạ).</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Khác biệt ấy có đủ lớn để đổi quyết định của tôi không?</div>
+            </div>
+          </article>
+        </div>
+
+        <p class="hw-p">"Sai số khả dĩ" là thước đo cũ: khoảng chứa giá trị thật với xác suất <b>50%</b>. Khoảng 95% dùng ngày nay rộng gấp chừng 2,9 lần — ±3 thành <b>±8,7</b> điểm — và nhìn theo nó, Peter và Linda gần như trùng nhau.</p>
+        <figure class="hl-fig">
+          <svg viewBox="0 0 360 132" role="img" aria-label="Hai khoảng IQ của Peter và Linda: khoảng đậm là ±3 điểm, khoảng nhạt là ±8,7 điểm; cả hai cặp khoảng chồng lên nhau gần hết">
+            <line class="hl-grid" x1="70" y1="22" x2="70" y2="104"></line>
+            <line class="hl-grid" x1="137.5" y1="22" x2="137.5" y2="104"></line>
+            <line class="hl-grid" x1="205" y1="22" x2="205" y2="104"></line>
+            <line class="hl-grid" x1="272.5" y1="22" x2="272.5" y2="104"></line>
+            <line class="hl-grid" x1="340" y1="22" x2="340" y2="104"></line>
+            <text class="hl-t hl-t--m" x="70" y="15" text-anchor="middle">85</text>
+            <text class="hl-t hl-t--m" x="137.5" y="15" text-anchor="middle">95</text>
+            <text class="hl-t hl-t--m" x="205" y="15" text-anchor="middle">105</text>
+            <text class="hl-t hl-t--m" x="272.5" y="15" text-anchor="middle">115</text>
+            <text class="hl-t hl-t--m" x="340" y="15" text-anchor="middle">125</text>
+            <!-- x = 70 + (IQ − 85) × 6,75 ; khoảng nhạt ±8,7, khoảng đậm ±3 -->
+            <rect x="99.02" y="40" width="117.45" height="12" rx="3" style="fill:var(--wb-neutral-weak)"></rect>
+            <rect x="137.50" y="40" width="40.50" height="12" rx="3" style="fill:var(--wb-neutral-strong)"></rect>
+            <circle cx="157.75" cy="46" r="4" style="fill:var(--wb-fg)"></circle>
+            <text class="hl-t hl-t--b" x="4" y="50">Peter 98</text>
+            <rect x="119.27" y="74" width="117.45" height="12" rx="3" style="fill:var(--wb-neutral-weak)"></rect>
+            <rect x="157.75" y="74" width="40.50" height="12" rx="3" style="fill:var(--wb-neutral-strong)"></rect>
+            <circle cx="178.00" cy="80" r="4" style="fill:var(--wb-fg)"></circle>
+            <text class="hl-t hl-t--b" x="4" y="84">Linda 101</text>
+            <text class="hl-t hl-t--s" x="4" y="124">đậm: ±3 (50%) · nhạt: ±8,7 (95%)</text>
+          </svg>
+        </figure>
+        <p class="hw-src">Hình do trang này vẽ từ ví dụ Peter–Linda của sách. Hệ số 2,9 = 1,96 ÷ 0,6745: tỉ số giữa nửa độ rộng của khoảng 95% và của khoảng 50% trong phân phối chuẩn.</p>
+
+        <div class="hl-next">
+          <p><b>Bạn vừa có:</b> ba câu hỏi cho mọi con số rút từ mẫu — hỏi ai, bao nhiêu người, dao động bao nhiêu.</p>
+          <p><b>Nó dẫn đi đâu:</b> giả sử mẫu tốt và số đo chuẩn, người muốn lừa vẫn còn chỗ chen vào: chọn con số nào để kể. "Trung bình" có ít nhất ba nghĩa — nghĩa nào sẽ được in ra?</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ PHẦN 2 ══════════════════ -->
+            <div class="hw-part-head" id="p2">
+        <p class="kicker">Phần 2 · Framing</p>
+        <h2>Chọn con số để kể: cùng dữ liệu, nhiều câu chuyện</h2>
+        <p>Hai chương, một mẹo ở hai dạng: chọn kiểu trung bình (chương 2) và chọn cách tính phần trăm (chương 9). Dữ liệu không đổi; chỉ cái được kể ra là đổi.</p>
+      </div>
+
+            <section id="c2">
+        <p class="hw-eyebrow-sec"><b>2.1</b> — Chapter 2 · The Well-Chosen Average</p>
+        <h2 class="hw-sec-title">“Trung bình” chọn khéo: ba con số cùng một tên, kể ba chuyện khác nhau</h2>
+        <p class="hw-lede">"Trung bình" là tên chung của ít nhất ba con số: <b>trung bình cộng</b> (cộng hết rồi chia đều), <b>trung vị</b> (người đứng giữa khi xếp từ thấp tới cao) và <b>yếu vị</b> (mức hay gặp nhất).</p>
+        <p class="hw-p">Với dữ liệu cân đối như chiều cao, ba số nằm gần nhau; với dữ liệu lệch như thu nhập, chúng cách xa, và người nói chọn số hợp ý mà vẫn nói thật.</p>
+        <div class="hw-quote">
+          Một xe buýt 40 người, một tỉ phú bước lên: "tài sản trung bình" của cả xe vọt lên hàng trăm tỉ, không ai giàu thêm đồng nào.
+          <cite>Chỗ ví von này hỏng: trên xe, ai cũng thấy tỉ phú bước lên. Trong một con số in trên báo, người kéo trung bình lên là vô hình.</cite>
+        </div>
+
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="t2-1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 2.1a</span><h3 class="hw-fal__name">Đổi kiểu trung bình tuỳ lúc</h3><span class="wb-tag">mean vs median</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Trung bình cộng bị vài giá trị cực lớn kéo đi, trung vị thì gần như không. Nói "trung bình" mà không nói kiểu nào là để ngỏ đường chọn.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Một người rao bán nhà nói thu nhập trung bình của khu phố là <b>15.000 USD</b> một năm; một năm sau, khi chống tăng thuế, cũng người ấy nói <b>3.500 USD</b>. Cả hai đúng: con số đầu là trung bình cộng, bị vài triệu phú về nghỉ cuối tuần kéo lên; con số sau là trung vị.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Tổng cục Thống kê công bố thu nhập bình quân năm 2024 là <b>5,4 triệu đồng một người một tháng</b> — một trung bình cộng. Cùng thông cáo: 20% dân số thu nhập cao nhất đạt 11,8 triệu, gấp 7,4 lần 20% thấp nhất (1,6 triệu). Trung vị không được công bố, nên 5,4 triệu chưa cho biết người đứng giữa kiếm bao nhiêu.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Trung bình kiểu nào — và tính trên những ai?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t2-2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 2.1b</span><h3 class="hw-fal__name">“Lương trung bình” mà phần đông không với tới</h3><span class="wb-tag">skewed pay</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Khi vài người ở đỉnh nhận rất nhiều, phần đông nhân viên nằm dưới "lương trung bình" của chính công ty mình.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Gặp một con số lương trung bình, Huff bảo việc đầu tiên là hỏi nó gộp những ai — chẳng hạn có tính cả giám đốc không.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Tin tuyển dụng "thu nhập trung bình 25 triệu" (số minh hoạ) ở một công ty mà nhân viên mới nhận 12 triệu.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Người đứng giữa nhận bao nhiêu?</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="hl-lab" id="lab-avg">
+          <div class="hl-lab__head">
+            <p class="hl-lab__kick">Mô hình 3 / 6 · trung bình</p>
+            <p class="hl-lab__title">Kéo lương chủ xưởng lên — xem “lương trung bình” chạy theo</p>
+            <p class="hl-lab__hint">Xưởng may 11 người (số minh hoạ, triệu đồng/tháng): 5 công nhân 8, 2 tổ trưởng 12, kế toán 15, thợ cả 18, quản đốc 25 — và <b>chủ xưởng</b>. Chỉ kéo lương của chủ xưởng.</p>
+          </div>
+          <div class="hl-lab__body">
+            <div class="hl-lab__row">
+              <label for="av-s">Lương chủ xưởng</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="av-s" min="25" max="400" step="5" value="150" style="flex:1 1 180px"><span class="hl-mono" id="av-s-l"></span></div>
+            </div>
+            <div class="hl-read">
+              <div class="is-hi"><span class="k">Trung bình cộng</span><span class="v" id="av-mean">—</span><span class="s">con số tin tuyển dụng sẽ in</span></div>
+              <div><span class="k">Trung vị</span><span class="v" id="av-med">—</span><span class="s">người đứng giữa</span></div>
+              <div><span class="k">Yếu vị</span><span class="v" id="av-mode">—</span><span class="s">mức nhiều người nhận nhất</span></div>
+              <div><span class="k">Dưới mức trung bình</span><span class="v" id="av-below">—</span><span class="s">số người trong xưởng</span></div>
+            </div>
+            <svg class="hl-svg" id="av-svg" viewBox="0 0 560 290" role="img" aria-label="Biểu đồ thanh: lương của 11 người trong xưởng xếp từ thấp tới cao, kèm vạch trung bình cộng và vạch trung vị"></svg>
+            <p class="hl-lab__foot"><b>Điều cần thấy:</b> kéo lương chủ xưởng từ 25 lên 400 triệu: trung bình cộng đi từ khoảng 13 lên hơn 47 triệu, còn trung vị đứng yên ở 12, yếu vị ở 8. Không ai khác được thêm đồng nào. Ở mặc định, 9 trên 11 người nhận dưới mức "trung bình" — với dữ liệu lệch, đó là chuyện thường.</p>
+          </div>
+        </div>
+      </section>
+
+            <section id="c9">
+        <p class="hw-eyebrow-sec"><b>2.2</b> — Chapter 9 · How to Statisticulate</p>
+        <h2 class="hw-sec-title">Mẹo phần trăm và những phép tính tráo gốc</h2>
+        <p class="hw-lede">Huff gọi việc dùng số liệu để người đọc hiểu sai là <b>statisticulation</b> — ghép <i>statistics</i> (thống kê) với <i>manipulation</i> (thao túng).</p>
+        <p class="hw-p">Chủ tịch Hội Thống kê Hoa Kỳ từng bảo Huff rằng phần nhiều là do kém cỏi chứ không phải gian dối. Huff không hẳn đồng ý: sai sót cứ nghiêng về phía có lợi cho người nói thì khó đổ hết cho vụng về.</p>
+
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="t9-1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 2.2a</span><h3 class="hw-fal__name">Phần trăm hay điểm phần trăm</h3><span class="wb-tag">percent vs percentage points</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Từ 3% lên 6% là tăng 3 <b>điểm phần trăm</b>, cũng là tăng <b>100%</b>: muốn nghe nhỏ thì nói điểm, muốn nghe to thì nói phần trăm.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Lợi nhuận trên vốn từ 3% lên 6% có thể gọi là "tăng 3 điểm phần trăm" hay "tăng 100%", tuỳ người nói muốn nghe khiêm tốn hay ấn tượng.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Lãi suất tiết kiệm từ 5% lên 6%: quảng cáo viết "tăng 20%", báo viết "tăng 1 điểm phần trăm" — với 100 triệu gửi một năm là chênh 1 triệu tiền lãi.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Phần trăm của một con số, hay hiệu của hai tỉ lệ?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t9-2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 2.2b</span><h3 class="hw-fal__name">Phần trăm trên nền nhỏ</h3><span class="wb-tag">small base</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Phần trăm trên một gốc nhỏ lúc nào cũng to: từ 2 lên 6 là "tăng 200%", nhưng chỉ thêm 4.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Huff cảnh báo phần trăm tính trên ít trường hợp rất dễ gây hiểu lầm; ví dụ Johns Hopkins ở mục <a href="#c10">5.1</a> là dạng cực đoan.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Doanh số tăng 300% sau livestream" — từ 5 lên 20 đơn (số minh hoạ).</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Con số gốc là bao nhiêu?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t9-3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 2.2c</span><h3 class="hw-fal__name">Tráo gốc so sánh</h3><span class="wb-tag">shifting base</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Phần trăm tăng và phần trăm giảm tính trên hai gốc khác nhau nên không triệt tiêu nhau.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Một người bán bánh mì thịt thỏ rẻ lạ lùng thú nhận có trộn thêm thịt ngựa, "năm mươi – năm mươi": một con ngựa, một con thỏ — tính theo con, không theo cân.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Tăng giá 25% rồi dán "giảm 20%": 100.000 → 125.000 → 100.000 đồng. Cổ phiếu mất 50% phải tăng 100% mới hoà vốn.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Tính trên gốc nào — lần trước tính trên gốc nào?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t9-4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 2.2d</span><h3 class="hw-fal__name">Bản đồ tô theo diện tích</h3><span class="wb-tag">area on maps</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Trên bản đồ, mắt đọc diện tích: tô vùng rộng mà thưa người thì con số trông khổng lồ.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Để nói chi tiêu liên bang bằng tổng thu nhập của dân một số bang, có thể tô các bang miền Tây rộng mà thu nhập thấp — nửa nước Mỹ tối sẫm — hoặc vài bang miền Đông nhỏ mà giàu. Cả hai đúng; ai muốn doạ về chính phủ phình to sẽ chọn bản đồ đầu.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Bản đồ "tỉnh có ca bệnh" tô đỏ cả tỉnh dù chỉ một xã có ca.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Màu đang đếm đất, hay đếm người?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t9-5">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 2.2e</span><h3 class="hw-fal__name">Số lẻ và thứ hạng: vẻ chính xác giả</h3><span class="wb-tag">false precision · percentiles</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Nhiều chữ số lẻ trông như đo kỹ; thứ hạng che mất khoảng cách thật giữa các bậc.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Huff lưu ý số thập phân gợi ra độ chính xác hiếm khi có thật. Xếp theo bách phân vị, người ở bậc 99 có lẽ hơn hẳn người ở bậc 90, còn bậc 40 và bậc 60 có thể gần như ngang nhau.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Chỉ số hài lòng đạt 87,36 điểm" (số minh hoạ), từ một khảo sát vài trăm người.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Con số được đo chính xác tới mức ấy thật sao?</div>
+            </div>
+          </article>
+        </div>
+
+        <p class="hw-p">Chương này còn mẹo trích nửa câu: một rạp ở New York in thật to lời báo <i>New York Times</i> tả phim <i>Quo Vadis</i> là "historical pretentiousness" (sự phô trương kiểu lịch sử), như thể đó là lời khen.</p>
+        <p class="hw-p">Mẹo nền nhỏ gây hại nhiều nhất vì hay nằm trong tin sức khoẻ: "nguy cơ tăng gấp đôi". Mô hình dưới đây tách hai con số mà tiêu đề gộp làm một.</p>
+
+        <div class="hl-lab" id="lab-base">
+          <div class="hl-lab__head">
+            <p class="hl-lab__kick">Mô hình 4 / 6 · phần trăm</p>
+            <p class="hl-lab__title">“Nguy cơ tăng gấp đôi” — từ bao nhiêu lên bao nhiêu?</p>
+            <p class="hl-lab__hint">Chọn <b>tỉ lệ ban đầu</b> của một rủi ro và <b>mức tăng</b>. Tiêu đề thường chỉ in con số tương đối; hai khối vuông, mỗi khối 1.000 người, cho thấy con số tuyệt đối.</p>
+          </div>
+          <div class="hl-lab__body">
+            <div class="hl-lab__row">
+              <label for="bs-p">Tỉ lệ ban đầu</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="bs-p" min="0" max="7" step="1" value="2" style="flex:1 1 180px"><span class="hl-mono" id="bs-p-l"></span></div>
+            </div>
+            <div class="hl-lab__row">
+              <label for="bs-m">Nhân lên</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="bs-m" min="11" max="50" step="1" value="20" style="flex:1 1 180px"><span class="hl-mono" id="bs-m-l"></span></div>
+            </div>
+            <div class="hl-read">
+              <div class="is-hi"><span class="k">Tiêu đề sẽ viết</span><span class="v" id="bs-rel">—</span><span class="s">tăng tương đối</span></div>
+              <div><span class="k">Thêm bao nhiêu người</span><span class="v" id="bs-abs">—</span><span class="s">trên 10.000 người</span></div>
+              <div><span class="k">Trước → sau</span><span class="v" id="bs-ba">—</span><span class="s">trên 10.000 người</span></div>
+            </div>
+            <svg class="hl-svg" id="bs-svg" viewBox="0 0 560 250" role="img" aria-label="Hai ô vuông, mỗi ô 1.000 người, tô những người gặp rủi ro trước và sau khi rủi ro tăng"></svg>
+            <p class="hl-lab__foot"><b>Điều cần thấy:</b> giữ ×2 và kéo tỉ lệ ban đầu từ 1 trên 100.000 lên 1 trên 5. Tiêu đề không đổi — "tăng gấp đôi" — nhưng số người bị ảnh hưởng thêm đi từ 0,1 lên 2.000 trên 10.000: hai chuyện khác nhau hai vạn lần, cùng một tiêu đề.</p>
+            <p class="hl-lab__foot">Chuyện thật: tháng 10/1995, cơ quan quản lý thuốc của Anh cảnh báo một số loại thuốc tránh thai làm nguy cơ huyết khối "tăng gấp đôi" — tính tuyệt đối là từ khoảng 1 lên 2 trên 7.000 phụ nữ. Nhiều người bỏ thuốc; năm 1996, số ca phá thai ở Anh và xứ Wales tăng 8%, thêm khoảng 13.600 ca. Mặc định của mô hình chính là con số ấy.</p>
+          </div>
+        </div>
+        <p class="hw-src">Nguồn vụ thuốc tránh thai: A. Furedi, "The public health implications of the 1995 ‘pill scare’", <i>Human Reproduction Update</i> 5(6), 1999; và thư đăng trên <i>The Lancet</i> "Conceptions and terminations after the 1995 warning about oral contraceptives". Xem mục <a href="#s-src">Nguồn</a>.</p>
+
+        <div class="hl-next">
+          <p><b>Bạn vừa có:</b> hai câu hỏi cho mọi con số tóm tắt — "trung bình kiểu nào, tính trên ai?" và "từ bao nhiêu lên bao nhiêu?".</p>
+          <p><b>Nó dẫn đi đâu:</b> con số đúng, cách tóm cũng đúng — vẫn còn hình vẽ. Mắt đọc hình nhanh hơn đọc số, và hình có những cách lừa riêng mà không cần đổi con số nào.</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ PHẦN 3 ══════════════════ -->
+            <div class="hw-part-head" id="p3">
+        <p class="kicker">Phần 3 · Charts</p>
+        <h2>Hình vẽ: cùng số liệu, cảm giác khác hẳn</h2>
+        <p>Mắt đọc hình trước khi đọc số. Hai chương là hai cách lợi dụng điều ấy: kéo dốc một đường (chương 5) và phóng to một hình (chương 6).</p>
+      </div>
+
+            <section id="c5">
+        <p class="hw-eyebrow-sec"><b>3.1</b> — Chapter 5 · The Gee-Whiz Graph</p>
+        <h2 class="hw-sec-title">Biểu đồ “Gee-Whiz”: cắt đáy trục, bóp khung, và 10% hoá thành cú vọt</h2>
+        <p class="hw-lede">Độ dốc của một đường không nằm trong số liệu mà ở hai lựa chọn của người vẽ: <b>trục dọc bắt đầu từ đâu</b> và <b>khung rộng hay hẹp</b>. ("Gee whiz" là tiếng thốt kiểu "trời đất ơi".)</p>
+
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="t5-1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 3.1a</span><h3 class="hw-fal__name">Cắt đáy trục dọc</h3><span class="wb-tag">truncated axis</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Trục dọc không bắt đầu từ 0 thì phần nhô lên trông lớn hơn nhiều; với biểu đồ cột, đó là bóp méo trực tiếp vì chiều dài cột chính là con số.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Thu nhập quốc dân tăng 10% trong một năm. Vẽ từ 0, đường dốc nhẹ; cắt phần dưới trục, đường dựng đứng. Huff chốt: <i>“Nothing has been falsified—except the impression that it gives.”</i> — không gì bị làm giả, trừ ấn tượng nó tạo ra.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Ứng dụng chứng khoán tự co trục theo biên độ: giảm 1% trông như rơi xuống vực.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Trục dọc bắt đầu từ đâu?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t5-2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 3.1b</span><h3 class="hw-fal__name">Bóp khung, đổi tỉ lệ hai trục</h3><span class="wb-tag">aspect ratio</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Bóp trục ngang hay kéo giãn trục dọc thì đường dốc hơn; làm ngược lại, một cú giảm trông như đi ngang.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Bước tiếp theo của Huff: đổi tỉ lệ giữa hai trục. Không luật nào cấm, và mức tăng 10% thành cú vọt mà người vẽ không cần một tính từ nào.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Báo cáo thường niên đặt biểu đồ doanh thu vào ô hẹp và cao, biểu đồ nợ xấu vào ô rộng và thấp.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Vẽ lại trong khung vuông, từ 0, còn dốc vậy không?</div>
+            </div>
+          </article>
+        </div>
+
+        <div class="hl-lab" id="lab-gee">
+          <div class="hl-lab__head">
+            <p class="hl-lab__kick">Mô hình 5 / 6 · biểu đồ</p>
+            <p class="hl-lab__title">Cùng một mức tăng 10%, kéo cho nó thành cú vọt</p>
+            <p class="hl-lab__hint">Doanh thu tháng của một cửa hàng đi từ 200 lên 220 triệu đồng trong 12 tháng (số minh hoạ) — tăng 10%. Kéo hai tay cầm; không con số nào đổi.</p>
+          </div>
+          <div class="hl-lab__body">
+            <div class="hl-lab__row">
+              <label for="gw-b">Trục dọc bắt đầu từ</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="gw-b" min="0" max="195" step="5" value="180" style="flex:1 1 180px"><span class="hl-mono" id="gw-b-l"></span></div>
+            </div>
+            <div class="hl-lab__row">
+              <label for="gw-w">Độ rộng khung</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="gw-w" min="30" max="100" step="5" value="100" style="flex:1 1 180px"><span class="hl-mono" id="gw-w-l"></span></div>
+            </div>
+            <div class="hl-read">
+              <div><span class="k">Tăng thật</span><span class="v">+10%</span><span class="s">từ 200 lên 220</span></div>
+              <div class="is-hi"><span class="k">Hình gợi ra</span><span class="v" id="gw-see">—</span><span class="s">so chiều cao hai đầu đường</span></div>
+              <div><span class="k">Hệ số nói dối</span><span class="v" id="gw-lie">—</span><span class="s">1 là trung thực</span></div>
+              <div><span class="k">Góc dốc</span><span class="v" id="gw-ang">—</span><span class="s">từ tháng 1 tới tháng 12</span></div>
+            </div>
+            <svg class="hl-svg" id="gw-svg" viewBox="0 0 560 260" role="img" aria-label="Biểu đồ đường doanh thu 12 tháng, trục dọc bắt đầu từ giá trị bạn chọn"></svg>
+            <p class="hl-lab__foot"><b>Điều cần thấy:</b> ở mặc định, trục bắt đầu từ 180 và hình gợi ra +100% cho mức tăng thật 10%. Kéo về 0: đường gần như nằm ngang. Bóp khung xuống 30%: góc dốc tăng vọt dù trục không đổi.</p>
+            <p class="hl-lab__foot"><b>Hệ số nói dối</b> (Edward Tufte, 1983) là độ lớn của hiệu ứng trên hình chia cho độ lớn của hiệu ứng trong số liệu. Bằng 1 là hình nói đúng tỉ lệ; bằng 10 là phóng đại gấp mười.</p>
+          </div>
+        </div>
+
+        <p class="hw-p">Cắt trục không phải lúc nào cũng là lừa: với nhiệt độ cơ thể từ 36 lên 39°C, vẽ từ 0 độ mới che mất điều đáng thấy. Quy tắc dùng được: cột nên bắt đầu từ 0; đường được cắt nhưng phải ghi rõ số ở chân trục, và người xem nên đọc số ấy trước khi nhìn độ dốc (xem thêm mục <a href="#s-held">6.3</a>).</p>
+      </section>
+
+            <section id="c6">
+        <p class="hw-eyebrow-sec"><b>3.2</b> — Chapter 6 · The One-Dimensional Picture</p>
+        <h2 class="hw-sec-title">Hình một chiều: phóng hình theo chiều cao, mắt đọc theo diện tích</h2>
+        <p class="hw-lede">Khi chiều cao của hình mang con số mà hình được phóng cả bề ngang, mắt đọc <b>diện tích</b>, thậm chí <b>thể tích</b>: gấp đôi thành gấp bốn, gấp tám. Con số chỉ có một chiều; hình thì có hai hoặc ba.</p>
+        <div class="hw-quote">
+          Gọi một cốc trà đá "cỡ gấp đôi", người ta bưng ra cái xô to gấp đôi mọi chiều — đựng gấp tám.
+          <cite>Chỗ ví von này hỏng: cái xô thật sự đựng gấp tám. Trên biểu đồ, con số vẫn chỉ gấp đôi; phần "gấp tám" là do mắt ta tự thêm vào.</cite>
+        </div>
+
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="t6-1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 3.2a</span><h3 class="hw-fal__name">Phóng cả hình thay vì kéo dài cột</h3><span class="wb-tag">pictogram scaling</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Cao gấp đôi, rộng gấp đôi thì diện tích gấp bốn; với vật có khối, cảm giác tới gấp tám.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Lương tuần của thợ mộc ở Mỹ là 60 USD, ở xứ "Rotundia" (tên bịa) là 30 USD. Hai cột là trung thực; hai túi tiền, túi lớn cao gấp đôi và rộng gấp đôi, thì mắt thấy gấp bốn trở lên. Tạp chí <i>Newsweek</i> từng vẽ tuổi thọ ở Mỹ tăng từ 34 năm (1879–1889) lên 68,2 năm bằng hai hình người: người sau cao gấp đôi mà trông nặng gấp tám.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Infographic "giá nhà gấp đôi" vẽ căn nhà sau to gấp đôi mọi chiều (số minh hoạ).</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Con số nằm ở chiều cao hay ở diện tích?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t6-2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 3.2b</span><h3 class="hw-fal__name">Con bò “lớn dần”</h3><span class="wb-tag">the crescive cow</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Với vật được đánh giá bằng khối, thể tích tăng theo lập phương của chiều cao.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Để nói đàn bò Mỹ tăng từ 8 lên 25 triệu con, một hình vẽ con bò sau cao gấp 25/8 ≈ 3,1 lần. Nhà thống kê J. Michael Steele nhớ mãi hình này từ thời trung học: ta nhìn con bò theo khối, và khối thì gấp 3,1³ ≈ 30 lần.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Xe máy tăng gấp đôi" minh hoạ bằng chiếc xe máy to gấp đôi mọi chiều.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Thay hình bằng cột thì cột sau cao gấp mấy lần?</div>
+            </div>
+          </article>
+        </div>
+
+        <p class="hw-p">Cách vẽ trung thực: giữ cột, hoặc xếp nhiều hình cùng cỡ, mỗi hình là một lượng cố định.</p>
+
+        <div class="hl-lab" id="lab-pic">
+          <div class="hl-lab__head">
+            <p class="hl-lab__kick">Mô hình 6 / 6 · hình một chiều</p>
+            <p class="hl-lab__title">Giá nhà gấp đôi — vẽ ngôi nhà to gấp mấy?</p>
+            <p class="hl-lab__hint">Giá nhà năm nay gấp <b>k</b> lần một mốc cũ (số minh hoạ). Chọn cách vẽ rồi kéo k; nhìn "diện tích mắt thấy" — đó là thứ mắt bạn đang so.</p>
+          </div>
+          <div class="hl-lab__body">
+            <div class="hl-lab__row">
+              <label for="pc-k">Số liệu gấp</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="pc-k" min="10" max="30" step="1" value="20" style="flex:1 1 180px"><span class="hl-mono" id="pc-k-l"></span></div>
+            </div>
+            <div class="hl-lab__row">
+              <span class="k">Cách vẽ</span>
+              <div class="wb-cluster" role="group" aria-label="Cách vẽ hình">
+                <button class="wb-btn wb-btn--sm" type="button" data-pc="scale" aria-pressed="true">Phóng cả hình</button>
+                <button class="wb-btn wb-btn--sm wb-btn--ghost" type="button" data-pc="area" aria-pressed="false">Phóng theo diện tích</button>
+                <button class="wb-btn wb-btn--sm wb-btn--ghost" type="button" data-pc="repeat" aria-pressed="false">Xếp nhiều hình</button>
+              </div>
+            </div>
+            <div class="hl-read">
+              <div><span class="k">Số liệu</span><span class="v" id="pc-data">—</span><span class="s">điều cần nói</span></div>
+              <div><span class="k">Chiều cao hình</span><span class="v" id="pc-h">—</span><span class="s">so với nhà mốc</span></div>
+              <div class="is-hi"><span class="k">Diện tích mắt thấy</span><span class="v" id="pc-a">—</span><span class="s">thứ mắt đang so</span></div>
+              <div><span class="k">Nếu là vật khối</span><span class="v" id="pc-v">—</span><span class="s">cảm giác thể tích</span></div>
+            </div>
+            <svg class="hl-svg" id="pc-svg" viewBox="0 0 560 250" role="img" aria-label="Ngôi nhà mốc bên trái và ngôi nhà được vẽ theo cách bạn chọn bên phải"></svg>
+            <p class="hl-lab__foot"><b>Điều cần thấy:</b> "phóng cả hình" với k = 3 cho diện tích gấp 9 — con số gấp ba mà mắt thấy gấp chín. "Phóng theo diện tích" sửa được diện tích nhưng chiều cao chỉ còn gấp √k, nên ai so chiều cao lại bị lừa theo chiều ngược. Chỉ "xếp nhiều hình" giữ cả hai cho đúng: gấp đôi là hai ngôi nhà.</p>
+          </div>
+        </div>
+
+        <div class="hl-next">
+          <p><b>Bạn vừa có:</b> hai phản xạ khi nhìn hình — đọc số ở chân trục trước khi nhìn độ dốc, và hỏi con số nằm ở chiều cao hay ở diện tích.</p>
+          <p><b>Nó dẫn đi đâu:</b> ba phần trên đều giả định con số nói đúng về chính thứ nó đo. Phần tiếp theo khó thấy hơn: số đúng, đo đúng, vẽ đúng — nhưng về một chuyện khác với kết luận được rút ra.</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ PHẦN 4 ══════════════════ -->
+            <div class="hw-part-head" id="p4">
+        <p class="kicker">Phần 4 · Claims</p>
+        <h2>Từ số tới kết luận: chứng minh một chuyện, kết luận chuyện khác</h2>
+        <p>Chỗ khó thấy nhất, vì con số không sai. Chương 7 gom những lần con số nói về một thứ <b>gần giống</b> điều được kết luận; chương 8 gom những lần hai thứ đi cùng nhau bị kể thành <b>thứ này gây ra thứ kia</b>.</p>
+      </div>
+
+            <section id="c7">
+        <p class="hw-eyebrow-sec"><b>4.1</b> — Chapter 7 · The Semiattached Figure</p>
+        <h2 class="hw-sec-title">Con số “dính hờ”: không chứng minh được điều muốn nói thì chứng minh điều khác</h2>
+        <p class="hw-lede">Công thức của Huff, nói bằng lời thường: không chứng minh được điều mình muốn thì chứng minh một điều na ná, rồi đánh đồng hai điều ấy. Khi con số va vào đầu người đọc, hiếm ai còn đủ tỉnh để thấy chỗ tráo.</p>
+        <div class="hw-quote">
+          Hỏi xe có bền không, người bán đáp: "xe này chạy được 200 km/h".
+          <cite>Chỗ ví von này hỏng: câu trả lời ấy lạc đề lộ liễu. Con số dính hờ thường sát đề tới mức nghe như trả lời đúng — chính vì thế nó lọt qua.</cite>
+        </div>
+
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="t7-1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 4.1a</span><h3 class="hw-fal__name">Đo trong ống nghiệm, hứa trong cơ thể</h3><span class="wb-tag">lab proxy</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Con số đo một thứ dễ đo, ở nơi dễ đo; lời hứa nói về thứ khác, ở nơi khác.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Không chứng minh được thuốc chữa cảm thì in to báo cáo phòng thí nghiệm: nửa ounce thuốc diệt <b>31.108 vi trùng trong ống nghiệm trong 11 giây</b>. Ống nghiệm không phải cổ họng người, và cảm lạnh vốn không do loại vi trùng ấy gây ra.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Nước rửa rau "diệt 99,9% vi khuẩn" trên mẫu thử thành "rau sạch, cả nhà khoẻ".</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Số đo cái gì, ở đâu — có đúng là điều được hứa không?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t7-2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 4.1b</span><h3 class="hw-fal__name">So với một thứ chẳng ai còn dùng</h3><span class="wb-tag">weak comparison</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> "Hơn X%" cần chữ "hơn cái gì"; chọn đối thủ yếu thì số nào cũng đẹp.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Máy ép trái cây quảng cáo ép <b>nhiều hơn 26% nước</b>, "phòng thí nghiệm chứng minh", có viện thử nghiệm của tạp chí <i>Good Housekeeping</i> bảo đảm — hơn cái vắt tay kiểu cũ, không phải hơn các máy ép khác.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Máy lọc không khí giảm 90% bụi mịn" — so với phòng đóng kín không bật gì.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Hơn cái gì?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t7-3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 4.1c</span><h3 class="hw-fal__name">Con số đúng mà chẳng chứng minh gì</h3><span class="wb-tag">irrelevant figure</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Con số có thật, nghe liên quan, nhưng không trả lời câu bạn cần hỏi.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Quảng cáo khoe 27% trong một mẫu lớn các bác sĩ nổi tiếng hút hãng Throaties, nhiều hơn mọi hãng khác. Cứ cho là thật: bác sĩ có biết hơn bạn hãng nào ít hại hơn không? Huff bảo chỉ cần hỏi: "Thì sao?"</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Hai triệu người theo dõi tin dùng" không chứng minh sản phẩm làm được điều nó hứa.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Nếu con số này đúng hoàn toàn, nó chứng minh được gì?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t7-4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 4.1d</span><h3 class="hw-fal__name">So hai nhóm khác loại</h3><span class="wb-tag">unlike groups</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Hai nhóm khác nhau ở nhiều thứ ngoài điều đang so.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Thời chiến tranh Mỹ – Tây Ban Nha (1898), tỉ lệ tử vong trong Hải quân Mỹ là <b>9 phần nghìn</b>, của dân thường New York là <b>16 phần nghìn</b>. Đi lính không vì thế mà an toàn hơn: lính là thanh niên khoẻ đã qua khám tuyển, còn dân thường gồm cả trẻ sơ sinh, người già, người ốm.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Bệnh viện tuyến trung ương có tỉ lệ tử vong cao hơn tuyến huyện chưa chắc vì chữa kém: ca nặng nhất được chuyển lên tuyến trên.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Hai nhóm có giống nhau ở những điểm khác không?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t7-5">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 4.1e</span><h3 class="hw-fal__name">Đếm tổng thay vì tính tỉ lệ</h3><span class="wb-tag">counts vs rates</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Chỗ nào đông hơn thì cũng nhiều chuyện hơn; đếm tổng mà không chia thì chỗ đông nào cũng thành chỗ nguy hiểm.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Tai nạn lúc trời quang nhiều hơn lúc sương mù vì trời quang chiếm phần lớn thời gian. Một báo cáo nêu 4.712 người chết liên quan tới đường sắt, nhưng phần lớn là ô tô đâm tàu ở chỗ giao cắt; chỉ 132 người là hành khách.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Phần lớn tai nạn giao thông có xe máy" gần như tất nhiên khi xe máy chiếm phần lớn phương tiện; phải chia cho số ki-lô-mét đã đi.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Phải chia cho cái gì mới công bằng?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t7-6">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 4.1f</span><h3 class="hw-fal__name">Đổi cách ghi nhận, rồi báo là thực tế đã đổi</h3><span class="wb-tag">changed definitions</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Định nghĩa đổi, báo cáo đầy đủ hơn, có thêm lý do để khai — con số đổi dù thực tế đứng yên.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Trước năm 1940, miền Nam nước Mỹ ghi hàng trăm nghìn ca sốt rét mỗi năm; vài năm sau chỉ còn một nhúm, chủ yếu vì từ đó chỉ ghi ca đã xác nhận. Ngược lại, một năm bại liệt "kỷ lục" có thể chỉ do báo cáo đầy đủ hơn và có bảo hiểm khiến người ta khai. Huff gợi ý nhìn số ca tử vong, vốn được ghi kỹ hơn.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Bạo lực học đường tăng vọt" sau khi ai cũng quay được bằng điện thoại: được ghi nhận nhiều hơn chưa chắc là xảy ra nhiều hơn.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Nhiều ca được ghi nhận hơn, hay nhiều ca hơn?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t7-7">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 4.1g</span><h3 class="hw-fal__name">Câu hỏi không đo điều nó tuyên bố</h3><span class="wb-tag">attitude, not fact</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Hỏi người ta nghĩ gì về một thực tế thì đo được suy nghĩ, không đo được thực tế.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Văn phòng Nghiên cứu Dư luận của Princeton hỏi người da đen có cơ hội việc làm như người da trắng không, kèm vài câu đo định kiến: khoảng hai phần ba người có định kiến nặng nói "có", khoảng hai phần ba người có thiện cảm nói "không". Câu hỏi đo thái độ nhiều hơn đo việc làm.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Khảo sát "bạn có thấy giá nhà quá cao không?" được dùng để kết luận về giá nhà.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Câu trả lời cho biết về thế giới, hay về người trả lời?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t7-8">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 4.1h</span><h3 class="hw-fal__name">Một sự thật, năm cách nói</h3><span class="wb-tag">pick the framing</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Một kết quả có nhiều cách nói đúng; người nói chọn cách lọt tai nhất.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Cùng một năm kinh doanh: lãi 1% trên doanh thu, 15% trên vốn, 10 triệu USD, tăng 40% so với trung bình 1935–1939, hay giảm 60% so với năm trước. Còn phần lợi nhuận được báo cáo có khi chỉ bằng một nửa hay một phần ba thực tế — phần còn lại nằm trong khấu hao và dự phòng.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Doanh thu kỷ lục" khi lợi nhuận giảm; "lợi nhuận tăng 300%" khi năm trước gần hoà vốn.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Vì sao người nói chọn cách nói này?</div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+            <section id="c8">
+        <p class="hw-eyebrow-sec"><b>4.2</b> — Chapter 8 · Post Hoc Rides Again</p>
+        <h2 class="hw-sec-title">Post hoc: hai thứ đi cùng nhau chưa chắc thứ này gây ra thứ kia</h2>
+        <p class="hw-lede">"Post hoc ergo propter hoc" — tiếng Latin, "sau cái này, vậy là do cái này" — là tên Huff dùng cho mọi lần một <b>mối liên hệ</b> (tương quan) bị kể thành <b>nguyên nhân</b>.</p>
+        <p class="hw-p">Ông chia các tương quan "vô chủ" thành bốn loại, ứng với bốn thẻ dưới đây, và nhắc: quan hệ vật lý như "càng xa bóng đèn càng tối" mới cho tương quan gần hoàn hảo; số liệu kinh doanh, xã hội, y tế hiếm khi gọn thế. Khi có nhiều lời giải thích hợp lý, không ai được chọn lời mình thích rồi khăng khăng.</p>
+
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="t8-1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 4.2a</span><h3 class="hw-fal__name">Tương quan do may rủi</h3><span class="wb-tag">chance correlation</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Mẫu càng nhỏ, càng dễ thấy tương quan giữa hai thứ bất kỳ; thử đủ nhiều cặp, kiểu gì cũng có cặp khớp.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Huff nói thẳng điều này — đó là mẹo kem đánh răng ở mục <a href="#c3">1.2</a>, áp vào chuyện nhân quả.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Năm nào đội tuyển vô địch, chứng khoán tăng" — vài năm số liệu, sau hàng chục cặp không khớp.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Bao nhiêu điểm dữ liệu — đã thử bao nhiêu cặp?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t8-2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 4.2b</span><h3 class="hw-fal__name">Nhân quả đi ngược chiều</h3><span class="wb-tag">reverse causation</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> A đi cùng B: có thể A gây ra B, cũng có thể B gây ra A.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Sinh viên hút thuốc có điểm thấp hơn; có thể học kém khiến người ta hút nhiều hơn, hoặc cả hai do một thứ khác. Dân quần đảo New Hebrides tin chấy làm người ta khoẻ, vì người khoẻ thường có chấy; thật ra người ốm sốt nóng lên và chấy bỏ đi.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Cửa hàng nhiều nhân viên bán được nhiều" — có khi vì đông khách mới phải thuê nhiều người.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Có thể "kết quả" đã gây ra "nguyên nhân" không?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t8-3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 4.2c</span><h3 class="hw-fal__name">Cả hai cùng do một thứ thứ ba</h3><span class="wb-tag">confounder</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Hai thứ cùng tăng vì một thứ khác đẩy cả hai lên — thời gian, tuổi tác, thu nhập, quy mô.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Lương mục sư Trưởng lão ở Massachusetts và giá rượu rum ở Havana cùng tăng vì giá cả chung đều tăng. Nhà nhiều tổ cò trên mái thì nhiều con, vì nhà to vừa có gia đình đông vừa có nhiều ống khói. Ung thư có vẻ phổ biến ở nơi uống nhiều sữa (New England, Minnesota, Wisconsin, Thuỵ Sĩ) và hiếm ở Ceylon, nay là Sri Lanka; nhưng ung thư chủ yếu là bệnh từ tuổi trung niên, và dân những nơi kia sống lâu hơn.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Học thêm nhiều thì điểm cao" — gia đình khá giả vừa cho con học thêm, vừa có nhiều điều kiện khác.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Có thứ thứ ba nào đẩy cả hai lên không?</div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="t8-4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Mẹo 4.2d</span><h3 class="hw-fal__name">Tương quan có thật, áp sai chỗ</h3><span class="wb-tag">beyond the data</span></div>
+            <p class="hw-fal__def"><b>Cơ chế.</b> Liên hệ đúng trong một khoảng chưa chắc đúng ngoài khoảng ấy, và xu hướng chung chưa chắc đúng với từng người.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Người học đại học kiếm nhiều hơn, nhưng đại học nhận nhiều trẻ vừa giỏi vừa giàu, những người có lẽ vẫn kiếm nhiều dù không học; và chưa ai chứng minh điều ấy cho những năm sau cử nhân. Với một người cụ thể, học thêm vẫn có thể là khoản lỗ.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Cử nhân kiếm nhiều hơn 40%" (số minh hoạ) không có nghĩa bằng thạc sĩ cộng thêm 40% nữa.</div>
+              <span class="hw-fal__k">Hỏi lại</span>
+              <div class="hw-fal__v is-ask">Còn đúng ở mức cao hơn, và với trường hợp của tôi không?</div>
+            </div>
+          </article>
+        </div>
+
+        <p class="hw-p">Mô hình biến thứ ba đã có ở <a href="psychology.html#s-how">mục phương pháp của trang Tâm lý học</a> (kéo tác động thật về 0 mà tương quan vẫn cao), nên trang này không dựng lại. Sáu bậc từ trùng hợp tới nhân quả có ở <a href="the-little-blue-reasoning-book.html#t30">nguyên tắc 30 của The Little Blue Reasoning Book</a>; cách tách nhân quả bằng thử nghiệm ngẫu nhiên có ở trang <a href="experimentation-causal-inference.html">Experimentation &amp; Causal Inference</a>.</p>
+
+        <div class="hl-next">
+          <p><b>Bạn vừa có:</b> hai câu hỏi cho mọi câu "X giúp Y" — con số này đo đúng điều được kết luận chưa, và còn lời giải thích nào khác cho mối liên hệ.</p>
+          <p><b>Nó dẫn đi đâu:</b> Huff gói tất cả thành năm câu hỏi ở chương cuối. Chính cuộc đời ông về sau lại là phép thử khắc nghiệt nhất cho năm câu hỏi ấy.</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ PHẦN 5 ══════════════════ -->
+            <div class="hw-part-head" id="p5">
+        <p class="kicker">Phần 5 · Talk back</p>
+        <h2>Cãi lại một con số: năm câu hỏi</h2>
+        <p>Chương cuối không thêm mẹo mới. Huff thừa nhận người đọc hiếm khi kiểm được một con số tới nơi tới chốn, nhưng năm câu hỏi sau đủ để gạt đi phần lớn những điều không đáng tin. Mỗi câu kèm ví dụ của sách và chỉ về những mẹo nó bắt được.</p>
+      </div>
+
+            <section id="c10">
+        <p class="hw-eyebrow-sec"><b>5.1</b> — Chapter 10 · How to Talk Back to a Statistic</p>
+        <h2 class="hw-sec-title">Năm câu hỏi, mỗi câu bắt một nhóm mẹo</h2>
+
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="q1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 1</span><h3 class="hw-fal__name">Ai nói?</h3><span class="wb-tag">Who says so?</span></div>
+            <p class="hw-fal__def">Người đưa ra con số được gì nếu bạn tin nó? Nhìn cả <b>độ lệch vô ý</b> — Huff cho là nguy hiểm hơn, vì người nói tin thật lòng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Phòng thí nghiệm cần chứng minh một lý thuyết hay lấy thù lao; tờ báo cần tin hay; chủ và thợ giằng co về lương. Với "cái tên bảo chứng", xem tổ chức ấy đứng sau con số hay chỉ đứng cạnh nó.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Theo nghiên cứu của một trường đại học" — thực ra là khảo sát do hãng sữa tài trợ, có một giảng viên tham gia.</div>
+              <span class="hw-fal__k">Nối về</span>
+              <div class="hw-fal__v"><a href="#c1">1.1 mẫu lệch</a> · <a href="#c7">4.1 con số dính hờ</a></div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="q2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 2</span><h3 class="hw-fal__name">Làm sao họ biết?</h3><span class="wb-tag">How does he know?</span></div>
+            <p class="hw-fal__def">Mẫu có lệch, có tự chọn, có đủ lớn không — và có ai biết được điều ấy bằng cách nào?</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Huff nêu một con số kiểu "người Mỹ đánh răng trung bình 1,02 lần một ngày" và hỏi: ai biết bằng cách nào? Chỉ có thể hỏi, và người ta nói điều dễ nghe.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"80% người Việt từng mua hàng qua livestream" (số minh hoạ), hỏi ngay trên một nền tảng livestream.</div>
+              <span class="hw-fal__k">Nối về</span>
+              <div class="hw-fal__v"><a href="#c1">1.1 mẫu lệch</a> · <a href="#c3">1.2 mẫu nhỏ</a></div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="q3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 3</span><h3 class="hw-fal__name">Thiếu gì?</h3><span class="wb-tag">What's missing?</span></div>
+            <p class="hw-fal__def">Cỡ mẫu, sai số, kiểu trung bình, con số gốc sau phần trăm, nhóm để so.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Khi Đại học Johns Hopkins mới nhận nữ sinh, có tin <b>33⅓% nữ sinh lấy giảng viên</b> — trường có ba nữ sinh, một người lấy giảng viên. Tin "tử vong do ung thư tăng mạnh" cũng phải trừ đi cách ghi nhận mới, chẩn đoán tốt hơn, dân số già đi và đông lên.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">"Tai nạn giảm 30%" — so với năm nào?</div>
+              <span class="hw-fal__k">Nối về</span>
+              <div class="hw-fal__v"><a href="#c3">1.2 con số vắng mặt</a> · <a href="#c2">2.1 trung bình</a> · <a href="#c9">2.2 phần trăm</a></div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="q4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 4</span><h3 class="hw-fal__name">Có ai đổi đề không?</h3><span class="wb-tag">Did somebody change the subject?</span></div>
+            <p class="hw-fal__def">Giữa số thô và kết luận có bị tráo không: ghi nhận thành thật, khai thành làm, tổng thành tỉ lệ, trước–sau thành nguyên nhân?</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Dân số một vùng ở Trung Quốc được ghi 28 triệu, năm năm sau là 105 triệu: lần đầu đếm để thu thuế và bắt lính, lần sau để phát cứu đói. Điều tra dân số Mỹ đếm được nhiều người 35 tuổi hơn người 34 hay 36, vì người khai hộ hay làm tròn tuổi.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Tuổi, thu nhập khai khi xin trợ cấp và khi tính thuế bị kéo về hai phía ngược nhau.</div>
+              <span class="hw-fal__k">Nối về</span>
+              <div class="hw-fal__v"><a href="#c7">4.1 con số dính hờ</a> · <a href="#c8">4.2 post hoc</a></div>
+            </div>
+          </article>
+
+          <article class="hw-fal" id="q5">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 5</span><h3 class="hw-fal__name">Có hợp lý không?</h3><span class="wb-tag">Does it make sense?</span></div>
+            <p class="hw-fal__def">Nhiều con số sai hiển nhiên nếu dừng lại nghĩ một phút. Để ý độ chính xác khó tin, và mọi phép ngoại suy.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Trong sách</span>
+              <div class="hw-fal__v">Có người bảo tuổi hưu 65 là lừa vì "tuổi thọ trung bình chỉ khoảng 63". Sai: tuổi thọ tính từ lúc sinh bị kéo xuống bởi người mất từ nhỏ; ai sống tới sáu mươi thường còn sống thêm nhiều năm. Về ngoại suy, Huff mượn Mark Twain: sông Mississippi ngắn đi 242 dặm trong 176 năm, vậy một triệu năm trước nó phải dài hơn một triệu dặm. Xu hướng tới hôm nay là sự thật; xu hướng tương lai là phỏng đoán.</div>
+              <span class="hw-fal__k">Hôm nay</span>
+              <div class="hw-fal__v">Tuổi thọ trung bình của người Việt khoảng 74–75 năm (Tổng cục Thống kê, 2023–2024) không có nghĩa người 70 tuổi chỉ còn sống bốn, năm năm.</div>
+              <span class="hw-fal__k">Nối về</span>
+              <div class="hw-fal__v"><a href="#c5">3.1 biểu đồ Gee-Whiz</a> · <a href="#c9">2.2 số lẻ và phần trăm</a></div>
+            </div>
+          </article>
+        </div>
+
+        <p class="hw-p">Huff cũng tự rào trước ở cuối chương 9: đừng vì những mẹo này mà vứt bỏ thống kê. Bác bỏ mọi con số cũng vô lý như thôi đọc sách vì có người dùng chữ để che giấu sự thật.</p>
+
+        <div class="hl-next">
+          <p><b>Bạn vừa có:</b> năm câu hỏi phủ gần hết các mẹo trong sách, và biết câu nào bắt mẹo nào.</p>
+          <p><b>Nó dẫn đi đâu:</b> chính người viết ra năm câu hỏi ấy về sau đã dùng mẹo của mình để phục vụ ngành thuốc lá. Mục Độ vững kể chuyện đó, và điều nó dạy mà sách không tự dạy.</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ ĐỘ VỮNG ══════════════════ -->
+            <div class="hw-part-head" id="robust">
+        <p class="kicker">Độ vững · Robustness</p>
+        <h2>Độ vững: điều đã thay đổi từ khi sách ra năm 1954</h2>
+        <p>Mục này gom những gì mạch chính cố ý để riêng: điều sách nói, điều nghiên cứu sau này xác nhận hoặc chỉnh lại, và điều đã sai. Nhãn cho biết mức chắc chắn: <span class="hl-evi hl-evi--solid">đã xác nhận</span> <span class="hl-evi hl-evi--mixed">cần chỉnh</span> <span class="hl-evi hl-evi--failed">sai</span></p>
+      </div>
+
+                  <section id="s-huff">
+        <p class="hw-eyebrow-sec"><b>6.1</b> — A journalist, not a statistician</p>
+        <h2 class="hw-sec-title">Huff là nhà báo, không phải nhà thống kê — và sách có một lỗi nền tảng</h2>
+        <p class="hw-p">Darrell Huff (1913–2001) học báo chí ở Đại học Iowa, làm biên tập tạp chí, rồi từ năm 1946 viết tự do ở California — phần lớn là sách hướng dẫn việc nhà. Ông không được đào tạo về thống kê; sức mạnh của sách là cách viết và tranh của Irving Geis, người về sau nổi tiếng vì vẽ cấu trúc phân tử protein.</p>
+        <p class="hw-p">Nhà thống kê J. Michael Steele (2005) viết sách đã bán hơn nửa triệu bản tiếng Anh, nhiều hơn mọi sách thống kê khác. Wikipedia ghi "hơn một triệu rưỡi bản" và dẫn chính bài của Steele, nhưng bài ấy không có con số đó — một dịp để hỏi "làm sao họ biết?".</p>
+        <ul class="hw-ul">
+          <li><span class="hl-evi hl-evi--failed">sai</span> <b>Cách đọc mức ý nghĩa.</b> Sách giải thích mức ý nghĩa 1% là "99 phần 100 khả năng khác biệt là thật" — lỗi đảo điều kiện, lỗi phổ biến nhất về p-value. Mức ý nghĩa nói về khả năng thấy dữ liệu như thế <i>nếu không có khác biệt nào</i>; muốn biết khả năng khác biệt là thật phải dùng định lý Bayes. Alex Reinhart (2014) thấy lỗi này lặp lại ở nhiều chương trong bản thảo về thuốc lá của Huff. Xem <a href="mathematics-for-machine-learning.html#s-test">p-value</a> và <a href="mathematics-for-machine-learning.html#s-bayes">Bayes</a> ở trang Toán cho học máy.</li>
+          <li><span class="hl-evi hl-evi--mixed">cần chỉnh</span> <b>Sai số khả dĩ</b> (khoảng 50%) nay được thay bằng khoảng tin cậy 95%, rộng hơn chừng 2,9 lần. Ý của Huff vẫn đúng; thước đo đã đổi (mục <a href="#c4">1.3</a>).</li>
+          <li><span class="hl-evi hl-evi--mixed">cần chỉnh</span> <b>Vụ <i>Literary Digest</i>.</b> Nhà chính trị học Peverill Squire (1988), dựa trên một cuộc thăm dò năm 1937, kết luận danh sách lệch chỉ là một yếu tố; nguyên nhân chính là <b>ai chịu gửi phiếu lại</b> — cơ chế của mẹo 1.1a và Mô hình 1.</li>
+        </ul>
+      </section>
+
+                  <section id="s-tobacco">
+        <p class="hw-eyebrow-sec"><b>6.2</b> — The tobacco manuscript</p>
+        <h2 class="hw-sec-title">Người dạy cãi lại con số đã bán kỹ năng ấy cho ngành thuốc lá</h2>
+        <p class="hw-p">Năm 1964, báo cáo <i>Smoking and Health</i> của Tổng Y sĩ Hoa Kỳ kết luận hút thuốc góp phần đáng kể vào tử vong. Cùng năm, ngành thuốc lá thuê Huff viết một tập mỏng về "những lỗ hổng" trong lập luận chống thuốc lá. Năm 1965, ông điều trần trước Uỷ ban Thương mại Thượng viện Mỹ và dùng lại ví dụ con cò ở mục <a href="#c8">4.2</a>; khi Thượng nghị sĩ Maurine Neuberger hỏi ông có thật nghĩ hai chuyện giống nhau không, ông đáp là có.</p>
+        <p class="hw-p">Ông mở rộng tập mỏng thành bản thảo <i>How to Lie with Smoking Statistics</i> và được trả khoảng 10.000 USD — theo Reinhart là hơn 70.000 USD theo giá năm 2014. Macmillan định in 100.000 bản, nhưng dự án chết đột ngột cuối năm 1968, không rõ vì sao. Bản thảo chỉ lộ ra sau thoả thuận dàn xếp năm 1998 giữa các hãng thuốc lá lớn và các bang Mỹ, khi hàng chục triệu trang tài liệu nội bộ bị buộc công khai.</p>
+        <p class="hw-p"><span class="hl-evi hl-evi--failed">Huff sai</span> Theo Tổ chức Y tế Thế giới (tờ thông tin tháng 6/2026), thuốc lá giết hơn 7 triệu người mỗi năm, trong đó hơn 1,6 triệu người không hút mà phải hít khói thụ động.</p>
+
+        <h3 class="hw-h3">Câu chuyện này dạy điều gì</h3>
+        <p class="hw-p">Hiểu nhầm cần gỡ: <b>biết hết mẹo thì miễn nhiễm, và cũng trung thực</b>. Nghe có lý, vì người viết cẩm nang chống lừa hẳn phải khó lừa nhất. Nhưng biết mẹo là một kỹ năng; dùng vào việc gì là chuyện khác. Reinhart chỉ ra Huff không cần bác bỏ cả khối bằng chứng — chỉ cần một đám nghi ngờ nhỏ cho từng nghiên cứu, nghi ngờ nào nghe cũng có lý.</p>
+        <p class="hw-p">Năm câu hỏi dùng để <b>kiểm</b>, không phải để <b>bác</b>: hỏi xong phải chịu nhận câu trả lời, kể cả khi nó là "con số này vững", và hỏi đều tay với cả con số hợp ý mình. Ngược lại, bỏ cuốn sách chỉ vì người viết là mắc <a href="how-to-win-every-argument.html#f-hoan-canh">ngụy biện hoàn cảnh</a>: lợi ích của người nói là lý do để kiểm kỹ hơn, không phải để bác ngay.</p>
+        <p class="hw-p">Caroline Jarrett, chuyên gia về biểu mẫu và khảo sát ở Anh, đã thôi giới thiệu cuốn sách (2021, cập nhật 2025) vì cho rằng nó gieo hoài nghi với thống kê nói chung — thứ ngành thuốc lá, và về sau những người chống vắc-xin, tận dụng. Nhà kinh tế học Tim Harford cũng cảnh báo: hoài nghi mọi con số không làm ta khôn hơn, chỉ khiến ta bị dẫn dắt theo kiểu khác.</p>
+      </section>
+
+                  <section id="s-held">
+        <p class="hw-eyebrow-sec"><b>6.3</b> — What held up, what changed</p>
+        <h2 class="hw-sec-title">Điều nghiên cứu sau này xác nhận, và điều đã thay đổi</h2>
+        <ul class="hw-ul">
+          <li><span class="hl-evi hl-evi--solid">đã xác nhận</span> <b>Cắt trục.</b> Michael Correll, Enrico Bertini và Steven Franconeri (hội nghị CHI 2020) thấy trục bị cắt khiến người xem đánh giá hiệu ứng lớn hơn, kể cả khi hình có dấu hiệu rõ ràng báo trục đã bị cắt; với biểu đồ đường, cắt trục có khi là lựa chọn đúng, tuỳ mục đích.</li>
+          <li><span class="hl-evi hl-evi--solid">đã xác nhận</span> <b>Mốc phát triển trẻ em.</b> Tháng 2/2022, CDC và Viện Hàn lâm Nhi khoa Hoa Kỳ (AAP) đổi mốc theo dõi từ mức một nửa số trẻ đạt được (bách phân vị 50) sang mức ba phần tư (bách phân vị 75): với mốc cũ, cứ hai trẻ có một trẻ "chưa đạt", nên cảnh báo mất tác dụng — đúng điều Huff chê ở chuẩn Gesell. Hiệp hội Ngôn ngữ – Lời nói – Thính học Hoa Kỳ (ASHA) bày tỏ lo ngại rằng mốc mới khiến trẻ được đưa đi đánh giá muộn hơn.</li>
+          <li><span class="hl-evi hl-evi--solid">đã xác nhận</span> <b>Mẫu nhỏ, chọn kết quả đẹp.</b> Năm 2015, Open Science Collaboration làm lại 100 nghiên cứu tâm lý: 97% bản gốc có kết quả "có ý nghĩa thống kê", bản làm lại chỉ 36%. Xem <a href="psychology.html#s-repl">mục khủng hoảng lặp lại</a> ở trang Tâm lý học.</li>
+          <li><span class="hl-evi hl-evi--solid">đã xác nhận</span> <b>Ai không trả lời.</b> Tỉ lệ trả lời khảo sát điện thoại của Pew Research Center giảm từ 36% năm 1997 xuống 6% năm 2018 — câu hỏi của mẹo 1.1a giờ quan trọng hơn năm 1954 nhiều.</li>
+        </ul>
+      </section>
+
+                  <section id="s-new">
+        <p class="hw-eyebrow-sec"><b>6.4</b> — New tricks since 1954</p>
+        <h2 class="hw-sec-title">Kiểu mới sau 1954: mẹo cũ, kênh mới</h2>
+        <ul class="hw-ul">
+          <li><b>Biểu đồ trên mạng xã hội:</b> ảnh chụp màn hình mất trục, mất nguồn, được chia sẻ hàng nghìn lần; ứng dụng tài chính tự co trục nên biến động nào cũng trông kịch tính.</li>
+          <li><b>Khảo sát trực tuyến tự chọn:</b> bình chọn trên fanpage, thăm dò trong story — mẫu tự chọn của chương 1, rẻ tới mức ai cũng làm được.</li>
+          <li><b>"Tăng 200%" trên nền nhỏ:</b> tin sức khoẻ ưa nguy cơ tương đối vì nó to (Mô hình 4, mục <a href="#c9">2.2</a>).</li>
+          <li><b>Chọn kết quả ở quy mô lớn:</b> chạy hàng chục phép kiểm rồi chỉ báo cái "có ý nghĩa", hay dừng A/B test đúng ngày số đẹp — xem <a href="mathematics-for-machine-learning.html#s-traps">các bẫy của kiểm định</a>.</li>
+        </ul>
+        <div class="hl-next">
+          <p><b>Bạn vừa có:</b> biết phần nào của sách vẫn vững (gần như mọi mẹo), phần nào cần chỉnh (cách hiểu p-value, sai số khả dĩ, vụ <i>Literary Digest</i>), và bài học sách không tự dạy: người biết mẹo vẫn có thể dùng mẹo.</p>
+          <p><b>Nó dẫn đi đâu:</b> phần cuối gói tất cả thành mười câu hỏi mang theo — kể cả một câu mà Huff lẽ ra nên tự hỏi mình.</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ MANG THEO ══════════════════ -->
+            <div class="hw-part-head" id="ket">
+        <p class="kicker">Mang theo · Take away</p>
+        <h2>Mang theo: mười câu hỏi cho một con số</h2>
+        <p>Quên hết tên các mẹo thì mười câu dưới đây — mỗi câu ứng với một mục — vẫn đủ dùng. Năm câu của Huff nằm trong đó, tách nhỏ cho dễ nhớ.</p>
+      </div>
+
+            <section id="s-carry">
+        <p class="hw-eyebrow-sec"><b>7.1</b> — Ten questions to carry</p>
+        <h2 class="hw-sec-title">Mười câu hỏi, theo đường đi của con số</h2>
+        <div class="wb-grid wb-grid--2">
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">1 · Ai đã không trả lời?</p>
+            <p class="wb-media__text">Mẫu to không sửa được mẫu lệch. <a href="#c1">1.1</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">2 · Bao nhiêu người, so với ai?</p>
+            <p class="wb-media__text">Nhóm nhỏ, không đối chứng, thử nhiều lần giữ lần đẹp. <a href="#c3">1.2</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">3 · Sai số bao nhiêu?</p>
+            <p class="wb-media__text">Hai khoảng chồng nhau thì chưa bên nào hơn. <a href="#c4">1.3</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">4 · Trung bình kiểu nào, tính trên ai?</p>
+            <p class="wb-media__text">Người đứng giữa nhận bao nhiêu? <a href="#c2">2.1</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">5 · Từ bao nhiêu lên bao nhiêu?</p>
+            <p class="wb-media__text">Phần trăm hay điểm phần trăm, gốc lớn hay nhỏ. <a href="#c9">2.2</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">6 · Trục dọc bắt đầu từ đâu?</p>
+            <p class="wb-media__text">Đọc số ở chân trục trước khi nhìn độ dốc. <a href="#c5">3.1</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">7 · Số nằm ở chiều cao hay diện tích?</p>
+            <p class="wb-media__text">Phóng hai chiều biến gấp đôi thành gấp bốn. <a href="#c6">3.2</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">8 · Con số đo đúng điều được kết luận chưa?</p>
+            <p class="wb-media__text">Hơn cái gì, tổng hay tỉ lệ, cách đếm có đổi không. <a href="#c7">4.1</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">9 · Còn lời giải thích nào khác?</p>
+            <p class="wb-media__text">May rủi, chiều ngược lại, hay một thứ thứ ba. <a href="#c8">4.2</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">10 · Tôi có hỏi đủ chín câu trên với con số hợp ý mình không?</p>
+            <p class="wb-media__text">Chỉ hoài nghi con số trái ý mình là cách Huff đã dùng năm câu hỏi của chính ông. <a href="#s-tobacco">6.2</a></p>
+          </div>
+        </div>
+
+        <div class="hl-next">
+          <p><b>Bạn vừa có:</b> một cách nhìn mọi con số như thứ đã đi qua nhiều tay — chọn mẫu, tóm tắt, vẽ, gắn vào kết luận — và mười câu hỏi cho từng chặng.</p>
+          <p><b>Nó dẫn đi đâu:</b> hỏi thì dễ; biết lúc nào một con số đủ vững để tin mới khó. Bước tiếp theo: khoảng tin cậy và p-value ở trang <a href="mathematics-for-machine-learning.html#s-ci">Toán cho học máy</a>, cách tách nhân quả ở trang <a href="experimentation-causal-inference.html">Experimentation &amp; Causal Inference</a>, các lối ngụy biện dùng lời thay vì số ở trang <a href="how-to-win-every-argument.html">How to Win Every Argument</a> — và một cuốn viết sau Huff với tinh thần ngược lại: <i>How to Make the World Add Up</i> (bản Mỹ: <i>The Data Detective</i>) của Tim Harford, tò mò thay vì nghi ngờ.</p>
+        </div>
+      </section>
+
+      <section id="s-src">
+        <p class="hw-eyebrow-sec"><b>7.2</b> — Sources</p>
+        <h2 class="hw-sec-title">Nguồn</h2>
+        <p class="hw-src"><b>Sách.</b> Darrell Huff, <i>How to Lie with Statistics</i>, tranh Irving Geis, W. W. Norton, New York, 1954, 142 trang — <a href="https://wwnorton.com/books/9780393310726">trang của NXB</a>. Tên và số trang các chương đối chiếu với <a href="https://openlibrary.org/books/OL52836735M">bản ghi Open Library</a> (ấn bản Victor Gollancz, 1960). Chưa kiểm được bản tiếng Việt do một nhà xuất bản phát hành.</p>
+        <p class="hw-src"><b>Về sách và tác giả.</b> J. Michael Steele, "Darrell Huff and Fifty Years of How to Lie with Statistics", <i>Statistical Science</i> 20(3), 2005, tr. 205–209 — <a href="https://doi.org/10.1214/088342305000000205">doi:10.1214/088342305000000205</a>. Tiểu sử bổ sung: <a href="https://en.wikipedia.org/wiki/Darrell_Huff">Wikipedia — Darrell Huff</a>.</p>
+        <p class="hw-src"><b>Chuyện thuốc lá.</b> Alex Reinhart, "Huff and puff", <i>Significance</i> 11(4), 2014, tr. 28–33 — <a href="https://doi.org/10.1111/j.1740-9713.2014.00765.x">doi:10.1111/j.1740-9713.2014.00765.x</a>; tài liệu gốc tập hợp tại <a href="https://www.refsmmat.com/articles/smoking-statistics.html">refsmmat.com</a>. Tim Harford, <i>Cautionary Tales</i>, "Storks, Smoking and the Power of Doubt", 16/9/2020. Caroline Jarrett, <a href="https://www.effortmark.co.uk/avoid-how-to-lie-with-statistics/">"Why I no longer recommend How to lie with statistics"</a>, Effortmark, 2021 (cập nhật 2025). WHO, <a href="https://www.who.int/news-room/fact-sheets/detail/tobacco">tờ thông tin về thuốc lá</a>, 26/6/2026.</p>
+        <p class="hw-src"><b>Nghiên cứu về sau.</b> Peverill Squire, "Why the 1936 Literary Digest Poll Failed", <i>Public Opinion Quarterly</i> 52(1), 1988 — <a href="https://doi.org/10.1086/269085">doi:10.1086/269085</a>; số liệu cuộc thăm dò: <a href="https://en.wikipedia.org/wiki/The_Literary_Digest">Wikipedia — The Literary Digest</a>. M. Correll, E. Bertini, S. Franconeri, <a href="https://arxiv.org/abs/1907.02035">"Truncating the Y-Axis: Threat or Menace?"</a>, CHI 2020. J. M. Zubler và cộng sự, <a href="https://publications.aap.org/pediatrics/article/149/3/e2021052138/184748/">"Evidence-Informed Milestones for Developmental Surveillance Tools"</a>, <i>Pediatrics</i> 149(3), 2022. Open Science Collaboration, "Estimating the reproducibility of psychological science", <i>Science</i> 349, 2015 — <a href="https://doi.org/10.1126/science.aac4716">doi:10.1126/science.aac4716</a>. Pew Research Center, <a href="https://www.pewresearch.org/short-reads/2019/02/27/response-rates-in-telephone-surveys-have-resumed-their-decline/">"Response rates in telephone surveys have resumed their decline"</a>, 27/2/2019. A. Furedi, <a href="https://pubmed.ncbi.nlm.nih.gov/10652971/">"The public health implications of the 1995 ‘pill scare’"</a>, <i>Human Reproduction Update</i> 5(6), 1999. Edward Tufte, <i>The Visual Display of Quantitative Information</i>, 1983 (hệ số nói dối).</p>
+        <p class="hw-src"><b>Số liệu Việt Nam.</b> Tổng cục Thống kê, <a href="https://www.nso.gov.vn/tin-tuc-thong-ke/2025/05/thong-cao-bao-chi-ket-qua-khao-sat-muc-song-dan-cu-nam-2024/">Thông cáo báo chí kết quả Khảo sát mức sống dân cư năm 2024</a> (5/2025). Tuổi thọ trung bình: số của Tổng cục Thống kê năm 2023–2024 do báo chí đưa tin, ví dụ <a href="https://baochinhphu.vn/tuoi-tho-trung-binh-cua-nguoi-viet-nam-dat-745-tuoi-102240711142540252.htm">Báo Chính phủ</a>.</p>
+
+        <div class="wb-alert wb-alert--plain" style="margin-top:18px">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Về bản tóm tắt này</p>
+            <p class="wb-alert__msg">Tóm tắt và viết lại bằng lời của trang này từ cuốn <b>How to Lie with Statistics</b> của <b>Darrell Huff</b> (W. W. Norton, 1954). Trang giữ lời giới thiệu và cả 10 chương, sắp lại thành năm phần theo đường đi của một con số, có bảng đối chiếu ở mục 0.1. Không chép đoạn văn của sách; chỉ có hai câu trích ngắn có ghi nguồn (mục 0.2 và 3.1). Tranh và biểu đồ của sách không được chép lại; các hình trên trang do trang tự vẽ bằng số minh hoạ.</p>
+            <p class="wb-alert__msg">Ví dụ "Hôm nay" phần lớn là tình huống dựng để minh hoạ, trừ những chỗ có ghi nguồn. Nếu thấy hữu ích, hãy tìm đọc bản đầy đủ của sách để ủng hộ tác giả và nhà xuất bản.</p>
+          </div>
+        </div>
+      </section>
+
+
+    </div><!-- /content column -->
+  </div><!-- /hw-layout -->
+</main>
+
+<footer class="wb-footer wb-footer--slim">
+  <div class="wb-footer__inner">
+    <div class="wb-footer__bottom">
+      <span class="wb-footer__copy">How to Lie with Statistics — tóm tắt · Darrell Huff, 1954 · viết lại để học đọc số liệu</span>
+      <a class="wb-footer__link" href="../index.html">← Trang chủ</a>
+    </div>
+  </div>
+</footer>
+
+<button class="wb-btn wb-btn--icon wb-btn--round hw-top" id="toTop" aria-label="Lên đầu trang">
+  <span class="wb-ico">arrow_upward</span>
+</button>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
+  root.classList.toggle('dark', saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
+  var toggle = document.getElementById('theme-toggle');
+  if (toggle) toggle.addEventListener('click', function () {
+    var dark = !root.classList.contains('dark');
+    root.classList.toggle('dark', dark);
+    try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+
+  var menu = document.querySelector('.wb-navbar__menu');
+  document.addEventListener('click', function (e) {
+    if (!menu) return;
+    if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
+    else if (e.target.closest('.wb-navbar__menu .wb-nav__link')) menu.classList.remove('is-open');
+  });
+
+  var links = [].slice.call(document.querySelectorAll('#toc .wb-sidenav__link'));
+  var byId = {};
+  var targets = [];
+  links.forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if (el) { byId[id] = a; targets.push(el); }
+  });
+  var current = null;
+  function setCurrent(a) {
+    if (current === a) return;
+    if (current) current.classList.remove('is-current');
+    current = a;
+    if (current) current.classList.add('is-current');
+  }
+  if ('IntersectionObserver' in window && targets.length) {
+    var seen = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { seen[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var bestId = null, best = 0;
+      targets.forEach(function (t) { if ((seen[t.id] || 0) > best) { best = seen[t.id]; bestId = t.id; } });
+      if (bestId) setCurrent(byId[bestId]);
+    }, { rootMargin: '-80px 0px -55% 0px', threshold: [0, .1, .5, 1] });
+    targets.forEach(function (t) { io.observe(t); });
+  }
+
+  var top = document.getElementById('toTop');
+  function onScroll() { top.classList.toggle('is-on', window.scrollY > 600); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+</script>
+
+<script>
+/* Sáu mô hình của trang. JS thuần, không thư viện, không fetch.
+   Mỗi SVG được vẽ lại theo đúng bề rộng thật của nó (viewBox = số px), nên chữ trong hình
+   giữ cỡ thật trên điện thoại thay vì teo lại theo tỉ lệ. */
+(function () {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  function $(id) { return document.getElementById(id); }
+  function el(tag, attrs, parent, text) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+  function fin(x, fb) { return (typeof x === 'number' && isFinite(x)) ? x : fb; }
+  function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+  /* Số kiểu Việt: phẩy thập phân, chấm hàng nghìn. */
+  function fmt(x, d) {
+    x = fin(x, 0); d = d || 0;
+    var neg = x < 0; x = Math.abs(x);
+    var parts = x.toFixed(d).split('.');
+    var s = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (parts[1] ? ',' + parts[1] : '');
+    return (neg && Number(x.toFixed(d)) !== 0 ? '−' : '') + s;
+  }
+  function widthOf(svg) {
+    var w = Math.round(svg.getBoundingClientRect().width) || 560;
+    return clamp(w, 250, 720);
+  }
+  function setBox(svg, W, H) { svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); }
+  function txt(parent, x, y, s, cls, anchor, extra) {
+    var a = { x: x, y: y, 'class': cls || 'hl-t' };
+    if (anchor) a['text-anchor'] = anchor;
+    if (extra) for (var k in extra) a[k] = extra[k];
+    return el('text', a, parent, s);
+  }
+  /* Đặt nhãn cạnh một vạch dọc mà không cho chữ thò ra khỏi khung. */
+  function sideLabel(parent, x, y, s, cls, W, preferLeft) {
+    var len = s.length * 6.6;
+    var fitsR = x + 5 + len <= W - 4, fitsL = x - 5 - len >= 4;
+    if (fitsR && !(preferLeft && fitsL)) return txt(parent, x + 5, y, s, cls, 'start');
+    if (fitsL) return txt(parent, x - 5, y, s, cls, 'end');
+    return txt(parent, clamp(x, 4, W - 4 - len), y, s, cls, 'start');
+  }
+  var redraws = [];
+  function onInput(ids, fn) {
+    ids.forEach(function (id) { var e = $(id); if (e) e.addEventListener('input', fn); });
+    redraws.push(fn);
+    fn();
+  }
+  var rt = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () { redraws.forEach(function (f) { try { f(); } catch (e) {} }); }, 150);
+  });
+
+  /* ── Mô hình 1: ai chịu trả lời khảo sát ─────────────────────────────── */
+  (function () {
+    var svg = $('rs-svg'); if (!svg) return;
+    var X = [8, 12, 16, 20, 25, 30, 40, 50, 70, 100];      // triệu đồng/tháng (minh hoạ)
+    var S = [6, 12, 16, 16, 14, 11, 10, 7, 5, 3];          // % số người trong ngành
+    var INV = [1000, 3000, 10000, 30000, 100000, 300000, 1000000];
+    function draw() {
+      var h = clamp(fin(+$('rs-h').value, 150), 50, 250) / 100;
+      var ni = clamp(Math.round(fin(+$('rs-n').value, 1)), 0, 6);
+      var k = Math.log(h) / Math.LN2;                     // người lương gấp đôi → khả năng trả lời ×h
+      var w = X.map(function (x, i) { return S[i] * Math.pow(x / 20, k); });
+      var Wt = w.reduce(function (a, b) { return a + b; }, 0) || 1;
+      var share = w.map(function (v) { return v / Wt; });
+      var tMean = X.reduce(function (a, x, i) { return a + x * S[i] / 100; }, 0);
+      var sMean = X.reduce(function (a, x, i) { return a + x * share[i]; }, 0);
+      var vR = X.reduce(function (a, x, i) { return a + share[i] * (x - sMean) * (x - sMean); }, 0);
+      var invited = INV[ni], n = invited / 10;            // trung bình 10 người mới có 1 người trả lời
+      var moe = 1.96 * Math.sqrt(vR / n);
+      var bias = sMean - tMean;
+
+      $('rs-h-l').textContent = '×' + fmt(h, 1);
+      $('rs-n-l').textContent = fmt(invited);
+      $('rs-say').textContent = fmt(sMean, 1) + ' tr';
+      $('rs-say-s').textContent = '±' + fmt(moe, moe < 1 ? 2 : 1) + ' · ' + fmt(n) + ' phiếu';
+      $('rs-true').textContent = fmt(tMean, 1) + ' tr';
+      $('rs-bias').textContent = (bias >= 0.05 ? '+' : '') + fmt(bias, 1) + ' tr';
+      $('rs-moe').textContent = '±' + fmt(moe, moe < 1 ? 2 : 1) + ' tr';
+
+      var W = widthOf(svg), H = 250; setBox(svg, W, H); clear(svg);
+      var L = 36, R = 8, T = 44, B = 50, pw = W - L - R, ph = H - T - B;
+      var slot = pw / X.length, bw = Math.max(3, Math.min(16, slot * 0.36));
+      var yMax = Math.max(0.2, Math.ceil(Math.max.apply(null, share.concat(S.map(function (s) { return s / 100; }))) * 20) / 20);
+      function ys(v) { return T + ph * (1 - v / yMax); }
+      function cx(i) { return L + slot * (i + 0.5); }
+      for (var g = 0; g <= yMax + 1e-9; g += 0.1) {
+        el('line', { x1: L, x2: W - R, y1: ys(g), y2: ys(g), 'class': 'hl-grid' }, svg);
+        txt(svg, L - 4, ys(g) + 3.5, fmt(g * 100) + '%', 'hl-t hl-t--m', 'end');
+      }
+      X.forEach(function (x, i) {
+        var c = cx(i), pop = S[i] / 100;
+        el('rect', { x: c - bw - 1, y: ys(pop), width: bw, height: Math.max(0, ys(0) - ys(pop)), style: 'fill:none;stroke:var(--wb-neutral-strong);stroke-width:1.2' }, svg);
+        el('rect', { x: c + 1, y: ys(share[i]), width: bw, height: Math.max(0, ys(0) - ys(share[i])), style: 'fill:var(--wb-fg);fill-opacity:.78' }, svg);
+        txt(svg, c, H - B + 15, String(x), 'hl-t hl-t--m', 'middle');
+      });
+      el('line', { x1: L, x2: W - R, y1: ys(0), y2: ys(0), 'class': 'hl-ax' }, svg);
+      function xOf(v) {
+        if (v <= X[0]) return cx(0);
+        for (var i = 0; i < X.length - 1; i++) if (v <= X[i + 1]) return cx(i) + (v - X[i]) / (X[i + 1] - X[i]) * slot;
+        return cx(X.length - 1);
+      }
+      var xt = xOf(tMean), xsv = xOf(sMean);
+      el('line', { x1: xt, x2: xt, y1: 18, y2: ys(0), style: 'stroke:var(--wb-neutral-strong);stroke-width:1.4;stroke-dasharray:4 3' }, svg);
+      el('line', { x1: xsv, x2: xsv, y1: 33, y2: ys(0), style: 'stroke:var(--wb-fg);stroke-width:1.6' }, svg);
+      sideLabel(svg, xt, 16, 'thật ' + fmt(tMean, 1), 'hl-t hl-t--s', W, xsv >= xt);
+      sideLabel(svg, xsv, 31, 'khảo sát ' + fmt(sMean, 1), 'hl-t hl-t--b', W, xt > xsv);
+      var ly = H - 10;
+      el('rect', { x: L, y: ly - 9, width: 10, height: 10, style: 'fill:none;stroke:var(--wb-neutral-strong);stroke-width:1.2' }, svg);
+      txt(svg, L + 14, ly, 'cả ngành', 'hl-t hl-t--s');
+      el('rect', { x: L + 78, y: ly - 9, width: 10, height: 10, style: 'fill:var(--wb-fg);fill-opacity:.78' }, svg);
+      txt(svg, L + 92, ly, 'người trả lời', 'hl-t hl-t--s');
+      if (W >= 440) txt(svg, W - R, ly, 'lương, triệu đồng/tháng', 'hl-t hl-t--s', 'end');
+    }
+    onInput(['rs-h', 'rs-n'], draw);
+  })();
+
+  /* ── Mô hình 2: mẫu nhỏ, kem đánh răng vô dụng ───────────────────────── */
+  (function () {
+    var svg = $('sm-svg'); if (!svg) return;
+    var NN = [4, 6, 8, 10, 12, 16, 20, 30, 40, 60, 80, 100, 150, 200, 300, 400];
+    var run = 0;
+    function rng(seed) {
+      return function () {
+        seed = (seed + 0x6D2B79F5) | 0;
+        var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+    function draw() {
+      var n = NN[clamp(Math.round(fin(+$('sm-n').value, 4)), 0, NN.length - 1)];
+      var r = rng(20260927 + run * 7919 + n * 131), res = [];
+      for (var t = 0; t < 20; t++) {
+        var kc = 0, kt = 0;
+        for (var i = 0; i < n; i++) { if (r() < 0.5) kc++; if (r() < 0.5) kt++; }
+        var red = kc > 0 ? (kc - kt) / kc : (kt > 0 ? -1 : 0);
+        res.push(clamp(red, -1, 1));
+      }
+      var hits = res.filter(function (v) { return v >= 0.23; }).length;
+      var best = Math.max.apply(null, res), bi = res.indexOf(best);
+      $('sm-n-l').textContent = n + ' người';
+      $('sm-hit').textContent = hits + ' / 20';
+      $('sm-best').textContent = (best >= 0 ? 'giảm ' : 'tăng ') + fmt(Math.abs(best) * 100) + '%';
+
+      var W = widthOf(svg), H = 312; setBox(svg, W, H); clear(svg);
+      var L = 14, R = 14, T = 28, rowH = 12;
+      function xs(v) { return L + (W - L - R) * (v + 1) / 2; }
+      [-1, -0.5, 0, 0.5, 1].forEach(function (v, j) {
+        el('line', { x1: xs(v), x2: xs(v), y1: T - 6, y2: T + 20 * rowH, 'class': v === 0 ? 'hl-ax' : 'hl-grid' }, svg);
+        var lab = v === 0 ? '0' : (v > 0 ? '+' : '−') + fmt(Math.abs(v) * 100) + '%';
+        txt(svg, xs(v), H - 8, lab, 'hl-t hl-t--m', j === 0 ? 'start' : (j === 4 ? 'end' : 'middle'));
+      });
+      var xth = xs(0.23);
+      el('line', { x1: xth, x2: xth, y1: T - 12, y2: T + 20 * rowH, style: 'stroke:var(--wb-fg);stroke-width:1.2;stroke-dasharray:4 3' }, svg);
+      sideLabel(svg, xth, 14, 'ngưỡng quảng cáo 23%', 'hl-t hl-t--s', W);
+      txt(svg, L, H - 26, '← nhiều sâu răng', 'hl-t hl-t--s', 'start');
+      txt(svg, W - R, H - 26, 'ít sâu răng →', 'hl-t hl-t--s', 'end');
+      res.forEach(function (v, t) {
+        var y = T + t * rowH + rowH / 2, hit = v >= 0.23;
+        el('line', { x1: xs(0), x2: xs(v), y1: y, y2: y, style: 'stroke:var(--wb-neutral);stroke-width:1.2' }, svg);
+        el('circle', { cx: xs(v), cy: y, r: 4.2, style: hit ? 'fill:var(--wb-fg)' : 'fill:var(--wb-canvas);stroke:var(--wb-neutral-strong);stroke-width:1.2' }, svg);
+      });
+      var by = T + bi * rowH + rowH / 2;
+      el('circle', { cx: xs(best), cy: by, r: 7.5, style: 'fill:none;stroke:var(--wb-fg);stroke-width:1.2' }, svg);
+    }
+    onInput(['sm-n'], draw);
+    var btn = $('sm-re');
+    if (btn) btn.addEventListener('click', function () { run++; draw(); });
+  })();
+
+  /* ── Mô hình 3: trung bình cộng và trung vị ──────────────────────────── */
+  (function () {
+    var svg = $('av-svg'); if (!svg) return;
+    var BASE = [['Công nhân', 8], ['Công nhân', 8], ['Công nhân', 8], ['Công nhân', 8], ['Công nhân', 8],
+                ['Tổ trưởng', 12], ['Tổ trưởng', 12], ['Kế toán', 15], ['Thợ cả', 18], ['Quản đốc', 25]];
+    function draw() {
+      var s = clamp(fin(+$('av-s').value, 150), 25, 400);
+      var rows = BASE.concat([['Chủ xưởng', s]]);
+      var vals = rows.map(function (r) { return r[1]; }).sort(function (a, b) { return a - b; });
+      var mean = vals.reduce(function (a, b) { return a + b; }, 0) / vals.length;
+      var med = vals[(vals.length - 1) / 2];
+      var cnt = {}, mode = vals[0], best = 0;
+      vals.forEach(function (v) { cnt[v] = (cnt[v] || 0) + 1; if (cnt[v] > best) { best = cnt[v]; mode = v; } });
+      var below = vals.filter(function (v) { return v < mean; }).length;
+      $('av-s-l').textContent = fmt(s) + ' tr';
+      $('av-mean').textContent = fmt(mean, 1) + ' tr';
+      $('av-med').textContent = fmt(med) + ' tr';
+      $('av-mode').textContent = fmt(mode) + ' tr';
+      $('av-below').textContent = below + ' / 11';
+
+      var W = widthOf(svg), H = 292; setBox(svg, W, H); clear(svg);
+      var L = 82, R = 36, T = 40, rowH = 22, vmax = Math.max(s, 25);
+      function xs(v) { return L + (W - L - R) * v / vmax; }
+      rows.forEach(function (r, i) {
+        var y = T + i * rowH, boss = i === rows.length - 1;
+        txt(svg, 4, y + 15, r[0], boss ? 'hl-t hl-t--b' : 'hl-t hl-t--s');
+        el('rect', { x: L, y: y + 4, width: Math.max(1, xs(r[1]) - L), height: 14, rx: 2, style: boss ? 'fill:var(--wb-fg)' : 'fill:var(--wb-neutral-strong)' }, svg);
+        txt(svg, xs(r[1]) + 4, y + 15, fmt(r[1]), 'hl-t hl-t--m');
+      });
+      var xm = xs(mean), xd = xs(med), yb = T + rows.length * rowH;
+      el('line', { x1: xd, x2: xd, y1: 20, y2: yb, style: 'stroke:var(--wb-neutral-strong);stroke-width:1.4;stroke-dasharray:4 3' }, svg);
+      el('line', { x1: xm, x2: xm, y1: 6, y2: yb, style: 'stroke:var(--wb-fg);stroke-width:1.6' }, svg);
+      sideLabel(svg, xm, 13, 'trung bình cộng ' + fmt(mean, 1), 'hl-t hl-t--b', W, xd > xm);
+      sideLabel(svg, xd, 30, 'trung vị ' + fmt(med), 'hl-t hl-t--s', W, xm > xd);
+    }
+    onInput(['av-s'], draw);
+  })();
+
+  /* ── Mô hình 4: nguy cơ tương đối và tuyệt đối ───────────────────────── */
+  (function () {
+    var svg = $('bs-svg'); if (!svg) return;
+    var P = [1 / 100000, 1 / 20000, 1 / 7000, 1 / 2000, 1 / 500, 1 / 100, 1 / 20, 1 / 5];
+    var PL = ['1/100.000', '1/20.000', '1/7.000', '1/2.000', '1/500', '1/100', '1/20', '1/5'];
+    function per10k(p) { var v = p * 10000; return fmt(v, v < 1 ? 2 : (v < 10 ? 1 : 0)); }
+    function draw() {
+      var i = clamp(Math.round(fin(+$('bs-p').value, 2)), 0, P.length - 1);
+      var m = clamp(fin(+$('bs-m').value, 20), 11, 50) / 10;
+      var p0 = P[i], p1 = Math.min(1, p0 * m);
+      $('bs-p-l').textContent = PL[i];
+      $('bs-m-l').textContent = '×' + fmt(m, 1);
+      $('bs-rel').textContent = '+' + fmt((p1 / p0 - 1) * 100) + '%';
+      $('bs-abs').textContent = '+' + per10k(p1 - p0);
+      $('bs-ba').textContent = per10k(p0) + ' → ' + per10k(p1);
+
+      var W = widthOf(svg), pad = 12, gw = (W - 3 * pad) / 2, cell = gw / 40;
+      var T = 24, H = Math.ceil(T + 25 * cell + 30); setBox(svg, W, H); clear(svg);
+      [[p0, 'Trước: ' + per10k(p0)], [p1, 'Sau: ' + per10k(p1)]].forEach(function (g, j) {
+        var x0 = pad + j * (gw + pad), c = g[0] * 1000, full = Math.floor(c + 1e-9), frac = c - full;
+        var off = '', on = '', s = Math.max(0.8, cell * 0.72), d;
+        for (var q = 0; q < 1000; q++) {
+          var cxq = x0 + (q % 40) * cell, cyq = T + Math.floor(q / 40) * cell;
+          if (q < full) on += 'M' + cxq.toFixed(1) + ' ' + cyq.toFixed(1) + 'h' + s.toFixed(2) + 'v' + s.toFixed(2) + 'h-' + s.toFixed(2) + 'z';
+          else {
+            off += 'M' + cxq.toFixed(1) + ' ' + cyq.toFixed(1) + 'h' + s.toFixed(2) + 'v' + s.toFixed(2) + 'h-' + s.toFixed(2) + 'z';
+            if (q === full && frac > 0.001) { d = s * Math.sqrt(frac); on += 'M' + cxq.toFixed(1) + ' ' + cyq.toFixed(1) + 'h' + d.toFixed(2) + 'v' + d.toFixed(2) + 'h-' + d.toFixed(2) + 'z'; }
+          }
+        }
+        el('path', { d: off || 'M0 0', style: 'fill:var(--wb-neutral-weak)' }, svg);
+        if (on) el('path', { d: on, style: 'fill:var(--wb-fg)' }, svg);
+        txt(svg, x0, 15, g[1], j ? 'hl-t hl-t--b' : 'hl-t hl-t--s');
+      });
+      var cap = p1 * 1000 < 1
+        ? (W >= 460 ? 'chưa tới 1 người trên mỗi khối 1.000 — cả hai khối gần như trống' : 'dưới 1 người trên 1.000')
+        : (W >= 460 ? 'số người trên 10.000 · mỗi ô nhỏ = 1 người · mỗi khối = 1.000 người' : 'mỗi ô = 1 người, khối = 1.000');
+      txt(svg, pad, H - 9, cap, 'hl-t hl-t--s');
+    }
+    onInput(['bs-p', 'bs-m'], draw);
+  })();
+
+  /* ── Mô hình 5: biểu đồ Gee-Whiz ─────────────────────────────────────── */
+  (function () {
+    var svg = $('gw-svg'); if (!svg) return;
+    var D = [200, 202, 201, 204, 206, 205, 209, 211, 212, 215, 217, 220];
+    function niceStep(range) {
+      var raw = range / 5, p = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10));
+      var c = [1, 2, 2.5, 5, 10];
+      for (var i = 0; i < c.length; i++) if (c[i] * p >= raw) return c[i] * p;
+      return 10 * p;
+    }
+    function draw() {
+      var b = clamp(fin(+$('gw-b').value, 180), 0, 195);
+      var wp = clamp(fin(+$('gw-w').value, 100), 30, 100) / 100;
+      var top = 225;
+      var W = widthOf(svg), H = 260; setBox(svg, W, H); clear(svg);
+      var L = 46, R = 12, T = 14, B = 34, pw = (W - L - R) * wp, ph = H - T - B;
+      function ys(v) { return T + ph * (1 - (v - b) / (top - b)); }
+      function xs(i) { return L + pw * i / 11; }
+      var st = niceStep(top - b);
+      for (var v = Math.ceil(b / st - 1e-9) * st; v <= top + 1e-9; v += st) {
+        el('line', { x1: L, x2: L + pw, y1: ys(v), y2: ys(v), 'class': 'hl-grid' }, svg);
+        if (Math.abs(v - b) > st * 0.4) txt(svg, L - 5, ys(v) + 3.5, fmt(v), 'hl-t hl-t--m', 'end');
+      }
+      txt(svg, L - 5, ys(b) + 3.5, fmt(b), 'hl-t hl-t--b', 'end', { style: 'font-size:11px' });
+      el('line', { x1: L, x2: L, y1: T, y2: ys(b), 'class': 'hl-ax' }, svg);
+      el('line', { x1: L, x2: L + pw, y1: ys(b), y2: ys(b), 'class': 'hl-ax' }, svg);
+      var d = D.map(function (y, i) { return (i ? 'L' : 'M') + xs(i).toFixed(1) + ' ' + ys(y).toFixed(1); }).join(' ');
+      var area = d + ' L' + xs(11).toFixed(1) + ' ' + ys(b).toFixed(1) + ' L' + xs(0).toFixed(1) + ' ' + ys(b).toFixed(1) + ' Z';
+      el('path', { d: area, style: 'fill:var(--wb-neutral-weak);fill-opacity:.6' }, svg);
+      el('path', { d: d, style: 'fill:none;stroke:var(--wb-fg);stroke-width:2;stroke-linejoin:round' }, svg);
+      el('circle', { cx: xs(0), cy: ys(D[0]), r: 3.5, style: 'fill:var(--wb-fg)' }, svg);
+      el('circle', { cx: xs(11), cy: ys(D[11]), r: 3.5, style: 'fill:var(--wb-fg)' }, svg);
+      var lab = pw >= 300 ? [0, 2, 4, 6, 8, 10, 11] : (pw >= 150 ? [0, 5, 11] : [0, 11]);
+      lab.forEach(function (i) { txt(svg, xs(i), H - B + 16, 'T' + (i + 1), 'hl-t hl-t--m', i === 0 ? 'start' : (i === 11 ? 'end' : 'middle')); });
+      txt(svg, L, H - 6, 'doanh thu, triệu đồng/tháng', 'hl-t hl-t--s');
+      var see = (D[11] - b) / (D[0] - b) - 1, lie = see / 0.10;
+      var ang = Math.atan2(ys(D[0]) - ys(D[11]), xs(11) - xs(0)) * 180 / Math.PI;
+      $('gw-b-l').textContent = fmt(b);
+      $('gw-w-l').textContent = fmt(wp * 100) + '%';
+      $('gw-see').textContent = '+' + fmt(see * 100) + '%';
+      $('gw-lie').textContent = fmt(lie, lie < 10 ? 1 : 0);
+      $('gw-ang').textContent = fmt(ang, 1) + '°';
+    }
+    onInput(['gw-b', 'gw-w'], draw);
+  })();
+
+  /* ── Mô hình 6: hình một chiều ───────────────────────────────────────── */
+  (function () {
+    var svg = $('pc-svg'); if (!svg) return;
+    var mode = 'scale';
+    var btns = [].slice.call(document.querySelectorAll('[data-pc]'));
+    function house(parent, x, yb, w, h, style) {
+      var d = 'M' + x.toFixed(1) + ' ' + yb.toFixed(1) + ' V' + (yb - 0.6 * h).toFixed(1) +
+              ' L' + (x + w / 2).toFixed(1) + ' ' + (yb - h).toFixed(1) +
+              ' L' + (x + w).toFixed(1) + ' ' + (yb - 0.6 * h).toFixed(1) + ' V' + yb.toFixed(1) + ' Z';
+      var g = el('g', {}, parent);
+      el('path', { d: d, style: style }, g);
+      el('rect', { x: (x + w * 0.4).toFixed(1), y: (yb - 0.3 * h).toFixed(1), width: (w * 0.2).toFixed(1), height: (0.3 * h).toFixed(1), style: 'fill:var(--wb-canvas)' }, g);
+      return g;
+    }
+    function x1(v) { return '×' + fmt(v, v < 10 ? 1 : 0); }
+    function draw() {
+      var k = clamp(fin(+$('pc-k').value, 20), 10, 30) / 10;
+      var hs = mode === 'scale' ? k : (mode === 'area' ? Math.sqrt(k) : 1);
+      var ar = mode === 'scale' ? k * k : k;
+      var vo = mode === 'scale' ? k * k * k : (mode === 'area' ? Math.pow(k, 1.5) : k);
+      $('pc-k-l').textContent = '×' + fmt(k, 1);
+      $('pc-data').textContent = '×' + fmt(k, 1);
+      $('pc-h').textContent = x1(hs);
+      $('pc-a').textContent = x1(ar);
+      $('pc-v').textContent = x1(vo);
+
+      var W = widthOf(svg), H = 250; setBox(svg, W, H); clear(svg);
+      var yb = H - 40, bw = 42, bh = 50, x0 = 14;
+      el('line', { x1: 6, x2: W - 6, y1: yb, y2: yb, 'class': 'hl-ax' }, svg);
+      house(svg, x0, yb, bw, bh, 'fill:var(--wb-neutral)');
+      txt(svg, x0 + bw / 2, yb + 16, 'mốc', 'hl-t hl-t--s', 'middle');
+      var rx = x0 + bw + 34;
+      if (mode === 'repeat') {
+        var full = Math.floor(k + 1e-9), frac = k - full, gap = 6, x = rx;
+        for (var i = 0; i < full; i++) { house(svg, x, yb, bw, bh, 'fill:var(--wb-fg)'); x += bw + gap; }
+        if (frac > 0.001) {
+          var defs = el('defs', {}, svg), cp = el('clipPath', { id: 'pc-clip' }, defs);
+          el('rect', { x: x.toFixed(1), y: 0, width: (bw * frac).toFixed(1), height: H }, cp);
+          var gp = house(svg, x, yb, bw, bh, 'fill:var(--wb-fg)');
+          gp.setAttribute('clip-path', 'url(#pc-clip)');
+          el('path', { d: 'M' + x.toFixed(1) + ' ' + yb + ' V' + (yb - 0.6 * bh) + ' L' + (x + bw / 2) + ' ' + (yb - bh) + ' L' + (x + bw) + ' ' + (yb - 0.6 * bh) + ' V' + yb + ' Z', style: 'fill:none;stroke:var(--wb-neutral);stroke-dasharray:3 3' }, svg);
+          x += bw;
+        } else { x -= gap; }
+        txt(svg, (rx + x) / 2, yb + 16, fmt(k, 1) + ' ngôi nhà cùng cỡ', 'hl-t hl-t--s', 'middle');
+      } else {
+        var w = bw * hs, hh = bh * hs;
+        house(svg, rx, yb, w, hh, 'fill:var(--wb-fg)');
+        var lab = mode === 'scale' ? 'cao ×' + fmt(hs, 1) + ', rộng ×' + fmt(hs, 1) : 'cao ×' + fmt(hs, 2) + ' (= √' + fmt(k, 1) + ')';
+        txt(svg, Math.min(rx + w / 2, W - 8 - lab.length * 3.2), yb + 16, lab, 'hl-t hl-t--s', 'middle');
+      }
+      txt(svg, 6, H - 6, 'mắt so diện tích: ' + x1(ar), 'hl-t hl-t--b');
+    }
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        mode = b.getAttribute('data-pc');
+        btns.forEach(function (x) {
+          var on = x === b;
+          x.setAttribute('aria-pressed', on ? 'true' : 'false');
+          x.classList.toggle('wb-btn--ghost', !on);
+        });
+        draw();
+      });
+    });
+    onInput(['pc-k'], draw);
+  })();
+})();
+</script>
+</body>
+</html>
