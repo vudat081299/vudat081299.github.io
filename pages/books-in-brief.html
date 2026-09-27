@@ -234,6 +234,30 @@
   #haidt .hd-svg .hw-vs { font-size: 11.5px; }
   #haidt .hd-svg .hw-vt { font-size: 12.5px; }
   #haidt .hd-out { margin-top: 12px; }
+
+  /* ---- sagan ---- */
+  /* Mô hình bậc thang bằng chứng: hình dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình.
+     Hình này không kéo được, nên trả lại cử chỉ cuộn trang mặc định (.bb-svg của trang đặt touch-action:none). */
+  #sagan .sg-svg { max-width: 520px; touch-action: auto; }
+  #sagan .sg-svg .hw-vs { font-size: 11.5px; }
+  #sagan .sg-svg .hw-vt { font-size: 12.5px; }
+  #sagan .sg-val { display: inline-block; min-width: 118px; }
+  #sagan .sg-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
+  #sagan .sg-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; min-height: 3.2em; }
+  #sagan .sg-en { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-muted); }
+  #sagan .hw-tw a, #sagan .bb-lab__foot a { color: var(--wb-fg); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--wb-border-strong); }
+  #sagan .sg-fine { display: block; font-size: 11px; line-height: 1.5; color: var(--wb-fg-muted); margin-top: 8px; }
+  @media (max-width: 620px) { #sagan .sg-pick { display: flex; } #sagan .sg-pick > .wb-btn { flex: 1 1 0; } }
+  /* Hai bảng ba cột bị bóp còn vài chữ một dòng ở bề rộng điện thoại: dưới 560px xếp mỗi hàng thành một khối dọc,
+     tên cột hiện lại ở đầu mỗi ô nhờ data-k. */
+  @media (max-width: 560px) {
+    #sagan .sg-stack thead { display: none; }
+    #sagan .sg-stack, #sagan .sg-stack tbody, #sagan .sg-stack tr, #sagan .sg-stack td { display: block; width: auto; }
+    #sagan .sg-stack tr { padding: 10px 12px; border-bottom: var(--wb-bw) solid var(--wb-border); }
+    #sagan .sg-stack tr:last-child { border-bottom: 0; }
+    #sagan .hw-tw .sg-stack tbody td { padding: 0; border: 0; }
+    #sagan .sg-stack td[data-k]::before { content: attr(data-k); display: block; font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 7px 0 1px; }
+  }
 </style>
 </head>
 <body class="wb-app">
@@ -282,6 +306,10 @@
       <li><b>The Righteous Mind:</b> mục kể lại ngắn câu chuyện hai anh em ruột ngủ với nhau (ví dụ gốc của “câm lặng đạo đức”, và là đích của lần làm lại năm 2015), và lấy tranh cãi đốt vàng mã, kèm công văn tháng 2/2018 của Giáo hội Phật giáo Việt Nam, làm ví dụ gần; trình bày cả hai phía, không kết luận bên nào đúng.</li>
       <li><b>The Righteous Mind:</b> bảng tự soi sáu vị dùng sáu chuyện và sáu câu “góp tiền lắp đèn hẻm” do trang tự soạn, đặt sẵn một hồ sơ mẫu (đậm thương xót, công bằng, tự do; nhạt ba vị còn lại) để hình có nghĩa ngay khi mở. Dáng ấy gần dáng “cấp tiến Mỹ” trong sách, nhưng mô hình không gắn nhãn chính trị nào; muốn tránh hẳn liên tưởng thì đổi giá trị mặc định.</li>
       <li><b>The Righteous Mind:</b> Độ vững có ba ý ngoài đề bài: lần làm lại lớn năm 2025 không thấy trẻ nhỏ ưu tiên con rối giúp đỡ; một nghiên cứu năm 2019 thấy quan điểm chính trị đoán trước nền tảng đạo đức (chiều ngược với sách); hai nhóm nghiên cứu năm 2026 không thấy lợi ích của việc nói theo vị người nghe. Mục dài ≈3.250 tiếng: khoảng 2.000 từ phần chữ, khoảng 2.200 từ nếu tính cả chữ trong mô hình (~12 phút đọc), sát trần.</li>
+      <li><b>The Demon-Haunted World:</b> bản tiếng Việt ghi theo Waka và NetaBooks (<i>Thế giới bị quỷ ám – Khoa học như ngọn nến trong đêm</i>, NXB Thế Giới, Alpha Books, 2014). Không trang nào ghi tên dịch giả; một cái tên hiện trong kết quả tìm kiếm tự động không tìm lại được nguồn, nên mục ghi “chưa kiểm được tên dịch giả”.</li>
+      <li><b>The Demon-Haunted World:</b> mục dài ≈3.200 tiếng phần chữ (khoảng 2.050–2.200 từ tuỳ cách đếm), cộng ≈260 tiếng trong mô hình (~13 phút đọc), nhỉnh hơn trần 2.000 từ; phần nặng nhất là hai bảng đề bài yêu cầu (đối chiếu hai mươi lỗi, soi quảng cáo). Chi tiết chương 1, 2, 10, 12 đối chiếu qua ghi chép từng chương và trích đoạn công khai, không qua bản đầy đủ của sách.</li>
+      <li><b>The Demon-Haunted World:</b> bảng đối chiếu xếp chín lỗi “trùng hẳn”, sáu lỗi “gần”, năm lỗi Pirie không có: đó là đánh giá của trang này (ví dụ “biện hộ đặc biệt” của Sagan là cứu một thuyết bằng ngoại lệ đặt riêng, của Pirie là tiêu chuẩn kép). Ngoài đề bài, mục thêm chuyện Le Verrier và Sao Hải Vương để nói rõ khi nào thêm giả định là chính đáng.</li>
+      <li><b>The Demon-Haunted World:</b> quảng cáo “viên xương khớp X” là ví dụ giả định. Dòng về Nghị định 15/2018 (cấm dùng hình ảnh bác sĩ và thư cảm ơn của người bệnh; buộc ghi “không phải là thuốc”) dựa trên tin Báo Chính phủ ngày 8/4/2026 rằng nghị định này tiếp tục có hiệu lực; quy định quảng cáo thực phẩm đổi nhiều lần trong 2025–2026, nên cần kiểm lại nếu có văn bản mới.</li>
     </ul>
   </aside>
 
@@ -345,7 +373,17 @@
         </div>
       </div>
     </a>
-    <!-- 06 sagan · 07 tetlock · 08 rosling · 09 diamond · 10 acemoglu: chèn sau thẻ 05 -->
+    <a class="wb-card wb-card--hover wb-card--pad" href="#sagan">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">06</span>
+        <div class="wb-media__body">
+          <p class="bb-card__k">The Demon-Haunted World</p>
+          <p class="wb-media__title">Thế giới bị quỷ ám</p>
+          <p class="wb-media__text">Khoa học như một cách nghĩ, vì sao chuyện nhảm dễ lọt tai, và bộ câu hỏi để soi một lời khẳng định, kể cả lời của chính mình.</p>
+        </div>
+      </div>
+    </a>
+    <!-- 07 tetlock · 08 rosling · 09 diamond · 10 acemoglu: chèn sau thẻ 06 -->
   </div>
 
   <div class="hw-layout">
@@ -363,7 +401,8 @@
       <a class="wb-sidenav__link" href="#haidt">The Righteous Mind</a>
 
       <div class="wb-sidenav__section" style="margin-top:12px">Evidence &amp; the future</div>
-      <!-- 06 sagan · 07 tetlock -->
+      <a class="wb-sidenav__link" href="#sagan">The Demon-Haunted World</a>
+      <!-- 07 tetlock -->
 
       <div class="wb-sidenav__section" style="margin-top:12px">The world</div>
       <!-- 08 rosling · 09 diamond · 10 acemoglu -->
@@ -1183,7 +1222,7 @@ Câu dễ trượt khỏi tai bạn nhất (thiêng liêng): “Hẻm tối thà
 
         <div class="bb-next">
           <p><b>Bạn vừa có:</b> một hình ảnh giải thích vì sao lý lẽ hay đến sau phán xét, sáu vị để nghe xem người kia đang lo điều gì, và một lời nhắc: thắng một cuộc cãi khác với đổi được một ý.</p>
-          <p><b>Nó dẫn đi đâu:</b> nếu trực giác chọn trước và lý lẽ chạy theo, lấy gì giữ cho niềm tin của ta bám vào thực tế? Đó là câu hỏi của <a href="#g-evidence">nhóm tiếp theo</a>: nên tin cái gì, và đoán tương lai thế nào.</p>
+          <p><b>Nó dẫn đi đâu:</b> nếu trực giác chọn trước và lý lẽ chạy theo, lấy gì giữ cho niềm tin của ta bám vào thực tế? Nhóm tiếp theo mở đầu bằng câu trả lời của <a href="#sagan">Carl Sagan</a>: một bộ câu hỏi để soi mọi lời khẳng định, kể cả lời của chính mình.</p>
         </div>
         <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/The_Righteous_Mind">Wikipedia</a> (Pantheon, 2012) · <a href="https://catdir.loc.gov/catdir/enhancements/fy1304/2011032036-t.html">Thư viện Quốc hội Mỹ</a> (mục lục) · trang của tác giả: <a href="https://righteousmind.com/about-the-book/introductory-chapter/">phần mở đầu</a> và <a href="https://righteousmind.com/wp-content/uploads/2012/08/RighteousMind.Chapter-9.pdf">chương 9</a> (bản thảo cuối) · bản tiếng Việt: <a href="https://nhasachthaiha.vn/products/tu-duy-dao-duc">Nhà sách Thái Hà</a>, <a href="https://bookbuy.vn/sach/tu-duy-dao-duc-vi-sao-nhung-nguoi-tot-bi-chia-re-boi-chinh-tri-va-ton-giao-p102455.html">BookBuy</a> (ngày xuất bản 31/10/2019, 516 trang), <a href="https://moingay1cuonsach.com.vn/tu-duy-dao-duc/">Mỗi ngày một cuốn sách</a> (mục lục tiếng Việt) · <a href="https://doi.org/10.1037/0022-3514.65.4.613">Haidt, Koller &amp; Dias, 1993</a> · <a href="https://doi.org/10.1037/0033-295X.108.4.814">Haidt, 2001</a> · <a href="https://doi.org/10.1017/S0140525X10000968">Mercier &amp; Sperber, 2011</a> · <a href="https://doi.org/10.1017/S0140525X0999152X">Henrich, Heine &amp; Norenzayan, 2010</a> · <a href="https://doi.org/10.1037/a0015141">Graham, Haidt &amp; Nosek, 2009</a> · <a href="https://doi.org/10.1037/pspp0000470">Atari và cs., 2023</a> (MFQ-2) · McNeill, <i>Keeping Together in Time</i> (Harvard University Press, 1995) · <a href="https://nld.com.vn/the-thao/sai-gon-khong-ngu-sau-chien-thang-cua-u23-viet-nam-20180124094443386.htm">Người Lao Động, 24/1/2018</a> · <a href="https://doi.org/10.1177/1069397103037002003">Sosis &amp; Bressler, 2003</a> · <a href="https://doi.org/10.1371/journal.pone.0050092">Graham, Nosek &amp; Haidt, 2012</a> · <a href="https://tuoitre.vn/giao-hoi-phat-giao-viet-nam-de-nghi-bo-tuc-dot-vang-ma-20180222092809043.htm">Tuổi Trẻ, 22/2/2018</a> (công văn về vàng mã) · <a href="https://doi.org/10.1037/0033-2909.125.2.255">Lerner &amp; Tetlock, 1999</a> · <a href="https://www.cambridge.org/core/journals/judgment-and-decision-making/article/curious-tale-of-julie-and-mark-unraveling-the-moral-dumbfounding-effect/B8243CAF7E57AFA4F05B6F1199EB0EBF">Royzman, Kim &amp; Leeman, 2015</a> · <a href="https://doi.org/10.1525/collabra.79">McHugh và cs., 2017</a> · <a href="https://doi.org/10.1111/j.1467-9280.2005.01614.x">Wheatley &amp; Haidt, 2005</a> · <a href="https://doi.org/10.1177/1745691615583128">Landy &amp; Goodwin, 2015</a> · <a href="https://doi.org/10.1038/nature06288">Hamlin, Wynn &amp; Bloom, 2007</a> · <a href="https://doi.org/10.1111/desc.13581">Lucca và cs., 2025</a> (ManyBabies 4) · <a href="https://doi.org/10.1177/1073191118817916">Iurino &amp; Saucier, 2020</a> · <a href="https://doi.org/10.1037/bul0000308">Kivikangas và cs., 2021</a> · <a href="https://doi.org/10.1111/ajps.12448">Hatemi, Crabtree &amp; Smith, 2019</a> · <a href="https://www.edge.org/conversation/steven_pinker-the-false-allure-of-group-selection">Pinker, Edge, 2012</a> (kèm phản hồi của Haidt) · <a href="https://doi.org/10.1177/0146167215607842">Feinberg &amp; Willer, 2015</a> · <a href="https://doi.org/10.1080/10584609.2026.2612739">Hawkins và cs., 2026</a>. Lời khuyên của Carnegie, chuyện McNeill và số liệu công xã theo cách sách kể lại, đối chiếu với <a href="https://righteousmind.com/wp-content/uploads/2012/08/RighteousMind.Notes_.pdf">phần chú thích của sách</a> trên trang tác giả và nhiều bản tóm tắt.</p>
       </section>
@@ -1195,7 +1234,186 @@ Câu dễ trượt khỏi tai bạn nhất (thiêng liêng): “Hẻm tối thà
         <p>Hai cuốn về cách biết: <b>Sagan</b> đưa một bộ câu hỏi để soi những lời khẳng định nghe có vẻ khoa học mà rỗng, còn <b>Tetlock</b> đo xem ai đoán tương lai giỏi, và họ nghĩ khác người thường ở chỗ nào.</p>
       </div>
 
-      <!-- 06 sagan · 07 tetlock -->
+      <section class="bb-book" id="sagan">
+        <p class="bb-book__eyebrow"><b>06</b> — Carl Sagan (với Ann Druyan) · 1995</p>
+        <h3 class="bb-book__title">Thế giới bị quỷ ám</h3>
+        <p class="bb-book__orig"><i>The Demon-Haunted World: Science as a Candle in the Dark</i> (1995) · bản tiếng Việt: <i>Thế giới bị quỷ ám – Khoa học như ngọn nến trong đêm</i>, NXB Thế Giới, Alpha Books phát hành (2014); chưa kiểm được tên dịch giả</p>
+        <p class="hw-lede">Khoa học trước hết là một cách nghĩ, không phải một kho kiến thức: đòi bằng chứng, tìm cách bác chính giả thuyết của mình, và sửa khi sai. Cách nghĩ ấy gói được thành một <b>bộ dụng cụ phát hiện chuyện nhảm</b> ai cũng mang theo được, và cần nhất đúng lúc một lời khẳng định đang chiều theo điều ta muốn tin.</p>
+        <div class="bb-verdict">
+          <span class="bb-verdict__k">Đọc gì trong bản gốc</span><p class="bb-verdict__v"><b>Chương 12</b>, “Nghệ thuật phát hiện chuyện nhảm” (<i>The Fine Art of Baloney Detection</i>), viết lại từ một bài báo năm 1987: cả bộ dụng cụ, hai mươi lỗi lập luận kèm ví dụ, và đoạn kết về ngành thuốc lá. Rồi vài trang đầu <b>chương 10</b>, “Con rồng trong gara” (<i>The Dragon in My Garage</i>). Tên chương tiếng Việt do trang này dịch.</p>
+          <span class="bb-verdict__k">Bỏ qua được</span><p class="bb-verdict__v"><b>Chương 3–9 và 11</b>: UFO, người ngoài hành tinh bắt cóc, “khuôn mặt trên sao Hoả”, ảo giác, ký ức dựng lại trong trị liệu. Cùng lối lập luận ấy, áp vào những đề tài rất Mỹ của thập niên 1990.</p>
+          <span class="bb-verdict__k">Mục này</span><p class="bb-verdict__v">~13 phút đọc, kèm một mô hình để kéo thử</p>
+        </div>
+
+        <h4 class="bb-h4" id="sagan-khung">Bộ khung</h4>
+        <p class="hw-p">Năm bước, theo trình tự lập luận: khoa học đáng tin nhờ một cơ chế tự sửa lỗi; chuyện nhảm dễ lọt tai vì chiều theo điều ta mong; lời khẳng định không cách nào bác được thì chẳng nói được gì; lời khẳng định càng lạ càng cần nhiều bằng chứng; và từ đó, một bộ dụng cụ để mang theo hằng ngày.</p>
+
+        <h4 class="bb-h4" id="sagan-cach-nghi">Khoa học là một cách nghĩ</h4>
+        <p class="hw-p"><b>Cỗ máy sửa lỗi.</b> Với Sagan, khoa học đáng tin không phải vì nhà khoa học giỏi hơn người thường; họ vẫn sai, vẫn thiên vị. Nó đáng tin nhờ một <b>cỗ máy sửa lỗi gắn sẵn</b>: lời khẳng định nào cũng phải đối chiếu với thế giới, ai cũng được làm lại thí nghiệm, kết luận nào cũng có thể bị lật khi có bằng chứng mới. Lỗi vẫn xảy ra, nhưng sớm muộn cũng lộ.</p>
+        <div class="hw-quote">
+          Như một bếp ăn mà món nào cũng phải qua tay vài người nếm trước khi ra bàn.
+          <cite>Chỗ ví von hỏng: ngoài đời, nếm lại món của người khác ít được khen hơn nấu món mới, nên không ít món ra bàn mà chưa ai nếm lại. <a href="psychology.html#s-repl">Khủng hoảng lặp lại</a> trong tâm lý học là một ví dụ.</cite>
+        </div>
+        <p class="hw-p"><b>Thanh sai số, và hai thái độ.</b> Ngoài toán học thuần tuý, Sagan viết, không gì biết chắc tuyệt đối; ông thử hình dung cả quảng cáo cũng kèm thanh sai số: “giảm 5 kg trong 7 ngày”, cộng trừ bao nhiêu, trên bao nhiêu người? Khoa học cũng là thế giằng co giữa sẵn lòng nghe mọi ý mới và soi xét không khoan nhượng mọi ý (chương 17): thiếu vế đầu thì không học được gì mới, thiếu vế sau thì tin tất cả.</p>
+
+        <h4 class="bb-h4" id="sagan-hap-dan">Vì sao chuyện nhảm dễ lọt tai</h4>
+        <p class="hw-p"><b>Người tò mò bị bỏ đói.</b> Chương 1 mở bằng một người tài xế nghe Sagan là nhà khoa học liền hỏi dồn: xác người ngoài hành tinh đông lạnh, người truyền lời linh hồn, pha lê, Nostradamus, chiêm tinh. Câu nào Sagan cũng phải đáp đại ý “chưa có bằng chứng”. Ông ta không dốt, chỉ tò mò mà toàn gặp hàng giả. Ở mình, đó là ông chú hay chuyển tiếp clip “bài thuốc dân gian chữa khỏi ung thư” trong nhóm Zalo gia đình.</p>
+        <p class="hw-p"><b>Ước là được.</b> Chuyện nhảm hứa đúng điều ta mong: khỏi bệnh không cần thuốc đắng, gặp lại người đã khuất. Chương 12 mở bằng ý của Francis Bacon: điều mong là thật thì người ta dễ tin hơn. Sagan lấy chính mình làm ví dụ: cha mẹ mất đã lâu, ông vẫn mong họ còn tồn tại ở đâu đó, và biết nỗi mong ấy khiến mình dễ bị lừa.</p>
+        <p class="hw-p"><b>Hỏi một câu kiểm được.</b> Với một phụ nữ Mỹ tự xưng truyền lời Ramtha, linh hồn 35.000 tuổi, Sagan đề nghị hỏi điều người thời ấy phải biết và nay kiểm được: lịch, ngôn ngữ, khí hậu. Thứ nhận được chỉ là lời khuyên chung chung. Khoa học cũng sai, nhưng đi tìm chỗ sai của mình; ngụy khoa học đặt lời khẳng định sao cho không ai kiểm được.</p>
+
+        <h4 class="bb-h4" id="sagan-rong">Con rồng trong gara</h4>
+        <p class="hw-p">Ở chương 10, Sagan bảo trong gara nhà ông có một con rồng phun lửa. Bạn vào xem, không thấy gì. “Nó tàng hình.” Rắc bột mì để in dấu chân? “Nó bay lơ lửng.” Máy ảnh hồng ngoại? “Lửa của nó không nóng.” Phun sơn? “Nó không có thân xác.” Phép thử nào cũng có sẵn lý do không dùng được. Một con rồng không thấy, không chạm, không đo được thì khác gì không có rồng? <b>Chưa ai bác được một lời khẳng định không có nghĩa là nó đúng.</b> Sagan đề nghị tạm gác, như phán quyết “không chứng minh được” (<i>not proven</i>) của toà án Scotland, và xem lại nếu dấu chân thật sự hiện trên lớp bột.</p>
+        <p class="hw-p"><b>Thêm giả định không có tội; né phép thử mới có tội.</b> Năm 1846, Urbain Le Verrier giải thích quỹ đạo lệch của Sao Thiên Vương bằng một hành tinh chưa ai thấy và nói rõ nó ở đâu; Johann Galle chĩa kính vào đó và thấy Sao Hải Vương, lệch chừng 1 độ. Làm y thế với Sao Thuỷ (hành tinh Vulcan, 1859) thì thất bại; lời giải là thuyết tương đối rộng. Giả định tốt sinh ra phép thử mới và chịu thua khi phép thử hỏng; giả định của chủ con rồng chỉ để né phép thử.</p>
+        <div class="hw-quote">
+          Truyện con rồng bày mọi lý do né ra cùng lúc, nên ai nghe cũng thấy.
+          <cite>Chỗ ngụ ngôn hỏng: ngoài đời, lý do né rải ra từng cái, cái nào nghe cũng có lý, như lời giải thích của phe buộc tội trong <a href="#galef-khung">vụ Dreyfus</a> ở mục Galef; phải xếp cạnh nhau mới thấy hình con rồng.</cite>
+        </div>
+
+        <h4 class="bb-h4" id="sagan-phi-thuong">Tuyên bố phi thường cần bằng chứng phi thường</h4>
+        <p class="hw-p"><b>“Phi thường” là hiếm</b>, trước khi xét bằng chứng. Câu nói này có trước cuốn sách: Sagan đã dùng nó từ năm 1977, còn ý thì có từ David Hume (1748). Đồng nghiệp bảo sáng nay kẹt xe ở ngã tư: một lời kể là đủ. Một người bảo viên thảo dược chữa khỏi thoát vị đĩa đệm: lời kể không đủ, vì điều ấy hiếm, và vì có quá nhiều cách để người ta thật lòng tin mà vẫn sai.</p>
+        <p class="hw-p"><b>Cách giới thiên văn xử một tín hiệu lạ.</b> Năm 1967, nghiên cứu sinh Jocelyn Bell Burnell bắt được một tín hiệu vô tuyến đều như nhịp đồng hồ, khoảng 1,34 giây một xung; cả nhóm đùa gọi nó là LGM-1, “người xanh nhỏ bé số 1”. Không ai họp báo. Khi bà bắt được tín hiệu tương tự ở một vùng trời khác, giả thuyết người ngoài hành tinh gần như sụp; lời giải là sao neutron quay rất nhanh, nay gọi là sao xung. Sagan kể chuyện này ở chương 10.</p>
+
+        <div class="bb-lab" id="sagan-lab">
+          <div class="bb-lab__head">
+            <p class="bb-lab__kick">Mô hình · tuyên bố phi thường</p>
+            <p class="bb-lab__title">Cùng một lượng bằng chứng: chuyện thường thì tin được, chuyện phi thường thì chưa</p>
+            <p class="bb-lab__hint">Kéo <b>độ hiếm</b> (lời khẳng định hiếm tới đâu trước khi xét bằng chứng) và <b>số bằng chứng tốt</b>: mỗi bằng chứng tốt dễ xuất hiện gấp 10 lần nếu lời khẳng định đúng so với khi nó sai, một giả định để minh hoạ. Thử cả <b>Chép cùng một nguồn</b>.</p>
+          </div>
+          <div class="bb-lab__body">
+            <div class="bb-lab__row">
+              <label for="sagan-rare">Độ hiếm</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="sagan-rare" min="0" max="6" step="1" value="4" style="flex:1 1 180px"><span class="bb-mono sg-val" id="sagan-rare-l">1 trong 10.000</span></div>
+            </div>
+            <div class="bb-lab__row">
+              <label for="sagan-n">Số bằng chứng tốt</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="sagan-n" min="0" max="8" step="1" value="3" style="flex:1 1 180px"><span class="bb-mono sg-val" id="sagan-n-l">3</span></div>
+            </div>
+            <div class="bb-lab__row">
+              <span class="k">Nguồn</span>
+              <div class="wb-btn-group sg-pick" role="group" aria-label="Các bằng chứng độc lập nhau hay chép cùng một nguồn">
+                <button class="wb-btn wb-btn--outline is-active" type="button" id="sagan-ind" aria-pressed="true">Độc lập nhau</button>
+                <button class="wb-btn wb-btn--outline" type="button" id="sagan-copy" aria-pressed="false">Chép cùng một nguồn</button>
+              </div>
+            </div>
+            <p class="sg-cap">Khả năng lời khẳng định đúng, sau khi xét bằng chứng</p>
+            <p class="bb-lab__big" id="sagan-big">9,1%</p>
+            <p class="sg-sub" id="sagan-sub" aria-live="polite">Cần 4 bằng chứng độc lập như thế mới tới 50%, 6 cái mới qua 95%. Cũng 3 bằng chứng ấy, một chuyện thường ngày (1 trong 10) đã lên 99,1%.</p>
+            <svg class="bb-svg sg-svg" id="sagan-svg" viewBox="0 0 360 240" role="img" aria-label="Biểu đồ: khả năng lời khẳng định đúng tăng theo số bằng chứng, mỗi đường là một mức độ hiếm"></svg>
+            <p class="bb-lab__foot"><b>Điều cần thấy:</b> mỗi nấc hiếm hơn gấp 10 lần cần thêm đúng một bằng chứng tốt, nên các đường chỉ trượt sang phải từng nấc. Với chuyện phi thường, mấy bằng chứng đầu gần như không nhích con số, rồi nó mới vọt lên. Và mười bài báo chép cùng một thông cáo vẫn chỉ là một bằng chứng.</p>
+            <p class="bb-lab__foot">Cách tính: tỉ lệ cược (khả năng đúng chia khả năng sai) nhân 10 sau mỗi bằng chứng độc lập, theo định lý Bayes. Lời cảm ơn của người đã khỏi yếu hơn ×10 nhiều, vì người tự khỏi vẫn cảm ơn dù sản phẩm vô tác dụng. Cùng phép tính, ở dạng đọc kết quả xét nghiệm: <a href="psychology.html#s-help">trang Psychology</a>.</p>
+          </div>
+        </div>
+
+        <h4 class="bb-h4" id="sagan-bo">Bộ dụng cụ</h4>
+        <p class="hw-p">Chương 12 gói các ý trên thành đồ nghề. Nửa việc nên làm gồm chín công cụ và ba thói quen khi thí nghiệm; trang này gom thành bốn câu hỏi.</p>
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="sagan-t1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 1</span><h5 class="hw-fal__name">Ai khác đã kiểm?</h5><span class="wb-tag">xác nhận độc lập · tranh luận · uy quyền</span></div>
+            <p class="hw-fal__def">Tìm xác nhận độc lập; khuyến khích tranh luận thực chất giữa những người hiểu chuyện ở mọi phía; coi nhẹ lập luận dựa vào uy quyền, vì người có uy tín từng sai. Sagan viết rằng trong khoa học “there are no authorities; at most, there are experts”: không có uy quyền, cùng lắm chỉ có chuyên gia.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Tin “ăn X chữa bệnh Y” chạy trên hai chục trang chép của nhau, không trang nào dẫn một nghiên cứu: một nguồn, không phải hai mươi.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="sagan-t2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 2</span><h5 class="hw-fal__name">Còn cách giải thích nào khác?</h5><span class="wb-tag">nhiều giả thuyết · dao cạo Occam</span></div>
+            <p class="hw-fal__def">Nghĩ ra mọi cách giải thích, rồi tìm phép thử loại dần từng cách; đừng quyến luyến giả thuyết chỉ vì nó là của mình. Hai cách khớp dữ liệu ngang nhau thì chọn cách đơn giản hơn.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Đèn chập chờn lúc cả nhà kể chuyện ma: ma, điện yếu, hay đui đèn lỏng? Nhà bên có chập chờn không, thay bóng có hết không?</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="sagan-t3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 3</span><h5 class="hw-fal__name">Con số bao nhiêu, mắt xích nào yếu?</h5><span class="wb-tag">định lượng · chuỗi lập luận</span></div>
+            <p class="hw-fal__def">Cái gì đo được thì đo: điều mơ hồ giải thích kiểu gì cũng xuôi, con số thì loại được giả thuyết. Chuỗi lập luận chỉ đứng khi mọi mắt xích đều đứng, kể cả tiền đề đầu tiên.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">“Đất vùng ven sẽ lên giá vì sắp có cao tốc”: cao tốc có chắc làm, bao giờ xong, nút ra vào có gần không? Gãy một mắt xích là gãy cả chuỗi.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="sagan-t4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 4</span><h5 class="hw-fal__name">Làm sao biết mình sai?</h5><span class="wb-tag">bác được · đối chứng · mù đôi</span></div>
+            <p class="hw-fal__def">Hỏi giả thuyết có thể, ít nhất về nguyên tắc, bị bác không, và để người hoài nghi nhất làm lại được thí nghiệm. Khi thử thì có nhóm đối chứng, tách từng yếu tố, và làm <b>mù đôi</b>: người được thử lẫn người chấm đều không biết ai dùng thật.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Nghi cà phê chiều làm mất ngủ: nhờ người nhà pha xen kẽ cà phê thường và cà phê khử caffeine, ghi ra giấy; mình ghi giờ ngủ hai tuần rồi mới mở giấy. Mình không biết hôm nào uống gì, người pha không chấm giấc ngủ.</div>
+            </div>
+          </article>
+        </div>
+        <p class="hw-p"><b>Hai mươi lỗi.</b> Nửa sau là hai mươi lỗi lập luận, ví dụ phần lớn lấy từ chính trường và tôn giáo Mỹ (bảng ở mục <a href="#sagan-dung">Dùng thế nào</a>). Sagan dặn: bộ này có thể bị dùng như bài thuộc lòng thay cho suy nghĩ, và đáng giá nhất khi soát lập luận của chính mình.</p>
+
+        <h4 class="bb-h4" id="sagan-dung">Dùng thế nào</h4>
+        <p class="hw-p">Hai việc: tra hai danh sách lỗi, rồi đem cả bộ soi một quảng cáo.</p>
+        <p class="hw-p"><b>Hai mươi lỗi của Sagan trên trang <a href="how-to-win-every-argument.html">How to Win Every Argument</a>.</b> Chín lỗi trùng hẳn một lối của Pirie, sáu lỗi chỉ gần, năm lỗi Pirie không có mục riêng.</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact sg-stack">
+            <thead><tr><th style="width:42%">Lỗi theo Sagan</th><th>Trên trang Pirie</th></tr></thead>
+            <tbody>
+              <tr><td><b>Công kích người nói</b><br><span class="sg-en">ad hominem</span></td><td data-k="Trên trang Pirie"><a href="how-to-win-every-argument.html#f-cong-kich-ca-nhan">Công kích cá nhân</a> (4.01), <a href="how-to-win-every-argument.html#f-hoan-canh">Ngụy biện hoàn cảnh</a> (4.02)</td></tr>
+              <tr><td><b>Dựa vào uy quyền</b><br><span class="sg-en">argument from authority</span></td><td data-k="Trên trang Pirie"><a href="how-to-win-every-argument.html#f-loi-dung-quyen-luc">Lợi dụng quyền lực</a> (4.05)</td></tr>
+              <tr><td><b>Dựa vào chỗ chưa biết</b><br><span class="sg-en">appeal to ignorance</span></td><td data-k="Trên trang Pirie"><a href="how-to-win-every-argument.html#f-bat-kha-tri">Ngụy biện bất khả tri</a> (3.09), <a href="how-to-win-every-argument.html#f-dich-chuyen-ganh-nang">Dịch chuyển gánh nặng bằng chứng</a> (3.15)</td></tr>
+              <tr><td><b>Mặc định câu trả lời</b><br><span class="sg-en">begging the question</span></td><td data-k="Trên trang Pirie"><a href="how-to-win-every-argument.html#f-diep-nguyen-luan">Điệp nguyên luận</a> (5.09), <a href="how-to-win-every-argument.html#f-luan-quan">Lập luận luẩn quẩn</a> (3.02)</td></tr>
+              <tr><td><b>Sau nên do</b><br><span class="sg-en">post hoc, ergo propter hoc</span></td><td data-k="Trên trang Pirie"><a href="how-to-win-every-argument.html#f-nhan-qua">Ngụy biện nhân quả</a> (5.10)</td></tr>
+              <tr><td><b>Chỉ có hai đầu</b><br><span class="sg-en">excluded middle, false dichotomy</span></td><td data-k="Trên trang Pirie"><a href="how-to-win-every-argument.html#f-re-doi">Ngụy biện rẽ đôi</a> (5.07), <a href="how-to-win-every-argument.html#f-song-de-gia">Song đề giả</a> (3.01)</td></tr>
+              <tr><td><b>Dốc trượt</b><br><span class="sg-en">slippery slope</span></td><td data-k="Trên trang Pirie"><a href="how-to-win-every-argument.html#f-tuot-doc">Lý luận tuột dốc</a> (4.20)</td></tr>
+              <tr><td><b>Lẫn tương quan với nhân quả</b><br><span class="sg-en">correlation and causation</span></td><td data-k="Trên trang Pirie"><a href="how-to-win-every-argument.html#f-sai-nguyen-nhan">Ngụy biện sai nguyên nhân</a> (5.11); thêm <a href="how-to-lie-with-statistics.html#c8">chương 8</a> của How to Lie with Statistics</td></tr>
+              <tr><td><b>Người rơm</b><br><span class="sg-en">straw man</span></td><td data-k="Trên trang Pirie"><a href="how-to-win-every-argument.html#f-nguoi-rom">Người rơm</a> (3.17)</td></tr>
+              <tr><td><b>Viện hậu quả xấu</b><br><span class="sg-en">argument from adverse consequences</span></td><td data-k="Trên trang Pirie">Gần: <a href="how-to-win-every-argument.html#f-vong-tuong">Vọng tưởng</a> (4.22), ở chiều chối một điều chỉ vì không muốn nó xảy ra</td></tr>
+              <tr><td><b>Biện hộ đặc biệt</b><br><span class="sg-en">special pleading</span></td><td data-k="Trên trang Pirie">Gần: <a href="how-to-win-every-argument.html#f-bien-ho-dac-biet">Biện hộ đặc biệt</a> (3.16), nhưng Sagan dùng tên này cho việc cứu một thuyết bằng ngoại lệ đặt riêng, Pirie cho tiêu chuẩn kép</td></tr>
+              <tr><td><b>Thiếu nhất quán</b><br><span class="sg-en">inconsistency</span></td><td data-k="Trên trang Pirie">Gần: <a href="how-to-win-every-argument.html#f-bien-ho-dac-biet">Biện hộ đặc biệt</a> (3.16), đúng nghĩa tiêu chuẩn kép; cũng là <a href="#galef-t1">phép thử tiêu chuẩn kép</a> ở mục Galef</td></tr>
+              <tr><td><b>Thống kê số nhỏ</b><br><span class="sg-en">statistics of small numbers</span></td><td data-k="Trên trang Pirie">Gần: <a href="how-to-win-every-argument.html#f-khai-quat-voi-va">Khái quát hóa vội vã</a> (5.15); ví dụ “ba lần liền ra bảy, tối nay không thể thua” là <a href="how-to-win-every-argument.html#f-ke-co-bac">Ngụy biện kẻ cờ bạc</a> (5.13)</td></tr>
+              <tr><td><b>Giấu bằng chứng, nửa sự thật</b><br><span class="sg-en">suppressed evidence, half-truths</span></td><td data-k="Trên trang Pirie">Gần: <a href="how-to-win-every-argument.html#f-nhin-phien-dien">Nhìn phiến diện</a> (3.12), <a href="how-to-win-every-argument.html#f-ly-le-khuat-ban">Lý lẽ khuất bán</a> (3.04)</td></tr>
+              <tr><td><b>Chữ né</b><br><span class="sg-en">weasel words</span></td><td data-k="Trên trang Pirie">Gần: <a href="how-to-win-every-argument.html#f-ngon-ngu-xuc-cam">Ngôn ngữ xúc cảm</a> (4.13); Sagan nhắm vào lối đổi tên cho dễ nghe, như gọi chiến tranh là “hành động cảnh sát”, hay nói “hỗ trợ điều trị” thay cho “chữa”</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p"><b>Năm lỗi Pirie không có mục riêng:</b></p>
+        <ul class="hw-ul">
+          <li><b>Chọn lọc quan sát</b> (<i>observational selection</i>): đếm lần trúng, quên lần trượt. Một bang khoe các tổng thống sinh ra ở đó, im lặng về những kẻ giết người hàng loạt; trang bán hàng chỉ đăng ảnh khách đã khỏi (xem <a href="how-to-lie-with-statistics.html#t1-1">mẫu chỉ gồm người muốn nói</a>).</li>
+          <li><b>Hiểu sai bản chất thống kê</b>: tổng thống Eisenhower được kể là kinh ngạc khi biết nửa số người Mỹ có trí thông minh dưới trung bình, điều gần như đúng theo định nghĩa (xem <a href="how-to-lie-with-statistics.html#c2">chữ “trung bình”</a>).</li>
+          <li><b>Kết luận không theo tiền đề</b> (<i>non sequitur</i>): “Nước ta sẽ thắng vì Chúa vĩ đại”. Pirie tách lỗi chung này thành từng lỗi cụ thể, như <a href="how-to-win-every-argument.html#g1">nhóm lỗi hình thức</a>.</li>
+          <li><b>Câu hỏi vô nghĩa</b>: lực không gì cản nổi gặp vật không gì lay nổi thì sao? Có cái này thì không thể có cái kia.</li>
+          <li><b>Ngắn hạn và dài hạn</b>, tách riêng khỏi lỗi “chỉ có hai đầu”: “Phải lo tội phạm ngoài đường ngay, lấy đâu tiền cho dinh dưỡng trẻ em.” Cái lợi đến chậm dễ bị gạt vì cái gấp trước mắt, dù hai thứ không loại trừ nhau.</li>
+        </ul>
+        <p class="hw-p"><b>Soi một quảng cáo “chữa khỏi”.</b> Quảng cáo dưới đây do trang này tự soạn từ những câu hay gặp, không nhắm vào sản phẩm có thật nào.</p>
+        <div class="bb-key sg-ad">
+          <span class="k">Quảng cáo giả định</span>
+          <b>Viên xương khớp X</b>: chữa khỏi hoàn toàn thoát vị đĩa đệm sau 30 ngày, không cần mổ! Hơn 10.000 người đã khỏi, xem video cảm ơn bên dưới. Bác sĩ Y, 30 năm kinh nghiệm, tin dùng. Công nghệ nano sinh học độc quyền. Chưa khỏi? Có thể do dùng chưa đủ liệu trình.
+          <span class="sg-fine">Thực phẩm này không phải là thuốc và không có tác dụng thay thế thuốc chữa bệnh.</span>
+        </div>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact sg-stack">
+            <thead><tr><th style="width:27%">Câu trong quảng cáo</th><th style="width:22%">Công cụ hay lỗi</th><th>Hỏi lại</th></tr></thead>
+            <tbody>
+              <tr><td>“Chữa khỏi hoàn toàn… không cần mổ”</td><td data-k="Công cụ hay lỗi">Tuyên bố phi thường</td><td data-k="Hỏi lại">Thử nghiệm nào, có nhóm đối chứng không, đăng ở đâu, đã có ai làm lại chưa?</td></tr>
+              <tr><td>“Hơn 10.000 người đã khỏi”</td><td data-k="Công cụ hay lỗi">Định lượng; chọn lọc quan sát</td><td data-k="Hỏi lại">Trên tổng số bao nhiêu người mua? Thoát vị đĩa đệm thường tự đỡ dần, phần lớn không cần mổ, nên người mua càng đông thì lời cảm ơn càng nhiều, dù viên uống vô tác dụng.</td></tr>
+              <tr><td>“Uống 30 ngày là hết đau”</td><td data-k="Công cụ hay lỗi">Sau nên do</td><td data-k="Hỏi lại">Người ta thường tìm tới thuốc lúc đau nhất, nên tháng sau đa số đỡ hơn dù uống gì (<a href="#kahneman-lab">hồi quy về trung bình</a>). So với người không uống thì sao?</td></tr>
+              <tr><td>“Bác sĩ Y, 30 năm kinh nghiệm, tin dùng”</td><td data-k="Công cụ hay lỗi">Dựa vào uy quyền</td><td data-k="Hỏi lại">Chuyên khoa gì, có được trả tiền không? Nghị định 15/2018 (theo Báo Chính phủ, áp dụng trở lại từ tháng 4/2026) cấm dùng hình ảnh bác sĩ và thư cảm ơn của người bệnh để quảng cáo thực phẩm.</td></tr>
+              <tr><td>“Công nghệ nano sinh học độc quyền”</td><td data-k="Công cụ hay lỗi">Chữ né; <a href="how-to-win-every-argument.html#f-che-day-khoa-hoc">Che đậy bằng khoa học</a> (Pirie, 4.16)</td><td data-k="Hỏi lại">Bỏ mấy chữ ấy đi, lời hứa còn lại điều gì kiểm được?</td></tr>
+              <tr><td>“Chưa khỏi? Có thể do dùng chưa đủ liệu trình”</td><td data-k="Công cụ hay lỗi">Con rồng trong gara</td><td data-k="Hỏi lại">Kết quả nào thì người bán chịu nhận là sản phẩm vô tác dụng? Không có kết quả nào như thế thì lời hứa chẳng nói gì.</td></tr>
+              <tr><td>Dòng chữ nhỏ ở cuối</td><td data-k="Công cụ hay lỗi">Nửa sự thật</td><td data-k="Hỏi lại">Chữ to hứa chữa khỏi, chữ nhỏ nói không phải thuốc. Chữ nhỏ là câu luật buộc phải ghi (Nghị định 15/2018, Điều 27), và là câu thật nhất cả quảng cáo.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="bb-key"><span class="k">Mang theo</span>Trước một lời khẳng định làm bạn muốn tin, hỏi: <b>nếu nó sai, mình sẽ thấy gì khác, và đã có ai thật sự đi tìm điều đó chưa?</b></p>
+
+        <h4 class="bb-h4" id="sagan-vung">Độ vững</h4>
+        <p class="hw-p">Sách đã ba mươi năm. Việc nên làm vẫn đứng như một bảng kiểm; chỗ cần sửa là danh sách lỗi, và niềm tin rằng hiểu khoa học là đủ.</p>
+        <ul class="hw-ul">
+          <li><b>Vài điểm đã được xác nhận.</b> “Khuôn mặt trên sao Hoả” là một khối núi đỉnh bằng (ảnh chụp lại năm 1998 và 2001). Lối gieo nghi ngờ của ngành thuốc lá mà Sagan tả được lặp lại ở giới dầu mỏ và than đá trong chuyện khí hậu (Pigliucci, 2026).</li>
+          <li><b>Nhiều “lỗi” không phải lúc nào cũng là lỗi.</b> Tin bác sĩ, hay cảnh báo bạn về một đại lý chuyên bán xe hỏng, về hình thức là “dựa vào uy quyền” và “công kích người nói”, nhưng ngoài đời thường hợp lý (Boudry, Paglieri và Pigliucci, 2015); phía bán chuyện nhảm cũng đã học hô “anh đang ngụy biện”. Và không ai tự kiểm được mọi thứ: nhà sinh học Richard Lewontin (1997) cũng phải tin nhà vật lý về cơ học lượng tử. Câu hỏi thực tế là tin ai, và đồng thuận của cả giới chuyên môn nặng ký hơn một người có học vị.</li>
+          <li><b>Hiểu khoa học không tự làm ta miễn nhiễm, nhưng luyện trên ca cụ thể thì có tác dụng.</b> Ở Mỹ, người hiểu khoa học và giỏi tính toán nhất không lo nhất về biến đổi khí hậu mà chia rẽ gay gắt nhất theo thế giới quan (Kahan và cộng sự, 2012), vì kiến thức phục vụ được cả <a href="#galef">lập luận có động cơ</a>. Còn lớp đại học dạy thẳng về ngụy khoa học thì làm niềm tin vô căn cứ của sinh viên giảm hẳn, lớp phương pháp nghiên cứu thì không (Dyer và Hall, 2019); và trong các thử nghiệm với hơn 29.000 người, video ngắn dạy nhận ra song đề giả, công kích người nói giúp người xem phân biệt nội dung đáng tin tốt hơn (Roozenbeek và cộng sự, 2022).</li>
+          <li><b>“Bác được” và “phi thường” là quy tắc thực hành, không phải thước đo tuyệt đối.</b> Theo nhiều nhà triết học khoa học, phần lớn ngụy khoa học, như chiêm tinh, không phải không thể bác mà đã bị bác rồi và người theo không chịu nhận. Còn “phi thường” không có thước đo khách quan, và đòi hỏi quá khắt khe có thể kìm cả phát hiện mới đúng (Deming, 2016).</li>
+        </ul>
+
+        <div class="bb-next">
+          <p><b>Bạn vừa có:</b> bốn câu hỏi để soi một lời khẳng định, một phép thử cho mọi lời hứa không bao giờ sai được, và một nghĩa đo được cho chữ “phi thường”.</p>
+          <p><b>Nó dẫn đi đâu:</b> Sagan dạy cân lời khẳng định về điều đang có. Còn lời đoán về điều chưa xảy ra, như giá nhà năm sau, thì chấm điểm thế nào, và ai đoán giỏi hơn ai? Đó là câu hỏi của cuốn tiếp theo trong nhóm, của Philip Tetlock.</p>
+        </div>
+        <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/The_Demon-Haunted_World">Wikipedia</a> (Random House, 1995; 25 chương, bốn chương viết cùng Ann Druyan) · <a href="https://openlibrary.org/books/OL797905M">Open Library</a> (bản in đầu, 457 trang) · mục lục đối chiếu <a href="https://it.wikipedia.org/wiki/Il_mondo_infestato_dai_demoni">Wikipedia tiếng Ý</a> và <a href="https://christianjmills.com/posts/the-demon-haunted-world-book-notes/">ghi chép từng chương của Christian Mills</a> (chi tiết chương 1, 2, 10, 12) · bản tiếng Việt: <a href="https://waka.vn/ebook/the-gioi-bi-quy-am-khoa-hoc-nhu-ngon-nen-trong-dem-bLYmRW.html">Waka</a> (NXB Thế Giới, 3/2014), <a href="https://www.netabooks.vn/the-gioi-bi-quy-am">NetaBooks</a> (Alpha Books, 2014), <a href="https://vi.wikipedia.org/wiki/Th%E1%BA%BF_gi%E1%BB%9Bi_b%E1%BB%8B_qu%E1%BB%B7_%C3%A1m">Wikipedia tiếng Việt</a> · Sagan, <a href="https://skepticalinquirer.org/wp-content/uploads/sites/29/uploads/files/ParadeFeb11987.pdf">“The Fine Art of Baloney Detection”, <i>Parade</i>, 1/2/1987</a> · <a href="https://www.themarginalian.org/2014/01/03/baloney-detection-kit-carl-sagan/">The Marginalian</a> (chín công cụ và hai mươi lỗi kèm ví dụ) · <a href="https://skepticalinquirer.org/2026/06/the-fine-art-of-baloney-detection-sagans-essay-three-decades-later/">Pigliucci, <i>Skeptical Inquirer</i> 50(4), 2026</a> · <a href="https://en.wikipedia.org/wiki/Extraordinary_claims_require_extraordinary_evidence">Extraordinary claims require extraordinary evidence</a> (Wikipedia; phỏng vấn năm 1977, Hume năm 1748) · <a href="https://en.wikipedia.org/wiki/PSR_B1919%2B21">PSR B1919+21</a> (sao xung đầu tiên) · <a href="https://en.wikipedia.org/wiki/Discovery_of_Neptune">Discovery of Neptune</a> và <a href="https://en.wikipedia.org/wiki/Vulcan_(hypothetical_planet)">Vulcan</a> (Wikipedia) · <a href="https://nssdc.gsfc.nasa.gov/planetary/mgs_cydonia.html">NASA NSSDC</a> (ảnh Cydonia của Mars Global Surveyor) · <a href="https://www.nybooks.com/articles/1997/01/09/billions-and-billions-of-demons/">Lewontin, 1997</a> · <a href="https://doi.org/10.1007/s10503-015-9359-1">Boudry, Paglieri &amp; Pigliucci, 2015</a> · <a href="https://doi.org/10.1038/nclimate1547">Kahan và cs., 2012</a> · <a href="https://doi.org/10.1007/s11162-018-9513-3">Dyer &amp; Hall, 2019</a> · <a href="https://doi.org/10.1126/sciadv.abo6254">Roozenbeek và cs., 2022</a> (6 thử nghiệm ngẫu nhiên, 6.464 người, cộng một thử nghiệm trên YouTube, 22.632 người) · <a href="https://plato.stanford.edu/entries/pseudo-science/">Stanford Encyclopedia of Philosophy</a> (mục Science and Pseudo-Science) · <a href="https://doi.org/10.1007/s11406-016-9779-7">Deming, 2016</a> · <a href="https://www.nhs.uk/conditions/slipped-disc/">NHS</a> (thoát vị đĩa đệm) · Nghị định 15/2018/NĐ-CP, Điều 27, theo <a href="https://vfa.gov.vn/tin-tuc/khong-su-dung-hinh-anh-thiet-bi-trang-phuc-ten-thu-tin-cua-cac-don-vi-co-so-y-te-bac-sy-duoc-sy-nhan-vien-y-te-thu-cam-on-cua-nguoi-benh-bai-viet-cua-bac-sy-duoc-sy-nhan-vien-y-te-de-quang-cao-thuc-pham.html">Cục An toàn thực phẩm</a> và <a href="https://vcci.com.vn/legal-document/nghi-dinh-152018nd-cp-huong-dan-luat-an-toan-thuc-pham">VCCI</a> · <a href="https://baochinhphu.vn/tiep-tuc-ap-dung-nghi-dinh-15-2018-nd-cp-ve-an-toan-thuc-pham-cho-den-khi-co-quy-dinh-moi-102260408123934123.htm">Báo Chính phủ, 8/4/2026</a> (Nghị định 15/2018 tiếp tục có hiệu lực).</p>
+      </section>
+
+      <!-- 07 tetlock -->
 
       <!-- ══════════════════ NHÓM 4 ══════════════════ -->
       <div class="hw-part-head" id="g-world">
@@ -1824,6 +2042,156 @@ Câu dễ trượt khỏi tai bạn nhất (thiêng liêng): “Hẻm tối thà
   }
 
   for (i = 0; i < ranges.length; i++) ranges[i].addEventListener('input', render);
+  render();
+})();
+</script>
+
+<script>
+/* ---- sagan: mô hình "tuyên bố phi thường" ----
+   Độ hiếm ban đầu: 1 trong N, N = 2, 10, 100, …, 10^6, tức xác suất đúng trước khi xét bằng chứng là 1/N.
+   Mỗi bằng chứng tốt có tỉ số hợp lý 10: nếu lời khẳng định đúng, bằng chứng ấy dễ xuất hiện gấp 10 lần.
+   Theo định lý Bayes, tỉ lệ cược (đúng : sai) nhân 10 sau mỗi bằng chứng độc lập:
+     cược sau k bằng chứng = 10^k / (N − 1);  xác suất = cược / (1 + cược).
+   "Chép cùng một nguồn": k bản chép chỉ tính là một bằng chứng, k hiệu dụng = min(k, 1).
+   Mọi giá trị đọc từ thanh trượt được kẹp về số nguyên trong khoảng cho phép, nên không bao giờ hiện NaN. */
+(function () {
+  var root = document.getElementById('sagan');
+  if (!root) return;
+  var box = root.querySelector('#sagan-svg'), rRare = root.querySelector('#sagan-rare'), rN = root.querySelector('#sagan-n');
+  if (!box || !rRare || !rN) return;
+  var lRare = root.querySelector('#sagan-rare-l'), lN = root.querySelector('#sagan-n-l'),
+      big = root.querySelector('#sagan-big'), sub = root.querySelector('#sagan-sub'),
+      bInd = root.querySelector('#sagan-ind'), bCopy = root.querySelector('#sagan-copy');
+  var NS = 'http://www.w3.org/2000/svg';
+  var NN = [2, 10, 100, 1000, 10000, 100000, 1000000];
+  var NAME = ['1 trong 2', '1 trong 10', '1 trong 100', '1 trong 1.000', '1 trong 10.000', '1 trong 100.000', '1 trong 1 triệu'];
+  var LR = 10, KMAX = 8;
+  var X0 = 46, X1 = 336, Y0 = 196, Y1 = 40;   /* vùng vẽ: ngang 0→8 bằng chứng, dọc 0→100% */
+  var copy = false;
+
+  function clampInt(v, lo, hi, dflt) {
+    v = Math.round(parseFloat(v));
+    return isFinite(v) ? Math.max(lo, Math.min(hi, v)) : dflt;
+  }
+  function prob(r, k) { var odds = Math.pow(LR, k) / (NN[r] - 1); return odds / (1 + odds); }
+  /* Số kiểu Việt: dưới 10% và trên 99% giữ một chữ số thập phân, ở giữa làm tròn; hai đầu nói bằng chữ. */
+  function fmt(p) {
+    if (!(p >= 0.00095)) return 'dưới 0,1%';   /* 1 trong 1.000 là đúng 0,1%, không phải “dưới” */
+    if (p >= 0.9995) return 'trên 99,9%';
+    var v = p * 100, s = (v < 10 || v > 99) ? v.toFixed(1) : String(Math.round(v));
+    return s.replace('.', ',').replace(/,0$/, '') + '%';
+  }
+  function need(r, target) {
+    for (var k = 0; k <= KMAX; k++) if (prob(r, k) >= target - 1e-12) return k;
+    return KMAX;
+  }
+  function px(k) { return X0 + k * (X1 - X0) / KMAX; }
+  function py(p) { return Y0 - p * (Y0 - Y1); }
+  function el(tag, attrs, style, text) {
+    var e = document.createElementNS(NS, tag), k;
+    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (style) e.setAttribute('style', style);
+    if (text != null) e.textContent = text;
+    box.appendChild(e);
+    return e;
+  }
+  function path(r, kEff) {
+    var d = '', k;
+    for (k = 0; k <= KMAX; k++) d += (k ? ' L' : 'M') + px(k).toFixed(1) + ' ' + py(prob(r, kEff(k))).toFixed(1);
+    return d;
+  }
+  function all(k) { return k; }
+  function one(k) { return Math.min(k, 1); }
+
+  function draw(r, n, p) {
+    var k, i, cx, cy;
+    while (box.firstChild) box.removeChild(box.firstChild);
+    el('text', { x: 4, y: 14, 'class': 'hw-vs' }, null, 'khả năng đúng');
+    /* Chú giải: đường đậm là độ hiếm đang chọn, đường mờ là sáu mức còn lại. */
+    el('line', { x1: 196, y1: 10, x2: 214, y2: 10 }, 'stroke:var(--wb-fg);stroke-width:2.5');
+    el('text', { x: 219, y: 14, 'class': 'hw-vs' }, null, 'độ hiếm đang chọn');
+    el('line', { x1: 196, y1: 25, x2: 214, y2: 25 }, copy ? 'stroke:var(--wb-fg-muted);stroke-width:1.5;stroke-dasharray:4 3' : 'stroke:var(--wb-border-strong);stroke-width:1.5');
+    el('text', { x: 219, y: 29, 'class': 'hw-vs' }, null, copy ? 'nếu độc lập nhau' : 'sáu mức hiếm khác');
+    /* Lưới: 0%, 50% (nét đứt), 95% (chấm). */
+    el('line', { x1: X0, y1: Y0, x2: X1, y2: Y0 }, 'stroke:var(--wb-border-strong);stroke-width:1');
+    el('line', { x1: X0, y1: py(0.5), x2: X1, y2: py(0.5) }, 'stroke:var(--wb-border-strong);stroke-width:1;stroke-dasharray:5 4');
+    el('line', { x1: X0, y1: py(0.95), x2: X1, y2: py(0.95) }, 'stroke:var(--wb-border-strong);stroke-width:1;stroke-dasharray:1.5 3');
+    el('text', { x: X0 - 6, y: Y0 + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, '0%');
+    el('text', { x: X0 - 6, y: py(0.5) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, '50%');
+    el('text', { x: X0 - 6, y: py(0.95) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, '95%');
+    for (k = 0; k <= KMAX; k++) el('text', { x: px(k), y: Y0 + 15, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, String(k));
+    el('text', { x: (X0 + X1) / 2, y: Y0 + 34, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, 'số bằng chứng tốt, mỗi cái ×10');
+
+    if (!copy) {
+      for (i = 0; i < NN.length; i++) if (i !== r) el('path', { d: path(i, all) }, 'fill:none;stroke:var(--wb-border-strong);stroke-width:1.2');
+    } else {
+      el('path', { d: path(r, all) }, 'fill:none;stroke:var(--wb-fg-muted);stroke-width:1.5;stroke-dasharray:4 3');
+    }
+    var kEff = copy ? one : all;
+    el('path', { d: path(r, kEff) }, 'fill:none;stroke:var(--wb-fg);stroke-width:2.5;stroke-linejoin:round');
+    for (k = 0; k <= KMAX; k++) el('circle', { cx: px(k).toFixed(1), cy: py(prob(r, kEff(k))).toFixed(1), r: 2.6 }, 'fill:var(--wb-fg)');
+
+    /* Điểm đang xem: chấm to và nhãn số, viền chữ cùng màu nền để đọc được khi đè lên đường kẻ.
+       Nhãn thử lần lượt vài chỗ quanh chấm, chọn chỗ ít đè lên đường đậm nhất và không ra khỏi vùng vẽ
+       hay chạm chú giải (đường đi lên từ trái sang phải, nên trên-trái và dưới-phải thường trống). */
+    cx = px(n); cy = py(p);
+    el('circle', { cx: cx.toFixed(1), cy: cy.toFixed(1), r: 5.5 }, 'fill:var(--wb-fg);stroke:var(--wb-canvas);stroke-width:2');
+    var txt = fmt(p), W = 7.3 * txt.length, pts = [], best = null;
+    for (k = 0; k < KMAX; k++) for (i = 0; i <= 12; i++) {
+      var t = i / 12, p0 = prob(r, kEff(k)), p1 = prob(r, kEff(k + 1));
+      pts.push([px(k) + t * (px(k + 1) - px(k)), py(p0 + t * (p1 - p0))]);
+    }
+    [[-9, -9, 'end'], [9, 17, 'start'], [9, -9, 'start'], [-9, 17, 'end'], [-11, 4, 'end'], [11, 4, 'start'], [-7, 28, 'end']].forEach(function (c) {
+      var x = cx + c[0], y = cy + c[1], L = c[2] === 'end' ? x - W : x, R = L + W, T = y - 11, B = y + 3, hit = 0;
+      if (L < X0 + 2 || R > 356 || T < 34 || B > Y0 - 1) return;
+      if (R > 190 && T < 34) return;
+      pts.forEach(function (q) { if (q[0] > L - 2 && q[0] < R + 2 && q[1] > T - 2 && q[1] < B + 2) hit++; });
+      if (!best || hit < best.hit) best = { x: x, y: y, a: c[2], hit: hit };
+    });
+    if (!best) best = { x: cx - 9, y: cy + 17, a: 'end' };
+    el('text', { x: best.x.toFixed(1), y: best.y.toFixed(1), 'text-anchor': best.a, 'class': 'hw-vt' },
+      'paint-order:stroke;stroke:var(--wb-canvas);stroke-width:3px;stroke-linejoin:round', txt);
+  }
+
+  function render() {
+    var r = clampInt(rRare.value, 0, NN.length - 1, 4), n = clampInt(rN.value, 0, KMAX, 3);
+    var p = prob(r, copy ? Math.min(n, 1) : n), s;
+    if (lRare) lRare.textContent = NAME[r];
+    if (lN) lN.textContent = String(n);
+    if (big) big.textContent = fmt(p);
+    if (copy) {
+      if (n <= 1) s = (n === 0 ? 'Chưa xét bằng chứng nào.' : 'Một bằng chứng thì độc lập hay chép cũng như nhau.') +
+        ' Kéo thêm bằng chứng để thấy khác biệt.';
+      else s = n + ' bản chép cùng một nguồn chỉ tính là một bằng chứng: con số dừng ở ' + fmt(prob(r, 1)) +
+        '. Nếu ' + n + ' bằng chứng ấy độc lập nhau, nó đã là ' + fmt(prob(r, n)) + '.';
+    } else {
+      var n50 = need(r, 0.5), n95 = need(r, 0.95);
+      if (n === 0) s = 'Chưa xét bằng chứng nào: con số chính là độ hiếm ban đầu. ' +
+        (r === 0 ? 'Cần ' + n95 + ' bằng chứng độc lập như thế mới qua 95%.'
+                 : 'Cần ' + n50 + ' bằng chứng độc lập như thế mới tới 50%, ' + n95 + ' cái mới qua 95%.');
+      else if (p >= 0.95) s = 'Đã qua 95%: với độ hiếm này, phải có từ ' + n95 + ' bằng chứng độc lập như thế trở lên.';
+      else if (p >= 0.5) s = 'Đã tới 50% nhưng chưa tới 95%: cần ' + n95 + ' bằng chứng độc lập như thế.';
+      else s = 'Cần ' + n50 + ' bằng chứng độc lập như thế mới tới 50%, ' + n95 + ' cái mới qua 95%.';
+      if (n > 0) s += r >= 2
+        ? ' Cũng ' + n + ' bằng chứng ấy, một chuyện thường ngày (1 trong 10) đã lên ' + fmt(prob(1, n)) + '.'
+        : ' Cũng ' + n + ' bằng chứng ấy, một chuyện phi thường (1 trong 1 triệu) mới ở mức ' + fmt(prob(6, n)) + '.';
+    }
+    if (sub) sub.textContent = s;
+    draw(r, n, p);
+    box.setAttribute('aria-label', 'Khả năng lời khẳng định đúng theo số bằng chứng tốt. Độ hiếm ' + NAME[r] + ', ' + n +
+      ' bằng chứng ' + (copy ? 'chép cùng một nguồn' : 'độc lập') + ': ' + fmt(p) + '.');
+  }
+
+  function setCopy(v) {
+    copy = v;
+    if (bInd) { bInd.classList.toggle('is-active', !v); bInd.setAttribute('aria-pressed', v ? 'false' : 'true'); }
+    if (bCopy) { bCopy.classList.toggle('is-active', v); bCopy.setAttribute('aria-pressed', v ? 'true' : 'false'); }
+    render();
+  }
+  rRare.addEventListener('input', render);
+  rN.addEventListener('input', render);
+  if (bInd) bInd.addEventListener('click', function () { setCopy(false); });
+  if (bCopy) bCopy.addEventListener('click', function () { setCopy(true); });
   render();
 })();
 </script>
