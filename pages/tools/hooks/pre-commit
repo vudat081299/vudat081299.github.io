@@ -128,4 +128,25 @@ MSG
   fi
 fi
 
+# Cổng kiến thức cho trang thí nghiệm & nhân quả: cỡ mẫu cho một MDE, tỉ lệ báo động giả
+# khi nhìn trộm, χ² của một lần chia lệch, hệ số thiết kế, DiD đọc từ bảng 2×2, Wald của IV —
+# và vài LUẬT (so hai nhóm = tác động + thiên lệch chọn). Chỉ chạy khi trang ấy bị chạm.
+if echo "$CHANGED" | grep -q "experimentation-causal-inference.html"; then
+  if ! python3 "$DIR/tools/verify-causal-inference.py"; then
+    cat >&2 <<'MSG'
+
+──────────────────────────────────────────────────────────────────────
+Commit bị chặn: trang thí nghiệm & nhân quả có con số không tính lại được.
+
+Nếu bạn vừa sửa một con số (hoặc dữ liệu có hạt giống của một mô hình)
+thì phải sửa cả phép tính tương ứng trong
+pages/tools/verify-causal-inference.py — hoặc con số mới là sai.
+
+Xem chi tiết:  python3 pages/tools/verify-causal-inference.py
+──────────────────────────────────────────────────────────────────────
+MSG
+    exit 1
+  fi
+fi
+
 echo "pre-commit: cổng $DIR qua."

@@ -10,7 +10,7 @@ cách chúng chạy tự động**.
 | `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3, 4 |
 | `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2, 4 |
 | `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `sh tools/check-index.sh` (lint dữ liệu + đo trong trình duyệt) | 2, 4 + chạy thật |
-| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` + `verify-ml.py` + `verify-betting-lab.py` + `verify-jazz-piano.py` | 2, 4 |
+| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` + `verify-ml.py` + `verify-betting-lab.py` + `verify-jazz-piano.py` + `verify-causal-inference.py` | 2, 4 |
 | `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2, 4 |
 | `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `sh shop/tools/check.sh` | 1, 2, 3, 4 + chạy thật |
 | các project khác | xem thư mục | — | 4 |
@@ -37,7 +37,7 @@ một shell, toàn bộ nội dung nằm ở `data/shop.json`, và giá tiền �
 ba thứ ấy là luật, và luật thì phải viết ra. Kèm theo là `shop/docs/`: lộ trình, ADR, sổ nợ, và
 một bộ tài liệu định hướng kinh doanh cho việc đàm phán với chủ shop.
 
-Bốn ngoại lệ trong `pages/`, đều là cổng **kiến thức**. Cái thứ nhất, `verify-math-for-ml.py`,
+Năm ngoại lệ trong `pages/`, đều là cổng **kiến thức**. Cái thứ nhất, `verify-math-for-ml.py`,
 chỉ chạy khi commit chạm `mathematics-for-machine-learning.html`. Trang ấy nói ~90 con số cụ thể (định thức,
 trị riêng, tỉ lệ PCA, dãy Newton, xác suất nhị thức, phân vị t, p-value) và tự nhận với người
 đọc là mọi con số tính được đều kiểm được bằng máy — nên phải có một script tính lại thật, chứ
@@ -83,6 +83,24 @@ cũ (mode, quãng, ký hiệu hợp âm, "mỗi nốt thuộc đúng ba hợp â
 nốt lick, lệch số phần, thêm một chữ "phần 12" trơn, đánh số mục trùng, bấm E7 thiếu G♯, đặt sai
 bass gạch chéo, cho fill lấn câu hát, ghi sai thứ tự Coda, sai vị trí nốt mốc, sai một nốt trong
 bảng mode — lần nào cũng đỏ. Nằm trong cả pre-commit lẫn gates.yml.
+
+Cái thứ năm, `verify-causal-inference.py` (1.224 phép kiểm, từ 27/09/2026), cho
+`experimentation-causal-inference.html` — giáo trình thí nghiệm A/B và suy luận nhân quả. Trang ấy do
+ba agent viết song song rồi ráp lại, nên cổng có bốn bộ phép kiểm viết tay riêng (`run_p1`, `run_p2`,
+`run_p3`, `run_ref`), mỗi bộ của đúng người viết phần ấy — vẫn là luật "mỗi trang một cổng", chỉ là một
+trang có bốn tác giả. Điểm riêng của nó: dựng lại **dữ liệu có hạt giống** của từng mô hình tương tác
+bằng một bản chép Python của đúng bộ sinh ngẫu nhiên trong JS của trang (`jsrng`, `jsgauss`), nên con
+số mô hình hiện ra lúc vừa mở trang cũng bị kiểm tới từng chữ số, không chỉ con số trong chữ. Cộng bốn
+phép kiểm toàn trang: link "mục N.M" trỏ đúng mục mang số ấy (cùng ý với tham chiếu chéo của cổng
+jazz-piano); đích `#s-…` của mọi mục từ điển GLOSS là một id có thật (`lint-pages.py` bóc `<script>`
+trước khi soi nên không thấy chúng); không có chữ Hy Lạp hay ký hiệu một chữ thường nằm trần trong nhãn
+bị CSS viết hoa — điểm xu hướng `e` hiện thành `E` là kỳ vọng, `θ` thành `Θ` (bọc bằng
+`<span class="lc">`); và số mô hình ghi ở đầu trang bằng số mô hình thật. Chạy ~15 giây vì dựng lại cả
+các mô phỏng. Đã thử ngược lúc ghép vào repo: đổi một hạt giống JS của mô hình (`rng(4242)`,
+`rng(31337)`, `rng(129)`) hay một dòng JS then chốt (`mu += 120` của RDD) thì đỏ. Một giới hạn phải nói
+thẳng: số trong chữ được ghim bằng cách đòi một **cụm chữ** có mặt ở đâu đó trong trang, nên cụm nào lặp
+lại thì sửa lệch một bản vẫn xanh — `<b>27,5%</b> số thí nghiệm` nằm hai chỗ, đổi chỗ ở câu dẫn mục
+nhìn trộm thì cổng không biết. Nằm trong cả pre-commit lẫn gates.yml.
 
 Nhân tiện, một cái đã sửa cùng lúc: `.github/workflows/gates.yml` trước đó chỉ chạy
 `lint-pages.py`, trong khi bảng ở đầu file này nói lớp 4 chạy cổng của mọi project con.
@@ -188,7 +206,7 @@ Ba bước, đúng thứ tự:
 3. **Ghép, chạy cổng, ship.**
 
 **Luật chia chỗ — đếm được, không tranh luận được:** khối **lặp** → chữ ở data; khối **độc
-nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 8 section + 29 ô + 6 dòng môn học đều lặp nên nằm ở
+nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 8 section + 30 ô + 6 dòng môn học đều lặp nên nằm ở
 `data/collection.json`; tiêu đề trang chỉ có một nên ở lại HTML. Rail bên trái và ba cột
 chân trang cũng dựng từ chính mảng `sections` ấy — không có danh sách mục thứ hai để quên
 cập nhật. Trang văn xuôi độc nhất
@@ -217,7 +235,7 @@ của chính repo — luật số 1 ở trên: cổng nằm trong repo, không n
 `tools/smoke-index.js` mở trình duyệt thật và đo 29 thứ: tràn ngang ở 11 bề rộng
 (1440→320), mép trái của gạch section / mô tả / hàng có thẳng nhau không, tương phản chữ ở
 cả hai nền, lọc tìm kiếm có còn trơ lại tiêu đề rỗng không, bàn phím (`/`, `Esc`, phím của
-từng mục), 35 href có mở được không, và trang có lặng lẽ quay về `wb-*` không.
+từng mục), 36 href có mở được không, và trang có lặng lẽ quay về `wb-*` không.
 `sh tools/check-index.sh` chạy cả hai tầng một lệnh, cùng khuôn với `shop/tools/check.sh`.
 
 Bốn lỗi dưới đây là lỗi THẬT của bản thiết kế lại, cổng lint mù hoàn toàn với cả bốn, và
@@ -293,14 +311,14 @@ là trường tuỳ chọn.** Mục không có `key` thì không vẽ chip phím
 chuột hoặc ô tìm kiếm — `/` nhảy vào ô, `↵` mở kết quả đầu. Linter chỉ kiểm định dạng và trùng
 lặp **khi** có `key`. **Đừng ép hai mục dùng chung một phím** để giữ cho đủ bộ.
 
-Ngày 21/09 chủ trang cho gỡ hai mục khỏi danh mục nên đang là **35/36**, ô `z` trống — và **mọi
-mục đang niêm yết đều có phím trở lại**. Nghĩa là luật "`key` tuỳ chọn" vừa mất **ví dụ sống
-duy nhất** của nó: người viết mục thứ 36 sẽ thấy 35 mục đều có phím rồi bắt chước, lấy nốt `z`;
-**mục thứ 37 mới là mục đầu tiên buộc phải bỏ trường `key`**, và lúc ấy trên trang không còn cái
-nào để nhìn theo. Linter vẫn cho thiếu `key` nên không ai bị chặn nhầm, nhưng đoạn này là chỗ duy
-nhất còn ghi — xem mục *Thứ tự làm một trang* ở trên: bộ mẫu mạnh hơn luật, và bộ mẫu cho nhánh
-này hiện bằng không. Dù vậy **đừng xáo lại phím của mục cũ** để lấp chỗ: phím tắt là thứ người
-dùng học thuộc, đổi nó là phá trí nhớ cơ bắp.
+Ngày 21/09 chủ trang cho gỡ hai mục khỏi danh mục nên còn **35/36**; ngày 27/09 mục thứ 36 —
+`pages/experimentation-causal-inference.html` — lấy nốt `z`, đúng như bản trước của đoạn này đoán.
+Keyspace **hết sạch: 36/36**, và **mọi mục đang niêm yết đều có phím**. Nghĩa là luật "`key` tuỳ
+chọn" không còn **ví dụ sống** nào: **mục tiếp theo là mục đầu tiên buộc phải bỏ trường `key`**, và
+trên trang không có cái nào để nhìn theo. Linter vẫn cho thiếu `key` nên không ai bị chặn nhầm,
+nhưng đoạn này là chỗ duy nhất còn ghi — xem mục *Thứ tự làm một trang* ở trên: bộ mẫu mạnh hơn
+luật, và bộ mẫu cho nhánh này hiện bằng không. Dù vậy **đừng xáo lại phím của mục cũ** để lấp chỗ:
+phím tắt là thứ người dùng học thuộc, đổi nó là phá trí nhớ cơ bắp.
 
 Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Từ 20/09/2026 nó kiểm thêm
 một chiều nữa: mọi `.html` trong `pages/` và `cooking/` phải có một mục trỏ tới, vì
