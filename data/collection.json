@@ -109,6 +109,12 @@
           "name": "How to Lie with Statistics",
           "desc": "Darrell Huff · 1954 — mẹo dùng số liệu và biểu đồ để đánh lừa, và cách nhận ra",
           "href": "pages/how-to-lie-with-statistics.html"
+        },
+        {
+          "icon": "library_books",
+          "name": "Books in Brief",
+          "desc": "Ý cốt lõi của những cuốn chỉ cần đọc một phần — Kahneman, Haidt, Cialdini, Rosling, Diamond, Acemoglu & Robinson…",
+          "href": "pages/books-in-brief.html"
         }
       ]
     },

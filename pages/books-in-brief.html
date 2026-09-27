@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Books in Brief — cốt lõi của những cuốn sách chỉ cần đọc một phần</title>
+<meta name="description" content="Tóm tắt những cuốn sách chỉ cần đọc một phần: về chỗ ta hay nghĩ sai, vì sao người khác gật đầu hay không chịu đổi ý, cách cân bằng chứng và đoán tương lai, vì sao có nước giàu nước nghèo. Mỗi cuốn giữ bộ khung tư duy, cách dùng vào đời thật, ý nào đã đứng vững và ý nào đã lung lay, và nên mở chương nào trong bản gốc.">
+
+<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+<link rel="stylesheet" href="../web-builder/web-builder.css">
+<script>
+  /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành. */
+  try {
+    var t = localStorage.getItem('hub-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+
+<style>
+  /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens.
+     Khung (hw-*) chép từ the-little-blue-reasoning-book.html; phần riêng của trang dùng bb-*. */
+  body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+
+  /* Chữ mờ phải đọc được: --wb-fg-subtle của kit (gray-400) chỉ ~2,4:1 trên nền sáng.
+     Nâng một bậc ở cả hai nhánh theme, như psychology.html. */
+  :root { --wb-fg-subtle: var(--wb-gray-500); }
+  .dark { --wb-fg-subtle: var(--wb-gray-400); }
+
+  /* Navbar co được: kit đặt brand là flex:none, tên dài làm trang tràn ngang trên điện thoại. */
+  .wb-navbar__brand { flex: 0 1 auto; min-width: 0; }
+  .hw-brand-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ---- hero ---- */
+  .hw-hero { padding: 30px 0 20px; }
+  .hw-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+  .hw-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 12px; line-height: 1.16; }
+  .hw-sub { color: var(--wb-fg-muted); font-size: 15.5px; max-width: 74ch; line-height: 1.65; margin: 0 0 12px; }
+  .hw-sub b { color: var(--wb-fg); }
+  .hw-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; line-height: 1.6; }
+
+  /* ---- two-column reading layout ---- */
+  .hw-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 34px; align-items: start; padding: 26px 0 60px; }
+  @media (max-width: 900px) { .hw-layout { grid-template-columns: minmax(0, 1fr); } .hw-toc { display: none; } }
+  .hw-toc { max-height: calc(100vh - 92px); overflow-y: auto; width: 250px; }
+  .hw-toc .wb-sidenav__link.is-current { background: var(--wb-surface-hover); font-weight: 620; color: var(--wb-fg); }
+
+  /* ---- section rhythm ---- */
+  section[id] { scroll-margin-top: 76px; }
+  /* Đầu nhóm là div có id (navbar trỏ vào), nên cần scroll-margin riêng để không chui dưới navbar. */
+  .hw-part-head { border-top: var(--wb-bw) solid var(--wb-border); padding: 22px 0 2px; scroll-margin-top: 76px; }
+  .hw-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .hw-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
+  .hw-part-head p { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.65; margin: 0; max-width: 78ch; }
+  .hw-part-head p b { color: var(--wb-fg); font-weight: 640; }
+
+  .hw-eyebrow-sec { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .hw-eyebrow-sec b { color: var(--wb-fg); font-weight: 650; }
+  .hw-sec-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 12px; line-height: 1.3; }
+  h3.hw-h3 { font-size: 15.5px; font-weight: 680; margin: 26px 0 10px; letter-spacing: -.005em; }
+
+  /* ---- prose ---- */
+  .hw-lede { font-size: 16px; line-height: 1.62; color: var(--wb-fg); max-width: 72ch; margin: 0 0 16px; font-weight: 500; }
+  .hw-lede b { font-weight: 700; }
+  .hw-p { font-size: 14.5px; line-height: 1.75; color: var(--wb-fg); max-width: 76ch; margin: 0 0 12px; }
+  .hw-p b { color: var(--wb-fg); font-weight: 650; }
+  .hw-p em { font-style: italic; color: var(--wb-fg-muted); }
+  .hw-ul { font-size: 14.5px; line-height: 1.72; color: var(--wb-fg); max-width: 76ch; margin: 0 0 14px; padding-left: 20px; }
+  .hw-ul li { margin-bottom: 6px; }
+  .hw-ul b { font-weight: 650; }
+
+  /* ---- pull quote ---- */
+  .hw-quote { border-left: 2px solid var(--wb-neutral-strong); padding: 2px 0 2px 14px; margin: 16px 0; color: var(--wb-fg-muted); font-size: 14.5px; line-height: 1.6; max-width: 72ch; }
+  .hw-quote b { color: var(--wb-fg); }
+  /* cite mang câu "chỗ ví von hỏng" — thường dài, nên không viết hoa (như how-to-lie-with-statistics.html). */
+  .hw-quote cite { display: block; font-style: normal; font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-subtle); margin-top: 7px; line-height: 1.6; }
+  .hw-quote cite a { color: inherit; }
+
+  /* ---- number anchors ---- */
+  .hw-figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 14px 0 16px; }
+  .hw-fig { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; background: var(--wb-surface); }
+  .hw-fig .n { font-size: 19px; font-weight: 720; letter-spacing: -.02em; font-variant-numeric: tabular-nums; display: block; }
+  .hw-fig .l { font-size: 12px; color: var(--wb-fg-muted); line-height: 1.45; margin-top: 3px; display: block; }
+
+  /* ---- tables ---- */
+  .hw-tw { overflow-x: auto; margin: 4px 0 16px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); }
+  .hw-tw .wb-table { margin: 0; border: 0; }
+  .hw-tw .wb-table th, .hw-tw .wb-table td { font-size: 13.5px; line-height: 1.55; vertical-align: top; }
+
+  /* ---- idea cards : one bordered card per idea, full width, full prose ---- */
+  .hw-fal-list { display: flex; flex-direction: column; gap: 14px; margin: 12px 0 6px; }
+  .hw-fal { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 16px 18px; scroll-margin-top: 76px; }
+  .hw-fal__top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 9px; margin-bottom: 8px; }
+  .hw-fal__no { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); font-weight: 600; }
+  .hw-fal__name { font-size: 15.5px; font-weight: 710; letter-spacing: -.01em; margin: 0; }
+  .hw-fal__def { font-size: 14px; line-height: 1.72; color: var(--wb-fg); margin: 0; max-width: 80ch; }
+  .hw-fal__def b { font-weight: 650; }
+  .hw-fal__def em { font-style: italic; color: var(--wb-fg-muted); }
+  .hw-fal__meta { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 8px 12px; margin-top: 13px; padding-top: 12px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .hw-fal__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); padding-top: 2px; line-height: 1.4; }
+  .hw-fal__v { font-size: 13px; line-height: 1.62; color: var(--wb-fg-muted); margin: 0; }
+  .hw-fal__v b { color: var(--wb-fg); font-weight: 640; }
+  .hw-fal__v em { font-style: italic; }
+  .hw-egs { margin: 0; padding-left: 16px; }
+  .hw-egs li { margin-bottom: 4px; }
+  .hw-egs li:last-child { margin-bottom: 0; }
+  @media (max-width: 560px) { .hw-fal__meta { grid-template-columns: minmax(0, 1fr); gap: 3px 0; } .hw-fal__k { padding-top: 8px; } }
+
+  /* ---- static diagrams ---- */
+  .hw-viz { margin: 16px 0 6px; }
+  .hw-viz .wb-chart__svg { max-width: 560px; width: 100%; }
+  .hw-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .04em; color: var(--wb-fg-subtle); margin: 10px 0 0; line-height: 1.5; }
+  .hw-vt { fill: var(--wb-fg); font-size: 12px; font-weight: 640; font-family: var(--wb-font); }
+  .hw-vs { fill: var(--wb-fg-muted); font-size: 10.5px; font-family: var(--wb-font); }
+  .hw-vpanel { fill: var(--wb-surface); stroke: var(--wb-border); stroke-width: 1; }
+
+  /* ---- back to top ---- */
+  .hw-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
+  .hw-top.is-on { opacity: 1; pointer-events: auto; }
+
+  /* ---- ghi chú cho chủ trang (xoá khi đã duyệt) ---- */
+  .pg-confirm { border: var(--wb-bw) dashed var(--wb-border-strong); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 10px 14px; margin: 18px 0 0; max-width: 90ch; }
+  .pg-confirm__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .pg-confirm__list { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.6; color: var(--wb-fg); }
+  .pg-confirm__list li { margin: 2px 0; }
+
+  /* ════════ Books in Brief — phần riêng của trang này ════════ */
+  .hw-sub a, .hw-p a, .hw-ul a, .bb-next a, .hw-src a, .hw-fal__v a, .hw-fal__def a { color: var(--wb-fg); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--wb-border-strong); }
+  .bb-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 900px) { .bb-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .bb-cards { grid-template-columns: minmax(0, 1fr); } }
+  .bb-cards a { text-decoration: none; color: inherit; }
+  .bb-card__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 4px; }
+  .bb-book { scroll-margin-top: 76px; }
+  .bb-book__eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 8px; }
+  .bb-book__eyebrow b { color: var(--wb-fg); font-weight: 650; }
+  .bb-book__title { font-size: clamp(21px, 3vw, 25px); font-weight: 720; letter-spacing: -.015em; margin: 0 0 4px; line-height: 1.25; }
+  .bb-book__orig { font-size: 13px; color: var(--wb-fg-muted); margin: 0 0 14px; line-height: 1.55; }
+  .bb-verdict { display: grid; grid-template-columns: 138px minmax(0, 1fr); gap: 7px 14px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 12px 16px; margin: 0 0 20px; max-width: 84ch; }
+  .bb-verdict__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; color: var(--wb-fg-subtle); padding-top: 3px; line-height: 1.4; }
+  .bb-verdict__v { font-size: 13.5px; line-height: 1.6; color: var(--wb-fg); margin: 0; }
+  .bb-verdict__v b { font-weight: 650; }
+  @media (max-width: 560px) { .bb-verdict { grid-template-columns: minmax(0, 1fr); gap: 2px 0; } .bb-verdict__k { padding-top: 8px; } }
+  h4.bb-h4 { font-size: 16px; font-weight: 690; margin: 28px 0 10px; letter-spacing: -.005em; scroll-margin-top: 76px; }
+  h5.hw-fal__name { font-size: 15px; }
+  .bb-next { border-left: 3px solid var(--wb-neutral-strong); padding: 4px 0 4px 14px; margin: 24px 0 12px; max-width: 78ch; }
+  .bb-next p { font-size: 14px; line-height: 1.68; margin: 0 0 6px; color: var(--wb-fg); }
+  .bb-next p:last-child { margin-bottom: 0; }
+  .bb-next b { font-weight: 680; }
+  .bb-key { font-size: 13.5px; line-height: 1.75; background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-left-width: 3px; border-left-color: var(--wb-neutral-strong); border-radius: var(--wb-radius); padding: 11px 14px; margin: 4px 0 16px; color: var(--wb-fg); max-width: 80ch; }
+  .bb-key b { font-weight: 700; }
+  .bb-key .k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); display: block; margin-bottom: 4px; }
+  .bb-lab { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); margin: 18px 0; overflow: hidden; max-width: 860px; }
+  .bb-lab__head { padding: 12px 16px; border-bottom: var(--wb-bw) solid var(--wb-border); }
+  .bb-lab__kick { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 3px; }
+  .bb-lab__title { font-size: 14.5px; font-weight: 690; margin: 0; letter-spacing: -.005em; }
+  .bb-lab__hint { font-size: 12.5px; color: var(--wb-fg-muted); margin: 5px 0 0; line-height: 1.55; }
+  .bb-lab__hint b { color: var(--wb-fg); font-weight: 640; }
+  .bb-lab__body { padding: 14px 16px 16px; }
+  .bb-lab__row { display: grid; grid-template-columns: 124px minmax(0, 1fr); gap: 8px 12px; align-items: center; margin-bottom: 10px; }
+  .bb-lab__row > label, .bb-lab__row > .k { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); line-height: 1.4; }
+  @media (max-width: 620px) { .bb-lab__row { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+  .bb-lab__big { font-size: 26px; font-weight: 720; letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin: 4px 0 2px; }
+  .bb-lab__foot { font-size: 12.5px; color: var(--wb-fg-muted); line-height: 1.62; margin: 12px 0 0; padding-top: 11px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .bb-lab__foot b { color: var(--wb-fg); font-weight: 640; }
+  .bb-lab__foot + .bb-lab__foot { border-top: 0; padding-top: 0; margin-top: 6px; }
+  .bb-out { font-family: var(--wb-font-mono); font-size: 12px; line-height: 1.7; background: var(--wb-canvas); border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; padding: 9px 11px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; color: var(--wb-fg); margin: 0; }
+  .bb-mono { font-family: var(--wb-font-mono); font-size: 12px; }
+  .bb-svg { width: 100%; height: auto; display: block; margin: 0 auto; touch-action: none; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
+  .bb-lab .wb-btn { white-space: normal; }
+  @media (max-width: 620px) {
+    .bb-lab .wb-btn { min-height: 40px; padding-top: 10px; padding-bottom: 10px; }
+    .bb-lab .wb-input { min-height: 40px; }
+    .bb-lab .wb-range { box-sizing: content-box; height: 4px; padding-block: 18px; margin: 0; background-clip: content-box; }
+  }
+
+  /* ---- manson ---- */
+</style>
+</head>
+<body class="wb-app">
+
+<header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
+  <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
+          aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">📚</span> <span class="hw-brand-text">Books in Brief</span></a>
+  <nav class="wb-nav wb-navbar__menu">
+    <a class="wb-nav__link" href="#how">Start</a>
+    <a class="wb-nav__link" href="#g-mind">Mind</a>
+    <a class="wb-nav__link" href="#g-people">People</a>
+    <a class="wb-nav__link" href="#g-evidence">Evidence</a>
+    <a class="wb-nav__link" href="#g-world">World</a>
+    <span class="wb-navbar__spacer"></span>
+    <a class="wb-nav__link" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Home</a>
+  </nav>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Đổi giao diện sáng / tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</header>
+
+<main class="wb-container wb-container--wide">
+
+  <aside class="pg-confirm" id="confirm" aria-label="Ghi chú cho chủ trang: những điểm cần xác nhận">
+    <p class="pg-confirm__k">Ghi chú cho chủ trang · cần xác nhận — duyệt xong thì xoá khối này</p>
+    <ul class="pg-confirm__list">
+      <li><b>Trang chung:</b> ô phím “z” trong đề bài đã thuộc mục Experimentation &amp; Causal Inference (27/09), keyspace kín 36/36, nên mục Books in Brief trên trang chủ <b>không có phím tắt</b> (bỏ trường “key”, đúng luật ghi trong collection.json).</li>
+      <li><b>The Subtle Art of Not Giving a F*ck:</b> sách dẫn lời Mustaine và Best từ hai cuộc phỏng vấn không tìm được bản gốc; mục thay bằng nguồn kiểm được (phim <i>Some Kind of Monster</i>, 2004; Irish Times) và bỏ chi tiết “bị đuổi nên mới gặp vợ”, vì Wikipedia ghi Best gặp vợ ở một buổi diễn của chính The Beatles.</li>
+      <li><b>The Subtle Art of Not Giving a F*ck:</b> Độ vững có hai ý ngoài đề bài: con số “đủ ăn rồi thì tiền không còn liên quan tới hạnh phúc” của sách đã bị dữ liệu 2021–2023 bác; và ý “sách không hợp với người hay tự trách” dựa trên một bài điểm sách cá nhân, không phải nghiên cứu.</li>
+      <li><b>The Subtle Art of Not Giving a F*ck:</b> tên bản Việt theo trang nhà phát hành Huy Hoàng (bản in 2018 và 2021, NXB Văn Học, Thanh Hương dịch; chưa rõ năm in đầu). Độ dài ≈2.000 tiếng, tức khoảng 1.350–1.450 từ tuỳ cách đếm, sát trần 1.400.</li>
+    </ul>
+  </aside>
+
+  <header class="hw-hero" id="overview">
+    <p class="hw-eyebrow">Tóm tắt sách · những cuốn chỉ cần đọc một phần</p>
+    <h1 class="hw-title">Nhiều cuốn sách hay chỉ có vài chương thật sự mang ý — phần còn lại là ví dụ kéo dài và nhắc lại.</h1>
+    <p class="hw-sub">Trang này gom những cuốn như thế: về chỗ ta hay nghĩ sai, vì sao người khác gật đầu hay không chịu đổi ý, cách cân bằng chứng và đoán tương lai, và vì sao có nước giàu nước nghèo. Mỗi cuốn giữ đúng bốn thứ: <b>bộ khung tư duy</b>, <b>cách dùng vào đời thật</b>, <b>ý nào đã đứng vững và ý nào đã lung lay</b>, và <b>nên mở chương nào</b> trong bản gốc.</p>
+    <p class="hw-sub">Cuốn nào giá trị nằm ở từng chi tiết, phải đọc hết, thì có trang riêng. Hiện có: <a href="how-to-lie-with-statistics.html">How to Lie with Statistics</a> của Darrell Huff.</p>
+    <p class="hw-meta">MỖI CUỐN: MỘT CÂU LUẬN ĐIỂM · BỘ KHUNG · DÙNG THẾ NÀO · ĐỘ VỮNG · NÊN MỞ CHƯƠNG NÀO</p>
+  </header>
+
+  <!-- Lưới thẻ: một thẻ một cuốn, xếp theo số thứ tự 01 → 10. -->
+  <div class="bb-cards">
+    <!-- 01 kahneman · 02 galef: chèn thẻ vào trước thẻ 03 -->
+    <a class="wb-card wb-card--hover wb-card--pad" href="#manson">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">03</span>
+        <div class="wb-media__body">
+          <p class="bb-card__k">The Subtle Art of Not Giving a F*ck</p>
+          <p class="wb-media__title">Nghệ thuật tinh tế của việc “đếch” quan tâm</p>
+          <p class="wb-media__text">Vì sao cố cho vui lại khổ hơn, và cách chọn cái thước để chấm chính mình, chọn nỗi khổ đáng để chịu.</p>
+        </div>
+      </div>
+    </a>
+    <!-- 04 cialdini · 05 haidt · 06 sagan · 07 tetlock · 08 rosling · 09 diamond · 10 acemoglu: chèn sau thẻ 03 -->
+  </div>
+
+  <div class="hw-layout">
+    <nav class="wb-sidenav hw-toc wb-sticky wb-scroll-y" style="--wb-sticky-gap:72px" id="toc" aria-label="Mục lục trang">
+      <div class="wb-sidenav__section">Start</div>
+      <a class="wb-sidenav__link" href="#how">How to use this page</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Your own mind</div>
+      <!-- 01 kahneman · 02 galef: chèn link vào trước link 03 -->
+      <a class="wb-sidenav__link" href="#manson">The Subtle Art of Not Giving a F*ck</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Other people</div>
+      <!-- 04 cialdini · 05 haidt -->
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Evidence &amp; the future</div>
+      <!-- 06 sagan · 07 tetlock -->
+
+      <div class="wb-sidenav__section" style="margin-top:12px">The world</div>
+      <!-- 08 rosling · 09 diamond · 10 acemoglu -->
+    </nav>
+
+    <div class="wb-stack" style="--wb-stack-gap:48px">
+
+      <!-- ══════════════════ 00 · TRƯỚC KHI ĐỌC ══════════════════ -->
+      <section id="how">
+        <p class="hw-eyebrow-sec"><b>00</b> — trước khi đọc</p>
+        <h2 class="hw-sec-title">Sách nào vào trang này, và vì sao tóm tắt vẫn phải giữ ví dụ</h2>
+        <p class="hw-lede">Phép thử để chọn sách: tóm cả cuốn thành <b>một câu</b>. Câu ấy còn đáng giá thì đọc tóm tắt là đủ. Câu ấy nghe hiển nhiên thì giá trị nằm ở chi tiết, và cuốn đó phải đọc hết.</p>
+        <p class="hw-p">Tóm <a href="how-to-win-every-argument.html">How to Win Every Argument</a> thành “có nhiều kiểu lập luận sai” là mất sạch thứ làm nên cuốn sách: 79 lối ngụy biện, mỗi lối một cái bẫy riêng. Cuốn như thế cần trang riêng. Những cuốn trên trang này nằm ở giữa: bộ khung tóm được trong vài màn hình, nhưng vẫn có một hai chương đáng mở bản gốc.</p>
+        <div class="hw-quote">
+          Biết về lối tắt không tắt được lối tắt.
+          <cite><a href="psychology.html#lab-bias">Psychology</a> · mô hình 9 / 11, về thiên kiến</cite>
+        </div>
+        <p class="hw-p">Câu ấy nói về thiên kiến: đọc xong về chúng, người ta vẫn dính y như cũ. Tóm tắt sách cũng vậy. Đọc câu “hạnh phúc đến từ việc giải quyết vấn đề” thì gật đầu ngay, rồi quên, vì chưa từng thấy nó chạy trên một ca cụ thể. Nên mỗi mục ở đây giữ <b>ví dụ nổi tiếng của chính cuốn sách</b>, thêm một ví dụ gần người Việt khi ví dụ gốc đã cũ hay quá Mỹ, và có khối <b>Dùng thế nào</b>: vài câu hỏi, vài phép thử để đem ra dùng ngay.</p>
+        <p class="hw-p">Mỗi mục đi theo cùng một thứ tự:</p>
+        <ol class="hw-ul">
+          <li><b>Một câu luận điểm</b> của cả cuốn.</li>
+          <li><b>Đọc gì trong bản gốc, bỏ qua được gì</b>, và mục này đọc mất bao lâu.</li>
+          <li><b>Bộ khung</b>: ý chính xếp theo trình tự lập luận, không theo trình tự chương.</li>
+          <li><b>Dùng thế nào</b>: câu hỏi, phép thử dùng được ngay.</li>
+          <li><b>Độ vững</b>: ý nào đã được kiểm lại, ý nào đã lung lay hoặc đang tranh cãi.</li>
+          <li><b>Bạn vừa có / Nó dẫn đi đâu</b>: nối sang cuốn khác hoặc trang khác.</li>
+        </ol>
+        <p class="hw-p">Các cuốn chia bốn nhóm, đi từ trong ra ngoài: đầu mình, người khác, bằng chứng, rồi cả thế giới.</p>
+      </section>
+
+      <!-- ══════════════════ NHÓM 1 ══════════════════ -->
+      <div class="hw-part-head" id="g-mind">
+        <p class="kicker">Nhóm 1 · Your own mind</p>
+        <h2>Trong đầu mình — ta nghĩ sai ở đâu, và nên bận tâm điều gì</h2>
+        <p>Ba cuốn nhìn vào chính đầu mình: <b>Kahneman</b> chỉ ra những lối tắt khiến ta đoán sai mà vẫn tự tin, <b>Galef</b> hỏi vì sao ta hay bảo vệ điều mình muốn tin thay vì tìm xem điều gì đúng, còn <b>Manson</b> hỏi ta đang dùng cái thước nào để chấm chính mình.</p>
+      </div>
+
+      <!-- 01 kahneman · 02 galef: chèn mục vào đây, trước mục 03 -->
+
+      <section class="bb-book" id="manson">
+        <p class="bb-book__eyebrow"><b>03</b> — Mark Manson · 2016</p>
+        <h3 class="bb-book__title">Nghệ thuật tinh tế của việc “đếch” quan tâm</h3>
+        <p class="bb-book__orig"><i>The Subtle Art of Not Giving a F*ck</i> (2016) · bản tiếng Việt: Thanh Hương dịch, NXB Văn Học, Huy Hoàng Bookstore phát hành</p>
+        <p class="hw-lede">Ai cũng đang bận tâm tới một điều gì đó, nên câu hỏi không phải “bận tâm ít đi” mà là <b>bận tâm tới điều gì</b>. Đời không hết khổ; sống tốt là chọn được nỗi khổ đáng chịu, và chọn đúng cái thước để chấm chính mình.</p>
+        <div class="bb-verdict">
+          <span class="bb-verdict__k">Đọc gì trong bản gốc</span><p class="bb-verdict__v">Không bắt buộc. Nếu đọc, mở <b>chương 4</b>, “Giá trị của sự chịu đựng” (<i>The Value of Suffering</i>), và <b>chương 5</b>, “Bạn luôn luôn lựa chọn” (<i>You Are Always Choosing</i>): hai chương này mang phần lớn bộ khung dưới đây.</p>
+          <span class="bb-verdict__k">Bỏ qua được</span><p class="bb-verdict__v">Chương 7–9: ý của mỗi chương gói được trong vài câu, phần còn lại là giai thoại và chuyện đời tác giả. Những câu chửi thề là giọng văn, bỏ qua không mất ý.</p>
+          <span class="bb-verdict__k">Mục này</span><p class="bb-verdict__v">~8 phút đọc</p>
+        </div>
+
+        <h4 class="bb-h4" id="manson-khung">Bộ khung</h4>
+        <p class="hw-p"><b>Gỡ hiểu nhầm trước.</b> Tựa sách nghe như lời khuyên sống bất cần, vì “đếch quan tâm” thường nghĩa là mặc kệ. Chương 1 nói ngược lại, qua ba điều “tinh tế”:</p>
+        <ul class="hw-ul">
+          <li><b>Không quan tâm không phải là thờ ơ</b>, mà là chịu được việc mình khác người khi theo đuổi điều mình coi trọng.</li>
+          <li><b>Muốn khỏi bận tâm chuyện vặt, phải có chuyện lớn hơn để bận tâm.</b> Người đang lo viện phí cho mẹ không còn sức cãi nhau với shipper vì giao trễ mười phút.</li>
+          <li><b>Ta luôn đang chọn thứ để bận tâm</b>, dù biết hay không. Mình không chọn thì mạng xã hội chọn hộ.</li>
+        </ul>
+        <p class="hw-p"><b>Vì sao cố cho vui lại khổ hơn.</b> Manson mượn của triết gia Alan Watts <b>luật ngược</b>: càng ráo riết đuổi theo cảm giác dễ chịu, ta càng thấy rõ mình đang thiếu nó; chấp nhận cảm giác khó chịu thì nó bớt dày vò. Cái bẫy là vòng lặp: buồn, rồi buồn vì thấy mình buồn.</p>
+        <div class="hw-quote">
+          Như mất ngủ: càng gồng cho ngủ được thì càng tỉnh.
+          <cite>Chỗ ví von hỏng: luật ngược chỉ đúng với cảm xúc như vui, bình tĩnh, buồn ngủ. Kỹ năng thì khác: muốn nói được tiếng Anh thì phải cố thật.</cite>
+        </div>
+        <p class="hw-p"><b>Hạnh phúc là giải được vấn đề, không phải hết vấn đề.</b> Vấn đề không biến mất, chỉ đổi sang loại khác, may thì loại tốt hơn: lương 8 triệu lo tiền trọ, lương 80 triệu lo trả góp căn hộ. Nên câu đáng hỏi không phải “mình muốn gì” mà là <b>mình sẵn lòng chịu nỗi khổ nào</b>: “What pain do you want in your life?” (chương 2). Nhiều người muốn chốt đơn tiền tỉ trên livestream; ít ai muốn nói liền bốn tiếng trước mười hai người xem, ngày này qua ngày khác. Người trụ lại là người chọn được nỗi khổ ấy.</p>
+        <p class="hw-p"><b>Bạn không đặc biệt, và đó là tin tốt.</b> Màn hình đổ về ta toàn những cái nhất, người cùng tuổi mua nhà, cô bán hàng online doanh thu tiền tỉ, nên bình thường trông như thất bại. Cảm giác mình xứng đáng hơn người, Manson gọi là <b>thói đòi hỏi</b> (<i>entitlement</i>). Nhận mình bình thường thì mới gỡ được áp lực phải phi thường.</p>
+
+        <h4 class="bb-h4" id="manson-thuoc">Cái thước để chấm chính mình</h4>
+        <p class="hw-p">Chọn nỗi khổ nào tuỳ vào <b>giá trị</b>: cái thước ta dùng để tự chấm mình thành hay bại. Giá trị khác thước thật ở chỗ mỗi người một cây, và đổi được. Sách kể chuyện hai nhạc công bị đuổi khỏi ban. <b>Dave Mustaine</b> bị Metallica đuổi năm 1983, lập ra Megadeth, bán hàng chục triệu đĩa, vậy mà trong phim tài liệu <i>Some Kind of Monster</i> (2004) ông vẫn nói mình luôn thấy mình chỉ là số hai sau Metallica. <b>Pete Best</b> bị The Beatles thay bằng Ringo Starr năm 1962, rồi bỏ nghề nhạc hai mươi năm để làm công chức ở Liverpool; ở tuổi 78, ông nói mình không hối tiếc và thấy mình may mắn. Người thành công hơn lại khổ hơn, vì chấm mình bằng thước “có hơn Metallica không”. Best đã đổi sang thước khác: gia đình.</p>
+        <p class="hw-p">Muốn thấy thước của mình, Manson đề nghị bóc <b>củ hành tự nhận thức</b>. Lớp một: mình đang cảm thấy gì. Lớp hai: vì sao. Lớp ba, khó nhất: mình đang lấy thước nào để coi chuyện này là thất bại. Hình củ hành chỉ đúng một nửa: lớp trong mới cay mắt, nhưng lớp ba không tự lộ ra khi bóc, phải chủ động hỏi “mình đang đo bằng gì” mới thấy.</p>
+        <p class="hw-p">Thước nào tốt? Sách đưa ba tiêu chí: giá trị tốt <b>bám thực tế</b>, <b>có ích cho người khác</b>, và <b>nằm trong tầm tay mình ngay bây giờ</b>, như trung thực, tò mò, khiêm tốn. Bốn thước xấu hay gặp: <b>khoái lạc</b>, <b>thành công vật chất</b>, <b>lúc nào cũng phải đúng</b>, <b>lúc nào cũng phải tích cực</b>. “Được nhiều like” là thước xấu vì nó nằm trong tay người khác; “hôm nay mình viết được 200 chữ chưa” là thước tốt vì nó nằm trong tay mình.</p>
+
+        <h4 class="bb-h4" id="manson-nam">Năm thước nên chọn, mỗi chương một cái</h4>
+        <p class="hw-p">Cuối chương 4, Manson đề xuất năm giá trị “ngược”: nghe khó chịu, nhưng dẫn tới những vấn đề đáng giải.</p>
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="manson-v1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 5</span><h5 class="hw-fal__name">Trách nhiệm, khác với lỗi</h5><span class="wb-tag">responsibility</span></div>
+            <p class="hw-fal__def">Lỗi nhìn về phía sau: ai đã gây ra chuyện. Trách nhiệm nhìn về phía trước: từ giờ ai đáp lại nó. Phép so mở chương: bị dí súng bắt chạy marathon là cực hình, tự đăng ký chạy là niềm tự hào; cùng một nỗi đau, khác ở chỗ ai chọn. Phép so có giới hạn: bệnh tật hay tai nạn thì không ai chọn, cái chọn được chỉ là cách đáp lại.</p>
+          </article>
+          <article class="hw-fal" id="manson-v2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 6</span><h5 class="hw-fal__name">Không chắc chắn</h5><span class="wb-tag">uncertainty</span></div>
+            <p class="hw-fal__def">Muốn đổi thước thì phải nghi cái thước đang dùng. Khó ở chỗ Manson gọi là <b>luật né tránh</b>: thứ gì càng đe doạ cách ta nhìn chính mình, ta càng né. Người tự nhận “có khiếu viết” có thể né mãi việc gửi bài, vì bị từ chối sẽ làm lung lay cái nhãn ấy.</p>
+          </article>
+          <article class="hw-fal" id="manson-v3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 7</span><h5 class="hw-fal__name">Thất bại, và nguyên tắc “cứ làm gì đó”</h5><span class="wb-tag">failure</span></div>
+            <p class="hw-fal__def">Ta hay chờ có cảm hứng mới có động lực, có động lực mới làm. Manson đảo chuỗi: <b>làm → cảm hứng → động lực</b>; việc nhỏ làm trước sinh cảm hứng cho bước sau. Khi thước đo là “có làm không” thay vì “kết quả có đẹp không”, thất bại bớt đáng sợ.</p>
+          </article>
+          <article class="hw-fal" id="manson-v4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 8</span><h5 class="hw-fal__name">Từ chối</h5><span class="wb-tag">saying no</span></div>
+            <p class="hw-fal__def">Chọn một thứ là từ chối những thứ khác. Người không dám nói, cũng không chịu nổi khi nghe chữ “không”, rốt cuộc chẳng có giá trị nào của riêng mình.</p>
+          </article>
+          <article class="hw-fal" id="manson-v5">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 9</span><h5 class="hw-fal__name">Nghĩ về cái chết của mình</h5><span class="wb-tag">mortality</span></div>
+            <p class="hw-fal__def">Chương cuối dựa vào nhà nhân học Ernest Becker (<i>The Denial of Death</i>, 1973, giải Pulitzer 1974): biết mình sẽ chết, con người dựng những “dự án bất tử” để phần nào của mình còn lại. Với Manson, nhìn thẳng vào cái chết là phép thử mạnh nhất cho mọi thước khác.</p>
+          </article>
+        </div>
+
+        <h4 class="bb-h4" id="manson-dung">Dùng thế nào</h4>
+        <p class="hw-p">Khi đang bực, đang tủi hay đang phân vân, viết ra giấy ba câu dưới đây. Viết, vì câu trả lời trong đầu hay trượt về chỗ dễ chịu.</p>
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="manson-q1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 1</span><h5 class="hw-fal__name">Mình đang chấm mình bằng thước nào?</h5><span class="wb-tag">củ hành · chương 4</span></div>
+            <p class="hw-fal__def">Bóc đủ ba lớp, rồi hỏi tiếp: thước ấy có nằm trong tay mình không?</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Thưởng Tết thấp hơn người ngồi cạnh. Lớp một: tủi. Lớp hai: thấy công sức bị xem nhẹ. Lớp ba: thước “phải hơn người cùng phòng”, nằm trong tay sếp. Đổi thành “năm nay mình làm được gì mà năm ngoái chưa làm được”, rồi mới tính chuyện xin tăng lương.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="manson-q2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 2</span><h5 class="hw-fal__name">Không phải lỗi của mình, vậy phần nào là việc của mình?</h5><span class="wb-tag">trách nhiệm · chương 5</span></div>
+            <p class="hw-fal__def">Chia hai cột. Cột “lỗi của ai” viết xong thì để đó; cột “từ giờ mình làm gì” phải có ít nhất một dòng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Đang dừng đèn đỏ thì bị xe sau tông vào đuôi. Lỗi: người kia. Việc của mình: chụp ảnh hiện trường, thoả thuận chuyện sửa xe, và về nhà mà không trút cơn bực lên con.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="manson-q3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Câu 3</span><h5 class="hw-fal__name">Mình sẵn lòng chịu nỗi khổ nào?</h5><span class="wb-tag">chọn nỗi khổ · chương 2</span></div>
+            <p class="hw-fal__def">Trước mỗi quyết định lớn, viết ra cái giá phải trả mỗi ngày, không phải phần thưởng cuối cùng. Đọc lại mà vẫn thấy chịu được thì đó là lựa chọn của mình.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Ví dụ</span>
+              <div class="hw-fal__v">Mở quán cà phê: dậy 5 giờ, đứng quầy 14 tiếng, vài tháng đầu có thể lỗ, Tết không nghỉ. Chỉ thích hình ảnh cái quán thì nên đi làm cho một quán khác vài tháng trước đã.</div>
+            </div>
+          </article>
+        </div>
+        <p class="bb-key"><span class="k">Mang theo</span>Đừng hỏi “làm sao cho hết khổ”. Hỏi <b>“khổ vì cái gì thì đáng”</b>.</p>
+
+        <h4 class="bb-h4" id="manson-vung">Độ vững</h4>
+        <ul class="hw-ul">
+          <li><b>Ý không mới, và tác giả không giấu.</b> Chấp nhận khổ đau, buông bớt cái tôi là ý của Phật giáo; chỉ lo phần trong tầm tay là ý của phái Khắc kỷ. Manson kể ông đọc sâu về Thiền từ sớm, còn Khắc kỷ chỉ biết sơ (phỏng vấn với Daily Stoic, 2016); “luật ngược” là của Watts (<i>The Wisdom of Insecurity</i>, 1951), chương cuối dựa trên Becker.</li>
+          <li><b>Bằng chứng chủ yếu là chuyện kể.</b> Chuyện kể minh hoạ tốt nhưng không chứng minh: chọn chuyện nào là đã chọn kết luận. Bao nhiêu người bị đuổi rồi day dứt cả đời, bao nhiêu người thanh thản như Best, sách không đếm.</li>
+          <li><b>“Luật ngược” có nghiên cứu đỡ một phần, kèm điều kiện.</b> Mauss và cộng sự (2011) thấy người càng coi trọng hạnh phúc càng kém vui khi đời đang êm, và người được gợi cho coi trọng hạnh phúc thì xem phim vui lại vui ít hơn, vì thất vọng với chính cảm xúc của mình. Nhưng người tham gia chỉ là nữ, một lần làm lại ở Bỉ (683 người, 2021) chỉ khớp một phần, và ở Nga, Đông Á thì ngược lại: khao khát hạnh phúc đi kèm hạnh phúc hơn (Ford và cộng sự, 2015). Vế “chấp nhận cảm xúc xấu” vững hơn: người quen chấp nhận cảm xúc tiêu cực có sức khoẻ tâm lý tốt hơn sáu tháng sau, còn chấp nhận <i>hoàn cảnh</i> thì không (Ford và cộng sự, 2018). Chấp nhận cảm giác, không phải chấp nhận vấn đề.</li>
+          <li><b>Một con số đã lung lay.</b> Sách viết rằng khi đã đủ ăn ở, tương quan giữa hạnh phúc và thành công vật chất gần như bằng không. Dữ liệu từ 33.391 người Mỹ nói khác: mỗi lần thu nhập gấp đôi, hạnh phúc nhích thêm một nấc tương đương, kể cả trên 75.000 USD một năm (Killingsworth, 2021); phân tích chung với Kahneman năm 2023 chỉ thấy đường ấy phẳng lại ở nhóm vốn kém hạnh phúc nhất. Còn đúng là lợi ích giảm dần: thêm 1 triệu là +20% với lương 5 triệu, +2% với lương 50 triệu. Lời khuyên đừng lấy tiền làm thước chấm mình vẫn đứng; con số đỡ nó thì không.</li>
+          <li><b>Tựa sách dễ bị đọc thành “sống bất cần”, và lời khuyên không hợp với mọi người.</b> Sách viết cho người hay đòi hỏi, hay đổ lỗi; bài điểm sách của Russ Allbery nhận xét người quen gác nhu cầu của mình cho người khác không phải đối tượng của sách. Với người vốn đã ôm hết lỗi về mình, “nhận trách nhiệm cho mọi thứ” dễ thành thêm một gánh.</li>
+        </ul>
+
+        <div class="bb-next">
+          <p><b>Bạn vừa có:</b> hai câu hỏi thay cho “làm sao hết khổ”: mình đang chấm mình bằng thước nào, và khổ vì cái gì thì đáng.</p>
+          <p><b>Nó dẫn đi đâu:</b> Manson bảo hãy nghi cái thước của mình, nhưng không kể ta tự lừa mình bằng những cách nào; trang <a href="psychology.html">Psychology</a> kể từng thiên kiến một. Nhóm tiếp theo quay ra ngoài: người khác gật đầu vì đâu, và vì sao họ không chịu đổi ý?</p>
+        </div>
+        <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/The_Subtle_Art_of_Not_Giving_a_Fuck">Wikipedia</a> (NXB HarperOne, 2016, chín chương) · <a href="https://markmanson.net/not-giving-a-fuck">bài blog gốc</a> (08/01/2015) · <a href="https://www.huyhoangbook.vn/products/nghe-thuat-tinh-te-cua-viec-dech-quan-tam-1">Huy Hoàng Bookstore</a> (bản tiếng Việt, mục lục) · <a href="https://dailystoic.com/mark-manson-interview/">Daily Stoic</a> (phỏng vấn, 2016) · Watts, <i>The Wisdom of Insecurity</i> (Pantheon, 1951) · <a href="https://en.wikipedia.org/wiki/The_Denial_of_Death">The Denial of Death</a> · <a href="https://en.wikipedia.org/wiki/Metallica:_Some_Kind_of_Monster">Some Kind of Monster</a> · <a href="https://en.wikipedia.org/wiki/Pete_Best">Pete Best</a> · <a href="https://www.irishtimes.com/culture/music/there-s-nothing-to-forgive-pete-best-on-being-sacked-from-the-beatles-1.4199732">Irish Times</a> · <a href="https://doi.org/10.1037/a0022010">Mauss và cs., 2011</a> · <a href="https://doi.org/10.5334/pb.1036">Hansenne, 2021</a> · <a href="https://doi.org/10.1037/xge0000108">Ford và cs., 2015</a> · <a href="https://doi.org/10.1037/pspp0000157">Ford và cs., 2018</a> · <a href="https://doi.org/10.1073/pnas.2016976118">Killingsworth, 2021</a> · <a href="https://doi.org/10.1073/pnas.2208661120">Killingsworth, Kahneman &amp; Mellers, 2023</a> · <a href="https://www.eyrie.org/~eagle/reviews/books/0-06-245773-X.html">Russ Allbery</a> (điểm sách). Chuyện Mustaine và Best: sách dẫn lời hai người từ những cuộc phỏng vấn mà trang chưa tìm được bản gốc, nên mục này dùng hai nguồn kiểm được ở trên.</p>
+      </section>
+
+      <!-- ══════════════════ NHÓM 2 ══════════════════ -->
+      <div class="hw-part-head" id="g-people">
+        <p class="kicker">Nhóm 2 · Other people</p>
+        <h2>Người khác — vì sao họ gật đầu, và vì sao họ không đổi ý</h2>
+        <p>Hai cuốn về người khác: <b>Cialdini</b> kể những lối tắt khiến ta nói “có” trước khi kịp nghĩ, còn <b>Haidt</b> giải thích vì sao tranh cãi chuyện đúng sai hiếm khi làm ai đổi ý — trực giác đi trước, lý lẽ chạy theo sau.</p>
+      </div>
+
+      <!-- 04 cialdini · 05 haidt -->
+
+      <!-- ══════════════════ NHÓM 3 ══════════════════ -->
+      <div class="hw-part-head" id="g-evidence">
+        <p class="kicker">Nhóm 3 · Evidence &amp; the future</p>
+        <h2>Bằng chứng và tương lai — nên tin cái gì, và đoán thế nào</h2>
+        <p>Hai cuốn về cách biết: <b>Sagan</b> đưa một bộ câu hỏi để soi những lời khẳng định nghe có vẻ khoa học mà rỗng, còn <b>Tetlock</b> đo xem ai đoán tương lai giỏi, và họ nghĩ khác người thường ở chỗ nào.</p>
+      </div>
+
+      <!-- 06 sagan · 07 tetlock -->
+
+      <!-- ══════════════════ NHÓM 4 ══════════════════ -->
+      <div class="hw-part-head" id="g-world">
+        <p class="kicker">Nhóm 4 · The world</p>
+        <h2>Thế giới — nó đang thật sự ra sao, và vì sao nước giàu nước nghèo</h2>
+        <p>Ba cuốn về thế giới: <b>Rosling</b> cho thấy phần đông chúng ta hình dung thế giới tệ hơn và cũ hơn thực tế, còn <b>Diamond</b> và <b>Acemoglu &amp; Robinson</b> là hai câu trả lời đối nghịch cho câu hỏi vì sao có nước giàu nước nghèo: do địa lý, hay do thể chế.</p>
+      </div>
+
+      <!-- 08 rosling · 09 diamond · 10 acemoglu -->
+
+    </div><!-- /content column -->
+  </div><!-- /hw-layout -->
+</main>
+
+<footer class="wb-footer wb-footer--slim">
+  <div class="wb-footer__inner">
+    <div class="wb-footer__bottom">
+      <span class="wb-footer__copy">Books in Brief — diễn giải lại để học tư duy, không thay cho bản gốc</span>
+      <a class="wb-footer__link" href="../index.html">← Home</a>
+    </div>
+  </div>
+</footer>
+
+<button class="wb-btn wb-btn--icon wb-btn--round hw-top" id="toTop" aria-label="Lên đầu trang">
+  <span class="wb-ico">arrow_upward</span>
+</button>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
+  root.classList.toggle('dark', saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
+  var toggle = document.getElementById('theme-toggle');
+  if (toggle) toggle.addEventListener('click', function () {
+    var dark = !root.classList.contains('dark');
+    root.classList.toggle('dark', dark);
+    try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+
+  var menu = document.querySelector('.wb-navbar__menu');
+  document.addEventListener('click', function (e) {
+    if (!menu) return;
+    if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
+    else if (e.target.closest('.wb-navbar__menu .wb-nav__link')) menu.classList.remove('is-open');
+  });
+
+  var links = [].slice.call(document.querySelectorAll('#toc .wb-sidenav__link'));
+  var byId = {};
+  var targets = [];
+  links.forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if (el) { byId[id] = a; targets.push(el); }
+  });
+  var current = null;
+  function setCurrent(a) {
+    if (current === a) return;
+    if (current) current.classList.remove('is-current');
+    current = a;
+    if (current) current.classList.add('is-current');
+  }
+  if ('IntersectionObserver' in window && targets.length) {
+    var seen = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { seen[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var bestId = null, best = 0;
+      targets.forEach(function (t) { if ((seen[t.id] || 0) > best) { best = seen[t.id]; bestId = t.id; } });
+      if (bestId) setCurrent(byId[bestId]);
+    }, { rootMargin: '-80px 0px -55% 0px', threshold: [0, .1, .5, 1] });
+    targets.forEach(function (t) { io.observe(t); });
+  }
+
+  var top = document.getElementById('toTop');
+  function onScroll() { top.classList.toggle('is-on', window.scrollY > 600); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+</script>
+</body>
+</html>
