@@ -19,13 +19,16 @@
   dung: rà". Bản rà (điểm, lỗi đã kiểm, tham chiếu chéo cũ, kế hoạch theo cấp) nằm ở một artifact của
   chủ trang, không ở trong repo. Đợt sau đó đã sửa tham chiếu chéo và thêm cổng `verify-jazz-piano.py`;
   phần còn lại của bản rà chưa được đối chiếu. Hỏi chủ trang trước khi sửa nội dung theo bản rà ấy.
-  Liên quan: nhánh `claude/jazz-redesign-842466c0` (chưa merge) có commit 59aa04e sửa kiến thức —
-  phần lớn các chỗ sai nó sửa vẫn còn trên trang (ví dụ Napoli ghi là "tritone sub của V/V",
-  "Swing ⇒ mọi thứ trước 1970", "80% bản thu"). Patch không áp thẳng được vì trang đã dựng lại giao
-  diện; phải áp lại bằng tay.
+- **jazz-piano-theory — dòng chữ trên bìa "HỌC LẠI SAU 10 NĂM".** Nó nói về người đặt trang, không về
+  nội dung (REPO-008), nhưng là một phần của bìa. Bỏ, hay giữ?
 - **scooter-maintenance-guide — theme.** Một ghi chú cũ nói chủ trang muốn trang này giữ tối trước;
   commit dbd2fc7 sau đó cho nó theo hệ điều hành như mọi trang. Hỏi chủ trang muốn bên nào.
 
 ## NỢ
 
+- `jazz-piano-theory.html`, hai lỗi demo nhỏ ngoài đợt sửa kiến thức:
+  - ①09 demo vòng hợp âm: lời nhắc "chú ý cú V→I ở cuối mỗi vòng" chỉ đúng với nút ii–V–I — mỗi vòng
+    chỉ phát một lần, các vòng khác không tới V→I.
+  - ⑤19 demo "Comping (Charleston)": nốt "và" của phách 2 vẫn phát thẳng, và bass C–E–G–A không tiếp
+    cận gốc ô sau như luật walking bass ở ②04.
 - Nợ đo được của cổng tĩnh nằm ở bảng `DEBT` trong `pages/tools/lint-pages.py` — không chép lại ở đây.
