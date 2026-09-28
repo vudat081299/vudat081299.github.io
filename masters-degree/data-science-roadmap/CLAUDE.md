@@ -249,7 +249,8 @@ theo dõi**, nên chúng không tự theo repo về máy mới (`.claude/setting
 và đã mang hook `PostToolUse` của thư mục này). Nguồn sự thật là `tools/hooks/pre-commit`,
 `tools/hooks/pre-push`, `tools/hooks/claude-settings.json` và `tools/hooks/launch.json` — các
 file được theo dõi; script chỉ nối chúng vào chỗ git, Claude Code và preview thật sự đọc. Chạy
-lại nhiều lần không sinh gì trùng, và không ghi lại `settings.json` khi nó đã đúng.
+lại nhiều lần không sinh gì trùng. `.claude/settings.json` ở gốc là nguồn của hook `PostToolUse`:
+đã có hook của thư mục này thì script để nguyên file, không đè bằng bản trong `tools/hooks/`.
 
 **Một lệnh là đủ, và git hook không cài riêng ở đây.** Repo có nhiều project con nên
 `.git/hooks/*` phải là **bộ điều phối** (gọi mọi `*/tools/hooks/<event>`), không phải symlink
