@@ -42,6 +42,7 @@ chủ repo trước; đảo xong thì giữ cả hai mục (*"đã thay bằng �
   bí mật, nhận webhook, trạng thái chung) giải được bằng một hàm serverless đặt cạnh trang tĩnh.
 - **Nguồn:** ADR 0001, phiên 20/09/2026 (commit 5a04a8b). Phiên ấy được phép đổi sang framework
   khác; ADR ghi lựa chọn giữ nguyên.
+  Chủ trang xác nhận ngày 28/09/2026 (cả năm ADR của shop/docs/adr/).
 - **Chi tiết:** docs/adr/0001-static-site.md
 
 ### SHOP-002 — Tìm mùi chấm điểm bằng trọng số tường minh, phân xử bằng câu ký ức
@@ -57,6 +58,7 @@ chủ repo trước; đảo xong thì giữ cả hai mục (*"đã thay bằng �
 - **Đừng:** học trọng số từ dữ liệu khi chưa có đủ lượt làm quiz thật; sửa trọng số mà không chạy
   lại cổng và đọc dòng phân bố.
 - **Nguồn:** ADR 0002, phiên 20/09/2026 (commit a18de77, 5a04a8b).
+  Chủ trang xác nhận ngày 28/09/2026 (cả năm ADR của shop/docs/adr/).
 - **Chi tiết:** docs/adr/0002-scent-finder-scoring.md
 
 ### SHOP-003 — Hộp quà là một dòng ghép trong giỏ; giỏ lưu cấu hình, không lưu giá
@@ -70,6 +72,7 @@ chủ repo trước; đảo xong thì giữ cả hai mục (*"đã thay bằng �
 - **Vì sao:** lưu giá thì shop đổi giá nến xong, cái hộp nằm sẵn trong giỏ của khách vẫn giữ giá
   cũ mà không ai biết là cũ.
 - **Nguồn:** ADR 0003, phiên 20/09/2026 (commit a18de77, 5a04a8b).
+  Chủ trang xác nhận ngày 28/09/2026 (cả năm ADR của shop/docs/adr/).
 - **Chi tiết:** docs/adr/0003-gift-box-in-cart.md
 
 ### SHOP-004 — Không tự xây phần mềm quản lý bán hàng
@@ -86,6 +89,7 @@ chủ repo trước; đảo xong thì giữ cả hai mục (*"đã thay bằng �
   công thức của shop" — sai: phần mềm bán hàng đại trà đã có tính năng sản xuất, trừ nguyên liệu
   theo định mức (ADR, mục sửa 24/09/2026).
 - **Nguồn:** ADR 0004, phiên 20/09/2026 (commit 5a04a8b); sửa ngày 24/09/2026 (commit f2fafec).
+  Chủ trang xác nhận ngày 28/09/2026 (cả năm ADR của shop/docs/adr/).
 - **Chi tiết:** docs/adr/0004-dont-rebuild-retail-software.md
 
 ### SHOP-005 — Ẩn icon cho tới khi font ligature thật sự về, không hẹn giờ dự phòng
@@ -101,6 +105,7 @@ chủ repo trước; đảo xong thì giữ cả hai mục (*"đã thay bằng �
   "đã về" khi font không về (ADR, mục sửa 21/09/2026).
 - **Nguồn:** ADR 0005, phiên 20/09/2026 (commit a18de77, 5a04a8b); sửa ngày 21/09/2026 (commit
   5799dde).
+  Chủ trang xác nhận ngày 28/09/2026 (cả năm ADR của shop/docs/adr/).
 - **Chi tiết:** docs/adr/0005-hide-icons-until-font-loads.md
 
 ### SHOP-006 — Ba trang lõi: trang chủ dẫn thẳng sang mua, trang sản phẩm chia theo mùi, thanh toán
