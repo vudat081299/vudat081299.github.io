@@ -91,6 +91,20 @@ Trong một worktree `.git` là một file, nên cách đoán cũ báo "2/3 lớ
 đang chạy thật ở thư mục hook chung — lỗi đó hiện ngay ở đầu phiên này, khi mở phiên trong
 worktree. Chuỗi nhận ra bộ điều phối (`*/tools/hooks/<tên>`) không đổi.
 
+Cùng lỗi đó đã được sửa một lần ở commit 9124fa9 (08/09) trên một nhánh chưa bao giờ merge.
+Đối chiếu: phần `hook-state.mjs` của commit ấy cùng cách với bản ở trên (`--git-path hooks`,
+đường tương đối tính theo gốc, không có git thì rơi về cách đoán cũ), nên không lấy thêm gì.
+Phần còn dùng được là `_doc` của `tools/hooks/claude-settings.json`: nó vẫn viện lý do
+".claude/ bị gitignore, file này là nguồn sự thật" — hết đúng từ khi `.claude/settings.json` ở
+gốc được git theo dõi. Viết lại theo đúng hiện trạng (bản ở gốc là nguồn, file này chỉ để cài
+khi máy chưa có), và **không** lấy câu "đừng chạy install-hooks.sh của project này" của commit
+ấy — câu đó đúng lúc script còn đặt symlink, giờ thì không. Để lời `_doc` là thật, điều kiện
+"đã có" của `install-hooks.sh` nới từ "có đúng bản giống hệt" thành "có một hook của thư mục
+này": bản cũ gặp hook ở gốc đã được sửa thì đè lại bằng bản cũ trong `tools/hooks/`. Phần
+`HANDOFF.md` của commit ấy không lấy — HANDOFF đã tách theo cách mới. Kiểm trên bản sao repo:
+`settings.json` đang theo dõi giữ nguyên từng byte; một hook đã sửa ở gốc được giữ; máy chưa
+có hook thì được thêm đúng một, chạy lại không thêm nữa.
+
 ### 5. `CLAUDE.md` chỉ còn luật hiện hành
 
 - Mọi câu "chủ trang chốt <ngày>" thành luật kèm mã: DS-004 (§2 luật 3), DS-013 / DS-014 (§10),

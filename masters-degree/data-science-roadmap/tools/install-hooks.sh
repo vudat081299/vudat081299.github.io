@@ -49,11 +49,13 @@ if ! command -v jq >/dev/null 2>&1; then
 else
   mkdir -p "$ROOT/.claude"
   [ -f "$CS" ] || echo '{}' > "$CS"
-  # settings.json được git theo dõi: đã có đúng hook này thì KHÔNG ghi lại file. Ghi lại
-  # (dù cùng nội dung) là dời hook xuống cuối danh sách và sinh một diff vô nghĩa trong
-  # một file mà mọi project con dùng chung.
-  if jq -e --slurpfile add "$HK" \
-       'any(.hooks.PostToolUse[]?; . == $add[0].hooks.PostToolUse[0])' "$CS" >/dev/null 2>&1; then
+  # settings.json ở gốc được git theo dõi và là NGUỒN SỰ THẬT của hook này: đã có một hook
+  # của thư mục này (nhận ra bằng chuỗi data-science-roadmap trong command) thì KHÔNG ghi lại
+  # file. Ghi lại là hai cái hại: dời hook xuống cuối danh sách, sinh một diff vô nghĩa trong
+  # file mọi project dùng chung — và nếu ai đó đã sửa hook ở file gốc, thì ĐÈ bản sửa đó bằng
+  # bản cũ trong tools/hooks/claude-settings.json.
+  if jq -e 'any(.hooks.PostToolUse[]?.hooks[]?; (.command // "") | contains("data-science-roadmap"))' \
+       "$CS" >/dev/null 2>&1; then
     echo "✓ Claude Code PostToolUse → tools/hooks/post-edit.sh — đã có sẵn trong $CS"
   else
     TMP=$(mktemp)
