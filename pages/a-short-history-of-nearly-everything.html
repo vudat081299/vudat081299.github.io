@@ -160,13 +160,18 @@
 
   /* Hình của mô hình: không kéo trực tiếp bằng ngón tay, nên KHÔNG đặt touch-action:none —
      vuốt trên hình phải cuộn được trang. */
-  .sh-svg { width: 100%; max-width: 720px; height: auto; display: block; margin: 0 auto; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
+  /* Hình trải hết khung lab (cùng mép với hàng số ở trên); vẽ theo đúng bề rộng thật nên cỡ chữ dưới đây là px thật. */
+  .sh-svg { box-sizing: border-box; width: 100%; height: auto; display: block; margin: 2px 0 0; border: var(--wb-bw) solid var(--wb-border); border-radius: 8px; background: var(--wb-canvas); }
   .sh-t { fill: var(--wb-fg); font-size: 12px; font-family: var(--wb-font); }
   .sh-t--b { font-weight: 680; }
   .sh-t--s { fill: var(--wb-fg-muted); font-size: 11px; }
-  .sh-t--m { font-family: var(--wb-font-mono); font-size: 10.5px; fill: var(--wb-fg-muted); }
+  .sh-t--m { font-size: 11px; fill: var(--wb-fg-muted); font-variant-numeric: tabular-nums; }
   .sh-ax { stroke: var(--wb-neutral-strong); stroke-width: 1; fill: none; }
   .sh-grid { stroke: var(--wb-neutral-weak); stroke-width: 1; fill: none; }
+  /* Đồng hồ 24 giờ: bốn bậc xám đậm dần theo sự sống. Bản tối, bậc cuối là xám sáng chứ không trắng tinh:
+     dải "giờ cuối" gần như cả khúc là thời khủng long, một khối trắng lớn thì chói. */
+  .sh-z0 { fill: var(--wb-neutral-weak); } .sh-z1 { fill: var(--wb-neutral); } .sh-z2 { fill: var(--wb-neutral-strong); } .sh-z3 { fill: var(--wb-fg); }
+  .dark .sh-z3 { fill: var(--wb-gray-300); }
 
   /* ---- back to top ---- */
   .hw-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
@@ -1377,8 +1382,9 @@
     return (neg && Number(x.toFixed(d)) !== 0 ? '−' : '') + s;
   }
   function widthOf(svg) {
-    var w = Math.round(svg.getBoundingClientRect().width) || 560;
-    return clamp(w, 250, 720);
+    var cs = window.getComputedStyle(svg);
+    var w = svg.getBoundingClientRect().width - (parseFloat(cs.borderLeftWidth) || 0) - (parseFloat(cs.borderRightWidth) || 0);
+    return clamp(Math.round(w) || 560, 240, 1200);
   }
   function setBox(svg, W, H) { svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); }
   function txt(parent, x, y, s, cls, anchor) {
@@ -1487,8 +1493,8 @@
       else cmp = 'gấp ' + fmt(prx / REFS[2].m, 1) + ' lần Trái Đất → Mặt Trăng thật';
       $('sc-prx-s').textContent = 'Proxima Centauri · ' + cmp;
 
-      var W = widthOf(svg), H = 204; setBox(svg, W, H); clear(svg);
-      var L = 10, R = 10, AX = 92, pw = W - L - R;
+      var tiny = widthOf(svg) < 360, W = widthOf(svg), H = tiny ? 212 : 204; setBox(svg, W, H); clear(svg);
+      var L = 10, R = 10, AX = tiny ? 100 : 92, pw = W - L - R;
       var pts = BODIES.map(function (b) { return b.m * k; }).concat(REFS.map(function (r) { return r.m; }));
       var lo = Math.floor(Math.log(Math.min.apply(null, pts)) / Math.LN10);
       var hi = Math.ceil(Math.log(Math.max.apply(null, pts)) / Math.LN10);
@@ -1508,7 +1514,7 @@
         var m = b.m * k, label = wide ? b.n + ' · ' + len(m) : b.n;
         return { x: xs(m), label: label, w: tw(label, 12, true) };
       });
-      assignRows(top, W, 3).forEach(function (it) {
+      assignRows(top, W, tiny ? 4 : 3).forEach(function (it) {
         var y = AX - 22 - it.row * 20;
         el('line', { x1: it.x, x2: it.x, y1: y + 4, y2: AX, style: 'stroke:var(--wb-neutral-strong);stroke-width:1' }, svg);
         el('circle', { cx: it.x, cy: AX, r: 4, style: 'fill:var(--wb-fg)' }, svg);
@@ -1523,7 +1529,13 @@
         el('line', { x1: it.x, x2: it.x, y1: AX, y2: y - 11, style: 'stroke:var(--wb-neutral);stroke-width:1;stroke-dasharray:3 3' }, svg);
         centerLabel(svg, it.x, y, it.label, 'sh-t sh-t--s', W, it.w);
       });
-      txt(svg, L, H - 6, wide ? '● vật thể thu nhỏ   ┆ khoảng cách thật, quen thuộc   · mỗi vạch gấp 10 lần' : '● thu nhỏ   ┆ khoảng cách thật', 'sh-t sh-t--m', 'start');
+      /* Chú giải bằng mẫu vẽ thật (chấm, vạch nét đứt) thay cho ký tự ● ┆: ký tự không cùng nét với hình. */
+      var gy = H - 12, gx = L + 2, items = wide ? ['vật thể thu nhỏ', 'khoảng cách thật, quen thuộc', 'mỗi vạch gấp 10 lần'] : ['thu nhỏ', 'khoảng cách thật'];
+      el('circle', { cx: gx + 4, cy: gy - 4, r: 4, style: 'fill:var(--wb-fg)' }, svg);
+      txt(svg, gx + 13, gy, items[0], 'sh-t sh-t--s', 'start'); gx += 13 + tw(items[0], 11) + 14;
+      el('line', { x1: gx + 3, x2: gx + 3, y1: gy - 11, y2: gy + 2, style: 'stroke:var(--wb-neutral);stroke-width:1;stroke-dasharray:3 3' }, svg);
+      txt(svg, gx + 11, gy, items[1], 'sh-t sh-t--s', 'start'); gx += 11 + tw(items[1], 11) + 14;
+      if (items[2]) txt(svg, gx, gy, items[2], 'sh-t sh-t--s', 'start');
     }
     onInput(['sc-d'], draw);
   })();
@@ -1587,7 +1599,8 @@
       /* vùng đồng hồ không đo được, tô nhạt */
       var badFrom = iso === 'c14' ? 50000 / I.T : SOLAR / I.T;
       if (badFrom < NMAX) {
-        el('rect', { x: xs(badFrom), y: T, width: Math.max(0, xs(NMAX) - xs(badFrom)), height: ph, style: 'fill:var(--wb-neutral-weak);opacity:.55' }, svg);
+        el('rect', { x: xs(badFrom), y: T, width: Math.max(0, xs(NMAX) - xs(badFrom)), height: ph, style: 'fill:var(--wb-fg);fill-opacity:.05' }, svg);
+        el('line', { x1: xs(badFrom), x2: xs(badFrom), y1: T, y2: ys(0), style: 'stroke:var(--wb-neutral);stroke-width:1' }, svg);
         var bl = iso === 'c14' ? 'quá ít để đo' : 'già hơn Hệ Mặt Trời';
         var bw = tw(bl, 11), bx = clamp(xs(badFrom) + 6, L + 2, W - R - bw - 2);
         txt(svg, bx, T + 14, bl, 'sh-t sh-t--s', 'start');
@@ -1616,19 +1629,20 @@
       for (var j = 1; j <= 4; j++) {
         el('circle', { cx: xs(j), cy: ys(Math.pow(2, -j)), r: 3, style: 'fill:var(--wb-canvas);stroke:var(--wb-neutral-strong);stroke-width:1.2' }, svg);
       }
-      if (W >= 420) {
-        txt(svg, xs(1) + 6, ys(0.5) - 6, '½', 'sh-t sh-t--s', 'start');
-        txt(svg, xs(2) + 6, ys(0.25) - 6, '¼', 'sh-t sh-t--s', 'start');
-        txt(svg, xs(3) + 6, ys(0.125) - 6, '⅛', 'sh-t sh-t--s', 'start');
-      }
       /* điểm của mẫu đang chọn */
       var mx = xs(n), my = ys(f), inFrame = n <= NMAX;
       el('line', { x1: L, x2: mx, y1: my, y2: my, style: 'stroke:var(--wb-neutral-strong);stroke-width:1;stroke-dasharray:4 3' }, svg);
       el('line', { x1: mx, x2: mx, y1: my, y2: ys(0), style: 'stroke:var(--wb-neutral-strong);stroke-width:1;stroke-dasharray:4 3' }, svg);
-      el('circle', { cx: mx, cy: my, r: 5, style: 'fill:var(--wb-fg)' }, svg);
+      el('circle', { cx: mx, cy: my, r: 5, style: 'fill:var(--wb-fg);stroke:var(--wb-canvas);stroke-width:2' }, svg);
       var lab = inFrame ? 'mẫu: ' + years(age) : 'ngoài khung → ' + years(age);
       var lw = tw(lab, 12, true), lx = clamp(mx + 8, L + 4, W - R - lw - 2), ly = clamp(my - 10, T + 30, ys(0) - 8);
       if (lx < mx && mx - lw - 8 >= L + 4) lx = mx - lw - 8;
+      /* Nhãn ½ ¼ ⅛ cạnh mỗi bậc chia đôi, bỏ nhãn nào chạm nhãn của mẫu. */
+      if (W >= 420) [[1, '½'], [2, '¼'], [3, '⅛']].forEach(function (q) {
+        var qx = xs(q[0]) + 6, qy = ys(Math.pow(2, -q[0])) - 6;
+        if (qx < lx + lw + 4 && qx + 10 > lx - 4 && qy > ly - 16 && qy - 12 < ly + 4) return;
+        txt(svg, qx, qy, q[1], 'sh-t sh-t--s', 'start');
+      });
       txt(svg, lx, ly, lab, 'sh-t sh-t--b', 'start');
     }
     onInput(['rd-f'], draw);
@@ -1686,7 +1700,13 @@
       $('ck-ago').textContent = i === 0 ? '4,54 tỉ năm' : ago(e.y);
       $('ck-left').textContent = i === 0 ? '24 giờ' : leftStr(left);
 
-      var W = widthOf(svg), H = W < 440 ? 266 : 250; setBox(svg, W, H); clear(svg);
+      var W = widthOf(svg), legRows = 1, lxx = 10;
+      ['chỉ vi sinh vật', 'sinh vật lớn', 'thời khủng long'].forEach(function (s0) {
+        var w0 = 14 + tw(s0, 11) + 12;
+        if (lxx + w0 > W - 10) { lxx = 10; legRows++; }
+        lxx += w0;
+      });
+      var H = 250 + (W < 440 ? 16 : 0) + (legRows - 1) * 16; setBox(svg, W, H); clear(svg);
       var L = 10, R = 10, pw = W - L - R, BH = 18;
       var bands = [
         { top: 36, t0: 0, t1: DAY, title: 'Cả ngày', ticks: [0, 6, 12, 18, 24].map(function (h) { return { t: h * 3600, s: h + ' giờ' }; }) },
@@ -1697,14 +1717,15 @@
       /* các dải nền: chưa thấy sự sống · chỉ vi sinh vật · sinh vật lớn; và thời khủng long */
       var tLife = sec(3.48e9), tBig = sec(5.75e8), tDinoA = sec(2.33e8), tDinoZ = sec(6.6e7);
       bands.forEach(function (b, k) {
-        function seg(a, z, style) {
+        function seg(a, z, cls) {
           var x1 = xs(b, clamp(a, b.t0, b.t1)), x2 = xs(b, clamp(z, b.t0, b.t1));
-          if (x2 - x1 > 0.3) el('rect', { x: x1, y: b.top, width: x2 - x1, height: BH, style: style }, svg);
+          if (x2 - x1 > 0.3) el('rect', { x: x1, y: b.top, width: x2 - x1, height: BH, 'class': cls }, svg);
         }
-        seg(b.t0, b.t1, 'fill:var(--wb-neutral-weak)');
-        seg(tLife, b.t1, 'fill:var(--wb-neutral);opacity:.55');
-        seg(tBig, b.t1, 'fill:var(--wb-neutral-strong);opacity:.75');
-        seg(tDinoA, tDinoZ, 'fill:var(--wb-fg);opacity:.55');
+        /* Bốn bậc xám tách bạch (không dùng độ trong: ba mức cũ lẫn vào nhau), đậm dần theo sự sống. */
+        seg(b.t0, b.t1, 'sh-z0');
+        seg(tLife, b.t1, 'sh-z1');
+        seg(tBig, b.t1, 'sh-z2');
+        seg(tDinoA, tDinoZ, 'sh-z3');
         el('rect', { x: L, y: b.top, width: pw, height: BH, style: 'fill:none;stroke:var(--wb-border-strong);stroke-width:1' }, svg);
         var lastR = -1e9;
         b.ticks.forEach(function (tk, j) {
@@ -1746,15 +1767,15 @@
       zoom(bands[1], bands[2], DAY - 60);
       /* chú giải: ô màu thật, không dùng ký tự — ký tự không mang màu của dải */
       var LEG = [
-        { s: 'chỉ vi sinh vật', st: 'fill:var(--wb-neutral);opacity:.55' },
-        { s: 'sinh vật lớn', st: 'fill:var(--wb-neutral-strong);opacity:.75' },
-        { s: 'thời khủng long', st: 'fill:var(--wb-fg);opacity:.55' }
+        { s: 'chỉ vi sinh vật', c: 'sh-z1' },
+        { s: 'sinh vật lớn', c: 'sh-z2' },
+        { s: 'thời khủng long', c: 'sh-z3' }
       ];
-      var lx3 = L, ly3 = W < 440 ? H - 26 : H - 12;
+      var lx3 = L, ly3 = H - 12 - (legRows - 1) * 16;
       LEG.forEach(function (g) {
         var w3 = 14 + tw(g.s, 11) + 12;
         if (lx3 + w3 > W - R) { lx3 = L; ly3 += 16; }
-        el('rect', { x: lx3, y: ly3 - 8, width: 10, height: 10, style: g.st }, svg);
+        el('rect', { x: lx3, y: ly3 - 8, width: 10, height: 10, rx: 2, 'class': g.c }, svg);
         txt(svg, lx3 + 14, ly3 + 1, g.s, 'sh-t sh-t--s', 'start');
         lx3 += w3;
       });
