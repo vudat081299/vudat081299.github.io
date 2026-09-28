@@ -3616,6 +3616,11 @@ function click(t0,strong){ const ac=audio(); const o=ac.createOscillator(); cons
 const EN=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
 const VN=['Đô','Đô♯','Rê','Rê♯','Mi','Fa','Fa♯','Sol','Sol♯','La','La♯','Si'];
 function nmeN(m){ return EN[((m%12)+12)%12]+(Math.floor(m/12)-1); }
+/* EN/VN là tên PHÍM (phím đen luôn ghi ♯). Đánh vần một quãng/hợp âm/gam từ Đô thì theo tên NỐT:
+   nốt ở bậc deg (1–7; 8 = quãng 8, 9 = 2, 11 = 4, 13 = 6) mang chữ thứ deg của C D E F G A B,
+   dấu hóa = số nửa cung lệch khỏi nốt tự nhiên ấy — nên 3 nửa cung là E♭ khi là bậc 3, D♯ khi là ♯9. */
+function spellC(semi,deg){ const k=(deg-1)%7, d=((semi-[0,2,4,5,7,9,11][k])%12+18)%12-6, a=(d<0?'♭':'♯').repeat(Math.abs(d));
+  return {en:'CDEFGAB'[k]+a, vn:['Đô','Rê','Mi','Fa','Sol','La','Si'][k]+a}; }
 function setPlaying(btn,on){ if(btn) btn.classList.toggle('playing',on); }
 
 /* ===== INTRO document modules ===== */
@@ -3755,11 +3760,13 @@ function setPlaying(btn,on){ if(btn) btn.classList.toggle('playing',on); }
 (function(){
   const wrap=document.getElementById('intervalBtns'), ro=document.getElementById('intReadout'), seg=document.getElementById('intModeSeg');
   if(!wrap) return; let mode='mel';
-  const data=[['2 thứ',1],['2 trưởng',2],['3 thứ',3],['3 trưởng',4],['4 đúng',5],['Tritone',6],['5 đúng',7],['6 thứ',8],['6 trưởng',9],['7 thứ',10],['7 trưởng',11],['Quãng 8',12]];
+  /* [tên, nửa cung, số quãng] — tritone có hai cách viết nên mang hai số */
+  const data=[['2 thứ',1,2],['2 trưởng',2,2],['3 thứ',3,3],['3 trưởng',4,3],['4 đúng',5,4],['Tritone',6,[4,5]],['5 đúng',7,5],['6 thứ',8,6],['6 trưởng',9,6],['7 thứ',10,7],['7 trưởng',11,7],['Quãng 8',12,8]];
   data.forEach(function(d){ const nm=d[0], semi=d[1]; const b=document.createElement('button'); b.className='btn sm'; b.textContent=nm; b.onclick=function(){
     audio(); markAudioOn(); const t=audio().currentTime, root=60;
     if(mode==='mel'){ voice(root,t,0.7,0.85); voice(root+semi,t+0.42,1.0,0.85); } else { voice(root,t,1.3,0.8); voice(root+semi,t,1.3,0.8); }
-    ro.innerHTML='<b>'+nm+'</b> = '+semi+' nửa cung · từ Đô (C) lên '+VN[semi%12]+' ('+EN[semi%12]+(semi===12?' cao':'')+')';
+    const up=function(n){ const s=spellC(semi,n); return s.vn+' ('+s.en+(semi===12?' cao':'')+')'; };
+    ro.innerHTML='<b>'+nm+'</b> = '+semi+' nửa cung · từ Đô (C) lên '+(Array.isArray(d[2]) ? up(d[2][0])+' nếu viết là quãng 4 tăng, '+up(d[2][1])+' nếu viết là quãng 5 giảm — cùng một phím' : up(d[2]));
   }; wrap.appendChild(b); });
   seg.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return; seg.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); mode=b.dataset.mode; });
 })();
@@ -3815,12 +3822,12 @@ const MAJOR=[0,2,4,5,7,9,11];
   const list=[
     ['C','Đô trưởng',[0,4,7]],['Cm','Đô thứ',[0,3,7]],['Cdim','giảm',[0,3,6]],['Caug','tăng',[0,4,8]],
     ['Cmaj7','trưởng 7',[0,4,7,11]],['C7','bảy (át)',[0,4,7,10]],['Cm7','thứ 7',[0,3,7,10]],['Cm7♭5','nửa giảm',[0,3,6,10]],
-    ['Csus4','treo 4',[0,5,7]],['Cmaj9','trưởng 9',[0,4,7,11,14]],['C13','mười ba',[0,4,7,10,14,21]]
-  ];
-  list.forEach(function(it){ const nm=it[0], vn=it[1], iv=it[2]; const b=document.createElement('button'); b.className='btn sm'; b.textContent=nm; b.onclick=function(){
+    ['Csus4','treo 4',[0,5,7],[1,4,5]],['Cmaj9','trưởng 9',[0,4,7,11,14]],['C13','mười ba',[0,4,7,10,14,21],[1,3,5,7,9,13]]
+  ];   /* phần tử thứ 4 = bậc của từng nốt, khi không phải chồng 1-3-5-7-9 */
+  list.forEach(function(it){ const nm=it[0], vn=it[1], iv=it[2], dg=it[3]||[1,3,5,7,9]; const b=document.createElement('button'); b.className='btn sm'; b.textContent=nm; b.onclick=function(){
     audio(); markAudioOn(); const root=60, ns=iv.map(x=>root+x), t=audio().currentTime;
     if(mode==='block') chord(ns,t,1.6,0.7); else arp(ns,t,0.14,1.4,0.78);
-    ro.innerHTML='<b>'+nm+'</b> ('+vn+') · nốt: '+ns.map(m=>EN[m%12]).join(' – ')+' · nửa cung từ gốc: '+iv.join('·');
+    ro.innerHTML='<b>'+nm+'</b> ('+vn+') · nốt: '+iv.map(function(x,i){ return spellC(x,dg[i]).en; }).join(' – ')+' · nửa cung từ gốc: '+iv.join('·');
   }; wrap.appendChild(b); });
   seg.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return; seg.querySelectorAll('button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); mode=b.dataset.mode; });
 })();
@@ -3860,7 +3867,8 @@ function playProgression(chords, bpm, btn, swing){
 
 /* ===== shared helpers for this doc ===== */
 function scaleUp(root, iv, t0, step, vel){ const arr=iv.concat([12]); for(let i=0;i<arr.length;i++) voice(root+arr[i], t0+i*step, step*0.9, vel==null?0.72:vel); }
-function ivNames(iv){ return iv.map(function(x){ return EN[((x%12)+12)%12]; }).join(' '); }
+/* gam 7 nốt từ Đô: nốt thứ i mang bậc i+1; deg ghi đè khi gam gọi tên theo tension (altered: 1 ♭9 ♯9 3 ♯11 ♭13 ♭7) */
+function ivNames(iv,deg){ return iv.map(function(x,i){ return spellC(x,deg?deg[i]:i+1).en; }).join(' '); }
 function seqPlay(items, step){ const t0=audio().currentTime+0.05; for(let i=0;i<items.length;i++){ const it=items[i], t=t0+i*step; if(it.bass!=null) voice(it.bass,t,step*0.95,0.55); chord(it.notes,t,step*0.92, it.vel==null?0.6:it.vel); } }
 function mkBtns(containerId, defs, onClick){ const w=document.getElementById(containerId); if(!w) return; defs.forEach(function(d,i){ const b=document.createElement('button'); b.className='btn sm'; b.textContent=d.label; b.onclick=function(){ audio(); markAudioOn(); onClick(d,i,b); }; w.appendChild(b); }); }
 
@@ -3889,11 +3897,11 @@ function mkBtns(containerId, defs, onClick){ const w=document.getElementById(con
     {label:'C7 · Mixolydian', ch:[60,64,67,70], iv:[0,2,4,5,7,9,10]},
     {label:'Cm7 · Aeolian',  ch:[60,63,67,70], iv:[0,2,3,5,7,8,10]},
     {label:'Cm7♭5 · Locrian', ch:[60,63,66,70], iv:[0,1,3,5,6,8,10]},
-    {label:'C7alt · Altered', ch:[60,64,67,70], iv:[0,1,3,4,6,8,10]}
+    {label:'C7alt · Altered', ch:[60,64,67,70], iv:[0,1,3,4,6,8,10], deg:[1,2,2,3,4,6,7]}
   ];
   mkBtns('csBtns',defs,function(d){
     const t=audio().currentTime+0.05; chord(d.ch,t,1.4,0.7); scaleUp(60,d.iv,t+1.75,0.2,0.75);
-    ro.innerHTML='<b>'+d.label+'</b> · gam: '+ivNames(d.iv)+' — nghe hợp âm trước, rồi gam "hợp" với nó.';
+    ro.innerHTML='<b>'+d.label+'</b> · gam: '+ivNames(d.iv,d.deg)+' — nghe hợp âm trước, rồi gam "hợp" với nó.';
   });
 })();
 
@@ -3922,11 +3930,11 @@ function mkBtns(containerId, defs, onClick){ const w=document.getElementById(con
   const defs=[
     {label:'C7 · Mixolydian (thường)', iv:[0,2,4,5,7,9,10], t:'dominant "chuẩn", ít căng.'},
     {label:'C7 · Lydian dominant (#11)', iv:[0,2,4,6,7,9,10], t:'dominant sáng, lơ lửng — hợp hợp âm 7 không giải quyết.'},
-    {label:'C7 · Altered (7alt)', iv:[0,1,3,4,6,8,10], t:'căng tối đa (♭9 ♯9 ♯11 ♭13) — dùng ngay trước khi về I.'}
+    {label:'C7 · Altered (7alt)', iv:[0,1,3,4,6,8,10], deg:[1,2,2,3,4,6,7], t:'căng tối đa (♭9 ♯9 ♯11 ♭13) — dùng ngay trước khi về I.'}
   ];
   mkBtns('mmBtns',defs,function(d){
     const t=audio().currentTime+0.05; chord(dr,t,3.2,0.36); scaleUp(60,d.iv,t+0.35,0.26,0.74);
-    ro.innerHTML='<b>'+d.label+'</b> — '+d.t+' · gam: '+ivNames(d.iv);
+    ro.innerHTML='<b>'+d.label+'</b> — '+d.t+' · gam: '+ivNames(d.iv,d.deg);
   });
 })();
 
@@ -3977,11 +3985,15 @@ function mkBtns(containerId, defs, onClick){ const w=document.getElementById(con
     mkBtns('altBtns',defs,function(d){ seqPlay([{bass:43,notes:d.up},{bass:48,notes:[64,67,71,74]}],1.15); roB.innerHTML='<b>'+d.label+'</b> — '+d.t+' Nghe lực căng rồi nhả về Cmaj7.'; });
   }
   const roU=document.getElementById('usReadout'); if(document.getElementById('usBtns')){
+    const LH=[48,52,58];   /* tay trái giữ nguyên khung C7 (C–E–B♭) cho cả năm dòng của bảng dưới */
     const defs=[
-      {label:'Rê trưởng / C7', notes:[48,52,58,62,66,69], t:'tay trái C7 (C–E–B♭), tay phải hợp âm Rê trưởng ở trên → 9 · ♯11 · 13: C13♯11, màu "phim".'},
-      {label:'Mi♭ trưởng / G7', notes:[43,47,53,63,67,70], t:'tay trái G7 (G–B–F), tay phải hợp âm Mi♭ trưởng ở trên → ♭13 · 1 · ♯9: G7♯9♭13, chất altered. Đây chính là dòng ♭VI của bảng dưới (A♭ trên C7), dời sang G7.'}
+      {label:'Rê trưởng / C7', rh:[62,66,69], t:'tay trái C7 (C–E–B♭), tay phải hợp âm Rê trưởng ở trên → 9 · ♯11 · 13: C13♯11, màu "phim".'},
+      {label:'Mi♭ trưởng / C7', rh:[63,67,70], t:'tay trái vẫn C7, tay phải Mi♭ trưởng → ♯9 · 5 · ♭7: C7♯9, gắt kiểu rock/blues.'},
+      {label:'Fa♯ trưởng / C7', rh:[66,70,73], t:'tay trái vẫn C7, tay phải Fa♯ trưởng → ♯11 · ♭7 · ♭9: C7♭9♯11, căng và mờ ảo.'},
+      {label:'La♭ trưởng / C7', rh:[68,72,75], t:'tay trái vẫn C7, tay phải La♭ trưởng → ♭13 · 1 · ♯9: C7♯9♭13, tối và nặng — chất altered. Dời cả khối lên G7 thì thành Mi♭ trưởng trên G7: cùng màu ấy ở cú V7 → I của giọng Đô.'},
+      {label:'La trưởng / C7', rh:[69,73,76], t:'tay trái vẫn C7, tay phải La trưởng → 13 · ♭9 · 3: C13♭9, lấp lánh mà vẫn căng.'}
     ];
-    mkBtns('usBtns',defs,function(d){ chord(d.notes,audio().currentTime+0.04,2.3,0.5); roU.innerHTML='<b>'+d.label+'</b> — '+d.t; });
+    mkBtns('usBtns',defs,function(d){ chord(LH.concat(d.rh),audio().currentTime+0.04,2.3,0.5); roU.innerHTML='<b>'+d.label+'</b> — '+d.t; });
   }
 })();
 
@@ -4155,7 +4167,7 @@ function mkBtns(containerId, defs, onClick){ const w=document.getElementById(con
     bossa:{steps:16,beats:4,desc:'Bossa Nova 4/4 · mát, đảo phách. Bass 2 nốt đều (gốc–quãng 5), hi-hat đều, hợp âm rơi lệch phách.',
       kick:[0,10],snare:[],hat:[0,2,4,6,8,10,12,14],bass:[0,4,8,12],chordHits:[3,6,11,14],bossaBass:true,defBpm:126},
     swing:{steps:16,beats:4,desc:'Jazz Swing 4/4 · ride "đung-đưa", walking bass đi từng phách, comping hợp âm lệch phách.',
-      kick:[],snare:[],hat:[0,3,4,7,8,11,12,15],bass:[0,4,8,12],chordHits:[6,14],swing:true,walk:true,defBpm:132}
+      kick:[],snare:[],hat:[0,2,4,6,8,10,12,14],bass:[0,4,8,12],chordHits:[6,14],swing:true,walk:true,defBpm:132}
   };
   function chordCellsFor(st){ if(st.chordArp){ const a=[]; const pb=st.steps/st.beats; for(let i=0;i<st.steps;i+=pb)a.push(i); return a; } return st.chordHits||[]; }
   function renderGrid(){
@@ -4183,17 +4195,22 @@ function mkBtns(containerId, defs, onClick){ const w=document.getElementById(con
     stepPos=0; let chordIdx=-1;
     const tick=()=>{
       const ac=audio(); let t=ac.currentTime+0.01;
-      if(st.swing && (stepPos%2===1)) t+=stepDur*0.34;
+      /* swing: móc đơn thứ hai của mỗi phách (ô "và", ô 2 trong 4) lùi từ 1/2 tới 2/3 phách — cặp 2/3 + 1/3 như tab Jazz dạy */
+      if(st.swing && (stepPos%pb===2)) t+=stepDur*2/3;
       const s=stepPos%N, beatIdx=Math.floor(s/pb);
       if(s===0) chordIdx=(chordIdx+1)%CH.length;
       const ch=CH[chordIdx];
       if((st.kick||[]).indexOf(s)>=0) kick(t, s===0?1:0.8);
       if((st.snare||[]).indexOf(s)>=0) snare(t,0.8);
-      if((st.hat||[]).indexOf(s)>=0) hat(t, s%pb===0?0.5:0.3, st.swing&&s%2===0);
+      if((st.hat||[]).indexOf(s)>=0) hat(t, s%pb===0?0.5:0.3, st.swing&&s%pb===0);
       if((st.bass||[]).indexOf(s)>=0){
         let bn=ch[0];
         if(st.bossaBass) bn=(beatIdx%2===0)?ch[0]:ch[0]+7;
-        if(st.walk){ const w=[ch[0],ch[0]+3,ch[0]+5,ch[0]+7]; bn=w[beatIdx%4]; }
+        if(st.walk){ /* đúng công thức walking bass của tab Đệm hát: phách 1 gốc · 2–3 nốt hợp âm · 4 cách gốc ô sau nửa cung */
+          const r=ch[0], th=ch.slice(1).some(n=>((n-r)%12+12)%12===3)?3:4, nx=CH[(chordIdx+1)%CH.length][0];
+          const w=(nx<r)?[r,r-5,r-12+th]:[r,r+th,r+7];   /* gốc ô sau thấp hơn thì đi xuống (5 dưới, 3 dưới), không thì đi lên (3, 5) */
+          w.push(Math.abs(nx-1-w[2])<=Math.abs(nx+1-w[2])?nx-1:nx+1);   /* nốt tiếp cận: phía nửa cung gần phách 3 hơn */
+          bn=w[beatIdx%4]; }
         voice(bn,t,stepDur*pb*0.9,0.6);
       }
       if(st.chordArp && s%pb===0) arp(ch.slice(1),t,stepDur*0.5,stepDur*pb,0.5);
@@ -4301,7 +4318,7 @@ function mkBtns(containerId, defs, onClick){ const w=document.getElementById(con
       const ch=pick(CHORDS); const ans=ch[0], iv=ch[1];
       const play=()=>{ audio(); markAudioOn(); const t=audio().currentTime; chord(iv.map(x=>60+x),t,1.6,0.72); };
       const opts=shuffle([ans].concat(distract(CHORDS.map(x=>x[0]),ans,3)));
-      cur={ans,opts,play,reveal:'Là hợp âm <b>'+ans+'</b> · nốt: '+iv.map(x=>EN[x%12]).join(' – ')+'.'};
+      cur={ans,opts,play,reveal:'Là hợp âm <b>'+ans+'</b> · nốt: '+iv.map(function(x,i){ return spellC(x,2*i+1).en; }).join(' – ')+'.'};
       qEl.innerHTML='Loại hợp âm vừa nghe là gì?';
     }
     render(); cur.play();
