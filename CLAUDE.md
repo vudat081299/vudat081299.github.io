@@ -206,7 +206,7 @@ Ba bước, đúng thứ tự:
 3. **Ghép, chạy cổng, ship.**
 
 **Luật chia chỗ — đếm được, không tranh luận được:** khối **lặp** → chữ ở data; khối **độc
-nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 8 section + 30 ô + 6 dòng môn học đều lặp nên nằm ở
+nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 8 section + 33 ô + 6 dòng môn học đều lặp nên nằm ở
 `data/collection.json`; tiêu đề trang chỉ có một nên ở lại HTML. Rail bên trái và ba cột
 chân trang cũng dựng từ chính mảng `sections` ấy — không có danh sách mục thứ hai để quên
 cập nhật. Trang văn xuôi độc nhất
@@ -235,7 +235,7 @@ của chính repo — luật số 1 ở trên: cổng nằm trong repo, không n
 `tools/smoke-index.js` mở trình duyệt thật và đo 29 thứ: tràn ngang ở 11 bề rộng
 (1440→320), mép trái của gạch section / mô tả / hàng có thẳng nhau không, tương phản chữ ở
 cả hai nền, lọc tìm kiếm có còn trơ lại tiêu đề rỗng không, bàn phím (`/`, `Esc`, phím của
-từng mục), 36 href có mở được không, và trang có lặng lẽ quay về `wb-*` không.
+từng mục), 39 href có mở được không, và trang có lặng lẽ quay về `wb-*` không.
 `sh tools/check-index.sh` chạy cả hai tầng một lệnh, cùng khuôn với `shop/tools/check.sh`.
 
 Bốn lỗi dưới đây là lỗi THẬT của bản thiết kế lại, cổng lint mù hoàn toàn với cả bốn, và
@@ -313,12 +313,13 @@ lặp **khi** có `key`. **Đừng ép hai mục dùng chung một phím** để
 
 Ngày 21/09 chủ trang cho gỡ hai mục khỏi danh mục nên còn **35/36**; ngày 27/09 mục thứ 36 —
 `pages/experimentation-causal-inference.html` — lấy nốt `z`, đúng như bản trước của đoạn này đoán.
-Keyspace **hết sạch: 36/36**, và **mọi mục đang niêm yết đều có phím**. Nghĩa là luật "`key` tuỳ
-chọn" không còn **ví dụ sống** nào: **mục tiếp theo là mục đầu tiên buộc phải bỏ trường `key`**, và
-trên trang không có cái nào để nhìn theo. Linter vẫn cho thiếu `key` nên không ai bị chặn nhầm,
-nhưng đoạn này là chỗ duy nhất còn ghi — xem mục *Thứ tự làm một trang* ở trên: bộ mẫu mạnh hơn
-luật, và bộ mẫu cho nhánh này hiện bằng không. Dù vậy **đừng xáo lại phím của mục cũ** để lấp chỗ:
-phím tắt là thứ người dùng học thuộc, đổi nó là phá trí nhớ cơ bắp.
+Keyspace **hết sạch: 36/36**. Ngày 28/09 ba mục đầu tiên **không có `key`** lên danh mục, cả ba ở
+cuối `Book Summaries`: How to Lie with Statistics, Books in Brief, A Short History of Nearly
+Everything. Bản trước của đoạn này cảnh báo nhánh "`key` tuỳ chọn" không còn ví dụ sống nào để bắt
+chước — xem mục *Thứ tự làm một trang* ở trên: bộ mẫu mạnh hơn luật. Nay nó có ba, và người viết mục
+kế tiếp nhìn vào đó là thấy mục không phím trông ra sao. Linter vẫn cho thiếu `key`, và
+`smoke-index.js` đòi mục không phím không vẽ chip rỗng. Dù vậy **đừng xáo lại phím của mục cũ** để
+lấp chỗ: phím tắt là thứ người dùng học thuộc, đổi nó là phá trí nhớ cơ bắp.
 
 Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Từ 20/09/2026 nó kiểm thêm
 một chiều nữa: mọi `.html` trong `pages/` và `cooking/` phải có một mục trỏ tới, vì
