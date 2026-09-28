@@ -4,8 +4,8 @@
 #
 # Chỉ chạy khi commit có chạm cooking/ — commit ở facts/, pages/… không bị ảnh hưởng.
 # Thường chỉ soi ĐÚNG những trang và file data đang được commit, không soi cả thư mục.
-# Ngoại lệ: commit sửa CHÍNH CỔNG (linter, hoặc hook này) thì soi lại mọi trang và mọi file
-# data. Một phép kiểm vừa đổi có thể làm đỏ một trang không ai chạm, và lọc theo file đang
+# Ngoại lệ: commit sửa CHÍNH CỔNG (linter, bộ kiểm chung tools/htmlcheck.py, hoặc hook này)
+# thì soi lại mọi trang và mọi file data. Một phép kiểm vừa đổi có thể làm đỏ một trang không ai chạm, và lọc theo file đang
 # commit thì không bao giờ thấy — cổng im lặng qua đúng lúc nó vừa bị sửa.
 #
 # Bỏ qua một lần (chỉ khi bạn BIẾT mình đang làm gì): git commit --no-verify
@@ -17,7 +17,7 @@ ROOT=$(git rev-parse --show-toplevel)
 CHANGED=$(git diff --cached --name-only --diff-filter=ACMR \
   | grep -E "^$DIR/([^/]*\.html|data/[^/]*\.json)$" || true)
 GATE=$(git diff --cached --name-only --diff-filter=ACMRD \
-  | grep -E "^$DIR/tools/(lint-cooking\.py|hooks/pre-commit)$" || true)
+  | grep -E "^($DIR/tools/(lint-cooking\.py|hooks/pre-commit)|tools/htmlcheck\.py)$" || true)
 [ -z "$CHANGED" ] && [ -z "$GATE" ] && exit 0
 
 if ! command -v python3 >/dev/null 2>&1; then
@@ -30,7 +30,7 @@ if [ -n "$GATE" ]; then
   echo "pre-commit: cổng $DIR vừa đổi — soi lại mọi trang và mọi file data…"
   TARGETS=""
 else
-  echo "pre-commit: chạy cổng $DIR…"
+  echo "pre-commit: chạy cổng ${DIR}…"
   TARGETS=$CHANGED
 fi
 
@@ -44,11 +44,15 @@ Commit bị chặn: cổng cooking không qua.
 Mỗi trang trong cooking/ là một tài liệu tự chứa, và push main = deploy
 thẳng lên GitHub Pages — không có build step nào bắt lỗi hộ.
 
-  · id trùng      → id phải duy nhất; trùng thì anchor nhảy sai chỗ
-  · anchor gãy    → href="#x" không có id nào tên x
-  · asset thiếu   → src/href trỏ vào file không tồn tại
-  · thẻ lệch      → div/section/table/ul/ol mở đóng không khớp
-  · data/*.json   → id công thức trùng, cat/role lạ, region/dips lệch
+  · id trùng        → id phải duy nhất; trùng thì anchor nhảy sai chỗ
+  · anchor gãy      → href="#x" không có id nào tên x
+  · asset thiếu     → src/href trỏ vào file không tồn tại
+  · thẻ lệch        → div/section/table/ul/ol mở đóng không khớp
+  · svg_vo_danh     → <svg> không có aria-label / <title> / aria-hidden
+  · hut_cap         → tiêu đề nhảy xuống quá một bậc (h2 → h4)
+  · nhan_tieng_anh  → aria-label thuần tiếng Anh trên trang lang="vi"
+    (ba dòng trên là bánh cóc: trang có tên trong DEBT chỉ được giảm)
+  · data/*.json     → id công thức trùng, cat/role lạ, region/dips lệch
 
 Xem thêm:  python3 cooking/tools/lint-cooking.py -v
 Bỏ qua có ý thức:  git commit --no-verify
