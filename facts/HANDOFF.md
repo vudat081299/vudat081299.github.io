@@ -2,14 +2,14 @@
 
 Chỉ việc chưa xong. Làm xong một mục thì xoá nó khỏi đây và ghi đợt ấy vào
 [HISTORY.md](HISTORY.md) — nơi giữ nhật ký các đợt rà, kể cả phần *"Còn nợ"* của từng đợt lúc
-viết. Luật ở [CLAUDE.md](CLAUDE.md).
+viết. Luật ở [CLAUDE.md](CLAUDE.md), quyết định của chủ trang ở [DECISIONS.md](DECISIONS.md).
 
 Trạng thái lúc cập nhật (28/09/2026): `check` và `verify` xanh · 1.923 fact · 74 truyện ·
 0 LOẠI · 7 XEM. Số đổi thì chạy lại `python3 facts/tools/factlint.py stats`.
 
 ## CHƯA LÀM
 
-- **Đích quy mô: khoảng 3.000 fact và 500 truyện.** Hiện 1.923 / 74. Nhịp đo được của repo là
+- **Đích quy mô: khoảng 3.000 fact và 500 truyện** (FACTS-008). Hiện 1.923 / 74. Nhịp đo được của repo là
   ~25 fact hoặc ~14 truyện một commit.
 - **Cụm fact mỏng** (≤ 2 fact): `kinh-doanh/ban-hang-marketing` 0 · `kinh-doanh/dam-phan` 1 ·
   `kinh-doanh/do-luong` 1 · `tu-duy/mo-hinh-tu-duy` 1 · `kinh-doanh/tuyen-dung` 2 ·
@@ -71,5 +71,5 @@ Trạng thái lúc cập nhật (28/09/2026): `check` và `verify` xanh · 1.923
 - **Truyện hài có cần `mang_di`, và có cần là chuyện có thật không?** Hiện `ky-quac` là chuyện
   có thật và phải có `mang_di` là một fact (§7.0, §7.1). Câu "truyện hài vẫn phải là chuyện có
   thật" là câu trả lời cho một câu agent hỏi sai đề, trước khi lằn ranh chung đổi thành có sẵn /
-  tự bịa (§7.0-a). Muốn một kiểu "hài thuần giải trí" không cần bài học thì phải nới §7 — hỏi
+  tự bịa (FACTS-009). Muốn một kiểu "hài thuần giải trí" không cần bài học thì phải nới §7 — hỏi
   chủ trang trước khi làm.

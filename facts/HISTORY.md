@@ -1,7 +1,9 @@
 # HISTORY — nhật ký các đợt rà facts/
 
 Nhật ký, mới nhất trên đầu: mỗi đợt đã đo gì, đã thử gì và rớt, sửa gì, vì sao. Đây không phải
-luật — luật nằm ở [CLAUDE.md](CLAUDE.md). Việc còn dở nằm ở [HANDOFF.md](HANDOFF.md).
+luật — luật nằm ở [CLAUDE.md](CLAUDE.md). Việc còn dở nằm ở [HANDOFF.md](HANDOFF.md). Đoạn nào
+là quyết định của chủ trang thì đã chuyển sang [DECISIONS.md](DECISIONS.md), ở đây chỉ còn một
+dòng trỏ tới mã của nó.
 
 Các mục *"Còn nợ"* trong từng đợt là **ảnh chụp lúc viết** và giữ nguyên để thấy nợ sinh ra từ
 đâu; nhiều mục đã xong hoặc đã lạc hậu ở đợt sau. Nợ đang mở thật sự thì đọc HANDOFF.md.
@@ -10,9 +12,7 @@ Các mục *"Còn nợ"* trong từng đợt là **ảnh chụp lúc viết** v�
 
 ## Đợt 25/08/2026 (e) — bác lớp "vì sao": fact ngắn lại, truyện gánh chiều sâu
 
-**Nguyên văn chủ trang:** *"facts thì tôi ưu tiên ngắn gọn, diễn giải cũng đơn giản dễ hiểu
-ngắn gọn, mà bạn lại giới hạn min 600, thế thì kể cả những thứ giải thích một câu là xong bạn
-cũng cố bôi ra thành 600 ký tự cho khó hiểu và lòng vòng à… hỏng hết trang web của tôi rồi."*
+Chủ trang bác sàn độ dài của phần giải thích → quyết định FACTS-011 (nguyên văn ở đó).
 
 Đợt (d) khoá 44 cụm khoa học vào `day_du`, ép mỗi fact một `d` ≥600 ký tự/3 đoạn. Đo lại: 609
 fact có `d`, **560 dồn cục ở 900–1.300 ký tự** — chữ ký của "viết cho đủ vạch". Median 1.132.
@@ -47,9 +47,8 @@ Nếu chủ trang muốn một loại "hài thuần giải trí" không cần b�
 
 ## Đợt 25/08/2026 (b) — Holmes, đối nhân xử thế, tâm lý học; 43 → 67 truyện
 
-**Nguyên văn chủ trang:** *"Tôi muốn thêm những mẩu truyện ngắn của sherlock holmes, những
-câu truyện về cách ứng xử EQ cao có thật, những câu truyện giúp tôi hiểu thêm hơn về đối
-nhân xử thế, tâm lý học"*.
+Chủ trang xin thêm truyện Holmes, truyện ứng xử có thật và truyện tâm lý học → quyết định
+FACTS-010 (nguyên văn ở đó).
 
 ### 1. Sherlock Holmes buộc phải nới §7.0-b, không phải nới §7.0-a
 
@@ -124,14 +123,12 @@ Phân bố cuối: `tham-hoa` 11 · `doi-nhan-xu-the` 8 · `thi-nghiem-nguoi` 8 
 
 ## Đợt 25/08/2026 — truyện tách khỏi chủ đề fact, và đích mới 3.000 / 500
 
-**Nguyên văn hai câu của chủ trang:** *"Tôi tưởng những truyện ngắn thì sẽ có 1 tab truyện
-ngắn riêng ở thanh chủ đề, không phải à, hiện tại đang là như thế nào, đang lẫn vào các chủ
-đề của fact à hay sao"* — và sau đó: *"fact tôi muốn khoảng 3000 fact, truyện thì 500"*.
+Hai câu của chủ trang: truyện cần một nhóm riêng trên thanh chủ đề → quyết định FACTS-007;
+đích khoảng 3.000 fact và 500 truyện → quyết định FACTS-008.
 
 ### 1. Truyện có trục riêng `kieu` (§7.0)
 
-Chủ trang chọn giữa ba phương án và lấy phương án tách hẳn: bỏ `cat`/`sub` của fact khỏi
-truyện, dựng vốn từ riêng, phân theo **hình dạng câu chuyện** chứ không theo đề tài. Sáu
+→ quyết định FACTS-007 (chủ trang chọn phương án tách hẳn trong ba phương án). Sáu
 kiểu trong `manifest.kieu_chuyen`. Cổng đổi theo, và bắt cả `cat`/`sub` sót lại.
 
 `ky-quac` được khai với 0 truyện — chủ trang hỏi riêng về "truyện hài". Chốt kèm: **nguồn
@@ -161,10 +158,8 @@ chính văn Leveson & Turner nói sáu **vụ**, không phải sáu người ch�
 
 ### 4. Tiêu chí bị sửa: lằn ranh là có sẵn/tự bịa
 
-Cùng ngày, chủ trang bác chính định nghĩa mà đợt này vừa viết lại: *"cái này thì hẹp quá
-'kể một chuyện có thật, rồi để lại một điều về thế giới', phải sửa tôi tiêu chí, truyện thì
-truyện gì cũng được, nhưng không được bịa, phải có nguồn chính thống, và nhiều người đánh
-giá nó hay chứ không phải tự AI bịa"*.
+Cùng ngày, chủ trang bác chính định nghĩa mà đợt này vừa viết lại → quyết định FACTS-009
+(nguyên văn ở đó).
 
 **Đây là chỗ agent đọc sai bài toán, ghi lại để phiên sau đừng đọc sai lần nữa.** Agent hiểu
 "không được bịa" thành "phải là chuyện có thật", nên đã hỏi chủ trang một câu sai đề —
@@ -205,9 +200,7 @@ câu trong `lai_lich` mô tả lời răn của Perrault bằng chính giọng m
 
 ## Đợt 24/08/2026 (d) — chủ trang chỉnh lại trọng tâm
 
-**Nguyên văn:** *"Mục đích của tôi không phải là muốn bạn thêm giải thích vì sao, nhưng thôi
-cũng được, nhưng mục đích chính là bổ sung truyện ngắn, bổ sung fact và sửa lại diễn giải các
-fact đang có + tập trung lấy fact + truyện ngắn từ những nguồn uy tín, diễn giải tốt."*
+Chủ trang chỉnh lại thứ tự ưu tiên → quyết định FACTS-006 (nguyên văn ở đó).
 
 Đợt (c) đọc sai thứ tự ưu tiên: nó dồn công vào lớp "vì sao" và migrate 563 fact. Lớp đó
 không sai — chủ trang nói "thôi cũng được" — nhưng nó không phải việc chính. Đợt (d) làm ba
@@ -287,8 +280,8 @@ phải có `q` + `d` đạt khuôn.
 ## Đợt 24/08/2026 (c) — đổi khuôn, không đổi nguồn
 
 **Câu hỏi của chủ trang:** có nguồn nào chuyên cung cấp fact không, vì fact lấy từ báo và
-paper đọc ra rất học thuật; mục tiêu là một nguồn học tập kiểu *10 vạn câu hỏi vì sao*, và
-có thể thêm cả truyện ngắn, miễn mỗi lần đọc là học thêm được một thứ.
+paper đọc ra rất học thuật. Mục tiêu của thư viện, và việc nhận thêm truyện ngắn → quyết định
+FACTS-005.
 
 **Có nguồn chuyên, và đã ghi vào [CLAUDE.md §2 bước 1](CLAUDE.md).** Nhưng đo lại thư viện
 thì thấy nguồn không phải chỗ hỏng:
@@ -362,9 +355,8 @@ bằng đọc code — phát hiện được vì chạy cổng trên nội dung 
 > *t:* "Lưỡi cảm nhận cả năm vị ở mọi vùng, và 'bản đồ vị giác' trong sách giáo khoa là hiểu
 > lầm từ một lỗi dịch" — *s:* "Bản đồ đó đến từ việc dịch sai một luận án tiếng Đức năm 1901
 > vốn chỉ nói mức nhạy chênh nhau rất nhỏ. Nó tồn tại trong sách giáo khoa gần một thế kỷ."
->
-> *"Tôi cần biết lỗi dịch sách giáo khoa để làm gì? Nếu như thế này thì bạn chỉ cần diễn giải
-> là 'Lưỡi cảm nhận cả năm vị ở mọi vùng' tức là mọi vùng của lưỡi đều có thể cảm nhận cả 5 vị."*
+
+Điều chủ trang yêu cầu ở phần tóm tắt → quyết định FACTS-004 (nguyên văn ở đó).
 
 CLAUDE.md §1.2 đã cấm dạng này từ 09/08 và lấy **đúng ca này** làm ví dụ ❌. Luật có, cổng
 không có, nên 6 fact sống sót tới khi chủ trang tự đọc thấy.
@@ -681,7 +673,11 @@ Tỉ lệ thì vẫn đúng; số tuyệt đối phải chạy lại `check` đ�
 
 **Nguyên nhân:** chủ trang mở trang lên, gặp `sh-207` (*"Ngưỡng 0,05 là một lựa chọn tuỳ tiện
 do Ronald Fisher đề xuất…"*) và chỉ ra rằng fact đó chỉ đọc được nếu người đọc **đã biết**
-p-value là gì. Yêu cầu: sửa cổng, rồi rà lại toàn bộ, không rà theo từng cụm.
+p-value là gì. → quyết định FACTS-002 (fact phải tự chứa) và FACTS-001 (sửa cổng, rồi rà
+lại toàn bộ thư viện, không rà theo từng cụm).
+
+Cùng ngày, chủ trang bác `sh-202` (số cần điều trị) vì đọc xong không cầm được gì →
+quyết định FACTS-003 (commit f4b7fec).
 
 **Đã làm:** 2.000 → **1.945 fact**. Hai cổng mới (§1.5 thuật ngữ, §3 lưới tiêu đề), đọc tay
 tiêu đề của **cả 1.945 fact** trong 20 chủ đề, sửa ~150 fact, xoá 55 fact.

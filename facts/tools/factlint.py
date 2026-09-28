@@ -882,7 +882,7 @@ RULES_REJECT = [
 # nâng thẳng chặn 28 fact, và đọc tay cả 28 thì KHÔNG cái nào sai. Riêng
 # 'dinh-luat-dat-ten' bản rộng chính là dạng mà CLAUDE.md §1.6 ghi "đã đo và RỚT, đừng
 # dựng lại" (13 fact, cả 13 nêu luôn nội dung ngay sau tên). Bản thắt theo mỏ neo dưới
-# đây chặn 0 fact hôm nay mà vẫn bịt được lớp lỗi thật — xem HANDOFF.md đợt 24/08.
+# đây chặn 0 fact hôm nay mà vẫn bịt được lớp lỗi thật — xem HISTORY.md đợt 24/08.
 RULES_REJECT_IF_NO_ANCHOR = [
     ('dinh-luat-dat-ten', 'định luật/nguyên lý đặt theo tên người, không mỏ neo', 't', [
         re.compile(r'\b(Định luật|Nguyên lý|Dao cạo|Quy tắc|Nghịch lý|Hiệu ứng) [A-ZÀ-ỸĐ]'),
