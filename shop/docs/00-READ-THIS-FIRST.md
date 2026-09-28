@@ -23,7 +23,7 @@ Viết ngày 20/09/2026. Người đọc chính là Đạt; người đọc th�
 | Lo tích hợp sàn/vận chuyển/thanh toán khó | [03-COMPETITORS-AND-INTEGRATIONS.md](03-COMPETITORS-AND-INTEGRATIONS.md), mục tích hợp |
 | Muốn biết làm gì trước | [02-ROADMAP.md](02-ROADMAP.md) |
 | Sắp viết mã trong `shop/` | [../CLAUDE.md](../CLAUDE.md), rồi [05-ARCHITECTURE.md](05-ARCHITECTURE.md) |
-| Vừa mở một phiên mới | [../HANDOFF.md](../HANDOFF.md) |
+| Vừa mở một phiên mới | [../HANDOFF.md](../HANDOFF.md) — việc dở; nhật ký các phiên ở [../HISTORY.md](../HISTORY.md) |
 | Muốn biết vì sao chọn thế này | [adr/](adr/) |
 | Muốn biết còn nợ gì | [TECH-DEBT.md](TECH-DEBT.md) |
 
@@ -74,7 +74,7 @@ Dấu này quan trọng hơn bản thân con số. Một con số sai nói ra b�
 ## Thứ đã dựng được
 
 Năm trang chạy thật trong `shop/`, cộng một bản đề xuất ở `shop/pitch/`. Xem
-[../HANDOFF.md](../HANDOFF.md) để biết cách chạy.
+[../README.md](../README.md) để biết cách chạy.
 
 Nhắc lại cho rõ, vì đây là chỗ dễ tự lừa mình nhất: **ba tính năng đã dựng đều là giả thuyết
 viết thành phần mềm.** Việc chúng chạy được không chứng minh là chúng cần thiết. Bảng "đang

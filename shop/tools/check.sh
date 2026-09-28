@@ -42,7 +42,7 @@ fi
 
 printf '\n──────────────────────────────────────────────────────────\n'
 if [ "$FAIL" -eq 0 ]; then
-  printf 'shop: XONG. Cập nhật shop/HANDOFF.md rồi commit.\n\n'
+  printf 'shop: XONG. Cập nhật shop/HANDOFF.md (việc dở) và shop/HISTORY.md (nhật ký) rồi commit.\n\n'
 else
   printf 'shop: CHƯA XONG — sửa các mục LỖI ở trên.\n\n'
 fi

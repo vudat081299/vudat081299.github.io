@@ -164,7 +164,8 @@ một mùi không bao giờ được giới thiệu cho ai.
 - **[TECH-DEBT.md](TECH-DEBT.md)** — nợ kỹ thuật ghi ra giấy. Nợ không ghi là nợ sẽ quên.
 - **[adr/](adr/)** — mỗi quyết định một file: bối cảnh, chọn gì, đánh đổi, **điều kiện xét lại**.
   Điều kiện xét lại là phần quan trọng nhất; thiếu nó thì ADR chỉ là một lời biện hộ.
-- **[../HANDOFF.md](../HANDOFF.md)** — trạng thái cuối mỗi phiên: đã làm, đang dở, việc tiếp theo.
+- **[../HANDOFF.md](../HANDOFF.md)** — việc đang dở và việc chờ chủ trang; chỉ việc chưa xong.
+- **[../HISTORY.md](../HISTORY.md)** — nhật ký từng phiên: đã làm gì, đã đo gì, vì sao.
 
 ### Làm việc với AI trong thư mục này
 
