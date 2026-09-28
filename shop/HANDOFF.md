@@ -6,7 +6,7 @@ Chỉ việc chưa xong. Làm xong một mục thì xoá nó khỏi đây và gh
 
 Trạng thái lúc cập nhật (28/09/2026): `lint-shop.py` xanh, ba mục XEM đều cố ý — phân bố mùi thắng
 của Tìm mùi, 2,2% tổ hợp hoà mà câu phân xử không gỡ được, 28 mục còn cờ `placeholder`. Tầng 2
-(`smoke.js`) chưa chạy được trên máy chính — xem mục NỢ.
+(`smoke.js`) qua 16/16 phép đo, nhưng máy chính phải dựng tạm mới chạy được — xem mục NỢ.
 
 ## CHỜ CHỦ TRANG
 
@@ -40,10 +40,13 @@ thông tin rồi thì làm phần việc của agent ghi trong từng dòng.
   đầu chặn việc bán thật: cờ placeholder, VietQR, form đơn không gửi đi đâu, trang cảm ơn, thủ tục
   thông báo, quyền riêng tư. Sổ có hai dòng cùng mang số 6 (quyền riêng tư; số phiên bản của `g`
   trong giỏ) — đánh lại số thì sửa luôn mọi chỗ trỏ tới.
-- **Tầng 2 của `check.sh` chưa chạy trên máy chính.** Máy thiếu `playwright-core` cả ở Node mặc
-  định (fnm v16) lẫn Node của Homebrew, và cache Chromium của Playwright rỗng; `smoke.js` thoát mã
-  2 và `check.sh` vẫn in *XONG*. Phiên nào sửa trang cửa hàng thì phải cài rồi chạy lại (lệnh ở
-  CLAUDE.md), vì CI mới là nơi duy nhất đang chạy tầng này.
+- **Máy chính chưa cài sẵn gì cho tầng 2 của `check.sh`.** Không có `playwright-core` ở Node nào,
+  cache Chromium của Playwright rỗng, và `node` mặc định là v16 trong khi `playwright-core` cần
+  ≥ 20 — nên chạy trơn thì `smoke.js` thoát mã 2 và `check.sh` vẫn in *XONG*. Chạy được mà không
+  cài gì toàn máy: cài `playwright-core` vào một thư mục tạm, rồi
+  `PATH=/opt/homebrew/bin:$PATH NODE_PATH=<thư mục tạm>/node_modules CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" sh shop/tools/check.sh`
+  — lần chạy 28/09/2026 theo cách ấy: *smoke: OK (16 phép đo)*. Cài hẳn (hoặc dựng một lệnh
+  gói sẵn) thì xoá mục này.
 - **`shop/` không có lớp cổng thứ ba.** Có post-edit (lớp 1), pre-commit (lớp 2) và
   `gates.yml` (lớp 4), nhưng không `pre-push` nào chạy `lint-shop.py` — trong khi bảng ở CLAUDE.md
   gốc ghi `shop/` nối "1, 2, 3, 4". Thêm `shop/tools/hooks/pre-push`, hoặc sửa bảng.

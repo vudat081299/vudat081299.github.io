@@ -152,6 +152,10 @@ của Playwright trên cả ba hệ điều hành. Máy chưa có thì:
 npm i -g playwright-core playwright && npx playwright install chromium
 ```
 
+`playwright-core` cần Node ≥ 20, mà `node` mặc định trên máy có thể là bản cũ do fnm/nvm ghim —
+chạy `check.sh` với Node mới (`PATH=/opt/homebrew/bin:$PATH`). Máy có sẵn Google Chrome thì khỏi
+tải Chromium: `CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`.
+
 Trong container agent (`/opt/pw-browsers` đã có sẵn) thì **đừng** chạy `playwright install` —
 trình duyệt nằm đó rồi. Thiếu công cụ thì tầng 2 thoát mã 2 và nói rõ là đã bỏ qua; nó **không**
 làm cổng đỏ, nên đọc kỹ dòng cuối chứ đừng chỉ nhìn chữ *XONG*.
