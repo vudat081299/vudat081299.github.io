@@ -1,6 +1,6 @@
 # Cashy — Loan Redesign Programme · Review & Handoff
 
-> Written 2026-07-23. This is the durable record for the **loan-redesign programme** (3 vertical slices) and the review checklist for **Slice A (Contact)**, which is done. Read this to pick the work back up. Full agreed design lives in the assistant memory `cashy-loan-redesign`; per-slice artifacts live under `cashy/docs/agentic-workflow/{specs,tech-designs,plans}/` + `cashy/features/…`.
+> Written 2026-07-23. This is the durable record for the **loan-redesign programme** (3 vertical slices) and the review checklist for **Slice A (Contact)**, which is done. Read this to pick the work back up. Full agreed design lives in [`cashy/DECISIONS.md`](../../DECISIONS.md) — CASHY-013 (Contact), CASHY-014 (loan redesign), CASHY-015 (stats toggle), CASHY-016 (architecture directive); per-slice artifacts live under `cashy/docs/agentic-workflow/{specs,tech-designs,plans}/` + `cashy/features/…`.
 
 ## Programme status
 
@@ -77,19 +77,19 @@ pnpm build       # clean
 - Preview via `.claude/launch.json` config `cashy-dev-s3` (Vite, port **5199**). Other chats have used 5173/5176/5188.
 - App code: `cashy/src/` (`domain/` pure → `usecases/` → `ui/`; `data/` = persistence seam). Layer rule enforced by `cashy/scripts/check-layers.mjs` (runs in `pnpm build`).
 
-### Slice B — Loan redesign (next). Decisions already agreed (see memory `cashy-loan-redesign`):
+### Slice B — Loan redesign (next). Decisions already agreed (CASHY-014 in `cashy/DECISIONS.md`):
 - Each disbursement (cho vay / vay thêm) and repayment (trả) is a **real `Transaction`** carrying a new `loanId`, **transfer-like** (excluded from income/expense). Multiple of each per loan.
 - `outstanding` / `paid` / progress **derived from the ledger** — drop `loan.payments[]` and hard `principal`. No negative amounts.
 - **Interest**: monthly reducing-balance compound at a single rate; `owed` is a **pure derived function** (no interest transaction, no stored `owed`). Auto-settle is a **sticky derived status**.
 - Loan links to a **Contact by id** (consume slice A's entity + `ContactPicker`).
 - **Migration v10**: existing loans are demo → drop + reseed in the new model.
 - **Resolve these ❓ at the START of slice B's `/spec`** (worked example implies subtract-repayments-then-apply-interest, e.g. 100 → repay 20 → 80 → ×1.10 = 88): VND rounding rule + order; multi-tranche compounding anchor; overpayment-excess handling; progress-% denominator once interest applies; whether interest freezes on archive.
-- Carry the architecture directive (UI/logic split; BE-ready query layer; per-feature sub-modules) into slice B's `to-tech-design`.
+- Carry the architecture directive (UI/logic split; BE-ready query layer; per-feature sub-modules — CASHY-016) into slice B's `to-tech-design`.
 
 **To kick off slice B:** run the kv pipeline again — `discovery` is effectively done (decisions above), so write the slice-B handoff and run `/spec`, then `/bdd` → `/design` → `/plan` → exec-plan. Same build-on-`main` convention (or switch to a worktree if you prefer isolation).
 
 ### Slice C — Stats aggregation toggle
-Dashboard multi-select filter: pure spending / + subscription / + loans. Default = spending + subscription (loans off).
+Dashboard multi-select filter: pure spending / + subscription / + loans. Default = spending + subscription (loans off). (CASHY-015)
 
 ### Reusable pieces slice A already shipped for B
 - `Contact` entity + `usecases/contacts.ts` + `domain/contact.ts` (`isContactReferenced` seam ready to extend).
