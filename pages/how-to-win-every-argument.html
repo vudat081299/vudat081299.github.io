@@ -114,6 +114,13 @@
   /* ---- back to top ---- */
   .hw-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
   .hw-top.is-on { opacity: 1; pointer-events: auto; }
+
+  /* Tên trang dài đẩy nút của thanh trên ra khỏi màn điện thoại (luật navbar ở web-builder/CLAUDE.md):
+     bọc chữ trong <span>, chặn bề rộng bằng max-width — KHÔNG cho brand co bằng flex: 0 1 auto. */
+  @media (max-width: 480px) {
+    .hw-brand-t { display: inline-block; max-width: calc(100vw - 188px); overflow: hidden;
+      white-space: nowrap; text-overflow: ellipsis; vertical-align: bottom; }
+  }
 </style>
 </head>
 <body class="wb-app">
@@ -121,7 +128,7 @@
 <header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
           aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
-  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">⚖</span> How to Win Every Argument</a>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">⚖</span> <span class="hw-brand-t">How to Win Every Argument</span></a>
   <nav class="wb-nav wb-navbar__menu">
     <a class="wb-nav__link" href="#mo-dau">Mở đầu</a>
     <a class="wb-nav__link" href="#g1">1 · Cấu trúc</a>

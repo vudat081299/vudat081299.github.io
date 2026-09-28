@@ -35,6 +35,4 @@
   `claude/review-learning-pages-ux-c78e73` (chưa merge).
 - `machine-learning-101.html`: bí danh `phá đối xứng|đối xứng` của từ điển thuật ngữ bật popup sai
   chỗ (cùng nhánh trên).
-- `how-to-win-every-argument.html`: tên trang dài tràn ngang ở thanh trên — đo được 62px ở 320px,
-  22px ở 360px. Cách sửa là luật navbar trong `web-builder/CLAUDE.md`.
 - Nợ đo được của cổng tĩnh nằm ở bảng `DEBT` trong `pages/tools/lint-pages.py` — không chép lại ở đây.
