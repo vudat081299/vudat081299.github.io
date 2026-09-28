@@ -1,399 +1,143 @@
 # Repo này — luật chung cho mọi agent
 
-Đây là một repo chứa **nhiều project con độc lập**, mỗi project có luật riêng trong
-`CLAUDE.md` của chính nó. File này chỉ nói về thứ vắt ngang tất cả: **cổng chất lượng và
-cách chúng chạy tự động**.
+Repo chứa nhiều project con độc lập. File này chỉ ghi thứ **vắt ngang mọi project**: bản đồ, cấu
+trúc bắt buộc, tri thức để đâu, cổng, git. Luật riêng của từng project nằm trong CLAUDE.md của
+project ấy — Claude Code tự nạp nó khi bạn đọc một file trong thư mục đó, nên đừng chép luật riêng
+lên đây.
 
-| Project | Luật riêng | Cổng | Lớp đang nối |
+## Bản đồ project
+
+| Đường dẫn | Loại | Là gì | Cổng |
 |---|---|---|---|
-| `facts/` | [facts/CLAUDE.md](facts/CLAUDE.md) | `facts/tools/factlint.py check` + `verify` | 1, 2, 3, 4 |
-| `masters-degree/data-science-roadmap/` | CLAUDE.md trong thư mục đó | `node tools/gate.mjs` | 1, 2, 3, 4 |
-| `cashy/` | [cashy/CLAUDE.md](cashy/CLAUDE.md) | `node scripts/check-layers.mjs` + `oxlint` | 2, 4 |
-| `index.html` (trang chủ) | file này, mục *Thứ tự làm một trang* | `sh tools/check-index.sh` (lint dữ liệu + đo trong trình duyệt) | 2, 4 + chạy thật |
-| `pages/` | — | `python3 pages/tools/lint-pages.py` + `verify-math-for-ml.py` + `verify-ml.py` + `verify-betting-lab.py` + `verify-jazz-piano.py` + `verify-causal-inference.py` | 2, 4 |
-| `cooking/` | — | `python3 cooking/tools/lint-cooking.py` | 2, 4 |
-| `shop/` | [shop/CLAUDE.md](shop/CLAUDE.md) | `sh shop/tools/check.sh` | 1, 2, 3, 4 + chạy thật |
-| các project khác | xem thư mục | — | 4 |
+| `index.html` | trang chủ | danh mục mọi trang, đọc từ `data/collection.json`; luật ở `.claude/rules/home.md` | `sh tools/check-index.sh` |
+| `pages/` | bộ sưu tập | trang dạy học và tóm tắt sách, mỗi trang một file HTML | `sh pages/tools/check.sh` |
+| `cooking/` | bộ sưu tập | công thức nấu ăn + kiến thức bếp | `sh cooking/tools/check.sh` |
+| `facts/` | project | thư viện fact có kiểm chứng | `sh facts/tools/check.sh` |
+| `shop/` | project | storefront nến thơm | `sh shop/tools/check.sh` |
+| `cashy/` | project | app chi tiêu Vite + React — thứ duy nhất trong repo cần build | `sh cashy/tools/check.sh` |
+| `masters-degree/data-science-roadmap/` | project | trang dạy Data Science | `sh masters-degree/data-science-roadmap/tools/check.sh` |
+| `masters-degree/thesis-topic-selector/` | project | bảng chấm và xếp hạng đề tài luận văn | chạy tay: `node calibrate.js --check` (trong thư mục) |
+| `masters-degree/business-analytics/` | project | môn Business Analytics + đồ án | — |
+| `masters-degree/system-analysis-design/` | project | đồ án môn Phân tích thiết kế hệ thống | — |
+| `masters-degree/research-proposal-project/` | project | đề cương nghiên cứu, từ đồ án tới luận văn | — |
+| `web-builder/` | project | design system `wb-*` + trang tài liệu; nhiều trang link thẳng vào `web-builder.css` | — |
+| `json-analysis/` | project | công cụ xem, sửa, so JSON | — |
+| `loto/` | project | thống kê và heatmap xổ số | — |
+| `read-excel-file-to-table/` | project | đọc file Excel ra bảng | — |
+| `poem/` | project | thơ Việt, engine Truyện Kiều | — |
+| `portfolio/` | project | portfolio + component thử nghiệm | — |
+| `stuff/` | gác xép | đồ cũ, không publish, không link từ đâu | — |
 
-Lớp 4 phủ **mọi** project vì `.github/workflows/gates.yml` chạy tất cả các cổng trên, không
-chỉ cổng của project vừa sửa. `shop/` và `index.html` có thêm một tầng mà cổng lint không có:
-mở trình duyệt thật rồi bấm/đo (`shop/tools/smoke.js`, `tools/smoke-index.js`) — xem mục dưới.
+`python3 tools/lint-structure.py` đỏ nếu một thư mục có mặt trong repo mà thiếu dòng ở đây.
 
-`pages/` và `cooking/` không có CLAUDE.md riêng: mỗi trang là một tài liệu HTML tự
-chứa, không có luật nội dung chung để viết ra. Cổng của chúng chỉ kiểm thứ đúng/sai khách quan —
-id trùng, anchor gãy, asset thiếu, thẻ lệch — cộng ba thứ nữa thêm ngày 21/09/2026: `<svg>`
-không có tên tiếp cận, cây tiêu đề nhảy quá một bậc, và `aria-label` thuần tiếng Anh trên trang
-`lang="vi"`. Cả ba đều đo được, không phải chuyện thẩm mỹ: một `<svg>` không tên thì trình đọc
-màn hình bỏ qua hẳn, mà mấy trang này dạy bằng biểu đồ.
+## Cấu trúc bắt buộc — mỗi loại tri thức một chỗ
 
-Ba phép kiểm ấy chạy theo kiểu **bánh cóc**, vì 4 trang cũ còn nợ mà dọn hết thì ngoài phạm vi
-lúc đó. Bảng `DEBT` trong `lint-pages.py` ghi đúng số đang nợ của từng trang: trang **không** có
-tên trong bảng thì phải bằng 0, trang có tên thì chỉ được giữ nguyên hoặc giảm — tăng là LỖI.
-Dọn xong một trang thì **xoá dòng của nó đi, đừng nới số lên**. Nợ nằm trong repo, không nằm
-trong đầu ai — và không trang sạch nào tụt lại được.
+Mỗi dòng trong bản đồ có các file sau, và mỗi file chỉ làm một việc:
 
-`shop/` thì **có** (từ 20/09/2026), vì nó không còn là một trang tự chứa: năm trang dùng chung
-một shell, toàn bộ nội dung nằm ở `data/shop.json`, và giá tiền được suy ra chứ không ghi tay —
-ba thứ ấy là luật, và luật thì phải viết ra. Kèm theo là `shop/docs/`: lộ trình, ADR, sổ nợ, và
-một bộ tài liệu định hướng kinh doanh cho việc đàm phán với chủ shop.
-
-Năm ngoại lệ trong `pages/`, đều là cổng **kiến thức**. Cái thứ nhất, `verify-math-for-ml.py`,
-chỉ chạy khi commit chạm `mathematics-for-machine-learning.html`. Trang ấy nói ~90 con số cụ thể (định thức,
-trị riêng, tỉ lệ PCA, dãy Newton, xác suất nhị thức, phân vị t, p-value) và tự nhận với người
-đọc là mọi con số tính được đều kiểm được bằng máy — nên phải có một script tính lại thật, chứ
-không phải một lời hứa. `lint-pages.py` kiểm được thẻ lệch nhưng không biết `0,0546875` có phải
-là P(X≥8 | n=10, p=0,5) hay không. Trang nào sau này cũng nói số cụ thể thì làm thêm một cổng
-cùng kiểu, đừng nới cổng này ra thành cổng chung: mỗi trang có bộ số riêng.
-
-Cái thứ hai, `verify-ml.py` (152 phép kiểm), làm đúng theo luật vừa nói cho hai trang học máy —
-`machine-learning.html` và `machine-learning-101.html` — vốn nói ~270 con số có đơn vị mà trước
-đó không cổng nào kiểm. Nó tính lại những con số *suy ra được*: `896 = 32×(3·3·3+1)` tham số của
-một lớp tích chập, `(32+2−3)/1+1 = 32` cỡ đầu ra sau padding/stride, precision/recall/F1 đọc ra
-từ ma trận nhầm lẫn 15/15/5/965, `28·28·32×(5·5·192) ≈ 120 triệu` phép nhân của khối Inception
-so với `12,4 triệu` khi chèn nút thắt 1×1. Nó gộp hai trang vào một file mà **không** vi phạm
-luật trên: hai bộ số viết tay riêng, mỗi bộ đọc đúng file của nó, không phép kiểm nào dùng chung —
-gộp chỉ để hai trang anh em khỏi chép lại cùng một đoạn hàm trợ giúp.
-
-Cái thứ ba, `verify-betting-lab.py` (92 phép kiểm), cho `betting-strategy-lab.html` — trang thí
-nghiệm chiến lược cược, thử cả luật cộng thêm lẫn luật nhân đôi sau mỗi lần thua. Nó khác hai cổng
-trên ở một chỗ đáng nói: trang ấy không chỉ nói con số, nó nói một **luật** ("gấp thếp không đổi
-được dấu của kỳ vọng"), và luật thì hỏng được mà con số vẫn đúng. Nên cổng có ba phần: tính lại
-~40 con số trong bài; đòi vài dòng JS then chốt còn nguyên hình — nặng nhất là **điểm đặt phải
-được chốt TRƯỚC khi quả ra**, vì đảo thứ tự ấy thì kỳ vọng không tách được thành `e × tổng điểm`
-và cả mục "Vì sao" sai mà trang vẫn hiện số đẹp; và dựng lại phân phối bằng một lối suy luận
-**khác** lối trang dùng (xích Markov đối chiếu với công thức bù trừ), cộng một lần mô phỏng cả trò
-chơi bằng Python. Nhánh nhân đôi không kiểm được bằng mô phỏng — ở hệ số 2 thì trung bình mẫu
-không hội tụ, đúng điều trang nói — nên nó đối chiếu hệ thức một biến với một phép tính chính xác
-khác đi qua cả phân phối chuỗi thua. Đã thử ngược: sửa lệch một con số thì đỏ, dời dòng chốt điểm
-đặt xuống sau vòng quay thì đỏ, bỏ nhánh nhân khỏi `nextStake` thì đỏ.
-
-Cái thứ tư, `verify-jazz-piano.py` (1.441 phép kiểm, từ 27/09/2026), cho `jazz-piano-theory.html` —
-trang nhạc lý → đệm hát → cảm âm → đọc bản → jazz, năm trụ trong một file. Nó bắt hai loại lỗi mà
-lint mù. Một là **tham chiếu chéo**: năm trụ đánh số "PHẦN NN" bằng tay, nên chèn một mục là mọi chữ
-"phần 07" phía sau lệch âm thầm — lúc rà ngày 27/09 đã có hơn 20 chỗ trỏ sai, để lại từ những lần
-chèn mục trước. Nay mọi tham chiếu là `<a class="xref" href="#id-mục">phần NN</a>`; cổng so số trong
-chữ với số của mục đích, đòi số mục của từng trụ liền mạch, và **cấm** chữ "phần NN" trơn. Hai là
-**nốt nhạc**: dữ liệu của các demo (kho lick, sáu lớp đệm, hợp âm nối, fill, phòng tập, nốt mốc, bản
-đồ D.S./Coda) nằm trong các khối `<script type="application/json">` ngay trong trang — trang phải
-chạy cả khi mở bằng `file://` nên không tách ra `data/*.json` — và cổng đọc đúng các khối đó:
-voicing có đúng bộ nốt của ký hiệu không, nốt ở phách mạnh có thuộc hợp âm không, bậc 7 có thật
-trượt nửa cung xuống bậc 3 ở vạch nhịp như lời tả không, fill có xong trước khi ca sĩ vào lại không,
-thứ tự D.S. al Coda chạy lại bằng luật có ra đúng dãy ghi trong bài không. Nó cũng tính lại vài bảng
-cũ (mode, quãng, ký hiệu hợp âm, "mỗi nốt thuộc đúng ba hợp âm ba"). Đã thử ngược 14 kiểu — đổi một
-nốt lick, lệch số phần, thêm một chữ "phần 12" trơn, đánh số mục trùng, bấm E7 thiếu G♯, đặt sai
-bass gạch chéo, cho fill lấn câu hát, ghi sai thứ tự Coda, sai vị trí nốt mốc, sai một nốt trong
-bảng mode — lần nào cũng đỏ. Nằm trong cả pre-commit lẫn gates.yml.
-
-Cái thứ năm, `verify-causal-inference.py` (1.224 phép kiểm, từ 27/09/2026), cho
-`experimentation-causal-inference.html` — giáo trình thí nghiệm A/B và suy luận nhân quả. Trang ấy do
-ba agent viết song song rồi ráp lại, nên cổng có bốn bộ phép kiểm viết tay riêng (`run_p1`, `run_p2`,
-`run_p3`, `run_ref`), mỗi bộ của đúng người viết phần ấy — vẫn là luật "mỗi trang một cổng", chỉ là một
-trang có bốn tác giả. Điểm riêng của nó: dựng lại **dữ liệu có hạt giống** của từng mô hình tương tác
-bằng một bản chép Python của đúng bộ sinh ngẫu nhiên trong JS của trang (`jsrng`, `jsgauss`), nên con
-số mô hình hiện ra lúc vừa mở trang cũng bị kiểm tới từng chữ số, không chỉ con số trong chữ. Cộng bốn
-phép kiểm toàn trang: link "mục N.M" trỏ đúng mục mang số ấy (cùng ý với tham chiếu chéo của cổng
-jazz-piano); đích `#s-…` của mọi mục từ điển GLOSS là một id có thật (`lint-pages.py` bóc `<script>`
-trước khi soi nên không thấy chúng); không có chữ Hy Lạp hay ký hiệu một chữ thường nằm trần trong nhãn
-bị CSS viết hoa — điểm xu hướng `e` hiện thành `E` là kỳ vọng, `θ` thành `Θ` (bọc bằng
-`<span class="lc">`); và số mô hình ghi ở đầu trang bằng số mô hình thật. Chạy ~15 giây vì dựng lại cả
-các mô phỏng. Đã thử ngược lúc ghép vào repo: đổi một hạt giống JS của mô hình (`rng(4242)`,
-`rng(31337)`, `rng(129)`) hay một dòng JS then chốt (`mu += 120` của RDD) thì đỏ. Một giới hạn phải nói
-thẳng: số trong chữ được ghim bằng cách đòi một **cụm chữ** có mặt ở đâu đó trong trang, nên cụm nào lặp
-lại thì sửa lệch một bản vẫn xanh — `<b>27,5%</b> số thí nghiệm` nằm hai chỗ, đổi chỗ ở câu dẫn mục
-nhìn trộm thì cổng không biết. Nằm trong cả pre-commit lẫn gates.yml.
-
-Nhân tiện, một cái đã sửa cùng lúc: `.github/workflows/gates.yml` trước đó chỉ chạy
-`lint-pages.py`, trong khi bảng ở đầu file này nói lớp 4 chạy cổng của mọi project con.
-Hai cổng `verify-*` cũ vì thế sống duy nhất trên **máy người sửa** suốt từ lúc chúng được
-viết: ai commit từ giao diện web của GitHub, hoặc quên chạy `install-hooks.sh`, thì không
-có gì kiểm lại ~270 con số của hai trang học máy và ~90 con số của trang toán. Nay cả ba
-đều nằm trong gates.yml. `shop/` cũng có một cổng riêng cùng kiểu vì cùng lý do: đó là một storefront, nơi sai một con
-số thì khách trả nhầm tiền. `lint-shop.py` soi thẳng vào `shop/data/shop.json` — giá phải là số
-nguyên dương, giá gạch phải lớn hơn giá bán, và `labels.ship_fee`/`free_ship` phải khớp con số
-viết trong đoạn văn `shipping`. Từ 21/09/2026 nó kiểm thêm **quan hệ giữa hai trường** — chỗ tiền
-thật sự nằm, và là chỗ mọi phép kiểm trước đó bỏ trống: `ship_fee` phải nhỏ hơn `free_ship` (hoán
-đổi hai số thì cổng cũ vẫn xanh vì đoạn văn nhắc cả hai), ngưỡng miễn phí ship quy ra phải nằm
-trong 2–4 cây nến (dưới 2 thì đơn nào cũng miễn phí, trên 4 thì không ai với tới), mỗi mục của
-băng chữ trang chủ phải khai rõ đã xác nhận hay đang đoán, và cả năm trang phải nạp đủ
-`assets/shop.css` + `assets/shop.js`.
-
-Bản trước của đoạn này hứa hai phép kiểm **không tồn tại** ("`cat` phải trỏ vào danh mục có thật",
-"tag của bộ chọn mùi phải khớp `mood`") — `cat` thậm chí không phải một trường trong `shop.json`.
-Tài liệu hứa nhiều hơn cổng làm là cách một cổng chết mà không ai biết. Nó còn kiểm chiều ngược lại: chữ của khối lặp KHÔNG được nằm trong
-`index.html` (so theo text node, ngưỡng 0,40 — số đo được, xem comment trong file).
-
-`cooking/` gồm bốn trang công thức (Việt, Hàn,
-Âu mặn, Bánh Âu) dùng chung một khung filter/modal, cộng một trang kiến thức nền
-(`food-fundamentals` — explainer tĩnh, sơ đồ SVG thịt/bò, nhiệt độ, kỹ thuật, rượu); tách
-khỏi `pages/` để gom một chỗ, nên có cổng cùng bộ kiểm nhưng riêng thư mục.
-
-Cổng `cashy/` cần Node ≥ 20 (oxlint cần ≥ 22). Node mặc định trên máy có thể là bản cũ do
-fnm/nvm ghim, nên hook tự dò Homebrew thay vì tin vào `PATH` — nếu không nó sẽ "im lặng
-pass" mà chẳng kiểm gì.
-
----
-
-## Việc đầu tiên khi bắt đầu một phiên
-
-```bash
-sh facts/tools/install-hooks.sh
-```
-
-Chạy được nhiều lần, không hại gì. Nó dựng lại `.git/hooks/pre-commit` và `pre-push` thành
-**bộ điều phối**. Bỏ bước này thì lớp cổng thứ hai không tồn tại trên máy bạn.
-
-## Ba lớp cổng, và vì sao cần cả ba
-
-| Lớp | Chạy khi | Bắt được gì | Đi theo repo |
+| File | Khi nào có | Chứa | Không chứa |
 |---|---|---|---|
-| 1. `PostToolUse` | ngay sau mỗi Edit/Write | sửa bằng công cụ sửa file | có — `.claude/settings.json` |
-| 2. `pre-commit` | lúc `git commit` | **mọi** thay đổi, kể cả viết bằng script | có — `*/tools/hooks/pre-commit` |
-| 3. `pre-push` | lúc `git push` | trạng thái cuối của thứ sắp lên public | có |
-| 4. GitHub Actions | lúc push lên `main` và mọi PR | thứ ba lớp trên bỏ sót vì chúng chạy trên **máy** người sửa | có — `.github/workflows/gates.yml` |
+| `CLAUDE.md` | luôn | luật đang áp dụng: là gì, file vào, lệnh cổng, luật riêng | ngày tháng, "bản trước sai", nhật ký, số đếm sẽ trôi |
+| `DECISIONS.md` | từ quyết định đầu tiên | quyết định chủ trang đã chốt — mã, ngày, phạm vi, nhóm, trạng thái | luật chi tiết (ở CLAUDE.md), chuyện riêng tư |
+| `HANDOFF.md` | khi có việc dở | chỉ bốn mục: `ĐANG LÀM`, `CHƯA LÀM`, `NỢ`, `CHỜ CHỦ TRANG` | nhật ký |
+| `HISTORY.md` | tuỳ | nhật ký phiên, mới nhất trên đầu | luật hiện hành |
+| `README.md` | tuỳ | cho người đọc trên GitHub | luật cho agent |
+| `tools/check.sh` | khi có cổng | mọi cổng của project, một lệnh; hook ở `tools/hooks/pre-commit` | — |
 
-Lớp 1 phản hồi nhanh nhất nhưng **có lỗ**: thay đổi viết bằng `python3 - <<EOF` hay `sed`
-không đi qua tool Edit/Write nên nó không thấy. Lớp 2 bịt lỗ đó. Lớp 3 bịt trường hợp
-`--no-verify`, commit merge, và commit cũ được cherry-pick vào. Lớp 4 bịt cái mà cả ba lớp
-kia không bịt được: chúng sống trên **máy** người sửa, nên chúng biến mất khi ai đó quên chạy
-`install-hooks.sh`, khi commit tạo từ giao diện web của GitHub, hoặc khi một phiên agent chạy
-ở môi trường khác. Lớp 4 chạy cổng của **mọi** project con chứ không chỉ project vừa sửa —
-repo này có nhiều phiên chạy song song, và một thay đổi ở đây làm hỏng chỗ kia là chuyện đã xảy ra.
+- Trang chủ không có thư mục riêng (GitHub Pages bắt `index.html` ở gốc), nên luật của nó ở
+  `.claude/rules/home.md`. Luật chung cho trang sách của cả `pages/` lẫn `cooking/` ở
+  `.claude/rules/book-pages.md`. Cả hai chỉ được nạp khi agent đọc file khớp `paths:` của chúng.
+- Quyết định và việc dở của trang chủ, và của những gì vắt qua nhiều project, ở `DECISIONS.md` /
+  `HANDOFF.md` / `HISTORY.md` ở gốc.
+- `python3 tools/lint-structure.py` kiểm phần đo được: bản đồ đủ, mỗi project có CLAUDE.md, project
+  có hook thì có `tools/check.sh`, CLAUDE.md không quá 200 dòng và không có ngày tháng, HANDOFF chỉ
+  có bốn mục. `python3 tools/decisions.py check` kiểm sổ quyết định.
 
-**Một thứ cả bốn lớp đều không bắt được: hành vi.** Cổng lint đọc cú pháp và dữ liệu; nó không
-bấm nút. Hai lỗi nặng nhất từng xảy ra ở `shop/` đều đi qua lint sạch sẽ và chỉ lộ ra khi mở
-trình duyệt thật rồi đo — nên `shop/` có thêm `tools/smoke.js`, và `check.sh` chạy cả hai tầng.
-Project nào có logic chạy trong trình duyệt thì nên làm cùng kiểu.
+**Thêm một trang vào `pages/` hoặc `cooking/`:** làm theo `pages/CLAUDE.md`, mục *Thêm một trang*.
+Tóm tắt: một file HTML theo `.claude/rules/book-pages.md`, một mục trong `data/collection.json`, trang
+nói số cụ thể thì thêm `pages/tools/verify-<tên>.py` (tự được tìm, không phải khai ở đâu).
 
-## Quy tắc bất di bất dịch
+**Thêm một project thư mục:** tạo thư mục + `CLAUDE.md`, thêm một dòng vào bản đồ. Có cổng thì đặt ở
+`<project>/tools/`, gom vào `<project>/tools/check.sh` (CI tự chạy), hook ở
+`<project>/tools/hooks/pre-commit` (bộ điều phối tự tìm). Lên trang chủ thì thêm mục vào
+`data/collection.json`.
 
-1. **Cổng mới phải nằm trong repo, không nằm trong đầu ai.** Viết ra một script chạy được,
-   đặt trong `<project>/tools/`, rồi nối vào một trong ba lớp trên.
-2. **`.claude/settings.json` và `.claude/skills/` được theo dõi bởi git** (xem `.gitignore`).
-   Thêm hook mới hay skill mới thì commit, đừng chỉ sửa trên máy mình — nếu không thì quy trình
-   chỉ chạy trên đúng một máy. Phần còn lại của `.claude/` vẫn là cục bộ.
-   Hiện có một skill: `.claude/skills/shop/` — quy trình làm việc trong `shop/`.
-3. **Bộ điều phối gọi mọi `*/tools/hooks/pre-commit`** trong repo, và mỗi hook con tự lọc
-   theo đường dẫn của nó. Thêm project mới thì chỉ cần đặt file đúng chỗ, không phải sửa
-   bộ điều phối.
-4. **Đừng cài hook bằng symlink trỏ vào một project.** Repo này có nhiều project; symlink
-   làm project cài sau xoá mất cổng của project cài trước. Đó là lý do bộ điều phối tồn tại.
-5. **Chạy `install-hooks.sh` của project con sẽ phá bộ điều phối** (nó đặt lại symlink).
-   Chạy lại `facts/tools/install-hooks.sh` là xong.
+## Tri thức để đâu
 
-## Bỏ qua cổng
+- Chủ trang trả lời một câu hỏi của agent và câu trả lời thành luật → ghi một mục vào `DECISIONS.md`
+  của project đó (định dạng ở docstring của `tools/decisions.py`), và luật vào CLAUDE.md kèm mã.
+  Quyết định áp cho nhiều project → `DECISIONS.md` gốc.
+- Trước khi sửa một file có thể dính quyết định cũ: `python3 tools/decisions.py find <file>`.
+- Repo **public** và được deploy nguyên cây: không ghi tên người thật, nơi làm việc, tiền bạc, hay vì
+  sao một trang bị ẩn — kể cả trong DECISIONS.md và commit message.
+- Memory của Claude Code chỉ nằm trên một máy và không vào git: chỉ dành cho chuyện riêng tư và mẹo
+  của đúng máy ấy. Luật, quyết định, việc dở của repo phải nằm trong repo, để máy nào `git pull`
+  cũng có (REPO-013).
+- Mẹo làm việc đã trả giá mới rút ra (chạy nhiều agent, sửa hàng loạt, dẫn nguồn, kiểm trong trình
+  duyệt): skill `agent-practices` trong `.claude/skills/`.
+- File HTML dài: đừng Read cả file. `python3 tools/toc.py <file>` in bản đồ mục kèm dải dòng.
 
-`git commit --no-verify` và `git push --no-verify` vẫn dùng được, và đôi khi đúng là cần.
-Nhưng bỏ qua rồi thì phải sửa ngay sau đó — cổng bị tắt lâu là cổng đã chết.
+## Nội dung trước, UI sau
 
----
+Khối **lặp** → chữ ở `data/*.json`; khối **độc nhất** → chữ ở HTML (REPO-001). Viết nội dung vào
+file dữ liệu trước (chữ thuần, chưa có thẻ), rồi dựng UI đọc dữ liệu bằng vòng lặp, rồi ghép và chạy
+cổng. Tách file mua được một thứ: cả tập nằm cạnh nhau nên cái lệch tự lộ, và linter kiểm được cấu
+trúc. Trang văn xuôi độc nhất thì **không** tách — JSON hoá chỉ thêm một lớp gián tiếp.
 
-## Thứ tự làm một trang: nội dung trước, UI sau
+- `fetch` cần HTTP: mở bằng `file://` là trang rỗng, nên trang đọc data phải có đường lỗi chỉ người
+  dùng chạy `python3 -m http.server`.
+- Chỉ trường có hậu tố `_html` được `innerHTML`, còn lại `textContent` / escape.
+- Số liệu suy ra được thì đừng ghi tay — trong data lẫn trong tài liệu. Cổng in số khi chạy.
 
-**Tách file không làm câu sau tốt hơn — nói rõ để không ai trông đợi sai.** Đã đo trên chính
-trang này: **12 trong 31 mô tả** đã nói về bộ máy của trang ("4 acts", "11 interactive models",
-"Searchable", "decision tool"). `(Anh/Việt)` không phải ngoại lệ, nó **khớp giọng láng giềng** —
-và trong file data láng giềng nằm sát nhau hơn nên áp lực bắt chước còn tăng.
+## Cổng: bốn lớp, và vì sao cần cả bốn
 
-Cái tách file mua được là **cả tập đọc được cùng lúc** (một màn hình, thay vì phải viết script
-mới dump nổi 31 mô tả ra khỏi HTML) và **linter kiểm được cấu trúc**. Cần, nhưng chưa đủ: thứ
-giữ chất lượng là **bộ mẫu nhất quán**, vì ai viết mục thứ 32 cũng bắt chước mục 1–31.
+| Lớp | Chạy khi | Bắt được | Nằm ở |
+|---|---|---|---|
+| 1. `PostToolUse` | ngay sau mỗi Edit/Write của Claude | sửa bằng công cụ sửa file | `.claude/settings.json` |
+| 2. `pre-commit` | `git commit` | mọi thay đổi, kể cả viết bằng script | `*/tools/hooks/pre-commit` |
+| 3. `pre-push` | `git push` | `--no-verify`, commit merge, commit cherry-pick vào | `*/tools/hooks/pre-push` |
+| 4. GitHub Actions | push lên `main` và mọi PR | thứ ba lớp trên bỏ sót vì chúng chạy trên máy người sửa | `.github/workflows/gates.yml` |
 
-Ba bước, đúng thứ tự:
+- Lớp 2 và 3 cần bộ điều phối: `sh tools/install-hooks.sh` (chạy nhiều lần vô hại). Nó gọi mọi
+  `*/tools/hooks/<event>` mà git theo dõi — chỉ file trong repo, không nhặt bản sao trong worktree.
+  Thêm project thì đặt hook đúng chỗ là xong, không phải sửa bộ điều phối.
+- Lớp 4 chạy cổng của **mọi** project, không chỉ project vừa sửa: nó tự tìm mọi `*/tools/check.sh`.
+  Repo có nhiều phiên song song, và một thay đổi ở đây làm hỏng chỗ kia là chuyện đã xảy ra.
+- **Deploy chỉ chạy sau khi lớp 4 xanh** (REPO-014): cổng đỏ thì web giữ bản cũ.
+- Cả bốn lớp đều không bắt được **hành vi**: lint đọc cú pháp và dữ liệu, không bấm nút. Project có
+  logic chạy trong trình duyệt thì cần thêm tầng mở trình duyệt thật rồi đo (`shop/tools/smoke.js`,
+  `tools/smoke-index.js`).
 
-1. **Nội dung ra file dữ liệu riêng** (`data/*.json`), chữ thuần, chưa có thẻ nào. Viết ở đây
-   thì 31 mô tả nằm cạnh nhau và cái lệch tự lộ — đó là toàn bộ lý do tách file.
-2. **Rồi mới dựng UI**, và UI *đọc* dữ liệu bằng vòng lặp / query theo key.
-3. **Ghép, chạy cổng, ship.**
+## Luật bất di bất dịch
 
-**Luật chia chỗ — đếm được, không tranh luận được:** khối **lặp** → chữ ở data; khối **độc
-nhất** → chữ ở HTML. `index.html` là ví dụ đã làm: 8 section + 33 ô + 6 dòng môn học đều lặp nên nằm ở
-`data/collection.json`; tiêu đề trang chỉ có một nên ở lại HTML. Rail bên trái và ba cột
-chân trang cũng dựng từ chính mảng `sections` ấy — không có danh sách mục thứ hai để quên
-cập nhật. Trang văn xuôi độc nhất
-(`pages/chemistry.html`, `how-money-works`…) **không** tách — chữ ở đó không lặp, JSON hoá chỉ
-thêm một lớp indirection.
+1. **Cổng mới phải nằm trong repo, không nằm trong đầu ai.** Viết thành script trong
+   `<project>/tools/`, gom vào `tools/check.sh`, nối vào một lớp ở trên.
+2. **`.claude/settings.json`, `.claude/skills/`, `.claude/rules/` được git theo dõi** (xem
+   `.gitignore`); phần còn lại của `.claude/` là cục bộ. Thêm hook, skill hay rule thì commit — nếu
+   không, quy trình chỉ chạy trên đúng một máy.
+3. **Đừng cài hook bằng symlink trỏ vào một project**: project cài sau xoá mất cổng của project trước.
+   Đó là lý do bộ điều phối tồn tại.
+4. **`--no-verify` dùng được khi thật cần**, nhưng bỏ qua xong phải sửa ngay — cổng tắt lâu là cổng
+   đã chết.
 
-Ba thứ phải nhớ khi làm:
+## Git: nhiều phiên chạy song song
 
-- **`fetch` cần HTTP.** Mở bằng `file://` là trang rỗng, nên mỗi trang đọc data phải có đường
-  lỗi tử tế chỉ người dùng chạy `python3 -m http.server` (xem `index.html` và `facts/app.js`).
-- **Chỉ trường có hậu tố `_html` được `innerHTML`**, còn lại `textContent` / escape. Mặc định
-  data là chữ thuần.
-- **Số liệu suy ra được thì đừng ghi trong data** — `subj__count` ("3 pages") tính từ
-  `files.length`, không ai phải sửa tay khi thêm một dòng.
+Nhiều phiên agent cùng làm trên các project con và **cùng push thẳng lên `main`**. `HEAD` cục bộ có
+thể bị phiên khác vượt mặt bất cứ lúc nào, kể cả giữa hai lệnh của cùng một lượt làm việc.
 
-**Trang chủ KHÔNG còn dựng trên bộ web-builder (21/09/2026).** Bản trước ráp từ part của
-skill `web-builder` (`wb-shell` + `wb-navbar` + `wb-card`…); chủ trang yêu cầu thiết kế lại
-mà không dùng bộ ấy. `index.html` giờ **tự chứa**: một `<style>` riêng, prefix `ix-`, không
-`<link>` tới `web-builder.css`, không mặt chữ icon. **Đừng "sửa giúp" bằng cách ráp lại vào
-bộ** — đó là quyết định, không phải thiếu sót. Hai chỗ dễ hiểu nhầm: thư mục `web-builder/`
-vẫn còn và vẫn là một mục trong danh mục (nó là project riêng — trang tài liệu của bộ), và
-10 trang khác trong repo vẫn `<link>` tới `web-builder.css`, không đụng gì tới chúng.
-
-Rời bộ thì mất luôn bộ cổng G1–G9 của `references/page-review.md`, nên phải thay bằng cổng
-của chính repo — luật số 1 ở trên: cổng nằm trong repo, không nằm trong đầu ai.
-`tools/smoke-index.js` mở trình duyệt thật và đo 29 thứ: tràn ngang ở 11 bề rộng
-(1440→320), mép trái của gạch section / mô tả / hàng có thẳng nhau không, tương phản chữ ở
-cả hai nền, lọc tìm kiếm có còn trơ lại tiêu đề rỗng không, bàn phím (`/`, `Esc`, phím của
-từng mục), 39 href có mở được không, và trang có lặng lẽ quay về `wb-*` không.
-`sh tools/check-index.sh` chạy cả hai tầng một lệnh, cùng khuôn với `shop/tools/check.sh`.
-
-Bốn lỗi dưới đây là lỗi THẬT của bản thiết kế lại, cổng lint mù hoàn toàn với cả bốn, và
-chính script trên bắt được — đó là lý do nó tồn tại: `margin-left` âm kéo theo `border-bottom`
-làm gạch của hàng thò ra ngoài gạch section 8px; `padding: 9px 0 11px` trong media query xoá
-mất lề ngang nên chữ chạm sát mép màn ở 390px; `flex-basis: auto` của ô tìm kiếm làm thanh
-trên gãy thành bốn hàng ở 320px (flex xếp dòng theo basis **trước** khi co); và một bậc chữ
-xám chỉ đạt 2,79:1, dưới ngưỡng AA 4,5:1.
-
-Một điều nữa đã đo, vì nó là thứ dễ phình mà không ai để ý: **xin font thì xin đúng thứ
-dùng.** `Fraunces:opsz,wght@9..144,600..700` nặng 65 KB chỉ riêng subset `latin`; bỏ dải nét
-600..700 (trang chỉ dùng 600) còn 34 KB. Nhưng **đừng ghim `opsz`** cho rẻ hơn nữa — `opsz@144`
-còn 16 KB mà 144 là bản khắc cho cỡ chữ rất lớn, tiêu đề section 23–31px hoá ra mảnh như sợi
-tóc. Tổng font lần mở đầu ~100 KB.
-
-**Luật nội dung đã chốt cho `index.html` (08/09/2026):** mô tả **chỉ nói chủ đề của trang**,
-không kể bộ phận hay tính năng của trang. Ba đường biên, đo được:
-
-| Cắt | Giữ |
-|---|---|
-| tính năng & bộ phận: `Interactive`, `Searchable`, `filter by`, `pop-ups`, `side drawer`, `tracked progress`, `(Anh/Việt)` | chủ đề: `từ hạt nhân tới hoá hữu cơ`, `pandas, SQL & Colab` |
-| **đếm bộ phận trang**: `4 acts`, `16 mô hình tương tác`, `7 phần` | **đếm nội dung**: `~79 lối ngụy biện`, `50 nguyên tắc` |
-| — | trang **công cụ** (Loto, Cashy, JSON Analysis, Web Builder): việc nó làm chính là chủ đề |
-
-Luật này cũng nằm ở trường `note` trong `data/collection.json` — ngay chỗ người viết mục tiếp
-theo đang gõ, vì **ai viết mục thứ 32 cũng bắt chước mục 1–31**. Đó là lý do bộ mẫu quan trọng
-hơn luật: đã rà cả 31 mô tả và sửa 12 cái vi phạm, để cái được bắt chước là cái đúng.
-
-**Mở rộng 20/09/2026 — luật áp cho cả `desc` của section, và một luật sắp xếp.** `desc` của
-section trước đây tự do hơn mục con nên vi phạm chính luật ấy ở ba chỗ: `lọc theo nguyên liệu,
-loại món, độ khó` (Cooking), `each with interactive models` (Science), `Each subject is a card —
-its rows are the pages inside that subject's folder` (Master's) — câu cuối còn tả cách trang
-được vẽ. `desc` nói **cái gì gom nhóm ấy lại**, không nói trang có bộ phận gì.
-
-Luật sắp xếp: **một section = một trục duy nhất.** `Tools` là thứ bạn *dùng*; bảy section còn
-lại là chủ đề bạn *đọc*. Bản trước trộn hai trục — một ô `Pages` 12 mục chứa lẫn công cụ
-(Loto, Cashy, JSON) với giáo trình (Debate, Psychology, English), cạnh những section chia theo
-chủ đề. **Đừng dựng lại một ô `Pages` chứa mọi thứ:** trang nào không biết xếp đâu là dấu hiệu
-thiếu một section, không phải cớ để có một cái thùng.
-
-**Luật thứ tự (21/09/2026) — viết ra vì thiếu nó là thiếu thứ để bắt chước.** Bản 20/09 đã gom
-nhóm đúng nhưng **không** nói gì về thứ tự, nên thứ tự trong section lệch nhau ngay trong cùng
-một trang: `Cooking` xếp đúng (món hay nấu trước, `Food Fundamentals` — kho tra cứu — chốt hậu)
-trong khi `Data & AI` xếp ngược chiều học và `Thinking` để kho tra cứu dẫn đầu. Bốn dòng:
-
-1. Section là **lộ trình học** (`Data & AI`, `Science`, `Thinking`, `Cooking`, `Master's`):
-   **cửa vào trước, kho tra cứu / đào sâu cuối.** `Machine Learning 101` tự mô tả *"cho người
-   mới, không cần biết toán cấp ba"* → nó mở màn `Data & AI`, không phải ba khoá toán của
-   Serrano. `Fact` và `Food Fundamentals` là kho tra cứu → chốt hậu section của chúng.
-2. Section là **cái kệ** (`Tools`, `Everyday`, `Books`): **cái hay với tay tới nhất trước.**
-3. Cùng một mức, không phân được đâu là cửa vào (`Science`): **cái gần việc chủ trang nhất
-   trước** — vì vậy `Cryptography` đứng trước `Chemistry` / `Relativity`.
-4. **Thứ tự 8 section là quyết định của chủ trang, không suy ra được từ nội dung.** Chốt
-   21/09/2026: `Everyday` · `Cooking` · `Book Summaries` · `Thinking & Communication` ·
-   `Tools` · `Science` · `Data & AI` · `Master's Degree`. Trục **đọc được** từ chính thứ tự
-   ấy là *đời thường trước, chuyên sâu sau*: bốn section đầu là thứ dùng ngoài giờ làm, bốn
-   section cuối nặng dần tới `Master's`, `Tools` nằm đúng chỗ bản lề giữa hai nửa. Nói rõ
-   để người sau không hiểu nhầm: **đó là cách đọc thứ tự, không phải lý do chủ trang nói
-   ra.** Bản 20/09 xếp `Tools` đầu vì coi trang là bảng nhảy việc mở hằng ngày; chủ trang
-   đổi ý ngày 21/09. Muốn đổi nữa thì đảo lại *cả dòng này* trước, đừng vá từng mục.
-
-Hai chỗ **cố ý** không có luật, đừng đi tìm: **ba môn cao học xếp tuỳ ý** (repo không có tín
-hiệu học kỳ nào, cả bốn thư mục commit cùng ngày 08/09; chủ trang chốt giữ nguyên 21/09/2026),
-và **`Cryptography` nằm trong `Science`** dù nó là toán rời rạc/CS chứ không phải khoa học tự
-nhiên — đã cân nhắc và giữ, vì đổi thì phải đổi tên section.
-
-Luật này **không có cổng máy kiểm**, và đó là chủ ý: "cửa vào" không đo được bằng regex, y như
-độ dài mô tả ở dưới. Cổng bịa ra cho nó sẽ đánh trượt nội dung thật.
-
-**Phím tắt: keyspace từng hết, và đã phải xử lý thật.** 36 ô phím (`0-9` + `a-z`) dùng hết ngày
-20/09/2026; đúng hôm ấy `pages/wealth-roadmap.html` là mục thứ 37. Cách xử lý đã chốt: **`key`
-là trường tuỳ chọn.** Mục không có `key` thì không vẽ chip phím (không vẽ chip rỗng), và mở bằng
-chuột hoặc ô tìm kiếm — `/` nhảy vào ô, `↵` mở kết quả đầu. Linter chỉ kiểm định dạng và trùng
-lặp **khi** có `key`. **Đừng ép hai mục dùng chung một phím** để giữ cho đủ bộ.
-
-Ngày 21/09 chủ trang cho gỡ hai mục khỏi danh mục nên còn **35/36**; ngày 27/09 mục thứ 36 —
-`pages/experimentation-causal-inference.html` — lấy nốt `z`, đúng như bản trước của đoạn này đoán.
-Keyspace **hết sạch: 36/36**. Ngày 28/09 ba mục đầu tiên **không có `key`** lên danh mục, cả ba ở
-cuối `Book Summaries`: How to Lie with Statistics, Books in Brief, A Short History of Nearly
-Everything. Bản trước của đoạn này cảnh báo nhánh "`key` tuỳ chọn" không còn ví dụ sống nào để bắt
-chước — xem mục *Thứ tự làm một trang* ở trên: bộ mẫu mạnh hơn luật. Nay nó có ba, và người viết mục
-kế tiếp nhìn vào đó là thấy mục không phím trông ra sao. Linter vẫn cho thiếu `key`, và
-`smoke-index.js` đòi mục không phím không vẽ chip rỗng. Dù vậy **đừng xáo lại phím của mục cũ** để
-lấp chỗ: phím tắt là thứ người dùng học thuộc, đổi nó là phá trí nhớ cơ bắp.
-
-Cổng `tools/lint-collection.py` kiểm trường bắt buộc, phím tắt trùng, href chết. Từ 20/09/2026 nó kiểm thêm
-một chiều nữa: mọi `.html` trong `pages/` và `cooking/` phải có một mục trỏ tới, vì
-`family-insurance-benefits.html` và `jazz-piano-theory.html` đã viết xong mà nằm ngoài danh mục
-nhiều tháng — trang vẫn mở được bằng URL trực tiếp nên không gì tự lộ ra. Muốn cố ý không niêm
-yết thì khai vào `WITHHELD` trong chính cổng ấy, đừng xoá cổng.
-
-**`WITHHELD` không phải một miễn trừ suông (21/09/2026).** Khai một đường dẫn vào đó là cổng làm
-ba việc: miễn nó khỏi kiểm trang mồ côi, **cấm** nó quay lại `collection.json`, và **bắt**
-`.github/workflows/deploy.yml` phải có `--exclude` cho nó. Cần cả ba vì **gỡ khỏi danh mục không
-phải là gỡ khỏi web** — đã đo 21/09: một trang gỡ khỏi danh mục vẫn trả HTTP 200 ở URL trực tiếp,
-vì `rsync` chép cả cây thư mục; danh mục chỉ bỏ cái *link*. Và cần chiều "cấm niêm yết lại" vì
-đúng hôm ấy một phiên agent thấy file nằm ngoài danh mục liền "sửa giúp" bằng cách đưa nó lên
-trang chủ. Cả ba chiều đều đã thử ngược: bỏ dòng `--exclude` ra thì cổng đỏ, niêm yết lại thì
-cổng đỏ, khai đúng thì xanh.
-
-**`UNLISTED` — cùng cổng ấy, ngược lại đúng một chiều (21/09/2026).** `WITHHELD` trộn hai quyết
-định vào một: *không có link ở trang chủ* và *không lên web*. Chủ trang chốt ngày 21/09 rằng
-`pages/betting-strategy-lab.html` chỉ cần cái thứ nhất — push thẳng lên `main` như mọi trang, chỉ
-là trang chủ đừng trỏ tới. Ép nó vào `WITHHELD` thì cổng sẽ bắt `--exclude` và trang biến mất
-khỏi web, tức là làm nhiều hơn điều được yêu cầu; nên tách hẳn một danh sách thứ hai thay vì nới
-`WITHHELD` ra cho lỏng.
-
-Khai vào `UNLISTED` thì cổng cũng làm ba việc, hai giống và một ngược: miễn cổng trang mồ côi,
-**cấm** quay lại `collection.json` (y hệt, và vì lý do y hệt), nhưng **đòi `deploy.yml` KHÔNG có
-`--exclude`** cho nó. Chiều thứ ba ấy mới là chỗ đáng giá: khai vào đây là nói "trang này phải
-sống ở URL trực tiếp", nên ai đó thêm dòng loại trừ vào là cổng đỏ — lời khai và thực tế không
-lệch nhau âm thầm được. Một đường dẫn chỉ được nằm ở đúng một trong hai danh sách, và cổng kiểm
-cả điều đó. Cả bốn chiều đều đã thử ngược: bỏ khỏi `UNLISTED` thì đỏ, niêm yết lại thì đỏ, thêm
-`--exclude` thì đỏ, khai vào cả hai danh sách thì đỏ.
-
-Nói thẳng hệ quả để không ai hiểu nhầm: trang trong `UNLISTED` **vẫn công khai** —
-`vudat081299.github.io/pages/…` mở được, Google index được. Nó chỉ không có đường dẫn nào từ
-trang chủ. Muốn giấu thật thì là `WITHHELD`, và ngay cả thế thì file vẫn đọc được trên github.com
-vì repo này public.
-
-Danh sách `WITHHELD` **cố ý không ghi lý do từng trang** — repo này public, nên một dòng lý do nằm cạnh
-đường dẫn thì chính nó là tấm biển chỉ đường. Các dòng trong đó nằm đấy theo quyết định của chủ
-trang; muốn bỏ một dòng ra thì **hỏi chủ trang**, đừng tự suy từ nội dung file.
-
-Hai giới hạn phải nói thẳng vì cổng không làm được: repo này **public**, nên loại trừ khỏi deploy
-chỉ chặn `vudat081299.github.io/…` chứ file vẫn đọc được trên github.com; và **lịch sử git vẫn
-giữ nội dung cũ**, muốn xoá thật thì phải viết lại lịch sử — việc đó phải hỏi chủ repo.
-
-Nó **không** kiểm độ dài mô tả: đã đo lại 21/09/2026, 35 mô tả đang chạy dài 24→193 ký tự
-(trung vị 77), mọi ngưỡng chung đều là số bịa. Câu có sát việc của cái ô hay không là việc của
-người viết.
-
----
-
-## Git: repo này có nhiều phiên chạy song song
-
-Nhiều phiên agent cùng làm việc trên các project con khác nhau và **cùng push thẳng lên
-`main`**. `HEAD` cục bộ của bạn có thể bị một phiên khác vượt mặt bất cứ lúc nào, kể cả
-giữa hai lệnh của cùng một lượt làm việc.
-
-**Trước mọi lệnh viết lại lịch sử — `commit --amend`, `rebase`, `reset --hard` — phải chạy:**
+**Trước mọi lệnh viết lại lịch sử — `commit --amend`, `rebase`, `reset --hard` — chạy:**
 
 ```bash
 git fetch origin main -q && git log --oneline -3 && git rev-list --left-right --count origin/main...HEAD
 ```
 
-Nếu `HEAD` không còn là commit bạn vừa tạo thì **dừng lại**. `--amend` không amend "commit
-của tôi", nó amend "commit đang là HEAD" — và nếu phiên khác vừa commit lên trên, bạn sẽ
-ghi đè message của họ mà không có cảnh báo nào.
+Nếu `HEAD` không còn là commit bạn vừa tạo thì **dừng lại**: `--amend` sửa "commit đang là HEAD",
+không phải "commit của tôi", nên nó ghi đè message của phiên khác mà không cảnh báo. Chuyện này đã
+xảy ra (xem `HISTORY.md`).
 
-Sự cố có thật ngày 09/08/2026: một lượt `--amend` nhằm sửa số liệu trong message của
-`cf8df60` đã rơi trúng `943af04` của phiên khác. Phát hiện được trước khi push, gỡ bằng
-`git reset --soft 943af04`. Nếu đã push kèm `--force` thì đó là mất dữ liệu thật.
-
-Ba quy tắc rút ra:
-
-1. **Đã push rồi thì đừng amend.** Sửa message bằng một commit mới nói rõ chỗ sai, hoặc hỏi
-   chủ repo trước khi rebase và force-push.
-2. **Force-push lên `main` luôn phải hỏi**, kể cả khi commit đó là của chính bạn — bạn không
-   biết phiên khác đang ở đâu.
-3. **`--force-with-lease` thay cho `--force`**, luôn luôn. Nó từ chối khi remote đã đổi.
+1. **Đã push rồi thì đừng amend.** Sửa bằng một commit mới nói rõ chỗ sai.
+2. **Force-push lên `main` luôn phải hỏi chủ repo**, kể cả khi commit là của bạn.
+3. **`--force-with-lease` thay cho `--force`**, luôn luôn.
+4. **Làm trong worktree thì mọi lệnh trỏ vào worktree** (`git -C "$WT" …`). Checkout chính thường
+   đang giữ việc dở chưa commit của chủ repo — ghi vào đó là trộn hai việc vào nhau.
+5. **Yêu cầu gồm nhiều gạch đầu dòng thì mỗi gạch một commit**, cổng xanh ở mọi commit, push một lần
+   cuối (REPO-009).

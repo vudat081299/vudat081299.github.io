@@ -35,7 +35,12 @@ tra: docstring của `tools/decisions.py`.
 **Các file quyết định trong repo** — tra theo file: `python3 tools/decisions.py find <đường dẫn>`
 
 - `DECISIONS.md` — mã `REPO-…`
+- `cashy/DECISIONS.md` — mã `CASHY-…`
+- `facts/DECISIONS.md` — mã `FACTS-…`
+- `masters-degree/data-science-roadmap/DECISIONS.md` — mã `DS-…`
+- `masters-degree/thesis-topic-selector/DECISIONS.md` — mã `THESIS-…`
 - `pages/DECISIONS.md` — mã `PAGES-…`
+- `shop/DECISIONS.md` — mã `SHOP-…`
 <!-- index:end -->
 
 ### REPO-001 — Nội dung trước, UI sau
