@@ -112,6 +112,15 @@ def check_page(path: pathlib.Path, debt=None):
         if opened != closed:
             errors.append(f'<{tag}> lệch: mở {opened} / đóng {closed}')
 
+    # ── LỖI 4b: tiêu đề tab tiếng Việt ─────────────────────────────────────────
+    # Chủ trang chốt tiêu đề tab tiếng Anh, thân trang tiếng Việt (REPO-016). Luật ấy từng chỉ nằm
+    # trong một commit, và năm tuần sau 30 trang đã trôi lại. Chỉ soi <title> trong <head>: <title>
+    # bên trong <svg> là tên tiếp cận của hình, phải cùng ngôn ngữ với thân trang.
+    head = re.search(r'<head\b.*?</head\s*>', raw, re.S | re.I)
+    title = head and re.search(r'<title>(.*?)</title>', head.group(0), re.S | re.I)
+    if title and VN_CHARS & set(title.group(1).lower()):
+        errors.append(f'tiêu đề tab tiếng Việt: "{title.group(1).strip()}" — viết bằng tiếng Anh (REPO-016)')
+
     # ── LỖI 5: <svg> không có tên tiếp cận ─────────────────────────────────────
     # Các trang này dạy bằng hình. Một <svg> không có aria-label / <title> / aria-labelledby
     # thì trình đọc màn hình bỏ qua hẳn, và nội dung hình biến mất với người dùng đó. Icon

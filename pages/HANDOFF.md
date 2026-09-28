@@ -23,9 +23,6 @@
   phần lớn các chỗ sai nó sửa vẫn còn trên trang (ví dụ Napoli ghi là "tritone sub của V/V",
   "Swing ⇒ mọi thứ trước 1970", "80% bản thu"). Patch không áp thẳng được vì trang đã dựng lại giao
   diện; phải áp lại bằng tay.
-- **Tiêu đề tab tiếng Anh cho mọi trang?** Nhánh `claude/web-page-title-english-ba4ca1` (chưa merge,
-  commit 96b69ff) đổi `<title>` của các trang sang tiếng Anh; gần như toàn bộ áp sạch. Chủ trang chưa
-  chốt có muốn vậy không.
 - **scooter-maintenance-guide — theme.** Một ghi chú cũ nói chủ trang muốn trang này giữ tối trước;
   commit dbd2fc7 sau đó cho nó theo hệ điều hành như mọi trang. Hỏi chủ trang muốn bên nào.
 

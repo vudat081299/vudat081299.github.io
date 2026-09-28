@@ -74,7 +74,9 @@ thức thì không. Cắt sạch HTML: bỏ luôn thẻ bọc nếu nó rỗng.
 
 Chúng chỉ kiểm thứ đúng/sai khách quan: id trùng, anchor gãy, asset thiếu, thẻ lệch; `<svg>` không
 có tên tiếp cận (trình đọc màn hình bỏ qua hẳn — mà các trang này dạy bằng hình); cây tiêu đề nhảy
-quá một bậc; `aria-label` thuần tiếng Anh trên trang `lang="vi"`. Chúng không kiểm câu chữ.
+quá một bậc; `aria-label` thuần tiếng Anh trên trang `lang="vi"`; `<title>` của trang (trong `<head>`)
+có chữ tiếng Việt — tiêu đề tab viết bằng tiếng Anh, thân trang tiếng Việt (REPO-016). Chúng không
+kiểm câu chữ.
 
 ## File dài
 

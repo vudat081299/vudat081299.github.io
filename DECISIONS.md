@@ -16,6 +16,7 @@ tra: docstring của `tools/decisions.py`.
 
 **nội dung**
 - REPO-008 — Trang sách: cắt mọi câu không mang kiến thức · `pages/*.html`, `cooking/*.html`
+- REPO-016 — Tiêu đề tab bằng tiếng Anh, thân trang bằng tiếng Việt · `pages/*.html`, `cooking/*.html`, `masters-degree/**/*.html`, `web-builder/templates/*.html`
 
 **cấu trúc**
 - REPO-001 — Nội dung trước, UI sau · `repo`
@@ -221,3 +222,16 @@ tra: docstring của `tools/decisions.py`.
 - **Vì sao:** thêm một cổng từng phải khai tên ở ba nơi (hook, gates.yml, CLAUDE.md), và đã có lần quên
   — hai cổng verify-* sống vài tuần chỉ trên máy người viết.
 - **Nguồn:** chủ trang đồng ý ngày 28/09/2026.
+
+### REPO-016 — Tiêu đề tab bằng tiếng Anh, thân trang bằng tiếng Việt
+- **Ngày:** 03/08/2026
+- **Phạm vi:** pages/*.html, cooking/*.html, masters-degree/**/*.html, web-builder/templates/*.html
+- **Nhóm:** nội dung
+- **Trạng thái:** đang áp dụng
+- **Quyết định:** `<title>` của mỗi trang, và chữ trên thanh trên cùng, viết bằng tiếng Anh; thân trang
+  giữ tiếng Việt. Không gồm `shop/`: lúc chốt thư mục ấy chưa có, và nó là cửa hàng bán cho khách Việt
+  với luật riêng — muốn áp cho `shop/` thì hỏi chủ trang.
+- **Đừng:** đặt tiêu đề tab tiếng Việt cho trang mới. Cổng `tools/htmlcheck.py` (chạy trong
+  `pages/` và `cooking/`) chặn; thanh trên cùng thì chưa có cổng.
+- **Nguồn:** commit 7db789b của chủ trang — "chuyển toàn bộ title trang & tiêu đề nav bar sang tiếng
+  Anh … Nội dung thân trang vẫn giữ tiếng Việt".

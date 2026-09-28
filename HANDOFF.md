@@ -42,5 +42,11 @@ Việc dở ở mức cả repo. Việc của một project nằm trong HANDOFF.
 
 ## NỢ
 
+- Chữ trên thanh trên cùng còn tiếng Việt ở 9 trang, trái REPO-016 (tiêu đề tab đã đổi hết, có cổng):
+  `ai-native-workflow`, `betting-strategy-lab`, `family-insurance-benefits`, `jazz-piano-theory`,
+  `machine-learning-101`, `machine-learning`, `mathematics-for-machine-learning`, `wealth-roadmap`
+  (trong `pages/`) và `masters-degree/research-proposal-project/research-proposal-project.html`.
+  Đổi xong thì đo tràn ngang ở 320 px — tên tiếng Anh thường dài hơn, và thanh trên cùng có luật cắt
+  chữ riêng (`web-builder/CLAUDE.md`).
 - CLAUDE.md dài quá 200 dòng hoặc còn mốc ngày: số đo ở bảng `DEBT_LINES` / `DEBT_DATES` trong
   `tools/lint-structure.py` (bánh cóc — chỉ được giảm).
