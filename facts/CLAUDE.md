@@ -7,16 +7,24 @@ Thư viện fact tiếng Việt cho người trưởng thành. Trang tĩnh, khô
 Kiến trúc, cách chạy tại máy và cấu trúc file: xem [README.md](README.md). File này nói về
 **quy trình** và **các quy tắc không được vi phạm**.
 
-Nhật ký các đợt rà soát, những gì đã đo và **những gì còn nợ**: xem [HANDOFF.md](HANDOFF.md).
-Đọc file đó trước khi bắt đầu một đợt rà mới — nó ghi rõ chỗ nào đã soi và chỗ nào chưa.
+Ba file đi kèm, mỗi file một việc:
+
+- [DECISIONS.md](DECISIONS.md) — điều chủ trang đã chốt, mã `FACTS-NNN`. Luật nào dưới đây sinh
+  ra từ một quyết định thì trích mã của nó.
+- [HANDOFF.md](HANDOFF.md) — việc dở và nợ đang mở. Đọc trước khi bắt đầu một đợt rà mới.
+- [HISTORY.md](HISTORY.md) — nhật ký các đợt rà: đã đo gì, đã thử gì và rớt, vì sao.
+
+**Một fact hỏng được chỉ ra là mẫu của cả một lớp lỗi** (FACTS-001). Đừng sửa riêng fact đó rồi
+báo xong: chẩn đoán cơ chế, đo lớp lỗi trên toàn thư viện trước khi viết luật (§1.6 là danh sách
+luật đã bị số liệu bác), nối luật vào `factlint.py`, rà sạch danh sách nó sinh ra. Việc chính là
+thêm truyện, thêm fact và sửa diễn giải, từ nguồn uy tín (FACTS-006).
 
 ---
 
 ## 1. Một fact là gì
 
-> Định nghĩa này được viết lại ngày 09/08/2026 vì thư viện đã trôi sang kể chuyện và khuyên
-> bảo. Nếu bạn thấy fact cũ nào không khớp định nghĩa dưới đây thì fact đó sai, không phải
-> định nghĩa sai.
+> Fact nào không khớp định nghĩa dưới đây thì fact đó sai, không phải định nghĩa sai. Định nghĩa
+> có mặt để chặn đúng một thứ: thư viện trôi sang kể chuyện và khuyên bảo.
 
 **Một fact là một khẳng định về thế giới, đúng độc lập với người đọc, và neo được vào ít nhất
 một thứ cứng: một con số đo được, một cơ chế gọi tên được, hoặc một mốc thời gian.**
@@ -67,11 +75,10 @@ tự bắt bằng mắt.
 2. **Lời khuyên.** Câu có mệnh lệnh, hoặc so sánh hai *cách làm* để người đọc chọn.
    Dấu hiệu: *nên*, *hãy*, *đừng*, *cách tốt nhất*, *X hiệu quả hơn Y*, *giúp bạn…*
    ❌ *"Nói 'kể tiếp đi' hiệu quả hơn đặt một câu hỏi mới"*.
-   Cổng này soi cả **phần tóm tắt**, không chỉ tiêu đề — lỗ đó tồn tại tới 24/08/2026 và
-   5 fact đã sống sót nhờ nó bằng cách gắn lời khuyên vào đuôi `s`: *"…hãy đi tìm con số
-   thật."*, *"Nguyên tắc thực tế: đừng đăng thứ mà bạn cần đảm bảo sẽ biến mất được."*
-   Chỉ nhóm mệnh lệnh (*hãy/đừng/chớ*) được soi trên `s`; *mẹo* thì không, vì trên `s` nó
-   khớp 5 chỗ mà 4 chỗ đang **nói về** mẹo để bác nó (*"chứ không phải mẹo dân gian"*).
+   Cổng này soi cả **phần tóm tắt**, không chỉ tiêu đề, vì lời khuyên hay nấp ở đuôi `s`:
+   *"…hãy đi tìm con số thật."*, *"Nguyên tắc thực tế: đừng đăng thứ mà bạn cần đảm bảo sẽ
+   biến mất được."* Chỉ nhóm mệnh lệnh (*hãy/đừng/chớ*) được soi trên `s`; *mẹo* thì không, vì
+   trên `s` nó khớp 5 chỗ mà 4 chỗ đang **nói về** mẹo để bác nó (*"chứ không phải mẹo dân gian"*).
 
 3. **Meta về nghiên cứu.** Nội dung là số phận của một bài báo, không phải thế giới.
    ❌ *"Thí nghiệm nhà tù Stanford không phải bằng chứng như nó được kể"*.
@@ -99,7 +106,8 @@ tự bắt bằng mắt.
   *"Chiến tranh Anh–Zanzibar 1896 kéo dài 38 phút"* — đạt.
   *"Một sĩ quan Liên Xô có thể đã ngăn chiến tranh hạt nhân"* — trượt: giá trị nằm ở diễn
   biến câu chuyện, và câu có chữ "có thể".
-- Fact sửa huyền thoại **được giữ** khi nó phát biểu cái **đúng**, không phát biểu cái sai:
+- Fact sửa huyền thoại **được giữ** khi nó phát biểu cái **đúng**, không phát biểu cái sai
+  (FACTS-004):
   ✅ *"Lưỡi cảm nhận cả năm vị ở mọi vùng"*  ❌ *"Bản đồ vị giác là hiểu lầm do lỗi dịch"*.
   Cổng `t-phat-bieu-cai-sai` bắt mức `LOẠI` mọi tiêu đề dạng *"X là huyền thoại / hiểu lầm"*.
   Ngược lại của nó cũng bị chặn: **phần tóm tắt phải diễn giải chính cái tiêu đề khẳng định**,
@@ -108,6 +116,12 @@ tự bắt bằng mắt.
   lấy nó làm toàn bộ phần tóm tắt thì cổng `s-khong-ve-the-gioi` chặn ở mức `LOẠI`.
   Phép thử: xoá `s` đi — người đọc mất thông tin về **thế giới**, hay chỉ mất thông tin về
   *lịch sử của một sai lầm*?
+- Fact **đúng mà đọc xong không cầm được gì** thì cũng loại (FACTS-003). Fact định nghĩa một đại
+  lượng hay một thước đo phải viết lại thành **một phép đo cụ thể** bằng chính thước đo ấy:
+  ❌ một fact giải thích "số cần điều trị" (NNT) là gì — đúng, có nguồn, nhưng chỉ là một định
+  nghĩa, không nói gì về thế giới. ✅ `sh-125`: *"Aspirin phòng ngừa cho người chưa bị bệnh tim:
+  1.667 người uống suốt một năm mới ngăn được 1 biến cố"* — cùng thước đo, nhưng là một phép đo.
+  Phép thử: ngoài một định nghĩa, người đọc cầm về được điều gì về thế giới?
 
 Viết bằng tiếng Việt thường ngày. Không "nghiên cứu cho thấy", không "các nhà khoa học đã
 chứng minh". Nêu thẳng con số và nêu thẳng ai tìm ra nó.
@@ -141,12 +155,11 @@ nên trùng ít là dấu hiệu tốt.
 
 ### 1.5 Fact phải tự chứa — không vay kiến thức người đọc chưa chắc có
 
-> Cổng này được thêm ngày 12/08/2026 sau khi chủ trang mở trang lên và gặp `sh-207`:
-> *"Ngưỡng 0,05 là một lựa chọn tuỳ tiện do Ronald Fisher đề xuất, không phải một hằng số tự
-> nhiên / … kêu gọi bỏ hẳn cách phân loại nhị phân 'có ý nghĩa' và 'không có ý nghĩa'."*
-> Ngưỡng của cái gì? Vượt ngưỡng thì sao? "Có ý nghĩa" với ai? Câu đó chỉ đọc được nếu bạn
-> **đã biết** p-value là gì — mà người đã biết thì không cần fact, còn người chưa biết thì đọc
-> xong vẫn chưa biết. Fact đó không có người đọc nào cả.
+> Ca mẫu trượt, `sh-207`: *"Ngưỡng 0,05 là một lựa chọn tuỳ tiện do Ronald Fisher đề xuất,
+> không phải một hằng số tự nhiên / … kêu gọi bỏ hẳn cách phân loại nhị phân 'có ý nghĩa' và
+> 'không có ý nghĩa'."* Ngưỡng của cái gì? Vượt ngưỡng thì sao? "Có ý nghĩa" với ai? Câu đó chỉ
+> đọc được nếu bạn **đã biết** p-value là gì — mà người đã biết thì không cần fact, còn người
+> chưa biết thì đọc xong vẫn chưa biết. Fact đó không có người đọc nào cả (FACTS-002).
 
 **Phép thử: một người 15 tuổi chưa học ngành đó đọc xong có nắm được không.** Fact viết cho
 người trong ngành thì để trong ngành, đừng để trong thư viện này.
@@ -194,16 +207,11 @@ Cả sáu nghe hợp lý và đều bị số liệu bác. Ghi ra đây để ph
 
 ### 1.7 Khuôn "vì sao" — câu hỏi mở đầu và phần giải thích, đều **tuỳ chọn**
 
-> Bản 24/08/2026 bắt mọi fact trong cụm `day_du` phải có `q` + một `d` dài tối thiểu 600 ký
-> tự / 3 đoạn. **Ngày 25/08/2026 chủ trang bác hướng đó:** *"facts thì tôi ưu tiên ngắn gọn,
-> diễn giải cũng đơn giản dễ hiểu ngắn gọn… kể cả những thứ giải thích một câu là xong bạn
-> cũng cố bôi ra thành 600 ký tự cho khó hiểu và lòng vòng à"*. Đúng. Sàn 600 ký tự ép cả
-> những fact tiêu đề đã tự hiểu cũng phải đẻ ra một đoạn dài — thành lòng vòng hơn cái nó
-> định làm rõ. Chiều sâu dài hơi là việc của **Truyện** (§7), không phải của fact.
-
-**Nguyên tắc: fact ưu tiên ngắn gọn.** `q` (câu hỏi mở đầu) và `d` (phần giải thích) đều
-**tuỳ chọn** và độc lập nhau — thêm khi thật sự giúp người đọc, bỏ khi tiêu đề đã tự hiểu.
-Khi có `d` thì viết **vừa đủ, dễ hiểu**: một câu là xong thì một câu, không có sàn độ dài.
+**Nguyên tắc: fact ưu tiên ngắn gọn** (FACTS-011). `q` (câu hỏi mở đầu) và `d` (phần giải
+thích) đều **tuỳ chọn** và độc lập nhau — thêm khi thật sự giúp người đọc, bỏ khi tiêu đề đã tự
+hiểu. Khi có `d` thì viết **vừa đủ, dễ hiểu**: một câu là xong thì một câu, không có sàn độ dài.
+Đừng đặt lại sàn độ dài hay số đoạn: sàn ép cả những fact tiêu đề đã tự hiểu cũng phải đẻ ra một
+đoạn dài, thành lòng vòng hơn cái nó định làm rõ. Chiều sâu dài hơi là việc của **Truyện** (§7).
 
 | Trường | Vai | Bắt buộc khi |
 |---|---|---|
@@ -238,27 +246,25 @@ Phép thử trước khi thêm `d`: **tiêu đề + `s` đã đủ hiểu chưa?
 chỉ làm loãng. Chưa đủ (một cơ chế phản trực giác, một con số cần diễn giải) thì `d` mới có
 việc để làm. `check` không còn ép độ dài hay số đoạn; nó chỉ bắt `q` sai định dạng và field rỗng.
 
-**Một luật cũ đã phải nới khi `d` thành phần chính.** `loi-khuyen` bắt `nên` + động từ ở mức
-`LOẠI`. Trên **tiêu đề** nó vẫn sạch (0 khớp trên 1.884 tiêu đề) nên giữ nguyên. Nhưng quét cả
-`t`+`s`+`d` thì được 17 chỗ, và đọc tay cả 17 thì **7 chỗ (41%) là liên từ "cho nên"**:
-*"Chim không có thụ thể phản ứng với capsaicin **nên ăn** ớt bình thường"*. Độ chính xác 59%
-là quá thấp cho một luật chặn commit — chính thư viện này đã bác những luật 22% và 11% vì lý
-do đó. Trong `d` nó hạ xuống mức `XEM`, rule id `nen-lam-gi`. Các mẫu còn lại của
-`loi-khuyen` (*hãy*, *đừng*, *mẹo*, *cách … nhất*) vẫn `LOẠI` trong `d`.
+**`nên` + động từ: `LOẠI` trên tiêu đề, chỉ `XEM` trong `d`** (rule id `nen-lam-gi`). Trong văn
+xuôi nó thường là liên từ *"cho nên"* — *"Chim không có thụ thể phản ứng với capsaicin **nên ăn**
+ớt bình thường"* — và đo trên `t`+`s`+`d` thì 7/17 chỗ khớp là như thế: độ chính xác 59%, quá
+thấp cho một luật chặn commit (thư viện này đã bác những luật 22% và 11% vì cùng lý do). Các mẫu
+còn lại của `loi-khuyen` (*hãy*, *đừng*, *mẹo*, *cách … nhất*) vẫn `LOẠI` trong `d`.
 
-**`manifest.day_du` giờ chỉ là dấu thông tin, không còn ép gì.** Trước nó khoá cụm vào việc
-"mọi fact phải có q+d"; từ 25/08 cổng không đọc nó để chặn nữa. Để nguyên danh sách cũng
-không sao — nó chỉ còn tô cột `✓ vì sao` trong `stats`. Không cần thêm tên cụm mới vào đó.
+**`manifest.day_du` chỉ là dấu thông tin, không ép gì**: cổng không đọc nó để chặn, nó chỉ tô
+cột `✓ vì sao` trong `stats`. Không cần thêm tên cụm mới vào đó, và đừng biến nó trở lại thành
+điều kiện chặn (FACTS-011).
 
 `factlint stats` in tiến độ: cột `✓ vì sao` cho cụm có tên trong `day_du`, `n/k vì sao` cho
 số fact đã có `q`. Cả hai chỉ để tham khảo — `q`/`d` không phải chỉ tiêu phải lấp đầy.
 
 ### 1.8 Phần tóm tắt kể **thế giới**, không kể **ai tìm ra**
 
-> Cổng này được thêm ngày 24/08/2026 sau khi chủ trang nói rằng fact trong thư viện "mang
-> tính học thuật rất khó đọc". Đo thử: **94 fact có `s` lấy một nghiên cứu làm chủ ngữ** — *"Các nghiên cứu về mất nước cho thấy…"*, *"Tổng hợp hơn 200 nghiên cứu cho
-> thấy…"*, *"Thí nghiệm hành vi cho thấy…"*. Cụm đó ăn mất phần đầu câu — chỗ đắt nhất
-> trong 217 ký tự — mà không thêm một chữ nào về thế giới.
+> Thư viện đọc không được thấy học thuật (FACTS-005), và giọng học thuật nằm nhiều nhất ở cụm
+> lấy một nghiên cứu làm chủ ngữ — *"Các nghiên cứu về mất nước cho thấy…"*, *"Tổng hợp hơn 200
+> nghiên cứu cho thấy…"*, *"Thí nghiệm hành vi cho thấy…"*. Cụm đó ăn mất phần đầu câu — chỗ đắt
+> nhất của phần tóm tắt — mà không thêm một chữ nào về thế giới.
 
 `src` đã là chỗ ghi xuất xứ, và nó nằm ngay dưới mỗi fact. Nhắc lại xuất xứ trong `s` vừa
 thừa vừa đẩy cái claim xuống nửa sau câu.
@@ -482,6 +488,10 @@ không khai báo ở đó: `factlint check` sẽ báo lỗi.
 | **Fact hệ quả** — B là suy ra từ A, hoặc là một chi tiết của A | `gt-010` (6 thành phần lời xin lỗi) / `gt-128` (2 thành phần nặng nhất) | nhập B vào `s` hoặc `d` của A |
 | **Fact demo** — B tồn tại chỉ để treo minh hoạ cho A | `ct-014` (điểm mù) / `ct-101` (tự tìm điểm mù) | gắn `viz` vào A, bỏ B — xem §5 |
 
+**Gộp bằng script thì kiểm trước khi xoá:** với mỗi cặp, xác nhận fact *được giữ* còn tồn tại
+rồi mới xoá fact kia. Xoá một fact hợp lệ không vi phạm luật nào, nên không cổng nào bắt được
+một script xoá mất cả hai fact của cùng một cặp — chỉ có mở trang qua HTTP rồi tìm lại mới thấy.
+
 Dạng thứ ba là lỗi hay gặp nhất và khó thấy nhất. Nếu bạn định viết một fact mà tiêu đề nghe
 như *"thử ngay"*, *"kéo thanh trượt"*, *"tự kiểm tra trong 20 giây"* — dừng lại: bạn đang định
 tách một fact thành hai.
@@ -552,9 +562,8 @@ trên điện thoại.
 
 ## 7. Truyện — loại nội dung thứ hai
 
-> Thêm ngày 24/08/2026, theo yêu cầu của chủ trang: thư viện là **nguồn học tập** kiểu
-> *10 vạn câu hỏi vì sao*, và không phải điều gì đáng biết cũng nén được vào một câu khẳng
-> định. Có những thứ chỉ mở ra khi được kể.
+> Thư viện là **nguồn học tập** kiểu *10 vạn câu hỏi vì sao* (FACTS-005), và không phải điều gì
+> đáng biết cũng nén được vào một câu khẳng định. Có những thứ chỉ mở ra khi được kể.
 
 Fact nói thẳng thế giới là thế nào. Truyện đi đường vòng. Hai loại dùng chung ô tìm kiếm,
 chung lưới card, chung modal — nhưng **phân loại bằng hai trục khác hẳn nhau** (§7.0). Thanh
@@ -563,11 +572,9 @@ fact* (20 chủ đề).
 
 ### 7.0-a Lằn ranh không phải thật/hư cấu, mà là có sẵn/tự bịa
 
-> Sửa ngày 25/08/2026. Bản trước định nghĩa truyện là *"kể một chuyện có thật, rồi để lại
-> một điều về thế giới"*. Chủ trang bác: **"cái này thì hẹp quá… truyện thì truyện gì cũng
-> được, nhưng không được bịa, phải có nguồn chính thống, và nhiều người đánh giá nó hay chứ
-> không phải tự AI bịa"**. Định nghĩa cũ chặn nhầm: nó loại cả Grimm, thứ rõ ràng không phải
-> do ai ở đây bịa ra.
+> Truyện gì cũng được, miễn không tự bịa, có nguồn chính thống, và được nhiều người đánh giá là
+> hay (FACTS-009). Lằn ranh "có thật / hư cấu" đặt sai chỗ: nó loại cả Grimm, thứ rõ ràng không
+> phải do ai ở đây bịa ra.
 
 Lọ Lem không phải truyện bịa. Nó là một hiện vật văn hoá có số hiệu, có bản in, có hàng trăm
 dị bản được ghi chép, và đã được nhiều thế hệ đọc. **Truyện bịa là truyện mà agent tự nghĩ ra
@@ -593,8 +600,8 @@ quyền riêng. Kể lại bám sát cốt truyện của bản gốc, không th
 
 ### 7.0 Truyện có trục phân loại riêng
 
-> Đổi ngày 25/08/2026, theo yêu cầu của chủ trang. Trước đó truyện mượn `cat`/`sub` của fact
-> nên nó nằm lẫn trong 20 chủ đề fact và không có chỗ đứng riêng trên thanh chủ đề.
+> Truyện có trục phân loại riêng và nhóm riêng trên thanh chủ đề (FACTS-007). Mượn `cat`/`sub`
+> của fact thì nó nằm lẫn trong 20 chủ đề fact và không có chỗ đứng riêng nào.
 
 Truyện **không có `cat`, không có `sub`**. Nó có **`kieu`** — một giá trị trong
 `manifest.kieu_chuyen`. Trục này phân theo **hình dạng câu chuyện**, không phải theo đề tài:
@@ -616,8 +623,8 @@ cùng một đề tài có thể ra một truyện *Thảm hoạ & điều tra* 
 Kiểu chưa có truyện nào vẫn được khai trong manifest; thanh bên bỏ qua kiểu rỗng để không có
 mục nào bấm vào ra lưới trắng.
 
-**Hai kiểu thêm ngày 25/08 vẫn là hình dạng, không phải đề tài.** Chủ trang xin *"truyện về
-cách ứng xử EQ cao"* và *"truyện giúp hiểu về đối nhân xử thế, tâm lý học"* — nghe như đề tài,
+**`doi-nhan-xu-the` và `thi-nghiem-nguoi` vẫn là hình dạng, không phải đề tài.** Chúng sinh ra
+từ một yêu cầu theo đề tài — truyện ứng xử EQ cao, đối nhân xử thế, tâm lý học (FACTS-010) —
 nhưng cái làm chúng thành một kiểu là hình dạng chung, và hình dạng đó cũng là chỗ đặt cổng:
 
 - `doi-nhan-xu-the` — có **một khoảnh khắc chọn**, và có **hiện vật** chứng minh đã chọn thế:
@@ -649,10 +656,10 @@ từ bản cũ (một hàng chép lại mà còn `cat` thì không lọc đượ
 
 ### 7.0-b Truyện kinh điển — `lai_lich` thay chỗ `mang_di`
 
-> Nới ngày 25/08/2026. Mục này ban đầu viết cho riêng truyện cổ. Sherlock Holmes cũng qua
-> được ba cổng của §7.0-a — có sẵn, có bản đăng cụ thể, được công nhận rộng — nhưng nó không
-> phải truyện dân gian nên không có mã ATU. Cờ trong manifest vì thế đổi từ `co_tich` sang
-> **`kinh_dien`**, và trục ATU thành **tuỳ kiểu** (`atu_bat_buoc`).
+> Mục này áp cho mọi kiểu **kinh điển**, không riêng truyện cổ: Sherlock Holmes qua được ba cổng
+> của §7.0-a — có sẵn, có bản đăng cụ thể, được công nhận rộng — nhưng không phải truyện dân gian
+> nên không có mã ATU. Vì thế cờ trong manifest là **`kinh_dien`**, và trục ATU là **tuỳ kiểu**
+> (`atu_bat_buoc`).
 
 **Kinh điển = có sẵn trước phiên làm việc này, nằm trong một tuyển tập đã khai.** Grimm là
 truyện dân gian sưu tầm, Holmes là tác phẩm có tác giả — điểm chung duy nhất, và là điểm duy
