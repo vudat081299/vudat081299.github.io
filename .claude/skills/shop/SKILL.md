@@ -5,118 +5,61 @@ description: Quy trình làm việc trong thư mục shop/ của repo này — s
 
 # Làm việc trong shop/
 
-`shop/` là storefront của một shop nến thơm thủ công. Khác mọi thư mục khác trong repo:
-**đây là nơi sai một con số thì khách trả nhầm tiền.** Mọi luật dưới đây sinh ra từ đó.
+Skill này chỉ giữ **thứ tự các bước**. Luật nằm ở `shop/CLAUDE.md` — mỗi bước dưới đây trỏ tới
+mục luật tương ứng, tên mục viết *nghiêng*. Đọc `shop/CLAUDE.md` một lượt trước khi sửa: đây là
+thư mục mà sai một con số thì khách trả nhầm tiền.
 
-## Trước khi sửa bất cứ thứ gì
+## 1. Đầu phiên
 
 ```bash
-sh facts/tools/install-hooks.sh      # dựng lại bộ điều phối hook, chạy nhiều lần vô hại
+sh tools/install-hooks.sh            # từ gốc repo; dựng lại bộ điều phối hook, chạy nhiều lần vô hại
 python3 -m http.server 8000          # fetch cần HTTP; mở file:// là trang rỗng
 python3 shop/tools/lint-shop.py -v   # cổng, chạy TRƯỚC để biết trạng thái xuất phát
-cat shop/HANDOFF.md                  # phiên trước để lại gì
+cat shop/HANDOFF.md                  # việc dở, việc chờ chủ trang
 ```
 
-## Thứ tự bắt buộc: dữ liệu → giao diện → cổng → chạy thật
+Sắp sửa file nào thì tra điều đã chốt cho file ấy trước:
+`python3 tools/decisions.py find shop/<file>`. Đảo một quyết định `SHOP-NNN` thì hỏi chủ repo.
+Luật: *Việc đầu tiên của mọi phiên*, và đầu file (ba file đi kèm, "mọi tính năng là giả thuyết").
 
-1. **Nội dung ra `shop/data/shop.json`** — chữ thuần, chưa thẻ nào.
-2. **Rồi mới dựng UI**, và UI *đọc* dữ liệu bằng vòng lặp.
-3. **Chạy cổng.**
-4. **Mở trình duyệt thật, bấm, rồi ĐO.** Không bỏ bước này (xem *Chạy thật* bên dưới).
-5. **Cập nhật tài liệu** — `HANDOFF.md` luôn luôn; `docs/TECH-DEBT.md` nếu để lại nợ;
-   `docs/adr/` nếu vừa quyết một thứ mà người sau có thể muốn hỏi "vì sao".
+## 2. Dữ liệu trước
 
-## Bốn luật không thương lượng
+Nội dung ra `shop/data/shop.json` — chữ thuần, chưa thẻ nào. Số suy ra được thì không ghi vào
+data. Luật: *Thứ tự làm việc*, *Bốn luật không thương lượng* (1, 2), *Tiền nằm ở quan hệ giữa
+các trường*.
 
-1. **Chữ của khối LẶP ở data, chữ ĐỘC NHẤT ở HTML.** Cổng đo bằng cách so text node với
-   chuỗi trong data, ngưỡng 0,40 — số đo được, không phải số bịa.
-   Chỉ trường có hậu tố `_html` mới được `innerHTML`; còn lại escape.
-2. **Số suy ra được thì không ghi trong data.** Giá hộp quà tính từ giá sản phẩm; tồn kho hộp
-   tính từ món khan nhất; tỉ lệ khớp Tìm mùi tính từ trọng số. Giỏ hàng chỉ lưu *cấu hình*
-   hộp quà, **không lưu giá** — giá tính lại mỗi lần đọc.
-3. **Năm trang dùng chung một shell, và shell được SINH RA.** Nav, menu, chân trang phải giống
-   hệt nhau; chỉ `is-active` và `nav--over` được khác. **Đừng sửa tay năm file** — sửa một file
-   rồi chép shell sang bốn file kia bằng script, gắn lại hai lớp đó sau.
-4. **Cổng mới phải nằm trong repo.** Tìm ra một lớp lỗi → viết phép kiểm vào
-   `shop/tools/lint-shop.py` → **thử ngược** (cố tình phá, xem nó có kêu không) → ghi lỗi gốc
-   vào comment của phép kiểm ấy.
+## 3. Rồi mới dựng UI
 
-## Chạy thật, đừng đọc code rồi kết luận
+UI *đọc* dữ liệu bằng vòng lặp. Sửa shell thì sửa một file rồi đồng bộ sang bốn file kia bằng
+script. Luật: *Bốn luật không thương lượng* (1, 3), *Trang nào làm gì*, *Chỗ dễ sai, đã trả giá
+một lần*.
 
-Mọi lỗi nặng của thư mục này đều tìm ra bằng cách mở trình duyệt và đo, không lỗi nào lộ ra khi
-đọc code. Cổng lint bắt được cú pháp và dữ liệu, **không** bắt được hành vi.
+## 4. Chạy cổng
 
-Ba phép đo tối thiểu sau khi sửa:
+`python3 shop/tools/lint-shop.py -v`. Đụng trọng số Tìm mùi thì đọc dòng phân bố, đừng đoán. Tìm
+ra một lớp lỗi mới thì viết phép kiểm, thử ngược, ghi lỗi gốc vào comment. Luật: *Bốn luật
+không thương lượng* (4), *Tìm mùi: chấm điểm bằng trọng số…*.
 
-| Sửa gì | Đo thế nào |
-|---|---|
-| Giỏ hàng / tồn kho | Bấm **quá** số tồn rồi đọc toast. Toast phải nói sự thật, không được báo "đã thêm" khi bị chặn. |
-| Hộp quà | Gói một hộp, thêm vào giỏ, rồi đọc `localStorage.getItem('scentsitive-cart')` — cấu hình phải còn nguyên. |
-| Tìm mùi | Làm hết một lượt, xem `/shop/measure/` có bắn đủ sự kiện không. |
+## 5. Mở trình duyệt thật, bấm, rồi ĐO
 
-`smoke.js` tự dò Chromium, không cần cấu hình: nó xem `CHROME_PATH`, `PLAYWRIGHT_BROWSERS_PATH`,
-`/opt/pw-browsers`, rồi cache của Playwright trên cả ba hệ điều hành. Máy chưa có thì:
+Không bỏ bước này — cổng lint không bắt được hành vi. Luật: *Chạy thật: ba phép đo tối thiểu
+sau khi sửa* (cả cách cài Chromium cho `smoke.js`).
+
+## 6. Cập nhật tài liệu
+
+`HANDOFF.md` (việc dở) luôn luôn; `HISTORY.md` (nhật ký phiên) luôn luôn; `DECISIONS.md` khi
+chủ repo vừa chốt một điều; `docs/TECH-DEBT.md` nếu để lại nợ; `docs/adr/` nếu vừa chọn một
+hướng kỹ thuật mà người sau có thể hỏi "vì sao". Luật: *Việc cuối của mọi phiên*, *Tài liệu
+trong `docs/`*.
+
+## 7. Xong
 
 ```bash
-npm i -g playwright-core playwright && npx playwright install chromium
+sh shop/tools/check.sh      # cổng + chạy thật; đây là "đã xong chưa" — đọc dòng cuối
 ```
 
-Trong container agent (`/opt/pw-browsers` đã có sẵn) thì **đừng** chạy `playwright install` —
-trình duyệt nằm đó rồi. Thiếu công cụ thì tầng 2 thoát mã 2 và nói rõ là đã bỏ qua; nó **không**
-làm cổng đỏ, nên đọc kỹ dòng cuối chứ đừng chỉ nhìn "XONG".
+Rồi commit. Repo có nhiều phiên chạy song song và cùng push thẳng lên `main` — trước mọi lệnh
+viết lại lịch sử phải `git fetch origin main` và kiểm tra `HEAD` (mục *Git* ở `CLAUDE.md` gốc).
 
-## Tìm mùi: đụng vào trọng số thì phải đọc lại phân bố
-
-Đáp án chấm bằng trọng số trong `data/shop.json`. Sửa một con số là lệch cả kết quả, **và lệch
-không kêu** — trang vẫn chạy, vẫn ra một mùi, chỉ là mùi ấy sai.
-
-Cổng duyệt toàn bộ tổ hợp đáp án và **chặn commit** nếu có mùi không bao giờ thắng, có mùi
-thắng quá nửa, có đáp án mọi trọng số bằng 0, hoặc `tiebreak` trỏ vào câu không chấm điểm.
-Mức XEM in ra phân bố hiện tại — **đọc nó, đừng đoán**. Xem `docs/adr/0002`.
-
-## Đo đạc
-
-`track(ev, props)` trong `assets/shop.js`. Thêm sự kiện = thêm một lời gọi, **đừng thêm một hệ
-thống**. Dữ liệu nằm trong `localStorage` của từng máy; shop không thấy gì. Muốn gộp số thật
-thì đổi `SINK` thành một URL — một dòng, đúng một chỗ.
-
-Xem phễu ở `/shop/measure/`.
-
-## Chỗ dễ sai, đã trả giá một lần
-
-- **Đừng dùng `display:grid; place-items:center` cho phần tử có hơn một con.** Grid mặc định
-  xếp theo hàng. Có cổng riêng, sinh ra từ nút giỏ hàng bị xếp hai hàng.
-- **Đừng neo tìm-thay vào một dòng xuất hiện ở hai hàm.** `renderCart()` và `boot()` cùng kết
-  thúc bằng `if ($('#coLines')) renderCheckout();`. Một lần neo nhầm khiến hộp quà bị trả về
-  mặc định sau mỗi lần giỏ đổi — cổng **không** bắt được vì cú pháp vẫn đúng.
-- **Đừng thêm liên kết markdown tới file chưa tồn tại.** Có cổng; markdown gãy thì im lặng.
-- **Đừng đặt đường dẫn có dấu sao kiểu `thư-mục-*/file` trong block comment JS.** Chuỗi `*/`
-  đóng comment sớm và node sẽ báo SyntaxError ở một dòng cách đó rất xa. Đã xảy ra một lần
-  trong chính `tools/smoke.js`.
-- **Lời khuyên một cổng in ra cũng là một lời hứa — phải thử làm theo nó một lần.** `smoke.js`
-  từng bảo "cài bằng `npm i -g playwright-core` rồi chạy lại"; làm đúng thế thì lần sau vẫn ra
-  đúng câu ấy, vì `require()` không tìm trong `npm root -g`. Cổng sai kiểu này nguy hơn cổng đỏ:
-  nó **im lặng bỏ qua** và người đọc tưởng đã kiểm.
-- **`pitch/` và `measure/` không dùng shell và không dùng lớp `.ms`.** Chúng nằm trong thư mục
-  con nên cổng shell không quét tới — sửa thì phải tự mở xem.
-
-## Đừng làm những việc này
-
-- **Đừng xây phần mềm quản lý bán hàng / kho / đơn.** Mua sẵn rẻ hơn nhiều lần — `docs/adr/0004`.
-- **Đừng hứa đồng bộ Shopee** trước khi xác minh shop có đủ điều kiện dùng API.
-- **Đừng bịa số uplift.** Mọi con số kiểu "quiz tăng chuyển đổi 40%" đều do chính công ty bán
-  phần mềm quiz công bố. Câu "McKinsey: bundling tăng AOV 20–35%" đã truy ngược: không có ấn
-  phẩm nào đứng sau.
-- **Đừng bịa đánh giá của khách.**
-- **Đừng thêm CI, test tự động, TypeScript hay bước build** chỉ vì thấy nên có. Thêm khi có một
-  lỗi thật mà ba lớp cổng hiện tại không bắt được — xem mục *Chỗ dừng lại* trong `docs/05-ARCHITECTURE.md`.
-
-## Xong một việc thì làm gì
-
-```bash
-sh shop/tools/check.sh      # cổng + kiểm nhanh; đây là "đã xong chưa"
-```
-
-Rồi cập nhật `shop/HANDOFF.md`, commit. Repo có nhiều phiên chạy song song và cùng push thẳng
-lên `main` — **trước mọi lệnh viết lại lịch sử phải `git fetch origin main` và kiểm tra `HEAD`**
-(xem `CLAUDE.md` ở gốc repo).
+Ở mọi bước: đọc lại *Đừng làm những việc này* trước khi thêm một tính năng, một con số, hay
+một lời hứa với chủ shop.

@@ -131,6 +131,31 @@ Bước 3 không phải thủ tục. **Ba lỗi nặng nhất của thư mục n
 rồi đo, không phải bằng đọc code** — xem `STATUS-REPORT.md` mục 2 và
 [docs/TECH-DEBT.md](docs/TECH-DEBT.md).
 
+### Chạy thật: ba phép đo tối thiểu sau khi sửa
+
+Cổng lint bắt được cú pháp và dữ liệu, **không** bắt được hành vi.
+
+| Sửa gì | Đo thế nào |
+|---|---|
+| Giỏ hàng / tồn kho | Bấm **quá** số tồn rồi đọc toast. Toast phải nói sự thật, không được báo "đã thêm" khi bị chặn. |
+| Hộp quà | Gói một hộp, thêm vào giỏ, rồi đọc `localStorage.getItem('scentsitive-cart')` — cấu hình phải còn nguyên. |
+| Tìm mùi | Làm hết một lượt, xem `/shop/measure/` có bắn đủ sự kiện không. |
+
+Lỗi chỉ lộ khi môi trường hỏng (font bị chặn, `localStorage` bị chặn) thì môi trường tốt xanh
+mãi — phải **dựng lại** tình huống hỏng rồi đo, như `smoke.js` tự chặn tên miền font và
+`localStorage`.
+
+`smoke.js` tự dò Chromium: `CHROME_PATH`, `PLAYWRIGHT_BROWSERS_PATH`, `/opt/pw-browsers`, rồi cache
+của Playwright trên cả ba hệ điều hành. Máy chưa có thì:
+
+```bash
+npm i -g playwright-core playwright && npx playwright install chromium
+```
+
+Trong container agent (`/opt/pw-browsers` đã có sẵn) thì **đừng** chạy `playwright install` —
+trình duyệt nằm đó rồi. Thiếu công cụ thì tầng 2 thoát mã 2 và nói rõ là đã bỏ qua; nó **không**
+làm cổng đỏ, nên đọc kỹ dòng cuối chứ đừng chỉ nhìn chữ *XONG*.
+
 ---
 
 ## Trang nào làm gì
@@ -213,6 +238,9 @@ Mức XEM in ra phân bố hiện tại và số tổ hợp hoà mà câu phân 
 - **Đừng bịa đánh giá của khách.** Đánh giá giả trên một shop bán thật là lừa người mua.
 - **Đừng đặt ô nhập số thẻ.** Trang tĩnh không được nhận số thẻ; cách nào chưa chạy được thì
   nút khoá kèm danh sách việc còn thiếu, không giả vờ có.
+- **Đừng thêm CI, test tự động, TypeScript hay bước build chỉ vì thấy nên có.** Thêm khi có một
+  lỗi thật mà các lớp cổng hiện có không bắt được — xem mục *Chỗ dừng lại* trong
+  [docs/05-ARCHITECTURE.md](docs/05-ARCHITECTURE.md).
 
 ---
 
@@ -228,5 +256,13 @@ Mức XEM in ra phân bố hiện tại và số tổ hợp hoà mà câu phân 
 - **Thử ngược một lớp phòng thủ khi có nhiều lớp thì phá cái mà cả mấy lớp cùng dùng.** Phá riêng
   `addToCart` thì cổng tồn kho không kêu, vì lớp kẹp ở `renderCart` che mất; phá `remaining()` —
   thứ cả ba lớp cùng gọi — nó mới kêu.
+- **Đừng thêm liên kết markdown tới file chưa tồn tại.** Markdown gãy thì im lặng — trên GitHub
+  nó vẫn hiện như một liên kết thường. Có cổng (`check_docs`).
+- **Đừng đặt đường dẫn có dấu sao kiểu `thư-mục-*/file` trong block comment JS.** Chuỗi `*/`
+  đóng comment sớm và node báo SyntaxError ở một dòng cách đó rất xa.
+- **Lời khuyên một cổng in ra cũng là một lời hứa — phải thử làm theo nó một lần.** `smoke.js`
+  từng bảo "cài bằng `npm i -g playwright-core` rồi chạy lại"; làm đúng thế thì lần sau vẫn ra
+  đúng câu ấy, vì `require()` không tìm trong `npm root -g`. Cổng sai kiểu này nguy hơn cổng đỏ:
+  nó **im lặng bỏ qua** và người đọc tưởng đã kiểm.
 - **`git commit --amend` chỉ khi chưa push, và phải `git fetch origin main` trước.** Repo này
   có nhiều phiên chạy song song — xem `CLAUDE.md` ở gốc.
