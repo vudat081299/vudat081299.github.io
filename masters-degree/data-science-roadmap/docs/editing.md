@@ -13,7 +13,7 @@ như vậy.
 Luật *vì sao* nằm ở [CLAUDE.md](../CLAUDE.md). Cách viết cho người đọc hiểu nằm ở
 [writing.md](writing.md). Nó trông thế nào và nằm ở đâu trên màn hình nằm ở
 [design.md](design.md). File này chỉ nói gõ ở đâu — và nó ghi **trạng thái hiện tại**, không
-ghi phiên nào đã làm gì; việc đó thuộc [HANDOFF.md](../HANDOFF.md).
+ghi phiên nào đã làm gì; việc đó thuộc [HISTORY.md](../HISTORY.md).
 
 Mở đúng đoạn cần sửa, đừng mở cả file:
 
@@ -35,7 +35,7 @@ cổng nào canh, bạn phải tự nhớ.
 | **Xoá một bài** | tất cả ô trên, cộng: `DAYS` · `SCOPE` · `DELIV_MIN` · `READONLY_OK` · `COMPS[].lessons` và `.key` · `PORTFOLIO[].id` · `tools/concepts.json` · mọi `data-goto="id"` và `href="#/id"` | cổng bắt hết phần tham chiếu |
 | **Dời một bài trong cùng chặng** | vị trí trong `TREE` · vị trí khối `<template>` (hai chỗ, phải khớp nhau) · `PAYOFF` của các bài kề · `WEEKS`/`DAYS` nếu tuần hoặc ngày đổi | `G-ORDER` + `G-NEXT` |
 | **Dời một bài SANG chặng khác** | tất cả ô trên, **cộng việc đổi id** — id có tiền tố theo chặng, nên `pr-data` chuyển sang chặng 3 phải thành `d-data`, rồi sửa mọi chỗ nhắc id cũ | cổng bắt id hỏng, nhưng **mắt** phải nhớ đổi tiền tố |
-| **Đổi tên / thời lượng / ưu tiên một bài** | chỉ `TREE`, rồi sinh lại `TOC.md` | `G-TOC-STRUCT` chặn để bạn xác nhận có ý thức |
+| **Đổi tên / thời lượng / ưu tiên một bài** | chỉ `TREE`, rồi sinh lại `TOC.md`. Bài thuộc **ngày 6** fast track thì đừng cắt giờ: ngày đó cố ý nhẹ nhất (ngày deliverable) và đang nằm đúng sàn 3,5 giờ | `G-TOC-STRUCT` chặn để bạn xác nhận có ý thức; `G-PLAN` chặn nếu một ngày tụt dưới 3,5 giờ |
 | **Dời một chặng** | xem [việc 3](#việc-3--dời-thêm-hoặc-xoá-một-chặng) — nhiều hơn bạn nghĩ | một phần |
 | **Thêm một nhánh phụ** (popup / ngăn phải) | khối `<template>` của nó, cộng một chip mở nó | `G-ORPHAN` chặn nếu tạo mà không ai mở |
 | **Thêm một lớp phủ mới** (popup / drawer / panel) | thêm id vào `LAYER_IDS` — thiếu thì `Esc` và bấm-ra-ngoài không đóng được nó, và nó không chặn phím `[` `]`. Dock `Notes` **cố ý không có** trong danh sách đó ([design.md](design.md) §0.5) | **mắt**: mở lớp mới rồi bấm Esc |
@@ -160,8 +160,8 @@ nhất:
 - **Dời sang chặng khác thì phải đổi id** theo tiền tố chặng: một bài `pr-*` chuyển sang
   chặng 3 phải thành `d-*`, rồi sửa mọi chỗ nhắc id cũ.
 
-Xoá bài thì ghi vào [HANDOFF.md](../HANDOFF.md) **mất gì** — nội dung đó biến mất khỏi
-trang, và phiên sau cần biết nó từng có.
+Xoá bài thì ghi vào mục của phiên mình ở [HISTORY.md](../HISTORY.md) **mất gì** — nội dung đó
+biến mất khỏi trang, và phiên sau cần biết nó từng có.
 
 ---
 
@@ -341,6 +341,12 @@ chính là hiểu nhầm bài muốn gỡ: loại nội dung đáng hỏi nhất
 **Ba thứ không hỏi:** con số phải nhớ (phiên bản thư viện, số lớp của GPT-3), cú pháp thuần
 tuý, và mục chỉ là danh mục tra cứu. Bài tra cứu (`r-*`) hỏi **quyết định và phân biệt**, không
 hỏi thuộc lòng danh sách.
+
+**Sửa câu nào thì chỉ sửa câu đó.** Hai lượt dọn "cho sạch" đã cân nhắc và bỏ, đừng mở lại:
+(1) chuẩn hoá escape cả file — dấu `>` trần, `< 0,05` trần và `&gt;` render y hệt nhau, số
+chỗ thật sự mất chữ là 0, và ba hình dạng làm mất chữ đã có `G-QUIZ-ESC` chặn; (2) `sed` trên
+cụm "theo bài" — phần lớn câu có cụm đó đã là câu tình huống, cụm ấy chỉ khoanh phạm vi "trả
+lời theo khung bài này". Câu nào thật sự hỏi nhớ chữ thì sửa riêng câu đó.
 
 **Rải vị trí đáp án đúng.** Đo được: một bộ 453 câu do máy sinh dồn 40,6% đáp án vào ô B —
 đoán bừa "chọn B" ăn 40% thay vì 25%. Rải lại về ~25% mỗi ô.

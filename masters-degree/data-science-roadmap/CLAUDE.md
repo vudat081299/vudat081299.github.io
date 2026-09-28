@@ -160,7 +160,9 @@ Bốn luật không được vi phạm:
 1. **HTML không bao giờ phụ thuộc vào `tools/` hay `docs/`.** Xoá cả hai thư mục đó thì
    trang vẫn chạy y nguyên. Cổng là thứ *soi* trang, không phải thứ trang cần để sống.
 2. **`TOC.md` và `roadmap.html` không bao giờ là nguồn.** Cả hai là SẢN PHẨM sinh ra; lệch
-   với HTML thì HTML đúng. **Đừng sửa tay `roadmap.html`** — lượt sinh sau xoá sạch.
+   với HTML thì HTML đúng. **Đừng sửa tay `roadmap.html`** — lượt sinh sau xoá sạch. Các comment
+   trong `roadmap.html` nhắc tới trang chính là ghi nguồn build, giữ lại: hợp đồng "roadmap tự
+   đứng một mình" (DS-002) chỉ nói về thứ người đọc thấy.
 3. **Mỗi mẩu nội dung có đúng MỘT nguồn.** Luật này *không* cấm tách nội dung ra file
    riêng — nó cấm **bản sao thứ hai**. Muốn tra cứu nhanh thì sinh ra bản index (như
    `TOC.md`) hoặc một VIEW sinh từ nguồn (như `roadmap.html`), đừng gõ tay một bản sao.
@@ -536,7 +538,8 @@ mất chỗ. Cổng `G-NO-DETAILS` chặn cứng.
 **Dấu hiệu một khối đang ở sai tầng** — nếu khối đó:
 
 - so sánh ≥2 sản phẩm cụ thể (LightGBM vs XGBoost, chọn bộ dữ liệu nào) → nhánh phụ
-- là danh mục lỗi / thông báo lỗi → popup
+- là danh mục lỗi / thông báo lỗi → popup — **trừ khi** chính danh mục đó là sản phẩm của bài
+  (`PAYOFF[id][0]` gọi tên nó): bảng chẩn đoán đường cong loss của `dl-train` ở lại mạch chính
 - là "ba cách, chỉ dùng cách 1" → mạch chính giữ cách dùng thật, hai cách kia vào popup
 - **tự khai là không cần thiết** ("chưa cần", "có thể bỏ qua", "đọc thêm") → nhánh phụ
 - là paper / lịch sử / tên để biết → popup
@@ -788,6 +791,12 @@ không hiểu datacard để làm gì"* thắng mọi heuristic của `G-VIZ`/`G
 có một người đọc thật ở một vị trí cụ thể. Và **≥2 bài cùng tắc ở một khái niệm** là tín
 hiệu mà `concepts.json` không thể tự có: khái niệm đó đang được dạy **muộn hơn chỗ cần
 dùng**. Cổng `G-LEARN` báo đúng việc đó.
+
+Hình có **dạy được** không cũng chỉ có bằng chứng theo đường này (DS-035): chủ trang học tới
+một bài mà xem hình xong vẫn không hiểu thì ghi một dòng `tac` cho bài đó —
+`node tools/learn.mjs --add <id> tac "xem <tên hình> xong vẫn không biết <cái gì>"`. Không dựng
+một buổi đo riêng, và đừng hỏi chủ trang về hình của bài chưa học. Hình có **đọc được** không
+(đè, cắt, chú giải lệch) thì agent tự kiểm bằng `viz-check.mjs`.
 
 Hai luật của file:
 

@@ -12,8 +12,9 @@ Ba file khác trả lời ba câu khác, đừng trộn:
 | luật bắt buộc và vì sao có luật đó? | [../CLAUDE.md](../CLAUDE.md) |
 | **nó trông thế nào, nằm ở đâu?** | **file này** |
 
-Đây là tài liệu **trạng thái hiện tại**, không phải nhật ký. Ai chốt gì, ngày nào, bản
-trước sai ra sao → [../HANDOFF.md](../HANDOFF.md).
+Đây là tài liệu **trạng thái hiện tại**, không phải nhật ký. Chủ trang chốt gì → mã `DS-…`
+trong [../DECISIONS.md](../DECISIONS.md); bản trước sai ra sao, phiên nào làm gì →
+[../HISTORY.md](../HISTORY.md).
 
 Hai mục trong `CLAUDE.md` là **luật cứng**, và file này không lặp lại chúng — nó chỉ cho
 biết cách áp dụng:
@@ -729,8 +730,20 @@ Không có nó thì `1` → `11` làm cả nút nhảy bề rộng, và một c�
 
 ## 8. Kiểm bằng mắt — và cái bẫy của pane preview
 
-Cổng **không thấy được layout**. Sửa giao diện thì phải mở trang. Cách mở ở
-[../HANDOFF.md](../HANDOFF.md) mục "Chạy preview". Bốn cái bẫy:
+Cổng **không thấy được layout**. Sửa giao diện thì phải mở trang; sửa chữ hay lịch học thì
+không cần — `node tools/gate.mjs` đã gồm cả `auditPlan()` (cổng `G-PLAN`).
+
+**Cách mở.** `tools/install-hooks.sh` cài `.claude/launch.json` serve **thẳng từ gốc repo** và
+bật `autoPort` (nhiều phiên chạy song song thì một cổng cố định làm phiên thứ hai không mở được
+preview). Mở bằng `preview_start` với `name: "ds-review"`, rồi vào
+`http://localhost:<cổng được cấp>/masters-degree/data-science-roadmap/data-science-roadmap.html`.
+Chỉ có một bản file, nên không cần mirror sang scratchpad và không cần `?v=n` chống cache.
+Preview đọc `launch.json` theo **thư mục làm việc của phiên**: phiên mở ở gốc repo mà không thấy
+`ds-review` thì dùng `root-static` rồi `navigate` tới đường dẫn đầy đủ. Server chạy mà 404 mọi
+đường dẫn thì kiểm `ps` xem tiến trình có bị sandbox bọc (chặn cả `getcwd()` lẫn việc đọc file
+repo) trước khi đi sửa config.
+
+Bốn cái bẫy:
 
 1. **Screenshot khi cuộn sâu, khi có LỚP PHỦ mở, hay khi có canvas z-index cực cao → khung
    đen** — giới hạn compositor của pane, không phải lỗi của trang. Ba thứ đã trúng bẫy này:

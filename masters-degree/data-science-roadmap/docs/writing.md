@@ -8,14 +8,14 @@ hiểu không.*
 
 File này là danh sách tám câu bạn phải tự soi, vì máy không soi hộ được. Nền lý thuyết:
 skill `explain-clearly`. Đây là tiêu chuẩn, không phải nhật ký — bài nào đã soát, phiên nào
-sửa gì thuộc [HANDOFF.md](../HANDOFF.md).
+sửa gì thuộc [HISTORY.md](../HISTORY.md).
 
 **Khi nào soi:** khi viết một bài mới, khi viết lại một bài, hoặc khi chủ trang yêu cầu
 review. **Đừng** soi cả 84 bài mỗi lần sửa một dấu phẩy — làm vậy là cách chắc chắn để
 không ai soi gì cả.
 
 Mỗi mục dưới đây có ba phần: **hỏi gì** · **đạt trông thế nào** · **trượt trông thế nào**.
-Trượt thì sửa. Cố ý không sửa thì ghi lý do vào `HANDOFF.md`.
+Trượt thì sửa. Cố ý không sửa thì ghi lý do vào mục của phiên mình ở `HISTORY.md`.
 
 ---
 
