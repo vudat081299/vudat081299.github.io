@@ -4195,7 +4195,7 @@
     "sữa",
     "vani"
    ],
-   "why": "Sốt vani nền của bếp Pháp, và là chỗ để học ngưỡng nhiệt của trứng: 82 °C là sốt mượt, 86 °C là trứng bác.",
+   "why": "Sốt vani nền của bếp Pháp, và là chỗ để học ngưỡng nhiệt của trứng: 82 °C là sốt mượt, 85 °C là trứng bác.",
    "ing": [
     {
      "n": "Sữa tươi",
@@ -4262,7 +4262,7 @@
      "d": "Đổ lại vào nồi, khuấy liên tục bằng spatula, vét cả đáy nồi.",
      "m": 6,
      "heat": "Lửa nhỏ",
-     "cue": "Kéo ngón tay qua mặt spatula để lại <b>một rãnh rõ, hai mép không khép lại</b>. Nếu có nhiệt kế: 82–84 °C. Quá 86 °C là lợn cợn."
+     "cue": "Kéo ngón tay qua mặt spatula để lại <b>một rãnh rõ, hai mép không khép lại</b>. Nếu có nhiệt kế: 82–84 °C. Quá 85 °C là lợn cợn."
     },
     {
      "t": "Lọc và làm nguội nhanh",
