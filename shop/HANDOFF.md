@@ -1,8 +1,8 @@
 # HANDOFF — việc dở của shop/
 
 Chỉ việc chưa xong. Làm xong một mục thì xoá nó khỏi đây và ghi phiên ấy vào
-[HISTORY.md](HISTORY.md). Luật ở [CLAUDE.md](CLAUDE.md); sổ nợ kỹ thuật ở
-[docs/TECH-DEBT.md](docs/TECH-DEBT.md).
+[HISTORY.md](HISTORY.md). Luật ở [CLAUDE.md](CLAUDE.md), quyết định đã chốt ở
+[DECISIONS.md](DECISIONS.md), sổ nợ kỹ thuật ở [docs/TECH-DEBT.md](docs/TECH-DEBT.md).
 
 Trạng thái lúc cập nhật (28/09/2026): `lint-shop.py` xanh, ba mục XEM đều cố ý — phân bố mùi thắng
 của Tìm mùi, 2,2% tổ hợp hoà mà câu phân xử không gỡ được, 28 mục còn cờ `placeholder`. Tầng 2
@@ -25,7 +25,7 @@ thông tin rồi thì làm phần việc của agent ghi trong từng dòng.
 - **Nội dung 5 mùi hương** → điền vào `data/shop.json`, hạ **10** cờ `placeholder` (`scents` 5 +
   `products` 5). 18 cờ còn lại là chính sách ship, thanh toán và cam kết thương hiệu — phải hỏi
   riêng. Có mùi thật thì chỉnh trọng số Tìm mùi theo mùi thật, rồi chạy lại cổng và đọc dòng
-  phân bố ([ADR 0002](docs/adr/0002-scent-finder-scoring.md)).
+  phân bố (SHOP-002).
 - **Số tài khoản ngân hàng** → bật VietQR: điền `payment.methods[bank].bank` rồi đặt
   `ready: true`; cổng kiểm định dạng BIN và số tài khoản.
 - **Shop có đủ điều kiện dùng API Shopee không**: mở `https://banhang.shopee.vn/edu/article/8450`

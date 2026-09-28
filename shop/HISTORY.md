@@ -2,7 +2,8 @@
 
 Nhật ký, mới nhất trên đầu: mỗi phiên đã làm gì, đã đo gì, vì sao. Đây không phải luật — luật
 nằm ở [CLAUDE.md](CLAUDE.md). Việc còn dở nằm ở [HANDOFF.md](HANDOFF.md); sổ nợ kỹ thuật ở
-[docs/TECH-DEBT.md](docs/TECH-DEBT.md).
+[docs/TECH-DEBT.md](docs/TECH-DEBT.md). Đoạn nào là quyết định đã chốt thì đã chuyển sang
+[DECISIONS.md](DECISIONS.md), ở đây chỉ còn một dòng trỏ tới mã.
 
 Các mục dưới giữ nguyên văn từ HANDOFF.md cũ. Những gì phiên nào ghi là *"việc tiếp theo"* hay
 *"chưa làm"* là **ảnh chụp lúc viết**; việc còn mở thật sự thì đọc HANDOFF.md.
@@ -46,17 +47,11 @@ Mọi con số minh hoạ ở 06 §4 và lịch ngược tháng 12 đều là s�
 Mục này trước tên là *"Một việc CHƯA làm, đang chờ Đạt quyết"*. Đã quyết, và chọn chiều ngược
 với mặc định cũ.
 
-Đạt chọn **công khai**: hai dòng `--exclude` đã gỡ khỏi `deploy.yml`, nên `shop/docs/` và mọi
-`shop/*.md` giờ đọc được ở `vudat081299.github.io/shop/…`. Lý do anh đưa ra: phần lớn bộ này là
-kế hoạch, không phải bí mật.
-
-Anh đã được nói rõ cái gì đang lên trước khi quyết: `04-NEGOTIATION.md` có mục §7 *"Dấu hiệu nên
-rút"*, và `01-CONTEXT-AND-OPPORTUNITY.md` tự mở đầu bằng *"Không đưa tài liệu này cho chị ấy"*.
-Hai câu ấy vẫn nguyên trong file, và giờ chúng ở trên web.
+Chủ repo chọn **công khai**, sau khi được báo trước những gì sẽ lên web → quyết định SHOP-007.
 
 **Hệ quả, nói thẳng:** nếu chị ấy tìm ra đường dẫn thì đọc được cả thế bài. Trước đây việc đó cần
 biết URL repo trên github.com; giờ chỉ cần biết `vudat081299.github.io/shop/`. Ai thấy việc này
-sai thì **hỏi Đạt**, đừng tự thêm lại dòng loại trừ — có cổng chặn đúng chiều đó.
+sai thì hỏi chủ repo, đừng tự thêm lại dòng loại trừ (SHOP-007) — có cổng chặn đúng chiều đó.
 
 Phiên AI thì nạp `.claude/skills/shop/` trước khi sửa; nó là quy trình trên viết dài ra.
 
@@ -66,15 +61,14 @@ Phiên AI thì nạp `.claude/skills/shop/` trước khi sửa; nó là quy trì
 - **Bản đề xuất mang đi gặp chủ shop: `/shop/pitch/`**
 - Phễu (nội bộ): `/shop/measure/`
 
-**Cái gì lên public.** Từ 21/09/2026: **mọi thứ trong `shop/`**, kể cả `docs/` và các file
-`.md`. Hai dòng loại trừ đã gỡ khỏi `deploy.yml`, và `check_publish` trong `lint-shop.py` đảo
-chiều — nó làm đỏ nếu hai dòng ấy **quay lại**, đúng khuôn `UNLISTED` của cổng danh mục.
+**Cái gì lên public** → quyết định SHOP-007. `check_publish` trong `lint-shop.py` đảo chiều —
+nó làm đỏ nếu hai dòng loại trừ **quay lại**, đúng khuôn `UNLISTED` của cổng danh mục.
 `shop/pitch/` vẫn công khai như trước.
 
 ## Tên file tài liệu đổi sang tiếng Anh — 21/09/2026
 
-13 file markdown trong `shop/` đổi tên theo yêu cầu chủ repo. **Nội dung vẫn tiếng Việt** —
-chỉ cái tên đổi. Ai còn nhớ đường dẫn cũ thì tra bảng này:
+13 file markdown trong `shop/` đổi tên sang tiếng Anh, nội dung giữ tiếng Việt → quyết định
+SHOP-008. Ai còn nhớ đường dẫn cũ thì tra bảng này:
 
 | Cũ | Mới |
 |---|---|
@@ -206,7 +200,7 @@ Ba mục mức XEM, đều cố ý:
 
 ### Bốn thứ đừng làm
 
-- **Đừng xây phần mềm quản lý bán hàng.** [adr/0004](docs/adr/0004-dont-rebuild-retail-software.md).
+- **Đừng xây phần mềm quản lý bán hàng** → quyết định SHOP-004 ([adr/0004](docs/adr/0004-dont-rebuild-retail-software.md)).
 - **Đừng nói "không phần mềm bán lẻ nào biết công thức nến"** — KiotViet biết
   ([docs/06-VALUE-CHAIN.md](docs/06-VALUE-CHAIN.md) §5). Câu ấy từng nằm trong bản đề xuất.
 - **Đừng hứa đồng bộ Shopee** trước khi xác minh xong điều kiện ở việc số 5.

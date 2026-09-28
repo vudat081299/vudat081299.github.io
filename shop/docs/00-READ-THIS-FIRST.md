@@ -24,7 +24,7 @@ Viết ngày 20/09/2026. Người đọc chính là Đạt; người đọc th�
 | Muốn biết làm gì trước | [02-ROADMAP.md](02-ROADMAP.md) |
 | Sắp viết mã trong `shop/` | [../CLAUDE.md](../CLAUDE.md), rồi [05-ARCHITECTURE.md](05-ARCHITECTURE.md) |
 | Vừa mở một phiên mới | [../HANDOFF.md](../HANDOFF.md) — việc dở; nhật ký các phiên ở [../HISTORY.md](../HISTORY.md) |
-| Muốn biết vì sao chọn thế này | [adr/](adr/) |
+| Muốn biết vì sao chọn thế này | [adr/](adr/), và [../DECISIONS.md](../DECISIONS.md) — mọi điều đã chốt, mỗi điều một mã `SHOP-NNN` |
 | Muốn biết còn nợ gì | [TECH-DEBT.md](TECH-DEBT.md) |
 
 ---
