@@ -8,7 +8,8 @@ nên cổng kiểm cả data — phần HTML không nhìn thấy nó.
 
 Phép kiểm HTML nằm ở tools/htmlcheck.py, dùng chung với pages/tools/lint-pages.py — cooking/
 có đúng bộ kiểm của pages/, kể cả ba phép bánh cóc. File này giữ phần của riêng cooking/: bảng
-nợ DEBT, cách chọn file, và check_data() cho cooking/data/*.json.
+nợ DEBT, cách chọn file, check_data() cho cooking/data/*.json, và check_sisters() cho dòng
+"trang chị em" ở chân trang.
 
 Hai mức, theo đúng quy ước của factlint.py:
   · LỖI  — chặn commit. Sai khách quan, sửa được ngay.
@@ -23,6 +24,7 @@ Exit code: 1 nếu có LỖI, 0 nếu không.
 """
 import json
 import pathlib
+import re
 import sys
 
 # Nạp bộ kiểm chung ở tools/ của gốc repo. Tắt .pyc: repo không bỏ qua __pycache__/, và mỗi lần
@@ -102,6 +104,29 @@ def check_data(path: pathlib.Path):
     return errors, []
 
 
+def check_sisters():
+    """Dòng "trang chị em" ở chân mỗi trang phải trỏ tới đủ mọi trang còn lại trong cooking/.
+
+    Danh sách ấy viết tay ở từng trang, nên mỗi lần có trang mới là các trang cũ bị quên: đã có
+    lúc bốn trang công thức không trỏ tới food-fundamentals.html và hai trang Âu không trỏ tới
+    trang Hàn. Vì thế luôn kiểm cả thư mục, không chỉ file đang commit — thêm một trang mới là
+    làm sai các trang CŨ, mà commit chỉ chứa trang mới.
+    """
+    pages = sorted(p.name for p in COOKING_DIR.glob('*.html'))
+    errors = []
+    for name in pages:
+        s = (COOKING_DIR / name).read_text(encoding='utf-8')
+        m = re.search(r'trang chị em:(.*?)</(?:div|footer)>', s, re.S)
+        if not m:
+            errors.append(f'{name}: chân trang không có dòng "trang chị em"')
+            continue
+        linked = set(re.findall(r'href="([a-z0-9-]+\.html)"', m.group(1)))
+        missing = [p for p in pages if p != name and p not in linked]
+        if missing:
+            errors.append(f'{name}: dòng "trang chị em" thiếu ' + ', '.join(missing))
+    return errors
+
+
 def main(argv):
     verbose, names = htmlcheck.parse_args(argv)
 
@@ -139,6 +164,11 @@ def main(argv):
         total_err += len(errors)
         total_note += len(notes)
         htmlcheck.print_result(path.name, errors, notes, verbose)
+
+    if targets:
+        errors = check_sisters()
+        total_err += len(errors)
+        htmlcheck.print_result('trang chị em (cả thư mục)', errors, [], verbose)
 
     print()
     if total_note and not verbose:

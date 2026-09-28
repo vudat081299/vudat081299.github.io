@@ -17,7 +17,9 @@ Luật chung cho mọi trang sách — giọng viết, giao diện, theme — n�
 
 `python3 cooking/tools/lint-cooking.py [file…] [-v]` — cùng bộ kiểm HTML với `pages/` (id trùng,
 anchor gãy, asset thiếu, thẻ lệch, svg không tên, cây tiêu đề, aria-label), cộng kiểm mọi
-`cooking/data/*.json`. Hook pre-commit truyền tên file đang commit làm tham số, nên cổng phải chạy
+`cooking/data/*.json`, cộng dòng "trang chị em" ở chân trang: mỗi trang phải trỏ tới **mọi** trang
+còn lại trong thư mục. Phép ấy luôn chạy trên cả thư mục, vì thêm trang mới là làm sai trang cũ.
+Hook pre-commit truyền tên file đang commit làm tham số, nên cổng phải chạy
 đúng dù nhận `.json`, `.html`, cả hai, hay không tham số nào.
 
 Thêm trang mới thì làm như `pages/CLAUDE.md` mục *Thêm một trang*: một mục trong
