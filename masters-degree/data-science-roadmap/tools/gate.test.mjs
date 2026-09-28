@@ -57,6 +57,15 @@ mkdirSync(join(DS, 'data'), { recursive: true });
 for (const f of COPIES) cpSync(join(REAL, f), join(DS, f));
 cpSync(join(REAL, 'tools'), join(DS, 'tools'), { recursive: true });
 
+/* Chạy trong hook (pre-push), git đặt sẵn GIT_DIR, GIT_INDEX_FILE… trỏ vào repo THẬT. Tiến trình
+   con mà thừa kế chúng thì `git -C <sân tạm>` vẫn đọc repo thật: G-HANDOFF thấy "không có gì đổi",
+   im, và test trượt dù cổng đúng — push bị chặn oan mỗi lần bộ cổng đổi. Bộ test không bao giờ
+   cần repo bên ngoài, nên bỏ hết các biến định vị repo trước khi làm gì với git. */
+for (const k of ['GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_OBJECT_DIRECTORY',
+  'GIT_ALTERNATE_OBJECT_DIRECTORIES', 'GIT_COMMON_DIR', 'GIT_PREFIX', 'GIT_NAMESPACE']) {
+  delete process.env[k];
+}
+
 /* G-HANDOFF đọc `git status`, nên sân tạm phải là một repo thật — không thì cổng đó
    im trong CẢ HAI chiều và ta không test được gì. `git init` là đủ: mọi file thành
    "chưa theo dõi", và đó chính là trạng thái "vừa sửa, chưa commit" mà cổng xét. */
