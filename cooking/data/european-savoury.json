@@ -2639,7 +2639,7 @@
     },
     {
      "t": "Ra nhiệt độ phòng",
-     "d": "Lấy ra trước 2 tiếng, thấm khô, phết mù tạt, rắc tiêu và thảo mộc băm.",
+     "d": "Lấy ra trước 2 tiếng — trời nóng trên 32 °C thì chỉ 1 tiếng, vì quá mốc ấy thịt sống nằm trong vùng nguy hiểm. Thấm khô, phết mù tạt, rắc tiêu và thảo mộc băm.",
      "m": 120,
      "heat": "—",
      "cue": "Lõi thịt <b>không còn lạnh buốt khi chạm</b>. Nướng thịt lạnh là ngoài chín trong sống."
