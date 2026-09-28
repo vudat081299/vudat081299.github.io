@@ -31,8 +31,4 @@
 
 ## NỢ
 
-- `cryptography.html`: định nghĩa MAC vẫn là bản yếu ("m chưa từng hỏi") — bản đúng có ở nhánh
-  `claude/review-learning-pages-ux-c78e73` (chưa merge).
-- `machine-learning-101.html`: bí danh `phá đối xứng|đối xứng` của từ điển thuật ngữ bật popup sai
-  chỗ (cùng nhánh trên).
 - Nợ đo được của cổng tĩnh nằm ở bảng `DEBT` trong `pages/tools/lint-pages.py` — không chép lại ở đây.

@@ -554,8 +554,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
     <h1>Tám khoá học, hàng trăm bài giảng, nhưng chỉ có <u>một cỗ máy ba bộ phận</u> — được lắp lại theo những cách ngày càng khéo.</h1>
     <p>Trang này diễn giải bằng tiếng Việt <b>toàn bộ nội dung 8 khoá</b> của Andrew Ng: 3 khoá <i>Machine Learning Specialization</i> và 5 khoá <i>Deep Learning Specialization</i>. Nhưng nó không kể theo thứ tự tuần. Nó kể theo <b>thứ tự các bức tường</b>: mỗi chặng bắt đầu bằng một thứ mà chặng trước <i>không biểu diễn nổi</i>, rồi dựng đúng công cụ để vượt qua.</p>
     <p>Sợi chỉ xuyên suốt là một câu: <b>mọi thuật toán ở đây — từ hồi quy tuyến tính tới Transformer — đều là ba lựa chọn</b>. Chọn <b class="c-m">một hàm để đoán</b>, chọn <b class="c-l">một cách đo sai</b>, chọn <b class="c-o">một cách sửa</b>. Ba màu ấy đi suốt trang và không bao giờ đổi vai: thấy chúng ở Transformer cũng đúng như thấy chúng ở đường thẳng đầu tiên.</p>
-    <p><b>Mười ba mô hình nghịch được ngay trên trang.</b> Mỗi cái dựng lên để giết một hiểu nhầm cụ thể, không phải để trang trí: kéo thanh trượt cho gradient descent phân kỳ, tắt hàm kích hoạt để thấy mạng 4 lớp sập về một đường thẳng, bấm từng bước lan truyền ngược, xem attention thật ra chỉ là một phép tra cứu mềm.</p>
-    <p class="meta">THUẬT NGỮ GẠCH CHÂN CHẤM LÀ BẤM ĐƯỢC — HIỆN TÊN TIẾNG ANH CHÍNH THỨC KÈM GIẢI THÍCH NGẮN<br>MỤC NÀO CÓ TRONG BẢN GỐC ĐỀU MANG CHIP GHI RÕ KHOÁ NÀO · TUẦN NÀO, ĐỂ BẠN TÌM ĐÚNG BÀI GIẢNG<br>MỌI TÍNH TOÁN CHẠY TRONG TRÌNH DUYỆT CỦA BẠN — KHÔNG CÓ DỮ LIỆU NÀO RỜI KHỎI TRANG</p>
+    <p><b>Mười ba mô hình nghịch được ngay trên trang.</b> Mỗi cái dựng lên để giết một hiểu nhầm cụ thể: kéo thanh trượt cho gradient descent phân kỳ, tắt hàm kích hoạt để thấy mạng 4 lớp sập về một đường thẳng, bấm từng bước lan truyền ngược, xem attention thật ra chỉ là một phép tra cứu mềm.</p>
+    <p class="meta">THUẬT NGỮ GẠCH CHÂN CHẤM LÀ BẤM ĐƯỢC — HIỆN TÊN TIẾNG ANH CHÍNH THỨC KÈM GIẢI THÍCH NGẮN<br>MỤC NÀO CÓ TRONG BẢN GỐC ĐỀU MANG CHIP GHI RÕ KHOÁ NÀO · TUẦN NÀO, ĐỂ BẠN TÌM ĐÚNG BÀI GIẢNG</p>
   </header>
 
   <div class="stats">
@@ -4683,7 +4683,7 @@ var GLOSS = [
 ['weight initialization','khởi tạo trọng số','Đặt giá trị ban đầu cho w. Khởi tạo toàn 0 làm mọi nơ-ron trong một lớp giống hệt nhau mãi mãi; khởi tạo sai thang làm gradient tan biến.','#s-init','khởi tạo trọng số|khởi tạo'],
 ['He initialization','khởi tạo He','Phương sai 2/n với n là số đầu vào của lớp. Mặc định khi dùng ReLU — hệ số 2 bù cho việc ReLU cắt mất một nửa tín hiệu.','#s-init',''],
 ['Xavier initialization','khởi tạo Xavier','Phương sai 1/n. Dùng với tanh và sigmoid. Còn gọi khởi tạo Glorot.','#s-init','Xavier|Glorot'],
-['symmetry breaking','phá đối xứng','Lý do phải khởi tạo NGẪU NHIÊN: nếu mọi nơ-ron trong một lớp bắt đầu giống nhau, chúng nhận cùng gradient và mãi mãi giống nhau.','#s-init','phá đối xứng|đối xứng'],
+['symmetry breaking','phá đối xứng','Lý do phải khởi tạo NGẪU NHIÊN: nếu mọi nơ-ron trong một lớp bắt đầu giống nhau, chúng nhận cùng gradient và mãi mãi giống nhau.','#s-init','phá đối xứng'],
 ['vanishing gradient','gradient tan biến','Gradient chảy qua nhiều lớp là tích của nhiều số nhỏ hơn 1, nên teo về 0 và các lớp đầu ĐỨNG YÊN. Không báo lỗi, chỉ là kết quả tệ khó hiểu.','#s-init','gradient tan biến'],
 ['exploding gradient','gradient bùng nổ','Ngược lại: tích của nhiều số lớn hơn 1 làm cập nhật văng mô hình đi mất, thấy NaN. Chữa bằng cắt ngưỡng gradient.','#s-init','gradient bùng nổ'],
 ['gradient checking','kiểm tra gradient bằng số','So gradient của bạn với đạo hàm tính theo định nghĩa (J(θ+ε)−J(θ−ε))/2ε. Chỉ để DEBUG rồi tắt đi, và không dùng chung với dropout.','#s-init','gradient checking|kiểm tra gradient'],
@@ -4789,7 +4789,7 @@ var GLOSS = [
 ['negative sampling','lấy mẫu âm','Đổi bài toán thành "cặp từ này có thật sự đứng gần nhau không". Mỗi bước chỉ cần k+1 hồi quy logistic thay vì một softmax 10.000 lớp.','#s-embed','negative sampling'],
 ['GloVe','GloVe','Học embedding bằng cách khớp trực tiếp với BẢNG ĐẾM số lần hai từ cùng xuất hiện. Đơn giản hơn hẳn về khái niệm, kết quả tương đương word2vec.','#s-embed',''],
 ['cosine similarity','độ tương đồng cosine','Đo góc giữa hai vector, bỏ qua độ dài. Cách chuẩn để tìm "từ gần nghĩa nhất" trong không gian embedding.','#s-embed','cosine similarity'],
-['debiasing','giảm định kiến trong embedding','Embedding học luôn cả định kiến trong văn bản mà loài người đã viết. Quy trình giảm: xác định hướng thiên lệch, chiếu bỏ nó khỏi các từ trung tính, cân bằng lại các cặp có giới.','#s-embed','debiasing|định kiến'],
+['debiasing','giảm định kiến trong embedding','Embedding học luôn cả định kiến trong văn bản mà loài người đã viết. Quy trình giảm: xác định hướng thiên lệch, chiếu bỏ nó khỏi các từ trung tính, cân bằng lại các cặp có giới.','#s-embed','debiasing'],
 ['seq2seq','mô hình chuỗi sang chuỗi','Một RNN ĐỌC hết câu nguồn và nén thành một vector; một RNN khác VIẾT câu đích từ vector đó. Khuyết điểm: cái nút thắt cổ chai một-vector.','#s-seq2seq','seq2seq'],
 ['encoder','bộ mã hoá','Nửa ĐỌC của seq2seq: nén đầu vào thành biểu diễn trung gian. Với chú thích ảnh, encoder là một CNN.','#s-seq2seq','encoder'],
 ['decoder','bộ giải mã','Nửa VIẾT của seq2seq: sinh chuỗi đầu ra từng bước từ biểu diễn trung gian. Mô hình ngôn ngữ lớn hôm nay là kiến trúc CHỈ-decoder.','#s-seq2seq','decoder'],
@@ -4820,13 +4820,13 @@ var GLOSS = [
 ['recommender system','hệ gợi ý','Bảng người dùng × món hàng với đa số ô trống, và bài toán là điền các ô trống đó.','#s-recsys','hệ gợi ý'],
 ['collaborative filtering','lọc cộng tác','Học ĐỒNG THỜI sở thích của người và tính chất của món, dù cả hai đều chưa biết. Chạy gradient descent trên cả hai bộ tham số cùng lúc.','#s-recsys','lọc cộng tác'],
 ['content-based filtering','lọc theo nội dung','Dùng thông tin sẵn có về người dùng và món hàng, đưa qua hai mạng riêng để lấy hai vector rồi nhân vô hướng. Giải được bài toán khởi đầu lạnh.','#s-recsys','lọc theo nội dung|hai tháp'],
-['mean normalization','trừ trung bình của từng món','Chi tiết bắt buộc trong hệ gợi ý: không có nó, người dùng mới nhận dự đoán 0 sao cho mọi món. Có nó, họ nhận điểm trung bình của món đó.','#s-recsys','chuẩn hoá theo trung bình'],
+['mean normalization','chuẩn hoá theo trung bình','Ng dùng cùng một tên cho HAI phép khác nhau. <b>(1) Chuẩn hoá đặc trưng</b>: (x − µ)/(max − min), một trong ba cách đưa mọi đặc trưng về cùng thang. <b>(2) Hệ gợi ý</b>: trừ trung bình của từng món trước khi huấn luyện — không có nó, người dùng mới nhận dự đoán 0 sao cho mọi món; có nó, họ nhận điểm trung bình của món đó.','#s-recsys','chuẩn hoá theo trung bình'],
 ['cold start','khởi đầu lạnh','Người dùng mới hoặc món hàng mới chưa có tương tác nào, nên lọc cộng tác thuần không biết gợi ý gì.','#s-recsys','khởi đầu lạnh'],
 ['retrieval and ranking','truy hồi rồi xếp hạng','Kiến trúc chuẩn của hệ gợi ý quy mô lớn: lấy nhanh vài trăm ứng viên bằng cách rẻ, rồi chạy mô hình đắt chỉ trên vài trăm ứng viên đó.','#s-recsys','truy hồi|xếp hạng'],
 ['reinforcement learning','học tăng cường','Thay nhãn bằng PHẦN THƯỞNG — một con số tới sau một chuỗi hành động và không nói hành động nào đã đúng. Đó gọi là bài toán gán công trạng.','#s-rl','học tăng cường'],
 ['reward','phần thưởng','Con số nói kết quả tốt hay tệ. BẠN viết nó ra, không phải agent học nó — nên mọi hành vi kỳ quặc của agent thường là hàm thưởng của bạn viết chưa đúng.','#s-rl','phần thưởng'],
 ['return','tổng thưởng có chiết khấu','Không phải phần thưởng tức thì mà R₁ + γR₂ + γ²R₃ + … Đây là thứ agent thật sự đi tối đa hoá.','#s-rl',''],
-['discount factor','hệ số chiết khấu γ','Nói agent KIÊN NHẪN tới mức nào. γ = 0,3 thì phần thưởng sau 3 bước chỉ còn 2,7% giá trị. Siêu tham số quan trọng nhất của học tăng cường — đổi nó là lật ngược cả chiến lược.','#s-rl','hệ số chiết khấu|γ'],
+['discount factor','hệ số chiết khấu γ','Nói agent KIÊN NHẪN tới mức nào. γ = 0,3 thì phần thưởng sau 3 bước chỉ còn 2,7% giá trị. Siêu tham số quan trọng nhất của học tăng cường — đổi nó là lật ngược cả chiến lược.','#s-rl','hệ số chiết khấu'],
 ['policy','chính sách','Hàm nói ở trạng thái nào thì làm gì. Đây là đích đến: có Q rồi thì chính sách tối ưu chỉ là "chọn hành động làm Q lớn nhất".','#s-rl','chính sách'],
 ['Q-function','hàm giá trị hành động','Q(s,a) = "nếu đang ở s, làm a, rồi từ đó về sau chơi tối ưu thì tổng thưởng bao nhiêu". Với trạng thái liên tục, Q là một mạng nơ-ron.','#s-rl','Q-function|state-action value'],
 ['Bellman equation','phương trình Bellman','Q(s,a) = R(s) + γ·max Q(s′,a′). Q xuất hiện ở CẢ HAI VẾ — một phương trình đệ quy, và đó là toàn bộ vẻ đẹp của nó.','#s-rl','phương trình Bellman|Bellman'],
