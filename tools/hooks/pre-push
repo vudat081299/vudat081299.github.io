@@ -1,0 +1,52 @@
+#!/bin/sh
+# Lớp cổng THỨ BA cho nội dung tĩnh: trang chủ + pages/ + cooking/. CHẶN.
+# Cài: tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo */tools/hooks/pre-push)
+#
+# Vì sao cần dù đã có pre-commit: push `main` = DEPLOY GitHub Pages, và pre-commit có ba lỗ
+# không bịt được — `--no-verify` (đúng và nên có), commit cũ được rebase/cherry-pick vào mà
+# chưa từng qua cổng, và commit merge không chạy pre-commit chút nào. Đây là lưới cuối.
+#
+# Không lọc theo đường dẫn như các hook lớp 2: các cổng này chạy hết rất nhanh, lọc chỉ thêm
+# chỗ sai mà không tiết kiệm được gì. Chúng kiểm TRẠNG THÁI CUỐI của cây làm việc — cùng cách
+# pre-push của facts/ làm.
+#
+# Bỏ qua một lần (chỉ khi bạn BIẾT mình đang làm gì): git push --no-verify
+
+set -e
+ROOT=$(git rev-parse --show-toplevel)
+
+command -v python3 >/dev/null 2>&1 || {
+  echo "pre-push: không có python3 — bỏ qua cổng nội dung tĩnh." >&2
+  exit 0
+}
+
+cd "$ROOT"
+echo "pre-push: cổng trang chủ + pages + cooking (push main = deploy, kiểm lần cuối)…"
+
+FAIL=0
+python3 tools/lint-collection.py       || FAIL=1
+python3 pages/tools/lint-pages.py      || FAIL=1
+python3 cooking/tools/lint-cooking.py  || FAIL=1
+
+if [ "$FAIL" -ne 0 ]; then
+  cat >&2 <<'MSG'
+
+──────────────────────────────────────────────────────────────────────
+Push bị CHẶN — cổng nội dung tĩnh không qua.
+
+Sau bước này nội dung nằm trên web, không có build step nào bắt lỗi hộ.
+
+  · trang chủ → trường thiếu / phím tắt trùng / href chết / trang không có ô
+  · trang     → id trùng / anchor gãy / asset thiếu / thẻ lệch
+
+Xem thêm:  python3 tools/lint-collection.py
+           python3 pages/tools/lint-pages.py -v
+           python3 cooking/tools/lint-cooking.py -v
+Bỏ qua có ý thức:  git push --no-verify
+──────────────────────────────────────────────────────────────────────
+MSG
+  exit 1
+fi
+
+echo "pre-push: cổng nội dung tĩnh qua."
+exit 0
