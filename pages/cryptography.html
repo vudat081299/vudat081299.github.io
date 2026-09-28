@@ -182,7 +182,11 @@
   .cb-chip.on { background: var(--wb-fg); border-color: var(--wb-fg); color: var(--wb-canvas); font-weight: 640; }
 
   /* interactive svg surfaces */
-  .cb-svg { width: 100%; height: auto; display: block; margin: 0 auto; touch-action: none; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
+  .cb-svg { width: 100%; height: auto; display: block; margin: 0 auto; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
+  /* CHỈ đường cong elliptic mới chặn cử chỉ chạm, vì nó có điểm kéo được. Đồ thị ba màu chỉ cần
+     bấm, nên phải để ngón tay cuộn trang bình thường — nếu không, trên điện thoại người đọc bị kẹt
+     lại đúng ở chỗ hình đó. */
+  #ec-svg { touch-action: none; }
   .cb-svg--sm { max-width: 400px; }
   .cb-svg--md { max-width: 520px; }
 
@@ -950,7 +954,7 @@ c' = c ⊕ Δ  ⟹  m' = c' ⊕ ks = (m ⊕ ks ⊕ Δ) ⊕ ks = <b>m ⊕ Δ</b>
         <p class="cb-p">Trò chơi rất khắc nghiệt, và sự khắc nghiệt đó là có chủ đích:</p>
         <ol class="cb-ul">
           <li>Kẻ địch được đưa <b>bao nhiêu thông điệp tuỳ thích</b> <code>m₁, m₂, …</code> và nhận về thẻ hợp lệ của chúng. Hắn tự chọn nội dung, thích nghi theo kết quả trước.</li>
-          <li>Hắn thắng nếu đưa ra <b>một cặp <code>(m, t)</code> hợp lệ với <code>m</code> chưa từng hỏi</b>.</li>
+          <li>Hắn thắng nếu đưa ra <b>một cặp <code>(m, t)</code> hợp lệ mà người thách đấu chưa từng trả về</b> — <code>m</code> hoàn toàn mới cũng được, mà <code>m</code> cũ kèm một thẻ <code>t</code> <i>khác</i> cũng được.</li>
         </ol>
         <p class="cb-p">Gọi là <b>không giả mạo được dưới tấn công chọn thông điệp</b>. Định nghĩa mạnh tới mức kỳ quặc: nó cấm cả việc tạo ra một thẻ <i>khác</i> cho một thông điệp <i>cũ</i>. Vì sao khắt khe vậy? Vì ta không biết trước hệ thống bên trên sẽ diễn giải “thông điệp mới” thế nào — có nơi coi hai thẻ khác nhau là hai giao dịch khác nhau. Định nghĩa an toàn phải chặn cả những đường mà ta chưa nghĩ ra.</p>
 
