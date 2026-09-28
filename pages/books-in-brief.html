@@ -304,6 +304,18 @@
   @media (max-width: 620px) { #acemoglu .ac-pick { display: flex; } #acemoglu .ac-pick > .wb-btn { flex: 1 1 0; } }
   /* Trên điện thoại hình co còn 0,8–0,9 lần viewBox: nâng cỡ chữ để nhãn không nhỏ dưới ~9 px. */
   @media (max-width: 620px) { #acemoglu .ac-svg .hw-vs { font-size: 13px; } #acemoglu .ac-svg .hw-vt { font-size: 14px; } }
+
+  /* ---- rosling ---- */
+  /* Mô hình kiến thức cũ: hình dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
+  #rosling .ro-svg { max-width: 520px; }
+  #rosling .ro-svg .hw-vs { font-size: 11.5px; }
+  #rosling .ro-svg .hw-vt { font-size: 12.5px; }
+  #rosling .ro-val { display: inline-block; min-width: 84px; }
+  #rosling .ro-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
+  #rosling .ro-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; min-height: 4.8em; }
+  #rosling .hw-tw th { white-space: normal; }
+  /* Trên điện thoại hình co còn 0,7–0,9 lần viewBox: nâng cỡ chữ để nhãn không nhỏ dưới ~9 px. */
+  @media (max-width: 620px) { #rosling .ro-svg .hw-vs { font-size: 13px; } #rosling .ro-svg .hw-vt { font-size: 14px; } }
 </style>
 </head>
 <body class="wb-app">
@@ -359,15 +371,17 @@
       <li><b>Superforecasting:</b> bản tiếng Việt ghi theo Alpha Books và NetaBooks (<i>Siêu Dự Báo – Superforecasting: Nghệ Thuật và Khoa Học Dự Đoán Tương Lai</i>, Lê Thiện Trí dịch, NXB Thế Giới, 382 trang, tháng 5/2026). Alpha còn một trang sách tựa phụ “Những phương pháp dự đoán trên tầm chuyên gia”, và Waka ghi một bản điện tử năm 2018 của NXB Lao Động Xã Hội; chưa kiểm được năm in đầu và dịch giả của bản cũ trên trang chính thức.</li>
       <li><b>Superforecasting:</b> Độ vững sửa hai điều hay được trích về dự án: câu “hơn nhà phân tích có tin mật 30%” gốc là một bài báo năm 2013 (phân tích đầy đủ: phương pháp gộp của cả dự án, không phải từng siêu dự báo viên, tốt hơn chừng 35%); và một phân tích lại năm 2025 thấy tác dụng của huấn luyện và làm nhóm có thể mất đi khi kiểm soát thêm biến. Độ vững của mục Galef vẫn dẫn Mellers 2014 như bằng chứng tốt nhất; chủ trang có thể muốn thêm một câu ở đó.</li>
       <li><b>Superforecasting:</b> mục dài ≈3.200 tiếng phần chữ (khoảng 2.200 từ), cộng ≈300 tiếng trong mô hình (~12 phút đọc), đúng trần; để giữ trần đã bỏ ví dụ “mắt chuồn chuồn”. Máy chấm điểm cho mười lời đoán cùng một mức chắc, để thấy điểm tốt nhất rơi đúng vào tỉ lệ đoán trúng; số chính theo thang 0–2 của sách, bản 0–1 ghi kèm. Ngoài đề bài, Độ vững thêm kết quả giải XPT (2022, đối chiếu năm 2025) về rủi ro AI.</li>
-      <li><b>Trang chung — mục 08 Rosling (<i>Factfulness</i>):</b> agent làm mục này bị dừng theo lệnh của chủ trang khi đang cắt cho vừa độ dài, nên phiên điều phối không làm lại và không đăng phần dở. Nhóm 4 hiện chỉ có Diamond và Acemoglu &amp; Robinson, chỗ số 08 để trống. Muốn có mục này thì yêu cầu làm lại. Tiêu đề nhóm 4 vẫn giữ vế “nó đang thật sự ra sao”, vế ấy viết cho Rosling: làm lại Rosling thì nó khớp trở lại, bỏ hẳn thì nên sửa tiêu đề. Mô tả của Books in Brief trên trang chủ đã bỏ tên Rosling cho khớp với trang.</li>
       <li><b>Guns, Germs, and Steel:</b> bản tiếng Việt ghi theo Znews (NXB Tri Thức phát hành năm 2007; Omega Plus in lại từ 2016, cùng NXB Thế Giới) và tin giải A Giải thưởng Sách Quốc gia lần thứ tư, 2021. Báo Tin Tức cùng dịp viết sách “xuất bản tại Việt Nam từ năm 1998”, lệch với năm 2007, nên mục không dùng con số ấy; chưa kiểm được năm in đầu trên trang của NXB.</li>
       <li><b>Guns, Germs, and Steel:</b> mô hình độ dài ngày là cách trang này minh hoạ một ý của chương 10 (cùng vĩ độ thì cùng độ dài ngày, cùng nhịp mùa), chỉ tính độ dài ngày, không tính khí hậu. Ví dụ ngô (có ở Balsas 8.700 năm trước, ở Tây Nam nước Mỹ khoảng 4.100 năm trước, gen quang kỳ ZmCCT) lấy từ ba bài trên PNAS, không từ sách. Sơ đồ chuỗi nhân quả do trang tự vẽ, không chép hình của sách.</li>
       <li><b>Guns, Germs, and Steel:</b> Độ vững có vài ý ngoài đề bài: lao ở người không đến từ bò (Brosch 2002); tổ tiên lúa mì không cho nhiều hạt hơn cỏ hoang hạt nhỏ (Preece 2015); Restall về đồng minh bản địa; Pomeranz về thời điểm châu Âu vượt Trung Quốc. Thư đáp của Acemoglu và Robinson trên NYRB (8/2012) không mở được, nên mục chỉ nói có thư đáp, không tóm nội dung.</li>
-      <li><b>Guns, Germs, and Steel:</b> mục dài ≈3.150 tiếng phần chữ (khoảng 2.150 từ), cộng ≈350 tiếng trong mô hình (~12 phút đọc), sát trần 2.200 từ. Để khỏi trỏ vào mục Rosling đã dừng, câu thứ hai trong “Nó dẫn đi đâu” của mục Tetlock được sửa để dẫn sang mục này, và đoạn giới thiệu nhóm 4 viết lại cho hai cuốn.</li>
+      <li><b>Guns, Germs, and Steel:</b> mục dài ≈3.150 tiếng phần chữ (khoảng 2.150 từ), cộng ≈350 tiếng trong mô hình (~12 phút đọc), sát trần 2.200 từ.</li>
       <li><b>Why Nations Fail:</b> tên dịch giả bản tiếng Việt lệch giữa các nguồn: Tuổi Trẻ (24/5/2013) ghi Nguyễn Thị Kim Chi dịch chính, cùng Hoàng Thạch Quân, Hoàng Ngọc Lan, Vũ Thành Tự Anh hiệu đính; thư viện Bộ Tư pháp (bản 2017) và nhà sách (tái bản 2024, 616 trang) ghi Trần Thị Kim Chi. Mục ghi theo hai nguồn mới hơn; trang NXB Trẻ báo lỗi khi mở nên chưa đối chiếu được.</li>
       <li><b>Why Nations Fail:</b> ví dụ gần là vụ Vinasun kiện Grab (toà phúc thẩm y án tháng 3/2020, Grab bồi thường khoảng 4,8 tỉ đồng), kể kèm ý toà thấy có căn cứ, để dùng đúng điều sách nói: kẻ thua đi kiện là bình thường, đáng lo là khi kẻ thua nắm quyền viết luật. Độ vững có vài ý ngoài đề bài: dữ liệu tử suất người định cư bị chất vấn (Albouy, 2012), Hàn Quốc thời Park Chung-hee (theo Sachs), Botswana co lại khoảng 3% năm 2024, và dân số hai nửa Nogales (lấy từ một bài bình luận trên Econlib năm 2025, không phải nghiên cứu).</li>
       <li><b>Why Nations Fail:</b> mô hình “bước ngoặt và vòng hồi tiếp” do trang tự dựng, không có trong sách; tham số (12% mỗi thế hệ, phóng đại 5 lần ở thế hệ 4) chọn để hình có nghĩa ngay khi mở, không đo từ dữ liệu, và mô hình ghi rõ điều ấy. Mục dài ≈3.200 tiếng phần chữ (khoảng 2.200 từ), cộng ≈400 tiếng trong mô hình (~12 phút đọc), đúng trần; để giữ trần đã bỏ chuyến sang London năm 1895 của ba tù trưởng Tswana, ví dụ cái cày ở Kongo và số liệu mở rộng quyền bầu cử ở Anh.</li>
-      <li><b>Trang chung — phần kết:</b> không có mục Rosling nên lộ trình “thế giới” là Diamond → Acemoglu &amp; Robinson → chặng 5 của trang Experimentation &amp; Causal Inference (thí nghiệm tự nhiên: ngưỡng cắt, biến công cụ), vì cả hai cuốn đều lập luận bằng những phép so không ai được chọn ngẫu nhiên. Câu nhắc trang sách riêng dẫn hai trang đã có: How to Lie with Statistics và How to Win Every Argument.</li>
+      <li><b>Factfulness:</b> số liệu hiện hành lấy theo bản mới nhất tới 28/9/2026: nghèo cùng cực theo ngưỡng 3,00 đô một ngày (giá 2021) của Ngân hàng Thế giới, bản 22/9/2026; tử vong trẻ em theo UN IGME vòng 2025; dân số theo UN WPP 2024 (chưa có bản mới hơn). Bốn mức thu nhập của sách vẫn tính theo giá 2011, nên câu “người Việt đứng giữa ở đầu mức 3” là quy đổi thô (13 đô giá 2021 thành khoảng 8–11 đô giá 2011), mục ghi rõ điều ấy.</li>
+      <li><b>Factfulness:</b> mô hình dùng năm câu trang tự soạn bằng số liệu công khai, không lấy câu nào của bài trắc nghiệm trong sách. Cả năm chỉ số đều đã khá lên nên đáp án luôn là phương án thứ ba; mô hình nói thẳng điều ấy, để không ai dùng nó chấm điểm người khác.</li>
+      <li><b>Factfulness:</b> Độ vững có ba ý ngoài đề bài: tiến bộ đã chậm lại (tốc độ giảm tử vong trẻ em mỗi năm từ 3,9% xuống 1,5%, tính từ chuỗi IGME), lời phê phán ngưỡng nghèo của Hickel (với ngưỡng 8,30 đô, số người dưới ngưỡng gần như không đổi từ 1990), và trang đính chính của Gapminder. Mục dài ≈2.900 tiếng phần chữ, cộng ≈260 tiếng trong mô hình (~10 phút đọc), dưới trần 2.200 từ.</li>
+      <li><b>Factfulness:</b> lộ trình “thế giới” ở phần kết là Rosling → Diamond → Acemoglu &amp; Robinson như đề bài, cộng chặng 5 của trang Experimentation &amp; Causal Inference làm chặng thêm (ngoài đề bài).</li>
     </ul>
   </aside>
 
@@ -451,7 +465,16 @@
         </div>
       </div>
     </a>
-    <!-- 08 rosling: chỗ trống, chèn giữa thẻ 07 và thẻ 09 nếu làm lại -->
+    <a class="wb-card wb-card--hover wb-card--pad" href="#rosling">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">08</span>
+        <div class="wb-media__body">
+          <p class="bb-card__k">Factfulness</p>
+          <p class="wb-media__title">Sự thật về thế giới</p>
+          <p class="wb-media__text">Vì sao phần đông, kể cả người có học, hình dung thế giới tệ hơn và cũ hơn thực tế, bốn mức thu nhập thay cho “giàu” và “nghèo”, và mười bản năng kéo ta về phía kịch tính.</p>
+        </div>
+      </div>
+    </a>
     <a class="wb-card wb-card--hover wb-card--pad" href="#diamond">
       <div class="wb-media">
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">09</span>
@@ -493,7 +516,7 @@
       <a class="wb-sidenav__link" href="#tetlock">Superforecasting</a>
 
       <div class="wb-sidenav__section" style="margin-top:12px">The world</div>
-      <!-- 08 rosling: chỗ trống -->
+      <a class="wb-sidenav__link" href="#rosling">Factfulness</a>
       <a class="wb-sidenav__link" href="#diamond">Guns, Germs, and Steel</a>
       <a class="wb-sidenav__link" href="#acemoglu">Why Nations Fail</a>
 
@@ -1656,7 +1679,7 @@ Mỗi lần sai:  2 × 0,9² = 1,62
 
         <div class="bb-next">
           <p><b>Bạn vừa có:</b> một cách biến lời đoán thành thứ chấm được (con số, hạn chót, điểm Brier), và năm thói quen của người đoán giỏi: chia nhỏ, lấy tỉ lệ nền làm gốc, sửa từng chút, nói đúng mức chắc, soát lại cả lần trúng.</p>
-          <p><b>Nó dẫn đi đâu:</b> Tetlock đo xem ai đoán đúng tương lai. Có những câu hỏi thì phải nhìn ngược lại cả vạn năm, như <a href="#diamond">vì sao có nước giàu, nước nghèo</a>. Nhóm cuối của trang, <a href="#g-world">Thế giới</a>, bắt đầu từ câu hỏi ấy.</p>
+          <p><b>Nó dẫn đi đâu:</b> Tetlock đo xem ai đoán đúng tương lai. Nhưng nhiều người còn <a href="#rosling">đoán sai cả hiện tại</a>: thế giới hôm nay giàu lên hay nghèo đi? Nhóm cuối của trang, <a href="#g-world">Thế giới</a>, bắt đầu từ câu hỏi ấy.</p>
         </div>
         <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/The_Good_Judgment_Project">Wikipedia, The Good Judgment Project</a> (sách: Crown, 29/9/2015; dự án từ 7/2011; Good Judgment Open từ 9/2015) · <a href="https://www.penguinrandomhouse.com/books/227815/superforecasting-by-philip-e-tetlock-and-dan-gardner/">Penguin Random House</a> (352 trang, lời giới thiệu) · mục lục và nội dung từng chương đối chiếu qua ghi chép của <a href="https://lifeitself.org/blog/notes-on-tetlock-and-gardners-superforecasting">Life Itself</a> và <a href="https://rufuspollock.com/post/tetlock-gardner-2015-superforecasting-the-art-and-science-of-prediction/">Rufus Pollock</a>, <a href="https://www.supersummary.com/superforecasting/chapters-5-7-summary/">SuperSummary</a> (chương 5), <a href="https://www.shortform.com/blog/auftragstaktik/">Shortform</a> (chương 10) · bản tiếng Việt: <a href="https://shop.alphabooks.vn/sieu-du-bao-superforecasting-nghe-thuat-va-khoa-hoc-du-doan-tuong-lai-p12523309.html">Alpha Books</a> (Lê Thiện Trí dịch, NXB Thế Giới, 382 trang), <a href="https://www.netabooks.vn/sieu-du-bao-nghe-thuat-va-khoa-hoc-du-doan-tuong-lai-philip-e-tetlock-dan-gardner">NetaBooks</a> (5/2026), <a href="https://waka.vn/ebook/sieu-du-bao-philip-e-tetlock-dan-gardner-bmdgDW.html">Waka</a> (bản điện tử, 2018) · số liệu và đoạn trích trong sách đối chiếu qua <a href="https://slatestarcodex.com/2016/02/07/list-of-passages-i-highlighted-in-my-copy-of-superforecasting/">Scott Alexander, 2016</a>, <a href="https://aiimpacts.org/evidence-on-good-forecasting-practices-from-the-good-judgment-project/">AI Impacts</a> và <a href="https://aiimpacts.org/evidence-on-good-forecasting-practices-from-the-good-judgment-project-an-accompanying-blog-post/">bài đi kèm</a>, <a href="https://www.econlib.org/archives/2015/10/outside_first.html">Bryan Caplan, 2015</a> (nhà Renzetti), <a href="https://www.econlib.org/archives/2015/10/superforecastin.html">Caplan, 2015</a> (bản beta mãi mãi), <a href="https://commoncog.com/how-the-superforecasters-do-it/">Commoncog</a> (Fermi), <a href="https://blog.jcx.au/posts/tetlock-and-gardners-superforecasting-the-art-and-science-of-prediction">Jason Collins, 2016</a> (ca Arafat), <a href="https://www.shortform.com/blog/superforecasting-review/">Shortform</a> (lời đáp Taleb) · <a href="https://faculty.wharton.upenn.edu/wp-content/uploads/2012/08/Tetlock-16.pdf">Tschoegl &amp; Armstrong, 2007</a> (điểm sách <i>Expert Political Judgment</i>) · <a href="https://en.wikipedia.org/wiki/Philip_E._Tetlock">Wikipedia, Philip E. Tetlock</a> · <a href="https://press.princeton.edu/books/hardcover/9780691178288/expert-political-judgment">Princeton University Press</a> · <a href="https://www.cia.gov/resources/csi/static/Words-of-Estimative-Probability.pdf">Kent, 1964</a> (NIE 29-51 và bảng cụm từ) · <a href="https://bpb-us-e1.wpmucdn.com/sites.dartmouth.edu/dist/0/433/files/2014/06/Friedman-War-and-Chance-Introduction-1qzp5lr.pdf">Friedman, <i>War and Chance</i></a> (Vịnh Con Heo) · <a href="https://en.wikipedia.org/wiki/Brier_score">Wikipedia, Brier score</a> (Brier, 1950) · <a href="https://www.gjopen.com/faq">Good Judgment Open</a> (thang 0–2) · <a href="https://doi.org/10.1177/0956797614524255">Mellers và cs., 2014</a> · <a href="https://doi.org/10.1287/deca.2014.0293">Baron và cs., 2014</a> (đẩy trung bình ra xa 50%) · <a href="https://doi.org/10.1093/isq/sqx078">Friedman và cs., 2018</a> · <a href="https://goodjudgment.com/wp-content/uploads/2020/11/Goldstein-et-al-GJP-vs-ICPM.pdf">Goldstein và cs.</a> (MITRE, 2015) và <a href="https://forum.effectivealtruism.org/posts/JQaeuuWiFfXCGDKNp/comparing-superforecasting-and-the-intelligence-community">Urtubey De Césaris &amp; Koehler, 2022</a> (con số 30%) · <a href="https://doi.org/10.1177/09567976241266481">Hauenstein và cs., 2025</a> và <a href="https://corporate.jcx.au/better-forecasting">ghi chú của Jason Collins</a> · <a href="https://forecastingresearch.org/research/existential-risk-persuasion-tournament">Forecasting Research Institute, 2023</a> và <a href="https://forecastingresearch.org/research/near-term-xpt-accuracy">2025</a> · <a href="https://www.stat.berkeley.edu/~aldous/157/Papers/taleb_tetlock.pdf">Taleb &amp; Tetlock, 2013</a>.</p>
       </section>
@@ -1665,10 +1688,200 @@ Mỗi lần sai:  2 × 0,9² = 1,62
       <div class="hw-part-head" id="g-world">
         <p class="kicker">Nhóm 4 · The world</p>
         <h2>Thế giới — nó đang thật sự ra sao, và vì sao nước giàu nước nghèo</h2>
-        <p>Hai cuốn, hai câu trả lời đối nghịch cho cùng một câu hỏi: vì sao có nước giàu, nước nghèo? <b>Diamond</b> tìm câu trả lời ở địa lý: cây, thú hoang và hình dáng lục địa. <b>Acemoglu &amp; Robinson</b> tìm ở thể chế: luật chơi con người đặt ra cho nhau.</p>
+        <p>Ba cuốn về thế giới. <b>Rosling</b> cho thấy nó đang thật sự ra sao: phần đông chúng ta hình dung nó tệ hơn và cũ hơn thực tế. <b>Diamond</b> và <b>Acemoglu &amp; Robinson</b> là hai câu trả lời đối nghịch cho câu hỏi vì sao có nước giàu, nước nghèo: một bên tìm ở địa lý, cây, thú hoang và hình dáng lục địa; một bên tìm ở thể chế, luật chơi con người đặt ra cho nhau.</p>
       </div>
 
-      <!-- 08 rosling: chỗ trống -->
+      <section class="bb-book" id="rosling">
+        <p class="bb-book__eyebrow"><b>08</b> — Hans Rosling, Ola Rosling &amp; Anna Rosling Rönnlund · 2018</p>
+        <h3 class="bb-book__title">Sự thật về thế giới</h3>
+        <p class="bb-book__orig"><i>Factfulness: Ten Reasons We're Wrong About the World – and Why Things Are Better Than You Think</i> (2018) · bản tiếng Việt: Trần Thị Kim Chi và Hà Kim Ngân dịch, NXB Trẻ (2019)</p>
+        <p class="hw-lede">Phần đông chúng ta, kể cả người có học, hình dung thế giới nghèo hơn, nguy hiểm hơn và ít đổi thay hơn thực tế, sai cùng một hướng nên còn kém cả chọn bừa. Gốc của lỗi là kiến thức cũ cộng mười bản năng ưa kịch tính; cách chữa không phải lạc quan, mà là <b>thói quen hỏi số liệu mới và so cho đúng cỡ</b>.</p>
+        <div class="bb-verdict">
+          <span class="bb-verdict__k">Đọc gì trong bản gốc</span><p class="bb-verdict__v"><b>Phần mở đầu</b> (bài trắc nghiệm, con tinh tinh) và <b>chương 1</b>, “Bản năng khoảng cách” (<i>The Gap Instinct</i>): bốn mức thu nhập, cái khung các chương sau dùng lại. Tên chương tiếng Việt do trang này dịch.</p>
+          <span class="bb-verdict__k">Bỏ qua được</span><p class="bb-verdict__v"><b>Chương 11</b> (<i>Factfulness in Practice</i>): đem mười bản năng vào trường học, doanh nghiệp, toà soạn, phần lớn là nhắc lại. Với chương 2–10, phần tóm dưới đây là đủ.</p>
+          <span class="bb-verdict__k">Mục này</span><p class="bb-verdict__v">~10 phút đọc, kèm một mô hình để kéo thử</p>
+        </div>
+
+        <h4 class="bb-h4" id="rosling-khung">Bộ khung</h4>
+        <p class="hw-p">Ba bước: một bài trắc nghiệm cho thấy người ta sai có hệ thống; một thước thay cho “nước giàu, nước nghèo”; mười bản năng giải thích vì sao ta sai, mỗi bản năng một cách chữa. Điều cần giữ: thế giới có thể <b>vừa tệ vừa đang khá lên</b>.</p>
+
+        <h4 class="bb-h4" id="rosling-tinh-tinh">Thua con tinh tinh: sai có hệ thống, không phải thiếu hiểu biết</h4>
+        <p class="hw-p">Năm 2017, Gapminder (quỹ Hans lập cùng con trai Ola và con dâu Anna) nhờ Ipsos MORI và Novus hỏi khoảng 12.000 người ở 14 nước giàu: mười hai câu về thế giới hôm nay, mỗi câu ba lựa chọn. Trung bình họ đúng 2,2 câu; một con tinh tinh chọn bừa trung bình đúng 4. Chỉ 10% làm tốt hơn chọn bừa, 15% sai cả mười hai câu.</p>
+        <p class="hw-p">Kém hơn chọn bừa mới là chỗ lạ: không biết gì mà chọn bừa vẫn đúng trung bình một phần ba. Muốn xuống dưới mức ấy, phải có sẵn một bức tranh sai và chọn theo nó ở mọi câu. Theo Rosling, một phần là kiến thức cũ, dừng ở thời thầy cô mình còn đi học; phần sâu hơn là những bản năng ưa kịch tính, và tin tức chọn đúng chuyện kịch tính để đưa.</p>
+        <div class="hw-quote">
+          Bức tranh thế giới trong đầu như tấm bản đồ in từ hồi đi học: đường mới mở không có trên đó, mà ta vẫn chỉ đường rất tự tin.
+          <cite>Chỗ ví von hỏng: bản đồ giấy in năm ở góc, nhìn là biết cũ; bức tranh trong đầu không ghi năm, và bản năng còn vẽ thêm những chỗ chưa từng có.</cite>
+        </div>
+
+        <div class="bb-lab" id="rosling-lab">
+          <div class="bb-lab__head">
+            <p class="bb-lab__kick">Mô hình · kiến thức cũ</p>
+            <p class="bb-lab__title">Người nhớ đúng số của một năm cũ, đấu với tinh tinh chọn bừa</p>
+            <p class="bb-lab__hint">Năm câu ba lựa chọn do trang này soạn, đáp án là số liệu mới nhất: tỉ lệ dân thế giới dưới ngưỡng nghèo cùng cực; trẻ chết trước 5 tuổi; số con mỗi phụ nữ ở thế giới và ở Việt Nam; GDP mỗi người của Việt Nam. Người chơi <b>nhớ chính xác</b> số của một năm cũ và chọn phương án gần nhất; tinh tinh chọn bừa. Kéo <b>năm của bức tranh trong đầu</b>.</p>
+          </div>
+          <div class="bb-lab__body">
+            <div class="bb-lab__row">
+              <label for="rosling-year">Bức tranh năm</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="rosling-year" min="0" max="7" step="1" value="2" aria-valuetext="năm 2000" style="flex:1 1 180px"><span class="bb-mono ro-val" id="rosling-year-l">2000</span></div>
+            </div>
+            <p class="ro-cap">Số câu đúng của người nhớ số năm cũ · trên 5 câu</p>
+            <p class="bb-lab__big" id="rosling-big">1 / 5</p>
+            <p class="ro-sub" id="rosling-sub" aria-live="polite">Tinh tinh chọn bừa trung bình được 1,67 câu; cứ 100 lượt thì khoảng 54 lượt hơn người này. Chịu chọn bừa, người này trung bình còn được nhiều điểm hơn.</p>
+            <svg class="bb-svg ro-svg" id="rosling-svg" viewBox="0 0 360 370" role="img" aria-label="Năm câu hỏi: phương án người nhớ số năm cũ chọn, đáp án theo số mới nhất, và phân phối số câu đúng của tinh tinh chọn bừa"></svg>
+            <p class="bb-lab__foot"><b>Điều cần thấy:</b> nhớ số của những năm 1990–2010, người ấy chỉ được 0–1 câu, kém con tinh tinh, dù không đoán bừa câu nào và mọi con số họ nhớ đều đúng, cho năm ấy. Tinh tinh sai lung tung; người ấy sai cùng một phía, phía tệ hơn thực tế.</p>
+            <p class="bb-lab__foot">Cách tính: tinh tinh đúng mỗi câu với xác suất một phần ba; cứ 100 lượt, số lượt đúng 0, 1, 2, 3, 4, 5 câu là khoảng 13, 33, 33, 16, 4 và 0,4. Cả năm chỉ số đều đã khá lên nên đáp án luôn là phương án sáng sủa nhất; ai biết mẹo ấy cũng được 5/5.</p>
+          </div>
+        </div>
+
+        <h4 class="bb-h4" id="rosling-muc">Bốn mức thu nhập thay cho “giàu” và “nghèo”</h4>
+        <p class="hw-p"><b>Bản năng khoảng cách</b> (chương 1) là thói chia thế giới làm hai, nước đang phát triển và nước phát triển, với một khoảng trống ở giữa. Theo Gapminder, cách chia ấy chỉ còn khớp dữ liệu tới khoảng năm 1975. Hôm nay 73% dân số thế giới sống ở các nước thu nhập trung bình, tức đúng chỗ khoảng trống (Ngân hàng Thế giới, 2025). Rosling thay hai ngăn bằng bốn mức thu nhập mỗi người mỗi ngày, quy về <b>sức mua</b>: một đô ở nước nào cũng được tính là mua được lượng hàng như một đô ở Mỹ.</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:22%">Mức</th><th style="width:18%">Số người</th><th>Cuộc sống điển hình</th></tr></thead>
+            <tbody>
+              <tr><td><b>1</b><br>dưới 2 đô</td><td>0,75 tỉ</td><td>Đi chân đất, xách xô đi xa lấy nước, nấu bằng lửa củi trong nhà; mất một mùa là cả nhà đói.</td></tr>
+              <tr><td><b>2</b><br>2–8 đô</td><td>3,3 tỉ</td><td>Dành dụm được chút ít: xe đạp, bếp ga, tấm nệm, vài bóng đèn, điện còn chập chờn.</td></tr>
+              <tr><td><b>3</b><br>8–32 đô</td><td>2,5 tỉ</td><td>Xe máy, vòi nước sạch trong nhà, điện đủ ổn định để có ti vi, máy tính.</td></tr>
+              <tr><td><b>4</b><br>trên 32 đô</td><td>0,9 tỉ</td><td>Ô tô, nước nóng, đồ điện gia dụng, đi máy bay nghỉ lễ, ăn nhà hàng.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p">Số người là ước tính của Gapminder cho năm 2017. Mỗi ngưỡng gấp bốn ngưỡng trước, vì đời sống đổi theo tỉ lệ: thêm 1 đô một ngày là đổi đời với người đang có 1 đô, còn với người có 30 đô thì gần như không thấy. Ảnh của dự án <a href="https://www.gapminder.org/dollar-street">Dollar Street</a> do Anna khởi xướng cho thấy cùng một mức thì bếp, giường, bàn chải ở hai châu lục thường giống nhau đến lạ.</p>
+        <p class="hw-p"><b>Thước đã đổi giá, khung thì chưa.</b> Bốn ngưỡng của sách tính theo giá năm 2011; Gapminder vẫn dùng bốn mốc ấy dù dữ liệu thu nhập của họ đã sang giá 2017 (11/2023). Ngân hàng Thế giới từ tháng 6/2025 đặt ngưỡng nghèo cùng cực ở 3,00 đô một ngày theo giá 2021; theo bản cập nhật ngày 22/9/2026, năm 2024 có khoảng 824 triệu người (10,1% dân số thế giới) dưới ngưỡng ấy, so với 43% năm 1990.</p>
+        <p class="hw-p"><b>Việt Nam đứng ở đâu.</b> Theo khảo sát mức sống năm 2022, người Việt đứng giữa (trung vị) chi tiêu khoảng 13 đô một ngày theo giá 2021, quy thô về giá 2011 còn chừng 8–11 đô: đầu mức 3. Từ 1/7/2026, Ngân hàng Thế giới xếp Việt Nam vào nhóm thu nhập trung bình cao (thu nhập quốc dân 4.970 đô mỗi người năm 2025, theo tỉ giá). Thước ấy xếp <b>nước</b> theo số bình quân; thước của Rosling xếp <b>người</b> theo mức sống.</p>
+
+        <h4 class="bb-h4" id="rosling-ban-nang">Mười bản năng kịch tính</h4>
+        <p class="hw-p">Mỗi chương một bản năng: lối tắt giúp não phản ứng nhanh, nhưng lọc tin theo hướng đáng sợ, đáng trách, gấp gáp nhất. Cách chữa ở mỗi thẻ phỏng theo quy tắc cuối chương.</p>
+        <div class="hw-fal-list">
+          <article class="hw-fal" id="rosling-b1">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 1</span><h5 class="hw-fal__name">Khoảng cách</h5><span class="wb-tag">gap instinct</span></div>
+            <p class="hw-fal__def">Thấy thế giới chia hai phe, giàu và nghèo, trong khi phần đông đứng giữa. Ảo giác đến từ so hai số trung bình (che phần hai nhóm chồng lên nhau), so hai thái cực, và <b>nhìn từ trên cao</b>: từ nóc nhà chọc trời, toà nào bên dưới cũng thấp như nhau.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Ngồi ô tô nhìn ra dòng xe máy, ai cũng như ai; người trong dòng xe thì phân biệt rõ chiếc xe cũ chở cả nhà với chiếc tay ga mới.</div>
+              <span class="hw-fal__k">Chữa</span>
+              <div class="hw-fal__v"><b>Tìm phần đông</b>; gặp hai số trung bình, hỏi hai nhóm có chồng lên nhau không (xem <a href="how-to-lie-with-statistics.html#c2">“trung bình” chọn khéo</a>).</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="rosling-b2">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 2</span><h5 class="hw-fal__name">Tiêu cực</h5><span class="wb-tag">negativity instinct</span></div>
+            <p class="hw-fal__def">Để ý cái xấu hơn cái tốt, tin thế giới đang tệ đi: chuyện xấu mới thành tin, tiến bộ chậm và đều thì không. Hình ảnh của sách: em bé sinh non trong lồng ấp, vẫn nguy kịch mà chỉ số nào cũng đang khá lên; nói em tệ hay nói em đang khá lên đều đúng.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Tin viện nhi quá tải là thật; song số trẻ Việt Nam mất trước 5 tuổi đã giảm từ khoảng 5 trên 100 (1990) xuống dưới 2 (2024).</div>
+              <span class="hw-fal__k">Chữa</span>
+              <div class="hw-fal__v"><b>Chờ sẵn tin xấu</b>: tin xấu nhiều hơn chưa chắc là khổ nhiều hơn. Tách hai câu hỏi: đang ở mức nào, đang đi hướng nào.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="rosling-b3">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 3</span><h5 class="hw-fal__name">Đường thẳng</h5><span class="wb-tag">straight line instinct</span></div>
+            <p class="hw-fal__def">Kéo dài xu hướng thành đường thẳng. Dân số từng tăng vọt nên ta nghĩ nó tăng mãi; nhưng số trẻ dưới 15 tuổi đã đạt đỉnh chừng 2 tỉ năm 2020. Dân số còn tăng vì lớp trẻ ấy lớn lên và sống lâu hơn (sách gọi là “lấp đầy”), và theo Liên Hợp Quốc sẽ chạm đỉnh khoảng 10,3 tỉ giữa những năm 2080.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Năm 1993, Nghị quyết 04 đặt mục tiêu mỗi gia đình một hoặc hai con. Năm 2024 mức sinh còn 1,91 con, thấp nhất từ trước tới nay; từ 3/6/2025, vợ chồng được tự quyết số con.</div>
+              <span class="hw-fal__k">Chữa</span>
+              <div class="hw-fal__v"><b>Đường có thể cong</b>: chữ S, dốc trượt, cái bướu hay đường nhân đôi? Điều gì sẽ bẻ cong nó?</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="rosling-b4">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 4</span><h5 class="hw-fal__name">Sợ hãi</h5><span class="wb-tag">fear instinct</span></div>
+            <p class="hw-fal__def">Chuyện đáng sợ (bạo lực, thiên tai, chất độc, rơi máy bay) hút phần lớn chú ý, nên ta tưởng chúng là rủi ro lớn nhất. Năm 2016, 40 triệu chuyến bay chở khách hạ cánh an toàn, 10 chuyến gặp nạn chết người; chỉ mười chuyến ấy lên báo. Công thức của sách: <b>rủi ro = mức nguy hiểm × mức tiếp xúc</b>.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Nhiều người sợ máy bay mà ngày nào cũng chạy xe máy: trong một năm tính tới 14/12/2025, tai nạn giao thông ở Việt Nam làm chết 10.491 người, gần 29 người mỗi ngày.</div>
+              <span class="hw-fal__k">Chữa</span>
+              <div class="hw-fal__v"><b>Tính rủi ro</b> bằng công thức ấy, và đừng quyết khi đang sợ.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="rosling-b5">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 5</span><h5 class="hw-fal__name">Kích cỡ</h5><span class="wb-tag">size instinct</span></div>
+            <p class="hw-fal__def">Một con số đứng một mình dễ trông to. Năm 2016, 4,2 triệu trẻ chết trước sinh nhật đầu tiên: nghe khủng khiếp, và mỗi em là một bi kịch thật. Nhưng năm 1950 con số là 14,4 triệu, khi thế giới ít người hơn nhiều.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Tỉnh A báo 3.000 ca sốt xuất huyết, tỉnh B 1.000 ca. Nếu tỉnh A đông dân gấp năm lần thì tính trên mỗi nghìn dân, A lại ít ca hơn.</div>
+              <span class="hw-fal__k">Chữa</span>
+              <div class="hw-fal__v"><b>Đặt đúng tỉ lệ</b>: so với năm trước, nơi khác; chia cho số dân; lo trước vài khoản lớn nhất (quy tắc 80/20). Xem <a href="how-to-lie-with-statistics.html#c3">những con số nhỏ vắng mặt</a>.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="rosling-b6">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 6</span><h5 class="hw-fal__name">Khái quát hoá</h5><span class="wb-tag">generalization instinct</span></div>
+            <p class="hw-fal__def">Xếp người và nước vào vài ngăn, rồi tưởng trong một ngăn ai cũng như ai. Chuyện của chính Rosling: hồi làm bác sĩ trẻ, ông khuyên một bà mẹ cho con ngủ sấp, đúng khuyến cáo thời ấy, vốn rút từ thương binh (nằm sấp thì không sặc chất nôn) rồi áp sang trẻ sơ sinh. Từ năm 1985, nghiên cứu cho thấy ngủ sấp làm trẻ dễ đột tử hơn.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">“Châu Phi” không phải một khối: năm 2024, tỉ lệ trẻ chết trước 5 tuổi ở Cabo Verde, Tunisia, Mauritius thấp hơn Việt Nam; ở Nigeria, Niger thì cao gấp hơn sáu lần.</div>
+              <span class="hw-fal__k">Chữa</span>
+              <div class="hw-fal__v"><b>Nghi ngờ cách chia nhóm</b>: tìm khác biệt trong nhóm, điểm giống giữa các nhóm; giả định người khác không ngốc.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="rosling-b7">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 7</span><h5 class="hw-fal__name">Định mệnh</h5><span class="wb-tag">destiny instinct</span></div>
+            <p class="hw-fal__def">Tin rằng nước, dân tộc, tôn giáo có bản chất cố định. Thay đổi vài phần trăm mỗi năm thì không ai thấy, nhưng cộng qua vài chục năm thành một thế giới khác; giá trị cũng đổi, cứ hỏi ông bà mình là thấy.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Năm 1992, 57% người Việt sống dưới ngưỡng nghèo cùng cực 3 đô; năm 2022 còn 1,6% (khảo sát đã đổi phương pháp, chỉ so được đại thể). Ai tin “nước nghèo thì nghèo mãi” đã sai ngay trên đất nước mình.</div>
+              <span class="hw-fal__k">Chữa</span>
+              <div class="hw-fal__v"><b>Chậm vẫn là đổi</b>: ghi lại những cải thiện nhỏ, cập nhật hiểu biết thường xuyên.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="rosling-b8">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 8</span><h5 class="hw-fal__name">Một góc nhìn</h5><span class="wb-tag">single perspective instinct</span></div>
+            <p class="hw-fal__def">Thích một nguyên nhân, một lời giải cho mọi chuyện (thị trường, nhà nước, công nghệ); cầm búa thì đâu cũng thấy đinh. Ví dụ của sách: Cuba là nước “khoẻ nhất trong đám nghèo” hay “nghèo nhất trong đám khoẻ”, tuỳ muốn khen hay chê; cả hai đều đúng, và mỗi câu che mất nửa kia.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Con học kém: thầy dạy thêm bảo cần học thêm, bác sĩ bảo do ngủ ít, người bán sữa bảo thiếu chất.</div>
+              <span class="hw-fal__k">Chữa</span>
+              <div class="hw-fal__v"><b>Mang theo cả hộp đồ nghề</b>: nhờ người không đồng ý tìm chỗ yếu trong ý mình, hỏi người khác ngành, ngờ lời giải đơn giản.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="rosling-b9">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 9</span><h5 class="hw-fal__name">Đổ lỗi</h5><span class="wb-tag">blame instinct</span></div>
+            <p class="hw-fal__def">Có chuyện xấu thì tìm ngay một kẻ để trách, rồi thôi tìm hiểu. Năm 2015, hàng nghìn người tị nạn chết đuối trên Địa Trung Hải; báo chí châu Âu trách những kẻ đưa người vượt biển. Rosling chỉ vào luật của chính châu Âu: Chỉ thị 2001/51/EC phạt hãng bay chở người thiếu giấy tờ, nên người tị nạn không lên được máy bay, đành trả tiền cho xuồng cao su.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Giá nhà tăng thì dễ đổ cho “cò đất”; hỏi thêm: nguồn cung, lãi vay, thuế hay quy hoạch đã làm đầu cơ có lãi?</div>
+              <span class="hw-fal__k">Chữa</span>
+              <div class="hw-fal__v"><b>Đừng vội chỉ tay</b>: tìm nguyên nhân, không tìm kẻ xấu; tìm hệ thống, không tìm người hùng.</div>
+            </div>
+          </article>
+          <article class="hw-fal" id="rosling-b10">
+            <div class="hw-fal__top"><span class="hw-fal__no">Chương 10</span><h5 class="hw-fal__name">Cấp bách</h5><span class="wb-tag">urgency instinct</span></div>
+            <p class="hw-fal__def">Cảm giác “bây giờ hoặc không bao giờ” đẩy ta hành động trước khi nghĩ. Năm 1981, Rosling làm bác sĩ huyện ở Nacala, Mozambique, thì một bệnh lạ làm nhiều phụ nữ và trẻ em liệt chân. Chưa chắc bệnh có lây không, ông đồng ý để chính quyền chặn đường vào thành phố. Không còn xe ra chợ, một nhóm phụ nữ và con nhỏ đi thuyền đánh cá; thuyền lật, họ chết đuối. Bệnh ấy hoá ra là konzo, không lây: nó do đói và ăn sắn chưa chế biến kỹ.</p>
+            <div class="hw-fal__meta">
+              <span class="hw-fal__k">Gần mình</span>
+              <div class="hw-fal__v">Livestream “giá này chỉ trong năm phút”, sốt đất “hôm nay không xuống tiền là lỡ”: bán cảm giác gấp, không bán thông tin.</div>
+              <span class="hw-fal__k">Chữa</span>
+              <div class="hw-fal__v"><b>Đi từng bước nhỏ</b>: hít một hơi, đòi số liệu, ngờ lời tiên tri không kèm độ bất định, dè chừng biện pháp quyết liệt.</div>
+            </div>
+          </article>
+        </div>
+
+        <h4 class="bb-h4" id="rosling-dung">Dùng thế nào</h4>
+        <p class="hw-p">Mười cách chữa gom lại còn bốn câu hỏi, để hỏi ngay khi lướt tin:</p>
+        <ul class="hw-ul">
+          <li><b>So với cái gì?</b> Năm trước, nơi khác, trên bao nhiêu người. (Bản năng kích cỡ, sợ hãi.)</li>
+          <li><b>Đang ở mức nào, đang đi hướng nào?</b> Câu thứ hai hiếm khi lên tin. (Bản năng tiêu cực, đường thẳng, định mệnh.)</li>
+          <li><b>Phần đông đứng ở đâu, và trong nhóm khác nhau cỡ nào?</b> (Bản năng khoảng cách, khái quát hoá.)</li>
+          <li><b>Do hệ thống nào, và ai đang giục mình tin ngay?</b> Tìm cơ chế thay vì kẻ xấu, hỏi người khác nghề; hiếm có gì thật sự là bây giờ hoặc không bao giờ. (Bản năng đổ lỗi, một góc nhìn, cấp bách.)</li>
+        </ul>
+        <p class="bb-key"><span class="k">Mang theo</span>Trước một con số gây sốc, hỏi: <b>so với cái gì, và mười năm trước nó là bao nhiêu?</b> Tệ và đang khá lên có thể cùng đúng.</p>
+
+        <h4 class="bb-h4" id="rosling-vung">Độ vững</h4>
+        <p class="hw-p">Số liệu sau năm 2018 xác nhận hướng đi chung của sách; chỗ còn tranh cãi là sách chọn kể gì và dùng thước nào.</p>
+        <ul class="hw-ul">
+          <li><b>Hướng đi đứng vững, nhưng đã chậm lại.</b> Tỉ lệ trẻ chết trước 5 tuổi giảm từ 9,4 trên 100 năm 1990 còn 3,7 năm 2024, nhưng tốc độ giảm mỗi năm tụt từ 3,9% (2000–2015) xuống 1,5% (2015–2024). Tỉ lệ nghèo cùng cực giảm 2,7 điểm phần trăm trong 2015–2019, rồi chưa tới 1 điểm trong bảy năm sau (hai năm cuối là số ước tính).</li>
+          <li><b>COVID-19 đẩy nghèo cùng cực tăng lại.</b> Năm 2020, số người dưới ngưỡng 3 đô một ngày tăng thêm khoảng 59 triệu, từ 10,8% lên 11,4% dân số thế giới, lần tăng đầu tiên kể từ năm 1998. Sách không hứa hết rủi ro: năm nguy cơ Rosling lo nhất (chương 10) là đại dịch toàn cầu, khủng hoảng tài chính, chiến tranh thế giới, biến đổi khí hậu và nghèo cùng cực.</li>
+          <li><b>Phê phán “lạc quan một chiều”.</b> Năm 2018, giáo sư quản trị công nghiệp người Thuỵ Điển Christian Berggren chê sách chỉ chọn chuyện xấu đang giảm, chuyện tốt đang tăng; không có rác nhựa trên biển, đa dạng sinh học suy giảm hay tổng khí thải đang tăng. Một bài điểm sách trên blog của Oxfam đếm hơn 80 biểu đồ, không cái nào tả xu hướng xấu. Với khí hậu và thiên nhiên, lời chê ấy vẫn đứng. Với dân số thì số liệu mới nghiêng về Rosling: nghiên cứu năm 2014 Berggren dẫn chỉ cho khoảng 30% khả năng dân số thế giới ngừng tăng trong thế kỷ này; dự báo năm 2024 của Liên Hợp Quốc cho khoảng 80%.</li>
+          <li><b>Đặt ngưỡng nghèo ở đâu, câu chuyện đổi ở đó.</b> Nhà nhân học Jason Hickel cho rằng ngưỡng nghèo cùng cực quá thấp. Với ngưỡng 8,30 đô Ngân hàng Thế giới dùng cho nước thu nhập trung bình cao, tỉ lệ dưới ngưỡng giảm từ 70% (1990) còn 46% (2024), nhưng số người vẫn khoảng 3,7–3,8 tỉ như năm 1990, vì dân số tăng hơn một nửa. Tỉ lệ hay số người: mỗi thước kể một chuyện.</li>
+          <li><b>Sách cũng có lỗi.</b> Gapminder đính chính công khai hàng chục chỗ, như chỗ gọi chính sách một con của Trung Quốc là “của Mao”: chính sách ấy ra đời sau khi ông mất.</li>
+          <li><b>Hans Rosling không kịp thấy sách ra.</b> Ông mất ngày 7/2/2017 vì ung thư tuỵ, ở tuổi 68; Ola và Anna viết nốt. Sách ra ngày 3/4/2018, kể bằng giọng Hans nhưng là việc chung của cả ba người.</li>
+        </ul>
+
+        <div class="bb-next">
+          <p><b>Bạn vừa có:</b> một thước thay cho “giàu” và “nghèo” (bốn mức thu nhập), một dấu hiệu của cái sai có hệ thống (điểm thấp hơn cả chọn bừa), và bốn câu hỏi cho mười bản năng kịch tính.</p>
+          <p><b>Nó dẫn đi đâu:</b> Rosling tả thế giới đang ở đâu và đi về đâu, nhưng chỉ lướt qua câu hỏi vì sao có nước lên mức 3, mức 4 trong vài chục năm mà có nước vẫn kẹt ở mức 1. Hai cuốn tiếp theo trả lời theo hai hướng ngược nhau: <a href="#diamond">Diamond</a> nói do địa lý, <a href="#acemoglu">Acemoglu và Robinson</a> nói do thể chế.</p>
+        </div>
+        <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/Factfulness">Wikipedia, Factfulness</a> (Flatiron Books và Sceptre, 3/4/2018) · bản tiếng Việt: <a href="https://www.nxbtre.com.vn/sach/su-that-ve-the-gioi-muoi-ly-do-khien-ta-hieu-sai-ve-the-gioi-va-vi-sao-the-gian-nay-tot-hon-ta-tuong-75087.html">NXB Trẻ</a> (dịch giả, 454 trang, in lần đầu 2019) · <a href="https://www.gapminder.org/ignorance/studies/gms/">Gapminder Misconception Study 2017</a> và <a href="https://www.gapminder.org/factfulness-book/notes/">ghi chú của sách</a> (12.000 người, điểm 2,2; bốn mức, giá 2011, ước tính 2017; 4,2 triệu trẻ; ngủ sấp và đột tử) · <a href="https://sive.rs/book/Factfulness">ghi chép của Derek Sivers</a> (kiến thức cũ) · Gapminder: <a href="https://www.gapminder.org/fw/income-levels/">bốn mức thu nhập</a>, <a href="https://www.gapminder.org/fw/income-mountains/">núi thu nhập</a> (năm 1975), <a href="https://www.gapminder.org/data/documentation/income-mountains-dataset/">bộ dữ liệu bản 3</a> (giá 2017, 9/11/2023), <a href="https://www.gapminder.org/factfulness/">mười bản năng và quy tắc</a>, <a href="https://www.gapminder.org/news/cuba-poorest-of-the-healthy/">Cuba</a> · ví dụ trong sách đối chiếu qua <a href="https://www.goodreads.com/work/quotes/56144100-factfulness-ten-reasons-we-re-wrong-about-the-world-and-why-things-ar">trích dẫn trên Goodreads</a> (lồng ấp, chuyến bay, năm rủi ro), <a href="https://www.nehrlich.com/blog/2018/06/26/factfulness-by-hans-rosling/">Eric Nehrlich, 2018</a> (4,2 và 14,4 triệu), <a href="https://www.uxmatters.com/mt/archives/2019/07/book-review-factfulness-ten-reasons-were-wrong-about-the-world-and-why-things-are-better-than-you-th.php">UXmatters, 2019</a> (ngủ sấp), <a href="https://www.shortform.com/blog/attribution-bias-blame/">Shortform</a> (Chỉ thị 2001/51/EC), <a href="https://www.supersummary.com/factfulness/chapters-10-11/">SuperSummary</a> (chặn đường ở Nacala) · <a href="https://en.wikipedia.org/wiki/Hans_Rosling">Wikipedia, Hans Rosling</a> (Nacala, konzo, ngày mất) · <a href="https://pip.worldbank.org/">World Bank PIP</a> (bản 22/9/2026; ngưỡng 3,00 và 8,30 đô, giá 2021; Việt Nam theo khảo sát 1992–2022) và <a href="https://www.worldbank.org/en/news/factsheet/2025/06/05/june-2025-update-to-global-poverty-lines">thông cáo 6/2025</a> · <a href="https://ourworldindata.org/grapher/child-mortality-igme">UN IGME qua Our World in Data</a> (vòng 2025; tốc độ giảm tính từ chuỗi này) · <a href="https://population.un.org/wpp/assets/Files/WPP2024_Summary-of-Results.pdf">UN WPP 2024</a> (đỉnh giữa những năm 2080; khả năng 80%, so với 30% một thập kỷ trước), <a href="https://ourworldindata.org/grapher/fertility-rate-with-projections">mức sinh</a>, <a href="https://ourworldindata.org/grapher/population-by-age-group-with-projections">dân số theo tuổi</a> · World Bank WDI: <a href="https://data.worldbank.org/indicator/NY.GDP.PCAP.PP.KD?locations=VN">GDP mỗi người theo sức mua, giá 2021</a>, <a href="https://data.worldbank.org/indicator/SP.POP.TOTL?locations=XM-XP-XD">dân số theo nhóm thu nhập</a>, <a href="https://blogs.worldbank.org/en/opendata/who-moves-up-and-why--a-closer-look-at-the-new-world-bank-group-">blog 1/7/2026</a> · quy đổi thô về giá 2011: chia cho 3,00/1,90 (tỉ lệ hai ngưỡng nghèo) hoặc cho chỉ số giá tiêu dùng Mỹ 2011–2021 · <a href="https://tulieuvankien.dangcongsan.vn/van-kien-tu-lieu-ve-dang/hoi-nghi-bch-trung-uong/khoa-vii/nghi-quyet-so-04-nqhntw-cua-hoi-nghi-lan-thu-tu-bchtw-dang-khoa-vii-ve-chinh-sach-dan-so-va-ke-hoach-hoa-1128">Nghị quyết 04-NQ/HNTW (1993)</a> · <a href="https://vnexpress.net/muc-sinh-nam-2024-thap-nhat-trong-lich-su-4832770.html">VnExpress</a> (mức sinh 2024) · <a href="https://baotintuc.vn/infographics/sua-phap-lenh-dan-so-vo-chong-tu-quyet-dinh-so-con-va-thoi-gian-sinh-con-20250603223823281.htm">Báo Tin tức, 3/6/2025</a> · <a href="https://vtcnews.vn/nam-2025-ca-nuoc-xay-ra-18-601-vu-tai-nan-giao-thong-giam-hon-5-000-vu-ar996041.html">VTC News</a> (tai nạn giao thông 2025) · <a href="https://quillette.com/2018/11/16/the-one-sided-worldview-of-hans-rosling/">Berggren, Quillette 16/11/2018</a> (đăng trước trên Kvartal, 9/2018) · <a href="https://frompoverty.oxfam.org.uk/dont-worry-be-factful-review-of-factfulness-by-hans-and-ola-rosling-and-anna-rosling-ronnlund/">Matthew Spencer, From Poverty to Power, 8/8/2018</a> · <a href="https://www.jasonhickel.org/blog/2019/2/3/pinker-and-global-poverty">Hickel, 2019</a> · <a href="https://www.gapminder.org/factfulness-book/mistakes/">Gapminder, trang đính chính</a>.</p>
+      </section>
 
       <section class="bb-book" id="diamond">
         <p class="bb-book__eyebrow"><b>09</b> — Jared Diamond · 1997</p>
@@ -1999,11 +2212,12 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
           <li><a href="#galef">The Scout Mindset</a>: cuối cùng là thứ giữ mình dùng tiếp cách chữa ấy khi sự thật làm đau: sẵn lòng thấy mình sai. Kèm một <a href="#galef-lab">bài tập hiệu chỉnh</a> để luyện nói đúng mức chắc.</li>
         </ol>
 
-        <h3 class="hw-h3" id="wrap-the-gioi">Thế giới: vì sao nước giàu, nước nghèo</h3>
+        <h3 class="hw-h3" id="wrap-the-gioi">Thế giới: đang ra sao, và vì sao có nước giàu, nước nghèo</h3>
         <ol class="hw-ul">
-          <li><a href="#diamond">Guns, Germs, and Steel</a>: nhìn xa trước, hàng nghìn năm: cây, thú hoang và hình dáng lục địa, cùng thói quen tách nguyên nhân gần khỏi nguyên nhân sâu.</li>
+          <li><a href="#rosling">Factfulness</a>: bắt đầu từ hiện tại, đo bằng bốn mức thu nhập thay cho hai ngăn giàu, nghèo. Đọc trước vì hai cuốn sau cùng hỏi vì sao có nước giàu, nước nghèo; Rosling cho thấy phần đông đang ở giữa và đang đi lên, nên câu hỏi đúng hơn là vì sao có nước đi nhanh, có nước kẹt lại.</li>
+          <li><a href="#diamond">Guns, Germs, and Steel</a>: rồi nhìn xa, hàng nghìn năm: cây, thú hoang và hình dáng lục địa, cùng thói quen tách nguyên nhân gần khỏi nguyên nhân sâu.</li>
           <li><a href="#acemoglu">Why Nations Fail</a>: rồi kéo gần lại vài thế kỷ: luật chơi, và ai được đặt luật. Đọc sau Diamond vì nó bắt đầu đúng ở chỗ Diamond bỏ ngỏ, hai nơi sát vách mà một giàu một nghèo, và cãi thẳng với ông.</li>
-          <li><a href="experimentation-causal-inference.html#act5">Experimentation &amp; Causal Inference, chặng 5</a>: cả hai cuốn đều lập luận bằng những phép so không ai được tung đồng xu chọn. Chặng này dạy khi nào một phép so như thế đáng tin: so hai bên một đường biên như ở Nogales cùng một ý với <a href="experimentation-causal-inference.html#s-rdd">ngưỡng cắt</a>, còn bài năm 2001 của nhóm Acemoglu dùng một <a href="experimentation-causal-inference.html#s-iv">biến công cụ</a>.</li>
+          <li><a href="experimentation-causal-inference.html#act5">Experimentation &amp; Causal Inference, chặng 5</a>, chặng thêm: Diamond lẫn Acemoglu và Robinson đều lập luận bằng những phép so không ai được tung đồng xu chọn. Chặng này dạy khi nào một phép so như thế đáng tin: so hai bên một đường biên như ở Nogales cùng một ý với <a href="experimentation-causal-inference.html#s-rdd">ngưỡng cắt</a>, còn bài năm 2001 của nhóm Acemoglu dùng một <a href="experimentation-causal-inference.html#s-iv">biến công cụ</a>.</li>
         </ol>
         <p class="hw-p">Những cuốn phải đọc từng chi tiết thì có trang riêng: <a href="how-to-lie-with-statistics.html">How to Lie with Statistics</a> của Darrell Huff, về những con số đúng mà vẫn lừa; <a href="how-to-win-every-argument.html">How to Win Every Argument</a> của Madsen Pirie, về chừng 79 lối ngụy biện; và <a href="a-short-history-of-nearly-everything.html">A Short History of Nearly Everything</a> của Bill Bryson, về những gì loài người đã biết về vũ trụ, Trái Đất và sự sống, và biết bằng cách nào.</p>
       </section>
@@ -3217,6 +3431,131 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
     if (Math.round(clampNum(rAmp.value, 1, 8, 5)) === 1) rAmp.value = '5';
     rGap.value = '0'; render();
   });
+  render();
+})();
+</script>
+<script>
+/* ---- rosling: người nhớ số năm cũ đấu với tinh tinh chọn bừa ----
+   Năm câu ba lựa chọn, đáp án là số mới nhất. Người chơi nhớ đúng số của một năm đã chọn và lấy phương án
+   có giá trị gần số ấy nhất (khoảng cách tuyệt đối). Tinh tinh đúng mỗi câu với xác suất 1/3, nên số câu đúng
+   trong 5 câu theo phân phối nhị thức: P(k) = C(5,k) · 2^(5−k) / 3^5 = 32, 80, 80, 40, 10, 1 phần 243.
+   Số liệu, đọc ngày 27–28/9/2026:
+     q0  % dân số thế giới dưới 3,00 đô/ngày (giá 2021): World Bank PIP, bản 22/9/2026;
+     q1  trẻ chết trước 5 tuổi trên 100 trẻ sinh sống, thế giới: UN IGME vòng 2025 (qua Our World in Data);
+     q2, q3  số con trung bình mỗi phụ nữ, thế giới và Việt Nam: UN WPP 2024 (ước tính, tới 2023);
+     q4  GDP mỗi người của Việt Nam, đô theo sức mua, giá cố định 2021: World Bank WDI, cập nhật 13/7/2026.
+   Cột "mới nhất" là năm cuối có số của từng chuỗi: 2024, 2024, 2023, 2023, 2025.
+   q1 giữ ba chữ số thập phân để toFixed(1) làm tròn đúng (9,3515 → 9,4; viết 9.35 thì JS in ra 9,3).
+   Thanh trượt được kẹp về 0…7 và mọi phép tính chỉ so các hằng số đã biết, nên không bao giờ ra NaN. */
+(function () {
+  var root = document.getElementById('rosling');
+  if (!root) return;
+  var box = root.querySelector('#rosling-svg'), range = root.querySelector('#rosling-year');
+  if (!box || !range) return;
+  var lab = root.querySelector('#rosling-year-l'), big = root.querySelector('#rosling-big'), sub = root.querySelector('#rosling-sub');
+  var NS = 'http://www.w3.org/2000/svg';
+  var YEARS = ['1990', '1995', '2000', '2005', '2010', '2015', '2020', 'mới nhất'];
+
+  function dec(v, d) { return v.toFixed(d).replace('.', ','); }
+  function thou(v) { return String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+  /* Phương án xếp từ tệ tới tốt; cả năm chỉ số đều đã khá lên nên đáp án luôn là phương án thứ ba. */
+  var Q = [
+    { name: 'Thế giới · dưới 3 đô/ngày', opts: [40, 25, 10], lab: ['khoảng 40%', 'khoảng 25%', 'khoảng 10%'],
+      v: [43.41, 39.40, 36.20, 28.33, 20.98, 13.42, 11.41, 10.12], fmt: function (v) { return dec(v, 1) + '%'; } },
+    { name: 'Thế giới · chết trước 5 tuổi', opts: [9, 6, 4], lab: ['9 trên 100', '6 trên 100', '4 trên 100'],
+      v: [9.352, 8.749, 7.668, 6.233, 5.059, 4.288, 3.916, 3.737], fmt: function (v) { return dec(v, 1); } },
+    { name: 'Thế giới · số con/phụ nữ', opts: [3.3, 2.7, 2.2], lab: ['3,3 con', '2,7 con', '2,2 con'],
+      v: [3.31, 2.89, 2.75, 2.63, 2.60, 2.54, 2.32, 2.25], fmt: function (v) { return dec(v, 2); } },
+    { name: 'Việt Nam · số con/phụ nữ', opts: [3.5, 2.5, 1.9], lab: ['3,5 con', '2,5 con', '1,9 con'],
+      v: [3.60, 2.70, 2.03, 1.89, 1.91, 2.10, 1.96, 1.91], fmt: function (v) { return dec(v, 2); } },
+    { name: 'Việt Nam · GDP/người/năm', opts: [3000, 8000, 15000], lab: ['3.000 đô', '8.000 đô', '15.000 đô'],
+      v: [2468, 3328, 4349, 5776, 7275, 9248, 11851, 15457], fmt: function (v) { return thou(v); } }
+  ];
+  var P = [32, 80, 80, 40, 10, 1];                          /* phần 243 */
+  var PCT = ['13%', '33%', '33%', '16%', '4%', '0,4%'];
+  var BETTER = [211, 131, 51, 11, 1, 0];                   /* số lượt tinh tinh làm tốt hơn, phần 243 */
+
+  function clampInt(v, lo, hi, d) { v = Math.round(parseFloat(v)); return isFinite(v) ? Math.max(lo, Math.min(hi, v)) : d; }
+  function nearest(opts, v) {
+    var best = 0, j;
+    for (j = 1; j < opts.length; j++) if (Math.abs(opts[j] - v) < Math.abs(opts[best] - v)) best = j;
+    return best;
+  }
+  function el(tag, attrs, style, text, parent) {
+    var e = document.createElementNS(NS, tag), k;
+    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (style) e.setAttribute('style', style);
+    if (text != null) e.textContent = text;
+    (parent || box).appendChild(e);
+    return e;
+  }
+
+  function draw(yi, picks, score) {
+    var i, j, k, y0, x, q, picked, right, t, h, top, bx;
+    while (box.firstChild) box.removeChild(box.firstChild);
+
+    /* Chú thích: ô tô đặc là phương án người ấy chọn, viền đậm là đáp án. */
+    el('rect', { x: 6, y: 5, width: 16, height: 11, rx: 2 }, 'fill:var(--wb-fg)');
+    el('text', { x: 27, y: 14, 'class': 'hw-vs' }, null, 'người ấy chọn');
+    el('rect', { x: 124, y: 5, width: 16, height: 11, rx: 2 }, 'fill:var(--wb-surface);stroke:var(--wb-fg);stroke-width:2');
+    el('text', { x: 145, y: 14, 'class': 'hw-vs' }, null, 'đáp án, theo số mới nhất');
+
+    for (i = 0; i < Q.length; i++) {
+      q = Q[i]; y0 = 26 + i * 46;
+      el('text', { x: 6, y: y0 + 11, 'class': 'hw-vt' }, null, q.name);
+      t = el('text', { x: 354, y: y0 + 11, 'text-anchor': 'end', 'class': 'hw-vs' }, null, 'nhớ ' + q.fmt(q.v[yi]) + ' · ');
+      el('tspan', { 'class': 'hw-vt' }, null, picks[i] === 2 ? 'đúng' : 'sai', t);
+      for (j = 0; j < 3; j++) {
+        x = 6 + j * 118; picked = j === picks[i]; right = j === 2;
+        el('rect', { x: x, y: y0 + 17, width: 112, height: 22, rx: 4 },
+          'fill:' + (picked ? 'var(--wb-fg)' : 'var(--wb-surface)') + ';stroke:' + (right ? 'var(--wb-fg)' : 'var(--wb-border-strong)') +
+          ';stroke-width:' + (right ? 2 : 1));
+        el('text', { x: x + 56, y: y0 + 32, 'text-anchor': 'middle', 'class': right ? 'hw-vt' : 'hw-vs' },
+          picked ? 'fill:var(--wb-canvas)' : null, q.lab[j]);
+      }
+    }
+
+    /* Dưới: tinh tinh chọn bừa, số câu đúng trên 100 lượt; cột đậm là điểm của người ấy. */
+    el('line', { x1: 6, y1: 258, x2: 354, y2: 258 }, 'stroke:var(--wb-border);stroke-width:1');
+    el('text', { x: 6, y: 274, 'class': 'hw-vs' }, null, 'Tinh tinh chọn bừa: số câu đúng, trên 100 lượt');
+    for (k = 0; k < 6; k++) {
+      h = Math.max(1.5, P[k] / 80 * 32); top = 350 - h; bx = 27 + k * 54;
+      el('rect', { x: bx, y: top.toFixed(1), width: 36, height: h.toFixed(1), rx: 2 }, k === score ? 'fill:var(--wb-fg)' : 'fill:var(--wb-neutral)');
+      el('text', { x: bx + 18, y: (top - 5).toFixed(1), 'text-anchor': 'middle', 'class': k === score ? 'hw-vt' : 'hw-vs' }, null, PCT[k]);
+      el('text', { x: bx + 18, y: 364, 'text-anchor': 'middle', 'class': k === score ? 'hw-vt' : 'hw-vs' }, null, k + ' câu');
+      if (k === score) el('text', { x: bx + 18, y: (top - 22).toFixed(1), 'text-anchor': 'middle', 'class': 'hw-vt' }, null, 'người ấy');
+    }
+    el('line', { x1: 20, y1: 350, x2: 340, y2: 350 }, 'stroke:var(--wb-border-strong);stroke-width:1');
+  }
+
+  function render() {
+    var yi = clampInt(range.value, 0, 7, 2), picks = [], score = 0, i, s, better, when;
+    for (i = 0; i < Q.length; i++) { picks.push(nearest(Q[i].opts, Q[i].v[yi])); if (picks[i] === 2) score++; }
+    when = yi === 7 ? 'số mới nhất' : 'số năm ' + YEARS[yi];
+    if (lab) lab.textContent = YEARS[yi];
+    range.setAttribute('aria-valuetext', yi === 7 ? 'số mới nhất' : 'năm ' + YEARS[yi]);
+    if (big) big.textContent = score + ' / 5';
+    better = Math.round(BETTER[score] * 100 / 243);
+    if (score <= 1) {
+      s = 'Tinh tinh chọn bừa trung bình được 1,67 câu; cứ 100 lượt thì khoảng ' + better + ' lượt hơn người này. ' +
+          'Chịu chọn bừa, người này trung bình còn được nhiều điểm hơn.';
+    } else if (score === 2) {
+      s = 'Nhỉnh hơn trung bình của tinh tinh (1,67 câu), nhưng cứ 100 lượt vẫn có khoảng ' + better + ' lượt tinh tinh hơn.';
+    } else if (score < 5) {
+      s = 'Hơn hẳn tinh tinh: chỉ khoảng ' + (better >= 1 ? better + ' trong 100' : '4 trong 1.000') + ' lượt tinh tinh làm tốt hơn. ' +
+          'Những câu còn sai vẫn sai cùng một phía, phía tệ hơn thực tế.';
+    } else {
+      s = 'Đúng cả năm câu. Tinh tinh chọn bừa chỉ được như vậy khoảng 4 lần trong 1.000 lượt.';
+    }
+    if (sub) sub.textContent = s;
+    draw(yi, picks, score);
+    box.setAttribute('aria-label', 'Người nhớ ' + when + ' đúng ' + score + ' trên 5 câu; đáp án luôn là phương án thứ ba. ' +
+      'Tinh tinh chọn bừa trung bình đúng 1,67 câu; ' +
+      (score === 5 ? 'không lượt nào làm tốt hơn người này.' : score === 4 ? 'khoảng 4 trong 1.000 lượt làm tốt hơn người này.'
+        : 'cứ 100 lượt có khoảng ' + better + ' lượt làm tốt hơn người này.'));
+  }
+
+  range.addEventListener('input', render);
   render();
 })();
 </script>
