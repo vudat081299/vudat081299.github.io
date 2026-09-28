@@ -35,6 +35,10 @@ thông tin rồi thì làm phần việc của agent ghi trong từng dòng.
 
 ## NỢ
 
+- `shop/tools/lint-shop.py` là bản chép thứ ba của bộ kiểm HTML (sau `pages/` và `cooking/`), và chưa có
+  ba phép kiểm svg / cây tiêu đề / aria-label. `pages/` và `cooking/` nay dùng chung
+  `tools/htmlcheck.py`; cho shop dùng nó luôn thì hết một bản chép.
+
 - **Sổ nợ đầy đủ nằm ở [docs/TECH-DEBT.md](docs/TECH-DEBT.md), và giữ nguyên ở đó** — các tài liệu
   trong `docs/`, một ADR và trang đọc `docs/index.html` trỏ vào nó theo từng số thứ tự. Sáu khoản
   đầu chặn việc bán thật: cờ placeholder, VietQR, form đơn không gửi đi đâu, trang cảm ơn, thủ tục

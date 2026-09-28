@@ -26,6 +26,19 @@ Việc dở ở mức cả repo. Việc của một project nằm trong HANDOFF.
 - **Gộp ba lệnh `PostToolUse` trong `.claude/settings.json` thành một bộ điều phối**, cùng kiểu với
   pre-commit: tự gọi `<project>/tools/hooks/post-edit.sh` nếu có. Hiện mỗi project một lệnh chép gần
   giống nhau, thêm project là phải sửa settings.json — cũng là file agent không được tự sửa.
+- **Dọn nhánh đã xong trên GitHub.** Rà ngày 28/09: các nhánh chỉ còn trên origin đã gộp hết vào main
+  (`code-repo-clone`, `educational-facts`, `family-insurance-page-restructure`, `funny-bardeen`,
+  `jazz-piano-theory-guide`, `review-knowledge-pages`, `vibrant-shannon`), cùng
+  `origin/refactor/componentize-and-confirm` (kiến trúc Cashy cũ), `origin/claude/ds-roadmap-review-brainstorm-wufnd0`
+  (đã có trên main), `origin/p1` (bản chép codepen cũ) và `origin/claude/mobile-responsive-optimization-476773`
+  (đã có trên main, trừ một sửa navbar — đã ghi ở `pages/HANDOFF.md`). Giữ
+  `origin/claude/amazing-ramanujan-wwc35z`: trùng đầu main, có thể là một phiên đang chạy. Xoá nhánh
+  trên remote không hoàn tác được — chờ chủ repo đồng ý.
+
+## CHƯA LÀM
+
+- **Nối `calibrate.js --check` của `masters-degree/thesis-topic-selector/` vào một lớp cổng** — lệnh kiểm
+  có sẵn nhưng chưa lớp nào chạy nó.
 
 ## NỢ
 
