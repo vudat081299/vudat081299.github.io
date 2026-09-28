@@ -37,7 +37,12 @@ Mỗi mục dưới đây từng làm mất thời gian thật hoặc sinh lỗi
 - WebFetch là **tóm tắt của một model nhỏ**, không phải nguồn: nó từng bịa ngày đăng dù câu trích vẫn
   khớp. Dùng WebFetch/WebSearch để *tìm*; để gắn nhãn `[đã kiểm]` thì `curl -sL -A "Mozilla/5.0" URL`,
   bỏ thẻ script/style, grep đúng câu định trích; ngày thì đọc `datePublished` / `dateModified` trong
-  JSON-LD. Trang dựng bằng JS mà curl không đọc được thì ghi `[chưa kiểm]`.
+  JSON-LD. curl bị chặn (403 — fsis.usda.gov, cdc.gov, foodsafety.gov đều vậy) hoặc trang dựng bằng
+  JS: mở bằng Chrome thật (playwright, mục *Đo và chụp* dưới) rồi đọc `document.body.innerText` — vẫn
+  là đọc nguồn. Không mở được bằng cả hai cách thì ghi `[chưa kiểm]`.
+- Bản sửa của một phiên cũ — nhánh chưa gộp, báo cáo rà — cũng là một nguồn phải kiểm, dù nó ghi là
+  đã đối chiếu: một nhánh từng "sửa" bảng lưu giữ cồn của USDA mà đọc lệch đúng một dòng (35% là mốc
+  30 phút, không phải một giờ). Đối chiếu lại với tài liệu gốc, không với lời của nhánh.
 - Con số đúng không làm kết luận đúng. Trước khi dùng một tỉ phần, hỏi **mẫu số là gì** và thứ mình kết
   luận có nằm trong mẫu số không: các phần cộng lại đúng 100% trong một tập đóng thì chỉ so sánh được
   *bên trong* tập ấy. Nhãn `[đã kiểm]` cho con số, nhãn riêng (`[chưa kiểm]`, `[đoán]`) cho suy luận.

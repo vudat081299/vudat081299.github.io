@@ -75,6 +75,9 @@ nói số cụ thể thì thêm `pages/tools/verify-<tên>.py` (tự được t�
 - Mẹo làm việc đã trả giá mới rút ra (chạy nhiều agent, sửa hàng loạt, dẫn nguồn, kiểm trong trình
   duyệt): skill `agent-practices` trong `.claude/skills/`.
 - File HTML dài: đừng Read cả file. `python3 tools/toc.py <file>` in bản đồ mục kèm dải dòng.
+- Việc lòi ra ngoài mục đích của phiên (dọn nhánh cũ mà gặp lỗi nội dung, rà kiến trúc mà gặp lỗi một
+  trang): ghi vào HANDOFF của project, rồi báo chủ trang quy mô — bao nhiêu mục, ở đâu — trước khi tự
+  mở rộng phiên. Chủ trang từng bất ngờ khi một phiên rà kiến trúc thành một loạt sửa nội dung.
 
 ## Nội dung trước, UI sau
 
