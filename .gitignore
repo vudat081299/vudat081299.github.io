@@ -1,6 +1,9 @@
 .DS_Store
 */.DS_Store
 
+# Trạng thái cục bộ của plugin kv-engineering (chỉ mục codebase, khoá) — của từng máy.
+.kv/
+
 # Claude Code scaffolding.
 #
 # Mặc định bỏ qua .claude/ ở MỌI cấp — đó là thiết lập cục bộ của từng máy.
