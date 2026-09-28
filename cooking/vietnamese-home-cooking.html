@@ -355,12 +355,19 @@
     .mc-dtitle { padding-right: 52px; }
     .mc-trow .wb-close { width: 40px; height: 40px; }
   }
+
+  /* Tên trang dài đẩy nút của thanh trên ra khỏi màn điện thoại (luật navbar ở web-builder/CLAUDE.md):
+     bọc chữ trong <span>, chặn bề rộng bằng max-width — KHÔNG cho brand co bằng flex: 0 1 auto. */
+  @media (max-width: 480px) {
+    .mc-brand-t { display: inline-block; max-width: calc(100vw - 170px); overflow: hidden;
+      white-space: nowrap; text-overflow: ellipsis; vertical-align: bottom; }
+  }
 </style>
 </head>
 <body>
 
 <div class="wb-navbar wb-navbar--sticky">
-  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">飯</span> Vietnamese Home Cooking</a>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">飯</span> <span class="mc-brand-t">Vietnamese Home Cooking</span></a>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
     <a class="wb-btn wb-btn--ghost wb-btn--sm mc-navhide" href="#mon-an">Món ăn</a>

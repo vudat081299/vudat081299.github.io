@@ -361,12 +361,19 @@
   .mc-spice { width: 100%; }
   .mc-spice .wb-table td:first-child { font-weight: 640; white-space: nowrap; }
   .mc-spice .wb-table td { vertical-align: top; }
+
+  /* Tên trang dài đẩy nút của thanh trên ra khỏi màn điện thoại (luật navbar ở web-builder/CLAUDE.md):
+     bọc chữ trong <span>, chặn bề rộng bằng max-width — KHÔNG cho brand co bằng flex: 0 1 auto. */
+  @media (max-width: 480px) {
+    .mc-brand-t { display: inline-block; max-width: calc(100vw - 170px); overflow: hidden;
+      white-space: nowrap; text-overflow: ellipsis; vertical-align: bottom; }
+  }
 </style>
 </head>
 <body>
 
 <div class="wb-navbar wb-navbar--sticky">
-  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">한</span> Korean Home Cooking</a>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">한</span> <span class="mc-brand-t">Korean Home Cooking</span></a>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
     <a class="wb-btn wb-btn--ghost wb-btn--sm mc-navhide" href="#mon-an">Món</a>
