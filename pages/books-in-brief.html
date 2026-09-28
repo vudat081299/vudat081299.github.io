@@ -288,6 +288,22 @@
   @media (max-width: 620px) { #diamond .dm-pick { display: flex; } #diamond .dm-pick > .wb-btn { flex: 1 1 0; } }
   /* Trên điện thoại hình mô hình co còn 0,7–0,9 lần viewBox: nâng cỡ chữ để nhãn không nhỏ dưới ~9 px. */
   @media (max-width: 620px) { #diamond .dm-svg .hw-vs { font-size: 13px; } #diamond .dm-svg .hw-vt { font-size: 14px; } }
+
+  /* ---- acemoglu ---- */
+  /* Mô hình bước ngoặt: dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
+  #acemoglu .ac-svg { max-width: 520px; }
+  #acemoglu .ac-svg .hw-vs { font-size: 11.5px; }
+  #acemoglu .ac-svg .hw-vt { font-size: 12.5px; }
+  #acemoglu .ac-val { display: inline-block; min-width: 150px; }
+  #acemoglu .ac-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
+  #acemoglu .ac-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; min-height: 3.2em; }
+  #acemoglu .ac-out { margin-top: 12px; }
+  #acemoglu .hw-tw th { white-space: normal; }
+  /* Tên tiếng Anh dưới tiêu đề cột: chữ thường, không giãn chữ, để bảng không phải cuộn ngang ở 320 px. */
+  #acemoglu .ac-en { display: block; font-family: var(--wb-font-mono); font-size: 10.5px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--wb-fg-muted); margin-top: 2px; }
+  @media (max-width: 620px) { #acemoglu .ac-pick { display: flex; } #acemoglu .ac-pick > .wb-btn { flex: 1 1 0; } }
+  /* Trên điện thoại hình co còn 0,8–0,9 lần viewBox: nâng cỡ chữ để nhãn không nhỏ dưới ~9 px. */
+  @media (max-width: 620px) { #acemoglu .ac-svg .hw-vs { font-size: 13px; } #acemoglu .ac-svg .hw-vt { font-size: 14px; } }
 </style>
 </head>
 <body class="wb-app">
@@ -343,11 +359,15 @@
       <li><b>Superforecasting:</b> bản tiếng Việt ghi theo Alpha Books và NetaBooks (<i>Siêu Dự Báo – Superforecasting: Nghệ Thuật và Khoa Học Dự Đoán Tương Lai</i>, Lê Thiện Trí dịch, NXB Thế Giới, 382 trang, tháng 5/2026). Alpha còn một trang sách tựa phụ “Những phương pháp dự đoán trên tầm chuyên gia”, và Waka ghi một bản điện tử năm 2018 của NXB Lao Động Xã Hội; chưa kiểm được năm in đầu và dịch giả của bản cũ trên trang chính thức.</li>
       <li><b>Superforecasting:</b> Độ vững sửa hai điều hay được trích về dự án: câu “hơn nhà phân tích có tin mật 30%” gốc là một bài báo năm 2013 (phân tích đầy đủ: phương pháp gộp của cả dự án, không phải từng siêu dự báo viên, tốt hơn chừng 35%); và một phân tích lại năm 2025 thấy tác dụng của huấn luyện và làm nhóm có thể mất đi khi kiểm soát thêm biến. Độ vững của mục Galef vẫn dẫn Mellers 2014 như bằng chứng tốt nhất; chủ trang có thể muốn thêm một câu ở đó.</li>
       <li><b>Superforecasting:</b> mục dài ≈3.200 tiếng phần chữ (khoảng 2.200 từ), cộng ≈300 tiếng trong mô hình (~12 phút đọc), đúng trần; để giữ trần đã bỏ ví dụ “mắt chuồn chuồn”. Máy chấm điểm cho mười lời đoán cùng một mức chắc, để thấy điểm tốt nhất rơi đúng vào tỉ lệ đoán trúng; số chính theo thang 0–2 của sách, bản 0–1 ghi kèm. Ngoài đề bài, Độ vững thêm kết quả giải XPT (2022, đối chiếu năm 2025) về rủi ro AI.</li>
-      <li><b>Trang chung — mục 08 Rosling (<i>Factfulness</i>):</b> agent làm mục này bị dừng theo lệnh của chủ trang khi đang cắt cho vừa độ dài, nên phiên điều phối không làm lại và không đăng phần dở. Nhóm 4 hiện chỉ có Diamond và Acemoglu &amp; Robinson, chỗ số 08 để trống. Muốn có mục này thì yêu cầu làm lại.</li>
+      <li><b>Trang chung — mục 08 Rosling (<i>Factfulness</i>):</b> agent làm mục này bị dừng theo lệnh của chủ trang khi đang cắt cho vừa độ dài, nên phiên điều phối không làm lại và không đăng phần dở. Nhóm 4 hiện chỉ có Diamond và Acemoglu &amp; Robinson, chỗ số 08 để trống. Muốn có mục này thì yêu cầu làm lại. Tiêu đề nhóm 4 vẫn giữ vế “nó đang thật sự ra sao”, vế ấy viết cho Rosling: làm lại Rosling thì nó khớp trở lại, bỏ hẳn thì nên sửa tiêu đề.</li>
       <li><b>Guns, Germs, and Steel:</b> bản tiếng Việt ghi theo Znews (NXB Tri Thức phát hành năm 2007; Omega Plus in lại từ 2016, cùng NXB Thế Giới) và tin giải A Giải thưởng Sách Quốc gia lần thứ tư, 2021. Báo Tin Tức cùng dịp viết sách “xuất bản tại Việt Nam từ năm 1998”, lệch với năm 2007, nên mục không dùng con số ấy; chưa kiểm được năm in đầu trên trang của NXB.</li>
       <li><b>Guns, Germs, and Steel:</b> mô hình độ dài ngày là cách trang này minh hoạ một ý của chương 10 (cùng vĩ độ thì cùng độ dài ngày, cùng nhịp mùa), chỉ tính độ dài ngày, không tính khí hậu. Ví dụ ngô (có ở Balsas 8.700 năm trước, ở Tây Nam nước Mỹ khoảng 4.100 năm trước, gen quang kỳ ZmCCT) lấy từ ba bài trên PNAS, không từ sách. Sơ đồ chuỗi nhân quả do trang tự vẽ, không chép hình của sách.</li>
       <li><b>Guns, Germs, and Steel:</b> Độ vững có vài ý ngoài đề bài: lao ở người không đến từ bò (Brosch 2002); tổ tiên lúa mì không cho nhiều hạt hơn cỏ hoang hạt nhỏ (Preece 2015); Restall về đồng minh bản địa; Pomeranz về thời điểm châu Âu vượt Trung Quốc. Thư đáp của Acemoglu và Robinson trên NYRB (8/2012) không mở được, nên mục chỉ nói có thư đáp, không tóm nội dung.</li>
       <li><b>Guns, Germs, and Steel:</b> mục dài ≈3.150 tiếng phần chữ (khoảng 2.150 từ), cộng ≈350 tiếng trong mô hình (~12 phút đọc), sát trần 2.200 từ. Để khỏi trỏ vào mục Rosling đã dừng, câu thứ hai trong “Nó dẫn đi đâu” của mục Tetlock được sửa để dẫn sang mục này, và đoạn giới thiệu nhóm 4 viết lại cho hai cuốn.</li>
+      <li><b>Why Nations Fail:</b> tên dịch giả bản tiếng Việt lệch giữa các nguồn: Tuổi Trẻ (24/5/2013) ghi Nguyễn Thị Kim Chi dịch chính, cùng Hoàng Thạch Quân, Hoàng Ngọc Lan, Vũ Thành Tự Anh hiệu đính; thư viện Bộ Tư pháp (bản 2017) và nhà sách (tái bản 2024, 616 trang) ghi Trần Thị Kim Chi. Mục ghi theo hai nguồn mới hơn; trang NXB Trẻ báo lỗi khi mở nên chưa đối chiếu được.</li>
+      <li><b>Why Nations Fail:</b> ví dụ gần là vụ Vinasun kiện Grab (toà phúc thẩm y án tháng 3/2020, Grab bồi thường khoảng 4,8 tỉ đồng), kể kèm ý toà thấy có căn cứ, để dùng đúng điều sách nói: kẻ thua đi kiện là bình thường, đáng lo là khi kẻ thua nắm quyền viết luật. Độ vững có vài ý ngoài đề bài: dữ liệu tử suất người định cư bị chất vấn (Albouy, 2012), Hàn Quốc thời Park Chung-hee (theo Sachs), Botswana co lại khoảng 3% năm 2024, và dân số hai nửa Nogales (lấy từ một bài bình luận trên Econlib năm 2025, không phải nghiên cứu).</li>
+      <li><b>Why Nations Fail:</b> mô hình “bước ngoặt và vòng hồi tiếp” do trang tự dựng, không có trong sách; tham số (12% mỗi thế hệ, phóng đại 5 lần ở thế hệ 4) chọn để hình có nghĩa ngay khi mở, không đo từ dữ liệu, và mô hình ghi rõ điều ấy. Mục dài ≈3.200 tiếng phần chữ (khoảng 2.200 từ), cộng ≈400 tiếng trong mô hình (~12 phút đọc), đúng trần; để giữ trần đã bỏ chuyến sang London năm 1895 của ba tù trưởng Tswana, ví dụ cái cày ở Kongo và số liệu mở rộng quyền bầu cử ở Anh.</li>
+      <li><b>Trang chung — phần kết:</b> không có mục Rosling nên lộ trình “thế giới” là Diamond → Acemoglu &amp; Robinson → chặng 5 của trang Experimentation &amp; Causal Inference (thí nghiệm tự nhiên: ngưỡng cắt, biến công cụ), vì cả hai cuốn đều lập luận bằng những phép so không ai được chọn ngẫu nhiên. Câu nhắc trang sách riêng dẫn hai trang đã có: How to Lie with Statistics và How to Win Every Argument.</li>
     </ul>
   </aside>
 
@@ -442,7 +462,16 @@
         </div>
       </div>
     </a>
-    <!-- 10 acemoglu: chèn sau thẻ 09 -->
+    <a class="wb-card wb-card--hover wb-card--pad" href="#acemoglu">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">10</span>
+        <div class="wb-media__body">
+          <p class="bb-card__k">Why Nations Fail</p>
+          <p class="wb-media__title">Tại sao các quốc gia thất bại</p>
+          <p class="wb-media__text">Vì sao hai nơi cùng đất, cùng trời mà một giàu một nghèo: luật chơi kinh tế và chính trị, ai hưởng lợi khi giữ nguyên nó, và vì sao nó khó đổi.</p>
+        </div>
+      </div>
+    </a>
   </div>
 
   <div class="hw-layout">
@@ -466,7 +495,10 @@
       <div class="wb-sidenav__section" style="margin-top:12px">The world</div>
       <!-- 08 rosling: chỗ trống -->
       <a class="wb-sidenav__link" href="#diamond">Guns, Germs, and Steel</a>
-      <!-- 10 acemoglu -->
+      <a class="wb-sidenav__link" href="#acemoglu">Why Nations Fail</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Wrap-up</div>
+      <a class="wb-sidenav__link" href="#wrap">Reading paths</a>
     </nav>
 
     <div class="wb-stack" style="--wb-stack-gap:48px">
@@ -1802,12 +1834,179 @@ Vĩ độ: 18,0° → 31,8° Bắc (≈ 111 km/độ)
 
         <div class="bb-next">
           <p><b>Bạn vừa có:</b> cách tách nguyên nhân gần khỏi nguyên nhân sâu, và chuỗi Diamond dựng từ cây, thú hoang và hình dáng lục địa tới súng, thép, vi trùng.</p>
-          <p><b>Nó dẫn đi đâu:</b> Chuỗi ấy giải thích được vì sao Á–Âu thắng châu Mỹ, nhưng khó giải thích hai nơi sát vách, cùng đất cùng trời, mà một giàu một nghèo: hai nửa thành phố Nogales ở biên giới Mỹ–Mexico, hai miền Triều Tiên. Cuốn cuối của nhóm, của Acemoglu và Robinson, lấy chính những ca ấy để bác “giả thuyết địa lý” và đặt thể chế vào chỗ của nó.</p>
+          <p><b>Nó dẫn đi đâu:</b> Chuỗi ấy giải thích được vì sao Á–Âu thắng châu Mỹ, nhưng khó giải thích hai nơi sát vách, cùng đất cùng trời, mà một giàu một nghèo: hai nửa thành phố Nogales ở biên giới Mỹ–Mexico, hai miền Triều Tiên. Cuốn cuối của nhóm, <a href="#acemoglu">của Acemoglu và Robinson</a>, lấy chính những ca ấy để bác “giả thuyết địa lý” và đặt thể chế vào chỗ của nó.</p>
         </div>
         <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/Guns,_Germs,_and_Steel">Wikipedia, Guns, Germs, and Steel</a> (W. W. Norton, 3/1997; Pulitzer 1998) · <a href="https://wwnorton.com/books/Guns-Germs-and-Steel/">W. W. Norton</a> · mục lục theo thư mục bản 2017 (Norton, 494 trang) trên Internet Archive · <a href="https://newsroom.ucla.edu/magazine/landscape-of-destiny-jared-diamond">UCLA Magazine</a> (Diamond kể chuyện Yali, 7/1972) · <a href="https://doi.org/10.1038/nature01019">Diamond, 2002, Nature</a> (148 loài, 14 được thuần hoá, 13 ở Á–Âu; sáu trở ngại; ngựa vằn; chín vùng khởi phát; nơi khởi phát và vựa lúa ngày nay; 8500 TCN; trục và độ dài ngày) · chương 3, 9 và phần kết đối chiếu qua <a href="https://www.litcharts.com/lit/guns-germs-and-steel">LitCharts</a> và ghi chép của <a href="https://sive.rs/book/GunsGermsSteel">Derek Sivers</a> (Columbus) · <a href="https://en.wikipedia.org/wiki/Battle_of_Cajamarca">Wikipedia, Battle of Cajamarca</a> và <a href="https://www.britannica.com/event/Battle-of-Cajamarca-1532">Britannica</a> (168 người, 80.000 quân) · <a href="https://en.wikipedia.org/wiki/Huayna_Capac">Wikipedia, Huayna Capac</a> (trận dịch, còn tranh cãi) · bản tiếng Việt: <a href="https://znews.vn/dich-gia-choang-ngop-khi-chuyen-ngu-sung-vi-trung-va-thep-post1278839.html">Znews, 21/11/2021</a> (NXB Tri Thức, 2007; Omega Plus từ 2016), <a href="https://baotintuc.vn/van-hoa/sung-vi-trung-va-thep-xung-dang-voi-giai-thuong-sach-quoc-gia-20211124083738058.htm">Báo Tin Tức, 24/11/2021</a> (giải A), <a href="https://shop.alphabooks.vn/sung-vi-trung-va-thep-jared-diamond-p38909176.html">Alpha Books</a> · <a href="https://doi.org/10.1126/science.275.5296.65">Keeling &amp; Grenfell, 1997</a> (sởi cần cộng đồng cỡ vài trăm nghìn người) · <a href="https://www.who.int/emergencies/disease-outbreak-news/item/2004_01_24-en">WHO, 24/1/2004</a> (H5N1 ở Việt Nam) · <a href="https://doi.org/10.1098/rspb.2018.0277">Wood &amp; Lenné, 2018</a> (32 trong 56 loài cỏ hạt to) · <a href="https://en.wikipedia.org/wiki/Neolithic_founder_crops">Wikipedia, Neolithic founder crops</a> · <a href="https://doi.org/10.1073/pnas.0812525106">Piperno và cs., 2009</a> (ngô ở Balsas 8.700 năm trước) · <a href="https://doi.org/10.1073/pnas.0906075106">Merrill và cs., 2009</a> (ngô ở Tây Nam nước Mỹ năm 2100 TCN) · <a href="https://doi.org/10.1073/pnas.1203189109">Hung và cs., 2012</a> (gen ZmCCT, ngô và độ dài ngày) · <a href="https://en.wikipedia.org/wiki/Zheng_He">Wikipedia, Zheng He</a> · <a href="https://doi.org/10.1016/j.euroecorev.2003.08.010">Olsson &amp; Hibbs, 2005</a> · <a href="https://doi.org/10.1111/nph.13353">Preece và cs., 2015</a> · <a href="https://doi.org/10.1073/pnas.1205338109">Laitin, Moortgat &amp; Robinson, 2012</a> · <a href="https://doi.org/10.1126/science.aba9411">Düx và cs., 2020</a> (sởi) · <a href="https://doi.org/10.1073/pnas.052548299">Brosch và cs., 2002</a> (lao) · <a href="https://doi.org/10.1016/j.quascirev.2018.12.004">Koch và cs., 2019</a> (60,5 triệu người, mất 90%) · <a href="https://en.wikipedia.org/wiki/Seven_Myths_of_the_Spanish_Conquest">Restall, 2003</a> · <a href="https://doi.org/10.1111/j.1931-0846.1999.tb00225.x">Blaut, 1999</a> · <a href="https://en.wikipedia.org/wiki/The_Great_Divergence_(book)">Pomeranz, 2000</a> · <a href="https://doi.org/10.1162/003355302320935025">Acemoglu, Johnson &amp; Robinson, 2002</a> · <a href="https://www.nybooks.com/articles/2012/06/07/what-makes-countries-rich-or-poor/">Diamond, NYRB 7/6/2012</a> và <a href="https://www.nybooks.com/articles/2012/08/16/why-nations-fail/">thư đáp 16/8/2012</a>.</p>
       </section>
 
-      <!-- 10 acemoglu -->
+      <section class="bb-book" id="acemoglu">
+        <p class="bb-book__eyebrow"><b>10</b> — Daron Acemoglu &amp; James A. Robinson · 2012</p>
+        <h3 class="bb-book__title">Tại sao các quốc gia thất bại</h3>
+        <p class="bb-book__orig"><i>Why Nations Fail: The Origins of Power, Prosperity, and Poverty</i> (2012) · bản tiếng Việt: <i>Tại sao các quốc gia thất bại: Nguồn gốc của quyền lực, thịnh vượng và nghèo đói</i>, Trần Thị Kim Chi và cộng sự dịch, Vũ Thành Tự Anh hiệu đính, NXB Trẻ (in lần đầu năm 2013, tái bản nhiều lần, gần nhất năm 2024)</p>
+        <p class="hw-lede">Nước giàu hay nghèo chủ yếu không do đất đai, khí hậu hay văn hoá, mà do <b>luật chơi</b> con người đặt ra cho nhau: luật cho số đông giữ được thành quả và có tiếng nói thì sinh ra thịnh vượng; luật để một nhóm nhỏ vơ về mình thì sinh ra nghèo. Luật tồi khó sửa, vì người hưởng lợi từ nó cũng là người nắm quyền sửa nó.</p>
+        <div class="bb-verdict">
+          <span class="bb-verdict__k">Đọc gì trong bản gốc</span><p class="bb-verdict__v"><b>Chương 1–4</b>, gần đủ cả lý thuyết: “Gần mà khác” (<i>So Close and Yet So Different</i>), hai thành phố Nogales; “Những lý thuyết không đứng vững” (<i>Theories That Don't Work</i>); “Giàu nghèo từ đâu ra” (<i>The Making of Prosperity and Poverty</i>), hai loại thể chế; “Khác biệt nhỏ và bước ngoặt: sức nặng của lịch sử” (<i>Small Differences and Critical Junctures: The Weight of History</i>). Tên chương tiếng Việt do trang này dịch.</p>
+          <span class="bb-verdict__k">Bỏ qua được</span><p class="bb-verdict__v"><b>Chương 5–15</b>: cùng một lập luận áp lên hàng chục nơi, từ Venice, La Mã tới Sierra Leone, Botswana; đọc chương về nơi mình tò mò.</p>
+          <span class="bb-verdict__k">Mục này</span><p class="bb-verdict__v">~12 phút đọc, kèm một mô hình cho thấy bước ngoặt phóng đại khác biệt nhỏ ra sao</p>
+        </div>
+
+        <h4 class="bb-h4" id="acemoglu-khung">Bộ khung</h4>
+        <p class="hw-p">Bảy bước: hai nơi giống nhau mà một giàu một nghèo; ba lời giải thích quen thuộc trượt phép thử ấy; thứ khác nhau là luật chơi; luật tồi đứng vững vì có người được lợi; các nước rẽ lối ở bước ngoặt; luật tự củng cố thành vòng tròn; và tăng trưởng dưới luật tồi không bền.</p>
+        <p class="hw-p"><b>Một thành phố, một hàng rào.</b> Biên giới Mỹ–Mexico cắt đôi thành phố Nogales. Theo sách, ở nửa thuộc bang Arizona, mỗi hộ kiếm trung bình khoảng 30.000 USD một năm, có điện, có đường, và bầu được người khác lên thay người làm dở. Ở nửa thuộc bang Sonora của Mexico, thu nhập chỉ chừng một phần ba, trẻ sơ sinh chết nhiều hơn, tội phạm nhiều hơn. Hai bên chung tổ tiên, chung món ăn, chung khí hậu; khác nhau ở luật chơi mỗi phía hàng rào.</p>
+        <p class="hw-p"><b>Một dân tộc, hai luật chơi.</b> Triều Tiên là một nước cho tới năm 1945 thì bị chia đôi ở vĩ tuyến 38: miền Bắc theo kinh tế kế hoạch dưới một dòng họ cầm quyền, miền Nam theo kinh tế thị trường. Theo ước tính của Ngân hàng Trung ương Hàn Quốc, thu nhập bình quân đầu người năm 2024 ở miền Nam gấp khoảng 29 lần miền Bắc; chỉ là ước tính, vì Triều Tiên không công bố số liệu kinh tế từ thập niên 1960.</p>
+        <p class="hw-p"><b>Ba lời giải thích quen thuộc trượt phép thử ấy.</b></p>
+        <ul class="hw-ul">
+          <li><b>Địa lý</b>: nước nhiệt đới nghèo vì nóng, nhiều bệnh, đất bạc màu. Nhưng hai nửa Nogales, hai miền Triều Tiên chung một khí hậu; và năm 1500, vùng giàu nhất châu Mỹ lại là đất nhiệt đới của người Aztec và Inca. Khí hậu không đổi mà thứ hạng thì đảo, chuyện mục Diamond gọi là <a href="#diamond-vung">“đảo ngược vận may”</a>.</li>
+          <li><b>Văn hoá</b>: dân xứ này cần cù, dân xứ kia lười. Nhưng hai miền Triều Tiên chung một văn hoá tới năm 1945.</li>
+          <li><b>Lãnh đạo không biết cách</b>, chỉ cần chuyên gia khuyên đúng. Sách kể thủ tướng Ghana Kofi Busia: chính sách của ông nuôi dân thành phố, hại nông dân, và theo sách, ông biết thế. Cuối năm 1971 ông chịu phá giá đồng tiền theo lời khuyên quốc tế; vài tuần sau, quân đội lật đổ ông rồi đảo lại. Chính sách tồi thường không do dốt, mà vì <b>nó có lợi cho người quyết định</b>.</li>
+        </ul>
+
+        <h4 class="bb-h4" id="acemoglu-luat">Hai loại luật chơi</h4>
+        <p class="hw-p"><b>Thể chế là luật chơi.</b> Sách gọi luật chơi, cả luật thành văn lẫn lệ ngầm, là <b>thể chế</b>. <b>Thể chế kinh tế</b> quyết định ai được gì: quyền tài sản, hợp đồng, ai được vào nghề. <b>Thể chế chính trị</b> quyết định ai đặt ra thể chế kinh tế, và quyền của người ấy bị ràng buộc tới đâu.</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:18%"></th><th>Bao trùm <span class="ac-en" lang="en">inclusive</span></th><th>Chiếm đoạt <span class="ac-en" lang="en">extractive</span></th></tr></thead>
+            <tbody>
+              <tr><td><b>Kinh tế</b></td><td>Tài sản được bảo vệ, ai cũng được vào nghề, một luật cho mọi người.</td><td>Một nhóm nhỏ vơ thành quả của số đông: lao động cưỡng bức, độc quyền ban cho người thân.</td></tr>
+              <tr><td><b>Chính trị</b></td><td>Quyền lực trải rộng và bị ràng buộc, nhưng nhà nước đủ mạnh để giữ luật.</td><td>Quyền lực dồn vào một nhóm nhỏ, không ai kiềm được.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p">Hai tầng kéo nhau: ai nắm chính trị sẽ đặt luật kinh tế có lợi cho mình, và của cải thu về lại giúp họ giữ quyền. Bao trùm cũng không có nghĩa là nhà nước yếu: nơi không ai đủ sức giữ trật tự cũng nghèo.</p>
+        <div class="hw-quote">
+          Như một cái chợ: thể chế kinh tế là nội quy chợ, thể chế chính trị là ai được viết nội quy. Chợ bao trùm: ai có hàng cũng thuê được sạp, bị lừa thì kiện được. Chợ chiếm đoạt: ban quản lý chia sạp đẹp cho người nhà và thu phí tuỳ ý.
+          <cite>Chỗ ví von hỏng: bán ế ở chợ này thì sang chợ khác, còn nước thì khó bỏ mà đi; và ban quản lý một nước có cả quân đội.</cite>
+        </div>
+        <p class="hw-p"><b>Vì sao người cầm quyền giữ luật tồi.</b> Tăng trưởng lâu dài cần cái mới, và cái mới thường có kẻ thua; nhà kinh tế Joseph Schumpeter gọi đó là <b>phá huỷ sáng tạo</b>. Kẻ thua có thể chính là người cầm quyền, vì cái mới sinh ra người giàu mới, ý tưởng mới, và họ sẽ đòi chia quyền. Sách kể hoàng đế Áo Francis I đầu thế kỷ 19: được trình dự án đường sắt, ông gạt đi vì sợ cách mạng theo tàu vào nước mình.</p>
+        <p class="hw-p">Gần mình hơn: khi Grab vào Việt Nam, hãng taxi Vinasun đi kiện, và tháng 3/2020 toà phúc thẩm buộc Grab bồi thường khoảng 4,8 tỉ đồng vì làm việc của một hãng taxi mà không theo luật dành cho taxi. Người thua đi kiện là chuyện thường, và lần này toà thấy có căn cứ. Điều sách lo là khi kẻ thua <b>nắm quyền viết luật</b>, như hoàng đế Áo: cái mới khi ấy không bị phạt mà bị cấm hẳn.</p>
+
+        <h4 class="bb-h4" id="acemoglu-re">Vì sao luật chơi rẽ lối</h4>
+        <p class="hw-p"><b>Bước ngoặt.</b> Luật chơi thường đứng yên hàng thế kỷ. Nó chỉ lung lay khi một biến cố lớn làm vỡ thế cân bằng cũ, cái sách gọi là <b>bước ngoặt</b> (<i>critical juncture</i>). Ý tinh nhất của sách: cùng một bước ngoặt có thể đẩy hai xã hội đi hai hướng ngược nhau, tuỳ những khác biệt nhỏ có sẵn. Ba bước ngoặt làm nên nước Anh:</p>
+        <ul class="hw-ul">
+          <li><b>Cái Chết Đen, 1346–1353.</b> Dịch hạch giết từ một phần tư tới hơn một nửa dân châu Âu, và người làm ruộng bỗng khan hiếm. Ở Tây Âu, nơi nông dân vốn mạnh hơn một chút, họ đòi công cao hơn; nước Anh ra luật giữ lương năm 1351 thì nông dân nổi dậy năm 1381, và nghĩa vụ phong kiến tan dần. Phía đông sông Elbe, nơi lãnh chúa mạnh hơn một chút, lãnh chúa dùng chính sự khan hiếm ấy để trói nông dân vào đất: chế độ nông nô lần thứ hai.</li>
+          <li><b>Buôn bán qua Đại Tây Dương, sau năm 1500.</b> Ở Tây Ban Nha, nhà vua độc quyền buôn bán với thuộc địa; ở Anh, nhà vua không đủ sức độc quyền, nên thương nhân giàu lên và muốn có tiếng nói.</li>
+          <li><b>Năm 1688.</b> Họ nằm trong liên minh rộng lật đổ vua James II. Quyền đặt thuế, đặt luật về tay Nghị viện, nơi nhiều quyền lợi phải thương lượng với nhau; theo sách, đó là nền cho Cách mạng Công nghiệp.</li>
+        </ul>
+        <p class="hw-p"><b>Trôi dạt.</b> Những khác biệt nhỏ ấy tích lại dần qua nhiều thế hệ, như hai quán phở chung một công thức gốc, qua ba đời chủ, mỗi đời chỉnh một chút, nay vị khác hẳn. Chỗ ví von hỏng: công thức đổi theo khẩu vị, còn luật chơi đổi qua giằng co quyền lực, và có thể trôi về phía tệ đi. Venice từng thuộc hàng giàu nhất thế giới nhờ những khế ước cho người trẻ không vốn góp sức đi buôn rồi chia lời. Năm 1297, các gia đình quyền thế biến ghế trong Đại Hội đồng thành cha truyền con nối, rồi dần cấm chính những khế ước ấy; Venice thành một thành phố bảo tàng.</p>
+
+        <div class="bb-lab" id="acemoglu-lab">
+          <div class="bb-lab__head">
+            <p class="bb-lab__kick">Mô hình · bước ngoặt và vòng hồi tiếp</p>
+            <p class="bb-lab__title">Hai xã hội gần như giống nhau: một cú sốc lớn làm gì với khoảng cách nhỏ giữa chúng?</p>
+            <p class="bb-lab__hint">Trục đứng đo <b>quyền lực trải rộng tới đâu</b>: 0 là một nhóm nhỏ nắm trọn, 100 là quyền lực chia rộng và bị ràng buộc. Mỗi thế hệ, phía đang nhỉnh hơn kéo luật chơi về mình thêm một chút: đó là vòng hồi tiếp. Ở thế hệ 4 có một <b>bước ngoặt</b> phóng đại thế chênh đang có. Mặc định gần với chuyện Cái Chết Đen trong sách: xã hội A nhỉnh hơn B một chút.</p>
+          </div>
+          <div class="bb-lab__body">
+            <div class="bb-lab__row">
+              <label for="acemoglu-gap">Chênh lệch ban đầu</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="acemoglu-gap" min="0" max="10" step="1" value="4" style="flex:1 1 180px"><span class="bb-mono ac-val" id="acemoglu-gap-l">4 điểm</span></div>
+            </div>
+            <div class="bb-lab__row">
+              <label for="acemoglu-amp">Sức bước ngoặt</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="acemoglu-amp" min="1" max="8" step="1" value="5" style="flex:1 1 180px"><span class="bb-mono ac-val" id="acemoglu-amp-l">phóng đại 5 lần</span></div>
+            </div>
+            <div class="bb-lab__row">
+              <span class="k">Thử nhanh</span>
+              <div class="wb-cluster ac-pick">
+                <button class="wb-btn wb-btn--sm" type="button" id="acemoglu-p-plague">Cái Chết Đen</button>
+                <button class="wb-btn wb-btn--sm" type="button" id="acemoglu-p-none">Không có bước ngoặt</button>
+                <button class="wb-btn wb-btn--sm" type="button" id="acemoglu-p-same">Khởi điểm như nhau</button>
+              </div>
+            </div>
+            <p class="ac-cap">Khoảng cách giữa A và B sau 16 thế hệ · thang 0–100</p>
+            <p class="bb-lab__big" id="acemoglu-big">78 điểm</p>
+            <p class="ac-sub" id="acemoglu-sub" aria-live="polite">A dừng ở 89, B ở 11. Không có bước ngoặt, sau 16 thế hệ hai bên chỉ cách nhau 24 điểm.</p>
+            <svg class="bb-svg ac-svg" id="acemoglu-svg" viewBox="0 0 360 240" role="img" aria-label="Hai đường qua 16 thế hệ: A đi từ 52 lên 89, B từ 48 xuống 11; bước ngoặt ở thế hệ 4 phóng đại chênh lệch 5 lần."></svg>
+            <pre class="bb-out ac-out" id="acemoglu-out">Thế hệ 0:  A 52,0 · B 48,0 · cách 4,0
+Thế hệ 4:  A 53,1 · B 46,9 · cách 6,2
+Bước ngoặt: chênh lệch × 5
+Thế hệ 5:  A 65,7 · B 34,3 · cách 31,4
+Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
+            <p class="bb-lab__foot"><b>Điều cần thấy:</b> không có bước ngoặt, hai xã hội chỉ tách nhau từ từ: đó là trôi dạt. Bước ngoặt không đẩy cả hai về cùng một phía; nó phóng đại thế chênh có sẵn, nên cùng một cú sốc đẩy A lên và B xuống, như Cái Chết Đen ở Tây Âu và Đông Âu. Sau đó không cần thêm cú sốc nào: vòng hồi tiếp tự làm nốt phần còn lại. Còn nếu hai bên khởi đầu y hệt nhau, bước ngoặt chẳng có gì để phóng đại.</p>
+            <p class="bb-lab__foot">Cách tính: gọi d là độ lệch khỏi mức giữa 50. Mỗi thế hệ, d tăng thêm 12% nhân với (1 − (d/50)²), nên càng gần hai đầu càng chậm lại; ở thế hệ 4, bước ngoặt nhân d lên theo thanh trượt, rồi kẹp trong khoảng 1–99. Mô hình do trang này dựng để minh hoạ, không có trong sách, và nó tất định: bên nào nhỉnh hơn thì thắng. Sách nhấn mạnh điều ngược lại: kết cục của một bước ngoặt còn tuỳ may rủi và lựa chọn của người trong cuộc.</p>
+          </div>
+        </div>
+
+        <h4 class="bb-h4" id="acemoglu-vong">Vòng tròn thuận, vòng tròn nghịch</h4>
+        <p class="hw-p"><b>Vòng tròn thuận.</b> Quyền lực đã trải rộng thì tự giữ mình: báo chí phanh phui người muốn gom quyền, toà án xử cả người quyền thế, mỗi nhóm mới giàu lên lại đòi thêm tiếng nói. Năm 1937, Tổng thống Mỹ Franklin Roosevelt, vừa tái đắc cử áp đảo, muốn bổ nhiệm thêm thẩm phán để Toà án Tối cao thôi chặn các chương trình của ông; Quốc hội, do chính đảng ông nắm đa số, gạt đi.</p>
+        <p class="hw-p"><b>Vòng tròn nghịch.</b> Chiều ngược lại cũng tự giữ mình: nắm quyền thì vơ được của, có của thì nuôi được quân để giữ quyền. Lật đổ cũng chưa chắc thoát, vì kẻ lật đổ thừa hưởng nguyên bộ máy; sách mượn chữ của nhà xã hội học Robert Michels (1911), gọi đó là <b>luật sắt của đầu sỏ</b>. Năm 1974, nhóm sĩ quan Derg lật đổ hoàng đế Ethiopia Haile Selassie nhân danh cách mạng; vài năm sau, thủ lĩnh Mengistu ngồi trong chính cung điện của hoàng đế, cai trị không kém độc đoán.</p>
+        <p class="hw-p">Sao người cầm quyền không tự cải cách, khi luật tốt làm cả nước giàu lên, kể cả họ? Thông cáo Nobel 2024 tóm một lý do từ nghiên cứu của nhóm tác giả: lời hứa của người vẫn nắm trọn quyền không ai tin, vì họ quay lại luật cũ lúc nào cũng được.</p>
+        <p class="hw-p"><b>Tăng trưởng dưới luật tồi: nhanh mà không bền.</b> Theo sách, thu nhập quốc dân Liên Xô tăng khoảng 6% một năm từ 1928 tới 1960, phần lớn nhờ chuyển người từ ruộng vào nhà máy và ép tích luỹ vốn; cuốn giáo khoa kinh tế của Paul Samuelson, bản năm 1961, còn đoán Liên Xô có thể vượt Mỹ vào năm 1984, nhiều khả năng vào năm 1997. Nhưng dồn người vào nhà máy chỉ làm được một lần. Sau đó phải lớn lên bằng cái mới, mà cái mới cần người dám thử, được giữ phần lời và được làm lung lay cái cũ: đúng những thứ bộ máy không cho. Theo sách, tới thập niên 1970 tăng trưởng gần như tắt; năm 1991, Liên Xô tan rã.</p>
+        <p class="hw-p"><b>Phá được vòng tròn: Botswana.</b> Khi độc lập năm 1966, Botswana thuộc hàng nghèo nhất thế giới: theo nhóm tác giả, cả nước có 12 km đường nhựa và 22 người tốt nghiệp đại học. Nhưng nó giữ được một truyền thống hiếm: tù trưởng người Tswana phải nghe dân ở <i>kgotla</i>, hội đồng nơi đàn ông trưởng thành tranh luận công khai. Năm 1967, kim cương được tìm thấy ở Orapa, trên đất của tộc Bangwato mà tổng thống Seretse Khama là tù trưởng; cũng năm ấy, một đạo luật trao quyền khoáng sản cho nhà nước thay vì từng tộc, để tiền kim cương chia cho cả nước. Theo Ngân hàng Thế giới, năm 1966 GDP bình quân đầu người của Botswana chưa bằng một nửa mức trung bình châu Phi hạ Sahara; năm 2023, nó gấp hơn bốn lần.</p>
+
+        <h4 class="bb-h4" id="acemoglu-diamond">Đặt cạnh Diamond</h4>
+        <p class="hw-p">Hai cuốn trả lời cùng một câu hỏi ở hai thang thời gian khác nhau.</p>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:22%"></th><th>Diamond</th><th>Acemoglu &amp; Robinson</th></tr></thead>
+            <tbody>
+              <tr><td><b>Thang thời gian</b></td><td>Hàng nghìn năm, từ lúc có nông nghiệp tới cuộc chinh phục châu Mỹ</td><td>Vài thế kỷ gần đây, nhất là từ năm 1500</td></tr>
+              <tr><td><b>Câu hỏi</b></td><td>Vì sao lục địa này thắng lục địa kia</td><td>Vì sao hai nơi sát vách, cùng đất cùng trời, mà một giàu một nghèo</td></tr>
+              <tr><td><b>Nguyên nhân gốc</b></td><td>Cây, thú hoang dễ thuần, hình dáng lục địa</td><td>Luật chơi, và ai nắm quyền đặt luật</td></tr>
+              <tr><td><b>Ca tiêu biểu</b></td><td>Cajamarca, 1532</td><td>Nogales; hai miền Triều Tiên</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p"><b>Chỗ bất đồng thật</b> không phải “địa lý hay thể chế”: Diamond nhận thể chế quan trọng, còn hai tác giả không chối rằng địa lý từng định hình lịch sử xa xưa. Họ bất đồng ở hai điểm hẹp hơn.</p>
+        <ul class="hw-ul">
+          <li><b>Thể chế tốt từ đâu ra.</b> Với Diamond, nó mọc trên nền lịch sử dài: nơi có nông nghiệp và nhà nước từ hàng nghìn năm trước thường có thể chế tốt hơn hôm nay, và nơi ấy do địa lý chọn sẵn. Với hai tác giả, nó sinh ra từ giằng co quyền lực ở các bước ngoặt, kết cục không định trước. Họ còn đảo mắt xích đầu trong chuỗi của Diamond: người Natufian ở Trung Đông đã sống thành làng trước khi trồng trọt, nên cách tổ chức xã hội đổi trước, nông nghiệp theo sau.</li>
+          <li><b>Hôm nay địa lý còn tác động trực tiếp không.</b> Trong bài điểm sách trên <i>New York Review of Books</i> (6/2012), Diamond ước thể chế giải thích “có lẽ 50%” chênh lệch giàu nghèo giữa các nước; nửa kia gồm bệnh nhiệt đới, sâu bệnh, đất nhiệt đới bị mưa rửa trôi, nước không giáp biển. Thư đáp của hai tác giả (8/2012) nói tính đến thể chế rồi thì không còn thấy bằng chứng địa lý ảnh hưởng đáng kể tới mức giàu hôm nay; Diamond vẫn giữ con số một nửa.</li>
+        </ul>
+        <p class="hw-p">Câu hỏi đáng giữ: trong một ca cụ thể, địa lý tác động <b>trực tiếp</b>, qua bệnh, đất, đường ra biển, hay <b>gián tiếp</b>, qua luật chơi nó từng định hình? Hai cuốn chủ yếu cãi nhau về tỉ lệ giữa hai đường ấy, và chưa ngã ngũ.</p>
+
+        <h4 class="bb-h4" id="acemoglu-dung">Dùng thế nào</h4>
+        <p class="hw-p">Ba câu hỏi cho một chuyện “mãi không sửa được”, ở tầm nước, tầm phường hay tầm công ty.</p>
+        <ul class="hw-ul">
+          <li><b>Ai mất gì nếu nó được sửa?</b> Một thủ tục rườm rà, một ngành chỉ vài công ty được cấp phép: trước khi đổ cho “họ không biết cách”, hỏi ai đang thu lợi từ chỗ rườm rà ấy, và họ có nắm quyền chặn không.</li>
+          <li><b>Tìm cặp Nogales.</b> Khi ai đó giải thích một khác biệt bằng văn hoá hay địa lý, tìm hai nơi chung văn hoá, chung địa lý mà khác luật chơi, như hai chi nhánh của cùng một chuỗi dưới hai kiểu quản lý. Khác biệt vẫn còn thì lời giải thích bằng văn hoá yếu đi.</li>
+          <li><b>Lớn nhờ dồn sức hay nhờ cái mới?</b> Tăng vọt nhờ dồn vốn, dồn người vào vài việc sẽ chững lại khi hết thứ để dồn; tăng trưởng bền cần chỗ cho người mới vào cuộc, kể cả khi họ làm lung lay người cũ.</li>
+        </ul>
+        <p class="bb-key"><span class="k">Mang theo</span>Trước một lời hứa cải cách, hỏi: <b>khi áp lực qua đi, cái gì ngăn người hứa quay lại như cũ?</b> Nếu câu trả lời chỉ là thiện chí của họ, lời hứa ấy chưa đáng tin.</p>
+
+        <h4 class="bb-h4" id="acemoglu-vung">Độ vững</h4>
+        <p class="hw-p">Ý lớn, rằng thể chế quan trọng cho thịnh vượng, được coi trọng tới mức thành giải Nobel: ngày 14/10/2024, Acemoglu, Simon Johnson và Robinson nhận giải kinh tế “vì các nghiên cứu về cách thể chế hình thành và ảnh hưởng tới thịnh vượng”. Giải dành cho cả một hướng nghiên cứu, không xác nhận từng câu trong sách; cách sách dán nhãn, và vài lời đoán của nó, vẫn bị chất vấn.</p>
+        <ul class="hw-ul">
+          <li><b>Bằng chứng thống kê gốc: còn tranh cãi.</b> Bài năm 2001 của ba người đo tác động của thể chế qua tỉ lệ tử vong của người châu Âu đến định cư ở các thuộc địa. David Albouy (2012) chỉ ra 36 trong 64 nước của mẫu mang số tử vong mượn từ nơi khác, và sửa lại thì kết quả kém vững; nhóm tác giả đáp lại trên cùng tạp chí, tranh luận chưa khép.</li>
+          <li><b>Nhãn dán sau khi biết kết quả.</b> Jeffrey Sachs (<i>Foreign Affairs</i>, 2012) chê sách không định nghĩa chính xác khái niệm chính, không có bảng số hay phép hồi quy nào. Nước giàu thì gọi là bao trùm, nước chững lại thì tìm ra chỗ chiếm đoạt: lý thuyết khớp mọi kết cục thì khó kiểm. Theo Sachs, lấy thước ấy đoán giai đoạn 1980–2010 sẽ đặt cược sai vào Đông Á, nơi nhiều nước lớn nhanh dưới chế độ chuyên quyền. Chính Hàn Quốc cũng tăng tốc dưới thời tướng Park Chung-hee (1961–1979); sách nói khi ấy thể chế kinh tế Hàn Quốc đã đủ bao trùm, người phê bình thấy lời giải thích ấy đến sau kết quả.</li>
+          <li><b>Trung Quốc: lời đoán không có hạn chót.</b> Sách cho rằng tăng trưởng dưới chính trị chiếm đoạt sẽ hết hơi nếu chính trị không mở ra, nhưng không nói khi nào. Từ năm sách ra tới 2024, GDP bình quân đầu người của Trung Quốc tính theo giá cố định gần gấp đôi, dù chậm dần; tháng 10/2024, Acemoglu nói Trung Quốc là “phần nào một thách thức” cho lập luận ấy. Lời đoán không có hạn thì khó chấm, đúng điều <a href="#tetlock-ro">mục Tetlock</a> đã nói.</li>
+          <li><b>Ca tiêu biểu là ca dễ nhớ, chưa phải phép đo.</b> Nogales phía Mexico đông dân hơn phía Mỹ hơn mười lần và lớn nhanh nhờ nhà máy gia công hàng bán sang Mỹ. Botswana vẫn dựa nhiều vào kim cương: năm 2024, khi kim cương nhân tạo kéo giá xuống, kinh tế co lại khoảng 3%.</li>
+          <li><b>Hai tác giả đã tự bổ sung.</b> Trong <i>The Narrow Corridor</i> (2019), họ viết rằng tự do chỉ nằm trong một hành lang hẹp giữa nhà nước chuyên chế và nhà nước bất lực: nhà nước và xã hội phải cùng mạnh lên và kìm nhau. Đó là lời đáp cho câu cuốn 2012 bỏ ngỏ: nhà nước đủ mạnh mà không đè bẹp dân từ đâu ra.</li>
+        </ul>
+
+        <div class="bb-next">
+          <p><b>Bạn vừa có:</b> hai nhãn bao trùm, chiếm đoạt cho luật chơi kinh tế lẫn chính trị; câu hỏi “ai mất gì nếu nó được sửa”; và cách nhìn lịch sử như những khác biệt nhỏ bị bước ngoặt phóng đại rồi bị vòng tròn khoá lại.</p>
+          <p><b>Nó dẫn đi đâu:</b> Sách giải thích quá khứ rất gọn, nhưng lời đoán về Trung Quốc cho thấy giải thích khéo chưa chắc đã đoán giỏi. Muốn đem một khung giải thích ra thử với tương lai, quay lại <a href="#tetlock">Tetlock</a>: ghi con số, đặt hạn chót, rồi chấm. Muốn đọc lại cả trang theo một thứ tự khác, xem <a href="#wrap">Đọc theo lộ trình</a>.</p>
+        </div>
+        <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/Why_Nations_Fail">Wikipedia, Why Nations Fail</a> (Crown Business, 20/3/2012; các bài điểm sách) · <a href="https://www.penguinrandomhouse.com/books/205014/why-nations-fail-by-daron-acemoglu-and-james-a-robinson/">Penguin Random House</a> · mục lục và nội dung từng chương đối chiếu qua <a href="https://www.litcharts.com/lit/why-nations-fail">LitCharts</a> (chương 2, 4, 6, 8, 11, 12, 14, 15) · <a href="https://news.mit.edu/2012/why-nations-fail-0323">MIT News, 23/3/2012</a> (số liệu Nogales) · <a href="https://www.goodreads.com/author/quotes/12817.Daron_Acemo_lu?page=13">đoạn trích trên Goodreads</a> (Liên Xô 1928–1960) · bản tiếng Việt: <a href="https://tuoitre.vn/tai-sao-cac-quoc-gia-that-bai-549967.htm">Tuổi Trẻ, 24/5/2013</a>, <a href="https://thuvienso.moj.gov.vn/opac/DmdInfo.aspx?mnuid=141&amp;search_id=12460&amp;search_field=SUBJECT&amp;dmd_id=38417">Thư viện Bộ Tư pháp</a> (bản 2017), <a href="https://trivan.com.vn/tai-sao-cac-quoc-gia-that-bai-tai-ban-p40767658.html">Trí Văn</a> (tái bản 2024) · <a href="https://www.koreatimes.co.kr/foreignaffairs/northkorea/20250829/n-korean-economy-logs-fastest-growth-in-8-years-in-2024-bok">Korea Times, 29/8/2025</a> và <a href="https://keia.org/analysis/what-to-make-of-north-koreas-fastest-economic-growth-since-2016/">KEI, 12/9/2025</a> (ước tính của Ngân hàng Trung ương Hàn Quốc) · <a href="https://en.wikipedia.org/wiki/Kofi_Abrefa_Busia">Wikipedia, Kofi Abrefa Busia</a> · <a href="https://tuoitre.vn/grab-phai-boi-thuong-cho-vinasun-4-8-ti-20200310170553885.htm">Tuổi Trẻ, 10/3/2020</a> (Vinasun và Grab) · <a href="https://en.wikipedia.org/wiki/Black_Death">Wikipedia, Black Death</a> và <a href="https://en.wikipedia.org/wiki/Second_serfdom">Second serfdom</a> · <a href="https://en.wikipedia.org/wiki/Serrata_del_Maggior_Consiglio">Wikipedia, Serrata del Maggior Consiglio</a> · <a href="https://en.wikipedia.org/wiki/Iron_law_of_oligarchy">Wikipedia, Iron law of oligarchy</a> · <a href="https://doi.org/10.1016/j.jebo.2010.12.012">Levy &amp; Peart, 2011</a> (sách giáo khoa của Samuelson) · <a href="https://economics.mit.edu/sites/default/files/publications/An%20African%20Success%20Story%20Botswana.pdf">Acemoglu, Johnson &amp; Robinson, 2003</a> (Botswana: đường nhựa, sinh viên, luật khoáng sản 1967, đất Bangwato) · <a href="https://en.wikipedia.org/wiki/Orapa_diamond_mine">Wikipedia, Orapa diamond mine</a> · <a href="https://data.worldbank.org/indicator/NY.GDP.PCAP.KD">World Bank, GDP bình quân đầu người theo giá cố định 2015</a> (Botswana, châu Phi hạ Sahara, Trung Quốc) · <a href="https://en.wikipedia.org/wiki/Economy_of_Botswana">Wikipedia, Economy of Botswana</a> (2024) · <a href="https://www.nobelprize.org/prizes/economic-sciences/2024/press-release/">Thông cáo Nobel, 14/10/2024</a> · <a href="https://www.nybooks.com/articles/2012/06/07/what-makes-countries-rich-or-poor/">Diamond, NYRB 7/6/2012</a> và <a href="https://www.nybooks.com/articles/2012/08/16/why-nations-fail/">thư đáp 16/8/2012</a> · <a href="https://www.foreignaffairs.com/reviews/why-nations-fail-daron-acemoglu-james-robinson">Sachs, Foreign Affairs, 9/2012</a> và <a href="https://devpolicy.org/note-sachs-weighs-in-on-why-nations-fail-20120925/">Devpolicy, 25/9/2012</a> · <a href="https://doi.org/10.1257/aer.102.6.3059">Albouy, 2012</a> · <a href="https://www.taipeitimes.com/News/editorials/archives/2024/10/21/2003825601">Taipei Times, 21/10/2024</a> (Acemoglu về Trung Quốc) · <a href="https://www.econlib.org/library/columns/y2025/salinasleonnogales.html">Salinas León, Econlib, 2025</a> (dân số hai nửa Nogales) · <a href="https://news.mit.edu/2019/narrow-corridor-acemoglu-liberty-0924">MIT News, 24/9/2019</a> (<i>The Narrow Corridor</i>).</p>
+      </section>
+
+      <!-- ══════════════════ 11 · SAU KHI ĐỌC ══════════════════ -->
+      <section id="wrap">
+        <p class="hw-eyebrow-sec"><b>11</b> — sau khi đọc</p>
+        <h2 class="hw-sec-title">Đọc theo lộ trình</h2>
+        <p class="hw-lede">Các cuốn trên trang xếp từ trong ra ngoài. Khi đọc để giải một việc cụ thể, ba lộ trình dưới đây gom các mục theo việc, và thứ tự trong mỗi lộ trình có lý do của nó.</p>
+
+        <h3 class="hw-h3" id="wrap-nguoi">Hiểu người khác</h3>
+        <ol class="hw-ul">
+          <li><a href="#haidt">The Righteous Mind</a>: bắt đầu từ chỗ người ta phán đúng sai bằng cảm giác trước, lý lẽ sau. Nắm điều ấy rồi thì hai cuốn sau bớt giống mẹo vặt.</li>
+          <li><a href="#cialdini">Influence</a>: những lối tắt cụ thể mà người muốn ta gật đầu hay bấm vào, và cách nhận ra tín hiệu giả.</li>
+          <li><a href="#kahneman">Thinking, Fast and Slow</a>: cỗ máy chung nằm dưới cả hai, vì sao trực giác nhanh, tiện mà sai có hệ thống. Để cuối vì nó dày nhất, và vì sau hai cuốn trên, mỗi lối tắt đã có sẵn một ví dụ để gắn vào.</li>
+        </ol>
+
+        <h3 class="hw-h3" id="wrap-quyet">Quyết định và dự đoán</h3>
+        <ol class="hw-ul">
+          <li><a href="#kahneman">Thinking, Fast and Slow</a>: chẩn bệnh trước: tự tin quá mức, quên tỉ lệ nền, ước lượng dự án thường lạc quan; <a href="#kahneman-p3">phần 3</a> là phần đáng đọc nhất cho việc này.</li>
+          <li><a href="#tetlock">Superforecasting</a>: rồi tới cách chữa: nói lời đoán bằng con số, có hạn chót, chịu chấm điểm, cùng năm thói quen của người đoán giỏi.</li>
+          <li><a href="#galef">The Scout Mindset</a>: cuối cùng là thứ giữ mình dùng tiếp cách chữa ấy khi sự thật làm đau: sẵn lòng thấy mình sai. Kèm một <a href="#galef-lab">bài tập hiệu chỉnh</a> để luyện nói đúng mức chắc.</li>
+        </ol>
+
+        <h3 class="hw-h3" id="wrap-the-gioi">Thế giới: vì sao nước giàu, nước nghèo</h3>
+        <ol class="hw-ul">
+          <li><a href="#diamond">Guns, Germs, and Steel</a>: nhìn xa trước, hàng nghìn năm: cây, thú hoang và hình dáng lục địa, cùng thói quen tách nguyên nhân gần khỏi nguyên nhân sâu.</li>
+          <li><a href="#acemoglu">Why Nations Fail</a>: rồi kéo gần lại vài thế kỷ: luật chơi, và ai được đặt luật. Đọc sau Diamond vì nó bắt đầu đúng ở chỗ Diamond bỏ ngỏ, hai nơi sát vách mà một giàu một nghèo, và cãi thẳng với ông.</li>
+          <li><a href="experimentation-causal-inference.html#act5">Experimentation &amp; Causal Inference, chặng 5</a>: cả hai cuốn đều lập luận bằng những phép so không ai được tung đồng xu chọn. Chặng này dạy khi nào một phép so như thế đáng tin: so hai bên một đường biên như ở Nogales cùng một ý với <a href="experimentation-causal-inference.html#s-rdd">ngưỡng cắt</a>, còn bài năm 2001 của nhóm Acemoglu dùng một <a href="experimentation-causal-inference.html#s-iv">biến công cụ</a>.</li>
+        </ol>
+        <p class="hw-p">Những cuốn phải đọc từng chi tiết thì có trang riêng: <a href="how-to-lie-with-statistics.html">How to Lie with Statistics</a> của Darrell Huff, về những con số đúng mà vẫn lừa, và <a href="how-to-win-every-argument.html">How to Win Every Argument</a> của Madsen Pirie, về chừng 79 lối ngụy biện.</p>
+      </section>
 
     </div><!-- /content column -->
   </div><!-- /hw-layout -->
@@ -2885,6 +3084,139 @@ Vĩ độ: 18,0° → 31,8° Bắc (≈ 111 km/độ)
   if (bCorn) bCorn.addEventListener('click', function () { preset(50, false); });
   if (bEast) bEast.addEventListener('click', function () { preset(0, true); });
   if (bNorth) bNorth.addEventListener('click', function () { preset(90, true); });
+  render();
+})();
+</script>
+
+<script>
+/* ---- acemoglu: bước ngoặt và vòng hồi tiếp ----
+   Mô hình đồ chơi do trang tự dựng, không có trong sách. Hai xã hội A, B; x = mức quyền lực trải rộng, thang 0–100.
+   Gọi d = x − 50. Mỗi thế hệ: d ← d + K·d·(1 − (d/50)²), K = 0,12: độ lệch tự khuếch đại (vòng hồi tiếp), chậm dần gần
+   0 và 100, và không bao giờ vượt ra ngoài (0, 100) vì hàm này tăng trên [−50, 50] và giữ nguyên hai đầu mút.
+   Ở bước từ thế hệ 4 sang 5, bước ngoặt thay cho bước thường: d ← d·M (M = sức bước ngoặt; M = 1 là không có), rồi kẹp
+   trong [−49, 49]. A bắt đầu ở 50 + g/2, B ở 50 − g/2, và hàm lẻ nên B luôn = 100 − A: chỉ cần tính A.
+   Số của B lấy từ số đã làm tròn của A (100 − A), nên hiệu in ra luôn khớp với hai số đứng cạnh.
+   Giá trị thanh trượt được kẹp về số hợp lệ: không bao giờ ra NaN. */
+(function () {
+  var root = document.getElementById('acemoglu');
+  if (!root) return;
+  var box = root.querySelector('#acemoglu-svg'), rGap = root.querySelector('#acemoglu-gap'), rAmp = root.querySelector('#acemoglu-amp');
+  if (!box || !rGap || !rAmp) return;
+  var lGap = root.querySelector('#acemoglu-gap-l'), lAmp = root.querySelector('#acemoglu-amp-l'),
+      big = root.querySelector('#acemoglu-big'), sub = root.querySelector('#acemoglu-sub'), out = root.querySelector('#acemoglu-out'),
+      bPlague = root.querySelector('#acemoglu-p-plague'), bNone = root.querySelector('#acemoglu-p-none'), bSame = root.querySelector('#acemoglu-p-same');
+  var NS = 'http://www.w3.org/2000/svg';
+  var K = 0.12, T = 16, J = 4;
+  var X0 = 40, X1 = 300, Y0 = 200, Y1 = 34;   /* thế hệ 0 ở x = 40, thế hệ 16 ở x = 300; mức 0 ở y = 200, mức 100 ở y = 34 */
+
+  function clampNum(v, lo, hi, d) { v = parseFloat(v); return isFinite(v) ? Math.max(lo, Math.min(hi, v)) : d; }
+  function num(v, dp) { return Math.abs(v).toFixed(dp || 0).replace('.', ','); }
+  function r1(v) { return Math.round(v * 10) / 10; }
+  function px(t) { return X0 + t * (X1 - X0) / T; }
+  function py(v) { return Y0 - Math.max(0, Math.min(100, v)) * (Y0 - Y1) / 100; }
+  function el(tag, attrs, style, text) {
+    var e = document.createElementNS(NS, tag), k;
+    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (style) e.setAttribute('style', style);
+    if (text != null) e.textContent = text;
+    box.appendChild(e);
+    return e;
+  }
+
+  /* Mức của A qua các thế hệ 0…T; B = 100 − A. */
+  function series(gap, amp) {
+    var d = gap / 2, a = [50 + d], t;
+    for (t = 0; t < T; t++) {
+      if (t === J && amp > 1) d = Math.max(-49, Math.min(49, d * amp));
+      else d = d + K * d * (1 - (d / 50) * (d / 50));
+      a.push(50 + d);
+    }
+    return a;
+  }
+
+  function draw(a, amp) {
+    var halo = 'paint-order:stroke;stroke:var(--wb-canvas);stroke-width:3px;stroke-linejoin:round';
+    var dA = '', dB = '', t, aEnd = Math.round(a[T]), yA, yB, m;
+    while (box.firstChild) box.removeChild(box.firstChild);
+
+    el('text', { x: X0, y: 12, 'class': 'hw-vs' }, null, 'quyền lực trải rộng tới đâu · 0–100');
+    /* Dải bước ngoặt giữa thế hệ 4 và 5. */
+    if (amp > 1) {
+      el('rect', { x: px(J), y: Y1, width: (px(J + 1) - px(J)).toFixed(2), height: Y0 - Y1 }, 'fill:var(--wb-fg);fill-opacity:.08;stroke:none');
+      el('text', { x: ((px(J) + px(J + 1)) / 2).toFixed(1), y: Y1 - 5, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, 'bước ngoặt');
+    }
+    /* Lưới: 0 và 100 là mép, 50 là mức giữa (nét đứt). */
+    [0, 50, 100].forEach(function (v) {
+      el('line', { x1: X0, y1: py(v), x2: X1, y2: py(v) },
+        v === 50 ? 'stroke:var(--wb-border-strong);stroke-width:1;stroke-dasharray:4 4' : 'stroke:var(--wb-border);stroke-width:1');
+      el('text', { x: X0 - 6, y: py(v) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, String(v));
+    });
+    [0, 4, 8, 12, 16].forEach(function (g) {
+      el('text', { x: px(g), y: Y0 + 16, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, String(g));
+    });
+    el('text', { x: X1, y: Y0 + 32, 'text-anchor': 'end', 'class': 'hw-vs' }, null, 'thế hệ');
+
+    /* Hai đường: A nét liền đậm, B nét đứt. */
+    for (t = 0; t <= T; t++) {
+      dA += (t ? ' L' : 'M') + px(t).toFixed(1) + ' ' + py(a[t]).toFixed(1);
+      dB += (t ? ' L' : 'M') + px(t).toFixed(1) + ' ' + py(100 - a[t]).toFixed(1);
+    }
+    el('path', { d: dB }, 'fill:none;stroke:var(--wb-neutral-strong);stroke-width:2;stroke-dasharray:5 4;stroke-linejoin:round');
+    el('path', { d: dA }, 'fill:none;stroke:var(--wb-fg);stroke-width:2.5;stroke-linejoin:round');
+    el('circle', { cx: X1, cy: py(100 - a[T]).toFixed(1), r: 3.5 }, 'fill:var(--wb-canvas);stroke:var(--wb-neutral-strong);stroke-width:1.5');
+    el('circle', { cx: X1, cy: py(a[T]).toFixed(1), r: 3.5 }, 'fill:var(--wb-fg)');
+
+    /* Nhãn cuối đường; hai đường sát nhau thì tách nhãn ra cho khỏi chồng. */
+    yA = py(a[T]) + 4; yB = py(100 - a[T]) + 4;
+    if (yB - yA < 15) { m = (yA + yB) / 2; yA = m - 7.5; yB = m + 7.5; }
+    el('text', { x: X1 + 8, y: yA.toFixed(1), 'class': 'hw-vt' }, halo, 'A ' + aEnd);
+    el('text', { x: X1 + 8, y: yB.toFixed(1), 'class': 'hw-vt' }, halo, 'B ' + (100 - aEnd));
+  }
+
+  function render() {
+    var gap = Math.round(clampNum(rGap.value, 0, 10, 4)), amp = Math.round(clampNum(rAmp.value, 1, 8, 5));
+    var a = series(gap, amp), a0 = series(gap, 1);
+    var aEnd = Math.round(a[T]), bEnd = 100 - aEnd, nEnd = Math.round(a0[T]), s, lines;
+
+    if (lGap) lGap.textContent = gap + ' điểm';
+    if (lAmp) lAmp.textContent = amp === 1 ? 'không có bước ngoặt' : 'phóng đại ' + amp + ' lần';
+    if (big) big.textContent = (aEnd - bEnd) + ' điểm';
+
+    if (gap === 0) s = 'Hai xã hội khởi đầu y hệt nhau, ở đúng mức giữa: bước ngoặt không có gì để phóng đại, cả hai đứng yên ở 50.';
+    else if (amp === 1) s = 'Không có bước ngoặt: vòng hồi tiếp chỉ kéo hai bên tách nhau từ từ. Sau 16 thế hệ, A dừng ở ' + aEnd + ', B ở ' + bEnd + '.';
+    else s = 'A dừng ở ' + aEnd + ', B ở ' + bEnd + '. Không có bước ngoặt, sau 16 thế hệ hai bên chỉ cách nhau ' + (2 * nEnd - 100) + ' điểm.';
+    if (sub) sub.textContent = s;
+
+    if (out) {
+      /* Dòng ngắn (dưới ~42 ký tự) để khỏi gãy dòng trên điện thoại. */
+      var line = function (t) {
+        var v = r1(a[t]);
+        return 'Thế hệ ' + t + ':' + (t < 10 ? '  ' : ' ') + 'A ' + num(v, 1) + ' · B ' + num(100 - v, 1) + ' · cách ' + num(2 * v - 100, 1);
+      };
+      lines = [line(0)];
+      if (amp > 1) lines.push(line(J), 'Bước ngoặt: chênh lệch × ' + amp, line(J + 1));
+      else lines.push('Không có bước ngoặt');
+      lines.push(line(T));
+      out.textContent = lines.join('\n');
+    }
+    draw(a, amp);
+    box.setAttribute('aria-label', 'Hai đường qua 16 thế hệ: ' +
+      (gap === 0 ? 'A và B cùng đứng yên ở 50' :
+        'A đi từ ' + num(a[0]) + ' lên ' + aEnd + ', B từ ' + num(100 - a[0]) + ' xuống ' + bEnd) +
+      (amp > 1 ? '; bước ngoặt ở thế hệ 4 phóng đại chênh lệch ' + amp + ' lần.' : '; không có bước ngoặt.'));
+  }
+
+  rGap.addEventListener('input', render);
+  rAmp.addEventListener('input', render);
+  if (bPlague) bPlague.addEventListener('click', function () { rGap.value = '4'; rAmp.value = '5'; render(); });
+  if (bNone) bNone.addEventListener('click', function () {
+    if (Math.round(clampNum(rGap.value, 0, 10, 4)) === 0) rGap.value = '4';
+    rAmp.value = '1'; render();
+  });
+  if (bSame) bSame.addEventListener('click', function () {
+    if (Math.round(clampNum(rAmp.value, 1, 8, 5)) === 1) rAmp.value = '5';
+    rGap.value = '0'; render();
+  });
   render();
 })();
 </script>
