@@ -1,15 +1,22 @@
 #!/bin/sh
-# Cổng lớp 2 cho nội dung trang chủ. Bộ điều phối gọi mọi */tools/hooks/pre-commit;
-# hook này tự lọc — chỉ chạy khi commit có chạm thứ liên quan tới danh mục.
+# Cổng lớp 2 của gốc repo. Bộ điều phối gọi mọi */tools/hooks/pre-commit; hook này tự lọc.
 #
-# Bộ lọc bao cả pages/*.html và cooking/*.html, không chỉ data/collection.json:
-# cổng "trang mồ côi" trong lint-collection.py bắt đúng trường hợp thêm một trang
-# MÀ KHÔNG sửa collection.json — nếu chỉ lọc theo collection.json thì hook không
-# bao giờ chạy đúng lúc nó cần chạy nhất. D trong diff-filter để xoá một trang
-# đang được niêm yết cũng bị bắt (href chết).
+# 1. Cấu trúc + sổ quyết định — khi commit chạm một tài liệu cho agent (CLAUDE.md, DECISIONS.md,
+#    HANDOFF.md, HISTORY.md, .claude/rules/, .claude/skills/), chính hai cổng ấy, hoặc có thêm/xoá
+#    file (bản đồ project và phạm vi của quyết định có thể lệch). Cả hai chạy dưới một giây.
+# 2. Danh mục trang chủ — bộ lọc bao cả pages/*.html và cooking/*.html, không chỉ
+#    data/collection.json: cổng "trang mồ côi" bắt đúng trường hợp thêm một trang MÀ KHÔNG sửa
+#    collection.json. D trong diff-filter để xoá một trang đang được niêm yết cũng bị bắt (href chết).
 set -eu
 ROOT=$(git rev-parse --show-toplevel)
 CHANGED=$(git diff --cached --name-only --diff-filter=ACMRD)
+ADDDEL=$(git diff --cached --name-only --diff-filter=AD)
+
+if printf '%s\n' "$CHANGED" | grep -qE '(^|/)(CLAUDE|DECISIONS|HANDOFF|HISTORY)\.md$|^\.claude/(rules|skills)/|^tools/(lint-structure|decisions)\.py$' \
+   || [ -n "$ADDDEL" ]; then
+  python3 "$ROOT/tools/lint-structure.py" || exit 1
+  python3 "$ROOT/tools/decisions.py" check || exit 1
+fi
 
 echo "$CHANGED" | grep -qE '^(data/collection\.json|index\.html|tools/lint-collection\.py|pages/[^/]+\.html|cooking/[^/]+\.html)$' || exit 0
 python3 "$ROOT/tools/lint-collection.py"

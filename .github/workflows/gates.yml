@@ -46,6 +46,10 @@ jobs:
         working-directory: cashy
         run: pnpm install --frozen-lockfile
 
+      - name: Cấu trúc repo + sổ quyết định
+        run: |
+          python3 tools/lint-structure.py
+          python3 tools/decisions.py check
       - name: Trang chủ
         run: python3 tools/lint-collection.py
       # Mọi project có cổng đều gom cổng vào <project>/tools/check.sh, và bước này TỰ TÌM chúng —

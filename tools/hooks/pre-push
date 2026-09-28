@@ -1,5 +1,5 @@
 #!/bin/sh
-# Lớp cổng THỨ BA cho nội dung tĩnh: trang chủ + pages/ + cooking/. CHẶN.
+# Lớp cổng THỨ BA cho nội dung tĩnh — cấu trúc repo, sổ quyết định, trang chủ, pages/, cooking/. CHẶN.
 # Cài: tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo */tools/hooks/pre-push)
 #
 # Vì sao cần dù đã có pre-commit: push `main` = DEPLOY GitHub Pages, và pre-commit có ba lỗ
@@ -24,6 +24,8 @@ cd "$ROOT"
 echo "pre-push: cổng trang chủ + pages + cooking (push main = deploy, kiểm lần cuối)…"
 
 FAIL=0
+python3 tools/lint-structure.py        || FAIL=1
+python3 tools/decisions.py check       || FAIL=1
 python3 tools/lint-collection.py       || FAIL=1
 python3 pages/tools/lint-pages.py      || FAIL=1
 python3 cooking/tools/lint-cooking.py  || FAIL=1
@@ -36,10 +38,14 @@ Push bị CHẶN — cổng nội dung tĩnh không qua.
 
 Sau bước này nội dung nằm trên web, không có build step nào bắt lỗi hộ.
 
+  · cấu trúc  → bản đồ project thiếu dòng / project thiếu CLAUDE.md / HANDOFF có nhật ký
+  · quyết định → trường thiếu / mã trùng / phạm vi không khớp file nào / mục lục cũ
   · trang chủ → trường thiếu / phím tắt trùng / href chết / trang không có ô
   · trang     → id trùng / anchor gãy / asset thiếu / thẻ lệch
 
-Xem thêm:  python3 tools/lint-collection.py
+Xem thêm:  python3 tools/lint-structure.py
+           python3 tools/decisions.py check
+           python3 tools/lint-collection.py
            python3 pages/tools/lint-pages.py -v
            python3 cooking/tools/lint-cooking.py -v
 Bỏ qua có ý thức:  git push --no-verify
