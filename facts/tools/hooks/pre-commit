@@ -1,6 +1,6 @@
 #!/bin/sh
 # Cổng chất lượng cho facts/ — chạy lúc commit.
-# Cài: facts/tools/install-hooks.sh
+# Cài: sh tools/install-hooks.sh  (từ gốc repo; bộ điều phối tự nhặt file này theo */tools/hooks/pre-commit)
 #
 # Chỉ chạy khi commit có chạm vào facts/ — commit ở cashy/, masters-degree/… không bị ảnh hưởng.
 # Đây là lưới cuối: hook PostToolUse chỉ bắt được sửa bằng Edit/Write, còn cổng này bắt được

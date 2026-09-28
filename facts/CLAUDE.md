@@ -792,21 +792,23 @@ python3 facts/tools/factlint.py verify    # cổng định nghĩa §1 — phải
 python3 facts/tools/factlint.py stats     # phân bố theo cụm, cảnh báo cụm to
 ```
 
-Hai cổng này còn chạy **tự động** ở hai lớp, và cả hai đều đi theo repo:
+Hai cổng này còn chạy **tự động** ở bốn lớp, và cả bốn đều đi theo repo:
 
 | Lớp | Khi nào | Khai báo ở | Chặn không |
 |---|---|---|---|
 | `tools/hooks/post-edit.sh` | mỗi lần Edit/Write vào `facts/data/*.json` | `.claude/settings.json` (được git theo dõi) | có — trả lỗi cho model tự sửa |
-| `tools/hooks/pre-commit` | lúc `git commit` có chạm `facts/` | `.git/hooks/pre-commit` | có — chặn commit |
+| `tools/hooks/pre-commit` | lúc `git commit` có chạm `facts/` | bộ điều phối ở `.git/hooks/pre-commit` | có — chặn commit |
+| `tools/hooks/pre-push` | lúc `git push` có commit chạm `facts/` | bộ điều phối ở `.git/hooks/pre-push` | có — chặn push |
+| `.github/workflows/gates.yml` | lúc lên `main` và mọi PR | GitHub Actions | có — CI đỏ |
 
 Lớp thứ nhất chỉ bắt được sửa bằng Edit/Write; thay đổi viết bằng script (`python3 - <<EOF`,
 `sed`…) lọt qua nó và bị lớp thứ hai bắt. Vì vậy **phải có cả hai**.
 
-Lớp thứ hai nằm trong `.git/`, mà `.git/` không clone theo được — nên đầu mỗi phiên phải chạy
-một lần:
+Lớp hai và ba nằm trong `.git/`, mà `.git/` không clone theo được — nên đầu mỗi phiên phải
+chạy một lần, từ gốc repo:
 
 ```bash
-sh facts/tools/install-hooks.sh
+sh tools/install-hooks.sh
 ```
 
 Chi tiết cơ chế ba lớp cổng của cả repo: [CLAUDE.md ở gốc repo](../CLAUDE.md).

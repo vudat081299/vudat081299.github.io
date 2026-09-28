@@ -1,6 +1,6 @@
 #!/bin/sh
 # Lớp tự động THỨ BA cho facts/: cổng lúc push. CHẶN.
-# Cài: facts/tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo *//tools/hooks/pre-push)
+# Cài: sh tools/install-hooks.sh  (từ gốc repo; bộ điều phối tự nhặt file này theo */tools/hooks/pre-push)
 #
 # Vì sao cần thêm lớp này khi đã có pre-commit của facts:
 #   push nhánh main = DEPLOY GitHub Pages — toàn bộ fact ra công khai. pre-commit có thể bị

@@ -22,8 +22,8 @@ facts/
   facts.css         phần web-builder chưa có: card dạng <button>, cắt dòng, khung minh hoạ
   tools/
     factlint.py     kiểm cấu trúc + cổng định nghĩa + tìm fact gần trùng + tra fact sắp thêm
-    hooks/          post-edit.sh (PostToolUse) và pre-commit — chạy cổng tự động
-    install-hooks.sh  cài bộ điều phối hook git cho cả repo
+    hooks/          post-edit.sh (PostToolUse), pre-commit, pre-push — chạy cổng tự động
+    install-hooks.sh  lối vào cũ — chuyển tiếp sang tools/install-hooks.sh ở gốc repo
   data/
     manifest.json   chủ đề fact + cụm (clusters) + kiểu truyện (kieu_chuyen)
                     + tuyển tập kinh điển (tuyen_tap) + mã kiểu truyện ATU (atu)
@@ -87,8 +87,8 @@ meta về nghiên cứu, xu hướng hành vi không mỏ neo, và fact chỉ ng
 — xem [CLAUDE.md](CLAUDE.md) §1. Xem thêm `stats` (phân bố theo cụm) và `near "<văn bản>"`
 (tra một fact sắp thêm).
 
-Cả hai cổng chạy tự động: qua hook `PostToolUse` mỗi lần sửa `data/`, và qua `pre-commit`
-lúc commit. Cài hook git bằng `sh facts/tools/install-hooks.sh`.
+Cả hai cổng chạy tự động: qua hook `PostToolUse` mỗi lần sửa `data/`, qua `pre-commit` lúc
+commit và `pre-push` lúc push. Cài hook git bằng `sh tools/install-hooks.sh` (chạy từ gốc repo).
 
 ## Quy tắc kiểm chứng (bắt buộc)
 
