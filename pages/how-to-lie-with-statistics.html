@@ -147,7 +147,6 @@
 
   /* ---- hình tĩnh vẽ hẹp để chữ không teo quá trên điện thoại ---- */
   .hl-fig { margin: 14px 0 8px; }
-  .hl-fig svg { width: 100%; max-width: 460px; height: auto; display: block; }
 
   /* ---- mức chắc chắn trong mục Độ vững: chỗ duy nhất màu mang nghĩa ---- */
   .hl-evi { display: inline-flex; align-items: center; gap: 5px; font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: var(--wb-radius-pill); border: var(--wb-bw) solid var(--wb-border); color: var(--wb-fg-muted); background: var(--wb-canvas); white-space: nowrap; vertical-align: 1px; }
@@ -181,11 +180,12 @@
   .hl-read .s { display: block; font-size: 11.5px; color: var(--wb-fg-muted); line-height: 1.4; margin-top: 2px; }
   .hl-read > div.is-hi { border-color: var(--wb-neutral-strong); }
 
-  .hl-svg { width: 100%; max-width: 720px; height: auto; display: block; margin: 0 auto; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
+  /* Hình trải hết khung lab (cùng mép với hàng số ở trên); vẽ theo đúng bề rộng thật nên cỡ chữ dưới đây là px thật. */
+  .hl-svg { box-sizing: border-box; width: 100%; height: auto; display: block; margin: 2px 0 0; border: var(--wb-bw) solid var(--wb-border); border-radius: 8px; background: var(--wb-canvas); }
   .hl-t { fill: var(--wb-fg); font-size: 12px; font-family: var(--wb-font); }
   .hl-t--b { font-weight: 680; }
   .hl-t--s { fill: var(--wb-fg-muted); font-size: 11px; }
-  .hl-t--m { font-family: var(--wb-font-mono); font-size: 10.5px; fill: var(--wb-fg-muted); }
+  .hl-t--m { font-size: 11px; fill: var(--wb-fg-muted); font-variant-numeric: tabular-nums; }
   .hl-ax { stroke: var(--wb-neutral-strong); stroke-width: 1; fill: none; }
   .hl-grid { stroke: var(--wb-neutral-weak); stroke-width: 1; fill: none; }
 
@@ -640,28 +640,7 @@
 
         <p class="hw-p">"Sai số khả dĩ" là thước đo cũ: khoảng chứa giá trị thật với xác suất <b>50%</b>. Khoảng 95% dùng ngày nay rộng gấp chừng 2,9 lần — ±3 thành <b>±8,7</b> điểm — và nhìn theo nó, Peter và Linda gần như trùng nhau.</p>
         <figure class="hl-fig">
-          <svg viewBox="0 0 360 132" role="img" aria-label="Hai khoảng IQ của Peter và Linda: khoảng đậm là ±3 điểm, khoảng nhạt là ±8,7 điểm; cả hai cặp khoảng chồng lên nhau gần hết">
-            <line class="hl-grid" x1="70" y1="22" x2="70" y2="104"></line>
-            <line class="hl-grid" x1="137.5" y1="22" x2="137.5" y2="104"></line>
-            <line class="hl-grid" x1="205" y1="22" x2="205" y2="104"></line>
-            <line class="hl-grid" x1="272.5" y1="22" x2="272.5" y2="104"></line>
-            <line class="hl-grid" x1="340" y1="22" x2="340" y2="104"></line>
-            <text class="hl-t hl-t--m" x="70" y="15" text-anchor="middle">85</text>
-            <text class="hl-t hl-t--m" x="137.5" y="15" text-anchor="middle">95</text>
-            <text class="hl-t hl-t--m" x="205" y="15" text-anchor="middle">105</text>
-            <text class="hl-t hl-t--m" x="272.5" y="15" text-anchor="middle">115</text>
-            <text class="hl-t hl-t--m" x="340" y="15" text-anchor="middle">125</text>
-            <!-- x = 70 + (IQ − 85) × 6,75 ; khoảng nhạt ±8,7, khoảng đậm ±3 -->
-            <rect x="99.02" y="40" width="117.45" height="12" rx="3" style="fill:var(--wb-neutral-weak)"></rect>
-            <rect x="137.50" y="40" width="40.50" height="12" rx="3" style="fill:var(--wb-neutral-strong)"></rect>
-            <circle cx="157.75" cy="46" r="4" style="fill:var(--wb-fg)"></circle>
-            <text class="hl-t hl-t--b" x="4" y="50">Peter 98</text>
-            <rect x="119.27" y="74" width="117.45" height="12" rx="3" style="fill:var(--wb-neutral-weak)"></rect>
-            <rect x="157.75" y="74" width="40.50" height="12" rx="3" style="fill:var(--wb-neutral-strong)"></rect>
-            <circle cx="178.00" cy="80" r="4" style="fill:var(--wb-fg)"></circle>
-            <text class="hl-t hl-t--b" x="4" y="84">Linda 101</text>
-            <text class="hl-t hl-t--s" x="4" y="124">đậm: ±3 (50%) · nhạt: ±8,7 (95%)</text>
-          </svg>
+          <svg class="hl-svg" id="pl-svg" viewBox="0 0 928 150" role="img" aria-label="Hai khoảng IQ của Peter và Linda: khoảng đậm là ±3 điểm, khoảng nhạt là ±8,7 điểm; cả hai cặp khoảng chồng lên nhau gần hết"></svg>
         </figure>
         <p class="hw-src">Hình do trang này vẽ từ ví dụ Peter–Linda của sách. Hệ số 2,9 = 1,96 ÷ 0,6745: tỉ số giữa nửa độ rộng của khoảng 95% và của khoảng 50% trong phân phối chuẩn.</p>
 
@@ -835,7 +814,7 @@
               <div><span class="k">Thêm bao nhiêu người</span><span class="v" id="bs-abs">—</span><span class="s">trên 10.000 người</span></div>
               <div><span class="k">Trước → sau</span><span class="v" id="bs-ba">—</span><span class="s">trên 10.000 người</span></div>
             </div>
-            <svg class="hl-svg" id="bs-svg" viewBox="0 0 560 250" role="img" aria-label="Hai ô vuông, mỗi ô 1.000 người, tô những người gặp rủi ro trước và sau khi rủi ro tăng"></svg>
+            <svg class="hl-svg" id="bs-svg" viewBox="0 0 560 250" role="img" aria-label="Hai khối, mỗi khối 1.000 chấm là 1.000 người; chấm đậm là người gặp rủi ro, trước và sau khi rủi ro tăng"></svg>
             <p class="hl-lab__foot"><b>Điều cần thấy:</b> giữ ×2 và kéo tỉ lệ ban đầu từ 1 trên 100.000 lên 1 trên 5. Tiêu đề không đổi — "tăng gấp đôi" — nhưng số người bị ảnh hưởng thêm đi từ 0,1 lên 2.000 trên 10.000: hai chuyện khác nhau hai vạn lần, cùng một tiêu đề.</p>
             <p class="hl-lab__foot">Chuyện thật: tháng 10/1995, cơ quan quản lý thuốc của Anh cảnh báo một số loại thuốc tránh thai làm nguy cơ huyết khối "tăng gấp đôi" — tính tuyệt đối là từ khoảng 1 lên 2 trên 7.000 phụ nữ. Nhiều người bỏ thuốc; năm 1996, số ca phá thai ở Anh và xứ Wales tăng 8%, thêm khoảng 13.600 ca. Mặc định của mô hình chính là con số ấy.</p>
           </div>
@@ -1504,8 +1483,9 @@
     return (neg && Number(x.toFixed(d)) !== 0 ? '−' : '') + s;
   }
   function widthOf(svg) {
-    var w = Math.round(svg.getBoundingClientRect().width) || 560;
-    return clamp(w, 250, 720);
+    var cs = window.getComputedStyle(svg);
+    var w = svg.getBoundingClientRect().width - (parseFloat(cs.borderLeftWidth) || 0) - (parseFloat(cs.borderRightWidth) || 0);
+    return clamp(Math.round(w) || 560, 240, 1200);
   }
   function setBox(svg, W, H) { svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); }
   function txt(parent, x, y, s, cls, anchor, extra) {
@@ -1653,6 +1633,30 @@
     if (btn) btn.addEventListener('click', function () { run++; draw(); });
   })();
 
+  /* ── Hình tĩnh: khoảng IQ của Peter và Linda (vẽ theo bề rộng thật như các mô hình) ──
+     x theo IQ 85→125; khoảng nhạt ±8,7 (95%), khoảng đậm ±3 (50%). */
+  (function () {
+    var svg = $('pl-svg'); if (!svg) return;
+    function draw() {
+      var W = widthOf(svg), H = 150; setBox(svg, W, H); clear(svg);
+      var L = 96, R = 24, T = 30, B = 112;
+      function xs(v) { return L + (W - L - R) * (v - 85) / 40; }
+      [85, 95, 105, 115, 125].forEach(function (v) {
+        el('line', { x1: xs(v), x2: xs(v), y1: T - 4, y2: B, 'class': 'hl-grid' }, svg);
+        txt(svg, xs(v), 18, String(v), 'hl-t hl-t--m', 'middle');
+      });
+      [['Peter 98', 98, 52], ['Linda 101', 101, 86]].forEach(function (r) {
+        var c = r[1], y = r[2];
+        el('rect', { x: xs(c - 8.7), y: y - 6, width: xs(c + 8.7) - xs(c - 8.7), height: 12, rx: 3, style: 'fill:var(--wb-neutral-weak)' }, svg);
+        el('rect', { x: xs(c - 3), y: y - 6, width: xs(c + 3) - xs(c - 3), height: 12, rx: 3, style: 'fill:var(--wb-neutral-strong)' }, svg);
+        el('circle', { cx: xs(c), cy: y, r: 4, style: 'fill:var(--wb-fg);stroke:var(--wb-canvas);stroke-width:2' }, svg);
+        txt(svg, 12, y + 4, r[0], 'hl-t hl-t--b');
+      });
+      txt(svg, 12, H - 12, 'đậm: ±3 (50%) · nhạt: ±8,7 (95%)', 'hl-t hl-t--s');
+    }
+    onInput([], draw);
+  })();
+
   /* ── Mô hình 3: trung bình cộng và trung vị ──────────────────────────── */
   (function () {
     var svg = $('av-svg'); if (!svg) return;
@@ -1707,27 +1711,31 @@
       $('bs-abs').textContent = '+' + per10k(p1 - p0);
       $('bs-ba').textContent = per10k(p0) + ' → ' + per10k(p1);
 
-      var W = widthOf(svg), pad = 12, gw = (W - 3 * pad) / 2, cell = gw / 40;
-      var T = 24, H = Math.ceil(T + 25 * cell + 30); setBox(svg, W, H); clear(svg);
+      var W = widthOf(svg), pad = 12, gap = W >= 640 ? 28 : 12, gw = Math.min((W - 2 * pad - gap) / 2, 380), cell = gw / 40;
+      var T = 26, H = Math.ceil(T + 25 * cell + 32), left = (W - 2 * gw - gap) / 2; setBox(svg, W, H); clear(svg);
       [[p0, 'Trước: ' + per10k(p0)], [p1, 'Sau: ' + per10k(p1)]].forEach(function (g, j) {
-        var x0 = pad + j * (gw + pad), c = g[0] * 1000, full = Math.floor(c + 1e-9), frac = c - full;
-        var off = '', on = '', s = Math.max(0.8, cell * 0.72), d;
+        var x0 = left + j * (gw + gap), c = g[0] * 1000, full = Math.floor(c + 1e-9), frac = c - full;
+        /* Người không gặp rủi ro là chấm nhỏ nhạt, người gặp là chấm đậm to hơn: 2.000 ô vuông xám đặc trước
+           đây đọc như một mảng tường, chấm nhỏ để khoảng trống giữa chúng làm nền. Ô lẻ (phần thập phân) là chấm
+           có diện tích theo đúng phần ấy. */
+        var off = '', on = '', ro = Math.max(0.7, cell * 0.2), rn = Math.max(1.2, cell * 0.4), d;
+        function dot(x, y, r) { return 'M' + (x - r).toFixed(1) + ' ' + y.toFixed(1) + 'a' + r.toFixed(2) + ' ' + r.toFixed(2) + ' 0 1 0 ' + (2 * r).toFixed(2) + ' 0a' + r.toFixed(2) + ' ' + r.toFixed(2) + ' 0 1 0 ' + (-2 * r).toFixed(2) + ' 0z'; }
         for (var q = 0; q < 1000; q++) {
-          var cxq = x0 + (q % 40) * cell, cyq = T + Math.floor(q / 40) * cell;
-          if (q < full) on += 'M' + cxq.toFixed(1) + ' ' + cyq.toFixed(1) + 'h' + s.toFixed(2) + 'v' + s.toFixed(2) + 'h-' + s.toFixed(2) + 'z';
+          var cxq = x0 + (q % 40 + 0.5) * cell, cyq = T + (Math.floor(q / 40) + 0.5) * cell;
+          if (q < full) on += dot(cxq, cyq, rn);
           else {
-            off += 'M' + cxq.toFixed(1) + ' ' + cyq.toFixed(1) + 'h' + s.toFixed(2) + 'v' + s.toFixed(2) + 'h-' + s.toFixed(2) + 'z';
-            if (q === full && frac > 0.001) { d = s * Math.sqrt(frac); on += 'M' + cxq.toFixed(1) + ' ' + cyq.toFixed(1) + 'h' + d.toFixed(2) + 'v' + d.toFixed(2) + 'h-' + d.toFixed(2) + 'z'; }
+            off += dot(cxq, cyq, ro);
+            if (q === full && frac > 0.001) { d = rn * Math.sqrt(frac); on += dot(cxq, cyq, d); }
           }
         }
-        el('path', { d: off || 'M0 0', style: 'fill:var(--wb-neutral-weak)' }, svg);
+        el('path', { d: off || 'M0 0', style: 'fill:var(--wb-neutral)' }, svg);
         if (on) el('path', { d: on, style: 'fill:var(--wb-fg)' }, svg);
-        txt(svg, x0, 15, g[1], j ? 'hl-t hl-t--b' : 'hl-t hl-t--s');
+        txt(svg, x0, 17, g[1], j ? 'hl-t hl-t--b' : 'hl-t hl-t--s');
       });
       var cap = p1 * 1000 < 1
         ? (W >= 460 ? 'chưa tới 1 người trên mỗi khối 1.000 — cả hai khối gần như trống' : 'dưới 1 người trên 1.000')
-        : (W >= 460 ? 'số người trên 10.000 · mỗi ô nhỏ = 1 người · mỗi khối = 1.000 người' : 'mỗi ô = 1 người, khối = 1.000');
-      txt(svg, pad, H - 9, cap, 'hl-t hl-t--s');
+        : (W >= 460 ? 'số người trên 10.000 · mỗi chấm = 1 người · mỗi khối = 1.000 người' : 'mỗi chấm = 1 người, khối = 1.000');
+      txt(svg, left, H - 10, cap, 'hl-t hl-t--s');
     }
     onInput(['bs-p', 'bs-m'], draw);
   })();
@@ -1805,11 +1813,11 @@
       $('pc-v').textContent = x1(vo);
 
       var W = widthOf(svg), H = 250; setBox(svg, W, H); clear(svg);
-      var yb = H - 40, bw = 42, bh = 50, x0 = 14;
-      el('line', { x1: 6, x2: W - 6, y1: yb, y2: yb, 'class': 'hl-ax' }, svg);
+      var yb = H - 42, bw = 44, bh = 52, x0 = Math.max(14, (W - (bw + 36 + 3 * bw + 12)) / 2);
+      el('line', { x1: 8, x2: W - 8, y1: yb, y2: yb, 'class': 'hl-ax' }, svg);
       house(svg, x0, yb, bw, bh, 'fill:var(--wb-neutral)');
       txt(svg, x0 + bw / 2, yb + 16, 'mốc', 'hl-t hl-t--s', 'middle');
-      var rx = x0 + bw + 34;
+      var rx = x0 + bw + 36;
       if (mode === 'repeat') {
         var full = Math.floor(k + 1e-9), frac = k - full, gap = 6, x = rx;
         for (var i = 0; i < full; i++) { house(svg, x, yb, bw, bh, 'fill:var(--wb-fg)'); x += bw + gap; }
@@ -1828,7 +1836,7 @@
         var lab = mode === 'scale' ? 'cao ×' + fmt(hs, 1) + ', rộng ×' + fmt(hs, 1) : 'cao ×' + fmt(hs, 2) + ' (= √' + fmt(k, 1) + ')';
         txt(svg, Math.min(rx + w / 2, W - 8 - lab.length * 3.2), yb + 16, lab, 'hl-t hl-t--s', 'middle');
       }
-      txt(svg, 6, H - 6, 'mắt so diện tích: ' + x1(ar), 'hl-t hl-t--b');
+      txt(svg, 12, 22, 'mắt so diện tích: ' + x1(ar), 'hl-t hl-t--b');
     }
     btns.forEach(function (b) {
       b.addEventListener('click', function () {
