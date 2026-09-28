@@ -1,12 +1,17 @@
 #!/bin/sh
 # Cổng lớp 2 cho pages/ — chạy lúc commit. CHẶN.
-# Cài: tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo */tools/hooks/pre-commit)
+# Cài: sh tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo */tools/hooks/pre-commit)
 #
 # Chỉ chạy khi commit có chạm pages/ — commit ở facts/, cashy/… không bị ảnh hưởng.
-#   · cổng tĩnh chỉ soi ĐÚNG những trang đang được commit: mỗi trang có thể dài vài nghìn dòng;
+#   · cổng tĩnh thường chỉ soi ĐÚNG những trang đang được commit: mỗi trang dài hàng nghìn dòng.
+#     Ngoại lệ: commit sửa CHÍNH CỔNG (lint-pages.py, tools/htmlcheck.py, hoặc hook này) thì
+#     soi lại mọi trang — một phép kiểm vừa đổi có thể làm đỏ một trang không ai chạm, và lọc
+#     theo trang đang commit thì không bao giờ thấy: cổng im lặng qua đúng lúc nó vừa bị sửa.
 #   · cổng kiến thức: run-verify.py đọc dòng PAGES đầu mỗi pages/tools/verify-*.py và chỉ chạy
 #     cổng nào có trang — hoặc chính file cổng — nằm trong commit. Thêm cổng mới không phải sửa
 #     file này.
+#
+# Viết ${DIR} chứ không $DIR ngay trước chữ có dấu: sh của macOS đọc lẫn byte UTF-8 vào tên biến.
 #
 # Bỏ qua một lần (chỉ khi bạn BIẾT mình đang làm gì): git commit --no-verify
 
@@ -14,21 +19,32 @@ set -e
 DIR="pages"
 ROOT=$(git rev-parse --show-toplevel)
 
-STAGED=$(git diff --cached --name-only --diff-filter=ACMR | grep "^$DIR/" || true)
-[ -z "$STAGED" ] && exit 0
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR | grep "^${DIR}/" || true)
+GATE=$(git diff --cached --name-only --diff-filter=ACMRD \
+  | grep -E "^(${DIR}/tools/(lint-pages\.py|hooks/pre-commit)|tools/htmlcheck\.py)$" || true)
+[ -z "$STAGED" ] && [ -z "$GATE" ] && exit 0
 
 if ! command -v python3 >/dev/null 2>&1; then
-  echo "pre-commit: không có python3 — bỏ qua cổng $DIR." >&2
+  echo "pre-commit: không có python3 — bỏ qua cổng ${DIR}." >&2
   exit 0
 fi
 
 cd "$ROOT"
-echo "pre-commit: chạy cổng $DIR…"
+HTML=$(printf '%s\n' "$STAGED" | grep "^${DIR}/[^/]*\.html$" || true)
+LINT=0
+TARGETS=""
+if [ -n "$GATE" ]; then
+  echo "pre-commit: cổng ${DIR} vừa đổi — soi lại mọi trang…"
+  LINT=1
+elif [ -n "$HTML" ]; then
+  echo "pre-commit: chạy cổng ${DIR}…"
+  LINT=1
+  TARGETS=$HTML
+fi
 
-HTML=$(printf '%s\n' "$STAGED" | grep "^$DIR/[^/]*\.html$" || true)
-if [ -n "$HTML" ]; then
+if [ "$LINT" -eq 1 ]; then
   # shellcheck disable=SC2086
-  if ! python3 "$DIR/tools/lint-pages.py" $HTML; then
+  if ! python3 "${DIR}/tools/lint-pages.py" $TARGETS; then
     cat >&2 <<'MSG'
 
 ──────────────────────────────────────────────────────────────────────
@@ -38,8 +54,9 @@ Mỗi trang là một tài liệu tự chứa, và push main = deploy lên GitHu
 không có build step nào bắt lỗi hộ.
 
   · id trùng · anchor gãy · asset thiếu · thẻ lệch
-  · <svg> không tên · cây tiêu đề nhảy bậc · aria-label tiếng Anh trên trang lang="vi"
-    (ba cái sau chạy theo bánh cóc — bảng DEBT trong lint-pages.py)
+  · <svg> không tên (svg_vo_danh) · cây tiêu đề nhảy bậc (hut_cap)
+    · aria-label tiếng Anh trên trang lang="vi" (nhan_tieng_anh)
+    — ba cái sau chạy theo bánh cóc: bảng DEBT trong lint-pages.py
 
 Xem thêm:  python3 pages/tools/lint-pages.py -v
 Bỏ qua có ý thức:  git commit --no-verify
@@ -49,7 +66,9 @@ MSG
   fi
 fi
 
-# shellcheck disable=SC2086
-python3 "$DIR/tools/run-verify.py" $STAGED || exit 1
+if [ -n "$STAGED" ]; then
+  # shellcheck disable=SC2086
+  python3 "${DIR}/tools/run-verify.py" $STAGED || exit 1
+fi
 
-echo "pre-commit: cổng $DIR qua."
+echo "pre-commit: cổng ${DIR} qua."

@@ -1,9 +1,12 @@
 #!/bin/sh
 # Cổng chất lượng cho cooking/ — chạy lúc commit. CHẶN.
-# Cài: facts/tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo */tools/hooks/pre-commit)
+# Cài: sh tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo */tools/hooks/pre-commit)
 #
 # Chỉ chạy khi commit có chạm cooking/ — commit ở facts/, pages/… không bị ảnh hưởng.
-# Chỉ soi ĐÚNG những trang đang được commit, không soi cả bốn trang: mỗi trang tới 4.700 dòng.
+# Thường chỉ soi ĐÚNG những trang và file data đang được commit, không soi cả thư mục.
+# Ngoại lệ: commit sửa CHÍNH CỔNG (linter, hoặc hook này) thì soi lại mọi trang và mọi file
+# data. Một phép kiểm vừa đổi có thể làm đỏ một trang không ai chạm, và lọc theo file đang
+# commit thì không bao giờ thấy — cổng im lặng qua đúng lúc nó vừa bị sửa.
 #
 # Bỏ qua một lần (chỉ khi bạn BIẾT mình đang làm gì): git commit --no-verify
 
@@ -13,7 +16,9 @@ ROOT=$(git rev-parse --show-toplevel)
 
 CHANGED=$(git diff --cached --name-only --diff-filter=ACMR \
   | grep -E "^$DIR/([^/]*\.html|data/[^/]*\.json)$" || true)
-[ -z "$CHANGED" ] && exit 0
+GATE=$(git diff --cached --name-only --diff-filter=ACMRD \
+  | grep -E "^$DIR/tools/(lint-cooking\.py|hooks/pre-commit)$" || true)
+[ -z "$CHANGED" ] && [ -z "$GATE" ] && exit 0
 
 if ! command -v python3 >/dev/null 2>&1; then
   echo "pre-commit: không có python3 — bỏ qua cổng $DIR." >&2
@@ -21,10 +26,16 @@ if ! command -v python3 >/dev/null 2>&1; then
 fi
 
 cd "$ROOT"
-echo "pre-commit: chạy cổng $DIR…"
+if [ -n "$GATE" ]; then
+  echo "pre-commit: cổng $DIR vừa đổi — soi lại mọi trang và mọi file data…"
+  TARGETS=""
+else
+  echo "pre-commit: chạy cổng $DIR…"
+  TARGETS=$CHANGED
+fi
 
 # shellcheck disable=SC2086
-if ! python3 "$DIR/tools/lint-cooking.py" $CHANGED; then
+if ! python3 "$DIR/tools/lint-cooking.py" $TARGETS; then
   cat >&2 <<'MSG'
 
 ──────────────────────────────────────────────────────────────────────
