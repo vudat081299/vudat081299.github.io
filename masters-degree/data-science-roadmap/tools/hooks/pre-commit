@@ -1,6 +1,7 @@
 #!/bin/sh
 # Cổng chất lượng cho masters-degree/data-science-roadmap/.
-# Cài: masters-degree/data-science-roadmap/tools/install-hooks.sh
+# Cài: sh masters-degree/data-science-roadmap/tools/install-hooks.sh — nó gọi bộ điều phối
+# chung (tools/install-hooks.sh ở gốc repo), bộ đó gọi mọi */tools/hooks/<tên>, kể cả file này.
 #
 # Chỉ chạy khi commit có chạm vào thư mục đó — commit ở cashy/, facts/… không bị ảnh hưởng.
 # Bỏ qua một lần (chỉ khi bạn BIẾT mình đang làm gì): git commit --no-verify

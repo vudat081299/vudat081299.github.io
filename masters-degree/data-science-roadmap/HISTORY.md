@@ -42,8 +42,8 @@ Ghi ở DS-026 và thành một mục chờ ở `HANDOFF.md`.
 |---|---|
 | `# Handoff — …` (giới thiệu trang, lệnh mở/đóng phiên, ba lớp hook) | bỏ — lặp lại `CLAUDE.md` |
 | `## ĐANG LÀM` — chữ thương hiệu tạm là `DS` | quyết định DS-018; việc đổi lại nằm ở `HANDOFF.md`, mục CHỜ CHỦ TRANG |
-| `### Đã quyết là GIỮ NGUYÊN` | dòng chủ trang duyệt → DS-008, DS-009; dòng agent tự chốt → luật ở `CLAUDE.md` §2, §4, §7 và `docs/editing.md` việc 7; bảng gốc chép nguyên văn ở mục 3 |
-| `### Một thứ để biết trước` | chép nguyên văn ở mục 3; hai ý của nó thành luật ở `CLAUDE.md` §13 và `docs/editing.md` |
+| `### Đã quyết là GIỮ NGUYÊN` | dòng chủ trang duyệt → DS-008, DS-009; dòng agent tự chốt → luật ở `CLAUDE.md` §2, §4, §7 và `docs/editing.md` việc 7; bảng gốc chép nguyên văn ở mục 5 |
+| `### Một thứ để biết trước` | chép nguyên văn ở mục 5; hai ý của nó thành luật ở `CLAUDE.md` §13 và `docs/editing.md` |
 | `## Chạy preview` | `docs/design.md` §8 — đó là cách làm, không phải việc |
 
 Hai món trước đây nằm lẫn trong "Cố ý KHÔNG làm" của các phiên mà chưa ai đóng giờ lên mục `NỢ`
@@ -72,7 +72,26 @@ vỡ chữ ở 375px (phiên (r)).
   nghĩa. Cùng khuôn đó quét cả phần mô tả nên đếm `G-QUIZ-GUESS` hai lần. Giờ tên lấy ở đầu
   dòng của `--gates`, có chữ số: 31 cổng, mỗi cổng một lần — bộ test ra 75 đạt / 0 trượt.
 
-### 4. Nguyên văn phần "CHƯA LÀM" cũ lúc tách
+### 4. `install-hooks.sh` gọi bộ điều phối chung thay vì tự đặt symlink
+
+Phần git hook của `tools/install-hooks.sh` từng tự đặt `.git/hooks/<tên>` thành symlink trỏ vào
+`tools/hooks/<tên>` của thư mục này — đúng thao tác mà `CLAUDE.md` gốc repo cấm (luật 4: symlink
+vào một project xoá mất cổng của mọi project khác). Nó chỉ không phá gì vì biết nhường khi hook
+đã là file thật. Giờ nó gọi thẳng `tools/install-hooks.sh` ở gốc repo (bộ điều phối, chạy từ gốc
+vì script đó tìm gốc theo thư mục đang đứng), nên **một lệnh là đủ** cho cả ba lớp; `session.mjs`
+và `G-HOOK` in đúng một lệnh đó. Phần trộn PostToolUse và cài `launch.json` giữ nguyên, thêm một
+thay đổi: `.claude/settings.json` giờ được git theo dõi, nên đã có đúng hook này thì script
+**không ghi lại file** — bản cũ luôn ghi lại, và mỗi lần chạy lại dời hook của thư mục này xuống
+cuối danh sách, sinh một diff vô nghĩa trong file mọi project dùng chung. Đã chạy thử trên một
+bản sao repo trong scratchpad: bộ điều phối được cài, `settings.json` giữ nguyên từng byte, chạy
+lần hai không đổi gì.
+
+`hook-state.mjs` giờ hỏi `git rev-parse --git-path hooks` thay vì đoán `<gốc>/.git/hooks`.
+Trong một worktree `.git` là một file, nên cách đoán cũ báo "2/3 lớp CHƯA cài" dù bộ điều phối
+đang chạy thật ở thư mục hook chung — lỗi đó hiện ngay ở đầu phiên này, khi mở phiên trong
+worktree. Chuỗi nhận ra bộ điều phối (`*/tools/hooks/<tên>`) không đổi.
+
+### 5. Nguyên văn phần "CHƯA LÀM" cũ lúc tách
 
 Chép lại để không mất gì; dòng nào đã thành quyết định thì chỉ còn mã.
 

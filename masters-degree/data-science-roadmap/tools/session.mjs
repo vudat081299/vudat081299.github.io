@@ -204,14 +204,11 @@ async function start() {
   const off = layers.filter(l => !l.ok);
   if (off.length) {
     console.log(RED(`⚠ ${off.length}/3 lớp tự động CHƯA cài`) + ` — ${off.map(l => l.when).join(', ')}`);
-    // HAI lệnh, và THỨ TỰ có ý nghĩa: repo này nhiều project con nên .git/hooks phải là
-    // bộ điều phối (gọi mọi */tools/hooks/<event>), không phải symlink trỏ vào một
-    // project. Script của project này biết nhường — nó không ghi đè hook đã là file
-    // thật — nên chạy nó trước rồi mới dựng bộ điều phối là an toàn ở cả hai thứ tự;
-    // nhưng in đúng thứ tự thì không ai phải nghĩ. Xem CLAUDE.md ở GỐC repo.
-    console.log('  Chạy ' + B('cả hai') + DIM(', một lần cho mỗi máy / mỗi bản clone:'));
-    console.log('    ' + B('tools/install-hooks.sh') + DIM('               lớp 1 (sau mỗi Edit) + cấu hình preview'));
-    console.log('    ' + B('sh ../../tools/install-hooks.sh') + DIM('         lớp 2–3 (commit, push) — bộ điều phối cho cả repo'));
+    // MỘT lệnh là đủ: script của thư mục này gọi bộ điều phối git hook chung của repo
+    // (gọi mọi */tools/hooks/<event>, không phải symlink trỏ vào một project — xem
+    // CLAUDE.md ở GỐC repo), rồi trộn PostToolUse và cài cấu hình preview.
+    console.log('  Chạy một lần cho mỗi máy / mỗi bản clone: ' + B('sh tools/install-hooks.sh'));
+    console.log(DIM('  (chỉ thiếu git hook thì bộ điều phối chung là đủ: sh ../../tools/install-hooks.sh)'));
   } else {
     console.log(GRN('✓ cả 3 lớp tự động đã cài') + DIM(' — sau mỗi Edit · lúc commit · lúc push'));
   }

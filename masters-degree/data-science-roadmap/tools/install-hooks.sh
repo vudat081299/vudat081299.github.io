@@ -1,40 +1,46 @@
 #!/bin/sh
-# Cài cả BA lớp tự động cho repo này. Chạy một lần cho mỗi máy / mỗi bản clone:
+# Cài cả BA lớp tự động cho thư mục này. Chạy một lần cho mỗi máy / mỗi bản clone:
 #
-#   masters-degree/data-science-roadmap/tools/install-hooks.sh
+#   sh masters-degree/data-science-roadmap/tools/install-hooks.sh
 #
 # Ba lớp, ba thời điểm khác nhau có chủ ý (xem CLAUDE.md §3):
 #   sau mỗi Edit/Write  → Claude Code PostToolUse  → agent tự sửa trong cùng một lượt
 #   lúc commit          → git pre-commit           → không để lỗi vào lịch sử
 #   lúc push            → git pre-push             → push main là DEPLOY, chặn lần cuối
 #
-# Vì sao phải có script: cả .git/hooks/ và .claude/ đều KHÔNG được git theo dõi
-# (.claude/ nằm trong .gitignore), nên hook không thể tự theo repo về máy mới. Nguồn sự
-# thật là các file được theo dõi trong tools/hooks/; script này chỉ nối chúng vào chỗ
-# git và Claude Code thật sự đọc.
+# Hai lớp git KHÔNG được cài riêng ở đây. Repo có nhiều project con, nên .git/hooks/<tên>
+# phải là BỘ ĐIỀU PHỐI chung (tools/install-hooks.sh ở gốc repo): một vòng lặp gọi mọi
+# */tools/hooks/<tên> mà git theo dõi — tools/hooks/pre-commit và pre-push của thư mục này
+# nằm trong số đó. Script này từng tự đặt symlink .git/hooks/<tên> → tools/hooks/<tên>, và
+# symlink đó xoá mất cổng của mọi project khác (CLAUDE.md gốc repo, luật 4). Giờ nó gọi
+# bộ điều phối, nên chạy nó bao nhiêu lần cũng không phá gì.
+#
+# Hai thứ còn lại vẫn là việc của script này, vì chúng không phải git hook:
+#   · hook PostToolUse trong .claude/settings.json — file đó ở gốc repo được git theo dõi
+#     và đã mang sẵn hook của thư mục này; bước trộn ở đây giữ cho bản trên máy đúng dù
+#     nó từng bị sửa tay, và chạy lại không sinh hook trùng;
+#   · .claude/launch.json cho preview — KHÔNG được git theo dõi (của .claude/ chỉ có
+#     settings.json và skills/ được theo dõi), nên phải cài từ tools/hooks/launch.json sang.
 set -e
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(git -C "$HERE" rev-parse --show-toplevel)
 
 chmod +x "$HERE/hooks/pre-commit" "$HERE/hooks/pre-push" "$HERE/hooks/post-edit.sh" 2>/dev/null || true
 
-# ---- 1. git pre-commit + pre-push ------------------------------------------
-for H in pre-commit pre-push; do
-  SRC="$HERE/hooks/$H"
-  DST="$ROOT/.git/hooks/$H"
-  if [ -e "$DST" ] && ! [ -L "$DST" ]; then
-    echo "· đã có $DST (không phải symlink) — KHÔNG ghi đè."
-    echo "  tự thêm dòng này vào hook hiện có:"
-    echo "    sh masters-degree/data-science-roadmap/tools/hooks/$H || exit 1"
-  else
-    ln -sf "$SRC" "$DST"
-    echo "✓ git $H → tools/hooks/$H"
-  fi
-done
+# ---- 1. git pre-commit + pre-push: bộ điều phối chung của repo ---------------
+# Chạy từ gốc repo: script đó tìm gốc bằng `git rev-parse` theo thư mục đang đứng, và nó
+# cài vào `git rev-parse --git-path hooks` — chỗ chung của mọi worktree.
+if [ -f "$ROOT/tools/install-hooks.sh" ]; then
+  (cd "$ROOT" && sh tools/install-hooks.sh)
+  echo "✓ git pre-commit + pre-push → bộ điều phối chung (gọi cả tools/hooks/ của thư mục này)"
+else
+  echo "· không thấy $ROOT/tools/install-hooks.sh — bỏ qua git hook."
+  echo "  Bản clone này cũ hơn bộ điều phối chung: pull rồi chạy lại."
+fi
 
 # ---- 2. Claude Code PostToolUse --------------------------------------------
-# .claude/ bị gitignore nên phải trộn từ file được theo dõi sang. Dùng jq để KHÔNG đè
-# mất các thiết lập khác mà chủ máy đã có trong settings.json.
+# Trộn từ tools/hooks/claude-settings.json sang .claude/settings.json. Dùng jq để KHÔNG đè
+# mất các thiết lập khác trong settings.json (hook của facts/, shop/…).
 CS="$ROOT/.claude/settings.json"
 HK="$HERE/hooks/claude-settings.json"
 if ! command -v jq >/dev/null 2>&1; then
@@ -43,25 +49,33 @@ if ! command -v jq >/dev/null 2>&1; then
 else
   mkdir -p "$ROOT/.claude"
   [ -f "$CS" ] || echo '{}' > "$CS"
-  TMP=$(mktemp)
-  # Lọc bỏ đúng hook cũ của chúng ta (nhận ra bằng chuỗi data-science-roadmap trong
-  # command) rồi thêm lại bản mới — chạy script hai lần không sinh hook trùng.
-  jq --slurpfile add "$HK" '
-    .hooks //= {} |
-    .hooks.PostToolUse = (
-      [ (.hooks.PostToolUse // [])[]
-        | .hooks = [ (.hooks // [])[] | select((.command // "") | contains("data-science-roadmap") | not) ]
-        | select((.hooks | length) > 0) ]
-      + $add[0].hooks.PostToolUse
-    )
-  ' "$CS" > "$TMP" && mv "$TMP" "$CS"
-  echo "✓ Claude Code PostToolUse → tools/hooks/post-edit.sh  ($CS)"
-  echo "  LƯU Ý: Claude Code chỉ nạp lại settings khi mở /hooks hoặc khởi động lại phiên."
+  # settings.json được git theo dõi: đã có đúng hook này thì KHÔNG ghi lại file. Ghi lại
+  # (dù cùng nội dung) là dời hook xuống cuối danh sách và sinh một diff vô nghĩa trong
+  # một file mà mọi project con dùng chung.
+  if jq -e --slurpfile add "$HK" \
+       'any(.hooks.PostToolUse[]?; . == $add[0].hooks.PostToolUse[0])' "$CS" >/dev/null 2>&1; then
+    echo "✓ Claude Code PostToolUse → tools/hooks/post-edit.sh — đã có sẵn trong $CS"
+  else
+    TMP=$(mktemp)
+    # Lọc bỏ đúng hook cũ của chúng ta (nhận ra bằng chuỗi data-science-roadmap trong
+    # command) rồi thêm lại bản mới — chạy script hai lần không sinh hook trùng.
+    jq --slurpfile add "$HK" '
+      .hooks //= {} |
+      .hooks.PostToolUse = (
+        [ (.hooks.PostToolUse // [])[]
+          | .hooks = [ (.hooks // [])[] | select((.command // "") | contains("data-science-roadmap") | not) ]
+          | select((.hooks | length) > 0) ]
+        + $add[0].hooks.PostToolUse
+      )
+    ' "$CS" > "$TMP" && mv "$TMP" "$CS"
+    echo "✓ Claude Code PostToolUse → tools/hooks/post-edit.sh  ($CS)"
+    echo "  LƯU Ý: Claude Code chỉ nạp lại settings khi mở /hooks hoặc khởi động lại phiên."
+  fi
 fi
 
 # ---- 3. Cấu hình preview (.claude/launch.json) -----------------------------
-# Cùng vấn đề như settings.json: .claude/ bị gitignore nên launch.json không theo repo
-# về máy mới, và bản cũ còn viết cứng cả đường dẫn repo lẫn /opt/homebrew/bin/python3.11
+# launch.json không được git theo dõi (của .claude/ chỉ settings.json và skills/ được theo
+# dõi), nên nó không theo repo về máy mới, và bản cũ còn viết cứng cả đường dẫn repo lẫn /opt/homebrew/bin/python3.11
 # — hai thứ chỉ đúng trên đúng một máy. Nguồn giờ là tools/hooks/launch.json (được git
 # theo dõi), chỗ này thay __REPO_ROOT__ rồi trộn vào, giữ nguyên configuration khác.
 # Cài vào HAI chỗ, và đó là chỗ bản trước làm sai. Preview đọc .claude/launch.json

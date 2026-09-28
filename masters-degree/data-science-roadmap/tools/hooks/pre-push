@@ -1,6 +1,7 @@
 #!/bin/sh
 # Lớp tự động THỨ BA: cổng lúc push. CHẶN.
-# Cài: masters-degree/data-science-roadmap/tools/install-hooks.sh
+# Cài: sh masters-degree/data-science-roadmap/tools/install-hooks.sh — nó gọi bộ điều phối
+# chung (tools/install-hooks.sh ở gốc repo), bộ đó gọi mọi */tools/hooks/<tên>, kể cả file này.
 #
 # Vì sao cần thêm một lớp nữa khi đã có pre-commit:
 #   push nhánh main = DEPLOY GitHub Pages. Đây là lúc lỗi thôi ra công khai, và là

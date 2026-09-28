@@ -974,7 +974,7 @@ if (!has('--ci')) {
   const off = layers.filter(l => !l.ok);
   if (off.length) {
     W(`G-HOOK: ${off.length}/3 lớp tự động chưa cài — ` + layers.map(l => `${l.what}: ${l.ok ? 'có' : 'CHƯA'}`).join(' · ') + '\n'
-    + '    Chạy: tools/install-hooks.sh, rồi sh ../../tools/install-hooks.sh (một lần cho mỗi máy / mỗi bản clone)\n'
+    + '    Chạy: sh tools/install-hooks.sh (một lần cho mỗi máy / mỗi bản clone — nó gọi cả bộ điều phối git hook chung)\n'
     + '    Chưa cài thì cổng chỉ chạy khi bạn tự gõ tay — mọi thứ CLAUDE.md §3 mô tả đang tắt.');
   }
 }
