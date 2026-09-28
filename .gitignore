@@ -4,11 +4,13 @@
 # Claude Code scaffolding.
 #
 # Mặc định bỏ qua .claude/ ở MỌI cấp — đó là thiết lập cục bộ của từng máy.
-# Hai ngoại lệ, cùng một lý do: chúng phải đi theo repo, nếu không thì quy trình chỉ
+# Ba ngoại lệ, cùng một lý do: chúng phải đi theo repo, nếu không thì quy trình chỉ
 # chạy trên đúng một máy.
-#   · .claude/settings.json — khai báo hook PostToolUse của các project con.
+#   · .claude/settings.json — khai báo hook của Claude Code cho các project con.
 #   · .claude/skills/       — skill riêng cho repo: quy trình làm việc viết ra thành
 #                             chữ, để phiên AI nào cũng theo cùng một lối.
+#   · .claude/rules/        — luật chỉ nạp khi đọc tới file khớp `paths:` — cho thứ không
+#                             có thư mục riêng (trang chủ) hoặc vắt qua nhiều thư mục.
 #
 # Bốn dòng dưới phải giữ đúng thứ tự này. Git không cho phép "mở lại" một file nằm trong
 # thư mục đã bị loại, nên phải mở lại thư mục gốc trước (dòng 2), loại nội dung của nó
@@ -19,3 +21,5 @@
 !/.claude/settings.json
 !/.claude/skills/
 !/.claude/skills/**
+!/.claude/rules/
+!/.claude/rules/**
