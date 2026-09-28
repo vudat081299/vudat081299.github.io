@@ -50,7 +50,29 @@ Hai món trước đây nằm lẫn trong "Cố ý KHÔNG làm" của các phiê
 của `HANDOFF.md`: câu `s-how#0` còn hỏi nhớ chữ (phiên (w)), và hộp "Nộp được" của lịch 14 ngày
 vỡ chữ ở 375px (phiên (r)).
 
-### 3. Nguyên văn phần "CHƯA LÀM" cũ lúc tách
+### 3. Công cụ theo kịp
+
+- `session.mjs` mở phiên: vẫn đọc `## ĐANG LÀM` / `## CHƯA LÀM` từ `HANDOFF.md`, thêm `## NỢ` và
+  `## CHỜ CHỦ TRANG` (in tiêu đề `###`), và bỏ qua mục ghi "Không có." — `HANDOFF.md` giữ đủ bốn
+  mục cho người đọc thấy khuôn, mục trống không phải thứ để in. Có `DECISIONS.md` thì in lệnh tra
+  theo file.
+- `session.mjs --close`: khung là cho `HISTORY.md` (dán lên trên phiên mới nhất, kèm tên phiên đó),
+  bỏ mục "Còn nợ của riêng phiên này" — việc dở giờ thuộc `HANDOFF.md` — và in hai lời nhắc:
+  còn việc dở thì vào `HANDOFF.md`, chủ trang vừa chốt gì thì vào `DECISIONS.md` (kèm mã kế tiếp).
+- `G-HANDOFF` giữ tên (bảng §4 của `CLAUDE.md` và `G-DOC` bám vào tên), nhưng giờ chỉ nhắc khi
+  **cả** `HISTORY.md` lẫn `HANDOFF.md` đều không đổi. `DECISIONS.md` không tính: quyết định của
+  chủ trang không thay cho việc kể phiên đã làm gì. `gate.test.mjs` chép thêm hai file phiên vào
+  sân tạm, ca NỔ xoá cả hai, và có thêm hai ca IM (chỉ một trong hai file đổi) để cổng không
+  quay về luật cũ.
+- Mọi câu trỏ "HANDOFF phiên (x)" trong công cụ đổi sang "HISTORY.md phiên (x)"; lời nhắc của
+  `G-ROADMAP-4` trỏ DS-002 thay vì một mục `CHƯA LÀM` không còn.
+- Một lỗi có sẵn của `gate.test.mjs`, lộ ra khi chạy lại bộ test: danh sách cổng lấy bằng khuôn
+  `G-[A-Z-]+` nên `G-ROADMAP-4` bị cắt thành `G-ROADMAP-` — chiều IM của cổng đó im mãi vì
+  không bao giờ khớp tên thật, và mỗi lần chạy in một dòng "chưa có ca NỔ: G-ROADMAP-" vô
+  nghĩa. Cùng khuôn đó quét cả phần mô tả nên đếm `G-QUIZ-GUESS` hai lần. Giờ tên lấy ở đầu
+  dòng của `--gates`, có chữ số: 31 cổng, mỗi cổng một lần — bộ test ra 75 đạt / 0 trượt.
+
+### 4. Nguyên văn phần "CHƯA LÀM" cũ lúc tách
 
 Chép lại để không mất gì; dòng nào đã thành quyết định thì chỉ còn mã.
 

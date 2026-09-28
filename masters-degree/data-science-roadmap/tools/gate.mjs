@@ -223,7 +223,7 @@ const GATES = [
   ['G-NEXT',       'nhắc', 'bài sau đã đổi → đọc lại câu "bài sau…" trong PAYOFF'],
   ['G-HOOK',       'nhắc', 'ba lớp hook tự động đã được cài chưa'],
   ['G-DOC',        'nhắc', 'mọi cổng trong code đều có tên trong CLAUDE.md'],
-  ['G-HANDOFF',    'nhắc', 'đổi trang / bộ cổng mà HANDOFF.md không đổi'],
+  ['G-HANDOFF',    'nhắc', 'đổi trang / bộ cổng mà cả HISTORY.md lẫn HANDOFF.md đều không đổi'],
   ['G-LEARN',      'nhắc', 'sổ học đọc được, và chỗ tắc trùng nhau = dạy quá muộn'],
   ['G-ROADMAP',    'nhắc', 'roadmap.html còn khớp bản sinh lại từ nguồn (chặn khi commit)'],
   ['G-ROADMAP-SUM','nhắc', 'tóm tắt roadmap thiếu bài, hoặc bài đã đổi sau khi tóm tắt'],
@@ -347,9 +347,9 @@ if (rmErr) {
      câu, một hình, một ví dụ chạy được / có số, một self-check có đáp án. Thiếu vật
      thứ ba hoặc thứ tư thì trang chỉ tạo NHẬN BIẾT — đọc xong không kiểm được mình
      hiểu chưa — và đó chính là lý do phải gọi nó là visual syllabus thay vì khoá học.
-     Cổng này tồn tại vì hợp đồng đó nằm trong HANDOFF suốt nhiều phiên mà không có gì
-     canh: hợp đồng trong đầu người thì phiên sau không biết nó tồn tại (CLAUDE.md gốc
-     repo, luật 1). Chỉ NHẮC, không chặn: bước good/skim mặc định bị ẩn nên không cần
+     Cổng này tồn tại vì hợp đồng đó (DS-002) từng chỉ nằm trong HANDOFF suốt nhiều phiên
+     mà không có gì canh: hợp đồng trong đầu người thì phiên sau không biết nó tồn tại
+     (CLAUDE.md gốc repo, luật 1). Chỉ NHẮC, không chặn: bước good/skim mặc định bị ẩn nên không cần
      đủ bốn vật, và cổng chỉ đếm bước core. */
   const four = LEAVES.filter(l => l.p === 'core').map(l => {
     const s = RM.sums[l.id] || {};
@@ -365,7 +365,7 @@ if (rmErr) {
     + four.slice(0, 8).map(x => `      ${x.id} — thiếu ${x.lack.join(', ')}`).join('\n')
     + (four.length > 8 ? `\n      … và ${four.length - 8} bước nữa` : '')
     + '\n    Ví dụ và self-check là DỮ LIỆU trong roadmap-summaries.json (trường `example`, `check`),\n'
-    + '    không sinh được từ trang chính — xem hợp đồng ở HANDOFF.md mục CHƯA LÀM.');
+    + '    không sinh được từ trang chính — hợp đồng: DECISIONS.md, DS-002.');
 }
 
 /* --- G-QUIZ / G-QUIZ-COV: câu hỏi trắc nghiệm tự kiểm ----------------------
@@ -437,7 +437,7 @@ if (rmErr) {
 
      Vì sao KHÔNG đặt ngưỡng từng-câu ở 2× (mức đáng lo thật): còn 19 câu ở
      2,0–2,3× sau lượt sửa, và đặt ngưỡng cho vừa nợ thì cổng thành con dấu cao su.
-     19 câu đó là nợ đã ghi, không phải chuẩn mới — xem HANDOFF phiên (w). Cả hai
+     19 câu đó là nợ đã ghi, không phải chuẩn mới — xem HISTORY.md phiên (w). Cả hai
      ngưỡng ở đây đều là NGƯỠNG BÁO ĐỘNG, không phải mục tiêu; mục tiêu vẫn là 25%
      và 1,0×. */
   {
@@ -884,8 +884,8 @@ for (const m of cssBlock.matchAll(/^\s*(\.[a-z0-9_-]+[^{\n]*)\{[^}\n]*max-width:
 
    Vì sao đáng có: `G-MEASURE` canh `max-width` cứng, nhưng KHÔNG cổng nào bắt được
    "vừa viết `margin-bottom: 17px` tại chỗ" — mà đó chính là cách thang khoảng cách
-   trôi trở lại 9 nhịp như trước khi token hoá. Nợ này đã nằm trong HANDOFF từ phiên
-   (k); chạy thử lần đầu ra 9 chỗ, và cả 9 đều rơi ĐÚNG vào một bậc có sẵn (4/6/8/14)
+   trôi trở lại 9 nhịp như trước khi token hoá. Nợ này đã nằm trong nhật ký từ phiên
+   (k) (HISTORY.md); chạy thử lần đầu ra 9 chỗ, và cả 9 đều rơi ĐÚNG vào một bậc có sẵn (4/6/8/14)
    — tức là drift thật, không phải cổng bắt sai.
 
    Hai thứ KHÔNG bắt, vì §0.6 cho phép có chủ ý:
@@ -974,18 +974,22 @@ if (!has('--ci')) {
   const off = layers.filter(l => !l.ok);
   if (off.length) {
     W(`G-HOOK: ${off.length}/3 lớp tự động chưa cài — ` + layers.map(l => `${l.what}: ${l.ok ? 'có' : 'CHƯA'}`).join(' · ') + '\n'
-    + '    Chạy: tools/install-hooks.sh, rồi sh ../../facts/tools/install-hooks.sh (một lần cho mỗi máy / mỗi bản clone)\n'
+    + '    Chạy: tools/install-hooks.sh, rồi sh ../../tools/install-hooks.sh (một lần cho mỗi máy / mỗi bản clone)\n'
     + '    Chưa cài thì cổng chỉ chạy khi bạn tự gõ tay — mọi thứ CLAUDE.md §3 mô tả đang tắt.');
   }
 }
 
 /* --- G-HANDOFF (khuyến nghị): đổi trang mà không ghi lại -----------------
-   CLAUDE.md §12 bắt buộc ghi HANDOFF "đã sửa gì, cố ý KHÔNG sửa gì và vì sao".
-   Mục thứ hai là thứ giữ cho phiên sau không làm lại việc đã cân nhắc và bỏ qua —
-   và nó không thể suy ra được từ diff, nên nếu không ai gõ thì nó mất hẳn.
+   CLAUDE.md §12 bắt buộc ghi một mục vào HISTORY.md: "đã sửa gì, cố ý KHÔNG sửa gì và
+   vì sao". Mục thứ hai là thứ giữ cho phiên sau không làm lại việc đã cân nhắc và bỏ
+   qua — và nó không thể suy ra được từ diff, nên nếu không ai gõ thì nó mất hẳn.
 
-   Máy không đọc được HANDOFF có ĐÚNG hay không, nhưng đọc được điều kiện cần: có
-   đổi trang/bộ cổng mà HANDOFF không nằm trong cùng lần đổi đó. */
+   Máy không đọc được nhật ký có ĐÚNG hay không, nhưng đọc được điều kiện cần: có đổi
+   trang/bộ cổng mà KHÔNG file phiên nào nằm trong cùng lần đổi đó. HISTORY.md hay
+   HANDOFF.md đổi là đủ — một phiên để lại việc dở mà chưa viết nhật ký (hoặc viết nhật
+   ký mà không còn việc dở) đều là trạng thái bình thường. DECISIONS.md thì không tính:
+   quyết định của chủ trang không thay cho việc kể phiên đã làm gì.
+   Tên cổng giữ là G-HANDOFF — tên là thứ bảng §4 của CLAUDE.md và G-DOC bám vào. */
 function gitLines(...args) {
   try {
     return execFileSync('git', ['-C', ROOT, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })
@@ -1002,11 +1006,12 @@ function gitLines(...args) {
   if (files) {
     const hit = s => files.some(f => f.includes(s));
     const substantive = hit('data-science-roadmap.html') || hit('/tools/');
-    if (substantive && !hit('HANDOFF.md')) {
-      W('G-HANDOFF: có đổi trang hoặc bộ cổng, mà HANDOFF.md không đổi.\n'
-      + '    Khung điền trước: node tools/session.mjs --close\n'
+    if (substantive && !hit('HISTORY.md') && !hit('HANDOFF.md')) {
+      W('G-HANDOFF: có đổi trang hoặc bộ cổng, mà cả HISTORY.md lẫn HANDOFF.md đều không đổi.\n'
+      + '    Khung điền trước cho HISTORY.md: node tools/session.mjs --close\n'
       + '    Phần đáng ghi nhất không phải "đã sửa gì" (diff nói được) mà "cố ý KHÔNG sửa gì\n'
-      + '    và vì sao" — không ghi thì phiên sau cân nhắc lại đúng thứ bạn đã bỏ.');
+      + '    và vì sao" — không ghi thì phiên sau cân nhắc lại đúng thứ bạn đã bỏ.\n'
+      + '    Còn việc dở thì nó thuộc HANDOFF.md; chủ trang vừa chốt gì thì thuộc DECISIONS.md.');
     }
   }
 }

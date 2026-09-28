@@ -12,13 +12,18 @@
        Nhưng `git status` CHỈ biết working tree: nó im lặng khi nền local đã cũ vì
        một phiên khác vừa push thẳng `main`. Nên mở phiên còn `git fetch` rồi so
        với upstream — "thư mục sạch" mà nền đã cũ vẫn là nền cũ.
-     · ĐÓNG PHIÊN. CLAUDE.md §12 bắt ghi HANDOFF "đã sửa gì, cố ý không sửa gì".
-       Một bắt buộc mà phải tự nhớ và tự gõ lại từ đầu thì trên thực tế sẽ bị bỏ.
-       Ở đây nó thành một khung điền trước, dựng từ `git diff` thật.
+     · ĐÓNG PHIÊN. CLAUDE.md §12 bắt ghi một mục vào HISTORY.md: "đã sửa gì, cố ý
+       không sửa gì". Một bắt buộc mà phải tự nhớ và tự gõ lại từ đầu thì trên thực
+       tế sẽ bị bỏ. Ở đây nó thành một khung điền trước, dựng từ `git diff` thật —
+       kèm lời nhắc cho hai file còn lại: HANDOFF.md nếu còn việc dở, DECISIONS.md
+       nếu chủ trang vừa chốt gì.
+
+   Ba file, ba câu: HANDOFF.md = việc còn dở (mở phiên in ra) · HISTORY.md = nhật ký
+   các phiên · DECISIONS.md = chủ trang đã chốt gì.
 
    Dùng:
      node tools/session.mjs           mở phiên — chạy TRƯỚC khi sửa gì
-     node tools/session.mjs --close   đóng phiên — khung HANDOFF + câu commit
+     node tools/session.mjs --close   đóng phiên — khung HISTORY.md + câu commit
 
    Không phải cổng: file này không bao giờ thoát khác 0 vì nội dung. Nó chỉ đọc và
    in. Cổng nằm ở gate.mjs.
@@ -35,6 +40,8 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
 const HTML = join(ROOT, 'data-science-roadmap.html');
 const HANDOFF = join(ROOT, 'HANDOFF.md');
+const HISTORY = join(ROOT, 'HISTORY.md');
+const DECISIONS = join(ROOT, 'DECISIONS.md');
 const REL = 'masters-degree/data-science-roadmap';
 
 const argv = process.argv.slice(2);
@@ -103,7 +110,9 @@ function remoteState() {
   return { branch, up, behind, ahead, fetched };
 }
 
-/* Lấy một mục `## <tên>` trong HANDOFF.md, tới `## ` kế tiếp. */
+/* Lấy một mục `## <tên>` trong HANDOFF.md, tới `## ` kế tiếp.
+   `empty` = mục có mà không có việc nào ("Không có."): HANDOFF.md luôn giữ đủ bốn mục cho
+   người đọc thấy khuôn, nên mục trống là trạng thái bình thường, không phải thứ để in. */
 function handoffSection(name) {
   if (!existsSync(HANDOFF)) return null;
   const lines = readFileSync(HANDOFF, 'utf8').split('\n');
@@ -112,7 +121,25 @@ function handoffSection(name) {
   let end = at + 1;
   while (end < lines.length && !lines[end].startsWith('## ')) end++;
   const body = lines.slice(at, end).join('\n').replace(/\n{3,}/g, '\n\n').replace(/\n+-{3,}\s*$/, '').trim();
-  return { at: at + 1, body };
+  const rest = lines.slice(at + 1, end).map(l => l.trim()).filter(l => l && !/^-{3,}$/.test(l));
+  const empty = !rest.length || rest.every(l => /^(_?không có\.?_?|—)$/i.test(l));
+  const heads = rest.filter(l => l.startsWith('### ')).map(l => l.slice(4));
+  return { at: at + 1, body, empty, heads };
+}
+
+/* Mục `## Phiên …` mới nhất của HISTORY.md — để khung đóng phiên nói được chữ kế tiếp. */
+function latestSession() {
+  if (!existsSync(HISTORY)) return null;
+  const m = /^## Phiên [^\n]*/m.exec(readFileSync(HISTORY, 'utf8'));
+  return m ? m[0] : null;
+}
+
+/* Mã kế tiếp trong DECISIONS.md (DS-NNN). Mã là duy nhất trong cả repo, và
+   `tools/decisions.py check` ở gốc repo bắt mã trùng. */
+function nextDecisionId() {
+  if (!existsSync(DECISIONS)) return 'DS-001';
+  const ns = [...readFileSync(DECISIONS, 'utf8').matchAll(/^### DS-(\d{3})\b/gm)].map(m => +m[1]);
+  return 'DS-' + String((ns.length ? Math.max(...ns) : 0) + 1).padStart(3, '0');
 }
 
 /* --------------------------------------------------------------------------
@@ -184,30 +211,38 @@ async function start() {
     // nhưng in đúng thứ tự thì không ai phải nghĩ. Xem CLAUDE.md ở GỐC repo.
     console.log('  Chạy ' + B('cả hai') + DIM(', một lần cho mỗi máy / mỗi bản clone:'));
     console.log('    ' + B('tools/install-hooks.sh') + DIM('               lớp 1 (sau mỗi Edit) + cấu hình preview'));
-    console.log('    ' + B('sh ../../facts/tools/install-hooks.sh') + DIM('  lớp 2–3 (commit, push) — bộ điều phối cho cả repo'));
+    console.log('    ' + B('sh ../../tools/install-hooks.sh') + DIM('         lớp 2–3 (commit, push) — bộ điều phối cho cả repo'));
   } else {
     console.log(GRN('✓ cả 3 lớp tự động đã cài') + DIM(' — sau mỗi Edit · lúc commit · lúc push'));
   }
   console.log('');
 
-  // 4. Việc đang dở, từ HANDOFF.md — in NGUYÊN VĂN, đây là mục dễ bị bỏ qua nhất.
+  // 4. Việc đang dở, từ HANDOFF.md — ĐANG LÀM in NGUYÊN VĂN, đây là mục dễ bị bỏ qua nhất.
+  //    HANDOFF.md chỉ chứa việc dở; nhật ký ở HISTORY.md, quyết định ở DECISIONS.md.
   const dang = handoffSection('ĐANG LÀM');
-  if (dang) {
+  if (dang && !dang.empty) {
     console.log(B('▶ ĐANG LÀM') + DIM(`  (HANDOFF.md dòng ${dang.at})`));
     rule();
     console.log(dang.body);
     rule();
-    console.log(DIM('  Xong việc này thì đổi tiêu đề mục trên thành `## Phiên <ngày> (<chữ>)`.'));
+    console.log(DIM('  Xong việc này thì xoá nó khỏi HANDOFF.md và kể lại ở HISTORY.md (khung: --close).'));
   } else {
-    console.log(DIM('· HANDOFF.md không có mục `## ĐANG LÀM` — không có việc nào đang dở.'));
+    console.log(DIM('· HANDOFF.md: không có việc nào đang làm dở.'));
   }
   console.log('');
 
-  const chua = handoffSection('CHƯA LÀM');
-  if (chua) {
-    const heads = chua.body.split('\n').filter(l => l.startsWith('### ')).map(l => l.slice(4));
-    console.log(B('CHƯA LÀM') + DIM('  (tiêu đề mục — chi tiết ở HANDOFF.md)'));
-    heads.forEach(h => console.log('    · ' + h));
+  // Ba mục còn lại chỉ in tiêu đề `###` — chi tiết đọc ở HANDOFF.md khi cần.
+  for (const [name, note] of [['CHƯA LÀM', 'việc chưa bắt đầu'], ['NỢ', 'biết là thiếu, chưa sửa'],
+                              ['CHỜ CHỦ TRANG', 'chờ một câu trả lời — đừng tự làm']]) {
+    const s = handoffSection(name);
+    if (!s || s.empty) continue;
+    console.log(B(name) + DIM(`  (${note} — chi tiết ở HANDOFF.md dòng ${s.at})`));
+    (s.heads.length ? s.heads : [s.body.split('\n').slice(1).find(l => l.trim()) || '']).forEach(h => console.log('    · ' + h));
+    console.log('');
+  }
+  if (existsSync(DECISIONS)) {
+    console.log(DIM('· chủ trang đã chốt gì: DECISIONS.md — tra theo file: ')
+      + B('python3 ../../tools/decisions.py find <file>'));
     console.log('');
   }
 
@@ -281,7 +316,7 @@ function close() {
 
   const dirty = dirtyHere() || [];
   if (!dirty.length) {
-    console.log(DIM('Thư mục sạch — không có gì để ghi vào HANDOFF, không có gì để commit.'));
+    console.log(DIM('Thư mục sạch — không có gì để ghi vào HISTORY.md, không có gì để commit.'));
     console.log('');
     return;
   }
@@ -294,7 +329,7 @@ function close() {
 
   const touched = touchedLessons(P);
   if (touched && touched.length) {
-    console.log(B('Dòng đã đổi thuộc về') + DIM('  — dùng cột này để viết HANDOFF, không dùng con số +/− ở trên'));
+    console.log(B('Dòng đã đổi thuộc về') + DIM('  — dùng cột này để viết HISTORY.md, không dùng con số +/− ở trên'));
     for (const [k, n] of touched.slice(0, 20)) {
       const id = k.replace(/^node:/, '');
       const l = P.byId[id];
@@ -317,14 +352,17 @@ function close() {
   if (changed('tools/')) need.push(['node tools/gate.test.mjs', 'bạn đã sửa tools/ — test cổng phải xanh']);
   if (changed('data-science-roadmap.html')) need.push(['node tools/gate.mjs --write', 'sinh lại TOC.md rồi `git add TOC.md`']);
   if (changed('LEARNING-LOG.md')) need.push(['node tools/learn.mjs --write', 'sinh lại khối summary của sổ học']);
+  if (changed('DECISIONS.md')) need.push(['python3 ../../tools/decisions.py write', 'sinh lại mục lục, rồi chạy `… check`']);
   console.log(B('Chạy trước khi commit'));
   for (const [cmd, why] of need) console.log(`    ${cmd.padEnd(32)} ${DIM('# ' + why)}`);
   console.log('');
 
-  // Khung HANDOFF điền trước. Đây là thứ CLAUDE.md §12 bắt buộc mà trước đây phải
-  // gõ lại từ đầu mỗi phiên.
+  // Khung HISTORY.md điền trước. Đây là thứ CLAUDE.md §12 bắt buộc mà trước đây phải
+  // gõ lại từ đầu mỗi phiên. Mục mới dán lên ĐẦU danh sách phiên (mới nhất trên đầu).
   const dang = handoffSection('ĐANG LÀM');
-  console.log(B('Khung HANDOFF.md — dán vào ngay dưới mục `## ĐANG LÀM`'));
+  const last = latestSession();
+  console.log(B('Khung HISTORY.md — dán lên trên mục `## Phiên …` mới nhất')
+    + (last ? DIM(`  (hiện là: ${last.slice(0, 60)}${last.length > 60 ? '…' : ''})`) : ''));
   rule();
   const d = new Date();
   const day = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -343,15 +381,17 @@ function close() {
   console.log('');
   console.log('- <việc đã cân nhắc rồi bỏ, và vì sao>   ← mục này quan trọng HƠN mục trên:');
   console.log('  nó là thứ giữ cho phiên sau không làm lại việc đã cân nhắc và bỏ qua.');
-  console.log('');
-  console.log('### Còn nợ của riêng phiên này');
-  console.log('');
-  console.log('- <việc làm dở, hoặc biết là thiếu mà chưa làm>');
   rule();
-  if (dang) {
-    console.log(YEL('⚠ HANDOFF.md vẫn còn mục `## ĐANG LÀM`') + ` (dòng ${dang.at}).`);
-    console.log('  Việc trong đó đã xong thì ' + B('đổi tiêu đề thành `## Phiên …`') + ' thay vì thêm mục mới —');
-    console.log(DIM('  hai mục cùng mô tả một việc là cách nhanh nhất làm HANDOFF hết đáng tin.'));
+  console.log(B('Hai file còn lại') + DIM('  — mỗi thứ đúng một chỗ, đừng tả một việc ở hai file'));
+  console.log('    · còn việc dở?  → ' + B('HANDOFF.md') + DIM('  ## ĐANG LÀM · ## CHƯA LÀM · ## NỢ · ## CHỜ CHỦ TRANG'));
+  console.log('    · chủ trang vừa chốt hay đảo một điều? → ' + B('DECISIONS.md') + DIM(`  mục mới: ${nextDecisionId()}`));
+  console.log(DIM('      đảo một quyết định cũ thì ghi cả hai đầu: mục cũ "Trạng thái: đã thay bằng <mã>",'));
+  console.log(DIM('      mục mới "Thay cho: <mã cũ>". Chỉ ghi thứ chủ trang chốt, không ghi lựa chọn của agent.'));
+  console.log('');
+  if (dang && !dang.empty) {
+    console.log(YEL('⚠ HANDOFF.md vẫn còn việc ở mục `## ĐANG LÀM`') + ` (dòng ${dang.at}).`);
+    console.log('  Việc trong đó đã xong thì ' + B('xoá nó khỏi HANDOFF.md') + ' — nó đã được kể ở HISTORY.md;');
+    console.log(DIM('  một việc được tả ở hai chỗ là cách nhanh nhất làm cả hai file hết đáng tin.'));
     console.log('');
   }
 

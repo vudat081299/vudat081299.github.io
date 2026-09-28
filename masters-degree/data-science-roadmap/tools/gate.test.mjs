@@ -48,9 +48,11 @@ writeFileSync(join(TMP, '.claude', 'settings.json'),
   JSON.stringify({ hooks: { PostToolUse: [{ command: 'data-science-roadmap' }] } }));
 
 /* roadmap.html có trong danh sách vì nó cũng là SẢN PHẨM sinh ra (cổng G-ROADMAP so nó
-   với bản sinh lại). Thiếu nó thì chiều IM đỏ vì "chưa có roadmap.html". */
+   với bản sinh lại). Thiếu nó thì chiều IM đỏ vì "chưa có roadmap.html".
+   Ba file phiên (HANDOFF / HISTORY / DECISIONS) có mặt đủ để G-HANDOFF và session.mjs
+   chạy trên đúng hình dạng thật của thư mục. */
 const COPIES = ['data-science-roadmap.html', 'roadmap.html', 'TOC.md', 'CLAUDE.md', 'HANDOFF.md',
-  'LEARNING-LOG.md', 'data/quiz.json'];
+  'HISTORY.md', 'DECISIONS.md', 'LEARNING-LOG.md', 'data/quiz.json'];
 mkdirSync(join(DS, 'data'), { recursive: true });
 for (const f of COPIES) cpSync(join(REAL, f), join(DS, f));
 cpSync(join(REAL, 'tools'), join(DS, 'tools'), { recursive: true });
@@ -252,8 +254,9 @@ const OTHER_CASES = [
     writeFileSync(join(DS, 'LEARNING-LOG.md'),
       ORIG['LEARNING-LOG.md'] + '\n### `d-eda` · x\n- 2026-08-04 · loai-khong-co · y\n');
   }],
-  ['G-HANDOFF', 'sửa trang mà không có HANDOFF.md', () => {
+  ['G-HANDOFF', 'sửa trang mà cả HISTORY.md lẫn HANDOFF.md đều không đổi', () => {
     rmSync(join(DS, 'HANDOFF.md'));
+    rmSync(join(DS, 'HISTORY.md'));
   }],
   ['G-ROADMAP', 'roadmap.html bị sửa tay, lệch bản sinh lại', () => {
     writeFileSync(join(DS, 'roadmap.html'), ORIG['roadmap.html'] + '\n<!-- sửa tay -->\n');
@@ -284,8 +287,12 @@ const OTHER_CASES = [
 let SUMS0 = null, SUMS1 = null;
 
 /* --- chạy ---------------------------------------------------------------- */
-const ALL_GATES = execFileSync(process.execPath, [join(DS, 'tools', 'gate.mjs'), '--gates'],
-  { cwd: DS, encoding: 'utf8' }).match(/G-[A-Z-]+/g);
+/* Tên cổng lấy ở ĐẦU mỗi dòng của `--gates`, không quét cả dòng: phần mô tả có nhắc tên cổng
+   khác (G-QUIZ-TIE nhắc G-QUIZ-GUESS), quét cả dòng là đếm một cổng hai lần. Và tên có thể
+   mang chữ số (G-ROADMAP-4): khuôn chỉ có chữ cái cắt nó thành "G-ROADMAP-", nên chiều IM
+   của cổng đó từng im mãi vì không bao giờ khớp tên thật. */
+const ALL_GATES = [...execFileSync(process.execPath, [join(DS, 'tools', 'gate.mjs'), '--gates'],
+  { cwd: DS, encoding: 'utf8' }).matchAll(/^  (G-[A-Z0-9-]*[A-Z0-9])\s/gm)].map(m => m[1]);
 
 let pass = 0, failed = 0;
 const ok = (name, msg) => { console.log(`  ✓ ${name.padEnd(14)} ${msg}`); pass++; };
@@ -296,7 +303,7 @@ console.log('\nchiều IM — chưa có vi phạm nào:\n');
 reset();
 const clean = runGate();
 for (const g of ALL_GATES) {
-  // G-FWD ở mức thân bài là trạng thái ổn định đã soát (xem HANDOFF) — nó kêu
+  // G-FWD ở mức thân bài là trạng thái ổn định đã soát (xem HISTORY.md) — nó kêu
   // 6 lần một cách có chủ ý, nên đây là ngoại lệ đã biết, không phải cổng hỏng.
   if (g === 'G-FWD') continue;
   if (clean.includes(g + ':')) no(g, 'kêu dù không có vi phạm');
@@ -322,6 +329,20 @@ for (const [gate, what, mutate, after] of OTHER_CASES) {
   if (out.includes(gate + ':')) ok(gate, what);
   else no(gate, `KHÔNG kêu khi ${what}`);
   if (after) after();
+}
+
+/* G-HANDOFF chỉ đòi MỘT trong hai file phiên đổi. Chiều IM của vòng trên có cả hai; hai ca
+   dưới giữ đúng một, để cổng không quay về luật cũ "phải là HANDOFF.md" — ghi nhật ký mà
+   không còn việc dở là trạng thái bình thường, không phải thiếu sót. */
+if (GIT_OK) {
+  for (const [keep, drop] of [['HISTORY.md', 'HANDOFF.md'], ['HANDOFF.md', 'HISTORY.md']]) {
+    reset();
+    rmSync(join(DS, drop));
+    const out = runGate();
+    out.includes('G-HANDOFF:')
+      ? no('G-HANDOFF', `kêu dù ${keep} có đổi — chỉ thiếu ${drop}`)
+      : ok('G-HANDOFF', `im khi chỉ ${keep} đổi`);
+  }
 }
 
 // --- cổng nào chưa có ca NỔ: nói ra, đừng im lặng ------------------------
