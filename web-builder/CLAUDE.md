@@ -28,6 +28,9 @@ các thư mục ấy chỉ đọc HTML, không thấy CSS đổi. Trước khi c
 
 ## Luật khi dựng giao diện bằng `wb-*`
 
+- **Chép markup từ trang demo `pages/<id>.html` của đúng component**, đừng đọc mô tả rồi tự ráp
+  class. Ráp tay thì đúng tên class vẫn xấu: demo mang cả cấu trúc lồng nhau, thứ tự phần tử và
+  những class phụ mà phần mô tả không nhắc tới.
 - **`.wb-navbar__actions` chỉ chứa nút icon** — slot ấy không bao giờ gập. Nút có chữ đặt cuối
   `__menu`, sau một `__spacer` lồng trong, để khi thanh hẹp nó chui vào ☰.
 - **Tên dài trên navbar:** `.wb-navbar__brand` là `flex: none`, tên dài đẩy `__actions` ra khỏi màn
