@@ -115,6 +115,12 @@
           "name": "Books in Brief",
           "desc": "Ý cốt lõi của những cuốn chỉ cần đọc một phần — Kahneman, Haidt, Cialdini, Rosling, Diamond, Acemoglu & Robinson…",
           "href": "pages/books-in-brief.html"
+        },
+        {
+          "icon": "public",
+          "name": "A Short History of Nearly Everything",
+          "desc": "Bill Bryson · 2003 — loài người đã biết gì về vũ trụ, Trái Đất và sự sống, và biết bằng cách nào",
+          "href": "pages/a-short-history-of-nearly-everything.html"
         }
       ]
     },

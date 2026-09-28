@@ -1,0 +1,1767 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>A Short History of Nearly Everything — ta biết bằng cách nào</title>
+<meta name="description" content="Tóm tắt đầy đủ A Short History of Nearly Everything (Bill Bryson, 2003): lời mở đầu và cả 30 chương trong 6 phần — vũ trụ, Trái Đất, nguyên tử, những hiểm hoạ, sự sống và loài người. Mỗi chương giữ câu hỏi lớn, điều ta biết bây giờ, ta biết bằng cách nào, người và con số then chốt; kèm cập nhật những gì đã đổi từ năm 2003.">
+
+<!-- Web Builder — the minimalist UI kit that styles the rest of the site -->
+<link rel="stylesheet" href="../web-builder/web-builder.css">
+<script>
+  /* Theme trước first paint: theo lựa chọn đã lưu, chưa lưu thì theo hệ điều hành. */
+  try {
+    var t = localStorage.getItem('hub-theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.classList.add('dark');
+  } catch (e) {}
+</script>
+
+<style>
+  /* Page-local layout only — every colour / radius / shadow comes from wb-* tokens.
+     Khung (hw-*) chép từ the-little-blue-reasoning-book.html qua how-to-lie-with-statistics.html;
+     phần riêng của trang dùng tiền tố sh-. */
+  body { background: var(--wb-canvas); color: var(--wb-fg); margin: 0; font-family: var(--wb-font); -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--wb-fg); color: var(--wb-canvas); }
+
+  /* Chữ mờ phải đọc được: --wb-fg-subtle của kit (gray-400) chỉ ~2,4:1 trên nền sáng.
+     Nâng một bậc ở cả hai nhánh theme, như psychology.html. */
+  :root { --wb-fg-subtle: var(--wb-gray-500); }
+  .dark { --wb-fg-subtle: var(--wb-gray-400); }
+
+  /* Navbar co được: kit đặt brand là flex:none, tên dài làm trang tràn ngang trên điện thoại. */
+  .wb-navbar__brand { flex: 0 1 auto; min-width: 0; }
+  .hw-brand-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ---- ghi chú cho chủ trang (xoá khi đã duyệt) ---- */
+  .pg-confirm { border: var(--wb-bw) dashed var(--wb-border-strong); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 10px 14px; margin: 18px 0 0; max-width: 90ch; }
+  .pg-confirm__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .pg-confirm__list { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.6; color: var(--wb-fg); }
+  .pg-confirm__list li { margin: 2px 0; }
+
+  /* ---- hero ---- */
+  .hw-hero { padding: 30px 0 20px; }
+  .hw-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
+  .hw-title { font-size: clamp(26px, 4.4vw, 38px); font-weight: 720; letter-spacing: -.02em; margin: 0 0 12px; line-height: 1.16; }
+  .hw-sub { color: var(--wb-fg-muted); font-size: 15.5px; max-width: 74ch; line-height: 1.65; margin: 0 0 12px; }
+  .hw-sub b { color: var(--wb-fg); }
+  .hw-meta { font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); letter-spacing: .04em; line-height: 1.6; }
+
+  /* ---- two-column reading layout ---- */
+  .hw-layout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 34px; align-items: start; padding: 26px 0 60px; }
+  @media (max-width: 900px) { .hw-layout { grid-template-columns: minmax(0, 1fr); } .hw-toc { display: none; } }
+  .hw-toc { max-height: calc(100vh - 92px); overflow-y: auto; width: 250px; }
+  .hw-toc .wb-sidenav__link.is-current { background: var(--wb-surface-hover); font-weight: 620; color: var(--wb-fg); }
+
+  /* ---- section rhythm ---- */
+  section[id] { scroll-margin-top: 76px; }
+  .hw-part-head { border-top: var(--wb-bw) solid var(--wb-border); padding: 22px 0 2px; scroll-margin-top: 76px; }
+  .hw-part-head .kicker { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .hw-part-head h2 { font-size: 21px; font-weight: 720; margin: 0 0 6px; letter-spacing: -.015em; }
+  .hw-part-head p { color: var(--wb-fg-muted); font-size: 14px; line-height: 1.65; margin: 0; max-width: 78ch; }
+  .hw-part-head p b { color: var(--wb-fg); font-weight: 640; }
+
+  .hw-eyebrow-sec { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
+  .hw-eyebrow-sec b { color: var(--wb-fg); font-weight: 650; }
+  .hw-sec-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 12px; line-height: 1.3; }
+  h3.hw-h3 { font-size: 15.5px; font-weight: 680; margin: 26px 0 10px; letter-spacing: -.005em; }
+
+  /* ---- prose ---- */
+  .hw-lede { font-size: 16px; line-height: 1.62; color: var(--wb-fg); max-width: 72ch; margin: 0 0 16px; font-weight: 500; }
+  .hw-lede b { font-weight: 700; }
+  .hw-p { font-size: 14.5px; line-height: 1.75; color: var(--wb-fg); max-width: 76ch; margin: 0 0 12px; }
+  .hw-p b { color: var(--wb-fg); font-weight: 650; }
+  .hw-p em { font-style: italic; color: var(--wb-fg-muted); }
+  .hw-ul { font-size: 14.5px; line-height: 1.72; color: var(--wb-fg); max-width: 76ch; margin: 0 0 14px; padding-left: 20px; }
+  .hw-ul li { margin-bottom: 6px; }
+  .hw-ul b { font-weight: 650; }
+  .hw-sub a, .hw-p a, .hw-ul a, .hw-src a, .sh-who a, .sh-upd a, .sh-next a, .sh-q a, .hw-quote a, .hw-tw a, .wb-media__text a { color: var(--wb-fg); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: var(--wb-border-strong); }
+
+  /* ---- pull quote: ví von + chỗ nó hỏng ---- */
+  .hw-quote { border-left: 2px solid var(--wb-neutral-strong); padding: 2px 0 2px 14px; margin: 16px 0; color: var(--wb-fg-muted); font-size: 14.5px; line-height: 1.6; max-width: 72ch; }
+  .hw-quote b { color: var(--wb-fg); }
+  .hw-quote cite { display: block; font-style: normal; font-family: var(--wb-font-mono); font-size: 11.5px; color: var(--wb-fg-subtle); margin-top: 7px; line-height: 1.6; }
+
+  /* ---- number anchors ---- */
+  .hw-figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 14px 0 16px; }
+  .hw-fig { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; background: var(--wb-surface); }
+  .hw-fig .n { font-size: 19px; font-weight: 720; letter-spacing: -.02em; font-variant-numeric: tabular-nums; display: block; }
+  .hw-fig .l { font-size: 12px; color: var(--wb-fg-muted); line-height: 1.45; margin-top: 3px; display: block; }
+
+  /* ---- tables ---- */
+  .hw-tw { overflow-x: auto; margin: 4px 0 16px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); }
+  .hw-tw .wb-table { margin: 0; border: 0; }
+  .hw-tw .wb-table th, .hw-tw .wb-table td { font-size: 13.5px; line-height: 1.55; vertical-align: top; }
+  .hw-tw .wb-table tr.sh-tr-part td { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--wb-fg-subtle); background: var(--wb-surface); }
+
+  /* ---- part overview tiles ---- */
+  .hw-parts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 900px) { .hw-parts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .hw-parts { grid-template-columns: minmax(0, 1fr); } }
+  .hw-parts a { text-decoration: none; color: inherit; }
+
+  /* ---- sources ---- */
+  .hw-src { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .03em; color: var(--wb-fg-subtle); margin: 10px 0 0; line-height: 1.55; }
+  .hw-src a { color: inherit; }
+
+  /* ---- một chương: câu hỏi lớn · bây giờ · bằng cách nào · người và số ---- */
+  .sh-q { font-size: 15.5px; line-height: 1.6; font-weight: 560; color: var(--wb-fg); max-width: 74ch; margin: 0 0 14px; }
+  .sh-q .k { display: block; font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); margin-bottom: 3px; font-weight: 500; }
+  .sh-who { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 6px 12px; margin: 14px 0; padding: 10px 14px; border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); max-width: 80ch; }
+  .sh-who dt { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); padding-top: 3px; line-height: 1.4; }
+  .sh-who dd { margin: 0; font-size: 13.5px; line-height: 1.6; color: var(--wb-fg); min-width: 0; }
+  .sh-who dd b { font-weight: 650; }
+  @media (max-width: 560px) { .sh-who { grid-template-columns: minmax(0, 1fr); gap: 2px 0; } .sh-who dd + dt { padding-top: 8px; } }
+  .sh-upd { border: var(--wb-bw) dashed var(--wb-border-strong); border-radius: var(--wb-radius); padding: 10px 14px; margin: 14px 0; font-size: 13.5px; line-height: 1.65; color: var(--wb-fg); max-width: 80ch; }
+  .sh-upd .k { display: block; font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); margin-bottom: 4px; }
+  .sh-upd p { margin: 0; }
+  .sh-upd p + p { margin-top: 6px; }
+  .sh-upd b { font-weight: 650; }
+
+  /* ---- "Bạn vừa có / Nó dẫn đi đâu" ---- */
+  .sh-next { font-size: 13.5px; line-height: 1.7; background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px 14px; margin: 18px 0 4px; color: var(--wb-fg); max-width: 80ch; }
+  .sh-next p { margin: 0; }
+  .sh-next p + p { margin-top: 6px; }
+  .sh-next b { font-weight: 700; }
+
+  /* ---- mức chắc chắn trong mục Độ vững: chỗ duy nhất màu mang nghĩa ---- */
+  .sh-evi { display: inline-flex; align-items: center; gap: 5px; font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: var(--wb-radius-pill); border: var(--wb-bw) solid var(--wb-border); color: var(--wb-fg-muted); background: var(--wb-canvas); white-space: nowrap; vertical-align: 1px; }
+  .sh-evi::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--wb-neutral); flex: none; }
+  .sh-evi--solid::before { background: var(--wb-success); }
+  .sh-evi--mixed::before { background: var(--wb-warning); }
+  .sh-evi--failed::before { background: var(--wb-danger); }
+
+  /* ---- lab: mô hình tương tác (khuôn .ps-lab của psychology.html, đổi tiền tố) ---- */
+  .sh-lab { border: var(--wb-bw) solid var(--wb-border); border-radius: var(--wb-radius); background: var(--wb-surface); margin: 18px 0; overflow: hidden; }
+  .sh-lab__head { padding: 12px 16px; border-bottom: var(--wb-bw) solid var(--wb-border); }
+  .sh-lab__kick { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 3px; }
+  .sh-lab__title { font-size: 14.5px; font-weight: 690; margin: 0; letter-spacing: -.005em; }
+  .sh-lab__hint { font-size: 12.5px; color: var(--wb-fg-muted); margin: 5px 0 0; line-height: 1.55; }
+  .sh-lab__hint b { color: var(--wb-fg); font-weight: 640; }
+  .sh-lab__body { padding: 14px 16px 16px; }
+  .sh-lab__row { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 8px 12px; align-items: center; margin-bottom: 10px; }
+  .sh-lab__row > label, .sh-lab__row > .k { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); line-height: 1.4; }
+  @media (max-width: 620px) { .sh-lab__row { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+  .sh-lab__foot { font-size: 12.5px; color: var(--wb-fg-muted); line-height: 1.62; margin: 12px 0 0; padding-top: 11px; border-top: var(--wb-bw) solid var(--wb-border); }
+  .sh-lab__foot b { color: var(--wb-fg); font-weight: 640; }
+  .sh-lab__foot + .sh-lab__foot { border-top: 0; padding-top: 0; margin-top: 6px; }
+  .sh-lab .wb-btn { white-space: normal; }
+  .sh-lab .wb-btn.is-active { background: var(--wb-fg); color: var(--wb-canvas); border-color: var(--wb-fg); }
+  .sh-mono { font-family: var(--wb-font-mono); font-size: 12px; min-width: 74px; text-align: right; }
+
+  /* Con số lớn: đứng giữa tay cầm và hình — đọc trước khi nhìn hình. */
+  .sh-read { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 8px; margin: 4px 0 12px; }
+  .sh-read > div { border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); padding: 8px 10px; min-width: 0; }
+  .sh-read .k { display: block; font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-subtle); line-height: 1.35; }
+  .sh-read .v { display: block; font-size: 21px; font-weight: 720; letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin-top: 2px; line-height: 1.2; overflow-wrap: anywhere; }
+  .sh-read .s { display: block; font-size: 11.5px; color: var(--wb-fg-muted); line-height: 1.4; margin-top: 2px; }
+  .sh-read > div.is-hi { border-color: var(--wb-neutral-strong); }
+
+  /* Hình của mô hình: không kéo trực tiếp bằng ngón tay, nên KHÔNG đặt touch-action:none —
+     vuốt trên hình phải cuộn được trang. */
+  .sh-svg { width: 100%; max-width: 720px; height: auto; display: block; margin: 0 auto; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
+  .sh-t { fill: var(--wb-fg); font-size: 12px; font-family: var(--wb-font); }
+  .sh-t--b { font-weight: 680; }
+  .sh-t--s { fill: var(--wb-fg-muted); font-size: 11px; }
+  .sh-t--m { font-family: var(--wb-font-mono); font-size: 10.5px; fill: var(--wb-fg-muted); }
+  .sh-ax { stroke: var(--wb-neutral-strong); stroke-width: 1; fill: none; }
+  .sh-grid { stroke: var(--wb-neutral-weak); stroke-width: 1; fill: none; }
+
+  /* ---- back to top ---- */
+  .hw-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
+  .hw-top.is-on { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 620px) {
+    /* Vùng chạm ≥ 40px cho mọi thứ bấm/kéo được trong lab. Thanh trượt: content-box +
+       padding dọc để vùng chạm cao 40px mà vệt track vẫn dày 4px. */
+    .sh-lab .wb-btn { min-height: 40px; padding-top: 10px; padding-bottom: 10px; }
+    .sh-lab .wb-range {
+      box-sizing: content-box; height: 4px; padding-block: 18px; margin: 0;
+      background-clip: content-box;
+    }
+    .sh-read .v { font-size: 19px; }
+  }
+</style>
+</head>
+<body class="wb-app">
+
+<header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
+  <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
+          aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
+  <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🌍</span> <span class="hw-brand-text">A Short History of Nearly Everything</span></a>
+  <nav class="wb-nav wb-navbar__menu">
+    <a class="wb-nav__link" href="#start">Start</a>
+    <a class="wb-nav__link" href="#p1">1 · Cosmos</a>
+    <a class="wb-nav__link" href="#p2">2 · Earth</a>
+    <a class="wb-nav__link" href="#p3">3 · Atoms</a>
+    <a class="wb-nav__link" href="#p4">4 · Dangers</a>
+    <a class="wb-nav__link" href="#p5">5 · Life</a>
+    <a class="wb-nav__link" href="#p6">6 · Us</a>
+    <a class="wb-nav__link" href="#robust">Robustness</a>
+    <a class="wb-nav__link" href="#ket">Take away</a>
+    <span class="wb-navbar__spacer"></span>
+    <a class="wb-nav__link" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> Home</a>
+  </nav>
+  <span class="wb-navbar__spacer"></span>
+  <div class="wb-navbar__actions">
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Đổi giao diện sáng / tối">
+      <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
+      <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
+    </button>
+  </div>
+</header>
+
+<main class="wb-container wb-container--wide">
+
+  <aside class="pg-confirm" id="confirm" aria-label="Ghi chú cho chủ trang: những điểm cần xác nhận">
+    <p class="pg-confirm__k">Ghi chú cho chủ trang · cần xác nhận — duyệt xong thì xoá khối này</p>
+    <ul class="pg-confirm__list">
+      <li><b>Bản 2.0 (2025):</b> Bryson đã ra bản sửa lại mọi chương (Doubleday, 21/10/2025). Trang tóm bản 2003, bản có tiếng Việt, và tự cập nhật từ nguồn gốc; chưa đối chiếu với bản 2.0. Muốn trang theo bản 2.0 thì phải làm lại các khung "Sách 2003 → nay".</li>
+      <li><b>Nguồn nội dung sách:</b> không có bản sách trong tay (không dùng bản lậu). Nội dung từng chương đối chiếu qua mục lục Thư viện Quốc hội Mỹ, tóm tắt LitCharts, trang errata và bài điểm sách; vài con số của sách (13,7 tỉ năm; 35.000–40.000 gen; vi khuẩn gấp mười; Yellowstone phun khoảng 600.000 năm một lần) chỉ kiểm được qua nguồn thứ cấp.</li>
+      <li><b>Độ dài:</b> khoảng 21.900 tiếng tính theo khoảng trắng cho mọi chữ trên trang, kể cả bảng, nguồn và mô hình (ước chừng 15.100 từ); riêng 30 chương khoảng 17.300 tiếng (chừng 11.900 từ, trung bình 400 từ mỗi chương). Vượt khung 8.000–12.000 nếu tính cả trang; chủ trang quyết có cần cắt tiếp không.</li>
+      <li><b>Ví dụ Việt Nam là phép tính của trang:</b> 21 mẩu xương hoá thạch cho 102,3 triệu người (5.6), tổ tiên thời Lý – Trần (5.11), vịnh Bắc Bộ là đất liền thời băng hà (6.1) dựa trên số của sách hoặc số công khai, không phải lời Bryson.</li>
+      <li><b>Tên chương:</b> bảng đối chiếu dùng tên gốc tiếng Anh cùng chủ đề do trang đặt, không dùng tên chương của bản dịch <i>Lược sử vạn vật</i> (chưa kiểm được đủ).</li>
+    </ul>
+  </aside>
+
+  <header class="hw-hero">
+    <p class="hw-eyebrow">Tóm tắt sách · Bill Bryson · A Short History of Nearly Everything · 2003</p>
+    <h1 class="hw-title">Những điều ta tưởng hiển nhiên — Trái Đất nặng bao nhiêu, bao nhiêu tuổi, ta từ đâu tới — đều do những con người cụ thể <u>đo ra</u>, phần lớn chỉ trong ba thế kỷ gần đây.</h1>
+    <p class="hw-sub">Bản tóm tắt đầy đủ cuốn <b>A Short History of Nearly Everything</b> của <b>Bill Bryson</b> (2003), bản tiếng Việt <i>Lược sử vạn vật</i>. Cuốn sách không có một luận điểm để tóm; giá trị của nó là cả một khối kiến thức cùng câu chuyện <b>làm sao loài người biết được</b> từng điều. Vì vậy trang giữ <b>lời mở đầu và cả 30 chương</b>, mỗi chương bốn phần: câu hỏi lớn, điều ta biết bây giờ, ta biết bằng cách nào, người và con số đáng nhớ.</p>
+    <p class="hw-sub">Cái bỏ đi: giai thoại kéo dài và những câu đùa chỉ minh hoạ một ý đã rõ. Cái thêm vào: cập nhật mọi chỗ sách đã cũ sau hơn hai mươi năm, có nguồn; ba mô hình để tự kéo; và mục <b>Độ vững</b>, kể cả những chỗ sách sai ngay từ đầu.</p>
+    <p class="hw-meta">GIỮ LỜI MỞ ĐẦU + 30 CHƯƠNG · MỖI CHƯƠNG: CÂU HỎI · BÂY GIỜ · BẰNG CÁCH NÀO · NGƯỜI VÀ SỐ<br>VIẾT LẠI BẰNG LỜI CỦA TRANG NÀY — KHÔNG CHÉP NGUYÊN VĂN SÁCH</p>
+  </header>
+
+  <div class="hw-figs" style="margin-bottom:20px">
+    <div class="hw-fig"><span class="n">2003</span><span class="l">in lần đầu ở Mỹ và Anh; năm 2025 tác giả ra bản sửa 2.0</span></div>
+    <div class="hw-fig"><span class="n">30 chương</span><span class="l">trong 6 phần, cộng lời mở đầu; trang giữ đủ, đúng thứ tự của sách</span></div>
+    <div class="hw-fig"><span class="n">13,8 tỉ năm</span><span class="l">tuổi vũ trụ theo vệ tinh Planck; năm 2003 sách dùng khoảng 13,7; xem mục 1.1</span></div>
+    <div class="hw-fig"><span class="n">4,54 tỉ năm</span><span class="l">tuổi Trái Đất, đọc từ chì trong thiên thạch; xem mục 3.3</span></div>
+  </div>
+
+  <div class="hw-parts">
+    <a class="wb-card wb-card--hover wb-card--pad" href="#p1">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">1</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Lạc giữa vũ trụ</p>
+          <p class="wb-media__text">Vụ Nổ Lớn và bức xạ nền, kích thước thật của Hệ Mặt Trời, những ngôi sao nổ tung. Chương 1–3.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#p2">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">2</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Kích thước Trái Đất</p>
+          <p class="wb-media__text">Cân Trái Đất, thời gian sâu trong đá, xương khủng long, bảng tuần hoàn và phóng xạ. Chương 4–7.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#p3">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">3</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Thời đại mới</p>
+          <p class="wb-media__text">Einstein, bên trong nguyên tử, tuổi Trái Đất đọc từ chì, hạt quark, lục địa trôi. Chương 8–12.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#p4">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">4</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Hành tinh nguy hiểm</p>
+          <p class="wb-media__text">Tiểu hành tinh, động đất, siêu núi lửa Yellowstone, và rủi ro thật của từng thứ. Chương 13–15.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#p5">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">5</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Chính sự sống</p>
+          <p class="wb-media__text">Khí quyển, biển, nguồn gốc sự sống, vi khuẩn, hoá thạch, tế bào, Darwin, ADN. Chương 16–26.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#p6">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">6</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Con đường tới chúng ta</p>
+          <p class="wb-media__text">Kỷ băng hà, xương người cổ, cuộc rời châu Phi, những loài ta đã làm mất. Chương 27–30.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#start">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--sm">?</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Bắt đầu từ đây</p>
+          <p class="wb-media__text">Cách đọc trang, bảng đối chiếu chương sách với mục trên trang, và lời mở đầu của Bryson.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#robust">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--sm">7</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Độ vững</p>
+          <p class="wb-media__text">Bản sửa năm 2025 của tác giả, những con số đã đổi từ 2003, và những chỗ sách sai.</p>
+        </div>
+      </div>
+    </a>
+    <a class="wb-card wb-card--hover wb-card--pad" href="#ket">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--sm">8</span>
+        <div class="wb-media__body">
+          <p class="wb-media__title">Mang theo</p>
+          <p class="wb-media__text">Tám câu hỏi để đọc mọi tin khoa học, và toàn bộ nguồn của trang.</p>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="hw-layout">
+    <nav class="wb-sidenav hw-toc wb-sticky wb-scroll-y" style="--wb-sticky-gap:72px" id="toc" aria-label="Mục lục trang">
+      <div class="wb-sidenav__section">Start</div>
+      <a class="wb-sidenav__link" href="#s-read">0.1 How to read this page</a>
+      <a class="wb-sidenav__link" href="#s-intro">0.2 Introduction</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">1 · Lost in the Cosmos</div>
+      <a class="wb-sidenav__link" href="#c1">1.1 How to build a universe · ch. 1</a>
+      <a class="wb-sidenav__link" href="#c2">1.2 Welcome to the solar system · ch. 2</a>
+      <a class="wb-sidenav__link" href="#c3">1.3 The Reverend Evans's universe · ch. 3</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">2 · The Size of the Earth</div>
+      <a class="wb-sidenav__link" href="#c4">2.1 The measure of things · ch. 4</a>
+      <a class="wb-sidenav__link" href="#c5">2.2 The stone-breakers · ch. 5</a>
+      <a class="wb-sidenav__link" href="#c6">2.3 Science red in tooth and claw · ch. 6</a>
+      <a class="wb-sidenav__link" href="#c7">2.4 Elemental matters · ch. 7</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">3 · A New Age Dawns</div>
+      <a class="wb-sidenav__link" href="#c8">3.1 Einstein's universe · ch. 8</a>
+      <a class="wb-sidenav__link" href="#c9">3.2 The mighty atom · ch. 9</a>
+      <a class="wb-sidenav__link" href="#c10">3.3 Getting the lead out · ch. 10</a>
+      <a class="wb-sidenav__link" href="#c11">3.4 Muster Mark's quarks · ch. 11</a>
+      <a class="wb-sidenav__link" href="#c12">3.5 The Earth moves · ch. 12</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">4 · Dangerous Planet</div>
+      <a class="wb-sidenav__link" href="#c13">4.1 Bang! · ch. 13</a>
+      <a class="wb-sidenav__link" href="#c14">4.2 The fire below · ch. 14</a>
+      <a class="wb-sidenav__link" href="#c15">4.3 Dangerous beauty · ch. 15</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">5 · Life Itself</div>
+      <a class="wb-sidenav__link" href="#c16">5.1 Lonely planet · ch. 16</a>
+      <a class="wb-sidenav__link" href="#c17">5.2 Into the troposphere · ch. 17</a>
+      <a class="wb-sidenav__link" href="#c18">5.3 The bounding main · ch. 18</a>
+      <a class="wb-sidenav__link" href="#c19">5.4 The rise of life · ch. 19</a>
+      <a class="wb-sidenav__link" href="#c20">5.5 Small world · ch. 20</a>
+      <a class="wb-sidenav__link" href="#c21">5.6 Life goes on · ch. 21</a>
+      <a class="wb-sidenav__link" href="#c22">5.7 Good-bye to all that · ch. 22</a>
+      <a class="wb-sidenav__link" href="#c23">5.8 The richness of being · ch. 23</a>
+      <a class="wb-sidenav__link" href="#c24">5.9 Cells · ch. 24</a>
+      <a class="wb-sidenav__link" href="#c25">5.10 Darwin's singular notion · ch. 25</a>
+      <a class="wb-sidenav__link" href="#c26">5.11 The stuff of life · ch. 26</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">6 · The Road to Us</div>
+      <a class="wb-sidenav__link" href="#c27">6.1 Ice time · ch. 27</a>
+      <a class="wb-sidenav__link" href="#c28">6.2 The mysterious biped · ch. 28</a>
+      <a class="wb-sidenav__link" href="#c29">6.3 The restless ape · ch. 29</a>
+      <a class="wb-sidenav__link" href="#c30">6.4 Good-bye · ch. 30</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Robustness</div>
+      <a class="wb-sidenav__link" href="#s-rev">7.1 Bryson's own 2025 revision</a>
+      <a class="wb-sidenav__link" href="#s-changed">7.2 What changed since 2003</a>
+      <a class="wb-sidenav__link" href="#s-wrong">7.3 What the book got wrong</a>
+
+      <div class="wb-sidenav__section" style="margin-top:12px">Take away</div>
+      <a class="wb-sidenav__link" href="#s-carry">8.1 Questions to carry</a>
+      <a class="wb-sidenav__link" href="#s-src">8.2 Sources</a>
+    </nav>
+
+    <div class="wb-stack" style="--wb-stack-gap:48px">
+
+      <!-- ══════════════════ MỞ ĐẦU ══════════════════ -->
+      <div class="hw-part-head" id="start" style="border-top:0;padding-top:0">
+        <p class="kicker">Mở đầu · Start</p>
+        <h2>Cách đọc trang này, và vì sao một nhà văn du ký đi viết về khoa học</h2>
+        <p>Hai mục ngắn: trang được xếp thế nào so với sách, và lời mở đầu của Bryson, nơi ông nói mình viết cuốn này để trả lời câu hỏi gì.</p>
+      </div>
+
+      <section id="s-read">
+        <p class="hw-eyebrow-sec"><b>0.1</b> — How to read this page</p>
+        <h2 class="hw-sec-title">Mỗi chương đi qua bốn câu hỏi, theo đúng thứ tự của sách</h2>
+        <p class="hw-lede">Mỗi chương trên trang trả lời bốn câu hỏi, và câu thứ ba là xương sống: <b>ta biết điều đó bằng cách nào?</b></p>
+        <p class="hw-p">Trước hết cần gỡ một hiểu nhầm: khoa học là một kho đáp án có sẵn để học thuộc. Nghe hợp lý, vì sách giáo khoa trình bày nó như vậy. Nhưng cuốn sách này kể điều ngược lại. Gần như mọi con số trong đó do một người cụ thể đo ra, bằng một mẹo cụ thể, có khi sai rồi mới được sửa. Nhiều con số đã đổi chỉ vài năm sau khi sách in (mục <a href="#s-changed">7.2</a>). Cái bền là cách đo, không phải kết quả.</p>
+        <p class="hw-p">Vì vậy mỗi chương có cùng một khuôn: <b>Câu hỏi lớn</b>; <b>Điều ta biết bây giờ</b>, với số liệu hiện tại chứ không phải số của năm 2003; <b>Ta biết bằng cách nào</b>, tức câu chuyện của phép đo; và <b>Người và con số</b> đáng nhớ. Chỗ nào sách đã cũ có thêm khung <b>Sách 2003 → nay</b>, kèm nguồn.</p>
+        <p class="hw-p">Trang giữ đúng thứ tự của sách, sáu phần và ba mươi chương, vì thứ tự ấy đã là một đường đi dễ theo: từ vũ trụ xuống Trái Đất, xuống nguyên tử, qua những hiểm hoạ, tới sự sống và loài người. Ba mô hình để tự kéo nằm ở mục <a href="#c2">1.2</a> (thu nhỏ Hệ Mặt Trời), <a href="#c10">3.3</a> (đồng hồ phóng xạ) và <a href="#c22">5.7</a> (lịch sử Trái Đất trong 24 giờ).</p>
+
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:44px">Ch.</th><th>Tên gốc</th><th>Chủ đề</th><th style="width:56px">Mục</th></tr></thead>
+            <tbody>
+              <tr><td>—</td><td>Introduction</td><td>Vì sao Bryson viết cuốn này</td><td><a href="#s-intro">0.2</a></td></tr>
+              <tr class="sh-tr-part"><td colspan="4">Phần I · Lost in the Cosmos</td></tr>
+              <tr><td>1</td><td>How to Build a Universe</td><td>Vụ Nổ Lớn, bức xạ nền, tuổi vũ trụ</td><td><a href="#c1">1.1</a></td></tr>
+              <tr><td>2</td><td>Welcome to the Solar System</td><td>Kích thước Hệ Mặt Trời, Diêm Vương</td><td><a href="#c2">1.2</a></td></tr>
+              <tr><td>3</td><td>The Reverend Evans's Universe</td><td>Siêu tân tinh, nguyên tố từ sao</td><td><a href="#c3">1.3</a></td></tr>
+              <tr class="sh-tr-part"><td colspan="4">Phần II · The Size of the Earth</td></tr>
+              <tr><td>4</td><td>The Measure of Things</td><td>Newton, đo hình dạng và cân Trái Đất</td><td><a href="#c4">2.1</a></td></tr>
+              <tr><td>5</td><td>The Stone-Breakers</td><td>Địa chất và thời gian sâu</td><td><a href="#c5">2.2</a></td></tr>
+              <tr><td>6</td><td>Science Red in Tooth and Claw</td><td>Hoá thạch, khủng long, tuổi Trái Đất</td><td><a href="#c6">2.3</a></td></tr>
+              <tr><td>7</td><td>Elemental Matters</td><td>Hoá học, bảng tuần hoàn, phóng xạ</td><td><a href="#c7">2.4</a></td></tr>
+              <tr class="sh-tr-part"><td colspan="4">Phần III · A New Age Dawns</td></tr>
+              <tr><td>8</td><td>Einstein's Universe</td><td>Ánh sáng, thuyết tương đối, vũ trụ giãn nở</td><td><a href="#c8">3.1</a></td></tr>
+              <tr><td>9</td><td>The Mighty Atom</td><td>Cấu tạo nguyên tử, lượng tử</td><td><a href="#c9">3.2</a></td></tr>
+              <tr><td>10</td><td>Getting the Lead Out</td><td>Patterson, tuổi Trái Đất, xăng pha chì</td><td><a href="#c10">3.3</a></td></tr>
+              <tr><td>11</td><td>Muster Mark's Quarks</td><td>Hạt cơ bản, vật chất tối, năng lượng tối</td><td><a href="#c11">3.4</a></td></tr>
+              <tr><td>12</td><td>The Earth Moves</td><td>Lục địa trôi, kiến tạo mảng</td><td><a href="#c12">3.5</a></td></tr>
+              <tr class="sh-tr-part"><td colspan="4">Phần IV · Dangerous Planet</td></tr>
+              <tr><td>13</td><td>Bang!</td><td>Va chạm tiểu hành tinh, khủng long tuyệt chủng</td><td><a href="#c13">4.1</a></td></tr>
+              <tr><td>14</td><td>The Fire Below</td><td>Lòng đất, động đất</td><td><a href="#c14">4.2</a></td></tr>
+              <tr><td>15</td><td>Dangerous Beauty</td><td>Siêu núi lửa Yellowstone</td><td><a href="#c15">4.3</a></td></tr>
+              <tr class="sh-tr-part"><td colspan="4">Phần V · Life Itself</td></tr>
+              <tr><td>16</td><td>Lonely Planet</td><td>Giới hạn sống được, lặn sâu, điều kiện hiếm</td><td><a href="#c16">5.1</a></td></tr>
+              <tr><td>17</td><td>Into the Troposphere</td><td>Khí quyển, thời tiết</td><td><a href="#c17">5.2</a></td></tr>
+              <tr><td>18</td><td>The Bounding Main</td><td>Nước, đại dương, nghề cá</td><td><a href="#c18">5.3</a></td></tr>
+              <tr><td>19</td><td>The Rise of Life</td><td>Nguồn gốc sự sống, ôxy</td><td><a href="#c19">5.4</a></td></tr>
+              <tr><td>20</td><td>Small World</td><td>Vi khuẩn, virus, ba lãnh giới</td><td><a href="#c20">5.5</a></td></tr>
+              <tr><td>21</td><td>Life Goes On</td><td>Hoá thạch, bùng nổ kỷ Cambri</td><td><a href="#c21">5.6</a></td></tr>
+              <tr><td>22</td><td>Good-bye to All That</td><td>Lên cạn, các đại tuyệt chủng</td><td><a href="#c22">5.7</a></td></tr>
+              <tr><td>23</td><td>The Richness of Being</td><td>Phân loại, số loài chưa biết</td><td><a href="#c23">5.8</a></td></tr>
+              <tr><td>24</td><td>Cells</td><td>Tế bào</td><td><a href="#c24">5.9</a></td></tr>
+              <tr><td>25</td><td>Darwin's Singular Notion</td><td>Chọn lọc tự nhiên</td><td><a href="#c25">5.10</a></td></tr>
+              <tr><td>26</td><td>The Stuff of Life</td><td>ADN, gen, bộ gen người</td><td><a href="#c26">5.11</a></td></tr>
+              <tr class="sh-tr-part"><td colspan="4">Phần VI · The Road to Us</td></tr>
+              <tr><td>27</td><td>Ice Time</td><td>Kỷ băng hà, khí hậu đổi đột ngột</td><td><a href="#c27">6.1</a></td></tr>
+              <tr><td>28</td><td>The Mysterious Biped</td><td>Hoá thạch người cổ</td><td><a href="#c28">6.2</a></td></tr>
+              <tr><td>29</td><td>The Restless Ape</td><td>Người hiện đại rời châu Phi, Neanderthal</td><td><a href="#c29">6.3</a></td></tr>
+              <tr><td>30</td><td>Good-bye</td><td>Những loài con người làm tuyệt chủng</td><td><a href="#c30">6.4</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-src">Tên và số chương đối chiếu với mục lục của Thư viện Quốc hội Mỹ cho ấn bản Broadway Books, 2003. Xem mục <a href="#s-src">Nguồn</a>.</p>
+      </section>
+
+      <section id="s-intro">
+        <p class="hw-eyebrow-sec"><b>0.2</b> — Introduction · the book's opening</p>
+        <h2 class="hw-sec-title">Lời mở đầu: làm sao họ biết được điều đó?</h2>
+        <p class="hw-p">Bill Bryson sinh năm 1951 ở Des Moines, bang Iowa, làm báo rồi nổi tiếng với sách du ký như <i>Notes from a Small Island</i> (1995) và <i>A Walk in the Woods</i>. Lời mở đầu kể hai khoảnh khắc. Năm chừng mười tuổi, ông mở một cuốn sách giáo khoa cũ có hình Trái Đất bị bổ đi một phần tư để lộ các lớp bên trong, và tự hỏi: <b>làm sao họ biết?</b> Sách không nói. Nhiều năm sau, trên một chuyến bay dài qua Thái Bình Dương, ông nhìn xuống mặt biển và nhận ra mình không biết cả những điều cơ bản về hành tinh duy nhất mình sẽ sống, chẳng hạn vì sao nước biển mặn mà các Hồ Lớn ở Mỹ thì không.</p>
+        <p class="hw-p">Ông dành khoảng ba năm đọc sách và hỏi chuyện các nhà khoa học. Theo ông, sách khoa học ở trường như muốn <b>"giữ kín phần hay nhất"</b> <span class="hw-meta">(Bryson, lời mở đầu)</span> sau những trang khô khốc. Cuốn này đi theo hướng ngược lại: kể con người và câu chuyện đứng sau từng con số.</p>
+        <p class="hw-p">Lời mở đầu còn đặt ra chủ đề thứ hai chạy suốt cuốn sách: <b>việc bạn có mặt ở đây là một chuỗi may mắn</b>. Chừng 7 tỉ tỉ tỉ nguyên tử vô tri (7 × 10²⁷) tạm tụ lại thành bạn trong vài chục năm. Tổ tiên bạn, qua hàng tỉ năm, chưa đời nào chết trước khi kịp sinh con. Và hầu hết các loài từng sống đều đã tuyệt chủng.</p>
+        <div class="sh-next">
+          <p><b>Bạn vừa có:</b> câu hỏi làm xương sống cho cả trang (làm sao họ biết?) và khuôn bốn phần của mỗi chương.</p>
+          <p><b>Nó dẫn đi đâu:</b> câu hỏi khó nhất nằm ngay ở chương đầu. Làm sao biết chuyện xảy ra 13,8 tỉ năm trước, khi không ai có mặt?</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ PHẦN 1 ══════════════════ -->
+      <div class="hw-part-head" id="p1">
+        <p class="kicker">Phần 1 · Lost in the Cosmos</p>
+        <h2>Lạc giữa vũ trụ: vũ trụ bắt đầu thế nào, và ta nhỏ bé đến đâu</h2>
+        <p>Ba chương hỏi ba câu: vũ trụ bắt đầu thế nào (chương 1), khu nhà của ta lớn cỡ nào (chương 2), và các ngôi sao sống, chết ra sao (chương 3). Mạch chung: phần lớn những điều này mới được biết trong thế kỷ 20, nhờ bắt được những tín hiệu cực yếu.</p>
+      </div>
+
+      <section id="c1">
+        <p class="hw-eyebrow-sec"><b>1.1</b> — Chapter 1 · How to Build a Universe</p>
+        <h2 class="hw-sec-title">Vũ trụ có tuổi, và ta đọc được tuổi ấy từ một tiếng rè trong ăng-ten</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Vũ trụ bắt đầu thế nào, và vì sao ta dám nói về một thời điểm không ai có mặt?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Khoảng 13,8 tỉ năm trước, mọi thứ nằm trong một trạng thái cực nóng, cực đặc, rồi giãn ra và nguội dần. Trong chừng hai mươi phút đầu, heli và một ít liti được "nấu" từ proton và neutron. Các nguyên tố nặng hơn, như cacbon trong cơ thể bạn hay sắt trong máu, đến muộn hơn nhiều, từ lò lửa của các ngôi sao (mục <a href="#c3">1.3</a>).</p>
+        <p class="hw-p">Hiểu nhầm cần gỡ: "Vụ Nổ Lớn" nghe như một quả bom nổ tại một điểm, văng mảnh vào khoảng trống xung quanh. Cái tên gợi đúng như vậy, nhưng không có khoảng trống nào bao quanh cả. Chính không gian giãn ra và kéo các thiên hà xa nhau. Cái tên "Big Bang" do nhà thiên văn Fred Hoyle đặt trên đài BBC tháng 3/1949, để chê một thuyết ông không tin.</p>
+        <div class="hw-quote">
+          Hình dung ổ bánh mì nho đang nở trong lò: nho không tự bò đi đâu, nhưng khoảng cách giữa chúng tăng dần vì bột nở, và hai hạt càng xa nhau thì càng rời nhau nhanh.
+          <cite>Chỗ ví von này hỏng: ổ bánh có vỏ, có tâm, và nở vào không khí trong lò. Vũ trụ, theo mô hình chuẩn, không có mép, không có tâm, và không nở "vào" cái gì cả.</cite>
+        </div>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Năm 1964, Arno Penzias và Robert Wilson ở phòng thí nghiệm Bell (Holmdel, bang New Jersey) chỉnh một ăng-ten hình loa để làm thiên văn vô tuyến, và gặp một tiếng rè không tắt được. Nó đến từ mọi hướng, ngày cũng như đêm. Họ dọn cả phân chim bồ câu trong ăng-ten; tiếng rè vẫn còn. Cách đó không xa, nhóm của Robert Dicke ở Đại học Princeton đang chuẩn bị đi tìm đúng tín hiệu ấy: ánh sáng còn sót lại từ vũ trụ sơ khai, nay đã nguội thành sóng vi ba. Nhận cuộc điện thoại từ Bell, Dicke hiểu ngay nhóm mình đã bị đi trước.</p>
+        <p class="hw-p">Tín hiệu ấy, bức xạ nền vi sóng, đã được Ralph Alpher và Robert Herman dự đoán từ năm 1948, ở mức chừng 5 độ trên độ không tuyệt đối (5 K). Đo ngày nay: 2,725 K. Giải Nobel Vật lý 1978 trao cho Penzias và Wilson, không có Dicke. Mảnh ghép thứ hai là <b>lạm phát vũ trụ</b>: năm 1978, nhà vật lý trẻ Alan Guth nghe Dicke giảng vì sao vũ trụ "phẳng" một cách khó tin; năm 1979, Guth đề xuất rằng trong một phần cực nhỏ của giây đầu tiên, vũ trụ đã phồng lên nhanh khủng khiếp, và điều đó giải thích vì sao nó phẳng và đều như ta đo được.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Arno Penzias, Robert Wilson (Bell) · Robert Dicke (Princeton) · Ralph Alpher, Robert Herman · Fred Hoyle · Alan Guth</dd>
+          <dt>Con số</dt><dd><b>13,8 tỉ năm</b> · bức xạ nền <b>2,725 K</b> · dự đoán năm 1948, bắt được năm 1964, Nobel năm 1978</dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Sách viết năm 2003 dùng con số khoảng 13,7 tỉ năm. Nay, theo vệ tinh Planck (kết quả công bố năm 2018): <b>13,787 ± 0,020 tỉ năm</b>.</p>
+          <p>Chỗ còn mở là tốc độ giãn nở. Tính từ bức xạ nền, cứ xa thêm 3,26 triệu năm ánh sáng thì thiên hà lùi nhanh thêm 67,4 km mỗi giây; đo trực tiếp bằng sao và siêu tân tinh gần thì ra khoảng 73. Hai cách lệch nhau quá sai số của cả hai. Giới thiên văn gọi đó là "căng thẳng Hubble", và chưa ai giải thích được.</p>
+        </div>
+      </section>
+
+      <section id="c2">
+        <p class="hw-eyebrow-sec"><b>1.2</b> — Chapter 2 · Welcome to the Solar System</p>
+        <h2 class="hw-sec-title">Hệ Mặt Trời gần như hoàn toàn trống rỗng</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Hệ Mặt Trời lớn cỡ nào, và vì sao nhìn trời bằng kính thiên văn hơn ba thế kỷ mà ta vẫn còn bị bất ngờ?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Mặt Trời giữ 99,86% khối lượng của cả hệ. Phần còn lại rải trên những khoảng cách mà hình vẽ trong sách giáo khoa không thể vẽ đúng tỉ lệ. Qua Sao Hải Vương là vành đai Kuiper, nơi Diêm Vương chỉ là một thành viên lớn. Xa hơn nữa là đám mây sao chổi Oort, rồi mới tới ngôi sao gần nhất, Proxima Centauri, cách 4,25 năm ánh sáng.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Nhà thiên văn Percival Lowell tin có một "Hành tinh X" ngoài Sao Hải Vương (ông cũng tin Sao Hoả có kênh đào). Sau khi ông mất năm 1916, đài thiên văn mang tên ông thuê Clyde Tombaugh, một thanh niên lớn lên trên nông trại ở Kansas, tự mài ống kính, không có bằng đại học. Tombaugh chụp cùng một vùng trời cách nhau vài ngày, rồi cho hai tấm ảnh chớp qua chớp lại trong một máy so ảnh, tìm một chấm sáng dịch chỗ giữa hàng trăm nghìn ngôi sao đứng yên. Ngày 18/2/1930, ở tuổi 24, anh tìm thấy Diêm Vương.</p>
+        <p class="hw-p">Diêm Vương nhỏ và mờ tới mức phải đợi tới ngày 22/6/1978, James Christy ở Đài quan sát Hải quân Mỹ mới nhận ra một cái bướu trên ảnh chụp là vệ tinh Charon. Bryson dùng chuyện này để nói một điều ít ai nghĩ tới: kính thiên văn lớn không quét trời, chúng được đặt để nhìn vào những vùng đã chọn.</p>
+        <p class="hw-p">Bryson đưa ra một hình ảnh về tỉ lệ: thu Trái Đất bằng hạt đậu thì Sao Mộc cách hơn 300 mét, Diêm Vương cách chừng hai cây số rưỡi và nhỏ "cỡ vi khuẩn". Khoảng cách thì đúng. Kích thước Diêm Vương thì sai hàng trăm tới cả nghìn lần. Mô hình dưới đây cho bạn tự thay số.</p>
+
+        <div class="sh-lab" id="lab-scale">
+          <div class="sh-lab__head">
+            <p class="sh-lab__kick">Mô hình 1 / 3 · tỉ lệ</p>
+            <p class="sh-lab__title">Thu Trái Đất bằng một hạt đậu: mọi thứ khác nằm ở đâu?</p>
+            <p class="sh-lab__hint">Kéo cỡ Trái Đất; mọi thứ co theo cùng một tỉ lệ. Số thật dùng để tính: Trái Đất rộng 12.742 km, Mặt Trời 1.392.700 km, Diêm Vương 2.377 km. Khoảng cách tính từ Mặt Trời, riêng Mặt Trăng tính từ Trái Đất.</p>
+          </div>
+          <div class="sh-lab__body">
+            <div class="sh-lab__row">
+              <label for="sc-d">Trái Đất to bằng</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="sc-d" min="0" max="300" step="1" value="70" style="flex:1 1 180px"><span class="sh-mono" id="sc-d-l"></span></div>
+            </div>
+            <div class="sh-lab__row">
+              <span class="k">Chọn nhanh</span>
+              <div class="wb-cluster">
+                <button class="wb-btn wb-btn--sm wb-btn--outline" type="button" data-sc="70">Hạt đậu · 5 mm</button>
+                <button class="wb-btn wb-btn--sm wb-btn--outline" type="button" data-sc="120">Viên bi · 1,6 cm</button>
+                <button class="wb-btn wb-btn--sm wb-btn--outline" type="button" data-sc="234">Bóng đá · 22 cm</button>
+              </div>
+            </div>
+            <div class="sh-read">
+              <div><span class="k">Mặt Trời</span><span class="v" id="sc-sun">—</span><span class="s" id="sc-sun-s"></span></div>
+              <div><span class="k">Sao Mộc</span><span class="v" id="sc-jup">—</span><span class="s">cách Mặt Trời</span></div>
+              <div class="is-hi"><span class="k">Diêm Vương</span><span class="v" id="sc-plu">—</span><span class="s" id="sc-plu-s"></span></div>
+              <div><span class="k">Sao gần nhất</span><span class="v" id="sc-prx">—</span><span class="s" id="sc-prx-s">Proxima Centauri</span></div>
+            </div>
+            <svg class="sh-svg" id="sc-svg" viewBox="0 0 560 200" role="img" aria-label="Thước chia theo luỹ thừa của mười: vị trí thu nhỏ của Mặt Trăng, Mặt Trời, Sao Mộc, Diêm Vương và sao Proxima Centauri, đặt cạnh những khoảng cách quen thuộc"></svg>
+            <p class="sh-lab__foot"><b>Điều cần thấy:</b> ở cỡ hạt đậu, Mặt Trời là một quả bóng rộng hơn nửa mét đặt cách bạn gần 60 mét; Diêm Vương cách hơn 2 km và rộng chưa tới 1 mm, tức cỡ hạt cát. Vi khuẩn thường chỉ dài một đến hai phần nghìn milimét, nên "cỡ vi khuẩn" nhỏ hơn thật vài trăm tới gần một nghìn lần. Giữa các chấm ấy là khoảng trống.</p>
+            <p class="sh-lab__foot">Kéo Trái Đất lên cỡ quả bóng đá: Diêm Vương cách chừng 100 km, còn sao gần nhất nằm xa gần gấp đôi khoảng cách thật từ Trái Đất tới Mặt Trăng. Mỗi vạch trên thước là gấp mười lần vạch trước.</p>
+          </div>
+        </div>
+
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Percival Lowell · Clyde Tombaugh · James Christy</dd>
+          <dt>Con số</dt><dd>Mặt Trời giữ <b>99,86%</b> khối lượng · Proxima Centauri cách <b>4,25 năm ánh sáng</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Sách viết năm 2003 là Diêm Vương là hành tinh thứ chín. Sau khi người ta tìm thấy thêm nhiều vật thể cỡ tương tự trong vành đai Kuiper (Eris, Sedna, Quaoar), ngày 24/8/2006 Hiệp hội Thiên văn Quốc tế xếp nó vào nhóm <b>hành tinh lùn</b>. Tàu New Horizons bay qua Diêm Vương ngày 14/7/2015; Voyager 1 rời vùng gió Mặt Trời, vào không gian liên sao ngày 25/8/2012. Riêng Sao Thổ nay có 274 vệ tinh được xác nhận (3/2025). Kính quét trời cũng đã có: ngày 30/6/2026, Đài quan sát Vera Rubin ở Chile bắt đầu chương trình mười năm, cứ vài đêm lại chụp toàn bộ bầu trời phía nam.</p>
+        </div>
+      </section>
+
+      <section id="c3">
+        <p class="hw-eyebrow-sec"><b>1.3</b> — Chapter 3 · The Reverend Evans's Universe</p>
+        <h2 class="hw-sec-title">Nhìn lên trời là nhìn về quá khứ, và những ngôi sao chết đã làm ra ta</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Làm sao biết một ngôi sao cách hàng triệu năm ánh sáng vừa nổ tung, và chuyện đó dính gì tới ta?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Ánh sáng cần thời gian để đi, nên thứ ta thấy trên trời là quá khứ. Một ngôi sao lớn chết trong vụ nổ siêu tân tinh, trong chốc lát sáng ngang cả một thiên hà. Lõi các ngôi sao và những vụ nổ ấy đã rèn ra phần lớn các nguyên tố nặng hơn heli, như cacbon, ôxy, sắt, rồi rải chúng vào không gian. Về sau, chính chúng góp phần làm nên Mặt Trời, Trái Đất và cơ thể bạn.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Nhân vật mở chương là Robert Evans, mục sư Giáo hội Hợp nhất ở vùng núi Blue Mountains gần Sydney, săn siêu tân tinh bằng kính thiên văn đặt ở hiên sau nhà. Ông thuộc lòng dáng vẻ của hàng nghìn thiên hà, nên liếc qua là nhận ra một chấm sáng mới: khoảng 50 thiên hà mỗi giờ, 120 thiên hà mỗi giờ ở vùng chòm Xử Nữ, nơi thiên hà dày đặc. Ông tìm được siêu tân tinh đầu tiên được công nhận năm 1981, và cả đời 42 cái bằng mắt nhìn qua kính, một kỷ lục; ông mất năm 2022.</p>
+        <div class="hw-quote">
+          Bryson ví việc Evans làm như trải bàn ăn kín một bãi đỗ xe, rắc lên mỗi bàn một nhúm muối, rồi nhận ra bàn nào vừa có thêm một hạt.
+          <cite>Chỗ ví von này hỏng: Evans không đếm từng hạt. Ông nhớ hình dạng tổng thể của mỗi thiên hà, như ta nhận ra một gương mặt quen vừa mọc thêm nốt ruồi.</cite>
+        </div>
+        <p class="hw-p">Người đặt ra chữ "siêu tân tinh" là Fritz Zwicky ở Viện Công nghệ California, cùng Walter Baade. Đầu thập niên 1930, hai người cho rằng khi lõi một ngôi sao lớn sụp xuống, nó ép thành một khối neutron siêu đặc, sao neutron, và năng lượng thoát ra làm vỏ sao bùng sáng. Năm 1933, Zwicky còn tính ra cụm thiên hà Coma phải nặng gấp nhiều lần phần nhìn thấy được, và gọi phần thiếu là "vật chất tối" (vài người trước ông đã dùng chữ ấy cho khối lượng không thấy trong Ngân Hà). Zwicky nổi tiếng khó chịu và hay bị đồng nghiệp phớt lờ, nhưng cả hai ý tưởng đều đứng vững: sao neutron được tìm thấy năm 1967, dưới dạng những sao xung; vật chất tối nay được đa số giới thiên văn chấp nhận, dù chưa ai biết nó là gì.</p>
+        <p class="hw-p">Chương này cũng nói tới phương trình Drake (1961), ước số nền văn minh trong Ngân Hà bằng cách nhân một chuỗi tỉ lệ phần lớn chưa ai đo được: bao nhiêu sao có hành tinh, bao nhiêu hành tinh ở được, trên bao nhiêu hành tinh sự sống thành trí tuệ. Sách viết kể cả với giả định dè dặt nhất vẫn ra hàng triệu; thật ra tuỳ người điền, kết quả đi từ gần bằng không tới hàng chục triệu.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Robert Evans · Fritz Zwicky, Walter Baade · Frank Drake</dd>
+          <dt>Con số</dt><dd><b>42</b> siêu tân tinh bằng mắt · Zwicky suy ra vật chất tối năm <b>1933</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Năm 2003, số hành tinh quay quanh những ngôi sao khác mới khoảng một trăm: danh mục của NASA hiện ghi 109 hành tinh được phát hiện tới hết năm ấy. Ngày 28/9/2026, con số đã xác nhận là <b>6.372</b> (NASA Exoplanet Archive). Câu hỏi "có ai ngoài kia không" vẫn chưa có lời đáp, nhưng câu hỏi "sao khác có hành tinh không" thì đã có: rất nhiều.</p>
+        </div>
+        <div class="sh-next">
+          <p><b>Bạn vừa có:</b> tuổi vũ trụ và cách ta đọc nó từ bức xạ nền; kích thước thật của Hệ Mặt Trời; và chuyện các nguyên tố trong người bạn được rèn trong sao.</p>
+          <p><b>Nó dẫn đi đâu:</b> từ trời xuống đất. Người thế kỷ 18 chưa ai rời khỏi mặt đất, vậy họ đo hình dạng và cân Trái Đất bằng cách nào?</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ PHẦN 2 ══════════════════ -->
+      <div class="hw-part-head" id="p2">
+        <p class="kicker">Phần 2 · The Size of the Earth</p>
+        <h2>Kích thước Trái Đất: đo, cân và định tuổi hành tinh của mình</h2>
+        <p>Bốn chương về việc đo chính hành tinh dưới chân: hình dạng, khoảng cách tới Mặt Trời và khối lượng (chương 4); tuổi của đá (chương 5); xương của những loài đã mất và cuộc cãi về tuổi Trái Đất (chương 6); và hoá học, thứ cuối cùng trao cho địa chất một chiếc đồng hồ (chương 7).</p>
+      </div>
+
+      <section id="c4">
+        <p class="hw-eyebrow-sec"><b>2.1</b> — Chapter 4 · The Measure of Things</p>
+        <h2 class="hw-sec-title">Cân Trái Đất mà không cần cái cân nào đủ to</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Trái Đất hình gì, cách Mặt Trời bao xa, nặng bao nhiêu, khi chưa ai rời được mặt đất và không có cái cân nào đủ to?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Trái Đất hơi dẹt: bán kính ở xích đạo dài hơn ở hai cực khoảng 21 km. Nó cách Mặt Trời trung bình 149,6 triệu km và nặng 5,97 × 10²⁴ kg, tức gần 6.000 tỉ tỉ tấn. Tính trung bình, mỗi phân khối Trái Đất nặng gấp 5,5 lần một phân khối nước.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Tháng 1/1684, ở London, Edmond Halley, Christopher Wren và Robert Hooke cãi nhau vì sao hành tinh đi theo quỹ đạo hình elip. Mùa hè năm ấy Halley tới Cambridge hỏi Isaac Newton. Newton đáp rằng mình đã tính ra từ lâu, chỉ là không tìm thấy tờ giấy. Ông tính lại, rồi viết tiếp thành bộ <i>Principia</i> (1687): mọi vật hút mọi vật. Luật ấy còn dự đoán một điều kiểm được: Trái Đất tự quay thì phải phình ra ở xích đạo.</p>
+        <p class="hw-p">Để kiểm, Viện Hàn lâm Pháp cử hai đoàn đi đo độ dài một độ kinh tuyến. Đoàn tới vùng Quito dưới xích đạo (Pierre Bouguer, Charles-Marie de La Condamine) rời Pháp năm 1735 và vật lộn gần mười năm trên dãy Andes. Đoàn tới Lapland gần vòng cực Bắc (Pierre Louis Maupertuis, 1736) xong trước và đã xác nhận: Trái Đất dẹt ở hai cực, đúng như Newton nói.</p>
+        <p class="hw-p">Khoảng cách tới Mặt Trời đến từ một ý của Halley: khi Sao Kim đi ngang mặt Mặt Trời, người ở những nơi cách xa nhau bấm giờ, và hình học sẽ cho ra khoảng cách. Hiện tượng ấy đến theo cặp cách nhau tám năm, mỗi cặp cách nhau hơn một thế kỷ. Năm 1761 và 1769, nhiều đoàn đi khắp thế giới, trong đó có James Cook tới Tahiti. Jérôme Lalande gom các kết quả, ra khoảng 153 triệu km, chỉ lệch chừng 2% so với số đo ngày nay.</p>
+        <p class="hw-p">Cân Trái Đất thì cần đo lực hút giữa hai vật thường. Năm 1774, Nevil Maskelyne đo xem ngọn núi Schiehallion ở Scotland kéo lệch dây dọi bao nhiêu; Charles Hutton tính ra Trái Đất nặng khoảng 4,5 lần nước, và tiện thể nghĩ ra đường đồng mức để tính thể tích ngọn núi. Năm 1797–1798, Henry Cavendish, một quý ông nhút nhát tới mức chỉ nói với người hầu bằng giấy nhắn, dựng lại bộ cân xoắn do John Michell thiết kế: hai quả cầu chì lớn, mỗi quả chừng 158 kg, hút hai quả cầu nhỏ treo trên một thanh ngang, làm sợi dây treo xoắn đi một chút. Ông khoá kín nhà kho và nhìn qua ống kính xuyên tường để hơi người không làm không khí xao động. Kết quả: 5,448 lần nước. Số ngày nay là 5,514; ông lệch khoảng 1%.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Newton, Halley · Maupertuis, La Condamine · James Cook, Jérôme Lalande · Maskelyne, Charles Hutton · John Michell, Henry Cavendish</dd>
+          <dt>Con số</dt><dd>dẹt <b>21 km</b> · Mặt Trời cách <b>149,6 triệu km</b> · Trái Đất nặng <b>5,97 × 10²⁴ kg</b>, gấp <b>5,5 lần</b> nước</dd>
+        </dl>
+      </section>
+
+      <section id="c5">
+        <p class="hw-eyebrow-sec"><b>2.2</b> — Chapter 5 · The Stone-Breakers</p>
+        <h2 class="hw-sec-title">Đá kể chuyện rất chậm: phát hiện ra thời gian sâu</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Đá có thể cho biết Trái Đất đã tồn tại bao lâu không?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Đá ghi lịch sử theo lớp: lớp dưới thường cũ hơn lớp trên. Những quá trình rất chậm ta thấy hôm nay, như mưa bào mòn đất, sông đổ phù sa ra biển, đáy biển thành đá rồi bị nâng lên, cộng dồn qua thời gian đủ dài thì dựng nên núi và khoét nên thung lũng. "Đủ dài" nghĩa là hàng trăm triệu tới hàng tỉ năm; con số chính xác phải đợi tới chiếc đồng hồ ở mục <a href="#c10">3.3</a>.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> James Hutton, người Edinburgh học y rồi làm nông, trình bày năm 1785 một ý tưởng: đất bị bào mòn ra biển, lắng thành đá, rồi bị sức nóng trong lòng đất nâng lên lại, thành một vòng không có điểm đầu. Năm 1788, ông cùng nhà toán học John Playfair tới mỏm Siccar Point trên bờ biển Scotland. Ở đó, những lớp đá xám dựng đứng bị một lớp sa thạch đỏ gần như nằm ngang phủ lên. Muốn có cảnh ấy, lớp dưới phải lắng xuống, bị dựng đứng, bị bào phẳng, rồi mới có lớp trên phủ lên; mỗi bước tốn một khoảng thời gian khổng lồ. Hutton kết luận ông không thấy dấu vết của một khởi đầu, cũng không thấy triển vọng của một kết thúc.</p>
+        <div class="hw-quote">
+          Đọc các lớp đá giống đọc một chồng báo để lâu năm trong góc nhà: tờ nằm dưới là tờ cũ hơn.
+          <cite>Chỗ ví von này hỏng: chồng đá có thể bị lật ngược, bẻ gãy, hoặc mất hẳn một khúc giữa. Ở Siccar Point, khúc bị bào mất dài hàng chục triệu năm, còn chồng báo thì không tự mất vài năm ở giữa.</cite>
+        </div>
+        <p class="hw-p">Hutton viết khó đọc tới mức bộ sách hai tập của ông (1795) gần như không ai đọc hết. Ý của ông chỉ lan ra nhờ bản tóm tắt của Playfair (1802), rồi nhờ bộ <i>Principles of Geology</i> của Charles Lyell (1830–1833), cuốn sách Darwin mang theo trên tàu Beagle. Lyell bênh vực <b>thuyết đều đặn</b>: quá khứ được tạo bởi đúng những quá trình chậm như hôm nay, chống lại <b>thuyết tai biến</b> cho rằng Trái Đất được nặn bởi những thảm hoạ lớn. Cùng thời, các quý ông của Hội Địa chất London (lập năm 1807) đặt tên các kỷ địa chất và cãi nhau về chúng: cuộc tranh chấp ranh giới giữa kỷ Cambri và kỷ Silur giữa Adam Sedgwick và Roderick Murchison chỉ được gỡ khi Charles Lapworth, năm 1879, chen vào giữa một kỷ mới, kỷ Ordovic; tên ấy tới năm 1960 mới được quốc tế chính thức công nhận.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>James Hutton · John Playfair · Charles Lyell · Adam Sedgwick, Roderick Murchison · Charles Lapworth</dd>
+          <dt>Con số</dt><dd>Siccar Point <b>1788</b> · <i>Principles of Geology</i> <b>1830–1833</b></dd>
+        </dl>
+        <p class="hw-p"><b>Độ vững.</b> Địa chất ngày nay giữ cả hai: phần lớn là quá trình chậm, nhưng thỉnh thoảng có tai biến thật, như tiểu hành tinh ở mục <a href="#c13">4.1</a>. Lyell đúng về thời gian, sai khi gạt hẳn thảm hoạ.</p>
+      </section>
+
+      <section id="c6">
+        <p class="hw-eyebrow-sec"><b>2.3</b> — Chapter 6 · Science Red in Tooth and Claw</p>
+        <h2 class="hw-sec-title">Xương khủng long, và cuộc tranh giành tên tuổi quanh chúng</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Những bộ xương khổng lồ trong đá là của ai, và vì sao con người mất lâu như vậy mới chịu tin có những loài đã biến mất hẳn?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Tuyệt chủng là chuyện bình thường của sự sống: hầu hết các loài từng tồn tại nay đã mất. Khủng long xuất hiện hơn 230 triệu năm trước và biến mất (trừ nhánh về sau thành chim) cách nay 66 triệu năm. Còn Trái Đất thì già hơn mọi con số thế kỷ 19 dám nghĩ.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Cuối thế kỷ 18, nhiều người vẫn tin Tạo hoá không để loài nào mất đi. Năm 1796, Georges Cuvier ở Paris so xương voi ma mút với voi đang sống và cho thấy đó là loài khác, nay không còn: tuyệt chủng có thật. Ở Anh, những người tìm xương đầu tiên thường ở ngoài giới học thuật. Mary Anning, con gái một thợ mộc nghèo ở thị trấn biển Lyme Regis, khoảng năm 1811–1812, khi mới 12 tuổi, cùng anh trai đào được hộp sọ rồi cả bộ xương một con thằn lằn cá (ichthyosaur), và năm 1823 tìm được một bộ xương plesiosaur gần như nguyên vẹn; giới khoa học toàn đàn ông mua hoá thạch của bà mà hiếm khi ghi tên bà. Năm 1822, vợ chồng bác sĩ Gideon Mantell tìm thấy những chiếc răng lạ, về sau đặt tên là <i>Iguanodon</i>. Năm 1824, William Buckland đặt tên <i>Megalosaurus</i>, chi khủng long đầu tiên được đặt tên hợp lệ. Richard Owen đặt ra chữ "Dinosauria" (thằn lằn kinh khủng), rồi nhận công tìm ra <i>Iguanodon</i> về mình và Cuvier, gạt hẳn Mantell.</p>
+        <p class="hw-p">Ở Mỹ, Edward Drinker Cope và Othniel Charles Marsh biến việc săn xương thành một cuộc chiến kéo dài từ thập niên 1870 tới 1890, có cả gián điệp, mua chuộc và đập phá hoá thạch cho đối thủ khỏi lấy. Kết quả vẫn là một kho báu: hai người mô tả 142 loài khủng long mới.</p>
+        <p class="hw-p">Câu hỏi "Trái Đất bao nhiêu tuổi" khi ấy do một nhà vật lý thống trị. William Thomson, tức Huân tước Kelvin, coi Trái Đất như một khối nóng chảy đang nguội dần và tính ngược thời gian nguội: năm 1862 ra 20 tới 400 triệu năm, năm 1897 thu lại còn 20 tới 40 triệu năm. John Joly (1899) tính theo lượng muối sông đổ ra biển và ra 80 tới 100 triệu năm. Nhà địa chất và Darwin cần nhiều thời gian hơn thế, nhưng không đưa ra được phép tính nào đứng vững trước Kelvin.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Georges Cuvier · Mary Anning · Gideon Mantell · William Buckland · Richard Owen · Edward Drinker Cope, Othniel Marsh · Huân tước Kelvin · John Joly</dd>
+          <dt>Con số</dt><dd><i>Megalosaurus</i> <b>1824</b> · <b>142</b> loài khủng long từ "Cuộc chiến xương" · Kelvin: <b>20–40 triệu năm</b> (1897)</dd>
+        </dl>
+        <p class="hw-p"><b>Độ vững.</b> Kelvin sai vì hai thứ ông không thể biết: lòng đất tự sinh nhiệt nhờ phóng xạ, và quan trọng hơn, lớp manti bên dưới đối lưu, liên tục mang nhiệt lên gần bề mặt. Năm 1895, kỹ sư John Perry, học trò cũ của ông, đã chỉ ra giả định sai về truyền nhiệt, nhưng ít ai nghe.</p>
+      </section>
+
+      <section id="c7">
+        <p class="hw-eyebrow-sec"><b>2.4</b> — Chapter 7 · Elemental Matters</p>
+        <h2 class="hw-sec-title">Từ lò giả kim tới bảng tuần hoàn, rồi tới chiếc đồng hồ nằm trong đá</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Mọi thứ được làm từ gì, và vì sao câu trả lời lại trao cho địa chất một chiếc đồng hồ?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Có 118 nguyên tố, 94 trong số đó có trong tự nhiên. Nguyên tử của cùng một nguyên tố giống hệt nhau và ghép lại thành mọi chất. Một số hạt nhân không bền, tự vỡ ra với tốc độ cố định bất kể nóng lạnh, và chính sự đều đặn ấy biến chúng thành đồng hồ.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Hoá học lớn lên từ giả kim thuật. Năm 1669, Hennig Brand ở Hamburg đun cặn nước tiểu để tìm đá biến kim loại thành vàng, và thu được một chất phát sáng rồi tự bốc cháy: phốtpho. Antoine Lavoisier ở Pháp, với người vợ Marie-Anne ghi chép và vẽ lại các thí nghiệm, cân kỹ mọi phản ứng, cho thấy khối lượng không tự mất đi, và cùng vài đồng nghiệp dựng lại cách gọi tên các chất; ông lên máy chém ngày 8/5/1794 vì từng làm nghề thu thuế. Humphry Davy dùng dòng điện tách ra kali và natri (1807). John Dalton đưa ra thuyết nguyên tử hiện đại (sách in năm 1808).</p>
+        <p class="hw-p">Năm 1869, Dmitri Mendeleev xếp các nguyên tố theo khối lượng và tính chất thành một bảng, cố ý để trống vài ô và đoán trước tính chất của những nguyên tố chưa ai tìm thấy (gali, germani, scandi). Khi chúng được tìm ra, tính chất khớp với lời đoán. Một bảng xếp được coi là đúng khi nó dự đoán trúng điều chưa ai biết.</p>
+        <p class="hw-p">Cuối thế kỷ 19, hoá học chạm tới đồng hồ. Năm 1896, Henri Becquerel thấy muối urani tự phát ra tia. Marie Curie cùng chồng là Pierre tìm ra poloni và radi (1898); bà là người đầu tiên nhận hai giải Nobel. Ernest Rutherford và Frederick Soddy chứng minh phóng xạ là nguyên tố này tự biến thành nguyên tố khác, và Rutherford nhận ra mỗi chất phóng xạ mất đi một nửa sau một khoảng thời gian cố định, gọi là chu kỳ bán rã. Cuối năm 1904, ông đề xuất dùng nó để định tuổi đá. Năm 1907, Bertram Boltwood đo lượng chì tích tụ trong quặng urani; các mẫu của ông, sau khi hiệu chỉnh, có tuổi từ 410 triệu tới 2,2 tỉ năm, già hơn giới hạn của Kelvin hàng chục lần.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Antoine và Marie-Anne Lavoisier · John Dalton · Dmitri Mendeleev · Henri Becquerel · Marie và Pierre Curie · Ernest Rutherford, Frederick Soddy · Bertram Boltwood</dd>
+          <dt>Con số</dt><dd>bảng tuần hoàn <b>1869</b> · phóng xạ <b>1896</b> · <b>118</b> nguyên tố</dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Từ khi sách ra</span>
+          <p>Bốn nguyên tố cuối (số 113, 115, 117, 118) được công nhận cuối năm 2015 và đặt tên năm 2016, lấp kín bảy hàng đầu của bảng tuần hoàn. Xem thêm về bảng tuần hoàn và liên kết hoá học ở trang <a href="chemistry.html">Chemistry</a>.</p>
+        </div>
+        <div class="sh-next">
+          <p><b>Bạn vừa có:</b> hình dạng và khối lượng của Trái Đất, ý niệm về thời gian sâu, và chiếc đồng hồ phóng xạ nằm sẵn trong đá.</p>
+          <p><b>Nó dẫn đi đâu:</b> đồng hồ có rồi nhưng chưa ai đọc chính xác được. Muốn đọc phải hiểu nguyên tử, thứ mà đầu thế kỷ 20 lật tung mọi hiểu biết cũ; và phải đợi tới năm 1953 mới có người đọc ra tuổi thật của Trái Đất.</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ PHẦN 3 ══════════════════ -->
+      <div class="hw-part-head" id="p3">
+        <p class="kicker">Phần 3 · A New Age Dawns</p>
+        <h2>Thời đại mới: thế kỷ 20 đảo lộn những gì tưởng đã xong</h2>
+        <p>Năm chương về thế kỷ khoa học đổi nhanh nhất: ánh sáng và không-thời gian (chương 8), bên trong nguyên tử (chương 9), tuổi thật của Trái Đất và chì trong xăng (chương 10), những hạt nhỏ hơn cả nguyên tử (chương 11), và những lục địa không đứng yên (chương 12).</p>
+      </div>
+
+      <section id="c8">
+        <p class="hw-eyebrow-sec"><b>3.1</b> — Chapter 8 · Einstein's Universe</p>
+        <h2 class="hw-sec-title">Ánh sáng không chịu đổi tốc độ, và vũ trụ đang giãn ra</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Vì sao ngành vật lý tưởng như đã xong vào cuối thế kỷ 19 lại phải viết lại từ gốc, và làm sao biết vũ trụ lớn hơn Ngân Hà?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Tốc độ ánh sáng trong chân không như nhau với mọi người đo, dù họ đứng yên hay đang chạy. Để điều đó đúng, thời gian và khoảng cách phải co giãn theo chuyển động. Khối lượng là một dạng năng lượng (E = mc²), còn lực hấp dẫn là không-thời gian bị các vật nặng uốn cong. Ngân Hà chỉ là một trong vô số thiên hà, và các thiên hà đang lùi xa nhau.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Năm 1887, Albert Michelson và Edward Morley ở Cleveland đo tốc độ ánh sáng theo nhiều hướng để tìm "ê-te", môi trường vô hình được cho là chở ánh sáng như nước chở sóng. Họ không thấy chút khác biệt nào. Năm 1900, Max Planck đề xuất năng lượng được phát ra theo từng gói, gọi là lượng tử. Năm 1905, Albert Einstein, một nhân viên thẩm định ở phòng cấp bằng sáng chế tại Bern, công bố bốn bài báo: ánh sáng là những hạt năng lượng (công trình được nêu trong giải Nobel năm 1921 của ông), chuyển động nhảy loạn của hạt nhỏ trong nước là bằng chứng nguyên tử có thật, thuyết tương đối hẹp, và E = mc². Mười năm sau là thuyết tương đối rộng. Ngày 29/5/1919, hai đoàn quan sát nhật thực ở đảo Príncipe và ở Sobral (Brazil), do Arthur Eddington thúc đẩy, đo được ánh sáng sao bị Mặt Trời bẻ cong đúng như Einstein tính.</p>
+        <p class="hw-p">Chuyện vũ trụ lớn cỡ nào bắt đầu từ một người ít được nhắc: Henrietta Swan Leavitt, một "người tính toán" được trả lương thấp ở đài thiên văn Harvard. Năm 1908–1912, bà nhận ra một loại sao biến quang (sao Cepheid) càng sáng thật thì chớp càng chậm. Biết tốc độ chớp là biết độ sáng thật, so với độ sáng nhìn thấy là ra khoảng cách. Năm 1924, Edwin Hubble dùng kính 100 inch (2,5 m) trên núi Wilson tìm thấy sao Cepheid trong "tinh vân" Andromeda: nó quá xa để thuộc Ngân Hà, tức là một thiên hà khác. Năm 1929, Hubble cho thấy thiên hà càng xa thì lùi càng nhanh, nghĩa là vũ trụ đang giãn nở. Linh mục người Bỉ Georges Lemaître đã suy ra điều ấy hai năm trước; năm 2018, Hiệp hội Thiên văn Quốc tế đề nghị gọi là định luật Hubble–Lemaître.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Albert Michelson, Edward Morley · Max Planck · Albert Einstein · Arthur Eddington · Henrietta Swan Leavitt · Edwin Hubble · Georges Lemaître</dd>
+          <dt>Con số</dt><dd><b>1905</b> năm kỳ diệu của Einstein · nhật thực <b>29/5/1919</b> · Andromeda là thiên hà khác: <b>1924</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Từ khi sách ra</span>
+          <p>Thuyết tương đối rộng dự đoán không-thời gian có thể gợn sóng. Ngày 14/9/2015, hai máy dò LIGO ở Mỹ bắt được gợn sóng ấy từ hai lỗ đen, nặng 36 và 29 lần Mặt Trời, nhập vào nhau (công bố 11/2/2016, giải Nobel 2017). Ngày 10/4/2019, kính Event Horizon Telescope công bố ảnh đầu tiên chụp bóng một lỗ đen. Muốn đi sâu vào thuyết tương đối, xem trang <a href="relativity.html">Relativity</a>.</p>
+        </div>
+      </section>
+
+      <section id="c9">
+        <p class="hw-eyebrow-sec"><b>3.2</b> — Chapter 9 · The Mighty Atom</p>
+        <h2 class="hw-sec-title">Nguyên tử gần như toàn là khoảng trống</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Nếu mọi thứ làm từ nguyên tử, thì nguyên tử trông ra sao, khi không kính hiển vi quang học nào nhìn thấy nó?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Nguyên tử cực nhỏ: một milimét xếp được khoảng mười triệu nguyên tử hydro. Gần như toàn bộ khối lượng nằm trong một hạt nhân tí hon ở giữa, gồm proton và neutron; quanh đó là electron, không chạy trên quỹ đạo như hành tinh mà tồn tại như một đám mây xác suất. Phần còn lại là khoảng trống. Nguyên tử lại rất bền và được dùng đi dùng lại: cacbon, ôxy hay sắt trong người bạn được rèn trong những ngôi sao đã chết từ trước khi có Mặt Trời, và phần lớn đã từng thuộc về nhiều sinh vật khác trước khi tới lượt bạn.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> John Dalton, một thầy giáo ở Manchester, đưa ra thuyết nguyên tử hiện đại năm 1808, nhưng cả thế kỷ sau nhiều nhà khoa học vẫn coi nguyên tử là một tiện lợi tính toán. Bài báo năm 1905 của Einstein về chuyển động của hạt nhỏ trong nước đã cho một cách kiểm, và thí nghiệm của Jean Perrin vài năm sau khép lại tranh cãi. Năm 1909, hai trợ lý của Ernest Rutherford là Hans Geiger và Ernest Marsden bắn hạt alpha vào lá vàng mỏng: hầu hết bay xuyên qua, nhưng một số ít bật ngược trở lại. Rutherford nói điều đó khó tin như bắn một quả đạn pháo vào tờ giấy lụa mà nó bật lại trúng mình. Năm 1911, ông kết luận nguyên tử có một hạt nhân đặc, nhỏ xíu. Năm 1913, Niels Bohr đặt electron lên những mức năng lượng cố định; năm 1932, James Chadwick tìm ra neutron.</p>
+        <div class="hw-quote">
+          Bryson ví: nếu nguyên tử to bằng một nhà thờ lớn, hạt nhân chỉ cỡ một con ruồi bay giữa lòng nhà thờ.
+          <cite>Chỗ ví von này hỏng: con ruồi ấy phải nặng hơn cả toà nhà, vì hơn 99,9% khối lượng nằm ở hạt nhân; và electron không phải những chấm đậu trên tường, mà là một đám mờ phủ cả không gian bên trong.</cite>
+        </div>
+        <p class="hw-p">Rồi tới cơ học lượng tử, phần kỳ lạ nhất của chương. Werner Heisenberg (1927) cho thấy không thể biết chính xác cùng lúc cả vị trí và tốc độ của một electron; Erwin Schrödinger viết phương trình mô tả electron như một sóng; Wolfgang Pauli và Paul Dirac hoàn thiện bức tranh. Einstein không bao giờ chấp nhận hết, và chỉ ra rằng theo lý thuyết này, hai hạt từng tương tác có thể "biết" trạng thái của nhau dù ở rất xa, điều ông gọi là tác động ma quái từ xa.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Ernest Rutherford, Hans Geiger, Ernest Marsden · Niels Bohr · James Chadwick · Werner Heisenberg, Erwin Schrödinger</dd>
+          <dt>Con số</dt><dd>lá vàng <b>1909</b> · hạt nhân <b>1911</b> · neutron <b>1932</b> · hạt nhân giữ hơn <b>99,9%</b> khối lượng nguyên tử</dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Từ khi sách ra</span>
+          <p>Cái "ma quái" Einstein không chịu đã được đo đi đo lại: giải Nobel Vật lý 2022 trao cho John Clauser, Alain Aspect và Anton Zeilinger vì các thí nghiệm cho thấy những hạt vướng víu lượng tử thật sự tương quan theo cách mà mọi lý thuyết kiểu "mỗi hạt mang sẵn đáp án từ trước" đều không giải thích được.</p>
+        </div>
+      </section>
+
+      <section id="c10">
+        <p class="hw-eyebrow-sec"><b>3.3</b> — Chapter 10 · Getting the Lead Out</p>
+        <h2 class="hw-sec-title">Tuổi Trái Đất đo bằng chì, và cái giá của chì trong xăng</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Trái Đất bao nhiêu tuổi, tính chính xác, và vì sao người trả lời được câu ấy lại dành nửa đời còn lại để đánh nhau với ngành xăng dầu?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Trái Đất 4,54 tỉ năm tuổi, sai số chừng 1%. Con số ấy đọc từ đồng hồ phóng xạ trong thiên thạch, vốn hình thành cùng lúc với Hệ Mặt Trời. Và chì pha vào xăng suốt hơn nửa thế kỷ đã nhiễm vào không khí, đất và máu của gần như mọi người trên hành tinh.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Chương mở bằng Thomas Midgley, kỹ sư của General Motors, người năm 1921 tìm ra rằng pha chì tetraethyl vào xăng làm động cơ hết kêu lọc cọc. Chì độc đã được biết từ lâu; năm 1924, năm công nhân chết ngay trong hai tháng đầu nhà máy Bayway (New Jersey) chạy. Xăng pha chì vẫn được bán khắp thế giới. Midgley còn phát minh ra khí CFC cho tủ lạnh, về sau hoá ra ăn mòn tầng ôzôn.</p>
+        <p class="hw-p">Người đọc được tuổi Trái Đất là Clair Patterson, một nghiên cứu sinh ở Chicago. Ý tưởng đã có: urani biến dần thành chì với tốc độ cố định, nên đo tỉ lệ các loại chì là ra tuổi. Khó ở chỗ đá cổ nhất trên Trái Đất đã bị xáo trộn, nên Patterson đo thiên thạch, mẫu vật nguyên sơ từ thuở Hệ Mặt Trời mới hình thành, trong đó có mảnh thiên thạch Canyon Diablo ở Arizona. Mẫu của ông cứ bị nhiễm chì từ không khí, bụi, dụng cụ, nên ông phải dựng một trong những phòng sạch đầu tiên. Năm 1953, đo bằng máy khối phổ ở Phòng thí nghiệm Argonne, ông ra con số; bài báo năm 1956 ghi <b>4,55 ± 0,07 tỉ năm</b>.</p>
+        <p class="hw-p">Chì nhiễm bẩn khắp nơi khiến Patterson đi tìm nguồn gốc của nó, và ông chỉ vào xăng. Ngành công nghiệp chì, với nhà khoa học Robert Kehoe làm người bênh vực, lập luận rằng mức chì trong máu người thường là "bình thường" nên vô hại. Patterson mất tài trợ nghiên cứu và năm 1971 bị loại khỏi hội đồng của Hội đồng Nghiên cứu Quốc gia Mỹ bàn về ô nhiễm chì, dù khi ấy ông là chuyên gia hàng đầu. Rốt cuộc Mỹ cấm xăng pha chì cho xe chạy đường bộ từ năm 1996; tới cuối thập niên 1990, lượng chì trong máu người Mỹ đã giảm tới 80%.</p>
+
+        <div class="sh-lab" id="lab-rad">
+          <div class="sh-lab__head">
+            <p class="sh-lab__kick">Mô hình 2 / 3 · định tuổi</p>
+            <p class="sh-lab__title">Đọc tuổi từ lượng chất phóng xạ còn lại</p>
+            <p class="sh-lab__hint">Chọn một đồng hồ, rồi kéo xem trong mẫu còn lại bao nhiêu phần chất phóng xạ ban đầu. Mỗi <b>chu kỳ bán rã</b> chất ấy mất đi một nửa. Cacbon-14: khoảng 5.730 năm. Urani-238 (biến dần thành chì): khoảng 4,46 tỉ năm.</p>
+          </div>
+          <div class="sh-lab__body">
+            <div class="sh-lab__row">
+              <span class="k">Đồng hồ</span>
+              <div class="wb-cluster">
+                <button class="wb-btn wb-btn--sm wb-btn--outline" type="button" data-iso="c14">Cacbon-14</button>
+                <button class="wb-btn wb-btn--sm wb-btn--outline" type="button" data-iso="u238">Urani-238</button>
+              </div>
+            </div>
+            <div class="sh-lab__row">
+              <label for="rd-f">Chất mẹ còn lại</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="rd-f" min="0" max="400" step="0.01" value="30.62" style="flex:1 1 180px"><span class="sh-mono" id="rd-f-l"></span></div>
+            </div>
+            <div class="sh-read">
+              <div class="is-hi"><span class="k">Tuổi của mẫu</span><span class="v" id="rd-age">—</span><span class="s" id="rd-age-s"></span></div>
+              <div><span class="k">Số lần chia đôi</span><span class="v" id="rd-n">—</span><span class="s">chu kỳ bán rã đã qua</span></div>
+              <div><span class="k">Đo được không?</span><span class="v" id="rd-ok">—</span><span class="s" id="rd-ok-s"></span></div>
+            </div>
+            <svg class="sh-svg" id="rd-svg" viewBox="0 0 560 240" role="img" aria-label="Đường phân rã: phần chất phóng xạ còn lại giảm một nửa sau mỗi chu kỳ bán rã, kèm điểm ứng với mẫu đang chọn và vùng đồng hồ đo được"></svg>
+            <p class="sh-lab__foot"><b>Điều cần thấy:</b> mỗi lần chia đôi tốn đúng một khoảng thời gian như nhau, dù còn nhiều hay còn ít. Sau mười chu kỳ chỉ còn chưa tới 0,1%, nên cacbon-14 không định tuổi được thứ gì già hơn khoảng 50.000 năm, càng không đo được xương khủng long. Ngược lại, urani-238 thay đổi quá ít trong vài nghìn năm để định tuổi một chiếc bình gốm.</p>
+            <p class="sh-lab__foot">Trái Đất già đúng chừng một chu kỳ của urani-238: gần một nửa lượng urani-238 có lúc Trái Đất hình thành vẫn còn tới hôm nay. Mô hình giản lược: thực tế người ta đo tỉ lệ chất con trên chất mẹ nên không cần biết lượng ban đầu, và Patterson dùng tỉ lệ giữa các đồng vị chì trong thiên thạch, một cách còn chắc hơn.</p>
+          </div>
+        </div>
+
+        <p class="hw-p">Chương cũng kể về Willard Libby, người nghĩ ra cách định tuổi bằng cacbon-14 (công bố năm 1949, Nobel Hoá học năm 1960): sinh vật hấp thụ cacbon-14 khi còn sống, chết đi thì lượng ấy chỉ còn giảm. Vì lượng cacbon-14 trong không khí không hoàn toàn cố định, niên đại nay được hiệu chỉnh bằng vòng gỗ.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Thomas Midgley · Clair Patterson · Robert Kehoe · Willard Libby</dd>
+          <dt>Con số</dt><dd>Trái Đất <b>4,54 tỉ năm</b> · Patterson <b>4,55 ± 0,07</b> (1956) · chì trong máu người Mỹ giảm tới <b>80%</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Khi sách ra, vẫn còn nước bán xăng pha chì. Việt Nam chuyển sang xăng không chì trên toàn quốc từ năm 2001. Tháng 7/2021, Algeria, nước cuối cùng, ngừng bán; ngày 30/8/2021, Chương trình Môi trường Liên Hợp Quốc tuyên bố xăng pha chì cho ô tô đã chấm dứt trên toàn thế giới.</p>
+          <p>Còn CFC thì bị Nghị định thư Montreal (ký ngày 16/9/1987) loại bỏ dần. Theo đánh giá của Liên Hợp Quốc năm 2023, tầng ôzôn đang trên đường hồi phục về mức năm 1980 vào khoảng năm 2040 ở hầu hết thế giới, 2045 ở Bắc Cực và 2066 ở Nam Cực.</p>
+        </div>
+      </section>
+
+      <section id="c11">
+        <p class="hw-eyebrow-sec"><b>3.4</b> — Chapter 11 · Muster Mark's Quarks</p>
+        <h2 class="hw-sec-title">Hạt nhỏ hơn hạt nhỏ, và phần lớn vũ trụ vẫn chưa biết là gì</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Proton và neutron được làm từ gì, và vì sao càng đo kỹ vũ trụ thì phần ta chưa biết càng lớn?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Proton và neutron được ghép từ những hạt nhỏ hơn gọi là quark. Cùng với electron, neutrino và các hạt mang lực, chúng tạo thành <b>Mô hình Chuẩn</b>, một trong những lý thuyết được kiểm nghiệm chính xác nhất của vật lý. Nhưng tất cả thứ Mô hình Chuẩn mô tả chỉ chiếm khoảng 5% vũ trụ. Khoảng 27% là vật chất tối, chỉ lộ ra qua lực hút; khoảng 68% là năng lượng tối, thứ đang làm vũ trụ giãn nở nhanh dần.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Năm 1911, C. T. R. Wilson, người Scotland, chế một buồng tạo mây để nghiên cứu mây, và thấy các hạt mang điện để lại vệt sương như máy bay để lại vệt khói: máy dò hạt đầu tiên ra đời một cách tình cờ (giải Nobel 1927). Sau đó là các máy gia tốc ngày càng lớn: bắn hạt vào nhau thật mạnh rồi xem mảnh vỡ. Tới thập niên 1960, người ta đã có cả một "vườn thú" hơn trăm loại hạt. Năm 1964, Murray Gell-Mann và George Zweig, mỗi người một ngả, đề xuất rằng nhiều hạt trong số ấy được ghép từ vài viên gạch nhỏ hơn. Gell-Mann đặt tên chúng là quark, lấy từ câu "Three quarks for Muster Mark" trong tiểu thuyết <i>Finnegans Wake</i> của James Joyce, và đó cũng là tên chương. Quark cuối cùng, quark đỉnh, được tìm thấy năm 1995.</p>
+        <p class="hw-p">Bryson kể cả cái giá của vật lý hạt: năm 1993, Quốc hội Mỹ huỷ Máy siêu va chạm siêu dẫn ở Texas khi đã đào xong khoảng 22 km đường hầm và tiêu hết chừng 2 tỉ USD. Ông cũng ngao ngán thuyết dây, cho rằng mọi hạt là những sợi dây rung trong mười hay mười một chiều: đẹp về toán học, nhưng chưa có thí nghiệm nào kiểm được. Chương khép lại với vũ trụ học: tốc độ giãn nở đo mãi vẫn lệch nhau, các thiên hà quay nhanh tới mức phải có vật chất tối níu lại (Vera Rubin đo điều này từ thập niên 1970), và năm 1998, hai nhóm theo dõi siêu tân tinh xa thấy vũ trụ giãn nhanh dần.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>C. T. R. Wilson · Murray Gell-Mann, George Zweig · Vera Rubin · các nhóm siêu tân tinh 1998 (Saul Perlmutter; Brian Schmidt và Adam Riess)</dd>
+          <dt>Con số</dt><dd>vật chất thường <b>~5%</b> · vật chất tối <b>~27%</b> · năng lượng tối <b>~68%</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Sách viết năm 2003 là boson Higgs, mảnh cuối cùng của Mô hình Chuẩn, vẫn chưa được tìm thấy. Ngày 4/7/2012, hai nhóm ATLAS và CMS ở Máy va chạm hạt lớn LHC (đường hầm 27 km dưới biên giới Pháp – Thuỵ Sĩ) công bố đã thấy nó, nặng khoảng 125 GeV; Peter Higgs và François Englert nhận giải Nobel năm 2013. Năm 1998, thí nghiệm Super-Kamiokande ở Nhật cho thấy neutrino có khối lượng, điều Mô hình Chuẩn ban đầu không có.</p>
+          <p>Về năng lượng tối: tháng 3/2025, nhóm DESI công bố kết hợp dữ liệu của họ với bức xạ nền và siêu tân tinh thì nghiêng về khả năng năng lượng tối yếu dần theo thời gian, ở mức 2,8 tới 4,2 sigma. Ngưỡng để coi là phát hiện trong vật lý là 5 sigma, và riêng dữ liệu DESI vẫn khớp mô hình chuẩn. Đây là một dấu hiệu đáng theo dõi, chưa phải kết luận.</p>
+        </div>
+      </section>
+
+      <section id="c12">
+        <p class="hw-eyebrow-sec"><b>3.5</b> — Chapter 12 · The Earth Moves</p>
+        <h2 class="hw-sec-title">Lục địa trôi: đúng từ sớm, được tin rất muộn</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Các lục địa có đứng yên không, và vì sao một ý tưởng đúng phải đợi nửa thế kỷ mới được chấp nhận?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Vỏ Trái Đất vỡ thành những mảng lớn trôi trên lớp manti nóng, dẻo bên dưới. Ở giữa Đại Tây Dương, hai bờ tách xa nhau 10 tới 40 mm mỗi năm, chừng tốc độ móng tay mọc; mảng Nazca ở Thái Bình Dương đi tới khoảng 160 mm mỗi năm. Núi, động đất, núi lửa và hình dạng bờ biển phần lớn là chuyện của các mảng ấy va, trượt và tách nhau.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Ngày 6/1/1912, nhà khí tượng học người Đức Alfred Wegener trình bày ở Frankfurt rằng các lục địa từng dính liền và đã trôi xa nhau: bờ Nam Mỹ khớp với bờ châu Phi, cùng một loại hoá thạch và đá xuất hiện ở hai bờ đại dương. Sách của ông ra năm 1915. Giới địa chất bác bỏ, một phần vì ông "không phải người trong nghề", một phần vì ông không chỉ ra được lực nào đủ sức đẩy cả lục địa. Để giải thích hoá thạch giống nhau, họ nghĩ ra những "cầu đất" nối các lục địa rồi chìm mất. Wegener chết trên băng Greenland tháng 11/1930, khi ý tưởng của ông vẫn bị coi là kỳ quặc.</p>
+        <p class="hw-p">Mảnh ghép cơ chế đến từ Arthur Holmes: nhiệt phóng xạ trong lòng đất làm lớp manti đối lưu như nồi cháo sôi, đủ sức kéo lớp vỏ bên trên. Bằng chứng đến từ đáy biển. Trong Thế chiến II, Harry Hess, một giáo sư địa chất làm thuyền trưởng tàu vận tải USS <i>Cape Johnson</i>, để máy đo sâu hồi âm chạy suốt các chuyến đi. Năm 1962, ông đề xuất đáy đại dương liên tục được sinh ra ở các sống núi giữa biển rồi trôi ra hai bên. Năm 1963, Fred Vine và Drummond Matthews ở Cambridge chỉ ra các dải từ tính đối xứng hai bên sống núi, ghi lại những lần từ trường Trái Đất đảo chiều, như băng ghi âm ghi lại lịch sử đáy biển; nhà địa vật lý Canada Lawrence Morley có cùng ý nhưng bị cả hai tạp chí từ chối. Cuối thập niên 1960, kiến tạo mảng trở thành nền của địa chất học.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Alfred Wegener · Arthur Holmes · Harry Hess · Fred Vine, Drummond Matthews · Lawrence Morley</dd>
+          <dt>Con số</dt><dd>đề xuất <b>1912</b> · được chấp nhận <b>cuối thập niên 1960</b> · <b>10–40 mm/năm</b> ở giữa Đại Tây Dương</dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Từ khi sách ra</span>
+          <p>Ngày nay không cần suy ra nữa: các trạm định vị vệ tinh GPS đo trực tiếp chuyển động của từng mảng, tới từng milimét mỗi năm.</p>
+        </div>
+        <div class="sh-next">
+          <p><b>Bạn vừa có:</b> không-thời gian của Einstein, bên trong nguyên tử, tuổi thật của Trái Đất đọc từ chì, những viên gạch nhỏ nhất đã biết, và một mặt đất không đứng yên.</p>
+          <p><b>Nó dẫn đi đâu:</b> mặt đất trôi, va và vỡ, trời thì thỉnh thoảng rơi đá xuống. Hành tinh này nguy hiểm tới đâu, và ta biết trước được bao lâu?</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ PHẦN 4 ══════════════════ -->
+      <div class="hw-part-head" id="p4">
+        <p class="kicker">Phần 4 · Dangerous Planet</p>
+        <h2>Hành tinh nguy hiểm: đá từ trời và lửa từ lòng đất</h2>
+        <p>Ba chương về những thứ có thể xoá sổ cả một phần sự sống: tiểu hành tinh (chương 13), động đất và lòng đất (chương 14), siêu núi lửa (chương 15). Mạch chung: phần lớn các mối nguy này mới được hiểu trong vài chục năm, và ta nhận ra chúng muộn hơn nhiều người nghĩ.</p>
+      </div>
+
+      <section id="c13">
+        <p class="hw-eyebrow-sec"><b>4.1</b> — Chapter 13 · Bang!</p>
+        <h2 class="hw-sec-title">Đá từ trời rơi xuống, và ta biết trước được bao lâu</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Điều gì đã giết khủng long, và nếu một tảng đá lớn đang lao về phía Trái Đất, ta có biết trước không?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Cách nay 66 triệu năm, một tiểu hành tinh rộng khoảng 10 km đâm xuống nơi nay là bán đảo Yucatán (Mexico), để lại hố Chicxulub rộng chừng 200 km, nay chôn sâu dưới một cây số đá trầm tích. Khói bụi che Mặt Trời và cú sốc môi trường sau đó quét sạch khủng long (trừ nhánh chim) cùng phần lớn các loài khác. Những tảng nhỏ hơn rơi xuống thường xuyên hơn nhiều, và ta chỉ mới lập danh sách chúng trong vài chục năm.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Bryson mở chương ở quê mình, bang Iowa: năm 1912, thợ khoan giếng ở thị trấn Manson moi lên loại đá vỡ vụn bất thường, dấu vết của một cú va chạm rộng chừng 35–38 km đã bị băng hà chôn vùi. Có thời nó bị nghi là thủ phạm diệt khủng long, cho tới khi đo tuổi: khoảng 74 triệu năm, sớm hơn chừng tám triệu năm. Người chứng minh các hố như thế đến từ trời là Eugene Shoemaker: ông tìm thấy ở Hố Thiên thạch (Arizona) loại thạch anh chỉ hình thành dưới áp suất khổng lồ của một cú va đập, thứ núi lửa không tạo ra được.</p>
+        <p class="hw-p">Lời giải cho khủng long bắt đầu từ một lớp đất sét mỏng ở Gubbio (Ý), nằm đúng ranh giới giữa kỷ Phấn trắng và kỷ Cổ cận. Nhà địa chất Walter Alvarez nhờ cha mình, nhà vật lý đoạt giải Nobel Luis Alvarez, tìm cách đo xem lớp ấy lắng đọng trong bao lâu. Họ đo iridi, nguyên tố hiếm trên mặt đất nhưng có nhiều trong thiên thạch, và thấy nồng độ trong lớp sét ấy cao gấp khoảng 30 lần bình thường; ở một vách đá tại Đan Mạch, gấp 160 lần. Năm 1980, nhóm Alvarez cùng hai nhà hoá học Frank Asaro và Helen Michel công bố giả thuyết một tiểu hành tinh đã đâm vào Trái Đất. Giới cổ sinh vật phản đối gay gắt nhiều năm. Hố va chạm được hai nhà địa vật lý làm cho công ty dầu Pemex, Antonio Camargo và Glen Penfield, nhận ra từ cuối thập niên 1970, và năm 1990–1991 Alan Hildebrand nối hố ấy với lớp iridi.</p>
+        <div class="hw-quote">
+          Bryson ví quỹ đạo Trái Đất như một xa lộ mà ta là chiếc xe duy nhất, còn những tảng đá lớn hơn 10 mét là người đi bộ băng qua đường, không ai biết lúc nào.
+          <cite>Chỗ ví von này hỏng: trên xa lộ thật, tài xế thấy người đi bộ và phanh được. Trái Đất không phanh, không lái, và mãi tới năm 2022 con người mới thử đẩy lệch một tảng đá lần đầu.</cite>
+        </div>
+        <p class="hw-p">Tháng 7/1994, các mảnh sao chổi Shoemaker–Levy 9 lần lượt đâm vào Sao Mộc trong sáu ngày, lần đầu con người tận mắt thấy hai thiên thể va nhau.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Eugene và Carolyn Shoemaker, David Levy · Walter và Luis Alvarez, Frank Asaro, Helen Michel · Antonio Camargo, Glen Penfield, Alan Hildebrand</dd>
+          <dt>Con số</dt><dd>Chicxulub: <b>66 triệu năm</b>, hố <b>~200 km</b>, đá <b>~10 km</b> · Manson: <b>~74 triệu năm</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Khi sách viết, danh sách những tảng đá cắt ngang quỹ đạo Trái Đất còn rất thiếu. Ngày 28/9/2026, cơ sở dữ liệu của NASA JPL ghi <b>42.534</b> tiểu hành tinh gần Trái Đất. Theo một ước tính năm 2021, có khoảng 980 tảng rộng từ 1 km trở lên và hơn 90% đã được tìm thấy; với loại từ 140 m, mới thấy khoảng một nửa.</p>
+          <p>Ngày 15/2/2013, một thiên thạch rộng 17–20 m nổ trên trời Chelyabinsk (Nga) mà không ai phát hiện trước, vì nó bay tới từ phía gần Mặt Trời; 1.491 người bị thương phải chữa trị, chủ yếu do kính vỡ. Ngày 26/9/2022, tàu DART của NASA đâm vào tiểu hành tinh nhỏ Dimorphos và rút ngắn quỹ đạo của nó 32 phút: lần đầu con người đẩy lệch một thiên thể. Đầu năm 2025, tiểu hành tinh 2024 YR4 từng có xác suất 3,1% đâm Trái Đất năm 2032, rồi bị loại trừ chỉ vài ngày sau khi có thêm số đo.</p>
+        </div>
+      </section>
+
+      <section id="c14">
+        <p class="hw-eyebrow-sec"><b>4.2</b> — Chapter 14 · The Fire Below</p>
+        <h2 class="hw-sec-title">Lòng đất: nơi chưa ai chạm tới, chỉ nghe được bằng động đất</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Bên dưới chân ta là gì, khi lỗ khoan sâu nhất chưa xuyên nổi một phần năm trăm đường tới tâm Trái Đất?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Tâm Trái Đất cách mặt đất 6.371 km. Bên dưới lớp vỏ mỏng là lớp manti đá nóng, rồi lõi ngoài bằng kim loại lỏng và lõi trong rắn. Lõi ngoài chuyển động tạo ra từ trường của Trái Đất. Lỗ khoan sâu nhất, ở bán đảo Kola (Nga), dừng ở 12.262 m năm 1989, chưa tới 0,2% đường tới tâm.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Nghe động đất. Sóng động đất đi qua các lớp đá khác nhau với tốc độ khác nhau và bị bẻ cong ở ranh giới, giống ánh sáng bị bẻ khi đi từ không khí vào nước. Năm 1906, nhà địa chất Anh Richard Oldham dùng thời gian sóng tới các trạm đo để đưa ra bằng chứng trực tiếp đầu tiên rằng Trái Đất có lõi. Sau trận động đất gần Zagreb ngày 8/10/1909, Andrija Mohorovičić phát hiện một ranh giới giữa vỏ và manti, nay gọi là Moho. Năm 1936, nhà địa chấn học Đan Mạch Inge Lehmann nhận ra lõi trong phải là khối rắn. Năm 1935, Charles Richter (cùng Beno Gutenberg) lập thang đo độ lớn động đất; mỗi độ tăng lên nghĩa là năng lượng lớn gấp khoảng 32 lần.</p>
+        <div class="hw-quote">
+          Hình dung việc gõ vào một quả dưa để đoán ruột nó đặc hay rỗng: không bổ ra, chỉ nghe tiếng dội lại.
+          <cite>Chỗ ví von này hỏng: người gõ dưa chọn chỗ gõ và nghe một tiếng. Nhà địa chấn không chọn được chỗ động đất xảy ra, và phải ghép hàng nghìn bản ghi từ khắp thế giới mới dựng được hình ảnh bên trong.</cite>
+        </div>
+        <p class="hw-p">Bryson mở chương bằng một nghĩa địa hoá thạch: năm 1971, nhà cổ sinh vật Michael Voorhies thấy một hộp sọ tê giác non lộ ra ở mép một khe xói tại Nebraska. Cả một hố nước đầy xác tê giác, ngựa và nhiều loài khác, chết vì hít tro núi lửa khoảng 10–12 triệu năm trước. Tro ấy bay tới từ một siêu núi lửa ở Idaho, cách chừng 1.600 km, trên cùng một điểm nóng nay nằm dưới Yellowstone. Chương cũng kể những trận động đất lớn: Lisbon ngày 1/11/1755, khoảng 40.000–50.000 người chết nếu tính cả Tây Ban Nha và Maroc; Chile năm 1960, trận mạnh nhất từng đo được, độ lớn khoảng 9,5; núi St. Helens ở Mỹ phun trào ngày 18/5/1980, giết khoảng 57 người.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Richard Oldham · Andrija Mohorovičić · Inge Lehmann · Charles Richter, Beno Gutenberg · Michael Voorhies</dd>
+          <dt>Con số</dt><dd>tâm Trái Đất <b>6.371 km</b> · lỗ khoan sâu nhất <b>12.262 m</b> · mỗi độ Richter ≈ <b>32 lần</b> năng lượng</dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sau khi sách ra</span>
+          <p>Ngày 26/12/2004, trận động đất độ lớn 9,1 ngoài khơi Sumatra gây sóng thần khắp Ấn Độ Dương, giết 227.898 người ở nhiều nước quanh bờ biển. Nó cho thấy điều chương sách nói: ta hiểu vì sao động đất xảy ra, nhưng chưa dự báo được lúc nào.</p>
+        </div>
+      </section>
+
+      <section id="c15">
+        <p class="hw-eyebrow-sec"><b>4.3</b> — Chapter 15 · Dangerous Beauty</p>
+        <h2 class="hw-sec-title">Yellowstone: một công viên nằm trên nồi magma</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Vì sao một núi lửa lớn nhất nước Mỹ lại không ai nhìn thấy, và nguy cơ nó phun trào thật ra là bao nhiêu?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Yellowstone không phải một ngọn núi hình nón mà là một hõm chảo khổng lồ: mặt đất đã sụp xuống sau những lần phun trào lớn tới mức rút rỗng cả khối magma bên dưới. Nó có ba lần siêu phun trào, cách nay khoảng 2,08 triệu, 1,3 triệu và 631.000 năm. Magma bên dưới nay phần lớn đã đông đặc.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Thập niên 1960, nhà địa chất Bob Christiansen của Cơ quan Khảo sát Địa chất Mỹ (USGS) bối rối vì không tìm thấy miệng núi lửa nào ở Yellowstone, dù suối nước nóng và mạch phun ở đó rõ ràng là núi lửa. Lời giải đến từ ảnh chụp trên cao của NASA: cả công viên chính là miệng núi lửa, rộng tới mức đứng trong đó không nhận ra.</p>
+        <p class="hw-p">Để hình dung cỡ, chương so với Krakatau (Indonesia) năm 1883: tiếng nổ nghe được ở đảo Rodrigues cách 4.800 km, và ít nhất 36.417 người chết, phần lớn vì sóng thần. Krakatau phun ra khoảng 20 km³ tro đá; lần siêu phun trào lớn nhất của Yellowstone, 2,08 triệu năm trước, phun ra hơn 2.450 km³, gấp hơn trăm lần. Một ví dụ gần ta hơn: núi Pinatubo ở Philippines, bên kia Biển Đông, phun trào tháng 6/1991 và bơm khí lưu huỳnh lên tầng bình lưu, làm nhiệt độ trung bình toàn cầu giảm khoảng 0,4°C trong một hai năm sau; mà Pinatubo nhỏ hơn một siêu phun trào rất nhiều.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Bob Christiansen (USGS)</dd>
+          <dt>Con số</dt><dd>ba siêu phun trào: <b>2,08 triệu · 1,3 triệu · 631.000 năm</b> trước · Krakatau <b>1883</b>: nghe thấy ở <b>4.800 km</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Sách viết năm 2003 rằng Yellowstone phun khoảng 600.000 năm một lần và lần cuối đã hơn 600.000 năm, dễ khiến người đọc hiểu là nó "đến hạn". USGS nay nói rõ Yellowstone <b>không quá hạn</b>: hai khoảng cách giữa ba lần phun là 0,8 và 0,66 triệu năm, trung bình khoảng 0,73 triệu năm, và núi lửa không chạy theo lịch. Xác suất một siêu phun trào mỗi năm được ước chừng <b>1 trên 730.000</b> (0,00014%), và dữ liệu quan trắc không cho thấy dấu hiệu sắp phun.</p>
+          <p>Đông Nam Á cũng có siêu núi lửa: Toba ở Sumatra, cách TP.HCM chừng 1.250 km, phun khoảng 74.000 năm trước. Thuyết cho rằng Toba suýt xoá sổ loài người từng phổ biến; các nghiên cứu về sau, như một nghiên cứu năm 2018 ở Nam Phi, thấy người thời ấy vẫn sống và phát triển qua được.</p>
+        </div>
+        <div class="sh-next">
+          <p><b>Bạn vừa có:</b> ba mối nguy lớn nhất của hành tinh (đá từ trời, động đất, siêu núi lửa), cách ta dò ra chúng, và con số rủi ro thật thay cho cảm giác.</p>
+          <p><b>Nó dẫn đi đâu:</b> với ngần ấy hiểm hoạ, việc sự sống tồn tại suốt 4 tỉ năm thật đáng ngạc nhiên. Sự sống cần những gì, và vì sao phần ở được của Trái Đất lại mỏng như vậy?</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ PHẦN 5 ══════════════════ -->
+      <div class="hw-part-head" id="p5">
+        <p class="kicker">Phần 5 · Life Itself</p>
+        <h2>Chính sự sống: từ một lớp vỏ mỏng có thể ở được tới ADN</h2>
+        <p>Phần dài nhất, mười một chương, đi từ ngoài vào trong: nơi sự sống có thể tồn tại (chương 16–18), nó bắt đầu và lan ra thế nào (19–22), có bao nhiêu dạng sống và ta xếp chúng ra sao (23), rồi xuống tế bào, chọn lọc tự nhiên và ADN (24–26).</p>
+      </div>
+
+      <section id="c16">
+        <p class="hw-eyebrow-sec"><b>5.1</b> — Chapter 16 · Lonely Planet</p>
+        <h2 class="hw-sec-title">Hành tinh cô đơn: phần ở được của Trái Đất mỏng hơn ta tưởng</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Sự sống cần những gì, và vì sao phần hành tinh con người thật sự sống được lại nhỏ như vậy?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Từ đáy vực biển sâu nhất, gần 11 km, lên tới độ cao con người còn thở được, chừng 8 km, là một lớp dày chưa tới hai chục km, và gần như mọi sự sống ta biết nằm trong lớp ấy. Con người còn hẹp hơn: sống trên đất liền, không quá cao, không quá sâu. Vi khuẩn thì có mặt ở cả những nơi khắc nghiệt nhất, nhưng sự sống phức tạp cần cả một chuỗi điều kiện cùng đúng một lúc.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Phần lớn bằng những người tự đem cơ thể ra thử. Cơ thể ta phần lớn là nước nên không bị áp suất đè bẹp; thứ nguy hiểm là khí. Lặn sâu, khí nitơ hoà vào máu; trồi lên quá nhanh, nó sủi bọt như chai nước ngọt vừa mở nắp và làm tắc mạch máu. Công nhân xây móng cầu Eads (St. Louis) và cầu Brooklyn (New York) làm việc trong buồng khí nén dưới đáy sông đã mắc chứng bệnh lạ này; riêng cầu Eads có 15 người chết. Nhà sinh lý học người Scotland John Scott Haldane dùng chuột bạch hoặc chim hoàng yến để báo khí độc trong hầm mỏ, và năm 1908 công bố bảng giảm áp theo từng chặng, nền của mọi bảng lặn sau này. Con trai ông, J. B. S. Haldane, tự làm vật thí nghiệm trong buồng áp suất tới thủng cả màng nhĩ.</p>
+        <p class="hw-p">Bệnh giảm áp vẫn là tai nạn nghề nghiệp quen thuộc ở Việt Nam. Tháng 3/2026, bệnh xá đảo Song Tử Tây cấp cứu một ngư dân Lý Sơn bị liệt hai chân sau sáu lần lặn xuống độ sâu 30–35 m bắt hải sản ở Trường Sa.</p>
+        <p class="hw-p">Chương điểm ra bốn điều kiện khiến Trái Đất ở được: <b>vị trí</b> vừa phải so với Mặt Trời, gần hơn thì nước sôi, xa hơn thì đóng băng; <b>đúng loại hành tinh</b>, với lõi nóng chảy sinh ra từ trường và làm các mảng lục địa chuyển động; <b>một hành tinh đôi</b>, tức Mặt Trăng lớn giữ cho trục quay ít chao đảo; và <b>đúng thời điểm</b>, một chuỗi biến cố như cú va chạm 66 triệu năm trước đã mở đường cho loài có vú.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>John Scott Haldane · J. B. S. Haldane</dd>
+          <dt>Con số</dt><dd>vực sâu nhất gần <b>11 km</b> · bảng giảm áp <b>1908</b> · bốn điều kiện: vị trí, loại hành tinh, Mặt Trăng, thời điểm</dd>
+        </dl>
+        <p class="hw-p"><b>Độ vững.</b> Một ý hay đi kèm danh sách này, rằng Sao Mộc là tấm khiên hút bớt sao chổi cho Trái Đất, đã bị nghi ngờ: mô phỏng của Jonathan Horner và Barrie Jones (2008) cho thấy Sao Mộc có khi đẩy về phía ta nhiều thiên thể hơn là chặn lại.</p>
+      </section>
+
+      <section id="c17">
+        <p class="hw-eyebrow-sec"><b>5.2</b> — Chapter 17 · Into the Troposphere</p>
+        <h2 class="hw-sec-title">Bầu khí quyển mỏng như một lớp sơn</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Lớp không khí che chở ta dày bao nhiêu, và thời tiết vận hành ra sao?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Gần như toàn bộ thời tiết nằm trong tầng đối lưu, dày trung bình khoảng 12 km, từ chừng 9 km ở hai cực tới 17 km ở xích đạo. Càng lên cao càng lạnh, trung bình mất khoảng 6,5°C mỗi km. Trên đó là tầng bình lưu có lớp ôzôn, rồi tầng giữa và tầng nhiệt. Bryson ví: thu Trái Đất bằng quả địa cầu để bàn, khí quyển chỉ dày cỡ một hai lớp vecni. Không khí cũng là một chiếc chăn: nhờ khí nhà kính, Trái Đất đủ ấm để có nước lỏng.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Thế kỷ 18, người đi khinh khí cầu tưởng lên cao sẽ ấm hơn vì gần Mặt Trời, và bị cái lạnh cùng không khí loãng làm tỉnh ra. Năm 1902, nhà khí tượng học Pháp Léon Teisserenc de Bort, sau hơn 200 lần thả bóng thám không mang dụng cụ đo (không người lái), cùng lúc với Richard Assmann ở Đức, phát hiện một độ cao mà nhiệt độ thôi không giảm nữa: ranh giới của tầng bình lưu. Việc gọi tên mây do Luke Howard, một nhà sản xuất hoá chất mê quan sát trời, đề xuất năm 1802 với những chữ vẫn dùng tới nay: mây ti (cirrus), mây tích (cumulus), mây tầng (stratus). Năm 1835, Gaspard-Gustave Coriolis viết ra công thức cho hiệu ứng mang tên ông: vì Trái Đất quay, gió và dòng hải lưu bị lệch sang phải ở Bắc bán cầu, sang trái ở Nam bán cầu, và bão xoáy theo chiều ngược nhau ở hai bán cầu.</p>
+        <div class="hw-quote">
+          Khí quyển giống lớp chăn đắp buổi sáng mùa đông ở Hà Nội: không tự sinh nhiệt, chỉ giữ lại hơi ấm của cơ thể.
+          <cite>Chỗ ví von này hỏng: chăn giữ nhiệt bằng cách chặn không khí ấm thoát đi. Khí nhà kính thì để ánh sáng Mặt Trời đi xuống, nhưng hấp thụ tia hồng ngoại mặt đất toả lên rồi phát trở lại, một cơ chế khác hẳn.</cite>
+        </div>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Léon Teisserenc de Bort, Richard Assmann · Luke Howard · Gaspard-Gustave Coriolis</dd>
+          <dt>Con số</dt><dd>tầng đối lưu <b>9–17 km</b> · giảm khoảng <b>6,5°C/km</b> · tầng bình lưu phát hiện năm <b>1902</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Lượng CO₂ trong không khí đo tại đỉnh Mauna Loa (Hawaii) trung bình năm 2003 là 376 phần triệu; năm 2025 là <b>427</b> phần triệu (NOAA), tăng khoảng 14% trong hơn hai mươi năm. Sách cũng có vài con số nhầm ở chương này, gom ở mục <a href="#s-wrong">7.3</a>.</p>
+        </div>
+      </section>
+
+      <section id="c18">
+        <p class="hw-eyebrow-sec"><b>5.3</b> — Chapter 18 · The Bounding Main</p>
+        <h2 class="hw-sec-title">Biển: nơi rộng nhất mà ta biết ít nhất</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Dưới đáy đại dương có gì, và vì sao ta biết về nó ít như vậy?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Khoảng 97% nước trên Trái Đất nằm ở biển, mặn tới mức không uống được; phần lớn nước ngọt lại đóng băng ở hai cực. Nước là chất kỳ lạ: khi đóng băng nó nở ra và nổi lên, nên hồ và biển đóng băng từ mặt xuống, giữ nước lỏng bên dưới. Biển sâu tối đen nhưng không chết: có cả những hệ sinh thái sống nhờ hoá chất phun lên từ lòng đất, không cần ánh sáng Mặt Trời.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Thập niên 1840, nhà tự nhiên học Edward Forbes cho rằng dưới vài trăm mét không có sự sống. Rồi dây cáp điện báo kéo lên từ đáy biển để sửa có sinh vật bám đầy, và chuyến thám hiểm của tàu HMS <i>Challenger</i> (12/1872–5/1876) đi vòng quanh thế giới, tìm thấy khoảng 4.700 loài mới. Ngày 15/8/1934, William Beebe và Otis Barton ngồi trong một quả cầu thép treo dưới dây cáp, gọi là bathysphere, xuống sâu 923 m. Ngày 23/1/1960, Jacques Piccard và Don Walsh đưa tàu lặn <i>Trieste</i> xuống vực Challenger, chỗ sâu nhất đại dương. Năm 1977, tàu lặn <i>Alvin</i> thấy quanh các miệng phun nước nóng dưới đáy biển gần quần đảo Galápagos đầy những con vật chưa ai biết.</p>
+        <p class="hw-p">Chương cũng là một lời cảnh báo về đánh bắt quá mức. Ví dụ lớn nhất là đàn cá tuyết ở bãi Grand Banks ngoài khơi Canada, nguồn cá nuôi sống vùng này suốt mấy thế kỷ. Năm 1992, Canada phải cấm đánh bắt, khiến hơn 35.000 ngư dân và công nhân chế biến mất việc, lần đóng cửa ngành nghề lớn nhất lịch sử nước này.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Edward Forbes · đoàn tàu HMS <i>Challenger</i> · William Beebe, Otis Barton · Jacques Piccard, Don Walsh</dd>
+          <dt>Con số</dt><dd><b>97%</b> nước là nước biển · <b>4.700</b> loài mới (1872–1876) · <b>923 m</b> năm 1934 · đáy vực Challenger năm <b>1960</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Ngày 26/3/2012, đạo diễn James Cameron một mình lặn xuống vực Challenger, lần thứ hai con người xuống tới đó sau năm 1960. Tháng 4/2026, dự án Seabed 2030 công bố <b>28,7%</b> đáy đại dương đã được lập bản đồ theo chuẩn hiện đại, nghĩa là hơn bảy phần mười đáy biển vẫn chưa được đo chi tiết.</p>
+        </div>
+      </section>
+
+      <section id="c19">
+        <p class="hw-eyebrow-sec"><b>5.4</b> — Chapter 19 · The Rise of Life</p>
+        <h2 class="hw-sec-title">Sự sống bắt đầu thế nào: câu hỏi vẫn chưa có lời đáp</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Làm sao những phân tử vô tri tự ráp thành một thứ biết ăn, lớn lên và sinh sản?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Sự sống xuất hiện rất sớm. Dấu vết chắc chắn cổ nhất là những thảm vi khuẩn hoá đá (stromatolite) 3,48 tỉ năm tuổi ở vùng Pilbara, Tây Úc; có những dấu hiệu cũ hơn nhưng còn tranh cãi. Suốt hàng tỉ năm, sự sống chỉ là vi sinh vật. Vi khuẩn lam quang hợp dần làm ôxy tích tụ trong không khí, bắt đầu khoảng 2,4 tỉ năm trước. Nhưng chính bước đầu tiên, từ hoá chất thành tế bào, thì vẫn chưa ai biết.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Năm 1952, Stanley Miller, nghiên cứu sinh ở Chicago, cho nước, mêtan, amôniắc và hydro vào bình kín, phóng tia lửa điện giả làm sét. Sau một tuần, bình chứa axit amin, những viên gạch của protein (công bố năm 1953). Thí nghiệm nổi tiếng, nhưng ngày nay người ta cho rằng khí quyển sơ khai không giống hỗn hợp ấy, và tạo axit amin còn cách một tế bào sống rất xa. Axit amin cũng có sẵn trong không gian: thiên thạch Murchison rơi xuống Úc ngày 28/9/1969 chứa hàng chục loại.</p>
+        <p class="hw-p">Bryson nêu cái khó bằng xác suất: một protein cần hàng trăm, có loại hơn một nghìn, axit amin xếp đúng thứ tự, và khả năng chúng tự xếp đúng một lần là gần như bằng không. Nhà thiên văn Fred Hoyle ví điều đó như một cơn lốc quét qua bãi phế liệu mà ráp xong một chiếc Boeing 747. Câu trả lời của sinh học: sự sống không cần ráp một lần. Các bước nhỏ được giữ lại rồi cộng dồn, như Richard Dawkins lập luận. Bước quan trọng tiếp theo là tế bào có nhân: Lynn Margulis đề xuất (bài báo năm 1967, sau khi bị khoảng mười lăm tạp chí từ chối) rằng ti thể trong tế bào ta vốn là vi khuẩn sống cộng sinh rồi ở lại luôn. Ý tưởng ấy nay đã được chấp nhận rộng rãi.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Stanley Miller (và thầy Harold Urey) · Fred Hoyle · Richard Dawkins · Lynn Margulis</dd>
+          <dt>Con số</dt><dd>stromatolite <b>3,48 tỉ năm</b> · ôxy tích tụ từ khoảng <b>2,4 tỉ năm</b> trước · thí nghiệm Miller <b>1952</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Từ khi sách ra</span>
+          <p>Năm 2024, một nghiên cứu so sánh bộ gen của nhiều nhóm sinh vật ước tính tổ tiên chung cuối cùng của mọi sự sống hiện nay đã sống khoảng 4,2 tỉ năm trước, chỉ vài trăm triệu năm sau khi Trái Đất hình thành. Nếu đúng, sự sống bắt đầu rất nhanh, ngay khi hành tinh vừa đủ nguội.</p>
+        </div>
+      </section>
+
+      <section id="c20">
+        <p class="hw-eyebrow-sec"><b>5.5</b> — Chapter 20 · Small World</p>
+        <h2 class="hw-sec-title">Thế giới nhỏ: đây là hành tinh của vi khuẩn</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Nếu tính theo số lượng, tuổi đời và mức cần thiết, ai mới là chủ nhân của Trái Đất?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Vi khuẩn có mặt từ trước ta hàng tỉ năm, ở khắp nơi, từ ruột người tới đá sâu trong lòng đất. Chúng làm những việc sự sống khác không làm được: biến nitơ trong không khí thành chất dinh dưỡng, phân huỷ xác chết, giúp ta tiêu hoá. Chúng sinh sản nhanh, thỉnh thoảng một cá thể đột biến chịu được kháng sinh, rồi còn trao gen ấy cho nhau. Đó là lý do kháng kháng sinh lan nhanh. Cây sự sống ngày nay chia ba nhánh lớn: vi khuẩn, cổ khuẩn, và sinh vật nhân thực, nhánh gồm cả nấm, cây cỏ và ta.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Sách giáo khoa lâu nay chia sinh giới thành động vật và thực vật, rồi thành năm giới. Năm 1977, nhà vi sinh vật học Carl Woese ở Đại học Illinois so sánh một đoạn ARN có ở mọi tế bào (ARN ribosome) của nhiều vi sinh vật, và thấy một nhóm trông như vi khuẩn nhưng khác hẳn về di truyền: cổ khuẩn. Năm 1990, ông đề xuất cây sự sống ba nhánh. Phần lớn sự đa dạng của sự sống hoá ra nằm ở thế giới nhỏ, không phải ở chim thú.</p>
+        <p class="hw-p">Chương này cũng nói về virus và dịch bệnh. Cúm năm 1918 giết khoảng 25 tới 50 triệu người theo ước tính thường được chấp nhận, có ước tính lên tới 100 triệu. Bryson còn kể một phát hiện gây chấn động năm 2000: nhóm của Russell Vreeland công bố đã hồi sinh vi khuẩn bị nhốt 250 triệu năm trong tinh thể muối. Kết quả ấy tới nay vẫn bị nghi ngờ, vì ADN của vi khuẩn quá giống loài đang sống, dấu hiệu thường gặp của mẫu bị nhiễm bẩn, và chưa phòng thí nghiệm độc lập nào lặp lại được.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Carl Woese · Russell Vreeland</dd>
+          <dt>Con số</dt><dd>cổ khuẩn <b>1977</b> · ba nhánh sự sống <b>1990</b> · cúm 1918: <b>25–50 triệu</b> người chết</dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Sách viết mỗi cơ thể người có khoảng mười triệu tỉ tế bào và chứa số tế bào vi khuẩn gấp mười lần, con số được nhắc nhiều thời ấy. Năm 2016, Ron Sender, Shai Fuchs và Ron Milo tính lại: một người đàn ông 70 kg có khoảng 38 nghìn tỉ vi khuẩn và khoảng 30 nghìn tỉ tế bào người, tức gần một đối một (1,3 : 1).</p>
+          <p>Về dịch bệnh, Tổ chức Y tế Thế giới ước tính COVID-19 gây ra khoảng 14,8 triệu ca tử vong vượt mức trên toàn cầu trong hai năm 2020–2021.</p>
+        </div>
+      </section>
+
+      <section id="c21">
+        <p class="hw-eyebrow-sec"><b>5.6</b> — Chapter 21 · Life Goes On</p>
+        <h2 class="hw-sec-title">Hoá thạch: đọc lịch sử sự sống từ một mẩu xương trong một tỉ</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Làm sao đọc được lịch sử sự sống, khi gần như không sinh vật nào để lại dấu vết?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Hoá thạch cực hiếm. Một con vật phải chết đúng chỗ, bị vùi nhanh trong bùn thiếu ôxy, lớp đá chứa nó phải còn nguyên qua hàng trăm triệu năm, rồi có người tìm thấy. Phần lớn hoá thạch vì thế là sinh vật biển. Khoảng 538,8 triệu năm trước, gần như mọi nhóm động vật lớn còn sống tới nay xuất hiện trong một khoảng thời gian ngắn theo thang địa chất: <b>bùng nổ kỷ Cambri</b>.</p>
+        <p class="hw-p">Bryson dẫn một ước tính: chỉ chừng một mẩu xương trong một tỉ trở thành hoá thạch. Thay số cho Việt Nam: 102,3 triệu người (2025), mỗi người 206 chiếc xương, là khoảng 21 tỉ chiếc xương, và theo tỉ lệ ấy sẽ để lại chừng <b>21 mẩu</b> hoá thạch cho cả nước. Tỉ lệ một phần tỉ là con số phỏng chừng, nhưng nó cho thấy vì sao cả một loài có thể sống rồi biến mất mà không để lại mẩu xương nào.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Ngày 30/8/1909, nhà cổ sinh vật Charles Walcott tìm thấy ở dãy Rocky (Canada) lớp đá phiến Burgess, loại đá giữ được cả phần mềm của động vật kỷ Cambri. Ông gom hơn 65.000 mẫu nhưng xếp chúng vào những nhóm đã biết, rồi cất vào ngăn kéo. Thập niên 1970, Harry Whittington và hai học trò, Derek Briggs và Simon Conway Morris, xem lại và thấy chúng lạ hơn nhiều. Năm 1989, cuốn <i>Wonderful Life</i> của Stephen Jay Gould làm chúng nổi tiếng, với luận điểm rằng lịch sử sự sống đầy may rủi: tua lại cuộn băng, kết quả có thể khác hẳn. Chính Conway Morris về sau phản bác, cho rằng tiến hoá hay đi tới những lời giải giống nhau.</p>
+        <p class="hw-p">Một ví dụ về cách tri thức tự sửa: con <i>Hallucigenia</i> kỳ quặc từng được dựng ngược, đi bằng gai và vẫy tua trên lưng. Năm 1991, Lars Ramsköld và Hou Xianguang, dựa trên hoá thạch ở Trừng Giang (Vân Nam, Trung Quốc), lật nó lại: tua là chân, gai là gai. Lớp hoá thạch Trừng Giang, nổi tiếng từ năm 1984, còn cổ hơn Burgess. Sớm hơn nữa là sinh vật Ediacara, do Reg Sprigg tìm thấy ở miền Nam nước Úc năm 1946.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Charles Walcott · Harry Whittington, Derek Briggs, Simon Conway Morris · Stephen Jay Gould · Hou Xianguang, Lars Ramsköld · Reg Sprigg · Richard Fortey (người dẫn Bryson xem bọ ba thuỳ)</dd>
+          <dt>Con số</dt><dd>bùng nổ kỷ Cambri <b>538,8 triệu năm</b> · Burgess <b>1909</b>, hơn <b>65.000</b> mẫu · Trừng Giang cổ tới <b>518 triệu năm</b></dd>
+        </dl>
+      </section>
+
+      <section id="c22">
+        <p class="hw-eyebrow-sec"><b>5.7</b> — Chapter 22 · Good-bye to All That</p>
+        <h2 class="hw-sec-title">Lên cạn, tuyệt chủng, và cả lịch sử sự sống trong một ngày</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Sự sống lên cạn thế nào, và vì sao hầu hết các loài từng sống đều đã biến mất?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Cây cỏ lên cạn khoảng 470 triệu năm trước; động vật có xương sống theo sau muộn hơn cả trăm triệu năm, qua những con cá có chân như Tiktaalik, khoảng 375 triệu năm trước. Trong chừng 450 triệu năm qua, sự sống đã qua năm lần đại tuyệt chủng. Lần lớn nhất, cuối kỷ Permi khoảng 252 triệu năm trước, xoá sổ phần lớn các loài biển. Lần gần nhất, 66 triệu năm trước, mở đường cho thú có vú.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Bryson mở chương bằng địa y, thứ bám đá hàng trăm năm và lớn cực chậm, để nhắc rằng phần lớn sự sống chỉ đơn giản là tồn tại. Bước lên cạn đòi phải có xương đỡ nổi thân và phổi thở không khí. Hoá thạch cho thấy những bàn chân đầu tiên không có năm ngón: <i>Acanthostega</i>, do Jenny Clack tìm ở Greenland năm 1987, có tám ngón ở mỗi chi trước; <i>Ichthyostega</i> có bảy ngón ở mỗi chân sau. Kỷ Than đá có những côn trùng khổng lồ: chuồn chuồn <i>Meganeura</i> sải cánh 65–75 cm, loài giống rết <i>Arthropleura</i> dài hơn 2 m, một phần nhờ lượng ôxy trong không khí lên tới 25–30%, so với 21% hôm nay.</p>
+        <p class="hw-p">Để thấy các biến cố ấy nằm ở đâu, Bryson nén cả lịch sử Trái Đất vào một ngày: sự sống đơn bào xuất hiện từ sáng sớm, rồi gần như đứng yên suốt nhiều giờ; động vật và cây cỏ lớn chỉ tới vào buổi tối; loài người xuất hiện khoảng một phút trước nửa đêm. Mô hình dưới đây dựng lại hình ảnh ấy bằng số liệu hiện nay.</p>
+
+        <div class="sh-lab" id="lab-clock">
+          <div class="sh-lab__head">
+            <p class="sh-lab__kick">Mô hình 3 / 3 · thời gian sâu</p>
+            <p class="sh-lab__title">Nén 4,54 tỉ năm vào 24 giờ</p>
+            <p class="sh-lab__hint">Nửa đêm đầu ngày là lúc Trái Đất hình thành, nửa đêm cuối ngày là hôm nay. Mỗi giờ trên đồng hồ ứng với khoảng 189 triệu năm, mỗi giây khoảng 52.500 năm. Kéo để chọn một mốc. Hai dải dưới phóng to <b>giờ cuối</b> và <b>phút cuối</b>.</p>
+          </div>
+          <div class="sh-lab__body">
+            <div class="sh-lab__row">
+              <label for="ck-i">Mốc thời gian</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="ck-i" min="0" max="14" step="1" value="5" style="flex:1 1 180px"><span class="sh-mono" id="ck-i-l"></span></div>
+            </div>
+            <div class="sh-read">
+              <div class="is-hi"><span class="k">Giờ trên đồng hồ</span><span class="v" id="ck-t">—</span><span class="s" id="ck-name"></span></div>
+              <div><span class="k">Cách nay</span><span class="v" id="ck-ago">—</span><span class="s">theo số liệu hiện nay</span></div>
+              <div><span class="k">Còn tới nửa đêm</span><span class="v" id="ck-left">—</span><span class="s">phần lịch sử phía sau mốc này</span></div>
+            </div>
+            <svg class="sh-svg" id="ck-svg" viewBox="0 0 560 250" role="img" aria-label="Ba dải thời gian: cả ngày 24 giờ, giờ cuối cùng và phút cuối cùng, đánh dấu các mốc từ lúc Trái Đất hình thành tới hôm nay"></svg>
+            <p class="sh-lab__foot"><b>Điều cần thấy:</b> suốt hơn 20 giờ đầu, sự sống chỉ là vi sinh vật. Mọi con vật và cái cây bạn từng thấy đều nằm trong khoảng ba giờ cuối. Khủng long chiếm chừng 53 phút; loài <i>Homo sapiens</i> chỉ khoảng 6 giây cuối cùng; toàn bộ lịch sử có chữ viết, khoảng 5.200 năm, chỉ chừng một phần mười giây.</p>
+            <p class="sh-lab__foot">Đồng hồ trông chắc chắn hơn thực tế: nhiều mốc còn sai số lớn. Dấu vết sự sống cổ nhất được công nhận rộng rãi ở 3,48 tỉ năm (05:36); nếu các dấu hiệu 3,7 tỉ năm đang tranh cãi là thật, mốc ấy lùi về khoảng 04:26.</p>
+          </div>
+        </div>
+
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Jenny Clack · những người nghiên cứu các đại tuyệt chủng</dd>
+          <dt>Con số</dt><dd>cây lên cạn <b>~470 triệu năm</b> · <b>năm</b> đại tuyệt chủng lớn · <i>Meganeura</i> sải cánh <b>65–75 cm</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Năm 2004, trên đảo Ellesmere (Canada), nhóm của Neil Shubin tìm thấy <i>Tiktaalik</i>, một con cá có cổ, có xương vai và vây như chân, sống khoảng 375 triệu năm trước, đúng hình dạng trung gian giữa cá và động vật bốn chân mà họ đã dự đoán sẽ nằm trong lớp đá tuổi ấy (công bố năm 2006).</p>
+          <p>Con số của cuộc đại tuyệt chủng cuối kỷ Permi cũng đổi. Thời sách ra, người ta hay nói tới 90–96% loài biển biến mất; năm 2016, nhà cổ sinh vật Steven Stanley tính lại còn khoảng 81%, vì con số cũ gộp nhầm với một đợt tuyệt chủng khác xảy ra sớm hơn 7–10 triệu năm.</p>
+        </div>
+      </section>
+
+      <section id="c23">
+        <p class="hw-eyebrow-sec"><b>5.8</b> — Chapter 23 · The Richness of Being</p>
+        <h2 class="hw-sec-title">Ta chưa biết trên Trái Đất có bao nhiêu loài</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Trên Trái Đất có bao nhiêu loài sinh vật, và vì sao câu hỏi đơn giản ấy chưa ai trả lời được?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Khoa học đã đặt tên khoảng 2,1 triệu loài đang sống (danh mục Catalogue of Life, bản tháng 9/2026). Một ước tính năm 2011 của Camilo Mora và cộng sự cho rằng riêng sinh vật nhân thực (động vật, thực vật, nấm…) đã có khoảng 8,7 triệu loài, sai số chừng 1,3 triệu, nghĩa là phần lớn chưa có tên. Con số chưa tính vi khuẩn, thứ còn khó đếm hơn nhiều. Mỗi năm vẫn có loài mới được tìm thấy, kể cả thú lớn.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Bằng những người kiên nhẫn đếm và đặt tên. Bryson đi qua những hành lang phía sau Bảo tàng Lịch sử Tự nhiên London, nơi lưu khoảng 80 triệu mẫu vật, và gặp người phụ trách bộ sưu tập rêu: riêng rêu đã có hơn mười nghìn loài được biết (nay ước chừng 12.000), và mô tả chính thức một loài mới có thể mất nhiều tháng. Thế kỷ 18, nhà thực vật học Thuỵ Điển Carl Linnaeus dẹp đi những cái tên dài lê thê bằng cách gọi hai chữ, tên chi rồi tên loài, như <i>Homo sapiens</i>: bộ <i>Systema Naturae</i> in lần đầu năm 1735, cách đặt tên cho thực vật tính từ năm 1753, cho động vật từ bản năm 1758, bản đầu tiên xếp cá voi vào lớp thú. Bryson kể Linnaeus rất tự phụ và thích đặt tên cây dại theo tên những người ông ghét.</p>
+        <p class="hw-p">Ví dụ gần ta nhất cho câu "ta chưa biết hết": tháng 5/1992, một đoàn khảo sát của Bộ Lâm nghiệp Việt Nam cùng Quỹ Quốc tế Bảo vệ Thiên nhiên (WWF) ở vùng rừng Vũ Quang, Hà Tĩnh, tìm thấy sừng và xương của một loài thú lớn chưa ai biết: <b>sao la</b>. WWF công bố phát hiện ngày 17/7/1992; bài mô tả khoa học in trên tạp chí <i>Nature</i> năm 1993. Sao la là loài thú lớn đầu tiên được phát hiện ở vùng này sau khoảng năm mươi năm. Tới nay, hình ảnh cuối cùng chụp được sao la ngoài tự nhiên là từ một bẫy ảnh năm 2013.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Carl Linnaeus · Camilo Mora · đoàn khảo sát Vũ Quang năm 1992, trong đó có Đỗ Tước, Vũ Văn Dũng và John MacKinnon</dd>
+          <dt>Con số</dt><dd>đã có tên <b>~2,1 triệu</b> loài · ước tính <b>~8,7 triệu</b> loài nhân thực · sao la phát hiện năm <b>1992</b></dd>
+        </dl>
+        <p class="hw-p"><b>Độ vững.</b> Con số 8,7 triệu dựa trên một cách ngoại suy từ các bậc phân loại đã biết; nhiều nhà khoa học cho rằng cách ấy có thể đếm thiếu hoặc thừa đáng kể. Điều chắc chắn hơn là tốc độ: người mô tả loài mới ít hơn nhiều so với số loài đang chờ, và một số loài có thể biến mất trước khi kịp có tên (mục <a href="#c30">6.4</a>).</p>
+      </section>
+
+      <section id="c24">
+        <p class="hw-eyebrow-sec"><b>5.9</b> — Chapter 24 · Cells</p>
+        <h2 class="hw-sec-title">Tế bào: cỗ máy nhỏ nhất biết tự sao chép</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Đơn vị nhỏ nhất của sự sống là gì, và làm sao người ta nhìn thấy nó?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Mọi sinh vật được làm từ tế bào, và tế bào chỉ sinh ra từ tế bào. Một người trưởng thành có khoảng 30 nghìn tỉ tế bào thuộc vài trăm loại, từ tế bào thần kinh có sợi dài tới tế bào hồng cầu không có nhân. Mỗi tế bào có nhân mang đủ bộ chỉ dẫn di truyền; bên trong là hàng nghìn loại protein làm việc không ngừng, và những ti thể biến thức ăn thành năng lượng dùng được. Phần lớn những gì diễn ra bên trong tế bào vẫn còn đang được tìm hiểu.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Năm 1665, Robert Hooke in cuốn <i>Micrographia</i> với những hình vẽ qua kính hiển vi; nhìn một lát bần, ông thấy những ô nhỏ như phòng của tu sĩ và gọi chúng là "cell" (ô, phòng nhỏ). Antonie van Leeuwenhoek, một người buôn vải ở Delft (Hà Lan) không học đại học, tự mài những thấu kính nhỏ phóng đại tới khoảng 275 lần, và từ năm 1673 gửi thư mô tả điều mình thấy cho Hội Hoàng gia London. Tháng 10/1676, ông kể về vô số "con vật nhỏ" bơi trong giọt nước, trong đó có những mô tả vi khuẩn đầu tiên; hội mất một thời gian mới tin ông.</p>
+        <p class="hw-p">Năm 1831, nhà thực vật học Robert Brown đặt tên cho nhân tế bào. Năm 1838–1839, Matthias Schleiden (với thực vật) và Theodor Schwann (với động vật) kết luận mọi sinh vật đều làm từ tế bào. Năm 1855, Rudolf Virchow gói lại bằng câu "mọi tế bào sinh ra từ tế bào", dựa trên công trình của Robert Remak mà không ghi công ông.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Robert Hooke · Antonie van Leeuwenhoek · Robert Brown · Matthias Schleiden, Theodor Schwann · Rudolf Virchow, Robert Remak</dd>
+          <dt>Con số</dt><dd><i>Micrographia</i> <b>1665</b> · phóng đại <b>~275 lần</b> · <b>~30 nghìn tỉ</b> tế bào trong một người</dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Sách viết cơ thể người có khoảng mười triệu tỉ (10¹⁶) tế bào, tạo ra sau 47 lần phân chia. Phép tính tự mâu thuẫn: nhân đôi 47 lần chỉ ra 2⁴⁷ ≈ 1,4 × 10¹⁴, tức khoảng 140 nghìn tỉ. Các ước tính kỹ về sau (Eva Bianconi và cộng sự năm 2013: khoảng 37 nghìn tỉ; Ron Sender và cộng sự năm 2016: khoảng 30 nghìn tỉ) cho con số nhỏ hơn con số của sách chừng 300 lần.</p>
+        </div>
+      </section>
+
+      <section id="c25">
+        <p class="hw-eyebrow-sec"><b>5.10</b> — Chapter 25 · Darwin's Singular Notion</p>
+        <h2 class="hw-sec-title">Ý tưởng độc nhất của Darwin, và hai mươi năm ông giữ kín</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Vì sao các loài lại khớp khéo đến thế với nơi chúng sống, mà không cần ai thiết kế?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Cá thể trong một loài khác nhau chút ít. Cá thể nào hợp với môi trường hơn thì sống sót và sinh nhiều con hơn, và những đặc điểm ấy truyền lại cho con. Lặp lại qua rất nhiều thế hệ, loài biến đổi, có khi tách thành loài mới. Đó là <b>chọn lọc tự nhiên</b>. Di truyền theo gen giải thích vì sao những khác biệt nhỏ ấy không bị hoà tan đi sau vài đời.</p>
+        <p class="hw-p">Hiểu nhầm cần gỡ: "kẻ mạnh nhất thì sống sót". Nghe hợp lý vì cụm từ "sống sót của kẻ thích nghi nhất" gắn liền với Darwin. Nhưng cụm ấy do triết gia Herbert Spencer đặt ra năm 1864, Darwin chỉ đưa vào sách từ bản in lần năm (1869), và "thích nghi nhất" nghĩa là hợp môi trường nhất, không phải to khoẻ nhất. Ở chỗ thiếu mồi, con nhỏ ăn ít có khi thắng.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Charles Darwin học y bỏ dở, chuyển sang học thần học, rồi được nhận lên tàu HMS <i>Beagle</i> (27/12/1831 – 2/10/1836) làm bạn đồng hành của thuyền trưởng Robert FitzRoy. Ở quần đảo Galápagos, ông gom chim mà không ghi rõ con nào từ đảo nào. Về London, nhà điểu học John Gould báo rằng những con ông tưởng thuộc nhiều họ khác nhau đều là một nhóm sẻ hoàn toàn mới gồm 12 loài, còn chim nhại ở các đảo khác nhau là những loài khác nhau. Darwin phác thảo xong thuyết của mình vào năm 1844 rồi cất đi, phần vì biết nó sẽ gây bão. Năm 1858, Alfred Russel Wallace, đang thu mẫu vật ở quần đảo Maluku (Indonesia ngày nay), gửi cho ông một bài viết với gần như cùng ý tưởng. Ngày 1/7/1858, bài của cả hai được đọc chung ở Hội Linnean London. Cuốn <i>On the Origin of Species</i> ra ngày 24/11/1859; 1.250 bản in đầu được các hiệu sách đặt hết ngay. Darwin không dùng chữ "tiến hoá" (evolution) cho tới bản in lần sáu (1872).</p>
+        <p class="hw-p">Mảnh còn thiếu nằm ở một tu viện ở Brno: Gregor Mendel lai đậu Hà Lan, trình bày kết quả năm 1865 và in năm 1866, cho thấy đặc điểm di truyền theo những "đơn vị" riêng rẽ. Darwin không bao giờ biết tới. Ba nhà khoa học tìm lại công trình của Mendel năm 1900, và phải tới thập niên 1930–1940, thuyết Darwin và di truyền học mới ghép thành một.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Charles Darwin · Robert FitzRoy · John Gould · Alfred Russel Wallace · Herbert Spencer · Gregor Mendel</dd>
+          <dt>Con số</dt><dd><i>Beagle</i> <b>1831–1836</b> · đọc chung <b>1/7/1858</b> · <i>Origin</i> <b>24/11/1859</b> · Mendel in năm <b>1866</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Từ khi sách ra</span>
+          <p>Tiến hoá nay được đo tận mắt. Từ năm 1973, Peter và Rosemary Grant năm nào cũng bắt, đo và đánh dấu chim sẻ trên đảo nhỏ Daphne Major ở Galápagos. Sau trận hạn năm 1977, khi cả mùa mưa chỉ có 24 mm, chỉ những con mỏ to đủ sức cắn hạt cứng mới sống sót, và thế hệ sau có mỏ to hơn đo được. Chọn lọc tự nhiên diễn ra trong vòng một đời người nghiên cứu.</p>
+        </div>
+      </section>
+
+      <section id="c26">
+        <p class="hw-eyebrow-sec"><b>5.11</b> — Chapter 26 · The Stuff of Life</p>
+        <h2 class="hw-sec-title">Chất liệu của sự sống: ADN, gen, và cuốn sách đọc chưa xong</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Bản chỉ dẫn để làm ra một con người được cất ở đâu, và viết bằng thứ chữ gì?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Chỉ dẫn nằm trong ADN, hai sợi xoắn vào nhau, viết bằng bốn "chữ" A, T, G, C. Bộ gen người dài khoảng 3,1 tỉ cặp chữ, chia trong 23 cặp nhiễm sắc thể, và chỉ chừng 19.000–20.000 gen làm ra protein. Tính theo những chữ đơn lẻ khác nhau, hai người bất kỳ giống nhau khoảng 99,9%; tính cả những đoạn bị lặp hay mất thì khác nhau nhiều hơn một chút.</p>
+        <p class="hw-p">Bryson mở chương bằng một phép tính về tổ tiên, thay số cho người Việt thế này: mỗi người có 2 cha mẹ, 4 ông bà, 8 cụ; lùi 30 đời, chừng 750–900 năm, tức khoảng thời Lý – Trần, số "ghế" tổ tiên là 2³⁰, hơn một tỉ. Nhưng cả thế giới khi ấy chỉ có khoảng 360 tới 500 triệu người. Vậy nhiều ghế phải do cùng một người ngồi, và mọi người đang sống đều là họ hàng xa của nhau.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Năm 1869, Friedrich Miescher, người Thuỵ Sĩ, tách được một chất lạ từ nhân tế bào trong mủ trên băng gạc bệnh viện: axit nucleic. Từ khoảng năm 1910, phòng thí nghiệm ruồi giấm của Thomas Hunt Morgan ở Đại học Columbia, bắt đầu từ một con ruồi đột biến mắt trắng, cho thấy gen nằm trên nhiễm sắc thể. Năm 1944, Oswald Avery cùng Colin MacLeod và Maclyn McCarty chứng minh chính ADN, chứ không phải protein, mang thông tin di truyền. Tháng 5/1952, trong nhóm của Rosalind Franklin ở King's College London, nghiên cứu sinh Raymond Gosling chụp được ảnh nhiễu xạ tia X số 51, bằng chứng rõ ràng về dạng xoắn. Maurice Wilkins đưa ảnh cho James Watson xem khi Franklin chưa đồng ý. Ngày 25/4/1953, Watson và Francis Crick công bố mô hình xoắn kép. Giải Nobel năm 1962 trao cho Watson, Crick và Wilkins; Franklin đã mất năm 1958, ở tuổi 37, mà giải Nobel không trao cho người đã khuất.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Friedrich Miescher · Thomas Hunt Morgan · Oswald Avery · Rosalind Franklin, Raymond Gosling · Maurice Wilkins · James Watson, Francis Crick</dd>
+          <dt>Con số</dt><dd>bộ gen <b>~3,1 tỉ</b> cặp chữ · <b>19.000–20.000</b> gen mã hoá protein · xoắn kép công bố <b>25/4/1953</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Sách viết năm 2003 rằng người ta từng tưởng người có ít nhất 100.000 gen, và Dự án Bộ gen Người gợi ý chỉ khoảng 35.000–40.000. Con số đếm được hôm nay còn ít hơn nữa: <b>19.000–20.000</b> gen mã hoá protein. Dự án tuyên bố hoàn tất ngày 14/4/2003, nhưng khi ấy mới giải được khoảng 92% bộ gen. Ngày 31/3/2022, nhóm Telomere-to-Telomere công bố trình tự đầy đủ đầu tiên, lấp nốt phần còn thiếu; nhiễm sắc thể Y được giải trọn năm 2023.</p>
+          <p>Câu chuyện Franklin cũng được kể lại. Năm 2023, hai nhà sử học khoa học Matthew Cobb và Nathaniel Comfort, dựa trên tài liệu mới tìm thấy, cho rằng bà là một thành viên ngang hàng trong cuộc đua, chứ không chỉ là nạn nhân bị lấy mất ảnh. Việc Wilkins cho Watson xem ảnh số 51 khi bà chưa đồng ý thì vẫn đúng.</p>
+        </div>
+        <div class="sh-next">
+          <p><b>Bạn vừa có:</b> lớp vỏ mỏng nơi sự sống tồn tại, những vi sinh vật làm chủ hành tinh, lịch sử sự sống đọc từ hoá thạch hiếm hoi, và ba tầng giải thích: tế bào, chọn lọc tự nhiên, ADN.</p>
+          <p><b>Nó dẫn đi đâu:</b> tất cả chuẩn bị cho một loài rất muộn. Khí hậu thất thường của những kỷ băng hà đã nhào nặn loài người thế nào, và ta biết về tổ tiên mình từ những mẩu xương nào?</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ PHẦN 6 ══════════════════ -->
+      <div class="hw-part-head" id="p6">
+        <p class="kicker">Phần 6 · The Road to Us</p>
+        <h2>Con đường dẫn tới chúng ta: băng, xương và gen</h2>
+        <p>Bốn chương cuối kể loài người: khí hậu thất thường đã nhào nặn ta (chương 27), những mẩu xương hiếm hoi của tổ tiên (28), cuộc lan ra khắp thế giới và những loài người khác ta đã gặp (29), và những gì ta đã làm với các loài còn lại (30).</p>
+      </div>
+
+      <section id="c27">
+        <p class="hw-eyebrow-sec"><b>6.1</b> — Chapter 27 · Ice Time</p>
+        <h2 class="hw-sec-title">Kỷ băng hà: khí hậu đã từng lật chỉ trong vài năm</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Khí hậu Trái Đất ổn định tới đâu, và điều gì khiến băng hà đến rồi đi?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Từ khoảng 2,58 triệu năm trước, băng hà tiến lui hàng chục lần theo nhịp dao động của quỹ đạo Trái Đất: quỹ đạo dẹt hay tròn hơn theo chu kỳ khoảng 100.000 năm, trục quay nghiêng nhiều hay ít theo chu kỳ khoảng 41.000 năm, và trục ấy còn lắc như con quay theo chu kỳ khoảng 26.000 năm. Ta đang sống trong một quãng ấm giữa hai kỳ băng hà, bắt đầu từ 11.700 năm trước. Khoảng 21.000 năm trước, băng phủ dày nhất và mực nước biển thấp hơn nay khoảng 125 m.</p>
+        <p class="hw-p">Thay số cho vùng biển quen thuộc: vịnh Bắc Bộ phần lớn sâu chưa tới 75 m và không chỗ nào sâu quá 100 m, nên khi nước biển rút 125 m, cả vịnh là đất liền; thềm lục địa Sunda lộ ra, nối bán đảo Đông Dương với Sumatra, Java và Borneo.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Chương mở bằng núi Tambora (Indonesia) phun trào tháng 4/1815, khoảng 10.000–11.000 người chết ngay, 49.000–90.000 người chết sau đó vì đói và dịch bệnh; năm 1816 ở châu Âu và Bắc Mỹ được gọi là "năm không có mùa hè". Nông dân vùng núi Thuỵ Sĩ từ lâu đã đoán những tảng đá lạc chỗ là do băng mang tới; ngày 24/7/1837, nhà tự nhiên học Louis Agassiz trình bày thuyết kỷ băng hà ở Neuchâtel, và phải nhiều năm sau mới được chấp nhận. Năm 1864, James Croll, một người gác cổng ở Đại học Anderson (Glasgow) tự học trong thư viện, đề xuất rằng thay đổi quỹ đạo gây ra băng hà. Kỹ sư Serbia Milutin Milanković tính tay suốt nhiều năm, gộp độ dẹt quỹ đạo, độ nghiêng và sự lắc của trục thành lượng nắng mà từng vĩ độ nhận được qua hàng trăm nghìn năm. Năm 1976, James Hays, John Imbrie và Nicholas Shackleton đọc thấy đúng những nhịp ấy trong lõi trầm tích đáy biển.</p>
+        <p class="hw-p">Lõi băng khoan ở Greenland cho thấy khí hậu có thể lật rất nhanh. Khoảng 12.900 năm trước, lúc Trái Đất đang ấm dần, Bắc bán cầu lại lạnh đột ngột: Greenland lạnh đi tới 10°C chỉ trong vài thập kỷ, có phần diễn ra trong ba năm hoặc ít hơn. Xa hơn nữa, trong kỷ Cryogen (720–635 triệu năm trước), Trái Đất có thể đã đóng băng gần như toàn bộ, giả thuyết "Trái Đất quả cầu tuyết" mà Joseph Kirschvink đặt tên năm 1992.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Louis Agassiz · James Croll · Milutin Milanković · James Hays, John Imbrie, Nicholas Shackleton · Joseph Kirschvink</dd>
+          <dt>Con số</dt><dd>chu kỳ <b>100.000 · 41.000 · 26.000 năm</b> · nước biển thấp <b>~125 m</b> cách nay 21.000 năm · Tambora <b>1815</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Từ khi sách ra</span>
+          <p>Lõi băng EPICA ở Nam Cực, công bố từ năm 2004, kéo dài ghi chép khí hậu ra 800.000 năm. Trong suốt khoảng ấy, lượng CO₂ trong không khí dao động giữa 172 và 299 phần triệu (số liệu của Dieter Lüthi và cộng sự, 2008). Năm 2025, con số đo ở Mauna Loa là 427 (mục <a href="#c17">5.2</a>).</p>
+        </div>
+      </section>
+
+      <section id="c28">
+        <p class="hw-eyebrow-sec"><b>6.2</b> — Chapter 28 · The Mysterious Biped</p>
+        <h2 class="hw-sec-title">Loài hai chân bí ẩn: dựng cây gia phả từ vài thùng xương</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Tổ tiên loài người là ai, khi hoá thạch của họ ít tới mức cãi nhau về từng mẩu xương?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Dòng người tách khỏi dòng tinh tinh ở châu Phi từ nhiều triệu năm trước. Đi bằng hai chân có trước bộ não lớn rất lâu. Trên đường ấy có nhiều loài người khác nhau, nhiều loài sống cùng thời, và "cây gia phả" của ta trông giống một bụi rậm nhiều nhánh hơn là một cái thang. Chi <i>Homo</i> xuất hiện khoảng 2,8 triệu năm trước.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Bằng những lần đào may mắn và những cuộc cãi dai dẳng. Năm 1887, bác sĩ quân y Hà Lan Eugène Dubois sang Đông Ấn chỉ vì tin tổ tiên loài người sẽ nằm ở đó; năm 1891–1892, đội của ông tìm thấy nắp sọ, răng và xương đùi ở Trinil (Java), nay gọi là người Java, <i>Homo erectus</i>. Giới khoa học châu Âu chê bai tới mức ông chán nản. Năm 1924, nhà giải phẫu Raymond Dart nhận được hộp sọ một đứa trẻ tìm thấy ở Taung (Nam Phi) và năm 1925 đặt tên <i>Australopithecus africanus</i>; ông bị gạt đi suốt nhiều năm, một phần vì giới chuyên môn đang tin vào "người Piltdown" ở Anh, hoá ra là đồ giả ghép sọ người với hàm vượn, chỉ bị vạch trần năm 1953. Sáng 24/11/1974, ở Hadar (Ethiopia), Donald Johanson và sinh viên Tom Gray tìm thấy "Lucy", khoảng 40% bộ xương một cá thể cái sống cách nay khoảng 3,2 triệu năm. Năm 1976, nhóm của Mary Leakey tìm thấy ở Laetoli (Tanzania) những dấu chân người đi hai chân in trên tro núi lửa 3,66 triệu năm tuổi. Năm 1984, Kamoya Kimeu tìm thấy "cậu bé Turkana" gần như nguyên vẹn ở Kenya.</p>
+        <p class="hw-p">Bryson nhấn vào sự khan hiếm: toàn bộ xương người cổ từng tìm được khi ấy gom lại chỉ chất vừa thùng một chiếc xe bán tải, nên mỗi mẩu mới có thể lật cả cây gia phả, và người ta chia loài theo nhiều cách khác nhau.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Eugène Dubois · Raymond Dart · Donald Johanson, Tom Gray · Mary Leakey · Kamoya Kimeu</dd>
+          <dt>Con số</dt><dd>người Java <b>1891</b> · Taung <b>1924</b> · Lucy <b>3,2 triệu năm</b> · dấu chân Laetoli <b>3,66 triệu năm</b> · chi <i>Homo</i> <b>~2,8 triệu năm</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Ngay sau khi sách ra, bụi rậm có thêm nhiều nhánh, hai trong số đó ở ngay Đông Nam Á. Năm 2003, trong hang Liang Bua trên đảo Flores (Indonesia), người ta tìm thấy <i>Homo floresiensis</i>, loài người cao khoảng 1,1 m (công bố năm 2004). Ban đầu họ được tưởng sống tới 12.000 năm trước; năm 2016, đo lại địa tầng cho thấy xương có tuổi 60.000–100.000 năm, và dấu vết cuối cùng biến mất vào khoảng lúc người hiện đại tới vùng này. Năm 2015 là <i>Homo naledi</i> ở Nam Phi (335.000–236.000 năm tuổi), năm 2019 là <i>Homo luzonensis</i> trong hang Callao ở đảo Luzon (Philippines). Hoá thạch <i>Homo</i> cổ nhất đã biết, hàm Ledi-Geraru ở Ethiopia khoảng 2,8 triệu năm tuổi, được công bố năm 2015.</p>
+        </div>
+      </section>
+
+      <section id="c29">
+        <p class="hw-eyebrow-sec"><b>6.3</b> — Chapter 29 · The Restless Ape</p>
+        <h2 class="hw-sec-title">Loài vượn không chịu ngồi yên: ta rời châu Phi, và đã gặp ai</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Người hiện đại ra đời ở đâu, lan khắp thế giới thế nào, và chuyện gì đã xảy ra với những loài người khác?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> <i>Homo sapiens</i> xuất hiện ở châu Phi; hoá thạch cổ nhất đã biết, ở Jebel Irhoud (Maroc), khoảng 315.000 năm tuổi. Người hiện đại rời châu Phi và gặp những loài người đã ở sẵn đó, như người Neanderthal ở châu Âu và Tây Á, người Denisova ở châu Á, và đã có con với họ. Người ngoài châu Phi ngày nay mang khoảng 1–4% ADN Neanderthal; một số cư dân ở Melanesia và Philippines mang thêm vài phần trăm ADN Denisova.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Trước tiên bằng đá. Rìu tay hình giọt nước, do tổ tiên ta ghè đẽo từ khoảng 1,76 triệu năm trước, là công cụ được dùng lâu nhất lịch sử; Bryson tới Olorgesailie (Kenya), nơi vợ chồng Mary và Louis Leakey khai quật từ năm 1943 và rìu tay nằm rải cả vùng. Rồi bằng ADN. Năm 1987, Rebecca Cann, Mark Stoneking và Allan Wilson so ADN ty thể, thứ chỉ truyền theo dòng mẹ, của người khắp các châu, và lần ngược về một tổ tiên chung ở châu Phi, báo chí gọi là "Eva ty thể". Phe "đa vùng" của Alan Thorne phản đối, cho rằng người hiện đại tiến hoá song song ở nhiều nơi từ <i>Homo erectus</i>. Người Neanderthal, được nhận ra lần đầu năm 1856 ở thung lũng Neander (Đức), có bộ não to và chịu lạnh giỏi, và biến mất khoảng 40.000 năm trước.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Mary và Louis Leakey · Rebecca Cann, Mark Stoneking, Allan Wilson · Alan Thorne · Svante Pääbo</dd>
+          <dt>Con số</dt><dd><i>Homo sapiens</i> <b>~315.000 năm</b> · rìu tay từ <b>~1,76 triệu năm</b> · ADN Neanderthal trong người ngoài châu Phi <b>1–4%</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Khi sách viết, các mẫu ADN ty thể Neanderthal đầu tiên (của nhóm Svante Pääbo, từ năm 1997) chưa cho thấy lai giống, và Bryson kể vụ hoá thạch "người Mungo" ở Úc được cho là mang một dòng ADN khác thường. Cả hai đều đã đổi. Tháng 5/2010, nhóm Pääbo công bố bản nháp bộ gen Neanderthal cho thấy có lai giống; cũng năm 2010, ADN từ một đốt xương ngón tay trong hang Denisova (Siberia) lộ ra một nhóm người chưa ai biết, người Denisova. Pääbo nhận giải Nobel Y học năm 2022. Năm 2025, protein và ADN ty thể lấy từ cao răng của hộp sọ Cáp Nhĩ Tân (Trung Quốc), hơn 146.000 năm tuổi, cho thấy nó thuộc người Denisova, lần đầu nhóm người này có một khuôn mặt.</p>
+          <p>Còn người Mungo: tuổi 62.000 năm (ước tính năm 1999) được hiệu chỉnh còn khoảng 40.000 năm (2003); năm 2016, một nhóm phân tích lại và cho rằng dòng ADN "khác thường" công bố năm 2001 có thể là ADN của người châu Âu hiện đại nhiễm vào mẫu.</p>
+        </div>
+      </section>
+
+      <section id="c30">
+        <p class="hw-eyebrow-sec"><b>6.4</b> — Chapter 30 · Good-bye</p>
+        <h2 class="hw-sec-title">Tạm biệt: loài làm tuyệt chủng các loài khác</h2>
+        <p class="sh-q"><span class="k">Câu hỏi lớn</span>Loài người đã làm gì với những loài sống cùng hành tinh, và điều đó nói gì về chính ta?</p>
+        <p class="hw-p"><b>Điều ta biết bây giờ.</b> Ở nhiều nơi, sự có mặt của con người trùng với sự biến mất của phần lớn thú lớn. Nhiều loài đã mất vì săn bắn, vì mất chỗ sống, vì những con vật ta mang theo như chuột và mèo. Hôm nay, theo báo cáo đánh giá toàn cầu của IPBES (2019), khoảng một triệu loài đang có nguy cơ tuyệt chủng.</p>
+        <p class="hw-p"><b>Ta biết bằng cách nào.</b> Bằng những lần nhìn thấy cuối cùng được ghi lại. Chim dodo trên đảo Mauritius, không biết sợ người, được ghi nhận lần cuối năm 1662. Hai con chim anh vũ lớn không bay (great auk) cuối cùng bị giết ngày 3/6/1844 trên đảo đá Eldey ngoài khơi Iceland. Bồ câu viễn khách, từng bay thành đàn hàng tỉ con ở Bắc Mỹ, mất con cuối cùng, tên Martha, ngày 1/9/1914 ở vườn thú Cincinnati; vẹt Carolina cuối cùng chết cũng ở đó, ngày 21/2/1918. Bryson dẫn cuốn <i>A Gap in Nature</i> của Tim Flannery và Peter Schouten, và kể cả những nhà sưu tầm như Walter Rothschild, người gom mẫu vật của những loài quý hiếm tới mức góp phần đẩy vài loài tới chỗ mất hẳn.</p>
+        <p class="hw-p">Ví dụ gần ta: tê giác Java ở Việt Nam. Đến cuối thập niên 1980, một quần thể nhỏ được phát hiện ở vùng Cát Tiên; con cuối cùng bị bắn năm 2010, và năm 2011 Quỹ Quốc tế Bảo vệ Thiên nhiên (WWF) tuyên bố tê giác Java đã tuyệt chủng tại Việt Nam. Sao la ở mục <a href="#c23">5.8</a>, phát hiện mới năm 1992, nay chỉ còn biết qua một tấm ảnh bẫy năm 2013.</p>
+        <p class="hw-p">Cuốn sách khép lại bằng hai ý đi cùng nhau. Theo những gì ta biết, ta là loài duy nhất hiểu được vũ trụ, và việc ta có mặt là một chuỗi may mắn khó tin. Nhưng ta cũng là mối nguy lớn nhất cho sự sống quanh mình, trên hành tinh duy nhất mà ta biết là có sự sống.</p>
+        <dl class="sh-who">
+          <dt>Người</dt><dd>Tim Flannery, Peter Schouten · Walter Rothschild</dd>
+          <dt>Con số</dt><dd>dodo: lần cuối <b>1662</b> · great auk <b>1844</b> · bồ câu viễn khách <b>1914</b> · tê giác Java ở Việt Nam <b>2010</b></dd>
+        </dl>
+        <div class="sh-upd">
+          <span class="k">Sách 2003 → nay</span>
+          <p>Sách lại kể chuyện hồng tước đảo Stephens (New Zealand), loài chim sẻ không biết bay, bị con mèo của người gác hải đăng xoá sổ. Chuyện một con mèo diệt cả loài là truyền thuyết: loài chim ấy bị cả một đàn mèo hoang trên đảo săn. Danh Sách Đỏ của IUCN (phiên bản 2026-1, 9/7/2026) đã đánh giá 175.909 loài, trong đó 49.505 loài bị đe doạ tuyệt chủng, gần ba phần mười.</p>
+        </div>
+        <div class="sh-next">
+          <p><b>Bạn vừa có:</b> khí hậu thất thường đã nhào nặn loài người, những mẩu xương và đoạn gen kể chuyện tổ tiên, và cái giá các loài khác đã trả cho sự có mặt của ta.</p>
+          <p><b>Nó dẫn đi đâu:</b> cả cuốn sách là ảnh chụp tri thức năm 2003, và ảnh ấy đã cũ đi nhiều chỗ. Phần tiếp theo gom lại những gì đã đổi, và những chỗ sách sai ngay từ đầu.</p>
+        </div>
+      </section>
+
+      <!-- ══════════════════ ĐỘ VỮNG ══════════════════ -->
+      <div class="hw-part-head" id="robust">
+        <p class="kicker">Độ vững · Robustness</p>
+        <h2>Độ vững: điều đã thay đổi từ khi sách ra năm 2003</h2>
+        <p>Mục này gom những gì mạch chính để riêng: bản sửa của chính tác giả, những con số đã đổi, và những chỗ sách sai ngay từ đầu. Nhãn cho biết mức chắc chắn: <span class="sh-evi sh-evi--solid">đã xác nhận</span> <span class="sh-evi sh-evi--mixed">còn mở</span> <span class="sh-evi sh-evi--failed">đã bị bác</span></p>
+      </div>
+
+      <section id="s-rev">
+        <p class="hw-eyebrow-sec"><b>7.1</b> — Bryson's own 2025 revision</p>
+        <h2 class="hw-sec-title">Chính tác giả đã viết lại cuốn sách</h2>
+        <p class="hw-p">Sách đoạt giải Aventis về sách khoa học năm 2004 (Bryson tặng toàn bộ 10.000 bảng tiền thưởng cho quỹ của Bệnh viện Nhi Great Ormond Street) và giải Descartes của Liên minh châu Âu về truyền thông khoa học năm 2005. Ngày 21/10/2025, nhà xuất bản Doubleday ở Anh in <i>A Short History of Nearly Everything 2.0</i>, bản sửa lại mọi chương theo hai mươi năm phát hiện mới: Diêm Vương thôi là hành tinh, số vệ tinh trong Hệ Mặt Trời tăng hơn gấp đôi, di truyền học tìm ra những loài người cổ chưa ai biết, boson Higgs, và việc ta vẫn chưa biết phần lớn vũ trụ làm bằng gì.</p>
+        <p class="hw-p">Trang này tóm bản năm 2003, bản đã được dịch ra tiếng Việt với tên <i>Lược sử vạn vật</i> (Khương Duy và Hán Ngọc dịch, NXB Khoa học Xã hội, 2020). Các cập nhật trên trang do trang tự tra từ nguồn gốc, không lấy từ bản 2.0, và chưa được đối chiếu với nội dung bản ấy.</p>
+      </section>
+
+      <section id="s-changed">
+        <p class="hw-eyebrow-sec"><b>7.2</b> — What changed since 2003</p>
+        <h2 class="hw-sec-title">Những con số đã đổi, gom một chỗ</h2>
+        <div class="hw-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:120px">Chủ đề</th><th>Khi sách ra (2003)</th><th>Nay (có nguồn trong mục)</th><th style="width:56px">Mục</th></tr></thead>
+            <tbody>
+              <tr><td>Tuổi vũ trụ</td><td>khoảng 13,7 tỉ năm</td><td><span class="sh-evi sh-evi--solid">xác nhận</span> 13,787 ± 0,020 tỉ năm; <span class="sh-evi sh-evi--mixed">còn mở</span> tốc độ giãn nở đo hai cách lệch nhau</td><td><a href="#c1">1.1</a></td></tr>
+              <tr><td>Diêm Vương</td><td>hành tinh thứ chín</td><td><span class="sh-evi sh-evi--solid">xác nhận</span> hành tinh lùn (2006); tàu New Horizons bay qua (2015)</td><td><a href="#c2">1.2</a></td></tr>
+              <tr><td>Hành tinh quanh sao khác</td><td>khoảng một trăm</td><td><span class="sh-evi sh-evi--solid">xác nhận</span> 6.372 (28/9/2026)</td><td><a href="#c3">1.3</a></td></tr>
+              <tr><td>Sóng hấp dẫn</td><td>chưa đo trực tiếp được</td><td><span class="sh-evi sh-evi--solid">xác nhận</span> đo được ngày 14/9/2015</td><td><a href="#c8">3.1</a></td></tr>
+              <tr><td>Boson Higgs</td><td>chưa tìm thấy</td><td><span class="sh-evi sh-evi--solid">xác nhận</span> công bố ngày 4/7/2012</td><td><a href="#c11">3.4</a></td></tr>
+              <tr><td>Năng lượng tối</td><td>mới phát hiện (1998)</td><td><span class="sh-evi sh-evi--mixed">còn mở</span> chưa biết là gì; DESI 2025 gợi ý nó yếu dần, chưa đạt ngưỡng phát hiện</td><td><a href="#c11">3.4</a></td></tr>
+              <tr><td>Xăng pha chì</td><td>còn bán ở nhiều nước</td><td><span class="sh-evi sh-evi--solid">xác nhận</span> xăng pha chì cho ô tô chấm dứt trên toàn thế giới (2021)</td><td><a href="#c10">3.3</a></td></tr>
+              <tr><td>Tiểu hành tinh gần Trái Đất</td><td>danh sách còn thiếu</td><td><span class="sh-evi sh-evi--solid">xác nhận</span> 42.534 đã biết; lần đầu đẩy lệch một thiên thể (2022)</td><td><a href="#c13">4.1</a></td></tr>
+              <tr><td>Yellowstone</td><td>phun khoảng 600.000 năm một lần</td><td><span class="sh-evi sh-evi--failed">bị bác</span> USGS: không có lịch, không "quá hạn"; khoảng 1/730.000 mỗi năm</td><td><a href="#c15">4.3</a></td></tr>
+              <tr><td>CO₂ trong không khí</td><td>376 phần triệu</td><td><span class="sh-evi sh-evi--solid">xác nhận</span> 427 phần triệu (2025)</td><td><a href="#c17">5.2</a></td></tr>
+              <tr><td>Vi khuẩn so với tế bào người</td><td>gấp mười lần</td><td><span class="sh-evi sh-evi--failed">bị bác</span> gần một đối một (2016)</td><td><a href="#c20">5.5</a></td></tr>
+              <tr><td>Đại tuyệt chủng cuối kỷ Permi</td><td>90–96% loài biển</td><td><span class="sh-evi sh-evi--failed">bị bác</span> tính lại khoảng 81% (2016): số cũ gộp nhầm hai đợt tuyệt chủng</td><td><a href="#c22">5.7</a></td></tr>
+              <tr><td>Số tế bào trong người</td><td>mười triệu tỉ</td><td><span class="sh-evi sh-evi--failed">bị bác</span> khoảng 30 nghìn tỉ</td><td><a href="#c24">5.9</a></td></tr>
+              <tr><td>Số gen người</td><td>35.000–40.000</td><td><span class="sh-evi sh-evi--solid">xác nhận</span> 19.000–20.000; trình tự đầy đủ năm 2022</td><td><a href="#c26">5.11</a></td></tr>
+              <tr><td>Loài người cổ</td><td>chưa biết người Denisova, người Flores</td><td><span class="sh-evi sh-evi--solid">xác nhận</span> thêm bốn nhóm (2004–2019); người hiện đại có lai với Neanderthal</td><td><a href="#c28">6.2</a></td></tr>
+              <tr><td>Người Mungo</td><td>62.000 năm, ADN khác thường</td><td><span class="sh-evi sh-evi--failed">bị bác</span> khoảng 40.000 năm; ADN có thể bị nhiễm bẩn</td><td><a href="#c29">6.3</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hw-p">Đọc bảng theo chiều dọc sẽ thấy một điều: gần như không mục nào đổi vì phương pháp sai. Chúng đổi vì có dụng cụ đo tốt hơn (vệ tinh Planck, máy dò LIGO, máy giải trình tự gen), có thêm mẫu vật, hoặc vì ai đó chịu tính lại. Đó chính là điều cuốn sách dạy: kết luận thì tạm, cách đi tới kết luận mới là thứ bền.</p>
+      </section>
+
+      <section id="s-wrong">
+        <p class="hw-eyebrow-sec"><b>7.3</b> — What the book got wrong</p>
+        <h2 class="hw-sec-title">Chỗ sách sai: thay số vào là thấy</h2>
+        <p class="hw-lede">Vài chỗ trong sách sai ngay từ lúc in, và nhiều chỗ lộ ra chỉ bằng một phép tính. Chúng không làm hỏng bức tranh lớn, nhưng là bài tập tốt cho một quy tắc: <b>có con số thì thay vào kiểm</b>.</p>
+        <ul class="hw-ul">
+          <li><span class="sh-evi sh-evi--failed">sai</span> <b>Diêm Vương cỡ vi khuẩn.</b> Diêm Vương rộng bằng 0,187 lần Trái Đất; Trái Đất là hạt đậu 5–7,5 mm thì Diêm Vương rộng 0,9–1,4 mm, lớn hơn một con vi khuẩn dài 1–2 phần nghìn milimét chừng 470 tới 1.400 lần (Mô hình 1, mục <a href="#c2">1.2</a>).</li>
+          <li><span class="sh-evi sh-evi--failed">sai</span> <b>Số proton trong dấu chấm chữ i và số giây của nửa triệu năm.</b> Sách viết 500 tỉ proton còn nhiều hơn số giây của nửa triệu năm. Một năm có 31.536.000 giây, nên 500 tỉ giây chỉ chừng 15.900 năm; nửa triệu năm là khoảng 15.800 tỉ giây, lớn hơn khoảng 30 lần.</li>
+          <li><span class="sh-evi sh-evi--failed">sai</span> <b>Bốn mươi bảy lần phân chia ra mười triệu tỉ tế bào.</b> 2⁴⁷ ≈ 140 nghìn tỉ (mục <a href="#c24">5.9</a>).</li>
+          <li><span class="sh-evi sh-evi--failed">sai</span> <b>Electron chạy 47.000 vòng quanh đường hầm 7 km trong chưa tới một giây.</b> 47.000 × 7 km = 329.000 km mỗi giây, nhanh hơn ánh sáng (khoảng 299.792 km/s).</li>
+          <li><span class="sh-evi sh-evi--failed">sai</span> <b>45 tỉ tỉ phân tử trong một phân khối không khí ở 0°C.</b> Chia số Avogadro (6,022 × 10²³) cho thể tích một mol khí (22.414 cm³) được khoảng 27 tỉ tỉ.</li>
+          <li><span class="sh-evi sh-evi--failed">sai</span> <b>Nhiệt độ giảm 1,6°C mỗi 1.000 m.</b> Trong tầng đối lưu, mức giảm trung bình khoảng 6,5°C mỗi km (mục <a href="#c17">5.2</a>).</li>
+          <li><span class="sh-evi sh-evi--failed">sai</span> <b>Kính cửa nhà thờ cổ dày ở đáy vì thuỷ tinh chảy dần.</b> Thuỷ tinh đã đông thì không chảy; tấm kính cổ dày mỏng không đều vì cách làm kính thời ấy.</li>
+          <li><span class="sh-evi sh-evi--failed">sai</span> <b>Phương trình Drake, kể cả với giả định dè dặt nhất, vẫn ra hàng triệu nền văn minh.</b> Tuỳ giả định, kết quả đi từ gần bằng không tới hàng chục triệu (mục <a href="#c3">1.3</a>).</li>
+        </ul>
+        <p class="hw-p">Danh sách đầy đủ hơn do độc giả tự lập tại trang errata của sách (xem Nguồn); trang này chỉ giữ những lỗi tự kiểm lại được bằng phép tính hoặc bằng nguồn gốc. Một bài tập cùng tinh thần cho mọi con số trên báo: năm câu hỏi của Darrell Huff ở trang <a href="how-to-lie-with-statistics.html#c10">How to Lie with Statistics</a>.</p>
+      </section>
+
+      <!-- ══════════════════ MANG THEO ══════════════════ -->
+      <div class="hw-part-head" id="ket">
+        <p class="kicker">Mang theo · Take away</p>
+        <h2>Mang theo: những câu hỏi cho mọi điều "khoa học đã chứng minh"</h2>
+        <p>Quên hết tên người và năm tháng thì tám câu dưới đây, mỗi câu gắn với một câu chuyện trên trang, vẫn đủ dùng khi đọc một tin khoa học.</p>
+      </div>
+
+      <section id="s-carry">
+        <p class="hw-eyebrow-sec"><b>8.1</b> — Questions to carry</p>
+        <h2 class="hw-sec-title">Tám câu hỏi, rút từ cả cuốn sách</h2>
+        <div class="wb-grid wb-grid--2">
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">1 · Ta biết điều này bằng cách nào?</p>
+            <p class="wb-media__text">Đo trực tiếp, suy ra từ một thứ khác, hay chỉ là mô hình? Tuổi vũ trụ được đọc từ một tiếng rè. <a href="#c1">1.1</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">2 · Ai đo, bằng gì, sai số bao nhiêu?</p>
+            <p class="wb-media__text">Cavendish cân Trái Đất trong nhà kho và chỉ lệch 1%. Con số không kèm sai số là con số chưa xong. <a href="#c4">2.1</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">3 · Con số này của năm nào?</p>
+            <p class="wb-media__text">Hơn chục con số trong sách đã đổi sau năm 2003. Sách hay vẫn có hạn dùng. <a href="#s-changed">7.2</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">4 · Thay số vào có ra không?</p>
+            <p class="wb-media__text">Một phép nhân đủ lộ ra Diêm Vương "cỡ vi khuẩn" là sai hàng trăm tới cả nghìn lần. <a href="#s-wrong">7.3</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">5 · Dụng cụ có hợp với câu hỏi không?</p>
+            <p class="wb-media__text">Cacbon-14 không định tuổi được khủng long; urani không định tuổi được bình gốm. <a href="#c10">3.3</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">6 · Nếu đúng, nó dự đoán được gì?</p>
+            <p class="wb-media__text">Newton đoán Trái Đất dẹt, Mendeleev đoán nguyên tố chưa ai thấy, nhóm Shubin đoán nơi tìm <i>Tiktaalik</i>. <a href="#c7">2.4</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">7 · Ý này bị gạt vì sai, hay vì người nói là người ngoài?</p>
+            <p class="wb-media__text">Wegener, Margulis, Dart đều bị gạt đi trước khi được công nhận. Người ngoài ngành không tự động đúng, nhưng cũng không tự động sai. <a href="#c12">3.5</a></p>
+          </div>
+          <div class="wb-card wb-card--pad">
+            <p class="wb-media__title">8 · Điều này đặt ta ở đâu?</p>
+            <p class="wb-media__text">Trên một hạt đậu giữa khoảng trống, trong sáu giây cuối của một ngày 4,54 tỉ năm; và theo những gì ta biết, là loài duy nhất hiểu được điều đó. <a href="#c22">5.7</a></p>
+          </div>
+        </div>
+        <div class="sh-next">
+          <p><b>Bạn vừa có:</b> một bức tranh gần đủ về vũ trụ, Trái Đất, sự sống và loài người, cùng câu chuyện phía sau từng con số, và tám câu hỏi để đọc mọi tin khoa học.</p>
+          <p><b>Nó dẫn đi đâu:</b> mỗi chương là một cửa. Đi sâu vào nguyên tử và liên kết ở trang <a href="chemistry.html">Chemistry</a>, không-thời gian ở trang <a href="relativity.html">Relativity</a>, cách đọc con số ở trang <a href="how-to-lie-with-statistics.html">How to Lie with Statistics</a>, vì sao khoa học tự sửa được ở mục Carl Sagan của trang <a href="books-in-brief.html#sagan">Books in Brief</a>. Và một câu hỏi để ngỏ: Bryson đã tự viết lại cuốn sách năm 2025, vậy hai mươi năm nữa, dòng nào trên trang này sẽ phải sửa?</p>
+        </div>
+      </section>
+
+      <section id="s-src">
+        <p class="hw-eyebrow-sec"><b>8.2</b> — Sources</p>
+        <h2 class="hw-sec-title">Nguồn</h2>
+        <p class="hw-src"><b>Sách.</b> Bill Bryson, <i>A Short History of Nearly Everything</i>, Broadway Books (Mỹ) và Doubleday (Anh), 2003. Tên và số chương theo <a href="https://catdir.loc.gov/catdir/toc/fy042/2003046006.html">mục lục của Thư viện Quốc hội Mỹ</a>. Bản sửa: <a href="https://www.penguin.co.uk/books/463567/a-short-history-of-nearly-everything-20-by-bryson-bill/9781529941050"><i>A Short History of Nearly Everything 2.0</i></a>, Doubleday, 21/10/2025. Bản tiếng Việt: <i>Lược sử vạn vật</i>, Khương Duy và Hán Ngọc dịch, NXB Khoa học Xã hội, 2020, 722 trang (<a href="https://thuviendongten.net/PrintedBook/ShowInfo?id=38210">thư mục Thư viện Dòng Tên</a>); bản in năm 2022 do Omega Plus phát hành (<a href="https://books.google.com/books?id=yLU6EQAAQBAJ">Google Books</a>). Giải thưởng: <a href="https://en.wikipedia.org/wiki/A_Short_History_of_Nearly_Everything">Wikipedia</a>. Lỗi của sách: <a href="http://errata.wikidot.com/0767908171">trang errata do độc giả lập</a> (mọi lỗi dẫn trên trang đã được tự tính lại hoặc đối chiếu nguồn gốc). Nội dung từng chương đối chiếu thêm với tóm tắt của LitCharts; không dùng bản sách lậu.</p>
+        <p class="hw-src"><b>Vũ trụ.</b> Planck Collaboration, "Planck 2018 results. VI", <a href="https://arxiv.org/abs/1807.06209">arXiv:1807.06209</a>. Berkeley Lab, <a href="https://newscenter.lbl.gov/2025/03/19/new-desi-results-strengthen-hints-that-dark-energy-may-evolve/">"New DESI Results Strengthen Hints That Dark Energy May Evolve"</a>, 19/3/2025. <a href="https://exoplanetarchive.ipac.caltech.edu/">NASA Exoplanet Archive</a> (bảng pscomppars, tra ngày 28/9/2026). Rubin Observatory, <a href="https://rubinobservatory.org/news/action-rubin-lsst-begins">"Action! NSF–DOE Vera C. Rubin Observatory Begins Capturing the Greatest Cosmic Movie Ever Made"</a>, 30/6/2026. Diêm Vương, Charon, Voyager, vệ tinh Sao Thổ, vật chất tối, sóng hấp dẫn, Higgs: các bài Wikipedia tương ứng (<a href="https://en.wikipedia.org/wiki/IAU_definition_of_planet">IAU 2006</a>, <a href="https://en.wikipedia.org/wiki/Moons_of_Saturn">vệ tinh Sao Thổ</a>, <a href="https://en.wikipedia.org/wiki/Dark_matter">lịch sử khái niệm vật chất tối</a>, <a href="https://en.wikipedia.org/wiki/First_observation_of_gravitational_waves">GW150914</a>, <a href="https://en.wikipedia.org/wiki/Higgs_boson">boson Higgs</a>). Robert Evans: <a href="https://en.wikipedia.org/wiki/Robert_Evans_(astronomer)">Wikipedia</a>.</p>
+        <p class="hw-src"><b>Trái Đất.</b> <a href="https://en.wikipedia.org/wiki/Cavendish_experiment">Thí nghiệm Cavendish</a>; <a href="https://en.wikipedia.org/wiki/Age_of_Earth">tuổi Trái Đất</a>; C. Patterson, "Age of meteorites and the earth", <i>Geochimica et Cosmochimica Acta</i> 10, 1956, <a href="https://doi.org/10.1016/0016-7037(56)90036-9">doi:10.1016/0016-7037(56)90036-9</a>; <a href="https://en.wikipedia.org/wiki/Tetraethyllead">chì tetraethyl và việc chấm dứt xăng pha chì</a>. L. W. Alvarez và cộng sự, <i>Science</i> 208, 1980, <a href="https://doi.org/10.1126/science.208.4448.1095">doi:10.1126/science.208.4448.1095</a>. <a href="https://en.wikipedia.org/wiki/Manson_impact_structure">Hố va chạm Manson</a>. NASA JPL, <a href="https://ssd.jpl.nasa.gov/tools/sbdb_query.html">Small-Body Database</a> (tra ngày 28/9/2026); A. W. Harris, P. W. Chodas, <i>Icarus</i> 365, 2021, <a href="https://doi.org/10.1016/j.icarus.2021.114452">doi:10.1016/j.icarus.2021.114452</a>; <a href="https://en.wikipedia.org/wiki/Double_Asteroid_Redirection_Test">DART</a>; <a href="https://en.wikipedia.org/wiki/2024_YR4">2024 YR4</a>. USGS, <a href="https://www.usgs.gov/volcanoes/yellowstone/questions-about-future-volcanic-activity-yellowstone">Questions about future volcanic activity at Yellowstone</a>. <a href="https://en.wikipedia.org/wiki/2004_Indian_Ocean_earthquake_and_tsunami">Sóng thần 2004</a>; <a href="https://en.wikipedia.org/wiki/1991_eruption_of_Mount_Pinatubo">Pinatubo 1991</a>.</p>
+        <p class="hw-src"><b>Khí hậu và biển.</b> NOAA, <a href="https://gml.noaa.gov/ccgg/trends/">CO₂ tại Mauna Loa</a> (trung bình năm). D. Lüthi và cộng sự, <i>Nature</i> 453, 2008, <a href="https://doi.org/10.1038/nature06949">doi:10.1038/nature06949</a>; số liệu <a href="https://www.ncei.noaa.gov/pub/data/paleo/icecore/antarctica/epica_domec/edc-co2-2008.txt">EPICA Dome C</a>. J. D. Hays, J. Imbrie, N. J. Shackleton, <i>Science</i> 194, 1976, <a href="https://doi.org/10.1126/science.194.4270.1121">doi:10.1126/science.194.4270.1121</a>. IHO, <a href="https://iho.int/en/global-seabed-mapping-reaches-new-milestone-as-five-million-square-kilometres-added-in-a-year">Seabed 2030, 28/4/2026</a>. <a href="https://en.wikipedia.org/wiki/Last_Glacial_Maximum">Cực đại băng hà cuối cùng</a>; <a href="https://en.wikipedia.org/wiki/Gulf_of_Tonkin">vịnh Bắc Bộ</a>.</p>
+        <p class="hw-src"><b>Sự sống.</b> R. Sender, S. Fuchs, R. Milo, <i>PLOS Biology</i> 14, 2016, <a href="https://doi.org/10.1371/journal.pbio.1002533">doi:10.1371/journal.pbio.1002533</a>. C. Mora và cộng sự, <i>PLOS Biology</i> 9, 2011, <a href="https://doi.org/10.1371/journal.pbio.1001127">doi:10.1371/journal.pbio.1001127</a>. <a href="https://www.catalogueoflife.org/">Catalogue of Life</a>, bản phát hành 11/9/2026 (2.269.433 loài được chấp nhận, trong đó 171.616 loài đã tuyệt chủng). E. R. R. Moody và cộng sự, <i>Nature Ecology &amp; Evolution</i>, 2024, <a href="https://doi.org/10.1038/s41559-024-02461-1">doi:10.1038/s41559-024-02461-1</a>. S. M. Stanley, <i>PNAS</i> 113, 2016, <a href="https://doi.org/10.1073/pnas.1613094113">doi:10.1073/pnas.1613094113</a>. E. B. Daeschler, N. H. Shubin, F. A. Jenkins, <i>Nature</i> 440, 2006, <a href="https://doi.org/10.1038/nature04639">doi:10.1038/nature04639</a>. S. Nurk và cộng sự, "The complete sequence of a human genome", <i>Science</i> 376, 2022, <a href="https://doi.org/10.1126/science.abj6987">doi:10.1126/science.abj6987</a>. M. Cobb, N. Comfort, <i>Nature</i> 616, 2023, <a href="https://doi.org/10.1038/d41586-023-01313-5">doi:10.1038/d41586-023-01313-5</a>. R. H. Vreeland và cộng sự, <i>Nature</i> 407, 2000, <a href="https://doi.org/10.1038/35038060">doi:10.1038/35038060</a>. Sao la: Vũ Văn Dũng và cộng sự, <i>Nature</i> 363, 1993, <a href="https://doi.org/10.1038/363443a0">doi:10.1038/363443a0</a>. <a href="https://en.wikipedia.org/wiki/Glass">Thuỷ tinh cổ không chảy</a>.</p>
+        <p class="hw-src"><b>Loài người và tuyệt chủng.</b> T. Sutikna và cộng sự, <i>Nature</i> 532, 2016, <a href="https://doi.org/10.1038/nature17179">doi:10.1038/nature17179</a>. R. E. Green và cộng sự, <i>Science</i> 328, 2010, <a href="https://doi.org/10.1126/science.1188021">doi:10.1126/science.1188021</a>. Q. Fu và cộng sự, <i>Cell</i> 188, 2025, <a href="https://doi.org/10.1016/j.cell.2025.05.040">doi:10.1016/j.cell.2025.05.040</a>. D. Richter và cộng sự, <i>Nature</i> 546, 2017, <a href="https://doi.org/10.1038/nature22335">doi:10.1038/nature22335</a>. T. H. Heupink và cộng sự, <i>PNAS</i> 113, 2016, <a href="https://doi.org/10.1073/pnas.1521066113">doi:10.1073/pnas.1521066113</a>. R. L. Cann, M. Stoneking, A. C. Wilson, <i>Nature</i> 325, 1987, <a href="https://doi.org/10.1038/325031a0">doi:10.1038/325031a0</a>. IPBES, <a href="https://www.ipbes.net/global-assessment">Global Assessment Report</a>, 2019. IUCN Red List 2026-1, tóm tắt tại <a href="https://www.artensterben.de/en/iucn-update-2026-15-more-animal-species-declared-extinct/">artensterben.de</a>. <a href="https://en.wikipedia.org/wiki/Javan_rhinoceros">Tê giác Java</a>; <a href="https://en.wikipedia.org/wiki/Lyall%27s_wren">hồng tước đảo Stephens</a>.</p>
+        <p class="hw-src"><b>Số liệu Việt Nam.</b> Cục Thống kê, <a href="https://www.nso.gov.vn/tin-tuc-thong-ke/2026/01/thong-cao-bao-chi-ve-tinh-hinh-dan-so-lao-dong-viec-lam-quy-iv-va-nam-2025/">Thông cáo báo chí về dân số, lao động, việc làm năm 2025</a> (dân số 102,3 triệu, tuổi thọ 74,7). VnExpress, <a href="https://vnexpress.net/su-dung-xang-khong-pha-chi-vo-hai-voi-tat-ca-cac-loai-xe-2661180.html">"Sử dụng xăng không pha chì vô hại với tất cả các loại xe"</a>, 13/12/2000. Pháp Luật TP.HCM, <a href="https://plo.vn/benh-xa-dao-song-tu-tay-cuu-tho-lan-bi-liet-chi-do-giam-ap-post899929.html">"Bệnh xá đảo Song Tử Tây cứu thợ lặn bị liệt chi do giảm áp"</a>, 17/3/2026. Khoảng cách Hà Nội – TP.HCM, Toba – TP.HCM: trang tự tính theo đường tròn lớn.</p>
+
+        <div class="wb-alert wb-alert--plain" style="margin-top:18px">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Về bản tóm tắt này</p>
+            <p class="wb-alert__msg">Tóm tắt và viết lại bằng lời của trang này từ cuốn <b>A Short History of Nearly Everything</b> của <b>Bill Bryson</b> (2003). Trang giữ lời mở đầu và cả 30 chương theo đúng thứ tự của sách, có bảng đối chiếu ở mục 0.1. Không chép đoạn văn của sách; chỉ có hai trích dẫn rất ngắn, đều ghi rõ là lời sách: một cụm ở mục 0.2 và cụm "cỡ vi khuẩn" ở mục 1.2. Ba mô hình và mọi con số cập nhật là của trang, có nguồn ở trên.</p>
+            <p class="wb-alert__msg">Nếu thấy hữu ích, hãy tìm đọc bản đầy đủ của sách, bản gốc hoặc bản dịch <i>Lược sử vạn vật</i>, để ủng hộ tác giả, dịch giả và nhà xuất bản.</p>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /content column -->
+  </div><!-- /hw-layout -->
+</main>
+
+<footer class="wb-footer wb-footer--slim">
+  <div class="wb-footer__inner">
+    <div class="wb-footer__bottom">
+      <span class="wb-footer__copy">A Short History of Nearly Everything — tóm tắt · Bill Bryson, 2003 · viết lại để học cách khoa học biết điều nó biết</span>
+      <a class="wb-footer__link" href="../index.html">← Trang chủ</a>
+    </div>
+  </div>
+</footer>
+
+<button class="wb-btn wb-btn--icon wb-btn--round hw-top" id="toTop" aria-label="Lên đầu trang">
+  <span class="wb-ico">arrow_upward</span>
+</button>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var saved = null;
+  try { saved = localStorage.getItem('hub-theme'); } catch (e) {}
+  root.classList.toggle('dark', saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
+  var toggle = document.getElementById('theme-toggle');
+  if (toggle) toggle.addEventListener('click', function () {
+    var dark = !root.classList.contains('dark');
+    root.classList.toggle('dark', dark);
+    try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+
+  var menu = document.querySelector('.wb-navbar__menu');
+  document.addEventListener('click', function (e) {
+    if (!menu) return;
+    if (e.target.closest('[data-navbar-toggle]')) menu.classList.toggle('is-open');
+    else if (e.target.closest('.wb-navbar__menu .wb-nav__link')) menu.classList.remove('is-open');
+  });
+
+  var links = [].slice.call(document.querySelectorAll('#toc .wb-sidenav__link'));
+  var byId = {};
+  var targets = [];
+  links.forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if (el) { byId[id] = a; targets.push(el); }
+  });
+  var current = null;
+  function setCurrent(a) {
+    if (current === a) return;
+    if (current) current.classList.remove('is-current');
+    current = a;
+    if (current) current.classList.add('is-current');
+  }
+  if ('IntersectionObserver' in window && targets.length) {
+    var seen = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { seen[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var bestId = null, best = 0;
+      targets.forEach(function (t) { if ((seen[t.id] || 0) > best) { best = seen[t.id]; bestId = t.id; } });
+      if (bestId) setCurrent(byId[bestId]);
+    }, { rootMargin: '-80px 0px -55% 0px', threshold: [0, .1, .5, 1] });
+    targets.forEach(function (t) { io.observe(t); });
+  }
+
+  var top = document.getElementById('toTop');
+  function onScroll() { top.classList.toggle('is-on', window.scrollY > 600); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+</script>
+
+<script>
+/* Ba mô hình của trang. JS thuần, không thư viện, không fetch.
+   Mỗi SVG được vẽ lại theo đúng bề rộng thật của nó (viewBox = số px), nên chữ trong hình
+   giữ cỡ thật trên điện thoại thay vì teo lại theo tỉ lệ. */
+(function () {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  function $(id) { return document.getElementById(id); }
+  function el(tag, attrs, parent, text) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function clear(svg) { while (svg.firstChild) svg.removeChild(svg.firstChild); }
+  function fin(x, fb) { return (typeof x === 'number' && isFinite(x)) ? x : fb; }
+  function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
+  /* Số kiểu Việt: phẩy thập phân, chấm hàng nghìn. */
+  function fmt(x, d) {
+    x = fin(x, 0); d = d || 0;
+    var neg = x < 0; x = Math.abs(x);
+    var parts = x.toFixed(d).split('.');
+    var s = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (parts[1] ? ',' + parts[1] : '');
+    return (neg && Number(x.toFixed(d)) !== 0 ? '−' : '') + s;
+  }
+  function widthOf(svg) {
+    var w = Math.round(svg.getBoundingClientRect().width) || 560;
+    return clamp(w, 250, 720);
+  }
+  function setBox(svg, W, H) { svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); }
+  function txt(parent, x, y, s, cls, anchor) {
+    var a = { x: x, y: y, 'class': cls || 'sh-t' };
+    if (anchor) a['text-anchor'] = anchor;
+    return el('text', a, parent, s);
+  }
+  /* Bề rộng ước chừng của một dòng chữ (cỡ px, đậm hay thường) — đủ để né chồng chữ
+     và giữ chữ trong khung. Ước rộng tay một chút: thừa chỗ còn hơn chữ đè lên nhau. */
+  function tw(s, px, bold) { return s.length * (px || 11) * (bold ? 0.64 : 0.58); }
+  /* Đặt nhãn giữa quanh x mà không thò ra khỏi khung; trả về [trái, phải] đã dùng. */
+  function centerLabel(parent, x, y, s, cls, W, w) {
+    w = w || tw(s);
+    var left = clamp(x - w / 2, 4, W - 4 - w);
+    txt(parent, left, y, s, cls, 'start');
+    return [left, left + w];
+  }
+  /* Xếp nhãn vào hàng: nhãn nào chồng lên nhãn đã đặt thì lên hàng kế tiếp. */
+  function assignRows(items, W, rows) {
+    var used = [];
+    for (var r = 0; r < rows; r++) used.push([]);
+    items.sort(function (a, b) { return a.x - b.x; });
+    items.forEach(function (it) {
+      var w = it.w || tw(it.label), left = clamp(it.x - w / 2, 4, W - 4 - w), right = left + w;
+      var row = rows - 1;
+      for (var r = 0; r < rows; r++) {
+        var ok = used[r].every(function (s) { return right + 8 < s[0] || left - 8 > s[1]; });
+        if (ok) { row = r; break; }
+      }
+      used[row].push([left, right]);
+      it.row = row;
+    });
+    return items;
+  }
+  var redraws = [];
+  function onInput(ids, fn) {
+    ids.forEach(function (id) { var e = $(id); if (e) e.addEventListener('input', fn); });
+    redraws.push(fn);
+    fn();
+  }
+  var rt = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () { redraws.forEach(function (f) { try { f(); } catch (e) {} }); }, 150);
+  });
+
+  /* ── Mô hình 1: thu nhỏ Hệ Mặt Trời ─────────────────────────────────── */
+  (function () {
+    var svg = $('sc-svg'), range = $('sc-d'); if (!svg || !range) return;
+    var EARTH = 12742e3, SUN_D = 1392700e3, PLUTO_D = 2376.6e3;   // mét
+    var LY = 9460730472580.8e3;                                   // mét trong một năm ánh sáng
+    var BODIES = [
+      { n: 'Mặt Trăng', m: 384400e3 },
+      { n: 'Mặt Trời', m: 149597871e3 },
+      { n: 'Sao Mộc', m: 778479000e3 },
+      { n: 'Diêm Vương', m: 5906380000e3 },
+      { n: 'Proxima', m: 4.2465 * LY }
+    ];
+    var REFS = [
+      { n: 'Hà Nội → TP.HCM', s: 'HN → TP.HCM', m: 1.14e6 },
+      { n: 'một vòng xích đạo', s: 'vòng xích đạo', m: 4.0075e7 },
+      { n: 'Trái Đất → Mặt Trăng thật', s: 'Mặt Trăng thật', m: 3.844e8 }
+    ];
+    function len(m) {
+      m = fin(m, 0);
+      if (m < 1e-4) return fmt(m * 1e6, m * 1e6 < 10 ? 1 : 0) + ' µm';
+      if (m < 1e-2) return fmt(m * 1e3, m * 1e3 < 1 ? 2 : 1) + ' mm';
+      if (m < 1) return fmt(m * 100, m * 100 < 10 ? 1 : 0) + ' cm';
+      if (m < 1000) return fmt(m, m < 10 ? 1 : 0) + ' m';
+      var km = m / 1000;
+      return fmt(km, km < 10 ? 2 : (km < 100 ? 1 : 0)) + ' km';
+    }
+    function decadeName(e) {
+      var names = { '-3': '1 mm', '-2': '1 cm', '-1': '10 cm', '0': '1 m', '1': '10 m', '2': '100 m', '3': '1 km',
+        '4': '10 km', '5': '100 km', '6': '1.000 km', '7': '10.000 km', '8': '100.000 km', '9': '1 triệu km',
+        '10': '10 triệu km', '11': '100 triệu km' };
+      return names[String(e)] || ('10^' + e + ' m');
+    }
+    var buttons = [].slice.call(document.querySelectorAll('#lab-scale [data-sc]'));
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () {
+        range.value = b.getAttribute('data-sc');
+        draw();
+      });
+    });
+    function draw() {
+      var v = clamp(fin(+range.value, 70), 0, 300);
+      var dm = Math.pow(10, -3 + v / 100);
+      var k = dm / EARTH;
+      buttons.forEach(function (b) {
+        var on = Math.abs(+b.getAttribute('data-sc') - v) < 0.5;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      $('sc-d-l').textContent = len(dm);
+      $('sc-sun').textContent = len(BODIES[1].m * k);
+      $('sc-sun-s').textContent = 'quả cầu rộng ' + len(SUN_D * k) + ', cách Trái Đất';
+      $('sc-jup').textContent = len(BODIES[2].m * k);
+      $('sc-plu').textContent = len(BODIES[3].m * k);
+      $('sc-plu-s').textContent = 'cách Mặt Trời · rộng ' + len(PLUTO_D * k);
+      var prx = BODIES[4].m * k;
+      $('sc-prx').textContent = len(prx);
+      var cmp;
+      if (prx < REFS[1].m) cmp = 'bằng ' + fmt(prx / REFS[1].m * 100) + '% một vòng xích đạo';
+      else if (prx < REFS[2].m) cmp = 'bằng ' + fmt(prx / REFS[1].m, 1) + ' vòng xích đạo';
+      else cmp = 'gấp ' + fmt(prx / REFS[2].m, 1) + ' lần Trái Đất → Mặt Trăng thật';
+      $('sc-prx-s').textContent = 'Proxima Centauri · ' + cmp;
+
+      var W = widthOf(svg), H = 204; setBox(svg, W, H); clear(svg);
+      var L = 10, R = 10, AX = 92, pw = W - L - R;
+      var pts = BODIES.map(function (b) { return b.m * k; }).concat(REFS.map(function (r) { return r.m; }));
+      var lo = Math.floor(Math.log(Math.min.apply(null, pts)) / Math.LN10);
+      var hi = Math.ceil(Math.log(Math.max.apply(null, pts)) / Math.LN10);
+      if (hi <= lo) hi = lo + 1;
+      function xs(m) { return L + (Math.log(m) / Math.LN10 - lo) / (hi - lo) * pw; }
+      el('line', { x1: L, x2: W - R, y1: AX, y2: AX, 'class': 'sh-ax' }, svg);
+      var per = pw / (hi - lo), every = per < 30 ? 3 : (per < 52 ? 2 : 1), lastR = -1e9;
+      for (var e = lo; e <= hi; e++) {
+        var x = xs(Math.pow(10, e));
+        el('line', { x1: x, x2: x, y1: AX - 4, y2: AX + 4, 'class': 'sh-ax' }, svg);
+        var dn = decadeName(e), dw = tw(dn, 11), dl = clamp(x - dw / 2, 4, W - 4 - dw);
+        if ((e - lo) % every === 0 && dl > lastR + 6) { txt(svg, dl, AX + 17, dn, 'sh-t sh-t--m', 'start'); lastR = dl + dw; }
+      }
+      /* Màn hẹp: nhãn chỉ ghi tên — con số đã nằm trong các ô phía trên. */
+      var wide = W >= 520;
+      var top = BODIES.map(function (b) {
+        var m = b.m * k, label = wide ? b.n + ' · ' + len(m) : b.n;
+        return { x: xs(m), label: label, w: tw(label, 12, true) };
+      });
+      assignRows(top, W, 3).forEach(function (it) {
+        var y = AX - 22 - it.row * 20;
+        el('line', { x1: it.x, x2: it.x, y1: y + 4, y2: AX, style: 'stroke:var(--wb-neutral-strong);stroke-width:1' }, svg);
+        el('circle', { cx: it.x, cy: AX, r: 4, style: 'fill:var(--wb-fg)' }, svg);
+        centerLabel(svg, it.x, y, it.label, 'sh-t sh-t--b', W, it.w);
+      });
+      var bot = REFS.map(function (r) {
+        var label = wide ? r.n : r.s;
+        return { x: xs(r.m), label: label, w: tw(label, 11) };
+      });
+      assignRows(bot, W, 3).forEach(function (it) {
+        var y = AX + 40 + it.row * 18;
+        el('line', { x1: it.x, x2: it.x, y1: AX, y2: y - 11, style: 'stroke:var(--wb-neutral);stroke-width:1;stroke-dasharray:3 3' }, svg);
+        centerLabel(svg, it.x, y, it.label, 'sh-t sh-t--s', W, it.w);
+      });
+      txt(svg, L, H - 6, wide ? '● vật thể thu nhỏ   ┆ khoảng cách thật, quen thuộc   · mỗi vạch gấp 10 lần' : '● thu nhỏ   ┆ khoảng cách thật', 'sh-t sh-t--m', 'start');
+    }
+    onInput(['sc-d'], draw);
+  })();
+
+  /* ── Mô hình 2: đồng hồ phóng xạ ───────────────────────────────────── */
+  (function () {
+    var svg = $('rd-svg'), range = $('rd-f'); if (!svg || !range) return;
+    var SOLAR = 4.568e9;                                  // tuổi Hệ Mặt Trời, năm
+    var ISO = {
+      c14: { name: 'cacbon-14', T: 5730, unit: 'mỗi chu kỳ 5.730 năm' },
+      u238: { name: 'urani-238', T: 4.463e9, unit: 'mỗi chu kỳ 4,46 tỉ năm' }
+    };
+    var iso = 'u238';
+    var buttons = [].slice.call(document.querySelectorAll('#lab-rad [data-iso]'));
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () { iso = b.getAttribute('data-iso'); draw(); });
+    });
+    function years(y) {
+      y = fin(y, 0);
+      if (y < 1e4) return fmt(Math.round(y / 10) * 10) + ' năm';
+      if (y < 1e6) return fmt(Math.round(y / 100) * 100) + ' năm';
+      if (y < 1e9) return fmt(y / 1e6, y < 1e7 ? 2 : 1) + ' triệu năm';
+      return fmt(y / 1e9, 2) + ' tỉ năm';
+    }
+    function pct(f) {
+      var p = f * 100;
+      return fmt(p, p >= 10 ? 1 : (p >= 1 ? 2 : 3)) + '%';
+    }
+    function draw() {
+      var v = clamp(fin(+range.value, 30.62), 0, 400);
+      var f = Math.pow(10, -v / 100);                    // phần chất mẹ còn lại: 1 → 0,0001
+      var I = ISO[iso];
+      var n = Math.log(1 / f) / Math.LN2;                // số lần chia đôi
+      var age = n * I.T;
+      buttons.forEach(function (b) {
+        var on = b.getAttribute('data-iso') === iso;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      $('rd-f-l').textContent = pct(f);
+      $('rd-age').textContent = years(age);
+      $('rd-age-s').textContent = 'đồng hồ ' + I.name + ', ' + I.unit;
+      $('rd-n').textContent = fmt(n, n < 10 ? 2 : 1);
+      var ok, why;
+      if (iso === 'c14') {
+        if (age > 50000) { ok = 'Không'; why = 'còn quá ít để đếm: giới hạn khoảng 50.000 năm'; }
+        else if (f > 0.99) { ok = 'Khó'; why = 'mới mất chưa tới 1%, gần như chưa đổi'; }
+        else { ok = 'Được'; why = 'trong khoảng đo của cacbon-14'; }
+      } else {
+        if (age > SOLAR) { ok = 'Không'; why = 'già hơn cả Hệ Mặt Trời (4,57 tỉ năm): không mẫu nào như thế'; }
+        else if (age < 1e6) { ok = 'Không'; why = 'urani gần như chưa đổi: quá trẻ cho đồng hồ này'; }
+        else { ok = 'Được'; why = 'trong khoảng đo của urani – chì'; }
+      }
+      $('rd-ok').textContent = ok;
+      $('rd-ok-s').textContent = why;
+
+      var W = widthOf(svg), H = 240; setBox(svg, W, H); clear(svg);
+      var L = 44, R = 12, T = 16, B = 46, pw = W - L - R, ph = H - T - B, NMAX = 10;
+      function xs(k) { return L + clamp(k, 0, NMAX) / NMAX * pw; }
+      function ys(p) { return T + (1 - p) * ph; }
+      /* vùng đồng hồ không đo được, tô nhạt */
+      var badFrom = iso === 'c14' ? 50000 / I.T : SOLAR / I.T;
+      if (badFrom < NMAX) {
+        el('rect', { x: xs(badFrom), y: T, width: Math.max(0, xs(NMAX) - xs(badFrom)), height: ph, style: 'fill:var(--wb-neutral-weak);opacity:.55' }, svg);
+        var bl = iso === 'c14' ? 'quá ít để đo' : 'già hơn Hệ Mặt Trời';
+        var bw = tw(bl, 11), bx = clamp(xs(badFrom) + 6, L + 2, W - R - bw - 2);
+        txt(svg, bx, T + 14, bl, 'sh-t sh-t--s', 'start');
+      }
+      [0.25, 0.5, 0.75, 1].forEach(function (g) {
+        el('line', { x1: L, x2: W - R, y1: ys(g), y2: ys(g), 'class': 'sh-grid' }, svg);
+        txt(svg, L - 6, ys(g) + 4, fmt(g * 100) + '%', 'sh-t sh-t--m', 'end');
+      });
+      el('line', { x1: L, x2: W - R, y1: ys(0), y2: ys(0), 'class': 'sh-ax' }, svg);
+      el('line', { x1: L, x2: L, y1: T, y2: ys(0), 'class': 'sh-ax' }, svg);
+      var step = pw / NMAX < 26 ? 2 : 1;
+      for (var k = 0; k <= NMAX; k++) {
+        el('line', { x1: xs(k), x2: xs(k), y1: ys(0), y2: ys(0) + 4, 'class': 'sh-ax' }, svg);
+        if (k % step === 0) txt(svg, xs(k), ys(0) + 16, String(k), 'sh-t sh-t--m', 'middle');
+      }
+      var cap = W >= 420 ? 'số lần chia đôi (' + I.unit + ')' : 'số lần chia đôi';
+      txt(svg, L + pw / 2, H - 8, cap, 'sh-t sh-t--s', 'middle');
+      /* đường phân rã */
+      var d = '';
+      for (var i = 0; i <= 200; i++) {
+        var kk = i / 200 * NMAX;
+        d += (i ? 'L' : 'M') + xs(kk).toFixed(1) + ' ' + ys(Math.pow(2, -kk)).toFixed(1);
+      }
+      el('path', { d: d, style: 'fill:none;stroke:var(--wb-fg);stroke-width:1.8' }, svg);
+      /* bậc chia đôi: mỗi chu kỳ còn một nửa */
+      for (var j = 1; j <= 4; j++) {
+        el('circle', { cx: xs(j), cy: ys(Math.pow(2, -j)), r: 3, style: 'fill:var(--wb-canvas);stroke:var(--wb-neutral-strong);stroke-width:1.2' }, svg);
+      }
+      if (W >= 420) {
+        txt(svg, xs(1) + 6, ys(0.5) - 6, '½', 'sh-t sh-t--s', 'start');
+        txt(svg, xs(2) + 6, ys(0.25) - 6, '¼', 'sh-t sh-t--s', 'start');
+        txt(svg, xs(3) + 6, ys(0.125) - 6, '⅛', 'sh-t sh-t--s', 'start');
+      }
+      /* điểm của mẫu đang chọn */
+      var mx = xs(n), my = ys(f), inFrame = n <= NMAX;
+      el('line', { x1: L, x2: mx, y1: my, y2: my, style: 'stroke:var(--wb-neutral-strong);stroke-width:1;stroke-dasharray:4 3' }, svg);
+      el('line', { x1: mx, x2: mx, y1: my, y2: ys(0), style: 'stroke:var(--wb-neutral-strong);stroke-width:1;stroke-dasharray:4 3' }, svg);
+      el('circle', { cx: mx, cy: my, r: 5, style: 'fill:var(--wb-fg)' }, svg);
+      var lab = inFrame ? 'mẫu: ' + years(age) : 'ngoài khung → ' + years(age);
+      var lw = tw(lab, 12, true), lx = clamp(mx + 8, L + 4, W - R - lw - 2), ly = clamp(my - 10, T + 30, ys(0) - 8);
+      if (lx < mx && mx - lw - 8 >= L + 4) lx = mx - lw - 8;
+      txt(svg, lx, ly, lab, 'sh-t sh-t--b', 'start');
+    }
+    onInput(['rd-f'], draw);
+  })();
+
+  /* ── Mô hình 3: lịch sử Trái Đất trong 24 giờ ───────────────────────── */
+  (function () {
+    var svg = $('ck-svg'), range = $('ck-i'); if (!svg || !range) return;
+    var AGE = 4.54e9, DAY = 86400;
+    /* Mốc: năm cách nay (số liệu hiện nay) và tên. */
+    var EV = [
+      { y: 4.54e9, n: 'Trái Đất hình thành' },
+      { y: 4.404e9, n: 'Tinh thể khoáng cổ nhất còn lại' },
+      { y: 3.48e9, n: 'Dấu vết sự sống chắc chắn cổ nhất' },
+      { y: 2.4e9, n: 'Ôxy bắt đầu tích tụ trong không khí' },
+      { y: 5.75e8, n: 'Sinh vật nhiều bào lớn đầu tiên' },
+      { y: 5.388e8, n: 'Bùng nổ kỷ Cambri' },
+      { y: 4.7e8, n: 'Cây cỏ lên cạn' },
+      { y: 3.75e8, n: 'Cá có chân (Tiktaalik)' },
+      { y: 2.519e8, n: 'Đại tuyệt chủng cuối kỷ Permi' },
+      { y: 2.33e8, n: 'Khủng long đầu tiên' },
+      { y: 6.6e7, n: 'Tiểu hành tinh, khủng long tuyệt chủng' },
+      { y: 2.8e6, n: 'Chi Homo xuất hiện' },
+      { y: 3.0e5, n: 'Homo sapiens xuất hiện' },
+      { y: 1.17e4, n: 'Bắt đầu trồng trọt, chăn nuôi' },
+      { y: 74.7, n: 'Một đời người Việt (74,7 năm)' }
+    ];
+    function sec(y) { return DAY * (1 - y / AGE); }          // giây kể từ nửa đêm đầu ngày
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function clock(t) {
+      t = clamp(fin(t, 0), 0, DAY);
+      var left = DAY - t, h = Math.floor(t / 3600), m = Math.floor((t % 3600) / 60), sc = t % 60;
+      if (left < 1) return '23:59:' + fmt(59 + (1 - left), left < 0.01 ? 4 : 2);
+      if (left < 60) return pad(h) + ':' + pad(m) + ':' + fmt(sc, 1).replace(/^(\d),/, '0$1,');
+      return pad(h) + ':' + pad(m) + ':' + pad(Math.floor(sc));
+    }
+    function ago(y) {
+      if (y >= 1e9) return fmt(y / 1e9, 2) + ' tỉ năm';
+      if (y >= 1e6) { var v = y / 1e6; return fmt(v, Math.abs(v - Math.round(v)) < 0.05 ? 0 : 1) + ' triệu năm'; }
+      if (y >= 1e3) return fmt(y) + ' năm';
+      return fmt(y, 1) + ' năm';
+    }
+    function leftStr(l) {
+      if (l >= 3600) { var h = Math.floor(l / 3600), m = Math.round((l % 3600) / 60); if (m === 60) { h++; m = 0; } return h + ' giờ ' + m + ' phút'; }
+      if (l >= 60) { var mm = Math.floor(l / 60), ss = Math.round(l % 60); if (ss === 60) { mm++; ss = 0; } return mm + ' phút ' + ss + ' giây'; }
+      if (l >= 1) return fmt(l, 1) + ' giây';
+      if (l >= 0.1) return fmt(l, 2) + ' giây';
+      return fmt(l * 1000, 1) + ' phần nghìn giây';
+    }
+    function draw() {
+      var i = clamp(Math.round(fin(+range.value, 5)), 0, EV.length - 1), e = EV[i], t = sec(e.y), left = DAY - t;
+      $('ck-i-l').textContent = (i + 1) + ' / ' + EV.length;
+      $('ck-t').textContent = clock(t);
+      $('ck-name').textContent = e.n;
+      $('ck-ago').textContent = i === 0 ? '4,54 tỉ năm' : ago(e.y);
+      $('ck-left').textContent = i === 0 ? '24 giờ' : leftStr(left);
+
+      var W = widthOf(svg), H = W < 440 ? 266 : 250; setBox(svg, W, H); clear(svg);
+      var L = 10, R = 10, pw = W - L - R, BH = 18;
+      var bands = [
+        { top: 36, t0: 0, t1: DAY, title: 'Cả ngày', ticks: [0, 6, 12, 18, 24].map(function (h) { return { t: h * 3600, s: h + ' giờ' }; }) },
+        { top: 110, t0: DAY - 3600, t1: DAY, title: 'Giờ cuối', ticks: [0, 10, 20, 30, 40, 50, 60].map(function (m) { return { t: DAY - 3600 + m * 60, s: m === 60 ? '24:00' : '23:' + pad(m) }; }) },
+        { top: 184, t0: DAY - 60, t1: DAY, title: 'Phút cuối', ticks: [0, 20, 40, 60].map(function (sx) { return { t: DAY - 60 + sx, s: sx === 60 ? '24:00:00' : '23:59:' + pad(sx) }; }) }
+      ];
+      function xs(b, tt) { return L + (tt - b.t0) / (b.t1 - b.t0) * pw; }
+      /* các dải nền: chưa thấy sự sống · chỉ vi sinh vật · sinh vật lớn; và thời khủng long */
+      var tLife = sec(3.48e9), tBig = sec(5.75e8), tDinoA = sec(2.33e8), tDinoZ = sec(6.6e7);
+      bands.forEach(function (b, k) {
+        function seg(a, z, style) {
+          var x1 = xs(b, clamp(a, b.t0, b.t1)), x2 = xs(b, clamp(z, b.t0, b.t1));
+          if (x2 - x1 > 0.3) el('rect', { x: x1, y: b.top, width: x2 - x1, height: BH, style: style }, svg);
+        }
+        seg(b.t0, b.t1, 'fill:var(--wb-neutral-weak)');
+        seg(tLife, b.t1, 'fill:var(--wb-neutral);opacity:.55');
+        seg(tBig, b.t1, 'fill:var(--wb-neutral-strong);opacity:.75');
+        seg(tDinoA, tDinoZ, 'fill:var(--wb-fg);opacity:.55');
+        el('rect', { x: L, y: b.top, width: pw, height: BH, style: 'fill:none;stroke:var(--wb-border-strong);stroke-width:1' }, svg);
+        var lastR = -1e9;
+        b.ticks.forEach(function (tk, j) {
+          var x = xs(b, tk.t);
+          el('line', { x1: x, x2: x, y1: b.top + BH, y2: b.top + BH + 4, 'class': 'sh-ax' }, svg);
+          var w = tw(tk.s, 11), lx = clamp(x - w / 2, 4, W - 4 - w);
+          if (lx > lastR + 6) { txt(svg, lx, b.top + BH + 16, tk.s, 'sh-t sh-t--m', 'start'); lastR = lx + w; }
+        });
+        EV.forEach(function (ev, j) {
+          var te = sec(ev.y);
+          if (te < b.t0 || te > b.t1 || j === i) return;
+          var x = xs(b, te);
+          el('line', { x1: x, x2: x, y1: b.top - 3, y2: b.top + BH + 3, style: 'stroke:var(--wb-fg);stroke-width:1;opacity:.5' }, svg);
+        });
+        var titleW = tw(b.title, 11, true);
+        txt(svg, L, b.top - 7, b.title, 'sh-t sh-t--s sh-t--b', 'start');
+        /* mốc đang chọn: vẽ ở mọi dải chứa nó; nhãn ở dải mịn nhất chứa nó */
+        if (t >= b.t0 && t <= b.t1) {
+          var x = xs(b, t);
+          el('line', { x1: x, x2: x, y1: b.top - 5, y2: b.top + BH + 5, style: 'stroke:var(--wb-fg);stroke-width:2.2' }, svg);
+          el('circle', { cx: x, cy: b.top - 5, r: 3.5, style: 'fill:var(--wb-fg)' }, svg);
+          var finest = (k === 2) || (k === 1 && t < DAY - 60) || (k === 0 && t < DAY - 3600);
+          if (finest) {
+            var lab = clock(t) + ' · ' + e.n;
+            if (tw(lab, 12, true) > pw - titleW - 16) lab = clock(t);
+            var w2 = tw(lab, 12, true), lx2 = clamp(x - w2 / 2, L + titleW + 12, W - R - w2);
+            txt(svg, lx2, b.top - 7, lab, 'sh-t sh-t--b', 'start');
+          }
+        }
+      });
+      /* đường nối phóng to: giờ cuối của dải trên → cả dải giữa; phút cuối của dải giữa → cả dải dưới */
+      function zoom(bUp, bDown, t0) {
+        var y0 = bUp.top + BH + 21, y1 = bDown.top - 18;
+        el('path', { d: 'M' + xs(bUp, t0) + ' ' + y0 + ' L' + L + ' ' + y1 +
+          ' M' + xs(bUp, DAY) + ' ' + y0 + ' L' + (W - R) + ' ' + y1,
+          style: 'fill:none;stroke:var(--wb-neutral);stroke-width:1;stroke-dasharray:3 3' }, svg);
+      }
+      zoom(bands[0], bands[1], DAY - 3600);
+      zoom(bands[1], bands[2], DAY - 60);
+      /* chú giải: ô màu thật, không dùng ký tự — ký tự không mang màu của dải */
+      var LEG = [
+        { s: 'chỉ vi sinh vật', st: 'fill:var(--wb-neutral);opacity:.55' },
+        { s: 'sinh vật lớn', st: 'fill:var(--wb-neutral-strong);opacity:.75' },
+        { s: 'thời khủng long', st: 'fill:var(--wb-fg);opacity:.55' }
+      ];
+      var lx3 = L, ly3 = W < 440 ? H - 26 : H - 12;
+      LEG.forEach(function (g) {
+        var w3 = 14 + tw(g.s, 11) + 12;
+        if (lx3 + w3 > W - R) { lx3 = L; ly3 += 16; }
+        el('rect', { x: lx3, y: ly3 - 8, width: 10, height: 10, style: g.st }, svg);
+        txt(svg, lx3 + 14, ly3 + 1, g.s, 'sh-t sh-t--s', 'start');
+        lx3 += w3;
+      });
+    }
+    onInput(['ck-i'], draw);
+  })();
+})();
+</script>
+</body>
+</html>
