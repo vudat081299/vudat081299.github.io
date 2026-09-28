@@ -6,7 +6,8 @@ một shell, và **toàn bộ chữ lẫn số nằm ở `data/shop.json`** ch�
 Live: <https://vudat081299.github.io/shop/>
 
 > **Sắp sửa gì trong đây?** Đọc [CLAUDE.md](CLAUDE.md) trước — luật viết mã và những lớp lỗi
-> đã trả giá một lần. Phiên trước để lại gì thì xem [HANDOFF.md](HANDOFF.md). Muốn biết *vì
+> đã trả giá một lần. Việc còn dở ở [HANDOFF.md](HANDOFF.md), điều đã chốt ở
+> [DECISIONS.md](DECISIONS.md), nhật ký các phiên ở [HISTORY.md](HISTORY.md). Muốn biết *vì
 > sao* dựng thứ này thì vào [docs/00-READ-THIS-FIRST.md](docs/00-READ-THIS-FIRST.md).
 > File này chỉ nói kiến trúc.
 
@@ -91,7 +92,7 @@ npm i -g playwright-core playwright && npx playwright install chromium
 ## Cái gì lên web, cái gì không
 
 `.github/workflows/deploy.yml` rsync cả cây thư mục, nên **mặc định là công khai** — và từ
-21/09/2026 thì **mọi thứ trong `shop/` đều công khai**, kể cả `docs/` và file này.
+21/09/2026 thì **mọi thứ trong `shop/` đều công khai**, kể cả `docs/` và file này (SHOP-007).
 
 Trước đó `docs/` và `shop/*.md` bị loại trừ; chủ repo đã gỡ hai dòng ấy vì anh muốn đọc bộ tài
 liệu trên web và coi nó là kế hoạch chứ không phải bí mật. `check_publish` trong `lint-shop.py`
