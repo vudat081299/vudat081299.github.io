@@ -270,6 +270,24 @@
   #tetlock .tl-no { display: block; font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .04em; color: var(--wb-fg-subtle); margin-top: 3px; }
   #tetlock .hw-tw th { white-space: normal; }
   @media (max-width: 620px) { #tetlock .tl-pick { display: flex; } #tetlock .tl-pick > .wb-btn { flex: 1 1 0; } }
+
+  /* ---- diamond ---- */
+  /* Sơ đồ chuỗi nhân quả và mô hình độ dài ngày: dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
+  #diamond .dm-chain { max-width: 520px; }
+  #diamond .dm-chain .hw-vs { font-size: 11px; }
+  #diamond .dm-chain .hw-vt { font-size: 12.5px; }
+  #diamond .hw-viz .hw-src { max-width: 520px; }
+  #diamond .dm-svg { max-width: 520px; }
+  #diamond .dm-svg .hw-vs { font-size: 11.5px; }
+  #diamond .dm-svg .hw-vt { font-size: 12.5px; }
+  #diamond .dm-val { display: inline-block; min-width: 150px; }
+  #diamond .dm-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
+  #diamond .dm-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; min-height: 3.2em; }
+  #diamond .dm-out { margin-top: 12px; }
+  #diamond .hw-quote i { font-style: italic; color: var(--wb-fg); }
+  @media (max-width: 620px) { #diamond .dm-pick { display: flex; } #diamond .dm-pick > .wb-btn { flex: 1 1 0; } }
+  /* Trên điện thoại hình mô hình co còn 0,7–0,9 lần viewBox: nâng cỡ chữ để nhãn không nhỏ dưới ~9 px. */
+  @media (max-width: 620px) { #diamond .dm-svg .hw-vs { font-size: 13px; } #diamond .dm-svg .hw-vt { font-size: 14px; } }
 </style>
 </head>
 <body class="wb-app">
@@ -326,6 +344,10 @@
       <li><b>Superforecasting:</b> Độ vững sửa hai điều hay được trích về dự án: câu “hơn nhà phân tích có tin mật 30%” gốc là một bài báo năm 2013 (phân tích đầy đủ: phương pháp gộp của cả dự án, không phải từng siêu dự báo viên, tốt hơn chừng 35%); và một phân tích lại năm 2025 thấy tác dụng của huấn luyện và làm nhóm có thể mất đi khi kiểm soát thêm biến. Độ vững của mục Galef vẫn dẫn Mellers 2014 như bằng chứng tốt nhất; chủ trang có thể muốn thêm một câu ở đó.</li>
       <li><b>Superforecasting:</b> mục dài ≈3.200 tiếng phần chữ (khoảng 2.200 từ), cộng ≈300 tiếng trong mô hình (~12 phút đọc), đúng trần; để giữ trần đã bỏ ví dụ “mắt chuồn chuồn”. Máy chấm điểm cho mười lời đoán cùng một mức chắc, để thấy điểm tốt nhất rơi đúng vào tỉ lệ đoán trúng; số chính theo thang 0–2 của sách, bản 0–1 ghi kèm. Ngoài đề bài, Độ vững thêm kết quả giải XPT (2022, đối chiếu năm 2025) về rủi ro AI.</li>
       <li><b>Trang chung — mục 08 Rosling (<i>Factfulness</i>):</b> agent làm mục này bị dừng theo lệnh của chủ trang khi đang cắt cho vừa độ dài, nên phiên điều phối không làm lại và không đăng phần dở. Nhóm 4 hiện chỉ có Diamond và Acemoglu &amp; Robinson, chỗ số 08 để trống. Muốn có mục này thì yêu cầu làm lại.</li>
+      <li><b>Guns, Germs, and Steel:</b> bản tiếng Việt ghi theo Znews (NXB Tri Thức phát hành năm 2007; Omega Plus in lại từ 2016, cùng NXB Thế Giới) và tin giải A Giải thưởng Sách Quốc gia lần thứ tư, 2021. Báo Tin Tức cùng dịp viết sách “xuất bản tại Việt Nam từ năm 1998”, lệch với năm 2007, nên mục không dùng con số ấy; chưa kiểm được năm in đầu trên trang của NXB.</li>
+      <li><b>Guns, Germs, and Steel:</b> mô hình độ dài ngày là cách trang này minh hoạ một ý của chương 10 (cùng vĩ độ thì cùng độ dài ngày, cùng nhịp mùa), chỉ tính độ dài ngày, không tính khí hậu. Ví dụ ngô (có ở Balsas 8.700 năm trước, ở Tây Nam nước Mỹ khoảng 4.100 năm trước, gen quang kỳ ZmCCT) lấy từ ba bài trên PNAS, không từ sách. Sơ đồ chuỗi nhân quả do trang tự vẽ, không chép hình của sách.</li>
+      <li><b>Guns, Germs, and Steel:</b> Độ vững có vài ý ngoài đề bài: lao ở người không đến từ bò (Brosch 2002); tổ tiên lúa mì không cho nhiều hạt hơn cỏ hoang hạt nhỏ (Preece 2015); Restall về đồng minh bản địa; Pomeranz về thời điểm châu Âu vượt Trung Quốc. Thư đáp của Acemoglu và Robinson trên NYRB (8/2012) không mở được, nên mục chỉ nói có thư đáp, không tóm nội dung.</li>
+      <li><b>Guns, Germs, and Steel:</b> mục dài ≈3.150 tiếng phần chữ (khoảng 2.150 từ), cộng ≈350 tiếng trong mô hình (~12 phút đọc), sát trần 2.200 từ. Để khỏi trỏ vào mục Rosling đã dừng, câu thứ hai trong “Nó dẫn đi đâu” của mục Tetlock được sửa để dẫn sang mục này, và đoạn giới thiệu nhóm 4 viết lại cho hai cuốn.</li>
     </ul>
   </aside>
 
@@ -409,7 +431,18 @@
         </div>
       </div>
     </a>
-    <!-- 08 rosling · 09 diamond · 10 acemoglu: chèn sau thẻ 07 -->
+    <!-- 08 rosling: chỗ trống, chèn giữa thẻ 07 và thẻ 09 nếu làm lại -->
+    <a class="wb-card wb-card--hover wb-card--pad" href="#diamond">
+      <div class="wb-media">
+        <span class="wb-avatar wb-avatar--solid wb-avatar--sm">09</span>
+        <div class="wb-media__body">
+          <p class="bb-card__k">Guns, Germs, and Steel</p>
+          <p class="wb-media__title">Súng, vi trùng và thép</p>
+          <p class="wb-media__text">Vì sao người Á–Âu đi chinh phục châu Mỹ chứ không phải ngược lại: chuỗi nhân quả từ cây trồng, vật nuôi và hình dáng lục địa tới súng, thép và dịch bệnh.</p>
+        </div>
+      </div>
+    </a>
+    <!-- 10 acemoglu: chèn sau thẻ 09 -->
   </div>
 
   <div class="hw-layout">
@@ -431,7 +464,9 @@
       <a class="wb-sidenav__link" href="#tetlock">Superforecasting</a>
 
       <div class="wb-sidenav__section" style="margin-top:12px">The world</div>
-      <!-- 08 rosling · 09 diamond · 10 acemoglu -->
+      <!-- 08 rosling: chỗ trống -->
+      <a class="wb-sidenav__link" href="#diamond">Guns, Germs, and Steel</a>
+      <!-- 10 acemoglu -->
     </nav>
 
     <div class="wb-stack" style="--wb-stack-gap:48px">
@@ -1589,7 +1624,7 @@ Mỗi lần sai:  2 × 0,9² = 1,62
 
         <div class="bb-next">
           <p><b>Bạn vừa có:</b> một cách biến lời đoán thành thứ chấm được (con số, hạn chót, điểm Brier), và năm thói quen của người đoán giỏi: chia nhỏ, lấy tỉ lệ nền làm gốc, sửa từng chút, nói đúng mức chắc, soát lại cả lần trúng.</p>
-          <p><b>Nó dẫn đi đâu:</b> Tetlock đo xem ai đoán đúng tương lai. Nhưng nhiều người còn đoán sai cả hiện tại: thế giới hôm nay giàu lên hay nghèo đi, trẻ em được tiêm chủng nhiều hơn hay ít hơn? Nhóm cuối của trang, <a href="#g-world">Thế giới</a>, bắt đầu từ câu hỏi ấy.</p>
+          <p><b>Nó dẫn đi đâu:</b> Tetlock đo xem ai đoán đúng tương lai. Có những câu hỏi thì phải nhìn ngược lại cả vạn năm, như <a href="#diamond">vì sao có nước giàu, nước nghèo</a>. Nhóm cuối của trang, <a href="#g-world">Thế giới</a>, bắt đầu từ câu hỏi ấy.</p>
         </div>
         <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/The_Good_Judgment_Project">Wikipedia, The Good Judgment Project</a> (sách: Crown, 29/9/2015; dự án từ 7/2011; Good Judgment Open từ 9/2015) · <a href="https://www.penguinrandomhouse.com/books/227815/superforecasting-by-philip-e-tetlock-and-dan-gardner/">Penguin Random House</a> (352 trang, lời giới thiệu) · mục lục và nội dung từng chương đối chiếu qua ghi chép của <a href="https://lifeitself.org/blog/notes-on-tetlock-and-gardners-superforecasting">Life Itself</a> và <a href="https://rufuspollock.com/post/tetlock-gardner-2015-superforecasting-the-art-and-science-of-prediction/">Rufus Pollock</a>, <a href="https://www.supersummary.com/superforecasting/chapters-5-7-summary/">SuperSummary</a> (chương 5), <a href="https://www.shortform.com/blog/auftragstaktik/">Shortform</a> (chương 10) · bản tiếng Việt: <a href="https://shop.alphabooks.vn/sieu-du-bao-superforecasting-nghe-thuat-va-khoa-hoc-du-doan-tuong-lai-p12523309.html">Alpha Books</a> (Lê Thiện Trí dịch, NXB Thế Giới, 382 trang), <a href="https://www.netabooks.vn/sieu-du-bao-nghe-thuat-va-khoa-hoc-du-doan-tuong-lai-philip-e-tetlock-dan-gardner">NetaBooks</a> (5/2026), <a href="https://waka.vn/ebook/sieu-du-bao-philip-e-tetlock-dan-gardner-bmdgDW.html">Waka</a> (bản điện tử, 2018) · số liệu và đoạn trích trong sách đối chiếu qua <a href="https://slatestarcodex.com/2016/02/07/list-of-passages-i-highlighted-in-my-copy-of-superforecasting/">Scott Alexander, 2016</a>, <a href="https://aiimpacts.org/evidence-on-good-forecasting-practices-from-the-good-judgment-project/">AI Impacts</a> và <a href="https://aiimpacts.org/evidence-on-good-forecasting-practices-from-the-good-judgment-project-an-accompanying-blog-post/">bài đi kèm</a>, <a href="https://www.econlib.org/archives/2015/10/outside_first.html">Bryan Caplan, 2015</a> (nhà Renzetti), <a href="https://www.econlib.org/archives/2015/10/superforecastin.html">Caplan, 2015</a> (bản beta mãi mãi), <a href="https://commoncog.com/how-the-superforecasters-do-it/">Commoncog</a> (Fermi), <a href="https://blog.jcx.au/posts/tetlock-and-gardners-superforecasting-the-art-and-science-of-prediction">Jason Collins, 2016</a> (ca Arafat), <a href="https://www.shortform.com/blog/superforecasting-review/">Shortform</a> (lời đáp Taleb) · <a href="https://faculty.wharton.upenn.edu/wp-content/uploads/2012/08/Tetlock-16.pdf">Tschoegl &amp; Armstrong, 2007</a> (điểm sách <i>Expert Political Judgment</i>) · <a href="https://en.wikipedia.org/wiki/Philip_E._Tetlock">Wikipedia, Philip E. Tetlock</a> · <a href="https://press.princeton.edu/books/hardcover/9780691178288/expert-political-judgment">Princeton University Press</a> · <a href="https://www.cia.gov/resources/csi/static/Words-of-Estimative-Probability.pdf">Kent, 1964</a> (NIE 29-51 và bảng cụm từ) · <a href="https://bpb-us-e1.wpmucdn.com/sites.dartmouth.edu/dist/0/433/files/2014/06/Friedman-War-and-Chance-Introduction-1qzp5lr.pdf">Friedman, <i>War and Chance</i></a> (Vịnh Con Heo) · <a href="https://en.wikipedia.org/wiki/Brier_score">Wikipedia, Brier score</a> (Brier, 1950) · <a href="https://www.gjopen.com/faq">Good Judgment Open</a> (thang 0–2) · <a href="https://doi.org/10.1177/0956797614524255">Mellers và cs., 2014</a> · <a href="https://doi.org/10.1287/deca.2014.0293">Baron và cs., 2014</a> (đẩy trung bình ra xa 50%) · <a href="https://doi.org/10.1093/isq/sqx078">Friedman và cs., 2018</a> · <a href="https://goodjudgment.com/wp-content/uploads/2020/11/Goldstein-et-al-GJP-vs-ICPM.pdf">Goldstein và cs.</a> (MITRE, 2015) và <a href="https://forum.effectivealtruism.org/posts/JQaeuuWiFfXCGDKNp/comparing-superforecasting-and-the-intelligence-community">Urtubey De Césaris &amp; Koehler, 2022</a> (con số 30%) · <a href="https://doi.org/10.1177/09567976241266481">Hauenstein và cs., 2025</a> và <a href="https://corporate.jcx.au/better-forecasting">ghi chú của Jason Collins</a> · <a href="https://forecastingresearch.org/research/existential-risk-persuasion-tournament">Forecasting Research Institute, 2023</a> và <a href="https://forecastingresearch.org/research/near-term-xpt-accuracy">2025</a> · <a href="https://www.stat.berkeley.edu/~aldous/157/Papers/taleb_tetlock.pdf">Taleb &amp; Tetlock, 2013</a>.</p>
       </section>
@@ -1598,10 +1633,181 @@ Mỗi lần sai:  2 × 0,9² = 1,62
       <div class="hw-part-head" id="g-world">
         <p class="kicker">Nhóm 4 · The world</p>
         <h2>Thế giới — nó đang thật sự ra sao, và vì sao nước giàu nước nghèo</h2>
-        <p>Ba cuốn về thế giới: <b>Rosling</b> cho thấy phần đông chúng ta hình dung thế giới tệ hơn và cũ hơn thực tế, còn <b>Diamond</b> và <b>Acemoglu &amp; Robinson</b> là hai câu trả lời đối nghịch cho câu hỏi vì sao có nước giàu nước nghèo: do địa lý, hay do thể chế.</p>
+        <p>Hai cuốn, hai câu trả lời đối nghịch cho cùng một câu hỏi: vì sao có nước giàu, nước nghèo? <b>Diamond</b> tìm câu trả lời ở địa lý: cây, thú hoang và hình dáng lục địa. <b>Acemoglu &amp; Robinson</b> tìm ở thể chế: luật chơi con người đặt ra cho nhau.</p>
       </div>
 
-      <!-- 08 rosling · 09 diamond · 10 acemoglu -->
+      <!-- 08 rosling: chỗ trống -->
+
+      <section class="bb-book" id="diamond">
+        <p class="bb-book__eyebrow"><b>09</b> — Jared Diamond · 1997</p>
+        <h3 class="bb-book__title">Súng, vi trùng và thép</h3>
+        <p class="bb-book__orig"><i>Guns, Germs, and Steel: The Fates of Human Societies</i> (1997; giải Pulitzer 1998) · bản tiếng Việt: <i>Súng, vi trùng và thép: Định mệnh của các xã hội loài người</i>, Trần Tiễn Cao Đăng dịch, NXB Tri Thức phát hành năm 2007; nay NXB Thế Giới và Omega Plus in lại, giải A Giải thưởng Sách Quốc gia 2021</p>
+        <p class="hw-lede">Người Á–Âu đi chinh phục châu Mỹ chứ không phải ngược lại, <b>không vì họ giỏi hơn</b>, mà vì lục địa của họ được chia bài tốt hơn: nhiều cây và thú hoang dễ thuần hoá, và một trục Đông–Tây cho cây, thú, ý tưởng lan xa. Súng, thép và vi trùng chỉ là những quân bài lật ra sau cùng.</p>
+        <div class="bb-verdict">
+          <span class="bb-verdict__k">Đọc gì trong bản gốc</span><p class="bb-verdict__v"><b>Mở đầu</b>, “Câu hỏi của Yali” (<i>Yali's Question</i>): đặt câu hỏi và gạt bỏ lời giải thích bằng chủng tộc. <b>Chương 3</b>, “Va chạm ở Cajamarca” (<i>Collision at Cajamarca</i>): cả cuốn sách thu vào một buổi chiều. Rồi <b>Phần 2</b> (chương 4–10), về nông nghiệp, nhất là <b>chương 4</b>, “Sức mạnh nhà nông” (<i>Farmer Power</i>), nơi Diamond vẽ cả chuỗi nhân quả; <b>chương 9</b>, nguyên lý Anna Karenina; <b>chương 10</b>, trục lục địa. Tên chương tiếng Việt do trang này dịch.</p>
+          <span class="bb-verdict__k">Bỏ qua được</span><p class="bb-verdict__v"><b>Phần 4</b> (chương 15–19; các bản in sau thêm một chương về Nhật Bản): đem cùng bộ khung đi qua từng vùng, từ Úc và New Guinea tới Đông Á, châu Phi. Nắm được lập luận rồi thì chỉ cần đọc chương về vùng mình tò mò.</p>
+          <span class="bb-verdict__k">Mục này</span><p class="bb-verdict__v">~12 phút đọc, kèm một mô hình cho thấy vì sao hướng đi của cây trồng quan trọng hơn quãng đường</p>
+        </div>
+
+        <h4 class="bb-h4" id="diamond-khung">Bộ khung</h4>
+        <p class="hw-p"><b>Câu hỏi của Yali.</b> Tháng 7/1972, trên một bãi biển ở New Guinea, Diamond, khi ấy đang nghiên cứu chim, đi bộ cùng Yali, một chính khách địa phương. Yali hỏi: vì sao người da trắng làm ra bao nhiêu “hàng hoá” (<i>cargo</i>) đem tới đây, còn người New Guinea gần như chẳng có gì của riêng mình? Hỏi rộng ra: vì sao của cải và quyền lực trên thế giới chia như hôm nay, chứ không theo cách khác?</p>
+        <p class="hw-p"><b>Câu trả lời dễ nghe nhất là sai.</b> Lời giải thích từng phổ biến nhất là do con người khác nhau: dân tộc này thông minh hơn, chăm hơn dân tộc kia. Nó nghe có lý vì kết cục trông như bằng chứng: đầu thế kỷ 20, các đế quốc châu Âu cai trị phần lớn thế giới. Diamond bác thẳng: không có bằng chứng về chênh lệch trí tuệ bẩm sinh giữa các dân tộc; lịch sử mỗi dân tộc rẽ lối vì môi trường sống khác nhau, không vì sinh học.</p>
+        <div class="hw-quote">
+          Lục địa như một ván bài: ai được chia nhiều quân tốt thì dễ thắng, dù người cầm bài chẳng giỏi hơn ai.
+          <cite>Chỗ ví von hỏng: trong ván bài, người chơi dở vẫn thua với bài tốt. Diamond ít bàn tới cách chơi, và đó là chỗ sách bị chê nhiều nhất (xem Độ vững).</cite>
+        </div>
+        <p class="hw-p"><b>Chuỗi nhân quả.</b> Cả cuốn là một chuỗi, đọc từ trên xuống: loài hoang dễ thuần và hình dáng lục địa quyết định ai có cây trồng, vật nuôi sớm; lương thực dư cho dân đông, ở yên một chỗ, nuôi được người không làm ruộng; từ đó ra nhà nước, chữ viết, kim loại; còn sống sát gia súc và chen chúc đông người thì sinh ra vi trùng. Các phần dưới đi qua từng mắt xích.</p>
+        <div class="hw-viz">
+          <div class="wb-chart">
+            <svg class="wb-chart__svg dm-chain" viewBox="0 0 360 352" role="img" aria-label="Sơ đồ chuỗi nhân quả của sách. Địa lý, gồm loài hoang dễ thuần và lục địa trải Đông–Tây, cho cây trồng và vật nuôi. Hai thứ ấy cho lương thực dư, dân đông, ở yên một chỗ; từ đó có người không làm ruộng, rồi súng, thép, ngựa chiến, tàu, chữ viết, nhà nước. Vật nuôi cộng dân đông sinh ra vi trùng và miễn dịch. Tất cả gặp nhau ở Cajamarca năm 1532.">
+              <text x="20" y="14" class="hw-vs">nguyên nhân sâu</text>
+              <rect x="20" y="22" width="320" height="42" rx="6" class="hw-vpanel"/>
+              <text x="180" y="39" text-anchor="middle" class="hw-vt">Địa lý</text>
+              <text x="180" y="55" text-anchor="middle" class="hw-vs">loài hoang dễ thuần · lục địa trải Đông–Tây</text>
+              <line x1="96" y1="64" x2="96" y2="81" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
+              <path d="M92 80 L96 86 L100 80 Z" style="fill:var(--wb-fg-muted)"/>
+              <line x1="264" y1="64" x2="264" y2="81" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
+              <path d="M260 80 L264 86 L268 80 Z" style="fill:var(--wb-fg-muted)"/>
+              <rect x="20" y="86" width="152" height="42" rx="6" class="hw-vpanel"/>
+              <text x="96" y="103" text-anchor="middle" class="hw-vt">Cây trồng</text>
+              <text x="96" y="119" text-anchor="middle" class="hw-vs">lúa mì, lúa mạch, đậu</text>
+              <rect x="188" y="86" width="152" height="42" rx="6" class="hw-vpanel"/>
+              <text x="264" y="103" text-anchor="middle" class="hw-vt">Vật nuôi</text>
+              <text x="264" y="119" text-anchor="middle" class="hw-vs">cừu, dê, bò, lợn, ngựa</text>
+              <line x1="96" y1="128" x2="96" y2="145" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
+              <path d="M92 144 L96 150 L100 144 Z" style="fill:var(--wb-fg-muted)"/>
+              <line x1="212" y1="128" x2="212" y2="145" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
+              <path d="M208 144 L212 150 L216 144 Z" style="fill:var(--wb-fg-muted)"/>
+              <rect x="20" y="150" width="216" height="42" rx="6" class="hw-vpanel"/>
+              <text x="128" y="167" text-anchor="middle" class="hw-vt">Lương thực dư</text>
+              <text x="128" y="183" text-anchor="middle" class="hw-vs">dân đông · ở yên một chỗ · có kho</text>
+              <line x1="296" y1="128" x2="296" y2="269" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
+              <line x1="236" y1="171" x2="291" y2="171" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
+              <path d="M290 167 L296 171 L290 175 Z" style="fill:var(--wb-fg-muted)"/>
+              <line x1="128" y1="192" x2="128" y2="207" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
+              <path d="M124 206 L128 212 L132 206 Z" style="fill:var(--wb-fg-muted)"/>
+              <rect x="20" y="212" width="216" height="42" rx="6" class="hw-vpanel"/>
+              <text x="128" y="229" text-anchor="middle" class="hw-vt">Người không làm ruộng</text>
+              <text x="128" y="245" text-anchor="middle" class="hw-vs">thợ, lính, quan lại, người ghi sổ</text>
+              <line x1="128" y1="254" x2="128" y2="269" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
+              <path d="M124 268 L128 274 L132 268 Z" style="fill:var(--wb-fg-muted)"/>
+              <path d="M292 268 L296 274 L300 268 Z" style="fill:var(--wb-fg-muted)"/>
+              <text x="20" y="268" class="hw-vs">nguyên nhân gần</text>
+              <rect x="20" y="274" width="216" height="42" rx="6" class="hw-vpanel"/>
+              <text x="128" y="291" text-anchor="middle" class="hw-vt">Súng, thép, ngựa chiến, tàu</text>
+              <text x="128" y="307" text-anchor="middle" class="hw-vs">chữ viết, nhà nước</text>
+              <rect x="252" y="274" width="88" height="42" rx="6" class="hw-vpanel"/>
+              <text x="296" y="291" text-anchor="middle" class="hw-vt">Vi trùng</text>
+              <text x="296" y="307" text-anchor="middle" class="hw-vs">và miễn dịch</text>
+              <line x1="128" y1="316" x2="176" y2="330" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
+              <line x1="296" y1="316" x2="208" y2="330" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
+              <text x="192" y="346" text-anchor="middle" class="hw-vt">Cajamarca, 1532</text>
+            </svg>
+          </div>
+          <p class="hw-src">Sơ đồ do trang này vẽ, gộp gọn lập luận của chương 4. Mũi tên đọc là “tạo điều kiện cho”, không phải “chắc chắn dẫn tới”.</p>
+        </div>
+
+        <h4 class="bb-h4" id="diamond-gan">Cajamarca: nguyên nhân gần và nguyên nhân sâu</h4>
+        <p class="hw-p"><b>Một buổi chiều năm 1532.</b> Tháng 11 năm ấy, ở thị trấn Cajamarca trên núi Andes, Francisco Pizarro dẫn 168 người Tây Ban Nha đến gặp hoàng đế Inca Atahualpa, người có một đạo quân mà nhân chứng Tây Ban Nha ước khoảng 80.000 người đóng ngay gần đó. Chỉ trong buổi chiều ấy, họ bắt sống Atahualpa; hàng nghìn người Inca bị giết, phía Tây Ban Nha không mất một người lính nào. Atahualpa nộp tiền chuộc bằng cả một căn phòng đầy vàng, rồi vẫn bị giết năm 1533.</p>
+        <p class="hw-p"><b>Vì sao không phải ngược lại?</b> Diamond hỏi: sao Atahualpa không vượt biển sang bắt vua Tây Ban Nha? Ông kể những lợi thế trực tiếp: gươm và giáp thép, chừng chục khẩu súng hoả mai, ngựa; một trận dịch từ châu Âu tràn tới trước cả người Tây Ban Nha (sách cho là đậu mùa, sử gia còn tranh cãi), giết vị hoàng đế trước cùng người kế vị và đẩy đế chế vào nội chiến; tàu vượt đại dương; một nhà nước đủ tổ chức để cấp vốn cho chuyến đi; và chữ viết: người Tây Ban Nha có thư từ, sách vở kể cách Cortés chiếm Mexico hơn mười năm trước, còn Atahualpa không biết gì về đám người lạ.</p>
+        <p class="hw-p">Đó là <b>nguyên nhân gần</b>: những thứ trực tiếp quyết định kết cục. Sách hỏi tầng dưới, <b>nguyên nhân sâu</b>: vì sao thép, ngựa, tàu, chữ viết và vi trùng đều nằm ở phía Á–Âu? Một ví dụ gần: quán phở đông khách vì phở ngon, giá vừa (gần), nhưng có khi vì nó nằm ngay cổng một khu công nghiệp năm nghìn công nhân (sâu). Chỗ ví von hỏng: chủ quán chọn được chỗ đặt quán, còn không dân tộc nào chọn được lục địa mình sinh ra.</p>
+
+        <h4 class="bb-h4" id="diamond-chuoi">Chuỗi nhân quả: từ hạt lúa mì tới vi trùng</h4>
+        <p class="hw-p"><b>Lương thực dư là mắt xích giữa.</b> Ruộng và đàn gia súc cho nhiều ca-lo trên mỗi mảnh đất hơn hẳn săn bắt hái lượm, nên cùng một vùng nuôi được đông người hơn nhiều. Có kho thóc thì người ta ở yên một chỗ và sinh con dày hơn. Có dư thì nuôi được người không làm ra cái ăn: thợ rèn, lính chuyên nghiệp, quan lại, người ghi sổ. Từ đó mới có nhà nước, chữ viết, luyện kim; gia súc còn cho sức kéo và ngựa chiến.</p>
+        <p class="hw-p"><b>Vi trùng là sản phẩm phụ.</b> Sởi, đậu mùa, cúm là bệnh của đám đông: lây nhanh, người khỏi thì miễn dịch, nên chúng chỉ trụ được ở nơi đủ đông để luôn có người mới chưa mắc; với sởi là cỡ vài trăm nghìn người. Theo sách, nhiều bệnh như thế vốn là bệnh của gia súc chuyển sang người. Người Á–Âu sống chung với chúng hàng nghìn năm, phần lớn người lớn đã mắc từ nhỏ và mang miễn dịch; người châu Mỹ chưa từng gặp. Châu Mỹ chỉ có vài loài vật nuôi, không nuôi thành đàn lớn sát người, nên dòng bệnh gần như chỉ chảy một chiều.</p>
+        <p class="hw-p">Người Việt từng thấy bước đầu của con đường ấy: từ đầu năm 2004, cúm gia cầm H5N1 từ gà vịt lây sang người. Nó chưa lây tốt từ người sang người nên chưa thành bệnh đám đông; sởi, đậu mùa là những con virus đã đi hết đường.</p>
+
+        <h4 class="bb-h4" id="diamond-bai">Vì sao phía Á–Âu được chia bài tốt</h4>
+        <p class="hw-p"><b>Nông nghiệp không bắt đầu ở nơi đất tốt nhất.</b> Vựa lúa của thế giới hôm nay, như đồng bằng Bắc Mỹ, châu Âu, đồng cỏ pampas ở Argentina, Java, gần như không trùng với những nơi đầu tiên biết trồng cấy. Theo Diamond, trồng cấy tự nảy sinh ở nhiều nhất chín vùng, những nơi sẵn loài hoang đáng thuần nhất, kể cả New Guinea, quê của Yali. Sớm nhất là <b>Lưỡi liềm Màu mỡ</b>, dải đất hình vòng cung từ bờ đông Địa Trung Hải tới lưu vực hai sông Tigris và Euphrates, khoảng 8500 TCN.</p>
+        <p class="hw-p">Ở đó mọc hoang tổ tiên của lúa mì, lúa mạch, đậu Hà Lan, đậu lăng, và sống hoang tổ tiên của cừu, dê, bò, lợn: danh sách đến nay vẫn gồm nhiều cây, con quan trọng nhất thế giới. Mùa đông ẩm, mùa hè dài và khô ưa loại cây sống một năm, dồn sức vào hạt to: 32 trong 56 loài cỏ hạt to nhất thế giới mọc ở Lưỡi liềm và vùng lân cận. Lúa mì hoang gần như ăn được ngay; tổ tiên của ngô thì bông bé tí, phải chọn giống hàng nghìn năm mới thành bắp.</p>
+        <p class="hw-p"><b>Thú lớn còn hiếm hơn cây.</b> Diamond đếm được 148 loài thú ăn cỏ hoặc ăn tạp trên cạn nặng từ 45 kg trở lên; chỉ 14 loài được thuần hoá, và 13 trong số đó có tổ tiên hoang sống ở Á–Âu (sách tính cả Bắc Phi). Loài còn lại là lạc đà không bướu ở Andes. Châu Phi phía nam xích đạo đầy thú lớn mà không có loài nào.</p>
+        <p class="hw-p"><b>Nguyên lý Anna Karenina.</b> Tiểu thuyết của Tolstoy mở đầu rằng mọi gia đình hạnh phúc đều giống nhau, còn mỗi gia đình bất hạnh lại bất hạnh theo cách riêng. Diamond đem vào chuyện thú: muốn thuần được, một loài phải qua đủ sáu cửa, trượt một cửa là hỏng.</p>
+        <ul class="hw-ul">
+          <li><b>Ăn thứ người nuôi nổi:</b> không ai nuôi thú ăn kiến.</li>
+          <li><b>Lớn nhanh, đẻ dày:</b> voi và khỉ đột lớn quá chậm.</li>
+          <li><b>Chịu đẻ khi bị nuôi nhốt:</b> báo săn, gấu trúc không chịu.</li>
+          <li><b>Tính không quá dữ:</b> gấu xám, tê giác thì không.</li>
+          <li><b>Không hoảng loạn khi bị nhốt:</b> linh dương, hươu nai lao vào rào; tuần lộc là ngoại lệ.</li>
+          <li><b>Sống bầy có thứ bậc:</b> quen đi theo con đầu đàn, nên người đứng vào chỗ con đầu đàn được.</li>
+        </ul>
+        <p class="hw-p">Ngựa vằn là ca điển hình: họ hàng gần của ngựa và lừa, nhưng người chăn nuôi châu Phi suốt hàng nghìn năm, rồi người châu Âu đến Nam Phi từ thế kỷ 17, đều thử rồi bỏ cuộc. Theo Diamond, ngựa vằn đã cắn là không nhả, và mắt nhìn ngang tốt tới mức thấy thòng lọng bay tới mà né.</p>
+        <div class="hw-quote">
+          <i lang="en">Domesticable animals are all alike; every undomesticable animal is undomesticable in its own way.</i>
+          <cite>Diamond, chương 9: loài thuần hoá được thì giống nhau, loài không thuần được thì mỗi loài hỏng một kiểu. Chỗ ví von hỏng: bò, ngựa, lạc đà chẳng giống nhau chút nào; chúng chỉ giống ở chỗ cùng qua đủ sáu cửa.</cite>
+        </div>
+
+        <h4 class="bb-h4" id="diamond-truc">Trục Đông–Tây, trục Bắc–Nam</h4>
+        <p class="hw-p"><b>Bài tốt còn phải chuyền được.</b> Á–Âu trải dài theo chiều Đông–Tây; châu Mỹ và châu Phi trải theo chiều Bắc–Nam, riêng châu Mỹ dài hơn 14.000 km từ bắc xuống nam. Nơi cùng vĩ độ thì cùng độ dài ngày, cùng nhịp mùa, thường cùng kiểu khí hậu và bệnh cây, nên cây, con đem tới khỏi phải thích nghi lại. Lúa mì, bánh xe và chữ viết từ Tây Á lan sang cả hai phía; gà, cam quýt, đào từ Trung Quốc lan dần sang tây. Ở châu Mỹ, trước thời Columbus, lạc đà không bướu và khoai tây của Andes không tới được Mexico, còn chữ viết và bánh xe của Mexico không xuống tới Andes.</p>
+        <p class="hw-p"><b>Ngô là ca dễ thấy nhất.</b> Ngô đã có ở thung lũng sông Balsas, tây nam Mexico, từ khoảng 8.700 năm trước, nhưng tới khoảng 4.100 năm trước mới có ở miền Tây Nam nước Mỹ, cách chừng 2.000 km về phía tây bắc. Nghiên cứu gen năm 2012 tìm ra một phần lý do: ngô nhiệt đới quen ngày ngắn, gặp ngày hè dài thì ra hoa trễ; ngô chỉ lên được phía bắc khi người trồng chọn được giống bớt nhạy với độ dài ngày.</p>
+
+        <div class="bb-lab" id="diamond-lab">
+          <div class="bb-lab__head">
+            <p class="bb-lab__kick">Mô hình · độ dài ngày theo vĩ độ</p>
+            <p class="bb-lab__title">Cùng một quãng đường, đi hướng nào thì cây trồng phải thích nghi lại?</p>
+            <p class="bb-lab__hint">Một giống cây rời quê ở vĩ độ <b>18° Bắc</b>, như thung lũng Balsas ở Mexico, quê của ngô. Chọn <b>hướng đi</b> và <b>quãng đường</b>; mô hình tính độ dài ngày quanh năm ở quê cây và ở nơi đến. Mặc định gần đúng đường ngô đã đi lên miền Tây Nam nước Mỹ.</p>
+          </div>
+          <div class="bb-lab__body">
+            <div class="bb-lab__row">
+              <label for="diamond-dir">Hướng đi</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="diamond-dir" min="0" max="90" step="5" value="50" style="flex:1 1 180px"><span class="bb-mono dm-val" id="diamond-dir-l">chếch 50° lên bắc</span></div>
+            </div>
+            <div class="bb-lab__row">
+              <label for="diamond-km">Quãng đường</label>
+              <div class="wb-cluster"><input class="wb-range" type="range" id="diamond-km" min="0" max="3000" step="100" value="2000" style="flex:1 1 180px"><span class="bb-mono dm-val" id="diamond-km-l">2.000 km</span></div>
+            </div>
+            <div class="bb-lab__row">
+              <span class="k">Thử nhanh</span>
+              <div class="wb-cluster dm-pick">
+                <button class="wb-btn wb-btn--sm" type="button" id="diamond-p-corn">Đường ngô</button>
+                <button class="wb-btn wb-btn--sm" type="button" id="diamond-p-east">Về đông</button>
+                <button class="wb-btn wb-btn--sm" type="button" id="diamond-p-north">Lên bắc</button>
+              </div>
+            </div>
+            <p class="dm-cap">Độ dài ngày ở nơi đến lệch so với quê cây · lúc lệch nhiều nhất trong năm</p>
+            <p class="bb-lab__big" id="diamond-big">61 phút</p>
+            <p class="dm-sub" id="diamond-sub" aria-live="polite">Nơi đến ở vĩ độ 31,8° Bắc. Ngày dài nhất năm ở đó dài hơn quê cây 61 phút, ngày ngắn nhất ngắn hơn 59 phút.</p>
+            <svg class="bb-svg dm-svg" id="diamond-svg" viewBox="0 0 360 246" role="img" aria-label="Thước vĩ độ và hai đường độ dài ngày trong năm, ở quê cây và ở nơi đến"></svg>
+            <pre class="bb-out dm-out" id="diamond-out">Phần lên bắc: 2.000 × sin 50° ≈ 1.532 km
+Vĩ độ: 18,0° → 31,8° Bắc (≈ 111 km/độ)
+21/6:  13 giờ 13 phút → 14 giờ 14 phút
+22/12: 11 giờ 3 phút → 10 giờ 4 phút</pre>
+            <p class="bb-lab__foot"><b>Điều cần thấy:</b> đi thẳng về đông hay tây, dù xa bao nhiêu, hai đường vẫn trùng khít: cùng vĩ độ thì cùng lịch ngày dài ngày ngắn, nên giống cây đem theo không phải thích nghi lại với độ dài ngày. Chỉ phần quãng đường đi lên phía bắc mới làm hai đường tách ra, và càng đi lên càng tách xa. Theo Diamond, đó là một lý do khiến cây trồng của Lưỡi liềm Màu mỡ lan nhanh ra hai phía, còn ngô mất hàng nghìn năm mới lên tới miền Tây Nam nước Mỹ.</p>
+            <p class="bb-lab__foot">Cách tính: độ dài ngày theo công thức thiên văn chuẩn, coi mặt trời mọc khi mép trên vừa nhô khỏi chân trời phẳng; mỗi độ vĩ ≈ 111 km. Mô hình chỉ tính độ dài ngày vì nó tính chính xác được. Nhiệt độ, mùa mưa, bệnh cây cũng đổi theo vĩ độ, nhưng còn tuỳ độ cao và biển: cao nguyên Mexico lạnh hơn đồng bằng cùng vĩ độ.</p>
+          </div>
+        </div>
+
+        <h4 class="bb-h4" id="diamond-chau-au">Vì sao là châu Âu, không phải Trung Quốc</h4>
+        <p class="hw-p"><b>Trung Quốc từng dẫn trước.</b> Chuỗi trên giải thích vì sao Á–Âu thắng các lục địa khác, chưa giải thích vì sao trong Á–Âu, phần thắng rơi vào châu Âu. Trung Quốc có la bàn, giấy, nghề in, thuốc súng trước. Từ năm 1405 tới 1433, Trịnh Hoà dẫn bảy chuyến hạm đội; chuyến đầu gồm 317 thuyền, gần 28.000 người, xa nhất tới bờ Đông Phi. Rồi triều đình dừng hẳn. Theo sách, đó là kết cục của một cuộc tranh quyền giữa phe hoạn quan và phe chống họ; nước đã thống nhất thì một lệnh là dừng cả nước.</p>
+        <p class="hw-p"><b>Ở châu Âu, không ai dừng được cả châu lục.</b> Columbus, người gốc Ý, lần lượt tìm tới công tước Anjou ở Pháp, vua Bồ Đào Nha, hai đại quý tộc Tây Ban Nha, rồi vua và hoàng hậu Tây Ban Nha; theo Diamond, tới người thứ năm, và sau một lần bị từ chối, ông mới được cấp tàu. Diamond cho rằng địa lý đứng sau cả hai: châu Âu bờ biển khúc khuỷu, nhiều bán đảo, đảo lớn và núi chia cắt, nên khó gom về một mối; Trung Quốc là một khối liền, sông dài nối các vùng.</p>
+
+        <h4 class="bb-h4" id="diamond-dung">Dùng thế nào</h4>
+        <p class="hw-p">Khi đọc một lời giải thích lịch sử hay kinh tế, tách hai tầng rồi hỏi từng tầng.</p>
+        <ul class="hw-ul">
+          <li><b>Hỏi tiếp một bậc.</b> “Phố ngập vì mưa to” là nguyên nhân gần. Hỏi tiếp: cùng lượng mưa ấy, vì sao mười năm trước không ngập? Tầng dưới có thể là ao hồ bị lấp, cống không theo kịp tốc độ xây nhà, hay mưa lớn dày hơn; mỗi giả thuyết đòi một loại bằng chứng khác.</li>
+          <li><b>Thử đổi chỗ.</b> Đặt cùng những người ấy vào hoàn cảnh kia, kết cục có đổi không? Diamond gọi những so sánh như thế là thí nghiệm tự nhiên của lịch sử (chương 2 làm thử với các đảo Polynesia); trang <a href="experimentation-causal-inference.html#act5">Experimentation &amp; Causal Inference</a> có cả một chặng về cách mượn thí nghiệm tự nhiên.</li>
+          <li><b>Coi chừng tầng quá sâu.</b> “Vì địa lý” giải thích được chuyện ở thang lục địa và hàng vạn năm, nhưng gần như im lặng trước câu hỏi vì sao hai nước sát vách, cùng khí hậu, hôm nay một giàu một nghèo.</li>
+        </ul>
+        <p class="bb-key"><span class="k">Mang theo</span>Với một lời giải thích, hỏi hai câu: <b>cái gì trực tiếp gây ra kết cục</b>, và <b>vì sao cái đó có ở phía này mà không có ở phía kia</b>. Đừng dừng ở câu thứ nhất, cũng đừng nhảy cóc tới câu thứ hai.</p>
+
+        <h4 class="bb-h4" id="diamond-vung">Độ vững</h4>
+        <p class="hw-p">Khung lớn nhất của sách đứng khá vững; nhiều chi tiết đã được sửa, và lời chê nặng nhất nhắm vào chính tầm với của khung ấy.</p>
+        <ul class="hw-ul">
+          <li><b>Loài hoang và nông nghiệp sớm để lại dấu tới hôm nay: được ủng hộ.</b> Olsson và Hibbs (2005) đo theo từng nước: điều kiện địa lý và số loài hoang dễ thuần dự báo được nông nghiệp đến sớm hay muộn, và qua đó cả thu nhập ngày nay. Bức tranh Lưỡi liềm thì phức tạp hơn sách kể: nhiều nhà nghiên cứu giờ đếm chừng 16–17 loài được trồng sớm chứ không chỉ tám “cây tổ”; và một thí nghiệm năm 2015 thấy tổ tiên lúa mì, lúa mạch không cho nhiều hạt hơn các loài cỏ hoang hạt nhỏ, nên hạt to chưa chắc là lá bài tốt vì năng suất.</li>
+          <li><b>Trục Đông–Tây: có bằng chứng, khó kiểm trọn.</b> Thế giới chỉ có vài lục địa, không đủ để làm thống kê. Một nghiên cứu năm 2012 kiểm một hệ quả: vùng nào càng trải theo chiều Bắc–Nam càng giữ được nhiều ngôn ngữ riêng, đúng như thể người và ý tưởng lan theo chiều ấy chậm hơn. Gen quang kỳ của ngô, kể ở trên, ủng hộ đúng cơ chế độ dài ngày.</li>
+          <li><b>Vi trùng từ gia súc: đúng ở đại thể, sai vài ca.</b> Sởi đúng là tách ra từ virus dịch tả trâu bò, khoảng thế kỷ 6 TCN (nghiên cứu năm 2020). Nhưng bệnh lao ở người không đến từ bò như Diamond viết: phân tích gen năm 2002 cho thấy vi khuẩn lao bò mới là nhánh tách ra sau. Con số 95% người bản địa châu Mỹ chết vì dịch của sách nằm ở mức cao; một tổng hợp năm 2019 từ 119 ước tính theo vùng cho khoảng 60 triệu người năm 1492, mất chừng 90% trong một thế kỷ.</li>
+          <li><b>Cajamarca kể thiếu đồng minh.</b> Nhà sử học Matthew Restall (2003) chỉ ra người Tây Ban Nha gần như không bao giờ đánh một mình: đồng minh bản địa đông gấp bội, và nhiều người bản địa thời ấy coi cuộc chinh phục là một cuộc nội chiến có người Tây Ban Nha nhúng tay. Nguyên nhân gần vì thế còn có chính trị, không chỉ thép và ngựa.</li>
+          <li><b>Quyết định luận địa lý: lời chê nặng nhất.</b> Nhà địa lý James Blaut (1999) cho rằng lối giải thích bằng môi trường từ lâu đã được dùng để biện hộ cho sự thống trị của châu Âu, và cuốn này vẫn nằm trong truyền thống ấy. Nhiều nhà sử học và nhân học chê sách xem nhẹ lựa chọn của con người: chiến tranh, thực dân, chính sách. Chỗ yếu rõ nhất là đoạn châu Âu và Trung Quốc: Kenneth Pomeranz (2000) cho rằng vùng giàu nhất Trung Quốc và nước Anh còn ngang nhau tới khoảng năm 1800, rồi than đá và thuộc địa mới tạo ra khoảng cách. Luận điểm ấy cũng đang bị tranh cãi, nhưng nếu nó đúng thì bờ biển khúc khuỷu khó là nguyên nhân chính.</li>
+          <li><b>Địa lý hay thể chế: cuộc tranh luận còn mở.</b> Năm 2002, Acemoglu, Johnson và Robinson chỉ ra một “đảo ngược vận may”: trong các thuộc địa cũ của châu Âu, nơi giàu nhất năm 1500, như đất của Aztec, Inca, Mughal, nay nghèo hơn hẳn Mỹ, Canada, Úc; địa lý không đổi, vậy phải có thứ khác đã đổi. Năm 2012, Diamond điểm sách của Acemoglu và Robinson: đồng ý thể chế quan trọng, nhưng hỏi thể chế tốt từ đâu ra, và trả lời bằng lịch sử dài của nông nghiệp và nhà nước, cộng những tác động trực tiếp của địa lý như bệnh nhiệt đới, đất nghèo, không có đường ra biển. Hai tác giả viết thư đáp lại.</li>
+        </ul>
+
+        <div class="bb-next">
+          <p><b>Bạn vừa có:</b> cách tách nguyên nhân gần khỏi nguyên nhân sâu, và chuỗi Diamond dựng từ cây, thú hoang và hình dáng lục địa tới súng, thép, vi trùng.</p>
+          <p><b>Nó dẫn đi đâu:</b> Chuỗi ấy giải thích được vì sao Á–Âu thắng châu Mỹ, nhưng khó giải thích hai nơi sát vách, cùng đất cùng trời, mà một giàu một nghèo: hai nửa thành phố Nogales ở biên giới Mỹ–Mexico, hai miền Triều Tiên. Cuốn cuối của nhóm, của Acemoglu và Robinson, lấy chính những ca ấy để bác “giả thuyết địa lý” và đặt thể chế vào chỗ của nó.</p>
+        </div>
+        <p class="hw-src">Nguồn: <a href="https://en.wikipedia.org/wiki/Guns,_Germs,_and_Steel">Wikipedia, Guns, Germs, and Steel</a> (W. W. Norton, 3/1997; Pulitzer 1998) · <a href="https://wwnorton.com/books/Guns-Germs-and-Steel/">W. W. Norton</a> · mục lục theo thư mục bản 2017 (Norton, 494 trang) trên Internet Archive · <a href="https://newsroom.ucla.edu/magazine/landscape-of-destiny-jared-diamond">UCLA Magazine</a> (Diamond kể chuyện Yali, 7/1972) · <a href="https://doi.org/10.1038/nature01019">Diamond, 2002, Nature</a> (148 loài, 14 được thuần hoá, 13 ở Á–Âu; sáu trở ngại; ngựa vằn; chín vùng khởi phát; nơi khởi phát và vựa lúa ngày nay; 8500 TCN; trục và độ dài ngày) · chương 3, 9 và phần kết đối chiếu qua <a href="https://www.litcharts.com/lit/guns-germs-and-steel">LitCharts</a> và ghi chép của <a href="https://sive.rs/book/GunsGermsSteel">Derek Sivers</a> (Columbus) · <a href="https://en.wikipedia.org/wiki/Battle_of_Cajamarca">Wikipedia, Battle of Cajamarca</a> và <a href="https://www.britannica.com/event/Battle-of-Cajamarca-1532">Britannica</a> (168 người, 80.000 quân) · <a href="https://en.wikipedia.org/wiki/Huayna_Capac">Wikipedia, Huayna Capac</a> (trận dịch, còn tranh cãi) · bản tiếng Việt: <a href="https://znews.vn/dich-gia-choang-ngop-khi-chuyen-ngu-sung-vi-trung-va-thep-post1278839.html">Znews, 21/11/2021</a> (NXB Tri Thức, 2007; Omega Plus từ 2016), <a href="https://baotintuc.vn/van-hoa/sung-vi-trung-va-thep-xung-dang-voi-giai-thuong-sach-quoc-gia-20211124083738058.htm">Báo Tin Tức, 24/11/2021</a> (giải A), <a href="https://shop.alphabooks.vn/sung-vi-trung-va-thep-jared-diamond-p38909176.html">Alpha Books</a> · <a href="https://doi.org/10.1126/science.275.5296.65">Keeling &amp; Grenfell, 1997</a> (sởi cần cộng đồng cỡ vài trăm nghìn người) · <a href="https://www.who.int/emergencies/disease-outbreak-news/item/2004_01_24-en">WHO, 24/1/2004</a> (H5N1 ở Việt Nam) · <a href="https://doi.org/10.1098/rspb.2018.0277">Wood &amp; Lenné, 2018</a> (32 trong 56 loài cỏ hạt to) · <a href="https://en.wikipedia.org/wiki/Neolithic_founder_crops">Wikipedia, Neolithic founder crops</a> · <a href="https://doi.org/10.1073/pnas.0812525106">Piperno và cs., 2009</a> (ngô ở Balsas 8.700 năm trước) · <a href="https://doi.org/10.1073/pnas.0906075106">Merrill và cs., 2009</a> (ngô ở Tây Nam nước Mỹ năm 2100 TCN) · <a href="https://doi.org/10.1073/pnas.1203189109">Hung và cs., 2012</a> (gen ZmCCT, ngô và độ dài ngày) · <a href="https://en.wikipedia.org/wiki/Zheng_He">Wikipedia, Zheng He</a> · <a href="https://doi.org/10.1016/j.euroecorev.2003.08.010">Olsson &amp; Hibbs, 2005</a> · <a href="https://doi.org/10.1111/nph.13353">Preece và cs., 2015</a> · <a href="https://doi.org/10.1073/pnas.1205338109">Laitin, Moortgat &amp; Robinson, 2012</a> · <a href="https://doi.org/10.1126/science.aba9411">Düx và cs., 2020</a> (sởi) · <a href="https://doi.org/10.1073/pnas.052548299">Brosch và cs., 2002</a> (lao) · <a href="https://doi.org/10.1016/j.quascirev.2018.12.004">Koch và cs., 2019</a> (60,5 triệu người, mất 90%) · <a href="https://en.wikipedia.org/wiki/Seven_Myths_of_the_Spanish_Conquest">Restall, 2003</a> · <a href="https://doi.org/10.1111/j.1931-0846.1999.tb00225.x">Blaut, 1999</a> · <a href="https://en.wikipedia.org/wiki/The_Great_Divergence_(book)">Pomeranz, 2000</a> · <a href="https://doi.org/10.1162/003355302320935025">Acemoglu, Johnson &amp; Robinson, 2002</a> · <a href="https://www.nybooks.com/articles/2012/06/07/what-makes-countries-rich-or-poor/">Diamond, NYRB 7/6/2012</a> và <a href="https://www.nybooks.com/articles/2012/08/16/why-nations-fail/">thư đáp 16/8/2012</a>.</p>
+      </section>
+
+      <!-- 10 acemoglu -->
 
     </div><!-- /content column -->
   </div><!-- /hw-layout -->
@@ -2521,6 +2727,164 @@ Mỗi lần sai:  2 × 0,9² = 1,62
   if (b50) b50.addEventListener('click', function () { setConf(50); });
   if (b100) b100.addEventListener('click', function () { setConf(100); });
   if (bFit) bFit.addEventListener('click', function () { setConf(10 * clampInt(rHit.value, 5, 10, 7)); });
+  render();
+})();
+</script>
+
+<script>
+/* ---- diamond: độ dài ngày theo vĩ độ ----
+   Một giống cây rời quê ở vĩ độ 18° Bắc, đi d km theo hướng chếch a độ lên bắc (0 = thẳng về đông, 90 = thẳng lên bắc).
+   Phần đi lên bắc là d·sin a; mỗi độ vĩ ≈ 111 km, nên vĩ độ nơi đến = 18 + d·sin a / 111. Phần đi sang ngang (d·cos a)
+   không đổi vĩ độ, nên không đổi độ dài ngày: đó chính là điều mô hình muốn cho thấy.
+   Độ dài ngày: cos ω0 = (sin h0 − sin φ·sin δ) / (cos φ·cos δ), h0 = −0,833° (mép trên mặt trời vừa nhô khỏi chân trời,
+   đã tính khúc xạ); ngày dài 2·ω0/15 giờ. Xích vĩ δ = −23,44°·cos(2π(N + 10)/365), N = ngày thứ mấy trong năm; hai ngày
+   21/6 và 22/12 dùng thẳng δ = ±23,44°. Chênh lệch lấy từ số phút đã làm tròn, nên số trên trang luôn cộng trừ khớp nhau.
+   Đối số của arccos được kẹp vào [−1, 1], giá trị thanh trượt được kẹp về số hợp lệ: không bao giờ ra NaN.
+   Vĩ độ nơi đến tối đa 18 + 3000/111 ≈ 45° Bắc, nằm gọn trong thước 10°–50° và trong khung 8–16 giờ. */
+(function () {
+  var root = document.getElementById('diamond');
+  if (!root) return;
+  var box = root.querySelector('#diamond-svg'), rDir = root.querySelector('#diamond-dir'), rKm = root.querySelector('#diamond-km');
+  if (!box || !rDir || !rKm) return;
+  var lDir = root.querySelector('#diamond-dir-l'), lKm = root.querySelector('#diamond-km-l'),
+      big = root.querySelector('#diamond-big'), sub = root.querySelector('#diamond-sub'), out = root.querySelector('#diamond-out'),
+      bCorn = root.querySelector('#diamond-p-corn'), bEast = root.querySelector('#diamond-p-east'), bNorth = root.querySelector('#diamond-p-north');
+  var NS = 'http://www.w3.org/2000/svg';
+  var LAT0 = 18, KM_PER_DEG = 111, TILT = 23.44, H0 = -0.833, RAD = Math.PI / 180;
+  var RX = 22, RY0 = 218, RPX = 4;                  /* thước vĩ độ: 10° ở y = 218, mỗi độ 4 px, 50° ở y = 58 */
+  var CX0 = 100, CX1 = 348, CY0 = 218, CPX = 20;    /* đồ thị: 8 giờ ở y = 218, mỗi giờ 20 px, 16 giờ ở y = 58 */
+  var MDAY = [15, 46, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349];   /* ngày giữa mỗi tháng */
+
+  function clampNum(v, lo, hi, d) { v = parseFloat(v); return isFinite(v) ? Math.max(lo, Math.min(hi, v)) : d; }
+  function dayLen(lat, decl) {
+    var p = lat * RAD, d = decl * RAD;
+    var c = (Math.sin(H0 * RAD) - Math.sin(p) * Math.sin(d)) / (Math.cos(p) * Math.cos(d));
+    return 2 * Math.acos(Math.max(-1, Math.min(1, c))) / RAD / 15;
+  }
+  function declOf(n) { return -TILT * Math.cos(2 * Math.PI * (n + 10) / 365); }
+  /* Số kiểu Việt: dấu chấm hàng nghìn, dấu phẩy thập phân. */
+  function num(v, dp) {
+    var parts = Math.abs(v).toFixed(dp || 0).split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return parts.join(',');
+  }
+  function mins(h) { return Math.round(h * 60); }
+  function hm(m) { return Math.floor(m / 60) + ' giờ ' + (m % 60) + ' phút'; }
+  function ry(lat) { return RY0 - (Math.max(10, Math.min(50, lat)) - 10) * RPX; }
+  function cx(n) { return CX0 + (n - 1) / 364 * (CX1 - CX0); }
+  function cy(h) { return CY0 - (Math.max(8, Math.min(16, h)) - 8) * CPX; }
+  function el(tag, attrs, style, text) {
+    var e = document.createElementNS(NS, tag), k;
+    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (style) e.setAttribute('style', style);
+    if (text != null) e.textContent = text;
+    box.appendChild(e);
+    return e;
+  }
+
+  function draw(a, lat1, gapS) {
+    var halo = 'paint-order:stroke;stroke:var(--wb-canvas);stroke-width:3px;stroke-linejoin:round';
+    var n, x, d0 = '', d1 = '', back = '', h0, h1, i;
+    while (box.firstChild) box.removeChild(box.firstChild);
+
+    /* La bàn nhỏ: mũi tên chỉ hướng đi, B = bắc, Đ = đông. */
+    el('circle', { cx: 38, cy: 26, r: 13 }, 'fill:none;stroke:var(--wb-border-strong);stroke-width:1');
+    el('text', { x: 38, y: 10, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, 'B');
+    el('text', { x: 55, y: 30, 'class': 'hw-vs' }, null, 'Đ');
+    el('line', { x1: 38, y1: 26, x2: (38 + 11 * Math.cos(a * RAD)).toFixed(1), y2: (26 - 11 * Math.sin(a * RAD)).toFixed(1) },
+      'stroke:var(--wb-fg);stroke-width:2;stroke-linecap:round');
+    el('circle', { cx: 38, cy: 26, r: 2 }, 'fill:var(--wb-fg)');
+
+    /* Thước vĩ độ: vòng rỗng là quê cây, chấm đặc là nơi đến. */
+    el('line', { x1: RX, y1: ry(50), x2: RX, y2: ry(10) }, 'stroke:var(--wb-border-strong);stroke-width:1');
+    [10, 20, 30, 40, 50].forEach(function (v) {
+      el('line', { x1: RX - 3, y1: ry(v), x2: RX + 3, y2: ry(v) }, 'stroke:var(--wb-border-strong);stroke-width:1');
+      el('text', { x: RX + 8, y: ry(v) + 4, 'class': 'hw-vs' }, null, v + '°');
+    });
+    el('text', { x: 4, y: 239, 'class': 'hw-vs' }, null, 'vĩ độ Bắc');
+    if (Math.abs(ry(lat1) - ry(LAT0)) > 0.5) el('line', { x1: RX, y1: ry(LAT0), x2: RX, y2: ry(lat1).toFixed(1) }, 'stroke:var(--wb-fg);stroke-width:2.5');
+    el('circle', { cx: RX, cy: ry(lat1).toFixed(1), r: 4 }, 'fill:var(--wb-fg)');
+    el('circle', { cx: RX, cy: ry(LAT0), r: 6.5 }, 'fill:none;stroke:var(--wb-neutral-strong);stroke-width:1.5');
+
+    /* Chú giải. */
+    el('line', { x1: 100, y1: 10, x2: 122, y2: 10 }, 'stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4');
+    el('circle', { cx: 111, cy: 10, r: 4 }, 'fill:var(--wb-canvas);stroke:var(--wb-neutral-strong);stroke-width:1.5');
+    el('text', { x: 128, y: 14, 'class': 'hw-vs' }, null, 'quê cây · 18° Bắc');
+    el('line', { x1: 100, y1: 26, x2: 122, y2: 26 }, 'stroke:var(--wb-fg);stroke-width:2.5');
+    el('circle', { cx: 111, cy: 26, r: 3.5 }, 'fill:var(--wb-fg)');
+    el('text', { x: 128, y: 30, 'class': 'hw-vs' }, null, 'nơi đến · ' + num(lat1, 1) + '° Bắc');
+
+    /* Khung đồ thị: giờ theo trục dọc, tháng theo trục ngang, vạch chấm ở ngày 21/6. */
+    [8, 10, 12, 14, 16].forEach(function (h) {
+      el('line', { x1: CX0, y1: cy(h), x2: CX1, y2: cy(h) }, h === 8 ? 'stroke:var(--wb-border-strong);stroke-width:1' : 'stroke:var(--wb-border);stroke-width:1');
+      el('text', { x: CX0 - 6, y: cy(h) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, String(h));
+    });
+    el('text', { x: CX0 - 6, y: 49, 'text-anchor': 'end', 'class': 'hw-vs' }, null, 'giờ');
+    for (i = 0; i < 12; i += 2) el('text', { x: cx(MDAY[i]).toFixed(1), y: CY0 + 16, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, 'T' + (i + 1));
+    x = cx(172).toFixed(1);
+    el('line', { x1: x, y1: cy(16), x2: x, y2: CY0 }, 'stroke:var(--wb-fg-muted);stroke-width:1;stroke-dasharray:1.5 3');
+    el('text', { x: x, y: 52, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, '21/6');
+
+    /* Hai đường độ dài ngày và dải chênh lệch giữa chúng. */
+    for (n = 1; n <= 365; n += 2) {
+      h0 = dayLen(LAT0, declOf(n)); h1 = dayLen(lat1, declOf(n));
+      d0 += (n > 1 ? ' L' : 'M') + cx(n).toFixed(1) + ' ' + cy(h0).toFixed(1);
+      d1 += (n > 1 ? ' L' : 'M') + cx(n).toFixed(1) + ' ' + cy(h1).toFixed(1);
+      back = ' L' + cx(n).toFixed(1) + ' ' + cy(h0).toFixed(1) + back;
+    }
+    el('path', { d: d1 + back + ' Z' }, 'fill:var(--wb-fg);fill-opacity:.08;stroke:none');
+    el('path', { d: d1 }, 'fill:none;stroke:var(--wb-fg);stroke-width:2.5;stroke-linejoin:round');
+    el('path', { d: d0 }, 'fill:none;stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4');
+    /* Nhãn chênh lệch đặt trên đường nơi đến ở ngày 21/6; sát mép trên quá thì chuyển xuống dưới đường quê cây. */
+    if (gapS >= 3) {
+      var yLab = cy(dayLen(lat1, TILT)) - 8;
+      if (yLab < 74) yLab = cy(dayLen(LAT0, TILT)) + 18;
+      el('text', { x: (+x + 6).toFixed(1), y: yLab.toFixed(1), 'class': 'hw-vt' }, halo, '+' + gapS + ' phút');
+    }
+  }
+
+  function render() {
+    var a = Math.round(clampNum(rDir.value, 0, 90, 50) / 5) * 5, km = Math.round(clampNum(rKm.value, 0, 3000, 2000) / 100) * 100;
+    var north = a === 0 ? 0 : a === 90 ? km : km * Math.sin(a * RAD);
+    var lat1 = LAT0 + north / KM_PER_DEG;
+    var s0 = mins(dayLen(LAT0, TILT)), s1 = mins(dayLen(lat1, TILT)), w0 = mins(dayLen(LAT0, -TILT)), w1 = mins(dayLen(lat1, -TILT));
+    var gapS = s1 - s0, gapW = w0 - w1, top = Math.max(Math.abs(gapS), Math.abs(gapW)), s;
+
+    if (lDir) lDir.textContent = a === 0 ? 'thẳng về đông' : a === 90 ? 'thẳng lên bắc' : 'chếch ' + a + '° lên bắc';
+    if (lKm) lKm.textContent = num(km) + ' km';
+    if (big) big.textContent = top + ' phút';
+
+    if (km === 0) s = 'Chưa đi đâu: nơi đến chính là quê cây.';
+    else if (lat1 - LAT0 < 0.05) s = 'Nơi đến cách quê cây ' + num(km) + ' km mà vẫn ở vĩ độ 18° Bắc: ngày dài nhất, ngày ngắn nhất y hệt quê cây.';
+    else if (top === 0) s = 'Nơi đến ở vĩ độ ' + num(lat1, 1) + '° Bắc: độ dài ngày lệch chưa tới một phút.';
+    else s = 'Nơi đến ở vĩ độ ' + num(lat1, 1) + '° Bắc. Ngày dài nhất năm ở đó dài hơn quê cây ' + gapS +
+      ' phút, ngày ngắn nhất ngắn hơn ' + gapW + ' phút.';
+    if (sub) sub.textContent = s;
+
+    if (out) {
+      /* Dòng ngắn (dưới ~42 ký tự) để khỏi gãy dòng trên điện thoại. */
+      out.textContent =
+        'Phần lên bắc: ' + num(km) + ' × sin ' + a + '° ' + (a === 0 || a === 90 ? '=' : '≈') + ' ' + num(north) + ' km\n' +
+        'Vĩ độ: 18,0° → ' + num(lat1, 1) + '° Bắc (≈ 111 km/độ)\n' +
+        '21/6:  ' + hm(s0) + ' → ' + hm(s1) + '\n' +
+        '22/12: ' + hm(w0) + ' → ' + hm(w1);
+    }
+    draw(a, lat1, gapS);
+    box.setAttribute('aria-label', 'Thước vĩ độ: quê cây ở 18° Bắc, nơi đến ở ' + num(lat1, 1) + '° Bắc. Đồ thị độ dài ngày trong năm: ngày 21/6 dài ' +
+      hm(s0) + ' ở quê cây, ' + hm(s1) + ' ở nơi đến; hai nơi lệch nhau nhiều nhất ' + top + ' phút.');
+  }
+
+  function preset(a, keepKm) {
+    var km = Math.round(clampNum(rKm.value, 0, 3000, 2000));
+    rDir.value = String(a);
+    if (!keepKm || km === 0) rKm.value = '2000';
+    render();
+  }
+  rDir.addEventListener('input', render);
+  rKm.addEventListener('input', render);
+  if (bCorn) bCorn.addEventListener('click', function () { preset(50, false); });
+  if (bEast) bEast.addEventListener('click', function () { preset(0, true); });
+  if (bNorth) bNorth.addEventListener('click', function () { preset(90, true); });
   render();
 })();
 </script>
