@@ -46,7 +46,7 @@ Quyết định của chủ trang: [DECISIONS.md](DECISIONS.md) (mã `THESIS-…
 
 - **OpenAlex:** `filter=title_and_abstract.search:<q>,from_publication_date:YYYY-01-01&sort=relevance_score:desc`.
   Tham số `search=` là fulltext và ra rác. Abstract nằm ở `abstract_inverted_index`, phải dựng
-  lại. Lọc theo trường: thêm `authorships.institutions.id:<id>` (id đã ghi ở review 2026-09-24).
+  lại. Lọc theo trường: thêm `authorships.institutions.id:<id>` (id đã ghi trong `thesis-topic-review-2026-09-24.md`).
 - **arXiv API** trả 429 / rỗng khi nhiều agent gọi song song — lúc đó tra mã arXiv qua OpenAlex
   bằng DOI `10.48550/arxiv.<id>`.
 - **License:** GitHub API không đăng nhập chỉ 60 lượt/giờ — đọc file thô
