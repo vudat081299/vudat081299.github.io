@@ -168,7 +168,40 @@
   .bb-lab__foot + .bb-lab__foot { border-top: 0; padding-top: 0; margin-top: 6px; }
   .bb-out { font-family: var(--wb-font-mono); font-size: 12px; line-height: 1.7; background: var(--wb-canvas); border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; padding: 9px 11px; overflow-x: auto; white-space: pre-wrap; word-break: break-word; color: var(--wb-fg); margin: 0; }
   .bb-mono { font-family: var(--wb-font-mono); font-size: 12px; }
-  .bb-svg { width: 100%; height: auto; display: block; margin: 0 auto; border: var(--wb-bw) solid var(--wb-border); border-radius: 6px; background: var(--wb-canvas); }
+  /* ---- hình: một bộ chữ và nét cho mọi hình của trang ----
+     Mọi hình vẽ theo đúng bề rộng thật của khung (xem BBV ở cuối trang), nên các cỡ dưới đây là px thật trên màn hình:
+     số trên trục 11 px, nhãn 12 px, số nhấn 13 px; lưới và trục 1 px, đường dữ liệu 2 px. Đậm là thứ cần nhìn, xám là nền. */
+  .bb-svg { display: block; box-sizing: border-box; width: 100%; height: auto; margin: 2px 0 0; border: var(--wb-bw) solid var(--wb-border); border-radius: 8px; background: var(--wb-canvas); }
+  .hw-viz { max-width: 860px; }
+  .bb-svg text { font-family: var(--wb-font); font-size: 12px; fill: var(--wb-fg-muted); }
+  .bb-svg .v-tick { font-size: 11px; fill: var(--wb-fg-subtle); font-variant-numeric: tabular-nums; }
+  .bb-svg .v-lab { font-size: 12px; fill: var(--wb-fg-muted); }
+  .bb-svg .v-sub { font-size: 11.5px; fill: var(--wb-fg-muted); }
+  .bb-svg .v-key { font-size: 12px; font-weight: 650; fill: var(--wb-fg); }
+  .bb-svg .v-val { font-size: 13px; font-weight: 700; fill: var(--wb-fg); font-variant-numeric: tabular-nums; }
+  .bb-svg .v-halo { paint-order: stroke; stroke: var(--wb-canvas); stroke-width: 4px; stroke-linejoin: round; }
+  .bb-svg .v-grid { stroke: var(--wb-border); stroke-width: 1; }
+  .bb-svg .v-axis { stroke: var(--wb-border-strong); stroke-width: 1; }
+  .bb-svg .v-ref { stroke: var(--wb-neutral); stroke-width: 1; stroke-dasharray: 4 4; fill: none; }
+  .bb-svg .v-guide { stroke: var(--wb-neutral); stroke-width: 1; stroke-dasharray: 2 3; }
+  .bb-svg .v-main { stroke: var(--wb-fg); stroke-width: 2; fill: none; stroke-linejoin: round; stroke-linecap: round; }
+  .bb-svg .v-alt { stroke: var(--wb-neutral-strong); stroke-width: 2; fill: none; stroke-dasharray: 6 4; stroke-linejoin: round; }
+  .bb-svg .v-ctx { stroke: var(--wb-neutral); stroke-width: 1; fill: none; }
+  .bb-svg .v-faint { opacity: .45; }
+  .bb-svg .v-dot { fill: var(--wb-fg); stroke: var(--wb-canvas); stroke-width: 2; }
+  .bb-svg .v-ring { fill: var(--wb-canvas); stroke: var(--wb-fg); stroke-width: 1.75; }
+  .bb-svg .v-ring-alt { fill: var(--wb-canvas); stroke: var(--wb-neutral-strong); stroke-width: 1.75; }
+  .bb-svg .v-circle { fill: none; stroke: var(--wb-border-strong); stroke-width: 1; }
+  .bb-svg .v-needle { stroke: var(--wb-fg); stroke-width: 2; stroke-linecap: round; }
+  .bb-svg .v-wash { fill: var(--wb-fg); fill-opacity: .07; }
+  .bb-svg .v-hi { fill: var(--wb-fg); }
+  .bb-svg .v-lo { fill: var(--wb-neutral); }
+  .bb-svg .v-track { fill: var(--wb-neutral-weak); }
+  .bb-svg .v-frame { fill: none; stroke: var(--wb-fg-muted); stroke-width: 1; stroke-dasharray: 3 2; }
+  .bb-svg .v-node { fill: var(--wb-surface); stroke: var(--wb-border-strong); stroke-width: 1; }
+  .bb-svg .v-node-end { stroke: var(--wb-fg); stroke-width: 1.5; }
+  .bb-svg .v-link { stroke: var(--wb-fg-muted); stroke-width: 1.5; fill: none; }
+  .bb-svg .v-head { fill: var(--wb-fg-muted); }
   .bb-lab .wb-btn { white-space: normal; }
   @media (max-width: 620px) {
     .bb-lab .wb-btn { min-height: 40px; padding-top: 10px; padding-bottom: 10px; }
@@ -179,24 +212,12 @@
   /* ---- manson ---- */
 
   /* ---- kahneman ---- */
-  /* Hai hình dựng trên viewBox 360 px: chặn bề rộng để chữ SVG không phình quá cỡ trên màn rộng. */
-  #kahneman .kh-vf { max-width: 480px; }
-  #kahneman .kh-vf .hw-vs { font-size: 11.5px; }
-  #kahneman .kh-vf .hw-vt { font-size: 12.5px; }
-  #kahneman .hw-viz .hw-src { max-width: 480px; }
-  #kahneman .kh-svg { max-width: 520px; }
-  #kahneman .kh-svg .hw-vs { font-size: 12px; }
-  #kahneman .kh-svg .hw-vt { font-size: 13px; }
   #kahneman .kh-val { display: inline-block; min-width: 40px; text-align: right; }
   #kahneman .kh-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
   #kahneman .kh-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; }
   #kahneman .kh-sub b { color: var(--wb-fg); font-weight: 640; }
 
   /* ---- galef ---- */
-  /* Bài tập hiệu chỉnh: hình dựng trên viewBox 360 px như mục kahneman, nên chặn bề rộng cho chữ SVG khỏi phình. */
-  #galef .gf-svg { max-width: 520px; }
-  #galef .gf-svg .hw-vs { font-size: 11.5px; }
-  #galef .gf-svg .hw-vt { font-size: 12.5px; }
   #galef .gf-no { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 4px; }
   #galef .gf-q { font-size: 15px; font-weight: 620; line-height: 1.5; margin: 0 0 12px; min-height: 3em; max-width: 60ch; }
   #galef .gf-val { display: inline-block; min-width: 40px; text-align: right; }
@@ -209,17 +230,12 @@
   @media (max-width: 620px) { #galef .gf-pick { display: flex; } #galef .gf-pick > .wb-btn { flex: 1 1 0; } }
 
   /* ---- cialdini ---- */
-  /* Mô hình dòng thác: hình dựng trên viewBox 360 px như hai mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
-  #cialdini .cd-svg { max-width: 520px; }
-  #cialdini .cd-svg .hw-vs { font-size: 12px; }
-  #cialdini .cd-svg .hw-vt { font-size: 13px; }
   #cialdini .cd-val { display: inline-block; min-width: 40px; text-align: right; }
   #cialdini .cd-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
   #cialdini .cd-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; }
   #cialdini .cd-run { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 10px 0 0; max-width: 72ch; min-height: 3.2em; }
 
   /* ---- haidt ---- */
-  /* Bảng tự soi sáu vị: hình dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
   #haidt .hd-note { font-size: 12px; color: var(--wb-fg-muted); line-height: 1.55; margin: -8px 0 14px; max-width: 76ch; }
   #haidt .hd-item { margin: 0 0 12px; }
   #haidt .hd-q { display: block; font-size: 13.5px; line-height: 1.55; color: var(--wb-fg); margin: 0 0 2px; max-width: 90ch; }
@@ -230,16 +246,9 @@
   #haidt .hd-val { display: inline-block; min-width: 100px; }
   #haidt .hd-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 16px 0 0; line-height: 1.5; }
   #haidt .hd-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; }
-  #haidt .hd-svg { max-width: 520px; }
-  #haidt .hd-svg .hw-vs { font-size: 11.5px; }
-  #haidt .hd-svg .hw-vt { font-size: 12.5px; }
   #haidt .hd-out { margin-top: 12px; }
 
   /* ---- sagan ---- */
-  /* Mô hình bậc thang bằng chứng: hình dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
-  #sagan .sg-svg { max-width: 520px; }
-  #sagan .sg-svg .hw-vs { font-size: 11.5px; }
-  #sagan .sg-svg .hw-vt { font-size: 12.5px; }
   #sagan .sg-val { display: inline-block; min-width: 118px; }
   #sagan .sg-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
   #sagan .sg-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; min-height: 3.2em; }
@@ -259,10 +268,6 @@
   }
 
   /* ---- tetlock ---- */
-  /* Máy chấm điểm Brier: hình dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
-  #tetlock .tl-svg { max-width: 520px; }
-  #tetlock .tl-svg .hw-vs { font-size: 11.5px; }
-  #tetlock .tl-svg .hw-vt { font-size: 12.5px; }
   #tetlock .tl-val { display: inline-block; min-width: 84px; }
   #tetlock .tl-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
   #tetlock .tl-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; min-height: 3.2em; }
@@ -272,28 +277,14 @@
   @media (max-width: 620px) { #tetlock .tl-pick { display: flex; } #tetlock .tl-pick > .wb-btn { flex: 1 1 0; } }
 
   /* ---- diamond ---- */
-  /* Sơ đồ chuỗi nhân quả và mô hình độ dài ngày: dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
-  #diamond .dm-chain { max-width: 520px; }
-  #diamond .dm-chain .hw-vs { font-size: 11px; }
-  #diamond .dm-chain .hw-vt { font-size: 12.5px; }
-  #diamond .hw-viz .hw-src { max-width: 520px; }
-  #diamond .dm-svg { max-width: 520px; }
-  #diamond .dm-svg .hw-vs { font-size: 11.5px; }
-  #diamond .dm-svg .hw-vt { font-size: 12.5px; }
   #diamond .dm-val { display: inline-block; min-width: 150px; }
   #diamond .dm-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
   #diamond .dm-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; min-height: 3.2em; }
   #diamond .dm-out { margin-top: 12px; }
   #diamond .hw-quote i { font-style: italic; color: var(--wb-fg); }
   @media (max-width: 620px) { #diamond .dm-pick { display: flex; } #diamond .dm-pick > .wb-btn { flex: 1 1 0; } }
-  /* Trên điện thoại hình mô hình co còn 0,7–0,9 lần viewBox: nâng cỡ chữ để nhãn không nhỏ dưới ~9 px. */
-  @media (max-width: 620px) { #diamond .dm-svg .hw-vs { font-size: 13px; } #diamond .dm-svg .hw-vt { font-size: 14px; } }
 
   /* ---- acemoglu ---- */
-  /* Mô hình bước ngoặt: dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
-  #acemoglu .ac-svg { max-width: 520px; }
-  #acemoglu .ac-svg .hw-vs { font-size: 11.5px; }
-  #acemoglu .ac-svg .hw-vt { font-size: 12.5px; }
   #acemoglu .ac-val { display: inline-block; min-width: 150px; }
   #acemoglu .ac-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
   #acemoglu .ac-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; min-height: 3.2em; }
@@ -302,20 +293,12 @@
   /* Tên tiếng Anh dưới tiêu đề cột: chữ thường, không giãn chữ, để bảng không phải cuộn ngang ở 320 px. */
   #acemoglu .ac-en { display: block; font-family: var(--wb-font-mono); font-size: 10.5px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--wb-fg-muted); margin-top: 2px; }
   @media (max-width: 620px) { #acemoglu .ac-pick { display: flex; } #acemoglu .ac-pick > .wb-btn { flex: 1 1 0; } }
-  /* Trên điện thoại hình co còn 0,8–0,9 lần viewBox: nâng cỡ chữ để nhãn không nhỏ dưới ~9 px. */
-  @media (max-width: 620px) { #acemoglu .ac-svg .hw-vs { font-size: 13px; } #acemoglu .ac-svg .hw-vt { font-size: 14px; } }
 
   /* ---- rosling ---- */
-  /* Mô hình kiến thức cũ: hình dựng trên viewBox 360 px như các mục trên, nên chặn bề rộng cho chữ SVG khỏi phình. */
-  #rosling .ro-svg { max-width: 520px; }
-  #rosling .ro-svg .hw-vs { font-size: 11.5px; }
-  #rosling .ro-svg .hw-vt { font-size: 12.5px; }
   #rosling .ro-val { display: inline-block; min-width: 84px; }
   #rosling .ro-cap { font-family: var(--wb-font-mono); font-size: 10.5px; letter-spacing: .05em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 14px 0 0; line-height: 1.5; }
   #rosling .ro-sub { font-size: 13px; color: var(--wb-fg-muted); line-height: 1.6; margin: 2px 0 12px; max-width: 72ch; min-height: 4.8em; }
   #rosling .hw-tw th { white-space: normal; }
-  /* Trên điện thoại hình co còn 0,7–0,9 lần viewBox: nâng cỡ chữ để nhãn không nhỏ dưới ~9 px. */
-  @media (max-width: 620px) { #rosling .ro-svg .hw-vs { font-size: 13px; } #rosling .ro-svg .hw-vt { font-size: 14px; } }
 </style>
 </head>
 <body class="wb-app">
@@ -347,6 +330,7 @@
   <aside class="pg-confirm" id="confirm" aria-label="Ghi chú cho chủ trang: những điểm cần xác nhận">
     <p class="pg-confirm__k">Ghi chú cho chủ trang · cần xác nhận — duyệt xong thì xoá khối này</p>
     <ul class="pg-confirm__list">
+      <li><b>Trang chung · hình (28/09):</b> cả 11 hình được vẽ lại theo đúng bề rộng thật của khung — chữ 11–13 px, nét 1–2 px trên mọi màn hình, hình trải hết khung — vẫn tông trắng–đen–xám của web-builder, số liệu giữ nguyên. Hai hình đổi cách vẽ: <b>Cialdini</b> thành hai hàng thẳng cột (gợi ý riêng / quán chọn thật) thay cho chấm có nhân nhỏ, nên câu “Điều cần thấy” đổi chữ trong ngoặc theo; <b>Rosling</b> thành một trục nhỏ cho mỗi câu (tam giác là số người ấy nhớ) thay cho lưới ô bấm.</li>
       <li><b>Trang chung:</b> ô phím “z” trong đề bài đã thuộc mục Experimentation &amp; Causal Inference (27/09), keyspace kín 36/36, nên mục Books in Brief trên trang chủ <b>không có phím tắt</b> (bỏ trường “key”, đúng luật ghi trong collection.json).</li>
       <li><b>The Subtle Art of Not Giving a F*ck:</b> sách dẫn lời Mustaine và Best từ hai cuộc phỏng vấn không tìm được bản gốc; mục thay bằng nguồn kiểm được (phim <i>Some Kind of Monster</i>, 2004; Irish Times) và bỏ chi tiết “bị đuổi nên mới gặp vợ”, vì Wikipedia ghi Best gặp vợ ở một buổi diễn của chính The Beatles.</li>
       <li><b>The Subtle Art of Not Giving a F*ck:</b> Độ vững có hai ý ngoài đề bài: con số “đủ ăn rồi thì tiền không còn liên quan tới hạnh phúc” của sách đã bị dữ liệu 2021–2023 bác; và ý “sách không hợp với người hay tự trách” dựa trên một bài điểm sách cá nhân, không phải nghiên cứu.</li>
@@ -611,7 +595,7 @@
             <p class="kh-cap">Nhóm được khen, hơn mức trung bình (triệu đồng) · tháng 1 → tháng 2</p>
             <p class="bb-lab__big" id="kahneman-big">+37 → +18</p>
             <p class="kh-sub" id="kahneman-sub">Giữ lại 50% khoảng cách. Trung bình qua rất nhiều tháng: 50%.</p>
-            <svg class="bb-svg kh-svg" id="kahneman-svg" viewBox="0 0 360 250" role="img" aria-label="Biểu đồ dốc: doanh số tháng 1 và tháng 2 của nhóm được khen và nhóm bị nhắc nhở, so với mức trung bình"></svg>
+            <svg class="bb-svg" id="kahneman-svg" viewBox="0 0 828 300" role="img" aria-label="Biểu đồ dốc: doanh số tháng 1 và tháng 2 của nhóm được khen và nhóm bị nhắc nhở, so với mức trung bình"></svg>
             <p class="bb-lab__foot"><b>Điều cần thấy:</b> may rủi 0% thì tháng 2 y hệt tháng 1; 50% thì nhóm được khen chỉ giữ chừng một nửa khoảng cách, nhóm bị nhắc nhở “tiến bộ” gần chừng ấy; 100% thì cả hai về sát trung bình. Tính trung bình qua nhiều tháng, phần giữ lại đúng bằng phần năng lực.</p>
           </div>
         </div>
@@ -671,30 +655,7 @@
         <p class="hw-p"><b>2. Né mất mát.</b> Tung đồng xu, sấp mất 100 đô, ngửa được 150 đô: phần đông từ chối, dù kỳ vọng là +25 đô. Độ lớn của hiện tượng còn tranh cãi (xem Độ vững).</p>
         <p class="hw-p"><b>3. Độ nhạy giảm dần.</b> Càng xa điểm tham chiếu, mỗi khoản thêm càng nhẹ. Năm 1981, 68% người được hỏi chịu đi 20 phút để mua rẻ hơn 5 đô một chiếc máy tính giá 15 đô; với máy giá 125 đô, chỉ còn 29%. Bớt 100 nghìn cho cái áo 300 nghìn thì đáng ghé tiệm khác; bớt 100 nghìn cho chiếc xe máy 40 triệu thì ít ai buồn đi.</p>
         <div class="hw-viz">
-          <div class="wb-chart">
-            <svg class="wb-chart__svg kh-vf" viewBox="0 0 360 250" role="img" aria-label="Đường cong giá trị của thuyết triển vọng: nhánh được phẳng dần, nhánh mất dốc hơn nhánh được, cả hai đi qua điểm tham chiếu">
-              <line x1="20" y1="92" x2="340" y2="92" style="stroke:var(--wb-border-strong);stroke-width:1"/>
-              <line x1="180" y1="18" x2="180" y2="244" style="stroke:var(--wb-border-strong);stroke-width:1"/>
-              <line x1="330" y1="92" x2="330" y2="28.7" style="stroke:var(--wb-neutral);stroke-width:1;stroke-dasharray:2 3"/>
-              <line x1="30" y1="92" x2="30" y2="234.4" style="stroke:var(--wb-neutral);stroke-width:1;stroke-dasharray:2 3"/>
-              <path d="M180.0 92.0 L178.5 93.1 L177.0 94.0 L174.0 95.7 L169.5 98.1 L163.5 101.1 L156.0 104.6 L147.0 108.7 L135.0 113.9 L120.0 120.3 L102.0 127.6 L81.0 135.9 L57.0 145.2 L30.0 155.3" style="fill:none;stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4"/>
-              <path d="M180.0 92.0 L181.5 90.9 L183.0 90.0 L186.0 88.3 L190.5 85.9 L196.5 82.9 L204.0 79.4 L213.0 75.3 L225.0 70.1 L240.0 63.7 L258.0 56.4 L279.0 48.1 L303.0 38.8 L330.0 28.7" style="fill:none;stroke:var(--wb-fg);stroke-width:2.5;stroke-linejoin:round"/>
-              <path d="M180.0 92.0 L178.5 94.5 L177.0 96.6 L174.0 100.4 L169.5 105.7 L163.5 112.4 L156.0 120.4 L147.0 129.6 L135.0 141.4 L120.0 155.6 L102.0 172.1 L81.0 190.8 L57.0 211.6 L30.0 234.4" style="fill:none;stroke:var(--wb-fg);stroke-width:2.5;stroke-linejoin:round"/>
-              <circle cx="180" cy="92" r="3.5" style="fill:var(--wb-fg)"/>
-              <text x="186" y="25" class="hw-vs">vui</text>
-              <text x="186" y="241" class="hw-vs">đau</text>
-              <text x="330" y="106" text-anchor="middle" class="hw-vs">được 100</text>
-              <text x="36" y="106" class="hw-vs">mất 100</text>
-              <text x="190" y="108" class="hw-vt">điểm tham chiếu</text>
-              <text x="322" y="74" text-anchor="end" class="hw-vs">càng xa gốc</text>
-              <text x="322" y="87" text-anchor="end" class="hw-vs">càng phẳng dần</text>
-              <line x1="24" y1="30" x2="44" y2="30" style="stroke:var(--wb-fg);stroke-width:2.5"/>
-              <text x="50" y="34" class="hw-vs">cảm giác được–mất</text>
-              <line x1="24" y1="50" x2="44" y2="50" style="stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4"/>
-              <text x="50" y="54" class="hw-vs">nếu mất chỉ đau</text>
-              <text x="50" y="67" class="hw-vs">bằng được vui</text>
-            </svg>
-          </div>
+          <svg class="bb-svg" id="kahneman-vf" viewBox="0 0 828 320" role="img" aria-label="Đường cong giá trị của thuyết triển vọng: nhánh được phẳng dần, nhánh mất dốc hơn nhánh được, cả hai đi qua điểm tham chiếu"></svg>
           <p class="hw-src">Vẽ theo tham số Tversky &amp; Kahneman ước lượng năm 1992 (độ cong 0,88, hệ số né mất mát 2,25): vạch đứt bên trái dài gấp 2,25 lần vạch bên phải, và khoảng hở giữa hai đường bên trái chính là né mất mát.</p>
         </div>
         <p class="hw-p"><b>4. Trọng số xác suất.</b> Khả năng rất nhỏ bị thổi phồng, còn chắc chắn được coi trọng hơn “gần chắc chắn” nhiều. Theo ước lượng năm 1992 của Tversky và Kahneman, với chuyện được, khả năng 1% được đối xử như chừng 5,5%, còn 99% như chừng 91%. Ghép điều này với hai nhánh của đường cong, ta được <b>mô hình bốn ô</b> (chương 29):</p>
@@ -892,7 +853,7 @@
             <p class="gf-cap">Mức chắc trung bình · tỉ lệ đúng thật</p>
             <p class="bb-lab__big" id="galef-big">Chưa chốt câu nào</p>
             <p class="gf-sub" id="galef-sub">Đích là đường chéo: nói chắc 75% thì đúng chừng 75%.</p>
-            <svg class="bb-svg gf-svg" id="galef-svg" viewBox="0 0 360 250" role="img" aria-label="Biểu đồ hiệu chỉnh: mỗi mức chắc là một điểm, cao bằng tỉ lệ câu đúng; đường chéo là hiệu chỉnh khớp"></svg>
+            <svg class="bb-svg" id="galef-svg" viewBox="0 0 828 276" role="img" aria-label="Biểu đồ hiệu chỉnh: mỗi mức chắc là một điểm, cao bằng tỉ lệ câu đúng; đường chéo là hiệu chỉnh khớp"></svg>
             <pre class="bb-out gf-out" id="galef-out">Mỗi mức chắc sẽ hiện ở đây: số câu đúng trên số câu đã chốt.</pre>
             <p class="bb-lab__foot"><b>Điều cần thấy:</b> điểm dưới đường chéo là nói chắc hơn mức mình thật sự đúng. Mỗi điểm chỉ dựa vào vài câu, nên lệch vài chục điểm phần trăm vẫn có thể do may rủi; theo Galef, vài giờ luyện thường đã thấy tiến bộ.</p>
           </div>
@@ -1141,9 +1102,9 @@
             <p class="cd-cap">Khả năng cả dòng người đổ vào quán dở</p>
             <p class="bb-lab__big" id="cialdini-big">16% số lần</p>
             <p class="cd-sub" id="cialdini-sub">Nếu 100 người tự chọn theo gợi ý riêng rồi đếm phiếu, khả năng đa số chọn nhầm chỉ là 0,0016%.</p>
-            <svg class="bb-svg cd-svg" id="cialdini-svg" viewBox="0 0 360 214" role="img" aria-label="Một trăm người theo thứ tự đến, mỗi người là một chấm: chấm đặc là vào quán A, chấm rỗng là vào quán B"></svg>
+            <svg class="bb-svg" id="cialdini-svg" viewBox="0 0 828 150" role="img" aria-label="Một trăm người theo thứ tự đến, mỗi người một cột: hàng trên là gợi ý riêng, hàng dưới là quán chọn thật"></svg>
             <p class="cd-run" id="cialdini-run" aria-live="polite">Lượt này: 4 người đầu chọn theo gợi ý riêng; từ người thứ 5, cả 96 người sau đều vào quán B, dù 69 người trong số đó có gợi ý riêng chỉ sang quán A. Cả dòng người vào quán dở.</p>
-            <p class="bb-lab__foot"><b>Điều cần thấy:</b> một quán hơn quán kia hai người là đủ để lá phiếu riêng của người đến sau không lật nổi cán cân; từ đó ai cũng vào theo, kể cả người có gợi ý ngược lại (chấm có nhân nhỏ). Ở mức 55%, cả dòng người vào nhầm quán khoảng 40% số lần; đếm phiếu độc lập chỉ sai khoảng 16%.</p>
+            <p class="bb-lab__foot"><b>Điều cần thấy:</b> một quán hơn quán kia hai người là đủ để lá phiếu riêng của người đến sau không lật nổi cán cân; từ đó ai cũng vào theo, kể cả người có gợi ý ngược lại (ô gợi ý khác màu với ô chọn ngay dưới). Ở mức 55%, cả dòng người vào nhầm quán khoảng 40% số lần; đếm phiếu độc lập chỉ sai khoảng 16%.</p>
             <p class="bb-lab__foot">Mô hình giả định ai cũng tính đúng. Thử với sinh viên đoán bi được bốc từ bình nào (1997), người đến sau bỏ gợi ý riêng để theo số đông ở 41 trên 56 lượt mà cán cân đã lệch đủ, có lượt cả dãy đoán nhầm (Anderson và Holt).</p>
           </div>
         </div>
@@ -1299,7 +1260,7 @@
             <p class="hd-cap">Số vị bạn thấy rõ (chấm từ “sai” trở lên)</p>
             <p class="bb-lab__big" id="haidt-big">3 / 6 vị</p>
             <p class="hd-sub" id="haidt-sub">Đậm nhất: thương xót (4 · rất sai). Nhạt nhất: thiêng liêng (0 · không sai).</p>
-            <svg class="bb-svg hd-svg" id="haidt-svg" viewBox="0 0 360 200" role="img" aria-label="Sáu thanh ngang, mỗi thanh là mức bạn thấy một chuyện sai, từ 0 tới 4"></svg>
+            <svg class="bb-svg" id="haidt-svg" viewBox="0 0 828 220" role="img" aria-label="Sáu thanh ngang, mỗi thanh là mức bạn thấy một chuyện sai, từ 0 tới 4"></svg>
             <pre class="bb-out hd-out" id="haidt-out" aria-live="polite">Đề nghị: cả xóm góp tiền lắp đèn cho con hẻm tối.
 Câu dễ lọt tai bạn nhất (thương xót): “Tối thế này, người già với trẻ con đi về dễ ngã, dễ bị giật đồ.”
 Câu dễ trượt khỏi tai bạn nhất (thiêng liêng): “Hẻm tối thành chỗ vứt rác, chỗ làm chuyện bậy bạ; có đèn, con hẻm sạch sẽ, tử tế trở lại.”</pre>
@@ -1414,7 +1375,7 @@ Câu dễ trượt khỏi tai bạn nhất (thiêng liêng): “Hẻm tối thà
             <p class="sg-cap">Khả năng lời khẳng định đúng, sau khi xét bằng chứng</p>
             <p class="bb-lab__big" id="sagan-big">9,1%</p>
             <p class="sg-sub" id="sagan-sub" aria-live="polite">Cần 4 bằng chứng độc lập như thế mới tới 50%, 6 cái mới qua 95%. Cũng 3 bằng chứng ấy, một chuyện thường ngày (1 trong 10) đã lên 99,1%.</p>
-            <svg class="bb-svg sg-svg" id="sagan-svg" viewBox="0 0 360 240" role="img" aria-label="Biểu đồ: khả năng lời khẳng định đúng tăng theo số bằng chứng, mỗi đường là một mức độ hiếm"></svg>
+            <svg class="bb-svg" id="sagan-svg" viewBox="0 0 828 272" role="img" aria-label="Biểu đồ: khả năng lời khẳng định đúng tăng theo số bằng chứng, mỗi đường là một mức độ hiếm"></svg>
             <p class="bb-lab__foot"><b>Điều cần thấy:</b> mỗi nấc hiếm hơn gấp 10 lần cần thêm đúng một bằng chứng tốt, nên các đường chỉ trượt sang phải từng nấc. Với chuyện phi thường, mấy bằng chứng đầu gần như không nhích con số, rồi nó mới vọt lên. Và mười bài báo chép cùng một thông cáo vẫn chỉ là một bằng chứng.</p>
             <p class="bb-lab__foot">Cách tính: tỉ lệ cược (khả năng đúng chia khả năng sai) nhân 10 sau mỗi bằng chứng độc lập, theo định lý Bayes. Lời cảm ơn của người đã khỏi yếu hơn ×10 nhiều, vì người tự khỏi vẫn cảm ơn dù sản phẩm vô tác dụng. Cùng phép tính, ở dạng đọc kết quả xét nghiệm: <a href="psychology.html#s-help">trang Psychology</a>.</p>
           </div>
@@ -1599,7 +1560,7 @@ Câu dễ trượt khỏi tai bạn nhất (thiêng liêng): “Hẻm tối thà
             <p class="tl-cap">Điểm Brier trung bình của mười lời đoán · thang 0–2, thấp là tốt</p>
             <p class="bb-lab__big" id="tetlock-big">0,50</p>
             <p class="tl-sub" id="tetlock-sub" aria-live="polite">Bản 0–1: 0,25. Ngang người nói 50% mọi lần. Nghiêng đúng 7/10 thì nói 70% mới được điểm tốt nhất: 0,42.</p>
-            <svg class="bb-svg tl-svg" id="tetlock-svg" viewBox="0 0 360 312" role="img" aria-label="Hai biểu đồ: điểm phạt của mười lời đoán, và điểm trung bình theo mức chắc nói ra"></svg>
+            <svg class="bb-svg" id="tetlock-svg" viewBox="0 0 828 270" role="img" aria-label="Hai biểu đồ: điểm phạt của mười lời đoán, và điểm trung bình theo mức chắc nói ra"></svg>
             <pre class="bb-out tl-out" id="tetlock-out">Mỗi lần đúng: 2 × (1 − 0,9)² = 0,02
 Mỗi lần sai:  2 × 0,9² = 1,62
 7 × 0,02 + 3 × 1,62 = 5,00
@@ -1727,7 +1688,7 @@ Mỗi lần sai:  2 × 0,9² = 1,62
             <p class="ro-cap">Số câu đúng của người nhớ số năm cũ · trên 5 câu</p>
             <p class="bb-lab__big" id="rosling-big">1 / 5</p>
             <p class="ro-sub" id="rosling-sub" aria-live="polite">Tinh tinh chọn bừa trung bình được 1,67 câu; cứ 100 lượt thì khoảng 54 lượt hơn người này. Chịu chọn bừa, người này trung bình còn được nhiều điểm hơn.</p>
-            <svg class="bb-svg ro-svg" id="rosling-svg" viewBox="0 0 360 370" role="img" aria-label="Năm câu hỏi: phương án người nhớ số năm cũ chọn, đáp án theo số mới nhất, và phân phối số câu đúng của tinh tinh chọn bừa"></svg>
+            <svg class="bb-svg" id="rosling-svg" viewBox="0 0 828 380" role="img" aria-label="Năm câu hỏi: phương án người nhớ số năm cũ chọn, đáp án theo số mới nhất, và phân phối số câu đúng của tinh tinh chọn bừa"></svg>
             <p class="bb-lab__foot"><b>Điều cần thấy:</b> nhớ số của những năm 1990–2010, người ấy chỉ được 0–1 câu, kém con tinh tinh, dù không đoán bừa câu nào và mọi con số họ nhớ đều đúng, cho năm ấy. Tinh tinh sai lung tung; người ấy sai cùng một phía, phía tệ hơn thực tế.</p>
             <p class="bb-lab__foot">Cách tính: tinh tinh đúng mỗi câu với xác suất một phần ba; cứ 100 lượt, số lượt đúng 0, 1, 2, 3, 4, 5 câu là khoảng 13, 33, 33, 16, 4 và 0,4. Cả năm chỉ số đều đã khá lên nên đáp án luôn là phương án sáng sủa nhất; ai biết mẹo ấy cũng được 5/5.</p>
           </div>
@@ -1903,52 +1864,7 @@ Mỗi lần sai:  2 × 0,9² = 1,62
         </div>
         <p class="hw-p"><b>Chuỗi nhân quả.</b> Cả cuốn là một chuỗi, đọc từ trên xuống: loài hoang dễ thuần và hình dáng lục địa quyết định ai có cây trồng, vật nuôi sớm; lương thực dư cho dân đông, ở yên một chỗ, nuôi được người không làm ruộng; từ đó ra nhà nước, chữ viết, kim loại; còn sống sát gia súc và chen chúc đông người thì sinh ra vi trùng. Các phần dưới đi qua từng mắt xích.</p>
         <div class="hw-viz">
-          <div class="wb-chart">
-            <svg class="wb-chart__svg dm-chain" viewBox="0 0 360 352" role="img" aria-label="Sơ đồ chuỗi nhân quả của sách. Địa lý, gồm loài hoang dễ thuần và lục địa trải Đông–Tây, cho cây trồng và vật nuôi. Hai thứ ấy cho lương thực dư, dân đông, ở yên một chỗ; từ đó có người không làm ruộng, rồi súng, thép, ngựa chiến, tàu, chữ viết, nhà nước. Vật nuôi cộng dân đông sinh ra vi trùng và miễn dịch. Tất cả gặp nhau ở Cajamarca năm 1532.">
-              <text x="20" y="14" class="hw-vs">nguyên nhân sâu</text>
-              <rect x="20" y="22" width="320" height="42" rx="6" class="hw-vpanel"/>
-              <text x="180" y="39" text-anchor="middle" class="hw-vt">Địa lý</text>
-              <text x="180" y="55" text-anchor="middle" class="hw-vs">loài hoang dễ thuần · lục địa trải Đông–Tây</text>
-              <line x1="96" y1="64" x2="96" y2="81" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
-              <path d="M92 80 L96 86 L100 80 Z" style="fill:var(--wb-fg-muted)"/>
-              <line x1="264" y1="64" x2="264" y2="81" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
-              <path d="M260 80 L264 86 L268 80 Z" style="fill:var(--wb-fg-muted)"/>
-              <rect x="20" y="86" width="152" height="42" rx="6" class="hw-vpanel"/>
-              <text x="96" y="103" text-anchor="middle" class="hw-vt">Cây trồng</text>
-              <text x="96" y="119" text-anchor="middle" class="hw-vs">lúa mì, lúa mạch, đậu</text>
-              <rect x="188" y="86" width="152" height="42" rx="6" class="hw-vpanel"/>
-              <text x="264" y="103" text-anchor="middle" class="hw-vt">Vật nuôi</text>
-              <text x="264" y="119" text-anchor="middle" class="hw-vs">cừu, dê, bò, lợn, ngựa</text>
-              <line x1="96" y1="128" x2="96" y2="145" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
-              <path d="M92 144 L96 150 L100 144 Z" style="fill:var(--wb-fg-muted)"/>
-              <line x1="212" y1="128" x2="212" y2="145" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
-              <path d="M208 144 L212 150 L216 144 Z" style="fill:var(--wb-fg-muted)"/>
-              <rect x="20" y="150" width="216" height="42" rx="6" class="hw-vpanel"/>
-              <text x="128" y="167" text-anchor="middle" class="hw-vt">Lương thực dư</text>
-              <text x="128" y="183" text-anchor="middle" class="hw-vs">dân đông · ở yên một chỗ · có kho</text>
-              <line x1="296" y1="128" x2="296" y2="269" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
-              <line x1="236" y1="171" x2="291" y2="171" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
-              <path d="M290 167 L296 171 L290 175 Z" style="fill:var(--wb-fg-muted)"/>
-              <line x1="128" y1="192" x2="128" y2="207" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
-              <path d="M124 206 L128 212 L132 206 Z" style="fill:var(--wb-fg-muted)"/>
-              <rect x="20" y="212" width="216" height="42" rx="6" class="hw-vpanel"/>
-              <text x="128" y="229" text-anchor="middle" class="hw-vt">Người không làm ruộng</text>
-              <text x="128" y="245" text-anchor="middle" class="hw-vs">thợ, lính, quan lại, người ghi sổ</text>
-              <line x1="128" y1="254" x2="128" y2="269" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
-              <path d="M124 268 L128 274 L132 268 Z" style="fill:var(--wb-fg-muted)"/>
-              <path d="M292 268 L296 274 L300 268 Z" style="fill:var(--wb-fg-muted)"/>
-              <text x="20" y="268" class="hw-vs">nguyên nhân gần</text>
-              <rect x="20" y="274" width="216" height="42" rx="6" class="hw-vpanel"/>
-              <text x="128" y="291" text-anchor="middle" class="hw-vt">Súng, thép, ngựa chiến, tàu</text>
-              <text x="128" y="307" text-anchor="middle" class="hw-vs">chữ viết, nhà nước</text>
-              <rect x="252" y="274" width="88" height="42" rx="6" class="hw-vpanel"/>
-              <text x="296" y="291" text-anchor="middle" class="hw-vt">Vi trùng</text>
-              <text x="296" y="307" text-anchor="middle" class="hw-vs">và miễn dịch</text>
-              <line x1="128" y1="316" x2="176" y2="330" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
-              <line x1="296" y1="316" x2="208" y2="330" style="stroke:var(--wb-fg-muted);stroke-width:1.5"/>
-              <text x="192" y="346" text-anchor="middle" class="hw-vt">Cajamarca, 1532</text>
-            </svg>
-          </div>
+          <svg class="bb-svg" id="diamond-chain" viewBox="0 0 828 480" role="img" aria-label="Sơ đồ chuỗi nhân quả của sách. Địa lý, gồm loài hoang dễ thuần và lục địa trải Đông–Tây, cho cây trồng và vật nuôi. Hai thứ ấy cho lương thực dư, dân đông, ở yên một chỗ; từ đó có người không làm ruộng, rồi súng, thép, ngựa chiến, tàu, chữ viết, nhà nước. Vật nuôi cộng dân đông sinh ra vi trùng và miễn dịch. Tất cả gặp nhau ở Cajamarca năm 1532."></svg>
           <p class="hw-src">Sơ đồ do trang này vẽ, gộp gọn lập luận của chương 4. Mũi tên đọc là “tạo điều kiện cho”, không phải “chắc chắn dẫn tới”.</p>
         </div>
 
@@ -2011,7 +1927,7 @@ Mỗi lần sai:  2 × 0,9² = 1,62
             <p class="dm-cap">Độ dài ngày ở nơi đến lệch so với quê cây · lúc lệch nhiều nhất trong năm</p>
             <p class="bb-lab__big" id="diamond-big">61 phút</p>
             <p class="dm-sub" id="diamond-sub" aria-live="polite">Nơi đến ở vĩ độ 31,8° Bắc. Ngày dài nhất năm ở đó dài hơn quê cây 61 phút, ngày ngắn nhất ngắn hơn 59 phút.</p>
-            <svg class="bb-svg dm-svg" id="diamond-svg" viewBox="0 0 360 246" role="img" aria-label="Thước vĩ độ và hai đường độ dài ngày trong năm, ở quê cây và ở nơi đến"></svg>
+            <svg class="bb-svg" id="diamond-svg" viewBox="0 0 828 300" role="img" aria-label="Thước vĩ độ và hai đường độ dài ngày trong năm, ở quê cây và ở nơi đến"></svg>
             <pre class="bb-out dm-out" id="diamond-out">Phần lên bắc: 2.000 × sin 50° ≈ 1.532 km
 Vĩ độ: 18,0° → 31,8° Bắc (≈ 111 km/độ)
 21/6:  13 giờ 13 phút → 14 giờ 14 phút
@@ -2128,7 +2044,7 @@ Vĩ độ: 18,0° → 31,8° Bắc (≈ 111 km/độ)
             <p class="ac-cap">Khoảng cách giữa A và B sau 16 thế hệ · thang 0–100</p>
             <p class="bb-lab__big" id="acemoglu-big">78 điểm</p>
             <p class="ac-sub" id="acemoglu-sub" aria-live="polite">A dừng ở 89, B ở 11. Không có bước ngoặt, sau 16 thế hệ hai bên chỉ cách nhau 24 điểm.</p>
-            <svg class="bb-svg ac-svg" id="acemoglu-svg" viewBox="0 0 360 240" role="img" aria-label="Hai đường qua 16 thế hệ: A đi từ 52 lên 89, B từ 48 xuống 11; bước ngoặt ở thế hệ 4 phóng đại chênh lệch 5 lần."></svg>
+            <svg class="bb-svg" id="acemoglu-svg" viewBox="0 0 828 272" role="img" aria-label="Hai đường qua 16 thế hệ: A đi từ 52 lên 89, B từ 48 xuống 11; bước ngoặt ở thế hệ 4 phóng đại chênh lệch 5 lần."></svg>
             <pre class="bb-out ac-out" id="acemoglu-out">Thế hệ 0:  A 52,0 · B 48,0 · cách 4,0
 Thế hệ 4:  A 53,1 · B 46,9 · cách 6,2
 Bước ngoặt: chênh lệch × 5
@@ -2294,21 +2210,140 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
 </script>
 
 <script>
+/* ---- BBV: bộ vẽ chung cho mọi hình của trang ----
+   Mỗi hình vẽ theo đúng bề rộng thật của khung: viewBox = số px, nên chữ và nét trong hình ra đúng cỡ đặt ở CSS
+   (.bb-svg .v-…) trên mọi màn hình. Bản trước dựng từng hình trên một viewBox 360 cố định rồi kéo giãn theo khung:
+   ở máy tính chữ 11 px phình thành 16 px và nét 2,5 px thành 3,6 px, ở điện thoại chữ teo còn chưa tới 10 px.
+   BBV.chart(svg, vẽ) trả về hàm vẽ lại; vẽ(bút, W) vẽ ở bề rộng W và trả về chiều cao. Hình tự vẽ lại khi bề rộng
+   khung đổi (xoay máy, kéo cửa sổ). Nhãn nào cần tránh nhau thì đo bằng bút.width(): phông hệ thống mỗi máy một khác. */
+var BBV = (function () {
+  'use strict';
+  var NS = 'http://www.w3.org/2000/svg';
+  var SW = { dot: 10, ring: 10, hi: 10, lo: 10, tri: 10, frame: 14, linedot: 22, dashring: 22 };
+  function f(v) { return typeof v === 'number' ? String(Math.round(v * 10) / 10) : v; }
+  function Pen(svg, W) { this.svg = svg; this.W = W; }
+  Pen.prototype.add = function (tag, a, text) {
+    var e = document.createElementNS(NS, tag), k;
+    for (k in a) if (Object.prototype.hasOwnProperty.call(a, k) && a[k] != null) e.setAttribute(k, f(a[k]));
+    if (text != null) e.textContent = text;
+    this.svg.appendChild(e);
+    return e;
+  };
+  Pen.prototype.line = function (x1, y1, x2, y2, c) { return this.add('line', { x1: x1, y1: y1, x2: x2, y2: y2, 'class': c }); };
+  /* Nét 1 px đặt giữa một hàng điểm ảnh, khỏi nhoè thành hai hàng xám nhạt. */
+  Pen.prototype.hline = function (x1, x2, y, c) { y = Math.round(y) + 0.5; return this.line(x1, y, x2, y, c); };
+  Pen.prototype.vline = function (x, y1, y2, c) { x = Math.round(x) + 0.5; return this.line(x, y1, x, y2, c); };
+  Pen.prototype.path = function (d, c) { return this.add('path', { d: d, 'class': c }); };
+  Pen.prototype.rect = function (x, y, w, h, c, rx) {
+    return this.add('rect', { x: x, y: y, width: Math.max(0, w), height: Math.max(0, h), rx: rx, 'class': c });
+  };
+  Pen.prototype.dot = function (x, y, r, c) { return this.add('circle', { cx: x, cy: y, r: r, 'class': c }); };
+  Pen.prototype.text = function (x, y, s, c, anchor) {
+    return this.add('text', { x: x, y: y, 'class': c || 'v-lab', 'text-anchor': anchor === 'end' || anchor === 'middle' ? anchor : null }, s);
+  };
+  /* Một dòng chữ nhiều khúc khác lớp: parts = [[chữ, lớp], …]. */
+  Pen.prototype.rich = function (x, y, parts, anchor) {
+    var t = this.add('text', { x: x, y: y, 'text-anchor': anchor === 'end' || anchor === 'middle' ? anchor : null }), i, s;
+    for (i = 0; i < parts.length; i++) {
+      s = document.createElementNS(NS, 'tspan');
+      s.setAttribute('class', parts[i][1]);
+      s.textContent = parts[i][0];
+      t.appendChild(s);
+    }
+    return t;
+  };
+  /* Chữ tự xuống dòng trong bề rộng maxW; trả về y của dòng cuối. */
+  Pen.prototype.para = function (x, y, s, c, maxW, lh) {
+    var words = s.split(' '), cur = '', i, t;
+    for (i = 0; i < words.length; i++) {
+      t = cur ? cur + ' ' + words[i] : words[i];
+      if (cur && this.width(t, c) > maxW) { this.text(x, y, cur, c); y += lh || 16; cur = words[i]; } else cur = t;
+    }
+    if (cur) this.text(x, y, cur, c);
+    return y;
+  };
+  /* Bề rộng thật của một dòng chữ, đo bằng chính trình duyệt đang vẽ. */
+  Pen.prototype.width = function (s, c) {
+    var t = this.text(0, -100, s, c), w = 0;
+    try { w = t.getComputedTextLength(); } catch (e) {}
+    this.svg.removeChild(t);
+    return w > 0 ? w : s.length * 6.4;
+  };
+  /* Mũi tên thẳng: đuôi ở (x1, y1), mũi chạm (x2, y2). */
+  Pen.prototype.arrow = function (x1, y1, x2, y2, lineCls, headCls) {
+    var a = Math.atan2(y2 - y1, x2 - x1), c = Math.cos(a), s = Math.sin(a), bx = x2 - 7 * c, by = y2 - 7 * s;
+    this.line(x1, y1, bx + c, by + s, lineCls || 'v-link');
+    return this.path('M' + f(x2) + ' ' + f(y2) + 'L' + f(bx + 3.8 * s) + ' ' + f(by - 3.8 * c) +
+      'L' + f(bx - 3.8 * s) + ' ' + f(by + 3.8 * c) + 'Z', headCls || 'v-head');
+  };
+  /* Mẫu nhỏ của chú giải, tâm dọc ở y. */
+  Pen.prototype.swatch = function (k, x, y) {
+    if (k === 'dot') this.dot(x + 5, y, 4, 'v-dot');
+    else if (k === 'ring') this.dot(x + 5, y, 4, 'v-ring');
+    else if (k === 'hi' || k === 'lo') this.rect(x, y - 5, 10, 10, 'v-' + k, 2);
+    else if (k === 'frame') this.rect(x + 0.5, y - 6.5, 13, 13, 'v-frame', 3);
+    else if (k === 'tri') this.path('M' + f(x) + ' ' + f(y - 4) + 'h10l-5 8z', 'v-hi');
+    else if (k === 'linedot') { this.line(x, y, x + 22, y, 'v-main'); this.dot(x + 11, y, 3.5, 'v-dot'); }
+    else if (k === 'dashring') { this.line(x, y, x + 22, y, 'v-alt'); this.dot(x + 11, y, 3.5, 'v-ring-alt'); }
+    else this.line(x, y, x + 18, y, { line: 'v-main', dash: 'v-alt', ref: 'v-ref', ctx: 'v-ctx' }[k] || 'v-main');
+  };
+  Pen.prototype.itemWidth = function (it) { return (SW[it[0]] || 18) + 6 + this.width(it[1], 'v-lab'); };
+  Pen.prototype.legendWidth = function (items) {
+    var w = 0, i;
+    for (i = 0; i < items.length; i++) w += this.itemWidth(items[i]) + (i ? 16 : 0);
+    return w;
+  };
+  /* Chú giải: items = [[kiểu mẫu, chữ], …], bắt đầu ở (x, y), xuống dòng khi vượt maxX. Trả về y của dòng cuối. */
+  Pen.prototype.legend = function (x, y, maxX, items) {
+    var cx = x, i, w, sw;
+    for (i = 0; i < items.length; i++) {
+      sw = SW[items[i][0]] || 18;
+      w = this.itemWidth(items[i]);
+      if (cx > x && cx + w > maxX) { cx = x; y += 18; }
+      this.swatch(items[i][0], cx, y - 4);
+      this.text(cx + sw + 6, y, items[i][1], 'v-lab');
+      cx += w + 16;
+    }
+    return y;
+  };
+  function chart(svg, draw) {
+    var lastW = -1;
+    function inner() {
+      var r = svg.getBoundingClientRect(), cs = window.getComputedStyle(svg);
+      return r.width - (parseFloat(cs.borderLeftWidth) || 0) - (parseFloat(cs.borderRightWidth) || 0);
+    }
+    function paint() {
+      var W = inner(), H;
+      if (!(W > 60)) W = 640;
+      lastW = W;
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      H = Math.ceil(draw(new Pen(svg, W), W)) || 240;
+      svg.setAttribute('viewBox', '0 0 ' + f(W) + ' ' + H);
+    }
+    function check() { var W = inner(); if (W > 60 && Math.abs(W - lastW) > 0.5) paint(); }
+    if ('ResizeObserver' in window) new ResizeObserver(check).observe(svg);
+    else window.addEventListener('resize', check);
+    return paint;
+  }
+  return { chart: chart };
+})();
+</script>
+
+<script>
 /* ---- kahneman: mô hình hồi quy về trung bình ----
    Doanh số = năng lực (cố định) + may rủi (rút mới mỗi tháng), trộn theo tỉ trọng phương sai L.
    Khi ấy tương quan giữa hai tháng là 1 − L, nên nhóm chọn theo tháng 1 giữ lại, tính trung bình,
    đúng (1 − L) khoảng cách của mình ở tháng 2. Số hiện ra là của lần rút đang xem, không làm tròn cho đẹp. */
 (function () {
   var root = document.getElementById('kahneman');
-  if (!root) return;
+  if (!root || !window.BBV) return;
   var box = root.querySelector('#kahneman-svg'), range = root.querySelector('#kahneman-luck');
   if (!box || !range) return;
   var lab = root.querySelector('#kahneman-luck-l'), big = root.querySelector('#kahneman-big'),
       sub = root.querySelector('#kahneman-sub'), btn = root.querySelector('#kahneman-redraw');
-  var NS = 'http://www.w3.org/2000/svg';
   var N = 1000, K = 100, MEAN = 100, SD = 20;           /* triệu đồng một tháng */
   var SEED = 347;                                        /* chọn sẵn để lần mở đầu ra đúng giá trị kỳ vọng */
-  var XL = 110, XR = 250, Y0 = 240, Y1 = 26, VMIN = 20, VMAX = 185;
+  var VMIN = 20, VMAX = 185;
 
   /* Bộ sinh số có hạt giống: kéo thanh trượt chỉ đổi tỉ trọng, không đổi người. */
   function rng(seed) {
@@ -2331,17 +2366,52 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
   }
   var r0 = rng(SEED), skill = normals(N, r0), luck1 = normals(N, r0), luck2 = normals(N, r0);
 
-  function el(tag, attrs, style, text) {
-    var e = document.createElementNS(NS, tag), k;
-    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
-    if (style) e.setAttribute('style', style);
-    if (text != null) e.textContent = text;
-    box.appendChild(e);
-    return e;
-  }
-  function y(v) { v = Math.max(VMIN, Math.min(VMAX, v)); return (Y0 - (v - VMIN) * (Y0 - Y1) / (VMAX - VMIN)).toFixed(1); }
   function gap(v) { var r = Math.round(v); return r === 0 ? '0' : (r > 0 ? '+' : '−') + Math.abs(r); }
   function avg(arr, ids) { var s = 0, i; for (i = 0; i < ids.length; i++) s += arr[ids[i]]; return s / Math.max(ids.length, 1); }
+
+  var S = null;   /* lần tính gần nhất; hình đọc từ đây mỗi khi vẽ lại */
+  var paint = BBV.chart(box, function (g, W) {
+    var narrow = W < 520, H = narrow ? 276 : 300;
+    var span = Math.max(140, Math.min(380, W * 0.44)), mid = W / 2 + (narrow ? 16 : 0);
+    var XL = mid - span / 2, XR = mid + span / 2, YT = 50, YB = H - 18, i;
+    var lw = Math.max(g.width('được khen', 'v-lab'), g.width('bị nhắc nhở', 'v-lab'), g.width('trung bình', 'v-lab'));
+    XL = Math.max(XL, 10 + lw + 12); XR = Math.min(XR, W - 44);
+    function y(v) { v = Math.max(VMIN, Math.min(VMAX, v)); return YB - (v - VMIN) * (YB - YT) / (VMAX - VMIN); }
+    if (!S) return H;
+    g.text(XL, 26, 'Tháng 1', 'v-key', 'middle');
+    g.text(XR, 26, 'Tháng 2', 'v-key', 'middle');
+    g.vline(XL, 38, YB, 'v-axis');
+    g.vline(XR, 38, YB, 'v-axis');
+    /* Mỗi người một đường mảnh (một phần ba số người của mỗi nhóm, cho đỡ rối). */
+    for (i = 0; i < K; i += 3) {
+      g.line(XL, y(S.m1[S.top[i]]), XR, y(S.m2[S.top[i]]), 'v-ctx v-faint');
+      g.line(XL, y(S.m1[S.bot[i]]), XR, y(S.m2[S.bot[i]]), 'v-ctx v-faint');
+    }
+    g.line(XL, y(S.mean1), XR, y(S.mean2), 'v-ref');
+    var yt1 = y(S.mean1 + S.t1), yt2 = y(S.mean2 + S.t2), yb1 = y(S.mean1 + S.b1), yb2 = y(S.mean2 + S.b2);
+    g.line(XL, yt1, XR, yt2, 'v-main');
+    g.line(XL, yb1, XR, yb2, 'v-main');
+    [[XL, yt1], [XR, yt2], [XL, yb1], [XR, yb2]].forEach(function (p) { g.dot(p[0], p[1], 4.5, 'v-dot'); });
+
+    /* Nhãn trái: tên nhóm + khoảng cách tháng 1 (màn hẹp thì xuống hai dòng); nhãn giữa: mức trung bình. */
+    var xl = XL - 12;
+    if (narrow) {
+      g.text(xl, yt1 - 3, 'được khen', 'v-lab', 'end');
+      g.text(xl, yt1 + 13, gap(S.t1), 'v-val', 'end');
+      g.text(xl, yb1 - 3, 'bị nhắc nhở', 'v-lab', 'end');
+      g.text(xl, yb1 + 13, gap(S.b1), 'v-val', 'end');
+    } else {
+      g.rich(xl, yt1 + 4.5, [['được khen   ', 'v-lab'], [gap(S.t1), 'v-val']], 'end');
+      g.rich(xl, yb1 + 4.5, [['bị nhắc nhở   ', 'v-lab'], [gap(S.b1), 'v-val']], 'end');
+    }
+    g.text(xl, y(S.mean1) + 4, 'trung bình', 'v-lab', 'end');
+    /* Nhãn phải: khoảng cách tháng 2; khi hai nhóm cùng về gần trung bình thì đẩy hai nhãn ra cho khỏi đè. */
+    var lt = yt2 + 4.5, lb = yb2 + 4.5, m;
+    if (lb - lt < 17) { m = (lt + lb) / 2; lt = m - 8.5; lb = m + 8.5; }
+    g.text(XR + 12, lt, gap(S.t2), 'v-val');
+    g.text(XR + 12, lb, gap(S.b2), 'v-val');
+    return H;
+  });
 
   function render() {
     var pct = Math.max(0, Math.min(100, Math.round(+range.value || 0)));
@@ -2369,37 +2439,8 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
       sub.textContent = head + ' Trung bình qua rất nhiều tháng: ' + (100 - pct) + '%. Nhóm bị nhắc nhở: ' +
         gap(b1) + ' → ' + gap(b2) + tail;
     }
-
-    while (box.firstChild) box.removeChild(box.firstChild);
-    el('text', { x: XL, y: 16, 'text-anchor': 'middle', 'class': 'hw-vt' }, null, 'Tháng 1');
-    el('text', { x: XR, y: 16, 'text-anchor': 'middle', 'class': 'hw-vt' }, null, 'Tháng 2');
-    el('line', { x1: XL, y1: Y1, x2: XL, y2: Y0 }, 'stroke:var(--wb-border-strong);stroke-width:1');
-    el('line', { x1: XR, y1: Y1, x2: XR, y2: Y0 }, 'stroke:var(--wb-border-strong);stroke-width:1');
-    el('line', { x1: XL, y1: y(mean1), x2: XR, y2: y(mean2) }, 'stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:4 4');
-
-    /* Mỗi người một đường mảnh (một phần ba số người của mỗi nhóm, cho đỡ rối). */
-    for (i = 0; i < K; i += 3) {
-      el('line', { x1: XL, y1: y(m1[top[i]]), x2: XR, y2: y(m2[top[i]]) }, 'stroke:var(--wb-fg);stroke-width:1;opacity:.16');
-      el('line', { x1: XL, y1: y(m1[bot[i]]), x2: XR, y2: y(m2[bot[i]]) }, 'stroke:var(--wb-fg);stroke-width:1;opacity:.16');
-    }
-    var yt1 = +y(mean1 + t1), yt2 = +y(mean2 + t2), yb1 = +y(mean1 + b1), yb2 = +y(mean2 + b2);
-    el('line', { x1: XL, y1: yt1, x2: XR, y2: yt2 }, 'stroke:var(--wb-fg);stroke-width:3;stroke-linecap:round');
-    el('line', { x1: XL, y1: yb1, x2: XR, y2: yb2 }, 'stroke:var(--wb-fg);stroke-width:3;stroke-linecap:round;stroke-dasharray:7 5');
-    [[XL, yt1], [XR, yt2], [XL, yb1], [XR, yb2]].forEach(function (p) {
-      el('circle', { cx: p[0], cy: p[1], r: 3.5 }, 'fill:var(--wb-fg)');
-    });
-
-    /* Nhãn trái: tên nhóm + khoảng cách tháng 1; nhãn giữa: mức trung bình. */
-    el('text', { x: XL - 8, y: yt1 - 5, 'text-anchor': 'end', 'class': 'hw-vs' }, null, 'được khen');
-    el('text', { x: XL - 8, y: yt1 + 10, 'text-anchor': 'end', 'class': 'hw-vt' }, null, gap(t1));
-    el('text', { x: XL - 8, y: +y(mean1) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, 'trung bình');
-    el('text', { x: XL - 8, y: yb1 - 5, 'text-anchor': 'end', 'class': 'hw-vs' }, null, 'bị nhắc nhở');
-    el('text', { x: XL - 8, y: yb1 + 10, 'text-anchor': 'end', 'class': 'hw-vt' }, null, gap(b1));
-    /* Nhãn phải: khoảng cách tháng 2; khi hai nhóm cùng về gần trung bình thì đẩy hai nhãn ra cho khỏi đè. */
-    var lt = yt2 + 4, lb = yb2 + 4;
-    if (lb - lt < 15) { var mid = (lt + lb) / 2; lt = mid - 7.5; lb = mid + 7.5; }
-    el('text', { x: XR + 8, y: lt.toFixed(1), 'class': 'hw-vt' }, null, gap(t2));
-    el('text', { x: XR + 8, y: lb.toFixed(1), 'class': 'hw-vt' }, null, gap(b2));
+    S = { m1: m1, m2: m2, top: top, bot: bot, mean1: mean1, mean2: mean2, t1: t1, t2: t2, b1: b1, b2: b2 };
+    paint();
   }
 
   range.addEventListener('input', render);
@@ -2411,6 +2452,54 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
   });
   render();
 })();
+
+/* ---- kahneman: đường cong giá trị (hình tĩnh, vẽ bằng BBV cho cùng cỡ chữ với các mô hình) ----
+   Tham số Tversky & Kahneman 1992: v(x) = x^0,88 khi được, −2,25·(−x)^0,88 khi mất. Đường nét đứt là
+   −(−x)^0,88: nếu mất chỉ đau bằng được vui. Hai vạch chấm ở ±100 là v(100) ≈ 57,5 và v(−100) ≈ −129,4. */
+(function () {
+  var box = document.getElementById('kahneman-vf');
+  if (!box || !window.BBV) return;
+  var A = 0.88, LAM = 2.25, VT = 75, VB = -138;
+  function v(x) { return x >= 0 ? Math.pow(x, A) : -LAM * Math.pow(-x, A); }
+  BBV.chart(box, function (g, W) {
+    var narrow = W < 520, H = narrow ? 290 : 320;
+    var PW = Math.min(W - 32, 640), x0 = (W - PW) / 2, x1 = x0 + PW, TOP = 16, BOT = H - 32;
+    function X(x) { return x0 + (x + 100) / 200 * PW; }
+    function Y(u) { return TOP + (VT - u) / (VT - VB) * (BOT - TOP); }
+    function curve(fn, from, to) {
+      var d = '', i, x;
+      for (i = 0; i <= 50; i++) { x = from + (to - from) * i / 50; d += (i ? 'L' : 'M') + X(x).toFixed(1) + ' ' + Y(fn(x)).toFixed(1); }
+      return d;
+    }
+    var ox = X(0), oy = Y(0);
+    g.hline(x0, x1, oy, 'v-axis');
+    g.vline(ox, TOP, BOT, 'v-axis');
+    g.vline(X(100) - 1, oy, Y(v(100)), 'v-guide');
+    g.vline(X(-100), oy, Y(v(-100)), 'v-guide');
+    g.path(curve(function (x) { return -Math.pow(-x, A); }, 0, -100), 'v-alt');
+    g.path(curve(v, 0, 100), 'v-main');
+    g.path(curve(v, 0, -100), 'v-main');
+    g.dot(ox, oy, 4.5, 'v-dot');
+
+    g.text(ox + 8, TOP + 11, 'vui', 'v-lab');
+    g.text(ox + 8, BOT - 3, 'đau', 'v-lab');
+    g.text(X(100) - 1, oy + 17, 'được 100', 'v-lab', 'end');
+    g.text(X(-100) + 7, oy + 17, 'mất 100', 'v-lab');
+    g.text(ox - 12, oy - 11, 'điểm tham chiếu', 'v-key', 'end');
+    /* Chú thích độ cong: nằm giữa nhánh được và trục ngang, sát đầu phải — chỗ ấy luôn trống. */
+    g.text(X(95), oy - 22, 'càng xa gốc', 'v-lab', 'end');
+    g.text(X(95), oy - 8, 'càng phẳng dần', 'v-lab', 'end');
+    /* Chú giải ở góc trên bên trái (góc phần tư này không có đường nào đi qua); màn quá hẹp thì xuống góc dưới
+       bên phải, góc cũng luôn trống. Nhãn tự xuống dòng theo chỗ còn lại. */
+    var lx = x0, ly = TOP + 11, room = ox - x0 - 36;
+    if (g.width('cảm giác được–mất', 'v-lab') > room) { lx = ox + 16; ly = oy + 44; room = x1 - lx - 28; }
+    g.swatch('line', lx, ly - 4);
+    ly = g.para(lx + 24, ly, 'cảm giác được–mất', 'v-lab', room, 15) + 20;
+    g.swatch('dash', lx, ly - 4);
+    g.para(lx + 24, ly, 'nếu mất chỉ đau bằng được vui', 'v-lab', narrow ? Math.min(room, 110) : room, 15);
+    return H;
+  });
+})();
 </script>
 
 <script>
@@ -2420,7 +2509,7 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
    ở mức ấy; đường chéo là khớp hoàn toàn. Không lưu gì: tải lại trang là làm lại từ đầu. */
 (function () {
   var root = document.getElementById('galef');
-  if (!root) return;
+  if (!root || !window.BBV) return;
   var box = root.querySelector('#galef-svg'), range = root.querySelector('#galef-conf'),
       go = root.querySelector('#galef-go');
   if (!box || !range || !go) return;
@@ -2429,7 +2518,6 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
       confL = root.querySelector('#galef-conf-l'), fb = root.querySelector('#galef-fb'),
       big = root.querySelector('#galef-big'), sub = root.querySelector('#galef-sub'),
       out = root.querySelector('#galef-out');
-  var NS = 'http://www.w3.org/2000/svg';
   var Q = [
     { s: 'Nhật Bản đông dân hơn Việt Nam.', a: true,
       e: 'Năm 2025, Nhật Bản có khoảng 123,4 triệu người, Việt Nam khoảng 101,6 triệu (World Bank).' },
@@ -2453,19 +2541,8 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
       e: 'WMO ước tính năm 2024 cao hơn mức trung bình 1850–1900 khoảng 1,55°C, nhiều khả năng là năm đầu tiên vượt ngưỡng 1,5°C.' }
   ];
   var LV = [55, 65, 75, 85, 95];
-  var X0 = 58, X1 = 336, Y0 = 212, Y1 = 34;   /* vùng vẽ: ngang 50→100% (mức chắc), dọc 0→100% (tỉ lệ đúng) */
-  var idx = 0, pick = null, locked = false, log = [];
+  var idx = 0, pick = null, locked = false, log = [], ROWS = [];
 
-  function px(c) { return (X0 + (c - 50) * (X1 - X0) / 50).toFixed(1); }
-  function py(p) { return (Y0 - p * (Y0 - Y1) / 100).toFixed(1); }
-  function el(tag, attrs, style, text) {
-    var e = document.createElementNS(NS, tag), k;
-    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
-    if (style) e.setAttribute('style', style);
-    if (text != null) e.textContent = text;
-    box.appendChild(e);
-    return e;
-  }
   /* Thanh trượt bước 10 nên chỉ ra 55…95; vẫn chặn lại cho chắc, để không bao giờ ra số lạ. */
   function level() {
     var v = +range.value, best = 75, i;
@@ -2480,45 +2557,47 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
     if (!locked) go.disabled = (v === null);
   }
 
-  function drawChart(rows) {
-    while (box.firstChild) box.removeChild(box.firstChild);
+  /* Hình: mỗi mức chắc một điểm, cao bằng tỉ lệ câu đúng ở mức ấy, to theo số câu đã chốt. */
+  var paint = BBV.chart(box, function (g, W) {
+    var narrow = W < 520, H = narrow ? 256 : 276;
+    var X0 = 52, X1 = W - 22, Y0 = H - 42, Y1 = 42;   /* vùng vẽ: ngang 50→100% (mức chắc), dọc 0→100% (tỉ lệ đúng) */
+    function px(c) { return X0 + (c - 50) * (X1 - X0) / 50; }
+    function py(p) { return Y0 - p * (Y0 - Y1) / 100; }
     [0, 25, 50, 75, 100].forEach(function (p) {
-      el('line', { x1: X0, y1: py(p), x2: X1, y2: py(p) }, 'stroke:var(--wb-border);stroke-width:1');
-      el('text', { x: X0 - 6, y: +py(p) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, p + '%');
+      g.hline(X0, X1, py(p), p ? 'v-grid' : 'v-axis');
+      g.text(X0 - 8, py(p) + 4, p + '%', 'v-tick', 'end');
     });
-    el('line', { x1: X0, y1: Y0, x2: X1, y2: Y0 }, 'stroke:var(--wb-border-strong);stroke-width:1');
-    LV.forEach(function (c) {
-      el('text', { x: px(c), y: Y0 + 15, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, c + '%');
-    });
-    el('text', { x: (X0 + X1) / 2, y: Y0 + 32, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, 'mức chắc bạn chọn');
+    LV.forEach(function (c) { g.text(px(c), Y0 + 17, c + '%', 'v-tick', 'middle'); });
+    g.text((X0 + X1) / 2, Y0 + 34, 'mức chắc bạn chọn', 'v-lab', 'middle');
     /* Tên trục dọc và chú giải nằm trên vùng vẽ, để điểm ở mức 100% không đè lên chữ. */
-    el('text', { x: 4, y: 14, 'class': 'hw-vs' }, null, 'tỉ lệ đúng thật');
-    el('line', { x1: 238, y1: 10, x2: 258, y2: 10 }, 'stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4');
-    el('text', { x: 262, y: 14, 'class': 'hw-vs' }, null, 'khớp hoàn toàn');
-    el('line', { x1: px(50), y1: py(50), x2: px(100), y2: py(100) }, 'stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4');
-    /* Nhãn điểm: vòng tròn + "đúng/tổng". Tính trước hộp chiếm chỗ để nhãn vùng tránh ra. */
+    g.text(16, 22, 'tỉ lệ đúng thật', 'v-lab');
+    var key = [['dash', 'khớp hoàn toàn']];
+    g.legend(X1 - g.legendWidth(key), 22, X1, key);
+    g.line(px(50), py(50), px(100), py(100), 'v-alt');
+    /* Nhãn điểm: vòng tròn + "đúng/tổng"; sát mép phải thì nhãn sang trái. Tính trước hộp chiếm chỗ để nhãn vùng tránh ra. */
     var marks = [];
-    rows.forEach(function (r) {
+    ROWS.forEach(function (r) {
       if (!r.n) return;
-      var cx = +px(r.c), cy = +py(100 * r.k / r.n), rad = 4 + 1.6 * Math.sqrt(r.n), t = r.k + '/' + r.n;
-      marks.push({ cx: cx, cy: cy, rad: rad, t: t, box: [cx - rad - 2, cy - rad - 2, cx + rad + 6 + 7.5 * t.length, cy + rad + 2] });
+      var cx = px(r.c), cy = py(100 * r.k / r.n), rad = 4 + 1.6 * Math.sqrt(r.n), t = r.k + '/' + r.n,
+          tw = g.width(t, 'v-val'), right = cx + rad + 6 + tw <= W - 8;
+      marks.push({ cx: cx, cy: cy, rad: rad, t: t, right: right,
+        box: right ? [cx - rad - 2, cy - rad - 2, cx + rad + 8 + tw, cy + rad + 2] : [cx - rad - 8 - tw, cy - rad - 2, cx + rad + 2, cy + rad + 2] });
     });
     /* Nhãn vùng: chỉ vẽ khi không đụng điểm nào, nên lúc mở trang (chưa có điểm) luôn hiện đủ. */
-    [{ x: +px(90), y: +py(50), a: 'tự tin quá mức', b: '(dưới đường chéo)' },
-     { x: +px(60), y: +py(88), a: 'tự ti', b: '(trên đường chéo)' }].forEach(function (g) {
-      var bx = [g.x - 50, g.y - 13, g.x + 50, g.y + 18];
+    [{ x: px(90), y: py(50) - 4, a: 'tự tin quá mức', b: '(dưới đường chéo)' },
+     { x: px(60), y: py(88), a: 'tự ti', b: '(trên đường chéo)' }].forEach(function (q) {
+      var hw = Math.max(g.width(q.a, 'v-key'), g.width(q.b, 'v-lab')) / 2 + 10, bx = [q.x - hw, q.y - 20, q.x + hw, q.y + 25];
       var hit = marks.some(function (m) { return m.box[0] < bx[2] && m.box[2] > bx[0] && m.box[1] < bx[3] && m.box[3] > bx[1]; });
       if (hit) return;
-      el('text', { x: g.x, y: g.y, 'text-anchor': 'middle', 'class': 'hw-vt' }, null, g.a);
-      el('text', { x: g.x, y: g.y + 14, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, g.b);
+      g.text(q.x, q.y, q.a, 'v-key', 'middle');
+      g.text(q.x, q.y + 15, q.b, 'v-lab', 'middle');
     });
     marks.forEach(function (m) {
-      el('circle', { cx: m.cx, cy: m.cy.toFixed(1), r: m.rad.toFixed(1) }, 'fill:var(--wb-fg)');
-      /* Viền chữ cùng màu nền để nhãn điểm đọc được cả khi nằm sát đường kẻ. */
-      el('text', { x: (m.cx + m.rad + 4).toFixed(1), y: (m.cy + 4).toFixed(1), 'class': 'hw-vt' },
-        'paint-order:stroke;stroke:var(--wb-canvas);stroke-width:3px;stroke-linejoin:round', m.t);
+      g.dot(m.cx, m.cy, m.rad, 'v-dot');
+      g.text(m.right ? m.cx + m.rad + 6 : m.cx - m.rad - 6, m.cy + 4.5, m.t, 'v-val v-halo', m.right ? null : 'end');
     });
-  }
+    return H;
+  });
 
   function render() {
     var rows = LV.map(function (c) { return { c: c, n: 0, k: 0 }; }), n = log.length, sumC = 0, ok = 0, i, r;
@@ -2545,7 +2624,8 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
         return 'Nói ' + x.c + '%: ' + (x.n ? 'đúng ' + x.k + '/' + x.n + ' câu (' + Math.round(100 * x.k / x.n) + '%)' : 'chưa có câu nào');
       }).join('\n');
     }
-    drawChart(rows);
+    ROWS = rows;
+    paint();
   }
 
   function say(head, tail) {
@@ -2599,17 +2679,18 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
    Hai con số là xác suất tính đúng, không phải mô phỏng:
      dòng thác sai = (1 − p)² / (p² + (1 − p)²)   (bỏ qua khả năng 100 người chưa thành dòng thác, dưới 1e-15);
      100 người tự chọn rồi đếm phiếu mà đa số nhầm = P(Bin(100, p) < 50) + ½·P(Bin(100, p) = 50).
-   Hình là một lượt rút ngẫu nhiên; lượt mở đầu dùng hạt giống cố định để thấy một lần trượt. */
+   Hình là một lượt rút ngẫu nhiên; lượt mở đầu dùng hạt giống cố định để thấy một lần trượt. Hai hàng thẳng cột:
+   hàng trên là gợi ý riêng của từng người, hàng dưới là quán người ấy vào thật — ô trên khác màu ô dưới là người
+   bỏ gợi ý của mình để theo số đông. */
 (function () {
   var root = document.getElementById('cialdini');
-  if (!root) return;
+  if (!root || !window.BBV) return;
   var box = root.querySelector('#cialdini-svg'), range = root.querySelector('#cialdini-acc');
   if (!box || !range) return;
   var lab = root.querySelector('#cialdini-acc-l'), big = root.querySelector('#cialdini-big'),
       sub = root.querySelector('#cialdini-sub'), out = root.querySelector('#cialdini-run'),
       btn = root.querySelector('#cialdini-redraw');
-  var NS = 'http://www.w3.org/2000/svg';
-  var N = 100, COLS = 20, X0 = 28, DX = 16, Y0 = 34, DY = 18, R = 5;
+  var N = 100;
   var SEED = 86;   /* ở 70%: người 1 đúng, người 2–4 sai, nên từ người thứ 5 cả dòng đổ vào quán B */
 
   function rng(seed) {
@@ -2625,15 +2706,6 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
   /* Mỗi người một số ngẫu nhiên cố định; gợi ý đúng khi số ấy nhỏ hơn p. Kéo thanh trượt chỉ đổi p, không đổi người. */
   function draw(seed) { var r = rng(seed), u = [], i; for (i = 0; i < N; i++) u.push(r()); return u; }
   var u = draw(SEED);
-
-  function el(tag, attrs, style, text) {
-    var e = document.createElementNS(NS, tag), k;
-    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
-    if (style) e.setAttribute('style', style);
-    if (text != null) e.textContent = text;
-    box.appendChild(e);
-    return e;
-  }
 
   /* Một lượt. k: số người đi trước dòng thác (họ chọn đúng theo gợi ý riêng). */
   function simulate(p) {
@@ -2667,9 +2739,38 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
     return v.toFixed(d).replace('.', ',').replace(/,0$/, '') + '%';
   }
 
+  var S = null;   /* lượt đang xem; hình đọc từ đây mỗi khi vẽ lại */
+  var paint = BBV.chart(box, function (g, W) {
+    var P = 16, narrow = W < 560, labW = narrow ? 42 : 86, avail = W - 2 * P - labW, per = 20, i, j;
+    /* Mỗi hàng 50, 25 hoặc 20 người: chọn hàng dài nhất mà mỗi ô còn rộng từ 9 px. */
+    [50, 25, 20].some(function (n) { if (avail / n >= 9) { per = n; return true; } return false; });
+    var pitch = avail / per, gp = pitch >= 12 ? 3 : 2, cw = pitch - gp, ch = narrow ? 13 : 15, X0 = P + labW;
+    var title = '100 người, đến lần lượt từ trái sang phải', y = 22;
+    var key = [['hi', 'quán A, ngon hơn thật'], ['lo', 'quán B'], ['frame', 'chọn theo gợi ý riêng']];
+    var kw = g.legendWidth(key);
+    if (P + g.width(title, 'v-lab') + 28 + kw <= W - P) { g.text(P, 22, title, 'v-lab'); g.legend(W - P - kw, 22, W - P, key); }
+    else y = g.legend(P, g.para(P, 22, title, 'v-lab', W - 2 * P) + 22, W - P, key);
+    if (!S) return y + 60;
+    var top = y + 20, blockH = 2 * ch + 4, gapB = narrow ? 13 : 16, chunks = Math.ceil(N / per);
+    for (j = 0; j < chunks; j++) {
+      var yH = top + j * (blockH + gapB), yC = yH + ch + 4, from = j * per, to = Math.min(N, from + per);
+      g.text(P, yH + ch - 3, narrow ? 'gợi ý' : 'gợi ý riêng', 'v-lab');
+      g.text(P, yC + ch - 3, narrow ? 'chọn' : 'chọn thật', 'v-lab');
+      for (i = from; i < to; i++) {
+        var x = X0 + (i - from) * pitch + gp / 2;
+        g.rect(x, yH, cw, ch, S.ppl[i].h ? 'v-hi' : 'v-lo', 1.5);
+        g.rect(x, yC, cw, ch, S.ppl[i].a ? 'v-hi' : 'v-lo', 1.5);
+      }
+      /* Khung nét đứt quanh những người chọn trước dòng thác; dài quá một hàng thì khung vắt sang hàng sau. */
+      var b = Math.min(to, S.k);
+      if (b > from) g.rect(X0 - 1, yH - 3.5, (b - from) * pitch + 2, blockH + 7, 'v-frame', 4);
+    }
+    return top + chunks * (blockH + gapB) - gapB + 16;
+  });
+
   function render() {
     var pct = Math.max(55, Math.min(90, Math.round(+range.value || 70)));
-    var p = pct / 100, s = simulate(p), ign = 0, lead = s.k < N ? s.ppl[s.k].a : null, i, P, cx, cy;
+    var p = pct / 100, s = simulate(p), ign = 0, lead = s.k < N ? s.ppl[s.k].a : null, i;
     for (i = s.k; i < N; i++) if (s.ppl[i].a !== s.ppl[i].h) ign++;
 
     if (lab) lab.textContent = pct + '%';
@@ -2691,51 +2792,11 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
       out.textContent = 'Lượt này: ' + txt;
     }
 
-    while (box.firstChild) box.removeChild(box.firstChild);
-    el('text', { x: 20, y: 14, 'class': 'hw-vs' }, null, '100 người, đến lần lượt từ trái sang phải');
-    /* Khung nét đứt quanh những người chọn trước dòng thác; nếu dài quá một hàng thì vắt sang hàng sau. */
-    var start = 0, row, end, xa, xb;
-    while (start < s.k) {
-      row = Math.floor(start / COLS);
-      end = Math.min(s.k, (row + 1) * COLS) - 1;
-      xa = X0 + (start % COLS) * DX - 7.5; xb = X0 + (end % COLS) * DX + 7.5;
-      el('rect', { x: xa, y: Y0 + row * DY - 8, width: xb - xa, height: 16, rx: 4 },
-        'fill:none;stroke:var(--wb-fg-muted);stroke-width:1;stroke-dasharray:3 2');
-      start = end + 1;
-    }
-    /* Chấm đặc: vào quán A; chấm rỗng: vào quán B; nhân nhỏ màu ngược: gợi ý riêng chỉ quán kia. */
-    for (i = 0; i < N; i++) {
-      P = s.ppl[i]; cx = X0 + (i % COLS) * DX; cy = Y0 + Math.floor(i / COLS) * DY;
-      if (P.a) el('circle', { cx: cx, cy: cy, r: R }, 'fill:var(--wb-fg)');
-      else el('circle', { cx: cx, cy: cy, r: R - 0.7 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.4');
-      if (P.a !== P.h) el('circle', { cx: cx, cy: cy, r: 1.8 }, P.a ? 'fill:var(--wb-canvas)' : 'fill:var(--wb-fg)');
-    }
-    /* Hai thanh đếm người ở mỗi quán, vẽ cùng kiểu với chấm. */
-    var YB = 132, BX = 170, BW = 1.5;
-    el('circle', { cx: 26, cy: YB, r: R }, 'fill:var(--wb-fg)');
-    el('text', { x: 36, y: YB + 4, 'class': 'hw-vs' }, null, 'Quán A, ngon hơn thật');
-    el('rect', { x: BX, y: YB - 5, width: Math.max(s.a * BW, 1), height: 10, rx: 2 }, 'fill:var(--wb-fg)');
-    el('text', { x: BX + s.a * BW + 6, y: YB + 4, 'class': 'hw-vt' }, null, String(s.a));
-    el('circle', { cx: 26, cy: YB + 20, r: R - 0.7 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.4');
-    el('text', { x: 36, y: YB + 24, 'class': 'hw-vs' }, null, 'Quán B');
-    el('rect', { x: BX, y: YB + 15, width: Math.max(s.b * BW, 1), height: 10, rx: 2 },
-      'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.2');
-    el('text', { x: BX + s.b * BW + 6, y: YB + 24, 'class': 'hw-vt' }, null, String(s.b));
-    /* Chú giải: mẫu "nhân nhỏ" vẽ theo quán mà dòng thác đổ vào, vì phần lớn chấm có nhân ở đó. */
-    var YL = 178;
-    if (lead === false) {
-      el('circle', { cx: 26, cy: YL, r: R - 0.7 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.4');
-      el('circle', { cx: 26, cy: YL, r: 1.8 }, 'fill:var(--wb-fg)');
-    } else {
-      el('circle', { cx: 26, cy: YL, r: R }, 'fill:var(--wb-fg)');
-      el('circle', { cx: 26, cy: YL, r: 1.8 }, 'fill:var(--wb-canvas)');
-    }
-    el('text', { x: 36, y: YL + 4, 'class': 'hw-vs' }, null, 'nhân nhỏ: gợi ý chỉ quán kia, vẫn theo');
-    el('rect', { x: 18.5, y: YL + 12, width: 15, height: 16, rx: 4 },
-      'fill:none;stroke:var(--wb-fg-muted);stroke-width:1;stroke-dasharray:3 2');
-    el('text', { x: 36, y: YL + 24, 'class': 'hw-vs' }, null, 'nét đứt: chọn theo gợi ý riêng');
-    box.setAttribute('aria-label', 'Một trăm chấm theo thứ tự đến: ' + s.a + ' người vào quán A, ' + s.b +
-      ' người vào quán B' + (s.k < N ? '; từ người thứ ' + (s.k + 1) + ' mọi người theo đám đông' : '') + '.');
+    S = s;
+    paint();
+    box.setAttribute('aria-label', 'Một trăm người theo thứ tự đến, mỗi người một cột: hàng trên là gợi ý riêng, hàng dưới là quán chọn thật. ' +
+      s.a + ' người vào quán A, ' + s.b + ' người vào quán B' +
+      (s.k < N ? '; từ người thứ ' + (s.k + 1) + ' mọi người theo đám đông' : '') + '.');
   }
 
   range.addEventListener('input', render);
@@ -2755,11 +2816,10 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
    số nguyên 0–4 trước khi dùng, nên không bao giờ hiện NaN. Thứ tự vị: năm vị gốc rồi vị tự do. */
 (function () {
   var root = document.getElementById('haidt');
-  if (!root) return;
+  if (!root || !window.BBV) return;
   var box = root.querySelector('#haidt-svg');
   if (!box) return;
   var big = root.querySelector('#haidt-big'), sub = root.querySelector('#haidt-sub'), out = root.querySelector('#haidt-out');
-  var NS = 'http://www.w3.org/2000/svg';
   var NAMES = ['thương xót', 'công bằng', 'trung thành', 'tôn ti', 'thiêng liêng', 'tự do'];
   var LEVEL = ['không sai', 'hơi kỳ', 'khá sai', 'sai', 'rất sai'];
   /* Cùng một đề nghị, sáu cách nói — mỗi câu chạm vào một vị. */
@@ -2772,7 +2832,6 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
     'Hẻm tối thành chỗ vứt rác, chỗ làm chuyện bậy bạ; có đèn, con hẻm sạch sẽ, tử tế trở lại.',
     'Tự mình góp, tự mình làm, khỏi phải chờ ai cho phép hay xin xỏ ai.'
   ];
-  var X0 = 104, W = 184, STEP = W / 4, Y0 = 34, DY = 25, BH = 12;
   var ranges = [], labs = [], i;
   for (i = 0; i < NAMES.length; i++) {
     ranges.push(root.querySelector('#haidt-r' + i));
@@ -2786,32 +2845,26 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
   }
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
   function names(idx) { return idx.map(function (k) { return NAMES[k]; }).join(', '); }
-  function el(tag, attrs, style, text) {
-    var e = document.createElementNS(NS, tag), k;
-    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
-    if (style) e.setAttribute('style', style);
-    if (text != null) e.textContent = text;
-    box.appendChild(e);
-    return e;
-  }
-
-  function draw(v, hi) {
-    var y, xs = X0 + 3 * STEP, yEnd = Y0 + (NAMES.length - 1) * DY + BH;
-    while (box.firstChild) box.removeChild(box.firstChild);
-    el('text', { x: 12, y: 16, 'class': 'hw-vs' }, null, 'Mức sai bạn chấm cho mỗi vị, thang 0 tới 4');
-    for (i = 0; i < NAMES.length; i++) {
-      y = Y0 + i * DY;
-      el('text', { x: 12, y: y + BH - 2, 'class': 'hw-vs' }, null, cap(NAMES[i]));
-      el('rect', { x: X0, y: y, width: W, height: BH, rx: 3 }, 'fill:var(--wb-neutral-weak)');
-      if (v[i] > 0) el('rect', { x: X0, y: y, width: v[i] * STEP, height: BH, rx: 3 },
-        v[i] === hi ? 'fill:var(--wb-fg)' : 'fill:var(--wb-neutral)');
-      el('text', { x: X0 + W + 10, y: y + BH - 2, 'class': 'hw-vt' }, null, String(v[i]));
+  var V = null, HI = 0, LO = 0;   /* điểm đang chấm; hình đọc từ đây mỗi khi vẽ lại */
+  var paint = BBV.chart(box, function (g, W) {
+    var P = 16, rowH = 28, BH = 10, k, nameW = 12 + Math.max.apply(null, NAMES.map(function (nm) { return g.width(cap(nm), 'v-key'); }));
+    var yt = g.para(P, 22, 'Mức sai bạn chấm cho mỗi vị, thang 0 tới 4', 'v-lab', W - 2 * P), Y0 = yt + 20;
+    var X0 = P + nameW, TW = Math.min(W - X0 - P - 26, 540), STEP = TW / 4;
+    var yEnd = Y0 + (NAMES.length - 1) * rowH + BH, H = yEnd + 38;
+    if (!V) return H;
+    for (k = 0; k < NAMES.length; k++) {
+      var y = Y0 + k * rowH;
+      g.text(P, y + BH / 2 + 4, cap(NAMES[k]), V[k] === HI && HI > LO ? 'v-key' : 'v-lab');
+      g.rect(X0, y, TW, BH, 'v-track', BH / 2);
+      if (V[k] > 0) g.rect(X0, y, V[k] * STEP, BH, V[k] === HI ? 'v-hi' : 'v-lo', BH / 2);
+      g.text(X0 + TW + 10, y + BH / 2 + 4.5, String(V[k]), 'v-val');
     }
-    /* Vạch nét đứt ở mức 3 ("sai"): từ vạch này trở lên là vị được đếm vào số lớn. */
-    el('line', { x1: xs, y1: Y0 - 5, x2: xs, y2: yEnd + 4 },
-      'stroke:var(--wb-fg-muted);stroke-width:1;stroke-dasharray:3 2');
-    el('text', { x: xs, y: yEnd + 18, 'class': 'hw-vs', 'text-anchor': 'middle' }, null, 'từ vạch này: thấy rõ');
-  }
+    /* Vạch ở mức 3 ("sai"): từ vạch này trở lên là vị được đếm vào số lớn. */
+    var xs = X0 + 3 * STEP;
+    g.vline(xs, Y0 - 9, yEnd + 7, 'v-ref');
+    g.text(xs, yEnd + 25, 'từ vạch này: thấy rõ', 'v-lab', 'middle');
+    return H;
+  });
 
   function render() {
     var v = ranges.map(val), hi = Math.max.apply(null, v), lo = Math.min.apply(null, v),
@@ -2834,7 +2887,8 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
         '\nCâu dễ lọt tai bạn nhất (' + NAMES[top[0]] + '): “' + SAY[top[0]] + '”' +
         '\nCâu dễ trượt khỏi tai bạn nhất (' + NAMES[bot[0]] + '): “' + SAY[bot[0]] + '”';
     }
-    draw(v, hi);
+    V = v; HI = hi; LO = lo;
+    paint();
     box.setAttribute('aria-label', 'Sáu thanh ngang, mức sai bạn chấm cho mỗi vị trên thang 0 tới 4: ' +
       NAMES.map(function (nm, k) { return nm + ' ' + v[k]; }).join(', ') + '.');
   }
@@ -2854,17 +2908,15 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
    Mọi giá trị đọc từ thanh trượt được kẹp về số nguyên trong khoảng cho phép, nên không bao giờ hiện NaN. */
 (function () {
   var root = document.getElementById('sagan');
-  if (!root) return;
+  if (!root || !window.BBV) return;
   var box = root.querySelector('#sagan-svg'), rRare = root.querySelector('#sagan-rare'), rN = root.querySelector('#sagan-n');
   if (!box || !rRare || !rN) return;
   var lRare = root.querySelector('#sagan-rare-l'), lN = root.querySelector('#sagan-n-l'),
       big = root.querySelector('#sagan-big'), sub = root.querySelector('#sagan-sub'),
       bInd = root.querySelector('#sagan-ind'), bCopy = root.querySelector('#sagan-copy');
-  var NS = 'http://www.w3.org/2000/svg';
   var NN = [2, 10, 100, 1000, 10000, 100000, 1000000];
   var NAME = ['1 trong 2', '1 trong 10', '1 trong 100', '1 trong 1.000', '1 trong 10.000', '1 trong 100.000', '1 trong 1 triệu'];
   var LR = 10, KMAX = 8;
-  var X0 = 46, X1 = 336, Y0 = 196, Y1 = 40;   /* vùng vẽ: ngang 0→8 bằng chứng, dọc 0→100% */
   var copy = false;
 
   function clampInt(v, lo, hi, dflt) {
@@ -2883,73 +2935,61 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
     for (var k = 0; k <= KMAX; k++) if (prob(r, k) >= target - 1e-12) return k;
     return KMAX;
   }
-  function px(k) { return X0 + k * (X1 - X0) / KMAX; }
-  function py(p) { return Y0 - p * (Y0 - Y1); }
-  function el(tag, attrs, style, text) {
-    var e = document.createElementNS(NS, tag), k;
-    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
-    if (style) e.setAttribute('style', style);
-    if (text != null) e.textContent = text;
-    box.appendChild(e);
-    return e;
-  }
-  function path(r, kEff) {
-    var d = '', k;
-    for (k = 0; k <= KMAX; k++) d += (k ? ' L' : 'M') + px(k).toFixed(1) + ' ' + py(prob(r, kEff(k))).toFixed(1);
-    return d;
-  }
   function all(k) { return k; }
   function one(k) { return Math.min(k, 1); }
 
-  function draw(r, n, p) {
-    var k, i, cx, cy;
-    while (box.firstChild) box.removeChild(box.firstChild);
-    el('text', { x: 4, y: 14, 'class': 'hw-vs' }, null, 'khả năng đúng');
-    /* Chú giải: đường đậm là độ hiếm đang chọn, đường mờ là sáu mức còn lại. */
-    el('line', { x1: 196, y1: 10, x2: 214, y2: 10 }, 'stroke:var(--wb-fg);stroke-width:2.5');
-    el('text', { x: 219, y: 14, 'class': 'hw-vs' }, null, 'độ hiếm đang chọn');
-    el('line', { x1: 196, y1: 25, x2: 214, y2: 25 }, copy ? 'stroke:var(--wb-fg-muted);stroke-width:1.5;stroke-dasharray:4 3' : 'stroke:var(--wb-border-strong);stroke-width:1.5');
-    el('text', { x: 219, y: 29, 'class': 'hw-vs' }, null, copy ? 'nếu độc lập nhau' : 'sáu mức hiếm khác');
-    /* Lưới: 0%, 50% (nét đứt), 95% (chấm). */
-    el('line', { x1: X0, y1: Y0, x2: X1, y2: Y0 }, 'stroke:var(--wb-border-strong);stroke-width:1');
-    el('line', { x1: X0, y1: py(0.5), x2: X1, y2: py(0.5) }, 'stroke:var(--wb-border-strong);stroke-width:1;stroke-dasharray:5 4');
-    el('line', { x1: X0, y1: py(0.95), x2: X1, y2: py(0.95) }, 'stroke:var(--wb-border-strong);stroke-width:1;stroke-dasharray:1.5 3');
-    el('text', { x: X0 - 6, y: Y0 + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, '0%');
-    el('text', { x: X0 - 6, y: py(0.5) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, '50%');
-    el('text', { x: X0 - 6, y: py(0.95) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, '95%');
-    for (k = 0; k <= KMAX; k++) el('text', { x: px(k), y: Y0 + 15, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, String(k));
-    el('text', { x: (X0 + X1) / 2, y: Y0 + 34, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, 'số bằng chứng tốt, mỗi cái ×10');
-
-    if (!copy) {
-      for (i = 0; i < NN.length; i++) if (i !== r) el('path', { d: path(i, all) }, 'fill:none;stroke:var(--wb-border-strong);stroke-width:1.2');
-    } else {
-      el('path', { d: path(r, all) }, 'fill:none;stroke:var(--wb-fg-muted);stroke-width:1.5;stroke-dasharray:4 3');
+  var S = null;   /* lựa chọn đang xem; hình đọc từ đây mỗi khi vẽ lại */
+  var paint = BBV.chart(box, function (g, W) {
+    var narrow = W < 520, P = 16, k, i, cx, cy;
+    var key = copy ? [['line', 'độ hiếm đang chọn'], ['dash', 'nếu độc lập nhau']] : [['line', 'độ hiếm đang chọn'], ['ctx', 'sáu mức hiếm khác']];
+    var title = 'khả năng đúng', kw = g.legendWidth(key), yl = 22;
+    g.text(P, 22, title, 'v-lab');
+    if (P + g.width(title, 'v-lab') + 28 + kw <= W - P) g.legend(W - P - kw, 22, W - P, key);
+    else yl = g.legend(P, 42, W - P, key);
+    var X0 = 50, X1 = W - 22, Y1 = yl + 30, Y0 = Y1 + (narrow ? 164 : 176), H = Y0 + 44;
+    function px(k) { return X0 + k * (X1 - X0) / KMAX; }
+    function py(p) { return Y0 - p * (Y0 - Y1); }
+    function path(r, kEff) {
+      var d = '', k;
+      for (k = 0; k <= KMAX; k++) d += (k ? ' L' : 'M') + px(k).toFixed(1) + ' ' + py(prob(r, kEff(k))).toFixed(1);
+      return d;
     }
-    var kEff = copy ? one : all;
-    el('path', { d: path(r, kEff) }, 'fill:none;stroke:var(--wb-fg);stroke-width:2.5;stroke-linejoin:round');
-    for (k = 0; k <= KMAX; k++) el('circle', { cx: px(k).toFixed(1), cy: py(prob(r, kEff(k))).toFixed(1), r: 2.6 }, 'fill:var(--wb-fg)');
+    if (!S) return H;
+    var r = S.r, n = S.n, p = S.p, kEff = copy ? one : all;
+    /* Lưới: 0% là trục, 50% nét đứt, 95% chấm. */
+    g.hline(X0, X1, Y0, 'v-axis');
+    g.hline(X0, X1, py(0.5), 'v-ref');
+    g.hline(X0, X1, py(0.95), 'v-guide');
+    g.text(X0 - 8, Y0 + 4, '0%', 'v-tick', 'end');
+    g.text(X0 - 8, py(0.5) + 4, '50%', 'v-tick', 'end');
+    g.text(X0 - 8, py(0.95) + 4, '95%', 'v-tick', 'end');
+    for (k = 0; k <= KMAX; k++) g.text(px(k), Y0 + 17, String(k), 'v-tick', 'middle');
+    g.text((X0 + X1) / 2, Y0 + 35, 'số bằng chứng tốt, mỗi cái ×10', 'v-lab', 'middle');
 
-    /* Điểm đang xem: chấm to và nhãn số, viền chữ cùng màu nền để đọc được khi đè lên đường kẻ.
-       Nhãn thử lần lượt vài chỗ quanh chấm, chọn chỗ ít đè lên đường đậm nhất và không ra khỏi vùng vẽ
-       hay chạm chú giải (đường đi lên từ trái sang phải, nên trên-trái và dưới-phải thường trống). */
+    if (!copy) { for (i = 0; i < NN.length; i++) if (i !== r) g.path(path(i, all), 'v-ctx'); }
+    else g.path(path(r, all), 'v-alt');
+    g.path(path(r, kEff), 'v-main');
+    for (k = 0; k <= KMAX; k++) g.dot(px(k), py(prob(r, kEff(k))), 2.6, 'v-hi');
+
+    /* Điểm đang xem: chấm to và nhãn số. Nhãn thử lần lượt vài chỗ quanh chấm, chọn chỗ ít đè lên đường đậm nhất
+       và không ra khỏi vùng vẽ (đường đi lên từ trái sang phải, nên trên-trái và dưới-phải thường trống). */
     cx = px(n); cy = py(p);
-    el('circle', { cx: cx.toFixed(1), cy: cy.toFixed(1), r: 5.5 }, 'fill:var(--wb-fg);stroke:var(--wb-canvas);stroke-width:2');
-    var txt = fmt(p), W = 7.3 * txt.length, pts = [], best = null;
+    g.dot(cx, cy, 5.5, 'v-dot');
+    var txt = fmt(p), TW = g.width(txt, 'v-val'), pts = [], best = null;
     for (k = 0; k < KMAX; k++) for (i = 0; i <= 12; i++) {
       var t = i / 12, p0 = prob(r, kEff(k)), p1 = prob(r, kEff(k + 1));
       pts.push([px(k) + t * (px(k + 1) - px(k)), py(p0 + t * (p1 - p0))]);
     }
-    [[-9, -9, 'end'], [9, 17, 'start'], [9, -9, 'start'], [-9, 17, 'end'], [-11, 4, 'end'], [11, 4, 'start'], [-7, 28, 'end']].forEach(function (c) {
-      var x = cx + c[0], y = cy + c[1], L = c[2] === 'end' ? x - W : x, R = L + W, T = y - 11, B = y + 3, hit = 0;
-      if (L < X0 + 2 || R > 356 || T < 34 || B > Y0 - 1) return;
-      if (R > 190 && T < 34) return;
+    [[-10, -10, 'end'], [10, 18, 'start'], [10, -10, 'start'], [-10, 18, 'end'], [-12, 4.5, 'end'], [12, 4.5, 'start'], [-8, 30, 'end']].forEach(function (c) {
+      var x = cx + c[0], y = cy + c[1], L = c[2] === 'end' ? x - TW : x, R = L + TW, T = y - 12, B = y + 3, hit = 0;
+      if (L < X0 + 2 || R > W - 6 || T < Y1 - 14 || B > Y0 - 1) return;
       pts.forEach(function (q) { if (q[0] > L - 2 && q[0] < R + 2 && q[1] > T - 2 && q[1] < B + 2) hit++; });
       if (!best || hit < best.hit) best = { x: x, y: y, a: c[2], hit: hit };
     });
-    if (!best) best = { x: cx - 9, y: cy + 17, a: 'end' };
-    el('text', { x: best.x.toFixed(1), y: best.y.toFixed(1), 'text-anchor': best.a, 'class': 'hw-vt' },
-      'paint-order:stroke;stroke:var(--wb-canvas);stroke-width:3px;stroke-linejoin:round', txt);
-  }
+    if (!best) best = { x: cx - 10, y: cy + 18, a: 'end' };
+    g.text(best.x, best.y, txt, 'v-val v-halo', best.a);
+    return H;
+  });
 
   function render() {
     var r = clampInt(rRare.value, 0, NN.length - 1, 4), n = clampInt(rN.value, 0, KMAX, 3);
@@ -2975,7 +3015,8 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
         : ' Cũng ' + n + ' bằng chứng ấy, một chuyện phi thường (1 trong 1 triệu) mới ở mức ' + fmt(prob(6, n)) + '.';
     }
     if (sub) sub.textContent = s;
-    draw(r, n, p);
+    S = { r: r, n: n, p: p };
+    paint();
     box.setAttribute('aria-label', 'Khả năng lời khẳng định đúng theo số bằng chứng tốt. Độ hiếm ' + NAME[r] + ', ' + n +
       ' bằng chứng ' + (copy ? 'chép cùng một nguồn' : 'độc lập') + ': ' + fmt(p) + '.');
   }
@@ -3006,18 +3047,15 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
    Nói 50% mọi lần luôn được 0,5. Giá trị đọc từ thanh trượt được kẹp về số nguyên hợp lệ, nên không bao giờ ra NaN. */
 (function () {
   var root = document.getElementById('tetlock');
-  if (!root) return;
+  if (!root || !window.BBV) return;
   var box = root.querySelector('#tetlock-svg'), rHit = root.querySelector('#tetlock-hit'), rConf = root.querySelector('#tetlock-conf');
   if (!box || !rHit || !rConf) return;
   var lHit = root.querySelector('#tetlock-hit-l'), lConf = root.querySelector('#tetlock-conf-l'),
       big = root.querySelector('#tetlock-big'), sub = root.querySelector('#tetlock-sub'), out = root.querySelector('#tetlock-out'),
       b50 = root.querySelector('#tetlock-p50'), b100 = root.querySelector('#tetlock-p100'), bFit = root.querySelector('#tetlock-pfit');
-  var NS = 'http://www.w3.org/2000/svg';
   /* Thứ tự các ô chuyển thành "sai" khi số lần nghiêng đúng giảm: chuỗi trông như thật, và kéo thanh trượt
      thì chỉ một ô đổi, không xáo cả hàng. */
   var MISS = [3, 7, 9, 1, 5];
-  var AX0 = 40, AX1 = 350, AY0 = 96, AUNIT = 33;          /* hình trên: mười cột, đáy 96, 33 px cho 1,0 điểm phạt */
-  var BX0 = 46, BX1 = 340, BY0 = 276, BY1 = 166;          /* hình dưới: ngang 50→100%, dọc 0→1,0 */
 
   function clampInt(v, lo, hi, d) { v = Math.round(parseFloat(v)); return isFinite(v) ? Math.max(lo, Math.min(hi, v)) : d; }
   /* n phần 10^d → số kiểu Việt (dấu phẩy thập phân), bỏ số 0 thừa ở đuôi nhưng giữ ít nhất 2 chữ số. */
@@ -3030,74 +3068,63 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
   }
   function cTxt(m) { var v = 5 * m; return v === 100 ? '1' : '0,' + (v % 10 === 0 ? String(v / 10) : String(v)); }
   function score(k, m) { return k * (20 - m) * (20 - m) + (10 - k) * m * m; }   /* = N */
-  function bx(c) { return BX0 + (c - 0.5) / 0.5 * (BX1 - BX0); }
-  function by(b) { return BY0 - Math.max(0, Math.min(1, b)) * (BY0 - BY1); }
-  function el(tag, attrs, style, text) {
-    var e = document.createElementNS(NS, tag), k;
-    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
-    if (style) e.setAttribute('style', style);
-    if (text != null) e.textContent = text;
-    box.appendChild(e);
-    return e;
-  }
-
-  function draw(k, m, N) {
-    var i, h = k / 10, c = m / 20, isMiss = {}, x, pen, hgt, halo = 'paint-order:stroke;stroke:var(--wb-canvas);stroke-width:3px;stroke-linejoin:round';
-    while (box.firstChild) box.removeChild(box.firstChild);
+  /* Hai hình: điểm phạt từng lời đoán, và điểm trung bình theo mức chắc. Màn rộng đặt cạnh nhau, màn hẹp xếp chồng. */
+  var S = null;
+  var paint = BBV.chart(box, function (g, W) {
+    var P = 16, side = W >= 660, gapX = 36, pw = side ? (W - 2 * P - gapX) / 2 : W - 2 * P, bL = side ? P + pw + gapX : P;
+    if (!S) return 300;
+    var k = S.k, m = S.m, N = S.N, h = k / 10, c = m / 20, isMiss = {}, i, x;
     for (i = 0; i < 10 - k; i++) isMiss[MISS[i]] = true;
+    /* Đầu mỗi hình: tên (tự xuống dòng khi hẹp) rồi chú giải. Đặt cạnh nhau thì hai vùng vẽ bắt đầu cùng một độ cao. */
+    function head(x, y0, title, key) { return g.legend(x, g.para(x, y0 + 22, title, 'v-lab', pw) + 20, x + pw, key); }
+    var yA = head(P, 0, 'Điểm phạt từng lời đoán', [['hi', 'sai'], ['lo', 'đúng'], ['dash', 'trung bình']]);
+    var AY1 = yA + 22, AY0 = AY1 + (side ? 162 : 86), aEnd = AY0 + 22;
+    var bT = side ? 0 : aEnd + 10;
+    var yB = head(bL, bT, 'Điểm trung bình theo mức chắc nói ra', [['dash', 'nói 50% mọi lần'], ['ring', 'điểm tốt nhất có thể']]);
+    if (side) { AY1 = Math.max(AY1, yB + 22); AY0 = AY1 + 162; yB = AY1 - 22; }
+    var H = side ? AY0 + 44 : yB + 22 + 116 + 44;
 
-    /* Hình trên: điểm phạt của từng lời đoán, thang 0–2. */
-    el('text', { x: 4, y: 14, 'class': 'hw-vs' }, null, 'Điểm phạt từng lời đoán · vạch đứt là trung bình');
+    /* Trái (hay trên): điểm phạt của từng lời đoán, thang 0–2. */
+    var A0 = P + 22, A1 = P + pw, AU = (AY0 - AY1) / 2;
     [0, 1, 2].forEach(function (v) {
-      var y = AY0 - v * AUNIT;
-      el('line', { x1: AX0, y1: y, x2: AX1, y2: y }, v ? 'stroke:var(--wb-border);stroke-width:1' : 'stroke:var(--wb-border-strong);stroke-width:1');
-      el('text', { x: AX0 - 7, y: y + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, String(v));
+      g.hline(A0, A1, AY0 - v * AU, v ? 'v-grid' : 'v-axis');
+      g.text(A0 - 8, AY0 - v * AU + 4, String(v), 'v-tick', 'end');
     });
+    var pitch = (A1 - A0) / 10, bw = Math.min(20, pitch * 0.56);
     for (i = 0; i < 10; i++) {
-      x = AX0 + i * 31 + 7;
-      pen = isMiss[i] ? 2 * c * c : 2 * (1 - c) * (1 - c);
-      hgt = Math.max(1.5, pen * AUNIT);
-      el('rect', { x: x, y: (AY0 - hgt).toFixed(1), width: 17, height: hgt.toFixed(1), rx: 2 },
-        isMiss[i] ? 'fill:var(--wb-fg)' : 'fill:var(--wb-neutral-strong)');
-      el('text', { x: x + 8.5, y: AY0 + 13, 'text-anchor': 'middle', 'class': isMiss[i] ? 'hw-vt' : 'hw-vs' }, null, isMiss[i] ? 'sai' : 'đúng');
+      var pen = isMiss[i] ? 2 * c * c : 2 * (1 - c) * (1 - c), hgt = Math.max(1.5, pen * AU);
+      x = A0 + (i + 0.5) * pitch;
+      g.rect(x - bw / 2, AY0 - hgt, bw, hgt, isMiss[i] ? 'v-hi' : 'v-lo', 2);
+      g.text(x, AY0 + 16, String(i + 1), 'v-tick', 'middle');
     }
-    var ym = AY0 - (N / 2000) * AUNIT;
-    el('line', { x1: AX0, y1: ym.toFixed(1), x2: AX1, y2: ym.toFixed(1) }, 'stroke:var(--wb-fg-muted);stroke-width:1.5;stroke-dasharray:5 4');
+    g.line(A0, AY0 - (N / 2000) * AU, A1, AY0 - (N / 2000) * AU, 'v-alt');
 
-    /* Hình dưới: điểm trung bình theo mức chắc nói ra, với số lần nghiêng đúng đang chọn. */
-    el('text', { x: 4, y: 136, 'class': 'hw-vs' }, null, 'Điểm trung bình theo mức chắc nói ra');
-    el('line', { x1: 6, y1: 150, x2: 24, y2: 150 }, 'stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4');
-    el('text', { x: 29, y: 154, 'class': 'hw-vs' }, null, 'nói 50% mọi lần');
-    el('circle', { cx: 146, cy: 150, r: 4 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.5');
-    el('text', { x: 155, y: 154, 'class': 'hw-vs' }, null, 'điểm tốt nhất có thể');
-    el('line', { x1: BX0, y1: BY1, x2: BX1, y2: BY1 }, 'stroke:var(--wb-border);stroke-width:1');
-    el('line', { x1: BX0, y1: BY0, x2: BX1, y2: BY0 }, 'stroke:var(--wb-border-strong);stroke-width:1');
-    el('line', { x1: BX0, y1: by(0.5), x2: BX1, y2: by(0.5) }, 'stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4');
-    [[0, '0'], [0.5, '0,5'], [1, '1']].forEach(function (t) {
-      el('text', { x: BX0 - 7, y: by(t[0]) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, t[1]);
-    });
-    for (i = 5; i <= 10; i++) {
-      el('text', { x: bx(i / 10).toFixed(1), y: BY0 + 15, 'text-anchor': 'middle', 'class': i === k ? 'hw-vt' : 'hw-vs' }, null, (i * 10) + '%');
-    }
-    el('text', { x: (BX0 + BX1) / 2, y: BY0 + 32, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, 'mức chắc nói ra');
-
+    /* Phải (hay dưới): điểm trung bình theo mức chắc nói ra, với số lần nghiêng đúng đang chọn. */
+    var B0 = bL + 30, B1 = bL + pw - 10, BY1 = yB + 22, BY0 = side ? AY0 : BY1 + 116;
+    function bx(cc) { return B0 + (cc - 0.5) / 0.5 * (B1 - B0); }
+    function by(b) { return BY0 - Math.max(0, Math.min(1, b)) * (BY0 - BY1); }
+    g.hline(B0, B1, by(1), 'v-grid');
+    g.hline(B0, B1, BY0, 'v-axis');
+    g.line(B0, by(0.5), B1, by(0.5), 'v-alt');
+    [[0, '0'], [0.5, '0,5'], [1, '1']].forEach(function (t) { g.text(B0 - 8, by(t[0]) + 4, t[1], 'v-tick', 'end'); });
+    for (i = 5; i <= 10; i++) g.text(bx(i / 10), BY0 + 17, (i * 10) + '%', i === k ? 'v-key' : 'v-tick', 'middle');
+    g.text((B0 + B1) / 2, BY0 + 35, 'mức chắc nói ra', 'v-lab', 'middle');
     var d = '', cc, bb;
     for (i = 0; i <= 50; i++) {
       cc = 0.5 + i / 100;
       bb = 2 * (h * (1 - cc) * (1 - cc) + (1 - h) * cc * cc);
       d += (i ? ' L' : 'M') + bx(cc).toFixed(1) + ' ' + by(bb).toFixed(1);
     }
-    el('path', { d: d }, 'fill:none;stroke:var(--wb-fg);stroke-width:2.5;stroke-linejoin:round');
+    g.path(d, 'v-main');
     var xb = bx(h), yb = by(k * (10 - k) / 50);
-    el('line', { x1: xb.toFixed(1), y1: yb.toFixed(1), x2: xb.toFixed(1), y2: BY0 }, 'stroke:var(--wb-fg-muted);stroke-width:1;stroke-dasharray:1.5 3');
-    el('circle', { cx: xb.toFixed(1), cy: yb.toFixed(1), r: 4.5 }, 'fill:var(--wb-canvas);stroke:var(--wb-fg);stroke-width:1.5');
-
+    g.vline(xb, yb + 6, BY0, 'v-guide');
+    g.dot(xb, yb, 5, 'v-ring');
     /* Điểm đang xem: chấm đặc, nhãn số đặt phía trên, viền chữ cùng màu nền để đọc được khi đè lên đường kẻ. */
-    var xc = bx(c), yc = by(N / 2000);
-    el('circle', { cx: xc.toFixed(1), cy: yc.toFixed(1), r: 5.5 }, 'fill:var(--wb-fg);stroke:var(--wb-canvas);stroke-width:2');
-    el('text', { x: Math.max(BX0 + 16, Math.min(BX1 - 14, xc)).toFixed(1), y: (yc - 10).toFixed(1), 'text-anchor': 'middle', 'class': 'hw-vt' },
-      halo, dec(N / 2, 3));
-  }
+    var xc = bx(c), yc = by(N / 2000), lbl = dec(N / 2, 3), lw = g.width(lbl, 'v-val');
+    g.dot(xc, yc, 5.5, 'v-dot');
+    g.text(Math.max(B0 + lw / 2, Math.min(W - 6 - lw / 2, xc)), yc - 11, lbl, 'v-val v-halo', 'middle');
+    return H;
+  });
 
   function render() {
     var k = clampInt(rHit.value, 5, 10, 7), m = clampInt(parseFloat(rConf.value) / 5, 10, 20, 18);
@@ -3128,7 +3155,8 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
         k + ' × ' + dec(hitPen, 3) + ' + ' + (10 - k) + ' × ' + dec(missPen, 3) + ' = ' + dec(5 * N, 3) + '\n' +
         dec(5 * N, 3) + ' ÷ 10 = ' + dec(N / 2, 3) + ' · thang 0–1: ' + dec(5 * N / 2, 4);
     }
-    draw(k, m, N);
+    S = { k: k, m: m, N: N };
+    paint();
     box.setAttribute('aria-label', 'Hai biểu đồ. Trên: điểm phạt của mười lời đoán, ' + k + ' lần đúng, ' + (10 - k) +
       ' lần sai. Dưới: điểm trung bình theo mức chắc nói ra; nói ' + (5 * m) + '% được ' + dec(N / 2, 3) +
       ', tốt nhất là nói ' + (10 * k) + '%, được ' + dec(nBest / 2, 3) + '.');
@@ -3156,16 +3184,13 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
    Vĩ độ nơi đến tối đa 18 + 3000/111 ≈ 45° Bắc, nằm gọn trong thước 10°–50° và trong khung 8–16 giờ. */
 (function () {
   var root = document.getElementById('diamond');
-  if (!root) return;
+  if (!root || !window.BBV) return;
   var box = root.querySelector('#diamond-svg'), rDir = root.querySelector('#diamond-dir'), rKm = root.querySelector('#diamond-km');
   if (!box || !rDir || !rKm) return;
   var lDir = root.querySelector('#diamond-dir-l'), lKm = root.querySelector('#diamond-km-l'),
       big = root.querySelector('#diamond-big'), sub = root.querySelector('#diamond-sub'), out = root.querySelector('#diamond-out'),
       bCorn = root.querySelector('#diamond-p-corn'), bEast = root.querySelector('#diamond-p-east'), bNorth = root.querySelector('#diamond-p-north');
-  var NS = 'http://www.w3.org/2000/svg';
   var LAT0 = 18, KM_PER_DEG = 111, TILT = 23.44, H0 = -0.833, RAD = Math.PI / 180;
-  var RX = 22, RY0 = 218, RPX = 4;                  /* thước vĩ độ: 10° ở y = 218, mỗi độ 4 px, 50° ở y = 58 */
-  var CX0 = 100, CX1 = 348, CY0 = 218, CPX = 20;    /* đồ thị: 8 giờ ở y = 218, mỗi giờ 20 px, 16 giờ ở y = 58 */
   var MDAY = [15, 46, 74, 105, 135, 166, 196, 227, 258, 288, 319, 349];   /* ngày giữa mỗi tháng */
 
   function clampNum(v, lo, hi, d) { v = parseFloat(v); return isFinite(v) ? Math.max(lo, Math.min(hi, v)) : d; }
@@ -3183,60 +3208,48 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
   }
   function mins(h) { return Math.round(h * 60); }
   function hm(m) { return Math.floor(m / 60) + ' giờ ' + (m % 60) + ' phút'; }
-  function ry(lat) { return RY0 - (Math.max(10, Math.min(50, lat)) - 10) * RPX; }
-  function cx(n) { return CX0 + (n - 1) / 364 * (CX1 - CX0); }
-  function cy(h) { return CY0 - (Math.max(8, Math.min(16, h)) - 8) * CPX; }
-  function el(tag, attrs, style, text) {
-    var e = document.createElementNS(NS, tag), k;
-    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
-    if (style) e.setAttribute('style', style);
-    if (text != null) e.textContent = text;
-    box.appendChild(e);
-    return e;
-  }
-
-  function draw(a, lat1, gapS) {
-    var halo = 'paint-order:stroke;stroke:var(--wb-canvas);stroke-width:3px;stroke-linejoin:round';
-    var n, x, d0 = '', d1 = '', back = '', h0, h1, i;
-    while (box.firstChild) box.removeChild(box.firstChild);
+  /* Trái: la bàn (hướng đi) và thước vĩ độ; phải: độ dài ngày cả năm ở quê cây và ở nơi đến.
+     Thước và đồ thị cao bằng nhau: 10° ở đáy, 50° ở đỉnh; 8 giờ ở đáy, 16 giờ ở đỉnh. */
+  var S = null;
+  var paint = BBV.chart(box, function (g, W) {
+    var P = 16, narrow = W < 520, RX = P + 7, CX0 = RX + (narrow ? 74 : 86), CX1 = W - P - 6;
+    var key = [['dashring', 'quê cây · 18° Bắc'], ['linedot', 'nơi đến · ' + (S ? num(S.lat1, 1) : '18,0') + '° Bắc']];
+    var yl = g.legend(CX0, 24, W - P, key), CY1 = Math.max(88, yl + 50), CY0 = CY1 + (narrow ? 150 : 162), H = CY0 + 44;
+    function ry(lat) { return CY0 - (Math.max(10, Math.min(50, lat)) - 10) * (CY0 - CY1) / 40; }
+    function cx(n) { return CX0 + (n - 1) / 364 * (CX1 - CX0); }
+    function cy(h) { return CY0 - (Math.max(8, Math.min(16, h)) - 8) * (CY0 - CY1) / 8; }
+    if (!S) return H;
+    var a = S.a, lat1 = S.lat1, gapS = S.gapS, n, x, d0 = '', d1 = '', back = '', h0, h1, i;
 
     /* La bàn nhỏ: mũi tên chỉ hướng đi, B = bắc, Đ = đông. */
-    el('circle', { cx: 38, cy: 26, r: 13 }, 'fill:none;stroke:var(--wb-border-strong);stroke-width:1');
-    el('text', { x: 38, y: 10, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, 'B');
-    el('text', { x: 55, y: 30, 'class': 'hw-vs' }, null, 'Đ');
-    el('line', { x1: 38, y1: 26, x2: (38 + 11 * Math.cos(a * RAD)).toFixed(1), y2: (26 - 11 * Math.sin(a * RAD)).toFixed(1) },
-      'stroke:var(--wb-fg);stroke-width:2;stroke-linecap:round');
-    el('circle', { cx: 38, cy: 26, r: 2 }, 'fill:var(--wb-fg)');
+    var ox = RX + 16, oy = 38, rr = 15;
+    g.dot(ox, oy, rr, 'v-circle');
+    g.text(ox, oy - rr - 5, 'B', 'v-tick', 'middle');
+    g.text(ox + rr + 5, oy + 4, 'Đ', 'v-tick');
+    g.arrow(ox, oy, ox + (rr - 2) * Math.cos(a * RAD), oy - (rr - 2) * Math.sin(a * RAD), 'v-needle', 'v-hi');
+    g.dot(ox, oy, 2, 'v-hi');
 
     /* Thước vĩ độ: vòng rỗng là quê cây, chấm đặc là nơi đến. */
-    el('line', { x1: RX, y1: ry(50), x2: RX, y2: ry(10) }, 'stroke:var(--wb-border-strong);stroke-width:1');
+    g.vline(RX, ry(50), ry(10), 'v-axis');
     [10, 20, 30, 40, 50].forEach(function (v) {
-      el('line', { x1: RX - 3, y1: ry(v), x2: RX + 3, y2: ry(v) }, 'stroke:var(--wb-border-strong);stroke-width:1');
-      el('text', { x: RX + 8, y: ry(v) + 4, 'class': 'hw-vs' }, null, v + '°');
+      g.hline(RX - 3, RX + 4, ry(v), 'v-axis');
+      g.text(RX + 10, ry(v) + 4, v + '°', 'v-tick');
     });
-    el('text', { x: 4, y: 239, 'class': 'hw-vs' }, null, 'vĩ độ Bắc');
-    if (Math.abs(ry(lat1) - ry(LAT0)) > 0.5) el('line', { x1: RX, y1: ry(LAT0), x2: RX, y2: ry(lat1).toFixed(1) }, 'stroke:var(--wb-fg);stroke-width:2.5');
-    el('circle', { cx: RX, cy: ry(lat1).toFixed(1), r: 4 }, 'fill:var(--wb-fg)');
-    el('circle', { cx: RX, cy: ry(LAT0), r: 6.5 }, 'fill:none;stroke:var(--wb-neutral-strong);stroke-width:1.5');
-
-    /* Chú giải. */
-    el('line', { x1: 100, y1: 10, x2: 122, y2: 10 }, 'stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4');
-    el('circle', { cx: 111, cy: 10, r: 4 }, 'fill:var(--wb-canvas);stroke:var(--wb-neutral-strong);stroke-width:1.5');
-    el('text', { x: 128, y: 14, 'class': 'hw-vs' }, null, 'quê cây · 18° Bắc');
-    el('line', { x1: 100, y1: 26, x2: 122, y2: 26 }, 'stroke:var(--wb-fg);stroke-width:2.5');
-    el('circle', { cx: 111, cy: 26, r: 3.5 }, 'fill:var(--wb-fg)');
-    el('text', { x: 128, y: 30, 'class': 'hw-vs' }, null, 'nơi đến · ' + num(lat1, 1) + '° Bắc');
+    g.text(P - 2, CY0 + 34, 'vĩ độ Bắc', 'v-lab');
+    if (Math.abs(ry(lat1) - ry(LAT0)) > 0.5) g.line(RX + 0.5, ry(LAT0), RX + 0.5, ry(lat1), 'v-main');
+    g.dot(RX + 0.5, ry(LAT0), 6, 'v-ring-alt');
+    g.dot(RX + 0.5, ry(lat1), 4.5, 'v-dot');
 
     /* Khung đồ thị: giờ theo trục dọc, tháng theo trục ngang, vạch chấm ở ngày 21/6. */
-    [8, 10, 12, 14, 16].forEach(function (h) {
-      el('line', { x1: CX0, y1: cy(h), x2: CX1, y2: cy(h) }, h === 8 ? 'stroke:var(--wb-border-strong);stroke-width:1' : 'stroke:var(--wb-border);stroke-width:1');
-      el('text', { x: CX0 - 6, y: cy(h) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, String(h));
+    [8, 10, 12, 14, 16].forEach(function (hh) {
+      g.hline(CX0, CX1, cy(hh), hh === 8 ? 'v-axis' : 'v-grid');
+      g.text(CX0 - 8, cy(hh) + 4, String(hh), 'v-tick', 'end');
     });
-    el('text', { x: CX0 - 6, y: 49, 'text-anchor': 'end', 'class': 'hw-vs' }, null, 'giờ');
-    for (i = 0; i < 12; i += 2) el('text', { x: cx(MDAY[i]).toFixed(1), y: CY0 + 16, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, 'T' + (i + 1));
-    x = cx(172).toFixed(1);
-    el('line', { x1: x, y1: cy(16), x2: x, y2: CY0 }, 'stroke:var(--wb-fg-muted);stroke-width:1;stroke-dasharray:1.5 3');
-    el('text', { x: x, y: 52, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, '21/6');
+    g.text(CX0 - 8, CY1 - 14, 'giờ', 'v-lab', 'end');
+    for (i = 0; i < 12; i += 2) g.text(cx(MDAY[i]), CY0 + 17, 'T' + (i + 1), 'v-tick', 'middle');
+    x = cx(172);
+    g.vline(x, CY1 - 4, CY0, 'v-guide');
+    g.text(x, CY1 - 14, '21/6', 'v-tick', 'middle');
 
     /* Hai đường độ dài ngày và dải chênh lệch giữa chúng. */
     for (n = 1; n <= 365; n += 2) {
@@ -3245,16 +3258,18 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
       d1 += (n > 1 ? ' L' : 'M') + cx(n).toFixed(1) + ' ' + cy(h1).toFixed(1);
       back = ' L' + cx(n).toFixed(1) + ' ' + cy(h0).toFixed(1) + back;
     }
-    el('path', { d: d1 + back + ' Z' }, 'fill:var(--wb-fg);fill-opacity:.08;stroke:none');
-    el('path', { d: d1 }, 'fill:none;stroke:var(--wb-fg);stroke-width:2.5;stroke-linejoin:round');
-    el('path', { d: d0 }, 'fill:none;stroke:var(--wb-neutral-strong);stroke-width:1.5;stroke-dasharray:5 4');
-    /* Nhãn chênh lệch đặt trên đường nơi đến ở ngày 21/6; sát mép trên quá thì chuyển xuống dưới đường quê cây. */
+    g.path(d1 + back + ' Z', 'v-wash');
+    g.path(d0, 'v-alt');
+    g.path(d1, 'v-main');
+    /* Nhãn chênh lệch đặt trên đường nơi đến ở ngày 21/6; sát mép trên quá thì vào giữa dải chênh lệch nếu đủ rộng,
+       không thì xuống dưới đường quê cây. */
     if (gapS >= 3) {
-      var yLab = cy(dayLen(lat1, TILT)) - 8;
-      if (yLab < 74) yLab = cy(dayLen(LAT0, TILT)) + 18;
-      el('text', { x: (+x + 6).toFixed(1), y: yLab.toFixed(1), 'class': 'hw-vt' }, halo, '+' + gapS + ' phút');
+      var yTop = cy(dayLen(lat1, TILT)), yBot = cy(dayLen(LAT0, TILT)), yLab = yTop - 9;
+      if (yLab < CY1 + 12) yLab = yBot - yTop >= 26 ? (yTop + yBot) / 2 + 4.5 : yBot + 20;
+      g.text(x + 7, yLab, '+' + gapS + ' phút', 'v-val v-halo');
     }
-  }
+    return H;
+  });
 
   function render() {
     var a = Math.round(clampNum(rDir.value, 0, 90, 50) / 5) * 5, km = Math.round(clampNum(rKm.value, 0, 3000, 2000) / 100) * 100;
@@ -3282,7 +3297,8 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
         '21/6:  ' + hm(s0) + ' → ' + hm(s1) + '\n' +
         '22/12: ' + hm(w0) + ' → ' + hm(w1);
     }
-    draw(a, lat1, gapS);
+    S = { a: a, lat1: lat1, gapS: gapS };
+    paint();
     box.setAttribute('aria-label', 'Thước vĩ độ: quê cây ở 18° Bắc, nơi đến ở ' + num(lat1, 1) + '° Bắc. Đồ thị độ dài ngày trong năm: ngày 21/6 dài ' +
       hm(s0) + ' ở quê cây, ' + hm(s1) + ' ở nơi đến; hai nơi lệch nhau nhiều nhất ' + top + ' phút.');
   }
@@ -3300,6 +3316,75 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
   if (bNorth) bNorth.addEventListener('click', function () { preset(90, true); });
   render();
 })();
+/* ---- diamond: sơ đồ chuỗi nhân quả (hình tĩnh, vẽ bằng BBV cho cùng cỡ chữ với các mô hình) ----
+   Hai làn: trái là cây trồng → lương thực dư → người không làm ruộng → súng, thép…; phải là vật nuôi → vi trùng.
+   Lương thực dư (dân đông) cũng đổ vào làn vi trùng. Chữ trong ô tự xuống dòng khi ô hẹp. */
+(function () {
+  var box = document.getElementById('diamond-chain');
+  if (!box || !window.BBV) return;
+  var NODES = [
+    { r: 0, a: 0, b: 1, t: 'Địa lý', s: 'loài hoang dễ thuần · lục địa trải Đông–Tây' },
+    { r: 1, a: 0, b: 0.47, t: 'Cây trồng', s: 'lúa mì, lúa mạch, đậu' },
+    { r: 1, a: 0.53, b: 1, t: 'Vật nuôi', s: 'cừu, dê, bò, lợn, ngựa' },
+    { r: 2, a: 0, b: 0.64, t: 'Lương thực dư', s: 'dân đông · ở yên một chỗ · có kho' },
+    { r: 3, a: 0, b: 0.64, t: 'Người không làm ruộng', s: 'thợ, lính, quan lại, người ghi sổ' },
+    { r: 4, a: 0, b: 0.64, t: 'Súng, thép, ngựa chiến, tàu', s: 'chữ viết, nhà nước' },
+    { r: 4, a: 0.72, b: 1, t: 'Vi trùng', s: 'và miễn dịch' }
+  ];
+  function wrap(g, s, cls, maxW) {
+    var words = s.split(' '), lines = [], cur = '', i, t;
+    for (i = 0; i < words.length; i++) {
+      t = cur ? cur + ' ' + words[i] : words[i];
+      if (cur && g.width(t, cls) > maxW) { lines.push(cur); cur = words[i]; } else cur = t;
+    }
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  BBV.chart(box, function (g, W) {
+    var CW = Math.min(W - 32, 640), x0 = (W - CW) / 2, GAP = 30, i, j;
+    function X(f) { return x0 + f * CW; }
+    /* Đo trước: mỗi ô cao theo số dòng chữ, mỗi hàng cao bằng ô cao nhất của nó. */
+    var rowH = [0, 0, 0, 0, 0];
+    NODES.forEach(function (n) {
+      var w = (n.b - n.a) * CW - 16;
+      n.tl = wrap(g, n.t, 'v-key', w); n.sl = wrap(g, n.s, 'v-sub', w);
+      n.h = 16 + 16 * n.tl.length + 14 * n.sl.length;
+      rowH[n.r] = Math.max(rowH[n.r], n.h);
+    });
+    var rowY = [], y = 30;
+    for (i = 0; i < 5; i++) { if (i === 4) y += 10; rowY.push(y); y += rowH[i] + GAP; }
+    var endY = y, endH = 34;
+    NODES.forEach(function (n) {
+      var nx = X(n.a), ny = rowY[n.r], nh = rowH[n.r], ty = ny + (nh - (16 * n.tl.length + 14 * n.sl.length)) / 2 + 12;
+      n.x = nx; n.y = ny; n.w = (n.b - n.a) * CW; n.hh = nh;
+      g.rect(nx + 0.5, ny + 0.5, n.w - 1, nh - 1, 'v-node', 7);
+      for (j = 0; j < n.tl.length; j++) { g.text(nx + n.w / 2, ty, n.tl[j], 'v-key', 'middle'); ty += 16; }
+      for (j = 0; j < n.sl.length; j++) { g.text(nx + n.w / 2, ty + 1, n.sl[j], 'v-sub', 'middle'); ty += 14; }
+    });
+    var N = NODES, bot = function (n) { return n.y + n.hh; };
+    /* Mũi tên: đọc là "tạo điều kiện cho". */
+    g.arrow(X(0.235), bot(N[0]), X(0.235), N[1].y);
+    g.arrow(X(0.765), bot(N[0]), X(0.765), N[2].y);
+    g.arrow(X(0.235), bot(N[1]), X(0.235), N[3].y);
+    g.arrow(X(0.585), bot(N[2]), X(0.585), N[3].y);
+    g.arrow(X(0.32), bot(N[3]), X(0.32), N[4].y);
+    g.arrow(X(0.32), bot(N[4]), X(0.32), N[5].y);
+    /* Làn phải: vật nuôi thẳng xuống vi trùng; lương thực dư (dân đông) nhập vào làn ấy. */
+    g.arrow(X(0.86), bot(N[2]), X(0.86), N[6].y);
+    g.arrow(X(0.64), N[3].y + N[3].hh / 2, X(0.86) - 1, N[3].y + N[3].hh / 2);
+    /* Cả hai làn gặp nhau ở Cajamarca. */
+    var ex0 = X(0.2), ex1 = X(0.96);
+    g.arrow(X(0.32), bot(N[5]), X(0.32), endY);
+    g.arrow(X(0.86), bot(N[6]), X(0.86), endY);
+    g.rect(ex0 + 0.5, endY + 0.5, ex1 - ex0 - 1, endH - 1, 'v-node v-node-end', endH / 2);
+    g.text((ex0 + ex1) / 2, endY + 21.5, 'Cajamarca, 1532', 'v-key', 'middle');
+    /* Nhãn hai tầng nguyên nhân: tầng gần nằm bên trái mũi tên nếu đủ chỗ, không thì bên phải. */
+    g.text(x0, rowY[0] - 11, 'nguyên nhân sâu', 'v-tick');
+    var lw = g.width('nguyên nhân gần', 'v-tick'), gx = x0 + lw + 10 <= X(0.32) ? x0 : X(0.32) + 10;
+    g.text(gx, rowY[4] - 12, 'nguyên nhân gần', 'v-tick');
+    return endY + endH + 18;
+  });
+})();
 </script>
 
 <script>
@@ -3313,30 +3398,17 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
    Giá trị thanh trượt được kẹp về số hợp lệ: không bao giờ ra NaN. */
 (function () {
   var root = document.getElementById('acemoglu');
-  if (!root) return;
+  if (!root || !window.BBV) return;
   var box = root.querySelector('#acemoglu-svg'), rGap = root.querySelector('#acemoglu-gap'), rAmp = root.querySelector('#acemoglu-amp');
   if (!box || !rGap || !rAmp) return;
   var lGap = root.querySelector('#acemoglu-gap-l'), lAmp = root.querySelector('#acemoglu-amp-l'),
       big = root.querySelector('#acemoglu-big'), sub = root.querySelector('#acemoglu-sub'), out = root.querySelector('#acemoglu-out'),
       bPlague = root.querySelector('#acemoglu-p-plague'), bNone = root.querySelector('#acemoglu-p-none'), bSame = root.querySelector('#acemoglu-p-same');
-  var NS = 'http://www.w3.org/2000/svg';
   var K = 0.12, T = 16, J = 4;
-  var X0 = 40, X1 = 300, Y0 = 200, Y1 = 34;   /* thế hệ 0 ở x = 40, thế hệ 16 ở x = 300; mức 0 ở y = 200, mức 100 ở y = 34 */
 
   function clampNum(v, lo, hi, d) { v = parseFloat(v); return isFinite(v) ? Math.max(lo, Math.min(hi, v)) : d; }
   function num(v, dp) { return Math.abs(v).toFixed(dp || 0).replace('.', ','); }
   function r1(v) { return Math.round(v * 10) / 10; }
-  function px(t) { return X0 + t * (X1 - X0) / T; }
-  function py(v) { return Y0 - Math.max(0, Math.min(100, v)) * (Y0 - Y1) / 100; }
-  function el(tag, attrs, style, text) {
-    var e = document.createElementNS(NS, tag), k;
-    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
-    if (style) e.setAttribute('style', style);
-    if (text != null) e.textContent = text;
-    box.appendChild(e);
-    return e;
-  }
-
   /* Mức của A qua các thế hệ 0…T; B = 100 − A. */
   function series(gap, amp) {
     var d = gap / 2, a = [50 + d], t;
@@ -3348,44 +3420,42 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
     return a;
   }
 
-  function draw(a, amp) {
-    var halo = 'paint-order:stroke;stroke:var(--wb-canvas);stroke-width:3px;stroke-linejoin:round';
-    var dA = '', dB = '', t, aEnd = Math.round(a[T]), yA, yB, m;
-    while (box.firstChild) box.removeChild(box.firstChild);
-
-    el('text', { x: X0, y: 12, 'class': 'hw-vs' }, null, 'quyền lực trải rộng tới đâu · 0–100');
+  var S = null;   /* lần tính gần nhất; hình đọc từ đây mỗi khi vẽ lại */
+  var paint = BBV.chart(box, function (g, W) {
+    var narrow = W < 520, yt = g.para(16, 22, 'quyền lực trải rộng tới đâu · 0–100', 'v-lab', W - 32);
+    var X0 = 44, X1 = W - 60, Y1 = yt + 34, Y0 = Y1 + (narrow ? 164 : 180), H = Y0 + 44;
+    function px(t) { return X0 + t * (X1 - X0) / T; }
+    function py(v) { return Y0 - Math.max(0, Math.min(100, v)) * (Y0 - Y1) / 100; }
+    if (!S) return H;
+    var a = S.a, amp = S.amp, dA = '', dB = '', t, aEnd = Math.round(a[T]), yA, yB, m;
     /* Dải bước ngoặt giữa thế hệ 4 và 5. */
     if (amp > 1) {
-      el('rect', { x: px(J), y: Y1, width: (px(J + 1) - px(J)).toFixed(2), height: Y0 - Y1 }, 'fill:var(--wb-fg);fill-opacity:.08;stroke:none');
-      el('text', { x: ((px(J) + px(J + 1)) / 2).toFixed(1), y: Y1 - 5, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, 'bước ngoặt');
+      g.rect(px(J), Y1 - 8, px(J + 1) - px(J), Y0 - Y1 + 8, 'v-wash');
+      g.text((px(J) + px(J + 1)) / 2, Y1 - 15, 'bước ngoặt', 'v-lab', 'middle');
     }
-    /* Lưới: 0 và 100 là mép, 50 là mức giữa (nét đứt). */
+    /* Lưới: 0 là trục, 100 là mép trên, 50 là mức giữa (nét đứt). */
     [0, 50, 100].forEach(function (v) {
-      el('line', { x1: X0, y1: py(v), x2: X1, y2: py(v) },
-        v === 50 ? 'stroke:var(--wb-border-strong);stroke-width:1;stroke-dasharray:4 4' : 'stroke:var(--wb-border);stroke-width:1');
-      el('text', { x: X0 - 6, y: py(v) + 4, 'text-anchor': 'end', 'class': 'hw-vs' }, null, String(v));
+      g.hline(X0, X1, py(v), v === 50 ? 'v-ref' : v ? 'v-grid' : 'v-axis');
+      g.text(X0 - 8, py(v) + 4, String(v), 'v-tick', 'end');
     });
-    [0, 4, 8, 12, 16].forEach(function (g) {
-      el('text', { x: px(g), y: Y0 + 16, 'text-anchor': 'middle', 'class': 'hw-vs' }, null, String(g));
-    });
-    el('text', { x: X1, y: Y0 + 32, 'text-anchor': 'end', 'class': 'hw-vs' }, null, 'thế hệ');
-
+    [0, 4, 8, 12, 16].forEach(function (k) { g.text(px(k), Y0 + 17, String(k), 'v-tick', 'middle'); });
+    g.text(X1, Y0 + 35, 'thế hệ', 'v-lab', 'end');
     /* Hai đường: A nét liền đậm, B nét đứt. */
     for (t = 0; t <= T; t++) {
       dA += (t ? ' L' : 'M') + px(t).toFixed(1) + ' ' + py(a[t]).toFixed(1);
       dB += (t ? ' L' : 'M') + px(t).toFixed(1) + ' ' + py(100 - a[t]).toFixed(1);
     }
-    el('path', { d: dB }, 'fill:none;stroke:var(--wb-neutral-strong);stroke-width:2;stroke-dasharray:5 4;stroke-linejoin:round');
-    el('path', { d: dA }, 'fill:none;stroke:var(--wb-fg);stroke-width:2.5;stroke-linejoin:round');
-    el('circle', { cx: X1, cy: py(100 - a[T]).toFixed(1), r: 3.5 }, 'fill:var(--wb-canvas);stroke:var(--wb-neutral-strong);stroke-width:1.5');
-    el('circle', { cx: X1, cy: py(a[T]).toFixed(1), r: 3.5 }, 'fill:var(--wb-fg)');
-
+    g.path(dB, 'v-alt');
+    g.path(dA, 'v-main');
+    g.dot(X1, py(100 - a[T]), 4.5, 'v-ring-alt');
+    g.dot(X1, py(a[T]), 4.5, 'v-dot');
     /* Nhãn cuối đường; hai đường sát nhau thì tách nhãn ra cho khỏi chồng. */
-    yA = py(a[T]) + 4; yB = py(100 - a[T]) + 4;
-    if (yB - yA < 15) { m = (yA + yB) / 2; yA = m - 7.5; yB = m + 7.5; }
-    el('text', { x: X1 + 8, y: yA.toFixed(1), 'class': 'hw-vt' }, halo, 'A ' + aEnd);
-    el('text', { x: X1 + 8, y: yB.toFixed(1), 'class': 'hw-vt' }, halo, 'B ' + (100 - aEnd));
-  }
+    yA = py(a[T]) + 4.5; yB = py(100 - a[T]) + 4.5;
+    if (yB - yA < 17) { m = (yA + yB) / 2; yA = m - 8.5; yB = m + 8.5; }
+    g.text(X1 + 12, yA, 'A ' + aEnd, 'v-val v-halo');
+    g.text(X1 + 12, yB, 'B ' + (100 - aEnd), 'v-val v-halo');
+    return H;
+  });
 
   function render() {
     var gap = Math.round(clampNum(rGap.value, 0, 10, 4)), amp = Math.round(clampNum(rAmp.value, 1, 8, 5));
@@ -3413,7 +3483,8 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
       lines.push(line(T));
       out.textContent = lines.join('\n');
     }
-    draw(a, amp);
+    S = { a: a, amp: amp };
+    paint();
     box.setAttribute('aria-label', 'Hai đường qua 16 thế hệ: ' +
       (gap === 0 ? 'A và B cùng đứng yên ở 50' :
         'A đi từ ' + num(a[0]) + ' lên ' + aEnd + ', B từ ' + num(100 - a[0]) + ' xuống ' + bEnd) +
@@ -3449,11 +3520,10 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
    Thanh trượt được kẹp về 0…7 và mọi phép tính chỉ so các hằng số đã biết, nên không bao giờ ra NaN. */
 (function () {
   var root = document.getElementById('rosling');
-  if (!root) return;
+  if (!root || !window.BBV) return;
   var box = root.querySelector('#rosling-svg'), range = root.querySelector('#rosling-year');
   if (!box || !range) return;
   var lab = root.querySelector('#rosling-year-l'), big = root.querySelector('#rosling-big'), sub = root.querySelector('#rosling-sub');
-  var NS = 'http://www.w3.org/2000/svg';
   var YEARS = ['1990', '1995', '2000', '2005', '2010', '2015', '2020', 'mới nhất'];
 
   function dec(v, d) { return v.toFixed(d).replace('.', ','); }
@@ -3481,52 +3551,58 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
     for (j = 1; j < opts.length; j++) if (Math.abs(opts[j] - v) < Math.abs(opts[best] - v)) best = j;
     return best;
   }
-  function el(tag, attrs, style, text, parent) {
-    var e = document.createElementNS(NS, tag), k;
-    for (k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
-    if (style) e.setAttribute('style', style);
-    if (text != null) e.textContent = text;
-    (parent || box).appendChild(e);
-    return e;
-  }
-
-  function draw(yi, picks, score) {
-    var i, j, k, y0, x, q, picked, right, t, h, top, bx;
-    while (box.firstChild) box.removeChild(box.firstChild);
-
-    /* Chú thích: ô tô đặc là phương án người ấy chọn, viền đậm là đáp án. */
-    el('rect', { x: 6, y: 5, width: 16, height: 11, rx: 2 }, 'fill:var(--wb-fg)');
-    el('text', { x: 27, y: 14, 'class': 'hw-vs' }, null, 'người ấy chọn');
-    el('rect', { x: 124, y: 5, width: 16, height: 11, rx: 2 }, 'fill:var(--wb-surface);stroke:var(--wb-fg);stroke-width:2');
-    el('text', { x: 145, y: 14, 'class': 'hw-vs' }, null, 'đáp án, theo số mới nhất');
-
+  /* Hình: mỗi câu một trục nhỏ, ba phương án xếp từ tệ nhất (trái) tới sáng sủa nhất (phải), nên đáp án luôn ở mút phải.
+     Tam giác là con số người ấy nhớ, của năm đã chọn; chấm đặc là phương án gần con số ấy nhất, tức phương án họ chọn.
+     Bên phải (màn hẹp thì bên dưới): số câu đúng của tinh tinh chọn bừa trên 100 lượt, cột đậm là điểm của người ấy. */
+  function frac(q, v) { return Math.max(-0.03, Math.min(1.03, (v - q.opts[0]) / (q.opts[2] - q.opts[0]))); }
+  var S = null;
+  var paint = BBV.chart(box, function (g, W) {
+    var PD = 16, side = W >= 700, i, j, k, x;
+    var qw = side ? Math.round((W - 2 * PD - 44) * 0.6) : W - 2 * PD;
+    var key = [['tri', 'số người ấy nhớ'], ['dot', 'người ấy chọn'], ['ring', 'đáp án, theo số mới nhất']];
+    var yl = g.legend(PD, 22, PD + qw, key);
+    var yn = g.para(PD, yl + 20, 'mỗi trục: trái là phương án tệ nhất, phải là sáng sủa nhất', 'v-tick', qw, 15);
+    /* Tên câu và kết quả chung một dòng; màn quá hẹp thì kết quả xuống dòng thứ hai. */
+    function res(q, j) { return [['nhớ ' + q.fmt(q.v[S.yi]) + ' · ', 'v-lab'], [S.picks[j] === 2 ? 'đúng' : 'sai', 'v-key']]; }
+    var two = S && Q.some(function (q, j) {
+      var r = res(q, j);
+      return g.width(q.name, 'v-key') + g.width(r[0][0], 'v-lab') + g.width(r[1][0], 'v-key') + 14 > qw;
+    });
+    var rowH = two ? 92 : 76, qTop = yn + 20, qH = qTop + Q.length * rowH - 12;
+    var hx = side ? PD + qw + 44 : PD, hw = side ? W - PD - hx : W - 2 * PD;
+    var hTop = side ? 0 : qH + 14, hH = side ? qH : 204 + (g.width('Tinh tinh chọn bừa: số câu đúng, trên 100 lượt', 'v-lab') > hw ? 16 : 0);
+    var H = side ? qH + 6 : hTop + hH;
+    if (!S) return H;
+    var yi = S.yi, picks = S.picks, score = S.score, xl = PD + 8, xr = PD + qw - 8;
     for (i = 0; i < Q.length; i++) {
-      q = Q[i]; y0 = 26 + i * 46;
-      el('text', { x: 6, y: y0 + 11, 'class': 'hw-vt' }, null, q.name);
-      t = el('text', { x: 354, y: y0 + 11, 'text-anchor': 'end', 'class': 'hw-vs' }, null, 'nhớ ' + q.fmt(q.v[yi]) + ' · ');
-      el('tspan', { 'class': 'hw-vt' }, null, picks[i] === 2 ? 'đúng' : 'sai', t);
+      var q = Q[i], y = qTop + i * rowH, yA = y + (two ? 54 : 38);
+      g.text(PD, y + 12, q.name, 'v-key');
+      g.rich(PD + qw, y + (two ? 29 : 12), res(q, i), 'end');
+      g.hline(xl, xr, yA, 'v-axis');
       for (j = 0; j < 3; j++) {
-        x = 6 + j * 118; picked = j === picks[i]; right = j === 2;
-        el('rect', { x: x, y: y0 + 17, width: 112, height: 22, rx: 4 },
-          'fill:' + (picked ? 'var(--wb-fg)' : 'var(--wb-surface)') + ';stroke:' + (right ? 'var(--wb-fg)' : 'var(--wb-border-strong)') +
-          ';stroke-width:' + (right ? 2 : 1));
-        el('text', { x: x + 56, y: y0 + 32, 'text-anchor': 'middle', 'class': right ? 'hw-vt' : 'hw-vs' },
-          picked ? 'fill:var(--wb-canvas)' : null, q.lab[j]);
+        x = xl + frac(q, q.opts[j]) * (xr - xl);
+        if (j === 2) g.dot(x, yA, 7, 'v-ring');
+        if (j === picks[i]) g.dot(x, yA, 4.5, 'v-dot');
+        else if (j !== 2) g.dot(x, yA, 3, 'v-lo');
+        g.text(j === 0 ? x - 7 : j === 2 ? x + 7 : x, yA + 22, q.lab[j], j === picks[i] ? 'v-key' : 'v-tick', j === 0 ? null : j === 2 ? 'end' : 'middle');
       }
+      x = xl + frac(q, q.v[yi]) * (xr - xl);
+      g.path('M' + (x - 5).toFixed(1) + ' ' + (yA - 17).toFixed(1) + 'h10l-5 8z', 'v-hi');
     }
-
-    /* Dưới: tinh tinh chọn bừa, số câu đúng trên 100 lượt; cột đậm là điểm của người ấy. */
-    el('line', { x1: 6, y1: 258, x2: 354, y2: 258 }, 'stroke:var(--wb-border);stroke-width:1');
-    el('text', { x: 6, y: 274, 'class': 'hw-vs' }, null, 'Tinh tinh chọn bừa: số câu đúng, trên 100 lượt');
+    /* Tinh tinh chọn bừa: số câu đúng trên 100 lượt. */
+    var yB = hTop + hH - 34, pitch = hw / 6, bw = Math.min(30, pitch * 0.58);
+    var yh = g.para(hx, hTop + 22, 'Tinh tinh chọn bừa: số câu đúng, trên 100 lượt', 'v-lab', hw), maxH = Math.min(yB - yh - 56, 190);
+    g.hline(hx, hx + hw, yB, 'v-axis');
     for (k = 0; k < 6; k++) {
-      h = Math.max(1.5, P[k] / 80 * 32); top = 350 - h; bx = 27 + k * 54;
-      el('rect', { x: bx, y: top.toFixed(1), width: 36, height: h.toFixed(1), rx: 2 }, k === score ? 'fill:var(--wb-fg)' : 'fill:var(--wb-neutral)');
-      el('text', { x: bx + 18, y: (top - 5).toFixed(1), 'text-anchor': 'middle', 'class': k === score ? 'hw-vt' : 'hw-vs' }, null, PCT[k]);
-      el('text', { x: bx + 18, y: 364, 'text-anchor': 'middle', 'class': k === score ? 'hw-vt' : 'hw-vs' }, null, k + ' câu');
-      if (k === score) el('text', { x: bx + 18, y: (top - 22).toFixed(1), 'text-anchor': 'middle', 'class': 'hw-vt' }, null, 'người ấy');
+      var bh = Math.max(1.5, P[k] / 80 * maxH), me = k === score;
+      x = hx + (k + 0.5) * pitch;
+      g.rect(x - bw / 2, yB - bh, bw, bh, me ? 'v-hi' : 'v-lo', 2);
+      g.text(x, yB - bh - 7, PCT[k], me ? 'v-val' : 'v-tick', 'middle');
+      g.text(x, yB + 17, k + ' câu', me ? 'v-key' : 'v-tick', 'middle');
+      if (me) g.text(x, yB - bh - 24, 'người ấy', 'v-key', 'middle');
     }
-    el('line', { x1: 20, y1: 350, x2: 340, y2: 350 }, 'stroke:var(--wb-border-strong);stroke-width:1');
-  }
+    return H;
+  });
 
   function render() {
     var yi = clampInt(range.value, 0, 7, 2), picks = [], score = 0, i, s, better, when;
@@ -3548,7 +3624,8 @@ Thế hệ 16: A 88,8 · B 11,2 · cách 77,6</pre>
       s = 'Đúng cả năm câu. Tinh tinh chọn bừa chỉ được như vậy khoảng 4 lần trong 1.000 lượt.';
     }
     if (sub) sub.textContent = s;
-    draw(yi, picks, score);
+    S = { yi: yi, picks: picks, score: score };
+    paint();
     box.setAttribute('aria-label', 'Người nhớ ' + when + ' đúng ' + score + ' trên 5 câu; đáp án luôn là phương án thứ ba. ' +
       'Tinh tinh chọn bừa trung bình đúng 1,67 câu; ' +
       (score === 5 ? 'không lượt nào làm tốt hơn người này.' : score === 4 ? 'khoảng 4 trong 1.000 lượt làm tốt hơn người này.'
