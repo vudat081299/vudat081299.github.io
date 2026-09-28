@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Cổng chất lượng cho pages/ — 8 trang HTML tự chứa, mỗi trang một file.
+"""Cổng chất lượng cho pages/ — các trang HTML tự chứa, mỗi trang một file.
 
-Vì sao cần: mỗi trang ở đây là một tài liệu dài (1.000–4.700 dòng), tự chứa cả CSS lẫn JS
-inline, và push main = deploy thẳng lên GitHub Pages. Không có build step nào bắt lỗi hộ,
-nên một anchor gãy hay một id trùng sẽ ra web mà không ai biết.
+Vì sao cần: mỗi trang ở đây là một tài liệu dài hàng nghìn dòng, tự chứa cả CSS lẫn JS inline,
+và push main = deploy thẳng lên GitHub Pages. Không có build step nào bắt lỗi hộ, nên một anchor
+gãy hay một id trùng sẽ ra web mà không ai biết.
+
+Các phép kiểm nằm ở tools/htmlcheck.py, dùng chung với cooking/tools/lint-cooking.py. File này
+giữ phần của riêng pages/: bảng nợ DEBT và cách chọn trang để kiểm.
 
 Hai mức, theo đúng quy ước của factlint.py:
   · LỖI  — chặn commit. Sai khách quan, sửa được ngay.
@@ -16,34 +19,21 @@ Chạy:
 
 Exit code: 1 nếu có LỖI, 0 nếu không.
 """
-import collections
 import pathlib
-import re
 import sys
+
+# Nạp bộ kiểm chung ở tools/ của gốc repo. Tắt .pyc: repo không bỏ qua __pycache__/, và mỗi lần
+# chạy cổng không được để lại file lạ trong cây làm việc.
+sys.dont_write_bytecode = True
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2] / 'tools'))
+import htmlcheck  # noqa: E402
 
 PAGES_DIR = pathlib.Path(__file__).resolve().parent.parent
 
-# Bóc script/style/comment TRƯỚC khi soi markup. Bắt buộc: các trang này sinh HTML bằng JS
-# nên trong <script> có những chuỗi kiểu "href='#' + id + '" — soi thẳng sẽ báo nhầm hàng loạt.
-RE_SCRIPT = re.compile(r'<script\b[^>]*>.*?</script\s*>', re.S | re.I)
-RE_STYLE = re.compile(r'<style\b[^>]*>.*?</style\s*>', re.S | re.I)
-RE_COMMENT = re.compile(r'<!--.*?-->', re.S)
-
-RE_ID = re.compile(r'\bid="([^"]+)"')
-RE_ANCHOR = re.compile(r'\bhref="#([^"]*)"')
-RE_ASSET = re.compile(r'\b(?:src|href)="([^"]+)"')
-
-# Thẻ container hay bị quên đóng khi cắt-dán một đoạn dài. Không kiểm mọi thẻ: void element
-# (<br>, <img>…) và thẻ tự đóng làm phép đếm vô nghĩa.
-BALANCED_TAGS = ('div', 'section', 'table', 'ul', 'ol')
-
-# Anchor tới các đích này luôn hợp lệ, không cần id tương ứng.
-ANCHOR_WHITELIST = {'', 'top'}
-
 # ── Nợ kỹ thuật, ghi thẳng vào repo thay vì để trong đầu ai ────────────────────
-# Ba phép kiểm dưới đây (LỖI 5, 6, 7) đã sạch trên phần lớn trang. Vài trang cũ còn nợ;
-# ghi đúng số đang nợ ở đây để cổng hoạt động như một bánh cóc: trang KHÔNG có tên trong
-# bảng thì phải bằng 0, trang có tên thì chỉ được phép giữ nguyên hoặc giảm — tăng là LỖI.
+# Ba phép kiểm bánh cóc (svg_vo_danh, hut_cap, nhan_tieng_anh — xem tools/htmlcheck.py) đã
+# sạch trên phần lớn trang. Vài trang cũ còn nợ; ghi đúng số đang nợ ở đây: trang KHÔNG có tên
+# trong bảng thì phải bằng 0, trang có tên thì chỉ được phép giữ nguyên hoặc giảm — tăng là LỖI.
 # Dọn xong một trang thì xoá dòng của nó đi, đừng nới số lên.
 DEBT = {
     'svg_vo_danh': {'scooter-maintenance-guide.html': 63},
@@ -52,124 +42,9 @@ DEBT = {
     'nhan_tieng_anh': {'cryptography.html': 3},
 }
 
-# Ký tự có dấu tiếng Việt — dùng để biết một chuỗi có phải tiếng Việt hay không.
-VN_CHARS = set('àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ')
-
-RE_SVG_OPEN = re.compile(r'<svg\b[^>]*>', re.I)
-RE_HEADING = re.compile(r'<(h[1-6])\b', re.I)
-RE_ARIA_LABEL = re.compile(r'aria-label="([^"]{3,60})"')
-# Nhãn "chỉ toàn chữ Latin không dấu" — đủ để bắt Home / Open menu / Light / dark,
-# mà không đụng vào tên riêng tiếng Anh nằm trong một câu tiếng Việt.
-RE_PLAIN_LATIN = re.compile(r'[\w\s\-/&().,:0-9×+%]+$')
-
-
-def ratchet(kind, page_name, found, errors, notes):
-    """Bánh cóc: trang chưa có nợ phải bằng 0; trang đang nợ chỉ được giảm."""
-    allowed = DEBT[kind].get(page_name, 0)
-    if found > allowed:
-        errors.append(f'{kind}: {found} chỗ, mức cho phép của trang này là {allowed}')
-    elif found < allowed:
-        notes.append(f'{kind}: còn {found}/{allowed} — đã dọn bớt, hạ số trong DEBT xuống {found}')
-
-
-def strip_code(html: str) -> str:
-    """Trả về phần markup thuần — không script, không style, không comment."""
-    out = RE_COMMENT.sub(' ', html)
-    out = RE_SCRIPT.sub(' ', out)
-    out = RE_STYLE.sub(' ', out)
-    return out
-
-
-def check_page(path: pathlib.Path):
-    """Soi một trang. Trả về (danh sách LỖI, danh sách XEM)."""
-    raw = path.read_text(encoding='utf-8', errors='replace')
-    markup = strip_code(raw)
-    errors, notes = [], []
-
-    # ── LỖI 1: id trùng ────────────────────────────────────────────────────────
-    # id phải duy nhất trong một document. Trùng thì getElementById chỉ thấy cái đầu,
-    # và anchor #id nhảy sai chỗ.
-    ids = RE_ID.findall(markup)
-    for name, count in sorted(collections.Counter(ids).items()):
-        if count > 1:
-            errors.append(f'id trùng {count} lần: id="{name}"')
-
-    # ── LỖI 2: anchor nội bộ gãy ───────────────────────────────────────────────
-    idset = set(ids)
-    for target in sorted(set(RE_ANCHOR.findall(markup))):
-        if target in ANCHOR_WHITELIST:
-            continue
-        if target not in idset:
-            errors.append(f'anchor gãy: href="#{target}" — không có id nào tên vậy')
-
-    # ── LỖI 3: asset nội bộ không tồn tại ──────────────────────────────────────
-    for ref in sorted(set(RE_ASSET.findall(markup))):
-        if ref.startswith(('#', 'http://', 'https://', '//', 'mailto:', 'data:', 'tel:')):
-            continue
-        target = (path.parent / ref.split('?', 1)[0].split('#', 1)[0]).resolve()
-        if not target.exists():
-            errors.append(f'asset thiếu: {ref}')
-
-    # ── LỖI 4: thẻ container lệch mở/đóng ──────────────────────────────────────
-    for tag in BALANCED_TAGS:
-        opened = len(re.findall(rf'<{tag}\b', markup, re.I))
-        closed = len(re.findall(rf'</{tag}\s*>', markup, re.I))
-        if opened != closed:
-            errors.append(f'<{tag}> lệch: mở {opened} / đóng {closed}')
-
-    # ── LỖI 5: <svg> không có tên tiếp cận ─────────────────────────────────────
-    # Trang ở đây dạy bằng biểu đồ. Một <svg> không có aria-label / <title> / aria-labelledby
-    # thì trình đọc màn hình bỏ qua hẳn, và nội dung hình biến mất với người dùng đó. Icon
-    # trang trí nằm trong nút đã có nhãn thì đánh aria-hidden="true" — cũng tính là đã xử lý.
-    bare_svg = 0
-    for m in RE_SVG_OPEN.finditer(markup):
-        tag = m.group(0)
-        if any(a in tag for a in ('aria-label', 'aria-labelledby', 'aria-hidden')):
-            continue
-        end = markup.find('</svg>', m.end())
-        if end > 0 and '<title' in markup[m.end():end]:
-            continue
-        bare_svg += 1
-    ratchet('svg_vo_danh', path.name, bare_svg, errors, notes)
-
-    # ── LỖI 6: cây tiêu đề hụt cấp ─────────────────────────────────────────────
-    # h2 nhảy thẳng xuống h4 làm người duyệt trang bằng phím theo cấp tiêu đề mất phương
-    # hướng. Chỉ bắt chiều đi XUỐNG quá một bậc; đi ngược lên bao nhiêu bậc cũng hợp lệ.
-    levels = [int(t[1]) for t in RE_HEADING.findall(markup)]
-    jumps = sum(1 for i in range(1, len(levels)) if levels[i] > levels[i - 1] + 1)
-    ratchet('hut_cap', path.name, jumps, errors, notes)
-
-    # ── LỖI 7: nhãn điều khiển còn tiếng Anh trên trang lang="vi" ──────────────
-    # aria-label là thứ người dùng NGHE. Trang tiếng Việt mà nút đọc lên thành "Open menu"
-    # là lệch ngôn ngữ. Chỉ soi nhãn thuần chữ Latin không dấu, nên "Sáng / Tối" hay một câu
-    # tiếng Việt có kèm tên riêng tiếng Anh đều không bị bắt nhầm.
-    en_labels = 0
-    if re.search(r'<html[^>]*lang="vi"', raw, re.I):
-        for m in RE_ARIA_LABEL.finditer(markup):
-            value = m.group(1)
-            if VN_CHARS & set(value.lower()):
-                continue
-            if RE_PLAIN_LATIN.match(value) and re.search(r'[A-Za-z]{3}', value):
-                en_labels += 1
-    ratchet('nhan_tieng_anh', path.name, en_labels, errors, notes)
-
-    # ── XEM: khung trang ───────────────────────────────────────────────────────
-    # Cả 8 trang hiện có đủ. Để mức XEM để trang MỚI thiếu thì được nhắc, không bị chặn.
-    if not re.search(r'<html[^>]*\blang=', raw, re.I):
-        notes.append('thiếu <html lang="…"> — trình đọc màn hình đọc sai ngôn ngữ')
-    if not re.search(r'<meta[^>]+viewport', raw, re.I):
-        notes.append('thiếu <meta viewport> — vỡ layout trên điện thoại')
-    if not re.search(r'<title\s*>\s*\S', raw, re.I):
-        notes.append('thiếu <title> có nội dung')
-    if not re.search(r'charset', raw, re.I):
-        notes.append('thiếu khai báo charset — tiếng Việt dễ vỡ dấu')
-
-    return errors, notes
-
 
 def main(argv):
-    verbose = '-v' in argv or '--verbose' in argv
-    names = [a for a in argv if not a.startswith('-')]
+    verbose, names = htmlcheck.parse_args(argv)
 
     if names:
         targets = []
@@ -189,17 +64,10 @@ def main(argv):
     total_err = 0
     total_note = 0
     for path in targets:
-        errors, notes = check_page(path)
+        errors, notes = htmlcheck.check_page(path, DEBT)
         total_err += len(errors)
         total_note += len(notes)
-        if errors:
-            print(f'\n{path.name} — LỖI ({len(errors)}):')
-            for e in errors:
-                print(f'    {e}')
-        if notes and verbose:
-            print(f'\n{path.name} — XEM ({len(notes)}):')
-            for n in notes:
-                print(f'    {n}')
+        htmlcheck.print_result(path.name, errors, notes, verbose)
 
     print()
     if total_note and not verbose:
