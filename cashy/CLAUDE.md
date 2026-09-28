@@ -30,6 +30,11 @@ the normative architecture and data-model docs → current feature docs → ship
 plans (historical design records) → native vision/spec. Plans record why a
 decision was made; they do not override current feature docs or code.
 
+**Owner decisions** — the choices the repo owner made or confirmed (taste, stack, the loan
+redesign, doc rules) — live in [DECISIONS.md](DECISIONS.md), one `CASHY-NNN` code each. This
+file cites the code wherever a rule comes from one. Look up the decisions that touch a file with
+`python3 tools/decisions.py find cashy/<path>` from the repo root.
+
 **Minimum reading path for a safe change:** this file → the relevant
 `docs/features/<feature>.md` → the entity fields in `docs/data-model.md` → the
 layer/procedure in `docs/architecture.md`. Read `docs/components.md` when touching
@@ -48,6 +53,16 @@ pnpm test           # vitest — pure tests over src/domain/ + src/data/ (no DOM
 pnpm lint           # oxlint
 pnpm build          # tsc -b → check:layers → vite build → dist/  (base /cashy/)
 ```
+
+**Node ≥ 20.12** (`engines` in `package.json`; `.nvmrc` = 20); `oxlint` needs ≥ 22. The
+machine's default `node` may be an old one pinned by fnm/nvm — run with
+`PATH=/opt/homebrew/bin:$PATH` rather than trusting `PATH`. The pre-commit hook
+(`tools/hooks/pre-commit`) looks for a Node ≥ 20 itself (PATH first, then Homebrew) instead of
+trusting `PATH`, so it does not pass silently on an old `node`. With one found it runs
+`check-layers`, and runs `oxlint` only when that Node is ≥ 22 **and** `node_modules` is
+installed; with none found it skips the whole gate. Every skip prints a line and still passes —
+a fresh worktree has no `node_modules` — so read the hook's output: a skipped lint is not a
+clean lint.
 
 A fresh workspace starts with the default categories, wallets, and an **empty
 ledger**. The Vietnamese demo dataset (~200 transactions + ~20 subscriptions) is
@@ -83,7 +98,8 @@ Full text: [docs/cashy-vision.md](docs/cashy-vision.md). The parts that bind day
   status, not decoration** — income green, expense/danger red, warning amber, info
   blue. Categories and tags are **grey**, never rainbow (a tag's own hue only shows
   on tag-*about* surfaces). No gratuitous gradients/shadows/animation. Hierarchy
-  comes from scale + weight. See the memory note "Cashy UI taste".
+  comes from scale + weight. This taste is an owner decision (CASHY-001); the web-builder
+  rebuild is how it is enforced today (CASHY-004).
 - **Speed & low friction.** Adding a transaction should cost almost no clicks; the
   editor pre-fills now, remembers a half-typed draft, and has keyboard shortcuts.
 - **Component-first composition (Atomic Design).** Build reusable units, compose
@@ -91,9 +107,9 @@ Full text: [docs/cashy-vision.md](docs/cashy-vision.md). The parts that bind day
   galleries exist to keep that honest.
 - **Money is an integer count of đồng.** Never a float. See invariants below.
 - **Language:** the **UI chrome is English**; the **seeded ledger data stays
-  Vietnamese** (payees, category names, notes). Compact money uses English
+  Vietnamese** (payees, category names, notes) — CASHY-011. Compact money uses English
   magnitude letters **k / m / b** (`3,4m`), not `k / tr / tỷ`. The currency glyph
-  is the đồng sign **`₫`** (U+20AB), applied app-wide through `domain/money`
+  is the đồng sign **`₫`** (U+20AB, CASHY-018), applied app-wide through `domain/money`
   (`formatMoney` / `formatMoneyShort`); `formatMoneyAxis` is the same compact form
   with the unit stripped, for chart axes and range labels.
 
@@ -245,8 +261,9 @@ Two class prefixes, two React layers, one design language.
 
 - **`wb-*`** — the generic design system in
   [src/styles/web-builder.css](src/styles/web-builder.css), wrapped by typed React
-  components in [src/ui/kit/](src/ui/kit/) (import via `@/ui/kit`). Knows nothing
-  about Cashy. Seen at **`#/wb`**.
+  components in [src/ui/kit/](src/ui/kit/). App code imports each component by its deep
+  path, `@/ui/kit/<Component>`; the `@/ui/kit` barrel exists but only the dev galleries use
+  it. Knows nothing about Cashy. Seen at **`#/wb`**.
 - **`cashy-*`** — app chrome in [src/index.css](src/index.css), built **only from
   `--wb-*` tokens** (no raw hexes). Components in `ui/common/` (Cashy-aware shared
   pieces: `AmountDisplay`, `TagChip`, `CategorySelect`, `StatusPicker`, `PeriodPicker`,
@@ -262,7 +279,7 @@ Component tiers (full catalogue + props + screen map: [docs/components.md](docs/
 | **Container / screen** | `Dashboard`, `Transactions`, `Subscriptions`, `Wallets`, `Loans`, `Contacts`, `Categories`, `Tags`, `Settings` | call `useCashy()` + usecases; pass callbacks down |
 | **Singleton modal** | `TransactionEditor`, `SubscriptionEditor`, `TransactionDetail` | register an open-handler; call usecases |
 
-**Composition rule — three tiers, one job each (kit-adoption pass, 2026-07-24).**
+**Composition rule — three tiers, one job each (CASHY-022, CASHY-023).**
 The app is built by *composing* the kit, not by hand-writing `wb-*` markup:
 1. **kit primitives** (`Button`, `Card`, `Capsule`, `Input`, `Progress`, `Modal`, …) are
    the shared vocabulary — never re-hand-write `<button className="wb-btn">`, use
@@ -272,19 +289,19 @@ The app is built by *composing* the kit, not by hand-writing `wb-*` markup:
    feature's business rendering by **composing kit primitives** inside. These stay
    product-specific (e.g. `TransactionTable` is deliberately NOT the generic `kit/Table`).
 3. **feature entry files** do **one job**: assemble tier-2 components + layout + wiring
-   (`useCashy` / usecases). Every entry is now thin — the inline organisms have all been
-   extracted into their own tier-2 files (pure moves, verified zero UI impact):
+   (`useCashy` / usecases) — state/derivation wiring plus a composition of tier-2 components,
+   no inline organism markup. An organism that grows inside an entry is extracted into its own
+   tier-2 file. The existing splits show the shape:
    - **Editors** → `LoanEditor` / `WalletEditor` / `ContactEditor` / `CategoryEditor`
-     (shared option lists in `loanOptions.ts`): `Loans` 686→295, `Wallets` 359→124,
-     `Contacts` 150→59.
-   - **Dashboard** 681→258 → six presentational organisms: `BalancesCard`, `ForecastCard`,
+     (shared option lists in `loanOptions.ts`, so child and entry never import each other).
+   - **Dashboard** → six presentational organisms: `BalancesCard`, `ForecastCard`,
      `DashboardSubscriptions`, `CashflowCard`, `CategoryBreakdownCard`, `InsightsCard`
      (guards + the `wb-grid` layout stay in the entry, which passes derived props;
      `InsightsCard` also owns the `insightTiles`/`STEADINESS` presentation logic).
-   - **Categories** 349→~50 → `CategoryEditor` + `Tree` (drag-reorder organism, clean
+   - **Categories** → `CategoryEditor` + `Tree` (drag-reorder organism, clean
      `{type,onAddChild,onEdit}` interface, reads the store itself).
-   `Transactions.tsx` was already the thin model. Entry files now hold state/derivation
-   wiring + a composition of tier-2 components — no inline organism markup.
+   `Transactions.tsx` is the thin model to copy. A pass that moves markup into the kit or into
+   a tier-2 file changes no DOM and no class — never mix a visual change into it (CASHY-022).
 
 Known residuals the kit can't yet cover byte-identically (left hand-written on purpose):
 `Settings`' `Section` uses `<section className="wb-card">` (kit `Card` renders a `<div>` —
@@ -295,10 +312,33 @@ components, not Button/Card/Capsule.
 
 Styling conventions: money cells use `.wb-num` (tabular, right-aligned). Design
 tokens (colours, radii, typography, chart palette) are CSS custom properties on
-`:root`, flipped for dark by a single `.dark` block. **CSS load order is
-load-bearing**: `index.css` loads *before* `web-builder.css`, so app-level `wb-*`
-overrides need raised specificity and dark `:hover` needs an explicit `.dark`
-branch (architecture.md §8).
+`:root`, flipped for dark by a single `.dark` block.
+
+- **CSS load order is load-bearing** (architecture.md §8). `main.tsx` imports `index.css` →
+  `web-builder.css` → `wb-theme.css`. Token overrides (`--wb-*`) go in `wb-theme.css`, which
+  loads last. Component overrides of a `wb-*` class live in `index.css`, which loads *before*
+  the vendored file and so loses at equal specificity: double the selector to reach 0-2-0
+  (`.wb-btn.cashy-btn--quiet-danger`), and write the dark hover branch out
+  (`.dark .wb-btn.cashy-btn--quiet-danger:hover`), because `.dark .wb-btn--ghost:hover` is
+  already 0-3-0. Never edit `web-builder.css` itself, and do not re-sync it from the root
+  `web-builder/` (CASHY-024).
+- **Theme is two switches.** `lib/theme.ts` and the pre-paint script in `index.html` both set
+  `data-theme` on `<html>` **and** the `.dark` class; web-builder keys off `.dark` only. Anything
+  that changes the theme sets both.
+- **Fonts must cover Vietnamese** — payees, notes and seed data are Vietnamese. `--wb-font` in
+  `wb-theme.css` leads with the system UI stack (SF Pro / Segoe UI cover Vietnamese); Plus
+  Jakarta Sans is a fallback loaded from Google Fonts in `index.html`, so it is not an offline
+  guarantee. Before adopting another web font, check it ships a Google Fonts `vietnamese`
+  subset (DM Sans does not). Money renders in the UI font with `tabular-nums` (`.wb-num`), not
+  a monospace face; `--wb-font-mono` (JetBrains Mono) is for key caps and templated inputs.
+- **A hand-portalled `.wb-popover__panel`** (e.g. the `PayeeInput` autocomplete) must copy the
+  inline overrides `ui/kit/Popover` sets, or it silently breaks: `display: block` (the class
+  is `display: none` until an `.is-open` ancestor reveals it, and a portal has none — the panel
+  is invisible while its text still reads as present); `right/bottom: auto` and
+  `transform: none` (the class defaults to centred-above and drags the panel half its width
+  sideways); `maxWidth` equal to the width you set (the stylesheet caps it at 280px);
+  `position: fixed` from the anchor's `getBoundingClientRect()`, re-placed on capture-phase
+  `scroll` and on `resize`; a `zIndex` above the modal overlay. Prefer `ui/kit/Popover` itself.
 
 **Card composition (feature-leaf cards).** A card is a *composition of the `Card`
 primitive*, not a bespoke `<div>`. Compose the primitive's semantic regions
@@ -354,7 +394,9 @@ goes solid.
    In net worth a `borrowed` loan subtracts and a `lent` loan adds (`loansNetWorth =
    receivable − payable`; the Dashboard shows assets − debts = `walletNet +
    loansNetWorth`). Loans touch NO transactions, categories, or analytics; amounts
-   are integer VND like all money.
+   are integer VND like all money. The agreed loan redesign (CASHY-014) reverses this —
+   transaction-linked loans, derived interest — in its own slice with migration v10; until
+   that slice ships, this invariant is the law.
 10. **Contacts currently hold identity only.** There is no `Loan.contactId` yet;
     `ContactPicker` is deliberate scaffolding and `isContactReferenced` deliberately
     returns false. Do not invent a partial link—adding it requires a persisted
@@ -390,7 +432,7 @@ A handoff is a **temporary work queue**, not project documentation.
 2. When an item is completed, first move any durable knowledge into its canonical
    home: business behaviour → `docs/features/`, data contract → `data-model.md`,
    architecture/reuse rule → `architecture.md` or `components.md`, agent procedure
-   → this file.
+   → this file, a choice the owner made or confirmed → `DECISIONS.md`.
 3. Then **delete the completed item**. If no open item remains, delete the handoff
    file itself and remove every link to it. Do not keep closed checklists or session
    notes “for history”; Git history already provides that archive.
@@ -406,6 +448,7 @@ A handoff is a **temporary work queue**, not project documentation.
 |---|---|
 | [README.md](README.md) | quickstart, commands, invariants, optional visual tuning |
 | **CLAUDE.md** (this) | the AI map |
+| [DECISIONS.md](DECISIONS.md) | owner decisions, one `CASHY-NNN` code each — taste, stack, loan redesign, doc rules |
 | [docs/architecture.md](docs/architecture.md) | **normative** for `src/` — layers, import matrix, procedures, traps |
 | [docs/data-model.md](docs/data-model.md) | full data dictionary — entities, enums, relationships, derived values |
 | [docs/components.md](docs/components.md) | component catalogue — tiers, props, screen→component map |

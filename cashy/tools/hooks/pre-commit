@@ -1,6 +1,6 @@
 #!/bin/sh
 # Cổng chất lượng cho cashy/ — chạy lúc commit. CHẶN.
-# Cài: facts/tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo */tools/hooks/pre-commit)
+# Cài: sh tools/install-hooks.sh  (từ gốc repo; bộ điều phối tự nhặt file này theo */tools/hooks/pre-commit)
 #
 # Chỉ chạy khi commit có chạm cashy/ — commit ở facts/, masters-degree/… không bị ảnh hưởng.
 # Hai cổng tĩnh, nhanh, không cần build:
