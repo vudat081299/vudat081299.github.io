@@ -5883,7 +5883,14 @@ function dName(d){ return VN7[d%7]+' '+Math.floor(d/7)+' ('+LET[d%7]+Math.floor(
 /* ===================== LỚP GIAO DIỆN — chỉ trình bày & chuyển động =====================
    Không đổi hành vi nào của các khối ở trên: mọi thứ dưới đây chỉ đọc trạng thái
    (.on, .playing, nội dung ô kết quả) rồi thêm class để CSS vẽ. Tắt cả khối này đi thì
-   trang vẫn chạy y nguyên, chỉ mất hiệu ứng. */
+   trang vẫn chạy y nguyên, chỉ mất hiệu ứng. Sửa giao diện thì sửa ở đây, đừng đụng các
+   module hành vi ở trên (PAGES-002).
+   Hai bẫy đã gặp khi dựng lớp này:
+   · `.rv` đã là chip giá trị của thanh trượt (<span class="rv" id="…V">), nên hiệu ứng hiện
+     dần khi cuộn dùng `.fx` (+ `.in`), đừng dùng `.rv`.
+   · Chỉ MỘT khoảng bù khi cuộn: `scroll-padding-top` trên <html>. Thêm `scroll-margin-top`
+     cho section nữa là bước nhảy từ mục lục dừng sát ngưỡng mà mục lục dùng để đánh dấu mục
+     đang đọc, và nó báo sai mục. */
 (function(){
   const d=document, reduce=matchMedia('(prefers-reduced-motion: reduce)');
 
