@@ -114,7 +114,10 @@ worktree. Chuỗi nhận ra bộ điều phối (`*/tools/hooks/<tên>`) không 
 
 Cùng luật cho `docs/`: mọi câu có ngày trong `docs/design.md` và `docs/editing.md` — "chủ trang
 chốt / báo / yêu cầu <ngày>", "trước <ngày> trang có…", "(bắt <ngày>)" — thành mã DS hoặc thành
-một câu nói trạng thái hiện tại; số đo cũ thì trỏ về phiên của nó ở file này.
+một câu nói trạng thái hiện tại; số đo cũ thì trỏ về phiên của nó ở file này. Và một chú
+thích trong `<style>` của trang (cạnh `.ds-codecap`) từng ghi "lý do ở HANDOFF.md" — nay trỏ
+HISTORY.md phiên (l). Chỉ chú thích, không đổi gì người đọc thấy; `TOC.md` và `roadmap.html`
+không đổi.
 
 ### 6. Nguyên văn phần "CHƯA LÀM" cũ lúc tách
 
