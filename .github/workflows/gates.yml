@@ -9,6 +9,8 @@ name: Cổng chất lượng
 # agent chạy song song và cùng push thẳng lên main, nên một thay đổi ở đây làm hỏng chỗ kia
 # là chuyện đã xảy ra.
 #
+# deploy.yml chờ workflow này xong và xanh rồi mới chạy — cổng đỏ thì web giữ bản cũ.
+#
 # Việc "chạy thật trong trình duyệt" tách thành job riêng vì nó cần tải Chromium (~120MB).
 # Tách ra thì kết quả lint vẫn hiện trong vài chục giây kể cả khi job kia còn đang tải.
 
@@ -35,30 +37,29 @@ jobs:
         with:
           node-version: 22
 
+      # oxlint của cashy/ cần deps; thiếu thì cashy/tools/check.sh nói rõ là bỏ qua, nên cài ở đây
+      # để lớp 4 chạy đủ những gì tài liệu nói nó chạy.
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - name: Cài deps cho cashy (oxlint)
+        working-directory: cashy
+        run: pnpm install --frozen-lockfile
+
       - name: Trang chủ
         run: python3 tools/lint-collection.py
-      - name: facts/
+      # Mọi project có cổng đều gom cổng vào <project>/tools/check.sh, và bước này TỰ TÌM chúng —
+      # không liệt kê tay. Trước đây mỗi cổng phải khai tên ở đây, và đã có lần quên: hai cổng
+      # verify-* sống vài tuần mà lớp này không chạy. Project mới hay cổng mới tự có mặt.
+      - name: Cổng của từng project (mọi */tools/check.sh)
         run: |
-          python3 facts/tools/factlint.py check
-          python3 facts/tools/factlint.py verify
-      - name: pages/
-        run: python3 pages/tools/lint-pages.py
-      - name: pages/ — cổng kiến thức
-        run: |
-          python3 pages/tools/verify-math-for-ml.py
-          python3 pages/tools/verify-ml.py
-          python3 pages/tools/verify-betting-lab.py
-          python3 pages/tools/verify-jazz-piano.py
-          python3 pages/tools/verify-causal-inference.py
-      - name: cooking/
-        run: python3 cooking/tools/lint-cooking.py
-      - name: shop/
-        run: python3 shop/tools/lint-shop.py -v
-      - name: masters-degree/data-science-roadmap
-        working-directory: masters-degree/data-science-roadmap
-        run: node tools/gate.mjs
-      - name: cashy/ — ranh giới tầng
-        run: node cashy/scripts/check-layers.mjs
+          FAIL=0
+          for c in $(git ls-files '*/tools/check.sh'); do
+            echo "::group::$c"
+            sh "$c" || { echo "::error::$c không qua"; FAIL=1; }
+            echo "::endgroup::"
+          done
+          exit $FAIL
 
   smoke:
     name: shop/ + trang chủ — chạy thật trong trình duyệt

@@ -28,6 +28,7 @@ import sys
 
 HERE = pathlib.Path(__file__).resolve().parent.parent
 PAGE = HERE / 'experimentation-causal-inference.html'
+PAGES = ['pages/experimentation-causal-inference.html']  # run-verify.py đọc dòng này để biết cổng kiểm trang nào
 
 fails = []
 checks = 0

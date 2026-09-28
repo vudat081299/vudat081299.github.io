@@ -1,9 +1,12 @@
 #!/bin/sh
-# Cổng chất lượng cho pages/ — chạy lúc commit. CHẶN.
-# Cài: facts/tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo */tools/hooks/pre-commit)
+# Cổng lớp 2 cho pages/ — chạy lúc commit. CHẶN.
+# Cài: tools/install-hooks.sh  (bộ điều phối tự nhặt file này theo */tools/hooks/pre-commit)
 #
 # Chỉ chạy khi commit có chạm pages/ — commit ở facts/, cashy/… không bị ảnh hưởng.
-# Chỉ soi ĐÚNG những trang đang được commit, không soi cả 8 trang: mỗi trang tới 4.700 dòng.
+#   · cổng tĩnh chỉ soi ĐÚNG những trang đang được commit: mỗi trang có thể dài vài nghìn dòng;
+#   · cổng kiến thức: run-verify.py đọc dòng PAGES đầu mỗi pages/tools/verify-*.py và chỉ chạy
+#     cổng nào có trang — hoặc chính file cổng — nằm trong commit. Thêm cổng mới không phải sửa
+#     file này.
 #
 # Bỏ qua một lần (chỉ khi bạn BIẾT mình đang làm gì): git commit --no-verify
 
@@ -11,8 +14,8 @@ set -e
 DIR="pages"
 ROOT=$(git rev-parse --show-toplevel)
 
-CHANGED=$(git diff --cached --name-only --diff-filter=ACMR | grep "^$DIR/.*\.html$" || true)
-[ -z "$CHANGED" ] && exit 0
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR | grep "^$DIR/" || true)
+[ -z "$STAGED" ] && exit 0
 
 if ! command -v python3 >/dev/null 2>&1; then
   echo "pre-commit: không có python3 — bỏ qua cổng $DIR." >&2
@@ -22,131 +25,31 @@ fi
 cd "$ROOT"
 echo "pre-commit: chạy cổng $DIR…"
 
-# shellcheck disable=SC2086
-if ! python3 "$DIR/tools/lint-pages.py" $CHANGED; then
-  cat >&2 <<'MSG'
+HTML=$(printf '%s\n' "$STAGED" | grep "^$DIR/[^/]*\.html$" || true)
+if [ -n "$HTML" ]; then
+  # shellcheck disable=SC2086
+  if ! python3 "$DIR/tools/lint-pages.py" $HTML; then
+    cat >&2 <<'MSG'
 
 ──────────────────────────────────────────────────────────────────────
-Commit bị chặn: cổng pages không qua.
+Commit bị chặn: cổng tĩnh của pages/ không qua — chi tiết ở trên.
 
-Mỗi trang trong pages/ là một tài liệu tự chứa, và push main = deploy
-thẳng lên GitHub Pages — không có build step nào bắt lỗi hộ.
+Mỗi trang là một tài liệu tự chứa, và push main = deploy lên GitHub Pages,
+không có build step nào bắt lỗi hộ.
 
-  · id trùng      → id phải duy nhất; trùng thì anchor nhảy sai chỗ
-  · anchor gãy    → href="#x" không có id nào tên x
-  · asset thiếu   → src/href trỏ vào file không tồn tại
-  · thẻ lệch      → div/section/table/ul/ol mở đóng không khớp
+  · id trùng · anchor gãy · asset thiếu · thẻ lệch
+  · <svg> không tên · cây tiêu đề nhảy bậc · aria-label tiếng Anh trên trang lang="vi"
+    (ba cái sau chạy theo bánh cóc — bảng DEBT trong lint-pages.py)
 
 Xem thêm:  python3 pages/tools/lint-pages.py -v
 Bỏ qua có ý thức:  git commit --no-verify
 ──────────────────────────────────────────────────────────────────────
 MSG
-  exit 1
-fi
-
-# Cổng kiến thức cho trang toán: nó nói ~90 con số cụ thể, và lint-pages không biết
-# 0,0546875 có phải P(X≥8 | n=10, p=0,5) hay không. Chỉ chạy khi trang ấy bị chạm.
-if echo "$CHANGED" | grep -q "mathematics-for-machine-learning.html"; then
-  if ! python3 "$DIR/tools/verify-math-for-ml.py"; then
-    cat >&2 <<'MSG'
-
-──────────────────────────────────────────────────────────────────────
-Commit bị chặn: có con số trong trang toán không tính lại được.
-
-Trang mathematics-for-machine-learning.html tự nhận là mọi con số
-trong đó đều kiểm được bằng máy. Nếu bạn vừa sửa một con số thì phải
-sửa cả phép tính tương ứng trong pages/tools/verify-math-for-ml.py —
-hoặc con số mới là sai.
-
-Xem chi tiết:  python3 pages/tools/verify-math-for-ml.py
-──────────────────────────────────────────────────────────────────────
-MSG
     exit 1
   fi
 fi
 
-# Cổng kiến thức cho hai trang học máy: chúng nói ~270 con số có đơn vị, phần lớn
-# tính lại được (896 = 32×(3·3·3+1), F1 đọc từ ma trận nhầm lẫn, chi phí nhân của
-# khối Inception, cỡ đầu ra sau padding/stride). Chỉ chạy khi một trong hai bị chạm.
-if echo "$CHANGED" | grep -qE "(^|/)machine-learning(-101)?\.html$"; then
-  if ! python3 "$DIR/tools/verify-ml.py"; then
-    cat >&2 <<'MSG'
-
-──────────────────────────────────────────────────────────────────────
-Commit bị chặn: có con số trong trang học máy không tính lại được.
-
-Nếu bạn vừa sửa một con số thì phải sửa cả phép tính tương ứng trong
-pages/tools/verify-ml.py — hoặc con số mới là sai.
-
-Xem chi tiết:  python3 pages/tools/verify-ml.py
-──────────────────────────────────────────────────────────────────────
-MSG
-    exit 1
-  fi
-fi
-
-# Cổng kiến thức cho trang thí nghiệm cược: nó nói ~30 con số (xác suất trúng, điểm hoà
-# vốn, tiền một chuỗi thua ngốn mất) VÀ một luật — "gấp thếp không đổi được dấu của kỳ
-# vọng". Cổng dựng lại cả hai, kể cả bằng một lối suy luận khác lối trang dùng.
-if echo "$CHANGED" | grep -q "betting-strategy-lab.html"; then
-  if ! python3 "$DIR/tools/verify-betting-lab.py"; then
-    cat >&2 <<'MSG'
-
-──────────────────────────────────────────────────────────────────────
-Commit bị chặn: trang thí nghiệm cược có chỗ không dựng lại được.
-
-Hoặc một con số trong bài vừa lệch khỏi phép tính của nó, hoặc một dòng
-JS then chốt đã đổi — ví dụ điểm đặt không còn được chốt TRƯỚC khi quả
-ra, và lúc ấy cả mục "Vì sao gấp thếp không đổi được dấu" là sai.
-
-Xem chi tiết:  python3 pages/tools/verify-betting-lab.py
-──────────────────────────────────────────────────────────────────────
-MSG
-    exit 1
-  fi
-fi
-
-# Cổng kiến thức cho trang nhạc lý → jazz: nó nói hàng trăm khẳng định về nốt (bậc 7 của Dm7
-# trượt nửa cung xuống bậc 3 của G7, G/B chỉ là G đổi bass, mỗi nốt thuộc đúng ba hợp âm ba…),
-# và năm trụ của nó đánh số "PHẦN NN" bằng tay — chèn một mục là mọi "phần NN" phía sau lệch.
-if echo "$CHANGED" | grep -q "jazz-piano-theory.html"; then
-  if ! python3 "$DIR/tools/verify-jazz-piano.py"; then
-    cat >&2 <<'MSG'
-
-──────────────────────────────────────────────────────────────────────
-Commit bị chặn: trang nhạc lý → jazz có chỗ không tính lại được.
-
-Hoặc một nốt trong dữ liệu (kho lick, sáu lớp đệm, hợp âm nối…) vừa
-lệch khỏi điều bài viết nói về nó, hoặc một tham chiếu "phần NN" trỏ
-sai mục sau khi bạn chèn/xóa một mục. Tham chiếu phải là
-<a class="xref" href="#id-mục">phần NN</a> — cổng tự so số với mục đích.
-
-Xem chi tiết:  python3 pages/tools/verify-jazz-piano.py
-──────────────────────────────────────────────────────────────────────
-MSG
-    exit 1
-  fi
-fi
-
-# Cổng kiến thức cho trang thí nghiệm & nhân quả: cỡ mẫu cho một MDE, tỉ lệ báo động giả
-# khi nhìn trộm, χ² của một lần chia lệch, hệ số thiết kế, DiD đọc từ bảng 2×2, Wald của IV —
-# và vài LUẬT (so hai nhóm = tác động + thiên lệch chọn). Chỉ chạy khi trang ấy bị chạm.
-if echo "$CHANGED" | grep -q "experimentation-causal-inference.html"; then
-  if ! python3 "$DIR/tools/verify-causal-inference.py"; then
-    cat >&2 <<'MSG'
-
-──────────────────────────────────────────────────────────────────────
-Commit bị chặn: trang thí nghiệm & nhân quả có con số không tính lại được.
-
-Nếu bạn vừa sửa một con số (hoặc dữ liệu có hạt giống của một mô hình)
-thì phải sửa cả phép tính tương ứng trong
-pages/tools/verify-causal-inference.py — hoặc con số mới là sai.
-
-Xem chi tiết:  python3 pages/tools/verify-causal-inference.py
-──────────────────────────────────────────────────────────────────────
-MSG
-    exit 1
-  fi
-fi
+# shellcheck disable=SC2086
+python3 "$DIR/tools/run-verify.py" $STAGED || exit 1
 
 echo "pre-commit: cổng $DIR qua."

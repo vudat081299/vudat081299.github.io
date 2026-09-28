@@ -23,6 +23,7 @@ from itertools import combinations
 from statistics import NormalDist
 
 PAGE = pathlib.Path(__file__).resolve().parent.parent / 'mathematics-for-machine-learning.html'
+PAGES = ['pages/mathematics-for-machine-learning.html']  # run-verify.py đọc dòng này để biết cổng kiểm trang nào
 N = NormalDist()
 fails = []
 checks = 0

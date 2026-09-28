@@ -28,6 +28,7 @@ import re
 import sys
 
 PAGE = pathlib.Path(__file__).resolve().parent.parent / 'betting-strategy-lab.html'
+PAGES = ['pages/betting-strategy-lab.html']  # run-verify.py đọc dòng này để biết cổng kiểm trang nào
 
 fails = []
 checks = 0

@@ -27,6 +27,7 @@ import sys
 HERE = pathlib.Path(__file__).resolve().parent.parent
 PAGE_ML = HERE / 'machine-learning.html'
 PAGE_101 = HERE / 'machine-learning-101.html'
+PAGES = ['pages/machine-learning.html', 'pages/machine-learning-101.html']  # run-verify.py đọc dòng này để biết cổng kiểm trang nào
 
 fails = []
 checks = 0

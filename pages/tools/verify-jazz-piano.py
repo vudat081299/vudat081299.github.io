@@ -20,6 +20,7 @@ import re
 import sys
 
 PAGE = pathlib.Path(__file__).resolve().parent.parent / 'jazz-piano-theory.html'
+PAGES = ['pages/jazz-piano-theory.html']  # run-verify.py đọc dòng này để biết cổng kiểm trang nào
 
 ERR = []
 N_OK = 0
