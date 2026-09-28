@@ -42,8 +42,8 @@ Ghi ở DS-026 và thành một mục chờ ở `HANDOFF.md`.
 |---|---|
 | `# Handoff — …` (giới thiệu trang, lệnh mở/đóng phiên, ba lớp hook) | bỏ — lặp lại `CLAUDE.md` |
 | `## ĐANG LÀM` — chữ thương hiệu tạm là `DS` | quyết định DS-018; việc đổi lại nằm ở `HANDOFF.md`, mục CHỜ CHỦ TRANG |
-| `### Đã quyết là GIỮ NGUYÊN` | dòng chủ trang duyệt → DS-008, DS-009; dòng agent tự chốt → luật ở `CLAUDE.md` §2, §4, §7 và `docs/editing.md` việc 7; bảng gốc chép nguyên văn ở mục 5 |
-| `### Một thứ để biết trước` | chép nguyên văn ở mục 5; hai ý của nó thành luật ở `CLAUDE.md` §13 và `docs/editing.md` |
+| `### Đã quyết là GIỮ NGUYÊN` | dòng chủ trang duyệt → DS-008, DS-009; dòng agent tự chốt → luật ở `CLAUDE.md` §2, §4, §7 và `docs/editing.md` việc 7; bảng gốc chép nguyên văn ở mục 6 |
+| `### Một thứ để biết trước` | chép nguyên văn ở mục 6; hai ý của nó thành luật ở `CLAUDE.md` §13 và `docs/editing.md` |
 | `## Chạy preview` | `docs/design.md` §8 — đó là cách làm, không phải việc |
 
 Hai món trước đây nằm lẫn trong "Cố ý KHÔNG làm" của các phiên mà chưa ai đóng giờ lên mục `NỢ`
@@ -91,7 +91,28 @@ Trong một worktree `.git` là một file, nên cách đoán cũ báo "2/3 lớ
 đang chạy thật ở thư mục hook chung — lỗi đó hiện ngay ở đầu phiên này, khi mở phiên trong
 worktree. Chuỗi nhận ra bộ điều phối (`*/tools/hooks/<tên>`) không đổi.
 
-### 5. Nguyên văn phần "CHƯA LÀM" cũ lúc tách
+### 5. `CLAUDE.md` chỉ còn luật hiện hành
+
+- Mọi câu "chủ trang chốt <ngày>" thành luật kèm mã: DS-004 (§2 luật 3), DS-013 / DS-014 (§10),
+  DS-016 / DS-017 (§11), DS-002 (§4, `G-ROADMAP-4`), DS-010 / DS-011 (§4, quiz), DS-033 (§0a),
+  DS-035 (§3, §13).
+- Chuyện đã xảy ra rút về một câu "vì sao" kèm con trỏ `HISTORY.md phiên (x)`: bẫy backtick
+  của `G-SYNTAX`, số đo của `G-QUIZ-COV` / `G-QUIZ-GUESS` / `G-QUIZ-ESC` / `G-QUIZ-TIE` /
+  `G-QUIZ-POS`, "ba lần tôi viết sai phép đo" của `viz-check`, bản rộng bị bác của `G-ABS`.
+  Không luật nào bị bỏ; chỉ ngày tháng, "bản đầu / bản trước" và câu chuyện rời đi.
+- Bỏ các con số đếm sẽ trôi: số bài, số câu quiz, số cổng mỗi bảng, số mount hình, số dòng /
+  dung lượng file HTML, số component kit ghi px cứng.
+- §0a nói đúng cách chia mới: bốn file `.md` ghi trạng thái hiện tại; ai chốt gì →
+  `DECISIONS.md`, phiên nào làm gì → `HISTORY.md`, việc dở → `HANDOFF.md`. Thêm một dòng định
+  tuyến "chủ trang vừa chốt / đảo một điều".
+- §12 viết lại quanh ba file phiên (bảng "file · ghi gì · khi nào" + luật của từng file). Số
+  mục không đổi — `G-DOC` đọc §4, `hook-state.mjs` và các hook trỏ §3, §6, §8, §12.
+- §3 trỏ `../../tools/install-hooks.sh` thay cho lối cũ qua `facts/`, và nói một lệnh là đủ.
+- Ba chỗ sai có sẵn sửa luôn: dòng "sửa lịch" ở §0a trỏ `docs/editing.md` việc 4 (đó là việc
+  thêm nhánh phụ); §7 còn gọi `t-stack` (đã đổi tên thành `r-stack`); `G-ROADMAP-4` ghi ngăn
+  phải "44% ≈ 634px, vừa ~78 ký tự" trong khi 44% chỉ vừa ~72 — con số đang chạy là 47% ≈ 677px.
+
+### 6. Nguyên văn phần "CHƯA LÀM" cũ lúc tách
 
 Chép lại để không mất gì; dòng nào đã thành quyết định thì chỉ còn mã.
 
