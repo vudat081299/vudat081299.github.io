@@ -38,8 +38,8 @@ hai vùng:
 | vùng | tiếng | gồm |
 |---|---|---|
 | **thanh trên** | **Anh** | nhãn nút, phụ đề thương hiệu, `title=`, `aria-label`, và cả chữ do JS sinh (`syncNotesCount`) |
-| **chân trang** | **Anh** | dòng credit + link "← Back to home" — chủ trang chốt 2026-08-05: chân trang là dòng ký tên / điều hướng cuối, không phải chỗ dạy, để tiếng Anh cho gọn |
-| **hero `roadmap.html`** | **Anh** | `.rm-hero__h` / `__sub` / `__stats` / `__note` — chủ trang chốt 2026-08-06 |
+| **chân trang** | **Anh** | dòng credit + link "← Back to home" — chân trang là dòng ký tên / điều hướng cuối, không phải chỗ dạy (DS-016) |
+| **hero `roadmap.html`** | **Anh** | `.rm-hero__h` / `__sub` / `__stats` / `__note` (DS-017) |
 | lớp vỏ còn lại | Việt | thanh bên, `<title>`, `<meta description>`, nhãn ô tìm kiếm, tiêu đề popup / ngăn phụ, mọi `aria-label` ngoài thanh trên |
 
 **Hero của `roadmap.html` là vùng tiếng Anh, và ô đó đã bị dịch ngược một lần** — đừng dịch
@@ -130,8 +130,8 @@ Ba luật kèm theo:
 - **Thêm một loại nội dung mới** → thêm một bậc ở ⑧ rồi trỏ vào; **thêm một component kit
   vào bài** → thêm một dòng ở tầng 3. Đừng viết `font-size` rời tại chỗ dùng.
 - **MỘT bậc, MỘT tên.** Tầng 2 làm `--ds-t-cap` và `--wb-text-caption` bằng nhau *bên trong*
-  `#main`, nên trước 2026-08-04 trang có 22 chỗ gõ tên này và 50 chỗ gõ tên kia cho cùng
-  những bậc đó — đọc code không biết được một rule thuộc cột bài hay lớp vỏ. Luật:
+  `#main`, nên gõ tên nào cũng ra cùng một bậc — và khi cả hai tên cùng được dùng cho cùng
+  những bậc đó thì đọc code không biết được một rule thuộc cột bài hay lớp vỏ. Luật:
   rule **chỉ trong cột bài** → `--ds-t-*`; rule **chỉ ở lớp vỏ** → `--wb-text-*` (px của
   kit, vì lớp vỏ không được giãn theo cỡ chữ bài); rule **trải cả hai lớp** → `--wb-text-*`
   và để tầng 2 tự đổi theo ngữ cảnh. Đúng một rule thuộc loại thứ ba:
@@ -187,7 +187,7 @@ Hai ưu tiên đó đẩy con số thứ ba lên **152 ký tự/dòng** ở cử
 
 ⚠️ **Đừng "sửa" bằng cách hẹp cột lại, và đừng bù bằng cách phóng chữ.** Ba đại lượng này
 đã bị đổi qua lại nhiều lần vì mỗi lần chỉ có hai trong ba được chọn, và cái giá của việc
-đổi qua đổi lại đắt hơn cái giá của dòng dài. **Muốn đổi thì HỎI chủ trang.**
+đổi qua đổi lại đắt hơn cái giá của dòng dài. **Muốn đổi thì HỎI chủ trang** (DS-014).
 
 Thứ duy nhất được nới để bù dòng dài: `line-height` của `p`/`li` = **1,8**. Lỗi duy nhất
 của dòng dài là mắt quay về đầu dòng sau bị nhảy lộn dòng, và giãn dòng chống đúng lỗi đó.
@@ -244,10 +244,9 @@ token ở `:root`:
 
 **Gốc là `dvh`/`dvw`, không phải `vh`/`vw`.** Trên mobile, thanh địa chỉ ẩn/hiện lúc cuộn
 làm viewport THẬT co giãn — `dvh` theo kịp việc đó, `vh` thì đứng yên theo viewport LỚN
-NHẤT. Bản trước dùng `vh` (chỉ để tránh việc `zoom` không chia đơn vị viewport, xem dưới),
-và hệ quả là TOC (`.wb-shell__side` thành drawer `position:fixed; height:var(--wb-shell-h)`
-dưới 900px) cao lệch cửa sổ thật một nhịp trên mobile — đúng lúc cuộn quá đầu drawer thì mép
-dưới hở ra, lộ nội dung trang nằm bên dưới nó (bắt 2026-08-16). `zoom` không điều chỉnh đơn
+NHẤT. Dùng `vh` thì TOC (`.wb-shell__side` thành drawer `position:fixed;
+height:var(--wb-shell-h)` dưới 900px) cao lệch cửa sổ thật một nhịp trên mobile — cuộn quá đầu
+drawer là mép dưới hở ra, lộ nội dung trang nằm bên dưới nó. `zoom` không điều chỉnh đơn
 vị viewport dù là `vh` hay `dvh` (xem dưới), nên đổi gốc sang `dvh` không mất gì.
 
 Chỗ đang dùng: `--wb-shell-h` (override token của kit — kit tự ghi chú "override if the page
@@ -302,8 +301,8 @@ cái bẫy dock tồn tại để tránh), và mở popup toán không làm mấ
 
 **Bề rộng: mặc định 1/4 cửa sổ, kéo được — sàn 1/4, trần 1/2 cửa sổ.** Không phải một số px
 cố định, vì dock lấy chỗ của cột bài nên "bao nhiêu là đủ" phụ thuộc cửa sổ — 380px là 30%
-cột trên màn 1280 và 15% trên màn 2560. **Chủ trang chốt 2026-08-05: MỌI ngăn kéo được (dock
-`Notes` và drawer ngăn phụ) có sàn 1/4 và trần 1/2 cửa sổ** — `makeEdgeResizer({minRatio,
+cột trên màn 1280 và 15% trên màn 2560. **MỌI ngăn kéo được (dock `Notes` và drawer ngăn phụ)
+có sàn 1/4 và trần 1/2 cửa sổ** (DS-022) — `makeEdgeResizer({minRatio,
 maxRatio})`, kèm một sàn px cứng (280/340) làm lưới an toàn cho cửa sổ hẹp. Bốn luật:
 
 1. Mặc định là `clamp(300px, calc(25 * var(--ds-vw)), 640px)` — **CSS tính, không phải JS**,
@@ -329,7 +328,7 @@ riêng, phụ đề dock **không** cần nói lại rằng mép trái kéo đư
 
 Panel hẹp (300–640px) nên mọi thứ ở đây là một cuộc thi giành bề rộng. Sáu luật:
 
-1. **GOM NHÓM theo bài, KHÔNG lọc theo bài đang mở** (chủ trang chốt 2026-08-05). Ghi chú
+1. **GOM NHÓM theo bài, KHÔNG lọc theo bài đang mở** (DS-023). Ghi chú
    là của cả quá trình học, không phải của một trang; lọc theo bài thì đổi bài là danh sách
    trông như vừa bị xoá sạch — nên vẫn hiện HẾT, gom nhóm chỉ đổi cách xếp. Mỗi nhóm có một
    **tiêu đề là tên bài** (link mở bài — bấm **giữ panel mở** vì bạn sang bài đó để xem lại
@@ -338,7 +337,7 @@ Panel hẹp (300–640px) nên mọi thứ ở đây là một cuộc thi giành
 2. **Hàng, không phải thẻ.** Thẻ = nền riêng + viền quanh + mép trái 3px màu + bo góc một
    bên: bốn thứ trang trí cho một dòng chữ, và trong một dock hẹp chúng cộng lại thành
    nhiễu. Hàng phẳng ngăn nhau bằng một vạch, chữ ghi chú là thứ đậm nhất.
-3. **Mỗi ghi chú là HAI HÀNG, không phải một hàng gói dòng.** Từ 2026-08-05 tên bài lên
+3. **Mỗi ghi chú là HAI HÀNG, không phải một hàng gói dòng.** Tên bài đã lên
    tiêu đề nhóm (điểm 1), nên mỗi ghi chú chỉ còn hàng meta + chữ. Vẫn KHÔNG gộp mọi thứ vào
    một hàng `flex-wrap: wrap`: các phần ngăn nhau bằng dấu `·` rời nên mỗi lần gói lại để một
    dấu `·` treo ở cuối/đầu dòng. Chia hàng theo thứ **đo được**:
@@ -513,21 +512,21 @@ Cách tự kiểm: rule `:hover` của chip **không được chứa** `border-s
 - **Bề rộng mặc định là tỉ lệ cửa sổ, không phải px cứng** (`--ds-aside-w` = 1/3, token ⑪).
   660px cứng vừa không nói được vì sao là 660, vừa cho hai cảm giác khác nhau trên hai màn:
   52% cửa sổ ở laptop 1280px, 26% ở màn 2560px. **Kéo được trong khoảng sàn 1/4 → trần 1/2
-  cửa sổ** (`minRatio: .25, maxRatio: .5`) — cùng luật với dock `Notes`, chủ trang chốt
-  2026-08-05; xem §0.5 khối "Bề rộng".
+  cửa sổ** (`minRatio: .25, maxRatio: .5`) — cùng luật với dock `Notes` (DS-022); xem §0.5
+  khối "Bề rộng".
 - **Kéo được ở mép trái**, bằng **đúng** tay kéo `.ds-grip` và **đúng** hàm
   `makeEdgeResizer()` mà dock `Notes` dùng. Có hai ngăn kéo được nhưng chỉ một cơ chế: mọi cái
   bẫy của việc kéo (hệ toạ độ zoom, `rect` trả 0 khi ngăn đang đóng, reset = *xoá* token chứ
   không ghi lại tỉ lệ mặc định, không dùng `setPointerCapture`) chỉ được nhớ đúng ở một chỗ.
 - **Lớp phủ thì phải KHOÁ CUỘN trang.** `inert` chặn tiêu điểm và chuột nhưng **không** chặn
-  bánh xe chuột, nên trước 2026-08-04 thanh cuộn trang vẫn còn và vẫn lái được trong lúc
+  bánh xe chuột, nên không khoá thì thanh cuộn trang vẫn còn và vẫn lái được trong lúc
   drawer mở — hai vùng cuộn cạnh nhau, không dấu hiệu nào nói cái nào đang nhận. Khoá bằng
   `html.ds-scrolllock { overflow: hidden }`, và **`scrollbar-gutter: stable` phải đặt vô điều
   kiện** ở `html` chứ không đặt kèm lúc khoá: đặt kèm thì chỗ chừa và chỗ mất xảy ra cùng một
   frame và nội dung nhảy ngang 11px. Đo sau khi làm: dịch ngang **0,00px**.
   Dock `Notes` **không** khoá — trang phía sau phải cuộn được, đó là điều làm nó khác ba tầng
   kia (§0.5).
-- **Ngăn của `roadmap.html` là KHÔNG phủ** (chủ trang chốt 2026-08-06) — nó theo luật của dock
+- **Ngăn của `roadmap.html` là KHÔNG phủ** (DS-027) — nó theo luật của dock
   `Notes`, không theo luật ba tầng phủ: **không lớp phủ mờ, không đóng khi bấm ra ngoài, không
   khoá cuộn, `aria-modal="false"`**. Chỉ ✕ và Esc đóng. Đổi một trong bốn thứ đó thì phải đổi
   cả bốn: một ngăn không phủ mà vẫn khoá cuộn là nhường chỗ cho người ta đọc danh sách rồi lại
@@ -546,15 +545,14 @@ Cách tự kiểm: rule `:hover` của chip **không được chứa** `border-s
   `wb-drawer__head` + `wb-drawer__title` + `wb-drawer__sub` + `wb-close`, và class riêng của
   trang (`.ds-drawer` / `.rm-drawer`) **chỉ để ghi đè**. Đừng tự vẽ một thanh đầu ngăn thứ hai:
   roadmap từng có `.rm-drawer__bar/__phase/__close` với một ký tự `✕` thô trong hộp 32px, và
-  hai trang lệch nhau ngay ở chỗ mắt nhìn vào đầu tiên (chủ trang báo 2026-08-06). `wb-close`
+  hai trang lệch nhau ngay ở chỗ mắt nhìn vào đầu tiên (DS-028). `wb-close`
   lấy dấu ✕ từ **icon font** của kit (`\e5cd`, Material Symbols Rounded — `@import` sẵn trong
   `web-builder.css`), không phải ký tự văn bản, nên nó cùng một hình ở mọi chỗ.
-- **Nền ngăn = `--wb-canvas` (nền TRANG), không phải `--wb-surface` của kit** (chủ trang chốt
-  2026-08-06): ở sáng `--wb-surface` là trắng tinh nên ngăn trông như một tờ giấy dán lên trang
+- **Nền ngăn = `--wb-canvas` (nền TRANG), không phải `--wb-surface` của kit** (DS-028): ở sáng `--wb-surface` là trắng tinh nên ngăn trông như một tờ giấy dán lên trang
   xám. Ngăn là chỗ **đọc tiếp** mạch chính, không phải một cái card nổi lên. Khai ở `.ds-drawer`
   và `.rm-drawer` — đổi một bên thì đổi cả bên kia.
 - **Đầu ngăn có dòng phụ thì cao theo nội dung; KHÔNG có dòng phụ thì cao đúng
-  `--wb-navbar-h`** (chủ trang chốt 2026-08-06). Dòng phụ đang có ở đâu thì **giữ nguyên** ở
+  `--wb-navbar-h`** (DS-028). Dòng phụ đang có ở đâu thì **giữ nguyên** ở
   đó — luật này chỉ ràng những đầu ngăn trống. Số đo: đầu ngăn có dòng phụ **81px** (title 25
   + sub 20 + padding 32), bỏ dòng phụ còn **58px**, ràng `min-height` là đúng **56px** = navbar.
   Ba chi tiết bắt buộc, thiếu cái nào là hụt:
@@ -616,8 +614,8 @@ cùng một việc.
 | **một chuỗi bước có thứ tự** | `wb-steps` — **luôn luôn**, xem ngay dưới |
 
 **`wb-steps` là component duy nhất cho "một chuỗi bước".** Trang có ba chỗ như vậy: sáu kết
-quả ở trang chủ, mười một chặng giáo trình, và lịch 14 ngày. Trước 2026-08-04 chặng giáo
-trình tự vẽ bằng một grid riêng (`.ds-map__phase` + `.ds-map__num` 34px) — cùng một hình (số
+quả ở trang chủ, mười một chặng giáo trình, và lịch 14 ngày. Chặng giáo trình từng tự vẽ
+bằng một grid riêng (`.ds-map__phase` + `.ds-map__num` 34px) — cùng một hình (số
 trong vòng tròn) nhưng gõ lại lần thứ hai, và lần thứ hai **thiếu đường nối dọc**. Người đọc
 không thấy "thiếu một đường kẻ", họ thấy *"cái này không phải một chuỗi"*. Sửa bằng cách
 dùng đúng component kia, **không** bằng cách vẽ thêm một đường nối thứ hai.
@@ -774,21 +772,21 @@ Bốn cái bẫy:
 
 ## 9. Pháo giấy — chúc mừng khi ĐẠT một bài (`celebrate()`)
 
-Chủ trang yêu cầu 2026-08-05. Khi một bài lần đầu chạm **mức cao nhất của nó** (đọc-xong
+Chủ trang yêu cầu (DS-024). Khi một bài lần đầu chạm **mức cao nhất của nó** (đọc-xong
 với bài không có deliverable, hoặc đạt-deliverable với bài có), trang bắn pháo giấy.
 
 - **Kích hoạt ở TIẾN ĐỘ, không ở nút.** `celebrate()` gọi từ `setLevel()` khi
   `lvl >= maxLevel(l) && before < maxLevel(l)` — nên cả pip trong cây lẫn nút cuối bài đều
   bắn, còn `loadProgress()`/undo/import ghi thẳng vào `prog` (không qua `setLevel`) nên
   **không** bắn lúc tải trang. "Hoàn thành một bài" là sự kiện của tiến độ, không của một cái nút.
-- **Không tự nhảy bài.** Trước đây đạt mức cao nhất thì `setTimeout` nhảy sang bài sau; chủ
-  trang bỏ (2026-08-05) — đánh dấu xong thì ở lại để đọc lại / ghi chú.
+- **Không tự nhảy bài** (DS-024). Đạt mức cao nhất thì ở lại bài đó để đọc lại / ghi chú —
+  đừng thêm lại `setTimeout` nhảy sang bài sau.
 - **Layer cao nhất, không chặn gì.** Một `<canvas id="dsConfetti">` `position:fixed`,
   `z-index: 2147483647` (trên popup 100/101 và dock 90), `pointer-events:none`. Giấy trong
   suốt ở chỗ không có mảnh (clearRect), nên trang phía sau vẫn thấy và vẫn bấm được.
 - **Tôn trọng `prefers-reduced-motion`**: người tắt chuyển động thì bỏ hẳn hiệu ứng.
 - **BA dial rời nhau — đừng xoay sai cái.** Vận tốc rơi cố ý chậm (`vy`/`g` đã giảm 75%
-  theo yêu cầu chủ trang), nên **`vy` không phải dial của bất kỳ câu nào dưới đây**:
+  theo yêu cầu chủ trang, DS-024), nên **`vy` không phải dial của bất kỳ câu nào dưới đây**:
 
   | muốn đổi | xoay | đang là |
   |---|---|---|
@@ -870,10 +868,10 @@ theo selector khớp `.ds-quiz`, khai chỗ khác là roadmap không nhận đư
 **Bóng dừng ở khung, không đi vào trong.** Bóng lồng trong bóng thì cái khung hết nổi mà chi
 tiết bên trong cũng mờ đi — hai lớp cạnh tranh nhau, không lớp nào thắng. Và có một hệ quả kỹ
 thuật: `roadmap.html` gỡ khung ngoài (`#quizModalBody .ds-quiz{…box-shadow:none}`) nên nó tự
-động không nhận bóng này (chủ trang chốt để nguyên trang kia) — nhưng **luật đó chỉ chặn được
+động không nhận bóng này (DS-031: bóng chỉ áp cho trang DS) — nhưng **luật đó chỉ chặn được
 đúng cái khung**. Thêm bóng cho một phần tử *bên trong* là rò sang trang kia ngay.
 
-**Hành xử (chủ trang yêu cầu, giữ đúng bốn điều):**
+**Hành xử (chủ trang yêu cầu — DS-030 — giữ đúng bốn điều):**
 
 1. **Một câu mỗi lần, tua ngang.** `.ds-quiz__track` dịch bằng `translateX(-cur*100%)`,
    `.ds-quiz__viewport` cắt bằng `overflow:hidden`. Bốn cách tua: nút ‹ ›, vạch tiến độ, phím

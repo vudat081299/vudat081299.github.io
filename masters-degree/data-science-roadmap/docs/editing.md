@@ -47,7 +47,7 @@ cổng nào canh, bạn phải tự nhớ.
 | **Cần "cao/rộng bằng cửa sổ"** | dùng `--ds-vh` / `--ds-vw`, **không** `vh`/`vw`/`dvh` trần ([design.md](design.md) §0.4). Media query cũng vậy — con số phải đã chia zoom | `node tools/gate.test.mjs` có ca canh |
 | **Đặt cỡ chữ cho khối trong `#main`** | trỏ vào **một bậc của thang** `--ds-t-*` ([design.md](design.md) §0.2). Cần một loại nội dung chưa có bậc → thêm bậc ở `:root` ⑧, đừng viết `font-size` rời. `em` chỉ cho thứ phụ thuộc ngữ cảnh (code inline). **Px cứng chỉ đúng ở lớp vỏ** | **mắt** + đếm lại số cỡ chữ (§0.2) |
 | **Thêm một component `wb-*` của kit vào bài** | nếu kit ghi `font-size` px cứng cho nó (đúng với hầu hết: alert, help, card, steps, cap, btn, pager…) thì thêm một dòng vào khối `#main .wb-*` để kéo về thang — không thêm thì nó đọc như một trang khác dán vào | đếm lại số cỡ chữ (§0.2): phải ≤ ~10 |
-| **Nới cột nội dung / đổi khổ chữ** | `--ds-measure` **và** `--ds-fs` cùng lúc — nhưng đọc [design.md](design.md) §0.3 trước, hai con số đó là quyết định của chủ trang. Rồi sửa số đo ở hai chỗ: khối chú thích đầu `<style>` và `design.md` §0.3 | `G-MEASURE`, và đo lại ký tự/dòng — **đừng** copy số cũ sang |
+| **Nới cột nội dung / đổi khổ chữ** | `--ds-measure` **và** `--ds-fs` cùng lúc — nhưng đọc [design.md](design.md) §0.3 trước, hai con số đó là quyết định của chủ trang (DS-014). Rồi sửa số đo ở hai chỗ: khối chú thích đầu `<style>` và `design.md` §0.3 | `G-MEASURE`, và đo lại ký tự/dòng — **đừng** copy số cũ sang |
 | **Đổi bề rộng dock `Notes`** | `--ds-dock-w` trong `:root` là mặc định fluid; JS chỉ ghi đè khi người dùng KÉO, và reset = **xoá** `localStorage['ds.dockW']` chứ không ghi lại 25% | mở dock, kéo, F5, kiểm bề rộng còn nhớ |
 | **Đổi tên file ghi chú tải về** | `a.download` trong HTML **và** `PAT_EXPORT` trong `tools/learn.mjs` — đây là hợp đồng để `--sync` tự tìm được file; lệch một bên là `--sync` báo "không thấy bản xuất nào" | chạy `node tools/learn.mjs --sync` sau khi bấm tải về |
 | **Đổi một từ ở lớp vỏ trang** | cùng từ đó **trong bài** — hai tên cho một khái niệm là lỗi `CLAUDE.md` §11. Thanh trên nói tiếng Anh, lớp vỏ còn lại tiếng Việt ([design.md](design.md) §0.1) | `grep -n '<từ cũ>' data-science-roadmap.html` phải ra 0 (hoặc chỉ còn chỗ nêu tên tiếng Anh một lần) |
@@ -327,10 +327,10 @@ nạp từ file ngoài**; phần nội dung bài học vẫn đang ở trong HTM
 ### Chuẩn bao phủ — số câu đi theo BÀI, không theo định mức
 
 **Mỗi mục `h2`/`h3` của mạch chính ít nhất một câu, và mỗi tiêu chí `ACCEPT` ít nhất một
-câu.** Đó là lý do số câu chạy từ 5 (`pr-cost`) tới 24 (`pr-code`) chứ không phải "4–6 câu
-mỗi bài" như bản đầu — định mức đó là cách bỏ sót có hệ thống: đo 2026-08-14 thấy 29/84 bài
-có ít câu hơn số mục của chính nó, trong khi các bài ngắn thì dư. `G-QUIZ-COV` canh đúng
-tỉ lệ này.
+câu** — quiz phải phủ đủ kiến thức mạch chính (DS-010). Đó là lý do số câu mỗi bài chênh nhau
+nhiều chứ không đều "4–6 câu mỗi bài": định mức đều là cách bỏ sót có hệ thống — bài dài có ít
+câu hơn số mục của chính nó trong khi bài ngắn thì dư (số đo: HISTORY.md phiên (v)).
+`G-QUIZ-COV` canh đúng tỉ lệ này.
 
 **Phạm vi dừng ở mạch chính.** Nội dung trong popup / ngăn phải là nhánh phụ (CLAUDE.md §7 —
 "bỏ qua vẫn học được bài"), nên **không hỏi**: hỏi vào đó là phạt người đọc đã bỏ qua theo

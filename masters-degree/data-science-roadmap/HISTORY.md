@@ -112,6 +112,10 @@ worktree. Chuỗi nhận ra bộ điều phối (`*/tools/hooks/<tên>`) không 
   thêm nhánh phụ); §7 còn gọi `t-stack` (đã đổi tên thành `r-stack`); `G-ROADMAP-4` ghi ngăn
   phải "44% ≈ 634px, vừa ~78 ký tự" trong khi 44% chỉ vừa ~72 — con số đang chạy là 47% ≈ 677px.
 
+Cùng luật cho `docs/`: mọi câu có ngày trong `docs/design.md` và `docs/editing.md` — "chủ trang
+chốt / báo / yêu cầu <ngày>", "trước <ngày> trang có…", "(bắt <ngày>)" — thành mã DS hoặc thành
+một câu nói trạng thái hiện tại; số đo cũ thì trỏ về phiên của nó ở file này.
+
 ### 6. Nguyên văn phần "CHƯA LÀM" cũ lúc tách
 
 Chép lại để không mất gì; dòng nào đã thành quyết định thì chỉ còn mã.
