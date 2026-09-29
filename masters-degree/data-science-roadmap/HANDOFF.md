@@ -12,13 +12,6 @@ Không có.
 
 ## NỢ
 
-### `s-how#0` còn là câu hỏi nhớ chữ
-
-Câu mở bằng "Theo bài, điều đó nghĩa là gì?" — hỏi lại chữ trong bài chứ không đặt một tình
-huống phải áp dụng (DS-011). Đây là ca thật duy nhất còn sót khi rà cụm "theo bài"; hơn một trăm
-câu khác có cụm đó đã là câu tình huống, nên sửa đúng câu này trong `data/quiz.json`, đừng sed
-cả cụm.
-
 ### Hộp "Nộp được" của lịch 14 ngày vỡ chữ ở màn 375px khi `out` chứa `<code>`
 
 Lỗi có từ trước, chưa ai đo lại (thấy khi sửa `s-plan14`, HISTORY.md phiên 2026-08-12 (r)). Chỗ
