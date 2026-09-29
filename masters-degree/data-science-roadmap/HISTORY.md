@@ -9,6 +9,25 @@ một dòng "→ quyết định DS-…".
 
 ---
 
+## Phiên 2026-09-29 (ae) — rà đợt commit 27–28/09: CI chặn như pre-push, `<title>` theo DS-016
+
+Chủ repo nhờ rà các commit của hai ngày 27–28/09 — kiến trúc và tài liệu, không đọc nội dung trang.
+Phần chạm thư mục này:
+
+- **`tools/check.sh` chạy `gate.mjs --ci`.** Đó là lối vào GitHub Actions gọi, và nó chạy cổng không
+  `--ci`, nên G-ROADMAP và G-TOC-STALE chỉ nhắc ở CI trong khi pre-commit và pre-push chặn: thêm một
+  dòng vào `roadmap.html` thì `gate.mjs` thoát 0, `gate.mjs --ci` thoát 1. CI là lớp quyết định
+  deploy (REPO-014), nên nó không được lỏng hơn máy.
+- **`<title>` về lại tiếng Việt** (DS-016). 82271b1 đổi nó sang tiếng Anh theo REPO-016 của gốc repo;
+  REPO-016 nay ghi ngoại lệ cho thư mục này.
+- **`HANDOFF.md`**: hai câu kể phiên trước viết lại thành trạng thái hiện tại; không đổi việc nào.
+- `tools/install-hooks.sh`: comment trỏ đúng "luật bất di bất dịch 3", và kể cả `.claude/rules/`.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- `gate.test.mjs` vẫn chỉ chạy ở pre-push khi `tools/` đổi, không chạy ở CI. Thêm nó vào `check.sh`
+  là đổi thời gian chạy của mọi lần CI — để phiên sau cân nhắc, không làm lẫn vào một đợt rà.
+
 ## Phiên 2026-09-28 (ad) — tách HANDOFF thành ba file: việc dở · nhật ký · quyết định
 
 Chủ repo yêu cầu dọn tầng tài liệu cho agent ở cả repo: quyết định của chủ trang ra

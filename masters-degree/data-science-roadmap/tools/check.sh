@@ -5,4 +5,6 @@
 set -eu
 HERE=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$HERE"
-node tools/gate.mjs
+# --ci như pre-commit và pre-push: G-ROADMAP và G-TOC-STALE CHẶN chứ không chỉ nhắc. GitHub Actions
+# là lớp quyết định deploy (REPO-014), nên roadmap.html lệch nguồn không được lên web.
+node tools/gate.mjs --ci

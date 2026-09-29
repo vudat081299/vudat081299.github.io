@@ -12,7 +12,7 @@
 # phải là BỘ ĐIỀU PHỐI chung (tools/install-hooks.sh ở gốc repo): một vòng lặp gọi mọi
 # */tools/hooks/<tên> mà git theo dõi — tools/hooks/pre-commit và pre-push của thư mục này
 # nằm trong số đó. Script này từng tự đặt symlink .git/hooks/<tên> → tools/hooks/<tên>, và
-# symlink đó xoá mất cổng của mọi project khác (CLAUDE.md gốc repo, luật 4). Giờ nó gọi
+# symlink đó xoá mất cổng của mọi project khác (CLAUDE.md gốc repo, luật bất di bất dịch 3). Giờ nó gọi
 # bộ điều phối, nên chạy nó bao nhiêu lần cũng không phá gì.
 #
 # Hai thứ còn lại vẫn là việc của script này, vì chúng không phải git hook:
@@ -20,7 +20,7 @@
 #     và đã mang sẵn hook của thư mục này; bước trộn ở đây giữ cho bản trên máy đúng dù
 #     nó từng bị sửa tay, và chạy lại không sinh hook trùng;
 #   · .claude/launch.json cho preview — KHÔNG được git theo dõi (của .claude/ chỉ có
-#     settings.json và skills/ được theo dõi), nên phải cài từ tools/hooks/launch.json sang.
+#     settings.json, skills/ và rules/ được theo dõi), nên phải cài từ tools/hooks/launch.json sang.
 set -e
 HERE=$(cd "$(dirname "$0")" && pwd)
 ROOT=$(git -C "$HERE" rev-parse --show-toplevel)
