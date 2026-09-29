@@ -24,11 +24,6 @@ Việc dở ở mức cả repo. Việc của một project nằm trong HANDOFF.
 - **Gộp ba lệnh `PostToolUse` trong `.claude/settings.json` thành một bộ điều phối**, cùng kiểu với
   pre-commit: tự gọi `<project>/tools/hooks/post-edit.sh` nếu có. Hiện mỗi project một lệnh chép gần
   giống nhau, thêm project là phải sửa settings.json — cũng là file agent không được tự sửa.
-- **REPO-016 có áp cho `web-builder/templates/*.html` không?** 82271b1 đổi `<title>` của bảy template
-  sang tiếng Anh và đưa chúng vào phạm vi REPO-016, dù commit gốc 7db789b để nguyên chúng; thư mục ấy
-  chép từ repo nguồn của kit, nên lần đồng bộ sau sẽ trả về tiếng Việt. Áp thì ghi một dòng vào
-  `web-builder/PENDING-FIXES.md` (mục kiểm lại sau mỗi lần đồng bộ); không áp thì bỏ
-  `web-builder/templates/*.html` khỏi phạm vi REPO-016 và trả title cũ.
 
 ## CHƯA LÀM
 
