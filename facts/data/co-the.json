@@ -45,21 +45,6 @@
     "src": "Beyerstein trong Mind Myths (1999); Hiệp hội Thần kinh học Hoa Kỳ"
   },
   {
-    "id": "ct-004",
-    "cat": "co-the",
-    "sub": "nao-than-kinh",
-    "q": "Nơ-ron trong vỏ não của bạn được tạo ra vào lúc nào?",
-    "t": "Nơ-ron vỏ não bạn đang dùng gần như là những nơ-ron bạn sinh ra đã có",
-    "s": "Bằng cách đo hàm lượng carbon-14 còn sót lại từ các vụ thử hạt nhân giữa thế kỷ 20 trong ADN tế bào, nhóm nghiên cứu Thuỵ Điển xác định nơ-ron vỏ não hầu như không được thay mới. Trong khi đó tế bào ruột thay sau vài ngày và hồng cầu sau khoảng 120 ngày.",
-    "d": "Cách biết được điều đó mượn dữ liệu từ chiến tranh lạnh: các vụ thử bom hạt nhân 1955–1963 đẩy lượng carbon-14 trong khí quyển lên gần gấp đôi rồi giảm dần theo một đường cong đã đo rất kỹ. Khi một tế bào sao chép ADN, nó khoá vào đó đúng tỉ lệ carbon-14 của năm ấy và sau đó không thay mới — nên mỗi tế bào mang sẵn một con dấu ghi năm ra đời. Đo tỉ lệ đó trong nơ-ron vỏ não cho ra năm sinh của chính người đó.",
-    "tags": [
-      "te-bao",
-      "nao",
-      "tim"
-    ],
-    "src": "Spalding et al., Cell (2005); Bergmann et al., Science (2009)"
-  },
-  {
     "id": "ct-005",
     "cat": "co-the",
     "sub": "tieu-hoa-chuyen-hoa",
