@@ -34,7 +34,6 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { readPage } from './read-html.mjs';
-import { hookLayers } from './hook-state.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
@@ -195,26 +194,7 @@ async function start() {
   const log = git('log', '--oneline', '-3', '--', '.');
   if (log) { console.log(B('3 commit cuối chạm thư mục này')); log.trimEnd().split('\n').forEach(l => console.log('    ' + l)); console.log(''); }
 
-  // 3. Hook: nếu chưa cài thì mọi thứ CLAUDE.md §3 mô tả đang tắt.
-  //    Luật "đã cài chưa" nằm ở tools/hook-state.mjs, dùng chung với cổng G-HOOK.
-  //    Bản cũ ở đây tự kiểm và KHÔNG biết bộ điều phối, nên nó báo "2/3 lớp CHƯA cài"
-  //    trong khi hook vẫn chạy — xem đầu hook-state.mjs.
-  const GITROOT = join(ROOT, '..', '..');
-  const layers = hookLayers({ hooksDir: join(HERE, 'hooks'), gitRoot: GITROOT });
-  const off = layers.filter(l => !l.ok);
-  if (off.length) {
-    console.log(RED(`⚠ ${off.length}/3 lớp tự động CHƯA cài`) + ` — ${off.map(l => l.when).join(', ')}`);
-    // MỘT lệnh là đủ: script của thư mục này gọi bộ điều phối git hook chung của repo
-    // (gọi mọi */tools/hooks/<event>, không phải symlink trỏ vào một project — xem
-    // CLAUDE.md ở GỐC repo), rồi trộn PostToolUse và cài cấu hình preview.
-    console.log('  Chạy một lần cho mỗi máy / mỗi bản clone: ' + B('sh tools/install-hooks.sh'));
-    console.log(DIM('  (chỉ thiếu git hook thì bộ điều phối chung là đủ: sh ../../tools/install-hooks.sh)'));
-  } else {
-    console.log(GRN('✓ cả 3 lớp tự động đã cài') + DIM(' — sau mỗi Edit · lúc commit · lúc push'));
-  }
-  console.log('');
-
-  // 4. Việc đang dở, từ HANDOFF.md — ĐANG LÀM in NGUYÊN VĂN, đây là mục dễ bị bỏ qua nhất.
+  // 3. Việc đang dở, từ HANDOFF.md — ĐANG LÀM in NGUYÊN VĂN, đây là mục dễ bị bỏ qua nhất.
   //    HANDOFF.md chỉ chứa việc dở; nhật ký ở HISTORY.md, quyết định ở DECISIONS.md.
   const dang = handoffSection('ĐANG LÀM');
   if (dang && !dang.empty) {
@@ -243,7 +223,7 @@ async function start() {
     console.log('');
   }
 
-  // 5. Cổng + sổ học: trạng thái nền, để biết mình bắt đầu từ đâu.
+  // 4. Cổng + sổ học: trạng thái nền, để biết mình bắt đầu từ đâu.
   const g = node('tools/gate.mjs', '--advice');
   const nAdv = (g.out.match(/^  · /gm) || []).length;
   console.log(g.ok
@@ -399,8 +379,7 @@ function close() {
   console.log(`    ${kind}(ds-roadmap): <việc>`);
   console.log(DIM('    loại: feat (thêm năng lực) · fix (sửa lỗi) · docs (chỉ tài liệu) · chore (công cụ, không đổi trang)'));
   console.log('');
-  console.log(DIM('Push là DEPLOY (GitHub Pages, nhánh main). Hook pre-push chạy cổng + audit + test'));
-  console.log(DIM('rồi mới cho đi — mất ~20 giây, và nó chặn thật.'));
+  console.log(DIM('Commit chạy tools/check.sh; push lên main thì CI chạy lại cổng, xanh mới deploy.'));
   console.log('');
 }
 

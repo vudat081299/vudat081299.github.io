@@ -30,22 +30,10 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REAL = join(HERE, '..');
 
 /* --- dựng sân tạm --------------------------------------------------------
-   Cấu trúc phải giống thật, vì gate.mjs tìm gốc repo bằng đường dẫn tương đối
-   (để kiểm hook). Nên: TMP/.git/hooks/ + TMP/.claude/ + TMP/md/ds/ */
+   Sâu hai cấp như thật (TMP/md/ds/): `learn.mjs --sync` tìm cả ở gốc repo = ../.. */
 const TMP = mkdtempSync(join(tmpdir(), 'ds-gate-test-'));
 const DS  = join(TMP, 'md', 'ds');
-mkdirSync(join(TMP, '.git', 'hooks'), { recursive: true });
-mkdirSync(join(TMP, '.claude'), { recursive: true });
 mkdirSync(DS, { recursive: true });
-
-// Hook giả cho CẢ HAI hook git, để chiều IM của G-HOOK là trạng thái mặc định của
-// sân tạm. Nội dung phải chứa đúng chuỗi mà G-HOOK tìm — đây là cách cài "gọi sang
-// từ hook có sẵn". Thiếu một cái thì G-HOOK kêu ở chiều IM và cả bộ test đỏ.
-const fakeHook = name => `#!/bin/sh\nsh masters-degree/data-science-roadmap/tools/hooks/${name} || exit 1\n`;
-const GIT_HOOKS = ['pre-commit', 'pre-push'];
-GIT_HOOKS.forEach(h => writeFileSync(join(TMP, '.git', 'hooks', h), fakeHook(h)));
-writeFileSync(join(TMP, '.claude', 'settings.json'),
-  JSON.stringify({ hooks: { PostToolUse: [{ command: 'data-science-roadmap' }] } }));
 
 /* roadmap.html có trong danh sách vì nó cũng là SẢN PHẨM sinh ra (cổng G-ROADMAP so nó
    với bản sinh lại). Thiếu nó thì chiều IM đỏ vì "chưa có roadmap.html".
@@ -57,10 +45,10 @@ mkdirSync(join(DS, 'data'), { recursive: true });
 for (const f of COPIES) cpSync(join(REAL, f), join(DS, f));
 cpSync(join(REAL, 'tools'), join(DS, 'tools'), { recursive: true });
 
-/* Chạy trong hook (pre-push), git đặt sẵn GIT_DIR, GIT_INDEX_FILE… trỏ vào repo THẬT. Tiến trình
-   con mà thừa kế chúng thì `git -C <sân tạm>` vẫn đọc repo thật: G-HANDOFF thấy "không có gì đổi",
-   im, và test trượt dù cổng đúng — push bị chặn oan mỗi lần bộ cổng đổi. Bộ test không bao giờ
-   cần repo bên ngoài, nên bỏ hết các biến định vị repo trước khi làm gì với git. */
+/* Chạy trong hook git (pre-commit gọi tools/check.sh), git đặt sẵn GIT_DIR, GIT_INDEX_FILE… trỏ vào
+   repo THẬT. Tiến trình con mà thừa kế chúng thì `git -C <sân tạm>` vẫn đọc repo thật: G-HANDOFF thấy
+   "không có gì đổi", im, và test trượt dù cổng đúng. Bộ test không bao giờ cần repo bên ngoài, nên
+   bỏ hết các biến định vị repo trước khi làm gì với git. */
 for (const k of ['GIT_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_OBJECT_DIRECTORY',
   'GIT_ALTERNATE_OBJECT_DIRECTORIES', 'GIT_COMMON_DIR', 'GIT_PREFIX', 'GIT_NAMESPACE']) {
   delete process.env[k];
@@ -195,7 +183,7 @@ const CASES = [
 ];
 
 /* Các ca không sửa HTML mà sửa file khác. Mỗi ca tự dọn ở `after` nếu nó chạm vào
-   thứ nằm NGOÀI những gì reset() phục hồi (ví dụ .git/hooks/). */
+   thứ nằm NGOÀI những gì reset() phục hồi (ví dụ tools/). */
 const OTHER_CASES = [
   /* Câu hỏi nằm ở data/quiz.json, không còn trong HTML — nên hai ca này sửa JSON.
      Ghi đè khoá 's-how' bằng JSON.parse/stringify chứ không chèn text: không phụ
@@ -256,9 +244,6 @@ const OTHER_CASES = [
   ['G-DOC', 'CLAUDE.md thiếu tên một cổng', () => {
     writeFileSync(join(DS, 'CLAUDE.md'), CL0.replace(/G-ORPHAN/g, 'G-KHONG-CO-TEN-NAY'));
   }],
-  ['G-HOOK', 'lớp hook lúc push chưa được cài', () => {
-    rmSync(join(TMP, '.git', 'hooks', 'pre-push'));
-  }, () => writeFileSync(join(TMP, '.git', 'hooks', 'pre-push'), fakeHook('pre-push'))],
   ['G-LEARN', 'sổ học có dòng gõ sai khuôn', () => {
     writeFileSync(join(DS, 'LEARNING-LOG.md'),
       ORIG['LEARNING-LOG.md'] + '\n### `d-eda` · x\n- 2026-08-04 · loai-khong-co · y\n');

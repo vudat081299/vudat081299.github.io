@@ -27,7 +27,7 @@
 - DS-029 · Đường đi của roadmap: các bước cách xa nhau, bước đã đạt viền xanh dương · `masters-degree/data-science-roadmap/tools/build-roadmap.mjs`, `masters-degree/data-science-roadmap/roadmap.html`
 - DS-030 · Quiz cuối bài: carousel, chọn không tự chuyển câu, trả lời hết mới chấm · `masters-degree/data-science-roadmap/data-science-roadmap.html`, `masters-degree/data-science-roadmap/tools/build-roadmap.mjs`, `masters-degree/data-science-roadmap/roadmap.html`
 - DS-031 · Ô quiz là card của kit, chỉ khác một bậc bóng · `masters-degree/data-science-roadmap/data-science-roadmap.html`
-- DS-032 · Push bị chặn khi cổng trượt · `masters-degree/data-science-roadmap/tools/hooks/pre-push`
+- DS-032 · Cổng trượt thì không lên web · `masters-degree/data-science-roadmap/tools/check.sh`
 - DS-033 · Tài liệu chỉ ghi trạng thái hiện tại · `masters-degree/data-science-roadmap/CLAUDE.md`, `masters-degree/data-science-roadmap/docs/*.md`
 - DS-034 · Thứ gì dùng lại, token hoá hay component hoá thì phải ghi vào tài liệu · `masters-degree/data-science-roadmap/`
 - DS-035 · Kiểm hình là việc của agent; hỏi "có hiểu không" chỉ khi chủ trang đã học tới bài · `masters-degree/data-science-roadmap/data-science-roadmap.html`, `masters-degree/data-science-roadmap/tools/viz-check.mjs`
@@ -233,13 +233,11 @@ Nguồn: 8964145
 Chi tiết: docs/design.md (§10)
 Nguồn: f3c0df2, 7bbfe18, 51ed4f6, de79bf0
 
-## DS-032 · Push bị chặn khi cổng trượt
-04/08/2026 · `masters-degree/data-science-roadmap/tools/hooks/pre-push`
+## DS-032 · Cổng trượt thì không lên web
+04/08/2026 · `masters-degree/data-science-roadmap/tools/check.sh`
 
-lớp `pre-push` chặn push nếu cổng trượt — "chặn push nếu cổng trượt".
-Vì: push `main` là deploy GitHub Pages; sau bước đó lỗi nằm trên web.
-Chi tiết: CLAUDE.md (§3)
-Nguồn: ada32de
+Chủ trang: "chặn push nếu cổng trượt". Nay `tools/check.sh` chạy lúc commit và ở CI, và deploy chờ CI
+xanh (REPO-014, REPO-017); không còn hook pre-push riêng.
 
 ## DS-033 · Tài liệu chỉ ghi trạng thái hiện tại
 04/08/2026 · `masters-degree/data-science-roadmap/CLAUDE.md`, `masters-degree/data-science-roadmap/docs/*.md`

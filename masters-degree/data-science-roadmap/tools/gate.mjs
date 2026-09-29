@@ -22,7 +22,7 @@
      node tools/gate.mjs --where <id> in dải dòng của một bài, để sed/Read đúng chỗ
      node tools/gate.mjs --advice     in cả phần khuyến nghị (không chặn commit)
      node tools/gate.mjs --gates      in danh sách cổng đang chạy
-     node tools/gate.mjs --ci         dùng trong pre-commit: nghiêm hơn một bậc
+     node tools/gate.mjs --ci         tools/check.sh dùng (lúc commit và ở CI): nghiêm hơn một bậc
 
    Các file đi kèm:
      read-html.mjs   luật đọc dữ liệu ra khỏi HTML (dùng chung)
@@ -40,7 +40,6 @@ import { dirname, join } from 'node:path';
 import { readPage } from './read-html.mjs';
 import { checkPlan } from './plan.mjs';
 import { checkLearn } from './learn.mjs';
-import { hookLayers } from './hook-state.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
@@ -221,7 +220,6 @@ const GATES = [
   ['G-MEASURE',    'nhắc', 'có max-width cứng làm trôi khổ chữ'],
   ['G-SPACING',    'nhắc', 'margin dọc còn viết px trần, chưa trỏ vào thang --ds-sp-*'],
   ['G-NEXT',       'nhắc', 'bài sau đã đổi → đọc lại câu "bài sau…" trong PAYOFF'],
-  ['G-HOOK',       'nhắc', 'ba lớp hook tự động đã được cài chưa'],
   ['G-DOC',        'nhắc', 'mọi cổng trong code đều có tên trong CLAUDE.md'],
   ['G-HANDOFF',    'nhắc', 'đổi trang / bộ cổng mà cả HISTORY.md lẫn HANDOFF.md đều không đổi'],
   ['G-LEARN',      'nhắc', 'sổ học đọc được, và chỗ tắc trùng nhau = dạy quá muộn'],
@@ -279,8 +277,8 @@ if (has('--write')) {
   + '    Rồi: node tools/gate.mjs --write && git add TOC.md');
 } else if (tocOnDisk !== tocWanted) {
   // Lúc đang sửa thì số dòng cũ chỉ là nhắc nhở. Nhưng lúc COMMIT thì không: bản commit
-  // phải mang mục lục có số dòng đúng, nếu không thì phiên sau mở sai đoạn. `--ci` (hook
-  // pre-commit dùng) nâng nó thành lỗi chặn.
+  // phải mang mục lục có số dòng đúng, nếu không thì phiên sau mở sai đoạn. `--ci` (tools/check.sh
+  // dùng, lúc commit và ở CI) nâng nó thành lỗi chặn.
   (has('--ci') ? F : W)('G-TOC-STALE: TOC.md còn số dòng cũ (cấu trúc vẫn đúng) — `node tools/gate.mjs --write` rồi `git add TOC.md`');
 }
 
@@ -292,7 +290,7 @@ if (has('--write')) {
    G-TOC-STRUCT / G-TOC-STALE:
 
    G-ROADMAP     — file trên đĩa khác bản sinh lại. Máy móc, sửa bằng đúng một lệnh, nên
-                   chỉ NHẮC lúc đang sửa; `--ci` (pre-commit / pre-push) nâng thành CHẶN.
+                   chỉ NHẮC lúc đang sửa; `--ci` (tools/check.sh) nâng thành CHẶN.
    G-ROADMAP-SUM — phần KHÔNG sinh được: 84 bản tóm tắt do một workflow viết ra. Máy không
                    đọc được "tóm tắt này còn đúng không", nhưng đọc được "bài đã đổi kể từ
                    lúc tóm tắt được viết" nhờ vân tay nội dung đóng dấu trong
@@ -958,25 +956,6 @@ if (tocOnDisk) {
     + '    không đọc được câu — nên đây là việc của mắt. Sửa xong: node tools/gate.mjs --write');
   }
   for (const l of LEAVES) if (!wasThere.has(l.id)) W(`G-NEXT: bài mới "${l.id}" — nhớ sửa PAYOFF của bài ĐỨNG TRƯỚC nó, câu "bài sau…" của bài đó giờ trỏ sai`);
-}
-
-/* --- G-HOOK (khuyến nghị): ba lớp tự động đã cài chưa -------------------
-   Cả .git/hooks/ lẫn .claude/ đều không được git theo dõi, nên hook không tự
-   theo repo về máy mới. Hệ quả: mọi thứ trong CLAUDE.md §3 mô tả có thể đang tắt
-   mà không ai biết — và đã từng đúng như vậy.
-
-   Bỏ qua khi chạy với --ci: lúc đó chính hook đang gọi ta, nên nó rõ ràng đã cài. */
-const GITROOT = join(ROOT, '..', '..');
-if (!has('--ci')) {
-  // Luật "đã cài chưa" nằm ở tools/hook-state.mjs — MỘT bản, vì session.mjs hỏi đúng
-  // câu này và hai bản trả lời đã từng lệch nhau (xem đầu file đó).
-  const layers = hookLayers({ hooksDir: join(HERE, 'hooks'), gitRoot: GITROOT });
-  const off = layers.filter(l => !l.ok);
-  if (off.length) {
-    W(`G-HOOK: ${off.length}/3 lớp tự động chưa cài — ` + layers.map(l => `${l.what}: ${l.ok ? 'có' : 'CHƯA'}`).join(' · ') + '\n'
-    + '    Chạy: sh tools/install-hooks.sh (một lần cho mỗi máy / mỗi bản clone — nó gọi cả bộ điều phối git hook chung)\n'
-    + '    Chưa cài thì cổng chỉ chạy khi bạn tự gõ tay — mọi thứ CLAUDE.md §3 mô tả đang tắt.');
-  }
 }
 
 /* --- G-HANDOFF (khuyến nghị): đổi trang mà không ghi lại -----------------

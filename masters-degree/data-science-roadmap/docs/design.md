@@ -731,15 +731,10 @@ Không có nó thì `1` → `11` làm cả nút nhảy bề rộng, và một c�
 Cổng **không thấy được layout**. Sửa giao diện thì phải mở trang; sửa chữ hay lịch học thì
 không cần — `node tools/gate.mjs` đã gồm cả `auditPlan()` (cổng `G-PLAN`).
 
-**Cách mở.** `tools/install-hooks.sh` cài `.claude/launch.json` serve **thẳng từ gốc repo** và
-bật `autoPort` (nhiều phiên chạy song song thì một cổng cố định làm phiên thứ hai không mở được
-preview). Mở bằng `preview_start` với `name: "ds-review"`, rồi vào
-`http://localhost:<cổng được cấp>/masters-degree/data-science-roadmap/data-science-roadmap.html`.
-Chỉ có một bản file, nên không cần mirror sang scratchpad và không cần `?v=n` chống cache.
-Preview đọc `launch.json` theo **thư mục làm việc của phiên**: phiên mở ở gốc repo mà không thấy
-`ds-review` thì dùng `root-static` rồi `navigate` tới đường dẫn đầy đủ. Server chạy mà 404 mọi
-đường dẫn thì kiểm `ps` xem tiến trình có bị sandbox bọc (chặn cả `getcwd()` lẫn việc đọc file
-repo) trước khi đi sửa config.
+**Cách mở.** Serve **thẳng từ gốc repo** (`python3 -m http.server`), rồi vào
+`http://localhost:<cổng>/masters-degree/data-science-roadmap/data-science-roadmap.html`. Pane preview
+của Claude Code đọc `.claude/launch.json` cục bộ (không nằm trong git). Server chạy mà 404 mọi đường
+dẫn thì kiểm `ps` xem tiến trình có bị sandbox bọc trước khi đi sửa config.
 
 Bốn cái bẫy:
 

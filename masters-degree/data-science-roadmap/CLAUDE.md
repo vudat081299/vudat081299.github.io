@@ -23,10 +23,10 @@ của nhãn phạm vi `SCOPE`). Hứa quá là lỗi nội dung nghiêm trọng,
 node tools/session.mjs
 ```
 
-Nó trả lời năm câu bạn không thể biết bằng cách đọc file: **có phiên khác đang làm dở
+Nó trả lời bốn câu bạn không thể biết bằng cách đọc file: **có phiên khác đang làm dở
 không** (thư mục này thường có nhiều phiên song song), **nền local có còn mới không** (nó
 `git fetch` rồi so với upstream — `git status` im lặng khi phiên khác vừa push thẳng
-`main`), hook đã cài chưa, việc gì đang dở, cổng đang xanh hay đỏ.
+`main`), việc gì đang dở, cổng đang xanh hay đỏ.
 
 Rồi tìm việc mình định làm trong bảng này:
 
@@ -131,8 +131,6 @@ tools/read-html.mjs   luật đọc dữ liệu ra khỏi HTML — dùng chung, 
   ├─ tools/learn.mjs  ↔ LEARNING-LOG.md         (cổng G-LEARN)
   ├─ tools/audit.mjs    chạy riêng plan.mjs cho người đọc
   └─ tools/session.mjs  mở / đóng phiên — KHÔNG phải cổng, chỉ đọc và in
-tools/hook-state.mjs  luật "ba lớp hook đã cài chưa" — dùng chung bởi gate.mjs (G-HOOK)
-                      và session.mjs; hai bản đã từng lệch nhau, xem đầu file đó
 tools/gate.test.mjs   test cho chính bộ cổng — mỗi cổng một ca nổ + một ca im
 tools/concepts.json   khái niệm nào dạy ở bài nào  (đầu vào cổng G-FWD)
 tools/waivers.json    lỗi thật đang hoãn có chủ ý
@@ -204,8 +202,7 @@ node tools/build-roadmap.mjs    # sinh riêng roadmap.html; --stamp = đóng d�
 node tools/learn.mjs            # tóm tắt sổ học; --add / --sync / --write / --check
 node tools/gate.test.mjs        # test cho chính bộ cổng
 node tools/viz-check.mjs        # HÌNH có đọc được không — chạy Chrome thật, xem ngay dưới
-sh tools/install-hooks.sh       # cả ba lớp + cấu hình preview (một lần mỗi máy / mỗi bản clone)
-sh ../../tools/install-hooks.sh # riêng lớp 2–3 — bộ điều phối git hook cho CẢ repo
+sh tools/check.sh               # cổng lúc commit và ở CI: gate --ci (+ gate.test khi tools/ đổi)
 python3 ../../tools/decisions.py find <file>   # chủ trang đã chốt gì cho file đó
 ```
 
@@ -219,9 +216,8 @@ mỗi thanh trượt) và kiểm **năm** thứ: mount có render không · hai 
 tràn ngoài `viewBox` · `.ds-viz__alt` có chữ không · **viền một `<rect>` có nằm trong hộp chữ
 không** (nhãn dài hơn hộp chứa nó). Không có Chrome thì nó in một dòng rồi thoát 0.
 
-Nó **không** vào ba lớp hook: nó cần Chrome nên không chạy được ở mọi máy, và một cổng chặn
-commit mà phụ thuộc môi trường thì sẽ bị `--no-verify` cho tới lúc chết. Chạy nó khi **thêm
-hoặc sửa hình**.
+Nó **không** nằm trong `tools/check.sh`: nó cần Chrome nên không chạy được ở mọi máy. Chạy nó
+khi **thêm hoặc sửa hình**.
 
 **Phép kiểm thứ năm (`chu-tran-hop`) chỉ soi `<rect>`, có chủ ý.** Đặt nhãn lên đúng thứ nó
 gọi tên — `"0"` trên đường 0, `★` *chính là* cái mốc — là **direct labelling**, một kỹ thuật
@@ -244,42 +240,10 @@ nghìn lỗi giả · và đòi mọi mount phải có `<svg>` tố oan những 
 `svg.getScreenCTM().inverse().multiply(text.getScreenCTM())`, và bỏ chữ có `opacity: 0` (một
 hình vẽ mỗi số **hai lần** với opacity bù nhau để đổi màu trên ô đậm).
 
-`install-hooks.sh` phải tồn tại vì `.git/hooks/` và `.claude/launch.json` **không được git
-theo dõi**, nên chúng không tự theo repo về máy mới (`.claude/settings.json` thì được theo dõi
-và đã mang hook `PostToolUse` của thư mục này). Nguồn sự thật là `tools/hooks/pre-commit`,
-`tools/hooks/pre-push`, `tools/hooks/claude-settings.json` và `tools/hooks/launch.json` — các
-file được theo dõi; script chỉ nối chúng vào chỗ git, Claude Code và preview thật sự đọc. Chạy
-lại nhiều lần không sinh gì trùng. `.claude/settings.json` ở gốc là nguồn của hook `PostToolUse`:
-đã có hook của thư mục này thì script để nguyên file, không đè bằng bản trong `tools/hooks/`.
-
-**Một lệnh là đủ, và git hook không cài riêng ở đây.** Repo có nhiều project con nên
-`.git/hooks/*` phải là **bộ điều phối** (gọi mọi `*/tools/hooks/<event>`), không phải symlink
-trỏ vào một project — xem `CLAUDE.md` ở **gốc repo**. Script của thư mục này gọi đúng bộ điều
-phối đó (`../../tools/install-hooks.sh`) cho lớp 2–3, rồi lo lớp 1 (`PostToolUse`) và
-`launch.json`. Đừng thêm lại bước tự đặt symlink.
-
-`launch.json` được cài vào **hai chỗ**: `.claude/` của thư mục này *và* `.claude/` ở gốc
-repo. Preview đọc file theo **thư mục làm việc của phiên**, mà phiên hay mở ở gốc repo —
-thiếu bản ở gốc thì `preview_start` với `name: "ds-review"` không tìm thấy config và rơi
-vào config đầu tiên của project khác.
-
-**Ba lớp tự động, ba thời điểm khác nhau có chủ ý:**
-
-| khi nào | ai chạy | làm gì |
-|---|---|---|
-| **ngay sau mỗi lần Edit/Write** vào file HTML | Claude Code hook `PostToolUse` (`.claude/settings.json` → `tools/hooks/post-edit.sh`) | chạy cổng; trượt thì **đưa lỗi lại cho agent ngay trong lượt đó**; qua thì tự làm mới số dòng trong `TOC.md` |
-| **khi commit** | git `pre-commit` (`tools/hooks/pre-commit`) | chạy cổng; chặn commit; chặn cả việc sửa HTML mà quên `git add TOC.md` |
-| **khi push** | git `pre-push` (`tools/hooks/pre-push`) — **CHẶN** | `gate --ci` + `audit`, và `gate.test` nếu `tools/` có đổi (~20 giây) |
-
-Vì sao cần lớp thứ ba khi đã có `pre-commit`: **push nhánh `main` là deploy GitHub Pages.**
-Sau bước đó lỗi nằm trên web. `pre-commit` bỏ qua được bằng `--no-verify` (đúng và nên có),
-một commit cũ có thể được rebase/cherry-pick vào mà chưa từng qua cổng, và commit merge
-không chạy `pre-commit` chút nào. `pre-push` kiểm **trạng thái cuối** của đúng những gì
-đang được đẩy lên. Bỏ qua có ý thức: `git push --no-verify`.
-
-Lớp thứ nhất mới là lớp quan trọng: một agent sửa 20 lần rồi mới commit một lần, nên bắt
-lỗi ở commit nghĩa là nó phải lần lại 20 bước để tìm chỗ hỏng. Bắt ngay lúc sửa thì nó
-tự sửa trong cùng một lượt, khi còn nhớ mình vừa làm gì.
+**Cổng tự chạy qua `tools/check.sh`** (REPO-017): hook commit ở gốc repo gọi nó khi commit có
+file của thư mục này, CI gọi nó ở mọi lần push, deploy chờ CI xanh. Nó chạy `gate.mjs --ci`, chặn
+commit sửa HTML mà quên `git add` `TOC.md` / `roadmap.html`, và chạy `gate.test.mjs` khi `tools/`
+đổi (ở CI thì luôn chạy).
 
 **`auditPlan()` chạy được bằng node, không cần mở trình duyệt.** Hàm đó vẫn nằm trong trang
 và vẫn tự chạy khi tải trang, nhưng luật của nó được viết lại trong `tools/plan.mjs` và chạy
@@ -347,7 +311,6 @@ nhắc ở mức thân bài):
 | `G-SPACING` | `margin` dọc còn viết px trần thay vì trỏ vào một bậc `--ds-sp-*` ([docs/design.md](docs/design.md) §0.6) |
 | `G-FWD` | (mức thân bài) dùng khái niệm trước bài dạy nó |
 | `G-NEXT` | bài sau đã đổi → đọc lại câu "bài sau…" trong `PAYOFF` của những bài nó nêu tên |
-| `G-HOOK` | ba lớp tự động ở §3 đã được cài chưa |
 | `G-DOC` | có cổng trong code mà `CLAUDE.md` không nhắc tên |
 | `G-HANDOFF` | đổi trang hoặc bộ cổng mà cả `HISTORY.md` lẫn `HANDOFF.md` đều không đổi — xem §12 |
 | `G-LEARN` | sổ học đọc được, và **≥2 bài cùng tắc ở một khái niệm** = khái niệm đó dạy quá muộn (§13) |
@@ -488,7 +451,7 @@ tiết**. Vì thế nó phải luôn đúng, và luôn khớp `TOC.md`.
 Sửa một câu trong bài, sửa CSS, sửa một con số — **không** phải soi lại mục lục. Cổng
 `G-TOC-STRUCT` tự phân biệt hộ: nó so **chữ ký cấu trúc**, không so số dòng, nên nó chỉ
 nổ khi thay đổi thật sự chạm tới mục lục. Số dòng cũ chỉ là một nhắc nhở
-(`G-TOC-STALE`) và được hook sau-khi-sửa tự làm mới.
+(`G-TOC-STALE`); `gate.mjs --write` làm mới.
 
 **Thêm một bài — bốn câu phải trả lời trước khi gõ:**
 
@@ -781,8 +744,7 @@ Repo đã dùng quy ước này rất nhất quán từ đầu; ghi ra đây đ�
 Scope luôn là `ds-roadmap` (repo có nhiều project; `cashy` dùng scope riêng). Nếu một
 commit chạm cả nội dung lẫn công cụ thì **tách hai commit** — đừng chọn một loại rồi thôi.
 
-**Push là DEPLOY.** Nhánh `main` đẩy lên là GitHub Pages build lại. Hook `pre-push` chạy
-cổng + audit (+ test nếu `tools/` đổi) rồi mới cho đi — mất ~20 giây và nó **chặn thật**.
+**Push là DEPLOY.** Push `main` thì CI chạy lại mọi cổng; đỏ thì web giữ bản cũ (REPO-014).
 
 **Cẩn thận:** file HTML này thỉnh thoảng có nhiều phiên làm việc song song.
 `node tools/session.mjs` phát hiện việc đó ngay ở dòng đầu; nếu file đã đổi so với lúc bạn

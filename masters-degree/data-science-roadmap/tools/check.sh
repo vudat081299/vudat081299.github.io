@@ -1,10 +1,21 @@
 #!/bin/sh
-# Mọi cổng CHẶN của data-science-roadmap/ — lối vào chuẩn, GitHub Actions chạy mọi */tools/check.sh.
-# Bộ cổng và ý nghĩa từng cổng: CLAUDE.md của thư mục này, mục "Chạy cổng" và "Cổng tự động".
-# Chạy:  sh masters-degree/data-science-roadmap/tools/check.sh
+# Cổng của data-science-roadmap/. Commit có file của thư mục này thì hook gốc repo chạy nó; CI chạy
+# nó ở mọi lần push (REPO-017). Chạy tay:  sh masters-degree/data-science-roadmap/tools/check.sh
 set -eu
-HERE=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-cd "$HERE"
-# --ci như pre-commit và pre-push: G-ROADMAP và G-TOC-STALE CHẶN chứ không chỉ nhắc. GitHub Actions
-# là lớp quyết định deploy (REPO-014), nên roadmap.html lệch nguồn không được lên web.
+cd "$(dirname "$0")/.."
+
+# --ci: G-TOC-STALE và G-ROADMAP chặn, không chỉ nhắc.
 node tools/gate.mjs --ci
+
+# Lúc commit: sửa HTML mà TOC.md / roadmap.html sinh lại chưa add thì bản commit mang bản cũ.
+if ! git diff --cached --quiet -- data-science-roadmap.html; then
+  for f in TOC.md roadmap.html; do
+    git diff --quiet -- "$f" || { echo "check: $f đã sinh lại mà chưa add — git add $f" >&2; exit 1; }
+  done
+fi
+
+# Test của chính bộ cổng (~15 giây): khi commit chạm tools/, và luôn chạy ở CI.
+if [ -n "${CI:-}" ] || ! git diff --cached --quiet -- tools/; then
+  OUT=$(node tools/gate.test.mjs 2>&1) || { printf '%s\n' "$OUT" >&2; exit 1; }
+  printf '%s\n' "$OUT" | tail -n 2
+fi
