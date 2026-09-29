@@ -21,7 +21,7 @@ Làm xong mục nào thì xoá mục ấy. Số hiện tại: `python3 facts/too
 - Fact mức XEM cố ý để hở cho tới khi tra được số: khai miễn sai làm cổng im vĩnh viễn.
 - `na-354` (phông biển báo) chưa có số. FHWA cho số nhưng tự mâu thuẫn: bản cho dùng Clearview (2004) ghi đọc xa hơn
   tới 16% ban đêm, bản gỡ (2016) ghi riêng màng phản quang đã cho 6% và phông gần như không hơn. Chọn claim rồi viết lại.
-- Cặp trùng tìm bằng mắt, chưa xử theo §3: tl-103/tl-335 · tl-110/tl-328 · xh-007/xh-103 ·
+- Cặp trùng tìm bằng mắt, chưa xử theo §3: tl-103/tl-335 · tl-110/tl-328 ·
   sk-136/hh-273. `xh-019`/`xh-147` là hai phép đo khác nhau, đừng gộp.
 - Khoảng 328 cặp dải 0,42–0,62 đã đọc là hai claim nhưng chưa khai `khac_voi`; khai được nếu kèm lý do từng cặp.
 - Lưới chống trùng lọt khoảng 73% cặp trùng ý; hạ ngưỡng không cứu được. Còn hai đường: nhúng ngữ nghĩa, hoặc đọc tay
