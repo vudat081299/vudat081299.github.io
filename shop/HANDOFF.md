@@ -26,5 +26,3 @@ Chờ chủ repo, hoặc chủ shop qua chủ repo. Có thông tin rồi thì l�
   `docs/index.html` trỏ vào nó theo số thứ tự. Sáu khoản đầu chặn việc bán thật.
 - Sổ nợ có hai dòng cùng số 6 (quyền riêng tư; số phiên bản của `g` trong giỏ): đánh lại số thì sửa
   mọi chỗ trỏ tới.
-- Chân trang ở màn hẹp: chữ `scentsitive.vn` (eyebrow cột 1) tràn sang cột 2, đè lên "Cửa hàng" ở 320
-  và 600px, vừa chạm ở 390px. Có từ trước; cột 1 của `.foot__grid` quá hẹp so với chữ giãn cách.
