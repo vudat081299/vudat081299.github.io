@@ -10,6 +10,13 @@ Các mục *"Còn nợ"* trong từng đợt là **ảnh chụp lúc viết** v�
 
 ---
 
+## Đợt 29/09/2026 — tài liệu gọn lại, chín fact sửa theo nguồn gốc
+
+CLAUDE.md từ 821 xuống 200 dòng. Sửa `sv-295`, `vl-203`, `sk-250`, `xh-124`, `hh-273`; gộp `vl-280` vào `vl-307`,
+`ct-004` vào `ct-111`; `gt-003`, `xh-007` bỏ câu chép claim của fact khác.
+
+---
+
 ## Đợt 25/08/2026 (e) — bác lớp "vì sao": fact ngắn lại, truyện gánh chiều sâu
 
 Chủ trang bác sàn độ dài của phần giải thích → quyết định FACTS-011 (nguyên văn ở đó).
