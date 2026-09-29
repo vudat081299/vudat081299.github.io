@@ -884,6 +884,10 @@
      Nhích khoảng cách lên vì mỗi mốc ở đây mang cả danh sách bài, không phải một dòng. */
   .ds-plan14 { margin: 0 0 var(--ds-sp-near); }
   .ds-plan14 > .wb-steps__item { padding-bottom: var(--ds-sp-sub); }
+  /* "Nộp được" là một câu có <code> xen giữa. renderPlan14() gói cả câu vào MỘT span, để hộp flex
+     của kit chỉ có hai con (icon + câu): để trần thì mỗi mảnh chữ và mỗi <code> thành một cột hẹp.
+     Câu thường dài hơn một dòng nên bo góc thường thay cho viên thuốc, icon đứng ở dòng đầu. */
+  .ds-plan14 .wb-steps__note { align-items: baseline; border-radius: var(--wb-radius); }
   .ds-daysplit { font-family: var(--wb-font-mono); font-size: var(--ds-t-cap); color: var(--wb-fg-subtle); margin: var(--ds-sp-hair) 0 var(--ds-sp-near); }
   .ds-daysplit__beg { color: var(--wb-border-strong); }
   .ds-daylist { list-style: none; margin: 0 0 var(--ds-sp-near); padding: 0; }
@@ -12264,7 +12268,7 @@ function renderPlan14(scope) {
         <ul class="ds-daylist">${items.map(l => `
           <li><a href="#/${l.id}">${l.t}</a> <span class="ds-leaf__m">${mins(l)}′</span></li>`).join('')}</ul>
         <p class="wb-steps__desc">${d.note}</p>
-        <p class="wb-steps__note"><span class="wb-ico wb-ico--xs">inventory_2</span> Nộp được: ${d.out}</p>
+        <p class="wb-steps__note"><span class="wb-ico wb-ico--xs">inventory_2</span><span>Nộp được: ${d.out}</span></p>
       </div>
     </li>`;
   }).join('') + `</ol>`;

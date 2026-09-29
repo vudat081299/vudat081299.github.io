@@ -12,11 +12,7 @@ Không có.
 
 ## NỢ
 
-### Hộp "Nộp được" của lịch 14 ngày vỡ chữ ở màn 375px khi `out` chứa `<code>`
-
-Lỗi có từ trước, chưa ai đo lại (thấy khi sửa `s-plan14`, HISTORY.md phiên 2026-08-12 (r)). Chỗ
-bắt đầu: `.wb-steps__note` trong `renderPlan14()`; ngày nào `d.out` không có `<code>` thì hiện
-bình thường. Sửa xong kiểm ở 375px, cả sáng lẫn tối.
+Không có.
 
 ## CHỜ CHỦ TRANG
 
