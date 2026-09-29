@@ -17,7 +17,7 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-012 · Mỗi project có bộ file bắt buộc · `repo`
 - REPO-013 · Luật ở trong repo, memory chỉ giữ thiết lập máy · `repo`
 - REPO-014 · Deploy chỉ chạy sau khi CI xanh · `.github/workflows/deploy.yml`
-- REPO-016 · Tiêu đề tab và thanh trên cùng bằng tiếng Anh · `pages/*.html`, `cooking/*.html`, `masters-degree/**/*.html`
+- REPO-016 · Tiêu đề tab và tên trang trên thanh trên cùng bằng tiếng Anh · `pages/*.html`, `cooking/*.html`, `masters-degree/**/*.html`
 - REPO-017 · Hai lớp cổng: commit và CI · `tools/hooks/pre-commit`, `**/tools/check.sh`, `.github/workflows/gates.yml`
 - REPO-018 · Tài liệu .md viết ngắn và thẳng · `repo`
 - REPO-019 · Không chặn force-push ở GitHub · `repo`
@@ -96,10 +96,10 @@ Chuyện riêng tư không lên repo. Không chắc ghi vào đâu thì hỏi ch
 
 Deploy chạy sau khi "Cổng chất lượng" xanh trên một lần push vào `main`, và chỉ khi commit ấy còn là đầu `main`.
 
-## REPO-016 · Tiêu đề tab và thanh trên cùng bằng tiếng Anh
+## REPO-016 · Tiêu đề tab và tên trang trên thanh trên cùng bằng tiếng Anh
 03/08/2026 · `pages/*.html`, `cooking/*.html`, `masters-degree/**/*.html`
 
-Thân trang giữ tiếng Việt. Ngoại lệ: `shop/` (cửa hàng cho khách Việt), `<title>` của data-science-roadmap
+Link điều hướng và thân trang giữ tiếng Việt. Ngoại lệ: `shop/` (cửa hàng cho khách Việt), `<title>` của data-science-roadmap
 (DS-016), `web-builder/templates/` (bản chép từ kit gốc, đồng bộ sẽ ghi đè). Nguồn: 7db789b.
 
 ## REPO-017 · Hai lớp cổng: commit và CI

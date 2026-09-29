@@ -11,7 +11,7 @@ Luật riêng của từng thư mục ở `pages/CLAUDE.md` và `cooking/CLAUDE.
 ## Một trang
 
 - Một file HTML tự chứa: CSS và JS inline, không build. Tên file tiếng Anh, chữ thường, nối bằng `-`.
-- Tiêu đề tab tiếng Anh, dạng `Tên — phụ đề`; chữ trên thanh trên cùng cũng tiếng Anh; thân trang tiếng
+- Tiêu đề tab tiếng Anh, dạng `Tên — phụ đề`; tên trang trên thanh trên cùng cũng tiếng Anh; thân trang tiếng
   Việt (REPO-016).
 - Chỉ khối lặp mới ra `data/*.json` (REPO-001); khi ấy trang phải báo rõ khi mở bằng `file://`.
 - Mỗi trang có một mục trong `data/collection.json`, hoặc nằm trong `UNLISTED` / `WITHHELD` của
