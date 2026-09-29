@@ -1,7 +1,7 @@
 """Bộ kiểm HTML dùng chung cho các thư mục "một file HTML = một trang": pages/ và cooking/.
 
 Không chạy trực tiếp. `pages/tools/lint-pages.py` và `cooking/tools/lint-cooking.py` nạp file này
-và giữ phần riêng của mình: chọn trang nào để kiểm, bảng nợ DEBT của thư mục, dòng tổng kết —
+và giữ phần riêng của mình: chọn trang nào để kiểm, dòng tổng kết —
 và riêng cooking/ còn kiểm cả `cooking/data/*.json`.
 
 Vì sao một file: hai linter từng là hai bản chép của cùng một bộ kiểm. Khi pages/ có thêm ba
@@ -12,12 +12,6 @@ cooking/ không có — thư mục ấy mất phép kiểm mà không ai hay, v�
 Hai mức, theo đúng quy ước của factlint.py:
   · LỖI  — chặn commit. Sai khách quan, sửa được ngay.
   · XEM  — chỉ cảnh báo. Đáng nhìn nhưng không đủ chắc để chặn.
-
-Ba phép kiểm svg_vo_danh / hut_cap / nhan_tieng_anh chạy theo kiểu BÁNH CÓC. Mỗi linter truyền
-vào bảng DEBT của thư mục mình, dạng {phép kiểm: {tên file: số chỗ đang nợ}}. Trang không có tên
-trong bảng thì phải bằng 0; trang có tên thì chỉ được giữ nguyên hoặc giảm — tăng là LỖI. Dọn
-xong một trang thì xoá dòng của nó đi, đừng nới số lên. Bảng nằm trong linter của từng thư mục,
-không nằm ở đây: nợ của pages/ không được phép che cho một trang cùng tên ở cooking/.
 """
 import collections
 import pathlib
@@ -65,18 +59,8 @@ def strip_code(html: str) -> str:
     return out
 
 
-def ratchet(kind, page_name, found, debt, errors, notes):
-    """Bánh cóc: trang chưa có nợ phải bằng 0; trang đang nợ chỉ được giảm."""
-    allowed = debt.get(kind, {}).get(page_name, 0)
-    if found > allowed:
-        errors.append(f'{kind}: {found} chỗ, mức cho phép của trang này là {allowed}')
-    elif found < allowed:
-        notes.append(f'{kind}: còn {found}/{allowed} — đã dọn bớt, hạ số trong DEBT xuống {found}')
-
-
-def check_page(path: pathlib.Path, debt=None):
-    """Soi một trang. Trả về (danh sách LỖI, danh sách XEM). `debt`: bảng nợ của thư mục."""
-    debt = debt or {}
+def check_page(path: pathlib.Path):
+    """Soi một trang. Trả về (danh sách LỖI, danh sách XEM)."""
     raw = path.read_text(encoding='utf-8', errors='replace')
     markup = strip_code(raw)
     errors, notes = [], []
@@ -134,7 +118,8 @@ def check_page(path: pathlib.Path, debt=None):
         if end > 0 and '<title' in markup[m.end():end]:
             continue
         bare_svg += 1
-    ratchet('svg_vo_danh', path.name, bare_svg, debt, errors, notes)
+    if bare_svg:
+        errors.append(f'{bare_svg} <svg> không có tên tiếp cận (aria-label, <title> hoặc aria-hidden)')
 
     # ── LỖI 6: cây tiêu đề hụt cấp ─────────────────────────────────────────────
     # h2 nhảy thẳng xuống h4 làm người duyệt trang bằng phím theo cấp tiêu đề mất phương
@@ -142,7 +127,8 @@ def check_page(path: pathlib.Path, debt=None):
     # Chỉ thấy tiêu đề viết sẵn trong HTML; tiêu đề do JS dựng lúc chạy nằm ngoài tầm cổng này.
     levels = [int(t[1]) for t in RE_HEADING.findall(markup)]
     jumps = sum(1 for i in range(1, len(levels)) if levels[i] > levels[i - 1] + 1)
-    ratchet('hut_cap', path.name, jumps, debt, errors, notes)
+    if jumps:
+        errors.append(f'cây tiêu đề nhảy quá một bậc ở {jumps} chỗ')
 
     # ── LỖI 7: nhãn điều khiển còn tiếng Anh trên trang lang="vi" ──────────────
     # aria-label là thứ người dùng NGHE. Trang tiếng Việt mà nút đọc lên thành "Open menu"
@@ -156,7 +142,8 @@ def check_page(path: pathlib.Path, debt=None):
                 continue
             if RE_PLAIN_LATIN.match(value) and re.search(r'[A-Za-z]{3}', value):
                 en_labels += 1
-    ratchet('nhan_tieng_anh', path.name, en_labels, debt, errors, notes)
+    if en_labels:
+        errors.append(f'{en_labels} aria-label thuần tiếng Anh trên trang lang="vi"')
 
     # ── XEM: khung trang ───────────────────────────────────────────────────────
     # Mọi trang hiện có đều đủ bốn thứ này. Để mức XEM để trang MỚI thiếu thì được nhắc,

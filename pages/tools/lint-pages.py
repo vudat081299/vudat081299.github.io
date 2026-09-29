@@ -6,7 +6,7 @@ và push main = deploy thẳng lên GitHub Pages. Không có build step nào b�
 gãy hay một id trùng sẽ ra web mà không ai biết.
 
 Các phép kiểm nằm ở tools/htmlcheck.py, dùng chung với cooking/tools/lint-cooking.py. File này
-giữ phần của riêng pages/: bảng nợ DEBT và cách chọn trang để kiểm.
+giữ phần của riêng pages/: cách chọn trang để kiểm.
 
 Hai mức, theo đúng quy ước của factlint.py:
   · LỖI  — chặn commit. Sai khách quan, sửa được ngay.
@@ -30,17 +30,6 @@ import htmlcheck  # noqa: E402
 
 PAGES_DIR = pathlib.Path(__file__).resolve().parent.parent
 
-# ── Nợ kỹ thuật, ghi thẳng vào repo thay vì để trong đầu ai ────────────────────
-# Ba phép kiểm bánh cóc (svg_vo_danh, hut_cap, nhan_tieng_anh — xem tools/htmlcheck.py): mọi
-# trang đang sạch cả ba, nên bảng trống. Trang KHÔNG có tên trong bảng thì phải bằng 0. Một phép
-# kiểm mới làm đỏ trang cũ mà chưa dọn được ngay thì ghi đúng số đo được vào đây, dạng
-# {'hut_cap': {'ten-trang.html': 2}} — rồi chỉ được giữ nguyên hoặc giảm, tăng là LỖI.
-# Dọn xong một trang thì xoá dòng của nó đi, đừng nới số lên.
-DEBT = {
-    'svg_vo_danh': {},
-    'hut_cap': {},
-    'nhan_tieng_anh': {},
-}
 
 
 def main(argv):
@@ -64,7 +53,7 @@ def main(argv):
     total_err = 0
     total_note = 0
     for path in targets:
-        errors, notes = htmlcheck.check_page(path, DEBT)
+        errors, notes = htmlcheck.check_page(path)
         total_err += len(errors)
         total_note += len(notes)
         htmlcheck.print_result(path.name, errors, notes, verbose)

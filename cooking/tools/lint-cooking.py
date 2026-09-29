@@ -7,8 +7,8 @@ trùng sẽ ra web mà không ai biết. Công thức của các trang công th�
 nên cổng kiểm cả data — phần HTML không nhìn thấy nó.
 
 Phép kiểm HTML nằm ở tools/htmlcheck.py, dùng chung với pages/tools/lint-pages.py — cooking/
-có đúng bộ kiểm của pages/, kể cả ba phép bánh cóc. File này giữ phần của riêng cooking/: bảng
-nợ DEBT, cách chọn file, check_data() cho cooking/data/*.json, và check_sisters() cho dòng
+có đúng bộ kiểm của pages/. File này giữ phần của riêng cooking/: cách chọn file, check_data()
+cho cooking/data/*.json, và check_sisters() cho dòng
 "trang chị em" ở chân trang.
 
 Hai mức, theo đúng quy ước của factlint.py:
@@ -35,11 +35,6 @@ import htmlcheck  # noqa: E402
 
 COOKING_DIR = pathlib.Path(__file__).resolve().parent.parent
 
-# Nợ của ba phép kiểm bánh cóc — cùng luật với DEBT trong pages/tools/lint-pages.py: trang KHÔNG
-# có tên ở đây thì phải bằng 0, trang có tên thì chỉ được giữ nguyên hoặc giảm. Trống vì mọi
-# trang cooking/ đang sạch cả ba. Một phép kiểm mới làm đỏ trang cũ mà chưa dọn được ngay thì
-# ghi đúng số đo được vào đây, dạng {'hut_cap': {'ten-trang.html': 2}} — rồi chỉ được giảm.
-DEBT = {}
 
 
 def check_data(path: pathlib.Path):
@@ -160,7 +155,7 @@ def main(argv):
         htmlcheck.print_result(f'data/{path.name}', errors, [], verbose)
 
     for path in targets:
-        errors, notes = htmlcheck.check_page(path, DEBT)
+        errors, notes = htmlcheck.check_page(path)
         total_err += len(errors)
         total_note += len(notes)
         htmlcheck.print_result(path.name, errors, notes, verbose)
