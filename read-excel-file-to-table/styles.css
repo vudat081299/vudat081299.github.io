@@ -123,3 +123,9 @@ textarea {
   color: white;
   font-weight: 600;
 }
+
+/* Ô chọn file có padding 20px nên rộng hơn màn 320px — giữ nó trong khung. */
+input[type="file"] {
+	max-width: 100%;
+	box-sizing: border-box;
+}
