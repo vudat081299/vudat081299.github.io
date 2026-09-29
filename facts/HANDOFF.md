@@ -15,7 +15,6 @@ Làm xong mục nào thì xoá mục ấy. Số hiện tại: `python3 facts/too
 ## NỢ
 
 - Đối chiếu `src` với nguồn gốc: mới kiểm khoảng 40 fact, còn gần 1.900.
-- `sv-295`: hoá thạch rừng Nam Cực ghi cách cực Nam ~500 km; Klages và cộng sự, Nature (2020) cho ~900 km.
 - `vl-203`: tán xạ Rayleigh "gấp khoảng 16 lần" chỉ đúng khi tỉ số bước sóng bằng 2; dải khả kiến thật cho 5–9 lần.
 - 30 fact thiếu đúng một con số quyết định, phải tra nguồn mới sửa được: ct-014 kt-133 xh-133 tl-296 sk-107 sk-260
   sk-300 vl-258 dl-344 tp-217 cn-233 na-351 sk-291 sv-148 xh-106 xh-141 kt-121 sh-020 tl-007 gt-007 xh-136 sk-115
