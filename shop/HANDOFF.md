@@ -47,5 +47,6 @@ thông tin rồi thì làm phần việc của agent ghi trong từng dòng.
   `PATH=/opt/homebrew/bin:$PATH NODE_PATH=<thư mục tạm>/node_modules CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" sh shop/tools/check.sh`.
   Cài hẳn (hoặc dựng một lệnh gói sẵn) thì xoá mục này.
 - **`shop/` không có lớp cổng thứ ba.** Có post-edit (lớp 1), pre-commit (lớp 2) và
-  `gates.yml` (lớp 4), nhưng không `pre-push` nào chạy `lint-shop.py` — trong khi bảng ở CLAUDE.md
-  gốc ghi `shop/` nối "1, 2, 3, 4". Thêm `shop/tools/hooks/pre-push`, hoặc sửa bảng.
+  `gates.yml` (lớp 4), nhưng không `pre-push` nào chạy `lint-shop.py`, nên commit vào bằng
+  `--no-verify`, merge hay cherry-pick chỉ bị bắt ở CI. Thêm `shop/tools/hooks/pre-push` — bộ điều
+  phối tự tìm nó — rồi bỏ chữ "chưa có" ở bảng lớp cổng của `docs/05-ARCHITECTURE.md`.

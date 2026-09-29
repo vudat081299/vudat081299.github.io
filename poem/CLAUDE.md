@@ -26,7 +26,7 @@ bộ icon nạp từ jsDelivr.
 - **Nó dùng:** Bootstrap + bootstrap-icons + boxicons từ CDN; và **ảnh đại diện lấy từ
   `../portfolio/GlassCard/assets/img/avar.jpg`** — mọi trang thơ đều trỏ vào đó. Xoá, đổi tên hay
   dời thư mục ấy của `portfolio/` là gãy ảnh ở mọi trang thơ cùng lúc. Ảnh thứ hai của trang
-  (`assets/truong-minh-duc-avar.jpeg`) thì nằm ngay trong thư mục này.
+  (một file `*-avar.jpeg` trong `assets/`) thì nằm ngay trong thư mục này.
 - **Dùng nó:** không có gì trong repo trỏ tới `poem/` — trang chủ không có mục nào cho nó. Nhưng
   thư mục vẫn được deploy (không có `--exclude` trong `.github/workflows/deploy.yml`), nên mọi
   trang ở đây công khai ở URL trực tiếp.

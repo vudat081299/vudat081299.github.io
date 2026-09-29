@@ -13,6 +13,10 @@ cùng đọc một file trang. Dữ liệu có hạt giống trên trang đượ
 ngẫu nhiên của trang (jsrng/jsgauss là bản chép của rng()/gauss() trong JS), nên con số
 nào trên trang sinh từ dữ liệu ấy cũng tính lại được tới từng chữ số hiện ra.
 
+Giới hạn đã biết: số trong lời văn được ghim bằng cách đòi một CỤM CHỮ có mặt ở đâu đó trong
+trang, nên cụm nào lặp lại thì sửa lệch một bản vẫn xanh — `<b>27,5%</b> số thí nghiệm` nằm hai
+chỗ, đổi chỗ ở câu dẫn mục nhìn trộm thì cổng không biết. Sửa một con số lặp thì sửa đủ mọi bản.
+
 Chỉ dùng thư viện chuẩn, để chạy được trên mọi máy (kể cả máy của GitHub Actions).
 
 Chạy:  python3 pages/tools/verify-causal-inference.py

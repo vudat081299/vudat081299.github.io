@@ -289,7 +289,8 @@ Thêm hay sửa một mục thì chạy `python3 tools/decisions.py write` rồi
   tạm thời ("tạm thời thôi, 1 tuần sau tôi sẽ revert lại"). Ngày 20/08 chủ trang hoãn việc đổi
   lại: "revert chữ navbar DS → Data Science để sau".
 - **Đừng:** tự đổi lại "Data Science" khi chủ trang chưa gọi; hỏi lại chuyện này mỗi phiên.
-- **Nguồn:** commit c1089ff, 60adbf2; lời chủ trang ngày 20/08 ghi ở HANDOFF.md, mục CHỜ CHỦ TRANG.
+- **Nguồn:** commit c1089ff, 60adbf2; lời chủ trang ngày 20/08: *"revert chữ navbar DS → Data
+  Science để sau"* (mục CHỜ CHỦ TRANG của HANDOFF.md trước khi tách, `232d62e^`).
 
 ### DS-019 — Đường nối stepper dùng --wb-border-strong
 - **Ngày:** 04/08/2026

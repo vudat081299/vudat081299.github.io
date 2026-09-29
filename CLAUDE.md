@@ -100,7 +100,9 @@ trúc. Trang văn xuôi độc nhất thì **không** tách — JSON hoá chỉ 
 | 3. `pre-push` | `git push` | `--no-verify`, commit merge, commit cherry-pick vào | `*/tools/hooks/pre-push` |
 | 4. GitHub Actions | push lên `main` và mọi PR | thứ ba lớp trên bỏ sót vì chúng chạy trên máy người sửa | `.github/workflows/gates.yml` |
 
-- Lớp 2 và 3 cần bộ điều phối: `sh tools/install-hooks.sh` (chạy nhiều lần vô hại). Nó gọi mọi
+- Lớp 2 và 3 cần bộ điều phối: `sh tools/install-hooks.sh` — chạy một lần cho mỗi bản clone, trước
+  commit đầu tiên (chạy nhiều lần vô hại); hook `SessionStart` ở HANDOFF gốc sẽ tự làm việc này khi
+  được đăng ký. Nó gọi mọi
   `*/tools/hooks/<event>` mà git theo dõi — chỉ file trong repo, không nhặt bản sao trong worktree.
   Thêm project thì đặt hook đúng chỗ là xong, không phải sửa bộ điều phối.
 - Lớp 4 chạy cổng của **mọi** project, không chỉ project vừa sửa: nó tự tìm mọi `*/tools/check.sh`.

@@ -811,7 +811,7 @@ chạy một lần, từ gốc repo:
 sh tools/install-hooks.sh
 ```
 
-Chi tiết cơ chế ba lớp cổng của cả repo: [CLAUDE.md ở gốc repo](../CLAUDE.md).
+Chi tiết cơ chế bốn lớp cổng của cả repo: [CLAUDE.md ở gốc repo](../CLAUDE.md).
 
 Nếu có sửa UI hoặc thêm minh hoạ, chạy tiếp bốn cổng cơ học của
 [page-review](../web-builder/) : không class `wb-*` tự chế, không nền màu trong `<main>`,

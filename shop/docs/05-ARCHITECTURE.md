@@ -111,13 +111,13 @@ thứ chặn lại mà không phải là sự chú ý của con người.
 Nguyên tắc để nó không phình: **mỗi phần dưới đây phải chỉ ra được một lỗi THẬT nó đã bắt.**
 Phần nào chưa bắt được gì thì chưa cần tồn tại.
 
-### Ba lớp cổng
+### Bốn lớp cổng
 
 | Lớp | Chạy khi | Bắt được gì |
 |---|---|---|
 | 1. `PostToolUse` | sau mỗi Edit/Write | sửa bằng công cụ sửa file |
 | 2. `pre-commit` | `git commit` | mọi thay đổi, kể cả viết bằng script |
-| 3. `pre-push` | `git push` | trạng thái cuối, kể cả sau `--no-verify` |
+| 3. `pre-push` | `git push` | trạng thái cuối, kể cả sau `--no-verify` — **`shop/` chưa có lớp này** ([../HANDOFF.md](../HANDOFF.md), mục NỢ) |
 | 4. GitHub Actions | push lên `main`, mọi PR | thứ ba lớp kia bỏ sót vì chúng sống trên máy người sửa |
 
 Lớp 1 có lỗ: thay đổi viết bằng `python3 - <<EOF` không đi qua tool Edit nên nó không thấy.
