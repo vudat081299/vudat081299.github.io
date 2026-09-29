@@ -14,8 +14,6 @@ Luật nằm ở CLAUDE.md gốc, mục "Cấu trúc bắt buộc". Script này 
   5. Mỗi .claude/rules/*.md có `paths:` và mọi mẫu trong đó khớp ít nhất một file — rule không có
      `paths` bị nạp vào MỌI phiên, rule có mẫu chết thì không bao giờ được nạp.
 
-Mục 3 chạy theo kiểu bánh cóc, như bảng DEBT của lint-pages.py: file có tên trong DEBT được giữ
-nguyên hoặc giảm, tăng là lỗi; xuống dưới ngưỡng thì xoá dòng của nó đi, đừng nới số lên.
 
 Sổ quyết định có cổng riêng: python3 tools/decisions.py check.
 
@@ -35,11 +33,6 @@ from decisions import glob_re  # noqa: E402  (cùng cú pháp glob với sổ qu
 ROOT = subprocess.check_output(['git', 'rev-parse', '--show-toplevel'], text=True).strip()
 
 MAX_LINES = 200
-# Bánh cóc: số dòng / số mốc ngày đang nợ của từng file. Chỉ được giảm.
-DEBT_LINES = {
-}
-DEBT_DATES = {
-}
 KINDS = {'trang chủ', 'bộ sưu tập', 'project', 'gác xép'}
 HANDOFF_SECTIONS = {'ĐANG LÀM', 'CHƯA LÀM', 'NỢ', 'CHỜ CHỦ TRANG'}
 # Thư mục ở gốc không phải project: hạ tầng dùng chung, dữ liệu của trang chủ, và nhóm chứa.
@@ -111,27 +104,17 @@ def check_map(all_files):
     return rows
 
 
-def ratchet(path, value, limit, table, what):
-    allowed = table.get(path)
-    if allowed is None:
-        if value > limit:
-            err(path, f'{what}: {value} (tối đa {limit})')
-    elif value > allowed:
-        err(path, f'{what}: {value}, bảng nợ cho phép {allowed} — chỉ được giảm')
-    elif value <= limit:
-        err(path, f'{what}: {value} — đã hết nợ, xoá dòng của file này khỏi bảng nợ trong tools/lint-structure.py')
-    elif value < allowed:
-        err(path, f'{what}: còn {value}/{allowed} — đã giảm, hạ số trong bảng nợ xuống {value}')
-
-
 def check_docs(all_files):
     docs = [f for f in all_files if os.path.basename(f) == 'CLAUDE.md' or
             (f.startswith('.claude/rules/') and f.endswith('.md'))]
     for f in docs:
         text = read(f)
-        ratchet(f, len(text.rstrip('\n').split('\n')), MAX_LINES, DEBT_LINES, 'số dòng')
-        ratchet(f, len(RE_DATE.findall(RE_FILENAME_WITH_DATE.sub('', text))), 0, DEBT_DATES,
-                'mốc ngày (nhật ký thuộc HISTORY.md, quyết định thuộc DECISIONS.md)')
+        lines = len(text.rstrip('\n').split('\n'))
+        if lines > MAX_LINES:
+            err(f, f'{lines} dòng (tối đa {MAX_LINES})')
+        dates = RE_DATE.findall(RE_FILENAME_WITH_DATE.sub('', text))
+        if dates:
+            err(f, f'có mốc ngày {dates[0]} — nhật ký thuộc HISTORY.md, quyết định thuộc DECISIONS.md')
     for f in all_files:
         if os.path.basename(f) != 'HANDOFF.md':
             continue
