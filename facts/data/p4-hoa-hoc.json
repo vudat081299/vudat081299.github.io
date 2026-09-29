@@ -1051,15 +1051,14 @@
     "cat": "hoa-hoc",
     "sub": "hoa-hoc-doi-song",
     "q": "Kem chống nắng chặn tia cực tím bằng cách nào?",
-    "t": "Chất chống nắng hoạt động theo hai cơ chế khác nhau: hấp thụ hoá học hoặc phản xạ vật lý",
-    "s": "Kẽm oxit và titan dioxit phản xạ và tán xạ tia tử ngoại; các chất hữu cơ như avobenzone hấp thụ rồi thải năng lượng thành nhiệt. SPF 30 chặn khoảng 97% tia UVB, SPF 50 chặn khoảng 98%.",
-    "d": "Cơ chế vật lý dùng hạt khoáng nằm trên bề mặt da phản xạ và tán xạ tia cực tím; nó hoạt động ngay khi bôi, bền dưới nắng, ít kích ứng, nhược điểm cổ điển là để lại vệt trắng — nên sản phẩm hiện đại dùng hạt kích thước nano vẫn chặn cực tím mà trong suốt trên da. Cơ chế hoá học dùng phân tử hữu cơ hấp thụ tia cực tím rồi nhả ra thành nhiệt lượng rất nhỏ, cho lớp bôi trong và mỏng nhẹ hơn, nhưng một số phân tử bị chính tia cực tím phá dần nên hiệu lực giảm theo thời gian phơi nắng — đó là một trong hai lý do phải bôi lại, lý do kia là mồ hôi và nước cuốn trôi. Về SPF: thang này không tuyến tính, nên lượng kem bôi đủ dày quan trọng hơn việc chọn chỉ số cao hơn.",
+    "t": "Kem chống nắng khoáng như kẽm oxit và titan dioxit chặn tia cực tím chủ yếu bằng cách hấp thụ, không phải phản xạ",
+    "s": "Đo trên cả dải tử ngoại, hai chất này chỉ phản xạ 4–5% tia tới, tức bảo vệ chưa bằng SPF 2; phần còn lại bị chúng hấp thụ. Với ánh sáng nhìn thấy thì ngược lại: chúng phản xạ tới 60% và gần như không hấp thụ, vì thế lớp kem khoáng trông trắng.",
     "tags": [
       "chong-nang",
-      "spf",
+      "tia-cuc-tim",
       "da"
     ],
-    "src": "US FDA Sunscreen Monograph; Hiệp hội Da liễu Mỹ (AAD)"
+    "src": "Cole, Shyr & Ou-Yang, Photodermatology, Photoimmunology & Photomedicine (2016)"
   },
   {
     "id": "hh-274",
