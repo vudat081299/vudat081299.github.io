@@ -1114,7 +1114,7 @@ footer b{color:var(--ink-2); font-weight:600}
       <span class="demo-label">Nghe các vòng hòa thanh (giọng Đô)</span>
       <div class="btn-row" id="progBtns"></div>
       <div class="range-row"><label>Tempo</label><input type="range" id="progBpm" min="60" max="140" value="96"><span class="rv" id="progBpmV">96 BPM</span></div>
-      <div class="readout" id="progReadout">Bấm để nghe. Chú ý cú <b>V→I</b> ở cuối mỗi vòng: đó là khoảnh khắc "căng rồi về nhà".</div>
+      <div class="readout" id="progReadout">Bấm để nghe — mỗi vòng phát một lần. Cú <b>V→I</b>, khoảnh khắc "căng rồi về nhà", chỉ có ở nút <b>ii–V–I</b>; vòng quay đầu và blues dừng ngay trên V nên nghe lửng, như một câu hỏi.</div>
     </div>
     <div class="key-def">
       <span class="tag">Chìa khóa của jazz</span>
@@ -4424,10 +4424,15 @@ function mkBtns(containerId, defs, onClick){ const w=document.getElementById(con
   function straight(){ const t0=audio().currentTime+0.05; chord(pad,t0,1.7,0.2); for(let i=0;i<8;i++) voice(mel[i],t0+i*0.25,0.24,0.7); }
   function swing(){ const t0=audio().currentTime+0.05; chord(pad,t0,1.7,0.2);
     for(let i=0;i<8;i++){ const beat=Math.floor(i/2), within=i%2; const t=t0+beat*0.5+(within?0.33:0); voice(mel[i],t,within?0.16:0.3,0.7); } }
-  function comping(){ const t0=audio().currentTime+0.05; const bass=[48,52,55,57];
+  /* Walking bass theo công thức ở #s-dem-walk (tab Đệm hát), như máy đệm Jazz Swing ở #s-styles: phách 1 gốc ·
+     2–3 nốt của hợp âm · 4 cách gốc ô sau nửa cung. Ô 1 đi lên C3 E3 G3 → B3 (dưới C4 nửa cung), ô 2 đi
+     xuống C4 G3 E3 → C♯3 (trên C3 nửa cung), rồi đáp về C3. Hợp âm Charleston: phách 1 và "và" của 2,
+     "và" swing ở 2/3 phách (e8). */
+  function comping(){ const t0=audio().currentTime+0.05; const bass=[[48,52,55,59],[60,55,52,49]];
     for(let bar=0;bar<2;bar++){ const bt=t0+bar*2.0;
-      for(let b=0;b<4;b++) voice(bass[b],bt+b*0.5,0.45,0.5);
-      chord([64,67,71],bt,0.5,0.42); chord([64,67,71],bt+0.75,0.5,0.42); } }
+      for(let b=0;b<4;b++) voice(bass[bar][b],bt+b*0.5,0.45,0.5);
+      chord([64,67,71],bt,0.5,0.42); chord([64,67,71],bt+e8(3,true)*0.5,0.5,0.42); }
+    voice(48,t0+4.0,0.9,0.5); chord([64,67,71],t0+4.0,0.9,0.42); }
   mkBtns('demFeelBtns',[
     {label:'Thẳng (straight)',f:straight,t:'8th đều tăm tắp — chất pop/cổ điển.'},
     {label:'Swing (đung đưa)',f:swing,t:'cặp 8th dài–ngắn (~2/3+1/3) — chất jazz.'},
