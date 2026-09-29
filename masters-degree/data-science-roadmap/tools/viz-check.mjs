@@ -9,8 +9,8 @@
  * Cần Chrome trên máy. Không có Chrome thì nó KHÔNG nổ — in một dòng rồi thoát 0, vì
  * đây là phép kiểm phụ thuộc môi trường, không phải cổng chặn commit.
  *
- * Nó KHÔNG kiểm "hình có dạy được không" — thứ đó cần người đọc thật, xem HANDOFF mục
- * "Tám hình P1". Nó kiểm năm thứ máy thấy được, ở MỌI trạng thái điều khiển:
+ * Nó KHÔNG kiểm "hình có dạy được không" — thứ đó cần người đọc thật (DS-035). Nó kiểm
+ * năm thứ máy thấy được, ở MỌI trạng thái điều khiển:
  *   1. mount có render ra svg không (mount rỗng = hình biến mất, im lặng)
  *   2. hai nhãn <text> có đè nhau không
  *   3. nhãn có tràn ra ngoài viewBox không
@@ -21,7 +21,7 @@
  *      là nhãn đặt CỐ Ý lên đúng thứ nó gọi tên — "0" trên đường 0, "train" trên đường
  *      train, "trung vị" trên đường trung vị, ★ chính là cái mốc. Đó là direct labelling,
  *      một kỹ thuật ĐÚNG, nên bắt cả chúng thì cổng thành tiếng ồn. Thu về <rect>: 0 chỗ
- *      ở trạng thái ổn định, mà vẫn bắt được lớp lỗi thật. Xem CLAUDE.md §3.
+ *      ở trạng thái ổn định, mà vẫn bắt được lớp lỗi thật. Xem docs/gates.md.
  */
 import { readFileSync, writeFileSync, existsSync, mkdtempSync } from 'node:fs';
 import { join, dirname } from 'node:path';
