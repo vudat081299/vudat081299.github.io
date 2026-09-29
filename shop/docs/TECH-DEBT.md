@@ -20,7 +20,7 @@ Cập nhật lần cuối: 20/09/2026.
 
 | # | Nợ | Cắn khi | Trả bằng cách |
 |---|---|---|---|
-| 6 | **`g` trong giỏ hàng chưa có số phiên bản** — đổi cấu trúc hộp quà làm hỏng giỏ đang lưu ở máy khách | Lần đầu đổi schema hộp quà sau khi có khách thật | Thêm `v: 1` vào `g`, và bỏ qua dòng nào có `v` lạ lúc nạp. Rẻ, nên làm sớm. |
+| 6b | **`g` trong giỏ hàng chưa có số phiên bản** — đổi cấu trúc hộp quà làm hỏng giỏ đang lưu ở máy khách | Lần đầu đổi schema hộp quà sau khi có khách thật | Thêm `v: 1` vào `g`, và bỏ qua dòng nào có `v` lạ lúc nạp. Rẻ, nên làm sớm. |
 | 7 | **`shop.css` / `shop.js` chưa gắn hash vào tên** | Sau mỗi lần deploy, khách cũ dùng bản cache tới ~10 phút | Thêm một bước build gắn hash. Chỉ đáng khi tần suất sửa tăng. |
 | 8 | **Mã VietQR gọi ảnh từ `img.vietqr.io`** (dịch vụ ngoài) | Nếu dịch vụ ấy chết hoặc đổi giá | Sinh QR ngay trong trình duyệt. Chuẩn VietQR là chuẩn mở của NAPAS nên làm được. Hiện chỉ đẩy số tiền và mã đơn, **không** đẩy tên/số điện thoại/địa chỉ khách. |
 | 9 | **Một mùi có hai sản phẩm thì hộp quà lặng lẽ lấy cái đầu** | Khi thêm sản phẩm thứ hai cho cùng một mùi | Cho `gift` chỉ định sản phẩm, hoặc cho khách chọn. Cổng đang cảnh báo ở mức XEM. |

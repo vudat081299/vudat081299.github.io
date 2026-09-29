@@ -24,5 +24,3 @@ Chờ chủ repo, hoặc chủ shop qua chủ repo. Có thông tin rồi thì l�
 
 - Sổ nợ đầy đủ ở [docs/TECH-DEBT.md](docs/TECH-DEBT.md) và giữ ở đó: `docs/`, một ADR và
   `docs/index.html` trỏ vào nó theo số thứ tự. Sáu khoản đầu chặn việc bán thật.
-- Sổ nợ có hai dòng cùng số 6 (quyền riêng tư; số phiên bản của `g` trong giỏ): đánh lại số thì sửa
-  mọi chỗ trỏ tới.
