@@ -9,6 +9,28 @@ một dòng "→ quyết định DS-…".
 
 ---
 
+## Phiên 2026-09-29 (af) — bỏ hook riêng, tài liệu viết ngắn
+
+Chủ repo thấy tài liệu và bộ hook phức tạp quá mức (REPO-017, REPO-018).
+
+- Bỏ `tools/hooks/`, `install-hooks.sh`, `hook-state.mjs` và cổng `G-HOOK`. `tools/check.sh` giữ hai việc
+  của hook cũ: chặn commit sửa HTML mà sản phẩm sinh lại chưa add, và chạy `gate.test.mjs` khi `tools/` đổi
+  (ở CI luôn chạy).
+- `check.sh` gọi git từ gốc repo: trong hook, git đặt `GIT_DIR` mà không đặt `GIT_WORK_TREE`, nên đường dẫn
+  tương đối tính từ thư mục con trỏ trượt và hai phép kiểm trên im.
+- Chữ thương hiệu về "Data Science" (DS-018); `s-how#0` thành câu tình huống; hộp "Nộp được" của lịch
+  14 ngày gói cả câu vào một span (ngày 4 ở 375px từ 15 dòng còn 5).
+- `CLAUDE.md` 840 → 197 dòng, giữ số mục §0a–§13 vì code trích; chi tiết cổng sang `docs/gates.md`;
+  `design.md`, `editing.md`, `writing.md`, `DECISIONS.md`, `HANDOFF.md` viết ngắn lại. `session.mjs --close`
+  đọc đúng khuôn DECISIONS mới.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- `TOC.md` là file sinh và phần đầu đã ngắn: không đổi `buildToc()`.
+- `G-DOC` vẫn đối chiếu tên cổng với `CLAUDE.md`, không với `gates.md`: danh sách tên ở §4 đủ ngắn.
+- `tools/concepts.json` còn id `t-stack` trong `allowEarly` của khái niệm rò rỉ: vô hại (không bài nào mang
+  id đó, `r-stack` đứng sau bài định nghĩa), để lần sửa `concepts.json` sau.
+
 ## Phiên 2026-09-29 (ae) — rà đợt commit 27–28/09: CI chặn như pre-push, `<title>` theo DS-016
 
 Chủ repo nhờ rà các commit của hai ngày 27–28/09 — kiến trúc và tài liệu, không đọc nội dung trang.
