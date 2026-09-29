@@ -1077,20 +1077,6 @@
     "src": "USDA Food Safety and Inspection Service"
   },
   {
-    "id": "vl-280",
-    "cat": "vat-ly",
-    "sub": "nhiet-va-nang-luong",
-    "q": "Thân nhiệt là 37 độ, vậy vì sao phòng 25 độ mới thấy dễ chịu?",
-    "t": "Nhiệt độ cơ thể người và nhiệt độ phòng chênh nhau chỉ khoảng 12 độ, nhưng bạn vẫn thấy phòng 25 °C là dễ chịu",
-    "s": "Cơ thể sinh khoảng 100 watt nhiệt khi nghỉ và phải thải hết ra ngoài. Nếu môi trường ở đúng 37 °C thì việc thải nhiệt gần như dừng lại, và đó là lý do 37 °C ngoài trời gây nguy hiểm dù nó bằng đúng thân nhiệt.",
-    "tags": [
-      "than-nhiet",
-      "trao-doi-nhiet",
-      "moi-truong"
-    ],
-    "src": "ASHRAE Handbook of Fundamentals"
-  },
-  {
     "id": "vl-282",
     "cat": "vat-ly",
     "sub": "luc-va-chuyen-dong",
@@ -1304,6 +1290,7 @@
     "q": "Một người toả ra bao nhiêu nhiệt?",
     "t": "Cơ thể bạn toả ra khoảng 100 watt khi nghỉ, tương đương một bóng đèn sợi đốt cũ",
     "s": "Một phòng họp 20 người nhận thêm khoảng 2 kW nhiệt chỉ từ người. Hệ thống điều hoà toà nhà phải tính riêng phần tải này.",
+    "d": "Vì phải thải liên tục khoảng 100 W ấy, cơ thể thấy dễ chịu trong phòng khoảng 25 °C chứ không phải 37 °C. Không khí càng gần thân nhiệt thì da càng khó toả nhiệt vào đó; ở 37 °C gần như chỉ còn mồ hôi bay hơi mang được nhiệt đi, và trời càng ẩm thì cách ấy càng kém.",
     "tags": [
       "than-nhiet",
       "nang-luong",
