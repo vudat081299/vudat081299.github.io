@@ -20,7 +20,7 @@ Làm xong mục nào thì xoá mục ấy. Số hiện tại: `python3 facts/too
   th-342 kt-013 nn-007 sk-290 th-330 tp-253 tp-293 na-366.
 - Fact mức XEM cố ý để hở cho tới khi tra được số: khai miễn sai làm cổng im vĩnh viễn.
 - `xh-124` chưa có con số (cách đo bằng họ hiếm đang bị tranh cãi); `na-354` (phông biển báo) cần số liệu thử nghiệm
-  quãng đọc; `sk-250` trích Wansink, tác giả bị rút nhiều bài vì gian lận dữ liệu.
+  quãng đọc.
 - Bảy cặp trùng tìm bằng mắt, chưa xử theo §3: gt-003/gt-101 · tl-103/tl-335 · tl-110/tl-328 · xh-007/xh-103 ·
   sk-136/hh-273 · vl-280/vl-307 · ct-004/ct-111. `xh-019`/`xh-147` là hai phép đo khác nhau, đừng gộp.
 - Khoảng 328 cặp dải 0,42–0,62 đã đọc là hai claim nhưng chưa khai `khac_voi`; khai được nếu kèm lý do từng cặp.
