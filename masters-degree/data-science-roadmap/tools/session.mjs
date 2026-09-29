@@ -137,7 +137,7 @@ function latestSession() {
    `tools/decisions.py check` ở gốc repo bắt mã trùng. */
 function nextDecisionId() {
   if (!existsSync(DECISIONS)) return 'DS-001';
-  const ns = [...readFileSync(DECISIONS, 'utf8').matchAll(/^### DS-(\d{3})\b/gm)].map(m => +m[1]);
+  const ns = [...readFileSync(DECISIONS, 'utf8').matchAll(/^##+ DS-(\d{3})\b/gm)].map(m => +m[1]);
   return 'DS-' + String((ns.length ? Math.max(...ns) : 0) + 1).padStart(3, '0');
 }
 
@@ -362,8 +362,8 @@ function close() {
   console.log(B('Hai file còn lại') + DIM('  — mỗi thứ đúng một chỗ, đừng tả một việc ở hai file'));
   console.log('    · còn việc dở?  → ' + B('HANDOFF.md') + DIM('  ## ĐANG LÀM · ## CHƯA LÀM · ## NỢ · ## CHỜ CHỦ TRANG'));
   console.log('    · chủ trang vừa chốt hay đảo một điều? → ' + B('DECISIONS.md') + DIM(`  mục mới: ${nextDecisionId()}`));
-  console.log(DIM('      đảo một quyết định cũ thì ghi cả hai đầu: mục cũ "Trạng thái: đã thay bằng <mã>",'));
-  console.log(DIM('      mục mới "Thay cho: <mã cũ>". Chỉ ghi thứ chủ trang chốt, không ghi lựa chọn của agent.'));
+  console.log(DIM('      thay một quyết định cũ: xoá mục cũ, mục mới ghi "· thay cho <mã cũ>" (khuôn ở tools/decisions.py).'));
+  console.log(DIM('      Chỉ ghi thứ chủ trang chốt, không ghi lựa chọn của agent.'));
   console.log('');
   if (dang && !dang.empty) {
     console.log(YEL('⚠ HANDOFF.md vẫn còn việc ở mục `## ĐANG LÀM`') + ` (dòng ${dang.at}).`);
