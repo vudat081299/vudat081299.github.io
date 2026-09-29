@@ -10,6 +10,16 @@ Các mục dưới giữ nguyên văn từ HANDOFF.md cũ. Những gì phiên n�
 
 ---
 
+## Phiên 29/09/2026 — cổng HTML chung, check.sh chỉ còn cổng tĩnh, tài liệu ngắn lại
+
+- `lint-shop.py` dùng `tools/htmlcheck.py`. Ba phép kiểm mới bắt một lỗi thật: tiêu đề chân trang
+  `<h4>` nhảy cấp ở cả năm trang → `<h2>`, `.foot h2` giữ nguyên hình (đo ở 390 và 1280px; `smoke.js` 16/16).
+- `check.sh` chỉ chạy `lint-shop.py`; `smoke.js` chạy ở CI và chạy tay ở máy (REPO-017).
+- CLAUDE.md 272 → 166 dòng; DECISIONS, HANDOFF, README, skill và phần lớp cổng của `docs/05` viết lại
+  theo REPO-018.
+- Cố ý không làm: `STATUS-REPORT.md`, các ADR và `TECH-DEBT.md` còn nhắc "ba/bốn lớp cổng" — đó là ảnh
+  chụp lúc viết, không phải luật. Lỗi chân trang ở màn hẹp (thấy khi đo) ghi vào HANDOFF, chưa sửa.
+
 ## Phiên 24/09/2026 — dàn phẳng chuỗi nguyên liệu → khách quay lại
 
 Đạt hỏi: chị ấy dùng Excel từ lúc nhập nguyên liệu tới lúc bán — có mắt xích nào can thiệp được
