@@ -78,7 +78,8 @@ a { color:inherit; }
 @media (max-width:600px) { .bar__in { padding:0 16px; gap:9px; } }
 .bar__brand { font-weight:700; font-size:14.5px; letter-spacing:-.01em; text-decoration:none; white-space:nowrap; display:flex; align-items:center; gap:7px; }
 .bar__brand span.d { color:var(--subtle); font-weight:500; }
-@media (max-width:1340px) { .bar__brand span.d { display:none; } }
+/* Đo được: thanh chỉ đủ chỗ cho dòng phụ từ 1458px. */
+@media (max-width:1480px) { .bar__brand span.d { display:none; } }
 .bar__nav { display:flex; gap:2px; margin-left:auto; }
 /* Thanh điều hướng ngang chỉ hiện khi CÒN CHỖ, và dòng phụ của thương hiệu nhường
      chỗ trước. Ngưỡng cũ làm trang tràn ngang suốt quãng màn hình vừa — đo được ở
@@ -525,7 +526,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
     <button class="iconbtn" id="tocBtn" aria-label="Mở mục lục">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-    <a class="bar__brand" href="../index.html">Machine Learning <span class="d">&amp; Deep Learning · Andrew Ng · 8 khoá</span></a>
+    <a class="bar__brand" href="../index.html">Machine Learning <span class="d">&amp; Deep Learning · Andrew Ng · 8 courses</span></a>
     <nav class="bar__nav">
       <a href="#mo-dau">Mở đầu</a>
       <a href="#act1">1 · Một đường thẳng</a>

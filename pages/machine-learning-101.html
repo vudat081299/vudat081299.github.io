@@ -85,8 +85,8 @@ a { color:inherit; }
 .bar__brand { font-weight:700; font-size:14.5px; letter-spacing:-.01em; text-decoration:none; white-space:nowrap; display:flex; align-items:center; gap:7px; }
 .bar__brand span.d { color:var(--subtle); font-weight:500; }
 /* Dòng phụ của trang này dài nhất trong ba trang anh em, nên nó phải nhường chỗ
-     muộn hơn: đo được vẫn tràn 43px ở 1360 và 3px ở 1440 nếu giữ ngưỡng 1340. */
-@media (max-width:1460px) { .bar__brand span.d { display:none; } }
+     muộn hơn: đo được thanh chỉ đủ chỗ cho nó từ 1566px. */
+@media (max-width:1590px) { .bar__brand span.d { display:none; } }
 .bar__nav { display:flex; gap:2px; margin-left:auto; }
 /* Thanh điều hướng ngang chỉ hiện khi CÒN CHỖ, và dòng phụ của thương hiệu nhường
      chỗ trước. Ngưỡng cũ làm trang tràn ngang suốt quãng màn hình vừa — đo được ở
@@ -340,6 +340,7 @@ input[type=range]::-moz-range-thumb { width:16px; height:16px; border-radius:50%
 @media (max-width:380px) {
   .bar__in { gap:6px; }
   .bar__brand { font-size:13px; }
+  .nm { white-space:normal; }   /* "depthwise separable convolution" dài hơn dòng ở 320px */
 }
 
 /* Viền focus bàn phím: mọi thứ bấm được phải thấy được khi đi bằng Tab. */
@@ -454,7 +455,7 @@ footer a { color:var(--muted); }
     <button class="iconbtn" id="tocBtn" aria-label="Mở mục lục">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-    <a class="bar__brand" href="../index.html">Machine Learning 101 <span class="d">· 13 chương · không cần toán phổ thông</span></a>
+    <a class="bar__brand" href="../index.html">Machine Learning 101 <span class="d">· 13 chapters · no high-school maths needed</span></a>
     <nav class="bar__nav">
       <a href="#s-what">1 · Máy đoán là gì</a>
       <a href="#s-machine">2 · Ba bộ phận</a>
