@@ -37,7 +37,7 @@ body {
 }
 /* * {
   cursor:no-drop;
-  cursor: url(sun.png) 2 2, no-drop;
+  cursor: no-drop;
 } */
 .test {
   position: absolute;
@@ -500,4 +500,12 @@ img{
     right: 18%;
     bottom: 17%;
   }
+}
+
+/* Màn hẹp: khối chữ rộng cố định 400px và hai vòng tròn trang trí thò ra ngoài mép — thu vào cho vừa màn. */
+@media (max-width: 600px) {
+  .home-page .text-zone { left: 16px; right: 16px; width: auto; }
+  .home-page h1 { font-size: 36px; line-height: 40px; }
+  .card__circle1 { left: 0; }
+  .card__circle2 { right: 0; }
 }
