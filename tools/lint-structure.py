@@ -40,7 +40,7 @@ DEBT_LINES = {
     'cashy/CLAUDE.md': 463,
     'facts/CLAUDE.md': 821,
     'masters-degree/data-science-roadmap/CLAUDE.md': 802,
-    'shop/CLAUDE.md': 272,
+    'shop/CLAUDE.md': 262,
 }
 DEBT_DATES = {
 }

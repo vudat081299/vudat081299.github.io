@@ -35,20 +35,11 @@ Rồi mở `http://localhost:8000/shop/`.
 sh shop/tools/check.sh
 ```
 
-Một lệnh, hai tầng: cổng lint (cú pháp, dữ liệu, shell, liên kết) rồi **chạy thật trong trình
-duyệt** (hành vi). Tầng hai mới là tầng bắt được hai lỗi nặng nhất từng xảy ra ở đây — cả hai
-đều đi qua tầng một sạch sẽ. Xanh hết thì cập nhật `HANDOFF.md` (việc dở) và `HISTORY.md` (nhật
-ký phiên) rồi commit; chủ repo vừa chốt điều gì thì ghi vào `DECISIONS.md`.
-
-Giữa hai việc ấy thì cứ sửa — cổng tự chạy:
-
-| Khi nào | Cái gì chạy | Nó bắt gì |
-|---|---|---|
-| Ngay sau mỗi Edit/Write trong `shop/` | `tools/hooks/post-edit.sh` | cổng lint — cú pháp, dữ liệu, shell, liên kết |
-| Lúc `git commit` chạm `shop/` | `tools/hooks/pre-commit` | như trên, **kể cả** thay đổi viết bằng script |
-| Lúc lên `main` / mở PR | `.github/workflows/gates.yml` | cổng lint **và** chạy thật trong trình duyệt |
-
-`shop/` không có `pre-push`: commit nào đi qua bằng `--no-verify` thì chỉ còn CI bắt lại.
+Cổng tĩnh: cú pháp, dữ liệu, shell, liên kết. Commit chạm `shop/` thì hook gốc repo chạy nó; CI chạy
+nó cùng `smoke.js` (bấm thật trong trình duyệt), deploy chờ CI xanh (REPO-017). Chạy smoke ở máy:
+`python3 -m http.server 8000` ở gốc repo, rồi `node shop/tools/smoke.js http://localhost:8000/shop/`.
+Xanh hết thì cập nhật `HANDOFF.md` (việc dở) và `HISTORY.md` (nhật ký phiên) rồi commit; chủ repo vừa
+chốt điều gì thì ghi vào `DECISIONS.md`.
 
 Có skill riêng cho thư mục này ở `.claude/skills/shop/` — phiên AI nào cũng nên nạp nó trước
 khi sửa. Skill chỉ giữ thứ tự các bước; luật nằm ở file này.
@@ -153,12 +144,11 @@ npm i -g playwright-core playwright && npx playwright install chromium
 ```
 
 `playwright-core` cần Node ≥ 20, mà `node` mặc định trên máy có thể là bản cũ do fnm/nvm ghim —
-chạy `check.sh` với Node mới (`PATH=/opt/homebrew/bin:$PATH`). Máy có sẵn Google Chrome thì khỏi
+chạy `smoke.js` với Node mới (`PATH=/opt/homebrew/bin:$PATH`). Máy có sẵn Google Chrome thì khỏi
 tải Chromium: `CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"`.
 
 Trong container agent (`/opt/pw-browsers` đã có sẵn) thì **đừng** chạy `playwright install` —
-trình duyệt nằm đó rồi. Thiếu công cụ thì tầng 2 thoát mã 2 và nói rõ là đã bỏ qua; nó **không**
-làm cổng đỏ, nên đọc kỹ dòng cuối chứ đừng chỉ nhìn chữ *XONG*.
+trình duyệt nằm đó rồi. Thiếu công cụ thì `smoke.js` thoát mã 2 (đã bỏ qua), không phải mã 1 (lỗi).
 
 ---
 
