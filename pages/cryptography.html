@@ -58,7 +58,7 @@
   .cb-eyebrow-sec b { color: var(--wb-fg); font-weight: 650; }
   .cb-sec-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; margin: 0 0 12px; line-height: 1.3; }
   h3.cb-h3 { font-size: 15.5px; font-weight: 680; margin: 26px 0 10px; letter-spacing: -.005em; }
-  h4.cb-h4 { font-size: 13.5px; font-weight: 680; margin: 18px 0 8px; letter-spacing: .01em; }
+  h3.cb-h4, h4.cb-h4 { font-size: 13.5px; font-weight: 680; margin: 18px 0 8px; letter-spacing: .01em; }
 
   /* ---- prose ---- */
   .cb-lede { font-size: 16px; line-height: 1.62; color: var(--wb-fg); max-width: 74ch; margin: 0 0 16px; font-weight: 500; }
@@ -253,7 +253,7 @@
 
 <header class="wb-navbar wb-navbar--sticky wb-navbar--collapse-lg">
   <button class="wb-navbar__toggle wb-btn wb-btn--ghost wb-btn--icon" data-navbar-toggle
-          aria-expanded="false" aria-label="Open menu"><span class="wb-ico">menu</span></button>
+          aria-expanded="false" aria-label="Mở mục lục"><span class="wb-ico">menu</span></button>
   <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark">🔐</span><span class="cb-brand-text">Cryptography</span></a>
   <nav class="wb-nav wb-navbar__menu">
     <a class="wb-nav__link" href="#mo-dau">Foundations</a>
@@ -265,8 +265,8 @@
   </nav>
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
-    <a class="wb-btn wb-btn--ghost wb-btn--icon" href="../index.html" aria-label="Home"><span class="wb-ico">home</span></a>
-    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Light / dark">
+    <a class="wb-btn wb-btn--ghost wb-btn--icon" href="../index.html" aria-label="Trang chủ"><span class="wb-ico">home</span></a>
+    <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
       <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
       <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
     </button>
@@ -655,7 +655,7 @@
 
         <p class="cb-p">Hàm nong ra đó gọi là <b>bộ sinh giả ngẫu nhiên</b> (PRG): <code>G: {0,1}ˢ → {0,1}ⁿ</code> với <code>n ≫ s</code>. Kết quả <code>G(k)</code> tất nhiên <i>không</i> ngẫu nhiên — chỉ có <code>2ˢ</code> dòng khoá khả dĩ trong khi có <code>2ⁿ</code> chuỗi. Yêu cầu vì thế phải hạ xuống: <b>không thuật toán hiệu quả nào phân biệt được <code>G(k)</code> với một chuỗi ngẫu nhiên thật</b>.</p>
 
-        <h4 class="cb-h4">Định nghĩa an toàn của PRG, viết cho lập trình viên</h4>
+        <h3 class="cb-h4">Định nghĩa an toàn của PRG, viết cho lập trình viên</h3>
         <p class="cb-p">Một <b>phép thử thống kê</b> <code>A</code> là bất kỳ chương trình nào nhận vào một chuỗi <code>n</code> bit và in ra <code>0</code> hoặc <code>1</code> — “tôi nghĩ đây là ngẫu nhiên” hoặc không. Ví dụ: đếm số bit 1 rồi báo <code>1</code> nếu xấp xỉ <code>n/2</code>; hoặc kiểm xem có nhiều cặp <code>00</code> bất thường không. <b>Lợi thế</b> của <code>A</code> là hiệu hai xác suất:</p>
 
         <div class="cb-formula">Adv(A) = | Pr[ A(G(k)) = 1 ]  −  Pr[ A(r) = 1 ] |
@@ -665,7 +665,7 @@
 
         <p class="cb-p">Một cách phát biểu tương đương, dễ hình dung hơn, là <b>tính không đoán trước</b>: cho kẻ địch xem <code>i</code> bit đầu của dòng khoá, hắn không đoán được bit thứ <code>i+1</code> tốt hơn tung đồng xu. Hai cách này tương đương nhau (định lý Yao), và cách thứ hai giải thích ngay vì sao một PRG <b>tuyến tính</b> chết: nếu dòng khoá sinh ra bởi một thanh ghi dịch phản hồi tuyến tính (LFSR), chỉ cần vài chục bit đầu là giải hệ phương trình tuyến tính ra toàn bộ trạng thái.</p>
 
-        <h4 class="cb-h4">Điều luật duy nhất của stream cipher</h4>
+        <h3 class="cb-h4">Điều luật duy nhất của stream cipher</h3>
         <p class="cb-p">Vì <code>G</code> tất định, <b>cùng một hạt giống luôn cho cùng một dòng khoá</b>. Mọi thứ ở Mô hình 1 áp dụng nguyên vẹn: dùng lại khoá là sập. Nhưng phiên nào cũng phải trao khoá mới thì bất tiện, nên các thiết kế hiện đại nhận thêm một <b>nonce</b> — số dùng một lần, không cần bí mật, chỉ cần <i>không bao giờ lặp với cùng một khoá</i>:</p>
 
         <div class="cb-formula">dòng khoá = G(k, nonce)     <span class="c">// khoá k dùng lâu dài; nonce đổi mỗi thông điệp, gửi kèm bản mã</span></div>
@@ -706,7 +706,7 @@
 
         <p class="cb-p">Vì sao định nghĩa lạ lùng này lại là đúng đắn? Vì nó <b>bao trùm mọi mục tiêu cụ thể</b>. Giả sử kẻ địch chỉ muốn biết một điều rất khiêm tốn — chẳng hạn <i>bit cuối của số tiền là chẵn hay lẻ</i>. Nếu hắn làm được, hắn tự động thắng trò chơi trên: cứ chọn <code>m₀</code> có số chẵn, <code>m₁</code> có số lẻ. Ngược lại, không thắng được trò chơi thì <b>không suy ra được bất kỳ hàm nào</b> của bản rõ. Một định nghĩa thay cho vô hạn định nghĩa.</p>
 
-        <h4 class="cb-h4">Hai hệ quả mà người mới hay vấp</h4>
+        <h3 class="cb-h4">Hai hệ quả mà người mới hay vấp</h3>
         <ul class="cb-ul">
           <li><b>Độ dài không được bảo vệ.</b> Trò chơi bắt <code>m₀</code>, <code>m₁</code> dài bằng nhau — vì bản mã gần như luôn để lộ độ dài. Đó không phải sơ suất của định nghĩa mà là thừa nhận thẳng một giới hạn thật. Hệ quả ngoài đời: nghe lén HTTPS vẫn suy ra được bạn đang xem trang nào nhờ <i>kích thước</i> và <i>nhịp</i> các gói tin. Muốn giấu thì phải chèn thêm dữ liệu độn — và đó là một bài toán riêng.</li>
           <li><b>Mã hoá tất định không bao giờ an toàn khi khoá dùng nhiều lần.</b> Nếu <code>E</code> không có yếu tố ngẫu nhiên, kẻ địch chỉ cần gửi <code>m₀ = "A"</code>, <code>m₁ = "B"</code>, xin mã hoá của <code>"A"</code> trước, rồi so sánh. Kết luận có tính ràng buộc thiết kế: <b>mọi hệ mã hoá dùng khoá nhiều lần đều bắt buộc phải có IV ngẫu nhiên hoặc nonce</b>. Bạn sẽ thấy hệ quả này quay lại ở chế độ ECB ngay dưới đây, và ở RSA sách giáo khoa tại <a href="#s-tdf">chặng 3</a>.</li>
@@ -950,7 +950,7 @@ c' = c ⊕ Δ  ⟹  m' = c' ⊕ ks = (m ⊕ ks ⊕ Δ) ⊕ ks = <b>m ⊕ Δ</b>
 
         <p class="cb-p">Chú ý một điểm mà người mới rất hay nhầm: <b>MAC không phải hàm băm</b>, và “băm rồi gửi kèm” <i>không</i> bảo vệ được gì. Nếu chỉ gửi <code>(m, SHA256(m))</code> thì kẻ địch sửa <code>m</code> xong băm lại là xong — hàm băm ai cũng tính được. Cái làm nên MAC là <b>khoá bí mật</b>. Chỗ này gặp thường xuyên ngoài đời dưới dạng “checksum để chống sửa đổi”: checksum chống <i>lỗi truyền</i>, không chống <i>kẻ địch</i>.</p>
 
-        <h4 class="cb-h4">Định nghĩa an toàn: không giả mạo được dù được hỏi trước</h4>
+        <h3 class="cb-h4">Định nghĩa an toàn: không giả mạo được dù được hỏi trước</h3>
         <p class="cb-p">Trò chơi rất khắc nghiệt, và sự khắc nghiệt đó là có chủ đích:</p>
         <ol class="cb-ul">
           <li>Kẻ địch được đưa <b>bao nhiêu thông điệp tuỳ thích</b> <code>m₁, m₂, …</code> và nhận về thẻ hợp lệ của chúng. Hắn tự chọn nội dung, thích nghi theo kết quả trước.</li>
@@ -958,7 +958,7 @@ c' = c ⊕ Δ  ⟹  m' = c' ⊕ ks = (m ⊕ ks ⊕ Δ) ⊕ ks = <b>m ⊕ Δ</b>
         </ol>
         <p class="cb-p">Gọi là <b>không giả mạo được dưới tấn công chọn thông điệp</b>. Định nghĩa mạnh tới mức kỳ quặc: nó cấm cả việc tạo ra một thẻ <i>khác</i> cho một thông điệp <i>cũ</i>. Vì sao khắt khe vậy? Vì ta không biết trước hệ thống bên trên sẽ diễn giải “thông điệp mới” thế nào — có nơi coi hai thẻ khác nhau là hai giao dịch khác nhau. Định nghĩa an toàn phải chặn cả những đường mà ta chưa nghĩ ra.</p>
 
-        <h4 class="cb-h4">Năm cách dựng MAC, và chúng khác nhau ở đâu</h4>
+        <h3 class="cb-h4">Năm cách dựng MAC, và chúng khác nhau ở đâu</h3>
         <div class="cb-tw">
           <table class="wb-table">
             <thead><tr><th style="width:132px">Cách dựng</th><th style="width:150px">Từ đâu ra</th><th>Cơ chế &amp; điểm đáng nhớ</th></tr></thead>
@@ -972,7 +972,7 @@ c' = c ⊕ Δ  ⟹  m' = c' ⊕ ks = (m ⊕ ks ⊕ Δ) ⊕ ks = <b>m ⊕ Δ</b>
           </table>
         </div>
 
-        <h4 class="cb-h4">Kiểm thẻ sai cách cũng đủ mất tất cả: tấn công thời gian</h4>
+        <h3 class="cb-h4">Kiểm thẻ sai cách cũng đủ mất tất cả: tấn công thời gian</h3>
         <p class="cb-p">Đây là ví dụ đắt giá nhất cho luận điểm “chứng minh chỉ đúng trong mô hình”. Mọi thứ ở trên vẫn đúng nguyên vẹn, thế mà hệ vẫn thủng — vì <b>hàm so sánh chuỗi</b>. Cách viết tự nhiên nhất trong mọi ngôn ngữ là so sánh từng byte và <b>thoát ngay khi khác</b>:</p>
 
         <div class="cb-formula">
@@ -993,7 +993,7 @@ diff = 0;  for (i = 0; i &lt; n; i++) diff |= tag[i] ^ computed[i];   return dif
 
         <p class="cb-p">Va chạm chắc chắn <i>tồn tại</i> — nén vô hạn xuống 256 bit thì không thể tránh, đó là nguyên lý chuồng bồ câu. Yêu cầu không phải “không có” mà là “<b>không ai tìm ra được</b>”. Đây là một trong số ít nơi trong mật mã mà định nghĩa an toàn nói về <i>khả năng tìm</i> chứ không về <i>sự tồn tại</i>.</p>
 
-        <h4 class="cb-h4">Vì sao 256 bit chỉ cho 128 bit an toàn</h4>
+        <h3 class="cb-h4">Vì sao 256 bit chỉ cho 128 bit an toàn</h3>
         <p class="cb-p">Đây là con số hay bị hiểu sai. Trực giác nói: muốn tìm va chạm trên đầu ra <code>n</code> bit thì phải thử cỡ <code>2ⁿ</code> lần. Sai — chỉ cần cỡ <b><code>2^(n/2)</code></b>. Lý do là <b>nghịch lý sinh nhật</b>: bạn không cần trùng với <i>một</i> giá trị định trước, bạn chỉ cần <i>một cặp bất kỳ</i> trong đống đã sinh trùng nhau. Với <code>q</code> mẫu có <code>q(q−1)/2</code> cặp, nên số cặp tăng theo bình phương, và ngưỡng 50% rơi vào khoảng <code>1,18 · √(2ⁿ)</code>.</p>
 
         <p class="cb-p">Cái tên đến từ ví dụ quen: trong phòng 23 người, xác suất có <i>hai người</i> trùng ngày sinh đã hơn 50% — dù xác suất ai đó trùng ngày sinh với <i>bạn</i> vẫn rất nhỏ. Cùng một hiện tượng, và nó chi phối mọi giới hạn an toàn trong trang này.</p>
@@ -1039,7 +1039,7 @@ diff = 0;  for (i = 0; i &lt; n; i++) diff |= tag[i] ^ computed[i];   return dif
         <p class="cb-p">Cũng như block cipher, không ai thiết kế thẳng một hàm băm cho đầu vào dài tuỳ ý. Người ta làm một <b>hàm nén</b> cho đầu vào cố định rồi <b>xích</b> nó lại — đó là <b>Merkle–Damgård</b>: chia thông điệp thành khối, giữ một <i>giá trị xích</i>, mỗi bước nén (khối mới + giá trị xích cũ) thành giá trị xích mới. Định lý đi kèm rất gọn và rất mạnh: <b>hàm nén chống va chạm ⇒ toàn bộ hàm băm chống va chạm</b>. Khối cuối phải chứa <b>độ dài thông điệp</b> — thiếu chi tiết đó thì chứng minh sập.</p>
         <p class="cb-p">Còn hàm nén lấy ở đâu? Thường là từ một block cipher, theo cấu trúc <b>Davies–Meyer</b>: <code>h(H, m) = E(m, H) ⊕ H</code> — dùng <i>khối thông điệp làm khoá</i>. Phép XOR ở cuối trông thừa nhưng là bắt buộc: bỏ nó đi thì tìm va chạm dễ, vì <code>E</code> đảo ngược được. SHA-256 dựng đúng theo lối này.</p>
 
-        <h4 class="cb-h4">Length extension: hệ quả trực tiếp của việc xích</h4>
+        <h3 class="cb-h4">Length extension: hệ quả trực tiếp của việc xích</h3>
         <p class="cb-p">Vì <code>H(m)</code> <b>chính là</b> giá trị xích sau khối cuối, ai cầm <code>H(m)</code> đều có thể <b>chạy tiếp</b> phép xích với dữ liệu của mình — mà không cần biết <code>m</code>. Cụ thể, biết <code>H(m)</code> và <code>len(m)</code> là tính được <code>H(m ‖ padding ‖ w)</code> với <code>w</code> tuỳ ý.</p>
 
         <div class="cb-viz">
@@ -1122,11 +1122,11 @@ diff = 0;  for (i = 0; i &lt; n; i++) diff |= tag[i] ^ computed[i];   return dif
           <cite>Vì sao đây không phải lời khuyên chung chung: nó suy ra một quy tắc <b>kiểm được bằng mắt</b> khi đọc code — tìm xem giữa lúc nhận gói tin và lúc kiểm thẻ có <i>bất kỳ</i> câu lệnh nào đụng vào dữ liệu không (bỏ đệm, phân tích cú pháp, giải nén, kiểm độ dài, ghi log nội dung). Có là hỏng.</cite>
         </div>
 
-        <h4 class="cb-h4">Định nghĩa an toàn tương ứng: chống tấn công chọn bản mã</h4>
+        <h3 class="cb-h4">Định nghĩa an toàn tương ứng: chống tấn công chọn bản mã</h3>
         <p class="cb-p">Cần một định nghĩa mô hình hoá được kẻ địch <i>chủ động</i>. <b>An toàn CCA</b> mở rộng trò chơi cũ: ngoài quyền xin mã hoá bản rõ tuỳ ý, kẻ địch còn được <b>xin giải mã bản mã tuỳ ý</b> (trừ đúng cái thử thách). Nếu hệ vẫn thắng trong trò chơi này, kẻ địch có gửi gói tin méo bao nhiêu cũng vô ích.</p>
         <p class="cb-p">Có một định lý gọn nối hai thế giới: <b>mã hoá an toàn CPA + toàn vẹn bản mã ⇒ an toàn CCA</b>. “Toàn vẹn bản mã” nghĩa là kẻ địch không tạo nổi <i>một bản mã mới nào</i> mà bộ giải mã chấp nhận. Encrypt-then-MAC cho đúng hai vế trái, nên nó cho vế phải. Đây là lý do <b>mã hoá có xác thực</b> (AE) là mặc định hiện đại, và tại sao thư viện ngày nay không cho bạn gọi riêng “mã hoá” nữa.</p>
 
-        <h4 class="cb-h4">Các chuẩn AEAD dùng thật, và dữ liệu kèm theo</h4>
+        <h3 class="cb-h4">Các chuẩn AEAD dùng thật, và dữ liệu kèm theo</h3>
         <p class="cb-p">Chữ <b>AD</b> trong AEAD là <b>dữ liệu kèm theo</b>: phần được <i>xác thực nhưng không mã hoá</i> — địa chỉ đích, số thứ tự gói, phiên bản giao thức. Router cần đọc chúng, nhưng không ai được sửa. Đây là một chi tiết thiết kế hay bị bỏ qua và là chỗ hay bị tấn công phát lại.</p>
 
         <div class="cb-tw">
@@ -1324,7 +1324,7 @@ Eve thấy: p, g, A, B — và phải tính g<sup>ab</sup> từ đó.</div>
 
         <p class="cb-lede">Toàn bộ mật mã khoá công khai sống nhờ một sự bất đối xứng: có những phép tính <b>làm xuôi thì nhanh, làm ngược thì chậm</b>. Mục này liệt kê đúng các phép tính đó, cái nào nhanh, cái nào chậm, và nhanh/chậm cỡ nào.</p>
 
-        <h4 class="cb-h4">Các phép nhanh — đều là đa thức theo số bit</h4>
+        <h3 class="cb-h4">Các phép nhanh — đều là đa thức theo số bit</h3>
         <div class="cb-tw">
           <table class="wb-table wb-table--compact">
             <thead><tr><th style="width:200px">Phép tính</th><th style="width:170px">Thuật toán</th><th>Ghi chú</th></tr></thead>
@@ -1339,14 +1339,14 @@ Eve thấy: p, g, A, B — và phải tính g<sup>ab</sup> từ đó.</div>
           </table>
         </div>
 
-        <h4 class="cb-h4">Ba định lý phải nhớ</h4>
+        <h3 class="cb-h4">Ba định lý phải nhớ</h3>
         <ul class="cb-ul">
           <li><b>Fermat nhỏ.</b> <code>p</code> nguyên tố, <code>gcd(x,p)=1</code> ⇒ <code>x^(p−1) = 1 mod p</code>. Đây là cơ sở của phép kiểm số nguyên tố.</li>
           <li><b>Euler.</b> Tổng quát hoá: <code>x^φ(N) = 1 mod N</code>, với <code>φ(N)</code> là số phần tử khả nghịch. Với <code>N = pq</code> thì <code>φ(N) = (p−1)(q−1)</code>. <b>Đây chính là điều làm RSA chạy</b> — và cũng chính là điều mà ai biết <code>p, q</code> thì biết, còn ai không biết thì không.</li>
           <li><b>Lagrange.</b> Bậc của một phần tử luôn chia hết bậc của nhóm. Hệ quả dùng liên tục: chọn <code>p = 2q+1</code> (số nguyên tố an toàn) thì mọi phần tử chỉ có bậc 1, 2, <code>q</code> hoặc <code>2q</code> — nên rất dễ kiểm một phần tử có nằm trong nhóm con lớn hay không, và tránh được cả một họ tấn công “đẩy vào nhóm con nhỏ”.</li>
         </ul>
 
-        <h4 class="cb-h4">Các bài toán chậm — nền móng của tất cả</h4>
+        <h3 class="cb-h4">Các bài toán chậm — nền móng của tất cả</h3>
         <div class="cb-tw">
           <table class="wb-table">
             <thead><tr><th style="width:150px">Bài toán</th><th style="width:210px">Phát biểu</th><th>Thuật toán tốt nhất &amp; ý nghĩa</th></tr></thead>
@@ -1360,7 +1360,7 @@ Eve thấy: p, g, A, B — và phải tính g<sup>ab</sup> từ đó.</div>
           </table>
         </div>
 
-        <h4 class="cb-h4">Quy đổi kích thước khoá giữa các họ nguyên thuỷ</h4>
+        <h3 class="cb-h4">Quy đổi kích thước khoá giữa các họ nguyên thuỷ</h3>
         <div class="cb-tw">
           <table class="wb-table wb-table--compact">
             <thead><tr><th style="width:140px">Mức an toàn</th><th style="width:130px">Đối xứng</th><th style="width:150px">RSA / DH mod p</th><th style="width:140px">Đường cong elliptic</th><th>Nhận xét</th></tr></thead>
@@ -1476,7 +1476,7 @@ Vì sao đúng:  y<sup>d</sup> = x<sup>ed</sup> = x<sup>1 + kφ(N)</sup> = x · 
           </div>
         </div>
 
-        <h4 class="cb-h4">Các tấn công lên RSA — gần như không cái nào nhắm vào toán học</h4>
+        <h3 class="cb-h4">Các tấn công lên RSA — gần như không cái nào nhắm vào toán học</h3>
         <div class="cb-tw">
           <table class="wb-table">
             <thead><tr><th style="width:180px">Tấn công</th><th style="width:180px">Điều kiện</th><th>Cơ chế &amp; cách phòng</th></tr></thead>
@@ -1544,7 +1544,7 @@ Bob:    k = H(u, u<sup>b</sup>) — vì u<sup>b</sup> = g<sup>ab</sup> = h<sup>a
 
         <p class="cb-p">Định nghĩa an toàn giống MAC: <b>không giả mạo được dưới tấn công chọn thông điệp</b> — kẻ địch xin ký bao nhiêu thông điệp tuỳ thích, vẫn không tạo nổi chữ ký hợp lệ cho một thông điệp mới. Và như mọi thứ trong trang này, cú pháp thì tầm thường, còn <i>cách dựng cho đúng</i> mới là nội dung.</p>
 
-        <h4 class="cb-h4">Mẫu chung: băm rồi mới ký</h4>
+        <h3 class="cb-h4">Mẫu chung: băm rồi mới ký</h3>
         <p class="cb-p">Không ai ký thẳng thông điệp — vừa chậm, vừa vướng giới hạn miền. Chuẩn là <b>băm rồi ký</b>: <code>σ = Sign(sk, H(m))</code>. Kéo theo một hệ quả cứng: <b>hàm băm gãy về va chạm thì chữ ký gãy theo</b> — tìm được <code>m₀ ≠ m₁</code> cùng mã băm là chữ ký của cái này dùng cho cái kia. Đây là lý do va chạm MD5 không phải chuyện học thuật: mã độc <b>Flame</b> (2012) đã dùng một va chạm MD5 để chế ra chứng chỉ giả trông như của Microsoft và tự phát tán qua kênh cập nhật Windows.</p>
 
         <div class="cb-list">
@@ -1580,14 +1580,14 @@ Bob:    k = H(u, u<sup>b</sup>) — vì u<sup>b</sup> = g<sup>ab</sup> = h<sup>a
 
         <p class="cb-p">Một <b>chứng chỉ</b> chỉ là một thông điệp được ký: <i>“tôi, tổ chức chứng thực C, xác nhận rằng khoá công khai này thuộc về tên miền vietcombank.com.vn, có hiệu lực tới ngày…”</i>. Trình duyệt tin nó vì tin <code>C</code>, và tin <code>C</code> vì khoá công khai của <code>C</code> <b>được cài sẵn</b> trong hệ điều hành hoặc trình duyệt. Đó là <b>neo tin cậy</b>: chuỗi phải kết thúc ở đâu đó, và nó kết thúc ở một danh sách được cài sẵn từ nhà máy.</p>
 
-        <h4 class="cb-h4">Ba điểm yếu có thật của mô hình này</h4>
+        <h3 class="cb-h4">Ba điểm yếu có thật của mô hình này</h3>
         <ul class="cb-ul">
           <li><b>Bất kỳ CA nào cũng ký được cho bất kỳ tên miền nào.</b> Đây là lỗi kiến trúc, không phải lỗi cài đặt: kho gốc của trình duyệt có hàng trăm CA thuộc nhiều quốc gia, và <i>mỗi cái</i> đều đủ quyền cấp chứng chỉ cho ngân hàng của bạn. An toàn của cả hệ bằng an toàn của <b>mắt xích yếu nhất</b>. Năm 2011, CA Hà Lan <b>DigiNotar</b> bị xâm nhập và cấp ra chứng chỉ giả cho các tên miền của Google; chúng được dùng để nghe lén người dùng ở Iran trên diện rộng. DigiNotar phá sản sau đó.</li>
           <li><b>Thu hồi hoạt động kém.</b> Chứng chỉ bị lộ khoá cần được vô hiệu trước hạn. Cơ chế cũ (danh sách thu hồi, rồi truy vấn OCSP trực tuyến) vừa chậm vừa lộ hành vi duyệt web, và tệ nhất là <b>thường bị bỏ qua khi không kết nối được</b> — nghĩa là kẻ địch chặn được truy vấn thì chứng chỉ đã thu hồi vẫn được chấp nhận. Hướng đi hiện nay là <b>rút ngắn tuổi thọ chứng chỉ</b> xuống hàng chục ngày, để hết hạn tự nhiên làm thay việc thu hồi.</li>
           <li><b>Xác minh chỉ ở mức tên miền.</b> Phần lớn chứng chỉ ngày nay được cấp tự động sau khi chứng minh quyền kiểm soát tên miền. Nó chứng minh <i>quyền với tên miền</i>, không chứng minh <i>doanh nghiệp đó có thật</i> — một chi tiết mà người dùng cuối gần như luôn hiểu sai khi thấy biểu tượng ổ khoá.</li>
         </ul>
 
-        <h4 class="cb-h4">Certificate Transparency: không ngăn được thì làm cho không giấu được</h4>
+        <h3 class="cb-h4">Certificate Transparency: không ngăn được thì làm cho không giấu được</h3>
         <p class="cb-p">Câu trả lời hiện đại cho vấn đề đầu tiên rất đáng học vì tinh thần của nó khác hẳn: thay vì cố ngăn CA cấp bậy — bất khả — người ta <b>bắt mọi chứng chỉ phải được ghi vào một sổ công khai chỉ-thêm</b>, dựng trên cây Merkle nên không ai sửa lại lịch sử được. Trình duyệt từ chối chứng chỉ không có bằng chứng đã vào sổ. Chủ tên miền theo dõi sổ và phát hiện ngay nếu có ai cấp chứng chỉ cho tên miền của mình.</p>
         <p class="cb-p">Đây là một chuyển hướng đáng suy nghĩ, và nó lặp lại ở nhiều nơi khác trong ngành: <b>khi không thể chặn hành vi xấu, hãy làm cho nó không thể xảy ra một cách âm thầm</b>. Đổi “phòng ngừa” lấy “phát hiện chắc chắn” — đúng cái tinh thần của sổ cái công khai.</p>
         <p class="cb-p">Cách tiếp cận thay thế cũng nên biết, kèm lý do chúng không thắng: <b>web of trust</b> của PGP bỏ hẳn CA, để người dùng ký chéo khoá cho nhau — thất bại ở quy mô lớn vì đòi người thường phải tự đánh giá tin cậy, việc mà hầu như không ai làm nổi. <b>Tin lần đầu rồi ghim</b> (kiểu SSH) đơn giản và hiệu quả trong nội bộ, nhưng để hở đúng lần kết nối đầu tiên — chấp nhận được với máy chủ bạn quản, không chấp nhận được với cả Internet.</p>
@@ -1610,7 +1610,7 @@ Bob:    k = H(u, u<sup>b</sup>) — vì u<sup>b</sup> = g<sup>ab</sup> = h<sup>a
           </table>
         </div>
 
-        <h4 class="cb-h4">Sigma protocol: bộ khung ba nhịp đứng sau rất nhiều thứ</h4>
+        <h3 class="cb-h4">Sigma protocol: bộ khung ba nhịp đứng sau rất nhiều thứ</h3>
         <p class="cb-p">Giao thức định danh chuẩn mực có đúng ba nhịp, và cấu trúc này quay lại ở chữ ký, ở zero-knowledge, ở blockchain:</p>
 
         <div class="cb-viz">
@@ -1643,7 +1643,7 @@ Bob:    k = H(u, u<sup>b</sup>) — vì u<sup>b</sup> = g<sup>ab</sup> = h<sup>a
         <p class="cb-p">Vì sao nó thuyết phục được người kiểm? Nếu kẻ mạo danh <i>không</i> biết <code>a</code>, hắn phải chọn <code>u</code> trước khi biết <code>c</code>. Với <code>u</code> đã cố định, hắn chỉ trả lời đúng được cho <b>một</b> giá trị <code>c</code> duy nhất mà hắn đoán trước. Xác suất đoán trúng là <code>1/|c|</code> — nhỏ tuỳ ý.</p>
         <p class="cb-p">Chiều ngược lại chặt hơn nữa, và nó là hạt nhân của mọi thứ ở mục sau: nếu ai đó trả lời đúng cho <b>hai</b> thử thách khác nhau trên cùng một cam kết, thì từ <code>z₁ = r + c₁a</code> và <code>z₂ = r + c₂a</code> ta <b>giải ra <code>a</code></b>. Nghĩa là người trả lời được nhất định <i>thực sự biết</i> bí mật — tính chất này gọi là <b>tính đúng đắn đặc biệt</b>, và nó chính là định nghĩa hình thức của cụm “chứng minh mình biết”.</p>
 
-        <h4 class="cb-h4">Fiat–Shamir: bỏ luôn người kiểm</h4>
+        <h3 class="cb-h4">Fiat–Shamir: bỏ luôn người kiểm</h3>
         <p class="cb-p">Nhịp 2 chỉ cần một số ngẫu nhiên mà người chứng minh không đoán trước được. Vậy <b>thay nó bằng một mã băm</b>: <code>c = H(u, thông điệp)</code>. Người chứng minh không điều khiển được đầu ra của hàm băm, nên tính chất bảo vệ được giữ; đổi lại giao thức từ ba nhịp thành <b>một tin nhắn</b> — gửi được qua email, ghi được vào blockchain, không cần đối phương trực tuyến.</p>
         <p class="cb-p">Cặp <code>(u, z)</code> ấy chính là <b>chữ ký Schnorr</b>. Đây là một trong những phép biến đổi có sức sinh sản cao nhất trong ngành: giao thức tương tác nào có dạng Sigma đều biến thành chữ ký hoặc thành bằng chứng không tương tác theo đúng cách này. Cái giá: chứng minh an toàn của Fiat–Shamir cần <b>mô hình bộ tiên tri ngẫu nhiên</b> — cùng dấu hoa thị đã gặp ở OAEP.</p>
       </section>
@@ -1666,11 +1666,11 @@ Bob:    k = H(u, u<sup>b</sup>) — vì u<sup>b</sup> = g<sup>ab</sup> = h<sup>a
           </table>
         </div>
 
-        <h4 class="cb-h4">Forward secrecy: vì sao khoá DH phải là <i>tạm thời</i></h4>
+        <h3 class="cb-h4">Forward secrecy: vì sao khoá DH phải là <i>tạm thời</i></h3>
         <p class="cb-p">Chữ “tạm thời” ở nhịp 1 là chi tiết quan trọng nhất của cả phần này. Khoá <code>a</code> và <code>b</code> được bốc mới cho từng phiên rồi <b>xoá khỏi bộ nhớ</b>. Hệ quả: kẻ địch ghi lại toàn bộ lưu lượng hôm nay, năm năm sau chiếm được máy chủ và lấy được khoá riêng dài hạn — <b>vẫn không giải mã được gì</b>, vì khoá riêng ấy chỉ dùng để <i>ký</i>, không dùng để <i>trao khoá</i>.</p>
         <p class="cb-p">Đối lập cho rõ: TLS đời cũ có chế độ máy khách <b>mã hoá thẳng khoá phiên bằng khoá công khai RSA</b> của máy chủ. Gọn hơn, nhưng khoá riêng máy chủ trở thành chìa mở <i>mọi phiên trong quá khứ</i>. Ai thu thập lưu lượng hôm nay để giải mã sau — chiến lược “thu hoạch bây giờ, giải mã sau” — thì đó là món quà. TLS 1.3 <b>xoá hẳn</b> chế độ ấy. Đây là ví dụ điển hình của việc <i>gỡ bỏ tuỳ chọn</i> lại là cải tiến an toàn lớn hơn thêm tính năng.</p>
 
-        <h4 class="cb-h4">Hai chi tiết còn lại</h4>
+        <h3 class="cb-h4">Hai chi tiết còn lại</h3>
         <ul class="cb-ul">
           <li><b>Dữ liệu sớm (0-RTT)</b> cho phép gửi dữ liệu ngay tin nhắn đầu, dựa vào khoá của phiên trước. Nhanh hơn, nhưng <b>không có chống phát lại</b>: kẻ địch chép lại gói tin ấy gửi lại nhiều lần. Chỉ dùng cho thao tác không gây tác dụng phụ — đọc, không ghi. Một đánh đổi được ghi thẳng trong tiêu chuẩn, không phải lỗi.</li>
           <li><b>PAKE</b> — trao khoá xác thực bằng mật khẩu — giải bài toán khi hai bên chỉ có chung một mật khẩu yếu và <i>không</i> có PKI. Điều kỳ lạ mà nó đạt được: kẻ đứng giữa <b>không thể dò từ điển ngoại tuyến</b>, mỗi lần đoán sai đều phải tương tác thêm một lần nữa và bị phát hiện. Các lược đồ hiện đại (OPAQUE, SRP) còn giữ được cả tính chất máy chủ <i>không bao giờ thấy</i> mật khẩu.</li>
@@ -1730,7 +1730,7 @@ Bob:    k = H(u, u<sup>b</sup>) — vì u<sup>b</sup> = g<sup>ab</sup> = h<sup>a
           </div>
         </div>
 
-        <h4 class="cb-h4">Từ trò chơi trên bàn tới thứ đang chạy trong sản phẩm thật</h4>
+        <h3 class="cb-h4">Từ trò chơi trên bàn tới thứ đang chạy trong sản phẩm thật</h3>
         <p class="cb-p">Định lý nền tảng nói rằng <b>mọi mệnh đề kiểm chứng được trong thời gian đa thức đều có bằng chứng không tiết lộ</b> — đồ thị ba màu chỉ là một đại diện. Nhưng phiên bản tương tác nhiều vòng thì bất tiện. Hai bước biến nó thành công cụ thực dụng:</p>
         <ul class="cb-ul">
           <li><b>Fiat–Shamir</b> bỏ tương tác: thử thách lấy từ hàm băm, bằng chứng thành một tin nhắn duy nhất.</li>
@@ -1798,14 +1798,14 @@ Bob:    k = H(u, u<sup>b</sup>) — vì u<sup>b</sup> = g<sup>ab</sup> = h<sup>a
           </div>
         </div>
 
-        <h4 class="cb-h4">Chọn đường cong: chi tiết quyết định độ an toàn thực tế</h4>
+        <h3 class="cb-h4">Chọn đường cong: chi tiết quyết định độ an toàn thực tế</h3>
         <ul class="cb-ul">
           <li>Đường cong <b>không được chọn tuỳ tiện</b>: có những họ đường cong yếu (bậc nhỏ, dị thường, nhúng được vào trường nhỏ) mà logarit rời rạc trên đó dễ. Mọi đường cong dùng thật đều đi kèm chứng cứ về việc tránh các họ ấy.</li>
           <li>Đường cong <b>Curve25519 / Ed25519</b> được thiết kế để cài đặt <i>khó sai</i>: mọi chuỗi 32 byte đều là khoá hợp lệ, công thức cộng hoạt động đồng nhất cho mọi trường hợp nên không cần rẽ nhánh (rẽ nhánh là nguồn của rò rỉ thời gian), và tham số được sinh từ quy tắc công khai nên không có chỗ giấu cửa hậu.</li>
           <li>Chi tiết cuối không phải chuyện hoang tưởng: bộ sinh số ngẫu nhiên <b>Dual_EC_DRBG</b> từng được chuẩn hoá với các hằng số elliptic không giải thích được nguồn gốc, và về sau bị xác định là có cửa hậu. Từ đó, <b>“hằng số này ở đâu ra”</b> trở thành câu hỏi bắt buộc khi đánh giá một thiết kế.</li>
         </ul>
 
-        <h4 class="cb-h4">Pairing: phép nhân bổ sung mở ra cả một thế giới</h4>
+        <h3 class="cb-h4">Pairing: phép nhân bổ sung mở ra cả một thế giới</h3>
         <p class="cb-p">Một số đường cong có thêm một hàm song tuyến tính <code>e(·,·)</code> thoả <code>e(aP, bQ) = e(P, Q)<sup>ab</sup></code>. Nhìn qua thì vô hại; thực ra nó cho phép <b>“nhân” hai số mũ đang bị giấu</b> — điều mà nhóm thông thường không làm được — và mở ra những thứ trước đó không dựng nổi:</p>
         <ul class="cb-ul">
           <li><b>Mã hoá theo danh tính (IBE)</b>: khoá công khai <i>chính là</i> chuỗi <code>"an@congty.vn"</code>. Không cần tra chứng chỉ trước khi gửi. Cái giá là một máy chủ trung tâm sinh mọi khoá riêng — nên nó <b>đọc được mọi thứ</b>. Đánh đổi đó chấp nhận được trong nội bộ một tổ chức, không chấp nhận được trên Internet mở.</li>
@@ -1893,7 +1893,7 @@ Mảnh thứ i = (i, f(i)),  i = 1 … n.        Ghép lại: nội suy Lagrange
 
         <p class="cb-p">Vì sao phải hành động <i>trước khi</i> máy tính lượng tử tồn tại: kẻ địch có thể <b>thu thập hôm nay, giải mã sau</b>. Lưu lượng mã hoá bị ghi lại bây giờ, giải mã khi công nghệ tới. Với dữ liệu cần bí mật trong 20–30 năm — hồ sơ y tế, bí mật nhà nước, sở hữu trí tuệ — thì rủi ro là <b>hiện tại</b>, không phải tương lai. Chữ ký thì ngược lại, ít cấp bách hơn: một chữ ký bị giả mạo năm 2045 không làm sai chữ ký đã kiểm năm 2026.</p>
 
-        <h4 class="cb-h4">Thay bằng gì</h4>
+        <h3 class="cb-h4">Thay bằng gì</h3>
         <ul class="cb-ul">
           <li><b>Lưới</b> — nhóm được nghiên cứu kỹ nhất và là lựa chọn chính. Bài toán nền: cho một hệ phương trình tuyến tính đã bị <i>thêm nhiễu nhỏ</i>, tìm nghiệm. Không nhiễu thì khử Gauss giải trong nháy mắt; có nhiễu thì bài toán trở nên rất khó, kể cả với máy lượng tử. Lưới còn là nền của mã hoá đồng cấu đầy đủ.</li>
           <li><b>Hàm băm</b> — chữ ký Lamport/Merkle ở <a href="#s-sig">mục chữ ký</a>. Giả định nhẹ nhất trong tất cả (chỉ cần hàm băm còn tốt), nên được tin cậy nhất; đổi lại chữ ký lớn.</li>

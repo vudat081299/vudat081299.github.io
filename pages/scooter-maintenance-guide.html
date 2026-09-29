@@ -83,6 +83,11 @@ em{font-style:normal; color:var(--accent-identity)}
 .brand .mark{display:grid; place-items:center; width:26px; height:26px; background:var(--accent-identity); color:var(--bg); border-radius:var(--r-sm)}
 .brand .mark .icon{width:17px; height:17px; stroke:var(--bg); stroke-width:2}
 .brand span{color:var(--accent-identity)}
+/* Tên dài đẩy nút đổi nền ra khỏi màn 320px (luật navbar ở web-builder/CLAUDE.md): bọc chữ trong span,
+   chặn bề rộng bằng max-width — không cho brand co. 170px = phần còn lại của thanh ở bề rộng này. */
+.brand .brand-t{color:inherit}
+.brand .brand-t span{margin-left:var(--sp-2)}   /* giữ khoảng 8px mà gap của flex từng đặt giữa hai chữ */
+@media(max-width:480px){.brand .brand-t{display:inline-block; max-width:calc(100vw - 170px); overflow:hidden; white-space:nowrap; text-overflow:ellipsis; vertical-align:bottom}}
 .topbar-spacer{flex:1}
 .topbar-km{font-family:var(--font-mono); font-size:var(--fs-xs); color:var(--text-muted); letter-spacing:.06em; display:none}
 @media(min-width:640px){.topbar-km{display:inline}}
@@ -165,8 +170,8 @@ a.dg-g:hover .dg-hot{fill:var(--accent-yellow)} a.dg-g:hover .dg-hot-lbl{fill:va
 .two{display:grid; grid-template-columns:1fr 1fr; gap:var(--sp-4)}
 @media(max-width:720px){.two{grid-template-columns:1fr}}
 .mini{background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:var(--sp-4) var(--sp-5)}
-.mini h4{margin:0 0 var(--sp-2); font-family:var(--font-mono); font-size:var(--fs-xs); letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted)}
-.mini h4.acc-km{color:var(--accent-identity)} .mini h4.acc-sig{color:var(--accent-cyan)}
+.mini h3{margin:0 0 var(--sp-2); font-family:var(--font-mono); font-weight:700; font-size:var(--fs-xs); letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted)}
+.mini h3.acc-km{color:var(--accent-identity)} .mini h3.acc-sig{color:var(--accent-cyan)}
 .mini p{font-size:var(--fs-sm); color:var(--text-secondary); margin:0}
 
 .parts{display:flex; flex-direction:column; gap:var(--sp-5)}
@@ -245,7 +250,7 @@ td .gh{font-size:var(--fs-xs); color:var(--text-muted)}
 .btn .icon{width:16px; height:16px}
 .btn-primary{background:var(--accent-identity); color:var(--bg); border-color:transparent}
 .btn-primary:hover{filter:brightness(1.08); background:var(--accent-identity)}
-.ck-groups{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:var(--sp-4)}
+.ck-groups{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr)); gap:var(--sp-4)}
 .ck-group{background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden}
 .ck-group-h{padding:var(--sp-3) var(--sp-4); background:var(--surface); border-bottom:1px solid var(--border); display:flex; align-items:baseline; justify-content:space-between; gap:var(--sp-2)}
 .ck-group-h .t{font-family:var(--font-mono); font-size:var(--fs-xs); letter-spacing:.08em; text-transform:uppercase; color:var(--accent-identity)}
@@ -353,11 +358,11 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
 </svg>
 
 <header class="topbar">
-  <button class="icon-btn" id="toggle" aria-label="Ẩn/hiện mục lục" aria-expanded="true"><svg class="icon"><use href="#i-menu"/></svg></button>
-  <div class="brand"><span class="mark"><svg class="icon"><use href="#i-wrench"/></svg></span>SCOOTER·<span>MAINTENANCE</span></div>
+  <button class="icon-btn" id="toggle" aria-label="Ẩn/hiện mục lục" aria-expanded="true"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></button>
+  <div class="brand"><span class="mark"><svg class="icon" aria-hidden="true"><use href="#i-wrench"/></svg></span><span class="brand-t">SCOOTER·<span>MAINTENANCE</span></span></div>
   <div class="topbar-spacer"></div>
   <span class="topbar-km">mô phỏng: <b id="tb-km">12.000 km</b></span>
-  <button class="icon-btn" id="theme" aria-label="Đổi nền sáng/tối"><svg class="icon"><use href="#i-moon" id="theme-ic"/></svg></button>
+  <button class="icon-btn" id="theme" aria-label="Đổi nền sáng/tối"><svg class="icon" aria-hidden="true"><use href="#i-moon" id="theme-ic"/></svg></button>
   <div class="topbar-progress" id="tp-fill"></div>
 </header>
 
@@ -418,11 +423,11 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
     </figure>
 
     <div class="two">
-      <div class="mini"><h4 class="acc-km">Nhóm thay theo KM</h4><p>Hao mòn tỉ lệ với quãng đường: nhớt máy, lọc gió, bugi, dây curoa, bi nồi, má phanh. Đi càng nhiều, tới hạn càng nhanh. Đồng hồ km nói cho bạn biết khi nào thay.</p></div>
-      <div class="mini"><h4 class="acc-sig">Nhóm theo THỜI GIAN / DẤU HIỆU</h4><p>Xuống cấp kể cả khi xe đắp chiếu: nước làm mát, dầu phanh, ắc quy, cao su lốp lão hoá. Xe đi ít vẫn phải thay theo năm. Với má phanh &amp; lốp, nhìn <b>độ mòn</b> quan trọng hơn con số km.</p></div>
+      <div class="mini"><h3 class="acc-km">Nhóm thay theo KM</h3><p>Hao mòn tỉ lệ với quãng đường: nhớt máy, lọc gió, bugi, dây curoa, bi nồi, má phanh. Đi càng nhiều, tới hạn càng nhanh. Đồng hồ km nói cho bạn biết khi nào thay.</p></div>
+      <div class="mini"><h3 class="acc-sig">Nhóm theo THỜI GIAN / DẤU HIỆU</h3><p>Xuống cấp kể cả khi xe đắp chiếu: nước làm mát, dầu phanh, ắc quy, cao su lốp lão hoá. Xe đi ít vẫn phải thay theo năm. Với má phanh &amp; lốp, nhìn <b>độ mòn</b> quan trọng hơn con số km.</p></div>
     </div>
     <div class="box box-note">
-      <div class="box-t"><svg class="icon"><use href="#i-clock"/></svg> Ý tưởng xuyên suốt trang</div>
+      <div class="box-t"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg> Ý tưởng xuyên suốt trang</div>
       <p>Đừng học thuộc vẹt con số. Với mỗi bộ phận, hãy nắm <strong>3 lớp</strong>: (1) nó <strong>làm gì</strong>, (2) <strong>vì sao</strong> hỏng, (3) <strong>mốc km / dấu hiệu</strong> phải thay. Hiểu (1)(2) thì con số (3) tự khắc hợp lý — và bạn nhớ được lâu.</p>
     </div>
   </section>
@@ -456,8 +461,8 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
       <div class="sim-list" id="sim-list"></div>
     </div>
     <div class="box box-warn">
-      <div class="box-t"><svg class="icon"><use href="#i-alert"/></svg> Đọc bảng cho đúng</div>
-      <p>Các mốc là <strong>chu kỳ khuyến nghị</strong>, không phải hạn chết. Đi phố bụi, kẹt xe, chở nặng hay leo đèo dốc thì tới hạn <strong>sớm hơn</strong>; đường trường thông thoáng thì trễ hơn. Mục gắn nhãn <span class="badge badge-time"><svg class="icon"><use href="#i-clock"/></svg>năm</span> được quy đổi ra km ở giả định ~12.000 km/năm — nếu bạn đi ít hơn, hãy tính theo <strong>năm</strong>. Cột trạng thái cũng <strong>giả định xe đã được thay đúng lịch ở các mốc trước</strong>, nên nó chỉ mốc kế tiếp; nếu không chắc lần bảo dưỡng gần nhất, cứ coi như đã tới hạn và kiểm tra sớm.</p>
+      <div class="box-t"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> Đọc bảng cho đúng</div>
+      <p>Các mốc là <strong>chu kỳ khuyến nghị</strong>, không phải hạn chết. Đi phố bụi, kẹt xe, chở nặng hay leo đèo dốc thì tới hạn <strong>sớm hơn</strong>; đường trường thông thoáng thì trễ hơn. Mục gắn nhãn <span class="badge badge-time"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>năm</span> được quy đổi ra km ở giả định ~12.000 km/năm — nếu bạn đi ít hơn, hãy tính theo <strong>năm</strong>. Cột trạng thái cũng <strong>giả định xe đã được thay đúng lịch ở các mốc trước</strong>, nên nó chỉ mốc kế tiếp; nếu không chắc lần bảo dưỡng gần nhất, cứ coi như đã tới hạn và kiểm tra sớm.</p>
     </div>
   </section>
 
@@ -470,7 +475,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
 
     <div class="parts">
       <article class="part" id="p-nhotmay">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-oil"/></svg></span><span class="part-name">Nhớt máy (dầu động cơ)</span><span class="pill pill-id">Động cơ</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo km</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-oil"/></svg></span><span class="part-name">Nhớt máy (dầu động cơ)</span><span class="pill pill-id">Động cơ</span><span class="badge badge-wear"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg>theo km</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Màng dầu mỏng chen giữa các chi tiết kim loại đang trượt lên nhau — <strong>bôi trơn, làm mát, rửa cặn</strong> cho động cơ.</span></div>
           <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Nhiệt độ cao và ma sát bào mòn phụ gia; dầu <strong>biến chất, loãng ra, lẫn muội</strong>, mất khả năng tạo màng. Xe ga máy nhỏ, vòng tua cao khi chạy phố nên dầu xuống cấp nhanh.</span></div>
@@ -480,7 +485,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
       </article>
 
       <article class="part" id="p-locgio">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-filter"/></svg></span><span class="part-name">Lọc gió</span><span class="pill pill-id">Động cơ</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo km</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-filter"/></svg></span><span class="part-name">Lọc gió</span><span class="pill pill-id">Động cơ</span><span class="badge badge-wear"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg>theo km</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">“Lá phổi” của xe: lọc bụi khỏi luồng khí trước khi trộn với xăng để đốt.</span></div>
           <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Bụi bám dày làm <strong>nghẹt khí</strong>, hỗn hợp quá giàu xăng → đốt không hết → hao xăng, hụt hơi, khói đen. Ở VN nhiều bụi nên bẩn nhanh.</span></div>
@@ -490,7 +495,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
       </article>
 
       <article class="part" id="p-bugi">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-spark"/></svg></span><span class="part-name">Bugi</span><span class="pill pill-id">Động cơ</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo km</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg></span><span class="part-name">Bugi</span><span class="pill pill-id">Động cơ</span><span class="badge badge-wear"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg>theo km</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Tạo tia lửa điện đốt cháy hỗn hợp xăng–gió đúng thời điểm.</span></div>
           <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Hai đầu cực <strong>ăn mòn, hở khe</strong> dần → tia lửa yếu, đánh lửa không đều → khó đề, rung giật, tốn xăng, có khi chết máy dọc đường.</span></div>
@@ -500,7 +505,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
       </article>
 
       <article class="part" id="p-xupap">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-valve"/></svg></span><span class="part-name">Khe hở xu-páp (canh chỉnh)</span><span class="pill pill-id">Động cơ</span><span class="badge badge-time"><svg class="icon"><use href="#i-wrench"/></svg>kiểm tra</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-valve"/></svg></span><span class="part-name">Khe hở xu-páp (canh chỉnh)</span><span class="pill pill-id">Động cơ</span><span class="badge badge-time"><svg class="icon" aria-hidden="true"><use href="#i-wrench"/></svg>kiểm tra</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Van nạp/xả phải hé đúng độ hở để máy “thở” chuẩn — nạp đủ khí, xả sạch.</span></div>
           <div class="layer"><span class="lg">Vì sao lệch</span><span class="lc">Nhiệt và va đập làm khe hở <strong>rộng hoặc hẹp</strong> theo thời gian. Sai khe → máy kêu lạch cạch (hở rộng) hoặc yếu, nóng, hại van (hở hẹp).</span></div>
@@ -537,7 +542,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
 
     <div class="parts">
       <article class="part" id="p-curoa">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-belt"/></svg></span><span class="part-name">Dây curoa</span><span class="pill pill-id">CVT</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo km</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-belt"/></svg></span><span class="part-name">Dây curoa</span><span class="pill pill-id">CVT</span><span class="badge badge-wear"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg>theo km</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Sợi đai cao su–sợi tổng hợp truyền toàn bộ lực từ máy ra bánh sau.</span></div>
           <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Chịu nhiệt, ma sát, uốn liên tục → <strong>nứt chân răng, giãn, mòn cạnh</strong>. Đứt curoa đang chạy là <strong>chết máy tại chỗ</strong>, có thể văng hỏng cả nồi.</span></div>
@@ -547,7 +552,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
       </article>
 
       <article class="part" id="p-binoi">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-roller"/></svg></span><span class="part-name">Bi nồi / con lăn</span><span class="pill pill-id">CVT</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo km</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-roller"/></svg></span><span class="part-name">Bi nồi / con lăn</span><span class="pill pill-id">CVT</span><span class="badge badge-wear"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg>theo km</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Các con lăn văng ra khi tua máy lên, ép puly để đổi tỉ số truyền — chính là “sang số” của xe ga.</span></div>
           <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Lăn triệu vòng nên <strong>mòn méo, mất tròn</strong>. Bi mòn → xe <strong>đề bốc giật, tăng tốc chậm</strong>, rung ở dải ga giữa, hao xăng.</span></div>
@@ -557,7 +562,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
       </article>
 
       <article class="part" id="p-nhotlap">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-gear"/></svg></span><span class="part-name">Nhớt láp (nhớt hộp số)</span><span class="pill pill-id">CVT</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo km</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg></span><span class="part-name">Nhớt láp (nhớt hộp số)</span><span class="pill pill-id">CVT</span><span class="badge badge-wear"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg>theo km</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Bôi trơn cụm bánh răng giảm tốc ở cầu sau — <strong>khác hoàn toàn nhớt máy</strong>.</span></div>
           <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Nhớt cạn/biến chất làm bánh răng <strong>khô, mòn, kêu “hú láp”</strong> khi chạy. Ít người để ý vì nó không nằm chung với nhớt máy.</span></div>
@@ -567,7 +572,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
       </article>
 
       <article class="part" id="p-bonoi">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-brake"/></svg></span><span class="part-name">Bố nồi (guốc ly hợp)</span><span class="pill pill-id">CVT</span><span class="badge badge-time"><svg class="icon"><use href="#i-wrench"/></svg>kiểm tra</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-brake"/></svg></span><span class="part-name">Bố nồi (guốc ly hợp)</span><span class="pill pill-id">CVT</span><span class="badge badge-time"><svg class="icon" aria-hidden="true"><use href="#i-wrench"/></svg>kiểm tra</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Bộ má côn ly tâm ở puly sau, bám vào chuông nồi để truyền lực khi máy đủ tua.</span></div>
           <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Ma sát khi bám–nhả làm <strong>mòn lớp bố</strong> và bám <strong>bụi bố</strong>. Mòn nhiều → xe <strong>trượt côn</strong>: rồ ga mà xuất phát ì, hoặc giật cục lúc đề.</span></div>
@@ -587,7 +592,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
 
     <div class="parts">
       <article class="part" id="p-nuoclammat">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-coolant"/></svg></span><span class="part-name">Nước làm mát (coolant)</span><span class="pill pill-id">Làm mát</span><span class="badge badge-time"><svg class="icon"><use href="#i-clock"/></svg>theo thời gian</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-coolant"/></svg></span><span class="part-name">Nước làm mát (coolant)</span><span class="pill pill-id">Làm mát</span><span class="badge badge-time"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>theo thời gian</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Giữ máy ở nhiệt ổn định (~80–90°C) và <strong>chống ăn mòn</strong> đường ống, lốc nhôm bên trong.</span></div>
           <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Phụ gia chống gỉ <strong>cạn dần theo năm</strong>; dung dịch mất khả năng tản nhiệt, bắt đầu đóng cặn. Rò rỉ khiến mực nước tụt. Thiếu coolant → <strong>quá nhiệt → bó máy, vỡ lốc</strong>: sửa rất đắt.</span></div>
@@ -598,11 +603,11 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
     </div>
 
     <div class="box box-warn">
-      <div class="box-t"><svg class="icon"><use href="#i-alert"/></svg> Tuyệt đối không đổ nước lã thay coolant</div>
+      <div class="box-t"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> Tuyệt đối không đổ nước lã thay coolant</div>
       <p>Nước thường không có phụ gia chống gỉ và sôi ở nhiệt thấp hơn — đổ vào sẽ <strong>đóng cặn, ăn mòn</strong> hệ thống kim loại. Chỉ dùng dung dịch làm mát chuyên dụng. Khi kẹt đường xa có thể châm tạm, nhưng phải xả và thay lại đúng loại sau đó.</p>
     </div>
     <div class="box box-note">
-      <div class="box-t"><svg class="icon"><use href="#i-engine"/></svg> Nếu xe bạn làm mát bằng gió</div>
+      <div class="box-t"><svg class="icon" aria-hidden="true"><use href="#i-engine"/></svg> Nếu xe bạn làm mát bằng gió</div>
       <p>Một số dòng phổ thông/đời cũ làm mát bằng gió (cánh tản nhiệt quanh lốc máy) thì <strong>bỏ qua mục này</strong> — không có nước làm mát để thay. Đổi lại, cần giữ sạch cánh tản nhiệt và không bịt kín gầm máy.</p>
     </div>
   </section>
@@ -616,7 +621,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
 
     <div class="parts">
       <article class="part" id="p-maphanh">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-brake"/></svg></span><span class="part-name">Má phanh (bố thắng)</span><span class="pill pill-id">Phanh</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>theo độ mòn</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-brake"/></svg></span><span class="part-name">Má phanh (bố thắng)</span><span class="pill pill-id">Phanh</span><span class="badge badge-wear"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg>theo độ mòn</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Lớp bố ép vào đĩa/tang trống, biến động năng thành nhiệt để xe dừng.</span></div>
           <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Ma sát <strong>bào mòn lớp bố</strong> mỗi lần phanh. Đi phố nhiều đèn đỏ, phanh gấp → mòn nhanh. Bố mòn hết → <strong>rít kim loại, ăn mòn cả đĩa</strong> (tốn hơn nhiều).</span></div>
@@ -626,7 +631,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
       </article>
 
       <article class="part" id="p-dauphanh">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-coolant"/></svg></span><span class="part-name">Dầu phanh</span><span class="pill pill-id">Phanh</span><span class="badge badge-time"><svg class="icon"><use href="#i-clock"/></svg>theo thời gian</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-coolant"/></svg></span><span class="part-name">Dầu phanh</span><span class="pill pill-id">Phanh</span><span class="badge badge-time"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>theo thời gian</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Chất lỏng truyền lực từ tay bóp tới piston phanh (phanh đĩa dầu).</span></div>
           <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Dầu DOT <strong>hút ẩm theo thời gian</strong>; ngậm nước làm <strong>tụt điểm sôi</strong> → phanh gấp nhiều dễ “<strong>phanh xốp</strong>”, mất lực. Vì vậy phải thay theo năm dù đi ít.</span></div>
@@ -636,7 +641,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
       </article>
 
       <article class="part" id="p-lop">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-tire"/></svg></span><span class="part-name">Lốp (vỏ xe)</span><span class="pill pill-id">Lốp</span><span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>mòn + thời gian</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-tire"/></svg></span><span class="part-name">Lốp (vỏ xe)</span><span class="pill pill-id">Lốp</span><span class="badge badge-wear"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg>mòn + thời gian</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Điểm tiếp xúc duy nhất với mặt đường — quyết định bám, phanh, ôm cua.</span></div>
           <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Gai mòn dần theo km; đồng thời <strong>cao su lão hoá, chai cứng, nứt</strong> theo năm dù đi ít. Lốp mòn/chai → <strong>trượt khi phanh, mất lái lúc đường ướt</strong>.</span></div>
@@ -656,7 +661,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
 
     <div class="parts">
       <article class="part" id="p-acquy">
-        <div class="part-head"><span class="part-ic"><svg class="icon"><use href="#i-battery"/></svg></span><span class="part-name">Ắc quy (bình điện)</span><span class="pill pill-id">Điện</span><span class="badge badge-time"><svg class="icon"><use href="#i-clock"/></svg>theo thời gian</span></div>
+        <div class="part-head"><span class="part-ic"><svg class="icon" aria-hidden="true"><use href="#i-battery"/></svg></span><span class="part-name">Ắc quy (bình điện)</span><span class="pill pill-id">Điện</span><span class="badge badge-time"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>theo thời gian</span></div>
         <div class="part-body">
           <div class="layer layer-1"><span class="lg">Nhiệm vụ</span><span class="lc">Trữ điện để đề nổ, chạy đèn/còi/xi-nhan và hệ thống phun xăng điện tử.</span></div>
           <div class="layer"><span class="lg">Vì sao hao mòn</span><span class="lc">Bản cực <strong>chai theo thời gian</strong>, mất khả năng giữ điện — kể cả không dùng. Xe đắp chiếu lâu càng nhanh yếu. Bình yếu → <strong>đề ù, đèn mờ, phải đạp nổ</strong>.</span></div>
@@ -667,12 +672,12 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
     </div>
 
     <div class="card" style="margin-top:var(--sp-4); border-color:rgb(var(--accent-blue-rgb)/.3)">
-      <div class="box-t" style="color:var(--accent-blue); margin-bottom:var(--sp-3); display:flex; align-items:center; gap:var(--sp-2); font-weight:700"><svg class="icon" style="width:16px;height:16px"><use href="#i-clock"/></svg> Nhóm phải tính theo THỜI GIAN</div>
+      <div class="box-t" style="color:var(--accent-blue); margin-bottom:var(--sp-3); display:flex; align-items:center; gap:var(--sp-2); font-weight:700"><svg class="icon" style="width:16px;height:16px" aria-hidden="true"><use href="#i-clock"/></svg> Nhóm phải tính theo THỜI GIAN</div>
       <div class="ck-groups" style="gap:var(--sp-3)">
-        <div class="mini"><h4 class="acc-sig">Nước làm mát</h4><p>~2 năm — dù đi ít, phụ gia chống gỉ vẫn cạn.</p></div>
-        <div class="mini"><h4 class="acc-sig">Dầu phanh</h4><p>~2–3 năm — hút ẩm, tụt điểm sôi theo thời gian.</p></div>
-        <div class="mini"><h4 class="acc-sig">Ắc quy</h4><p>~2–3 năm — bản cực chai kể cả không dùng.</p></div>
-        <div class="mini"><h4 class="acc-sig">Cao su lốp</h4><p>~3–5 năm — chai cứng, nứt dù gai chưa mòn hết.</p></div>
+        <div class="mini"><h3 class="acc-sig">Nước làm mát</h3><p>~2 năm — dù đi ít, phụ gia chống gỉ vẫn cạn.</p></div>
+        <div class="mini"><h3 class="acc-sig">Dầu phanh</h3><p>~2–3 năm — hút ẩm, tụt điểm sôi theo thời gian.</p></div>
+        <div class="mini"><h3 class="acc-sig">Ắc quy</h3><p>~2–3 năm — bản cực chai kể cả không dùng.</p></div>
+        <div class="mini"><h3 class="acc-sig">Cao su lốp</h3><p>~3–5 năm — chai cứng, nứt dù gai chưa mòn hết.</p></div>
       </div>
     </div>
   </section>
@@ -705,7 +710,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
       </table>
     </div></div>
     <div class="box box-good">
-      <div class="box-t"><svg class="icon"><use href="#i-gauge"/></svg> Mẹo tối ưu chi phí</div>
+      <div class="box-t"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg> Mẹo tối ưu chi phí</div>
       <p>Gộp các việc <strong>phải tháo nồi</strong> (curoa + bi nồi + bố nồi + nhớt láp) vào cùng một lần để chỉ trả tiền công tháo lắp một lượt. Tương tự, các mục <strong>theo thời gian</strong> (nước làm mát, dầu phanh) nên canh làm chung một kỳ bảo dưỡng lớn.</p>
     </div>
   </section>
@@ -718,7 +723,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
     <p class="sec-intro">Bản gọn theo mốc km để tick trước khi ra tiệm — biết mình cần hỏi gì, làm gì. Tick để đánh dấu, bấm <b>In / Lưu PDF</b> để mang theo. (Trạng thái tick chỉ lưu trong phiên xem này.)</p>
 
     <div class="ck-estimate">
-      <div class="cke-head"><svg class="icon"><use href="#i-gauge"/></svg> Ước tính chi phí · <b id="cke-n">0</b> mục dịch vụ đã chọn</div>
+      <div class="cke-head"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg> Ước tính chi phí · <b id="cke-n">0</b> mục dịch vụ đã chọn</div>
       <div class="cke-rows">
         <div class="cke-row"><span class="cke-k">Phụ tùng (min – max)</span><span class="cke-v" id="cke-parts">0đ</span></div>
         <div class="cke-row"><span class="cke-k">Tiền công (min – max)</span><span class="cke-v" id="cke-labor">0đ</span></div>
@@ -729,51 +734,51 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
 
     <div class="ck-head">
       <span class="ck-count">Đã tick <b id="ck-done">0</b>/<span id="ck-total">0</span></span>
-      <button class="btn" id="ck-reset"><svg class="icon"><use href="#i-reset"/></svg> Xoá tick</button>
-      <button class="btn btn-primary" id="ck-print"><svg class="icon"><use href="#i-print"/></svg> In / Lưu PDF</button>
+      <button class="btn" id="ck-reset"><svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg> Xoá tick</button>
+      <button class="btn btn-primary" id="ck-print"><svg class="icon" aria-hidden="true"><use href="#i-print"/></svg> In / Lưu PDF</button>
     </div>
 
     <div class="ck-groups">
       <div class="ck-group">
         <div class="ck-group-h"><span class="t">Mỗi ~3.000 km</span><span class="s">thường xuyên</span></div>
-        <label class="ck-item" data-pmin="80" data-pmax="140" data-lmin="0" data-lmax="20"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay nhớt máy</b> (lần đầu ~1.000 km)</span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Kiểm áp suất lốp</b> &amp; nhìn gai mòn</span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Bóp thử phanh</b> — độ ăn, tiếng rít</span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Ngó mực nước làm mát</b> (vạch Lower–Upper)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="80" data-pmax="140" data-lmin="0" data-lmax="20"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay nhớt máy</b> (lần đầu ~1.000 km)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Kiểm áp suất lốp</b> &amp; nhìn gai mòn</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Bóp thử phanh</b> — độ ăn, tiếng rít</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Ngó mực nước làm mát</b> (vạch Lower–Upper)</span><span class="ck-cost"></span></label>
       </div>
       <div class="ck-group">
         <div class="ck-group-h"><span class="t">~8.000–10.000 km</span><span class="s">bảo dưỡng vừa</span></div>
-        <label class="ck-item" data-pmin="120" data-pmax="200" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay lọc gió</b> (không giặt lại)</span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-pmin="80" data-pmax="150" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay bugi</b></span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-pmin="80" data-pmax="150" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay nhớt láp</b> (mỗi 3 lần nhớt máy)</span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-pmin="0" data-pmax="0" data-lmin="50" data-lmax="120"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Vệ sinh nồi</b> + soi dây curoa</span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-pmin="0" data-pmax="0" data-lmin="100" data-lmax="250"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Canh khe xu-páp</b> (theo sổ xe)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="120" data-pmax="200" data-note="kem"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay lọc gió</b> (không giặt lại)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="80" data-pmax="150" data-note="kem"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay bugi</b></span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="80" data-pmax="150" data-note="kem"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay nhớt láp</b> (mỗi 3 lần nhớt máy)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="0" data-pmax="0" data-lmin="50" data-lmax="120"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Vệ sinh nồi</b> + soi dây curoa</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="0" data-pmax="0" data-lmin="100" data-lmax="250"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Canh khe xu-páp</b> (theo sổ xe)</span><span class="ck-cost"></span></label>
       </div>
       <div class="ck-group">
         <div class="ck-group-h"><span class="t">~15.000–20.000 km</span><span class="s">tới lượt nồi</span></div>
-        <label class="ck-item" data-pmin="150" data-pmax="350" data-lmin="80" data-lmax="150"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay dây curoa</b> (trước khi đứt)</span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-pmin="80" data-pmax="200" data-lmin="30" data-lmax="80"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Kiểm / thay má phanh</b> (mỏng &lt; 2 mm)</span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Đo độ mòn lốp</b> (vạch TWI)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="150" data-pmax="350" data-lmin="80" data-lmax="150"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay dây curoa</b> (trước khi đứt)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="80" data-pmax="200" data-lmin="30" data-lmax="80"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Kiểm / thay má phanh</b> (mỏng &lt; 2 mm)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Đo độ mòn lốp</b> (vạch TWI)</span><span class="ck-cost"></span></label>
       </div>
       <div class="ck-group">
         <div class="ck-group-h"><span class="t">~20.000–30.000 km</span><span class="s">bảo dưỡng lớn</span></div>
-        <label class="ck-item" data-pmin="120" data-pmax="300" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay bi nồi / con lăn</b></span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Kiểm bố nồi</b> (guốc ly hợp)</span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-pmin="100" data-pmax="200" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay nước làm mát lần đầu</b></span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="120" data-pmax="300" data-note="kem"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay bi nồi / con lăn</b></span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-note="check"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Kiểm bố nồi</b> (guốc ly hợp)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="100" data-pmax="200" data-note="kem"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay nước làm mát lần đầu</b></span><span class="ck-cost"></span></label>
       </div>
       <div class="ck-group">
         <div class="ck-group-h"><span class="t">Theo thời gian · 2–3 năm</span><span class="s">dù đi ít</span></div>
-        <label class="ck-item" data-pmin="100" data-pmax="200" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay nước làm mát</b> (mỗi 2 năm)</span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-pmin="80" data-pmax="180" data-lmin="30" data-lmax="60"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay dầu phanh</b> (~2 năm)</span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-pmin="250" data-pmax="500" data-note="kem"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay ắc quy</b> khi đề yếu (2–3 năm)</span><span class="ck-cost"></span></label>
-        <label class="ck-item" data-pmin="400" data-pmax="900" data-lmin="30" data-lmax="80"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Cân nhắc thay lốp</b> (cao su 3–5 năm)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="100" data-pmax="200" data-note="kem"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay nước làm mát</b> (mỗi 2 năm)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="80" data-pmax="180" data-lmin="30" data-lmax="60"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay dầu phanh</b> (~2 năm)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="250" data-pmax="500" data-note="kem"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Thay ắc quy</b> khi đề yếu (2–3 năm)</span><span class="ck-cost"></span></label>
+        <label class="ck-item" data-pmin="400" data-pmax="900" data-lmin="30" data-lmax="80"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Cân nhắc thay lốp</b> (cao su 3–5 năm)</span><span class="ck-cost"></span></label>
       </div>
       <div class="ck-group">
         <div class="ck-group-h"><span class="t">Mang theo khi ra tiệm</span><span class="s">giữ thế chủ động</span></div>
-        <label class="ck-item"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Ghi số km hiện tại</b> của xe</span></label>
-        <label class="ck-item"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Hỏi rõ hạng mục &amp; giá</b> trước khi làm</span></label>
-        <label class="ck-item"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Xin xem phụ tùng cũ</b> vừa tháo ra</span></label>
-        <label class="ck-item"><span class="ck-box"><svg class="icon"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Giữ hoá đơn / ghi sổ</b> để nhớ mốc sau</span></label>
+        <label class="ck-item"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Ghi số km hiện tại</b> của xe</span></label>
+        <label class="ck-item"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Hỏi rõ hạng mục &amp; giá</b> trước khi làm</span></label>
+        <label class="ck-item"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Xin xem phụ tùng cũ</b> vừa tháo ra</span></label>
+        <label class="ck-item"><span class="ck-box"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ck-txt"><b>Giữ hoá đơn / ghi sổ</b> để nhớ mốc sau</span></label>
       </div>
     </div>
   </section>
@@ -809,7 +814,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
 
   <footer>
     <div class="foot-verify">
-      <div class="vt"><svg class="icon"><use href="#i-check"/></svg> Đã verify</div>
+      <div class="vt"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Đã verify</div>
       <p>Các mốc km được đối chiếu với lịch bảo dưỡng khuyến nghị của Honda và nhiều HEAD/tiệm xe tại Việt Nam (bài viết 2024–2026). Dải số phản ánh khoảng “<strong>sổ xe ↔ điều kiện phố bụi / tải nặng</strong>”. Riêng <strong>khe hở xu-páp</strong> không tìm được số công bố riêng cho từng dòng Vision nên để dạng dải chung của xe ga — hãy đối chiếu <strong>sổ bảo dưỡng xe bạn</strong>. Bảng chi phí là <strong>ước tính tham khảo</strong>, thay đổi theo tiệm, khu vực và loại phụ tùng (zin/OEM/aftermarket).</p>
     </div>
     <div class="src">
@@ -918,9 +923,9 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
       list = document.getElementById('sim-list'), nDueEl = document.getElementById('n-due'), nSoonEl = document.getElementById('n-soon');
   var LBL = { due:'ĐẾN HẠN', soon:'SẮP TỚI', ok:'CÒN SỚM' };
   var TAG = {
-    time:  '<span class="badge badge-time"><svg class="icon"><use href="#i-clock"/></svg>năm</span>',
-    wear:  '<span class="badge badge-wear"><svg class="icon"><use href="#i-gauge"/></svg>độ mòn</span>',
-    check: '<span class="badge badge-time"><svg class="icon"><use href="#i-wrench"/></svg>kiểm</span>',
+    time:  '<span class="badge badge-time"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>năm</span>',
+    wear:  '<span class="badge badge-wear"><svg class="icon" aria-hidden="true"><use href="#i-gauge"/></svg>độ mòn</span>',
+    check: '<span class="badge badge-time"><svg class="icon" aria-hidden="true"><use href="#i-wrench"/></svg>kiểm</span>',
     km:    ''
   };
   function render(){
@@ -947,7 +952,7 @@ footer{margin-top:var(--sp-12); padding:var(--sp-8) 0 var(--sp-16); border-top:1
         subTxt  = r.toNext > 0 ? ('còn ' + fmt(r.toNext) + ' km') : 'ngay bây giờ';
       }
       return '<div class="row" data-s="' + r.s + '">'
-        + '<div class="row-ic"><svg class="icon"><use href="#' + it.icon + '"/></svg></div>'
+        + '<div class="row-ic"><svg class="icon" aria-hidden="true"><use href="#' + it.icon + '"/></svg></div>'
         + '<div class="row-main"><div class="nm">' + it.name + ' ' + TAG[it.tag] + '</div><div class="sub">' + it.disp + '</div></div>'
         + '<div class="row-end">'
           + '<span class="badge badge-' + r.s + '">' + LBL[r.s] + '</span>'

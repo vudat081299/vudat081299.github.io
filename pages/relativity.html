@@ -206,8 +206,8 @@ section[id] { scroll-margin-top: 78px; }
 
 /* prose inside the popup — grown-up density, not kid density */
 .rl-sci { font-size: 14.5px; line-height: 1.7; }
-.rl-sci h5 { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-muted); margin: 22px 0 8px; padding-top: 12px; border-top: var(--wb-bw) solid var(--wb-border); }
-.rl-sci h5:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.rl-sci h4 { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--wb-fg-muted); margin: 22px 0 8px; padding-top: 12px; border-top: var(--wb-bw) solid var(--wb-border); }
+.rl-sci h4:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
 .rl-sci p { margin: 0 0 11px; }
 .rl-sci ul { margin: 0 0 12px; padding-left: 20px; }
 .rl-sci li { margin-bottom: 6px; }
@@ -223,7 +223,7 @@ section[id] { scroll-margin-top: 78px; }
 /* ---- wrap-up ------------------------------------------------------------ */
 .rl-take { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 20px 0 8px; }
 .rl-take__c { padding: 16px 18px; border-radius: var(--wb-radius-lg); background: var(--wb-surface); border: var(--wb-bw) solid var(--wb-border); border-left: 4px solid var(--sec); }
-.rl-take__c h4 { font-size: 15px; font-weight: 690; margin: 0 0 6px; }
+.rl-take__c h3 { font-size: 15px; font-weight: 690; margin: 0 0 6px; }
 .rl-take__c p { font-size: 14.5px; line-height: 1.6; color: var(--wb-fg-muted); margin: 0; }
 
 .rl-tw { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -416,22 +416,22 @@ section[id] { scroll-margin-top: 78px; }
          data-title-vi="Hệ quy chiếu quán tính và phép biến đổi Galilei"
          data-sub-vi="Vì sao hai người quan sát bất đồng về một quỹ đạo nhưng không bao giờ bất đồng về một định luật">
       <div class="rl-sci t-en">
-        <h5>Frames, and which ones are special</h5>
+        <h4>Frames, and which ones are special</h4>
         <p>An <b>inertial frame</b> is a coordinate system in which a body with no net force on it moves with constant velocity — Newton's first law, promoted from a statement about bodies to a definition of good coordinates. Any frame translating at constant velocity with respect to an inertial frame is itself inertial; there is no experiment inside a sealed carriage that can pick out which one is “really” at rest. That is <b>Galileo's principle of relativity</b>, stated in 1632 with a ship, a bowl of fish and some dripping water, three centuries before Einstein needed it.</p>
 
-        <h5>The transformation</h5>
+        <h4>The transformation</h4>
         <p>For a frame $S'$ moving at velocity $v$ along $x$ relative to $S$:</p>
         <div class="rl-eq">$$x' = x - vt,\qquad y' = y,\qquad z' = z,\qquad t' = t$$</div>
         <p>Differentiating once gives the familiar velocity addition, and twice gives the reason mechanics does not notice the change of frame at all:</p>
         <div class="rl-eq">$$\mathbf{u}' = \mathbf{u} - \mathbf{v}, \qquad \mathbf{a}' = \mathbf{a}$$
           <span class="rl-eq__note">Acceleration is invariant, so $\mathbf{F} = m\mathbf{a}$ keeps its form. Velocities are not invariant — which is exactly why the two observers draw different curves.</span></div>
 
-        <h5>The ball in the lab above</h5>
+        <h4>The ball in the lab above</h4>
         <p>Take the throw to happen at $t=0$ from height $h$ with vertical speed $u_0$. In the carriage frame the ball has no horizontal velocity, so it traces a vertical segment. In the platform frame it inherits the train's velocity:</p>
         <div class="rl-eq">$$x(t) = vt, \qquad y(t) = h + u_0 t - \tfrac{1}{2} g t^2$$</div>
         <p>Eliminating $t$ gives $y = h + (u_0/v)x - (g/2v^2)x^2$: a parabola whose <em>width</em> is set by $v$ and whose <em>height</em> is not. Both observers measure the same flight time, the same maximum height above the carriage floor, and the same $g$. The disagreement is entirely about the shape of a path, never about a law.</p>
 
-        <h5>Where this stops working</h5>
+        <h4>Where this stops working</h4>
         <p>Galilean relativity is not a small idea that Einstein replaced; it is the idea Einstein kept. What he replaced was the transformation. Maxwell's equations, written down in the 1860s, predict electromagnetic waves travelling at</p>
         <div class="rl-eq">$$c = \frac{1}{\sqrt{\varepsilon_0 \mu_0}} \approx 2.998 \times 10^{8}\ \mathrm{m\,s^{-1}}$$</div>
         <p>with no reference to any frame. Apply the Galilean boost to those equations and they change form — light would have to travel at $c \pm v$ for a moving observer. So one of three things had to be wrong: Maxwell, the principle of relativity, or $x' = x - vt$. Nineteenth-century physics bet on an <b>aether</b>, a medium whose rest frame would be the one where Maxwell held exactly. Experiment said otherwise, and the third option won.</p>
@@ -447,22 +447,22 @@ section[id] { scroll-margin-top: 78px; }
         <p>The last row is the smallest number on the list and still matters: multiplied by 86 400 seconds it becomes 7.2 microseconds a day, which is the subject of section 9.</p>
       </div>
       <div class="rl-sci t-vi">
-        <h5>Hệ quy chiếu, và hệ nào là đặc biệt</h5>
+        <h4>Hệ quy chiếu, và hệ nào là đặc biệt</h4>
         <p>Một <b>hệ quy chiếu quán tính</b> là hệ toạ độ trong đó vật không chịu hợp lực nào sẽ chuyển động với vận tốc không đổi — định luật I Newton, được nâng từ một phát biểu về vật thành một định nghĩa cho toạ độ tốt. Mọi hệ tịnh tiến đều so với một hệ quán tính thì bản thân nó cũng quán tính; không có thí nghiệm nào bên trong một toa tàu kín chỉ ra được hệ nào “thật sự” đứng yên. Đó là <b>nguyên lý tương đối của Galilei</b>, phát biểu năm 1632 với một con tàu, một bát cá và mấy giọt nước nhỏ tí tách — ba thế kỷ trước khi Einstein cần tới nó.</p>
 
-        <h5>Phép biến đổi</h5>
+        <h4>Phép biến đổi</h4>
         <p>Với hệ $S'$ chuyển động vận tốc $v$ dọc trục $x$ so với $S$:</p>
         <div class="rl-eq">$$x' = x - vt,\qquad y' = y,\qquad z' = z,\qquad t' = t$$</div>
         <p>Lấy đạo hàm một lần cho ra quy tắc cộng vận tốc quen thuộc; lấy hai lần cho ra lý do vì sao cơ học chẳng hề nhận ra việc đổi hệ:</p>
         <div class="rl-eq">$$\mathbf{u}' = \mathbf{u} - \mathbf{v}, \qquad \mathbf{a}' = \mathbf{a}$$
           <span class="rl-eq__note">Gia tốc là bất biến, nên $\mathbf{F} = m\mathbf{a}$ giữ nguyên dạng. Vận tốc thì không bất biến — và đó chính là lý do hai người quan sát vẽ ra hai đường cong khác nhau.</span></div>
 
-        <h5>Quả bóng trong hình động phía trên</h5>
+        <h4>Quả bóng trong hình động phía trên</h4>
         <p>Cho cú tung xảy ra tại $t=0$ từ độ cao $h$ với vận tốc thẳng đứng $u_0$. Trong hệ của toa tàu, quả bóng không có vận tốc ngang nên nó vạch ra một đoạn thẳng đứng. Trong hệ của sân ga, nó thừa hưởng vận tốc con tàu:</p>
         <div class="rl-eq">$$x(t) = vt, \qquad y(t) = h + u_0 t - \tfrac{1}{2} g t^2$$</div>
         <p>Khử $t$ được $y = h + (u_0/v)x - (g/2v^2)x^2$: một parabol có <em>bề rộng</em> do $v$ quyết định, còn <em>độ cao</em> thì không. Hai người quan sát đo được cùng một thời gian bay, cùng một độ cao cực đại so với sàn toa, cùng một $g$. Bất đồng nằm trọn ở hình dạng của một quỹ đạo, không bao giờ nằm ở một định luật.</p>
 
-        <h5>Chỗ này hỏng ở đâu</h5>
+        <h4>Chỗ này hỏng ở đâu</h4>
         <p>Tương đối Galilei không phải một ý nhỏ bị Einstein thay thế; nó là ý mà Einstein giữ lại. Thứ ông thay là phép biến đổi. Hệ phương trình Maxwell, viết ra những năm 1860, tiên đoán sóng điện từ đi với tốc độ</p>
         <div class="rl-eq">$$c = \frac{1}{\sqrt{\varepsilon_0 \mu_0}} \approx 2{,}998 \times 10^{8}\ \mathrm{m\,s^{-1}}$$</div>
         <p>mà không nhắc tới một hệ quy chiếu nào. Áp phép biến đổi Galilei lên hệ đó thì nó đổi dạng — ánh sáng sẽ phải đi với tốc độ $c \pm v$ đối với người quan sát đang chuyển động. Vậy một trong ba thứ phải sai: Maxwell, nguyên lý tương đối, hoặc $x' = x - vt$. Vật lý thế kỷ 19 đặt cược vào <b>ê-te</b>, một môi trường mà hệ đứng yên của nó là nơi Maxwell đúng chính xác. Thí nghiệm nói khác, và lựa chọn thứ ba thắng.</p>
@@ -555,28 +555,28 @@ section[id] { scroll-margin-top: 78px; }
          data-title-vi="Tính bất biến của c và phép biến đổi Lorentz"
          data-sub-vi="Một kết quả rỗng của thí nghiệm, hai tiên đề, và một bộ toạ độ mới">
       <div class="rl-sci t-en">
-        <h5>The experiment that had no result</h5>
+        <h4>The experiment that had no result</h4>
         <p>If light propagated in an aether, Earth's motion through it would make the round-trip light speed depend on direction. Michelson and Morley (1887) floated an interferometer with 11 m effective arms on a bed of mercury and looked for the fringe shift as they rotated it. For Earth's orbital speed the predicted shift was about <b>0.4 fringes</b>; the measured upper bound was about <b>0.01 fringes</b>. Repeated with growing precision ever since — most recently with cryogenic optical resonators — the anisotropy is bounded below one part in $10^{17}$.</p>
 
-        <h5>Einstein's two postulates (1905)</h5>
+        <h4>Einstein's two postulates (1905)</h4>
         <ul>
           <li><b>P1 — Relativity.</b> The laws of physics take the same form in every inertial frame. Not just mechanics this time: <em>all</em> of physics, electromagnetism included.</li>
           <li><b>P2 — Invariance of $c$.</b> Light propagates in vacuum at a speed $c$ that is independent of the motion of its source, and of the observer.</li>
         </ul>
         <p>P2 is not an extra assumption bolted on; it is what P1 forces once you accept Maxwell, because $c = 1/\sqrt{\varepsilon_0\mu_0}$ contains only constants of the vacuum and no velocity parameter. Keeping both postulates costs you the Galilean transformation.</p>
 
-        <h5>The replacement</h5>
+        <h4>The replacement</h4>
         <p>The transformation that leaves the wave equation — and the quantity $c^2t^2 - x^2 - y^2 - z^2$ — unchanged is the <b>Lorentz boost</b>:</p>
         <div class="rl-eq">$$x' = \gamma\left(x - vt\right), \qquad t' = \gamma\left(t - \frac{vx}{c^{2}}\right), \qquad \gamma = \frac{1}{\sqrt{1 - v^{2}/c^{2}}}$$
           <span class="rl-eq__note">$y' = y$ and $z' = z$: only the boost direction is affected. Set $c \to \infty$ and this collapses back to $x' = x - vt,\ t' = t$.</span></div>
         <p>The second equation is the strange one. It mixes position into time, which means <b>simultaneity is not shared</b>: two events at different places that are simultaneous in $S$ are separated by $\Delta t' = -\gamma v \Delta x / c^{2}$ in $S'$. Almost every apparent paradox in special relativity is this term being forgotten.</p>
 
-        <h5>Velocities no longer just add</h5>
+        <h4>Velocities no longer just add</h4>
         <div class="rl-eq">$$u = \frac{u' + v}{1 + u'v/c^{2}}$$
           <span class="rl-eq__note">Put $u' = c$: the numerator is $c + v$, the denominator $1 + v/c$, and the quotient is exactly $c$. The invariance of light speed is built into the arithmetic.</span></div>
         <p>Two objects approaching at $0.9c$ each in your frame close at $1.8c$ <em>in your coordinates</em> — a legal closing rate — but each measures the other's speed as $1.8c/1.81 = 0.994c$. Nothing overtakes light.</p>
 
-        <h5>How well is P2 tested?</h5>
+        <h4>How well is P2 tested?</h4>
         <ul>
           <li><b>Source-independence.</b> Alväger and colleagues (1964) measured the speed of $\gamma$ rays from $\pi^{0}$ mesons decaying at $0.99975c$ and found $c$ unchanged to within $10^{-4}$. If light took on its source's speed, those photons would have arrived enormously early.</li>
           <li><b>Astronomical.</b> De Sitter's binary-star argument: if emitted light carried the source velocity, orbiting stars would appear to move in impossible ways and multiple images would appear. They do not.</li>
@@ -584,28 +584,28 @@ section[id] { scroll-margin-top: 78px; }
         </ul>
       </div>
       <div class="rl-sci t-vi">
-        <h5>Thí nghiệm không cho ra kết quả nào</h5>
+        <h4>Thí nghiệm không cho ra kết quả nào</h4>
         <p>Nếu ánh sáng lan truyền trong ê-te, chuyển động của Trái Đất qua ê-te sẽ làm tốc độ ánh sáng khứ hồi phụ thuộc vào hướng. Michelson và Morley (1887) thả nổi một giao thoa kế có cánh tay hiệu dụng 11 m trên một bể thuỷ ngân rồi tìm độ dịch vân khi xoay nó. Với tốc độ quỹ đạo của Trái Đất, độ dịch tiên đoán là khoảng <b>0,4 vân</b>; cận trên đo được là khoảng <b>0,01 vân</b>. Lặp lại với độ chính xác ngày càng cao từ đó tới nay — gần đây nhất bằng hốc cộng hưởng quang học đông lạnh — tính bất đẳng hướng bị chặn dưới một phần $10^{17}$.</p>
 
-        <h5>Hai tiên đề của Einstein (1905)</h5>
+        <h4>Hai tiên đề của Einstein (1905)</h4>
         <ul>
           <li><b>T1 — Tương đối.</b> Các định luật vật lý có cùng một dạng trong mọi hệ quán tính. Lần này không chỉ cơ học: <em>toàn bộ</em> vật lý, kể cả điện từ.</li>
           <li><b>T2 — Bất biến của $c$.</b> Ánh sáng lan truyền trong chân không với tốc độ $c$ không phụ thuộc chuyển động của nguồn, cũng không phụ thuộc người quan sát.</li>
         </ul>
         <p>T2 không phải một giả thiết bắt thêm vào; nó là thứ T1 ép ra một khi bạn chấp nhận Maxwell, vì $c = 1/\sqrt{\varepsilon_0\mu_0}$ chỉ chứa hằng số của chân không, không có tham số vận tốc nào. Giữ cả hai tiên đề thì bạn mất phép biến đổi Galilei.</p>
 
-        <h5>Thứ thay thế</h5>
+        <h4>Thứ thay thế</h4>
         <p>Phép biến đổi giữ nguyên phương trình sóng — và giữ nguyên đại lượng $c^2t^2 - x^2 - y^2 - z^2$ — là <b>phép đẩy Lorentz</b>:</p>
         <div class="rl-eq">$$x' = \gamma\left(x - vt\right), \qquad t' = \gamma\left(t - \frac{vx}{c^{2}}\right), \qquad \gamma = \frac{1}{\sqrt{1 - v^{2}/c^{2}}}$$
           <span class="rl-eq__note">$y' = y$ và $z' = z$: chỉ phương đẩy bị ảnh hưởng. Cho $c \to \infty$ thì nó sập về đúng $x' = x - vt,\ t' = t$.</span></div>
         <p>Phương trình thứ hai mới là cái lạ. Nó trộn vị trí vào thời gian, nghĩa là <b>tính đồng thời không được chia sẻ</b>: hai biến cố ở hai chỗ khác nhau mà đồng thời trong $S$ thì lệch nhau $\Delta t' = -\gamma v \Delta x / c^{2}$ trong $S'$. Gần như mọi nghịch lý biểu kiến của thuyết tương đối hẹp đều là số hạng này bị bỏ quên.</p>
 
-        <h5>Vận tốc không còn cộng thẳng</h5>
+        <h4>Vận tốc không còn cộng thẳng</h4>
         <div class="rl-eq">$$u = \frac{u' + v}{1 + u'v/c^{2}}$$
           <span class="rl-eq__note">Đặt $u' = c$: tử số là $c + v$, mẫu số là $1 + v/c$, thương đúng bằng $c$. Tính bất biến của tốc độ ánh sáng nằm sẵn trong phép tính.</span></div>
         <p>Hai vật lao vào nhau, mỗi vật $0,9c$ trong hệ của bạn, khép lại khoảng cách với nhịp $1,8c$ <em>trong toạ độ của bạn</em> — một tốc độ tiếp cận hợp lệ — nhưng mỗi vật đo tốc độ của vật kia là $1,8c/1,81 = 0,994c$. Không gì vượt qua ánh sáng.</p>
 
-        <h5>T2 đã được kiểm tới đâu?</h5>
+        <h4>T2 đã được kiểm tới đâu?</h4>
         <ul>
           <li><b>Không phụ thuộc nguồn.</b> Alväger và cộng sự (1964) đo tốc độ tia $\gamma$ phát ra từ meson $\pi^{0}$ đang phân rã ở $0,99975c$ và thấy $c$ không đổi trong phạm vi $10^{-4}$. Nếu ánh sáng mang theo tốc độ của nguồn, những photon đó đã tới sớm hơn rất nhiều.</li>
           <li><b>Thiên văn.</b> Lập luận sao đôi của de Sitter: nếu ánh sáng phát ra mang theo vận tốc nguồn, các sao đang quay trên quỹ đạo sẽ trông như chuyển động theo những cách bất khả và sẽ xuất hiện nhiều ảnh. Điều đó không xảy ra.</li>
@@ -693,7 +693,7 @@ section[id] { scroll-margin-top: 78px; }
          data-title-vi="Giãn thời gian, thời gian riêng và khoảng bất biến"
          data-sub-vi="Dẫn γ từ đồng hồ ánh sáng, rồi đối chiếu với phòng thí nghiệm">
       <div class="rl-sci t-en">
-        <h5>The derivation, in full</h5>
+        <h4>The derivation, in full</h4>
         <p>Let the mirrors be separated by $L$ transverse to the motion — transverse, so that no length contraction enters and the argument stays honest. In the clock's rest frame a round trip takes</p>
         <div class="rl-eq">$$\Delta t_{0} = \frac{2L}{c}$$</div>
         <p>In a frame where the clock moves at $v$, the light traverses two hypotenuses while the clock advances $v\,\Delta t$. Applying Pythagoras to half the round trip:</p>
@@ -702,14 +702,14 @@ section[id] { scroll-margin-top: 78px; }
         <div class="rl-eq">$$\Delta t = \frac{2L}{\sqrt{c^{2} - v^{2}}} = \frac{2L/c}{\sqrt{1 - v^{2}/c^{2}}} = \gamma\,\Delta t_{0}$$
           <span class="rl-eq__note">$L$ cancels: the result is a property of spacetime, not of the apparatus. Any clock — caesium, biological, radioactive — must agree, or you could compare it against the light clock and detect your own uniform motion, violating P1.</span></div>
 
-        <h5>Proper time</h5>
+        <h4>Proper time</h4>
         <p>$\Delta t_0$ is the <b>proper time</b> $\Delta\tau$: the time read by a clock carried along the worldline. Differentially,</p>
         <div class="rl-eq">$$d\tau^{2} = dt^{2}\left(1 - \frac{v^{2}}{c^{2}}\right), \qquad \tau = \int \sqrt{1 - \frac{v^{2}(t)}{c^{2}}}\; dt$$</div>
         <p>It descends from the <b>invariant interval</b>, the quantity all inertial observers agree on where they no longer agree on lengths or durations:</p>
         <div class="rl-eq">$$ds^{2} = -c^{2}dt^{2} + dx^{2} + dy^{2} + dz^{2}, \qquad d\tau = \frac{\sqrt{-ds^{2}}}{c}$$</div>
         <p>Note the symmetry that trips people up: each inertial observer sees the <em>other's</em> clock running slow, and both are right, because they are comparing different pairs of events using different lines of simultaneity. An asymmetric, absolute comparison requires the worldlines to meet twice — which is section 5.</p>
 
-        <h5>The measurements</h5>
+        <h4>The measurements</h4>
         <table class="rl-num">
           <tr><th>Test</th><th>Setup</th><th>Result</th></tr>
           <tr><td>Rossi &amp; Hall, 1941</td><td>Cosmic-ray muons, Mount Washington (1917 m) vs sea level</td><td>Survival fraction far above the non-relativistic prediction; $\tau = 2.197\ \mu$s at rest, but $\gamma \approx 5$ in flight</td></tr>
@@ -718,11 +718,11 @@ section[id] { scroll-margin-top: 78px; }
           <tr><td>Chou <em>et al.</em>, NIST 2010</td><td>Al⁺ optical clocks, $\sim10^{-17}$ fractional stability</td><td>Velocity dilation resolved at walking speed (&lt; 10 m/s); gravitational shift resolved over 33 cm of height</td></tr>
         </table>
 
-        <h5>Worked number: the muon</h5>
+        <h4>Worked number: the muon</h4>
         <p>A muon has a mean proper lifetime $\tau = 2.197\ \mu\mathrm{s}$, so travelling at $0.98c$ it would cover only $c\tau \approx 646$ m before decaying if time were absolute — nowhere near the 15 km of atmosphere. With $\gamma = (1 - 0.98^{2})^{-1/2} = 5.03$, its lifetime in the ground frame is 11.0 $\mu$s and its mean flight distance becomes 3.2 km. In the muon's own frame nothing about its lifetime changes; instead the atmosphere is contracted to 3 km. <b>Both descriptions give the same survival count</b> — which is the point.</p>
       </div>
       <div class="rl-sci t-vi">
-        <h5>Dẫn đầy đủ</h5>
+        <h4>Dẫn đầy đủ</h4>
         <p>Cho hai gương cách nhau $L$ theo phương vuông góc với chuyển động — vuông góc, để không có sự co độ dài chen vào và lập luận giữ được tính trung thực. Trong hệ đứng yên của đồng hồ, một chu trình khứ hồi mất</p>
         <div class="rl-eq">$$\Delta t_{0} = \frac{2L}{c}$$</div>
         <p>Trong hệ mà đồng hồ chuyển động với vận tốc $v$, ánh sáng đi hết hai cạnh huyền trong khi đồng hồ tiến được $v\,\Delta t$. Áp Pythagoras cho nửa chu trình:</p>
@@ -731,14 +731,14 @@ section[id] { scroll-margin-top: 78px; }
         <div class="rl-eq">$$\Delta t = \frac{2L}{\sqrt{c^{2} - v^{2}}} = \frac{2L/c}{\sqrt{1 - v^{2}/c^{2}}} = \gamma\,\Delta t_{0}$$
           <span class="rl-eq__note">$L$ triệt tiêu: kết quả là một tính chất của không-thời gian, không phải của thiết bị. Mọi đồng hồ — caesium, sinh học, phóng xạ — đều buộc phải nhất trí, nếu không bạn có thể đem nó so với đồng hồ ánh sáng để phát hiện chuyển động đều của chính mình, tức là vi phạm T1.</span></div>
 
-        <h5>Thời gian riêng</h5>
+        <h4>Thời gian riêng</h4>
         <p>$\Delta t_0$ chính là <b>thời gian riêng</b> $\Delta\tau$: thời gian mà một chiếc đồng hồ mang theo dọc đường thế giới đọc được. Dạng vi phân:</p>
         <div class="rl-eq">$$d\tau^{2} = dt^{2}\left(1 - \frac{v^{2}}{c^{2}}\right), \qquad \tau = \int \sqrt{1 - \frac{v^{2}(t)}{c^{2}}}\; dt$$</div>
         <p>Nó sinh ra từ <b>khoảng bất biến</b>, đại lượng mà mọi người quan sát quán tính đều nhất trí ở chỗ họ đã không còn nhất trí về độ dài hay khoảng thời gian:</p>
         <div class="rl-eq">$$ds^{2} = -c^{2}dt^{2} + dx^{2} + dy^{2} + dz^{2}, \qquad d\tau = \frac{\sqrt{-ds^{2}}}{c}$$</div>
         <p>Chú ý tính đối xứng hay làm người ta vấp: mỗi người quan sát quán tính đều thấy đồng hồ của <em>người kia</em> chạy chậm, và cả hai đều đúng, vì họ đang so những cặp biến cố khác nhau bằng những đường đồng thời khác nhau. Muốn có một phép so bất đối xứng, tuyệt đối, thì hai đường thế giới phải gặp nhau hai lần — đó là mục 5.</p>
 
-        <h5>Các phép đo</h5>
+        <h4>Các phép đo</h4>
         <table class="rl-num">
           <tr><th>Kiểm chứng</th><th>Bố trí</th><th>Kết quả</th></tr>
           <tr><td>Rossi &amp; Hall, 1941</td><td>Muon tia vũ trụ, đỉnh Mount Washington (1917 m) so với mực nước biển</td><td>Tỉ lệ sống sót cao hơn hẳn tiên đoán phi tương đối tính; $\tau = 2{,}197\ \mu$s lúc đứng yên, nhưng $\gamma \approx 5$ khi bay</td></tr>
@@ -747,7 +747,7 @@ section[id] { scroll-margin-top: 78px; }
           <tr><td>Chou <em>và cộng sự</em>, NIST 2010</td><td>Đồng hồ quang học Al⁺, độ ổn định tương đối $\sim10^{-17}$</td><td>Phân giải được giãn thời gian do vận tốc ở tốc độ đi bộ (&lt; 10 m/s); phân giải được dịch chuyển hấp dẫn qua 33 cm độ cao</td></tr>
         </table>
 
-        <h5>Ví dụ tính bằng số: hạt muon</h5>
+        <h4>Ví dụ tính bằng số: hạt muon</h4>
         <p>Muon có thời gian sống riêng trung bình $\tau = 2{,}197\ \mu\mathrm{s}$, nên khi bay ở $0{,}98c$ nó chỉ đi được $c\tau \approx 646$ m trước khi phân rã nếu thời gian là tuyệt đối — chẳng thấm vào đâu so với 15 km khí quyển. Với $\gamma = (1 - 0{,}98^{2})^{-1/2} = 5{,}03$, thời gian sống của nó trong hệ mặt đất thành 11,0 $\mu$s và quãng đường bay trung bình thành 3,2 km. Trong hệ của chính muon thì thời gian sống chẳng đổi chút nào; thay vào đó, khí quyển bị co lại còn 3 km. <b>Hai cách mô tả cho cùng một số hạt sống sót</b> — và đó mới là điểm chính.</p>
       </div>
     </div>
@@ -816,49 +816,49 @@ section[id] { scroll-margin-top: 78px; }
          data-title-vi="Sự co độ dài, động lượng và năng lượng"
          data-sub-vi="Vì sao γ xuất hiện ở ba chỗ cùng lúc, và vì sao nó cấm cửa cái biên">
       <div class="rl-sci t-en">
-        <h5>Contraction</h5>
+        <h4>Contraction</h4>
         <p>A rod of rest length $L_{0}$ lying along the boost direction is measured, by a frame in which it moves at $v$, to have length</p>
         <div class="rl-eq">$$L = \frac{L_{0}}{\gamma} = L_{0}\sqrt{1 - \frac{v^{2}}{c^{2}}}$$</div>
         <p>“Measured” has to mean: note both ends <em>at the same time in the measuring frame</em>. Because simultaneity is frame-dependent, the other observer will say you noted the two ends at different moments — which is exactly how the two accounts stay consistent. Transverse dimensions are untouched, so a fast sphere is an oblate spheroid in your coordinates. Its <em>photographic</em> appearance is a separate question: light travel time from different parts of the object adds an apparent rotation, the Penrose–Terrell effect, so a fast sphere still photographs as a circle.</p>
 
-        <h5>Momentum and energy</h5>
+        <h4>Momentum and energy</h4>
         <p>Requiring momentum conservation to hold in every inertial frame forces the Newtonian definition to be replaced:</p>
         <div class="rl-eq">$$\mathbf{p} = \gamma m \mathbf{v}, \qquad E = \gamma m c^{2}, \qquad E_{k} = (\gamma - 1)mc^{2}$$</div>
         <p>Here $m$ is the invariant (rest) mass. The older habit of writing $m_{\text{rel}} = \gamma m$ and saying “mass increases with speed” reproduces $\mathbf{p} = m_\text{rel}\mathbf{v}$ but breaks $\mathbf{F} = m_\text{rel}\mathbf{a}$, because for a longitudinal push the useful coefficient is $\gamma^{3}m$, not $\gamma m$. Keep $m$ invariant and put the $\gamma$ where it belongs.</p>
         <p>Expanding for $v \ll c$ recovers the classical limit and, as a bonus, the rest energy:</p>
         <div class="rl-eq">$$E = mc^{2}\left(1 + \tfrac{1}{2}\beta^{2} + \tfrac{3}{8}\beta^{4} + \cdots\right) = \underbrace{mc^{2}}_{\text{rest}} + \underbrace{\tfrac{1}{2}mv^{2}}_{\text{Newton}} + \cdots$$</div>
 
-        <h5>The energy–momentum relation, and why $c$ is unreachable</h5>
+        <h4>The energy–momentum relation, and why $c$ is unreachable</h4>
         <div class="rl-eq">$$E^{2} = (pc)^{2} + (mc^{2})^{2}$$
           <span class="rl-eq__note">For $m = 0$ this reduces to $E = pc$, satisfied only by something moving at exactly $c$. Massless particles have no choice of speed.</span></div>
         <p>For $m \neq 0$, $E = \gamma mc^{2} \to \infty$ as $v \to c$. Reaching $c$ would require infinite work, which is not a large engineering problem but a categorical one. Concretely, accelerating 1 kg to $0.99c$ needs</p>
         <div class="rl-eq">$$E_{k} = (\gamma - 1)mc^{2} = (7.089 - 1)(1\ \mathrm{kg})c^{2} \approx 5.5 \times 10^{17}\ \mathrm{J}$$
           <span class="rl-eq__note">About the annual output of twenty 1 GW power stations — to move a single kilogram, and still leaving 1% of the gap.</span></div>
 
-        <h5>How close do we actually get?</h5>
+        <h4>How close do we actually get?</h4>
         <p>LHC protons at 6.8 TeV have $\gamma = E/mc^{2} = 6800/0.938 \approx 7250$. Since $1 - \beta \approx 1/(2\gamma^{2})$, that is $\beta \approx 0.999\,999\,990$ — the protons lag light by roughly <b>3 metres per second</b>, after being pushed by the largest machine ever built. The last decimal places are expensive.</p>
       </div>
       <div class="rl-sci t-vi">
-        <h5>Sự co</h5>
+        <h4>Sự co</h4>
         <p>Một thanh có độ dài riêng $L_{0}$ nằm dọc phương đẩy sẽ được một hệ, trong đó nó chuyển động với vận tốc $v$, đo ra độ dài</p>
         <div class="rl-eq">$$L = \frac{L_{0}}{\gamma} = L_{0}\sqrt{1 - \frac{v^{2}}{c^{2}}}$$</div>
         <p>“Đo” ở đây bắt buộc phải hiểu là: ghi lại hai đầu thanh <em>cùng một lúc trong hệ đang đo</em>. Vì tính đồng thời phụ thuộc hệ, người quan sát kia sẽ nói bạn ghi hai đầu vào hai thời điểm khác nhau — và đó chính là cách hai lời kể giữ được tính nhất quán. Kích thước theo phương ngang không đổi, nên một quả cầu bay nhanh là một phỏng cầu dẹt trong toạ độ của bạn. <em>Ảnh chụp</em> của nó lại là chuyện khác: thời gian ánh sáng đi từ các phần khác nhau của vật cộng thêm một hiệu ứng quay biểu kiến — hiệu ứng Penrose–Terrell — nên quả cầu bay nhanh vẫn chụp ra một hình tròn.</p>
 
-        <h5>Động lượng và năng lượng</h5>
+        <h4>Động lượng và năng lượng</h4>
         <p>Đòi hỏi bảo toàn động lượng phải đúng trong mọi hệ quán tính buộc phải thay định nghĩa Newton:</p>
         <div class="rl-eq">$$\mathbf{p} = \gamma m \mathbf{v}, \qquad E = \gamma m c^{2}, \qquad E_{k} = (\gamma - 1)mc^{2}$$</div>
         <p>Ở đây $m$ là khối lượng bất biến (khối lượng nghỉ). Thói quen cũ viết $m_{\text{tđ}} = \gamma m$ rồi bảo “khối lượng tăng theo tốc độ” thì tái tạo được $\mathbf{p} = m_\text{tđ}\mathbf{v}$ nhưng làm hỏng $\mathbf{F} = m_\text{tđ}\mathbf{a}$, vì với một cú đẩy dọc thì hệ số dùng được là $\gamma^{3}m$, không phải $\gamma m$. Cứ giữ $m$ bất biến và đặt $\gamma$ vào đúng chỗ của nó.</p>
         <p>Khai triển cho $v \ll c$ vừa lấy lại giới hạn cổ điển, vừa tặng thêm năng lượng nghỉ:</p>
         <div class="rl-eq">$$E = mc^{2}\left(1 + \tfrac{1}{2}\beta^{2} + \tfrac{3}{8}\beta^{4} + \cdots\right) = \underbrace{mc^{2}}_{\text{nghỉ}} + \underbrace{\tfrac{1}{2}mv^{2}}_{\text{Newton}} + \cdots$$</div>
 
-        <h5>Hệ thức năng lượng–động lượng, và vì sao không chạm tới $c$</h5>
+        <h4>Hệ thức năng lượng–động lượng, và vì sao không chạm tới $c$</h4>
         <div class="rl-eq">$$E^{2} = (pc)^{2} + (mc^{2})^{2}$$
           <span class="rl-eq__note">Với $m = 0$ nó rút về $E = pc$, chỉ thoả mãn được bởi thứ đang đi với đúng tốc độ $c$. Hạt không khối lượng không có quyền chọn tốc độ.</span></div>
         <p>Với $m \neq 0$, $E = \gamma mc^{2} \to \infty$ khi $v \to c$. Chạm tới $c$ đòi hỏi công vô hạn — không phải một bài toán kỹ thuật lớn, mà là một điều bất khả về nguyên tắc. Cụ thể, tăng tốc 1 kg lên $0{,}99c$ cần</p>
         <div class="rl-eq">$$E_{k} = (\gamma - 1)mc^{2} = (7{,}089 - 1)(1\ \mathrm{kg})c^{2} \approx 5{,}5 \times 10^{17}\ \mathrm{J}$$
           <span class="rl-eq__note">Xấp xỉ sản lượng cả năm của hai mươi nhà máy điện 1 GW — để đẩy đúng một ki-lô-gam, mà vẫn còn thiếu 1% quãng đường.</span></div>
 
-        <h5>Thực tế ta tới gần cỡ nào?</h5>
+        <h4>Thực tế ta tới gần cỡ nào?</h4>
         <p>Proton ở LHC năng lượng 6,8 TeV có $\gamma = E/mc^{2} = 6800/0{,}938 \approx 7250$. Vì $1 - \beta \approx 1/(2\gamma^{2})$, ta có $\beta \approx 0{,}999\,999\,990$ — các proton chậm hơn ánh sáng chừng <b>3 mét mỗi giây</b>, sau khi được đẩy bởi cỗ máy lớn nhất từng được xây. Mấy chữ số thập phân cuối cùng rất đắt.</p>
       </div>
     </div>
@@ -935,43 +935,43 @@ section[id] { scroll-margin-top: 78px; }
          data-title-vi="Nghịch lý anh em sinh đôi và hình học gỡ nó ra"
          data-sub-vi="Thời gian trôi qua là tính chất của một con đường, không phải của một cặp đầu mút">
       <div class="rl-sci t-en">
-        <h5>Statement</h5>
+        <h4>Statement</h4>
         <p>Twin B leaves Earth at speed $v$, travels a distance $D$ (measured in Earth's frame), turns around and returns. In Earth's frame the round trip takes $T = 2D/v$. Twin B's accumulated proper time is</p>
         <div class="rl-eq">$$\tau_{B} = \int\sqrt{1 - \frac{v^{2}(t)}{c^{2}}}\;dt = \frac{T}{\gamma} \quad\text{(for an idealised instantaneous turnaround)}$$</div>
         <p>With $D = 4.24$ ly (Proxima Centauri) and $v = 0.99c$: $T = 8.57$ yr, $\gamma = 7.089$, $\tau_{B} = 1.21$ yr.</p>
 
-        <h5>Why the situation is not symmetric</h5>
+        <h4>Why the situation is not symmetric</h4>
         <p>The usual objection — “from B's point of view, A is the one moving” — assumes B has a single inertial frame. She does not. B occupies one inertial frame outbound and a <em>different</em> one inbound, and the switch is physically detectable: an accelerometer on board reads non-zero at the turn, while A's reads zero throughout. Only A can use one global inertial frame for the whole story.</p>
         <p>Worked from B's side, the accounting still balances. On each leg B does see A's clock running slow by $1/\gamma$. But at the turnaround B's line of simultaneity swings across Earth's worldline, and events on Earth that were "now" for outbound-B are far in Earth's past compared with what is "now" for inbound-B. That jump is</p>
         <div class="rl-eq">$$\Delta t_{\text{jump}} = \frac{2vD}{c^{2}}$$</div>
         <p>and adding it to the two dilated legs reproduces $T$ exactly.</p>
 
-        <h5>The geometric statement</h5>
+        <h4>The geometric statement</h4>
         <p>In Euclidean geometry the straight line is the <em>shortest</em> path between two points. In Minkowski spacetime the metric signature flips one sign, and for timelike worldlines the inertial (straight) path is the one of <b>maximal</b> proper time:</p>
         <div class="rl-eq">$$\tau = \frac{1}{c}\int \sqrt{-ds^{2}} \quad\text{is stationary and maximal along a geodesic}$$</div>
         <p>Every detour through space costs time. The twin paradox is that single sentence in costume, and in general relativity it becomes the statement that free fall — not standing still — maximises the time on your watch.</p>
 
-        <h5>It has been flown</h5>
+        <h4>It has been flown</h4>
         <p>Hafele and Keating (1971) carried caesium clocks on scheduled commercial flights, eastward and westward, and compared them against the US Naval Observatory ensemble on return. The eastward clocks lost $59 \pm 10$ ns, the westward gained $273 \pm 7$ ns, matching the combined kinematic and gravitational prediction. The effect is small only because aircraft are slow; it is not conditional. Every clock in every satellite is corrected for it continuously.</p>
       </div>
       <div class="rl-sci t-vi">
-        <h5>Phát biểu</h5>
+        <h4>Phát biểu</h4>
         <p>Người B rời Trái Đất với tốc độ $v$, đi hết quãng đường $D$ (đo trong hệ Trái Đất), quay đầu rồi trở về. Trong hệ Trái Đất, chuyến khứ hồi mất $T = 2D/v$. Thời gian riêng B tích luỹ được là</p>
         <div class="rl-eq">$$\tau_{B} = \int\sqrt{1 - \frac{v^{2}(t)}{c^{2}}}\;dt = \frac{T}{\gamma} \quad\text{(với cú quay đầu lý tưởng, tức thời)}$$</div>
         <p>Với $D = 4{,}24$ năm ánh sáng (Proxima Centauri) và $v = 0{,}99c$: $T = 8{,}57$ năm, $\gamma = 7{,}089$, $\tau_{B} = 1{,}21$ năm.</p>
 
-        <h5>Vì sao tình huống không đối xứng</h5>
+        <h4>Vì sao tình huống không đối xứng</h4>
         <p>Phản bác quen thuộc — “theo cách nhìn của B thì A mới là người chuyển động” — giả định rằng B có một hệ quán tính duy nhất. Cô ấy không có. B ở trong một hệ quán tính lúc đi và một hệ <em>khác</em> lúc về, và cú chuyển hệ ấy phát hiện được bằng vật lý: gia tốc kế trên tàu khác không tại chỗ quay đầu, trong khi gia tốc kế của A bằng không suốt hành trình. Chỉ A mới dùng được một hệ quán tính toàn cục cho toàn bộ câu chuyện.</p>
         <p>Tính từ phía B thì sổ sách vẫn cân. Trên mỗi chặng, B đúng là thấy đồng hồ của A chạy chậm đi $1/\gamma$ lần. Nhưng tại chỗ quay đầu, đường đồng thời của B quét ngang qua đường thế giới của Trái Đất, và những biến cố trên Trái Đất vốn là “bây giờ” với B-lúc-đi lại nằm sâu trong quá khứ so với “bây giờ” của B-lúc-về. Bước nhảy đó bằng</p>
         <div class="rl-eq">$$\Delta t_{\text{nhảy}} = \frac{2vD}{c^{2}}$$</div>
         <p>và cộng nó vào hai chặng đã giãn thì tái tạo lại đúng $T$.</p>
 
-        <h5>Phát biểu hình học</h5>
+        <h4>Phát biểu hình học</h4>
         <p>Trong hình học Euclid, đường thẳng là đường <em>ngắn nhất</em> nối hai điểm. Trong không-thời gian Minkowski, metric đảo dấu một số hạng, và với những đường thế giới kiểu thời gian thì đường quán tính (đường thẳng) lại là đường có thời gian riêng <b>lớn nhất</b>:</p>
         <div class="rl-eq">$$\tau = \frac{1}{c}\int \sqrt{-ds^{2}} \quad\text{dừng và cực đại dọc theo một đường trắc địa}$$</div>
         <p>Mọi khúc vòng qua không gian đều phải trả bằng thời gian. Nghịch lý sinh đôi chỉ là câu vừa rồi hoá trang, và trong thuyết tương đối rộng nó trở thành phát biểu: rơi tự do — chứ không phải đứng yên — mới là thứ làm đồng hồ của bạn chạy được nhiều nhất.</p>
 
-        <h5>Và nó đã được bay thật</h5>
+        <h4>Và nó đã được bay thật</h4>
         <p>Hafele và Keating (1971) mang đồng hồ caesium lên các chuyến bay thương mại theo lịch, một vòng về phía đông và một vòng về phía tây, rồi so lại với cụm đồng hồ của Đài Thiên văn Hải quân Hoa Kỳ khi trở về. Nhóm bay về phía đông mất $59 \pm 10$ ns, nhóm bay về phía tây được thêm $273 \pm 7$ ns, khớp với tiên đoán gộp cả phần động học lẫn phần hấp dẫn. Hiệu ứng nhỏ chỉ vì máy bay chậm; nó không hề có điều kiện kèm theo. Mọi chiếc đồng hồ trên mọi vệ tinh đều được hiệu chỉnh vì nó, liên tục.</p>
       </div>
     </div>
@@ -1057,29 +1057,29 @@ section[id] { scroll-margin-top: 78px; }
          data-title-vi="Hiệu ứng Doppler cổ điển (âm học)"
          data-sub-vi="Một môi trường có hệ đứng yên riêng, và sự bất đối xứng tố cáo điều đó">
       <div class="rl-sci t-en">
-        <h5>The general formula</h5>
+        <h4>The general formula</h4>
         <p>With $v$ the wave speed in the medium, $v_{o}$ the observer's speed and $v_{s}$ the source's speed — both measured <b>with respect to the medium</b>, positive when directed from observer towards source:</p>
         <div class="rl-eq">$$f' = f\,\frac{v + v_{o}}{v - v_{s}}$$
           <span class="rl-eq__note">Approach raises $f'$, recession lowers it. In still air at 20 °C, $v = 331.3 + 0.606\,T[^\circ\mathrm{C}] \approx 343\ \mathrm{m\,s^{-1}}$.</span></div>
         <p>The mechanism is geometric, not physiological. Between two emissions separated by $T = 1/f$ the source advances $v_{s}T$, so the wavelength ahead of it is compressed to $\lambda' = (v - v_{s})T$ and behind it stretched to $(v + v_{s})T$. Frequency is $v/\lambda'$.</p>
 
-        <h5>Worked example — the lab above</h5>
+        <h4>Worked example — the lab above</h4>
         <p>A 700 Hz siren at $v_{s} = 20\ \mathrm{m\,s^{-1}}$ (72 km/h), stationary listener:</p>
         <div class="rl-eq">$$f'_{\text{approach}} = 700\cdot\frac{343}{343-20} = 743\ \mathrm{Hz}, \qquad f'_{\text{recede}} = 700\cdot\frac{343}{343+20} = 661\ \mathrm{Hz}$$</div>
         <p>A ratio of 1.124 — a little over two semitones, and instantly audible. The jump happens over the second or so during which the ambulance passes, which is why the change sounds abrupt rather than gradual.</p>
 
-        <h5>Source motion ≠ observer motion</h5>
+        <h4>Source motion ≠ observer motion</h4>
         <p>Expand both cases to second order in $\beta_{\text{rel}} = v_{s}/v$ or $v_{o}/v$:</p>
         <div class="rl-eq">$$\frac{f'}{f}\bigg|_{\text{source moves}} = \frac{1}{1-\beta} = 1 + \beta + \beta^{2} + \cdots, \qquad \frac{f'}{f}\bigg|_{\text{observer moves}} = 1 + \beta$$</div>
         <p>They agree to first order and differ at $\beta^{2}$. That difference is a real, measurable thing, and it is the fingerprint of a <b>medium with a preferred frame</b>: air knows which of the two is moving through it. This is precisely what the optical case cannot have, and it is why the relativistic Doppler formula in section 7 depends only on the <em>relative</em> velocity.</p>
 
-        <h5>Beyond Mach 1</h5>
+        <h4>Beyond Mach 1</h4>
         <p>When $v_{s} > v$ the denominator changes sign and the formula stops describing a listener ahead of the source — no sound reaches there before the source does. The wavefronts instead envelope a cone:</p>
         <div class="rl-eq">$$\sin\theta = \frac{v}{v_{s}} = \frac{1}{M}$$
           <span class="rl-eq__note">$M$ is the Mach number; $\theta$ is the half-angle of the shock cone. At $M = 2$, $\theta = 30^{\circ}$.</span></div>
         <p>The boom is not an event at the moment of "breaking the sound barrier" — it is a continuous trailing shock that sweeps across the ground as long as the aircraft stays supersonic.</p>
 
-        <h5>Where it is used</h5>
+        <h4>Where it is used</h4>
         <ul>
           <li><b>Doppler weather radar.</b> Frequency shift of the return pulse gives the radial wind speed inside a storm, which is how rotation — and therefore tornado risk — is detected.</li>
           <li><b>Medical ultrasound.</b> Doppler echocardiography maps blood velocity and direction from the shift off moving red cells.</li>
@@ -1087,29 +1087,29 @@ section[id] { scroll-margin-top: 78px; }
         </ul>
       </div>
       <div class="rl-sci t-vi">
-        <h5>Công thức tổng quát</h5>
+        <h4>Công thức tổng quát</h4>
         <p>Với $v$ là tốc độ sóng trong môi trường, $v_{o}$ là tốc độ người nghe và $v_{s}$ là tốc độ nguồn — cả hai đều đo <b>so với môi trường</b>, dương khi hướng từ người nghe về phía nguồn:</p>
         <div class="rl-eq">$$f' = f\,\frac{v + v_{o}}{v - v_{s}}$$
           <span class="rl-eq__note">Lại gần thì $f'$ tăng, ra xa thì giảm. Trong không khí lặng ở 20 °C, $v = 331{,}3 + 0{,}606\,T[^\circ\mathrm{C}] \approx 343\ \mathrm{m\,s^{-1}}$.</span></div>
         <p>Cơ chế là hình học chứ không phải sinh lý. Giữa hai lần phát cách nhau $T = 1/f$, nguồn tiến được $v_{s}T$, nên bước sóng ở phía trước nó bị nén còn $\lambda' = (v - v_{s})T$ và ở phía sau bị giãn thành $(v + v_{s})T$. Tần số là $v/\lambda'$.</p>
 
-        <h5>Ví dụ tính bằng số — đúng hình động phía trên</h5>
+        <h4>Ví dụ tính bằng số — đúng hình động phía trên</h4>
         <p>Còi 700 Hz chạy $v_{s} = 20\ \mathrm{m\,s^{-1}}$ (72 km/h), người nghe đứng yên:</p>
         <div class="rl-eq">$$f'_{\text{lại gần}} = 700\cdot\frac{343}{343-20} = 743\ \mathrm{Hz}, \qquad f'_{\text{ra xa}} = 700\cdot\frac{343}{343+20} = 661\ \mathrm{Hz}$$</div>
         <p>Tỉ số 1,124 — hơn hai nửa cung một chút, và tai nghe ra ngay. Cú đổi diễn ra trong khoảng một giây lúc chiếc xe vượt qua, nên nó nghe như một bước nhảy chứ không phải một chuyển dần.</p>
 
-        <h5>Nguồn chạy ≠ người nghe chạy</h5>
+        <h4>Nguồn chạy ≠ người nghe chạy</h4>
         <p>Khai triển cả hai trường hợp tới bậc hai theo $\beta_{\text{tđ}} = v_{s}/v$ hoặc $v_{o}/v$:</p>
         <div class="rl-eq">$$\frac{f'}{f}\bigg|_{\text{nguồn chạy}} = \frac{1}{1-\beta} = 1 + \beta + \beta^{2} + \cdots, \qquad \frac{f'}{f}\bigg|_{\text{người nghe chạy}} = 1 + \beta$$</div>
         <p>Hai vế trùng nhau ở bậc một và lệch nhau từ $\beta^{2}$. Chênh lệch đó là thật, đo được, và nó là dấu vân tay của một <b>môi trường có hệ quy chiếu ưu tiên</b>: không khí biết ai trong hai bên đang chuyển động xuyên qua nó. Đó đúng là thứ mà trường hợp quang học không thể có, và là lý do công thức Doppler tương đối tính ở mục 7 chỉ phụ thuộc vận tốc <em>tương đối</em>.</p>
 
-        <h5>Vượt Mach 1</h5>
+        <h4>Vượt Mach 1</h4>
         <p>Khi $v_{s} > v$, mẫu số đổi dấu và công thức thôi mô tả được người nghe đứng phía trước nguồn — không có âm thanh nào tới đó trước khi bản thân nguồn tới. Thay vào đó, các mặt sóng bao lấy một hình nón:</p>
         <div class="rl-eq">$$\sin\theta = \frac{v}{v_{s}} = \frac{1}{M}$$
           <span class="rl-eq__note">$M$ là số Mach; $\theta$ là nửa góc ở đỉnh nón sốc. Ở $M = 2$ thì $\theta = 30^{\circ}$.</span></div>
         <p>Tiếng nổ không phải một biến cố xảy ra đúng lúc “vượt rào âm thanh” — nó là một sóng sốc kéo theo liên tục, quét ngang mặt đất suốt thời gian máy bay còn bay siêu thanh.</p>
 
-        <h5>Người ta dùng nó ở đâu</h5>
+        <h4>Người ta dùng nó ở đâu</h4>
         <ul>
           <li><b>Radar thời tiết Doppler.</b> Độ dịch tần của xung phản hồi cho ra tốc độ gió theo phương xuyên tâm bên trong một cơn bão, và đó là cách người ta phát hiện sự xoáy — tức nguy cơ lốc.</li>
           <li><b>Siêu âm y tế.</b> Siêu âm tim Doppler dựng bản đồ tốc độ và hướng dòng máu từ độ dịch tần phản xạ trên hồng cầu đang chuyển động.</li>
@@ -1198,20 +1198,20 @@ section[id] { scroll-margin-top: 78px; }
          data-title-vi="Dịch chuyển Doppler tương đối tính và dịch chuyển đỏ vũ trụ"
          data-sub-vi="Hai cơ chế khác nhau cho ra hai quang phổ trông giống hệt nhau">
       <div class="rl-sci t-en">
-        <h5>The relativistic formula</h5>
+        <h4>The relativistic formula</h4>
         <p>Light has no medium, so only the relative velocity can appear. For a source receding along the line of sight at $\beta = v/c$:</p>
         <div class="rl-eq">$$\frac{f_{\text{obs}}}{f_{\text{src}}} = \sqrt{\frac{1-\beta}{1+\beta}}, \qquad 1 + z \equiv \frac{\lambda_{\text{obs}}}{\lambda_{\text{src}}} = \sqrt{\frac{1+\beta}{1-\beta}}$$
           <span class="rl-eq__note">Approach is the same expression with $\beta \to -\beta$. To first order $z \approx \beta$, which is why the Newtonian formula survives for stellar velocities of a few hundred km/s.</span></div>
         <p>At a general angle $\theta$ between the source's velocity and the line of sight, measured in the observer's frame:</p>
         <div class="rl-eq">$$f_{\text{obs}} = \frac{f_{\text{src}}}{\gamma\left(1 + \beta\cos\theta\right)}$$</div>
 
-        <h5>The transverse term, and why it settles the argument</h5>
+        <h4>The transverse term, and why it settles the argument</h4>
         <p>Set $\theta = 90^{\circ}$ — the source is at closest approach, moving neither towards nor away. Classically there is no shift at all. Relativistically:</p>
         <div class="rl-eq">$$f_{\text{obs}} = \frac{f_{\text{src}}}{\gamma}$$
           <span class="rl-eq__note">A pure redshift, and pure time dilation: the moving source's oscillator is simply ticking slow. This term has no classical analogue whatsoever.</span></div>
         <p>Ives and Stilwell (1938) measured it on hydrogen canal rays by observing both forward and backward emission and taking the mean, which cancels the first-order term and leaves the $\gamma$ factor exposed. It remains one of the cleanest direct confirmations of time dilation, and it was performed by two physicists who were trying to disprove relativity.</p>
 
-        <h5>Cosmological redshift is a different mechanism</h5>
+        <h4>Cosmological redshift is a different mechanism</h4>
         <p>Distant galaxies are not, for the most part, moving <em>through</em> space away from us. The metric itself expands, and the wavelength of light in transit expands with it:</p>
         <div class="rl-eq">$$1 + z = \frac{a(t_{\text{obs}})}{a(t_{\text{emit}})}$$
           <span class="rl-eq__note">$a$ is the scale factor of the FLRW metric. This is a ratio of sizes of the universe, not a velocity — which is how $z > 1$ is possible without anything travelling faster than light.</span></div>
@@ -1220,7 +1220,7 @@ section[id] { scroll-margin-top: 78px; }
           <span class="rl-eq__note">The two best measurements of $H_0$ — from the cosmic microwave background (≈ 67.4) and from the local distance ladder (≈ 73) — disagree by more than their stated errors. That is the “Hubble tension”, and it is unresolved.</span></div>
         <p>Galaxies also have <b>peculiar velocities</b> on top of the expansion, which is why Andromeda is blueshifted: it is falling towards the Milky Way at about 110 km/s, and at 2.5 million light-years the expansion term is far too small to beat that.</p>
 
-        <h5>What gets built with it</h5>
+        <h4>What gets built with it</h4>
         <ul>
           <li><b>Exoplanets.</b> A planet makes its star wobble; the radial-velocity method reads the wobble as a periodic Doppler shift. 51 Pegasi b (1995) showed a semi-amplitude of roughly 59 m/s — a shift of about $2\times10^{-7}$ in wavelength.</li>
           <li><b>Galaxy rotation curves.</b> One side of a spiral is redshifted, the other blueshifted; the resulting rotation speeds are what revealed dark matter.</li>
@@ -1228,20 +1228,20 @@ section[id] { scroll-margin-top: 78px; }
         </ul>
       </div>
       <div class="rl-sci t-vi">
-        <h5>Công thức tương đối tính</h5>
+        <h4>Công thức tương đối tính</h4>
         <p>Ánh sáng không có môi trường, nên chỉ vận tốc tương đối được phép xuất hiện. Với nguồn lùi ra xa dọc đường ngắm với $\beta = v/c$:</p>
         <div class="rl-eq">$$\frac{f_{\text{thu}}}{f_{\text{phát}}} = \sqrt{\frac{1-\beta}{1+\beta}}, \qquad 1 + z \equiv \frac{\lambda_{\text{thu}}}{\lambda_{\text{phát}}} = \sqrt{\frac{1+\beta}{1-\beta}}$$
           <span class="rl-eq__note">Lại gần thì vẫn biểu thức ấy với $\beta \to -\beta$. Tới bậc một, $z \approx \beta$ — và đó là lý do công thức Newton vẫn dùng được cho vận tốc sao cỡ vài trăm km/s.</span></div>
         <p>Với góc $\theta$ bất kỳ giữa vận tốc nguồn và đường ngắm, đo trong hệ người quan sát:</p>
         <div class="rl-eq">$$f_{\text{thu}} = \frac{f_{\text{phát}}}{\gamma\left(1 + \beta\cos\theta\right)}$$</div>
 
-        <h5>Số hạng ngang, và vì sao nó khép lại tranh cãi</h5>
+        <h4>Số hạng ngang, và vì sao nó khép lại tranh cãi</h4>
         <p>Đặt $\theta = 90^{\circ}$ — nguồn đang ở điểm gần nhất, không lại gần cũng không ra xa. Theo cổ điển thì không có dịch chuyển nào cả. Theo tương đối tính:</p>
         <div class="rl-eq">$$f_{\text{thu}} = \frac{f_{\text{phát}}}{\gamma}$$
           <span class="rl-eq__note">Một dịch chuyển đỏ thuần tuý, và là giãn thời gian thuần tuý: bộ dao động của nguồn đang chuyển động đơn giản là đập chậm. Số hạng này không có đối ứng cổ điển nào hết.</span></div>
         <p>Ives và Stilwell (1938) đo được nó trên tia kênh hydro bằng cách quan sát cả bức xạ tới và bức xạ lui rồi lấy trung bình, thao tác này triệt tiêu số hạng bậc một và để lộ hệ số $\gamma$. Đây vẫn là một trong những xác nhận trực tiếp sạch nhất cho giãn thời gian — và nó được thực hiện bởi hai nhà vật lý đang cố bác bỏ thuyết tương đối.</p>
 
-        <h5>Dịch chuyển đỏ vũ trụ là một cơ chế khác</h5>
+        <h4>Dịch chuyển đỏ vũ trụ là một cơ chế khác</h4>
         <p>Phần lớn các thiên hà xa không phải đang chuyển động <em>xuyên qua</em> không gian để rời xa ta. Chính metric giãn nở, và bước sóng của ánh sáng đang trên đường đi giãn theo:</p>
         <div class="rl-eq">$$1 + z = \frac{a(t_{\text{thu}})}{a(t_{\text{phát}})}$$
           <span class="rl-eq__note">$a$ là hệ số tỉ lệ của metric FLRW. Đây là tỉ số kích thước của vũ trụ, không phải một vận tốc — và đó là cách $z > 1$ có thể xảy ra mà không thứ gì đi nhanh hơn ánh sáng.</span></div>
@@ -1250,7 +1250,7 @@ section[id] { scroll-margin-top: 78px; }
           <span class="rl-eq__note">Hai phép đo $H_0$ tốt nhất — từ bức xạ nền vi sóng vũ trụ (≈ 67,4) và từ thang khoảng cách địa phương (≈ 73) — lệch nhau nhiều hơn sai số công bố của chúng. Đó là “căng thẳng Hubble”, và nó chưa được giải quyết.</span></div>
         <p>Các thiên hà còn có <b>vận tốc riêng</b> chồng lên trên giãn nở, và đó là lý do Andromeda bị dịch chuyển xanh: nó đang rơi về phía Ngân Hà với tốc độ chừng 110 km/s, và ở khoảng cách 2,5 triệu năm ánh sáng thì số hạng giãn nở quá nhỏ để thắng nổi.</p>
 
-        <h5>Người ta dựng được gì từ nó</h5>
+        <h4>Người ta dựng được gì từ nó</h4>
         <ul>
           <li><b>Ngoại hành tinh.</b> Hành tinh làm ngôi sao của nó lắc lư; phương pháp vận tốc xuyên tâm đọc cái lắc ấy thành một dịch chuyển Doppler tuần hoàn. 51 Pegasi b (1995) cho biên độ chừng 59 m/s — tức một độ dịch bước sóng cỡ $2\times10^{-7}$.</li>
           <li><b>Đường cong quay của thiên hà.</b> Một bên của thiên hà xoắn ốc bị dịch đỏ, bên kia bị dịch xanh; các tốc độ quay rút ra từ đó chính là thứ đã hé lộ vật chất tối.</li>
@@ -1345,26 +1345,26 @@ section[id] { scroll-margin-top: 78px; }
          data-title-vi="Độ cong, đường trắc địa và phương trình trường Einstein"
          data-sub-vi="Từ một ý nghĩ về chiếc thang máy rơi tới một phương trình tensor, và những gì nó tiên đoán">
       <div class="rl-sci t-en">
-        <h5>The starting point</h5>
+        <h4>The starting point</h4>
         <p>The <b>equivalence principle</b>: in a freely falling laboratory, small enough and for a short enough time, the laws of physics are those of special relativity. Gravity can be transformed away locally. Equivalently, inertial mass and gravitational mass are the same thing — tested by Eötvös-type and modern torsion-balance experiments to about one part in $10^{13}$, and by the MICROSCOPE satellite to $10^{-15}$.</p>
         <p>“Locally” carries the whole content. Over a large enough region you <em>can</em> tell gravity from acceleration, because real gravitational fields converge: two balls dropped side by side in a falling lift drift together. That residual, unremovable effect is <b>tidal</b>, and tidal effects are curvature.</p>
 
-        <h5>Free fall as straight motion</h5>
+        <h4>Free fall as straight motion</h4>
         <p>A free particle follows a geodesic of the spacetime metric $g_{\mu\nu}$ — the straightest available worldline:</p>
         <div class="rl-eq">$$\frac{d^{2}x^{\mu}}{d\tau^{2}} + \Gamma^{\mu}_{\ \alpha\beta}\,\frac{dx^{\alpha}}{d\tau}\frac{dx^{\beta}}{d\tau} = 0$$
           <span class="rl-eq__note">No force term. The Christoffel symbols $\Gamma$ are built from derivatives of the metric; in a locally inertial frame they vanish and the equation becomes $d^{2}x^{\mu}/d\tau^{2}=0$.</span></div>
         <p>Note which curvature is doing the work for everyday gravity. An apple falls at 9.8 m/s², but it moves through <em>time</em> at $c$; the dominant term in the geodesic equation for slow bodies is $\Gamma^{i}_{\ tt}$, i.e. the curvature of the <b>time</b> direction. Newtonian gravity is very nearly the statement of section 9 — that clocks run slower lower down — in disguise.</p>
 
-        <h5>The field equations (1915)</h5>
+        <h4>The field equations (1915)</h4>
         <div class="rl-eq">$$G_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^{4}}\,T_{\mu\nu}, \qquad G_{\mu\nu} \equiv R_{\mu\nu} - \tfrac{1}{2}R\,g_{\mu\nu}$$
           <span class="rl-eq__note">Left: geometry. Right: energy, momentum, pressure and stress. Ten coupled non-linear partial differential equations for the metric. $8\pi G/c^{4} \approx 2.08\times10^{-43}\ \mathrm{N^{-1}}$ — spacetime is extraordinarily stiff, which is why it takes a star to make a noticeable bend.</span></div>
 
-        <h5>The vacuum solution around a spherical mass</h5>
+        <h4>The vacuum solution around a spherical mass</h4>
         <p>Schwarzschild found it within weeks, while serving on the Russian front:</p>
         <div class="rl-eq">$$ds^{2} = -\left(1 - \frac{r_{s}}{r}\right)c^{2}dt^{2} + \frac{dr^{2}}{1 - r_{s}/r} + r^{2}d\Omega^{2}, \qquad r_{s} = \frac{2GM}{c^{2}}$$
           <span class="rl-eq__note">$r_{s}$ is the Schwarzschild radius: 2.95 km for the Sun, 8.87 mm for the Earth. Both are buried far inside the body, so the exterior solution is all that applies — unless the object collapses.</span></div>
 
-        <h5>What it predicted, and what was found</h5>
+        <h4>What it predicted, and what was found</h4>
         <table class="rl-num">
           <tr><th>Prediction</th><th>Value</th><th>Status</th></tr>
           <tr><td>Mercury's perihelion advance</td><td>43″ per century beyond Newton</td><td>Already an unexplained anomaly in 1915; GR gives 42.98″</td></tr>
@@ -1375,7 +1375,7 @@ section[id] { scroll-margin-top: 78px; }
           <tr><td>Frame dragging</td><td>A rotating mass drags inertial frames</td><td>Gravity Probe B, 2011; LARES/LAGEOS</td></tr>
         </table>
 
-        <h5>Honest limits of the trampoline picture</h5>
+        <h4>Honest limits of the trampoline picture</h4>
         <ul>
           <li>It embeds a 2-surface in 3-space, and needs an external "down" — the very thing it claims to explain.</li>
           <li>It shows curved <em>space</em>. For non-relativistic orbits, curved <em>time</em> dominates, and the rubber sheet does not show it at all.</li>
@@ -1383,26 +1383,26 @@ section[id] { scroll-margin-top: 78px; }
         </ul>
       </div>
       <div class="rl-sci t-vi">
-        <h5>Điểm xuất phát</h5>
+        <h4>Điểm xuất phát</h4>
         <p><b>Nguyên lý tương đương</b>: trong một phòng thí nghiệm rơi tự do, đủ nhỏ và trong khoảng thời gian đủ ngắn, các định luật vật lý đúng là các định luật của thuyết tương đối hẹp. Hấp dẫn có thể bị biến mất một cách cục bộ. Tương đương với điều đó, khối lượng quán tính và khối lượng hấp dẫn là cùng một thứ — được kiểm bằng các thí nghiệm kiểu Eötvös và cân xoắn hiện đại tới khoảng một phần $10^{13}$, và bằng vệ tinh MICROSCOPE tới $10^{-15}$.</p>
         <p>Chữ “cục bộ” mang toàn bộ nội dung. Trên một vùng đủ lớn thì bạn <em>có thể</em> phân biệt hấp dẫn với gia tốc, vì trường hấp dẫn thật thì hội tụ: hai quả bóng thả cạnh nhau trong thang máy rơi sẽ trôi lại gần nhau. Hiệu ứng dư ra, không xoá được ấy là <b>hiệu ứng thuỷ triều</b>, và hiệu ứng thuỷ triều chính là độ cong.</p>
 
-        <h5>Rơi tự do chính là chuyển động thẳng</h5>
+        <h4>Rơi tự do chính là chuyển động thẳng</h4>
         <p>Một hạt tự do đi theo đường trắc địa của metric không-thời gian $g_{\mu\nu}$ — đường thế giới thẳng nhất mà nó có:</p>
         <div class="rl-eq">$$\frac{d^{2}x^{\mu}}{d\tau^{2}} + \Gamma^{\mu}_{\ \alpha\beta}\,\frac{dx^{\alpha}}{d\tau}\frac{dx^{\beta}}{d\tau} = 0$$
           <span class="rl-eq__note">Không có số hạng lực nào. Các ký hiệu Christoffel $\Gamma$ dựng từ đạo hàm của metric; trong một hệ quán tính cục bộ chúng triệt tiêu và phương trình thành $d^{2}x^{\mu}/d\tau^{2}=0$.</span></div>
         <p>Chú ý xem độ cong nào mới thật sự làm việc trong hấp dẫn đời thường. Quả táo rơi với gia tốc 9,8 m/s², nhưng nó đi xuyên qua <em>thời gian</em> với tốc độ $c$; số hạng trội trong phương trình trắc địa cho vật chậm là $\Gamma^{i}_{\ tt}$, tức là độ cong của phương <b>thời gian</b>. Hấp dẫn Newton gần như đúng là phát biểu của mục 9 — rằng đồng hồ ở thấp chạy chậm hơn — trong một bộ đồ hoá trang.</p>
 
-        <h5>Phương trình trường (1915)</h5>
+        <h4>Phương trình trường (1915)</h4>
         <div class="rl-eq">$$G_{\mu\nu} + \Lambda g_{\mu\nu} = \frac{8\pi G}{c^{4}}\,T_{\mu\nu}, \qquad G_{\mu\nu} \equiv R_{\mu\nu} - \tfrac{1}{2}R\,g_{\mu\nu}$$
           <span class="rl-eq__note">Vế trái: hình học. Vế phải: năng lượng, động lượng, áp suất và ứng suất. Mười phương trình đạo hàm riêng phi tuyến liên kết nhau cho metric. $8\pi G/c^{4} \approx 2{,}08\times10^{-43}\ \mathrm{N^{-1}}$ — không-thời gian cứng tới mức phi thường, và đó là lý do phải cỡ một ngôi sao mới bẻ cong được thấy rõ.</span></div>
 
-        <h5>Nghiệm chân không quanh một khối cầu</h5>
+        <h4>Nghiệm chân không quanh một khối cầu</h4>
         <p>Schwarzschild tìm ra nó chỉ trong vài tuần, khi đang phục vụ ở mặt trận Nga:</p>
         <div class="rl-eq">$$ds^{2} = -\left(1 - \frac{r_{s}}{r}\right)c^{2}dt^{2} + \frac{dr^{2}}{1 - r_{s}/r} + r^{2}d\Omega^{2}, \qquad r_{s} = \frac{2GM}{c^{2}}$$
           <span class="rl-eq__note">$r_{s}$ là bán kính Schwarzschild: 2,95 km với Mặt Trời, 8,87 mm với Trái Đất. Cả hai đều nằm sâu bên trong thiên thể, nên nghiệm ngoài là tất cả những gì áp dụng được — trừ khi vật sụp đổ.</span></div>
 
-        <h5>Nó tiên đoán gì, và người ta tìm thấy gì</h5>
+        <h4>Nó tiên đoán gì, và người ta tìm thấy gì</h4>
         <table class="rl-num">
           <tr><th>Tiên đoán</th><th>Giá trị</th><th>Tình trạng</th></tr>
           <tr><td>Tiến động điểm cận nhật của Sao Thuỷ</td><td>43″ mỗi thế kỷ, ngoài phần Newton</td><td>Vốn đã là dị thường chưa giải thích được năm 1915; GR cho 42,98″</td></tr>
@@ -1413,7 +1413,7 @@ section[id] { scroll-margin-top: 78px; }
           <tr><td>Kéo lê hệ quy chiếu</td><td>Khối lượng đang quay kéo theo các hệ quán tính</td><td>Gravity Probe B, 2011; LARES/LAGEOS</td></tr>
         </table>
 
-        <h5>Giới hạn thành thật của hình ảnh tấm bạt nhún</h5>
+        <h4>Giới hạn thành thật của hình ảnh tấm bạt nhún</h4>
         <ul>
           <li>Nó nhúng một mặt hai chiều vào không gian ba chiều, và cần một hướng “xuống” từ bên ngoài — đúng thứ mà nó tự nhận là đang giải thích.</li>
           <li>Nó cho thấy <em>không gian</em> cong. Với quỹ đạo phi tương đối tính thì <em>thời gian</em> cong mới là phần trội, và tấm bạt chẳng thể hiện điều đó chút nào.</li>
@@ -1497,12 +1497,12 @@ section[id] { scroll-margin-top: 78px; }
          data-title-vi="Giãn thời gian hấp dẫn và ngân sách GPS"
          data-sub-vi="Một số hạng của metric Schwarzschild, và hệ quả của nó xuống tới từng nano-giây">
       <div class="rl-sci t-en">
-        <h5>Where it comes from</h5>
+        <h4>Where it comes from</h4>
         <p>Take the Schwarzschild metric and set $dr = d\Omega = 0$ — a clock held at fixed $r$. Then $ds^{2} = -(1-r_{s}/r)c^{2}dt^{2}$, and proper time relates to coordinate time (which is the time kept by a clock at infinity) by</p>
         <div class="rl-eq">$$\frac{d\tau}{dt} = \sqrt{1 - \frac{r_{s}}{r}} = \sqrt{1 - \frac{2GM}{rc^{2}}}$$
           <span class="rl-eq__note">$\to 0$ as $r \to r_{s}$: from far away, an infalling clock appears to freeze at the horizon. The infalling observer crosses in finite proper time and notices nothing locally special there.</span></div>
 
-        <h5>Weak field</h5>
+        <h4>Weak field</h4>
         <p>For $2GM/rc^{2} \ll 1$, expand and write the result in terms of Newtonian potential $\Phi$:</p>
         <div class="rl-eq">$$\frac{\Delta f}{f} \approx \frac{\Delta\Phi}{c^{2}} \approx \frac{g\,\Delta h}{c^{2}} = 1.09\times10^{-16}\ \text{per metre of height on Earth}$$</div>
         <table class="rl-num">
@@ -1514,12 +1514,12 @@ section[id] { scroll-margin-top: 78px; }
           <tr><td>Sun's surface vs infinity</td><td><code>2.12 × 10⁻⁶</code></td><td>≈ 67 s per year</td></tr>
         </table>
 
-        <h5>The GPS budget</h5>
+        <h4>The GPS budget</h4>
         <p>A GPS satellite orbits at $r = 26\,560$ km with $v = 3.87$ km/s. Both effects are computed relative to a clock on the rotating geoid:</p>
         <div class="rl-eq">$$\underbrace{-\frac{v^{2}}{2c^{2}}}_{\text{kinematic}} \;+\; \underbrace{\frac{GM}{c^{2}}\left(\frac{1}{R_{\oplus}} - \frac{1}{r}\right)}_{\text{gravitational}} \;\Rightarrow\; -7.2 + 45.9 = +38.7\ \mu\mathrm{s\ per\ day}$$</div>
         <p>Left uncorrected, $c \times 38.7\ \mu\mathrm{s} \approx 11.6$ km of position error accumulates per day. The fix is built into the hardware: the satellite oscillators are set to 10.229 999 995 43 MHz on the ground so that they read 10.23 MHz in orbit. There is a further periodic term of up to 46 ns from orbital eccentricity, applied in the receiver.</p>
 
-        <h5>Consequences at the extreme</h5>
+        <h4>Consequences at the extreme</h4>
         <ul>
           <li><b>Redshift of escaping light.</b> Photons climbing out of a well lose frequency by the same factor — the gravitational redshift measured for white dwarfs (Sirius B) and, at $z \approx 6.7\times10^{-4}$ (about 200 km/s in velocity units), for the S2 star at its closest approach to Sgr A*.</li>
           <li><b>The horizon.</b> $r_{s} = 2GM/c^{2}$ is not a surface of matter but the radius at which the escape speed reaches $c$ and $d\tau/dt$ vanishes. For Sgr A* (4.3 × 10⁶ $M_\odot$) it is about 12.7 million km, roughly a tenth of the Earth–Sun distance.</li>
@@ -1527,12 +1527,12 @@ section[id] { scroll-margin-top: 78px; }
         </ul>
       </div>
       <div class="rl-sci t-vi">
-        <h5>Nó tới từ đâu</h5>
+        <h4>Nó tới từ đâu</h4>
         <p>Lấy metric Schwarzschild rồi đặt $dr = d\Omega = 0$ — một đồng hồ giữ cố định ở bán kính $r$. Khi đó $ds^{2} = -(1-r_{s}/r)c^{2}dt^{2}$, và thời gian riêng liên hệ với thời gian toạ độ (chính là thời gian của một đồng hồ ở vô cực) bởi</p>
         <div class="rl-eq">$$\frac{d\tau}{dt} = \sqrt{1 - \frac{r_{s}}{r}} = \sqrt{1 - \frac{2GM}{rc^{2}}}$$
           <span class="rl-eq__note">$\to 0$ khi $r \to r_{s}$: nhìn từ xa, một chiếc đồng hồ đang rơi vào có vẻ đóng băng ngay tại chân trời. Người quan sát rơi cùng nó thì vượt qua trong một khoảng thời gian riêng hữu hạn và không thấy có gì đặc biệt xảy ra tại chỗ đó.</span></div>
 
-        <h5>Trường yếu</h5>
+        <h4>Trường yếu</h4>
         <p>Với $2GM/rc^{2} \ll 1$, khai triển rồi viết kết quả theo thế Newton $\Phi$:</p>
         <div class="rl-eq">$$\frac{\Delta f}{f} \approx \frac{\Delta\Phi}{c^{2}} \approx \frac{g\,\Delta h}{c^{2}} = 1{,}09\times10^{-16}\ \text{trên mỗi mét độ cao trên Trái Đất}$$</div>
         <table class="rl-num">
@@ -1544,12 +1544,12 @@ section[id] { scroll-margin-top: 78px; }
           <tr><td>Bề mặt Mặt Trời so với vô cực</td><td><code>2,12 × 10⁻⁶</code></td><td>≈ 67 s mỗi năm</td></tr>
         </table>
 
-        <h5>Ngân sách GPS</h5>
+        <h4>Ngân sách GPS</h4>
         <p>Một vệ tinh GPS bay ở $r = 26\,560$ km với $v = 3{,}87$ km/s. Cả hai hiệu ứng đều tính so với một đồng hồ trên geoid đang quay:</p>
         <div class="rl-eq">$$\underbrace{-\frac{v^{2}}{2c^{2}}}_{\text{động học}} \;+\; \underbrace{\frac{GM}{c^{2}}\left(\frac{1}{R_{\oplus}} - \frac{1}{r}\right)}_{\text{hấp dẫn}} \;\Rightarrow\; -7{,}2 + 45{,}9 = +38{,}7\ \mu\mathrm{s\ mỗi\ ngày}$$</div>
         <p>Nếu không hiệu chỉnh, mỗi ngày tích luỹ $c \times 38{,}7\ \mu\mathrm{s} \approx 11{,}6$ km sai số vị trí. Cách sửa được ghép sẵn vào phần cứng: bộ dao động trên vệ tinh được đặt ở 10,229 999 995 43 MHz khi còn dưới mặt đất, để lên quỹ đạo nó đọc đúng 10,23 MHz. Còn một số hạng tuần hoàn nữa, tới 46 ns, do độ lệch tâm quỹ đạo, được máy thu tự bù.</p>
 
-        <h5>Hệ quả ở vùng cực đoan</h5>
+        <h4>Hệ quả ở vùng cực đoan</h4>
         <ul>
           <li><b>Dịch chuyển đỏ của ánh sáng leo ra.</b> Photon leo ra khỏi giếng thế mất tần số đúng theo hệ số ấy — chính là dịch chuyển đỏ hấp dẫn đã đo được ở các sao lùn trắng (Sirius B) và, ở mức $z \approx 6{,}7\times10^{-4}$ (khoảng 200 km/s quy theo vận tốc), ở ngôi sao S2 lúc nó tới gần Sgr A* nhất.</li>
           <li><b>Chân trời.</b> $r_{s} = 2GM/c^{2}$ không phải một mặt vật chất mà là bán kính tại đó tốc độ thoát đạt tới $c$ và $d\tau/dt$ triệt tiêu. Với Sgr A* (4,3 × 10⁶ $M_\odot$) nó vào khoảng 12,7 triệu km, tức chừng một phần mười khoảng cách Trái Đất – Mặt Trời.</li>
@@ -1571,27 +1571,27 @@ section[id] { scroll-margin-top: 78px; }
 
   <div class="rl-take">
     <div class="rl-take__c p-move">
-      <h4><span class="t-en">1 · Speed is a comparison</span><span class="t-vi">1 · Tốc độ là một phép so sánh</span></h4>
+      <h3><span class="t-en">1 · Speed is a comparison</span><span class="t-vi">1 · Tốc độ là một phép so sánh</span></h3>
       <p class="t-en">There is no such thing as “really standing still”. You are always moving relative to <em>something</em>, and every one of those answers is correct.</p>
       <p class="t-vi">Không có cái gọi là “thật sự đứng yên”. Bạn luôn chuyển động so với <em>một thứ nào đó</em>, và mọi đáp án kiểu ấy đều đúng.</p>
     </div>
     <div class="rl-take__c p-fast">
-      <h4><span class="t-en">2 · Light has one speed</span><span class="t-vi">2 · Ánh sáng chỉ có một tốc độ</span></h4>
+      <h3><span class="t-en">2 · Light has one speed</span><span class="t-vi">2 · Ánh sáng chỉ có một tốc độ</span></h3>
       <p class="t-en">Everybody who measures light gets 299,792,458 metres per second — running towards it, running away, it makes no difference.</p>
       <p class="t-vi">Ai đo ánh sáng cũng ra 299.792.458 mét mỗi giây — chạy về phía nó hay chạy khỏi nó cũng chẳng khác gì.</p>
     </div>
     <div class="rl-take__c p-fast">
-      <h4><span class="t-en">3 · Fast clocks fall behind</span><span class="t-vi">3 · Đồng hồ đi nhanh thì tụt lại</span></h4>
+      <h3><span class="t-en">3 · Fast clocks fall behind</span><span class="t-vi">3 · Đồng hồ đi nhanh thì tụt lại</span></h3>
       <p class="t-en">Because light's speed cannot change, time has to. Move fast and your clock, your heartbeat and your whole life run slow — as measured by someone you left behind.</p>
       <p class="t-vi">Vì tốc độ ánh sáng không được phép đổi, thời gian phải đổi. Đi nhanh thì đồng hồ, nhịp tim và cả cuộc đời bạn chạy chậm — theo phép đo của người bạn bỏ lại phía sau.</p>
     </div>
     <div class="rl-take__c p-wave">
-      <h4><span class="t-en">4 · Movement changes waves</span><span class="t-vi">4 · Chuyển động làm đổi sóng</span></h4>
+      <h3><span class="t-en">4 · Movement changes waves</span><span class="t-vi">4 · Chuyển động làm đổi sóng</span></h3>
       <p class="t-en">Coming towards you, waves bunch up: higher notes, bluer light. Going away, they stretch: lower notes, redder light. That is how we know the universe is growing.</p>
       <p class="t-vi">Đi về phía bạn thì sóng dồn lại: nốt cao hơn, ánh sáng xanh hơn. Đi ra xa thì sóng giãn ra: nốt thấp hơn, ánh sáng đỏ hơn. Đó là cách ta biết vũ trụ đang lớn lên.</p>
     </div>
     <div class="rl-take__c p-bend">
-      <h4><span class="t-en">5 · Gravity is bent spacetime</span><span class="t-vi">5 · Hấp dẫn là không-thời gian bị cong</span></h4>
+      <h3><span class="t-en">5 · Gravity is bent spacetime</span><span class="t-vi">5 · Hấp dẫn là không-thời gian bị cong</span></h3>
       <p class="t-en">Heavy things dent the space and time around them. Everything else travels straight — and “straight” on a dented floor is a curve. Time runs slow down in the dent.</p>
       <p class="t-vi">Vật nặng làm lõm không gian và thời gian quanh chúng. Mọi thứ khác chỉ đi thẳng — mà “thẳng” trên một cái sàn bị lõm là một đường cong. Dưới đáy chỗ lõm, thời gian trôi chậm.</p>
     </div>
@@ -1719,7 +1719,7 @@ section[id] { scroll-margin-top: 78px; }
     <div class="wb-modal__head">
       <div>
         <p class="rl-modal__kicker" id="rl-modal-kicker"><span class="t-en">Detail · for scientists</span><span class="t-vi">Chi tiết · cho nhà khoa học</span></p>
-        <h4 class="wb-modal__title" id="rl-modal-title">—</h4>
+        <h3 class="wb-modal__title" id="rl-modal-title">—</h3>
         <p class="wb-modal__sub" id="rl-modal-sub">—</p>
       </div>
       <!-- .wb-close draws its own × via ::before — an inner icon span would render a second one -->

@@ -31,15 +31,15 @@ import htmlcheck  # noqa: E402
 PAGES_DIR = pathlib.Path(__file__).resolve().parent.parent
 
 # ── Nợ kỹ thuật, ghi thẳng vào repo thay vì để trong đầu ai ────────────────────
-# Ba phép kiểm bánh cóc (svg_vo_danh, hut_cap, nhan_tieng_anh — xem tools/htmlcheck.py) đã
-# sạch trên phần lớn trang. Vài trang cũ còn nợ; ghi đúng số đang nợ ở đây: trang KHÔNG có tên
-# trong bảng thì phải bằng 0, trang có tên thì chỉ được phép giữ nguyên hoặc giảm — tăng là LỖI.
+# Ba phép kiểm bánh cóc (svg_vo_danh, hut_cap, nhan_tieng_anh — xem tools/htmlcheck.py): mọi
+# trang đang sạch cả ba, nên bảng trống. Trang KHÔNG có tên trong bảng thì phải bằng 0. Một phép
+# kiểm mới làm đỏ trang cũ mà chưa dọn được ngay thì ghi đúng số đo được vào đây, dạng
+# {'hut_cap': {'ten-trang.html': 2}} — rồi chỉ được giữ nguyên hoặc giảm, tăng là LỖI.
 # Dọn xong một trang thì xoá dòng của nó đi, đừng nới số lên.
 DEBT = {
-    'svg_vo_danh': {'scooter-maintenance-guide.html': 63},
-    'hut_cap':     {'cryptography.html': 15, 'relativity.html': 3,
-                    'scooter-maintenance-guide.html': 2},
-    'nhan_tieng_anh': {'cryptography.html': 3},
+    'svg_vo_danh': {},
+    'hut_cap': {},
+    'nhan_tieng_anh': {},
 }
 
 
