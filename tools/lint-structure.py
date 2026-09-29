@@ -38,7 +38,6 @@ MAX_LINES = 200
 # Bánh cóc: số dòng / số mốc ngày đang nợ của từng file. Chỉ được giảm.
 DEBT_LINES = {
     'cashy/CLAUDE.md': 463,
-    'facts/CLAUDE.md': 821,
 }
 DEBT_DATES = {
 }
