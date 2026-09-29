@@ -33,12 +33,6 @@
   .wb-navbar__brand { flex: 0 1 auto; min-width: 0; }
   .hw-brand-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* ---- ghi chú cho chủ trang (xoá khi đã duyệt) ---- */
-  .pg-confirm { border: var(--wb-bw) dashed var(--wb-border-strong); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 10px 14px; margin: 18px 0 0; max-width: 90ch; }
-  .pg-confirm__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
-  .pg-confirm__list { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.6; color: var(--wb-fg); }
-  .pg-confirm__list li { margin: 2px 0; }
-
   /* ---- hero ---- */
   .hw-hero { padding: 30px 0 20px; }
   .hw-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
@@ -234,17 +228,6 @@
 </header>
 
 <main class="wb-container wb-container--wide">
-
-  <aside class="pg-confirm" id="confirm" aria-label="Ghi chú cho chủ trang: những điểm cần xác nhận">
-    <p class="pg-confirm__k">Ghi chú cho chủ trang · cần xác nhận — duyệt xong thì xoá khối này</p>
-    <ul class="pg-confirm__list">
-      <li><b>Thứ tự chương:</b> trang sắp lại — chương 3, 4 đứng cạnh chương 1; chương 9 cạnh chương 2 (bảng đối chiếu ở mục 0.1). Muốn giữ đúng thứ tự sách thì chỉ cần dời ba section.</li>
-      <li><b>Nguồn của ví dụ trong sách:</b> không có bản sách đầy đủ trong tay; các con số của sách (25.111 USD, 9% / 2%, 31.108 vi trùng, 4.712 / 132…) được đối chiếu qua trích đoạn, bài điểm sách và ghi chú của người đọc khác, không qua chính cuốn sách.</li>
-      <li><b>Số bản bán:</b> Wikipedia ghi "hơn 1,5 triệu" và dẫn Steele (2005), nhưng bài Steele viết "hơn nửa triệu bản tiếng Anh". Trang dùng số của Steele và nói rõ chỗ lệch (mục 6.1).</li>
-      <li><b>Giọng về chuyện thuốc lá:</b> mục 6.2 kể Huff nhận tiền ngành thuốc lá và dẫn việc một chuyên gia khảo sát đã thôi giới thiệu sách, nhưng trang vẫn giữ các mẹo vì chúng đúng. Chủ trang xem giọng này có ổn không.</li>
-      <li><b>Độ dài, bản tiếng Việt:</b> trang ≈11.400 tiếng tính theo khoảng trắng (ước chừng 7.500–8.000 từ) — sát hoặc nhỉnh hơn khung 8.000 tuỳ cách đếm. Chưa tìm thấy bản tiếng Việt do một nhà xuất bản phát hành.</li>
-    </ul>
-  </aside>
 
   <header class="hw-hero">
     <p class="hw-eyebrow">Tóm tắt sách · Darrell Huff · How to Lie with Statistics · 1954</p>
@@ -542,7 +525,7 @@
             <p class="hw-fal__def"><b>Cơ chế.</b> Nhiều thứ tự khỏi, tự lên xuống. Không có nhóm <i>không dùng</i> để so thì không biết phần nào do sản phẩm.</p>
             <div class="hw-fal__meta">
               <span class="hw-fal__k">Trong sách</span>
-              <div class="hw-fal__v">Thuốc cảm "khỏi trong một tuần" — không uống gì cũng khỏi chừng ấy. Một cuộc thử vắc-xin bại liệt (450 trẻ được tiêm, 680 trẻ không) chẳng chứng minh được gì, vì năm ấy bệnh ít tới mức số ca ở cả hai nhóm quá nhỏ để so.</div>
+              <div class="hw-fal__v">Thuốc cảm "khỏi trong một tuần" — không uống gì cũng khỏi chừng ấy. Một cuộc thử vắc-xin bại liệt (450 trẻ được tiêm, 680 trẻ không) chẳng chứng minh được gì, vì bại liệt thể liệt vốn hiếm: nhóm cỡ ấy chỉ dự kiến chừng hai ca, và rốt cuộc cả hai nhóm đều không có ca nào.</div>
               <span class="hw-fal__k">Hôm nay</span>
               <div class="hw-fal__v">Trung tâm luyện thi: "học viên tăng 1,5 điểm sau 3 tháng" (số minh hoạ). Học sinh nào ôn ba tháng cuối cũng tăng điểm.</div>
               <span class="hw-fal__k">Hỏi lại</span>
@@ -1046,7 +1029,7 @@
             <p class="hw-fal__def"><b>Cơ chế.</b> Chỗ nào đông hơn thì cũng nhiều chuyện hơn; đếm tổng mà không chia thì chỗ đông nào cũng thành chỗ nguy hiểm.</p>
             <div class="hw-fal__meta">
               <span class="hw-fal__k">Trong sách</span>
-              <div class="hw-fal__v">Tai nạn lúc trời quang nhiều hơn lúc sương mù vì trời quang chiếm phần lớn thời gian. Một báo cáo nêu 4.712 người chết liên quan tới đường sắt, nhưng phần lớn là ô tô đâm tàu ở chỗ giao cắt; chỉ 132 người là hành khách.</div>
+              <div class="hw-fal__v">Tai nạn lúc trời quang nhiều hơn lúc sương mù vì trời quang chiếm phần lớn thời gian. Một báo cáo nêu 4.712 người chết liên quan tới đường sắt, nhưng gần một nửa là ô tô đâm tàu ở chỗ giao cắt, phần đông số còn lại là người đu tàu đi lậu; chỉ 132 người là hành khách.</div>
               <span class="hw-fal__k">Hôm nay</span>
               <div class="hw-fal__v">"Phần lớn tai nạn giao thông có xe máy" gần như tất nhiên khi xe máy chiếm phần lớn phương tiện; phải chia cho số ki-lô-mét đã đi.</div>
               <span class="hw-fal__k">Hỏi lại</span>
@@ -1085,7 +1068,7 @@
             <p class="hw-fal__def"><b>Cơ chế.</b> Một kết quả có nhiều cách nói đúng; người nói chọn cách lọt tai nhất.</p>
             <div class="hw-fal__meta">
               <span class="hw-fal__k">Trong sách</span>
-              <div class="hw-fal__v">Cùng một năm kinh doanh: lãi 1% trên doanh thu, 15% trên vốn, 10 triệu USD, tăng 40% so với trung bình 1935–1939, hay giảm 60% so với năm trước. Còn phần lợi nhuận được báo cáo có khi chỉ bằng một nửa hay một phần ba thực tế — phần còn lại nằm trong khấu hao và dự phòng.</div>
+              <div class="hw-fal__v">Cùng một năm kinh doanh: lãi 1% trên doanh thu, 15% trên vốn, 10 triệu USD, tăng 40% so với trung bình 1935–1939, hay giảm 60% so với năm trước. Còn theo tạp chí của nghiệp đoàn công nhân ô tô Mỹ mà Huff dẫn, phần lợi nhuận được báo cáo có khi chỉ bằng một nửa hay một phần ba thực tế — phần còn lại nằm trong khấu hao và dự phòng.</div>
               <span class="hw-fal__k">Hôm nay</span>
               <div class="hw-fal__v">"Doanh thu kỷ lục" khi lợi nhuận giảm; "lợi nhuận tăng 300%" khi năm trước gần hoà vốn.</div>
               <span class="hw-fal__k">Hỏi lại</span>
@@ -1369,7 +1352,7 @@
       <section id="s-src">
         <p class="hw-eyebrow-sec"><b>7.2</b> — Sources</p>
         <h2 class="hw-sec-title">Nguồn</h2>
-        <p class="hw-src"><b>Sách.</b> Darrell Huff, <i>How to Lie with Statistics</i>, tranh Irving Geis, W. W. Norton, New York, 1954, 142 trang — <a href="https://wwnorton.com/books/9780393310726">trang của NXB</a>. Tên và số trang các chương đối chiếu với <a href="https://openlibrary.org/books/OL52836735M">bản ghi Open Library</a> (ấn bản Victor Gollancz, 1960). Chưa kiểm được bản tiếng Việt do một nhà xuất bản phát hành.</p>
+        <p class="hw-src"><b>Sách.</b> Darrell Huff, <i>How to Lie with Statistics</i>, tranh Irving Geis, W. W. Norton, New York, 1954, 142 trang — <a href="https://wwnorton.com/books/9780393310726">trang của NXB</a>. Tên và số trang các chương đối chiếu với <a href="https://openlibrary.org/books/OL52836735M">bản ghi Open Library</a> (ấn bản Victor Gollancz, 1960). Bản tiếng Việt: <a href="https://shop.alphabooks.vn/bip-bom-bang-thong-ke-nhung-bai-hoc-vo-long-ve-thong-ke-va-nghe-thuat-bop-meo-du-lieu-p39109134.html"><i>Bịp bợm bằng thống kê – Những bài học vỡ lòng về thống kê và nghệ thuật bóp méo dữ liệu</i></a>, NXB Thế Giới, Alpha Books phát hành, 2026, 188 trang.</p>
         <p class="hw-src"><b>Về sách và tác giả.</b> J. Michael Steele, "Darrell Huff and Fifty Years of How to Lie with Statistics", <i>Statistical Science</i> 20(3), 2005, tr. 205–209 — <a href="https://doi.org/10.1214/088342305000000205">doi:10.1214/088342305000000205</a>. Tiểu sử bổ sung: <a href="https://en.wikipedia.org/wiki/Darrell_Huff">Wikipedia — Darrell Huff</a>.</p>
         <p class="hw-src"><b>Chuyện thuốc lá.</b> Alex Reinhart, "Huff and puff", <i>Significance</i> 11(4), 2014, tr. 28–33 — <a href="https://doi.org/10.1111/j.1740-9713.2014.00765.x">doi:10.1111/j.1740-9713.2014.00765.x</a>; tài liệu gốc tập hợp tại <a href="https://www.refsmmat.com/articles/smoking-statistics.html">refsmmat.com</a>. Tim Harford, <i>Cautionary Tales</i>, "Storks, Smoking and the Power of Doubt", 16/9/2020. Caroline Jarrett, <a href="https://www.effortmark.co.uk/avoid-how-to-lie-with-statistics/">"Why I no longer recommend How to lie with statistics"</a>, Effortmark, 2021 (cập nhật 2025). WHO, <a href="https://www.who.int/news-room/fact-sheets/detail/tobacco">tờ thông tin về thuốc lá</a>, 26/6/2026.</p>
         <p class="hw-src"><b>Nghiên cứu về sau.</b> Peverill Squire, "Why the 1936 Literary Digest Poll Failed", <i>Public Opinion Quarterly</i> 52(1), 1988 — <a href="https://doi.org/10.1086/269085">doi:10.1086/269085</a>; số liệu cuộc thăm dò: <a href="https://en.wikipedia.org/wiki/The_Literary_Digest">Wikipedia — The Literary Digest</a>. M. Correll, E. Bertini, S. Franconeri, <a href="https://arxiv.org/abs/1907.02035">"Truncating the Y-Axis: Threat or Menace?"</a>, CHI 2020. J. M. Zubler và cộng sự, <a href="https://publications.aap.org/pediatrics/article/149/3/e2021052138/184748/">"Evidence-Informed Milestones for Developmental Surveillance Tools"</a>, <i>Pediatrics</i> 149(3), 2022. Open Science Collaboration, "Estimating the reproducibility of psychological science", <i>Science</i> 349, 2015 — <a href="https://doi.org/10.1126/science.aac4716">doi:10.1126/science.aac4716</a>. Pew Research Center, <a href="https://www.pewresearch.org/short-reads/2019/02/27/response-rates-in-telephone-surveys-have-resumed-their-decline/">"Response rates in telephone surveys have resumed their decline"</a>, 27/2/2019. A. Furedi, <a href="https://pubmed.ncbi.nlm.nih.gov/10652971/">"The public health implications of the 1995 ‘pill scare’"</a>, <i>Human Reproduction Update</i> 5(6), 1999. Edward Tufte, <i>The Visual Display of Quantitative Information</i>, 1983 (hệ số nói dối).</p>

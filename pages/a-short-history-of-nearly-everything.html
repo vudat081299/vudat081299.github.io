@@ -34,12 +34,6 @@
   .wb-navbar__brand { flex: 0 1 auto; min-width: 0; }
   .hw-brand-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* ---- ghi chú cho chủ trang (xoá khi đã duyệt) ---- */
-  .pg-confirm { border: var(--wb-bw) dashed var(--wb-border-strong); border-radius: var(--wb-radius); background: var(--wb-surface); padding: 10px 14px; margin: 18px 0 0; max-width: 90ch; }
-  .pg-confirm__k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 6px; }
-  .pg-confirm__list { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.6; color: var(--wb-fg); }
-  .pg-confirm__list li { margin: 2px 0; }
-
   /* ---- hero ---- */
   .hw-hero { padding: 30px 0 20px; }
   .hw-eyebrow { font-family: var(--wb-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--wb-fg-subtle); margin: 0 0 10px; }
@@ -218,17 +212,6 @@
 </header>
 
 <main class="wb-container wb-container--wide">
-
-  <aside class="pg-confirm" id="confirm" aria-label="Ghi chú cho chủ trang: những điểm cần xác nhận">
-    <p class="pg-confirm__k">Ghi chú cho chủ trang · cần xác nhận — duyệt xong thì xoá khối này</p>
-    <ul class="pg-confirm__list">
-      <li><b>Bản 2.0 (2025):</b> Bryson đã ra bản sửa lại mọi chương (Doubleday, 21/10/2025). Trang tóm bản 2003, bản có tiếng Việt, và tự cập nhật từ nguồn gốc; chưa đối chiếu với bản 2.0. Muốn trang theo bản 2.0 thì phải làm lại các khung "Sách 2003 → nay".</li>
-      <li><b>Nguồn nội dung sách:</b> không có bản sách trong tay (không dùng bản lậu). Nội dung từng chương đối chiếu qua mục lục Thư viện Quốc hội Mỹ, tóm tắt LitCharts, trang errata và bài điểm sách; vài con số của sách (13,7 tỉ năm; 35.000–40.000 gen; vi khuẩn gấp mười; Yellowstone phun khoảng 600.000 năm một lần) chỉ kiểm được qua nguồn thứ cấp.</li>
-      <li><b>Độ dài:</b> khoảng 21.900 tiếng tính theo khoảng trắng cho mọi chữ trên trang, kể cả bảng, nguồn và mô hình (ước chừng 15.100 từ); riêng 30 chương khoảng 17.300 tiếng (chừng 11.900 từ, trung bình 400 từ mỗi chương). Vượt khung 8.000–12.000 nếu tính cả trang; chủ trang quyết có cần cắt tiếp không.</li>
-      <li><b>Ví dụ Việt Nam là phép tính của trang:</b> 21 mẩu xương hoá thạch cho 102,3 triệu người (5.6), tổ tiên thời Lý – Trần (5.11), vịnh Bắc Bộ là đất liền thời băng hà (6.1) dựa trên số của sách hoặc số công khai, không phải lời Bryson.</li>
-      <li><b>Tên chương:</b> bảng đối chiếu dùng tên gốc tiếng Anh cùng chủ đề do trang đặt, không dùng tên chương của bản dịch <i>Lược sử vạn vật</i> (chưa kiểm được đủ).</li>
-    </ul>
-  </aside>
 
   <header class="hw-hero">
     <p class="hw-eyebrow">Tóm tắt sách · Bill Bryson · A Short History of Nearly Everything · 2003</p>
@@ -844,7 +827,7 @@
         </dl>
         <div class="sh-upd">
           <span class="k">Sách 2003 → nay</span>
-          <p>Sách viết năm 2003 rằng Yellowstone phun khoảng 600.000 năm một lần và lần cuối đã hơn 600.000 năm, dễ khiến người đọc hiểu là nó "đến hạn". USGS nay nói rõ Yellowstone <b>không quá hạn</b>: hai khoảng cách giữa ba lần phun là 0,8 và 0,66 triệu năm, trung bình khoảng 0,73 triệu năm, và núi lửa không chạy theo lịch. Xác suất một siêu phun trào mỗi năm được ước chừng <b>1 trên 730.000</b> (0,00014%), và dữ liệu quan trắc không cho thấy dấu hiệu sắp phun.</p>
+          <p>Sách viết năm 2003 rằng Yellowstone phun khoảng 600.000 năm một lần và lần cuối đã hơn 600.000 năm, rồi kết luận Yellowstone "có vẻ đã đến hạn". USGS nay nói rõ Yellowstone <b>không quá hạn</b>: hai khoảng cách giữa ba lần phun là 0,8 và 0,66 triệu năm, trung bình khoảng 0,73 triệu năm, và núi lửa không chạy theo lịch. Xác suất một siêu phun trào mỗi năm được ước chừng <b>1 trên 730.000</b> (0,00014%), và dữ liệu quan trắc không cho thấy dấu hiệu sắp phun.</p>
           <p>Đông Nam Á cũng có siêu núi lửa: Toba ở Sumatra, cách TP.HCM chừng 1.250 km, phun khoảng 74.000 năm trước. Thuyết cho rằng Toba suýt xoá sổ loài người từng phổ biến; các nghiên cứu về sau, như một nghiên cứu năm 2018 ở Nam Phi, thấy người thời ấy vẫn sống và phát triển qua được.</p>
         </div>
         <div class="sh-next">
