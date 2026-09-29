@@ -7,16 +7,14 @@ Luật nằm ở CLAUDE.md gốc, mục "Cấu trúc bắt buộc". Script này 
      dòng trỏ vào thứ có thật.
   2. Mỗi project trong bản đồ có CLAUDE.md của nó; trang chủ (không có thư mục) có
      .claude/rules/home.md.
-  3. Project nào có hook pre-commit thì có tools/check.sh — lối vào chuẩn mà GitHub Actions tự tìm.
-     Thiếu nó thì cổng của project chạy lúc commit mà CI không bao giờ chạy.
-  4. CLAUDE.md và .claude/rules/*.md không quá 200 dòng — hướng dẫn chính thức của Claude Code: file
+  3. CLAUDE.md và .claude/rules/*.md không quá 200 dòng — hướng dẫn chính thức của Claude Code: file
      dài hơn tốn ngữ cảnh và bị tuân thủ kém hơn. Không có ngày tháng dd/mm/yyyy: ngày là dấu hiệu
      của nhật ký, và nhật ký thuộc HISTORY.md / DECISIONS.md.
-  5. HANDOFF.md chỉ có bốn mục cấp 2: ĐANG LÀM, CHƯA LÀM, NỢ, CHỜ CHỦ TRANG.
-  6. Mỗi .claude/rules/*.md có `paths:` và mọi mẫu trong đó khớp ít nhất một file — rule không có
+  4. HANDOFF.md chỉ có bốn mục cấp 2: ĐANG LÀM, CHƯA LÀM, NỢ, CHỜ CHỦ TRANG.
+  5. Mỗi .claude/rules/*.md có `paths:` và mọi mẫu trong đó khớp ít nhất một file — rule không có
      `paths` bị nạp vào MỌI phiên, rule có mẫu chết thì không bao giờ được nạp.
 
-Mục 4 chạy theo kiểu bánh cóc, như bảng DEBT của lint-pages.py: file có tên trong DEBT được giữ
+Mục 3 chạy theo kiểu bánh cóc, như bảng DEBT của lint-pages.py: file có tên trong DEBT được giữ
 nguyên hoặc giảm, tăng là lỗi; xuống dưới ngưỡng thì xoá dòng của nó đi, đừng nới số lên.
 
 Sổ quyết định có cổng riêng: python3 tools/decisions.py check.
@@ -117,15 +115,6 @@ def check_map(all_files):
     return rows
 
 
-def check_gates(all_files):
-    for f in all_files:
-        if f.endswith('/tools/hooks/pre-commit'):
-            project = f[:-len('/tools/hooks/pre-commit')]
-            if f'{project}/tools/check.sh' not in all_files:
-                err(f'{project}/', 'có tools/hooks/pre-commit mà không có tools/check.sh — '
-                                   'GitHub Actions chỉ chạy các */tools/check.sh nó tìm thấy')
-
-
 def ratchet(path, value, limit, table, what):
     allowed = table.get(path)
     if allowed is None:
@@ -171,7 +160,6 @@ def check_docs(all_files):
 def main():
     all_files = files()
     rows = check_map(all_files)
-    check_gates(all_files)
     check_docs(all_files)
     if errors:
         for e in errors:

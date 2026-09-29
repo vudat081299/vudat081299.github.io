@@ -1,18 +1,7 @@
 name: Cổng chất lượng
 
-# Lớp cổng thứ tư. Ba lớp kia (PostToolUse, pre-commit, pre-push) chạy trên MÁY của người
-# sửa — nên chúng biến mất khi ai đó dùng `--no-verify`, khi commit được tạo từ giao diện
-# web của GitHub, hoặc khi một phiên quên chạy `install-hooks.sh`. Lớp này chạy trên máy
-# của GitHub và không ai tắt được.
-#
-# Nó cố ý chạy cổng của MỌI project con, không chỉ project vừa sửa: repo này có nhiều phiên
-# agent chạy song song và cùng push thẳng lên main, nên một thay đổi ở đây làm hỏng chỗ kia
-# là chuyện đã xảy ra.
-#
-# deploy.yml chờ workflow này xong và xanh rồi mới chạy — cổng đỏ thì web giữ bản cũ.
-#
-# Việc "chạy thật trong trình duyệt" tách thành job riêng vì nó cần tải Chromium (~120MB).
-# Tách ra thì kết quả lint vẫn hiện trong vài chục giây kể cả khi job kia còn đang tải.
+# Chạy cổng của MỌI project (tools/check.sh ở gốc và mọi */tools/check.sh), không chỉ project vừa sửa,
+# rồi các bài chạy thật trong trình duyệt. deploy.yml chỉ chạy khi workflow này xanh.
 
 on:
   push:
@@ -28,37 +17,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
-    name: Cổng tĩnh
+  check:
+    name: Cổng
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-
-      # oxlint của cashy/ cần deps; thiếu thì cashy/tools/check.sh nói rõ là bỏ qua, nên cài ở đây
-      # để lớp 4 chạy đủ những gì tài liệu nói nó chạy.
       - uses: pnpm/action-setup@v4
         with:
           version: 11
-      - name: Cài deps cho cashy (oxlint)
+      - name: Cài deps cho cashy
         working-directory: cashy
         run: pnpm install --frozen-lockfile
-
-      - name: Cấu trúc repo + sổ quyết định
-        run: |
-          python3 tools/lint-structure.py
-          python3 tools/decisions.py check
-      - name: Trang chủ
-        run: python3 tools/lint-collection.py
-      # Mọi project có cổng đều gom cổng vào <project>/tools/check.sh, và bước này TỰ TÌM chúng —
-      # không liệt kê tay. Trước đây mỗi cổng phải khai tên ở đây, và đã có lần quên: hai cổng
-      # verify-* sống vài tuần mà lớp này không chạy. Project mới hay cổng mới tự có mặt.
-      - name: Cổng của từng project (mọi */tools/check.sh)
+      - name: Mọi tools/check.sh
         run: |
           FAIL=0
-          for c in $(git ls-files '*/tools/check.sh'); do
+          for c in tools/check.sh $(git ls-files '*/tools/check.sh'); do
             echo "::group::$c"
             sh "$c" || { echo "::error::$c không qua"; FAIL=1; }
             echo "::endgroup::"
@@ -66,21 +42,17 @@ jobs:
           exit $FAIL
 
   smoke:
-    name: shop/ + trang chủ — chạy thật trong trình duyệt
+    name: Chạy thật trong trình duyệt (shop/, trang chủ)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-
-      # Cổng lint bắt được cú pháp và dữ liệu, KHÔNG bắt được hành vi. Hai lỗi nặng nhất
-      # từng xảy ra ở shop/ đều đi qua lint sạch sẽ — xem comment đầu shop/tools/smoke.js.
       - name: Cài Chromium
         run: |
           npm install --no-save playwright-core@1
           npx --yes playwright@1 install --with-deps chromium
-
       - name: Chạy smoke
         run: |
           python3 -m http.server 8347 >/dev/null 2>&1 &
@@ -89,10 +61,4 @@ jobs:
             sleep 0.25
           done
           node shop/tools/smoke.js http://127.0.0.1:8347/shop/
-
-      # Trang chủ từ 21/09/2026 không còn dựng trên bộ web-builder nên mất luôn bộ cổng
-      # G1–G9 của skill ấy; đây là cái thay vào. Nó đo bề ngang, mép, tương phản và bàn
-      # phím — bốn lớp lỗi mà lint-collection.py mù hoàn toàn. Chạy chung job vì đã có
-      # sẵn Chromium ở đây; dựng riêng một job nữa là tải lại trình duyệt lần hai.
-      - name: Chạy smoke trang chủ
-        run: node tools/smoke-index.js http://127.0.0.1:8347/index.html
+          node tools/smoke-index.js http://127.0.0.1:8347/index.html

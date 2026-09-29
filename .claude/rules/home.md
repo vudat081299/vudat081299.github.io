@@ -4,7 +4,6 @@ paths:
   - "data/**"
   - "tools/lint-collection.py"
   - "tools/smoke-index.js"
-  - "tools/check-index.sh"
 ---
 
 # Trang chủ — `index.html` + `data/collection.json`
@@ -28,7 +27,7 @@ tới một trong các đường dẫn ở phần `paths` phía trên. Quyết �
 - Chỉ trường có hậu tố `_html` được `innerHTML`, còn lại `textContent`/escape. Số suy ra được
   (số trang của một môn…) thì tính từ dữ liệu, đừng ghi tay.
 
-## Cổng — `sh tools/check-index.sh`
+## Cổng — `sh tools/smoke-index.js`
 
 1. `python3 tools/lint-collection.py`: trường bắt buộc, phím tắt trùng, href chết, trang
    `pages/`/`cooking/` không có mục (mồ côi), và hai danh sách `WITHHELD` / `UNLISTED` ở dưới.

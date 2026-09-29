@@ -17,8 +17,8 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-012 · Mỗi project có bộ file bắt buộc · `repo`
 - REPO-013 · Luật ở trong repo, memory chỉ giữ thiết lập máy · `repo`
 - REPO-014 · Deploy chỉ chạy sau khi CI xanh · `.github/workflows/deploy.yml`
-- REPO-015 · Cổng được tìm tự động, không khai tên bằng tay · `.github/workflows/gates.yml`, `pages/tools/run-verify.py`, `**/tools/check.sh`
 - REPO-016 · Tiêu đề tab và thanh trên cùng bằng tiếng Anh · `pages/*.html`, `cooking/*.html`, `masters-degree/**/*.html`, `web-builder/templates/*.html`
+- REPO-017 · Hai lớp cổng: commit và CI · `tools/hooks/pre-commit`, `**/tools/check.sh`, `.github/workflows/gates.yml`
 - REPO-018 · Tài liệu .md viết ngắn và thẳng · `repo`
 
 Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md), [`shop/DECISIONS.md`](shop/DECISIONS.md).
@@ -95,17 +95,17 @@ Chuyện riêng tư không lên repo. Không chắc ghi vào đâu thì hỏi ch
 
 Deploy chạy sau khi "Cổng chất lượng" xanh trên một lần push vào `main`, và chỉ khi commit ấy còn là đầu `main`.
 
-## REPO-015 · Cổng được tìm tự động, không khai tên bằng tay
-28/09/2026 · `.github/workflows/gates.yml`, `pages/tools/run-verify.py`, `**/tools/check.sh`
-
-Mỗi project có cổng thì có `tools/check.sh`; CI chạy mọi `*/tools/check.sh` nó tìm thấy. Mỗi
-`pages/tools/verify-*.py` khai trang nó kiểm ở dòng `PAGES`; hook và CI tự tìm.
-
 ## REPO-016 · Tiêu đề tab và thanh trên cùng bằng tiếng Anh
 03/08/2026 · `pages/*.html`, `cooking/*.html`, `masters-degree/**/*.html`, `web-builder/templates/*.html`
 
 Thân trang giữ tiếng Việt. Ngoại lệ: `shop/` (cửa hàng cho khách Việt), `<title>` của data-science-roadmap
 (DS-016). Nguồn: 7db789b.
+
+## REPO-017 · Hai lớp cổng: commit và CI
+29/09/2026 · `tools/hooks/pre-commit`, `**/tools/check.sh`, `.github/workflows/gates.yml` · thay cho REPO-015
+
+Cổng của mỗi project là `tools/check.sh`. Commit chạy cổng gốc và cổng của project bị chạm; CI chạy tất cả.
+Không có hook sau mỗi lần sửa file, không có pre-push. Vì: bộ bốn lớp phức tạp quá mức, và CI đã chặn deploy.
 
 ## REPO-018 · Tài liệu .md viết ngắn và thẳng
 29/09/2026 · `repo`
