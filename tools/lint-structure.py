@@ -28,6 +28,9 @@ import re
 import subprocess
 import sys
 
+# Tắt .pyc như lint-pages.py: repo không bỏ qua __pycache__/, và chạy cổng không được để lại file
+# lạ trong cây làm việc.
+sys.dont_write_bytecode = True
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from decisions import glob_re  # noqa: E402  (cùng cú pháp glob với sổ quyết định)
 
@@ -59,8 +62,10 @@ def err(path, msg):
 
 
 def files():
-    out = subprocess.check_output(
-        ['git', '-C', ROOT, 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], text=True)
+    # Chỉ file git theo dõi, kể cả file vừa `git add`. File chưa track thì không: một thư mục nháp
+    # hay node_modules/ chưa bị .gitignore loại sẽ thành "thư mục thiếu dòng bản đồ" và chặn mọi
+    # push từ checkout ấy, dù nó không bao giờ lên repo.
+    out = subprocess.check_output(['git', '-C', ROOT, 'ls-files', '-z', '--cached'], text=True)
     return sorted({p for p in out.split('\0') if p and os.path.isfile(os.path.join(ROOT, p))})
 
 

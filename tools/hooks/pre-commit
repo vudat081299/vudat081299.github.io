@@ -2,15 +2,15 @@
 # Cổng lớp 2 của gốc repo. Bộ điều phối gọi mọi */tools/hooks/pre-commit; hook này tự lọc.
 #
 # 1. Cấu trúc + sổ quyết định — khi commit chạm một tài liệu cho agent (CLAUDE.md, DECISIONS.md,
-#    HANDOFF.md, HISTORY.md, .claude/rules/, .claude/skills/), chính hai cổng ấy, hoặc có thêm/xoá
-#    file (bản đồ project và phạm vi của quyết định có thể lệch). Cả hai chạy dưới một giây.
+#    HANDOFF.md, HISTORY.md, .claude/rules/, .claude/skills/), chính hai cổng ấy, hoặc có thêm/xoá/đổi
+#    tên file (bản đồ project và phạm vi của quyết định có thể lệch). Cả hai chạy dưới một giây.
 # 2. Danh mục trang chủ — bộ lọc bao cả pages/*.html và cooking/*.html, không chỉ
 #    data/collection.json: cổng "trang mồ côi" bắt đúng trường hợp thêm một trang MÀ KHÔNG sửa
 #    collection.json. D trong diff-filter để xoá một trang đang được niêm yết cũng bị bắt (href chết).
 set -eu
 ROOT=$(git rev-parse --show-toplevel)
 CHANGED=$(git diff --cached --name-only --diff-filter=ACMRD)
-ADDDEL=$(git diff --cached --name-only --diff-filter=AD)
+ADDDEL=$(git diff --cached --name-only --diff-filter=ADR)
 
 if printf '%s\n' "$CHANGED" | grep -qE '(^|/)(CLAUDE|DECISIONS|HANDOFF|HISTORY)\.md$|^\.claude/(rules|skills)/|^tools/(lint-structure|decisions)\.py$' \
    || [ -n "$ADDDEL" ]; then
