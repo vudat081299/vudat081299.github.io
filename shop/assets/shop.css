@@ -526,7 +526,7 @@ html.js .hero__fade { opacity: 0; animation: fadeUp .95s var(--ease) forwards; }
   pointer-events: none; background: radial-gradient(circle, rgba(255,165,75,.14) 0%, transparent 62%);
 }
 .foot__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) repeat(auto-fit, minmax(180px, 1fr)); gap: clamp(26px, 4vw, 54px); }
-.foot h4 { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 16px; font-weight: 500; }
+.foot h2 { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 16px; font-weight: 500; }
 .foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 11px; font-size: 13.8px; }
 .foot a { text-decoration: none; color: var(--ink-2); transition: color .25s; }
 .foot a:hover { color: var(--ember-soft); }

@@ -13,7 +13,10 @@ Nhóm thứ ba là thứ riêng của thư mục này và là lý do nó tồn t
 data ngược lên HTML hay không**. Luật repo là "khối lặp → chữ ở data". Một người vội sẽ gõ
 thẳng tên sản phẩm vào HTML cho nhanh; lúc đó JSON và trang nói hai giá khác nhau mà không
 ai biết. Nên: tên sản phẩm, tên danh mục, câu hỏi FAQ, tiêu đề giá trị/quy trình KHÔNG được
-xuất hiện trong index.html.
+xuất hiện trong HTML.
+
+Phần kiểm HTML chung (id, anchor, asset, thẻ lệch, svg không tên, tiêu đề nhảy cấp, nhãn tiếng
+Anh, khung trang) nằm ở tools/htmlcheck.py, dùng chung với pages/ và cooking/.
 
 Chạy:
   python3 shop/tools/lint-shop.py        # data + trang
@@ -29,6 +32,11 @@ import pathlib
 import re
 import sys
 
+# Không để lại .pyc trong tools/ ở gốc repo: repo không bỏ qua __pycache__/.
+sys.dont_write_bytecode = True
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2] / 'tools'))
+import htmlcheck  # noqa: E402
+
 SHOP = pathlib.Path(__file__).resolve().parent.parent
 DATA = SHOP / 'data' / 'shop.json'
 
@@ -41,21 +49,6 @@ SLUG = re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
 def vnd(n):
     """123456 → "123.456" — đúng cách trang hiển thị giá."""
     return '{:,}'.format(int(n)).replace(',', '.')
-
-RE_SCRIPT = re.compile(r'<script\b[^>]*>.*?</script\s*>', re.S | re.I)
-RE_STYLE = re.compile(r'<style\b[^>]*>.*?</style\s*>', re.S | re.I)
-RE_COMMENT = re.compile(r'<!--.*?-->', re.S)
-RE_ID = re.compile(r'\bid="([^"]+)"')
-RE_ANCHOR = re.compile(r'\bhref="#([^"]*)"')
-RE_ASSET = re.compile(r'\b(?:src|href)="([^"]+)"')
-BALANCED_TAGS = ('div', 'section', 'ul', 'ol', 'table')
-ANCHOR_WHITELIST = {'', 'top'}
-
-
-def strip_code(html):
-    out = RE_COMMENT.sub(' ', html)
-    out = RE_SCRIPT.sub(' ', out)
-    return RE_STYLE.sub(' ', out)
 
 
 # ── data ──────────────────────────────────────────────────────────────────────
@@ -490,32 +483,10 @@ def repeated_text(d):
 
 
 def check_page(path, data):
-    raw = path.read_text(encoding='utf-8', errors='replace')
-    markup = strip_code(raw)
-    err, note = [], []
-
-    ids = RE_ID.findall(markup)
-    for name, count in sorted(collections.Counter(ids).items()):
-        if count > 1:
-            err.append('id trùng %d lần: id="%s"' % (count, name))
-
-    idset = set(ids)
-    for target in sorted(set(RE_ANCHOR.findall(markup))):
-        if target not in ANCHOR_WHITELIST and target not in idset:
-            err.append('anchor gãy: href="#%s" — không có id nào tên vậy' % target)
-
-    for ref in sorted(set(RE_ASSET.findall(markup))):
-        if ref.startswith(('#', 'http://', 'https://', '//', 'mailto:', 'data:', 'tel:')):
-            continue
-        t = (path.parent / ref.split('?', 1)[0].split('#', 1)[0]).resolve()
-        if not t.exists():
-            err.append('asset thiếu: %s' % ref)
-
-    for tag in BALANCED_TAGS:
-        o = len(re.findall(r'<%s\b' % tag, markup, re.I))
-        c = len(re.findall(r'</%s\s*>' % tag, markup, re.I))
-        if o != c:
-            err.append('<%s> lệch: mở %d / đóng %d' % (tag, o, c))
+    err, note = htmlcheck.check_page(path)
+    # Cửa hàng cho khách Việt: <title> tiếng Việt là đúng, REPO-016 miễn cho shop/.
+    err = [e for e in err if not e.startswith('tiêu đề tab tiếng Việt')]
+    markup = htmlcheck.strip_code(path.read_text(encoding='utf-8', errors='replace'))
 
     # ── nội dung rò từ data lên HTML — lý do cổng này tồn tại ──────────────────
     # Soi TEXT NODE, không soi cả file: "Nến thơm" trong <title> hay "Rót tay" trong câu
@@ -537,15 +508,6 @@ def check_page(path, data):
                 err.append('nội dung lặp nằm trong HTML: %s "%s" — chữ này phải ở '
                            'data/shop.json, không thì hai chỗ sẽ lệch nhau' % (kind, text))
                 break
-
-    if not re.search(r'<html[^>]*\blang=', raw, re.I):
-        note.append('thiếu <html lang="…">')
-    if not re.search(r'<meta[^>]+viewport', raw, re.I):
-        note.append('thiếu <meta viewport>')
-    if not re.search(r'<title\s*>\s*\S', raw, re.I):
-        note.append('thiếu <title> có nội dung')
-    if not re.search(r'charset', raw, re.I):
-        note.append('thiếu khai báo charset — tiếng Việt dễ vỡ dấu')
 
     return err, note
 
@@ -693,7 +655,7 @@ def check_centring(pages, css):
         return []
     err = []
     for path in pages:
-        raw = strip_code(path.read_text(encoding='utf-8', errors='replace'))
+        raw = htmlcheck.strip_code(path.read_text(encoding='utf-8', errors='replace'))
         for m in re.finditer(r'<(\w+)\s[^>]*class="([^"]*)"[^>]*>', raw):
             classes = set(m.group(2).split())
             hit = classes & names
