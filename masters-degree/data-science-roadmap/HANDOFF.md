@@ -27,13 +27,6 @@ bình thường. Sửa xong kiểm ở 375px, cả sáng lẫn tối.
 
 ## CHỜ CHỦ TRANG
 
-### Đổi chữ thương hiệu "DS" về "Data Science" — chỉ khi chủ trang gọi (DS-018)
-
-Chủ trang hoãn có chủ ý; đừng tự làm, đừng hỏi lại mỗi phiên. Khi được gọi: đổi `DS` thành
-`Data Science` ở `data-science-roadmap.html` (`<a class="wb-navbar__brand ds-brand" href="#/home">`)
-và ở template thanh trên trong `tools/build-roadmap.mjs`, chạy `node tools/build-roadmap.mjs` để
-`roadmap.html` khớp, rồi commit cả hai file sinh.
-
 ### Ngăn của roadmap mặc định 1/3 cửa sổ (DS-026) hay 47% như code đang chạy
 
 DS-026 chốt 1/3, kéo được; code đang chạy 47%, vì ở cửa sổ 1440px 1/3 chỉ vừa

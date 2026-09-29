@@ -14,7 +14,7 @@
 - DS-014 · Cột 1060px, chữ 14–15px · `masters-degree/data-science-roadmap/data-science-roadmap.html`
 - DS-016 · Thanh trên và chân trang nói tiếng Anh, lớp vỏ còn lại tiếng Việt · `masters-degree/data-science-roadmap/data-science-roadmap.html`, `masters-degree/data-science-roadmap/tools/build-roadmap.mjs`
 - DS-017 · Hero của roadmap.html nói tiếng Anh · `masters-degree/data-science-roadmap/tools/build-roadmap.mjs`, `masters-degree/data-science-roadmap/roadmap.html`
-- DS-018 · Chữ thương hiệu trên thanh trên tạm là "DS" · `masters-degree/data-science-roadmap/data-science-roadmap.html`, `masters-degree/data-science-roadmap/tools/build-roadmap.mjs`, `masters-degree/data-science-roadmap/roadmap.html`
+- DS-018 · Chữ thương hiệu trên thanh trên là "Data Science" · `masters-degree/data-science-roadmap/data-science-roadmap.html`, `masters-degree/data-science-roadmap/tools/build-roadmap.mjs`, `masters-degree/data-science-roadmap/roadmap.html`
 - DS-019 · Đường nối stepper dùng --wb-border-strong · `masters-degree/data-science-roadmap/data-science-roadmap.html`
 - DS-020 · Nút sao chép code chỉ là icon · `masters-degree/data-science-roadmap/data-science-roadmap.html`
 - DS-021 · Lớp vỏ điều hướng không cho bôi đen chữ, trừ ô tìm kiếm · `masters-degree/data-science-roadmap/data-science-roadmap.html`
@@ -133,12 +133,10 @@ Vì: hero là khung của trang, phần dạy là các bản tóm tắt ở gi�
 Chi tiết: docs/design.md (§0.1)
 Nguồn: 82bd55f, 6942b6d
 
-## DS-018 · Chữ thương hiệu trên thanh trên tạm là "DS"
-18/08/2026 · `masters-degree/data-science-roadmap/data-science-roadmap.html`, `masters-degree/data-science-roadmap/tools/build-roadmap.mjs`, `masters-degree/data-science-roadmap/roadmap.html`
+## DS-018 · Chữ thương hiệu trên thanh trên là "Data Science"
+29/09/2026 · `masters-degree/data-science-roadmap/data-science-roadmap.html`, `masters-degree/data-science-roadmap/tools/build-roadmap.mjs`, `masters-degree/data-science-roadmap/roadmap.html`
 
-chữ thương hiệu "Data Science" trên thanh trên của cả hai trang rút thành "DS", tạm thời ("tạm thời thôi, 1 tuần sau tôi sẽ revert lại"). Ngày 20/08 chủ trang hoãn việc đổi lại: "revert chữ navbar DS → Data Science để sau".
-Đừng tự đổi lại "Data Science" khi chủ trang chưa gọi; hỏi lại chuyện này mỗi phiên.
-Nguồn: c1089ff, 60adbf2, 232d62e
+Thanh trên của cả hai trang ghi "Data Science". Chủ trang yêu cầu đổi lại từ "DS", bản rút gọn tạm từ 18/08.
 
 ## DS-019 · Đường nối stepper dùng --wb-border-strong
 04/08/2026 · `masters-degree/data-science-roadmap/data-science-roadmap.html`
