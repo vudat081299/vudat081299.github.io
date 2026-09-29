@@ -20,6 +20,7 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-016 · Tiêu đề tab và thanh trên cùng bằng tiếng Anh · `pages/*.html`, `cooking/*.html`, `masters-degree/**/*.html`, `web-builder/templates/*.html`
 - REPO-017 · Hai lớp cổng: commit và CI · `tools/hooks/pre-commit`, `**/tools/check.sh`, `.github/workflows/gates.yml`
 - REPO-018 · Tài liệu .md viết ngắn và thẳng · `repo`
+- REPO-019 · Không chặn force-push ở GitHub · `repo`
 
 Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md), [`shop/DECISIONS.md`](shop/DECISIONS.md).
 <!-- index:end -->
@@ -111,3 +112,8 @@ Không có hook sau mỗi lần sửa file, không có pre-push. Vì: bộ bốn
 29/09/2026 · `repo`
 
 Mỗi dòng một ý, chỉ ghi luật đang áp dụng, không kể lịch sử. Cách viết: CLAUDE.md gốc, mục *Viết tài liệu*.
+
+## REPO-019 · Không chặn force-push ở GitHub
+29/09/2026 · `repo`
+
+Chủ trang để `main` cho phép force-push. Agent vẫn phải hỏi trước khi force-push (CLAUDE.md gốc, mục Git).
