@@ -1,38 +1,28 @@
-# HANDOFF — việc dở của shop/
+# HANDOFF — shop/
 
-Chỉ việc chưa xong. Làm xong một mục thì xoá nó khỏi đây và ghi phiên ấy vào
-[HISTORY.md](HISTORY.md). Luật ở [CLAUDE.md](CLAUDE.md), quyết định đã chốt ở
-[DECISIONS.md](DECISIONS.md), sổ nợ kỹ thuật ở [docs/TECH-DEBT.md](docs/TECH-DEBT.md).
+Chỉ việc chưa xong; xong thì xoá khỏi đây và ghi vào [HISTORY.md](HISTORY.md).
 
 ## CHỜ CHỦ TRANG
 
-Những việc chờ người thật — chủ repo, hoặc chủ shop qua chủ repo. Agent không tự làm được; có
-thông tin rồi thì làm phần việc của agent ghi trong từng dòng.
+Chờ chủ repo, hoặc chủ shop qua chủ repo. Có thông tin rồi thì làm phần của agent ghi trong dòng.
 
-- **Buổi gặp đầu với chủ shop chưa diễn ra.** Đọc [docs/04-NEGOTIATION.md](docs/04-NEGOTIATION.md)
-  trước khi đi. Mục tiêu buổi đầu là *khám phá*, không phải trình diễn — hôm đó nói nhiều hơn
-  nghe thì buổi gặp hỏng.
-- **Giá vốn một cây nến (`V`).** Thiếu nó thì mọi phép tính chỉ nói về doanh thu. Cách hỏi tốt
-  nhất là xin cùng xem file Excel của chủ shop (câu E4 ở 04 — cùng xem, không xin file, vì nó chứa
-  thông tin khách), rồi tính hai cách ở [docs/06-VALUE-CHAIN.md](docs/06-VALUE-CHAIN.md) §4; câu
-  trả lời từ trí nhớ nhiều khả năng thiếu cây lỗi, cây thử, bao bì. Chưa ai xem file ấy, nên §7
-  của 06 toàn là điều kiện *"nếu file có…"*, còn số minh hoạ ở §4 và lịch ngược tháng 12 là số
-  bịa có nhãn. Có `V` rồi thì quyết lại mức giảm 8% và 14% của hộp quà (sổ nợ 9b).
-- **Nội dung 5 mùi hương** → điền vào `data/shop.json`, hạ **10** cờ `placeholder` (`scents` 5 +
-  `products` 5). 18 cờ còn lại là chính sách ship, thanh toán và cam kết thương hiệu — phải hỏi
-  riêng. Có mùi thật thì chỉnh trọng số Tìm mùi theo mùi thật, rồi chạy lại cổng và đọc dòng
-  phân bố (SHOP-002).
-- **Số tài khoản ngân hàng** → bật VietQR: điền `payment.methods[bank].bank` rồi đặt
-  `ready: true`; cổng kiểm định dạng BIN và số tài khoản.
-- **Shop có đủ điều kiện dùng API Shopee không**: mở `https://banhang.shopee.vn/edu/article/8450`
-  và `/8451` bằng trình duyệt — máy không đọc được hai trang đó. Chưa xác minh thì đừng hứa đồng
-  bộ Shopee.
-- **Nghĩa vụ thông báo website sau 01/07/2026**: hỏi luật sư một câu hẹp — sổ nợ mục 5.
+- Buổi gặp đầu với chủ shop chưa diễn ra: đọc [docs/04-NEGOTIATION.md](docs/04-NEGOTIATION.md)
+  trước; buổi đầu để khám phá, không để trình diễn.
+- Giá vốn một cây nến (`V`): cùng xem file Excel của chủ shop (câu E4 ở 04; xem cùng, không xin file vì
+  nó chứa thông tin khách), rồi tính hai cách ở [docs/06-VALUE-CHAIN.md](docs/06-VALUE-CHAIN.md) §4.
+  Có `V` thì quyết lại mức giảm giá của hộp quà (sổ nợ 9b).
+- Nội dung thật của 5 mùi: điền `data/shop.json`, hạ 10 cờ `placeholder` (`scents` + `products`),
+  chỉnh trọng số Tìm mùi rồi đọc dòng phân bố (SHOP-002). Các cờ còn lại (ship, thanh toán, cam kết
+  thương hiệu) hỏi riêng.
+- Số tài khoản ngân hàng: điền `payment.methods[bank].bank`, đặt `ready: true`; cổng kiểm BIN và số
+  tài khoản.
+- Shop có đủ điều kiện dùng API Shopee không: mở `https://banhang.shopee.vn/edu/article/8450` và
+  `/8451` bằng trình duyệt (máy không đọc được); chưa xác minh thì đừng hứa đồng bộ Shopee.
+- Nghĩa vụ thông báo website sau 01/07/2026: hỏi luật sư một câu hẹp (sổ nợ mục 5).
 
 ## NỢ
 
-- **Sổ nợ đầy đủ nằm ở [docs/TECH-DEBT.md](docs/TECH-DEBT.md), và giữ nguyên ở đó** — các tài liệu
-  trong `docs/`, một ADR và trang đọc `docs/index.html` trỏ vào nó theo từng số thứ tự. Sáu khoản
-  đầu chặn việc bán thật: cờ placeholder, VietQR, form đơn không gửi đi đâu, trang cảm ơn, thủ tục
-  thông báo, quyền riêng tư. Sổ có hai dòng cùng mang số 6 (quyền riêng tư; số phiên bản của `g`
-  trong giỏ) — đánh lại số thì sửa luôn mọi chỗ trỏ tới.
+- Sổ nợ đầy đủ ở [docs/TECH-DEBT.md](docs/TECH-DEBT.md) và giữ ở đó: `docs/`, một ADR và
+  `docs/index.html` trỏ vào nó theo số thứ tự. Sáu khoản đầu chặn việc bán thật.
+- Sổ nợ có hai dòng cùng số 6 (quyền riêng tư; số phiên bản của `g` trong giỏ): đánh lại số thì sửa
+  mọi chỗ trỏ tới.
