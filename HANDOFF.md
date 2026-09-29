@@ -26,6 +26,11 @@ Việc dở ở mức cả repo. Việc của một project nằm trong HANDOFF.
 - **Gộp ba lệnh `PostToolUse` trong `.claude/settings.json` thành một bộ điều phối**, cùng kiểu với
   pre-commit: tự gọi `<project>/tools/hooks/post-edit.sh` nếu có. Hiện mỗi project một lệnh chép gần
   giống nhau, thêm project là phải sửa settings.json — cũng là file agent không được tự sửa.
+- **REPO-016 có áp cho `web-builder/templates/*.html` không?** 82271b1 đổi `<title>` của bảy template
+  sang tiếng Anh và đưa chúng vào phạm vi REPO-016, dù commit gốc 7db789b để nguyên chúng; thư mục ấy
+  chép từ repo nguồn của kit, nên lần đồng bộ sau sẽ trả về tiếng Việt. Áp thì ghi một dòng vào
+  `web-builder/PENDING-FIXES.md` (mục kiểm lại sau mỗi lần đồng bộ); không áp thì bỏ
+  `web-builder/templates/*.html` khỏi phạm vi REPO-016 và trả title cũ.
 
 ## CHƯA LÀM
 
@@ -40,5 +45,26 @@ Việc dở ở mức cả repo. Việc của một project nằm trong HANDOFF.
   (trong `pages/`) và `masters-degree/research-proposal-project/research-proposal-project.html`.
   Đổi xong thì đo tràn ngang ở 320 px — tên tiếng Anh thường dài hơn, và thanh trên cùng có luật cắt
   chữ riêng (`web-builder/CLAUDE.md`).
+- **Lớp 3 soi cây làm việc, không soi commit được đẩy.** Mọi pre-push (gốc, `facts/`, ds-roadmap) chạy
+  cổng trên file đang có trong thư mục: commit `--no-verify` mang lỗi mà cây đã sửa (chưa commit) vẫn
+  đẩy được, còn cây có việc dở thì bị chặn oan. Sửa: bộ điều phối pre-push dựng
+  `git worktree add --detach <sha>` tạm cho sha được đẩy rồi chạy hook con ở đó.
+- **`deploy.yml` còn hai lối vòng qua cổng, trái REPO-014.** `workflow_dispatch` deploy nhánh được chọn
+  mà không qua "Cổng chất lượng"; và chạy lại một lần cổng cũ phát lại `workflow_run` với `head_sha`
+  cũ, nên có thể đè web bằng commit cũ (suy từ cách `workflow_run` chạy, chưa thử). Sửa: job build
+  dừng nếu `head_sha` không còn là đầu `main`; dispatch chỉ cho `refs/heads/main`.
+- **`pages/tools/run-verify.py` không có sàn.** Tìm ra 0 cổng `verify-*.py` (đổi tên, lỗi glob) thì
+  không in gì và thoát 0 ở cả bốn lớp; sửa chính `run-verify.py` thì hook pages báo "không chạm trang
+  nào có cổng kiến thức". Sửa: không đối số mà tìm ra 0 cổng thì thoát 1; `run-verify.py` đổi thì
+  chạy hết.
+- **`cashy/tools/check.sh` không chạy `tsc -b` hay vitest, trong khi deploy build bằng `tsc -b`.** Lỗi
+  kiểu qua mọi cổng rồi làm deploy đỏ — cả site đứng ở bản cũ mà không cổng nào báo. Sửa: có
+  `node_modules` thì `check.sh` chạy thêm `tsc -b` (và `vitest run`).
+- **`tools/toc.py` ra bản đồ sai khi `<section id>` lồng trong một nhóm có h2 riêng.** Trên
+  `pages/books-in-brief.html`, h2 "Người khác…" bị gắn id và dải dòng của section sách Manson đứng
+  trước nó, và `--where kahneman` báo không có mục dù `<section id="kahneman">` có thật. Ba tài liệu bảo
+  dùng toc.py cho file dài (CLAUDE.md gốc, `pages/CLAUDE.md`, `.claude/rules/book-pages.md`); tới khi
+  sửa, đối chiếu kết quả của nó với `grep -n '<h2\|<section id'`. Kèm: `toc.py … | head` ném
+  BrokenPipeError.
 - CLAUDE.md dài quá 200 dòng hoặc còn mốc ngày: số đo ở bảng `DEBT_LINES` / `DEBT_DATES` trong
   `tools/lint-structure.py` (bánh cóc — chỉ được giảm).

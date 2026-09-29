@@ -2,6 +2,11 @@
 
 ## CHỜ CHỦ TRANG
 
+- **Khối "Ghi chú cho chủ trang · cần xác nhận" đang hiện trên web ở ba trang sách** —
+  `books-in-brief.html`, `how-to-lie-with-statistics.html`, `a-short-history-of-nearly-everything.html`
+  (`<aside class="pg-confirm" id="confirm">`). Các phiên viết sách ghi điểm cần xác nhận vào đó thay
+  cho HANDOFF, theo lời dặn lúc giao việc. Duyệt xong thì xoá khối và CSS `.pg-confirm` của trang —
+  trước đó người đọc web thấy cả những câu nói về đề bài.
 - **ML 101 và Toán cho ML — đề xuất cấu trúc chưa làm** (PAGES-004: chỉ đề xuất, không tự làm).
   - ML 101: tách chương 10 thành "CNN" và "Dùng CNN".
   - ML 101: mô hình attention đủ ba bước (điểm = nhân từng cặp → softmax → trộn nội dung).
@@ -32,4 +37,7 @@
     chỉ phát một lần, các vòng khác không tới V→I.
   - ⑤19 demo "Comping (Charleston)": nốt "và" của phách 2 vẫn phát thẳng, và bass C–E–G–A không tiếp
     cận gốc ô sau như luật walking bass ở ②04.
+- Các commit trang sách dẫn "measure.mjs sạch ở 1440/768/390/320" làm bằng chứng đã đo hình, nhưng
+  `measure.mjs` không có trong repo — phiên khác không đo lại được. Đưa nó vào `pages/tools/` (luật bất
+  di bất dịch 1 ở CLAUDE.md gốc), hoặc thôi dẫn nó làm bằng chứng.
 - Nợ đo được của cổng tĩnh nằm ở bảng `DEBT` trong `pages/tools/lint-pages.py` — không chép lại ở đây.
