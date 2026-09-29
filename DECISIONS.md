@@ -230,7 +230,9 @@ tra: docstring của `tools/decisions.py`.
 - **Trạng thái:** đang áp dụng
 - **Quyết định:** `<title>` của mỗi trang, và chữ trên thanh trên cùng, viết bằng tiếng Anh; thân trang
   giữ tiếng Việt. Không gồm `shop/`: lúc chốt thư mục ấy chưa có, và nó là cửa hàng bán cho khách Việt
-  với luật riêng — muốn áp cho `shop/` thì hỏi chủ trang.
+  với luật riêng — muốn áp cho `shop/` thì hỏi chủ trang. Không gồm `<title>` của
+  `masters-degree/data-science-roadmap/`: DS-016 — chốt sau, riêng cho trang ấy — giữ nó tiếng Việt;
+  thanh trên của trang ấy thì vẫn tiếng Anh.
 - **Đừng:** đặt tiêu đề tab tiếng Việt cho trang mới. Cổng `tools/htmlcheck.py` (chạy trong
   `pages/` và `cooking/`) chặn; thanh trên cùng thì chưa có cổng.
 - **Nguồn:** commit 7db789b của chủ trang — "chuyển toàn bộ title trang & tiêu đề nav bar sang tiếng

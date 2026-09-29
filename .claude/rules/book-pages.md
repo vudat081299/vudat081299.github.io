@@ -12,7 +12,7 @@ từng thư mục (cổng, cách thêm trang, dữ liệu) nằm ở `pages/CLAU
 ## Một trang là gì
 
 - **Một file HTML tự chứa**: CSS và JS inline, không build step. Tên file tiếng Anh, viết thường,
-  nối bằng gạch ngang. Tiêu đề tab phần lớn theo dạng `Tên tiếng Anh — phụ đề tiếng Việt`.
+  nối bằng gạch ngang. Tiêu đề tab tiếng Anh cả hai vế, dạng `Tên — phụ đề` (REPO-016).
 - Văn xuôi độc nhất thì ở lại HTML, không tách sang JSON (REPO-001). Chỉ khối **lặp** (danh sách
   công thức, câu hỏi…) mới ra `data/*.json` — khi ấy trang cần HTTP để `fetch`, và phải có đường
   lỗi chỉ người dùng chạy `python3 -m http.server`.
