@@ -59,7 +59,7 @@ shop/
   assets/shop.css   một hệ thiết kế, token ở :root
   assets/shop.js    một IIFE, không build, không phụ thuộc ngoài
   data/shop.json    TOÀN BỘ nội dung lặp — sửa nội dung là sửa ở đây
-  tools/            cổng chất lượng + hook
+  tools/            cổng chất lượng
   pitch/            bản đề xuất mang đi gặp chủ shop (không phải trang cửa hàng)
   docs/             tài liệu định hướng + ADR + sổ nợ
 ```
@@ -111,20 +111,17 @@ thứ chặn lại mà không phải là sự chú ý của con người.
 Nguyên tắc để nó không phình: **mỗi phần dưới đây phải chỉ ra được một lỗi THẬT nó đã bắt.**
 Phần nào chưa bắt được gì thì chưa cần tồn tại.
 
-### Bốn lớp cổng
+### Hai lớp cổng
 
-| Lớp | Chạy khi | Bắt được gì |
-|---|---|---|
-| 1. `PostToolUse` | sau mỗi Edit/Write | sửa bằng công cụ sửa file |
-| 2. `pre-commit` | `git commit` | mọi thay đổi, kể cả viết bằng script |
-| 3. `pre-push` | `git push` | trạng thái cuối, kể cả sau `--no-verify` — **`shop/` chưa có lớp này** ([../HANDOFF.md](../HANDOFF.md), mục NỢ) |
-| 4. GitHub Actions | push lên `main`, mọi PR | thứ ba lớp kia bỏ sót vì chúng sống trên máy người sửa |
+| Lớp | Chạy khi | Chạy gì | Bắt được gì |
+|---|---|---|---|
+| 1. `pre-commit` | `git commit` chạm `shop/` | `sh shop/tools/check.sh`, qua hook ở gốc repo | mọi thay đổi, kể cả viết bằng script |
+| 2. GitHub Actions | push lên `main`, mọi PR | `check.sh` và `tools/smoke.js` | thứ lọt qua máy người sửa (`--no-verify`, merge, commit từ giao diện web), và hành vi |
 
-Lớp 1 có lỗ: thay đổi viết bằng `python3 - <<EOF` không đi qua tool Edit nên nó không thấy.
-Lớp 2 bịt lỗ đó. **Phiên 20/09/2026 sửa gần như toàn bộ bằng heredoc Python, nên lớp 2 là lớp
-duy nhất thật sự làm việc.** Đó là bằng chứng nó cần tồn tại.
+Deploy chỉ chạy sau khi lớp 2 xanh (REPO-014, REPO-017). Không có hook sau mỗi lần sửa file hay lúc
+push: lớp 1 đã bắt cả thay đổi viết bằng script, và lớp 2 chặn deploy.
 
-### Và một thứ không lớp nào trong bốn lớp trên bắt được: hành vi
+### Và một thứ cổng tĩnh không bắt được: hành vi
 
 Cổng lint đọc cú pháp và dữ liệu. Nó **không bấm nút**. **Mọi lỗi nặng của thư mục này đều đi
 qua lint sạch sẽ** — hộp quà bị trả về mặc định sau mỗi lần giỏ đổi; trần tồn kho hộp quà không
@@ -140,7 +137,7 @@ chúng xanh mãi mãi. Nên cổng phải **dựng lại** tình huống hỏng 
 `lint-shop.py` in ra **OK**; `smoke.js` in ra **2/12 LỖI**, kèm đúng câu chẩn đoán
 ("số lượng dừng ở 1, toast cuối: Đã thêm hộp quà vào giỏ").
 
-Nên `shop/tools/check.sh` chạy cả hai tầng, và đó là lệnh trả lời "đã xong chưa".
+Nên CI chạy `smoke.js` cạnh `check.sh`; ở máy thì chạy nó bằng tay sau khi sửa thứ gì có hành vi.
 
 ### Cổng phải thử ngược
 
@@ -193,11 +190,11 @@ Ba thói quen đã trả giá để có:
 ### Chỗ dừng lại
 
 Quy trình này **đã đủ** cho quy mô hiện tại. Chưa cần: bộ test đơn vị, TypeScript, bước build,
-hệ quản trị nội dung, môi trường staging. Mỗi thứ ấy chỉ nên thêm khi có một lỗi thật mà bốn
+hệ quản trị nội dung, môi trường staging. Mỗi thứ ấy chỉ nên thêm khi có một lỗi thật mà hai
 lớp cổng hiện tại không bắt được — và lúc đó thì lỗi ấy chính là lý do để thêm.
 
 Bản trước của mục này còn liệt kê "CI trên GitHub Actions" vào diện chưa cần. Đã đổi ý, và lý
-do đổi đáng ghi lại: ba lớp đầu đều sống trên **máy** người sửa, nên một phiên chạy ở môi
+do đổi đáng ghi lại: cổng lúc commit sống trên **máy** người sửa, nên một phiên chạy ở môi
 trường khác — hoặc một commit tạo từ giao diện web — đi lọt hết. Đó không phải giả thuyết về
 tương lai; repo này có nhiều phiên agent chạy song song và cùng push thẳng lên `main`.
 
