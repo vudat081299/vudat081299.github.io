@@ -4,13 +4,12 @@ Chỉ việc chưa xong. Làm xong một mục thì xoá nó khỏi đây và gh
 [HISTORY.md](HISTORY.md) — nơi giữ nhật ký các đợt rà, kể cả phần *"Còn nợ"* của từng đợt lúc
 viết. Luật ở [CLAUDE.md](CLAUDE.md), quyết định của chủ trang ở [DECISIONS.md](DECISIONS.md).
 
-Trạng thái lúc cập nhật (28/09/2026): `check` và `verify` xanh · 1.923 fact · 74 truyện ·
-0 LOẠI · 7 XEM. Số đổi thì chạy lại `python3 facts/tools/factlint.py stats`.
+Số hiện tại (fact, truyện, từng cụm): `python3 facts/tools/factlint.py stats`; mức LOẠI / XEM:
+`python3 facts/tools/factlint.py verify -v`.
 
 ## CHƯA LÀM
 
-- **Đích quy mô: khoảng 3.000 fact và 500 truyện** (FACTS-008). Hiện 1.923 / 74. Nhịp đo được của repo là
-  ~25 fact hoặc ~14 truyện một commit.
+- **Đích quy mô: khoảng 3.000 fact và 500 truyện** (FACTS-008).
 - **Cụm fact mỏng** (≤ 2 fact): `kinh-doanh/ban-hang-marketing` 0 · `kinh-doanh/dam-phan` 1 ·
   `kinh-doanh/do-luong` 1 · `tu-duy/mo-hinh-tu-duy` 1 · `kinh-doanh/tuyen-dung` 2 ·
   `kinh-doanh/khoi-nghiep` 2 · `tu-duy/rui-ro` 2 · `giao-tiep/huyen-thoai-giao-tiep` 2.

@@ -4,10 +4,6 @@ Chỉ việc chưa xong. Làm xong một mục thì xoá nó khỏi đây và gh
 [HISTORY.md](HISTORY.md). Luật ở [CLAUDE.md](CLAUDE.md), quyết định đã chốt ở
 [DECISIONS.md](DECISIONS.md), sổ nợ kỹ thuật ở [docs/TECH-DEBT.md](docs/TECH-DEBT.md).
 
-Trạng thái lúc cập nhật (28/09/2026): `lint-shop.py` xanh, ba mục XEM đều cố ý — phân bố mùi thắng
-của Tìm mùi, 2,2% tổ hợp hoà mà câu phân xử không gỡ được, 28 mục còn cờ `placeholder`. Tầng 2
-(`smoke.js`) qua 16/16 phép đo, nhưng máy chính phải dựng tạm mới chạy được — xem mục NỢ.
-
 ## CHỜ CHỦ TRANG
 
 Những việc chờ người thật — chủ repo, hoặc chủ shop qua chủ repo. Agent không tự làm được; có
@@ -48,9 +44,8 @@ thông tin rồi thì làm phần việc của agent ghi trong từng dòng.
   cache Chromium của Playwright rỗng, và `node` mặc định là v16 trong khi `playwright-core` cần
   ≥ 20 — nên chạy trơn thì `smoke.js` thoát mã 2 và `check.sh` vẫn in *XONG*. Chạy được mà không
   cài gì toàn máy: cài `playwright-core` vào một thư mục tạm, rồi
-  `PATH=/opt/homebrew/bin:$PATH NODE_PATH=<thư mục tạm>/node_modules CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" sh shop/tools/check.sh`
-  — lần chạy 28/09/2026 theo cách ấy: *smoke: OK (16 phép đo)*. Cài hẳn (hoặc dựng một lệnh
-  gói sẵn) thì xoá mục này.
+  `PATH=/opt/homebrew/bin:$PATH NODE_PATH=<thư mục tạm>/node_modules CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" sh shop/tools/check.sh`.
+  Cài hẳn (hoặc dựng một lệnh gói sẵn) thì xoá mục này.
 - **`shop/` không có lớp cổng thứ ba.** Có post-edit (lớp 1), pre-commit (lớp 2) và
   `gates.yml` (lớp 4), nhưng không `pre-push` nào chạy `lint-shop.py` — trong khi bảng ở CLAUDE.md
   gốc ghi `shop/` nối "1, 2, 3, 4". Thêm `shop/tools/hooks/pre-push`, hoặc sửa bảng.

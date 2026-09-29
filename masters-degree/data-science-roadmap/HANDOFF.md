@@ -21,9 +21,9 @@ cả cụm.
 
 ### Hộp "Nộp được" của lịch 14 ngày vỡ chữ ở màn 375px khi `out` chứa `<code>`
 
-Thấy khi sửa `s-plan14` (HISTORY.md phiên 2026-08-12 (r)); lỗi có từ trước, cố ý tách khỏi phiên
-nội dung đó, và chưa ai đo lại. Chỗ bắt đầu: `.wb-steps__note` trong `renderPlan14()`; ngày nào
-`d.out` không có `<code>` thì hiện bình thường. Sửa xong kiểm ở 375px, cả sáng lẫn tối.
+Lỗi có từ trước, chưa ai đo lại (thấy khi sửa `s-plan14`, HISTORY.md phiên 2026-08-12 (r)). Chỗ
+bắt đầu: `.wb-steps__note` trong `renderPlan14()`; ngày nào `d.out` không có `<code>` thì hiện
+bình thường. Sửa xong kiểm ở 375px, cả sáng lẫn tối.
 
 ## CHỜ CHỦ TRANG
 
@@ -36,7 +36,7 @@ và ở template thanh trên trong `tools/build-roadmap.mjs`, chạy `node tools
 
 ### Ngăn của roadmap mặc định 1/3 cửa sổ (DS-026) hay 47% như code đang chạy
 
-Chủ trang chốt 1/3, kéo được. Một phiên sau tự nới lên 47%, vì đo ở cửa sổ 1440px: 1/3 chỉ vừa
+DS-026 chốt 1/3, kéo được; code đang chạy 47%, vì ở cửa sổ 1440px 1/3 chỉ vừa
 ~52 ký tự mono mỗi dòng nên mọi snippet trong ngăn cuộn ngang, 47% vừa ~78 — khớp trần 76 ký
 tự/dòng của `example.code`. Cần chủ trang chọn: giữ 47% (thì ghi một quyết định mới thay DS-026),
 hay về 1/3 (thì phải hạ trần độ dài dòng code, hoặc chấp nhận cuộn ngang). Con số nằm ở

@@ -15,14 +15,15 @@
   - Toán: mô hình đường hợp lý L(p) cho 4.3.
   - Toán: khối "span, cơ sở, số chiều" ở chặng 1.
   - Toán: hộp "một phía hay hai phía, z là gì" ở 4.7.
-- **jazz-piano-theory — bản rà nội dung.** Chủ trang từng tách yêu cầu thành "giao diện: làm lại, nội
-  dung: rà". Bản rà (điểm, lỗi đã kiểm, tham chiếu chéo cũ, kế hoạch theo cấp) nằm ở một artifact của
-  chủ trang, không ở trong repo. Đợt sau đó đã sửa tham chiếu chéo và thêm cổng `verify-jazz-piano.py`;
-  phần còn lại của bản rà chưa được đối chiếu. Hỏi chủ trang trước khi sửa nội dung theo bản rà ấy.
+- **jazz-piano-theory — bản rà nội dung chưa đối chiếu xong.** Phạm vi chủ trang giao: giao diện làm
+  lại, nội dung chỉ rà. Bản rà (điểm, lỗi đã kiểm, tham chiếu chéo cũ, kế hoạch theo cấp) nằm ở một
+  artifact của chủ trang, không ở trong repo. Đã làm theo nó: tham chiếu chéo, cổng
+  `verify-jazz-piano.py`, và các lỗi kiến thức mà nhánh rà cũ từng sửa (67a1d62…7d889b2). Phần còn lại
+  chưa đối chiếu — hỏi chủ trang trước khi sửa nội dung theo bản rà ấy.
 - **jazz-piano-theory — dòng chữ trên bìa "HỌC LẠI SAU 10 NĂM".** Nó nói về người đặt trang, không về
   nội dung (REPO-008), nhưng là một phần của bìa. Bỏ, hay giữ?
-- **scooter-maintenance-guide — theme.** Một ghi chú cũ nói chủ trang muốn trang này giữ tối trước;
-  commit dbd2fc7 sau đó cho nó theo hệ điều hành như mọi trang. Hỏi chủ trang muốn bên nào.
+- **scooter-maintenance-guide — theme.** Trang đang theo theme của hệ điều hành như mọi trang (commit
+  dbd2fc7), trong khi một ghi chú cũ nói chủ trang muốn nó tối trước. Hỏi chủ trang muốn bên nào.
 
 ## NỢ
 
