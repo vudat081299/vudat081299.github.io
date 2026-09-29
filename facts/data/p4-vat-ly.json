@@ -34,14 +34,14 @@
     "cat": "vat-ly",
     "sub": "anh-sang-song",
     "q": "Vì sao bầu trời xanh chứ không phải màu khác?",
-    "t": "Màu xanh của bầu trời là do phân tử khí tán xạ ánh sáng ngắn bước sóng mạnh gấp khoảng 16 lần ánh sáng đỏ",
-    "s": "Tán xạ Rayleigh tỉ lệ nghịch với luỹ thừa bốn của bước sóng. Ánh sáng tím bị tán xạ còn mạnh hơn xanh lam, nhưng Mặt Trời phát ít tím hơn và mắt người kém nhạy với tím, nên ta thấy trời xanh chứ không thấy trời tím.",
+    "t": "Màu xanh của bầu trời là do phân tử khí tán xạ ánh sáng lam mạnh gần gấp 6 lần ánh sáng đỏ",
+    "s": "Mức tán xạ tỉ lệ nghịch với luỹ thừa bốn của bước sóng: lam 450 nm so với đỏ 700 nm cho (700/450)⁴ ≈ 5,9 lần, tím 400 nm cho khoảng 9,4 lần. Tím bị tán xạ mạnh nhất, nhưng Mặt Trời phát ít tím hơn và mắt người kém nhạy với tím, nên ta thấy trời xanh chứ không thấy trời tím.",
     "tags": [
       "bau-troi",
       "tan-xa",
       "mau-sac"
     ],
-    "src": "Lord Rayleigh (1871); Bohren & Clothiaux, Fundamentals of Atmospheric Radiation"
+    "src": "Lord Rayleigh, Philosophical Magazine (1871); Bohren & Clothiaux, Fundamentals of Atmospheric Radiation"
   },
   {
     "id": "vl-204",
