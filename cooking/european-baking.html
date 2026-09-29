@@ -243,7 +243,12 @@
 
   /* combo */
   .mc-combo__list { display: flex; flex-direction: column; gap: 2px; margin: 10px 0 0; }
-  .mc-combo__row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-top: var(--wb-bw) dashed var(--wb-border); cursor: pointer; }
+  /* Mỗi dòng là một <button> để đi được bằng Tab / Enter. Bỏ hết style mặc định của nút
+     (kể cả box-sizing: nút là border-box, div cũ là content-box) để trông y như cũ. */
+  .mc-combo__row { display: flex; align-items: center; gap: 8px; padding: 7px 0; margin: 0; border: 0;
+    border-top: var(--wb-bw) dashed var(--wb-border); cursor: pointer; box-sizing: content-box;
+    width: 100%; text-align: inherit; background: none; font: inherit; color: inherit; }
+  .mc-combo__row:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--wb-ring); }
   .mc-combo__row:hover .mc-combo__n { text-decoration: underline; }
   .mc-combo__n { font-size: 13.5px; font-weight: 560; }
   .mc-combo__t { margin-left: auto; font-family: var(--wb-font-mono); font-size: 11px; color: var(--wb-fg-subtle); }
@@ -1629,11 +1634,11 @@ function boot() {
     var items = cb.items.map(function (x) { return { r: byIdMap[x.id], when: x.when }; }).filter(function (x) { return x.r; });
     var card = el('div', 'wb-card');
     var rows = items.map(function (x, n) {
-      return '<div class="mc-combo__row" data-open="' + x.r.id + '">' +
+      return '<button type="button" class="mc-combo__row" data-open="' + x.r.id + '">' +
         '<span class="wb-avatar wb-avatar--solid wb-avatar--sm">' + (n + 1) + '</span>' +
         '<span><span class="mc-combo__n">' + x.r.name + '</span><br>' +
         '<span class="wb-help" style="margin:0">' + x.when + '</span></span>' +
-        '<span class="mc-combo__t">' + timeText(x.r.total) + '</span></div>';
+        '<span class="mc-combo__t">' + timeText(x.r.total) + '</span></button>';
     }).join('');
     card.innerHTML =
       '<div class="wb-card__head"><h4 class="wb-card__title">' + cb.name + '</h4></div>' +
