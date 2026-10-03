@@ -76,7 +76,6 @@ jobs:
             --exclude '.DS_Store' \
             --exclude 'masters-degree/data-science-roadmap/LEARNING-LOG.md' \
             --exclude 'pages/family-insurance-benefits.html' \
-            --exclude 'pages/wealth-roadmap.html' \
             ./ _site/
           mkdir -p _site/cashy
           cp -r cashy/dist/. _site/cashy/

@@ -190,9 +190,9 @@ async function ready(page) {
     }));
     const type = async v => { await p.fill('#q', v); await p.waitForTimeout(60); };
 
-    await type('loto'); let s = await state();
+    await type('json'); let s = await state();
     check('lọc: không trơ lại section/nhóm rỗng',
-      s.items === 1 && s.emptySecs === 0 && s.toc === 1, `"loto" → ${s.items} hàng, ${s.toc} mục lục`);
+      s.items === 1 && s.emptySecs === 0 && s.toc === 1, `"json" → ${s.items} hàng, ${s.toc} mục lục`);
 
     await type('thesis'); s = await state();
     check('lọc: nhóm môn rỗng tự ẩn', s.emptySubj === 0 && s.emptySecs === 0, `"thesis" → ${s.items} hàng`);
@@ -232,6 +232,63 @@ async function ready(page) {
     check(`phím "${first.key}" mở thẳng trang của nó`, went, first.href);
     await p.goto(URL_, { waitUntil: 'networkidle' });
     await ready(p);
+  }
+
+  /* ---- 6b. danh sách ẩn: giữ ⌘⇧A thì hiện, thả thì mất -------------------- */
+  if (data.hold && data.hold.items && data.hold.items.length) {
+    const H = data.hold.items;
+    const vis = () => p.evaluate(() => !document.getElementById('hold').hidden);
+    const rows = () => p.evaluate(() =>
+      [...document.querySelectorAll('#hold a')].map(a => a.getAttribute('href')));
+    await p.evaluate(() => document.activeElement.blur());
+
+    check('danh sách ẩn: mặc định không hiện', !(await vis()));
+
+    await p.keyboard.down('Meta'); await p.keyboard.down('Shift'); await p.keyboard.down('KeyA');
+    const shown = await vis();
+    const hrefs = await rows();
+    check('giữ ⌘⇧A: bảng hiện đủ mục trong data.hold',
+      shown && JSON.stringify(hrefs) === JSON.stringify(H.map(i => i.href)), hrefs.join(', '));
+    const leak = await p.evaluate(() => ({
+      items: document.querySelectorAll('[data-item]').length,
+      toc: document.querySelectorAll('[data-toc]').length,
+      foot: document.querySelectorAll('#foot-links a').length,
+      count: document.getElementById('count').textContent,
+    }));
+    check('bảng ẩn không lọt vào ô đếm, mục lục, chân trang, phím tắt',
+      leak.items === N && leak.toc === LABELS.length && leak.foot === LABELS.length
+        && leak.count.startsWith(N + ' pages'), `${leak.items} hàng · ${leak.count}`);
+    await p.keyboard.up('KeyA');
+    check('thả A: bảng mất', !(await vis()));
+
+    await p.keyboard.down('KeyA');
+    check('giữ lại: bảng hiện lại', await vis());
+    await p.keyboard.up('Shift');
+    check('thả Shift (A còn giữ): bảng mất', !(await vis()));
+    await p.keyboard.up('KeyA'); await p.keyboard.up('Meta');
+
+    await p.keyboard.down('Control'); await p.keyboard.down('Shift'); await p.keyboard.down('KeyA');
+    const ctl = await vis();
+    await p.keyboard.up('Control');
+    check('Ctrl+Shift+A cũng hiện; thả Ctrl thì mất', ctl && !(await vis()));
+    await p.keyboard.up('Shift'); await p.keyboard.up('KeyA');
+
+    /* Không thử Shift+A một mình: đó là phím tắt mở mục `a` có sẵn, và sẽ chuyển trang. */
+    await p.keyboard.down('Meta'); await p.keyboard.down('KeyA');
+    check('⌘+A thiếu Shift: không hiện', !(await vis()));
+    await p.keyboard.up('KeyA'); await p.keyboard.up('Meta');
+
+    await p.keyboard.down('Meta'); await p.keyboard.down('Shift'); await p.keyboard.down('KeyA');
+    await p.evaluate(() => window.dispatchEvent(new Event('blur')));
+    check('mất focus cửa sổ khi đang giữ: bảng tự đóng', !(await vis()));
+    await p.keyboard.up('KeyA'); await p.keyboard.up('Shift'); await p.keyboard.up('Meta');
+
+    const broken = [];
+    for (const h of H.map(i => i.href)) {
+      const res = await p.request.get(new URL(h, URL_).toString());
+      if (!res.ok()) broken.push(`${h} → ${res.status()}`);
+    }
+    check('mọi href của danh sách ẩn mở được', broken.length === 0, broken.join(', ') || `${H.length} link`);
   }
 
   /* ---- 7. tương phản chữ ở cả hai nền ------------------------------------- */

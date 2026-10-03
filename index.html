@@ -343,6 +343,30 @@
       .ix-subj__rows .ix-row:last-child { border-bottom: 0; }
 
       /* ==========================================================================
+         DANH SÁCH ẨN — chỉ hiện khi đang giữ phím tắt (xem script ở cuối).
+         Bảng nổi cố định ở đáy khung nhìn, không nằm trong luồng trang: người đang
+         cuộn giữa trang vẫn thấy nó, và nó hiện/biến mất không làm trang nhảy.
+         ========================================================================== */
+      .ix-hold {
+        position: fixed; z-index: 40; left: 50%; bottom: 24px; transform: translateX(-50%);
+        width: min(1040px, calc(100vw - 2 * var(--pad)));
+        max-height: calc(100vh - 48px); overflow-y: auto;
+        padding: 14px 18px 4px;
+        background: var(--paper-2); border: 1px solid var(--rule); border-radius: 10px;
+        box-shadow: 0 14px 44px rgba(0, 0, 0, .2);
+      }
+      .ix-hold__t {
+        margin: 0 0 2px; font-family: var(--mono); font-size: 11px;
+        letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3);
+      }
+      /* Hai cột từ 1000px như lưới chính; hàng cuối của mỗi cột bỏ gạch chân. */
+      .ix-hold .ix-rows { padding-bottom: 4px; }
+      .ix-hold .ix-row:last-child { border-bottom: 0; }
+      @media (min-width: 1000px) {
+        .ix-hold .ix-row:nth-last-child(2):nth-child(odd) { border-bottom: 0; }
+      }
+
+      /* ==========================================================================
          TRẠNG THÁI RỖNG / LỖI
          ========================================================================== */
       .ix-note {
@@ -459,6 +483,11 @@
       </div>
     </footer>
 
+    <aside class="ix-hold" id="hold" aria-label="Reserved" hidden>
+      <p class="ix-hold__t" id="hold-t"></p>
+      <div class="ix-rows ix-rows--two" id="hold-rows"></div>
+    </aside>
+
     <script>
       (function () {
         'use strict';
@@ -493,9 +522,10 @@
         /* `key` là TUỲ CHỌN: keyspace 36 ô (0-9 + a-z) từng dùng hết. Không có key
            thì vẽ một ô trong suốt cùng kích thước — không có chip rỗng để đọc
            nhầm, mà chữ của mọi hàng vẫn thẳng một cột. */
-        function row(o, title, desc) {
+        function row(o, title, desc, plain) {
           var k = (o.key || '').trim();
-          return '<a class="ix-row" href="' + esc(o.href) + '" data-item data-key="' + esc(k) + '">' +
+          return '<a class="ix-row" href="' + esc(o.href) + '"' +
+            (plain ? '' : ' data-item data-key="' + esc(k) + '"') + '>' +
             '<span class="ix-key' + (k ? '' : ' ix-key--none') + '" aria-hidden="true">' +
               esc(k).toUpperCase() + '</span>' +
             '<span class="ix-row__t">' + esc(title) + '</span>' +
@@ -593,6 +623,13 @@
             toc.innerHTML   = d.sections.map(tocLink).join('');
             links.innerHTML = d.sections.map(footLink).join('');
             items = Array.prototype.slice.call(document.querySelectorAll('[data-item]'));
+            if (d.hold && d.hold.items && d.hold.items.length) {
+              /* `plain`: không data-item — nên không vào ô đếm, tìm kiếm hay phím tắt. */
+              document.getElementById('hold-t').textContent = d.hold.label;
+              document.getElementById('hold-rows').innerHTML =
+                d.hold.items.map(function (it) { return row(it, it.name, it.desc, true); }).join('');
+              armed = true;
+            }
             hint.innerHTML = 'Press <kbd>/</kbd> to search, <kbd>&crarr;</kbd> to open the first hit' +
                              ' — or the key shown on any row to open it directly.';
             filter('');
@@ -633,6 +670,27 @@
         });
 
         input.addEventListener('input', function () { filter(this.value); });
+
+        /* Giữ ⌘⇧A (hoặc Ctrl+Shift+A) thì bảng ẩn hiện, thả ra là mất.
+           Dò bằng e.code: Shift+A cho e.key = 'A', và đổi theo bố cục bàn phím.
+           macOS không bắn keyup của phím thường khi ⌘ còn giữ — nên thả A mà chưa thả
+           ⌘ thì bảng ở lại tới lúc thả ⌘ hoặc Shift. Đó là giới hạn của hệ điều hành,
+           không sửa được từ trang; vì vậy mọi đường thả (phím sửa đổi, blur, đổi tab)
+           đều đóng bảng, để nó không kẹt lại. */
+        var hold = document.getElementById('hold');
+        var armed = false;     /* true khi collection.json có danh sách ẩn */
+        function chord(e) { return e.shiftKey && (e.metaKey || e.ctrlKey) && !e.altKey; }
+        function peek(on) { hold.hidden = !(on && armed); }
+
+        document.addEventListener('keydown', function (e) {
+          if (e.code === 'KeyA' && chord(e)) { if (armed) e.preventDefault(); peek(true); }
+          else if (!chord(e)) peek(false);
+        });
+        document.addEventListener('keyup', function (e) {
+          if (e.code === 'KeyA' || !chord(e)) peek(false);
+        });
+        window.addEventListener('blur', function () { peek(false); });
+        document.addEventListener('visibilitychange', function () { peek(false); });
 
         document.addEventListener('keydown', function (e) {
           if (e.metaKey || e.ctrlKey || e.altKey) return;

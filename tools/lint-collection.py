@@ -122,7 +122,6 @@ WATCHED = ('pages', 'cooking')
 # đừng tự suy từ nội dung file.
 WITHHELD = (
     'pages/family-insurance-benefits.html',
-    'pages/wealth-roadmap.html',
 )
 
 # --- Trang cố ý không có link ở trang chủ, nhưng VẪN lên web --------------------
@@ -151,6 +150,26 @@ for sec in d.get('sections', []):
             h = str(obj.get('href', '')).strip()
             if h:
                 listed.add(os.path.normpath(h))
+
+# --- Danh sách ẩn: khoá `hold` ở gốc, chỉ hiện khi giữ phím (xem index.html) --------
+# Trang trong đó VẪN được niêm yết (có mục trỏ tới) nên nó tính là "listed": không
+# mồ côi, và cũng không được nằm trong WITHHELD/UNLISTED — chiều ngược ở dưới bắt.
+# Không có `key`: JS không gắn phím tắt cho nó, một `key` ở đây là lời hứa suông.
+hold = d.get('hold')
+if hold is not None:
+    need(hold, ('label',), 'hold')
+    if not hold.get('items'):
+        err.append('hold: không có item nào — bỏ hẳn khoá `hold` nếu không cần danh sách ẩn')
+    for ii, it in enumerate(hold.get('items', [])):
+        w = 'hold › %s' % it.get('name', ii)
+        need(it, TILE_FIELDS, w)
+        if 'key' in it:
+            err.append('%s: danh sách ẩn không có phím tắt — bỏ trường "key"' % w)
+        h = str(it.get('href', '')).strip()
+        if h and not h.startswith(('http://', 'https://')):
+            if not href_ok(h):
+                err.append('%s: href "%s" không tồn tại' % (w, h))
+            listed.add(os.path.normpath(h))
 
 for folder in WATCHED:
     dirpath = os.path.join(ROOT, folder)
@@ -200,5 +219,6 @@ if err:
 n = sum(len(s['items']) if s['kind'] == 'tiles'
         else sum(len(i['files']) for i in s['items']) for s in d['sections'])
 print('collection: OK (%d section, %d mục, %d/36 phím tắt; %s không có trang mồ côi; '
-      '%d trang gỡ khỏi web, %d trang vẫn lên web mà không niêm yết).'
-      % (len(d['sections']), n, len(keys), '/'.join(WATCHED), len(WITHHELD), len(UNLISTED)))
+      '%d trang gỡ khỏi web, %d trang vẫn lên web mà không niêm yết, %d trang trong danh sách ẩn).'
+      % (len(d['sections']), n, len(keys), '/'.join(WATCHED), len(WITHHELD), len(UNLISTED),
+         len((hold or {}).get('items', []))))
