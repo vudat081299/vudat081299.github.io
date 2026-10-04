@@ -17,7 +17,7 @@
 ## CHƯA LÀM
 
 - `hidden-curriculum.html`: Luật Đo lường đang được sửa. Khi nghị định mới thay Nghị định 86/2012/NĐ-CP, sửa
-  câu đơn vị vàng ở mục 1.5 và dòng *Luật* ở mục 6.4.
+  câu đơn vị vàng ở mục 1.5 và dòng *Luật* ở mục 7.4.
 
 ## NỢ
 

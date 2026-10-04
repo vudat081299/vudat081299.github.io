@@ -3,9 +3,10 @@
 
 Vì sao cần, khác lint-pages.py: trang nói vài chục con số tính lại được — trò đồng xu của
 Peters (86,4% người chơi thua, ×131,5 trung bình, mức Kelly 25%), thống kê nắm giữ cổ phiếu,
-vàng, tín phiếu Mỹ 1928–2025 (0 trên 79 khung, 28 trên 79 khung), phí 1% ăn mất 24,3%, lãi
-"3% mỗi tháng" là 42,6%/năm, giá trị hôm nay của vốn con người — và bảy mô hình JS sinh ra
-chính những con số ấy. lint-pages.py không biết 86,4% có đúng là P(K ≤ 55), K ~ B(100, ½),
+vàng, tín phiếu Mỹ 1928–2025 (0 trên 79 khung, 28 trên 79 khung), phí 1% ăn mất 24,4%, lãi
+"3% mỗi tháng" là 42,6%/năm, giá trị hôm nay của vốn con người, điểm hoà vốn và đòn bẩy hoạt
+động của quán ví dụ, lợi suất cho thuê và quy tắc 72, bảng nhà trẻ Haifa của Gneezy và
+Rustichini — và tám mô hình JS sinh ra chính những con số ấy. lint-pages.py không biết 86,4% có đúng là P(K ≤ 55), K ~ B(100, ½),
 hay không; càng không biết luật ấy còn đúng sau khi ai đó sửa một dòng JS.
 
 Bốn phần, bốn loại sai khác nhau:
@@ -18,7 +19,7 @@ Bốn phần, bốn loại sai khác nhau:
      giống cố định, cách trừ lạm phát, ma trận điểm của trò chơi lặp lại.
   D. TOÁN ĐỘC LẬP — dựng lại bằng lối khác lối trang dùng: mô phỏng Monte Carlo trò đồng xu,
      tìm cực đại Kelly bằng lưới, giá trị hiện tại bằng công thức đóng, và chạy lại giải đấu
-     của mô hình 5 bằng đúng bộ sinh số ngẫu nhiên của trang để kiểm các câu lời văn nói về nó.
+     của mô hình 6 bằng đúng bộ sinh số ngẫu nhiên của trang để kiểm các câu lời văn nói về nó.
 
 Chỉ dùng thư viện chuẩn, chạy dưới 5 giây.
 
@@ -310,12 +311,82 @@ def phan_B():
     claim('1%/ngày = 365%/năm, "gấp hơn 18 lần" trần 20%', 18 < 365 / 20 < 19)
     need('lãi 1% mỗi ngày trong bài', 'là 365%/năm tính đơn — gấp hơn 18 lần mức trần')
 
+    # ── Thu nhập (mục 1.9): 7,4% của giá trị hôm nay ở mô hình 4 ───────────────
+    need('7,4% thu nhập cả đời', f'7,4% thu nhập cả đời đáng giá khoảng <b>{vi(round(0.074 * hc, -1), 0)} triệu đồng hôm nay</b>',
+         0.074 * hc)
+
+    # ── Điểm hoà vốn (mô hình 5): nghìn đồng, chi phí cố định 60 triệu = 60.000 nghìn ──
+    for idv in ('id="be-p" value="35"', 'id="be-v" value="12"', 'id="be-f" value="60"', 'id="be-q" value="3000"'):
+        need('giá trị mặc định của mô hình 5', idv)
+    p, v, F, q = 35, 12, 60_000, 3000
+    cm = p - v
+    be = F / cm
+    prof = q * cm - F
+    mos = (q - be) / q
+    dol = q * cm / prof
+    rest = (prof - 0.1 * q * cm) / 1000
+    need('mô hình 5, lời dặn',
+         f'hoà vốn ở {vi(math.ceil(be), 0)} đơn vị mỗi tháng, khoảng {vi(be / 30, 0)} đơn vị mỗi ngày; '
+         f'lãi {vi(prof / 1000, 0)} triệu mỗi tháng; biên an toàn {vi(100 * mos, 1)}%. '
+         f'Đòn bẩy hoạt động {vi(dol, 2)}: doanh số giảm 10% thì lãi giảm {vi(10 * dol, 1)}%, còn {vi(rest, 1)} triệu.')
+    near('đòn bẩy hoạt động = %Δlãi ÷ %Δdoanh số', ((0.9 * q * cm - F) / prof - 1) / -0.1, dol, 1e-9)
+
+    # ── Định giá (mục 1.11) ───────────────────────────────────────────────────
+    price, rent = 4000, 12                          # triệu đồng
+    gross = rent * 12 / price
+    net_m = rent * 11 - 0.01 * price                # trống 1 tháng, chi phí 1% giá nhà mỗi năm
+    interest = 2000 * 0.09
+    need('lợi suất cho thuê gộp', f'Căn hộ 4 tỷ cho thuê 12 triệu/tháng: {vi(100 * gross, 1)}%/năm')
+    need('lợi suất cho thuê ròng', f'còn {vi(net_m, 0)} triệu, tức {vi(100 * net_m / price, 1)}%/năm')
+    need('vay để mua cho thuê', f'tiền lãi {vi(interest, 0)} triệu một năm, dòng tiền cho thuê ròng {vi(net_m, 0)} triệu — '
+                                f'mỗi năm hụt {vi(interest - net_m, 0)} triệu')
+    need('quy tắc 72', f'6%/năm: khoảng {vi(72 / 6, 0)} năm (tính chính xác: {vi(math.log(2) / math.log(1.06), 1)} năm)')
+    need('P/E 20', f'lợi suất lợi nhuận 1/20 = {vi(100 / 20, 0)}%/năm')
+
+    # ── Phạt là giá (mục 4.4): bảng 1 của Gneezy & Rustichini (2000), lượt đón muộn mỗi tuần ──
+    TEST = [[8, 8, 7, 6, 8, 9, 9, 12, 13, 13, 15, 13, 14, 16, 14, 15, 16, 13, 15, 17],
+            [6, 7, 3, 5, 2, 11, 14, 9, 16, 12, 10, 14, 14, 16, 12, 17, 14, 10, 14, 15],
+            [8, 9, 8, 9, 3, 5, 15, 18, 16, 14, 20, 18, 25, 22, 27, 19, 20, 23, 23, 22],
+            [10, 3, 14, 9, 6, 24, 8, 22, 22, 19, 25, 18, 23, 22, 24, 17, 15, 23, 25, 18],
+            [13, 12, 9, 13, 15, 10, 27, 28, 35, 10, 24, 32, 29, 29, 26, 31, 26, 35, 29, 28],
+            [5, 8, 7, 5, 5, 9, 12, 14, 19, 17, 14, 13, 10, 15, 14, 16, 6, 12, 17, 13]]
+    CTRL = [[7, 10, 12, 6, 4, 13, 7, 8, 5, 12, 3, 5, 6, 13, 7, 4, 7, 10, 4, 6],
+            [12, 9, 14, 18, 10, 11, 6, 15, 14, 13, 7, 12, 9, 9, 17, 8, 5, 11, 8, 13],
+            [3, 4, 9, 3, 3, 5, 9, 5, 2, 7, 6, 6, 9, 4, 9, 2, 3, 8, 3, 5],
+            [15, 13, 13, 12, 10, 9, 15, 15, 15, 10, 17, 12, 13, 11, 14, 17, 12, 9, 15, 13]]
+    wk = lambda M, ws: sum(sum(r[w] for r in M) for w in ws) / len(ws)
+    first, last = range(4), range(16, 20)            # tuần 1–4 (chưa phạt), 17–20 (đã bỏ phạt)
+    need('nhà trẻ Haifa, nhóm bị phạt', f'tăng từ trung bình {vi(wk(TEST, first), 0)} trong bốn tuần đầu lên '
+                                        f'{vi(wk(TEST, last), 0)} trong bốn tuần cuối')
+    need('nhà trẻ Haifa, nhóm đối chứng', f'nhóm không phạt đi từ {vi(wk(CTRL, first), 0)} xuống {vi(wk(CTRL, last), 0)}')
+
+    # ── Lời cảm ơn (mục 3.3): bảng 3 của Grant & Gino (2010), thí nghiệm 3 ──────
+    g0, g1, c0, c1 = 41.40, 62.60, 39.76, 41.38
+    claim('cảm ơn: "hơn 50%"', g1 / g0 - 1 > 0.5, f'tính được {g1 / g0 - 1:.3f}')
+    need('cảm ơn, số cuộc gọi', f'từ trung bình {vi(g0, 1)} lên {vi(g1, 1)} — hơn 50%; nhóm không được cảm ơn gần như '
+                                f'đứng yên, từ {vi(c0, 1)} lên {vi(c1, 1)}')
+
+    # ── Luthans (1988) và tỉ lệ sống của doanh nghiệp (SBA 2026) ────────────────
+    claim('Luthans: nhóm lên chức nhanh cộng đủ 100%', 48 + 28 + 13 + 11 == 100)
+    claim('Luthans: nhóm hiệu quả cộng đủ 100%', 44 + 26 + 19 + 11 == 100)
+    need('Luthans trong bài', 'dành 48% thời gian cho giao thiệp')
+    need('Luthans, ô số ở đầu trang', '<span class="n">48% / 11%</span>')
+    surv = [67.7, 49.2, 33.9, 25.5]
+    claim('tỉ lệ sống giảm dần theo thời gian', all(a > b for a, b in zip(surv, surv[1:])))
+    need('tỉ lệ sống trong bài', '<b>67,7%</b> sống qua 2 năm, <b>49,2%</b> qua 5 năm, <b>33,9%</b> qua 10 năm và '
+                                 '<b>25,5%</b> qua 15 năm')
+
     # ── Đếm trên chính trang ──────────────────────────────────────────────────
     nsec = len(re.findall(r'<section id="s-', HTML))
-    nlab = len(set(re.findall(r'Mô hình (\d) / 7', HTML)))
+    nlab = len(set(re.findall(r'Mô hình (\d) / 8', HTML)))
     need('số mục ở đầu trang', f'· {nsec} mục ·', nsec)
-    claim('bảy mô hình đánh số 1–7', nlab == 7, f'thấy {nlab} số mô hình khác nhau')
-    need('số mô hình ở đầu trang', '· 7 mô hình</p>')
+    claim('tám mô hình đánh số 1–8', nlab == 8, f'thấy {nlab} số mô hình khác nhau')
+    need('số mô hình ở đầu trang', '· 8 mô hình</p>')
+    nau = len(re.findall(r'id="au-[a-z]+\d"', HTML))
+    claim('bài tự soát: 6 nhóm × 5 câu = 30 ô', nau == 30, f'thấy {nau} ô')
+    need('bài tự soát, tiêu đề', 'Ba mươi câu: năm loại vốn và quyền lực')
+    npl = len(re.findall(r'id="pl-[a-c]\d"', HTML))
+    claim('lộ trình: 19 việc', npl == 19, f'thấy {npl} ô')
     near('Kidd 2013: 722,43 s so với 181,57 s là "khoảng bốn lần"', 722.43 / 181.57, 4, 0.1)
     left = re.findall(r'⟦[^⟧]*⟧', HTML)
     claim('không còn chỗ chờ kiểm', not left, 'còn ' + ' '.join(sorted(set(left))))
@@ -347,6 +418,10 @@ RULES = [
     ('40 lần lặp, 50 thế hệ', 'var REPS = 40, GENS = 50;'),
     ('hạt giống của giải đấu', 'var rnd = rng(12345), M = S.map'),
     ('sinh thái: tỉ trọng ∝ tỉ trọng × điểm', 'x = x.map(function (v, i) { return v * f[i] / avg; });'),
+    ('mô hình 5: đổi triệu ra nghìn đồng', 'var p = +pEl.value, v = +vEl.value, F = +fEl.value * 1000, q = +qEl.value;'),
+    ('mô hình 5: hoà vốn và lãi', 'var be = F / cm, profit = q * cm - F;'),
+    ('mô hình 5: đòn bẩy hoạt động', 'var dol = q * cm / profit, drop = 0.1 * dol;'),
+    ('mô hình 8: sáu nhóm', "var KEYS = ['kt', 'cn', 'xh', 'vh', 'kd', 'ql'];"),
 ]
 
 
