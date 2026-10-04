@@ -14,6 +14,11 @@
   biên tập cũ (độ dài so với đề bài, thứ tự chương, giọng vài đoạn) đã gỡ khỏi web ở commit 5bb410d. Muốn
   làm tiếp thì xem diff của commit ấy; không bắt buộc.
 
+## CHƯA LÀM
+
+- `hidden-curriculum.html`: Luật Đo lường đang được sửa. Khi nghị định mới thay Nghị định 86/2012/NĐ-CP, sửa
+  câu đơn vị vàng ở mục 1.5 và dòng *Luật* ở mục 6.4.
+
 ## NỢ
 
 - `scooter-maintenance-guide.html`: mục checklist là `<label>` không có ô input — không dùng được bằng bàn

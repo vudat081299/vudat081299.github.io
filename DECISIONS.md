@@ -123,6 +123,6 @@ Chủ trang để `main` cho phép force-push. Agent vẫn phải hỏi trước
 03/10/2026 · `data/collection.json`, `index.html`
 
 Khoá `hold` trong `collection.json` là danh sách chỉ hiện khi giữ ⌘⇧A, thả ra là mất. Trang trong đó vẫn
-deploy; đây là giấu link, không phải bảo mật. Trong đó: Wealth Roadmap, Scooter Maintenance, Fact, Cashy, Loto,
-scentsitive.vn, Web Builder. Sáu mục sau chuyển hẳn từ `sections` sang (03/10/2026): mất phím tắt, không còn
-ở chỗ cũ.
+deploy; đây là giấu link, không phải bảo mật. Trong đó: Wealth Roadmap, Hidden Curriculum (PAGES-005), Scooter
+Maintenance, Fact, Cashy, Loto, scentsitive.vn, Web Builder. Sáu mục sau chuyển hẳn từ `sections` sang
+(03/10/2026): mất phím tắt, không còn ở chỗ cũ.

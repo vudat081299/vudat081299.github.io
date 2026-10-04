@@ -341,6 +341,12 @@
         "href": "pages/wealth-roadmap.html"
       },
       {
+        "icon": "key",
+        "name": "Hidden Curriculum",
+        "desc": "What well-off families teach without saying it: survive before you profit, stocks and gold, trust and negotiation, manners and the classics",
+        "href": "pages/hidden-curriculum.html"
+      },
+      {
         "icon": "two_wheeler",
         "name": "Scooter Maintenance",
         "desc": "Scooter service schedule",
