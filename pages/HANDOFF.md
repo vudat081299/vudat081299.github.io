@@ -17,7 +17,13 @@
 ## CHƯA LÀM
 
 - `hidden-curriculum.html`: Luật Đo lường đang được sửa. Khi nghị định mới thay Nghị định 86/2012/NĐ-CP, sửa
-  câu đơn vị vàng ở mục 1.5 và dòng *Luật* ở mục 7.4.
+  câu đơn vị vàng ở mục vàng (`s-vang`) và dòng *Luật* ở mục nguồn (`s-nguon`).
+- `hidden-curriculum.html`, mục `s-taisan`: Nghị định 200/2026/NĐ-CP (Điều 9) và Luật Thuế TNCN 109/2025/QH15
+  (Điều 3, 4) mới đối chiếu qua bản tóm tắt, bản dịch; đối chiếu bản gốc khi có trên vbpl.vn. Khi Chính phủ quy định
+  thuế chuyển nhượng vàng miếng, tài sản số, sửa câu thuế ở mục ấy.
+- `hidden-curriculum.html`, mục `s-giayto`: Luật Đất đai đang được sửa (dự án ở kỳ họp Quốc hội 10/2026); Luật Công
+  chứng sửa đổi số 04/2026/QH16 có hiệu lực 01/01/2027. Khi hai luật ấy có hiệu lực, đối chiếu lại câu về công chứng
+  hợp đồng nhà đất và di chúc.
 
 ## NỢ
 

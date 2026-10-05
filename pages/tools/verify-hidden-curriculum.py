@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Cổng kiến thức cho pages/hidden-curriculum.html.
+"""Cổng kiến thức cho pages/hidden-curriculum.html và thư viện mô hình pages/data/hidden-curriculum.json.
 
 Vì sao cần, khác lint-pages.py: trang nói vài chục con số tính lại được — trò đồng xu của
 Peters (86,4% người chơi thua, ×131,5 trung bình, mức Kelly 25%), thống kê nắm giữ cổ phiếu,
 vàng, tín phiếu Mỹ 1928–2025 (0 trên 79 khung, 28 trên 79 khung), phí 1% ăn mất 24,4%, lãi
 "3% mỗi tháng" là 42,6%/năm, giá trị hôm nay của vốn con người, điểm hoà vốn và đòn bẩy hoạt
 động của quán ví dụ, lợi suất cho thuê và quy tắc 72, bảng nhà trẻ Haifa của Gneezy và
-Rustichini — và tám mô hình JS sinh ra chính những con số ấy. lint-pages.py không biết 86,4% có đúng là P(K ≤ 55), K ~ B(100, ½),
-hay không; càng không biết luật ấy còn đúng sau khi ai đó sửa một dòng JS.
+Rustichini, các phép Bayes, độ lệch chuẩn của một danh mục — và mười mô hình JS sinh ra chính
+những con số ấy. lint-pages.py không biết 86,4% có đúng là P(K ≤ 55), K ~ B(100, ½), hay không;
+càng không biết luật ấy còn đúng sau khi ai đó sửa một dòng JS.
 
-Bốn phần, bốn loại sai khác nhau:
+Năm phần, năm loại sai khác nhau:
 
   A. DỮ LIỆU NHÚNG — đối chiếu vài giá trị với nguồn (Damodaran, histretSP.xls, 01/2026) và
      kiểm độ dài, để mảng không bị cắt hay lệch năm.
@@ -19,13 +20,21 @@ Bốn phần, bốn loại sai khác nhau:
      giống cố định, cách trừ lạm phát, ma trận điểm của trò chơi lặp lại.
   D. TOÁN ĐỘC LẬP — dựng lại bằng lối khác lối trang dùng: mô phỏng Monte Carlo trò đồng xu,
      tìm cực đại Kelly bằng lưới, giá trị hiện tại bằng công thức đóng, và chạy lại giải đấu
-     của mô hình 6 bằng đúng bộ sinh số ngẫu nhiên của trang để kiểm các câu lời văn nói về nó.
+     của mô hình trò chơi lặp lại bằng đúng bộ sinh số ngẫu nhiên của trang để kiểm các câu lời
+     văn nói về nó.
+  E. THƯ VIỆN MÔ HÌNH — đủ trường, khoá hợp lệ, id duy nhất, mọi related và sections trỏ tới thứ
+     có thật, không có HTML trong dữ liệu, mọi con số trong thẻ có mặt trên trang, số thẻ khớp đầu trang.
+  F. VỐN, NGHỀ, GIA ĐÌNH — các mục rủi ro, tạo của, doanh nghiệp, danh mục, tài sản, nghề, gia đình:
+     chuỗi lấy từ nguồn (luật, số liệu chính thức) giữ nguyên văn, và mọi con số suy ra được tính lại
+     trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn trong giá, thứ tự lợi suất, trái phiếu…).
 
 Chỉ dùng thư viện chuẩn, chạy dưới 5 giây.
 
 Chạy:  python3 pages/tools/verify-hidden-curriculum.py
 Exit code: 1 nếu có con số hoặc luật không khớp.
 """
+import collections
+import json
 import math
 import pathlib
 import random
@@ -34,11 +43,13 @@ import statistics
 import sys
 
 PAGE = pathlib.Path(__file__).resolve().parent.parent / 'hidden-curriculum.html'
+DATA = PAGE.parent / 'data' / 'hidden-curriculum.json'
 PAGES = ['pages/hidden-curriculum.html']
 
 fails = []
 checks = 0
 HTML = ''
+TEXT = ''   # chữ đã bóc thẻ và chú thích, gộp khoảng trắng — cho các phép kiểm chạy qua ô bảng
 
 
 def vi(x, d=2):
@@ -54,6 +65,14 @@ def need(label, text, expect=None):
     checks += 1
     if text not in HTML:
         fails.append(f'{label}: không thấy "{text}"' + (f' (tính được: {expect})' if expect is not None else ''))
+
+
+def need_t(label, text, expect=None):
+    """Như need(), nhưng tìm trong chữ đã bóc thẻ (TEXT): một hàng bảng thành một chuỗi liền."""
+    global checks
+    checks += 1
+    if text not in TEXT:
+        fails.append(f'{label}: không thấy "{text}" trong chữ' + (f' (tính được: {expect})' if expect is not None else ''))
 
 
 def claim(label, ok, why=''):
@@ -181,14 +200,14 @@ def pv(y0, g, r, n):
 
 
 def phan_B():
-    # ── Trò đồng xu (mô hình 1) ────────────────────────────────────────────────
+    # ── Trò đồng xu (lab-coin) ─────────────────────────────────────────────────
     # Mỗi con số được đòi đúng ở câu chứa nó: một số xuất hiện hai nơi thì kiểm cả hai, nếu không
     # sửa một nơi mà quên nơi kia vẫn lọt (đã thử ngược: ô 86,4% ở đầu trang từng lọt như vậy).
     T = 100
     mean1, med1, pl1 = (1.05) ** T, math.exp(growth(1) * T), p_lose(1, T)
     med25, med12 = math.exp(growth(0.25) * T), math.exp(growth(0.125) * T)
     g25, g12 = math.exp(growth(0.25)) - 1, math.exp(growth(0.125)) - 1
-    need('đồng xu, lời dặn dưới mô hình 1',
+    need('đồng xu, lời dặn dưới mô hình',
          f'100%: sau 100 ván, trung bình đám đông là {times(mean1)} trong khi người ở giữa còn {times(med1)} '
          f'và {vi(100 * pl1, 1)}% người chơi nghèo hơn lúc đầu')
     need('đồng xu, ô số ở đầu trang', f'<span class="n">{vi(100 * pl1, 1)}%</span>', pl1)
@@ -223,7 +242,7 @@ def phan_B():
               f'tính được {100 * l / (1 - l):.2f}%')
         need(f'nhãn hình lỗ {int(l * 100)}%', f'lỗ {int(l * 100)}% cần {txt}')
 
-    # ── Cỗ máy thời gian (mô hình 2) ───────────────────────────────────────────
+    # ── Cỗ máy thời gian (lab-time) ──────────────────────────────────────────
     w1 = windows(series('sp', True), 1)
     w20 = windows(series('sp', True), 20)
     neg1 = sum(1 for x in w1 if x[2] < 1)
@@ -251,7 +270,7 @@ def phan_B():
     g2025 = GOLD[-1] / GOLD[-2] - 1
     need('vàng năm 2025', f'một năm 2025 tăng {vi(100 * g2025, 0)}%')
     sp_nom = geo(series('sp', False))
-    need('cổ phiếu Mỹ 1928–2025, danh nghĩa (mô hình 6)', f'lợi suất bình quân {vi(100 * sp_nom, 2)}%/năm (danh nghĩa, gồm cổ tức) của cổ phiếu Mỹ')
+    need('cổ phiếu Mỹ 1928–2025, danh nghĩa (lời dặn của lab-pz)', f'lợi suất bình quân {vi(100 * sp_nom, 2)}%/năm (danh nghĩa, gồm cổ tức) của cổ phiếu Mỹ')
 
     # ── Giá vàng theo sức mua (hình) ───────────────────────────────────────────
     lvl, real = 1.0, [0.0] * 56
@@ -271,7 +290,7 @@ def phan_B():
     need('phí 1% lấy mất', f'<b>phí lấy mất {vi(100 * (1 - a7 / a8), 1)}%</b>')
     need('phí 2% lấy mất', f'Với phí 2%/năm, con số là {vi(100 * (1 - a6 / a8), 1)}%')
 
-    # ── Vàng: đơn vị và mô hình 3 ─────────────────────────────────────────────
+    # ── Vàng: đơn vị và lab-gold ─────────────────────────────────────────────
     need('một lượng', 'là 37,5 gam, bằng 10 <b>chỉ</b>; một chỉ là 3,75 gam')
     need('một ounce', 'một ounce quốc tế (troy ounce) là 31,1035 gam')
     claim('ounce troy 31,1034768 g làm tròn thành 31,1035', f'{31.1034768:.4f}' == '31.1035')
@@ -290,34 +309,34 @@ def phan_B():
     months = 12 * math.log(120 / 117.5) / math.log(1.05)
     claim('"khoảng 5 tháng" để hoà vốn', 4.5 <= months < 5.5, f'tính được {months:.2f} tháng')
 
-    # ── Vốn con người (mô hình 4) ─────────────────────────────────────────────
+    # ── Vốn con người (lab-hk) ──────────────────────────────────────────────
     for idv in ('id="hk-inc" value="25"', 'id="hk-g" min="0" max="10" step="0.5" value="4"',
                 'id="hk-n" min="5" max="45" step="1" value="35"', 'id="hk-r" min="2" max="12" step="0.5" value="6"',
                 'id="hk-fc" value="200"'):
-        need('giá trị mặc định của mô hình 4', idv)
+        need('giá trị mặc định của lab-hk', idv)
     hc = pv(300, 0.04, 0.06, 35)
     need('vốn con người mặc định', f'vốn con người ≈ {vi(hc / 1000, 2)} tỷ đồng', hc)
     need('tỉ trọng vốn con người', f'chiếm {vi(100 * hc / (hc + 200), 1)}% tổng tài sản', hc / (hc + 200))
     need('10% thu nhập', f'khoảng {vi(round(hc * 0.1, -1), 0)} triệu hôm nay', hc * 0.1)
     need('10% so với tài sản tài chính', f'gấp {vi(hc * 0.1 / 200, 1)} lần toàn bộ tài sản tài chính')
 
-    # ── Lãi cam kết (mô hình 6) ───────────────────────────────────────────────
+    # ── Lãi cam kết (lab-pz) ────────────────────────────────────────────────
     y3, y5 = 1.03 ** 12 - 1, 1.05 ** 12 - 1
     need('3%/tháng quy ra năm', f'“3% mỗi tháng” là {vi(100 * y3, 1)}% mỗi năm')
     need('5%/tháng quy ra năm', f'“5% mỗi tháng” là {vi(100 * y5, 1)}% mỗi năm')
     claim('"hơn bốn lần" lợi suất danh nghĩa', 4 < y3 / sp_nom < 5, f'tỉ số {y3 / sp_nom:.2f}')
     claim('5%/tháng gấp đôi "chưa đầy 15 tháng"', math.log(2) / math.log(1.05) < 15)
-    need('lãi mặc định của mô hình 6', 'id="pz-m" min="0.5" max="10" step="0.5" value="3"')
+    need('lãi mặc định của lab-pz', 'id="pz-m" min="0.5" max="10" step="0.5" value="3"')
     claim('1%/ngày = 365%/năm, "gấp hơn 18 lần" trần 20%', 18 < 365 / 20 < 19)
     need('lãi 1% mỗi ngày trong bài', 'là 365%/năm tính đơn — gấp hơn 18 lần mức trần')
 
-    # ── Thu nhập (mục 1.9): 7,4% của giá trị hôm nay ở mô hình 4 ───────────────
+    # ── Thu nhập (s-thunhap): 7,4% của giá trị hôm nay ở lab-hk ────────────────
     need('7,4% thu nhập cả đời', f'7,4% thu nhập cả đời đáng giá khoảng <b>{vi(round(0.074 * hc, -1), 0)} triệu đồng hôm nay</b>',
          0.074 * hc)
 
-    # ── Điểm hoà vốn (mô hình 5): nghìn đồng, chi phí cố định 60 triệu = 60.000 nghìn ──
+    # ── Điểm hoà vốn (lab-be): nghìn đồng, chi phí cố định 60 triệu = 60.000 nghìn ──
     for idv in ('id="be-p" value="35"', 'id="be-v" value="12"', 'id="be-f" value="60"', 'id="be-q" value="3000"'):
-        need('giá trị mặc định của mô hình 5', idv)
+        need('giá trị mặc định của lab-be', idv)
     p, v, F, q = 35, 12, 60_000, 3000
     cm = p - v
     be = F / cm
@@ -325,7 +344,7 @@ def phan_B():
     mos = (q - be) / q
     dol = q * cm / prof
     rest = (prof - 0.1 * q * cm) / 1000
-    need('mô hình 5, lời dặn',
+    need('lab-be, lời dặn',
          f'hoà vốn ở {vi(math.ceil(be), 0)} đơn vị mỗi tháng, khoảng {vi(be / 30, 0)} đơn vị mỗi ngày; '
          f'lãi {vi(prof / 1000, 0)} triệu mỗi tháng; biên an toàn {vi(100 * mos, 1)}%. '
          f'Đòn bẩy hoạt động {vi(dol, 2)}: doanh số giảm 10% thì lãi giảm {vi(10 * dol, 1)}%, còn {vi(rest, 1)} triệu.')
@@ -376,17 +395,141 @@ def phan_B():
     need('tỉ lệ sống trong bài', '<b>67,7%</b> sống qua 2 năm, <b>49,2%</b> qua 5 năm, <b>33,9%</b> qua 10 năm và '
                                  '<b>25,5%</b> qua 15 năm')
 
+    # ── Cập nhật niềm tin (s-bayes, lab-bayes) ────────────────────────────────
+    tp, fpos = 1000 * 0.01 * 0.9, 1000 * 0.99 * 0.09
+    need('Bayes: người lành dương tính', f'990 người lành thì khoảng {vi(fpos, 0)} người dương tính', fpos)
+    need('Bayes: phần dương tính thật', f'Trong khoảng {vi(tp + fpos, 0)} kết quả dương tính, chỉ {vi(tp, 0)} người thật '
+                                       f'sự bệnh — <b>khoảng {vi(100 * tp / (tp + fpos), 0)}%</b>', tp / (tp + fpos))
+    claim('nhũ ảnh: 4 xuống 3 trên 1.000 là “giảm 25%”', (4 - 3) / 4 == 0.25)
+    need('nhũ ảnh trong bài', 'cứ 1.000 phụ nữ đi chụp thì có thêm 1 người không chết vì bệnh này')
+    ls, ll = 0.7 ** 3, 0.5 ** 3
+    post = 0.05 * ls / (0.05 * ls + 0.95 * ll)
+    need('Bayes: quỹ thắng ba năm', f'Ba năm liền thắng có khả năng {vi(100 * ls, 1)}% ở quỹ giỏi và {vi(100 * ll, 1)}% ở '
+                                   f'quỹ may: sức nặng của bằng chứng là {vi(ls / ll, 2)}')
+    need('Bayes: tỉ số cược sau', f'Tỉ số cược từ 5:95 lên khoảng {vi(5 * ls / ll, 0)}:95 — xác suất quỹ giỏi thật chỉ '
+                                 f'còn <b>{vi(100 * post, 1)}%</b>', post)
+
+    def trail(p0, a, b, seq):
+        odds = p0 / (1 - p0)
+        for o in seq:
+            odds *= (1 - a) / (1 - b) if o else a / b
+        return odds / (1 + odds)
+    a, b = 0.05, 0.5
+    for idv in ('id="by-prior" min="1" max="99" step="1" value="90"', 'id="by-ft" min="1" max="40" step="1" value="5"',
+                'id="by-fu" min="10" max="95" step="1" value="50"'):
+        need('giá trị mặc định của lab-bayes', idv)
+    need('lab-bayes: người quen lâu năm', f'niềm tin từ {vi(100 * trail(0.9, a, b, [1] * 10), 2)}% xuống '
+                                         f'{vi(100 * trail(0.9, a, b, [1] * 10 + [0]), 2)}%')
+    need('lab-bayes: người mới thất hứa', f'thất hứa ngay lần đầu: còn {vi(100 * trail(0.5, a, b, [0]), 1)}%')
+    need('lab-bayes: thất hứa xen giữ lời', f'từ mức tin 90%: còn {vi(100 * trail(0.9, a, b, [0, 1, 0, 1, 0]), 1)}%')
+    need('lab-bayes: hai hệ số', f'Mỗi lần giữ lời nhân tỉ số cược với {vi((1 - a) / (1 - b), 1)}; mỗi lần thất hứa '
+                                f'nhân với {vi(a / b, 1)}')
+    claim('lab-bayes: một lần thất hứa nặng hơn một lần giữ lời', abs(math.log(a / b)) > abs(math.log((1 - a) / (1 - b))))
+
+    # ── Đa dạng hoá (s-danhmuc, lab-div) ─────────────────────────────────────
+    def sd(sig, r, n):
+        return sig * math.sqrt(r + (1 - r) / n)
+    for idv in ('id="dv-s" min="10" max="60" step="1" value="30"', 'id="dv-r" min="0" max="100" step="5" value="30"',
+                'id="dv-n" min="1" max="50" step="1" value="10"'):
+        need('giá trị mặc định của lab-div', idv)
+    floor = 0.3 * math.sqrt(0.3)
+    nmin = next(n for n in range(1, 1000) if sd(0.3, 0.3, n) <= 1.1 * floor)
+    need('lab-div: mười tài sản', f'mười tài sản còn {vi(100 * sd(0.3, 0.3, 10), 2)}%')
+    need('lab-div: cái sàn', f'không xuống dưới {vi(100 * floor, 2)}%')
+    need('lab-div: số tài sản để vào trong 10% trên sàn', f'Chỉ cần {nmin} tài sản là đã vào trong khoảng 10% trên cái sàn')
+    claim('lab-div: công thức tìm N trong mã khớp phép đếm', math.ceil((1 - 0.3) / (0.21 * 0.3) - 1e-9) == nmin)
+    need('lab-div: khủng hoảng', f'mười tài sản vẫn dao động {vi(100 * sd(0.3, 0.8, 10), 2)}%')
+
+    # ── Quyền chọn (s-quyenchon) ─────────────────────────────────────────────
+    need('mười phép thử, ít nhất một lần trúng', f'<b>{vi(100 * (1 - 0.9 ** 10), 1)}%</b> khả năng trúng ít nhất một lần')
+    claim('mỗi phép thử có kỳ vọng dương', 0.1 * 300 - 10 > 0)
+    need('chi phí mười phép thử', 'Mười phép thử như vậy, độc lập với nhau, tốn 100 triệu')
+
+    # ── Các con số dẫn từ nguồn ở các mục mới (giữ khỏi bị sửa lệch) ─────────────
+    need('Tetlock 2005', 'Tetlock theo dõi 284 người làm nghề bình luận chính trị, kinh tế với 82.361 dự báo')
+    need('Lewicki 2016', 'qua hai thí nghiệm với 333 người lớn và 422 sinh viên')
+    need('Marsh và Hau 2003', 'khảo sát 103.558 học sinh 15 tuổi ở 26 nước và thấy ở cả 26 nước')
+    need('Resnick 2006', 'người mua trả cho tên quen cao hơn <b>8,1%</b> giá bán')
+
     # ── Đếm trên chính trang ──────────────────────────────────────────────────
     nsec = len(re.findall(r'<section id="s-', HTML))
-    nlab = len(set(re.findall(r'Mô hình (\d) / 8', HTML)))
+    heads = re.findall(r'<div class="hc-part-head" id="([a-z]+)"', HTML)
+    kicks = re.findall(r'<p class="hc-lab__kick">Mô hình (\d+) / (\d+) ·', HTML)
+    nlab = len(kicks)
+    need('số phần ở đầu trang', f'· {len(heads) - 1} phần ·', len(heads) - 1)
     need('số mục ở đầu trang', f'· {nsec} mục ·', nsec)
-    claim('tám mô hình đánh số 1–8', nlab == 8, f'thấy {nlab} số mô hình khác nhau')
-    need('số mô hình ở đầu trang', '· 8 mô hình</p>')
+    need('số mô hình ở đầu trang', f'· {nlab} mô hình ·', nlab)
+    claim('mô hình đánh số 1…N theo thứ tự xuất hiện, mẫu số N',
+          [int(x) for x, _ in kicks] == list(range(1, nlab + 1)) and all(int(y) == nlab for _, y in kicks), f'thấy {kicks}')
+    claim('mười mô hình', nlab == 10, f'thấy {nlab}')
+
+    # Số mục trong eyebrow chạy liền theo phần; mỗi đầu phần đếm đúng và kể đủ các mục của nó.
+    VN = {'một': 1, 'hai': 2, 'ba': 3, 'bốn': 4, 'năm': 5, 'sáu': 6, 'bảy': 7, 'tám': 8, 'chín': 9, 'mười': 10}
+    eyebrow = dict(re.findall(r'<section id="(s-[a-z]+)">\s*<p class="hc-eyebrow-sec"><b>([^<]+)</b>', HTML))
+    claim('mọi mục có số ở eyebrow', len(eyebrow) == nsec, f'{len(eyebrow)} trên {nsec}')
+    bad_eb, bad_head = [], []
+    for i, h in enumerate(heads):
+        a0 = HTML.index(f'<div class="hc-part-head" id="{h}"')
+        b0 = HTML.index('<div class="hc-part-head" id=', a0 + 10) if i + 1 < len(heads) else HTML.index('</main>')
+        secs = re.findall(r'<section id="(s-[a-z]+)">', HTML[a0:b0])
+        for k, sid in enumerate(secs, 1):
+            want = f'Khung {k}/{len(secs)}' if i == 0 else f'{i}.{k}'
+            if eyebrow.get(sid) != want:
+                bad_eb.append(f'{sid}: {eyebrow.get(sid)} ≠ {want}')
+        ph = re.search(r'<h2>(.*?)</h2>\s*<p>(.*?)</p>', HTML[a0:b0], flags=re.S)
+        h2, pp = (re.sub(r'<[^>]+>', '', x) for x in ph.groups())
+        m = re.search(r'(\S+) mục: ([^.]*)\.', pp)
+        if m:
+            ok = VN.get(m.group(1).lower()) == len(secs) == len(m.group(2).split('; '))
+        else:
+            m, m2 = re.match(r'(\S+) công cụ nghĩ: (.*)$', h2), re.search(r'; (\S+) mục sau', pp)
+            ok = bool(m and m2) and VN.get(m.group(1).lower()) == len(secs) == len(m.group(2).split(', ')) \
+                and VN.get(m2.group(1)) == len(secs) - 1
+        if not ok:
+            bad_head.append(h)
+    claim('eyebrow đánh số liền theo phần', not bad_eb, '; '.join(bad_eb[:6]))
+    claim('đầu phần đếm đúng và kể đủ các mục', not bad_head, 'sai ở ' + ', '.join(bad_head))
+
+    # Mọi liên kết mang số (mục 3.2, Khung 1/3, mô hình 4) phải khớp số của đích; không còn số trơn.
+    labno = {lab: int(k) for lab, k in re.findall(
+        r'<div class="hc-lab" id="(lab-[a-z]+)">\s*<div class="hc-lab__head">\s*<p class="hc-lab__kick">Mô hình (\d+) /', HTML)}
+    bad = []
+    for href, text in re.findall(r'<a class="hc-x" href="#([a-z-]+)">([^<]*)</a>', HTML):
+        mm = re.fullmatch(r'(?:mục )?(\d+\.\d+|Khung \d+/\d+)', text)
+        if mm and eyebrow.get(href) != mm.group(1):
+            bad.append(f'#{href} “{text}”')
+        mm = re.fullmatch(r'[Mm]ô hình (\d+)', text)
+        if mm and labno.get(href) != int(mm.group(1)):
+            bad.append(f'#{href} “{text}”')
+        mm = re.fullmatch(r'Phần (\d+)', text)
+        if mm and (href not in heads or heads.index(href) != int(mm.group(1))):
+            bad.append(f'#{href} “{text}”')
+    claim('số trong liên kết khớp số của đích', not bad, ', '.join(bad[:8]))
+    prose = re.sub(r'<script>.*?</script>|<a [^>]*>.*?</a>|<p class="hc-lab__kick">.*?</p>|<b>[^<]*</b> ·', '', HTML, flags=re.S)
+    plain = re.findall(r'[Mm]ô hình \d+|mục \d+\.\d+', prose)
+    claim('không còn số mục, số mô hình viết trơn (không bấm được, dễ lệch)', not plain, ', '.join(plain[:8]))
+
+    groups = collections.Counter(re.findall(r'<input type="checkbox" id="au-([a-z]+)\d" data-k="\1">', HTML))
     nau = len(re.findall(r'id="au-[a-z]+\d"', HTML))
-    claim('bài tự soát: 6 nhóm × 5 câu = 30 ô', nau == 30, f'thấy {nau} ô')
-    need('bài tự soát, tiêu đề', 'Ba mươi câu: năm loại vốn và quyền lực')
+    claim('tự soát: 7 nhóm × 5 câu, id khớp nhóm', len(groups) == 7 and set(groups.values()) == {5} and sum(groups.values()) == nau,
+          f'{dict(groups)}, {nau} ô')
+    keys = re.search(r"var KEYS = \[([^\]]*)\];", HTML)
+    claim('tự soát: KEYS trong mã đúng các nhóm, đúng thứ tự', bool(keys) and [k.strip(" '") for k in keys.group(1).split(',')] == list(groups))
+    need('bài tự soát, tiêu đề', 'Ba mươi lăm câu: năm loại vốn, quyền lực và gia đình')
+    need('bài tự soát ở đầu phần Thực hành', 'bài tự soát ba mươi lăm câu')
+    need('bài tự soát ở thẻ phần', f'tự soát {nau} câu')
     npl = len(re.findall(r'id="pl-[a-c]\d"', HTML))
-    claim('lộ trình: 19 việc', npl == 19, f'thấy {npl} ô')
+    claim('lộ trình: 23 việc', npl == 23, f'thấy {npl} ô')
+    books = re.search(r'Mười cuốn nên đọc trọn, theo thứ tự</h3>\s*<ol class="hc-ol">(.*?)</ol>', HTML, flags=re.S)
+    claim('mười cuốn nên đọc trọn', bool(books) and books.group(1).count('<li>') == 10)
+    need('lộ trình trỏ đúng số sách', 'Đọc mười cuốn ở mục')
+    tt = re.search(r'<section id="s-tomtat">.*?<tbody>(.*?)</tbody>', HTML, flags=re.S).group(1)
+    rows = re.findall(r'<tr><td class="hc-num">(\d+)</td><td>.*?</td><td><a class="hc-x" href="#(s-[a-z]+)">', tt)
+    skip = {'s-cach', 's-tusoat', 's-lotrinh', 's-tomtat', 's-thuvien', 's-nguon'}
+    order = [x for x in re.findall(r'<section id="(s-[a-z]+)">', HTML) if x not in skip]
+    claim('bảng tóm tắt: mỗi mục một dòng, đúng thứ tự trang, đánh số liền',
+          [x for _, x in rows] == order and [int(k) for k, _ in rows] == list(range(1, len(rows) + 1)),
+          f'{len(rows)} dòng, {len(order)} mục')
     near('Kidd 2013: 722,43 s so với 181,57 s là "khoảng bốn lần"', 722.43 / 181.57, 4, 0.1)
     left = re.findall(r'⟦[^⟧]*⟧', HTML)
     claim('không còn chỗ chờ kiểm', not left, 'còn ' + ' '.join(sorted(set(left))))
@@ -418,10 +561,17 @@ RULES = [
     ('40 lần lặp, 50 thế hệ', 'var REPS = 40, GENS = 50;'),
     ('hạt giống của giải đấu', 'var rnd = rng(12345), M = S.map'),
     ('sinh thái: tỉ trọng ∝ tỉ trọng × điểm', 'x = x.map(function (v, i) { return v * f[i] / avg; });'),
-    ('mô hình 5: đổi triệu ra nghìn đồng', 'var p = +pEl.value, v = +vEl.value, F = +fEl.value * 1000, q = +qEl.value;'),
-    ('mô hình 5: hoà vốn và lãi', 'var be = F / cm, profit = q * cm - F;'),
-    ('mô hình 5: đòn bẩy hoạt động', 'var dol = q * cm / profit, drop = 0.1 * dol;'),
-    ('mô hình 8: sáu nhóm', "var KEYS = ['kt', 'cn', 'xh', 'vh', 'kd', 'ql'];"),
+    ('lab-be: đổi triệu ra nghìn đồng', 'var p = +pEl.value, v = +vEl.value, F = +fEl.value * 1000, q = +qEl.value;'),
+    ('lab-be: hoà vốn và lãi', 'var be = F / cm, profit = q * cm - F;'),
+    ('lab-be: đòn bẩy hoạt động', 'var dol = q * cm / profit, drop = 0.1 * dol;'),
+    ('tự soát: bảy nhóm', "var KEYS = ['kt', 'cn', 'xh', 'vh', 'kd', 'ql', 'gd'];"),
+    ('lab-bayes: nhân tỉ số cược sau mỗi lần quan sát',
+     's.forEach(function (o) { odds *= o ? (1 - a) / (1 - b) : a / b; out.push(odds / (1 + odds)); });'),
+    ('lab-div: độ lệch chuẩn của danh mục', 'function sd(s, r, n) { return s * Math.sqrt(r + (1 - r) / n); }'),
+    ('lab-div: số tài sản để vào trong 10% trên sàn', 'var need = Math.ceil((1 - r) / (0.21 * r) - 1e-9);'),
+    ('lab-div: khủng hoảng đẩy tương quan lên 0,8', 'crisis = false, RC = 0.8'),
+    ('thư viện: chữ vào DOM bằng textContent', 'if (text !== undefined) e.textContent = text;'),
+    ('thư viện: đọc dữ liệu từ file JSON', "fetch('data/hidden-curriculum.json', { cache: 'no-cache' })"),
 ]
 
 
@@ -523,7 +673,18 @@ def phan_D():
         b = [math.exp(sum(math.log1p(r) for _, r in s[i:i + h]) / h) - 1 for i in range(len(s) - h + 1)]
         near(f'khung {h} năm: tích và tổng log', max(abs(x[1] - y) for x, y in zip(a, b)), 0, 1e-12)
 
-    # Giải đấu của mô hình 5 — kiểm đúng những câu lời văn nói.
+    # Đa dạng hoá: phương sai = (1/N²)·ΣΣ σ²ρ_ij, cộng từng cặp, không dùng công thức gọn của trang.
+    for sig, r, n in ((0.3, 0.3, 10), (0.3, 0.8, 10), (0.45, 0.1, 37)):
+        var = sum(sig * sig * (1 if i == j else r) for i in range(n) for j in range(n)) / n ** 2
+        near(f'danh mục σ={sig}, ρ={r}, N={n}: cộng từng cặp', math.sqrt(var), sig * math.sqrt(r + (1 - r) / n), 1e-12)
+    # Bayes: đếm trên một đám đông giả lập phải gặp công thức tỉ số cược.
+    rng2 = random.Random(1763)
+    good = [rng2.random() < 0.05 for _ in range(200000)]
+    wins = [all(rng2.random() < (0.7 if g else 0.5) for _ in range(3)) for g in good]
+    hit = sum(1 for g, w in zip(good, wins) if g and w) / max(1, sum(wins))
+    near('quỹ thắng ba năm: đếm trên 200.000 quỹ giả lập', hit, 0.05 * 0.343 / (0.05 * 0.343 + 0.95 * 0.125), 0.01)
+
+    # Giải đấu của lab-ipd — kiểm đúng những câu lời văn nói.
     idx = {k: i for i, k in enumerate(NAMES)}
     sc, rank, eco = tournament(1, 0)
     claim('1 lượt: Lật lọng đứng đầu', rank[0] == idx['ALLD'])
@@ -541,20 +702,237 @@ def phan_D():
             sc, rank, eco = tournament(n, noise)
             claim(f'{n} lượt, nhầm {int(noise * 100)}%: Rộng lượng đứng đầu', rank[0] == idx['TF2T'],
                   'đứng đầu là ' + NAMES[rank[0]])
-    need('lời văn về mô hình 5', 'Với quan hệ từ 50 lượt trở lên, Rộng lượng đứng đầu ở mọi mức nhầm lẫn')
+    need('lời văn về lab-ipd', 'Với quan hệ từ 50 lượt trở lên, Rộng lượng đứng đầu ở mọi mức nhầm lẫn')
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# E. Thư viện mô hình
+# ══════════════════════════════════════════════════════════════════════════════
+CARD = ['id', 'name', 'en', 'layer', 'kind', 'idea', 'why', 'mechanism', 'mistake', 'example', 'use', 'limits',
+        'remember', 'related', 'sections']
+KINDS = {'math', 'solid', 'mixed', 'theory', 'hist', 'lore', 'custom'}
+
+
+def phan_E():
+    if not DATA.exists():
+        fails.append('không thấy ' + str(DATA))
+        return
+    try:
+        cards = json.loads(DATA.read_text(encoding='utf-8'))['concepts']
+    except (ValueError, KeyError) as e:
+        fails.append(f'không đọc được {DATA.name}: {e}')
+        return
+    ids = [c.get('id') for c in cards]
+    claim('thư viện: id duy nhất', len(ids) == len(set(ids)), 'trùng ' + ', '.join(sorted(set(i for i in ids if ids.count(i) > 1))))
+    idset, secs = set(ids), set(re.findall(r'<section id="(s-[a-z]+)">', HTML))
+    layers = set(re.findall(r'<button class="wb-btn wb-btn--outline wb-btn--sm[^"]*" data-l="([a-z]+)">', HTML)) - {'all'}
+    bad = collections.defaultdict(list)
+    for c in cards:
+        cid = c.get('id')
+        if list(c) != CARD:
+            bad['đủ và đúng thứ tự các trường'].append(cid)
+        if c.get('layer') not in layers:
+            bad['tầng có nút lọc'].append(cid)
+        if not c.get('kind') or not set(c['kind']) <= KINDS:
+            bad['nhãn độ tin hợp lệ'].append(cid)
+        if not all(isinstance(c.get(f), str) and c[f].strip() and not re.search(r'[<>]', c[f]) for f in CARD
+                   if f not in ('kind', 'related', 'sections')):
+            bad['chữ thuần, không rỗng, không HTML'].append(cid)
+        rel = c.get('related', [])
+        if not (2 <= len(rel) <= 4) or len(set(rel)) != len(rel) or cid in rel or not set(rel) <= idset:
+            bad['2–4 mô hình liên quan có thật'].append(cid)
+        sec = c.get('sections', [])
+        if not (1 <= len(sec) <= 4) or not set(sec) <= secs:
+            bad['1–4 mục có thật'].append(cid)
+    for what in ('đủ và đúng thứ tự các trường', 'tầng có nút lọc', 'nhãn độ tin hợp lệ', 'chữ thuần, không rỗng, không HTML',
+                 '2–4 mô hình liên quan có thật', '1–4 mục có thật'):
+        claim('thư viện: ' + what, not bad[what], 'sai ở ' + ', '.join(map(str, bad[what][:10])))
+    claim('thư viện: mỗi tầng trong bộ lọc có thẻ', layers == set(c.get('layer') for c in cards))
+    claim('thư viện: không có trường _html (REPO-001)', not any(k.endswith('_html') for c in cards for k in c))
+    # Thẻ không được mang số riêng: mỗi con số trong thẻ phải có mặt trên trang (chữ hoặc aria-label của hình),
+    # để sửa một con số ở mục mà quên thẻ thì cổng đỏ. Bỏ qua các số nhỏ dùng như chữ (một, hai, mười…).
+    pool = TEXT + ' ' + ' '.join(re.findall(r'aria-label="([^"]*)"', HTML))
+    num = re.compile(r'[×−]?\d[\d.]*(?:,\d+)?%?')
+    stray = sorted(set((c.get('id'), m.group(0).rstrip('.')) for c in cards
+                       for f in ('idea', 'why', 'mechanism', 'mistake', 'example', 'use', 'limits', 'remember')
+                       for m in num.finditer(str(c.get(f, '')))
+                       if m.group(0).rstrip('.').lstrip('×−') not in ('0', '1', '2', '3', '4', '5', '6', '10', '100')
+                       and m.group(0).rstrip('.') not in pool and m.group(0).rstrip('.').lstrip('×−') not in pool))
+    claim('thư viện: mọi con số trong thẻ có mặt trên trang', not stray, ', '.join(f'{i}: {x}' for i, x in stray[:12]))
+    need('số khái niệm ở đầu trang', f'· {len(cards)} khái niệm</p>', len(cards))
+    claim('thư viện: ít nhất 60 khái niệm', len(cards) >= 60, f'có {len(cards)}')
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# F. Vốn, nghề, gia đình
+# ══════════════════════════════════════════════════════════════════════════════
+def phan_F():
+    vn = vi
+    # Chuỗi lấy từ nguồn: mỗi chuỗi ứng một dòng kiểm nguồn; sửa thì mở lại nguồn.
+    for x in ('Luật Bảo hiểm tiền gửi 2025 (Luật 111/2025/QH15)', '350 triệu đồng', 'Thông tư 05/2026/TT-NHNN',
+              '125 triệu đồng', 'tối đa 45 ngày', 'bằng đồng Việt Nam của cá nhân', 'trên 5% vốn điều lệ',
+              'giấy tờ có giá vô danh', '139 doanh nghiệp', '83.600 tỉ đồng', '50,7%', '9,9% GDP',
+              'Nghị định 08/2023/NĐ-CP', 'tối đa hai năm', 'Nghị định 200/2026/NĐ-CP', '2 tỷ đồng', '180 ngày', '39,2%',
+              '25.967', '42,6%', '1.092', '34,82 nghìn tỷ USD', '2,4%', '75,7 nghìn tỷ USD', '40% năm 1982',
+              '69% năm 2011', '60% xuống 32%', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
+              '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
+              '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%', '−0,82', '−0,31',
+              '−1,04%', '2,24%', '1.820,1', '2.610,85', '1.000 tấn', '473 tấn', '863 tấn', '15.858,92', '24.164,89',
+              '3,92%', 'Luật 71/2025/QH15', 'Nghị quyết 05/2025/NQ-CP', '109/2025/QH15', '0,1%', '1,84%', '3,15%',
+              '3,25%', '3,63%', '3,31%', '12,73%', '23,12%'):
+        need_t('vốn, chuỗi từ nguồn', x)
+
+    need_t('bảo hiểm tiền gửi: hạn mức mới so với cũ', f'gấp {vn(350 / 125, 1)} lần', 350 / 125)
+    claim('Bessembinder: 57,4% thua tín phiếu là “hơn bốn trên bảy”', 1 - 0.426 > 4 / 7)
+    claim('Bessembinder: 1.092 trên khoảng 25.300 công ty là “hơn 4%”', 0.04 < 1092 / 25300 < 0.05)
+    need_t('Bessembinder trong bài', 'hơn bốn trên bảy')
+
+    # Giá trị = lợi nhuận năm tới × (1 − g/ROIC) / (chi phí vốn − g); lợi nhuận 100, chi phí vốn 10%, g = 5%.
+    for roic in (0.20, 0.10, 0.08):
+        val, ir = 100 * (1 - 0.05 / roic) / (0.10 - 0.05), 0.05 / roic * 100
+        need_t(f'bảng giá trị, ROIC {roic:.0%}', f'Tăng 5%/năm, ROIC {round(roic * 100)}% {vn(ir, 1 if ir % 1 else 0)}% {vn(val, 0)}', val)
+    need_t('bảng giá trị, không tăng trưởng', f'Không tăng trưởng 0% {vn(100 / 0.10, 0)}')
+
+    # Kỳ vọng ẩn trong giá: P/E 40, người mua đòi 9%/năm.
+    PE, r = 40, 0.09
+    need_t('E/P của P/E 40', f'E/P = {vn(100 / PE, 1)}%')
+    need_t('g hàm ý khi trả hết lợi nhuận', f'khoảng {vn((r - 1 / PE) * 100, 1)}%/năm mãi mãi')
+    g15 = (1 - PE * r) / (1 / 0.15 - PE)          # PE = (1 − g/ROIC)/(r − g), ROIC 15%
+    need_t('g hàm ý khi tái đầu tư với ROIC 15%', f'khoảng {vn(g15 * 100, 1)}%/năm', g15)
+
+    def price2(g1, g2=0.03, n=10):
+        pv, e = 0.0, 1.0
+        for t in range(1, n + 1):
+            pv += e / (1 + r) ** t
+            if t < n:
+                e *= 1 + g1
+        return pv + (e * (1 + g1) / (r - g2)) / (1 + r) ** n
+    lo, hi = 0.0, 0.5
+    for _ in range(200):
+        mid = (lo + hi) / 2
+        lo, hi = (lo, mid) if price2(mid) > PE else (mid, hi)
+    need_t('tăng trưởng mười năm đầu rồi 3%/năm', f'khoảng {vn(lo * 100, 1)}%/năm', lo)
+    claim('lợi nhuận sau mười năm “gấp khoảng 4 lần”', round((1 + lo) ** 10) == 4, f'{(1 + lo) ** 10:.2f}')
+    need_t('gấp khoảng 4 lần trong bài', 'gấp khoảng 4 lần')
+
+    # Đa dạng hoá: bảng và đoạn đọc mô hình (σ = 30%).
+    s0 = 30.0
+    for rho, label in ((0, '0 (độc lập)'), (0.3, '0,3 (ngày thường)'), (0.8, '0,8 (khủng hoảng)')):
+        cells = [vn(s0 * math.sqrt(rho + (1 - rho) / N), 1) + '%' for N in (1, 5, 10, 20)]
+        last = 'về 0' if rho == 0 else vn(s0 * math.sqrt(rho), 1) + '%'
+        need_t(f'bảng đa dạng hoá, ρ = {rho}', f'ρ = {label} ' + ' '.join(cells) + ' ' + last)
+    n10, n50 = s0 * math.sqrt(0.37), s0 * math.sqrt(0.3 + 0.7 / 50)
+    need_t('đọc mô hình: N 10 → 50', f'từ {vn(n10, 2)}% xuống {vn(n50, 2)}%')
+    claim('đọc mô hình: bớt “chưa tới 1,5 điểm phần trăm”', n10 - n50 < 1.5, f'{n10 - n50:.2f}')
+    need_t('đọc mô hình: ρ = 0, N = 20', f'hai mươi tài sản còn {vn(s0 / math.sqrt(20), 2)}%')
+    need_t('đọc mô hình: sàn khi khủng hoảng', f'nhảy lên {vn(s0 * math.sqrt(0.8), 2)}%')
+    share10 = (s0 - n10) / (s0 - s0 * math.sqrt(0.3))
+    need_t('mười tài sản bỏ được bao nhiêu phần rủi ro bỏ được', f'bỏ đi {round(share10 * 100)}%', share10)
+
+    st = 60 * 1.3
+    need_t('tái cân bằng 60/40 sau một năm cổ phiếu +30%', f'{vn(st / (st + 40) * 100, 1)}% / {vn(40 / (st + 40) * 100, 1)}%')
+    need_t('khoản 5% về 0', f'lãi {vn(0.05 / 0.95 * 100, 1)}%')
+    need_t('khoản 40% mất một nửa', f'cần lãi {vn(0.2 / 0.8 * 100, 0)}%')
+
+    # Thứ tự lợi suất: 1.000 triệu, rút (hoặc góp) 60 triệu cuối mỗi năm.
+    good, bad = [0.2, 0.1, -0.2, -0.1], [-0.1, -0.2, 0.1, 0.2]
+
+    def run(seq, c=-60.0):
+        w, out = 1000.0, []
+        for x in seq:
+            w = w * (1 + x) + c
+            out.append(w)
+        return out
+    for i, (a, b) in enumerate(zip(run(good), run(bad)), start=1):
+        need_t(f'thứ tự lợi suất, năm {i}', f'{i} {vn(a, 1)} {vn(b, 1)}')
+    prod = 1.2 * 1.1 * 0.8 * 0.9
+    need_t('thứ tự lợi suất: tích bốn thừa số', vn(prod, 4))
+    need_t('thứ tự lợi suất: không rút', vn(1000 * prod, 1))
+    need_t('thứ tự lợi suất: chênh hai kết cục', vn(run(good)[-1] - run(bad)[-1], 2))
+    need_t('góp đều, năm xấu trước', vn(run(bad, 60)[-1], 2))
+    need_t('góp đều, năm tốt trước', vn(run(good, 60)[-1], 2))
+    claim('góp đều thì năm xấu trước lại tốt hơn', run(bad, 60)[-1] > run(good, 60)[-1])
+
+    def bond(c, n, y):
+        return sum(c / (1 + y) ** t for t in range(1, n + 1)) + 100 / (1 + y) ** n
+    need_t('trái phiếu 10 năm khi lãi lên 7%', vn(bond(5, 10, 0.07), 2))
+    need_t('trái phiếu 10 năm: mức giảm', f'mất {vn(100 - bond(5, 10, 0.07), 2)}%')
+    need_t('trái phiếu 10 năm khi lãi xuống 3%', vn(bond(5, 10, 0.03), 2))
+    need_t('trái phiếu 2 năm', f'chỉ mất {vn(100 - bond(5, 2, 0.07), 2)}%')
+
+    need_t('lợi suất thực với 5% và 3,31%', f'{vn((1.05 / 1.0331 - 1) * 100, 2)}%/năm')
+    need_t('phép trừ nhanh', f'{vn(5 - 3.31, 2)}%')
+    need_t('lợi suất thực năm 2008', f'{vn((1.1273 / 1.2312 - 1) * 100, 1)}%')
+    need_t('phép trừ năm 2008', f'{vn(12.73 - 23.12, 1)}%')
+    fx = 24164.89 / 15858.92
+    need_t('đồng mất giá so với USD 2005 → 2024', f'mất {vn((1 - 1 / fx) * 100, 1)}%')
+    need_t('mất giá bình quân năm', f'khoảng {vn((fx ** (1 / 19) - 1) * 100, 2)}% mỗi năm')
+    need_t('giá vàng cuối 2021 → cuối 2024', f'tức {vn((2610.85 / 1820.1 - 1) * 100, 1)}%')
+    # Lãi tiền gửi và lạm phát Việt Nam 2005–2023 (World Bank FR.INR.DPST, FP.CPI.TOTL.ZG), bình quân nhân.
+    dep = [7.145, 7.63, 7.492, 12.73, 7.91, 11.194, 13.993, 10.504, 7.14, 5.758, 4.747, 5.035, 4.809, 4.738,
+           4.975, 4.12, 3.375, 3.817, 4.781]
+    inf = [8.285, 7.418, 8.344, 23.115, 6.717, 9.207, 18.678, 9.095, 6.593, 4.085, 0.631, 2.668, 3.52, 3.54,
+           2.796, 3.221, 1.835, 3.157, 3.253]
+    pd_, pi_ = math.prod(1 + x / 100 for x in dep), math.prod(1 + x / 100 for x in inf)
+    n = len(dep)
+    claim('chuỗi tiền gửi 2005–2023 đủ 19 năm', n == len(inf) == 19)
+    need_t('lãi tiền gửi bình quân', f'khoảng {vn((pd_ ** (1 / n) - 1) * 100, 1)}%/năm và giá')
+    need_t('lạm phát bình quân', f'khoảng {vn((pi_ ** (1 / n) - 1) * 100, 1)}%/năm: lãi thực')
+    need_t('lãi thực bình quân', f'chỉ khoảng {vn(((pd_ / pi_) ** (1 / n) - 1) * 100, 1)}%/năm')
+    for ltv, x in ((0.5, 'mất 40%'), (0.7, 'mất 66,7%')):
+        claim(f'vay {ltv:.0%}, giá −20%: vốn tự có {x}', vn((1 - (0.8 - ltv) / (1 - ltv)) * 100, 1).rstrip('0').rstrip(',') == x[4:-1])
+        need_t(f'vay {ltv:.0%} trong bài', x)
+    need_t('phí 1%/năm trong 30 năm', f'{vn((1 - (1.07 / 1.08) ** 30) * 100, 1)}% số tiền cuối cùng')
+    phan_F2()
+
+
+def phan_F2():
+    """Nghề và gia đình: các phép tính trong bài và vài con số dẫn từ nguồn."""
+    vn = vi
+    # Quỹ đạo lương (s-tichluy): A 20 triệu +3%/năm, B 15 triệu +10%/năm; lương năm = 12 × lương tháng.
+    A = [20 * 1.03 ** (n - 1) for n in range(1, 21)]
+    B = [15 * 1.10 ** (n - 1) for n in range(1, 21)]
+    first = next(n for n in range(1, 21) if B[n - 1] > A[n - 1])
+    cum = next(n for n in range(1, 21) if sum(B[:n]) > sum(A[:n]))
+    need_t('lương tháng của B vượt A', f'Lương tháng của B vượt A từ năm thứ {first}', first)
+    need_t('tổng thu nhập của B vượt A', f'tổng thu nhập cộng dồn của B vượt A từ năm thứ {cum}', cum)
+    need_t('năm thứ 20', f'A nhận khoảng {vn(A[-1], 1)} triệu/tháng, B khoảng {vn(B[-1], 1)} triệu')
+    need_t('cộng 20 năm', f'A nhận khoảng {vn(12 * sum(A) / 1000, 2)} tỷ đồng, B khoảng {vn(12 * sum(B) / 1000, 2)} tỷ')
+    b20 = 15 * 1.10 ** 10 * 1.03 ** 9          # mười lần tăng 10%, rồi 3% như A
+    need_t('giả định khắc nghiệt hơn', f'B vẫn nhận khoảng {vn(b20, 1)} triệu/tháng, cao hơn A khoảng {round(100 * (b20 / A[-1] - 1))}%')
+    # Thừa kế (s-giayto): phần di sản 1,2 tỷ, bốn người hàng thứ nhất, Điều 644 Bộ luật Dân sự: 2/3 một suất.
+    suat = 1200 / 4
+    need_t('một suất theo luật', f'một suất theo luật là {vn(suat, 0)} triệu', suat)
+    need_t('hai phần ba suất', f'tức {vn(suat * 2 / 3, 0)} triệu, cộng lại {vn(4 * suat * 2 / 3, 0)} triệu; em trai nhận {vn(1200 - 4 * suat * 2 / 3, 0)} triệu')
+    # Ngành học (s-daycon): 0,561 điểm log là khoảng 75%.
+    claim('0,561 điểm log ≈ cao hơn 75%', round(100 * (math.exp(0.561) - 1)) == 75, f'{100 * (math.exp(0.561) - 1):.1f}%')
+    need_t('Altonji, Blom và Meghir', '(0,561 điểm log, tức cao hơn khoảng 75%)')
+    # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 286 ca.
+    claim('Van Such: 36 + 188 + 62 = 286', 36 + 188 + 62 == 286)
+    need_t('Van Such trong bài', 'Chẩn đoán cuối giống chẩn đoán lúc chuyển ở 36 ca (12%), được làm rõ hơn ở 188 ca (66%), và khác hẳn ở 62 ca (21%)')
+    # Các con số dẫn từ nguồn ở hai phần này.
+    for x in ('89,3%', '47,6%', '23.878 nhân viên và 1.940 người quản lý', '4–9% tổng thù lao', '51 báo cáo về 6.096 vận động viên, 772 người',
+              '115 nghiên cứu theo dõi dài hạn với hơn 45.000 cuộc hôn nhân', '4.574 cặp vợ chồng', '0,3–0,4', '0,1–0,2',
+              '18.869 người', '0,70–0,75', '3.250 gia đình', '42 gia đình', '36 trẻ 4–6 tuổi', '64 học sinh',
+              'hơn 48.000 cây ghim', 'Điều 644', 'Điều 645', '30 năm với bất động sản, 10 năm với động sản'):
+        need_t('nghề, gia đình: chuỗi từ nguồn', x)
 
 
 def main():
-    global HTML
+    global HTML, TEXT
     if not PAGE.exists():
         print('verify-hidden-curriculum: không thấy %s' % PAGE.name)
         return 1
     HTML = PAGE.read_text(encoding='utf-8')
+    TEXT = re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', re.sub(r'<!--.*?-->|<script>.*?</script>|<style>.*?</style>', ' ', HTML, flags=re.S)))
+    TEXT = re.sub(r'&amp;', '&', re.sub(r'&nbsp;', ' ', TEXT))
     phan_A()
     if not fails:
         phan_B()
         phan_C()
         phan_D()
+        phan_E()
+        phan_F()
     print()
     if fails:
         print('verify-hidden-curriculum: %d chỗ KHÔNG khớp (trên %d phép kiểm):' % (len(fails), checks))
