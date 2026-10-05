@@ -10,7 +10,7 @@ Rustichini, các phép Bayes, độ lệch chuẩn của một danh mục — v�
 những con số ấy. lint-pages.py không biết 86,4% có đúng là P(K ≤ 55), K ~ B(100, ½), hay không;
 càng không biết luật ấy còn đúng sau khi ai đó sửa một dòng JS.
 
-Năm phần, năm loại sai khác nhau:
+Sáu phần, sáu loại sai khác nhau:
 
   A. DỮ LIỆU NHÚNG — đối chiếu vài giá trị với nguồn (Damodaran, histretSP.xls, 01/2026) và
      kiểm độ dài, để mảng không bị cắt hay lệch năm.
@@ -25,8 +25,10 @@ Năm phần, năm loại sai khác nhau:
   E. THƯ VIỆN MÔ HÌNH — đủ trường, khoá hợp lệ, id duy nhất, mọi related và sections trỏ tới thứ
      có thật, không có HTML trong dữ liệu, mọi con số trong thẻ có mặt trên trang, số thẻ khớp đầu trang.
   F. VỐN, NGHỀ, GIA ĐÌNH — các mục rủi ro, tạo của, doanh nghiệp, danh mục, tài sản, nghề, gia đình:
-     chuỗi lấy từ nguồn (luật, số liệu chính thức) giữ nguyên văn, và mọi con số suy ra được tính lại
-     trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn trong giá, thứ tự lợi suất, trái phiếu…).
+     chuỗi lấy từ nguồn (luật, số liệu chính thức, tác giả và năm) giữ nguyên văn trong đúng mục, mỗi
+     câu hỏi của hai bảng luật đi với đúng điều đã đối chiếu, năm can chi tính lại từ năm dương lịch,
+     và mọi con số suy ra được tính lại trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn
+     trong giá, thứ tự lợi suất, trái phiếu…).
 
 Chỉ dùng thư viện chuẩn, chạy dưới 5 giây.
 
@@ -34,6 +36,7 @@ Chạy:  python3 pages/tools/verify-hidden-curriculum.py
 Exit code: 1 nếu có con số hoặc luật không khớp.
 """
 import collections
+import html
 import json
 import math
 import pathlib
@@ -88,6 +91,19 @@ def near(label, got, want, tol, why=''):
     checks += 1
     if abs(got - want) > tol:
         fails.append(f'{label}: {got:.6g} lệch khỏi {want:.6g} quá {tol:.3g}. {why}')
+
+
+def muc(sid):
+    """HTML của một mục <section id="sid">; rỗng nếu mục không có."""
+    m = re.search(r'<section id="%s">(.*?)</section>' % re.escape(sid), HTML, flags=re.S)
+    return m.group(1) if m else ''
+
+
+def chu(h):
+    """Chữ hiển thị của một đoạn HTML: thẻ khối thành khoảng trắng, thẻ dòng bỏ hẳn (để “<b>tiền</b>,”
+    thành “tiền,”), giải mã thực thể, gộp khoảng trắng."""
+    h = re.sub(r'</?(?:p|div|td|th|tr|li|ol|ul|h2|h3|h4|table|thead|tbody|figure|figcaption|blockquote)\b[^>]*>', ' ', h)
+    return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', '', h))).strip()
 
 
 def arr(name):
@@ -910,12 +926,199 @@ def phan_F2():
     # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 286 ca.
     claim('Van Such: 36 + 188 + 62 = 286', 36 + 188 + 62 == 286)
     need_t('Van Such trong bài', 'Chẩn đoán cuối giống chẩn đoán lúc chuyển ở 36 ca (12%), được làm rõ hơn ở 188 ca (66%), và khác hẳn ở 62 ca (21%)')
-    # Các con số dẫn từ nguồn ở hai phần này.
-    for x in ('89,3%', '47,6%', '23.878 nhân viên và 1.940 người quản lý', '4–9% tổng thù lao', '51 báo cáo về 6.096 vận động viên, 772 người',
-              '115 nghiên cứu theo dõi dài hạn với hơn 45.000 cuộc hôn nhân', '4.574 cặp vợ chồng', '0,3–0,4', '0,1–0,2',
-              '18.869 người', '0,70–0,75', '3.250 gia đình', '42 gia đình', '36 trẻ 4–6 tuổi', '64 học sinh',
-              'hơn 48.000 cây ghim', 'Điều 644', 'Điều 645', '30 năm với bất động sản, 10 năm với động sản'):
-        need_t('nghề, gia đình: chuỗi từ nguồn', x)
+    # Bảng luật: mỗi câu hỏi đi với đúng điều đã đối chiếu văn bản, đúng thứ tự (s-honnhan: Luật Hôn nhân và
+    # gia đình 2014; s-giayto: Bộ luật Dân sự 2015).
+    LAW = {
+        's-honnhan': [
+            ('Tài sản nào là chung?', '33'), ('Không chứng minh được là riêng?', '33'),
+            ('Tài sản nào là riêng?', '43'), ('Bán, thế chấp nhà đất chung', '35, 31'),
+            ('Giấy chứng nhận đứng tên ai?', '34'), ('Nợ nào là nợ chung?', '37, 27'), ('Nợ nào là nợ riêng?', '45'),
+            ('Tự đặt chế độ tài sản', '47, 48'), ('Chia tài sản chung khi còn hôn nhân', '38, 42'),
+            ('Khi ly hôn', '59'), ('Khi một người mất', '66'),
+        ],
+        's-giayto': [
+            ('Ai lập được di chúc?', '625, 630'), ('Hình thức', '627, 629'), ('Di chúc miệng', '629, 630'),
+            ('Tự viết, không người làm chứng', '631, 633'), ('Có người làm chứng', '632, 634'),
+            ('Thế nào là hợp pháp?', '630'), ('Sửa, thay, gửi giữ', '640, 643, 641'),
+            ('Ai vẫn được hưởng dù di chúc không cho?', '644'), ('Di sản thờ cúng', '645'),
+            ('Không có di chúc', '650, 651'), ('Di sản gồm gì?', '612'), ('Nợ của người mất', '615'),
+            ('Thời hiệu', '623'),
+        ],
+    }
+    for sid, want in LAW.items():
+        tb = re.search(r'<th>Điều</th>.*?<tbody>(.*?)</tbody>', muc(sid), flags=re.S)
+        got = [(chu(r[0]), chu(r[-1])) for r in (re.findall(r'<td[^>]*>(.*?)</td>', tr, flags=re.S)
+               for tr in re.findall(r'<tr>(.*?)</tr>', tb.group(1) if tb else '', flags=re.S))]
+        claim(f'{sid}: bảng luật có {len(want)} dòng', len(got) == len(want), f'thấy {len(got)} dòng')
+        for i, (q, d) in enumerate(want):
+            r = got[i] if i < len(got) else ('—', '—')
+            claim(f'{sid}: “{q}” → Điều {d}', r == (q, d), f'trang ghi “{r[0]}” → Điều {r[1]}')
+    # Mọi điều luật dẫn trong bài, kể cả cột Điều của hai bảng, có trong danh sách nguồn của đúng văn bản ấy.
+    # Mỗi mục có một văn bản mặc định ('*'); điều dẫn từ văn bản khác thì gán riêng. Điều mới chưa gán thì đỏ.
+    VB = {'BLDS': 'Bộ luật Dân sự 2015', 'BLHS': 'Bộ luật Hình sự 2015', 'NĐ340': 'Nghị định 340/2025/NĐ-CP',
+          'BHTG': 'Luật Bảo hiểm tiền gửi 2025', 'TT05': 'Thông tư 05/2026/TT-NHNN',
+          'NĐ200': 'Nghị định 200/2026/NĐ-CP', 'CNS': 'Luật Công nghiệp công nghệ số',
+          'TNCN': 'Luật Thuế thu nhập cá nhân 2025', 'HNGĐ': 'Luật Hôn nhân và gia đình 2014',
+          'ĐĐ': 'Luật Đất đai 2024', 'NO': 'Luật Nhà ở 2023', 'KDBH': 'Luật Kinh doanh bảo hiểm 2022',
+          'HP': 'Hiến pháp 2013'}
+    GAN = {
+        's-no': {'468': 'BLDS', '201': 'BLHS'},
+        's-ruiro': {'*': 'BHTG', '3': 'TT05'},
+        's-dungtien': {'*': 'BLHS'},
+        's-taisan': {'9': 'NĐ200', '46': 'CNS', '47': 'CNS', '3': 'TNCN', '4': 'TNCN', '13': 'TNCN'},
+        's-vanminh': {'*': 'HP'},
+        's-thehe': {'*': 'BLDS'},
+        's-honnhan': {'*': 'HNGĐ'},
+        's-giayto': {'*': 'BLDS', '66': 'HNGĐ', '27': 'ĐĐ', '164': 'NO', '4': 'KDBH', '41': 'KDBH', '46': 'CNS'},
+        's-muoihai': {'335': 'BLDS', '336': 'BLDS', '30': 'NĐ340', '291': 'BLHS'},
+    }
+
+    def dieu(s):
+        """'629–634, 636' → {'629', …, '634', '636'}."""
+        out = set()
+        for a in re.split(r',\s*', s):
+            lo, _, hi = a.partition('–')
+            out |= {str(k) for k in range(int(lo), int(hi or lo) + 1)}
+        return out
+
+    m = re.search(r'<b>Luật\.</b>(.*?)</li>', muc('s-nguon'), flags=re.S)
+    luat = chu(m.group(1)) if m else ''
+    REF = {}
+    for k, v in VB.items():
+        m = re.search(re.escape(v) + r'[^.]*?\(Điều ([\d–, ]+)\)', luat)
+        claim(f'nguồn: {v} có danh sách điều', bool(m))
+        REF[k] = dieu(m.group(1)) if m else set()
+    for sid in re.findall(r'<section id="(s-[a-z]+)">', HTML):
+        if sid == 's-nguon':
+            continue
+        arts = set()
+        for g in re.findall(r'Điều (\d+(?:–\d+)?(?:, \d+(?:–\d+)?)*)', chu(muc(sid))):
+            arts |= dieu(g)
+        for _, d in LAW.get(sid, []):
+            arts |= dieu(d)
+        for a in sorted(arts, key=int):
+            k = GAN.get(sid, {}).get(a) or GAN.get(sid, {}).get('*')
+            claim(f'{sid}: Điều {a} được gán một văn bản', k is not None, 'thêm vào GAN')
+            if k:
+                claim(f'{sid}: Điều {a} {VB[k]}', a in REF[k], f'danh sách nguồn của {VB[k]} không có Điều {a}')
+    tb = re.search(r'Mười sáu ý tưởng làm nền</h3>.*?<tbody>(.*?)</tbody>', muc('s-vanminh'), flags=re.S)
+    n = tb.group(1).count('<tr>') if tb else 0
+    claim('s-vanminh: bảng “Mười sáu ý tưởng làm nền” có 16 dòng', n == 16, f'thấy {n} dòng')
+    # Năm can chi đi kèm năm dương lịch: can = (năm − 4) mod 10, chi = (năm − 4) mod 12; năm 4 là Giáp Tý.
+    CAN = 'Giáp Ất Bính Đinh Mậu Kỷ Canh Tân Nhâm Quý'.split()
+    CHI = 'Tý Sửu Dần Mão Thìn Tỵ Ngọ Mùi Thân Dậu Tuất Hợi'.split()
+    cc = re.findall(r'\b(%s) (%s) (\d{3,4})\b' % ('|'.join(CAN), '|'.join(CHI)), TEXT)
+    claim('năm can chi trong bài (Đinh Mùi 1427, Kỷ Mùi 1919)', len(cc) >= 2, f'chỉ thấy {len(cc)} chỗ')
+    for c, h, y in cc:
+        k = int(y) - 4
+        claim(f'{c} {h} {y}', (CAN[k % 10], CHI[k % 12]) == (c, h), f'năm {y} là {CAN[k % 10]} {CHI[k % 12]}')
+    # Chuỗi lấy từ nguồn, trong đúng mục: tác giả, năm, tạp chí, cỡ mẫu, số đo, ngày tháng, số hiệu luật.
+    NGUON = {
+        's-tichluy': [
+            'Robert Merton (1968) gọi là hiệu ứng Matthew',
+            'Jacob Mincer (Schooling, Experience, and Earnings, 1974)', 'ghép số liệu điều tra của 18 nước',
+            '(Mỹ, Đức, Canada, Anh)', 'dưới 5 năm kinh nghiệm 89,3%', '(Brazil, Chile, Mexico, Jamaica) chỉ 47,6%',
+            'có Việt Nam với số liệu năm 1998 và 2002, đều dưới 50%', 'A khởi điểm 20 triệu/tháng, mỗi năm tăng 3%',
+            'B khởi điểm 15 triệu ở một chỗ học nhanh hơn, mỗi năm tăng 10%',
+            'Brynjolfsson, Li và Raymond (Quarterly Journal of Economics, 2025) theo dõi 5.172 nhân viên',
+            'tăng trung bình 15%', 'Gary Becker (1962)',
+        ],
+        's-moitruong': [
+            'Lazear, Shaw và Stanton (Journal of Labor Economics, 2015)',
+            '23.878 nhân viên và 1.940 người quản lý, 2006–2010', 'nhiều hơn việc thêm một người vào nhóm chín người',
+            'khoảng một phần tư hiệu ứng riêng của một người quản lý vẫn còn một năm sau',
+            'Mas và Moretti (American Economic Review, 2009)', 'Bản làm việc năm 2006 (370 thu ngân, sáu cửa hàng)',
+            'tăng 10% kéo nỗ lực của một người tăng 1,7%', '(Cornelissen, Dustmann và Schönberg, 2017)',
+            'Jarosch, Oberfield và Rossi-Hansberg (Econometrica, 2021)',
+            '4–9% tổng thù lao của người lao động là việc học từ đồng nghiệp',
+            'Kahneman và Klein (American Psychologist, 2009)', 'Robin Hogarth (Educating Intuition, 2001)',
+            'gộp 51 báo cáo về 6.096 vận động viên, 772 người thuộc hàng đầu thế giới',
+            'Topel và Ward (Quarterly Journal of Economics, 1992)', 'nam thanh niên Mỹ 1957–1972',
+            'một người điển hình làm bảy việc, khoảng hai phần ba số việc của cả đời', 'ít nhất một phần ba',
+            'trong khoảng 91% số tháng từ 1/1997 tới 8/2026, trung bình hơn khoảng 0,7 điểm phần trăm',
+            'Rộng nhất vào 11/2022, lúc thị trường lao động rất căng: 7,7% so với 5,5%', '(6/2025: 4,3% so với 4,4%)',
+            '8/2026: 4,4% so với 3,6%',
+        ],
+        's-vanminh': [
+            'E. D. Hirsch (Cultural Literacy, 1987)', 'Recht và Leslie (1988) cho 64 học sinh trung học cơ sở',
+            'Aronowitz và Giroux (Harvard Educational Review, 1988)',
+            '“các truyền thống cốt lõi của văn minh phương Tây”', 'Mười sáu ý tưởng làm nền',
+            'Socrates (469–399 TCN), qua Plato', 'Khổng Tử (551–479 TCN theo truyền thống), Mạnh Tử',
+            '“Biết đủ là giàu”', 'Đức Phật (khoảng thế kỷ 5 TCN; niên đại còn tranh luận)',
+            'Epictetus (sinh khoảng thập niên 50, mất khoảng năm 135; từng là nô lệ)',
+            'Ý, từ thế kỷ 14; chính yếu thế kỷ 15–16', 'Pascal và Fermat, năm lá thư mùa hè 1654',
+            'họp lần đầu 28/11/1660; khẩu hiệu Nullius in verba từ hiến chương 1662',
+            'Kant, “Khai sáng là gì?”, 12/1784', 'Adam Smith, Của cải của các quốc gia (1776)',
+            'Mười người chia công đoạn làm hơn 48.000 cây ghim mỗi ngày', 'Darwin, Nguồn gốc các loài (24/11/1859)',
+            'Tuyên ngôn của Đảng Cộng sản (2/1848)', 'Hiến pháp 2013, Điều 4',
+            'Monet, Ấn tượng, mặt trời mọc (1872), bày năm 1874', '(25/4/1874)',
+            'Bình Ngô đại cáo (tháng Chạp năm Đinh Mùi 1427, âm lịch)', '“Việc nhân nghĩa cốt ở yên dân”',
+            'Tuyên ngôn Độc lập (2/9/1945)', 'Đại hội VI của Đảng, 15–18/12/1986',
+            '求則得之，舍則失之，是求有益於得也，求在我者也。求之有道，得之有命，是求無益於得也，求在外者也。',
+            'Mạnh Tử · thiên Tận tâm thượng',
+            '938 Ngô Quyền đánh tan quân Nam Hán trên sông Bạch Đằng',
+            '1802 Nguyễn Ánh lên ngôi, lấy niên hiệu Gia Long', 'gần 300 năm chia cắt Trịnh – Nguyễn',
+            '1/9/1858 Liên quân Pháp – Tây Ban Nha nổ súng vào thành Đà Nẵng', '2/9/1945 Tuyên ngôn Độc lập',
+            '7/5/1954 Chiến thắng Điện Biên Phủ; Hiệp định Genève ký tháng 7/1954',
+            '30/4/1975 Chiến dịch Hồ Chí Minh kết thúc', '12/1986 Đại hội VI đề ra đường lối Đổi mới',
+            'Phan Kế Bính, Việt Nam phong tục (1915)', 'Đào Duy Anh, Việt Nam văn hoá sử cương (1938)',
+            'Văn minh An Nam (1944)', 'E. H. Gombrich, The Story of Art (1950)',
+            'Bill Bryson, A Short History of Nearly Everything (2003)',
+        ],
+        's-thehe': [
+            'Gia huấn ca (tương truyền của Nguyễn Trãi, tác giả còn tồn nghi)', 'Lẽ tục phú',
+            'Adermon, Lindahl và Waldenström (Economic Journal, 2018)',
+            'tương quan thứ hạng tài sản giữa cha mẹ và con là 0,3–0,4, giữa ông bà và cháu chỉ 0,1–0,2',
+            'ít nhất một nửa', 'khoảng một phần tư', 'Gregory Clark (The Son Also Rises, 2014)',
+            'Với 18.869 người mang họ hiếm ở Anh và xứ Wales', 'từ 1858 tới 2012',
+            'hệ số truyền ẩn 0,70–0,75 mỗi đời', 'Torche và Corvalán (2018)',
+            '“70% mất ở đời thứ hai, 90% ở đời thứ ba”', '(Williams và Preisser, 2003)', '3.250 gia đình giàu',
+            '“tỉ lệ thất bại 70%”', 'James Grubman (2022)', 'nghiên cứu năm 1987 của John Ward',
+            'tỉ lệ 30% doanh nghiệp', 'Holtz-Eakin, Joulfaian và Rosen (Quarterly Journal of Economics, 1993)',
+            'khoảng 150.000 USD', 'cao gấp khoảng bốn lần người nhận dưới 25.000 USD', '(Điều 645;',
+        ],
+        's-daycon': [
+            'Whitebread và Bingham (Đại học Cambridge, 2013)', 'tới khoảng 7 tuổi', 'PISA 2022 (OECD, 2024)',
+            'học sinh 15 tuổi ở 20 nước và vùng; Việt Nam không có trong phần này', 'cao hơn 12 điểm',
+            'thấp hơn 13 điểm',
+            '83% học sinh nói mình có thể tự quyết tiêu tiền vào gì; nhóm này cao hơn khoảng 30 điểm',
+            '70% học sinh tự tiêu khoản nhỏ', 'Lý thuyết tự quyết (Ryan và Deci, 2000)',
+            'Hart và Risley (1995) quan sát 42 gia đình Mỹ, mỗi tháng một giờ, trong hai năm rưỡi; chỉ 6 gia đình',
+            'một tuần 100 giờ thức, rồi thành bốn năm',
+            'khoảng 45 triệu từ ở nhà làm nghề chuyên môn so với 13 triệu ở nhà nhận trợ cấp',
+            '“Khoảng cách 30 triệu từ.”', 'Sperry, Sperry và Miller (2019) quan sát 42 trẻ ở năm cộng đồng Mỹ',
+            'Nhóm Golinkoff (2019)', 'Romeo và cộng sự (2018), trên 36 trẻ 4–6 tuổi',
+            'năm 1885, Mrs. Dymond của Anne Isabella Thackeray Ritchie', 'chỉ xuất hiện từ năm 1976', '臨河而羨魚，不如歸家織網。',
+            'Hoài Nam Tử · thiên Thuyết lâm huấn', 'Altonji, Blom và Meghir (Annual Review of Economics, 2012)',
+            'Với số liệu Mỹ năm 2009', '(0,561 điểm log, tức cao hơn khoảng 75%)', '(0,577 điểm log)',
+            'Deci, Koestner và Ryan (1999)',
+        ],
+        's-honnhan': [
+            'Karney và Bradbury (Psychological Bulletin, 1995) tổng quan 115 nghiên cứu theo dõi dài hạn với hơn 45.000 cuộc hôn nhân',
+            'Gottman và Levenson (2000) theo dõi các cặp vợ chồng trong 14 năm', '“dự báo đúng hơn 90%”',
+            'Heyman và Smith Slep (2001)', 'các cặp mới cưới năm 1998', '(Stanley, Bradbury và Markman, 2000)',
+            'Dew, Britt và Huston (2012), theo dõi 4.574 cặp vợ chồng Mỹ', 'số 52/2014/QH13, hiệu lực từ 01/01/2015',
+            'Luật số 81/2025/QH15', '121/VBHN-VPQH (2025)', '(Điều 33, 43)', '(Điều 38, 47)',
+        ],
+        's-giayto': [
+            'tới tháng 10/2026', 'người 15–18 tuổi được lập', 'trong 5 ngày làm việc', 'sau 3 tháng',
+            '30 năm với bất động sản, 10 năm với động sản',
+            'xác nhận hoặc bác bỏ quyền thừa kế: 10 năm; đòi người thừa kế trả nợ của người mất: 3 năm',
+            'Bộ luật Dân sự số 91/2015/QH13, hiệu lực từ 01/01/2017', 'Luật số 142/2025/QH15',
+            'phần di sản là 1,2 tỷ đồng', 'một suất theo luật là 300 triệu',
+            'tức 200 triệu, cộng lại 800 triệu; em trai nhận 400 triệu', '(Điều 140)',
+            'chỉ có hiệu lực một năm (Điều 563)', '(Luật Đất đai 2024, Điều 27)', '(Luật Nhà ở 2023, Điều 164)',
+            'kỳ họp Quốc hội tháng 10/2026', '(Luật Kinh doanh bảo hiểm 2022, Điều 4)', '(Điều 41)',
+            'Từ 01/01/2026, Luật Công nghiệp công nghệ số (số 71/2025/QH15, Điều 46)', '(Điều 615)', '(Điều 643)',
+            '(Điều 647)', '(Điều 636)', 'Van Such và cộng sự (2017) xem 286 bệnh nhân', 'năm 2009–2010',
+            '36 ca (12%)', '188 ca (66%)', '62 ca (21%)', 'Luật Công chứng 2024 (hiệu lực từ 01/07/2025)',
+            '04/2026/QH16, hiệu lực từ 01/01/2027',
+        ],
+    }
+    for sid, xs in NGUON.items():
+        t = chu(muc(sid))
+        for x in xs:
+            claim(f'{sid}: chuỗi từ nguồn', x in t, f'không thấy “{x}”')
 
 
 def main():
