@@ -10,6 +10,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-004 · ML 101 và Toán cho ML: đổi cấu trúc lớn thì chỉ đề xuất · `pages/machine-learning-101.html`, `pages/mathematics-for-machine-learning.html`
 - PAGES-005 · hidden-curriculum: nằm trong danh sách ẩn · `pages/hidden-curriculum.html`
 - PAGES-007 · hidden-curriculum: kho mô hình đòn bẩy cao, sâu hơn nhiều · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+- PAGES-008 · hidden-curriculum: rà nội dung, sửa có điều kiện và nén chữ · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -47,3 +48,9 @@ Mục tiêu: có được, giữ được, dùng được tiền tài, quyền l
 sau nhiều năm. Thuần kiến thức, không dẫn chuyện. Mỗi ý phải đổi được một quyết định; sâu hơn nhiều: luật kèm cơ chế,
 bằng chứng, giới hạn, việc làm và nhãn độ tin. Không giáo điều, không khái quát về tầng lớp, không dạy thao túng.
 Khái niệm cốt lõi ở thư viện mô hình (file JSON), nối với nhau và với các mục.
+
+## PAGES-008 · hidden-curriculum: rà nội dung, sửa có điều kiện và nén chữ
+05/10/2026 · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+
+Rà cả luận điểm lẫn diễn đạt: giữ ý đúng, sửa sai hoặc thiếu điều kiện, chỉ bổ sung điều đổi được cách quyết định.
+Rút câu dài, dẫn nhập và ý lặp; không thêm mục chỉ để đủ checklist mô hình. Giữ thiết kế, tập trung chất lượng nội dung.

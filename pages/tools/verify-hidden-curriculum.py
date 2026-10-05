@@ -240,16 +240,14 @@ def phan_B():
     need('một ngửa một sấp viết trong bài', '= <b>0,9</b>')
     near('nửa Kelly giữ khoảng ba phần tư tốc độ', growth(0.125) / growth(0.25), 0.75, 0.01)
     near('mức hoà vốn 50%: (1+0,5f)(1−0,4f) = 1', up(0.5) * dn(0.5), 1.0, 1e-12)
-    # Thorp: với phần c của mức Kelly, P(có lúc còn x vốn ban đầu) = x^(2/c − 1) (xấp xỉ liên tục).
-    near('Thorp: Kelly đầy đủ, P(có lúc mất nửa vốn)', 0.5 ** (2 / 1 - 1), 0.5, 1e-12)
-    near('Thorp: nửa Kelly, P(có lúc mất nửa vốn)', 0.5 ** (2 / 0.5 - 1), 0.125, 1e-12)
-    need('Thorp trong bài', 'là 1/2; với nửa Kelly, chỉ còn 1/8')
+    # Không dùng xác suất drawdown của xấp xỉ liên tục cho trò đồng xu rời rạc.
+    # So trực tiếp tốc độ tăng trưởng và xác suất thua của hai mức đặt trong trò này.
     # Quá tay và non tay: (1 + 0,5f)(1 − 0,4f) = 1 + 0,1f − 0,2f² đối xứng quanh f = 25%, nên 12,5% và 37,5%
     # tăng đúng như nhau; chỉ độ phân tán khác.
     near('12,5% và 37,5% cùng tốc độ tăng', growth(0.125), growth(0.375), 1e-12)
     need('đồng xu, quá tay và non tay',
-         f'đặt 12,5% và đặt 37,5% tăng nhanh đúng như nhau, nhưng sau 100 ván, số người thua là '
-         f'{vi(100 * p_lose(0.125, T), 1)}% ở mức thứ nhất và {vi(100 * p_lose(0.375, T), 1)}% ở mức thứ hai')
+         f'đặt 12,5% và 37,5% có cùng tốc độ tăng trưởng dài hạn, nhưng sau 100 ván, số người thua là '
+         f'{vi(100 * p_lose(0.125, T), 1)}% và {vi(100 * p_lose(0.375, T), 1)}%')
     claim('mức 37,5% chọn được trên thanh trượt', 37.5 % 2.5 == 0)
 
     # ── Lỗ và lãi cần để hoà (hình) ────────────────────────────────────────────
@@ -269,7 +267,7 @@ def phan_B():
     worst = min(w20, key=lambda x: x[1])
     w10 = windows(series('sp', True), 10)
     neg10 = sum(1 for x in w10 if x[2] < 1)
-    need('cổ phiếu, giữ 10 năm (bảy luật)', f'ở Mỹ vẫn có {neg10} trên {len(w10)} khung 10 năm mất sức mua')
+    need('cổ phiếu, giữ 10 năm', f'ở Mỹ có {neg10} trên {len(w10)} khung 10 năm mất sức mua')
     need('khung 20 năm tệ nhất', f'khung tệ nhất ({worst[0]}–{worst[0] + 19}, bắt đầu ngay trước Đại suy thoái) vẫn +{vi(100 * worst[1], 2)}%/năm')
     b20 = windows(series('bill', True), 20)
     nb = sum(1 for x in b20 if x[2] < 1)
@@ -420,10 +418,8 @@ def phan_B():
     need('nhũ ảnh trong bài', 'cứ 1.000 phụ nữ đi chụp thì có thêm 1 người không chết vì bệnh này')
     ls, ll = 0.7 ** 3, 0.5 ** 3
     post = 0.05 * ls / (0.05 * ls + 0.95 * ll)
-    need('Bayes: quỹ thắng ba năm', f'Ba năm liền thắng có khả năng {vi(100 * ls, 1)}% ở quỹ giỏi và {vi(100 * ll, 1)}% ở '
-                                   f'quỹ may: sức nặng của bằng chứng là {vi(ls / ll, 2)}')
-    need('Bayes: tỉ số cược sau', f'Tỉ số cược từ 5:95 lên khoảng {vi(5 * ls / ll, 0)}:95 — xác suất quỹ giỏi thật chỉ '
-                                 f'còn <b>{vi(100 * post, 1)}%</b>', post)
+    need('Bayes: quỹ thắng ba năm', f'Ba năm thắng liên tiếp có xác suất {vi(100 * ls, 1)}% và {vi(100 * ll, 1)}%, nên sức nặng bằng chứng là {vi(ls / ll, 2)}')
+    need('Bayes: tỉ số cược sau', f'Tỉ số cược từ 5:95 lên khoảng {vi(5 * ls / ll, 0)}:95: xác suất giỏi tăng từ 5% lên <b>{vi(100 * post, 1)}%</b>', post)
 
     def trail(p0, a, b, seq):
         odds = p0 / (1 - p0)
@@ -457,12 +453,12 @@ def phan_B():
     need('lab-div: khủng hoảng', f'mười tài sản vẫn dao động {vi(100 * sd(0.3, 0.8, 10), 2)}%')
 
     # ── Quyền chọn (s-quyenchon) ─────────────────────────────────────────────
-    need('mười phép thử, ít nhất một lần trúng', f'<b>{vi(100 * (1 - 0.9 ** 10), 1)}%</b> khả năng trúng ít nhất một lần')
+    need('mười phép thử, ít nhất một lần trúng', f'<b>{vi(100 * (1 - 0.9 ** 10), 1)}%</b> cơ hội trúng ít nhất một lần')
     claim('mỗi phép thử có kỳ vọng dương', 0.1 * 300 - 10 > 0)
-    need('chi phí mười phép thử', 'Mười phép thử như vậy, độc lập với nhau, tốn 100 triệu')
+    need('chi phí mười phép thử', 'Mười thử nghiệm độc lập tốn 100 triệu')
 
     # ── Các con số dẫn từ nguồn ở các mục mới (giữ khỏi bị sửa lệch) ─────────────
-    need('Tetlock 2005', 'Tetlock theo dõi 284 người làm nghề bình luận chính trị, kinh tế với 82.361 dự báo')
+    need('Tetlock 2005', 'theo dõi 284 chuyên gia với 82.361 dự báo')
     need('Lewicki 2016', 'qua hai thí nghiệm với 333 người lớn và 422 sinh viên')
     need('Marsh và Hau 2003', 'khảo sát 103.558 học sinh 15 tuổi ở 26 nước và thấy ở cả 26 nước')
     need('Resnick 2006', 'người mua trả cho tên quen cao hơn <b>8,1%</b> giá bán')
@@ -536,9 +532,9 @@ def phan_B():
     need('bài tự soát ở thẻ phần', f'tự soát {nau} câu')
     npl = len(re.findall(r'id="pl-[a-c]\d"', HTML))
     claim('lộ trình: 23 việc', npl == 23, f'thấy {npl} ô')
-    books = re.search(r'Mười cuốn nên đọc trọn, theo thứ tự</h3>\s*<ol class="hc-ol">(.*?)</ol>', HTML, flags=re.S)
-    claim('mười cuốn nên đọc trọn', bool(books) and books.group(1).count('<li>') == 10)
-    need('lộ trình trỏ đúng số sách', 'Đọc mười cuốn ở mục')
+    books = re.search(r'Mười cuốn để đọc theo nhu cầu</h3>\s*<ol class="hc-ol">(.*?)</ol>', HTML, flags=re.S)
+    claim('mười sách tham khảo theo nhu cầu', bool(books) and books.group(1).count('<li>') == 10)
+    need('lộ trình chọn sách theo vấn đề và áp dụng', 'Chọn cuốn đáp đúng câu hỏi đang gặp và thử áp dụng một ý')
     tt = re.search(r'<section id="s-tomtat">.*?<tbody>(.*?)</tbody>', HTML, flags=re.S).group(1)
     rows = re.findall(r'<tr><td class="hc-num">(\d+)</td><td>.*?</td><td><a class="hc-x" href="#(s-[a-z]+)">', tt)
     skip = {'s-cach', 's-tusoat', 's-lotrinh', 's-tomtat', 's-thuvien', 's-nguon'}
@@ -718,7 +714,7 @@ def phan_D():
             sc, rank, eco = tournament(n, noise)
             claim(f'{n} lượt, nhầm {int(noise * 100)}%: Rộng lượng đứng đầu', rank[0] == idx['TF2T'],
                   'đứng đầu là ' + NAMES[rank[0]])
-    need('lời văn về lab-ipd', 'Với quan hệ từ 50 lượt trở lên, Rộng lượng đứng đầu ở mọi mức nhầm lẫn')
+    need('lời văn về lab-ipd', 'với quan hệ từ 50 lượt trở lên, Rộng lượng đứng đầu ở mọi mức nhầm lẫn')
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -801,7 +797,7 @@ def phan_F():
     need_t('bảo hiểm tiền gửi: hạn mức mới so với cũ', f'gấp {vn(350 / 125, 1)} lần', 350 / 125)
     claim('Bessembinder: 57,4% thua tín phiếu là “hơn bốn trên bảy”', 1 - 0.426 > 4 / 7)
     claim('Bessembinder: 1.092 trên khoảng 25.300 công ty là “hơn 4%”', 0.04 < 1092 / 25300 < 0.05)
-    need_t('Bessembinder trong bài', 'hơn bốn trên bảy')
+    need_t('Bessembinder trong bài', 'vượt tín phiếu kho bạc một tháng')
 
     # Giá trị = lợi nhuận năm tới × (1 − g/ROIC) / (chi phí vốn − g); lợi nhuận 100, chi phí vốn 10%, g = 5%.
     for roic in (0.20, 0.10, 0.08):
@@ -841,7 +837,7 @@ def phan_F():
     need_t('đọc mô hình: N 10 → 50', f'từ {vn(n10, 2)}% xuống {vn(n50, 2)}%')
     claim('đọc mô hình: bớt “chưa tới 1,5 điểm phần trăm”', n10 - n50 < 1.5, f'{n10 - n50:.2f}')
     need_t('đọc mô hình: ρ = 0, N = 20', f'hai mươi tài sản còn {vn(s0 / math.sqrt(20), 2)}%')
-    need_t('đọc mô hình: sàn khi khủng hoảng', f'nhảy lên {vn(s0 * math.sqrt(0.8), 2)}%')
+    need_t('đọc mô hình: sàn khi khủng hoảng', f'sàn lên {vn(s0 * math.sqrt(0.8), 2)}%')
     share10 = (s0 - n10) / (s0 - s0 * math.sqrt(0.3))
     need_t('mười tài sản bỏ được bao nhiêu phần rủi ro bỏ được', f'bỏ đi {round(share10 * 100)}%', share10)
 
@@ -874,7 +870,7 @@ def phan_F():
     need_t('trái phiếu 10 năm khi lãi lên 7%', vn(bond(5, 10, 0.07), 2))
     need_t('trái phiếu 10 năm: mức giảm', f'mất {vn(100 - bond(5, 10, 0.07), 2)}%')
     need_t('trái phiếu 10 năm khi lãi xuống 3%', vn(bond(5, 10, 0.03), 2))
-    need_t('trái phiếu 2 năm', f'chỉ mất {vn(100 - bond(5, 2, 0.07), 2)}%')
+    need_t('trái phiếu 2 năm', f'giá giảm {vn(100 - bond(5, 2, 0.07), 2)}%')
 
     need_t('lợi suất thực với 5% và 3,31%', f'{vn((1.05 / 1.0331 - 1) * 100, 2)}%/năm')
     need_t('phép trừ nhanh', f'{vn(5 - 3.31, 2)}%')
