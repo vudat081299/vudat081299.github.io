@@ -916,6 +916,10 @@ def phan_F2():
     need_t('cộng 20 năm', f'A nhận khoảng {vn(12 * sum(A) / 1000, 2)} tỷ đồng, B khoảng {vn(12 * sum(B) / 1000, 2)} tỷ')
     b20 = 15 * 1.10 ** 10 * 1.03 ** 9          # mười lần tăng 10%, rồi 3% như A
     need_t('giả định khắc nghiệt hơn', f'B vẫn nhận khoảng {vn(b20, 1)} triệu/tháng, cao hơn A khoảng {round(100 * (b20 / A[-1] - 1))}%')
+    # “khoảng cách ấy giữ nguyên tới cuối”: từ năm 11 cả hai cùng tăng 3%/năm, nên tỉ số B/A không đổi.
+    ba = [15 * 1.10 ** min(n - 1, 10) * 1.03 ** max(n - 11, 0) / (20 * 1.03 ** (n - 1)) for n in range(11, 41)]
+    claim('từ năm 11, tỉ số lương B/A không đổi', max(ba) - min(ba) < 1e-9, f'{min(ba):.6f}…{max(ba):.6f}')
+    need_t('khoảng cách giữ nguyên', 'và khoảng cách ấy giữ nguyên tới cuối, vì các lần tăng sau đều tính theo phần trăm')
     # Thừa kế (s-giayto): phần di sản 1,2 tỷ, bốn người hàng thứ nhất, Điều 644 Bộ luật Dân sự: 2/3 một suất.
     suat = 1200 / 4
     need_t('một suất theo luật', f'một suất theo luật là {vn(suat, 0)} triệu', suat)
@@ -948,7 +952,7 @@ def phan_F2():
     for sid, want in LAW.items():
         tb = re.search(r'<th>Điều</th>.*?<tbody>(.*?)</tbody>', muc(sid), flags=re.S)
         got = [(chu(r[0]), chu(r[-1])) for r in (re.findall(r'<td[^>]*>(.*?)</td>', tr, flags=re.S)
-               for tr in re.findall(r'<tr>(.*?)</tr>', tb.group(1) if tb else '', flags=re.S))]
+               for tr in re.findall(r'<tr>(.*?)</tr>', tb.group(1) if tb else '', flags=re.S)) if r]
         claim(f'{sid}: bảng luật có {len(want)} dòng', len(got) == len(want), f'thấy {len(got)} dòng')
         for i, (q, d) in enumerate(want):
             r = got[i] if i < len(got) else ('—', '—')
@@ -1001,6 +1005,7 @@ def phan_F2():
             claim(f'{sid}: Điều {a} được gán một văn bản', k is not None, 'thêm vào GAN')
             if k:
                 claim(f'{sid}: Điều {a} {VB[k]}', a in REF[k], f'danh sách nguồn của {VB[k]} không có Điều {a}')
+    # Bảng “Mười sáu ý tưởng làm nền” (s-vanminh): số dòng khớp chữ “mười sáu” của tiêu đề.
     tb = re.search(r'Mười sáu ý tưởng làm nền</h3>.*?<tbody>(.*?)</tbody>', muc('s-vanminh'), flags=re.S)
     n = tb.group(1).count('<tr>') if tb else 0
     claim('s-vanminh: bảng “Mười sáu ý tưởng làm nền” có 16 dòng', n == 16, f'thấy {n} dòng')
