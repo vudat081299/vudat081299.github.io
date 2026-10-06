@@ -21,7 +21,7 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-017 · Hai lớp cổng: commit và CI · `tools/hooks/pre-commit`, `**/tools/check.sh`, `.github/workflows/gates.yml`
 - REPO-018 · Tài liệu .md viết ngắn và thẳng · `repo`
 - REPO-019 · Không chặn force-push ở GitHub · `repo`
-- REPO-020 · Trang chủ có một danh sách ẩn, hiện khi giữ ⌃⌥⇧⌘Z · `data/collection.json`, `index.html`
+- REPO-020 · Trang chủ có một danh sách ẩn, hiện khi giữ `.` và `?` · `data/collection.json`, `index.html`
 
 Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md), [`shop/DECISIONS.md`](shop/DECISIONS.md).
 <!-- index:end -->
@@ -119,10 +119,10 @@ Mỗi dòng một ý, chỉ ghi luật đang áp dụng, không kể lịch sử
 
 Chủ trang để `main` cho phép force-push. Agent vẫn phải hỏi trước khi force-push (CLAUDE.md gốc, mục Git).
 
-## REPO-020 · Trang chủ có một danh sách ẩn, hiện khi giữ ⌃⌥⇧⌘Z
+## REPO-020 · Trang chủ có một danh sách ẩn, hiện khi giữ `.` và `?`
 03/10/2026 · `data/collection.json`, `index.html`
 
-Khoá `hold` trong `collection.json` là danh sách chỉ hiện khi giữ ⌃⌥⇧⌘Z (Ctrl+Option+Shift+Cmd+Z), thả ra là mất. Trang trong đó vẫn
+Khoá `hold` trong `collection.json` là danh sách chỉ hiện khi giữ cùng lúc hai phím `.` và `?`, thả ra là mất. Trang trong đó vẫn
 deploy; đây là giấu link, không phải bảo mật. Trong đó: Wealth Roadmap, Hidden Curriculum (PAGES-005), Scooter
 Maintenance, Fact, Cashy, Loto, scentsitive.vn, Web Builder. Sáu mục sau chuyển hẳn từ `sections` sang
 (03/10/2026): mất phím tắt, không còn ở chỗ cũ.

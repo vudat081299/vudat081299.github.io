@@ -234,7 +234,7 @@ async function ready(page) {
     await ready(p);
   }
 
-  /* ---- 6b. danh sách ẩn: giữ ⌃⌥⇧⌘Z thì hiện, thả thì mất -------------------- */
+  /* ---- 6b. danh sách ẩn: giữ `.` và `?` thì hiện, thả thì mất ------------------- */
   if (data.hold && data.hold.items && data.hold.items.length) {
     const H = data.hold.items;
     const vis = () => p.evaluate(() => !document.getElementById('hold').hidden);
@@ -244,11 +244,13 @@ async function ready(page) {
 
     check('danh sách ẩn: mặc định không hiện', !(await vis()));
 
-    await p.keyboard.down('Control'); await p.keyboard.down('Alt'); await p.keyboard.down('Shift'); await p.keyboard.down('Meta'); await p.keyboard.down('KeyZ');
+    await p.keyboard.down('Period'); await p.keyboard.down('Slash');
     const shown = await vis();
     const hrefs = await rows();
-    check('giữ ⌃⌥⇧⌘Z: bảng hiện đủ mục trong data.hold',
+    check('giữ . và ?: bảng hiện đủ mục trong data.hold',
       shown && JSON.stringify(hrefs) === JSON.stringify(H.map(i => i.href)), hrefs.join(', '));
+    check('giữ . rồi ?: ô tìm kiếm không giành focus',
+      await p.evaluate(() => document.activeElement.id !== 'q'));
     const leak = await p.evaluate(() => ({
       items: document.querySelectorAll('[data-item]').length,
       toc: document.querySelectorAll('[data-toc]').length,
@@ -258,35 +260,40 @@ async function ready(page) {
     check('bảng ẩn không lọt vào ô đếm, mục lục, chân trang, phím tắt',
       leak.items === N && leak.toc === LABELS.length && leak.foot === LABELS.length
         && leak.count.startsWith(N + ' pages'), `${leak.items} hàng · ${leak.count}`);
-    await p.keyboard.up('KeyZ');
-    check('thả Z: bảng mất', !(await vis()));
+    await p.keyboard.up('Slash');
+    check('thả ?: bảng mất', !(await vis()));
 
-    await p.keyboard.down('KeyZ');
+    await p.keyboard.down('Slash');
     check('giữ lại: bảng hiện lại', await vis());
-    await p.keyboard.up('Shift');
-    check('thả Shift (Z còn giữ): bảng mất', !(await vis()));
-    await p.keyboard.up('KeyZ'); await p.keyboard.up('Meta'); await p.keyboard.up('Alt'); await p.keyboard.up('Control');
+    await p.keyboard.up('Period');
+    check('thả . (? còn giữ): bảng mất', !(await vis()));
+    await p.keyboard.up('Slash');
 
-    await p.keyboard.down('Alt'); await p.keyboard.down('Shift'); await p.keyboard.down('Meta'); await p.keyboard.down('KeyZ');
-    check('thiếu Ctrl: không hiện', !(await vis()));
-    await p.keyboard.up('KeyZ'); await p.keyboard.up('Meta'); await p.keyboard.up('Shift'); await p.keyboard.up('Alt');
+    await p.keyboard.down('Shift'); await p.keyboard.down('Period'); await p.keyboard.down('Slash');
+    check('có Shift (ấn đúng chữ ?) cũng hiện', await vis());
+    await p.keyboard.up('Slash'); await p.keyboard.up('Period'); await p.keyboard.up('Shift');
 
-    await p.keyboard.down('Control'); await p.keyboard.down('Shift'); await p.keyboard.down('Meta'); await p.keyboard.down('KeyZ');
-    check('thiếu Option: không hiện', !(await vis()));
-    await p.keyboard.up('KeyZ'); await p.keyboard.up('Meta'); await p.keyboard.up('Shift'); await p.keyboard.up('Control');
+    await p.keyboard.down('Slash'); await p.keyboard.down('Period');
+    const r1 = await p.evaluate(() => ({ f: document.activeElement.id, v: document.getElementById('q').value }));
+    check('ấn / trước rồi .: bảng hiện, ô tìm kiếm nhả focus, không dính chữ',
+      (await vis()) && r1.f !== 'q' && r1.v === '', JSON.stringify(r1));
+    await p.keyboard.up('Period'); await p.keyboard.up('Slash');
 
-    await p.keyboard.down('Control'); await p.keyboard.down('Alt'); await p.keyboard.down('Meta'); await p.keyboard.down('KeyZ');
-    check('thiếu Shift: không hiện', !(await vis()));
-    await p.keyboard.up('KeyZ'); await p.keyboard.up('Meta'); await p.keyboard.up('Alt'); await p.keyboard.up('Control');
+    await p.keyboard.down('Period');
+    check('chỉ giữ .: không hiện', !(await vis()));
+    await p.keyboard.up('Period');
 
-    await p.keyboard.down('Control'); await p.keyboard.down('Alt'); await p.keyboard.down('Shift'); await p.keyboard.down('KeyZ');
-    check('thiếu ⌘: không hiện', !(await vis()));
-    await p.keyboard.up('KeyZ'); await p.keyboard.up('Shift'); await p.keyboard.up('Alt'); await p.keyboard.up('Control');
+    await p.focus('#q');
+    await p.keyboard.down('Period'); await p.keyboard.down('Slash');
+    const r2 = await p.evaluate(() => document.getElementById('q').value);
+    check('đang gõ trong ô tìm kiếm: "./" không mở bảng', !(await vis()) && r2 === './', r2);
+    await p.keyboard.up('Slash'); await p.keyboard.up('Period');
+    await p.keyboard.press('Escape');
 
-    await p.keyboard.down('Control'); await p.keyboard.down('Alt'); await p.keyboard.down('Shift'); await p.keyboard.down('Meta'); await p.keyboard.down('KeyZ');
+    await p.keyboard.down('Period'); await p.keyboard.down('Slash');
     await p.evaluate(() => window.dispatchEvent(new Event('blur')));
     check('mất focus cửa sổ khi đang giữ: bảng tự đóng', !(await vis()));
-    await p.keyboard.up('KeyZ'); await p.keyboard.up('Meta'); await p.keyboard.up('Shift'); await p.keyboard.up('Alt'); await p.keyboard.up('Control');
+    await p.keyboard.up('Slash'); await p.keyboard.up('Period');
 
     const broken = [];
     for (const h of H.map(i => i.href)) {
