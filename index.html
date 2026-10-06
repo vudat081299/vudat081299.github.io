@@ -671,36 +671,25 @@
 
         input.addEventListener('input', function () { filter(this.value); });
 
-        /* Giữ cùng lúc hai phím `.` và `?` (phím `/`, Shift không bắt buộc) thì bảng ẩn hiện,
-           thả một phím là mất. Dò bằng e.code vì Shift đổi e.key và e.key đổi theo bố cục.
-           `/` một mình vẫn nhảy vào ô tìm kiếm: ấn `/` trước rồi `.` thì trả focus lại trang.
-           Đang gõ trong ô tìm kiếm thì không bắt, để gõ "./" không mở bảng. */
+        /* Giữ ⇧? (Shift + phím `/`) thì bảng ẩn hiện, thả một phím là mất.
+           Dò bằng e.code: e.key đổi theo bố cục bàn phím. `/` không Shift vẫn nhảy vào ô
+           tìm kiếm. Đang gõ trong ô tìm kiếm thì không bắt, để gõ được dấu `?`. */
         var hold = document.getElementById('hold');
         var armed = false;     /* true khi collection.json có danh sách ẩn */
-        var down = {};         /* e.code → true nếu phím đang giữ và được ấn ngoài ô gõ */
-        function typing(e) {
-          var t = (e.target && e.target.tagName) || '';
-          return t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT';
-        }
         function peek(on) { hold.hidden = !(on && armed); }
 
         document.addEventListener('keydown', function (e) {
-          if (e.code !== 'Period' && e.code !== 'Slash') return;
-          if (e.metaKey || e.ctrlKey || e.altKey) return;
-          if (!e.repeat && !typing(e)) down[e.code] = true;
-          var other = e.code === 'Period' ? 'Slash' : 'Period';
-          if (!down[other]) return;
-          down[e.code] = true;
-          if (!armed) return;
-          e.preventDefault(); e.stopImmediatePropagation();
-          if (typing(e)) e.target.blur();
+          if (e.code !== 'Slash' || !e.shiftKey || e.metaKey || e.ctrlKey || e.altKey) return;
+          var t = (e.target && e.target.tagName) || '';
+          if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
+          if (armed) e.preventDefault();
           peek(true);
-        }, true);
-        document.addEventListener('keyup', function (e) {
-          if (e.code === 'Period' || e.code === 'Slash') { delete down[e.code]; peek(false); }
         });
-        window.addEventListener('blur', function () { down = {}; peek(false); });
-        document.addEventListener('visibilitychange', function () { down = {}; peek(false); });
+        document.addEventListener('keyup', function (e) {
+          if (e.code === 'Slash' || e.key === 'Shift') peek(false);
+        });
+        window.addEventListener('blur', function () { peek(false); });
+        document.addEventListener('visibilitychange', function () { peek(false); });
 
         document.addEventListener('keydown', function (e) {
           if (e.metaKey || e.ctrlKey || e.altKey) return;

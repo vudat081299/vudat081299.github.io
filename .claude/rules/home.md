@@ -59,10 +59,9 @@ Chủ trang gọi là "list ẩn"; trên bảng nhãn là `Reserved`.
 
 - Khoá `hold` ở gốc `collection.json`, ngoài `sections`: `label` và `items` (đủ `icon`, `name`, `desc`, `href`;
   không có `key`). Không có số thứ tự, không vào mục lục, chân trang, ô đếm, tìm kiếm hay phím tắt (REPO-020).
-- Giữ cùng lúc hai phím `.` và `?` (`Period` + `Slash`, Shift tuỳ ý) thì một bảng nổi hiện ở đáy khung nhìn;
-  thả một phím là mất. Dò bằng `e.code`. Blur cửa sổ và đổi tab cũng đóng bảng.
-- `/` một mình vẫn nhảy vào ô tìm kiếm. Ấn `/` trước rồi `.` thì bảng hiện và ô tìm kiếm nhả focus.
-- Phím ấn khi đang gõ trong ô tìm kiếm không tính, để gõ `./` không mở bảng.
+- Giữ ⇧? (Shift + `Slash`) thì một bảng nổi hiện ở đáy khung nhìn; thả một phím là mất. Dò bằng `e.code`.
+  Blur cửa sổ và đổi tab cũng đóng bảng.
+- `/` không Shift vẫn nhảy vào ô tìm kiếm. Đang gõ trong ô tìm kiếm thì ⇧? chỉ gõ dấu `?`.
 - Trang trong `hold` vẫn lên web: không nằm trong `WITHHELD` / `UNLISTED`, `deploy.yml` không `--exclude`. Đó là
   cách giấu link, không phải bảo mật; URL trực tiếp vẫn mở được.
 - Cổng: `lint-collection.py` kiểm `hold` như `sections`; `smoke-index.js` kiểm hiện/ẩn và không lọt vào số đếm.

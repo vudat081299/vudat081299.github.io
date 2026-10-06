@@ -234,7 +234,7 @@ async function ready(page) {
     await ready(p);
   }
 
-  /* ---- 6b. danh sách ẩn: giữ `.` và `?` thì hiện, thả thì mất ------------------- */
+  /* ---- 6b. danh sách ẩn: giữ ⇧? thì hiện, thả thì mất --------------------------- */
   if (data.hold && data.hold.items && data.hold.items.length) {
     const H = data.hold.items;
     const vis = () => p.evaluate(() => !document.getElementById('hold').hidden);
@@ -244,12 +244,12 @@ async function ready(page) {
 
     check('danh sách ẩn: mặc định không hiện', !(await vis()));
 
-    await p.keyboard.down('Period'); await p.keyboard.down('Slash');
+    await p.keyboard.down('Shift'); await p.keyboard.down('Slash');
     const shown = await vis();
     const hrefs = await rows();
-    check('giữ . và ?: bảng hiện đủ mục trong data.hold',
+    check('giữ ⇧?: bảng hiện đủ mục trong data.hold',
       shown && JSON.stringify(hrefs) === JSON.stringify(H.map(i => i.href)), hrefs.join(', '));
-    check('giữ . rồi ?: ô tìm kiếm không giành focus',
+    check('giữ ⇧?: ô tìm kiếm không giành focus',
       await p.evaluate(() => document.activeElement.id !== 'q'));
     const leak = await p.evaluate(() => ({
       items: document.querySelectorAll('[data-item]').length,
@@ -265,35 +265,21 @@ async function ready(page) {
 
     await p.keyboard.down('Slash');
     check('giữ lại: bảng hiện lại', await vis());
-    await p.keyboard.up('Period');
-    check('thả . (? còn giữ): bảng mất', !(await vis()));
+    await p.keyboard.up('Shift');
+    check('thả Shift (? còn giữ): bảng mất', !(await vis()));
     await p.keyboard.up('Slash');
 
-    await p.keyboard.down('Shift'); await p.keyboard.down('Period'); await p.keyboard.down('Slash');
-    check('có Shift (ấn đúng chữ ?) cũng hiện', await vis());
-    await p.keyboard.up('Slash'); await p.keyboard.up('Period'); await p.keyboard.up('Shift');
-
-    await p.keyboard.down('Slash'); await p.keyboard.down('Period');
-    const r1 = await p.evaluate(() => ({ f: document.activeElement.id, v: document.getElementById('q').value }));
-    check('ấn / trước rồi .: bảng hiện, ô tìm kiếm nhả focus, không dính chữ',
-      (await vis()) && r1.f !== 'q' && r1.v === '', JSON.stringify(r1));
-    await p.keyboard.up('Period'); await p.keyboard.up('Slash');
-
-    await p.keyboard.down('Period');
-    check('chỉ giữ .: không hiện', !(await vis()));
-    await p.keyboard.up('Period');
-
     await p.focus('#q');
-    await p.keyboard.down('Period'); await p.keyboard.down('Slash');
-    const r2 = await p.evaluate(() => document.getElementById('q').value);
-    check('đang gõ trong ô tìm kiếm: "./" không mở bảng', !(await vis()) && r2 === './', r2);
-    await p.keyboard.up('Slash'); await p.keyboard.up('Period');
+    await p.keyboard.down('Shift'); await p.keyboard.down('Slash');
+    const typed = await p.evaluate(() => document.getElementById('q').value);
+    check('đang gõ trong ô tìm kiếm: ⇧? chỉ gõ dấu ?', !(await vis()) && typed === '?', typed);
+    await p.keyboard.up('Slash'); await p.keyboard.up('Shift');
     await p.keyboard.press('Escape');
 
-    await p.keyboard.down('Period'); await p.keyboard.down('Slash');
+    await p.keyboard.down('Shift'); await p.keyboard.down('Slash');
     await p.evaluate(() => window.dispatchEvent(new Event('blur')));
     check('mất focus cửa sổ khi đang giữ: bảng tự đóng', !(await vis()));
-    await p.keyboard.up('Slash'); await p.keyboard.up('Period');
+    await p.keyboard.up('Slash'); await p.keyboard.up('Shift');
 
     const broken = [];
     for (const h of H.map(i => i.href)) {
