@@ -234,7 +234,7 @@ async function ready(page) {
     await ready(p);
   }
 
-  /* ---- 6b. danh sách ẩn: giữ ⌘⇧A thì hiện, thả thì mất -------------------- */
+  /* ---- 6b. danh sách ẩn: giữ ⌃⇧⌘A thì hiện, thả thì mất -------------------- */
   if (data.hold && data.hold.items && data.hold.items.length) {
     const H = data.hold.items;
     const vis = () => p.evaluate(() => !document.getElementById('hold').hidden);
@@ -244,10 +244,10 @@ async function ready(page) {
 
     check('danh sách ẩn: mặc định không hiện', !(await vis()));
 
-    await p.keyboard.down('Meta'); await p.keyboard.down('Shift'); await p.keyboard.down('KeyA');
+    await p.keyboard.down('Control'); await p.keyboard.down('Meta'); await p.keyboard.down('Shift'); await p.keyboard.down('KeyA');
     const shown = await vis();
     const hrefs = await rows();
-    check('giữ ⌘⇧A: bảng hiện đủ mục trong data.hold',
+    check('giữ ⌃⇧⌘A: bảng hiện đủ mục trong data.hold',
       shown && JSON.stringify(hrefs) === JSON.stringify(H.map(i => i.href)), hrefs.join(', '));
     const leak = await p.evaluate(() => ({
       items: document.querySelectorAll('[data-item]').length,
@@ -265,23 +265,31 @@ async function ready(page) {
     check('giữ lại: bảng hiện lại', await vis());
     await p.keyboard.up('Shift');
     check('thả Shift (A còn giữ): bảng mất', !(await vis()));
-    await p.keyboard.up('KeyA'); await p.keyboard.up('Meta');
+    await p.keyboard.up('KeyA'); await p.keyboard.up('Meta'); await p.keyboard.up('Control');
+
+    await p.keyboard.down('Control'); await p.keyboard.down('Meta'); await p.keyboard.down('Shift'); await p.keyboard.down('KeyA');
+    const all = await vis();
+    await p.keyboard.up('Control');
+    check('thả Ctrl (⇧⌘A còn giữ): bảng mất', all && !(await vis()));
+    await p.keyboard.up('KeyA'); await p.keyboard.up('Shift'); await p.keyboard.up('Meta');
+
+    await p.keyboard.down('Meta'); await p.keyboard.down('Shift'); await p.keyboard.down('KeyA');
+    check('⌘⇧A thiếu Ctrl: không hiện', !(await vis()));
+    await p.keyboard.up('KeyA'); await p.keyboard.up('Shift'); await p.keyboard.up('Meta');
 
     await p.keyboard.down('Control'); await p.keyboard.down('Shift'); await p.keyboard.down('KeyA');
-    const ctl = await vis();
-    await p.keyboard.up('Control');
-    check('Ctrl+Shift+A cũng hiện; thả Ctrl thì mất', ctl && !(await vis()));
-    await p.keyboard.up('Shift'); await p.keyboard.up('KeyA');
+    check('Ctrl+Shift+A thiếu ⌘: không hiện', !(await vis()));
+    await p.keyboard.up('KeyA'); await p.keyboard.up('Shift'); await p.keyboard.up('Control');
 
     /* Không thử Shift+A một mình: đó là phím tắt mở mục `a` có sẵn, và sẽ chuyển trang. */
     await p.keyboard.down('Meta'); await p.keyboard.down('KeyA');
     check('⌘+A thiếu Shift: không hiện', !(await vis()));
     await p.keyboard.up('KeyA'); await p.keyboard.up('Meta');
 
-    await p.keyboard.down('Meta'); await p.keyboard.down('Shift'); await p.keyboard.down('KeyA');
+    await p.keyboard.down('Control'); await p.keyboard.down('Meta'); await p.keyboard.down('Shift'); await p.keyboard.down('KeyA');
     await p.evaluate(() => window.dispatchEvent(new Event('blur')));
     check('mất focus cửa sổ khi đang giữ: bảng tự đóng', !(await vis()));
-    await p.keyboard.up('KeyA'); await p.keyboard.up('Shift'); await p.keyboard.up('Meta');
+    await p.keyboard.up('KeyA'); await p.keyboard.up('Shift'); await p.keyboard.up('Meta'); await p.keyboard.up('Control');
 
     const broken = [];
     for (const h of H.map(i => i.href)) {

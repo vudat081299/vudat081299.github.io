@@ -59,7 +59,7 @@ Chủ trang gọi là "list ẩn"; trên bảng nhãn là `Reserved`.
 
 - Khoá `hold` ở gốc `collection.json`, ngoài `sections`: `label` và `items` (đủ `icon`, `name`, `desc`, `href`;
   không có `key`). Không có số thứ tự, không vào mục lục, chân trang, ô đếm, tìm kiếm hay phím tắt (REPO-020).
-- Giữ ⌘⇧A (Ctrl+Shift+A) thì một bảng nổi hiện ở đáy khung nhìn, thả ra là mất. Dò bằng `e.code`.
+- Giữ ⌃⇧⌘A (Ctrl+Shift+Cmd+A) thì một bảng nổi hiện ở đáy khung nhìn, thả ra là mất. Dò bằng `e.code`.
 - macOS không bắn `keyup` của phím thường khi ⌘ còn giữ: thả A mà chưa thả ⌘ thì bảng ở lại tới lúc thả ⌘
   hoặc Shift. Blur cửa sổ và đổi tab cũng đóng bảng.
 - Trang trong `hold` vẫn lên web: không nằm trong `WITHHELD` / `UNLISTED`, `deploy.yml` không `--exclude`. Đó là

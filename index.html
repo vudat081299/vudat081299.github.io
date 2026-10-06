@@ -671,7 +671,7 @@
 
         input.addEventListener('input', function () { filter(this.value); });
 
-        /* Giữ ⌘⇧A (hoặc Ctrl+Shift+A) thì bảng ẩn hiện, thả ra là mất.
+        /* Giữ ⌃⇧⌘A (Ctrl+Shift+Cmd+A) thì bảng ẩn hiện, thả ra là mất.
            Dò bằng e.code: Shift+A cho e.key = 'A', và đổi theo bố cục bàn phím.
            macOS không bắn keyup của phím thường khi ⌘ còn giữ — nên thả A mà chưa thả
            ⌘ thì bảng ở lại tới lúc thả ⌘ hoặc Shift. Đó là giới hạn của hệ điều hành,
@@ -679,7 +679,7 @@
            đều đóng bảng, để nó không kẹt lại. */
         var hold = document.getElementById('hold');
         var armed = false;     /* true khi collection.json có danh sách ẩn */
-        function chord(e) { return e.shiftKey && (e.metaKey || e.ctrlKey) && !e.altKey; }
+        function chord(e) { return e.shiftKey && e.metaKey && e.ctrlKey && !e.altKey; }
         function peek(on) { hold.hidden = !(on && armed); }
 
         document.addEventListener('keydown', function (e) {
