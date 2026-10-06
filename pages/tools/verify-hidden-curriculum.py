@@ -10,7 +10,7 @@ Rustichini, các phép Bayes, độ lệch chuẩn của một danh mục — v�
 những con số ấy. lint-pages.py không biết 86,4% có đúng là P(K ≤ 55), K ~ B(100, ½), hay không;
 càng không biết luật ấy còn đúng sau khi ai đó sửa một dòng JS.
 
-Sáu phần, sáu loại sai khác nhau:
+Bảy phần, bảy loại sai khác nhau:
 
   A. DỮ LIỆU NHÚNG — đối chiếu vài giá trị với nguồn (Damodaran, histretSP.xls, 01/2026) và
      kiểm độ dài, để mảng không bị cắt hay lệch năm.
@@ -29,6 +29,8 @@ Sáu phần, sáu loại sai khác nhau:
      câu hỏi của hai bảng luật đi với đúng điều đã đối chiếu, năm can chi tính lại từ năm dương lịch,
      và mọi con số suy ra được tính lại trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn
      trong giá, thứ tự lợi suất, trái phiếu…).
+  G. BẢN GỌN — định nghĩa và điều kiện quan trọng phải còn ngoài phần chi tiết. Không thay được
+     review ngữ nghĩa; bắt hồi quy khi gấp nhầm điều kiện vào details hoặc bỏ lời giải nghĩa của 12 luật.
 
 Chỉ dùng thư viện chuẩn, chạy dưới 5 giây.
 
@@ -37,6 +39,7 @@ Exit code: 1 nếu có con số hoặc luật không khớp.
 """
 import collections
 import html
+from html.parser import HTMLParser
 import json
 import math
 import pathlib
@@ -1123,6 +1126,63 @@ def phan_F2():
             claim(f'{sid}: chuỗi từ nguồn', x in t, f'không thấy “{x}”')
 
 
+def phan_G():
+    class CompactText(HTMLParser):
+        """Đọc phần còn lại của mỗi mục khi mọi details bị loại khỏi bản in gọn."""
+        def __init__(self):
+            super().__init__()
+            self.sid = None
+            self.depth = 0
+            self.sections = {}
+            self.law_notes = 0
+
+        def handle_starttag(self, tag, attrs):
+            attrs = dict(attrs)
+            if tag == 'section':
+                self.sid = attrs.get('id')
+                self.sections[self.sid] = []
+            if tag == 'details':
+                self.depth += 1
+            if self.sid == 's-muoihai' and not self.depth and 'hc-item__brief' in attrs.get('class', '').split():
+                self.law_notes += 1
+
+        def handle_endtag(self, tag):
+            if tag == 'details':
+                self.depth -= 1
+            if tag == 'section':
+                self.sid = None
+
+        def handle_data(self, data):
+            if self.sid and not self.depth:
+                self.sections[self.sid].append(data)
+
+    compact = CompactText()
+    compact.feed(HTML)
+    essential = {
+        's-von': ['vốn kinh tế', 'vốn văn hoá', 'vốn xã hội', 'vốn con người', 'khoảng đệm'],
+        's-no': ['Khoản vay mua thứ gì?', 'Ai có quyền đổi luật giữa chừng?', 'Nếu mất thu nhập sáu tháng'],
+        's-dongxu': ['không phải tỉ lệ an toàn chung'],
+        's-khanhiem': ['bằng chứng chưa thống nhất'],
+        's-phanphoi': ['Xác suất chỉ là ước lượng', 'dùng kết quả để học'],
+        's-bayes': ['Tỉ số cược là xác suất', 'tần suất trong những trường hợp tương tự'],
+        's-heth': ['Dự đoán có thể sai', 'Một bước lùi không tự dẫn'],
+        's-cophieu': ['dữ liệu quá khứ của Mỹ, không bảo đảm tương lai'],
+        's-danhmuc': ['Khi đang rút tiền', 'không để bảo đảm lợi nhuận'],
+        's-vonnguoi': ['không chứng minh mọi khoá học sinh lời', 'không phải tiền có thể rút hôm nay'],
+        's-chutin': ['hai bên còn coi trọng tương lai', 'Giao dịch lớn vẫn cần bảo đảm'],
+        's-thuongluong': ['phương án tốt nhất ấy là BATNA', 'không dùng làm lời đe doạ'],
+        's-memcung': ['chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
+        's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
+        's-giayto': ['quyền của người thừa kế được luật bảo vệ'],
+        's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn'],
+    }
+    for sid, phrases in essential.items():
+        visible = ' '.join(' '.join(compact.sections.get(sid, [])).split())
+        for phrase in phrases:
+            claim(f'bản gọn {sid}: điều kiện luôn hiện', phrase in visible, f'không thấy “{phrase}” ngoài details')
+    claim('bản gọn: cả 12 luật có giải nghĩa luôn hiện', compact.law_notes == 12, str(compact.law_notes))
+
+
 def main():
     global HTML, TEXT
     if not PAGE.exists():
@@ -1138,6 +1198,7 @@ def main():
         phan_D()
         phan_E()
         phan_F()
+        phan_G()
     print()
     if fails:
         print('verify-hidden-curriculum: %d chỗ KHÔNG khớp (trên %d phép kiểm):' % (len(fails), checks))

@@ -56,3 +56,4 @@ Rà cả luận điểm lẫn diễn đạt: giữ ý đúng, sửa sai hoặc t
 Rút câu dài, dẫn nhập và ý lặp; không thêm mục chỉ để đủ checklist mô hình. Giữ thiết kế, tập trung chất lượng nội dung.
 Ưu tiên xương sống và chủ đề dùng được với ít kiến thức; phân biệt nguyên lý dùng rộng với kiến thức theo tình huống.
 Độ dài không tự là lỗi; kiểm cả thời gian tiếp thu và bản in PDF, giữ chiều sâu có ích để tra cứu.
+Thu gọn phải giữ nguyên lý, cách dùng và điều kiện quan trọng luôn hiện; bản PDF gọn cũng phải hiểu đúng khi đọc riêng.

@@ -142,7 +142,7 @@
    "kind": [
     "math"
    ],
-   "idea": "Mức đặt mỗi lần — phần tài sản đem ra cược — quyết định giàu lên hay nghèo đi, ngay cả khi lợi thế không đổi.",
+   "idea": "Với lợi thế cho trước, phần tài sản đem ra rủi ro ảnh hưởng tốc độ tích luỹ và khả năng tiếp tục. Kelly cần xác suất, tỉ lệ ăn thua đáng tin; đặt nhỏ không tự tạo lợi thế.",
    "why": "Chọn đúng cơ hội vẫn có thể thua vì đặt quá lớn.",
    "mechanism": "Trong trò đồng xu +50%/−40%, đặt phần f mỗi ván cho tăng trưởng theo thời gian ½·ln(1 + 0,5f) + ½·ln(1 − 0,4f), cao nhất ở f = 25% (tiêu chuẩn Kelly) và âm khi f vượt 50%.",
    "mistake": "Đặt quá tay vì tin chắc vào lợi thế của mình; Thorp nhận xét đặt quá tay hại hơn hẳn đặt non tay.",
@@ -522,7 +522,7 @@
     "math",
     "lore"
    ],
-   "idea": "Luôn bước lên chỗ cao hơn thì dừng ở đỉnh gần nhất; muốn tới đỉnh cao hơn thường phải xuống dốc một đoạn.",
+   "idea": "Chỉ chọn bước tốt hơn ngay có thể giữ mình ở một kết quả kém. Đổi hướng đôi khi cần bước lùi có giới hạn; không phải bước lùi nào cũng dẫn tới kết quả tốt hơn.",
    "why": "Lợi ích trước mắt có thể giữ mình ở hướng kém hơn trong dài hạn.",
    "mechanism": "Mỗi bước được chấm bằng lợi ích ngay, nên các bước đi xuống — giảm lương để học, một năm làm lại từ đầu — luôn bị loại, dù chúng dẫn tới chỗ cao hơn.",
    "mistake": "Tham bát bỏ mâm: giữ lợi nhỏ trước mắt, mất cái lớn phía sau.",
@@ -767,7 +767,7 @@
     "math",
     "mixed"
    ],
-   "idea": "Giá một cổ phiếu đã chứa sẵn một lời đoán về tương lai; lãi hay lỗ đến từ chênh lệch giữa điều xảy ra và điều giá đã hứa.",
+   "idea": "Lợi suất cổ đông đến từ dòng tiền nhận được và thay đổi giá. Giá chứa kỳ vọng về tương lai; doanh nghiệp tốt vẫn có thể là khoản mua kém nếu kỳ vọng trong giá quá cao.",
    "why": "Công ty tốt có thể là khoản đầu tư tồi nếu giá đòi tương lai quá đẹp.",
    "mechanism": "Khi lợi nhuận được trả hết và tăng đều mãi mãi, lợi suất lợi nhuận E/P = r − g. P/E 40 với lợi suất đòi hỏi 9%/năm hàm ý lợi nhuận tăng ít nhất khoảng 6,5%/năm mãi mãi; nếu sau mười năm chỉ còn 3%/năm thì mười năm đầu phải tăng khoảng 14,9%/năm.",
    "mistake": "Mua vì công ty nổi tiếng và đang tăng trưởng mà không hỏi giá đã trả trước bao nhiêu cho tăng trưởng ấy.",
@@ -1097,7 +1097,7 @@
    "kind": [
     "mixed"
    ],
-   "idea": "Ở tầng đỉnh, nhiều người giỏi nhất thế giới đã thử rộng trước rồi mới chuyên, và lúc đầu tiến bộ chậm hơn người chuyên sớm.",
+   "idea": "Nghiên cứu, rõ nhất ở thể thao, ghi nhận nhiều người đạt đỉnh đã thử rộng trước khi chuyên sâu. Đây là gợi ý kiểm theo nghề, không phải lời khuyên trì hoãn đào sâu cho mọi người.",
    "why": "Thử có chủ đích giúp chọn hướng và tìm kỹ năng bổ trợ; đào sâu vẫn cần thiết.",
    "mechanism": "Phân tích gộp 51 báo cáo về 6.096 vận động viên, 772 người thuộc hàng đầu thế giới: người đẳng cấp thế giới lúc trưởng thành thuở nhỏ chơi nhiều môn hơn, bắt đầu môn chính muộn hơn, tiến bộ ban đầu chậm hơn người chỉ đạt cấp quốc gia; ở lứa trẻ thì ngược lại (Güllich, Macnamara & Hambrick, 2022).",
    "mistake": "Suy ra đa năng luôn hơn chuyên sâu, hoặc ngược lại; đây là tương quan, đo ở tầng đỉnh.",
@@ -1204,7 +1204,7 @@
    "kind": [
     "solid"
    ],
-   "idea": "Người quen sơ, nhất là ở môi trường khác, mang tới thông tin và cơ hội mà bạn thân không có.",
+   "idea": "Người quen sơ ở môi trường khác có thể mang tới thông tin nhóm thân quen thiếu. Tác dụng khác theo ngành và loại hỗ trợ; quan hệ mạnh vẫn quan trọng cho sự tin cậy sâu.",
    "why": "Người ngoài nhóm quen có thể mang thông tin và cơ hội khác.",
    "mechanism": "Bạn thân biết đúng điều bạn đã biết; người quen sơ đứng ở nhóm khác nên nghe được việc chưa đăng tuyển, giá thị trường, người đang cần. Granovetter (1973): trong những người tìm được việc nhờ người quen, chỉ 16,7% gặp người ấy thường xuyên.",
    "mistake": "Nghĩ quan hệ càng yếu càng tốt: các thí nghiệm trên hơn 20 triệu người dùng LinkedIn (2022) thấy quan hệ yếu vừa phải giúp chuyển việc nhiều nhất; quá yếu hay quá thân đều kém hơn.",
@@ -1230,7 +1230,7 @@
     "mixed",
     "lore"
    ],
-   "idea": "Người nhận một điều tốt thấy mắc nợ và muốn đáp lại — một nguyên tắc được ghi nhận ở hầu hết mọi nền văn hoá.",
+   "idea": "Nhận điều tốt có thể tạo cảm giác muốn đáp lại; đó là cơ chế giúp hợp tác, cũng có thể tạo áp lực. Nhận quà không buộc mình nhận lời nhờ.",
    "why": "Giúp nhau trước khi cần tạo giá trị chung; quà tặng cũng có thể gây áp lực.",
    "mechanism": "Quà không được xin cũng có thể tạo cảm giác phải đáp. Trong thí nghiệm 3 của Grant & Gino (2010), cảm ơn người gây quỹ gắn với số cuộc gọi tăng từ 41,4 lên 62,6 mỗi tuần.",
    "mistake": "Cho không chọn lọc tới kiệt sức: Grant (2013) thấy người cho có mặt ở cả đáy lẫn đỉnh thành công, và người cho ở đỉnh vẫn giữ lợi ích của chính mình.",
@@ -1364,7 +1364,7 @@
    "kind": [
     "solid"
    ],
-   "idea": "Người ta chấp nhận một kết quả bất lợi dễ hơn hẳn khi cách đi tới kết quả ấy công bằng.",
+   "idea": "Tiêu chí rõ, cơ hội góp ý và đối xử tôn trọng có thể giúp người ta chấp nhận kết quả bất lợi. Thủ tục công bằng không biến quyết định sai thành đúng.",
    "why": "Người chịu quyết định còn đánh giá cách mình được lắng nghe và đối xử.",
    "mechanism": "Thibaut và Walker (1975), Tyler (Why People Obey the Law, 1990): ba thành phần — được trình bày ý kiến, tiêu chí rõ và áp như nhau cho mọi người, được đối xử tôn trọng.",
    "mistake": "Nghĩ kết quả tốt sẽ bù cho thủ tục ẩu, hoặc giữ kín tiêu chí để được linh hoạt.",
@@ -1472,7 +1472,7 @@
    "kind": [
     "mixed"
    ],
-   "idea": "Con số được nói ra đầu tiên kéo các con số sau về phía nó.",
+   "idea": "Con số đầu tiên có thể kéo thương lượng về phía nó. Đối chiếu dữ liệu, mục tiêu và phương án thay thế; neo quá xa có thể làm bên kia bỏ cuộc.",
    "why": "Nó quyết định nên ra giá trước hay chờ, và cách tự vệ khi bên kia ra giá trước.",
    "mechanism": "Trong ba thí nghiệm của Galinsky và Mussweiler (2001), giá mở đầu kéo giá chốt. Lợi thế ra giá trước giảm khi bên kia nghĩ tới phương án thay thế, giới hạn của đối tác hoặc mục tiêu riêng.",
    "mistake": "Xoay quanh con số bên kia vừa đưa, hoặc ra giá trước khi chưa có dữ liệu thị trường.",
@@ -1721,7 +1721,7 @@
     "custom",
     "math"
    ],
-   "idea": "Sắp xếp trước bằng giấy tờ hợp lệ để tài sản đến đúng người, và để người ở lại không phải đoán hay đi tìm từng thứ.",
+   "idea": "Giấy tờ hợp lệ giúp chuyển phần tài sản mình có quyền và để người ở lại tìm được hồ sơ. Di chúc vẫn chịu giới hạn của luật, gồm quyền thừa kế được bảo vệ.",
    "why": "Thiếu di chúc thì luật chia thay; thiếu hồ sơ thì người ở lại khó tìm tài sản và nghĩa vụ.",
    "mechanism": "Di chúc thường lập thành văn bản; chỉ được di chúc miệng khi tính mạng bị đe doạ và không thể lập văn bản (Điều 627, 629). Điều 644 bảo vệ tối thiểu hai phần ba suất theo luật cho con chưa thành niên, cha mẹ, vợ chồng, con thành niên không có khả năng lao động, trừ người từ chối nhận hoặc không có quyền hưởng. Phần di sản không có định đoạt hợp lệ thì chia theo luật; cùng hàng được phần bằng nhau (Điều 651).",
    "mistake": "Nghĩ giấy uỷ quyền thay được di chúc — uỷ quyền chấm dứt khi người uỷ quyền chết (Điều 140); hoặc quên kiểm tên người thụ hưởng trên hợp đồng bảo hiểm sau khi cưới, ly hôn, có con.",

@@ -276,6 +276,7 @@
   .hc-rel .k { font-family: var(--wb-font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--wb-fg-subtle); margin-right: 8px; }
 
   /* Nguyên lý và điều kiện ở ngoài; bằng chứng, ví dụ và công thức mở khi cần. */
+  .hc-item__brief { margin: 8px 0; font-size: 14px; line-height: 1.65; color: var(--wb-fg-muted); }
   .hc-depth { margin: 14px 0; border-top: var(--wb-bw) solid var(--wb-border); }
   .hc-depth > summary { cursor: pointer; padding: 12px 0; font-size: 13.5px; font-weight: 650; line-height: 1.5; }
   .hc-depth > summary:focus-visible { outline: 2px solid var(--wb-fg); outline-offset: 3px; }
@@ -305,9 +306,12 @@
     .hc-hero { padding: 0 0 10px; }
     .hc-title { font-size: 22pt; }
     .hc-sec-title, .hc-part-head h2 { font-size: 14pt; }
-    .hc-p, .hc-lede, .hc-ul, .hc-ol, .hc-key, .hc-start-list { font-size: 10pt; line-height: 1.45; max-width: none; }
+    .hc-p, .hc-lede, .hc-ul, .hc-ol, .hc-key, .hc-start-list, .hc-item__brief { font-size: 10pt; line-height: 1.45; max-width: none; }
     .hc-meta, .hc-src, .hc-eyebrow-sec { font-size: 8pt; }
     h2, h3, h4, summary { break-after: avoid; }
+    .hc-eyebrow-sec, .hc-item__top { break-after: avoid; }
+    .hc-key { break-inside: avoid; }
+    body[data-print="brief"] #s-muoihai .hc-item { break-inside: avoid; }
     p { orphans: 3; widows: 3; }
     .hc-start, .hc-key, .hc-item, .hc-classic { box-shadow: none; }
     .hc-start-list { display: block; }
@@ -388,8 +392,8 @@
     <button class="wb-btn wb-btn--outline wb-btn--sm" id="hc-print">In / lưu PDF</button>
     <span id="hc-reading-status" role="status"></span>
   </div>
-  <p class="hc-reading-note">Mỗi mục hiện nguyên lý và gợi ý áp dụng; mở chi tiết để xem bằng chứng, giới hạn và mô hình. Bản PDF gọn giữ phần tóm lược đang hiện, lộ trình đọc và 12 luật trả giá; bản đầy đủ thêm mọi chi tiết, bài tự soát, bảng ôn tập và thư viện, kể cả thẻ đang bị lọc.</p>
-  <p class="hc-print-note" id="hc-print-note">Bản gọn — nguyên lý và gợi ý, lược phần bằng chứng, công thức và thư viện. Trước quyết định lớn, đọc chi tiết và nguồn tại https://vudat081299.github.io/pages/hidden-curriculum.html. Nội dung rà ngày 06/10/2026.</p>
+  <p class="hc-reading-note">Mỗi mục luôn hiện nguyên lý, gợi ý và điều kiện quan trọng để hiểu đúng; mở chi tiết để xem cơ chế, bằng chứng, ví dụ và giới hạn sâu hơn. Bản PDF gọn giữ phần cốt lõi này, lộ trình đọc và 12 luật trả giá; bản đầy đủ thêm mọi chi tiết, bài tự soát, bảng ôn tập và thư viện, kể cả thẻ đang bị lọc. Chọn nội dung PDF độc lập với các mục đang mở trên màn hình.</p>
+  <p class="hc-print-note" id="hc-print-note">Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn. Khi cần tính toán hoặc quyết định lớn, mở chi tiết tại https://vudat081299.github.io/pages/hidden-curriculum.html. Nội dung rà ngày 06/10/2026.</p>
 
   <details class="hc-depth hc-examples"><summary>Bốn ví dụ định lượng trong bài</summary>
   <div class="hc-figs" style="margin-bottom:20px">
@@ -617,6 +621,7 @@
         <h2 class="hc-sec-title">Không sao chép được xuất phát điểm; <i>có thể học cách dùng vốn</i></h2>
 
         <p class="hc-lede">Bourdieu (1986) phân biệt <b>vốn kinh tế</b> (tiền, tài sản), <b>vốn văn hoá</b> (hiểu biết, cách cư xử, bằng cấp) và <b>vốn xã hội</b> (quan hệ huy động được). Chúng có thể hỗ trợ nhau: tiền mở cơ hội học; học và quan hệ mở cơ hội nghề. Chuyển đổi cần thời gian, điều kiện và sự công nhận của môi trường.</p>
+        <p class="hc-p">Trang thêm <b>vốn con người</b> — kỹ năng, kiến thức, sức khoẻ (Becker, 1964) — và <b>khoảng đệm</b>: phần dư tiền, thời gian, sức lực. Khoảng đệm giúp chờ, thử và từ chối; thiếu nó khiến lựa chọn bị thu hẹp. Bằng chứng về ảnh hưởng lên nhận thức còn tranh cãi (<a class="hc-x" href="#s-khanhiem">2.1</a>).</p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
@@ -626,7 +631,6 @@
         <details class="hc-depth">
           <summary>Cơ chế, bằng chứng và cách áp dụng</summary>
           <div class="hc-depth__body">
-        <p class="hc-p">Trang thêm <b>vốn con người</b> — kỹ năng, kiến thức, sức khoẻ (Becker, 1964) — và <b>khoảng đệm</b>: phần dư tiền, thời gian, sức lực. Khoảng đệm giúp chờ, thử và từ chối; thiếu nó khiến lựa chọn bị thu hẹp. Bằng chứng về ảnh hưởng lên nhận thức còn tranh cãi (<a class="hc-x" href="#s-khanhiem">2.1</a>).</p>
         <h3 class="hc-h3">Ba mục tiêu trên năm loại vốn</h3>
         <div class="hc-tw hc-tw--stack">
           <table class="wb-table">
@@ -800,7 +804,7 @@
         <p class="hc-eyebrow-sec"><b>Khung 3/3</b> — đọc trang thế nào</p>
         <h2 class="hc-sec-title">Đọc nguyên tắc cùng <i>bằng chứng và giới hạn</i></h2>
 
-        <p class="hc-p">Toán, nghiên cứu, lý thuyết, sử liệu, kinh nghiệm và tập quán có mức tin khác nhau. Phương trình cần đúng giả định; tục ngữ có thể đối nghịch nhau. Bảy nhãn dưới đây giúp đọc mỗi nguyên tắc đúng mức.</p>
+        <p class="hc-p">Toán, nghiên cứu, lý thuyết, sử liệu, kinh nghiệm và tập quán có mức tin khác nhau. Phương trình cần đúng giả định; tục ngữ có thể đối nghịch nhau. Bảy nhãn trong chi tiết giúp đọc mỗi nguyên tắc đúng mức.</p>
 
         <details class="hc-depth"><summary>Ý nghĩa bảy nhãn độ tin</summary>
 <div class="hc-tw hc-tw--stack">
@@ -819,7 +823,7 @@
         </div>
 </details>
 
-        <p class="hc-p">Mỗi mục có nguyên tắc, cơ chế, bằng chứng và cách dùng. Khung cuối mục là gợi ý áp dụng, không phải chân lý. Đọc giới hạn trước quyết định lớn; mục <a class="hc-x" href="#s-mauthuan">11.1</a> đối chiếu các nguyên tắc ngược chiều. Số như <a class="hc-x" href="#s-dongxu">1.3</a> là liên kết tới mục.</p>
+        <p class="hc-p">Phần luôn hiện gồm nguyên lý, gợi ý và điều kiện quan trọng; khung “Luật của mục này” là gợi ý áp dụng, không phải chân lý. Mở chi tiết khi cần hiểu cơ chế, tính toán hoặc quyết định lớn; mục <a class="hc-x" href="#s-mauthuan">11.1</a> đối chiếu các nguyên tắc ngược chiều. Số như <a class="hc-x" href="#s-dongxu">1.3</a> là liên kết tới mục.</p>
 
         <p class="hc-p">Trang hay hỏi “điều gì người lớn lên trong một gia đình có vốn được dạy sớm, mà trường không dạy?”. Đó là một cách đi tìm tri thức ngầm, không phải một luận điểm về tầng lớp: một luật đúng hay sai vì cơ chế và bằng chứng của nó, không vì ai đang dùng nó.</p>
 
@@ -934,7 +938,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Kỳ vọng dương chưa đủ; mức đặt mới quyết định bạn có giàu lên không.</b> Không bao giờ đặt một khoản mà nếu thua sẽ không còn gì để chơi tiếp. Khi không chắc lợi thế của mình lớn cỡ nào, đặt nhỏ hơn mức mình nghĩ.
+          <b>Kỳ vọng dương chưa đủ; mức đặt ảnh hưởng khả năng tích luỹ và sống sót.</b> Không đặt khoản mà thua thì hết khả năng tiếp tục. Khi chưa chắc lợi thế, thu nhỏ phần rủi ro; đặt nhỏ không biến một khoản bất lợi thành có lợi. Kelly tối ưu theo giả định của mô hình, không phải tỉ lệ an toàn chung ngoài đời.
         </div>
 
         <details class="hc-depth">
@@ -986,6 +990,11 @@
         <p><span class="hc-evi hc-evi--math">Toán học</span> <span class="hc-evi hc-evi--lore">Kinh nghiệm</span></p>
 
         <p class="hc-lede">Nợ không tốt hay xấu tự nó. Nó là một <b>đòn bẩy</b>: nhân cả lãi lẫn lỗ, và nó có thể <b>bị gọi về đúng lúc bạn yếu nhất</b>. Ba câu nên hỏi trước mọi khoản vay:</p>
+        <ol class="hc-ol">
+          <li><b>Khoản vay mua thứ gì?</b> Tài sản sinh tiền (nhà cho thuê, máy móc của một việc kinh doanh đang chạy), tài sản để ở trong khả năng, hay đồ tiêu dùng mất giá?</li>
+          <li><b>Ai có quyền đổi luật giữa chừng?</b> Lãi có thả nổi sau thời gian ưu đãi không? Bên cho vay có quyền gọi thêm ký quỹ hay bán tài sản của bạn khi giá xuống không?</li>
+          <li><b>Nếu mất thu nhập sáu tháng, khoản trả nợ còn đứng được không?</b></li>
+        </ol>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
@@ -995,11 +1004,6 @@
         <details class="hc-depth">
           <summary>Cơ chế, bằng chứng và cách áp dụng</summary>
           <div class="hc-depth__body">
-        <ol class="hc-ol">
-          <li><b>Khoản vay mua thứ gì?</b> Tài sản sinh tiền (nhà cho thuê, máy móc của một việc kinh doanh đang chạy), tài sản để ở trong khả năng, hay đồ tiêu dùng mất giá?</li>
-          <li><b>Ai có quyền đổi luật giữa chừng?</b> Lãi có thả nổi sau thời gian ưu đãi không? Bên cho vay có quyền gọi thêm ký quỹ hay bán tài sản của bạn khi giá xuống không?</li>
-          <li><b>Nếu mất thu nhập sáu tháng, khoản trả nợ còn đứng được không?</b></li>
-        </ol>
         <p class="hc-p">Ba cái bẫy hay gặp ở Việt Nam, mỗi cái trượt ít nhất một trong ba câu ấy:</p>
         <ul class="hc-ul">
           <li><b>Vay ký quỹ mua cổ phiếu</b> trượt câu 2: khi giá giảm tới ngưỡng, công ty chứng khoán bán cổ phiếu của bạn ở giá thấp — biến một đợt giảm tạm thời thành khoản lỗ vĩnh viễn. Đây chính là đặt <i>f</i> &gt; 100% trong trò đồng xu ở <a class="hc-x" href="#s-dongxu">mục 1.3</a>.</li>
@@ -1141,7 +1145,7 @@
         <h2 class="hc-sec-title">Khoảng đệm giúp bớt bị <i>việc gấp chi phối</i></h2>
         <p><span class="hc-evi hc-evi--mixed">Bằng chứng vừa</span></p>
 
-        <p class="hc-lede">Mani, Mullainathan, Shafir và Zhao (2013) kiểm tra cùng 464 nông dân trồng mía ở Ấn Độ trước và sau thu hoạch. Trước vụ, khi cạn tiền, họ làm bài <b>kém hơn rõ rệt</b>; tác giả so mức chênh với khoảng ba phần tư tác hại của mất một đêm ngủ. Giả thuyết: lo thiếu tiền chiếm sự chú ý cần cho việc khác.</p>
+        <p class="hc-lede">Khoảng đệm tiền, thời gian và sức lực giúp mình bớt phải chọn trong thế gấp. Giả thuyết rằng lo thiếu tiền làm giảm khả năng nhận thức có nghiên cứu ủng hộ, cũng có kết quả không tái hiện được; <b>bằng chứng chưa thống nhất</b>. Khoảng đệm không thay được hỗ trợ xã hội và môi trường đáng tin.</p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
@@ -1151,6 +1155,7 @@
         <details class="hc-depth">
           <summary>Cơ chế, bằng chứng và cách áp dụng</summary>
           <div class="hc-depth__body">
+        <p class="hc-p">Mani, Mullainathan, Shafir và Zhao (2013) kiểm tra cùng 464 nông dân trồng mía ở Ấn Độ trước và sau thu hoạch. Trước vụ, khi cạn tiền, họ làm bài <b>kém hơn rõ rệt</b>; tác giả so mức chênh với khoảng ba phần tư tác hại của mất một đêm ngủ. Giả thuyết: lo thiếu tiền chiếm sự chú ý cần cho việc khác.</p>
         <p class="hc-p">Mullainathan và Shafir (<i>Scarcity</i>, 2013) gọi là <b>đào hầm</b>: dồn chú ý vào thiếu thốn trước mắt, bỏ sót sức khoẻ, học hành và kế hoạch dài hạn. Nhưng bằng chứng chưa thống nhất: Carvalho, Meier và Wang (2016) không thấy nhận thức của hộ thu nhập thấp Mỹ đổi trước–sau ngày lương; Wicherts và Scholten (2013) không tái hiện được kết quả khi phân tích lại thí nghiệm Mani. Vì vậy nhãn là <i>bằng chứng vừa</i>. Nghiên cứu dưới đây xét thêm độ đáng tin của môi trường:</p>
         <div class="hc-quote">
           Trong thí nghiệm “viên kẹo dẻo” làm lại năm 2013, trẻ được chia hai nhóm. Nhóm thứ nhất vừa thấy người thí nghiệm <b>giữ lời hứa</b> mang bút màu đẹp tới; nhóm thứ hai vừa bị <b>thất hứa</b>. Sau đó, trẻ nhóm thứ nhất chờ được trung bình 12 phút trước khi ăn kẹo, trẻ nhóm thứ hai 3 phút — gấp khoảng bốn lần. Kiên nhẫn không chỉ là tính cách; nó còn là <b>phán đoán hợp lý về việc môi trường có đáng tin hay không</b>.
@@ -1215,7 +1220,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Mọi quyết định lớn viết ra ba kịch bản và một câu: “nếu kịch bản xấu xảy ra, tôi còn đứng được không?”.</b> Nếu không, thu nhỏ quyết định lại cho tới khi câu trả lời là có.
+          <b>Viết ba kịch bản và hỏi: “nếu kịch bản xấu xảy ra, tôi còn đứng được không?”.</b> Nếu không, thu nhỏ rủi ro. Xác suất chỉ là ước lượng: kiểm tỉ lệ của những trường hợp tương tự và giữ một khoảng khi chưa chắc. Đánh giá cách chọn bằng thông tin có lúc quyết; dùng kết quả để học, không coi một lần thắng là chứng minh cách làm tốt.
         </div>
 
         <details class="hc-depth">
@@ -1250,7 +1255,7 @@
         <h2 class="hc-sec-title">Bắt đầu từ tỉ lệ nền; <i>cập nhật theo sức nặng bằng chứng</i></h2>
         <p><span class="hc-evi hc-evi--math">Toán học</span> <span class="hc-evi hc-evi--solid">Bằng chứng mạnh</span> <span class="hc-evi hc-evi--mixed">Bằng chứng vừa</span></p>
 
-        <p class="hc-lede"><b>Tỉ số cược sau = tỉ số cược trước × sức nặng của bằng chứng.</b> Sức nặng là khả năng thấy bằng chứng nếu giả thuyết đúng, chia cho khả năng thấy nó nếu giả thuyết sai. Công thức Bayes dùng cùng phép tính cho xét nghiệm, thành tích quỹ hay đánh giá độ đáng tin.</p>
+        <p class="hc-lede"><b>Tỉ số cược sau = tỉ số cược trước × sức nặng của bằng chứng.</b> Tỉ số cược là xác suất giả thuyết đúng chia cho xác suất nó sai. Tỉ lệ nền — tần suất trong những trường hợp tương tự — giúp đặt niềm tin ban đầu. Sức nặng là khả năng thấy bằng chứng nếu giả thuyết đúng, chia cho khả năng thấy nó nếu giả thuyết sai. Chọn sai nhóm so sánh hoặc đầu vào thì công thức đúng vẫn cho kết luận sai.</p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
@@ -1395,7 +1400,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Trước mỗi can thiệp lớn, hỏi “và rồi sao nữa?” ít nhất hai lần:</b> ai sẽ đổi hành vi, ai sẽ chơi theo thước đo, vòng nào sẽ quay. Đừng biến một con số thành mục tiêu duy nhất; tìm nút thắt trước khi tối ưu; sẵn sàng xuống dốc một đoạn để sang đỉnh cao hơn.
+          <b>Trước can thiệp lớn, hỏi “và rồi sao nữa?”:</b> ai sẽ đổi hành vi, ai sẽ tối ưu thước đo, vòng nào sẽ quay. Đối chiếu chỉ số với kết quả thật; tìm khâu đang giới hạn mục tiêu trước khi tăng năng lực. Dự đoán có thể sai: với việc dễ sửa, thử nhỏ rồi quan sát. Một bước lùi không tự dẫn tới kết quả tốt hơn; đổi hướng cần khoảng đệm và giới hạn tổn thất.
         </div>
 
         <details class="hc-depth">
@@ -1456,7 +1461,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Khi tương lai còn mù mờ, giữ lựa chọn tương lai với chi phí hợp lý: tiền dự phòng, kỹ năng chuyển được, chi phí cố định thấp, quan hệ rộng, sức khoẻ.</b> Tránh những thứ phá quyền chọn: nợ, chi cố định cao, chữ ký bảo lãnh. Và biết lúc đóng cửa: cam kết có thể giúp dồn nguồn lực để đi sâu.
+          <b>Khi tương lai còn mù mờ, giữ lựa chọn tương lai với chi phí hợp lý:</b> tiền dự phòng, kỹ năng chuyển được, chi phí cố định thấp, quan hệ rộng, sức khoẻ. Nợ và nghĩa vụ cố định vượt sức có thể chặn đường lui. Biết lúc đóng cửa: cam kết có thể giúp dồn nguồn lực để đi sâu; chờ và giữ cửa mở cũng có chi phí.
         </div>
 
         <details class="hc-depth">
@@ -1700,11 +1705,11 @@
         <h2 class="hc-sec-title">Đầu tư dài hạn cần <i>đa dạng, phí thấp và khả năng chờ</i></h2>
         <p><span class="hc-evi hc-evi--solid">Bằng chứng mạnh</span> <span class="hc-evi hc-evi--math">Toán học</span></p>
 
-        <p class="hc-lede">Không có cách chọn mã thắng mọi lần. <b>Lướt sóng thua sau phí với gần như tất cả mọi người</b>, kể cả người làm nghề toàn thời gian; dữ liệu từ nhiều nước nói cùng một điều:</p>
+        <p class="hc-lede">Không có cách chọn mã thắng mọi lần. Nghiên cứu giao dịch trong ngày ghi nhận đa số thua sau phí, hoặc rất ít người giữ được lợi nhuận đều đặn. Kết quả khác theo thị trường và cách đo; thắng một thời gian chưa chứng minh có lợi thế bền.</p>
 
         <div class="hc-key">
-          <span class="k">Bảy luật để không bị thị trường đánh bại</span>
-          <b>Đa dạng, phí thấp, không vay; đầu tư theo kế hoạch phù hợp khả năng chịu lỗ.</b> Giữ tiền sắp cần ở chỗ ít biến động. Mười năm vẫn có thể lỗ: ở Mỹ có 11 trên 89 khung 10 năm mất sức mua (<a class="hc-x" href="#lab-time">mô hình 3</a>). Khi giá giảm, kiểm lại nhu cầu tiền, tỉ trọng và giá trị tài sản; đừng bán chỉ vì hoảng, cũng đừng mua chỉ vì giảm. Cơ chế giá: <a class="hc-x" href="finance-econ-rulebook.html#eq-stock">Economics Handbook, mục A5</a>.
+          <span class="k">Giữ kế hoạch và mức rủi ro phù hợp</span>
+          <b>Đa dạng, phí thấp, không vay; đầu tư theo kế hoạch phù hợp khả năng chịu lỗ.</b> Giữ tiền sắp cần ở chỗ ít biến động. Mười năm vẫn có thể lỗ: ở Mỹ có 11 trên 89 khung 10 năm mất sức mua (<a class="hc-x" href="#lab-time">mô hình 3</a>). Đó là dữ liệu quá khứ của Mỹ, không bảo đảm tương lai hay kết quả ở thị trường khác. Khi giá giảm, kiểm lại nhu cầu tiền, tỉ trọng và giá trị tài sản; đừng bán chỉ vì hoảng, cũng đừng mua chỉ vì giảm. Cơ chế giá: <a class="hc-x" href="finance-econ-rulebook.html#eq-stock">Economics Handbook, mục A5</a>.
         </div>
 
         <details class="hc-depth">
@@ -1824,7 +1829,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Trước mọi khoản mua, tính lợi suất ròng và đặt nó cạnh lãi vay và lãi tiền gửi.</b> Chỉ mua thứ nằm trong vòng tròn hiểu biết, với biên an toàn; coi giá thị trường là lời chào hàng, không phải lời phán xử. Câu cổ cùng ý: <a class="hc-x" href="#s-kinhdien">8.4</a>, lời Kế Nhiên.
+          <b>Trước khoản mua để đầu tư, tính lợi suất ròng và so với chi phí vốn.</b> Lãi tiền gửi là mốc so, không biến hai khoản có rủi ro khác nhau thành tương đương. Hiểu thứ mình mua và chừa khoảng giữa giá mua với giá trị ước tính để chịu sai số; biên an toàn không cứu được ước tính sai từ gốc. Coi giá thị trường là lời chào hàng, không phải lời phán xử. Câu cổ cùng ý: <a class="hc-x" href="#s-kinhdien">8.4</a>, lời Kế Nhiên.
         </div>
 
         <details class="hc-depth">
@@ -1862,7 +1867,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Đặt tỉ trọng theo mức mất chịu được, chọn tài sản theo tương quan chứ không theo số lượng, và giữ tiền của ba năm tới ở chỗ không bị buộc bán.</b> Viết sẵn luật tái cân bằng; xem danh mục theo lịch thưa.
+          <b>Đặt tỉ trọng theo mức mất chịu được; xét các khoản có thể cùng giảm thay vì chỉ đếm số lượng.</b> Giữ tiền sắp cần ở chỗ dễ rút, ít biến động; thời hạn và số tiền phụ thuộc nghĩa vụ của mình. Khi đang rút tiền, năm lỗ đến sớm có thể hại hơn. Viết luật tái cân bằng để giữ mức rủi ro đã chọn, không để bảo đảm lợi nhuận.
         </div>
 
         <details class="hc-depth">
@@ -2086,7 +2091,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Ở tuổi hai mươi, đầu tư vào bản thân là đầu tư vào tài sản lớn nhất mình có</b> — và đa dạng hoá nghĩa là phần tiền nên bù vào chỗ thu nhập của mình yếu, không đặt cược thêm vào cùng một rủi ro.
+          <b>Đầu tư và bảo vệ khả năng kiếm tiền: kỹ năng có cầu, phản hồi thật và sức khoẻ.</b> So chi phí học, thu nhập bỏ qua và cơ hội dùng kỹ năng; vốn con người lớn không chứng minh mọi khoá học sinh lời, cũng không phải tiền có thể rút hôm nay. Phần tài chính nên bớt cùng chiều với rủi ro thu nhập, thay vì đặt cược thêm vào cùng một cú sốc.
         </div>
 
         <details class="hc-depth">
@@ -2304,7 +2309,7 @@
 
       <div class="hc-part-head" id="nguoi">
         <p class="kicker">Phần 5 · Lòng người — vốn xã hội và uy tín</p>
-        <h2>Lòng người là niềm tin tích qua những lần gặp lại: <i>ấm áp trước, năng lực sau, có đi có lại, công bằng khi dẫn dắt</i></h2>
+        <h2>Lòng người là niềm tin tích qua những lần gặp lại: <i>thiện ý, năng lực, có đi có lại, công bằng khi dẫn dắt</i></h2>
         <p>Mạnh Tử nói <span class="hc-han" lang="zh-Hant">天時不如地利，地利不如人和</span> — thiên thời không bằng địa lợi, địa lợi không bằng nhân hoà (thiên Công Tôn Sửu hạ). Tám mục: hai trục người khác dùng để xét mình; mạng lưới; cho và nhận; chữ tín; uy tín; địa vị và tín hiệu; thuyết phục; giữ lòng người khi dẫn dắt.</p>
       </div>
 
@@ -2365,7 +2370,7 @@
 
         <div class="hc-key">
           <span class="k">Việc làm</span>
-          (1) Mỗi quý tham gia một nhóm có người ngoài môi trường quen thuộc. (2) Giữ quan hệ yếu bằng những lần chạm nhỏ: vài tháng một tin nhắn, một bài viết hữu ích gửi đúng người. (3) <b>Làm cầu nối</b>: giới thiệu hai người nên biết nhau. Người hay nối người khác lại với nhau là người được nhớ đến khi có cơ hội.
+          <b>Xây quan hệ qua việc làm chung đều đặn với người ngoài môi trường quen thuộc.</b> Giữ liên hệ bằng thông tin hữu ích; giới thiệu hai người khi có lợi cho cả hai. Lời giới thiệu chỉ mở cửa, không thay năng lực; tác dụng của quan hệ yếu khác theo ngành và loại hỗ trợ.
         </div>
 
         <details class="hc-depth">
@@ -2427,7 +2432,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Chữ tín được xây bằng những lời hứa nhỏ</b> — đúng giờ, trả lời đúng hạn, trả nợ đúng ngày — vì đó là cách người khác biết bạn thuộc kiểu nào trước khi có chuyện lớn. Khi lỡ hẹn, báo sớm, nhận trách nhiệm và sửa. Cảnh giác ở lần giao dịch cuối: khi một bên biết sẽ không gặp lại, đó là lúc người ta dễ thôi tử tế.
+          <b>Giữ lời hứa nhỏ; khi lỡ hẹn, báo sớm, nhận trách nhiệm và sửa.</b> Gặp lại có thể giúp hợp tác khi hành vi được quan sát và hai bên còn coi trọng tương lai. Giao dịch lớn vẫn cần bảo đảm dù tin nhau. Kiểm hiểu lầm trước khi đáp lại; vi phạm nghiêm trọng có thể cần giảm rủi ro ngay. Một chiến lược thắng trò mô phỏng không tự thắng mọi quan hệ.
         </div>
 
         <details class="hc-depth">
@@ -2812,7 +2817,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Cứng với vấn đề, mềm với con người.</b> Chọn mức cứng bằng hai câu: chuyện này hệ trọng tới đâu, quan hệ này đáng giá tới đâu. Đáp sự thiếu tôn trọng ở mức nhỏ nhất đủ dùng, riêng tư trước, làm đúng điều đã nói — và chừa cho người kia một đường lui.
+          <b>Cứng với vấn đề, mềm với con người.</b> Chọn cách đáp theo hậu quả, quan hệ và chênh lệch quyền lực. Với va chạm thông thường, gọi tên hành vi, nói riêng khi phù hợp và chừa đường sửa sai. Chuyện an toàn hoặc sai luật cần kênh bảo vệ và xử lý phù hợp; giữ thể diện không buộc mình nhường nguyên tắc hay tự đặt mình vào nguy hiểm.
         </div>
 
         <details class="hc-depth">
@@ -2871,7 +2876,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Tập xin những thứ nhỏ</b>: miễn một khoản phí, gia hạn một tuần, một cuộc gặp mười lăm phút, một lời giới thiệu. Hỏi bác sĩ “còn lựa chọn nào khác không?”, hỏi ngân hàng “khoản phí này miễn được không?”. Lạt mềm buộc chặt: lời lẽ mềm, yêu cầu rõ, có phương án thay thế trong tay.
+          <b>Viết việc mình sẽ làm nếu không đạt thoả thuận: phương án tốt nhất ấy là BATNA.</b> Dùng nó cùng chi phí và rủi ro để đặt giới hạn chấp nhận; xây phương án khả thi, không dùng làm lời đe doạ. Hỏi lợi ích thật sau yêu cầu của hai bên. Giá đầu tiên có thể làm neo: quay về dữ liệu và giới hạn của mình. Tập hỏi rõ, không quyết vì bị giục; ghi lại nội dung đã thống nhất và kiểm hình thức cần thiết trước khi ký.
         </div>
 
         <details class="hc-depth">
@@ -3032,7 +3037,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Tìm một người bảo trợ, không chỉ một người cố vấn</b>, bằng cách làm họ thành công và để họ thấy. Đứng ở chỗ nối giữa các nhóm. <i>Hữu xạ tự nhiên hương</i> — nhưng trong tổ chức lớn, phải có người mở cửa cho mùi hương bay tới đúng phòng.
+          <b>Cố vấn cho lời khuyên; người bảo trợ dùng uy tín để đề cử và đưa mình vào dự án.</b> Cho họ thấy đóng góp đáng tin bằng kết quả và báo cáo ngắn. Nối các nhóm để công việc chạy tốt hơn; quan hệ không thay chất lượng công việc, cũng không bảo đảm thăng tiến.
         </div>
 
         <details class="hc-depth">
@@ -3252,7 +3257,7 @@
         <h2 class="hc-sec-title">Một số phép lịch sự thường gặp <i>trong gia đình Việt</i></h2>
         <p><span class="hc-evi hc-evi--custom">Tập quán</span></p>
 
-        <p class="hc-lede"><i>Ăn trông nồi, ngồi trông hướng</i> (Nam Bộ: “ăn coi nồi, ngồi coi hướng”): để ý phần ăn còn lại và vị trí ngồi cho đúng vai. Bảng dưới gom các phép lịch sự thường gặp, nhưng tập quán khác nhau theo vùng và từng nhà. Ở nhà người khác, <i>nhập gia tuỳ tục</i>; không chắc thì hỏi chủ nhà.</p>
+        <p class="hc-lede"><i>Ăn trông nồi, ngồi trông hướng</i> (Nam Bộ: “ăn coi nồi, ngồi coi hướng”): để ý phần ăn còn lại và vị trí ngồi cho đúng vai. Phần chi tiết gom các phép lịch sự thường gặp, nhưng tập quán khác nhau theo vùng và từng nhà. Ở nhà người khác, <i>nhập gia tuỳ tục</i>; không chắc thì hỏi chủ nhà.</p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
@@ -3288,7 +3293,7 @@
         <h2 class="hc-sec-title">Bàn tiệc kiểu Âu và công sở quốc tế: <i>vài quy ước thường gặp</i></h2>
         <p><span class="hc-evi hc-evi--custom">Tập quán</span></p>
 
-        <p class="hc-lede">Bàn tiệc kiểu Âu và công sở quốc tế có một bộ luật nhỏ; thuộc nó thì đầu óc được rảnh cho câu chuyện. Hình dưới là một bộ bàn ăn kiểu Âu thường gặp, bày theo hướng dẫn của Emily Post Institute (Mỹ); bộ trang trọng hơn chỉ thêm dụng cụ theo cùng logic, còn kiểu Anh khác ở vài chi tiết.</p>
+        <p class="hc-lede">Bàn tiệc kiểu Âu và công sở quốc tế có một bộ luật nhỏ; thuộc nó thì đầu óc được rảnh cho câu chuyện. Sơ đồ trong chi tiết là một bộ bàn ăn kiểu Âu thường gặp, bày theo hướng dẫn của Emily Post Institute (Mỹ); bộ trang trọng hơn chỉ thêm dụng cụ theo cùng logic, còn kiểu Anh khác ở vài chi tiết.</p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
@@ -3359,7 +3364,7 @@
         <h2 class="hc-sec-title">Câu kinh điển để gợi nhớ — <i>đọc cùng ngữ cảnh và giới hạn</i></h2>
         <p><span class="hc-evi hc-evi--lore">Kinh nghiệm</span></p>
 
-        <p class="hc-lede">Tam tự kinh, Tứ thư và Ngũ kinh là những nguồn học truyền thống; khoa thi Hội và thi Đình cuối cùng diễn ra năm Kỷ Mùi 1919. Một số câu gợi nhớ nguyên tắc hôm nay, <b>nhưng sự tương đồng không thay thế bằng chứng</b>. Dưới đây là các câu chưa xuất hiện; bảng cuối gom các câu đã gặp.</p>
+        <p class="hc-lede">Tam tự kinh, Tứ thư và Ngũ kinh là những nguồn học truyền thống; khoa thi Hội và thi Đình cuối cùng diễn ra năm Kỷ Mùi 1919. Một số câu gợi nhớ nguyên tắc hôm nay, <b>nhưng sự tương đồng không thay thế bằng chứng</b>. Phần chi tiết có thêm câu kinh điển và bảng tra các câu đã gặp.</p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
@@ -3795,7 +3800,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Sắp hồ sơ và di chúc phù hợp khi còn khoẻ; sửa khi đời đổi.</b> Người tin cậy biết nơi để và cách tiếp cận an toàn. Kiểm hình thức pháp lý theo từng việc: di chúc không mặc nhiên phải công chứng chỉ vì có nhà đất. Việc phức tạp nên nhờ người làm nghề kiểm.
+          <b>Sắp hồ sơ và di chúc phù hợp khi còn khoẻ; sửa khi đời đổi.</b> Chỉ định đoạt phần tài sản mình có quyền; di chúc còn phải tôn trọng quyền của người thừa kế được luật bảo vệ. Người tin cậy biết nơi để và cách tiếp cận an toàn. Kiểm hình thức theo từng việc: di chúc không mặc nhiên phải công chứng chỉ vì có nhà đất. Việc phức tạp nên nhờ người làm nghề kiểm.
         </div>
 
         <details class="hc-depth">
@@ -3882,11 +3887,11 @@
         <h2 class="hc-sec-title">Dấu hiệu lừa đảo: <i>lãi cao, bảo đảm, giục quyết, cấm hỏi</i></h2>
         <p><span class="hc-evi hc-evi--math">Toán học</span> <span class="hc-evi hc-evi--lore">Kinh nghiệm</span></p>
 
-        <p class="hc-lede">Ponzi trả “lãi” cho người trước bằng tiền người sau, không cần lợi nhuận thật. Nó sụp khi tiền mới không đủ trả nghĩa vụ. Nếu “lãi” được tái đầu tư, số dư hứa trả tăng theo lãi kép; mô hình dưới đây cho thấy quy mô của lời hứa ấy.</p>
+        <p class="hc-lede">Ponzi trả “lãi” cho người trước bằng tiền người sau, không cần lợi nhuận thật. Nó sụp khi tiền mới không đủ trả nghĩa vụ. Nếu “lãi” được tái đầu tư, số dư hứa trả tăng theo lãi kép; mô hình trong chi tiết cho thấy quy mô của lời hứa ấy.</p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Lợi nhuận cao bất thường kèm lời bảo đảm không rủi ro là tín hiệu đỏ.</b> Xác minh qua một kênh độc lập do chính bạn chọn; áp lực quyết ngay không phải lý do để bỏ kiểm tra.
+          <b>Lợi nhuận cao bất thường kèm lời bảo đảm không rủi ro là tín hiệu đỏ.</b> Dấu hiệu để dừng và kiểm, chưa tự chứng minh lừa đảo; không thấy dấu hiệu cũng chưa bảo đảm an toàn. Xác minh qua kênh độc lập do mình chọn, hỏi nguồn lợi nhuận và đường đi của tiền; áp lực quyết ngay không phải lý do để bỏ kiểm tra.
         </div>
 
         <details class="hc-depth">
@@ -3927,11 +3932,12 @@
         <h2 class="hc-sec-title">Mười hai luật người ta thường chỉ học được <i>sau</i> khi đã trả giá</h2>
         <p><span class="hc-evi hc-evi--lore">Kinh nghiệm</span> <span class="hc-evi hc-evi--solid">Bằng chứng mạnh</span></p>
 
-        <p class="hc-lede">Mỗi luật có ba dòng: luật, vì sao nó đúng, và dấu hiệu sắp vi phạm nó. Chúng khó giữ nhất đúng lúc cần nhất: khi người nhờ là người thân, khi cơ hội trông quá đẹp, khi mình đang mệt.</p>
+        <p class="hc-lede">Mỗi luật luôn hiện lời nhắc cùng cách hiểu hoặc điều kiện cần giữ. Mở chi tiết để xem cơ sở và dấu hiệu dễ vi phạm; các câu ngắn này giúp tự kiểm, không thay việc xét hoàn cảnh.</p>
 
         <div class="hc-list">
           <div class="hc-item">
-            <div class="hc-item__top"><span class="hc-item__no">Luật 1</span><p class="hc-item__name">Chỉ cho vay số tiền bạn sẵn lòng tặng.</p></div>
+            <div class="hc-item__top"><span class="hc-item__no">Luật 1</span><p class="hc-item__name">Chỉ cho người quen vay trong mức chịu mất được.</p></div>
+            <p class="hc-item__brief">Chốt lịch trả bằng văn bản. Chấp nhận rủi ro không biến khoản vay thành quà hay bảo đảm giữ quan hệ.</p>
             <details class="hc-depth"><summary>Vì sao và dấu hiệu</summary>
 <div class="hc-item__meta">
               <span class="hc-item__k">Vì sao</span><p class="hc-item__v">Khoản vay giữa người quen thường không có tài sản bảo đảm, không có lịch trả cứng, và đòi thì mất lòng. Chỉ cho vay trong mức chịu mất được; chốt số tiền, lịch trả và cách xử lý chậm trả. Việc coi trước khả năng mất tiền không bảo đảm giữ được quan hệ.</p>
@@ -3940,7 +3946,8 @@
 </details>
           </div>
           <div class="hc-item">
-            <div class="hc-item__top"><span class="hc-item__no">Luật 2</span><p class="hc-item__name">Không ký bảo lãnh, không đứng tên hộ, không cho mượn giấy tờ hay tài khoản ngân hàng.</p></div>
+            <div class="hc-item__top"><span class="hc-item__no">Luật 2</span><p class="hc-item__name">Không bảo lãnh hay đứng tên hộ nếu chưa hiểu và gánh được nghĩa vụ; không cho mượn giấy tờ, tài khoản.</p></div>
+            <p class="hc-item__brief">Bảo lãnh có thể buộc mình trả thay; chữ ký không phải “chỉ thủ tục”. Không cho người khác dùng tài khoản để giao dịch thay họ.</p>
             <details class="hc-depth"><summary>Vì sao và dấu hiệu</summary>
 <div class="hc-item__meta">
               <span class="hc-item__k">Vì sao</span><p class="hc-item__v">Theo Bộ luật Dân sự (Điều 335–336), người bảo lãnh cam kết làm thay nghĩa vụ khi người được bảo lãnh không làm hoặc làm không đúng, và trừ khi có thoả thuận khác, phần phải gánh gồm cả tiền lãi, tiền phạt, tiền bồi thường — tức là nhận toàn bộ rủi ro mà không có quyền kiểm soát nào. Mua, bán, thuê, cho thuê, mượn, cho mượn tài khoản thanh toán bị phạt từ 100 tới 200 triệu đồng với cá nhân (Nghị định 340/2025/NĐ-CP, Điều 30); mua bán thông tin tài khoản ngân hàng của người khác, từ 20 tài khoản hoặc thu lợi từ 20 triệu đồng, là tội hình sự (Bộ luật Hình sự, Điều 291); và tài khoản cho mượn rất hay được dùng để nhận tiền lừa đảo.</p>
@@ -3950,6 +3957,7 @@
           </div>
           <div class="hc-item">
             <div class="hc-item__top"><span class="hc-item__no">Luật 3</span><p class="hc-item__name">Việc gì dính tới tiền, kể cả với người nhà, làm thành giấy trắng mực đen.</p></div>
+            <p class="hc-item__brief">Ghi ai góp gì, quyền và nghĩa vụ, cách xử lý khi dừng; văn bản cần đúng hình thức pháp lý của việc đó.</p>
             <details class="hc-depth"><summary>Vì sao và dấu hiệu</summary>
 <div class="hc-item__meta">
               <span class="hc-item__k">Vì sao</span><p class="hc-item__v">Trí nhớ của hai bên lệch nhau một cách thành thật, nhất là sau vài năm. Văn bản bảo vệ <b>mối quan hệ</b> chứ không chỉ bảo vệ tiền: nó thay một cuộc cãi bằng một lần mở giấy ra đọc. Làm ăn chung thì viết trước cả điều khoản chia tay.</p>
@@ -3958,7 +3966,8 @@
 </details>
           </div>
           <div class="hc-item">
-            <div class="hc-item__top"><span class="hc-item__no">Luật 4</span><p class="hc-item__name">Không quyết định lớn khi đói, giận, mệt, vội, hay vừa nhận một tin xấu.</p></div>
+            <div class="hc-item__top"><span class="hc-item__no">Luật 4</span><p class="hc-item__name">Hoãn cam kết khó sửa khi quá tải, nếu việc còn chờ được.</p></div>
+            <p class="hc-item__brief">Việc không thể chờ thì thu nhỏ rủi ro và nhờ người tin cậy kiểm cùng.</p>
             <details class="hc-depth"><summary>Vì sao và dấu hiệu</summary>
 <div class="hc-item__meta">
               <span class="hc-item__k">Vì sao</span><p class="hc-item__v">Đó là lúc băng thông hẹp nhất (<a class="hc-x" href="#s-khanhiem">2.1</a>), và kẻ lừa đảo cố đẩy bạn vào đúng trạng thái ấy: vội, sợ, rối.</p>
@@ -3968,6 +3977,7 @@
           </div>
           <div class="hc-item">
             <div class="hc-item__top"><span class="hc-item__no">Luật 5</span><p class="hc-item__name">Không bỏ tiền vào thứ mình không giải thích được trong hai câu.</p></div>
+            <p class="hc-item__brief">Nói được nguồn tiền lời và cách có thể mất vốn; giải thích ngắn là phép kiểm hiểu biết, chưa chứng minh khoản đó tốt.</p>
             <details class="hc-depth"><summary>Vì sao và dấu hiệu</summary>
 <div class="hc-item__meta">
               <span class="hc-item__k">Vì sao</span><p class="hc-item__v">Không giải thích được tiền lãi từ đâu ra thì không biết khi nào nó dừng. Khổng Tử: biết thì nói là biết, không biết thì nói là không biết (<a class="hc-x" href="#s-kinhdien">8.4</a>).</p>
@@ -3976,7 +3986,8 @@
 </details>
           </div>
           <div class="hc-item">
-            <div class="hc-item__top"><span class="hc-item__no">Luật 6</span><p class="hc-item__name">Tin động cơ hơn lời hứa; tin việc người ta đã làm hơn lời người ta đang nói.</p></div>
+            <div class="hc-item__top"><span class="hc-item__no">Luật 6</span><p class="hc-item__name">Xét động cơ và chuỗi hành vi, đừng chỉ tin lời hứa.</p></div>
+            <p class="hc-item__brief">Kiểm cả năng lực, bằng chứng và ngữ cảnh. Cùng chịu hậu quả hay từng làm đúng không tự bảo đảm lần sau đúng.</p>
             <details class="hc-depth"><summary>Vì sao và dấu hiệu</summary>
 <div class="hc-item__meta">
               <span class="hc-item__k">Vì sao</span><p class="hc-item__v">Hành vi quá khứ thường dự báo hành vi tương lai tốt hơn lời hứa; lời hứa thì miễn phí (<a class="hc-x" href="#s-dongco">2.5</a>).</p>
@@ -3986,6 +3997,7 @@
           </div>
           <div class="hc-item">
             <div class="hc-item__top"><span class="hc-item__no">Luật 7</span><p class="hc-item__name">Đừng khoe tài sản.</p></div>
+            <p class="hc-item__brief">Giữ kín số dư, giấy tờ và vị trí tài sản; vẫn chia sẻ có mục đích với người cần biết.</p>
             <details class="hc-depth"><summary>Vì sao và dấu hiệu</summary>
 <div class="hc-item__meta">
               <span class="hc-item__k">Vì sao</span><p class="hc-item__v">Công khai số dư, giấy tờ hay vị trí tài sản có thể tăng rủi ro bị nhắm tới. Chia sẻ có mục đích với người cần biết; giữ kín thông tin nhạy cảm, không coi mọi người quan tâm là kẻ xấu.</p>
@@ -3995,6 +4007,7 @@
           </div>
           <div class="hc-item">
             <div class="hc-item__top"><span class="hc-item__no">Luật 8</span><p class="hc-item__name">Đừng làm người khác mất mặt chỉ để thắng cuộc cãi.</p></div>
+            <p class="hc-item__brief">Phản biện việc, chừa đường đổi ý; chuyện an toàn và sai luật vẫn cần lên tiếng qua kênh phù hợp.</p>
             <details class="hc-depth"><summary>Vì sao và dấu hiệu</summary>
 <div class="hc-item__meta">
               <span class="hc-item__k">Vì sao</span><p class="hc-item__v">Làm người khác bẽ mặt dễ khiến họ phòng thủ và làm hỏng hợp tác. Phản biện vấn đề, chừa đường để họ đổi ý (<a class="hc-x" href="#s-chutin">5.4</a>).</p>
@@ -4003,7 +4016,8 @@
 </details>
           </div>
           <div class="hc-item">
-            <div class="hc-item__top"><span class="hc-item__no">Luật 9</span><p class="hc-item__name">Khi lương tăng, định trước phần để dành rồi mới tăng chi tiêu cần thiết.</p></div>
+            <div class="hc-item__top"><span class="hc-item__no">Luật 9</span><p class="hc-item__name">Khi lương tăng, tính chi phí thiết yếu và định phần để dành trước khi nâng mức sống.</p></div>
+            <p class="hc-item__brief">Ưu tiên chi phí thiết yếu còn thiếu và khoản đệm; phần để dành tuỳ nghĩa vụ, không phải tỉ lệ cứng cho mọi nhà.</p>
             <details class="hc-depth"><summary>Vì sao và dấu hiệu</summary>
 <div class="hc-item__meta">
               <span class="hc-item__k">Vì sao</span><p class="hc-item__v">Chi tiêu tăng dễ và giảm rất khó; con người quen với mức sống mới rất nhanh. Dành phần tăng cho khoảng đệm hoặc mục tiêu trước khi nó thành thói quen tiêu dùng; thời gian chờ tuỳ nhu cầu và độ ổn định thu nhập.</p>
@@ -4013,6 +4027,7 @@
           </div>
           <div class="hc-item">
             <div class="hc-item__top"><span class="hc-item__no">Luật 10</span><p class="hc-item__name">“Gỡ” là một cách thua lớn: giá đã mua không quyết định triển vọng từ hôm nay.</p></div>
+            <p class="hc-item__brief">Hỏi: nếu chưa sở hữu, hôm nay mình có mua không? Giá giảm không tự là lý do mua thêm, cũng không tự là lý do bán.</p>
             <details class="hc-depth"><summary>Vì sao và dấu hiệu</summary>
 <div class="hc-item__meta">
               <span class="hc-item__k">Vì sao</span><p class="hc-item__v"><i>Disposition effect</i> là xu hướng bán sớm cổ phiếu lãi, ôm lâu cổ phiếu lỗ (Shefrin &amp; Statman, 1985). Odean (1998), trên 10.000 tài khoản môi giới Mỹ (1987–1993), thấy cổ phiếu lãi có khả năng bị bán mỗi ngày cao hơn trên 50% so với cổ phiếu lỗ. Hãy hỏi: “Nếu hôm nay có tiền mặt, tôi có mua thứ này không?”, thay vì chỉ tìm cách lấy lại tiền đã mất.</p>
@@ -4022,6 +4037,7 @@
           </div>
           <div class="hc-item">
             <div class="hc-item__top"><span class="hc-item__no">Luật 11</span><p class="hc-item__name">Chi phí chìm đã chìm.</p></div>
+            <p class="hc-item__brief">Bỏ chi phí không lấy lại được khỏi phép tính; so lợi ích và chi phí từ hôm nay, kể cả chi phí dừng. Phần việc còn dùng được vẫn có giá trị.</p>
             <details class="hc-depth"><summary>Vì sao và dấu hiệu</summary>
 <div class="hc-item__meta">
               <span class="hc-item__k">Vì sao</span><p class="hc-item__v">Tiền, thời gian, công sức đã bỏ vào một dự án không quay lại được dù bạn đi tiếp hay dừng. Quyết định chỉ nên nhìn về phía trước: từ hôm nay, đi tiếp có đáng không?</p>
@@ -4031,6 +4047,7 @@
           </div>
           <div class="hc-item">
             <div class="hc-item__top"><span class="hc-item__no">Luật 12</span><p class="hc-item__name">Sức khoẻ là vốn không thế chấp được.</p></div>
+            <p class="hc-item__brief">Đặt giới hạn giờ làm và giữ thời gian hồi phục; sức khoẻ không phải thứ luôn mua lại được bằng thu nhập cao hơn.</p>
             <details class="hc-depth"><summary>Vì sao và dấu hiệu</summary>
 <div class="hc-item__meta">
               <span class="hc-item__k">Vì sao</span><p class="hc-item__v">Mất sức khoẻ thì vốn con người giảm giá, khoảng đệm cạn, và mọi loại vốn khác phải bán bớt để bù. Ngủ đủ, vận động, khám định kỳ là khoản phí bảo hiểm rẻ mà hiệu quả.</p>
@@ -4054,7 +4071,7 @@
         <h2 class="hc-sec-title">Luật đúng khi nào? <i>Tìm điều kiện trước khi áp dụng</i></h2>
         <p><span class="hc-evi hc-evi--lore">Kinh nghiệm</span> <span class="hc-evi hc-evi--mixed">Bằng chứng vừa</span></p>
 
-        <p class="hc-lede">“Một điều nhịn chín điều lành” và “được đằng chân lân đằng đầu” hợp các hoàn cảnh khác nhau. <b>Nguyên tắc cần đi cùng điều kiện áp dụng.</b> Bảng dưới giúp tìm biến số quyết định nên chọn hướng nào.</p>
+        <p class="hc-lede">“Một điều nhịn chín điều lành” và “được đằng chân lân đằng đầu” hợp các hoàn cảnh khác nhau. <b>Nguyên tắc cần đi cùng điều kiện áp dụng.</b> Bảng trong chi tiết giúp tìm biến số quyết định nên chọn hướng nào.</p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
@@ -4113,7 +4130,7 @@
         <p class="hc-eyebrow-sec"><b>11.2</b> · Thực hành — biết mình đang thiếu gì</p>
         <h2 class="hc-sec-title">Tự soát: tick những câu <i>đúng với bạn hôm nay</i>, không phải đúng với dự định</h2>
 
-        <p class="hc-lede">Dùng các câu hỏi để tìm một lỗ hổng có hậu quả lớn. Số tick chỉ giúp chọn việc cần làm, không đo giá trị hay năng lực của bạn.</p>
+        <p class="hc-lede">Bắt đầu bằng ba câu: tiền dễ rút chịu được bao lâu nếu mất thu nhập; rủi ro nào chạm cả việc làm và tài sản; việc hôm nay để lại kỹ năng hay sản phẩm gì? Chọn một lỗ hổng hậu quả lớn để sửa. Bài tick trong chi tiết giúp mở rộng việc tự soát; số tick không đo giá trị hay năng lực của bạn.</p>
 
         <details class="hc-depth">
           <summary>Mở bài tự soát</summary>
@@ -4197,7 +4214,7 @@
         <p class="hc-eyebrow-sec"><b>11.3</b> · Thực hành — theo thứ tự</p>
         <h2 class="hc-sec-title">Lộ trình tham khảo: <i>giảm rủi ro, tạo khoảng đệm, mở cơ hội</i></h2>
 
-        <p class="hc-p">Ba mốc dưới đây giúp sắp việc, không phải lịch đạt thành công. Ưu tiên rủi ro lớn và khả năng chi trả; kỹ năng, quan hệ và khoảng đệm có thể xây song song. Điều chỉnh mốc theo thu nhập, sức khoẻ và người phụ thuộc.</p>
+        <p class="hc-p">Bắt đầu: ghi tài sản, nợ, chi phí thiết yếu và một rủi ro cần giảm. Sau đó: xây khoản đệm vừa sức và kỹ năng có cầu. Dài hạn: tích tài sản, sản phẩm và quan hệ dùng được tiếp. Ba mốc trong chi tiết là tham khảo; các việc có thể làm song song, điều chỉnh theo khả năng chi trả, sức khoẻ và người phụ thuộc.</p>
 
         <details class="hc-depth">
           <summary>Mở lộ trình tham khảo</summary>
@@ -4250,7 +4267,7 @@
         <p class="hc-eyebrow-sec"><b>11.4</b> · Thực hành — tra cứu nhanh</p>
         <h2 class="hc-sec-title">Mọi luật trên trang, <i>mỗi luật một dòng</i></h2>
 
-        <p class="hc-lede">Bảng này để tra cứu sau khi đọc, không phải danh sách phải thuộc. Khi dùng một dòng, quay lại mục gốc để xem điều kiện và giới hạn.</p>
+        <p class="hc-lede">Mở bảng trong chi tiết để tra cứu sau khi đọc; đây không phải danh sách phải thuộc. Khi dùng một dòng, quay lại mục gốc để xem điều kiện và giới hạn.</p>
 
         <details class="hc-depth">
           <summary>Mở bảng ôn tập theo mục</summary>
@@ -4263,14 +4280,14 @@
               <tr><td class="hc-num">2</td><td>Hỏi mỗi quyết định đẩy mình vào vòng nào; đặt tay vào tỉ lệ để dành, tốc độ học, chữ tín.</td><td><a class="hc-x" href="#s-vonglap">Khung 2/3</a></td></tr>
               <tr><td class="hc-num">3</td><td>Đo tài sản ròng, dòng tiền và thanh khoản; dành trước một phần thu nhập tăng.</td><td><a class="hc-x" href="#s-bang">1.1</a></td></tr>
               <tr><td class="hc-num">4</td><td>Bảo vệ khả năng tiếp tục trước khi tìm lợi nhuận.</td><td><a class="hc-x" href="#s-toanthang">1.2</a></td></tr>
-              <tr><td class="hc-num">5</td><td>Kỳ vọng dương chưa đủ; mức đặt quyết định. Không đặt khoản nào mà thua thì hết đường chơi tiếp.</td><td><a class="hc-x" href="#s-dongxu">1.3</a></td></tr>
+              <tr><td class="hc-num">5</td><td>Kỳ vọng dương chưa đủ; giới hạn phần rủi ro. Kelly theo mô hình không phải tỉ lệ an toàn chung.</td><td><a class="hc-x" href="#s-dongxu">1.3</a></td></tr>
               <tr><td class="hc-num">6</td><td>Kiểm dòng tiền trả nợ, lãi sau ưu đãi và điều khoản; thử kịch bản mất thu nhập.</td><td><a class="hc-x" href="#s-no">1.4</a></td></tr>
               <tr><td class="hc-num">7</td><td>Giữ khoản đệm dễ rút, cân đối với trả nợ đắt; bảo hiểm tổn thất khó tự gánh.</td><td><a class="hc-x" href="#s-baohiem">1.5</a></td></tr>
               <tr><td class="hc-num">8</td><td>Với mỗi khoản tiền, hỏi ai đang giữ nó, nó mất vì đâu, cú sốc nào chạm cùng lúc thu nhập; che trước ô có thể xoá sổ cả nhà.</td><td><a class="hc-x" href="#s-ruiro">1.6</a></td></tr>
               <tr><td class="hc-num">9</td><td>Chi theo nhu cầu và giá trị của mình; so lợi ích thêm, không áp một thứ tự chi cho mọi nhà.</td><td><a class="hc-x" href="#s-dungtien">1.7</a></td></tr>
               <tr><td class="hc-num">10</td><td>Tạo khoảng đệm; khi quá tải, hoãn việc khó sửa nếu được hoặc thu nhỏ rủi ro.</td><td><a class="hc-x" href="#s-khanhiem">2.1</a></td></tr>
               <tr><td class="hc-num">11</td><td>Thử nhỏ với ngân sách, hạn đánh giá và điều kiện dừng; kiểm kỹ cam kết khó sửa.</td><td><a class="hc-x" href="#s-thoigian">2.2</a></td></tr>
-              <tr><td class="hc-num">12</td><td>Ba kịch bản cho mọi quyết định lớn; kịch bản xấu phải sống sót được.</td><td><a class="hc-x" href="#s-phanphoi">2.3</a></td></tr>
+              <tr><td class="hc-num">12</td><td>Ba kịch bản với xác suất ước lượng; chịu được kịch bản xấu, dùng kết quả để học.</td><td><a class="hc-x" href="#s-phanphoi">2.3</a></td></tr>
               <tr><td class="hc-num">13</td><td>Bắt đầu từ tỉ lệ nền; cập nhật theo bằng chứng phân biệt các giả thuyết; tránh đếm trùng nguồn.</td><td><a class="hc-x" href="#s-bayes">2.4</a></td></tr>
               <tr><td class="hc-num">14</td><td>Hỏi họ được lợi gì khi mình làm theo và chịu gì nếu sai.</td><td><a class="hc-x" href="#s-dongco">2.5</a></td></tr>
               <tr><td class="hc-num">15</td><td>Hỏi “và rồi sao nữa?”; đừng biến một con số thành đích; tìm nút thắt trước khi tối ưu.</td><td><a class="hc-x" href="#s-heth">2.6</a></td></tr>
@@ -4282,10 +4299,10 @@
               <tr><td class="hc-num">21</td><td>Đa dạng, phí thấp, không vay; khi giá giảm, kiểm kế hoạch thay vì phản ứng vì hoảng.</td><td><a class="hc-x" href="#s-cophieu">3.3</a></td></tr>
               <tr><td class="hc-num">22</td><td>Viết ra giá hôm nay giả định gì về tăng trưởng và lợi suất trên vốn; công ty tốt chưa phải khoản đầu tư tốt.</td><td><a class="hc-x" href="#s-doanhnghiep">3.4</a></td></tr>
               <tr><td class="hc-num">23</td><td>Tính lợi suất ròng và so với lãi vay; chỉ mua trong vòng tròn hiểu biết, với biên an toàn.</td><td><a class="hc-x" href="#s-dinhgia">3.5</a></td></tr>
-              <tr><td class="hc-num">24</td><td>Đặt tỉ trọng theo mức mất chịu được, chọn tài sản theo tương quan; tiền của ba năm tới để ở chỗ không bị buộc bán.</td><td><a class="hc-x" href="#s-danhmuc">3.6</a></td></tr>
+              <tr><td class="hc-num">24</td><td>Đặt tỉ trọng theo mức mất chịu được, xét rủi ro chung; tiền sắp cần phải dễ rút, ít biến động.</td><td><a class="hc-x" href="#s-danhmuc">3.6</a></td></tr>
               <tr><td class="hc-num">25</td><td>Vàng có thể che một số rủi ro; tính chi phí và khả năng mất sức mua, tránh nợ.</td><td><a class="hc-x" href="#s-vang">3.7</a></td></tr>
               <tr><td class="hc-num">26</td><td>Trước khi bỏ vốn: điểm hoà vốn, biên an toàn, đòn bẩy hoạt động, số tháng sống được khi doanh thu bằng 0.</td><td><a class="hc-x" href="#s-kinhdoanh">3.8</a></td></tr>
-              <tr><td class="hc-num">27</td><td>Ở tuổi hai mươi, tài sản lớn nhất là khả năng kiếm tiền; đầu tư vào nó và bảo vệ nó.</td><td><a class="hc-x" href="#s-vonnguoi">4.1</a></td></tr>
+              <tr><td class="hc-num">27</td><td>Đầu tư và bảo vệ khả năng kiếm tiền; so chi phí, cơ hội dùng kỹ năng, không coi mọi khoá học là sinh lời.</td><td><a class="hc-x" href="#s-vonnguoi">4.1</a></td></tr>
               <tr><td class="hc-num">28</td><td>Cân nhắc thương lượng bằng dữ liệu; tích kỹ năng có cầu và chứng cứ năng lực.</td><td><a class="hc-x" href="#s-thunhap">4.2</a></td></tr>
               <tr><td class="hc-num">29</td><td>Đo cả thu nhập và thứ dùng được tiếp; kiểm lời hứa học hỏi bằng phản hồi thật.</td><td><a class="hc-x" href="#s-tichluy">4.3</a></td></tr>
               <tr><td class="hc-num">30</td><td>Chọn thị trường, thu nhập, tốc độ học và lối ra; tính lựa chọn tốt nhất phải bỏ.</td><td><a class="hc-x" href="#s-moitruong">4.4</a></td></tr>
@@ -4301,11 +4318,11 @@
               <tr><td class="hc-num">40</td><td>Hỏi nhiều hơn nói; xưng hô đúng vai; không cố thắng cuộc cãi.</td><td><a class="hc-x" href="#s-noi">6.1</a></td></tr>
               <tr><td class="hc-num">41</td><td>Nói khi giúp hiểu hay hành động; giữ lý lẽ mạnh, bỏ phần thừa; sai thì nhận và sửa.</td><td><a class="hc-x" href="#s-imlang">6.2</a></td></tr>
               <tr><td class="hc-num">42</td><td>Xem hành vi trong ngữ cảnh; vi phạm nghiêm trọng có thể đủ để giảm rủi ro ngay.</td><td><a class="hc-x" href="#s-docnguoi">6.3</a></td></tr>
-              <tr><td class="hc-num">43</td><td>Cứng với vấn đề, mềm với người; chọn mức cứng theo mức hệ trọng và giá trị của quan hệ.</td><td><a class="hc-x" href="#s-memcung">6.4</a></td></tr>
+              <tr><td class="hc-num">43</td><td>Chọn cách đáp theo hậu quả, quan hệ và quyền lực; an toàn, pháp lý không nhường cho thể diện.</td><td><a class="hc-x" href="#s-memcung">6.4</a></td></tr>
               <tr><td class="hc-num">44</td><td>Tập hỏi điều gì thương lượng được; xây BATNA và đặt giới hạn chấp nhận trước.</td><td><a class="hc-x" href="#s-thuongluong">6.5</a></td></tr>
               <tr><td class="hc-num">45</td><td>Nhịn chuyện nhỏ; giữ chặt tiền, chữ ký, sức khoẻ; từ chối bằng nguyên tắc.</td><td><a class="hc-x" href="#s-ranhgioi">6.6</a></td></tr>
               <tr><td class="hc-num">46</td><td>Tạo giá trị người khác cần; giảm lệ thuộc bằng nguồn thay thế và liên minh, tránh độc quyền thông tin.</td><td><a class="hc-x" href="#s-nguonquyen">7.1</a></td></tr>
-              <tr><td class="hc-num">47</td><td>Tìm người bảo trợ; đứng ở chỗ nối giữa các nhóm; làm cho công việc nhìn thấy được.</td><td><a class="hc-x" href="#s-quyenluc">7.2</a></td></tr>
+              <tr><td class="hc-num">47</td><td>Cố vấn cho lời khuyên, bảo trợ dùng uy tín đề cử; cho thấy đóng góp và nối các nhóm.</td><td><a class="hc-x" href="#s-quyenluc">7.2</a></td></tr>
               <tr><td class="hc-num">48</td><td>Vẽ ai quyết, ai giữ tiền, ai giữ tin, ai nói “chưa được”; hỏi vì sao hàng rào được dựng.</td><td><a class="hc-x" href="#s-tochuc">7.3</a></td></tr>
               <tr><td class="hc-num">49</td><td>Dựng thế trước khi dùng sức; chỉ cam kết khi chịu được hậu quả nếu tình thế đổi.</td><td><a class="hc-x" href="#s-thecuoc">7.4</a></td></tr>
               <tr><td class="hc-num">50</td><td>Xây uy tín, đặt tiêu chuẩn và hệ quả rõ; áp công bằng, tránh đe doạ và làm nhục.</td><td><a class="hc-x" href="#s-diavi">7.5</a></td></tr>
@@ -4318,7 +4335,7 @@
               <tr><td class="hc-num">57</td><td>Tiền truyền bằng giấy tờ; hiểu biết, quan hệ và lý do của các giá trị thì truyền bằng lời và việc làm.</td><td><a class="hc-x" href="#s-thehe">9.1</a></td></tr>
               <tr><td class="hc-num">58</td><td>Bàn tiền, nghĩa vụ và bất đồng; xem cả sức ép bên ngoài, ưu tiên an toàn.</td><td><a class="hc-x" href="#s-honnhan">9.2</a></td></tr>
               <tr><td class="hc-num">59</td><td>Cho con tự quyết những khoản nhỏ thật, để con sai khi còn rẻ; nói về lựa chọn của con, và giữ lời hứa với con.</td><td><a class="hc-x" href="#s-daycon">9.3</a></td></tr>
-              <tr><td class="hc-num">60</td><td>Sắp hồ sơ, di chúc phù hợp; kiểm hình thức pháp lý theo từng việc, cho người tin cậy biết nơi để.</td><td><a class="hc-x" href="#s-giayto">9.4</a></td></tr>
+              <tr><td class="hc-num">60</td><td>Sắp hồ sơ, di chúc hợp lệ; kiểm quyền định đoạt, quyền thừa kế được luật bảo vệ và hình thức theo từng việc.</td><td><a class="hc-x" href="#s-giayto">9.4</a></td></tr>
               <tr><td class="hc-num">61</td><td>Lãi cao bất thường kèm bảo đảm không rủi ro là tín hiệu đỏ; xác minh qua kênh độc lập.</td><td><a class="hc-x" href="#s-luadao">10.1</a></td></tr>
               <tr><td class="hc-num">62</td><td>Mười hai luật trả giá: cho vay trong mức mất được, không bảo lãnh tuỳ tiện, ghi thoả thuận, tránh quyết khi mệt, hiểu trước khi mua, xét động cơ, giữ riêng tư, tránh làm mất mặt, định phần để dành, không gỡ, bỏ chi phí chìm, giữ sức khoẻ.</td><td><a class="hc-x" href="#s-muoihai">10.2</a></td></tr>
               <tr><td class="hc-num">63</td><td>Với mỗi luật, biết luật ngược chiều và biến số ở giữa; luật chống bị loại thì giữ cứng.</td><td><a class="hc-x" href="#s-mauthuan">11.1</a></td></tr>
@@ -4469,7 +4486,7 @@ var libraryReady = Promise.resolve();
   function printNote() {
     var full = scope.value === 'full';
     document.body.setAttribute('data-print', full ? 'full' : 'brief');
-    $('hc-print-note').textContent = (full ? 'Bản đầy đủ — các mục, mô hình, nguồn và thư viện.' : 'Bản gọn — nguyên lý và gợi ý; lược bằng chứng, công thức và thư viện.') +
+    $('hc-print-note').textContent = (full ? 'Bản đầy đủ — các mục, mô hình, nguồn và thư viện.' : 'Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn.') +
       (full && !$('lib').getAttribute('data-ready') ? ' Thư viện chưa nạp được; phần đó thiếu trong bản in này.' : '') +
       ' Trước quyết định lớn, đọc chi tiết và nguồn tại https://vudat081299.github.io/pages/hidden-curriculum.html. Nội dung rà ngày 06/10/2026.';
   }
