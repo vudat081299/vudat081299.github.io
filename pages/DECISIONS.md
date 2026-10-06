@@ -50,7 +50,9 @@ bằng chứng, giới hạn, việc làm và nhãn độ tin. Không giáo đi�
 Khái niệm cốt lõi ở thư viện mô hình (file JSON), nối với nhau và với các mục.
 
 ## PAGES-008 · hidden-curriculum: rà nội dung, sửa có điều kiện và nén chữ
-05/10/2026 · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+06/10/2026 · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 
 Rà cả luận điểm lẫn diễn đạt: giữ ý đúng, sửa sai hoặc thiếu điều kiện, chỉ bổ sung điều đổi được cách quyết định.
 Rút câu dài, dẫn nhập và ý lặp; không thêm mục chỉ để đủ checklist mô hình. Giữ thiết kế, tập trung chất lượng nội dung.
+Ưu tiên xương sống và chủ đề dùng được với ít kiến thức; phân biệt nguyên lý dùng rộng với kiến thức theo tình huống.
+Độ dài không tự là lỗi; kiểm cả thời gian tiếp thu và bản in PDF, giữ chiều sâu có ích để tra cứu.

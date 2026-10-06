@@ -1099,7 +1099,8 @@ def phan_F2():
             'Gottman và Levenson (2000) theo dõi các cặp vợ chồng trong 14 năm', '“dự báo đúng hơn 90%”',
             'Heyman và Smith Slep (2001)', 'các cặp mới cưới năm 1998', '(Stanley, Bradbury và Markman, 2000)',
             'Dew, Britt và Huston (2012), theo dõi 4.574 cặp vợ chồng Mỹ', 'số 52/2014/QH13, hiệu lực từ 01/01/2015',
-            'Luật số 81/2025/QH15', '121/VBHN-VPQH (2025)', '(Điều 33, 43)', '(Điều 38, 47)',
+            'Luật số 81/2025/QH15', '121/VBHN-VPQH (2025)', '(Điều 33, 43)', '(Điều 47)', '(Điều 49)', '(Điều 38)',
+            'Nếu đã có thoả thuận hợp lệ, vợ chồng có thể sửa, bổ sung nội dung theo đúng hình thức',
         ],
         's-giayto': [
             'tới tháng 10/2026', 'người 15–18 tuổi được lập', 'trong 5 ngày làm việc', 'sau 3 tháng',

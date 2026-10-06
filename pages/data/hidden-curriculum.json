@@ -334,7 +334,7 @@
     "math",
     "lore"
    ],
-   "idea": "Chấm một quyết định bằng những gì người quyết biết lúc ấy và cách họ cân nhắc, không bằng kết cục.",
+   "idea": "Chấm chất lượng quyết định bằng thông tin có lúc chọn và cách cân nhắc; dùng kết quả sau đó để học, không coi một lần thắng là chứng minh quy trình tốt.",
    "why": "Chấm theo một kết quả dễ thưởng cho liều gặp may, phạt thận trọng gặp xui.",
    "mechanism": "Kết cục là chất lượng quyết định cộng với may rủi. Với một lần quan sát không tách được hai phần ấy; qua nhiều quyết định, chất lượng mới lộ ra.",
    "mistake": "Cái Annie Duke gọi là resulting: một người dồn hết tiền vào một mã và thắng không chứng minh quyết định ấy đúng.",
@@ -443,12 +443,12 @@
     "theory",
     "hist"
    ],
-   "idea": "Khi một thước đo trở thành mục tiêu, nó thôi là một thước đo tốt.",
+   "idea": "Khi thưởng phạt phụ thuộc một chỉ số, người ta có thể tối ưu chỉ số mà làm lệch mục tiêu thật.",
    "why": "Chỉ tiêu dễ kéo hành vi lệch khỏi mục đích thật.",
    "mechanism": "Thước đo chỉ đi cùng điều mình muốn khi không ai cố đẩy nó. Khi người bị đo được thưởng theo nó, họ tìm cách đẩy con số rẻ nhất — thường là cách không đẩy được điều mình muốn.",
    "mistake": "Thấy con số bị chơi khăm thì tăng thưởng phạt cho chính con số ấy, thay vì đổi cách đo.",
    "example": "Năm 1902 ở Hà Nội, trả tiền theo đuôi chuột dẫn tới cảnh người ta nuôi chuột, cắt đuôi rồi thả cho chuột đẻ tiếp.",
-   "use": "Dùng vài thước đo bù trừ nhau, giữ phán xét của con người, và thỉnh thoảng đổi cách đo.",
+   "use": "Đối chiếu chỉ số với kết quả và tác dụng phụ; công bố tiêu chí rõ, sửa cách đo khi có bằng chứng lệch.",
    "limits": "Thước đo vẫn hữu ích; đối chiếu mục đích và bổ sung quan sát, phán đoán.",
    "remember": "Đo để hiểu, đừng để con số thành đích.",
    "related": [
@@ -496,13 +496,13 @@
    "kind": [
     "theory"
    ],
-   "idea": "Sản lượng của một hệ thống bị giới hạn bởi khâu chậm nhất; cải thiện khâu khác không làm hệ thống ra thêm gì.",
+   "idea": "Trong một dây chuyền ổn định, khâu đang giới hạn sản lượng là nơi tăng năng lực có thể giúp cả hệ thống.",
    "why": "Tăng năng suất khâu khác không giúp nếu nút thắt vẫn chặn đầu ra.",
    "mechanism": "Mỗi đơn vị việc phải đi qua mọi khâu; khâu chậm nhất đặt nhịp cho cả dây, phần dư ở khâu khác chỉ thành hàng chờ.",
    "mistake": "Tối ưu thứ dễ tối ưu thay vì thứ đang chặn — học thêm một công cụ khi cái chặn là tiếng Anh hay giấc ngủ.",
    "example": "Một đội phần mềm viết mã nhanh gấp đôi mà khâu kiểm thử vẫn như cũ thì không phát hành nhanh hơn.",
    "use": "Trước khi cải thiện, hỏi: việc đang ùn lại trước khâu nào? Gỡ khâu ấy, rồi tìm nút thắt mới.",
-   "limits": "Nút thắt dịch chuyển: gỡ xong một chỗ thì chỗ khác thành chậm nhất. Và việc sáng tạo không phải lúc nào cũng tuần tự như một dây chuyền.",
+   "limits": "Nút thắt dịch chuyển và có thể có nhiều khâu cùng hạn chế. Khâu khác vẫn có thể cần sửa chất lượng, chi phí hay độ tin cậy; việc sáng tạo không luôn giống dây chuyền.",
    "remember": "Tìm chỗ tắc trước khi tăng tốc.",
    "related": [
     "localopt",
@@ -738,14 +738,14 @@
     "solid",
     "math"
    ],
-   "idea": "Tạo của cần tập trung vào chỗ mình có lợi thế; giữ của cần đa dạng hoá để không bị xoá sổ — hai bài toán, hai lời giải.",
+   "idea": "Tập trung vào nơi có lợi thế có thể tạo kết quả vượt trội, cũng tăng tổn thất. Đa dạng hoá giảm rủi ro riêng và vẫn có thể tạo của cải qua thu nhập, tiết kiệm và tái đầu tư.",
    "why": "Tập trung và đa dạng có ích khác nhau; phải xét lợi thế và mức lỗ chịu được.",
    "mechanism": "Lợi suất cổ phiếu riêng lẻ rất lệch: trong 25.967 cổ phiếu Mỹ 1926–2016, chỉ 42,6% thắng tín phiếu, và khoảng 4% công ty tạo ra toàn bộ của cải ròng. Ai sở hữu tập trung một công ty trong nhóm nhỏ ấy giàu vượt trội; ai chọn đại vài mã thì nhiều khả năng trượt nó.",
    "mistake": "Chép mức tập trung của người sáng lập mà không có thông tin, quyền quyết định và công sức của họ — tức chép phần rủi ro, bỏ phần lợi thế.",
    "example": "Gần ba phần tư người khởi nghiệp được quỹ mạo hiểm rót vốn ở Mỹ nhận 0 khi thoái vốn, dù trung bình là 5,8 triệu USD. Cuối năm 2000, một năm trước khi Enron sụp, 62% tài sản quỹ hưu trí của nhân viên là cổ phiếu công ty.",
    "use": "Dồn thời gian và kỹ năng vào nghề, doanh nghiệp của mình; đa dạng hoá tiền nhàn rỗi, và để nó ở chỗ ít cùng chiều với thu nhập.",
    "limits": "Đa dạng hoá giảm mức phụ thuộc vào một khoản thắng lớn, không bảo đảm khỏi lỗ. Tập trung cộng nợ và nhu cầu tiền gấp có thể làm mất khả năng tiếp tục.",
-   "remember": "Tập trung để vượt trội, đa dạng hoá để còn chơi tiếp.",
+   "remember": "Dồn công sức có lợi thế, giới hạn vốn chịu rủi ro, đa dạng phần tài chính.",
    "related": [
     "correlation",
     "survivorship",
@@ -910,7 +910,7 @@
    "mistake": "Lập kế hoạch nghỉ hưu bằng một lợi suất bình quân, như thể năm nào cũng giống năm nào.",
    "example": "1.000 triệu đồng, rút 60 triệu cuối mỗi năm, bốn năm lợi suất +20%, +10%, −20%, −10%: còn 745,7 triệu; đảo thứ tự: còn 675,8 triệu. Không rút gì thì cả hai đều thành 950,4.",
    "use": "Tách chi tiêu sắp cần khỏi phần biến động; định trước cách rút và tái cân bằng.",
-   "limits": "Với người đang góp tiền đều thì ngược lại: năm xấu đến sớm có lợi vì mua được nhiều hơn ở giá thấp — cùng ví dụ, góp 60 triệu mỗi năm thì thứ tự năm xấu trước kết thúc cao hơn.",
+   "limits": "Thứ tự cũng ảnh hưởng người góp tiền; ví dụ trên trang có lợi cho thứ tự năm xấu trước, không phải quy luật mọi chuỗi giá. Khi không thêm hoặc rút tiền, cùng bộ lợi suất cho cùng kết quả.",
    "remember": "Lúc bắt đầu rút tiền, năm xấu đầu tiên là năm đắt nhất.",
    "related": [
     "liquidity",
@@ -956,7 +956,7 @@
    "kind": [
     "math"
    ],
-   "idea": "Một mô hình kinh doanh chỉ đứng được khi mỗi đơn vị bán ra góp đủ vào chi phí cố định, và mỗi khách đem về nhiều hơn chi phí để có khách ấy.",
+   "idea": "Biên đóng góp của các giao dịch phải đủ bù chi phí cố định trong dài hạn; so giá trị khách hàng sau chi phí phục vụ với chi phí có khách.",
    "why": "Kiểm hoà vốn, biên an toàn và thời gian cầm cự trước khi bỏ vốn.",
    "mechanism": "Biên đóng góp = giá bán − chi phí biến đổi; hoà vốn = chi phí cố định ÷ biên đóng góp; giá trị vòng đời khách ≈ biên đóng góp mỗi tháng ÷ tỉ lệ khách bỏ đi mỗi tháng; chu kỳ tiền mặt cho biết tiền bị giam bao lâu.",
    "mistake": "Nhìn doanh thu và lượng khách tăng mà không tính mỗi khách lãi hay lỗ; doanh nghiệp có lãi trên sổ vẫn chết được vì hết tiền mặt.",
@@ -1178,7 +1178,7 @@
     "solid",
     "mixed"
    ],
-   "idea": "Người khác xét bạn theo hai trục — có ý tốt không và có làm được không — và xét trục thứ nhất trước.",
+   "idea": "Thiện ý và năng lực là hai trục thường dùng khi đánh giá người; thiện ý hay được xét sớm, không có thứ tự cố định trong mọi hoàn cảnh.",
    "why": "Thiện ý và năng lực cùng ảnh hưởng cách người khác đánh giá mình.",
    "mechanism": "Fiske, Cuddy và Glick (2007): trước hết người ta xác định người kia là bạn hay thù, rồi mới xét người ấy có đủ sức thực hiện ý định không. Mỗi tổ hợp của hai trục kéo theo một cảm xúc: ngưỡng mộ, thương hại, ghen tị, coi thường.",
    "mistake": "Người năng lực cao tưởng kết quả tự nói thay mình, nên rơi vào ô ghen tị: được nể nhưng bị đề phòng.",
@@ -1311,7 +1311,7 @@
     "theory",
     "solid"
    ],
-   "idea": "Khi người khác không thấy được thứ mình có, họ nhìn vào tín hiệu; tín hiệu chỉ đáng tin khi nó tốn kém để giả.",
+   "idea": "Khi chất lượng khó thấy, người khác dựa vào tín hiệu. Tín hiệu hữu ích hơn khi kiểm chứng được hoặc khó làm giả; đắt tiền tự nó chưa đủ.",
    "why": "Giúp đọc qua vẻ ngoài và chọn chứng cứ năng lực phù hợp.",
    "mechanism": "Người có thật trả giá rẻ hơn người giả để có cùng một tín hiệu, nên tín hiệu tách được hai nhóm (Spence, 1973; Zahavi, 1975).",
    "mistake": "Nhầm tín hiệu với thứ nó báo hiệu; hoặc đầu tư vào tín hiệu dễ giả như đồ để khoe, thay vì thứ khó giả.",
@@ -1390,7 +1390,7 @@
     "solid",
     "mixed"
    ],
-   "idea": "Niềm tin chung trong nhóm rằng nói ra một lo ngại, một câu hỏi, một lỗi sẽ không bị trừng phạt.",
+   "idea": "Niềm tin chung rằng nêu lo ngại, hỏi hoặc nhận lỗi thiện chí không dẫn tới làm nhục hay trả đũa; tiêu chuẩn và trách nhiệm vẫn phải giữ.",
    "why": "Giúp nhóm nêu lỗi và lo ngại sớm để sửa.",
    "mechanism": "Edmondson (1999) nghiên cứu niềm tin nhóm rằng góp ý thiện chí không bị làm nhục hay trả đũa. Google khảo sát 180 nhóm và xếp yếu tố này đứng đầu trong dữ liệu nội bộ, không phải mọi tổ chức.",
    "mistake": "Hiểu an toàn tâm lý là dễ dãi hay không phê bình; nó là được nói thật, kể cả điều khó nghe, mà không bị phạt.",
@@ -1499,7 +1499,7 @@
    "kind": [
     "theory"
    ],
-   "idea": "Quyền lực của A với B bằng mức B phụ thuộc vào A: B cần thứ A nắm tới đâu, và có lấy được nó ở chỗ khác không.",
+   "idea": "Trong khung phụ thuộc của Emerson, A có thêm ảnh hưởng khi B cần nguồn lực A nắm và ít nguồn thay thế. Đây là một nguồn quyền lực, không phải toàn bộ quyền lực.",
    "why": "Giảm lệ thuộc và tăng nguồn thay thế có thể đổi sức thương lượng.",
    "mechanism": "Emerson (1962): phụ thuộc tăng theo mức cần và giảm theo số nguồn thay thế; bên yếu cân lại bằng bốn cách — bớt cần, tìm nguồn khác, trao địa vị cho bên mạnh, liên minh.",
    "mistake": "Nhìn sơ đồ tổ chức để đoán ai có quyền, bỏ qua người giữ thông tin, ngân sách, kỹ năng hiếm.",
