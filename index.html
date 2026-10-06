@@ -671,23 +671,23 @@
 
         input.addEventListener('input', function () { filter(this.value); });
 
-        /* Giữ ⌃⇧⌘A (Ctrl+Shift+Cmd+A) thì bảng ẩn hiện, thả ra là mất.
-           Dò bằng e.code: Shift+A cho e.key = 'A', và đổi theo bố cục bàn phím.
-           macOS không bắn keyup của phím thường khi ⌘ còn giữ — nên thả A mà chưa thả
-           ⌘ thì bảng ở lại tới lúc thả ⌘ hoặc Shift. Đó là giới hạn của hệ điều hành,
+        /* Giữ ⌃⌥⇧⌘Z (Ctrl+Option+Shift+Cmd+Z) thì bảng ẩn hiện, thả ra là mất.
+           Dò bằng e.code: Option và Shift đổi e.key, và e.key đổi theo bố cục bàn phím.
+           macOS không bắn keyup của phím thường khi ⌘ còn giữ — nên thả Z mà chưa thả
+           ⌘ thì bảng ở lại tới lúc thả một phím sửa đổi. Đó là giới hạn của hệ điều hành,
            không sửa được từ trang; vì vậy mọi đường thả (phím sửa đổi, blur, đổi tab)
            đều đóng bảng, để nó không kẹt lại. */
         var hold = document.getElementById('hold');
         var armed = false;     /* true khi collection.json có danh sách ẩn */
-        function chord(e) { return e.shiftKey && e.metaKey && e.ctrlKey && !e.altKey; }
+        function chord(e) { return e.shiftKey && e.metaKey && e.ctrlKey && e.altKey; }
         function peek(on) { hold.hidden = !(on && armed); }
 
         document.addEventListener('keydown', function (e) {
-          if (e.code === 'KeyA' && chord(e)) { if (armed) e.preventDefault(); peek(true); }
+          if (e.code === 'KeyZ' && chord(e)) { if (armed) e.preventDefault(); peek(true); }
           else if (!chord(e)) peek(false);
         });
         document.addEventListener('keyup', function (e) {
-          if (e.code === 'KeyA' || !chord(e)) peek(false);
+          if (e.code === 'KeyZ' || !chord(e)) peek(false);
         });
         window.addEventListener('blur', function () { peek(false); });
         document.addEventListener('visibilitychange', function () { peek(false); });

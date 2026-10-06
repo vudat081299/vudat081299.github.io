@@ -59,9 +59,9 @@ Chủ trang gọi là "list ẩn"; trên bảng nhãn là `Reserved`.
 
 - Khoá `hold` ở gốc `collection.json`, ngoài `sections`: `label` và `items` (đủ `icon`, `name`, `desc`, `href`;
   không có `key`). Không có số thứ tự, không vào mục lục, chân trang, ô đếm, tìm kiếm hay phím tắt (REPO-020).
-- Giữ ⌃⇧⌘A (Ctrl+Shift+Cmd+A) thì một bảng nổi hiện ở đáy khung nhìn, thả ra là mất. Dò bằng `e.code`.
-- macOS không bắn `keyup` của phím thường khi ⌘ còn giữ: thả A mà chưa thả ⌘ thì bảng ở lại tới lúc thả ⌘
-  hoặc Shift. Blur cửa sổ và đổi tab cũng đóng bảng.
+- Giữ ⌃⌥⇧⌘Z (Ctrl+Option+Shift+Cmd+Z) thì một bảng nổi hiện ở đáy khung nhìn, thả ra là mất. Dò bằng `e.code`.
+- macOS không bắn `keyup` của phím thường khi ⌘ còn giữ: thả Z mà chưa thả ⌘ thì bảng ở lại tới lúc thả
+  một phím sửa đổi. Blur cửa sổ và đổi tab cũng đóng bảng.
 - Trang trong `hold` vẫn lên web: không nằm trong `WITHHELD` / `UNLISTED`, `deploy.yml` không `--exclude`. Đó là
   cách giấu link, không phải bảo mật; URL trực tiếp vẫn mở được.
 - Cổng: `lint-collection.py` kiểm `hold` như `sections`; `smoke-index.js` kiểm hiện/ẩn và không lọt vào số đếm.
