@@ -310,6 +310,7 @@
     .hc-meta, .hc-src, .hc-eyebrow-sec { font-size: 8pt; }
     h2, h3, h4, summary { break-after: avoid; }
     .hc-eyebrow-sec, .hc-item__top { break-after: avoid; }
+    .hc-sec-title + p:has(.hc-evi) { break-after: avoid; }
     .hc-key { break-inside: avoid; }
     body[data-print="brief"] #s-muoihai .hc-item { break-inside: avoid; }
     p { orphans: 3; widows: 3; }
@@ -385,15 +386,15 @@
     <p class="hc-p"><b>Dừng đọc để thử:</b> chọn một quyết định thật, viết việc sẽ làm khác, điều kiện áp dụng và ngày kiểm kết quả. Nếu chưa đổi được việc gì, tìm ví dụ gần hơn hoặc phản hồi thật trước khi thêm mô hình.</p>
   </div>
   <div class="hc-reading" id="hc-reading" hidden>
-    <button class="wb-btn wb-btn--outline wb-btn--sm" id="hc-expand">Mở tất cả chi tiết</button>
+    <button class="wb-btn wb-btn--outline wb-btn--sm" id="hc-expand">Mở chi tiết các mục</button>
     <button class="wb-btn wb-btn--outline wb-btn--sm" id="hc-collapse">Thu gọn chi tiết</button>
     <label for="hc-print-scope">Nội dung PDF</label>
     <select class="wb-input" id="hc-print-scope"><option value="brief">Bản gọn</option><option value="full">Bản đầy đủ, gồm thư viện</option></select>
     <button class="wb-btn wb-btn--outline wb-btn--sm" id="hc-print">In / lưu PDF</button>
     <span id="hc-reading-status" role="status"></span>
   </div>
-  <p class="hc-reading-note">Mỗi mục luôn hiện nguyên lý, gợi ý và điều kiện quan trọng để hiểu đúng; mở chi tiết để xem cơ chế, bằng chứng, ví dụ và giới hạn sâu hơn. Bản PDF gọn giữ phần cốt lõi này, lộ trình đọc và 12 luật trả giá; bản đầy đủ thêm mọi chi tiết, bài tự soát, bảng ôn tập và thư viện, kể cả thẻ đang bị lọc. Chọn nội dung PDF độc lập với các mục đang mở trên màn hình.</p>
-  <p class="hc-print-note" id="hc-print-note">Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn. Khi cần tính toán hoặc quyết định lớn, mở chi tiết tại https://vudat081299.github.io/pages/hidden-curriculum.html. Nội dung rà ngày 06/10/2026.</p>
+  <p class="hc-reading-note">Mỗi mục luôn hiện nguyên lý, gợi ý và điều kiện quan trọng để hiểu đúng; mở chi tiết để xem cơ chế, bằng chứng, ví dụ và giới hạn sâu hơn. Thẻ thư viện mở riêng. Bản PDF gọn giữ phần cốt lõi này, lộ trình đọc và 12 luật trả giá; bản đầy đủ thêm mọi chi tiết, bài tự soát, bảng ôn tập và thư viện, kể cả thẻ đang bị lọc. Chọn nội dung PDF độc lập với các mục đang mở trên màn hình.</p>
+  <p class="hc-print-note" id="hc-print-note">Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn. Khi cần tính toán hoặc quyết định lớn, mở chi tiết tại https://vudat081299.github.io/pages/hidden-curriculum.html. Nội dung rà ngày 07/10/2026.</p>
 
   <details class="hc-depth hc-examples"><summary>Bốn ví dụ định lượng trong bài</summary>
   <div class="hc-figs" style="margin-bottom:20px">
@@ -712,7 +713,7 @@
         <h2 class="hc-sec-title">Hỏi mỗi quyết định đang <i>nuôi vòng tốt hay vòng xấu</i></h2>
         <p><span class="hc-evi hc-evi--theory">Lý thuyết</span> <span class="hc-evi hc-evi--math">Toán học</span> <span class="hc-evi hc-evi--mixed">Bằng chứng vừa</span></p>
 
-        <p class="hc-lede">Kỹ năng → thu nhập → phần dư → nhiều lựa chọn → cơ hội học thêm là một vòng tăng cường. Nợ đắt → thiếu tiền → vay thêm là vòng ngược. Vòng lặp giúp giải thích lợi thế tích luỹ; cú sốc, xuất phát điểm và quyết định lớn vẫn có thể đổi hướng.</p>
+        <p class="hc-lede">Vòng tăng cường khuếch đại xu hướng đang có: kỹ năng → thu nhập → phần dư → cơ hội học thêm; hoặc nợ đắt → thiếu tiền → vay thêm → nợ lớn hơn. Cả hai cùng cơ chế, khác hậu quả. Vòng lặp giúp giải thích lợi thế tích luỹ; cú sốc, xuất phát điểm và quyết định lớn vẫn có thể đổi hướng.</p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
@@ -722,7 +723,7 @@
         <details class="hc-depth">
           <summary>Cơ chế, bằng chứng và cách áp dụng</summary>
           <div class="hc-depth__body">
-        <p class="hc-p"><b>Vòng tăng cường</b> khuếch đại kết quả trước, theo chiều tốt hoặc xấu; <b>vòng cân bằng</b> kéo hệ về một mức, như thân nhiệt hay thị trường bão hoà. Robert Merton (1968) gọi việc người nổi tiếng được ghi công nhiều hơn cho cùng đóng góp là <b>hiệu ứng Matthew</b>. DiPrete và Eirich (2006) tổng hợp cơ chế <b>lợi thế tích luỹ</b>: lợi thế nhỏ giúp lấy thêm lợi thế, rồi thành khoảng cách lớn.</p>
+        <p class="hc-p"><b>Vòng tăng cường</b> khuếch đại thay đổi ban đầu, cả tăng lẫn giảm; <b>vòng cân bằng</b> chống lại thay đổi, hướng về một mức hoặc giới hạn. “Tăng cường” không đồng nghĩa tốt, “cân bằng” không đồng nghĩa xấu. Độ trễ có thể khiến hệ dao động thay vì ổn định ngay (<a class="hc-x" href="https://ocw.mit.edu/courses/15-988-system-dynamics-self-study-fall-1998-spring-1999/f94fa854452dd69fff5ca7554dfb69f8_feedback.pdf">MIT, <i>An Introduction to Feedback</i></a>). Robert Merton (1968) gọi việc người nổi tiếng được ghi công nhiều hơn cho cùng đóng góp là <b>hiệu ứng Matthew</b>. DiPrete và Eirich (2006) tổng hợp cơ chế <b>lợi thế tích luỹ</b>: lợi thế nhỏ giúp lấy thêm lợi thế, rồi thành khoảng cách lớn.</p>
         <figure class="hc-viz">
           <svg class="hc-svg" viewBox="0 0 720 330" role="img" aria-label="Hai vòng lặp. Vòng tốt: kỹ năng hiếm làm tăng thu nhập; thu nhập dư thành tiền để dành; tiền để dành cho quyền chọn; quyền chọn cho phép chọn việc học được nhiều; việc học được nhiều làm kỹ năng hiếm hơn. Vòng xấu: thiếu khoảng đệm buộc phải vay đắt và nhận việc đầu tiên; vay đắt sinh tiền lãi, việc không học được làm thu nhập chững lại; thu nhập chững lại làm thiếu khoảng đệm hơn.">
             <defs>
@@ -783,7 +784,7 @@
               <tr><td>Sức khoẻ – sức làm</td><td>Ngủ đủ, vận động → làm tốt, ít sai → ít căng thẳng → còn sức giữ thói quen.</td><td>Giấc ngủ</td><td><a class="hc-x" href="#s-muoihai">10.2</a></td></tr>
               <tr><td>Nợ tiêu dùng</td><td>Lãi cao → thiếu tiền cuối tháng → vay thêm để trả → lãi cao hơn.</td><td>Ngừng vay mới trước, rồi trả khoản lãi cao nhất</td><td><a class="hc-x" href="#s-no">1.4</a></td></tr>
               <tr><td>Đường hầm khan hiếm</td><td>Thiếu tiền, thiếu giờ → đầu óc dồn vào cái gấp → quyết định đắt → thiếu hơn.</td><td>Khoảng đệm, quy tắc đặt sẵn</td><td><a class="hc-x" href="#s-khanhiem">2.1</a></td></tr>
-              <tr><td>Lạm phát lối sống</td><td>Chi cố định cao → không dám nghỉ, không dám đổi việc → kẹt ở việc không học được → thu nhập chững.</td><td>Giữ mức sống cũ thêm một năm sau mỗi lần tăng lương</td><td><a class="hc-x" href="#s-bang">1.1</a></td></tr>
+              <tr><td>Lạm phát lối sống</td><td>Chi cố định cao → không dám nghỉ, không dám đổi việc → kẹt ở việc không học được → thu nhập chững.</td><td>Tính chi phí thiết yếu và phần để dành trước khi nâng mức sống</td><td><a class="hc-x" href="#s-bang">1.1</a></td></tr>
               <tr><td>Mất chữ tín</td><td>Một lần thất hứa → ít người giao việc → ít cơ hội chứng minh → khó lấy lại.</td><td>Lời hứa nhỏ, đúng hạn</td><td><a class="hc-x" href="#s-chutin">5.4</a></td></tr>
             </tbody>
           </table>
@@ -1525,7 +1526,7 @@
               <tr><td>Dồn hết vào một mã, vay ký quỹ</td><td>Không khoản nào đủ lớn để xoá sổ mình</td><td><a class="hc-x" href="#s-dongxu">1.3</a></td></tr>
               <tr><td>Ký bảo lãnh, đứng tên hộ</td><td>Không ký thứ mình không gánh nổi</td><td><a class="hc-x" href="#s-muoihai">10.2</a></td></tr>
               <tr><td>Tin lời hứa lãi cao, chắc chắn</td><td>Lãi cao kèm bảo đảm không rủi ro cần kiểm chứng</td><td><a class="hc-x" href="#s-luadao">10.1</a></td></tr>
-              <tr><td>Lương tăng là đổi xe, đổi điện thoại</td><td>Giữ mức sống cũ thêm một năm</td><td><a class="hc-x" href="#s-bang">1.1</a></td></tr>
+              <tr><td>Lương tăng là đổi xe, đổi điện thoại</td><td>Định phần để dành; nâng mức sống có chủ đích</td><td><a class="hc-x" href="#s-bang">1.1</a></td></tr>
               <tr><td>Mười năm làm một việc không học thêm gì</td><td>Đầu tư vào vốn con người</td><td><a class="hc-x" href="#s-vonnguoi">4.1</a></td></tr>
               <tr><td>Cãi thắng sếp trên email, cắt đứt quan hệ cũ</td><td>Thắng cuộc cãi là thua một mối quan hệ</td><td><a class="hc-x" href="#s-noi">6.1</a></td></tr>
               <tr><td>Đốt sức khoẻ cho công việc</td><td>Sức khoẻ là vốn không thế chấp được</td><td><a class="hc-x" href="#s-muoihai">10.2</a></td></tr>
@@ -1920,7 +1921,7 @@
               <span><span class="sw" style="background:var(--wb-neutral)"></span>sàn: σ · √ρ</span>
             </div>
             <pre class="hc-out" id="dv-out" aria-live="polite"></pre>
-            <p class="hc-lab__foot"><b>Với số điền sẵn</b> (σ = 30%, ρ = 0,3): một tài sản dao động 30%/năm; mười tài sản còn 18,25%; thêm bao nhiêu tài sản nữa cũng không xuống dưới 16,43% — phần rủi ro chung. Chỉ cần 12 tài sản là đã vào trong khoảng 10% trên cái sàn ấy. Bấm khủng hoảng: mười tài sản vẫn dao động 27,17%, gần bằng một tài sản. Đa dạng hoá chỉ giảm phần rủi ro riêng; phần chung chỉ giảm được bằng cách giữ ít tài sản rủi ro hơn và không vay.</p>
+            <p class="hc-lab__foot"><b>Với số điền sẵn</b> (σ = 30%, ρ = 0,3): một tài sản dao động 30%/năm; mười tài sản còn 18,25%; thêm bao nhiêu tài sản nữa cũng không xuống dưới 16,43% — phần rủi ro chung. Chỉ cần 12 tài sản là đã vào trong khoảng 10% trên cái sàn ấy. Bấm khủng hoảng: mười tài sản vẫn dao động 27,17%, gần bằng một tài sản. Trong mô hình này, thêm tài sản cùng σ và ρ chỉ giảm phần rủi ro riêng. Ngoài đời, cần xét thêm loại tài sản chịu cú sốc khác, tỉ trọng và mức vay; không thể suy ra rủi ro toàn danh mục chỉ từ số khoản.</p>
           </div>
         </div>
         <p class="hc-p"><b>Thử mô hình.</b> Với ρ = 0,3, tăng N từ 10 lên 50 chỉ giảm rủi ro từ 18,25% xuống 16,81%. Đưa ρ về 0: không còn sàn, hai mươi tài sản còn 6,71%. Tăng σ lên 60%: mọi số gấp đôi, hình dạng không đổi vì √(ρ + (1 − ρ) ÷ N) chỉ phụ thuộc ρ và N. Bấm “Khủng hoảng”: sàn lên 26,83%. <b>Thêm khoản ít cùng chiều có ích hơn chỉ thêm số lượng.</b></p>
@@ -1928,7 +1929,7 @@
         <p class="hc-p">Longin và Solnik (2001) dùng lý thuyết giá trị cực trị trên dữ liệu các thị trường cổ phiếu lớn và thấy tương quan giữa chúng <b>tăng trong thị trường giá xuống, không tăng trong thị trường giá lên</b>; nó gắn với chiều đi của thị trường chứ không chỉ với độ biến động. Tài sản nào che được lại tuỳ loại cú sốc. Năm 2008, cổ phiếu Mỹ mất 36,55% trong khi trái phiếu chính phủ Mỹ kỳ hạn 10 năm lãi 20,10%. Năm 2022, khi cú sốc là lạm phát và lãi suất tăng, cả hai cùng giảm: −18,04% và −17,83% (Damodaran, NYU Stern).</p>
         <h3 class="hc-h3">Tái cân bằng và tỉ trọng một khoản</h3>
         <p class="hc-p">Tỉ trọng trôi theo giá. Danh mục 60% cổ phiếu, 40% trái phiếu, sau một năm cổ phiếu tăng 30% còn trái phiếu đứng yên, thành 66,1% / 33,9% — rủi ro cao hơn mức đã chọn mà không ai quyết định. <b>Tái cân bằng</b> bán bớt phần đã lên, mua thêm phần đã xuống để về tỉ trọng cũ, theo lịch hoặc khi lệch quá vài điểm phần trăm. Nó không phải lời hứa lợi nhuận — trong một đợt tăng dài, để mặc thường lãi hơn — mà là cách giữ mức rủi ro đã chọn bằng một luật viết sẵn.</p>
-        <p class="hc-p">Tỉ trọng mỗi khoản đặt theo câu hỏi “nếu nó mất một nửa, hay về 0, tôi mất bao nhiêu phần trăm tài sản ròng”. Khoản chiếm 5% mà về 0 thì mất 5%, chỉ cần lãi 5,3% để hoà; khoản chiếm 40% mà mất một nửa thì mất 20%, cần lãi 25% (<a class="hc-x" href="#s-toanthang">1.2</a>). Khi biết xác suất, tiêu chuẩn Kelly cho mức đặt trần; ngoài đời không biết chính xác, nên đặt dưới trần ấy (<a class="hc-x" href="#s-dongxu">1.3</a>).</p>
+        <p class="hc-p">Tỉ trọng mỗi khoản đặt theo câu hỏi “nếu nó mất một nửa, hay về 0, tôi mất bao nhiêu phần trăm tài sản ròng”. Khoản chiếm 5% mà về 0 thì mất 5%, chỉ cần lãi 5,3% để hoà; khoản chiếm 40% mà mất một nửa thì mất 20%, cần lãi 25% (<a class="hc-x" href="#s-toanthang">1.2</a>). Kelly tối ưu tăng trưởng dài hạn theo xác suất, mức lời lỗ và giả định của mô hình; không phải trần an toàn. Ngoài đời, sai số ước lượng và tương quan giữa các khoản cần tính chung; mức đặt còn phải chịu được nghĩa vụ tiền và tổn thất của mình (<a class="hc-x" href="#s-dongxu">1.3</a>).</p>
         <h3 class="hc-h3">Rủi ro thứ tự lợi suất: vô hại khi để yên, nguy hiểm khi rút tiền</h3>
         <p class="hc-p">Khi không rút tiền, thứ tự các năm lãi lỗ không đổi kết quả, vì phép nhân giao hoán: 1,2 × 1,1 × 0,8 × 0,9 = 0,9504 theo thứ tự nào cũng vậy. Khi rút đều, thứ tự đổi kết quả. Lấy 1.000 triệu đồng, cuối mỗi năm rút 60 triệu, qua bốn năm có đúng bốn mức lợi suất +20%, +10%, −20%, −10%:</p>
         <div class="hc-tw">
@@ -2686,16 +2687,17 @@
         <h2 class="hc-sec-title">Hỏi tiếp để cho thấy <i>bạn đã nghe</i></h2>
         <p><span class="hc-evi hc-evi--mixed">Bằng chứng vừa</span> <span class="hc-evi hc-evi--custom">Tập quán</span></p>
 
-        <p class="hc-lede">Huang và cộng sự (2017) thấy qua các cuộc trò chuyện và hẹn hò tốc độ: người hỏi nhiều, nhất là <b>hỏi tiếp từ điều vừa nghe</b>, được thích và nhận lời hẹn lần hai nhiều hơn. Câu hỏi tiếp cho thấy sự lắng nghe — nguyên tắc Carnegie đã nhấn mạnh trong <i>How to Win Friends and Influence People</i> (1936), bản Việt quen gọi <i>Đắc nhân tâm</i>.</p>
+        <p class="hc-lede">Huang và cộng sự (2017) ghi nhận trong các cuộc trò chuyện làm quen: người hỏi nhiều, nhất là <b>hỏi tiếp từ điều vừa nghe</b>, được đối tác đánh giá dễ mến hơn. Đây là bằng chứng trong bối cảnh cụ thể, không cho một tỉ lệ hỏi/nói đúng với mọi cuộc gặp. Hỏi tiếp có thể thể hiện sự lắng nghe — nguyên tắc Carnegie nhấn mạnh trong <i>How to Win Friends and Influence People</i> (1936), bản Việt quen gọi <i>Đắc nhân tâm</i>.</p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Hỏi nhiều hơn nói; hỏi câu thứ hai.</b> Xưng hô đúng vai. Khen công khai, góp ý kín. Tránh làm người khác bẽ mặt chỉ để thắng lý.
+          <b>Nghe câu trả lời rồi hỏi tiếp cho đúng ý.</b> Cho cả hai lượt chia sẻ; dừng nếu người kia không muốn nói. Xưng hô theo tập quán; khen cụ thể, góp ý riêng khi phù hợp. Chuyện an toàn và sai luật cần lên tiếng qua kênh phù hợp; tránh làm mất mặt chỉ để thắng lý.
         </div>
 
         <details class="hc-depth">
           <summary>Cơ chế, bằng chứng và cách áp dụng</summary>
           <div class="hc-depth__body">
+        <p class="hc-p"><b>Giới hạn của bằng chứng.</b> Chính <a class="hc-x" href="https://www.hbs.edu/ris/Publication%20Files/Huang%20et%20al%202017_6945bc5e-3b3e-4c0a-addd-254c9e603c60.pdf">Huang và cộng sự (2017)</a> lưu ý hỏi quá nhiều mà không chia sẻ có thể gây khó chịu. Kết quả về lời hẹn lần hai trong mẫu hẹn hò tốc độ đã có tranh luận: <a class="hc-x" href="https://doi.org/10.1037/pspi0000156">Kluger và Malloy (2019)</a> phân tích lại và đưa ra kết luận khác; <a class="hc-x" href="https://doi.org/10.1037/pspi0000220">Yeomans và cộng sự (2019)</a> phản biện và bảo vệ kết quả gốc. Không dùng số câu hỏi để đo khả năng lắng nghe hay bảo đảm được quý mến.</p>
         <p class="hc-p">Trong nhiều gia đình Việt, <b>xưng hô đúng vai</b> thể hiện sự lễ phép và mức quen tập quán. Gọi người hơn tuổi bố bằng “chú” thay vì “bác”, xưng “tôi” trong chỗ thân tình hay trả lời trống không đều dễ gây chú ý. Quy ước khác nhau theo vùng và từng nhà; không chắc thì hỏi.</p>
         <div class="hc-tw">
           <table class="wb-table">
@@ -2704,7 +2706,7 @@
               <tr><td>Hỏi câu nối tiếp; nhắc lại một chi tiết người kia vừa kể</td><td>Đợi người ta nói xong để kể chuyện của mình</td></tr>
               <tr><td>Nhớ tên, dùng tên khi chào lại</td><td>Hỏi lương, tuổi, chuyện con cái, chuyện cân nặng ở lần gặp đầu</td></tr>
               <tr><td>Khen cụ thể, khen việc làm chứ không chỉ khen người</td><td>Khen chung chung, khen quá lời (người nghe thấy ngay)</td></tr>
-              <tr><td>Góp ý riêng, khen ngợi trước mặt người khác</td><td>Chê trước đám đông, kể cả khi mình đúng</td></tr>
+              <tr><td>Góp ý riêng khi phù hợp; khen theo cách người nhận thoải mái</td><td>Làm mất mặt để thắng lý; giấu chuyện an toàn hoặc sai luật vì sợ mất lòng</td></tr>
               <tr><td>Nói “mình nghĩ có thể…”, chừa đường lui cho người kia</td><td>Cãi để thắng — thắng cuộc cãi là thua người</td></tr>
               <tr><td>Xưng hô đúng vai, thưa gửi với người lớn tuổi</td><td>Bàn chính trị, tôn giáo, tiền bạc với người mới quen</td></tr>
             </tbody>
@@ -2724,7 +2726,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Nói khi lời mình đổi được điều gì; im khi lời chỉ để thắng hay để tự vệ.</b> Mở bằng lý lẽ mạnh nhất; bỏ phần không giúp hiểu hay hành động. Khi sai, nhận trách nhiệm và đề nghị sửa — đừng giải thích dài. Chuyện an toàn và chuyện sai luật thì không im.
+          <b>Nói khi giúp hiểu, hành động hoặc bảo vệ quyền lợi; tránh lặp lời chỉ để thắng cuộc cãi.</b> Mở bằng lý lẽ mạnh nhất; giữ thông tin cần thiết. Khi sai, nhận trách nhiệm, giải thích đủ để hiểu và đề nghị sửa. Chuyện an toàn và sai luật cần lên tiếng qua kênh phù hợp.
         </div>
 
         <details class="hc-depth">
@@ -4294,11 +4296,11 @@
               <tr><td class="hc-num">16</td><td>Mua quyền chọn rẻ khi tương lai mù mờ; tránh thứ phá quyền chọn; biết lúc phải cam kết.</td><td><a class="hc-x" href="#s-quyenchon">2.7</a></td></tr>
               <tr><td class="hc-num">17</td><td>Tìm cách dễ làm hỏng mục tiêu; chặn trước rủi ro lớn, khó hồi phục.</td><td><a class="hc-x" href="#s-latnguoc">2.8</a></td></tr>
               <tr><td class="hc-num">18</td><td>Kiểm chất lượng bằng chứng và kết quả làm lại; nhãn không bảo chứng mọi câu.</td><td><a class="hc-x" href="#s-giakienthuc">2.9</a></td></tr>
-              <tr><td class="hc-num">19</td><td>Tập trung vào chỗ mình có lợi thế và quyền kiểm soát; đa dạng hoá mọi chỗ còn lại.</td><td><a class="hc-x" href="#s-taogiu">3.1</a></td></tr>
+              <tr><td class="hc-num">19</td><td>Dồn công sức nơi có lợi thế; giới hạn tổn thất và đa dạng rủi ro tài chính.</td><td><a class="hc-x" href="#s-taogiu">3.1</a></td></tr>
               <tr><td class="hc-num">20</td><td>Nói được tài sản trả mình bằng gì, ai hứa trả, bán được trong bao lâu; đo lợi suất sau lạm phát, phí và thuế.</td><td><a class="hc-x" href="#s-taisan">3.2</a></td></tr>
               <tr><td class="hc-num">21</td><td>Đa dạng, phí thấp, không vay; khi giá giảm, kiểm kế hoạch thay vì phản ứng vì hoảng.</td><td><a class="hc-x" href="#s-cophieu">3.3</a></td></tr>
               <tr><td class="hc-num">22</td><td>Viết ra giá hôm nay giả định gì về tăng trưởng và lợi suất trên vốn; công ty tốt chưa phải khoản đầu tư tốt.</td><td><a class="hc-x" href="#s-doanhnghiep">3.4</a></td></tr>
-              <tr><td class="hc-num">23</td><td>Tính lợi suất ròng và so với lãi vay; chỉ mua trong vòng tròn hiểu biết, với biên an toàn.</td><td><a class="hc-x" href="#s-dinhgia">3.5</a></td></tr>
+              <tr><td class="hc-num">23</td><td>So lợi suất ròng với chi phí vốn; hiểu thứ mua, chừa biên an toàn nhưng vẫn kiểm sai số ước tính.</td><td><a class="hc-x" href="#s-dinhgia">3.5</a></td></tr>
               <tr><td class="hc-num">24</td><td>Đặt tỉ trọng theo mức mất chịu được, xét rủi ro chung; tiền sắp cần phải dễ rút, ít biến động.</td><td><a class="hc-x" href="#s-danhmuc">3.6</a></td></tr>
               <tr><td class="hc-num">25</td><td>Vàng có thể che một số rủi ro; tính chi phí và khả năng mất sức mua, tránh nợ.</td><td><a class="hc-x" href="#s-vang">3.7</a></td></tr>
               <tr><td class="hc-num">26</td><td>Trước khi bỏ vốn: điểm hoà vốn, biên an toàn, đòn bẩy hoạt động, số tháng sống được khi doanh thu bằng 0.</td><td><a class="hc-x" href="#s-kinhdoanh">3.8</a></td></tr>
@@ -4310,13 +4312,13 @@
               <tr><td class="hc-num">32</td><td>Thể hiện thiện ý, chứng minh năng lực bằng kết quả; giữ chính trực ở việc nhỏ.</td><td><a class="hc-x" href="#s-amap">5.1</a></td></tr>
               <tr><td class="hc-num">33</td><td>Kết qua việc làm chung với người khác môi trường; giữ quan hệ yếu; làm cầu nối.</td><td><a class="hc-x" href="#s-mangluoi">5.2</a></td></tr>
               <tr><td class="hc-num">34</td><td>Giúp trong khả năng, giữ ranh giới; cảm ơn cụ thể, không biến quan hệ thành sổ nợ.</td><td><a class="hc-x" href="#s-cho">5.3</a></td></tr>
-              <tr><td class="hc-num">35</td><td>Hợp tác khi phù hợp; kiểm tra hiểu lầm, giảm rủi ro khi hành vi xấu lặp lại; giữ lời hứa nhỏ.</td><td><a class="hc-x" href="#s-chutin">5.4</a></td></tr>
+              <tr><td class="hc-num">35</td><td>Giữ lời, kiểm hiểu lầm; giao dịch lớn cần bảo đảm, vi phạm nghiêm trọng có thể cần giảm rủi ro ngay.</td><td><a class="hc-x" href="#s-chutin">5.4</a></td></tr>
               <tr><td class="hc-num">36</td><td>Giữ lời ở việc nhỏ; để người khác kể về mình; làm phép thử trang nhất báo.</td><td><a class="hc-x" href="#s-uytin">5.5</a></td></tr>
               <tr><td class="hc-num">37</td><td>Phát tín hiệu khó làm giả; nhìn qua tín hiệu tới hành vi; chọn ao để so.</td><td><a class="hc-x" href="#s-tinhieu">5.6</a></td></tr>
               <tr><td class="hc-num">38</td><td>Xây uy tín, hiểu người nghe, đưa lý lẽ phù hợp; việc lớn cần lý do thật.</td><td><a class="hc-x" href="#s-thuyetphuc">5.7</a></td></tr>
               <tr><td class="hc-num">39</td><td>Thủ tục sạch, an toàn để nói thật, khen cụ thể đúng lúc; dùng người theo chỗ giỏi.</td><td><a class="hc-x" href="#s-giunguoi">5.8</a></td></tr>
-              <tr><td class="hc-num">40</td><td>Hỏi nhiều hơn nói; xưng hô đúng vai; không cố thắng cuộc cãi.</td><td><a class="hc-x" href="#s-noi">6.1</a></td></tr>
-              <tr><td class="hc-num">41</td><td>Nói khi giúp hiểu hay hành động; giữ lý lẽ mạnh, bỏ phần thừa; sai thì nhận và sửa.</td><td><a class="hc-x" href="#s-imlang">6.2</a></td></tr>
+              <tr><td class="hc-num">40</td><td>Nghe rồi hỏi tiếp; cả hai cùng chia sẻ; góp ý riêng khi phù hợp, không giấu chuyện an toàn.</td><td><a class="hc-x" href="#s-noi">6.1</a></td></tr>
+              <tr><td class="hc-num">41</td><td>Nói khi giúp hiểu, hành động hoặc bảo vệ quyền lợi; sai thì nhận, giải thích đủ và sửa.</td><td><a class="hc-x" href="#s-imlang">6.2</a></td></tr>
               <tr><td class="hc-num">42</td><td>Xem hành vi trong ngữ cảnh; vi phạm nghiêm trọng có thể đủ để giảm rủi ro ngay.</td><td><a class="hc-x" href="#s-docnguoi">6.3</a></td></tr>
               <tr><td class="hc-num">43</td><td>Chọn cách đáp theo hậu quả, quan hệ và quyền lực; an toàn, pháp lý không nhường cho thể diện.</td><td><a class="hc-x" href="#s-memcung">6.4</a></td></tr>
               <tr><td class="hc-num">44</td><td>Tập hỏi điều gì thương lượng được; xây BATNA và đặt giới hạn chấp nhận trước.</td><td><a class="hc-x" href="#s-thuongluong">6.5</a></td></tr>
@@ -4488,7 +4490,7 @@ var libraryReady = Promise.resolve();
     document.body.setAttribute('data-print', full ? 'full' : 'brief');
     $('hc-print-note').textContent = (full ? 'Bản đầy đủ — các mục, mô hình, nguồn và thư viện.' : 'Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn.') +
       (full && !$('lib').getAttribute('data-ready') ? ' Thư viện chưa nạp được; phần đó thiếu trong bản in này.' : '') +
-      ' Trước quyết định lớn, đọc chi tiết và nguồn tại https://vudat081299.github.io/pages/hidden-curriculum.html. Nội dung rà ngày 06/10/2026.';
+      ' Trước quyết định lớn, đọc chi tiết và nguồn tại https://vudat081299.github.io/pages/hidden-curriculum.html. Nội dung rà ngày 07/10/2026.';
   }
   scope.addEventListener('change', printNote);
   window.addEventListener('beforeprint', function () {

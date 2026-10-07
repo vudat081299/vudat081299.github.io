@@ -34,9 +34,9 @@
    "kind": [
     "theory"
    ],
-   "idea": "Kết quả của một vòng trở lại làm đầu vào của vòng sau: vòng tăng cường làm mọi thứ lớn dần, vòng cân bằng kéo hệ về một mức.",
+   "idea": "Kết quả quay lại ảnh hưởng đầu vào: vòng tăng cường khuếch đại thay đổi ban đầu, cả tăng lẫn giảm; vòng cân bằng chống lại thay đổi, hướng về một mức hoặc giới hạn.",
    "why": "Lợi thế và bất lợi có thể tự khuếch đại; nhìn từng quyết định riêng dễ bỏ sót vòng lặp.",
-   "mechanism": "Vòng tăng cường là lãi kép theo cả hai chiều; vòng cân bằng là giới hạn; độ trễ làm người ta phản ứng quá tay hoặc bỏ cuộc quá sớm.",
+   "mechanism": "Thay đổi cùng chiều qua một vòng tạo tăng cường; thay đổi ngược chiều tạo cân bằng. Tăng cường không đồng nghĩa tốt, cân bằng không đồng nghĩa xấu; độ trễ có thể khiến hệ dao động hoặc người can thiệp phản ứng quá tay.",
    "mistake": "Chấm từng quyết định như một ảnh chụp; chữa triệu chứng bằng cách nuôi chính vòng xấu, như vay mới để trả nợ cũ.",
    "example": "Được mùa mất giá: người trồng theo giá vụ trước, cung dồn lên, giá rơi, rồi năm sau lại thiếu.",
    "use": "Mỗi quý viết ra một vòng tốt đang quay, một vòng xấu đang siết, và một biến số sẽ đổi.",
