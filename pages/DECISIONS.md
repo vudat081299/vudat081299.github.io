@@ -11,6 +11,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-005 · hidden-curriculum: nằm trong danh sách ẩn · `pages/hidden-curriculum.html`
 - PAGES-007 · hidden-curriculum: kho mô hình đòn bẩy cao, sâu hơn nhiều · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-008 · hidden-curriculum: rà nội dung, sửa có điều kiện và nén chữ · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+- PAGES-009 · hidden-curriculum: tự trọng và hành vi đời thường · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -57,3 +58,10 @@ Rút câu dài, dẫn nhập và ý lặp; không thêm mục chỉ để đủ 
 Ưu tiên xương sống và chủ đề dùng được với ít kiến thức; phân biệt nguyên lý dùng rộng với kiến thức theo tình huống.
 Độ dài không tự là lỗi; kiểm cả thời gian tiếp thu và bản in PDF, giữ chiều sâu có ích để tra cứu.
 Thu gọn phải giữ nguyên lý, cách dùng và điều kiện quan trọng luôn hiện; bản PDF gọn cũng phải hiểu đúng khi đọc riêng.
+
+## PAGES-009 · hidden-curriculum: tự trọng và hành vi đời thường
+07/10/2026 · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+
+Bổ sung cách rèn sự vững vàng qua tự trọng, giao tiếp, chủ động và lựa chọn đời thường; mở rộng theo cơ chế để dùng ở nhiều tình huống.
+Không quy mọi hành vi về thiếu giá trị bản thân hay mục đích sống; phân biệt phẩm giá, năng lực và đánh giá bên ngoài.
+Chủ trang giao quyền chọn tích hợp hoặc tách trang; giữ nguyên lý và giới hạn luôn hiện, để ví dụ và bài tập trong phần mở rộng.

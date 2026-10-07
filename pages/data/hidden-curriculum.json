@@ -1739,6 +1739,136 @@
     "s-honnhan",
     "s-thehe"
    ]
+  },
+  {
+   "id": "contingent-worth",
+   "name": "Giá trị bản thân có điều kiện",
+   "en": "contingencies of self-worth",
+   "layer": "xahoi",
+   "kind": [
+    "theory"
+   ],
+   "idea": "Khi dùng một lĩnh vực để định giá cả con người mình, thành bại ở lĩnh vực ấy dễ kéo theo biến động trong cách tự đánh giá.",
+   "why": "Nhận ra lúc phản hồi về một việc đang bị biến thành phán quyết về toàn bộ bản thân.",
+   "mechanism": "Crocker và Wolfe (2001) mô tả lòng tự đánh giá lên xuống theo thành bại trong những lĩnh vực mình đặt giá trị bản thân vào, như thành tích hoặc sự công nhận.",
+   "mistake": "“Chưa kiếm nhiều tiền, chưa được thích thì tôi chưa có giá trị”; hoặc nghĩ tự trọng đồng nghĩa với luôn đúng.",
+   "example": "Người có kinh nghiệm góp ý một sản phẩm: có thể cần sửa kỹ năng hoặc cách làm, chưa đủ để kết luận mình vô dụng.",
+   "use": "Tách phẩm giá, khả năng làm việc cụ thể và lựa chọn của người khác; chọn một điều cần sửa cùng một giá trị muốn giữ.",
+   "limits": "Phẩm giá là nguyên tắc đối xử. Khung này không chẩn đoán nguyên nhân mọi lo âu; năng lực, nguồn lực và đánh giá bên ngoài vẫn ảnh hưởng cơ hội thật.",
+   "remember": "Sửa việc cần sửa; đừng dùng một kết quả để định giá cả con người.",
+   "related": [
+    "self-efficacy",
+    "status",
+    "process-outcome"
+   ],
+   "sections": [
+    "s-tutrong",
+    "s-chudong"
+   ]
+  },
+  {
+   "id": "self-efficacy",
+   "name": "Tự tin vào khả năng làm một việc",
+   "en": "self-efficacy",
+   "layer": "nen",
+   "kind": [
+    "theory"
+   ],
+   "idea": "Niềm tin mình thực hiện được một hành động khác với năng lực thật, phẩm giá và kỳ vọng hành động ấy sẽ đem lại kết quả mong muốn.",
+   "why": "Biến mong muốn “tự tin hơn” thành một kỹ năng cụ thể có thể luyện và nhận phản hồi.",
+   "mechanism": "Bandura (1977) đề xuất trải nghiệm tự làm được, quan sát người khác, sự thuyết phục và trạng thái sinh lý là các nguồn hình thành niềm tin vào khả năng thực hiện.",
+   "mistake": "Đợi chắc chắn thành công mới thử; hoặc lấy sự tự tin trong một việc làm bằng chứng mình giỏi mọi việc.",
+   "example": "Mình tập được cách mở lời lịch sự; điều ấy không bảo đảm người kia nhận lời hẹn.",
+   "use": "Chọn hành động vừa sức trong hoàn cảnh an toàn, thực hiện, nhận phản hồi và tăng độ khó phù hợp.",
+   "limits": "Niềm tin có thể lệch năng lực thật. Khung lý thuyết không bảo đảm mọi bài tập đều hiệu quả hoặc thay thế hỗ trợ chuyên môn khi có rối loạn lo âu.",
+   "remember": "Luyện việc mình làm được; kết quả còn phụ thuộc người khác và hoàn cảnh.",
+   "related": [
+    "contingent-worth",
+    "learningrate",
+    "process-outcome"
+   ],
+   "sections": [
+    "s-tutrong",
+    "s-tunhien"
+   ]
+  },
+  {
+   "id": "spotlight",
+   "name": "Hiệu ứng ánh đèn",
+   "en": "spotlight effect",
+   "layer": "xahoi",
+   "kind": [
+    "mixed"
+   ],
+   "idea": "Trong một số tình huống, ta ước lượng quá cao mức người khác chú ý tới ngoại hình và hành động của mình.",
+   "why": "Không lấy cảm giác bị soi làm bằng chứng mọi người đang quan sát và phán xét mình.",
+   "mechanism": "Gilovich, Medvec và Savitsky (2000) ghi nhận người tham gia đánh giá quá cao mức người khác nhận ra hình trên áo hoặc chú ý tới lời nói của họ.",
+   "mistake": "Suy từ một câu vấp rằng cả cuộc gặp đã hỏng; hoặc hiểu ngược rằng không ai chú ý nên khỏi cần chuẩn bị.",
+   "example": "Mình nhớ mãi một câu nói chưa trôi chảy; chưa biết người nghe có nhớ hoặc đánh giá nó như mình không.",
+   "use": "Tách sự kiện khỏi suy đoán; quay lại nội dung cuộc gặp, chuẩn bị vừa mức yêu cầu và sửa lỗi thật nếu có.",
+   "limits": "Đây là xu hướng trong các nghiên cứu, không áp cho mọi cá nhân. Phỏng vấn, thuyết trình và môi trường thiếu an toàn có mức chú ý thật khác nhau.",
+   "remember": "Cảm thấy nổi bật không chứng minh mình đang bị soi.",
+   "related": [
+    "liking-gap",
+    "baserate",
+    "self-efficacy"
+   ],
+   "sections": [
+    "s-tunhien"
+   ]
+  },
+  {
+   "id": "liking-gap",
+   "name": "Khoảng cách thiện cảm",
+   "en": "liking gap",
+   "layer": "xahoi",
+   "kind": [
+    "mixed"
+   ],
+   "idea": "Sau một cuộc làm quen, người tham gia nhiều nghiên cứu đánh giá thấp mức đối tác thích mình và thích cuộc trò chuyện.",
+   "why": "Không để việc tự chê sau cuộc gặp tự động trở thành kết luận rằng người kia không thích mình.",
+   "mechanism": "Boothby và cộng sự (2018) đối chiếu thiện cảm đối tác báo cáo với mức người tham gia dự đoán, trong phòng thí nghiệm, hoạt động làm quen và nhóm sinh viên ở ký túc xá.",
+   "mistake": "Đọc suy nghĩ người kia từ sự hồi hộp của mình; hoặc lấy kết quả nghiên cứu làm xác nhận người mình thích cũng muốn hẹn hò.",
+   "example": "Sau khi nói chuyện, mình thấy đã kể hơi vụng; đối tác có thể đánh giá cuộc gặp khác, nhưng cần phản hồi để biết.",
+   "use": "Xem phản hồi và sự đáp lại thật; mở lời phù hợp thay vì tự kết luận trước, tôn trọng việc không muốn tiếp tục.",
+   "limits": "Thiện cảm trò chuyện khác hấp dẫn tình cảm và đồng thuận. Xu hướng trung bình không bảo đảm một người cụ thể thích mình.",
+   "remember": "Sự tự chê của mình không phải lời đánh giá của họ.",
+   "related": [
+    "spotlight",
+    "contingent-worth",
+    "warmth"
+   ],
+   "sections": [
+    "s-tunhien",
+    "s-chudong"
+   ]
+  },
+  {
+   "id": "satisficing",
+   "name": "Chọn đủ tốt và biết dừng",
+   "en": "satisficing vs maximizing",
+   "layer": "nen",
+   "kind": [
+    "mixed",
+    "lore"
+   ],
+   "idea": "Đặt mức đáp ứng nhu cầu rồi chọn phương án đạt mức ấy; tính chi phí tìm thêm thay vì luôn đòi chứng minh đã chọn tốt nhất.",
+   "why": "Dành thời gian và sự chú ý cho lựa chọn có hậu quả lớn hơn.",
+   "mechanism": "Schwartz và cộng sự (2002) ghi nhận xu hướng tối đa hoá có tương quan với tiếc nuối nhiều hơn, hài lòng thấp hơn; không chứng minh mọi tiêu chuẩn cao gây bất mãn.",
+   "mistake": "Tối ưu tiêu chí dễ nhìn như phần ăn lớn nhất, dù nhu cầu là đủ no và hợp khẩu vị; hoặc dùng “đủ tốt” để chọn cẩu thả.",
+   "example": "Khi các suất đều đủ ăn và chênh lệch nhỏ, có thể chọn một suất phù hợp thay vì tiếp tục tìm miếng thịt lớn nhất.",
+   "use": "Với việc ít hậu quả, dễ sửa: đặt tiêu chí tối thiểu, giới hạn tìm kiếm phù hợp và mở lại khi có thông tin đáng kể.",
+   "limits": "Sức khoẻ, tiền lớn và cam kết khó rút cần kiểm kỹ. Tìm phần ăn nhiều có thể hợp lý khi thật sự cần; một lần chọn lâu không đo tính cách.",
+   "remember": "Tối ưu công sức theo hậu quả; đủ tốt phải đủ nhu cầu.",
+   "related": [
+    "opportunity",
+    "reversibility",
+    "buffer"
+   ],
+   "sections": [
+    "s-dutot",
+    "s-quyenchon"
+   ]
   }
  ]
 }
