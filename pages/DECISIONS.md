@@ -12,6 +12,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-007 · hidden-curriculum: kho mô hình đòn bẩy cao, sâu hơn nhiều · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-008 · hidden-curriculum: rà nội dung, sửa có điều kiện và nén chữ · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-009 · hidden-curriculum: tự trọng và hành vi đời thường · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+- PAGES-010 · hidden-curriculum: yêu đương và cách xây quan hệ · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -65,3 +66,10 @@ Thu gọn phải giữ nguyên lý, cách dùng và điều kiện quan trọng 
 Bổ sung cách rèn sự vững vàng qua tự trọng, giao tiếp, chủ động và lựa chọn đời thường; mở rộng theo cơ chế để dùng ở nhiều tình huống.
 Không quy mọi hành vi về thiếu giá trị bản thân hay mục đích sống; phân biệt phẩm giá, năng lực và đánh giá bên ngoài.
 Chủ trang giao quyền chọn tích hợp hoặc tách trang; giữ nguyên lý và giới hạn luôn hiện, để ví dụ và bài tập trong phần mở rộng.
+
+## PAGES-010 · hidden-curriculum: yêu đương và cách xây quan hệ
+08/10/2026 · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+
+Bổ sung kinh nghiệm yêu đương từ làm quen, nhắn tin và hẹn gặp đến xây quan hệ, bất đồng và quyết định tiếp tục hay dừng.
+Đối chiếu nghiên cứu với kinh nghiệm truyền miệng; hướng tới hiểu và lựa chọn hai chiều, giảm suy tính trong giao tiếp.
+Tự review phần mới, sửa rồi review lại khi chưa đạt; giữ nguyên lý và điều kiện quan trọng ở bản thu gọn.

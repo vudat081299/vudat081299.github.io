@@ -1869,6 +1869,86 @@
     "s-dutot",
     "s-quyenchon"
    ]
+  },
+  {
+   "id": "responsiveness",
+   "name": "Cảm nhận được hiểu và quan tâm",
+   "en": "perceived partner responsiveness",
+   "layer": "xahoi",
+   "kind": [
+    "mixed",
+    "lore"
+   ],
+   "idea": "Sự gần gũi có thể được nuôi bởi cảm giác người kia hiểu điều mình chia sẻ, coi trọng mình và quan tâm tới nhu cầu thật.",
+   "why": "Đổi mục tiêu trò chuyện từ gây ấn tượng sang hiểu và đáp lại nhau.",
+   "mechanism": "Mô hình thân mật xem chia sẻ và cảm nhận được đáp ứng là những thành phần liên quan; nghiên cứu nhật ký tương tác không cho một câu nói bảo đảm tạo tình yêu.",
+   "mistake": "Coi đáp ứng là phải đồng ý, trả lời ngay hoặc chiều mọi nhu cầu; hỏi dồn mà không nghe và không chia sẻ.",
+   "example": "Khi người kia kể một ngày khó, hỏi họ muốn được nghe hay cùng nghĩ cách; khi họ có tin vui, cùng vui và hỏi điều có ý nghĩa.",
+   "use": "Nghe, kiểm mình hiểu đúng, chia sẻ phần mình và hỏi nhu cầu; điều chỉnh theo phản hồi thay vì học thuộc mẫu câu.",
+   "limits": "Cảm nhận có thể khác ý định; cần kiểm với người kia. Quan tâm không thay đồng thuận, không buộc họ phải thích mình hay bỏ giới hạn của họ.",
+   "remember": "Hiểu, coi trọng, quan tâm; vẫn có quyền khác ý và nói không.",
+   "related": [
+    "liking-gap",
+    "relationship-agreement"
+   ],
+   "sections": [
+    "s-henho",
+    "s-quanhe",
+    "s-noi"
+   ]
+  },
+  {
+   "id": "relationship-agreement",
+   "name": "Thoả thuận trong quan hệ",
+   "en": "explicit relationship agreements",
+   "layer": "xahoi",
+   "kind": [
+    "lore"
+   ],
+   "idea": "Hai người nói rõ mong muốn và nghĩa vụ thay vì suy cam kết từ sự thân mật, danh xưng hay tần suất liên lạc.",
+   "why": "Giảm hiểu lầm về kiểu quan hệ, thời gian, tiền và ranh giới; biết khác biệt có dung hoà được không.",
+   "mechanism": "Điều được nói rõ cho cả hai cơ hội chọn, từ chối hoặc bàn lại; hành vi giữ thoả thuận mới cho thấy điều có thể trông cậy. Đây là nguyên tắc thực hành.",
+   "mistake": "Một người tự đặt luật, gọi kiểm soát là yêu hoặc dùng sự hi sinh để tạo nghĩa vụ tình cảm.",
+   "example": "Trước khi mặc định chỉ hẹn hò với nhau, hỏi cả hai đang mong gì; thống nhất nhịp liên lạc mà không đòi quyền kiểm điện thoại.",
+   "use": "Bàn điều đang ảnh hưởng quan hệ theo mức phù hợp; trước quyết định lớn, làm rõ kỳ vọng, giới hạn và trách nhiệm.",
+   "limits": "Thoả thuận cần tự nguyện, có thể bàn lại và không miễn đồng thuận cho từng hành vi thân mật. Khác biệt cốt yếu có thể không dung hoà được; không có quyền buộc người kia ở lại.",
+   "remember": "Nói rõ, cùng chọn, giữ lời; không tự suy hoặc áp đặt.",
+   "related": [
+    "responsiveness",
+    "conflict-repair"
+   ],
+   "sections": [
+    "s-quanhe",
+    "s-dunglai",
+    "s-honnhan"
+   ]
+  },
+  {
+   "id": "conflict-repair",
+   "name": "Sửa chữa sau bất đồng",
+   "en": "conflict repair and accountability",
+   "layer": "xahoi",
+   "kind": [
+    "mixed",
+    "lore"
+   ],
+   "idea": "Làm rõ việc gây tổn thương, nhận phần trách nhiệm và kiểm thay đổi thật; không coi lời xin lỗi hoặc thắng tranh luận là đã giải quyết.",
+   "why": "Giúp phân biệt một vấn đề có thể cùng sửa với việc lặp lời hứa nhưng không thay hành vi.",
+   "mechanism": "Tác dụng của cách giao tiếp phụ thuộc vấn đề và hoàn cảnh. Khung nêu việc, nghe, đề nghị và kiểm lại là hướng áp dụng, không phải một liệu pháp hay công thức chung.",
+   "mistake": "Nhịn để giữ hoà khí, công kích con người, im lặng trừng phạt hoặc ép người bị tổn thương phải tha thứ.",
+   "example": "Nói việc đổi hẹn không báo đã khiến mình chờ, hỏi hoàn cảnh, thống nhất cách báo và xem việc đó có được làm không.",
+   "use": "Trao đổi khi an toàn và đủ bình tĩnh; nếu cần nghỉ, hẹn lúc quay lại. Nhận lỗi cụ thể, đề nghị vừa sức và theo dõi việc đã thống nhất.",
+   "limits": "Giao tiếp tốt không buộc hai người phù hợp hay tiếp tục. Ép buộc, đe doạ và bạo lực cần ưu tiên an toàn và hỗ trợ; không quy trách nhiệm cho cả hai bằng nhau.",
+   "remember": "Nhận trách nhiệm và đổi hành vi; giữ quyền dừng và quyền an toàn.",
+   "related": [
+    "relationship-agreement",
+    "contingent-worth"
+   ],
+   "sections": [
+    "s-batdong",
+    "s-dunglai",
+    "s-memcung"
+   ]
   }
  ]
 }
