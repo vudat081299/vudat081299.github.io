@@ -13,6 +13,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-008 · hidden-curriculum: rà nội dung, sửa có điều kiện và nén chữ · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-009 · hidden-curriculum: tự trọng và hành vi đời thường · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-010 · hidden-curriculum: yêu đương và cách xây quan hệ · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+- PAGES-011 · hidden-curriculum: sức hút và nhịp tiến triển trong yêu đương · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -73,3 +74,10 @@ Chủ trang giao quyền chọn tích hợp hoặc tách trang; giữ nguyên l�
 Bổ sung kinh nghiệm yêu đương từ làm quen, nhắn tin và hẹn gặp đến xây quan hệ, bất đồng và quyết định tiếp tục hay dừng.
 Đối chiếu nghiên cứu với kinh nghiệm truyền miệng; hướng tới hiểu và lựa chọn hai chiều, giảm suy tính trong giao tiếp.
 Tự review phần mới, sửa rồi review lại khi chưa đạt; giữ nguyên lý và điều kiện quan trọng ở bản thu gọn.
+
+## PAGES-011 · hidden-curriculum: sức hút và nhịp tiến triển trong yêu đương
+09/10/2026 · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+
+Bổ sung kỹ năng tạo sức hút, tán tỉnh, đọc sự đáp lại và chọn nhịp từ làm quen đến khi đã yêu vào các mục hiện có.
+Giải thích yếu tố chiến lược; phân biệt chú ý, thiện cảm, theo đuổi và cam kết, đối chiếu cả tác dụng lẫn giới hạn của “làm giá”.
+Giữ nguyên lý ở bản gọn, ví dụ và nghiên cứu ở phần mở rộng; tự review, sửa rồi kiểm lại trước commit và push main.
