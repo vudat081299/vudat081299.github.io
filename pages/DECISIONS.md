@@ -14,6 +14,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-009 · hidden-curriculum: tự trọng và hành vi đời thường · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-010 · hidden-curriculum: yêu đương và cách xây quan hệ · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-011 · hidden-curriculum: sức hút và nhịp tiến triển trong yêu đương · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+- PAGES-012 · hidden-curriculum: hàm ý và giới hạn của lời nói lấp lửng · `pages/hidden-curriculum.html`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -81,3 +82,10 @@ Tự review phần mới, sửa rồi review lại khi chưa đạt; giữ nguy�
 Bổ sung kỹ năng tạo sức hút, tán tỉnh, đọc sự đáp lại và chọn nhịp từ làm quen đến khi đã yêu vào các mục hiện có.
 Giải thích yếu tố chiến lược; phân biệt chú ý, thiện cảm, theo đuổi và cam kết, đối chiếu cả tác dụng lẫn giới hạn của “làm giá”.
 Giữ nguyên lý ở bản gọn, ví dụ và nghiên cứu ở phần mở rộng; tự review, sửa rồi kiểm lại trước commit và push main.
+
+## PAGES-012 · hidden-curriculum: hàm ý và giới hạn của lời nói lấp lửng
+09/10/2026 · `pages/hidden-curriculum.html`
+
+Đối chiếu tư duy “người khôn ăn nói nửa chừng”; chỉ bổ sung phần có ích và có điều kiện vào các mục giao tiếp, yêu đương hiện có.
+Phân biệt kiệm lời, nói tế nhị, giữ riêng tư và gợi mở với mập mờ tạo kỳ vọng sai; làm rõ thông tin người kia cần để quyết định.
+Giữ nguyên lý ở bản gọn, ví dụ và bằng chứng ở phần mở rộng; tự review trước commit và push main.
