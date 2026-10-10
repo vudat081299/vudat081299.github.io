@@ -15,6 +15,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-010 · hidden-curriculum: yêu đương và cách xây quan hệ · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-011 · hidden-curriculum: sức hút và nhịp tiến triển trong yêu đương · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-012 · hidden-curriculum: hàm ý và giới hạn của lời nói lấp lửng · `pages/hidden-curriculum.html`
+- PAGES-013 · hidden-curriculum: xử lý khi chưa rõ ý người khác · `pages/hidden-curriculum.html`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -89,3 +90,10 @@ Giữ nguyên lý ở bản gọn, ví dụ và nghiên cứu ở phần mở r�
 Đối chiếu tư duy “người khôn ăn nói nửa chừng”; chỉ bổ sung phần có ích và có điều kiện vào các mục giao tiếp, yêu đương hiện có.
 Phân biệt kiệm lời, nói tế nhị, giữ riêng tư và gợi mở với mập mờ tạo kỳ vọng sai; làm rõ thông tin người kia cần để quyết định.
 Giữ nguyên lý ở bản gọn, ví dụ và bằng chứng ở phần mở rộng; tự review trước commit và push main.
+
+## PAGES-013 · hidden-curriculum: xử lý khi chưa rõ ý người khác
+10/10/2026 · `pages/hidden-curriculum.html`
+
+Bổ sung khung chung để xử lý lời nói và tin nhắn chưa rõ ý vào mục đọc người, nối sang phần nhắn tin.
+Tách dữ kiện khỏi suy đoán, xem ngữ cảnh, hỏi điều cần quyết định và điều chỉnh theo phản hồi; không mặc định động cơ theo giới hay phủ nhận lời từ chối.
+Giữ nguyên lý ở bản gọn, ví dụ và bằng chứng ở phần mở rộng; tích hợp vào các mục hiện có để tránh kéo dài tài liệu bằng các tình huống lặp.
