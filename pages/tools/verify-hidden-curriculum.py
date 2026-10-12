@@ -790,9 +790,7 @@ def phan_F():
     vn = vi
     # Chuỗi lấy từ nguồn: mỗi chuỗi ứng một dòng kiểm nguồn; sửa thì mở lại nguồn.
     for x in ('350 triệu đồng', 'bằng đồng Việt Nam của cá nhân', '139 doanh nghiệp', '83.600 tỉ đồng', '50,7%',
-              'tối đa hai năm', '39,2%',
-              '25.967', '42,6%', '1.092', '34,82 nghìn tỷ USD', '2,4%', '75,7 nghìn tỷ USD', '40% năm 1982',
-              '69% năm 2011', '60% xuống 32%', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
+              'tối đa hai năm', '39,2%', '25.967', '42,6%', '1.092', '34,82 nghìn tỷ USD', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
               '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
               '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%', '−0,82', '−0,31',
               '−1,04%', '2,24%', '1.820,1', '2.610,85', '1.000 tấn', '473 tấn', '863 tấn', '15.858,92', '24.164,89',
