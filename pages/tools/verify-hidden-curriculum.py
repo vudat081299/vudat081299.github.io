@@ -914,16 +914,15 @@ def phan_F2():
     B = [15 * 1.10 ** (n - 1) for n in range(1, 21)]
     first = next(n for n in range(1, 21) if B[n - 1] > A[n - 1])
     cum = next(n for n in range(1, 21) if sum(B[:n]) > sum(A[:n]))
-    need_t('lương tháng của B vượt A', f'Lương tháng của B vượt A từ năm thứ {first}', first)
-    need_t('tổng thu nhập của B vượt A', f'tổng thu nhập cộng dồn của B vượt A từ năm thứ {cum}', cum)
-    need_t('năm thứ 20', f'A nhận khoảng {vn(A[-1], 1)} triệu/tháng, B khoảng {vn(B[-1], 1)} triệu')
-    need_t('cộng 20 năm', f'A nhận khoảng {vn(12 * sum(A) / 1000, 2)} tỷ đồng, B khoảng {vn(12 * sum(B) / 1000, 2)} tỷ')
+    du_kien('s-tichluy', 'lương tháng của B vượt A', 'Lương tháng', f'năm thứ {first}', w=60)
+    du_kien('s-tichluy', 'tổng tiền đã nhận của B vượt A', 'đã nhận', f'năm thứ {cum}', w=60)
+    du_kien('s-tichluy', 'năm thứ 20', 'Năm thứ 20', f'{vn(A[-1], 1)} triệu/tháng', f'{vn(B[-1], 1)} triệu', w=120)
     b20 = 15 * 1.10 ** 10 * 1.03 ** 9          # mười lần tăng 10%, rồi 3% như A
-    need_t('giả định khắc nghiệt hơn', f'B vẫn nhận khoảng {vn(b20, 1)} triệu/tháng, cao hơn A khoảng {round(100 * (b20 / A[-1] - 1))}%')
+    du_kien('s-tichluy', 'giả định khắc nghiệt hơn', f'{vn(b20, 1)} triệu/tháng', f'khoảng {round(100 * (b20 / A[-1] - 1))}%', w=80)
     # “khoảng cách ấy giữ nguyên tới cuối”: từ năm 11 cả hai cùng tăng 3%/năm, nên tỉ số B/A không đổi.
     ba = [15 * 1.10 ** min(n - 1, 10) * 1.03 ** max(n - 11, 0) / (20 * 1.03 ** (n - 1)) for n in range(11, 41)]
     claim('từ năm 11, tỉ số lương B/A không đổi', max(ba) - min(ba) < 1e-9, f'{min(ba):.6f}…{max(ba):.6f}')
-    need_t('khoảng cách giữ nguyên', 'và khoảng cách ấy giữ nguyên tới cuối, vì các lần tăng sau đều tính theo phần trăm')
+    du_kien('s-tichluy', 'khoảng cách giữ nguyên', 'giữ nguyên tới cuối', 'theo phần trăm', w=80)
     # Ngành học (s-daycon): 0,561 điểm log (Altonji, Blom và Meghir 2012) là khoảng 75%.
     claim('0,561 điểm log ≈ cao hơn 75%', round(100 * (math.exp(0.561) - 1)) == 75, f'{100 * (math.exp(0.561) - 1):.1f}%')
     need_t('Altonji, Blom và Meghir', 'có lương cao hơn khoảng 75% so với nam học sư phạm')
@@ -991,13 +990,10 @@ def phan_F2():
     # Chuỗi lấy từ nguồn, trong đúng mục: tác giả, năm, tạp chí, cỡ mẫu, số đo, ngày tháng, số hiệu luật.
     NGUON = {
         's-tichluy': [
-            'Merton (1968) gọi đó là hiệu ứng Matthew',
-            '(mô hình của Mincer, 1974)', 'ghép số liệu điều tra của 18 nước',
-            '(Mỹ, Đức, Canada, Anh)', 'dưới 5 năm kinh nghiệm 89,3%', '(Brazil, Chile, Mexico, Jamaica) chỉ 47,6%',
-            'có Việt Nam với số liệu năm 1998 và 2002, đều dưới 50%', 'A khởi điểm 20 triệu/tháng, mỗi năm tăng 3%',
-            'B khởi điểm 15 triệu ở một chỗ học nhanh hơn, mỗi năm tăng 10%',
-            '(Brynjolfsson và cộng sự, 2025)',
-            'tăng trung bình 15%', '(Becker, 1962)',
+            ('Merton', '1968', 'Matthew'), ('Mincer', '1974'), ('Lagakos', '2018', '18 nước', 'toàn thời gian'),
+            ('Mỹ, Đức, Canada, Anh', '20–24 năm', 'dưới 5 năm', '89,3%'), ('Brazil, Chile, Mexico, Jamaica', '47,6%'),
+            ('Việt Nam', '1998', '2002', 'dưới 50%'), ('A khởi điểm 20 triệu/tháng', 'tăng 3%'),
+            ('B khởi điểm 15 triệu', 'tăng 10%'), ('Brynjolfsson', '2025', '15%'), ('Becker', '1962'),
         ],
         's-moitruong': [
             '(Lazear, Shaw và Stanton, 2015)', 'nhiều hơn việc thêm một người vào nhóm chín người',
