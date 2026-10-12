@@ -287,7 +287,7 @@ def phan_B():
     g2025 = GOLD[-1] / GOLD[-2] - 1
     need('vàng năm 2025', f'một năm 2025 tăng {vi(100 * g2025, 0)}%')
     sp_nom = geo(series('sp', False))
-    need('cổ phiếu Mỹ 1928–2025, danh nghĩa (lời dặn của lab-pz)', f'lợi suất bình quân {vi(100 * sp_nom, 2)}%/năm (danh nghĩa, gồm cổ tức) của cổ phiếu Mỹ')
+    need('cổ phiếu Mỹ 1928–2025, danh nghĩa (lời dặn của lab-pz)', f'lợi suất kép bình quân {vi(100 * sp_nom, 2)}%/năm (danh nghĩa, gồm cổ tức) của cổ phiếu Mỹ')
 
     # ── Giá vàng theo sức mua (hình) ───────────────────────────────────────────
     lvl, real = 1.0, [0.0] * 56
@@ -956,7 +956,7 @@ def phan_F2():
             ('Tự viết, không người làm chứng', '631, 633'), ('Có người làm chứng', '632, 634'),
             ('Thế nào là hợp pháp?', '630'), ('Sửa, thay, gửi giữ', '640, 643, 641'),
             ('Ai vẫn được hưởng dù di chúc không cho?', '644'), ('Di sản thờ cúng', '645'),
-            ('Không có di chúc', '650, 651'), ('Di sản gồm gì?', '612'), ('Nợ của người mất', '615'),
+            ('Không có di chúc, hoặc di chúc không hợp pháp', '650, 651'), ('Di sản gồm gì?', '612'), ('Nợ của người mất', '615'),
             ('Thời hiệu', '623'),
         ],
     }
@@ -985,10 +985,11 @@ def phan_F2():
         's-dungtien': {'*': 'BLHS'},
         's-taisan': {'9': 'NĐ200', '46': 'CNS', '47': 'CNS', '3': 'TNCN', '4': 'TNCN', '13': 'TNCN'},
         's-vanminh': {'*': 'HP'},
+        's-luadao': {'174': 'BLHS'},
         's-thehe': {'*': 'BLDS'},
         's-honnhan': {'*': 'HNGĐ'},
         's-giayto': {'*': 'BLDS', '66': 'HNGĐ', '27': 'ĐĐ', '164': 'NO', '4': 'KDBH', '41': 'KDBH', '46': 'CNS'},
-        's-muoihai': {'335': 'BLDS', '336': 'BLDS', '30': 'NĐ340', '291': 'BLHS'},
+        's-muoihai': {'335': 'BLDS', '336': 'BLDS', '468': 'BLDS', '30': 'NĐ340', '291': 'BLHS'},
     }
 
     def dieu(s):
@@ -1196,6 +1197,13 @@ def phan_G():
         for phrase in phrases:
             claim(f'bản gọn {sid}: điều kiện luôn hiện', phrase in visible, f'không thấy “{phrase}” ngoài details')
     claim('bản gọn: cả 12 luật có giải nghĩa luôn hiện', compact.law_notes == 12, str(compact.law_notes))
+    # Mỗi mục nội dung có đúng một khung luật, cùng một nhãn, để người đọc bản gọn tìm thấy luật ở cùng chỗ.
+    khung = {'s-cach', 's-muoihai', 's-tusoat', 's-lotrinh', 's-tomtat', 's-thuvien', 's-nguon'}
+    for sid, body in re.findall(r'<section id="(s-[a-z]+)">(.*?)</section>', HTML, flags=re.S):
+        if sid in khung:
+            continue
+        ks = re.findall(r'<div class="hc-key">\s*<span class="k">([^<]*)</span>', body)
+        claim(f'{sid}: một khung “Luật của mục này”', ks == ['Luật của mục này'], f'thấy {ks}')
 
 
 def main():
