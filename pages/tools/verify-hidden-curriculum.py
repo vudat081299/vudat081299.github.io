@@ -346,6 +346,12 @@ def phan_B():
     need('lãi mặc định của lab-pz', 'id="pz-m" min="0.5" max="10" step="0.5" value="3"')
     claim('1%/ngày = 365%/năm, "gấp hơn 18 lần" trần 20%', 18 < 365 / 20 < 19)
     need('lãi 1% mỗi ngày trong bài', 'là 365%/năm tính đơn — gấp hơn 18 lần mức trần')
+    # Lãi trên dư nợ ban đầu (s-no): 1,5%/tháng, 12 kỳ, mỗi kỳ trả P/12 + 1,5%·P → lãi thật theo dư nợ giảm dần.
+    pay, lo, hi = 1 / 12 + 0.015, 0.0, 0.1
+    for _ in range(100):
+        r = (lo + hi) / 2
+        lo, hi = (r, hi) if sum(pay / (1 + r) ** k for k in range(1, 13)) > 1 else (lo, r)
+    need_t('lãi phẳng 1,5%/tháng quy ra dư nợ thật', f'khoảng {vi(100 * r, 2)}%/tháng trên số còn nợ thật, tức khoảng {vi(1200 * r, 1)}%/năm', r)
 
     # ── Thu nhập (s-thunhap): 7,4% của giá trị hôm nay ở lab-hk ────────────────
     need('7,4% thu nhập cả đời', f'7,4% thu nhập cả đời đáng giá khoảng <b>{vi(round(0.074 * hc, -1), 0)} triệu đồng hôm nay</b>',
@@ -963,10 +969,12 @@ def phan_F2():
           'NĐ200': 'Nghị định 200/2026/NĐ-CP', 'CNS': 'Luật Công nghiệp công nghệ số',
           'TNCN': 'Luật Thuế thu nhập cá nhân 2025', 'HNGĐ': 'Luật Hôn nhân và gia đình 2014',
           'ĐĐ': 'Luật Đất đai 2024', 'NO': 'Luật Nhà ở 2023', 'KDBH': 'Luật Kinh doanh bảo hiểm 2022',
-          'HP': 'Hiến pháp 2013'}
+          'HP': 'Hiến pháp 2013', 'TCTD': 'Luật Các tổ chức tín dụng 2024',
+          'VL': 'Luật Việc làm 2025'}
     GAN = {
-        's-no': {'468': 'BLDS', '201': 'BLHS'},
+        's-no': {'468': 'BLDS', '201': 'BLHS', '100': 'TCTD'},
         's-ruiro': {'*': 'BHTG', '3': 'TT05'},
+        's-baohiem': {'35': 'KDBH', '39': 'VL'},
         's-dungtien': {'*': 'BLHS'},
         's-taisan': {'9': 'NĐ200', '46': 'CNS', '47': 'CNS', '3': 'TNCN', '4': 'TNCN', '13': 'TNCN'},
         's-vanminh': {'*': 'HP'},
@@ -1019,7 +1027,7 @@ def phan_F2():
     # Chuỗi lấy từ nguồn, trong đúng mục: tác giả, năm, tạp chí, cỡ mẫu, số đo, ngày tháng, số hiệu luật.
     NGUON = {
         's-tichluy': [
-            'Robert Merton (1968) gọi là hiệu ứng Matthew',
+            'Robert K. Merton (1968) gọi là hiệu ứng Matthew',
             'Jacob Mincer (Schooling, Experience, and Earnings, 1974)', 'ghép số liệu điều tra của 18 nước',
             '(Mỹ, Đức, Canada, Anh)', 'dưới 5 năm kinh nghiệm 89,3%', '(Brazil, Chile, Mexico, Jamaica) chỉ 47,6%',
             'có Việt Nam với số liệu năm 1998 và 2002, đều dưới 50%', 'A khởi điểm 20 triệu/tháng, mỗi năm tăng 3%',
