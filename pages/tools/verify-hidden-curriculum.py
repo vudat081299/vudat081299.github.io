@@ -469,7 +469,6 @@ def phan_B():
 
     # ── Các con số dẫn từ nguồn ở các mục mới (giữ khỏi bị sửa lệch) ─────────────
     need('Tetlock 2005', 'theo dõi 284 chuyên gia với 82.361 dự báo')
-    need('Lewicki 2016', 'qua hai thí nghiệm với 333 người lớn và 422 sinh viên')
     need('Marsh và Hau 2003', 'khảo sát 103.558 học sinh 15 tuổi ở 26 nước và thấy ở cả 26 nước')
     need('Resnick 2006', 'người mua trả cho tên quen cao hơn <b>8,1%</b> giá bán')
 
@@ -1035,29 +1034,27 @@ def phan_F2():
     # Chuỗi lấy từ nguồn, trong đúng mục: tác giả, năm, tạp chí, cỡ mẫu, số đo, ngày tháng, số hiệu luật.
     NGUON = {
         's-tichluy': [
-            'Robert K. Merton (1968) gọi là hiệu ứng Matthew',
-            'Jacob Mincer (Schooling, Experience, and Earnings, 1974)', 'ghép số liệu điều tra của 18 nước',
+            'Merton (1968) gọi đó là hiệu ứng Matthew',
+            '(mô hình của Mincer, 1974)', 'ghép số liệu điều tra của 18 nước',
             '(Mỹ, Đức, Canada, Anh)', 'dưới 5 năm kinh nghiệm 89,3%', '(Brazil, Chile, Mexico, Jamaica) chỉ 47,6%',
             'có Việt Nam với số liệu năm 1998 và 2002, đều dưới 50%', 'A khởi điểm 20 triệu/tháng, mỗi năm tăng 3%',
             'B khởi điểm 15 triệu ở một chỗ học nhanh hơn, mỗi năm tăng 10%',
-            'Brynjolfsson, Li và Raymond (Quarterly Journal of Economics, 2025) theo dõi 5.172 nhân viên',
-            'tăng trung bình 15%', 'Gary Becker (1962)',
+            '(Brynjolfsson và cộng sự, 2025)',
+            'tăng trung bình 15%', '(Becker, 1962)',
         ],
         's-moitruong': [
-            'Lazear, Shaw và Stanton (Journal of Labor Economics, 2015)',
-            '23.878 nhân viên và 1.940 người quản lý, 2006–2010', 'nhiều hơn việc thêm một người vào nhóm chín người',
-            'khoảng một phần tư hiệu ứng riêng của một người quản lý vẫn còn một năm sau',
-            'Mas và Moretti (American Economic Review, 2009)', 'Bản làm việc năm 2006 (370 thu ngân, sáu cửa hàng)',
-            'tăng 10% kéo nỗ lực của một người tăng 1,7%', '(Cornelissen, Dustmann và Schönberg, 2017)',
-            'Jarosch, Oberfield và Rossi-Hansberg (Econometrica, 2021)',
+            '(Lazear, Shaw và Stanton, 2015)', 'nhiều hơn việc thêm một người vào nhóm chín người',
+            'Khoảng một phần tư tác dụng của người quản lý vẫn còn một năm sau khi họ rời nhóm',
+            '(Mas và Moretti, 2009); bản làm việc năm 2006 của nghiên cứu',
+            'tăng 10% kéo nỗ lực của một người tăng 1,7%', '(Cornelissen và cộng sự, 2017)',
+            'Jarosch, Oberfield và Rossi-Hansberg (2021)',
             '4–9% tổng thù lao của người lao động là việc học từ đồng nghiệp',
-            'Kahneman và Klein (American Psychologist, 2009)', 'Robin Hogarth (Educating Intuition, 2001)',
-            'gộp 51 báo cáo về 6.096 vận động viên, 772 người thuộc hàng đầu thế giới',
-            'Topel và Ward (Quarterly Journal of Economics, 1992)', 'nam thanh niên Mỹ 1957–1972',
+            '(Kahneman và Klein, 2009)', 'Hogarth (2001)',
+            '6.096 vận động viên, trong đó 772 người thuộc hàng đầu thế giới',
+            'Topel và Ward (1992)', 'nam thanh niên Mỹ 1957–1972',
             'một người điển hình làm bảy việc, khoảng hai phần ba số việc của cả đời', 'ít nhất một phần ba',
             'trong khoảng 91% số tháng từ 1/1997 tới 8/2026, trung bình hơn khoảng 0,7 điểm phần trăm',
-            'Rộng nhất vào 11/2022, lúc thị trường lao động rất căng: 7,7% so với 5,5%', '(6/2025: 4,3% so với 4,4%)',
-            '8/2026: 4,4% so với 3,6%',
+            'rộng nhất vào 11/2022, lúc thị trường lao động rất căng: 7,7% so với 5,5%', '(6/2025: 4,3% so với 4,4%)',
         ],
         's-vanminh': [
             'E. D. Hirsch (Cultural Literacy, 1987)', 'Recht và Leslie (1988) cho 64 học sinh trung học cơ sở',
@@ -1124,7 +1121,7 @@ def phan_F2():
             'không làm phát sinh quyền, nghĩa vụ vợ chồng (Điều 14)', 'có tính công nội trợ như lao động có thu nhập (Điều 16)',
         ],
         's-tinhyeu': [
-            'Joel và cộng sự (2020) gộp 43 nghiên cứu theo dõi, 11.196 cặp', 'giải thích khoảng 45% mức hài lòng hiện tại',
+            'Gộp 43 nghiên cứu theo dõi 11.196 cặp, Joel và cộng sự (2020)', 'giải thích khoảng 45% mức hài lòng hiện tại',
             'Birnbaum, Zholtack và Reis (2020), ba nghiên cứu',
         ],
         's-nhantin': ['Patel, Mahar và Webster (2022) khảo sát 302 sinh viên Mỹ'],
@@ -1136,9 +1133,8 @@ def phan_F2():
             'một phần ba số cặp đã đoàn tụ chia tay trong ba tháng',
         ],
         's-dunglai': [
-            'gọi 113', 'Tổng đài quốc gia 117, 24/7', 'Tổng hợp 202 mẫu với 50.427 người',
-            '0,65 cho hài lòng, 0,53 cho đầu tư và −0,43 cho chất lượng lựa chọn khác', 'nghiên cứu ở 11 thành phố Mỹ',
-            'trong khảo sát 464 người',
+            'gọi 113', 'Tổng đài quốc gia 117, 24/7', 'tổng hợp trên hơn 50.000 người xác nhận cả ba, mạnh nhất là mức hài lòng',
+            'nghiên cứu ở 11 thành phố Mỹ',
         ],
         's-giayto': [
             'tới tháng 10/2026', 'người 15–18 tuổi được lập', 'trong 5 ngày làm việc', 'sau 3 tháng',
