@@ -854,7 +854,7 @@
    "why": "Chừa khoảng chịu sai số trong ước tính và kế hoạch.",
    "mechanism": "Graham gọi đây là khái niệm trung tâm của đầu tư. Trong kinh doanh, cùng ý ấy là biên an toàn doanh số: (sản lượng thực − sản lượng hoà vốn) ÷ sản lượng thực, tức doanh số được phép giảm bao nhiêu trước khi lỗ.",
    "mistake": "Mua ở đúng giá trị ước tính, hoặc cao hơn vì “công ty tốt”, rồi coi ước tính của mình là chắc chắn.",
-   "example": "Một quán đồ uống bán 3.000 đơn vị mỗi tháng, hoà vốn ở 2.609 đơn vị, có biên an toàn 13,0%: doanh số giảm hơn 13% là lỗ.",
+   "example": "Một quán đồ uống bán 3.000 đơn vị mỗi tháng, hoà vốn ở 2.609 đơn vị, có biên an toàn 13,0%: doanh số giảm hơn 13,0% là lỗ.",
    "use": "Đặt giá mua tối đa dưới giá trị ước tính; tính dư địa doanh thu giảm trước khi ký chi phí cố định.",
    "limits": "Biên đòi rộng quá có thể khiến mình không bao giờ mua; và nó không cứu được một ước tính sai từ gốc, như một doanh nghiệp đang mất hào.",
    "remember": "Chừa chỗ cho chính mình sai.",
@@ -1747,16 +1747,15 @@
    "layer": "thehe",
    "kind": [
     "lore",
-    "custom",
-    "math"
+    "custom"
    ],
-   "idea": "Giấy tờ hợp lệ giúp chuyển phần tài sản mình có quyền và để người ở lại tìm được hồ sơ. Di chúc vẫn chịu giới hạn của luật, gồm quyền thừa kế được bảo vệ.",
-   "why": "Thiếu di chúc thì luật chia thay; thiếu hồ sơ thì người ở lại khó tìm tài sản và nghĩa vụ.",
-   "mechanism": "Di chúc phải lập thành văn bản; chỉ được di chúc miệng khi tính mạng bị đe doạ và không thể lập văn bản (Điều 627, 629). Điều 644 bảo vệ tối thiểu hai phần ba suất theo luật cho con chưa thành niên, cha mẹ, vợ chồng, con thành niên không có khả năng lao động, trừ người từ chối nhận hoặc không có quyền hưởng. Phần di sản không có định đoạt hợp lệ thì chia theo luật; cùng hàng được phần bằng nhau (Điều 651).",
-   "mistake": "Nghĩ giấy uỷ quyền thay được di chúc — uỷ quyền chấm dứt khi người uỷ quyền chết (Điều 140); hoặc quên kiểm tên người thụ hưởng trên hợp đồng bảo hiểm sau khi cưới, ly hôn, có con.",
-   "example": "Giả sử di sản 1,2 tỷ đồng, di chúc cho em trai; chỉ có vợ, hai con chưa thành niên và mẹ thuộc hàng thừa kế thứ nhất, đều có quyền hưởng và không từ chối: mỗi người có phần tối thiểu 200 triệu, em trai nhận 400 triệu.",
-   "use": "Gom tài sản, nợ, bảo hiểm, di chúc và đầu mối vào hồ sơ; cho người tin cậy biết nơi để, cập nhật khi đời thay đổi.",
-   "limits": "Quyền hưởng phụ thuộc giấy tờ, tài sản, quan hệ gia đình và luật áp dụng. Tài sản ở nhiều nơi, di chúc có tranh chấp hoặc gia đình phức tạp thì cần người làm nghề kiểm.",
+   "idea": "Di chúc hợp lệ giúp tài sản đi đúng ý mình; hồ sơ gọn giúp người ở lại tìm được tài sản và nghĩa vụ.",
+   "why": "Không có di chúc thì tài sản chia theo luật; không ai biết giấy tờ ở đâu thì tài sản có thể mất hẳn.",
+   "mechanism": "Di chúc phải lập thành văn bản. Người lập chỉ để lại được phần của mình, và không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên: luật vẫn để cho họ một phần. Không có di chúc thì phần ấy chia đều cho vợ hoặc chồng, cha mẹ và các con.",
+   "mistake": "Nghĩ giấy uỷ quyền thay được di chúc, trong khi nó hết hiệu lực khi người uỷ quyền mất; hoặc quên kiểm tên người thụ hưởng bảo hiểm sau khi cưới, ly hôn, có con.",
+   "example": "Một người để di chúc cho em trai toàn bộ tài sản, trong khi còn vợ, con nhỏ và mẹ già. Di chúc ấy chỉ thực hiện được một phần, vì luật vẫn để cho vợ, con và mẹ một phần.",
+   "use": "Gom tài sản, nợ, bảo hiểm, di chúc và người cần gọi vào một hồ sơ; cho hai người tin cậy biết nơi để; cập nhật khi đời thay đổi.",
+   "limits": "Trường hợp cụ thể phụ thuộc giấy tờ, tài sản và gia đình. Tài sản ở nhiều nơi, gia đình phức tạp hay có tranh chấp thì hỏi công chứng viên hoặc luật sư.",
    "remember": "Viết khi còn khoẻ, sửa khi đời đổi.",
    "related": [
     "family-system",
