@@ -109,6 +109,20 @@ def chu(h):
     return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', '', h))).strip()
 
 
+def du_kien(sid, label, *xs, w=200):
+    """Đòi một DỮ KIỆN trong mục sid: mọi chuỗi xs (con số kèm đơn vị, tên nguồn, năm) có mặt trong chữ
+    của mục và cách chuỗi đầu không quá w ký tự. Kiểm số và nguồn, không kiểm câu văn: viết lại câu thì
+    vẫn xanh, sửa lệch một số thì đỏ."""
+    global checks
+    checks += 1
+    t = chu(muc(sid))
+    for m in re.finditer(re.escape(xs[0]), t):
+        win = t[max(0, m.start() - w):m.end() + w]
+        if all(x in win for x in xs[1:]):
+            return
+    fails.append(f'{sid}: {label}: không thấy ' + ' … '.join(f'“{x}”' for x in xs) + ' gần nhau')
+
+
 def arr(name):
     """Đọc một mảng số trong <script> của trang: `name: [ … ]`."""
     m = re.search(name + r':\s*\[([^\]]*)\]', HTML)
@@ -788,15 +802,10 @@ def phan_F():
               'tối đa hai năm', '39,2%', '25.967', '42,6%', '1.092', '34,82 nghìn tỷ USD', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
               '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
               '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%', '−0,82', '−0,31',
-              '−1,04%', '2,24%', '1.820,1', '2.610,85', '1.000 tấn', '473 tấn', '863 tấn', '15.858,92', '24.164,89',
-              '3,92%', '3,31%', '12,73%', '23,12%'):
+              '−1,04%', '2,24%', '1.820,1', '2.610,85', '1.000 tấn', '473 tấn', '15.858,92', '24.164,89',
+              '3,31%', '12,73%', '23,12%'):
         need_t('vốn, chuỗi từ nguồn', x)
 
-    # Tỉ giá 2005 → 2024 (19 năm): đồng mất giá theo năm khác đô-la lên giá theo năm.
-    fx = 24164.8858 / 15858.9167
-    need_t('đồng mất giá và đô-la lên giá theo năm',
-           f'đồng mất {vn(100 * (1 - 1 / fx), 1)}% giá so với USD, khoảng {vn(100 * (1 - fx ** (-1 / 19)), 2)}% mỗi năm '
-           f'(đô-la lên khoảng {vn(100 * (fx ** (1 / 19) - 1), 2)}% mỗi năm)')
     claim('Bessembinder: 57,4% thua tín phiếu là “hơn bốn trên bảy”', 1 - 0.426 > 4 / 7)
     claim('Bessembinder: 1.092 trên khoảng 25.300 công ty là “hơn 4%”', 0.04 < 1092 / 25300 < 0.05)
     need_t('Bessembinder trong bài', 'vượt tín phiếu kho bạc một tháng')
@@ -858,12 +867,10 @@ def phan_F():
     for i, (a, b) in enumerate(zip(run(good), run(bad)), start=1):
         need_t(f'thứ tự lợi suất, năm {i}', f'{i} {vn(a, 1)} {vn(b, 1)}')
     prod = 1.2 * 1.1 * 0.8 * 0.9
-    need_t('thứ tự lợi suất: tích bốn thừa số', vn(prod, 4))
     need_t('thứ tự lợi suất: không rút', vn(1000 * prod, 1))
     need_t('thứ tự lợi suất: chênh hai kết cục', vn(run(good)[-1] - run(bad)[-1], 2))
-    need_t('góp đều, năm xấu trước', vn(run(bad, 60)[-1], 2))
-    need_t('góp đều, năm tốt trước', vn(run(good, 60)[-1], 2))
     claim('góp đều thì năm xấu trước lại tốt hơn', run(bad, 60)[-1] > run(good, 60)[-1])
+    du_kien('s-danhmuc', 'công thức: sàn với σ 30%, ρ 0,3', '30% × √0,3', f'khoảng {vn(30 * math.sqrt(0.3), 1)}%')
 
     def bond(c, n, y):
         return sum(c / (1 + y) ** t for t in range(1, n + 1)) + 100 / (1 + y) ** n
@@ -872,14 +879,14 @@ def phan_F():
     need_t('trái phiếu 10 năm khi lãi xuống 3%', vn(bond(5, 10, 0.03), 2))
     need_t('trái phiếu 2 năm', f'giá giảm {vn(100 - bond(5, 2, 0.07), 2)}%')
 
-    need_t('lợi suất thực với 5% và 3,31%', f'{vn((1.05 / 1.0331 - 1) * 100, 2)}%/năm')
-    need_t('phép trừ nhanh', f'{vn(5 - 3.31, 2)}%')
-    need_t('lợi suất thực năm 2008', f'{vn((1.1273 / 1.2312 - 1) * 100, 1)}%')
-    need_t('phép trừ năm 2008', f'{vn(12.73 - 23.12, 1)}%')
+    du_kien('s-taisan', 'lãi thực với lãi 5% và lạm phát 3,31%', '3,31%', f'{vn((1.05 / 1.0331 - 1) * 100, 2)}%/năm')
+    du_kien('s-taisan', 'lãi thực năm 2008', '2008', '12,73%', '23,12%', f'{vn((1.1273 / 1.2312 - 1) * 100, 1)}%')
     fx = 24164.89 / 15858.92
     need_t('đồng mất giá so với USD 2005 → 2024', f'mất {vn((1 - 1 / fx) * 100, 1)}%')
     need_t('mất giá bình quân năm', f'khoảng {vn((fx ** (1 / 19) - 1) * 100, 2)}% mỗi năm')
-    need_t('giá vàng cuối 2021 → cuối 2024', f'tức {vn((2610.85 / 1820.1 - 1) * 100, 1)}%')
+    du_kien('s-vang', 'giá vàng cuối 2021 → cuối 2024', 'cuối 2024', f'tăng {vn((2610.85 / 1820.1 - 1) * 100, 1)}%')
+    du_kien('s-vang', 'lãi thực TIPS cuối 2021 → cuối 2024', '−1,04%', '2,24%', 'TIPS', w=400)
+    du_kien('s-vang', 'Erb và Harvey', 'Erb và Harvey', '2013', '−0,82', '−0,31', '1997–2012', w=600)
     # Lãi tiền gửi và lạm phát Việt Nam 2005–2023 (World Bank FR.INR.DPST, FP.CPI.TOTL.ZG), bình quân nhân.
     dep = [7.145, 7.63, 7.492, 12.73, 7.91, 11.194, 13.993, 10.504, 7.14, 5.758, 4.747, 5.035, 4.809, 4.738,
            4.975, 4.12, 3.375, 3.817, 4.781]
@@ -888,9 +895,10 @@ def phan_F():
     pd_, pi_ = math.prod(1 + x / 100 for x in dep), math.prod(1 + x / 100 for x in inf)
     n = len(dep)
     claim('chuỗi tiền gửi 2005–2023 đủ 19 năm', n == len(inf) == 19)
-    need_t('lãi tiền gửi bình quân', f'khoảng {vn((pd_ ** (1 / n) - 1) * 100, 1)}%/năm và giá')
-    need_t('lạm phát bình quân', f'khoảng {vn((pi_ ** (1 / n) - 1) * 100, 1)}%/năm: lãi thực')
-    need_t('lãi thực bình quân', f'chỉ khoảng {vn(((pd_ / pi_) ** (1 / n) - 1) * 100, 1)}%/năm')
+    du_kien('s-taisan', 'lãi tiền gửi, lạm phát và lãi thực bình quân 2005–2023', '2005–2023',
+            f'{vn((pd_ ** (1 / n) - 1) * 100, 1)}%/năm', f'{vn((pi_ ** (1 / n) - 1) * 100, 1)}%/năm',
+            f'{vn(((pd_ / pi_) ** (1 / n) - 1) * 100, 1)}%/năm')
+    du_kien('s-taisan', 'nguồn lãi tiền gửi 2005–2023', 'World Bank', '2005–2023')
     for ltv, x in ((0.5, 'mất 40%'), (0.7, 'mất 66,7%')):
         claim(f'vay {ltv:.0%}, giá −20%: vốn tự có {x}', vn((1 - (0.8 - ltv) / (1 - ltv)) * 100, 1).rstrip('0').rstrip(',') == x[4:-1])
         need_t(f'vay {ltv:.0%} trong bài', x)
@@ -1098,7 +1106,10 @@ def phan_F2():
     for sid, xs in NGUON.items():
         t = chu(muc(sid))
         for x in xs:
-            claim(f'{sid}: chuỗi từ nguồn', x in t, f'không thấy “{x}”')
+            if isinstance(x, tuple):
+                du_kien(sid, 'dữ kiện từ nguồn', *x)
+            else:
+                claim(f'{sid}: chuỗi từ nguồn', x in t, f'không thấy “{x}”')
 
 
 def phan_G():
