@@ -1204,7 +1204,7 @@ def phan_G():
         's-quanhe': ['có thể rút bất cứ lúc nào', 'Quyền riêng tư không biến mất khi yêu'],
         's-batdong': ['không coi là lỗi đôi bên'],
         's-dunglai': ['gọi 113', 'Tổng đài quốc gia 117', 'Không phải chứng minh người kia xấu mới được rời đi'],
-        's-honnhan': ['Bạo lực cần ưu tiên an toàn'],
+        's-honnhan': ['Bạo lực cần ưu tiên an toàn', 'Sống chung mà không đăng ký kết hôn thì không có quyền, nghĩa vụ vợ chồng'],
     }
     for sid, phrases in essential.items():
         visible = ' '.join(' '.join(compact.sections.get(sid, [])).split())
