@@ -804,12 +804,12 @@ def phan_F():
     # Giá trị = lợi nhuận năm tới × (1 − g/ROIC) / (chi phí vốn − g); lợi nhuận 100, chi phí vốn 10%, g = 5%.
     for roic in (0.20, 0.10, 0.08):
         val, ir = 100 * (1 - 0.05 / roic) / (0.10 - 0.05), 0.05 / roic * 100
-        need_t(f'bảng giá trị, ROIC {roic:.0%}', f'Tăng 5%/năm, ROIC {round(roic * 100)}% {vn(ir, 1 if ir % 1 else 0)}% {vn(val, 0)}', val)
+        need_t(f'bảng giá trị, ROIC {roic:.0%}', f'Tăng 5%/năm, vốn giữ lại lời {round(roic * 100)}%/năm {vn(ir, 1 if ir % 1 else 0)}% {vn(val, 0)}', val)
     need_t('bảng giá trị, không tăng trưởng', f'Không tăng trưởng 0% {vn(100 / 0.10, 0)}')
 
     # Kỳ vọng ẩn trong giá: P/E 40, người mua đòi 9%/năm.
     PE, r = 40, 0.09
-    need_t('E/P của P/E 40', f'E/P = {vn(100 / PE, 1)}%')
+    need_t('lợi nhuận hôm nay so với giá ở P/E 40', f'chỉ bằng {vn(100 / PE, 1)}% giá (1 ÷ 40)')
     need_t('g hàm ý khi trả hết lợi nhuận', f'khoảng {vn((r - 1 / PE) * 100, 1)}%/năm mãi mãi')
     g15 = (1 - PE * r) / (1 / 0.15 - PE)          # PE = (1 − g/ROIC)/(r − g), ROIC 15%
     need_t('g hàm ý khi tái đầu tư với ROIC 15%', f'khoảng {vn(g15 * 100, 1)}%/năm', g15)
@@ -834,7 +834,7 @@ def phan_F():
     for rho, label in ((0, '0 (độc lập)'), (0.3, '0,3 (ngày thường)'), (0.8, '0,8 (khủng hoảng)')):
         cells = [vn(s0 * math.sqrt(rho + (1 - rho) / N), 1) + '%' for N in (1, 5, 10, 20)]
         last = 'về 0' if rho == 0 else vn(s0 * math.sqrt(rho), 1) + '%'
-        need_t(f'bảng đa dạng hoá, ρ = {rho}', f'ρ = {label} ' + ' '.join(cells) + ' ' + last)
+        need_t(f'bảng đa dạng hoá, ρ = {rho}', f'Tương quan {label} ' + ' '.join(cells) + ' ' + last)
     n10, n50 = s0 * math.sqrt(0.37), s0 * math.sqrt(0.3 + 0.7 / 50)
     need_t('đọc mô hình: N 10 → 50', f'từ {vn(n10, 2)}% xuống {vn(n50, 2)}%')
     claim('đọc mô hình: bớt “chưa tới 1,5 điểm phần trăm”', n10 - n50 < 1.5, f'{n10 - n50:.2f}')
