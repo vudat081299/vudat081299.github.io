@@ -287,7 +287,7 @@ def phan_B():
     g2025 = GOLD[-1] / GOLD[-2] - 1
     need('vàng năm 2025', f'một năm 2025 tăng {vi(100 * g2025, 0)}%')
     sp_nom = geo(series('sp', False))
-    need('cổ phiếu Mỹ 1928–2025, danh nghĩa (lời dặn của lab-pz)', f'lợi suất bình quân {vi(100 * sp_nom, 2)}%/năm (danh nghĩa, gồm cổ tức) của cổ phiếu Mỹ')
+    need('cổ phiếu Mỹ 1928–2025, danh nghĩa (lời dặn của lab-pz)', f'lợi suất kép bình quân {vi(100 * sp_nom, 2)}%/năm (danh nghĩa, gồm cổ tức) của cổ phiếu Mỹ')
 
     # ── Giá vàng theo sức mua (hình) ───────────────────────────────────────────
     lvl, real = 1.0, [0.0] * 56
@@ -346,10 +346,17 @@ def phan_B():
     need('lãi mặc định của lab-pz', 'id="pz-m" min="0.5" max="10" step="0.5" value="3"')
     claim('1%/ngày = 365%/năm, "gấp hơn 18 lần" trần 20%', 18 < 365 / 20 < 19)
     need('lãi 1% mỗi ngày trong bài', 'là 365%/năm tính đơn — gấp hơn 18 lần mức trần')
+    # Lãi trên dư nợ ban đầu (s-no): 1,5%/tháng, 12 kỳ, mỗi kỳ trả P/12 + 1,5%·P → lãi thật theo dư nợ giảm dần.
+    pay, lo, hi = 1 / 12 + 0.015, 0.0, 0.1
+    for _ in range(100):
+        r = (lo + hi) / 2
+        lo, hi = (r, hi) if sum(pay / (1 + r) ** k for k in range(1, 13)) > 1 else (lo, r)
+    need_t('lãi phẳng 1,5%/tháng quy ra dư nợ thật', f'khoảng {vi(100 * r, 2)}%/tháng trên số còn nợ thật, tức khoảng {vi(1200 * r, 1)}%/năm', r)
 
     # ── Thu nhập (s-thunhap): 7,4% của giá trị hôm nay ở lab-hk ────────────────
-    need('7,4% thu nhập cả đời', f'7,4% thu nhập cả đời đáng giá khoảng <b>{vi(round(0.074 * hc, -1), 0)} triệu đồng hôm nay</b>',
+    need('7,4% thu nhập cả đời', f'phần chênh ấy đáng khoảng <b>{vi(round(0.074 * hc, -1), 0)} triệu đồng hôm nay</b>',
          0.074 * hc)
+    need('7,4% là mức nâng khởi điểm của ví dụ ấy', 'thương lượng nâng mức khởi điểm 7,4%')
 
     # ── Điểm hoà vốn (lab-be): nghìn đồng, chi phí cố định 60 triệu = 60.000 nghìn ──
     for idv in ('id="be-p" value="35"', 'id="be-v" value="12"', 'id="be-f" value="60"', 'id="be-q" value="3000"'):
@@ -797,6 +804,11 @@ def phan_F():
               '3,25%', '3,63%', '3,31%', '12,73%', '23,12%'):
         need_t('vốn, chuỗi từ nguồn', x)
 
+    # Tỉ giá 2005 → 2024 (19 năm): đồng mất giá theo năm khác đô-la lên giá theo năm.
+    fx = 24164.8858 / 15858.9167
+    need_t('đồng mất giá và đô-la lên giá theo năm',
+           f'đồng mất {vn(100 * (1 - 1 / fx), 1)}% giá so với USD, khoảng {vn(100 * (1 - fx ** (-1 / 19)), 2)}% mỗi năm '
+           f'(đô-la lên khoảng {vn(100 * (fx ** (1 / 19) - 1), 2)}% mỗi năm)')
     need_t('bảo hiểm tiền gửi: hạn mức mới so với cũ', f'gấp {vn(350 / 125, 1)} lần', 350 / 125)
     claim('Bessembinder: 57,4% thua tín phiếu là “hơn bốn trên bảy”', 1 - 0.426 > 4 / 7)
     claim('Bessembinder: 1.092 trên khoảng 25.300 công ty là “hơn 4%”', 0.04 < 1092 / 25300 < 0.05)
@@ -944,7 +956,7 @@ def phan_F2():
             ('Tự viết, không người làm chứng', '631, 633'), ('Có người làm chứng', '632, 634'),
             ('Thế nào là hợp pháp?', '630'), ('Sửa, thay, gửi giữ', '640, 643, 641'),
             ('Ai vẫn được hưởng dù di chúc không cho?', '644'), ('Di sản thờ cúng', '645'),
-            ('Không có di chúc', '650, 651'), ('Di sản gồm gì?', '612'), ('Nợ của người mất', '615'),
+            ('Không có di chúc, hoặc di chúc không hợp pháp', '650, 651'), ('Di sản gồm gì?', '612'), ('Nợ của người mất', '615'),
             ('Thời hiệu', '623'),
         ],
     }
@@ -963,19 +975,24 @@ def phan_F2():
           'NĐ200': 'Nghị định 200/2026/NĐ-CP', 'CNS': 'Luật Công nghiệp công nghệ số',
           'TNCN': 'Luật Thuế thu nhập cá nhân 2025', 'HNGĐ': 'Luật Hôn nhân và gia đình 2014',
           'ĐĐ': 'Luật Đất đai 2024', 'NO': 'Luật Nhà ở 2023', 'KDBH': 'Luật Kinh doanh bảo hiểm 2022',
-          'HP': 'Hiến pháp 2013', 'BLGĐ': 'Luật Phòng, chống bạo lực gia đình 2022'}
+          'HP': 'Hiến pháp 2013', 'TCTD': 'Luật Các tổ chức tín dụng 2024',
+          'VL': 'Luật Việc làm 2025', 'BLLĐ': 'Bộ luật Lao động 2019', 'BHXH': 'Luật Bảo hiểm xã hội 2024',
+          'BLGĐ': 'Luật Phòng, chống bạo lực gia đình 2022'}
     GAN = {
-        's-no': {'468': 'BLDS', '201': 'BLHS'},
+        's-no': {'468': 'BLDS', '201': 'BLHS', '100': 'TCTD'},
         's-ruiro': {'*': 'BHTG', '3': 'TT05'},
+        's-baohiem': {'35': 'KDBH', '39': 'VL'},
+        's-thunhap': {'14': 'BLLĐ', '26': 'BLLĐ', '31': 'BHXH'},
         's-dungtien': {'*': 'BLHS'},
         's-taisan': {'9': 'NĐ200', '46': 'CNS', '47': 'CNS', '3': 'TNCN', '4': 'TNCN', '13': 'TNCN'},
         's-vanminh': {'*': 'HP'},
+        's-luadao': {'174': 'BLHS'},
         's-thehe': {'*': 'BLDS'},
         's-honnhan': {'*': 'HNGĐ'},
         's-quanhe': {'*': 'BLDS'},
         's-dunglai': {'*': 'BLGĐ'},
         's-giayto': {'*': 'BLDS', '66': 'HNGĐ', '27': 'ĐĐ', '164': 'NO', '4': 'KDBH', '41': 'KDBH', '46': 'CNS'},
-        's-muoihai': {'335': 'BLDS', '336': 'BLDS', '30': 'NĐ340', '291': 'BLHS'},
+        's-muoihai': {'335': 'BLDS', '336': 'BLDS', '468': 'BLDS', '30': 'NĐ340', '291': 'BLHS'},
     }
 
     def dieu(s):
@@ -1021,7 +1038,7 @@ def phan_F2():
     # Chuỗi lấy từ nguồn, trong đúng mục: tác giả, năm, tạp chí, cỡ mẫu, số đo, ngày tháng, số hiệu luật.
     NGUON = {
         's-tichluy': [
-            'Robert Merton (1968) gọi là hiệu ứng Matthew',
+            'Robert K. Merton (1968) gọi là hiệu ứng Matthew',
             'Jacob Mincer (Schooling, Experience, and Earnings, 1974)', 'ghép số liệu điều tra của 18 nước',
             '(Mỹ, Đức, Canada, Anh)', 'dưới 5 năm kinh nghiệm 89,3%', '(Brazil, Chile, Mexico, Jamaica) chỉ 47,6%',
             'có Việt Nam với số liệu năm 1998 và 2002, đều dưới 50%', 'A khởi điểm 20 triệu/tháng, mỗi năm tăng 3%',
@@ -1063,7 +1080,7 @@ def phan_F2():
             '求則得之，舍則失之，是求有益於得也，求在我者也。求之有道，得之有命，是求無益於得也，求在外者也。',
             'Mạnh Tử · thiên Tận tâm thượng',
             '938 Ngô Quyền đánh tan quân Nam Hán trên sông Bạch Đằng',
-            '1802 Nguyễn Ánh lên ngôi, lấy niên hiệu Gia Long', 'gần 300 năm chia cắt Trịnh – Nguyễn',
+            '1802 Nguyễn Ánh lên ngôi, lấy niên hiệu Gia Long', 'gần ba thế kỷ nội chiến và chia cắt (Lê – Mạc, Trịnh – Nguyễn, Tây Sơn – Nguyễn)',
             '1/9/1858 Liên quân Pháp – Tây Ban Nha nổ súng vào thành Đà Nẵng', '2/9/1945 Tuyên ngôn Độc lập',
             '7/5/1954 Chiến thắng Điện Biên Phủ; Hiệp định Genève ký tháng 7/1954',
             '30/4/1975 Chiến dịch Hồ Chí Minh kết thúc', '12/1986 Đại hội VI đề ra đường lối Đổi mới',
@@ -1224,6 +1241,13 @@ def phan_G():
     bare = [sid for sid, h2 in re.findall(r'<section id="(s-[a-z]+)">\s*<p class="hc-eyebrow-sec">.*?</p>\s*(<h2[^>]*>)', HTML, flags=re.S)
             if 'hc-sec-title' not in h2]
     claim('mọi tiêu đề mục có class hc-sec-title', not bare, ', '.join(bare))
+    # Mỗi mục nội dung có đúng một khung luật, cùng một nhãn, để người đọc bản gọn tìm thấy luật ở cùng chỗ.
+    khung = {'s-cach', 's-muoihai', 's-tusoat', 's-lotrinh', 's-tomtat', 's-thuvien', 's-nguon'}
+    for sid, body in re.findall(r'<section id="(s-[a-z]+)">(.*?)</section>', HTML, flags=re.S):
+        if sid in khung:
+            continue
+        ks = re.findall(r'<div class="hc-key">\s*<span class="k">([^<]*)</span>', body)
+        claim(f'{sid}: một khung “Luật của mục này”', ks == ['Luật của mục này'], f'thấy {ks}')
 
 
 def main():
