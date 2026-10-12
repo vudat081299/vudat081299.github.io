@@ -16,6 +16,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-011 · hidden-curriculum: sức hút và nhịp tiến triển trong yêu đương · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-012 · hidden-curriculum: hàm ý và giới hạn của lời nói lấp lửng · `pages/hidden-curriculum.html`
 - PAGES-013 · hidden-curriculum: xử lý khi chưa rõ ý người khác · `pages/hidden-curriculum.html`
+- PAGES-014 · hidden-curriculum: tâm kế · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -97,3 +98,10 @@ Giữ nguyên lý ở bản gọn, ví dụ và bằng chứng ở phần mở r
 Bổ sung khung chung để xử lý lời nói và tin nhắn chưa rõ ý vào mục đọc người, nối sang phần nhắn tin.
 Tách dữ kiện khỏi suy đoán, xem ngữ cảnh, hỏi điều cần quyết định và điều chỉnh theo phản hồi; không mặc định động cơ theo giới hay phủ nhận lời từ chối.
 Giữ nguyên lý ở bản gọn, ví dụ và bằng chứng ở phần mở rộng; tích hợp vào các mục hiện có để tránh kéo dài tài liệu bằng các tình huống lặp.
+
+## PAGES-014 · hidden-curriculum: tâm kế
+12/10/2026 · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+
+Bổ sung tâm kế vào mục thế và cam kết: phân biệt mưu lược hợp lệ với thao túng bằng phép thử công khai.
+Dạy để nhận ra và phòng thủ, không để dùng; nêu bằng chứng về lợi và giá của tâm kế cùng giới hạn của nó.
+Các chiêu kèm dấu hiệu và cách đáp không buộc tội ai; không lặp bảng Cialdini, chiêu trong yêu đương trỏ sang Phần 7.
