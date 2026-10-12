@@ -1119,6 +1119,14 @@ def phan_F2():
             '36 ca (12%)', '188 ca (66%)', '62 ca (21%)', 'Luật Công chứng 2024 (hiệu lực từ 01/07/2025)',
             '04/2026/QH16, hiệu lực từ 01/01/2027',
         ],
+        # Tâm kế: số liệu từ abstract và bảng 2 của O'Boyle và cộng sự (2012), abstract của Spurk và cộng sự
+        # (2016), Harsey và Freyd (2020); phép thử công khai theo Kant (bản Campbell Smith) và Nudge (2008).
+        's-thecuoc': [
+            'O’Boyle và cộng sự (2012) gộp 245 mẫu, 43.907 người', 'tương quan −0,07 với hiệu suất công việc',
+            'tương quan 0,25 với hành vi phản tác dụng', 'khảo sát 793 người mới đi làm ở Đức',
+            'thang Mach IV gồm 20 câu', 'Kant (Bàn về hoà bình vĩnh cửu, 1795, phụ lục II)',
+            'chỉ có chiều phủ định', 'mà họ gán cho Rawls (1971)', 'Jennifer Freyd (1997) đặt tên DARVO',
+        ],
     }
     for sid, xs in NGUON.items():
         t = chu(muc(sid))
@@ -1170,6 +1178,7 @@ def phan_G():
         's-danhmuc': ['Khi đang rút tiền', 'không để bảo đảm lợi nhuận'],
         's-vonnguoi': ['không chứng minh mọi khoá học sinh lời', 'không phải tiền có thể rút hôm nay'],
         's-chutin': ['hai bên còn coi trọng tương lai', 'Giao dịch lớn vẫn cần bảo đảm'],
+        's-thecuoc': ['họ sẽ phản đối nếu biết, là thao túng', 'khi còn gặp lại và chuyện lan được'],
         's-thuongluong': ['phương án tốt nhất ấy là BATNA', 'không dùng làm lời đe doạ'],
         's-memcung': ['chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],

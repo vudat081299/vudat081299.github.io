@@ -1599,6 +1599,34 @@
    ]
   },
   {
+   "id": "manipulation",
+   "name": "Mưu lược và thao túng",
+   "en": "strategy vs. manipulation",
+   "layer": "xahoi",
+   "kind": [
+    "theory",
+    "mixed"
+   ],
+   "idea": "Mưu lược đổi tình thế hoặc thông tin người kia có, rồi để họ tự chọn. Thao túng đạt mục đích nhờ họ hiểu sai, bị lừa, bị ép bằng cảm xúc, hoặc không biết mình đang bị dẫn.",
+   "why": "Nhận ra thao túng sớm giúp không ký, không chuyển tiền, không quay lưng với người khác chỉ vì một phiên bản dựng sẵn.",
+   "mechanism": "Thao túng sống nhờ chỗ tối: thông tin không được đối chiếu, quyết định bị dồn, mỗi người nghe một phiên bản. Ở cuộc gặp một lần nó có thể thắng, như chơi xấu trong trò chơi một lượt; khi quan hệ lặp lại và chuyện lan được, nó tốn uy tín.",
+   "mistake": "Nghĩ người nhiều tâm kế luôn thắng; hoặc ngược lại, gán nhãn thao túng cho mọi người bất đồng với mình.",
+   "example": "Một phân tích gộp 245 mẫu thấy điểm Machiavellianism tương quan −0,07 với hiệu suất công việc và 0,25 với hành vi gây hại cho tổ chức hay đồng nghiệp.",
+   "use": "Hỏi: nếu người kia biết rõ mình đang làm gì và vì sao, cách ấy còn hiệu quả không, họ còn đồng ý không? Gặp chiêu thì ghi lại, xác minh qua kênh mình chọn, đưa ra chỗ nhiều người cùng thấy.",
+   "limits": "Phép thử công khai chỉ có chiều phủ định: qua chưa chắc đã đúng. Thang đo Machiavellianism là tự khai và đo mức sẵn lòng, không đo tài thao túng.",
+   "remember": "Cách làm nào phải giấu mới thành thì đáng ngờ.",
+   "related": [
+    "repeated",
+    "reputation",
+    "info-asymmetry"
+   ],
+   "sections": [
+    "s-thecuoc",
+    "s-ranhgioi",
+    "s-chutin"
+   ]
+  },
+  {
    "id": "cultural-capital",
    "name": "Vốn văn hoá",
    "en": "cultural capital",
