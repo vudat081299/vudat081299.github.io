@@ -925,11 +925,10 @@ def phan_F2():
     du_kien('s-tichluy', 'khoảng cách giữ nguyên', 'giữ nguyên tới cuối', 'theo phần trăm', w=80)
     # Ngành học (s-daycon): 0,561 điểm log (Altonji, Blom và Meghir 2012) là khoảng 75%.
     claim('0,561 điểm log ≈ cao hơn 75%', round(100 * (math.exp(0.561) - 1)) == 75, f'{100 * (math.exp(0.561) - 1):.1f}%')
-    need_t('Altonji, Blom và Meghir', 'có lương cao hơn khoảng 75% so với nam học sư phạm')
+    du_kien('s-daycon', 'Altonji, Blom và Meghir: kỹ thuật điện so với sư phạm', 'kỹ thuật điện', 'khoảng 75%', 'sư phạm', w=60)
     # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 62 trên 286 ca.
     claim('Van Such: 62 trên 286 ca là 21%', int(100 * 62 / 286) == 21, f'{100 * 62 / 286:.1f}%')
-    need_t('Van Such trong bài', 'xem 286 bệnh nhân')
-    need_t('Van Such trong bài', 'khác hẳn chẩn đoán lúc chuyển ở 62 ca (21%)')
+    du_kien('s-giayto', 'Van Such: 62 trên 286 ca', 'Van Such', '2017', '286 bệnh nhân', '62 ca (21%)')
     # Mọi điều luật dẫn trong bài có trong danh sách nguồn của đúng văn bản ấy.
     # Mỗi mục có một văn bản mặc định ('*'); điều dẫn từ văn bản khác thì gán riêng. Điều mới chưa gán thì đỏ.
     VB = {'BLDS': 'Bộ luật Dân sự 2015', 'BLHS': 'Bộ luật Hình sự 2015', 'NĐ340': 'Nghị định 340/2025/NĐ-CP',
@@ -1026,35 +1025,30 @@ def phan_F2():
             ('Bryson', 'A Short History of Nearly Everything', '2003'),
         ],
         's-thehe': [
-            'Gia huấn ca (tương truyền của Nguyễn Trãi, tác giả còn tồn nghi)', 'Lẽ tục phú',
-            'Adermon, Lindahl và Waldenström (Economic Journal, 2018)',
-            'tương quan thứ hạng tài sản giữa cha mẹ và con là 0,3–0,4, giữa ông bà và cháu chỉ 0,1–0,2',
-            'ít nhất một nửa', 'khoảng một phần tư', 'Gregory Clark (The Son Also Rises, 2014)',
-            'Với 18.869 người mang họ hiếm ở Anh và xứ Wales', 'từ 1858 tới 2012',
-            'hệ số truyền ẩn 0,70–0,75 mỗi đời', 'Torche và Corvalán, 2018',
-            '“70% mất ở đời thứ hai, 90% ở đời thứ ba”', '(Williams và Preisser, 2003)', '3.250 gia đình giàu',
-            '“tỉ lệ thất bại 70%”', 'James Grubman (2022)', 'nghiên cứu năm 1987 của John Ward',
-            'tỉ lệ 30% doanh nghiệp', 'Holtz-Eakin, Joulfaian và Rosen, Quarterly Journal of Economics, 1993',
-            'khoảng 150.000 USD', 'cao gấp khoảng bốn lần người nhận dưới 25.000 USD',
+            ('Gia huấn ca', 'Nguyễn Trãi', 'tồn nghi'), 'Lẽ tục phú',
+            ('Adermon, Lindahl và Waldenström', '2018', 'Thuỵ Điển'), ('cha mẹ và con 0,3–0,4', 'ông bà và cháu chỉ 0,1–0,2', 60),
+            ('thừa kế và quà tặng', 'Ít nhất một nửa'), ('học vấn', 'khoảng một phần tư', 40),
+            ('Gregory Clark', 'The Son Also Rises', '2014'), ('18.869', 'Anh và xứ Wales', '1858', '2012'),
+            ('0,70–0,75', 'ba phần tư'), ('Torche và Corvalán', '2018'),
+            '“70% mất ở đời thứ hai, 90% ở đời thứ ba”', ('Williams và Preisser', '2003', '3.250 gia đình'),
+            ('James Grubman', '2022'), ('John Ward', '1987', '30% doanh nghiệp'),
+            ('Holtz-Eakin, Joulfaian và Rosen', '1993'), ('150.000 USD', 'bốn lần', '25.000 USD', 120),
         ],
         's-daycon': [
-            'Whitebread và Bingham, 2013', 'tới khoảng 7 tuổi', 'PISA 2022 (OECD, 2024)',
-            'học sinh 15 tuổi ở 20 nước và vùng; Việt Nam không có trong phần này', 'cao hơn 12 điểm',
-            'thấp hơn 13 điểm',
-            '83% học sinh nói mình có thể tự quyết tiêu tiền vào gì; nhóm này cao hơn khoảng 30 điểm',
-            '70% học sinh tự tiêu khoản nhỏ', 'Lý thuyết tự quyết (Ryan và Deci, 2000)',
-            '“Khoảng cách 30 triệu từ.” Hart và Risley (1995) quan sát 42 gia đình Mỹ, mỗi tháng một giờ',
-            'nghe khoảng 45 triệu từ, trẻ nhà nhận trợ cấp khoảng 13 triệu', 'Sperry và cộng sự, 2019',
-            'Romeo và cộng sự, 2018',
-            'năm 1885, Mrs. Dymond của Anne Isabella Thackeray Ritchie', 'chỉ xuất hiện từ năm 1976', '臨河而羨魚，不如歸家織網。',
-            'Hoài Nam Tử · thiên Thuyết lâm huấn', 'Altonji, Blom và Meghir (Annual Review of Economics, 2012)',
-            'Với số liệu Mỹ năm 2009', 'Deci, Koestner và Ryan, 1999',
+            ('Whitebread và Bingham', '2013'), 'tới khoảng 7 tuổi', ('PISA 2022', 'OECD, 2024'),
+            ('15 tuổi', '20 nước và vùng', 'không có Việt Nam'), ('chi tiêu của chính mình', 'cao hơn 12 điểm', 80),
+            ('ngân sách cả nhà', 'thấp hơn 13 điểm', 80), ('tự quyết tiêu tiền', 'khoảng 30 điểm', 60),
+            ('70% học sinh', 'khoản nhỏ', 40), ('Ryan và Deci', '2000'),
+            ('Hart và Risley', '1995', '42 gia đình', 'mỗi tháng một giờ'), ('45 triệu từ', '13 triệu', 80),
+            ('Sperry', '2019'), ('Romeo', '2018'),
+            ('1885', 'Mrs. Dymond', 'Anne Isabella Thackeray Ritchie'), ('Lão Tử', '1976'), '臨河而羨魚，不如歸家織網。',
+            'Hoài Nam Tử · thiên Thuyết lâm huấn', ('Altonji, Blom và Meghir', '2012'), ('Mỹ năm 2009', '75%', 80),
+            ('Deci, Koestner và Ryan', '1999'),
         ],
         's-honnhan': [
-            'Tổng quan 115 nghiên cứu với hơn 45.000 cuộc hôn nhân (Karney và Bradbury, 1995)',
-            'Gottman và Levenson (2000) theo dõi các cặp vợ chồng trong 14 năm', '“dự báo đúng hơn 90%”',
-            'Heyman và Smith Slep, 2001', 'Theo dõi 4.574 cặp vợ chồng Mỹ (Dew, Britt và Huston, 2012)',
-            'Kiểm lại trên 388 cặp mới cưới thu nhập thấp (Ross và cộng sự, 2022)',
+            ('115 nghiên cứu', '45.000 cuộc hôn nhân', 'Karney và Bradbury', '1995'),
+            ('14 năm', 'Gottman và Levenson', '2000'), '“dự báo đúng hơn 90%”', ('Heyman và Smith Slep', '2001'),
+            ('4.574 cặp', 'Dew, Britt và Huston', '2012'), ('388 cặp', 'Ross và cộng sự', '2022'),
         ],
         's-tinhyeu': [
             'Gộp 43 nghiên cứu theo dõi 11.196 cặp, Joel và cộng sự (2020)', 'giải thích khoảng 45% mức hài lòng hiện tại',
