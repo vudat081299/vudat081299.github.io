@@ -354,8 +354,9 @@ def phan_B():
     need_t('lãi phẳng 1,5%/tháng quy ra dư nợ thật', f'khoảng {vi(100 * r, 2)}%/tháng trên số còn nợ thật, tức khoảng {vi(1200 * r, 1)}%/năm', r)
 
     # ── Thu nhập (s-thunhap): 7,4% của giá trị hôm nay ở lab-hk ────────────────
-    need('7,4% thu nhập cả đời', f'7,4% thu nhập cả đời đáng giá khoảng <b>{vi(round(0.074 * hc, -1), 0)} triệu đồng hôm nay</b>',
+    need('7,4% thu nhập cả đời', f'phần chênh ấy đáng khoảng <b>{vi(round(0.074 * hc, -1), 0)} triệu đồng hôm nay</b>',
          0.074 * hc)
+    need('7,4% là mức nâng khởi điểm của ví dụ ấy', 'thương lượng nâng mức khởi điểm 7,4%')
 
     # ── Điểm hoà vốn (lab-be): nghìn đồng, chi phí cố định 60 triệu = 60.000 nghìn ──
     for idv in ('id="be-p" value="35"', 'id="be-v" value="12"', 'id="be-f" value="60"', 'id="be-q" value="3000"'):
@@ -970,11 +971,12 @@ def phan_F2():
           'TNCN': 'Luật Thuế thu nhập cá nhân 2025', 'HNGĐ': 'Luật Hôn nhân và gia đình 2014',
           'ĐĐ': 'Luật Đất đai 2024', 'NO': 'Luật Nhà ở 2023', 'KDBH': 'Luật Kinh doanh bảo hiểm 2022',
           'HP': 'Hiến pháp 2013', 'TCTD': 'Luật Các tổ chức tín dụng 2024',
-          'VL': 'Luật Việc làm 2025'}
+          'VL': 'Luật Việc làm 2025', 'BLLĐ': 'Bộ luật Lao động 2019', 'BHXH': 'Luật Bảo hiểm xã hội 2024'}
     GAN = {
         's-no': {'468': 'BLDS', '201': 'BLHS', '100': 'TCTD'},
         's-ruiro': {'*': 'BHTG', '3': 'TT05'},
         's-baohiem': {'35': 'KDBH', '39': 'VL'},
+        's-thunhap': {'14': 'BLLĐ', '26': 'BLLĐ', '31': 'BHXH'},
         's-dungtien': {'*': 'BLHS'},
         's-taisan': {'9': 'NĐ200', '46': 'CNS', '47': 'CNS', '3': 'TNCN', '4': 'TNCN', '13': 'TNCN'},
         's-vanminh': {'*': 'HP'},
