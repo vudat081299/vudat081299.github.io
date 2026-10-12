@@ -804,6 +804,11 @@ def phan_F():
               '3,25%', '3,63%', '3,31%', '12,73%', '23,12%'):
         need_t('vốn, chuỗi từ nguồn', x)
 
+    # Tỉ giá 2005 → 2024 (19 năm): đồng mất giá theo năm khác đô-la lên giá theo năm.
+    fx = 24164.8858 / 15858.9167
+    need_t('đồng mất giá và đô-la lên giá theo năm',
+           f'đồng mất {vn(100 * (1 - 1 / fx), 1)}% giá so với USD, khoảng {vn(100 * (1 - fx ** (-1 / 19)), 2)}% mỗi năm '
+           f'(đô-la lên khoảng {vn(100 * (fx ** (1 / 19) - 1), 2)}% mỗi năm)')
     need_t('bảo hiểm tiền gửi: hạn mức mới so với cũ', f'gấp {vn(350 / 125, 1)} lần', 350 / 125)
     claim('Bessembinder: 57,4% thua tín phiếu là “hơn bốn trên bảy”', 1 - 0.426 > 4 / 7)
     claim('Bessembinder: 1.092 trên khoảng 25.300 công ty là “hơn 4%”', 0.04 < 1092 / 25300 < 0.05)
