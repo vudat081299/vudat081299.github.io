@@ -963,7 +963,7 @@ def phan_F2():
           'NĐ200': 'Nghị định 200/2026/NĐ-CP', 'CNS': 'Luật Công nghiệp công nghệ số',
           'TNCN': 'Luật Thuế thu nhập cá nhân 2025', 'HNGĐ': 'Luật Hôn nhân và gia đình 2014',
           'ĐĐ': 'Luật Đất đai 2024', 'NO': 'Luật Nhà ở 2023', 'KDBH': 'Luật Kinh doanh bảo hiểm 2022',
-          'HP': 'Hiến pháp 2013'}
+          'HP': 'Hiến pháp 2013', 'BLGĐ': 'Luật Phòng, chống bạo lực gia đình 2022'}
     GAN = {
         's-no': {'468': 'BLDS', '201': 'BLHS'},
         's-ruiro': {'*': 'BHTG', '3': 'TT05'},
@@ -972,6 +972,8 @@ def phan_F2():
         's-vanminh': {'*': 'HP'},
         's-thehe': {'*': 'BLDS'},
         's-honnhan': {'*': 'HNGĐ'},
+        's-quanhe': {'*': 'BLDS'},
+        's-dunglai': {'*': 'BLGĐ'},
         's-giayto': {'*': 'BLDS', '66': 'HNGĐ', '27': 'ĐĐ', '164': 'NO', '4': 'KDBH', '41': 'KDBH', '46': 'CNS'},
         's-muoihai': {'335': 'BLDS', '336': 'BLDS', '30': 'NĐ340', '291': 'BLHS'},
     }
@@ -1104,6 +1106,27 @@ def phan_F2():
             'Dew, Britt và Huston (2012), theo dõi 4.574 cặp vợ chồng Mỹ', 'số 52/2014/QH13, hiệu lực từ 01/01/2015',
             'Luật số 81/2025/QH15', '121/VBHN-VPQH (2025)', '(Điều 33, 43)', '(Điều 47)', '(Điều 49)', '(Điều 38)',
             'Nếu đã có thoả thuận hợp lệ, vợ chồng có thể sửa, bổ sung nội dung theo đúng hình thức',
+            'Ross, Nguyen, Karney và Bradbury (2022) kiểm lại trên 388 cặp mới cưới',
+            'không làm phát sinh quyền, nghĩa vụ vợ chồng (Điều 14)', 'có tính công nội trợ như lao động có thu nhập (Điều 16)',
+        ],
+        's-tinhyeu': [
+            'Joel và cộng sự (2020) gộp 43 nghiên cứu theo dõi, 11.196 cặp', 'giải thích khoảng 45% mức hài lòng hiện tại',
+            'Birnbaum, Zholtack và Reis (2020), ba nghiên cứu',
+        ],
+        's-nhantin': ['Patel, Mahar và Webster (2022) khảo sát 302 sinh viên Mỹ'],
+        's-henho': [
+            'Aron và cộng sự (1997)', 'trong 45 phút', 'Whitchurch, Wilson và Gilbert (2011)',
+            'hồ sơ Facebook của bốn nam sinh viên',
+        ],
+        's-quanhe': [
+            '(Bộ luật Dân sự, Điều 38)', '(Bộ luật Dân sự, Điều 32)',
+            'một phần ba số cặp đã đoàn tụ chia tay trong ba tháng',
+        ],
+        's-dunglai': [
+            'gọi 113', 'Tổng đài quốc gia 117, 24/7', 'số 13/2022/QH15, hiệu lực từ 01/07/2023',
+            '(Điều 3, khoản 1)', '(Điều 3, khoản 2)', 'Tổng hợp 202 mẫu với 50.427 người',
+            '0,65 cho hài lòng, 0,53 cho đầu tư và −0,43 cho chất lượng lựa chọn khác', 'nghiên cứu ở 11 thành phố Mỹ',
+            'trong khảo sát 464 người',
         ],
         's-giayto': [
             'tới tháng 10/2026', 'người 15–18 tuổi được lập', 'trong 5 ngày làm việc', 'sau 3 tháng',
@@ -1184,12 +1207,23 @@ def phan_G():
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
         's-giayto': ['quyền của người thừa kế được luật bảo vệ'],
         's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn'],
+        's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
+        's-nhantin': ['ngừng nhắc', 'Không tìm kênh khác để vượt ranh giới'],
+        's-henho': ['không thay đồng thuận thân mật', 'chọn nơi công cộng', 'không gửi tiền cho người yêu qua mạng'],
+        's-quanhe': ['có thể rút bất cứ lúc nào', 'Quyền riêng tư không biến mất khi yêu'],
+        's-batdong': ['không coi là lỗi đôi bên'],
+        's-dunglai': ['gọi 113', 'Tổng đài quốc gia 117', 'Không phải chứng minh người kia xấu mới được rời đi'],
+        's-honnhan': ['Bạo lực cần ưu tiên an toàn', 'Sống chung mà không đăng ký kết hôn thì không có quyền, nghĩa vụ vợ chồng'],
     }
     for sid, phrases in essential.items():
         visible = ' '.join(' '.join(compact.sections.get(sid, [])).split())
         for phrase in phrases:
             claim(f'bản gọn {sid}: điều kiện luôn hiện', phrase in visible, f'không thấy “{phrase}” ngoài details')
     claim('bản gọn: cả 12 luật có giải nghĩa luôn hiện', compact.law_notes == 12, str(compact.law_notes))
+    # Tiêu đề mục thiếu class thì mất cỡ chữ và luật ngắt trang của bản in (Phần 7 từng thiếu cả sáu).
+    bare = [sid for sid, h2 in re.findall(r'<section id="(s-[a-z]+)">\s*<p class="hc-eyebrow-sec">.*?</p>\s*(<h2[^>]*>)', HTML, flags=re.S)
+            if 'hc-sec-title' not in h2]
+    claim('mọi tiêu đề mục có class hc-sec-title', not bare, ', '.join(bare))
 
 
 def main():
