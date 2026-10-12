@@ -26,7 +26,7 @@ Bảy phần, bảy loại sai khác nhau:
      có thật, không có HTML trong dữ liệu, mọi con số trong thẻ có mặt trên trang, số thẻ khớp đầu trang.
   F. VỐN, NGHỀ, GIA ĐÌNH — các mục rủi ro, tạo của, doanh nghiệp, danh mục, tài sản, nghề, gia đình:
      chuỗi lấy từ nguồn (luật, số liệu chính thức, tác giả và năm) giữ nguyên văn trong đúng mục, mỗi
-     câu hỏi của hai bảng luật đi với đúng điều đã đối chiếu, năm can chi tính lại từ năm dương lịch,
+     điều luật dẫn trong bài có trong danh sách nguồn, năm can chi tính lại từ năm dương lịch,
      và mọi con số suy ra được tính lại trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn
      trong giá, thứ tự lợi suất, trái phiếu…).
   G. BẢN GỌN — định nghĩa và điều kiện quan trọng phải còn ngoài phần chi tiết. Không thay được
@@ -311,10 +311,6 @@ def phan_B():
     need('một lượng', 'là 37,5 gam, bằng 10 <b>chỉ</b>; một chỉ là 3,75 gam')
     need('một ounce', 'một ounce quốc tế (troy ounce) là 31,1035 gam')
     claim('ounce troy 31,1034768 g làm tròn thành 31,1035', f'{31.1034768:.4f}' == '31.1035')
-    # Nghị định 340/2025/NĐ-CP, Điều 30: cá nhân 100–150 triệu (1 đến dưới 10 tài khoản), 150–200 triệu (từ 10).
-    need('mức phạt cho mượn tài khoản', 'bị phạt từ 100 tới 200 triệu đồng với cá nhân (Nghị định 340/2025/NĐ-CP, Điều 30)')
-    # Bộ luật Hình sự, Điều 291 khoản 1: từ 20 tài khoản, hoặc thu lợi bất chính từ 20 triệu đồng.
-    need('ngưỡng của Điều 291', 'từ 20 tài khoản hoặc thu lợi từ 20 triệu đồng, là tội hình sự (Bộ luật Hình sự, Điều 291)')
     need('lượng ra ounce', f'một lượng ≈ {vi(37.5 / 31.1034768, 5)} ounce')
     need('giá mua mặc định', 'id="gs-buy" value="120"')
     need('giá bán mặc định', 'id="gs-sell" value="117.5"')
@@ -922,44 +918,14 @@ def phan_F2():
     ba = [15 * 1.10 ** min(n - 1, 10) * 1.03 ** max(n - 11, 0) / (20 * 1.03 ** (n - 1)) for n in range(11, 41)]
     claim('từ năm 11, tỉ số lương B/A không đổi', max(ba) - min(ba) < 1e-9, f'{min(ba):.6f}…{max(ba):.6f}')
     need_t('khoảng cách giữ nguyên', 'và khoảng cách ấy giữ nguyên tới cuối, vì các lần tăng sau đều tính theo phần trăm')
-    # Thừa kế (s-giayto): phần di sản 1,2 tỷ, bốn người hàng thứ nhất, Điều 644 Bộ luật Dân sự: 2/3 một suất.
-    suat = 1200 / 4
-    need_t('một suất theo luật', f'một suất theo luật là {vn(suat, 0)} triệu', suat)
-    need_t('hai phần ba suất', f'tức {vn(suat * 2 / 3, 0)} triệu, cộng lại {vn(4 * suat * 2 / 3, 0)} triệu; em trai nhận {vn(1200 - 4 * suat * 2 / 3, 0)} triệu')
-    # Ngành học (s-daycon): 0,561 điểm log là khoảng 75%.
+    # Ngành học (s-daycon): 0,561 điểm log (Altonji, Blom và Meghir 2012) là khoảng 75%.
     claim('0,561 điểm log ≈ cao hơn 75%', round(100 * (math.exp(0.561) - 1)) == 75, f'{100 * (math.exp(0.561) - 1):.1f}%')
-    need_t('Altonji, Blom và Meghir', '(0,561 điểm log, tức cao hơn khoảng 75%)')
-    # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 286 ca.
-    claim('Van Such: 36 + 188 + 62 = 286', 36 + 188 + 62 == 286)
-    need_t('Van Such trong bài', 'Chẩn đoán cuối giống chẩn đoán lúc chuyển ở 36 ca (12%), được làm rõ hơn ở 188 ca (66%), và khác hẳn ở 62 ca (21%)')
-    # Bảng luật: mỗi câu hỏi đi với đúng điều đã đối chiếu văn bản, đúng thứ tự (s-honnhan: Luật Hôn nhân và
-    # gia đình 2014; s-giayto: Bộ luật Dân sự 2015).
-    LAW = {
-        's-honnhan': [
-            ('Tài sản nào là chung?', '33'), ('Không chứng minh được là riêng?', '33'),
-            ('Tài sản nào là riêng?', '43'), ('Bán, thế chấp nhà đất chung', '35, 31'),
-            ('Giấy chứng nhận đứng tên ai?', '34'), ('Nợ nào là nợ chung?', '37, 27'), ('Nợ nào là nợ riêng?', '45'),
-            ('Tự đặt chế độ tài sản', '47, 48'), ('Chia tài sản chung khi còn hôn nhân', '38, 42'),
-            ('Khi ly hôn', '59'), ('Khi một người mất', '66'),
-        ],
-        's-giayto': [
-            ('Ai lập được di chúc?', '625, 630'), ('Hình thức', '627, 629'), ('Di chúc miệng', '629, 630'),
-            ('Tự viết, không người làm chứng', '631, 633'), ('Có người làm chứng', '632, 634'),
-            ('Thế nào là hợp pháp?', '630'), ('Sửa, thay, gửi giữ', '640, 643, 641'),
-            ('Ai vẫn được hưởng dù di chúc không cho?', '644'), ('Di sản thờ cúng', '645'),
-            ('Không có di chúc, hoặc di chúc không hợp pháp', '650, 651'), ('Di sản gồm gì?', '612'), ('Nợ của người mất', '615'),
-            ('Thời hiệu', '623'),
-        ],
-    }
-    for sid, want in LAW.items():
-        tb = re.search(r'<th>Điều</th>.*?<tbody>(.*?)</tbody>', muc(sid), flags=re.S)
-        got = [(chu(r[0]), chu(r[-1])) for r in (re.findall(r'<td[^>]*>(.*?)</td>', tr, flags=re.S)
-               for tr in re.findall(r'<tr>(.*?)</tr>', tb.group(1) if tb else '', flags=re.S)) if r]
-        claim(f'{sid}: bảng luật có {len(want)} dòng', len(got) == len(want), f'thấy {len(got)} dòng')
-        for i, (q, d) in enumerate(want):
-            r = got[i] if i < len(got) else ('—', '—')
-            claim(f'{sid}: “{q}” → Điều {d}', r == (q, d), f'trang ghi “{r[0]}” → Điều {r[1]}')
-    # Mọi điều luật dẫn trong bài, kể cả cột Điều của hai bảng, có trong danh sách nguồn của đúng văn bản ấy.
+    need_t('Altonji, Blom và Meghir', 'có lương cao hơn khoảng 75% so với nam học sư phạm')
+    # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 62 trên 286 ca.
+    claim('Van Such: 62 trên 286 ca là 21%', int(100 * 62 / 286) == 21, f'{100 * 62 / 286:.1f}%')
+    need_t('Van Such trong bài', 'xem 286 bệnh nhân')
+    need_t('Van Such trong bài', 'khác hẳn chẩn đoán lúc chuyển ở 62 ca (21%)')
+    # Mọi điều luật dẫn trong bài có trong danh sách nguồn của đúng văn bản ấy.
     # Mỗi mục có một văn bản mặc định ('*'); điều dẫn từ văn bản khác thì gán riêng. Điều mới chưa gán thì đỏ.
     VB = {'BLDS': 'Bộ luật Dân sự 2015', 'BLHS': 'Bộ luật Hình sự 2015', 'NĐ340': 'Nghị định 340/2025/NĐ-CP',
           'BHTG': 'Luật Bảo hiểm tiền gửi 2025', 'TT05': 'Thông tư 05/2026/TT-NHNN',
@@ -999,8 +965,6 @@ def phan_F2():
         arts = set()
         for g in re.findall(r'Điều (\d+(?:–\d+)?(?:, \d+(?:–\d+)?)*)', chu(muc(sid))):
             arts |= dieu(g)
-        for _, d in LAW.get(sid, []):
-            arts |= dieu(d)
         for a in sorted(arts, key=int):
             k = GAN.get(sid, {}).get(a) or GAN.get(sid, {}).get('*')
             claim(f'{sid}: Điều {a} được gán một văn bản', k is not None, 'thêm vào GAN')
@@ -1054,7 +1018,7 @@ def phan_F2():
             'họp lần đầu 28/11/1660; khẩu hiệu Nullius in verba từ hiến chương 1662',
             'Kant, “Khai sáng là gì?”, 12/1784', 'Adam Smith, Của cải của các quốc gia (1776)',
             'Mười người chia công đoạn làm hơn 48.000 cây ghim mỗi ngày', 'Darwin, Nguồn gốc các loài (24/11/1859)',
-            'Tuyên ngôn của Đảng Cộng sản (2/1848)', 'Hiến pháp 2013, Điều 4',
+            'Tuyên ngôn của Đảng Cộng sản (2/1848)', 'nền tảng tư tưởng của Đảng, ghi trong Hiến pháp',
             'Monet, Ấn tượng, mặt trời mọc (1872), bày năm 1874', '(25/4/1874)',
             'Bình Ngô đại cáo (tháng Chạp năm Đinh Mùi 1427, âm lịch)', '“Việc nhân nghĩa cốt ở yên dân”',
             'Tuyên ngôn Độc lập (2/9/1945)', 'Đại hội VI của Đảng, 15–18/12/1986',
@@ -1075,37 +1039,30 @@ def phan_F2():
             'tương quan thứ hạng tài sản giữa cha mẹ và con là 0,3–0,4, giữa ông bà và cháu chỉ 0,1–0,2',
             'ít nhất một nửa', 'khoảng một phần tư', 'Gregory Clark (The Son Also Rises, 2014)',
             'Với 18.869 người mang họ hiếm ở Anh và xứ Wales', 'từ 1858 tới 2012',
-            'hệ số truyền ẩn 0,70–0,75 mỗi đời', 'Torche và Corvalán (2018)',
+            'hệ số truyền ẩn 0,70–0,75 mỗi đời', 'Torche và Corvalán, 2018',
             '“70% mất ở đời thứ hai, 90% ở đời thứ ba”', '(Williams và Preisser, 2003)', '3.250 gia đình giàu',
             '“tỉ lệ thất bại 70%”', 'James Grubman (2022)', 'nghiên cứu năm 1987 của John Ward',
-            'tỉ lệ 30% doanh nghiệp', 'Holtz-Eakin, Joulfaian và Rosen (Quarterly Journal of Economics, 1993)',
-            'khoảng 150.000 USD', 'cao gấp khoảng bốn lần người nhận dưới 25.000 USD', '(Điều 645;',
+            'tỉ lệ 30% doanh nghiệp', 'Holtz-Eakin, Joulfaian và Rosen, Quarterly Journal of Economics, 1993',
+            'khoảng 150.000 USD', 'cao gấp khoảng bốn lần người nhận dưới 25.000 USD',
         ],
         's-daycon': [
-            'Whitebread và Bingham (Đại học Cambridge, 2013)', 'tới khoảng 7 tuổi', 'PISA 2022 (OECD, 2024)',
+            'Whitebread và Bingham, 2013', 'tới khoảng 7 tuổi', 'PISA 2022 (OECD, 2024)',
             'học sinh 15 tuổi ở 20 nước và vùng; Việt Nam không có trong phần này', 'cao hơn 12 điểm',
             'thấp hơn 13 điểm',
             '83% học sinh nói mình có thể tự quyết tiêu tiền vào gì; nhóm này cao hơn khoảng 30 điểm',
             '70% học sinh tự tiêu khoản nhỏ', 'Lý thuyết tự quyết (Ryan và Deci, 2000)',
-            'Hart và Risley (1995) quan sát 42 gia đình Mỹ, mỗi tháng một giờ, trong hai năm rưỡi; chỉ 6 gia đình',
-            'một tuần 100 giờ thức, rồi thành bốn năm',
-            'khoảng 45 triệu từ ở nhà làm nghề chuyên môn so với 13 triệu ở nhà nhận trợ cấp',
-            '“Khoảng cách 30 triệu từ.”', 'Sperry, Sperry và Miller (2019) quan sát 42 trẻ ở năm cộng đồng Mỹ',
-            'Nhóm Golinkoff (2019)', 'Romeo và cộng sự (2018), trên 36 trẻ 4–6 tuổi',
+            '“Khoảng cách 30 triệu từ.” Hart và Risley (1995) quan sát 42 gia đình Mỹ, mỗi tháng một giờ',
+            'nghe khoảng 45 triệu từ, trẻ nhà nhận trợ cấp khoảng 13 triệu', 'Sperry và cộng sự, 2019',
+            'Romeo và cộng sự, 2018',
             'năm 1885, Mrs. Dymond của Anne Isabella Thackeray Ritchie', 'chỉ xuất hiện từ năm 1976', '臨河而羨魚，不如歸家織網。',
             'Hoài Nam Tử · thiên Thuyết lâm huấn', 'Altonji, Blom và Meghir (Annual Review of Economics, 2012)',
-            'Với số liệu Mỹ năm 2009', '(0,561 điểm log, tức cao hơn khoảng 75%)', '(0,577 điểm log)',
-            'Deci, Koestner và Ryan (1999)',
+            'Với số liệu Mỹ năm 2009', 'Deci, Koestner và Ryan, 1999',
         ],
         's-honnhan': [
-            'Karney và Bradbury (Psychological Bulletin, 1995) tổng quan 115 nghiên cứu theo dõi dài hạn với hơn 45.000 cuộc hôn nhân',
+            'Tổng quan 115 nghiên cứu với hơn 45.000 cuộc hôn nhân (Karney và Bradbury, 1995)',
             'Gottman và Levenson (2000) theo dõi các cặp vợ chồng trong 14 năm', '“dự báo đúng hơn 90%”',
-            'Heyman và Smith Slep (2001)', 'các cặp mới cưới năm 1998', '(Stanley, Bradbury và Markman, 2000)',
-            'Dew, Britt và Huston (2012), theo dõi 4.574 cặp vợ chồng Mỹ', 'số 52/2014/QH13, hiệu lực từ 01/01/2015',
-            'Luật số 81/2025/QH15', '121/VBHN-VPQH (2025)', '(Điều 33, 43)', '(Điều 47)', '(Điều 49)', '(Điều 38)',
-            'Nếu đã có thoả thuận hợp lệ, vợ chồng có thể sửa, bổ sung nội dung theo đúng hình thức',
-            'Ross, Nguyen, Karney và Bradbury (2022) kiểm lại trên 388 cặp mới cưới',
-            'không làm phát sinh quyền, nghĩa vụ vợ chồng (Điều 14)', 'có tính công nội trợ như lao động có thu nhập (Điều 16)',
+            'Heyman và Smith Slep, 2001', 'Theo dõi 4.574 cặp vợ chồng Mỹ (Dew, Britt và Huston, 2012)',
+            'Kiểm lại trên 388 cặp mới cưới thu nhập thấp (Ross và cộng sự, 2022)',
         ],
         's-tinhyeu': [
             'Gộp 43 nghiên cứu theo dõi 11.196 cặp, Joel và cộng sự (2020)', 'giải thích khoảng 45% mức hài lòng hiện tại',
@@ -1123,27 +1080,25 @@ def phan_F2():
             'gọi 113', 'Tổng đài quốc gia 117, 24/7', 'tổng hợp trên hơn 50.000 người xác nhận cả ba, mạnh nhất là mức hài lòng',
             'nghiên cứu ở 11 thành phố Mỹ',
         ],
+        # Bộ luật Dân sự 2015: Điều 650–651 (hàng thừa kế thứ nhất), 644 (hai phần ba suất), 615 (nợ trong phạm vi
+        # di sản), 140 (uỷ quyền chấm dứt khi người uỷ quyền chết); Luật Đất đai 2024 Điều 27, Luật Nhà ở 2023 Điều 164
+        # (công chứng); Luật Kinh doanh bảo hiểm 2022 Điều 4, 41 (người thụ hưởng). Trang chỉ giữ việc cần làm, không số điều.
         's-giayto': [
-            'tới tháng 10/2026', 'người 15–18 tuổi được lập', 'trong 5 ngày làm việc', 'sau 3 tháng',
-            '30 năm với bất động sản, 10 năm với động sản',
-            'xác nhận hoặc bác bỏ quyền thừa kế: 10 năm; đòi người thừa kế trả nợ của người mất: 3 năm',
-            'Bộ luật Dân sự số 91/2015/QH13, hiệu lực từ 01/01/2017', 'Luật số 142/2025/QH15',
-            'phần di sản là 1,2 tỷ đồng', 'một suất theo luật là 300 triệu',
-            'tức 200 triệu, cộng lại 800 triệu; em trai nhận 400 triệu', '(Điều 140)',
-            'chỉ có hiệu lực một năm (Điều 563)', '(Luật Đất đai 2024, Điều 27)', '(Luật Nhà ở 2023, Điều 164)',
-            'kỳ họp Quốc hội tháng 10/2026', '(Luật Kinh doanh bảo hiểm 2022, Điều 4)', '(Điều 41)',
-            'Từ 01/01/2026, Luật Công nghiệp công nghệ số (số 71/2025/QH15, Điều 46)', '(Điều 615)', '(Điều 643)',
-            '(Điều 647)', '(Điều 636)', 'Van Such và cộng sự (2017) xem 286 bệnh nhân', 'năm 2009–2010',
-            '36 ca (12%)', '188 ca (66%)', '62 ca (21%)', 'Luật Công chứng 2024 (hiệu lực từ 01/07/2025)',
-            '04/2026/QH16, hiệu lực từ 01/01/2027',
+            'tới tháng 10/2026', 'chia đều cho vợ hoặc chồng, cha mẹ và các con, kể cả con nuôi',
+            'vẫn nhận ít nhất hai phần ba phần họ được hưởng nếu chia theo luật',
+            'chỉ trả nợ của người mất trong phạm vi tài sản được nhận',
+            'Giấy uỷ quyền hết hiệu lực khi người uỷ quyền mất',
+            'Mua bán, tặng cho, thế chấp nhà đất phải công chứng hoặc chứng thực',
+            'Tiền bảo hiểm trả cho người thụ hưởng ghi trong hợp đồng, không chia theo di chúc',
+            'Van Such và cộng sự, 2017',
         ],
         # Tâm kế: số liệu từ abstract và bảng 2 của O'Boyle và cộng sự (2012), abstract của Spurk và cộng sự
         # (2016), Harsey và Freyd (2020); phép thử công khai theo Kant (bản Campbell Smith) và Nudge (2008).
         's-thecuoc': [
             'O’Boyle và cộng sự (2012) gộp 245 mẫu, 43.907 người', 'tương quan −0,07 với hiệu suất công việc',
             'tương quan 0,25 với hành vi phản tác dụng', 'khảo sát 793 người mới đi làm ở Đức',
-            'thang Mach IV gồm 20 câu', 'Kant (Bàn về hoà bình vĩnh cửu, 1795, phụ lục II)',
-            'chỉ có chiều phủ định', 'mà họ gán cho Rawls (1971)', 'Jennifer Freyd (1997) đặt tên DARVO',
+            'thang Mach IV gồm 20 câu', 'Kant (Bàn về hoà bình vĩnh cửu, 1795)',
+            'chỉ có chiều phủ định', 'Jennifer Freyd (1997) đặt tên DARVO',
         ],
     }
     for sid, xs in NGUON.items():
@@ -1200,7 +1155,7 @@ def phan_G():
         's-thuongluong': ['phương án tốt nhất ấy là BATNA', 'không dùng làm lời đe doạ'],
         's-memcung': ['chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
-        's-giayto': ['quyền của người thừa kế được luật bảo vệ'],
+        's-giayto': ['nên công chứng', 'di chúc không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên'],
         's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn'],
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
         's-nhantin': ['ngừng nhắc', 'Không tìm kênh khác để vượt ranh giới'],
