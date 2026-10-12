@@ -1008,28 +1008,22 @@ def phan_F2():
             'rộng nhất vào 11/2022, lúc thị trường lao động rất căng: 7,7% so với 5,5%', '(6/2025: 4,3% so với 4,4%)',
         ],
         's-vanminh': [
-            'E. D. Hirsch (Cultural Literacy, 1987)', 'Recht và Leslie (1988) cho 64 học sinh trung học cơ sở',
-            'Aronowitz và Giroux (Harvard Educational Review, 1988)',
-            '“các truyền thống cốt lõi của văn minh phương Tây”', 'Mười sáu ý tưởng làm nền',
-            'Socrates (469–399 TCN), qua Plato', 'Khổng Tử (551–479 TCN theo truyền thống), Mạnh Tử',
-            '“Biết đủ là giàu”', 'Đức Phật (khoảng thế kỷ 5 TCN; niên đại còn tranh luận)',
-            'Epictetus (sinh khoảng thập niên 50, mất khoảng năm 135; từng là nô lệ)',
-            'Ý, từ thế kỷ 14; chính yếu thế kỷ 15–16', 'Pascal và Fermat, năm lá thư mùa hè 1654',
-            'họp lần đầu 28/11/1660; khẩu hiệu Nullius in verba từ hiến chương 1662',
-            'Kant, “Khai sáng là gì?”, 12/1784', 'Adam Smith, Của cải của các quốc gia (1776)',
-            'Mười người chia công đoạn làm hơn 48.000 cây ghim mỗi ngày', 'Darwin, Nguồn gốc các loài (24/11/1859)',
-            'Tuyên ngôn của Đảng Cộng sản (2/1848)', 'nền tảng tư tưởng của Đảng, ghi trong Hiến pháp',
-            'Monet, Ấn tượng, mặt trời mọc (1872), bày năm 1874', '(25/4/1874)',
-            'Bình Ngô đại cáo (tháng Chạp năm Đinh Mùi 1427, âm lịch)', '“Việc nhân nghĩa cốt ở yên dân”',
-            'Tuyên ngôn Độc lập (2/9/1945)', 'Đại hội VI của Đảng, 15–18/12/1986',
-            '938 Ngô Quyền đánh tan quân Nam Hán trên sông Bạch Đằng',
-            '1802 Nguyễn Ánh lên ngôi, lấy niên hiệu Gia Long', 'gần ba thế kỷ nội chiến và chia cắt (Lê – Mạc, Trịnh – Nguyễn, Tây Sơn – Nguyễn)',
-            '1/9/1858 Liên quân Pháp – Tây Ban Nha nổ súng vào thành Đà Nẵng', '2/9/1945 Tuyên ngôn Độc lập',
-            '7/5/1954 Chiến thắng Điện Biên Phủ; Hiệp định Genève ký tháng 7/1954',
-            '30/4/1975 Chiến dịch Hồ Chí Minh kết thúc', '12/1986 Đại hội VI đề ra đường lối Đổi mới',
-            'Phan Kế Bính, Việt Nam phong tục (1915)', 'Đào Duy Anh, Việt Nam văn hoá sử cương (1938)',
-            'Văn minh An Nam (1944)', 'E. H. Gombrich, The Story of Art (1950)',
-            'Bill Bryson, A Short History of Nearly Everything (2003)',
+            ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh'),
+            ('Aronowitz và Giroux', '1988'), 'Mười sáu ý tưởng làm nền',
+            ('Socrates', '469–399 TCN', 'Plato'), ('Khổng Tử', '551–479 TCN', 'Mạnh Tử'), '“Biết đủ là giàu”',
+            ('Đức Phật', 'thế kỷ 5 TCN'), ('Epictetus', '50–135', 'nô lệ'), ('Phục hưng', 'thế kỷ 14–16'),
+            ('Pascal và Fermat', '1654'), ('Hội Hoàng gia Anh', '1660', 'Nullius in verba'), ('Kant', '1784'),
+            ('Adam Smith', 'Của cải của các quốc gia', '1776', '48.000 cây ghim'), ('Darwin', 'Nguồn gốc các loài', '1859'),
+            ('Tuyên ngôn của Đảng Cộng sản', '1848'), 'nền tảng tư tưởng của Đảng, ghi trong Hiến pháp',
+            ('Monet', 'Ấn tượng, mặt trời mọc', '1872', '1874'), ('Bình Ngô đại cáo', 'Đinh Mùi 1427', 'âm lịch'),
+            '“Việc nhân nghĩa cốt ở yên dân”', ('Hồ Chí Minh, Tuyên ngôn Độc lập', '2/9/1945', 20),
+            ('Đại hội VI của Đảng', '12/1986', 20), ('Ngày Quốc khánh', '2/9/1945', 40), ('Đại hội VI mở đường Đổi mới', '12/1986', 20),
+            ('Ngô Quyền', '938', 'Nam Hán', 'Bạch Đằng'), ('Gia Long', '1802', 'gần ba thế kỷ'),
+            ('1/9/1858', 'Tây Ban Nha', 'Đà Nẵng'), ('7/5/1954', 'Điện Biên Phủ', 'Genève', '7/1954'),
+            ('30/4/1975', 'Chiến dịch Hồ Chí Minh'),
+            ('Phan Kế Bính', 'Việt Nam phong tục', '1915'), ('Đào Duy Anh', 'Việt Nam văn hoá sử cương', '1938'),
+            ('Văn minh An Nam', '1944'), ('Gombrich', 'The Story of Art', '1950'),
+            ('Bryson', 'A Short History of Nearly Everything', '2003'),
         ],
         's-thehe': [
             'Gia huấn ca (tương truyền của Nguyễn Trãi, tác giả còn tồn nghi)', 'Lẽ tục phú',
@@ -1102,7 +1096,9 @@ def phan_F2():
     for sid, xs in NGUON.items():
         t = chu(muc(sid))
         for x in xs:
-            if isinstance(x, tuple):
+            if isinstance(x, tuple) and isinstance(x[-1], int):
+                du_kien(sid, 'dữ kiện từ nguồn', *x[:-1], w=x[-1])
+            elif isinstance(x, tuple):
                 du_kien(sid, 'dữ kiện từ nguồn', *x)
             else:
                 claim(f'{sid}: chuỗi từ nguồn', x in t, f'không thấy “{x}”')
