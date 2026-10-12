@@ -1069,7 +1069,7 @@ def phan_F2():
             '求則得之，舍則失之，是求有益於得也，求在我者也。求之有道，得之有命，是求無益於得也，求在外者也。',
             'Mạnh Tử · thiên Tận tâm thượng',
             '938 Ngô Quyền đánh tan quân Nam Hán trên sông Bạch Đằng',
-            '1802 Nguyễn Ánh lên ngôi, lấy niên hiệu Gia Long', 'gần 300 năm chia cắt Trịnh – Nguyễn',
+            '1802 Nguyễn Ánh lên ngôi, lấy niên hiệu Gia Long', 'gần ba thế kỷ nội chiến và chia cắt (Lê – Mạc, Trịnh – Nguyễn, Tây Sơn – Nguyễn)',
             '1/9/1858 Liên quân Pháp – Tây Ban Nha nổ súng vào thành Đà Nẵng', '2/9/1945 Tuyên ngôn Độc lập',
             '7/5/1954 Chiến thắng Điện Biên Phủ; Hiệp định Genève ký tháng 7/1954',
             '30/4/1975 Chiến dịch Hồ Chí Minh kết thúc', '12/1986 Đại hội VI đề ra đường lối Đổi mới',
