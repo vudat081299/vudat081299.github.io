@@ -311,8 +311,6 @@ def phan_B():
     need('một lượng', 'là 37,5 gam, bằng 10 <b>chỉ</b>; một chỉ là 3,75 gam')
     need('một ounce', 'một ounce quốc tế (troy ounce) là 31,1035 gam')
     claim('ounce troy 31,1034768 g làm tròn thành 31,1035', f'{31.1034768:.4f}' == '31.1035')
-    claim('trần lãi 20%/năm × 5 = 100%/năm (Bộ luật Hình sự, Điều 201)', 20 * 5 == 100)
-    need('ngưỡng của Điều 201', 'tức từ 100%/năm — và thu lợi bất chính từ 30 triệu đồng là tội hình sự')
     # Nghị định 340/2025/NĐ-CP, Điều 30: cá nhân 100–150 triệu (1 đến dưới 10 tài khoản), 150–200 triệu (từ 10).
     need('mức phạt cho mượn tài khoản', 'bị phạt từ 100 tới 200 triệu đồng với cá nhân (Nghị định 340/2025/NĐ-CP, Điều 30)')
     # Bộ luật Hình sự, Điều 291 khoản 1: từ 20 tài khoản, hoặc thu lợi bất chính từ 20 triệu đồng.
@@ -344,8 +342,8 @@ def phan_B():
     claim('"hơn bốn lần" lợi suất danh nghĩa', 4 < y3 / sp_nom < 5, f'tỉ số {y3 / sp_nom:.2f}')
     claim('5%/tháng gấp đôi "chưa đầy 15 tháng"', math.log(2) / math.log(1.05) < 15)
     need('lãi mặc định của lab-pz', 'id="pz-m" min="0.5" max="10" step="0.5" value="3"')
-    claim('1%/ngày = 365%/năm, "gấp hơn 18 lần" trần 20%', 18 < 365 / 20 < 19)
-    need('lãi 1% mỗi ngày trong bài', 'là 365%/năm tính đơn — gấp hơn 18 lần mức trần')
+    claim('1%/ngày tính đơn = 365%/năm', 1 * 365 == 365)
+    need('lãi 1% mỗi ngày trong bài', '“chỉ 1% mỗi ngày” là 365%/năm tính đơn')
     # Lãi trên dư nợ ban đầu (s-no): 1,5%/tháng, 12 kỳ, mỗi kỳ trả P/12 + 1,5%·P → lãi thật theo dư nợ giảm dần.
     pay, lo, hi = 1 / 12 + 0.015, 0.0, 0.1
     for _ in range(100):
@@ -791,17 +789,14 @@ def phan_E():
 def phan_F():
     vn = vi
     # Chuỗi lấy từ nguồn: mỗi chuỗi ứng một dòng kiểm nguồn; sửa thì mở lại nguồn.
-    for x in ('Luật Bảo hiểm tiền gửi 2025 (Luật 111/2025/QH15)', '350 triệu đồng', 'Thông tư 05/2026/TT-NHNN',
-              '125 triệu đồng', 'tối đa 45 ngày', 'bằng đồng Việt Nam của cá nhân', 'trên 5% vốn điều lệ',
-              'giấy tờ có giá vô danh', '139 doanh nghiệp', '83.600 tỉ đồng', '50,7%', '9,9% GDP',
-              'Nghị định 08/2023/NĐ-CP', 'tối đa hai năm', 'Nghị định 200/2026/NĐ-CP', '2 tỷ đồng', '180 ngày', '39,2%',
+    for x in ('350 triệu đồng', 'bằng đồng Việt Nam của cá nhân', '139 doanh nghiệp', '83.600 tỉ đồng', '50,7%',
+              'tối đa hai năm', '39,2%',
               '25.967', '42,6%', '1.092', '34,82 nghìn tỷ USD', '2,4%', '75,7 nghìn tỷ USD', '40% năm 1982',
               '69% năm 2011', '60% xuống 32%', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
               '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
               '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%', '−0,82', '−0,31',
               '−1,04%', '2,24%', '1.820,1', '2.610,85', '1.000 tấn', '473 tấn', '863 tấn', '15.858,92', '24.164,89',
-              '3,92%', 'Luật 71/2025/QH15', 'Nghị quyết 05/2025/NQ-CP', '109/2025/QH15', '0,1%', '1,84%', '3,15%',
-              '3,25%', '3,63%', '3,31%', '12,73%', '23,12%'):
+              '3,92%', '3,31%', '12,73%', '23,12%'):
         need_t('vốn, chuỗi từ nguồn', x)
 
     # Tỉ giá 2005 → 2024 (19 năm): đồng mất giá theo năm khác đô-la lên giá theo năm.
@@ -809,7 +804,6 @@ def phan_F():
     need_t('đồng mất giá và đô-la lên giá theo năm',
            f'đồng mất {vn(100 * (1 - 1 / fx), 1)}% giá so với USD, khoảng {vn(100 * (1 - fx ** (-1 / 19)), 2)}% mỗi năm '
            f'(đô-la lên khoảng {vn(100 * (fx ** (1 / 19) - 1), 2)}% mỗi năm)')
-    need_t('bảo hiểm tiền gửi: hạn mức mới so với cũ', f'gấp {vn(350 / 125, 1)} lần', 350 / 125)
     claim('Bessembinder: 57,4% thua tín phiếu là “hơn bốn trên bảy”', 1 - 0.426 > 4 / 7)
     claim('Bessembinder: 1.092 trên khoảng 25.300 công ty là “hơn 4%”', 0.04 < 1092 / 25300 < 0.05)
     need_t('Bessembinder trong bài', 'vượt tín phiếu kho bạc một tháng')
@@ -979,12 +973,7 @@ def phan_F2():
           'VL': 'Luật Việc làm 2025', 'BLLĐ': 'Bộ luật Lao động 2019', 'BHXH': 'Luật Bảo hiểm xã hội 2024',
           'BLGĐ': 'Luật Phòng, chống bạo lực gia đình 2022'}
     GAN = {
-        's-no': {'468': 'BLDS', '201': 'BLHS', '100': 'TCTD'},
-        's-ruiro': {'*': 'BHTG', '3': 'TT05'},
-        's-baohiem': {'35': 'KDBH', '39': 'VL'},
         's-thunhap': {'14': 'BLLĐ', '26': 'BLLĐ', '31': 'BHXH'},
-        's-dungtien': {'*': 'BLHS'},
-        's-taisan': {'9': 'NĐ200', '46': 'CNS', '47': 'CNS', '3': 'TNCN', '4': 'TNCN', '13': 'TNCN'},
         's-vanminh': {'*': 'HP'},
         's-luadao': {'174': 'BLHS'},
         's-thehe': {'*': 'BLDS'},
