@@ -1161,6 +1161,9 @@ def phan_G():
         for phrase in phrases:
             claim(f'bản gọn {sid}: điều kiện luôn hiện', phrase in visible, f'không thấy “{phrase}” ngoài details')
     claim('bản gọn: cả 12 luật có giải nghĩa luôn hiện', compact.law_notes == 12, str(compact.law_notes))
+    dai = [n for n, x in enumerate(re.findall(r'<p class="hc-item__brief">(.*?)</p>', muc('s-muoihai'), flags=re.S), 1)
+           if len(chu(x).split()) > 25]
+    claim('bản gọn: dòng giải nghĩa của mỗi luật tối đa 25 chữ', not dai, 'luật ' + ', '.join(map(str, dai)))
     # Tiêu đề mục thiếu class thì mất cỡ chữ và luật ngắt trang của bản in (Phần 7 từng thiếu cả sáu).
     bare = [sid for sid, h2 in re.findall(r'<section id="(s-[a-z]+)">\s*<p class="hc-eyebrow-sec">.*?</p>\s*(<h2[^>]*>)', HTML, flags=re.S)
             if 'hc-sec-title' not in h2]
