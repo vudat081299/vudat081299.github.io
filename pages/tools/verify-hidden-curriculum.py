@@ -26,13 +26,15 @@ Bảy phần, bảy loại sai khác nhau:
      có thật, không có HTML trong dữ liệu, số thẻ khớp đầu trang, và mỗi con số trong thẻ có mặt
      nguyên số trong chính các mục thẻ trỏ tới (không chỉ ở đâu đó trên trang).
   F. VỐN, NGHỀ, GIA ĐÌNH — các mục rủi ro, tạo của, doanh nghiệp, danh mục, tài sản, nghề, gia đình:
-     chuỗi lấy từ nguồn (số liệu chính thức, tác giả và năm) giữ nguyên văn trong đúng mục, thân bài
-     không dẫn số điều luật hay số hiệu văn bản (PAGES-015), năm can chi tính lại từ năm dương lịch,
+     dữ kiện lấy từ nguồn (con số kèm đơn vị, tác giả và năm) phải có mặt và đứng gần nhau trong đúng
+     mục — kiểm số, không kiểm câu văn (du_kien) —, thân bài không dẫn số điều luật hay số hiệu văn bản
+     (PAGES-015), năm can chi tính lại từ năm dương lịch,
      và mọi con số suy ra được tính lại trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn
      trong giá, thứ tự lợi suất, trái phiếu…).
   G. BẢN GỌN — định nghĩa và điều kiện quan trọng phải còn ngoài phần chi tiết; mỗi mục nội dung có
      đúng một khung “Luật của mục này”. Không thay được review ngữ nghĩa; bắt hồi quy khi gấp nhầm
-     điều kiện vào details hoặc bỏ lời giải nghĩa của mười hai luật ở mục 11.2.
+     điều kiện vào details hoặc bỏ lời giải nghĩa của mười hai luật ở mục 11.2,
+     hoặc để lời ấy dài quá 25 chữ.
 
 Cổng không kiểm bảng tóm tắt (s-tomtat) khớp lời từng khung luật, cũng không kiểm mỗi nguồn trong
 s-nguon còn được thân bài dẫn: hai việc ấy rà bằng tay khi sửa một mục.
@@ -112,6 +114,20 @@ def chu(h):
     thành “tiền,”), giải mã thực thể, gộp khoảng trắng."""
     h = re.sub(r'</?(?:p|div|td|th|tr|li|ol|ul|h2|h3|h4|table|thead|tbody|figure|figcaption|blockquote)\b[^>]*>', ' ', h)
     return re.sub(r'\s+', ' ', html.unescape(re.sub(r'<[^>]+>', '', h))).strip()
+
+
+def du_kien(sid, label, *xs, w=200):
+    """Đòi một DỮ KIỆN trong mục sid: mọi chuỗi xs (con số kèm đơn vị, tên nguồn, năm) có mặt trong chữ
+    của mục và cách chuỗi đầu không quá w ký tự. Kiểm số và nguồn, không kiểm câu văn: viết lại câu thì
+    vẫn xanh, sửa lệch một số thì đỏ."""
+    global checks
+    checks += 1
+    t = chu(muc(sid))
+    for m in re.finditer(re.escape(xs[0]), t):
+        win = t[max(0, m.start() - w):m.end() + w]
+        if all(x in win for x in xs[1:]):
+            return
+    fails.append(f'{sid}: {label}: không thấy ' + ' … '.join(f'“{x}”' for x in xs) + ' gần nhau')
 
 
 def arr(name):
@@ -808,15 +824,10 @@ def phan_F():
               'tối đa hai năm', '39,2%', '25.967', '42,6%', '1.092', '34,82 nghìn tỷ USD', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
               '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
               '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%', '−0,82', '−0,31',
-              '−1,04%', '2,24%', '1.820,1', '2.610,85', '1.000 tấn', '473 tấn', '863 tấn', '15.858,92', '24.164,89',
-              '3,92%', '3,31%', '12,73%', '23,12%'):
+              '−1,04%', '2,24%', '1.820,1', '2.610,85', '1.000 tấn', '473 tấn', '15.858,92', '24.164,89',
+              '3,31%', '12,73%', '23,12%'):
         need_t('vốn, chuỗi từ nguồn', x)
 
-    # Tỉ giá 2005 → 2024 (19 năm): đồng mất giá theo năm khác đô-la lên giá theo năm.
-    fx = 24164.8858 / 15858.9167
-    need_t('đồng mất giá và đô-la lên giá theo năm',
-           f'đồng mất {vn(100 * (1 - 1 / fx), 1)}% giá so với USD, khoảng {vn(100 * (1 - fx ** (-1 / 19)), 2)}% mỗi năm '
-           f'(đô-la lên khoảng {vn(100 * (fx ** (1 / 19) - 1), 2)}% mỗi năm)')
     claim('Bessembinder: 57,4% thua tín phiếu là “hơn bốn trên bảy”', 1 - 0.426 > 4 / 7)
     claim('Bessembinder: 1.092 trên khoảng 25.300 công ty là “hơn 4%”', 0.04 < 1092 / 25300 < 0.05)
     need_t('Bessembinder trong bài', 'vượt tín phiếu kho bạc một tháng')
@@ -878,12 +889,10 @@ def phan_F():
     for i, (a, b) in enumerate(zip(run(good), run(bad)), start=1):
         need_t(f'thứ tự lợi suất, năm {i}', f'{i} {vn(a, 1)} {vn(b, 1)}')
     prod = 1.2 * 1.1 * 0.8 * 0.9
-    need_t('thứ tự lợi suất: tích bốn thừa số', vn(prod, 4))
     need_t('thứ tự lợi suất: không rút', vn(1000 * prod, 1))
     need_t('thứ tự lợi suất: chênh hai kết cục', vn(run(good)[-1] - run(bad)[-1], 2))
-    need_t('góp đều, năm xấu trước', vn(run(bad, 60)[-1], 2))
-    need_t('góp đều, năm tốt trước', vn(run(good, 60)[-1], 2))
     claim('góp đều thì năm xấu trước lại tốt hơn', run(bad, 60)[-1] > run(good, 60)[-1])
+    du_kien('s-danhmuc', 'công thức: sàn với σ 30%, ρ 0,3', '30% × √0,3', f'khoảng {vn(30 * math.sqrt(0.3), 1)}%')
 
     def bond(c, n, y):
         return sum(c / (1 + y) ** t for t in range(1, n + 1)) + 100 / (1 + y) ** n
@@ -892,14 +901,14 @@ def phan_F():
     need_t('trái phiếu 10 năm khi lãi xuống 3%', vn(bond(5, 10, 0.03), 2))
     need_t('trái phiếu 2 năm', f'giá giảm {vn(100 - bond(5, 2, 0.07), 2)}%')
 
-    need_t('lợi suất thực với 5% và 3,31%', f'{vn((1.05 / 1.0331 - 1) * 100, 2)}%/năm')
-    need_t('phép trừ nhanh', f'{vn(5 - 3.31, 2)}%')
-    need_t('lợi suất thực năm 2008', f'{vn((1.1273 / 1.2312 - 1) * 100, 1)}%')
-    need_t('phép trừ năm 2008', f'{vn(12.73 - 23.12, 1)}%')
+    du_kien('s-taisan', 'lãi thực với lãi 5% và lạm phát 3,31%', '3,31%', f'{vn((1.05 / 1.0331 - 1) * 100, 2)}%/năm')
+    du_kien('s-taisan', 'lãi thực năm 2008', '2008', '12,73%', '23,12%', f'{vn((1.1273 / 1.2312 - 1) * 100, 1)}%')
     fx = 24164.89 / 15858.92
     need_t('đồng mất giá so với USD 2005 → 2024', f'mất {vn((1 - 1 / fx) * 100, 1)}%')
     need_t('mất giá bình quân năm', f'khoảng {vn((fx ** (1 / 19) - 1) * 100, 2)}% mỗi năm')
-    need_t('giá vàng cuối 2021 → cuối 2024', f'tức {vn((2610.85 / 1820.1 - 1) * 100, 1)}%')
+    du_kien('s-vang', 'giá vàng cuối 2021 → cuối 2024', 'cuối 2024', f'tăng {vn((2610.85 / 1820.1 - 1) * 100, 1)}%')
+    du_kien('s-vang', 'lãi thực TIPS cuối 2021 → cuối 2024', '−1,04%', '2,24%', 'TIPS', w=400)
+    du_kien('s-vang', 'Erb và Harvey', 'Erb và Harvey', '2013', '−0,82', '−0,31', '1997–2012', w=600)
     # Lãi tiền gửi và lạm phát Việt Nam 2005–2023 (World Bank FR.INR.DPST, FP.CPI.TOTL.ZG), bình quân nhân.
     dep = [7.145, 7.63, 7.492, 12.73, 7.91, 11.194, 13.993, 10.504, 7.14, 5.758, 4.747, 5.035, 4.809, 4.738,
            4.975, 4.12, 3.375, 3.817, 4.781]
@@ -908,9 +917,10 @@ def phan_F():
     pd_, pi_ = math.prod(1 + x / 100 for x in dep), math.prod(1 + x / 100 for x in inf)
     n = len(dep)
     claim('chuỗi tiền gửi 2005–2023 đủ 19 năm', n == len(inf) == 19)
-    need_t('lãi tiền gửi bình quân', f'khoảng {vn((pd_ ** (1 / n) - 1) * 100, 1)}%/năm và giá')
-    need_t('lạm phát bình quân', f'khoảng {vn((pi_ ** (1 / n) - 1) * 100, 1)}%/năm: lãi thực')
-    need_t('lãi thực bình quân', f'chỉ khoảng {vn(((pd_ / pi_) ** (1 / n) - 1) * 100, 1)}%/năm')
+    du_kien('s-taisan', 'lãi tiền gửi, lạm phát và lãi thực bình quân 2005–2023', '2005–2023',
+            f'{vn((pd_ ** (1 / n) - 1) * 100, 1)}%/năm', f'{vn((pi_ ** (1 / n) - 1) * 100, 1)}%/năm',
+            f'{vn(((pd_ / pi_) ** (1 / n) - 1) * 100, 1)}%/năm')
+    du_kien('s-taisan', 'nguồn lãi tiền gửi 2005–2023', 'World Bank', '2005–2023')
     for ltv, x in ((0.5, 'mất 40%'), (0.7, 'mất 66,7%')):
         claim(f'vay {ltv:.0%}, giá −20%: vốn tự có {x}', vn((1 - (0.8 - ltv) / (1 - ltv)) * 100, 1).rstrip('0').rstrip(',') == x[4:-1])
         need_t(f'vay {ltv:.0%} trong bài', x)
@@ -926,23 +936,21 @@ def phan_F2():
     B = [15 * 1.10 ** (n - 1) for n in range(1, 21)]
     first = next(n for n in range(1, 21) if B[n - 1] > A[n - 1])
     cum = next(n for n in range(1, 21) if sum(B[:n]) > sum(A[:n]))
-    need_t('lương tháng của B vượt A', f'Lương tháng của B vượt A từ năm thứ {first}', first)
-    need_t('tổng thu nhập của B vượt A', f'tổng thu nhập cộng dồn của B vượt A từ năm thứ {cum}', cum)
-    need_t('năm thứ 20', f'A nhận khoảng {vn(A[-1], 1)} triệu/tháng, B khoảng {vn(B[-1], 1)} triệu')
-    need_t('cộng 20 năm', f'A nhận khoảng {vn(12 * sum(A) / 1000, 2)} tỷ đồng, B khoảng {vn(12 * sum(B) / 1000, 2)} tỷ')
+    du_kien('s-tichluy', 'lương tháng của B vượt A', 'Lương tháng', f'năm thứ {first}', w=60)
+    du_kien('s-tichluy', 'tổng tiền đã nhận của B vượt A', 'đã nhận', f'năm thứ {cum}', w=60)
+    du_kien('s-tichluy', 'năm thứ 20', 'Năm thứ 20', f'{vn(A[-1], 1)} triệu/tháng', f'{vn(B[-1], 1)} triệu', w=120)
     b20 = 15 * 1.10 ** 10 * 1.03 ** 9          # mười lần tăng 10%, rồi 3% như A
-    need_t('giả định khắc nghiệt hơn', f'B vẫn nhận khoảng {vn(b20, 1)} triệu/tháng, cao hơn A khoảng {round(100 * (b20 / A[-1] - 1))}%')
+    du_kien('s-tichluy', 'giả định khắc nghiệt hơn', f'{vn(b20, 1)} triệu/tháng', f'khoảng {round(100 * (b20 / A[-1] - 1))}%', w=80)
     # “khoảng cách ấy giữ nguyên tới cuối”: từ năm 11 cả hai cùng tăng 3%/năm, nên tỉ số B/A không đổi.
     ba = [15 * 1.10 ** min(n - 1, 10) * 1.03 ** max(n - 11, 0) / (20 * 1.03 ** (n - 1)) for n in range(11, 41)]
     claim('từ năm 11, tỉ số lương B/A không đổi', max(ba) - min(ba) < 1e-9, f'{min(ba):.6f}…{max(ba):.6f}')
-    need_t('khoảng cách giữ nguyên', 'và khoảng cách ấy giữ nguyên tới cuối, vì các lần tăng sau đều tính theo phần trăm')
+    du_kien('s-tichluy', 'khoảng cách giữ nguyên', 'giữ nguyên tới cuối', 'theo phần trăm', w=80)
     # Ngành học (s-daycon): 0,561 điểm log (Altonji, Blom và Meghir 2012) là khoảng 75%.
     claim('0,561 điểm log ≈ cao hơn 75%', round(100 * (math.exp(0.561) - 1)) == 75, f'{100 * (math.exp(0.561) - 1):.1f}%')
-    need_t('Altonji, Blom và Meghir', 'có lương cao hơn khoảng 75% so với nam học sư phạm')
+    du_kien('s-daycon', 'Altonji, Blom và Meghir: kỹ thuật điện so với sư phạm', 'kỹ thuật điện', 'khoảng 75%', 'sư phạm', w=60)
     # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 62 trên 286 ca.
     claim('Van Such: 62 trên 286 ca là 21%', int(100 * 62 / 286) == 21, f'{100 * 62 / 286:.1f}%')
-    need_t('Van Such trong bài', 'xem 286 bệnh nhân')
-    need_t('Van Such trong bài', 'khác hẳn chẩn đoán lúc chuyển ở 62 ca (21%)')
+    du_kien('s-giayto', 'Van Such: 62 trên 286 ca', 'Van Such', '2017', '286 bệnh nhân', '62 ca (21%)')
     # Thân bài không dẫn số điều luật hay số hiệu văn bản (PAGES-015); chi tiết ấy chỉ ở dòng Luật của s-nguon.
     so_hieu = re.compile(r'Điều \d|\b\d+/\d{4}/(?:QH|NĐ|TT|NQ|VBHN|UBTVQH)')
     lo = sorted({f'{sid}: {m.group(0)}' for sid in re.findall(r'<section id="(s-[a-z]+)">', HTML) if sid != 's-nguon'
@@ -960,16 +968,14 @@ def phan_F2():
     for c, h, y in cc:
         k = int(y) - 4
         claim(f'{c} {h} {y}', (CAN[k % 10], CHI[k % 12]) == (c, h), f'năm {y} là {CAN[k % 10]} {CHI[k % 12]}')
-    # Chuỗi lấy từ nguồn, trong đúng mục: tác giả, năm, tạp chí, cỡ mẫu, số đo, ngày tháng, số hiệu luật.
+    # Dữ kiện lấy từ nguồn, trong đúng mục: tác giả, năm, cỡ mẫu, số đo, ngày tháng. Một chuỗi phải có nguyên văn;
+    # một bộ là một dữ kiện (du_kien): các phần phải đứng gần nhau, số nguyên cuối bộ (nếu có) là cỡ cửa sổ.
     NGUON = {
         's-tichluy': [
-            'Merton (1968) gọi đó là hiệu ứng Matthew',
-            '(mô hình của Mincer, 1974)', 'ghép số liệu điều tra của 18 nước',
-            '(Mỹ, Đức, Canada, Anh)', 'dưới 5 năm kinh nghiệm 89,3%', '(Brazil, Chile, Mexico, Jamaica) chỉ 47,6%',
-            'có Việt Nam với số liệu năm 1998 và 2002, đều dưới 50%', 'A khởi điểm 20 triệu/tháng, mỗi năm tăng 3%',
-            'B khởi điểm 15 triệu ở một chỗ học nhanh hơn, mỗi năm tăng 10%',
-            '(Brynjolfsson và cộng sự, 2025)',
-            'tăng trung bình 15%', '(Becker, 1962)',
+            ('Merton', '1968', 'Matthew'), ('Mincer', '1974'), ('Lagakos', '2018', '18 nước', 'toàn thời gian'),
+            ('Mỹ, Đức, Canada, Anh', '20–24 năm', 'dưới 5 năm', '89,3%'), ('Brazil, Chile, Mexico, Jamaica', '47,6%'),
+            ('Việt Nam', '1998', '2002', 'dưới 50%'), ('A khởi điểm 20 triệu/tháng', 'tăng 3%'),
+            ('B khởi điểm 15 triệu', 'tăng 10%'), ('Brynjolfsson', '2025', '15%'), ('Becker', '1962'),
         ],
         's-moitruong': [
             '(Lazear, Shaw và Stanton, 2015)', 'nhiều hơn việc thêm một người vào nhóm chín người',
@@ -984,59 +990,48 @@ def phan_F2():
             'rộng nhất vào 11/2022, lúc thị trường lao động rất căng: 7,7% so với 5,5%', '(6/2025: 4,3% so với 4,4%)',
         ],
         's-vanminh': [
-            'E. D. Hirsch (Cultural Literacy, 1987)', 'Recht và Leslie (1988) cho 64 học sinh trung học cơ sở',
-            'Aronowitz và Giroux (Harvard Educational Review, 1988)',
-            '“các truyền thống cốt lõi của văn minh phương Tây”', 'Mười sáu ý tưởng làm nền',
-            'Socrates (469–399 TCN), qua Plato', 'Khổng Tử (551–479 TCN theo truyền thống), Mạnh Tử',
-            '“Biết đủ là giàu”', 'Đức Phật (khoảng thế kỷ 5 TCN; niên đại còn tranh luận)',
-            'Epictetus (sinh khoảng thập niên 50, mất khoảng năm 135; từng là nô lệ)',
-            'Ý, từ thế kỷ 14; chính yếu thế kỷ 15–16', 'Pascal và Fermat, năm lá thư mùa hè 1654',
-            'họp lần đầu 28/11/1660; khẩu hiệu Nullius in verba từ hiến chương 1662',
-            'Kant, “Khai sáng là gì?”, 12/1784', 'Adam Smith, Của cải của các quốc gia (1776)',
-            'Mười người chia công đoạn làm hơn 48.000 cây ghim mỗi ngày', 'Darwin, Nguồn gốc các loài (24/11/1859)',
-            'Tuyên ngôn của Đảng Cộng sản (2/1848)', 'nền tảng tư tưởng của Đảng, ghi trong Hiến pháp',
-            'Monet, Ấn tượng, mặt trời mọc (1872), bày năm 1874', '(25/4/1874)',
-            'Bình Ngô đại cáo (tháng Chạp năm Đinh Mùi 1427, âm lịch)', '“Việc nhân nghĩa cốt ở yên dân”',
-            'Tuyên ngôn Độc lập (2/9/1945)', 'Đại hội VI của Đảng, 15–18/12/1986',
-            '938 Ngô Quyền đánh tan quân Nam Hán trên sông Bạch Đằng',
-            '1802 Nguyễn Ánh lên ngôi, lấy niên hiệu Gia Long', 'gần ba thế kỷ nội chiến và chia cắt (Lê – Mạc, Trịnh – Nguyễn, Tây Sơn – Nguyễn)',
-            '1/9/1858 Liên quân Pháp – Tây Ban Nha nổ súng vào thành Đà Nẵng', '2/9/1945 Tuyên ngôn Độc lập',
-            '7/5/1954 Chiến thắng Điện Biên Phủ; Hiệp định Genève ký tháng 7/1954',
-            '30/4/1975 Chiến dịch Hồ Chí Minh kết thúc', '12/1986 Đại hội VI đề ra đường lối Đổi mới',
-            'Phan Kế Bính, Việt Nam phong tục (1915)', 'Đào Duy Anh, Việt Nam văn hoá sử cương (1938)',
-            'Văn minh An Nam (1944)', 'E. H. Gombrich, The Story of Art (1950)',
-            'Bill Bryson, A Short History of Nearly Everything (2003)',
+            ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh'),
+            ('Aronowitz và Giroux', '1988'), 'Mười sáu ý tưởng làm nền',
+            ('Socrates', '469–399 TCN', 'Plato'), ('Khổng Tử', '551–479 TCN', 'Mạnh Tử'), '“Biết đủ là giàu”',
+            ('Đức Phật', 'thế kỷ 5 TCN'), ('Epictetus', '50–135', 'nô lệ'), ('Phục hưng', 'thế kỷ 14–16'),
+            ('Pascal và Fermat', '1654'), ('Hội Hoàng gia Anh', '1660', 'Nullius in verba'), ('Kant', '1784'),
+            ('Adam Smith', 'Của cải của các quốc gia', '1776', '48.000 cây ghim'), ('Darwin', 'Nguồn gốc các loài', '1859'),
+            ('Tuyên ngôn của Đảng Cộng sản', '1848'), 'nền tảng tư tưởng của Đảng, ghi trong Hiến pháp',
+            ('Monet', 'Ấn tượng, mặt trời mọc', '1872', '1874'), ('Bình Ngô đại cáo', 'Đinh Mùi 1427', 'âm lịch'),
+            '“Việc nhân nghĩa cốt ở yên dân”', ('Hồ Chí Minh, Tuyên ngôn Độc lập', '2/9/1945', 20),
+            ('Đại hội VI của Đảng', '12/1986', 20), ('Ngày Quốc khánh', '2/9/1945', 40), ('Đại hội VI mở đường Đổi mới', '12/1986', 20),
+            ('Ngô Quyền', '938', 'Nam Hán', 'Bạch Đằng'), ('Gia Long', '1802', 'gần ba thế kỷ'),
+            ('1/9/1858', 'Tây Ban Nha', 'Đà Nẵng'), ('7/5/1954', 'Điện Biên Phủ', 'Genève', '7/1954'),
+            ('30/4/1975', 'Chiến dịch Hồ Chí Minh'),
+            ('Phan Kế Bính', 'Việt Nam phong tục', '1915'), ('Đào Duy Anh', 'Việt Nam văn hoá sử cương', '1938'),
+            ('Văn minh An Nam', '1944'), ('Gombrich', 'The Story of Art', '1950'),
+            ('Bryson', 'A Short History of Nearly Everything', '2003'),
         ],
         's-thehe': [
-            'Gia huấn ca (tương truyền của Nguyễn Trãi, tác giả còn tồn nghi)', 'Lẽ tục phú',
-            'Adermon, Lindahl và Waldenström (Economic Journal, 2018)',
-            'tương quan thứ hạng tài sản giữa cha mẹ và con là 0,3–0,4, giữa ông bà và cháu chỉ 0,1–0,2',
-            'ít nhất một nửa', 'khoảng một phần tư', 'Gregory Clark (The Son Also Rises, 2014)',
-            'Với 18.869 người mang họ hiếm ở Anh và xứ Wales', 'từ 1858 tới 2012',
-            'hệ số truyền ẩn 0,70–0,75 mỗi đời', 'Torche và Corvalán, 2018',
-            '“70% mất ở đời thứ hai, 90% ở đời thứ ba”', '(Williams và Preisser, 2003)', '3.250 gia đình giàu',
-            '“tỉ lệ thất bại 70%”', 'James Grubman (2022)', 'nghiên cứu năm 1987 của John Ward',
-            'tỉ lệ 30% doanh nghiệp', 'Holtz-Eakin, Joulfaian và Rosen, Quarterly Journal of Economics, 1993',
-            'khoảng 150.000 USD', 'cao gấp khoảng bốn lần người nhận dưới 25.000 USD',
+            ('Gia huấn ca', 'Nguyễn Trãi', 'tồn nghi'), 'Lẽ tục phú',
+            ('Adermon, Lindahl và Waldenström', '2018', 'Thuỵ Điển'), ('cha mẹ và con 0,3–0,4', 'ông bà và cháu chỉ 0,1–0,2', 60),
+            ('thừa kế và quà tặng', 'Ít nhất một nửa'), ('học vấn', 'khoảng một phần tư', 40),
+            ('Gregory Clark', 'The Son Also Rises', '2014'), ('18.869', 'Anh và xứ Wales', '1858', '2012'),
+            ('0,70–0,75', 'ba phần tư'), ('Torche và Corvalán', '2018'),
+            '“70% mất ở đời thứ hai, 90% ở đời thứ ba”', ('Williams và Preisser', '2003', '3.250 gia đình'),
+            ('James Grubman', '2022'), ('John Ward', '1987', '30% doanh nghiệp'),
+            ('Holtz-Eakin, Joulfaian và Rosen', '1993'), ('150.000 USD', 'bốn lần', '25.000 USD', 120),
         ],
         's-daycon': [
-            'Whitebread và Bingham, 2013', 'tới khoảng 7 tuổi', 'PISA 2022 (OECD, 2024)',
-            'học sinh 15 tuổi ở 20 nước và vùng; Việt Nam không có trong phần này', 'cao hơn 12 điểm',
-            'thấp hơn 13 điểm',
-            '83% học sinh nói mình có thể tự quyết tiêu tiền vào gì; nhóm này cao hơn khoảng 30 điểm',
-            '70% học sinh tự tiêu khoản nhỏ', 'Lý thuyết tự quyết (Ryan và Deci, 2000)',
-            '“Khoảng cách 30 triệu từ.” Hart và Risley (1995) quan sát 42 gia đình Mỹ, mỗi tháng một giờ',
-            'nghe khoảng 45 triệu từ, trẻ nhà nhận trợ cấp khoảng 13 triệu', 'Sperry và cộng sự, 2019',
-            'Romeo và cộng sự, 2018',
-            'năm 1885, Mrs. Dymond của Anne Isabella Thackeray Ritchie', 'chỉ xuất hiện từ năm 1976', '臨河而羨魚，不如歸家織網。',
-            'Hoài Nam Tử · thiên Thuyết lâm huấn', 'Altonji, Blom và Meghir (Annual Review of Economics, 2012)',
-            'Với số liệu Mỹ năm 2009', 'Deci, Koestner và Ryan, 1999',
+            ('Whitebread và Bingham', '2013'), 'tới khoảng 7 tuổi', ('PISA 2022', 'OECD, 2024'),
+            ('15 tuổi', '20 nước và vùng', 'không có Việt Nam'), ('chi tiêu của chính mình', 'cao hơn 12 điểm', 80),
+            ('ngân sách cả nhà', 'thấp hơn 13 điểm', 80), ('tự quyết tiêu tiền', 'khoảng 30 điểm', 60),
+            ('70% học sinh', 'khoản nhỏ', 40), ('Ryan và Deci', '2000'),
+            ('Hart và Risley', '1995', '42 gia đình', 'mỗi tháng một giờ'), ('45 triệu từ', '13 triệu', 80),
+            ('Sperry', '2019'), ('Romeo', '2018'),
+            ('1885', 'Mrs. Dymond', 'Anne Isabella Thackeray Ritchie'), ('Lão Tử', '1976'), '臨河而羨魚，不如歸家織網。',
+            'Hoài Nam Tử · thiên Thuyết lâm huấn', ('Altonji, Blom và Meghir', '2012'), ('Mỹ năm 2009', '75%', 80),
+            ('Deci, Koestner và Ryan', '1999'),
         ],
         's-honnhan': [
-            'Tổng quan 115 nghiên cứu với hơn 45.000 cuộc hôn nhân (Karney và Bradbury, 1995)',
-            'Gottman và Levenson (2000) theo dõi các cặp vợ chồng trong 14 năm', '“dự báo đúng hơn 90%”',
-            'Heyman và Smith Slep, 2001', 'Theo dõi 4.574 cặp vợ chồng Mỹ (Dew, Britt và Huston, 2012)',
-            'Kiểm lại trên 388 cặp mới cưới thu nhập thấp (Ross và cộng sự, 2022)',
+            ('115 nghiên cứu', '45.000 cuộc hôn nhân', 'Karney và Bradbury', '1995'),
+            ('14 năm', 'Gottman và Levenson', '2000'), '“dự báo đúng hơn 90%”', ('Heyman và Smith Slep', '2001'),
+            ('4.574 cặp', 'Dew, Britt và Huston', '2012'), ('388 cặp', 'Ross và cộng sự', '2022'),
         ],
         's-tinhyeu': [
             'Gộp 43 nghiên cứu theo dõi 11.196 cặp, Joel và cộng sự (2020)', 'giải thích khoảng 45% mức hài lòng hiện tại',
@@ -1078,7 +1073,12 @@ def phan_F2():
     for sid, xs in NGUON.items():
         t = chu(muc(sid))
         for x in xs:
-            claim(f'{sid}: chuỗi từ nguồn', x in t, f'không thấy “{x}”')
+            if isinstance(x, tuple) and isinstance(x[-1], int):
+                du_kien(sid, 'dữ kiện từ nguồn', *x[:-1], w=x[-1])
+            elif isinstance(x, tuple):
+                du_kien(sid, 'dữ kiện từ nguồn', *x)
+            else:
+                claim(f'{sid}: chuỗi từ nguồn', x in t, f'không thấy “{x}”')
 
 
 def phan_G():
@@ -1125,7 +1125,7 @@ def phan_G():
         's-danhmuc': ['Khi đang rút tiền', 'không để bảo đảm lợi nhuận'],
         's-vonnguoi': ['không chứng minh mọi khoá học sinh lời', 'không phải tiền có thể rút hôm nay'],
         's-chutin': ['hai bên còn coi trọng tương lai', 'Giao dịch lớn vẫn cần bảo đảm'],
-        's-thecuoc': ['họ sẽ phản đối nếu biết, là thao túng', 'khi còn gặp lại và chuyện lan được'],
+        's-thecuoc': ['họ sẽ phản đối nếu biết, là thao túng', 'ép công khai vẫn là ép', 'khi còn gặp lại và chuyện lan được'],
         's-thuongluong': ['phương án tốt nhất ấy là BATNA', 'không dùng làm lời đe doạ'],
         's-memcung': ['chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
@@ -1134,7 +1134,7 @@ def phan_G():
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
         's-nhantin': ['ngừng nhắc', 'Không tìm kênh khác để vượt ranh giới'],
         's-henho': ['không thay đồng thuận thân mật', 'chọn nơi công cộng', 'không gửi tiền cho người yêu qua mạng'],
-        's-quanhe': ['có thể rút bất cứ lúc nào', 'Quyền riêng tư không biến mất khi yêu'],
+        's-quanhe': ['có thể rút bất cứ lúc nào', 'không thay cho đồng ý lúc này', 'Quyền riêng tư không biến mất khi yêu'],
         's-batdong': ['không coi là lỗi đôi bên'],
         's-dunglai': ['gọi 113', 'Tổng đài quốc gia 117', 'Không phải chứng minh người kia xấu mới được rời đi'],
         's-honnhan': ['Bạo lực cần ưu tiên an toàn', 'Sống chung mà không đăng ký kết hôn thì không có quyền, nghĩa vụ vợ chồng'],
@@ -1144,6 +1144,9 @@ def phan_G():
         for phrase in phrases:
             claim(f'bản gọn {sid}: điều kiện luôn hiện', phrase in visible, f'không thấy “{phrase}” ngoài details')
     claim('bản gọn: cả 12 luật có giải nghĩa luôn hiện', compact.law_notes == 12, str(compact.law_notes))
+    dai = [n for n, x in enumerate(re.findall(r'<p class="hc-item__brief">(.*?)</p>', muc('s-muoihai'), flags=re.S), 1)
+           if len(chu(x).split()) > 25]
+    claim('bản gọn: dòng giải nghĩa của mỗi luật tối đa 25 chữ', not dai, 'luật ' + ', '.join(map(str, dai)))
     # Tiêu đề mục thiếu class thì mất cỡ chữ và luật ngắt trang của bản in (Phần 7 từng thiếu cả sáu).
     bare = [sid for sid, h2 in re.findall(r'<section id="(s-[a-z]+)">\s*<p class="hc-eyebrow-sec">.*?</p>\s*(<h2[^>]*>)', HTML, flags=re.S)
             if 'hc-sec-title' not in h2]
