@@ -1022,8 +1022,6 @@ def phan_F2():
             'Monet, Ấn tượng, mặt trời mọc (1872), bày năm 1874', '(25/4/1874)',
             'Bình Ngô đại cáo (tháng Chạp năm Đinh Mùi 1427, âm lịch)', '“Việc nhân nghĩa cốt ở yên dân”',
             'Tuyên ngôn Độc lập (2/9/1945)', 'Đại hội VI của Đảng, 15–18/12/1986',
-            '求則得之，舍則失之，是求有益於得也，求在我者也。求之有道，得之有命，是求無益於得也，求在外者也。',
-            'Mạnh Tử · thiên Tận tâm thượng',
             '938 Ngô Quyền đánh tan quân Nam Hán trên sông Bạch Đằng',
             '1802 Nguyễn Ánh lên ngôi, lấy niên hiệu Gia Long', 'gần ba thế kỷ nội chiến và chia cắt (Lê – Mạc, Trịnh – Nguyễn, Tây Sơn – Nguyễn)',
             '1/9/1858 Liên quân Pháp – Tây Ban Nha nổ súng vào thành Đà Nẵng', '2/9/1945 Tuyên ngôn Độc lập',
