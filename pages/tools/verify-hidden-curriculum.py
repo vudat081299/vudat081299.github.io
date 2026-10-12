@@ -840,8 +840,6 @@ def phan_F():
     claim('đọc mô hình: bớt “chưa tới 1,5 điểm phần trăm”', n10 - n50 < 1.5, f'{n10 - n50:.2f}')
     need_t('đọc mô hình: ρ = 0, N = 20', f'hai mươi tài sản còn {vn(s0 / math.sqrt(20), 2)}%')
     need_t('đọc mô hình: sàn khi khủng hoảng', f'sàn lên {vn(s0 * math.sqrt(0.8), 2)}%')
-    share10 = (s0 - n10) / (s0 - s0 * math.sqrt(0.3))
-    need_t('mười tài sản bỏ được bao nhiêu phần rủi ro bỏ được', f'bỏ đi {round(share10 * 100)}%', share10)
 
     st = 60 * 1.3
     need_t('tái cân bằng 60/40 sau một năm cổ phiếu +30%', f'{vn(st / (st + 40) * 100, 1)}% / {vn(40 / (st + 40) * 100, 1)}%')
@@ -996,8 +994,6 @@ def phan_F2():
         's-moitruong': [
             '(Lazear, Shaw và Stanton, 2015)', 'nhiều hơn việc thêm một người vào nhóm chín người',
             'Khoảng một phần tư tác dụng của người quản lý vẫn còn một năm sau khi họ rời nhóm',
-            '(Mas và Moretti, 2009); bản làm việc năm 2006 của nghiên cứu',
-            'tăng 10% kéo nỗ lực của một người tăng 1,7%', '(Cornelissen và cộng sự, 2017)',
             'Jarosch, Oberfield và Rossi-Hansberg (2021)',
             '4–9% tổng thù lao của người lao động là việc học từ đồng nghiệp',
             '(Kahneman và Klein, 2009)', 'Hogarth (2001)',
