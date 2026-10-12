@@ -17,6 +17,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-012 · hidden-curriculum: hàm ý và giới hạn của lời nói lấp lửng · `pages/hidden-curriculum.html`
 - PAGES-013 · hidden-curriculum: xử lý khi chưa rõ ý người khác · `pages/hidden-curriculum.html`
 - PAGES-014 · hidden-curriculum: tâm kế · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+- PAGES-015 · hidden-curriculum: dạy tư duy, luật chỉ giữ khi thật cần, viết đơn giản nhất · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -105,3 +106,10 @@ Giữ nguyên lý ở bản gọn, ví dụ và bằng chứng ở phần mở r
 Bổ sung tâm kế vào mục thế và cam kết: phân biệt mưu lược hợp lệ với thao túng bằng phép thử công khai.
 Dạy để nhận ra và phòng thủ, không để dùng; nêu bằng chứng về lợi và giá của tâm kế cùng giới hạn của nó.
 Các chiêu kèm dấu hiệu và cách đáp không buộc tội ai; không lặp bảng Cialdini, chiêu trong yêu đương trỏ sang Phần 7.
+
+## PAGES-015 · hidden-curriculum: dạy tư duy, luật chỉ giữ khi thật cần, viết đơn giản nhất
+12/10/2026 · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+
+Trang dạy tư duy, không dạy luật. Chỉ giữ một quy định khi thiếu nó người đọc dễ mất tiền, mất an toàn hay mất quyền khó lấy lại, và nguyên tắc tư duy chưa đủ dẫn tới việc đúng; còn lại xoá.
+Quy định giữ lại viết thành một câu việc cần làm, không số điều, số nghị định trong thân bài; chi tiết đổi theo năm thì bảo người đọc kiểm quy định hiện hành.
+Viết đơn giản, dễ hiểu nhất có thể: câu ngắn, từ thường, thuật ngữ phải giải nghĩa; giữ nguyên lý và điều kiện, cắt chi tiết không đổi được quyết định.
