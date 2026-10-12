@@ -16,26 +16,31 @@ Bảy phần, bảy loại sai khác nhau:
      kiểm độ dài, để mảng không bị cắt hay lệch năm.
   B. CON SỐ TRONG BÀI — tính lại từ đầu rồi đòi trang có đúng chuỗi ấy. Bắt được chuyện sửa
      một con số mà quên chỗ khác.
-  C. LUẬT TRONG MÃ — đòi vài dòng JS then chốt còn nguyên hình: công thức của trò đồng xu, hạt
+  C. DÒNG MÃ THEN CHỐT — đòi vài dòng JS then chốt còn nguyên hình: công thức của trò đồng xu, hạt
      giống cố định, cách trừ lạm phát, ma trận điểm của trò chơi lặp lại.
   D. TOÁN ĐỘC LẬP — dựng lại bằng lối khác lối trang dùng: mô phỏng Monte Carlo trò đồng xu,
      tìm cực đại Kelly bằng lưới, giá trị hiện tại bằng công thức đóng, và chạy lại giải đấu
      của mô hình trò chơi lặp lại bằng đúng bộ sinh số ngẫu nhiên của trang để kiểm các câu lời
      văn nói về nó.
   E. THƯ VIỆN MÔ HÌNH — đủ trường, khoá hợp lệ, id duy nhất, mọi related và sections trỏ tới thứ
-     có thật, không có HTML trong dữ liệu, mọi con số trong thẻ có mặt trên trang, số thẻ khớp đầu trang.
+     có thật, không có HTML trong dữ liệu, số thẻ khớp đầu trang, và mỗi con số trong thẻ có mặt
+     nguyên số trong chính các mục thẻ trỏ tới (không chỉ ở đâu đó trên trang).
   F. VỐN, NGHỀ, GIA ĐÌNH — các mục rủi ro, tạo của, doanh nghiệp, danh mục, tài sản, nghề, gia đình:
-     chuỗi lấy từ nguồn (luật, số liệu chính thức, tác giả và năm) giữ nguyên văn trong đúng mục, mỗi
-     điều luật dẫn trong bài có trong danh sách nguồn, năm can chi tính lại từ năm dương lịch,
+     chuỗi lấy từ nguồn (số liệu chính thức, tác giả và năm) giữ nguyên văn trong đúng mục, thân bài
+     không dẫn số điều luật hay số hiệu văn bản (PAGES-015), năm can chi tính lại từ năm dương lịch,
      và mọi con số suy ra được tính lại trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn
      trong giá, thứ tự lợi suất, trái phiếu…).
-  G. BẢN GỌN — định nghĩa và điều kiện quan trọng phải còn ngoài phần chi tiết. Không thay được
-     review ngữ nghĩa; bắt hồi quy khi gấp nhầm điều kiện vào details hoặc bỏ lời giải nghĩa của 12 luật.
+  G. BẢN GỌN — định nghĩa và điều kiện quan trọng phải còn ngoài phần chi tiết; mỗi mục nội dung có
+     đúng một khung “Luật của mục này”. Không thay được review ngữ nghĩa; bắt hồi quy khi gấp nhầm
+     điều kiện vào details hoặc bỏ lời giải nghĩa của mười hai luật ở mục 11.2.
+
+Cổng không kiểm bảng tóm tắt (s-tomtat) khớp lời từng khung luật, cũng không kiểm mỗi nguồn trong
+s-nguon còn được thân bài dẫn: hai việc ấy rà bằng tay khi sửa một mục.
 
 Chỉ dùng thư viện chuẩn, chạy dưới 5 giây.
 
 Chạy:  python3 pages/tools/verify-hidden-curriculum.py
-Exit code: 1 nếu có con số hoặc luật không khớp.
+Exit code: 1 nếu có con số, dòng mã then chốt hay chuỗi nguồn không khớp.
 """
 import collections
 import html
@@ -553,7 +558,7 @@ def phan_B():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# C. Luật trong mã
+# C. Dòng mã then chốt
 # ══════════════════════════════════════════════════════════════════════════════
 RULES = [
     ('ngửa: phần đặt +50%', 'function up(f) { return 1 + 0.5 * f; }'),
@@ -764,16 +769,31 @@ def phan_E():
         claim('thư viện: ' + what, not bad[what], 'sai ở ' + ', '.join(map(str, bad[what][:10])))
     claim('thư viện: mỗi tầng trong bộ lọc có thẻ', layers == set(c.get('layer') for c in cards))
     claim('thư viện: không có trường _html (REPO-001)', not any(k.endswith('_html') for c in cards for k in c))
-    # Thẻ không được mang số riêng: mỗi con số trong thẻ phải có mặt trên trang (chữ hoặc aria-label của hình),
-    # để sửa một con số ở mục mà quên thẻ thì cổng đỏ. Bỏ qua các số nhỏ dùng như chữ (một, hai, mười…).
-    pool = TEXT + ' ' + ' '.join(re.findall(r'aria-label="([^"]*)"', HTML))
+    # Thẻ không được mang số riêng: mỗi con số trong thẻ phải có mặt, nguyên một số, trong chính các mục thẻ trỏ
+    # tới (chữ, aria-label của hình, giá trị mặc định của mô hình). Tìm cả trang thì “180” khớp tình cờ ở chỗ khác.
+    # Bỏ qua các số nhỏ dùng như chữ (một, hai, mười…).
+    def pool_of(sids):
+        out = []
+        for sid in sids:
+            h = muc(sid)
+            out += [chu(h)] + re.findall(r'aria-label="([^"]*)"', h) + re.findall(r'<input [^>]*value="([^"]*)"', h)
+        return ' '.join(out)
+
+    def co(x, pool):
+        return re.search(r'(?<![\d.,])' + re.escape(x) + r'(?![\d]|[.,]\d)', pool) is not None
+
     num = re.compile(r'[×−]?\d[\d.]*(?:,\d+)?%?')
-    stray = sorted(set((c.get('id'), m.group(0).rstrip('.')) for c in cards
-                       for f in ('idea', 'why', 'mechanism', 'mistake', 'example', 'use', 'limits', 'remember')
-                       for m in num.finditer(str(c.get(f, '')))
-                       if m.group(0).rstrip('.').lstrip('×−') not in ('0', '1', '2', '3', '4', '5', '6', '10', '100')
-                       and m.group(0).rstrip('.') not in pool and m.group(0).rstrip('.').lstrip('×−') not in pool))
-    claim('thư viện: mọi con số trong thẻ có mặt trên trang', not stray, ', '.join(f'{i}: {x}' for i, x in stray[:12]))
+    stray = []
+    for c in cards:
+        pool = pool_of(c.get('sections', []))
+        for f in ('idea', 'why', 'mechanism', 'mistake', 'example', 'use', 'limits', 'remember'):
+            for m in num.finditer(str(c.get(f, ''))):
+                x = m.group(0).rstrip('.')
+                if x.lstrip('×−') in ('0', '1', '2', '3', '4', '5', '6', '10', '100'):
+                    continue
+                if not (co(x, pool) or co(x.lstrip('×−'), pool)):
+                    stray.append(f'{c.get("id")}: {x}')
+    claim('thư viện: mọi con số trong thẻ có mặt ở mục thẻ trỏ tới', not stray, ', '.join(sorted(set(stray))[:12]))
     need('số khái niệm ở đầu trang', f'· {len(cards)} khái niệm</p>', len(cards))
     claim('thư viện: ít nhất 60 khái niệm', len(cards) >= 60, f'có {len(cards)}')
 
@@ -923,51 +943,11 @@ def phan_F2():
     claim('Van Such: 62 trên 286 ca là 21%', int(100 * 62 / 286) == 21, f'{100 * 62 / 286:.1f}%')
     need_t('Van Such trong bài', 'xem 286 bệnh nhân')
     need_t('Van Such trong bài', 'khác hẳn chẩn đoán lúc chuyển ở 62 ca (21%)')
-    # Mọi điều luật dẫn trong bài có trong danh sách nguồn của đúng văn bản ấy.
-    # Mỗi mục có một văn bản mặc định ('*'); điều dẫn từ văn bản khác thì gán riêng. Điều mới chưa gán thì đỏ.
-    VB = {'BLDS': 'Bộ luật Dân sự 2015', 'BLHS': 'Bộ luật Hình sự 2015', 'NĐ340': 'Nghị định 340/2025/NĐ-CP',
-          'BHTG': 'Luật Bảo hiểm tiền gửi 2025', 'TT05': 'Thông tư 05/2026/TT-NHNN',
-          'NĐ200': 'Nghị định 200/2026/NĐ-CP', 'CNS': 'Luật Công nghiệp công nghệ số',
-          'TNCN': 'Luật Thuế thu nhập cá nhân 2025', 'HNGĐ': 'Luật Hôn nhân và gia đình 2014',
-          'ĐĐ': 'Luật Đất đai 2024', 'NO': 'Luật Nhà ở 2023', 'KDBH': 'Luật Kinh doanh bảo hiểm 2022',
-          'HP': 'Hiến pháp 2013', 'TCTD': 'Luật Các tổ chức tín dụng 2024',
-          'VL': 'Luật Việc làm 2025', 'BLLĐ': 'Bộ luật Lao động 2019', 'BHXH': 'Luật Bảo hiểm xã hội 2024',
-          'BLGĐ': 'Luật Phòng, chống bạo lực gia đình 2022'}
-    GAN = {
-        's-vanminh': {'*': 'HP'},
-        's-luadao': {'174': 'BLHS'},
-        's-thehe': {'*': 'BLDS'},
-        's-honnhan': {'*': 'HNGĐ'},
-        's-giayto': {'*': 'BLDS', '66': 'HNGĐ', '27': 'ĐĐ', '164': 'NO', '4': 'KDBH', '41': 'KDBH', '46': 'CNS'},
-        's-muoihai': {'335': 'BLDS', '336': 'BLDS', '468': 'BLDS', '30': 'NĐ340', '291': 'BLHS'},
-    }
-
-    def dieu(s):
-        """'629–634, 636' → {'629', …, '634', '636'}."""
-        out = set()
-        for a in re.split(r',\s*', s):
-            lo, _, hi = a.partition('–')
-            out |= {str(k) for k in range(int(lo), int(hi or lo) + 1)}
-        return out
-
-    m = re.search(r'<b>Luật\.</b>(.*?)</li>', muc('s-nguon'), flags=re.S)
-    luat = chu(m.group(1)) if m else ''
-    REF = {}
-    for k, v in VB.items():
-        m = re.search(re.escape(v) + r'[^.]*?\(Điều ([\d–, ]+)\)', luat)
-        claim(f'nguồn: {v} có danh sách điều', bool(m))
-        REF[k] = dieu(m.group(1)) if m else set()
-    for sid in re.findall(r'<section id="(s-[a-z]+)">', HTML):
-        if sid == 's-nguon':
-            continue
-        arts = set()
-        for g in re.findall(r'Điều (\d+(?:–\d+)?(?:, \d+(?:–\d+)?)*)', chu(muc(sid))):
-            arts |= dieu(g)
-        for a in sorted(arts, key=int):
-            k = GAN.get(sid, {}).get(a) or GAN.get(sid, {}).get('*')
-            claim(f'{sid}: Điều {a} được gán một văn bản', k is not None, 'thêm vào GAN')
-            if k:
-                claim(f'{sid}: Điều {a} {VB[k]}', a in REF[k], f'danh sách nguồn của {VB[k]} không có Điều {a}')
+    # Thân bài không dẫn số điều luật hay số hiệu văn bản (PAGES-015); chi tiết ấy chỉ ở dòng Luật của s-nguon.
+    so_hieu = re.compile(r'Điều \d|\b\d+/\d{4}/(?:QH|NĐ|TT|NQ|VBHN|UBTVQH)')
+    lo = sorted({f'{sid}: {m.group(0)}' for sid in re.findall(r'<section id="(s-[a-z]+)">', HTML) if sid != 's-nguon'
+                 for m in so_hieu.finditer(chu(muc(sid)))})
+    claim('thân bài không dẫn số điều luật, số hiệu văn bản', not lo, ', '.join(lo[:8]))
     # Bảng “Mười sáu ý tưởng làm nền” (s-vanminh): số dòng khớp chữ “mười sáu” của tiêu đề.
     tb = re.search(r'Mười sáu ý tưởng làm nền</h3>.*?<tbody>(.*?)</tbody>', muc('s-vanminh'), flags=re.S)
     n = tb.group(1).count('<tr>') if tb else 0
@@ -1087,7 +1067,7 @@ def phan_F2():
             'Van Such và cộng sự, 2017',
         ],
         # Tâm kế: số liệu từ abstract và bảng 2 của O'Boyle và cộng sự (2012), abstract của Spurk và cộng sự
-        # (2016), Harsey và Freyd (2020); phép thử công khai theo Kant (bản Campbell Smith) và Nudge (2008).
+        # (2016), Harsey và Freyd (2020); phép thử công khai theo Kant (bản Campbell Smith).
         's-thecuoc': [
             'O’Boyle và cộng sự (2012) gộp 245 mẫu, 43.907 người', 'tương quan −0,07 với hiệu suất công việc',
             'tương quan 0,25 với hành vi phản tác dụng', 'khảo sát 793 người mới đi làm ở Đức',
@@ -1199,7 +1179,7 @@ def main():
         for f in fails:
             print('    %s' % f)
         return 1
-    print('verify-hidden-curriculum: OK — %d phép kiểm, mọi con số và luật trong trang dựng lại được.' % checks)
+    print('verify-hidden-curriculum: OK — %d phép kiểm, mọi con số và dòng mã then chốt trong trang dựng lại được.' % checks)
     return 0
 
 

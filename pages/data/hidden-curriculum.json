@@ -23,7 +23,9 @@
    ],
    "sections": [
     "s-von",
-    "s-cophieu"
+    "s-cophieu",
+    "s-dinhgia",
+    "s-no"
    ]
   },
   {
@@ -185,7 +187,8 @@
    ],
    "sections": [
     "s-no",
-    "s-kinhdoanh"
+    "s-kinhdoanh",
+    "s-taisan"
    ]
   },
   {
@@ -203,7 +206,7 @@
    "mistake": "Tin rằng thứ gì bán tại quầy ngân hàng cũng an toàn như sổ tiết kiệm.",
    "example": "Năm 2023, nhiều doanh nghiệp Việt Nam chậm trả gốc lãi trái phiếu. Người cầm những trái phiếu ấy là chủ nợ của doanh nghiệp, không phải người gửi tiền ở nơi đã bán chúng.",
    "use": "Ghi nơi giữ tiền, loại giấy tờ và quyền của mình khi có sự cố; kiểm hạn mức bảo hiểm tiền gửi hiện hành.",
-   "limits": "Giấy phép và quy mô không bảo đảm an toàn; xem nghĩa vụ trả, cách tách tài sản và quyền khi đối tác gặp sự cố.",
+   "limits": "Giấy phép và quy mô không bảo đảm an toàn; xem ai phải trả, tiền của mình có được giữ riêng không, và mình có quyền gì khi đối tác gặp sự cố.",
    "remember": "Tiền không trong tay mình là lời hứa của ai đó.",
    "related": [
     "liquidity",
@@ -391,7 +394,7 @@
    "why": "Một vài kết quả cực đoan có thể chi phối tổng kết quả; cần xét riêng tổn thất lớn.",
    "mechanism": "Đuôi dày nghĩa là chuyện cực đoan xảy ra thường hơn nhiều so với mô hình quen dùng (phân phối chuẩn) dự đoán. Nó khác với việc lệch về một phía. Giá cổ phiếu theo ngày có những phiên tăng, giảm cực mạnh như vậy.",
    "mistake": "Coi kịch bản trung bình là dự báo, hoặc tin rằng chuyện “trăm năm có một” sẽ không xảy ra trong đời mình.",
-   "example": "Ngày thứ Hai đen tối năm 1987, chỉ số S&P 500 mất hơn một phần năm giá trị trong một phiên; với độ dao động thường ngày khoảng 1%, phân phối chuẩn coi đó là chuyện gần như không bao giờ xảy ra.",
+   "example": "Một đợt khủng hoảng có thể xoá lãi của nhiều năm: VN-Index từ đỉnh tháng 3/2007 mất khoảng 80% tới tháng 2/2009 và 11 năm sau mới vượt lại.",
    "use": "Thêm kịch bản cực xấu ngoài xấu–giữa–tốt, rồi kiểm khả năng tiếp tục.",
    "limits": "Không phải đại lượng nào cũng có đuôi dày — chiều cao của người trưởng thành chẳng hạn; và sợ đuôi quá mức có thể làm tê liệt mọi quyết định.",
    "remember": "Cái đuôi quyết định nhiều hơn cái giữa.",
@@ -404,7 +407,8 @@
    "sections": [
     "s-phanphoi",
     "s-dongxu",
-    "s-ruiro"
+    "s-ruiro",
+    "s-cophieu"
    ]
   },
   {
@@ -659,7 +663,7 @@
    "why": "Tài sản có giá trị vẫn có thể gây khó nếu không đổi ra tiền đúng lúc.",
    "mechanism": "Ngày thường, người mua có sẵn; khi có cú sốc, người mua rút đi còn người bán tăng lên, nên giá bán được rơi sâu dưới giá trị. Đất, trái phiếu riêng lẻ, doanh nghiệp tư nhân chịu nặng nhất.",
    "mistake": "Lấy độ dễ bán hôm nay làm chuẩn cho lúc khủng hoảng, hoặc dùng tài sản biến động làm quỹ dự phòng.",
-   "example": "Năm 2023, nhiều doanh nghiệp được phép kéo dài kỳ hạn trái phiếu riêng lẻ, có khi thêm hai năm, nếu người mua đồng ý: tiền định dùng năm nay có thể thành tiền của hai năm sau.",
+   "example": "Năm 2022–2023, quy định cho phép doanh nghiệp kéo dài kỳ hạn trái phiếu riêng lẻ tối đa hai năm nếu người sở hữu đồng ý: tiền định dùng năm nay có thể thành tiền của hai năm sau.",
    "use": "Ước tính thời gian và mức giảm giá để bán. Tiền sắp cần phải đủ dễ rút và ít biến động.",
    "limits": "Thanh khoản có giá: tiền gửi lãi thấp hơn tài sản khó bán, nên giữ quá nhiều là trả phí bảo hiểm quá cao, nhất là với người có thu nhập ổn định.",
    "remember": "Bán được lúc yên chưa chắc bán được lúc cần.",
@@ -770,7 +774,7 @@
    ],
    "idea": "Lời của cổ đông đến từ tiền công ty trả ra và giá lên xuống. Giá đã chứa kỳ vọng về tương lai, nên công ty tốt vẫn có thể là khoản mua kém nếu giá đòi quá nhiều.",
    "why": "Công ty tốt có thể là khoản đầu tư tồi nếu giá đòi tương lai quá đẹp.",
-   "mechanism": "Giá cao so với lợi nhuận nghĩa là người mua đang trả trước cho tăng trưởng tương lai. Với P/E 40, nếu người mua đòi lời 9%/năm, lợi nhuận phải tăng ít nhất khoảng 6,5%/năm mãi mãi.",
+   "mechanism": "Giá cao so với lợi nhuận nghĩa là người mua đang trả trước cho tăng trưởng tương lai. Với giá gấp 40 lần lợi nhuận một năm (P/E 40), nếu người mua đòi lời 9%/năm, lợi nhuận phải tăng ít nhất khoảng 6,5%/năm mãi mãi.",
    "mistake": "Mua vì công ty nổi tiếng và đang tăng trưởng mà không hỏi giá đã trả trước bao nhiêu cho tăng trưởng ấy.",
    "example": "Một nghiên cứu so 29 công ty “xuất sắc” với 39 công ty “kém xuất sắc”: trong năm năm sau, nhóm kém hơn lại lãi hơn chỉ số trên 12%/năm, còn nhóm xuất sắc chỉ hơn khoảng 1%/năm (Clayman, 1987).",
    "use": "Trước khi mua, viết ra tốc độ tăng trưởng mà giá hôm nay hàm ý, rồi hỏi điều gì khiến mình tin con số thật sẽ cao hơn.",
@@ -796,9 +800,9 @@
     "theory",
     "lore"
    ],
-   "idea": "Hào là thứ giữ cho lợi suất trên vốn của một doanh nghiệp cao hơn chi phí vốn trong nhiều năm, dù đối thủ muốn chen vào.",
+   "idea": "Hào là thứ giữ cho mức lời trên vốn của một doanh nghiệp cao hơn mức lời tối thiểu người góp vốn đòi (chi phí vốn) trong nhiều năm, dù đối thủ muốn chen vào.",
    "why": "Phân biệt thành tích hiện tại với lợi thế có thể giữ lâu.",
-   "mechanism": "Lợi suất cao hút đối thủ; không có rào cản thì cạnh tranh kéo nó về mức chi phí vốn. Morningstar xếp rào cản thành năm nguồn: tài sản vô hình, lợi thế chi phí, chi phí chuyển đổi, hiệu ứng mạng và quy mô hiệu quả.",
+   "mechanism": "Lời cao hút đối thủ; không có rào cản thì cạnh tranh kéo nó về mức chi phí vốn. Morningstar nêu năm nguồn: thương hiệu, bằng sáng chế, giấy phép; chi phí thấp hơn đối thủ; khách khó chuyển sang hãng khác; càng nhiều người dùng càng có giá trị; thị trường chỉ đủ nuôi ít hãng.",
    "mistake": "Coi thị phần lớn, sản phẩm được yêu thích hay tăng trưởng nhanh là hào; những thứ ấy có thể mất rất nhanh khi đối thủ nhiều tiền vào ngành.",
    "example": "Morningstar chỉ xếp “hào hẹp” khi tin lợi suất vượt chi phí vốn kéo dài ít nhất 10 năm, và “hào rộng” khi gần như chắc 10 năm và có thể 20 năm.",
    "use": "Với mỗi công ty định mua, viết một câu: khách mất gì nếu đổi sang đối thủ, và đối thủ cần gì để làm được như vậy.",
@@ -881,7 +885,7 @@
    "why": "Nhiều khoản vẫn có thể chịu cùng một cú sốc.",
    "mechanism": "Thêm tài sản chỉ giảm được phần rủi ro riêng của từng thứ; phần rủi ro chung khi chúng cùng lên xuống thì không giảm được. Với số liệu ví dụ trên trang, rổ nhiều tài sản không xuống dưới 16,4% dao động; khi khủng hoảng làm mọi thứ cùng chiều hơn, hai mươi tài sản vẫn dao động 27,0%.",
    "mistake": "Đếm số mã, số căn nhà, số quỹ thay vì hỏi cú sốc nào làm tất cả cùng giảm.",
-   "example": "Tương quan giữa các thị trường cổ phiếu tăng trong thị trường giá xuống, không tăng trong thị trường giá lên (Longin và Solnik, 2001). Năm 2022, cổ phiếu Mỹ và trái phiếu chính phủ Mỹ kỳ hạn 10 năm cùng mất khoảng 18%.",
+   "example": "Tương quan giữa các thị trường cổ phiếu tăng trong thị trường giá xuống, không tăng trong thị trường giá lên (Longin và Solnik, 2001). Năm 2022, cổ phiếu Mỹ và trái phiếu chính phủ Mỹ kỳ hạn 10 năm cùng giảm: −18,04% và −17,83%.",
    "use": "Khoản mới có thể giảm cùng thu nhập và tài sản lớn khác không? Đa dạng theo nguồn rủi ro, không chỉ số khoản.",
    "limits": "Tương quan đo trên quá khứ và đổi theo loại cú sốc: trái phiếu chính phủ Mỹ che tốt năm 2008 nhưng không che được năm 2022.",
    "remember": "Nhiều thứ cùng chiều vẫn là một thứ.",
@@ -1006,17 +1010,17 @@
   },
   {
    "id": "careercap",
-   "name": "Vốn sự nghiệp",
-   "en": "career capital",
+   "name": "Dòng và kho của một năm làm việc",
+   "en": "flows and stocks of a career",
    "layer": "nghe",
    "kind": [
     "theory",
     "mixed",
     "math"
    ],
-   "idea": "Thứ tích được qua công việc mà thị trường trả tiền: kỹ năng hiếm, uy tín, quan hệ, sản phẩm để lại. Nó cho mình quyền chọn việc.",
-   "why": "Chọn việc theo cả tiền sống và kỹ năng, uy tín, sản phẩm dùng được tiếp.",
-   "mechanism": "Kỹ năng, quan hệ và sản phẩm làm mình làm nhanh hơn và mở thêm cơ hội. Thu nhập trong kỳ có thể để dành; năm nào không học thêm cũng không có nghĩa công sức về 0.",
+   "idea": "Dòng là thu nhập trong kỳ; kho là thứ còn lại sau kỳ và dùng được tiếp: kỹ năng, tiền để dành, uy tín, quan hệ, sản phẩm dùng lại. Kho mở thêm lựa chọn cho việc sau.",
+   "why": "Giúp chọn việc theo cả tiền sống lẫn thứ để lại cho ngày mai.",
+   "mechanism": "Một phần dòng có thể đổi thành kho: để dành, học kỹ năng có người cần, làm sản phẩm dùng lại. Kho làm mình làm nhanh hơn, được tin hơn và có thêm việc để chọn; nó cũng có thể lỗi thời hoặc mất.",
    "mistake": "Coi bận rộn là tiến bộ, hoặc học những kỹ năng chỉ có giá ở một công ty rồi tưởng mang đi được.",
    "example": "A khởi điểm 20 triệu/tháng, tăng 3%/năm; B khởi điểm 15 triệu, tăng 10%/năm: lương tháng của B vượt A từ năm thứ 6, và năm thứ 20 B nhận khoảng 91,7 triệu so với 35,1 triệu của A. Đây là ví dụ minh hoạ, không phải dự báo.",
    "use": "Cuối tuần ghi thứ đã tích thêm; biến việc lặp thành tài liệu hoặc công cụ dùng lại.",
@@ -1049,7 +1053,7 @@
    "mistake": "Nghĩ thâm niên tự động là kinh nghiệm, và ở lại một chỗ đã phẳng vì lương ổn.",
    "example": "Ở một công ty dịch vụ lớn, thay một quản lý thuộc nhóm 10% kém nhất bằng người thuộc nhóm 10% giỏi nhất làm cả nhóm làm ra nhiều hơn việc thêm một người vào nhóm chín người (Lazear và cộng sự, 2015).",
    "use": "Kiểm điều đã học, người hướng dẫn và phản hồi. Khi hết cơ hội học, so lợi ích chuyển với tiền sống và chi phí chuyển.",
-   "limits": "Số liệu đa quốc gia không nói nơi làm cụ thể nào tốt, và số liệu Việt Nam trong nghiên cứu là năm 1998 và 2002. Độ dốc cao thường kèm áp lực, nên cần khoảng đệm.",
+   "limits": "Số liệu đa quốc gia không nói nơi làm cụ thể nào tốt, và số liệu Việt Nam trong nghiên cứu là năm 1998 và 2002. Chỗ học nhanh thường kèm áp lực, nên cần khoảng đệm.",
    "remember": "Hỏi chỗ làm dạy mình được gì trước khi hỏi nó trả bao nhiêu.",
    "related": [
     "environment",
@@ -1064,7 +1068,7 @@
   },
   {
    "id": "environment",
-   "name": "Môi trường tử tế và môi trường hiểm",
+   "name": "Môi trường dạy được và môi trường đánh lừa",
    "en": "kind and wicked learning environments",
    "layer": "nghe",
    "kind": [
@@ -1073,7 +1077,7 @@
    ],
    "idea": "Trực giác chỉ thành kỹ năng khi được rèn trong môi trường đủ đều đặn và cho phản hồi nhanh, rõ; ở môi trường khác, kinh nghiệm có thể dạy sai.",
    "why": "Kinh nghiệm đáng tin hơn khi tín hiệu ổn định và phản hồi rõ.",
-   "mechanism": "Trực giác đáng tin khi có hai điều: môi trường có tín hiệu ổn định, và người ấy đã luyện lâu với phản hồi nhanh, rõ (Kahneman và Klein, 2009). Nơi điều học được khớp với điều sẽ gặp là môi trường tử tế; nơi chúng lệch nhau là môi trường hiểm.",
+   "mechanism": "Trực giác đáng tin khi có hai điều: môi trường có tín hiệu ổn định, và người ấy đã luyện lâu với phản hồi nhanh, rõ (Kahneman và Klein, 2009). Nơi điều học được khớp với điều sẽ gặp là môi trường dạy được; nơi chúng lệch nhau là môi trường đánh lừa: có phản hồi, nhưng dạy sai.",
    "mistake": "Lấy độ tự tin hay số năm làm nghề làm thước đo; độ tự tin của người phán đoán không cho biết phán đoán có đúng.",
    "example": "Chẩn đoán có phản hồi kịp thời dễ rèn hơn dự báo chính trị dài hạn. Cùng một nghề vẫn có phần dễ học và phần dễ đánh lừa.",
    "use": "Hỏi chuyên gia đã nhận phản hồi thế nào; ghi dự đoán trước rồi đối chiếu kết quả.",
@@ -1100,9 +1104,9 @@
    ],
    "idea": "Nghiên cứu, rõ nhất ở thể thao, ghi nhận nhiều người đạt đỉnh đã thử rộng trước khi chuyên sâu. Đây là gợi ý kiểm theo nghề, không phải lời khuyên trì hoãn đào sâu cho mọi người.",
    "why": "Thử có chủ đích giúp chọn hướng và tìm kỹ năng bổ trợ; đào sâu vẫn cần thiết.",
-   "mechanism": "Gộp 51 báo cáo về 6.096 vận động viên: người đẳng cấp thế giới lúc trưởng thành thuở nhỏ chơi nhiều môn hơn, bắt đầu môn chính muộn hơn và tiến bộ ban đầu chậm hơn người chỉ đạt cấp quốc gia; ở lứa trẻ thì ngược lại.",
+   "mechanism": "Gộp dữ liệu về 6.096 vận động viên: người đẳng cấp thế giới lúc trưởng thành thuở nhỏ chơi nhiều môn hơn, bắt đầu môn chính muộn hơn và tiến bộ ban đầu chậm hơn người chỉ đạt cấp quốc gia; ở lứa trẻ thì ngược lại.",
    "mistake": "Suy ra đa năng luôn hơn chuyên sâu, hoặc ngược lại; đây là tương quan, đo ở tầng đỉnh.",
-   "example": "Một tổng quan năm 2025 thấy mẫu hình giống vậy ở nhà khoa học, nhạc công, kỳ thủ: người giỏi nhất lúc trẻ và người giỏi nhất lúc trưởng thành phần lớn là hai nhóm khác nhau.",
+   "example": "Thử vài câu lạc bộ, vài dự án nhỏ trước khi chọn ngành cho thêm dữ liệu về việc mình hợp gì; nhưng những nghề đòi luyện chuyên từ nhỏ, như nhạc cổ điển, không chờ được lâu.",
    "use": "Thử vài hướng trong mức chịu được; chọn hướng có cầu, hợp mình, rồi đào sâu và ghép kỹ năng bổ trợ.",
    "limits": "Bằng chứng chắc nhất ở thể thao; nhiều nghề đòi chứng chỉ và nhiều năm luyện chuyên. Người thử mãi mà không đào sâu thì không có gì để bán.",
    "remember": "Rộng để tìm chỗ, sâu để được trả.",
@@ -1235,7 +1239,7 @@
    "why": "Giúp nhau trước khi cần tạo giá trị chung; quà tặng cũng có thể gây áp lực.",
    "mechanism": "Nhận quà, kể cả quà không xin, dễ tạo cảm giác phải đáp lại. Trong một thí nghiệm, người gây quỹ được cảm ơn gọi nhiều hơn, từ 41,4 lên 62,6 cuộc mỗi tuần (Grant và Gino, 2010).",
    "mistake": "Cho không chọn lọc tới kiệt sức: Grant (2013) thấy người cho có mặt ở cả đáy lẫn đỉnh thành công, và người cho ở đỉnh vẫn giữ lợi ích của chính mình.",
-   "example": "Một quan hệ ngọt quá nhanh — quà nhiều, khen nhiều — có thể đi trước một lời nhờ, dù chưa đủ để kết luận người kia có ý đồ; Trang Tử nói quân tử chơi với nhau nhạt như nước.",
+   "example": "Một quan hệ ngọt quá nhanh — quà nhiều, khen nhiều — có thể đi trước một lời nhờ, dù chưa đủ để kết luận người kia có ý đồ.",
    "use": "Giúp trong khả năng; cảm ơn cụ thể và báo kết quả. Giữ ranh giới, tránh biến quan hệ thành sổ nợ.",
    "limits": "Nhận quà không buộc phải nhận lời nhờ; không cho thứ mình không mất được.",
    "remember": "Cho trước, cho nhỏ, nhớ ai đáp lại.",
@@ -1318,7 +1322,7 @@
    "mistake": "Nhầm tín hiệu với thứ nó báo hiệu; hoặc đầu tư vào tín hiệu dễ giả như đồ để khoe, thay vì thứ khó giả.",
    "example": "Một sản phẩm chạy thật, một kết quả có số, một lời giới thiệu từ người có uy tín nói nhiều hơn mọi lời tự giới thiệu.",
    "use": "Khi đánh giá người, nhìn qua tín hiệu tới chuỗi hành vi; khi phát tín hiệu, chọn thứ khó làm giả.",
-   "limits": "Tín hiệu vẫn mang thông tin thật, bỏ qua mọi tín hiệu là ngây thơ; phản tín hiệu chỉ có tác dụng khi người ta đã biết mình là ai.",
+   "limits": "Tín hiệu vẫn mang thông tin thật, bỏ qua mọi tín hiệu là ngây thơ. Người đã được biết qua kênh khác có khi cố ý không phô, nên vẻ giản dị cũng không tự nói ai kém.",
    "remember": "Tín hiệu tốt là thứ khó làm giả.",
    "related": [
     "status",
@@ -1393,11 +1397,11 @@
    ],
    "idea": "Niềm tin chung rằng nêu lo ngại, hỏi hoặc nhận lỗi thiện chí không dẫn tới làm nhục hay trả đũa; tiêu chuẩn và trách nhiệm vẫn phải giữ.",
    "why": "Giúp nhóm nêu lỗi và lo ngại sớm để sửa.",
-   "mechanism": "Edmondson (1999) gọi đó là niềm tin chung rằng góp ý thiện chí không bị làm nhục hay trả đũa. Google khảo sát 180 nhóm của chính họ và xếp yếu tố này đứng đầu.",
+   "mechanism": "Edmondson (1999) gọi đó là niềm tin chung rằng góp ý thiện chí không bị làm nhục hay trả đũa. Khi tin vậy, người ta dám hỏi, báo lỗi và nêu lo ngại sớm, lúc sửa còn rẻ.",
    "mistake": "Hiểu an toàn tâm lý là dễ dãi hay không phê bình; nó là được nói thật, kể cả điều khó nghe, mà không bị phạt.",
    "example": "Người có chức nhất nói sau cùng và cảm ơn công khai người dám nói “không” mỗi lần họ đúng — hai cách rẻ để người dưới dám nói thật.",
    "use": "Trong buổi họp tuần này, hỏi một câu mời phản biện — “điều gì có thể làm kế hoạch này hỏng?” — và cảm ơn người trả lời trước khi tranh luận.",
-   "limits": "Dữ liệu của Google đến từ một công ty. An toàn tâm lý không thay được tiêu chuẩn cao: thiếu tiêu chuẩn, nhóm chỉ dễ chịu chứ không giỏi lên.",
+   "limits": "An toàn tâm lý không thay được tiêu chuẩn cao: thiếu tiêu chuẩn, nhóm chỉ dễ chịu chứ không giỏi lên.",
    "remember": "Người ta chỉ nói thật khi lần nói thật trước không bị phạt.",
    "related": [
     "procedural-justice",
@@ -1446,7 +1450,7 @@
     "theory",
     "lore"
    ],
-   "idea": "Sức mạnh trong thương lượng đến từ việc bạn sẽ làm gì nếu không đạt thoả thuận.",
+   "idea": "Sức mạnh trong thương lượng đến từ việc bạn sẽ làm gì nếu không đạt thoả thuận; phương án tốt nhất ấy gọi là BATNA.",
    "why": "Phương án khác tốt hơn thường tăng sức thương lượng trước khi ngồi vào bàn.",
    "mechanism": "Một thoả thuận chỉ đáng nhận khi nó tốt hơn việc bạn sẽ làm nếu không có nó; việc ấy là cái sàn (Fisher và Ury, 1981). Bên có lối thoát tốt hơn khi thương lượng đổ vỡ là bên có sức.",
    "mistake": "Ngồi vào bàn mà chưa có phương án khác, để lộ phương án yếu, hoặc tưởng phương án thay thế chỉ là tiền.",
@@ -1612,7 +1616,7 @@
    "why": "Nhận ra thao túng sớm giúp không ký, không chuyển tiền, không quay lưng với người khác chỉ vì một phiên bản dựng sẵn.",
    "mechanism": "Thao túng sống nhờ chỗ tối: thông tin không được đối chiếu, quyết định bị dồn, mỗi người nghe một phiên bản. Ở cuộc gặp một lần nó có thể thắng, như chơi xấu trong trò chơi một lượt; khi quan hệ lặp lại và chuyện lan được, nó tốn uy tín.",
    "mistake": "Nghĩ người nhiều tâm kế luôn thắng; hoặc ngược lại, gán nhãn thao túng cho mọi người bất đồng với mình.",
-   "example": "Gộp 245 mẫu nghiên cứu: người sẵn lòng thao túng gần như không làm việc tốt hơn (tương quan −0,07), nhưng gây hại cho tổ chức và đồng nghiệp nhiều hơn (tương quan 0,25).",
+   "example": "Gộp 245 mẫu nghiên cứu: người sẵn lòng thao túng gần như không làm việc tốt hơn (tương quan −0,07, gần như bằng 0), nhưng gây hại cho tổ chức và đồng nghiệp nhiều hơn (tương quan 0,25).",
    "use": "Hỏi: nếu người kia biết rõ mình đang làm gì và vì sao, cách ấy còn hiệu quả không, họ còn đồng ý không? Gặp chiêu thì ghi lại, xác minh qua kênh mình chọn, đưa ra chỗ nhiều người cùng thấy.",
    "limits": "Phép thử công khai chỉ có chiều phủ định: qua chưa chắc đã đúng. Thang đo khuynh hướng thao túng là tự khai, đo mức sẵn lòng, không đo tài thao túng.",
    "remember": "Cách làm nào phải giấu mới thành thì đáng ngờ.",
