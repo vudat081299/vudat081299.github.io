@@ -13,12 +13,6 @@
 - Ba trang sách (books-in-brief, how-to-lie-with-statistics, a-short-history-of-nearly-everything): ghi chú
   biên tập cũ (độ dài so với đề bài, thứ tự chương, giọng vài đoạn) đã gỡ khỏi web ở commit 5bb410d. Muốn
   làm tiếp thì xem diff của commit ấy; không bắt buộc.
-- hidden-curriculum, câu hỏi còn mở (đề xuất là phương án đầu):
-  - 7.4: không thêm tuổi đồng thuận (trang cho người trưởng thành), hay thêm một câu trong phần chi tiết?
-  - `s-tusoat`: giữ sáu nhóm, hay thêm nhóm "Yêu đương" 3–4 câu?
-  - Tâm kế: giữ trong 8.4, hay thêm một luật vào bảng luật đánh số?
-  - Nhãn "Nguyên tắc thực hành": giữ (đã định nghĩa trong bảng nhãn), coi là nhãn thứ tám, hay gộp vào "Kinh nghiệm"?
-  - 3.8: thêm thuế và hình thức hộ kinh doanh khi đã đối chiếu Nghị định 141/2026 bản gốc?
 
 ## CHƯA LÀM
 
