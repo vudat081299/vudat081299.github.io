@@ -25,12 +25,13 @@ Bảy phần, bảy loại sai khác nhau:
   E. THƯ VIỆN MÔ HÌNH — đủ trường, khoá hợp lệ, id duy nhất, mọi related và sections trỏ tới thứ
      có thật, không có HTML trong dữ liệu, mọi con số trong thẻ có mặt trên trang, số thẻ khớp đầu trang.
   F. VỐN, NGHỀ, GIA ĐÌNH — các mục rủi ro, tạo của, doanh nghiệp, danh mục, tài sản, nghề, gia đình:
-     chuỗi lấy từ nguồn (luật, số liệu chính thức, tác giả và năm) giữ nguyên văn trong đúng mục, mỗi
-     điều luật dẫn trong bài có trong danh sách nguồn, năm can chi tính lại từ năm dương lịch,
+     dữ kiện lấy từ nguồn (con số kèm đơn vị, tác giả và năm) phải có mặt và đứng gần nhau trong đúng
+     mục — kiểm số, không kiểm câu văn (du_kien) —, mỗi điều luật dẫn trong bài có trong danh sách nguồn, năm can chi tính lại từ năm dương lịch,
      và mọi con số suy ra được tính lại trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn
      trong giá, thứ tự lợi suất, trái phiếu…).
   G. BẢN GỌN — định nghĩa và điều kiện quan trọng phải còn ngoài phần chi tiết. Không thay được
-     review ngữ nghĩa; bắt hồi quy khi gấp nhầm điều kiện vào details hoặc bỏ lời giải nghĩa của 12 luật.
+     review ngữ nghĩa; bắt hồi quy khi gấp nhầm điều kiện vào details, bỏ lời giải nghĩa của 12 luật
+     hoặc để lời ấy dài quá 25 chữ.
 
 Chỉ dùng thư viện chuẩn, chạy dưới 5 giây.
 
@@ -986,7 +987,8 @@ def phan_F2():
     for c, h, y in cc:
         k = int(y) - 4
         claim(f'{c} {h} {y}', (CAN[k % 10], CHI[k % 12]) == (c, h), f'năm {y} là {CAN[k % 10]} {CHI[k % 12]}')
-    # Chuỗi lấy từ nguồn, trong đúng mục: tác giả, năm, tạp chí, cỡ mẫu, số đo, ngày tháng, số hiệu luật.
+    # Dữ kiện lấy từ nguồn, trong đúng mục: tác giả, năm, cỡ mẫu, số đo, ngày tháng. Một chuỗi phải có nguyên văn;
+    # một bộ là một dữ kiện (du_kien): các phần phải đứng gần nhau, số nguyên cuối bộ (nếu có) là cỡ cửa sổ.
     NGUON = {
         's-tichluy': [
             ('Merton', '1968', 'Matthew'), ('Mincer', '1974'), ('Lagakos', '2018', '18 nước', 'toàn thời gian'),
