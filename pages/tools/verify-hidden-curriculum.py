@@ -862,7 +862,7 @@ def phan_F():
 
     # Đa dạng hoá: bảng và đoạn đọc mô hình (σ = 30%).
     s0 = 30.0
-    for rho, label in ((0, '0 (độc lập)'), (0.3, '0,3 (ngày thường)'), (0.8, '0,8 (khủng hoảng)')):
+    for rho, label in ((0, '0 (không tương quan tuyến tính)'), (0.3, '0,3 (ngày thường)'), (0.8, '0,8 (khủng hoảng)')):
         cells = [vn(s0 * math.sqrt(rho + (1 - rho) / N), 1) + '%' for N in (1, 5, 10, 20)]
         last = 'về 0' if rho == 0 else vn(s0 * math.sqrt(rho), 1) + '%'
         need_t(f'bảng đa dạng hoá, ρ = {rho}', f'Tương quan {label} ' + ' '.join(cells) + ' ' + last)
@@ -1158,6 +1158,34 @@ def phan_G():
             continue
         ks = re.findall(r'<div class="hc-key">\s*<span class="k">([^<]*)</span>', body)
         claim(f'{sid}: một khung “Luật của mục này”', ks == ['Luật của mục này'], f'thấy {ks}')
+
+
+    # Điều kiện đã mất khi rút gọn: kiểm các thành phần cần để hiểu đúng, không khoá cả câu văn.
+    bh = chu(muc('s-baohiem'))
+    claim('bảo hiểm: phạm vi, mốc tính thời hạn và khấu trừ hoàn phí',
+          all(x in bh for x in ['hợp đồng trên một năm', '21 ngày từ ngày nhận hợp đồng', 'trừ chi phí hợp lý']))
+    dm = chu(muc('s-danhmuc'))
+    claim('độ lệch chuẩn: quy tắc hai phần ba có giả định phân phối chuẩn',
+          'Nếu lợi suất gần phân phối chuẩn' in dm and 'đuôi dày' in dm)
+    claim('tương quan bằng 0 không được đồng nhất với độc lập', 'Tương quan 0 (độc lập)' not in dm)
+    rep = chu(muc('s-giakienthuc'))
+    claim('36% là tiêu chí thống kê, không phải chứng minh hiệu ứng không tồn tại',
+          'ngưỡng ý nghĩa thống kê' in rep and 'Không đạt ngưỡng chưa chứng minh hiệu ứng không tồn tại' in rep)
+    row = re.search(r'<tr><td class="hc-num">59</td><td>(.*?)</td>', muc('s-tomtat'), re.S)
+    claim('ôn tập tâm kế: giữ điều kiện tự do lựa chọn và giới hạn phép thử',
+          bool(row) and all(x in chu(row.group(1)) for x in ['hiểu sai', 'tự do lựa chọn', 'chưa chứng minh']))
+    cards = {c['id']: c for c in json.loads(DATA.read_text(encoding='utf-8'))['concepts']}
+    cm = cards['compounding']['mistake']
+    claim('thẻ lãi kép: 24,4% giữ giả định lợi suất và thời hạn',
+          all(x in cm for x in ['8%', '7%', '30 năm', '24,4%']))
+    unit = cards['unit-economics']['mechanism']
+    claim('thẻ hoà vốn dùng chi phí biến đổi, không thay bằng chi phí trực tiếp',
+          'chi phí biến đổi' in unit and 'chi phí trực tiếp' not in unit)
+    estate = cards['estate']['mechanism']
+    claim('thẻ di chúc giữ ngoại lệ khẩn cấp và điều kiện luật định',
+          all(x in estate for x in ['Di chúc miệng', 'tính mạng bị đe doạ', 'không thể lập văn bản', 'đủ điều kiện']))
+    claim('thẻ đổi việc: khoản đệm không tự tạo khả năng quay lại',
+          'lối quay lại thật' in cards['reversibility']['example'])
 
 
 def main():
