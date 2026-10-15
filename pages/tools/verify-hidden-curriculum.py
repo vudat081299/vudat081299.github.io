@@ -24,7 +24,8 @@ Bảy phần, bảy loại sai khác nhau:
      văn nói về nó.
   E. THƯ VIỆN MÔ HÌNH — đủ trường, khoá hợp lệ, id duy nhất, mọi related và sections trỏ tới thứ
      có thật, không có HTML trong dữ liệu, số thẻ khớp đầu trang, và mỗi con số trong thẻ có mặt
-     nguyên số trong chính các mục thẻ trỏ tới (không chỉ ở đâu đó trên trang).
+     nguyên số trong chính các mục thẻ trỏ tới (không chỉ ở đâu đó trên trang). Lộ trình, mẫu quyết
+     định và bài tập phải đủ trường, khoá duy nhất, mọi liên kết mục có thật.
   F. VỐN, NGHỀ, GIA ĐÌNH — các mục rủi ro, tạo của, doanh nghiệp, danh mục, tài sản, nghề, gia đình:
      dữ kiện lấy từ nguồn (con số kèm đơn vị, tác giả và năm) phải có mặt và đứng gần nhau trong đúng
      mục — kiểm số, không kiểm câu văn (du_kien) —, thân bài không dẫn số điều luật hay số hiệu văn bản
@@ -754,7 +755,8 @@ def phan_E():
         fails.append('không thấy ' + str(DATA))
         return
     try:
-        cards = json.loads(DATA.read_text(encoding='utf-8'))['concepts']
+        data = json.loads(DATA.read_text(encoding='utf-8'))
+        cards = data['concepts']
     except (ValueError, KeyError) as e:
         fails.append(f'không đọc được {DATA.name}: {e}')
         return
@@ -812,6 +814,32 @@ def phan_E():
     claim('thư viện: mọi con số trong thẻ có mặt ở mục thẻ trỏ tới', not stray, ', '.join(sorted(set(stray))[:12]))
     need('số khái niệm ở đầu trang', f'· {len(cards)} khái niệm</p>', len(cards))
     claim('thư viện: ít nhất 60 khái niệm', len(cards) >= 60, f'có {len(cards)}')
+
+    # Lộ trình và bài tập cũng dùng cùng file: lỗi dữ liệu không được làm dừng buildPractice().
+    for key, fields in (
+        ('reading_paths', ('id', 'title', 'action')),
+        ('decision_fields', ('name', 'prompt')),
+        ('practice_cases', ('id', 'title', 'prompt', 'answer')),
+    ):
+        entries = data.get(key)
+        valid = isinstance(entries, list) and bool(entries) and all(isinstance(e, dict) for e in entries)
+        claim(f'{key}: danh sách không rỗng, mỗi mục là object', valid)
+        if not valid:
+            continue
+        claim(f'{key}: đủ chữ thuần, không rỗng', all(
+            isinstance(e.get(f), str) and e[f].strip() and not re.search(r'[<>]', e[f])
+            for e in entries for f in fields))
+        identity = 'name' if key == 'decision_fields' else 'id'
+        names = [e.get(identity) for e in entries]
+        claim(f'{key}: khoá duy nhất', all(isinstance(n, str) for n in names)
+              and len(names) == len(set(names)))
+        if key != 'decision_fields':
+            refs = [e.get('sections') for e in entries]
+            claim(f'{key}: mục đọc có thật và không trùng', all(
+                isinstance(s, list) and bool(s) and all(isinstance(x, str) for x in s)
+                and len(s) == len(set(s)) and set(s) <= secs for s in refs))
+            if key == 'reading_paths':
+                claim('lộ trình: mỗi lần đọc 3–5 mục', all(isinstance(s, list) and 3 <= len(s) <= 5 for s in refs))
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -986,8 +1014,8 @@ def phan_F2():
             '6.096 vận động viên, trong đó 772 người thuộc hàng đầu thế giới',
             'Topel và Ward (1992)', 'nam thanh niên Mỹ 1957–1972',
             'một người điển hình làm bảy việc, khoảng hai phần ba số việc của cả đời', 'ít nhất một phần ba',
-            'trong khoảng 91% số tháng từ 1/1997 tới 8/2026, trung bình hơn khoảng 0,7 điểm phần trăm',
-            'rộng nhất vào 11/2022, lúc thị trường lao động rất căng: 7,7% so với 5,5%', '(6/2025: 4,3% so với 4,4%)',
+            'Fed Atlanta lấy ngày 15/10/2026', '306 trên 355 tháng có dữ liệu từ 1/1997 tới 8/2026',
+            'chênh trung bình khoảng 0,7 điểm phần trăm', 'trung bình ba tháng', 'thiếu số tháng 10/2025',
         ],
         's-vanminh': [
             ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh'),
@@ -1053,7 +1081,7 @@ def phan_F2():
         # di sản), 140 (uỷ quyền chấm dứt khi người uỷ quyền chết); Luật Đất đai 2024 Điều 27, Luật Nhà ở 2023 Điều 164
         # (công chứng); Luật Kinh doanh bảo hiểm 2022 Điều 4, 41 (người thụ hưởng). Trang chỉ giữ việc cần làm, không số điều.
         's-giayto': [
-            'tới tháng 10/2026', 'chia đều cho vợ hoặc chồng, cha mẹ và các con, kể cả con nuôi',
+            'tới tháng 10/2026', 'hàng thừa kế đầu gồm vợ hoặc chồng, cha mẹ và các con, kể cả con nuôi',
             'vẫn nhận ít nhất hai phần ba phần họ được hưởng nếu chia theo luật',
             'chỉ trả nợ của người mất trong phạm vi tài sản được nhận',
             'Giấy uỷ quyền hết hiệu lực khi người uỷ quyền mất',
@@ -1129,7 +1157,8 @@ def phan_G():
         's-thuongluong': ['phương án tốt nhất ấy là BATNA', 'không dùng làm lời đe doạ'],
         's-memcung': ['chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
-        's-giayto': ['nên công chứng', 'di chúc không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên'],
+        's-giayto': ['nên công chứng', 'di chúc không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên',
+                     'con thành niên không có khả năng lao động', 'trừ người từ chối nhận hoặc không có quyền hưởng'],
         's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn'],
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
         's-nhantin': ['ngừng nhắc', 'Không tìm kênh khác để vượt ranh giới'],
@@ -1186,6 +1215,17 @@ def phan_G():
           all(x in estate for x in ['Di chúc miệng', 'tính mạng bị đe doạ', 'không thể lập văn bản', 'đủ điều kiện']))
     claim('thẻ đổi việc: khoản đệm không tự tạo khả năng quay lại',
           'lối quay lại thật' in cards['reversibility']['example'])
+    claim('thẻ khoảng đệm không hứa biến quyết định thành quay lại được',
+          'không tự tạo lại' in cards['buffer']['mechanism']
+          and 'trở thành quay lại được' not in cards['buffer']['mechanism'])
+    fee = chu(muc('s-taisan'))
+    claim('bản đồ tài sản: 24,4% cũng giữ giả định lợi suất',
+          all(x in fee for x in ['8%/năm trước phí', '7% sau phí', '30 năm', '24,4%']))
+    # Snapshot Fed Atlanta 15/10/2026, data_overall, cột I/J, 1/1997–8/2026.
+    need_t('tỷ lệ tháng nhóm đổi việc cao hơn = 306 / 355', f'({vi(100 * 306 / 355, 1)}%)')
+    wage = chu(muc('s-moitruong'))
+    claim('đổi việc: mức tăng lương là trung vị, không phải tác dụng riêng của chuyển chỗ',
+          'trung vị' in wage and 'không đo tác dụng riêng' in wage)
 
 
 def main():

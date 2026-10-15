@@ -242,9 +242,9 @@
   /* nhãn viết hoa của mô hình: giữ chữ Hy Lạp thường (σ, ρ), vì Σ đọc thành “tổng” và Ρ thành chữ P */
   .hc-nocase { text-transform: none; }
 
-  /* ---- thanh trên cùng: 12 liên kết cần khoảng 1.190px bề rộng nội dung, nên gập vào ☰ sớm hơn
+  /* ---- thanh trên cùng: 14 liên kết cần thêm chỗ cho Yêu đương và Bài học, nên gập vào ☰ sớm hơn
      ngưỡng 900px của kit. Viết lại kiểu bảng xổ xuống của kit (chỉ có trong khối @container 900px). ---- */
-  @container (max-width: 1220px) {
+  @container (max-width: 1410px) {
     .hc-navbar > .wb-navbar__toggle { display: inline-flex; order: -1; }
     .hc-navbar > .wb-navbar__menu:not(.is-open) { display: none; }
     .hc-navbar .wb-navbar__menu.is-open {
@@ -300,6 +300,25 @@
   .hc-print-note { display: none; }
   @media (max-width: 620px) { .hc-start-list { grid-template-columns: minmax(0, 1fr); } .hc-start { padding: 14px; } }
 
+
+  .hc-route { margin-bottom: 18px; padding-bottom: 16px; border-bottom: var(--wb-bw) solid var(--wb-border); scroll-margin-top: 76px; }
+  #hc-exercises { scroll-margin-top: 76px; }
+  .hc-route label { display: block; margin: 0 0 6px; font-size: 14px; font-weight: 650; }
+  .hc-route select { max-width: 100%; width: 430px; }
+  .hc-route-list { display: flex; flex-wrap: wrap; gap: 6px 28px; margin: 12px 0; padding-left: 22px; font-size: 14px; line-height: 1.6; }
+  .hc-decision { display: grid; grid-template-columns: 165px minmax(0, 1fr); gap: 8px 14px; font-size: 14px; line-height: 1.6; }
+  .hc-decision dt { font-weight: 650; }
+  .hc-decision dd { margin: 0; }
+  .hc-check-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 6px 10px; }
+  .hc-check-row.is-na > label { color: var(--wb-fg-muted); text-decoration: line-through; }
+  .hc-check-row > button { font-size: 11px; white-space: nowrap; margin-top: 2px; }
+  @media (max-width: 560px) {
+    .hc-decision { grid-template-columns: minmax(0, 1fr); gap: 3px; }
+    .hc-decision dd { margin-bottom: 9px; }
+    .hc-check-row { grid-template-columns: minmax(0, 1fr); }
+    .hc-check-row > button { justify-self: end; }
+  }
+
   /* Bản in độc lập với theme, màn hình và những thẻ người đọc đã mở/lọc. */
   @page { size: A4; margin: 14mm; }
   @media print {
@@ -323,6 +342,7 @@
     p { orphans: 3; widows: 3; }
     .hc-start, .hc-key, .hc-item, .hc-classic { box-shadow: none; }
     .hc-start-list { display: block; }
+    .hc-route select, .hc-check-row > button { display: none !important; }
     .hc-start-list li { margin-bottom: 8px; break-inside: avoid; }
     .hc-depth, .hc-lab, .hc-tw { overflow: visible; }
     .hc-depth__body { padding: 0; }
@@ -351,9 +371,11 @@
     <a class="wb-nav__link" href="#nghe">Nghề</a>
     <a class="wb-nav__link" href="#nguoi">Người</a>
     <a class="wb-nav__link" href="#xuthe">Xử thế</a>
+    <a class="wb-nav__link" href="#s-tinhyeu">Yêu đương</a>
     <a class="wb-nav__link" href="#quyen">Quyền lực</a>
     <a class="wb-nav__link" href="#vanhoa">Văn hoá</a>
     <a class="wb-nav__link" href="#giadinh">Gia đình</a>
+    <a class="wb-nav__link" href="#baihoc">Bài học</a>
     <a class="wb-nav__link" href="#thuchanh">Thực hành</a>
     <a class="wb-nav__link" href="#s-thuvien">Thư viện</a>
   </nav>
@@ -377,7 +399,16 @@
   </header>
 
   <div class="hc-start" id="hc-start">
-    <h2 class="hc-sec-title">Bắt đầu với <i>tám câu hỏi đổi được quyết định</i></h2>
+    <div class="hc-route" id="hc-route">
+      <h2 class="hc-sec-title">Chọn việc đang gặp, <i>đọc rồi thử một bước</i></h2>
+      <label for="hc-route-choice">Bạn đang cần giải quyết việc gì?</label>
+      <select class="wb-input" id="hc-route-choice" disabled><option>Chọn lộ trình đọc</option></select>
+      <ol class="hc-route-list" id="hc-route-links"></ol>
+      <p class="hc-p" id="hc-route-action">Nếu thư viện chưa tải, chọn tình huống trong <a class="hc-x" href="#s-cach">Khung 3/3</a>.</p>
+      <p class="hc-p"><a class="hc-x" href="#hc-practice">Ghi một quyết định và ngày xem lại</a> · <a class="hc-x" href="#hc-exercises">Thử bài tập áp dụng</a>.</p>
+    </div>
+    <details class="hc-depth"><summary>Tám câu hỏi để kiểm lại quyết định</summary>
+    <div class="hc-depth__body">
     <p class="hc-p">Tám câu hỏi này giúp tránh những sai lầm đắt. Chọn câu gần với việc đang gặp; không cần đọc hết trang mới bắt đầu.</p>
     <ol class="hc-start-list">
       <li><b>Nếu sai, tôi còn tiếp tục được không?</b> Tính khoản mất lớn nhất, khoản phải trả sắp tới và tiền rút được ngay. Bớt phần rủi ro vượt sức chịu. Vừa để dành quỹ dự phòng vừa trả bớt nợ lãi cao. <a class="hc-x" href="#s-baohiem">Khoảng đệm</a> · <a class="hc-x" href="#s-ruiro">rủi ro chung</a>.</li>
@@ -389,8 +420,9 @@
       <li><b>Nếu không thoả thuận, tôi sẽ làm gì?</b> Viết ra phương án thay thế và mức thấp nhất mình nhận; hỏi hai bên thật sự cần gì. Có đường lui giúp từ chối việc không hợp, không phải để đe doạ. <a class="hc-x" href="#s-thuongluong">Thương lượng</a>.</li>
       <li><b>Ai quyết, họ cần gì và đang được chấm điểm thế nào?</b> Vẽ ra ai quyết, ai giữ tiền và người, ai giữ cửa, họ bị đo bằng gì. Giúp họ đạt việc, chia sẻ thông tin; kiểm tác dụng phụ trước khi đổi luật. <a class="hc-x" href="#s-tochuc">Tổ chức</a> · <a class="hc-x" href="#s-heth">hệ thống</a>.</li>
     </ol>
+    </div></details>
     <p class="hc-reading-note"><b>Đọc theo việc đang gặp:</b> <a class="hc-x" href="#s-cach">chọn lộ trình tình huống</a>; nếu đang tự ti, ngại gặp gỡ hoặc trì hoãn mở lời, bắt đầu với <a class="hc-x" href="#s-tutrong">tự trọng và sự chủ động</a>; khi làm quen hoặc đang yêu, xem <a class="hc-x" href="#s-tinhyeu">bản đồ yêu đương</a>. Định giá doanh nghiệp, vàng, hôn nhân và giấy tờ: đọc kỹ khi sắp dùng. Kinh điển, lịch sử và nghi thức: tra khi cần.</p>
-    <p class="hc-p"><b>Dừng đọc để thử:</b> chọn một quyết định thật, viết việc sẽ làm khác, điều kiện áp dụng và ngày kiểm kết quả. Nếu chưa đổi được việc gì, tìm ví dụ gần hơn hoặc phản hồi thật trước khi thêm mô hình.</p>
+    <p class="hc-p"><b>Dừng đọc để thử:</b> dùng <a class="hc-x" href="#hc-practice">mẫu quyết định</a> để viết việc sẽ làm khác, điều kiện và ngày kiểm kết quả. Nếu chưa đổi được việc gì, tìm ví dụ gần hơn hoặc phản hồi thật trước khi thêm mô hình.</p>
   </div>
   <div class="hc-reading" id="hc-reading" hidden>
     <button class="wb-btn wb-btn--outline wb-btn--sm" id="hc-expand">Mở chi tiết các mục</button>
@@ -401,7 +433,7 @@
     <span id="hc-reading-status" role="status"></span>
   </div>
   <p class="hc-reading-note">Mỗi mục luôn hiện luật, lý do ngắn và điều kiện cần biết; mở chi tiết để xem cơ chế, bằng chứng và ví dụ. PDF in theo ô “Nội dung PDF”, không theo các mục đang mở: bản gọn giữ phần luôn hiện, lộ trình đọc và 12 luật trả giá; bản đầy đủ thêm mọi chi tiết, bài tự soát, bảng ôn tập và thư viện.</p>
-  <p class="hc-print-note" id="hc-print-note">Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn. Khi cần tính toán hoặc quyết định lớn, mở chi tiết tại https://vudat081299.github.io/pages/hidden-curriculum.html. Các điểm nội dung cập nhật ngày 13/10/2026; nguồn thay đổi theo thời gian cần kiểm lại.</p>
+  <p class="hc-print-note" id="hc-print-note">Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn. Khi cần tính toán hoặc quyết định lớn, mở chi tiết tại https://vudat081299.github.io/pages/hidden-curriculum.html. Các điểm nội dung cập nhật ngày 15/10/2026; nguồn thay đổi theo thời gian cần kiểm lại.</p>
 
   <details class="hc-depth hc-examples"><summary>Bốn ví dụ định lượng trong bài</summary>
   <div class="hc-figs" style="margin-bottom:20px">
@@ -1693,7 +1725,7 @@
         <h3 class="hc-h3">Đo bằng tiền thật: trừ lạm phát, phí, thuế</h3>
         <p class="hc-p"><b>Lãi thực</b> là tiền lời còn lại sau khi trừ <b>lạm phát</b> (mức giá cả tăng mỗi năm): tiền của bạn mua thêm được bao nhiêu hàng. Gửi tiết kiệm lãi 5%/năm khi giá tăng 3,31% (năm 2025) thì lãi thực chỉ 1,64%/năm.</p>
         <p class="hc-p">Lãi thực có thể âm. Năm 2008, lãi tiền gửi khoảng 12,73% nhưng giá tăng 23,12%: lãi thực khoảng −8,4%, tức người gửi tiền mất sức mua. Tính cả giai đoạn 2005–2023, lãi tiền gửi bình quân khoảng 6,9%/năm, giá tăng khoảng 6,5%/năm, nên lãi thực chỉ khoảng 0,4%/năm. <b>Tiền gửi giữ được sức mua, nhưng gần như không làm bạn giàu thêm.</b></p>
-        <p class="hc-p"><b>Phí</b> cũng ăn theo lãi kép: phí 1%/năm lấy mất 24,4% số tiền cuối cùng sau 30 năm (<a class="hc-x" href="#s-cophieu">3.3</a>). <b>Thuế</b> khác theo loại thu nhập và đổi theo năm; kiểm quy định hiện hành. So hai lựa chọn thì so tiền lời sau lạm phát, phí và thuế.</p>
+        <p class="hc-p"><b>Phí</b> cũng ăn theo lãi kép: trong ví dụ lãi 8%/năm trước phí, còn 7% sau phí, số tiền cuối sau 30 năm thấp hơn 24,4% (<a class="hc-x" href="#s-cophieu">3.3</a>). <b>Thuế</b> khác theo loại thu nhập và đổi theo năm; kiểm quy định hiện hành. So hai lựa chọn thì so tiền lời sau lạm phát, phí và thuế.</p>
         <p class="hc-p">Muốn tự tính: lãi thực = (1 + lãi) ÷ (1 + lạm phát) − 1. Lấy lãi trừ lạm phát chỉ gần đúng khi lạm phát thấp.</p>
         <p class="hc-src">Lạm phát năm 2025: Cục Thống kê, Bộ Tài chính (12/2025). Lãi tiền gửi và lạm phát 2005–2023: chuỗi của IMF qua World Bank, bình quân nhân; lãi tiền gửi là lãi suất đại diện, không phải mức mỗi người nhận được.</p>
           </div>
@@ -1721,6 +1753,7 @@
           <li><b>Quỹ chuyên nghiệp</b>: tới cuối 2024, 84% quỹ cổ phiếu công ty lớn ở Mỹ do người chọn mã quản lý thua chỉ số S&amp;P 500 trong 10 năm, 90% trong 15 năm, 92% trong 20 năm (tính sau phí; quỹ đóng giữa chừng tính là thua).</li>
           <li><b>Người mua quỹ</b>: 10 năm tới cuối 2025, đồng vốn bình quân đặt vào quỹ ở Mỹ lời 8,7%/năm, trong khi chính các quỹ ấy lời 9,9%/năm. Morningstar quy khoảng chênh cho lúc tiền vào và rút ra; chính họ lưu ý nó không hẳn do chọn lúc kém.</li>
         </ul>
+        <p class="hc-p"><b>Quỹ chỉ số chưa chắc phân tán rộng.</b> Kiểm quỹ theo chỉ số gì, tập trung vào ngành hay vài công ty nào, tổng phí và điều kiện rút/bán. Quỹ theo ngành hoặc chủ đề vẫn có rủi ro tập trung. Chỉ dùng tiền chưa cần và mức biến động chịu được (<a class="hc-x" href="https://www.investor.gov/sites/investorgov/files/2023-09/mutual-funds-ETFs_2_0.pdf">SEC: quỹ và ETF</a>).</p>
         <p class="hc-p">Cách còn lại nghe nhàm: <b>mua cả thị trường với phí thấp, mua đều đặn, giữ thật lâu</b>. Mô hình dưới dùng dữ liệu thật của Mỹ 1928–2025 để hỏi: mua vào một năm bất kỳ và giữ đúng <i>h</i> năm thì bao nhiêu phần trăm số lần bạn mất tiền?</p>
         <div class="hc-lab" id="lab-time">
           <div class="hc-lab__head">
@@ -1975,7 +2008,7 @@
           <p class="hc-src" id="fig-gold-note"></p>
           <p class="hc-src">Giá cuối năm (LBMA từ 1970) theo Damodaran, histretSP; quy đổi sức mua bằng CPI-U của Mỹ. Đường này dùng giá cuối năm, nên đỉnh 1980 trên hình thấp hơn đỉnh thật (850 USD/ounce ngày 21/1/1980). Tính từ đỉnh thật ấy, vàng vượt lại theo giá danh nghĩa vào tháng 1/2008, và theo sức mua vào tháng 9/2025: 45 năm sau.</p>
         </figure>
-        <p class="hc-p">Cả giai đoạn 1971–2025, vàng tăng sức mua khoảng <b>4,95%/năm</b>, nhưng nhờ hai đầu: đầu là giá Nhà nước Mỹ giữ cố định nhiều thập kỷ, cuối là đỉnh lịch sử sau một năm 2025 tăng 66%. Ở giữa, khung 20 năm điển hình chỉ cho khoảng 2,6%/năm sau lạm phát, và cứ khoảng ba khung 20 năm thì một khung mất sức mua (<a class="hc-x" href="#lab-time">mô hình 3</a>, chọn Vàng, giữ 20 năm). Từ năm 1900, vàng tăng sức mua khoảng 1,3%/năm, cổ phiếu toàn thế giới gồm cổ tức khoảng 5,2%/năm (Dimson, Marsh và Staunton, UBS).</p>
+        <p class="hc-p">Cả giai đoạn 1971–2025, vàng tăng sức mua khoảng <b>4,95%/năm</b>, nhưng nhờ hai đầu: đầu là giá Nhà nước Mỹ giữ cố định nhiều thập kỷ, cuối là đỉnh lịch sử sau một năm 2025 tăng 66%. Ở giữa, khung 20 năm điển hình chỉ cho khoảng 2,6%/năm sau lạm phát, và cứ khoảng ba khung 20 năm thì một khung mất sức mua (<a class="hc-x" href="#lab-time">mô hình 3</a>, chọn Vàng, giữ 20 năm). Theo Dimson, Marsh và Staunton, vàng tăng sức mua bằng USD khoảng 1,3%/năm trong 1900–2025 (<a class="hc-x" href="https://www.ubs.com/content/dam/assets/wm/static/cio/documents/giry2026-summary-public.pdf">UBS 2026, trang 10</a>); cổ phiếu toàn thế giới gồm cổ tức khoảng 5,2%/năm trong 1900–2024 (<a class="hc-x" href="https://www.jbs.cam.ac.uk/2025/report-stocks-have-far-outperformed-over-the-past-125-years/">tác giả giới thiệu UBS 2025</a>). Hai số khác năm kết thúc, chỉ để thấy quy mô dài hạn, không để xếp hạng cùng kỳ.</p>
         <h3 class="hc-h3">Ở Việt Nam: chênh lệch mua–bán và chênh lệch với giá thế giới</h3>
         <p class="hc-p">Một <b>lượng</b> (cây) vàng là 37,5 gam, bằng 10 <b>chỉ</b>; một chỉ là 3,75 gam; một ounce quốc tế (troy ounce) là 31,1035 gam, nên một lượng ≈ 1,20565 ounce. Người mua vàng ở Việt Nam trả hai khoản phí ẩn. Thứ nhất là <b>chênh lệch giữa giá tiệm bán ra và giá tiệm mua vào</b>: mất ngay khi bước ra khỏi tiệm. Thứ hai là <b>chênh lệch giữa vàng miếng trong nước và giá thế giới quy đổi</b>, có lúc tới hàng chục triệu đồng một lượng, phần lớn vì Nhà nước quản chặt nguồn cung vàng miếng. Khoảng chênh này có thể co lại rất nhanh khi chính sách đổi (<a class="hc-x" href="finance-econ-rulebook.html#viz-gold">Economics Handbook, mục A6</a>). Mô hình dưới tính khoản thứ nhất.</p>
         <div class="hc-lab" id="lab-gold">
@@ -2255,7 +2288,7 @@
         <p class="hc-p">Gộp dữ liệu về 6.096 vận động viên, trong đó 772 người thuộc hàng đầu thế giới, Güllich và cộng sự (2022) thấy nhóm hàng đầu thường đã thử nhiều môn, chuyên muộn và <b>tiến bộ lúc đầu chậm hơn</b> người chỉ đạt cấp quốc gia. Đây là tương quan, chắc nhất trong thể thao; nhiều nghề vẫn cần luyện chuyên sớm. <b>Thử có chủ đích rồi đào sâu</b>, ghép kỹ năng bổ trợ (<a class="hc-x" href="#s-donbay">4.5</a>).</p>
         <h3 class="hc-h3">Lúc đổi việc</h3>
         <p class="hc-p">Topel và Ward (1992), số liệu nam thanh niên Mỹ 1957–1972: trong mười năm đầu đi làm, một người điển hình làm bảy việc, khoảng hai phần ba số việc của cả đời; các lần đổi việc góp <b>ít nhất một phần ba</b> mức tăng lương đầu sự nghiệp.</p>
-        <p class="hc-p">Theo số liệu tăng lương của Fed Atlanta, ở Mỹ người đổi việc tăng lương nhanh hơn người ở lại trong khoảng 91% số tháng từ 1/1997 tới 8/2026, trung bình hơn khoảng 0,7 điểm phần trăm. Chênh lệch rộng nhất vào 11/2022, lúc thị trường lao động rất căng: 7,7% so với 5,5%; gần bằng nhau giữa 2025 (6/2025: 4,3% so với 4,4%). <b>Chênh lệch đổi theo thị trường, và là trung bình của những người tự chọn đổi việc</b>; không phải mức tăng bảo đảm cho mỗi người.</p>
+        <p class="hc-p">Theo chuỗi Fed Atlanta lấy ngày 15/10/2026, nhóm đổi việc ở Mỹ có mức tăng lương cao hơn nhóm ở lại trong 306 trên 355 tháng có dữ liệu từ 1/1997 tới 8/2026 (86,2%), chênh trung bình khoảng 0,7 điểm phần trăm. Chuỗi dùng trung vị thay đổi lương theo giờ qua 12 tháng, làm mượt bằng trung bình ba tháng; thiếu số tháng 10/2025. Chênh lệch thay đổi theo thị trường. Nhóm “đổi việc” còn gồm đổi ngành, nghề hoặc nhiệm vụ, không chỉ tự nghỉ sang công ty khác. <b>Đây là dữ liệu quan sát, không đo tác dụng riêng của việc đổi chỗ</b>; không bảo đảm mức tăng cho từng người (<a class="hc-x" href="https://www.atlantafed.org/research-and-data/data/wage-growth-tracker">Fed Atlanta: phương pháp và dữ liệu</a>).</p>
         <p class="hc-p"><b>Đổi việc có giá:</b> cổ phần, thưởng chưa tới hạn; uy tín và quan hệ nội bộ không mang theo được; thời gian học lại (<a class="hc-x" href="#s-tichluy">4.3</a>). Khi chỗ cũ ít còn gì để học, so cái được ở chỗ mới với các khoản mất và khả năng chịu sốc của mình (<a class="hc-x" href="#s-thoigian">2.2</a>). Lời mời từ bên ngoài, dù không nhận, vẫn là dữ liệu để thương lượng ở chỗ cũ (<a class="hc-x" href="#s-thuongluong">6.5</a>).</p>
         <h3 class="hc-h3">Chọn cuộc chơi và tính điều bỏ qua</h3>
         <p class="hc-p"><b>Chọn ngành trước khi lo làm giỏi trong ngành.</b> Hỏi: nhu cầu đang tăng hay giảm, thu nhập cao nhất tới đâu, kỹ năng có mang đi được không, và nhịp làm việc có hợp sức mình không.</p>
@@ -3897,7 +3930,7 @@
           <summary>Cơ chế, bằng chứng và cách áp dụng</summary>
           <div class="hc-depth__body">
         <h3 class="hc-h3">Đặt tục ngữ cạnh dữ liệu</h3>
-        <p class="hc-p">“Không ai giàu ba họ, không ai khó ba đời” có gốc trong <i>Gia huấn ca</i> (tương truyền của Nguyễn Trãi, tác giả còn tồn nghi) và <i>Lẽ tục phú</i>. Dữ liệu trả lời khác nhau tuỳ cách đo. Các số dưới là <b>tương quan</b> thứ hạng giàu nghèo giữa hai đời: 1 là giống hệt, 0 là không liên quan.</p>
+        <p class="hc-p">“Không ai giàu ba họ, không ai khó ba đời” có gốc trong <i>Gia huấn ca</i> (tương truyền của Nguyễn Trãi, tác giả còn tồn nghi) và <i>Lẽ tục phú</i>. Dữ liệu trả lời khác nhau tuỳ cách đo. Các số dưới là <b>tương quan</b> thứ hạng giàu nghèo giữa hai đời: 1 là cùng chiều tuyến tính hoàn hảo; 0 là không tương quan tuyến tính, chưa chứng minh không có quan hệ nào khác.</p>
         <ul class="hc-ul">
           <li><b>Từng gia đình: lợi thế giảm nhanh qua mỗi đời.</b> Số liệu bốn thế hệ ở Thuỵ Điển: cha mẹ và con 0,3–0,4; ông bà và cháu chỉ 0,1–0,2. Ít nhất một nửa mối liên hệ cha mẹ – con đến từ thừa kế và quà tặng; thu nhập và học vấn chỉ khoảng một phần tư (Adermon, Lindahl và Waldenström, 2018).</li>
           <li><b>Cả một dòng họ: lợi thế phai chậm hơn nhiều.</b> Lần theo những họ hiếm ở Anh và xứ Wales từ 1858 tới 2012 (18.869 người), mỗi đời giữ lại khoảng ba phần tư khoảng cách với mức trung bình: hệ số 0,70–0,75 (Gregory Clark, <i>The Son Also Rises</i>, 2014; Clark và Cummins, 2015). Phản biện: đo cả dòng họ khác đo từng người (Torche và Corvalán, 2018).</li>
@@ -3983,6 +4016,7 @@
           <li>Em bàn với cha mẹ về <b>ngân sách cả nhà</b> hằng tuần, hằng tháng lại thấp hơn 13 điểm. Nói chuyện tiền <b>hằng ngày</b> cũng thấp hơn nói hằng tuần.</li>
           <li>Em được tự quyết tiêu tiền vào gì cao hơn khoảng 30 điểm. Cách phổ biến nhất: 70% học sinh tự tiêu khoản nhỏ, khoản lớn thì xin phép.</li>
         </ul>
+        <p class="hc-src"><a class="hc-x" href="https://www.oecd.org/en/publications/pisa-2022-results-volume-iv_5a849c2a-en/full-report/component-11.html">OECD, chương 4: bảng IV.B1.4.5, IV.B1.4.6 và IV.B1.4.10</a>; chênh lệch điểm đã xét giới, hoàn cảnh kinh tế–xã hội và nguồn gốc nhập cư.</p>
         <p class="hc-p">Đây là những điều đi cùng nhau, chưa phải nguyên nhân: có thể học sinh giỏi hay chủ động hỏi, còn học sinh yếu hỏi hằng ngày vì cần giúp. <b>Cách dùng</b>: cùng con bàn lựa chọn hợp tuổi, giải thích giới hạn thật, đừng bắt con gánh lo toan tiền bạc của người lớn.</p>
         <p class="hc-p"><b>Tự chủ không phải là bỏ mặc.</b> Lý thuyết tự quyết (Ryan và Deci, 2000) cho rằng người ta có động lực bền khi thấy mình được chọn, làm được việc, và gắn bó với người khác. Khi giao con một việc khô khan, cho con <b>một lý do có nghĩa và một chút lựa chọn</b>.</p>
         <h3 class="hc-h3">Hai câu nói phổ biến cần kiểm lại</h3>
@@ -4025,7 +4059,7 @@
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
-          <b>Lập di chúc bằng văn bản khi còn minh mẫn; nên công chứng, nhất là khi tài sản lớn hoặc gia đình dễ tranh chấp.</b> Sửa di chúc khi đời đổi: cưới, ly hôn, có con, mua nhà. Bạn chỉ để lại được phần tài sản của mình, và di chúc không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên: luật vẫn để cho họ một phần. Ít nhất hai người tin cậy phải biết hồ sơ để ở đâu.
+          <b>Lập di chúc bằng văn bản khi còn minh mẫn; nên công chứng, nhất là khi tài sản lớn hoặc gia đình dễ tranh chấp.</b> Sửa di chúc khi đời đổi: cưới, ly hôn, có con, mua nhà. Bạn chỉ để lại được phần tài sản của mình, và di chúc không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên và con thành niên không có khả năng lao động: luật vẫn để cho họ một phần, trừ người từ chối nhận hoặc không có quyền hưởng. Ít nhất hai người tin cậy phải biết hồ sơ để ở đâu.
         </div>
 
         <details class="hc-depth">
@@ -4033,7 +4067,7 @@
           <div class="hc-depth__body">
         <h3 class="hc-h3">Bốn điều luật đáng biết</h3>
         <ul class="hc-ul">
-          <li><b>Không có di chúc</b> thì phần của bạn chia đều cho vợ hoặc chồng, cha mẹ và các con, kể cả con nuôi. Anh chị em chỉ được hưởng khi không còn ai trong nhóm này.</li>
+          <li><b>Không có di chúc</b> thì hàng thừa kế đầu gồm vợ hoặc chồng, cha mẹ và các con, kể cả con nuôi; người cùng hàng được phần bằng nhau. Con mất trước hoặc cùng lúc thì có thể có cháu, chắt hưởng thế vị. Chỉ chuyển sang hàng sau khi không còn người hàng trước có quyền nhận và nhận di sản.</li>
           <li><b>Chỉ để lại được phần của mình</b>: với nhà chung, phải xác định phần của người kia trước; tỉ lệ không phải lúc nào cũng đúng một nửa.</li>
           <li><b>Người thân gần vẫn có phần</b>: vợ, chồng, cha mẹ, con chưa thành niên, và con thành niên không có khả năng lao động, vẫn nhận ít nhất hai phần ba phần họ được hưởng nếu chia theo luật, trừ người từ chối nhận hoặc không có quyền hưởng.</li>
           <li><b>Người thừa kế chỉ trả nợ của người mất trong phạm vi tài sản được nhận</b>, không phải lấy tiền riêng ra trả.</li>
@@ -4322,6 +4356,16 @@
 
         <p class="hc-lede">Bắt đầu bằng ba câu hỏi. Nếu mất thu nhập, tiền dễ rút đủ sống bao lâu? Rủi ro nào chạm cả việc làm lẫn tài sản? Việc hôm nay để lại kỹ năng hay sản phẩm gì? Chọn một lỗ hổng có hậu quả lớn để sửa trước. Số tick không đo giá trị hay năng lực của bạn.</p>
 
+        <div id="hc-practice" class="hc-start">
+          <h3 class="hc-h3">Mẫu cho một quyết định thật</h3>
+          <p class="hc-p">Viết trên giấy theo các câu dưới. Chọn một việc nhỏ đủ an toàn để thử; ghi trước rồi mới nhìn kết quả.</p>
+          <dl class="hc-decision" id="hc-decision-fields"></dl>
+          <p class="hc-src">Nguyên tắc thực hành; không phải thang đo hay công thức bảo đảm kết quả.</p>
+        </div>
+        <details class="hc-depth" id="hc-exercises">
+          <summary>Bài tập: phân biệt dữ kiện, rủi ro và việc cần làm</summary>
+          <div class="hc-depth__body"><h3 class="hc-h3">Ba tình huống để thử</h3><div id="hc-practice-cases"></div></div>
+        </details>
         <details class="hc-depth">
           <summary>Mở bài tự soát</summary>
           <div class="hc-depth__body">
@@ -4329,7 +4373,7 @@
           <div class="hc-lab__head">
             <p class="hc-lab__kick">Mô hình 10 / 10 · thực hành</p>
             <p class="hc-lab__title">Ba mươi lăm câu: năm loại vốn, quyền lực và gia đình</p>
-            <p class="hc-lab__hint">Mỗi nhóm năm câu. Số tick giúp chọn mục đọc, không phải thang đo năng lực hay giá trị của bạn. Ưu tiên lỗ hổng gây hậu quả lớn trước nhóm ít tick nhất. Kết quả chỉ lưu trong trình duyệt này.</p>
+            <p class="hc-lab__hint">Mỗi nhóm năm câu. Số tick giúp chọn mục đọc, không phải thang đo năng lực hay giá trị của bạn. Ưu tiên lỗ hổng gây hậu quả lớn trước nhóm ít tick nhất. Chọn “Không áp dụng” cho câu chưa phù hợp; câu ấy không tính vào tổng. Kết quả chỉ lưu trong trình duyệt này.</p>
           </div>
           <div class="hc-lab__body">
             <div id="au-form">
@@ -4413,13 +4457,14 @@
           <div class="hc-lab__head">
             <p class="hc-lab__kick">Danh sách tick · lưu trong trình duyệt này</p>
             <p class="hc-lab__title" id="pl-count">0 việc đã xong</p>
+            <p class="hc-lab__hint">Chọn việc hợp hoàn cảnh; “Không áp dụng” loại việc khỏi tổng, không coi là chưa làm. Các mốc là tham khảo, không phải hạn bắt buộc.</p>
           </div>
           <div class="hc-lab__body" id="pl-form">
             <p class="hc-group-t">30 ngày — bịt lỗ</p>
             <div class="hc-checks">
               <label class="wb-check"><input type="checkbox" id="pl-a1"> Viết một trang: mọi tài sản, mọi khoản nợ, và tài sản trừ nợ còn bao nhiêu (<a class="hc-x" href="#s-bang">1.1</a>).</label>
               <label class="wb-check"><input type="checkbox" id="pl-a2"> Ghi chi tiêu đủ một tháng; tính phần trăm thu nhập để dành được.</label>
-              <label class="wb-check"><input type="checkbox" id="pl-a3"> Trả hoặc đàm phán lại mọi khoản nợ lãi trên 20%/năm (<a class="hc-x" href="#s-no">1.4</a>).</label>
+              <label class="wb-check"><input type="checkbox" id="pl-a3"> Lập kế hoạch trả hoặc đàm phán nợ lãi cao, tính cả phí và khả năng trả (<a class="hc-x" href="#s-no">1.4</a>).</label>
               <label class="wb-check"><input type="checkbox" id="pl-a4"> Mở một tài khoản riêng cho quỹ dự phòng; đặt lệnh chuyển tự động ngày nhận lương.</label>
               <label class="wb-check"><input type="checkbox" id="pl-a5"> Kiểm bảo hiểm y tế; mua bảo hiểm tai nạn, nhân thọ có kỳ hạn nếu đã có người phụ thuộc (<a class="hc-x" href="#s-baohiem">1.5</a>).</label>
               <label class="wb-check"><input type="checkbox" id="pl-a6"> Viết ra ba quy tắc cứng: không vay để mua chứng khoán, không ký bảo lãnh khoản mình không gánh nổi, không chuyển tiền khi bị giục.</label>
@@ -4429,7 +4474,7 @@
             <p class="hc-group-t">12 tháng — khoảng đệm và lãi kép</p>
             <div class="hc-checks">
               <label class="wb-check"><input type="checkbox" id="pl-b1"> Quỹ dự phòng đủ 3–6 tháng chi tiêu.</label>
-              <label class="wb-check"><input type="checkbox" id="pl-b2"> Mỗi tháng đầu tư đều vào một quỹ chỉ số phí thấp (quỹ mua cả rổ cổ phiếu của thị trường); không xem giá hằng ngày (<a class="hc-x" href="#s-cophieu">3.3</a>).</label>
+              <label class="wb-check"><input type="checkbox" id="pl-b2"> Nếu có tiền chưa cần dùng và chịu được biến động, chọn quỹ chỉ số phân tán rộng, phí thấp rồi đầu tư theo kế hoạch; không xem giá hằng ngày (<a class="hc-x" href="#s-cophieu">3.3</a>).</label>
               <label class="wb-check"><input type="checkbox" id="pl-b3"> Một kỹ năng mới có bằng chứng người khác xem được: một dự án, một chuỗi bài viết, một chứng chỉ có giá trị (<a class="hc-x" href="#s-vonnguoi">4.1</a>).</label>
               <label class="wb-check"><input type="checkbox" id="pl-b4"> Mỗi tháng gặp riêng một người giỏi hơn mình trong nghề; giúp trước, hỏi sau (<a class="hc-x" href="#s-mangluoi">5.2</a>).</label>
               <label class="wb-check"><input type="checkbox" id="pl-b5"> Chọn cuốn đáp đúng câu hỏi đang gặp và thử áp dụng một ý, từ mục <a class="hc-x" href="#s-nguon">Nguồn</a>.</label>
@@ -4552,6 +4597,9 @@
 
         <p class="hc-lede"><b>Mỗi thẻ bắt đầu bằng một câu nguyên lý.</b> Mở để xem cơ chế, hiểu sai, ví dụ, cách dùng và giới hạn. Liên kết nối thẻ với mô hình liên quan và mục trong bài; dòng “Mô hình ở mục này” ở cuối mỗi mục dẫn ngược về thư viện.</p>
 
+        <details class="hc-depth" id="hc-library-browse">
+          <summary>Chọn nhóm hoặc tìm trong thư viện</summary>
+          <div class="hc-depth__body">
         <div class="hc-lib-tools">
           <div class="wb-btn-group" id="lib-layer" role="group" aria-label="Lọc theo tầng">
             <button class="wb-btn wb-btn--outline wb-btn--sm is-active" data-l="all">Tất cả</button>
@@ -4566,7 +4614,9 @@
         </div>
         <p class="hc-lib-count" id="lib-count" aria-live="polite"></p>
         <div class="hc-lib" id="lib"></div>
-        <p class="hc-src" id="lib-msg"></p>
+          </div>
+        </details>
+        <p class="hc-src" id="lib-msg" role="status"></p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
@@ -4691,7 +4741,7 @@ var libraryReady = Promise.resolve();
     document.body.setAttribute('data-print', full ? 'full' : 'brief');
     $('hc-print-note').textContent = (full ? 'Bản đầy đủ — các mục, mô hình, nguồn và thư viện.' : 'Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn.') +
       (full && !$('lib').getAttribute('data-ready') ? ' Thư viện chưa nạp được; phần đó thiếu trong bản in này.' : '') +
-      ' Trước quyết định lớn, đọc chi tiết và nguồn tại https://vudat081299.github.io/pages/hidden-curriculum.html. Các điểm nội dung cập nhật ngày 13/10/2026; nguồn thay đổi theo thời gian cần kiểm lại.';
+      ' Trước quyết định lớn, đọc chi tiết và nguồn tại https://vudat081299.github.io/pages/hidden-curriculum.html. Các điểm nội dung cập nhật ngày 15/10/2026; nguồn thay đổi theo thời gian cần kiểm lại.';
   }
   scope.addEventListener('change', printNote);
   window.addEventListener('beforeprint', function () {
@@ -5483,7 +5533,12 @@ Array.prototype.forEach.call(document.querySelectorAll('.hc-tw--stack table'), f
     return b ? b.textContent.trim() : id;
   }
   function fold(s) { return s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase(); }
-  function say(msg) { $('lib-msg').textContent = msg; }
+  function say(msg) {
+    $('lib-msg').textContent = msg;
+    $('hc-route-action').textContent = 'Chưa tải được lộ trình và bài tập. Chọn tình huống trong ';
+    var fallback = el('a', 'hc-x', 'Khung 3/3'); fallback.href = '#s-cach';
+    $('hc-route-action').appendChild(fallback);
+  }
   if (location.protocol === 'file:') {
     say('Thư viện đọc data/hidden-curriculum.json bằng fetch nên cần mở trang qua HTTP: chạy python3 -m http.server trong thư mục gốc của repo, rồi mở http://localhost:8000/pages/hidden-curriculum.html.');
     return;
@@ -5491,7 +5546,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.hc-tw--stack table'), f
   libraryReady = fetch('data/hidden-curriculum.json', { cache: 'no-cache' })
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(build)
-    .catch(function (e) { say('Không đọc được data/hidden-curriculum.json (' + e.message + '), nên thư viện mô hình và các dòng “Mô hình ở mục này” chưa hiện.'); });
+    .catch(function (e) { say('Không đọc được data/hidden-curriculum.json (' + e.message + '), nên lộ trình, bài tập và thư viện mô hình chưa hiện.'); });
 
   function build(data) {
     var cards = data.concepts, byId = {}, nodes = [];
@@ -5564,6 +5619,8 @@ Array.prototype.forEach.call(document.querySelectorAll('.hc-tw--stack table'), f
     q.addEventListener('input', filter);
     filter();
 
+    buildPractice(data);
+
     /* Bấm một mô hình (ở thẻ khác hay ở cuối một mục): bỏ lọc nếu thẻ đang bị ẩn, rồi mở thẻ. */
     function openCard(id) {
       var d = document.getElementById(id);
@@ -5577,6 +5634,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.hc-tw--stack table'), f
         filter();
       }
       d.open = true;
+      for (var outer = d.parentElement.closest('details'); outer; outer = outer.parentElement.closest('details')) outer.open = true;
     }
     document.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('a.hc-chip');
@@ -5588,49 +5646,113 @@ Array.prototype.forEach.call(document.querySelectorAll('.hc-tw--stack table'), f
     if (location.hash.indexOf('#m-') === 0) { var t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
     lib.setAttribute('data-ready', 'true');
   }
+  function buildPractice(data) {
+    var paths = data.reading_paths, choice = $('hc-route-choice');
+    clear(choice);
+    paths.forEach(function (path) { var option = el('option', null, path.title); option.value = path.id; choice.appendChild(option); });
+    choice.disabled = false;
+    function route() {
+      var path = paths.filter(function (p) { return p.id === choice.value; })[0];
+      if (!path) return;
+      clear($('hc-route-links'));
+      path.sections.forEach(function (sid) {
+        var item = el('li'), toc = document.querySelector('#toc a[href="#' + sid + '"]');
+        var a = el('a', 'hc-x', secNo(sid) + ' — ' + (toc ? toc.textContent.trim() : document.getElementById(sid).querySelector('h2').textContent));
+        a.href = '#' + sid; item.appendChild(a); $('hc-route-links').appendChild(item);
+      });
+      $('hc-route-action').textContent = 'Việc làm: ' + path.action;
+    }
+    choice.addEventListener('change', route); route();
+    data.decision_fields.forEach(function (field) {
+      $('hc-decision-fields').appendChild(el('dt', null, field.name));
+      $('hc-decision-fields').appendChild(el('dd', null, field.prompt));
+    });
+    data.practice_cases.forEach(function (sample) {
+      var card = el('div', 'hc-start');
+      card.appendChild(el('h4', 'hc-h3', sample.title));
+      card.appendChild(el('p', 'hc-p', sample.prompt));
+      var answer = el('details', 'hc-depth');
+      answer.appendChild(el('summary', null, 'Xem một cách trả lời'));
+      answer.appendChild(el('p', 'hc-p', sample.answer)); card.appendChild(answer);
+      var links = el('p', 'hc-reading-note', 'Đọc lại: ');
+      sample.sections.forEach(function (sid, i) {
+        if (i) links.appendChild(document.createTextNode(' · '));
+        var a = el('a', 'hc-x', secNo(sid)); a.href = '#' + sid; links.appendChild(a);
+      });
+      card.appendChild(links); $('hc-practice-cases').appendChild(card);
+    });
+  }
 })();
 
 /* ═════════════════ Mô hình 10 — tự soát & lộ trình ═════════════════
-   Lưu trong localStorage của trình duyệt này (khoá hc-audit-v1, hc-plan-v1); không gửi đi đâu. */
+   Giữ khoá v1: đọc được các ô đã tick cũ; giá trị "na" là không áp dụng. */
 (function () {
   var box = $('au-form'); if (!box) return;
   var KEYS = ['kt', 'cn', 'xh', 'vh', 'kd', 'ql', 'gd'];
   var LABEL = { kt: 'Kinh tế', cn: 'Con người', xh: 'Xã hội', vh: 'Văn hoá', kd: 'Khoảng đệm', ql: 'Quyền lực', gd: 'Gia đình' };
   var LINK = { kt: '#tien', cn: '#s-vonnguoi', xh: '#nguoi', vh: '#vanhoa', kd: '#s-khanhiem', ql: '#quyen', gd: '#giadinh' };
-  var boxes = Array.prototype.slice.call(box.querySelectorAll('input[type=checkbox]'));
-  var saved = store('hc-audit-v1') || {};
-  boxes.forEach(function (b) { if (saved[b.id]) b.checked = true; });
+  function choices(container, key, change) {
+    var saved = store(key) || {};
+    return Array.prototype.map.call(container.querySelectorAll('input[type=checkbox]'), function (input) {
+      var label = input.parentElement, row = document.createElement('div'), button = document.createElement('button');
+      var item = { input: input, ignored: saved[input.id] === 'na' };
+      input.checked = saved[input.id] === true;
+      row.className = 'hc-check-row'; label.parentElement.insertBefore(row, label); row.appendChild(label);
+      button.type = 'button'; button.className = 'wb-btn wb-btn--ghost wb-btn--sm';
+      button.setAttribute('aria-label', 'Không áp dụng: ' + label.textContent.trim());
+      row.appendChild(button);
+      function show() {
+        input.disabled = item.ignored;
+        row.classList.toggle('is-na', item.ignored);
+        button.textContent = item.ignored ? 'Đã bỏ qua · đổi lại' : 'Không áp dụng';
+        button.setAttribute('aria-pressed', item.ignored ? 'true' : 'false');
+      }
+      show();
+      input.addEventListener('change', change);
+      button.addEventListener('click', function () { item.ignored = !item.ignored; show(); change(); });
+      return item;
+    });
+  }
+  function saveChoices(key, items) {
+    var saved = {};
+    items.forEach(function (item) { saved[item.input.id] = item.ignored ? 'na' : item.input.checked; });
+    store(key, saved);
+  }
+  var items = choices(box, 'hc-audit-v1', render);
   function render() {
-    var sc = {}, st = {};
-    KEYS.forEach(function (k) { sc[k] = 0; });
-    boxes.forEach(function (b) { st[b.id] = b.checked; if (b.checked) sc[b.getAttribute('data-k')]++; });
-    store('hc-audit-v1', st);
-    var html = '', weakest = KEYS[0];
+    var sc = {}, count = {}, ignored = 0;
+    KEYS.forEach(function (k) { sc[k] = 0; count[k] = 0; });
+    items.forEach(function (item) {
+      if (item.ignored) { ignored++; return; }
+      var k = item.input.getAttribute('data-k'); count[k]++;
+      if (item.input.checked) sc[k]++;
+    });
+    saveChoices('hc-audit-v1', items);
+    var html = '', weakest = null;
     KEYS.forEach(function (k) {
-      if (sc[k] < sc[weakest]) weakest = k;
-      html += '<div class="hc-bars__t">' + LABEL[k] + '</div><div class="hc-bars__track"><div class="hc-bars__fill" style="width:' + (sc[k] / 5 * 100) + '%"></div></div><div class="hc-bars__v">' + sc[k] + '/5</div>';
+      if (count[k] && (weakest === null || sc[k] / count[k] < sc[weakest] / count[weakest])) weakest = k;
+      var width = count[k] ? sc[k] / count[k] * 100 : 0;
+      html += '<div class="hc-bars__t">' + LABEL[k] + '</div><div class="hc-bars__track"><div class="hc-bars__fill" style="width:' + width + '%"></div></div><div class="hc-bars__v">' + (count[k] ? sc[k] + '/' + count[k] : '—') + '</div>';
     });
     $('au-bars').innerHTML = html;
-    var total = KEYS.reduce(function (s, k) { return s + sc[k]; }, 0);
-    var a = $('au-next');
-    var full = boxes.length === total;
-    a.textContent = full ? 'Đủ cả ' + total + ' ô — đọc lại phần Bài học để giữ được những gì đang có.' : 'Thấp nhất: ' + LABEL[weakest] + ' (' + sc[weakest] + '/5) — đọc phần ấy trước.';
-    a.setAttribute('href', full ? '#baihoc' : LINK[weakest]);
+    var total = KEYS.reduce(function (sum, k) { return sum + sc[k]; }, 0), applicable = items.length - ignored;
+    var a = $('au-next'), full = applicable === total;
+    a.textContent = !applicable ? 'Đã bỏ qua mọi câu; chọn một tình huống gần với mình để đọc.' :
+      full ? 'Đã tick các câu áp dụng; chọn một việc cần củng cố từ phần Bài học.' :
+      'Nhóm cần xem lại: ' + LABEL[weakest] + ' (' + sc[weakest] + '/' + count[weakest] + '). Ưu tiên hậu quả lớn, không chỉ số ô.';
+    if (ignored) a.textContent += ' Bỏ qua ' + ignored + ' câu.';
+    a.setAttribute('href', !applicable ? '#hc-route' : full ? '#baihoc' : LINK[weakest]);
   }
-  boxes.forEach(function (b) { b.addEventListener('change', render); });
   render();
-
   var plan = $('pl-form'); if (!plan) return;
-  var pboxes = Array.prototype.slice.call(plan.querySelectorAll('input[type=checkbox]'));
-  var psaved = store('hc-plan-v1') || {};
-  pboxes.forEach(function (b) { if (psaved[b.id]) b.checked = true; });
+  var pitems = choices(plan, 'hc-plan-v1', prender);
   function prender() {
-    var st = {}, done = 0;
-    pboxes.forEach(function (b) { st[b.id] = b.checked; if (b.checked) done++; });
-    store('hc-plan-v1', st);
-    $('pl-count').textContent = done + ' / ' + pboxes.length + ' việc đã xong';
+    var done = 0, applicable = 0;
+    pitems.forEach(function (item) { if (!item.ignored) { applicable++; if (item.input.checked) done++; } });
+    saveChoices('hc-plan-v1', pitems);
+    $('pl-count').textContent = done + ' / ' + applicable + ' việc áp dụng đã xong' +
+      (applicable < pitems.length ? ' · bỏ qua ' + (pitems.length - applicable) : '');
   }
-  pboxes.forEach(function (b) { b.addEventListener('change', prender); });
   prender();
 })();
 

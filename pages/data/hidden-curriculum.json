@@ -231,7 +231,7 @@
    ],
    "idea": "Phần dư về tiền, thời gian và sức lực giữa mình và mức tối thiểu phải có.",
    "why": "Khoảng đệm giúp chờ, từ chối và bớt phải vay đắt hoặc bán gấp.",
-   "mechanism": "Giả thuyết: lo khoản sắp trả kéo sự chú ý vào việc gấp và làm bỏ sót phần còn lại. Có khoảng đệm thì ít phải quyết trong thế gấp, và nhiều việc khó quay lại trở thành quay lại được.",
+   "mechanism": "Giả thuyết: lo khoản sắp trả kéo sự chú ý vào việc gấp và làm bỏ sót phần còn lại. Có khoảng đệm thì ít phải quyết trong thế gấp và có sức chịu chi phí đổi hướng; nó không tự tạo lại công việc hay cơ hội đã mất.",
    "mistake": "Coi khoảng đệm là tiền nằm chết hay giờ bị phí, rồi tối ưu cho tới khi lịch kín 100% và tài khoản về 0.",
    "example": "Quỹ dự phòng ba đến sáu tháng chi tiêu biến chuyện mất việc từ một cú sốc buộc phải nhận việc đầu tiên thành vài tháng tìm đúng việc.",
    "use": "Dựng khoảng đệm từng chút, song song với việc lập kế hoạch: quỹ dự phòng, vài giờ trống mỗi tuần, quy tắc đặt sẵn cho những quyết định lặp lại.",
@@ -1980,6 +1980,147 @@
     "s-batdong",
     "s-dunglai",
     "s-memcung"
+   ]
+  }
+ ],
+ "reading_paths": [
+  {
+   "id": "start",
+   "title": "Mới đi làm, đang xây nền",
+   "sections": [
+    "s-bang",
+    "s-no",
+    "s-baohiem",
+    "s-vonnguoi",
+    "s-tichluy"
+   ],
+   "action": "Ghi tài sản, nợ, chi thiết yếu; chọn một rủi ro cần giảm và một kỹ năng sẽ luyện."
+  },
+  {
+   "id": "invest",
+   "title": "Chuẩn bị đầu tư",
+   "sections": [
+    "s-ruiro",
+    "s-taisan",
+    "s-cophieu",
+    "s-danhmuc",
+    "s-luadao"
+   ],
+   "action": "Ghi lúc cần tiền, mức mất chịu được và những khoản có thể cùng giảm; kiểm sản phẩm trước khi mua."
+  },
+  {
+   "id": "career",
+   "title": "Đổi việc hoặc thương lượng",
+   "sections": [
+    "s-thunhap",
+    "s-moitruong",
+    "s-thuongluong",
+    "s-docnguoi"
+   ],
+   "action": "Viết phương án nếu không thoả thuận được, tiêu chí chọn việc và điều cần xác nhận bằng văn bản."
+  },
+  {
+   "id": "dating",
+   "title": "Ngại mở lời, muốn làm quen",
+   "sections": [
+    "s-tutrong",
+    "s-tunhien",
+    "s-chudong",
+    "s-tinhyeu",
+    "s-henho"
+   ],
+   "action": "Chọn một lời mời thật, vừa sức và dễ từ chối; xem phản hồi thay vì đoán động cơ."
+  },
+  {
+   "id": "relationship",
+   "title": "Đang yêu, có bất đồng",
+   "sections": [
+    "s-quanhe",
+    "s-batdong",
+    "s-dunglai"
+   ],
+   "action": "Ghi việc đã xảy ra, điều mình cần và một đề nghị cụ thể; có đe doạ hay bạo lực thì ưu tiên an toàn."
+  },
+  {
+   "id": "family",
+   "title": "Cưới, có con hoặc lo giấy tờ gia đình",
+   "sections": [
+    "s-honnhan",
+    "s-daycon",
+    "s-giayto",
+    "s-thehe"
+   ],
+   "action": "Chọn một cuộc trao đổi hoặc một giấy tờ đang thiếu; ghi người cùng làm và ngày xem lại."
+  },
+  {
+   "id": "workplace",
+   "title": "Làm việc với người, đọc tổ chức",
+   "sections": [
+    "s-noi",
+    "s-ranhgioi",
+    "s-tochuc",
+    "s-thecuoc"
+   ],
+   "action": "Vẽ ai quyết, ai giữ nguồn lực; tách việc đã thấy khỏi suy đoán và chọn cách kiểm không buộc tội."
+  }
+ ],
+ "decision_fields": [
+  {
+   "name": "Quyết định",
+   "prompt": "Tôi đang chọn gì, và cần chọn trước khi nào?"
+  },
+  {
+   "name": "Dữ kiện",
+   "prompt": "Điều gì đã kiểm được? Nguồn nào độc lập? Điều gì còn chưa biết?"
+  },
+  {
+   "name": "Giả định",
+   "prompt": "Tôi đang đoán điều gì? Bằng chứng nào sẽ khiến tôi đổi ý?"
+  },
+  {
+   "name": "Phương án và việc thử",
+   "prompt": "Nếu không chọn cách này, tôi sẽ làm gì? Có phép thử nhỏ nào cho thêm thông tin?"
+  },
+  {
+   "name": "Giới hạn",
+   "prompt": "Mất tối đa tiền, thời gian, sức lực tới đâu? Điều kiện nào khiến tôi dừng?"
+  },
+  {
+   "name": "Ngày xem lại",
+   "prompt": "Khi nào kiểm kết quả, theo dấu hiệu nào? Ghi trước khi biết kết quả."
+  }
+ ],
+ "practice_cases": [
+  {
+   "id": "cash",
+   "title": "Tiền để dành và nợ lãi cao",
+   "prompt": "Thu nhập đang bấp bênh, có nợ lãi cao và một khoản để dành. Một người rủ đầu tư vì giá vừa giảm. Bạn cần biết gì trước khi quyết?",
+   "answer": "Ghi khoản phải trả, chi thiết yếu, tiền dễ rút và điều khoản nợ. Giá giảm chưa chứng minh rẻ. Giữ một khoản đệm vừa sức song song trả bớt nợ lãi cao; chưa dùng tiền sắp cần vào phần biến động. Mức cụ thể tuỳ hoàn cảnh.",
+   "sections": [
+    "s-no",
+    "s-baohiem",
+    "s-danhmuc"
+   ]
+  },
+  {
+   "id": "message",
+   "title": "Một lời từ chối nhẹ",
+   "prompt": "Bạn mời gặp, người kia nói đang bận và chưa gợi ý lúc khác. Bạn nghĩ họ đang thử mình. Đâu là dữ kiện, đâu là suy đoán, và bước tiếp nào vừa mức?",
+   "answer": "Dữ kiện là họ nói bận; “đang thử mình” là suy đoán. Một lần chưa cho biết động cơ. Có thể để họ chủ động hẹn lúc tiện; lời mời vẫn không được đáp thì ngừng nhắc. Không dùng ẩn ý mình đoán để gạt lời từ chối hay vượt ranh giới.",
+   "sections": [
+    "s-docnguoi",
+    "s-nhantin"
+   ]
+  },
+  {
+   "id": "offer",
+   "title": "Lương thấp hơn để được học",
+   "prompt": "Chỗ mới hứa cho học nhiều nhưng trả ít hơn. Bạn thích lời hứa ấy. Cần kiểm gì, thử ra sao, và điều kiện nào khiến bạn không nhận?",
+   "answer": "Kiểm nhiệm vụ thật, người hướng dẫn, cách nhận phản hồi, tiền đủ sống và khoản mất khi chuyển. Hỏi người đang làm, chốt điều kiện bằng văn bản, đặt ngày xem lại việc học. Không nhận mức không đủ sống chỉ vì lời hứa; quỹ dự phòng không tự tạo đường quay lại chỗ cũ.",
+   "sections": [
+    "s-moitruong",
+    "s-thuongluong",
+    "s-tichluy"
    ]
   }
  ]
