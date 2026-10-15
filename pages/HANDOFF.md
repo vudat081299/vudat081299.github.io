@@ -21,8 +21,7 @@
 
 ## NỢ
 
-- `hidden-curriculum.html`, số liệu chưa kiểm đủ bản gốc: tỷ lệ 51%/34% của Genschow 2021;
-  ngày VN-Index vượt lại đỉnh 2022.
+- `hidden-curriculum.html`, số liệu chưa kiểm đủ bản gốc: ngày VN-Index vượt lại đỉnh 2022.
 - `scooter-maintenance-guide.html`: mục checklist là `<label>` không có ô input — không dùng được bằng bàn
   phím, không báo trạng thái đã tích.
 - Sáu trang cho `.wb-navbar__brand` co bằng `flex: 0 1 auto`, điều `web-builder/CLAUDE.md` bảo đừng làm:

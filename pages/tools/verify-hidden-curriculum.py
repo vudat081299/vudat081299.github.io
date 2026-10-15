@@ -1223,6 +1223,9 @@ def phan_G():
           all(x in fee for x in ['8%/năm trước phí', '7% sau phí', '30 năm', '24,4%']))
     # Snapshot Fed Atlanta 15/10/2026, data_overall, cột I/J, 1/1997–8/2026.
     need_t('tỷ lệ tháng nhóm đổi việc cao hơn = 306 / 355', f'({vi(100 * 306 / 355, 1)}%)')
+    ditf = chu(muc('s-thuyetphuc'))
+    claim('Genschow bảng 1: so nhóm sau yêu cầu lớn với nhóm chỉ yêu cầu nhỏ',
+          '51%' in ditf and '38%' in ditf and '34%' not in ditf)
     wage = chu(muc('s-moitruong'))
     claim('đổi việc: mức tăng lương là trung vị, không phải tác dụng riêng của chuyển chỗ',
           'trung vị' in wage and 'không đo tác dụng riêng' in wage)
