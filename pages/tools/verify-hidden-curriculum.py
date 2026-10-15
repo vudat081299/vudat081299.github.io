@@ -1014,8 +1014,8 @@ def phan_F2():
             '6.096 vận động viên, trong đó 772 người thuộc hàng đầu thế giới',
             'Topel và Ward (1992)', 'nam thanh niên Mỹ 1957–1972',
             'một người điển hình làm bảy việc, khoảng hai phần ba số việc của cả đời', 'ít nhất một phần ba',
-            'Fed Atlanta lấy ngày 15/10/2026', '306 trên 355 tháng có dữ liệu từ 1/1997 tới 8/2026',
-            'chênh trung bình khoảng 0,7 điểm phần trăm', 'trung bình ba tháng', 'thiếu số tháng 10/2025',
+            'Fed Atlanta lấy ngày 15/10/2026', '324 trên 355 tháng có dữ liệu từ 1/1997 tới 8/2026',
+            'chênh trung bình khoảng 0,7 điểm phần trăm', 'trung bình 12 tháng', 'thiếu số tháng 10/2025',
         ],
         's-vanminh': [
             ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh'),
@@ -1221,8 +1221,8 @@ def phan_G():
     fee = chu(muc('s-taisan'))
     claim('bản đồ tài sản: 24,4% cũng giữ giả định lợi suất',
           all(x in fee for x in ['8%/năm trước phí', '7% sau phí', '30 năm', '24,4%']))
-    # Snapshot Fed Atlanta 15/10/2026, data_overall, cột I/J, 1/1997–8/2026.
-    need_t('tỷ lệ tháng nhóm đổi việc cao hơn = 306 / 355', f'({vi(100 * 306 / 355, 1)}%)')
+    # Snapshot Fed Atlanta 15/10/2026, Job Switcher (12 tháng), cột B/C, 1/1997–8/2026.
+    need_t('tỷ lệ tháng nhóm đổi việc cao hơn = 324 / 355', f'({vi(100 * 324 / 355, 1)}%)')
     ditf = chu(muc('s-thuyetphuc'))
     claim('Genschow bảng 1: so nhóm sau yêu cầu lớn với nhóm chỉ yêu cầu nhỏ',
           '51%' in ditf and '38%' in ditf and '34%' not in ditf)
