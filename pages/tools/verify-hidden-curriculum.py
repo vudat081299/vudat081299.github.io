@@ -978,6 +978,9 @@ def phan_F2():
     du_kien('s-daycon', 'Altonji, Blom và Meghir: kỹ thuật điện so với sư phạm', 'kỹ thuật điện', 'khoảng 75%', 'sư phạm', w=60)
     # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 62 trên 286 ca.
     claim('Van Such: 62 trên 286 ca là 21%', int(100 * 62 / 286) == 21, f'{100 * 62 / 286:.1f}%')
+    # Odean (1998), bảng I: tỉ lệ lãi được bán 0,148, tỉ lệ lỗ được bán 0,098 → cao hơn khoảng 50% (luật 10, s-muoihai).
+    claim('Odean: 0,148 so với 0,098 là cao hơn khoảng 50%', 45 <= 100 * (0.148 / 0.098 - 1) <= 55,
+          f'{100 * (0.148 / 0.098 - 1):.1f}%')
     du_kien('s-giayto', 'Van Such: 62 trên 286 ca', 'Van Such', '2017', '286 bệnh nhân', '62 ca (21%)')
     # Thân bài không dẫn số điều luật hay số hiệu văn bản (PAGES-015); chi tiết ấy chỉ ở dòng Luật của s-nguon.
     so_hieu = re.compile(r'Điều \d|\b\d+/\d{4}/(?:QH|NĐ|TT|NQ|VBHN|UBTVQH)')
@@ -1094,6 +1097,19 @@ def phan_F2():
             'Van Such và cộng sự, 2017', 'kiểm quy định hiện hành trước khi ký',
             'Nhiều bản cùng định đoạt một tài sản thì bản sau cùng có hiệu lực',
         ],
+        # Lừa đảo: bài “25 kịch bản lừa đảo trên không gian mạng năm 2026” (bocongan.gov.vn, 8/9/2026) và cảnh báo
+        # “phạt nguội” (baochinhphu.vn, 10/9/2026): công an không yêu cầu nộp phạt hay đưa mật khẩu, OTP qua link lạ.
+        's-luadao': [
+            'Công an không yêu cầu nộp phạt hay đưa mật khẩu, mã OTP qua đường link trong tin nhắn lạ',
+            ('Bộ Công an', '2026'), ('cho rút tiền vài lần đầu', 'dụ nạp số lớn', 60),
+        ],
+        # Luật 12: WHO, “Road traffic injuries” (20/7/2026) — hàng đầu ở 5–29 tuổi; mũ đúng cách giảm nguy cơ tử
+        # vong hơn 6 lần, chấn thương não tới 74%. Cấm lái khi có nồng độ cồn: luật trật tự, an toàn giao thông
+        # đường bộ (bản hợp nhất 2026), áp cho mọi phương tiện, kể cả xe thô sơ. Odean (1998) bảng I: PGR 0,148, PLR 0,098.
+        's-muoihai': [
+            ('người 5–29 tuổi', 'hơn 6 lần', '74%', 'WHO'), 'kể cả xe đạp, khi trong máu hoặc hơi thở có nồng độ cồn',
+            ('Odean (1998)', '10.000 tài khoản', 'khoảng 50%'), ('Shefrin và Statman', '1985'), ('Cochrane', '2019'),
+        ],
         # Tâm kế: số liệu từ abstract và bảng 2 của O'Boyle và cộng sự (2012), abstract của Spurk và cộng sự
         # (2016), Harsey và Freyd (2020); phép thử công khai theo Kant (bản Campbell Smith).
         's-thecuoc': [
@@ -1167,7 +1183,9 @@ def phan_G():
         's-kinhdien': ['trăm trận không nguy', 'hai lần là đủ', 'chưa rõ xuất xứ'],
         's-giayto': ['nên công chứng', 'di chúc không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên',
                      'con thành niên không có khả năng lao động', 'trừ người từ chối nhận hoặc không có quyền hưởng'],
-        's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn'],
+        's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn',
+                     'Không đưa mã OTP, mật khẩu', 'gọi ngay ngân hàng của mình để khoá tài khoản'],
+        's-muoihai': ['đã uống rượu bia thì không lái xe nào', 'cài quai đúng cách'],
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
         's-nhantin': ['ngừng nhắc', 'Không tìm kênh khác để vượt ranh giới'],
         's-henho': ['không thay đồng thuận thân mật', 'chọn nơi công cộng', 'không gửi tiền cho người yêu qua mạng'],
