@@ -1061,14 +1061,17 @@ def phan_F2():
             ('14 năm', 'Gottman và Levenson', '2000'), '“dự báo đúng hơn 90%”', ('Heyman và Smith Slep', '2001'),
             ('4.574 cặp', 'Dew, Britt và Huston', '2012'), ('388 cặp', 'Ross và cộng sự', '2022'),
         ],
+        # Yêu đương: abstract của từng bài (PubMed, Crossref, Semantic Scholar), 10/2026.
         's-tinhyeu': [
             'Gộp 43 nghiên cứu theo dõi 11.196 cặp, Joel và cộng sự (2020)', 'giải thích khoảng 45% mức hài lòng hiện tại',
-            'Birnbaum, Zholtack và Reis (2020), ba nghiên cứu',
+            ('Eastwick và Finkel', '2008'), ('Dai và cộng sự', '2014'),
+            ('ba nghiên cứu với người lạ', 'Birnbaum, Zholtack và Reis', '2020'),
+            ('hồ sơ Facebook của bốn nam sinh viên', 'Whitchurch, Wilson và Gilbert', '2011'),
+            ('bốn nghiên cứu trò chuyện qua mạng', 'Birnbaum và cộng sự', '2018', 400),
         ],
         's-nhantin': ['Patel, Mahar và Webster (2022) khảo sát 302 sinh viên Mỹ'],
         's-henho': [
-            'Aron và cộng sự (1997)', 'trong 45 phút', 'Whitchurch, Wilson và Gilbert (2011)',
-            'hồ sơ Facebook của bốn nam sinh viên',
+            'Aron và cộng sự (1997)', 'trong 45 phút', ('Laurenceau và cộng sự', '1998'), ('Bộ Công an', '2025'),
         ],
         's-quanhe': [
             'một phần ba số cặp đã đoàn tụ chia tay trong ba tháng',
