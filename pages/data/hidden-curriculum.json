@@ -202,7 +202,7 @@
    ],
    "idea": "Tiền không nằm trong tay mình là lời hứa trả của ai đó. Hỏi ai phải trả, và mình được gì nếu họ không trả được.",
    "why": "Tiền gửi, trái phiếu, bảo hiểm trông giống nhau ở quầy, nhưng người phải trả và mức an toàn khác nhau.",
-   "mechanism": "Người giữ tiền có thể vỡ nợ, chậm trả hoặc khoá tài khoản; lãi cao hơn thường là tiền bù cho rủi ro ấy. Bảo hiểm tiền gửi chỉ che tiền gửi của cá nhân và có hạn mức; trái phiếu, bảo hiểm nhân thọ không được che.",
+   "mechanism": "Người giữ tiền có thể vỡ nợ, chậm trả hoặc khoá tài khoản; lãi cao hơn thường là tiền bù cho rủi ro ấy. Bảo hiểm tiền gửi chỉ che tiền gửi bằng đồng Việt Nam của cá nhân và có hạn mức; trái phiếu, bảo hiểm nhân thọ không được che.",
    "mistake": "Tin rằng thứ gì bán tại quầy ngân hàng cũng an toàn như sổ tiết kiệm.",
    "example": "Năm 2023, nhiều doanh nghiệp Việt Nam chậm trả gốc lãi trái phiếu. Người cầm những trái phiếu ấy là chủ nợ của doanh nghiệp, không phải người gửi tiền ở nơi đã bán chúng.",
    "use": "Ghi nơi giữ tiền, loại giấy tờ và quyền của mình khi có sự cố; kiểm hạn mức bảo hiểm tiền gửi hiện hành.",
@@ -233,7 +233,7 @@
    "why": "Khoảng đệm giúp chờ, từ chối và bớt phải vay đắt hoặc bán gấp.",
    "mechanism": "Giả thuyết: lo khoản sắp trả kéo sự chú ý vào việc gấp và làm bỏ sót phần còn lại. Có khoảng đệm thì ít phải quyết trong thế gấp và có sức chịu chi phí đổi hướng; nó không tự tạo lại công việc hay cơ hội đã mất.",
    "mistake": "Coi khoảng đệm là tiền nằm chết hay giờ bị phí, rồi tối ưu cho tới khi lịch kín 100% và tài khoản về 0.",
-   "example": "Quỹ dự phòng ba đến sáu tháng chi tiêu biến chuyện mất việc từ một cú sốc buộc phải nhận việc đầu tiên thành vài tháng tìm đúng việc.",
+   "example": "Quỹ dự phòng ba đến sáu tháng chi tiêu thiết yếu biến chuyện mất việc từ một cú sốc buộc phải nhận việc đầu tiên thành vài tháng tìm đúng việc.",
    "use": "Dựng khoảng đệm từng chút, song song với việc lập kế hoạch: quỹ dự phòng, vài giờ trống mỗi tuần, quy tắc đặt sẵn cho những quyết định lặp lại.",
    "limits": "Ảnh hưởng của thiếu thốn lên nhận thức còn tranh cãi. Đệm quá lớn cũng có chi phí cơ hội.",
    "remember": "Dựng khoảng đệm từng chút; đừng chờ hết thiếu mới lập kế hoạch.",
@@ -271,7 +271,7 @@
    ],
    "sections": [
     "s-thoigian",
-    "s-ruiro"
+    "s-latnguoc"
    ]
   },
   {
@@ -297,8 +297,8 @@
     "regression"
    ],
    "sections": [
-    "s-phanphoi",
-    "s-bayes"
+    "s-bayes",
+    "s-phanphoi"
    ]
   },
   {
@@ -1132,7 +1132,7 @@
    "why": "Động cơ giúp nhận ra lúc lời khuyên có thể lệch lợi ích của mình; nó là một manh mối, không phải lời giải cho mọi hành vi.",
    "mechanism": "Người ta tối ưu theo cách mình được chấm, và thường tự thuyết phục rằng điều có lợi cho mình cũng là điều đúng.",
    "mistake": "Tin rằng người tử tế không bị động cơ chi phối. Munger nói cả đời ông vẫn đánh giá thấp sức mạnh của động cơ, dù hiểu nó hơn hầu hết người cùng thời.",
-   "example": "Người bán bảo hiểm nhân thọ thường nhận phần lớn hoa hồng ở những năm đầu hợp đồng, nên có thể có động cơ ưu tiên ký hợp đồng hơn sự phù hợp dài hạn.",
+   "example": "Thử bằng khách giả ở Ấn Độ, đại lý bảo hiểm nhân thọ phần lớn khuyên gói hoa hồng cao dù kém hẳn gói khác cho khách (Anagol, Cole và Sarkar, 2017).",
    "use": "Trước lời khuyên quan trọng, hỏi người ấy được lợi gì và có chịu hậu quả nếu sai không. Cùng chịu rủi ro là tín hiệu hữu ích, không bảo đảm họ đúng.",
    "limits": "Con người không chỉ chạy theo tiền: danh dự, quan hệ, hứng thú cũng là động cơ — và phần thưởng vật chất hứa trước có khi làm giảm hứng thú với việc vốn thú vị.",
    "remember": "Nghe lời nói, nhìn cách được trả.",
