@@ -1204,6 +1204,15 @@ def phan_G():
     no = chu(muc('s-no'))
     claim('nợ: trả góp 0% so bằng tổng tiền; thẻ chỉ miễn lãi khi trả đủ, trả tối thiểu vẫn là vay',
           all(x in no for x in ['so tổng tiền phải trả với giá trả ngay', 'trả đủ dư nợ sao kê đúng hạn', 'kể cả trả mức tối thiểu']))
+    # Caplovitz (1963) đo người nghèo trả giá và lãi mua chịu cao hơn; "mua đồ rẻ nhiều lần" không phải của ông.
+    claim('nợ: Caplovitz gắn với mua chịu, giá và lãi cao, không gắn với “mua đồ rẻ nhiều lần”',
+          'mua chịu' in no and 'mua đồ rẻ nhiều lần' not in no)
+    # Mani và cộng sự (2013): lời phê bình của Wicherts và Zand Scholten nhắm các thí nghiệm trong phòng, không phải
+    # nghiên cứu mía; Kidd và cộng sự (2013) là một biến thể của thí nghiệm kẹo dẻo, không phải bản làm lại.
+    kh = chu(muc('s-khanhiem'))
+    claim('khan hiếm: phê bình 2013 nhắm thí nghiệm trong phòng, không nhắm nghiên cứu mía',
+          'thí nghiệm trong phòng thí nghiệm của cùng bài báo' in kh and 'phân tích nghiên cứu mía' not in kh)
+    claim('kẹo dẻo: Kidd 2013 là biến thể, không phải bản làm lại', 'biến thể của thí nghiệm' in kh and 'làm lại năm 2013' not in kh)
     bh = chu(muc('s-baohiem'))
     claim('bảo hiểm: phạm vi, mốc tính thời hạn và khấu trừ hoàn phí',
           all(x in bh for x in ['hợp đồng trên một năm', '21 ngày từ ngày nhận hợp đồng', 'trừ chi phí hợp lý']))
