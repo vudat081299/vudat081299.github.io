@@ -852,7 +852,7 @@ def phan_F():
     vn = vi
     # Chuỗi lấy từ nguồn: mỗi chuỗi ứng một dòng kiểm nguồn; sửa thì mở lại nguồn.
     for x in ('350 triệu đồng', 'bằng đồng Việt Nam của cá nhân', '139 doanh nghiệp', '83.600 tỉ đồng', '50,7%',
-              'tối đa hai năm', '39,2%', '25.967', '42,6%', '1.092', '34,82 nghìn tỷ USD', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
+              'tối đa hai năm', '39,2%', '25.967', '42,6%', '1.092', 'khoảng 35 nghìn tỷ USD', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
               '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
               '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%', '−0,82', '−0,31',
               '−1,04%', '2,24%', '1.820,1', '2.610,85', '1.000 tấn', '473 tấn', '15.858,92', '24.164,89',
@@ -874,7 +874,8 @@ def phan_F():
     need_t('lợi nhuận hôm nay so với giá ở P/E 40', f'chỉ bằng {vn(100 / PE, 1)}% giá (1 ÷ 40)')
     need_t('g hàm ý khi trả hết lợi nhuận', f'khoảng {vn((r - 1 / PE) * 100, 1)}%/năm mãi mãi')
     g15 = (1 - PE * r) / (1 / 0.15 - PE)          # PE = (1 − g/ROIC)/(r − g), ROIC 15%
-    need_t('g hàm ý khi tái đầu tư với ROIC 15%', f'khoảng {vn(g15 * 100, 1)}%/năm', g15)
+    claim('giữ lại lợi nhuận thì tăng trưởng phải cao hơn 6,5%', g15 > r - 1 / PE, f'{g15:.4f}')
+    need_t('cao hơn khi phải giữ lại lợi nhuận', 'và cao hơn nữa nếu phải giữ lại lợi nhuận để làm ăn')
 
     def price2(g1, g2=0.03, n=10):
         pv, e = 0.0, 1.0
@@ -891,17 +892,16 @@ def phan_F():
     claim('lợi nhuận sau mười năm “gấp khoảng 4 lần”', round((1 + lo) ** 10) == 4, f'{(1 + lo) ** 10:.2f}')
     need_t('gấp khoảng 4 lần trong bài', 'gấp khoảng 4 lần')
 
-    # Đa dạng hoá: bảng và đoạn đọc mô hình (σ = 30%).
+    # Đa dạng hoá: bảng và đoạn đọc bảng (σ = 30%).
     s0 = 30.0
     for rho, label in ((0, '0 (không tương quan tuyến tính)'), (0.3, '0,3 (ngày thường)'), (0.8, '0,8 (khủng hoảng)')):
         cells = [vn(s0 * math.sqrt(rho + (1 - rho) / N), 1) + '%' for N in (1, 5, 10, 20)]
         last = 'về 0' if rho == 0 else vn(s0 * math.sqrt(rho), 1) + '%'
         need_t(f'bảng đa dạng hoá, ρ = {rho}', f'Tương quan {label} ' + ' '.join(cells) + ' ' + last)
-    n10, n50 = s0 * math.sqrt(0.37), s0 * math.sqrt(0.3 + 0.7 / 50)
-    need_t('đọc mô hình: N 10 → 50', f'từ {vn(n10, 2)}% xuống {vn(n50, 2)}%')
-    claim('đọc mô hình: bớt “chưa tới 1,5 điểm phần trăm”', n10 - n50 < 1.5, f'{n10 - n50:.2f}')
-    need_t('đọc mô hình: ρ = 0, N = 20', f'hai mươi tài sản còn {vn(s0 / math.sqrt(20), 2)}%')
-    need_t('đọc mô hình: sàn khi khủng hoảng', f'sàn lên {vn(s0 * math.sqrt(0.8), 2)}%')
+    # Đọc bảng: khủng hoảng (ρ = 0,8) thì hai mươi tài sản vẫn lên xuống “gần bằng một” tài sản.
+    claim('đọc bảng: khủng hoảng, hai mươi tài sản gần bằng một', math.sqrt(0.8 + 0.2 / 20) > 0.85,
+          f'tỉ số {math.sqrt(0.8 + 0.2 / 20):.3f}')
+    need_t('đọc bảng trong bài', 'khủng hoảng đẩy tương quan lên 0,8 thì hai mươi tài sản vẫn lên xuống gần bằng một')
 
     st = 60 * 1.3
     need_t('tái cân bằng 60/40 sau một năm cổ phiếu +30%', f'{vn(st / (st + 40) * 100, 1)}% / {vn(40 / (st + 40) * 100, 1)}%')
@@ -923,14 +923,26 @@ def phan_F():
     need_t('thứ tự lợi suất: không rút', vn(1000 * prod, 1))
     need_t('thứ tự lợi suất: chênh hai kết cục', vn(run(good)[-1] - run(bad)[-1], 2))
     claim('góp đều thì năm xấu trước lại tốt hơn', run(bad, 60)[-1] > run(good, 60)[-1])
-    du_kien('s-danhmuc', 'công thức: sàn với σ 30%, ρ 0,3', '30% × √0,3', f'khoảng {vn(30 * math.sqrt(0.3), 1)}%')
 
     def bond(c, n, y):
         return sum(c / (1 + y) ** t for t in range(1, n + 1)) + 100 / (1 + y) ** n
     need_t('trái phiếu 10 năm khi lãi lên 7%', vn(bond(5, 10, 0.07), 2))
     need_t('trái phiếu 10 năm: mức giảm', f'mất {vn(100 - bond(5, 10, 0.07), 2)}%')
-    need_t('trái phiếu 10 năm khi lãi xuống 3%', vn(bond(5, 10, 0.03), 2))
-    need_t('trái phiếu 2 năm', f'giá giảm {vn(100 - bond(5, 2, 0.07), 2)}%')
+    need_t('trái phiếu 2 năm', f'kỳ hạn 2 năm chỉ giảm {vn(100 - bond(5, 2, 0.07), 2)}%')
+
+    # Mua để ở hay đi thuê (s-dinhgia): căn 4 tỷ, trả trước 2 tỷ, vay 2 tỷ lãi 9%; khoản trả trước lẽ ra gửi
+    # tiết kiệm 5%/năm; phí quản lý và sửa chữa 1% giá mỗi năm; thuê 12 triệu/tháng. Gốc trả dần là để dành, không tính.
+    h_price, h_down, h_loan, h_dep, h_keep, h_rent = 4000, 2000, 0.09, 0.05, 0.01, 12      # triệu đồng
+    h_int, h_lost, h_fee = (h_price - h_down) * h_loan, h_down * h_dep, h_price * h_keep
+    h_own, h_rent_y = h_int + h_lost + h_fee, 12 * h_rent
+    du_kien('s-dinhgia', 'mua để ở: chi phí sở hữu mỗi năm', f'lãi vay {vn(h_int, 0)} triệu',
+            f'vay {vn((h_price - h_down) / 1000, 0)} tỷ lãi {vn(100 * h_loan, 0)}%',
+            f'gửi tiết kiệm {vn(100 * h_dep, 0)}%/năm lẽ ra lời {vn(h_lost, 0)} triệu',
+            f'{vn(100 * h_keep, 0)}% giá là {vn(h_fee, 0)} triệu', f'tổng {vn(h_own, 0)} triệu',
+            f'hết {vn(h_rent_y, 0)} triệu', w=400)
+    h_be = (h_own - h_rent_y) / h_price
+    need_t('mua để ở: khoảng chênh', f'Khoảng chênh {vn(h_own - h_rent_y, 0)} triệu bằng {vn(100 * h_be, 1)}% giá nhà')
+    need_t('mua để ở: giá nhà phải tăng nhanh hơn', f'nếu giá nhà tăng nhanh hơn {vn(100 * h_be, 1)}%/năm')
 
     du_kien('s-taisan', 'lãi thực với lãi 5% và lạm phát 3,31%', '3,31%', f'{vn((1.05 / 1.0331 - 1) * 100, 2)}%/năm')
     du_kien('s-taisan', 'lãi thực năm 2008', '2008', '12,73%', '23,12%', f'{vn((1.1273 / 1.2312 - 1) * 100, 1)}%')
@@ -1013,22 +1025,36 @@ def phan_F2():
     # một bộ là một dữ kiện (du_kien): các phần phải đứng gần nhau, số nguyên cuối bộ (nếu có) là cỡ cửa sổ.
     NGUON = {
         's-tichluy': [
-            ('Merton', '1968', 'Matthew'), ('Mincer', '1974'), ('Lagakos', '2018', '18 nước', 'toàn thời gian'),
+            ('hiệu ứng Matthew', 'Merton', '1968', 'Khung 2/3'), ('Mincer', '1974'), ('Lagakos', '2018', '18 nước', 'toàn thời gian'),
             ('Mỹ, Đức, Canada, Anh', '20–24 năm', 'dưới 5 năm', '89,3%'), ('Brazil, Chile, Mexico, Jamaica', '47,6%'),
             ('Việt Nam', '1998', '2002', 'dưới 50%'), ('A khởi điểm 20 triệu/tháng', 'tăng 3%'),
             ('B khởi điểm 15 triệu', 'tăng 10%'), ('Brynjolfsson', '2025', '15%'), ('Becker', '1962'),
         ],
+        # Bằng chứng về chọn mã và giữ lâu (s-cophieu): Barber, Lee, Liu và Odean (2014); Chague, De-Losso và
+        # Giovannetti (2020); SPIVA Year-End 2024; Morningstar Mind the Gap 2026; đỉnh VN-Index 2007, 2022.
+        's-cophieu': [
+            ('Đài Loan, 1992–2006', '450.000', 'Khoảng 20%', 'chưa tới 1%'), ('Brazil, 2013–2015', 'ít nhất 300 ngày', '97% lỗ'),
+            ('tới cuối 2024, 84%', 'trong 10 năm', 'gần 90% trong 15 năm'),
+            ('10 năm tới cuối 2025', '8,7%/năm', '9,9%/năm', 'Morningstar'), ('Jorion và Goetzmann', '1999'),
+            ('Nikkei', 'cuối năm 1989', 'hơn 34 năm'),
+            ('VN-Index từ đỉnh tháng 3/2007', 'khoảng 80%', 'tháng 2/2009', '11 năm sau', 'đỉnh đầu năm 2022', 'ba năm rưỡi'),
+            'Sharpe (1991)',
+        ],
+        's-dinhgia': [
+            ('Buffett', 'năm 1996'), 'Graham coi đây là ý trung tâm của đầu tư', 'lời của Bạch Khuê',
+        ],
+        's-thunhap': [('Babcock và Laschever, 2003', '7,4%')],
         's-moitruong': [
             '(Lazear, Shaw và Stanton, 2015)', 'nhiều hơn việc thêm một người vào nhóm chín người',
-            'Khoảng một phần tư tác dụng của người quản lý vẫn còn một năm sau khi họ rời nhóm',
+            'Khoảng một phần tư tác dụng của người quản lý vẫn còn một năm sau khi nhân viên thôi làm với họ',
             'Jarosch, Oberfield và Rossi-Hansberg (2021)',
             '4–9% tổng thù lao của người lao động là việc học từ đồng nghiệp',
             '(Kahneman và Klein, 2009)', 'Hogarth (2001)',
             '6.096 vận động viên, trong đó 772 người thuộc hàng đầu thế giới',
             'Topel và Ward (1992)', 'nam thanh niên Mỹ 1957–1972',
             'một người điển hình làm bảy việc, khoảng hai phần ba số việc của cả đời', 'ít nhất một phần ba',
-            'Fed Atlanta lấy ngày 15/10/2026', '324 trên 355 tháng có dữ liệu từ 1/1997 tới 8/2026',
-            'chênh trung bình khoảng 0,7 điểm phần trăm', 'trung bình 12 tháng', 'thiếu số tháng 10/2025',
+            'bảng số liệu Fed Atlanta bản tháng 10/2026', '325 trên 356 tháng có dữ liệu từ 1/1997 tới 9/2026',
+            'hơn trung bình khoảng 0,7 điểm phần trăm', 'trung bình 12 tháng', 'thiếu tháng 10/2025',
         ],
         # Văn hoá: Ambady và Rosenthal (1993) nghiên cứu 1 — 13 giảng viên, ba đoạn 10 giây, r(11) = 0,76; Emily Post
         # Institute — khăn ăn “loosely to the left”, dao dĩa ăn xong ở số 4; Recht và Leslie (1988) — 64 học sinh, nửa hiệp.
@@ -1264,8 +1290,7 @@ def phan_G():
     claim('bảo hiểm: phạm vi, mốc tính thời hạn và khấu trừ hoàn phí',
           all(x in bh for x in ['hợp đồng trên một năm', '21 ngày từ ngày nhận hợp đồng', 'trừ chi phí hợp lý']))
     dm = chu(muc('s-danhmuc'))
-    claim('độ lệch chuẩn: quy tắc hai phần ba có giả định phân phối chuẩn',
-          'Nếu lợi suất gần phân phối chuẩn' in dm and 'đuôi dày' in dm)
+    claim('tương quan 0 được giải nghĩa là chưa chắc độc lập', 'không có liên hệ tuyến tính (chưa chắc là độc lập)' in dm)
     claim('tương quan bằng 0 không được đồng nhất với độc lập', 'Tương quan 0 (độc lập)' not in dm)
     rep = chu(muc('s-giakienthuc'))
     claim('36% là tiêu chí thống kê, không phải chứng minh hiệu ứng không tồn tại',
@@ -1291,8 +1316,9 @@ def phan_G():
     fee = chu(muc('s-taisan'))
     claim('bản đồ tài sản: 24,4% cũng giữ giả định lợi suất',
           all(x in fee for x in ['8%/năm trước phí', '7% sau phí', '30 năm', '24,4%']))
-    # Snapshot Fed Atlanta 15/10/2026, Job Switcher (12 tháng), cột B/C, 1/1997–8/2026.
-    need_t('tỷ lệ tháng nhóm đổi việc cao hơn = 324 / 355', f'({vi(100 * 324 / 355, 1)}%)')
+    # Fed Atlanta, wage-growth-data.xlsx sửa ngày 8/10/2026, sheet Job Switcher (12 tháng), cột B/C, 1/1997–9/2026:
+    # 325 trên 356 tháng có số liệu nhóm đổi việc cao hơn, chênh bình quân 0,729 điểm; tháng 10/2025 trống.
+    need_t('tỷ lệ tháng nhóm đổi việc cao hơn = 325 / 356', f'({vi(100 * 325 / 356, 1)}%)')
     ditf = chu(muc('s-thuyetphuc'))
     claim('Genschow bảng 1: so nhóm sau yêu cầu lớn với nhóm chỉ yêu cầu nhỏ',
           '51%' in ditf and '38%' in ditf and '34%' not in ditf)
