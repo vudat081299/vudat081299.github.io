@@ -871,7 +871,8 @@ def phan_F():
     need_t('lợi nhuận hôm nay so với giá ở P/E 40', f'chỉ bằng {vn(100 / PE, 1)}% giá (1 ÷ 40)')
     need_t('g hàm ý khi trả hết lợi nhuận', f'khoảng {vn((r - 1 / PE) * 100, 1)}%/năm mãi mãi')
     g15 = (1 - PE * r) / (1 / 0.15 - PE)          # PE = (1 − g/ROIC)/(r − g), ROIC 15%
-    need_t('g hàm ý khi tái đầu tư với ROIC 15%', f'khoảng {vn(g15 * 100, 1)}%/năm', g15)
+    claim('giữ lại lợi nhuận thì tăng trưởng phải cao hơn 6,5%', g15 > r - 1 / PE, f'{g15:.4f}')
+    need_t('cao hơn khi phải giữ lại lợi nhuận', 'và cao hơn nữa nếu phải giữ lại lợi nhuận để làm ăn')
 
     def price2(g1, g2=0.03, n=10):
         pv, e = 0.0, 1.0
@@ -897,7 +898,7 @@ def phan_F():
     # Đọc bảng: khủng hoảng (ρ = 0,8) thì hai mươi tài sản vẫn lên xuống “gần bằng một” tài sản.
     claim('đọc bảng: khủng hoảng, hai mươi tài sản gần bằng một', math.sqrt(0.8 + 0.2 / 20) > 0.85,
           f'tỉ số {math.sqrt(0.8 + 0.2 / 20):.3f}')
-    need_t('đọc bảng trong bài', 'Khủng hoảng đẩy tương quan lên 0,8 thì hai mươi tài sản vẫn lên xuống gần bằng một')
+    need_t('đọc bảng trong bài', 'khủng hoảng đẩy tương quan lên 0,8 thì hai mươi tài sản vẫn lên xuống gần bằng một')
 
     st = 60 * 1.3
     need_t('tái cân bằng 60/40 sau một năm cổ phiếu +30%', f'{vn(st / (st + 40) * 100, 1)}% / {vn(40 / (st + 40) * 100, 1)}%')
@@ -919,7 +920,6 @@ def phan_F():
     need_t('thứ tự lợi suất: không rút', vn(1000 * prod, 1))
     need_t('thứ tự lợi suất: chênh hai kết cục', vn(run(good)[-1] - run(bad)[-1], 2))
     claim('góp đều thì năm xấu trước lại tốt hơn', run(bad, 60)[-1] > run(good, 60)[-1])
-    du_kien('s-danhmuc', 'công thức: sàn với σ 30%, ρ 0,3', '30% × √0,3', f'khoảng {vn(30 * math.sqrt(0.3), 1)}%')
 
     def bond(c, n, y):
         return sum(c / (1 + y) ** t for t in range(1, n + 1)) + 100 / (1 + y) ** n
@@ -1206,8 +1206,7 @@ def phan_G():
     claim('bảo hiểm: phạm vi, mốc tính thời hạn và khấu trừ hoàn phí',
           all(x in bh for x in ['hợp đồng trên một năm', '21 ngày từ ngày nhận hợp đồng', 'trừ chi phí hợp lý']))
     dm = chu(muc('s-danhmuc'))
-    claim('độ lệch chuẩn: quy tắc hai phần ba có giả định phân phối chuẩn',
-          'Nếu lợi suất gần phân phối chuẩn' in dm and 'đuôi dày' in dm)
+    claim('tương quan 0 được giải nghĩa là chưa chắc độc lập', 'không có liên hệ tuyến tính (chưa chắc là độc lập)' in dm)
     claim('tương quan bằng 0 không được đồng nhất với độc lập', 'Tương quan 0 (độc lập)' not in dm)
     rep = chu(muc('s-giakienthuc'))
     claim('36% là tiêu chí thống kê, không phải chứng minh hiệu ứng không tồn tại',
