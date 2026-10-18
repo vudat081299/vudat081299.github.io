@@ -428,7 +428,10 @@ def phan_B():
     # ── Luthans (1988) và tỉ lệ sống của doanh nghiệp (SBA 2026) ────────────────
     claim('Luthans: nhóm lên chức nhanh cộng đủ 100%', 48 + 28 + 13 + 11 == 100)
     claim('Luthans: nhóm hiệu quả cộng đủ 100%', 44 + 26 + 19 + 11 == 100)
-    need('Luthans trong bài', 'dành 48% thời gian cho giao thiệp')
+    # 48% và 11% là phần đóng góp tương đối của giao thiệp vào tốc độ lên chức và vào hiệu quả, không phải phần thời gian
+    # (Luthans, Real Managers, 1988; trung bình người quản lý dành khoảng một phần năm thời gian cho giao thiệp).
+    need('Luthans trong bài', 'góp phần lớn nhất vào tốc độ lên chức (48%) nhưng nhỏ nhất vào hiệu quả của đơn vị (11%)')
+    need('Luthans: không đọc thành phần thời gian', 'Đó là phần đóng góp tương đối, không phải phần thời gian')
     need('Luthans, ô số ở đầu trang', '<span class="n">48% / 11%</span>')
     surv = [67.7, 49.2, 33.9, 25.5]
     claim('tỉ lệ sống giảm dần theo thời gian', all(a > b for a, b in zip(surv, surv[1:])))
@@ -1071,14 +1074,17 @@ def phan_F2():
             ('14 năm', 'Gottman và Levenson', '2000'), '“dự báo đúng hơn 90%”', ('Heyman và Smith Slep', '2001'),
             ('4.574 cặp', 'Dew, Britt và Huston', '2012'), ('388 cặp', 'Ross và cộng sự', '2022'),
         ],
+        # Yêu đương: abstract của từng bài (PubMed, Crossref, Semantic Scholar), 10/2026.
         's-tinhyeu': [
             'Gộp 43 nghiên cứu theo dõi 11.196 cặp, Joel và cộng sự (2020)', 'giải thích khoảng 45% mức hài lòng hiện tại',
-            'Birnbaum, Zholtack và Reis (2020), ba nghiên cứu',
+            ('Eastwick và Finkel', '2008'), ('Dai và cộng sự', '2014'),
+            ('ba nghiên cứu với người lạ', 'Birnbaum, Zholtack và Reis', '2020'),
+            ('hồ sơ Facebook của bốn nam sinh viên', 'Whitchurch, Wilson và Gilbert', '2011'),
+            ('bốn nghiên cứu trò chuyện qua mạng', 'Birnbaum và cộng sự', '2018', 400),
         ],
         's-nhantin': ['Patel, Mahar và Webster (2022) khảo sát 302 sinh viên Mỹ'],
         's-henho': [
-            'Aron và cộng sự (1997)', 'trong 45 phút', 'Whitchurch, Wilson và Gilbert (2011)',
-            'hồ sơ Facebook của bốn nam sinh viên',
+            'Aron và cộng sự (1997)', 'trong 45 phút', ('Laurenceau và cộng sự', '1998'), 'Bộ Công an, 2025',
         ],
         's-quanhe': [
             'một phần ba số cặp đã đoàn tụ chia tay trong ba tháng',
@@ -1099,14 +1105,23 @@ def phan_F2():
             'Tiền bảo hiểm trả cho người thụ hưởng ghi trong hợp đồng, không chia theo di chúc',
             'Van Such và cộng sự, 2017',
         ],
-        # Tâm kế: số liệu từ abstract và bảng 2 của O'Boyle và cộng sự (2012), abstract của Spurk và cộng sự
-        # (2016), Harsey và Freyd (2020); phép thử công khai theo Kant (bản Campbell Smith).
+        # Tâm kế: bảng 2 của O'Boyle và cộng sự (2012) — riêng Machiavellianism: hiệu suất ρ −0,07 (k = 57), hành vi
+        # gây hại ρ 0,25 (k = 13); 245 mẫu là của cả ba nét “đen tối”, không phải của riêng một nét. Abstract của Spurk
+        # và cộng sự (2016), Harsey và Freyd (2020); phép thử công khai theo Kant (bản Campbell Smith).
         's-thecuoc': [
-            'O’Boyle và cộng sự (2012) gộp 245 mẫu, 43.907 người', 'tương quan −0,07 với hiệu suất công việc',
-            'tương quan 0,25 với hành vi phản tác dụng', 'khảo sát 793 người mới đi làm ở Đức',
-            'thang Mach IV gồm 20 câu', 'Kant (Bàn về hoà bình vĩnh cửu, 1795)',
-            'chỉ có chiều phủ định', 'Jennifer Freyd (1997) đặt tên DARVO',
+            ('O’Boyle và cộng sự (2012)', 'tương quan −0,07 với hiệu suất công việc', '57 mẫu'),
+            ('tương quan 0,25', '13 mẫu', 'gây hại cho tổ chức và đồng nghiệp'), 'khảo sát 793 người mới đi làm ở Đức',
+            'thang Mach IV gồm 20 câu', 'Kant (Bàn về hoà bình vĩnh cửu, 1795)', ('Schelling', '1960'), ('Akerlof', '1970'),
+            'chỉ có chiều phủ định', 'Jennifer Freyd (1997) đặt tên DARVO', ('Harsey và Freyd', '2020'),
         ],
+        # Quyền lực: Emerson (1962) bốn cách cân lại; Burt (2004) 673 quản lý; Ibarra, Carter và Silva (2010);
+        # Krackhardt và Hanson (1993); Cheng và cộng sự (2013); Sabey và cộng sự (2025) 813 mẫu; Many Labs 3 (2016), 20 trường.
+        's-nguonquyen': [('Richard Emerson', '1962'), ('French và Raven', '1959', 'Raven (1965)')],
+        's-quyenluc': [('Burt', '2004', '673 quản lý'), ('Ibarra và cộng sự', '2010')],
+        's-tochuc': [('Krackhardt và Hanson', '1993'), ('Chesterton', '1929')],
+        's-diavi': [('Henrich và Gil-White', '2001'), ('Cheng và cộng sự', '2013')],
+        's-hoaquyen': [('Phân tích gộp 813 mẫu', 'Sabey và cộng sự', '2025'), ('Galinsky và cộng sự', '2006'),
+                       ('20 trường', '2016')],
     }
     for sid, xs in NGUON.items():
         t = chu(muc(sid))
