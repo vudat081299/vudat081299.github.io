@@ -1479,7 +1479,7 @@
    ],
    "idea": "Con số đầu tiên có thể kéo thương lượng về phía nó. Đối chiếu dữ liệu, mục tiêu và phương án thay thế; neo quá xa có thể làm bên kia bỏ cuộc.",
    "why": "Nó quyết định nên ra giá trước hay chờ, và cách tự vệ khi bên kia ra giá trước.",
-   "mechanism": "Trong thí nghiệm, giá mở đầu kéo giá chốt về phía nó (Galinsky và Mussweiler, 2001). Lợi thế ra giá trước giảm khi bên kia nghĩ tới phương án thay thế hoặc mục tiêu riêng của họ.",
+   "mechanism": "Trong thí nghiệm, giá mở đầu kéo giá chốt về phía nó (Galinsky và Mussweiler, 2001). Lợi thế ra giá trước mất khi bên nhận giá nghĩ tới lựa chọn khác của bên ra giá, mức tệ nhất bên ấy còn chịu nhận, hoặc mục tiêu của chính mình.",
    "mistake": "Xoay quanh con số bên kia vừa đưa, hoặc ra giá trước khi chưa có dữ liệu thị trường.",
    "example": "Tiệm đưa mức giá đầu khiến người mua xoay quanh nó. Trước khi mặc cả, tự kiểm giá thị trường và mức tối đa mình chấp nhận.",
    "use": "Khi có dữ liệu tốt, cân nhắc ra đề nghị trước: người bán thường neo cao, người mua neo thấp, trong khoảng giải thích được. Đừng để con số ban đầu thay cho định giá.",

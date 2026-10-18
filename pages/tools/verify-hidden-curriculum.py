@@ -1156,6 +1156,7 @@ def phan_G():
         's-thecuoc': ['họ sẽ phản đối nếu biết, là thao túng', 'ép công khai vẫn là ép', 'khi còn gặp lại và chuyện lan được'],
         's-thuongluong': ['phương án tốt nhất ấy là BATNA', 'không dùng làm lời đe doạ'],
         's-memcung': ['chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
+        's-ranhgioi': ['Đã uống rượu bia thì không cầm lái'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
         's-giayto': ['nên công chứng', 'di chúc không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên',
                      'con thành niên không có khả năng lao động', 'trừ người từ chối nhận hoặc không có quyền hưởng'],
@@ -1226,6 +1227,26 @@ def phan_G():
     ditf = chu(muc('s-thuyetphuc'))
     claim('Genschow bảng 1: so nhóm sau yêu cầu lớn với nhóm chỉ yêu cầu nhỏ',
           '51%' in ditf and '38%' in ditf and '34%' not in ditf)
+    # Galinsky và Mussweiler (2001): lợi thế ra giá trước mất khi bên nhận giá nghĩ tới lựa chọn khác của BÊN RA GIÁ.
+    tl = chu(muc('s-thuongluong'))
+    claim('con số neo: lựa chọn khác là của bên ra giá, không phải của bên nhận giá',
+          'lựa chọn khác của bên ra giá' in tl and 'lựa chọn khác của mình' not in tl)
+    # Kim và cộng sự (2004): với lỗi gian dối, xin lỗi hàn gắn kém hơn chối; chối rồi bị lộ thì mất tin nặng hơn.
+    dn = chu(muc('s-docnguoi'))
+    claim('đọc người: Kim và cộng sự (2004) giữ đúng chiều của lỗi gian dối',
+          all(x in dn for x in ['Kim và cộng sự, 2004', 'hàn gắn kém hơn', 'chối rồi bị lộ']))
+    # Rượu bia (6.6): mọi loại xe, mọi mức cồn; mức phạt đổi theo năm nên chỉ dặn kiểm quy định hiện hành.
+    rg = chu(muc('s-ranhgioi'))
+    claim('ranh giới: đã uống thì không lái xe nào, mức phạt kiểm quy định hiện hành',
+          all(x in rg for x in ['kể cả xe đạp', 'trong máu hoặc hơi thở có cồn', 'kiểm quy định hiện hành']))
+    # Câu cho những lần nói khó (6.2): một bảng 7–9 dòng, mỗi dòng ba ô — tình huống, câu nói, điều kiện.
+    tk = re.search(r'Câu cho những lần nói khó</h3>.*?<tbody>(.*?)</tbody>', muc('s-imlang'), flags=re.S)
+    rows = re.findall(r'<tr>(.*?)</tr>', tk.group(1), flags=re.S) if tk else []
+    claim('6.2: bảng câu cho những lần nói khó có 7–9 dòng, mỗi dòng ba ô',
+          7 <= len(rows) <= 9 and all(r.count('<td>') == 3 for r in rows), f'{len(rows)} dòng')
+    claim('6.2: bằng chứng của bảng câu nói khó còn dẫn nguồn',
+          all(x in chu(muc('s-imlang')) for x in ['Zhao và Epley, 2021', 'Kardas, Kumar và Epley, 2022',
+                                                  'Lewicki và cộng sự, 2016']))
     wage = chu(muc('s-moitruong'))
     claim('đổi việc: mức tăng lương là trung vị, không phải tác dụng riêng của chuyển chỗ',
           'trung vị' in wage and 'không đo tác dụng riêng' in wage)
