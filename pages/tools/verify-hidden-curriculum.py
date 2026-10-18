@@ -1045,25 +1045,25 @@ def phan_F2():
             ('thừa kế và quà tặng', 'Ít nhất một nửa'), ('học vấn', 'khoảng một phần tư', 40),
             ('Gregory Clark', 'The Son Also Rises', '2014'), ('18.869', 'Anh và xứ Wales', '1858', '2012'),
             ('0,70–0,75', 'ba phần tư'), ('Torche và Corvalán', '2018'),
-            '“70% mất ở đời thứ hai, 90% ở đời thứ ba”', ('Williams và Preisser', '2003', '3.250 gia đình'),
-            ('James Grubman', '2022'), ('John Ward', '1987', '30% doanh nghiệp'),
             ('Holtz-Eakin, Joulfaian và Rosen', '1993'), ('150.000 USD', 'bốn lần', '25.000 USD', 120),
         ],
+        # PISA 2022 tập IV (OECD, 2024), trung bình các nước OECD tham gia: +12 điểm (nói với cha mẹ về chi tiêu của
+        # mình hằng tuần, hằng tháng so với không bao giờ), +30 điểm (tự quyết tiêu tiền) — đối chiếu qua bài của ACER
+        # (Teacher, 2024) vì oecd.org chặn truy cập tự động; Deci, Koestner và Ryan (1999): 128 thí nghiệm.
         's-daycon': [
-            ('Whitebread và Bingham', '2013'), 'tới khoảng 7 tuổi', ('PISA 2022', 'OECD, 2024'),
+            ('PISA 2022', 'OECD, 2024'),
             ('15 tuổi', '20 nước và vùng', 'không có Việt Nam'), ('chi tiêu của chính mình', 'cao hơn 12 điểm', 80),
-            ('ngân sách cả nhà', 'thấp hơn 13 điểm', 80), ('tự quyết tiêu tiền', 'khoảng 30 điểm', 60),
-            ('70% học sinh', 'khoản nhỏ', 40), ('Ryan và Deci', '2000'),
+            ('tự quyết tiêu tiền', 'khoảng 30 điểm', 60), ('Ryan và Deci', '2000'),
             ('Hart và Risley', '1995', '42 gia đình', 'mỗi tháng một giờ'), ('45 triệu từ', '13 triệu', 80),
-            ('Sperry', '2019'), ('Romeo', '2018'),
-            ('1885', 'Mrs. Dymond', 'Anne Isabella Thackeray Ritchie'), ('Lão Tử', '1976'), '臨河而羨魚，不如歸家織網。',
-            'Hoài Nam Tử · thiên Thuyết lâm huấn', ('Altonji, Blom và Meghir', '2012'), ('Mỹ năm 2009', '75%', 80),
-            ('Deci, Koestner và Ryan', '1999'),
+            ('Sperry', '2019'), ('Romeo', '2018'), ('trò chuyện qua lại', 'Romeo', 120),
+            ('Altonji, Blom và Meghir', '2012'), ('Mỹ năm 2009', '75%', 80),
+            ('128 thí nghiệm', 'Deci, Koestner và Ryan', '1999'),
         ],
         's-honnhan': [
             ('115 nghiên cứu', '45.000 cuộc hôn nhân', 'Karney và Bradbury', '1995'),
             ('14 năm', 'Gottman và Levenson', '2000'), '“dự báo đúng hơn 90%”', ('Heyman và Smith Slep', '2001'),
             ('4.574 cặp', 'Dew, Britt và Huston', '2012'), ('388 cặp', 'Ross và cộng sự', '2022'),
+            'cả ba nhóm đều dự báo mức hài lòng', 'giàu hay nghèo không còn liên quan',
         ],
         's-tinhyeu': [
             'Gộp 43 nghiên cứu theo dõi 11.196 cặp, Joel và cộng sự (2020)', 'giải thích khoảng 45% mức hài lòng hiện tại',
@@ -1091,7 +1091,8 @@ def phan_F2():
             'Giấy uỷ quyền hết hiệu lực khi người uỷ quyền mất',
             'Mua bán, tặng cho, thế chấp nhà đất phải công chứng hoặc chứng thực',
             'Tiền bảo hiểm trả cho người thụ hưởng ghi trong hợp đồng, không chia theo di chúc',
-            'Van Such và cộng sự, 2017',
+            'Van Such và cộng sự, 2017', 'kiểm quy định hiện hành trước khi ký',
+            'Nhiều bản cùng định đoạt một tài sản thì bản sau cùng có hiệu lực',
         ],
         # Tâm kế: số liệu từ abstract và bảng 2 của O'Boyle và cộng sự (2012), abstract của Spurk và cộng sự
         # (2016), Harsey và Freyd (2020); phép thử công khai theo Kant (bản Campbell Smith).
