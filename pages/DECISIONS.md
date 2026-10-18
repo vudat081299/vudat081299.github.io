@@ -18,6 +18,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-013 · hidden-curriculum: xử lý khi chưa rõ ý người khác · `pages/hidden-curriculum.html`
 - PAGES-014 · hidden-curriculum: tâm kế · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-015 · hidden-curriculum: dạy tư duy, luật chỉ giữ khi thật cần, viết đơn giản nhất · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+- PAGES-016 · hidden-curriculum: hành trang cho người 26 tuổi, rà toàn trang · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -113,3 +114,10 @@ Các chiêu kèm dấu hiệu và cách đáp không buộc tội ai; không l�
 Trang dạy tư duy, không dạy luật. Chỉ giữ một quy định khi thiếu nó người đọc dễ mất tiền, mất an toàn hay mất quyền khó lấy lại, và nguyên tắc tư duy chưa đủ dẫn tới việc đúng; còn lại xoá.
 Quy định giữ lại viết thành một câu việc cần làm, không số điều, số nghị định trong thân bài; chi tiết đổi theo năm thì bảo người đọc kiểm quy định hiện hành.
 Viết đơn giản, dễ hiểu nhất có thể: câu ngắn, từ thường, thuật ngữ phải giải nghĩa; giữ nguyên lý và điều kiện, cắt chi tiết không đổi được quyết định.
+
+## PAGES-016 · hidden-curriculum: hành trang cho người 26 tuổi, rà toàn trang
+18/10/2026 · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+
+Mục đích: hành trang có đòn bẩy cao cho người khoảng 26 tuổi, ít vốn, ít quen biết: ăn nói khéo, làm giàu, xử lý tình huống xã hội, yêu đương, thành công từ điểm xuất phát thấp.
+Rà mọi mục theo bốn câu: đúng chưa (đối chiếu nguồn gốc), hợp mục đích chưa, gọn nhất chưa, còn thiếu mảng nào; tự sửa, không hỏi lại chủ trang.
+Mảng thiếu bổ sung vào mục có sẵn, ngắn, có nguồn; phần thêm trả bằng phần cắt.
