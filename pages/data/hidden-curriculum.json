@@ -271,7 +271,7 @@
    ],
    "sections": [
     "s-thoigian",
-    "s-ruiro"
+    "s-latnguoc"
    ]
   },
   {
@@ -297,8 +297,8 @@
     "regression"
    ],
    "sections": [
-    "s-phanphoi",
-    "s-bayes"
+    "s-bayes",
+    "s-phanphoi"
    ]
   },
   {

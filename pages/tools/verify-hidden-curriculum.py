@@ -484,7 +484,7 @@ def phan_B():
     need('chi phí mười phép thử', 'Mười thử nghiệm độc lập tốn 100 triệu')
 
     # ── Các con số dẫn từ nguồn ở các mục mới (giữ khỏi bị sửa lệch) ─────────────
-    need('Tetlock 2005', 'theo dõi 284 chuyên gia với 82.361 dự báo')
+    need('Atanasov và cộng sự 2020 (s-bayes)', 'người sửa từng bước nhỏ thường đoán đúng hơn (Atanasov và cộng sự, 2020)')
     need('Marsh và Hau 2003', 'khảo sát 103.558 học sinh 15 tuổi ở 26 nước và thấy ở cả 26 nước')
     need('Resnick 2006', 'người mua trả cho tên quen cao hơn <b>8,1%</b> giá bán')
 
@@ -1158,7 +1158,7 @@ def phan_G():
         's-dongxu': ['không phải tỉ lệ an toàn chung'],
         's-khanhiem': ['bằng chứng chưa thống nhất'],
         's-phanphoi': ['Xác suất chỉ là ước lượng', 'dùng kết quả để học'],
-        's-bayes': ['Tỉ số cược là xác suất', 'tần suất trong những trường hợp tương tự'],
+        's-bayes': ['Tỉ số cược là xác suất', 'tần suất trong những trường hợp tương tự', 'nếu mình sai, mình có thấy điều này không'],
         's-heth': ['Dự đoán có thể sai', 'Một bước lùi không tự dẫn'],
         's-cophieu': ['dữ liệu quá khứ của Mỹ, không bảo đảm tương lai'],
         's-danhmuc': ['Khi đang rút tiền', 'không để bảo đảm lợi nhuận'],
