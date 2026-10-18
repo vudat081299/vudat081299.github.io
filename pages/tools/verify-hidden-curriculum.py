@@ -979,6 +979,16 @@ def phan_F2():
     # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 62 trên 286 ca.
     claim('Van Such: 62 trên 286 ca là 21%', int(100 * 62 / 286) == 21, f'{100 * 62 / 286:.1f}%')
     du_kien('s-giayto', 'Van Such: 62 trên 286 ca', 'Van Such', '2017', '286 bệnh nhân', '62 ca (21%)')
+    # Rút bảo hiểm xã hội một lần (s-baohiem), Luật Bảo hiểm xã hội 2024: mỗi năm đóng từ 2014 được 2 tháng lương
+    # bình quân; người lao động 8% và chủ 14% lương mỗi tháng vào quỹ hưu trí và tử tuất, tức 12 × 22% tháng lương
+    # mỗi năm; lương hưu cần đủ 15 năm đóng; chỉ người có thời gian đóng trước 1/7/2025 được rút khi nghỉ việc.
+    bhxh = 12 * (0.08 + 0.14)
+    du_kien('s-baohiem', 'BHXH một lần so với số đã nộp', 'rút một lần', 'khoảng 2 tháng lương bình quân',
+            f'{vn(bhxh, 2)} tháng lương', f'{vn(100 * (0.08 + 0.14), 0)}% lương mỗi tháng', w=260)
+    du_kien('s-baohiem', 'BHXH: điều kiện lương hưu, mốc 1/7/2025', 'đủ 15 năm đóng', 'bắt đầu đóng từ 1/7/2025',
+            'kiểm quy định hiện hành', w=260)
+    # Bảo hiểm tiền gửi (s-ruiro): hạn mức 350 triệu đồng từ 13/7/2026 (Bảo hiểm tiền gửi Việt Nam, 7/2026).
+    du_kien('s-ruiro', 'hạn mức bảo hiểm tiền gửi và ngày áp dụng', '350 triệu đồng', 'từ 13/7/2026', 'kiểm mức hiện hành', w=260)
     # Thân bài không dẫn số điều luật hay số hiệu văn bản (PAGES-015); chi tiết ấy chỉ ở dòng Luật của s-nguon.
     so_hieu = re.compile(r'Điều \d|\b\d+/\d{4}/(?:QH|NĐ|TT|NQ|VBHN|UBTVQH)')
     lo = sorted({f'{sid}: {m.group(0)}' for sid in re.findall(r'<section id="(s-[a-z]+)">', HTML) if sid != 's-nguon'
@@ -1143,7 +1153,8 @@ def phan_G():
     compact.feed(HTML)
     essential = {
         's-von': ['vốn kinh tế', 'vốn văn hoá', 'vốn xã hội', 'vốn con người', 'khoảng đệm'],
-        's-no': ['Khoản vay mua thứ gì?', 'Ai có quyền đổi luật giữa chừng?', 'Nếu mất thu nhập sáu tháng'],
+        's-no': ['Khoản vay mua thứ gì?', 'Ai có quyền đổi luật giữa chừng?', 'Nếu mất thu nhập sáu tháng', 'tổng tiền phải trả'],
+        's-baohiem': ['đủ trả một sự cố hay gặp', '3–6 tháng chi tiêu thiết yếu', 'thu nhập bấp bênh hoặc có người phụ thuộc'],
         's-dongxu': ['không phải tỉ lệ an toàn chung'],
         's-khanhiem': ['bằng chứng chưa thống nhất'],
         's-phanphoi': ['Xác suất chỉ là ước lượng', 'dùng kết quả để học'],
@@ -1190,6 +1201,9 @@ def phan_G():
 
 
     # Điều kiện đã mất khi rút gọn: kiểm các thành phần cần để hiểu đúng, không khoá cả câu văn.
+    no = chu(muc('s-no'))
+    claim('nợ: trả góp 0% so bằng tổng tiền; thẻ chỉ miễn lãi khi trả đủ, trả tối thiểu vẫn là vay',
+          all(x in no for x in ['so tổng tiền phải trả với giá trả ngay', 'trả đủ dư nợ sao kê đúng hạn', 'kể cả trả mức tối thiểu']))
     bh = chu(muc('s-baohiem'))
     claim('bảo hiểm: phạm vi, mốc tính thời hạn và khấu trừ hoàn phí',
           all(x in bh for x in ['hợp đồng trên một năm', '21 ngày từ ngày nhận hợp đồng', 'trừ chi phí hợp lý']))
