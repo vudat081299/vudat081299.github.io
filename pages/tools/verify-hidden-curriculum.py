@@ -1061,14 +1061,14 @@ def phan_F2():
         ],
         # PISA 2022 tập IV (OECD, 2024), trung bình các nước OECD tham gia: +12 điểm (nói với cha mẹ về chi tiêu của
         # mình hằng tuần, hằng tháng so với không bao giờ), +30 điểm (tự quyết tiêu tiền) — đối chiếu qua bài của ACER
-        # (Teacher, 2024) vì oecd.org chặn truy cập tự động; Deci, Koestner và Ryan (1999): 128 thí nghiệm.
+        # (Teacher, 2024) vì oecd.org chặn truy cập tự động; Deci, Koestner và Ryan (1999): 128 nghiên cứu.
         's-daycon': [
             ('PISA 2022', 'OECD, 2024'),
             ('15 tuổi', '20 nước và vùng', 'không có Việt Nam'), ('chi tiêu của chính mình', 'cao hơn 12 điểm', 80),
             ('tự quyết tiêu tiền', 'khoảng 30 điểm', 60), ('Ryan và Deci', '2000'),
             ('Hart và Risley', '1995', '42 gia đình', 'mỗi tháng một giờ'), ('45 triệu từ', '13 triệu', 80),
             ('Sperry', '2019'), ('Romeo', '2018'), ('trò chuyện qua lại', 'Romeo', 120),
-            ('128 thí nghiệm', 'Deci, Koestner và Ryan', '1999'),
+            ('128 nghiên cứu', 'Deci, Koestner và Ryan', '1999'),
         ],
         's-honnhan': [
             ('115 nghiên cứu', '45.000 cuộc hôn nhân', 'Karney và Bradbury', '1995'),
