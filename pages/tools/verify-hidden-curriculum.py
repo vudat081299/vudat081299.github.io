@@ -1097,6 +1097,15 @@ def phan_F2():
             'Van Such và cộng sự, 2017', 'kiểm quy định hiện hành trước khi ký',
             'Nhiều bản cùng định đoạt một tài sản thì bản sau cùng có hiệu lực',
         ],
+        # Thói quen (s-lotrinh): Gollwitzer và Sheeran (2006), abstract: 94 phép thử, d = 0,65; Sheeran, Listrom và
+        # Gollwitzer (2024), abstract: 642 phép thử, 0,27 ≤ d ≤ 0,66; Lally và cộng sự (2010), abstract: 96 người, 18–254
+        # ngày; trung bình 66 ngày theo Gardner, Lally và Wardle (2012). Luật đối luật: Tetlock (2005); Atanasov và cộng sự (2020).
+        's-lotrinh': [
+            ('94 phép thử', 'd = 0,65', 'Gollwitzer và Sheeran', '2006'),
+            ('642 phép thử', '0,27 tới 0,66', 'Sheeran, Listrom và Gollwitzer', '2024'),
+            ('96 người', 'khoảng 66 ngày', '18 ngày', '254 ngày', 'Lally và cộng sự, 2010', 320),
+        ],
+        's-mauthuan': [('Tetlock', '2005'), ('Atanasov và cộng sự', '2020'), '執中無權，猶執一也'],
         # Lừa đảo: bài “25 kịch bản lừa đảo trên không gian mạng năm 2026” (bocongan.gov.vn, 8/9/2026) và cảnh báo
         # “phạt nguội” (baochinhphu.vn, 10/9/2026): công an không yêu cầu nộp phạt hay đưa mật khẩu, OTP qua link lạ.
         's-luadao': [
@@ -1186,6 +1195,7 @@ def phan_G():
         's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn',
                      'Không đưa mã OTP, mật khẩu', 'gọi ngay ngân hàng của mình để khoá tài khoản'],
         's-muoihai': ['đã uống rượu bia thì không lái xe nào', 'cài quai đúng cách'],
+        's-lotrinh': ['“nếu [lúc, chỗ] thì tôi [việc nhỏ]”', 'vài tuần tới vài tháng', 'lỡ một lần thì làm lại'],
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
         's-nhantin': ['ngừng nhắc', 'Không tìm kênh khác để vượt ranh giới'],
         's-henho': ['không thay đồng thuận thân mật', 'chọn nơi công cộng', 'không gửi tiền cho người yêu qua mạng'],
