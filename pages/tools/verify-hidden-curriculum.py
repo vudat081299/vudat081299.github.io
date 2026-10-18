@@ -1012,7 +1012,7 @@ def phan_F2():
     # một bộ là một dữ kiện (du_kien): các phần phải đứng gần nhau, số nguyên cuối bộ (nếu có) là cỡ cửa sổ.
     NGUON = {
         's-tichluy': [
-            ('Merton', '1968', 'Matthew'), ('Mincer', '1974'), ('Lagakos', '2018', '18 nước', 'toàn thời gian'),
+            ('hiệu ứng Matthew', 'Merton', '1968', 'Khung 2/3'), ('Mincer', '1974'), ('Lagakos', '2018', '18 nước', 'toàn thời gian'),
             ('Mỹ, Đức, Canada, Anh', '20–24 năm', 'dưới 5 năm', '89,3%'), ('Brazil, Chile, Mexico, Jamaica', '47,6%'),
             ('Việt Nam', '1998', '2002', 'dưới 50%'), ('A khởi điểm 20 triệu/tháng', 'tăng 3%'),
             ('B khởi điểm 15 triệu', 'tăng 10%'), ('Brynjolfsson', '2025', '15%'), ('Becker', '1962'),
