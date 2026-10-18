@@ -16,12 +16,12 @@
 
 ## CHƯA LÀM
 
-- `hidden-curriculum.html`, mục `s-giayto`: Luật Đất đai đang được sửa; Luật Công chứng sửa đổi có hiệu lực
-  01/01/2027. Khi hai luật ấy có hiệu lực, kiểm lại câu "mua bán, tặng cho, thế chấp nhà đất phải công chứng".
+- `hidden-curriculum.html`, mục `s-giayto` và luật 3 của `s-muoihai`: Luật Đất đai đang được sửa (mới là dự thảo);
+  Luật 04/2026/QH16 sửa Luật Công chứng có hiệu lực 01/01/2027, để luật chuyên ngành tự nêu giao dịch nào phải công
+  chứng. Khi hai luật ấy có hiệu lực, kiểm lại câu "nhà đất phải công chứng hoặc chứng thực".
 
 ## NỢ
 
-- `hidden-curriculum.html`, số liệu chưa kiểm đủ bản gốc: ngày VN-Index vượt lại đỉnh 2022.
 - `scooter-maintenance-guide.html`: mục checklist là `<label>` không có ô input — không dùng được bằng bàn
   phím, không báo trạng thái đã tích.
 - Sáu trang cho `.wb-navbar__brand` co bằng `flex: 0 1 auto`, điều `web-builder/CLAUDE.md` bảo đừng làm:
