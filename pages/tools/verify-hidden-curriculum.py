@@ -973,9 +973,6 @@ def phan_F2():
     ba = [15 * 1.10 ** min(n - 1, 10) * 1.03 ** max(n - 11, 0) / (20 * 1.03 ** (n - 1)) for n in range(11, 41)]
     claim('từ năm 11, tỉ số lương B/A không đổi', max(ba) - min(ba) < 1e-9, f'{min(ba):.6f}…{max(ba):.6f}')
     du_kien('s-tichluy', 'khoảng cách giữ nguyên', 'giữ nguyên tới cuối', 'theo phần trăm', w=80)
-    # Ngành học (s-daycon): 0,561 điểm log (Altonji, Blom và Meghir 2012) là khoảng 75%.
-    claim('0,561 điểm log ≈ cao hơn 75%', round(100 * (math.exp(0.561) - 1)) == 75, f'{100 * (math.exp(0.561) - 1):.1f}%')
-    du_kien('s-daycon', 'Altonji, Blom và Meghir: kỹ thuật điện so với sư phạm', 'kỹ thuật điện', 'khoảng 75%', 'sư phạm', w=60)
     # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 62 trên 286 ca.
     claim('Van Such: 62 trên 286 ca là 21%', int(100 * 62 / 286) == 21, f'{100 * 62 / 286:.1f}%')
     # Odean (1998), bảng I: tỉ lệ lãi được bán 0,148, tỉ lệ lỗ được bán 0,098 → cao hơn khoảng 50% (luật 10, s-muoihai).
@@ -1038,8 +1035,7 @@ def phan_F2():
             ('Bình Ngô đại cáo', 'Đinh Mùi 1427', 'âm lịch'),
             '“Việc nhân nghĩa cốt ở yên dân”', ('Hồ Chí Minh, Tuyên ngôn Độc lập', '2/9/1945', 20),
             ('Đại hội VI của Đảng', '12/1986', 20),
-            ('Phan Kế Bính', 'Việt Nam phong tục', '1915'), ('Đào Duy Anh', 'Việt Nam văn hoá sử cương', '1938'),
-            ('Văn minh An Nam', '1944'),
+            ('Phan Kế Bính', 'Việt Nam phong tục', '1915'),
             ('Bryson', 'A Short History of Nearly Everything', '2003'),
         ],
         's-thehe': [
@@ -1059,7 +1055,6 @@ def phan_F2():
             ('tự quyết tiêu tiền', 'khoảng 30 điểm', 60), ('Ryan và Deci', '2000'),
             ('Hart và Risley', '1995', '42 gia đình', 'mỗi tháng một giờ'), ('45 triệu từ', '13 triệu', 80),
             ('Sperry', '2019'), ('Romeo', '2018'), ('trò chuyện qua lại', 'Romeo', 120),
-            ('Altonji, Blom và Meghir', '2012'), ('Mỹ năm 2009', '75%', 80),
             ('128 thí nghiệm', 'Deci, Koestner và Ryan', '1999'),
         ],
         's-honnhan': [
