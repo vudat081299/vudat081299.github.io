@@ -984,10 +984,10 @@ def phan_F2():
     lo = sorted({f'{sid}: {m.group(0)}' for sid in re.findall(r'<section id="(s-[a-z]+)">', HTML) if sid != 's-nguon'
                  for m in so_hieu.finditer(chu(muc(sid)))})
     claim('thân bài không dẫn số điều luật, số hiệu văn bản', not lo, ', '.join(lo[:8]))
-    # Bảng “Mười sáu ý tưởng làm nền” (s-vanminh): số dòng khớp chữ “mười sáu” của tiêu đề.
-    tb = re.search(r'Mười sáu ý tưởng làm nền</h3>.*?<tbody>(.*?)</tbody>', muc('s-vanminh'), flags=re.S)
+    # Bảng “Mười bốn ý tưởng làm nền” (s-vanminh): số dòng khớp chữ “mười bốn” của tiêu đề.
+    tb = re.search(r'Mười bốn ý tưởng làm nền</h3>.*?<tbody>(.*?)</tbody>', muc('s-vanminh'), flags=re.S)
     n = tb.group(1).count('<tr>') if tb else 0
-    claim('s-vanminh: bảng “Mười sáu ý tưởng làm nền” có 16 dòng', n == 16, f'thấy {n} dòng')
+    claim('s-vanminh: bảng “Mười bốn ý tưởng làm nền” có 14 dòng', n == 14, f'thấy {n} dòng')
     # Năm can chi đi kèm năm dương lịch: can = (năm − 4) mod 10, chi = (năm − 4) mod 12; năm 4 là Giáp Tý.
     CAN = 'Giáp Ất Bính Đinh Mậu Kỷ Canh Tân Nhâm Quý'.split()
     CHI = 'Tý Sửu Dần Mão Thìn Tỵ Ngọ Mùi Thân Dậu Tuất Hợi'.split()
@@ -1017,22 +1017,26 @@ def phan_F2():
             'Fed Atlanta lấy ngày 15/10/2026', '324 trên 355 tháng có dữ liệu từ 1/1997 tới 8/2026',
             'chênh trung bình khoảng 0,7 điểm phần trăm', 'trung bình 12 tháng', 'thiếu số tháng 10/2025',
         ],
+        # Văn hoá: Ambady và Rosenthal (1993) nghiên cứu 1 — 13 giảng viên, ba đoạn 10 giây, r(11) = 0,76; Emily Post
+        # Institute — khăn ăn “loosely to the left”, dao dĩa ăn xong ở số 4; Recht và Leslie (1988) — 64 học sinh, nửa hiệp.
+        's-vonvanhoa': [
+            ('Ambady và Rosenthal', '1993', '30 giây'), ('13 giảng viên', '0,76', 40), ('Veblen', '1899'),
+            ('Currid-Halkett', '2017', 'hưu trí'),
+        ],
+        's-quocte': ['Emily Post Institute', 'gấp lỏng khăn, đặt bên trái đĩa', 'cán chỉ về số 4'],
         's-vanminh': [
-            ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh'),
-            ('Aronowitz và Giroux', '1988'), 'Mười sáu ý tưởng làm nền',
+            ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh', 'nửa hiệp'),
+            ('Aronowitz và Giroux', '1988'), 'Mười bốn ý tưởng làm nền',
             ('Socrates', '469–399 TCN', 'Plato'), ('Khổng Tử', '551–479 TCN', 'Mạnh Tử'), '“Biết đủ là giàu”',
-            ('Đức Phật', 'thế kỷ 5 TCN'), ('Epictetus', '50–135', 'nô lệ'), ('Phục hưng', 'thế kỷ 14–16'),
+            ('Đức Phật', 'thế kỷ 5 TCN'), ('Epictetus', '50–135', 'nô lệ'),
             ('Pascal và Fermat', '1654'), ('Hội Hoàng gia Anh', '1660', 'Nullius in verba'), ('Kant', '1784'),
             ('Adam Smith', 'Của cải của các quốc gia', '1776', '48.000 cây ghim'), ('Darwin', 'Nguồn gốc các loài', '1859'),
             ('Tuyên ngôn của Đảng Cộng sản', '1848'), 'nền tảng tư tưởng của Đảng, ghi trong Hiến pháp',
-            ('Monet', 'Ấn tượng, mặt trời mọc', '1872', '1874'), ('Bình Ngô đại cáo', 'Đinh Mùi 1427', 'âm lịch'),
+            ('Bình Ngô đại cáo', 'Đinh Mùi 1427', 'âm lịch'),
             '“Việc nhân nghĩa cốt ở yên dân”', ('Hồ Chí Minh, Tuyên ngôn Độc lập', '2/9/1945', 20),
-            ('Đại hội VI của Đảng', '12/1986', 20), ('Ngày Quốc khánh', '2/9/1945', 40), ('Đại hội VI mở đường Đổi mới', '12/1986', 20),
-            ('Ngô Quyền', '938', 'Nam Hán', 'Bạch Đằng'), ('Gia Long', '1802', 'gần ba thế kỷ'),
-            ('1/9/1858', 'Tây Ban Nha', 'Đà Nẵng'), ('7/5/1954', 'Điện Biên Phủ', 'Genève', '7/1954'),
-            ('30/4/1975', 'Chiến dịch Hồ Chí Minh'),
+            ('Đại hội VI của Đảng', '12/1986', 20),
             ('Phan Kế Bính', 'Việt Nam phong tục', '1915'), ('Đào Duy Anh', 'Việt Nam văn hoá sử cương', '1938'),
-            ('Văn minh An Nam', '1944'), ('Gombrich', 'The Story of Art', '1950'),
+            ('Văn minh An Nam', '1944'),
             ('Bryson', 'A Short History of Nearly Everything', '2003'),
         ],
         's-thehe': [
@@ -1157,6 +1161,9 @@ def phan_G():
         's-thuongluong': ['phương án tốt nhất ấy là BATNA', 'không dùng làm lời đe doạ'],
         's-memcung': ['chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
+        's-vonvanhoa': ['không đo đúng năng lực hay nhân cách'],
+        's-lenghia': ['khác theo vùng và từng nhà', 'nhập gia tuỳ tục'],
+        's-kinhdien': ['trăm trận không nguy', 'hai lần là đủ', 'chưa rõ xuất xứ'],
         's-giayto': ['nên công chứng', 'di chúc không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên',
                      'con thành niên không có khả năng lao động', 'trừ người từ chối nhận hoặc không có quyền hưởng'],
         's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn'],
