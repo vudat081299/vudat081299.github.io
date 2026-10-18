@@ -849,7 +849,7 @@ def phan_F():
     vn = vi
     # Chuỗi lấy từ nguồn: mỗi chuỗi ứng một dòng kiểm nguồn; sửa thì mở lại nguồn.
     for x in ('350 triệu đồng', 'bằng đồng Việt Nam của cá nhân', '139 doanh nghiệp', '83.600 tỉ đồng', '50,7%',
-              'tối đa hai năm', '39,2%', '25.967', '42,6%', '1.092', '34,82 nghìn tỷ USD', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
+              'tối đa hai năm', '39,2%', '25.967', '42,6%', '1.092', 'khoảng 35 nghìn tỷ USD', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
               '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
               '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%', '−0,82', '−0,31',
               '−1,04%', '2,24%', '1.820,1', '2.610,85', '1.000 tấn', '473 tấn', '15.858,92', '24.164,89',
@@ -928,6 +928,20 @@ def phan_F():
     need_t('trái phiếu 10 năm: mức giảm', f'mất {vn(100 - bond(5, 10, 0.07), 2)}%')
     need_t('trái phiếu 10 năm khi lãi xuống 3%', vn(bond(5, 10, 0.03), 2))
     need_t('trái phiếu 2 năm', f'giá giảm {vn(100 - bond(5, 2, 0.07), 2)}%')
+
+    # Mua để ở hay đi thuê (s-dinhgia): căn 4 tỷ, trả trước 2 tỷ, vay 2 tỷ lãi 9%; khoản trả trước lẽ ra gửi
+    # tiết kiệm 5%/năm; phí quản lý và sửa chữa 1% giá mỗi năm; thuê 12 triệu/tháng. Gốc trả dần là để dành, không tính.
+    h_price, h_down, h_loan, h_dep, h_keep, h_rent = 4000, 2000, 0.09, 0.05, 0.01, 12      # triệu đồng
+    h_int, h_lost, h_fee = (h_price - h_down) * h_loan, h_down * h_dep, h_price * h_keep
+    h_own, h_rent_y = h_int + h_lost + h_fee, 12 * h_rent
+    du_kien('s-dinhgia', 'mua để ở: chi phí sở hữu mỗi năm', f'lãi vay {vn(h_int, 0)} triệu',
+            f'vay {vn((h_price - h_down) / 1000, 0)} tỷ lãi {vn(100 * h_loan, 0)}%',
+            f'gửi tiết kiệm {vn(100 * h_dep, 0)}%/năm lẽ ra lời {vn(h_lost, 0)} triệu',
+            f'{vn(100 * h_keep, 0)}% giá là {vn(h_fee, 0)} triệu', f'tổng {vn(h_own, 0)} triệu',
+            f'hết {vn(h_rent_y, 0)} triệu', w=400)
+    h_be = (h_own - h_rent_y) / h_price
+    need_t('mua để ở: khoảng chênh', f'Khoảng chênh {vn(h_own - h_rent_y, 0)} triệu bằng {vn(100 * h_be, 1)}% giá nhà')
+    need_t('mua để ở: giá nhà phải tăng nhanh hơn', f'nếu giá nhà tăng nhanh hơn {vn(100 * h_be, 1)}%/năm')
 
     du_kien('s-taisan', 'lãi thực với lãi 5% và lạm phát 3,31%', '3,31%', f'{vn((1.05 / 1.0331 - 1) * 100, 2)}%/năm')
     du_kien('s-taisan', 'lãi thực năm 2008', '2008', '12,73%', '23,12%', f'{vn((1.1273 / 1.2312 - 1) * 100, 1)}%')
