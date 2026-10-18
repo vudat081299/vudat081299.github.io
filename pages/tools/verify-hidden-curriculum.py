@@ -888,17 +888,16 @@ def phan_F():
     claim('lợi nhuận sau mười năm “gấp khoảng 4 lần”', round((1 + lo) ** 10) == 4, f'{(1 + lo) ** 10:.2f}')
     need_t('gấp khoảng 4 lần trong bài', 'gấp khoảng 4 lần')
 
-    # Đa dạng hoá: bảng và đoạn đọc mô hình (σ = 30%).
+    # Đa dạng hoá: bảng và đoạn đọc bảng (σ = 30%).
     s0 = 30.0
     for rho, label in ((0, '0 (không tương quan tuyến tính)'), (0.3, '0,3 (ngày thường)'), (0.8, '0,8 (khủng hoảng)')):
         cells = [vn(s0 * math.sqrt(rho + (1 - rho) / N), 1) + '%' for N in (1, 5, 10, 20)]
         last = 'về 0' if rho == 0 else vn(s0 * math.sqrt(rho), 1) + '%'
         need_t(f'bảng đa dạng hoá, ρ = {rho}', f'Tương quan {label} ' + ' '.join(cells) + ' ' + last)
-    n10, n50 = s0 * math.sqrt(0.37), s0 * math.sqrt(0.3 + 0.7 / 50)
-    need_t('đọc mô hình: N 10 → 50', f'từ {vn(n10, 2)}% xuống {vn(n50, 2)}%')
-    claim('đọc mô hình: bớt “chưa tới 1,5 điểm phần trăm”', n10 - n50 < 1.5, f'{n10 - n50:.2f}')
-    need_t('đọc mô hình: ρ = 0, N = 20', f'hai mươi tài sản còn {vn(s0 / math.sqrt(20), 2)}%')
-    need_t('đọc mô hình: sàn khi khủng hoảng', f'sàn lên {vn(s0 * math.sqrt(0.8), 2)}%')
+    # Đọc bảng: khủng hoảng (ρ = 0,8) thì hai mươi tài sản vẫn lên xuống “gần bằng một” tài sản.
+    claim('đọc bảng: khủng hoảng, hai mươi tài sản gần bằng một', math.sqrt(0.8 + 0.2 / 20) > 0.85,
+          f'tỉ số {math.sqrt(0.8 + 0.2 / 20):.3f}')
+    need_t('đọc bảng trong bài', 'Khủng hoảng đẩy tương quan lên 0,8 thì hai mươi tài sản vẫn lên xuống gần bằng một')
 
     st = 60 * 1.3
     need_t('tái cân bằng 60/40 sau một năm cổ phiếu +30%', f'{vn(st / (st + 40) * 100, 1)}% / {vn(40 / (st + 40) * 100, 1)}%')
@@ -926,8 +925,7 @@ def phan_F():
         return sum(c / (1 + y) ** t for t in range(1, n + 1)) + 100 / (1 + y) ** n
     need_t('trái phiếu 10 năm khi lãi lên 7%', vn(bond(5, 10, 0.07), 2))
     need_t('trái phiếu 10 năm: mức giảm', f'mất {vn(100 - bond(5, 10, 0.07), 2)}%')
-    need_t('trái phiếu 10 năm khi lãi xuống 3%', vn(bond(5, 10, 0.03), 2))
-    need_t('trái phiếu 2 năm', f'giá giảm {vn(100 - bond(5, 2, 0.07), 2)}%')
+    need_t('trái phiếu 2 năm', f'kỳ hạn 2 năm chỉ giảm {vn(100 - bond(5, 2, 0.07), 2)}%')
 
     # Mua để ở hay đi thuê (s-dinhgia): căn 4 tỷ, trả trước 2 tỷ, vay 2 tỷ lãi 9%; khoản trả trước lẽ ra gửi
     # tiết kiệm 5%/năm; phí quản lý và sửa chữa 1% giá mỗi năm; thuê 12 triệu/tháng. Gốc trả dần là để dành, không tính.
@@ -1021,15 +1019,15 @@ def phan_F2():
         ],
         's-moitruong': [
             '(Lazear, Shaw và Stanton, 2015)', 'nhiều hơn việc thêm một người vào nhóm chín người',
-            'Khoảng một phần tư tác dụng của người quản lý vẫn còn một năm sau khi họ rời nhóm',
+            'Khoảng một phần tư tác dụng của người quản lý vẫn còn một năm sau khi nhân viên thôi làm với họ',
             'Jarosch, Oberfield và Rossi-Hansberg (2021)',
             '4–9% tổng thù lao của người lao động là việc học từ đồng nghiệp',
             '(Kahneman và Klein, 2009)', 'Hogarth (2001)',
             '6.096 vận động viên, trong đó 772 người thuộc hàng đầu thế giới',
             'Topel và Ward (1992)', 'nam thanh niên Mỹ 1957–1972',
             'một người điển hình làm bảy việc, khoảng hai phần ba số việc của cả đời', 'ít nhất một phần ba',
-            'Fed Atlanta lấy ngày 15/10/2026', '324 trên 355 tháng có dữ liệu từ 1/1997 tới 8/2026',
-            'chênh trung bình khoảng 0,7 điểm phần trăm', 'trung bình 12 tháng', 'thiếu số tháng 10/2025',
+            'bảng số liệu Fed Atlanta bản tháng 10/2026', '325 trên 356 tháng có dữ liệu từ 1/1997 tới 9/2026',
+            'hơn trung bình khoảng 0,7 điểm phần trăm', 'trung bình 12 tháng', 'thiếu tháng 10/2025',
         ],
         's-vanminh': [
             ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh'),
@@ -1235,8 +1233,9 @@ def phan_G():
     fee = chu(muc('s-taisan'))
     claim('bản đồ tài sản: 24,4% cũng giữ giả định lợi suất',
           all(x in fee for x in ['8%/năm trước phí', '7% sau phí', '30 năm', '24,4%']))
-    # Snapshot Fed Atlanta 15/10/2026, Job Switcher (12 tháng), cột B/C, 1/1997–8/2026.
-    need_t('tỷ lệ tháng nhóm đổi việc cao hơn = 324 / 355', f'({vi(100 * 324 / 355, 1)}%)')
+    # Fed Atlanta, wage-growth-data.xlsx sửa ngày 8/10/2026, sheet Job Switcher (12 tháng), cột B/C, 1/1997–9/2026:
+    # 325 trên 356 tháng có số liệu nhóm đổi việc cao hơn, chênh bình quân 0,729 điểm; tháng 10/2025 trống.
+    need_t('tỷ lệ tháng nhóm đổi việc cao hơn = 325 / 356', f'({vi(100 * 325 / 356, 1)}%)')
     ditf = chu(muc('s-thuyetphuc'))
     claim('Genschow bảng 1: so nhóm sau yêu cầu lớn với nhóm chỉ yêu cầu nhỏ',
           '51%' in ditf and '38%' in ditf and '34%' not in ditf)
