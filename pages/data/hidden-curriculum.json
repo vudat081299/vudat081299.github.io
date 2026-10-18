@@ -1997,6 +1997,27 @@
    "action": "Ghi tài sản, nợ, chi thiết yếu; chọn một rủi ro cần giảm và một kỹ năng sẽ luyện."
   },
   {
+   "id": "speech",
+   "title": "Cần nói điều khó mà không mất lòng",
+   "sections": [
+    "s-noi",
+    "s-imlang",
+    "s-memcung",
+    "s-thuongluong"
+   ],
+   "action": "Chọn một cuộc nói chuyện đang hoãn: viết câu mở gồm việc cụ thể, ảnh hưởng của nó và một đề nghị; nói riêng, lúc người kia không vội."
+  },
+  {
+   "id": "pressure",
+   "title": "Bị nhờ vay, nhờ ký, ép uống hoặc giục quyết",
+   "sections": [
+    "s-ranhgioi",
+    "s-muoihai",
+    "s-luadao"
+   ],
+   "action": "Dừng trước khi trả lời; từ chối bằng một quy tắc chung; kiểm qua kênh mình chọn; không ký, không chuyển tiền trong lúc bị giục."
+  },
+  {
    "id": "invest",
    "title": "Chuẩn bị đầu tư",
    "sections": [
@@ -2056,10 +2077,10 @@
    "id": "workplace",
    "title": "Làm việc với người, đọc tổ chức",
    "sections": [
-    "s-noi",
-    "s-ranhgioi",
+    "s-quyenluc",
     "s-tochuc",
-    "s-thecuoc"
+    "s-thecuoc",
+    "s-docnguoi"
    ],
    "action": "Vẽ ai quyết, ai giữ nguồn lực; tách việc đã thấy khỏi suy đoán và chọn cách kiểm không buộc tội."
   }
@@ -2122,6 +2143,17 @@
     "s-moitruong",
     "s-thuongluong",
     "s-tichluy"
+   ]
+  },
+  {
+   "id": "extra",
+   "title": "Sếp giao thêm việc sát hạn",
+   "prompt": "Chiều thứ Năm, sếp giao thêm một báo cáo cần nộp sáng thứ Hai, trong khi bạn đang kín hai việc hạn thứ Sáu. Bạn nói gì để không nhận bừa mà cũng không mất lòng?",
+   "answer": "Nêu việc đang làm và cái giá: “Em đang làm A và B cho hạn thứ Sáu; nhận thêm C thì một việc sẽ trễ. Anh/chị muốn em ưu tiên việc nào ạ?”. Để người giao chọn khi đã thấy cái giá, rồi chốt lại bằng một tin nhắn ngắn. Đừng nhận hết rồi làm dở; việc sai luật hay nguy hiểm thì không làm.",
+   "sections": [
+    "s-imlang",
+    "s-memcung",
+    "s-quyenluc"
    ]
   }
  ]

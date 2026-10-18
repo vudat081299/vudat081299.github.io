@@ -25,9 +25,11 @@ Bảy phần, bảy loại sai khác nhau:
   E. THƯ VIỆN MÔ HÌNH — đủ trường, khoá hợp lệ, id duy nhất, mọi related và sections trỏ tới thứ
      có thật, không có HTML trong dữ liệu, số thẻ khớp đầu trang, và mỗi con số trong thẻ có mặt
      nguyên số trong chính các mục thẻ trỏ tới (không chỉ ở đâu đó trên trang). Lộ trình, mẫu quyết
-     định và bài tập phải đủ trường, khoá duy nhất, mọi liên kết mục có thật.
-  F. VỐN, NGHỀ, GIA ĐÌNH — các mục rủi ro, tạo của, doanh nghiệp, danh mục, tài sản, nghề, gia đình:
-     dữ kiện lấy từ nguồn (con số kèm đơn vị, tác giả và năm) phải có mặt và đứng gần nhau trong đúng
+     định và bài tập phải đủ trường, khoá duy nhất, mọi liên kết mục có thật; tiêu đề bài tập đếm đúng
+     số tình huống.
+  F. DỮ KIỆN TỪ NGUỒN — mọi phần, từ tiền, vốn, nghề tới lời nói, yêu đương, quyền lực, văn hoá, gia đình,
+     lừa đảo, an toàn giao thông và thói quen: dữ kiện lấy từ nguồn (con số kèm đơn vị, tác giả và năm,
+     số tổng đài) phải có mặt và đứng gần nhau trong đúng
      mục — kiểm số, không kiểm câu văn (du_kien) —, thân bài không dẫn số điều luật hay số hiệu văn bản
      (PAGES-015), năm can chi tính lại từ năm dương lịch,
      và mọi con số suy ra được tính lại trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn
@@ -535,7 +537,8 @@ def phan_B():
         r'<div class="hc-lab" id="(lab-[a-z]+)">\s*<div class="hc-lab__head">\s*<p class="hc-lab__kick">Mô hình (\d+) /', HTML)}
     bad = []
     for href, text in re.findall(r'<a class="hc-x" href="#([a-z-]+)">([^<]*)</a>', HTML):
-        mm = re.fullmatch(r'(?:mục )?(\d+\.\d+|Khung \d+/\d+)', text)
+        # Số đứng đầu một nhãn dài hơn ("6.7: tự trọng") cũng phải khớp đích.
+        mm = re.match(r'(?:mục )?(\d+\.\d+|Khung \d+/\d+)(?![\d/])', text)
         if mm and eyebrow.get(href) != mm.group(1):
             bad.append(f'#{href} “{text}”')
         mm = re.fullmatch(r'[Mm]ô hình (\d+)', text)
@@ -545,6 +548,11 @@ def phan_B():
         if mm and (href not in heads or heads.index(href) != int(mm.group(1))):
             bad.append(f'#{href} “{text}”')
     claim('số trong liên kết khớp số của đích', not bad, ', '.join(bad[:8]))
+    # Bảng "Bắt đầu từ đâu" (Khung 3/3): chữ số ở tiêu đề phần mở rộng khớp số dòng của bảng.
+    sk = re.search(r'<summary>(\S+) tình huống khác:[^<]*</summary>.*?<tbody>(.*?)</tbody>', muc('s-cach'), flags=re.S)
+    claim('Khung 3/3: số tình huống khác khớp số dòng của bảng',
+          bool(sk) and VN.get(sk.group(1).lower()) == sk.group(2).count('<tr>'),
+          f'{sk.group(1) if sk else "?"} so với {sk.group(2).count("<tr>") if sk else "?"} dòng')
     prose = re.sub(r'<script>.*?</script>|<a [^>]*>.*?</a>|<p class="hc-lab__kick">.*?</p>|<b>[^<]*</b> ·', '', HTML, flags=re.S)
     plain = re.findall(r'[Mm]ô hình \d+|mục \d+\.\d+', prose)
     claim('không còn số mục, số mô hình viết trơn (không bấm được, dễ lệch)', not plain, ', '.join(plain[:8]))
@@ -843,6 +851,10 @@ def phan_E():
                 and len(s) == len(set(s)) and set(s) <= secs for s in refs))
             if key == 'reading_paths':
                 claim('lộ trình: mỗi lần đọc 3–5 mục', all(isinstance(s, list) and 3 <= len(s) <= 5 for s in refs))
+    # Tiêu đề khối bài tập đếm số tình huống bằng chữ; thêm hay bớt một tình huống trong file thì phải sửa theo.
+    ncase = len(data.get('practice_cases') or [])
+    need('tiêu đề bài tập đếm đúng số tình huống trong dữ liệu',
+         '<h3 class="hc-h3">%s tình huống để thử</h3>' % {2: 'Hai', 3: 'Ba', 4: 'Bốn', 5: 'Năm', 6: 'Sáu'}.get(ncase, ncase), ncase)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1055,7 +1067,14 @@ def phan_F2():
             'một người điển hình làm bảy việc, khoảng hai phần ba số việc của cả đời', 'ít nhất một phần ba',
             'bảng số liệu Fed Atlanta bản tháng 10/2026', '325 trên 356 tháng có dữ liệu từ 1/1997 tới 9/2026',
             'hơn trung bình khoảng 0,7 điểm phần trăm', 'trung bình 12 tháng', 'thiếu tháng 10/2025',
+            # Gallup, State of the American Manager (2015); ô số ≥ 70% ở đầu trang trỏ về câu này.
+            ('Gallup', 'ít nhất 70% chênh lệch mức gắn bó'),
         ],
+        # Bohns (2016): hơn 14.000 người lạ được nhờ, người nhờ đoán thấp mức nhận lời trung bình 48%.
+        's-chudong': [('hơn 14.000 người lạ', 'trung bình 48%', 'Bohns, 2016')],
+        # Curhan và cộng sự (2022): quãng im từ 3 giây, không giành phần lớn hơn; khi địa vị chênh rõ, chỉ quãng im
+        # của bên địa vị cao tạo thêm giá trị.
+        's-imlang': [('ba giây', 'Curhan và cộng sự, 2022', 'chỉ quãng im của bên địa vị cao')],
         # Văn hoá: Ambady và Rosenthal (1993) nghiên cứu 1 — 13 giảng viên, ba đoạn 10 giây, r(11) = 0,76; Emily Post
         # Institute — khăn ăn “loosely to the left”, dao dĩa ăn xong ở số 4; Recht và Leslie (1988) — 64 học sinh, nửa hiệp.
         's-vonvanhoa': [
