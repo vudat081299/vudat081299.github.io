@@ -1267,7 +1267,7 @@
    "mechanism": "Ở một lượt, chơi xấu có lợi. Khi còn gặp lại, tương lai đủ quan trọng và hành vi kiểm chứng được, hợp tác có thể lời hơn. Chiến lược “ăn miếng trả miếng” từng thắng hai giải đấu của Axelrod; kết quả vẫn tuỳ luật chơi và đối thủ.",
    "mistake": "Thù dai: trong mô hình của trang, với 2% nhầm lẫn, kiểu Thù dai tụt xuống sát Lật lọng, vì một lần hiểu lầm biến thành thù vĩnh viễn.",
    "example": "Trong mô hình sáu kiểu người: với 1 lượt, Lật lọng chiếm cả quần thể; với 200 lượt không nhầm lẫn, Lật lọng xuống cuối bảng; với quan hệ từ 50 lượt trở lên, Rộng lượng đứng đầu ở mọi mức nhầm lẫn.",
-   "use": "Với giao dịch ít khả năng lặp lại, kiểm chứng và dùng hợp đồng, đặt cọc phù hợp. Với quan hệ dài, hợp tác có giới hạn, kiểm tra hiểu lầm và dừng khi bị lợi dụng lặp lại.",
+   "use": "Với quan hệ dài: hợp tác trước, đáp lại đúng điều người kia làm, kiểm hiểu lầm và bỏ qua một lần lỡ; dừng khi bị lợi dụng lặp lại. Với giao dịch lớn hoặc ít khả năng lặp lại, dùng hợp đồng, đặt cọc phù hợp.",
    "limits": "Kết luận cần hai bên thấy được nước đi của nhau và còn quan tâm tới tương lai; khi một bên biết sắp rời cuộc chơi, động cơ hợp tác yếu đi.",
    "remember": "Chữ tín là thứ người ta tính trước khi có chuyện lớn.",
    "related": [
@@ -1293,7 +1293,7 @@
    "mechanism": "Người khác không quan sát được mình mỗi ngày nên đoán từ những gì đã thấy và nghe kể. Về đạo đức, một lần xấu nặng hơn một lần tốt; về năng lực thì ngược lại.",
    "mistake": "Lẫn uy tín với chiều lòng mọi người; hay nghĩ việc tốt tự lan đi, trong khi uy tín cần người kể.",
    "example": "Trên eBay, cùng một người bán, cùng loại hàng, tên quen bán được giá cao hơn 8,1% so với tên mới.",
-   "use": "Giữ lời ở việc nhỏ; làm tốt việc khó mà không ai bắt; trước việc mập mờ, làm phép thử trang nhất báo ngày mai.",
+   "use": "Làm đều đặn cả việc nhỏ; làm tốt việc khó mà không ai bắt; để kết quả hiện ra cho người khác kể; trước việc mập mờ, làm phép thử trang nhất báo ngày mai.",
    "limits": "Uy tín có thể sai, có thể giam mình vào một vai cũ, và giữ nó quá kỹ có thể làm mình sợ thử.",
    "remember": "Tốt danh hơn lành áo.",
    "related": [
