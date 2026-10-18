@@ -717,7 +717,7 @@
    ],
    "idea": "Thứ đã bỏ ra không quay lại được dù mình đi tiếp hay dừng; quyết định chỉ nên nhìn về phía trước.",
    "why": "Tránh đổ thêm chỉ vì đã bỏ vào nhiều.",
-   "mechanism": "Phần đã chìm giống nhau ở mọi lựa chọn kể từ hôm nay, nên nó không giúp phân biệt lựa chọn nào tốt hơn. Cảm giác “bỏ thì phí” là chuyện của lòng tự trọng, không phải của phép tính.",
+   "mechanism": "Phần đã chìm giống nhau ở mọi lựa chọn kể từ hôm nay, nên nó không giúp phân biệt lựa chọn nào tốt hơn. Cảm giác “bỏ thì phí” là nỗi tiếc, không phải phép tính.",
    "mistake": "Lẫn chi phí chìm với bằng chứng: ba năm đã bỏ vào có thể là dấu hiệu dự án khó hơn mình nghĩ, không phải lý do để bỏ thêm năm thứ tư.",
    "example": "Khoá học đã đóng tiền nhưng không còn hợp nhu cầu: học tiếp chỉ đáng khi phần còn lại đáng thời gian bỏ ra từ hôm nay.",
    "use": "Trước mỗi quyết định đi tiếp, viết ra: nếu bắt đầu từ con số không hôm nay, mình có chọn con đường này không?",
@@ -1670,7 +1670,7 @@
    ],
    "idea": "Người nói thường bỏ qua kiến thức nền họ cho là chung. Thiếu vốn ấy, ta có thể hiểu từng chữ mà vẫn không theo được ý.",
    "why": "Kiến thức nền giúp hiểu điều người nói cho là đã biết.",
-   "mechanism": "64 học sinh đọc tường thuật một trận bóng chày: em nào biết bóng chày hiểu tốt hơn hẳn, dù đọc giỏi hay đọc kém (Recht và Leslie, 1988).",
+   "mechanism": "64 học sinh đọc tường thuật nửa hiệp bóng chày: em nào biết bóng chày nhớ và kể lại tốt hơn hẳn, dù đọc giỏi hay đọc kém (Recht và Leslie, 1988).",
    "mistake": "Biến nó thành học thuộc danh sách để khoe; biết tên một ý tưởng chưa phải là hiểu nó.",
    "example": "Biết khẩu hiệu Nullius in verba của Hội Hoàng gia Anh — không dựa vào lời uy quyền — giúp nhớ hỏi bằng chứng và đọc phương pháp của nghiên cứu.",
    "use": "Mỗi tuần đọc một văn bản gốc ngắn — một đoạn Luận ngữ, vài trang Epictetus, Tuyên ngôn Độc lập — và tự hỏi nó còn sống ở đâu trong cách người ta nghĩ hôm nay.",
@@ -1700,7 +1700,7 @@
    "idea": "Gia đình có thể truyền tài sản, kỹ năng, quan hệ và giá trị; mỗi loại cần cách chuyển khác nhau, không loại nào tự được giữ nguyên.",
    "why": "Cần quyết để lại gì, cho ai và chuyển thế nào — không chỉ bao nhiêu tiền.",
    "mechanism": "Ở Thuỵ Điển, thứ hạng tài sản của con giống cha mẹ khá rõ, giống ông bà ít hơn nhiều. Theo dõi cả dòng họ ở Anh thì lợi thế phai chậm hơn. Hai cách đo khác nhau, nên không cho cùng một câu trả lời về độ bền gia sản.",
-   "mistake": "Tin con số “70% gia sản mất ở đời thứ hai, 90% ở đời thứ ba”: truy ngược, nó bắt nguồn từ một nghiên cứu năm 1987 về doanh nghiệp gia đình, không phải về tài sản.",
+   "mistake": "Coi “không ai giàu ba họ” là định luật, hoặc tin một con số truyền miệng về chuyện mất của sau ba đời mà không hỏi nó đo gì, đo ai.",
    "example": "Con nhà giàu thường vẫn khá hơn mức chung, cháu thì ít hơn hẳn; nhưng cả dòng họ có thể vẫn nhỉnh hơn qua nhiều đời. Không con số nào ở đây cho biết bao nhiêu nhà mất của sau ba đời.",
    "use": "Mỗi năm một buổi họp gia đình: cập nhật bảng cân đối gia đình, nơi để giấy tờ, và một bài học của nhà mình ghi thành chữ.",
    "limits": "Mỗi nhà và tập quán khác nhau; nghĩa vụ họ hàng có thể nâng đỡ hoặc đè nặng. Dữ liệu nhiều đời còn thiếu cho Việt Nam.",
@@ -1729,8 +1729,8 @@
    "idea": "Trẻ học tiền bằng cách tự quyết những khoản nhỏ thật, và bằng những cuộc trò chuyện bình thường với cha mẹ về chính lựa chọn của mình.",
    "why": "Cho con sai ở khoản nhỏ để học trước khi quyết khoản lớn.",
    "mechanism": "PISA 2022: học sinh 15 tuổi hay nói với cha mẹ về chi tiêu của chính mình có điểm năng lực tài chính cao hơn 12 điểm; được tự quyết tiêu tiền gắn với cao hơn khoảng 30 điểm. Đây là tương quan.",
-   "mistake": "Đọc tương quan thành lời cấm: PISA thấy nhóm hay bàn ngân sách gia đình có điểm thấp hơn, nhưng không chứng minh cuộc nói chuyện ấy gây hại.",
-   "example": "Cách sắp xếp phổ biến trong PISA 2022: 70% học sinh tự tiêu khoản nhỏ, còn khoản lớn thì phải xin phép cha mẹ.",
+   "mistake": "Đọc tương quan thành nhân quả: điểm cao hơn có thể vì em giỏi hay chủ động hỏi hơn, không hẳn vì cuộc nói chuyện.",
+   "example": "Cho con một khoản tiêu vặt đều đặn và quyền tự quyết trong khoản ấy; khoản lớn thì bàn với cha mẹ trước.",
    "use": "Cùng bàn lựa chọn và giới hạn phù hợp tuổi; để con quyết khoản nhỏ, tránh giao gánh nặng người lớn.",
    "limits": "Số liệu PISA là tương quan, và Việt Nam không có trong bài đánh giá năng lực tài chính. Nhà khó khăn không thể giấu con mọi nỗi lo tiền.",
    "remember": "Cho con quyết tiền nhỏ để con không phải học bài đầu tiên bằng tiền lớn.",
@@ -2095,11 +2095,12 @@
    "id": "cash",
    "title": "Tiền để dành và nợ lãi cao",
    "prompt": "Thu nhập đang bấp bênh, có nợ lãi cao và một khoản để dành. Một người rủ đầu tư vì giá vừa giảm. Bạn cần biết gì trước khi quyết?",
-   "answer": "Ghi khoản phải trả, chi thiết yếu, tiền dễ rút và điều khoản nợ. Giá giảm chưa chứng minh rẻ. Giữ một khoản đệm vừa sức song song trả bớt nợ lãi cao; chưa dùng tiền sắp cần vào phần biến động. Mức cụ thể tuỳ hoàn cảnh.",
+   "answer": "Ghi khoản phải trả, chi thiết yếu, tiền dễ rút và điều khoản nợ. Giá giảm chưa chứng minh rẻ; lời rủ kèm lãi “chắc chắn” thì dừng và kiểm. Giữ một khoản đệm vừa sức song song trả bớt nợ lãi cao; chưa dùng tiền sắp cần vào phần biến động. Mức cụ thể tuỳ hoàn cảnh.",
    "sections": [
     "s-no",
     "s-baohiem",
-    "s-danhmuc"
+    "s-danhmuc",
+    "s-luadao"
    ]
   },
   {

@@ -976,11 +976,11 @@ def phan_F2():
     ba = [15 * 1.10 ** min(n - 1, 10) * 1.03 ** max(n - 11, 0) / (20 * 1.03 ** (n - 1)) for n in range(11, 41)]
     claim('từ năm 11, tỉ số lương B/A không đổi', max(ba) - min(ba) < 1e-9, f'{min(ba):.6f}…{max(ba):.6f}')
     du_kien('s-tichluy', 'khoảng cách giữ nguyên', 'giữ nguyên tới cuối', 'theo phần trăm', w=80)
-    # Ngành học (s-daycon): 0,561 điểm log (Altonji, Blom và Meghir 2012) là khoảng 75%.
-    claim('0,561 điểm log ≈ cao hơn 75%', round(100 * (math.exp(0.561) - 1)) == 75, f'{100 * (math.exp(0.561) - 1):.1f}%')
-    du_kien('s-daycon', 'Altonji, Blom và Meghir: kỹ thuật điện so với sư phạm', 'kỹ thuật điện', 'khoảng 75%', 'sư phạm', w=60)
     # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 62 trên 286 ca.
     claim('Van Such: 62 trên 286 ca là 21%', int(100 * 62 / 286) == 21, f'{100 * 62 / 286:.1f}%')
+    # Odean (1998), bảng I: tỉ lệ lãi được bán 0,148, tỉ lệ lỗ được bán 0,098 → cao hơn khoảng 50% (luật 10, s-muoihai).
+    claim('Odean: 0,148 so với 0,098 là cao hơn khoảng 50%', 45 <= 100 * (0.148 / 0.098 - 1) <= 55,
+          f'{100 * (0.148 / 0.098 - 1):.1f}%')
     du_kien('s-giayto', 'Van Such: 62 trên 286 ca', 'Van Such', '2017', '286 bệnh nhân', '62 ca (21%)')
     # Rút bảo hiểm xã hội một lần (s-baohiem), Luật Bảo hiểm xã hội 2024: mỗi năm đóng từ 2014 được 2 tháng lương
     # bình quân; người lao động 8% và chủ 14% lương mỗi tháng vào quỹ hưu trí và tử tuất, tức 12 × 22% tháng lương
@@ -997,10 +997,10 @@ def phan_F2():
     lo = sorted({f'{sid}: {m.group(0)}' for sid in re.findall(r'<section id="(s-[a-z]+)">', HTML) if sid != 's-nguon'
                  for m in so_hieu.finditer(chu(muc(sid)))})
     claim('thân bài không dẫn số điều luật, số hiệu văn bản', not lo, ', '.join(lo[:8]))
-    # Bảng “Mười sáu ý tưởng làm nền” (s-vanminh): số dòng khớp chữ “mười sáu” của tiêu đề.
-    tb = re.search(r'Mười sáu ý tưởng làm nền</h3>.*?<tbody>(.*?)</tbody>', muc('s-vanminh'), flags=re.S)
+    # Bảng “Mười bốn ý tưởng làm nền” (s-vanminh): số dòng khớp chữ “mười bốn” của tiêu đề.
+    tb = re.search(r'Mười bốn ý tưởng làm nền</h3>.*?<tbody>(.*?)</tbody>', muc('s-vanminh'), flags=re.S)
     n = tb.group(1).count('<tr>') if tb else 0
-    claim('s-vanminh: bảng “Mười sáu ý tưởng làm nền” có 16 dòng', n == 16, f'thấy {n} dòng')
+    claim('s-vanminh: bảng “Mười bốn ý tưởng làm nền” có 14 dòng', n == 14, f'thấy {n} dòng')
     # Năm can chi đi kèm năm dương lịch: can = (năm − 4) mod 10, chi = (năm − 4) mod 12; năm 4 là Giáp Tý.
     CAN = 'Giáp Ất Bính Đinh Mậu Kỷ Canh Tân Nhâm Quý'.split()
     CHI = 'Tý Sửu Dần Mão Thìn Tỵ Ngọ Mùi Thân Dậu Tuất Hợi'.split()
@@ -1030,22 +1030,25 @@ def phan_F2():
             'Fed Atlanta lấy ngày 15/10/2026', '324 trên 355 tháng có dữ liệu từ 1/1997 tới 8/2026',
             'chênh trung bình khoảng 0,7 điểm phần trăm', 'trung bình 12 tháng', 'thiếu số tháng 10/2025',
         ],
+        # Văn hoá: Ambady và Rosenthal (1993) nghiên cứu 1 — 13 giảng viên, ba đoạn 10 giây, r(11) = 0,76; Emily Post
+        # Institute — khăn ăn “loosely to the left”, dao dĩa ăn xong ở số 4; Recht và Leslie (1988) — 64 học sinh, nửa hiệp.
+        's-vonvanhoa': [
+            ('Ambady và Rosenthal', '1993', '30 giây'), ('13 giảng viên', '0,76', 40), ('Veblen', '1899'),
+            ('Currid-Halkett', '2017', 'hưu trí'),
+        ],
+        's-quocte': ['Emily Post Institute', 'gấp lỏng khăn, đặt bên trái đĩa', 'cán chỉ về số 4'],
         's-vanminh': [
-            ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh'),
-            ('Aronowitz và Giroux', '1988'), 'Mười sáu ý tưởng làm nền',
+            ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh', 'nửa hiệp'),
+            ('Aronowitz và Giroux', '1988'), 'Mười bốn ý tưởng làm nền',
             ('Socrates', '469–399 TCN', 'Plato'), ('Khổng Tử', '551–479 TCN', 'Mạnh Tử'), '“Biết đủ là giàu”',
-            ('Đức Phật', 'thế kỷ 5 TCN'), ('Epictetus', '50–135', 'nô lệ'), ('Phục hưng', 'thế kỷ 14–16'),
+            ('Đức Phật', 'thế kỷ 5 TCN'), ('Epictetus', '50–135', 'nô lệ'),
             ('Pascal và Fermat', '1654'), ('Hội Hoàng gia Anh', '1660', 'Nullius in verba'), ('Kant', '1784'),
             ('Adam Smith', 'Của cải của các quốc gia', '1776', '48.000 cây ghim'), ('Darwin', 'Nguồn gốc các loài', '1859'),
             ('Tuyên ngôn của Đảng Cộng sản', '1848'), 'nền tảng tư tưởng của Đảng, ghi trong Hiến pháp',
-            ('Monet', 'Ấn tượng, mặt trời mọc', '1872', '1874'), ('Bình Ngô đại cáo', 'Đinh Mùi 1427', 'âm lịch'),
+            ('Bình Ngô đại cáo', 'Đinh Mùi 1427', 'âm lịch'),
             '“Việc nhân nghĩa cốt ở yên dân”', ('Hồ Chí Minh, Tuyên ngôn Độc lập', '2/9/1945', 20),
-            ('Đại hội VI của Đảng', '12/1986', 20), ('Ngày Quốc khánh', '2/9/1945', 40), ('Đại hội VI mở đường Đổi mới', '12/1986', 20),
-            ('Ngô Quyền', '938', 'Nam Hán', 'Bạch Đằng'), ('Gia Long', '1802', 'gần ba thế kỷ'),
-            ('1/9/1858', 'Tây Ban Nha', 'Đà Nẵng'), ('7/5/1954', 'Điện Biên Phủ', 'Genève', '7/1954'),
-            ('30/4/1975', 'Chiến dịch Hồ Chí Minh'),
-            ('Phan Kế Bính', 'Việt Nam phong tục', '1915'), ('Đào Duy Anh', 'Việt Nam văn hoá sử cương', '1938'),
-            ('Văn minh An Nam', '1944'), ('Gombrich', 'The Story of Art', '1950'),
+            ('Đại hội VI của Đảng', '12/1986', 20),
+            ('Phan Kế Bính', 'Việt Nam phong tục', '1915'),
             ('Bryson', 'A Short History of Nearly Everything', '2003'),
         ],
         's-thehe': [
@@ -1054,25 +1057,24 @@ def phan_F2():
             ('thừa kế và quà tặng', 'Ít nhất một nửa'), ('học vấn', 'khoảng một phần tư', 40),
             ('Gregory Clark', 'The Son Also Rises', '2014'), ('18.869', 'Anh và xứ Wales', '1858', '2012'),
             ('0,70–0,75', 'ba phần tư'), ('Torche và Corvalán', '2018'),
-            '“70% mất ở đời thứ hai, 90% ở đời thứ ba”', ('Williams và Preisser', '2003', '3.250 gia đình'),
-            ('James Grubman', '2022'), ('John Ward', '1987', '30% doanh nghiệp'),
             ('Holtz-Eakin, Joulfaian và Rosen', '1993'), ('150.000 USD', 'bốn lần', '25.000 USD', 120),
         ],
+        # PISA 2022 tập IV (OECD, 2024), trung bình các nước OECD tham gia: +12 điểm (nói với cha mẹ về chi tiêu của
+        # mình hằng tuần, hằng tháng so với không bao giờ), +30 điểm (tự quyết tiêu tiền) — đối chiếu qua bài của ACER
+        # (Teacher, 2024) vì oecd.org chặn truy cập tự động; Deci, Koestner và Ryan (1999): 128 thí nghiệm.
         's-daycon': [
-            ('Whitebread và Bingham', '2013'), 'tới khoảng 7 tuổi', ('PISA 2022', 'OECD, 2024'),
+            ('PISA 2022', 'OECD, 2024'),
             ('15 tuổi', '20 nước và vùng', 'không có Việt Nam'), ('chi tiêu của chính mình', 'cao hơn 12 điểm', 80),
-            ('ngân sách cả nhà', 'thấp hơn 13 điểm', 80), ('tự quyết tiêu tiền', 'khoảng 30 điểm', 60),
-            ('70% học sinh', 'khoản nhỏ', 40), ('Ryan và Deci', '2000'),
+            ('tự quyết tiêu tiền', 'khoảng 30 điểm', 60), ('Ryan và Deci', '2000'),
             ('Hart và Risley', '1995', '42 gia đình', 'mỗi tháng một giờ'), ('45 triệu từ', '13 triệu', 80),
-            ('Sperry', '2019'), ('Romeo', '2018'),
-            ('1885', 'Mrs. Dymond', 'Anne Isabella Thackeray Ritchie'), ('Lão Tử', '1976'), '臨河而羨魚，不如歸家織網。',
-            'Hoài Nam Tử · thiên Thuyết lâm huấn', ('Altonji, Blom và Meghir', '2012'), ('Mỹ năm 2009', '75%', 80),
-            ('Deci, Koestner và Ryan', '1999'),
+            ('Sperry', '2019'), ('Romeo', '2018'), ('trò chuyện qua lại', 'Romeo', 120),
+            ('128 thí nghiệm', 'Deci, Koestner và Ryan', '1999'),
         ],
         's-honnhan': [
             ('115 nghiên cứu', '45.000 cuộc hôn nhân', 'Karney và Bradbury', '1995'),
             ('14 năm', 'Gottman và Levenson', '2000'), '“dự báo đúng hơn 90%”', ('Heyman và Smith Slep', '2001'),
             ('4.574 cặp', 'Dew, Britt và Huston', '2012'), ('388 cặp', 'Ross và cộng sự', '2022'),
+            'cả ba nhóm đều dự báo mức hài lòng', 'giàu hay nghèo không còn liên quan',
         ],
         # Yêu đương: abstract của từng bài (PubMed, Crossref, Semantic Scholar), 10/2026.
         's-tinhyeu': [
@@ -1103,7 +1105,30 @@ def phan_F2():
             'Giấy uỷ quyền hết hiệu lực khi người uỷ quyền mất',
             'Mua bán, tặng cho, thế chấp nhà đất phải công chứng hoặc chứng thực',
             'Tiền bảo hiểm trả cho người thụ hưởng ghi trong hợp đồng, không chia theo di chúc',
-            'Van Such và cộng sự, 2017',
+            'Van Such và cộng sự, 2017', 'kiểm quy định hiện hành trước khi ký',
+            'Nhiều bản cùng định đoạt một tài sản thì bản sau cùng có hiệu lực',
+        ],
+        # Thói quen (s-lotrinh): Gollwitzer và Sheeran (2006), abstract: 94 phép thử, d = 0,65; Sheeran, Listrom và
+        # Gollwitzer (2024), abstract: 642 phép thử, 0,27 ≤ d ≤ 0,66; Lally và cộng sự (2010), abstract: 96 người, 18–254
+        # ngày; trung bình 66 ngày theo Gardner, Lally và Wardle (2012). Luật đối luật: Tetlock (2005); Atanasov và cộng sự (2020).
+        's-lotrinh': [
+            ('94 phép thử', 'd = 0,65', 'Gollwitzer và Sheeran', '2006'),
+            ('642 phép thử', '0,27 tới 0,66', 'Sheeran, Listrom và Gollwitzer', '2024'),
+            ('96 người', 'khoảng 66 ngày', '18 ngày', '254 ngày', 'Lally và cộng sự, 2010', 320),
+        ],
+        's-mauthuan': [('Tetlock', '2005'), ('Atanasov và cộng sự', '2020'), '執中無權，猶執一也'],
+        # Lừa đảo: bài “25 kịch bản lừa đảo trên không gian mạng năm 2026” (bocongan.gov.vn, 8/9/2026) và cảnh báo
+        # “phạt nguội” (baochinhphu.vn, 10/9/2026): công an không yêu cầu nộp phạt hay đưa mật khẩu, OTP qua link lạ.
+        's-luadao': [
+            'Công an không yêu cầu nộp phạt hay đưa mật khẩu, mã OTP qua đường link trong tin nhắn lạ',
+            ('Bộ Công an', '2026'), ('cho rút tiền vài lần đầu', 'dụ nạp số lớn', 60),
+        ],
+        # Luật 12: WHO, “Road traffic injuries” (20/7/2026) — hàng đầu ở 5–29 tuổi; mũ đúng cách giảm nguy cơ tử
+        # vong hơn 6 lần, chấn thương não tới 74%. Cấm lái khi có nồng độ cồn: luật trật tự, an toàn giao thông
+        # đường bộ (bản hợp nhất 2026), áp cho mọi phương tiện, kể cả xe thô sơ. Odean (1998) bảng I: PGR 0,148, PLR 0,098.
+        's-muoihai': [
+            ('người 5–29 tuổi', 'hơn 6 lần', '74%', 'WHO'), 'kể cả xe đạp, khi trong máu hoặc hơi thở có nồng độ cồn',
+            ('Odean (1998)', '10.000 tài khoản', 'khoảng 50%'), ('Shefrin và Statman', '1985'), ('Cochrane', '2019'),
         ],
         # Tâm kế: bảng 2 của O'Boyle và cộng sự (2012) — riêng Machiavellianism: hiệu suất ρ −0,07 (k = 57), hành vi
         # gây hại ρ 0,25 (k = 13); 245 mẫu là của cả ba nét “đen tối”, không phải của riêng một nét. Abstract của Spurk
@@ -1184,9 +1209,15 @@ def phan_G():
         's-memcung': ['chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
         's-ranhgioi': ['Đã uống rượu bia thì không cầm lái'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
+        's-vonvanhoa': ['không đo đúng năng lực hay nhân cách'],
+        's-lenghia': ['khác theo vùng và từng nhà', 'nhập gia tuỳ tục'],
+        's-kinhdien': ['trăm trận không nguy', 'hai lần là đủ', 'chưa rõ xuất xứ'],
         's-giayto': ['nên công chứng', 'di chúc không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên',
                      'con thành niên không có khả năng lao động', 'trừ người từ chối nhận hoặc không có quyền hưởng'],
-        's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn'],
+        's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn',
+                     'Không đưa mã OTP, mật khẩu', 'gọi ngay ngân hàng của mình để khoá tài khoản'],
+        's-muoihai': ['đã uống rượu bia thì không lái xe nào', 'cài quai đúng cách'],
+        's-lotrinh': ['“nếu [lúc, chỗ] thì tôi [việc nhỏ]”', 'vài tuần tới vài tháng', 'lỡ một lần thì làm lại'],
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
         's-nhantin': ['ngừng nhắc', 'Không tìm kênh khác để vượt ranh giới'],
         's-henho': ['không thay đồng thuận thân mật', 'chọn nơi công cộng', 'không gửi tiền cho người yêu qua mạng'],
