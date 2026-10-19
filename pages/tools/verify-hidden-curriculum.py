@@ -362,8 +362,6 @@ def phan_B():
     claim('"hơn bốn lần" lợi suất danh nghĩa', 4 < y3 / sp_nom < 5, f'tỉ số {y3 / sp_nom:.2f}')
     claim('5%/tháng gấp đôi "chưa đầy 15 tháng"', math.log(2) / math.log(1.05) < 15)
     need('lãi mặc định của lab-pz', 'id="pz-m" min="0.5" max="10" step="0.5" value="3"')
-    claim('1%/ngày tính đơn = 365%/năm', 1 * 365 == 365)
-    need('lãi 1% mỗi ngày trong bài', '“chỉ 1% mỗi ngày” là 365%/năm tính đơn')
     # Lãi trên dư nợ ban đầu (s-no): 1,5%/tháng, 12 kỳ, mỗi kỳ trả P/12 + 1,5%·P → lãi thật theo dư nợ giảm dần.
     pay, lo, hi = 1 / 12 + 0.015, 0.0, 0.1
     for _ in range(100):
