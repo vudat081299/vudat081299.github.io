@@ -1139,18 +1139,10 @@ def phan_F2():
             'gọi 113', 'Tổng đài quốc gia 117, 24/7', 'tổng hợp trên hơn 50.000 người xác nhận cả ba, mạnh nhất là mức hài lòng',
             'nghiên cứu ở 11 thành phố Mỹ',
         ],
-        # Bộ luật Dân sự 2015: Điều 650–651 (hàng thừa kế thứ nhất), 644 (hai phần ba suất), 615 (nợ trong phạm vi
-        # di sản), 140 (uỷ quyền chấm dứt khi người uỷ quyền chết); Luật Đất đai 2024 Điều 27, Luật Nhà ở 2023 Điều 164
-        # (công chứng); Luật Kinh doanh bảo hiểm 2022 Điều 4, 41 (người thụ hưởng). Trang chỉ giữ việc cần làm, không số điều.
+        # Luật Kinh doanh bảo hiểm 2022 Điều 4, 41 (người thụ hưởng). Trang chỉ giữ việc cần làm, không số điều.
         's-giayto': [
-            'tới tháng 10/2026', 'hàng thừa kế đầu gồm vợ hoặc chồng, cha mẹ và các con, kể cả con nuôi',
-            'vẫn nhận ít nhất hai phần ba phần họ được hưởng nếu chia theo luật',
-            'chỉ trả nợ của người mất trong phạm vi tài sản được nhận',
-            'Giấy uỷ quyền hết hiệu lực khi người uỷ quyền mất',
-            'Mua bán, tặng cho, thế chấp nhà đất phải công chứng hoặc chứng thực',
             'Tiền bảo hiểm trả cho người thụ hưởng ghi trong hợp đồng, không chia theo di chúc',
-            'Van Such và cộng sự, 2017', 'kiểm quy định hiện hành trước khi ký',
-            'Nhiều bản cùng định đoạt một tài sản thì bản sau cùng có hiệu lực',
+            'Van Such và cộng sự, 2017',
         ],
         # Thói quen (s-lotrinh): Gollwitzer và Sheeran (2006), abstract: 94 phép thử, d = 0,65; Sheeran, Listrom và
         # Gollwitzer (2024), abstract: 642 phép thử, 0,27 ≤ d ≤ 0,66; Lally và cộng sự (2010), abstract: 96 người, 18–254
@@ -1256,8 +1248,7 @@ def phan_G():
         's-vonvanhoa': ['không đo đúng năng lực hay nhân cách'],
         's-lenghia': ['khác theo vùng và từng nhà'],
         's-kinhdien': ['trăm trận không nguy', 'hai lần là đủ', 'chưa rõ xuất xứ'],
-        's-giayto': ['nên công chứng', 'di chúc không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên',
-                     'con thành niên không có khả năng lao động', 'trừ người từ chối nhận hoặc không có quyền hưởng'],
+        's-giayto': ['không chia theo di chúc', 'Ít nhất hai người tin cậy'],
         's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn',
                      'Không đưa mã OTP, mật khẩu', 'gọi ngay ngân hàng của mình để khoá tài khoản'],
         's-muoihai': ['đã uống rượu bia thì không lái xe nào', 'cài quai đúng cách'],
@@ -1324,8 +1315,8 @@ def phan_G():
     claim('thẻ hoà vốn dùng chi phí biến đổi, không thay bằng chi phí trực tiếp',
           'chi phí biến đổi' in unit and 'chi phí trực tiếp' not in unit)
     estate = cards['estate']['mechanism']
-    claim('thẻ di chúc giữ ngoại lệ khẩn cấp và điều kiện luật định',
-          all(x in estate for x in ['Di chúc miệng', 'tính mạng bị đe doạ', 'không thể lập văn bản', 'đủ điều kiện']))
+    claim('thẻ di chúc: tiền bảo hiểm trả cho người thụ hưởng, không chia theo di chúc',
+          all(x in estate for x in ['người thụ hưởng ghi trong hợp đồng', 'không chia theo di chúc']))
     claim('thẻ đổi việc: khoản đệm không tự tạo khả năng quay lại',
           'lối quay lại thật' in cards['reversibility']['example'])
     claim('thẻ khoảng đệm không hứa biến quyết định thành quay lại được',
