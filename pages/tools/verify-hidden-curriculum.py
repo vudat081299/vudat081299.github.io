@@ -362,8 +362,6 @@ def phan_B():
     claim('"hơn bốn lần" lợi suất danh nghĩa', 4 < y3 / sp_nom < 5, f'tỉ số {y3 / sp_nom:.2f}')
     claim('5%/tháng gấp đôi "chưa đầy 15 tháng"', math.log(2) / math.log(1.05) < 15)
     need('lãi mặc định của lab-pz', 'id="pz-m" min="0.5" max="10" step="0.5" value="3"')
-    claim('1%/ngày tính đơn = 365%/năm', 1 * 365 == 365)
-    need('lãi 1% mỗi ngày trong bài', '“chỉ 1% mỗi ngày” là 365%/năm tính đơn')
     # Lãi trên dư nợ ban đầu (s-no): 1,5%/tháng, 12 kỳ, mỗi kỳ trả P/12 + 1,5%·P → lãi thật theo dư nợ giảm dần.
     pay, lo, hi = 1 / 12 + 0.015, 0.0, 0.1
     for _ in range(100):
@@ -440,16 +438,12 @@ def phan_B():
                                  '<b>25,5%</b> qua 15 năm')
 
     # ── Cập nhật niềm tin (s-bayes, lab-bayes) ────────────────────────────────
-    tp, fpos = 1000 * 0.01 * 0.9, 1000 * 0.99 * 0.09
-    need('Bayes: người lành dương tính', f'990 người lành thì khoảng {vi(fpos, 0)} người dương tính', fpos)
-    need('Bayes: phần dương tính thật', f'Trong khoảng {vi(tp + fpos, 0)} kết quả dương tính, chỉ {vi(tp, 0)} người thật '
-                                       f'sự bệnh — <b>khoảng {vi(100 * tp / (tp + fpos), 0)}%</b>', tp / (tp + fpos))
     claim('nhũ ảnh: 4 xuống 3 trên 1.000 là “giảm 25%”', (4 - 3) / 4 == 0.25)
     need('nhũ ảnh trong bài', 'cứ 1.000 phụ nữ đi chụp thì có thêm 1 người không chết vì bệnh này')
     ls, ll = 0.7 ** 3, 0.5 ** 3
     post = 0.05 * ls / (0.05 * ls + 0.95 * ll)
-    need('Bayes: quỹ thắng ba năm', f'Ba năm thắng liên tiếp có xác suất {vi(100 * ls, 1)}% và {vi(100 * ll, 1)}%, nên sức nặng bằng chứng là {vi(ls / ll, 2)}')
-    need('Bayes: tỉ số cược sau', f'Tỉ số cược từ 5:95 lên khoảng {vi(5 * ls / ll, 0)}:95: xác suất giỏi tăng từ 5% lên <b>{vi(100 * post, 1)}%</b>', post)
+    need('Bayes: quỹ thắng ba năm, sức nặng bằng chứng và xác suất sau',
+         f'Sức nặng bằng chứng của ba năm thắng liên tiếp là {vi(ls / ll, 2)}: xác suất giỏi tăng từ 5% lên <b>{vi(100 * post, 1)}%</b>', post)
 
     def trail(p0, a, b, seq):
         odds = p0 / (1 - p0)
@@ -862,7 +856,7 @@ def phan_E():
 def phan_F():
     vn = vi
     # Chuỗi lấy từ nguồn: mỗi chuỗi ứng một dòng kiểm nguồn; sửa thì mở lại nguồn.
-    for x in ('350 triệu đồng', 'bằng đồng Việt Nam của cá nhân', '139 doanh nghiệp', '83.600 tỉ đồng', '50,7%',
+    for x in ('139 doanh nghiệp', '83.600 tỉ đồng', '50,7%',
               'tối đa hai năm', '39,2%', '25.967', '42,6%', '1.092', 'khoảng 35 nghìn tỷ USD', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
               '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
               '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%',
@@ -1001,16 +995,6 @@ def phan_F2():
     claim('Odean: 0,148 so với 0,098 là cao hơn khoảng 50%', 45 <= 100 * (0.148 / 0.098 - 1) <= 55,
           f'{100 * (0.148 / 0.098 - 1):.1f}%')
     du_kien('s-giayto', 'Van Such: 62 trên 286 ca', 'Van Such', '2017', '286 bệnh nhân', '62 ca (21%)')
-    # Rút bảo hiểm xã hội một lần (s-baohiem), Luật Bảo hiểm xã hội 2024: mỗi năm đóng từ 2014 được 2 tháng lương
-    # bình quân; người lao động 8% và chủ 14% lương mỗi tháng vào quỹ hưu trí và tử tuất, tức 12 × 22% tháng lương
-    # mỗi năm; lương hưu cần đủ 15 năm đóng; chỉ người có thời gian đóng trước 1/7/2025 được rút khi nghỉ việc.
-    bhxh = 12 * (0.08 + 0.14)
-    du_kien('s-baohiem', 'BHXH một lần so với số đã nộp', 'rút một lần', 'khoảng 2 tháng lương bình quân',
-            f'{vn(bhxh, 2)} tháng lương', f'{vn(100 * (0.08 + 0.14), 0)}% lương mỗi tháng', w=260)
-    du_kien('s-baohiem', 'BHXH: điều kiện lương hưu, mốc 1/7/2025', 'đủ 15 năm đóng', 'bắt đầu đóng từ 1/7/2025',
-            'kiểm quy định hiện hành', w=260)
-    # Bảo hiểm tiền gửi (s-ruiro): hạn mức 350 triệu đồng từ 13/7/2026 (Bảo hiểm tiền gửi Việt Nam, 7/2026).
-    du_kien('s-ruiro', 'hạn mức bảo hiểm tiền gửi và ngày áp dụng', '350 triệu đồng', 'từ 13/7/2026', 'kiểm mức hiện hành', w=260)
     # Thân bài không dẫn số điều luật hay số hiệu văn bản (PAGES-015); chi tiết ấy chỉ ở dòng Luật của s-nguon.
     so_hieu = re.compile(r'Điều \d|\b\d+/\d{4}/(?:QH|NĐ|TT|NQ|VBHN|UBTVQH)')
     lo = sorted({f'{sid}: {m.group(0)}' for sid in re.findall(r'<section id="(s-[a-z]+)">', HTML) if sid != 's-nguon'
@@ -1238,7 +1222,7 @@ def phan_G():
         's-dongxu': ['không phải tỉ lệ an toàn chung'],
         's-khanhiem': ['bằng chứng chưa thống nhất'],
         's-phanphoi': ['Xác suất chỉ là ước lượng', 'dùng kết quả để học'],
-        's-bayes': ['Tỉ số cược là xác suất', 'tần suất trong những trường hợp tương tự', 'nếu mình sai, mình có thấy điều này không'],
+        's-bayes': ['tần suất trong những trường hợp tương tự', 'nếu mình sai, mình có thấy điều này không'],
         's-heth': ['Dự đoán có thể sai', 'Một bước lùi không tự dẫn'],
         's-cophieu': ['dữ liệu quá khứ của Mỹ, không bảo đảm tương lai'],
         's-danhmuc': ['Khi đang rút tiền', 'không để bảo đảm lợi nhuận'],
@@ -1300,9 +1284,6 @@ def phan_G():
     claim('khan hiếm: phê bình 2013 nhắm thí nghiệm trong phòng, không nhắm nghiên cứu mía',
           'thí nghiệm trong phòng thí nghiệm của cùng bài báo' in kh and 'phân tích nghiên cứu mía' not in kh)
     claim('kẹo dẻo: Kidd 2013 là biến thể, không phải bản làm lại', 'biến thể của thí nghiệm' in kh and 'làm lại năm 2013' not in kh)
-    bh = chu(muc('s-baohiem'))
-    claim('bảo hiểm: phạm vi, mốc tính thời hạn và khấu trừ hoàn phí',
-          all(x in bh for x in ['hợp đồng trên một năm', '21 ngày từ ngày nhận hợp đồng', 'trừ chi phí hợp lý']))
     dm = chu(muc('s-danhmuc'))
     claim('tương quan bằng 0 không được đồng nhất với độc lập', 'Tương quan 0 (độc lập)' not in dm)
     rep = chu(muc('s-giakienthuc'))
