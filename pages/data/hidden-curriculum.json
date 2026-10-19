@@ -2116,7 +2116,7 @@
    "id": "cash",
    "title": "Tiền để dành và nợ lãi cao",
    "prompt": "Thu nhập đang bấp bênh, có nợ lãi cao và một khoản để dành. Một người rủ đầu tư vì giá vừa giảm. Bạn cần biết gì trước khi quyết?",
-   "answer": "Ghi khoản phải trả, chi thiết yếu, tiền dễ rút và điều khoản nợ. Giá giảm chưa chứng minh rẻ; lời rủ kèm lãi “chắc chắn” thì dừng và kiểm. Giữ một khoản đệm vừa sức song song trả bớt nợ lãi cao; chưa dùng tiền sắp cần vào phần biến động. Mức cụ thể tuỳ hoàn cảnh.",
+   "answer": "Ghi khoản phải trả, chi thiết yếu, tiền dễ rút và điều khoản nợ. Giá giảm chưa chứng minh rẻ; lời rủ kèm lãi “chắc chắn” thì dừng và kiểm. Giữ một khoản đệm vừa sức song song trả bớt nợ lãi cao; chưa dùng tiền sắp cần vào phần biến động.",
    "sections": [
     "s-no",
     "s-baohiem",
@@ -2149,7 +2149,7 @@
    "id": "extra",
    "title": "Sếp giao thêm việc sát hạn",
    "prompt": "Chiều thứ Năm, sếp giao thêm một báo cáo cần nộp sáng thứ Hai, trong khi bạn đang kín hai việc hạn thứ Sáu. Bạn nói gì để không nhận bừa mà cũng không mất lòng?",
-   "answer": "Nêu việc đang làm và cái giá: “Em đang làm A và B cho hạn thứ Sáu; nhận thêm C thì một việc sẽ trễ. Anh/chị muốn em ưu tiên việc nào ạ?”. Để người giao chọn khi đã thấy cái giá, rồi chốt lại bằng một tin nhắn ngắn. Đừng nhận hết rồi làm dở; việc sai luật hay nguy hiểm thì không làm.",
+   "answer": "Nêu việc đang làm và cái giá: “Em đang làm A và B cho hạn thứ Sáu; nhận thêm C thì một việc sẽ trễ. Anh/chị muốn em ưu tiên việc nào ạ?”. Để người giao chọn khi đã thấy cái giá, rồi chốt lại bằng một tin nhắn ngắn. Đừng nhận hết rồi làm dở.",
    "sections": [
     "s-imlang",
     "s-memcung",
