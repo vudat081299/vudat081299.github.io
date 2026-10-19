@@ -743,14 +743,14 @@
     "solid",
     "math"
    ],
-   "idea": "Dồn vào nơi mình có lợi thế có thể tạo kết quả vượt trội, nhưng cũng làm tổn thất lớn hơn. Chia rổ giảm rủi ro riêng, và vẫn tạo được của cải qua thu nhập, để dành và tái đầu tư.",
+   "idea": "Dồn vào nơi mình có lợi thế có thể tạo kết quả vượt trội, nhưng cũng làm tổn thất lớn hơn.",
    "why": "Tập trung và đa dạng có ích khác nhau; phải xét lợi thế và mức lỗ chịu được.",
    "mechanism": "Lợi suất cổ phiếu riêng lẻ rất lệch: trong 25.967 cổ phiếu Mỹ 1926–2016, chỉ 42,6% lãi hơn tín phiếu, và khoảng 4% công ty tạo ra toàn bộ phần của cải tăng thêm. Ai nắm tập trung một công ty trong nhóm nhỏ ấy thì giàu vượt trội; ai chọn đại vài mã thì nhiều khả năng trượt nó.",
    "mistake": "Chép mức tập trung của người sáng lập mà không có thông tin, quyền quyết định và công sức của họ — tức chép phần rủi ro, bỏ phần lợi thế.",
    "example": "Gần ba phần tư người khởi nghiệp được quỹ mạo hiểm rót vốn ở Mỹ nhận 0 khi thoái vốn, dù trung bình là 5,8 triệu USD. Cuối năm 2000, một năm trước khi Enron sụp, 62% tài sản quỹ hưu trí của nhân viên là cổ phiếu công ty.",
    "use": "Dồn thời gian và kỹ năng vào nghề, doanh nghiệp của mình; đa dạng hoá tiền nhàn rỗi, và để nó ở chỗ ít cùng chiều với thu nhập.",
    "limits": "Đa dạng hoá giảm mức phụ thuộc vào một khoản thắng lớn, không bảo đảm khỏi lỗ. Tập trung cộng nợ và nhu cầu tiền gấp có thể làm mất khả năng tiếp tục.",
-   "remember": "Dồn công sức có lợi thế, giới hạn vốn chịu rủi ro, đa dạng phần tài chính.",
+   "remember": "Dồn công sức có lợi thế, đa dạng phần tài chính.",
    "related": [
     "correlation",
     "survivorship",
@@ -935,9 +935,9 @@
     "math",
     "mixed"
    ],
-   "idea": "Thứ thật sự giữ lại được của một khoản đầu tư là lời sau lạm phát: (1 + lãi) ÷ (1 + lạm phát) − 1.",
+   "idea": "Thứ thật sự giữ lại được của một khoản đầu tư là lời sau lạm phát.",
    "why": "So sức mua giữ lại, thay vì chỉ số tiền danh nghĩa.",
-   "mechanism": "Lãi 5%/năm khi giá tăng 3,31% chỉ cho thêm 1,64% sức mua. Vàng không trả lãi, nên khi lợi suất thực cao thì giữ vàng tốn cơ hội hơn; trong nhiều năm, giá vàng đi ngược khá sát lợi suất thực của trái phiếu Mỹ.",
+   "mechanism": "Vàng không trả lãi, nên khi lợi suất thực cao thì giữ vàng tốn cơ hội hơn; trong nhiều năm, giá vàng đi ngược khá sát lợi suất thực của trái phiếu Mỹ.",
    "mistake": "Coi lãi danh nghĩa cao là giàu lên: năm 2008, lãi tiền gửi khoảng 12,73% mà giá tăng 23,12%, nên thực ra mất khoảng 8,4% sức mua.",
    "example": "Từ 2005 tới 2023, lãi tiền gửi ở Việt Nam bình quân khoảng 6,9%/năm còn giá tiêu dùng tăng khoảng 6,5%/năm: lãi thực khoảng 0,4%/năm.",
    "use": "Quy lợi suất về sau lạm phát, phí và thuế rồi mới so lựa chọn.",

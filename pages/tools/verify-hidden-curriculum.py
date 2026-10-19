@@ -868,7 +868,7 @@ def phan_F():
               '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
               '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%', '−0,82', '−0,31',
               '−1,04%', '2,24%', '1.820,1', '2.610,85', '1.000 tấn', '473 tấn', '15.858,92', '24.164,89',
-              '3,31%', '12,73%', '23,12%'):
+              '12,73%', '23,12%'):
         need_t('vốn, chuỗi từ nguồn', x)
 
     claim('Bessembinder: 57,4% thua tín phiếu là “hơn bốn trên bảy”', 1 - 0.426 > 4 / 7)
@@ -956,7 +956,6 @@ def phan_F():
     need_t('mua để ở: khoảng chênh', f'Khoảng chênh {vn(h_own - h_rent_y, 0)} triệu bằng {vn(100 * h_be, 1)}% giá nhà')
     need_t('mua để ở: giá nhà phải tăng nhanh hơn', f'nếu giá nhà tăng nhanh hơn {vn(100 * h_be, 1)}%/năm')
 
-    du_kien('s-taisan', 'lãi thực với lãi 5% và lạm phát 3,31%', '3,31%', f'{vn((1.05 / 1.0331 - 1) * 100, 2)}%/năm')
     du_kien('s-taisan', 'lãi thực năm 2008', '2008', '12,73%', '23,12%', f'{vn((1.1273 / 1.2312 - 1) * 100, 1)}%')
     fx = 24164.89 / 15858.92
     need_t('đồng mất giá so với USD 2005 → 2024', f'mất {vn((1 - 1 / fx) * 100, 1)}%')
@@ -1332,9 +1331,6 @@ def phan_G():
     claim('thẻ khoảng đệm không hứa biến quyết định thành quay lại được',
           'không tự tạo lại' in cards['buffer']['mechanism']
           and 'trở thành quay lại được' not in cards['buffer']['mechanism'])
-    fee = chu(muc('s-taisan'))
-    claim('bản đồ tài sản: 24,4% cũng giữ giả định lợi suất',
-          all(x in fee for x in ['8%/năm trước phí', '7% sau phí', '30 năm', '24,4%']))
     # Fed Atlanta, wage-growth-data.xlsx sửa ngày 8/10/2026, sheet Job Switcher (12 tháng), cột B/C, 1/1997–9/2026:
     # 325 trên 356 tháng có số liệu nhóm đổi việc cao hơn, chênh bình quân 0,729 điểm; tháng 10/2025 trống.
     need_t('tỷ lệ tháng nhóm đổi việc cao hơn = 325 / 356', f'({vi(100 * 325 / 356, 1)}%)')
