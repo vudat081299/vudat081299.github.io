@@ -28,7 +28,7 @@ Bảy phần, bảy loại sai khác nhau:
      định và bài tập phải đủ trường, khoá duy nhất, mọi liên kết mục có thật; tiêu đề bài tập đếm đúng
      số tình huống.
   F. DỮ KIỆN TỪ NGUỒN — mọi phần, từ tiền, vốn, nghề tới lời nói, yêu đương, quyền lực, văn hoá, gia đình,
-     lừa đảo, an toàn giao thông và thói quen: dữ kiện lấy từ nguồn (con số kèm đơn vị, tác giả và năm)
+     lừa đảo, sức khoẻ và thói quen: dữ kiện lấy từ nguồn (con số kèm đơn vị, tác giả và năm)
      phải có mặt và đứng gần nhau trong đúng
      mục — kiểm số, không kiểm câu văn (du_kien) —, thân bài không dẫn số điều luật hay số hiệu văn bản
      (PAGES-015),
@@ -403,7 +403,7 @@ def phan_B():
          f'Đòn bẩy hoạt động {vi(dol, 2)}: doanh số giảm 10% thì lãi giảm {vi(10 * dol, 1)}%, còn {vi(rest, 1)} triệu.')
     near('đòn bẩy hoạt động = %Δlãi ÷ %Δdoanh số', ((0.9 * q * cm - F) / prof - 1) / -0.1, dol, 1e-9)
 
-    # ── Định giá (mục 1.11) ───────────────────────────────────────────────────
+    # ── Định giá (s-dinhgia) ───────────────────────────────────────────────────
     price, rent = 4000, 12                          # triệu đồng
     gross = rent * 12 / price
     net_m = rent * 11 - 0.01 * price                # trống 1 tháng, chi phí 1% giá nhà mỗi năm
@@ -1101,6 +1101,7 @@ def phan_F2():
             ('14 năm', 'Gottman và Levenson', '2000'), '“dự báo đúng hơn 90%”', ('Heyman và Smith Slep', '2001'),
             ('4.574 cặp', 'Dew, Britt và Huston', '2012'), ('388 cặp', 'Ross và cộng sự', '2022'),
             'cả ba nhóm đều dự báo mức hài lòng', 'giàu hay nghèo không còn liên quan',
+            'Tài sản không chứng minh được là riêng thì bị coi là của chung',
         ],
         # Yêu đương: abstract của từng bài (PubMed, Crossref, Semantic Scholar), 10/2026.
         's-tinhyeu': [
@@ -1125,6 +1126,7 @@ def phan_F2():
         's-giayto': [
             'Tiền bảo hiểm trả cho người thụ hưởng ghi trong hợp đồng, không chia theo di chúc',
             'Van Such và cộng sự, 2017',
+            'Người thừa kế chỉ trả nợ của người mất trong phạm vi tài sản được nhận',
         ],
         # Thói quen (s-lotrinh): Gollwitzer và Sheeran (2006), abstract: 94 phép thử, d = 0,65; Sheeran, Listrom và
         # Gollwitzer (2024), abstract: 642 phép thử, 0,27 ≤ d ≤ 0,66; Lally và cộng sự (2010), abstract: 96 người, 18–254
