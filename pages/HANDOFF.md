@@ -14,12 +14,6 @@
   biên tập cũ (độ dài so với đề bài, thứ tự chương, giọng vài đoạn) đã gỡ khỏi web ở commit 5bb410d. Muốn
   làm tiếp thì xem diff của commit ấy; không bắt buộc.
 
-## CHƯA LÀM
-
-- `hidden-curriculum.html`, mục `s-giayto` và luật 3 của `s-muoihai`: Luật Đất đai đang được sửa (mới là dự thảo);
-  Luật 04/2026/QH16 sửa Luật Công chứng có hiệu lực 01/01/2027, để luật chuyên ngành tự nêu giao dịch nào phải công
-  chứng. Khi hai luật ấy có hiệu lực, kiểm lại câu "nhà đất phải công chứng hoặc chứng thực".
-
 ## NỢ
 
 - `scooter-maintenance-guide.html`: mục checklist là `<label>` không có ô input — không dùng được bằng bàn
