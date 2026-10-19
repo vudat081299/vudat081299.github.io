@@ -8,9 +8,9 @@
    "kind": [
     "math"
    ],
-   "idea": "Khi tiền lãi được để lại sinh lãi tiếp, vốn tăng theo phép nhân, không theo phép cộng. Kỹ năng, uy tín và quan hệ cũng tích luỹ như vậy khi cái có hôm nay giúp tạo thêm cái mới.",
+   "idea": "Cái có hôm nay giúp tạo thêm cái mới thì tăng theo phép nhân, không theo phép cộng: tiền lãi để lại, kỹ năng, uy tín và quan hệ đều vậy.",
    "why": "Bắt đầu sớm và cắt phí nhỏ có thể tạo chênh lệch lớn qua nhiều năm.",
-   "mechanism": "Mỗi khoản để dành được nhân với (1 + lãi suất) qua mỗi năm. Mẹo nhanh: lấy 72 chia cho lãi suất năm (tính bằng %) ra số năm để tiền gấp đôi; ở 6%/năm là khoảng 12 năm.",
+   "mechanism": "Quy tắc 72: lấy 72 chia cho lãi suất năm (tính bằng %) ra số năm để tiền gấp đôi; ở 6%/năm là khoảng 12 năm.",
    "mistake": "Bỏ qua phí vì nó “chỉ 1%”: trong ví dụ lãi 8%/năm trước phí, còn 7% sau phí, số tiền cuối sau 30 năm thấp hơn 24,4%.",
    "example": "Lãi kép cũng chạy cho nợ: vay “chỉ 1% mỗi ngày” đã là 365% mỗi năm khi chưa tính lãi chồng lãi.",
    "use": "Bắt đầu đầu tư đều đặn sớm, chọn sản phẩm phí thấp, và tránh mọi sự kiện có thể đưa tài sản về 0.",
@@ -38,11 +38,11 @@
    ],
    "idea": "Kết quả quay lại tác động tới chính nguyên nhân của nó. Vòng tăng cường đẩy thay đổi đi xa hơn, cả lên lẫn xuống; vòng cân bằng kéo mọi thứ về một mức.",
    "why": "Lợi thế và bất lợi có thể tự khuếch đại; nhìn từng quyết định riêng dễ bỏ sót vòng lặp.",
-   "mechanism": "A tăng làm B tăng, rồi B tăng lại làm A tăng: đó là vòng tăng cường. B tăng lại kéo A giảm: đó là vòng cân bằng. Tăng cường không có nghĩa là tốt; độ trễ trong vòng dễ khiến người can thiệp phản ứng quá tay.",
+   "mechanism": "Tăng cường không có nghĩa là tốt; độ trễ trong vòng dễ khiến người can thiệp phản ứng quá tay.",
    "mistake": "Chấm từng quyết định như một ảnh chụp; chữa triệu chứng bằng cách nuôi chính vòng xấu, như vay mới để trả nợ cũ.",
    "example": "Được mùa mất giá: người trồng theo giá vụ trước, cung dồn lên, giá rơi, rồi năm sau lại thiếu.",
    "use": "Mỗi quý viết ra một vòng tốt đang quay, một vòng xấu đang siết, và một biến số sẽ đổi.",
-   "limits": "Cú sốc có thể bẻ gãy vòng tốt; vẫn cần khoảng đệm.",
+   "limits": "Không vòng nào chạy mãi: chạm giới hạn thì đẩy mạnh hơn ít tác dụng. Vòng tốt khuếch đại cả lợi thế sẵn có, nên không chứng minh người ấy giỏi.",
    "remember": "Hỏi quyết định này đẩy mình vào vòng nào.",
    "related": [
     "compounding",
@@ -1644,7 +1644,7 @@
    "why": "Tập quán quen thuộc ảnh hưởng cách mình được đón nhận, ngoài năng lực chuyên môn.",
    "mechanism": "Bourdieu chia ba dạng: thấm vào người (cách nói, hiểu biết), đồ vật (sách, tranh) và bằng cấp. Gia đình truyền chúng qua sinh hoạt hằng ngày; học được quy ước vẫn khác với có cơ hội bước vào.",
    "mistake": "Đồng nhất vốn văn hoá với hàng hiệu; nhiều người khá giả lại chi cho thứ ít ai thấy: học vấn, sức khoẻ, thời gian.",
-   "example": "Đồ vừa người, giày sạch, đúng giờ, giọng nói bình tĩnh là những tín hiệu rẻ mà người khác đọc được ngay.",
+   "example": "Trẻ nhà trung lưu Mỹ được dạy hỏi và đề nghị người lớn giúp mình; ở trường, các em xin giúp nhiều và thẳng hơn nên được giúp nhiều hơn (Lareau; Calarco).",
    "use": "Quan sát quy ước của môi trường muốn tham gia, thử và xin phản hồi từ người tin cậy.",
    "limits": "Quy ước khác theo nhóm và theo thời. Vốn văn hoá không thay được năng lực, và học nó để khoe là đi ngược mục đích.",
    "remember": "Vốn văn hoá là một ngôn ngữ: học được, và người khác đọc được.",
@@ -1656,7 +1656,8 @@
    "sections": [
     "s-von",
     "s-vonvanhoa",
-    "s-vanminh"
+    "s-vanminh",
+    "s-thuongluong"
    ]
   },
   {
@@ -2060,7 +2061,7 @@
     "s-batdong",
     "s-dunglai"
    ],
-   "action": "Ghi việc đã xảy ra, điều mình cần và một đề nghị cụ thể; có đe doạ hay bạo lực thì ưu tiên an toàn."
+   "action": "Ghi việc đã xảy ra, điều mình cần và một đề nghị cụ thể."
   },
   {
    "id": "family",

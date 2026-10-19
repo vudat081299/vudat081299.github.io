@@ -19,6 +19,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-014 · hidden-curriculum: tâm kế · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-015 · hidden-curriculum: dạy tư duy, luật chỉ giữ khi thật cần, viết đơn giản nhất · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-016 · hidden-curriculum: hành trang cho người 26 tuổi, rà toàn trang · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+- PAGES-017 · hidden-curriculum: bỏ điều hiển nhiên, giữ điều đúc kết · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -121,3 +122,10 @@ Viết đơn giản, dễ hiểu nhất có thể: câu ngắn, từ thường, 
 Mục đích: hành trang có đòn bẩy cao cho người khoảng 26 tuổi, ít vốn, ít quen biết: ăn nói khéo, làm giàu, xử lý tình huống xã hội, yêu đương, thành công từ điểm xuất phát thấp.
 Rà mọi mục theo bốn câu: đúng chưa (đối chiếu nguồn gốc), hợp mục đích chưa, gọn nhất chưa, còn thiếu mảng nào; tự sửa, không hỏi lại chủ trang.
 Mảng thiếu bổ sung vào mục có sẵn, ngắn, có nguồn; phần thêm trả bằng phần cắt.
+
+## PAGES-017 · hidden-curriculum: bỏ điều hiển nhiên, giữ điều đúc kết
+19/10/2026 · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+
+Người đọc là người trưởng thành, có học, hiểu pháp luật và lẽ thường: xoá điều ai cũng biết — luật định sẵn, điều cấm, thủ tục, đạo lý suông, phép lịch sự quen thuộc, định nghĩa giáo khoa, lời rào đón lặp lại.
+Chỉ giữ điều người từng trải đúc kết thành nguyên tắc: kinh nghiệm, triết lý, cơ chế, bằng chứng trái trực giác, kỹ thuật cụ thể, đánh đổi và điều kiện áp dụng; không thêm danh sách điều cấm tuyệt đối.
+Một quy định chỉ ở lại khi trái trực giác và làm sai thì mất lớn, khó lấy lại (chặt hơn PAGES-015); điều hiển nhiên chỉ giữ khi là tiền đề của một ý không hiển nhiên.
