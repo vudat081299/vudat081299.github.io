@@ -5,7 +5,7 @@ Vì sao cần, khác lint-pages.py: trang nói vài chục con số tính lại 
 Peters (86,4% người chơi thua, ×131,5 trung bình, mức Kelly 25%), thống kê nắm giữ cổ phiếu,
 vàng, tín phiếu Mỹ 1928–2025 (0 trên 79 khung, 28 trên 79 khung), phí 1% ăn mất 24,4%, lãi
 "3% mỗi tháng" là 42,6%/năm, giá trị hôm nay của vốn con người, điểm hoà vốn và đòn bẩy hoạt
-động của quán ví dụ, lợi suất cho thuê và quy tắc 72, bảng nhà trẻ Haifa của Gneezy và
+động của quán ví dụ, lợi suất cho thuê, bảng nhà trẻ Haifa của Gneezy và
 Rustichini, các phép Bayes, độ lệch chuẩn của một danh mục — và mười mô hình JS sinh ra chính
 những con số ấy. lint-pages.py không biết 86,4% có đúng là P(K ≤ 55), K ~ B(100, ½), hay không;
 càng không biết luật ấy còn đúng sau khi ai đó sửa một dòng JS.
@@ -401,7 +401,6 @@ def phan_B():
     need('lợi suất cho thuê ròng', f'còn {vi(net_m, 0)} triệu, tức {vi(100 * net_m / price, 1)}%/năm')
     need('vay để mua cho thuê', f'tiền lãi {vi(interest, 0)} triệu một năm, dòng tiền cho thuê ròng {vi(net_m, 0)} triệu — '
                                 f'mỗi năm hụt {vi(interest - net_m, 0)} triệu')
-    need('quy tắc 72', f'6%/năm: khoảng {vi(72 / 6, 0)} năm (tính chính xác: {vi(math.log(2) / math.log(1.06), 1)} năm)')
     need('P/E 20', f'lợi suất lợi nhuận 1/20 = {vi(100 / 20, 0)}%/năm')
 
     # ── Phạt là giá (mục 4.4): bảng 1 của Gneezy & Rustichini (2000), lượt đón muộn mỗi tuần ──

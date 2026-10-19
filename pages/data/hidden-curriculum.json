@@ -10,7 +10,7 @@
    ],
    "idea": "Khi tiền lãi được để lại sinh lãi tiếp, vốn tăng theo phép nhân, không theo phép cộng. Kỹ năng, uy tín và quan hệ cũng tích luỹ như vậy khi cái có hôm nay giúp tạo thêm cái mới.",
    "why": "Bắt đầu sớm và cắt phí nhỏ có thể tạo chênh lệch lớn qua nhiều năm.",
-   "mechanism": "Mỗi khoản để dành được nhân với (1 + lãi suất) qua mỗi năm. Mẹo nhanh: lấy 72 chia cho lãi suất năm (tính bằng %) ra số năm để tiền gấp đôi; ở 6%/năm là khoảng 12 năm.",
+   "mechanism": "Mỗi khoản để dành được nhân với (1 + lãi suất) qua mỗi năm.",
    "mistake": "Bỏ qua phí vì nó “chỉ 1%”: trong ví dụ lãi 8%/năm trước phí, còn 7% sau phí, số tiền cuối sau 30 năm thấp hơn 24,4%.",
    "example": "Lãi kép cũng chạy cho nợ: vay “chỉ 1% mỗi ngày” đã là 365% mỗi năm khi chưa tính lãi chồng lãi.",
    "use": "Bắt đầu đầu tư đều đặn sớm, chọn sản phẩm phí thấp, và tránh mọi sự kiện có thể đưa tài sản về 0.",
