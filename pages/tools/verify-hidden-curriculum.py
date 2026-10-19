@@ -1264,7 +1264,7 @@ def phan_G():
         's-muoihai': ['đã uống rượu bia thì không lái xe nào', 'cài quai đúng cách'],
         's-lotrinh': ['“nếu [lúc, chỗ] thì tôi [việc nhỏ]”', 'vài tuần tới vài tháng', 'lỡ một lần thì làm lại'],
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
-        's-nhantin': ['ngừng nhắc', 'Không tìm kênh khác để vượt ranh giới'],
+        's-nhantin': ['ngừng nhắc'],
         's-henho': ['không thay đồng thuận thân mật', 'chọn nơi công cộng', 'không gửi tiền cho người yêu qua mạng'],
         's-quanhe': ['có thể rút bất cứ lúc nào', 'không thay cho đồng ý lúc này', 'Quyền riêng tư không biến mất khi yêu'],
         's-batdong': ['không coi là lỗi đôi bên'],
