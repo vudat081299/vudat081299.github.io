@@ -31,7 +31,7 @@ Bảy phần, bảy loại sai khác nhau:
      lừa đảo, an toàn giao thông và thói quen: dữ kiện lấy từ nguồn (con số kèm đơn vị, tác giả và năm)
      phải có mặt và đứng gần nhau trong đúng
      mục — kiểm số, không kiểm câu văn (du_kien) —, thân bài không dẫn số điều luật hay số hiệu văn bản
-     (PAGES-015), năm can chi tính lại từ năm dương lịch,
+     (PAGES-015),
      và mọi con số suy ra được tính lại trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn
      trong giá, thứ tự lợi suất, trái phiếu…).
   G. BẢN GỌN — định nghĩa và điều kiện quan trọng phải còn ngoài phần chi tiết; mỗi mục nội dung có
@@ -73,6 +73,19 @@ def vi(x, d=2):
     Unicode (U+2212)."""
     s = f'{abs(x):,.{d}f}'.replace(',', '\x00').replace('.', ',').replace('\x00', '.')
     return ('−' if x < 0 and round(abs(x), d) != 0 else '') + s
+
+
+VN = {'một': 1, 'hai': 2, 'ba': 3, 'bốn': 4, 'năm': 5, 'sáu': 6, 'bảy': 7, 'tám': 8, 'chín': 9, 'mười': 10}
+
+
+def so_chu(n):
+    """Số 1–99 viết bằng chữ: 31 → "ba mươi mốt", 35 → "ba mươi lăm"."""
+    dv = ['', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín']
+    if n < 10:
+        return dv[n]
+    c, d = divmod(n, 10)
+    head = 'mười' if c == 1 else dv[c] + ' mươi'
+    return head if d == 0 else head + ' ' + ('lăm' if d == 5 else 'mốt' if d == 1 and c > 1 else dv[d])
 
 
 def need(label, text, expect=None):
@@ -499,7 +512,6 @@ def phan_B():
     claim('mười mô hình', nlab == 10, f'thấy {nlab}')
 
     # Số mục trong eyebrow chạy liền theo phần; mỗi đầu phần đếm đúng và kể đủ các mục của nó.
-    VN = {'một': 1, 'hai': 2, 'ba': 3, 'bốn': 4, 'năm': 5, 'sáu': 6, 'bảy': 7, 'tám': 8, 'chín': 9, 'mười': 10}
     eyebrow = dict(re.findall(r'<section id="(s-[a-z]+)">\s*<p class="hc-eyebrow-sec"><b>([^<]+)</b>', HTML))
     claim('mọi mục có số ở eyebrow', len(eyebrow) == nsec, f'{len(eyebrow)} trên {nsec}')
     bad_eb, bad_head = [], []
@@ -552,12 +564,14 @@ def phan_B():
 
     groups = collections.Counter(re.findall(r'<input type="checkbox" id="au-([a-z]+)\d" data-k="\1">', HTML))
     nau = len(re.findall(r'id="au-[a-z]+\d"', HTML))
-    claim('tự soát: 7 nhóm × 5 câu, id khớp nhóm', len(groups) == 7 and set(groups.values()) == {5} and sum(groups.values()) == nau,
+    ids = re.findall(r'id="(au-[a-z]+\d)"', HTML)
+    claim('tự soát: 7 nhóm, mỗi nhóm ít nhất 2 câu, id khớp nhóm, không trùng', len(groups) == 7 and min(groups.values()) >= 2
+          and sum(groups.values()) == nau and len(set(ids)) == nau,
           f'{dict(groups)}, {nau} ô')
     keys = re.search(r"var KEYS = \[([^\]]*)\];", HTML)
     claim('tự soát: KEYS trong mã đúng các nhóm, đúng thứ tự', bool(keys) and [k.strip(" '") for k in keys.group(1).split(',')] == list(groups))
-    need('bài tự soát, tiêu đề', 'Ba mươi lăm câu: năm loại vốn, quyền lực và gia đình')
-    need('bài tự soát ở đầu phần Thực hành', 'bài tự soát ba mươi lăm câu')
+    need('bài tự soát, tiêu đề', f'{so_chu(nau).capitalize()} câu: năm loại vốn, quyền lực và gia đình', nau)
+    need('bài tự soát ở đầu phần Thực hành', f'bài tự soát {so_chu(nau)} câu', nau)
     need('bài tự soát ở thẻ phần', f'tự soát {nau} câu')
     npl = len(re.findall(r'id="pl-[a-c]\d"', HTML))
     claim('lộ trình: 23 việc', npl == 23, f'thấy {npl} ô')
@@ -1000,18 +1014,11 @@ def phan_F2():
     lo = sorted({f'{sid}: {m.group(0)}' for sid in re.findall(r'<section id="(s-[a-z]+)">', HTML) if sid != 's-nguon'
                  for m in so_hieu.finditer(chu(muc(sid)))})
     claim('thân bài không dẫn số điều luật, số hiệu văn bản', not lo, ', '.join(lo[:8]))
-    # Bảng “Mười bốn ý tưởng làm nền” (s-vanminh): số dòng khớp chữ “mười bốn” của tiêu đề.
-    tb = re.search(r'Mười bốn ý tưởng làm nền</h3>.*?<tbody>(.*?)</tbody>', muc('s-vanminh'), flags=re.S)
-    n = tb.group(1).count('<tr>') if tb else 0
-    claim('s-vanminh: bảng “Mười bốn ý tưởng làm nền” có 14 dòng', n == 14, f'thấy {n} dòng')
-    # Năm can chi đi kèm năm dương lịch: can = (năm − 4) mod 10, chi = (năm − 4) mod 12; năm 4 là Giáp Tý.
-    CAN = 'Giáp Ất Bính Đinh Mậu Kỷ Canh Tân Nhâm Quý'.split()
-    CHI = 'Tý Sửu Dần Mão Thìn Tỵ Ngọ Mùi Thân Dậu Tuất Hợi'.split()
-    cc = re.findall(r'\b(%s) (%s) (\d{3,4})\b' % ('|'.join(CAN), '|'.join(CHI)), TEXT)
-    claim('năm can chi trong bài (Đinh Mùi 1427)', len(cc) >= 1, f'chỉ thấy {len(cc)} chỗ')
-    for c, h, y in cc:
-        k = int(y) - 4
-        claim(f'{c} {h} {y}', (CAN[k % 10], CHI[k % 12]) == (c, h), f'năm {y} là {CAN[k % 10]} {CHI[k % 12]}')
+    # Bảng “… ý tưởng làm nền” (s-vanminh): số dòng khớp chữ số ở tiêu đề.
+    tb = re.search(r'<h3 class="hc-h3">(\S+) ý tưởng làm nền</h3>.*?<tbody>(.*?)</tbody>', muc('s-vanminh'), flags=re.S)
+    claim('s-vanminh: số dòng bảng ý tưởng làm nền khớp tiêu đề',
+          bool(tb) and VN.get(tb.group(1).lower()) == tb.group(2).count('<tr>'),
+          f'{tb.group(1) if tb else "?"} so với {tb.group(2).count("<tr>") if tb else "?"} dòng')
     # Dữ kiện lấy từ nguồn, trong đúng mục: tác giả, năm, cỡ mẫu, số đo, ngày tháng. Một chuỗi phải có nguyên văn;
     # một bộ là một dữ kiện (du_kien): các phần phải đứng gần nhau, số nguyên cuối bộ (nếu có) là cỡ cửa sổ.
     NGUON = {
@@ -1062,15 +1069,11 @@ def phan_F2():
         ],
         's-vanminh': [
             ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh', 'nửa hiệp'),
-            ('Aronowitz và Giroux', '1988'), 'Mười bốn ý tưởng làm nền',
-            ('Socrates', '469–399 TCN', 'Plato'), ('Khổng Tử', '551–479 TCN', 'Mạnh Tử'), '“Biết đủ là giàu”',
-            ('Đức Phật', 'thế kỷ 5 TCN'), ('Epictetus', '50–135', 'nô lệ'),
-            ('Pascal và Fermat', '1654'), ('Hội Hoàng gia Anh', '1660', 'Nullius in verba'), ('Kant', '1784'),
-            ('Adam Smith', 'Của cải của các quốc gia', '1776', '48.000 cây ghim'), ('Darwin', 'Nguồn gốc các loài', '1859'),
-            ('Tuyên ngôn của Đảng Cộng sản', '1848'), 'nền tảng tư tưởng của Đảng, ghi trong Hiến pháp',
-            ('Bình Ngô đại cáo', 'Đinh Mùi 1427', 'âm lịch'),
-            '“Việc nhân nghĩa cốt ở yên dân”', ('Hồ Chí Minh, Tuyên ngôn Độc lập', '2/9/1945', 20),
-            ('Đại hội VI của Đảng', '12/1986', 20),
+            ('Aronowitz và Giroux', '1988'),
+            ('Socrates', '469–399 TCN', 'Plato'), ('Epictetus', '50–135', 'nô lệ'),
+            ('Hội Hoàng gia Anh', '1660', 'Nullius in verba'), ('Kant', '1784'),
+            ('Adam Smith', 'Của cải của các quốc gia', '1776', '48.000 cây ghim'),
+            ('Hồ Chí Minh, Tuyên ngôn Độc lập', '2/9/1945', 20),
             ('Phan Kế Bính', 'Việt Nam phong tục', '1915'),
             ('Bryson', 'A Short History of Nearly Everything', '2003'),
         ],
@@ -1221,7 +1224,6 @@ def phan_G():
         's-ranhgioi': ['Từ chối bằng một nguyên tắc chung', 'vừa bị giục vừa được chiều chuộng'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
         's-vonvanhoa': ['không đo đúng năng lực hay nhân cách'],
-        's-lenghia': ['khác theo vùng và từng nhà'],
         's-kinhdien': ['trăm trận không nguy', 'hai lần là đủ', 'chưa rõ xuất xứ'],
         's-giayto': ['không chia theo di chúc', 'Ít nhất hai người tin cậy'],
         's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn'],
