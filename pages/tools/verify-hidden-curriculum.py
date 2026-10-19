@@ -1008,7 +1008,7 @@ def phan_F2():
     CAN = 'Giáp Ất Bính Đinh Mậu Kỷ Canh Tân Nhâm Quý'.split()
     CHI = 'Tý Sửu Dần Mão Thìn Tỵ Ngọ Mùi Thân Dậu Tuất Hợi'.split()
     cc = re.findall(r'\b(%s) (%s) (\d{3,4})\b' % ('|'.join(CAN), '|'.join(CHI)), TEXT)
-    claim('năm can chi trong bài (Đinh Mùi 1427, Kỷ Mùi 1919)', len(cc) >= 2, f'chỉ thấy {len(cc)} chỗ')
+    claim('năm can chi trong bài (Đinh Mùi 1427)', len(cc) >= 1, f'chỉ thấy {len(cc)} chỗ')
     for c, h, y in cc:
         k = int(y) - 4
         claim(f'{c} {h} {y}', (CAN[k % 10], CHI[k % 12]) == (c, h), f'năm {y} là {CAN[k % 10]} {CHI[k % 12]}')
@@ -1054,13 +1054,12 @@ def phan_F2():
         # Curhan và cộng sự (2022): quãng im từ 3 giây, không giành phần lớn hơn; khi địa vị chênh rõ, chỉ quãng im
         # của bên địa vị cao tạo thêm giá trị.
         's-imlang': [('ba giây', 'Curhan và cộng sự, 2022', 'chỉ quãng im của bên địa vị cao')],
-        # Văn hoá: Ambady và Rosenthal (1993) nghiên cứu 1 — 13 giảng viên, ba đoạn 10 giây, r(11) = 0,76; Emily Post
-        # Institute — khăn ăn “loosely to the left”, dao dĩa ăn xong ở số 4; Recht và Leslie (1988) — 64 học sinh, nửa hiệp.
+        # Văn hoá: Ambady và Rosenthal (1993) nghiên cứu 1 — 13 giảng viên, ba đoạn 10 giây, r(11) = 0,76;
+        # Recht và Leslie (1988) — 64 học sinh, nửa hiệp.
         's-vonvanhoa': [
             ('Ambady và Rosenthal', '1993', '30 giây'), ('13 giảng viên', '0,76', 40), ('Veblen', '1899'),
             ('Currid-Halkett', '2017', 'hưu trí'),
         ],
-        's-quocte': ['Emily Post Institute', 'gấp lỏng khăn, đặt bên trái đĩa', 'cán chỉ về số 4'],
         's-vanminh': [
             ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh', 'nửa hiệp'),
             ('Aronowitz và Giroux', '1988'), 'Mười bốn ý tưởng làm nền',
@@ -1119,18 +1118,10 @@ def phan_F2():
             'tổng hợp trên hơn 50.000 người xác nhận cả ba, mạnh nhất là mức hài lòng',
             'nghiên cứu ở 11 thành phố Mỹ',
         ],
-        # Bộ luật Dân sự 2015: Điều 650–651 (hàng thừa kế thứ nhất), 644 (hai phần ba suất), 615 (nợ trong phạm vi
-        # di sản), 140 (uỷ quyền chấm dứt khi người uỷ quyền chết); Luật Đất đai 2024 Điều 27, Luật Nhà ở 2023 Điều 164
-        # (công chứng); Luật Kinh doanh bảo hiểm 2022 Điều 4, 41 (người thụ hưởng). Trang chỉ giữ việc cần làm, không số điều.
+        # Luật Kinh doanh bảo hiểm 2022 Điều 4, 41 (người thụ hưởng). Trang chỉ giữ việc cần làm, không số điều.
         's-giayto': [
-            'tới tháng 10/2026', 'hàng thừa kế đầu gồm vợ hoặc chồng, cha mẹ và các con, kể cả con nuôi',
-            'vẫn nhận ít nhất hai phần ba phần họ được hưởng nếu chia theo luật',
-            'chỉ trả nợ của người mất trong phạm vi tài sản được nhận',
-            'Giấy uỷ quyền hết hiệu lực khi người uỷ quyền mất',
-            'Mua bán, tặng cho, thế chấp nhà đất phải công chứng hoặc chứng thực',
             'Tiền bảo hiểm trả cho người thụ hưởng ghi trong hợp đồng, không chia theo di chúc',
-            'Van Such và cộng sự, 2017', 'kiểm quy định hiện hành trước khi ký',
-            'Nhiều bản cùng định đoạt một tài sản thì bản sau cùng có hiệu lực',
+            'Van Such và cộng sự, 2017',
         ],
         # Thói quen (s-lotrinh): Gollwitzer và Sheeran (2006), abstract: 94 phép thử, d = 0,65; Sheeran, Listrom và
         # Gollwitzer (2024), abstract: 642 phép thử, 0,27 ≤ d ≤ 0,66; Lally và cộng sự (2010), abstract: 96 người, 18–254
@@ -1141,17 +1132,13 @@ def phan_F2():
             ('96 người', 'khoảng 66 ngày', '18 ngày', '254 ngày', 'Lally và cộng sự, 2010', 320),
         ],
         's-mauthuan': [('Tetlock', '2005'), ('Atanasov và cộng sự', '2020'), '執中無權，猶執一也'],
-        # Lừa đảo: bài “25 kịch bản lừa đảo trên không gian mạng năm 2026” (bocongan.gov.vn, 8/9/2026) và cảnh báo
-        # “phạt nguội” (baochinhphu.vn, 10/9/2026): công an không yêu cầu nộp phạt hay đưa mật khẩu, OTP qua link lạ.
+        # Lừa đảo: mồi rút tiền vài lần đầu rồi chặn rút là dấu hiệu chung của các kịch bản, không riêng một năm.
         's-luadao': [
-            'Công an không yêu cầu nộp phạt hay đưa mật khẩu, mã OTP qua đường link trong tin nhắn lạ',
-            ('Bộ Công an', '2026'), ('cho rút tiền vài lần đầu', 'dụ nạp số lớn', 60),
+            ('Cho rút vài lần đầu', 'nạp thêm để mở khoá', 60),
         ],
-        # Luật 12: WHO, “Road traffic injuries” (20/7/2026) — hàng đầu ở 5–29 tuổi; mũ đúng cách giảm nguy cơ tử
-        # vong hơn 6 lần, chấn thương não tới 74%. Cấm lái khi có nồng độ cồn: luật trật tự, an toàn giao thông
-        # đường bộ (bản hợp nhất 2026), áp cho mọi phương tiện, kể cả xe thô sơ. Odean (1998) bảng I: PGR 0,148, PLR 0,098.
+        # Luật 12: Krogsbøll, Jørgensen và Gøtzsche (Cochrane, 2019) — khám tổng quát ở người lớn khoẻ hầu như không
+        # giảm tử vong. Odean (1998) bảng I: PGR 0,148, PLR 0,098.
         's-muoihai': [
-            ('người 5–29 tuổi', 'hơn 6 lần', '74%', 'WHO'), 'kể cả xe đạp, khi trong máu hoặc hơi thở có nồng độ cồn',
             ('Odean (1998)', '10.000 tài khoản', 'khoảng 50%'), ('Shefrin và Statman', '1985'), ('Cochrane', '2019'),
         ],
         # Tâm kế: bảng 2 của O'Boyle và cộng sự (2012) — riêng Machiavellianism: hiệu suất ρ −0,07 (k = 57), hành vi
@@ -1234,13 +1221,11 @@ def phan_G():
         's-ranhgioi': ['Từ chối bằng một nguyên tắc chung', 'vừa bị giục vừa được chiều chuộng'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
         's-vonvanhoa': ['không đo đúng năng lực hay nhân cách'],
-        's-lenghia': ['khác theo vùng và từng nhà', 'nhập gia tuỳ tục'],
+        's-lenghia': ['khác theo vùng và từng nhà'],
         's-kinhdien': ['trăm trận không nguy', 'hai lần là đủ', 'chưa rõ xuất xứ'],
-        's-giayto': ['nên công chứng', 'di chúc không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên',
-                     'con thành niên không có khả năng lao động', 'trừ người từ chối nhận hoặc không có quyền hưởng'],
-        's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn',
-                     'Không đưa mã OTP, mật khẩu', 'gọi ngay ngân hàng của mình để khoá tài khoản'],
-        's-muoihai': ['đã uống rượu bia thì không lái xe nào', 'cài quai đúng cách'],
+        's-giayto': ['không chia theo di chúc', 'Ít nhất hai người tin cậy'],
+        's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn'],
+        's-muoihai': ['hầu như không giảm tử vong'],
         's-lotrinh': ['“nếu [lúc, chỗ] thì tôi [việc nhỏ]”', 'vài tuần tới vài tháng', 'lỡ một lần thì làm lại'],
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
         's-nhantin': ['ngừng nhắc'],
@@ -1248,7 +1233,7 @@ def phan_G():
         's-quanhe': ['đừng coi kiểm soát là bằng chứng yêu'],
         's-batdong': ['không coi là lỗi đôi bên'],
         's-dunglai': ['Không phải chứng minh người kia xấu mới được rời đi', 'lúc rời đi có thể nguy hiểm hơn'],
-        's-honnhan': ['Bạo lực cần ưu tiên an toàn', 'Sống chung mà không đăng ký kết hôn thì không có quyền, nghĩa vụ vợ chồng'],
+        's-honnhan': ['đừng dựa vào một dấu hiệu'],
     }
     for sid, phrases in essential.items():
         visible = ' '.join(' '.join(compact.sections.get(sid, [])).split())
@@ -1300,8 +1285,8 @@ def phan_G():
     claim('thẻ hoà vốn dùng chi phí biến đổi, không thay bằng chi phí trực tiếp',
           'chi phí biến đổi' in unit and 'chi phí trực tiếp' not in unit)
     estate = cards['estate']['mechanism']
-    claim('thẻ di chúc giữ ngoại lệ khẩn cấp và điều kiện luật định',
-          all(x in estate for x in ['Di chúc miệng', 'tính mạng bị đe doạ', 'không thể lập văn bản', 'đủ điều kiện']))
+    claim('thẻ di chúc: tiền bảo hiểm trả cho người thụ hưởng, không chia theo di chúc',
+          all(x in estate for x in ['người thụ hưởng ghi trong hợp đồng', 'không chia theo di chúc']))
     claim('thẻ đổi việc: khoản đệm không tự tạo khả năng quay lại',
           'lối quay lại thật' in cards['reversibility']['example'])
     claim('thẻ khoảng đệm không hứa biến quyết định thành quay lại được',
