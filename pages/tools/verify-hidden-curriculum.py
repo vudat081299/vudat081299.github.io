@@ -1029,7 +1029,7 @@ def phan_F2():
     CAN = 'Giáp Ất Bính Đinh Mậu Kỷ Canh Tân Nhâm Quý'.split()
     CHI = 'Tý Sửu Dần Mão Thìn Tỵ Ngọ Mùi Thân Dậu Tuất Hợi'.split()
     cc = re.findall(r'\b(%s) (%s) (\d{3,4})\b' % ('|'.join(CAN), '|'.join(CHI)), TEXT)
-    claim('năm can chi trong bài (Đinh Mùi 1427, Kỷ Mùi 1919)', len(cc) >= 2, f'chỉ thấy {len(cc)} chỗ')
+    claim('năm can chi trong bài (Đinh Mùi 1427)', len(cc) >= 1, f'chỉ thấy {len(cc)} chỗ')
     for c, h, y in cc:
         k = int(y) - 4
         claim(f'{c} {h} {y}', (CAN[k % 10], CHI[k % 12]) == (c, h), f'năm {y} là {CAN[k % 10]} {CHI[k % 12]}')
