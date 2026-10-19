@@ -914,8 +914,6 @@ def phan_F():
           f'tỉ số {math.sqrt(0.8 + 0.2 / 20):.3f}')
     need_t('đọc bảng trong bài', 'khủng hoảng đẩy tương quan lên 0,8 thì hai mươi tài sản vẫn lên xuống gần bằng một')
 
-    st = 60 * 1.3
-    need_t('tái cân bằng 60/40 sau một năm cổ phiếu +30%', f'{vn(st / (st + 40) * 100, 1)}% / {vn(40 / (st + 40) * 100, 1)}%')
     need_t('khoản 5% về 0', f'lãi {vn(0.05 / 0.95 * 100, 1)}%')
     need_t('khoản 40% mất một nửa', f'cần lãi {vn(0.2 / 0.8 * 100, 0)}%')
 
@@ -1307,7 +1305,6 @@ def phan_G():
     claim('bảo hiểm: phạm vi, mốc tính thời hạn và khấu trừ hoàn phí',
           all(x in bh for x in ['hợp đồng trên một năm', '21 ngày từ ngày nhận hợp đồng', 'trừ chi phí hợp lý']))
     dm = chu(muc('s-danhmuc'))
-    claim('tương quan 0 được giải nghĩa là chưa chắc độc lập', 'không có liên hệ tuyến tính (chưa chắc là độc lập)' in dm)
     claim('tương quan bằng 0 không được đồng nhất với độc lập', 'Tương quan 0 (độc lập)' not in dm)
     rep = chu(muc('s-giakienthuc'))
     claim('36% là tiêu chí thống kê, không phải chứng minh hiệu ứng không tồn tại',

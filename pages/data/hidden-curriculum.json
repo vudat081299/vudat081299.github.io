@@ -664,7 +664,7 @@
    "mechanism": "Ngày thường, người mua có sẵn; khi có cú sốc, người mua rút đi còn người bán tăng lên, nên giá bán được rơi sâu dưới giá trị. Đất, trái phiếu riêng lẻ, doanh nghiệp tư nhân chịu nặng nhất.",
    "mistake": "Lấy độ dễ bán hôm nay làm chuẩn cho lúc khủng hoảng, hoặc dùng tài sản biến động làm quỹ dự phòng.",
    "example": "Năm 2022–2023, quy định cho phép doanh nghiệp kéo dài kỳ hạn trái phiếu riêng lẻ tối đa hai năm nếu người sở hữu đồng ý: tiền định dùng năm nay có thể thành tiền của hai năm sau.",
-   "use": "Ước tính thời gian và mức giảm giá để bán. Tiền sắp cần phải đủ dễ rút và ít biến động.",
+   "use": "Ước tính thời gian và mức giảm giá để bán.",
    "limits": "Thanh khoản có giá: tiền gửi lãi thấp hơn tài sản khó bán, nên giữ quá nhiều là trả phí bảo hiểm quá cao, nhất là với người có thu nhập ổn định.",
    "remember": "Bán được lúc yên chưa chắc bán được lúc cần.",
    "related": [
@@ -772,7 +772,7 @@
     "math",
     "mixed"
    ],
-   "idea": "Lời của cổ đông đến từ tiền công ty trả ra và giá lên xuống. Giá đã chứa kỳ vọng về tương lai, nên công ty tốt vẫn có thể là khoản mua kém nếu giá đòi quá nhiều.",
+   "idea": "Giá đã chứa kỳ vọng về tương lai, nên công ty tốt vẫn có thể là khoản mua kém nếu giá đòi quá nhiều.",
    "why": "Công ty tốt có thể là khoản đầu tư tồi nếu giá đòi tương lai quá đẹp.",
    "mechanism": "Giá cao so với lợi nhuận nghĩa là người mua đang trả trước cho tăng trưởng tương lai. Với giá gấp 40 lần lợi nhuận một năm (P/E 40), nếu người mua đòi lời 9%/năm, lợi nhuận phải tăng ít nhất khoảng 6,5%/năm mãi mãi.",
    "mistake": "Mua vì công ty nổi tiếng và đang tăng trưởng mà không hỏi giá đã trả trước bao nhiêu cho tăng trưởng ấy.",
@@ -883,7 +883,7 @@
    ],
    "idea": "Rủi ro của một rổ phụ thuộc vào việc các thứ trong rổ có cùng lên xuống không, nhiều hơn là số thứ trong rổ.",
    "why": "Nhiều khoản vẫn có thể chịu cùng một cú sốc.",
-   "mechanism": "Thêm tài sản chỉ giảm được phần rủi ro riêng của từng thứ; phần rủi ro chung khi chúng cùng lên xuống thì không giảm được. Với số liệu ví dụ trên trang, rổ nhiều tài sản không xuống dưới 16,4% dao động; khi khủng hoảng làm mọi thứ cùng chiều hơn, hai mươi tài sản vẫn dao động 27,0%.",
+   "mechanism": "Với số liệu ví dụ trên trang, rổ nhiều tài sản không xuống dưới 16,4% dao động; khi khủng hoảng làm mọi thứ cùng chiều hơn, hai mươi tài sản vẫn dao động 27,0%.",
    "mistake": "Đếm số mã, số căn nhà, số quỹ thay vì hỏi cú sốc nào làm tất cả cùng giảm.",
    "example": "Tương quan giữa các thị trường cổ phiếu tăng trong thị trường giá xuống, không tăng trong thị trường giá lên (Longin và Solnik, 2001). Năm 2022, cổ phiếu Mỹ và trái phiếu chính phủ Mỹ kỳ hạn 10 năm cùng giảm: −18,04% và −17,83%.",
    "use": "Khoản mới có thể giảm cùng thu nhập và tài sản lớn khác không? Đa dạng theo nguồn rủi ro, không chỉ số khoản.",
@@ -915,7 +915,7 @@
    "mistake": "Lập kế hoạch nghỉ hưu bằng một lợi suất bình quân, như thể năm nào cũng giống năm nào.",
    "example": "1.000 triệu đồng, rút 60 triệu cuối mỗi năm, bốn năm lợi suất +20%, +10%, −20%, −10%: còn 745,7 triệu; đảo thứ tự: còn 675,8 triệu. Không rút gì thì cả hai đều thành 950,4.",
    "use": "Tách chi tiêu sắp cần khỏi phần biến động; định trước cách rút và tái cân bằng.",
-   "limits": "Thứ tự cũng ảnh hưởng người góp tiền; ví dụ trên trang có lợi cho thứ tự năm xấu trước, không phải quy luật mọi chuỗi giá. Khi không thêm hoặc rút tiền, cùng bộ lợi suất cho cùng kết quả.",
+   "limits": "Thứ tự cũng ảnh hưởng người góp tiền; ví dụ trên trang có lợi cho thứ tự năm xấu trước, không phải quy luật mọi chuỗi giá.",
    "remember": "Lúc bắt đầu rút tiền, năm xấu đầu tiên là năm đắt nhất.",
    "related": [
     "liquidity",
