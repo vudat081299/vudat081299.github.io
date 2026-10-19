@@ -420,12 +420,12 @@
     "math",
     "solid"
    ],
-   "idea": "Niềm tin sau khi thấy bằng chứng bằng niềm tin trước, điều chỉnh theo sức nặng của bằng chứng.",
+   "idea": "Đổi ý nhiều hay ít tuỳ bằng chứng mạnh hay yếu: bằng chứng chỉ đáng đổi ý khi nó giúp phân biệt hai khả năng.",
    "why": "Giúp đổi niềm tin theo sức nặng của tin mới, thay vì cảm giác.",
-   "mechanism": "Sức nặng của một bằng chứng = khả năng thấy nó nếu điều mình nghi là đúng ÷ khả năng thấy nó nếu điều ấy sai. Hai bên sinh ra nó như nhau thì nó không đổi được gì.",
-   "mistake": "Nhầm “khả năng dương tính khi có bệnh” với “khả năng có bệnh khi dương tính”.",
-   "example": "Với tỉ lệ bệnh 1%, xét nghiệm bắt được 90% người bệnh và báo nhầm ở 9% người lành, chỉ khoảng 9% người có kết quả dương tính thật sự bị bệnh.",
-   "use": "So khả năng bằng chứng xuất hiện dưới từng giả thuyết. Bằng chứng mạnh có thể đổi niềm tin nhiều; tránh đếm lại cùng nguồn.",
+   "mechanism": "Người đáng tin hiếm khi thất hứa, nên một lần thất hứa nói nhiều hơn một lần giữ lời: với số điền sẵn của mô hình, mỗi lần giữ lời nhân tỉ số cược với 1,9, mỗi lần thất hứa nhân với 0,1.",
+   "mistake": "Đã tin thì thấy gì cũng thành bằng chứng, như người mất rìu trong Liệt Tử.",
+   "example": "Người mới quen thất hứa ngay lần đầu: niềm tin từ 50% còn 9,1%. Người quen lâu năm giữ lời 10 lần rồi lỡ một lần: từ 99,98% xuống 99,82%.",
+   "use": "Hỏi: nếu mình sai, mình có thấy điều này không? Bằng chứng mạnh có thể đổi niềm tin nhiều; tránh đếm lại cùng nguồn.",
    "limits": "Kết quả phụ thuộc niềm tin ban đầu. Mười người kể cùng một tin đồn không phải mười nguồn mới; đếm một nguồn hai lần là tự lừa mình.",
    "remember": "Đổi ý theo sức nặng của bằng chứng, không theo số người kể.",
    "related": [

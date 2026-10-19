@@ -439,16 +439,12 @@ def phan_B():
                                  '<b>25,5%</b> qua 15 năm')
 
     # ── Cập nhật niềm tin (s-bayes, lab-bayes) ────────────────────────────────
-    tp, fpos = 1000 * 0.01 * 0.9, 1000 * 0.99 * 0.09
-    need('Bayes: người lành dương tính', f'990 người lành thì khoảng {vi(fpos, 0)} người dương tính', fpos)
-    need('Bayes: phần dương tính thật', f'Trong khoảng {vi(tp + fpos, 0)} kết quả dương tính, chỉ {vi(tp, 0)} người thật '
-                                       f'sự bệnh — <b>khoảng {vi(100 * tp / (tp + fpos), 0)}%</b>', tp / (tp + fpos))
     claim('nhũ ảnh: 4 xuống 3 trên 1.000 là “giảm 25%”', (4 - 3) / 4 == 0.25)
     need('nhũ ảnh trong bài', 'cứ 1.000 phụ nữ đi chụp thì có thêm 1 người không chết vì bệnh này')
     ls, ll = 0.7 ** 3, 0.5 ** 3
     post = 0.05 * ls / (0.05 * ls + 0.95 * ll)
-    need('Bayes: quỹ thắng ba năm', f'Ba năm thắng liên tiếp có xác suất {vi(100 * ls, 1)}% và {vi(100 * ll, 1)}%, nên sức nặng bằng chứng là {vi(ls / ll, 2)}')
-    need('Bayes: tỉ số cược sau', f'Tỉ số cược từ 5:95 lên khoảng {vi(5 * ls / ll, 0)}:95: xác suất giỏi tăng từ 5% lên <b>{vi(100 * post, 1)}%</b>', post)
+    need('Bayes: quỹ thắng ba năm, sức nặng bằng chứng và xác suất sau',
+         f'Sức nặng bằng chứng của ba năm thắng liên tiếp là {vi(ls / ll, 2)}: xác suất giỏi tăng từ 5% lên <b>{vi(100 * post, 1)}%</b>', post)
 
     def trail(p0, a, b, seq):
         odds = p0 / (1 - p0)
@@ -1231,7 +1227,7 @@ def phan_G():
         's-dongxu': ['không phải tỉ lệ an toàn chung'],
         's-khanhiem': ['bằng chứng chưa thống nhất'],
         's-phanphoi': ['Xác suất chỉ là ước lượng', 'dùng kết quả để học'],
-        's-bayes': ['Tỉ số cược là xác suất', 'tần suất trong những trường hợp tương tự', 'nếu mình sai, mình có thấy điều này không'],
+        's-bayes': ['tần suất trong những trường hợp tương tự', 'nếu mình sai, mình có thấy điều này không'],
         's-heth': ['Dự đoán có thể sai', 'Một bước lùi không tự dẫn'],
         's-cophieu': ['dữ liệu quá khứ của Mỹ, không bảo đảm tương lai'],
         's-danhmuc': ['Khi đang rút tiền', 'không để bảo đảm lợi nhuận'],
