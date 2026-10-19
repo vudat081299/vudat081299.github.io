@@ -28,8 +28,8 @@ Bảy phần, bảy loại sai khác nhau:
      định và bài tập phải đủ trường, khoá duy nhất, mọi liên kết mục có thật; tiêu đề bài tập đếm đúng
      số tình huống.
   F. DỮ KIỆN TỪ NGUỒN — mọi phần, từ tiền, vốn, nghề tới lời nói, yêu đương, quyền lực, văn hoá, gia đình,
-     lừa đảo, an toàn giao thông và thói quen: dữ kiện lấy từ nguồn (con số kèm đơn vị, tác giả và năm,
-     số tổng đài) phải có mặt và đứng gần nhau trong đúng
+     lừa đảo, an toàn giao thông và thói quen: dữ kiện lấy từ nguồn (con số kèm đơn vị, tác giả và năm)
+     phải có mặt và đứng gần nhau trong đúng
      mục — kiểm số, không kiểm câu văn (du_kien) —, thân bài không dẫn số điều luật hay số hiệu văn bản
      (PAGES-015), năm can chi tính lại từ năm dương lịch,
      và mọi con số suy ra được tính lại trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn
@@ -1132,7 +1132,7 @@ def phan_F2():
             'một phần ba số cặp đã đoàn tụ chia tay trong ba tháng',
         ],
         's-dunglai': [
-            'gọi 113', 'Tổng đài quốc gia 117, 24/7', 'tổng hợp trên hơn 50.000 người xác nhận cả ba, mạnh nhất là mức hài lòng',
+            'tổng hợp trên hơn 50.000 người xác nhận cả ba, mạnh nhất là mức hài lòng',
             'nghiên cứu ở 11 thành phố Mỹ',
         ],
         # Bộ luật Dân sự 2015: Điều 650–651 (hàng thừa kế thứ nhất), 644 (hai phần ba suất), 615 (nợ trong phạm vi
@@ -1247,7 +1247,7 @@ def phan_G():
         's-thecuoc': ['họ sẽ phản đối nếu biết, là thao túng', 'ép công khai vẫn là ép', 'khi còn gặp lại và chuyện lan được'],
         's-thuongluong': ['phương án tốt nhất ấy là BATNA', 'không dùng làm lời đe doạ'],
         's-memcung': ['chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
-        's-ranhgioi': ['Đã uống rượu bia thì không cầm lái'],
+        's-ranhgioi': ['Từ chối bằng một nguyên tắc chung', 'vừa bị giục vừa được chiều chuộng'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
         's-vonvanhoa': ['không đo đúng năng lực hay nhân cách'],
         's-lenghia': ['khác theo vùng và từng nhà', 'nhập gia tuỳ tục'],
@@ -1259,11 +1259,11 @@ def phan_G():
         's-muoihai': ['đã uống rượu bia thì không lái xe nào', 'cài quai đúng cách'],
         's-lotrinh': ['“nếu [lúc, chỗ] thì tôi [việc nhỏ]”', 'vài tuần tới vài tháng', 'lỡ một lần thì làm lại'],
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
-        's-nhantin': ['ngừng nhắc', 'Không tìm kênh khác để vượt ranh giới'],
-        's-henho': ['không thay đồng thuận thân mật', 'chọn nơi công cộng', 'không gửi tiền cho người yêu qua mạng'],
-        's-quanhe': ['có thể rút bất cứ lúc nào', 'không thay cho đồng ý lúc này', 'Quyền riêng tư không biến mất khi yêu'],
+        's-nhantin': ['ngừng nhắc'],
+        's-henho': ['mời theo cách dễ từ chối'],
+        's-quanhe': ['đừng coi kiểm soát là bằng chứng yêu'],
         's-batdong': ['không coi là lỗi đôi bên'],
-        's-dunglai': ['gọi 113', 'Tổng đài quốc gia 117', 'Không phải chứng minh người kia xấu mới được rời đi'],
+        's-dunglai': ['Không phải chứng minh người kia xấu mới được rời đi', 'lúc rời đi có thể nguy hiểm hơn'],
         's-honnhan': ['Bạo lực cần ưu tiên an toàn', 'Sống chung mà không đăng ký kết hôn thì không có quyền, nghĩa vụ vợ chồng'],
     }
     for sid, phrases in essential.items():
@@ -1340,10 +1340,6 @@ def phan_G():
     dn = chu(muc('s-docnguoi'))
     claim('đọc người: Kim và cộng sự (2004) giữ đúng chiều của lỗi gian dối',
           all(x in dn for x in ['Kim và cộng sự, 2004', 'hàn gắn kém hơn', 'chối rồi bị lộ']))
-    # Rượu bia (6.6): mọi loại xe, mọi mức cồn; mức phạt đổi theo năm nên chỉ dặn kiểm quy định hiện hành.
-    rg = chu(muc('s-ranhgioi'))
-    claim('ranh giới: đã uống thì không lái xe nào, mức phạt kiểm quy định hiện hành',
-          all(x in rg for x in ['kể cả xe đạp', 'trong máu hoặc hơi thở có cồn', 'kiểm quy định hiện hành']))
     # Câu cho những lần nói khó (6.2): một bảng 7–9 dòng, mỗi dòng ba ô — tình huống, câu nói, điều kiện.
     tk = re.search(r'Câu cho những lần nói khó</h3>.*?<tbody>(.*?)</tbody>', muc('s-imlang'), flags=re.S)
     rows = re.findall(r'<tr>(.*?)</tr>', tk.group(1), flags=re.S) if tk else []
