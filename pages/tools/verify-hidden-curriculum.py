@@ -1075,13 +1075,12 @@ def phan_F2():
         # Curhan và cộng sự (2022): quãng im từ 3 giây, không giành phần lớn hơn; khi địa vị chênh rõ, chỉ quãng im
         # của bên địa vị cao tạo thêm giá trị.
         's-imlang': [('ba giây', 'Curhan và cộng sự, 2022', 'chỉ quãng im của bên địa vị cao')],
-        # Văn hoá: Ambady và Rosenthal (1993) nghiên cứu 1 — 13 giảng viên, ba đoạn 10 giây, r(11) = 0,76; Emily Post
-        # Institute — khăn ăn “loosely to the left”, dao dĩa ăn xong ở số 4; Recht và Leslie (1988) — 64 học sinh, nửa hiệp.
+        # Văn hoá: Ambady và Rosenthal (1993) nghiên cứu 1 — 13 giảng viên, ba đoạn 10 giây, r(11) = 0,76;
+        # Recht và Leslie (1988) — 64 học sinh, nửa hiệp.
         's-vonvanhoa': [
             ('Ambady và Rosenthal', '1993', '30 giây'), ('13 giảng viên', '0,76', 40), ('Veblen', '1899'),
             ('Currid-Halkett', '2017', 'hưu trí'),
         ],
-        's-quocte': ['Emily Post Institute', 'gấp lỏng khăn, đặt bên trái đĩa', 'cán chỉ về số 4'],
         's-vanminh': [
             ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh', 'nửa hiệp'),
             ('Aronowitz và Giroux', '1988'), 'Mười bốn ý tưởng làm nền',
@@ -1255,7 +1254,7 @@ def phan_G():
         's-ranhgioi': ['Đã uống rượu bia thì không cầm lái'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
         's-vonvanhoa': ['không đo đúng năng lực hay nhân cách'],
-        's-lenghia': ['khác theo vùng và từng nhà', 'nhập gia tuỳ tục'],
+        's-lenghia': ['khác theo vùng và từng nhà'],
         's-kinhdien': ['trăm trận không nguy', 'hai lần là đủ', 'chưa rõ xuất xứ'],
         's-giayto': ['nên công chứng', 'di chúc không gạt được hết vợ, chồng, cha mẹ, con chưa thành niên',
                      'con thành niên không có khả năng lao động', 'trừ người từ chối nhận hoặc không có quyền hưởng'],
