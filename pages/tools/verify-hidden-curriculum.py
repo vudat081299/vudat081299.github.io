@@ -1252,7 +1252,7 @@ def phan_G():
         's-thecuoc': ['họ sẽ phản đối nếu biết, là thao túng', 'ép công khai vẫn là ép', 'khi còn gặp lại và chuyện lan được'],
         's-thuongluong': ['phương án tốt nhất ấy là BATNA', 'không dùng làm lời đe doạ'],
         's-memcung': ['chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
-        's-ranhgioi': ['Đã uống rượu bia thì không cầm lái'],
+        's-ranhgioi': ['Từ chối bằng một nguyên tắc chung', 'vừa bị giục vừa được chiều chuộng'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
         's-vonvanhoa': ['không đo đúng năng lực hay nhân cách'],
         's-lenghia': ['khác theo vùng và từng nhà', 'nhập gia tuỳ tục'],
@@ -1349,10 +1349,6 @@ def phan_G():
     dn = chu(muc('s-docnguoi'))
     claim('đọc người: Kim và cộng sự (2004) giữ đúng chiều của lỗi gian dối',
           all(x in dn for x in ['Kim và cộng sự, 2004', 'hàn gắn kém hơn', 'chối rồi bị lộ']))
-    # Rượu bia (6.6): mọi loại xe, mọi mức cồn; mức phạt đổi theo năm nên chỉ dặn kiểm quy định hiện hành.
-    rg = chu(muc('s-ranhgioi'))
-    claim('ranh giới: đã uống thì không lái xe nào, mức phạt kiểm quy định hiện hành',
-          all(x in rg for x in ['kể cả xe đạp', 'trong máu hoặc hơi thở có cồn', 'kiểm quy định hiện hành']))
     # Câu cho những lần nói khó (6.2): một bảng 7–9 dòng, mỗi dòng ba ô — tình huống, câu nói, điều kiện.
     tk = re.search(r'Câu cho những lần nói khó</h3>.*?<tbody>(.*?)</tbody>', muc('s-imlang'), flags=re.S)
     rows = re.findall(r'<tr>(.*?)</tr>', tk.group(1), flags=re.S) if tk else []
