@@ -63,10 +63,10 @@
     "math",
     "mixed"
    ],
-   "idea": "Tài sản ròng = tài sản − nợ. Khả năng chịu sốc còn cần dòng tiền và tài sản rút được đúng lúc.",
+   "idea": "Tài sản ròng chưa đủ: khả năng chịu sốc còn cần dòng tiền và tài sản rút được đúng lúc.",
    "why": "Tài sản ròng đo phần tích luỹ; dòng tiền và thanh khoản cho biết mình có trả được nghĩa vụ trước mắt không.",
-   "mechanism": "Tách tài sản sinh tiền (cổ phần, tiền gửi, nhà cho thuê), tài sản không trả dòng tiền (vàng, đất để không), và đồ dùng mất giá. Kỹ năng là vốn con người, thường không tính vào bảng tài sản ròng. Tỉ lệ để dành = (thu nhập − chi tiêu) ÷ thu nhập.",
-   "mistake": "Đo mình bằng lương hay bằng đồ đang dùng; mua đồ mất giá bằng nợ là trả lãi cho một thứ đang teo lại.",
+   "mechanism": "Hứa trước thì dễ giữ: khi một phần mỗi lần tăng lương tự chuyển vào quỹ hưu, tỉ lệ để dành tăng từ 3,5% lên 13,6% sau 40 tháng (Thaler và Benartzi, 2004).",
+   "mistake": "Đo mình bằng lương hay bằng đồ đang dùng.",
    "example": "Nhà có giá trị lớn nhưng khó bán vẫn không thay được tiền trả hoá đơn hôm nay.",
    "use": "Mỗi quý ghi tài sản theo giá bán thực tế sau chi phí, nợ và chi tiêu thiết yếu. Dành trước một phần thu nhập tăng để tích luỹ.",
    "limits": "Tài sản ròng không đo vốn con người, thứ lớn nhất của người trẻ; và giá bán được của nhà, đất, doanh nghiệp chỉ là ước lượng.",
