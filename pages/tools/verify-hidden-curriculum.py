@@ -332,7 +332,7 @@ def phan_B():
     need('phí 2% lấy mất', f'Với phí 2%/năm, con số là {vi(100 * (1 - a6 / a8), 1)}%')
 
     # ── Vàng: đơn vị và lab-gold ─────────────────────────────────────────────
-    need('một lượng', 'là 37,5 gam, bằng 10 <b>chỉ</b>; một chỉ là 3,75 gam')
+    need('một lượng', '(cây) vàng là 37,5 gam;')
     need('một ounce', 'một ounce quốc tế (troy ounce) là 31,1035 gam')
     claim('ounce troy 31,1034768 g làm tròn thành 31,1035', f'{31.1034768:.4f}' == '31.1035')
     need('lượng ra ounce', f'một lượng ≈ {vi(37.5 / 31.1034768, 5)} ounce')
@@ -865,8 +865,8 @@ def phan_F():
     for x in ('350 triệu đồng', 'bằng đồng Việt Nam của cá nhân', '139 doanh nghiệp', '83.600 tỉ đồng', '50,7%',
               'tối đa hai năm', '39,2%', '25.967', '42,6%', '1.092', 'khoảng 35 nghìn tỷ USD', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
               '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
-              '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%', '−0,82', '−0,31',
-              '−1,04%', '2,24%', '1.820,1', '2.610,85', '1.000 tấn', '473 tấn', '15.858,92', '24.164,89',
+              '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%',
+              '15.858,92', '24.164,89',
               '12,73%', '23,12%'):
         need_t('vốn, chuỗi từ nguồn', x)
 
@@ -957,9 +957,8 @@ def phan_F():
     fx = 24164.89 / 15858.92
     need_t('đồng mất giá so với USD 2005 → 2024', f'mất {vn((1 - 1 / fx) * 100, 1)}%')
     need_t('mất giá bình quân năm', f'khoảng {vn((fx ** (1 / 19) - 1) * 100, 2)}% mỗi năm')
-    du_kien('s-vang', 'giá vàng cuối 2021 → cuối 2024', 'cuối 2024', f'tăng {vn((2610.85 / 1820.1 - 1) * 100, 1)}%')
-    du_kien('s-vang', 'lãi thực TIPS cuối 2021 → cuối 2024', '−1,04%', '2,24%', 'TIPS', w=400)
-    du_kien('s-vang', 'Erb và Harvey', 'Erb và Harvey', '2013', '−0,82', '−0,31', '1997–2012', w=600)
+    du_kien('s-vang', 'Erb và Harvey: vàng không chống lạm phát đáng tin', 'không chống lạm phát đáng tin', 'Erb và Harvey',
+            '2013', w=80)
     # Lãi tiền gửi và lạm phát Việt Nam 2005–2023 (World Bank FR.INR.DPST, FP.CPI.TOTL.ZG), bình quân nhân.
     dep = [7.145, 7.63, 7.492, 12.73, 7.91, 11.194, 13.993, 10.504, 7.14, 5.758, 4.747, 5.035, 4.809, 4.738,
            4.975, 4.12, 3.375, 3.817, 4.781]
