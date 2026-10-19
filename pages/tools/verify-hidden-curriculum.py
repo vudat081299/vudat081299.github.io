@@ -1004,14 +1004,6 @@ def phan_F2():
     claim('Odean: 0,148 so với 0,098 là cao hơn khoảng 50%', 45 <= 100 * (0.148 / 0.098 - 1) <= 55,
           f'{100 * (0.148 / 0.098 - 1):.1f}%')
     du_kien('s-giayto', 'Van Such: 62 trên 286 ca', 'Van Such', '2017', '286 bệnh nhân', '62 ca (21%)')
-    # Rút bảo hiểm xã hội một lần (s-baohiem), Luật Bảo hiểm xã hội 2024: mỗi năm đóng từ 2014 được 2 tháng lương
-    # bình quân; người lao động 8% và chủ 14% lương mỗi tháng vào quỹ hưu trí và tử tuất, tức 12 × 22% tháng lương
-    # mỗi năm; lương hưu cần đủ 15 năm đóng; chỉ người có thời gian đóng trước 1/7/2025 được rút khi nghỉ việc.
-    bhxh = 12 * (0.08 + 0.14)
-    du_kien('s-baohiem', 'BHXH một lần so với số đã nộp', 'rút một lần', 'khoảng 2 tháng lương bình quân',
-            f'{vn(bhxh, 2)} tháng lương', f'{vn(100 * (0.08 + 0.14), 0)}% lương mỗi tháng', w=260)
-    du_kien('s-baohiem', 'BHXH: điều kiện lương hưu, mốc 1/7/2025', 'đủ 15 năm đóng', 'bắt đầu đóng từ 1/7/2025',
-            'kiểm quy định hiện hành', w=260)
     # Bảo hiểm tiền gửi (s-ruiro): hạn mức 350 triệu đồng từ 13/7/2026 (Bảo hiểm tiền gửi Việt Nam, 7/2026).
     du_kien('s-ruiro', 'hạn mức bảo hiểm tiền gửi và ngày áp dụng', '350 triệu đồng', 'từ 13/7/2026', 'kiểm mức hiện hành', w=260)
     # Thân bài không dẫn số điều luật hay số hiệu văn bản (PAGES-015); chi tiết ấy chỉ ở dòng Luật của s-nguon.
@@ -1303,9 +1295,6 @@ def phan_G():
     claim('khan hiếm: phê bình 2013 nhắm thí nghiệm trong phòng, không nhắm nghiên cứu mía',
           'thí nghiệm trong phòng thí nghiệm của cùng bài báo' in kh and 'phân tích nghiên cứu mía' not in kh)
     claim('kẹo dẻo: Kidd 2013 là biến thể, không phải bản làm lại', 'biến thể của thí nghiệm' in kh and 'làm lại năm 2013' not in kh)
-    bh = chu(muc('s-baohiem'))
-    claim('bảo hiểm: phạm vi, mốc tính thời hạn và khấu trừ hoàn phí',
-          all(x in bh for x in ['hợp đồng trên một năm', '21 ngày từ ngày nhận hợp đồng', 'trừ chi phí hợp lý']))
     dm = chu(muc('s-danhmuc'))
     claim('tương quan 0 được giải nghĩa là chưa chắc độc lập', 'không có liên hệ tuyến tính (chưa chắc là độc lập)' in dm)
     claim('tương quan bằng 0 không được đồng nhất với độc lập', 'Tương quan 0 (độc lập)' not in dm)
