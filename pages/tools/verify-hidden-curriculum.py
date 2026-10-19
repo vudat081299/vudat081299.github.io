@@ -1266,7 +1266,7 @@ def phan_G():
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
         's-nhantin': ['ngừng nhắc'],
         's-henho': ['mời theo cách dễ từ chối'],
-        's-quanhe': ['có thể rút bất cứ lúc nào', 'không thay cho đồng ý lúc này', 'Quyền riêng tư không biến mất khi yêu'],
+        's-quanhe': ['đừng coi kiểm soát là bằng chứng yêu'],
         's-batdong': ['không coi là lỗi đôi bên'],
         's-dunglai': ['gọi 113', 'Tổng đài quốc gia 117', 'Không phải chứng minh người kia xấu mới được rời đi'],
         's-honnhan': ['Bạo lực cần ưu tiên an toàn', 'Sống chung mà không đăng ký kết hôn thì không có quyền, nghĩa vụ vợ chồng'],
