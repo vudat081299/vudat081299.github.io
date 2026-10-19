@@ -1157,11 +1157,9 @@ def phan_F2():
         's-luadao': [
             ('Cho rút vài lần đầu', 'nạp thêm để mở khoá', 60),
         ],
-        # Luật 12: WHO, “Road traffic injuries” (20/7/2026) — hàng đầu ở 5–29 tuổi; mũ đúng cách giảm nguy cơ tử
-        # vong hơn 6 lần, chấn thương não tới 74%. Cấm lái khi có nồng độ cồn: luật trật tự, an toàn giao thông
-        # đường bộ (bản hợp nhất 2026), áp cho mọi phương tiện, kể cả xe thô sơ. Odean (1998) bảng I: PGR 0,148, PLR 0,098.
+        # Luật 12: Krogsbøll, Jørgensen và Gøtzsche (Cochrane, 2019) — khám tổng quát ở người lớn khoẻ hầu như không
+        # giảm tử vong. Odean (1998) bảng I: PGR 0,148, PLR 0,098.
         's-muoihai': [
-            ('người 5–29 tuổi', 'hơn 6 lần', '74%', 'WHO'), 'kể cả xe đạp, khi trong máu hoặc hơi thở có nồng độ cồn',
             ('Odean (1998)', '10.000 tài khoản', 'khoảng 50%'), ('Shefrin và Statman', '1985'), ('Cochrane', '2019'),
         ],
         # Tâm kế: bảng 2 của O'Boyle và cộng sự (2012) — riêng Machiavellianism: hiệu suất ρ −0,07 (k = 57), hành vi
@@ -1248,7 +1246,7 @@ def phan_G():
         's-kinhdien': ['trăm trận không nguy', 'hai lần là đủ', 'chưa rõ xuất xứ'],
         's-giayto': ['không chia theo di chúc', 'Ít nhất hai người tin cậy'],
         's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn'],
-        's-muoihai': ['đã uống rượu bia thì không lái xe nào', 'cài quai đúng cách'],
+        's-muoihai': ['hầu như không giảm tử vong'],
         's-lotrinh': ['“nếu [lúc, chỗ] thì tôi [việc nhỏ]”', 'vài tuần tới vài tháng', 'lỡ một lần thì làm lại'],
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
         's-nhantin': ['ngừng nhắc', 'Không tìm kênh khác để vượt ranh giới'],
