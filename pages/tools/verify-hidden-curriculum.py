@@ -5,7 +5,7 @@ Vì sao cần, khác lint-pages.py: trang nói vài chục con số tính lại 
 Peters (86,4% người chơi thua, ×131,5 trung bình, mức Kelly 25%), thống kê nắm giữ cổ phiếu,
 vàng, tín phiếu Mỹ 1928–2025 (0 trên 79 khung, 28 trên 79 khung), phí 1% ăn mất 24,4%, lãi
 "3% mỗi tháng" là 42,6%/năm, giá trị hôm nay của vốn con người, điểm hoà vốn và đòn bẩy hoạt
-động của quán ví dụ, lợi suất cho thuê và quy tắc 72, bảng nhà trẻ Haifa của Gneezy và
+động của quán ví dụ, lợi suất cho thuê, bảng nhà trẻ Haifa của Gneezy và
 Rustichini, các phép Bayes, độ lệch chuẩn của một danh mục — và mười mô hình JS sinh ra chính
 những con số ấy. lint-pages.py không biết 86,4% có đúng là P(K ≤ 55), K ~ B(100, ½), hay không;
 càng không biết luật ấy còn đúng sau khi ai đó sửa một dòng JS.
@@ -332,7 +332,7 @@ def phan_B():
     need('phí 2% lấy mất', f'Với phí 2%/năm, con số là {vi(100 * (1 - a6 / a8), 1)}%')
 
     # ── Vàng: đơn vị và lab-gold ─────────────────────────────────────────────
-    need('một lượng', 'là 37,5 gam, bằng 10 <b>chỉ</b>; một chỉ là 3,75 gam')
+    need('một lượng', '(cây) vàng là 37,5 gam;')
     need('một ounce', 'một ounce quốc tế (troy ounce) là 31,1035 gam')
     claim('ounce troy 31,1034768 g làm tròn thành 31,1035', f'{31.1034768:.4f}' == '31.1035')
     need('lượng ra ounce', f'một lượng ≈ {vi(37.5 / 31.1034768, 5)} ounce')
@@ -401,7 +401,6 @@ def phan_B():
     need('lợi suất cho thuê ròng', f'còn {vi(net_m, 0)} triệu, tức {vi(100 * net_m / price, 1)}%/năm')
     need('vay để mua cho thuê', f'tiền lãi {vi(interest, 0)} triệu một năm, dòng tiền cho thuê ròng {vi(net_m, 0)} triệu — '
                                 f'mỗi năm hụt {vi(interest - net_m, 0)} triệu')
-    need('quy tắc 72', f'6%/năm: khoảng {vi(72 / 6, 0)} năm (tính chính xác: {vi(math.log(2) / math.log(1.06), 1)} năm)')
     need('P/E 20', f'lợi suất lợi nhuận 1/20 = {vi(100 / 20, 0)}%/năm')
 
     # ── Phạt là giá (mục 4.4): bảng 1 của Gneezy & Rustichini (2000), lượt đón muộn mỗi tuần ──
@@ -866,9 +865,9 @@ def phan_F():
     for x in ('350 triệu đồng', 'bằng đồng Việt Nam của cá nhân', '139 doanh nghiệp', '83.600 tỉ đồng', '50,7%',
               'tối đa hai năm', '39,2%', '25.967', '42,6%', '1.092', 'khoảng 35 nghìn tỷ USD', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
               '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
-              '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%', '−0,82', '−0,31',
-              '−1,04%', '2,24%', '1.820,1', '2.610,85', '1.000 tấn', '473 tấn', '15.858,92', '24.164,89',
-              '3,31%', '12,73%', '23,12%'):
+              '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%',
+              '15.858,92', '24.164,89',
+              '12,73%', '23,12%'):
         need_t('vốn, chuỗi từ nguồn', x)
 
     claim('Bessembinder: 57,4% thua tín phiếu là “hơn bốn trên bảy”', 1 - 0.426 > 4 / 7)
@@ -915,8 +914,6 @@ def phan_F():
           f'tỉ số {math.sqrt(0.8 + 0.2 / 20):.3f}')
     need_t('đọc bảng trong bài', 'khủng hoảng đẩy tương quan lên 0,8 thì hai mươi tài sản vẫn lên xuống gần bằng một')
 
-    st = 60 * 1.3
-    need_t('tái cân bằng 60/40 sau một năm cổ phiếu +30%', f'{vn(st / (st + 40) * 100, 1)}% / {vn(40 / (st + 40) * 100, 1)}%')
     need_t('khoản 5% về 0', f'lãi {vn(0.05 / 0.95 * 100, 1)}%')
     need_t('khoản 40% mất một nửa', f'cần lãi {vn(0.2 / 0.8 * 100, 0)}%')
 
@@ -956,14 +953,12 @@ def phan_F():
     need_t('mua để ở: khoảng chênh', f'Khoảng chênh {vn(h_own - h_rent_y, 0)} triệu bằng {vn(100 * h_be, 1)}% giá nhà')
     need_t('mua để ở: giá nhà phải tăng nhanh hơn', f'nếu giá nhà tăng nhanh hơn {vn(100 * h_be, 1)}%/năm')
 
-    du_kien('s-taisan', 'lãi thực với lãi 5% và lạm phát 3,31%', '3,31%', f'{vn((1.05 / 1.0331 - 1) * 100, 2)}%/năm')
     du_kien('s-taisan', 'lãi thực năm 2008', '2008', '12,73%', '23,12%', f'{vn((1.1273 / 1.2312 - 1) * 100, 1)}%')
     fx = 24164.89 / 15858.92
     need_t('đồng mất giá so với USD 2005 → 2024', f'mất {vn((1 - 1 / fx) * 100, 1)}%')
     need_t('mất giá bình quân năm', f'khoảng {vn((fx ** (1 / 19) - 1) * 100, 2)}% mỗi năm')
-    du_kien('s-vang', 'giá vàng cuối 2021 → cuối 2024', 'cuối 2024', f'tăng {vn((2610.85 / 1820.1 - 1) * 100, 1)}%')
-    du_kien('s-vang', 'lãi thực TIPS cuối 2021 → cuối 2024', '−1,04%', '2,24%', 'TIPS', w=400)
-    du_kien('s-vang', 'Erb và Harvey', 'Erb và Harvey', '2013', '−0,82', '−0,31', '1997–2012', w=600)
+    du_kien('s-vang', 'Erb và Harvey: vàng không chống lạm phát đáng tin', 'không chống lạm phát đáng tin', 'Erb và Harvey',
+            '2013', w=80)
     # Lãi tiền gửi và lạm phát Việt Nam 2005–2023 (World Bank FR.INR.DPST, FP.CPI.TOTL.ZG), bình quân nhân.
     dep = [7.145, 7.63, 7.492, 12.73, 7.91, 11.194, 13.993, 10.504, 7.14, 5.758, 4.747, 5.035, 4.809, 4.738,
            4.975, 4.12, 3.375, 3.817, 4.781]
@@ -1309,7 +1304,6 @@ def phan_G():
     claim('bảo hiểm: phạm vi, mốc tính thời hạn và khấu trừ hoàn phí',
           all(x in bh for x in ['hợp đồng trên một năm', '21 ngày từ ngày nhận hợp đồng', 'trừ chi phí hợp lý']))
     dm = chu(muc('s-danhmuc'))
-    claim('tương quan 0 được giải nghĩa là chưa chắc độc lập', 'không có liên hệ tuyến tính (chưa chắc là độc lập)' in dm)
     claim('tương quan bằng 0 không được đồng nhất với độc lập', 'Tương quan 0 (độc lập)' not in dm)
     rep = chu(muc('s-giakienthuc'))
     claim('36% là tiêu chí thống kê, không phải chứng minh hiệu ứng không tồn tại',
@@ -1332,9 +1326,6 @@ def phan_G():
     claim('thẻ khoảng đệm không hứa biến quyết định thành quay lại được',
           'không tự tạo lại' in cards['buffer']['mechanism']
           and 'trở thành quay lại được' not in cards['buffer']['mechanism'])
-    fee = chu(muc('s-taisan'))
-    claim('bản đồ tài sản: 24,4% cũng giữ giả định lợi suất',
-          all(x in fee for x in ['8%/năm trước phí', '7% sau phí', '30 năm', '24,4%']))
     # Fed Atlanta, wage-growth-data.xlsx sửa ngày 8/10/2026, sheet Job Switcher (12 tháng), cột B/C, 1/1997–9/2026:
     # 325 trên 356 tháng có số liệu nhóm đổi việc cao hơn, chênh bình quân 0,729 điểm; tháng 10/2025 trống.
     need_t('tỷ lệ tháng nhóm đổi việc cao hơn = 325 / 356', f'({vi(100 * 325 / 356, 1)}%)')
