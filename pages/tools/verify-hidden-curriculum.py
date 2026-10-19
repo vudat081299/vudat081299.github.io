@@ -28,8 +28,8 @@ Bảy phần, bảy loại sai khác nhau:
      định và bài tập phải đủ trường, khoá duy nhất, mọi liên kết mục có thật; tiêu đề bài tập đếm đúng
      số tình huống.
   F. DỮ KIỆN TỪ NGUỒN — mọi phần, từ tiền, vốn, nghề tới lời nói, yêu đương, quyền lực, văn hoá, gia đình,
-     lừa đảo, an toàn giao thông và thói quen: dữ kiện lấy từ nguồn (con số kèm đơn vị, tác giả và năm,
-     số tổng đài) phải có mặt và đứng gần nhau trong đúng
+     lừa đảo, an toàn giao thông và thói quen: dữ kiện lấy từ nguồn (con số kèm đơn vị, tác giả và năm)
+     phải có mặt và đứng gần nhau trong đúng
      mục — kiểm số, không kiểm câu văn (du_kien) —, thân bài không dẫn số điều luật hay số hiệu văn bản
      (PAGES-015), năm can chi tính lại từ năm dương lịch,
      và mọi con số suy ra được tính lại trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn
@@ -1137,7 +1137,7 @@ def phan_F2():
             'một phần ba số cặp đã đoàn tụ chia tay trong ba tháng',
         ],
         's-dunglai': [
-            'gọi 113', 'Tổng đài quốc gia 117, 24/7', 'tổng hợp trên hơn 50.000 người xác nhận cả ba, mạnh nhất là mức hài lòng',
+            'tổng hợp trên hơn 50.000 người xác nhận cả ba, mạnh nhất là mức hài lòng',
             'nghiên cứu ở 11 thành phố Mỹ',
         ],
         # Bộ luật Dân sự 2015: Điều 650–651 (hàng thừa kế thứ nhất), 644 (hai phần ba suất), 615 (nợ trong phạm vi
@@ -1268,7 +1268,7 @@ def phan_G():
         's-henho': ['mời theo cách dễ từ chối'],
         's-quanhe': ['đừng coi kiểm soát là bằng chứng yêu'],
         's-batdong': ['không coi là lỗi đôi bên'],
-        's-dunglai': ['gọi 113', 'Tổng đài quốc gia 117', 'Không phải chứng minh người kia xấu mới được rời đi'],
+        's-dunglai': ['Không phải chứng minh người kia xấu mới được rời đi', 'lúc rời đi có thể nguy hiểm hơn'],
         's-honnhan': ['Bạo lực cần ưu tiên an toàn', 'Sống chung mà không đăng ký kết hôn thì không có quyền, nghĩa vụ vợ chồng'],
     }
     for sid, phrases in essential.items():
