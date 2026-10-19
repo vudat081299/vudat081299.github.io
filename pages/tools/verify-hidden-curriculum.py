@@ -1265,7 +1265,7 @@ def phan_G():
         's-lotrinh': ['“nếu [lúc, chỗ] thì tôi [việc nhỏ]”', 'vài tuần tới vài tháng', 'lỡ một lần thì làm lại'],
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
         's-nhantin': ['ngừng nhắc'],
-        's-henho': ['không thay đồng thuận thân mật', 'chọn nơi công cộng', 'không gửi tiền cho người yêu qua mạng'],
+        's-henho': ['mời theo cách dễ từ chối'],
         's-quanhe': ['có thể rút bất cứ lúc nào', 'không thay cho đồng ý lúc này', 'Quyền riêng tư không biến mất khi yêu'],
         's-batdong': ['không coi là lỗi đôi bên'],
         's-dunglai': ['gọi 113', 'Tổng đài quốc gia 117', 'Không phải chứng minh người kia xấu mới được rời đi'],
