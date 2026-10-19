@@ -584,7 +584,7 @@
    "why": "Tìm cách làm hỏng mục tiêu thường cho hành động cụ thể hơn lời hứa thành công.",
    "mechanism": "Lật ngược biến một mục tiêu mờ thành những điều cấm rõ ràng; bớt một sai lầm lớn thường đáng hơn thêm một mẹo hay.",
    "mistake": "Chỉ tìm mẹo tăng thêm mà không kiểm những lỗ có thể làm vỡ cả con đê.",
-   "example": "Nợ đắt để tiêu, dồn hết vào một mã, bảo lãnh không gánh nổi, tin lời hứa không kiểm chứng: bốn cách dễ phá kế hoạch tài chính.",
+   "example": "Giả định đã hỏng (pre-mortem của Gary Klein): trước một quyết định lớn, tưởng tượng nó đã thất bại rồi viết ra vì sao; coi thất bại là chuyện đã xảy ra giúp nghĩ ra nguyên nhân cụ thể hơn.",
    "use": "Với mục tiêu lớn, liệt kê cách dễ thất bại; ưu tiên chặn tổn thất lớn, khó hồi phục.",
    "limits": "Tránh thất bại là điều kiện cần, chưa đủ: một danh sách điều cấm không tự tạo ra tăng trưởng.",
    "remember": "Biết chỗ mình sẽ ngã, và đừng đi tới đó.",
