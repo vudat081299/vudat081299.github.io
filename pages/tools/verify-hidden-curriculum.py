@@ -1153,11 +1153,9 @@ def phan_F2():
             ('96 người', 'khoảng 66 ngày', '18 ngày', '254 ngày', 'Lally và cộng sự, 2010', 320),
         ],
         's-mauthuan': [('Tetlock', '2005'), ('Atanasov và cộng sự', '2020'), '執中無權，猶執一也'],
-        # Lừa đảo: bài “25 kịch bản lừa đảo trên không gian mạng năm 2026” (bocongan.gov.vn, 8/9/2026) và cảnh báo
-        # “phạt nguội” (baochinhphu.vn, 10/9/2026): công an không yêu cầu nộp phạt hay đưa mật khẩu, OTP qua link lạ.
+        # Lừa đảo: mồi rút tiền vài lần đầu rồi chặn rút là dấu hiệu chung của các kịch bản, không riêng một năm.
         's-luadao': [
-            'Công an không yêu cầu nộp phạt hay đưa mật khẩu, mã OTP qua đường link trong tin nhắn lạ',
-            ('Bộ Công an', '2026'), ('cho rút tiền vài lần đầu', 'dụ nạp số lớn', 60),
+            ('Cho rút vài lần đầu', 'nạp thêm để mở khoá', 60),
         ],
         # Luật 12: WHO, “Road traffic injuries” (20/7/2026) — hàng đầu ở 5–29 tuổi; mũ đúng cách giảm nguy cơ tử
         # vong hơn 6 lần, chấn thương não tới 74%. Cấm lái khi có nồng độ cồn: luật trật tự, an toàn giao thông
@@ -1249,8 +1247,7 @@ def phan_G():
         's-lenghia': ['khác theo vùng và từng nhà'],
         's-kinhdien': ['trăm trận không nguy', 'hai lần là đủ', 'chưa rõ xuất xứ'],
         's-giayto': ['không chia theo di chúc', 'Ít nhất hai người tin cậy'],
-        's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn',
-                     'Không đưa mã OTP, mật khẩu', 'gọi ngay ngân hàng của mình để khoá tài khoản'],
+        's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn'],
         's-muoihai': ['đã uống rượu bia thì không lái xe nào', 'cài quai đúng cách'],
         's-lotrinh': ['“nếu [lúc, chỗ] thì tôi [việc nhỏ]”', 'vài tuần tới vài tháng', 'lỡ một lần thì làm lại'],
         's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
