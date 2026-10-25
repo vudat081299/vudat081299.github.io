@@ -2049,7 +2049,7 @@
     "s-tunhien",
     "s-chudong",
     "s-tinhyeu",
-    "s-henho"
+    "s-ngoloi"
    ],
    "action": "Chọn một lời mời thật, vừa sức và dễ từ chối; xem phản hồi thay vì đoán động cơ."
   },
@@ -2133,7 +2133,8 @@
    "answer": "Dữ kiện là họ nói bận; “đang thử mình” là suy đoán. Một lần chưa cho biết động cơ. Có thể để họ chủ động hẹn lúc tiện; lời mời vẫn không được đáp thì ngừng nhắc. Không dùng ẩn ý mình đoán để gạt lời từ chối hay vượt ranh giới.",
    "sections": [
     "s-docnguoi",
-    "s-nhantin"
+    "s-nhantin",
+    "s-ngoloi"
    ]
   },
   {
