@@ -2042,6 +2042,18 @@
    "action": "Viết phương án nếu không thoả thuận được, tiêu chí chọn việc và điều cần xác nhận bằng văn bản."
   },
   {
+   "id": "wealth",
+   "title": "Làm thuê, muốn giàu và có nhà",
+   "sections": [
+    "s-lamgiau",
+    "s-vonnguoi",
+    "s-tichluy",
+    "s-dinhgia",
+    "s-donbay"
+   ],
+   "action": "Viết ra núm đang mạnh nhất với mình, một việc tăng thu nhập trong quý này và mức sống mình coi là đủ."
+  },
+  {
    "id": "dating",
    "title": "Ngại mở lời, muốn làm quen",
    "sections": [

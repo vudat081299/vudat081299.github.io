@@ -1003,6 +1003,24 @@ def phan_F2():
     ba = [15 * 1.10 ** min(n - 1, 10) * 1.03 ** max(n - 11, 0) / (20 * 1.03 ** (n - 1)) for n in range(11, 41)]
     claim('từ năm 11, tỉ số lương B/A không đổi', max(ba) - min(ba) < 1e-9, f'{min(ba):.6f}…{max(ba):.6f}')
     du_kien('s-tichluy', 'khoảng cách giữ nguyên', 'giữ nguyên tới cuối', 'theo phần trăm', w=80)
+    # Bốn núm vặn (s-lamgiau): để dành 90 triệu/năm (30% của 25 triệu/tháng), gửi cuối mỗi năm, 10 năm, tiền danh nghĩa.
+    def von(save, r, g, n=10):
+        w, s = 0.0, save
+        for _ in range(n):
+            w, s = w * (1 + r) + s, s * (1 + g)
+        return w
+    goc = von(90, 0.05, 0)
+    num = (('lợi suất 10%', von(90, 0.10, 0)), ('để dành 40%', von(120, 0.05, 0)), ('thu nhập +10%/năm', von(90, 0.05, 0.10)))
+    need('s-lamgiau: gốc sau 10 năm', f'<td>{vn(goc / 1000, 2)} tỷ</td><td>—</td>', goc)
+    for label, w in num:
+        need(f's-lamgiau: {label} sau 10 năm', f'<td>{vn(w / 1000, 2)} tỷ</td><td>{round(w - goc)} triệu</td>', w)
+    claim('s-lamgiau: trong mười năm, núm thu nhập mạnh hơn để dành thêm, để dành thêm mạnh hơn lợi suất gấp đôi',
+          num[2][1] > num[1][1] > num[0][1] > goc)
+    du_kien('s-lamgiau', 'điểm giao = tiền để dành một năm ÷ lợi suất', '90 triệu ÷ 5%', f'{vn(90 / 0.05 / 1000, 1)} tỷ', w=40)
+    # Căn 70 m² × 75 triệu/m² (Savills, quý III/2026) so với thu nhập người lao động thành thị 10,9 triệu/tháng (Cục Thống kê).
+    du_kien('s-lamgiau', 'căn 70 m² bằng bao nhiêu năm thu nhập một người', '70 m²', '75 triệu/m²',
+            f'{vn(70 * 75 / 1000, 2)} tỷ', f'khoảng {round(70 * 75 / (10.9 * 12))} năm', '10,9 triệu/tháng', w=300)
+    claim('s-lamgiau: giá tăng 11,7%/năm so với thu nhập 6,4%/năm là "gần gấp đôi"', 1.7 < 11.7 / 6.4 < 2.0)
     # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 62 trên 286 ca.
     claim('Van Such: 62 trên 286 ca là 21%', int(100 * 62 / 286) == 21, f'{100 * 62 / 286:.1f}%')
     # Odean (1998), bảng I: tỉ lệ lãi được bán 0,148, tỉ lệ lỗ được bán 0,098 → cao hơn khoảng 50% (luật 10, s-muoihai).
@@ -1212,6 +1230,18 @@ def phan_F2():
         's-quyenluc': [('Burt', '2004', '673 quản lý'), ('Ibarra và cộng sự', '2010')],
         's-tochuc': [('Krackhardt và Hanson', '1993'), ('Chesterton', '1929')],
         's-diavi': [('Henrich và Gil-White', '2001'), ('Cheng và cộng sự', '2013')],
+        # Làm thuê và làm giàu: VARS qua Đại biểu Nhân dân 21/9/2025 (Hà Nội 2014 tới giữa 2025: thu nhập đầu người +6,4%/năm,
+        # giá chung cư +11,7%/năm); VARS IRE qua Znews 25/1/2026 (căn hộ điển hình 20–25 lần thu nhập hộ); Demographia ≤3,
+        # ULI ≤5; lãi thả nổi 11–15% (Nhà Đầu tư, 8/2026). Abstract: Smith và cộng sự (2019) lợi nhuận giảm ba phần tư khi chủ
+        # nghỉ hưu hay mất; Hamilton (2000) trung vị kém 35% sau 10 năm; Raffiee và Feng (2014) nguy cơ rời bỏ thấp hơn 33,3%
+        # (con số qua trích dẫn nguyên văn tác giả); Azoulay và cộng sự (2020) 45,0 tuổi, tới 125%.
+        's-lamgiau': [
+            ('6,4%/năm', '11,7%/năm', 'VARS', '2025'), ('20–25 lần', 'VARS IRE', '2025'), ('3–5 lần', 'Demographia', 'ULI'),
+            ('Savills', 'quý III/2026'), ('11–15%', 'năm 2026'), ('ba phần tư', 'Smith, Yagan, Zidar và Zwick', '2019'),
+            ('35%', 'Hamilton', '2000'), ('Hurst và Pugsley', '2011'), ('một phần ba', 'Raffiee và Feng', '2014'),
+            ('45 tuổi', '125%', 'Azoulay và cộng sự', '2020'), ('Rosen', '1981'), ('Stutzer', '2004'),
+            ('Bertrand và Morse', '2016'), ('Maggiulli', '2017'), 'Paul Graham (2004)',
+        ],
         's-hoaquyen': [('Phân tích gộp 813 mẫu', 'Sabey và cộng sự', '2025'), ('Galinsky và cộng sự', '2006'),
                        ('20 trường', '2016')],
     }
@@ -1294,6 +1324,8 @@ def phan_G():
         's-batdong': ['không coi là lỗi đôi bên'],
         's-dunglai': ['Không phải chứng minh người kia xấu mới được rời đi', 'lúc rời đi có thể nguy hiểm hơn'],
         's-honnhan': ['đừng dựa vào một dấu hiệu'],
+        's-lamgiau': ['đừng săn lợi suất cao', 'đo được riêng', 'chủ ở mức giữa kiếm ít hơn người làm công',
+                      'thử làm chủ khi vẫn giữ lương', 'không giải được bằng một người tiết kiệm thêm', 'chốt phần để dành trước'],
     }
     for sid, phrases in essential.items():
         visible = ' '.join(' '.join(compact.sections.get(sid, [])).split())
