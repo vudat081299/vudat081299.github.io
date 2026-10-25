@@ -1155,6 +1155,9 @@ def phan_F2():
         's-luadao': [
             ('Cho rút vài lần đầu', 'nạp thêm để mở khoá', 60),
             ('lấy lại tiền bị lừa', 'vừa mất tiền', 'Công an tỉnh Bắc Giang, 2025', 260),
+            # Investor.gov (SEC), mục “affinity fraud”: người có uy tín trong nhóm bị thuyết phục rồi đi giới thiệu,
+            # “many times … become unwitting victims”.
+            ('Người quen giới thiệu', 'nạn nhân chưa biết mình bị lừa', 'Investor.gov', 220),
         ],
         # Luật 12: Krogsbøll, Jørgensen và Gøtzsche (Cochrane, 2019) — khám tổng quát ở người lớn khoẻ hầu như không
         # giảm tử vong. Odean (1998) bảng I: PGR 0,148, PLR 0,098.
