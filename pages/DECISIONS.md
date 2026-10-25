@@ -20,6 +20,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-015 · hidden-curriculum: dạy tư duy, luật chỉ giữ khi thật cần, viết đơn giản nhất · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-016 · hidden-curriculum: hành trang cho người 26 tuổi, rà toàn trang · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-017 · hidden-curriculum: bỏ điều hiển nhiên, giữ điều đúc kết · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+- PAGES-018 · hidden-curriculum: nói chuyện phiếm, tâm thế tán tỉnh, tỏ ý với đồng nghiệp · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -129,3 +130,10 @@ Mảng thiếu bổ sung vào mục có sẵn, ngắn, có nguồn; phần thêm
 Người đọc là người trưởng thành, có học, hiểu pháp luật và lẽ thường: xoá điều ai cũng biết — luật định sẵn, điều cấm, thủ tục, đạo lý suông, phép lịch sự quen thuộc, định nghĩa giáo khoa, lời rào đón lặp lại.
 Chỉ giữ điều người từng trải đúc kết thành nguyên tắc: kinh nghiệm, triết lý, cơ chế, bằng chứng trái trực giác, kỹ thuật cụ thể, đánh đổi và điều kiện áp dụng; không thêm danh sách điều cấm tuyệt đối.
 Một quy định chỉ ở lại khi trái trực giác và làm sai thì mất lớn, khó lấy lại (chặt hơn PAGES-015); điều hiển nhiên chỉ giữ khi là tiền đề của một ý không hiển nhiên.
+
+## PAGES-018 · hidden-curriculum: nói chuyện phiếm, tâm thế tán tỉnh, tỏ ý với đồng nghiệp
+25/10/2026 · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+
+Nói chuyện phiếm và bắt sóng là kỹ năng cần có trên trang; đặt trong mục nghe và hỏi (6.1), không tách mục riêng.
+Phần yêu đương trả lời được: tâm thế khi bắt đầu tán tỉnh, cách tiến từng bước tới tỏ ý, dấu hiệu dễ đọc sai, và cách làm việc tiếp với đồng nghiệp sau khi bị từ chối.
+Khác biệt trung bình theo giới chỉ nêu khi có nguồn, kèm điều kiện, không dùng để đoán một người cụ thể (PAGES-013).

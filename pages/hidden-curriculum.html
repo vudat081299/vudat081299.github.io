@@ -433,7 +433,7 @@
     <span id="hc-reading-status" role="status"></span>
   </div>
   <p class="hc-reading-note">Mỗi mục luôn hiện luật, lý do ngắn và điều kiện cần biết; mở chi tiết để xem cơ chế, bằng chứng và ví dụ. PDF in theo ô “Nội dung PDF”, không theo các mục đang mở: bản gọn giữ phần luôn hiện, lộ trình đọc và 12 luật trả giá; bản đầy đủ thêm mọi chi tiết, bài tự soát, bảng ôn tập và thư viện.</p>
-  <p class="hc-print-note" id="hc-print-note">Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn. Khi cần tính toán hoặc quyết định lớn, mở chi tiết tại https://vudat081299.github.io/pages/hidden-curriculum.html. Các điểm nội dung cập nhật ngày 19/10/2026; nguồn thay đổi theo thời gian cần kiểm lại.</p>
+  <p class="hc-print-note" id="hc-print-note">Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn. Khi cần tính toán hoặc quyết định lớn, mở chi tiết tại https://vudat081299.github.io/pages/hidden-curriculum.html. Các điểm nội dung cập nhật ngày 25/10/2026; nguồn thay đổi theo thời gian cần kiểm lại.</p>
 
   <details class="hc-depth hc-examples"><summary>Bốn ví dụ định lượng trong bài</summary>
   <div class="hc-figs" style="margin-bottom:20px">
@@ -2969,6 +2969,7 @@
                 <tbody>
                   <tr><td>“Phải khó có được; ai yêu nhiều hơn là thua.”</td><td>Có thể tăng sự theo đuổi lúc đầu, chưa chứng minh tăng tình cảm.</td></tr>
                   <tr><td>“Cứ tốt và giúp đủ nhiều, rồi họ sẽ yêu.”</td><td>Tử tế không tạo món nợ tình cảm. Nói rõ mong muốn, đừng đóng vai bạn bè để đổi lấy tình yêu.</td></tr>
+                  <tr><td>“Mưa dầm thấm lâu; cứ theo đuổi rồi sẽ đổ.”</td><td>Hỏi lại sau lời “không” bắt người kia từ chối thêm lần nữa; người bị theo đuổi thấy phiền và có lỗi (<a class="hc-x" href="#s-ngoloi">7.4</a>). Kiên trì đáng giá ở việc làm mình tốt lên, không ở việc hỏi lại.</td></tr>
                   <tr><td>“Đàn ông/phụ nữ luôn muốn kiểu người ấy.”</td><td>Không suy một người cụ thể từ câu nói chung về giới; hỏi và quan sát chính người ấy.</td></tr>
                 </tbody>
               </table>
@@ -4377,7 +4378,7 @@ var libraryReady = Promise.resolve();
     document.body.setAttribute('data-print', full ? 'full' : 'brief');
     $('hc-print-note').textContent = (full ? 'Bản đầy đủ — các mục, mô hình, nguồn và thư viện.' : 'Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn.') +
       (full && !$('lib').getAttribute('data-ready') ? ' Thư viện chưa nạp được; phần đó thiếu trong bản in này.' : '') +
-      ' Trước quyết định lớn, đọc chi tiết và nguồn tại https://vudat081299.github.io/pages/hidden-curriculum.html. Các điểm nội dung cập nhật ngày 19/10/2026; nguồn thay đổi theo thời gian cần kiểm lại.';
+      ' Trước quyết định lớn, đọc chi tiết và nguồn tại https://vudat081299.github.io/pages/hidden-curriculum.html. Các điểm nội dung cập nhật ngày 25/10/2026; nguồn thay đổi theo thời gian cần kiểm lại.';
   }
   scope.addEventListener('change', printNote);
   window.addEventListener('beforeprint', function () {
