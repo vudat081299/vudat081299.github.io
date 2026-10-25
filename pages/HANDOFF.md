@@ -13,6 +13,11 @@
 - Ba trang sách (books-in-brief, how-to-lie-with-statistics, a-short-history-of-nearly-everything): ghi chú
   biên tập cũ (độ dài so với đề bài, thứ tự chương, giọng vài đoạn) đã gỡ khỏi web ở commit 5bb410d. Muốn
   làm tiếp thì xem diff của commit ấy; không bắt buộc.
+- hidden-curriculum, đề xuất từ lượt rà toàn trang:
+  - Rút bảo hiểm xã hội một lần (luật đổi năm 2025): đưa vào 1.5, 4.1, hay để cho `family-insurance-benefits.html`?
+  - Phần 9 kém đòn bẩy với người đọc 26 tuổi: 9.3 "bản đồ văn minh"; "Khoe và không khoe" ở 9.1 lặp 5.6. Gộp hay cắt mục?
+  - Chưa có cách xử lý khi bị nói xấu, tin đồn ở công sở; nếu thêm thì gộp vào 6.4, phần "Khi bị thiếu tôn trọng".
+  - Lộ trình `dating` đã đủ 5 mục (trần của cổng), nên chưa có 6.1; muốn thêm thì đổi một mục.
 
 ## NỢ
 
@@ -26,3 +31,5 @@
 - a-short-history-of-nearly-everything: bảng 7.2 ghi một dòng "xác nhận", dòng song song "bị bác" — đối chiếu
   lại với sách.
 - family-insurance-benefits, wealth-roadmap (không lên web): thanh trên cùng xuống hai hàng ở khoảng 940–1200px.
+- hidden-curriculum: Nisbett, Zukier và Lemley (1981) có trong 12.6 mà thân bài không dẫn; 11.1 nói "bớt kiểm vì
+  tin" hai lần (lời dẫn đầu mục và dấu hiệu 4).
