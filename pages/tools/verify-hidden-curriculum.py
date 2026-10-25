@@ -1131,6 +1131,10 @@ def phan_F2():
             ('ba nghiên cứu với người lạ', 'Birnbaum, Zholtack và Reis', '2020'),
             ('hồ sơ Facebook của bốn nam sinh viên', 'Whitchurch, Wilson và Gilbert', '2011'),
             ('bốn nghiên cứu trò chuyện qua mạng', 'Birnbaum và cộng sự', '2018', 400),
+            # Moore và cộng sự (2017), abstract: lợi của tự xác nhận chỉ đo ở ứng viên được xếp vào 10% tốt nhất;
+            # Knee và cộng sự (2008), abstract: cặp cùng cao RCSE gắn bó hơn mà không hài lòng hay gần gũi hơn.
+            ('10% tốt nhất', 'Moore và cộng sự', '2017', 'chưa được đo trong hẹn hò', 400),
+            ('Knee và cộng sự', '2008', 'không hài lòng hay gần gũi hơn'),
         ],
         # Patel, Mahar và Webster (2022), abstract: liên hệ giữa hài lòng với nhịp nhắn và chất lượng quan hệ mạnh hơn
         # ở người lo âu gắn bó.
@@ -1265,7 +1269,8 @@ def phan_G():
         's-luadao': ['chưa tự chứng minh lừa đảo', 'không thấy dấu hiệu cũng chưa bảo đảm an toàn'],
         's-muoihai': ['hầu như không giảm tử vong'],
         's-lotrinh': ['“nếu [lúc, chỗ] thì tôi [việc nhỏ]”', 'vài tuần tới vài tháng', 'lỡ một lần thì làm lại'],
-        's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý'],
+        's-tinhyeu': ['Không có kỹ thuật bảo đảm khiến một người yêu mình', 'có quyền đổi ý', 'không phải chinh phục',
+                      'đầu tư theo mức người kia đáp lại', 'không phải phán quyết về mình'],
         's-nhantin': ['ngừng nhắc'],
         's-henho': ['mời theo cách dễ từ chối'],
         's-quanhe': ['đừng coi kiểm soát là bằng chứng yêu'],
