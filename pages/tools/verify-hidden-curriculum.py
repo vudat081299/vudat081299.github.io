@@ -1145,6 +1145,19 @@ def phan_F2():
         's-henho': [
             'Aron và cộng sự (1997)', 'trong 45 phút', ('Laurenceau và cộng sự', '1998'), 'Bộ Công an, 2025',
         ],
+        # Ngỏ lời (s-ngoloi), abstract từng bài: Abbey (1982) cuộc trò chuyện 5 phút; Farris và cộng sự (2008) nam không có
+        # ngưỡng dễ dãi hơn mà phân biệt kém hơn, nhầm cả hai chiều; Perilloux, Easton và Buss (2012) N = 199; Kitzinger và
+        # Frith (1999); Baumeister, Wotman và Stillwell (1993) người bị từ chối tin lời từ chối chưa từng dứt khoát; Joel,
+        # Teper và MacDonald (2014); Bohns và DeVincent (2019) N = 942 và 385; SHRM (2023) 632 người, 27%, 75%, 18%.
+        's-ngoloi': [
+            ('5 phút', 'Abbey', '1982'), ('Farris và cộng sự', '2008', 'phân biệt kém hơn'),
+            ('199 người', 'Perilloux, Easton và Buss', '2012'), ('Kitzinger và Frith', '1999'),
+            ('chưa bao giờ được nói dứt khoát', 'Baumeister, Wotman và Stillwell', '1993'),
+            ('Joel, Teper và MacDonald', '2014'),
+            ('942 nghiên cứu sinh', '385 người', 'Bohns và DeVincent', '2019'),
+            ('632 người đi làm ở Mỹ', '27%', '75%', '18%', 'SHRM', '2023', 300),
+            'Đây là xu hướng trung bình ở sinh viên Mỹ, đo ý muốn tình dục chứ không phải tình cảm',
+        ],
         's-quanhe': [
             'một phần ba số cặp đã đoàn tụ chia tay trong ba tháng',
         ],
@@ -1273,6 +1286,8 @@ def phan_G():
                       'đầu tư theo mức người kia đáp lại', 'không phải phán quyết về mình'],
         's-nhantin': ['ngừng nhắc'],
         's-henho': ['mời theo cách dễ từ chối'],
+        's-ngoloi': ['chỉ lên bậc khi bậc trước được đáp lại', 'Lịch sự, thân thiện chưa phải là thích',
+                     'kể cả “không” nhẹ', 'không mời lại', 'chấm điểm họ thì đừng mời', 'không kể với ai'],
         's-quanhe': ['đừng coi kiểm soát là bằng chứng yêu'],
         's-batdong': ['không coi là lỗi đôi bên'],
         's-dunglai': ['Không phải chứng minh người kia xấu mới được rời đi', 'lúc rời đi có thể nguy hiểm hơn'],
@@ -1317,7 +1332,9 @@ def phan_G():
     rep = chu(muc('s-giakienthuc'))
     claim('36% là tiêu chí thống kê, không phải chứng minh hiệu ứng không tồn tại',
           'ngưỡng ý nghĩa thống kê' in rep and 'Không đạt ngưỡng chưa chứng minh hiệu ứng không tồn tại' in rep)
-    row = re.search(r'<tr><td class="hc-num">59</td><td>(.*?)</td>', muc('s-tomtat'), re.S)
+    # Tìm theo mục đích, không theo số dòng: thêm một mục ở phần trước thì số dòng đổi.
+    row = re.search(r'<tr><td class="hc-num">\d+</td><td>((?:(?!</td>).)*)</td><td><a class="hc-x" href="#s-thecuoc">',
+                    muc('s-tomtat'), re.S)
     claim('ôn tập tâm kế: giữ điều kiện tự do lựa chọn và giới hạn phép thử',
           bool(row) and all(x in chu(row.group(1)) for x in ['hiểu sai', 'tự do lựa chọn', 'chưa chứng minh']))
     cards = {c['id']: c for c in json.loads(DATA.read_text(encoding='utf-8'))['concepts']}
