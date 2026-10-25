@@ -1043,6 +1043,10 @@ def phan_F2():
         # Bộ Tài chính, báo cáo thị trường trái phiếu riêng lẻ 2023: 50,7% là phần SỐ DOANH NGHIỆP chậm trả làm bất động
         # sản, không phải phần giá trị.
         's-ruiro': [('139 doanh nghiệp', '83.600 tỉ đồng', '50,7% số doanh nghiệp', 'Bộ Tài chính')],
+        # Phân nhóm nợ: trễ quá 90 ngày là nợ nhóm 3 trở lên (nợ xấu). Lịch sử nợ xấu được cung cấp tối đa năm năm kể
+        # từ khi kết thúc, không phụ thuộc số tiền: Ngân hàng Nhà nước trả lời trên Cổng Thông tin điện tử Chính phủ,
+        # 22/9/2026 (qua CafeF). Trang chỉ giữ việc cần làm và bảo kiểm quy định hiện hành (PAGES-015).
+        's-no': [('quá 90 ngày', 'nợ xấu', 'CIC', 'năm năm sau khi đã trả xong', 'vài triệu', 'quy định hiện hành', 400)],
         's-dinhgia': [
             ('Buffett', 'năm 1996'), 'Graham coi đây là ý trung tâm của đầu tư', 'lời của Bạch Khuê',
         ],
