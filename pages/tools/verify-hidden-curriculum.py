@@ -1029,15 +1029,20 @@ def phan_F2():
             ('B khởi điểm 15 triệu', 'tăng 10%'), ('Brynjolfsson', '2025', '15%'), ('Becker', '1962'),
         ],
         # Bằng chứng về chọn mã và giữ lâu (s-cophieu): Barber, Lee, Liu và Odean (2014); Chague, De-Losso và
-        # Giovannetti (2020); SPIVA Year-End 2024; Morningstar Mind the Gap 2026; đỉnh VN-Index 2007, 2022.
+        # Giovannetti (2020) — thị trường hợp đồng tương lai chỉ số; SPIVA Year-End 2024; Morningstar Mind the Gap
+        # 2026; đỉnh VN-Index 2007, 2022.
         's-cophieu': [
-            ('Đài Loan, 1992–2006', '450.000', 'Khoảng 20%', 'chưa tới 1%'), ('Brazil, 2013–2015', 'ít nhất 300 ngày', '97% lỗ'),
+            ('Đài Loan, 1992–2006', '450.000', 'Khoảng 20%', 'chưa tới 1%'),
+            ('Brazil, 2013–2015', 'hợp đồng tương lai', 'ít nhất 300 ngày', '97% lỗ'),
             ('tới cuối 2024, 84%', 'trong 10 năm', 'gần 90% trong 15 năm'),
             ('10 năm tới cuối 2025', '8,7%/năm', '9,9%/năm', 'Morningstar'), ('Jorion và Goetzmann', '1999'),
             ('Nikkei', 'cuối năm 1989', 'hơn 34 năm'),
             ('VN-Index từ đỉnh tháng 3/2007', 'khoảng 80%', 'tháng 2/2009', '11 năm sau', 'đỉnh đầu năm 2022', 'ba năm rưỡi'),
             'Sharpe (1991)',
         ],
+        # Bộ Tài chính, báo cáo thị trường trái phiếu riêng lẻ 2023: 50,7% là phần SỐ DOANH NGHIỆP chậm trả làm bất động
+        # sản, không phải phần giá trị.
+        's-ruiro': [('139 doanh nghiệp', '83.600 tỉ đồng', '50,7% số doanh nghiệp', 'Bộ Tài chính')],
         's-dinhgia': [
             ('Buffett', 'năm 1996'), 'Graham coi đây là ý trung tâm của đầu tư', 'lời của Bạch Khuê',
         ],
