@@ -1132,7 +1132,12 @@ def phan_F2():
             ('hồ sơ Facebook của bốn nam sinh viên', 'Whitchurch, Wilson và Gilbert', '2011'),
             ('bốn nghiên cứu trò chuyện qua mạng', 'Birnbaum và cộng sự', '2018', 400),
         ],
-        's-nhantin': ['Patel, Mahar và Webster (2022) khảo sát 302 sinh viên Mỹ'],
+        # Patel, Mahar và Webster (2022), abstract: liên hệ giữa hài lòng với nhịp nhắn và chất lượng quan hệ mạnh hơn
+        # ở người lo âu gắn bó.
+        's-nhantin': ['Patel, Mahar và Webster (2022) khảo sát 302 sinh viên Mỹ', ('302 sinh viên Mỹ', 'rõ nhất ở người hay lo', 300)],
+        # Overall và McNulty (2017), abstract: phản đối thẳng hại khi người kia không đủ tự tin, an toàn để đáp lại; giao tiếp
+        # hợp tác, công nhận cảm xúc hại khi vấn đề lớn cần đổi. Giữ cả hai điều kiện.
+        's-batdong': [('Overall và McNulty', '2017'), ('chưa đủ vững để đáp lại', 'vấn đề lớn cần đổi', 120)],
         's-henho': [
             'Aron và cộng sự (1997)', 'trong 45 phút', ('Laurenceau và cộng sự', '1998'), 'Bộ Công an, 2025',
         ],
