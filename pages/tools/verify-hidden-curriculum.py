@@ -1003,24 +1003,34 @@ def phan_F2():
     ba = [15 * 1.10 ** min(n - 1, 10) * 1.03 ** max(n - 11, 0) / (20 * 1.03 ** (n - 1)) for n in range(11, 41)]
     claim('từ năm 11, tỉ số lương B/A không đổi', max(ba) - min(ba) < 1e-9, f'{min(ba):.6f}…{max(ba):.6f}')
     du_kien('s-tichluy', 'khoảng cách giữ nguyên', 'giữ nguyên tới cuối', 'theo phần trăm', w=80)
-    # Bốn núm vặn (s-lamgiau): để dành 90 triệu/năm (30% của 25 triệu/tháng), gửi cuối mỗi năm, 10 năm, tiền danh nghĩa.
+    # Bốn núm vặn (s-lamgiau): 25 triệu/tháng tăng 4%/năm như mô hình 7, để dành 30% (90 triệu năm đầu), gửi cuối mỗi
+    # năm, 10 năm, tiền danh nghĩa. Gốc phải cùng tăng như mô hình 7: để thu nhập đứng yên thì phần “thu nhập tăng” gộp cả
+    # phần tăng chung ai cũng có, và thứ tự các núm đổi.
     def von(save, r, g, n=10):
         w, s = 0.0, save
         for _ in range(n):
             w, s = w * (1 + r) + s, s * (1 + g)
         return w
-    goc = von(90, 0.05, 0)
-    num = (('lợi suất 10%', von(90, 0.10, 0)), ('để dành 40%', von(120, 0.05, 0)), ('thu nhập +10%/năm', von(90, 0.05, 0.10)))
+    goc = von(90, 0.05, 0.04)
+    num = (('lợi suất 10%', von(90, 0.10, 0.04)), ('thu nhập +10%/năm', von(90, 0.05, 0.10)), ('để dành 40%', von(120, 0.05, 0.04)))
     need('s-lamgiau: gốc sau 10 năm', f'<td>{vn(goc / 1000, 2)} tỷ</td><td>—</td>', goc)
     for label, w in num:
         need(f's-lamgiau: {label} sau 10 năm', f'<td>{vn(w / 1000, 2)} tỷ</td><td>{round(w - goc)} triệu</td>', w)
-    claim('s-lamgiau: trong mười năm, núm thu nhập mạnh hơn để dành thêm, để dành thêm mạnh hơn lợi suất gấp đôi',
-          num[2][1] > num[1][1] > num[0][1] > goc)
+    claim('s-lamgiau: bảng xếp tăng dần và lợi suất gấp đôi “thêm ít nhất”', goc < num[0][1] < num[1][1] < num[2][1])
     du_kien('s-lamgiau', 'điểm giao = tiền để dành một năm ÷ lợi suất', '90 triệu ÷ 5%', f'{vn(90 / 0.05 / 1000, 1)} tỷ', w=40)
-    # Căn 70 m² × 75 triệu/m² (Savills, quý III/2026) so với thu nhập người lao động thành thị 10,9 triệu/tháng (Cục Thống kê).
-    du_kien('s-lamgiau', 'căn 70 m² bằng bao nhiêu năm thu nhập một người', '70 m²', '75 triệu/m²',
-            f'{vn(70 * 75 / 1000, 2)} tỷ', f'khoảng {round(70 * 75 / (10.9 * 12))} năm', '10,9 triệu/tháng', w=300)
-    claim('s-lamgiau: giá tăng 11,7%/năm so với thu nhập 6,4%/năm là "gần gấp đôi"', 1.7 < 11.7 / 6.4 < 2.0)
+    # VARS IRE (Đại biểu Nhân dân, 9/2025): Hà Nội 2014 tới giữa 2025, thu nhập đầu người 4,11 → 8,3 triệu/tháng, giá chung
+    # cư 25 → 75,5 triệu/m². Hai tỉ lệ năm 6,4% và 11,7% của nguồn tính trên hai khoảng khác nhau, nên trang chỉ dùng bội số.
+    du_kien('s-lamgiau', 'thu nhập gấp mấy', '4,11', '8,3 triệu/tháng', f'gấp {round(8.3 / 4.11)}', w=80)
+    du_kien('s-lamgiau', 'giá căn hộ gấp mấy', '25 lên 75,5 triệu/m²', f'gấp {round(75.5 / 25)}', w=40)
+    # Căn 70 m² × 75 triệu/m² (Savills, quý III/2026); vay 70% trong 25 năm, lãi 13%/năm, trả đều hằng tháng. Thu nhập hộ
+    # Hà Nội ≈ 8,374 triệu/người/tháng (Cục Thống kê, KSMS 2025, qua Znews) × 3,4 người/hộ thành thị.
+    gia = 70 * 75
+    lt = 0.13 / 12
+    tra = gia * 0.7 * lt / (1 - (1 + lt) ** -300)
+    du_kien('s-lamgiau', 'trả góp căn 70 m²', '70 m²', '75 triệu/m²', f'{vn(gia / 1000, 2)} tỷ', 'vay 70% trong 25 năm',
+            'lãi 13%', f'khoảng {round(tra)} triệu/tháng', w=300)
+    du_kien('s-lamgiau', 'thu nhập một hộ Hà Nội', f'khoảng {vn(8.374 * 3.4, 1)} triệu/tháng', '8,374 triệu/người × 3,4 người', w=80)
+    claim('s-lamgiau: tiền trả góp vượt thu nhập cả hộ', tra > 8.374 * 3.4, f'{tra:.1f} so với {8.374 * 3.4:.1f}')
     # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 62 trên 286 ca.
     claim('Van Such: 62 trên 286 ca là 21%', int(100 * 62 / 286) == 21, f'{100 * 62 / 286:.1f}%')
     # Odean (1998), bảng I: tỉ lệ lãi được bán 0,148, tỉ lệ lỗ được bán 0,098 → cao hơn khoảng 50% (luật 10, s-muoihai).
@@ -1230,17 +1240,17 @@ def phan_F2():
         's-quyenluc': [('Burt', '2004', '673 quản lý'), ('Ibarra và cộng sự', '2010')],
         's-tochuc': [('Krackhardt và Hanson', '1993'), ('Chesterton', '1929')],
         's-diavi': [('Henrich và Gil-White', '2001'), ('Cheng và cộng sự', '2013')],
-        # Làm thuê và làm giàu: VARS qua Đại biểu Nhân dân 21/9/2025 (Hà Nội 2014 tới giữa 2025: thu nhập đầu người +6,4%/năm,
-        # giá chung cư +11,7%/năm); VARS IRE qua Znews 25/1/2026 (căn hộ điển hình 20–25 lần thu nhập hộ); Demographia ≤3,
-        # ULI ≤5; lãi thả nổi 11–15% (Nhà Đầu tư, 8/2026). Abstract: Smith và cộng sự (2019) lợi nhuận giảm ba phần tư khi chủ
+        # Làm thuê và làm giàu: VARS IRE qua Đại biểu Nhân dân 21/9/2025 (Hà Nội 2014 tới giữa 2025); VARS IRE qua Znews 25/1/2026 (căn hộ điển hình 20–25 lần thu nhập hộ); Demographia ≤3,
+        # ULI ≤5; lãi sau ưu đãi 13–15% (Nhà Đầu tư, 8/2026); Savills: giá thứ cấp Hà Nội giảm quý thứ ba liên tiếp. Abstract: Smith và cộng sự (2019) lợi nhuận giảm ba phần tư khi chủ
         # nghỉ hưu hay mất; Hamilton (2000) trung vị kém 35% sau 10 năm; Raffiee và Feng (2014) nguy cơ rời bỏ thấp hơn 33,3%
         # (con số qua trích dẫn nguyên văn tác giả); Azoulay và cộng sự (2020) 45,0 tuổi, tới 125%.
         's-lamgiau': [
-            ('6,4%/năm', '11,7%/năm', 'VARS', '2025'), ('20–25 lần', 'VARS IRE', '2025'), ('3–5 lần', 'Demographia', 'ULI'),
-            ('Savills', 'quý III/2026'), ('11–15%', 'năm 2026'), ('ba phần tư', 'Smith, Yagan, Zidar và Zwick', '2019'),
+            ('gấp 3', 'VARS IRE', '9/2025'), ('20–25 lần', 'VARS IRE', '1/2026'), ('3–5 lần', 'Demographia', 'ULI'),
+            ('Savills', 'quý III/2026'), ('13–15%', 'năm 2026'), ('giảm ba quý liên tiếp', 'Savills'),
+            ('Levine và Rubinstein', '2017'), ('ba phần tư', 'Smith, Yagan, Zidar và Zwick', '2019'),
             ('35%', 'Hamilton', '2000'), ('Hurst và Pugsley', '2011'), ('một phần ba', 'Raffiee và Feng', '2014'),
             ('45 tuổi', '125%', 'Azoulay và cộng sự', '2020'), ('Rosen', '1981'), ('Stutzer', '2004'),
-            ('Bertrand và Morse', '2016'), ('Maggiulli', '2017'), 'Paul Graham (2004)',
+            ('Maggiulli', '2017'), 'Paul Graham (2004)',
         ],
         's-hoaquyen': [('Phân tích gộp 813 mẫu', 'Sabey và cộng sự', '2025'), ('Galinsky và cộng sự', '2006'),
                        ('20 trường', '2016')],
@@ -1325,7 +1335,7 @@ def phan_G():
         's-dunglai': ['Không phải chứng minh người kia xấu mới được rời đi', 'lúc rời đi có thể nguy hiểm hơn'],
         's-honnhan': ['đừng dựa vào một dấu hiệu'],
         's-lamgiau': ['đừng săn lợi suất cao', 'đo được riêng', 'chủ ở mức giữa kiếm ít hơn người làm công',
-                      'thử làm chủ khi vẫn giữ lương', 'không giải được bằng một người tiết kiệm thêm', 'chốt phần để dành trước'],
+                      'thử làm chủ khi vẫn giữ lương', 'không giải được bằng một người tiết kiệm thêm'],
     }
     for sid, phrases in essential.items():
         visible = ' '.join(' '.join(compact.sections.get(sid, [])).split())
