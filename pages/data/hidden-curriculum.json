@@ -2081,7 +2081,8 @@
     "s-quyenluc",
     "s-tochuc",
     "s-thecuoc",
-    "s-docnguoi"
+    "s-docnguoi",
+    "s-noi"
    ],
    "action": "Vẽ ai quyết, ai giữ nguồn lực; tách việc đã thấy khỏi suy đoán và chọn cách kiểm không buộc tội."
   }

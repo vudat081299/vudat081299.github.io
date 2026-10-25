@@ -1056,6 +1056,18 @@ def phan_F2():
             # Gallup, State of the American Manager (2015); ô số ≥ 70% ở đầu trang trỏ về câu này.
             ('Gallup', 'ít nhất 70% chênh lệch mức gắn bó'),
         ],
+        # Chuyện phiếm (s-noi), abstract trên PubMed/Crossref, 10/2026: Mastroianni và cộng sự (2021) — 932 cuộc trò
+        # chuyện; Montoya, Horton và Kirchner (2008) — 313 nghiên cứu, 460 hệ số; Methot và cộng sự (2021) — ba tuần lấy
+        # mẫu kinh nghiệm; Robbins và Karan (2020) — N = 467 (abstract), 52 phút/ngày và gần ba phần tư trung tính
+        # (thông cáo của UC Riverside, 3/5/2019).
+        's-noi': [
+            ('Malinowski (1923)', 'giao cảm ngôn từ'), ('Huang và cộng sự, 2017', 'hỏi tiếp từ điều vừa nghe'),
+            ('ba tuần', 'khó tập trung', 'Methot và cộng sự, 2021'), ('Epley và Schroeder, 2014', 'tàu xe'),
+            ('Sprecher và cộng sự, 2013', 'Sprecher và Treger, 2015'), ('313 nghiên cứu', 'Montoya, Horton và Kirchner, 2008'),
+            ('Kluger và Malloy, 2019', 'hỏi nhiều chưa phải là biết nghe'),
+            ('932 cuộc trò chuyện', 'cả hai cùng muốn', 'đoán kém', 'Mastroianni và cộng sự, 2021'),
+            ('467 người', '52 phút mỗi ngày', 'ba phần tư', 'Robbins và Karan, 2020'), ('Skowronski và cộng sự, 1998', 'vô lý'),
+        ],
         # Bohns (2016): hơn 14.000 người lạ được nhờ, người nhờ đoán thấp mức nhận lời trung bình 48%.
         's-chudong': [('hơn 14.000 người lạ', 'trung bình 48%', 'Bohns, 2016')],
         # Curhan và cộng sự (2022): quãng im từ 3 giây, không giành phần lớn hơn; khi địa vị chênh rõ, chỉ quãng im
@@ -1222,6 +1234,8 @@ def phan_G():
         's-chutin': ['hai bên còn coi trọng tương lai', 'Giao dịch lớn vẫn cần bảo đảm'],
         's-thecuoc': ['họ sẽ phản đối nếu biết, là thao túng', 'ép công khai vẫn là ép', 'khi còn gặp lại và chuyện lan được'],
         's-thuongluong': ['phương án tốt nhất ấy là BATNA', 'không dùng làm lời đe doạ'],
+        's-noi': ['không để trao tin', 'hỏi tiếp từ chi tiết người kia tự kể thêm', 'kết bằng một câu rõ ràng',
+                  'đoán kém lúc người kia muốn dừng', 'Đừng mở bằng lương'],
         's-memcung': ['chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
         's-ranhgioi': ['Từ chối bằng một nguyên tắc chung', 'vừa bị giục vừa được chiều chuộng'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
@@ -1316,8 +1330,24 @@ def phan_G():
     claim('6.2: bảng câu cho những lần nói khó có 7–9 dòng, mỗi dòng ba ô',
           7 <= len(rows) <= 9 and all(r.count('<td>') == 3 for r in rows), f'{len(rows)} dòng')
     claim('6.2: bằng chứng của bảng câu nói khó còn dẫn nguồn',
-          all(x in chu(muc('s-imlang')) for x in ['Zhao và Epley, 2021', 'Kardas, Kumar và Epley, 2022',
-                                                  'Lewicki và cộng sự, 2016']))
+          all(x in chu(muc('s-imlang')) for x in ['Zhao và Epley, 2021', 'Lewicki và cộng sự, 2016']))
+    # Chuyện phiếm (6.1): bảng kỹ thuật ba cột Làm / Vì sao / Giới hạn, mỗi dòng ba ô; câu mẫu theo bối cảnh có
+    # câu hỏi tiếp từ điều người kia vừa đáp (dấu →).
+    noi = muc('s-noi')
+    kt = re.search(r'<th>Làm</th><th>Vì sao</th><th>Giới hạn</th></tr></thead>\s*<tbody>(.*?)</tbody>', noi, flags=re.S)
+    rows = re.findall(r'<tr>(.*?)</tr>', kt.group(1), flags=re.S) if kt else []
+    claim('6.1: bảng kỹ thuật chuyện phiếm có 5–8 dòng, mỗi dòng ba ô',
+          5 <= len(rows) <= 8 and all(r.count('<td>') == 3 for r in rows), f'{len(rows)} dòng')
+    cm = re.search(r'<th>Bối cảnh</th><th>Câu mở</th><th>[^<]*</th></tr></thead>\s*<tbody>(.*?)</tbody>', noi, flags=re.S)
+    rows = re.findall(r'<tr>(.*?)</tr>', cm.group(1), flags=re.S) if cm else []
+    claim('6.1: câu mẫu chuyện phiếm có ít nhất ba bối cảnh, mỗi dòng có câu hỏi tiếp',
+          len(rows) >= 3 and all('→' in r for r in rows), f'{len(rows)} dòng')
+    # Montoya, Horton và Kirchner (2008): trong quan hệ đã có, điểm giống thật không còn đáng kể, chỉ điểm giống cảm
+    # nhận được — đừng đảo chiều. Mastroianni và cộng sự (2021): người ta đoán KÉM lúc người kia muốn dừng.
+    tn = chu(noi)
+    claim('6.1: Montoya giữ đúng chiều: đã quen thì chỉ điểm giống cảm nhận được còn đi cùng thiện cảm',
+          'chỉ điểm giống cảm nhận được' in tn and 'giống thật đi cùng thiện cảm' in tn)
+    claim('6.1: Kardas, Kumar và Epley (2022) dẫn ở mục chuyện phiếm', 'Kardas, Kumar và Epley, 2022' in tn)
     wage = chu(muc('s-moitruong'))
     claim('đổi việc: mức tăng lương là trung vị, không phải tác dụng riêng của chuyển chỗ',
           'trung vị' in wage and 'không đo tác dụng riêng' in wage)
