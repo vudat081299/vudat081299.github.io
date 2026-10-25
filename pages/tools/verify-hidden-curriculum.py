@@ -1046,7 +1046,7 @@ def phan_F2():
         # Phân nhóm nợ: trễ quá 90 ngày là nợ nhóm 3 trở lên (nợ xấu). Lịch sử nợ xấu được cung cấp tối đa năm năm kể
         # từ khi kết thúc, không phụ thuộc số tiền: Ngân hàng Nhà nước trả lời trên Cổng Thông tin điện tử Chính phủ,
         # 22/9/2026 (qua CafeF). Trang chỉ giữ việc cần làm và bảo kiểm quy định hiện hành (PAGES-015).
-        's-no': [('quá 90 ngày', 'nợ xấu', 'CIC', 'năm năm sau khi đã trả xong', 'vài triệu', 'quy định hiện hành', 400)],
+        's-no': [('quá 90 ngày', 'nợ xấu', 'CIC', 'năm năm sau khi đã trả xong', 'vài triệu', 'nợ cần chú ý, giữ một năm', 'quy định hiện hành', 500)],
         's-dinhgia': [
             ('Buffett', 'năm 1996'), 'Graham coi đây là ý trung tâm của đầu tư', 'lời của Bạch Khuê',
         ],
@@ -1148,14 +1148,16 @@ def phan_F2():
         # Ngỏ lời (s-ngoloi), abstract từng bài: Abbey (1982) cuộc trò chuyện 5 phút; Farris và cộng sự (2008) nam không có
         # ngưỡng dễ dãi hơn mà phân biệt kém hơn, nhầm cả hai chiều; Perilloux, Easton và Buss (2012) N = 199; Kitzinger và
         # Frith (1999); Baumeister, Wotman và Stillwell (1993) người bị từ chối tin lời từ chối chưa từng dứt khoát; Joel,
-        # Teper và MacDonald (2014); Bohns và DeVincent (2019) N = 942 và 385; SHRM (2023) 632 người, 27%, 75%, 18%.
+        # Teper và MacDonald (2014); Bohns và DeVincent (2019) N = 942 và 385; SHRM (2023) 632 người, 27%, 75% thấy ổn, 25% sẵn lòng, 18%.
+        # Abbey, Zawacki và McAuslan (2000), abstract: 88 cặp, 15 phút, người say phóng đại tín hiệu rõ.
         's-ngoloi': [
             ('5 phút', 'Abbey', '1982'), ('Farris và cộng sự', '2008', 'phân biệt kém hơn'),
             ('199 người', 'Perilloux, Easton và Buss', '2012'), ('Kitzinger và Frith', '1999'),
             ('chưa bao giờ được nói dứt khoát', 'Baumeister, Wotman và Stillwell', '1993'),
             ('Joel, Teper và MacDonald', '2014'),
             ('942 nghiên cứu sinh', '385 người', 'Bohns và DeVincent', '2019'),
-            ('632 người đi làm ở Mỹ', '27%', '75%', '18%', 'SHRM', '2023', 300),
+            ('632 người đi làm ở Mỹ', '27%', '75% thấy ổn', '25%', '18%', 'SHRM', '2023', 300),
+            ('88 cặp', '15 phút', 'Abbey, Zawacki và McAuslan', '2000'),
             'Đây là xu hướng trung bình ở sinh viên Mỹ, đo ý muốn tình dục chứ không phải tình cảm',
         ],
         's-quanhe': [
