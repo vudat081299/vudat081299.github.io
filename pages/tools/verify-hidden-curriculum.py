@@ -1150,8 +1150,11 @@ def phan_F2():
         ],
         's-mauthuan': [('Tetlock', '2005'), ('Atanasov và cộng sự', '2020'), '執中無權，猶執一也'],
         # Lừa đảo: mồi rút tiền vài lần đầu rồi chặn rút là dấu hiệu chung của các kịch bản, không riêng một năm.
+        # Lừa lần hai: cảnh báo của Công an tỉnh Bắc Giang (LSVN, 23/4/2025) — mạo danh công an, công ty luật nhận
+        # “lấy lại tiền bị lừa”, nhắm người đã là nạn nhân, đòi chuyển tiền “hoàn thiện hồ sơ”; khuyên trình báo trực tiếp.
         's-luadao': [
             ('Cho rút vài lần đầu', 'nạp thêm để mở khoá', 60),
+            ('lấy lại tiền bị lừa', 'vừa mất tiền', 'Công an tỉnh Bắc Giang, 2025', 260),
         ],
         # Luật 12: Krogsbøll, Jørgensen và Gøtzsche (Cochrane, 2019) — khám tổng quát ở người lớn khoẻ hầu như không
         # giảm tử vong. Odean (1998) bảng I: PGR 0,148, PLR 0,098.
