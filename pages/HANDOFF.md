@@ -25,6 +25,8 @@
 
 ## NỢ
 
+- `experimentation-causal-inference.html`: popup thuật ngữ, ngăn mục lục, bản in từ theme tối và câu tự sinh của
+  sáu mô hình chỉ đo được trong trình duyệt (cổng chỉ ghim dòng điều kiện); đáng có smoke như `shop/tools/smoke.js`.
 - `machine-learning.html`: 608 thuật ngữ gạch chân là 608 điểm dừng Tab (hơn nửa số điểm dừng của trang).
 - `machine-learning-101.html`: chưa có smoke test trình duyệt (mẫu `tools/smoke-index.js`) giữ các bản sửa UI — thang m6 không
   cắt nhãn, nhãn m11 không chồng, chữ nút m2/m5/m9 và Dừng của m9 không đi thêm bước, `aria-pressed` khớp `.on`, phím

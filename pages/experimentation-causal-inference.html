@@ -151,6 +151,8 @@ html.dark .ic-moon { display:none; }
 .toc a { display:block; text-decoration:none; color:var(--muted); padding:4px 9px; border-radius:var(--radius-sm); line-height:1.45; border-left:2px solid transparent; }
 .toc a:hover { color:var(--ink); background:var(--surface-2); }
 .toc a.on { color:var(--ink); font-weight:640; border-left-color:var(--ink); background:var(--surface-2); }
+/* Tab tới link sát mép dưới ngăn: chừa chỗ cho viền focus, kẻo mép khung cuộn cắt mất */
+.toc a { scroll-margin:8px 0; }
 @media (max-width:1040px) {
   .toc {
     position:fixed; inset:52px auto 0 0; width:290px; background:var(--surface); z-index:39;
@@ -298,6 +300,8 @@ td code { font-size:12px; }
 td b { font-weight:660; }
 tbody + tbody { border-top:1px solid var(--border); }
 tr.grp th { white-space:normal; color:var(--ink); }
+/* th trải cả bảng (rộng hơn khung cuộn ở 320–390px): chữ dính mép trái khung và xuống dòng trong bề rộng nhìn thấy */
+tr.grp th > span { position:sticky; left:13px; display:inline-block; max-width:calc(100vw - 72px); }
 
 /* ── lưới thẻ ────────────────────────────────────────────────────────────── */
 .grid2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:16px 0; }
@@ -426,9 +430,12 @@ footer a { color:var(--muted); }
 .totop {
   position:fixed; right:18px; bottom:18px; z-index:30; width:38px; height:38px; border-radius:50%;
   border:1px solid var(--border-2); background:var(--surface); color:var(--ink); cursor:pointer;
-  display:grid; place-items:center; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:opacity .16s;
+  display:grid; place-items:center; box-shadow:var(--shadow); opacity:0; pointer-events:none;
+  visibility:hidden; transition:opacity .16s, visibility 0s linear .16s;
 }
-.totop.on { opacity:1; pointer-events:auto; }
+/* opacity 0 vẫn nhận Tab; visibility:hidden thì không */
+.totop.on { opacity:1; pointer-events:auto; visibility:visible; transition:opacity .16s; }
+.hero h1:focus { outline:none; }
 .totop svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 
 /* ── thuật ngữ bấm được: gạch chân chấm, bấm ra popup song ngữ ───────────── */
@@ -495,7 +502,25 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 .gl-tw td a { font-family:var(--mono); font-size:11px; color:var(--a); text-decoration:none; white-space:nowrap; }
 @media (max-width:640px) { .gl-tw td:first-child, .gl-tw td:nth-child(2) { white-space:normal; } }
 
-@media print { .bar, .toc, .totop, .prog, .scrim, .pop { display:none !important; } .layout { grid-template-columns:1fr; } .term { border-bottom:0; } }
+@media print {
+  .bar, .toc, .totop, .prog, .scrim, .pop, .btn, .gl-bar { display:none !important; }
+  .layout { grid-template-columns:1fr; } .term { border-bottom:0; }
+  /* giấy trắng: in từ theme tối vẫn dùng bộ màu sáng. Hình vẽ bằng JS được vẽ lại ở beforeprint. */
+  html.dark {
+    --k:#3f4654; --k-bg:#f2f3f7; --k-line:#dfe1e8;
+    --canvas:#fbfbf9; --surface:#ffffff; --surface-2:#f4f4f1; --sunk:#f7f7f4;
+    --ink:#15171c; --muted:#575d6b; --subtle:#646b7d; --border:#e5e4de; --border-2:#d6d5cd;
+    --a:#3450c8; --a-bg:#eceffc; --a-line:#c3cdf3;
+    --c:#a2560b; --c-bg:#fbf1e4; --c-line:#eed4ac;
+    --p:#0d6b60; --p-bg:#e6f3f0; --p-line:#b3ddd5;
+    --bad:#b02a20; --bad-bg:#fcedeb; --bad-line:#f2c9c3;
+    --good:#1c6b3a; --good-bg:#e9f4ec; --good-line:#bcdec7;
+  }
+  /* trình duyệt bỏ nền khi in: chip đang chọn (chữ màu nền trên nền mực) thành chữ trắng trên giấy trắng */
+  .chip.on { background:none; color:var(--ink); border:2px solid var(--ink); }
+  /* ô màu của chú giải chỉ là nền: giữ nền khi in, kẻo chú giải mất ký hiệu */
+  .lgd i { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
 /* ── chặng nào thì màu nào ────────────────────────────────────────────────────
    Đặt class này lên <section> của chặng (hoặc lên thẻ chặng ở đầu trang) là xong:
    mọi thứ bên trong tự đổi màu vì chúng chỉ đọc var(--k). */
@@ -3950,6 +3975,30 @@ function css(name, node) {
     setTimeout(function () { redraws.forEach(function (f) { try { f(); } catch (e) {} }); }, 30);
   });
 
+  /* In: hình vẽ bằng JS đã nướng màu theme vào thuộc tính style, nên in từ theme tối phải bỏ class dark
+     và vẽ lại; mở mọi <details> để lời giải lên giấy. afterprint trả lại đúng trạng thái cũ.
+     matchMedia('print') phủ cả trường hợp trình duyệt không bắn beforeprint. */
+  var printing = false, wasDark = false, closed = [];
+  function redrawAll() { redraws.forEach(function (f) { try { f(); } catch (e) {} }); }
+  function beforePrint() {
+    if (printing) return; printing = true;
+    wasDark = root.classList.contains('dark');
+    if (wasDark) { root.classList.remove('dark'); redrawAll(); }
+    closed = Array.prototype.filter.call(document.querySelectorAll('details'), function (d) { return !d.open; });
+    closed.forEach(function (d) { d.open = true; });
+  }
+  function afterPrint() {
+    if (!printing) return; printing = false;
+    closed.forEach(function (d) { d.open = false; }); closed = [];
+    if (wasDark) { root.classList.add('dark'); redrawAll(); }
+  }
+  window.addEventListener('beforeprint', beforePrint);
+  window.addEventListener('afterprint', afterPrint);
+  if (window.matchMedia) {
+    var mqp = matchMedia('print'), onMq = function (e) { if (e.matches) beforePrint(); else afterPrint(); };
+    if (mqp.addEventListener) mqp.addEventListener('change', onMq); else if (mqp.addListener) mqp.addListener(onMq);
+  }
+
   /* thanh tiến độ đọc */
   var prog = $('prog'), tt = $('toTop');
   function onScroll() {
@@ -3957,7 +4006,14 @@ function css(name, node) {
     prog.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
     tt.classList.toggle('on', window.scrollY > 700);
   }
-  tt.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  tt.addEventListener('click', function () {
+    /* behavior trong JS thắng scroll-behavior của CSS, nên phải tự hỏi prefers-reduced-motion */
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    /* nút tự ẩn ở đầu trang: chuyển tiêu điểm lên tiêu đề, kẻo nó rơi về <body> */
+    var h1 = document.querySelector('.hero h1');
+    if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus({ preventScroll: true }); }
+  });
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
   onScroll();
@@ -3970,17 +4026,16 @@ function css(name, node) {
   function syncInert() {
     var narrow = window.innerWidth <= 1040, open = toc.classList.contains('open');
     toc.inert = narrow && !open;
-    if (col) col.inert = narrow && open;
-    if (hero) hero.inert = narrow && open;
+    behind.forEach(function (n) { n.inert = narrow && open; });
   }
-  var col = document.querySelector('.col'), hero = document.querySelector('.hero');
+  /* mọi thứ nằm dưới lớp che: Tab qua link cuối của ngăn không được rơi xuống footer hay nút lên đầu trang */
+  var behind = ['.hero', '.col', 'body > footer', '#toTop'].map(function (q) { return document.querySelector(q); }).filter(Boolean);
   function setToc(open) {
     toc.classList.toggle('open', open);
     scrim.classList.toggle('on', open);
     if (tb) tb.setAttribute('aria-expanded', open ? 'true' : 'false');
     /* Có scrim che nhưng scrim không chặn bàn phím: mở ngăn rồi Tab quá link cuối
-       là rơi vào một .term nằm DƯỚI lớp che. inert phần nội dung khi ngăn đang mở. */
-    if (col) col.inert = open && window.innerWidth <= 1040;
+       là rơi vào thứ nằm DƯỚI lớp che. syncInert gỡ chúng khỏi tab order khi ngăn đang mở. */
     syncInert();
     /* đưa tiêu điểm vào ngăn, kẻo Tab đi qua thanh trên rồi mới tới mục lục */
     if (open && window.innerWidth <= 1040) { var a1 = toc.querySelector('a'); if (a1) a1.focus({ preventScroll: true }); }
@@ -6712,13 +6767,18 @@ var GLOSS = [
   function place(fromScroll) {
     if (!anchor) return;
     var r = anchor.getBoundingClientRect();
-    /* tiêu điểm đang trong popup (mở bằng bàn phím) thì không đóng khi thuật ngữ cuộn khỏi màn hình */
-    if (fromScroll && (r.bottom < 0 || r.top > window.innerHeight) && !pop.contains(document.activeElement)) { hide(); return; }
+    if (fromScroll && (r.bottom < 0 || r.top > window.innerHeight)) {
+      /* thuật ngữ đã cuộn khỏi màn hình. Tiêu điểm ở trong popup (mở bằng bàn phím) thì giữ popup đứng yên
+         tại chỗ, không trôi theo thuật ngữ ra ngoài khung nhìn; còn không thì đóng. */
+      if (!pop.contains(document.activeElement)) hide();
+      return;
+    }
     if (window.innerWidth <= 620) { pop.style.top = ''; pop.style.left = ''; return; }
     var w = pop.offsetWidth, h = pop.offsetHeight, gap = 9;
     var left = Math.min(Math.max(10, r.left - 12), window.innerWidth - w - 10);
     var top = r.bottom + gap;
     if (top + h > window.innerHeight - 10) top = Math.max(60, r.top - h - gap);
+    top = Math.max(60, Math.min(top, window.innerHeight - h - 10));
     pop.style.left = left + 'px';
     pop.style.top = top + 'px';
   }
@@ -6743,8 +6803,20 @@ var GLOSS = [
     pop.classList.remove('on');
     if (a) a.classList.remove('is-open');
     anchor = null;
-    if (inside && back === true && a) a.focus({ preventScroll: true });
+    if (inside && back === true && a) {
+      /* thuật ngữ có thể đã cuộn khỏi màn hình trong lúc đọc popup: đưa nó về giữa khung nhìn trước khi trả tiêu điểm */
+      var r = a.getBoundingClientRect();
+      if (r.top < 60 || r.bottom > window.innerHeight) a.scrollIntoView({ block: 'center', behavior: 'instant' });
+      a.focus({ preventScroll: true });
+    }
   }
+  /* popup gắn ở cuối <body>: Tab ra khỏi nó sẽ đi tới cuối tài liệu rồi vòng lên thanh trên. Tab qua phần tử
+     cuối, hoặc Shift+Tab từ đầu, thì đóng popup và trả tiêu điểm về thuật ngữ — Tab kế tiếp đi tiếp trong bài. */
+  pop.addEventListener('keydown', function (e) {
+    if (e.key !== 'Tab') return;
+    var x = pop.querySelector('.pop__x'), last = pGo.style.display === 'none' ? x : pGo, ae = document.activeElement;
+    if ((!e.shiftKey && ae === last) || (e.shiftKey && (ae === pop || ae === x))) { e.preventDefault(); hide(true); }
+  });
   pop.querySelector('.pop__x').addEventListener('click', function () { hide(true); });
   pGo.addEventListener('click', function () { hide(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && anchor) hide(true); });
@@ -6846,9 +6918,16 @@ var GLOSS = [
     });
     sorted.forEach(function (g) {
       var tr = document.createElement('tr');
-      tr.innerHTML = '<td>' + g[0] + '</td><td>' + g[1] + '</td><td>' + g[2] + '</td>' +
-        '<td>' + (g[3] ? '<a href="' + g[3] + '">' + g[3] + '</a>' : '') + '</td>';
-      tr.setAttribute('data-s', (g[0] + ' ' + g[1] + ' ' + g[2]).toLowerCase());
+      tr.innerHTML = '<td>' + g[0] + '</td><td>' + g[1] + '</td><td>' + g[2] + '</td><td></td>';
+      if (g[3]) {
+        /* chữ link là số và tên mục đích ("2.3 · Cỡ mẫu"), không phải mã anchor "#s-power" */
+        var tg = document.querySelector(g[3]), sh = tg ? tg.querySelector('.sechead') : null, a2 = document.createElement('a');
+        a2.href = g[3];
+        a2.textContent = sh ? sh.textContent.replace(/\s+/g, ' ').trim() : secName(g[3]);
+        tr.children[3].appendChild(a2);
+      }
+      /* lọc theo chữ ĐÃ HIỆN (không còn thẻ <b>, &lt;, &ldquo;) của ba cột đầu */
+      tr.setAttribute('data-s', [0, 1, 2].map(function (k) { return tr.children[k].textContent; }).join(' ').toLowerCase());
       body.appendChild(tr);
     });
     var rows = Array.prototype.slice.call(body.children), q = $('gl-q'), cnt = $('gl-n');

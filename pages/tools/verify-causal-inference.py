@@ -3070,7 +3070,8 @@ def run_ref():
     xếp hạng theo độ "rẻ" của giả định; định nghĩa p-value có vế "hoặc lớn hơn"; ô D không chồng
     trường hợp gương. Cộng: nhánh điều kiện của câu tự sinh và nhãn ở m-simpson, m-uplift, m-power,
     m-srm, m-cluster, m-synth — ghim nguyên dòng điều kiện, và kiểm bằng Python điều câu nói ở mọi
-    trạng thái rơi vào nhánh ấy. Cổng không chạy JS; hành vi trong trình duyệt cần smoke riêng.
+    trạng thái rơi vào nhánh ấy. Cộng: bản in ép bộ màu sáng (so token với :root), lên đầu trang
+    tôn trọng giảm chuyển động. Cổng không chạy JS; hành vi trong trình duyệt cần smoke riêng.
     """
     import re as _re
 
@@ -3311,6 +3312,23 @@ def run_ref():
     pin('ref · cluster JS: vẽ tối đa min(12, số cửa hàng) cột', 'cluster', 'var Sd = Math.min(S, nK), L = 14, R = 330, T = 34, B = 222, cw = (R - L) / Sd;')
     pin('ref · cluster JS: vòng vẽ theo Sd', 'cluster', 'for (i = 0; i < Sd; i++) {')
     pin('ref · cluster JS: nhãn "X trong K" chỉ khi X < K', 'cluster', "(Sd < nK ? Sd + ' trong ' + nK : 'cả ' + nK) + ' cửa hàng")
+    # in: @media print ép html.dark về đúng bộ màu sáng của :root — đổi một token sáng mà quên bản in thì đỏ
+    def _tokens(css):
+        return dict(_re.findall(r'(--[a-z0-9-]+):\s*(#[0-9a-fA-F]{3,8})', css))
+    root_m = _re.search(r':root \{(.*?)\n\}', HTML, _re.S)
+    pr_m = _re.search(r'@media print \{.*?html\.dark \{(.*?)\}', HTML, _re.S)
+    light, printed = _tokens(root_m.group(1)) if root_m else {}, _tokens(pr_m.group(1)) if pr_m else {}
+    dk_m = _re.search(r'\nhtml\.dark \{(.*?)\n\}', HTML, _re.S)
+    dark_names = set(_tokens(dk_m.group(1))) if dk_m else set()
+    claim('ref · in: html.dark trong @media print đặt lại mọi token màu của theme tối', bool(dark_names) and dark_names <= set(printed),
+          f'thiếu {sorted(dark_names - set(printed))[:6]}')
+    claim('ref · in: token in = token sáng của :root', bool(printed) and all(light.get(k) == v for k, v in printed.items()),
+          ', '.join(f'{k} {v}≠{light.get(k)}' for k, v in printed.items() if light.get(k) != v)[:200])
+    claim('ref · in: vẽ lại hình và mở <details> trước khi in',
+          "window.addEventListener('beforeprint', beforePrint);" in HTML and "if (wasDark) { root.classList.remove('dark'); redrawAll(); }" in HTML)
+    # lên đầu trang: behavior trong JS thắng scroll-behavior của CSS, nên phải tự hỏi prefers-reduced-motion
+    claim('ref · lên đầu trang tôn trọng giảm chuyển động', "window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });" in HTML
+          and "behavior: 'smooth' }" not in HTML.replace("behavior: reduce ? 'auto' : 'smooth' }", ''))
     # m-synth: tổng bốn thanh bằng 0 thì thanh cũng về đúng trọng số chia đều
     claim('ref · synth JS: tổng 0 → chia đều và đẩy thanh theo (trong fromSliders)',
           _re.search(r'function fromSliders\(\) \{(?:(?!function toSliders).)*?w = \[0\.25, 0\.25, 0\.25, 0\.25\]; toSliders\(\);\s*\}\s*function toSliders',
