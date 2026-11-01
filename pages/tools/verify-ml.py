@@ -416,6 +416,17 @@ def run_ml_models():
         claim(f'M4: thanh {sid} đủ rộng cho nghiệm GD (|w₂| ≈ 3,7)', r is not None and float(r.group(2)) >= 4,
               'nghiệm GD bị kẹp vào biên thanh trượt')
     need('M4: nhân đôi cả w và b', 'nhân đôi cả w₁, w₂ <b>và b</b>')
+    # kết quả GD được kẹp vào ĐÚNG biên của thanh trượt, không hẹp hơn (kẹp hẹp hơn = nghiệm bị cắt mà thanh vẫn rộng)
+    for sid, var in (('m4-w1', 'w1'), ('m4-w2', 'w2'), ('m4-b', 'b')):
+        r = re.search(r'id="%s" min="(-?[\d.]+)" max="(-?[\d.]+)"' % sid, HTML)
+        k = re.search(r"\$\('%s'\)\.value = Math\.max\((-?[\d.]+), Math\.min\((-?[\d.]+), %s\)\)" % (sid, var), m4)
+        claim(f'M4: kẹp {var} đúng bằng biên thanh {sid}', r is not None and k is not None
+              and float(k.group(1)) == float(r.group(1)) and float(k.group(2)) == float(r.group(2)),
+              f'thanh {r.groups() if r else None}, kẹp {k.groups() if k else None}')
+    # M11: mọi khoá khớp như nhau (truy vấn rỗng) thì không có "lấy nhiều nhất từ …"
+    m11 = js('M11', 'Mô hình 11 —', 'Mô hình 12 —')
+    claim('M11: nhánh trọng số chia đều đứng trước nhánh "lấy nhiều nhất"',
+          0 <= m11.find('(Math.max.apply(null, w) - Math.min.apply(null, w) < 1e-6') < m11.find("'lấy nhiều nhất từ \"'"))
 
     # ── M5: dựng lại ĐÚNG mô hình của trang (dữ liệu, cơ sở Chebyshev, phạt λ) rồi chạy
     #    điều kiện chẩn đoán bóc từ JS — lời văn và nhãn phải khớp con số mô hình thật sự sinh ra ──
