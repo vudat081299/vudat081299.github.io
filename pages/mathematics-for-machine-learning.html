@@ -52,7 +52,8 @@
   --math:"Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
   --measure:70ch;
 }
-html.dark {
+/* chỉ trên màn hình: bản in luôn dùng bộ màu sáng, kể cả khi đang ở theme tối */
+@media screen { html.dark {
   --k:#9aa3b4; --k-bg:#1b1f27; --k-line:#333a46;
   --canvas:#0f1115; --surface:#171a20; --surface-2:#1e222a; --sunk:#12151a;
   --ink:#e7e9ee; --muted:#a0a7b5; --subtle:#868d9c; --border:#282d36; --border-2:#3a404b;
@@ -62,7 +63,7 @@ html.dark {
   --bad:#f08b7f; --bad-bg:#331a17; --bad-line:#61302a;
   --good:#77c894; --good-bg:#152a1d; --good-line:#2b5439;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -10px rgba(0,0,0,.6);
-}
+} }
 
 * { box-sizing:border-box; }
 html { scroll-behavior:smooth; }
@@ -490,6 +491,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
   .pop { left:9px !important; right:9px; bottom:9px; top:auto !important; width:auto; max-height:62vh; overflow-y:auto; }
   /* nới vùng chạm cho hai nút nhỏ nhất của trang (phải đặt ở đây, sau định nghĩa gốc) */
   .pop__x { width:40px; height:40px; top:3px; right:3px; }
+  /* popup ở đây là khung cuộn: viền focus lệch 2px ra ngoài nút sẽ bị mép khung cắt mất 1px */
+  .pop__x:focus-visible { outline-offset:0; }
   .pop__en { padding-right:44px; }
   .totop { width:44px; height:44px; right:14px; bottom:14px; }
   footer .in a { display:inline-flex; align-items:center; min-height:40px; }
@@ -512,7 +515,14 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 .gl-tw td a { font-size:13px; color:var(--a); text-decoration:none; }
 @media (max-width:640px) { .gl-tw td:first-child, .gl-tw td:nth-child(2) { white-space:normal; } }
 
-@media print { .bar, .toc, .totop, .prog, .scrim, .pop { display:none !important; } .layout { grid-template-columns:1fr; } .term { border-bottom:0; } }
+@media print {
+  .bar, .toc, .totop, .prog, .scrim, .pop, .tabs { display:none !important; }
+  .layout { grid-template-columns:1fr; }
+  .term { border-bottom:0; }
+  /* bốn bảng tra cứu đều lên giấy, mỗi bảng một tiêu đề lấy từ tên tab */
+  [data-panel][hidden] { display:block !important; }
+  [data-panel]::before { content:attr(data-name); display:block; font-weight:700; margin:16px 0 6px; }
+}
 /* ── chặng nào thì màu nào ────────────────────────────────────────────────────
    Đặt class này lên <section> của chặng (hoặc lên thẻ chặng ở đầu trang) là xong:
    mọi thứ bên trong tự đổi màu vì chúng chỉ đọc var(--k). */
@@ -604,7 +614,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a class="iconbtn" href="../index.html" aria-label="Trang chủ">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
       </a>
-      <button class="iconbtn" id="themeBtn" aria-label="Sáng / Tối">
+      <button class="iconbtn" id="themeBtn" aria-label="Giao diện tối">
         <svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8"/></svg>
         <svg class="ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       </button>
@@ -2883,7 +2893,31 @@ function css(name, node) {
     prog.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
     tt.classList.toggle('on', window.scrollY > 700);
   }
-  tt.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  /* CSS reduced-motion chỉ tắt scroll-behavior của html, không tắt được lệnh JS này */
+  tt.addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  });
+
+  /* In: phần Kết là chỗ tra lại, nên giấy phải có lời giải của mọi câu tự kiểm (details chỉ mở
+     được bằng JS; bốn tab thì @media print tự mở). Màu trong SVG là giá trị đã chép lúc vẽ,
+     @media print không đổi được, nên đang tối thì vẽ lại bằng bộ màu sáng rồi trả về sau khi in. */
+  var printOpened = [], printDark = false, printing = false;
+  function redrawAll() { redraws.forEach(function (f) { try { f(); } catch (e) {} }); }
+  window.addEventListener('beforeprint', function () {
+    if (printing) return;  /* có trình duyệt bắn beforeprint hai lần trước một afterprint */
+    printing = true;
+    printOpened = Array.prototype.slice.call(document.querySelectorAll('details:not([open])'));
+    printOpened.forEach(function (d) { d.open = true; });
+    printDark = root.classList.contains('dark');
+    if (printDark) { root.classList.remove('dark'); redrawAll(); }
+  });
+  window.addEventListener('afterprint', function () {
+    if (!printing) return;
+    printing = false;
+    printOpened.forEach(function (d) { d.open = false; });
+    printOpened = [];
+    if (printDark) { root.classList.add('dark'); redrawAll(); }
+  });
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
   onScroll();
@@ -2952,6 +2986,11 @@ function css(name, node) {
 /* tab trong bảng tra cứu */
 Array.prototype.slice.call(document.querySelectorAll('[data-tabs]')).forEach(function (bar) {
   var scope = bar.parentElement;
+  /* tên tab chép sang bảng, để bản in (thanh tab bị ẩn, bốn bảng xếp liền) còn tiêu đề */
+  Array.prototype.slice.call(scope.querySelectorAll('[data-panel][aria-labelledby]')).forEach(function (p) {
+    var t = document.getElementById(p.getAttribute('aria-labelledby'));
+    if (t) p.setAttribute('data-name', t.textContent);
+  });
   bar.addEventListener('click', function (e) {
     var b = e.target.closest ? e.target.closest('[data-tab]') : null;
     if (!b) return;
@@ -4922,7 +4961,9 @@ var GLOSS = [
   function place(fromScroll) {
     if (!anchor) return;
     var r = anchor.getBoundingClientRect();
-    if (fromScroll && (r.bottom < 0 || r.top > window.innerHeight)) { hide(); return; }
+    /* thuật ngữ ra khỏi màn hình thì đóng — trừ khi focus đang ở trong popup (mở bằng bàn
+       phím): đóng lúc ấy là focus rơi về <body> và Tab tiếp theo nhảy lên đầu trang */
+    if (fromScroll && (r.bottom < 0 || r.top > window.innerHeight)) { if (!pop.contains(document.activeElement)) hide(); return; }
     if (window.innerWidth <= 620) { pop.style.top = ''; pop.style.left = ''; return; }
     var w = pop.offsetWidth, h = pop.offsetHeight, gap = 9;
     var left = Math.min(Math.max(10, r.left - 12), window.innerWidth - w - 10);
@@ -4951,7 +4992,7 @@ var GLOSS = [
     pop.inert = true;
     if (a) a.classList.remove('is-open');
     anchor = null;
-    if (back === true && inside && a) a.focus({ preventScroll: true });
+    if (back === true && inside && a) a.focus();
   }
   pop.querySelector('.pop__x').addEventListener('click', function () { hide(true); });
   pGo.addEventListener('click', hide);
