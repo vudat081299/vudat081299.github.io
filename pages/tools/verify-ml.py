@@ -728,7 +728,14 @@ def run_101():
               f'dòng phán theo λ là {seq3}')
 
     # ══ các câu kiến thức đã từng viết sai ═════════════════════════════════
+    import html as _html
+    main_i = HTML.find('<main')
+    body = HTML[main_i:HTML.find('<script', main_i)] if main_i >= 0 else ''
+    plain = re.sub(r'\s+', ' ', _html.unescape(re.sub(r'<[^>]+>', ' ', body)))
+    WORD = {2: 'HAI', 3: 'BA', 10: 'mười', 13: 'MƯỜI BA'}
+
     # Mô hình 3: lời gợi ý đọc đúng số mô hình in ra khi kéo từ chỗ mặc định về đáy thanh.
+    need('m3 thước cũ là bình phương', 'function sq(p) { return (p - y) * (p - y); }')
     i = HTML.find('id="m3-p"')
     tag = HTML[i:HTML.find('>', i)] if i >= 0 else ''
     lo = re.search(r'min="([\d.]+)"', tag)
@@ -736,26 +743,40 @@ def run_101():
     claim('m3 bóc được thanh trượt', bool(lo and p0))
     if lo and p0:
         lo, p0 = float(lo.group(1)), float(p0.group(1))
-        claim('m3: thước cũ ở đáy thanh vẫn dưới 1', (1 - lo) ** 2 < 1, f'{(1 - lo) ** 2:.4f}')
-        need('m3 gợi ý: thước cũ', f'cái cũ chỉ nhích từ {vi((1 - p0) ** 2)} lên chưa tới 1', (1 - p0) ** 2)
+        claim('m3: thước cũ ở đáy thanh vẫn dưới trần 1', (1 - lo) ** 2 < 1, f'{(1 - lo) ** 2:.4f}')
+        need('m3 gợi ý: thước cũ', f'cái cũ chỉ nhích từ {vi((1 - p0) ** 2)} lên {vi((1 - lo) ** 2)}, sát trần 1 mà không vượt được',
+             (1 - lo) ** 2)
         need('m3 gợi ý: thước mới', f'cái mới vọt từ {vi(-math.log(p0), 1)} lên {vi(-math.log(lo), 1)}')
 
-    # Momentum: trung bình trượt mũ với β tương đương chừng 1/(1 − β) bước gần nhất.
-    need('β₁ của Adam trong bảng tra', 'β₁ = 0,9 ·')
-    claim('β = 0,9 → chừng mười bước', round(1 / (1 - 0.9)) == 10)
-    need('cửa sổ của momentum', 'trung bình của chừng mười bước gần đây</b> (với β = 0,9)')
+    # Momentum: trung bình trượt mũ với hệ số β nhớ chừng 1/(1 − β) bước gần nhất. β đọc từ
+    # bảng tra (β₁ của Adam, cũng là mặc định của momentum); thân bài phải ghi đúng số bước,
+    # đúng hai tỉ lệ giữ/thêm, và định nghĩa β trước lần đầu dùng chữ ấy.
+    mb = re.search(r'β₁ = ([\d,]+) ·', HTML)
+    claim('bóc được β₁ trong bảng tra', bool(mb))
+    if mb:
+        beta = float(mb.group(1).replace(',', '.'))
+        n = round(1 / (1 - beta))
+        need('cửa sổ của momentum', f'trung bình của chừng {WORD.get(n, n)} bước gần đây</b>', f'1/(1 − {beta}) = {n}')
+        need('β định nghĩa bằng lời', f'mỗi bước giữ {round(beta * 100)}% mức trung bình cũ và thêm '
+             f'{round((1 - beta) * 100)}% độ nghiêng mới — hệ số {vi(beta, 1)} ấy gọi là β')
+        need('thứ tự vặn: β của momentum', f'Rồi tới β của momentum ({vi(beta, 1)} là mặc định tốt)')
+    k = plain.find('β')
+    claim('β định nghĩa trước lần dùng đầu', k >= 0 and plain[max(0, k - 7):k] == 'gọi là ',
+          f'lần đầu gặp β trong thân bài: "…{plain[max(0, k - 60):k + 1]}"')
+    ewa = [r for r in gloss_records(r"\['([^']*)',\s*'([^']*)',\s*'([^']*)'\]") if r[1] == 'exponentially weighted average']
+    claim('GLOSS trung bình trượt mũ không nói "mấy chục bước"', len(ewa) == 1 and 'mấy chục' not in ewa[0][0],
+          f'{ewa}')
 
-    # Chuẩn hoá: sau z-score, độ cong của MSE là 2 × ma trận tương quan, trị riêng 1 ± r.
-    # Hai cột tương quan r = 0,8 vẫn cho lòng chảo dẹt (1 + r)/(1 − r) = 9 lần: chỉ "gần tròn".
-    claim('z-score chỉ làm bát tròn hẳn khi r = 0', abs((1 + 0.8) / (1 - 0.8) - 9) < 1e-9)
+    # Chuẩn hoá: sau z-score, độ cong của MSE là 2 × ma trận tương quan, trị riêng 1 ± r — lòng chảo
+    # chỉ tròn hẳn khi r = 0, nên thân bài và GLOSS đều phải nói "gần tròn", không nói "bát tròn".
     need('bát gần tròn', 'Khe hẹp thành gần như bát tròn (tròn hẳn khi hai loại số không đi cùng nhau)')
+    fs = [r for r in gloss_records(r"\['([^']*)',\s*'([^']*)',\s*'([^']*)'\]") if r[1] == 'feature scaling']
+    claim('GLOSS feature scaling nói "gần tròn"', len(fs) == 1 and 'gần tròn' in fs[0][2] and 'bát tròn' not in fs[0][2], f'{fs}')
 
     # Normal equation: nghịch đảo ma trận n × n tốn cỡ n³; mốc của khoá gốc là ~10.000 đặc trưng.
     need('mốc normal equation', 'tốn công tăng theo (số núm)³, nên từ chừng mười nghìn núm trở lên')
 
-    # Mặc định khởi tạo: Keras Dense = glorot_uniform; PyTorch nn.Linear = U(±1/√n),
-    # phương sai 1/(3n), nhỏ hơn He (2/n) sáu lần.
-    claim('PyTorch mặc định nhỏ hơn He sáu lần', abs((2 / 1) / (1 / 3) - 6) < 1e-9)
+    # Mặc định khởi tạo: Keras Dense = glorot_uniform; PyTorch nn.Linear = U(±1/√n).
     need('mặc định không phải He', 'Mặc định của thư viện thường không phải He (Keras: Xavier; PyTorch: rải đều trong ±1/√(số đầu vào))')
 
     # Mốc năm: ViT (arXiv 2010.11929) và DDPM (2006.11239) năm 2020, CLIP (2103.00020) năm 2021;
@@ -764,13 +785,81 @@ def run_101():
     need('mốc ViT / diffusion', 'chúng nổi lên từ 2020, sau bản quay 2017–2018')
     need('data-centric AI từ 2021', "'hướng Ng đẩy mạnh từ 2021'")
 
-    # Lan truyền ngược nhân thêm độ dốc của cái bẻ — đúng như mô hình 5 làm.
-    need('m5 nhân độ dốc của cái bẻ', 'prev[q] = s * dact(f.Z[k - 1][q]);')
+    # Lan truyền ngược nhân thêm độ dốc của cái bẻ — đúng như mô hình 5 làm, và chỉ một lần gán.
+    i = HTML.find('MÔ HÌNH 5 — TẮT CÁI BẺ')
+    m5 = HTML[i:HTML.find('MÔ HÌNH 6', i)] if i >= 0 else ''
+    sets = re.findall(r'prev\[q\]\s*=(?!=)[^;]*;', m5)
+    claim('m5 nhân độ dốc của cái bẻ', sets == ['prev[q] = s * dact(f.Z[k - 1][q]);'],
+          f'các lệnh gán prev[q] trong m5: {sets}')
     need('lời văn nhắc độ dốc của cái bẻ', 'nếu nó đang bị bẻ về 0 thì phần trách nhiệm là 0')
+    need('"cái bẻ" chỉ sang mục dưới ở lần đầu', 'rồi bóp qua cầu trượt chữ S — hoặc một <i>cái bẻ</i> khác, xem mục dưới')
 
     need('attention chia căn độ dài', 'chia cho căn của độ dài dãy số để softmax')
     need('distortion là trung bình', '<b>trung bình bình phương</b> khoảng cách')
+    ds = [r for r in gloss_records(r"\['([^']*)',\s*'([^']*)',\s*'([^']*)'\]") if r[1] == 'distortion']
+    claim('GLOSS distortion là trung bình', len(ds) == 1 and ds[0][0].startswith('trung bình bình phương'), f'{ds}')
     need('DQN hai kiểu lớp cuối', 'một Q cho mỗi hành động')
+    need('bảng tra DQN: k giá trị Q', '<td>k giá trị Q</td>')
+
+    # Mô hình 12 (k-means): lần kẹt nào cũng là "hai tâm chia một cụm, hai cụm kia chung một tâm"
+    # — không nhóm nào rỗng, và có một nhóm cỡ gần hai cụm. Dòng phán của m9 rẽ nhánh ở ngưỡng
+    # đọc từ trang; mọi lần kẹt phải rơi đúng nhánh "giành một cụm", không rơi nhánh "nhóm rỗng".
+    mt = re.search(r'Math\.min\.apply\(null, sizes\) < (\d+)', HTML)
+    stuck = [e for e in ends if e != [22, 22, 22]]
+    claim('k-means: lần kẹt không bỏ trống cụm nào', bool(stuck) and all(min(e) > 0 for e in stuck), f'{stuck}')
+    claim('k-means: lần kẹt có một nhóm gộp hai cụm', bool(stuck) and all(max(e) > 1.5 * 22 for e in stuck), f'{stuck}')
+    claim('k-means: dòng phán của lần kẹt là "giành một cụm"',
+          bool(mt) and all(0 < min(e) < int(mt.group(1)) for e in stuck), f'ngưỡng {mt.group(1) if mt else "?"}, {stuck}')
+    need('cái bẫy k-means', 'Đặt xấu thì hai tâm chia nhau một cụm, còn hai cụm kia phải chung một tâm.')
+
+    # Mô hình 2: ba bước chân mà gợi ý mời thử phải cho đúng điều nó hứa, trên đúng khung vẽ.
+    ma = re.search(r"axes\(svg, \[56, 22, 620, 218\], \[(−?-?[\d.]+), ([\d.]+)\]", HTML)
+    mc = re.search(r'var C = ([\d.]+);\s*/\* đáy thung lũng', HTML)
+    mx = re.search(r'id="m2-x"[^>]*value="(-?[\d.]+)"', HTML)
+    ms2 = re.search(r'Ở 1,1, kéo <b>chỗ thả bóng</b> về (−?[\d,]+) trước rồi mới Thả: mỗi cú nảy cao hơn cú trước', HTML)
+    claim('m2 bóc được khung, đáy, chỗ thả', bool(ma and mc and mx and ms2))
+    if ma and mc and mx and ms2:
+        x_hi, C2, x0 = float(ma.group(2)), float(mc.group(1)), float(mx.group(1))
+        x11 = float(ms2.group(1).replace('−', '-').replace(',', '.'))
+
+        def path(a, w, n):
+            out = [w]
+            for _ in range(n):
+                w = w - a * 2 * (w - C2)
+                out.append(w)
+            return out
+        for a in (0.3, 0.7):
+            claim(f'm2 α = {vi(a, 1)} từ chỗ thả mặc định: bóng ở trong khung', all(abs(w) <= x_hi for w in path(a, x0, 40)))
+        claim('m2 α = 1,1 từ chỗ thả mặc định văng ngay bước đầu (lý do gợi ý dời chỗ thả)',
+              abs(path(1.1, x0, 1)[1]) > x_hi, f'bước 1 tới {path(1.1, x0, 1)[1]:.2f}')
+        p11 = path(1.1, x11, 5)
+        claim('m2 α = 1,1 từ chỗ gợi ý: năm cú nảy đầu còn trong khung, mỗi cú cao hơn',
+              all(abs(w) <= x_hi for w in p11) and all(abs(b - C2) > abs(a - C2) for a, b in zip(p11, p11[1:])), f'{p11}')
+    need('m2 dòng phán so với bước trước', 'up = trail.length > 1 && j > J(trail[trail.length - 2])')
+    need('m2 dòng phán dùng so sánh ấy', "(up ? '→ ĐANG ĐI LÊN. Bước chân quá dài.'")
+
+    # Phần mở đầu: đếm mô hình và đếm mô hình dùng số đặt tay ngay trong trang.
+    labs = sorted(set(int(x) for x in re.findall(r'Nghịch được · mô hình (\d+) / 13', HTML)))
+    hand = len(re.findall(r'<p class="lab__f">[^<]*(?:do người đặt|được đặt ra)', HTML))
+    claim('đủ mười ba mô hình', labs == list(range(1, 14)), f'{labs}')
+    need('phần mở đầu: số mô hình và số mô hình đặt tay',
+         f'{WORD.get(len(labs), len(labs))} MÔ HÌNH CHẠY NGAY TRONG TRÌNH DUYỆT CỦA BẠN — {WORD.get(hand, hand)} MÔ HÌNH DÙNG SỐ ĐẶT TAY, CÓ GHI RÕ',
+         f'{len(labs)} mô hình, {hand} đặt tay')
+    if 'ra đời sau tám khoá gốc' in HTML[HTML.find('GLOSS = ['):]:
+        need('233 tên không chỉ của tám khoá', 'thuật ngữ của tám khoá gốc và vài tên mới hơn')
+
+    # Bảng tên thật là "ví von trong trang ↔ tên chính thức": tên nào cũng phải có mặt ở thân bài.
+    lowp = plain.lower()
+    gone = []
+    for r in gloss_records(r"\['([^']*)',\s*'([^']*)',\s*'[^']*'\]"):
+        parts = [r[1]]
+        mm = re.fullmatch(r'(.*?)\s*\(([^)]*)\)', r[1])
+        if mm:
+            parts = [mm.group(1), mm.group(2)]
+        if any(t.lower() not in lowp for t in parts):
+            gone.append(r[1])
+    claim('mọi tên thật trong bảng đều có ở thân bài', not gone, f'thiếu: {gone}')
+    claim('không câu tự khen bảng', 'quan trọng đến vậy' not in HTML)
 
 
 def main():
