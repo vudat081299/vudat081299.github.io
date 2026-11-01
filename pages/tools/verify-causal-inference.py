@@ -720,6 +720,21 @@ def run_p1():
     claim('p1 · 2.3 paper CUPED: 5% → 0,5% cần gấp (5/0,5)² = 100 lần', (5 / 0.5) ** 2 == 100)
     claim('p1 · 2.3 ví von: gấp nghìn lần khách → hẹp đi chừng 32 lần', jfmt(math.sqrt(1000), 0) == '32')
     needs('p1 · 2.3 ví von 32', 's-power', 'chỉ làm khoảng tin cậy hẹp đi chừng 32 lần')
+    # thước đo là TRUNG BÌNH: n mỗi nhóm = 2(z₁₋α/₂ + z₁₋β)²σ²/δ² ≈ 16σ²/δ² (α 5%, độ mạnh 80%).
+    # σ, δ, hệ số và n đều đọc từ câu ví dụ của trang, rồi tính lại.
+    km = 2 * (ND.inv_cdf(0.975) + ND.inv_cdf(0.8)) ** 2
+    needs('p1 · 2.3 trung bình: 2(1,96 + 0,84)² = 15,7', 's-power',
+          f'2(1,96 + 0,84)² = {jfmt(2 * (1.96 + 0.84) ** 2, 1)}, nên n ≈ 16σ²/δ²')
+    claim('p1 · 2.3 trung bình: hệ số đúng chữ số là 15,7', jfmt(km, 1) == jfmt(2 * (1.96 + 0.84) ** 2, 1), f'{km:.4f}')
+    mm = re.search(r'σ = ([0-9.]+) nghìn ₫, muốn thấy \+([0-9.]+) nghìn ₫ thì cần ([0-9]+,[0-9]+) · \1² / \2² ≈ <b>([0-9.]+)</b> '
+                   r'khách mỗi nhóm \(quy tắc 16 cho ([0-9.]+)\)', sec_html('s-power'))
+    claim('p1 · 2.3 trung bình: có câu ví dụ σ, δ, n', mm is not None, 'không đọc được câu ví dụ')
+    if mm:
+        sig, dl = int(mm.group(1).replace('.', '')), int(mm.group(2).replace('.', ''))
+        claim('p1 · 2.3 trung bình: hệ số trong ví dụ', mm.group(3) == jfmt(km, 3), f'trang ghi {mm.group(3)}, tính được {km:.4f}')
+        claim('p1 · 2.3 trung bình: n = ⌈2(z + z)²σ²/δ²⌉', mm.group(4) == jfmt(math.ceil(km * sig ** 2 / dl ** 2), 0),
+              f'trang ghi {mm.group(4)}, tính được {km * sig ** 2 / dl ** 2:.3f}')
+        claim('p1 · 2.3 trung bình: quy tắc 16σ²/δ²', mm.group(5) == jfmt(16 * sig ** 2 / dl ** 2, 0), f'trang ghi {mm.group(5)}')
     same('p1 · power ô mỗi nhóm', 'm-power-n', '14.751')
     same('p1 · power ô tổng', 'm-power-tot', '29.502')
     same('p1 · power ô ngày', 'm-power-d', '12')
@@ -1872,9 +1887,13 @@ def run_p2():
     # A2 · FWER: khả năng có dù chỉ một báo động giả ≤ 5%, không phải "chịu được tối đa một"
     need('A2 · lede 3.2', 'muốn khả năng có dù chỉ <b>một</b> báo động giả trong cả bảng không quá 5% (giữ FWER — dùng Holm)')
     claim('A2 · không còn "chịu được tối đa một báo động giả"', 'chịu được tối đa' not in P2)
-    # A4 · Deng 2018 chỉ đo 100 và 1.000 khách
-    need('A4 · khoảng một trăm khách', 'với khoảng một trăm khách và đuôi phân phối nặng')
-    need('A4 · 1.000 khách đã về 94–95%', '(ở 1.000 khách đã về 94–95%)')
+    # A4 · Deng, Knoblich & Lu (2018), arXiv 1803.06336, bảng 3: độ phủ của KTC bootstrap 95% cho
+    # phân vị 95%. Chuẩn là phân phối KHÔNG đuôi nặng; log-normal mới là đuôi nặng.
+    T3 = {('chuẩn', 100): 0.9039, ('log-normal', 100): 0.8551, ('chuẩn', 1000): 0.9500, ('log-normal', 1000): 0.9403}
+    need('A4 · 100 khách, hai phân phối',
+         f'độ phủ chỉ {vi(100 * T3["chuẩn", 100], 1)}% (phân phối chuẩn) và {vi(100 * T3["log-normal", 100], 1)}% (đuôi nặng, log-normal)')
+    lo1k, hi1k = sorted((T3['chuẩn', 1000], T3['log-normal', 1000]))
+    need('A4 · 1.000 khách đã về 94–95%', f'(ở 1.000 khách đã về {math.floor(100 * lo1k)}–{round(100 * hi1k)}%)')
     claim('A4 · không còn "vài trăm khách"', 'vài trăm khách' not in P2)
     # A6 · AUC cao là triệu chứng của dữ liệu
     need('A6 · AUC', 'AUC rất cao không phải là mô hình tốt')
@@ -3160,7 +3179,14 @@ def run_ref():
     # áp dụng mọi dòng khớp, nên không được nằm chung phần với lời dặn "dừng ở dòng đầu tiên khớp"
     tbs = _re.findall(r'<tbody>(.*?)</tbody>', secs.get('s-choose', ''), _re.S)
     claim('ref · bảng chọn cách làm có hai phần: chọn thiết kế, bổ sung', len(tbs) == 2
-          and 'dừng ở dòng đầu tiên khớp' in tbs[0] and 'áp dụng mọi dòng khớp' in tbs[1], f'thấy {len(tbs)} tbody')
+          and 'dừng ở bậc đầu tiên khớp' in tbs[0] and 'áp dụng mọi dòng khớp' in tbs[1], f'thấy {len(tbs)} tbody')
+    # lời dẫn: thứ tự theo cơ chế gán can thiệp (Lee & Lemieux 2010: RDD không cần giả định nặng hơn DiD),
+    # và nói rõ phần bổ sung áp dụng mọi dòng khớp
+    ml = _re.search(r'<p class="lede">(.*?)</p>', secs.get('s-choose', ''), _re.S)
+    lede = _p_text(ml.group(1)) if ml else ''
+    for frag in ('ai quyết định ai nhận can thiệp', 'Bốn dòng thí nghiệm tự nhiên không xếp hạng với nhau', 'áp dụng mọi dòng khớp'):
+        claim(f'ref · lời dẫn chọn cách làm: "{frag}"', frag in lede, 'lời dẫn đã mất câu này')
+    claim('ref · không xếp hạng thiết kế theo độ "rẻ" của giả định', 'rẻ hơn' not in lede, 'lời dẫn lại nói dòng trên rẻ hơn dòng dưới')
     if len(tbs) == 2:
         order = _re.findall(r'<tr><td>.*?<a href="#(s-[a-z-]+)"', tbs[0])
         claim('ref · chọn thiết kế theo thứ tự sơ đồ 0.2', order == ['s-random', 's-did', 's-synth', 's-rdd', 's-iv', 's-adjust'], f'thấy {order}')

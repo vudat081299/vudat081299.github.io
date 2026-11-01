@@ -1336,6 +1336,7 @@ print(f'lift {x1/n1 / (x0/n0) - 1:.3f}, KTC [{rlo-1:.3f}; {rhi-1:.3f}]')
           <li><b>Tỉ lệ nền p₀</b> — lấy từ dữ liệu cũ của đúng nhóm khách sẽ vào thí nghiệm.</li>
         </ul>
         <p>Núm quan trọng nhất là MDE, vì <b>n tỉ lệ với 1/MDE²</b>: sai số chuẩn chỉ nhỏ đi theo √n, nên muốn thấy một tác động nhỏ bằng một nửa thì phải có gấp bốn lần người — ở đây 3,9 lần, vì tỉ lệ trung bình của hai nhóm cũng xê dịch theo. Paper CUPED (Deng và cộng sự, 2013) mở đầu bằng đúng phép tính ấy: phát hiện chênh 0,5% thay vì 5% cần gấp 100 lần người.</p>
+        <p>Thước đo là một <b>trung bình</b> — chi tiêu, lợi nhuận mỗi khách — thì p(1 − p) nhường chỗ cho phương sai σ² của chính thước đo ấy, lấy từ dữ liệu cũ của đúng nhóm khách sẽ vào thí nghiệm: n mỗi nhóm = 2(z₁₋α/₂ + z₁₋β)² · σ² / δ², với δ là MDE tuyệt đối, cùng đơn vị với thước đo. Ở α = 5% hai phía và độ mạnh 80%, 2(1,96 + 0,84)² = 15,7, nên n ≈ <b>16σ²/δ²</b> — quy tắc ngón tay cái của van Belle (2002). Ví dụ: chi tiêu 4 tuần có σ = 150 nghìn ₫, muốn thấy +10 nghìn ₫ thì cần 15,698 · 150² / 10² ≈ <b>3.532</b> khách mỗi nhóm (quy tắc 16 cho 3.600). CUPED (<a href="#s-cuped">mục 2.4</a>) nhân σ² với 1 − ρ², nên nhân cả n.</p>
 
         <div class="lab" id="m-power">
           <div class="lab__h">
@@ -1381,7 +1382,7 @@ print(f'lift {x1/n1 / (x0/n0) - 1:.3f}, KTC [{rlo-1:.3f}; {rhi-1:.3f}]')
         <div class="tri">
           <div class="r-play"><div class="lbl">Đời thường</div><div class="v">Nền 10%, muốn thấy được +1 điểm: 14.751 khách mỗi nhóm. Muốn thấy +0,5 điểm: 57.763. Nửa tác động, gần bốn lần người.</div></div>
           <div class="r-math"><div class="lbl">Toán</div><div class="v"><span class="fml">n = (z₁₋α/₂√(2p̄q̄) + z₁₋β√(p₀q₀ + p₁q₁))² / (p₁ − p₀)²</span>, với <span class="fml">p̄ = (p₀ + p₁)/2</span>. Hệ quả: <span class="fml">n ∝ 1/MDE²</span>.</div></div>
-          <div class="r-use"><div class="lbl">Làm thật</div><div class="v">Chốt MDE với người ra quyết định trước khi chạy; lấy p₀ từ đúng nhóm khách sẽ vào thí nghiệm; tính bằng <span class="mono">samplesize_proportions_2indep_onetail</span>; làm tròn thời gian lên tuần đủ; ghi cả bốn con số vào kế hoạch.</div></div>
+          <div class="r-use"><div class="lbl">Làm thật</div><div class="v">Chốt MDE với người ra quyết định trước khi chạy; lấy p₀ từ đúng nhóm khách sẽ vào thí nghiệm; tính bằng <span class="mono">samplesize_proportions_2indep_onetail</span> (thước đo là trung bình: <span class="mono">NormalIndPower().solve_power(effect_size=δ/σ, alpha=0.05, power=0.8)</span>); làm tròn thời gian lên tuần đủ; ghi cả bốn con số vào kế hoạch.</div></div>
         </div>
 
         <p class="code__k">Python · chạy được trên Colab</p>
@@ -1546,7 +1547,7 @@ print(f'TB {m[0]:.2f} và {m[1]:.2f}; độ vung {s[0]:.2f} và {s[1]:.2f}')
         </div>
 
         <details class="q">
-          <summary>Thước đo của bạn tương quan ρ = 0,5 với chính nó ở kỳ trước. Không dùng CUPED thì cần 20.000 khách mỗi nhóm. Dùng CUPED thì cần bao nhiêu? Nếu ρ chỉ là 0,3 thì sao?</summary>
+          <summary>Thước đo của bạn tương quan ρ = 0,5 với chính nó ở kỳ trước. Không dùng CUPED, công thức cỡ mẫu cho trung bình ở mục 2.3 cho 20.000 khách mỗi nhóm. Dùng CUPED thì cần bao nhiêu? Nếu ρ chỉ là 0,3 thì sao?</summary>
           <div class="a"><p>Phương sai còn 1 − 0,25 = 0,75, nên cần <b>15.000</b> khách mỗi nhóm — bớt 25%. Với ρ = 0,3 thì 1 − 0,09 = 0,91: vẫn cần <b>18.200</b>, chỉ bớt 9%. CUPED đáng giá nhất với thước đo ổn định theo thời gian (số lần ghé, chi tiêu của khách đều đặn), và gần như vô ích với thước đo hên xui (một đơn hàng lớn bất chợt).</p></div>
         </details>
 
@@ -2160,7 +2161,7 @@ print('tỉ lệ A/A báo động giả:', np.mean(bao_dong))
         </div>
 
         <p><b>Một ví dụ tính tay được</b> (số tự dựng). Một nhóm có n = 10.000 khách, trung bình Ō = 3,0 đơn và R̄ = 750 nghìn ₫ mỗi khách; độ lệch chuẩn s<sub>O</sub> = 2,5 đơn, s<sub>R</sub> = 800 nghìn ₫; tương quan giữa doanh thu và số đơn của khách là 0,9, nên s<sub>RO</sub> = 0,9 × 800 × 2,5 = 1.800. Giá trị trung bình mỗi đơn là 750/3,0 = <b>250 nghìn ₫</b>. Trong ngoặc: 640.000 − 2 × 250 × 1.800 + 250² × 6,25 = 640.000 − 900.000 + 390.625 = 130.625. Chia cho n·Ō² = 90.000: phương sai 1,451, <b>SE ≈ 1,20 nghìn ₫</b>, khoảng tin cậy 95% là 250 ± 2,36 nghìn ₫.</p>
-        <p><b>Khi nào bootstrap theo khách an toàn hơn.</b> Khi thước đo không phải tỉ số của hai trung bình theo khách (trung vị giá trị đơn, phân vị 95% thời gian thanh toán, một chỉ số đi qua nhiều bước lọc), hoặc khi bạn không chắc công thức của mình. Cách làm: bốc lại <b>khách</b> (có hoàn lại), mỗi khách mang theo <b>tất cả</b> đơn của mình, tính lại thước đo, lặp 1.000 lần, lấy độ lệch chuẩn. Nó không cần đạo hàm, nên khó tính sai. Nó cũng không phải phép màu: với khoảng một trăm khách và đuôi phân phối nặng, bootstrap cũng phủ thiếu: Deng và cộng sự đo được độ phủ chỉ 85–90% thay vì 95% cho phân vị 95% ở 100 khách (ở 1.000 khách đã về 94–95%). Cách thứ ba cho cùng kết quả với tỉ số đơn giản: hồi quy giá trị từng đơn với SE theo cụm khách.</p>
+        <p><b>Khi nào bootstrap theo khách an toàn hơn.</b> Khi thước đo không phải tỉ số của hai trung bình theo khách (trung vị giá trị đơn, phân vị 95% thời gian thanh toán, một chỉ số đi qua nhiều bước lọc), hoặc khi bạn không chắc công thức của mình. Cách làm: bốc lại <b>khách</b> (có hoàn lại), mỗi khách mang theo <b>tất cả</b> đơn của mình, tính lại thước đo, lặp 1.000 lần, lấy độ lệch chuẩn. Nó không cần đạo hàm, nên khó tính sai. Nó cũng không phải phép màu: với khoảng một trăm khách, bootstrap cũng phủ thiếu: Deng và cộng sự đo được độ phủ chỉ 90,4% (phân phối chuẩn) và 85,5% (đuôi nặng, log-normal) thay vì 95% cho phân vị 95% ở 100 khách (ở 1.000 khách đã về 94–95%). Cách thứ ba cho cùng kết quả với tỉ số đơn giản: hồi quy giá trị từng đơn với SE theo cụm khách.</p>
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Đời thường</div><div class="v">Thăm dò 30.000 lá phiếu mà hoá ra chỉ có 10.000 người bỏ, mỗi người ba lá. Bạn có 10.000 ý kiến, không phải 30.000. <i>Chỗ ví von hỏng:</i> ba lá phiếu của một người là ba bản sao y hệt, còn ba đơn của một khách thì khác nhau — nên không chia đơn giản cho 3 được; cần phương pháp delta hay bootstrap theo khách.</div></div>
@@ -3590,7 +3591,7 @@ print(giu.groupby(nhom[giu.index]).cate.mean().round(3))
               <div class="read"><div class="k">Lệch</div><div class="v" id="m-dml-bias">+16,68</div></div>
             </div>
             <p class="lab__f" id="m-dml-say">Hồi quy thẳng doanh số theo giảm giá.</p>
-            <p class="lab__f"><b>Nói thẳng:</b> &ldquo;học máy&rdquo; trong mô hình này chỉ là <b>trung bình theo ô</b> — chia cỡ và mùa mỗi trục 10 khúc, đoán T và Y của một cửa hàng-tháng bằng trung bình ô của nó, tính trên nửa kia của dữ liệu. Nó thô: trong mỗi ô, cỡ và mùa vẫn còn chênh nhau, nên qua nhiều bộ dữ liệu cùng kiểu cách này lệch lên khoảng <b>0,25</b>. Còn 0,20 trên màn hình phần lớn là nhiễu của chính mẫu này: dùng hàm phụ thật, không làm mượt gì, cũng đã ra 4,17. Code bên dưới dùng gradient boosting với chia chéo 5 phần trên một bộ dữ liệu cùng kiểu.</p>
+            <p class="lab__f">&ldquo;Học máy&rdquo; trong mô hình này chỉ là <b>trung bình theo ô</b> — chia cỡ và mùa mỗi trục 10 khúc, đoán T và Y của một cửa hàng-tháng bằng trung bình ô của nó, tính trên nửa kia của dữ liệu. Nó thô: trong mỗi ô, cỡ và mùa vẫn còn chênh nhau, nên qua nhiều bộ dữ liệu cùng kiểu cách này lệch lên khoảng <b>0,25</b>. Còn 0,20 trên màn hình phần lớn là nhiễu của chính mẫu này: dùng hàm phụ thật, không làm mượt gì, cũng đã ra 4,17. Code bên dưới dùng gradient boosting với chia chéo 5 phần trên một bộ dữ liệu cùng kiểu.</p>
           </div>
         </div>
 
@@ -3691,7 +3692,7 @@ print(f'DML      : {theta:.2f} (SE {se:.2f})')
 
       <section id="s-carry">
         <p class="sechead">Tra cứu · <b>Mang theo</b></p>
-        <h2 class="st">Tám câu này gánh cả trang</h2>
+        <h2 class="st">Tám điều mang theo</h2>
 
         <div class="grid2">
           <div class="mini ch-x"><p class="t">1 · Tác động là hai tương lai trừ cho nhau</p><p class="d">Mỗi người chỉ sống một tương lai, nên tác động trên <b>từng người</b> không bao giờ đo được. Mọi cách làm trong trang là một cách <b>mượn nửa còn thiếu</b> từ người khác — và lần mượn nào cũng trả bằng một giả định (<a href="#s-po">mục 1.1</a>).</p></div>
@@ -3709,13 +3710,13 @@ print(f'DML      : {theta:.2f} (SE {se:.2f})')
         <p class="sechead">Tra cứu · <b>Chọn cách làm</b></p>
         <h2 class="st">Bạn đang có gì trong tay thì dùng cách nào</h2>
 
-        <p class="lede">Bảng có hai phần. Phần đầu chọn thiết kế: đọc từ trên xuống, dừng ở <b>dòng đầu tiên khớp với tình huống của bạn</b>. Thứ tự ấy có chủ ý, và là thứ tự của sơ đồ ở <a href="#s-ban-do">mục 0.2</a>: tung được đồng xu thì làm thí nghiệm; không được thì tìm một thí nghiệm tự nhiên; không có mới điều chỉnh theo biến đã đo — dòng trên mua được kết luận bằng giả định rẻ hơn dòng dưới. Phần sau <b>bổ sung</b> cho thiết kế đã chọn: áp dụng mọi dòng khớp.</p>
+        <p class="lede">Bảng có hai phần. Phần đầu chọn thiết kế theo thứ tự của sơ đồ ở <a href="#s-ban-do">mục 0.2</a>, tức theo <b>ai quyết định ai nhận can thiệp</b>: bạn tung được đồng xu thì làm thí nghiệm; một quy tắc hay sự kiện bên ngoài đã chia nhóm hộ bạn thì dùng thí nghiệm tự nhiên; người ta tự chọn thì mới điều chỉnh theo biến đã đo. Đọc từ trên xuống, dừng ở <b>bậc đầu tiên khớp với tình huống của bạn</b>. Bốn dòng thí nghiệm tự nhiên không xếp hạng với nhau: dùng dòng tả đúng cách nhóm được chia; khớp hai dòng (hạng VIP theo vạch chi tiêu, áp dụng từ một tháng nào đó) thì làm cả hai rồi so. Phần sau <b>bổ sung</b> cho thiết kế đã chọn: áp dụng mọi dòng khớp.</p>
 
         <div class="tw">
           <table>
             <thead><tr><th>Bạn đang có</th><th>Cách làm</th><th>Ước lượng được</th><th>Giả định chủ chốt</th><th>Kiểm gián tiếp</th><th>Trong Python</th></tr></thead>
             <tbody>
-              <tr class="grp"><th colspan="6" scope="rowgroup">Chọn thiết kế · dừng ở dòng đầu tiên khớp</th></tr>
+              <tr class="grp"><th colspan="6" scope="rowgroup"><span>Chọn thiết kế · dừng ở bậc đầu tiên khớp</span></th></tr>
               <tr><td>Được chia ngẫu nhiên từng khách</td><td><a href="#s-random">A/B test</a> (2.1–2.6)</td><td>ATE trên người vào thí nghiệm</td><td>Đồng xu thật sự quyết định; không lây; một phiên bản can thiệp</td><td>Tỉ lệ chia (SRM), A/A test, SMD của biến trước thí nghiệm</td><td><code>proportions_ztest</code>, <code>confint_proportions_2indep</code></td></tr>
               <tr><td>Một nhóm áp dụng từ một thời điểm, nhóm khác chưa</td><td><a href="#s-did">DiD</a> (5.1)</td><td>ATT</td><td>Xu hướng song song; không ai đoán trước để đổi hành vi</td><td>Các kỳ trước ≈ 0 (event study); mốc giả</td><td><code>smf.ols('y ~ A:sau + C(don_vi) + C(thang)')</code>, SE theo cụm</td></tr>
               <tr><td>Chỉ một (vài) đơn vị lớn được áp dụng</td><td><a href="#s-synth">Đối chứng tổng hợp</a> (5.2)</td><td>Tác động trên đơn vị ấy</td><td>Khớp giai đoạn trước dài thì khớp tiếp nếu không can thiệp; kho hiến không bị lây</td><td>RMSPE trước nhỏ; placebo trong không gian</td><td><code>scipy.optimize.minimize(method='SLSQP')</code></td></tr>
@@ -3724,8 +3725,8 @@ print(f'DML      : {theta:.2f} (SE {se:.2f})')
               <tr><td>Không chia ngẫu nhiên, nhưng đo được mọi biến gây nhiễu</td><td><a href="#s-adjust">Hồi quy</a>, <a href="#s-match">ghép cặp</a>, <a href="#s-ipw">IPW, AIPW</a> (4.2–4.4)</td><td>ATE hoặc ATT</td><td>Không còn biến gây nhiễu chưa đo; chồng lấn</td><td>SMD sau điều chỉnh, histogram e(x), cỡ mẫu hiệu dụng, <a href="#s-sense">E-value</a></td><td><code>smf.ols</code>, <code>LogisticRegression</code>, numpy</td></tr>
             </tbody>
             <tbody>
-              <tr class="grp"><th colspan="6" scope="rowgroup">Bổ sung cho thiết kế đã chọn · áp dụng mọi dòng khớp</th></tr>
-              <tr><td>Có số liệu từ trước thí nghiệm của chính những người tham gia</td><td><a href="#s-cuped">CUPED</a> / hồi quy có biến trước (2.4)</td><td>Như trên, với ít người hơn</td><td>Biến X đo <b>trước</b> can thiệp</td><td>X cân bằng giữa hai nhóm</td><td><code>smf.ols('y ~ t + x_truoc')</code></td></tr>
+              <tr class="grp"><th colspan="6" scope="rowgroup"><span>Bổ sung · áp dụng mọi dòng khớp</span></th></tr>
+              <tr><td>Có số liệu từ trước thí nghiệm của chính những người tham gia</td><td><a href="#s-cuped">CUPED</a> / hồi quy có biến trước (2.4)</td><td>Như thiết kế đã chọn, với ít người hơn</td><td>Biến X đo <b>trước</b> can thiệp</td><td>X cân bằng giữa hai nhóm</td><td><code>smf.ols('y ~ t + x_truoc')</code></td></tr>
               <tr><td>Cần xem kết quả giữa chừng</td><td><a href="#s-peek">Ngưỡng tuần tự</a>, p-value luôn hợp lệ (3.1)</td><td>Quyết định dừng sớm</td><td>Số lần nhìn / hàm chi α định trước</td><td>Mô phỏng A/A với đúng quy trình nhìn</td><td>Tự tính ngưỡng như mục 3.1</td></tr>
               <tr><td>Nhiều thước đo, nhiều phân khúc</td><td><a href="#s-multi">Holm, Benjamini–Hochberg</a> (3.2)</td><td>Cái nào là thật</td><td>BH: các p độc lập hoặc phụ thuộc dương</td><td>—</td><td><code>multipletests(p, method='holm')</code> / <code>'fdr_bh'</code></td></tr>
               <tr><td>Khách hay cửa hàng ảnh hưởng lẫn nhau</td><td><a href="#s-interfere">Chia theo cụm</a> (3.4)</td><td>Tác động khi có lây</td><td>Lây dừng ở biên cụm; đủ số cụm</td><td>A/A theo cụm</td><td><code>.fit(cov_type='cluster', …)</code></td></tr>
@@ -3797,7 +3798,7 @@ print(f'DML      : {theta:.2f} (SE {se:.2f})')
           <p>Cấu trúc sáu chặng, ví dụ chuỗi cửa hàng, 20 mô hình tương tác và mọi phép ví von là <b>diễn giải của trang này</b> — không chép từ một cuốn sách nào, và nên đọc như cách kể chứ không như lời của các tác giả được dẫn. Dữ liệu trong mọi ví dụ là <b>tự dựng</b>. Mọi con số tính được — cỡ mẫu, tỉ lệ báo động giả, χ² của một lần chia lệch, hệ số thiết kế, ước lượng DiD, Wald, uplift — đều được <b>tính lại bằng máy và kiểm tự động</b> trước khi trang được đăng, kể cả con số mà mô hình hiện ra lúc bạn vừa mở trang: dữ liệu có hạt giống được dựng lại bằng đúng bộ sinh ngẫu nhiên của trang.</p>
           <p>Nguồn đã mở và đối chiếu, theo chặng:</p>
           <ul>
-            <li><b>Chặng 1–2.</b> Cunningham, <i>Causal Inference: The Mixtape</i>, chương 4 (kết quả tiềm năng, ngẫu nhiên hoá). Deng, Xu, Kohavi &amp; Walker (2013), bài gốc của CUPED. Tài liệu statsmodels của <code>proportions_ztest</code> và <code>confint_proportions_2indep</code>. Trang của sách Kohavi, Tang &amp; Xu, <i>Trustworthy Online Controlled Experiments</i> (experimentguide.com).</li>
+            <li><b>Chặng 1–2.</b> Cunningham, <i>Causal Inference: The Mixtape</i>, chương 4 (kết quả tiềm năng, ngẫu nhiên hoá). Deng, Xu, Kohavi &amp; Walker (2013), bài gốc của CUPED. Tài liệu statsmodels của <code>proportions_ztest</code> và <code>confint_proportions_2indep</code>. Trang của sách Kohavi, Tang &amp; Xu, <i>Trustworthy Online Controlled Experiments</i> (experimentguide.com). Công thức cỡ mẫu cho trung bình và quy tắc 16σ²/δ² của van Belle, <i>Statistical Rules of Thumb</i> (2002), đối chiếu qua Zhou, Lu &amp; Shallah (2023, arXiv 2305.16459).</li>
             <li><b>Chặng 3.</b> Johari và cộng sự (2017), &ldquo;Peeking at A/B Tests&rdquo; (KDD). Lakens, <i>Improving Your Statistical Inferences</i>, chương 10 (kiểm định tuần tự). Fabijan và cộng sự (2019) về lệch tỉ lệ chia (KDD) và bài của nhóm thí nghiệm Microsoft (ExP) về ngưỡng kiểm SRM. Kohavi và cộng sự (2012), &ldquo;Trustworthy Online Controlled Experiments: Five Puzzling Outcomes Explained&rdquo;. Tài liệu statsmodels của <code>multipletests</code>.</li>
             <li><b>Chặng 4.</b> Facure, <i>Causal Inference for the Brave and True</i>, chương 4 (sơ đồ nhân quả). Rosenbaum &amp; Rubin (1983), bài gốc của điểm xu hướng (Biometrika). Bài giảng về đánh trọng số của Fan Li (Duke). Mathur và cộng sự (2018) cùng tài liệu gói <code>EValue</code> cho E-value.</li>
             <li><b>Chặng 5.</b> Facure, chương 8, 9, 13, 15, 16 và 24. Callaway &amp; Sant&rsquo;Anna (2021) cùng tài liệu gói <code>did</code>. Abadie (2021), &ldquo;Using Synthetic Controls&rdquo; (Journal of Economic Literature). Gelman &amp; Imbens (2019) về đa thức bậc cao trong RDD. Lee, McCrary, Moreira &amp; Porter (2022) về ngưỡng F của biến công cụ. Bertrand, Duflo &amp; Mullainathan (NBER w8841) về sai số chuẩn của DiD.</li>
@@ -3807,7 +3808,7 @@ print(f'DML      : {theta:.2f} (SE {se:.2f})')
 
         <div class="box note">
           <p class="box__k">Những chỗ trang này chưa đọc được tận mắt</p>
-          <p>Nói thẳng để bạn biết nên tin tới đâu. <b>Holland (1986)</b> — bài đặt tên &ldquo;vấn đề cơ bản của suy luận nhân quả&rdquo; — chỉ mở được bản quét ảnh; việc gán tên dựa vào Mixtape. <b>Armitage, McPherson &amp; Rowe (1969)</b> nằm sau tường phí: ba mốc gán cho họ ở mục 3.1 lấy qua Lakens, các ô còn lại là tích phân số của trang. Bài gốc E-value của <b>VanderWeele &amp; Ding (2017)</b> không tải được; công thức đối chiếu qua bài của chính các tác giả năm 2018. Của <b>Goodman-Bacon (2021)</b> chỉ đọc được phần tóm tắt; ví dụ số về hồi quy hai hiệu ứng cố định ở mục 5.1 là của trang, kiểm bằng hồi quy.</p>
+          <p><b>Holland (1986)</b> — bài đặt tên &ldquo;vấn đề cơ bản của suy luận nhân quả&rdquo; — chỉ mở được bản quét ảnh; việc gán tên dựa vào Mixtape. <b>Armitage, McPherson &amp; Rowe (1969)</b> nằm sau tường phí: ba mốc gán cho họ ở mục 3.1 lấy qua Lakens, các ô còn lại là tích phân số của trang. Bài gốc E-value của <b>VanderWeele &amp; Ding (2017)</b> không tải được; công thức đối chiếu qua bài của chính các tác giả năm 2018. Của <b>Goodman-Bacon (2021)</b> chỉ đọc được phần tóm tắt; ví dụ số về hồi quy hai hiệu ứng cố định ở mục 5.1 là của trang, kiểm bằng hồi quy.</p>
         </div>
 
         <ul>
@@ -6616,7 +6617,7 @@ var GLOSS = [
 ['placebo test','kiểm chứng giả','Cố ý chạy lại phân tích ở chỗ tác động thật chắc chắn bằng 0 — một kết quả mà can thiệp không chạm tới được, một mốc thời gian giả, một đơn vị giả. Ra khác 0 rõ rệt là giả định đang hỏng; ra gần 0 thì chưa chứng minh được gì, chỉ là giả định đã qua một lần thử.','#s-sense','placebo|kiểm chứng giả'],
 ['difference-in-differences','chênh lệch kép','So <b>mức thay đổi</b> của nhóm được áp dụng với mức thay đổi của nhóm không: (sau − trước) − (sau − trước). Mượn tương lai còn thiếu từ mức thay đổi của nhóm kia; ước lượng ra ATT.','#s-did','DiD|chênh lệch kép'],
 ['parallel trends','xu hướng song song','Giả định của DiD: nếu không áp dụng, hai nhóm đã thay đổi bằng nhau. Không kiểm trực tiếp được; các kỳ <b>trước</b> đi song song (event study) chỉ là bằng chứng gián tiếp.','#s-did','xu hướng song song'],
-['two-way fixed effects','hồi quy hiệu ứng cố định hai chiều','Hồi quy có hiệu ứng cố định theo hai chiều: đơn vị và thời gian. Khi áp dụng so le, nó dùng cả nhóm đã áp dụng làm đối chứng; nếu tác động đổi theo thời gian thì kết quả có thể lệch xa, kể cả sai dấu.','#s-did','TWFE'],
+['two-way fixed effects','hồi quy hai hiệu ứng cố định','Hồi quy có hiệu ứng cố định theo hai chiều: đơn vị và thời gian. Khi áp dụng so le, nó dùng cả nhóm đã áp dụng làm đối chứng; nếu tác động đổi theo thời gian thì kết quả có thể lệch xa, kể cả sai dấu.','#s-did','TWFE|hồi quy hai hiệu ứng cố định'],
 ['synthetic control','đối chứng tổng hợp','Dựng một &ldquo;bản giả&rdquo; của đơn vị được áp dụng bằng trung bình có trọng số (không âm, tổng bằng 1) của các đơn vị khác, chọn cho khớp giai đoạn trước. Khoảng hở sau đó là tác động.','#s-synth','đối chứng tổng hợp'],
 ['donor pool','kho đơn vị hiến','Tập đơn vị không bị áp dụng mà đối chứng tổng hợp được phép trộn. Phải sạch: không bị can thiệp tương tự, không bị lây, không gặp cú sốc riêng lớn.','#s-synth','kho đơn vị hiến|thành phố hiến'],
 ['regression discontinuity design','thiết kế ngưỡng cắt','So những đơn vị sát hai bên một vạch cắt quyết định việc áp dụng; bước nhảy của kết quả tại vạch là tác động — chỉ cho những người quanh vạch.','#s-rdd','RDD|ngưỡng cắt'],
