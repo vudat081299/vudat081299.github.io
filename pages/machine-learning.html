@@ -796,7 +796,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p>Ba câu trên có ở mọi giáo trình. Câu thứ tư thì không: <b>khi kết quả tệ, làm sao biết nên sửa bộ phận nào trong ba bộ phận trên?</b> Thêm dữ liệu? Đổi mô hình? Chỉnh learning rate? Sửa nhãn? Đoán mò ở đây tốn hàng tháng. Ng gọi bộ công cụ trả lời câu này là <i>chẩn đoán</i> (diagnostics), và nó chiếm trọn khoá 3 của DL Specialization cùng tuần 3 khoá 2 của ML Specialization. Trang này gom lại thành <a href="#act3">chặng 3</a>.</p>
         </div>
 
-        <p>Ba màu trong trang tương ứng ba câu hỏi, và <b>không bao giờ dùng vào việc khác</b>: <b class="c-m">xanh dương = mô hình</b>, <b class="c-l">cam = mất mát</b>, <b class="c-o">xanh lục = tối ưu</b>. Tám thuật toán trụ của trang mở đầu bằng một dải ba ô đúng ba màu ấy, điền sẵn ba câu trả lời: hồi quy tuyến tính, hồi quy logistic, cây quyết định, CNN, RNN, Transformer, k-means, học tăng cường. Các mục còn lại chỉ đổi <em>một</em> trong ba ô nên đi thẳng vào chỗ đổi, không lặp lại cả dải. Đọc dải đó trước khi đọc văn xuôi — nó là bản tóm tắt trung thực nhất của thuật toán.</p>
+        <p>Ba màu trong trang tương ứng ba câu hỏi: <b class="c-m">xanh dương = mô hình</b>, <b class="c-l">cam = mất mát</b>, <b class="c-o">xanh lục = tối ưu</b>. Tám thuật toán trụ của trang mở đầu bằng một dải ba ô đúng ba màu ấy, điền sẵn ba câu trả lời: hồi quy tuyến tính, hồi quy logistic, cây quyết định, CNN, RNN, Transformer, k-means, học tăng cường. Các mục còn lại chỉ đổi <em>một</em> trong ba ô nên đi thẳng vào chỗ đổi, không lặp lại cả dải. Đọc dải đó trước khi đọc văn xuôi — nó là bản tóm tắt trung thực nhất của thuật toán.</p>
 
         <div class="take"><span class="k">Mang theo</span><p>Gặp thuật toán lạ, đừng hỏi "nó là gì". Hỏi ba câu: nó vẽ được hình dạng nào, nó đo sai bằng thước nào, nó dò xuống bằng cách nào.</p></div>
       </section>
@@ -940,13 +940,13 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <li><b>Lồi.</b> Với mô hình tuyến tính, chi phí bình phương tạo ra một mặt hình bát — <b>chỉ có đúng một đáy</b>, không có hố phụ để kẹt. Đây là tính chất quý và <i>sẽ mất</i> ngay khi ta sang mạng nơ-ron.</li>
         </ul>
 
-        <p>Hãy nhìn thấy tận mắt. Bên trái là dữ liệu và đường đang xét; bên phải là <b>bản đồ chi phí</b>: mỗi điểm trên bản đồ ứng với một cặp (<i>w</i>, <i>b</i>), càng sáng thì chi phí càng thấp. Kéo hai thanh trượt và xem chấm chạy trên bản đồ.</p>
+        <p>Hãy nhìn thấy tận mắt. Bên trái là dữ liệu và đường đang xét; bên phải là <b>bản đồ chi phí</b>: mỗi điểm trên bản đồ ứng với một cặp (<i>w</i>, <i>b</i>), màu càng nhạt (càng gần màu nền) thì chi phí càng thấp. Kéo hai thanh trượt và xem chấm chạy trên bản đồ.</p>
 
         <div class="lab" id="m1">
           <div class="lab__h">
             <p class="lab__k">Mô hình 1 / 13 · giết hiểu nhầm “hàm chi phí là một khái niệm trừu tượng”</p>
             <p class="lab__t">Chi phí là một cái bát, và bạn đang đứng đâu đó trên thành bát</p>
-            <p class="lab__hint">Kéo <b>w</b> và <b>b</b>. Đường bên trái đổi, chấm bên phải chạy. Hãy thử đi vòng quanh mép bản đồ rồi tìm về vùng sáng nhất <b>chỉ bằng cách nhìn con số J</b> — đó đúng là việc mà gradient descent làm, chỉ khác là nó không nhìn được cả bản đồ, nó chỉ sờ được độ dốc ngay dưới chân.</p>
+            <p class="lab__hint">Kéo <b>w</b> và <b>b</b>. Đường bên trái đổi, chấm bên phải chạy. Hãy thử đi vòng quanh mép bản đồ rồi tìm về vùng nhạt nhất <b>chỉ bằng cách nhìn con số J</b> — đó đúng là việc mà gradient descent làm, chỉ khác là nó không nhìn được cả bản đồ, nó chỉ sờ được độ dốc ngay dưới chân.</p>
           </div>
           <div class="lab__b">
             <div class="pair">
@@ -955,8 +955,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                 <figcaption>Dữ liệu &amp; đường hiện tại. Đoạn dọc xám là <b>sai lệch</b> của từng căn — chi phí là trung bình bình phương của chúng.</figcaption>
               </figure>
               <figure>
-                <svg class="viz" id="m1-map" role="img" aria-label="Bản đồ chi phí J theo hai tham số w và b: càng sáng thì chi phí càng thấp, chấm đen là vị trí hiện tại." viewBox="0 0 320 240"></svg>
-                <figcaption>Bản đồ chi phí <b>J(w, b)</b>. Sáng = thấp. Chấm đen là vị trí hiện tại; vòng tròn nhỏ là đáy thật.</figcaption>
+                <svg class="viz" id="m1-map" role="img" aria-label="Bản đồ chi phí J theo hai tham số w và b: màu càng nhạt thì chi phí càng thấp, chấm đặc là vị trí hiện tại." viewBox="0 0 320 240"></svg>
+                <figcaption>Bản đồ chi phí <b>J(w, b)</b>. Càng nhạt (gần màu nền) = càng thấp. Chấm đặc là vị trí hiện tại; vòng tròn nhỏ là đáy thật.</figcaption>
               </figure>
             </div>
             <div style="margin-top:14px">
@@ -1057,7 +1057,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                 <div class="row"><span class="k">Kết quả</span><pre class="out" id="m2-out"></pre></div>
               </div>
               <p class="lab__f"><b>Ngưỡng phân kỳ rất sắc.</b> Trên bài này, dưới một giá trị α nào đó thì mọi thứ mượt; nhích qua nó một chút là văng ngay. Không có vùng chuyển tiếp êm ái. Đó là vì sao Ng khuyên dò α theo <b>bội số 3</b>: 0,001 → 0,003 → 0,01 → 0,03 → 0,1, thay vì cộng thêm đều đặn.</p>
-              <p class="lab__f"><b>Cách đọc đường cong học ngoài đời:</b> nếu J tăng dù chỉ một lần → α quá lớn (hoặc có bug trong đạo hàm). Nếu J giảm nhưng chậm đến sốt ruột → tăng α. Nếu J phẳng ngay từ đầu → nhiều khả năng đạo hàm sai dấu hoặc dữ liệu chưa chuẩn hoá, không phải α.</p>
+              <p class="lab__f"><b>Cách đọc đường cong học ngoài đời:</b> nếu J tăng dù chỉ một lần → α quá lớn (hoặc có bug trong đạo hàm). Nếu J giảm nhưng chậm đến sốt ruột → tăng α. Nếu J phẳng ngay từ đầu → α quá nhỏ, đạo hàm luôn ra 0 (bug), hoặc dữ liệu chưa chuẩn hoá. Đạo hàm sai dấu thì J tăng chứ không phẳng.</p>
             </div>
 
             <div data-panel="b" hidden>
@@ -1112,12 +1112,12 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__b">
             <div class="pair">
               <figure>
-                <svg class="viz" id="m3-raw" role="img" aria-label="Bản đồ chi phí khi chưa chuẩn hoá: vùng thấp là một dải dẹt nằm ngang, đường đi zigzag mãi mới tới đáy." viewBox="0 0 320 250"></svg>
-                <figcaption><b>Chưa chuẩn hoá.</b> Vùng chi phí thấp là một dải <b>dẹt như quả trứng nằm ngang</b>; đường đi zigzag.</figcaption>
+                <svg class="viz" id="m3-raw" role="img" aria-label="Bản đồ chi phí khi chưa chuẩn hoá: vùng thấp là một khe dẹt nằm ngang; α phải rất nhỏ, và đường đi bò rất chậm dọc khe." viewBox="0 0 320 250"></svg>
+                <figcaption><b>Chưa chuẩn hoá.</b> Vùng chi phí thấp là một khe <b>dẹt như quả trứng nằm ngang</b>; α chỉ được nhỏ hơn ~2·10⁻⁴, và ở đó đường đi bò rất chậm dọc khe.</figcaption>
               </figure>
               <figure>
-                <svg class="viz" id="m3-norm" role="img" aria-label="Bản đồ chi phí sau khi chuẩn hoá: vùng thấp gần tròn, đường đi gần như thẳng vào đáy." viewBox="0 0 320 250"></svg>
-                <figcaption><b>Đã chuẩn hoá.</b> Vùng chi phí thấp <b>gần tròn</b>; đường đi gần như thẳng vào đáy.</figcaption>
+                <svg class="viz" id="m3-norm" role="img" aria-label="Bản đồ chi phí sau khi chuẩn hoá: vùng thấp gần tròn; ở α khoảng 1, đường đi gần như thẳng vào đáy." viewBox="0 0 320 250"></svg>
+                <figcaption><b>Đã chuẩn hoá.</b> Vùng chi phí thấp <b>gần tròn</b>; ở α ≈ 1, đường đi gần như thẳng vào đáy.</figcaption>
               </figure>
             </div>
             <div style="margin-top:14px">
@@ -1193,8 +1193,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <div data-panel="a">
               <div class="pair">
                 <figure>
-                  <svg class="viz" id="m4-plane" role="img" aria-label="Mỗi chấm là một căn nhà, đen là bán nhanh và rỗng là không; một đường thẳng chia mặt phẳng thành hai vùng." viewBox="0 0 320 250"></svg>
-                  <figcaption>Mỗi chấm là một căn nhà. <b>Đen = bán nhanh</b>, rỗng = không. Đường là ranh giới; vùng nền là xác suất mô hình gán.</figcaption>
+                  <svg class="viz" id="m4-plane" role="img" aria-label="Mỗi chấm là một căn nhà, chấm đặc là bán nhanh và chấm rỗng là không; một đường thẳng chia mặt phẳng thành hai vùng." viewBox="0 0 320 250"></svg>
+                  <figcaption>Mỗi chấm là một căn nhà. <b>Chấm đặc = bán nhanh</b>, chấm rỗng = không. Đường là ranh giới; vùng nền là xác suất mô hình gán.</figcaption>
                 </figure>
                 <figure>
                   <svg class="viz" id="m4-sig" role="img" aria-label="Đường sigmoid với trục ngang là z và trục dọc là xác suất, kèm các ví dụ được chiếu lên đường." viewBox="0 0 320 250"></svg>
@@ -1202,16 +1202,16 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                 </figure>
               </div>
               <div style="margin-top:14px">
-                <div class="row"><label for="m4-w1">w₁ · diện tích</label><div class="inline"><input type="range" id="m4-w1" min="-3" max="3" step="0.05" value="1.1"><span class="val" id="m4-w1v"></span></div></div>
-                <div class="row"><label for="m4-w2">w₂ · giá/m²</label><div class="inline"><input type="range" id="m4-w2" min="-3" max="3" step="0.05" value="-1.4"><span class="val" id="m4-w2v"></span></div></div>
+                <div class="row"><label for="m4-w1">w₁ · diện tích</label><div class="inline"><input type="range" id="m4-w1" min="-5" max="5" step="0.05" value="1.1"><span class="val" id="m4-w1v"></span></div></div>
+                <div class="row"><label for="m4-w2">w₂ · giá/m²</label><div class="inline"><input type="range" id="m4-w2" min="-5" max="5" step="0.05" value="-1.4"><span class="val" id="m4-w2v"></span></div></div>
                 <div class="row"><label for="m4-b">b · độ chệch</label><div class="inline"><input type="range" id="m4-b" min="-4" max="4" step="0.05" value="0.2"><span class="val" id="m4-bv"></span></div></div>
                 <div class="row">
                   <span class="k">Điều khiển</span>
-                  <div class="inline"><button class="btn btn--solid" id="m4-fit">Để máy tự tìm</button><span class="dim" style="font-size:12.5px">200 vòng gradient descent trên log loss</span></div>
+                  <div class="inline"><button class="btn btn--solid" id="m4-fit">Để máy tự tìm</button><span class="dim" style="font-size:12.5px">400 vòng gradient descent trên log loss</span></div>
                 </div>
                 <div class="row"><span class="k">Kết quả</span><pre class="out" id="m4-out"></pre></div>
               </div>
-              <p class="lab__f"><b>Để ý độ lớn của w:</b> khi bạn tăng cả w₁ và w₂ lên gấp đôi mà giữ nguyên tỉ lệ, <b>ranh giới không đổi chỗ</b> nhưng vùng chuyển màu <b>hẹp lại</b> — mô hình trở nên "tự tin" hơn ở cùng một ranh giới. Đây chính là cơ chế mà regularization sẽ can thiệp vào ở mục sau: phạt w lớn = ép mô hình bớt tự tin thái quá.</p>
+              <p class="lab__f"><b>Để ý độ lớn của w:</b> khi bạn nhân đôi cả w₁, w₂ <b>và b</b>, <b>ranh giới không đổi chỗ</b> nhưng vùng chuyển màu <b>hẹp lại</b> — mô hình trở nên "tự tin" hơn ở cùng một ranh giới. Đây chính là cơ chế mà regularization sẽ can thiệp vào ở mục sau: phạt w lớn = ép mô hình bớt tự tin thái quá.</p>
             </div>
 
             <div data-panel="b" hidden>
@@ -1279,7 +1279,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__h">
             <p class="lab__k">Mô hình 5 / 13 · giết hiểu nhầm “sai số huấn luyện thấp là mô hình tốt”</p>
             <p class="lab__t">Bậc đa thức, λ, và hai đường cong không bao giờ đi cùng nhau</p>
-            <p class="lab__hint">Chấm đen là dữ liệu <b>huấn luyện</b>; chấm rỗng là dữ liệu <b>kiểm thử</b> mà mô hình chưa từng thấy. Tăng bậc đa thức và xem hai con số sai số tách nhau ra. Rồi bật λ lên và xem điều gì xảy ra.</p>
+            <p class="lab__hint">Chấm đặc là dữ liệu <b>huấn luyện</b>; chấm rỗng là dữ liệu <b>kiểm thử</b> mà mô hình chưa từng thấy. Tăng bậc đa thức và xem hai con số sai số tách nhau ra. Rồi bật λ lên và xem điều gì xảy ra.</p>
           </div>
           <div class="lab__b">
             <div class="pair">
@@ -1289,7 +1289,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               </figure>
               <figure>
                 <svg class="viz" id="m5-err" role="img" aria-label="Sai số theo bậc đa thức: đường huấn luyện luôn đi xuống, đường kiểm thử xuống rồi vọt lên." viewBox="0 0 320 250"></svg>
-                <figcaption>Sai số theo bậc đa thức: <b>đen = huấn luyện</b> (luôn đi xuống), <b>đỏ = kiểm thử</b> (xuống rồi lên). Vạch dọc là bậc đang chọn.</figcaption>
+                <figcaption>Sai số theo bậc đa thức: <b>màu chữ = huấn luyện</b> (luôn đi xuống), <b>đỏ = kiểm thử</b> (xuống rồi lên). Vạch dọc là bậc đang chọn.</figcaption>
               </figure>
             </div>
             <div style="margin-top:14px">
@@ -1405,7 +1405,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               </div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m6-out"></pre></div>
             </div>
-            <p class="lab__f"><b>Thí nghiệm bắt buộc phải làm:</b> để tuyến tính, kéo số lớp lên 4 và nơ-ron lên 12 — tức <b>hơn 400 tham số</b> — rồi huấn luyện. Ranh giới vẫn là một đường thẳng, và độ chính xác vẫn kẹt ở mức của hồi quy logistic. Bốn trăm tham số, không hơn được hai tham số. Sau đó bấm ReLU và huấn luyện lại.</p>
+            <p class="lab__f"><b>Thí nghiệm bắt buộc phải làm:</b> để tuyến tính, kéo số lớp lên 4 và nơ-ron lên 12 — tức <b>hơn 500 tham số</b> — rồi huấn luyện. Ranh giới vẫn là một đường thẳng, và độ chính xác vẫn kẹt ở mức của hồi quy logistic. Hơn năm trăm tham số, không hơn được ba tham số của hồi quy logistic. Sau đó bấm ReLU và huấn luyện lại.</p>
             <p class="lab__f"><b>Vì sao ReLU cho ranh giới gấp khúc:</b> ReLU là hai đoạn thẳng nối nhau tại 0. Mỗi nơ-ron ReLU vẽ một "nếp gấp" trong không gian; nhiều nơ-ron cho nhiều nếp; nhiều lớp thì nếp gấp <b>nhân lên theo cấp số nhân</b>. Đó là toàn bộ nguồn gốc của sức mạnh mạng sâu — nó ghép nhiều mảnh thẳng thành một hình cong tuỳ ý, giống cách bạn xấp xỉ đường tròn bằng đa giác nhiều cạnh.</p>
           </div>
         </div>
@@ -1673,7 +1673,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <p><b>Cái giá:</b> hàm chi phí không còn được định nghĩa rõ ràng ở mỗi bước, nên <i>đường cong J không còn giảm đơn điệu</i> và bạn mất một công cụ debug. Ng khuyên: khi nghi có bug, tắt dropout, xác nhận J giảm đều, rồi mới bật lại.</p>
 
         <h3>Batch normalization: chuẩn hoá lại ở <i>giữa</i> mạng</h3>
-        <p>Ở <a href="#s-scale">chặng 1</a> ta chuẩn hoá đầu vào. Batch norm hỏi câu hiển nhiên tiếp theo: <b>tại sao chỉ chuẩn hoá lớp 0?</b> Đầu vào của lớp 5 chính là đầu ra của lớp 4, và nó cũng có thể lệch thang, cũng làm bề mặt chi phí dẹt đi. Nên: chuẩn hoá <span class="mono">z</span> trong từng lớp về trung bình 0 phương sai 1, rồi <b>nhân lại với hai tham số học được γ và β</b> để mạng tự chọn thang đo phù hợp nếu trung bình 0 không phải điều nó muốn.</p>
+        <p>Ở <a href="#s-scale">chặng 1</a> ta chuẩn hoá đầu vào. Batch norm hỏi câu hiển nhiên tiếp theo: <b>tại sao chỉ chuẩn hoá lớp 0?</b> Đầu vào của lớp 5 chính là đầu ra của lớp 4, và nó cũng có thể lệch thang, cũng làm bề mặt chi phí dẹt đi. Nên: chuẩn hoá <span class="mono">z</span> trong từng lớp về trung bình 0 phương sai 1, rồi <b>nhân với γ và cộng β</b> — hai tham số học được — để mạng tự chọn thang đo phù hợp nếu trung bình 0 không phải điều nó muốn.</p>
         <ul class="tight">
           <li><b>Lợi ích chính</b>: huấn luyện nhanh hơn rõ rệt, và cho phép dùng α lớn hơn.</li>
           <li><b>Lợi ích phụ</b>: có tác dụng regularize nhẹ, vì trung bình/phương sai tính trên mini-batch nên có nhiễu. Nhưng <b>đừng dùng nó thay dropout</b> — tác dụng phụ này yếu và giảm dần khi lô lớn.</li>
@@ -1730,7 +1730,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="box__t">"Chia ngẫu nhiên là xong."</p>
           <div class="row">
             <span class="k">Nghe có lý vì</span><span><span class="mono">train_test_split(shuffle=True)</span> là dòng lệnh mặc định trong mọi hướng dẫn.</span>
-            <span class="k">Chỗ sai</span><span><b>Dev và test phải phản ánh dữ liệu bạn sẽ gặp khi triển khai thật</b>, chứ không phải dữ liệu bạn tình cờ thu thập được. Ng kể ví dụ: đội xây nhận dạng ảnh mèo lấy dev/test từ ảnh chất lượng cao trên web, còn ứng dụng thật thì người dùng chụp bằng điện thoại, mờ và thiếu sáng. Mô hình đạt 95% trên dev và thất bại khi ra mắt. Họ đã <b>ngắm sai bia</b> suốt sáu tháng.</span>
+            <span class="k">Chỗ sai</span><span><b>Dev và test phải phản ánh dữ liệu bạn sẽ gặp khi triển khai thật</b>, chứ không phải dữ liệu bạn tình cờ thu thập được. Ng kể một chuyện có thật: một đội tối ưu mô hình duyệt khoản vay trên tập dev lấy từ các vùng thu nhập trung bình, rồi đem thử trên vùng thu nhập thấp, nơi dữ liệu khác hẳn, và mô hình chạy không tốt. Họ đã <b>ngắm sai bia</b>, mất khoảng ba tháng công phải làm lại.</span>
             <span class="k">Và</span><span>với dữ liệu <b>theo thời gian</b> (giá cổ phiếu, doanh số, log người dùng), chia ngẫu nhiên là <b>rò rỉ tương lai vào quá khứ</b>. Phải chia theo mốc thời gian: huấn luyện trên trước tháng 6, kiểm thử trên sau tháng 6.</span>
           </div>
         </div>
@@ -1786,8 +1786,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <div data-panel="a">
               <div class="pair">
                 <figure>
-                  <svg class="viz" id="m9-bars" role="img" aria-label="Bốn mức sai số xếp chồng lên nhau; khoảng nào rộng nhất chính là chỗ phải sửa." viewBox="0 0 320 250"></svg>
-                  <figcaption>Bốn mức xếp chồng. Khoảng nào <b>rộng nhất</b> chính là chỗ phải sửa.</figcaption>
+                  <svg class="viz" id="m9-bars" role="img" aria-label="Bốn mức sai số đứng cạnh nhau; vạch màu giữa hai cột là khoảng cách, khoảng nào rộng nhất chính là chỗ phải sửa." viewBox="0 0 320 250"></svg>
+                  <figcaption>Bốn mức sai số đứng cạnh nhau; vạch màu giữa hai cột là khoảng cách. Khoảng nào <b>rộng nhất</b> chính là chỗ phải sửa.</figcaption>
                 </figure>
                 <figure>
                   <pre class="out" id="m9-adv" style="min-height:210px"></pre>
@@ -2045,7 +2045,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <thead><tr><th>Tiêu chí</th><th>Cây / rừng / XGBoost</th><th>Mạng nơ-ron</th></tr></thead>
             <tbody>
               <tr><td>Dữ liệu bảng (số + hạng mục)</td><td><b>Rất tốt. Nên thử trước.</b></td><td>Được, nhưng ít khi thắng và tốn công hơn.</td></tr>
-              <tr><td>Ảnh, âm thanh, chữ</td><td><b>Không dùng được</b> — không khai thác được cấu trúc không gian/thứ tự.</td><td><b>Lựa chọn duy nhất.</b></td></tr>
+              <tr><td>Ảnh, âm thanh, chữ</td><td><b>Không nên dùng</b> — không khai thác được cấu trúc không gian/thứ tự.</td><td><b>Lựa chọn mặc định.</b></td></tr>
               <tr><td>Thời gian huấn luyện</td><td>Nhanh. Thường vài giây tới vài phút trên CPU.</td><td>Chậm. Thường cần GPU.</td></tr>
               <tr><td>Tiền xử lý</td><td>Gần như không cần: <b>không phải chuẩn hoá</b>, xử lý được đặc trưng lệch thang tự nhiên.</td><td>Bắt buộc chuẩn hoá, chọn khởi tạo, chọn optimizer.</td></tr>
               <tr><td>Giải thích được</td><td>Một cây nhỏ thì <b>đọc được như luật</b>. Rừng thì khó hơn nhưng vẫn có độ quan trọng đặc trưng.</td><td>Rất khó. Cần công cụ riêng.</td></tr>
@@ -2060,7 +2060,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p><b>Dữ liệu của bạn nằm trong bảng Excel được không? → thử XGBoost trước. Là ảnh, âm thanh hay chữ? → mạng nơ-ron.</b> Ng nói gần đúng như vậy trong bài <i>When to use decision trees</i>.</p>
         </div>
 
-        <div class="take"><span class="k">Mang theo</span><p>Cây quyết định là họ mô hình duy nhất trong tám khoá không dùng gradient descent — nên nó thoát khỏi cả learning rate, chuẩn hoá lẫn khởi tạo. Trên dữ liệu bảng, đó thường là món hời chứ không phải bước lùi.</p></div>
+        <div class="take"><span class="k">Mang theo</span><p>Cây quyết định là họ mô hình có giám sát duy nhất trong tám khoá không dùng gradient descent — nên nó thoát khỏi cả learning rate, chuẩn hoá lẫn khởi tạo. Trên dữ liệu bảng, đó thường là món hời chứ không phải bước lùi.</p></div>
       </section>
 
       <!-- ═══════════════════════ CHẶNG 4 ═══════════════════════ -->
@@ -2108,8 +2108,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__b">
             <div class="pair">
               <figure>
-                <svg class="viz" id="m10-in" role="img" aria-label="Lưới ảnh đầu vào mười sáu nhân mười sáu ô, kéo chuột lên đó để vẽ." viewBox="0 0 260 260"></svg>
-                <figcaption><b>Ảnh đầu vào</b> 16×16. Kéo để vẽ.</figcaption>
+                <svg class="viz" id="m10-in" role="img" aria-label="Lưới ảnh đầu vào mười sáu nhân mười sáu ô, nét vẽ trắng trên nền đen; kéo chuột lên đó để vẽ." viewBox="0 0 260 260"></svg>
+                <figcaption><b>Ảnh đầu vào</b> 16×16, nét vẽ trắng trên nền đen. Kéo để vẽ.</figcaption>
               </figure>
               <figure>
                 <svg class="viz" id="m10-out" role="img" aria-label="Bản đồ đặc trưng sau tích chập: ô càng sáng thì bộ lọc càng kêu to ở chỗ đó." viewBox="0 0 260 260"></svg>
@@ -2140,8 +2140,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               </div>
               <div class="row"><span class="k">Đếm tham số</span><pre class="out" id="m10-cnt"></pre></div>
             </div>
-            <p class="lab__f"><b>Con số trong bảng đếm là toàn bộ luận điểm.</b> Một lớp tích chập với 32 bộ lọc 3×3 trên ảnh RGB có <b>896</b> tham số — và con số ấy <b>không đổi</b> dù ảnh là 32×32 hay 4000×4000. Một lớp kết nối đầy đủ tương đương cần hàng tỉ. Đó là cách CNN biến bài toán bất khả thi thành bài toán chạy trên một chiếc laptop.</p>
-            <p class="lab__f"><b>Ba tính chất làm nên điều đó:</b> <b>(1) chia sẻ tham số</b> — một bộ dò cạnh dọc dùng được ở mọi vị trí, nên chỉ cần lưu 9 số; <b>(2) kết nối thưa</b> — mỗi giá trị đầu ra chỉ phụ thuộc 9 điểm ảnh, không phải cả ảnh; <b>(3) bất biến tịnh tiến</b> — dịch ảnh sang phải vài pixel thì bản đồ đặc trưng cũng dịch theo, thông tin không mất.</p>
+            <p class="lab__f"><b>Con số trong bảng đếm là toàn bộ luận điểm.</b> Một lớp tích chập với 32 bộ lọc 3×3 trên ảnh RGB có <b>896</b> tham số — và con số ấy <b>không đổi</b> dù ảnh là 32×32 hay 4000×4000. Một lớp kết nối đầy đủ 1.000 nơ-ron trên ảnh 224×224 đã cần hơn 150 triệu; với ảnh 1000×1000 là 3 tỉ. Đó là cách CNN biến bài toán bất khả thi thành bài toán chạy trên một chiếc laptop.</p>
+            <p class="lab__f"><b>Ba tính chất làm nên điều đó:</b> <b>(1) chia sẻ tham số</b> — một bộ dò cạnh dọc dùng được ở mọi vị trí, nên chỉ cần lưu 9 số; <b>(2) kết nối thưa</b> — mỗi giá trị đầu ra chỉ phụ thuộc 9 điểm ảnh, không phải cả ảnh; <b>(3) đồng biến tịnh tiến</b> (translation equivariance) — dịch ảnh sang phải vài pixel thì bản đồ đặc trưng cũng dịch theo, thông tin không mất; pooling và các lớp sau biến nó thành gần <i>bất biến</i>.</p>
           </div>
         </div>
 
@@ -2370,7 +2370,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         </div>
 
         <h3>Bức tường của RNN: phụ thuộc xa</h3>
-        <p>"Con mèo mà tôi nuôi từ hồi còn bé, con mà cả nhà ai cũng quý, <b>đã</b> mười lăm tuổi." Chữ "đã" phải hợp với "con mèo" — cách nhau 18 từ. Muốn học được điều đó, gradient phải chảy ngược qua 18 bước thời gian, và mỗi bước là một phép nhân ma trận. Đây <b>đúng là bài toán gradient tan biến</b> ở <a href="#s-init">chặng 2</a>, chỉ khác là "số lớp" giờ bằng độ dài câu.</p>
+        <p>Ví dụ của Ng: "<span lang="en">The <b>cat</b>, which already ate an apple, a banana and a lot of other things, <b>was</b> full.</span>" Đổi "cat" thành "cats" thì "was" phải thành "were" — hai từ cách nhau 14 bước. Muốn học được điều đó, gradient phải chảy ngược qua 14 bước thời gian, và mỗi bước là một phép nhân ma trận. Đây <b>đúng là bài toán gradient tan biến</b> ở <a href="#s-init">chặng 2</a>, chỉ khác là "số lớp" giờ bằng độ dài câu.</p>
         <ul class="tight">
           <li><b>Gradient bùng nổ</b> thì dễ nhận ra (thấy <span class="mono">NaN</span>) và dễ chữa: <b>cắt ngưỡng gradient</b> — nếu chuẩn của gradient vượt ngưỡng thì co nó lại. Thô nhưng hiệu quả.</li>
           <li><b>Gradient tan biến</b> khó hơn nhiều, và nó là <b>vấn đề chính</b> của RNN. Nó không báo lỗi; mạng chỉ đơn giản là <i>không bao giờ học được phụ thuộc xa</i>. Cả mục sau sinh ra để chữa nó.</li>
@@ -2384,7 +2384,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <span class="map">Bản gốc · <b>DLS C5 Tuần 1</b> · GRU, LSTM, Bidirectional RNN, Deep RNNs</span>
         <h2 class="st">Cổng: thay vì ghi đè trí nhớ mỗi bước, hãy <i>học xem khi nào nên ghi</i></h2>
 
-        <p class="lede">RNN cơ bản <b>viết đè lên toàn bộ trí nhớ ở mỗi bước</b> — <span class="mono">a&lt;t&gt;</span> được tính lại từ đầu. Thông tin từ 18 bước trước bị pha loãng dần rồi biến mất. Ý tưởng của GRU và LSTM: thêm một <b>đường ống nhớ chạy thẳng</b>, và học các "van" quyết định khi nào ghi vào, khi nào xoá, khi nào đọc ra.</p>
+        <p class="lede">RNN cơ bản <b>viết đè lên toàn bộ trí nhớ ở mỗi bước</b> — <span class="mono">a&lt;t&gt;</span> được tính lại từ đầu. Thông tin từ 14 bước trước bị pha loãng dần rồi biến mất. Ý tưởng của GRU và LSTM: thêm một <b>đường ống nhớ chạy thẳng</b>, và học các "van" quyết định khi nào ghi vào, khi nào xoá, khi nào đọc ra.</p>
 
         <div class="box ana">
           <p class="box__k">Ví von</p>
@@ -2471,7 +2471,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="box note">
           <p class="box__k">Vì sao tham lam thất bại — ví dụ của Ng</p>
-          <p>Dịch một câu. Sau khi chọn "Jane is", từ có xác suất cao nhất kế tiếp là <b>"going"</b> (vì "is going" cực kỳ phổ biến trong tiếng Anh). Nhưng câu tổng thể tốt nhất lại là "Jane <b>visits</b> Africa in September". Chọn tham lam từng bước <b>khoá bạn vào một nhánh tệ</b> mà không quay lại được. <b>Xác suất cao nhất của từng từ không cộng thành xác suất cao nhất của cả câu.</b></p>
+          <p>Dịch một câu. Sau khi chọn "Jane is", từ có xác suất cao nhất kế tiếp là <b>"going"</b> (vì "is going" cực kỳ phổ biến trong tiếng Anh). Nhưng câu tổng thể tốt nhất lại là "Jane is <b>visiting</b> Africa in September"; tham lam ra "Jane is going to be visiting Africa in September", dài và kém hơn. Chọn tham lam từng bước <b>khoá bạn vào một nhánh tệ</b> mà không quay lại được. <b>Xác suất cao nhất của từng từ không cộng thành xác suất cao nhất của cả câu.</b></p>
         </div>
 
         <p><b>Beam search</b> là lối đi giữa: thay vì giữ 1 phương án (tham lam) hay tất cả (bất khả thi — 10.000<sup>10</sup> câu), <b>giữ B phương án tốt nhất</b> ở mỗi bước. B = 3 nghĩa là luôn có ba câu dở dang trong tay, mở rộng cả ba, rồi giữ lại ba tốt nhất trong số các mở rộng.</p>
@@ -2642,7 +2642,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__h">
             <p class="lab__k">Mô hình 12 / 13 · giết hiểu nhầm “k-means luôn tìm ra các cụm đúng”</p>
             <p class="lab__t">Bấm từng bước, và xem nó kẹt ở một nghiệm tồi</p>
-            <p class="lab__hint">Bấm <b>Gán</b> rồi <b>Dời</b> luân phiên để thấy cơ chế. Sau đó bấm <b>Khởi tạo xấu</b> vài lần và <b>Chạy tới cùng</b> — bạn sẽ thấy cùng một dữ liệu cho ra những cách chia cụm khác hẳn nhau, với distortion khác nhau.</p>
+            <p class="lab__hint">Bấm <b>Gán</b> rồi <b>Dời</b> luân phiên để thấy cơ chế. Sau đó bấm <b>Khởi tạo xấu</b> rồi <b>Chạy tới cùng</b>, và so với <b>Chạy 20 lần, giữ tốt nhất</b> — bạn sẽ thấy cùng một dữ liệu cho ra những cách chia cụm khác hẳn nhau, với distortion khác nhau.</p>
           </div>
           <div class="lab__b">
             <svg class="viz" id="m12-plot" role="img" aria-label="Các điểm dữ liệu và tâm cụm của k-means; bấm từng bước để thấy nó dừng lại ở một nghiệm tồi." viewBox="0 0 360 300" style="max-width:420px;margin:0 auto"></svg>
@@ -2830,7 +2830,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <div class="acthead" id="ket">
         <p class="k">Kết &amp; tra cứu</p>
         <h2>Chỗ nào của khoá học vẫn đúng nguyên, chỗ nào đã cũ, và bảng tra cứu</h2>
-        <p>Phần này không có trong khoá gốc. Nó tồn tại vì <b>Deep Learning Specialization được quay năm 2017–2018</b> (tuần CNN có cập nhật một phần năm 2021) và <b>Machine Learning Specialization làm lại năm 2022</b> — nghĩa là bạn đang học một tài liệu tốt nhưng không mới. Biết chính xác chỗ nào còn nguyên giá trị và chỗ nào cần đọc thêm là phần công việc mà không khoá học nào tự làm cho bạn được.</p>
+        <p>Phần này không có trong khoá gốc. Nó tồn tại vì <b>Deep Learning Specialization được quay năm 2017–2018</b> (năm 2021 thêm MobileNet, EfficientNet, U-Net vào khoá 4 và tuần Transformer vào khoá 5) và <b>Machine Learning Specialization làm lại năm 2022</b> — nghĩa là bạn đang học một tài liệu tốt nhưng không mới. Biết chính xác chỗ nào còn nguyên giá trị và chỗ nào cần đọc thêm là phần công việc mà không khoá học nào tự làm cho bạn được.</p>
       </div>
 
       <section id="s-dated">
@@ -2878,7 +2878,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <tbody>
               <tr><td><b>1</b></td><td><b>Rò rỉ dữ liệu qua bước chuẩn hoá</b></td><td>Tính µ, σ (hoặc min/max) trên <i>toàn bộ</i> dữ liệu rồi mới chia tập. Kết quả đẹp bất thường trên test rồi sập khi triển khai. <b>Tính trên train, áp cho mọi tập.</b></td></tr>
               <tr><td><b>2</b></td><td><b>Chia ngẫu nhiên dữ liệu theo thời gian</b></td><td>Mô hình dự báo doanh số đạt 97% và vô dụng. Bạn đã cho nó xem tương lai. <b>Chia theo mốc thời gian.</b></td></tr>
-              <tr><td><b>3</b></td><td><b>Tập dev không giống dữ liệu thật</b></td><td>Tối ưu sáu tháng cho một bài toán không ai cần. <b>Dev/test phải lấy từ phân phối ngày triển khai.</b></td></tr>
+              <tr><td><b>3</b></td><td><b>Tập dev không giống dữ liệu thật</b></td><td>Tối ưu hàng tháng trời cho một bài toán không ai cần. <b>Dev/test phải lấy từ phân phối ngày triển khai.</b></td></tr>
               <tr><td><b>4</b></td><td><b>Dùng "độ chính xác" trên dữ liệu lệch</b></td><td>99,5% và không phát hiện được ca nào. <b>Dùng precision / recall / F1.</b></td></tr>
               <tr><td><b>5</b></td><td><b>Nhìn tập test nhiều lần rồi chỉnh theo</b></td><td>Bạn đã biến nó thành tập dev thứ hai, và mất luôn ước lượng khách quan cuối cùng. <b>Xem một lần.</b></td></tr>
               <tr><td><b>6</b></td><td><b>Không có mốc so sánh</b></td><td>"Mô hình đạt 82%" — tốt hay tệ? Luôn dựng trước: <b>đoán bừa theo lớp đa số</b>, một mô hình tuyến tính đơn giản, và <b>mức con người</b>.</td></tr>
@@ -3409,12 +3409,16 @@ function drawCostMap(svg, W, H, P) {
     }
     el(sc, 'path', { d: dd }, 'fill:none;stroke:var(--l);stroke-width:1.8');
 
-    var J = costLin(w, b);
+    var J = costLin(w, b), L = hist.length;
+    /* J của hàm bậc hai chỉ tăng khi α vượt 2/λ_max: một lần tăng là đủ biết sẽ phân kỳ */
+    var rising = !diverged && L > 1 && hist[L - 1] > hist[L - 2];
     $('m2-out').textContent = diverged
       ? 'PHÂN KỲ sau ' + path.length + ' vòng.\nα = ' + alpha().toPrecision(2) + ' quá lớn: mỗi bước nhảy qua đáy và đáp lên chỗ dốc hơn.\n→ chi phí ra vô cực / NaN. Giảm α rồi bấm "Về điểm xuất phát".'
       : 'sau ' + (path.length - 1) + ' vòng:  w = ' + fmt(w, 3) + '   b = ' + fmt(b, 3) + '\n' +
         'J = ' + fmt(J, 5) + '   (đáy: ' + fmt(costLin(BEST.w, BEST.b), 5) + ')\n' +
-        (J < costLin(BEST.w, BEST.b) * 1.001 ? '→ đã hội tụ.' : '→ còn đang đi. Bấm chạy tiếp hoặc tăng α.');
+        (J < costLin(BEST.w, BEST.b) * 1.001 ? '→ đã hội tụ.'
+          : rising ? '→ J đang TĂNG: α quá lớn, chạy tiếp sẽ phân kỳ. Giảm α rồi bấm "Về điểm xuất phát".'
+          : '→ còn đang đi. Bấm chạy tiếp hoặc tăng α.');
   }
   $('m2-a').addEventListener('input', function () { reset(); });
   $('m2-run').addEventListener('click', function () { step(200); });
@@ -3592,6 +3596,13 @@ function drawCostMap(svg, W, H, P) {
       return padr(t, 17) + 'sau 600 vòng còn cao hơn đáy ' + pad(fmt((r.J / r.jb - 1) * 100, 0), 5) + '%';
     }
     if (!SW) SW = { raw: sweep(false, 'raw'), norm: sweep(true, 'norm') };
+    /* gộp α hiện tại vào kết quả quét, để dòng quét không nói ngược dòng ngay trên nó */
+    function merge(w, r) {
+      var m = { amax: w.amax, iter: w.iter, a: w.a };
+      if (!r.bad && (m.amax === null || a > m.amax)) m.amax = a;
+      if (r.conv > 0 && r.conv < m.iter) { m.iter = r.conv; m.a = a; }
+      return m;
+    }
     function bestLine(t, w) {
       return padr(t, 17) + 'α tối đa trước khi phân kỳ ≈ ' + padr(w.amax.toPrecision(2), 9) +
         (w.a === null ? '  · không α nào về đáy trong ' + CAP + ' vòng'
@@ -3600,10 +3611,13 @@ function drawCostMap(svg, W, H, P) {
     $('m3-out').textContent =
       'Ở α hiện tại (' + a.toPrecision(2) + '):\n' +
       line('  chưa chuẩn hoá', r1) + '\n' + line('  đã chuẩn hoá', r2) + '\n' +
-      '  → ' + (r1.bad || r2.bad ? 'một bên đã nổ trong khi bên kia vẫn chạy.'
-                                 : 'cùng α này không bên nào về đáy — vì hai bài toán ở hai thang đo khác hẳn.') + '\n\n' +
-      'Quét 60 giá trị α từ 1e−6 tới 4, tối đa ' + CAP + ' vòng mỗi lần — tốt nhất mỗi bên làm được gì:\n' +
-      bestLine('  chưa chuẩn hoá', SW.raw) + '\n' + bestLine('  đã chuẩn hoá', SW.norm) + '\n\n' +
+      '  → ' + (r1.bad && r2.bad ? 'cả hai đều nổ — α này quá lớn cho cả hai thang đo.'
+              : r1.bad || r2.bad ? 'một bên đã nổ trong khi bên kia vẫn chạy.'
+              : r1.conv > 0 && r2.conv > 0 ? 'cả hai về đáy.'
+              : r1.conv > 0 || r2.conv > 0 ? 'chỉ một bên về đáy với cùng α này — vì hai bài toán ở hai thang đo khác hẳn.'
+              : 'cùng α này không bên nào về đáy — vì hai bài toán ở hai thang đo khác hẳn.') + '\n\n' +
+      'Quét 60 giá trị α từ 1e−6 tới 4 (cộng α hiện tại), tối đa ' + CAP + ' vòng mỗi lần — tốt nhất mỗi bên làm được gì:\n' +
+      bestLine('  chưa chuẩn hoá', merge(SW.raw, r1)) + '\n' + bestLine('  đã chuẩn hoá', merge(SW.norm, r2)) + '\n\n' +
       'Chuẩn hoá không đổi bài toán. Nó đổi HÌNH DẠNG bề mặt — và nhờ đó đổi cả\n' +
       'khoảng α dùng được lẫn số vòng cần thiết, chênh nhau nhiều bậc độ lớn.';
   }
@@ -3703,7 +3717,7 @@ function drawCostMap(svg, W, H, P) {
       }
       w1 -= 0.6 * g1 / D.length; w2 -= 0.6 * g2 / D.length; b -= 0.6 * gb / D.length;
     }
-    $('m4-w1').value = Math.max(-3, Math.min(3, w1)); $('m4-w2').value = Math.max(-3, Math.min(3, w2)); $('m4-b').value = Math.max(-4, Math.min(4, b));
+    $('m4-w1').value = Math.max(-5, Math.min(5, w1)); $('m4-w2').value = Math.max(-5, Math.min(5, w2)); $('m4-b').value = Math.max(-4, Math.min(4, b));
     draw();
   });
   redraws.push(draw); draw();
@@ -3763,6 +3777,10 @@ function drawCostMap(svg, W, H, P) {
   for (i = 0; i < 60; i++) { var x = -3 + 6 * R(); ALL.push([x, truef(x) + gauss(R) * 0.26]); }
   var R2 = rng(999);
   for (i = 0; i < 60; i++) { var x2 = -3 + 6 * R2(); TEST.push([x2, truef(x2) + gauss(R2) * 0.26]); }
+  /* sàn nhiễu đo trên ĐÚNG 60 điểm kiểm thử này: sai số của chính hàm thật (σ² = 0,068 là sàn của tổng thể) */
+  var FLOOR = 0;
+  for (i = 0; i < TEST.length; i++) FLOOR += Math.pow(truef(TEST[i][0]) - TEST[i][1], 2);
+  FLOOR /= TEST.length;
 
   /* cơ sở Chebyshev: cùng một không gian đa thức bậc d, nhưng ma trận không suy biến —
      nếu dùng thẳng u^k thì phép khử Gauss tự cắt bớt các hướng gần suy biến, tức là
@@ -3840,7 +3858,7 @@ function drawCostMap(svg, W, H, P) {
     txt(se, W / 2, H - 10, 'bậc đa thức  1 → 14', 'vs', 'middle');
 
     var wk2 = w, a2 = mse(wk2, TR), b2 = mse(wk2, TEST);
-    var gap = b2 - a2, hiB = a2 > 0.20, hiV = gap > Math.max(0.10, a2);
+    var gap = b2 - a2, hiB = a2 > 0.20, hiV = gap > 0.03 && b2 > 2 * a2;
     var diag = (hiB && hiV) ? 'BIAS CAO VÀ VARIANCE CAO — vừa nghèo vừa học thuộc.'
       : hiV ? 'VARIANCE CAO — mô hình học thuộc dữ liệu huấn luyện.'
       : hiB ? 'BIAS CAO — mô hình quá nghèo để bám xu thế.'
@@ -3848,7 +3866,7 @@ function drawCostMap(svg, W, H, P) {
     $('m5-out').textContent =
       'sai số huấn luyện = ' + fmt(a2, 4) + '\n' +
       'sai số kiểm thử  = ' + fmt(b2, 4) + '   (chênh ' + fmt(gap, 4) + ')\n' +
-      'sàn nhiễu không thể vượt qua ≈ 0.068 — mô hình hoàn hảo cũng chỉ tới đó\n' +
+      'sàn nhiễu trên 60 điểm kiểm thử này ≈ ' + fmt(FLOOR, 3) + ' (σ² = 0.068 trên tổng thể) — hàm thật cũng chỉ tới đó\n' +
       '→ ' + diag;
   }
   ['m5-d', 'm5-l', 'm5-m'].forEach(function (id) { $(id).addEventListener('input', draw); });
@@ -3998,7 +4016,9 @@ function accuracy(net, data) {
       'kích hoạt: ' + names[actName] + '\n' +
       (trained ? 'sau 600 vòng:  log loss = ' + fmt(lastLoss, 4) + '   đoán đúng ' + fmt(accuracy(net, D) * 100, 1) + '%\n' +
         (actName === 'lin' ? '→ ranh giới vẫn là MỘT ĐƯỜNG THẲNG. Thêm lớp, thêm nơ-ron đều vô ích.'
-                           : '→ ranh giới gấp khúc bao được vòng tròn.')
+          : '→ ranh giới ' + (actName === 'relu' ? 'gấp khúc' : 'cong') +
+            (accuracy(net, D) >= 0.97 ? ' bao được vòng tròn.'
+                                      : ' nhưng chưa khép được vòng tròn — thêm nơ-ron, thêm lớp, hoặc huấn luyện tiếp.'))
         : 'chưa huấn luyện — bấm nút.');
   }
   $('m6-act').addEventListener('click', function (e) {
@@ -4205,16 +4225,21 @@ function accuracy(net, data) {
     out.push('');
     if (ab < 0) { out.push('⚠ Mô hình đang TỐT HƠN mức con người.'); out.push('   Bộ chẩn đoán này hết tác dụng: không còn mốc để'); out.push('   biết bias tránh được là bao nhiêu.'); }
     var big = Math.max(ab, va, dt);
-    if (ab >= 0 && ab === big && ab > 1) {
+    if (ab > 1 && va > 1 && Math.min(ab, va) >= 0.5 * Math.max(ab, va) && Math.max(ab, va) === big) {
+      out.push('CHẨN ĐOÁN: CẢ BIAS VÀ VARIANCE đều cao.');
+      acts = ['1. Sửa bias trước: mạng to hơn, huấn luyện lâu hơn', '2. Rồi tới variance: thêm dữ liệu huấn luyện',
+              '3. Tăng λ, dropout, tăng cường dữ liệu',
+              '', 'Mạng to hơn mà có regularization đủ thì hầu như', 'không làm variance tệ thêm.'];
+    } else if (ab >= 0 && ab === big && ab > 1) {
       out.push('CHẨN ĐOÁN: BIAS là nút thắt chính.');
       acts = ['1. Mạng to hơn (nhiều lớp / nơ-ron hơn)', '2. Huấn luyện lâu hơn, hoặc đổi sang Adam',
-              '3. Giảm λ', '4. Thêm đặc trưng / đặc trưng đa thức', '5. Đổi kiến trúc',
-              '', '✗ ĐỪNG thu thập thêm dữ liệu — sẽ không giúp gì.'];
+              '3. Giảm λ', '4. Thêm đặc trưng / đặc trưng đa thức', '5. Đổi kiến trúc'];
+      if (va <= 1) acts.push('', '✗ ĐỪNG thu thập thêm dữ liệu — sẽ không giúp gì.');
     } else if (va === big && va > 1) {
       out.push('CHẨN ĐOÁN: VARIANCE là nút thắt chính.');
       acts = ['1. Thêm dữ liệu huấn luyện (hiệu quả nhất)', '2. Tăng λ', '3. Dropout',
-              '4. Tăng cường dữ liệu', '5. Bớt đặc trưng / mạng nhỏ hơn (biện pháp cuối)',
-              '', '✗ ĐỪNG huấn luyện lâu hơn — chỉ khớp thêm nhiễu.'];
+              '4. Tăng cường dữ liệu', '5. Bớt đặc trưng / mạng nhỏ hơn (biện pháp cuối)'];
+      if (ab <= 1) acts.push('', '✗ ĐỪNG huấn luyện lâu hơn — chỉ khớp thêm nhiễu.');
     } else if (dt === big && dt > 1) {
       out.push('CHẨN ĐOÁN: bạn đã KHỚP THEO TẬP DEV.');
       acts = ['1. Tập dev quá nhỏ — cần nhiều mẫu hơn', '2. Bạn đã chỉnh siêu tham số theo dev quá nhiều lần',
@@ -4229,7 +4254,7 @@ function accuracy(net, data) {
   ['m9-h', 'm9-tr', 'm9-dv', 'm9-te'].forEach(function (id) { $(id).addEventListener('input', draw); });
   var PRE = {
     bias: [1, 15, 16, 16.5], var: [1, 1.5, 11, 11.5], both: [1, 12, 22, 22.5],
-    ok: [4, 4.5, 5, 5.2], dev: [1, 3, 4, 12]
+    ok: [4, 4.5, 5, 5.5], dev: [1, 3, 4, 12]
   };
   $('m9-presets').addEventListener('click', function (e) {
     var c = e.target.closest ? e.target.closest('.chip') : null; if (!c) return;
@@ -4319,19 +4344,20 @@ function accuracy(net, data) {
     }
     return out;
   }
+  /* thang xám CỐ ĐỊNH, không theo theme: 0 = đen, 1 = trắng, như một tấm ảnh thật —
+     để chữ "sáng / tối" trong bài đúng ở cả hai theme */
+  function gray(v) { var g = Math.round(14 + 236 * v); return 'fill:rgb(' + g + ',' + g + ',' + g + ');stroke:#555;stroke-width:.4'; }
   function draw() {
     clear(si); clear(so);
     var S = 260 / N, i, j;
     for (j = 0; j < N; j++) for (i = 0; i < N; i++) {
-      el(si, 'rect', { x: i * S, y: j * S, width: S, height: S },
-         'fill:var(--ink);fill-opacity:' + (0.04 + 0.86 * img[j][i]) + ';stroke:var(--border);stroke-width:.4');
+      el(si, 'rect', { x: i * S, y: j * S, width: S, height: S }, gray(img[j][i]));
     }
     var out = conv(), M = 0, S2 = 260 / (N - 2);
     for (j = 0; j < out.length; j++) for (i = 0; i < out[j].length; i++) M = Math.max(M, Math.abs(out[j][i]));
     M = M || 1;
     for (j = 0; j < out.length; j++) for (i = 0; i < out[j].length; i++) {
-      el(so, 'rect', { x: i * S2, y: j * S2, width: S2, height: S2 },
-         'fill:var(--ink);fill-opacity:' + (0.04 + 0.86 * Math.abs(out[j][i]) / M) + ';stroke:var(--border);stroke-width:.4');
+      el(so, 'rect', { x: i * S2, y: j * S2, width: S2, height: S2 }, gray(Math.abs(out[j][i]) / M));
     }
     var mk = K[kname].m;
     $('m10-mat').textContent = K[kname].t + '\n' + mk.map(function (r) {
@@ -4413,9 +4439,11 @@ function accuracy(net, data) {
       'điểm thô q·k : ' + sc.map(function (v) { return fmt(v, 2); }).join('  ') + '\n' +
       'trọng số      : ' + w.map(function (v) { return fmt(v, 2); }).join('  ') + '\n' +
       'đầu ra (trộn) : [' + out.map(function (v) { return fmt(v, 2); }).join(', ') + ']\n' +
-      'lấy nhiều nhất từ "' + TOK[top] + '" (' + fmt(w[top] * 100, 1) + '%)' +
-      (T < 0.12 ? '   ← nhiệt độ gần 0: đây là tra cứu CỨNG, gần như dict[key]'
-        : T > 1.8 ? '   ← nhiệt độ cao: gần như trung bình đều, mất hết chọn lọc' : '');
+      (Math.max.apply(null, w) - Math.min.apply(null, w) < 1e-6
+        ? 'mọi khoá khớp như nhau — trọng số chia đều, nhiệt độ không có tác dụng'
+        : 'lấy nhiều nhất từ "' + TOK[top] + '" (' + fmt(w[top] * 100, 1) + '%)' +
+          (T < 0.12 ? '   ← nhiệt độ gần 0: đây là tra cứu CỨNG, gần như dict[key]'
+            : T > 1.8 ? '   ← nhiệt độ cao: gần như trung bình đều, mất hết chọn lọc' : ''));
   }
   ['m11-q0', 'm11-q1', 'm11-q2', 'm11-q3', 'm11-t'].forEach(function (id) { $(id).addEventListener('input', drawA); });
   redraws.push(drawA); drawA();
@@ -4480,7 +4508,9 @@ function accuracy(net, data) {
     var K = +$('m12-k').value, i;
     C = [];
     for (i = 0; i < K; i++) {
-      if (bad) C.push([0.20 + 0.10 * rr(), 0.22 + 0.10 * rr()]);
+      /* khởi tạo xấu: K−1 tâm chen nhau trong cụm dưới trái, tâm cuối nằm giữa hai cụm còn lại —
+         hai cụm ấy bị gộp làm một và k-means không tự thoát ra được */
+      if (bad) C.push(i < K - 1 ? [0.21 + 0.06 * rr(), 0.24 + 0.06 * rr()] : [0.60 + 0.04 * rr(), 0.51 + 0.04 * rr()]);
       else { var p = PTS[Math.floor(rr() * PTS.length)]; C.push([p[0], p[1]]); }
     }
     assign = []; nstep = 0; draw();
@@ -4590,8 +4620,8 @@ function accuracy(net, data) {
       txt(sv, x0 + s * cw + (cw - 6) / 2, y0 - 10, 'ô ' + (s + 1), 'vs', 'middle');
       txt(sv, x0 + s * cw + (cw - 6) / 2, y0 + 28, term ? ('thưởng ' + r.R[s]) : 'thưởng 0', 'vs', 'middle');
       txt(sv, x0 + s * cw + (cw - 6) / 2, y0 + 52, 'V = ' + fmt(r.V[s], 1), 'vt', 'middle');
-      if (!term) {
-        var goLeft = r.Q[s][0] >= r.Q[s][1];
+      if (!term && Math.abs(r.Q[s][0] - r.Q[s][1]) > 1e-9) {
+        var goLeft = r.Q[s][0] > r.Q[s][1];
         var cx = x0 + s * cw + (cw - 6) / 2;
         el(sv, 'path', { d: goLeft ? ('M' + (cx + 16) + ' ' + (y0 + ch + 22) + 'L' + (cx - 16) + ' ' + (y0 + ch + 22) + 'M' + (cx - 8) + ' ' + (y0 + ch + 16) + 'L' + (cx - 16) + ' ' + (y0 + ch + 22) + 'L' + (cx - 8) + ' ' + (y0 + ch + 28))
                                    : ('M' + (cx - 16) + ' ' + (y0 + ch + 22) + 'L' + (cx + 16) + ' ' + (y0 + ch + 22) + 'M' + (cx + 8) + ' ' + (y0 + ch + 16) + 'L' + (cx + 16) + ' ' + (y0 + ch + 22) + 'L' + (cx + 8) + ' ' + (y0 + ch + 28)) },
@@ -4600,16 +4630,22 @@ function accuracy(net, data) {
     }
     txt(sv, W / 2, 30, 'mũi tên = hành động tối ưu tại ô đó (theo bảng Q)', 'vs', 'middle');
     var lines = ['ô   Q(s, trái)   Q(s, phải)   chọn'];
-    var s2, flips = 0;
+    var s2, nL = 0, nR = 0, r1 = r.R[0], r6 = r.R[N - 1];
     for (s2 = 1; s2 < N - 1; s2++) {
-      var L = r.Q[s2][0], Rr = r.Q[s2][1], pick = L >= Rr ? '←' : '→';
-      if (pick === '→') flips++;
+      var L = r.Q[s2][0], Rr = r.Q[s2][1], tie = Math.abs(L - Rr) <= 1e-9, pick = tie ? '=' : L > Rr ? '←' : '→';
+      if (pick === '←') nL++; if (pick === '→') nR++;
       lines.push(pad(s2 + 1, 2) + pad(fmt(L, 2), 13) + pad(fmt(Rr, 2), 13) + '   ' + pick);
     }
     lines.push('');
-    lines.push(flips === 0 ? 'Mọi ô đều chọn đi TRÁI về mỏ lớn — γ đủ cao để chờ đợi bõ công.'
-      : flips === 4 ? 'Mọi ô đều chọn đi PHẢI về mỏ nhỏ — γ thấp, phần thưởng xa bị chiết khấu gần hết.'
-      : flips + '/4 ô chọn đi PHẢI. Ranh giới nằm giữa bản đồ: gần mỏ nào thì về mỏ đó.');
+    /* mỏ lớn là mỏ có thưởng cao hơn — người đọc kéo được cả hai thanh, nên không mặc định là ô 1 */
+    var bigDir = r1 > r6 ? 'TRÁI' : 'PHẢI', smallDir = r1 > r6 ? 'PHẢI' : 'TRÁI';
+    var nBig = r1 > r6 ? nL : nR, nSmall = r1 > r6 ? nR : nL;
+    lines.push(r1 === r6
+        ? (r1 === 0 ? 'Cả hai mỏ đều thưởng 0 — mọi hướng như nhau, không có hành động nào tốt hơn.'
+                    : 'Hai mỏ thưởng bằng nhau — gần mỏ nào thì về mỏ đó.')
+      : nBig === 4 ? 'Mọi ô đều chọn đi ' + bigDir + ' về mỏ lớn — γ đủ cao để chờ đợi bõ công.'
+      : nSmall === 4 ? 'Mọi ô đều chọn đi ' + smallDir + ' về mỏ nhỏ — γ thấp, phần thưởng xa bị chiết khấu gần hết.'
+      : nBig + '/4 ô chọn đi ' + bigDir + ' về mỏ lớn. Ranh giới nằm giữa bản đồ: gần mỏ nào thì về mỏ đó.');
     $('m13-out').textContent = lines.join('\n');
   }
   ['m13-g', 'm13-r1', 'm13-r6'].forEach(function (id) { $(id).addEventListener('input', draw); });
@@ -4699,7 +4735,7 @@ var GLOSS = [
 ['learning rate decay','giảm dần α theo thời gian','Bước lớn lúc đầu để đi nhanh, bước nhỏ lúc cuối để không nảy quanh đáy. Có ích, nhưng tìm đúng α₀ quan trọng hơn nhiều so với chọn đúng lịch giảm.','#s-optim','learning rate decay'],
 ['dropout','tắt ngẫu nhiên nơ-ron','Mỗi bước huấn luyện tắt ngẫu nhiên một tỉ lệ nơ-ron, buộc mạng phân tán trách nhiệm. <b>Phải TẮT hoàn toàn lúc suy luận</b> — bật nhầm là bug âm thầm hay gặp nhất.','#s-regdl',''],
 ['inverted dropout','dropout nghịch đảo','Bản dropout phổ biến: sau khi tắt, chia phần còn lại cho keep_prob để kỳ vọng đầu ra không đổi. Nhờ vậy lúc dự đoán không phải chỉnh gì.','#s-regdl','inverted dropout|keep_prob'],
-['batch normalization','chuẩn hoá theo lô','Chuẩn hoá z ngay TRONG từng lớp về trung bình 0 phương sai 1, rồi nhân lại với hai tham số học được γ, β. Huấn luyện nhanh hơn rõ rệt.','#s-regdl','batch norm|batch normalization'],
+['batch normalization','chuẩn hoá theo lô','Chuẩn hoá z ngay TRONG từng lớp về trung bình 0 phương sai 1, rồi nhân với γ và cộng β (hai tham số học được). Huấn luyện nhanh hơn rõ rệt.','#s-regdl','batch norm|batch normalization'],
 ['data augmentation','tăng cường dữ liệu','Lật, xoay, cắt cúp, méo màu để tạo ví dụ mới từ ví dụ cũ. Rẻ hơn đi gán nhãn thêm. Chỉ dùng phép biến đổi KHÔNG đổi nhãn.','#s-regdl','tăng cường dữ liệu'],
 ['early stopping','dừng sớm','Dừng huấn luyện ngay khi sai số dev bắt đầu đi lên. Hiệu quả nhưng Ng không thích: nó động vào hai núm cùng lúc, phá trực giao hoá.','#s-regdl','dừng sớm'],
 ['universal approximation','xấp xỉ phổ quát','Định lý nói một lớp ẩn đủ rộng đã xấp xỉ được mọi hàm liên tục. Nhưng "đủ rộng" có thể là rộng theo cấp số nhân — nên vẫn cần độ sâu.','#s-deep','xấp xỉ phổ quát'],
@@ -4750,7 +4786,7 @@ var GLOSS = [
 ['channel','kênh','Chiều sâu của một khối dữ liệu. Ảnh RGB có 3 kênh; sau một lớp 32 bộ lọc thì có 32 kênh. Chiều kênh trả lời "CÁI GÌ", chiều không gian trả lời "Ở ĐÂU".','#s-cnnparts','kênh'],
 ['pooling','gộp vùng','Max pooling 2×2 giữ giá trị lớn nhất mỗi ô 2×2. KHÔNG có tham số nào để học. Nó nói "ở vùng này có đặc trưng đó không", bỏ qua vị trí chính xác.','#s-cnnparts',''],
 ['parameter sharing','chia sẻ tham số','Một bộ dò cạnh dọc dùng được ở mọi vị trí, nên chỉ cần lưu 9 số thay vì học lại cho từng vùng ảnh. Đây là lý do CNN rẻ.','#s-cnn','chia sẻ tham số'],
-['translation invariance','bất biến tịnh tiến','Dịch ảnh sang phải vài pixel thì bản đồ đặc trưng cũng dịch theo, thông tin không mất. Tri thức về ảnh được nhét thẳng vào kiến trúc.','#s-cnn','bất biến tịnh tiến'],
+['translation equivariance','đồng biến tịnh tiến','Dịch ảnh sang phải vài pixel thì bản đồ đặc trưng cũng dịch theo, thông tin không mất. Pooling và các lớp sau biến nó thành gần bất biến (invariance): đầu ra gần như không đổi. Tri thức về ảnh được nhét thẳng vào kiến trúc.','#s-cnn','đồng biến tịnh tiến'],
 ['ResNet','mạng có kết nối tắt','Kiến trúc thêm đường tắt cộng đầu vào của khối vào đầu ra của nó. Nhờ vậy hàm đồng nhất học được miễn phí, và thêm lớp KHÔNG THỂ làm tệ đi.','#s-cnnarch',''],
 ['skip connection','kết nối tắt','Nối đầu vào của một khối thẳng sang đầu ra, vòng qua phần giữa. Xuất hiện bốn lần trong trang: ResNet (cho gradient), U-Net (cho chi tiết không gian), cổng của LSTM (cho trí nhớ xa), attention trong Transformer (cho quan hệ giữa các từ xa nhau).','#s-cnnarch','kết nối tắt|đường tắt'],
 ['1x1 convolution','tích chập 1×1','Nhìn đúng một điểm ảnh nhưng xuyên hết chiều sâu — thực chất là một nơ-ron kết nối đầy đủ chạy trên trục kênh. Dùng để GIẢM số kênh, rẻ hơn 10 lần.','#s-cnnarch','1×1|nút thắt cổ chai|bottleneck'],

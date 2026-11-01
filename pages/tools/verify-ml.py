@@ -203,6 +203,121 @@ def run_ml():
     dup = sorted({t for t in en if en.count(t) > 1})
     claim('từ điển ML không trùng tên EN', not dup, f'trùng: {dup}')
 
+    run_ml_models()
+
+
+def run_ml_models():
+    """Lời văn và luật của 13 mô hình trên machine-learning.html — các chỗ lượt rà
+    nội dung/UI đã bắt sai. Mỗi phép kiểm đọc ĐÚNG dòng JS hoặc câu chữ then chốt."""
+    import re
+
+    def js(name, start, end):
+        """Cắt khối JS của một mô hình, để phép kiểm không dính sang mô hình khác."""
+        i = HTML.find(start)
+        j = HTML.find(end, i + 1)
+        claim(f'{name}: tìm thấy khối JS', i >= 0 and j > i, f'không thấy "{start}"')
+        return HTML[i:j] if i >= 0 and j > i else ''
+
+    # ── nguồn: chuyện dev/test của Ng (DLS C3 W1, Train/dev/test distributions) ──
+    # Bài giảng kể đội duyệt khoản vay, dev lấy từ vùng thu nhập trung bình, mất "about
+    # three months". Không có ảnh mèo web/điện thoại, không có 95%, không có sáu tháng.
+    for bad in ('sáu tháng', 'Mô hình đạt 95% trên dev'):
+        claim(f'chuyện Ng: không còn "{bad}"', bad not in HTML, 'chi tiết không có trong bài giảng')
+    need('chuyện Ng: duyệt khoản vay', 'duyệt khoản vay')
+    need('chuyện Ng: ba tháng', 'khoảng ba tháng công')
+
+    # ── phụ thuộc xa của RNN: đếm đúng khoảng cách cat → was trong câu ví dụ ──
+    m = re.search(r'<span lang="en">(.*?)</span>', HTML[HTML.find('id="s-rnn"'):])
+    words = re.sub(r'<[^>]+>', '', m.group(1)).replace(',', ' ').replace('.', ' ').split() if m else []
+    dist = words.index('was') - words.index('cat') if 'cat' in words and 'was' in words else -1
+    claim('RNN: câu ví dụ có cat … was', dist > 0, 'không bóc được câu tiếng Anh ở #s-rnn')
+    need('RNN: khoảng cách cat → was', f'cách nhau {dist} bước', dist)
+    need('LSTM: nhắc lại khoảng cách', f'Thông tin từ {dist} bước trước', dist)
+
+    # ── beam search: câu tốt nhất phải chung tiền tố "Jane is" với câu tham lam ──
+    m = re.search(r'tốt nhất lại là "([^"]+)"', HTML)
+    best = re.sub(r'<[^>]+>', '', m.group(1)) if m else ''
+    claim('tham lam: câu tốt nhất bắt đầu bằng "Jane is"', best.startswith('Jane is '),
+          f'câu tốt nhất là "{best}" — lập luận "khoá sau tiền tố Jane is" sập')
+
+    # ── tích chập: dịch ảnh → bản đồ dịch theo là ĐỒNG biến, không phải bất biến ──
+    claim('CNN: không gọi tính đồng biến là "bất biến tịnh tiến"', 'bất biến tịnh tiến' not in HTML)
+    need('CNN: đồng biến tịnh tiến', 'đồng biến tịnh tiến')
+    need('CNN: FC 224×224 hơn 150 triệu', 'hơn 150 triệu', 224 * 224 * 3 * 1000)
+    claim('CNN: không còn "cần hàng tỉ"', 'tương đương cần hàng tỉ' not in HTML,
+          'bảng đếm ngay trên ghi 150.528.000, không phải hàng tỉ')
+
+    # ── batch norm: γ nhân, β cộng ──
+    claim('batch norm: β là phép cộng', 'nhân lại với hai tham số' not in HTML)
+
+    # ── M6: số tham số mạng 4 lớp × 12 nơ-ron, và của hồi quy logistic 2 đặc trưng ──
+    sizes = [2, 12, 12, 12, 12, 1]
+    p46 = sum(a * b + b for a, b in zip(sizes, sizes[1:]))
+    claim('M6: 4 lớp × 12 nơ-ron có hơn 500 tham số', 500 < p46 < 600, f'tính ra {p46}')
+    need('M6: hơn 500 tham số', 'hơn 500 tham số', p46)
+    need('M6: logistic có ba tham số', 'ba tham số của hồi quy logistic', 2 + 1)
+
+    # ── M2: J tăng là đủ biết α vượt 2/λ_max — không được khuyên "tăng α" lúc ấy ──
+    m2 = js('M2', 'Mô hình 2 — learning rate', 'Mô hình 3 —')
+    claim('M2: có nhánh "J đang tăng"', 'hist[L - 1] > hist[L - 2]' in m2 and 'rising ?' in m2,
+          'ô kết quả phải báo J tăng thay vì "còn đang đi … tăng α"')
+
+    # ── M3: hai bên cùng nổ thì không được nói "một bên" ──
+    m3 = js('M3', 'Mô hình 3 —', 'Mô hình 4 —')
+    claim('M3: nhánh cả hai cùng nổ đứng trước nhánh một bên',
+          0 <= m3.find('r1.bad && r2.bad') < m3.find('r1.bad || r2.bad'))
+    claim('M3: không còn hứa "zigzag"', 'đường đi zigzag' not in HTML)
+
+    # ── M4: nhãn nút đúng số vòng, và kết quả không bị kẹp vào biên thanh trượt ──
+    m4 = js('M4', 'Mô hình 4 —', 'Mô hình 5 —')
+    loops = re.search(r"\$\('m4-fit'\).*?k < (\d+); k\+\+", m4, re.S)
+    n4 = int(loops.group(1)) if loops else -1
+    need('M4: nhãn nút = số vòng trong code', f'>{n4} vòng gradient descent trên log loss<', n4)
+    for sid in ('m4-w1', 'm4-w2'):
+        r = re.search(r'id="%s" min="(-?[\d.]+)" max="(-?[\d.]+)"' % sid, HTML)
+        claim(f'M4: thanh {sid} đủ rộng cho nghiệm GD (|w₂| ≈ 3,7)', r is not None and float(r.group(2)) >= 4,
+              'nghiệm GD bị kẹp vào biên thanh trượt')
+    need('M4: nhân đôi cả w và b', 'nhân đôi cả w₁, w₂ <b>và b</b>')
+
+    # ── M5: sàn nhiễu đo trên tập kiểm thử đang dùng, không ghi cứng σ² ──
+    m5 = js('M5', 'Mô hình 5 —', 'mạng nơ-ron tối giản')
+    claim('M5: sàn nhiễu tính từ TEST', 'truef(TEST[i][0]) - TEST[i][1]' in m5 and 'fmt(FLOOR' in m5)
+    claim('M5: điều kiện variance đủ chặt', 'b2 > 2 * a2' in m5,
+          'bậc 8 với 14 điểm (kiểm thử gấp 8 lần huấn luyện) từng bị dán "CÂN BẰNG TỐT"')
+
+    # ── M6: câu kết luận theo độ chính xác, không theo tên hàm kích hoạt ──
+    m6 = js('M6', 'Mô hình 6 —', 'Mô hình 7 —')
+    claim('M6: kết luận "bao được vòng tròn" có điều kiện độ chính xác',
+          'accuracy(net, D) >= 0.97' in m6 and 'chưa khép được vòng tròn' in m6)
+
+    # ── M9: "Cả hai" phải ra chẩn đoán cả hai; chỉ cấm thêm dữ liệu khi variance nhỏ ──
+    m9 = js('M9', 'Mô hình 9 —', 'tab b — đường cong học')
+    pre = dict(re.findall(r'(\w+): \[([\d., ]+)\]', m9[m9.find('var PRE'):]))
+    h, tr, dv, te = (float(x) for x in pre.get('both', '0,0,0,0').split(','))
+    ab, va = tr - h, dv - tr
+    claim('M9: mẫu "Cả hai" đúng là cả hai', ab > 1 and va > 1 and min(ab, va) >= 0.5 * max(ab, va),
+          f'bias {ab}, variance {va}')
+    claim('M9: có nhánh CẢ BIAS VÀ VARIANCE trước nhánh BIAS',
+          0 <= m9.find('Math.min(ab, va) >= 0.5 * Math.max(ab, va)') < m9.find("'CHẨN ĐOÁN: BIAS là nút thắt chính.'"))
+    claim('M9: "ĐỪNG thu thập thêm dữ liệu" chỉ khi variance ≤ 1',
+          "if (va <= 1) acts.push('', '✗ ĐỪNG thu thập" in m9)
+    steps = {sid: float(st) for sid, st in re.findall(r'id="(m9-(?:h|tr|dv|te))" min="[\d.]+" max="[\d.]+" step="([\d.]+)"', HTML)}
+    order = ['m9-h', 'm9-tr', 'm9-dv', 'm9-te']
+    offgrid = [f'{k}:{v}' for k, vals in pre.items() for sid, v in zip(order, (float(x) for x in vals.split(',')))
+               if sid in steps and abs(v / steps[sid] - round(v / steps[sid])) > 1e-9]
+    claim('M9: mẫu chỉ dùng giá trị thanh trượt có', len(steps) == 4 and not offgrid, f'lệch bước: {offgrid}')
+
+    # ── M13: kết luận theo mỏ LỚN HƠN thật, không mặc định ô 1 ──
+    m13 = js('M13', 'Mô hình 13 —', 'TỪ ĐIỂN THUẬT NGỮ')
+    claim('M13: hướng mỏ lớn tính từ hai thanh thưởng', "bigDir = r1 > r6 ? 'TRÁI' : 'PHẢI'" in m13)
+
+    # ── chú thích sáng/đen: --ink đảo theo theme, nên chữ phải trung tính ──
+    for bad in ('Sáng = thấp', 'Đen = bán nhanh', 'Chấm đen', 'đen = huấn luyện', 'càng sáng thì chi phí'):
+        claim(f'theme: không còn "{bad}"', bad not in HTML, 'đúng ở một theme, ngược ở theme kia')
+    m10 = js('M10', 'Mô hình 10 —', 'Mô hình 11 —')
+    claim('M10: ảnh và bản đồ đặc trưng dùng thang xám cố định ("Sáng = kêu to" đúng cả hai theme)',
+          'function gray(' in m10 and 'var(--ink)' not in m10[m10.find('function gray('):m10.find('$(\'m10-mat\')')])
+
 
 
 # ════════════════════════ machine-learning-101.html ════════════════════════
