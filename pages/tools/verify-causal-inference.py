@@ -544,7 +544,13 @@ def run_p1():
     same('p1 · simpson ô gộp', 'm-simpson-pool', jfmt(float(r1 - r0) * 100, 1))
     same('p1 · simpson câu mặc định', 'm-simpson-say',
          f'Nhận SMS: 800 khách cửa hàng nhỏ + 200 khách cửa hàng lớn → gộp {jfmt(float(r1) * 100, 1)}%. Không nhận: 200 + 800 → gộp {jfmt(float(r0) * 100, 1)}%. '
-         f'Chênh lệch gộp {jfmt(float(r1 - r0) * 100, 1)} điểm, trong khi trong từng cỡ vẫn là +5. Phép gộp đảo cả dấu: nhóm nhận SMS nghiêng hẳn về khách cửa hàng nhỏ.')
+         f'Chênh lệch gộp {jfmt(float(r1 - r0) * 100, 1)} điểm, trong khi trong từng cỡ vẫn là +5. Phép gộp đảo cả dấu: '
+         f'khách cửa hàng nhỏ chiếm {jfmt(float(1 - sim_pool(80, 20)[2]) * 100, 0)}% nhóm nhận SMS, so với {jfmt(float(1 - sim_pool(80, 20)[3]) * 100, 0)}% nhóm không nhận.')
+    # câu tự sinh so THÀNH PHẦN hai nhóm bằng hai số làm tròn: hai số ấy không được trùng nhau ở vị trí
+    # thanh nào mà thành phần thật khác nhau, nếu không câu thành "chiếm 50%, so với 50%"
+    same_pct = [(a, b) for a, b in grid for _, _, w1, w0 in [sim_pool(a, b)]
+                if w1 != w0 and jfmt(float(1 - w1 if w1 < w0 else w1) * 100, 0) == jfmt(float(1 - w0 if w1 < w0 else w0) * 100, 0)]
+    claim('p1 · simpson: hai tỉ phần trong câu tự sinh không trùng nhau sau làm tròn', not same_pct, f'trùng ở {same_pct[:5]}')
     for s in ('gộp ra −13 điểm', 'thì gộp ra đúng +5', 'gộp ra +23', '5 + 30 × (0,2 − 0,8) = −13'):
         needs(f'p1 · simpson "{s}"', 's-traps3', s)
     claim('p1 · simpson HTML mở ở nhỏ 80%, lớn 20%', 'id="m-simpson-s" min="5" max="95" step="5" value="80"' in HTML and 'id="m-simpson-l" min="5" max="95" step="5" value="20"' in HTML)
@@ -3060,9 +3066,11 @@ def run_ref():
        nhãn do JS sinh thì không (việc ấy của smoke trong trình duyệt).
     4. Số mô hình ở đầu trang = số khối .lab thật; không sót {{ hay @@ của bộ ráp.
     Cộng: vài con số phần tra cứu nhắc lại phải còn đúng ở mục gốc của nó.
-    Cộng: bảng chọn cách làm chia hai phần, phần chọn thiết kế theo thứ tự sơ đồ 0.2; định nghĩa
-    p-value có vế "hoặc lớn hơn"; ô D không chồng trường hợp gương; câu "hay mua nhất" của m-uplift
-    và phép đổi kiểu MDE của m-power.
+    Cộng: bảng chọn cách làm chia hai phần, phần chọn thiết kế theo thứ tự sơ đồ 0.2 và lời dẫn không
+    xếp hạng theo độ "rẻ" của giả định; định nghĩa p-value có vế "hoặc lớn hơn"; ô D không chồng
+    trường hợp gương. Cộng: nhánh điều kiện của câu tự sinh và nhãn ở m-simpson, m-uplift, m-power,
+    m-srm, m-cluster, m-synth — ghim nguyên dòng điều kiện, và kiểm bằng Python điều câu nói ở mọi
+    trạng thái rơi vào nhánh ấy. Cổng không chạy JS; hành vi trong trình duyệt cần smoke riêng.
     """
     import re as _re
 
@@ -3204,14 +3212,109 @@ def run_ref():
     need('ref · ô D chỉ từ 0 tới dưới MDE', 'đầu dưới ≤ 0, đầu trên từ 0 tới dưới MDE')
     # SRM: 1.000 xô, bản cũ thiếu một xô → 499 / 999
     need('ref · SRM thiếu một xô', f'500/500 xô thành 499/500 ({vi(499 / 999 * 100, 2)}% / {vi(500 / 999 * 100, 2)}%)', 499 / 999)
-    # m-uplift: câu "khách hay mua nhất" chỉ nhắc nhóm đang có người
-    for frag in ("R.cnt[1] > 0 && R.cnt[3] > 0 ?", "ở tỉ trọng này không có chó ngủ.", "ở tỉ trọng này không có ai đằng nào cũng mua."):
-        claim(f'ref · uplift JS: {frag}', frag in HTML, 'câu "hay mua nhất" lại nhắc nhóm rỗng')
-    # m-power: đổi kiểu MDE giữ nguyên tác động; ngày/tuần phân nhóm nghìn
-    for frag in ("pin = Math.abs(+sl.value - ex) < 1e-9 ? null : ex;", "fmt(plan.days, 0) + ' ngày → chạy ' + fmt(plan.weeks, 0)",
-                 "fmt(plan.weeks * 7, 0) + ' ngày)", 'id="m-power-mder" min="1" max="100"'):
-        claim(f'ref · power JS: {frag}', frag in HTML)
+    # ── logic câu tự sinh và nhánh điều kiện của các mô hình đã sửa ─────────────────────────
+    # Cổng không chạy JS, nên ghim NGUYÊN DÒNG điều kiện then chốt (khoảng trắng tuỳ ý), và kiểm bằng
+    # Python rằng điều câu ấy nói là đúng ở mọi trạng thái rơi vào nhánh đó.
+    def _blk(key):
+        i = HTML.find('mô hình · ' + key + ' ')
+        j = HTML.find('/* ═══', i + 10) if i >= 0 else -1
+        return HTML[i:j if j > 0 else len(HTML)] if i >= 0 else ''
 
+    def pin(label, key, code):
+        rx = r'\s*'.join(_re.escape(t) for t in code.split())
+        claim(label, _re.search(rx, _blk(key)) is not None, f'JS của m-{key} không còn dòng: {code}')
+
+    # m-simpson: so thành phần hai nhóm, có số; d = 0 là "xoá sạch"
+    pin('ref · simpson JS: tỉ phần khách nhỏ hai nhóm khi nhóm nhận có ít khách lớn hơn', 'simpson',
+        "var mix = P.w1 < P.w0 ? 'khách cửa hàng nhỏ chiếm ' + fmt(100 * (1 - P.w1), 0) + '% nhóm nhận SMS, so với ' + fmt(100 * (1 - P.w0), 0) + '% nhóm không nhận.'")
+    pin('ref · simpson JS: tỉ phần khách lớn ở nhánh còn lại', 'simpson',
+        ": 'khách cửa hàng lớn chiếm ' + fmt(100 * P.w1, 0) + '% nhóm nhận SMS, so với ' + fmt(100 * P.w0, 0) + '% nhóm không nhận.';")
+    for code in ("else if (Math.abs(P.d) < 0.0005) say += ' Phép gộp xoá sạch tác động: ' + mix;",
+                 "else if (P.d < 0) say += ' Phép gộp đảo cả dấu: ' + mix;",
+                 "else if (P.w1 < P.w0) say += ' Phép gộp thu nhỏ tác động: ' + mix;",
+                 "else say += ' Phép gộp thổi phồng tác động: ' + mix;"):
+        pin(f'ref · simpson JS: {code[:40]}', 'simpson', code)
+    claim('ref · simpson: không còn "nghiêng hẳn"', 'nghiêng hẳn' not in _blk('simpson') + secs.get('s-traps3', ''))
+
+    # m-uplift: mỗi chiến lược chỉ nhắc nhóm đang có người
+    for code in ("R.cnt[1] === 0 ? 'Không còn ai đằng nào cũng mua, nên nhắn khách hay mua nhất là nhắn toàn chó ngủ: báo cáo ghi 0% khách nhận tin đã mua, chiến dịch làm MẤT ' + fmt(R.cnt[3], 0) + ' đơn",
+                 "(R.cnt[3] > 0 ? 'người đằng nào cũng mua (tốn mã giảm giá) cộng với chó ngủ",
+                 "else if (key === 'resp') say = R.msg === 0 ?",
+                 "R.cnt[0] === 0 ? 'Không có ai bị thuyết phục: mô hình phản hồi chỉ còn nhắn người đằng nào cũng mua — ' + fmt(R.cnt[1], 0)",
+                 "(R.cnt[1] > 0 ? ', nhưng kèm cả người đằng nào cũng mua: '",
+                 "else if (key === 'upl') say = (R.msg === 0 ?",
+                 "if (R.cnt[0] > 0) parts.push('người bị thuyết phục mua thêm');",
+                 "if (R.cnt[3] > 0) parts.push('chó ngủ thôi mua');",
+                 "if (R.cnt[0] + R.cnt[1] > 0) parts.push('mọi người mua đều dùng mã');"):
+        pin(f'ref · uplift JS: {code[:48]}', 'uplift', code)
+    # thứ tự cờ trong P3.UP_CHIEN là P, S, L, D — chỉ số cnt[0..3] trong các dòng trên dựa vào đó
+    claim('ref · uplift JS: cờ chiến lược theo thứ tự P, S, L, D',
+          all(f in HTML for f in ('all: [1, 1, 1, 1]', 'hist: [0, 1, 0, 1]', 'resp: [1, 1, 0, 0]', 'upl: [1, 0, 0, 0]')))
+    G1, GD = (0, 1, 5, 20, 60), (0, 1, 10, 40)
+    grid_u = [(a, b, d) for a in G1 for b in G1 for d in GD if a + b + d <= 100]
+    bad_u = []
+    for a, b, d in grid_u:
+        h, r, u = _p3_uplift(a, b, d, 'hist'), _p3_uplift(a, b, d, 'resp'), _p3_uplift(a, b, d, 'upl')
+        if b == 0 and d > 0 and not (h['resp'] == 0 and -h['orders'] == 100 * d):
+            bad_u.append(f'hist {a}/{b}/{d}')         # "0% … làm MẤT cnt[3] đơn"
+        if a == 0 and b > 0 and not (r['msg'] == 100 * b and r['orders'] == 0):
+            bad_u.append(f'resp P=0 {a}/{b}/{d}')     # chỉ còn nhắn S
+        if a > 0 and b > 0 and not (r['resp'] == u['resp'] == 1 and r['profit'] < u['profit']):
+            bad_u.append(f'resp {a}/{b}/{d}')         # "y như chiến lược uplift — mà lãi thấp hơn"
+        if a > 0 and b == 0 and r != u:
+            bad_u.append(f'resp=upl {a}/{b}/{d}')     # "trùng chiến lược uplift"
+        if a == 0 and not (u['msg'] == 0 and u['profit'] == 0):
+            bad_u.append(f'upl {a}/{b}/{d}')          # "không nhắn ai và lãi đúng bằng 0"
+    claim('ref · uplift: điều câu tự sinh nói đúng ở mọi trạng thái của nhánh ấy', not bad_u, ', '.join(bad_u[:6]))
+
+    # m-power: đổi kiểu MDE giữ nguyên tác động, kể cả khi giá trị đổi ra nằm ngoài dải thanh
+    pin('ref · power JS: MDE đang dùng là pin nếu có', 'power',
+        "function mdeVal() { return pin !== null ? pin : +$(mode === 'abs' ? 'm-power-mdea' : 'm-power-mder').value; }")
+    pin('ref · power JS: đổi kiểu không làm tròn, không chặn', 'power', "var ex = v === 'rel' ? cur / p0p * 100 : cur * p0p / 100;\n        var sl =")
+    pin('ref · power JS: pin chỉ bỏ khi thanh giữ đúng giá trị', 'power', 'pin = Math.abs(+sl.value - ex) < 1e-9 ? null : ex;')
+    pin('ref · power JS: trục giãn theo MDE đang giữ', 'power',
+        "var xlo = Math.min(mode === 'abs' ? 0.1 : 1, xc), xhi = Math.max(mode === 'abs' ? 5 : 100, xc);")
+    claim('ref · power JS: không chặn giá trị đổi kiểu', 'clamp(ex' not in _blk('power'))
+    # mô phỏng thanh trượt của trang (min/max/step đọc từ HTML): thanh tự làm tròn về nấc và chặn ở
+    # đầu mút; giá trị nó không giữ được đi vào pin. Đi rồi về phải giữ n ở mọi vị trí thanh.
+    def _rng(i):
+        m = _re.search(r'id="%s" min="([0-9.]+)" max="([0-9.]+)" step="([0-9.]+)"' % i, HTML)
+        return tuple(float(x) for x in m.groups()) if m else None
+    rp0, ra, rr = _rng('m-power-p0'), _rng('m-power-mdea'), _rng('m-power-mder')
+    claim('ref · power: đọc được dải ba thanh', None not in (rp0, ra, rr))
+    if None not in (rp0, ra, rr):
+        def snap(v, r):
+            lo, hi, st = r
+            return min(hi, max(lo, lo + round((v - lo) / st) * st))
+        def nn(p0, mde_pts):
+            p0 /= 100; p1 = p0 + mde_pts / 100; pb = (p0 + p1) / 2
+            return math.ceil((z(0.975) * math.sqrt(2 * pb * (1 - pb)) + z(0.8) * math.sqrt(p0 * (1 - p0) + p1 * (1 - p1))) ** 2 / (p1 - p0) ** 2)
+        def go(cur, p0, to):
+            ex = cur / p0 * 100 if to == 'rel' else cur * p0 / 100
+            sl = snap(ex, rr if to == 'rel' else ra)
+            return ex if abs(sl - ex) >= 1e-9 else sl
+        drift = []
+        p0s = [rp0[0] + k * rp0[2] for k in range(int(round((rp0[1] - rp0[0]) / rp0[2])) + 1)]
+        for p0 in p0s:
+            for k in range(int(round((ra[1] - ra[0]) / ra[2])) + 1):
+                a = ra[0] + k * ra[2]
+                r_ = go(a, p0, 'rel'); a2 = go(r_, p0, 'abs')
+                if not (nn(p0, a) == nn(p0, r_ * p0 / 100) == nn(p0, a2)):
+                    drift.append(f'nền {p0}% MDE {a} điểm')
+        claim('ref · power: tuyệt đối → tương đối → tuyệt đối giữ n ở mọi vị trí thanh', not drift, ', '.join(drift[:5]))
+
+    # m-srm: vạch, nhãn, vùng đỏ dùng tỉ lệ ĐÃ ĐẾM, như χ² và p
+    pin('ref · srm JS: tỉ lệ vẽ = số đếm / n, đặt trước khi vẽ', 'srm', 'var c = counts(n, share), x2 = chi2(n, share), p = chi2sf1(x2);')
+    claim('ref · srm JS: share = c[0] / n đứng sau counts và trước dev, vạch, nhãn',
+          _re.search(r'var c = counts\(n, share\), x2.*?share = c\[0\] / n;.*?dev = Math\.abs\(share - 0\.5\).*?\'đã thấy \' \+ fmt\(share \* 100, 1\)', _blk('srm'), _re.S) is not None)
+    # m-cluster: thanh số cửa hàng có thể dưới 12
+    pin('ref · cluster JS: vẽ tối đa min(12, số cửa hàng) cột', 'cluster', 'var Sd = Math.min(S, nK), L = 14, R = 330, T = 34, B = 222, cw = (R - L) / Sd;')
+    pin('ref · cluster JS: vòng vẽ theo Sd', 'cluster', 'for (i = 0; i < Sd; i++) {')
+    pin('ref · cluster JS: nhãn "X trong K" chỉ khi X < K', 'cluster', "(Sd < nK ? Sd + ' trong ' + nK : 'cả ' + nK) + ' cửa hàng")
+    # m-synth: tổng bốn thanh bằng 0 thì thanh cũng về đúng trọng số chia đều
+    claim('ref · synth JS: tổng 0 → chia đều và đẩy thanh theo (trong fromSliders)',
+          _re.search(r'function fromSliders\(\) \{(?:(?!function toSliders).)*?w = \[0\.25, 0\.25, 0\.25, 0\.25\]; toSliders\(\);\s*\}\s*function toSliders',
+                     _blk('synth'), _re.S) is not None)
 
 def main():
     global HTML, TEXT, PAGE

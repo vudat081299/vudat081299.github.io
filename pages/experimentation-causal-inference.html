@@ -1098,7 +1098,7 @@ ol.steps > li::before { content:counter(st); position:absolute; left:0; top:1px;
               <div class="read"><div class="k">Trong cửa hàng nhỏ</div><div class="v">+5,0<span class="u">điểm</span></div></div>
               <div class="read good"><div class="k">Chuẩn hoá 1.000 + 1.000</div><div class="v">+5,0<span class="u">điểm</span></div></div>
             </div>
-            <p class="lab__f" id="m-simpson-say">Nhận SMS: 800 khách cửa hàng nhỏ + 200 khách cửa hàng lớn → gộp 21,0%. Không nhận: 200 + 800 → gộp 34,0%. Chênh lệch gộp −13,0 điểm, trong khi trong từng cỡ vẫn là +5. Phép gộp đảo cả dấu: nhóm nhận SMS nghiêng hẳn về khách cửa hàng nhỏ.</p>
+            <p class="lab__f" id="m-simpson-say">Nhận SMS: 800 khách cửa hàng nhỏ + 200 khách cửa hàng lớn → gộp 21,0%. Không nhận: 200 + 800 → gộp 34,0%. Chênh lệch gộp −13,0 điểm, trong khi trong từng cỡ vẫn là +5. Phép gộp đảo cả dấu: khách cửa hàng nhỏ chiếm 80% nhóm nhận SMS, so với 20% nhóm không nhận.</p>
             <p class="lab__f"><b>Vì sao đúng như vậy, bằng một dòng tính tay:</b> tỉ lệ gộp của một nhóm là trung bình của hai cỡ, cân theo số khách. Trừ hai nhóm cho nhau thì ra <b>chênh lệch gộp = 5 + 30 × (tỉ phần khách cửa hàng lớn trong nhóm nhận − trong nhóm không nhận)</b>, với 5 là tác động thật trong từng cỡ và 30 là khoảng cách vốn có giữa cửa hàng lớn và nhỏ (40% so với 10%). Mặc định: 5 + 30 × (0,2 − 0,8) = −13. Số hạng thứ hai là thiên lệch chọn của mục 1.2, viết cho bảng này; nó bằng 0 đúng khi hai nhóm có cùng thành phần.</p>
           </div>
         </div>
@@ -2073,7 +2073,7 @@ for moi, cu in [(50_600, 49_400), (506, 494)]:
             <div class="row"><label for="m-cluster-icc">ICC</label><div class="inline"><input type="range" id="m-cluster-icc" min="0" max="200" step="5" value="20"><span class="val" id="m-cluster-iccv">0,020</span></div></div>
             <div class="row"><label for="m-cluster-k">Số cửa hàng</label><div class="inline"><input type="range" id="m-cluster-k" min="10" max="200" step="10" value="40"><span class="val" id="m-cluster-kv">40</span></div></div>
             <div class="pair">
-              <svg class="viz" id="m-cluster-dots" viewBox="0 0 340 262" role="img" aria-label="Chi tiêu của khách xếp theo 12 cửa hàng, vạch màu là trung bình từng cửa hàng"></svg>
+              <svg class="viz" id="m-cluster-dots" viewBox="0 0 340 262" role="img" aria-label="Chi tiêu của khách xếp theo cửa hàng, vẽ tối đa 12 cửa hàng; vạch màu là trung bình từng cửa hàng"></svg>
               <svg class="viz" id="m-cluster-curve" viewBox="0 0 340 262" role="img" aria-label="Đường n hiệu dụng theo số khách mỗi cửa hàng, có trần bằng số cửa hàng chia ICC"></svg>
             </div>
             <div class="reads">
@@ -4488,10 +4488,14 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
       var say = 'Nhận SMS: ' + fmt(P.nS1, 0) + ' khách cửa hàng nhỏ + ' + fmt(P.nL1, 0) + ' khách cửa hàng lớn → gộp ' + fmt(P.r1 * 100, 1) +
         '%. Không nhận: ' + fmt(P.nS0, 0) + ' + ' + fmt(P.nL0, 0) + ' → gộp ' + fmt(P.r0 * 100, 1) + '%. Chênh lệch gộp ' + sgn(P.d * 100) +
         ' điểm, trong khi trong từng cỡ vẫn là +5.';
+      /* so THÀNH PHẦN hai nhóm, không nói một nhóm "nghiêng về" đâu: nhỏ 95% + lớn 80% cho nhóm nhận 54% khách nhỏ */
+      var mix = P.w1 < P.w0 ? 'khách cửa hàng nhỏ chiếm ' + fmt(100 * (1 - P.w1), 0) + '% nhóm nhận SMS, so với ' + fmt(100 * (1 - P.w0), 0) + '% nhóm không nhận.'
+                            : 'khách cửa hàng lớn chiếm ' + fmt(100 * P.w1, 0) + '% nhóm nhận SMS, so với ' + fmt(100 * P.w0, 0) + '% nhóm không nhận.';
       if (Math.abs(P.w1 - P.w0) < 1e-12) say += ' Hai cỡ cửa hàng nhắn cùng một tỉ lệ, nên hai nhóm có cùng thành phần và phép gộp nói đúng.';
-      else if (P.d < 0) say += ' Phép gộp đảo cả dấu: nhóm nhận SMS nghiêng hẳn về khách cửa hàng nhỏ.';
-      else if (P.w1 < P.w0) say += ' Phép gộp thu nhỏ tác động: nhóm nhận SMS nghiêng về khách cửa hàng nhỏ.';
-      else say += ' Phép gộp thổi phồng tác động: nhóm nhận SMS nghiêng về khách cửa hàng lớn.';
+      else if (Math.abs(P.d) < 0.0005) say += ' Phép gộp xoá sạch tác động: ' + mix;
+      else if (P.d < 0) say += ' Phép gộp đảo cả dấu: ' + mix;
+      else if (P.w1 < P.w0) say += ' Phép gộp thu nhỏ tác động: ' + mix;
+      else say += ' Phép gộp thổi phồng tác động: ' + mix;
       $('m-simpson-say').textContent = say;
     }
     ['m-simpson-s', 'm-simpson-l'].forEach(function (id) { $(id).addEventListener('input', draw); });
@@ -4656,7 +4660,9 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
       $('m-power-vv').textContent = fmt(perDay, 0);
       var plan = powPlan(p0, mde, alpha, power, perDay), half = powPlan(p0, mde / 2, alpha, power, perDay);
       /* đường cong: trục ngang là MDE theo kiểu đang chọn, trục dọc là n mỗi nhóm, thang log */
-      var xlo = mode === 'abs' ? 0.1 : 1, xhi = mode === 'abs' ? 5 : 100;
+      /* trục là dải của thanh, giãn ra khi MDE đang giữ (pin) nằm ngoài dải ấy */
+      var xc = mdeVal(), xh = xc / 2;
+      var xlo = Math.min(mode === 'abs' ? 0.1 : 1, xc), xhi = Math.max(mode === 'abs' ? 5 : 100, xc);
       function toAbs(x) { return mode === 'abs' ? x / 100 : p0 * x / 100; }
       var xs = [], ns = [];
       for (i = 0; i <= 120; i++) { var x = xlo + (xhi - xlo) * i / 120; xs.push(x); ns.push(powN(p0, p0 + toAbs(x), alpha, power)); }
@@ -4669,17 +4675,21 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
         el(svg, 'line', { x1: X0, y1: sy(Math.pow(10, i)), x2: X1, y2: sy(Math.pow(10, i)), 'class': 'vgrid' });
         txt(svg, X0 - 6, sy(Math.pow(10, i)) + 4, yTick(Math.pow(10, i)), 'vs', 'end');
       }
-      /* trục bắt đầu ở MDE nhỏ nhất của thanh trượt (0,1 điểm hoặc 1%), không phải ở 0 — nhãn phải nói đúng điều đó */
-      (mode === 'abs' ? [0.1, 1, 2, 3, 4, 5] : [1, 20, 40, 60, 80, 100]).forEach(function (t) {
+      /* trục bắt đầu ở MDE nhỏ nhất (0,1 điểm hoặc 1% khi theo thanh), không phải ở 0 — nhãn phải nói đúng điều đó.
+         Vạch: đầu trục, rồi bội của một bước tròn (1 điểm / 20% ở dải mặc định) */
+      var stp = (xhi - xlo) / 5, mag = Math.pow(10, Math.floor(Math.log10(stp)));
+      stp = [1, 2, 5, 10].map(function (q) { return q * mag; }).filter(function (q) { return q >= stp * 0.98; })[0];
+      var ticks = [xlo];
+      for (var tk = Math.ceil((xlo + stp * 0.4) / stp) * stp; tk <= xhi + 1e-9; tk += stp) ticks.push(tk);
+      ticks.forEach(function (t) {
         el(svg, 'line', { x1: sx(t), y1: Y0, x2: sx(t), y2: Y1, 'class': 'vgrid' });
-        txt(svg, sx(t), Y1 + 16, fmt(t, t < 1 ? 1 : 0), 'vs', 'middle');
+        txt(svg, sx(t), Y1 + 16, fmt(t, t < 0.1 ? 2 : t < 1 ? 1 : 0), 'vs', 'middle');
       });
       txt(svg, X1, Y1 + 34, mode === 'abs' ? 'MDE (điểm phần trăm)' : 'MDE (% của tỉ lệ nền)', 'vs', 'end');
       txt(svg, X1, 12, 'khách mỗi nhóm · trục dọc thang log', 'vs', 'end');
       var d = '';
       for (i = 0; i < xs.length; i++) d += (i ? 'L' : 'M') + sx(xs[i]).toFixed(1) + ',' + sy(ns[i]).toFixed(1);
       el(svg, 'path', { d: d }, 'fill:none;stroke:' + K + ';stroke-width:2.2');
-      var xc = mdeVal(), xh = xc / 2;
       el(svg, 'line', { x1: sx(xc), y1: sy(plan.n), x2: sx(xc), y2: Y1 }, 'stroke:' + MUTED + ';stroke-dasharray:3 3');
       el(svg, 'line', { x1: X0, y1: sy(plan.n), x2: sx(xc), y2: sy(plan.n) }, 'stroke:' + MUTED + ';stroke-dasharray:3 3');
       el(svg, 'circle', { cx: sx(xc), cy: sy(plan.n), r: 5.5 }, 'fill:' + K);
@@ -4703,11 +4713,12 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
     }
     chipGroup('m-power-mode', 'v', function (v) {
       /* đổi kiểu MDE mà giữ nguyên tác động: 1 điểm trên nền 10% ⇄ 10% của nền. Thanh chỉ có nấc
-         0,1 điểm / 1%, nên giá trị không rơi đúng nấc được giữ trong pin; chỉ bị chặn khi ra ngoài dải thanh */
+         0,1 điểm / 1%, nên giá trị không rơi đúng nấc hoặc nằm ngoài dải thanh được giữ trong pin. Thanh tự
+         chặn ở đầu mút; số hiện ra, đường cong và n dùng pin. */
       if (v !== mode) {
         var p0p = +$('m-power-p0').value, cur = mdeVal();
+        /* không làm tròn ex: làm tròn tới 1e-6 đã đủ đổi n một khách ở vài trạng thái (nền 6,5%, MDE 0,2 điểm) */
         var ex = v === 'rel' ? cur / p0p * 100 : cur * p0p / 100;
-        ex = Math.round(clamp(ex, v === 'rel' ? 1 : 0.1, v === 'rel' ? 100 : 5) * 1e6) / 1e6;
         var sl = $(v === 'rel' ? 'm-power-mder' : 'm-power-mdea');
         sl.value = String(ex);
         pin = Math.abs(+sl.value - ex) < 1e-9 ? null : ex;
@@ -5087,6 +5098,8 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
     var K = css('--k', sec), INK = css('--ink'), MUTED = css('--muted'), BAD = css('--bad'), BADBG = css('--bad-bg'), LINE2 = css('--border-2');
     var n = NS[+$('m-srm-n').value], share = +$('m-srm-s').value / 1000;
     var c = counts(n, share), x2 = chi2(n, share), p = chi2sf1(x2);
+    /* n nhỏ thì thanh 50,6% chỉ cho 51 / 49 khách: vẽ theo tỉ lệ ĐÃ ĐẾM, là thứ χ² và p dùng */
+    share = c[0] / n;
     var L = 30, R = 600, T = 34, B = 190, lo = 0.47, hi = 0.53, sd = 0.5 / Math.sqrt(n);
     function X(s) { return L + (s - lo) / (hi - lo) * (R - L); }
     function dens(s) { var zz = (s - 0.5) / sd; return Math.exp(-0.5 * zz * zz); }   /* chuẩn hoá đỉnh = 1 */
@@ -5179,12 +5192,12 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
     var m = +$('m-cluster-m').value, icc = +$('m-cluster-icc').value / 1000, nK = +$('m-cluster-k').value;
     var dv = deff(m, icc), ne = neff(nK, m, icc), fa = falseAlarm(dv);
     /* ── trái: chấm theo cửa hàng ── */
-    var L = 14, R = 330, T = 34, B = 222, cw = (R - L) / S;
+    var Sd = Math.min(S, nK), L = 14, R = 330, T = 34, B = 222, cw = (R - L) / Sd;
     txt(svgD, L, 16, 'Chi tiêu của khách, theo cửa hàng', 'vt');
     function Yd(v) { return (T + B) / 2 - v / 3.2 * (B - T) / 2; }
     el(svgD, 'line', { x1: L, y1: Yd(0), x2: R, y2: Yd(0), 'class': 'vgrid' });
     var show = Math.min(DOTS, m);
-    for (i = 0; i < S; i++) {
+    for (i = 0; i < Sd; i++) {
       var cx = L + (i + 0.5) * cw, mu = Math.sqrt(icc) * A[i];
       for (j = 0; j < show; j++) {
         var v = mu + Math.sqrt(1 - icc) * E[i][j][0];
@@ -5192,7 +5205,7 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
       }
       el(svgD, 'line', { x1: cx - cw * 0.4, y1: Yd(mu), x2: cx + cw * 0.4, y2: Yd(mu) }, 'stroke:' + K + ';stroke-width:3;stroke-linecap:round');
     }
-    txt(svgD, L, B + 18, '12 trong ' + nK + ' cửa hàng · vạch màu: trung bình từng cửa hàng', 'vs');
+    txt(svgD, L, B + 18, (Sd < nK ? Sd + ' trong ' + nK : 'cả ' + nK) + ' cửa hàng · vạch màu: trung bình từng cửa hàng', 'vs');
     if (m > DOTS) txt(svgD, L, B + 34, 'vẽ ' + DOTS + ' trong ' + m + ' khách mỗi cửa hàng', 'vs');
     /* ── phải: n hiệu dụng theo số khách mỗi cửa hàng ── */
     var L2 = 56, R2 = 326, T2 = 34, B2 = 210, mMax = 500;
@@ -6115,7 +6128,9 @@ P3.qiniCurve = function (rows, key, sigma) {
   var w = [0.25, 0.25, 0.25, 0.25];
   function fromSliders() {
     var raw = ids.map(function (id) { return +$(id).value; }), s = raw[0] + raw[1] + raw[2] + raw[3];
-    w = s > 0 ? raw.map(function (x) { return x / s; }) : [0.25, 0.25, 0.25, 0.25];
+    if (s > 0) { w = raw.map(function (x) { return x / s; }); return; }
+    /* tổng 0 không chia được: về chia đều, và kéo cả bốn thanh theo để thanh không nói 0 trong khi nhãn nói 0,25 */
+    w = [0.25, 0.25, 0.25, 0.25]; toSliders();
   }
   function toSliders() { ids.forEach(function (id, j) { $(id).value = String(Math.round(w[j] * 100)); }); }
   function draw() {
@@ -6418,18 +6433,31 @@ P3.qiniCurve = function (rows, key, sigma) {
     $('m-uplift-resp').textContent = R.msg > 0 ? pct(R.resp, 0) : '—';
     var say;
     if (key === 'hist') say = R.msg === 0 ? 'Với tỉ trọng này không ai thuộc nhóm “hay mua” (đằng nào cũng mua và chó ngủ đều 0%), nên chiến lược này không nhắn ai.' :
+      R.cnt[1] === 0 ? 'Không còn ai đằng nào cũng mua, nên nhắn khách hay mua nhất là nhắn toàn chó ngủ: báo cáo ghi 0% khách nhận tin đã mua, chiến dịch làm MẤT ' +
+        fmt(R.cnt[3], 0) + ' đơn và tốn ' + fmt(R.cost / 1000, 1) + ' triệu.' :
       'Báo cáo chiến dịch sẽ ghi “' + pct(R.resp, 0) + ' khách nhận tin đã mua” — trong khi chiến dịch ' +
       (R.orders < 0 ? 'làm MẤT ' + fmt(-R.orders, 0) + ' đơn' : 'không thêm được đơn nào') + ' và tốn ' + fmt(R.cost / 1000, 1) +
       ' triệu: khách hay mua nhất là ' +
-      (R.cnt[1] > 0 && R.cnt[3] > 0 ? 'người đằng nào cũng mua (tốn mã giảm giá) cộng với chó ngủ (bị nhắn là thôi mua). Lúc không bị nhắn, hai nhóm ấy trông giống hệt nhau.' :
-       R.cnt[1] > 0 ? 'người đằng nào cũng mua (tốn mã giảm giá); ở tỉ trọng này không có chó ngủ.' :
-       'chó ngủ (bị nhắn là thôi mua); ở tỉ trọng này không có ai đằng nào cũng mua.');
-    else if (key === 'resp') say = 'Mô hình học từ người đã mua SAU khi được nhắn chọn đúng người bị thuyết phục' +
+      (R.cnt[3] > 0 ? 'người đằng nào cũng mua (tốn mã giảm giá) cộng với chó ngủ (bị nhắn là thôi mua). Lúc không bị nhắn, hai nhóm ấy trông giống hệt nhau.' :
+       'người đằng nào cũng mua (tốn mã giảm giá); ở tỉ trọng này không có chó ngủ.');
+    /* resp nhắn P + S: không có P thì nó chỉ còn nhắn S; không có S thì nó trùng chiến lược uplift */
+    else if (key === 'resp') say = R.msg === 0 ? 'Với tỉ trọng này không ai bị thuyết phục và không ai đằng nào cũng mua, nên mô hình phản hồi không nhắn ai.' :
+      R.cnt[0] === 0 ? 'Không có ai bị thuyết phục: mô hình phản hồi chỉ còn nhắn người đằng nào cũng mua — ' + fmt(R.cnt[1], 0) +
+        ' mã giảm giá cho những đơn không cần mã, lãi ' + sgn(R.profit / 1000, 1) + ' triệu.' :
+      'Mô hình học từ người đã mua SAU khi được nhắn chọn đúng người bị thuyết phục' +
       (R.cnt[1] > 0 ? ', nhưng kèm cả người đằng nào cũng mua: ' + fmt(R.cnt[1], 0) + ' mã giảm giá trả cho những đơn không cần mã. Tỉ lệ mua trong nhóm được nhắn là ' +
         pct(R.resp, 0) + ' — y như chiến lược uplift — mà lãi thấp hơn.' : '; ở tỉ trọng này không có ai đằng nào cũng mua, nên nó trùng chiến lược uplift.');
-    else if (key === 'upl') say = 'Chỉ nhắn người có uplift dương: ' + fmt(R.msg, 0) + ' tin, ' + sgn(R.orders, 0) + ' đơn, lãi ' + sgn(R.profit / 1000, 1) +
-      ' triệu. Ngoài đời không ai mang nhãn “bị thuyết phục” trên trán — ta phải ƯỚC LƯỢNG uplift từ dữ liệu có nhóm đối chứng (mục 6.3).';
-    else say = 'Nhắn tất cả: người bị thuyết phục mua thêm, chó ngủ thôi mua, và mọi người mua đều dùng mã. Đơn tăng thêm ' + sgn(R.orders, 0) + ', lãi ' + sgn(R.profit / 1000, 1) + ' triệu.';
+    else if (key === 'upl') say = (R.msg === 0 ? 'Với tỉ trọng này không ai có uplift dương, nên chiến lược này không nhắn ai và lãi đúng bằng 0.' :
+      'Chỉ nhắn người có uplift dương: ' + fmt(R.msg, 0) + ' tin, ' + sgn(R.orders, 0) + ' đơn, lãi ' + sgn(R.profit / 1000, 1) + ' triệu.') +
+      ' Ngoài đời không ai mang nhãn “bị thuyết phục” trên trán — ta phải ƯỚC LƯỢNG uplift từ dữ liệu có nhóm đối chứng (mục 6.3).';
+    else {
+      /* chỉ kể nhóm đang có người */
+      var parts = [];
+      if (R.cnt[0] > 0) parts.push('người bị thuyết phục mua thêm');
+      if (R.cnt[3] > 0) parts.push('chó ngủ thôi mua');
+      if (R.cnt[0] + R.cnt[1] > 0) parts.push('mọi người mua đều dùng mã');
+      say = 'Nhắn tất cả' + (parts.length ? ': ' + parts.join(', ') : '') + '. Đơn tăng thêm ' + sgn(R.orders, 0) + ', lãi ' + sgn(R.profit / 1000, 1) + ' triệu.';
+    }
     $('m-uplift-say').textContent = say;
   }
   ids.forEach(function (id) { $(id).addEventListener('input', function () { fix(id); draw(); }); });
