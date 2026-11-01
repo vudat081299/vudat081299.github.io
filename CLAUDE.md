@@ -76,7 +76,7 @@ quyết định và việc dở ở `DECISIONS.md` / `HANDOFF.md` gốc. Luật 
   cho mỗi bản clone: `sh tools/install-hooks.sh` (phiên Claude Code tự chạy lúc bắt đầu).
 - Push lên `main`: CI chạy mọi cổng; deploy chỉ chạy khi CI xanh (REPO-014).
 - Cổng không bấm nút. Trang có JS thì đo thêm trong trình duyệt thật: `tools/smoke-index.js`,
-  `shop/tools/smoke.js` (CI chạy cả hai).
+  `shop/tools/smoke.js`, `masters-degree/class-schedule/tools/smoke.cjs` (CI chạy cả ba).
 - Cổng mới: viết script trong `<project>/tools/`, gọi nó từ `tools/check.sh` của project. Không khai tên ở
   đâu khác.
 - `--no-verify` chỉ dùng khi thật cần, và sửa ngay sau đó.

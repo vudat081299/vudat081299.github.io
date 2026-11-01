@@ -42,7 +42,7 @@ jobs:
           exit $FAIL
 
   smoke:
-    name: Chạy thật trong trình duyệt (shop/, trang chủ)
+    name: Chạy thật trong trình duyệt (shop/, trang chủ, lịch học)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -62,3 +62,4 @@ jobs:
           done
           node shop/tools/smoke.js http://127.0.0.1:8347/shop/
           node tools/smoke-index.js http://127.0.0.1:8347/index.html
+          node masters-degree/class-schedule/tools/smoke.cjs http://127.0.0.1:8347/masters-degree/class-schedule/

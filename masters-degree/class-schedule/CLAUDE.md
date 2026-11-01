@@ -33,3 +33,5 @@ lịch tháng / tuần / danh sách, panel chi tiết môn và buổi. Niêm y�
 
 - `node tools/verify.mjs`: dữ liệu khớp lịch gốc từng buổi, giờ Việt Nam, trạng thái, tiến độ, tìm kiếm.
 - `tsc -p tsconfig.json`: kiểm kiểu JSDoc (dùng `tsc` toàn cục, hoặc của `cashy/node_modules`).
+- Cổng không bấm nút. CI chạy thêm `node tools/smoke.cjs <url>`: bấm thật điều hướng, chip lọc, panel, tìm
+  kiếm, giảng viên theo ngày, tràn ngang ở 375px. Sửa sự kiện hay view thì chạy nó trước khi commit.
