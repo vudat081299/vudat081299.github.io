@@ -227,12 +227,17 @@ def run_ml_models():
     need('chuyện Ng: ba tháng', 'khoảng ba tháng công')
 
     # ── phụ thuộc xa của RNN: đếm đúng khoảng cách cat → was trong câu ví dụ ──
+    # Đếm từ <b>cat</b> tới <b>was</b> in đậm (câu có "was" khác ở giữa), bỏ dấu "…".
     m = re.search(r'<span lang="en">(.*?)</span>', HTML[HTML.find('id="s-rnn"'):])
-    words = re.sub(r'<[^>]+>', '', m.group(1)).replace(',', ' ').replace('.', ' ').split() if m else []
-    dist = words.index('was') - words.index('cat') if 'cat' in words and 'was' in words else -1
-    claim('RNN: câu ví dụ có cat … was', dist > 0, 'không bóc được câu tiếng Anh ở #s-rnn')
+    s = m.group(1).replace('<b>cat</b>', ' CAT ').replace('<b>was</b>', ' WAS ') if m else ''
+    words = [w for w in re.sub(r'<[^>]+>|[,.…]', ' ', s).split()]
+    dist = words.index('WAS') - words.index('CAT') if 'CAT' in words and 'WAS' in words else -1
+    claim('RNN: câu ví dụ có cat … was in đậm', dist > 0, 'không bóc được câu tiếng Anh ở #s-rnn')
     need('RNN: khoảng cách cat → was', f'cách nhau {dist} bước', dist)
+    need('RNN: số bước gradient chảy ngược', f'ít nhất {dist} bước thời gian', dist)
     need('LSTM: nhắc lại khoảng cách', f'Thông tin từ {dist} bước trước', dist)
+    # Chỉ để trong ngoặc kép đúng phần chữ Ng nói (DLS C5 W1, Vanishing gradients with RNNs).
+    need('RNN: câu trích đúng lời Ng', 'which already ate a bunch of food that was delicious')
 
     # ── beam search: câu tốt nhất phải chung tiền tố "Jane is" với câu tham lam ──
     m = re.search(r'tốt nhất lại là "([^"]+)"', HTML)
@@ -256,6 +261,57 @@ def run_ml_models():
     claim('M6: 4 lớp × 12 nơ-ron có hơn 500 tham số', 500 < p46 < 600, f'tính ra {p46}')
     need('M6: hơn 500 tham số', 'hơn 500 tham số', p46)
     need('M6: logistic có ba tham số', 'ba tham số của hồi quy logistic', 2 + 1)
+
+    # ── lời văn vòng rà 2: mỗi dòng một chỗ đã sửa, đọc đúng mục của nó ──
+    def sec(sid):
+        i = HTML.find(f'<section id="{sid}"')
+        return HTML[i:HTML.find('</section>', i)] if i >= 0 else ''
+    # khởi tạo: Keras Dense mặc định glorot_uniform; PyTorch nn.Linear dùng kaiming_uniform_(a=√5) = U(±1/√n)
+    for sid in ('s-init', 's-cheat'):
+        s = sec(sid)
+        claim(f'{sid}: không nói thư viện mặc định đã chọn đúng khởi tạo', 'mặc định đã' not in s and 'kaiming_normal_' in s
+              and 'Xavier' in s, 'Keras mặc định Xavier/Glorot cho mọi activation; PyTorch Linear không phải He')
+    # error analysis đếm nguyên nhân; ceiling analysis thay từng chặng pipeline bằng đáp án đúng
+    gl = {r[0]: r for r in gloss_records(r"\['([^']+)','([^']*)','([^']*)','(#[^']*)','([^']*)'\]")}
+    ca, ea = gl.get('ceiling analysis'), gl.get('error analysis')
+    claim('GLOSS: ceiling analysis = thay từng chặng bằng đáp án đúng', ca is not None and 'từng chặng' in ca[2]
+          and '0,8%' not in ca[2] and 'trần lợi ích' not in ca[4])
+    claim('GLOSS: "trần lợi ích" trỏ về error analysis', ea is not None and 'trần lợi ích' in ea[4].split('|'))
+    owner = {}
+    for en, _, _, anc, al in gl.values():
+        for form in [en] + [a for a in al.split('|') if a]:
+            owner.setdefault(form.lower(), anc)
+    claim('GLOSS: chữ "one-hot" (vector từ ở #s-embed) mở đúng mục', owner.get('one-hot') == '#s-embed', str(owner.get('one-hot')))
+    # cây: một cây không có gradient; XGBoost thì khớp gradient và có learning rate (eta, mặc định 0,3)
+    st = sec('s-trees')
+    claim('cây: h2 không phủ nhận gradient/learning rate cho cả họ', 'không learning rate' not in st)
+    need('cây: XGBoost có learning rate', 'learning rate</b> riêng (<code>eta</code>, mặc định 0,3)')
+    # M3: khe của bản chưa chuẩn hoá chạy gần như dọc trục b (dốc db/dw ≈ −µ ≈ −90)
+    claim('M3: không tả khe là "nằm ngang"', 'nằm ngang' not in sec('s-scale'))
+    # M9: ba con số chẩn đoán + thanh test tuỳ chọn = bốn thanh
+    n9 = len(re.findall(r'id="m9-(?:h|tr|dv|te)" min=', HTML))
+    claim('M9: bốn thanh trượt', n9 == 4, f'đếm được {n9}')
+    need('M9: tiêu đề nói rõ thanh thứ tư', 'nhập ba con số (và sai số test nếu có)')
+    # phát hiện bất thường (MLS C3 W1): 10.000 tốt → 6.000 train, 2.000 dev, 2.000 test; 20 lỗi chia dev/test
+    claim('bất thường: không "để hết" dữ liệu bình thường vào train', 'Để hết dữ liệu bình thường' not in HTML)
+    need('bất thường: số của Ng', '6.000 trong 10.000 động cơ tốt')
+    need('#s-nn: báo đổi bộ cột so với #s-thread', 'với bộ cột Ng dùng ở bài này')
+    for bad in ('phần đặc sản', 'bản tóm tắt trung thực nhất', 'không bao giờ dùng vào việc khác',
+                'tìm về vùng sáng nhất', 'nhiều khả năng đạo hàm sai dấu', 'Lựa chọn duy nhất',
+                'tuần CNN có cập nhật một phần năm 2021'):
+        claim(f'lời văn: không còn "{bad}"', bad not in HTML)
+    for good in ('vùng nhạt nhất', 'Đạo hàm sai dấu thì J tăng chứ không phẳng', 'mô hình có giám sát duy nhất'):
+        need('lời văn vòng 1', good)
+
+    # ── M7: phép so một lớp / hai lớp không cân tham số — lời văn phải nói đúng số ──
+    def smax(sid):
+        mm = re.search(r'id="%s" min="(\d+)" max="(\d+)"' % sid, HTML)
+        return int(mm.group(2)) if mm else -1
+    h1, h2 = smax('m7-h'), smax('m7-l2')
+    p1 = 2 * h1 + h1 + h1 + 1
+    p2 = 2 * h1 + h1 + h1 * h2 + h2 + h2 + 1
+    need('M7: số tham số một lớp so với hai lớp (hết thanh)', f'({p1} so với {p2})', (p1, p2))
+    claim('M7: không còn gọi xoắn ốc là ví dụ "sâu rẻ hơn rộng"', 'ví dụ trực tiếp nhất cho lập luận' not in HTML)
 
     # ── M2: J tăng là đủ biết α vượt 2/λ_max — không được khuyên "tăng α" lúc ấy ──
     m2 = js('M2', 'Mô hình 2 — learning rate', 'Mô hình 3 —')

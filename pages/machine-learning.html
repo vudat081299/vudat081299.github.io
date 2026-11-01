@@ -811,7 +811,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p>Ba câu trên có ở mọi giáo trình. Câu thứ tư thì không: <b>khi kết quả tệ, làm sao biết nên sửa bộ phận nào trong ba bộ phận trên?</b> Thêm dữ liệu? Đổi mô hình? Chỉnh learning rate? Sửa nhãn? Đoán mò ở đây tốn hàng tháng. Ng gọi bộ công cụ trả lời câu này là <i>chẩn đoán</i> (diagnostics), và nó chiếm trọn khoá 3 của DL Specialization cùng tuần 3 khoá 2 của ML Specialization. Trang này gom lại thành <a href="#act3">chặng 3</a>.</p>
         </div>
 
-        <p>Ba màu trong trang tương ứng ba câu hỏi: <b class="c-m">xanh dương = mô hình</b>, <b class="c-l">cam = mất mát</b>, <b class="c-o">xanh lục = tối ưu</b>. Tám thuật toán trụ của trang mở đầu bằng một dải ba ô đúng ba màu ấy, điền sẵn ba câu trả lời: hồi quy tuyến tính, hồi quy logistic, cây quyết định, CNN, RNN, Transformer, k-means, học tăng cường. Các mục còn lại chỉ đổi <em>một</em> trong ba ô nên đi thẳng vào chỗ đổi, không lặp lại cả dải. Đọc dải đó trước khi đọc văn xuôi — nó là bản tóm tắt trung thực nhất của thuật toán.</p>
+        <p>Ba màu trong trang tương ứng ba câu hỏi: <b class="c-m">xanh dương = mô hình</b>, <b class="c-l">cam = mất mát</b>, <b class="c-o">xanh lục = tối ưu</b>. Tám thuật toán trụ của trang mở đầu bằng một dải ba ô đúng ba màu ấy, điền sẵn ba câu trả lời: hồi quy tuyến tính, hồi quy logistic, cây quyết định, CNN, RNN, Transformer, k-means, học tăng cường. Các mục còn lại chỉ đổi <em>một</em> trong ba ô nên đi thẳng vào chỗ đổi, không lặp lại cả dải. Đọc dải đó trước khi đọc văn xuôi.</p>
 
         <div class="take"><span class="k">Mang theo</span><p>Gặp thuật toán lạ, đừng hỏi "nó là gì". Hỏi ba câu: nó vẽ được hình dạng nào, nó đo sai bằng thước nào, nó dò xuống bằng cách nào.</p></div>
       </section>
@@ -1127,8 +1127,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__b">
             <div class="pair">
               <figure>
-                <svg class="viz" id="m3-raw" role="img" aria-label="Bản đồ chi phí khi chưa chuẩn hoá: vùng thấp là một khe dẹt nằm ngang; α phải rất nhỏ, và đường đi bò rất chậm dọc khe." viewBox="0 0 320 250"></svg>
-                <figcaption><b>Chưa chuẩn hoá.</b> Vùng chi phí thấp là một khe <b>dẹt như quả trứng nằm ngang</b>; α chỉ được nhỏ hơn ~2·10⁻⁴, và ở đó đường đi bò rất chậm dọc khe.</figcaption>
+                <svg class="viz" id="m3-raw" role="img" aria-label="Bản đồ chi phí khi chưa chuẩn hoá: vùng thấp là một khe hẹp chạy gần như dọc theo trục b; α phải rất nhỏ, và đường đi bò rất chậm dọc khe." viewBox="0 0 320 250"></svg>
+                <figcaption><b>Chưa chuẩn hoá.</b> Vùng chi phí thấp là một khe <b>hẹp và dài</b>, chạy gần như dọc theo trục b; α chỉ được nhỏ hơn ~2·10⁻⁴, và ở đó đường đi bò rất chậm dọc khe.</figcaption>
               </figure>
               <figure>
                 <svg class="viz" id="m3-norm" role="img" aria-label="Bản đồ chi phí sau khi chuẩn hoá: vùng thấp gần tròn; ở α khoảng 1, đường đi gần như thẳng vào đáy." viewBox="0 0 320 250"></svg>
@@ -1314,7 +1314,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m5-out"></pre></div>
             </div>
             <p class="lab__f"><b>Ba thí nghiệm nên làm, theo thứ tự:</b> (1) để λ tắt, kéo bậc từ 1 lên 14 — thấy sai số huấn luyện giảm đều đặn về gần 0 trong khi sai số kiểm thử chạm đáy ở đâu đó rồi <b>vọt lên</b>; (2) giữ bậc 14, kéo λ lên — thấy đường cong dại dột bỗng mượt lại và sai số kiểm thử tụt xuống, <b>mà không phải bỏ bớt đặc trưng nào</b>; (3) giữ bậc 14 và λ tắt, kéo số điểm huấn luyện lên 60 — thấy quá khớp <b>tự nó biến mất</b>.</p>
-            <p class="lab__f"><b>Thí nghiệm 3 chính là câu trả lời cho “khi nào thêm dữ liệu có ích”:</b> chỉ khi bạn đang quá khớp. Nếu bạn đang ở bậc 1 (thiếu khớp), kéo số điểm lên 60 <b>không giúp gì cả</b> — hãy tự thử để tin. Đây là dạng đơn giản nhất của chẩn đoán bias/variance ở <a href="#s-bias">chặng 3</a>.</p>
+            <p class="lab__f"><b>Thí nghiệm 3 chính là câu trả lời cho “khi nào thêm dữ liệu có ích”:</b> chỉ khi bạn đang quá khớp. Nếu bạn đang ở bậc 1 (thiếu khớp), kéo số điểm lên 60 chỉ thu hẹp khoảng chênh giữa hai sai số; sai số kiểm thử <b>vẫn cao gấp hơn mười lần sàn nhiễu</b>, còn sai số huấn luyện lại nhích lên — hãy tự thử để tin. Đây là dạng đơn giản nhất của chẩn đoán bias/variance ở <a href="#s-bias">chặng 3</a>.</p>
           </div>
         </div>
 
@@ -1351,7 +1351,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         </div>
 
         <h3>Vì sao xếp chồng lại giải quyết được vấn đề của chặng 1</h3>
-        <p>Quay lại giá nhà. Bạn có bốn cột thô: diện tích, số phòng ngủ, mã khu vực, mức thu nhập trung bình của khu. Một chuyên gia bất động sản sẽ không dùng thẳng bốn số đó — họ nghĩ theo <b>khái niệm trung gian</b>: căn này hợp với gia đình mấy người, khu này đi bộ tiện không, trường học quanh đây tốt không. Rồi từ ba khái niệm đó mới ra giá.</p>
+        <p>Quay lại giá nhà, với bộ cột Ng dùng ở bài này. Bạn có bốn cột thô: diện tích, số phòng ngủ, mã khu vực, mức thu nhập trung bình của khu. Một chuyên gia bất động sản sẽ không dùng thẳng bốn số đó — họ nghĩ theo <b>khái niệm trung gian</b>: căn này hợp với gia đình mấy người, khu này đi bộ tiện không, trường học quanh đây tốt không. Rồi từ ba khái niệm đó mới ra giá.</p>
         <p>Trước 2012, bạn phải tự tính ba khái niệm ấy bằng tay — đó là feature engineering. Mạng nơ-ron làm điều này: <b>đặt một lớp nơ-ron ở giữa, và để việc huấn luyện tự quyết định mỗi nơ-ron trung gian nên là tổ hợp nào của đầu vào</b>.</p>
 
         <figure style="margin:20px 0 8px">
@@ -1500,7 +1500,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m7-out"></pre></div>
             </div>
             <p class="lab__f"><b>Vòng tròn cần bao nhiêu nơ-ron?</b> Hạ xuống 2 rồi 3 và huấn luyện lại. Với 2 nơ-ron ReLU bạn chỉ có hai nếp gấp — không khép kín được một vòng. Với 3–4 thì bắt đầu ra hình tam giác/tứ giác bao quanh. Đây là <b>bias</b> nhìn thấy bằng mắt: giới hạn cứng của hình dạng, không phải lỗi huấn luyện. Tăng số vòng lặp không cứu được.</p>
-            <p class="lab__f"><b>Xoắn ốc thì khác hẳn:</b> nó cần lớp ẩn thứ hai. Kéo thanh "lớp ẩn thứ hai" lên 6–8 và so. Đây là ví dụ trực tiếp nhất cho lập luận "sâu rẻ hơn rộng" ở trên — bạn có thể tự kiểm bằng cách thử làm điều tương tự chỉ bằng cách tăng lớp 1 lên 8.</p>
+            <p class="lab__f"><b>Xoắn ốc thì khó hơn hẳn.</b> Một lớp 8 nơ-ron (hết thanh) thường dừng ở khoảng 75–85%, hiếm khi vượt 95%. Kéo thêm thanh "lớp ẩn thứ hai" lên 8: khoảng một nửa số lần khởi tạo vượt 95%, số còn lại vẫn kẹt — bấm Khởi tạo lại vài lần để thấy; ở 6 + 6 thì gần như chưa hơn một lớp. Phép so này không cân số tham số (33 so với 105), nên nó chỉ cho thấy lớp thứ hai <i>giúp được</i>; lập luận "sâu rẻ hơn rộng" ở trên nói về những hàm lớn hơn nhiều so với mô hình đồ chơi này.</p>
             <p class="lab__f"><b>Và mỗi lần bấm "Khởi tạo lại" bạn được một nghiệm khác.</b> Chi phí ở đây <b>không lồi</b> — khác hẳn chặng 1. Chạy hai lần ra hai mạng khác nhau, có thể chênh nhau vài phần trăm độ chính xác, và cả hai đều "đúng". Đây là hiện thực bạn phải sống chung từ giờ trở đi.</p>
           </div>
         </div>
@@ -1615,7 +1615,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             </tbody>
           </table>
         </div>
-        <p>Trong thực tế bạn không tự gõ mấy con số này — Keras và PyTorch mặc định đã dùng đúng loại theo hàm kích hoạt. Nhưng khi bạn thấy mạng sâu không chịu học, <b>đây là thứ thứ ba cần kiểm</b>, sau learning rate và chuẩn hoá đầu vào.</p>
+        <p>Thư viện có sẵn cả hai, nhưng mặc định <b>không tự chọn theo hàm kích hoạt</b>: Keras dùng Xavier, PyTorch rải đều trong ±1/√n[l−1]. Mạng ReLU sâu thì đặt He tường minh: <code>he_normal</code> hay <code>kaiming_normal_</code>. Nhưng khi bạn thấy mạng sâu không chịu học, <b>đây là thứ thứ ba cần kiểm</b>, sau learning rate và chuẩn hoá đầu vào.</p>
 
         <div class="box good-box">
           <p class="box__k">Gradient checking — công cụ debug, không phải công cụ huấn luyện</p>
@@ -1714,7 +1714,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
       <!-- ═══════════════════════ CHẶNG 3 ═══════════════════════ -->
       <div class="acthead" id="act3">
-        <p class="k">Chặng 3 · phần đặc sản, và là phần người học hay bỏ qua nhất</p>
+        <p class="k">Chặng 3 · phần người học hay bỏ qua nhất</p>
         <h2>Khi nó không chạy: chẩn đoán thay vì đoán mò</h2>
         <p>Bạn đã có mô hình. Nó đạt 85% và bạn cần 95%. Trước mặt bạn là năm hướng đi, mỗi hướng tốn <b>vài tuần</b>: thu thập thêm dữ liệu, làm mạng to hơn, huấn luyện lâu hơn, thêm regularization, sửa nhãn sai. <b>Bốn trong năm hướng đó là lãng phí hoàn toàn</b> — và không ai nói cho bạn biết là hướng nào. Chặng này là bộ công cụ để biết. Nó không có công thức đẹp, không có kiến trúc mới, và đó chính là lý do nó bị bỏ qua — trong khi ngoài đời nó quyết định thành bại nhiều hơn mọi thứ ở chặng 2.</p>
       </div>
@@ -1789,7 +1789,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <div class="lab" id="m9">
           <div class="lab__h">
             <p class="lab__k">Mô hình 9 / 13 · giết hiểu nhầm “cứ thêm dữ liệu là khá lên”</p>
-            <p class="lab__t">Máy chẩn đoán: nhập ba con số, nhận về việc phải làm</p>
+            <p class="lab__t">Máy chẩn đoán: nhập ba con số (và sai số test nếu có), nhận về việc phải làm</p>
             <p class="lab__hint">Kéo bốn thanh trượt để mô tả tình huống của bạn. Cột bên phải <b>xếp hạng các hành động theo thứ tự nên làm</b>, và nói rõ hành động nào là lãng phí. Đây chính là cây quyết định mà Ng dạy, viết thành công cụ.</p>
           </div>
           <div class="lab__b">
@@ -2025,7 +2025,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <section id="s-trees">
         <p class="sechead"><b>Chặng 3 · 7/7</b> — họ mô hình còn lại, và thường là họ nên chọn</p>
         <span class="map">Bản gốc · <b>MLS C2 Tuần 4</b> · Decision trees, Information gain, Random forest, XGBoost, When to use</span>
-        <h2 class="st">Cây quyết định: không gradient, không learning rate, và thường thắng trên dữ liệu bảng</h2>
+        <h2 class="st">Cây quyết định: không lan truyền ngược, không chuẩn hoá, và thường thắng trên dữ liệu bảng</h2>
 
         <p class="lede">Đặt ở đây, không đặt ở chặng 1, vì lý do sư phạm: <b>cây quyết định là câu trả lời thực dụng cho phần lớn bài toán doanh nghiệp</b>, và bạn chỉ đánh giá đúng điều đó sau khi đã thấy mạng nơ-ron đòi hỏi bao nhiêu công chăm sóc.</p>
 
@@ -2052,7 +2052,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <ul>
           <li><b>Bagging</b> — dựng <i>B</i> cây, mỗi cây học trên một mẫu bootstrap (lấy có hoàn lại từ tập gốc). Bỏ phiếu.</li>
           <li><b>Random forest</b> — thêm một mẹo nữa: tại mỗi nút, <b>chỉ được chọn trong một tập con ngẫu nhiên của các đặc trưng</b> (thường √n cái). Nếu không, mọi cây sẽ cùng chọn đúng đặc trưng mạnh nhất ở gốc và các cây giống hệt nhau — mất hết lợi ích của việc gộp.</li>
-          <li><b>Boosting / XGBoost</b> — không dựng song song mà <b>tuần tự</b>: cây sau tập trung vào các mẫu mà các cây trước làm sai. Ng ví như luyện tập có chủ đích — chơi lại đúng những đoạn nhạc mình vấp. Đây là thuật toán thắng nhiều cuộc thi Kaggle dữ liệu bảng nhất, và trong thực tế là <b>lựa chọn mặc định</b> cho dữ liệu bảng.</li>
+          <li><b>Boosting / XGBoost</b> — không dựng song song mà <b>tuần tự</b>: cây sau tập trung vào các mẫu mà các cây trước làm sai. Trong XGBoost, mỗi cây mới khớp theo gradient của hàm mất mát tại dự đoán hiện có, rồi được nhân với một <b>learning rate</b> riêng (<code>eta</code>, mặc định 0,3) để mỗi cây chỉ sửa một phần. Ng ví như luyện tập có chủ đích — chơi lại đúng những đoạn nhạc mình vấp. Đây là thuật toán thắng nhiều cuộc thi Kaggle dữ liệu bảng nhất, và trong thực tế là <b>lựa chọn mặc định</b> cho dữ liệu bảng.</li>
         </ul>
 
         <div class="tw">
@@ -2075,7 +2075,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p><b>Dữ liệu của bạn nằm trong bảng Excel được không? → thử XGBoost trước. Là ảnh, âm thanh hay chữ? → mạng nơ-ron.</b> Ng nói gần đúng như vậy trong bài <i>When to use decision trees</i>.</p>
         </div>
 
-        <div class="take"><span class="k">Mang theo</span><p>Cây quyết định là họ mô hình có giám sát duy nhất trong tám khoá không dùng gradient descent — nên nó thoát khỏi cả learning rate, chuẩn hoá lẫn khởi tạo. Trên dữ liệu bảng, đó thường là món hời chứ không phải bước lùi.</p></div>
+        <div class="take"><span class="k">Mang theo</span><p>Một cây quyết định là mô hình có giám sát duy nhất trong tám khoá không học bằng gradient descent — nên nó thoát khỏi cả learning rate, chuẩn hoá lẫn khởi tạo. Boosting mượn lại learning rate, nhưng vẫn không cần chuẩn hoá hay khởi tạo. Trên dữ liệu bảng, đó thường là món hời chứ không phải bước lùi.</p></div>
       </section>
 
       <!-- ═══════════════════════ CHẶNG 4 ═══════════════════════ -->
@@ -2385,7 +2385,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         </div>
 
         <h3>Bức tường của RNN: phụ thuộc xa</h3>
-        <p>Ví dụ của Ng: "<span lang="en">The <b>cat</b>, which already ate an apple, a banana and a lot of other things, <b>was</b> full.</span>" Đổi "cat" thành "cats" thì "was" phải thành "were" — hai từ cách nhau 14 bước. Muốn học được điều đó, gradient phải chảy ngược qua 14 bước thời gian, và mỗi bước là một phép nhân ma trận. Đây <b>đúng là bài toán gradient tan biến</b> ở <a href="#s-init">chặng 2</a>, chỉ khác là "số lớp" giờ bằng độ dài câu.</p>
+        <p>Ví dụ của Ng: "<span lang="en">The <b>cat</b>, which already ate a bunch of food that was delicious, …, <b>was</b> full.</span>" Đổi "cat" thành "cats" thì "was" phải thành "were". Riêng phần chữ Ng đọc ra đã đặt hai từ cách nhau 11 bước, và dấu "…" của ông nghĩa là khúc giữa dài bao nhiêu cũng được. Muốn học được điều đó, gradient phải chảy ngược qua ít nhất 11 bước thời gian, và mỗi bước là một phép nhân ma trận. Đây <b>đúng là bài toán gradient tan biến</b> ở <a href="#s-init">chặng 2</a>, chỉ khác là "số lớp" giờ bằng độ dài câu.</p>
         <ul class="tight">
           <li><b>Gradient bùng nổ</b> thì dễ nhận ra (thấy <span class="mono">NaN</span>) và dễ chữa: <b>cắt ngưỡng gradient</b> — nếu chuẩn của gradient vượt ngưỡng thì co nó lại. Thô nhưng hiệu quả.</li>
           <li><b>Gradient tan biến</b> khó hơn nhiều, và nó là <b>vấn đề chính</b> của RNN. Nó không báo lỗi; mạng chỉ đơn giản là <i>không bao giờ học được phụ thuộc xa</i>. Cả mục sau sinh ra để chữa nó.</li>
@@ -2399,7 +2399,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <span class="map">Bản gốc · <b>DLS C5 Tuần 1</b> · GRU, LSTM, Bidirectional RNN, Deep RNNs</span>
         <h2 class="st">Cổng: thay vì ghi đè trí nhớ mỗi bước, hãy <i>học xem khi nào nên ghi</i></h2>
 
-        <p class="lede">RNN cơ bản <b>viết đè lên toàn bộ trí nhớ ở mỗi bước</b> — <span class="mono">a&lt;t&gt;</span> được tính lại từ đầu. Thông tin từ 14 bước trước bị pha loãng dần rồi biến mất. Ý tưởng của GRU và LSTM: thêm một <b>đường ống nhớ chạy thẳng</b>, và học các "van" quyết định khi nào ghi vào, khi nào xoá, khi nào đọc ra.</p>
+        <p class="lede">RNN cơ bản <b>viết đè lên toàn bộ trí nhớ ở mỗi bước</b> — <span class="mono">a&lt;t&gt;</span> được tính lại từ đầu. Thông tin từ 11 bước trước bị pha loãng dần rồi biến mất. Ý tưởng của GRU và LSTM: thêm một <b>đường ống nhớ chạy thẳng</b>, và học các "van" quyết định khi nào ghi vào, khi nào xoá, khi nào đọc ra.</p>
 
         <div class="box ana">
           <p class="box__k">Ví von</p>
@@ -2696,7 +2696,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         </div>
 
         <h3>Đánh giá thế nào khi không có nhãn?</h3>
-        <p>Mẹo thực dụng của Ng: <b>huấn luyện không nhãn, nhưng đánh giá có nhãn</b>. Để hết dữ liệu bình thường vào tập huấn luyện (dùng để tính µ, σ). Còn <b>20 mẫu lỗi hiếm hoi thì chia vào tập dev và test</b>, kèm một ít mẫu bình thường. Giờ bạn đo được precision/recall/F1 trên tập dev — và <b>dò ε bằng tập dev</b> như một siêu tham số bình thường. Đây là cách biến một bài toán không giám sát thành một bài toán đo được.</p>
+        <p>Mẹo thực dụng của Ng: <b>huấn luyện không nhãn, nhưng đánh giá có nhãn</b>. Để phần lớn dữ liệu bình thường vào tập huấn luyện (dùng để tính µ, σ) — ví dụ của Ng: 6.000 trong 10.000 động cơ tốt. Còn <b>20 mẫu lỗi hiếm hoi thì chia vào tập dev và test</b>, kèm một ít mẫu bình thường. Giờ bạn đo được precision/recall/F1 trên tập dev — và <b>dò ε bằng tập dev</b> như một siêu tham số bình thường. Đây là cách biến một bài toán không giám sát thành một bài toán đo được.</p>
 
         <div class="tw">
           <table>
@@ -2939,7 +2939,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <tr><td>Optimizer</td><td><b>Adam</b></td><td>β₁ = 0,9 · β₂ = 0,999 · ε = 10⁻⁸ — gần như không đổi.</td></tr>
               <tr><td>Cỡ mini-batch</td><td><b>64–512</b></td><td>Luỹ thừa của 2; giới hạn thật là RAM của GPU. Tập nhỏ (dưới ~2.000 ví dụ) thì bỏ hẳn mini-batch, chạy batch cả tập.</td></tr>
               <tr><td>Hàm kích hoạt ẩn</td><td><b>ReLU</b></td><td>Không phân vân thì chọn cái này.</td></tr>
-              <tr><td>Khởi tạo</td><td><b>He</b> với ReLU</td><td>Thư viện mặc định đã đúng.</td></tr>
+              <tr><td>Khởi tạo</td><td><b>He</b> với ReLU</td><td>Mặc định thường không phải He (Keras: Xavier), nên đặt rõ: <code>he_normal</code> hay <code>kaiming_normal_</code>.</td></tr>
               <tr><td>λ (L2)</td><td><b>0</b>, rồi tăng nếu variance cao</td><td>Dò 0,01 → 0,1 → 1 → 10.</td></tr>
               <tr><td>Dropout</td><td><b>0,2–0,5</b> ở lớp dày</td><td>Chỉ dùng khi thật sự đang quá khớp.</td></tr>
               <tr><td>Beam width B</td><td><b>3–10</b></td><td>Lợi ích giảm nhanh sau 10.</td></tr>
@@ -4801,8 +4801,8 @@ var GLOSS = [
 ['F1 score','điểm F1','Trung bình ĐIỀU HOÀ của precision và recall: 2PR/(P+R). Chọn điều hoà chứ không phải cộng vì nó trừng phạt sự mất cân bằng.','#s-metric','F1'],
 ['threshold','ngưỡng quyết định','Mức xác suất để chuyển dự đoán thành quyết định. Nâng ngưỡng thì precision cao recall thấp, và ngược lại. Đây là lựa chọn của CON NGƯỜI, không phải của thuật toán.','#s-metric','ngưỡng'],
 ['skewed dataset','dữ liệu lệch lớp','Một lớp chiếm áp đảo (99,5% âm). Ở đây "tỉ lệ đoán đúng" là số đo dối trá — mô hình luôn nói "âm" cũng đạt 99,5%.','#s-metric','dữ liệu lệch'],
-['error analysis','phân tích lỗi bằng tay','Lấy 100 ca dev mà mô hình làm sai, đếm theo nguyên nhân. Phần trăm mỗi nguyên nhân chính là TRẦN LỢI ÍCH của việc đi sửa nó. Hai tiếng thay cho hai tháng.','#s-error','phân tích lỗi'],
-['ceiling analysis','tính trần lợi ích','Tính TRƯỚC xem giải quyết triệt để một chỗ thì cải thiện được tối đa bao nhiêu, để không bỏ hai tháng ra lấy 0,8%. Trong bảng error analysis, trần đó là phần trăm của mỗi cột. Riêng thuật ngữ ceiling analysis là bản dùng cho pipeline: thay đầu ra một chặng bằng đáp án đúng do người gán, rồi xem cả hệ thống nhảy bao nhiêu.','#s-error','ceiling analysis|trần lợi ích'],
+['error analysis','phân tích lỗi bằng tay','Lấy 100 ca dev mà mô hình làm sai, đếm theo nguyên nhân. Phần trăm mỗi nguyên nhân chính là TRẦN LỢI ÍCH của việc đi sửa nó. Hai tiếng thay cho hai tháng.','#s-error','phân tích lỗi|trần lợi ích'],
+['ceiling analysis','phân tích trần theo chặng','Dùng cho pipeline nhiều chặng: lần lượt thay đầu ra của từng chặng bằng đáp án đúng do người gán, rồi xem độ chính xác của cả hệ thống tăng bao nhiêu. Chặng nào thay vào mà hệ không khá hơn thì không phải chỗ nghẽn. Khác error analysis, vốn đếm nguyên nhân trên 100 ca sai.','#s-error',''],
 ['data mismatch','lệch phân phối dữ liệu','Tập huấn luyện và dữ liệu thật khác loại nhau (ảnh web sạch vs ảnh điện thoại mờ). Khác hoàn toàn với quá khớp, và chữa bằng cách khác.','#s-mismatch','lệch phân phối'],
 ['train-dev set','tập train-dev','Một tập nhỏ CÙNG PHÂN PHỐI với tập huấn luyện nhưng không đem đi huấn luyện. Cắt ra miễn phí, và nó tách được variance khỏi lệch phân phối.','#s-mismatch','train-dev'],
 ['transfer learning','học chuyển giao','Lấy mô hình đã huấn luyện trên bài toán nhiều dữ liệu, bỏ lớp cuối, gắn lớp mới cho bài của bạn. Nước đi đầu tiên đáng thử khi dữ liệu ít.','#s-mismatch','học chuyển giao'],
@@ -4816,7 +4816,7 @@ var GLOSS = [
 ['random forest','rừng ngẫu nhiên','Bagging cộng thêm một mẹo: tại mỗi nút chỉ được chọn trong một tập con ngẫu nhiên các đặc trưng. Nếu không, mọi cây sẽ giống hệt nhau.','#s-trees','random forest|rừng ngẫu nhiên'],
 ['boosting','tăng cường tuần tự','Dựng cây tuần tự, cây sau tập trung vào các mẫu mà cây trước làm sai. Như luyện tập có chủ đích: chơi lại đúng đoạn nhạc mình vấp.','#s-trees',''],
 ['XGBoost','cây tăng cường XGBoost','Bản boosting phổ biến nhất. <b>Lựa chọn mặc định cho dữ liệu bảng</b> — thường thắng mạng nơ-ron, huấn luyện nhanh hơn nhiều lần và ít phải chỉnh hơn.','#s-trees',''],
-['one-hot encoding','mã hoá một-nóng','Biến một cột hạng mục k giá trị thành k cột 0/1. Cách chuẩn để đưa dữ liệu hạng mục vào mô hình số.','#s-trees','one-hot'],
+['one-hot encoding','mã hoá một-nóng','Biến một cột hạng mục k giá trị thành k cột 0/1. Cách chuẩn để đưa dữ liệu hạng mục vào mô hình số.','#s-trees',''],
 
 /* ── chặng 4: CNN ─────────────────────────────────────────────────────────── */
 ['convolution','tích chập','Một bộ lọc nhỏ trượt khắp ảnh, mỗi vị trí tính một tích vô hướng. Cùng một bộ trọng số cho MỌI vị trí — đó là chỗ tiết kiệm tham số.','#s-cnn','tích chập'],
@@ -4862,7 +4862,7 @@ var GLOSS = [
 ['gate','cổng','Một hàm sigmoid có trọng số học được, cho ra số từ 0 tới 1, rồi trí nhớ được NHÂN với số đó. Vì nó liên tục nên lấy đạo hàm được và học được.','#s-lstm','cổng quên|cổng cập nhật|cổng đầu ra'],
 ['bidirectional RNN','RNN hai chiều','Chạy hai RNN, một xuôi một ngược, rồi ghép trạng thái. Cần khi phải đọc hết câu mới hiểu đầu câu. Nhược điểm: KHÔNG dùng được cho thời gian thực.','#s-lstm','RNN hai chiều|hai chiều'],
 ['word embedding','vector biểu diễn từ','Thay one-hot bằng vector dày đặc 300 chiều, học sao cho từ dùng trong ngữ cảnh giống nhau thì ở gần nhau. Nhờ đó tri thức chuyển được giữa "táo" và "cam".','#s-embed','word embedding'],
-['one-hot vector','vector một-nóng','Vector toàn 0 trừ đúng một số 1. Vấn đề chí mạng: tích vô hướng của one-hot hai từ khác nhau luôn bằng 0, nên mọi từ cách nhau đúng bằng nhau.','#s-embed','one-hot vector'],
+['one-hot vector','vector một-nóng','Vector toàn 0 trừ đúng một số 1. Vấn đề chí mạng: tích vô hướng của one-hot hai từ khác nhau luôn bằng 0, nên mọi từ cách nhau đúng bằng nhau.','#s-embed','one-hot'],
 ['word2vec','word2vec','Học embedding bằng bài toán giả: cho một từ giữa câu, đoán các từ xung quanh (skip-gram). Bản thân bài toán giả không ai quan tâm — chỉ lấy trọng số.','#s-embed','skip-gram'],
 ['negative sampling','lấy mẫu âm','Đổi bài toán thành "cặp từ này có thật sự đứng gần nhau không". Mỗi bước chỉ cần k+1 hồi quy logistic thay vì một softmax 10.000 lớp.','#s-embed','negative sampling'],
 ['GloVe','GloVe','Học embedding bằng cách khớp trực tiếp với BẢNG ĐẾM số lần hai từ cùng xuất hiện. Đơn giản hơn hẳn về khái niệm, kết quả tương đương word2vec.','#s-embed',''],
