@@ -25,6 +25,9 @@
   10,5 đơn vị còn ~7,7px. Tăng cỡ chữ thì phải đo lại chồng nhãn ở mọi trạng thái của từng mô hình.
 - mathematics-for-machine-learning: chữ trong 18 SVG còn 4–6px ở 320–390px (cỡ chữ theo viewBox 620). Phóng 1,5×
   bằng media query làm 8 mô hình cắt hoặc chồng nhãn; phải vẽ lại theo bề rộng thật của SVG.
+- experimentation-causal-inference: chữ trong các SVG viewBox 620 chỉ cao 5,5px ở 390px, 4,3px ở 320px. Tăng cỡ chữ
+  theo media query làm chồng nhãn (1,25× → 41 chỗ, vẫn 6,8px; 1,5× → 97 chỗ). Cách còn lại cần chủ trang chọn: bọc
+  hình trong khung cuộn ngang với `min-width:540px` (chữ ≥ 9px), hoặc vẽ lại theo bề rộng cột.
 - `scooter-maintenance-guide.html`: mục checklist là `<label>` không có ô input — không dùng được bằng bàn
   phím, không báo trạng thái đã tích.
 - Sáu trang cho `.wb-navbar__brand` co bằng `flex: 0 1 auto`, điều `web-builder/CLAUDE.md` bảo đừng làm:

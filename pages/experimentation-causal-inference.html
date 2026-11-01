@@ -337,6 +337,7 @@ input[type=text], input[type=number], select {
   background:var(--surface); color:var(--ink); min-width:0;
 }
 input[type=text]:focus, input[type=number]:focus, select:focus { outline:2px solid var(--a); outline-offset:-1px; }
+input::placeholder { color:var(--subtle); opacity:1; }
 .btn {
   font:inherit; font-size:12.5px; font-weight:600; padding:5px 11px; border:1px solid var(--border-2);
   border-radius:var(--radius-sm); background:var(--surface); color:var(--ink); cursor:pointer; white-space:nowrap;
@@ -344,7 +345,7 @@ input[type=text]:focus, input[type=number]:focus, select:focus { outline:2px sol
 .btn:hover { background:var(--surface-2); }
 .btn--solid { background:var(--ink); color:var(--canvas); border-color:var(--ink); }
 .btn--solid:hover { opacity:.87; background:var(--ink); }
-.btn:disabled { opacity:.45; cursor:not-allowed; }
+.btn:disabled, .btn[aria-disabled="true"] { opacity:.45; cursor:not-allowed; }
 .val { font-family:var(--mono); font-size:12.5px; color:var(--ink); min-width:56px; display:inline-block; }
 
 /* Vùng chạm trên điện thoại: thanh trượt cao 22px và nút cao 27px quá nhỏ cho ngón tay.
@@ -355,7 +356,6 @@ input[type=text]:focus, input[type=number]:focus, select:focus { outline:2px sol
   input[type=range]::-webkit-slider-thumb { width:22px; height:22px; margin-top:-9.5px; }
   input[type=range]::-moz-range-thumb { width:22px; height:22px; }
   .btn { min-height:40px; padding:10px 14px; }
-  .tab { min-height:40px; padding:10px 13px; }
   .chip { display:inline-flex; align-items:center; min-height:40px; padding:8px 13px; }
   /* ký hiệu bấm được trong công thức: nới vùng chạm bằng padding. Không đổi được chiều
      ngang của một ký tự đơn, nhưng .fx__line có line-height 2.1 nên 40px chiều cao vẫn vừa. */
@@ -374,7 +374,7 @@ input[type=text]:focus, input[type=number]:focus, select:focus { outline:2px sol
 
 /* Viền focus bàn phím: mọi thứ bấm được phải thấy được khi đi bằng Tab.
    :focus-visible nên chuột bấm không hiện viền. */
-.btn:focus-visible, .tab:focus-visible, .chip:focus-visible, .iconbtn:focus-visible,
+.btn:focus-visible, .chip:focus-visible, .iconbtn:focus-visible,
 .totop:focus-visible, .pop__x:focus-visible, .pop__go:focus-visible,
 details.q > summary:focus-visible, input[type=range]:focus-visible,
 .bar__nav a:focus-visible, .toc a:focus-visible, .acts a:focus-visible {
@@ -382,22 +382,10 @@ details.q > summary:focus-visible, input[type=range]:focus-visible,
 }
 .tm:focus-visible { outline:2px solid var(--a); outline-offset:1px; }
 
-/* tab trong lab */
-.tabs { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:14px; border-bottom:1px solid var(--border); }
-.tab {
-  font:inherit; font-size:12.5px; font-weight:600; padding:6px 12px; border:0; background:transparent;
-  color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px;
-}
-.tab:hover { color:var(--ink); }
-.tab.on { color:var(--ink); border-bottom-color:var(--ink); }
 
 
 /* svg / canvas trong lab */
 .viz { width:100%; height:auto; display:block; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--sunk); }
-/* CHỈ ô vẽ kéo được mới chặn cử chỉ chạm — mọi biểu đồ khác phải để ngón tay cuộn
-   trang bình thường, nếu không trên điện thoại người đọc bị kẹt ở mỗi hình. */
-.viz--drag { touch-action:none; cursor:grab; }
-.viz--drag:active { cursor:grabbing; }
 .vt { fill:var(--ink); font-size:12px; font-weight:600; font-family:var(--font); }
 .vs { fill:var(--muted); font-size:10.5px; font-family:var(--font); }
 .vm { fill:var(--ink); font-size:11px; font-family:var(--mono); }
@@ -457,10 +445,12 @@ footer a { color:var(--muted); }
   background:var(--surface); border:1px solid var(--border-2); border-radius:var(--radius);
   box-shadow:0 8px 30px -8px rgba(20,22,28,.30), 0 2px 6px rgba(20,22,28,.08);
   padding:14px 16px 14px; font-size:14px; line-height:1.62; color:var(--ink);
-  opacity:0; pointer-events:none; transform:translateY(5px); transition:opacity .13s ease, transform .13s ease;
+  opacity:0; pointer-events:none; transform:translateY(5px); visibility:hidden;
+  transition:opacity .13s ease, transform .13s ease, visibility 0s linear .13s;
 }
 html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
-.pop.on { opacity:1; pointer-events:auto; transform:none; }
+.pop.on { opacity:1; pointer-events:auto; transform:none; visibility:visible; transition:opacity .13s ease, transform .13s ease; }
+.pop:focus { outline:none; }
 .pop__en { font-size:15.5px; font-weight:730; letter-spacing:-.012em; margin:0 0 2px; padding-right:24px; line-height:1.3; }
 .pop__vi { font-family:var(--mono); font-size:11.5px; color:var(--muted); margin:0 0 9px; letter-spacing:.02em; }
 .pop__d { margin:0; max-width:none; }
@@ -620,7 +610,7 @@ ol.steps > li::before { content:counter(st); position:absolute; left:0; top:1px;
       <a class="iconbtn" href="../index.html" aria-label="Trang chủ">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
       </a>
-      <button class="iconbtn" id="themeBtn" aria-label="Sáng / Tối">
+      <button class="iconbtn" id="themeBtn" aria-label="Giao diện tối">
         <svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8"/></svg>
         <svg class="ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       </button>
@@ -3922,36 +3912,6 @@ function binompmf(n, k, p) {
   var lp = lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1) + k * Math.log(p) + (n - k) * Math.log(1 - p);
   return Math.exp(lp);
 }
-/* toạ độ con trỏ đổi sang hệ toạ độ viewBox của SVG — bắt buộc, vì SVG được
-   phóng theo bề rộng cột nên pixel màn hình không bằng đơn vị viewBox. */
-function svgPt(svg, e) {
-  var r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal;
-  return { x: (e.clientX - r.left) / r.width * vb.width, y: (e.clientY - r.top) / r.height * vb.height };
-}
-/* Mũi tên bàn phím cho những ô vẽ mà tương tác CHÍNH là kéo chuột. Không có nó thì
-   mô hình 2 và mô hình 8 hoàn toàn không dùng được bằng bàn phím — mà kéo mới là
-   phần dạy, chip chỉ đổi chế độ. Shift = bước lớn; ô vẽ tự nhận tiêu điểm được. */
-function arrowKeys(svg, handler) {
-  svg.setAttribute('tabindex', '0');
-  svg.addEventListener('keydown', function (e) {
-    var d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
-    if (!d) return;
-    e.preventDefault();
-    handler(d[0], d[1], e.shiftKey);
-  });
-}
-function onDrag(svg, handler) {
-  var active = false;
-  function go(e) { handler(svgPt(svg, e), e); }
-  svg.addEventListener('pointerdown', function (e) {
-    active = true;
-    if (svg.setPointerCapture) { try { svg.setPointerCapture(e.pointerId); } catch (err) {} }
-    go(e); e.preventDefault();
-  });
-  svg.addEventListener('pointermove', function (e) { if (active) { go(e); e.preventDefault(); } });
-  svg.addEventListener('pointerup', function () { active = false; });
-  svg.addEventListener('pointercancel', function () { active = false; });
-}
 /* chips: một nhóm chip là một bộ chọn một-trong-nhiều */
 function chipGroup(id, attr, cb) {
   var bar = $(id);
@@ -3980,9 +3940,11 @@ function css(name, node) {
 (function () {
   var root = document.documentElement;
   var btn = $('themeBtn');
+  if (btn) btn.setAttribute('aria-pressed', root.classList.contains('dark') ? 'true' : 'false');
   if (btn) btn.addEventListener('click', function () {
     var dark = !root.classList.contains('dark');
     root.classList.toggle('dark', dark);
+    btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
     try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
     setTimeout(function () { redraws.forEach(function (f) { try { f(); } catch (e) {} }); }, 30);
   });
@@ -4008,8 +3970,9 @@ function css(name, node) {
     var narrow = window.innerWidth <= 1040, open = toc.classList.contains('open');
     toc.inert = narrow && !open;
     if (col) col.inert = narrow && open;
+    if (hero) hero.inert = narrow && open;
   }
-  var col = document.querySelector('.col');
+  var col = document.querySelector('.col'), hero = document.querySelector('.hero');
   function setToc(open) {
     toc.classList.toggle('open', open);
     scrim.classList.toggle('on', open);
@@ -4018,6 +3981,8 @@ function css(name, node) {
        là rơi vào một .term nằm DƯỚI lớp che. inert phần nội dung khi ngăn đang mở. */
     if (col) col.inert = open && window.innerWidth <= 1040;
     syncInert();
+    /* đưa tiêu điểm vào ngăn, kẻo Tab đi qua thanh trên rồi mới tới mục lục */
+    if (open && window.innerWidth <= 1040) { var a1 = toc.querySelector('a'); if (a1) a1.focus({ preventScroll: true }); }
   }
   syncInert();
   window.addEventListener('resize', syncInert);
@@ -4057,22 +4022,6 @@ function css(name, node) {
     targets.forEach(function (t) { io.observe(t); });
   }
 })();
-
-/* tab trong bảng tra cứu */
-Array.prototype.slice.call(document.querySelectorAll('[data-tabs]')).forEach(function (bar) {
-  var scope = bar.parentElement;
-  bar.addEventListener('click', function (e) {
-    var b = e.target.closest ? e.target.closest('[data-tab]') : null;
-    if (!b) return;
-    Array.prototype.slice.call(bar.querySelectorAll('.tab')).forEach(function (x) {
-      x.classList.toggle('on', x === b);
-      if (x.hasAttribute('role')) x.setAttribute('aria-selected', x === b ? 'true' : 'false');
-    });
-    Array.prototype.slice.call(scope.querySelectorAll('[data-panel]')).forEach(function (p) {
-      p.hidden = p.getAttribute('data-panel') !== b.getAttribute('data-tab');
-    });
-  });
-});
 
 /* Bàn phím cho hai loại "nút" viết bằng <span>: .chip (chọn kịch bản trong các mô hình)
    và .tm (ký hiệu bấm được trong công thức). Cả hai chỉ có handler click, nên nếu không
@@ -4292,8 +4241,8 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
     function poNaive(T) {
       var s1 = 0, s0 = 0, n1 = 0, n0 = 0;
       for (var i = 0; i < 10; i++) { if (T[i]) { s1 += Y1[i]; n1++; } else { s0 += Y0[i]; n0++; } }
-      if (!n1 || !n0) return { n1: n1, n0: n0 };
-      var m1 = Math.round(s1 / n1 * 10) / 10, m0 = Math.round(s0 / n0 * 10) / 10;
+      var m1 = n1 ? Math.round(s1 / n1 * 10) / 10 : null, m0 = n0 ? Math.round(s0 / n0 * 10) / 10 : null;
+      if (!n1 || !n0) return { n1: n1, n0: n0, m1: m1, m0: m0 };
       return { n1: n1, n0: n0, m1: m1, m0: m0, d: Math.round((m1 - m0) * 10) / 10 };
     }
     /* chủ cửa hàng nhắn 5 người quen mặt nhất = 5 người vốn chi nhiều nhất */
@@ -4733,7 +4682,9 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
       el(svg, 'line', { x1: sx(xc), y1: sy(plan.n), x2: sx(xc), y2: Y1 }, 'stroke:' + MUTED + ';stroke-dasharray:3 3');
       el(svg, 'line', { x1: X0, y1: sy(plan.n), x2: sx(xc), y2: sy(plan.n) }, 'stroke:' + MUTED + ';stroke-dasharray:3 3');
       el(svg, 'circle', { cx: sx(xc), cy: sy(plan.n), r: 5.5 }, 'fill:' + K);
-      txt(svg, sx(xc) + 9, sy(plan.n) - 8, 'n = ' + fmt(plan.n, 0), 'vt', 'start', 'fill:' + K);
+      /* sát mép phải thì nhãn sang trái chấm, kẻo lố khung */
+      var nr = sx(xc) > X1 - 90;
+      txt(svg, sx(xc) + (nr ? -9 : 9), sy(plan.n) - (nr ? 12 : 8), 'n = ' + fmt(plan.n, 0), 'vt', nr ? 'end' : 'start', 'fill:' + K);
       if (xh >= xlo) {
         el(svg, 'circle', { cx: sx(xh), cy: sy(half.n), r: 5.5 }, 'fill:' + SURF + ';stroke:' + K + ';stroke-width:2');
         txt(svg, sx(xh) + 9, sy(half.n) - 6, 'MDE / 2 → × ' + fmt(half.n / plan.n, 1), 'vs', 'start');
@@ -5593,7 +5544,9 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
       var y0 = 50 + q * 52, ok = Math.abs(rw[1] - TRUE) < 1;
       txt(svgE, L2 - 8, y0 + 16, rw[0], 'vt', 'end');
       el(svgE, 'rect', { x: L2, y: y0, width: Math.max(1, X2(rw[1]) - L2), height: 24, rx: 3 }, 'fill:' + (q === 0 ? SUNK : ok ? GOOD : BAD) + ';fill-opacity:' + (q === 0 ? '1' : '.85'));
-      txt(svgE, X2(rw[1]) + 6, y0 + 16, fmt(rw[1], 2), 'vm', 'start');
+      /* số lớn thì nằm trong thanh, kẻo lố mép phải của hình */
+      var inb = X2(rw[1]) > R2 - 40;
+      txt(svgE, X2(rw[1]) + (inb ? -6 : 6), y0 + 16, fmt(rw[1], 2), 'vm', inb ? 'end' : 'start', inb ? 'fill:' + (q === 0 ? INK : css('--surface')) : null);
     });
     el(svgE, 'line', { x1: X2(TRUE), y1: 34, x2: X2(TRUE), y2: 206 }, 'stroke:' + INK + ';stroke-width:1.8;stroke-dasharray:5 3');
     txt(svgE, X2(TRUE) + 4, 44, 'thật = 5', 'vs', 'start');
@@ -6165,7 +6118,7 @@ P3.qiniCurve = function (rows, key, sigma) {
   }
   function toSliders() { ids.forEach(function (id, j) { $(id).value = String(Math.round(w[j] * 100)); }); }
   function draw() {
-    ids.forEach(function (id, j) { $(id + 'v').textContent = fmt(w[j], 2); });
+    ids.forEach(function (id, j) { $(id + 'v').textContent = fmt(w[j], 2); $(id).setAttribute('aria-valuetext', fmt(w[j], 2)); });
     var S = P3.synthCurve(dat.D, w);
     var pre = P3.rmspe(dat.P, S, 0, 18), gap = P3.meanGap(dat.P, S, 18, 24), post = P3.rmspe(dat.P, S, 18, 24);
     if (!plac) plac = P3.synthPlacebo(dat);
@@ -6196,7 +6149,7 @@ P3.qiniCurve = function (rows, key, sigma) {
       txt(g, x0 - 44, top + 4, 'đơn/ngày', 'vs');
       for (var k = 0; k < 4; k++) {
         path(dat.D[k], Yf, 'stroke:' + MUTED + ';stroke-width:1;opacity:' + (0.25 + 0.6 * w[k]).toFixed(2));
-        txt(g, x0 + 3, Yf(dat.D[k][0]) - 4, P3.SY_TEN[k], 'vs', null, 'opacity:.85');
+        txt(g, x0 + 3, Yf(dat.D[k][0]) - 4, P3.SY_TEN[k], 'vs');
       }
       path(dat.P0.slice(0, 24), Yf, 'stroke:' + INK + ';stroke-width:1.3;stroke-dasharray:1.5 3.5');
       path(S, Yf, 'stroke:' + K + ';stroke-width:2;stroke-dasharray:7 4');
@@ -6238,13 +6191,14 @@ P3.qiniCurve = function (rows, key, sigma) {
     var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) { w = P3.synthStep(dat.D, dat.P, w, P3.SY_ITERS); toSliders(); draw(); return; }
     /* hiện dần: 30 khung, mỗi khung 20 bước gradient — tổng đúng SY_ITERS bước như bản không hoạt ảnh */
-    busy = true; btn.disabled = true; eq.disabled = true;
+    /* không dùng disabled: nút đang giữ tiêu điểm bị vô hiệu thì tiêu điểm rơi về <body>. Cờ busy chặn bấm chồng. */
+    busy = true; btn.setAttribute('aria-disabled', 'true'); eq.setAttribute('aria-disabled', 'true');
     var frame = 0;
     (function step() {
       w = P3.synthStep(dat.D, dat.P, w, P3.SY_ITERS / 30);
       toSliders(); draw();
       if (++frame < 30) requestAnimationFrame(step);
-      else { busy = false; btn.disabled = false; eq.disabled = false; }
+      else { busy = false; btn.removeAttribute('aria-disabled'); eq.removeAttribute('aria-disabled'); }
     })();
   });
   eq.addEventListener('click', function () { if (busy) return; w = [0.25, 0.25, 0.25, 0.25]; toSliders(); draw(); });
@@ -6278,7 +6232,8 @@ P3.qiniCurve = function (rows, key, sigma) {
     var g = el(svg, 'g'), v, i;
     for (v = 0; v <= 1500; v += 300) {
       el(g, 'line', { x1: x0, x2: x1, y1: Y(v), y2: Y(v), 'class': 'vgrid' });
-      txt(g, x0 - 6, Y(v) + 4, fmt(v, 0), 'vs', 'end');
+      /* nhãn 0 nhích lên, kẻo dính nhãn 400 của trục ngang ở góc */
+      txt(g, x0 - 6, Y(v) + (v ? 4 : 0), fmt(v, 0), 'vs', 'end');
     }
     for (v = 400; v <= 1600; v += 200) txt(g, X(v), bot + 14, fmt(v, 0), 'vs', 'middle');
     txt(g, x0 - 50, top + 2, 'nghìn ₫', 'vs');
@@ -6709,12 +6664,13 @@ var GLOSS = [
   pop.className = 'pop';
   pop.setAttribute('role', 'dialog');
   pop.setAttribute('aria-label', 'Giải thích thuật ngữ');
+  pop.setAttribute('tabindex', '-1');
   pop.innerHTML = '<button class="pop__x" aria-label="Đóng"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
     '<p class="pop__en"></p><p class="pop__vi"></p><p class="pop__d"></p><a class="pop__go" href="#"></a>';
   document.body.appendChild(pop);
   var pEn = pop.querySelector('.pop__en'), pVi = pop.querySelector('.pop__vi'),
       pD = pop.querySelector('.pop__d'), pGo = pop.querySelector('.pop__go');
-  var anchor = null;
+  var anchor = null, viaKey = false;
 
   function secName(href) {
     var el2 = document.querySelector(href);
@@ -6727,7 +6683,8 @@ var GLOSS = [
   function place(fromScroll) {
     if (!anchor) return;
     var r = anchor.getBoundingClientRect();
-    if (fromScroll && (r.bottom < 0 || r.top > window.innerHeight)) { hide(); return; }
+    /* tiêu điểm đang trong popup (mở bằng bàn phím) thì không đóng khi thuật ngữ cuộn khỏi màn hình */
+    if (fromScroll && (r.bottom < 0 || r.top > window.innerHeight) && !pop.contains(document.activeElement)) { hide(); return; }
     if (window.innerWidth <= 620) { pop.style.top = ''; pop.style.left = ''; return; }
     var w = pop.offsetWidth, h = pop.offsetHeight, gap = 9;
     var left = Math.min(Math.max(10, r.left - 12), window.innerWidth - w - 10);
@@ -6747,15 +6704,21 @@ var GLOSS = [
     else pGo.style.display = 'none';
     pop.classList.add('on');
     place();
+    /* mở bằng bàn phím: đưa tiêu điểm vào popup, kẻo phải Tab qua cả trang mới tới link "đọc kỹ ở" */
+    if (viaKey) pop.focus({ preventScroll: true });
+    viaKey = false;
   }
-  function hide() {
+  /* back: trả tiêu điểm về thuật ngữ nếu nó đang nằm trong popup (Đóng, Esc) */
+  function hide(back) {
+    var a = anchor, inside = pop.contains(document.activeElement);
     pop.classList.remove('on');
-    if (anchor) anchor.classList.remove('is-open');
+    if (a) a.classList.remove('is-open');
     anchor = null;
+    if (inside && back === true && a) a.focus({ preventScroll: true });
   }
-  pop.querySelector('.pop__x').addEventListener('click', hide);
-  pGo.addEventListener('click', hide);
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+  pop.querySelector('.pop__x').addEventListener('click', function () { hide(true); });
+  pGo.addEventListener('click', function () { hide(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && anchor) hide(true); });
   document.addEventListener('click', function (e) {
     var t = e.target.closest ? e.target.closest('.term') : null;
     if (t) {
@@ -6841,7 +6804,9 @@ var GLOSS = [
     var t = document.activeElement;
     if (!t || !t.classList || !t.classList.contains('term')) return;
     e.preventDefault();
+    viaKey = true;
     t.click();
+    viaKey = false;
   });
 
   /* ── bảng tra ở cuối trang, sinh từ cùng mảng GLOSS ─────────────────────── */
@@ -6870,6 +6835,24 @@ var GLOSS = [
     q.addEventListener('input', filter);
     filter();
   }
+})();
+
+/* thanh trượt: trình đọc màn hình đọc đúng số đang hiện ở .val, không đọc giá trị thô
+   (chỉ số, phần nghìn…). Gắn ở document và gắn sau cùng, nên chạy sau listener của mô hình. */
+(function () {
+  function sync(root) {
+    Array.prototype.forEach.call(root.querySelectorAll('input[type=range]'), function (r) {
+      var row = r.closest('.row'), v = row ? row.querySelector('.val') : null;
+      if (v && v.textContent.trim()) r.setAttribute('aria-valuetext', v.textContent.trim());
+    });
+  }
+  sync(document);
+  ['input', 'change', 'click'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) {
+      var lab = e.target.closest ? e.target.closest('.lab') : null;
+      if (lab) sync(lab);
+    });
+  });
 })();
 
 })();
