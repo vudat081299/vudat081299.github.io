@@ -90,6 +90,37 @@ function fail(message, err) {
 
 /* ---------- Vẽ ---------- */
 
+const KEY_ATTRS = ['data-session', 'data-course', 'data-day', 'data-id', 'data-action', 'data-view'];
+
+/**
+ * Cách tìm lại một nút sau khi vùng chứa nó bị vẽ lại: id vùng + thuộc tính nhận dạng.
+ * @param {Element|null} el
+ * @returns {{region:string, selector:string}|null}
+ */
+function focusKeyOf(el) {
+  if (!(el instanceof HTMLElement) || el === document.body) return null;
+  const region = el.closest('[id]');
+  const attr = KEY_ATTRS.find((a) => el.hasAttribute(a));
+  if (!region || !attr) return null;
+  return { region: region.id, selector: `${el.tagName.toLowerCase()}[${attr}="${CSS.escape(el.getAttribute(attr) ?? '')}"]` };
+}
+
+/** @param {{region:string, selector:string}|null} key */
+function refocus(key) {
+  if (!key) return false;
+  const el = /** @type {HTMLElement|null} */ (document.getElementById(key.region)?.querySelector(key.selector) ?? null);
+  el?.focus({ preventScroll: true });
+  return !!el;
+}
+
+/** Thay nội dung một vùng mà không làm rơi focus bàn phím đang nằm trong nó. @param {HTMLElement} el @param {unknown} content */
+function replace(el, content) {
+  const active = document.activeElement;
+  const key = active && el.contains(active) ? focusKeyOf(active) : null;
+  el.innerHTML = String(content);
+  if (key) refocus(key);
+}
+
 function renderAll() {
   renderDashboardArea();
   renderToolbar();
@@ -98,19 +129,19 @@ function renderAll() {
 }
 
 function renderDashboardArea() {
-  $('dashboard').innerHTML = String(renderDashboard(state));
+  replace($('dashboard'), renderDashboard(state));
 }
 
 function renderToolbar() {
   $('cal-title').textContent = viewTitle(state);
-  $('cal').dataset.view = state.view;
+  $('cal').dataset.mode = state.view;
   for (const b of document.querySelectorAll('[data-view]')) {
     const on = /** @type {HTMLElement} */ (b).dataset.view === state.view;
     b.setAttribute('aria-pressed', String(on));
   }
-  $('filters').innerHTML = String(html`${state.schedule.courses.map((c) => {
+  replace($('filters'), html`${state.schedule.courses.map((c) => {
     const on = !state.hidden.has(c.id);
-    return html`<button type="button" class="chip tone-${c.tone}" data-action="toggle-course" data-id="${c.id}" aria-pressed="${on}">
+    return html`<button type="button" class="chip tone-${c.tone}" data-action="toggle-course" data-id="${c.id}" aria-pressed="${String(on)}">
       <span class="chip-dot" aria-hidden="true"></span>${c.shortName}
     </button>`;
   })}`);
@@ -121,7 +152,7 @@ function renderToolbar() {
 /** @param {boolean} [animate] vẽ lại do người dùng thao tác (có hiệu ứng), không phải do đồng hồ */
 function renderCalendar(animate = true) {
   const el = $('cal-view');
-  el.innerHTML = String(renderView(state));
+  replace(el, renderView(state));
   if (animate) {
     el.classList.remove('anim');
     void el.offsetWidth;
@@ -135,7 +166,7 @@ function renderPanelArea(keepScroll) {
   const body = root.querySelector('.panel-body');
   const scroll = body ? body.scrollTop : 0;
   const wasOpen = root.classList.contains('is-open');
-  root.innerHTML = String(renderPanel(state));
+  replace(root, renderPanel(state));
   if (!state.panel) {
     root.classList.remove('is-open');
     return;
@@ -201,13 +232,13 @@ function goToday() {
   }
 }
 
-/** @type {Element|null} */
-let lastFocus = null;
+/** @type {{el:Element|null, key:{region:string, selector:string}|null}} */
+let lastFocus = { el: null, key: null };
 
 /** @param {string} courseId @param {string|null} sessionId */
 function openPanel(courseId, sessionId) {
   const wasOpen = !!state.panel;
-  if (!wasOpen) lastFocus = document.activeElement;
+  if (!wasOpen) lastFocus = { el: document.activeElement, key: focusKeyOf(document.activeElement) };
   state.panel = { courseId, sessionId };
   renderPanelArea(false);
   document.documentElement.classList.add('panel-lock');
@@ -223,7 +254,9 @@ function closePanel() {
   document.documentElement.classList.remove('panel-lock');
   const done = () => { if (!state.panel) root.innerHTML = ''; };
   setTimeout(done, 260);
-  if (lastFocus instanceof HTMLElement && document.contains(lastFocus)) lastFocus.focus({ preventScroll: true });
+  // Nút đã mở panel có thể đã bị vẽ lại trong lúc panel mở: tìm lại theo khoá.
+  if (lastFocus.el instanceof HTMLElement && document.contains(lastFocus.el)) lastFocus.el.focus({ preventScroll: true });
+  else refocus(lastFocus.key);
 }
 
 function tick() {
@@ -251,7 +284,7 @@ function bindEvents() {
       openPanel(courseEl.dataset.course ?? '', null);
       return;
     }
-    const viewEl = /** @type {HTMLElement|null} */ (target.closest('[data-view]'));
+    const viewEl = /** @type {HTMLElement|null} */ (target.closest('button[data-view]'));
     if (viewEl) {
       setView(/** @type {View} */ (viewEl.dataset.view));
       return;
@@ -271,6 +304,7 @@ function bindEvents() {
         setView('week');
         return;
       }
+      if (!state.narrow) return;
       state.selectedDay = key;
       if (key.slice(0, 7) !== state.cursor.slice(0, 7)) {
         state.cursor = key;

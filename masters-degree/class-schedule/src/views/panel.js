@@ -100,7 +100,7 @@ export function renderPanel(state) {
           ${own.map((s) => {
             const st = statusOf(s, now.ms);
             const cls = ['p-date', `is-${st}`, s === session ? 'is-current' : '', s === ownNext ? 'is-own-next' : ''].join(' ');
-            return html`<li><button type="button" class="${cls}" data-session="${s.id}"${s === session ? ' aria-current="true"' : ''}>
+            return html`<li><button type="button" class="${cls}" data-session="${s.id}" aria-current="${s === session ? 'true' : 'false'}">
               <span class="p-idx num">${s.index}</span>
               <span class="p-when"><span class="num">${weekdayShort(s.date)} ${fmtDate(s.date)}</span>${teachers.length > 1 ? html`<span class="muted">${s.instructor.name}</span>` : ''}</span>
               <span class="p-st">${st === 'past' ? icon('check') : st === 'live' ? html`<span class="pulse"></span>` : s === ownNext ? html`<span class="badge badge-next">Tới</span>` : ''}</span>

@@ -69,12 +69,12 @@ function monthView(state) {
     const cls = ['day', out ? 'is-out' : '', key === now.key ? 'is-today' : '', key === selected ? 'is-selected' : '',
       key < now.key ? 'is-before' : '', list.length ? 'has-events' : ''].join(' ');
     const label = `${weekdayLong(key)}, ${fmtDate(key)}${list.length ? `, ${list.length} buổi học` : ''}`;
-    cells.push(html`<div class="${cls}" data-day="${key}" role="gridcell">
-      <button type="button" class="day-num num" data-day="${key}" aria-label="${label}"${key === now.key ? ' aria-current="date"' : ''}>${parseKey(key).d}</button>
+    cells.push(html`<div class="${cls}" data-day="${key}">
+      <button type="button" class="day-num num" data-day="${key}" aria-label="${label}" aria-current="${key === now.key ? 'date' : 'false'}">${parseKey(key).d}</button>
       ${list.length
         ? html`<span class="day-events">${list.map((s) => {
             const { status, isNext } = stateOf(s, now.ms, next);
-            return html`<button type="button" class="ev tone-${s.course.tone} is-${status}${isNext ? ' is-next' : ''}" data-session="${s.id}" title="${s.course.name} · ${s.start}–${s.end} · ${s.room}">
+            return html`<button type="button" class="ev tone-${s.course.tone} is-${status}${isNext ? ' is-next' : ''}" data-session="${s.id}" title="${s.course.name} · ${s.start}–${s.end} · ${s.room} · ${s.instructor.name}">
               <span class="ev-time num">${s.start}</span><span class="ev-name">${s.course.shortName}</span><span class="ev-room">${s.room}</span>
             </button>`;
           })}</span>
@@ -84,9 +84,9 @@ function monthView(state) {
   }
 
   const dayList = selected ? days.get(selected) ?? [] : [];
-  return html`<div class="month" role="grid" aria-label="${fmtMonthTitle(first)}">
-      <div class="month-head" role="row">${WEEK_HEADERS.map((h) => html`<span role="columnheader">${h}</span>`)}</div>
-      <div class="month-body" role="rowgroup" style="--weeks:${weeks}">${cells}</div>
+  return html`<div class="month" aria-label="${fmtMonthTitle(first)}">
+      <div class="month-head" aria-hidden="true">${WEEK_HEADERS.map((h) => html`<span>${h}</span>`)}</div>
+      <div class="month-body" style="--weeks:${weeks}">${cells}</div>
     </div>
     ${filterNote(state, inMonth)}
     <div class="month-daylist" aria-live="polite">
@@ -198,7 +198,7 @@ function agendaView(state) {
 
   return html`<div class="agenda">
     ${past.length
-      ? html`<button type="button" class="past-toggle" data-action="toggle-past" aria-expanded="${state.showPast}">
+      ? html`<button type="button" class="past-toggle" data-action="toggle-past" aria-expanded="${String(state.showPast)}">
           ${icon('chevron-down', state.showPast ? 'rot' : '')}${state.showPast ? 'Ẩn' : 'Hiện'} ${past.length} buổi đã qua
         </button>`
       : ''}
