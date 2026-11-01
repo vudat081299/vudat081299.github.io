@@ -23,6 +23,8 @@
 
 - machine-learning-101: ở 320px các khung SVG rộng 300–340 đơn vị (m1, m4, m6, m9, m11) co còn 0,74 lần, chữ
   10,5 đơn vị còn ~7,7px. Tăng cỡ chữ thì phải đo lại chồng nhãn ở mọi trạng thái của từng mô hình.
+- mathematics-for-machine-learning: chữ trong 18 SVG còn 4–6px ở 320–390px (cỡ chữ theo viewBox 620). Phóng 1,5×
+  bằng media query làm 8 mô hình cắt hoặc chồng nhãn; phải vẽ lại theo bề rộng thật của SVG.
 - `scooter-maintenance-guide.html`: mục checklist là `<label>` không có ô input — không dùng được bằng bàn
   phím, không báo trạng thái đã tích.
 - Sáu trang cho `.wb-navbar__brand` co bằng `flex: 0 1 auto`, điều `web-builder/CLAUDE.md` bảo đừng làm:

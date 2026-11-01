@@ -218,6 +218,12 @@ code { font-family:var(--mono); font-size:.88em; background:var(--surface-2); bo
 .fx__line {
   font-family:var(--math); font-size:20px; line-height:2.1; padding:16px 18px 12px; overflow-x:auto;
   white-space:nowrap; letter-spacing:.01em;
+  /* bóng ở mép còn chữ khuất: dải "local" che bóng khi đã cuộn tới mép ấy */
+  background:
+    linear-gradient(to right, var(--surface) 30%, transparent) left center / 28px 100% no-repeat local,
+    linear-gradient(to left, var(--surface) 30%, transparent) right center / 28px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, var(--subtle), transparent) left center / 10px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--subtle), transparent) right center / 10px 100% no-repeat scroll;
 }
 .fx__line.sm { font-size:17px; }
 .fx__line + .fx__line { padding-top:0; }
@@ -294,7 +300,7 @@ code { font-family:var(--mono); font-size:.88em; background:var(--surface-2); bo
 .tw { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius); margin:16px 0 18px; }
 table { border-collapse:collapse; width:100%; font-size:13.5px; }
 th, td { text-align:left; padding:9px 13px; border-bottom:1px solid var(--border); vertical-align:top; line-height:1.6; }
-th { font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--subtle); font-weight:650; background:var(--sunk); white-space:nowrap; }
+th { font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; color:var(--subtle); font-weight:650; background:var(--sunk); white-space:nowrap; }
 tbody tr:last-child td { border-bottom:0; }
 td code { font-size:12px; }
 td b { font-weight:660; }
@@ -322,7 +328,7 @@ td b { font-weight:660; }
 
 .row { display:grid; grid-template-columns:118px minmax(0,1fr); gap:8px 13px; align-items:center; margin-bottom:11px; }
 @media (max-width:620px) { .row { grid-template-columns:minmax(0,1fr); gap:3px; } }
-.row > label, .row > .k { font-family:var(--mono); font-size:10.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--subtle); line-height:1.45; }
+.row > label, .row > .k { font-family:var(--mono); font-size:10.5px; letter-spacing:.04em; color:var(--subtle); line-height:1.45; }
 .row:last-child { margin-bottom:0; }
 .inline { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
 
@@ -546,7 +552,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
    vào bảng thông số. */
 .reads { display:grid; grid-template-columns:repeat(auto-fit,minmax(132px,1fr)); gap:9px; margin:13px 0 0; }
 .read { border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 11px; background:var(--sunk); }
-.read .k { font-family:var(--mono); font-size:9.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--subtle); font-weight:650; }
+/* ký hiệu toán trong nhãn in hoa: σ in hoa thành Σ, f thành F — là ký hiệu khác */
+.lc { text-transform:none !important; }
+.read .k { font-family:var(--mono); font-size:9.5px; letter-spacing:.09em; color:var(--subtle); font-weight:650; }
 .read .v { font-family:var(--mono); font-size:19px; font-weight:700; letter-spacing:-.02em; line-height:1.3; margin-top:2px; }
 .read.hi { background:var(--k-bg); border-color:var(--k-line); }
 .read.hi .v { color:var(--k); }
@@ -1463,7 +1471,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="lab" id="m7">
           <div class="lab__h">
-            <p class="lab__k">Mô hình 7 · kéo điểm, thu nhỏ h</p>
+            <p class="lab__k">Mô hình 7 · kéo điểm, thu nhỏ <span class="lc">h</span></p>
             <p class="lab__t">Dây cung co lại thành tiếp tuyến</p>
             <p class="lab__hint">Kéo điểm chạy trên đường cong và đọc độ nghiêng. Rồi thu <b>h</b> nhỏ dần: đường xám (đi qua hai điểm) sẽ trùng dần vào đường màu (tiếp tuyến). Hãy tìm chỗ độ nghiêng <b>bằng 0</b> — rồi thử xem sigmoid có chỗ nào như thế không. Chỗ phẳng là đáy, đỉnh hay thứ khác: mục 2.3 phân biệt.</p>
           </div>
@@ -1564,9 +1572,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <div class="box ana">
           <p class="box__k">Ví như</p>
           <div class="row">
-            <div class="k">f′ = 0</div><div><b>Đứng chỗ phẳng.</b> Không nghiêng bên nào.</div>
-            <div class="k">f″ &gt; 0</div><div>Phẳng vì đang ở <b>lòng chảo</b> — nhích đi đâu cũng cao lên.</div>
-            <div class="k">f″ &lt; 0</div><div>Phẳng vì đang ở <b>đỉnh gò</b> — nhích đi đâu cũng thấp xuống.</div>
+            <div class="k lc">f′ = 0</div><div><b>Đứng chỗ phẳng.</b> Không nghiêng bên nào.</div>
+            <div class="k lc">f″ &gt; 0</div><div>Phẳng vì đang ở <b>lòng chảo</b> — nhích đi đâu cũng cao lên.</div>
+            <div class="k lc">f″ &lt; 0</div><div>Phẳng vì đang ở <b>đỉnh gò</b> — nhích đi đâu cũng thấp xuống.</div>
             <div class="k brk">Yên ngựa</div><div>Ngay tại chỗ đứng thì phẳng mọi hướng, nhưng đi đông-tây thì cao lên như lòng chảo, đi bắc-nam thì thấp xuống như đỉnh gò. Chỉ xuất hiện khi có <b>từ hai biến trở lên</b> — và trong mạng nơ-ron thì nó nhiều hơn cực tiểu.</div>
           </div>
         </div>
@@ -2426,7 +2434,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       </section>
 
       <section id="s-test" class="ch-p">
-        <p class="sechead">4.7 · <b>Kiểm định &amp; p-value</b></p>
+        <p class="sechead">4.7 · <b>Kiểm định &amp; <span class="lc">p-value</span></b></p>
         <h2 class="st">p-value trả lời: &ldquo;nếu chẳng có gì xảy ra, chuyện này lạ tới mức nào?&rdquo;</h2>
         <p class="map">Bản gốc · <b>C3 · Tuần 4</b> · Hypothesis testing, p-value, type I/II errors</p>
 
@@ -2464,7 +2472,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <p class="lab__hint">Giữ nguyên tỉ lệ 10% so với 13% nhưng kéo <b>cỡ mẫu</b> xuống 200: p-value vọt lên trên 0,05 và kết luận biến mất — <b>cùng một chênh lệch, không còn kết luận được gì</b>. &ldquo;Chưa bác bỏ được&rdquo; không có nghĩa là &ldquo;hai nút như nhau&rdquo;; nó chỉ nói dữ liệu chưa đủ để phân biệt. Đó là lý do phải tính cỡ mẫu <i>trước khi</i> chạy thử nghiệm, không phải sau.</p>
           </div>
           <div class="lab__b">
-            <div class="row"><label for="m18-n">Người xem mỗi bản</label><div class="inline"><input type="range" id="m18-n" min="50" max="5000" step="50" value="1000"><span class="val" id="m18-nv">1000</span></div></div>
+            <div class="row"><label for="m18-n">Người xem mỗi bản</label><div class="inline"><input type="range" id="m18-n" min="50" max="5000" step="50" value="1000"><span class="val" id="m18-nv">1.000</span></div></div>
             <div class="row"><label for="m18-pa">Bản A mua (%)</label><div class="inline"><input type="range" id="m18-pa" min="1" max="40" step="1" value="10"><span class="val" id="m18-pav">10%</span></div></div>
             <div class="row"><label for="m18-pb">Bản B mua (%)</label><div class="inline"><input type="range" id="m18-pb" min="1" max="40" step="1" value="13"><span class="val" id="m18-pbv">13%</span></div></div>
             <svg class="viz" id="m18-svg" viewBox="0 0 620 300" role="img" aria-label="Phân phối của chênh lệch dưới giả thuyết không, với vùng p-value được tô"></svg>
@@ -2485,7 +2493,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         </div>
 
         <div class="box mis">
-          <p class="box__k">p-value không phải cái người ta tưởng</p>
+          <p class="box__k"><span class="lc">p-value</span> không phải cái người ta tưởng</p>
           <div class="row">
             <div class="k">Nó <span class="c-bad">không</span> phải</div><div>&ldquo;Xác suất H₀ đúng&rdquo;. Nó cũng <b>không</b> phải &ldquo;xác suất kết quả này do may rủi&rdquo;. Và p = 0,04 <b>không</b> mạnh gấp đôi p = 0,08.</div>
             <div class="k">Nó là</div><div>P(thấy dữ liệu lạ thế này <b>hoặc lạ hơn</b> | H₀ đúng). Chú ý chiều của gạch dọc — <b>đúng cái bẫy đảo chiều ở mục 3.4</b>. Muốn có P(H₀ | dữ liệu) thì phải dùng Bayes, và phải có một tiên nghiệm.</div>
@@ -2855,9 +2863,11 @@ function css(name, node) {
 (function () {
   var root = document.documentElement;
   var btn = $('themeBtn');
+  if (btn) btn.setAttribute('aria-pressed', root.classList.contains('dark') ? 'true' : 'false');
   if (btn) btn.addEventListener('click', function () {
     var dark = !root.classList.contains('dark');
     root.classList.toggle('dark', dark);
+    btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
     try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
     setTimeout(function () { redraws.forEach(function (f) { try { f(); } catch (e) {} }); }, 30);
   });
@@ -2882,16 +2892,18 @@ function css(name, node) {
   function syncInert() {
     var narrow = window.innerWidth <= 1040, open = toc.classList.contains('open');
     toc.inert = narrow && !open;
-    if (col) col.inert = narrow && open;
+    under.forEach(function (n) { n.inert = narrow && open; });
   }
   var col = document.querySelector('.col');
+  /* mọi thứ nằm dưới lớp che khi ngăn mở: nội dung, hero (link bốn chặng), footer, nút lên đầu */
+  var under = [col, document.querySelector('.hero'), document.querySelector('body > footer'), $('toTop')]
+    .filter(function (n) { return n; });
   function setToc(open) {
     toc.classList.toggle('open', open);
     scrim.classList.toggle('on', open);
     if (tb) tb.setAttribute('aria-expanded', open ? 'true' : 'false');
     /* Có scrim che nhưng scrim không chặn bàn phím: mở ngăn rồi Tab quá link cuối
        là rơi vào một .term nằm DƯỚI lớp che. inert phần nội dung khi ngăn đang mở. */
-    if (col) col.inert = open && window.innerWidth <= 1040;
     syncInert();
   }
   syncInert();
@@ -2983,7 +2995,15 @@ Array.prototype.slice.call(document.querySelectorAll('[data-tabs]')).forEach(fun
 /* công thức bấm được: bấm một ký hiệu, dòng chú thích đổi thành nghĩa của nó.
    aria-live để trình đọc màn hình đọc lên dòng vừa đổi — không có nó thì bấm ký hiệu
    bằng bàn phím mà không nghe thấy gì. */
-Array.prototype.slice.call(document.querySelectorAll('.fx__note')).forEach(function (n) { n.setAttribute('aria-live', 'polite'); });
+Array.prototype.slice.call(document.querySelectorAll('.fx__note, p.lab__f[id$="-say"]')).forEach(function (n) { n.setAttribute('aria-live', 'polite'); });
+/* Thanh trượt lưu số nguyên (1650) mà hiện số đã chia (165,0): trình đọc màn hình phải đọc
+   đúng chữ trong ô .val bên cạnh, nên chép nó sang aria-valuetext mỗi khi ô ấy đổi. */
+Array.prototype.slice.call(document.querySelectorAll('input[type=range] + .val')).forEach(function (v) {
+  var r = v.previousElementSibling;
+  function sync() { r.setAttribute('aria-valuetext', v.textContent.trim()); }
+  sync();
+  new MutationObserver(sync).observe(v, { childList: true, characterData: true, subtree: true });
+});
 document.addEventListener('click', function (e) {
   var t = e.target.closest ? e.target.closest('.tm') : null;
   if (!t) return;
@@ -3063,7 +3083,7 @@ function eig2(a, b, c, d) {
     $('m1-av').textContent = fmt(a, 2); $('m1-bv').textContent = fmt(b, 2); $('m1-cv').textContent = fmt(c, 0);
     var det = 1 * b - 1 * a;
     var x0 = 0, x1 = 12, y0 = 0, y1 = 12;
-    var ml = 46, mr = 14, mt = 14, mb = 34, W = 620, H = 340;
+    var ml = 46, mr = 14, mt = 28, mb = 42, W = 620, H = 340;
     var X = function (x) { return ml + (x - x0) / (x1 - x0) * (W - ml - mr); };
     var Y = function (y) { return H - mb - (y - y0) / (y1 - y0) * (H - mt - mb); };
     clear(svg);
@@ -3077,7 +3097,7 @@ function eig2(a, b, c, d) {
     }
     el(g, 'line', { x1: X(x0), y1: Y(y0), x2: X(x1), y2: Y(y0), class: 'vaxis' });
     el(g, 'line', { x1: X(x0), y1: Y(y0), x2: X(x0), y2: Y(y1), class: 'vaxis' });
-    txt(g, W - mr, H - mb + 15, 'giá bánh →', 'vs', 'end');
+    txt(g, W - mr, H - mb + 32, 'giá bánh →', 'vs', 'end');
     /* nhãn trục dọc phải nằm NGOÀI vùng vạch số, nếu không nó đè lên vạch trên cùng */
     txt(g, 6, 11, '↑ giá kẹo', 'vs');
 
@@ -3092,7 +3112,8 @@ function eig2(a, b, c, d) {
       $('m1-x').textContent = fmt(sx); $('m1-y').textContent = fmt(sy);
       if (sx >= x0 && sx <= x1 && sy >= y0 && sy <= y1) {
         el(g, 'circle', { cx: X(sx), cy: Y(sy), r: 6.5, fill: css('--good'), stroke: css('--surface'), 'stroke-width': 2 });
-        txt(g, X(sx) + 11, Y(sy) - 9, 'bánh ' + fmt(sx, 1) + ' · kẹo ' + fmt(sy, 1), 'vt');
+        var flip = X(sx) > W - 130;
+        txt(g, X(sx) + (flip ? -11 : 11), Y(sy) - 9, 'bánh ' + fmt(sx, 1) + ' · kẹo ' + fmt(sy, 1), 'vt', flip ? 'end' : null);
       }
       say = 'Hai đường cắt nhau tại một điểm: có đúng một cặp giá thoả cả hai hoá đơn.';
       if (sx < 0 || sy < 0) say = 'Cắt nhau, nhưng ở chỗ có giá âm — đúng về toán, vô nghĩa về chợ. Toán không biết kẹo không thể có giá âm.';
@@ -3162,7 +3183,8 @@ function eig2(a, b, c, d) {
       var pr = [u[0] * t, u[1] * t];
       el(g, 'line', { x1: X(v[0]), y1: Y(v[1]), x2: X(pr[0]), y2: Y(pr[1]), stroke: M, 'stroke-width': 1.4, 'stroke-dasharray': '4 3' });
       arrow(g, X(0), Y(0), X(pr[0]), Y(pr[1]), G, 4);
-      txt(g, X(pr[0]) + 6, Y(pr[1]) + 18, 'hình chiếu của v lên u', 'vs');
+      var pf = X(pr[0]) > W - 130;
+      txt(g, X(pr[0]) + (pf ? -6 : 6), Math.min(Y(pr[1]) + 18, H - 6), 'hình chiếu của v lên u', 'vs', pf ? 'end' : null);
       var a1 = Math.atan2(u[1], u[0]), a2 = Math.atan2(v[1], v[0]), R = 34;
       var sweep = ((a2 - a1) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
       /* θ trong u·v = ‖u‖‖v‖cos θ luôn ≤ 180°. Quét ngược chiều kim đồng hồ từ u sang v mà
@@ -3176,8 +3198,8 @@ function eig2(a, b, c, d) {
     }
     arrow(g, X(0), Y(0), X(u[0]), Y(u[1]), A, 3);
     arrow(g, X(0), Y(0), X(v[0]), Y(v[1]), C, 3);
-    txt(g, X(u[0]) + 9, Y(u[1]) - 6, 'u', 'vt');
-    txt(g, X(v[0]) + 9, Y(v[1]) - 6, 'v', 'vt');
+    txt(g, Math.min(X(u[0]) + 9, W - 12), Math.max(14, Y(u[1]) - 6), 'u', 'vt');
+    txt(g, Math.min(X(v[0]) + 9, W - 12), Math.max(14, Y(v[1]) - 6), 'v', 'vt');
     el(g, 'circle', { cx: X(u[0]), cy: Y(u[1]), r: 7, fill: A, opacity: 0.25 });
     el(g, 'circle', { cx: X(v[0]), cy: Y(v[1]), r: 7, fill: C, opacity: 0.25 });
 
@@ -3227,7 +3249,7 @@ function eig2(a, b, c, d) {
   /* Cửa lệch sang trái, cố ý: nhà đối xứng thì ảnh gương trùng với một ảnh xoay, và mô hình
      không còn cách nào cho thấy chữ "lật". */
   var DOOR = [[0.2, 0], [0.4, 0], [0.4, 0.4], [0.2, 0.4]];
-  var W = 400, H = 340, cx = W / 2, cy = H / 2 + 34, S = 58;
+  var W = 400, H = 340, cx = W / 2, cy = H / 2 + 30, S = 44;
   function draw() {
     var a = +$('m3-a').value, b = +$('m3-b').value, c = +$('m3-c').value, d = +$('m3-d').value;
     ['a', 'b', 'c', 'd'].forEach(function (n, i) { $('m3-' + n + 'v').textContent = fmt([a, b, c, d][i], 2); });
@@ -3261,8 +3283,11 @@ function eig2(a, b, c, d) {
     /* hai mũi tên đơn vị: cột của ma trận */
     arrow(g, X(0), Y(0), X(a), Y(c), css('--bad'), 2.6);
     arrow(g, X(0), Y(0), X(b), Y(d), css('--p'), 2.6);
-    txt(g, X(a) + 7, Y(c) - 5, 'cột 1', 'vs');
-    txt(g, X(b) + 7, Y(d) - 5, 'cột 2', 'vs');
+    if (Math.abs(a - b) < 1e-9 && Math.abs(c - d) < 1e-9) txt(g, X(a) + 7, Y(c) - 5, 'cột 1 = cột 2', 'vs');
+    else {
+      txt(g, X(a) + 7, Y(c) - 5, 'cột 1', 'vs');
+      txt(g, X(b) + 7, Y(d) - 5, 'cột 2', 'vs');
+    }
 
     $('m3-det').textContent = fmt(det);
     /* Diện tích đo từ chính hình bình hành đã vẽ (công thức dây giày), không lấy lại |det|:
@@ -3668,7 +3693,7 @@ var SURF = [
     /* tam giác "lên bao nhiêu / đi ngang bao nhiêu" */
     el(g, 'path', { d: 'M' + X(x) + ' ' + Y(fx) + 'L' + X(x2) + ' ' + Y(fx) + 'L' + X(x2) + ' ' + Y(f2),
       fill: 'none', stroke: css('--subtle'), 'stroke-width': 1, 'stroke-dasharray': '3 3' });
-    txt(g, (X(x) + X(x2)) / 2, Y(fx) + 15, 'h = ' + fmt(h), 'vs', 'middle');
+    txt(g, Math.min((X(x) + X(x2)) / 2, W - 26), Y(fx) + 15, 'h = ' + fmt(h), 'vs', 'middle');
     el(g, 'circle', { cx: X(x2), cy: Y(f2), r: 4.5, fill: css('--muted') });
     /* x tới 3, h tới 1,5: điểm thứ hai có thể ra khỏi khung vẽ. Nói ra, để không ai tưởng
        dây cung mọc từ hư không. */
@@ -3690,7 +3715,14 @@ var SURF = [
     $('m7-say').textContent = say;
   }
   ['m7-x', 'm7-h'].forEach(function (id) { $(id).addEventListener('input', draw); });
-  chipGroup('m7-fn', 'f', function (v) { fi = +v; draw(); });
+  chipGroup('m7-fn', 'f', function (v) {
+    fi = +v;
+    /* x³ − 3x ra khỏi khung [−6; 6] khi |x| ≥ 2,4: thu thanh lại để chấm đang đứng luôn ở trong hình */
+    var lim = fi === 1 ? 23 : 30, r = $('m7-x');
+    r.min = -lim; r.max = lim;
+    r.value = Math.max(-lim, Math.min(lim, +r.value));
+    draw();
+  });
   redraws.push(draw); draw();
 })();
 
@@ -3722,7 +3754,8 @@ var SURF = [
       arrow(g, X(px), Y(py), dn[0], dn[1], css('--a'), 2.4);
     }
     el(g, 'circle', { cx: X(px), cy: Y(py), r: 6, fill: css('--ink'), stroke: css('--surface'), 'stroke-width': 2 });
-    txt(g, X(px) + 10, Y(py) + 19, 'bạn ở đây', 'vs');
+    var hf = X(px) > W - 70;
+    txt(g, X(px) + (hf ? -10 : 10), Y(py) > H - 30 ? Y(py) - 12 : Y(py) + 19, 'bạn ở đây', 'vs', hf ? 'end' : null);
     txt(g, 24, 20, S.name + ': f = ' + (si === 0 ? 'x² + 3y²' : si === 1 ? 'x² + 12y²' : 'x² − y²'), 'vt');
 
     $('m8-pos').textContent = '(' + fmt(px, 1) + '; ' + fmt(py, 1) + ')';
@@ -3802,7 +3835,7 @@ var SURF = [
 
     var f = S.f(last[0], last[1]);
     $('m9-n').textContent = path.length - 1;
-    $('m9-pos').textContent = Math.abs(last[0]) > 999 ? 'bay ra ngoài' : '(' + fmt(last[0]) + '; ' + fmt(last[1]) + ')';
+    $('m9-pos').textContent = Math.max(Math.abs(last[0]), Math.abs(last[1])) > 999 ? 'bay ra ngoài' : '(' + fmt(last[0]) + '; ' + fmt(last[1]) + ')';
     $('m9-f').textContent = f > 1e6 ? '∞' : fmt(f);
     var st, cls, say;
     /* So với sai số ở chỗ XUẤT PHÁT (chốt lúc reset), không so với path[0] — path bị
@@ -4011,7 +4044,8 @@ function sci(v) {
     function dot(x, color, label, dy) {
       var xc = Math.max(x0, Math.min(x1, x));
       el(g, 'circle', { cx: X(xc), cy: Y(Math.max(y0, Math.min(y1, F.f(xc)))), r: 7, fill: color, stroke: css('--surface'), 'stroke-width': 2 });
-      txt(g, X(xc) + 11, Y(Math.max(y0, Math.min(y1, F.f(xc)))) + dy, label, 'vt');
+      var lf = X(xc) > W - 70;  /* sát mép phải thì nhãn sang trái, không bị cắt */
+      txt(g, X(xc) + (lf ? -11 : 11), Y(Math.max(y0, Math.min(y1, F.f(xc)))) + dy, label, 'vt', lf ? 'end' : null);
     }
     dot(gx, css('--a'), 'tụt dốc', -8);
     dot(nx, css('--c'), 'Newton', 18);
@@ -4473,7 +4507,7 @@ function tcrit(conf, df) {
   function draw() {
     var mu = +$('m16-mu').value / 10, sd = +$('m16-sd').value / 10;
     $('m16-muv').textContent = fmt(mu, 1); $('m16-sdv').textContent = fmt(sd, 1);
-    var x0 = 155, x1 = 190, ml = 46, mr = 14, mt = 16, mb = 34;
+    var x0 = 155, x1 = 190, ml = 46, mr = 14, mt = 16, mb = 44;
     var X = function (v) { return ml + (v - x0) / (x1 - x0) * (W - ml - mr); };
     var top = normpdf(mu, mu, Math.max(1, sd));
     var ymax = Math.max(top, 0.14);
@@ -4485,7 +4519,7 @@ function tcrit(conf, df) {
       el(g, 'line', { x1: X(t), y1: mt, x2: X(t), y2: H - mb, class: 'vgrid' });
       txt(g, X(t), H - mb + 15, t, 'vm', 'middle');
     }
-    txt(g, W - mr, H - mb + 15, 'chiều cao (cm) →', 'vs', 'end');
+    txt(g, W - mr, H - mb + 32, 'chiều cao (cm) →', 'vs', 'end');
     var d = '', i;
     for (i = 0; i <= 260; i++) {
       var xx = x0 + (x1 - x0) * i / 260;
@@ -4586,7 +4620,7 @@ function tcrit(conf, df) {
   var W = 620, H = 300;
   function draw() {
     var n = +$('m18-n').value, pa = +$('m18-pa').value / 100, pb = +$('m18-pb').value / 100;
-    $('m18-nv').textContent = n;
+    $('m18-nv').textContent = fmt(n, 0);
     $('m18-pav').textContent = fmt(pa * 100, 0) + '%';
     $('m18-pbv').textContent = fmt(pb * 100, 0) + '%';
     /* Làm tròn TRƯỚC rồi lấy tỉ lệ từ số người: nếu tính bằng tỉ lệ thô mà hiển thị
@@ -4666,7 +4700,7 @@ function tcrit(conf, df) {
     /* mép khoảng làm tròn về 0 thì in "0,0", không in "−0,0" */
     var bound = function (v) { return Math.abs(v) < 0.0005 ? '0,0' : fmt(v * 100, 1); };
     $('m18-say').textContent = 'Khoảng tin cậy 95% của chênh lệch: [' + bound(lo) + '; ' + bound(hi) + '] điểm phần trăm' +
-      note + ' Mỗi bản: ' + cA + '/' + n + ' so với ' + cB + '/' + n + ' người mua.';
+      note + ' Mỗi bản: ' + fmt(cA, 0) + '/' + fmt(n, 0) + ' so với ' + fmt(cB, 0) + '/' + fmt(n, 0) + ' người mua.';
   }
   ['m18-n', 'm18-pa', 'm18-pb'].forEach(function (id) { $(id).addEventListener('input', draw); });
   redraws.push(draw); draw();
@@ -4823,6 +4857,7 @@ var GLOSS = [
   pop.setAttribute('aria-label', 'Giải thích thuật ngữ');
   pop.innerHTML = '<button class="pop__x" aria-label="Đóng"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
     '<p class="pop__en"></p><p class="pop__vi"></p><p class="pop__d"></p><a class="pop__go" href="#"></a>';
+  pop.inert = true;  /* ẩn bằng opacity, nên phải gỡ khỏi thứ tự Tab bằng inert */
   document.body.appendChild(pop);
   var pEn = pop.querySelector('.pop__en'), pVi = pop.querySelector('.pop__vi'),
       pD = pop.querySelector('.pop__d'), pGo = pop.querySelector('.pop__go');
@@ -4857,24 +4892,33 @@ var GLOSS = [
     pD.innerHTML = g[2];
     if (g[3]) { pGo.href = g[3]; pGo.textContent = '→ đọc kỹ ở: ' + secName(g[3]); pGo.style.display = ''; }
     else pGo.style.display = 'none';
+    pop.inert = false;
     pop.classList.add('on');
     place();
   }
-  function hide() {
+  /* back: focus đang ở trong popup thì trả về thuật ngữ đã mở nó */
+  function hide(back) {
+    var a = anchor, inside = pop.contains(document.activeElement);
     pop.classList.remove('on');
-    if (anchor) anchor.classList.remove('is-open');
+    pop.inert = true;
+    if (a) a.classList.remove('is-open');
     anchor = null;
+    if (back === true && inside && a) a.focus({ preventScroll: true });
   }
-  pop.querySelector('.pop__x').addEventListener('click', hide);
+  pop.querySelector('.pop__x').addEventListener('click', function () { hide(true); });
   pGo.addEventListener('click', hide);
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(true); });
   document.addEventListener('click', function (e) {
     var t = e.target.closest ? e.target.closest('.term') : null;
     if (t) {
       e.preventDefault();
       if (t === anchor) { hide(); return; }
       var g = byKey[(t.getAttribute('data-k') || t.textContent).toLowerCase()];
-      if (g) show(t, g);
+      if (g) {
+        show(t, g);
+        /* mở bằng Enter/Space (click không có toạ độ chuột): đưa focus vào popup */
+        if (e.detail === 0) pop.querySelector('.pop__x').focus({ preventScroll: true });
+      }
       return;
     }
     if (!e.target.closest || !e.target.closest('.pop')) hide();
