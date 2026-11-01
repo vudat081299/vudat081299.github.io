@@ -6,9 +6,16 @@
       "id": "everyday",
       "icon": "handyman",
       "label": "Everyday",
-      "desc": "Economic rules of thumb and music theory — reference for the things outside work.",
+      "desc": "The master's class timetable, economic rules of thumb and music theory — reference for the things outside work.",
       "kind": "tiles",
       "items": [
+        {
+          "key": "1",
+          "icon": "calendar_month",
+          "name": "Class Schedule",
+          "desc": "Lịch học cao học Khoa học dữ liệu — 32 buổi của 3 môn: ngày học, giờ, phòng, giảng viên từng buổi",
+          "href": "masters-degree/class-schedule/"
+        },
         {
           "key": "6",
           "icon": "account_balance",
