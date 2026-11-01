@@ -18,6 +18,7 @@ nằm ở CLAUDE.md trong thư mục của nó; Claude Code tự nạp file ấy
 | `masters-degree/business-analytics/` | project | môn Business Analytics và đồ án |
 | `masters-degree/system-analysis-design/` | project | đồ án Phân tích thiết kế hệ thống |
 | `masters-degree/research-proposal-project/` | project | đề cương nghiên cứu, từ đồ án tới luận văn |
+| `masters-degree/class-schedule/` | project | lịch học cao học: ba môn, từng buổi, giảng viên, phòng |
 | `web-builder/` | project | design system `wb-*`; nhiều trang link thẳng vào `web-builder.css` |
 | `json-analysis/` | project | công cụ xem, sửa, so JSON |
 | `loto/` | project | thống kê và heatmap xổ số |

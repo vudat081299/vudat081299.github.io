@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Class Schedule — Master's timetable</title>
+<meta name="description" content="Lịch học cao học Khoa học dữ liệu: ba môn, ngày học, giảng viên từng buổi, phòng học.">
+<meta name="theme-color" content="#fbfbfa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e0e10" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script>
+  // Đặt theme trước khi vẽ để khỏi nháy.
+  try {
+    var p = JSON.parse(localStorage.getItem('class-schedule:prefs:v1') || '{}');
+    if (p.theme === 'light' || p.theme === 'dark') document.documentElement.dataset.theme = p.theme;
+  } catch (e) { /* không đọc được thì theo hệ thống */ }
+</script>
+<script type="module" src="src/main.js"></script>
+</head>
+<body>
+<a class="skip" href="#cal">Bỏ qua tới lịch</a>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="home" href="../../index.html" aria-label="Về trang chủ">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+    </a>
+    <div class="brand">
+      <span class="brand-name">Class Schedule</span>
+      <span class="brand-sub">Cao học · Khoa học dữ liệu</span>
+    </div>
+    <button type="button" class="icon-btn" id="theme-btn" data-action="theme" aria-label="Đổi giao diện sáng/tối"></button>
+  </div>
+</header>
+
+<div class="wrap app-error" id="app-error" hidden>
+  <p class="empty-title" data-msg>Không tải được dữ liệu lịch học.</p>
+  <p class="muted" data-detail></p>
+  <p class="muted">Trang đọc dữ liệu bằng <code>fetch</code>, nên phải mở qua HTTP: chạy
+    <code>python3 -m http.server</code> ở gốc repo rồi mở
+    <code>http://localhost:8000/masters-degree/class-schedule/</code>.</p>
+</div>
+
+<main class="wrap" id="app">
+  <noscript><p class="muted">Trang cần JavaScript để hiện lịch học.</p></noscript>
+  <div id="dashboard" class="dashboard" aria-live="off"></div>
+
+  <section class="cal" id="cal" aria-labelledby="cal-title" tabindex="-1">
+    <div class="cal-toolbar">
+      <div class="cal-row">
+        <h2 class="cal-title num" id="cal-title">Lịch học</h2>
+        <div class="cal-nav">
+          <button type="button" class="icon-btn" data-action="prev" aria-label="Trước">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button type="button" class="btn" data-action="today">Hôm nay</button>
+          <button type="button" class="icon-btn" data-action="next" aria-label="Sau">
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+        <div class="seg" role="group" aria-label="Chế độ xem">
+          <button type="button" data-view="month" aria-pressed="false">Tháng</button>
+          <button type="button" data-view="week" aria-pressed="false">Tuần</button>
+          <button type="button" data-view="agenda" aria-pressed="false">Danh sách</button>
+        </div>
+      </div>
+      <div class="cal-row cal-row-filters">
+        <div class="chips" id="filters" role="group" aria-label="Lọc theo môn"></div>
+        <label class="search">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span class="sr">Tìm buổi học</span>
+          <input id="search" type="search" placeholder="Tìm môn, giảng viên, phòng…" autocomplete="off" enterkeyhint="search">
+        </label>
+        <span class="result-count muted num" id="result-count" aria-live="polite"></span>
+      </div>
+    </div>
+    <div id="cal-view" class="cal-view"></div>
+  </section>
+
+  <footer class="foot muted">
+    Giờ Việt Nam (UTC+7) · Phím tắt: <kbd>T</kbd> hôm nay, <kbd>←</kbd> <kbd>→</kbd> trước/sau, <kbd>/</kbd> tìm, <kbd>Esc</kbd> đóng
+  </footer>
+</main>
+
+<div id="panel-root" class="panel-root"></div>
+
+<script>
+  // fetch và ES module không chạy trên file:// — báo ngay thay vì để trang trắng.
+  if (location.protocol === 'file:') {
+    document.getElementById('app').hidden = true;
+    var box = document.getElementById('app-error');
+    box.hidden = false;
+    box.querySelector('[data-msg]').textContent = 'Trang này phải mở qua HTTP, không mở thẳng file.';
+  }
+</script>
+</body>
+</html>

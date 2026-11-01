@@ -1,0 +1,114 @@
+{
+  "timezone": "Asia/Ho_Chi_Minh",
+  "utcOffsetHours": 7,
+  "instructors": [
+    {
+      "id": "trungbq",
+      "name": "Bùi Quốc Trung",
+      "email": "trungbq@soict.hust.edu.vn"
+    },
+    {
+      "id": "thieuvv",
+      "name": "Vũ Văn Thiệu",
+      "email": "thieuvv@soict.hust.edu.vn"
+    },
+    {
+      "id": "dangtv",
+      "name": "Trần Văn Đặng",
+      "email": "dangtv@soict.hust.edu.vn"
+    },
+    {
+      "id": "sonnv",
+      "name": "Nguyễn Văn Sơn",
+      "email": "sonnv@soict.hust.edu.vn"
+    }
+  ],
+  "courses": [
+    {
+      "id": "it5305e",
+      "code": "IT5305E-1-26-2 (26.1B01)",
+      "name": "Khởi nghiệp số với Khoa học dữ liệu",
+      "shortName": "Khởi nghiệp số",
+      "credits": 3,
+      "weekdays": [
+        3
+      ],
+      "start": "17:30",
+      "end": "20:30",
+      "periods": "Tiết 13–16",
+      "room": "B1-405",
+      "faculty": "KHDL (Khoa học dữ liệu)",
+      "mode": "Hybrid Learning",
+      "tone": "indigo"
+    },
+    {
+      "id": "it4043e",
+      "code": "IT4043E-1-26-2 (26.1B01)",
+      "name": "Lưu trữ và xử lý dữ liệu lớn",
+      "shortName": "Dữ liệu lớn",
+      "credits": 3,
+      "weekdays": [
+        6
+      ],
+      "start": "08:00",
+      "end": "12:00",
+      "periods": null,
+      "room": "B1-504",
+      "faculty": "KHDL (Khoa học dữ liệu)",
+      "mode": "Hybrid Learning",
+      "tone": "teal"
+    },
+    {
+      "id": "it5425e",
+      "code": "IT5425E-1-26-2 (26.1B01)_1D7",
+      "name": "Quản trị dữ liệu và trực quan hóa",
+      "shortName": "Trực quan hóa",
+      "credits": 3,
+      "weekdays": [
+        1,
+        5
+      ],
+      "start": "18:00",
+      "end": "20:30",
+      "periods": null,
+      "room": "C7-238",
+      "faculty": "KHDL (Khoa học dữ liệu)",
+      "mode": null,
+      "tone": "amber"
+    }
+  ],
+  "sessions": [
+    { "courseId": "it4043e", "date": "2026-11-07", "instructorId": "dangtv" },
+    { "courseId": "it4043e", "date": "2026-11-14", "instructorId": "dangtv" },
+    { "courseId": "it4043e", "date": "2026-11-21", "instructorId": "dangtv" },
+    { "courseId": "it4043e", "date": "2026-11-28", "instructorId": "dangtv" },
+    { "courseId": "it4043e", "date": "2026-12-05", "instructorId": "dangtv" },
+    { "courseId": "it4043e", "date": "2026-12-12", "instructorId": "dangtv" },
+    { "courseId": "it4043e", "date": "2026-12-19", "instructorId": "dangtv" },
+    { "courseId": "it4043e", "date": "2026-12-26", "instructorId": "dangtv" },
+    { "courseId": "it4043e", "date": "2027-01-09", "instructorId": "dangtv" },
+    { "courseId": "it5305e", "date": "2026-11-04", "instructorId": "trungbq" },
+    { "courseId": "it5305e", "date": "2026-11-11", "instructorId": "thieuvv" },
+    { "courseId": "it5305e", "date": "2026-11-18", "instructorId": "trungbq" },
+    { "courseId": "it5305e", "date": "2026-11-25", "instructorId": "thieuvv" },
+    { "courseId": "it5305e", "date": "2026-12-02", "instructorId": "trungbq" },
+    { "courseId": "it5305e", "date": "2026-12-09", "instructorId": "thieuvv" },
+    { "courseId": "it5305e", "date": "2026-12-16", "instructorId": "trungbq" },
+    { "courseId": "it5305e", "date": "2026-12-23", "instructorId": "thieuvv" },
+    { "courseId": "it5305e", "date": "2026-12-30", "instructorId": "trungbq" },
+    { "courseId": "it5305e", "date": "2027-01-06", "instructorId": "thieuvv" },
+    { "courseId": "it5305e", "date": "2027-01-13", "instructorId": "trungbq" },
+    { "courseId": "it5305e", "date": "2027-01-20", "instructorId": "thieuvv" },
+    { "courseId": "it5425e", "date": "2026-11-09", "instructorId": "sonnv" },
+    { "courseId": "it5425e", "date": "2026-11-16", "instructorId": "sonnv" },
+    { "courseId": "it5425e", "date": "2026-11-23", "instructorId": "sonnv" },
+    { "courseId": "it5425e", "date": "2026-11-30", "instructorId": "sonnv" },
+    { "courseId": "it5425e", "date": "2026-12-07", "instructorId": "sonnv" },
+    { "courseId": "it5425e", "date": "2026-12-11", "instructorId": "sonnv" },
+    { "courseId": "it5425e", "date": "2026-12-14", "instructorId": "sonnv" },
+    { "courseId": "it5425e", "date": "2026-12-18", "instructorId": "sonnv" },
+    { "courseId": "it5425e", "date": "2026-12-21", "instructorId": "sonnv" },
+    { "courseId": "it5425e", "date": "2026-12-25", "instructorId": "sonnv" },
+    { "courseId": "it5425e", "date": "2026-12-28", "instructorId": "sonnv" }
+  ]
+}
