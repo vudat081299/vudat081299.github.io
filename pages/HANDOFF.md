@@ -26,6 +26,9 @@
 ## NỢ
 
 - `machine-learning.html`: 608 thuật ngữ gạch chân là 608 điểm dừng Tab (hơn nửa số điểm dừng của trang).
+- `machine-learning-101.html`: chưa có smoke test trình duyệt (mẫu `tools/smoke-index.js`) giữ các bản sửa UI — thang m6 không
+  cắt nhãn, nhãn m11 không chồng, chữ nút m2/m5/m9 và Dừng của m9 không đi thêm bước, `aria-pressed` khớp `.on`, phím
+  mũi tên m7 kéo ô kết quả vào tầm nhìn ở 390px, bản in theme tối giống hệt bản in sáng.
 - `scooter-maintenance-guide.html`: mục checklist là `<label>` không có ô input — không dùng được bằng bàn
   phím, không báo trạng thái đã tích.
 - Sáu trang cho `.wb-navbar__brand` co bằng `flex: 0 1 auto`, điều `web-builder/CLAUDE.md` bảo đừng làm:

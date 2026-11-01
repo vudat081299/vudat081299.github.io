@@ -311,6 +311,8 @@ tr.d-bug td:nth-child(3) { color:var(--bad); }
 .row { display:grid; grid-template-columns:132px minmax(0,1fr); gap:8px 14px; align-items:center; margin-bottom:12px; }
 @media (max-width:640px) { .row { grid-template-columns:minmax(0,1fr); gap:3px; } }
 .row > label, .row > .k { font-family:var(--mono); font-size:10.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--subtle); line-height:1.45; }
+/* ký hiệu (α, λ, γ, k) giữ nguyên chữ thường trong nhãn viết hoa: Α, Λ, Γ, K là ký hiệu khác */
+.sym { text-transform:none; }
 .row:last-child { margin-bottom:0; }
 .inline { display:flex; flex-wrap:wrap; gap:9px; align-items:center; }
 
@@ -351,6 +353,10 @@ details.q > summary:focus-visible, input[type=range]:focus-visible,
 .bar__nav a:focus-visible, .toc a:focus-visible, .acts a:focus-visible, .tok:focus-visible, #m7-viz:focus-visible {
   outline:2px solid var(--m); outline-offset:2px;
 }
+/* Phần tử nằm trong khung cuộn (hình 660 ở ≤720px, dòng công thức tràn, bảng cuộn ngang): vẽ viền vào
+   trong, và chừa lề khi focus cuộn tới, để khung cuộn không cắt mất viền. */
+#m7-viz:focus-visible, .fx__line:focus-visible { outline:2px solid var(--m); outline-offset:-2px; }
+.tw a { scroll-margin-inline:8px; white-space:nowrap; }
 
 /* output đơn sắc */
 .out {
@@ -447,7 +453,28 @@ footer a { color:var(--muted); }
   footer .in a { display:inline-flex; align-items:center; min-height:42px; }
 }
 
-@media print { .bar, .toc, .totop, .prog, .scrim { display:none !important; } .layout { grid-template-columns:1fr; } }
+/* In: giấy luôn trắng, nên theme tối cũng in bằng bộ màu sáng (chép đúng :root ở trên).
+   Ẩn thanh trên, mục lục, nút; mở hộp tự kiểm tra; bảng tên thật in đủ, không theo ô tìm. */
+@media print {
+  html.dark {
+    color-scheme:light;
+    --canvas:#fbfbf9; --surface:#ffffff; --surface-2:#f4f4f1; --sunk:#f7f7f4;
+    --ink:#15171c; --muted:#575d6b; --subtle:#676e80; --border:#e5e4de; --border-2:#d6d5cd;
+    --m:#3450c8; --m-bg:#eceffc; --m-line:#c3cdf3;
+    --l:#a2560b; --l-bg:#fbf1e4; --l-line:#eed4ac;
+    --o:#0d6b60; --o-bg:#e6f3f0; --o-line:#b3ddd5;
+    --bad:#b02a20; --bad-bg:#fcedeb; --bad-line:#f2c9c3;
+    --good:#1c6b3a; --good-bg:#e9f4ec; --good-line:#bcdec7;
+    --k1:#2f5fd0; --k2:#b8442c; --k3:#0e7a5f;
+  }
+  .bar, .toc, .totop, .prog, .scrim, .btn, .row:has(> .inline > .btn), .gl-bar { display:none !important; }
+  .layout { grid-template-columns:1fr; }
+  .lab, .fx { box-shadow:none; }
+  .vscroll > .viz { width:100%; }
+  .tw { overflow:visible; }
+  .gl-tw tr.hide { display:table-row; }
+  details.q::details-content { content-visibility:visible; display:block; }
+}
 </style>
 </head>
 <body>
@@ -746,7 +773,7 @@ footer a { color:var(--muted); }
           <div class="lab__b">
             <div class="vscroll"><svg class="viz" id="m2-viz" role="img" aria-label="Mặt cắt một thung lũng điểm trừ với quả bóng lăn xuống đáy; bước chân càng dài thì bóng nảy càng mạnh và có thể văng hẳn ra ngoài." viewBox="0 0 660 280" style="max-width:660px;margin:0 auto"></svg></div>
             <div style="margin-top:16px">
-              <div class="row"><label for="m2-a">Bước chân · α</label><div class="inline"><input type="range" id="m2-a" min="0.02" max="1.4" step="0.01" value="0.20"><span class="val" id="m2-av"></span></div></div>
+              <div class="row"><label for="m2-a">Bước chân · <span class="sym">α</span></label><div class="inline"><input type="range" id="m2-a" min="0.02" max="1.4" step="0.01" value="0.20"><span class="val" id="m2-av"></span></div></div>
               <div class="row"><label for="m2-x">Chỗ thả bóng</label><div class="inline"><input type="range" id="m2-x" min="-3.2" max="3.2" step="0.05" value="-2.60"><span class="val" id="m2-xv"></span></div></div>
               <div class="row"><span class="k">Chạy</span><div class="inline"><button class="btn btn--solid" id="m2-run">Thả bóng</button><button class="btn" id="m2-step">Một bước</button><button class="btn" id="m2-reset">Đặt lại</button></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m2-out"></pre></div>
@@ -934,7 +961,7 @@ footer a { color:var(--muted); }
             </div>
             <div style="margin-top:16px">
               <div class="row"><label for="m4-d">Độ vặn vẹo</label><div class="inline"><input type="range" id="m4-d" min="1" max="12" step="1" value="1"><span class="val" id="m4-dv"></span></div></div>
-              <div class="row"><label for="m4-l">λ · mức phạt</label><div class="inline"><input type="range" id="m4-l" min="-7" max="1" step="0.1" value="-7"><span class="val" id="m4-lv"></span></div></div>
+              <div class="row"><label for="m4-l"><span class="sym">λ</span> · mức phạt</label><div class="inline"><input type="range" id="m4-l" min="-7" max="1" step="0.1" value="-7"><span class="val" id="m4-lv"></span></div></div>
               <div class="row"><label for="m4-m">Số bài trong đề ôn</label><div class="inline"><input type="range" id="m4-m" min="8" max="40" step="1" value="12"><span class="val" id="m4-mv"></span></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m4-out"></pre></div>
             </div>
@@ -1686,7 +1713,7 @@ footer a { color:var(--muted); }
 
       <!-- ═══════════════════ CHƯƠNG 12 ═══════════════════ -->
       <section id="s-nolabel">
-        <p class="sechead"><b>Chương 12</b> — k-means, bắt cái khác thường, PCA, hệ gợi ý</p>
+        <p class="sechead"><b>Chương 12</b> — <span class="sym">k</span>-means, bắt cái khác thường, PCA, hệ gợi ý</p>
         <h2 class="st">Không nhãn, không đáp án — chỉ có một đống dữ liệu và câu hỏi "trong đây có gì?"</h2>
 
         <p class="lede">Gần như mọi ví dụ từ chương 1 tới chương 11 đều có đáp án kèm theo: tấm ảnh này <i>là mèo</i>, ngày đó bán <i>42 cốc</i> — kể cả mô hình ngôn ngữ, chỉ có điều đáp án của nó (từ kế tiếp) nằm sẵn trong câu chữ, không cần ai dán. Cách học ấy, như chương 1 đã gọi, là <span class="nm">supervised learning</span> — học có giám sát. Nhưng phần lớn dữ liệu trên đời <b>không có đáp án</b> — không ai đi dán nhãn cho một tỉ tấm ảnh, và với nhiều câu hỏi thì chẳng có nhãn nào để dán. Học từ dữ liệu không nhãn gọi là <span class="nm">unsupervised learning</span> — học không giám sát.</p>
@@ -1816,7 +1843,7 @@ footer a { color:var(--muted); }
           <div class="lab__b">
             <div class="vscroll"><svg class="viz" id="m13-viz" role="img" aria-label="Sáu ô của xe tự hành với mũi tên chỉ hành động tối ưu ở mỗi ô; kéo γ thì mũi tên ở ô 5 lật chiều." viewBox="0 0 660 260" style="max-width:660px;margin:0 auto"></svg></div>
             <div style="margin-top:16px">
-              <div class="row"><label for="m13-g">γ · độ kiên nhẫn</label><div class="inline"><input type="range" id="m13-g" min="0.1" max="0.99" step="0.01" value="0.50"><span class="val" id="m13-gv"></span></div></div>
+              <div class="row"><label for="m13-g"><span class="sym">γ</span> · độ kiên nhẫn</label><div class="inline"><input type="range" id="m13-g" min="0.1" max="0.99" step="0.01" value="0.50"><span class="val" id="m13-gv"></span></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m13-out"></pre></div>
             </div>
             <p class="lab__f">Không có một chiến lược nào "đúng" ở đây. Có <b>γ của bạn</b>, và chiến lược tối ưu <i>ứng với</i> γ đó. Đặt γ là một quyết định về giá trị, không phải một phép tinh chỉnh kỹ thuật — đó là điều đáng mang theo nhất từ mô hình này.</p>
@@ -2149,7 +2176,17 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     prog.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
     toTop.classList.toggle('on', window.scrollY > 700);
   }
-  toTop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  toTop.addEventListener('click', function () {
+    var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: calm ? 'auto' : 'smooth' });
+  });
+  /* in: mở mọi hộp tự kiểm tra, in xong trả lại như cũ (trình duyệt không hiểu ::details-content) */
+  var shut = [];
+  window.addEventListener('beforeprint', function () {
+    shut = Array.prototype.filter.call(document.querySelectorAll('details'), function (d) { return !d.open; });
+    shut.forEach(function (d) { d.open = true; });
+  });
+  window.addEventListener('afterprint', function () { shut.forEach(function (d) { d.open = false; }); shut = []; });
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
   onScroll();
@@ -3026,7 +3063,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     mo: { n: 'làm mờ', k: [[1 / 9, 1 / 9, 1 / 9], [1 / 9, 1 / 9, 1 / 9], [1 / 9, 1 / 9, 1 / 9]], d: 'chín cái núm bằng nhau → lấy trung bình, mép nào cũng nhoè đi' },
     net: { n: 'làm nét', k: [[0, -1, 0], [-1, 5, -1], [0, -1, 0]], d: 'giữa dương mạnh, bốn bên âm → đẩy ô giữa xa khỏi các ô cạnh nó' }
   };
-  var cur = 'vd', hover = null;
+  var cur = 'vd', hover = null, hiOut = null;
 
   function conv(k) {
     var O = [], i, j, a, b;
@@ -3080,8 +3117,8 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     var hi = hover || [0, 0];
     el(svg, 'rect', { x: ix + hi[1] * cell - 1, y: iy + hi[0] * cell - 1, width: cell * 3 + 2, height: cell * 3 + 2, rx: 2 },
       'fill:none;stroke:var(--ink);stroke-width:2.6');
-    el(svg, 'rect', { x: ox + hi[1] * cell - 1, y: oy + hi[0] * cell - 1, width: cell + 2, height: cell + 2, rx: 2 },
-      'fill:none;stroke:var(--ink);stroke-width:2.6');
+    hiOut = el(svg, 'rect', { x: ox + hi[1] * cell - 1, y: oy + hi[0] * cell - 1, width: cell + 2, height: cell + 2, rx: 2 },
+      'fill:none;stroke:var(--ink);stroke-width:2.6;scroll-margin:8px');
     el(svg, 'path', {
       d: 'M' + (ix + hi[1] * cell + cell * 3 + 4) + ' ' + (iy + hi[0] * cell + cell * 1.5) +
         ' C' + (fx - 30) + ' ' + (iy + hi[0] * cell + cell * 1.5) + ', ' + (fx - 30) + ' ' + (fy + cell * 1.5) + ', ' + (fx - 6) + ' ' + (fy + cell * 1.5),
@@ -3128,6 +3165,8 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     var h = hover || [0, 0];
     hover = [Math.max(0, Math.min(M - 1, h[0] + d[0])), Math.max(0, Math.min(M - 1, h[1] + d[1]))];
     draw();
+    /* ở ≤720px hình cuộn ngang và lưới kết quả nằm ngoài tầm nhìn: kéo ô đang sáng vào */
+    if (hiOut && hiOut.scrollIntoView) hiOut.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   });
   chips.addEventListener('click', function (e) {
     var c = e.target.closest('.chip');
@@ -3201,7 +3240,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
   var svg = $('m9-viz');
   if (!svg) return;
   var out = $('m9-out');
-  var K = 3, SEEDS = [7, 1538, 62, 9757, 447, 9454], si = 0, seed = SEEDS[0], P = [], C = [], asg = null, iter = 0, done = false, timer = null;
+  var K = 3, SEEDS = [7, 1538, 62, 9757, 447, 9454], si = 0, seed = SEEDS[0], P = [], C = [], asg = null, iter = 0, done = false, timer = null, pend = null;
 
   (function () {
     var r = rng(31337), cen = [[.28, .30], [.72, .33], [.50, .76]], i, k;
@@ -3211,6 +3250,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
 
   function stop() {
     if (timer) { clearInterval(timer); timer = null; }
+    if (pend) { clearTimeout(pend); pend = null; }   /* bước dời tâm đã hẹn cũng phải huỷ */
     $('m9-run').textContent = 'Chạy tới khi dừng';
   }
   function init() {
@@ -3315,7 +3355,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
       var changed = assign();
       draw();
       if (!changed || k > 24) { stop(); return; }
-      setTimeout(function () { move(); draw(); }, 190);
+      pend = setTimeout(function () { pend = null; move(); draw(); }, 190);
       k++;
     }, 420);
   });
