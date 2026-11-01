@@ -33,6 +33,8 @@
   mũi tên m7 kéo ô kết quả vào tầm nhìn ở 390px, bản in theme tối giống hệt bản in sáng.
 - `mathematics-for-machine-learning.html`: chưa có smoke test trình duyệt cho popup thuật ngữ mở bằng phím rồi cuộn,
   `#m9-live` (chỉ đọc khi đổi trạng thái), ô Số bước quá 400 bước, và bản in (bốn bảng tra, `details` mở).
+- `machine-learning.html`: chưa có smoke trình duyệt. aria-live, tab bằng phím mũi tên, popup khi cuộn, bản in và câu
+  tự sinh của M6, M13 mới chỉ đo bằng playwright ngoài repo; cổng tĩnh chỉ dựng lại được M2, M5, M12.
 - `scooter-maintenance-guide.html`: mục checklist là `<label>` không có ô input — không dùng được bằng bàn
   phím, không báo trạng thái đã tích.
 - Sáu trang cho `.wb-navbar__brand` co bằng `flex: 0 1 auto`, điều `web-builder/CLAUDE.md` bảo đừng làm:

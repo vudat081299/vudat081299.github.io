@@ -567,6 +567,25 @@ def run_ml_models():
         claim('M12: mọi góc của bộ tâm xấu đều kẹt (distortion > 3 lần nghiệm tốt)',
               len(boxes) == 3 and worst > 3 * best, f'tốt nhất {best:.4f}, góc thoát {worst:.4f}')
 
+    # ── in: giấy trắng nên bản in ở theme tối phải mang ĐÚNG bộ token sáng của :root ──
+    mroot = re.search(r':root \{(.*?)\n\}', HTML, re.S)
+    mpr = re.search(r'@media print \{.*?html\.dark \{(.*?)\}', HTML, re.S)
+    tok = lambda s: dict(re.findall(r'(--[\w-]+):\s*([^;]+);', s))
+    if mroot and mpr:
+        light, prn = tok(mroot.group(1)), tok(mpr.group(1))
+        colours = {k: v for k, v in light.items() if v.strip().startswith('#')}
+        diff = sorted(k for k in colours if prn.get(k) != colours[k])
+        claim('in: html.dark trong @media print chép đủ token màu của :root', not diff and 'color-scheme:light' in mpr.group(1),
+              f'thiếu hoặc lệch: {diff}')
+    else:
+        claim('in: có khối html.dark trong @media print', False, 'in lúc theme tối sẽ ra chữ sáng trên giấy trắng')
+
+    # ── nhãn viết hoa (text-transform:uppercase): ký hiệu Hy Lạp phải nằm trong .nt, không thì α → Α, λ → Λ ──
+    up = [m.group(1) for m in re.finditer(r'<label for="[^"]+">(.*?)</label>|<span class="k">(.*?)</span>', HTML) if m.group(1)]
+    up += [m.group(1) for m in re.finditer(r'<span class="k">(.*?)</span>', HTML)]
+    bare = [u for u in up if re.search(r'[α-ωµ]', re.sub(r'<span class="nt">.*?</span>', '', u))]
+    claim('nhãn viết hoa: không còn ký hiệu Hy Lạp trần', not bare and '.nt { text-transform:none; }' in HTML, f'{bare[:4]}')
+
     # ── chú thích sáng/đen: --ink đảo theo theme, nên chữ phải trung tính ──
     for bad in ('Sáng = thấp', 'Đen = bán nhanh', 'Chấm đen', 'đen = huấn luyện', 'càng sáng thì chi phí'):
         claim(f'theme: không còn "{bad}"', bad not in HTML, 'đúng ở một theme, ngược ở theme kia')

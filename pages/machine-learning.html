@@ -221,6 +221,8 @@ code { font-family:var(--mono); font-size:.88em; background:var(--surface-2); bo
 }
 .fx__line.sm { font-size:17px; }
 .fx__line + .fx__line { padding-top:0; }
+/* phần tử nhận focus trong khung cuộn ngang: focus cuộn chừa cả viền 2px + khoảng 1–2px */
+.fx__line .tm, .tw .term, .tw a, .tw .tm { scroll-margin:4px; }
 .fx__cap { font-size:12.5px; color:var(--subtle); padding:0 18px 10px; font-family:var(--mono); letter-spacing:.02em; }
 .tm {
   font-style:italic; cursor:pointer; border-radius:4px; padding:1px 3px; margin:0 -1px;
@@ -322,6 +324,8 @@ td b { font-weight:660; }
 .row { display:grid; grid-template-columns:118px minmax(0,1fr); gap:8px 13px; align-items:center; margin-bottom:11px; }
 @media (max-width:620px) { .row { grid-template-columns:minmax(0,1fr); gap:3px; } }
 .row > label, .row > .k { font-family:var(--mono); font-size:10.5px; letter-spacing:.04em; text-transform:uppercase; color:var(--subtle); line-height:1.45; }
+/* ký hiệu toán trong nhãn viết hoa: α, λ, γ, w, b viết hoa thành Α, Λ, Γ, W, B — nghĩa khác hẳn */
+.nt { text-transform:none; }
 .row:last-child { margin-bottom:0; }
 .inline { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
 .inline--tight { gap:5px; }
@@ -360,6 +364,7 @@ input[type=text]:focus, input[type=number]:focus, select:focus { outline:2px sol
   /* ký hiệu bấm được trong công thức: nới vùng chạm bằng padding. Không đổi được chiều
      ngang của một ký tự đơn, nhưng .fx__line có line-height 2.1 nên 40px chiều cao vẫn vừa. */
   .fx__line .tm { padding:8px 6px; }
+  .fx__line + .fx__line { padding-top:4px; }   /* .tm cao hơn dòng: chừa chỗ cho viền focus khỏi bị khung cuộn cắt */
   .iconbtn { width:40px; height:40px; }
   /* chốt an toàn: icon 40px ăn thêm 24px chiều ngang của thanh trên, tên trang không
      được phép đẩy thanh tràn ngang. */
@@ -399,7 +404,7 @@ details.q > summary:focus-visible, input[type=range]:focus-visible,
 }
 .out b { font-weight:700; }
 /* ô kết quả căn cột bằng dấu cách: không bẻ dòng, cuộn ngang trong ô trên màn hẹp */
-#m3-out, #m10-cnt, #m11-out { white-space:pre; word-break:normal; }
+#m11-out { white-space:pre; word-break:normal; }
 
 /* svg / canvas trong lab */
 .viz { width:100%; height:auto; display:block; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--sunk); }
@@ -529,7 +534,27 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 .gl-tw td a { font-family:var(--mono); font-size:11px; color:var(--m); text-decoration:none; white-space:nowrap; }
 @media (max-width:640px) { .gl-tw td:first-child, .gl-tw td:nth-child(2) { white-space:normal; } }
 
-@media print { .bar, .toc, .totop, .prog, .scrim, .pop { display:none !important; } .layout { grid-template-columns:1fr; } .term { border-bottom:0; } }
+@media print {
+  .bar, .toc, .totop, .prog, .scrim, .pop, .tabs { display:none !important; } .layout { grid-template-columns:1fr; } .term { border-bottom:0; }
+  /* giấy luôn trắng: in lúc đang ở theme tối thì trả mọi token về bộ sáng của :root */
+  html.dark {
+    color-scheme:light;
+    --canvas:#fbfbf9; --surface:#ffffff; --surface-2:#f4f4f1; --sunk:#f7f7f4;
+    --ink:#15171c; --muted:#575d6b; --subtle:#676e80; --border:#e5e4de; --border-2:#d6d5cd;
+    --m:#3450c8; --m-bg:#eceffc; --m-line:#c3cdf3;
+    --l:#a2560b; --l-bg:#fbf1e4; --l-line:#eed4ac;
+    --o:#0d6b60; --o-bg:#e6f3f0; --o-line:#b3ddd5;
+    --bad:#b02a20; --bad-bg:#fcedeb; --bad-line:#f2c9c3;
+    --good:#1c6b3a; --good-bg:#e9f4ec; --good-line:#bcdec7;
+  }
+  /* giấy không bấm được: in mọi tab (kèm tên tab) và mọi lời giải "Thử đoán" */
+  [data-panel][hidden] { display:block !important; }
+  [data-panel]::before { content:attr(data-label); display:block; font-weight:700; margin:14px 0 6px; }
+  details.q::details-content { content-visibility:visible; display:block; }
+  .tw { overflow:visible; }
+  .gl-tw td:first-child, .gl-tw td:nth-child(2), .gl-tw td a { white-space:normal; }
+  pre.out, #m11-out { white-space:pre-wrap; overflow:visible; }
+}
 </style>
 </head>
 <body>
@@ -555,7 +580,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
       <a class="iconbtn" href="../index.html" aria-label="Trang chủ">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
       </a>
-      <button class="iconbtn" id="themeBtn" aria-label="Sáng / Tối">
+      <button class="iconbtn" id="themeBtn" aria-label="Chế độ tối" aria-pressed="false">
         <svg class="ic-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8"/></svg>
         <svg class="ic-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       </button>
@@ -976,11 +1001,11 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             </div>
             <div style="margin-top:14px">
               <div class="row">
-                <label for="m1-w">w · độ dốc</label>
+                <label for="m1-w"><span class="nt">w</span> · độ dốc</label>
                 <div class="inline"><input type="range" id="m1-w" min="0" max="6" step="0.05" value="1.50"><span class="val" id="m1-wv"></span></div>
               </div>
               <div class="row">
-                <label for="m1-b">b · độ chệch (tỉ)</label>
+                <label for="m1-b"><span class="nt">b</span> · độ chệch (tỉ)</label>
                 <div class="inline"><input type="range" id="m1-b" min="-1" max="3" step="0.02" value="2.40"><span class="val" id="m1-bv"></span></div>
               </div>
               <div class="row">
@@ -1058,7 +1083,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               </div>
               <div style="margin-top:14px">
                 <div class="row">
-                  <label for="m2-a">Learning rate α</label>
+                  <label for="m2-a">Learning rate <span class="nt">α</span></label>
                   <div class="inline"><input type="range" id="m2-a" min="-2" max="0.7" step="0.02" value="-0.70"><span class="val" id="m2-av"></span></div>
                 </div>
                 <div class="row">
@@ -1083,7 +1108,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                   <div class="inline"><input type="range" id="m2-x0" min="-3.4" max="3.4" step="0.05" value="-2.6"><span class="val" id="m2-x0v"></span></div>
                 </div>
                 <div class="row">
-                  <label for="m2-a2">Learning rate α</label>
+                  <label for="m2-a2">Learning rate <span class="nt">α</span></label>
                   <div class="inline"><input type="range" id="m2-a2" min="0.005" max="0.6" step="0.005" value="0.08"><span class="val" id="m2-a2v"></span></div>
                 </div>
                 <div class="row">
@@ -1137,7 +1162,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             </div>
             <div style="margin-top:14px">
               <div class="row">
-                <label for="m3-a">Learning rate α</label>
+                <label for="m3-a">Learning rate <span class="nt">α</span></label>
                 <div class="inline"><input type="range" id="m3-a" min="-6" max="0.6" step="0.05" value="-3.80"><span class="val" id="m3-av"></span></div>
               </div>
               <div class="row">
@@ -1217,9 +1242,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                 </figure>
               </div>
               <div style="margin-top:14px">
-                <div class="row"><label for="m4-w1">w₁ · diện tích</label><div class="inline"><input type="range" id="m4-w1" min="-5" max="5" step="0.05" value="1.1"><span class="val" id="m4-w1v"></span></div></div>
-                <div class="row"><label for="m4-w2">w₂ · giá/m²</label><div class="inline"><input type="range" id="m4-w2" min="-5" max="5" step="0.05" value="-1.4"><span class="val" id="m4-w2v"></span></div></div>
-                <div class="row"><label for="m4-b">b · độ chệch</label><div class="inline"><input type="range" id="m4-b" min="-4" max="4" step="0.05" value="0.2"><span class="val" id="m4-bv"></span></div></div>
+                <div class="row"><label for="m4-w1"><span class="nt">w₁</span> · diện tích</label><div class="inline"><input type="range" id="m4-w1" min="-5" max="5" step="0.05" value="1.1"><span class="val" id="m4-w1v"></span></div></div>
+                <div class="row"><label for="m4-w2"><span class="nt">w₂</span> · giá/<span class="nt">m²</span></label><div class="inline"><input type="range" id="m4-w2" min="-5" max="5" step="0.05" value="-1.4"><span class="val" id="m4-w2v"></span></div></div>
+                <div class="row"><label for="m4-b"><span class="nt">b</span> · độ chệch</label><div class="inline"><input type="range" id="m4-b" min="-4" max="4" step="0.05" value="0.2"><span class="val" id="m4-bv"></span></div></div>
                 <div class="row">
                   <span class="k">Điều khiển</span>
                   <div class="inline"><button class="btn btn--solid" id="m4-fit">Để máy tự tìm</button><span class="dim" style="font-size:12.5px">400 vòng gradient descent trên log loss</span></div>
@@ -1309,7 +1334,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             </div>
             <div style="margin-top:14px">
               <div class="row"><label for="m5-d">Bậc đa thức</label><div class="inline"><input type="range" id="m5-d" min="1" max="14" step="1" value="1"><span class="val" id="m5-dv"></span></div></div>
-              <div class="row"><label for="m5-l">λ · mức phạt</label><div class="inline"><input type="range" id="m5-l" min="-6" max="1" step="0.1" value="-6"><span class="val" id="m5-lv"></span></div></div>
+              <div class="row"><label for="m5-l"><span class="nt">λ</span> · mức phạt</label><div class="inline"><input type="range" id="m5-l" min="-6" max="1" step="0.1" value="-6"><span class="val" id="m5-lv"></span></div></div>
               <div class="row"><label for="m5-m">Số điểm huấn luyện</label><div class="inline"><input type="range" id="m5-m" min="6" max="60" step="1" value="14"><span class="val" id="m5-mv"></span></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m5-out"></pre></div>
             </div>
@@ -1530,10 +1555,10 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__b">
             <svg class="viz" id="m8-graph" role="img" aria-label="Đồ thị tính toán của một biểu thức nhỏ; bấm để chạy xuôi rồi chạy ngược, xem đạo hàm lan qua từng nút." viewBox="0 0 700 250"></svg>
             <div style="margin-top:14px">
-              <div class="row"><label for="m8-w">w</label><div class="inline"><input type="range" id="m8-w" min="-3" max="3" step="0.1" value="1.4"><span class="val" id="m8-wv"></span></div></div>
-              <div class="row"><label for="m8-x">x</label><div class="inline"><input type="range" id="m8-x" min="-3" max="3" step="0.1" value="2"><span class="val" id="m8-xv"></span></div></div>
-              <div class="row"><label for="m8-b">b</label><div class="inline"><input type="range" id="m8-b" min="-3" max="3" step="0.1" value="-1"><span class="val" id="m8-bv"></span></div></div>
-              <div class="row"><span class="k">Nhãn y</span><div class="chips" id="m8-y"><span class="chip on" data-y="1">y = 1</span><span class="chip" data-y="0">y = 0</span></div></div>
+              <div class="row"><label for="m8-w"><span class="nt">w</span></label><div class="inline"><input type="range" id="m8-w" min="-3" max="3" step="0.1" value="1.4"><span class="val" id="m8-wv"></span></div></div>
+              <div class="row"><label for="m8-x"><span class="nt">x</span></label><div class="inline"><input type="range" id="m8-x" min="-3" max="3" step="0.1" value="2"><span class="val" id="m8-xv"></span></div></div>
+              <div class="row"><label for="m8-b"><span class="nt">b</span></label><div class="inline"><input type="range" id="m8-b" min="-3" max="3" step="0.1" value="-1"><span class="val" id="m8-bv"></span></div></div>
+              <div class="row"><span class="k">Nhãn <span class="nt">y</span></span><div class="chips" id="m8-y"><span class="chip on" data-y="1">y = 1</span><span class="chip" data-y="0">y = 0</span></div></div>
               <div class="row">
                 <span class="k">Điều khiển</span>
                 <div class="inline"><button class="btn btn--solid" id="m8-fwd">Xuôi</button><button class="btn" id="m8-back">Ngược một bước</button><button class="btn" id="m8-all">Ngược hết</button></div>
@@ -2566,11 +2591,11 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <svg class="viz" id="m11-mat" role="img" aria-label="Ma trận self-attention của một câu: mỗi hàng là một từ, độ đậm của ô cho biết từ đó dồn trọng số về đâu." viewBox="0 0 560 330" style="max-width:560px;margin:0 auto"></svg>
               <div style="margin-top:14px">
                 <div class="row">
-                  <span class="k">Chia cho √d</span>
+                  <span class="k">Chia cho <span class="nt">√d</span></span>
                   <div class="chips" id="m11-scale"><span class="chip on" data-s="1">Có chia — đúng công thức</span><span class="chip" data-s="0">Không chia</span></div>
                 </div>
                 <div class="row">
-                  <span class="k">Số chiều d</span>
+                  <span class="k">Số chiều <span class="nt">d</span></span>
                   <div class="inline"><input type="range" id="m11-d" min="4" max="512" step="4" value="64"><span class="val" id="m11-dv"></span></div>
                 </div>
                 <div class="row"><span class="k">Đọc bảng</span><pre class="out" id="m11-mout"></pre></div>
@@ -2814,10 +2839,10 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__b">
             <svg class="viz" id="m13-grid" role="img" aria-label="Sáu ô của xe thăm dò sao Hoả với mũi tên chỉ hành động tối ưu ở mỗi ô; đổi γ thì mũi tên lật chiều." viewBox="0 0 640 250" style="max-width:640px;margin:0 auto"></svg>
             <div style="margin-top:14px">
-              <div class="row"><label for="m13-g">γ · hệ số chiết khấu</label><div class="inline"><input type="range" id="m13-g" min="0.05" max="0.99" step="0.01" value="0.5"><span class="val" id="m13-gv"></span></div></div>
+              <div class="row"><label for="m13-g"><span class="nt">γ</span> · hệ số chiết khấu</label><div class="inline"><input type="range" id="m13-g" min="0.05" max="0.99" step="0.01" value="0.5"><span class="val" id="m13-gv"></span></div></div>
               <div class="row"><label for="m13-r1">Thưởng ở ô 1</label><div class="inline"><input type="range" id="m13-r1" min="0" max="200" step="5" value="100"><span class="val" id="m13-r1v"></span></div></div>
               <div class="row"><label for="m13-r6">Thưởng ở ô 6</label><div class="inline"><input type="range" id="m13-r6" min="0" max="200" step="5" value="40"><span class="val" id="m13-r6v"></span></div></div>
-              <div class="row"><span class="k">Bảng Q(s, a)</span><pre class="out" id="m13-out"></pre></div>
+              <div class="row"><span class="k">Bảng Q(<span class="nt">s, a</span>)</span><pre class="out" id="m13-out"></pre></div>
             </div>
             <p class="lab__f"><b>Thí nghiệm chính:</b> đặt γ = 0,9 — xe ở ô 5 vẫn chịu đi ngược cả quãng đường về ô 1 để lấy 100. Hạ γ xuống 0,3 — cùng chiếc xe ấy, cùng bản đồ ấy, giờ nó quay sang ô 6 lấy 40. <b>Không có gì trong thế giới thay đổi; chỉ có một con số bạn đặt ra.</b></p>
             <p class="lab__f"><b>Đó là bài học quan trọng nhất của cả mục:</b> γ và hàm thưởng <b>không phải do agent học</b> — chúng do <i>bạn</i> viết ra, và chúng <b>định nghĩa</b> thế nào là hành xử đúng. Agent không "muốn" gì cả; nó tối đa hoá đúng con số bạn đưa. Mọi câu chuyện về AI "có mục tiêu riêng" đều bắt đầu từ chỗ người ta viết sai hàm thưởng, không phải từ chỗ máy nổi loạn.</p>
@@ -3128,9 +3153,11 @@ function solve(A, b) {
 (function () {
   var root = document.documentElement;
   var btn = $('themeBtn');
+  if (btn) btn.setAttribute('aria-pressed', root.classList.contains('dark') ? 'true' : 'false');
   if (btn) btn.addEventListener('click', function () {
     var dark = !root.classList.contains('dark');
     root.classList.toggle('dark', dark);
+    btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
     try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
     setTimeout(function () { redraws.forEach(function (f) { try { f(); } catch (e) {} }); }, 30);
   });
@@ -3143,10 +3170,32 @@ function solve(A, b) {
     top.classList.toggle('on', window.scrollY > 700);
   }
   var top = $('toTop');
-  top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  /* behavior:'smooth' viết trong JS thắng scroll-behavior của CSS, nên phải tự hỏi prefers-reduced-motion */
+  top.addEventListener('click', function () {
+    var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: still ? 'auto' : 'smooth' });
+  });
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll);
   onScroll();
+
+  /* focus vào phần tử đang lấp ló ở mép một khung cuộn ngang (công thức, bảng): trình duyệt không tự cuộn
+     khi phần tử còn thấy một phần, nên viền focus bị cắt — tự cuộn khung cho đủ phần tử và viền */
+  document.addEventListener('focusin', function (e) {
+    var t = e.target, sc = t.closest ? t.closest('.tw, .fx__line') : null;
+    if (!sc || sc.scrollWidth <= sc.clientWidth) return;
+    var r = t.getBoundingClientRect(), s = sc.getBoundingClientRect(), m = 4;
+    if (r.right + m > s.right) sc.scrollLeft += Math.min(r.right + m - s.right, Math.max(0, r.left - m - s.left));
+    else if (r.left - m < s.left) sc.scrollLeft -= s.left - (r.left - m);
+  });
+
+  /* in: mở mọi lời giải "Thử đoán" rồi đóng lại sau (trình duyệt chưa có ::details-content thì CSS không mở được) */
+  var opened = [];
+  window.addEventListener('beforeprint', function () {
+    opened = Array.prototype.slice.call(document.querySelectorAll('details.q:not([open])'));
+    opened.forEach(function (d) { d.open = true; });
+  });
+  window.addEventListener('afterprint', function () { opened.forEach(function (d) { d.open = false; }); opened = []; });
 
   /* mục lục trên máy nhỏ */
   var toc = $('toc'), scrim = $('scrim'), tb = $('tocBtn');
@@ -3202,24 +3251,52 @@ function solve(A, b) {
   }
 })();
 
-/* tab trong các mô hình */
+/* tab trong các mô hình — đủ mẫu tabs của ARIA: tab nối với panel bằng id, chỉ tab đang chọn
+   nằm trong thứ tự Tab, mũi tên trái/phải và Home/End chuyển tab */
 Array.prototype.slice.call(document.querySelectorAll('[data-tabs]')).forEach(function (bar) {
-  var scope = bar.parentElement;
+  var scope = bar.parentElement, key = bar.getAttribute('data-tabs');
+  var tabs = Array.prototype.slice.call(bar.querySelectorAll('.tab'));
+  var panels = Array.prototype.slice.call(scope.querySelectorAll('[data-panel]'));
   bar.setAttribute('role', 'tablist');
-  Array.prototype.slice.call(bar.querySelectorAll('.tab')).forEach(function (x) {
-    x.setAttribute('role', 'tab'); x.setAttribute('aria-selected', x.classList.contains('on') ? 'true' : 'false');
+  tabs.forEach(function (x) {
+    var k = x.getAttribute('data-tab');
+    var p = panels.filter(function (q) { return q.getAttribute('data-panel') === k; })[0];
+    x.id = 'tab-' + key + '-' + k;
+    x.setAttribute('role', 'tab');
+    if (p) {
+      p.id = 'panel-' + key + '-' + k;
+      p.setAttribute('role', 'tabpanel');
+      p.setAttribute('aria-labelledby', x.id);
+      p.setAttribute('data-label', x.textContent);   /* tên tab in ra giấy, khi thanh tab bị ẩn */
+      x.setAttribute('aria-controls', p.id);
+    }
   });
-  Array.prototype.slice.call(scope.querySelectorAll('[data-panel]')).forEach(function (p) { p.setAttribute('role', 'tabpanel'); });
+  function mark(b) {
+    tabs.forEach(function (x) {
+      var on = x === b;
+      x.classList.toggle('on', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); x.tabIndex = on ? 0 : -1;
+    });
+  }
+  function select(b, focus) {
+    mark(b);
+    panels.forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== b.getAttribute('data-tab'); });
+    if (focus) b.focus();
+    redraws.forEach(function (f) { try { f(); } catch (err) {} });
+  }
+  mark(tabs.filter(function (x) { return x.classList.contains('on'); })[0] || tabs[0]);
   bar.addEventListener('click', function (e) {
     var b = e.target.closest ? e.target.closest('[data-tab]') : null;
-    if (!b) return;
-    Array.prototype.slice.call(bar.querySelectorAll('.tab')).forEach(function (x) {
-      x.classList.toggle('on', x === b); x.setAttribute('aria-selected', x === b ? 'true' : 'false');
-    });
-    Array.prototype.slice.call(scope.querySelectorAll('[data-panel]')).forEach(function (p) {
-      p.hidden = p.getAttribute('data-panel') !== b.getAttribute('data-tab');
-    });
-    redraws.forEach(function (f) { try { f(); } catch (err) {} });
+    if (b) select(b);
+  });
+  bar.addEventListener('keydown', function (e) {
+    var i = tabs.indexOf(document.activeElement), n = tabs.length, j = -1;
+    if (i < 0) return;
+    if (e.key === 'ArrowRight') j = (i + 1) % n;
+    else if (e.key === 'ArrowLeft') j = (i + n - 1) % n;
+    else if (e.key === 'Home') j = 0;
+    else if (e.key === 'End') j = n - 1;
+    if (j < 0) return;
+    e.preventDefault(); select(tabs[j], true);
   });
 });
 
@@ -3240,9 +3317,18 @@ Array.prototype.slice.call(document.querySelectorAll('[data-tabs]')).forEach(fun
   Array.prototype.slice.call(document.querySelectorAll('.chip')).forEach(function (c) {
     syncPressed(c); mo.observe(c, { attributes: true, attributeFilter: ['class'] });
   });
-  /* ô kết quả đọc lên khi đổi; m7-out thì không — nó đổi mỗi khung hình lúc huấn luyện */
+  /* ô kết quả đọc lên khi đổi. Không gắn cho m7-out (đổi mỗi khung hình lúc huấn luyện) và m10-cnt
+     (bảng đếm cố định). Mô hình vẽ lại cả khi chữ không đổi (di chuột vẽ ở M10, đổi theme): mỗi lần gán
+     textContent là một nút chữ mới, trình đọc màn hình đọc lại cả khối — nên chỉ ghi khi chữ thật sự khác. */
+  var TC = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent');
   Array.prototype.slice.call(document.querySelectorAll('pre.out')).forEach(function (o) {
-    if (o.id !== 'm7-out') o.setAttribute('aria-live', 'polite');
+    if (o.id === 'm7-out' || o.id === 'm10-cnt') return;
+    o.setAttribute('aria-live', 'polite');
+    if (TC && TC.get && TC.set) Object.defineProperty(o, 'textContent', {
+      configurable: true,
+      get: function () { return TC.get.call(this); },
+      set: function (v) { if (TC.get.call(this) !== String(v)) TC.set.call(this, v); }
+    });
   });
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Enter' && e.key !== ' ') return;
@@ -3642,10 +3728,11 @@ function drawCostMap(svg, W, H, P) {
     var r1 = runOne(false, 'raw', a, 600, true), r2 = runOne(true, 'norm', a, 600, true);
     paths.raw = r1.path; paths.norm = r2.path;
     draw();
+    /* nhãn ngắn, con số đứng ngay sau dấu hai chấm: ô bẻ dòng trên điện thoại mà số vẫn ở đầu */
     function line(t, r) {
-      if (r.bad) return padr(t, 17) + 'PHÂN KỲ — α quá lớn cho thang đo này';
-      if (r.conv > 0) return padr(t, 17) + 'tới đáy sau ' + pad(r.conv, 4) + ' vòng';
-      return padr(t, 17) + 'sau 600 vòng còn cao hơn đáy ' + pad(fmt((r.J / r.jb - 1) * 100, 0), 5) + '%';
+      if (r.bad) return t + ': PHÂN KỲ — α quá lớn cho thang đo này';
+      if (r.conv > 0) return t + ': tới đáy sau ' + r.conv + ' vòng';
+      return t + ': cao hơn đáy ' + fmt((r.J / r.jb - 1) * 100, 0) + '% sau 600 vòng';
     }
     if (!SW) SW = { raw: sweep(false, 'raw'), norm: sweep(true, 'norm') };
     /* gộp α hiện tại vào kết quả quét, để dòng quét không nói ngược dòng ngay trên nó */
@@ -3656,9 +3743,9 @@ function drawCostMap(svg, W, H, P) {
       return m;
     }
     function bestLine(t, w) {
-      return padr(t, 17) + 'α tối đa trước khi phân kỳ ≈ ' + padr(w.amax.toPrecision(2), 9) +
-        (w.a === null ? '  · không α nào về đáy trong ' + CAP + ' vòng'
-                      : '  · nhanh nhất ' + pad(w.iter, 5) + ' vòng (α = ' + w.a.toPrecision(2) + ')');
+      return t + ': α tối đa ≈ ' + w.amax.toPrecision(2) +
+        (w.a === null ? ' · không α nào về đáy trong ' + CAP + ' vòng'
+                      : ' · nhanh nhất ' + w.iter + ' vòng (α = ' + w.a.toPrecision(2) + ')');
     }
     $('m3-out').textContent =
       'Ở α hiện tại (' + a.toPrecision(2) + '):\n' +
@@ -3670,7 +3757,7 @@ function drawCostMap(svg, W, H, P) {
               : 'cùng α này không bên nào về đáy — vì hai bài toán ở hai thang đo khác hẳn.') + '\n\n' +
       'Quét 60 giá trị α từ 1e−6 tới 4 (cộng α hiện tại), tối đa ' + CAP + ' vòng mỗi lần — tốt nhất mỗi bên làm được gì:\n' +
       bestLine('  chưa chuẩn hoá', merge(SW.raw, r1)) + '\n' + bestLine('  đã chuẩn hoá', merge(SW.norm, r2)) + '\n\n' +
-      'Chuẩn hoá không đổi bài toán. Nó đổi HÌNH DẠNG bề mặt — và nhờ đó đổi cả\n' +
+      'Chuẩn hoá không đổi bài toán. Nó đổi HÌNH DẠNG bề mặt — và nhờ đó đổi cả ' +
       'khoảng α dùng được lẫn số vòng cần thiết, chênh nhau nhiều bậc độ lớn.';
   }
   $('m3-a').addEventListener('input', function () { paths = { raw: [], norm: [] }; draw(); });
@@ -4335,7 +4422,13 @@ function accuracy(net, data) {
     }
     $('m9-adv').textContent = out.join('\n') + '\n\nLÀM GÌ TIẾP, theo thứ tự:\n' + acts.join('\n');
   }
-  ['m9-h', 'm9-tr', 'm9-dv', 'm9-te'].forEach(function (id) { $(id).addEventListener('input', draw); });
+  /* chip mẫu chỉ "đang chọn" khi bốn thanh còn đúng giá trị của mẫu: kéo thanh là bỏ chọn */
+  ['m9-h', 'm9-tr', 'm9-dv', 'm9-te'].forEach(function (id) {
+    $(id).addEventListener('input', function () {
+      Array.prototype.slice.call($('m9-presets').children).forEach(function (x) { x.classList.remove('on'); });
+      draw();
+    });
+  });
   var PRE = {
     bias: [1, 15, 16, 16.5], var: [1, 1.5, 11, 11.5], both: [1, 12, 22, 22.5],
     ok: [4, 4.5, 5, 5.5], dev: [1, 3, 4, 12]
@@ -4449,10 +4542,10 @@ function accuracy(net, data) {
     }).join('\n') + '\n\nđầu ra 14×14  (16 − 3 + 1 = 14, không đệm)  ·  hiển thị |giá trị|';
     $('m10-cnt').textContent =
       'MỘT LỚP TÍCH CHẬP, 32 bộ lọc 3×3 trên ảnh RGB\n' +
-      '  3 × 3 × 3 × 32 + 32                     =        896 tham số\n' +
+      '  3·3·3·32 + 32 = 896 tham số\n' +
       '  ...và con số này KHÔNG ĐỔI dù ảnh 32×32 hay 4000×4000\n\n' +
       'MỘT LỚP KẾT NỐI ĐẦY ĐỦ tương đương, ảnh 224×224×3 → 1000 nơ-ron\n' +
-      '  224 × 224 × 3 × 1000                    = 150.528.000 tham số\n\n' +
+      '  224·224·3·1000 = 150.528.000 tham số\n\n' +
       'chênh nhau khoảng 168.000 lần.';
   }
   function cellFrom(e) {
@@ -5012,7 +5105,13 @@ var GLOSS = [
   function place(fromScroll) {
     if (!anchor) return;
     var r = anchor.getBoundingClientRect();
-    if (fromScroll && (r.bottom < 0 || r.top > window.innerHeight)) { hide(false); return; }
+    if (fromScroll && (r.bottom < 0 || r.top > window.innerHeight)) {
+      /* focus đang trong popup thì trả về thuật ngữ (không cuộn ngược), để Tab kế tiếp đi tiếp từ chỗ đang đọc */
+      var a0 = anchor, inside = pop.contains(document.activeElement);
+      hide(false);
+      if (inside && a0) a0.focus({ preventScroll: true });
+      return;
+    }
     if (window.innerWidth <= 620) { pop.style.top = ''; pop.style.left = ''; return; }
     var w = pop.offsetWidth, h = pop.offsetHeight, gap = 9;
     var left = Math.min(Math.max(10, r.left - 12), window.innerWidth - w - 10);
