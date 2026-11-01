@@ -2660,7 +2660,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <p class="lab__hint">Bấm <b>Gán</b> rồi <b>Dời</b> luân phiên để thấy cơ chế. Sau đó bấm <b>Khởi tạo xấu</b> rồi <b>Chạy tới cùng</b>, và so với <b>Chạy 20 lần, giữ tốt nhất</b> — bạn sẽ thấy cùng một dữ liệu cho ra những cách chia cụm khác hẳn nhau, với distortion khác nhau.</p>
           </div>
           <div class="lab__b">
-            <svg class="viz" id="m12-plot" role="img" aria-label="Các điểm dữ liệu và tâm cụm của k-means; bấm từng bước để thấy nó dừng lại ở một nghiệm tồi." viewBox="0 0 360 300" style="max-width:420px;margin:0 auto"></svg>
+            <svg class="viz" id="m12-plot" role="img" aria-label="Các điểm dữ liệu và tâm cụm của k-means; bấm từng bước để thấy tâm cụm dời dần, và với khởi tạo xấu thì nó dừng lại ở một nghiệm tồi." viewBox="0 0 360 300" style="max-width:420px;margin:0 auto"></svg>
             <div style="margin-top:14px">
               <div class="row"><label for="m12-k">Số cụm K</label><div class="inline"><input type="range" id="m12-k" min="2" max="6" step="1" value="3"><span class="val" id="m12-kv"></span></div></div>
               <div class="row">
@@ -2669,7 +2669,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               </div>
               <div class="row">
                 <span class="k">Khởi tạo</span>
-                <div class="inline"><button class="btn" id="m12-init">Ngẫu nhiên</button><button class="btn" id="m12-bad">Khởi tạo xấu</button><button class="btn" id="m12-best">Chạy 20 lần, giữ tốt nhất</button></div>
+                <div class="inline"><button class="btn" id="m12-init">Ngẫu nhiên</button><button class="btn" id="m12-bad">Khởi tạo xấu (K = 3)</button><button class="btn" id="m12-best">Chạy 20 lần, giữ tốt nhất</button></div>
               </div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m12-out"></pre></div>
             </div>
@@ -3395,6 +3395,13 @@ function drawCostMap(svg, W, H, P) {
 (function () {
   var sm = $('m2-map'); if (!sm) return;
   var sc = $('m2-curve'), path = [], hist = [], w0 = 0.6, b0 = 2.6, w = w0, b = b0, diverged = false;
+  /* J bậc hai, Hessian H = (1/m)[[Σx², Σx], [Σx, m]]: GD hội tụ khi và chỉ khi α < 2/λ_max(H) */
+  var AMAX = (function () {
+    var sx = 0, sxx = 0, n = HOUSE.n, i;
+    for (i = 0; i < n; i++) { sx += HOUSE.x[i]; sxx += HOUSE.x[i] * HOUSE.x[i]; }
+    var p = sxx / n, q = sx / n;
+    return 2 / ((p + 1) / 2 + Math.sqrt((p - 1) * (p - 1) / 4 + q * q));
+  })();
 
   function alpha() { return Math.pow(10, +$('m2-a').value); }
   function reset() { w = w0; b = b0; path = [[w, b]]; hist = [costLin(w, b)]; diverged = false; draw(); }
@@ -3445,16 +3452,18 @@ function drawCostMap(svg, W, H, P) {
     }
     el(sc, 'path', { d: dd }, 'fill:none;stroke:var(--l);stroke-width:1.8');
 
-    var J = costLin(w, b), L = hist.length;
-    /* J của hàm bậc hai chỉ tăng khi α vượt 2/λ_max: một lần tăng là đủ biết sẽ phân kỳ */
-    var rising = !diverged && L > 1 && hist[L - 1] > hist[L - 2];
+    var J = costLin(w, b), a = alpha();
+    /* α vượt 2/λ_max thì thành phần theo hướng dốc nhất lớn dần mỗi bước: J có thể còn giảm vài bước
+       (thành phần theo trục thoải chiếm ưu thế), nhưng chắc chắn sẽ phân kỳ — báo ngay, không chờ J tăng */
+    var over = a > AMAX;
     $('m2-out').textContent = diverged
       ? 'PHÂN KỲ sau ' + path.length + ' vòng.\nα = ' + alpha().toPrecision(2) + ' quá lớn: mỗi bước nhảy qua đáy và đáp lên chỗ dốc hơn.\n→ chi phí ra vô cực / NaN. Giảm α rồi bấm "Về điểm xuất phát".'
       : 'sau ' + (path.length - 1) + ' vòng:  w = ' + fmt(w, 3) + '   b = ' + fmt(b, 3) + '\n' +
         'J = ' + fmt(J, 5) + '   (đáy: ' + fmt(costLin(BEST.w, BEST.b), 5) + ')\n' +
-        (J < costLin(BEST.w, BEST.b) * 1.001 ? '→ đã hội tụ.'
-          : rising ? '→ J đang TĂNG: α quá lớn, chạy tiếp sẽ phân kỳ. Giảm α rồi bấm "Về điểm xuất phát".'
-          : '→ còn đang đi. Bấm chạy tiếp hoặc tăng α.');
+        (over ? '→ α vượt ngưỡng 2/λ_max ≈ ' + fmt(AMAX, 2) + ': ' + (hist[hist.length - 1] > hist[hist.length - 2] ? 'J đang TĂNG,' : 'J có thể còn giảm vài bước, nhưng') + ' chạy tiếp sẽ phân kỳ. Giảm α rồi bấm "Về điểm xuất phát".'
+          : J < costLin(BEST.w, BEST.b) * 1.001 ? '→ đã hội tụ.'
+          : a < 0.5 * AMAX ? '→ còn đang đi. Bấm chạy tiếp hoặc tăng α.'
+          : '→ còn đang đi. Bấm chạy tiếp. α đã quá nửa ngưỡng phân kỳ 2/λ_max ≈ ' + fmt(AMAX, 2) + ', nên chỉ tăng thêm được chút ít.');
   }
   $('m2-a').addEventListener('input', function () { reset(); });
   $('m2-run').addEventListener('click', function () { step(200); });
@@ -3466,6 +3475,7 @@ function drawCostMap(svg, W, H, P) {
   var nc = $('m2-nc');
   function f(x) { return 0.12 * x * x * x * x - 1.2 * x * x + 0.4 * x + 5; }
   function df(x) { return 0.48 * x * x * x - 2.4 * x + 0.4; }
+  function ddf(x) { return 1.44 * x * x - 2.4; }
   var trail = [];
   function drawNc() {
     clear(nc);
@@ -3476,8 +3486,8 @@ function drawCostMap(svg, W, H, P) {
     var d = '', i;
     for (i = 0; i <= 300; i++) { var x = XMIN + (XMAX - XMIN) * i / 300; d += (i ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(f(x)).toFixed(1); }
     el(nc, 'path', { d: d }, 'fill:none;stroke:var(--ink);stroke-width:1.8');
-    txt(nc, sx(-2.3), sy(f(-2.26)) + 26, 'đáy sâu', 'vs', 'middle');
-    txt(nc, sx(2.1), sy(f(2.07)) + 26, 'đáy nông', 'vs', 'middle');
+    txt(nc, sx(-2.32), sy(f(-2.32)) + 26, 'đáy sâu', 'vs', 'middle');
+    txt(nc, sx(2.15), sy(f(2.15)) + 26, 'đáy nông', 'vs', 'middle');
     for (i = 0; i < trail.length; i++) {
       el(nc, 'circle', { cx: sx(trail[i]), cy: sy(f(trail[i])), r: i === trail.length - 1 ? 6 : 2.5 },
          i === trail.length - 1 ? 'fill:var(--ink)' : 'fill:var(--l);fill-opacity:.65');
@@ -3486,24 +3496,30 @@ function drawCostMap(svg, W, H, P) {
     if (!trail.length) el(nc, 'circle', { cx: sx(x0), cy: sy(f(x0)), r: 6 }, 'fill:var(--ink)');
   }
   function run2() {
-    var x = +$('m2-x0').value, a = +$('m2-a2').value, i;
+    /* chạy tới khi |f'| < 1e-5 (dừng thật) hoặc hết 20.000 vòng; chỉ vẽ 300 điểm đầu */
+    var x = +$('m2-x0').value, a = +$('m2-a2').value, i, conv = false, div = false;
     trail = [x];
-    for (i = 0; i < 300; i++) {
+    for (i = 0; i < 20000; i++) {
       x -= a * df(x);
-      if (!isFinite(x) || Math.abs(x) > 50) { trail.push(NaN); break; }
-      trail.push(x);
-      if (Math.abs(df(x)) < 1e-5) break;
+      if (!isFinite(x) || Math.abs(x) > 50) { div = true; break; }
+      if (trail.length < 300) trail.push(x);
+      if (Math.abs(df(x)) < 1e-5) { conv = true; break; }
     }
-    trail = trail.filter(function (v) { return isFinite(v); });
+    if (!div && trail[trail.length - 1] !== x) trail.push(x);
     drawNc();
     var last = trail[trail.length - 1];
-    var deep = Math.abs(last + 2.26) < 0.4;
+    var deep = Math.abs(last + 2.32) < 0.4;   /* đáy sâu ở x ≈ −2,315, đáy nông ở x ≈ 2,148 */
+    /* đáy chỉ giữ được bóng khi α·f''(đáy) < 2; vượt thì một lần chạm đáy cũng chỉ là tình cờ */
+    var stable = conv && a * ddf(last) < 2;
     $('m2-out2').textContent =
       'xuất phát x₀ = ' + fmt(+$('m2-x0').value, 2) + '   α = ' + fmt(a, 3) + '\n' +
-      'dừng tại x = ' + fmt(last, 4) + '   f = ' + fmt(f(last), 4) + '\n' +
-      (Math.abs(last) > 20 ? '→ PHÂN KỲ: α quá lớn.'
-        : deep ? '→ rơi vào ĐÁY SÂU (nghiệm tốt).'
-               : '→ rơi vào ĐÁY NÔNG. Thuật toán không biết là còn chỗ tốt hơn — độ dốc ở đây cũng bằng 0.');
+      (div ? '→ PHÂN KỲ sau ' + (i + 1) + ' vòng: α quá lớn, bóng văng ra ngoài.'
+        : !stable ? (conv ? 'tình cờ chạm |f′| < 10⁻⁵ sau ' + (i + 1) + ' vòng tại x = ' + fmt(last, 4)
+                          : 'sau ' + i + ' vòng vẫn chưa dừng: x = ' + fmt(last, 4) + '   f′ = ' + fmt(df(last), 3)) + '\n' +
+                  '→ KHÔNG DỪNG ĐƯỢC: α quá lớn so với độ cong của đáy (α·f″ ≥ 2), bóng nảy mãi giữa hai sườn. Giảm α.'
+        : 'dừng sau ' + (i + 1) + ' vòng tại x = ' + fmt(last, 4) + '   f = ' + fmt(f(last), 4) + '\n' +
+          (deep ? '→ rơi vào ĐÁY SÂU (nghiệm tốt).'
+                : '→ rơi vào ĐÁY NÔNG. Thuật toán không biết là còn chỗ tốt hơn — độ dốc ở đây cũng bằng 0.'));
   }
   $('m2-x0').addEventListener('input', function () { $('m2-x0v').textContent = fmt(+this.value, 2); trail = []; drawNc(); });
   $('m2-a2').addEventListener('input', function () { $('m2-a2v').textContent = 'α = ' + fmt(+this.value, 3); });
@@ -3809,11 +3825,12 @@ function drawCostMap(svg, W, H, P) {
   var sf = $('m5-fit'); if (!sf) return;
   var se = $('m5-err');
   function truef(x) { return Math.sin(1.55 * x) + 0.28 * x; }
+  var SD = 0.26, SIG2 = SD * SD;   /* độ lệch chuẩn của nhiễu; σ² là sàn nhiễu của tổng thể */
   var R = rng(4242), ALL = [], TEST = [], i;
-  for (i = 0; i < 60; i++) { var x = -3 + 6 * R(); ALL.push([x, truef(x) + gauss(R) * 0.26]); }
+  for (i = 0; i < 60; i++) { var x = -3 + 6 * R(); ALL.push([x, truef(x) + gauss(R) * SD]); }
   var R2 = rng(999);
-  for (i = 0; i < 60; i++) { var x2 = -3 + 6 * R2(); TEST.push([x2, truef(x2) + gauss(R2) * 0.26]); }
-  /* sàn nhiễu đo trên ĐÚNG 60 điểm kiểm thử này: sai số của chính hàm thật (σ² = 0,068 là sàn của tổng thể) */
+  for (i = 0; i < 60; i++) { var x2 = -3 + 6 * R2(); TEST.push([x2, truef(x2) + gauss(R2) * SD]); }
+  /* sàn nhiễu đo trên ĐÚNG 60 điểm kiểm thử này: sai số của chính hàm thật */
   var FLOOR = 0;
   for (i = 0; i < TEST.length; i++) FLOOR += Math.pow(truef(TEST[i][0]) - TEST[i][1], 2);
   FLOOR /= TEST.length;
@@ -3894,15 +3911,18 @@ function drawCostMap(svg, W, H, P) {
     txt(se, W / 2, H - 10, 'bậc đa thức  1 → 14', 'vs', 'middle');
 
     var wk2 = w, a2 = mse(wk2, TR), b2 = mse(wk2, TEST);
-    var gap = b2 - a2, hiB = a2 > 0.20, hiV = gap > 0.03 && b2 > 2 * a2;
+    /* bias: mô hình đã bám xu thế thì sai số huấn luyện không vượt σ² của nhiễu;
+       variance: kiểm thử vượt huấn luyện rõ rệt VÀ gấp đôi trở lên */
+    var gap = b2 - a2, hiB = a2 > SIG2, hiV = gap > 0.03 && b2 > 2 * a2;
     var diag = (hiB && hiV) ? 'BIAS CAO VÀ VARIANCE CAO — vừa nghèo vừa học thuộc.'
       : hiV ? 'VARIANCE CAO — mô hình học thuộc dữ liệu huấn luyện.'
-      : hiB ? 'BIAS CAO — mô hình quá nghèo để bám xu thế.'
-      : 'CÂN BẰNG TỐT — hai sai số gần nhau và cùng thấp.';
+      : hiB ? 'BIAS CAO — sai số huấn luyện còn trên σ² của nhiễu: mô hình quá nghèo để bám xu thế.'
+      : b2 <= 2 * FLOOR ? 'CÂN BẰNG TỐT — hai sai số gần nhau và cùng thấp.'
+      : 'KHÔNG BÊN NÀO TRỘI HẲN — nhưng sai số kiểm thử còn gấp ' + fmt(b2 / FLOOR, 1) + ' lần sàn nhiễu.';
     $('m5-out').textContent =
       'sai số huấn luyện = ' + fmt(a2, 4) + '\n' +
       'sai số kiểm thử  = ' + fmt(b2, 4) + '   (chênh ' + fmt(gap, 4) + ')\n' +
-      'sàn nhiễu trên 60 điểm kiểm thử này ≈ ' + fmt(FLOOR, 3) + ' (σ² = 0.068 trên tổng thể) — hàm thật cũng chỉ tới đó\n' +
+      'sàn nhiễu trên 60 điểm kiểm thử này ≈ ' + fmt(FLOOR, 3) + ' (σ² = ' + fmt(SIG2, 3) + ' trên tổng thể) — hàm thật cũng chỉ tới đó\n' +
       '→ ' + diag;
   }
   ['m5-d', 'm5-l', 'm5-m'].forEach(function (id) { $(id).addEventListener('input', draw); });
@@ -4035,14 +4055,28 @@ function accuracy(net, data) {
 /* ═══════════════════ Mô hình 6 — phi tuyến ═══════════════════ */
 (function () {
   var sv = $('m6-plane'); if (!sv) return;
-  var D = dataset('circle', 11), actName = 'lin', net = null, lastLoss = 0, trained = false;
+  var D = dataset('circle', 11), actName = 'lin', net = null, lastLoss = 0, prevLoss = 0, epochs = 0, seed = 33;
   function sizes() {
     var L = +$('m6-L').value, H = +$('m6-H').value, s = [2], i;
     for (i = 0; i < L; i++) s.push(H);
     s.push(1); return s;
   }
   function nparams() { var s = sizes(), n = 0, i; for (i = 1; i < s.length; i++) n += s[i] * s[i - 1] + s[i]; return n; }
-  function build() { net = makeNet(sizes(), actName, 33); trained = false; lastLoss = 0; render(); }
+  function build() { net = makeNet(sizes(), actName, seed); epochs = 0; lastLoss = 0; render(); }
+  /* lớp ReLU ẩn nào tắt hết trên mọi điểm dữ liệu thì đầu ra là hằng số và gradient phía trước nó bằng 0 */
+  function deadLayer() {
+    if (actName !== 'relu') return 0;
+    var l, k, i;
+    for (l = 1; l < net.W.length; l++) {
+      var alive = false;
+      for (k = 0; k < D.X.length && !alive; k++) {
+        var a = net.forward(D.X[k]).A[l];
+        for (i = 0; i < a.length; i++) if (a[i] > 0) { alive = true; break; }
+      }
+      if (!alive) return l;
+    }
+    return 0;
+  }
   function render() {
     $('m6-Lv').textContent = $('m6-L').value; $('m6-Hv').textContent = $('m6-H').value;
     drawBoundary(sv, 340, 260, 22, net, D, 34);
@@ -4050,12 +4084,20 @@ function accuracy(net, data) {
     $('m6-out').textContent =
       'kiến trúc: ' + sizes().join(' → ') + '     tham số: ' + nparams() + '\n' +
       'kích hoạt: ' + names[actName] + '\n' +
-      (trained ? 'sau 600 vòng:  log loss = ' + fmt(lastLoss, 4) + '   đoán đúng ' + fmt(accuracy(net, D) * 100, 1) + '%\n' +
-        (actName === 'lin' ? '→ ranh giới vẫn là MỘT ĐƯỜNG THẲNG. Thêm lớp, thêm nơ-ron đều vô ích.'
-          : '→ ranh giới ' + (actName === 'relu' ? 'gấp khúc' : 'cong') +
-            (accuracy(net, D) >= 0.97 ? ' bao được vòng tròn.'
-                                      : ' nhưng chưa khép được vòng tròn — thêm nơ-ron, thêm lớp, hoặc huấn luyện tiếp.'))
+      (epochs ? 'sau ' + epochs + ' vòng:  log loss = ' + fmt(lastLoss, 4) +
+        (epochs > 600 ? ' (600 vòng trước: ' + fmt(prevLoss, 4) + ')' : '') + '   đoán đúng ' + fmt(accuracy(net, D) * 100, 1) + '%\n' + verdict()
         : 'chưa huấn luyện — bấm nút.');
+  }
+  function verdict() {
+    if (actName === 'lin') return '→ ranh giới vẫn là MỘT ĐƯỜNG THẲNG. Thêm lớp, thêm nơ-ron đều vô ích.';
+    var dl = deadLayer();
+    if (dl) return '→ MẠNG CHẾT: lớp ẩn ' + dl + ' có mọi nơ-ron ReLU tắt trên mọi điểm dữ liệu, nên đầu ra là hằng số và gradient ' +
+                   'qua lớp ấy bằng 0. Huấn luyện thêm không cứu được — bấm "Khởi tạo lại" hoặc đổi số nơ-ron, số lớp.';
+    var shape = actName === 'relu' ? 'gấp khúc' : 'cong';
+    if (accuracy(net, D) >= 0.97) return '→ ranh giới ' + shape + ' bao được vòng tròn.';
+    /* không đoán trước được 600 vòng nữa có giúp không (log loss có khi dao động): chỉ dặn cách đọc */
+    return '→ ranh giới ' + shape + ' nhưng chưa khép được vòng tròn. Bấm huấn luyện thêm: log loss còn giảm rõ thì cứ chạy tiếp; ' +
+      'đứng yên thì cần thêm nơ-ron, hoặc "Khởi tạo lại" để đổi điểm xuất phát.';
   }
   $('m6-act').addEventListener('click', function (e) {
     var c = e.target.closest ? e.target.closest('.chip') : null; if (!c) return;
@@ -4064,11 +4106,14 @@ function accuracy(net, data) {
   });
   $('m6-L').addEventListener('input', build);
   $('m6-H').addEventListener('input', build);
-  $('m6-reset').addEventListener('click', build);
+  $('m6-reset').addEventListener('click', function () { seed = 1 + Math.floor(Math.random() * 9999); build(); });
   $('m6-train').addEventListener('click', function () {
     var i;
-    for (i = 0; i < 600; i++) lastLoss = net.trainStep(D.X, D.Y, actName === 'lin' ? 0.35 : 0.9);
-    trained = true; render();
+    prevLoss = lastLoss;
+    for (i = 0; i < 600; i++) {
+      lastLoss = net.trainStep(D.X, D.Y, actName === 'lin' ? 0.35 : 0.9);
+    }
+    epochs += 600; render();
   });
   redraws.push(render); build();
 })();
@@ -4548,12 +4593,10 @@ function accuracy(net, data) {
   function initC(bad) {
     var K = +$('m12-k').value, i;
     C = [];
-    for (i = 0; i < K; i++) {
-      /* khởi tạo xấu: K−1 tâm chen nhau trong cụm dưới trái, tâm cuối nằm giữa hai cụm còn lại —
-         hai cụm ấy bị gộp làm một và k-means không tự thoát ra được */
-      if (bad) C.push(i < K - 1 ? [0.21 + 0.06 * rr(), 0.24 + 0.06 * rr()] : [0.60 + 0.04 * rr(), 0.51 + 0.04 * rr()]);
-      else { var p = PTS[Math.floor(rr() * PTS.length)]; C.push([p[0], p[1]]); }
-    }
+    /* khởi tạo xấu (K = 3): hai tâm chia đôi cụm dưới trái theo chiều dọc, tâm thứ ba nằm giữa hai cụm còn lại —
+       hai cụm ấy bị gộp làm một và k-means không tự thoát ra được (0/40.000 lần thử thoát) */
+    if (bad) C = [[0.19 + 0.04 * rr(), 0.30 + 0.04 * rr()], [0.23 + 0.04 * rr(), 0.18 + 0.04 * rr()], [0.60 + 0.04 * rr(), 0.51 + 0.04 * rr()]];
+    else for (i = 0; i < K; i++) { var p = PTS[Math.floor(rr() * PTS.length)]; C.push([p[0], p[1]]); }
     assign = []; nstep = 0; draw();
   }
   function doAssign() {
@@ -4609,7 +4652,11 @@ function accuracy(net, data) {
   $('m12-move').addEventListener('click', doMove);
   $('m12-run').addEventListener('click', runAll);
   $('m12-init').addEventListener('click', function () { initC(false); });
-  $('m12-bad').addEventListener('click', function () { initC(true); });
+  /* bộ tâm xấu dựng cho đúng ba cụm của dữ liệu: K khác 3 thì k-means tự bò ra gần nghiệm tốt, nên nút đưa K về 3 */
+  $('m12-bad').addEventListener('click', function () {
+    if (+$('m12-k').value !== 3) { $('m12-k').value = 3; $('m12-kv').textContent = '3'; }
+    initC(true);
+  });
   $('m12-best').addEventListener('click', function () {
     var bestC = null, bestD = 1e9, t, worst = 0;
     for (t = 0; t < 20; t++) {
@@ -4671,22 +4718,27 @@ function accuracy(net, data) {
     }
     txt(sv, W / 2, 30, 'mũi tên = hành động tối ưu tại ô đó (theo bảng Q)', 'vs', 'middle');
     var lines = ['ô   Q(s, trái)   Q(s, phải)   chọn'];
-    var s2, nL = 0, nR = 0, r1 = r.R[0], r6 = r.R[N - 1];
+    var s2, nL = 0, nR = 0, nT = 0, r1 = r.R[0], r6 = r.R[N - 1];
     for (s2 = 1; s2 < N - 1; s2++) {
       var L = r.Q[s2][0], Rr = r.Q[s2][1], tie = Math.abs(L - Rr) <= 1e-9, pick = tie ? '=' : L > Rr ? '←' : '→';
-      if (pick === '←') nL++; if (pick === '→') nR++;
+      if (pick === '←') nL++; if (pick === '→') nR++; if (tie) nT++;
       lines.push(pad(s2 + 1, 2) + pad(fmt(L, 2), 13) + pad(fmt(Rr, 2), 13) + '   ' + pick);
     }
     lines.push('');
     /* mỏ lớn là mỏ có thưởng cao hơn — người đọc kéo được cả hai thanh, nên không mặc định là ô 1 */
     var bigDir = r1 > r6 ? 'TRÁI' : 'PHẢI', smallDir = r1 > r6 ? 'PHẢI' : 'TRÁI';
     var nBig = r1 > r6 ? nL : nR, nSmall = r1 > r6 ? nR : nL;
+    /* ô sát mỏ nhỏ: đi xa 4 bước được γ⁴·r_lớn, đi gần 1 bước được γ·r_nhỏ — về mỏ lớn khi γ³ > r_nhỏ/r_lớn.
+       Ô sát mỏ lớn luôn về mỏ lớn, nên "mọi ô về mỏ nhỏ" không bao giờ xảy ra. */
+    var lo = Math.min(r1, r6), hi = Math.max(r1, r6), g3 = Math.pow(r.g, 3),
+        cond = 'γ³ = ' + (g3 >= 0.01 ? fmt(g3, 3) : g3.toPrecision(2)) + ' và r_nhỏ/r_lớn = ' + lo + '/' + hi + ' = ' + fmt(lo / hi, 3);
     lines.push(r1 === r6
         ? (r1 === 0 ? 'Cả hai mỏ đều thưởng 0 — mọi hướng như nhau, không có hành động nào tốt hơn.'
                     : 'Hai mỏ thưởng bằng nhau — gần mỏ nào thì về mỏ đó.')
-      : nBig === 4 ? 'Mọi ô đều chọn đi ' + bigDir + ' về mỏ lớn — γ đủ cao để chờ đợi bõ công.'
-      : nSmall === 4 ? 'Mọi ô đều chọn đi ' + smallDir + ' về mỏ nhỏ — γ thấp, phần thưởng xa bị chiết khấu gần hết.'
-      : nBig + '/4 ô chọn đi ' + bigDir + ' về mỏ lớn. Ranh giới nằm giữa bản đồ: gần mỏ nào thì về mỏ đó.');
+      : lo === 0 ? 'Mỏ ' + smallDir + ' thưởng 0 — đi về mỏ có thưởng là đúng ở mọi γ; không có gì để đánh đổi.'
+      : nBig === 4 ? 'Mọi ô đều chọn đi ' + bigDir + ' về mỏ lớn, kể cả ô sát mỏ nhỏ: ' + cond + ',\nγ³ lớn hơn nên đi xa thêm ba bước vẫn bõ công.'
+      : nBig + '/4 ô đi ' + bigDir + ' về mỏ lớn, ' + nSmall + ' ô gần mỏ nhỏ đi ' + smallDir + ' về mỏ nhỏ' + (nT ? ', ' + nT + ' ô hoà' : '') + '.\n' +
+        cond + ': γ³ ' + (nT && nSmall === 0 ? 'bằng' : 'nhỏ hơn') + ', nên với ô sát mỏ nhỏ, phần thưởng xa không bõ ba bước chờ.');
     $('m13-out').textContent = lines.join('\n');
   }
   ['m13-g', 'm13-r1', 'm13-r6'].forEach(function (id) { $(id).addEventListener('input', draw); });

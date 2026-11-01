@@ -218,6 +218,27 @@ def run_ml_models():
         claim(f'{name}: tìm thấy khối JS', i >= 0 and j > i, f'không thấy "{start}"')
         return HTML[i:j] if i >= 0 and j > i else ''
 
+    def js_rng(seed):
+        """Bộ sinh LCG của trang (rng), chép đúng từng phép tính 32 bit."""
+        s = [seed & 0xffffffff]
+        def nxt():
+            s[0] = (s[0] * 1664525 + 1013904223) & 0xffffffff
+            return s[0] / 4294967296
+        return nxt
+
+    def js_gauss(r):
+        """gauss() của trang: Box–Muller, bỏ số 0."""
+        import math
+        u = v = 0
+        while u == 0: u = r()
+        while v == 0: v = r()
+        return math.sqrt(-2 * math.log(u)) * math.cos(2 * math.pi * v)
+
+    m_rng = re.search(r'function rng\(seed\) \{\s*var s = seed >>> 0;\s*return function \(\) \{ s = \(s \* 1664525 \+ 1013904223\) >>> 0; return s / 4294967296; \};', HTML)
+    claim('trang: rng/gauss đúng như bản chép trong cổng', m_rng is not None and
+          'return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);' in HTML,
+          'đổi bộ sinh ngẫu nhiên thì sửa js_rng/js_gauss trong cổng')
+
     # ── nguồn: chuyện dev/test của Ng (DLS C3 W1, Train/dev/test distributions) ──
     # Bài giảng kể đội duyệt khoản vay, dev lấy từ vùng thu nhập trung bình, mất "about
     # three months". Không có ảnh mèo web/điện thoại, không có 95%, không có sáu tháng.
@@ -313,10 +334,71 @@ def run_ml_models():
     need('M7: số tham số một lớp so với hai lớp (hết thanh)', f'({p1} so với {p2})', (p1, p2))
     claim('M7: không còn gọi xoắn ốc là ví dụ "sâu rẻ hơn rộng"', 'ví dụ trực tiếp nhất cho lập luận' not in HTML)
 
-    # ── M2: J tăng là đủ biết α vượt 2/λ_max — không được khuyên "tăng α" lúc ấy ──
+    # ── M2 tab a: ngưỡng phân kỳ 2/λ_max tính từ dữ liệu, báo NGAY khi α vượt (J có thể còn giảm vài bước) ──
     m2 = js('M2', 'Mô hình 2 — learning rate', 'Mô hình 3 —')
-    claim('M2: có nhánh "J đang tăng"', 'hist[L - 1] > hist[L - 2]' in m2 and 'rising ?' in m2,
-          'ô kết quả phải báo J tăng thay vì "còn đang đi … tăng α"')
+    house = js('M2: dữ liệu HOUSE', 'var HOUSE = (function', 'function costLin')
+    hs = re.search(r'rng\((\d+)\)', house)
+    xs = []
+    if hs:
+        r = js_rng(int(hs.group(1)))
+        for _ in range(34):
+            a = 0.42 + 0.98 * r()
+            js_gauss(r); js_gauss(r)   # beds và nhiễu giá: rút đúng thứ tự như trang để x sau không lệch
+            xs.append(a)
+    claim('M2: dựng lại được dữ liệu HOUSE', len(xs) == 34 and "a = 0.42 + 0.98 * r()" in house
+          and house.count('gauss(r)') == 2, 'đổi cách sinh dữ liệu thì sửa cả phép kiểm này')
+    if xs:
+        n = len(xs); p = sum(x * x for x in xs) / n; q = sum(xs) / n
+        # λ_max của Hessian [[p, q], [q, 1]] tính bằng lặp luỹ thừa, độc lập với công thức trong trang
+        v = [1.0, 0.3]
+        for _ in range(200):
+            v = [p * v[0] + q * v[1], q * v[0] + v[1]]
+            s = (v[0] ** 2 + v[1] ** 2) ** .5; v = [v[0] / s, v[1] / s]
+        lmax = v[0] * (p * v[0] + q * v[1]) + v[1] * (q * v[0] + v[1])
+        fm = re.search(r'return 2 / \(\(p \+ 1\) / 2 \+ Math\.sqrt\(\(p - 1\) \* \(p - 1\) / 4 \+ q \* q\)\);', m2)
+        amax_js = 2 / ((p + 1) / 2 + ((p - 1) ** 2 / 4 + q * q) ** .5) if fm else -1
+        claim('M2: công thức AMAX trong trang = 2/λ_max', fm is not None and abs(amax_js - 2 / lmax) < 1e-9,
+              f'trang {amax_js:.4f}, λ_max thật cho {2 / lmax:.4f}')
+        sa = re.search(r'id="m2-a" min="(-?[\d.]+)" max="(-?[\d.]+)"', HTML)
+        claim('M2: thanh α đi qua được ngưỡng phân kỳ', sa is not None and
+              10 ** float(sa.group(1)) < 2 / lmax < 10 ** float(sa.group(2)))
+    tern = m2[m2.find("$('m2-out').textContent"):m2.find("$('m2-a').addEventListener")]
+    claim('M2: α > AMAX là nhánh đầu tiên sau phân kỳ, trước "đã hội tụ" và "tăng α"',
+          'var over = a > AMAX;' in m2 and 0 <= tern.find('(over ?') < tern.find('đã hội tụ') < tern.find('hoặc tăng α'))
+    claim('M2: chỉ khuyên "tăng α" khi α dưới nửa ngưỡng',
+          "a < 0.5 * AMAX ? '→ còn đang đi. Bấm chạy tiếp hoặc tăng α.'" in tern)
+
+    # ── M2 tab b: chỉ nói "rơi vào đáy" khi GD dừng thật và đáy ổn định (α·f'' < 2) ──
+    def poly(name):
+        mm = re.search(r'function %s\(x\) \{ return ([^;]+); \}' % name, m2)
+        if not mm:
+            return None
+        c = {}
+        for sign, coef, xs_ in re.findall(r'([+-]?)\s*([\d.]+)((?:\s*\*\s*x)*)', mm.group(1).replace(' ', ' ')):
+            k = xs_.count('x')
+            c[k] = c.get(k, 0) + (-1 if sign == '-' else 1) * float(coef)
+        return c
+    f0, f1, f2 = poly('f'), poly('df'), poly('ddf')
+    der = lambda c: {k - 1: v * k for k, v in c.items() if k > 0}
+    same = lambda a, b: a is not None and b is not None and all(abs(a.get(k, 0) - b.get(k, 0)) < 1e-12 for k in set(a) | set(b))
+    claim("M2: df là đạo hàm của f", f0 is not None and same(der(f0), f1), f'f={f0} df={f1}')
+    claim("M2: ddf là đạo hàm của df", f1 is not None and same(der(f1), f2), f'df={f1} ddf={f2}')
+    if f1 and f2:
+        ev = lambda c, x: sum(v * x ** k for k, v in c.items())
+        lo_, hi_ = -3.0, -1.0                               # đáy sâu: nghiệm âm của f'
+        for _ in range(80):
+            mid = (lo_ + hi_) / 2
+            lo_, hi_ = (mid, hi_) if ev(f1, lo_) * ev(f1, mid) > 0 else (lo_, mid)
+        xd = lo_
+        md = re.search(r'Math\.abs\(last \+ ([\d.]+)\) < ([\d.]+)', m2)
+        claim('M2: hằng số "đáy sâu" trong code khớp nghiệm của f\'', md is not None and abs(float(md.group(1)) + xd) < 0.01,
+              f'nghiệm thật x = {xd:.4f}')
+        sa2 = re.search(r'id="m2-a2" min="([\d.]+)" max="([\d.]+)"', HTML)
+        claim('M2: thanh α tab b vượt được 2/f\'\'(đáy sâu) — nhánh "không dừng" có thật',
+              sa2 is not None and float(sa2.group(2)) > 2 / ev(f2, xd), f'2/f\'\' = {2 / ev(f2, xd):.3f}')
+    claim('M2: nhãn đáy chỉ khi dừng thật và ổn định',
+          'var stable = conv && a * ddf(last) < 2;' in m2 and 'if (Math.abs(df(x)) < 1e-5) { conv = true; break; }' in m2
+          and 0 <= m2.find(': !stable ?') < m2.find("'→ rơi vào ĐÁY SÂU"))
 
     # ── M3: hai bên cùng nổ thì không được nói "một bên" ──
     m3 = js('M3', 'Mô hình 3 —', 'Mô hình 4 —')
@@ -335,16 +417,97 @@ def run_ml_models():
               'nghiệm GD bị kẹp vào biên thanh trượt')
     need('M4: nhân đôi cả w và b', 'nhân đôi cả w₁, w₂ <b>và b</b>')
 
-    # ── M5: sàn nhiễu đo trên tập kiểm thử đang dùng, không ghi cứng σ² ──
+    # ── M5: dựng lại ĐÚNG mô hình của trang (dữ liệu, cơ sở Chebyshev, phạt λ) rồi chạy
+    #    điều kiện chẩn đoán bóc từ JS — lời văn và nhãn phải khớp con số mô hình thật sự sinh ra ──
     m5 = js('M5', 'Mô hình 5 —', 'mạng nơ-ron tối giản')
-    claim('M5: sàn nhiễu tính từ TEST', 'truef(TEST[i][0]) - TEST[i][1]' in m5 and 'fmt(FLOOR' in m5)
-    claim('M5: điều kiện variance đủ chặt', 'b2 > 2 * a2' in m5,
-          'bậc 8 với 14 điểm (kiểm thử gấp 8 lần huấn luyện) từng bị dán "CÂN BẰNG TỐT"')
+    claim('M5: sàn nhiễu tính từ TEST', 'truef(TEST[i][0]) - TEST[i][1]' in m5 and 'fmt(FLOOR' in m5
+          and 'fmt(SIG2' in m5 and '0.068' not in m5, 'σ² phải tính từ SD, không ghi cứng')
+    mt = re.search(r'function truef\(x\) \{ return Math\.sin\(([\d.]+) \* x\) \+ ([\d.]+) \* x; \}', m5)
+    msd = re.search(r'var SD = ([\d.]+), SIG2 = SD \* SD;', m5)
+    seeds = [int(s) for s in re.findall(r'= rng\((\d+)\)', m5)]
+    msc = re.search(r'cheb\(p\[0\] / ([\d.]+), d\)', m5)
+    mcond = re.search(r'var gap = b2 - a2, hiB = ([^,]+), hiV = ([^;]+);', m5)
+    mok = re.search(r": (b2 <= 2 \* FLOOR) \? 'CÂN BẰNG TỐT", m5)
+    claim('M5: bóc được mô hình', all((mt, msd, msc, mcond, mok)) and len(seeds) == 2,
+          'đổi cách viết mô hình thì sửa cả phép kiểm này')
+    if all((mt, msd, msc, mcond, mok)) and len(seeds) == 2:
+        import math
+        k1, k2, SD, SC = float(mt.group(1)), float(mt.group(2)), float(msd.group(1)), float(msc.group(1))
+        tf = lambda x: math.sin(k1 * x) + k2 * x
+        def gen(seed):
+            r, out = js_rng(seed), []
+            for _ in range(60):
+                x = -3 + 6 * r(); out.append((x, tf(x) + js_gauss(r) * SD))
+            return out
+        ALL, TEST = gen(seeds[0]), gen(seeds[1])
+        FLOOR = sum((tf(x) - y) ** 2 for x, y in TEST) / len(TEST)
+        SIG2 = SD * SD
+        def cheb(u, d):
+            row = [1.0] + ([u] if d >= 1 else [])
+            for k in range(2, d + 1):
+                row.append(2 * u * row[k - 1] - row[k - 2])
+            return row
+        def solve(A, b):          # đúng thuật toán solve() của trang: khử Gauss, chọn trụ theo cột
+            n = len(b); M = [A[i][:] + [b[i]] for i in range(n)]
+            for i in range(n):
+                p = max(range(i, n), key=lambda j: abs(M[j][i])); M[i], M[p] = M[p], M[i]
+                if abs(M[i][i]) < 1e-12: continue
+                for j in range(i + 1, n):
+                    f = M[j][i] / M[i][i]
+                    for k in range(i, n + 1): M[j][k] -= f * M[i][k]
+            w = [0.0] * n
+            for i in range(n - 1, -1, -1):
+                s = M[i][n] - sum(M[i][j] * w[j] for j in range(i + 1, n))
+                w[i] = 0 if abs(M[i][i]) < 1e-12 else s / M[i][i]
+            return w
+        def fit(pts, d, lam):
+            X = [cheb(x / SC, d) for x, _ in pts]; n = d + 1
+            A = [[sum(r[i] * r[j] for r in X) for j in range(n)] for i in range(n)]
+            b = [sum(r[i] * y for r, (_, y) in zip(X, pts)) for i in range(n)]
+            for i in range(1, n): A[i][i] += (lam + 1e-9) * len(X)
+            A[0][0] += 1e-9
+            return solve(A, b)
+        def mse(w, pts):
+            return sum((sum(c * t for c, t in zip(w, cheb(x / SC, len(w) - 1))) - y) ** 2 for x, y in pts) / len(pts)
+        def diag(d, m, lam=0.0):
+            w = fit(ALL[:m], d, lam); a2, b2 = mse(w, ALL[:m]), mse(w, TEST); gap = b2 - a2
+            env = dict(a2=a2, b2=b2, gap=gap, SIG2=SIG2, FLOOR=FLOOR)
+            js2py = lambda e: e.replace('&&', ' and ').replace('||', ' or ')
+            hb, hv = eval(js2py(mcond.group(1)), {}, env), eval(js2py(mcond.group(2)), {}, env)
+            lab = 'BV' if hb and hv else 'V' if hv else 'B' if hb else 'OK' if eval(mok.group(1), {}, env) else 'MID'
+            return a2, b2, lab
+        claim('M5: sàn nhiễu của tập kiểm thử ≈ 0,045', abs(FLOOR - 0.045) < 0.0005, f'tính ra {FLOOR:.4f}')
+        # thí nghiệm (3) của lời văn: bậc 14, λ tắt, 60 điểm → quá khớp biến mất
+        claim('M5: bậc 14 với 60 điểm ra CÂN BẰNG TỐT', diag(14, 60)[2] == 'OK', str(diag(14, 60)))
+        claim('M5: bậc 8 với 14 điểm ra VARIANCE', diag(8, 14)[2] == 'V', str(diag(8, 14)))
+        claim('M5: bậc 3 với 14 điểm (sai số gấp 4 lần sàn) ra BIAS', diag(3, 14)[2] == 'B', str(diag(3, 14)))
+        # lời văn ở bậc 1: thêm điểm chỉ hạ kiểm thử chút ít, vẫn > 10 lần sàn, huấn luyện lại nhích lên
+        a14, b14, _ = diag(1, 14); a60, b60, l60 = diag(1, 60)
+        claim('M5: bậc 1, 60 điểm: kiểm thử vẫn gấp hơn mười lần sàn', b60 / FLOOR > 10 and b60 < b14 and a60 > a14
+              and l60 in ('B', 'BV'), f'14 điểm {a14:.4f}/{b14:.4f}, 60 điểm {a60:.4f}/{b60:.4f} {l60}')
+        need('M5: lời văn bậc 1', 'vẫn cao gấp hơn mười lần sàn nhiễu</b>, còn sai số huấn luyện lại nhích lên')
+        # quét: mọi trạng thái bị dán "CÂN BẰNG TỐT … cùng thấp" phải thật sự thấp; khi bậc đa thức đủ bám hàm thật
+        # (sai số xấp xỉ trên lưới dày < 0,01) thì không được dán BIAS, và khoảng chênh lớn hơn sàn phải là VARIANCE
+        dense = [(-3 + 6 * i / 400, tf(-3 + 6 * i / 400)) for i in range(401)]
+        approx = {d: mse(fit(dense, d, 0.0), dense) for d in range(1, 15)}
+        wrong = [(d, m) for d in range(1, 15) for m in range(6, 61)
+                 for a2, b2, lab in [diag(d, m)]
+                 if (lab == 'OK' and b2 > 2 * FLOOR) or (lab in ('B', 'BV') and approx[d] < 0.01)
+                 or (lab not in ('V', 'BV') and approx[d] < 0.01 and b2 - a2 > FLOOR)]
+        claim('M5: quét bậc × số điểm (λ tắt): nhãn khớp sai số thật', not wrong, f'sai ở {wrong}')
 
-    # ── M6: câu kết luận theo độ chính xác, không theo tên hàm kích hoạt ──
+    # ── M6: mạng chết báo là chết; đếm đúng số vòng đã chạy; không hứa "huấn luyện tiếp" sẽ giúp ──
     m6 = js('M6', 'Mô hình 6 —', 'Mô hình 7 —')
+    vd = m6[m6.find('function verdict()'):]
     claim('M6: kết luận "bao được vòng tròn" có điều kiện độ chính xác',
-          'accuracy(net, D) >= 0.97' in m6 and 'chưa khép được vòng tròn' in m6)
+          'accuracy(net, D) >= 0.97' in vd and 'chưa khép được vòng tròn' in vd)
+    claim('M6: kiểm mạng chết TRƯỚC khi kết luận về ranh giới',
+          0 <= vd.find("if (dl) return '→ MẠNG CHẾT") < vd.find('accuracy(net, D) >= 0.97')
+          and "if (a[i] > 0) { alive = true; break; }" in m6)
+    claim('M6: in đúng tổng số vòng đã chạy', 'epochs += 600;' in m6 and "'sau ' + epochs + ' vòng" in m6
+          and 'sau 600 vòng' not in m6)
+    claim('M6: "Khởi tạo lại" đổi hạt giống', "seed = 1 + Math.floor(Math.random() * 9999); build();" in m6)
+    claim('M6: không hứa thêm lớp / huấn luyện tiếp sẽ giúp', 'thêm lớp, hoặc huấn luyện tiếp' not in m6)
 
     # ── M9: "Cả hai" phải ra chẩn đoán cả hai; chỉ cấm thêm dữ liệu khi variance nhỏ ──
     m9 = js('M9', 'Mô hình 9 —', 'tab b — đường cong học')
@@ -363,9 +526,46 @@ def run_ml_models():
                if sid in steps and abs(v / steps[sid] - round(v / steps[sid])) > 1e-9]
     claim('M9: mẫu chỉ dùng giá trị thanh trượt có', len(steps) == 4 and not offgrid, f'lệch bước: {offgrid}')
 
-    # ── M13: kết luận theo mỏ LỚN HƠN thật, không mặc định ô 1 ──
+    # ── M13: kết luận theo mỏ LỚN HƠN thật; mỏ thưởng 0 thì không quy cho γ; điều kiện thật là γ³ > r_nhỏ/r_lớn ──
     m13 = js('M13', 'Mô hình 13 —', 'TỪ ĐIỂN THUẬT NGỮ')
     claim('M13: hướng mỏ lớn tính từ hai thanh thưởng', "bigDir = r1 > r6 ? 'TRÁI' : 'PHẢI'" in m13)
+    claim('M13: nhánh "mỏ thưởng 0" đứng trước nhánh "mọi ô về mỏ lớn"',
+          "var lo = Math.min(r1, r6), hi = Math.max(r1, r6)" in m13
+          and 0 <= m13.find(": lo === 0 ? ") < m13.find(": nBig === 4 ? "))
+    claim('M13: in đúng điều kiện γ³ so với r_nhỏ/r_lớn', 'g3 = Math.pow(r.g, 3)' in m13 and "lo + '/' + hi" in m13)
+    claim('M13: không còn quy mọi ca cho "γ đủ cao"', 'γ đủ cao để chờ đợi bõ công' not in m13)
+    # luật: ô sát mỏ nhỏ về mỏ lớn ⇔ γ⁴·r_lớn > γ·r_nhỏ ⇔ γ³ > r_nhỏ/r_lớn; ô sát mỏ lớn luôn về mỏ lớn
+    for g, lo, hi in ((0.9, 40, 100), (0.5, 40, 100), (0.05, 5, 200)):
+        cells = ['big' if g ** (5 - s) * hi > g ** s * lo else 'small' for s in range(1, 5)]
+        claim(f'M13: γ={g}, {lo}/{hi}: "mọi ô về mỏ lớn" ⇔ γ³ > r_nhỏ/r_lớn',
+              (cells.count('big') == 4) == (g ** 3 > lo / hi) and cells[-1] == 'big', str(cells))
+
+    # ── M12: "Khởi tạo xấu" phải kẹt THẬT — dựng lại dữ liệu và chạy k-means từ mọi góc của hộp khởi tạo ──
+    m12 = js('M12', 'Mô hình 12 —', 'Mô hình 13 —')
+    claim('M12: nút khởi tạo xấu đưa K về 3', "if (+$('m12-k').value !== 3)" in m12 and '>Khởi tạo xấu (K = 3)<' in HTML)
+    mp = re.search(r"rng\((\d+)\), P = \[\], c = (\[\[.*?\]\]), i, k;", m12)
+    msd12 = re.search(r'gauss\(r\) \* ([\d.]+)\]', m12)
+    mbad = re.search(r'if \(bad\) C = (\[\[.*?\]\]);', m12)
+    claim('M12: bóc được dữ liệu và bộ tâm xấu', mp and msd12 and mbad, 'đổi cách viết thì sửa cả phép kiểm này')
+    if mp and msd12 and mbad:
+        import itertools, json as _json
+        cen = _json.loads(mp.group(2)); sd = float(msd12.group(1)); r = js_rng(int(mp.group(1)))
+        PTS = [(cx + js_gauss(r) * sd, cy + js_gauss(r) * sd) for cx, cy in cen for _ in range(34)]
+        boxes = re.findall(r'\[([\d.]+) \+ ([\d.]+) \* rr\(\), ([\d.]+) \+ ([\d.]+) \* rr\(\)\]', mbad.group(1))
+        def lloyd(C):
+            for it in range(31):
+                asg = [min(range(len(C)), key=lambda k: (p[0] - C[k][0]) ** 2 + (p[1] - C[k][1]) ** 2) for p in PTS]
+                if it == 30: break
+                C = [(sum(p[0] for p, a in zip(PTS, asg) if a == k) / max(1, asg.count(k)),
+                      sum(p[1] for p, a in zip(PTS, asg) if a == k) / max(1, asg.count(k))) if k in asg else C[k]
+                     for k in range(len(C))]
+            return sum((p[0] - C[a][0]) ** 2 + (p[1] - C[a][1]) ** 2 for p, a in zip(PTS, asg)) / len(PTS)
+        best = lloyd([tuple(c) for c in cen])
+        corners = [[(float(x0) + float(dx) * u, float(y0) + float(dy) * v) for (x0, dx, y0, dy), (u, v) in zip(boxes, uv)]
+                   for uv in itertools.product(itertools.product((0, 1), repeat=2), repeat=len(boxes))]
+        worst = min(lloyd(C) for C in corners) if len(boxes) == 3 else 0
+        claim('M12: mọi góc của bộ tâm xấu đều kẹt (distortion > 3 lần nghiệm tốt)',
+              len(boxes) == 3 and worst > 3 * best, f'tốt nhất {best:.4f}, góc thoát {worst:.4f}')
 
     # ── chú thích sáng/đen: --ink đảo theo theme, nên chữ phải trung tính ──
     for bad in ('Sáng = thấp', 'Đen = bán nhanh', 'Chấm đen', 'đen = huấn luyện', 'càng sáng thì chi phí'):
