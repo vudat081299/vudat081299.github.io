@@ -28,6 +28,10 @@
 - experimentation-causal-inference: chữ trong các SVG viewBox 620 chỉ cao 5,5px ở 390px, 4,3px ở 320px. Tăng cỡ chữ
   theo media query làm chồng nhãn (1,25× → 41 chỗ, vẫn 6,8px; 1,5× → 97 chỗ). Cách còn lại cần chủ trang chọn: bọc
   hình trong khung cuộn ngang với `min-width:540px` (chữ ≥ 9px), hoặc vẽ lại theo bề rộng cột.
+- `machine-learning.html`: chữ SVG trên điện thoại còn 4–6px ở sơ đồ #s-machine, sơ đồ #s-nn, m11-bars, m11-mat (tăng cỡ
+  chữ thì chồng nhãn, cần bố cục riêng cho màn hẹp); năm hình đã nâng cỡ chữ (m2-nc, m4-loss, m8, m9-curve, m13) còn ~6,5px ở 320.
+- `machine-learning.html`: 608 thuật ngữ gạch chân là 608 điểm dừng Tab (hơn nửa số điểm dừng của trang).
+
 - `scooter-maintenance-guide.html`: mục checklist là `<label>` không có ô input — không dùng được bằng bàn
   phím, không báo trạng thái đã tích.
 - Sáu trang cho `.wb-navbar__brand` co bằng `flex: 0 1 auto`, điều `web-builder/CLAUDE.md` bảo đừng làm:
