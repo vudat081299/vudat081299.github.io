@@ -758,6 +758,15 @@ def run_stats():
     need('4.7 tỉ lệ gộp', f'{cA + cB}/2.000 = ' + vi(pp * 100, 1) + '%')
     num('4.7 SE gộp', se2 * 100, 2, ctx='<span class="op">≈</span> <b>')
     num('4.7 z trong khối công thức', z, 2, ctx='z = 3,0 / ' + vi(se2 * 100, 2) + ' = <b>')
+    # 4.7 — bước z → p làm lại được: một đuôi 1 − Φ(z) với z giữ ba chữ số, nhân hai ra đúng p
+    z3 = round(z, 3)
+    tail = 1 - N.cdf(z3)
+    num('4.7 z ba chữ số', z3, 3, ctx='z = ')
+    num('4.7 một đuôi', tail, 4, ctx='1 − Φ(' + vi(z3, 3) + ') ≈ ')
+    claim('4.7 hai đuôi từ một đuôi', vi(2 * round(tail, 4), 3) == vi(pv, 3),
+          f'2·{round(tail, 4)} không ra {vi(pv, 3)}')
+    need('4.7 lệnh Python', f'2*scipy.stats.norm.sf({z3})')
+    need('4.7 lệnh Excel', f'=2*(1-NORM.S.DIST({z3},TRUE))')
 
     # 4.8 nhiều so sánh
     for k, d in [(20, 1), (100, 1)]:

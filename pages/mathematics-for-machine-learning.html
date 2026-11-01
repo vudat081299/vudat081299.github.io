@@ -23,7 +23,8 @@
 <style>
 /* ══════════════════════════════════════════════════════════════════════════
    TOKENS
-   Ba màu = BA KHOÁ HỌC, và không bao giờ mang nghĩa khác:
+   Ba màu = BA KHOÁ HỌC khi tô khung (viền lab, chip, tiêu đề, vạch tam đoạn). Bên trong SVG
+   của mô hình, chúng chỉ phân biệt các đường với nhau — 0.2 nói đúng phạm vi ấy:
      --a  đại số tuyến tính   (nhiều số đi cùng nhau)
      --c  giải tích           (đi hướng nào thì tốt hơn)
      --p  xác suất & thống kê (tin được tới đâu)
@@ -508,7 +509,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 .gl-tw td:first-child { white-space:nowrap; font-weight:650; }
 .gl-tw td:nth-child(2) { color:var(--muted); font-style:italic; white-space:nowrap; }
 .gl-tw tr.hide { display:none; }
-.gl-tw td a { font-family:var(--mono); font-size:11px; color:var(--a); text-decoration:none; white-space:nowrap; }
+.gl-tw td a { font-size:13px; color:var(--a); text-decoration:none; }
 @media (max-width:640px) { .gl-tw td:first-child, .gl-tw td:nth-child(2) { white-space:normal; } }
 
 @media print { .bar, .toc, .totop, .prog, .scrim, .pop { display:none !important; } .layout { grid-template-columns:1fr; } .term { border-bottom:0; } }
@@ -747,7 +748,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <p>Ba quy ước nhỏ nữa, để không phải giải thích lại ở từng mục:</p>
 
         <ul>
-          <li><b>Màu là điều hướng, không phải trang trí.</b> <span class="c-a">Xanh</span> = khoá 1, <span class="c-c">nâu</span> = khoá 2, <span class="c-p">xanh lục</span> = khoá 3. Chặng 3 và chặng 4 cùng màu vì chúng <i>cùng một khoá</i> — xác suất và thống kê được dạy trong khoá 3, nửa đầu và nửa sau.</li>
+          <li><b>Màu của khung là điều hướng, không phải trang trí.</b> Viền mô hình, chip, tiêu đề mục: <span class="c-a">xanh</span> = khoá 1, <span class="c-c">nâu</span> = khoá 2, <span class="c-p">xanh lục</span> = khoá 3. Chặng 3 và chặng 4 cùng màu vì chúng <i>cùng một khoá</i> — xác suất và thống kê được dạy trong khoá 3, nửa đầu và nửa sau. Bên trong hình vẽ, màu chỉ để phân biệt các đường với nhau.</li>
           <li><b>Chip xám ở đầu mục</b> ghi rõ mục ấy ứng với khoá nào, tuần nào của bản gốc — để bạn tìm đúng bài giảng khi muốn nghe lại.</li>
           <li><b>Ký hiệu trong công thức bấm được.</b> Bấm vào một chữ cái, dòng chú thích dưới công thức đổi thành nghĩa của đúng chữ cái đó. Bấm lần nữa để trả về.</li>
         </ul>
@@ -1521,7 +1522,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <table>
             <thead><tr><th>Quy tắc</th><th>Công thức</th><th>Nói bằng tiếng người</th></tr></thead>
             <tbody>
-              <tr><td><b>Hằng số</b></td><td>(c)′ = 0 · (c·f)′ = c·f′</td><td>Đường nằm ngang thì không nghiêng chỗ nào. Hằng số đứng nhân thì đi theo: (3y²)′ = 3·2y = 6y.</td></tr>
+              <tr><td><b>Hằng số</b></td><td>(c)′ = 0 · (c·f)′ = c·f′</td><td>Đường nằm ngang thì không nghiêng chỗ nào. Hằng số đứng nhân thì đi theo: (3x²)′ = 3·2x = 6x.</td></tr>
               <tr><td><b>Luỹ thừa</b></td><td>(xⁿ)′ = n·xⁿ⁻¹</td><td>Hạ số mũ xuống làm hệ số, rồi trừ mũ đi 1. (x²)′ = 2x.</td></tr>
               <tr><td><b>Tổng</b></td><td>(f ± g)′ = f′ ± g′</td><td>Hai chuyện cộng (hay trừ) vào nhau thì độ nghiêng cũng cộng (hay trừ).</td></tr>
               <tr><td><b>Chuỗi</b></td><td>(f(g(x)))′ = f′(g(x))·g′(x)</td><td><b>Nhân</b> hai độ nghiêng. Xem mục 2.6 — đây là quy tắc quan trọng nhất của học sâu.</td></tr>
@@ -1969,7 +1970,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read"><div class="k">Bỏ sót / 1.000</div><div class="v" id="m12-fn">0,0</div></div>
             </div>
             <p class="lab__f" id="m12-say">Bệnh càng hiếm, một kết quả dương tính càng ít nghĩa.</p>
-            <p class="lab__f"><b>Đây không phải chuyện y tế.</b> Cùng phép toán, cùng cái bẫy: máy phát hiện gian lận thẻ (gian lận ~0,1% giao dịch), máy lọc thư rác, máy chấm điểm rủi ro, mô hình dự đoán bỏ học. Mỗi lần bạn thấy &ldquo;độ chính xác 99%&rdquo; trên một lớp <b>hiếm</b>, hãy hỏi ngay: <b>trong 100 lần báo động, bao nhiêu lần là thật?</b> Con số đó — <i>precision</i> — mới là con số phải xem, và nó chính là ô lớn màu xanh ở trên.</p>
+            <p class="lab__f"><b>Đây không phải chuyện y tế.</b> Cùng phép toán, cùng cái bẫy: máy phát hiện gian lận thẻ (gian lận ~0,1% giao dịch), máy lọc thư rác, máy chấm điểm rủi ro, mô hình dự đoán bỏ học. Mỗi lần bạn thấy &ldquo;độ chính xác 99%&rdquo; trên một lớp <b>hiếm</b>, hãy hỏi ngay: <b>trong 100 lần báo động, bao nhiêu lần là thật?</b> Con số đó — <i>precision</i> — mới là con số phải xem, và nó chính là ô đầu tiên ở trên, &ldquo;Báo dương → bệnh thật&rdquo;.</p>
           </div>
         </div>
 
@@ -2450,7 +2451,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="fx__line sm"><span class="op">≈</span> <b>1,43</b> điểm %</p>
           <p class="fx__line sm">z = 3,0 / 1,43 = <b>2,10</b></p>
           <p class="fx__line sm"><span class="op">→</span>&nbsp; p = <b>0,035</b></p>
-          <p class="fx__note">Cả phép kiểm là thế. Trong thế giới H₀, tỉ lệ mua chung là p̄ = 230/2.000 = 11,5%, mỗi bản n = 1.000 người, nên độ lệch chuẩn của chênh lệch — gọi là <b>sai số chuẩn</b>, SE — là √(0,115 · 0,885 · 2/1.000) ≈ 1,43 điểm %. Căn thức ấy lấy từ mục 3.9: phương sai của hiệu hai tỉ lệ độc lập bằng tổng hai phương sai, mỗi cái p(1 − p)/n. Chênh lệch đã thấy, 3,0 điểm %, bằng 2,10 lần SE — con số ấy gọi là <b>z</b>. Rồi tra diện tích hai đuôi ngoài ±2,10 SE của cái chuông, như bảng ở mục 3.8: 0,035. 2,10 vượt mốc 1,96 một chút, nên hai đuôi còn dưới 5% một chút.</p>
+          <p class="fx__note">Cả phép kiểm là thế. Trong thế giới H₀, tỉ lệ mua chung là p̄ = 230/2.000 = 11,5%, mỗi bản n = 1.000 người, nên độ lệch chuẩn của chênh lệch — gọi là <b>sai số chuẩn</b>, SE — là √(0,115 · 0,885 · 2/1.000) ≈ 1,43 điểm %. Căn thức ấy lấy từ mục 3.9: phương sai của hiệu hai tỉ lệ độc lập bằng tổng hai phương sai, mỗi cái p(1 − p)/n. Chênh lệch đã thấy, 3,0 điểm %, bằng 2,10 lần SE — con số ấy gọi là <b>z</b>. Rồi lấy diện tích hai đuôi ngoài ±2,10 SE của cái chuông. Một đuôi là 1 − Φ(z), với Φ là CDF của phân phối chuẩn tắc (mục 3.6); giữ thêm một chữ số, z = 2,103 và 1 − Φ(2,103) ≈ 0,0177, nên hai đuôi ≈ 0,035. Máy tính làm thay bảng tra: <code>2*scipy.stats.norm.sf(2.103)</code> trong Python, <code>=2*(1-NORM.S.DIST(2.103,TRUE))</code> trong Excel. 2,10 vượt mốc 1,96 ở bảng mục 3.8 một chút, nên hai đuôi còn dưới 5% một chút.</p>
         </div>
 
         <div class="tw">
@@ -5048,6 +5049,11 @@ var GLOSS = [
   });
 
   /* ── bảng tra ở cuối trang, sinh từ cùng mảng GLOSS ─────────────────────── */
+  /* cột "Đọc kỹ" in số và tên mục như mục lục ("1.2 Định thức & suy biến"), không in mã neo */
+  function secNum(href) {
+    var s = document.querySelector(href), k = s && s.querySelector('.sechead');
+    return k ? k.textContent.replace(/\s*·\s*/, ' ').trim().replace(/&/g, '&amp;') : href;
+  }
   var body = $('gl-body');
   if (body) {
     var sorted = GLOSS.slice().sort(function (a, b) {
@@ -5056,7 +5062,7 @@ var GLOSS = [
     sorted.forEach(function (g) {
       var tr = document.createElement('tr');
       tr.innerHTML = '<td>' + g[0] + '</td><td>' + g[1] + '</td><td>' + g[2] + '</td>' +
-        '<td>' + (g[3] ? '<a href="' + g[3] + '">' + g[3] + '</a>' : '') + '</td>';
+        '<td>' + (g[3] ? '<a href="' + g[3] + '">' + secNum(g[3]) + '</a>' : '') + '</td>';
       tr.setAttribute('data-s', (g[0] + ' ' + g[1] + ' ' + g[2]).toLowerCase());
       body.appendChild(tr);
     });
