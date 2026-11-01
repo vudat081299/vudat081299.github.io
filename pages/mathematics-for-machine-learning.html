@@ -554,6 +554,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 .read { border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 11px; background:var(--sunk); }
 /* ký hiệu toán trong nhãn in hoa: σ in hoa thành Σ, f thành F — là ký hiệu khác */
 .lc { text-transform:none !important; }
+/* chỉ cho trình đọc màn hình */
+.sr-only { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
 .read .k { font-family:var(--mono); font-size:9.5px; letter-spacing:.09em; color:var(--subtle); font-weight:650; }
 .read .v { font-family:var(--mono); font-size:19px; font-weight:700; letter-spacing:-.02em; line-height:1.3; margin-top:2px; }
 .read.hi { background:var(--k-bg); border-color:var(--k-line); }
@@ -1698,6 +1700,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read" id="m9-vbox"><div class="k">Trạng thái</div><div class="v" id="m9-st" style="font-size:14px">chưa chạy</div></div>
             </div>
             <p class="lab__f" id="m9-say">Chọn chỗ xuất phát rồi bấm Bước.</p>
+            <p class="sr-only" id="m9-live" role="status"></p>
             <p class="lab__f"><b>Đây là lý do thật của việc chuẩn hoá đặc trưng.</b> Theo trục y, mỗi bước nhân chỗ đứng với (1 − 6α) trên cái bát và với (1 − 24α) trên máng hẹp — cùng lối với (1 − 2α) ở bảng trên. Nên cái bát chịu được α tới 1/3 ≈ 0,33, còn máng hẹp nổ ngay khi α vượt 1/12 ≈ 0,083 — <b>chênh nhau đúng bốn lần</b>, vì trục y của máng cong gấp bốn trục y của bát (24 so với 6). Luật chung: α vượt <b>2 chia cho độ cong lớn nhất</b> (đạo hàm bậc hai, mục 2.3) là phân kỳ — đúng hẳn với mặt bậc hai như ở đây, còn mặt khác thì đúng khi đã gần đáy. Còn α đúng bằng 1 chia cho độ cong thì nhảy trúng đáy trong một bước: đó là dòng α = 0,5 của bảng trên, và cũng chính là Newton ở mục 2.7. (Hai độ cong 2 và 24 của máng là hai trị riêng của ma trận Hessian — lời hẹn ở mục 1.9.) Với dữ liệu thật, &ldquo;một trục cong gấp nghìn lần trục kia&rdquo; là chuyện thường (thu nhập tính bằng đồng, số phòng tính bằng cái), và khi đó <b>không có α nào dùng được</b>: đủ nhỏ để trục dốc không nổ thì trục thoải bò cả ngày. Chuẩn hoá làm cái máng phình lại thành cái bát, và bài toán biến mất.</p>
             <p class="lab__f"><b>Ba biến thể bạn sẽ gặp, và cả ba chỉ sửa đúng dòng công thức trên:</b> <b>SGD</b> tính gradient trên một nhúm nhỏ dữ liệu thay vì cả tập (nhanh hơn, đường đi lắc hơn); <b>quán tính</b> cộng thêm một phần bước trước (đỡ zíc-zắc, như quả bóng có đà thật); <b>Adam</b> tự chỉnh độ dài bước riêng cho từng tham số. Không cái nào đổi ý tưởng, chúng chỉ đổi cách chọn hướng và độ dài.</p>
           </div>
@@ -2995,7 +2998,7 @@ Array.prototype.slice.call(document.querySelectorAll('[data-tabs]')).forEach(fun
 /* công thức bấm được: bấm một ký hiệu, dòng chú thích đổi thành nghĩa của nó.
    aria-live để trình đọc màn hình đọc lên dòng vừa đổi — không có nó thì bấm ký hiệu
    bằng bàn phím mà không nghe thấy gì. */
-Array.prototype.slice.call(document.querySelectorAll('.fx__note, p.lab__f[id$="-say"]')).forEach(function (n) { n.setAttribute('aria-live', 'polite'); });
+Array.prototype.slice.call(document.querySelectorAll('.fx__note, p.lab__f[id$="-say"]:not(#m9-say)')).forEach(function (n) { n.setAttribute('aria-live', 'polite'); });
 /* Thanh trượt lưu số nguyên (1650) mà hiện số đã chia (165,0): trình đọc màn hình phải đọc
    đúng chữ trong ô .val bên cạnh, nên chép nó sang aria-valuetext mỗi khi ô ấy đổi. */
 Array.prototype.slice.call(document.querySelectorAll('input[type=range] + .val')).forEach(function (v) {
@@ -3116,7 +3119,7 @@ function eig2(a, b, c, d) {
         txt(g, X(sx) + (flip ? -11 : 11), Y(sy) - 9, 'bánh ' + fmt(sx, 1) + ' · kẹo ' + fmt(sy, 1), 'vt', flip ? 'end' : null);
       }
       say = 'Hai đường cắt nhau tại một điểm: có đúng một cặp giá thoả cả hai hoá đơn.';
-      if (sx < 0 || sy < 0) say = 'Cắt nhau, nhưng ở chỗ có giá âm — đúng về toán, vô nghĩa về chợ. Toán không biết kẹo không thể có giá âm.';
+      if (sx < 0 || sy < 0) say = 'Cắt nhau, nhưng ở chỗ có giá âm — đúng về toán, vô nghĩa về chợ. Toán không biết ' + (sx < 0 && sy < 0 ? 'bánh lẫn kẹo' : sx < 0 ? 'bánh' : 'kẹo') + ' không thể có giá âm.';
     } else {
       $('m1-x').textContent = '—'; $('m1-y').textContent = '—';
       if (Math.abs(a) < 1e-9 && Math.abs(b) < 1e-9) {
@@ -3289,17 +3292,27 @@ function eig2(a, b, c, d) {
       txt(g, X(b) + 7, Y(d) - 5, 'cột 2', 'vs');
     }
 
-    $('m3-det').textContent = fmt(det);
+    /* Bóp phẳng = hai cột cùng hướng = det đúng bằng 0. Thanh trượt bước 0,05 nên det là bội của
+       0,0025: dưới 1e-9 chỉ còn sai số làm tròn. Det nhỏ mà khác 0 thì KHÔNG phải bóp phẳng
+       (nhân cả ma trận với 0,1 làm det nhỏ 100 lần mà hình chỉ thu nhỏ, mục 1.8); thước đúng là
+       góc giữa hai cột: sin góc = |det| / (|cột 1|·|cột 2|). */
+    var h1 = Math.hypot(a, c), h2 = Math.hypot(b, d), flat = Math.abs(det) < 1e-9;
+    var sinT = flat || !(h1 * h2) ? 0 : Math.abs(det) / (h1 * h2), near = !flat && sinT < 0.05;
+    /* det nhỏ thì in bốn chữ số, để ô không ghi "0,00" cạnh câu nói nó khác 0 */
+    var dd = !flat && Math.abs(det) < 0.1 ? 4 : 2;
+    $('m3-det').textContent = fmt(flat ? 0 : det, dd);
     /* Diện tích đo từ chính hình bình hành đã vẽ (công thức dây giày), không lấy lại |det|:
        lấy lại thì hai ô luôn khớp chỉ vì chúng là một con số. */
     var ar = 0;
     for (var s = 0; s < 4; s++) { var pa = sq[s], pb = sq[(s + 1) % 4]; ar += pa[0] * pb[1] - pb[0] * pa[1]; }
-    $('m3-area').textContent = fmt(Math.abs(ar) / 2);
-    $('m3-det').parentElement.className = 'read ' + (Math.abs(det) < 0.02 ? 'bad' : 'hi');
+    $('m3-area').textContent = fmt(flat ? 0 : Math.abs(ar) / 2, dd);
+    $('m3-det').parentElement.className = 'read ' + (flat || near ? 'bad' : 'hi');
     var say;
     if (Math.abs(a) + Math.abs(b) + Math.abs(c) + Math.abs(d) < 0.02)
       say = 'Ma trận không: cả mặt phẳng bị nén về ĐÚNG MỘT ĐIỂM — gốc toạ độ. Ngôi nhà biến mất hẳn, không còn cả một sợi. Đây là trường hợp mất nhiều chiều nhất có thể.';
-    else if (Math.abs(det) < 0.02) say = 'Định thức bằng 0: cả mặt phẳng bị BÓP PHẲNG thành một đường thẳng. Ngôi nhà biến thành một sợi, và không cái máy nào dựng lại được nó — hai cột của ma trận đã nằm trên cùng một đường.';
+    else if (flat) say = 'Định thức bằng 0: cả mặt phẳng bị BÓP PHẲNG thành một đường thẳng. Ngôi nhà biến thành một sợi, và không cái máy nào dựng lại được nó — hai cột của ma trận đã nằm trên cùng một đường.';
+    else if (near) say = 'Hai cột gần như cùng hướng (lệch nhau ' + fmt(Math.asin(sinT) * 180 / Math.PI, 1) + '°): ngôi nhà gần bẹp thành một sợi' + (det < 0 ? ', và bị lật gương' : '') + '. Định thức ' + fmt(det, dd) + ' chưa bằng 0 nên vẫn có máy đi ngược, nhưng đây là ma trận điều kiện xấu: một nhiễu nhỏ ở đầu vào bị phóng rất to ở đầu ra (mục 1.8).';
+    else if (Math.abs(det) < 0.02) say = 'Định thức chỉ còn ' + fmt(det, dd) + ': diện tích co còn ' + fmt(Math.abs(det), dd) + ' lần' + (det < 0 ? ' và hình bị lật gương' : '') + ', nhưng hai cột vẫn khác hướng — ngôi nhà nhỏ lại chứ không bị bóp phẳng. Định thức nhỏ chưa phải suy biến (mục 1.8).';
     else if (det < 0) say = 'Định thức âm (' + fmt(det) + '): hình bị LẬT GƯƠNG. Diện tích phóng ' + fmt(Math.abs(det)) + ' lần, nhưng cửa nhà đổi sang bên kia, và đi từ cột 1 sang cột 2 giờ là quay theo chiều kim đồng hồ — xoay kiểu gì cũng không đưa hình về như cũ.';
     else if (Math.abs(a - 1) < 0.01 && Math.abs(b) < 0.01 && Math.abs(c) < 0.01 && Math.abs(d - 1) < 0.01) say = 'Ma trận đơn vị: cái máy không làm gì cả. Mọi điểm ở nguyên chỗ của nó.';
     else if (Math.abs(Math.abs(det) - 1) < 0.05) say = 'Định thức ≈ 1: hình bị xoay hoặc kéo méo, nhưng DIỆN TÍCH gần như không đổi. Hai mũi tên màu là hai CỘT của ma trận — chúng là chỗ hai mũi tên đơn vị hạ cánh.';
@@ -3589,6 +3602,7 @@ function eig2(a, b, c, d) {
     var say;
     if (keep > 0.95) say = 'Đám điểm gần như nằm trên một đường: trục 1 giữ ' + pct(keep, 1) + '. Bỏ trục 2 đi thì mỗi điểm chỉ còn MỘT con số mà gần như không mất gì.';
     else if (keep > 0.75) say = 'Trục 1 giữ ' + pct(keep, 1) + '. Nén xuống một chiều vẫn dùng được, nhưng đã bắt đầu mất chi tiết.';
+    else if (keep > 0.6) say = 'Trục 1 vẫn trội, giữ ' + pct(keep, 1) + ': đám điểm vẫn là một hình bầu dục thấy rõ. Nhưng nén xuống một chiều là bỏ đi ' + pct(1 - keep, 1) + ' biến thiên, hơn một phần tư.';
     else say = 'Đám điểm gần như tròn: trục 1 chỉ giữ ' + pct(keep, 1) + ', tức là KHÔNG có hướng nào đáng ưu tiên. Ở đây PCA không giúp gì — nén xuống một chiều là mất thật.';
     $('m6-say').textContent = say;
   }
@@ -3632,6 +3646,10 @@ function contour(g, f, level, x0, x1, y0, y1, X, Y, color, w, dash) {
   if (d) el(g, 'path', { d: d, fill: 'none', stroke: color, 'stroke-width': w || 1,
     'stroke-dasharray': dash || 'none', opacity: 0.9 });
 }
+/* ── cổng: đầu ─────────────────────────────────────────────────────────────────
+   Bốn mặt của mô hình 8, 9 và các câu nhắc tự sinh của hai mô hình ấy, viết thành hàm thuần
+   (không đọc DOM). verify-math-for-ml.py cắt đúng khối này, chạy bằng node trên lưới α ×
+   chỗ xuất phát và so với phép tính riêng của nó — sửa nhánh ở đây thì cổng thấy ngay. */
 var SURF = [
   { name: 'cái bát', f: function (x, y) { return x * x + 3 * y * y; }, gx: function (x) { return 2 * x; }, gy: function (y) { return 6 * y; },
     /* Mức CÁCH ĐỀU: luật "vòng chen chúc = dốc" của bản đồ núi chỉ đúng khi hai vòng kề
@@ -3646,6 +3664,59 @@ var SURF = [
     gx: function (x) { return x * (x * x - 4); }, gy: function (y) { return 2 * y; },
     lv: [0.3, 1, 2, 4, 7, 11, 16] }
 ];
+/* Mô hình 8: câu nhắc theo gradient (gx, gy) của mặt si ở chỗ đang đứng. */
+function m8Say(si, gx, gy) {
+  var ax = Math.abs(gx), ay = Math.abs(gy);
+  if (Math.hypot(gx, gy) < 0.15) return 'Gradient gần bằng 0: mặt đất phẳng theo cả hai hướng. Ở cái bát thì đây là ĐÁY; ở yên ngựa thì đây là chỗ phẳng mà vẫn tuột được — chỉ cần lệch một chút.';
+  /* Ba nhánh theo tỉ số hai thành phần: chỉ một nhánh "vào tường", một nhánh "dọc máng"
+     thì dải giữa (mũi tên chéo) bị nói thành một trong hai. */
+  if (si === 1 && ay > 3 * ax) return 'Máng hẹp: ∂f/∂y = ' + fmt(gy) + ' lớn hơn ∂f/∂x = ' + fmt(gx) + ' rất nhiều, nên mũi tên gần như chỉ ngang vào tường máng chứ không dọc theo máng về đáy.';
+  if (si === 1 && 3 * ay < ax) return 'Máng hẹp, nhưng bạn đang đứng sát đáy máng (y ≈ 0): ∂f/∂y = ' + fmt(gy) + ' nhỏ so với ∂f/∂x = ' + fmt(gx) + ', nên gradient chỉ gần như dọc theo máng. Lệch khỏi đáy máng một chút là mũi tên quay ngang vào tường.';
+  if (si === 1) return 'Máng hẹp: ∂f/∂y = ' + fmt(gy) + ' và ∂f/∂x = ' + fmt(gx) + ' cùng cỡ, nên mũi tên chỉ chéo — một phần vào tường máng, một phần dọc máng.';
+  if (si === 2) return 'Yên ngựa: theo trục x mặt đất cong lên (∂²f/∂x² = 2), theo trục y cong xuống (∂²f/∂y² = −2). Nên ở gốc toạ độ gradient bằng 0 mà đó không phải đáy — chỗ &ldquo;nghiêng bằng 0&rdquo; lừa được người ta.';
+  return 'Mũi tên nâu chỉ hướng LÊN dốc nhất, mũi tên xanh là hướng đi xuống. Cả hai luôn vuông góc với đường đồng mức tại chỗ bạn đứng.';
+}
+/* Mô hình 9: trạng thái sau `steps` bước. si: 0 bát, 1 máng, 2 hai đáy (SURF[3]). path: các
+   điểm đang vẽ (tối đa 400, nên đếm bước bằng `steps`, không bằng path.length). f0: sai số ở
+   chỗ xuất phát. box: [x0, x1, y0, y1] của khung vẽ. */
+function m9Status(si, a, path, f0, steps, box) {
+  var S = si === 2 ? SURF[3] : SURF[si], n = path.length, last = path[n - 1];
+  var dist = function (i, j) { return Math.hypot(path[i][0] - path[j][0], path[i][1] - path[j][1]); };
+  var out = path.some(function (p) { return p[0] < box[0] || p[0] > box[1] || p[1] < box[2] || p[1] > box[3]; });
+  var f = S.f(last[0], last[1]), flat = Math.hypot(S.gx(last[0]), S.gy(last[1])) < 0.02;
+  /* So với sai số ở chỗ XUẤT PHÁT, có sàn 1e-6 (xuất phát trúng đáy thì f0·1,5 = 0). Mặt hai đáy
+     không dùng phép so này: ở đó đường đi có thể nảy mãi với sai số bị chặn, mà xuất phát sát
+     đáy thì f0 nhỏ tới mức một cú nảy cũng vượt 1,5·f0. Còn bay ra khỏi khung thì mặt ấy chắc
+     chắn phân kỳ: ngoài |x| = 4 mỗi bước lại xa hơn bước trước (khi α > 1/6, mức duy nhất bay ra được). */
+  var diverging = si !== 2 && n > 2 && f > Math.max(1e-6, f0 * 1.5);
+  /* Bước vừa rồi dài hơn bước trước. Trên mặt bậc hai (bát, máng) chuyện này chỉ xảy ra khi
+     có một hướng đang nảy xa dần, kể cả khi f còn giảm nhờ hướng kia co nhanh. */
+  var grow = n > 2 && dist(n - 1, n - 2) > dist(n - 2, n - 3) * (1 + 1e-9);
+  /* Chu kỳ hai điểm: quay về đúng chỗ của hai bước trước, mà hai bước liền nhau vẫn cách xa.
+     Chỉ xét khi α > 0,25 (dưới đó, ở α = 0,25, đường đi cũng nảy nhưng biên độ co dần rất chậm). */
+  var cyc = n > 3 && dist(n - 1, n - 3) < 1e-3 && dist(n - 1, n - 2) > 0.02;
+  if (out || diverging) return { st: 'PHÂN KỲ', cls: 'bad',
+    say: 'Sai số TĂNG thay vì giảm: bước quá dài nên mỗi lần lại vọt qua đáy xa hơn lần trước. Đây là chỗ nhật ký huấn luyện hiện ra NaN. Việc đầu tiên: giảm α — hoặc chuẩn hoá đặc trưng cho máng bớt hẹp.' };
+  /* mặt hai đáy: f_xx = 3x² − 4 < 0 ở gần x = 0, nên chỗ phẳng ấy là yên ngựa */
+  if (flat && si === 2 && 3 * last[0] * last[0] - 4 < 0) return { st: 'yên ngựa', cls: 'bad',
+    say: 'Gradient ≈ 0 nhưng đây là YÊN NGỰA (f = ' + fmt(f) + '): theo trục x mặt đất cong xuống. Nhích sang trái hay phải một chút là lăn về một trong hai đáy (±2; 0).' };
+  if (flat) return { st: 'tới đáy', cls: 'good',
+    say: 'Gradient ≈ 0 nên các bước đứng lại: đã tới đáy sau ' + steps + ' bước.' +
+      (si === 2 ? ' Nhưng để ý: đây là đáy GẦN chỗ xuất phát, không phải đáy duy nhất. Xuất phát bên kia thì rơi vào đáy bên kia.' : '') };
+  /* Ở đáy (±2; 0) của mặt hai đáy, f_xx = 3·4 − 4 = 8: mỗi bước gần đáy nhân độ lệch theo x với
+     (1 − 8α). α > 2/8 thì hệ số ấy dưới −1 và đường đi không thể dừng ở đáy — nó rơi vào một chu
+     kỳ hai điểm, nảy loạn, hoặc văng ra ngoài. Riêng x đúng bằng 0 hay ±2 thì x đứng yên (∂f/∂x = 0). */
+  if (si === 2 && 1 - 8 * a < -1 && S.gx(last[0]) !== 0) return cyc ? { st: 'kẹt nảy', cls: 'bad',
+    say: 'Nảy qua lại giữa hai điểm, (' + fmt(last[0]) + '; ' + fmt(last[1]) + ') và (' + fmt(path[n - 2][0]) + '; ' + fmt(path[n - 2][1]) + '), không bao giờ dừng: ở đáy (±2; 0) độ cong theo x là 8, nên α vượt 2/8 = 0,25 là quá dài. Sai số không tăng mãi, nhưng cũng không giảm nữa. Giảm α.' } : { st: 'không dừng', cls: 'bad',
+    say: 'α = ' + fmt(a, 2) + ' vượt 2/8 = 0,25: ở đáy (±2; 0) độ cong theo x là 8, nên bước này quá dài để dừng ở đáy. Đường đi sẽ nảy qua lại mãi, hoặc văng ra ngoài. Giảm α.' };
+  if (grow && si !== 2) return { st: 'sắp phân kỳ', cls: 'bad',
+    say: 'Bước vừa rồi DÀI hơn bước trước: theo một hướng, mỗi lần nó vọt qua đáy xa hơn lần trước. Sai số có thể vẫn đang giảm nhờ hướng kia, nhưng cứ thế này sẽ phân kỳ. Giảm α.' };
+  if (grow) return { st: 'đang đi', cls: 'hi',
+    say: 'Bước vừa rồi dài hơn bước trước, vì chỗ nó vừa rời dốc hơn chỗ trước đó: bước = α × độ dốc. Mặt này không phải bậc hai, nên chuyện ấy chưa phải dấu hiệu phân kỳ — gần đáy thì bước sẽ ngắn lại.' };
+  return { st: 'đang đi', cls: 'hi',
+    say: 'Mỗi bước đi ngược gradient một đoạn bằng α × độ dốc. Bước càng gần đáy càng ngắn, vì gradient càng nhỏ — không ai phải hãm lại, nó tự hãm (khi gradient tính trên cả tập dữ liệu).' };
+}
+/* ── cổng: cuối ── */
 
 /* ═══════════════════ mô hình 7 · dây cung → tiếp tuyến ═══════════════════ */
 (function () {
@@ -3763,13 +3834,7 @@ var SURF = [
     $('m8-gx').textContent = fmt(gx);
     $('m8-gy').textContent = fmt(gy);
     $('m8-gn').textContent = fmt(gn);
-    var say;
-    if (gn < 0.15) say = 'Gradient gần bằng 0: mặt đất phẳng theo cả hai hướng. Ở cái bát thì đây là ĐÁY; ở yên ngựa thì đây là chỗ phẳng mà vẫn tuột được — chỉ cần lệch một chút.';
-    else if (si === 1 && Math.abs(gy) > 3 * Math.abs(gx)) say = 'Máng hẹp: ∂f/∂y = ' + fmt(gy) + ' lớn hơn ∂f/∂x = ' + fmt(gx) + ' rất nhiều, nên mũi tên gần như chỉ ngang vào tường máng chứ không dọc theo máng về đáy.';
-    else if (si === 1) say = 'Máng hẹp, nhưng bạn đang đứng gần đáy máng (y ≈ 0): ∂f/∂y = ' + fmt(gy) + ' nhỏ, nên gradient chỉ dọc theo máng. Lệch khỏi đáy máng một chút là mũi tên quay ngang vào tường.';
-    else if (si === 2) say = 'Yên ngựa: theo trục x mặt đất cong lên (∂²f/∂x² = 2), theo trục y cong xuống (∂²f/∂y² = −2). Nên ở gốc toạ độ gradient bằng 0 mà đó không phải đáy — chỗ &ldquo;nghiêng bằng 0&rdquo; lừa được người ta.';
-    else say = 'Mũi tên nâu chỉ hướng LÊN dốc nhất, mũi tên xanh là hướng đi xuống. Cả hai luôn vuông góc với đường đồng mức tại chỗ bạn đứng.';
-    $('m8-say').innerHTML = say;
+    $('m8-say').innerHTML = m8Say(si, gx, gy);
   }
   onDrag(svg, function (p) {
     px = Math.max(x0, Math.min(x1, x0 + (p.x - 20) / (W - 40) * (x1 - x0)));
@@ -3789,8 +3854,11 @@ var SURF = [
 /* ═══════════════════ mô hình 9 · gradient descent ═══════════════════ */
 (function () {
   var svg = $('m9-svg'); if (!svg) return;
-  var si = 0, start = [2.5, 1.6], path = [start.slice()], timer = null, f0 = 0;
+  var si = 0, start = [2.5, 1.6], path = [start.slice()], timer = null, f0 = 0, steps = 0;
   var W = 620, H = 360, x0 = -4, x1 = 4, y0 = -2.3, y1 = 2.3;
+  /* #m9-say đổi mỗi bước của hoạt ảnh, nên nó không phải vùng aria-live; câu được đọc lên đi
+     qua #m9-live: khi trạng thái đổi, khi chạy xong, hoặc sau mỗi thao tác tay. */
+  var live = $('m9-live'), lastSt = '', runN = 0;
   var X = function (x) { return 20 + (x - x0) / (x1 - x0) * (W - 40); };
   var Y = function (y) { return H - 20 - (y - y0) / (y1 - y0) * (H - 40); };
   function surf() { return si === 2 ? SURF[3] : SURF[si]; }
@@ -3801,6 +3869,7 @@ var SURF = [
     if (!isFinite(nx) || Math.abs(nx) > 1e6) nx = Math.sign(nx || 1) * 1e6;
     if (!isFinite(ny) || Math.abs(ny) > 1e6) ny = Math.sign(ny || 1) * 1e6;
     path.push([nx, ny]);
+    steps++;
     if (path.length > 400) path.shift();
     draw();
   }
@@ -3817,10 +3886,9 @@ var SURF = [
     mins.forEach(function (m) {
       el(g, 'circle', { cx: X(m[0]), cy: Y(m[1]), r: 4, fill: 'none', stroke: css('--good'), 'stroke-width': 2 });
     });
-    var d = '', out = false;
+    var d = '';
     path.forEach(function (p, i) {
       var cx = X(Math.max(x0, Math.min(x1, p[0]))), cy = Y(Math.max(y0, Math.min(y1, p[1])));
-      if (p[0] < x0 || p[0] > x1 || p[1] < y0 || p[1] > y1) out = true;
       d += (i ? 'L' : 'M') + cx.toFixed(1) + ' ' + cy.toFixed(1);
     });
     if (path.length > 1) el(g, 'path', { d: d, fill: 'none', stroke: css('--a'), 'stroke-width': 2, 'stroke-linejoin': 'round' });
@@ -3834,46 +3902,20 @@ var SURF = [
     txt(g, 24, 20, S.name + ' · α = ' + fmt(a, 3), 'vt');
 
     var f = S.f(last[0], last[1]);
-    $('m9-n').textContent = path.length - 1;
+    $('m9-n').textContent = steps;
     $('m9-pos').textContent = Math.max(Math.abs(last[0]), Math.abs(last[1])) > 999 ? 'bay ra ngoài' : '(' + fmt(last[0]) + '; ' + fmt(last[1]) + ')';
     $('m9-f').textContent = f > 1e6 ? '∞' : fmt(f);
-    var st, cls, say;
-    /* So với sai số ở chỗ XUẤT PHÁT (chốt lúc reset), không so với path[0] — path bị
-       shift() sau 400 bước nên path[0] trôi thành một điểm giữa đường. Và phải có sàn
-       1e-6: xuất phát trúng ngay đáy thì f0·1,5 = 0, mọi bước sau đều thành "phân kỳ". */
-    var diverging = path.length > 2 && f > Math.max(1e-6, f0 * 1.5);
-    /* Bước vừa rồi dài hơn bước trước. Trên mặt bậc hai (bát, máng) chuyện này chỉ xảy ra khi
-       có một hướng đang nảy xa dần, kể cả khi f còn giảm nhờ hướng kia co nhanh. */
-    var n = path.length, grow = n > 2 &&
-      Math.hypot(last[0] - path[n - 2][0], last[1] - path[n - 2][1]) >
-      Math.hypot(path[n - 2][0] - path[n - 3][0], path[n - 2][1] - path[n - 3][1]) * (1 + 1e-9);
-    if (out || diverging) {
-      st = 'PHÂN KỲ'; cls = 'bad';
-      say = 'Sai số TĂNG thay vì giảm: bước quá dài nên mỗi lần lại vọt qua đáy xa hơn lần trước. Đây là chỗ nhật ký huấn luyện hiện ra NaN. Việc đầu tiên: giảm α — hoặc chuẩn hoá đặc trưng cho máng bớt hẹp.';
-    } else if (Math.hypot(S.gx(last[0]), S.gy(last[1])) < 0.02 && si === 2 && 3 * last[0] * last[0] - 4 < 0) {
-      /* mặt hai đáy: f_xx = 3x² − 4 < 0 ở gần x = 0, nên chỗ phẳng ấy là yên ngựa */
-      st = 'yên ngựa'; cls = 'bad';
-      say = 'Gradient ≈ 0 nhưng đây là YÊN NGỰA (f = ' + fmt(f) + '): theo trục x mặt đất cong xuống. Nhích sang trái hay phải một chút là lăn về một trong hai đáy (±2; 0).';
-    } else if (Math.hypot(S.gx(last[0]), S.gy(last[1])) < 0.02) {
-      st = 'tới đáy'; cls = 'good';
-      say = 'Gradient ≈ 0 nên các bước đứng lại: đã tới đáy sau ' + (path.length - 1) + ' bước.' +
-        (si === 2 ? ' Nhưng để ý: đây là đáy GẦN chỗ xuất phát, không phải đáy duy nhất. Xuất phát bên kia thì rơi vào đáy bên kia.' : '');
-    } else if (grow && si !== 2) {
-      st = 'sắp phân kỳ'; cls = 'bad';
-      say = 'Bước vừa rồi DÀI hơn bước trước: theo một hướng, mỗi lần nó vọt qua đáy xa hơn lần trước. Sai số có thể vẫn đang giảm nhờ hướng kia, nhưng cứ thế này sẽ phân kỳ. Giảm α.';
-    } else if (grow) {
-      st = 'đang đi'; cls = 'hi';
-      say = 'Bước vừa rồi dài hơn bước trước: hoặc nó đang lăn khỏi chỗ phẳng xuống chỗ dốc hơn, hoặc α lớn tới mức vọt qua đáy xa dần.';
-    } else {
-      st = 'đang đi'; cls = 'hi';
-      say = 'Mỗi bước đi ngược gradient một đoạn bằng α × độ dốc. Bước càng gần đáy càng ngắn, vì gradient càng nhỏ — không ai phải hãm lại, nó tự hãm (khi gradient tính trên cả tập dữ liệu).';
-    }
-    $('m9-st').textContent = st;
-    $('m9-vbox').className = 'read ' + cls;
-    $('m9-say').textContent = say;
+    var r = m9Status(si, a, path, f0, steps, [x0, x1, y0, y1]);
+    $('m9-st').textContent = r.st;
+    $('m9-vbox').className = 'read ' + r.cls;
+    $('m9-say').textContent = r.say;
+    if (!timer || r.st !== lastSt) announce(r.say);
+    lastSt = r.st;
   }
+  function announce(s) { if (live && live.textContent !== s) live.textContent = s; }
   function reset() {
     path = [start.slice()];
+    steps = 0;
     f0 = surf().f(start[0], start[1]);
     if (timer) {
       clearInterval(timer); timer = null;
@@ -3892,14 +3934,15 @@ var SURF = [
       btn.textContent = on ? 'Dừng' : 'Chạy 40 bước';
       btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     }
-    if (timer) { clearInterval(timer); timer = null; label(false); return; }
+    function done(k) { announce('Đã chạy ' + k + ' bước. ' + $('m9-say').textContent); }
+    if (timer) { clearInterval(timer); timer = null; label(false); done(runN); return; }
     var slow = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (slow) { for (var i = 0; i < 40; i++) step(); return; }
-    var n = 0;
+    if (slow) { for (var i = 0; i < 40; i++) step(); done(40); return; }
+    runN = 0;
     label(true);
     timer = setInterval(function () {
       step();
-      if (++n >= 40) { clearInterval(timer); timer = null; label(false); }
+      if (++runN >= 40) { clearInterval(timer); timer = null; label(false); done(runN); }
     }, 60);
   });
   $('m9-a').addEventListener('input', draw);
@@ -4320,7 +4363,7 @@ function tcrit(conf, df) {
     Q.forEach(function (q) { ax += q[0]; ay += q[1]; });
     ax /= k; ay /= k;
     Q.forEach(function (q) { var dx = q[0] - ax, dy = q[1] - ay; qxx += dx * dx; qyy += dy * dy; qxy += dx * dy; });
-    return (qxx > 1e-12 && qyy > 1e-12) ? qxy / Math.sqrt(qxx * qyy) : 0;
+    return (qxx > 1e-12 && qyy > 1e-12) ? qxy / Math.sqrt(qxx * qyy) : NaN;
   }
   function draw() {
     $('m14-slopev').textContent = fmt(+$('m14-slope').value / 10);
@@ -4332,7 +4375,8 @@ function tcrit(conf, df) {
     var sxx = 0, syy = 0, sxy = 0;
     P.forEach(function (q) { var dx = q[0] - mx, dy = q[1] - my; sxx += dx * dx; syy += dy * dy; sxy += dx * dy; });
     var cov = sxy / (n - 1);
-    var r = (sxx > 1e-12 && syy > 1e-12) ? sxy / Math.sqrt(sxx * syy) : 0;
+    /* y không đổi thì r = 0/0: không xác định, không phải 0 */
+    var r = (sxx > 1e-12 && syy > 1e-12) ? sxy / Math.sqrt(sxx * syy) : NaN;
     var x0 = -2.6, x1 = 3.8, y0 = -4.2, y1 = 4.2;
     var ml = 40, mr = 14, mt = 14, mb = 28;
     var X = function (v) { return ml + (v - x0) / (x1 - x0) * (W - ml - mr); };
@@ -4355,12 +4399,14 @@ function tcrit(conf, df) {
     P.forEach(function (q) {
       el(g, 'circle', { cx: X(q[0]), cy: Y(Math.max(y0, Math.min(y1, q[1]))), r: 4, fill: css('--p'), opacity: 0.8 });
     });
-    $('m14-r').textContent = fmt(r);
+    $('m14-r').textContent = isNaN(r) ? '—' : fmt(r);
     $('m14-cov').textContent = fmt(cov);
-    $('m14-r2').textContent = fmt(r * r);
-    var say;
-    if (mode === 'u') say = 'r = ' + fmt(r) + ' — gần bằng 0, mà quan hệ thì rõ như ban ngày. r chỉ đo quan hệ THEO ĐƯỜNG THẲNG, và ở đây không có đường thẳng nào tả được hình chữ U.';
-    else if (mode === 'out') say = 'Riêng 39 điểm đầu thì r = ' + fmt(corr(P.slice(0, 39))) + ' — chẳng liên quan gì nhau. Thêm MỘT điểm lạc ở góc trên, r nhảy lên ' + fmt(r) + '. Một điểm trên 40 đã lái được kết luận.';
+    $('m14-r2').textContent = isNaN(r) ? '—' : fmt(r * r);
+    var say, r39 = mode === 'out' ? corr(P.slice(0, 39)) : 0;
+    if (isNaN(r)) say = 'y không đổi chút nào, nên r không xác định (0 chia 0): tương quan đo y đi theo x tới đâu, mà y không đi đâu cả.';
+    else if (mode === 'out' && isNaN(r39)) say = 'Riêng 39 điểm đầu thì y không đổi chút nào, nên r của chúng không xác định — chẳng có quan hệ nào để đo. Thêm MỘT điểm lạc ở góc trên, r nhảy lên ' + fmt(r) + '. Một điểm trên 40 đã lái được kết luận.';
+    else if (mode === 'u') say = 'r = ' + fmt(r) + ' — gần bằng 0, mà quan hệ thì rõ như ban ngày. r chỉ đo quan hệ THEO ĐƯỜNG THẲNG, và ở đây không có đường thẳng nào tả được hình chữ U.';
+    else if (mode === 'out') say = 'Riêng 39 điểm đầu thì r = ' + fmt(r39) + ' — chẳng liên quan gì nhau. Thêm MỘT điểm lạc ở góc trên, r nhảy lên ' + fmt(r) + '. Một điểm trên 40 đã lái được kết luận.';
     else if (Math.abs(r) > 0.9) say = 'r = ' + fmt(r) + ': gần như thẳng hàng. r² = ' + fmt(r * r) + ' nghĩa là đường thẳng giải thích được ' + pct(r * r, 0) + ' biến thiên của y.';
     else if (Math.abs(r) > 0.4) say = 'r = ' + fmt(r) + ': có xu hướng nhưng nhiễu nhiều. Nhìn đám điểm thì thấy ngay điều mà con số r không nói hết.';
     else say = 'r = ' + fmt(r) + ': gần như không có quan hệ thẳng nào.';
@@ -4695,7 +4741,8 @@ function tcrit(conf, df) {
     var note;
     if (edge) note = '. Một đầu khoảng chạm đúng 0 — kết luận nằm ngay trên ranh giới 5%.';
     else if (ciOut && sig) note = '. Khoảng này không chứa 0, khớp với kết luận bác bỏ H₀.';
-    else if (!ciOut && !sig) note = '. Khoảng này CHỨA 0 — nên chưa loại trừ được khả năng hai bản như nhau. Cùng chênh lệch ấy với cỡ mẫu lớn hơn thì kết luận có thể đổi.';
+    else if (!ciOut && !sig) note = '. Khoảng này CHỨA 0 — nên chưa loại trừ được khả năng hai bản như nhau. ' +
+      (cA === cB ? 'Hai bản cho đúng cùng một số người mua: không có chênh lệch nào để kiểm, cỡ mẫu lớn mấy cũng vậy.' : 'Cùng chênh lệch ấy với cỡ mẫu lớn hơn thì kết luận có thể đổi.');
     else note = '. Khoảng này và phép kiểm lệch nhau đúng ở sát ngưỡng (khoảng dùng độ lệch chuẩn riêng từng bản, phép kiểm dùng tỉ lệ gộp) — kết luận nằm ngay trên ranh giới 5%.';
     /* mép khoảng làm tròn về 0 thì in "0,0", không in "−0,0" */
     var bound = function (v) { return Math.abs(v) < 0.0005 ? '0,0' : fmt(v * 100, 1); };

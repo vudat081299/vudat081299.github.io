@@ -12,6 +12,8 @@ ngược lại, thấy cổng xanh là biết mọi con số trong trang đều 
 
 Chỉ dùng thư viện chuẩn (math, statistics, itertools) để chạy được ở mọi máy:
 numpy có thể chưa cài trên máy người khác, và cổng không được phụ thuộc vào may mắn.
+Riêng câu nhắc tự sinh của mô hình 8 và 9 thì cổng chạy chính JS của trang bằng node
+(xem run_js_models); CI có node, máy cục bộ cần node trong PATH.
 
 Chạy:  python3 pages/tools/verify-math-for-ml.py
 Exit code: 1 nếu có con số không khớp.
@@ -435,17 +437,8 @@ def run_calculus():
     need('2.5 máng phân kỳ', f'phân kỳ ngay từ <b>{vi(div_mang)}</b>', div_mang)
     need('2.5 ngưỡng bát', 'α tới 1/3 ≈ ' + vi(1 / 3))
     need('2.5 ngưỡng máng', 'α vượt 1/12 ≈ ' + vi(1 / 12, 3))
-    # 2.5 — mặt "hai đáy" f = 0,25(x² − 4)² + y² của mô hình 9: gradient bằng 0 ở cả (0; 0), nhưng
-    # f_xx = 3x² − 4 < 0 ở đó nên là yên ngựa. Mô hình phải xét độ cong trước khi báo "tới đáy".
-    gx2 = lambda x: x * (x * x - 4)
-    fxx = lambda x: (gx2(x + 1e-6) - gx2(x - 1e-6)) / 2e-6
-    claim('2.5 hai đáy: f_xx = 3x² − 4', all(abs(fxx(x) - (3 * x * x - 4)) < 1e-6 for x in (-2, -0.5, 0, 1, 2)))
-    claim('2.5 hai đáy: (0; 0) là yên ngựa, (±2; 0) là đáy', fxx(0) < 0 and fxx(2) > 0 and fxx(-2) > 0)
-    need('2.5 mô hình 9 xét yên ngựa', "3 * last[0] * last[0] - 4 < 0")
-    # bát, α = 0,34: theo y mỗi bước nhân −1,04 nên bước dài dần dù f còn giảm vài bước đầu —
-    # mô hình phải báo theo độ dài bước, không chỉ theo f.
-    claim('2.5 bát α=0,34 nảy xa dần', abs(1 - 6 * 0.34) > 1)
-    need('2.5 mô hình 9 so độ dài bước', "} else if (grow && si !== 2) {")
+    # 2.5 — câu nhắc tự sinh của mô hình 8 và 9: chạy chính JS của trang (run_js_models).
+    run_js_models()
 
     # 2.6 — quy tắc chuỗi
     h3 = lambda x: (2 * x + 1) ** 3
@@ -835,6 +828,168 @@ def run_m17():
     claim('mô hình 17 ô "chứa đúng"', int(m_hit.group(1)) == hit, f'JS cho {hit}, HTML ghi {m_hit.group(1)}')
     claim('mô hình 17 ô "bắn trượt"', int(m_miss.group(1)) == 100 - hit, f'JS cho {100 - hit}, HTML ghi {m_miss.group(1)}')
     claim('mô hình 17 ô bề rộng', m_w.group(1) == vi(wsum / 100, 1), f'JS cho {vi(wsum / 100, 1)}, HTML ghi {m_w.group(1)}')
+
+
+# ─────────────────────── mô hình 8, 9: chạy JS của trang ───────────────────────
+# Câu nhắc của hai mô hình này là nhánh điều kiện, không phải con số: ghim chuỗi mã thì sửa
+# nhánh mà giữ chuỗi vẫn xanh. Nên cổng cắt khối "cổng: đầu … cổng: cuối" (SURF, m8Say,
+# m9Status) cùng hàm fmt ra khỏi trang, chạy bằng node, rồi tự tính số phận thật của từng
+# đường đi bằng Python và đòi trạng thái trang in ra không mâu thuẫn với nó.
+SURF_PY = [  # bốn mặt như chip và lời văn ghi: x² + 3y², x² + 12y², x² − y², hai đáy
+    (lambda x, y: x * x + 3 * y * y, lambda x: 2 * x, lambda y: 6 * y),
+    (lambda x, y: x * x + 12 * y * y, lambda x: 2 * x, lambda y: 24 * y),
+    (lambda x, y: x * x - y * y, lambda x: 2 * x, lambda y: -2 * y),
+    (lambda x, y: 0.25 * (x * x - 4) ** 2 + y * y, lambda x: x * (x * x - 4), lambda y: 2 * y),
+]
+BOX = (-4, 4, -2.3, 2.3)
+M9_ALPHAS = [k / 100 for k in range(1, 61)]  # thanh trượt α: 1…60, chia 100
+M9_STARTS = [(x, y) for x in (-4, -3, -2.15, -1, 0, 1, 2, 2.5, 3.5) for y in (-2.3, 0, 1.6)]
+M9_STEPS = 120
+JS_HARNESS = r"""
+const out = { surf: [], m8: [], m9: [] };
+const H = 1e-5, P = [[-3, -1.7], [-1.2, 0.4], [0, 0], [0.5, 2], [2, -0.3], [3.7, 1.1]];
+SURF.forEach(function (S) { out.surf.push(P.map(function (p) {
+  return [S.f(p[0], p[1]), S.gx(p[0]), S.gy(p[1])]; })); });
+CASES.m8.forEach(function (c) { out.m8.push(m8Say(c[0], c[1], c[2])); });
+CASES.m9.forEach(function (c) {
+  var si = c[0], a = c[1], S = si === 2 ? SURF[3] : SURF[si], path = [c[2].slice()];
+  var f0 = S.f(c[2][0], c[2][1]), sts = [], says = [];
+  for (var k = 0; k <= c[3]; k++) {
+    if (k) {  /* đúng phép bước của step() trong mô hình 9 */
+      var p = path[path.length - 1], nx = p[0] - a * S.gx(p[0]), ny = p[1] - a * S.gy(p[1]);
+      if (!isFinite(nx) || Math.abs(nx) > 1e6) nx = Math.sign(nx || 1) * 1e6;
+      if (!isFinite(ny) || Math.abs(ny) > 1e6) ny = Math.sign(ny || 1) * 1e6;
+      path.push([nx, ny]); if (path.length > 400) path.shift();
+    }
+    var r = m9Status(si, a, path, f0, k, BOX);
+    sts.push(r.st); if (c[4]) says.push(r.say);
+  }
+  out.m9.push({ st: sts, say: says, last: path[path.length - 1] });
+});
+process.stdout.write(JSON.stringify(out));
+"""
+
+
+def run_js_models():
+    import json
+    import re
+    import shutil
+    import subprocess
+    global checks
+    checks += 1
+    node = shutil.which('node')
+    if not node:
+        fails.append('mô hình 8, 9: cần node để chạy JS của trang (CI có sẵn; máy cục bộ cài node)')
+        return
+    a0, a1 = HTML.find('/* ── cổng: đầu'), HTML.find('/* ── cổng: cuối')
+    mf = re.search(r'function fmt\(n, d\) \{.*?\n\}\n', HTML, re.S)
+    if a0 < 0 or a1 < a0 or not mf:
+        fails.append('mô hình 8, 9: không thấy khối "cổng: đầu … cổng: cuối" hoặc hàm fmt trong trang')
+        return
+    m8cases = [(1, 2 * x / 4, 24 * y / 4) for x in range(-16, 17) for y in range(-9, 10)]
+    m8cases += [(s, 2 * x, g * y) for s, g in ((0, 6), (2, -2)) for x in (-3, 0, 1.5) for y in (-1, 0, 2)]
+    m9cases = [(si, a, list(st), M9_STEPS, 0) for si in (0, 1, 2) for a in M9_ALPHAS for st in M9_STARTS]
+    named = {  # ca cụ thể: (si, α, chỗ xuất phát, số bước) → trạng thái phải in
+        'hai đáy (0; 1,6) α 0,10 → yên ngựa': ((2, 0.10, [0, 1.6], 40), 'yên ngựa'),
+        'bát (0; 1,6) α 0,34, bước 2 → sắp phân kỳ': ((0, 0.34, [0, 1.6], 2), 'sắp phân kỳ'),
+        'bát (2,5; 1,6) α 0,10 → tới đáy': ((0, 0.10, [2.5, 1.6], 40), 'tới đáy'),
+        'hai đáy (2,5; 1,6) α 0,28 → kẹt nảy': ((2, 0.28, [2.5, 1.6], 80), 'kẹt nảy'),
+        'hai đáy (−2,15; 0) α 0,28 → kẹt nảy': ((2, 0.28, [-2.15, 0], 80), 'kẹt nảy'),
+    }
+    for (si, a, st, n), _ in named.values():
+        m9cases.append((si, a, st, n, 1))
+    js = ('"use strict";\nvar BOX = ' + json.dumps(list(BOX)) + ', CASES = ' +
+          json.dumps({'m8': m8cases, 'm9': m9cases}) + ';\n' + mf.group(0) + HTML[a0:a1] + JS_HARNESS)
+    r = subprocess.run([node, '-'], input=js, capture_output=True, text=True, timeout=120)
+    if r.returncode:
+        fails.append('mô hình 8, 9: node lỗi khi chạy khối của trang: ' + r.stderr.strip()[:300])
+        return
+    out = json.loads(r.stdout)
+
+    # 1. Bốn mặt trong JS đúng là bốn mặt bài viết nói, và gx, gy đúng là đạo hàm riêng của f.
+    pts = [(-3, -1.7), (-1.2, 0.4), (0, 0), (0.5, 2), (2, -0.3), (3.7, 1.1)]
+    for i, (f, gx, gy) in enumerate(SURF_PY):
+        claim(f'mô hình 8/9 mặt {i}', all(abs(v[0] - f(x, y)) < 1e-9 and abs(v[1] - gx(x)) < 1e-9 and
+              abs(v[2] - gy(y)) < 1e-9 for v, (x, y) in zip(out['surf'][i], pts)),
+              'SURF trong JS không khớp f và đạo hàm riêng của nó')
+
+    # 2. Mô hình 8: câu nhắc theo tỉ số |∂f/∂y| / |∂f/∂x| (máng hẹp), không mâu thuẫn mũi tên.
+    bad8 = []
+    for (si, gx, gy), say in zip(m8cases, out['m8']):
+        if math.hypot(gx, gy) < 0.15:
+            want = 'Gradient gần bằng 0'
+        elif si != 1:
+            want = 'Yên ngựa:' if si == 2 else 'Mũi tên nâu'
+        elif abs(gy) > 3 * abs(gx):
+            want = 'gần như chỉ ngang vào tường'
+        elif 3 * abs(gy) < abs(gx):
+            want = 'gần như dọc theo máng'
+        else:
+            want = 'chỉ chéo'
+        if want not in say:
+            bad8.append((si, gx, gy))
+    claim('mô hình 8 câu nhắc', not bad8, f'{len(bad8)} chỗ đứng nói sai hướng mũi tên, ví dụ {bad8[:3]}')
+
+    # 3. Mô hình 9: số phận thật của từng đường đi, tính lại bằng Python.
+    def fxx(si, x):
+        gx = SURF_PY[3 if si == 2 else si][1]
+        return (gx(x + 1e-6) - gx(x - 1e-6)) / 2e-6
+
+    def fate(si, a, st):
+        """'conv', 'div' hay 'bounded' (nảy mãi mà không bay ra)."""
+        f, gx, gy = SURF_PY[3 if si == 2 else si]
+        if si < 2:  # mặt bậc hai: mỗi trục nhân với một hệ số cố định mỗi bước
+            ks = [(st[0], 1 - a * gx(1)), (st[1], 1 - a * gy(1))]
+            return 'div' if any(v and abs(k) > 1 for v, k in ks) else 'conv'
+        x, y = st
+        A1 = A2 = 0
+        for i in range(2000):
+            px = x
+            x, y = x - a * gx(x), y - a * gy(y)
+            if not (abs(x) < 1e6 and abs(y) < 1e6):
+                return 'div'
+            if 800 <= i < 1000:
+                A1 = max(A1, abs(x - px))
+            if i >= 1800:
+                A2 = max(A2, abs(x - px))
+        if math.hypot(gx(x), gy(y)) < 1e-6:
+            return 'conv'
+        # biên độ nảy còn co dần (α = 0,25: co rất chậm) thì vẫn là hội tụ
+        return 'conv' if A2 < 0.85 * A1 and A2 < 0.2 else 'bounded'
+
+    bad9 = []
+    for (si, a, st, n, _), res in zip(m9cases, out['m9']):
+        F_ = fate(si, a, st)
+        f, gx, gy = SURF_PY[3 if si == 2 else si]
+        x, y = st
+        hist = [(x, y)]
+        for k, s in enumerate(res['st']):
+            if k:
+                x, y = x - a * gx(x), y - a * gy(y)
+                hist.append((x, y))
+            flat = math.hypot(gx(x), gy(y)) < 0.02
+            if s == 'tới đáy':
+                ok = flat and fxx(si, x) > 0
+            elif s == 'yên ngựa':
+                ok = flat and fxx(si, x) < 0
+            elif F_ == 'conv':
+                ok = s not in ('PHÂN KỲ', 'sắp phân kỳ', 'kẹt nảy', 'không dừng')
+            elif F_ == 'div':
+                ok = s != 'kẹt nảy'
+            elif s == 'kẹt nảy':
+                ok = k >= 2 and math.dist(hist[-1], hist[-3]) < 1e-3
+            else:
+                ok = s == 'không dừng'
+            if not ok:
+                bad9.append((si, a, st, k, s, F_))
+                break
+    claim('mô hình 9 trạng thái', not bad9,
+          f'{len(bad9)} đường đi có bước báo sai, ví dụ (mặt, α, xuất phát, bước, in ra, thật) {bad9[:3]}')
+    k0 = len(m9cases) - len(named)
+    for (label, ((si, a, st, n), want)), res in zip(named.items(), out['m9'][k0:]):
+        claim('mô hình 9 ' + label, res['st'][-1] == want, f'in ra "{res["st"][-1]}"')
+    sayd = out['m9'][k0 + 2]['say'][-1]
+    claim('mô hình 9 đếm bước trong câu "tới đáy"', 'sau 40 bước' in sayd, sayd[:80])
 
 
 def assert_close(label, got, want, tol=1e-9):
