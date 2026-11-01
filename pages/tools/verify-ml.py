@@ -612,6 +612,51 @@ def run_101():
         claim('m4 thí nghiệm 3: kéo λ → thuộc lòng, vừa phải, rồi chưa học đủ', re.fullmatch(r'T+v+C+', seq3) is not None,
               f'dòng phán theo λ là {seq3}')
 
+    # ══ các câu kiến thức đã từng viết sai ═════════════════════════════════
+    # Mô hình 3: lời gợi ý đọc đúng số mô hình in ra khi kéo từ chỗ mặc định về đáy thanh.
+    i = HTML.find('id="m3-p"')
+    tag = HTML[i:HTML.find('>', i)] if i >= 0 else ''
+    lo = re.search(r'min="([\d.]+)"', tag)
+    p0 = re.search(r'value="([\d.]+)"', tag)
+    claim('m3 bóc được thanh trượt', bool(lo and p0))
+    if lo and p0:
+        lo, p0 = float(lo.group(1)), float(p0.group(1))
+        claim('m3: thước cũ ở đáy thanh vẫn dưới 1', (1 - lo) ** 2 < 1, f'{(1 - lo) ** 2:.4f}')
+        need('m3 gợi ý: thước cũ', f'cái cũ chỉ nhích từ {vi((1 - p0) ** 2)} lên chưa tới 1', (1 - p0) ** 2)
+        need('m3 gợi ý: thước mới', f'cái mới vọt từ {vi(-math.log(p0), 1)} lên {vi(-math.log(lo), 1)}')
+
+    # Momentum: trung bình trượt mũ với β tương đương chừng 1/(1 − β) bước gần nhất.
+    need('β₁ của Adam trong bảng tra', 'β₁ = 0,9 ·')
+    claim('β = 0,9 → chừng mười bước', round(1 / (1 - 0.9)) == 10)
+    need('cửa sổ của momentum', 'trung bình của chừng mười bước gần đây</b> (với β = 0,9)')
+
+    # Chuẩn hoá: sau z-score, độ cong của MSE là 2 × ma trận tương quan, trị riêng 1 ± r.
+    # Hai cột tương quan r = 0,8 vẫn cho lòng chảo dẹt (1 + r)/(1 − r) = 9 lần: chỉ "gần tròn".
+    claim('z-score chỉ làm bát tròn hẳn khi r = 0', abs((1 + 0.8) / (1 - 0.8) - 9) < 1e-9)
+    need('bát gần tròn', 'Khe hẹp thành gần như bát tròn (tròn hẳn khi hai loại số không đi cùng nhau)')
+
+    # Normal equation: nghịch đảo ma trận n × n tốn cỡ n³; mốc của khoá gốc là ~10.000 đặc trưng.
+    need('mốc normal equation', 'tốn công tăng theo (số núm)³, nên từ chừng mười nghìn núm trở lên')
+
+    # Mặc định khởi tạo: Keras Dense = glorot_uniform; PyTorch nn.Linear = U(±1/√n),
+    # phương sai 1/(3n), nhỏ hơn He (2/n) sáu lần.
+    claim('PyTorch mặc định nhỏ hơn He sáu lần', abs((2 / 1) / (1 / 3) - 6) < 1e-9)
+    need('mặc định không phải He', 'Mặc định của thư viện thường không phải He (Keras: Xavier; PyTorch: rải đều trong ±1/√(số đầu vào))')
+
+    # Mốc năm: ViT (arXiv 2010.11929) và DDPM (2006.11239) năm 2020, CLIP (2103.00020) năm 2021;
+    # diffusion có gốc từ 2015 (1503.03585), nên "ra đời sau khoá học" là sai.
+    claim('không còn "ra đời sau khoá học"', 'ra đời sau khoá học' not in HTML)
+    need('mốc ViT / diffusion', 'chúng nổi lên từ 2020, sau bản quay 2017–2018')
+    need('data-centric AI từ 2021', "'hướng Ng đẩy mạnh từ 2021'")
+
+    # Lan truyền ngược nhân thêm độ dốc của cái bẻ — đúng như mô hình 5 làm.
+    need('m5 nhân độ dốc của cái bẻ', 'prev[q] = s * dact(f.Z[k - 1][q]);')
+    need('lời văn nhắc độ dốc của cái bẻ', 'nếu nó đang bị bẻ về 0 thì phần trách nhiệm là 0')
+
+    need('attention chia căn độ dài', 'chia cho căn của độ dài dãy số để softmax')
+    need('distortion là trung bình', '<b>trung bình bình phương</b> khoảng cách')
+    need('DQN hai kiểu lớp cuối', 'một Q cho mỗi hành động')
+
 
 def main():
     global HTML

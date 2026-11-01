@@ -667,7 +667,7 @@ footer a { color:var(--muted); }
 
         <div class="box note">
           <p class="box__k">Một ngoại lệ đáng biết</p>
-          <p>Riêng với đường thẳng, có <b>công thức giải thẳng ra đáp án</b>, không cần dò gì cả — tên nó là <span class="nm">normal equation</span>. Vì sao cả trang này vẫn nói về dò: công thức ấy đòi nghịch đảo một bảng số cỡ (số núm)², nên với vài nghìn núm nó đã chậm hơn dò, và với mạng nơ-ron thì <b>không tồn tại</b> công thức nào tương tự. Dò là cách duy nhất mở rộng được.</p>
+          <p>Riêng với đường thẳng, có <b>công thức giải thẳng ra đáp án</b>, không cần dò gì cả — tên nó là <span class="nm">normal equation</span>. Vì sao cả trang này vẫn nói về dò: công thức ấy đòi nghịch đảo một bảng số cỡ (số núm)², tốn công tăng theo (số núm)³, nên từ chừng mười nghìn núm trở lên nó chậm hơn dò, và với mạng nơ-ron thì <b>không tồn tại</b> công thức nào tương tự. Dò là cách duy nhất mở rộng được.</p>
         </div>
 
         <div class="nmrow">
@@ -756,7 +756,7 @@ footer a { color:var(--muted); }
 
         <p>Bạn đoán giá nhà bằng hai con số: diện tích (từ 20 tới 300) và số phòng ngủ (từ 1 tới 5). Diện tích to hơn số phòng cỡ vài chục lần. Chuyện gì xảy ra: sườn đồi không còn là cái bát tròn nữa, nó thành <b>một cái khe hẹp và dài</b>. Quả bóng dội qua dội lại giữa hai vách khe, mỗi vòng chỉ nhích xuôi theo khe được một chút. Chạy lâu gấp mấy chục lần mà vẫn chưa tới.</p>
 
-        <p>Cách sửa mất ba dòng lệnh: <b>kéo mọi con số về cùng một cỡ trước khi học.</b> Với từng loại số — diện tích riêng, số phòng riêng — lấy mỗi giá trị trừ đi trung bình của loại ấy, rồi chia cho <b>độ lệch chuẩn</b> của loại ấy (con số cho biết các giá trị thường nằm cách trung bình bao xa) — xong, cái nào cũng nằm quanh 0 và cùng độ rộng. Khe hẹp thành bát tròn. Đúng phép ấy tên là <span class="nm">z-score normalization</span>.</p>
+        <p>Cách sửa mất ba dòng lệnh: <b>kéo mọi con số về cùng một cỡ trước khi học.</b> Với từng loại số — diện tích riêng, số phòng riêng — lấy mỗi giá trị trừ đi trung bình của loại ấy, rồi chia cho <b>độ lệch chuẩn</b> của loại ấy (con số cho biết các giá trị thường nằm cách trung bình bao xa) — xong, cái nào cũng nằm quanh 0 và cùng độ rộng. Khe hẹp thành gần như bát tròn (tròn hẳn khi hai loại số không đi cùng nhau). Đúng phép ấy tên là <span class="nm">z-score normalization</span>.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
@@ -815,7 +815,7 @@ footer a { color:var(--muted); }
           <div class="lab__h">
             <p class="lab__k">Nghịch được · mô hình 3 / 13</p>
             <p class="lab__t">Chọn sự thật, rồi kéo "máy tin bao nhiêu phần trăm" và xem nó bị trừ mấy điểm</p>
-            <p class="lab__hint">Đặt sự thật là <b>có</b>, rồi kéo lời đoán về gần 0. Xem điểm trừ của hai thước đo: cái cũ đứng gần như im, cái mới bay lên trời.</p>
+            <p class="lab__hint">Đặt sự thật là <b>có</b>, rồi kéo lời đoán về gần 0. Xem điểm trừ của hai thước đo: cái cũ chỉ nhích từ 0,49 lên chưa tới 1 rồi đụng trần, cái mới vọt từ 1,2 lên 4,6.</p>
           </div>
           <div class="lab__b">
             <div class="vscroll"><svg class="viz" id="m3-viz" role="img" aria-label="Hai đường phạt theo mức máy tin: log loss (thước mới) và bình phương (thước cũ), vẽ cho sự thật đang chọn." viewBox="0 0 660 260" style="max-width:660px;margin:0 auto"></svg></div>
@@ -1033,7 +1033,7 @@ footer a { color:var(--muted); }
 
         <p>Máy đoán sai. Nó có cả trăm cái núm. Núm nào phải vặn, vặn về phía nào, vặn bao nhiêu?</p>
 
-        <p>Cách làm là <b>đi ngược từ đầu ra về đầu vào, chia phần trách nhiệm.</b> Đọc thành lời: "Kết quả đang thấp hơn đáp án 0,3. Nơ-ron này đi vào kết quả qua một cái núm 0,5 — nó nhích lên 1 thì kết quả nhích lên 0,5 — nên phần trách nhiệm của nó là 0,3 × 0,5 = 0,15. Núm của nơ-ron này đang nhân với số vào là 2 — núm nhích lên 1 thì nơ-ron nhích lên 2 — nên phần trách nhiệm của núm là 0,15 × 2 = 0,3." Núm nào gánh phần lớn thì được vặn nhiều, đúng như ở <a href="#s-descent">chương 3</a>: dốc hơn thì bước dài hơn. Rồi lùi tiếp một lớp, làm y như vậy.</p>
+        <p>Cách làm là <b>đi ngược từ đầu ra về đầu vào, chia phần trách nhiệm.</b> Đọc thành lời: "Kết quả đang thấp hơn đáp án 0,3. Nơ-ron này đi vào kết quả qua một cái núm 0,5 — nó nhích lên 1 thì kết quả nhích lên 0,5 — nên phần trách nhiệm của nó là 0,3 × 0,5 = 0,15. Núm của nơ-ron này đang nhân với số vào là 2 — núm nhích lên 1 thì nơ-ron nhích lên 2 (cái bẻ của nó đang ở phía dương nên để nguyên; nếu nó đang bị bẻ về 0 thì phần trách nhiệm là 0) — nên phần trách nhiệm của núm là 0,15 × 2 = 0,3." Núm nào gánh phần lớn thì được vặn nhiều, đúng như ở <a href="#s-descent">chương 3</a>: dốc hơn thì bước dài hơn. Rồi lùi tiếp một lớp, làm y như vậy.</p>
 
         <p>Mẹo duy nhất khiến nó chạy nhanh: <b>không tính lại thứ đã tính.</b> Phần trách nhiệm của lớp 5 dùng được cho cả lớp 4, lớp 3, lớp 2 — cứ mang theo mà nhân tiếp. Nhờ vậy vặn một tỉ cái núm chỉ tốn khoảng hai lần chi phí của một lần đoán — trong khi nhích thử từng núm một rồi xem điểm trừ đổi ra sao thì tốn một tỉ lần đoán.</p>
 
@@ -1100,7 +1100,7 @@ footer a { color:var(--muted); }
 
         <h3>3 · Cho bước chân có quán tính</h3>
 
-        <p>Hướng nào đi mãi vẫn thấy đúng thì đi nhanh dần lên; hướng nào cứ đổi ý liên tục thì đi chậm lại. Cách làm: thay vì dùng độ nghiêng đo được ở đúng bước này, dùng <b>độ nghiêng trung bình của mấy chục bước gần đây</b> — nhiễu tự triệt tiêu, hướng thật còn lại.</p>
+        <p>Hướng nào đi mãi vẫn thấy đúng thì đi nhanh dần lên; hướng nào cứ đổi ý liên tục thì đi chậm lại. Cách làm: thay vì dùng độ nghiêng đo được ở đúng bước này, dùng <b>độ nghiêng trung bình của chừng mười bước gần đây</b> (với β = 0,9) — nhiễu tự triệt tiêu, hướng thật còn lại.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
@@ -1641,7 +1641,7 @@ footer a { color:var(--muted); }
 
         <p>Cách sửa đến qua hai bước. Bước đầu vẫn giữ RNN, chỉ bỏ cái nút thắt: mỗi lần viết một từ tiếng Anh, decoder được nhìn lại <b>mọi</b> từ tiếng Việt và tự chọn nhìn từ nào nhiều. Bước sau bỏ luôn việc đọc lần lượt: cho <b>mỗi từ tự hỏi</b>: "trong câu này, từ nào liên quan tới tôi?" Rồi nó lấy về thông tin từ đúng những từ đó, nhiều hay ít tuỳ mức liên quan. Trong câu "Con mèo không ăn con cá vì <b>nó</b> đã no", chữ "nó" phải nhìn về "mèo", không nhìn về "cá".</p>
 
-        <p>Cơ chế đúng ba bước, và đáng nhớ vì nó y như tra từ điển: mỗi từ phát ra một <b>câu hỏi</b>, một <b>nhãn</b> để người khác tìm thấy nó, và một <b>nội dung</b> để đưa ra. Đem câu hỏi của tôi nhân từng cặp rồi cộng với nhãn của từng từ — đúng phép của một nơ-ron ở <a href="#s-nn">chương 6</a>, hai dãy số càng cùng hướng thì kết quả càng lớn — ra điểm liên quan; bóp qua softmax → ra phần trăm cộng lại 100%; lấy nội dung của mọi từ trộn theo phần trăm ấy. <b>Attention chỉ là một phép tra cứu mềm</b> — mềm vì thay vì lấy đúng một mục, nó lấy một chút của mọi mục.</p>
+        <p>Cơ chế đúng ba bước, và đáng nhớ vì nó y như tra từ điển: mỗi từ phát ra một <b>câu hỏi</b>, một <b>nhãn</b> để người khác tìm thấy nó, và một <b>nội dung</b> để đưa ra. Đem câu hỏi của tôi nhân từng cặp rồi cộng với nhãn của từng từ — đúng phép của một nơ-ron ở <a href="#s-nn">chương 6</a>, hai dãy số càng cùng hướng thì kết quả càng lớn — ra điểm liên quan, rồi chia cho căn của độ dài dãy số để softmax khỏi bị đẩy ra bãi phẳng; bóp qua softmax → ra phần trăm cộng lại 100%; lấy nội dung của mọi từ trộn theo phần trăm ấy. <b>Attention chỉ là một phép tra cứu mềm</b> — mềm vì thay vì lấy đúng một mục, nó lấy một chút của mọi mục.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
@@ -1692,7 +1692,7 @@ footer a { color:var(--muted); }
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v">việc chia nhóm là <span class="nm">clustering</span> — phân cụm; thuật toán này là <span class="nm">k-means</span>, và chữ k là số nhóm mà <b>bạn</b> phải chọn. Cái điểm giữa mỗi nhóm là <span class="nm">centroid</span> — tâm cụm. Điểm trừ của nó — <b>tổng bình phương</b> khoảng cách từ mỗi điểm tới tâm của mình — có tên riêng: <span class="nm">distortion</span> — độ méo. Chữ “bình phương” không phải bắt bẻ; đoạn dưới cho thấy bỏ nó đi thì mất luôn lý do thuật toán dừng.</span>
+          <span class="v">việc chia nhóm là <span class="nm">clustering</span> — phân cụm; thuật toán này là <span class="nm">k-means</span>, và chữ k là số nhóm mà <b>bạn</b> phải chọn. Cái điểm giữa mỗi nhóm là <span class="nm">centroid</span> — tâm cụm. Điểm trừ của nó — <b>trung bình bình phương</b> khoảng cách từ mỗi điểm tới tâm của mình — có tên riêng: <span class="nm">distortion</span> — độ méo (scikit-learn dùng tổng thay cho trung bình và gọi là inertia; mô hình dưới in tổng). Chữ “bình phương” không phải bắt bẻ; đoạn dưới cho thấy bỏ nó đi thì mất luôn lý do thuật toán dừng.</span>
         </div>
 
         <p>Hai điều đáng nhớ về nó:</p>
@@ -1820,7 +1820,7 @@ footer a { color:var(--muted); }
 
         <h3>Khi chỗ đứng không đếm được nữa</h3>
 
-        <p>Với sáu chỗ đứng thì Q là một cái bảng. Với một chiếc trực thăng — độ cao, tốc độ, ba góc nghiêng, đều là số thực — thì có <b>vô hạn</b> chỗ đứng, không kẻ bảng nào được. Nên thay cái bảng bằng <b>một mạng nơ-ron</b>: đưa vào (chỗ đứng, hành động), trả ra một con số Q. Tên thật: <span class="nm">DQN</span> — deep Q-network.</p>
+        <p>Với sáu chỗ đứng thì Q là một cái bảng. Với một chiếc trực thăng — độ cao, tốc độ, ba góc nghiêng, đều là số thực — thì có <b>vô hạn</b> chỗ đứng, không kẻ bảng nào được. Nên thay cái bảng bằng <b>một mạng nơ-ron</b>: đưa vào (chỗ đứng, hành động), trả ra một con số Q. Bản hay dùng hơn chỉ nhận chỗ đứng và trả ra cùng lúc một Q cho mỗi hành động — chạy một lần là chọn được nước đi. Tên thật: <span class="nm">DQN</span> — deep Q-network.</p>
 
         <p>Ba mảnh ghép nữa mới chạy được — một mảnh để máy chịu thử nước mới, hai mảnh để việc chạy theo cái đích tự di chuyển bớt chao đảo:</p>
 
@@ -1879,7 +1879,7 @@ footer a { color:var(--muted); }
               <tr><td>bộ vặn núm — <span class="nm">optimizer</span></td><td><span class="nm">Adam</span></td><td>β₁ = 0,9 · β₂ = 0,999 · ε = 10⁻⁸ (ε này chỉ để khỏi chia cho 0, không phải ε làm bừa ở dòng cuối bảng). Gần như không ai đổi ba số này.</td></tr>
               <tr><td>mỗi lần xem bao nhiêu bài — <span class="nm">mini-batch</span></td><td>32–512</td><td>Luỹ thừa của 2; giới hạn thật là RAM. Dưới ~2.000 bài thì bỏ hẳn, chạy cả tập một lượt.</td></tr>
               <tr><td>hàm kích hoạt lớp giữa</td><td><span class="nm">ReLU</span></td><td>Không phân vân thì chọn cái này.</td></tr>
-              <tr><td>đặt núm ban đầu</td><td><span class="nm">He initialization</span> với ReLU</td><td>Mặc định của thư viện đã đúng. Chỉ cần đừng đặt tất cả bằng 0.</td></tr>
+              <tr><td>đặt núm ban đầu</td><td><span class="nm">He initialization</span> với ReLU</td><td>Mặc định của thư viện thường không phải He (Keras: Xavier; PyTorch: rải đều trong ±1/√(số đầu vào)), nên với mạng ReLU sâu thì đặt rõ: <code>he_normal</code> hay <code>kaiming_normal_</code>. Đừng bao giờ đặt tất cả bằng 0.</td></tr>
               <tr><td>phạt núm to λ — <span class="nm">L2 regularization</span></td><td>0, rồi tăng nếu đang thuộc lòng</td><td>Dò 0,01 → 0,1 → 1 → 10.</td></tr>
               <tr><td><span class="nm">dropout</span></td><td>0,2–0,5 ở lớp dày</td><td>Chỉ bật khi thật sự đang thuộc lòng. Đang <span class="nm">bias</span> mà bật là làm nặng thêm.</td></tr>
               <tr><td>bề rộng chùm — <span class="nm">beam width</span></td><td>3–10</td><td>Lợi ích giảm rất nhanh sau 10.</td></tr>
@@ -1954,7 +1954,7 @@ footer a { color:var(--muted); }
         <div class="steps">
           <div class="step"><div class="n">1</div><div class="b"><p><b>Tỉ trọng.</b> Transformer chỉ chiếm tuần cuối của khoá cuối — DLS C5 ở <a href="#s-cheat">bảng 4</a> phía trên. Hôm nay nó là trung tâm của gần như mọi thứ. Khung "một bên đọc, một bên viết" cho dịch máy ở <a href="#s-text">chương 11</a> đã nhường chỗ cho loại máy chỉ có bên viết, chạy bằng đúng một việc: đoán từ kế tiếp. Tên thật: <span class="nm">decoder-only model</span>.</p></div></div>
           <div class="step"><div class="n">2</div><div class="b"><p><b>Quy mô đổi chất.</b> Khoá có dạy mượn mạng đã học bài khác, nhưng chuyện huấn luyện <i>một lần</i> ở cỡ cực lớn rồi cả thế giới dùng lại — bằng cách học tiếp một ít, hoặc chỉ bằng cách viết yêu cầu ra chữ — thì không có trong khoá. Tên thật: <span class="nm">foundation model</span>, và luật đằng sau nó là <span class="nm">scaling laws</span>.</p></div></div>
-          <div class="step"><div class="n">3</div><div class="b"><p><b>Thị giác.</b> Cắt tấm ảnh thành các ô rồi đối xử với chúng như một câu — <span class="nm">Vision Transformer</span> — và loại máy sinh ảnh bằng cách gỡ nhiễu dần từ một tấm nhiễu trắng — <span class="nm">diffusion model</span> — đều ra đời sau khoá học. Cả loại máy nối ảnh với chữ vào cùng một không gian vector cũng vậy.</p></div></div>
+          <div class="step"><div class="n">3</div><div class="b"><p><b>Thị giác.</b> Cắt tấm ảnh thành các ô rồi đối xử với chúng như một câu — <span class="nm">Vision Transformer</span> — và loại máy sinh ảnh bằng cách gỡ nhiễu dần từ một tấm nhiễu trắng — <span class="nm">diffusion model</span> — đều không có trong khoá: chúng nổi lên từ 2020, sau bản quay 2017–2018. Cả loại máy nối ảnh với chữ vào cùng một không gian vector cũng không có.</p></div></div>
           <div class="step"><div class="n">4</div><div class="b"><p><b>Cuốn sổ nhớ.</b> RNN và LSTM ở <a href="#s-text">chương 11</a> vẫn nên hiểu, vì chúng dạy ý tưởng cổng và trí nhớ rõ hơn bất cứ thứ gì. Nhưng hiếm khi còn là lựa chọn để bắt đầu một dự án về câu chữ.</p></div></div>
           <div class="step"><div class="n">5</div><div class="b"><p><b>Chỗ ngồi cố định của mỗi từ.</b> <span class="nm">word2vec</span> và <span class="nm">GloVe</span> gán cho mỗi từ đúng một vector, nên "con chuột" trong "bắt chuột" và trong "bấm chuột" ngồi cùng một chỗ. Cách làm bây giờ là vector đổi theo câu chứa nó: <span class="nm">contextual embedding</span>.</p></div></div>
           <div class="step"><div class="n">6</div><div class="b"><p><b>Công cụ.</b> Khoá dạy TensorFlow; phần lớn nghiên cứu hôm nay viết bằng PyTorch. Ý tưởng chuyển được nguyên vẹn, cú pháp thì không — và cú pháp là phần dễ học lại nhất.</p></div></div>
@@ -3705,7 +3705,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['sườn đồi hình cái bát', 'convex', 'chỉ một cái đáy, nên đứng đâu cũng về cùng chỗ'],
     ['đáy chỉ thấp trong vùng', 'local minimum', 'mạng nơ-ron có nhiều cái như vậy'],
     ['yên ngựa', 'saddle point', 'chỗ phẳng mà không phải đáy — và phổ biến hơn đáy hố'],
-    ['kéo về cùng cỡ', 'feature scaling', 'khe hẹp thành bát tròn; bước làm cho CHẠY'],
+    ['kéo về cùng cỡ', 'feature scaling', 'khe hẹp thành gần tròn; bước làm cho CHẠY'],
     ['trừ trung bình, chia độ lệch chuẩn', 'z-score normalization', 'cách kéo về cùng cỡ hay dùng nhất'],
 
     /* ── Chương 4 · đoán loại ────────────────────────────────────────────── */
@@ -3770,7 +3770,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['32 ví dụ một lần', 'mini-batch', 'bước nhiều hơn, mỗi bước hơi lệch — mặc định nên chọn'],
     ['đúng 1 ví dụ một lần', 'stochastic gradient descent', 'zíc-zắc dữ, không tận dụng phép nhân bảng'],
     ['một lượt qua hết dữ liệu', 'epoch', '"10 epoch" = xem mỗi ví dụ mười lần'],
-    ['trung bình mấy chục bước gần đây', 'exponentially weighted average', 'nền tảng chung của momentum, RMSprop, Adam'],
+    ['trung bình các bước gần đây, bước mới nặng ký hơn', 'exponentially weighted average', 'nền tảng chung của momentum, RMSprop, Adam'],
     ['bước chân có quán tính', 'momentum', 'đi mãi vẫn đúng thì đi nhanh dần'],
     ['núm nào dốc quá thì bước ngắn', 'RMSprop', 'chia bước theo độ lớn gradient'],
     ['bộ vặn núm hay dùng nhất', 'Adam', 'gộp quán tính với việc tự chỉnh bước chân'],
@@ -3898,7 +3898,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['chia nhóm', 'clustering', 'câu hỏi đổi thành "trong đống này có cấu trúc gì"'],
     ['hai bước lặp lại', 'k-means', 'k là số nhóm mà BẠN chọn'],
     ['điểm giữa mỗi nhóm', 'centroid', 'dấu × trong mô hình 12'],
-    ['tổng bình phương khoảng cách tới tâm', 'distortion', 'điểm trừ của k-means; hai bước không bao giờ làm nó tăng, số cách chia lại hữu hạn, nên nó chắc chắn dừng'],
+    ['trung bình bình phương khoảng cách tới tâm', 'distortion', 'điểm trừ của k-means; hai bước không bao giờ làm nó tăng, số cách chia lại hữu hạn, nên nó chắc chắn dừng'],
     ['tìm chỗ đường gấp khúc', 'elbow method', 'Ng thẳng thắn: thường không có cái khuỷu nào rõ'],
     ['bắt cái khác thường', 'anomaly detection', 'học "bình thường", báo động khi lệch'],
     ['hình chuông', 'Gaussian distribution', 'khớp trung bình và độ lệch chuẩn cho từng con số'],
@@ -3933,11 +3933,11 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     /* ── Tra cứu · những tên ra đời sau tám khoá gốc ──────────────────────── */
     ['máy chỉ có bên viết, đoán từ kế tiếp', 'decoder-only model', 'thay khung một-bên-đọc-một-bên-viết ở chương 11'],
     ['cắt ảnh thành ô rồi coi như chuỗi từ', 'Vision Transformer', 'attention của chương 11, đem sang ảnh'],
-    ['sinh ảnh bằng cách gỡ nhiễu dần', 'diffusion model', 'ra đời sau khoá học'],
+    ['sinh ảnh bằng cách gỡ nhiễu dần', 'diffusion model', 'không có trong khoá; nổi lên từ 2020'],
     ['vector của một từ đổi theo câu chứa nó', 'contextual embedding', 'thay chỗ ngồi cố định của word2vec'],
     ['dạy máy theo phản hồi của người', 'RLHF', 'chương 13, với điểm thưởng do người chấm'],
     ['nuôi cái máy sau khi nó đã chạy', 'MLOps', 'triển khai, theo dõi trôi, học lại định kỳ'],
-    ['sửa dữ liệu thay vì sửa mô hình', 'data-centric AI', 'hướng Ng chuyển sang sau tám khoá']
+    ['sửa dữ liệu thay vì sửa mô hình', 'data-centric AI', 'hướng Ng đẩy mạnh từ 2021']
   ];
 
   function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
