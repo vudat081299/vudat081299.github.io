@@ -25,16 +25,12 @@
 
 ## NỢ
 
-- `experimentation-causal-inference.html`: popup thuật ngữ, ngăn mục lục, bản in từ theme tối và câu tự sinh của
-  sáu mô hình chỉ đo được trong trình duyệt (cổng chỉ ghim dòng điều kiện); đáng có smoke như `shop/tools/smoke.js`.
 - `machine-learning.html`: 608 thuật ngữ gạch chân là 608 điểm dừng Tab (hơn nửa số điểm dừng của trang).
-- `machine-learning-101.html`: chưa có smoke test trình duyệt (mẫu `tools/smoke-index.js`) giữ các bản sửa UI — thang m6 không
-  cắt nhãn, nhãn m11 không chồng, chữ nút m2/m5/m9 và Dừng của m9 không đi thêm bước, `aria-pressed` khớp `.on`, phím
-  mũi tên m7 kéo ô kết quả vào tầm nhìn ở 390px, bản in theme tối giống hệt bản in sáng.
-- `mathematics-for-machine-learning.html`: chưa có smoke test trình duyệt cho popup thuật ngữ mở bằng phím rồi cuộn,
-  `#m9-live` (chỉ đọc khi đổi trạng thái), ô Số bước quá 400 bước, và bản in (bốn bảng tra, `details` mở).
-- `machine-learning.html`: chưa có smoke trình duyệt. aria-live, tab bằng phím mũi tên, popup khi cuộn, bản in và câu
-  tự sinh của M6, M13 mới chỉ đo bằng playwright ngoài repo; cổng tĩnh chỉ dựng lại được M2, M5, M12.
+- Bốn trang ML / ML 101 / Toán / Causal chưa có smoke trình duyệt (mẫu `shop/tools/smoke.js`, CI chạy). Cổng tĩnh
+  không giữ được: popup thuật ngữ mở bằng phím rồi cuộn, ngăn mục lục (inert), aria-live chỉ đọc khi chữ đổi, tab
+  bằng phím mũi tên, bản in theme tối giống bản in sáng (đủ tab, `details` mở), nhãn SVG không chồng/cắt (m6, m8,
+  m11 của ML 101; M8 của ML), chữ nút chạy/Dừng, câu tự sinh của các mô hình chưa dựng lại được trong cổng
+  (ML: M6, M13; Causal: sáu mô hình có quét trạng thái).
 - `scooter-maintenance-guide.html`: mục checklist là `<label>` không có ô input — không dùng được bằng bàn
   phím, không báo trạng thái đã tích.
 - Sáu trang cho `.wb-navbar__brand` co bằng `flex: 0 1 auto`, điều `web-builder/CLAUDE.md` bảo đừng làm:
