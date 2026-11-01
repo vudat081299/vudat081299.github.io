@@ -544,7 +544,7 @@ def run_p1():
     same('p1 · simpson ô gộp', 'm-simpson-pool', jfmt(float(r1 - r0) * 100, 1))
     same('p1 · simpson câu mặc định', 'm-simpson-say',
          f'Nhận SMS: 800 khách cửa hàng nhỏ + 200 khách cửa hàng lớn → gộp {jfmt(float(r1) * 100, 1)}%. Không nhận: 200 + 800 → gộp {jfmt(float(r0) * 100, 1)}%. '
-         f'Chênh lệch gộp {jfmt(float(r1 - r0) * 100, 1)} điểm, trong khi trong từng cỡ vẫn là +5. Phép gộp đảo cả dấu: nhóm nhận SMS toàn khách cửa hàng nhỏ.')
+         f'Chênh lệch gộp {jfmt(float(r1 - r0) * 100, 1)} điểm, trong khi trong từng cỡ vẫn là +5. Phép gộp đảo cả dấu: nhóm nhận SMS nghiêng hẳn về khách cửa hàng nhỏ.')
     for s in ('gộp ra −13 điểm', 'thì gộp ra đúng +5', 'gộp ra +23', '5 + 30 × (0,2 − 0,8) = −13'):
         needs(f'p1 · simpson "{s}"', 's-traps3', s)
     claim('p1 · simpson HTML mở ở nhỏ 80%, lớn 20%', 'id="m-simpson-s" min="5" max="95" step="5" value="80"' in HTML and 'id="m-simpson-l" min="5" max="95" step="5" value="20"' in HTML)
@@ -3041,6 +3041,9 @@ def run_ref():
        nhãn do JS sinh thì không (việc ấy của smoke trong trình duyệt).
     4. Số mô hình ở đầu trang = số khối .lab thật; không sót {{ hay @@ của bộ ráp.
     Cộng: vài con số phần tra cứu nhắc lại phải còn đúng ở mục gốc của nó.
+    Cộng: bảng chọn cách làm chia hai phần, phần chọn thiết kế theo thứ tự sơ đồ 0.2; định nghĩa
+    p-value có vế "hoặc lớn hơn"; ô D không chồng trường hợp gương; câu "hay mua nhất" của m-uplift
+    và phép đổi kiểu MDE của m-power.
     """
     import re as _re
 
@@ -3151,6 +3154,37 @@ def run_ref():
     claim('ref · bảng chọn cách làm có 13 dòng', rows_choose == 13, f'thấy {rows_choose}')
     rows_mis = len(_re.findall(r'<tr><td>', secs.get('s-mistakes', '')))
     claim('ref · bảng nhầm lẫn có 20 dòng', rows_mis == 20, f'thấy {rows_mis}')
+
+    # bảng chọn cách làm: phần "chọn thiết kế" theo đúng thứ tự sơ đồ 0.2 — tung đồng xu, rồi thí
+    # nghiệm tự nhiên (chặng 5), cuối cùng mới điều chỉnh theo biến đã đo (chặng 4); phần "bổ sung"
+    # áp dụng mọi dòng khớp, nên không được nằm chung phần với lời dặn "dừng ở dòng đầu tiên khớp"
+    tbs = _re.findall(r'<tbody>(.*?)</tbody>', secs.get('s-choose', ''), _re.S)
+    claim('ref · bảng chọn cách làm có hai phần: chọn thiết kế, bổ sung', len(tbs) == 2
+          and 'dừng ở dòng đầu tiên khớp' in tbs[0] and 'áp dụng mọi dòng khớp' in tbs[1], f'thấy {len(tbs)} tbody')
+    if len(tbs) == 2:
+        order = _re.findall(r'<tr><td>.*?<a href="#(s-[a-z-]+)"', tbs[0])
+        claim('ref · chọn thiết kế theo thứ tự sơ đồ 0.2', order == ['s-random', 's-did', 's-synth', 's-rdd', 's-iv', 's-adjust'], f'thấy {order}')
+        addon = set(_re.findall(r'<tr><td>.*?<a href="#(s-[a-z-]+)"', tbs[1]))
+        claim('ref · phần bổ sung đủ các dòng', addon == {'s-cuped', 's-peek', 's-multi', 's-interfere', 's-units', 's-uplift', 's-dml'}, f'thấy {sorted(addon)}')
+    # sơ đồ 0.2: "có sự kiện tình cờ" → chặng 5; "không" → chặng 4
+    claim('ref · sơ đồ 0.2 hỏi thí nghiệm tự nhiên trước điều chỉnh',
+          'Không có thì đi chặng 4, có thì đi chặng 5' in HTML)
+
+    # p-value: xác suất thấy chênh lệch cỡ này HOẶC LỚN HƠN dưới H0, không phải "dữ liệu này hiếm"
+    need('ref · p-value có vế "hoặc lớn hơn" (2.2)', 'hiếm khi thấy một chênh lệch lớn cỡ này hoặc lớn hơn')
+    need('ref · p-value có vế "hoặc lớn hơn" (2.6)', 'một chênh lệch cỡ này hoặc lớn hơn hiếm gặp')
+    claim('ref · không còn "dữ liệu (như thế) này hiếm gặp"', 'dữ liệu như thế này hiếm gặp' not in HTML and 'dữ liệu này hiếm gặp' not in HTML)
+    # bảng quyết định 2.5: ô D không chồng lên trường hợp gương (đầu trên < 0)
+    need('ref · ô D chỉ từ 0 tới dưới MDE', 'đầu dưới ≤ 0, đầu trên từ 0 tới dưới MDE')
+    # SRM: 1.000 xô, bản cũ thiếu một xô → 499 / 999
+    need('ref · SRM thiếu một xô', f'500/500 xô thành 499/500 ({vi(499 / 999 * 100, 2)}% / {vi(500 / 999 * 100, 2)}%)', 499 / 999)
+    # m-uplift: câu "khách hay mua nhất" chỉ nhắc nhóm đang có người
+    for frag in ("R.cnt[1] > 0 && R.cnt[3] > 0 ?", "ở tỉ trọng này không có chó ngủ.", "ở tỉ trọng này không có ai đằng nào cũng mua."):
+        claim(f'ref · uplift JS: {frag}', frag in HTML, 'câu "hay mua nhất" lại nhắc nhóm rỗng')
+    # m-power: đổi kiểu MDE giữ nguyên tác động; ngày/tuần phân nhóm nghìn
+    for frag in ("pin = Math.abs(+sl.value - ex) < 1e-9 ? null : ex;", "fmt(plan.days, 0) + ' ngày → chạy ' + fmt(plan.weeks, 0)",
+                 "fmt(plan.weeks * 7, 0) + ' ngày)", 'id="m-power-mder" min="1" max="100"'):
+        claim(f'ref · power JS: {frag}', frag in HTML)
 
 
 def main():

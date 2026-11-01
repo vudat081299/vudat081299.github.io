@@ -296,6 +296,8 @@ th { font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-trans
 tbody tr:last-child td { border-bottom:0; }
 td code { font-size:12px; }
 td b { font-weight:660; }
+tbody + tbody { border-top:1px solid var(--border); }
+tr.grp th { white-space:normal; color:var(--ink); }
 
 /* ── lưới thẻ ────────────────────────────────────────────────────────────── */
 .grid2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:16px 0; }
@@ -1106,7 +1108,7 @@ ol.steps > li::before { content:counter(st); position:absolute; left:0; top:1px;
               <div class="read"><div class="k">Trong cửa hàng nhỏ</div><div class="v">+5,0<span class="u">điểm</span></div></div>
               <div class="read good"><div class="k">Chuẩn hoá 1.000 + 1.000</div><div class="v">+5,0<span class="u">điểm</span></div></div>
             </div>
-            <p class="lab__f" id="m-simpson-say">Nhận SMS: 800 khách cửa hàng nhỏ + 200 khách cửa hàng lớn → gộp 21,0%. Không nhận: 200 + 800 → gộp 34,0%. Chênh lệch gộp −13,0 điểm, trong khi trong từng cỡ vẫn là +5. Phép gộp đảo cả dấu: nhóm nhận SMS toàn khách cửa hàng nhỏ.</p>
+            <p class="lab__f" id="m-simpson-say">Nhận SMS: 800 khách cửa hàng nhỏ + 200 khách cửa hàng lớn → gộp 21,0%. Không nhận: 200 + 800 → gộp 34,0%. Chênh lệch gộp −13,0 điểm, trong khi trong từng cỡ vẫn là +5. Phép gộp đảo cả dấu: nhóm nhận SMS nghiêng hẳn về khách cửa hàng nhỏ.</p>
             <p class="lab__f"><b>Vì sao đúng như vậy, bằng một dòng tính tay:</b> tỉ lệ gộp của một nhóm là trung bình của hai cỡ, cân theo số khách. Trừ hai nhóm cho nhau thì ra <b>chênh lệch gộp = 5 + 30 × (tỉ phần khách cửa hàng lớn trong nhóm nhận − trong nhóm không nhận)</b>, với 5 là tác động thật trong từng cỡ và 30 là khoảng cách vốn có giữa cửa hàng lớn và nhỏ (40% so với 10%). Mặc định: 5 + 30 × (0,2 − 0,8) = −13. Số hạng thứ hai là thiên lệch chọn của mục 1.2, viết cho bảng này; nó bằng 0 đúng khi hai nhóm có cùng thành phần.</p>
           </div>
         </div>
@@ -1285,7 +1287,7 @@ for col in ['chi_truoc', 'khoang_cach']:
         </div>
 
         <h3>Có ý nghĩa thống kê chưa phải là đáng làm</h3>
-        <p>p nhỏ nói: <b>nếu</b> tác động bằng 0 thì dữ liệu như thế này hiếm gặp. Nó không nói tác động <b>đủ lớn</b>. Với 10 triệu khách mỗi nhóm, chênh 0,05 điểm phần trăm vẫn cho p rất nhỏ (trang Toán, <a href="mathematics-for-machine-learning.html#s-traps">mục 4.8</a>, cái bẫy thứ ba). Câu “có đáng làm không” cần một con số bạn đặt <b>trước</b> — tác động nhỏ nhất đáng làm, MDE (mục <a href="#s-power">2.3</a>) — và một bảng quyết định so khoảng tin cậy với cả 0 lẫn MDE (mục <a href="#s-oec">2.5</a>). Trang Toán cũng đã có mô hình lấy mẫu 100 lần để thấy tận mắt “95% số khoảng chứa giá trị thật” nghĩa là gì; trang này không làm lại.</p>
+        <p>p nhỏ nói: <b>nếu</b> tác động bằng 0 thì hiếm khi thấy một chênh lệch lớn cỡ này hoặc lớn hơn. Nó không nói tác động <b>đủ lớn</b>. Với 10 triệu khách mỗi nhóm, chênh 0,05 điểm phần trăm vẫn cho p rất nhỏ (trang Toán, <a href="mathematics-for-machine-learning.html#s-traps">mục 4.8</a>, cái bẫy thứ ba). Câu “có đáng làm không” cần một con số bạn đặt <b>trước</b> — tác động nhỏ nhất đáng làm, MDE (mục <a href="#s-power">2.3</a>) — và một bảng quyết định so khoảng tin cậy với cả 0 lẫn MDE (mục <a href="#s-oec">2.5</a>). Trang Toán cũng đã có mô hình lấy mẫu 100 lần để thấy tận mắt “95% số khoảng chứa giá trị thật” nghĩa là gì; trang này không làm lại.</p>
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Đời thường</div><div class="v">Câu nói với sếp: “SMS tăng tỉ lệ quay lại khoảng 3 điểm — ít thì 0,7, nhiều thì 5,3. Tính theo tỉ lệ là +20%, trong khoảng từ 4% tới 38%.”</div></div>
@@ -1355,7 +1357,7 @@ print(f'lift {x1/n1 / (x0/n0) - 1:.3f}, KTC [{rlo-1:.3f}; {rhi-1:.3f}]')
             <div class="row"><label for="m-power-p0">Tỉ lệ nền</label><div class="inline"><input type="range" id="m-power-p0" min="1" max="50" step="0.5" value="10"><span class="val" id="m-power-p0v">10,0%</span></div></div>
             <div class="row"><span class="k">Kiểu MDE</span><div class="chips" id="m-power-mode"><span class="chip on" data-v="abs">tuyệt đối · điểm %</span><span class="chip" data-v="rel">tương đối · % của nền</span></div></div>
             <div class="row" id="m-power-arow"><label for="m-power-mdea">MDE tuyệt đối</label><div class="inline"><input type="range" id="m-power-mdea" min="0.1" max="5" step="0.1" value="1"><span class="val" id="m-power-mdeav">1,0 điểm</span></div></div>
-            <div class="row" id="m-power-rrow" style="display:none"><label for="m-power-mder">MDE tương đối</label><div class="inline"><input type="range" id="m-power-mder" min="1" max="50" step="1" value="10"><span class="val" id="m-power-mderv">10%</span></div></div>
+            <div class="row" id="m-power-rrow" style="display:none"><label for="m-power-mder">MDE tương đối</label><div class="inline"><input type="range" id="m-power-mder" min="1" max="100" step="1" value="10"><span class="val" id="m-power-mderv">10%</span></div></div>
             <div class="row"><span class="k">Mức ý nghĩa</span><div class="chips" id="m-power-alpha"><span class="chip" data-v="0.01">1%</span><span class="chip on" data-v="0.05">5%</span><span class="chip" data-v="0.10">10%</span></div></div>
             <div class="row"><span class="k">Độ mạnh</span><div class="chips" id="m-power-pw"><span class="chip on" data-v="0.8">80%</span><span class="chip" data-v="0.9">90%</span></div></div>
             <div class="row"><label for="m-power-v">Khách mới / ngày</label><div class="inline"><input type="range" id="m-power-v" min="100" max="20000" step="100" value="2500"><span class="val" id="m-power-vv">2.500</span></div></div>
@@ -1620,7 +1622,7 @@ print(f'TB {m[0]:.2f} và {m[1]:.2f}; độ vung {s[0]:.2f} và {s[1]:.2f}')
               <tr><td><b>A</b></td><td>đầu dưới ≥ MDE — ví dụ [1,2; 2,6]</td><td>tác động có thật và đủ lớn</td><td>triển khai, nếu thước đo bảo vệ ổn</td></tr>
               <tr><td><b>B</b></td><td>đầu dưới trên 0 nhưng dưới MDE — ví dụ [0,3; 1,6]</td><td>có tác động, chưa chắc đủ lớn</td><td>quyết theo chi phí: rẻ thì làm, tốn thì cân nhắc; nếu cả khoảng dưới MDE thì thường là không</td></tr>
               <tr><td><b>C</b></td><td>đầu dưới ≤ 0, đầu trên ≥ MDE: chứa cả 0 lẫn MDE — ví dụ [−0,4; 1,8]</td><td>chưa biết gì: thí nghiệm quá yếu</td><td>đừng kết luận “không có tác động”; thêm khách hoặc bớt nhiễu (mục 2.4), với một kế hoạch mới</td></tr>
-              <tr><td><b>D</b></td><td>đầu dưới ≤ 0, đầu trên dưới MDE — ví dụ [−0,3; 0,5]</td><td>nếu có tác động thì cũng nhỏ hơn mức đáng làm</td><td>dừng; đây là “không đáng làm” có bằng chứng</td></tr>
+              <tr><td><b>D</b></td><td>đầu dưới ≤ 0, đầu trên từ 0 tới dưới MDE — ví dụ [−0,3; 0,5]</td><td>nếu có tác động thì cũng nhỏ hơn mức đáng làm</td><td>dừng; đây là “không đáng làm” có bằng chứng</td></tr>
             </tbody>
           </table>
         </div>
@@ -1719,7 +1721,7 @@ print(f'lỗi: chênh {eT/nT - eC/nC:.4f}, KTC [{glo:.4f}; {ghi:.4f}]')
           <p class="box__k">Hiểu nhầm hay gặp</p>
           <div class="row">
             <div class="k">Nghe thấy</div><div>“p = 0,0033, vậy chắc chắn màn hình mới tăng tỉ lệ mua thêm 0,96 điểm.”</div>
-            <div class="k">Thật ra</div><div>p nhỏ chỉ nói dữ liệu này hiếm gặp nếu màn hình mới chẳng làm gì; con số 0,96 là điểm giữa của một khoảng rộng từ 0,32 tới 1,60. Báo cáo khoảng, và nói rõ đầu dưới của nó nằm dưới MDE — người ra quyết định cần biết điều đó.</div>
+            <div class="k">Thật ra</div><div>p nhỏ chỉ nói một chênh lệch cỡ này hoặc lớn hơn hiếm gặp nếu màn hình mới chẳng làm gì; con số 0,96 là điểm giữa của một khoảng rộng từ 0,32 tới 1,60. Báo cáo khoảng, và nói rõ đầu dưới của nó nằm dưới MDE — người ra quyết định cần biết điều đó.</div>
           </div>
         </div>
 
@@ -2009,7 +2011,7 @@ for cach in ('bonferroni', 'holm', 'fdr_bh'):
           <table>
             <thead><tr><th>Giai đoạn</th><th>Thí dụ trong chuỗi cửa hàng</th></tr></thead>
             <tbody>
-              <tr><td><b>Gán nhóm</b></td><td>Hàm băm chia khách vào 1.000 xô, bản cũ bị thiếu một xô nên 50/50 thành 49,9/50; mã khách không ổn định — khách đổi số điện thoại là sang nhóm khác.</td></tr>
+              <tr><td><b>Gán nhóm</b></td><td>Hàm băm chia khách vào 1.000 xô, bản cũ bị thiếu một xô nên 500/500 xô thành 499/500 (49,95% / 50,05%); mã khách không ổn định — khách đổi số điện thoại là sang nhóm khác.</td></tr>
               <tr><td><b>Thực thi</b></td><td>Bản mới chậm hoặc treo trên máy bán hàng đời cũ, khách bỏ đi trước khi nhật ký kịp ghi; chỉ bản mới có một bước chuyển trang; hai bản được bật lệch giờ nhau.</td></tr>
               <tr><td><b>Xử lý nhật ký</b></td><td>Bộ lọc &ldquo;giao dịch bất thường&rdquo; hay bộ lọc bot dựa trên hành vi <b>sau</b> khi khách thấy màn hình mới; ghép bảng sai làm rơi dòng.</td></tr>
               <tr><td><b>Phân tích</b></td><td>Chỉ phân tích &ldquo;khách tới được bước thanh toán&rdquo;, trong khi chính bản mới đổi ai tới được bước ấy.</td></tr>
@@ -3717,23 +3719,27 @@ print(f'DML      : {theta:.2f} (SE {se:.2f})')
         <p class="sechead">Tra cứu · <b>Chọn cách làm</b></p>
         <h2 class="st">Bạn đang có gì trong tay thì dùng cách nào</h2>
 
-        <p class="lede">Đọc từ trên xuống, dừng ở <b>dòng đầu tiên khớp với tình huống của bạn</b>. Thứ tự ấy có chủ ý: dòng trên mua được kết luận bằng giả định rẻ hơn dòng dưới. Bản đồ dạng sơ đồ nằm ở <a href="#s-ban-do">mục 0.2</a>.</p>
+        <p class="lede">Bảng có hai phần. Phần đầu chọn thiết kế: đọc từ trên xuống, dừng ở <b>dòng đầu tiên khớp với tình huống của bạn</b>. Thứ tự ấy có chủ ý, và là thứ tự của sơ đồ ở <a href="#s-ban-do">mục 0.2</a>: tung được đồng xu thì làm thí nghiệm; không được thì tìm một thí nghiệm tự nhiên; không có mới điều chỉnh theo biến đã đo — dòng trên mua được kết luận bằng giả định rẻ hơn dòng dưới. Phần sau <b>bổ sung</b> cho thiết kế đã chọn: áp dụng mọi dòng khớp.</p>
 
         <div class="tw">
           <table>
             <thead><tr><th>Bạn đang có</th><th>Cách làm</th><th>Ước lượng được</th><th>Giả định chủ chốt</th><th>Kiểm gián tiếp</th><th>Trong Python</th></tr></thead>
             <tbody>
+              <tr class="grp"><th colspan="6" scope="rowgroup">Chọn thiết kế · dừng ở dòng đầu tiên khớp</th></tr>
               <tr><td>Được chia ngẫu nhiên từng khách</td><td><a href="#s-random">A/B test</a> (2.1–2.6)</td><td>ATE trên người vào thí nghiệm</td><td>Đồng xu thật sự quyết định; không lây; một phiên bản can thiệp</td><td>Tỉ lệ chia (SRM), A/A test, SMD của biến trước thí nghiệm</td><td><code>proportions_ztest</code>, <code>confint_proportions_2indep</code></td></tr>
-              <tr><td>…và có số liệu của chính những người ấy từ trước thí nghiệm</td><td><a href="#s-cuped">CUPED</a> / hồi quy có biến trước (2.4)</td><td>Như trên, với ít người hơn</td><td>Biến X đo <b>trước</b> can thiệp</td><td>X cân bằng giữa hai nhóm</td><td><code>smf.ols('y ~ t + x_truoc')</code></td></tr>
-              <tr><td>Cần xem kết quả giữa chừng</td><td><a href="#s-peek">Ngưỡng tuần tự</a>, p-value luôn hợp lệ (3.1)</td><td>Quyết định dừng sớm</td><td>Số lần nhìn / hàm chi α định trước</td><td>Mô phỏng A/A với đúng quy trình nhìn</td><td>Tự tính ngưỡng như mục 3.1</td></tr>
-              <tr><td>Nhiều thước đo, nhiều phân khúc</td><td><a href="#s-multi">Holm, Benjamini–Hochberg</a> (3.2)</td><td>Cái nào là thật</td><td>BH: các p độc lập hoặc phụ thuộc dương</td><td>—</td><td><code>multipletests(p, method='holm')</code> / <code>'fdr_bh'</code></td></tr>
-              <tr><td>Khách hay cửa hàng ảnh hưởng lẫn nhau</td><td><a href="#s-interfere">Chia theo cụm</a> (3.4)</td><td>Tác động khi có lây</td><td>Lây dừng ở biên cụm; đủ số cụm</td><td>A/A theo cụm</td><td><code>.fit(cov_type='cluster', …)</code></td></tr>
-              <tr><td>Đo theo đơn hàng nhưng chia theo khách</td><td><a href="#s-units">Phương pháp delta</a>, bootstrap theo khách (3.5)</td><td>Sai số chuẩn đúng của thước đo tỉ số</td><td>Nhiều khách; mẫu số không sát 0</td><td>So với bootstrap theo khách</td><td>numpy, như mục 3.5</td></tr>
-              <tr><td>Không chia ngẫu nhiên, nhưng đo được mọi biến gây nhiễu</td><td><a href="#s-adjust">Hồi quy</a>, <a href="#s-match">ghép cặp</a>, <a href="#s-ipw">IPW, AIPW</a> (4.2–4.4)</td><td>ATE hoặc ATT</td><td>Không còn biến gây nhiễu chưa đo; chồng lấn</td><td>SMD sau điều chỉnh, histogram e(x), cỡ mẫu hiệu dụng, <a href="#s-sense">E-value</a></td><td><code>smf.ols</code>, <code>LogisticRegression</code>, numpy</td></tr>
               <tr><td>Một nhóm áp dụng từ một thời điểm, nhóm khác chưa</td><td><a href="#s-did">DiD</a> (5.1)</td><td>ATT</td><td>Xu hướng song song; không ai đoán trước để đổi hành vi</td><td>Các kỳ trước ≈ 0 (event study); mốc giả</td><td><code>smf.ols('y ~ A:sau + C(don_vi) + C(thang)')</code>, SE theo cụm</td></tr>
               <tr><td>Chỉ một (vài) đơn vị lớn được áp dụng</td><td><a href="#s-synth">Đối chứng tổng hợp</a> (5.2)</td><td>Tác động trên đơn vị ấy</td><td>Khớp giai đoạn trước dài thì khớp tiếp nếu không can thiệp; kho hiến không bị lây</td><td>RMSPE trước nhỏ; placebo trong không gian</td><td><code>scipy.optimize.minimize(method='SLSQP')</code></td></tr>
               <tr><td>Can thiệp quyết định bởi một ngưỡng</td><td><a href="#s-rdd">RDD</a> (5.3)</td><td>Tác động tại vạch</td><td>Kết quả tiềm năng liên tục tại vạch; không ai tự đẩy mình qua vạch</td><td>Mật độ tại vạch; biến nền không nhảy; vài cửa sổ h</td><td><code>smf.wls</code> trong cửa sổ; gói <code>rdrobust</code></td></tr>
               <tr><td>Một cú hích ngẫu nhiên đẩy người ta dùng</td><td><a href="#s-iv">Biến công cụ</a> (5.4)</td><td>LATE của người tuân thủ</td><td>Liên quan, độc lập, loại trừ, đơn điệu</td><td>Bước một đủ mạnh; biến nền cân bằng theo cú hích</td><td>Wald = ITT<sub>Y</sub> / ITT<sub>D</sub>; <code>IV2SLS</code></td></tr>
+              <tr><td>Không chia ngẫu nhiên, nhưng đo được mọi biến gây nhiễu</td><td><a href="#s-adjust">Hồi quy</a>, <a href="#s-match">ghép cặp</a>, <a href="#s-ipw">IPW, AIPW</a> (4.2–4.4)</td><td>ATE hoặc ATT</td><td>Không còn biến gây nhiễu chưa đo; chồng lấn</td><td>SMD sau điều chỉnh, histogram e(x), cỡ mẫu hiệu dụng, <a href="#s-sense">E-value</a></td><td><code>smf.ols</code>, <code>LogisticRegression</code>, numpy</td></tr>
+            </tbody>
+            <tbody>
+              <tr class="grp"><th colspan="6" scope="rowgroup">Bổ sung cho thiết kế đã chọn · áp dụng mọi dòng khớp</th></tr>
+              <tr><td>Có số liệu từ trước thí nghiệm của chính những người tham gia</td><td><a href="#s-cuped">CUPED</a> / hồi quy có biến trước (2.4)</td><td>Như trên, với ít người hơn</td><td>Biến X đo <b>trước</b> can thiệp</td><td>X cân bằng giữa hai nhóm</td><td><code>smf.ols('y ~ t + x_truoc')</code></td></tr>
+              <tr><td>Cần xem kết quả giữa chừng</td><td><a href="#s-peek">Ngưỡng tuần tự</a>, p-value luôn hợp lệ (3.1)</td><td>Quyết định dừng sớm</td><td>Số lần nhìn / hàm chi α định trước</td><td>Mô phỏng A/A với đúng quy trình nhìn</td><td>Tự tính ngưỡng như mục 3.1</td></tr>
+              <tr><td>Nhiều thước đo, nhiều phân khúc</td><td><a href="#s-multi">Holm, Benjamini–Hochberg</a> (3.2)</td><td>Cái nào là thật</td><td>BH: các p độc lập hoặc phụ thuộc dương</td><td>—</td><td><code>multipletests(p, method='holm')</code> / <code>'fdr_bh'</code></td></tr>
+              <tr><td>Khách hay cửa hàng ảnh hưởng lẫn nhau</td><td><a href="#s-interfere">Chia theo cụm</a> (3.4)</td><td>Tác động khi có lây</td><td>Lây dừng ở biên cụm; đủ số cụm</td><td>A/A theo cụm</td><td><code>.fit(cov_type='cluster', …)</code></td></tr>
+              <tr><td>Đo theo đơn hàng nhưng chia theo khách</td><td><a href="#s-units">Phương pháp delta</a>, bootstrap theo khách (3.5)</td><td>Sai số chuẩn đúng của thước đo tỉ số</td><td>Nhiều khách; mẫu số không sát 0</td><td>So với bootstrap theo khách</td><td>numpy, như mục 3.5</td></tr>
               <tr><td>Muốn biết nên nhắn cho ai</td><td><a href="#s-uplift">Uplift</a>, <a href="#s-learners">meta-learner</a> (6.2–6.3)</td><td>CATE theo đặc điểm khách</td><td>Dữ liệu ngẫu nhiên hoá (hoặc không còn biến gây nhiễu chưa đo)</td><td>Đường uplift / Qini trên tập giữ lại</td><td>Hai <code>GradientBoostingClassifier</code> (T-learner)</td></tr>
               <tr><td>Nhiều biến gây nhiễu tác động phi tuyến</td><td><a href="#s-dml">Double ML</a> (6.4)</td><td>Một tác động θ</td><td>Không còn biến gây nhiễu chưa đo ngoài X</td><td>Sai số ngoài mẫu của hai mô hình phụ</td><td><code>cross_val_predict</code> + hồi quy phần dư; EconML <code>LinearDML</code></td></tr>
             </tbody>
@@ -4533,7 +4539,7 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
         '%. Không nhận: ' + fmt(P.nS0, 0) + ' + ' + fmt(P.nL0, 0) + ' → gộp ' + fmt(P.r0 * 100, 1) + '%. Chênh lệch gộp ' + sgn(P.d * 100) +
         ' điểm, trong khi trong từng cỡ vẫn là +5.';
       if (Math.abs(P.w1 - P.w0) < 1e-12) say += ' Hai cỡ cửa hàng nhắn cùng một tỉ lệ, nên hai nhóm có cùng thành phần và phép gộp nói đúng.';
-      else if (P.d < 0) say += ' Phép gộp đảo cả dấu: nhóm nhận SMS toàn khách cửa hàng nhỏ.';
+      else if (P.d < 0) say += ' Phép gộp đảo cả dấu: nhóm nhận SMS nghiêng hẳn về khách cửa hàng nhỏ.';
       else if (P.w1 < P.w0) say += ' Phép gộp thu nhỏ tác động: nhóm nhận SMS nghiêng về khách cửa hàng nhỏ.';
       else say += ' Phép gộp thổi phồng tác động: nhóm nhận SMS nghiêng về khách cửa hàng lớn.';
       $('m-simpson-say').textContent = say;
@@ -4681,22 +4687,26 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
     }
     /* ── hết phần tính thuần ── */
 
+    /* pin: MDE vừa đổi kiểu, giữ đúng giá trị khi nấc của thanh không biểu diễn được nó (đơn vị của kiểu đang chọn) */
     var mode = 'abs', alpha = 0.05, power = 0.8;
+    var pin = null;
     function p0v() { return +$('m-power-p0').value / 100; }
-    function mdeAbs() { return mode === 'abs' ? +$('m-power-mdea').value / 100 : p0v() * +$('m-power-mder').value / 100; }
+    function mdeVal() { return pin !== null ? pin : +$(mode === 'abs' ? 'm-power-mdea' : 'm-power-mder').value; }
+    function mdeAbs() { return mode === 'abs' ? mdeVal() / 100 : p0v() * mdeVal() / 100; }
     function lab(v, unit) { return (Math.abs(v * 10 - Math.round(v * 10)) < 1e-9 ? fmt(v, 1) : fmt(v, 2)) + unit; }
+    function labR(v) { return (Math.abs(v - Math.round(v)) < 1e-9 ? fmt(v, 0) : fmt(v, 1)) + '%'; }
     function yTick(v) { return v >= 1e6 ? fmt(v / 1e6, 0) + ' triệu' : fmt(v, 0); }
     function draw() {
       clear(svg);
       var K = css('--k', sec), MUTED = css('--muted'), SURF = css('--surface');
       var p0 = p0v(), perDay = +$('m-power-v').value, mde = mdeAbs(), i;
       $('m-power-p0v').textContent = fmt(p0 * 100, 1) + '%';
-      $('m-power-mdeav').textContent = fmt(+$('m-power-mdea').value, 1) + ' điểm';
-      $('m-power-mderv').textContent = fmt(+$('m-power-mder').value, 0) + '%';
+      $('m-power-mdeav').textContent = lab(mode === 'abs' ? mdeVal() : +$('m-power-mdea').value, ' điểm');
+      $('m-power-mderv').textContent = labR(mode === 'rel' ? mdeVal() : +$('m-power-mder').value);
       $('m-power-vv').textContent = fmt(perDay, 0);
       var plan = powPlan(p0, mde, alpha, power, perDay), half = powPlan(p0, mde / 2, alpha, power, perDay);
       /* đường cong: trục ngang là MDE theo kiểu đang chọn, trục dọc là n mỗi nhóm, thang log */
-      var xlo = mode === 'abs' ? 0.1 : 1, xhi = mode === 'abs' ? 5 : 50;
+      var xlo = mode === 'abs' ? 0.1 : 1, xhi = mode === 'abs' ? 5 : 100;
       function toAbs(x) { return mode === 'abs' ? x / 100 : p0 * x / 100; }
       var xs = [], ns = [];
       for (i = 0; i <= 120; i++) { var x = xlo + (xhi - xlo) * i / 120; xs.push(x); ns.push(powN(p0, p0 + toAbs(x), alpha, power)); }
@@ -4710,7 +4720,7 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
         txt(svg, X0 - 6, sy(Math.pow(10, i)) + 4, yTick(Math.pow(10, i)), 'vs', 'end');
       }
       /* trục bắt đầu ở MDE nhỏ nhất của thanh trượt (0,1 điểm hoặc 1%), không phải ở 0 — nhãn phải nói đúng điều đó */
-      (mode === 'abs' ? [0.1, 1, 2, 3, 4, 5] : [1, 10, 20, 30, 40, 50]).forEach(function (t) {
+      (mode === 'abs' ? [0.1, 1, 2, 3, 4, 5] : [1, 20, 40, 60, 80, 100]).forEach(function (t) {
         el(svg, 'line', { x1: sx(t), y1: Y0, x2: sx(t), y2: Y1, 'class': 'vgrid' });
         txt(svg, sx(t), Y1 + 16, fmt(t, t < 1 ? 1 : 0), 'vs', 'middle');
       });
@@ -4719,7 +4729,7 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
       var d = '';
       for (i = 0; i < xs.length; i++) d += (i ? 'L' : 'M') + sx(xs[i]).toFixed(1) + ',' + sy(ns[i]).toFixed(1);
       el(svg, 'path', { d: d }, 'fill:none;stroke:' + K + ';stroke-width:2.2');
-      var xc = mode === 'abs' ? mde * 100 : +$('m-power-mder').value, xh = xc / 2;
+      var xc = mdeVal(), xh = xc / 2;
       el(svg, 'line', { x1: sx(xc), y1: sy(plan.n), x2: sx(xc), y2: Y1 }, 'stroke:' + MUTED + ';stroke-dasharray:3 3');
       el(svg, 'line', { x1: X0, y1: sy(plan.n), x2: sx(xc), y2: sy(plan.n) }, 'stroke:' + MUTED + ';stroke-dasharray:3 3');
       el(svg, 'circle', { cx: sx(xc), cy: sy(plan.n), r: 5.5 }, 'fill:' + K);
@@ -4731,19 +4741,25 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
       $('m-power-n').textContent = fmt(plan.n, 0);
       $('m-power-tot').textContent = fmt(plan.tot, 0);
       $('m-power-d').textContent = fmt(plan.days, 0);
-      $('m-power-w').textContent = plan.weeks + ' tuần';
-      var hl = mode === 'abs' ? lab(mde * 100 / 2, ' điểm') : lab(+$('m-power-mder').value / 2, '% của nền');
+      $('m-power-w').textContent = fmt(plan.weeks, 0) + ' tuần';
+      var hl = mode === 'abs' ? lab(mde * 100 / 2, ' điểm') : lab(mdeVal() / 2, '% của nền');
       var say = 'Cần ' + fmt(plan.n, 0) + ' khách mỗi nhóm (' + fmt(plan.tot, 0) + ' tổng). Với ' + fmt(perDay, 0) + ' khách mới mỗi ngày: tối thiểu ' +
-        plan.days + ' ngày → chạy ' + plan.weeks + ' tuần đủ (' + plan.weeks * 7 + ' ngày), tức khoảng ' + fmt(plan.weeks * 7 * perDay, 0) +
+        fmt(plan.days, 0) + ' ngày → chạy ' + fmt(plan.weeks, 0) + ' tuần đủ (' + fmt(plan.weeks * 7, 0) + ' ngày), tức khoảng ' + fmt(plan.weeks * 7 * perDay, 0) +
         ' khách — dư ra chỉ làm độ mạnh cao hơn. Muốn thấy MDE bằng một nửa (' + hl + ') thì cần ' + fmt(half.n, 0) + ' mỗi nhóm, gấp ' + fmt(half.n / plan.n, 1) + ' lần.';
       if (plan.weeks > 8) say += ' Hơn 8 tuần thường là dấu hiệu MDE quá nhỏ so với lượng khách bạn có — cân nhắc nới MDE, dùng CUPED (mục 2.4) hoặc một thước đo nhạy hơn.';
       $('m-power-say').textContent = say;
     }
     chipGroup('m-power-mode', 'v', function (v) {
-      /* đổi kiểu MDE mà giữ nguyên tác động: 1 điểm trên nền 10% ⇄ 10% của nền */
-      var p0p = +$('m-power-p0').value;
-      if (v === 'rel' && mode === 'abs') $('m-power-mder').value = String(clamp(Math.round(+$('m-power-mdea').value / p0p * 100), 1, 50));
-      if (v === 'abs' && mode === 'rel') $('m-power-mdea').value = String(clamp(Math.round(+$('m-power-mder').value * p0p / 10) / 10, 0.1, 5));
+      /* đổi kiểu MDE mà giữ nguyên tác động: 1 điểm trên nền 10% ⇄ 10% của nền. Thanh chỉ có nấc
+         0,1 điểm / 1%, nên giá trị không rơi đúng nấc được giữ trong pin; chỉ bị chặn khi ra ngoài dải thanh */
+      if (v !== mode) {
+        var p0p = +$('m-power-p0').value, cur = mdeVal();
+        var ex = v === 'rel' ? cur / p0p * 100 : cur * p0p / 100;
+        ex = Math.round(clamp(ex, v === 'rel' ? 1 : 0.1, v === 'rel' ? 100 : 5) * 1e6) / 1e6;
+        var sl = $(v === 'rel' ? 'm-power-mder' : 'm-power-mdea');
+        sl.value = String(ex);
+        pin = Math.abs(+sl.value - ex) < 1e-9 ? null : ex;
+      }
       mode = v;
       $('m-power-arow').style.display = v === 'abs' ? '' : 'none';
       $('m-power-rrow').style.display = v === 'rel' ? '' : 'none';
@@ -4751,7 +4767,8 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
     });
     chipGroup('m-power-alpha', 'v', function (v) { alpha = +v; draw(); });
     chipGroup('m-power-pw', 'v', function (v) { power = +v; draw(); });
-    ['m-power-p0', 'm-power-mdea', 'm-power-mder', 'm-power-v'].forEach(function (id) { $(id).addEventListener('input', draw); });
+    ['m-power-p0', 'm-power-v'].forEach(function (id) { $(id).addEventListener('input', draw); });
+    ['m-power-mdea', 'm-power-mder'].forEach(function (id) { $(id).addEventListener('input', function () { pin = null; draw(); }); });
     redraws.push(draw); draw();
   })();
 
@@ -6447,7 +6464,10 @@ P3.qiniCurve = function (rows, key, sigma) {
     if (key === 'hist') say = R.msg === 0 ? 'Với tỉ trọng này không ai thuộc nhóm “hay mua” (đằng nào cũng mua và chó ngủ đều 0%), nên chiến lược này không nhắn ai.' :
       'Báo cáo chiến dịch sẽ ghi “' + pct(R.resp, 0) + ' khách nhận tin đã mua” — trong khi chiến dịch ' +
       (R.orders < 0 ? 'làm MẤT ' + fmt(-R.orders, 0) + ' đơn' : 'không thêm được đơn nào') + ' và tốn ' + fmt(R.cost / 1000, 1) +
-      ' triệu: khách hay mua nhất là người đằng nào cũng mua (tốn mã giảm giá) cộng với chó ngủ (bị nhắn là thôi mua). Lúc không bị nhắn, hai nhóm ấy trông giống hệt nhau.';
+      ' triệu: khách hay mua nhất là ' +
+      (R.cnt[1] > 0 && R.cnt[3] > 0 ? 'người đằng nào cũng mua (tốn mã giảm giá) cộng với chó ngủ (bị nhắn là thôi mua). Lúc không bị nhắn, hai nhóm ấy trông giống hệt nhau.' :
+       R.cnt[1] > 0 ? 'người đằng nào cũng mua (tốn mã giảm giá); ở tỉ trọng này không có chó ngủ.' :
+       'chó ngủ (bị nhắn là thôi mua); ở tỉ trọng này không có ai đằng nào cũng mua.');
     else if (key === 'resp') say = 'Mô hình học từ người đã mua SAU khi được nhắn chọn đúng người bị thuyết phục' +
       (R.cnt[1] > 0 ? ', nhưng kèm cả người đằng nào cũng mua: ' + fmt(R.cnt[1], 0) + ' mã giảm giá trả cho những đơn không cần mã. Tỉ lệ mua trong nhóm được nhắn là ' +
         pct(R.resp, 0) + ' — y như chiến lược uplift — mà lãi thấp hơn.' : '; ở tỉ trọng này không có ai đằng nào cũng mua, nên nó trùng chiến lược uplift.');
