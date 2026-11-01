@@ -18,20 +18,14 @@
   - Phần 9 kém đòn bẩy với người đọc 26 tuổi: 9.3 "bản đồ văn minh"; "Khoe và không khoe" ở 9.1 lặp 5.6. Gộp hay cắt mục?
   - Chưa có cách xử lý khi bị nói xấu, tin đồn ở công sở; nếu thêm thì gộp vào 6.4, phần "Khi bị thiếu tôn trọng".
   - Lộ trình `dating` đã đủ 5 mục (trần của cổng), nên chưa có 6.1; muốn thêm thì đổi một mục.
+- Chữ SVG trên điện thoại ở bốn trang ML / Toán / Causal: cỡ chữ theo viewBox (thường 620) nên ở 390px còn 4–6px,
+  ở 320px còn 4–7px. Phóng chữ bằng media query thì chồng nhãn (Causal 1,5× → 97 chỗ; Toán 1,5× → 8 mô hình). Chọn
+  một: bọc hình trong khung cuộn ngang `min-width:540px`, hay vẽ lại từng hình theo bề rộng cột. Đã nâng tạm năm hình
+  của machine-learning (m2-nc, m4-loss, m8, m9-curve, m13) lên ~8px ở 390px.
 
 ## NỢ
 
-- machine-learning-101: ở 320px các khung SVG rộng 300–340 đơn vị (m1, m4, m6, m9, m11) co còn 0,74 lần, chữ
-  10,5 đơn vị còn ~7,7px. Tăng cỡ chữ thì phải đo lại chồng nhãn ở mọi trạng thái của từng mô hình.
-- mathematics-for-machine-learning: chữ trong 18 SVG còn 4–6px ở 320–390px (cỡ chữ theo viewBox 620). Phóng 1,5×
-  bằng media query làm 8 mô hình cắt hoặc chồng nhãn; phải vẽ lại theo bề rộng thật của SVG.
-- experimentation-causal-inference: chữ trong các SVG viewBox 620 chỉ cao 5,5px ở 390px, 4,3px ở 320px. Tăng cỡ chữ
-  theo media query làm chồng nhãn (1,25× → 41 chỗ, vẫn 6,8px; 1,5× → 97 chỗ). Cách còn lại cần chủ trang chọn: bọc
-  hình trong khung cuộn ngang với `min-width:540px` (chữ ≥ 9px), hoặc vẽ lại theo bề rộng cột.
-- `machine-learning.html`: chữ SVG trên điện thoại còn 4–6px ở sơ đồ #s-machine, sơ đồ #s-nn, m11-bars, m11-mat (tăng cỡ
-  chữ thì chồng nhãn, cần bố cục riêng cho màn hẹp); năm hình đã nâng cỡ chữ (m2-nc, m4-loss, m8, m9-curve, m13) còn ~6,5px ở 320.
 - `machine-learning.html`: 608 thuật ngữ gạch chân là 608 điểm dừng Tab (hơn nửa số điểm dừng của trang).
-
 - `scooter-maintenance-guide.html`: mục checklist là `<label>` không có ô input — không dùng được bằng bàn
   phím, không báo trạng thái đã tích.
 - Sáu trang cho `.wb-navbar__brand` co bằng `flex: 0 1 auto`, điều `web-builder/CLAUDE.md` bảo đừng làm:
