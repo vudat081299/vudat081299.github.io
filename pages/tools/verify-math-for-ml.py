@@ -435,6 +435,17 @@ def run_calculus():
     need('2.5 máng phân kỳ', f'phân kỳ ngay từ <b>{vi(div_mang)}</b>', div_mang)
     need('2.5 ngưỡng bát', 'α tới 1/3 ≈ ' + vi(1 / 3))
     need('2.5 ngưỡng máng', 'α vượt 1/12 ≈ ' + vi(1 / 12, 3))
+    # 2.5 — mặt "hai đáy" f = 0,25(x² − 4)² + y² của mô hình 9: gradient bằng 0 ở cả (0; 0), nhưng
+    # f_xx = 3x² − 4 < 0 ở đó nên là yên ngựa. Mô hình phải xét độ cong trước khi báo "tới đáy".
+    gx2 = lambda x: x * (x * x - 4)
+    fxx = lambda x: (gx2(x + 1e-6) - gx2(x - 1e-6)) / 2e-6
+    claim('2.5 hai đáy: f_xx = 3x² − 4', all(abs(fxx(x) - (3 * x * x - 4)) < 1e-6 for x in (-2, -0.5, 0, 1, 2)))
+    claim('2.5 hai đáy: (0; 0) là yên ngựa, (±2; 0) là đáy', fxx(0) < 0 and fxx(2) > 0 and fxx(-2) > 0)
+    need('2.5 mô hình 9 xét yên ngựa', "3 * last[0] * last[0] - 4 < 0")
+    # bát, α = 0,34: theo y mỗi bước nhân −1,04 nên bước dài dần dù f còn giảm vài bước đầu —
+    # mô hình phải báo theo độ dài bước, không chỉ theo f.
+    claim('2.5 bát α=0,34 nảy xa dần', abs(1 - 6 * 0.34) > 1)
+    need('2.5 mô hình 9 so độ dài bước', "} else if (grow && si !== 2) {")
 
     # 2.6 — quy tắc chuỗi
     h3 = lambda x: (2 * x + 1) ** 3
