@@ -850,7 +850,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read"><div class="k">Giá kẹo</div><div class="v" id="m1-y">3,00</div></div>
             </div>
             <p class="lab__f" id="m1-say">Hai đường cắt nhau tại một điểm: có đúng một cặp giá thoả cả hai hoá đơn.</p>
-            <p class="lab__f"><b>Cái đáng để ý:</b> định thức chỉ chạm 0 ở đúng hai trạng thái — trùng nhau và song song. Nó không quan tâm đáp án là bao nhiêu, nó chỉ trả lời <b>&ldquo;hai câu đố này có hỏi hai chuyện khác nhau không&rdquo;</b>.</p>
+            <p class="lab__f"><b>Cái đáng để ý:</b> định thức chạm 0 khi hai đường trùng nhau hoặc song song (và khi hoá đơn thứ hai không mua gì). Nó không quan tâm đáp án là bao nhiêu, nó chỉ trả lời <b>&ldquo;hai câu đố này có hỏi hai chuyện khác nhau không&rdquo;</b>.</p>
           </div>
         </div>
 
@@ -1771,16 +1771,16 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <table>
             <thead><tr><th>Bước</th><th>x</th><th>Chữ số thập phân đúng</th></tr></thead>
             <tbody>
-              <tr><td>0</td><td>1,0000000000</td><td>0</td></tr>
-              <tr><td>1</td><td>1,5000000000</td><td>0</td></tr>
-              <tr><td>2</td><td>1,4166666667</td><td>2</td></tr>
-              <tr><td>3</td><td>1,4142156863</td><td>5</td></tr>
-              <tr><td>4</td><td><b>1,4142135624</b></td><td><b>10</b></td></tr>
+              <tr><td>0</td><td>1,000000000000</td><td>0</td></tr>
+              <tr><td>1</td><td>1,500000000000</td><td>0</td></tr>
+              <tr><td>2</td><td>1,416666666667</td><td>2</td></tr>
+              <tr><td>3</td><td>1,414215686275</td><td>5</td></tr>
+              <tr><td>4</td><td><b>1,414213562375</b></td><td><b>11</b></td></tr>
             </tbody>
           </table>
         </div>
 
-        <p>Số chữ số đúng <b>gần gấp đôi mỗi bước</b> (2 → 5 → 10) — gọi là hội tụ bậc hai. Bốn bước từ một phỏng đoán tệ tới mười chữ số. Gradient descent với α cố định thường cần hàng chục tới hàng trăm bước cho cùng độ chính xác.</p>
+        <p>Số chữ số đúng <b>gần gấp đôi mỗi bước</b> (2 → 5 → 11) — gọi là hội tụ bậc hai. Bốn bước từ một phỏng đoán tệ tới mười một chữ số. Gradient descent với α cố định thường cần hàng chục tới hàng trăm bước cho cùng độ chính xác.</p>
 
         <p>Điều kiện là đã đứng <b>gần</b> nghiệm. √2 là ca dễ: x² − 2 cong lên ở mọi chỗ x &gt; 0, nên xuất phát dương nào cũng tới. Bài tìm đáy thì còn cần mặt đất cong lên (f″ &gt; 0) ở chỗ đứng: f″ &lt; 0 thì Newton đi về phía đỉnh, f″ ≈ 0 thì nó chia cho một số gần 0 và bay rất xa. Mô hình dưới cho thấy cả hai.</p>
 
@@ -3732,7 +3732,8 @@ var SURF = [
     $('m8-gn').textContent = fmt(gn);
     var say;
     if (gn < 0.15) say = 'Gradient gần bằng 0: mặt đất phẳng theo cả hai hướng. Ở cái bát thì đây là ĐÁY; ở yên ngựa thì đây là chỗ phẳng mà vẫn tuột được — chỉ cần lệch một chút.';
-    else if (si === 1) say = 'Máng hẹp: ∂f/∂y = ' + fmt(gy) + ' lớn hơn ∂f/∂x = ' + fmt(gx) + ' rất nhiều, nên mũi tên gần như chỉ ngang vào tường máng chứ không dọc theo máng về đáy.';
+    else if (si === 1 && Math.abs(gy) > 3 * Math.abs(gx)) say = 'Máng hẹp: ∂f/∂y = ' + fmt(gy) + ' lớn hơn ∂f/∂x = ' + fmt(gx) + ' rất nhiều, nên mũi tên gần như chỉ ngang vào tường máng chứ không dọc theo máng về đáy.';
+    else if (si === 1) say = 'Máng hẹp, nhưng bạn đang đứng gần đáy máng (y ≈ 0): ∂f/∂y = ' + fmt(gy) + ' nhỏ, nên gradient chỉ dọc theo máng. Lệch khỏi đáy máng một chút là mũi tên quay ngang vào tường.';
     else if (si === 2) say = 'Yên ngựa: theo trục x mặt đất cong lên (∂²f/∂x² = 2), theo trục y cong xuống (∂²f/∂y² = −2). Nên ở gốc toạ độ gradient bằng 0 mà đó không phải đáy — chỗ &ldquo;nghiêng bằng 0&rdquo; lừa được người ta.';
     else say = 'Mũi tên nâu chỉ hướng LÊN dốc nhất, mũi tên xanh là hướng đi xuống. Cả hai luôn vuông góc với đường đồng mức tại chỗ bạn đứng.';
     $('m8-say').innerHTML = say;
@@ -3808,13 +3809,28 @@ var SURF = [
        shift() sau 400 bước nên path[0] trôi thành một điểm giữa đường. Và phải có sàn
        1e-6: xuất phát trúng ngay đáy thì f0·1,5 = 0, mọi bước sau đều thành "phân kỳ". */
     var diverging = path.length > 2 && f > Math.max(1e-6, f0 * 1.5);
+    /* Bước vừa rồi dài hơn bước trước. Trên mặt bậc hai (bát, máng) chuyện này chỉ xảy ra khi
+       có một hướng đang nảy xa dần, kể cả khi f còn giảm nhờ hướng kia co nhanh. */
+    var n = path.length, grow = n > 2 &&
+      Math.hypot(last[0] - path[n - 2][0], last[1] - path[n - 2][1]) >
+      Math.hypot(path[n - 2][0] - path[n - 3][0], path[n - 2][1] - path[n - 3][1]) * (1 + 1e-9);
     if (out || diverging) {
       st = 'PHÂN KỲ'; cls = 'bad';
       say = 'Sai số TĂNG thay vì giảm: bước quá dài nên mỗi lần lại vọt qua đáy xa hơn lần trước. Đây là chỗ nhật ký huấn luyện hiện ra NaN. Việc đầu tiên: giảm α — hoặc chuẩn hoá đặc trưng cho máng bớt hẹp.';
+    } else if (Math.hypot(S.gx(last[0]), S.gy(last[1])) < 0.02 && si === 2 && 3 * last[0] * last[0] - 4 < 0) {
+      /* mặt hai đáy: f_xx = 3x² − 4 < 0 ở gần x = 0, nên chỗ phẳng ấy là yên ngựa */
+      st = 'yên ngựa'; cls = 'bad';
+      say = 'Gradient ≈ 0 nhưng đây là YÊN NGỰA (f = ' + fmt(f) + '): theo trục x mặt đất cong xuống. Nhích sang trái hay phải một chút là lăn về một trong hai đáy (±2; 0).';
     } else if (Math.hypot(S.gx(last[0]), S.gy(last[1])) < 0.02) {
       st = 'tới đáy'; cls = 'good';
       say = 'Gradient ≈ 0 nên các bước đứng lại: đã tới đáy sau ' + (path.length - 1) + ' bước.' +
         (si === 2 ? ' Nhưng để ý: đây là đáy GẦN chỗ xuất phát, không phải đáy duy nhất. Xuất phát bên kia thì rơi vào đáy bên kia.' : '');
+    } else if (grow && si !== 2) {
+      st = 'sắp phân kỳ'; cls = 'bad';
+      say = 'Bước vừa rồi DÀI hơn bước trước: theo một hướng, mỗi lần nó vọt qua đáy xa hơn lần trước. Sai số có thể vẫn đang giảm nhờ hướng kia, nhưng cứ thế này sẽ phân kỳ. Giảm α.';
+    } else if (grow) {
+      st = 'đang đi'; cls = 'hi';
+      say = 'Bước vừa rồi dài hơn bước trước: hoặc nó đang lăn khỏi chỗ phẳng xuống chỗ dốc hơn, hoặc α lớn tới mức vọt qua đáy xa dần.';
     } else {
       st = 'đang đi'; cls = 'hi';
       say = 'Mỗi bước đi ngược gradient một đoạn bằng α × độ dốc. Bước càng gần đáy càng ngắn, vì gradient càng nhỏ — không ai phải hãm lại, nó tự hãm (khi gradient tính trên cả tập dữ liệu).';

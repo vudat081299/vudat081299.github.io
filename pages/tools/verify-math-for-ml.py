@@ -465,21 +465,24 @@ def run_calculus():
         x = x - (x * x - 2) / (2 * x)
         seq.append(x)
     for i, val in enumerate(seq):
-        num(f'2.7 Newton bước {i}', val, 10)
+        num(f'2.7 Newton bước {i}', val, 12)
     if abs(seq[-1] - math.sqrt(2)) > 1e-9:
         fails.append('2.7: Newton phải hội tụ về căn 2')
     # đáy của x⁴−3x² nằm ở căn 1,5
     num('2.7 đáy x⁴−3x²', math.sqrt(1.5), 4)
-    # 2.7 — cột "chữ số thập phân đúng": k lớn nhất để |x − √2| ≤ 0,5·10⁻ᵏ, cắt ở 10
-    # chữ số đang hiện. Bản trước trộn hai cách đếm nên dãy không gấp đôi như bài nói.
+    # 2.7 — cột "chữ số thập phân đúng": k lớn nhất để |x − √2| ≤ 0,5·10⁻ᵏ, cắt ở 12
+    # chữ số đang hiện; bước 4 đúng 11 chữ số, nên bảng phải in đủ 12.
     x = 1.0
+    ks = []
     for i in range(5):
-        k = min(10, max(0, math.floor(-math.log10(2 * abs(x - math.sqrt(2))))))
-        cell = (f'<td>{vi(x, 10)}</td><td>{k}</td>' if i < 4
-                else f'<td><b>{vi(x, 10)}</b></td><td><b>{k}</b></td>')
+        k = min(12, max(0, math.floor(-math.log10(2 * abs(x - math.sqrt(2))))))
+        cell = (f'<td>{vi(x, 12)}</td><td>{k}</td>' if i < 4
+                else f'<td><b>{vi(x, 12)}</b></td><td><b>{k}</b></td>')
         need(f'2.7 chữ số đúng bước {i}', cell, k)
+        ks.append(k)
         x = x - (x * x - 2) / (2 * x)
-    need('2.7 gần gấp đôi', 'gần gấp đôi mỗi bước</b> (2 → 5 → 10)')
+    need('2.7 gần gấp đôi', 'gần gấp đôi mỗi bước</b> (%d → %d → %d)' % tuple(ks[2:]), ks[2:])
+    need('2.7 mười một chữ số', 'tới mười một chữ số')
     # 2.7 — vùng hỏng của Newton trên x⁴ − 3x², chạy đúng vòng lặp của mô hình 11
     # (độ cong dưới 0,05 thì chia cho ±0,05). Lời gợi ý của mô hình nói vùng ấy.
     def newton_m11(x0, steps=60):
