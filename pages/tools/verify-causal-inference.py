@@ -3476,6 +3476,33 @@ def run_r3():
     claim('r3 L18 · GLOSS ATT/ATC dùng nhóm can thiệp / đối chứng', "'tác động trên nhóm can thiệp (ATT)'" in gloss and "'tác động trên nhóm đối chứng (ATC)'" in gloss)
     claim('r3 L18 · 2.2 nói không chệch là thiên lệch bằng 0', 'không chệch của ATE (unbiased:' in sec('s-estimate'))
     claim('r3 L19 · ô Simpson không gọi là "chuẩn hoá"', 'Chuẩn hoá 1.000 + 1.000' not in HTML)
+    # D5 · hình hai thế giới H₀ / H₁ của 2.3: đo hình học ngay trên SVG của trang
+    s = sec('s-power')
+    fi = s.find('<h3>Vì sao hai số z cộng nhau</h3>')
+    fs = s[fi:s.find('</svg>', fi)] if fi >= 0 else ''
+    def poly(txt_):
+        return [tuple(map(float, q.split(','))) for q in txt_.split()]
+    def shoelace(ps):
+        return abs(sum(ps[i][0] * ps[(i + 1) % len(ps)][1] - ps[(i + 1) % len(ps)][0] * ps[i][1] for i in range(len(ps)))) / 2
+    lines = re.findall(r'<polyline points="([^"]+)"', fs)
+    areas = re.findall(r'<path d="M([0-9.]+),([0-9.]+) L([^"]+?) L([0-9.]+),\2 Z"', fs)
+    vx = re.search(r'<line x1="([0-9.]+)" y1="[0-9.]+" x2="\1" y2="([0-9.]+)" style="stroke:var\(--ink\);stroke-width:1.4;stroke-dasharray', fs)
+    claim('r3 D5 · 2.3 có hình hai thế giới (hai đường, hai vùng tô, một vạch)', len(lines) == 2 and len(areas) == 2 and vx is not None)
+    if len(lines) == 2 and len(areas) == 2 and vx:
+        base = float(vx.group(2))
+        h0, h1 = poly(lines[0]), poly(lines[1])
+        pk0, pk1 = min(h0, key=lambda q: q[1])[0], min(h1, key=lambda q: q[1])[0]
+        xv = float(vx.group(1))
+        near('r3 D5 · vạch ở 1,96 SE, tâm H₁ ở 1,96 + 0,84 SE', (xv - pk0) / (pk1 - pk0), z(0.975) / (z(0.975) + z(0.8)), 0.01)
+        full0 = shoelace(h0 + [(h0[-1][0], base), (h0[0][0], base)])
+        full1 = shoelace(h1 + [(h1[-1][0], base), (h1[0][0], base)])
+        def area_of(a):
+            ps = [(float(a[0]), float(a[1]))] + [tuple(map(float, q.split(','))) for q in a[2].split(' L')] + [(float(a[3]), base)]
+            return shoelace(ps)
+        near('r3 D5 · vùng tô của H₁ là 80% (độ mạnh)', area_of(areas[0]) / full1, 0.80, 0.01)
+        near('r3 D5 · vùng tô của H₀ là 2,5% (báo động giả một phía)', area_of(areas[1]) / full0, 0.025, 0.003)
+    claim('r3 D5 · câu kết của hình: MDE = (1,96 + 0,84) · SE', 'Vì thế MDE = (1,96 + 0,84) · SE.' in s)
+
     # mục từ điển mới phải có chữ để gắn vào trong thân bài
     for form in ('SHAP', 'AUC', 'kiểm soát', 'hiệu ứng cố định', 'SE theo cụm', 'định danh', 'nội sinh'):
         claim(f'r3 GLOSS · "{form}" có mặt trong thân bài', form in TEXT)
