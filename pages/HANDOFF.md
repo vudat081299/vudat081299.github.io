@@ -6,6 +6,12 @@
   mini-batch (zíc-zắc nhẹ), một ví dụ (zíc-zắc dữ), momentum (mượt lại). Đặt ngay dưới bảng mini-batch.
 - ML 101 mô hình 4 (`#m4`): thêm hình thứ ba là đường cong học — điểm trừ đề ôn và đề thử theo số bài 8→40, ở bậc
   và λ đang chọn — để người đọc thấy hình mà chương 5, cách chữa 1 dạy đọc.
+- `machine-learning.html`, đề xuất của lượt rà sư phạm vòng 3 (cần mô hình hoặc hình mới):
+  - M3 (#s-scale): chip GD / Momentum / Adam trên bản chưa chuẩn hoá, cùng α; phải cho thấy momentum bớt nảy
+    giữa hai vách khe và Adam đi gần thẳng. Đổi luật "Chạy cả hai" nên phải sửa cả phép kiểm M3 trong cổng.
+  - #s-trees: hình tĩnh hai lớp điểm, ba nhát cắt song song trục chia vùng hộp, cạnh đồ thị H(p) đỉnh 1 ở p = 0,5.
+  - M8 (#s-backprop): thêm một nút có hai đầu ra để bước ngược cho thấy hai đạo hàm cộng vào một nút.
+  - #s-deep: hình ba khối chữ nhật W[l] · A[l−1] + b[l] có ghi kích thước, cột của W khớp hàng của A.
 
 ## CHỜ CHỦ TRANG
 
@@ -29,16 +35,6 @@
   ở 320px còn 4–7px. Phóng chữ bằng media query thì chồng nhãn (Causal 1,5× → 97 chỗ; Toán 1,5× → 8 mô hình). Chọn
   một: bọc hình trong khung cuộn ngang `min-width:540px`, hay vẽ lại từng hình theo bề rộng cột. Đã nâng tạm năm hình
   của machine-learning (m2-nc, m4-loss, m8, m9-curve, m13) lên ~8px ở 390px.
-
-## CHƯA LÀM
-
-- `machine-learning.html`, đề xuất của lượt rà sư phạm vòng 3 (cần mô hình hoặc hình mới):
-  - M3 (#s-scale): chip GD / Momentum / Adam trên bản chưa chuẩn hoá, cùng α; phải cho thấy momentum bớt nảy
-    giữa hai vách khe và Adam đi gần thẳng. Đổi luật "Chạy cả hai" nên phải sửa cả phép kiểm M3 trong cổng.
-  - #s-trees: hình tĩnh hai lớp điểm, ba nhát cắt song song trục chia vùng hộp, cạnh đồ thị H(p) đỉnh 1 ở p = 0,5.
-  - M8 (#s-backprop): thêm một nút có hai đầu ra để bước ngược cho thấy hai đạo hàm cộng vào một nút.
-  - #s-deep: hình ba khối chữ nhật W[l] · A[l−1] + b[l] có ghi kích thước, cột của W khớp hàng của A.
-
 ## NỢ
 
 - `machine-learning.html`: 608 thuật ngữ gạch chân là 608 điểm dừng Tab (hơn nửa số điểm dừng của trang).
