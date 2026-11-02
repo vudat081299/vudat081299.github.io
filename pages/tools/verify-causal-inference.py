@@ -1857,7 +1857,7 @@ def run_p2():
     # K10 · act4 nói rõ các thế giới tách nhau
     need('K10 · act4', 'tác động thật của cùng một tính năng đổi từ mục này sang mục khác — đừng nối con số giữa các mục')
     # review-main · ký hiệu Latin một chữ trong nhãn viết hoa phải nằm trong .lc (e → E là kỳ vọng)
-    for want in ('một bảng <span class="lc">p</span>, bốn cách đọc', 'Số phép kiểm <span class="lc">k</span>',
+    for want in ('một bảng <span class="lc">p</span>, bốn cách đọc', 'Số phép kiểm <span class="lc">m</span>',
                  '<th><span class="lc">p</span></th><th>Ngưỡng</th>', '<div class="k"><span class="lc">p</span></div><div class="v" id="m-srm-p">',
                  '<div class="k"><span class="lc">n</span> hiệu dụng</div>', '<th><span class="lc">e</span></th><th>Bật · doanh thu</th>',
                  'Trọng số bật 1/<span class="lc">e</span>', 'Trọng số không bật 1/(1 − <span class="lc">e</span>)'):
@@ -3334,6 +3334,55 @@ def run_ref():
           _re.search(r'function fromSliders\(\) \{(?:(?!function toSliders).)*?w = \[0\.25, 0\.25, 0\.25, 0\.25\]; toSliders\(\);\s*\}\s*function toSliders',
                      _blk('synth'), _re.S) is not None)
 
+def run_r3():
+    """Vòng rà 3 (học thuật + sư phạm): luật đã sửa không được quay lại dạng cũ."""
+    def sec(sid):
+        m = re.search(r'<section id="' + sid + r'"[^>]*>(.*?)</section>', HTML, re.S)
+        return m.group(1) if m else ''
+    gl = re.search(r'var GLOSS = \[(.*?)\n\];', HTML, re.S)
+    gloss = gl.group(1) if gl else ''
+
+    def gloss_row(en):
+        m = re.search(r"^\['" + re.escape(en) + r"',.*$", gloss, re.M)
+        return m.group(0) if m else ''
+
+    # C1 · va chạm: chỉ cấm tuyệt đối khi biến do T gây ra; có trước T thì xét bằng tiêu chí cửa sau
+    for sid in ('s-dag', 's-carry'):
+        s = sec(sid)
+        claim(f'r3 C1 · {sid}: không còn luật "không bao giờ / đừng bao giờ kiểm soát biến va chạm"',
+              re.search(r'(không|đừng) bao giờ</b> kiểm soát biến va chạm', s) is None)
+        claim(f'r3 C1 · {sid}: cấm va chạm do T gây ra, có trước T thì theo tiêu chí cửa sau',
+              '<b>cấm</b> kiểm soát biến va chạm do T gây ra' in s and 'biến va chạm có trước T' in s.replace('Biến va chạm', 'biến va chạm'))
+    # C7 · GLOSS va chạm phủ cả ví dụ "đã ghé" (đầu thứ hai là nguyên nhân của Y)
+    claim('r3 C7 · GLOSS va chạm: hậu quả chung của hai biến, có ví dụ "đã ghé"',
+          'Hậu quả chung của hai biến trên một con đường' in gloss_row('collider') and 'SMS → đã ghé ← khách quen' in gloss_row('collider'))
+    # C2 · hai quy ước của "selection bias" được nói ra, ở thân bài và ở GLOSS
+    claim('r3 C2 · 1.2 nói quy ước Mixtape/Angrist–Pischke vs Hernán–Robins',
+          'theo Mixtape và Angrist–Pischke. Hernán–Robins và dịch tễ học dành chữ <i>selection bias</i> cho thiên lệch va chạm' in sec('s-ate'))
+    claim('r3 C2 · GLOSS selection bias nói quy ước', 'Hernán–Robins dùng chữ <i>selection bias</i> cho thiên lệch va chạm' in gloss_row('selection bias'))
+    claim('r3 C2 · thẻ chọn mẫu của 1.3 gắn nhãn "sample selection"', '· sample selection</span>' in sec('s-traps3') and '· selection</span>' not in sec('s-traps3'))
+    # C3 · "nếu có thì cũng nhỏ": điều kiện là đầu trên < MDE; câu tự kiểm [0,2; 0,8] ở ô B thoả nó
+    s = sec('s-oec')
+    m3 = re.search(r'MDE là (\d+) điểm\. Khoảng tin cậy 95% của thước đo chính ra \[(\d+),(\d); (\d+),(\d)\]', s)
+    lo, hi, mde = (float(m3.group(2) + '.' + m3.group(3)), float(m3.group(4) + '.' + m3.group(5)), float(m3.group(1))) if m3 else (0, 9, 0)
+    claim('r3 C3 · câu tự kiểm 2.5: khoảng ở ô B (0 < đầu dưới < MDE) mà đầu trên < MDE', 0 < lo < mde and hi < mde, f'{lo}, {hi}, MDE {mde}')
+    claim('r3 C3 · 2.5 không còn "Chỉ ô D mới cho phép"', 'Chỉ ô D mới cho phép' not in s)
+    claim('r3 C3 · 2.5 điều kiện là đầu trên dưới MDE', 'Chỉ khi đầu trên của khoảng nằm dưới MDE — ô D, hoặc phần cuối của ô B' in s and '[0,2; 0,8]' in s)
+    # C4 · Bonferroni còn lý do: khoảng tin cậy đồng thời
+    s = sec('s-multi')
+    claim('r3 C4 · 3.2 không còn "Không có lý do dùng Bonferroni"', 'Không có lý do dùng Bonferroni' not in s)
+    claim('r3 C4 · 3.2 nói Bonferroni cho khoảng đồng thời mức 1 − α/m', 'Bonferroni cho khoảng đồng thời đơn giản: mỗi khoảng ở mức 1 − α/m' in s)
+    # C5 · 3.2: số phép kiểm là m ở mọi chỗ (k chỉ còn là hạng của BH); q là mức FDR
+    claim('r3 C5 · fx FWER mũ m', re.search(r'\(1 − <span class="tm"[^>]*>α</span>\)<sup><span class="tm"[^>]*>m</span></sup>', s) is not None)
+    claim('r3 C5 · nhãn thanh trượt và câu gợi ý dùng m', '<b>m</b> = 10' in s and 'Số phép kiểm <span class="lc">m</span>' in s and '<b>k</b> = 10' not in s)
+    claim('r3 C5 · fx note dùng m, nói k của BH là hạng', 'Với m = 10 và α = 0,05' in s and 'Với k = 10' not in s and 'k là hạng lớn nhất còn lọt ngưỡng' in s)
+    claim('r3 C5 · trục hình FWER ghi m', "'số kiểm định m'" in HTML and "'số kiểm định k'" not in HTML)
+    claim('r3 C5 · GLOSS FWER dùng m', 'với m phép kiểm độc lập là 1 − (1 − α)ᵐ' in gloss_row('family-wise error rate') and 'k phép kiểm' not in gloss_row('family-wise error rate'))
+    claim('r3 C5 · q ở 3.2 được nói là mức FDR, khác 1 − p', 'mức FDR q — chữ q ở đây không phải 1 − p của mục 2.2' in s)
+    # C6 · GLOSS delta không gán θ nghĩa thứ ba
+    claim('r3 C6 · GLOSS delta không dùng θ', 'θ' not in gloss_row('delta method') and 'Var(R − (R̄/Ō)·O)/(nŌ²)' in gloss_row('delta method'))
+
+
 def main():
     global HTML, TEXT, PAGE
     args = sys.argv[1:]
@@ -3345,7 +3394,7 @@ def main():
     HTML = PAGE.read_text(encoding='utf-8')
     body = re.sub(r'<(script|style)\b[^>]*>.*?</\1\s*>', ' ', HTML, flags=re.S | re.I)
     TEXT = re.sub(r'\s+', ' ', _html.unescape(re.sub(r'<[^>]+>', '', body)))
-    for name in ('p1', 'p2', 'p3', 'ref'):
+    for name in ('p1', 'p2', 'p3', 'ref', 'r3'):
         if only and name not in only:
             continue
         fn = globals().get('run_' + name)

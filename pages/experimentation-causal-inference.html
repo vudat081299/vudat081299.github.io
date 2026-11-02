@@ -1021,7 +1021,7 @@ ol.steps > li::before { content:counter(st); position:absolute; left:0; top:1px;
 
         <div class="fx">
           <p class="fx__line sm"><span class="tm" data-n="Chênh lệch ngây thơ: trung bình nhóm được nhắn trừ trung bình nhóm không được nhắn — cột trái trừ cột phải. Thứ duy nhất tính được từ dữ liệu.">E[Y | T=1] − E[Y | T=0]</span> <span class="op">=</span> <span class="tm" data-n="ATT: cột trái trừ cột giữa — cùng những người được nhắn, có nhắn so với không nhắn.">E[Y(1) − Y(0) | T=1]</span> <span class="op">+</span> <span class="tm" data-n="Thiên lệch chọn: cột giữa trừ cột phải — hai nhóm vốn chi khác nhau bao nhiêu khi chưa ai nhắn gì.">E[Y(0) | T=1] − E[Y(0) | T=0]</span></p>
-          <p class="fx__note">Đây chỉ là cách viết gọn của phép tính mô hình vừa chạy: lấy cột trái trừ cột phải, rồi cộng và trừ đúng cột giữa. Không có giả định nào — nó đúng với mọi quy tắc chọn, và đúng tới từng đồng trên màn hình. <b>Thiên lệch chọn bằng 0 khi và chỉ khi</b> hai nhóm vốn chi như nhau lúc chưa ai được nhắn; chặng 2 là cách làm cho điều ấy đúng.</p>
+          <p class="fx__note">Đây chỉ là cách viết gọn của phép tính mô hình vừa chạy: lấy cột trái trừ cột phải, rồi cộng và trừ đúng cột giữa. Không có giả định nào — nó đúng với mọi quy tắc chọn, và đúng tới từng đồng trên màn hình. <b>Thiên lệch chọn bằng 0 khi và chỉ khi</b> hai nhóm vốn chi như nhau lúc chưa ai được nhắn; chặng 2 là cách làm cho điều ấy đúng. Tên “thiên lệch chọn” cho số hạng này theo Mixtape và Angrist–Pischke. Hernán–Robins và dịch tễ học dành chữ <i>selection bias</i> cho thiên lệch va chạm (bẫy chọn mẫu ở mục 1.3), và gọi phần do nguyên nhân chung là <i>confounding</i>.</p>
         </div>
 
         <p>So với ATE thay vì ATT thì phải thêm một số hạng: chênh lệch ngây thơ = ATE + thiên lệch chọn + (1 − π)(ATT − ATC), với π là tỉ lệ người được nhắn — Mixtape viết dạng này. Với quy tắc khách quen: 49.498 + 201.378 + ½ · (34.936 − 64.060) = 236.314 ₫. Số hạng cuối khác 0 vì SMS tác động lên khách quen ít hơn lên những người còn lại.</p>
@@ -1065,7 +1065,7 @@ ol.steps > li::before { content:counter(st); position:absolute; left:0; top:1px;
         <div class="grid3">
           <div class="mini"><p class="t">Đảo chiều <span class="c-x">· reverse causality</span></p><p class="d">Khách cài app thành viên chi gấp đôi. Nhưng người vốn mua nhiều mới chịu cài app để tích điểm: <b>chi tiêu gây ra việc cài app</b>. Dấu hiệu: nhóm “được áp dụng” đã khác từ <b>trước</b> khi được áp dụng — so kỳ trước là thấy.</p></div>
           <div class="mini"><p class="t">Gây nhiễu <span class="c-x">· confounding</span></p><p class="d">Cửa hàng nhỏ gửi SMS nhiều hơn, và khách của cửa hàng nhỏ vốn ít quay lại. <b>Cỡ cửa hàng gây ra cả hai</b>. Dấu hiệu: tách theo biến ấy thì kết quả đổi hẳn — bảng Simpson dưới đây. Chữa được khi đo được biến ấy: chặng 4.</p></div>
-          <div class="mini"><p class="t">Chọn mẫu <span class="c-x">· selection</span></p><p class="d">Chỉ phân tích khách <b>đã ghé cửa hàng</b> trong tuần. SMS kéo thêm khách thưa tới, nên trong số người ghé, nhóm SMS nhiều khách thưa hơn — SMS trông như làm giảm chi tiêu, <b>dù được bốc thăm</b>. Luật: đừng lọc theo thứ xảy ra <b>sau</b> can thiệp.</p></div>
+          <div class="mini"><p class="t">Chọn mẫu <span class="c-x">· sample selection</span></p><p class="d">Chỉ phân tích khách <b>đã ghé cửa hàng</b> trong tuần. SMS kéo thêm khách thưa tới, nên trong số người ghé, nhóm SMS nhiều khách thưa hơn — SMS trông như làm giảm chi tiêu, <b>dù được bốc thăm</b>. Luật: đừng lọc theo thứ xảy ra <b>sau</b> can thiệp.</p></div>
         </div>
 
         <h3>Chọn mẫu, bằng số: SMS được bốc thăm mà vẫn ra kết quả sai</h3>
@@ -1646,7 +1646,7 @@ print(f'TB {m[0]:.2f} và {m[1]:.2f}; độ vung {s[0]:.2f} và {s[1]:.2f}')
         <p>Còn một trường hợp gương — đầu trên của khoảng <b>dưới 0</b> — là bản mới làm hại: không triển khai, và ghi lại để khỏi thử lại. Bảng này không phải luật trời; nó là một <b>quy ước bạn tự đặt</b>. Điều bắt buộc là đặt nó <b>trước</b> khi thấy số, vì sau khi thấy số thì ai cũng tìm được lý do để đẩy một khoảng từ ô C sang ô B.</p>
 
         <h3>“Không có ý nghĩa” không có nghĩa là “không có tác động”</h3>
-        <p>p = 0,21 chỉ nói dữ liệu chưa phân biệt được tác động với 0. Nếu khoảng tin cậy là [−0,4; 1,8] điểm thì tác động có thể bằng 0, mà cũng có thể gần gấp đôi MDE: đó là ô C, chưa nói được gì. Chỉ ô D mới cho phép nói “nếu có thì cũng nhỏ” — và muốn rơi vào ô D thì thí nghiệm phải đủ mạnh ngay từ đầu. Đây là lý do thứ hai phải tính cỡ mẫu trước.</p>
+        <p>p = 0,21 chỉ nói dữ liệu chưa phân biệt được tác động với 0. Nếu khoảng tin cậy là [−0,4; 1,8] điểm thì tác động có thể bằng 0, mà cũng có thể gần gấp đôi MDE: đó là ô C, chưa nói được gì. Chỉ khi đầu trên của khoảng nằm dưới MDE — ô D, hoặc phần cuối của ô B như câu tự kiểm dưới đây — mới nói được “nếu có thì cũng nhỏ”, và muốn khoảng hẹp tới thế thì thí nghiệm phải đủ mạnh ngay từ đầu. Đây là lý do thứ hai phải tính cỡ mẫu trước.</p>
 
         <h3>Kế hoạch phân tích, viết trước khi chạy</h3>
         <ol class="steps">
@@ -1886,10 +1886,10 @@ for k in (1, 2, 4, 7, 14, 28):   <span class="cm"># nhìn k lần cách đều</
           <div class="mini"><p class="t">FWER · tỉ lệ sai theo họ</p><p class="d">Family-wise error rate = xác suất có <b>ít nhất một</b> báo động giả trong cả họ kiểm định. Giữ nó khi mỗi phát hiện sẽ được hành động theo ngay — tung ra, báo cáo lên trên — và một lần sai là đắt.</p></div>
           <div class="mini"><p class="t">FDR · tỉ lệ phát hiện sai</p><p class="d">False discovery rate = <b>trung bình</b>, trong số những cái bạn gọi là phát hiện, bao nhiêu phần là giả. Giữ nó khi sàng lọc nhiều ứng viên để chọn cái đáng thử tiếp, và bạn chấp nhận vài cái sai để đổi lấy việc không bỏ sót.</p></div>
         </div>
-        <p>Ba thủ tục hay dùng, cho m phép kiểm ở mức α (hoặc q):</p>
+        <p>Ba thủ tục hay dùng, cho m phép kiểm ở mức α (hoặc mức FDR q — chữ q ở đây không phải 1 − p của mục 2.2):</p>
         <ul>
           <li><b>Bonferroni</b>: so từng p với α/m — với m = 10 là 0,005. Giữ FWER với mọi kiểu phụ thuộc giữa các thước đo. Khắt khe nhất.</li>
-          <li><b>Holm</b>: xếp p tăng dần; so cái nhỏ nhất với α/m, cái thứ hai với α/(m − 1), cái thứ ba với α/(m − 2)… và <b>dừng ở cái đầu tiên không qua</b> — nó và mọi cái sau đều bị giữ lại. Cùng lời hứa FWER như Bonferroni, với mọi kiểu phụ thuộc, nhưng không bao giờ chọn ít hơn. Không có lý do dùng Bonferroni ngoài việc dễ tính nhẩm.</li>
+          <li><b>Holm</b>: xếp p tăng dần; so cái nhỏ nhất với α/m, cái thứ hai với α/(m − 1), cái thứ ba với α/(m − 2)… và <b>dừng ở cái đầu tiên không qua</b> — nó và mọi cái sau đều bị giữ lại. Cùng lời hứa FWER như Bonferroni, với mọi kiểu phụ thuộc, nhưng không bao giờ chọn ít hơn. Chỉ cần quyết định giữ hay bỏ thì dùng Holm. Cần khoảng tin cậy cho từng thước đo thì Bonferroni cho khoảng đồng thời đơn giản: mỗi khoảng ở mức 1 − α/m; khoảng tương thích với Holm thường không cho thêm thông tin.</li>
           <li><b>Benjamini–Hochberg</b>: xếp p tăng dần; tìm hạng k <b>lớn nhất</b> mà p₍ₖ₎ ≤ k·q/m; nhận hết các hạng 1 tới k — kể cả những cái ở giữa không tự qua ngưỡng của mình. Giữ FDR ≤ q khi các kiểm định độc lập hoặc phụ thuộc dương; với phụ thuộc tuỳ ý có bản sửa khắt khe hơn (Benjamini–Yekutieli, <code>fdr_by</code> trong statsmodels).</li>
         </ul>
         <p>Cách chữa rẻ nhất là không cần hiệu chỉnh: chốt <b>một</b> thước đo chính (OEC, <a href="#s-oec">mục 2.5</a>) trước khi chạy, và quyết định dựa vào nó ở α = 0,05. Các thước đo phụ để hiểu vì sao; nếu định hành động theo một thước đo phụ thì đưa nó vào họ kiểm định và hiệu chỉnh. Cắt kết quả theo 20 tỉnh hay 10 loại cửa hàng cũng là chạy 20 hay 10 phép kiểm: một phân khúc &ldquo;thắng&rdquo; tìm được theo cách này là một giả thuyết để kiểm lại bằng thí nghiệm mới, không phải một kết luận (xem <a href="#s-hte">mục 6.1</a>).</p>
@@ -1898,10 +1898,10 @@ for k in (1, 2, 4, 7, 14, 28):   <span class="cm"># nhìn k lần cách đều</
           <div class="lab__h">
             <p class="lab__k">Mô hình 8 · một bảng <span class="lc">p</span>, bốn cách đọc</p>
             <p class="lab__t">Bao nhiêu báo động giả là &ldquo;bình thường&rdquo;, và mỗi thủ tục giữ lại những thước đo nào</p>
-            <p class="lab__hint">Ở <b>k</b> = 10, khả năng có ít nhất một báo động giả là <b>40,1%</b>; kéo lên 20 là 64,2%. Rồi bấm từng chip ở bảng 10 thước đo: không hiệu chỉnh giữ <b>7</b>, Bonferroni <b>2</b>, Holm <b>3</b>, Benjamini–Hochberg <b>5</b>. Ở chip Benjamini–Hochberg, nhìn hạng 4 (p = 0,023): nó nằm <b>trên</b> ngưỡng riêng của mình (0,020) mà vẫn được giữ, vì hạng 5 (0,024 ≤ 0,025) lọt ngưỡng và BH nhận hết từ hạng 1 tới hạng lớn nhất còn lọt.</p>
+            <p class="lab__hint">Ở <b>m</b> = 10, khả năng có ít nhất một báo động giả là <b>40,1%</b>; kéo lên 20 là 64,2%. Rồi bấm từng chip ở bảng 10 thước đo: không hiệu chỉnh giữ <b>7</b>, Bonferroni <b>2</b>, Holm <b>3</b>, Benjamini–Hochberg <b>5</b>. Ở chip Benjamini–Hochberg, nhìn hạng 4 (p = 0,023): nó nằm <b>trên</b> ngưỡng riêng của mình (0,020) mà vẫn được giữ, vì hạng 5 (0,024 ≤ 0,025) lọt ngưỡng và BH nhận hết từ hạng 1 tới hạng lớn nhất còn lọt.</p>
           </div>
           <div class="lab__b">
-            <div class="row"><label for="m-fwer-k">Số phép kiểm <span class="lc">k</span></label><div class="inline"><input type="range" id="m-fwer-k" min="1" max="50" step="1" value="10"><span class="val" id="m-fwer-kv">10</span></div></div>
+            <div class="row"><label for="m-fwer-k">Số phép kiểm <span class="lc">m</span></label><div class="inline"><input type="range" id="m-fwer-k" min="1" max="50" step="1" value="10"><span class="val" id="m-fwer-kv">10</span></div></div>
             <svg class="viz" id="m-fwer-curve" viewBox="0 0 620 190" role="img" aria-label="Đường khả năng có ít nhất một báo động giả theo số phép kiểm, từ 1 tới 50"></svg>
             <div class="reads">
               <div class="read bad"><div class="k">Ít nhất một báo động giả</div><div class="v" id="m-fwer-f">40,1%</div></div>
@@ -1935,9 +1935,9 @@ for k in (1, 2, 4, 7, 14, 28):   <span class="cm"># nhìn k lần cách đều</
         </div>
 
         <div class="fx">
-          <p class="fx__line sm"><span class="tm" data-n="Tỉ lệ sai theo họ: xác suất có ÍT NHẤT MỘT báo động giả trong k phép kiểm — công thức này đúng khi chúng độc lập.">FWER</span> <span class="op">=</span> 1 − (1 − <span class="tm" data-n="Mức ý nghĩa của MỖI phép kiểm, thường 0,05.">α</span>)<sup><span class="tm" data-n="Số phép kiểm: số thước đo × số phân khúc × số lần nhìn…">k</span></sup></p>
+          <p class="fx__line sm"><span class="tm" data-n="Tỉ lệ sai theo họ: xác suất có ÍT NHẤT MỘT báo động giả trong m phép kiểm — công thức này đúng khi chúng độc lập.">FWER</span> <span class="op">=</span> 1 − (1 − <span class="tm" data-n="Mức ý nghĩa của MỖI phép kiểm, thường 0,05.">α</span>)<sup><span class="tm" data-n="Số phép kiểm: số thước đo × số phân khúc × số lần nhìn…">m</span></sup></p>
           <p class="fx__line sm">Holm: <span class="tm" data-n="p-value nhỏ thứ i sau khi xếp tăng dần.">p₍ᵢ₎</span> ≤ α/(m − i + 1), dừng ở lần hỏng đầu · BH: k = max{ i : p₍ᵢ₎ ≤ i·<span class="tm" data-n="Mức FDR bạn chọn, thường 0,05 hoặc 0,10.">q</span>/m }, nhận hạng 1…k</p>
-          <p class="fx__note">Đây chỉ là cách viết gọn của đúng những gì mô hình vừa làm: đường cong ở trên là dòng thứ nhất, bậc thang ngưỡng ở hình dưới là dòng thứ hai. Với k = 10 và α = 0,05: 1 − 0,95¹⁰ = 0,401.</p>
+          <p class="fx__note">Đây chỉ là cách viết gọn của đúng những gì mô hình vừa làm: đường cong ở trên là dòng thứ nhất, bậc thang ngưỡng ở hình dưới là dòng thứ hai. Với m = 10 và α = 0,05: 1 − 0,95¹⁰ = 0,401. Ở dòng hai, k là hạng lớn nhất còn lọt ngưỡng, không phải số phép kiểm.</p>
         </div>
 
         <div class="tri">
@@ -2428,7 +2428,7 @@ for kieu in ('nga_ba', 'day_chuyen', 'va_cham'):
           <div class="a"><p><b>Số năm là khách</b>: có trước T, ảnh hưởng cả T lẫn Y — ngã ba, phải kiểm soát. <b>Hạng VIP cuối quý</b>: bị cả T (điểm từ mã) lẫn Y (tổng chi tiêu) gây ra — va chạm, cấm kiểm soát. Đưa hạng VIP vào hồi quy sẽ làm khách dùng mã trông như chi ít hơn, y như kịch bản va chạm của mô hình.</p></div>
         </details>
 
-        <div class="take"><div class="k">Mang theo</div><p>Vẽ mũi tên trước khi chọn biến. Kiểm soát biến gây nhiễu; <b>đừng</b> kiểm soát trung gian nếu muốn tác động toàn phần; <b>không bao giờ</b> kiểm soát biến va chạm.</p></div>
+        <div class="take"><div class="k">Mang theo</div><p>Vẽ mũi tên trước khi chọn biến. Kiểm soát biến gây nhiễu; <b>đừng</b> kiểm soát trung gian nếu muốn tác động toàn phần; <b>cấm</b> kiểm soát biến va chạm do T gây ra. Biến va chạm có trước T thì xét bằng tiêu chí cửa sau: kiểm soát nó là mở một con đường, nên phải chặn con đường ấy bằng một biến khác.</p></div>
       </section>
 
       <section id="s-adjust" class="ch-o">
@@ -3725,7 +3725,7 @@ print(f'DML      : {theta:.2f} (SE {se:.2f})')
           <div class="mini ch-x"><p class="t">3 · Chốt mọi thứ trước khi bật thí nghiệm</p><p class="d">Thước đo chính, MDE, số tuần đủ, thước đo bảo vệ, bảng quyết định. Cỡ mẫu đi theo <b>1/MDE²</b>: muốn thấy một tác động nhỏ bằng một nửa thì cần <b>gấp bốn</b> số người (<a href="#s-power">mục 2.3</a>, <a href="#s-oec">2.5</a>).</p></div>
           <div class="mini ch-x"><p class="t">4 · p &lt; 0,05 chỉ đúng cho một lần nhìn đã định</p><p class="d">Nhìn mỗi ngày trong 4 tuần rồi dừng ngay khi p &lt; 0,05 thì <b>27,5%</b> số thí nghiệm A/A — hai bản y hệt nhau — dừng với một báo động giả, không phải 5%; đúng một nửa số ấy, 13,7%, báo bản mới thắng (<a href="#s-peek">mục 3.1</a>). Nhiều thước đo, nhiều phân khúc thì hiệu chỉnh, và nói rõ đã hiệu chỉnh cách nào (<a href="#s-multi">3.2</a>).</p></div>
           <div class="mini ch-x"><p class="t">5 · Kiểm tỉ lệ chia trước khi đọc kết quả</p><p class="d">Chia lệch là dấu hiệu <b>dữ liệu hỏng</b>, không phải một tác động: lệch rõ thì dừng đọc và đi tìm nguyên nhân (<a href="#s-srm">mục 3.3</a>). Và tính sai số theo <b>đúng đơn vị đã tung đồng xu</b> (<a href="#s-interfere">3.4</a>, <a href="#s-units">3.5</a>).</p></div>
-          <div class="mini ch-o"><p class="t">6 · Vẽ sơ đồ trước khi chọn biến đưa vào hồi quy</p><p class="d">Kiểm soát biến gây nhiễu; đừng kiểm soát biến trung gian nếu muốn tác động toàn phần; <b>đừng bao giờ</b> kiểm soát biến va chạm. Hồi quy, ghép cặp, IPW đều trả bằng <b>cùng một giả định</b>: không còn biến gây nhiễu nào chưa đo (<a href="#s-dag">mục 4.1</a>–<a href="#s-sense">4.5</a>).</p></div>
+          <div class="mini ch-o"><p class="t">6 · Vẽ sơ đồ trước khi chọn biến đưa vào hồi quy</p><p class="d">Kiểm soát biến gây nhiễu; đừng kiểm soát biến trung gian nếu muốn tác động toàn phần; <b>cấm</b> kiểm soát biến va chạm do T gây ra, còn biến va chạm có trước T thì xét bằng tiêu chí cửa sau. Hồi quy, ghép cặp, IPW đều trả bằng <b>cùng một giả định</b>: không còn biến gây nhiễu nào chưa đo (<a href="#s-dag">mục 4.1</a>–<a href="#s-sense">4.5</a>).</p></div>
           <div class="mini ch-o"><p class="t">7 · Thí nghiệm tự nhiên đổi một giả định lấy một kết luận</p><p class="d">DiD cần <b>xu hướng song song</b>; RDD cần người ngay hai bên vạch giống nhau; biến công cụ cần cú hích <b>chỉ đi qua</b> việc dùng. Mỗi thiết kế cho một đại lượng khác: ATT, tác động tại vạch, LATE — hai con số khác nhau chưa chắc đã mâu thuẫn (<a href="#act5">chặng 5</a>).</p></div>
           <div class="mini ch-h"><p class="t">8 · Nhắm người đổi ý, không nhắm người dễ mua nhất</p><p class="d">Trung bình dương có thể giấu một nhóm bị hại. Chọn người theo <b>uplift</b>, chấm mô hình uplift trên một tập ngẫu nhiên hoá giữ lại; học máy thay việc đoán dạng hàm, <b>không thay giả định</b> (<a href="#act6">chặng 6</a>).</p></div>
         </div>
@@ -5064,7 +5064,7 @@ function shuffle(a, r) { for (var i = a.length - 1; i > 0; i--) { var j = Math.f
       txt(svgA, L - 6, Y(v) + 3.5, pct(v, 0), 'vs', 'end');
     });
     [1, 10, 20, 30, 40, 50].forEach(function (v) { txt(svgA, X(v), B + 15, v, 'vs', 'middle'); });
-    txt(svgA, R, B + 30, 'số kiểm định k', 'vs', 'end');
+    txt(svgA, R, B + 30, 'số kiểm định m', 'vs', 'end');
     txt(svgA, L, 14, 'Khả năng có ít nhất một báo động giả khi mọi thước đo đều không đổi', 'vt');
     var pts = [];
     for (var v = 1; v <= 50; v++) pts.push(X(v).toFixed(1) + ',' + Y(fwer(v, ALPHA)).toFixed(1));
@@ -6658,7 +6658,7 @@ var GLOSS = [
 ['average treatment effect','tác động trung bình (ATE)','E[Y(1) − Y(0)] trên <b>mọi</b> người: áp dụng cho tất cả so với không áp dụng cho ai.','#s-ate','ATE'],
 ['average treatment effect on the treated','tác động trên nhóm được áp dụng (ATT)','E[Y(1) − Y(0) | T = 1]: can thiệp đã mang lại gì cho <b>chính những người đã nhận</b>.','#s-ate','ATT'],
 ['average treatment effect on the controls','tác động trên nhóm không được áp dụng (ATC)','E[Y(1) − Y(0) | T = 0]: nếu áp dụng thêm cho những người <b>chưa nhận</b> thì được gì. Có sách gọi là ATU.','#s-ate','ATC|ATU'],
-['selection bias','thiên lệch chọn','E[Y(0) | T = 1] − E[Y(0) | T = 0]: hai nhóm <b>vốn đã khác nhau</b> bao nhiêu khi chưa ai làm gì. Chênh lệch ngây thơ = ATT + thiên lệch chọn.','#s-ate','thiên lệch chọn'],
+['selection bias','thiên lệch chọn','E[Y(0) | T = 1] − E[Y(0) | T = 0]: hai nhóm <b>vốn đã khác nhau</b> bao nhiêu khi chưa ai làm gì. Chênh lệch ngây thơ = ATT + thiên lệch chọn. Tên theo Mixtape, Angrist–Pischke; Hernán–Robins dùng chữ <i>selection bias</i> cho thiên lệch va chạm.','#s-ate','thiên lệch chọn'],
 ['reverse causality','đảo chiều nhân quả','Kết quả, hoặc dấu hiệu sớm của nó, gây ra việc nhận “can thiệp” chứ không phải ngược lại: khách vốn mua nhiều mới cài app.','#s-traps3','reverse causation|đảo chiều nhân quả'],
 ['confounder','biến gây nhiễu','Biến gây ra <b>cả</b> việc nhận can thiệp <b>lẫn</b> kết quả, tạo ra chênh lệch không phải do can thiệp — như cỡ cửa hàng trong bảng Simpson; đó là dạng ngã ba T ← Z → Y ở mục 4.1.','#s-dag','confounding|biến gây nhiễu|gây nhiễu'],
 ['Simpson\'s paradox','nghịch lý Simpson','Xu hướng trong từng nhóm con <b>đảo chiều</b> khi gộp các nhóm lại, vì các nhóm con có cỡ và tỉ lệ nhận can thiệp khác nhau.','#s-traps3','nghịch lý Simpson|Simpson'],
@@ -6678,18 +6678,18 @@ var GLOSS = [
 ['peeking','nhìn trộm','Xem kết quả thí nghiệm giữa chừng và <b>dừng</b> khi thấy p &lt; 0,05. Nhìn mỗi ngày trong 4 tuần làm tỉ lệ báo động giả thành 27,5% thay vì 5%.','#s-peek','nhìn trộm'],
 ['A/A test','thí nghiệm A/A','Chia khách làm hai nhóm nhưng cho cả hai <b>cùng một</b> bản. Tác động thật bằng 0, nên mọi lần báo &ldquo;có khác biệt&rdquo; là báo động giả — cái cân để đo cả quy trình phân tích.','#s-peek','thí nghiệm A/A'],
 ['sequential testing','kiểm định tuần tự','Nhìn nhiều lần mà vẫn giữ tổng báo động giả ở α: ngưỡng định trước cho từng lần (O\'Brien–Fleming, Pocock), hàm chi α (Lan–DeMets), hoặc p-value luôn hợp lệ (mSPRT, Johari và cộng sự).','#s-peek','kiểm định tuần tự|O\'Brien–Fleming|alpha spending|mSPRT|always-valid p-value'],
-['family-wise error rate','tỉ lệ sai theo họ (FWER)','Xác suất có <b>ít nhất một</b> báo động giả trong cả họ phép kiểm; với k phép kiểm độc lập là 1 − (1 − α)ᵏ. Bonferroni (α/m) và Holm (bước xuống) giữ nó ≤ α với mọi kiểu phụ thuộc.','#s-multi','FWER|Holm|Bonferroni'],
+['family-wise error rate','tỉ lệ sai theo họ (FWER)','Xác suất có <b>ít nhất một</b> báo động giả trong cả họ phép kiểm; với m phép kiểm độc lập là 1 − (1 − α)ᵐ. Bonferroni (α/m) và Holm (bước xuống) giữ nó ≤ α với mọi kiểu phụ thuộc.','#s-multi','FWER|Holm|Bonferroni'],
 ['false discovery rate','tỉ lệ phát hiện sai (FDR)','Trung bình, trong số các phát hiện, bao nhiêu phần là giả. Benjamini–Hochberg giữ nó ≤ q: tìm hạng k <b>lớn nhất</b> với p₍ₖ₎ ≤ k·q/m rồi nhận hạng 1…k.','#s-multi','FDR|Benjamini–Hochberg'],
 ['sample ratio mismatch','lệch tỉ lệ chia (SRM)','Tỉ lệ khách thật sự rơi vào các nhóm lệch khỏi tỉ lệ đã đặt quá mức may rủi (kiểm bằng χ²). Dấu hiệu có nhóm bị rơi khách không ngẫu nhiên — đừng đọc kết quả.','#s-srm','SRM|lệch tỉ lệ chia'],
 ['interference','lây giữa hai nhóm','Kết quả của một đơn vị bị việc can thiệp lên đơn vị <b>khác</b> tác động: hàng tồn chung, khách chuyển cửa hàng, nhân viên chung. Vi phạm phần &ldquo;không lây&rdquo; của SUTVA.','#s-interfere','spillover|lây nhau|lây sang nhau'],
 ['cluster randomization','ngẫu nhiên hoá theo cụm','Tung đồng xu cho cả cụm — cửa hàng, vùng — thay vì từng khách, để sự lây nằm gọn trong một nhóm. Cái giá là hệ số thiết kế.','#s-interfere','ngẫu nhiên hoá theo cụm'],
 ['design effect','hệ số thiết kế (DEFF)','Phương sai thật gấp bao nhiêu lần phương sai tính như thể mọi đơn vị độc lập. Với cụm cùng cỡ m: 1 + (m − 1)·ICC; n hiệu dụng = n/DEFF.','#s-interfere','DEFF|hệ số thiết kế'],
 ['intraclass correlation','tương quan nội cụm (ICC)','Phần phương sai nằm <b>giữa</b> các cụm: 0 là khách cùng cửa hàng không giống nhau hơn chút nào, 1 là giống hệt nhau.','#s-interfere','ICC|tương quan nội cụm'],
-['delta method','phương pháp delta','Xấp xỉ phương sai của một hàm các trung bình bằng khai triển bậc một. Với tỉ số R̄/Ō theo khách: Var ≈ Var(R − θO)/(nŌ²), θ = R̄/Ō.','#s-units','phương pháp delta'],
+['delta method','phương pháp delta','Xấp xỉ phương sai của một hàm các trung bình bằng khai triển bậc một. Với tỉ số R̄/Ō theo khách: Var ≈ Var(R − (R̄/Ō)·O)/(nŌ²).','#s-units','phương pháp delta'],
 ['novelty effect','hiệu ứng mới lạ','Tác động ban đầu phồng lên vì khách tò mò bấm thử cái mới, rồi xẹp. Ngược lại là hiệu ứng quen cũ (primacy): khách quen lóng ngóng lúc đầu. Nhiều &ldquo;xu hướng&rdquo; của vài ngày đầu chỉ là nhiễu.','#s-novelty','novelty|primacy|hiệu ứng mới lạ|hiệu ứng quen cũ'],
 ['directed acyclic graph','sơ đồ nhân quả (DAG)','Đồ thị mũi tên, A → B nghĩa là &ldquo;can thiệp đổi A thì B đổi&rdquo;, không có vòng. Dùng để chọn biến phải kiểm soát và biến cấm kiểm soát.','#s-dag','DAG|sơ đồ nhân quả'],
 ['mediator','biến trung gian','Biến nằm trên đường T → Z → Y. Kiểm soát nó làm mất phần tác động đi qua nó, chỉ còn tác động trực tiếp.','#s-dag','biến trung gian'],
-['collider','biến va chạm','Biến bị cả hai đầu gây ra: T → Z ← Y. Con đường qua nó tự đóng; kiểm soát nó, hay chọn mẫu theo nó, là mở ra một liên hệ giả.','#s-dag','biến va chạm'],
+['collider','biến va chạm','Hậu quả chung của hai biến trên một con đường: T → Z ← Y, hoặc T → Z ← một nguyên nhân của Y (SMS → đã ghé ← khách quen). Con đường qua nó tự đóng; kiểm soát nó, hay chọn mẫu theo nó, là mở ra một liên hệ giả.','#s-dag','biến va chạm'],
 ['backdoor criterion','tiêu chí cửa sau','Tập biến kiểm soát phải chặn mọi con đường T–Y bắt đầu bằng mũi tên chĩa <b>vào</b> T, và không chứa biến nào là hậu quả của T (Pearl).','#s-dag','cửa sau'],
 ['unconfoundedness','không còn biến gây nhiễu chưa đo','Giả định: trong số các đơn vị cùng X, việc nhận can thiệp coi như tung đồng xu — (Y(0), Y(1)) ⊥ T | X. Còn gọi là conditional ignorability. Không kiểm được bằng dữ liệu.','#s-adjust','conditional ignorability|không còn biến gây nhiễu nào chưa đo|không còn biến gây nhiễu chưa đo'],
 ['overlap','chồng lấn','Ở mọi mức X đều có cả đơn vị nhận lẫn không nhận can thiệp: 0 &lt; e(x) &lt; 1. Thiếu thì hồi quy phải ngoại suy và trọng số IPW nổ tung. Còn gọi là positivity.','#s-adjust','positivity|chồng lấn'],
