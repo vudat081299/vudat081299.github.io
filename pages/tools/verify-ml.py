@@ -730,6 +730,8 @@ def run_ml_r3():
     need('đạo hàm riêng: giữ nguyên tham số khác', 'nhích w lên một tí, <b>giữ nguyên mọi tham số khác</b>, thì J đổi bao nhiêu')
     for key in ('gradient', 'partial derivative'):
         claim(f'GLOSS có mục "{key}"', key in gl, 'thuật ngữ nền phải có popup')
+    claim('GLOSS learning rate: tên Việt "tốc độ học" (thống nhất với trang Toán)',
+          gl.get('learning rate') is not None and gl['learning rate'][1] == 'tốc độ học')
     for sym in ('<span class="g">n<sup>[l]</sup></span>', '<span class="g">x<sup>&lt;t&gt;</sup></span>', '<span class="g">θ</span>'):
         need('bảng ký hiệu', sym)
     need('ký hiệu dùng lại', '<b>Vài chữ bị dùng lại với nghĩa khác.</b>')
