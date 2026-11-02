@@ -1147,6 +1147,42 @@ def run_101():
     claim('mọi tên thật trong bảng đều có ở thân bài', not gone, f'thiếu: {gone}')
     claim('không câu tự khen bảng', 'quan trọng đến vậy' not in HTML)
 
+    # ══ vòng 3: câu đúng-có-điều-kiện, không được viết thành luôn-đúng ══════
+    G3 = {r[1]: r for r in gloss_records(r"\['([^']*)',\s*'([^']*)',\s*'([^']*)'\]")}
+    # Lồi chỉ hứa "đáy nào cũng thấp nhất", không hứa một đáy duy nhất (Boyd–Vandenberghe §4.2.2).
+    claim('lồi không phải "chỉ một cái đáy"', 'chỉ đúng một cái đáy' not in HTML and 'cái bát duy nhất' not in HTML
+          and 'đáy giả' in G3.get('convex', ('', '', ''))[2], f"GLOSS convex: {G3.get('convex')}")
+    need('lồi: đáy có thể là cả rãnh', 'Lồi không hứa chỉ có một điểm đáy')
+    # from_logits=True đòi lớp cuối tuyến tính; ô "Lớp cuối" mà chỉ ghi softmax thì làm theo cả hàng là bóp hai lần.
+    row = re.search(r'<tr><td>Một trong k loại[^\n]*?</tr>', HTML)
+    claim('bảng tra: softmax + from_logits nói rõ lớp cuối tuyến tính', bool(row) and 'from_logits=True' in row.group(0)
+          and 'lớp cuối để tuyến tính' in row.group(0), row.group(0)[:160] if row else 'không thấy hàng')
+    # Glorot: Var = 2/(vào + ra) = 1/trung bình(vào, ra); He: Var = 2/vào. "Cả hai chia cho căn số vào" là quy ước của khoá.
+    fi, fo = 300, 100
+    claim('Xavier = chia cho căn trung bình số vào và số ra', abs(2 / (fi + fo) - 1 / ((fi + fo) / 2)) < 1e-15)
+    need('Xavier trong thân bài', 'Xavier chia cho căn của trung bình số đầu vào và số đầu ra')
+    claim('không còn "Cả hai đều là chia cho căn số đầu vào"', 'Cả hai đều là "chia cho căn số đầu vào"' not in HTML)
+    # Kính 3 + padding 1 giữ nguyên cỡ (kiểm ở trên), nên "tích chập chỉ làm ảnh nhỏ đi" là sai.
+    claim('tích chập không "chỉ làm ảnh nhỏ đi"', out(32, 3, 1, 1) == 32 and 'chỉ làm ảnh nhỏ đi' not in HTML
+          and 'chỉ làm ảnh <i>nhỏ</i> đi' not in HTML)
+    # Hệ số chặn B là lời đoán khi đầu vào bằng 0; đầu vào là "nóng hơn 20 độ mấy độ".
+    need('đầu vào đo từ mốc 20 độ', 'nóng hơn 20 độ mấy độ')
+    need('B là lời đoán ở đầu vào 0', 'số cốc đoán cho ngày có độ nóng bằng 0, tức đúng 20 độ')
+    # Mức người chỉ là ước lượng trên của sai số Bayes: nhãn m6 không được khẳng định chắc.
+    claim('m6 không gọi khoảng đầu là chắc chắn không tránh được', "['không tránh được', 0, h," not in HTML
+          and 'Khoảng đầu không ai chữa được' not in HTML)
+    claim('GLOSS xấp xỉ phổ quát nói "gần đúng"', 'gần đúng' in G3.get('universal approximation', ('',))[0])
+    claim('scaling laws là luỹ thừa, không phải "tốt đều"', 'tăng đều thì tốt đều' not in HTML)
+    need('scaling laws: gấp mười, giảm cùng tỉ lệ', 'mỗi lần gấp mười sức tính, điểm trừ giảm đi cùng một tỉ lệ')
+    claim('RLHF: người so câu trả lời, mô hình chấm điểm', 'điểm thưởng do người chấm' not in HTML)
+    claim('số đầu là siêu tham số, không phải hằng số tám', 'tám phép nhìn song song' not in HTML)
+    claim('tách đẳng biến và bất biến', 'translation equivariance' in G3 and 'translation invariance' in G3)
+    need('SGD: tên của khoá khác tên của thư viện', 'gọi cả tụt dốc theo mini-batch là SGD')
+    need('ε ngưỡng khác ε làm bừa', 'ε ở đây là một ngưỡng')
+    need('Bellman: quy ước của khoá so với Sutton & Barto', 'cùng ý, lệch chỉ số một bước')
+    claim('GLOSS học có giám sát nói "gần như"', G3.get('supervised learning', ('', '', ''))[2].startswith('gần như'))
+
+
 
 def main():
     global HTML
