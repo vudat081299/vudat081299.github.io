@@ -161,6 +161,19 @@ def run_algebra():
     if rank(dep) != 2:
         fails.append('1.3: hạng của hệ có hàng phụ thuộc phải là 2')
     need('1.3 hạng 2', 'hạng = 2')
+    # det 3×3 tính bằng khử: chỉ trừ bội của hàng khác thì det = tích các trụ
+    def det3(M):
+        return (M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1])
+                - M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0])
+                + M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0]))
+    claim('1.3 det = tích các trụ', det3(A3) == 1 * 1 * 1 and det3(dep) == 0,
+          f'det bảng táo–chuối–cam = {det3(A3)}, bảng hạng 2 = {det3(dep)}')
+    need('1.3 det bảng đủ tin', 'có ba trụ bằng 1, nên det = 1')
+    need('1.3 det bảng hạng 2', 'thành toàn 0, nên det = 0')
+    h3 = [a - 2 * b for a, b in zip(dep[2] + [21], dep[0] + [9])]
+    h2 = [a - b for a, b in zip(dep[1] + [12], dep[0] + [9])]
+    claim('1.3 bước khử bội 2', h3 == h2 == [0, 1, 0, 3], f'H3 − 2·H1 = {h3}, H2 − H1 = {h2}')
+    need('1.3 bước khử bội 2 trong bài', 'Hàng 3 trừ 2 lần hàng 1 còn (0, 1, 0 | 3)')
     if 9 + 12 != 21:
         fails.append('1.3: 21 phải bằng 9 + 12')
     # hạng 3 chỉ nói "nhiều nhất một bộ giá": tờ thứ tư cãi nhau thì hệ vô nghiệm
@@ -242,6 +255,13 @@ def run_algebra():
     need('1.9 λ = 2', '<b>2 lần</b>')
     # vì sao det(A − λI) = 0, giải tay cho đúng máy mặc định
     need('1.9 phương trình đặc trưng', '(3 \u2212 λ)² \u2212 1 = 0')
+    for lm, v in [(4, (1, 1)), (2, (1, -1))]:
+        Ml = [[3 - lm, 1], [1, 3 - lm]]
+        claim(f'1.9 (A − {lm}I)v = 0', det2(Ml) == 0 and all(r[0] * v[0] + r[1] * v[1] == 0 for r in Ml),
+              f'v = {v} phải thoả (A − {lm}I)v = 0 và hệ ấy phải suy biến')
+    need('1.9 tìm v cho λ = 4', mono([[3 - 4, 1], [1, 3 - 4]]).replace('-', '\u2212') + '</span>v = 0')
+    need('1.9 v cho λ = 4', 'nên v₂ = v₁ và v = (1, 1)')
+    need('1.9 v cho λ = 2', 'nên v = (1, \u22121)')
     # λ được phép âm: máy gương lật (1, −1)
     claim('1.9 gương có λ = −1', eig2(0, 1, 1, 0) == (1.0, -1.0), 'máy gương phải có trị riêng 1 và −1')
     need('1.9 gương', 'vector riêng với λ = \u22121')
@@ -294,6 +314,18 @@ def run_algebra():
     # bóng lên trục 1: phương sai của mười cái bóng đúng bằng λ1
     z = [((p[0] - mx) + (p[1] - my)) / math.sqrt(2) for p in X]
     num('1.10 bóng bạn 1', z[0], 2)
+    def var_dir(a, b):
+        return sum((a * (p[0] - mx) + b * (p[1] - my)) ** 2 for p in X) / (n - 1)
+    r2 = 1 / math.sqrt(2)
+    num('1.10 uᵀCu trục x', var_dir(1, 0), 2, ctx='<b>')
+    num('1.10 uᵀCu hướng −45°', var_dir(r2, -r2), 2, ctx='cho 4/9 ≈ <b>')
+    num('1.10 uᵀCu hướng 45°', var_dir(r2, r2), 2, ctx='cho 161/9 ≈ <b>')
+    claim('1.10 khai triển uᵀCu', abs(2 * Sxy - 157) < 1e-9 and abs(Sxx - 82.5) < 1e-9,
+          'Σdx² phải là 82,5 và 2·Σdx·dy phải là 157')
+    need('1.10 khai triển trong bài', '82,5a² + 157ab + 82,5b² = 82,5 + 157ab')
+    best = max(range(0, 360), key=lambda d: var_dir(math.cos(math.radians(d)), math.sin(math.radians(d))))
+    claim('1.10 hướng tãi rộng nhất là u₁', best in (45, 225) and abs(var_dir(r2, r2) - l1) < 1e-9,
+          f'quét mọi hướng: rộng nhất ở {best}°, phải là 45° và bằng λ1')
     claim('1.10 phương sai của bóng = λ1', abs(sum(t * t for t in z) / (n - 1) - l1) < 1e-9,
           'phương sai của bóng lên trục 1 phải bằng λ1')
     # quên trừ trung bình thì trục 1 lệch khỏi 45°
@@ -383,6 +415,12 @@ def run_calculus():
     need("2.2 σ' cực đại", '<b>0,25</b>')
     if abs(sig(0) * (1 - sig(0)) - 0.25) > 1e-15:
         fails.append("2.2: σ'(0) phải bằng đúng 0,25")
+    claim("2.2 σ' = e⁻ˣ/(1 + e⁻ˣ)² = σ(1 − σ)",
+          all(abs(math.exp(-t) / (1 + math.exp(-t)) ** 2 - sig(t) * (1 - sig(t))) < 1e-12
+              and abs(math.exp(-t) / (1 + math.exp(-t)) - (1 - sig(t))) < 1e-12 for t in (-3, -0.5, 0, 1, 4)),
+          'hai bước suy đạo hàm sigmoid phải đúng tại mọi x')
+    need("2.2 suy σ'", 'σ′ = e⁻ˣ/(1 + e⁻ˣ)²')
+    need("2.2 suy σ' bước cuối", 'e⁻ˣ/(1 + e⁻ˣ) = 1 − 1/(1 + e⁻ˣ) = 1 − σ')
 
     # 2.3 — cực tiểu
     g = lambda x: x * x - 4 * x + 7
@@ -463,6 +501,13 @@ def run_calculus():
         fails.append(f'2.6: đạo hàm phải là 54, công thức {der}, đo được {numeric}')
     need('2.6 đạo hàm chuỗi', '<b>54</b>')
     need('2.6 bánh răng', '<b>Sáu vòng.</b>')
+    W, gL = [[1, 2], [3, 4]], [1, 2]
+    by_path = [sum(W[i][j] * gL[i] for i in range(2)) for j in range(2)]   # nhân dọc từng đường rồi cộng
+    WTg = [r[0] for r in matmul(T(W), [[gL[0]], [gL[1]]])]
+    claim('2.6 cộng các đường = Wᵀg', by_path == WTg == [7, 10], f'theo đường {by_path}, Wᵀg {WTg}')
+    need('2.6 ∂L/∂x₁', '∂L/∂x₁ = 1·1 + 3·2 = 7')
+    need('2.6 ∂L/∂x₂', '∂L/∂x₂ = 2·1 + 4·2 = 10')
+    need('2.6 Wᵀ trong khối công thức', mxspans(T(W)))
     if 2 * 3 != 6:
         fails.append('2.6: 2 × 3 phải bằng 6')
     v = 0.25 ** 10
@@ -549,6 +594,17 @@ def run_calculus():
     so = (L(1 + 1e-6) - L(1 - 1e-6)) / 2e-6
     claim('2.8 rút gọn log-loss', abs(so - (sig(2) - 1) * 2) < 1e-6,
           f'đạo hàm số {so} không khớp (σ(z) − y)·x')
+    pts = [(1, 2), (2, 5)]
+    w_hat = sum(a * b for a, b in pts) / sum(a * a for a, _ in pts)
+    Lw = lambda w_: sum((w_ * a - b) ** 2 for a, b in pts)
+    claim('2.8 đáy của tổng bình phương', abs((Lw(w_hat + 1e-6) - Lw(w_hat - 1e-6)) / 2e-6) < 1e-6,
+          f'w = {w_hat} phải làm L′(w) = 0')
+    need('2.8 w = Σxy/Σx²', '(1·2 + 2·5)/(1 + 4) = 12/5 = ' + vi(w_hat, 1))
+    need('2.8 phương trình chuẩn', '<b>X<sup>T</sup>Xw = X<sup>T</sup>y</b>')
+    claim('2.8 quy đồng dL/dp', all(abs(-(yy / pp - (1 - yy) / (1 - pp)) - (pp - yy) / (pp * (1 - pp))) < 1e-12
+                                     for pp in (0.1, 0.5, 0.88) for yy in (0, 1)),
+          '−[y/p − (1 − y)/(1 − p)] phải bằng (p − y)/(p(1 − p))')
+    need('2.8 bước dL/dp', 'dL/dp = −[y/p − (1 − y)/(1 − p)]')
 
 
 # ───────────────────────────── xác suất & thống kê ───────────────────────────
@@ -662,6 +718,9 @@ def run_stats():
     need('3.7 10!', '3.628.800/(120·120) = 252')
     need('3.7 mẫu số', '1.024')
     num('3.7 độ lệch chuẩn', math.sqrt(10 * 0.25), 2, ctx='lệch chuẩn ')
+    claim('3.7 phương sai một lần tung', all(abs((1 - pp) ** 2 * pp + pp ** 2 * (1 - pp) - pp * (1 - pp)) < 1e-15
+                                            for pp in (0.1, 0.5, 0.7)), 'phải ra p(1 − p)')
+    need('3.7 bước phương sai', '(1 − p)²·p + (0 − p)²·(1 − p) = p(1 − p)')
 
     # 3.8 phân phối chuẩn
     for k, d in [(1, 2), (2, 2), (3, 2), (1.96, 2)]:
@@ -717,6 +776,11 @@ def run_stats():
     # 4.2 giới hạn trung tâm
     sd_dice = math.sqrt(35 / 12)
     num('4.2 σ/√30', sd_dice / math.sqrt(30), 3, ctx='<b>')
+    num('4.2 sai số ±3%', 1.96 * 0.5 / math.sqrt(1000) * 100, 1, ctx='1,96·0,5/√1.000 ≈ ')
+    claim('4.2 gấp bốn mẫu thì sai số còn một nửa', round(1.96 * 0.5 / math.sqrt(4000) * 100, 1) == 1.5,
+          '4.000 người phải cho ±1,5%')
+    need('4.2 gấp bốn', 'Muốn ±1,5% thì phải hỏi gấp bốn, 4.000 người')
+    need('4.2 tên sai số chuẩn', 'gọi là <b>sai số chuẩn</b> (standard error, SE) của trung bình')
 
     # 4.3 MLE
     for p, want_pct in [(0.5, 11.7), (0.7, 26.7), (0.9, 5.7)]:

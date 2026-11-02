@@ -790,8 +790,10 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <tr><td><b>P(A|B)</b></td><td>pê của A biết B</td><td>&ldquo;Nếu đã biết B xảy ra, thì A còn thường xuyên tới mức nào&rdquo;.</td></tr>
               <tr><td><b>μ</b>, <b>σ</b></td><td>muy, xích-ma nhỏ</td><td>Trung bình, và &ldquo;thường lệch khỏi trung bình chừng bao nhiêu&rdquo;. Riêng σ(z) — có ngoặc, bên trong là một biểu thức — là hàm sigmoid của khoá 2: cùng chữ, khác hẳn nghĩa.</td></tr>
               <tr><td><b>λ</b></td><td>lam-đa</td><td>Trong khoá 1: hệ số phóng của một hướng riêng. Trong học máy: mức chính quy hoá. Hai nghĩa khác nhau, cùng một chữ.</td></tr>
-              <tr><td><b>α</b></td><td>an-pha</td><td>Trong khoá 2: độ dài bước học của gradient descent. Trong khoá 3: mức ý nghĩa của một kiểm định (thường 0,05). Hai nghĩa khác nhau, cùng một chữ.</td></tr>
-              <tr><td><b>θ</b></td><td>tê-ta</td><td>&ldquo;Bộ tham số&rdquo; — cách gọi gộp mọi con số mà mô hình phải học.</td></tr>
+              <tr><td><b>α</b></td><td>an-pha</td><td>Trong khoá 2: tốc độ học của gradient descent. Trong khoá 3: mức ý nghĩa của một kiểm định (thường 0,05). Hai nghĩa khác nhau, cùng một chữ. Ngoài trang còn nghĩa thứ ba: scikit-learn gọi λ (mức chính quy hoá) là <code>alpha</code>.</td></tr>
+              <tr><td><b>θ</b></td><td>tê-ta</td><td>&ldquo;Bộ tham số&rdquo; — cách gọi gộp mọi con số mà mô hình phải học. Ở mục 1.5 và 2.4, θ là góc giữa hai mũi tên (cos θ).</td></tr>
+              <tr><td><b>X</b>, <b>z</b>, <b>p</b></td><td>ích hoa, dét, pê</td><td>X hoa là cả bảng dữ liệu ở khoá 1, là một biến ngẫu nhiên ở khoá 3; x thường là một giá trị. z và p đổi nghĩa theo mục (một cái bóng, một xác suất, một thống kê kiểm định); mỗi lần dùng, trang nói nghĩa ngay tại chỗ.</td></tr>
+              <tr><td><b>(a, b)</b>, <b>(a; b)</b></td><td>cặp a, b</td><td>Một cặp số: toạ độ một điểm, hoặc một vector. Có số thập phân thì ngăn bằng dấu chấm phẩy cho khỏi lẫn với dấu phẩy thập phân: (2,5; 1,6).</td></tr>
             </tbody>
           </table>
         </div>
@@ -832,7 +834,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <h3>Nhìn bằng mắt: mỗi câu đố là một đường thẳng</h3>
 
-        <p>Vẽ trục ngang là <b>giá bánh</b>, trục dọc là <b>giá kẹo</b>. Câu đố &ldquo;bánh + kẹo = 10&rdquo; không chỉ ra <i>một</i> đáp án — nó chỉ ra <b>cả một đường thẳng</b> những cặp giá có thể: (10; 0), (7; 3), (4; 6)&hellip; Câu đố thứ hai cũng vẽ ra một đường thẳng của riêng nó. <b>Chỗ hai đường cắt nhau</b> là cặp giá thoả cả hai — đáp án.</p>
+        <p>Vẽ trục ngang là <b>giá bánh</b>, trục dọc là <b>giá kẹo</b>. Câu đố &ldquo;bánh + kẹo = 10&rdquo; không chỉ ra <i>một</i> đáp án — nó chỉ ra <b>cả một đường thẳng</b> những cặp giá có thể: (10, 0), (7, 3), (4, 6)&hellip; Câu đố thứ hai cũng vẽ ra một đường thẳng của riêng nó. <b>Chỗ hai đường cắt nhau</b> là cặp giá thoả cả hai — đáp án.</p>
 
         <p>Và ngay lập tức bạn thấy được cả ba trường hợp có thể xảy ra trên đời, không cần học thuộc:</p>
 
@@ -891,7 +893,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="fx">
           <p class="fx__line">det <span class="mx mx--k" style="--cols:2"><span><span class="tm" data-n="<b>a</b> — số bánh trong hoá đơn thứ nhất. Cùng hàng với b: một hàng = một hoá đơn.">a</span></span><span><span class="tm" data-n="<b>b</b> — số kẹo trong hoá đơn thứ nhất. Cùng cột với d: một cột = một món hàng.">b</span></span><span><span class="tm" data-n="<b>c</b> — số bánh trong hoá đơn thứ hai.">c</span></span><span><span class="tm" data-n="<b>d</b> — số kẹo trong hoá đơn thứ hai.">d</span></span></span> <span class="op">=</span> ad <span class="op">−</span> bc</p>
-          <p class="fx__note">Bấm vào từng chữ để xem nó là con số nào trong hai hoá đơn. Hàng = một phương trình. Cột = một ẩn.</p>
+          <p class="fx__note">Bấm vào từng chữ để xem nó là con số nào trong hai hoá đơn. Hàng = một phương trình. Cột = một ẩn. ad − bc = 0 nghĩa là ad = bc, tức a : b = c : d — hai hoá đơn mua bánh và kẹo theo cùng một tỉ lệ, nên hoá đơn sau là hoá đơn trước nhân lên.</p>
         </div>
 
         <p>Thay số của ví dụ ở mục trước — hoá đơn 1 là (1 bánh, 1 kẹo), hoá đơn 2 là (1 bánh, 2 kẹo):</p>
@@ -963,12 +965,14 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <h3>Khi một tờ hoá đơn là tổng của hai tờ kia</h3>
 
-        <p>Đổi lần 3 thành &ldquo;2 táo, 3 chuối, 2 cam, hết 21 nghìn&rdquo;. Trông như một hoá đơn mới. Nhưng 21 = 9 + 12, và (2,3,2) = (1,1,1) + (1,2,1): <b>tờ thứ ba đúng bằng tờ một cộng tờ hai</b>. Khử xong, hàng thứ ba biến thành toàn số 0:</p>
+        <p>Đổi lần 3 thành &ldquo;2 táo, 3 chuối, 2 cam, hết 21 nghìn&rdquo;. Trông như một hoá đơn mới. Nhưng 21 = 9 + 12, và (2,3,2) = (1,1,1) + (1,2,1): <b>tờ thứ ba đúng bằng tờ một cộng tờ hai</b>: ba hàng <b>phụ thuộc tuyến tính</b>, dù không hàng nào là bội của hàng nào. Khử thì thấy ngay. Hàng 3 trừ 2 lần hàng 1 còn (0, 1, 0 | 3), đúng bằng hàng 2 sau khi trừ hàng 1. Trừ nốt hai hàng ấy cho nhau thì hàng thứ ba thành toàn số 0:</p>
 
         <div class="fx">
           <p class="fx__line sm"><span class="mx mx--sm" style="--cols:4"><span>1</span><span>1</span><span>1</span><span class="sep">9</span><span>1</span><span>2</span><span>1</span><span class="sep">12</span><span>2</span><span>3</span><span>2</span><span class="sep">21</span></span> <span class="op">→</span> <span class="mx mx--sm" style="--cols:4"><span><b>1</b></span><span>1</span><span>1</span><span class="sep">9</span><span>0</span><span><b>1</b></span><span>0</span><span class="sep">3</span><span>0</span><span>0</span><span>0</span><span class="sep">0</span></span> &nbsp; <span class="op">hạng = 2</span></p>
           <p class="fx__note">Hàng &ldquo;0 = 0&rdquo; là một câu đúng nhưng vô ích. Ba phương trình, chỉ <b>hai</b> tin tức, ba ẩn → thiếu một tin, nên có <b>vô số</b> bộ giá thoả cả ba hoá đơn.</p>
         </div>
+
+        <p><b>Định thức của bảng 3×3</b> cũng tính bằng chính phép khử này. Phép &ldquo;trừ một bội của hàng khác&rdquo; không làm đổi det, nên khi khử mà không phải đổi chỗ hàng thì det = <b>tích các trụ</b>. Bảng táo–chuối–cam có ba trụ bằng 1, nên det = 1. Bảng hạng 2 có một hàng thành toàn 0, nên det = 0. Nghĩa hình học ở mục 1.6 giữ nguyên, chỉ thêm chiều: |det| là hệ số phóng <i>thể tích</i>.</p>
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Ba người kể chuyện. Người thứ ba chỉ <b>nhắc lại lời hai người trước cộng vào</b>. Bạn nghe ba lời khai nhưng chỉ có hai nguồn tin.</div></div>
@@ -1257,13 +1261,13 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="fx">
           <p class="fx__line sm">X <span class="op">=</span> <span class="mx mx--sm" style="--cols:2"><span>1</span><span>2</span><span>3</span><span>1</span><span>2</span><span>4</span></span> <span class="op">→</span> X<sup>T</sup>X <span class="op">=</span> <span class="mx mx--sm mx--k" style="--cols:2"><span>14</span><span>13</span><span>13</span><span>21</span></span></p>
-          <p class="fx__note">X là <b>3 mẫu × 2 đặc trưng</b>. X<sup>T</sup>X luôn <b>vuông theo số đặc trưng</b> (2×2) và luôn <b>đối xứng</b> — hai số 13 ở hai bên đường chéo bằng nhau, và điều đó <i>không</i> phải tình cờ: ô (1,2) là &ldquo;cột 1 nhân cột 2&rdquo;, ô (2,1) là &ldquo;cột 2 nhân cột 1&rdquo;, mà nhân vô hướng thì không quan tâm thứ tự.</p>
+          <p class="fx__note">X là <b>3 mẫu × 2 đặc trưng</b>. X<sup>T</sup>X luôn <b>vuông theo số đặc trưng</b> (2×2) và luôn <b>đối xứng</b>: hai số 13 ở hai bên đường chéo bằng nhau, <i>không</i> phải tình cờ. Hàng 1 của X<sup>T</sup> chính là cột 1 của X, nên ô (1,2) là &ldquo;cột 1 nhân cột 2&rdquo;. Ô (2,1) là &ldquo;cột 2 nhân cột 1&rdquo;. Nhân vô hướng thì không quan tâm thứ tự.</p>
         </div>
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Lật bảng điểm qua đường chéo. Số ở hàng 2 cột 3 sang hàng 3 cột 2. Không số nào bị sửa, chỉ đổi chỗ ngồi. Ô trên đường chéo <b>không phải đi đâu</b>.</div></div>
           <div class="r-math"><div class="lbl">Toán</div><div class="v"><b>(A<sup>T</sup>)<sub>ij</sub> = A<sub>ji</sub></b>. Cỡ m×n thành n×m. Luật: (A<sup>T</sup>)<sup>T</sup> = A · (A+B)<sup>T</sup> = A<sup>T</sup>+B<sup>T</sup> · <b>(AB)<sup>T</sup> = B<sup>T</sup>A<sup>T</sup></b> (đảo thứ tự) · det(A<sup>T</sup>) = det(A). <b>Đối xứng ⟺ A<sup>T</sup> = A</b>.</div></div>
-          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Ba chỗ, tất cả đều không đọc được nếu thiếu mục này. <b>(1)</b> Nhân vô hướng viết gọn là <b>a<sup>T</sup>b</b>: vector mặc định là một <i>cột</i> (viết (2, 3) nằm ngang chỉ cho gọn), lật nó thành hàng rồi nhân. <b>(2)</b> Hồi quy tuyến tính có nghiệm <b>w = (X<sup>T</sup>X)<sup>−1</sup>X<sup>T</sup>y</b> (mũ −1 là nghịch đảo, mục sau). X<sup>T</sup> ở đây không phải thêm vào cho vuông: nó rơi ra khi đặt đạo hàm của tổng bình phương sai số bằng 0 (chặng 2), và nhờ nó mà X<sup>T</sup>X vuông theo số <i>đặc trưng</i> — đúng cỡ để có nghịch đảo. <b>(3)</b> Trong lan truyền ngược, tín hiệu đi xuôi qua một lớp là nhân với <b>W</b>, còn gradient đi ngược qua lớp ấy là nhân với <b>W<sup>T</sup></b> — cùng bộ trọng số, đọc theo chiều kia.</div></div>
+          <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v">Ba chỗ, tất cả đều không đọc được nếu thiếu mục này. <b>(1)</b> Nhân vô hướng viết gọn là <b>a<sup>T</sup>b</b>: vector mặc định là một <i>cột</i> (viết (2, 3) nằm ngang chỉ cho gọn), lật nó thành hàng rồi nhân. <b>(2)</b> Hồi quy tuyến tính có nghiệm <b>w = (X<sup>T</sup>X)<sup>−1</sup>X<sup>T</sup>y</b> (mũ −1 là nghịch đảo, mục sau). X<sup>T</sup> ở đây không phải thêm vào cho vuông: nó rơi ra khi đặt đạo hàm của tổng bình phương sai số bằng 0 (<a href="#s-losses">mục 2.8</a>), và nhờ nó mà X<sup>T</sup>X vuông theo số <i>đặc trưng</i> — đúng cỡ để có nghịch đảo. Nghịch đảo ấy có thật khi các cột của X độc lập tuyến tính; hai cột cm và inch ở mục 1.2 làm hỏng điều này. <b>(3)</b> Trong lan truyền ngược, tín hiệu đi xuôi qua một lớp là nhân với <b>W</b>, còn gradient đi ngược qua lớp ấy là nhân với <b>W<sup>T</sup></b> — cùng bộ trọng số, đọc theo chiều kia (<a href="#s-chain">mục 2.6</a> tính một ví dụ).</div></div>
         </div>
 
         <details class="q">
@@ -1331,7 +1335,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="fx">
           <p class="fx__line sm">Av = λv, v ≠ 0 &nbsp;<span class="op">⟺</span>&nbsp; (A − λI)v = 0, v ≠ 0 &nbsp;<span class="op">⟺</span>&nbsp; det(A − λI) = 0</p>
-          <p class="fx__note">Vì sao lại là định thức: λv = λIv, chuyển sang trái được (A − λI)v = 0 — máy A − λI đưa một mũi tên <b>khác 0</b> về gốc, tức là nó bóp phẳng, và mục 1.6 đã nói bóp phẳng ⟺ det = 0. Với A = <span class="mono">[[3,1],[1,3]]</span>: det(A − λI) = (3 − λ)² − 1 = 0 ⟹ 3 − λ = ±1 ⟹ λ = 2 hoặc λ = 4 — đúng hai hệ số ở trên.</p>
+          <p class="fx__note">Vì sao lại là định thức: λv = λIv, chuyển sang trái được (A − λI)v = 0 — máy A − λI đưa một mũi tên <b>khác 0</b> về gốc, tức là nó bóp phẳng, và mục 1.6 đã nói bóp phẳng ⟺ det = 0. Với A = <span class="mono">[[3,1],[1,3]]</span>: det(A − λI) = (3 − λ)² − 1 = 0 ⟹ 3 − λ = ±1 ⟹ λ = 2 hoặc λ = 4 — đúng hai hệ số ở trên. Có λ rồi thì tìm v bằng cách thay λ vào (A − λI)v = 0 và giải như mục 1.1. λ = 4 cho <span class="mono">[[−1,1],[1,−1]]</span>v = 0, tức −v₁ + v₂ = 0, nên v₂ = v₁ và v = (1, 1). λ = 2 cho <span class="mono">[[1,1],[1,1]]</span>v = 0, nên v = (1, −1). Mọi bội của chúng cũng là vector riêng: hệ này suy biến (det = 0), nên nghiệm nằm trên cả một đường thẳng.</p>
         </div>
 
         <div class="lab" id="m5">
@@ -1407,7 +1411,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p>17,89 so với 0,44 — trục thứ nhất &ldquo;kể&rdquo; nhiều hơn trục thứ hai <b>40 lần</b>. Nên vứt trục thứ hai đi: mỗi bạn từ hai con số còn một con số, mà vẫn giữ được <b>97,6%</b> lượng biến thiên. Đó là nén dữ liệu <i>có ý thức</i>, khác hẳn nén bừa.</p>
 
-        <p>Con số còn lại của mỗi bạn là <b>cái bóng</b> của bạn ấy trên trục chính 1, đo từ điểm trung bình μ = (5,5; 6,5): <b>z = u₁ · (p − μ)</b>, với p là chỗ đứng của bạn ấy và u₁ = (1, 1)/√2 ≈ (0,71; 0,71) dài đúng 1 — hình chiếu ở mục 1.5. Bạn 1 đứng ở (1; 2), lệch khỏi trung bình (−4,5; −4,5), nên z = (−4,5 − 4,5)/√2 ≈ <b>−6,36</b>. Làm thế cho cả mười bạn rồi tính phương sai của mười cái bóng, bạn được đúng <b>17,89</b>: trị riêng <i>chính là</i> độ tãi của dữ liệu dọc theo trục của nó, và 97,6% chỉ là 17,89 / (17,89 + 0,44). Bước trừ trung bình không bỏ được: quên nó thì trục 1 thành (0,66; 0,75) — chỉ về phía đám điểm nhìn từ gốc toạ độ, không còn nằm dọc theo đám.</p>
+        <p>Con số còn lại của mỗi bạn là <b>cái bóng</b> của bạn ấy trên trục chính 1, đo từ điểm trung bình μ = (5,5; 6,5): <b>z = u₁ · (p − μ)</b>, với p là chỗ đứng của bạn ấy và u₁ = (1, 1)/√2 ≈ (0,71; 0,71) dài đúng 1 — hình chiếu ở mục 1.5. Bạn 1 đứng ở (1, 2), lệch khỏi trung bình (−4,5; −4,5), nên z = (−4,5 − 4,5)/√2 ≈ <b>−6,36</b>. Làm thế cho cả mười bạn rồi tính phương sai của mười cái bóng, bạn được đúng <b>17,89</b>: trị riêng <i>chính là</i> độ tãi của dữ liệu dọc theo trục của nó, và 97,6% chỉ là 17,89 / (17,89 + 0,44). Bước trừ trung bình không bỏ được: quên nó thì trục 1 thành (0,66; 0,75) — chỉ về phía đám điểm nhìn từ gốc toạ độ, không còn nằm dọc theo đám.</p>
+
+        <p><b>Vì sao lại là vector riêng?</b> Chiếu lên một hướng bất kỳ u = (a, b) dài 1, tức a² + b² = 1. Bóng của mỗi bạn là a·dx + b·dy, với dx, dy là độ lệch của bạn ấy khỏi trung bình. Bình phương lên rồi cộng cho cả mười bạn: a²·Σdx² + 2ab·Σdx·dy + b²·Σdy² = 82,5a² + 157ab + 82,5b² = 82,5 + 157ab. Chia cho 9 ra phương sai của bóng; viết gọn bằng ma trận thì đó là <b>u<sup>T</sup>Cu</b>, với C là ma trận hiệp phương sai ở trên. Trục x, u = (1, 0), cho 82,5/9 ≈ <b>9,17</b>. Hướng −45°, u = (1, −1)/√2, có ab = −½ nên cho 4/9 ≈ <b>0,44</b>. Hướng 45°, u₁, có ab = ½ — lớn nhất có thể — nên cho 161/9 ≈ <b>17,89</b>. Với mọi ma trận hiệp phương sai cũng thế: hướng làm u<sup>T</sup>Cu lớn nhất là vector riêng của trị riêng lớn nhất, và giá trị lớn nhất ấy chính là λ₁.</p>
 
         <div class="lab" id="m6">
           <div class="lab__h">
@@ -1433,7 +1439,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read"><div class="k">Góc trục 1</div><div class="v" id="m6-ang">—</div></div>
             </div>
             <p class="lab__f" id="m6-say">Trục chính 1 luôn nằm dọc theo chiều dài của đám điểm.</p>
-            <p class="lab__f"><b>Hai điều PCA <span class="c-bad">không</span> làm:</b> nó <b>không</b> chọn ra &ldquo;những cột quan trọng&rdquo; — mỗi trục mới là một <i>trộn lẫn</i> của mọi cột cũ, nên khó giải thích cho người ngoài; và nó <b>không</b> biết bạn định dự đoán gì, nên trục nó bỏ đi có thể lại là trục duy nhất phân biệt được hai nhóm bạn cần phân biệt. Thêm nữa, khi các cột <b>lệch thang đo</b> thì phải chuẩn hoá trước, nếu không cột &ldquo;thu nhập tính bằng đồng&rdquo; sẽ nuốt hết mọi cột khác chỉ vì con số nó to.</p>
+            <p class="lab__f"><b>Hai điều PCA <span class="c-bad">không</span> làm:</b> Một: nó <b>không</b> chọn ra &ldquo;những cột quan trọng&rdquo;. Mỗi trục mới là một <i>trộn lẫn</i> của mọi cột cũ, nên khó giải thích cho người ngoài. Hai: nó <b>không</b> biết bạn định dự đoán gì. Trục nó bỏ đi có thể lại là trục duy nhất tách được hai nhóm bạn cần phân biệt. Thêm nữa, khi các cột <b>lệch thang đo</b> thì phải chuẩn hoá trước (mỗi cột trừ trung bình rồi chia cho độ lệch chuẩn của nó), nếu không cột &ldquo;thu nhập tính bằng đồng&rdquo; sẽ nuốt hết mọi cột khác chỉ vì con số nó to.</p>
           </div>
         </div>
 
@@ -1458,7 +1464,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="ask">Đứng trên cầu tuột, bịt mắt. <span>Chỉ được sờ mặt cầu ngay dưới chân.</span> Làm sao biết phải bước bên nào để xuống?</p>
 
-        <p class="lede">Sờ thấy bên trái thấp hơn thì bước sang trái. Không cần biết cầu tuột dài bao nhiêu, hình gì, đáy ở đâu — <b>chỉ cần độ nghiêng ngay dưới chân</b>. Đó là đạo hàm, và đó cũng là lý do máy học được: nó không bao giờ nhìn thấy toàn bộ &ldquo;mặt lỗi&rdquo;, nó chỉ sờ được chỗ đang đứng.</p>
+        <p class="lede">Sờ thấy bên trái thấp hơn thì bước sang trái. Không cần biết cầu tuột dài bao nhiêu, hình gì, đáy ở đâu — <b>chỉ cần độ nghiêng ngay dưới chân</b>. Đó là đạo hàm, và đó cũng là lý do máy học được: nó không bao giờ nhìn thấy toàn bộ &ldquo;mặt lỗi&rdquo;, nó chỉ sờ được chỗ đang đứng. Mặt lỗi là đồ thị của sai số theo mọi núm; mục 2.8 gọi sai số ấy là <b>hàm mất mát</b>.</p>
 
         <p>Cách đo độ nghiêng: đi thêm một đoạn <b>h</b> rồi xem độ cao đổi bao nhiêu, chia cho h. Rồi cho h nhỏ dần. Với đường cong <span class="mono">f(x) = x²</span> tại điểm x = 3:</p>
 
@@ -1556,6 +1562,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p>Kiểm chứng dòng sigmoid — chỗ hay bị coi là &ldquo;phép màu&rdquo;: σ(1) = 0,7311, nên công thức nói σ′(1) = 0,7311 × (1 − 0,7311) = <b>0,1966</b>. Đo bằng cách sờ hai bên (h = 0,000001) cũng ra <b>0,1966</b>. Và σ′ lớn nhất tại x = 0, bằng đúng <b>0,25</b> — con số này sẽ quay lại ở mục 2.6 để giải thích vì sao mạng sâu dùng sigmoid thì học rất chậm.</p>
 
+        <p>Suy bằng quy tắc cũng ra đúng thế. Viết σ = (1 + e⁻ˣ)⁻¹. Luỹ thừa với n = −1 cho khâu ngoài −(1 + e⁻ˣ)⁻²; khâu trong 1 + e⁻ˣ có đạo hàm −e⁻ˣ (chuỗi, mục 2.6). Nhân lại: σ′ = e⁻ˣ/(1 + e⁻ˣ)². Tách thành hai thừa số: 1/(1 + e⁻ˣ) là σ, còn e⁻ˣ/(1 + e⁻ˣ) = 1 − 1/(1 + e⁻ˣ) = 1 − σ. Vậy σ′ = σ(1 − σ).</p>
+
         <div class="take"><div class="k">Mang theo</div><p>Bốn quy tắc: <b>hằng, luỹ thừa, tổng, chuỗi</b>. Trong đó <b>chuỗi</b> là cái làm nên lan truyền ngược, nên nếu chỉ nhớ được một quy tắc thì nhớ nó.</p></div>
       </section>
 
@@ -1611,7 +1619,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="fx__note">Cách tính dễ đến mức đáng ngờ: <b>coi mọi biến khác như hằng số</b> rồi đạo hàm bình thường. Ở đây nhích y đáng giá hơn nhích x (6 so với 4), nên hướng dốc nhất nghiêng về phía y.</p>
         </div>
 
-        <p><b>Vì sao hai phép đo lại đủ cho mọi hướng?</b> Nhìn đủ gần, mặt đồi quanh chỗ đứng phẳng như một tấm ván nghiêng. Trên tấm ván ấy, đi một bước ngắn dài 1 theo hướng u = (u₁, u₂) thì độ cao đổi ∂f/∂x·u₁ + ∂f/∂y·u₂ = <b>∇f · u</b> — đúng phép nhân vô hướng của mục 1.5. Mà ∇f · u = ‖∇f‖·cos θ lớn nhất khi θ = 0, tức u cùng hướng với ∇f, và khi ấy bằng ‖∇f‖. Tại (2, 1): đi thẳng về đông dốc 4, về bắc dốc 6, còn theo hướng của ∇f thì dốc √(4² + 6²) ≈ 7,21 — hơn cả hai, và không trùng hướng nào trong bốn hướng. Hai điều kiện đi kèm: đó là hướng dốc nhất <b>tại chỗ đang đứng</b> (đi xa thì mặt đồi cong, hướng tốt nhất đổi), và là khi &ldquo;một bước&rdquo; được đo bằng chuẩn L2 của mục 1.4 (đổi thước thì hướng dốc nhất cũng đổi).</p>
+        <p><b>Vì sao hai phép đo lại đủ cho mọi hướng?</b> Nhìn đủ gần, mặt đồi quanh chỗ đứng phẳng như một tấm ván nghiêng. Trên tấm ván ấy, đi một bước ngắn dài 1 theo hướng u = (u₁, u₂) thì độ cao đổi ∂f/∂x·u₁ + ∂f/∂y·u₂ = <b>∇f · u</b> — đúng phép nhân vô hướng của mục 1.5. Mà ∇f · u = ‖∇f‖·cos θ lớn nhất khi θ = 0, tức u cùng hướng với ∇f, và khi ấy bằng ‖∇f‖. Tại (2, 1): đi thẳng về đông dốc 4, về bắc dốc 6, còn theo hướng của ∇f thì dốc √(4² + 6²) ≈ 7,21 — hơn cả hai, và không trùng hướng nào trong bốn hướng. Hai điều kiện đi kèm: đó là hướng dốc nhất <b>tại chỗ đang đứng</b> (đi xa thì mặt đồi cong, hướng tốt nhất đổi), và là khi &ldquo;một bước&rdquo; được đo bằng chuẩn L2 của mục 1.4 (đổi thước thì hướng dốc nhất cũng đổi). Cũng từ ∇f · u mà ra điều thứ ba: đi dọc đường đồng mức thì độ cao không đổi, tức ∇f · u = 0, nên mũi tên gradient luôn <b>vuông góc</b> với đường đồng mức.</p>
 
         <div class="lab" id="m8">
           <div class="lab__h">
@@ -1663,11 +1671,11 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="ask">Bịt mắt trên đồi, muốn xuống thấp nhất. <span>Bước dài hay bước ngắn?</span></p>
 
-        <p class="lede">Bước quá ngắn thì bò cả ngày không tới. Bước quá dài thì <b>nhảy vọt qua đáy sang bên kia, rồi vọt trở lại, mỗi lần một xa hơn</b> — càng đi càng tệ. Con số nhân vào độ dốc để ra độ dài bước gọi là <b>độ dài bước học</b> (learning rate), viết α — bước thật dài α × độ dốc, nên cùng một α mà càng gần đáy bước càng ngắn — và nó là núm quan trọng nhất trong cả học máy.</p>
+        <p class="lede">Bước quá ngắn thì bò cả ngày không tới. Bước quá dài thì <b>nhảy vọt qua đáy sang bên kia, rồi vọt trở lại, mỗi lần một xa hơn</b> — càng đi càng tệ. Con số nhân vào độ dốc gọi là <b>tốc độ học</b> (learning rate), viết α. Bước thật dài α × độ dốc, nên cùng một α mà càng gần đáy thì bước càng ngắn. α là núm quan trọng nhất trong cả học máy.</p>
 
         <div class="fx">
-          <p class="fx__line"><span class="tm" data-n="Chỗ đứng mới. Mũi tên ← đọc là &ldquo;gán bằng&rdquo;: lấy giá trị bên phải rồi ghi đè lên chỗ cũ, làm lại hàng nghìn lần.">w</span> <span class="op">←</span> <span class="tm" data-n="Chỗ đứng cũ.">w</span> <span class="op">−</span> <span class="tm" data-n="α (an-pha) — độ dài bước học: con số nhân vào độ dốc để ra độ dài bước. Chỉ bạn chọn, máy không học nó — loại núm này gọi là siêu tham số. Điển hình 0,001 tới 0,1; dò theo bội số 3 trên thang log.">α</span> <span class="tm" data-n="Độ nghiêng tại chỗ đang đứng. Dấu TRỪ ở trước là toàn bộ chỗ &ldquo;đi xuống&rdquo;: nghiêng lên bên phải thì bước sang trái.">∇f(w)</span></p>
-          <p class="fx__note">Toàn bộ quá trình huấn luyện của gần như mọi hệ AI hôm nay là dòng này, chạy hàng trăm nghìn tới hàng triệu lần. Không có mẹo nào ẩn phía sau.</p>
+          <p class="fx__line"><span class="tm" data-n="Chỗ đứng mới. Mũi tên ← đọc là &ldquo;gán bằng&rdquo;: lấy giá trị bên phải rồi ghi đè lên chỗ cũ, làm lại hàng nghìn lần.">w</span> <span class="op">←</span> <span class="tm" data-n="Chỗ đứng cũ.">w</span> <span class="op">−</span> <span class="tm" data-n="α (an-pha) — tốc độ học: con số nhân vào độ dốc để ra độ dài bước. Chỉ bạn chọn, máy không học nó — loại núm này gọi là siêu tham số. Điển hình 0,001 tới 0,1; dò theo bội số 3 trên thang log.">α</span> <span class="tm" data-n="Độ nghiêng tại chỗ đang đứng. Dấu TRỪ ở trước là toàn bộ chỗ &ldquo;đi xuống&rdquo;: nghiêng lên bên phải thì bước sang trái.">∇f(w)</span></p>
+          <p class="fx__note">Tên Việt trên trang này của phép lặp ấy là <b>tụt dốc</b>. Toàn bộ quá trình huấn luyện của gần như mọi hệ AI hôm nay là dòng này, chạy hàng trăm nghìn tới hàng triệu lần. Không có mẹo nào ẩn phía sau.</p>
         </div>
 
         <p>Nhìn nó chạy trên hàm dễ nhất, <span class="mono">f(x) = x²</span>, bắt đầu từ x = 5. Đạo hàm là 2x, nên mỗi bước x mới = x − α·2x = x·(1 − 2α). <b>Cả số phận nằm trong cái hệ số (1 − 2α)</b>:</p>
@@ -1699,7 +1707,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <span class="chip" data-s="1">Máng hẹp: x² + 12y²</span>
               <span class="chip" data-s="2">Hai đáy</span>
             </div>
-            <div class="row"><label for="m9-a">Bước học α</label><div class="inline"><input type="range" id="m9-a" min="1" max="60" step="1" value="10"><span class="val" id="m9-av">0,100</span></div></div>
+            <div class="row"><label for="m9-a">Tốc độ học α</label><div class="inline"><input type="range" id="m9-a" min="1" max="60" step="1" value="10"><span class="val" id="m9-av">0,100</span></div></div>
             <div class="inline" style="margin-bottom:12px">
               <button class="btn btn--solid" id="m9-step">Bước</button>
               <button class="btn" id="m9-run">Chạy 40 bước</button>
@@ -1715,13 +1723,13 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <p class="lab__f" id="m9-say">Chọn chỗ xuất phát rồi bấm Bước.</p>
             <p class="sr-only" id="m9-live" role="status"></p>
             <p class="lab__f"><b>Đây là lý do thật của việc chuẩn hoá đặc trưng.</b> Theo trục y, mỗi bước nhân chỗ đứng với (1 − 6α) trên cái bát và với (1 − 24α) trên máng hẹp — cùng lối với (1 − 2α) ở bảng trên. Nên cái bát chịu được α tới 1/3 ≈ 0,33, còn máng hẹp nổ ngay khi α vượt 1/12 ≈ 0,083 — <b>chênh nhau đúng bốn lần</b>, vì trục y của máng cong gấp bốn trục y của bát (24 so với 6). Luật chung: α vượt <b>2 chia cho độ cong lớn nhất</b> (đạo hàm bậc hai, mục 2.3) là phân kỳ — đúng hẳn với mặt bậc hai như ở đây, còn mặt khác thì đúng khi đã gần đáy. Còn α đúng bằng 1 chia cho độ cong thì nhảy trúng đáy trong một bước: đó là dòng α = 0,5 của bảng trên, và cũng chính là Newton ở mục 2.7. (Hai độ cong 2 và 24 của máng là hai trị riêng của ma trận Hessian — lời hẹn ở mục 1.9.) Với dữ liệu thật, &ldquo;một trục cong gấp nghìn lần trục kia&rdquo; là chuyện thường (thu nhập tính bằng đồng, số phòng tính bằng cái), và khi đó <b>không có α nào dùng được</b>: đủ nhỏ để trục dốc không nổ thì trục thoải bò cả ngày. Chuẩn hoá làm cái máng phình lại thành cái bát, và bài toán biến mất.</p>
-            <p class="lab__f"><b>Ba biến thể bạn sẽ gặp, và cả ba chỉ sửa đúng dòng công thức trên:</b> <b>SGD</b> tính gradient trên một nhúm nhỏ dữ liệu thay vì cả tập (nhanh hơn, đường đi lắc hơn); <b>quán tính</b> cộng thêm một phần bước trước (đỡ zíc-zắc, như quả bóng có đà thật); <b>Adam</b> tự chỉnh độ dài bước riêng cho từng tham số. Không cái nào đổi ý tưởng, chúng chỉ đổi cách chọn hướng và độ dài.</p>
+            <p class="lab__f"><b>Ba biến thể bạn sẽ gặp, và cả ba chỉ sửa đúng dòng công thức trên:</b> <b>SGD</b> tính gradient trên một nhúm nhỏ dữ liệu thay vì cả tập (nhanh hơn, đường đi lắc hơn); <b>quán tính</b> (momentum) cộng thêm một phần bước trước (đỡ zíc-zắc, như quả bóng có đà thật); <b>Adam</b> tự chỉnh độ dài bước riêng cho từng tham số. Không cái nào đổi ý tưởng, chúng chỉ đổi cách chọn hướng và độ dài.</p>
           </div>
         </div>
 
         <details class="q">
           <summary>Vì sao không nhảy thẳng tới đáy bằng cách giải f′ = 0, như mục 2.3?</summary>
-          <div class="a"><p>Vì với hồi quy tuyến tính thì <b>làm được</b> (có công thức đóng), nhưng với mạng nơ-ron thì phương trình ∇f = 0 là một hệ <b>phi tuyến</b> — không có công thức nào giải nó, bằng tay hay bằng máy; hàng triệu ẩn chỉ làm chuyện tệ thêm. Với hồi quy tuyến tính thì ∇f = 0 là một hệ tuyến tính cỡ d×d (d là số đặc trưng), giải bằng khử Gauss của chặng 1 — nhưng với d = 100.000 thì riêng bảng hệ số đã là 10¹⁰ ô, và tụt dốc vẫn nhanh và ít tốn bộ nhớ hơn nhiều.</p></div>
+          <div class="a"><p>Vì với hồi quy tuyến tính thì <b>làm được</b> (có công thức đóng), nhưng với mạng nơ-ron thì phương trình ∇f = 0 là một hệ <b>phi tuyến</b> — không có công thức nào giải nó, bằng tay hay bằng máy; hàng triệu ẩn chỉ làm chuyện tệ thêm. Với hồi quy tuyến tính thì ∇f = 0 là một hệ tuyến tính cỡ d×d (d là số đặc trưng): X<sup>T</sup>Xw = X<sup>T</sup>y, suy ở mục 2.8. Hệ ấy giải bằng khử Gauss của chặng 1 — nhưng với d = 100.000 thì riêng bảng hệ số đã là 10¹⁰ ô, và tụt dốc vẫn nhanh và ít tốn bộ nhớ hơn nhiều.</p></div>
         </details>
 
         <div class="take"><div class="k">Mang theo</div><p>Gradient descent = <b>đo dốc, bước ngược lại, lặp</b>. α quá lớn thì <b>phân kỳ</b> — sai số tăng vọt thay vì giảm. Thấy sai số tăng: nghi α trước khi nghi mọi thứ khác.</p></div>
@@ -1744,6 +1752,13 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         </div>
 
         <p>Một chi tiết mà mạng thật nào cũng cần: khi một núm ảnh hưởng tới đầu ra theo <b>nhiều</b> đường (một nơ-ron nối tới nhiều nơ-ron lớp sau), thì nhân dọc từng đường rồi <b>cộng các đường lại</b>. Ví dụ nhỏ nhất: y = x·x, trong đó x đi vào qua hai thừa số, mỗi đường góp một x, cộng lại 2x — đúng (x²)′, và cũng chính là quy tắc nhân ở mục 2.2. <code>backward()</code> làm đúng phép cộng ấy ở mọi chỗ rẽ nhánh.</p>
+
+        <p>Với vector, &ldquo;nhân dọc từng đường rồi cộng&rdquo; viết gọn được thành một phép nhân ma trận. Lấy một lớp z = Wx với W = <span class="mono">[[1,2],[3,4]]</span>, tức z₁ = x₁ + 2x₂ và z₂ = 3x₁ + 4x₂. Giả sử phần sau của mạng đã tính xong g = (∂L/∂z₁, ∂L/∂z₂) = (1, 2). x₁ đi tới L qua hai đường: qua z₁ với tỉ số 1, qua z₂ với tỉ số 3. Nhân dọc từng đường rồi cộng: ∂L/∂x₁ = 1·1 + 3·2 = 7. Tương tự, ∂L/∂x₂ = 2·1 + 4·2 = 10. Bảng mọi tỉ số ∂z<sub>i</sub>/∂x<sub>j</sub> gọi là <b>ma trận Jacobian</b> (Jacobian matrix); với một lớp tuyến tính, nó chính là W.</p>
+
+        <div class="fx">
+          <p class="fx__line sm">∂L/∂x <span class="op">=</span> W<sup>T</sup>g <span class="op">=</span> <span class="mx mx--sm" style="--cols:2"><span>1</span><span>3</span><span>2</span><span>4</span></span><span class="mx mx--sm" style="--cols:1"><span>1</span><span>2</span></span> <span class="op">=</span> <span class="mx mx--sm mx--k" style="--cols:1"><span>7</span><span>10</span></span></p>
+          <p class="fx__note">Cột j của W là các tỉ số của x<sub>j</sub>, nên &ldquo;nhân dọc rồi cộng&rdquo; cho x<sub>j</sub> là cột j nhân vô hướng với g, tức hàng j của W<sup>T</sup> nhân g. Đó là lời hẹn ở mục 1.7: gradient đi ngược qua một lớp là nhân với W<sup>T</sup>. Tổng quát, đi ngược qua một khâu bất kỳ là nhân với chuyển vị Jacobian của khâu ấy.</p>
+        </div>
 
         <div class="lab" id="m10">
           <div class="lab__h">
@@ -1833,7 +1848,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read"><div class="k">Đáy thật</div><div class="v" id="m11-true">±1,2247</div></div>
             </div>
             <p class="lab__f" id="m11-say">Bấm Bước để so hai cách đi.</p>
-            <p class="lab__f"><b>Vậy vì sao học sâu vẫn dùng tụt dốc?</b> Vì với d tham số, Newton cần ma trận đạo hàm bậc hai — <b>Hessian</b> — cỡ d×d, rồi phải nghịch đảo nó. Với d = 10 triệu thì riêng bảng số ấy đã là 10¹⁴ ô: không có máy nào chứa nổi. Thêm nữa, ở chỗ f″ &lt; 0 Newton <b>đi ngược lên đỉnh</b> thay vì xuống đáy, và mặt lỗi của mạng nơ-ron đầy những chỗ như thế. Nên người ta chỉ mượn <i>ý</i> của Newton — mỗi hướng một độ dài bước riêng — mà không tính Hessian: Adam chia bước của từng tham số cho độ lớn trung bình của gradient gần đây, rẻ hơn nhiều, và không đo độ cong thật.</p>
+            <p class="lab__f"><b>Vậy vì sao học sâu vẫn dùng tụt dốc?</b> Vì với d tham số, Newton cần ma trận đạo hàm bậc hai — <b>Hessian</b> — cỡ d×d, rồi phải nghịch đảo nó: bản nhiều biến của x ← x − f′/f″ là w ← w − H<sup>−1</sup>∇f(w), chia cho độ cong thành nhân với nghịch đảo của bảng độ cong H (mục 1.8). Với d = 10 triệu thì riêng bảng số ấy đã là 10¹⁴ ô: không có máy nào chứa nổi. Thêm nữa, ở chỗ f″ &lt; 0 Newton <b>đi ngược lên đỉnh</b> thay vì xuống đáy, và mặt lỗi của mạng nơ-ron đầy những chỗ như thế. Nên người ta chỉ mượn <i>ý</i> của Newton — mỗi hướng một độ dài bước riêng — mà không tính Hessian: Adam chia bước của từng tham số cho độ lớn trung bình của gradient gần đây, rẻ hơn nhiều, và không đo độ cong thật.</p>
           </div>
         </div>
 
@@ -1849,7 +1864,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p><b>Hồi quy — sai số bình phương.</b> Mô hình đoán ŷ = wx, đáp án đúng là y. Mất mát một điểm là (wx − y)². Đạo hàm theo w, dùng quy tắc chuỗi: khâu ngoài (mũ hai) cho 2(wx − y), khâu trong cho x. Nhân lại: <b>2x(wx − y)</b>. Thử số: x = 2, y = 5, w = 1 → mất mát (2−5)² = <b>9</b>, đạo hàm 2·2·(2−5) = <b>−12</b>. Âm nghĩa là &ldquo;tăng w lên thì sai số giảm&rdquo; — đúng, vì đang đoán 2 mà đáp án là 5.</p>
 
-        <p><b>Phân loại — log-loss</b> (thư viện gọi là <i>binary cross-entropy</i>). Đáp án y là 1 (có) hoặc 0 (không); mô hình đoán xác suất p = σ(z), với z = wx. Mất mát một điểm là L = −[y·ln p + (1 − y)·ln(1 − p)]: đáp án là 1 mà máy chỉ tin p = 0,1 thì bị phạt −ln 0,1 ≈ 2,30, tin p = 0,9 thì chỉ bị phạt 0,11. Đạo hàm theo w là ba khâu nối tiếp: dL/dp = (p − y)/(p(1 − p)); dp/dz = p(1 − p) (dòng sigmoid ở mục 2.2); dz/dw = x. Nhân lại, p(1 − p) triệt tiêu, còn <b>(σ(z) − y)·x</b> — chỉ là <i>sai lệch nhân đầu vào</i>. Thử số: x = 2, y = 1, w = 1 → z = 2, σ(2) = 0,8808, đạo hàm (0,8808 − 1)·2 = <b>−0,2384</b>.</p>
+        <p><b>Cả tập n điểm.</b> Mất mát của cả tập là tổng: L(w) = Σ(wxᵢ − yᵢ)², và đạo hàm của tổng là tổng các đạo hàm: L′(w) = 2Σxᵢ(wxᵢ − yᵢ). (Chia cho n thành MSE thì đáy vẫn ở chỗ cũ.) Đặt bằng 0 rồi chuyển vế: w·Σxᵢ² = Σxᵢyᵢ, nên w = Σxᵢyᵢ / Σxᵢ². Hai điểm (1, 2) và (2, 5) cho w = (1·2 + 2·5)/(1 + 4) = 12/5 = 2,4. Gom x và y thành hai vector cột thì tử là x<sup>T</sup>y, mẫu là x<sup>T</sup>x, tức w = (x<sup>T</sup>x)<sup>−1</sup>x<sup>T</sup>y. Nhiều đặc trưng thì x thành ma trận X, gradient thành 2X<sup>T</sup>(Xw − y), và đặt bằng 0 ra <b>X<sup>T</sup>Xw = X<sup>T</sup>y</b> — đúng nghiệm w = (X<sup>T</sup>X)<sup>−1</sup>X<sup>T</sup>y ở mục 1.7.</p>
+
+        <p><b>Phân loại — log-loss</b> (thư viện gọi là <i>binary cross-entropy</i>). Đáp án y là 1 (có) hoặc 0 (không); mô hình đoán xác suất p = σ(z), với z = wx. Mất mát một điểm là L = −[y·ln p + (1 − y)·ln(1 − p)]: đáp án là 1 mà máy chỉ tin p = 0,1 thì bị phạt −ln 0,1 ≈ 2,30, tin p = 0,9 thì chỉ bị phạt 0,11. Đạo hàm theo w là ba khâu nối tiếp: dL/dp = −[y/p − (1 − y)/(1 − p)], quy đồng mẫu p(1 − p) thì gọn thành (p − y)/(p(1 − p)); dp/dz = p(1 − p) (dòng sigmoid ở mục 2.2); dz/dw = x. Nhân lại, p(1 − p) triệt tiêu, còn <b>(σ(z) − y)·x</b> — chỉ là <i>sai lệch nhân đầu vào</i>. Thử số: x = 2, y = 1, w = 1 → z = 2, σ(2) = 0,8808, đạo hàm (0,8808 − 1)·2 = <b>−0,2384</b>.</p>
 
         <div class="box good-box">
           <p class="box__k">Vì sao hai công thức giống nhau đến thế</p>
@@ -2039,7 +2056,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <tr><td>P(đúng một giá trị)</td><td>Có nghĩa: P(ra 6) = 1/6</td><td><b>Bằng 0</b> — không ai cao đúng 170,000&hellip;0 cm</td></tr>
               <tr><td>Câu hỏi hợp lệ</td><td>P(X = 6)</td><td>P(169 &lt; X &lt; 171) = <b>diện tích</b> dưới đường cong</td></tr>
               <tr><td>Cộng hết lại</td><td>mọi ô của PMF cộng lại = 1</td><td>toàn bộ diện tích dưới PDF = 1</td></tr>
-              <tr><td><b>CDF</b></td><td colspan="2">Cả hai đều có: &ldquo;xác suất X <b>nhỏ hơn hoặc bằng</b> một mốc&rdquo;. Luôn đi từ 0 lên 1, không bao giờ giảm.</td></tr>
+              <tr><td><b>CDF</b></td><td colspan="2">Cả hai đều có: &ldquo;xác suất X <b>nhỏ hơn hoặc bằng</b> một mốc&rdquo;. Luôn đi từ 0 lên 1, không bao giờ giảm. Với biến liên tục, CDF tại x, viết F(x), là diện tích dưới PDF từ bên trái tới x (tích phân của PDF). Nên P(a &lt; X ≤ b) = F(b) − F(a), và phần diện tích bên phải x là 1 − F(x).</td></tr>
             </tbody>
           </table>
         </div>
@@ -2092,7 +2109,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <div class="fx">
           <p class="fx__line sm">P(X = k) <span class="op">=</span> <span class="tm" data-n="Số CÁCH chọn k lần ngửa trong n lần tung — &ldquo;n chọn k&rdquo;. Với n=10, k=5 thì bằng 252. Đây là phần &ldquo;đếm&rdquo;.">C(n, k)</span> <span class="op">·</span> <span class="tm" data-n="Xác suất của MỘT dãy cụ thể có k ngửa và n−k sấp. Với xu công bằng thì mọi dãy đều xác suất (1/2)^n = 1/1024.">p<sup>k</sup>(1 − p)<sup>n−k</sup></span></p>
           <p class="fx__note">Hai phần: <b>đếm số cách</b> nhân <b>xác suất mỗi cách</b>. Trung bình là <b>np</b>, độ lệch chuẩn là <b>√(np(1−p))</b> — với 10 lần tung xu công bằng: trung bình 5, lệch chuẩn 1,58.</p>
-          <p class="fx__note">C(n, k) = n! / (k!·(n − k)!), với n! = 1·2·…·n. Ở cỡ nhỏ thì đếm tay được: 4 lần tung ra 2 ngửa có C(4, 2) = 24/(2·2) = 6 cách — NNSS, NSNS, NSSN, SNNS, SNSN, SSNN. Với n = 10, k = 5: 3.628.800/(120·120) = 252. Còn np và np(1 − p): số mặt ngửa là tổng của n lần tung, mỗi lần góp 1 với xác suất p, tức kỳ vọng p và phương sai p(1 − p); cộng n lần độc lập thì cả hai nhân lên n (mục 3.9).</p>
+          <p class="fx__note">C(n, k) = n! / (k!·(n − k)!), với n! = 1·2·…·n. Ở cỡ nhỏ thì đếm tay được: 4 lần tung ra 2 ngửa có C(4, 2) = 24/(2·2) = 6 cách — NNSS, NSNS, NSSN, SNNS, SNSN, SSNN. Với n = 10, k = 5: 3.628.800/(120·120) = 252. Còn np và np(1 − p): số mặt ngửa là tổng của n lần tung, mỗi lần góp 1 với xác suất p và 0 với xác suất 1 − p, tức kỳ vọng 1·p + 0·(1 − p) = p và phương sai (1 − p)²·p + (0 − p)²·(1 − p) = p(1 − p); cộng n lần độc lập thì cả hai nhân lên n (mục 3.9).</p>
         </div>
 
         <div class="take"><div class="k">Mang theo</div><p>Nhị thức = <b>đếm số cách × xác suất mỗi cách</b>. Kết quả &ldquo;cân bằng&rdquo; thường gặp hơn không phải vì trời thương, mà vì <b>có nhiều đường dẫn tới nó hơn</b>.</p></div>
@@ -2260,7 +2277,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="lede"><b>Hình chuông.</b> Gần như luôn luôn: <b>hình của dữ liệu gốc gần như không quan trọng</b>. Chỉ cần bạn lấy trung bình của đủ nhiều mẫu độc lập, thì trung bình ấy gần như phân phối chuẩn — càng gần khi n càng lớn.</p>
 
-        <p>Cụ thể hơn — và đây là phần dùng được: nếu dữ liệu gốc có trung bình μ và độ lệch chuẩn σ, thì trung bình của n mẫu có trung bình vẫn là <b>μ</b>, nhưng độ lệch chuẩn chỉ còn <b>σ/√n</b>. Vì sao lại là √n: phương sai của tổng n mẫu độc lập là n·σ² (tính chất thứ ba ở mục 3.9); chia tổng cho n thì phương sai chia cho n² (tính chất thứ hai), còn σ²/n; khai căn ra σ/√n. Với xúc xắc (σ = 1,708) và n = 30: 1,708/√30 = <b>0,312</b>. Mô phỏng 200.000 lần cho <b>0,312</b>.</p>
+        <p>Cụ thể hơn — và đây là phần dùng được: nếu dữ liệu gốc có trung bình μ và độ lệch chuẩn σ, thì trung bình của n mẫu có trung bình vẫn là <b>μ</b>, nhưng độ lệch chuẩn chỉ còn <b>σ/√n</b> — con số này gọi là <b>sai số chuẩn</b> (standard error, SE) của trung bình. Vì sao lại là √n: phương sai của tổng n mẫu độc lập là n·σ² (tính chất thứ ba ở mục 3.9); chia tổng cho n thì phương sai chia cho n² (tính chất thứ hai), còn σ²/n; khai căn ra σ/√n. Với xúc xắc (σ = 1,708) và n = 30: 1,708/√30 = <b>0,312</b>. Mô phỏng 200.000 lần cho <b>0,312</b>.</p>
 
         <div class="lab" id="m15">
           <div class="lab__h">
@@ -2288,7 +2305,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read"><div class="k">σ đo được</div><div class="v" id="m15-obs">1,69</div></div>
             </div>
             <p class="lab__f" id="m15-say">Với n = 1, &ldquo;trung bình của 1 mẫu&rdquo; chính là dữ liệu gốc — hai hình giống nhau.</p>
-            <p class="lab__f"><b>Định lý này là một cây cầu:</b> nó cho phép bạn dùng công thức của phân phối chuẩn <b>mà không cần dữ liệu gốc phân phối chuẩn</b>. Mọi khoảng tin cậy và mọi kiểm định ở mục 4.6 và 4.7 đứng trên đúng cái cầu này. Nhưng để ý <b>σ/√n</b>: muốn khoảng hẹp đi <b>một nửa</b> thì phải lấy mẫu <b>gấp bốn</b>. Đó là lý do thăm dò ý kiến luôn kẹt ở sai số ±3%.</p>
+            <p class="lab__f"><b>Định lý này là một cây cầu:</b> nó cho phép bạn dùng công thức của phân phối chuẩn <b>mà không cần dữ liệu gốc phân phối chuẩn</b>. Mọi khoảng tin cậy và mọi kiểm định ở mục 4.6 và 4.7 đứng trên đúng cái cầu này. Nhưng để ý <b>σ/√n</b>: muốn khoảng hẹp đi <b>một nửa</b> thì phải lấy mẫu <b>gấp bốn</b>. Đó là lý do thăm dò ý kiến luôn kẹt ở sai số ±3%. Câu hỏi có/không quanh 50% có σ = √(0,5·0,5) = 0,5 (mục 3.7); hỏi 1.000 người thì 1,96·0,5/√1.000 ≈ 3,1%. Muốn ±1,5% thì phải hỏi gấp bốn, 4.000 người.</p>
           </div>
         </div>
 
@@ -2310,7 +2327,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="fx">
           <p class="fx__line sm"><span class="tm" data-n="Hợp lý (likelihood): xác suất thấy ĐÚNG dữ liệu này, NẾU tham số là θ. Chú ý chiều: dữ liệu đã cố định, θ là cái đang thay đổi. Với dữ liệu liên tục, như chiều cao ở mô hình dưới, thì dùng mật độ thay cho xác suất (mục 3.6).">L(θ)</span> = P(dữ liệu | <span class="tm" data-n="θ — bộ tham số đang thử. Với đồng xu chỉ có một: p. Với một mạng nơ-ron: hàng triệu.">θ</span>) &nbsp;&nbsp;<span class="op">→</span>&nbsp;&nbsp; chọn <span class="tm" data-n="Cái mũ ^ nghĩa là &ldquo;ước lượng từ dữ liệu&rdquo;, để phân biệt với giá trị thật mà ta không bao giờ biết.">θ̂</span> làm L lớn nhất</p>
-          <p class="fx__note">Với n điểm dữ liệu độc lập, L(θ) = Π P(xᵢ | θ). Phép nhân ấy là quy tắc &ldquo;và&rdquo; của mục 3.2, nên nó cần giả định các điểm độc lập. Trong thực tế người ta cực đại <b>log</b> của L. Làm thế được vì log là hàm đồng biến: θ nào làm L lớn nhất thì cũng làm log L lớn nhất. Cái lợi là log biến dây phép nhân dài thành phép cộng — dễ đạo hàm hơn, và không bị tràn số dưới (máy làm tròn về 0) khi nhân 10.000 xác suất nhỏ với nhau.</p>
+          <p class="fx__note">Với n điểm dữ liệu độc lập, L(θ) = Π P(xᵢ | θ). Phép nhân ấy là quy tắc &ldquo;và&rdquo; của mục 3.2, nên nó cần giả định các điểm độc lập. Trong thực tế người ta cực đại <b>log</b> của L. Từ đây tới hết trang, log là logarit tự nhiên ln của chặng 2, như thư viện học máy vẫn hiểu. Làm thế được vì log là hàm đồng biến: θ nào làm L lớn nhất thì cũng làm log L lớn nhất. Cái lợi là log biến dây phép nhân dài thành phép cộng — dễ đạo hàm hơn, và không bị tràn số dưới (máy làm tròn về 0) khi nhân 10.000 xác suất nhỏ với nhau.</p>
           <p class="fx__note">Đỉnh nằm đúng ở 0,7, không cần thử: log L(p) = log C(10, 7) + 7·log p + 3·log(1 − p). Đạo hàm theo p là 7/p − 3/(1 − p); ở đỉnh nó bằng 0 (mục 2.3), nên 7(1 − p) = 3p, tức p = 0,7. Tổng quát: k ngửa trong n lần thì p̂ = k/n.</p>
         </div>
 
@@ -2391,14 +2408,14 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <table>
             <thead><tr><th>Niềm tin ban đầu về trọng số</th><th>Thành số hạng phạt</th><th>Tên thường gặp</th><th>Tác dụng thấy được</th></tr></thead>
             <tbody>
-              <tr><td>&ldquo;trọng số có lẽ <b>nhỏ</b>&rdquo; — chuẩn quanh 0</td><td>λ·Σw²</td><td><b>Ridge / L2</b></td><td>mọi trọng số co lại, ít cái nào về hẳn 0</td></tr>
+              <tr><td>&ldquo;trọng số có lẽ <b>nhỏ</b>&rdquo; — phân phối chuẩn (cái chuông) quanh 0</td><td>λ·Σw²</td><td><b>Ridge / L2</b></td><td>mọi trọng số co lại, ít cái nào về hẳn 0</td></tr>
               <tr><td>&ldquo;trọng số có lẽ nhỏ, dồn sát 0 hơn cả chuông, thỉnh thoảng mới có cái lớn&rdquo; — Laplace (nhọn ở 0)</td><td>λ·Σ|w|</td><td><b>Lasso / L1</b></td><td>nhiều trọng số về <b>đúng 0</b> → tự chọn đặc trưng (do phép chọn đỉnh rơi đúng vào cái nhọn, không phải vì niềm tin cho số 0 một xác suất lớn)</td></tr>
               <tr><td>&ldquo;không có ý kiến gì&rdquo; — đều</td><td>không có</td><td>MLE trơn</td><td>khớp dữ liệu tối đa, kể cả khớp cả nhiễu</td></tr>
             </tbody>
           </table>
         </div>
 
-        <p>Vậy nên λ trong dòng &ldquo;<span class="mono">Ridge(alpha=1.0)</span>&rdquo; không phải một núm tuỳ tiện. Nó là <b>độ mạnh của niềm tin</b> bạn đặt vào trước khi xem dữ liệu, tính bằng đơn vị &ldquo;bao nhiêu dữ liệu thì đủ để tôi đổi ý&rdquo;. Và nó chữa đúng cái bệnh ở mục 1.8: ma trận điều kiện xấu, trọng số nổ to và đổi dấu loạn xạ. Muốn thấy λ làm dịu một đường cong đang học thuộc lòng, kéo thanh λ ở <a href="machine-learning-101.html#s-overfit">Machine Learning 101, chương 5</a>.</p>
+        <p>Vậy nên λ — scikit-learn gọi nó là <code>alpha</code>, nghĩa thứ ba của chữ α (<a href="#s-kyhieu">bảng ký hiệu</a>) — trong dòng &ldquo;<span class="mono">Ridge(alpha=1.0)</span>&rdquo; không phải một núm tuỳ tiện. Nó là <b>độ mạnh của niềm tin</b> bạn đặt vào trước khi xem dữ liệu, tính bằng đơn vị &ldquo;bao nhiêu dữ liệu thì đủ để tôi đổi ý&rdquo;. Và nó chữa đúng cái bệnh ở mục 1.8: ma trận điều kiện xấu, trọng số nổ to và đổi dấu loạn xạ. Muốn thấy λ làm dịu một đường cong đang học thuộc lòng, kéo thanh λ ở <a href="machine-learning-101.html#s-overfit">Machine Learning 101, chương 5</a>.</p>
 
         <div class="take"><div class="k">Mang theo</div><p><b>MAP = MLE + niềm tin ban đầu.</b> Ridge và Lasso là niềm tin ban đầu viết bằng toán, và λ là độ mạnh của niềm tin đó. Không phải phép chính quy hoá nào cũng đọc được như thế: số hạng phạt phải là −log của một phân phối, và không được phụ thuộc dữ liệu.</p></div>
       </section>
@@ -2463,7 +2480,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="fx__line sm"><span class="op">≈</span> <b>1,43</b> điểm %</p>
           <p class="fx__line sm">z = 3,0 / 1,43 = <b>2,10</b></p>
           <p class="fx__line sm"><span class="op">→</span>&nbsp; p = <b>0,035</b></p>
-          <p class="fx__note">Cả phép kiểm là thế. Trong thế giới H₀, tỉ lệ mua chung là p̄ = 230/2.000 = 11,5%, mỗi bản n = 1.000 người, nên độ lệch chuẩn của chênh lệch — gọi là <b>sai số chuẩn</b>, SE — là √(0,115 · 0,885 · 2/1.000) ≈ 1,43 điểm %. Căn thức ấy lấy từ mục 3.9: phương sai của hiệu hai tỉ lệ độc lập bằng tổng hai phương sai, mỗi cái p(1 − p)/n. Chênh lệch đã thấy, 3,0 điểm %, bằng 2,10 lần SE — con số ấy gọi là <b>z</b>. Rồi lấy diện tích hai đuôi ngoài ±2,10 SE của cái chuông. Một đuôi là 1 − Φ(z), với Φ là CDF của phân phối chuẩn tắc (mục 3.6); giữ thêm một chữ số, z = 2,103 và 1 − Φ(2,103) ≈ 0,0177, nên hai đuôi ≈ 0,035. Máy tính làm thay bảng tra: <code>2*scipy.stats.norm.sf(2.103)</code> trong Python, <code>=2*(1-NORM.S.DIST(2.103,TRUE))</code> trong Excel. 2,10 vượt mốc 1,96 ở bảng mục 3.8 một chút, nên hai đuôi còn dưới 5% một chút.</p>
+          <p class="fx__note">Cả phép kiểm là thế. Trong thế giới H₀, tỉ lệ mua chung là p̄ = 230/2.000 = 11,5%, mỗi bản n = 1.000 người, nên độ lệch chuẩn của chênh lệch — lại là <b>sai số chuẩn</b> (mục 4.2), SE, lần này của một hiệu — là √(0,115 · 0,885 · 2/1.000) ≈ 1,43 điểm %. Căn thức ấy lấy từ mục 3.9: Var(X − Y) = Var(X) + (−1)²·Var(Y), nên phương sai của hiệu hai tỉ lệ độc lập bằng <i>tổng</i> hai phương sai. Mỗi cái là p(1 − p)/n: một lần thử có phương sai p(1 − p) (mục 3.7), trung bình của n lần chia nó cho n (mục 4.2). Chênh lệch đã thấy, 3,0 điểm %, bằng 2,10 lần SE — con số ấy gọi là <b>z</b>. Rồi lấy diện tích hai đuôi ngoài ±2,10 SE của cái chuông. Một đuôi là 1 − Φ(z), với Φ là CDF của phân phối chuẩn tắc (mục 3.6); giữ thêm một chữ số, z = 2,103 và 1 − Φ(2,103) ≈ 0,0177, nên hai đuôi ≈ 0,035. Máy tính làm thay bảng tra: <code>2*scipy.stats.norm.sf(2.103)</code> trong Python, <code>=2*(1-NORM.S.DIST(2.103,TRUE))</code> trong Excel. 2,10 vượt mốc 1,96 ở bảng mục 3.8 một chút, nên hai đuôi còn dưới 5% một chút.</p>
         </div>
 
         <div class="tw">
@@ -2638,7 +2655,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                 <tr><td>Sigmoid</td><td>σ′ = σ(1 − σ), tối đa 0,25</td><td>Đạo hàm viết được bằng chính nó. Trần 0,25 gây gradient tan biến.</td></tr>
                 <tr><td>Gradient</td><td>∇f = (∂f/∂x, ∂f/∂y, &hellip;)</td><td>Mũi tên chỉ lên dốc nhất, vuông góc đường đồng mức.</td></tr>
                 <tr><td>Gradient descent</td><td>w ← w − α∇f(w)</td><td>Đo dốc, bước ngược lại, lặp.</td></tr>
-                <tr><td>Newton (tìm đáy)</td><td>x ← x − f′/f″</td><td>Dùng cả độ cong nên tự chọn bước; cần Hessian nên không lên nổi mạng lớn.</td></tr>
+                <tr><td>Newton (tìm đáy)</td><td>x ← x − f′/f″; nhiều biến: w ← w − H⁻¹∇f</td><td>Dùng cả độ cong nên tự chọn bước; cần Hessian nên không lên nổi mạng lớn.</td></tr>
                 <tr><td>Đạo hàm MSE</td><td>2x(wx − y)</td><td>(đoán − đúng) × đầu vào, nhân 2.</td></tr>
                 <tr><td>Log-loss</td><td>−[y ln p + (1 − y) ln(1 − p)], p = σ(z)</td><td>Tự tin mà sai thì phạt nặng, không có trần.</td></tr>
                 <tr><td>Đạo hàm log-loss</td><td>(σ(z) − y)·x</td><td>Đúng dạng ấy, không có số 2.</td></tr>
@@ -4813,7 +4830,7 @@ var GLOSS = [
 ['Gaussian elimination','khử Gauss','Lấy hàng nọ trừ hàng kia cho tới khi mỗi hàng chỉ còn một ẩn. Chính là mẹo &ldquo;so hai hoá đơn&rdquo;, làm nhiều lần.','#s-khu','khử Gauss'],
 ['row echelon form','dạng bậc thang','Dạng của bảng số sau khi khử: mỗi hàng bắt đầu (số khác 0 đầu tiên, gọi là trụ) lùi sang phải hơn hàng trên, dưới mỗi trụ toàn 0. Số trụ là hạng.','#s-khu','dạng bậc thang'],
 ['rank','hạng','Số hàng thật sự nói chuyện mới, sau khi bỏ những hàng chỉ nhắc lại hàng khác. Hạng &lt; số ẩn thì thiếu thông tin.','#s-khu',''],
-['linear independence','độc lập tuyến tính','Không hàng nào (hay vector nào) viết được thành tổ hợp của các hàng khác. Mất tính này là det = 0.','#s-khu','độc lập tuyến tính'],
+['linear independence','độc lập tuyến tính','Không hàng nào (hay vector nào) viết được thành tổ hợp của các hàng khác. Ngược lại là phụ thuộc tuyến tính, như tờ hoá đơn thứ ba bằng tổng hai tờ kia. Mất tính này là det = 0.','#s-khu','độc lập tuyến tính|phụ thuộc tuyến tính'],
 ['vector','vector','Một danh sách số có thứ tự, hình dung được như mũi tên &ldquo;sang phải bao nhiêu, lên trên bao nhiêu&rdquo;.','#s-vector',''],
 ['norm','chuẩn','Độ dài của vector. L2 là bay thẳng (√Σx²), L1 là đi theo phố (Σ|x|).','#s-vector','chuẩn L1|chuẩn L2'],
 ['transpose','chuyển vị','Lật ma trận qua đường chéo chính: ô ở hàng i cột j sang hàng j cột i, nên cỡ m×n thành n×m. Viết Aᵀ. Nhân rồi lật thì ĐẢO thứ tự: (AB)ᵀ = BᵀAᵀ.','#s-transpose','chuyển vị'],
@@ -4841,6 +4858,7 @@ var GLOSS = [
 ['chain rule','quy tắc chuỗi','Hàm lồng nhau thì NHÂN các đạo hàm. Đúng như dây bánh răng: đạp 1 vòng, bánh cuối quay bằng tích các tỉ số.','#s-chain','quy tắc chuỗi'],
 ['backpropagation','lan truyền ngược','Áp quy tắc chuỗi từ đầu ra về đầu vào, có ghi lại kết quả trung gian để không tính lại. Toàn bộ phép &ldquo;học&rdquo; của mạng nơ-ron.','#s-chain','lan truyền ngược'],
 ['vanishing gradient','gradient tan biến','Nhân nhiều số nhỏ hơn 1 dọc theo mạng sâu, tín hiệu về tới lớp đầu gần như bằng 0 nên lớp đầu không học được. Sigmoid có đạo hàm tối đa 0,25 nên rất dễ mắc.','#s-chain','gradient tan biến'],
+['Jacobian','ma trận Jacobian','Bảng mọi đạo hàm riêng ∂zᵢ/∂xⱼ của một hàm đi từ vector ra vector. Với một lớp z = Wx nó chính là W; lan truyền ngược nhân gradient với chuyển vị của nó.','#s-chain','Jacobian'],
 ['exploding gradient','gradient nổ','Chuyện ngược lại: nhân nhiều số lớn hơn 1 thì tín hiệu bùng nổ, trọng số nhảy loạn và sai số ra NaN.','#s-chain','gradient nổ'],
 ['second derivative','đạo hàm bậc hai','Đạo hàm của đạo hàm = ĐỘ CONG. Dương là cong lên như lòng chảo, âm là cong xuống như đỉnh gò; ở chỗ f′ = 0 thì dương là cực tiểu, âm là cực đại.','#s-min','đạo hàm bậc hai|độ cong'],
 ['convex','lồi','Hình cái bát: KHÔNG có đáy giả, mọi cực tiểu địa phương đều là toàn cục — nên tụt dốc không kẹt ở đáy tệ. Hồi quy tuyến tính và logistic thì lồi; mạng nơ-ron thì không. Sách phổ thông cũ gọi hình này là &ldquo;lõm&rdquo;.','#s-min','lồi'],
@@ -4851,7 +4869,7 @@ var GLOSS = [
 ['contour line','đường đồng mức','Đường nối những chỗ cùng độ cao, như bản đồ núi. Vòng chen chúc = dốc.','#s-partial','đường đồng mức'],
 ['feature scaling','chuẩn hoá đặc trưng','Đưa các cột về cùng thang. Nó biến cái &ldquo;máng hẹp&rdquo; thành cái bát tròn, nên tụt dốc thôi đi zíc-zắc.','#s-partial','chuẩn hoá đặc trưng'],
 ['gradient descent','tụt dốc theo đạo hàm','Đo dốc tại chỗ đang đứng, bước ngược lại một đoạn bằng α × độ dốc, lặp lại. Thuật toán huấn luyện gần như mọi hệ AI hôm nay.','#s-gd','tụt dốc'],
-['learning rate','độ dài bước học','Ký hiệu α. Không phải độ dài bước: bước thật = α × độ dốc. Quá nhỏ thì bò cả ngày; hơi lớn thì nảy qua nảy lại quanh đáy mà vẫn tới; quá lớn thì phân kỳ. Siêu tham số quan trọng nhất.','#s-gd','độ dài bước học'],
+['learning rate','tốc độ học','Ký hiệu α. Có sách gọi là độ dài bước học, nhưng α không phải độ dài bước: bước thật = α × độ dốc. Quá nhỏ thì bò cả ngày; hơi lớn thì nảy qua nảy lại quanh đáy mà vẫn tới; quá lớn thì phân kỳ. Siêu tham số quan trọng nhất.','#s-gd','tốc độ học'],
 ['hyperparameter','siêu tham số','Núm do người chọn trước khi huấn luyện, máy không tự học: α, λ, số lớp.','#s-gd','siêu tham số'],
 ['divergence','phân kỳ','Sai số TĂNG theo cấp số nhân rồi ra NaN. Nguyên nhân số một: α quá lớn.','#s-gd','phân kỳ'],
 ['stochastic gradient descent','tụt dốc ngẫu nhiên','Tính gradient trên một nhúm nhỏ dữ liệu thay vì cả tập: nhanh hơn nhiều, đường đi lắc hơn.','#s-gd','SGD'],
@@ -4896,7 +4914,7 @@ var GLOSS = [
 ['law of large numbers','luật số lớn','Các lần lấy độc lập, cùng phân phối, kỳ vọng hữu hạn thì mẫu càng lớn, trung bình mẫu càng sát trung bình của chỗ đang lấy mẫu. Đó là trung bình tổng thể chỉ khi mẫu đại diện.','#s-sample','luật số lớn'],
 ['sampling bias','thiên lệch lấy mẫu','Múc sai chỗ. Tăng cỡ mẫu KHÔNG chữa được, chỉ làm bạn tự tin hơn vào một câu sai.','#s-sample','thiên lệch lấy mẫu'],
 ['central limit theorem','định lý giới hạn trung tâm','Trung bình của n mẫu độc lập tiến về phân phối chuẩn với độ lệch σ/√n, bất kể dữ liệu gốc hình gì — miễn là phương sai hữu hạn (Cauchy thì không).','#s-clt','định lý giới hạn trung tâm'],
-['standard error','sai số chuẩn','σ/√n — trung bình mẫu thường lệch khỏi trung bình thật bao nhiêu. Khác với σ của dữ liệu.','#s-ci','sai số chuẩn'],
+['standard error','sai số chuẩn','σ/√n — trung bình mẫu thường lệch khỏi trung bình thật bao nhiêu. Khác với σ của dữ liệu. Tổng quát: độ lệch chuẩn của một con số tính từ mẫu, như hiệu hai tỉ lệ ở mục 4.7.','#s-clt','sai số chuẩn'],
 ['maximum likelihood estimation','ước lượng hợp lý cực đại','MLE — chọn tham số làm dữ liệu đang thấy trở nên đỡ bất ngờ nhất. Cách phổ biến nhất để định nghĩa &ldquo;huấn luyện&rdquo; bằng toán.','#s-mle','MLE|ước lượng hợp lý cực đại'],
 ['likelihood','độ hợp lý','P(dữ liệu | tham số), nhìn như hàm của THAM SỐ trong khi dữ liệu đã cố định. Không phải xác suất của tham số.','#s-mle','độ hợp lý'],
 ['log-likelihood','log-hợp-lý','Log của độ hợp lý: biến dây phép nhân thành phép cộng, dễ đạo hàm và không tràn số.','#s-mle','log-hợp-lý'],
