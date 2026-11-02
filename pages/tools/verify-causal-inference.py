@@ -392,7 +392,7 @@ def run_p1():
     rest = Fraction(sum(Y0) - Y0[an], 9)
     claim('p1 · po chỉ An: 450 − 180 = 270, τ(An) = 30', (Y1[an], rest, Y1[an] - rest, tau['An']) == (450, 180, 270, 30))
     claim('p1 · po chỉ An: 270 gấp chín lần 30', (Y1[an] - rest) / tau['An'] == 9)
-    needs('p1 · po lời giải có (2.040 − 420) / 9', 's-po', 'Chênh lệch ngây thơ là 450 − 180 = 270 nghìn ₫, trong đó 180 là trung bình của chín người không nhận: (2.040 − 420) / 9')
+    needs('p1 · po lời giải có (2.040 − 420) / 9', 's-po', 'Chênh lệch ngây thơ là 450 − 180 = 270 nghìn ₫, trong đó 180 là trung bình của chín người không nhận: tổng Y(0) của cả mười khách là 2.040, bỏ 420 của An, chia 9: (2.040 − 420) / 9')
     claim('p1 · po tổng Y(0) = 2.040', sum(Y0) == 2040)
 
     # ══ 1.2 · mô hình select ═════════════════════════════════════════════════════
@@ -1006,7 +1006,7 @@ def run_p1():
 
     # ══ vòng sửa 27/09 — các câu đã sửa theo rà soát không được quay lại ═════════
     needs('p1 · 1.2 ba con số bằng nhau cả khi tác động không đều, nếu ai được nhắn không dính tới τ', 's-ate',
-          'và cả khi tác động không đều, miễn là việc ai được nhắn chẳng dính gì tới chuyện SMS tác động lên người ấy bao nhiêu')
+          'Chúng cũng bằng nhau khi tác động không đều, miễn là việc ai được nhắn chẳng dính gì tới chuyện SMS tác động lên người ấy bao nhiêu')
     claim('p1 · 1.2 không còn "chỉ bằng nhau khi" (đủ, không cần)', 'chỉ bằng nhau khi' not in sec_text('s-ate'))
     needs('p1 · 0.1 đảo chiều: chính kết quả (ở lại) gây ra việc cài app', 's-cau-hoi', 'Việc ở lại gây ra việc cài app')
     for t_ in ('1 · Đảo chiều', '2 · Gây nhiễu', '3 · Chọn mẫu'):
@@ -1607,7 +1607,7 @@ def run_p2():
     need('match: đọc số mặc định ATT', 'id="m-propensity-av">' + vi(o1['att'], 1))
     need('match: đọc số mặc định dùng lại', 'id="m-propensity-ru">' + str(o1['reuse']))
     need('match: câu JS mặc định', 'Trước ghép: |SMD| lớn nhất ' + vi(o1['before'], 2) + ', vượt quy ước 0,1; chênh lệch ngây thơ ' + vi(o1['naive'], 1) +
-         '. Sau ghép theo ê: |SMD| lớn nhất ' + vi(o1['after'], 2) + ' (đạt quy ước), ước lượng ' + vi(o1['att'], 1) + ' (thật: 5).')
+         '. Sau ghép theo điểm xu hướng ước lượng: |SMD| lớn nhất ' + vi(o1['after'], 2) + ' (đạt quy ước), ước lượng ' + vi(o1['att'], 1) + ' (thật: 5).')
     need('match: dòng chi tiết mặc định', 'SMD cỡ cửa hàng: ' + vi(o1['s1'][0], 2) + ' → ' + vi(o1['s1'][1], 2) +
          ' · SMD số năm dùng phần mềm: ' + vi(o1['s2'][0], 2) + ' → ' + vi(o1['s2'][1], 2) + ' · ' + str(o1['used']) + ' cửa hàng')
     need('match: code in ra — SMD cỡ', '# in ra: SMD cỡ: trước ' + ('%.2f' % o1['s1'][0]) + ' · sau ' + ('%.2f' % o1['s1'][1]))
@@ -3379,6 +3379,107 @@ def run_r3():
     claim('r3 C5 · trục hình FWER ghi m', "'số kiểm định m'" in HTML and "'số kiểm định k'" not in HTML)
     claim('r3 C5 · GLOSS FWER dùng m', 'với m phép kiểm độc lập là 1 − (1 − α)ᵐ' in gloss_row('family-wise error rate') and 'k phép kiểm' not in gloss_row('family-wise error rate'))
     claim('r3 C5 · q ở 3.2 được nói là mức FDR, khác 1 − p', 'mức FDR q — chữ q ở đây không phải 1 − p của mục 2.2' in s)
+    # ── Vai D: thiếu nền, ký hiệu, bước nhảy ──
+    def has_row(en, *subs):
+        r = gloss_row(en)
+        return bool(r) and all(x in r for x in subs)
+    # D1 · SHAP, AUC: giải nghĩa tại chỗ và có mục từ điển
+    s = sec('s-cau-hoi')
+    claim('r3 D1 · 0.1 giải nghĩa SHAP ở lần dùng đầu', 'SHAP (cách chia điểm dự đoán của từng khách cho từng cột' in s)
+    claim('r3 D1 · 0.1 giải nghĩa AUC', 'AUC là xác suất mô hình chấm khách bỏ đi rủi ro hơn' in s)
+    claim('r3 D1 · GLOSS có SHAP và AUC', has_row('SHAP', 'Lundberg') and has_row('AUC', 'xác suất mô hình chấm ca dương cao hơn'))
+    # D2 · "kiểm soát" được định nghĩa TRƯỚC lưới ba kiểu nối
+    s = sec('s-dag')
+    i_def, i_grid = s.find('<b>Kiểm soát</b> Z (hay điều chỉnh theo Z) nghĩa là chỉ so những đơn vị có cùng giá trị Z'), s.find('<div class="grid3">')
+    claim('r3 D2 · 4.1 định nghĩa kiểm soát trước lưới ba kiểu nối', 0 <= i_def < i_grid, f'{i_def} / {i_grid}')
+    claim('r3 D2 · GLOSS kiểm soát', has_row('adjust for', "'kiểm soát (điều chỉnh theo) một biến'", 'control for|kiểm soát|điều chỉnh theo'))
+    # D3 · hiệu ứng cố định
+    claim('r3 D3 · 5.1 định nghĩa hiệu ứng cố định', 'Hiệu ứng cố định cửa hàng là cho mỗi cửa hàng một hằng số riêng' in sec('s-did'))
+    claim('r3 D3 · GLOSS hiệu ứng cố định, TWFE không vòng quanh', has_row('fixed effects', 'hằng số riêng') and has_row('two-way fixed effects', 'mỗi đơn vị một hằng số'))
+    # D4 · delta bằng phép chia: R̄/Ō − c = D̄/Ō với D = R − c·O; kiểm đẳng thức trên số của ví dụ tay, và link Toán 2.4 có thật
+    s = sec('s-units')
+    claim('r3 D4 · 3.5 có lối dẫn chỉ cần phép chia', 'Khi đó R̄/Ō − μ<sub>R</sub>/μ<sub>O</sub> = D̄/Ō' in s and 'Var(D)/(n·μ<sub>O</sub>²)' in s)
+    for Rb, Ob, c in ((750.0, 3.0, 240.0), (812.5, 3.1, 250.0)):
+        near(f'r3 D4 · R̄/Ō − c = (R̄ − cŌ)/Ō ở R̄ = {Rb}', Rb / Ob - c, (Rb - c * Ob) / Ob, 1e-9)
+    mv = re.search(r'Trong ngoặc: ([0-9.]+) − 2 × ([0-9]+) × ([0-9.]+) \+ \2² × ([0-9,]+) = ', s)
+    if mv:
+        sR2, c_, sRO, sO2 = (float(mv.group(1).replace('.', '')), float(mv.group(2)), float(mv.group(3).replace('.', '')),
+                             float(mv.group(4).replace(',', '.')))
+        vD = sR2 - 2 * c_ * sRO + c_ ** 2 * sO2
+    claim('r3 D4 · ví dụ tay: phần trong ngoặc = Var(D) = s_R² − 2c·s_RO + c²·s_O²', mv is not None and f' = {vi(vD, 0)}. Chia cho' in s,
+          f'{vD if mv else None}')
+    claim('r3 D4 · 3.5 trỏ về đạo hàm riêng ở Toán 2.4', '<a href="mathematics-for-machine-learning.html#s-partial">Toán 2.4</a>' in s)
+    math_page = (HERE / 'mathematics-for-machine-learning.html')
+    claim('r3 D4 · Toán có id s-partial', math_page.exists() and 'id="s-partial"' in math_page.read_text(encoding='utf-8'))
+    claim('r3 D4 · GLOSS delta có lối phép chia', has_row('delta method', 'D̄/Ō'))
+    # D7 · định danh; D8 · nội sinh
+    claim('r3 D7 · 5.3 giải nghĩa "định danh được"', 'định danh được (identified: với dữ liệu vô hạn' in sec('s-rdd') and has_row('identification', 'dữ liệu vô hạn'))
+    claim('r3 D8 · 5.4 giải nghĩa nội sinh', '(nội sinh, endogeneity:' in sec('s-iv') and has_row('endogeneity', 'thiên lệch chọn'))
+    # D9 · độ mạnh 80% = bỏ sót 1 trong 5; 90% = 1 trong 10 (không còn "một lần trong năm")
+    s = sec('s-power')
+    claim('r3 D9 · không còn "một lần trong năm"', 'một lần trong năm' not in s)
+    claim('r3 D9 · 80% ⇒ bỏ sót 1/5, 90% ⇒ 1/10', round(1 / (1 - 0.8)) == 5 and round(1 / (1 - 0.9)) == 10
+          and 'cứ 5 lần có tác động thật thì bỏ sót 1' in s and 'từ 1 trên 5 lần xuống 1 trên 10 lần' in s)
+    # L1 · ATT = ATE + (1 − π)(ATT − ATC) — dựng từ đẳng thức nêu ở trang, kiểm trên số của mô hình
+    s = sec('s-ate')
+    claim('r3 L1 · 1.2 nêu ATE = π·ATT + (1 − π)·ATC rồi suy ra ATT', 'ATE = π·ATT + (1 − π)·ATC, nên ATT = ATE + (1 − π)(ATT − ATC)' in s)
+    claim('r3 L1 · số mô hình: 49.498 + ½(34.936 − 64.060) = 34.936', 49498 + (34936 - 64060) / 2 == 34936)
+    claim('r3 L2 · 1.2 nói bước nối là tính nhất quán', 'nối hai vế là tính nhất quán (mục 1.1)' in s)
+    # L3 · bốn con số có cách tính
+    near('r3 L3 · P(|Z| > 0,1/(2/√200)) ≈ 48%', p_two_sided(0.1 / (2 / math.sqrt(200))), 0.48, 0.005)
+    near('r3 L3 · P(|Z| > 0,1/(2/√2000)) ≈ 2,5%', p_two_sided(0.1 / (2 / math.sqrt(2000))), 0.025, 0.001)
+    claim('r3 L3 · 2.1 viết phép tính 48% / 2,5%', f'P(|Z| &gt; {vi(0.1 / (2 / math.sqrt(200)), 2)}) ≈ 48%' in sec('s-random')
+          and f'P(|Z| &gt; {vi(0.1 / (2 / math.sqrt(2000)), 2)}) ≈ 2,5%' in sec('s-random'))
+    d42 = 1.96 / math.sqrt(1 + 249 * 0.02)
+    claim('r3 L3 · 3.4 viết phép tính 42%', f'P(|Z| &gt; {vi(d42, 2)}) ≈ {vi(p_two_sided(d42) * 100, 0)}%' in sec('s-interfere'))
+    d1, d2 = 1.96 / math.sqrt(21), 1.96 / math.sqrt(10.5)
+    claim('r3 L3 · 3.6 viết phép tính 67% / 55%', f'P(|Z| &gt; {vi(d1, 2)}) ≈ {vi(p_two_sided(d1) * 100, 0)}%' in sec('s-novelty')
+          and f'≈ {vi(d2, 2)}) ≈ {vi(p_two_sided(d2) * 100, 0)}%' in sec('s-novelty'))
+    # L4 · Var(ln p̂) ≈ (1 − p)/(np) = 1/x − 1/n
+    p_, n_ = 0.18, 2000
+    near('r3 L4 · (1 − p)/(np) = 1/x − 1/n', (1 - p_) / (n_ * p_), 1 / (n_ * p_) - 1 / n_, 1e-12)
+    claim('r3 L4 · 2.2 có bước delta một biến', 'Var(ln p̂) ≈ p(1 − p)/n · 1/p² = (1 − p)/(np) = 1/x − 1/n' in sec('s-estimate'))
+    claim('r3 L5 · 2.4 đi trọn tới Var(Y)(1 − ρ²)', 'Vậy Var(Y′) = Var(Y)(1 − ρ²).' in sec('s-cuped'))
+    claim('r3 L6 · 3.1 nói α là một ngân sách', 'Nó coi α = 5% là một ngân sách' in sec('s-peek'))
+    # L7 · DEFF: [m·σ² + m(m − 1)·ICC·σ²]/m² = σ²/m·[1 + (m − 1)ICC]
+    m_, icc = 250, 0.02
+    near('r3 L7 · tổng phương sai/m² = σ²/m · DEFF', (m_ + m_ * (m_ - 1) * icc) / m_ ** 2, (1 + (m_ - 1) * icc) / m_, 1e-12)
+    claim('r3 L7 · 3.4 có bước ra DEFF', 'cộng m(m − 1) cặp khách cùng cửa hàng, mỗi cặp góp hiệp phương sai ICC·σ²' in sec('s-interfere'))
+    claim('r3 L8 · 3.4 giải nghĩa SE theo cụm ở lần đầu', '<b>SE theo cụm</b> (cluster-robust:' in sec('s-interfere')
+          and has_row('cluster-robust standard error', 'SE theo cụm|sai số chuẩn theo cụm'))
+    claim('r3 L9 · quy ước dấu mũ có trong "Cách đọc trang"', '<li><b>Dấu mũ là ước lượng.</b>' in sec('s-ban-do'))
+    claim('r3 L9 · không còn "theo ê" đứng một mình', 'theo ê:' not in HTML)
+    claim('r3 L10 · 4.5 nói hồi quy ngắn/dài là gì', 'Facure gọi hồi quy thiếu U là &ldquo;hồi quy ngắn&rdquo;' in sec('s-sense'))
+    claim('r3 L11 · 4.5 định nghĩa RR và tỉ số chênh', 'RR = P(rời bỏ | bật) / P(rời bỏ | không bật)' in sec('s-sense') and 'tỉ số chênh (odds ratio:' in sec('s-sense'))
+    RR = 1 / 0.70
+    E_ = RR + math.sqrt(RR * (RR - 1))
+    near('r3 L12 · E = RR + √(RR(RR − 1)) là nghiệm của E²/(2E − 1) = RR', E_ ** 2 / (2 * E_ - 1), RR, 1e-9)
+    claim('r3 L12 · 2,5 và 5 trỏ tới hệ số thiên lệch', '1,6 lần cần 5 lần (tính bằng hệ số thiên lệch a·b/(a + b − 1) ≥ RR ở hộp dưới)' in sec('s-sense'))
+    claim('r3 L12 · 4.5 viết phương trình bậc hai của E', 'E² − 2RR·E + RR = 0' in sec('s-sense'))
+    s = sec('s-synth')
+    claim('r3 L13 · RMSPE định nghĩa trước lần dùng đầu', 0 <= s.find('RMSPE — root mean squared prediction error') < s.find('RMSPE trước'))
+    # L14 · cận của "bị làm thôi mua" đọc từ hai tỉ lệ của trang
+    s = sec('s-hte')
+    mt = re.search(r'tỉ lệ mua chỉ tụt từ (\d+)% xuống (\d+)%', s)
+    a_, b_ = (int(mt.group(1)), int(mt.group(2))) if mt else (0, 0)
+    claim('r3 L14 · cận dưới = a − b, cận trên = a; khi ấy b% bị thuyết phục',
+          mt is not None and f'Ít nhất {a_ - b_}%' in s and f'Nhiều nhất {a_}%' in s and f'phải có {b_}% người vốn không mua' in s)
+    claim('r3 L15 · 6.3 không dùng "sai số chuẩn" cho nhiễu', 'sai số chuẩn cỡ σ' not in HTML)
+    s = sec('s-dml')
+    claim('r3 L16 · 6.4 trực giao Neyman = đạo hàm bằng 0; ℓ nối với g', 'đạo hàm của ước lượng theo lỗi của chúng bằng 0' in s
+          and 'đứng vuông góc' not in s and 'ℓ(X) = E[Y | X] = θ·m(X) + g(X)' in s)
+    # L17 · câu quá dày đã tách
+    claim('r3 L17 · câu dày 2.3 đã tách', 'thì thay p(1 − p) bằng phương sai σ² của chính thước đo ấy' in sec('s-power') and 'nhường chỗ' not in sec('s-power'))
+    claim('r3 L17 · câu dày 1.4 và 4.4 đã tách', 'Giả định hỏng trong ba trường hợp.' in sec('s-sutva') and 'Vì sao sai một trong hai vẫn đúng?' in sec('s-ipw'))
+    # L18 · một tên cho nhóm T = 1 / T = 0; "không chệch" nối với "thiên lệch"
+    claim('r3 L18 · không còn "nhóm được áp dụng"', 'nhóm được áp dụng' not in HTML and 'nhóm “được áp dụng”' not in HTML)
+    claim('r3 L18 · GLOSS ATT/ATC dùng nhóm can thiệp / đối chứng', "'tác động trên nhóm can thiệp (ATT)'" in gloss and "'tác động trên nhóm đối chứng (ATC)'" in gloss)
+    claim('r3 L18 · 2.2 nói không chệch là thiên lệch bằng 0', 'không chệch của ATE (unbiased:' in sec('s-estimate'))
+    claim('r3 L19 · ô Simpson không gọi là "chuẩn hoá"', 'Chuẩn hoá 1.000 + 1.000' not in HTML)
+    # mục từ điển mới phải có chữ để gắn vào trong thân bài
+    for form in ('SHAP', 'AUC', 'kiểm soát', 'hiệu ứng cố định', 'SE theo cụm', 'định danh', 'nội sinh'):
+        claim(f'r3 GLOSS · "{form}" có mặt trong thân bài', form in TEXT)
+
     # C6 · GLOSS delta không gán θ nghĩa thứ ba
     claim('r3 C6 · GLOSS delta không dùng θ', 'θ' not in gloss_row('delta method') and 'Var(R − (R̄/Ō)·O)/(nŌ²)' in gloss_row('delta method'))
 
