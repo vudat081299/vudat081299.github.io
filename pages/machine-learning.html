@@ -320,6 +320,9 @@ td b { font-weight:660; }
 .lab__f { font-size:13px; color:var(--muted); line-height:1.65; margin:13px 0 0; padding-top:12px; border-top:1px solid var(--border); }
 .lab__f b { color:var(--ink); font-weight:650; }
 .lab__f + .lab__f { border-top:0; padding-top:0; margin-top:7px; }
+.lab__l { font-size:13px; color:var(--muted); line-height:1.65; margin:6px 0 0; padding-left:22px; }
+.lab__l b { color:var(--ink); font-weight:650; }
+.lab__l + .lab__f { border-top:0; padding-top:0; margin-top:7px; }
 
 .row { display:grid; grid-template-columns:118px minmax(0,1fr); gap:8px 13px; align-items:center; margin-bottom:11px; }
 @media (max-width:620px) { .row { grid-template-columns:minmax(0,1fr); gap:3px; } }
@@ -889,14 +892,24 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="sym1"><span class="g">λ</span><div class="d">hệ số regularization — mức phạt cho tham số quá lớn. Càng lớn càng ép mô hình đơn giản.</div></div>
           <div class="sym1"><span class="g">g(z)</span><div class="d">hàm kích hoạt: sigmoid, ReLU, tanh… Phần phi tuyến của một nơ-ron.</div></div>
           <div class="sym1"><span class="g">a<sup>[l]</sup></span><div class="d">đầu ra (activation) của <b>lớp thứ l</b>. Chỉ số trên trong ngoặc vuông = <b>lớp nào</b>.</div></div>
-          <div class="sym1"><span class="g">∂J/∂w</span><div class="d">đạo hàm riêng: "nhích w lên một tí thì J đổi bao nhiêu". Đây là <i>toàn bộ</i> nội dung của gradient.</div></div>
+          <div class="sym1"><span class="g">n<sup>[l]</sup></span><div class="d">số nơ-ron của lớp l. Lớp 0 là đầu vào, nên n<sup>[0]</sup> = n, số đặc trưng.</div></div>
+          <div class="sym1"><span class="g">x<sup>&lt;t&gt;</sup></span><div class="d">phần tử thứ t của một chuỗi (chặng 4). Ngoặc nhọn ở trên = <b>bước thời gian nào</b>.</div></div>
+          <div class="sym1"><span class="g">θ</span><div class="d">mọi tham số (mọi W, b) gộp thành một vector dài — cách viết gọn khi nói chung về "các tham số".</div></div>
+          <div class="sym1"><span class="g">∂J/∂w</span><div class="d">đạo hàm riêng: "nhích w lên một tí, <b>giữ nguyên mọi tham số khác</b>, thì J đổi bao nhiêu". Xếp các đạo hàm riêng thành một vector — (∂J/∂w, ∂J/∂b) — là được <b>gradient</b>: mũi tên chỉ hướng J tăng nhanh nhất.</div></div>
           <div class="sym1"><span class="g">:=</span><div class="d">gán, không phải bằng. "w := w − 3" nghĩa là lấy giá trị mới thay giá trị cũ.</div></div>
           <div class="sym1"><span class="g">σ</span><div class="d">sigmoid, cũng viết là g khi nói chung về hàm kích hoạt.</div></div>
         </div>
 
         <div class="box note">
           <p class="box__k">Một quy ước đọc rất đáng thuộc</p>
-          <p><b>Ngoặc tròn ở trên = ví dụ thứ mấy. Ngoặc vuông ở trên = lớp thứ mấy. Chỉ số dưới = đặc trưng/nơ-ron thứ mấy.</b> Ba loại chỉ số này đứng cạnh nhau trong công thức mạng sâu, và 90% cảm giác "công thức rối" đến từ việc chưa tách được chúng. Ví dụ <span class="mono">a<sub>3</sub><sup>[2](7)</sup></span> = giá trị của nơ-ron thứ 3, ở lớp 2, khi đưa vào ví dụ thứ 7.</p>
+          <p><b>Ngoặc tròn ở trên = ví dụ thứ mấy. Ngoặc vuông ở trên = lớp thứ mấy. Chỉ số dưới = đặc trưng/nơ-ron thứ mấy.</b> Ba loại chỉ số này (chặng 4 thêm loại thứ tư, ngoặc nhọn &lt;t&gt; cho bước thời gian) đứng cạnh nhau trong công thức mạng sâu, và 90% cảm giác "công thức rối" đến từ việc chưa tách được chúng. Ví dụ <span class="mono">a<sub>3</sub><sup>[2](7)</sup></span> = giá trị của nơ-ron thứ 3, ở lớp 2, khi đưa vào ví dụ thứ 7.</p>
+          <p><b>Vài chữ bị dùng lại với nghĩa khác.</b> α còn là biên của triplet loss. β, γ của batch norm là hai tham số học được, khác β của momentum/Adam và γ chiết khấu của học tăng cường. ε là số rất nhỏ trong Adam, bước nhích trong gradient checking, ngưỡng của phát hiện bất thường, và xác suất thử ngẫu nhiên của ε-greedy. n trong công thức cỡ ảnh của tích chập là cạnh ảnh, không phải số đặc trưng.</p>
+        </div>
+
+        <div class="box note">
+          <p class="box__k">Kiến thức nền — có sẵn ở trang khác, không dạy lại ở đây</p>
+          <p>Trang dùng mà không dạy lại mấy thứ đã có ở trang <a href="mathematics-for-machine-learning.html">Toán cho học máy</a>: đạo hàm riêng và gradient (<a href="mathematics-for-machine-learning.html#s-partial">mục 2.4</a>), gradient descent (<a href="mathematics-for-machine-learning.html#s-gd">2.5</a>), quy tắc chuỗi khi một biến đi qua nhiều đường (<a href="mathematics-for-machine-learning.html#s-chain">2.6</a>), tích vô hướng (<a href="mathematics-for-machine-learning.html#s-dot">1.5</a>), nhân ma trận với vector (<a href="mathematics-for-machine-learning.html#s-matrix">1.6</a>), chuyển vị (<a href="mathematics-for-machine-learning.html#s-transpose">1.7</a>), phân phối chuẩn (<a href="mathematics-for-machine-learning.html#s-normal">3.8</a>), hiệp phương sai (<a href="mathematics-for-machine-learning.html#s-cov">3.10</a>) và trị riêng (<a href="mathematics-for-machine-learning.html#s-eigen">1.9</a>). Chữ nào trong số đó còn lạ thì đọc mục ấy trước.</p>
+          <p>Bản nhẹ hơn của chặng 1–3, ít công thức hơn, ở trang <a href="machine-learning-101.html">Machine Learning 101</a>.</p>
         </div>
 
         <div class="take"><span class="k">Mang theo</span><p>Hình dạng dữ liệu quyết định kiến trúc. Hàng bảng → mạng thường hoặc cây. Lưới không gian → tích chập. Chuỗi có thứ tự → hồi quy theo thời gian hoặc attention. Ba chặng sau chỉ là ba câu trả lời cho ba hình dạng.</p></div>
@@ -986,7 +999,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="lab__h">
             <p class="lab__k">Mô hình 1 / 13 · giết hiểu nhầm “hàm chi phí là một khái niệm trừu tượng”</p>
             <p class="lab__t">Chi phí là một cái bát, và bạn đang đứng đâu đó trên thành bát</p>
-            <p class="lab__hint">Kéo <b>w</b> và <b>b</b>. Đường bên trái đổi, chấm bên phải chạy. Hãy thử đi vòng quanh mép bản đồ rồi tìm về vùng nhạt nhất <b>chỉ bằng cách nhìn con số J</b> — đó đúng là việc mà gradient descent làm, chỉ khác là nó không nhìn được cả bản đồ, nó chỉ sờ được độ dốc ngay dưới chân.</p>
+            <p class="lab__hint">Kéo <b>w</b> và <b>b</b>. Đường bên trái đổi, chấm bên phải chạy. Hãy thử đi vòng quanh mép bản đồ rồi tìm về vùng nhạt nhất. Mũi tên ở chấm là <b>−gradient</b>: thứ duy nhất gradient descent thấy được — nó không nhìn được cả bản đồ, nó chỉ sờ được độ dốc ngay dưới chân.</p>
           </div>
           <div class="lab__b">
             <div class="pair">
@@ -995,8 +1008,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                 <figcaption>Dữ liệu &amp; đường hiện tại. Đoạn dọc xám là <b>sai lệch</b> của từng căn — chi phí là trung bình bình phương của chúng.</figcaption>
               </figure>
               <figure>
-                <svg class="viz" id="m1-map" role="img" aria-label="Bản đồ chi phí J theo hai tham số w và b: màu càng nhạt thì chi phí càng thấp, chấm đặc là vị trí hiện tại." viewBox="0 0 320 240"></svg>
-                <figcaption>Bản đồ chi phí <b>J(w, b)</b>. Càng nhạt (gần màu nền) = càng thấp. Chấm đặc là vị trí hiện tại; vòng tròn nhỏ là đáy thật.</figcaption>
+                <svg class="viz" id="m1-map" role="img" aria-label="Bản đồ chi phí J theo hai tham số w và b: màu càng nhạt thì chi phí càng thấp, chấm đặc là vị trí hiện tại, mũi tên là hướng ngược gradient." viewBox="0 0 320 240"></svg>
+                <figcaption>Bản đồ chi phí <b>J(w, b)</b>. Càng nhạt (gần màu nền) = càng thấp. Chấm đặc là vị trí hiện tại; vòng tròn nhỏ là đáy thật. Mũi tên là <b>−gradient</b> tại chấm: luôn chỉ về vùng nhạt hơn, và ngắn lại khi gần đáy.</figcaption>
               </figure>
             </div>
             <div style="margin-top:14px">
@@ -1048,8 +1061,16 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="fx__line sm" data-fx>
             <span class="tm t-m" data-n="Độ chệch cũng được cập nhật theo đúng luật ấy, bằng đạo hàm riêng của nó."><i>b</i> := <i>b</i> − <i>α</i> ∂<i>J</i>/∂<i>b</i></span><span class="op">  ·  hai dòng này phải cập nhật</span><span class="tm t-o" data-n="<b>Đồng thời</b>: tính cả hai đạo hàm bằng giá trị w, b <i>cũ</i>, rồi mới gán. Nếu bạn cập nhật w trước rồi dùng w mới để tính đạo hàm của b, đó là một thuật toán khác và nó không đảm bảo đi xuống. Ng nhấn mạnh chi tiết này vì nó là lỗi lập trình phổ biến nhất ở bài tập tuần 1."> đồng thời</span>
           </div>
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-o" data-n="Đạo hàm của J theo w, viết ra cho hồi quy tuyến tính. Mỗi số hạng (f − y)² cho đạo hàm 2(f − y)·x, vì f = wx + b nên ∂f/∂w = x. Số 2 ấy triệt tiêu số 2 trong ½m.">∂<i>J</i>/∂<i>w</i> = <sup>1</sup>⁄<sub>m</sub> Σ (f(x<sup>(i)</sup>) − y<sup>(i)</sup>)·x<sup>(i)</sup></span>
+          </div>
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-o" data-n="Với b thì ∂f/∂b = 1, nên không có thừa số x.">∂<i>J</i>/∂<i>b</i> = <sup>1</sup>⁄<sub>m</sub> Σ (f(x<sup>(i)</sup>) − y<sup>(i)</sup>)</span>
+          </div>
           <p class="fx__note">Bấm vào từng ký hiệu. <span class="dim">Màu xanh lục = <b>tối ưu</b>.</span></p>
         </div>
+
+        <p>Hai dòng cập nhật gộp lại là <b>một bước theo mũi tên −(∂J/∂w, ∂J/∂b)</b>, tức ngược hướng gradient. Gradient chỉ hướng J tăng nhanh nhất, nên đi ngược nó là hướng J giảm nhanh nhất ngay tại chỗ đang đứng (lý do ở <a href="mathematics-for-machine-learning.html#s-partial">trang Toán 2.4</a>). <a href="#m1">Mô hình 1</a> vẽ mũi tên ấy trên bản đồ chi phí.</p>
 
         <h3>Ba điều đáng ngạc nhiên về hành vi của nó</h3>
         <ul>
@@ -1192,7 +1213,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <p class="lede">Câu hỏi mới: "căn nhà này bán được trong 30 ngày không?". Đáp án chỉ có 0 hoặc 1. Nếu dùng thẳng hồi quy tuyến tính, mô hình sẽ trả về những thứ như −0,4 hay 1,8 — <b>vô nghĩa với một câu hỏi có/không</b>. Cần một cái phễu ép mọi số thực về khoảng (0, 1) để đọc được thành <i>xác suất</i>.</p>
 
         <div class="spine">
-          <div class="s-m"><div class="lbl">Mô hình · model</div><div class="v">Vẫn là <span class="mono">w·x + b</span>, nhưng bọc thêm sigmoid ở ngoài. Ranh giới nó vẽ được vẫn là một <b>đường thẳng</b> (siêu phẳng).</div></div>
+          <div class="s-m"><div class="lbl">Mô hình · model</div><div class="v">Vẫn là <span class="mono">w·x + b</span>, nhưng bọc thêm sigmoid ở ngoài. Ranh giới nó vẽ được vẫn là một <b>đường thẳng</b> (siêu phẳng — "đường thẳng" của không gian nhiều chiều).</div></div>
           <div class="s-l"><div class="lbl">Mất mát · loss</div><div class="v"><b>Log loss</b> — không phải bình phương. Đây là chỗ đổi thật sự, và có lý do bắt buộc.</div></div>
           <div class="s-o"><div class="lbl">Tối ưu · optimizer</div><div class="v">Gradient descent, <b>công thức cập nhật trông y hệt</b> hồi quy tuyến tính. Trùng hợp đẹp, không phải ngẫu nhiên.</div></div>
         </div>
@@ -1263,7 +1284,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                 <div class="row"><label for="m4-p">Mô hình đoán</label><div class="inline"><input type="range" id="m4-p" min="0.01" max="0.99" step="0.01" value="0.3"><span class="val" id="m4-pv"></span></div></div>
                 <div class="row"><span class="k">Bị phạt</span><pre class="out" id="m4-lout"></pre></div>
               </div>
-              <p class="lab__f"><b>Nhìn hai đường cong:</b> bình phương phạt tối đa là 1 — sai hoàn toàn cũng chỉ mất 1 điểm. Log loss thì <b>đi tới vô cực</b>. Nghĩa là với log loss, mô hình <i>không bao giờ được phép</i> tự tin tuyệt đối vào một câu trả lời sai; với bình phương thì nó chịu được, và gradient ở vùng sai nặng lại còn <b>rất nhỏ</b> nên nó gần như không học được từ những ca sai nặng nhất.</p>
+              <p class="lab__f"><b>Nhìn hai đường cong:</b> bình phương phạt tối đa là 1 — sai hoàn toàn cũng chỉ mất 1 điểm. Log loss thì <b>đi tới vô cực</b>. Nghĩa là với log loss, mô hình <i>không bao giờ được phép</i> tự tin tuyệt đối vào một câu trả lời sai; với bình phương thì nó chịu được.</p>
+              <p class="lab__f"><b>Chỗ hỏng thứ hai không thấy trên hình này</b>, vì hình vẽ theo p. Thứ gradient descent chỉnh là z (p = σ(z)). Theo z, bình phương cho đạo hàm <span class="mono">2(p − y)·p(1 − p)</span>; log loss cho <span class="mono">p − y</span>. Ở p = 0,01 và y = 1, bình phương chỉ cho ≈ −0,02, còn log loss cho −0,99, gấp khoảng 50 lần. Thừa số p(1 − p) của sigmoid gần bằng 0 đúng ở ca sai nặng nhất, nên với bình phương mô hình gần như <b>không học được</b> từ chính những ca ấy.</p>
               <p class="lab__f"><b>Đó mới là lý do kỹ thuật thật sự:</b> không chỉ vì "lồi", mà vì <b>hình dạng gradient</b>. Log loss cho gradient lớn đúng ở chỗ mô hình sai nặng — nơi cần sửa nhiều nhất.</p>
             </div>
           </div>
@@ -1271,7 +1293,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="box note">
           <p class="box__k">Chi tiết đẹp mà Ng chỉ nói lướt</p>
-          <p>Sau khi lấy đạo hàm, công thức cập nhật của hồi quy logistic <b>trông giống hệt</b> hồi quy tuyến tính: <span class="mono">w := w − α · (1/m) Σ (f(x)−y) x</span>. Cùng một dòng, chữ nào cũng như nhau. Cái khác duy nhất nằm bên trong <span class="mono">f</span>. Đây không phải trùng hợp — cả hai đều thuộc họ <b>mô hình tuyến tính tổng quát</b>, và mỗi phân phối trong họ ấy có một <b>hàm liên kết chính tắc</b> riêng — dùng đúng cái đó thì công thức cập nhật luôn rút về đúng dạng này. Biết vậy thì bạn khỏi phải nhớ hai công thức.</p>
+          <p>Sau khi lấy đạo hàm, công thức cập nhật của hồi quy logistic <b>trông giống hệt</b> hồi quy tuyến tính: <span class="mono">w := w − α · (1/m) Σ (f(x)−y) x</span>. Cùng một dòng, chữ nào cũng như nhau. Cái khác duy nhất nằm bên trong <span class="mono">f</span>. Đây không phải trùng hợp, và lý do kiểm được bằng tay: với log loss, đạo hàm theo f có mẫu số f(1 − f); đạo hàm của sigmoid lại đúng bằng f(1 − f). Hai thứ triệt tiêu nhau, còn lại f − y. <a href="#m8">Mô hình 8</a> cho bạn bấm từng bước phép triệt tiêu ấy; <a href="mathematics-for-machine-learning.html#s-losses">trang Toán 2.8</a> làm bằng số, và <a href="mathematics-for-machine-learning.html#s-mle-ml">4.4</a> cho thấy cả hai hàm mất mát rơi ra từ ước lượng hợp lý cực đại. Thống kê gọi tên chung cho chuyện này: hồi quy tuyến tính và logistic cùng thuộc họ <b>mô hình tuyến tính tổng quát</b> (GLM), mỗi cái dùng <b>hàm liên kết chính tắc</b> của phân phối mình (chuẩn, Bernoulli), nên công thức cập nhật luôn rút về đúng dạng này. Biết vậy thì bạn khỏi phải nhớ hai công thức.</p>
         </div>
 
         <div class="take"><span class="k">Mang theo</span><p>Ba bộ phận không độc lập. Đổi mô hình mà quên đổi thước đo thì thuật toán tối ưu lãnh đủ — và triệu chứng (kẹt, học chậm) trông y hệt lỗi của learning rate. Khi chẩn đoán, luôn hỏi cả ba.</p></div>
@@ -1285,9 +1307,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <p class="lede">Đây là khái niệm quan trọng nhất của cả chặng 1, và có lẽ của cả tám khoá. <b>Mục tiêu không bao giờ là khớp dữ liệu bạn có; mục tiêu là đoán đúng dữ liệu bạn chưa thấy.</b> Hai điều đó nghe giống nhau nhưng lệch nhau, và toàn bộ nghệ thuật của học máy nằm trong khe hở ấy.</p>
 
         <div class="grid3">
-          <div class="mini"><p class="t">Thiếu khớp <span class="dim mono">underfit</span></p><p class="d">Mô hình quá nghèo hình dạng để bám dữ liệu. Đường thẳng cho quan hệ hình chữ U. Sai <b>cả trên tập huấn luyện</b>. Ng gọi là <b>bias cao</b>.</p></div>
+          <div class="mini"><p class="t">Thiếu khớp <span class="dim mono">underfit</span></p><p class="d">Mô hình quá nghèo hình dạng để bám dữ liệu. Đường thẳng cho quan hệ hình chữ U. Sai <b>cả trên tập huấn luyện</b>. Ng gọi là <b>bias cao</b>: đổi sang tập huấn luyện khác thì đường vẫn lệch khỏi quy luật thật theo cùng một kiểu.</p></div>
           <div class="mini"><p class="t">Vừa <span class="dim mono">just right</span></p><p class="d">Bám được xu thế, bỏ qua nhiễu. Sai vừa phải trên tập huấn luyện, và <b>sai xấp xỉ như thế</b> trên dữ liệu mới.</p></div>
-          <div class="mini"><p class="t">Quá khớp <span class="dim mono">overfit</span></p><p class="d">Mô hình đủ mạnh để đi qua từng điểm, kể cả các điểm chỉ là nhiễu. Gần như <b>không sai trên tập huấn luyện</b>, sai thảm trên dữ liệu mới. Ng gọi là <b>variance cao</b>.</p></div>
+          <div class="mini"><p class="t">Quá khớp <span class="dim mono">overfit</span></p><p class="d">Mô hình đủ mạnh để đi qua từng điểm, kể cả các điểm chỉ là nhiễu. Gần như <b>không sai trên tập huấn luyện</b>, sai thảm trên dữ liệu mới. Ng gọi là <b>variance cao</b>: lấy một tập huấn luyện khác cùng nguồn thì đường khớp được sẽ khác hẳn. Khoảng cách giữa sai số kiểm thử và sai số huấn luyện là cách đo nó khi bạn chỉ có một tập.</p></div>
         </div>
 
         <div class="box ana">
@@ -1314,6 +1336,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <li><b>Không phạt <i>b</i>.</b> Độ chệch chỉ dịch mô hình lên xuống, nó không làm mô hình phức tạp hơn. Phạt nó không giúp gì mà còn làm lệch.</li>
           <li><b>Vì sao trọng số nhỏ = mô hình đơn giản?</b> Vì trọng số nhỏ nghĩa là đầu ra <i>ít nhạy</i> với thay đổi nhỏ của đầu vào. Một hàm ít nhạy thì không thể ngoằn ngoèo bám từng điểm nhiễu — nó buộc phải mượt. Đây là trực giác đáng thuộc hơn cả công thức.</li>
         </ul>
+        <p><b>Vì sao L2 còn gọi là weight decay.</b> Lấy đạo hàm khoản phạt (được <span class="mono">(λ/m)·w</span>) rồi gộp vào luật cập nhật: <span class="mono">w := w·(1 − αλ/m) − α·(đạo hàm của phần cũ)</span>. Mỗi bước, w bị nhân với một số hơi nhỏ hơn 1 trước khi đi theo dốc, nên trọng số "phân rã" dần. Điều này chỉ đúng với gradient descent thường. Với Adam, phần gradient của khoản phạt bị chia cho độ lớn trung bình của gradient nên không còn là phép nhân đều ấy; muốn weight decay thật thì dùng <b>AdamW</b>.</p>
 
         <div class="lab" id="m5">
           <div class="lab__h">
@@ -1336,16 +1359,23 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="row"><label for="m5-d">Bậc đa thức</label><div class="inline"><input type="range" id="m5-d" min="1" max="14" step="1" value="1"><span class="val" id="m5-dv"></span></div></div>
               <div class="row"><label for="m5-l"><span class="nt">λ</span> · mức phạt</label><div class="inline"><input type="range" id="m5-l" min="-6" max="1" step="0.1" value="-6"><span class="val" id="m5-lv"></span></div></div>
               <div class="row"><label for="m5-m">Số điểm huấn luyện</label><div class="inline"><input type="range" id="m5-m" min="6" max="60" step="1" value="14"><span class="val" id="m5-mv"></span></div></div>
+              <div class="row"><span class="k">10 tập khác</span><div class="chips" id="m5-rs"><span class="chip on" data-v="0">Ẩn</span><span class="chip" data-v="1">Vẽ chồng</span></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m5-out"></pre></div>
             </div>
-            <p class="lab__f"><b>Ba thí nghiệm nên làm, theo thứ tự:</b> (1) để λ tắt, kéo bậc từ 1 lên 14 — thấy sai số huấn luyện giảm đều đặn về gần 0 trong khi sai số kiểm thử chạm đáy ở đâu đó rồi <b>vọt lên</b>; (2) giữ bậc 14, kéo λ lên — thấy đường cong dại dột bỗng mượt lại và sai số kiểm thử tụt xuống, <b>mà không phải bỏ bớt đặc trưng nào</b>; (3) giữ bậc 14 và λ tắt, kéo số điểm huấn luyện lên 60 — thấy quá khớp <b>tự nó biến mất</b>.</p>
+            <p class="lab__f"><b>Ba thí nghiệm nên làm, theo thứ tự:</b></p>
+            <ol class="tight lab__l">
+              <li>Để λ tắt, kéo bậc từ 1 lên 14. Sai số huấn luyện giảm đều đặn về gần 0, trong khi sai số kiểm thử chạm đáy ở đâu đó rồi <b>vọt lên</b>.</li>
+              <li>Giữ bậc 14, kéo λ lên. Đường cong dại dột bỗng mượt lại và sai số kiểm thử tụt xuống, <b>mà không phải bỏ bớt đặc trưng nào</b>.</li>
+              <li>Giữ bậc 14 và λ tắt, kéo số điểm huấn luyện lên 60. Quá khớp <b>tự nó biến mất</b>.</li>
+            </ol>
+            <p class="lab__f"><b>Variance và bias theo nghĩa gốc:</b> bấm "Vẽ chồng". Trang lấy thêm 10 tập huấn luyện khác từ cùng nguồn (cùng số điểm), khớp cùng bậc và λ, rồi vẽ 10 đường mờ. Bậc 14, λ tắt, 14 điểm: 10 đường <b>toả rộng</b> — đó là variance. Bậc 1, cùng 14 điểm: 10 đường <b>chụm sát nhau nhưng cùng lệch</b> khỏi đường thật — đó là bias. Ô kết quả in hai con số ấy, lấy trung bình theo x.</p>
             <p class="lab__f"><b>Thí nghiệm 3 chính là câu trả lời cho “khi nào thêm dữ liệu có ích”:</b> chỉ khi bạn đang quá khớp. Nếu bạn đang ở bậc 1 (thiếu khớp), kéo số điểm lên 60 chỉ thu hẹp khoảng chênh giữa hai sai số; sai số kiểm thử <b>vẫn cao gấp hơn mười lần sàn nhiễu</b>, còn sai số huấn luyện lại nhích lên — hãy tự thử để tin. Đây là dạng đơn giản nhất của chẩn đoán bias/variance ở <a href="#s-bias">chặng 3</a>.</p>
           </div>
         </div>
 
         <details class="q">
           <summary>Nếu λ lớn ép mọi w về 0, tại sao mô hình không trở thành đường nằm ngang y = 0 mà là y = trung bình?</summary>
-          <div class="a"><p>Vì <b>b không bị phạt</b>. Khi mọi w bị ép về 0, mô hình còn lại đúng <span class="mono">f(x) = b</span> — một hằng số. Và giá trị của b tối thiểu hoá bình phương sai lệch với một hằng số chính là <b>trung bình của y</b>. Nên mô hình quá-regularized không dự đoán 0, nó dự đoán "cứ đoán trung bình cho lành". Đó cũng là <b>đường cơ sở (baseline)</b> mà mọi mô hình phải thắng mới đáng tồn tại.</p></div>
+          <div class="a"><p>Vì <b>b không bị phạt</b>. Khi mọi w bị ép về 0, mô hình còn lại đúng <span class="mono">f(x) = b</span> — một hằng số. Và giá trị của b tối thiểu hoá bình phương sai lệch với một hằng số chính là <b>trung bình của y</b> (đạo hàm theo b của Σ(b − y<sup>(i)</sup>)² là 2Σ(b − y<sup>(i)</sup>), bằng 0 khi b đúng bằng trung bình của y). Nên mô hình quá-regularized không dự đoán 0, nó dự đoán "cứ đoán trung bình cho lành". Đó cũng là <b>đường cơ sở (baseline)</b> mà mọi mô hình phải thắng mới đáng tồn tại.</p></div>
         </details>
 
         <div class="take"><span class="k">Mang theo</span><p>Đích không phải khớp dữ liệu đang có, mà là đoán đúng dữ liệu chưa thấy — nên bạn phải giữ riêng dữ liệu để đo, và phải có một cái van (λ) để chỉnh độ phức tạp mà không phải xây lại mô hình.</p></div>
@@ -1418,7 +1448,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="lede">Đây là kết quả đẹp nhất và bị coi nhẹ nhất trong cả chặng. Nếu bạn bỏ <span class="mono">g</span> đi (hoặc dùng <span class="mono">g(z) = z</span>), thì mỗi lớp là một phép biến đổi tuyến tính, và <b>hợp của các phép tuyến tính vẫn là một phép tuyến tính</b>. Toàn bộ mạng sâu của bạn thu gọn về đúng <span class="mono">W'x + b'</span> — một hồi quy tuyến tính, chỉ tốn điện hơn vài nghìn lần.</p>
 
-        <p>Chứng minh bằng hai dòng: <span class="mono">a¹ = W¹x + b¹</span>, <span class="mono">a² = W²a¹ + b² = W²(W¹x + b¹) + b² = (W²W¹)x + (W²b¹ + b²)</span>. Đặt <span class="mono">W' = W²W¹</span> và <span class="mono">b' = W²b¹ + b²</span> là xong. Thêm bao nhiêu lớp cũng chỉ là nhân thêm ma trận, và tích của ma trận vẫn là một ma trận.</p>
+        <p>Chứng minh bằng hai dòng (số trong ngoặc vuông là số lớp, không phải số mũ): <span class="mono">a<sup>[1]</sup> = W<sup>[1]</sup>x + b<sup>[1]</sup></span>, <span class="mono">a<sup>[2]</sup> = W<sup>[2]</sup>a<sup>[1]</sup> + b<sup>[2]</sup> = W<sup>[2]</sup>(W<sup>[1]</sup>x + b<sup>[1]</sup>) + b<sup>[2]</sup> = (W<sup>[2]</sup>W<sup>[1]</sup>)x + (W<sup>[2]</sup>b<sup>[1]</sup> + b<sup>[2]</sup>)</span>. Đặt <span class="mono">W' = W<sup>[2]</sup>W<sup>[1]</sup></span> và <span class="mono">b' = W<sup>[2]</sup>b<sup>[1]</sup> + b<sup>[2]</sup></span> là xong. Thêm bao nhiêu lớp cũng chỉ là nhân thêm ma trận, và tích của ma trận vẫn là một ma trận.</p>
 
         <div class="lab" id="m6">
           <div class="lab__h">
@@ -1530,6 +1560,16 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </div>
         </div>
 
+        <h3>Vector hoá: cả lô m ví dụ trong một phép nhân</h3>
+        <p>Công thức <span class="mono">a<sup>[l]</sup> = g(W<sup>[l]</sup>a<sup>[l−1]</sup> + b<sup>[l]</sup>)</span> ở <a href="#s-nn">mục nơ-ron</a> chạy cho một ví dụ. Máy chạy cả lô cùng lúc bằng cách xếp m ví dụ thành m cột: <span class="mono">Z<sup>[l]</sup> = W<sup>[l]</sup>A<sup>[l−1]</sup> + b<sup>[l]</sup></span>, rồi <span class="mono">A<sup>[l]</sup> = g(Z<sup>[l]</sup>)</span>. Kích thước của từng thứ:</p>
+        <ul class="tight">
+          <li><span class="mono">W<sup>[l]</sup></span>: n<sup>[l]</sup> hàng (mỗi nơ-ron một hàng) × n<sup>[l−1]</sup> cột (mỗi đầu vào một cột).</li>
+          <li><span class="mono">A<sup>[l−1]</sup></span>: n<sup>[l−1]</sup> hàng × m cột (mỗi ví dụ một cột). <span class="mono">A<sup>[0]</sup> = X</span>.</li>
+          <li><span class="mono">b<sup>[l]</sup></span>: n<sup>[l]</sup> hàng × 1 cột, được cộng vào mọi cột (numpy gọi là broadcasting).</li>
+          <li>Kết quả <span class="mono">Z<sup>[l]</sup></span> và <span class="mono">A<sup>[l]</sup></span>: n<sup>[l]</sup> hàng × m cột.</li>
+        </ul>
+        <p>Luật kiểm chiều Ng dạy (<i>Getting your matrix dimensions right</i>): số cột của W<sup>[l]</sup> phải bằng số hàng của A<sup>[l−1]</sup>. Sai chiều là lỗi hay gặp nhất khi tự viết mạng; in <span class="mono">.shape</span> của từng lớp ra là bắt được. Nhân ma trận với ma trận: <a href="mathematics-for-machine-learning.html#s-matrix">trang Toán 1.6</a>.</p>
+
         <div class="take"><span class="k">Mang theo</span><p>Độ sâu không mua thêm khả năng biểu diễn về lý thuyết — nó mua <b>hiệu quả</b>: với nhiều hàm có cấu trúc tầng lớp, cần ít tham số hơn theo cấp số nhân. Và cái giá là bề mặt chi phí không còn lồi, nên kết quả phụ thuộc vào khởi tạo.</p></div>
       </section>
 
@@ -1540,9 +1580,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="lede">Gradient descent cần <span class="mono">∂J/∂w</span> cho <i>từng</i> trọng số. Mạng có 25 triệu trọng số thì phải có 25 triệu đạo hàm, mỗi vòng lặp. Nếu tính từng cái riêng bằng cách nhích rồi đo, một vòng lặp sẽ mất hàng giờ. <b>Lan truyền ngược tính toàn bộ 25 triệu đạo hàm với chi phí chỉ cỡ hai, ba lần chạy xuôi</b>, bất kể có bao nhiêu trọng số. Đó là lý do học sâu tồn tại được về mặt thực hành.</p>
 
-        <p>Cơ chế gồm đúng hai ý, và cả hai đều học ở phổ thông:</p>
+        <p>Cơ chế gồm đúng hai ý. Ý thứ nhất là quy tắc chuỗi bạn học ở phổ thông, cộng thêm một luật cho trường hợp nhiều đường (<a href="mathematics-for-machine-learning.html#s-chain">trang Toán 2.6</a>):</p>
         <ol>
-          <li><b>Quy tắc chuỗi.</b> Nếu <span class="mono">a</span> ảnh hưởng <span class="mono">b</span>, và <span class="mono">b</span> ảnh hưởng <span class="mono">c</span>, thì ảnh hưởng của <span class="mono">a</span> lên <span class="mono">c</span> = tích của hai ảnh hưởng. <span class="mono">∂c/∂a = (∂c/∂b)(∂b/∂a)</span>.</li>
+          <li><b>Quy tắc chuỗi.</b> Nếu <span class="mono">a</span> ảnh hưởng <span class="mono">b</span>, và <span class="mono">b</span> ảnh hưởng <span class="mono">c</span>, thì ảnh hưởng của <span class="mono">a</span> lên <span class="mono">c</span> = tích của hai ảnh hưởng. <span class="mono">∂c/∂a = (∂c/∂b)(∂b/∂a)</span>. <b>Nhiều đường thì cộng:</b> nếu a ảnh hưởng c qua hai nút b₁ và b₂ thì <span class="mono">∂c/∂a = (∂c/∂b₁)(∂b₁/∂a) + (∂c/∂b₂)(∂b₂/∂a)</span>. Trong mạng, mỗi nơ-ron nối tới mọi nơ-ron lớp sau, nên luật cộng này dùng ở mọi chỗ. Một trọng số dùng chung ở nhiều vị trí (CNN, RNN) cũng nhận tổng gradient từ mọi vị trí.</li>
           <li><b>Không tính lại.</b> Nhiều đường đi ngược đều đi qua cùng những nút. Tính đạo hàm tại một nút <b>một lần</b>, lưu lại, dùng cho mọi nhánh phía dưới. Đây là quy hoạch động, không phải phép màu.</li>
         </ol>
 
@@ -1589,7 +1629,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="fx__line sm" data-fx>
             <span class="tm t-m" data-n="Xác suất mô hình gán cho <b>lớp thứ j</b>."><i>a</i><sub>j</sub></span><span class="op">=</span><span class="tm t-m" data-n="Luỹ thừa e của điểm số thô lớp j. Luỹ thừa làm hai việc: biến mọi số thành số <b>dương</b>, và <b>khuếch đại chênh lệch</b> — điểm cao hơn một chút thì xác suất cao hơn nhiều."><i>e</i><sup>z<sub>j</sub></sup></span><span class="op">/</span><span class="tm t-m" data-n="Tổng luỹ thừa của <b>tất cả</b> các lớp. Chia cho tổng là bước ép mọi xác suất cộng lại bằng 1. Chính chữ ‘tất cả’ này làm softmax khác mọi hàm kích hoạt khác: <b>nó nhìn cả vector cùng lúc</b>, không xử lý từng nơ-ron độc lập.">Σ<sub>k</sub> <i>e</i><sup>z<sub>k</sub></sup></span>
           </div>
-          <p class="fx__note">Bấm vào từng phần. <span class="dim">Với k = 2, softmax rút gọn về đúng sigmoid — nó là bản tổng quát chứ không phải thứ khác.</span></p>
+          <p class="fx__note">Bấm vào từng phần. <span class="dim">Với k = 2, softmax rút gọn về đúng sigmoid — nó là bản tổng quát chứ không phải thứ khác. (Chia tử và mẫu cho e<sup>z₁</sup>: a₁ = 1/(1 + e<sup>−(z₁−z₂)</sup>) = σ(z₁ − z₂).)</span></p>
         </div>
 
         <p>Hàm mất mát đi kèm là <b>cross-entropy nhiều lớp</b>, và nó đơn giản đến bất ngờ: <span class="mono">L = −log(a<sub>y</sub>)</span> — <i>âm logarit của xác suất mà mô hình gán cho lớp đúng</i>. Chín lớp còn lại không xuất hiện trong công thức. Chỉ có một câu hỏi: <b>bạn có tự tin vào đáp án đúng không?</b></p>
@@ -1630,7 +1670,8 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </div>
         </div>
 
-        <p><b>Cách chữa</b> là khởi tạo với phương sai phụ thuộc số đầu vào của lớp — ý tưởng: giữ cho độ lớn tín hiệu không đổi khi đi qua mỗi lớp.</p>
+        <p><b>Cách chữa</b> là khởi tạo với phương sai phụ thuộc số đầu vào của lớp, n<sup>[l−1]</sup> — ý tưởng: giữ cho độ lớn tín hiệu không đổi khi đi qua mỗi lớp.</p>
+        <p>Lý do của con số: <span class="mono">z = w₁x₁ + … + wₙxₙ</span> là tổng n số hạng. Nếu w và x độc lập, trung bình 0, thì <span class="mono">Var(z) = n·Var(w)·Var(x)</span>. Đặt <span class="mono">Var(w) = 1/n</span> thì <span class="mono">Var(z) = Var(x)</span>: tín hiệu giữ nguyên thang qua mỗi lớp. ReLU xoá nửa âm nên chỉ giữ một nửa <span class="mono">E[z²]</span>; nhân đôi phương sai (2/n) là để bù. Ở đây n = n<sup>[l−1]</sup>.</p>
         <div class="tw">
           <table>
             <thead><tr><th>Tên</th><th>Phương sai</th><th>Dùng với</th></tr></thead>
@@ -1672,12 +1713,31 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <p><b>Dấu hiệu nhận biết trên đường cong học:</b> batch thì J giảm đều đặn mỗi vòng; mini-batch thì J <b>răng cưa</b> — đi xuống nhưng lên xuống lăn tăn, vì mỗi lô là một mẫu khác. Thấy răng cưa đừng hoảng, đó là bình thường.</p>
 
         <h3>Trung bình trượt: nền tảng chung của momentum, RMSprop và Adam</h3>
-        <p>Cả ba đều xây trên đúng một ý: <b>trung bình trượt có trọng số theo cấp số nhân</b>. Giữ một con số <span class="mono">v</span>, mỗi vòng cập nhật <span class="mono">v := βv + (1−β)·giá trị mới</span>. Với β = 0,9 thì <span class="mono">v</span> xấp xỉ trung bình 10 giá trị gần nhất; β = 0,98 thì xấp xỉ 50 giá trị. Đây là bộ lọc làm mượt, viết bằng một dòng và không cần lưu lịch sử.</p>
+        <p>Cả ba đều xây trên đúng một ý: <b>trung bình trượt có trọng số theo cấp số nhân</b>. Giữ một con số <span class="mono">v</span>, mỗi vòng cập nhật <span class="mono">v := βv + (1−β)·giá trị mới</span>. Nói chung <span class="mono">v</span> xấp xỉ trung bình của khoảng 1/(1−β) giá trị gần nhất: β = 0,9 cho 10 giá trị, β = 0,98 cho 50. Đây là bộ lọc làm mượt, viết bằng một dòng và không cần lưu lịch sử.</p>
         <ul>
           <li><b>Momentum</b> — làm mượt <i>gradient</i>. Nhiễu ngang triệt tiêu nhau, xu hướng dọc cộng dồn. Kết quả: bớt zigzag trong khe hẹp, đi nhanh hơn theo hướng nhất quán. Đúng là "quán tính" mà quả bóng thật có còn gradient descent cơ bản thì không. β = 0,9 gần như luôn dùng được.</li>
           <li><b>RMSprop</b> — làm mượt <i>bình phương</i> gradient, rồi <b>chia</b> bước cho căn của nó. Hướng nào gradient hay lớn thì bị chia nhiều → bước ngắn lại; hướng nào gradient bé thì bước dài ra. Nói cách khác: <b>mỗi tham số có learning rate riêng, tự điều chỉnh</b>. Nó chữa được khe hẹp nằm dọc theo trục của một tham số. Khe nằm chéo so với các trục (khi đặc trưng chưa trừ trung bình) thì vẫn cần chuẩn hoá đầu vào.</li>
           <li><b>Adam</b> — <i>adaptive moment estimation</i>: dùng cả hai cùng lúc, cộng thêm hiệu chỉnh chệch cho những vòng đầu (khi v còn khởi tạo bằng 0 nên bị lệch xuống). Siêu tham số mặc định gần như không ai đổi: <b>β₁ = 0,9 · β₂ = 0,999 · ε = 10⁻⁸</b>. Chỉ có <b>α vẫn phải tự dò</b>.</li>
         </ul>
+
+        <div class="fx">
+          <div class="fx__line sm" data-fx>
+            <span class="op">Momentum:</span> <span class="tm t-o" data-n="v là trung bình trượt của gradient dw. Thành phần đổi dấu liên tục (nảy ngang) triệt tiêu; thành phần cùng dấu (xu hướng) cộng dồn.">v := βv + (1−β)·dw</span>
+          </div>
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-o" data-n="Bước theo gradient đã làm mượt, thay vì gradient của riêng lô này.">w := w − α·v</span>
+          </div>
+          <div class="fx__line sm" data-fx>
+            <span class="op">RMSprop:</span> <span class="tm t-o" data-n="s là trung bình trượt của bình phương gradient: đo gradient của tham số này thường lớn cỡ nào.">s := βs + (1−β)·dw²</span>
+          </div>
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-o" data-n="Chia cho căn của s: tham số nào gradient hay lớn thì bước ngắn lại. ε (cỡ 10⁻⁸) chỉ để khỏi chia cho 0.">w := w − α·dw / (√s + ε)</span>
+          </div>
+          <div class="fx__line sm" data-fx>
+            <span class="op">Adam:</span> <span class="tm t-o" data-n="Giữ cả v (với β₁) và s (với β₂). Ở vòng thứ t, chia v cho (1 − β₁ᵗ) và s cho (1 − β₂ᵗ) để được v̂, ŝ: hai số ấy khởi đầu bằng 0 nên bị lệch về 0 ở những vòng đầu, phép chia sửa lệch ấy.">w := w − α·v̂ / (√ŝ + ε)</span>
+          </div>
+          <p class="fx__note">dw là gradient theo w của lô hiện tại; mọi phép toán làm riêng cho từng tham số. <span class="dim">Màu xanh lục = <b>tối ưu</b>.</span></p>
+        </div>
 
         <div class="box good-box">
           <p class="box__k">Lời khuyên thực dụng</p>
@@ -1713,7 +1773,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <p><b>Cái giá:</b> hàm chi phí không còn được định nghĩa rõ ràng ở mỗi bước, nên <i>đường cong J không còn giảm đơn điệu</i> và bạn mất một công cụ debug. Ng khuyên: khi nghi có bug, tắt dropout, xác nhận J giảm đều, rồi mới bật lại.</p>
 
         <h3>Batch normalization: chuẩn hoá lại ở <i>giữa</i> mạng</h3>
-        <p>Ở <a href="#s-scale">chặng 1</a> ta chuẩn hoá đầu vào. Batch norm hỏi câu hiển nhiên tiếp theo: <b>tại sao chỉ chuẩn hoá lớp 0?</b> Đầu vào của lớp 5 chính là đầu ra của lớp 4, và nó cũng có thể lệch thang, cũng làm bề mặt chi phí dẹt đi. Nên: chuẩn hoá <span class="mono">z</span> trong từng lớp về trung bình 0 phương sai 1, rồi <b>nhân với γ và cộng β</b> — hai tham số học được — để mạng tự chọn thang đo phù hợp nếu trung bình 0 không phải điều nó muốn.</p>
+        <p>Ở <a href="#s-scale">chặng 1</a> ta chuẩn hoá đầu vào. Batch norm hỏi câu hiển nhiên tiếp theo: <b>tại sao chỉ chuẩn hoá lớp 0?</b> Đầu vào của lớp 5 chính là đầu ra của lớp 4, và nó cũng có thể lệch thang, cũng làm bề mặt chi phí dẹt đi. Nên: chuẩn hoá <span class="mono">z</span> trong từng lớp về trung bình 0 phương sai 1, rồi <b>nhân với γ và cộng β</b> — hai tham số học được (không phải β của momentum hay γ chiết khấu) — để mạng tự chọn thang đo phù hợp nếu trung bình 0 không phải điều nó muốn.</p>
         <ul class="tight">
           <li><b>Lợi ích chính</b>: huấn luyện nhanh hơn rõ rệt, và cho phép dùng α lớn hơn.</li>
           <li><b>Lợi ích phụ</b>: có tác dụng regularize nhẹ, vì trung bình/phương sai tính trên mini-batch nên có nhiễu. Nhưng <b>đừng dùng nó thay dropout</b> — tác dụng phụ này yếu và giảm dần khi lô lớn.</li>
@@ -1756,7 +1816,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <thead><tr><th>Tập</th><th>Dùng để</th><th>Mô hình có "thấy" nó không</th></tr></thead>
             <tbody>
               <tr><td><b>Huấn luyện</b><br><span class="dim">training set</span></td><td>Chỉnh <b>tham số</b> w, b bằng gradient descent.</td><td>Có, trực tiếp. Sai số ở đây <b>thường</b> lạc quan.</td></tr>
-              <tr><td><b>Kiểm định</b><br><span class="dim">dev / validation / cross-validation set</span></td><td>Chọn <b>siêu tham số</b>: bậc đa thức, λ, số lớp, kiến trúc nào. Và để <b>chẩn đoán</b>.</td><td>Không trực tiếp — nhưng bạn đã <i>chọn theo nó</i> hàng chục lần, nên nó cũng dần bị "khớp" theo cách gián tiếp.</td></tr>
+              <tr><td><b>Kiểm định</b><br><span class="dim">dev / validation set (MLS gọi là cross-validation set — tên riêng của khoá, không phải k-fold)</span></td><td>Chọn <b>siêu tham số</b>: bậc đa thức, λ, số lớp, kiến trúc nào. Và để <b>chẩn đoán</b>.</td><td>Không trực tiếp — nhưng bạn đã <i>chọn theo nó</i> hàng chục lần, nên nó cũng dần bị "khớp" theo cách gián tiếp.</td></tr>
               <tr><td><b>Kiểm thử</b><br><span class="dim">test set</span></td><td><b>Chỉ để báo cáo con số cuối cùng.</b> Xem đúng một lần.</td><td>Không, và phải giữ cho bằng được. Xem nó nhiều lần rồi chỉnh theo là bạn đã biến nó thành tập dev thứ hai.</td></tr>
             </tbody>
           </table>
@@ -1900,6 +1960,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <h3>Khi dữ liệu lệch, "tỉ lệ đoán đúng" là số đo dối trá</h3>
         <p>Chẩn đoán một bệnh hiếm gặp ở 0,5% dân số. Mô hình "luôn nói không mắc bệnh" đạt <b>99,5% chính xác</b> và giết người. Đây không phải ví dụ giả tưởng — nó là dạng phổ biến nhất của lỗi chọn số đo. Với dữ liệu lệch, phải dùng cặp:</p>
+        <p>Viết tắt: <b>TP</b> = báo dương và đúng, <b>FP</b> = báo dương mà sai (báo động giả), <b>FN</b> = báo âm mà sai (bỏ sót), <b>TN</b> = báo âm và đúng.</p>
 
         <div class="tw">
           <table>
@@ -2071,6 +2132,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </div>
           <p class="fx__note">Bấm vào từng phần. <span class="dim">Mỗi lần tách, thuật toán chọn cặp (đặc trưng, ngưỡng) làm <b>gain</b> lớn nhất.</span></p>
         </div>
+        <p>H(p) không phải một thước mới: nó chính là log loss trung bình (tính bằng log₂) nếu nút đoán xác suất p cho mọi mẫu của nó. Nên "tách để giảm entropy" là "tách để giảm log loss", cùng thước đo với <a href="#s-logistic">hồi quy logistic</a>.</p>
 
         <h3>Từ một cây thành một rừng — vì sao cần nhiều cây</h3>
         <p>Một cây rất <b>không ổn định</b>: đổi vài mẫu dữ liệu là cả cấu trúc cây đổi theo. Đó là variance cao. Cách chữa là dựng nhiều cây rồi lấy ý kiến số đông:</p>
@@ -2129,6 +2191,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <h3>Phép tích chập, bằng số</h3>
         <p>Bộ lọc phát hiện cạnh dọc kinh điển là ma trận 3×3 này. Đặt nó lên một mảnh ảnh 3×3, nhân từng ô tương ứng rồi cộng lại, được <b>một</b> số. Trượt sang phải một ô, làm lại. Hết hàng thì xuống dòng.</p>
+        <p>Bằng số: mảnh có ba hàng đều là <span class="mono">9 9 0</span> (sáng bên trái). Cột trái nhân 1, cột giữa nhân 0, cột phải nhân −1, được 3 × 9 + 0 − 3 × 0 = <b>27</b>. Mảnh ba hàng đều <span class="mono">9 9 9</span> cho 3 × 9 + 0 − 3 × 9 = <b>0</b>.</p>
         <p class="mono" style="font-size:13px;background:var(--sunk);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;max-width:var(--measure);white-space:pre;overflow-x:auto">   1   0  −1        vùng sáng bên trái, tối bên phải  →  số dương lớn
    1   0  −1        hai bên sáng như nhau            →  gần 0
    1   0  −1        tối bên trái, sáng bên phải      →  số âm lớn</p>
@@ -2180,8 +2243,13 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               </div>
               <div class="row"><span class="k">Đếm tham số</span><pre class="out" id="m10-cnt"></pre></div>
             </div>
-            <p class="lab__f"><b>Con số trong bảng đếm là toàn bộ luận điểm.</b> Một lớp tích chập với 32 bộ lọc 3×3 trên ảnh RGB có <b>896</b> tham số — và con số ấy <b>không đổi</b> dù ảnh là 32×32 hay 4000×4000. Một lớp kết nối đầy đủ 1.000 nơ-ron trên ảnh 224×224 đã cần hơn 150 triệu; với ảnh 1000×1000 là 3 tỉ. Đó là cách CNN biến bài toán bất khả thi thành bài toán chạy trên một chiếc laptop.</p>
-            <p class="lab__f"><b>Ba tính chất làm nên điều đó:</b> <b>(1) chia sẻ tham số</b> — một bộ dò cạnh dọc dùng được ở mọi vị trí, nên chỉ cần lưu 9 số; <b>(2) kết nối thưa</b> — mỗi giá trị đầu ra chỉ phụ thuộc 9 điểm ảnh, không phải cả ảnh; <b>(3) đồng biến tịnh tiến</b> (translation equivariance) — dịch ảnh sang phải vài pixel thì bản đồ đặc trưng cũng dịch theo, thông tin không mất; pooling và các lớp sau biến nó thành gần <i>bất biến</i>.</p>
+            <p class="lab__f"><b>Con số trong bảng đếm là toàn bộ luận điểm.</b> Một lớp tích chập với 32 bộ lọc 3×3 trên ảnh RGB có <b>896</b> tham số (mỗi bộ lọc 3 × 3 × 3 = 27 trọng số + 1 độ chệch; 32 × 28 = 896) — và con số ấy <b>không đổi</b> dù ảnh là 32×32 hay 4000×4000. Một lớp kết nối đầy đủ 1.000 nơ-ron trên ảnh 224×224 đã cần hơn 150 triệu; với ảnh 1000×1000 là 3 tỉ. Đó là cách CNN biến bài toán bất khả thi thành bài toán chạy trên một chiếc laptop.</p>
+            <p class="lab__f"><b>Ba tính chất làm nên điều đó:</b></p>
+            <ol class="tight lab__l">
+              <li><b>Chia sẻ tham số.</b> Một bộ dò cạnh dọc dùng được ở mọi vị trí, nên chỉ cần lưu 9 số.</li>
+              <li><b>Kết nối thưa.</b> Mỗi giá trị đầu ra chỉ phụ thuộc 9 điểm ảnh, không phải cả ảnh.</li>
+              <li><b>Đồng biến tịnh tiến</b> (translation equivariance). Dịch ảnh sang phải vài pixel thì bản đồ đặc trưng cũng dịch theo, thông tin không mất. Pooling và các lớp sau biến nó thành gần <i>bất biến</i>.</li>
+            </ol>
           </div>
         </div>
 
@@ -2254,7 +2322,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <tr><td><b>VGG-16</b><br><span class="dim">2014</span></td><td><b>Đơn giản hoá triệt để</b>: chỉ dùng conv 3×3 stride 1 same, và maxpool 2×2 stride 2. Cứ mỗi lần pool thì số kênh gấp đôi.</td><td>Trước đó mỗi lớp một cấu hình khác nhau, chọn siêu tham số là ác mộng. VGG cho thấy <b>một quy luật đều đặn cũng đủ tốt</b> — và dễ hiểu hơn nhiều. Cái giá: 138 triệu tham số.</td></tr>
               <tr><td><b>ResNet</b><br><span class="dim">2015</span></td><td><b>Kết nối tắt</b>: đầu ra của lớp l được cộng thẳng vào lớp l+2 <i>ngay trước hàm kích hoạt</i>, bỏ qua hai lớp ở giữa.</td><td>Bức tường lớn nhất: <b>mạng sâu hơn lại tệ hơn</b>, kể cả trên tập huấn luyện. ResNet phá được trần này và cho phép huấn luyện mạng <b>trên 100 lớp</b>.</td></tr>
               <tr><td><b>Inception</b><br><span class="dim">2014</span></td><td>Thay vì chọn 1×1 hay 3×3 hay 5×5 hay pool, <b>làm hết rồi ghép lại</b>, để mạng tự chọn qua trọng số.</td><td>"Chọn kích thước bộ lọc" là một siêu tham số khó. Inception xoá nó đi — nhưng sinh ra vấn đề chi phí tính toán, xem ô dưới.</td></tr>
-              <tr><td><b>MobileNet</b><br><span class="dim">2017</span></td><td><b>Tích chập tách theo chiều sâu</b>: tách một phép conv thành hai bước rẻ hơn nhiều.</td><td>Chạy trên điện thoại. Giảm chi phí tính toán khoảng <b>10 lần</b> với độ chính xác gần như giữ nguyên.</td></tr>
+              <tr><td><b>MobileNet</b><br><span class="dim">2017</span></td><td><b>Tích chập tách theo chiều sâu</b>: tách một phép conv thành hai bước rẻ hơn nhiều — (1) mỗi kênh một bộ lọc f×f riêng (depthwise), (2) conv 1×1 để trộn kênh (pointwise). Chi phí còn 1/n<sub>ra</sub> + 1/f² lần conv thường, n<sub>ra</sub> là số kênh ra.</td><td>Chạy trên điện thoại. Với bộ lọc 3×3, giảm chi phí tính toán khoảng <b>8–9 lần</b> với độ chính xác gần như giữ nguyên.</td></tr>
               <tr><td><b>EfficientNet</b><br><span class="dim">2019</span></td><td><b>Mở rộng có phối hợp</b>: tăng đồng thời độ phân giải ảnh, chiều sâu và chiều rộng theo một tỉ lệ chung.</td><td>Trước đó người ta tăng bừa một chiều. EfficientNet cho một công thức để chọn cấu hình hợp với đúng thiết bị của bạn.</td></tr>
             </tbody>
           </table>
@@ -2278,7 +2346,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <li><b>Giảm số kênh</b> — từ 192 xuống 32 mà không đụng vào kích thước không gian. Đây là "nút thắt cổ chai" (bottleneck).</li>
           <li><b>Thêm một tầng phi tuyến</b> mà gần như không tốn tính toán.</li>
         </ul>
-        <p><b>Con số cụ thể của Ng cho khối Inception:</b> tích chập trực tiếp 5×5 từ 192 kênh sang 32 kênh trên bản đồ 28×28 tốn khoảng <b>120 triệu</b> phép nhân. Chèn một lớp 1×1 hạ xuống 16 kênh trước, rồi mới 5×5, tốn khoảng <b>12,4 triệu</b> — <b>rẻ hơn 10 lần</b>, và độ chính xác gần như không đổi. Đây là lý do nút thắt cổ chai có mặt ở khắp nơi.</p>
+        <p><b>Con số cụ thể của Ng cho khối Inception:</b> tích chập trực tiếp 5×5 từ 192 kênh sang 32 kênh trên bản đồ 28×28 tốn khoảng <b>120 triệu</b> phép nhân (28 × 28 × 32 ô đầu ra, mỗi ô 5 × 5 × 192 phép nhân). Chèn một lớp 1×1 hạ xuống 16 kênh trước, rồi mới 5×5, tốn khoảng <b>12,4 triệu</b> (28 × 28 × 16 × 192 cho bước 1×1, cộng 28 × 28 × 32 × 5 × 5 × 16 cho bước 5×5) — <b>rẻ hơn 10 lần</b>, và độ chính xác gần như không đổi. Đây là lý do nút thắt cổ chai có mặt ở khắp nơi.</p>
 
         <h3>Ba lời khuyên thực hành mà Ng nhấn mạnh hơn cả kiến trúc</h3>
         <div class="grid3">
@@ -2412,7 +2480,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <h3>Bức tường của RNN: phụ thuộc xa</h3>
         <p>Ví dụ của Ng: "<span lang="en">The <b>cat</b>, which already ate a bunch of food that was delicious, …, <b>was</b> full.</span>" Đổi "cat" thành "cats" thì "was" phải thành "were". Riêng phần chữ Ng đọc ra đã đặt hai từ cách nhau 11 bước, và dấu "…" của ông nghĩa là khúc giữa dài bao nhiêu cũng được. Muốn học được điều đó, gradient phải chảy ngược qua ít nhất 11 bước thời gian, và mỗi bước là một phép nhân ma trận. Đây <b>đúng là bài toán gradient tan biến</b> ở <a href="#s-init">chặng 2</a>, chỉ khác là "số lớp" giờ bằng độ dài câu.</p>
         <ul class="tight">
-          <li><b>Gradient bùng nổ</b> thì dễ nhận ra (thấy <span class="mono">NaN</span>) và dễ chữa: <b>cắt ngưỡng gradient</b> — nếu chuẩn của gradient vượt ngưỡng thì co nó lại. Thô nhưng hiệu quả.</li>
+          <li><b>Gradient bùng nổ</b> thì dễ nhận ra (thấy <span class="mono">NaN</span>) và dễ chữa: <b>cắt ngưỡng gradient</b> — nếu chuẩn của gradient (độ dài của vector gradient) vượt ngưỡng thì co nó lại. Thô nhưng hiệu quả.</li>
           <li><b>Gradient tan biến</b> khó hơn nhiều, và nó là <b>vấn đề chính</b> của RNN. Nó không báo lỗi; mạng chỉ đơn giản là <i>không bao giờ học được phụ thuộc xa</i>. Cả mục sau sinh ra để chữa nó.</li>
         </ul>
 
@@ -2446,7 +2514,14 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </table>
         </div>
 
-        <p><b>Vì sao cổng chữa được gradient tan biến:</b> khi cổng quên gần bằng 1 và cổng cập nhật gần bằng 0, ô nhớ đi qua bước thời gian <b>gần như không đổi</b> — <span class="mono">c&lt;t&gt; ≈ c&lt;t−1&gt;</span>. Gradient chảy ngược qua đường ấy được nhân với gần 1, nên không teo đi. Đây <b>lại</b> là ý rút ngắn đường đi, xuất hiện lần thứ ba trong trang này — và nó có trước ResNet: đường nhớ không đổi có từ bản LSTM đầu tiên năm 1997, gần hai mươi năm trước ResNet; cổng quên được thêm vào năm 2000.</p>
+        <div class="fx">
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-m" data-n="Ô nhớ ở bước t.">c<sup>&lt;t&gt;</sup></span><span class="op">=</span><span class="tm t-m" data-n="<b>Cổng cập nhật</b>: một sigmoid, mỗi chiều một số từ 0 tới 1 — ghi bao nhiêu phần ứng viên mới.">Γ<sub>u</sub></span><span class="op">⊙</span><span class="tm t-m" data-n="<b>Ứng viên mới</b>, tính như RNN thường bằng tanh từ a&lt;t−1&gt; và x&lt;t&gt;.">c̃<sup>&lt;t&gt;</sup></span><span class="op">+</span><span class="tm t-m" data-n="<b>Cổng quên</b>: một sigmoid khác, giữ bao nhiêu phần ô nhớ cũ.">Γ<sub>f</sub></span><span class="op">⊙</span><span class="tm t-m" data-n="Ô nhớ của bước trước.">c<sup>&lt;t−1&gt;</sup></span>
+          </div>
+          <p class="fx__note">Bấm vào từng ký hiệu. ⊙ là nhân từng phần tử. <span class="dim">Cổng thứ ba, cổng đầu ra Γ<sub>o</sub>, chỉ quyết định đọc ra bao nhiêu: a&lt;t&gt; = Γ<sub>o</sub> ⊙ tanh(c&lt;t&gt;).</span></p>
+        </div>
+
+        <p><b>Vì sao cổng chữa được gradient tan biến:</b> khi cổng quên gần bằng 1 và cổng cập nhật gần bằng 0, ô nhớ đi qua bước thời gian <b>gần như không đổi</b> — <span class="mono">c&lt;t&gt; ≈ c&lt;t−1&gt;</span>. Theo phương trình trên, đạo hàm của c&lt;t&gt; theo c&lt;t−1&gt; dọc đường ấy chính là Γ<sub>f</sub>: gradient chảy ngược được nhân với gần 1 và không phải nhân qua ma trận trọng số nào, nên không teo đi. Đây <b>lại</b> là ý rút ngắn đường đi, xuất hiện lần thứ ba trong trang này — và nó có trước ResNet: đường nhớ không đổi có từ bản LSTM đầu tiên năm 1997, gần hai mươi năm trước ResNet; cổng quên được thêm vào năm 2000.</p>
 
         <h3>Hai biến thể còn lại, nói ngắn</h3>
         <div class="grid2">
@@ -2493,7 +2568,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="row">
             <span class="k">Hiện tượng</span><span>cùng phép toán ở trên cho ra <span class="mono">đàn ông − phụ nữ ≈ lập trình viên − nội trợ</span>. Mô hình không "kỳ thị"; nó <b>phản ánh trung thực</b> tần suất đồng xuất hiện trong văn bản mà loài người đã viết ra.</span>
             <span class="k">Vì sao nguy</span><span>vì embedding này đi vào hệ thống lọc hồ sơ, xếp hạng tìm kiếm, gợi ý nội dung — và ở đó nó <b>khuếch đại</b> định kiến thay vì chỉ phản ánh.</span>
-            <span class="k">Cách giảm</span><span>Ng dạy quy trình ba bước: <b>(1)</b> xác định hướng thiên lệch trong không gian (lấy trung bình các hiệu <span class="mono">anh−chị</span>, <span class="mono">ông−bà</span>…); <b>(2)</b> với các từ <i>trung tính về giới</i> (bác sĩ, y tá, lập trình viên), <b>chiếu bỏ</b> thành phần theo hướng đó; <b>(3)</b> với các cặp thật sự có giới (ông–bà), cân bằng lại cho đối xứng. Đây là giảm nhẹ, <b>không phải xoá sổ</b> — và bước khó nhất là quyết định từ nào nên trung tính, vốn là một câu hỏi giá trị chứ không phải câu hỏi kỹ thuật.</span>
+            <span class="k">Cách giảm</span><span>Ng dạy quy trình ba bước: <b>(1)</b> xác định hướng thiên lệch trong không gian (lấy trung bình các hiệu <span class="mono">anh−chị</span>, <span class="mono">ông−bà</span>…); <b>(2)</b> với các từ <i>trung tính về giới</i> (bác sĩ, y tá, lập trình viên), <b>chiếu bỏ</b> thành phần theo hướng đó (phép chiếu dùng tích vô hướng, <a href="mathematics-for-machine-learning.html#s-dot">trang Toán 1.5</a>); <b>(3)</b> với các cặp thật sự có giới (ông–bà), cân bằng lại cho đối xứng. Đây là giảm nhẹ, <b>không phải xoá sổ</b> — và bước khó nhất là quyết định từ nào nên trung tính, vốn là một câu hỏi giá trị chứ không phải câu hỏi kỹ thuật.</span>
           </div>
         </div>
 
@@ -2556,7 +2631,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="fx">
           <div class="fx__line sm" data-fx>
-            <span class="tm t-m" data-n="Kết quả: một vector, là hỗn hợp của các giá trị.">Attention(<i>Q</i>,<i>K</i>,<i>V</i>)</span><span class="op">=</span><span class="fn">softmax(</span><span class="tm t-m" data-n="<b>Bước 1 — chấm điểm.</b> Tích vô hướng giữa truy vấn và mọi khoá. Hai vector cùng hướng cho tích lớn: ‘khoá này khớp với thứ tôi đang tìm’."><i>Q K</i><sup>T</sup></span><span class="op">/</span><span class="tm t-o" data-n="<b>Bước 2 — chia cho căn của số chiều.</b> Nghe như chi tiết vụn nhưng rất quan trọng: với d = 512, tích vô hướng của hai vector ngẫu nhiên có độ lớn cỡ √512 ≈ 23. Đưa những số cỡ đó vào softmax thì nó <b>bão hoà</b> — một trọng số bằng gần 1, phần còn lại gần 0, và gradient tan biến. Chia cho √d giữ điểm số ở thang hợp lý.">√<i>d</i><sub>k</sub></span><span class="op">)</span><span class="tm t-m" data-n="<b>Bước 4 — trộn.</b> Nhân trọng số với các giá trị và cộng lại. Kết quả là ‘0,7 phần từ này + 0,2 phần từ kia’."><i>V</i></span>
+            <span class="tm t-m" data-n="Kết quả: một vector, là hỗn hợp của các giá trị.">Attention(<i>Q</i>,<i>K</i>,<i>V</i>)</span><span class="op">=</span><span class="fn">softmax(</span><span class="tm t-m" data-n="<b>Bước 1 — chấm điểm.</b> Tích vô hướng giữa truy vấn và mọi khoá. Hai vector cùng hướng cho tích lớn: ‘khoá này khớp với thứ tôi đang tìm’. Q và K xếp mỗi từ thành một hàng; K<sup>T</sup> là chuyển vị (trang Toán 1.7), lật hàng thành cột, nên QK<sup>T</sup> là bảng mọi tích vô hướng truy vấn × khoá, tính cùng lúc."><i>Q K</i><sup>T</sup></span><span class="op">/</span><span class="tm t-o" data-n="<b>Bước 2 — chia cho căn của số chiều.</b> Nghe như chi tiết vụn nhưng rất quan trọng: với d<sub>k</sub> = 512 (số chiều của khoá), tích vô hướng q·k là tổng của 512 tích q<sub>i</sub>k<sub>i</sub>. Nếu mỗi tích có trung bình 0, phương sai 1 thì tổng có phương sai 512, độ lệch chuẩn √512 ≈ 23. Đưa những số cỡ đó vào softmax thì nó <b>bão hoà</b> — một trọng số bằng gần 1, phần còn lại gần 0, và gradient tan biến. Chia cho √d<sub>k</sub> giữ điểm số ở thang hợp lý.">√<i>d</i><sub>k</sub></span><span class="op">)</span><span class="tm t-m" data-n="<b>Bước 4 — trộn.</b> Nhân trọng số với các giá trị và cộng lại. Kết quả là ‘0,7 phần từ này + 0,2 phần từ kia’."><i>V</i></span>
           </div>
           <p class="fx__note">Bấm vào <span class="mono">√d<sub>k</sub></span> — đó là chi tiết mà bản gốc của Ng nhắc rất nhanh nhưng lại quyết định mạng có huấn luyện được hay không. <span class="dim">Bước 3 là chính hàm softmax: biến điểm số thành trọng số cộng bằng 1.</span></p>
         </div>
@@ -2735,7 +2810,11 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         </div>
         <p><b>Ranh giới nằm ở câu này:</b> <i>bạn có tin rằng cái bất thường tiếp theo sẽ giống những cái bất thường bạn đã thấy không?</i> Tin thì dùng phân loại; không tin thì dùng phát hiện bất thường. Riêng lọc spam thú vị ở chỗ nó <b>trôi dần</b> từ nhóm phải sang nhóm trái khi kẻ gửi spam thay đổi chiến thuật — nên hệ thống thật thường dùng cả hai.</p>
 
-        <p><b>Chọn đặc trưng</b> quan trọng hơn ở đây so với học có giám sát, vì không có nhãn để mô hình tự sửa. Hai mẹo của Ng: <b>(1)</b> biến đổi đặc trưng cho <i>giống hình chuông</i> hơn (lấy log, căn bậc hai) vì mô hình giả định phân phối chuẩn; <b>(2)</b> khi một mẫu lỗi bị lọt lưới, hãy <i>nhìn nó</i> và tự hỏi <b>đặc trưng nào sẽ làm nó nổi bật</b> — thường là một <b>tỉ số</b> giữa hai đặc trưng đã có (ví dụ: tải CPU chia cho lưu lượng mạng — cao bất thường nghĩa là máy đang bận mà không phục vụ ai).</p>
+        <p><b>Chọn đặc trưng</b> quan trọng hơn ở đây so với học có giám sát, vì không có nhãn để mô hình tự sửa. Hai mẹo của Ng:</p>
+        <ol class="tight">
+          <li>Biến đổi đặc trưng cho <i>giống hình chuông</i> hơn (lấy log, căn bậc hai), vì mô hình giả định phân phối chuẩn.</li>
+          <li>Khi một mẫu lỗi bị lọt lưới, hãy <i>nhìn nó</i> và tự hỏi <b>đặc trưng nào sẽ làm nó nổi bật</b>. Thường đó là một <b>tỉ số</b> giữa hai đặc trưng đã có. Ví dụ: tải CPU chia cho lưu lượng mạng; cao bất thường nghĩa là máy đang bận mà không phục vụ ai.</li>
+        </ol>
 
         <div class="take"><span class="k">Mang theo</span><p>Khi mẫu dương quá ít và quá đa dạng, đừng phân loại — hãy mô hình hoá cái bình thường và báo động khi lệch. Và dù không có nhãn để huấn luyện, vẫn phải có nhãn để <b>đánh giá</b>.</p></div>
       </section>
@@ -2747,7 +2826,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="lede">Bạn có 50 đặc trưng về mỗi chiếc xe. Không vẽ được biểu đồ 50 chiều. PCA tìm <b>hai hoặc ba trục mới</b> — mỗi trục là một tổ hợp tuyến tính của 50 trục cũ — sao cho khi chiếu dữ liệu lên đó, <b>dữ liệu vẫn còn trải rộng nhất có thể</b>.</p>
 
-        <p>Vì sao "trải rộng" là tiêu chí đúng: nếu chiếu lên một trục mà mọi điểm chồng lên nhau, bạn đã mất khả năng phân biệt chúng — trục ấy vô dụng. Trục giữ được nhiều phương sai nhất là trục giữ được nhiều <i>thông tin phân biệt</i> nhất — phân biệt các điểm với nhau, không phải phân biệt các lớp: hướng tách hai lớp có thể có phương sai rất nhỏ. Cách tính (qua ma trận hiệp phương sai và phân rã trị riêng) thì thư viện lo; điều cần nhớ là <b>tiêu chí</b>.</p>
+        <p>Vì sao "trải rộng" là tiêu chí đúng: nếu chiếu lên một trục mà mọi điểm chồng lên nhau, bạn đã mất khả năng phân biệt chúng — trục ấy vô dụng. Trục giữ được nhiều phương sai nhất là trục giữ được nhiều <i>thông tin phân biệt</i> nhất — phân biệt các điểm với nhau, không phải phân biệt các lớp: hướng tách hai lớp có thể có phương sai rất nhỏ. Cách tính (qua ma trận hiệp phương sai và phân rã trị riêng — xem <a href="mathematics-for-machine-learning.html#s-pca">trang Toán 1.10</a>) thì thư viện lo; điều cần nhớ là <b>tiêu chí</b>.</p>
 
         <p><b>Hai bước bắt buộc trước khi chạy:</b> chuẩn hoá về trung bình 0, và đưa các đặc trưng về cùng thang. Nếu không, đặc trưng có đơn vị lớn nhất (chẳng hạn số km tính bằng mét) sẽ chiếm trọn trục thứ nhất chỉ vì đơn vị của nó — không phải vì nó quan trọng.</p>
 
@@ -3032,7 +3111,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="box note">
           <p class="box__k">Quy ước dịch trong trang này</p>
-          <p>Ba loại từ được <b>giữ nguyên tiếng Anh</b>, không dịch, vì bản dịch tiếng Việt hoặc không tồn tại hoặc gây hại nhiều hơn lợi: <b>(1) tên riêng của thuật toán và kiến trúc</b> — gradient descent, Adam, dropout, batch norm, softmax, ReLU, ResNet, LSTM, Transformer, XGBoost; <b>(2) tên tham số và hàm bạn sẽ gõ trong code</b> — learning rate, epoch, mini-batch, logits, keep_prob; <b>(3) thuật ngữ mà cộng đồng Việt cũng nói bằng tiếng Anh</b> — overfitting, bias/variance, embedding, attention, fine-tune.</p>
+          <p>Ba loại từ được <b>giữ nguyên tiếng Anh</b>, không dịch, vì bản dịch tiếng Việt hoặc không tồn tại hoặc gây hại nhiều hơn lợi: <b>(1) tên riêng của thuật toán và kiến trúc</b> — gradient descent, Adam, dropout, batch norm, softmax, ReLU, ResNet, LSTM, Transformer, XGBoost; <b>(2) tên tham số và hàm bạn sẽ gõ trong code</b> — learning rate, epoch, mini-batch, logits, keep_prob; <b>(3) thuật ngữ mà cộng đồng Việt cũng nói bằng tiếng Anh</b> — bias/variance, embedding, attention. Overfitting và fine-tune thì trang dịch là quá khớp và tinh chỉnh.</p>
           <p>Các khái niệm còn lại được dịch để câu văn đọc trôi, <b>nhưng tên tiếng Anh luôn có mặt</b>: hoặc trong chip "Bản gốc" ở đầu mỗi mục (chép nguyên tên bài giảng của Ng), hoặc trong popup khi bạn bấm vào thuật ngữ, hoặc trong bảng này.</p>
         </div>
       </section>
@@ -3461,6 +3540,19 @@ function drawCostMap(svg, W, H, P) {
     /* phải: bản đồ chi phí */
     var s = drawCostMap(sm, 320, 240, 30);
     el(sm, 'circle', { cx: s.sx(BEST.w), cy: s.sy(BEST.b), r: 6 }, 'fill:none;stroke:var(--o);stroke-width:2');
+    /* mũi tên −gradient: hướng theo −(∂J/∂w, ∂J/∂b) đổi sang toạ độ màn hình; dài theo độ lớn gradient,
+       so với độ lớn ở một điểm mốc cách đáy một đơn vị w, nên ngắn dần khi gần đáy */
+    var g = gradLin(w, b), gr = gradLin(BEST.w + 1, BEST.b);
+    var px = -g[0] * (s.sx(1) - s.sx(0)), py = -g[1] * (s.sy(1) - s.sy(0));
+    var pn = Math.sqrt(px * px + py * py), rn = Math.hypot(gr[0] * (s.sx(1) - s.sx(0)), gr[1] * (s.sy(1) - s.sy(0)));
+    var len = 46 * pn / (pn + rn);
+    if (len > 3) {
+      /* đầu mũi tên dài tối đa 8; mũi tên ngắn hơn thì chỉ còn đầu, để thân không bao giờ chĩa ngược */
+      var ux = px / pn, uy = py / pn, x2 = s.sx(w) + ux * len, y2 = s.sy(b) + uy * len, hl = Math.min(8, len), hw = hl * 0.56;
+      if (len - hl > 0.5) el(sm, 'line', { x1: s.sx(w), y1: s.sy(b), x2: x2 - ux * (hl - 1), y2: y2 - uy * (hl - 1) }, 'stroke:var(--o);stroke-width:2.2');
+      el(sm, 'path', { d: 'M' + x2.toFixed(1) + ' ' + y2.toFixed(1) + 'L' + (x2 - ux * hl - uy * hw).toFixed(1) + ' ' + (y2 - uy * hl + ux * hw).toFixed(1) +
+        'L' + (x2 - ux * hl + uy * hw).toFixed(1) + ' ' + (y2 - uy * hl - ux * hw).toFixed(1) + 'Z' }, 'fill:var(--o)');
+    }
     el(sm, 'circle', { cx: s.sx(w), cy: s.sy(b), r: 5 }, 'fill:var(--ink);stroke:var(--canvas);stroke-width:1.6');
     txt(sm, 160, 235, 'w  →', 'vs', 'middle');
     txt(sm, 12, 125, 'b', 'vs', 'middle');
@@ -3469,6 +3561,7 @@ function drawCostMap(svg, W, H, P) {
     $('m1-out').textContent =
       'J(w, b) = ' + fmt(J, 4) + '   (thấp nhất có thể: ' + fmt(Jb, 4) + ')\n' +
       'căn của bình phương sai lệch trung bình (RMSE) ≈ ' + fmt(Math.sqrt(2 * J) * 1000, 0) + ' triệu đồng\n' +
+      '∂J/∂w = ' + fmt(g[0], 3) + ',  ∂J/∂b = ' + fmt(g[1], 3) + '  → bước tới đi ngược hai số này\n' +
       (J < Jb * 1.02 ? '→ bạn đang ở đáy bát. Không cặp (w,b) nào tốt hơn đáng kể.'
                      : '→ còn cách đáy. Đáy thật ở w = ' + fmt(BEST.w, 2) + ', b = ' + fmt(BEST.b, 2) + '.');
   }
@@ -3917,6 +4010,14 @@ function drawCostMap(svg, W, H, P) {
   for (i = 0; i < 60; i++) { var x = -3 + 6 * R(); ALL.push([x, truef(x) + gauss(R) * SD]); }
   var R2 = rng(999);
   for (i = 0; i < 60; i++) { var x2 = -3 + 6 * R2(); TEST.push([x2, truef(x2) + gauss(R2) * SD]); }
+  /* 10 tập huấn luyện khác từ cùng nguồn — để thấy variance và bias theo nghĩa gốc: hàm khớp được
+     dao động bao nhiêu khi đổi tập (variance), và trung bình của chúng lệch khỏi hàm thật bao nhiêu (bias²) */
+  var ALT = [], RS = 0, s5;
+  for (s5 = 0; s5 < 10; s5++) {
+    var R3 = rng(7000 + s5), set = [];
+    for (i = 0; i < 60; i++) { var x3 = -3 + 6 * R3(); set.push([x3, truef(x3) + gauss(R3) * SD]); }
+    ALT.push(set);
+  }
   /* sàn nhiễu đo trên ĐÚNG 60 điểm kiểm thử này: sai số của chính hàm thật */
   var FLOOR = 0;
   for (i = 0; i < TEST.length; i++) FLOOR += Math.pow(truef(TEST[i][0]) - TEST[i][1], 2);
@@ -3968,6 +4069,24 @@ function drawCostMap(svg, W, H, P) {
       dm += (k ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(Math.max(-3.5, Math.min(3.5, evalp(w, x)))).toFixed(1);
     }
     el(sf, 'path', { d: dt }, 'fill:none;stroke:var(--ink);stroke-opacity:.28;stroke-width:1.6;stroke-dasharray:5 4');
+    var bv = '';
+    if (RS) {
+      var ws = ALT.map(function (set) { return fit(set.slice(0, m), d, lam); }), q, gx, B2 = 0, V = 0;
+      ws.forEach(function (wa) {
+        var da = '';
+        for (q = 0; q <= 130; q++) { gx = -3.2 + 6.4 * q / 130; da += (q ? 'L' : 'M') + sx(gx).toFixed(1) + ' ' + sy(Math.max(-3.5, Math.min(3.5, evalp(wa, gx)))).toFixed(1); }
+        el(sf, 'path', { d: da }, 'fill:none;stroke:var(--m);stroke-opacity:.3;stroke-width:1.2');
+      });
+      for (q = 0; q <= 60; q++) {
+        gx = -3 + 6 * q / 60;
+        var vals = ws.map(function (wa) { return evalp(wa, gx); }), mu = 0, vv = 0;
+        vals.forEach(function (v) { mu += v; }); mu /= vals.length;
+        vals.forEach(function (v) { vv += (v - mu) * (v - mu); }); vv /= vals.length;
+        B2 += (mu - truef(gx)) * (mu - truef(gx)); V += vv;
+      }
+      bv = '\n10 tập khác, trung bình theo x: bias² ≈ ' + fmt(B2 / 61, 3) + ', variance ≈ ' + fmt(V / 61, 3) +
+        (V > 3 * B2 ? '  → các đường toả rộng: variance trội' : B2 > 3 * V ? '  → các đường chụm mà cùng lệch: bias trội' : '  → hai phần cỡ nhau');
+    }
     el(sf, 'path', { d: dm }, 'fill:none;stroke:var(--m);stroke-width:2.2');
     for (k = 0; k < TEST.length; k += 2) el(sf, 'circle', { cx: sx(TEST[k][0]), cy: sy(TEST[k][1]), r: 2.6 },
       'fill:var(--canvas);stroke:var(--ink);stroke-opacity:.5;stroke-width:1');
@@ -4010,9 +4129,14 @@ function drawCostMap(svg, W, H, P) {
       'sai số huấn luyện = ' + fmt(a2, 4) + '\n' +
       'sai số kiểm thử  = ' + fmt(b2, 4) + '   (chênh ' + fmt(gap, 4) + ')\n' +
       'sàn nhiễu trên 60 điểm kiểm thử này ≈ ' + fmt(FLOOR, 3) + ' (σ² = ' + fmt(SIG2, 3) + ' trên tổng thể) — hàm thật cũng chỉ tới đó\n' +
-      '→ ' + diag;
+      '→ ' + diag + bv;
   }
   ['m5-d', 'm5-l', 'm5-m'].forEach(function (id) { $(id).addEventListener('input', draw); });
+  $('m5-rs').addEventListener('click', function (e) {
+    var c = e.target.closest ? e.target.closest('.chip') : null; if (!c) return;
+    Array.prototype.slice.call(this.children).forEach(function (x) { x.classList.toggle('on', x === c); });
+    RS = +c.getAttribute('data-v'); draw();
+  });
   redraws.push(draw); draw();
 })();
 
@@ -4287,7 +4411,7 @@ function accuracy(net, data) {
   }
   var STEPS = [
     { key: 'a', label: '∂L/∂a', calc: function () { return -(yv / V.a) + (1 - yv) / (1 - V.a); }, note: '∂L/∂a = −y/a + (1−y)/(1−a)' },
-    { key: 'z', label: '∂L/∂z', calc: function () { return G.a * V.a * (1 - V.a); }, note: '∂a/∂z = a(1−a)  →  nhân vào: ∂L/∂z = ∂L/∂a · a(1−a) = a − y' },
+    { key: 'z', label: '∂L/∂z', calc: function () { return G.a * V.a * (1 - V.a); }, note: '∂a/∂z = a(1−a)  →  nhân vào: ∂L/∂z = ∂L/∂a · a(1−a) = −y(1−a) + (1−y)a = a − y' },
     { key: 'z1b', label: '∂L/∂z₁ và ∂L/∂b', calc: function () { return G.z; }, note: 'phép cộng chuyển tiếp gradient nguyên vẹn sang cả hai nhánh' },
     { key: 'wx', label: '∂L/∂w và ∂L/∂x', calc: function () { return G.z1 * V.x; }, note: 'phép nhân: gradient nhân với ĐẦU VÀO CÒN LẠI. ∂L/∂w = ∂L/∂z₁ · x' }
   ];
@@ -4862,6 +4986,8 @@ var GLOSS = [
 /* ── chặng 1 ──────────────────────────────────────────────────────────────── */
 ['linear regression','hồi quy tuyến tính','Mô hình f(x) = w·x + b. Dự đoán một số thực. Chỉ vẽ được đường thẳng hoặc siêu phẳng.','#s-linreg','hồi quy tuyến tính'],
 ['mean squared error','sai số bình phương trung bình','Hàm mất mát cho hồi quy: trung bình của (dự đoán − thật)². Phạt nặng sai lớn, trơn, và lồi với mô hình tuyến tính.','#s-cost','MSE|sai số bình phương'],
+['partial derivative','đạo hàm riêng','Nhích MỘT tham số một tí, giữ nguyên mọi tham số khác, rồi xem J đổi bao nhiêu. Ký hiệu ∂J/∂w.','#s-thread','đạo hàm riêng'],
+['gradient','gradient','Vector gom mọi đạo hàm riêng, ví dụ (∂J/∂w, ∂J/∂b). Chỉ hướng J TĂNG nhanh nhất; gradient descent bước ngược hướng ấy.','#s-gd',''],
 ['gradient descent','tụt dốc theo đạo hàm','Đứng ở một điểm, tính hướng dốc xuống mạnh nhất, bước một bước dài α, lặp lại. Thuật toán tối ưu chạy đằng sau gần như mọi hệ thống AI hôm nay.','#s-gd',''],
 ['learning rate','độ dài bước học','Ký hiệu α. Quá nhỏ thì bò cả ngày, quá lớn thì nhảy qua đáy và <b>phân kỳ</b>. Siêu tham số quan trọng nhất — dò theo bội số 3 trên thang log.','#s-gd','learning rate'],
 ['convergence','hội tụ','Chi phí thôi giảm đáng kể — thuật toán đã tới (gần) đáy. Dấu hiệu tốt: J giảm ở mọi vòng.','#s-gd','hội tụ'],
@@ -4893,7 +5019,7 @@ var GLOSS = [
 ['hidden layer','lớp ẩn','Lớp nằm giữa đầu vào và đầu ra. Gọi là "ẩn" vì bạn không chỉ định nó phải học gì — gradient descent tự quyết.','#s-nn','lớp ẩn'],
 ['forward propagation','lan truyền xuôi','Chạy dữ liệu từ đầu vào tới đầu ra để lấy dự đoán. Chỉ là lặp lại a = g(Wa + b) từ lớp 1 tới lớp cuối.','#s-nn','lan truyền xuôi'],
 ['backpropagation','lan truyền ngược','Tính đạo hàm cho MỌI tham số với chi phí chỉ cỡ hai, ba lần chạy xuôi. Cơ chế: quy tắc chuỗi + không tính lại cái đã tính.','#s-backprop','lan truyền ngược|backprop'],
-['chain rule','quy tắc chuỗi','Nếu a ảnh hưởng b và b ảnh hưởng c thì ∂c/∂a = (∂c/∂b)(∂b/∂a). Toàn bộ backprop là quy tắc này áp lặp lại.','#s-backprop','quy tắc chuỗi'],
+['chain rule','quy tắc chuỗi','Nếu a ảnh hưởng b và b ảnh hưởng c thì ∂c/∂a = (∂c/∂b)(∂b/∂a). Nếu a ảnh hưởng c qua nhiều đường thì cộng tích của từng đường. Toàn bộ backprop là hai luật này áp lặp lại.','#s-backprop','quy tắc chuỗi'],
 ['computation graph','đồ thị tính toán','Biểu thức vẽ thành các nút và mũi tên. Chạy xuôi thì điền giá trị, chạy ngược thì mỗi bước chỉ là một phép nhân.','#s-backprop','đồ thị tính toán'],
 ['activation function','hàm kích hoạt','Phần PHI TUYẾN của một nơ-ron, ký hiệu g. Bỏ nó đi thì mạng 100 lớp thu gọn về đúng một đường thẳng.','#s-act','hàm kích hoạt'],
 ['ReLU','đơn vị tuyến tính chỉnh','max(0, z). Mặc định cho mọi lớp ẩn. Thắng vì đạo hàm là 0 hoặc 1 — không bão hoà ở nửa dương, tính cực nhanh.','#s-act',''],
@@ -4978,7 +5104,7 @@ var GLOSS = [
 ['1x1 convolution','tích chập 1×1','Nhìn đúng một điểm ảnh nhưng xuyên hết chiều sâu — thực chất là một nơ-ron kết nối đầy đủ chạy trên trục kênh. Dùng để GIẢM số kênh trước một tích chập đắt; ở ví dụ Inception của Ng, rẻ hơn 10 lần.','#s-cnnarch','1×1|nút thắt cổ chai|bottleneck'],
 ['Inception','khối Inception','Thay vì chọn 1×1 hay 3×3 hay 5×5, làm hết rồi ghép lại và để mạng tự chọn qua trọng số. Xoá một siêu tham số khó.','#s-cnnarch',''],
 ['MobileNet','mạng cho điện thoại','Dùng tích chập tách theo chiều sâu: tách một phép conv thành hai bước rẻ hơn. Giảm chi phí tính toán khoảng 10 lần với độ chính xác gần như giữ nguyên.','#s-cnnarch',''],
-['depthwise separable convolution','tích chập tách theo chiều sâu','Kỹ thuật cốt lõi của MobileNet: làm riêng phần không gian rồi mới trộn kênh, thay vì làm cả hai cùng lúc.','#s-cnnarch','tích chập tách theo chiều sâu'],
+['depthwise separable convolution','tích chập tách theo chiều sâu','Kỹ thuật cốt lõi của MobileNet: làm riêng phần không gian (mỗi kênh một bộ lọc f×f, depthwise) rồi mới trộn kênh (conv 1×1, pointwise), thay vì làm cả hai cùng lúc. Chi phí còn 1/n_ra + 1/f² lần conv thường.','#s-cnnarch','tích chập tách theo chiều sâu'],
 ['EfficientNet','mạng mở rộng có phối hợp','Tăng ĐỒNG THỜI độ phân giải ảnh, chiều sâu và chiều rộng theo một tỉ lệ chung, thay vì tăng bừa một chiều.','#s-cnnarch',''],
 ['object detection','phát hiện vật thể','Trả lời "có những gì, mỗi cái ở đâu, bao nhiêu cái" — khó hơn phân loại hẳn một bậc.','#s-detect','phát hiện vật thể'],
 ['bounding box','khung bao','Bốn số bx, by, bh, bw mô tả hình chữ nhật quanh vật. Là đầu ra của mạng, dạy bằng nhãn khung như mọi đầu ra khác.','#s-detect','khung bao|khung chữ nhật'],

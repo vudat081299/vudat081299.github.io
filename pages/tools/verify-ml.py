@@ -515,6 +515,24 @@ def run_ml_models():
                  if (lab == 'OK' and b2 > 2 * FLOOR) or (lab in ('B', 'BV') and approx[d] < 0.01)
                  or (lab not in ('V', 'BV') and approx[d] < 0.01 and b2 - a2 > FLOOR)]
         claim('M5: quét bậc × số điểm (λ tắt): nhãn khớp sai số thật', not wrong, f'sai ở {wrong}')
+        # 10 tập huấn luyện khác (nút "Vẽ chồng"): bias² và variance theo nghĩa gốc, trên lưới 61 điểm x ∈ [−3, 3]
+        malt = re.search(r'var R3 = rng\((\d+) \+ s5\)', m5)
+        claim('M5: bóc được 10 tập khác', malt is not None and 's5 < 10' in m5
+              and "V > 3 * B2 ? '  → các đường toả rộng: variance trội' : B2 > 3 * V ?" in m5)
+        if malt:
+            ALT = [gen(int(malt.group(1)) + s) for s in range(10)]
+            def bvar(d, m, lam=0.0):
+                ws = [fit(a[:m], d, lam) for a in ALT]; B2 = V = 0.0
+                for q in range(61):
+                    x = -3 + 6 * q / 60
+                    vals = [sum(c * t for c, t in zip(w, cheb(x / SC, d))) for w in ws]
+                    mu = sum(vals) / 10
+                    B2 += (mu - tf(x)) ** 2; V += sum((v - mu) ** 2 for v in vals) / 10
+                return B2 / 61, V / 61
+            b14, v14 = bvar(14, 14); b1, v1 = bvar(1, 14)
+            claim('M5: bậc 14, λ tắt, 14 điểm: variance trội (đường toả rộng)', v14 > 3 * b14, f'bias² {b14:.3f}, variance {v14:.3f}')
+            claim('M5: bậc 1, 14 điểm: bias trội (đường chụm mà lệch)', b1 > 3 * v1, f'bias² {b1:.3f}, variance {v1:.3f}')
+            need('M5: lời văn 10 tập khác', 'Bậc 14, λ tắt, 14 điểm: 10 đường <b>toả rộng</b> — đó là variance. Bậc 1, cùng 14 điểm: 10 đường <b>chụm sát nhau nhưng cùng lệch</b>')
 
     # ── M6: mạng chết báo là chết; đếm đúng số vòng đã chạy; không hứa "huấn luyện tiếp" sẽ giúp ──
     m6 = js('M6', 'Mô hình 6 —', 'Mô hình 7 —')
@@ -698,6 +716,125 @@ def run_ml_r3():
     need('XGBoost: đạo hàm bậc hai', 'tức đạo hàm bậc hai')
     need('bất thường: mật độ, không phải xác suất', 'tính <b>mật độ xác suất</b> của nó')
     need('PCA: phân biệt điểm, không phải lớp', 'không phải phân biệt các lớp')
+
+    # ── nền cần có (vòng 3, sư phạm): link sang trang Toán phải trỏ vào mục CÓ THẬT ──
+    # lint-pages.py chỉ kiểm anchor trong cùng trang; link sang trang khác là điểm mù của nó.
+    import math, pathlib
+    mpage = pathlib.Path(__file__).resolve().parent.parent / 'mathematics-for-machine-learning.html'
+    mids = set(re.findall(r'\bid="([^"]+)"', mpage.read_text(encoding='utf-8'))) if mpage.exists() else set()
+    links = re.findall(r'href="mathematics-for-machine-learning\.html#([^"]+)"', HTML)
+    gone = sorted({a for a in links if a not in mids})
+    claim('link sang trang Toán: đủ mục nền và trỏ đúng', len(set(links)) >= 12 and not gone, f'{len(set(links))} mục, gãy: {gone}')
+    need('hộp Kiến thức nền', '<p class="box__k">Kiến thức nền — có sẵn ở trang khác, không dạy lại ở đây</p>')
+    claim('hộp Kiến thức nền nằm ở #s-thread', 'Kiến thức nền — có sẵn' in sec('s-thread'))
+    need('đạo hàm riêng: giữ nguyên tham số khác', 'nhích w lên một tí, <b>giữ nguyên mọi tham số khác</b>, thì J đổi bao nhiêu')
+    for key in ('gradient', 'partial derivative'):
+        claim(f'GLOSS có mục "{key}"', key in gl, 'thuật ngữ nền phải có popup')
+    for sym in ('<span class="g">n<sup>[l]</sup></span>', '<span class="g">x<sup>&lt;t&gt;</sup></span>', '<span class="g">θ</span>'):
+        need('bảng ký hiệu', sym)
+    need('ký hiệu dùng lại', '<b>Vài chữ bị dùng lại với nghĩa khác.</b>')
+    claim('#s-act: chỉ số lớp viết [l], không phải luỹ thừa', 'W²W¹' not in HTML and 'a¹ = W¹x' not in HTML)
+
+    # hồi quy tuyến tính: ∂J/∂w = (1/m)Σ(f−y)x — đúng thứ gradLin của trang tính
+    need('#s-gd: đạo hàm của J', '∂<i>J</i>/∂<i>w</i> = <sup>1</sup>⁄<sub>m</sub> Σ (f(x<sup>(i)</sup>) − y<sup>(i)</sup>)·x<sup>(i)</sup>')
+    claim('gradLin = (1/m)Σ(f−y)x, (1/m)Σ(f−y)', 'gw += e * HOUSE.x[i]; gb += e; }' in HTML and 'return [gw / HOUSE.n, gb / HOUSE.n];' in HTML)
+    m1 = HTML[HTML.find('Mô hình 1 —'):HTML.find('Mô hình 2 —')]
+    # màn hình: trục b lộn ngược (sy giảm khi b tăng), nên nhân với hiệu sy(1) − sy(0) chứ không đổi dấu tay
+    claim('M1: mũi tên là −gradient đổi sang toạ độ màn hình',
+          'var px = -g[0] * (s.sx(1) - s.sx(0)), py = -g[1] * (s.sy(1) - s.sy(0));' in m1 and 'var g = gradLin(w, b)' in m1)
+    claim('M1: in hai đạo hàm riêng', "'∂J/∂w = ' + fmt(g[0], 3) + ',  ∂J/∂b = ' + fmt(g[1], 3)" in m1)
+
+    # quy tắc chuỗi nhiều đường: L = a·b với b = a → dL/da = b + a (cộng hai đường), không phải b
+    a0 = 1.7; h = 1e-6
+    fd = ((a0 + h) * (a0 + h) - (a0 - h) * (a0 - h)) / (2 * h)
+    claim('quy tắc chuỗi: hai đường thì cộng', abs(fd - (a0 + a0)) < 1e-6)
+    need('#s-backprop: luật cộng', '∂c/∂a = (∂c/∂b₁)(∂b₁/∂a) + (∂c/∂b₂)(∂b₂/∂a)')
+    claim('GLOSS chain rule: có luật cộng', gl.get('chain rule') is not None and 'cộng tích của từng đường' in gl['chain rule'][2])
+
+    # M4: đạo hàm theo z ở p = 0,01, y = 1 — bình phương 2(p−y)p(1−p), log loss p − y
+    p, y = 0.01, 1
+    sq, ll = 2 * (p - y) * p * (1 - p), p - y
+    claim('M4: bình phương theo z ≈ −0,02', abs(sq + 0.0196) < 1e-4, f'{sq}')
+    claim('M4: log loss gấp khoảng 50 lần', 49 < ll / sq < 52, f'{ll / sq:.1f}')
+    need('M4: số theo z', 'bình phương chỉ cho ≈ −0,02, còn log loss cho −0,99, gấp khoảng 50 lần')
+    # log loss: dL/df = (f − y)/(f(1 − f)); sigmoid' = f(1 − f) → triệt tiêu còn f − y
+    f_, y_ = 0.37, 1
+    dLdf = -y_ / f_ + (1 - y_) / (1 - f_)
+    claim('log loss: dL/df · f(1−f) = f − y', abs(dLdf * f_ * (1 - f_) - (f_ - y_)) < 1e-12)
+    need('#s-logistic: lý do triệt tiêu', 'với log loss, đạo hàm theo f có mẫu số f(1 − f); đạo hàm của sigmoid lại đúng bằng f(1 − f)')
+    need('M8: bước nhân viết ra', '∂L/∂a · a(1−a) = −y(1−a) + (1−y)a = a − y')
+    claim('M8: −y(1−a) + (1−y)a = a − y', all(abs(-yy * (1 - a) + (1 - yy) * a - (a - yy)) < 1e-12 for a in (0.1, 0.6) for yy in (0, 1)))
+    # weight decay: đạo hàm của (λ/2m)w² là (λ/m)w → w := w(1 − αλ/m) − α·(phần cũ)
+    lam, m_, al, w0, g0 = 0.7, 50, 0.1, 2.0, 0.3
+    claim('weight decay: hai cách viết cập nhật bằng nhau',
+          abs((w0 - al * (g0 + lam / m_ * w0)) - (w0 * (1 - al * lam / m_) - al * g0)) < 1e-12)
+    need('#s-overfit: cập nhật có phạt', '<span class="mono">w := w·(1 − αλ/m) − α·(đạo hàm của phần cũ)</span>')
+    # khởi tạo: Var(Σ wᵢxᵢ) = n·Var(w)·Var(x) khi độc lập, trung bình 0
+    need('#s-init: lý do 1/n', '<span class="mono">Var(z) = n·Var(w)·Var(x)</span>')
+    # trung bình trượt: khoảng 1/(1−β) giá trị
+    claim('EWA: 1/(1−β)', round(1 / (1 - 0.9)) == 10 and round(1 / (1 - 0.98)) == 50)
+    need('#s-optim: 1/(1−β)', 'khoảng 1/(1−β) giá trị gần nhất: β = 0,9 cho 10 giá trị, β = 0,98 cho 50')
+    need('#s-optim: ba dòng cập nhật', 'w := w − α·dw / (√s + ε)')
+    # tích chập bằng số: bộ lọc cạnh dọc [1 0 −1] ×3 hàng
+    K = [[1, 0, -1]] * 3
+    conv = lambda patch: sum(K[i][j] * patch[i][j] for i in range(3) for j in range(3))
+    claim('tích chập: 9 9 0 → 27, 9 9 9 → 0', conv([[9, 9, 0]] * 3) == 27 and conv([[9, 9, 9]] * 3) == 0)
+    need('tích chập bằng số', '3 × 9 + 0 − 3 × 0 = <b>27</b>')
+    need('896: cách tính', '32 × 28 = 896')
+    claim('896 = 32 × (3·3·3 + 1)', 32 * 28 == 896 and 3 * 3 * 3 + 1 == 28)
+    need('Inception: cách tính 120 triệu', '(28 × 28 × 32 ô đầu ra, mỗi ô 5 × 5 × 192 phép nhân)')
+    need('Inception: cách tính 12,4 triệu', '(28 × 28 × 16 × 192 cho bước 1×1, cộng 28 × 28 × 32 × 5 × 5 × 16 cho bước 5×5)')
+    # MobileNet: chi phí tách / thường = 1/n_ra + 1/f²; f = 3, n_ra từ 128 tới 1024 → rẻ hơn 8–9 lần
+    claim('MobileNet: 3×3 rẻ hơn 8–9 lần', all(8 <= 1 / (1 / n + 1 / 9) < 9 for n in (128, 256, 512, 1024)))
+    need('MobileNet: tỉ lệ', 'Chi phí còn 1/n<sub>ra</sub> + 1/f² lần conv thường')
+    need('MobileNet: 8–9 lần', 'khoảng <b>8–9 lần</b>')
+    # entropy = log loss trung bình (log₂) khi đoán p cho mọi mẫu của nút
+    pp = 0.3
+    H = -(pp * math.log2(pp) + (1 - pp) * math.log2(1 - pp))
+    claim('entropy = log loss trung bình', abs(H - (pp * -math.log2(pp) + (1 - pp) * -math.log2(1 - pp))) < 1e-12)
+    need('#s-trees: entropy là log loss', 'nó chính là log loss trung bình (tính bằng log₂)')
+    # √d: tổng d tích độc lập phương sai 1 → độ lệch chuẩn √d
+    claim('√512 ≈ 23', round(math.sqrt(512)) == 23)
+    need('attention: lý do √d', 'tổng có phương sai 512, độ lệch chuẩn √512 ≈ 23')
+    need('LSTM: phương trình ô nhớ', 'đạo hàm của c&lt;t&gt; theo c&lt;t−1&gt; dọc đường ấy chính là Γ<sub>f</sub>')
+    st_ = sec('s-metric')
+    claim('#s-metric: viết tắt TP/FP đứng trước bảng', 0 <= st_.find('Viết tắt: <b>TP</b>') < st_.find('<code>TP / (TP + FP)</code>'))
+    claim('quy ước dịch: overfitting không ở nhóm giữ tiếng Anh', 'overfitting, bias/variance' not in HTML)
+    # softmax hai lớp = sigmoid của hiệu; b tối ưu của hằng số = trung bình
+    z1, z2 = 0.8, -0.4
+    claim('softmax k = 2 là σ(z₁ − z₂)', abs(math.exp(z1) / (math.exp(z1) + math.exp(z2)) - 1 / (1 + math.exp(-(z1 - z2)))) < 1e-12)
+    need('#s-softmax: bước rút gọn', 'a₁ = 1/(1 + e<sup>−(z₁−z₂)</sup>) = σ(z₁ − z₂)')
+    ys_ = [1.0, 2.5, 4.0]
+    claim('hằng số tốt nhất cho bình phương là trung bình', abs(sum(2 * (sum(ys_) / 3 - v) for v in ys_)) < 1e-12)
+    need('#s-overfit: b = trung bình', 'là 2Σ(b − y<sup>(i)</sup>), bằng 0 khi b đúng bằng trung bình của y')
+    for label, s in (
+        ('vector hoá: kích thước W', 'n<sup>[l]</sup> hàng (mỗi nơ-ron một hàng) × n<sup>[l−1]</sup> cột'),
+        ('vector hoá: luật kiểm chiều', 'số cột của W<sup>[l]</sup> phải bằng số hàng của A<sup>[l−1]</sup>'),
+        ('LSTM: hộp công thức', 'Γ<sub>f</sub></span><span class="op">⊙</span>'),
+        ('variance: nghĩa gốc ở thẻ quá khớp', 'lấy một tập huấn luyện khác cùng nguồn thì đường khớp được sẽ khác hẳn'),
+        ('bias: nghĩa gốc ở thẻ thiếu khớp', 'đổi sang tập huấn luyện khác thì đường vẫn lệch khỏi quy luật thật'),
+        ('cross-validation set ≠ k-fold', 'tên riêng của khoá, không phải k-fold'),
+        ('attention: chuyển vị', 'lật hàng thành cột, nên QK<sup>T</sup> là bảng mọi tích vô hướng'),
+        ('attention: d_k', 'Chia cho √d<sub>k</sub> giữ'),
+        ('#s-backprop: link quy tắc chuỗi', '#s-chain">trang Toán 2.6</a>'),
+        ('batch norm: β, γ khác nghĩa', '(không phải β của momentum hay γ chiết khấu)'),
+        ('M1: chú thích mũi tên', 'Mũi tên là <b>−gradient</b> tại chấm: luôn chỉ về vùng nhạt hơn, và ngắn lại khi gần đáy.'),
+        ('siêu phẳng', '(siêu phẳng — "đường thẳng" của không gian nhiều chiều)'),
+        ('chuẩn của gradient', 'chuẩn của gradient (độ dài của vector gradient)'),
+        ('debiasing: phép chiếu', '#s-dot">trang Toán 1.5</a>'),
+        ('chỉ số thứ tư', 'chặng 4 thêm loại thứ tư, ngoặc nhọn &lt;t&gt;'),
+        ('#s-init: n[l−1]', 'phụ thuộc số đầu vào của lớp, n<sup>[l−1]</sup>'),
+    ):
+        need(label, s)
+    claim('GLOSS MobileNet: hai bước và chi phí', gl.get('depthwise separable convolution') is not None
+          and '1/n_ra + 1/f²' in gl['depthwise separable convolution'][2])
+    # câu quá dày (vòng 3): ba danh sách đánh số trong một câu đã tách thành <ol>
+    for bad in ('(1) để λ tắt', '<b>(1) chia sẻ tham số</b>', 'Hai mẹo của Ng: <b>(1)</b>'):
+        claim(f'câu dày: không còn "{bad}"', bad not in HTML)
+    claim('CSS: có kiểu cho danh sách trong khung mô hình', '.lab__l {' in HTML and 'class="tight lab__l"' in HTML)
+    m5 = HTML[HTML.find('Mô hình 5 —'):HTML.find('mạng nơ-ron tối giản')]
+    claim('M5: chip "Vẽ chồng" nối vào mô hình và ô kết quả', 'id="m5-rs"' in HTML
+          and "$('m5-rs').addEventListener('click'" in m5 and "'→ ' + diag + bv" in m5)
     # J = (1/2m)Σe² nên √(2J) là RMSE, không phải sai lệch tuyệt đối trung bình
     m1 = HTML[HTML.find('Mô hình 1 —'):HTML.find('Mô hình 2 —')]
     claim('M1: √(2J) được gọi là RMSE', 'return s / (2 * HOUSE.n);' in HTML and "(RMSE) ≈ ' + fmt(Math.sqrt(2 * J)" in m1
