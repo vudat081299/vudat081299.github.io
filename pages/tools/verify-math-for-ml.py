@@ -408,7 +408,20 @@ def run_calculus():
     claim('2.4 x² + 3xy + y² là yên ngựa', q(1, 0) > 0 and q(0, 1) > 0 and q(1, -1) < 0,
           'phải cong lên dọc hai trục mà cong xuống dọc y = −x')
     need('2.4 trị riêng yên ngựa', 'trị riêng 2 và −2')
-    need('2.4 trị riêng yên ngựa xoay', 'trị riêng 5 và −1')
+    need('2.4 trị riêng yên ngựa xoay', 'trị riêng 2 + 3 = 5 và 2 − 3 = −1')
+    # từng ô của Hessian bằng sai phân bậc hai, và ∇f = 0 tại gốc (chỗ phép thử được dùng)
+    e = 1e-4
+    hxx = (q(e, 0) - 2 * q(0, 0) + q(-e, 0)) / e ** 2
+    hyy = (q(0, e) - 2 * q(0, 0) + q(0, -e)) / e ** 2
+    hxy = (q(e, e) - q(e, -e) - q(-e, e) + q(-e, -e)) / (4 * e * e)
+    assert_close('2.4 Hessian từng ô', [hxx, hxy, hyy], [2, 3, 2], tol=1e-5)
+    need('2.4 bước tính Hessian', '∂f/∂x = 2x + 3y, lấy tiếp theo x được 2, theo y được 3')
+    need('2.4 bước tính Hessian 2', '∂f/∂y = 3x + 2y, lấy tiếp theo x được 3, theo y được 2')
+    # x² + 3y² tại (2, 1): Hessian dương mà không phải đáy, vì ∇f ≠ 0 — nên câu điều kiện phải có
+    claim('2.4 Hessian dương chưa đủ', grad != (0, 0) and min(eig2(2, 0, 0, 6)) > 0,
+          'x² + 3y² tại (2, 1) phải có Hessian dương mà gradient khác 0')
+    need('2.4 điều kiện ∇f = 0', 'Phép thử chỉ dùng tại chỗ <b>∇f = 0</b>')
+    need('2.4 trị riêng 0 chưa kết luận', 'có trị riêng bằng 0 thì chưa kết luận được, y như f″ = 0 ở mục 2.3')
 
     # 2.5 — bảng gradient descent
     for a, x10 in [(0.1, None), (0.5, None), (0.9, None), (1.0, None), (1.1, None)]:
@@ -636,6 +649,11 @@ def run_stats():
     num('3.7 P(≥8)', pge8 * 100, 2)
     pboth = pge8 + sum(binom(10, k, 0.5) for k in (0, 1, 2))
     num('3.7 hai phía', pboth * 100, 1, ctx='hai đuôi: ')
+    # cỡ của phép kiểm nhị thức n = 10 không bao giờ đúng bằng 5%: k ≥ 8 vượt, k ≥ 9 hụt xa
+    tails = [sum(binom(10, j, 0.5) for j in range(k, 11)) for k in range(11)]
+    claim('4.7 dữ liệu đếm không ra đúng α', 0.05 not in tails and tails[8] > 0.05 > tails[9],
+          f'P(X ≥ 8) = {tails[8]}, P(X ≥ 9) = {tails[9]}')
+    need('4.7 sai lầm loại I tối đa α', 'Xác suất tối đa là α: đúng bằng α khi thống kê kiểm định liên tục')
     # C(n, k) đếm tay ở cỡ nhỏ, và giai thừa của n = 10
     seqs = sorted(''.join(t) for t in {tuple('N' if i in c else 'S' for i in range(4)) for c in combinations(range(4), 2)})
     claim('3.7 sáu dãy 2 ngửa trong 4 lần', seqs == ['NNSS', 'NSNS', 'NSSN', 'SNNS', 'SNSN', 'SSNN'] and C(4, 2) == 24 // (2 * 2) == 6)

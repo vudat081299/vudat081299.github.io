@@ -952,7 +952,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <li>Quay lại lần 1: táo + 3 + 5 = 9 → <b>táo 1 nghìn</b>.</li>
         </ul>
 
-        <p>Việc bạn vừa làm — lấy hàng 1 trừ khỏi hàng 2 và hàng 3 cho táo rụng khỏi hai hàng dưới, rồi thế ngược lên hàng 1 — chính là <b>khử Gauss</b>. Tổng quát thì là &ldquo;trừ đi một <i>bội</i> của hàng kia&rdquo;; ở đây bội ấy tình cờ bằng 1. Dạng sau bước trừ, khi bảng số chỉ còn số 0 ở dưới đường chéo, gọi là <b>dạng bậc thang</b>:</p>
+        <p>Việc bạn vừa làm — lấy hàng 1 trừ khỏi hàng 2 và hàng 3 cho táo rụng khỏi hai hàng dưới, rồi thế ngược lên hàng 1 — chính là <b>khử Gauss</b>. Tổng quát thì là &ldquo;trừ đi một <i>bội</i> của hàng kia&rdquo;; ở đây bội ấy tình cờ bằng 1. Dạng sau bước trừ gọi là <b>dạng bậc thang</b>: số khác 0 đầu tiên của mỗi hàng nằm lùi sang phải hơn hàng trên, và hàng toàn 0 dồn xuống cuối.</p>
 
         <div class="fx">
           <p class="fx__line sm"><span class="mx mx--sm" style="--cols:4"><span>1</span><span>1</span><span>1</span><span class="sep">9</span><span>1</span><span>2</span><span>1</span><span class="sep">12</span><span>1</span><span>1</span><span>2</span><span class="sep">14</span></span> <span class="op">→</span> <span class="mx mx--sm mx--k" style="--cols:4"><span><b>1</b></span><span>1</span><span>1</span><span class="sep">9</span><span>0</span><span><b>1</b></span><span>0</span><span class="sep">3</span><span>0</span><span>0</span><span><b>1</b></span><span class="sep">5</span></span></p>
@@ -1363,13 +1363,13 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read"><div class="k">λ của máy này</div><div class="v" id="m5-lam" style="font-size:15px">4 và 2</div></div>
             </div>
             <p class="lab__f" id="m5-say">Quay v đến khi &ldquo;lệch hướng&rdquo; về 0°.</p>
-            <p class="lab__f"><b>Bốn chuyện đáng biết:</b> ma trận <b>xoay</b> một góc khác 0° và 180° không có vector riêng thật nào (mũi tên nào cũng bị đổi hướng — trị riêng của nó là số phức); ma trận <b>trượt</b> chỉ có <b>một</b> hướng riêng thay vì hai; ma trận <b>không đối xứng</b> như <span class="mono">[[2,1],[0,3]]</span> vẫn có thể có đủ hai hướng riêng — (1, 0) với λ = 2 và (1, 1) với λ = 3 — nhưng hai hướng ấy lệch nhau 45°, <b>không</b> vuông góc; chỉ ma trận <b>đối xứng</b> (A<sup>T</sup> = A, mục 1.7) mới luôn có đủ hướng riêng <b>vuông góc</b> với nhau — và đó chính là lý do PCA ở mục sau chạy được, vì ma trận hiệp phương sai luôn đối xứng.</p>
+            <p class="lab__f"><b>Bốn chuyện đáng biết.</b> Ma trận <b>xoay</b> một góc khác 0° và 180° không có vector riêng thật nào: mũi tên nào cũng bị đổi hướng, và trị riêng của nó là số phức. Ma trận <b>trượt</b> chỉ có <b>một</b> hướng riêng thay vì hai. Ma trận <b>không đối xứng</b> như <span class="mono">[[2,1],[0,3]]</span> vẫn có thể có đủ hai hướng riêng — (1, 0) với λ = 2 và (1, 1) với λ = 3 — nhưng hai hướng ấy lệch nhau 45°, <b>không</b> vuông góc. Chỉ ma trận <b>đối xứng</b> (A<sup>T</sup> = A, mục 1.7) mới luôn chọn được đủ hướng riêng <b>vuông góc</b> với nhau. Ma trận hiệp phương sai luôn đối xứng, nên PCA ở mục sau chạy được.</p>
           </div>
         </div>
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Bóp tấm hình. Vài mũi tên <b>cứng đầu</b>: chỉ dài ra hay ngắn lại, không quay. Chúng cho biết cái máy này <b>thật sự</b> làm gì, tách khỏi chuyện bạn vẽ trục toạ độ ở đâu.</div></div>
-          <div class="r-math"><div class="lbl">Toán</div><div class="v"><span class="fml">Av = λv</span>, tìm λ bằng <span class="fml">det(A − λI) = 0</span>. Ma trận đối xứng: mọi λ là số thực, các v riêng vuông góc nhau. Luật det(A<sup>T</sup>) = det(A) ở mục 1.7 cho thêm: A<sup>T</sup> có cùng trị riêng với A, vì det(A<sup>T</sup> − λI) = det((A − λI)<sup>T</sup>) = det(A − λI) — nhưng vector riêng thì thường khác.</div></div>
+          <div class="r-math"><div class="lbl">Toán</div><div class="v"><span class="fml">Av = λv</span>, tìm λ bằng <span class="fml">det(A − λI) = 0</span>. Ma trận đối xứng: mọi λ là số thực, và luôn chọn được các v riêng vuông góc nhau (hai λ khác nhau thì hai v riêng chắc chắn vuông góc). Luật det(A<sup>T</sup>) = det(A) ở mục 1.7 cho thêm: A<sup>T</sup> có cùng trị riêng với A, vì det(A<sup>T</sup> − λI) = det((A − λI)<sup>T</sup>) = det(A − λI) — nhưng vector riêng thì thường khác.</div></div>
           <div class="r-use"><div class="lbl">Dùng ở đâu</div><div class="v"><b>PCA</b> (mục sau) là bài toán trị riêng của ma trận hiệp phương sai. Trong huấn luyện mạng, trị riêng của <b>Hessian</b> (ma trận độ cong, mục 2.4) cho biết mặt lỗi cong bao nhiêu theo từng hướng — chúng chênh nhau càng xa thì gradient descent càng đi zíc-zắc.</div></div>
         </div>
 
@@ -1643,7 +1643,9 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </div>
         </div>
 
-        <p>Yên ngựa trong mô hình trên là lý do mục 2.3 phải hẹn tới đây: với hai biến, &ldquo;độ cong&rdquo; không còn là một con số. Nó là một bảng 2×2 gọi là <b>ma trận Hessian</b>: ô hàng i cột j là đạo hàm riêng bậc hai, lấy theo biến i rồi theo biến j. Bảng ấy đối xứng (mục 1.7), nên có hai trị riêng thực (mục 1.9) — độ cong theo hai hướng chính. Cả hai dương thì là đáy; cả hai âm thì là đỉnh; một dương một âm thì là yên ngựa. Với x² − y², Hessian là [[2, 0], [0, −2]], trị riêng 2 và −2, nên là yên ngựa. Đừng chỉ nhìn hai trục: x² + 3xy + y² cong lên theo cả trục x lẫn trục y, vậy mà Hessian [[2, 3], [3, 2]] có trị riêng 5 và −1. Đi dọc đường y = −x thì nó cong xuống, nên vẫn là yên ngựa.</p>
+        <p>Yên ngựa trong mô hình trên là lý do mục 2.3 phải hẹn tới đây: với hai biến, &ldquo;độ cong&rdquo; không còn là một con số. Nó là một bảng 2×2 gọi là <b>ma trận Hessian</b>: ô hàng i cột j là đạo hàm riêng bậc hai, lấy một lần theo biến i và một lần theo biến j, viết ∂²f/∂x<sub>i</sub>∂x<sub>j</sub>. Với f = x² + 3xy + y²: ∂f/∂x = 2x + 3y, lấy tiếp theo x được 2, theo y được 3; ∂f/∂y = 3x + 2y, lấy tiếp theo x được 3, theo y được 2. Hessian là [[2, 3], [3, 2]]. Hai số 3 bằng nhau không phải tình cờ: với hàm có đạo hàm bậc hai liên tục — mọi hàm mất mát trơn đều thế — lấy theo x rồi y hay theo y rồi x đều ra một số. Nên bảng ấy đối xứng (mục 1.7), và có hai trị riêng thực (mục 1.9): độ cong theo hai hướng chính.</p>
+
+        <p>Phép thử chỉ dùng tại chỗ <b>∇f = 0</b>. Ở đó: cả hai trị riêng dương thì là đáy; cả hai âm thì là đỉnh; một dương một âm thì là yên ngựa; có trị riêng bằng 0 thì chưa kết luận được, y như f″ = 0 ở mục 2.3. Chỗ ∇f ≠ 0 thì chưa phẳng, nên không là đáy, đỉnh hay yên ngựa, dù Hessian ở đó có dấu gì. Với x² − y², ∇f = 0 tại gốc, Hessian là [[2, 0], [0, −2]], trị riêng 2 và −2, nên gốc là yên ngựa. Đừng chỉ nhìn hai trục: x² + 3xy + y² cũng phẳng tại gốc và cong lên theo cả trục x lẫn trục y, vậy mà Hessian [[2, 3], [3, 2]] có trị riêng 2 + 3 = 5 và 2 − 3 = −1 (dạng [[a, b], [b, a]] ở mục 1.10). Đi dọc đường y = −x thì nó cong xuống, nên gốc vẫn là yên ngựa.</p>
 
         <div class="tri">
           <div class="r-play"><div class="lbl">Trò chơi</div><div class="v">Trên đồi, thử một bước sang đông rồi một bước lên bắc. Hai kết quả ấy ghép thành <b>một mũi tên chỉ hướng lên dốc nhất</b>. Muốn xuống thì đi ngược mũi tên.</div></div>
@@ -2103,7 +2105,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="ask">Đo chiều cao một nghìn nam thanh niên cùng tuổi. <span>Vì sao vẽ ra lại thành hình cái chuông, chứ không phải hình gì khác?</span></p>
 
-        <p class="lede">Vì chiều cao là <b>tổng của rất nhiều chuyện nhỏ</b> — hàng trăm gen, dinh dưỡng, giấc ngủ, bệnh tật lúc bé. Mỗi chuyện đẩy lên hoặc kéo xuống một chút. Cộng nhiều thứ nhỏ độc lập lại thì ra cái chuông, bất kể từng thứ nhỏ có hình gì — miễn là mỗi thứ có <b>phương sai hữu hạn</b>. Đó là định lý giới hạn trung tâm ở mục 4.2, và nó là lý do sâu xa của cả mục này.</p>
+        <p class="lede">Vì chiều cao là <b>tổng của rất nhiều chuyện nhỏ</b> — hàng trăm gen, dinh dưỡng, giấc ngủ, bệnh tật lúc bé. Mỗi chuyện đẩy lên hoặc kéo xuống một chút. Cộng nhiều thứ nhỏ độc lập lại thì ra cái chuông, bất kể từng thứ nhỏ có hình gì — miễn là mỗi thứ có <b>phương sai hữu hạn</b> và <b>không thứ nào lấn át cả tổng</b>. Đó là định lý giới hạn trung tâm ở mục 4.2, và nó là lý do sâu xa của cả mục này.</p>
 
         <p>Cái chuông chỉ cần <b>hai con số</b> là mô tả xong: <b>μ</b> (đỉnh ở đâu) và <b>σ</b> (chuông béo hay gầy). Và khi có hai con số ấy, mọi câu hỏi &ldquo;bao nhiêu phần trăm nằm trong khoảng này&rdquo; đều trả lời được:</p>
 
@@ -2236,7 +2238,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="lede">Cả thống kê nằm trong ví dụ nồi canh. <b>Nồi canh</b> = tổng thể, <b>thìa canh</b> = mẫu, và <b>khuấy</b> = lấy mẫu ngẫu nhiên. Không khuấy mà múc trên mặt thì thìa ấy không nói được gì về nồi — và <b>thìa to hơn cũng không cứu được</b> nếu vẫn múc mãi một chỗ.</p>
 
-        <p><b>Luật số lớn</b> nói: mẫu càng lớn thì trung bình mẫu càng sát trung bình thật. Tung xu 10 lần có thể ra 7 ngửa (70%); tung 10.000 lần thì tỉ lệ ngửa gần như chắc chắn nằm quanh 50%. Nhưng luật ấy có <b>một điều kiện</b> mà thực tế phá vỡ liên tục: mẫu phải <b>đại diện</b>.</p>
+        <p><b>Luật số lớn</b> nói: mẫu càng lớn thì trung bình mẫu càng sát trung bình thật. Tung xu 10 lần có thể ra 7 ngửa (70%); tung 10.000 lần thì tỉ lệ ngửa gần như chắc chắn nằm quanh 50%. Nhưng luật ấy chỉ hứa trung bình mẫu tiến về trung bình của <i>chỗ bạn múc</i> (các lần múc độc lập, cùng một chỗ, và trung bình ở đó hữu hạn). Nó là trung bình của cả nồi chỉ khi mẫu <b>đại diện</b> — điều thực tế phá vỡ liên tục.</p>
 
         <div class="box mis">
           <p class="box__k">Thiên lệch lấy mẫu không phải cứ tăng cỡ mẫu là hết</p>
@@ -2334,7 +2336,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </div>
         </div>
 
-        <div class="take"><div class="k">Mang theo</div><p>MLE = <b>chọn tham số làm dữ liệu đang thấy đỡ bất ngờ nhất</b>. Đây là chỗ &ldquo;huấn luyện một mô hình&rdquo; có định nghĩa toán học, không phải chỉ là một quy trình.</p></div>
+        <div class="take"><div class="k">Mang theo</div><p>MLE = <b>chọn tham số làm dữ liệu đang thấy đỡ bất ngờ nhất</b>. Đây là cách phổ biến nhất để biến &ldquo;huấn luyện một mô hình&rdquo; từ một quy trình thành một bài toán có định nghĩa; mục 4.5 thêm niềm tin ban đầu vào.</p></div>
       </section>
 
       <section id="s-mle-ml" class="ch-p">
@@ -2369,7 +2371,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p>Cái được: bạn thôi phải nhớ &ldquo;hồi quy dùng MSE, phân loại dùng log-loss&rdquo; như hai điều luật. Bạn chỉ cần hỏi <b>&ldquo;dữ liệu của tôi sinh ra kiểu gì?&rdquo;</b> và hàm mất mát tự rơi ra. Số thực có nhiễu chuẩn, cùng độ rộng ở mọi điểm → bình phương. Nhiễu cũng đối xứng nhưng đuôi dày hơn, kiểu Laplace (thỉnh thoảng lệch rất xa) → trị tuyệt đối, tức MAE. Có/không → log-loss. Dữ liệu đếm (số cuộc gọi mỗi giờ) → hợp lý Poisson, và hàm mất mát trông khác cả hai cái trên. Đó là cách người ta chọn hàm mất mát cho một bài toán mới, chứ không phải bằng cách thử.</p>
 
-        <div class="take"><div class="k">Mang theo</div><p>Hàm mất mát <b>không phải quy ước</b> — nó là <b>giả định của bạn về cách dữ liệu sinh ra</b>, viết lại dưới dạng thứ để đi giảm. Đổi giả định thì hàm mất mát đổi theo.</p></div>
+        <div class="take"><div class="k">Mang theo</div><p>MSE và log-loss <b>không phải quy ước</b> — chúng là <b>giả định của bạn về cách dữ liệu sinh ra</b>, viết lại dưới dạng thứ để đi giảm. Đổi giả định thì hàm mất mát đổi theo. Cũng có hàm mất mát chọn vì lý do khác, như hinge loss của SVM; khi ấy nó là một lựa chọn thiết kế.</p></div>
       </section>
 
       <section id="s-map" class="ch-p">
@@ -2398,7 +2400,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p>Vậy nên λ trong dòng &ldquo;<span class="mono">Ridge(alpha=1.0)</span>&rdquo; không phải một núm tuỳ tiện. Nó là <b>độ mạnh của niềm tin</b> bạn đặt vào trước khi xem dữ liệu, tính bằng đơn vị &ldquo;bao nhiêu dữ liệu thì đủ để tôi đổi ý&rdquo;. Và nó chữa đúng cái bệnh ở mục 1.8: ma trận điều kiện xấu, trọng số nổ to và đổi dấu loạn xạ. Muốn thấy λ làm dịu một đường cong đang học thuộc lòng, kéo thanh λ ở <a href="machine-learning-101.html#s-overfit">Machine Learning 101, chương 5</a>.</p>
 
-        <div class="take"><div class="k">Mang theo</div><p><b>MAP = MLE + niềm tin ban đầu.</b> Mọi số hạng chính quy hoá là một niềm tin ban đầu viết bằng toán, và λ là độ mạnh của niềm tin đó.</p></div>
+        <div class="take"><div class="k">Mang theo</div><p><b>MAP = MLE + niềm tin ban đầu.</b> Ridge và Lasso là niềm tin ban đầu viết bằng toán, và λ là độ mạnh của niềm tin đó. Không phải phép chính quy hoá nào cũng đọc được như thế: số hạng phạt phải là −log của một phân phối, và không được phụ thuộc dữ liệu.</p></div>
       </section>
 
       <section id="s-ci" class="ch-p">
@@ -2472,7 +2474,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <tr><td><b>Giả thuyết đối</b> H₁</td><td>&ldquo;Hai nút khác nhau thật.&rdquo;</td></tr>
               <tr><td><b>p-value</b></td><td>Nếu H₀ đúng, xác suất thấy chênh lệch <b>lớn bằng hoặc hơn</b> cái đã thấy. Ở đây <b>0,035</b> — đếm cả hai phía, vì H₁ chỉ nói &ldquo;khác nhau&rdquo;, không nói bản nào hơn.</td></tr>
               <tr><td><b>Mức ý nghĩa</b> α</td><td>Ngưỡng bạn <b>tự chọn trước</b>, thường 0,05. p &lt; α thì bác bỏ H₀.</td></tr>
-              <tr><td><b>Sai lầm loại I</b></td><td>Bác bỏ H₀ khi H₀ đúng — <b>báo động giả</b>. Xác suất đúng bằng α.</td></tr>
+              <tr><td><b>Sai lầm loại I</b></td><td>Bác bỏ H₀ khi H₀ đúng — <b>báo động giả</b>. Xác suất tối đa là α: đúng bằng α khi thống kê kiểm định liên tục và tính chính xác; với dữ liệu đếm như tung xu thì thường thấp hơn.</td></tr>
               <tr><td><b>Sai lầm loại II</b></td><td>Không bác bỏ H₀ khi H₁ đúng — <b>bỏ sót</b>. Xác suất gọi là β.</td></tr>
               <tr><td><b>Độ mạnh</b></td><td>1 − β: khả năng phát hiện được cái khác biệt <i>nếu nó có thật</i>. Tăng cỡ mẫu là cách tăng nó.</td></tr>
             </tbody>
@@ -2563,7 +2565,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="mini ch-c"><p class="t">4 · Chỉ cần độ nghiêng dưới chân</p><p class="d">Không ai thấy toàn bộ mặt lỗi. Đo dốc tại chỗ đang đứng, bước ngược lại, lặp. Đó là cách gần như mọi mạng nơ-ron hôm nay được huấn luyện.</p></div>
           <div class="mini ch-c"><p class="t">5 · Chuỗi thì nhân, và phép nhân ấy nguy hiểm</p><p class="d">Nhiều khâu nối tiếp thì đạo hàm <b>nhân dồn</b>. Nhiều số nhỏ hơn 1 → <b>tan biến</b>; nhiều số lớn hơn 1 → <b>nổ</b>. ReLU, khởi tạo trọng số đúng thang, kết nối tắt đều sinh ra để giữ phép nhân ấy quanh 1.</p></div>
           <div class="mini ch-p"><p class="t">6 · P(A|B) không phải P(B|A)</p><p class="d">&ldquo;Xét nghiệm đúng 99%&rdquo; và &ldquo;tôi có bệnh không&rdquo; là hai câu khác nhau, cách nhau <b>hơn mười lần</b> khi bệnh hiếm. Nối hai chiều cần <b>tỉ lệ tiên nghiệm</b> và tỉ lệ dương giả, và với lớp hiếm thì tiên nghiệm quyết định gần như toàn bộ.</p></div>
-          <div class="mini ch-p"><p class="t">7 · Hàm mất mát là một giả định</p><p class="d">MSE ⟸ giả định nhiễu chuẩn. Log-loss ⟸ giả định kết quả có/không. Chính quy hoá ⟸ niềm tin trọng số nhỏ. Không cái nào là quy ước — đổi giả định thì công thức đổi theo.</p></div>
+          <div class="mini ch-p"><p class="t">7 · Hàm mất mát quen dùng là một giả định</p><p class="d">MSE ⟸ giả định nhiễu chuẩn, cùng độ rộng ở mọi điểm. Log-loss ⟸ giả định kết quả có/không. Ridge ⟸ niềm tin trọng số nhỏ. Ba cái ấy không phải quy ước — đổi giả định thì công thức đổi theo.</p></div>
           <div class="mini ch-p"><p class="t">8 · Độ chính xác đắt theo bình phương</p><p class="d">Sai số của trung bình là <b>σ/√n</b>. Muốn hẹp một nửa phải lấy mẫu <b>gấp bốn</b>. Và mẫu lớn chỉ chữa <b>nhiễu</b>, không chữa <b>múc sai chỗ</b>.</p></div>
         </div>
       </section>
@@ -2583,7 +2585,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <tr><td>Ma trận nào cũng có vector riêng</td><td>Ma trận <b>xoay</b> (góc khác 0° và 180°) không có vector riêng thực; ma trận <b>trượt</b> chỉ có một hướng. Ma trận <b>đối xứng</b> thì luôn đủ và vuông góc.</td></tr>
               <tr><td>PCA chọn ra các cột quan trọng</td><td>PCA <b>trộn</b> mọi cột thành trục mới. Nó cũng không biết bạn định dự đoán gì, nên có thể bỏ đúng trục bạn cần.</td></tr>
               <tr><td>Đạo hàm là &ldquo;h rất bé&rdquo;</td><td>Là <b>giới hạn</b> — cái đích mà mọi phép đo tiến tới. Khác nhau ở chỗ giới hạn là một con số xác định, còn &ldquo;h rất bé&rdquo; thì tuỳ bé bao nhiêu.</td></tr>
-              <tr><td>f′ = 0 nghĩa là đáy</td><td>Có thể là <b>đỉnh</b>, <b>điểm uốn nằm ngang</b> hoặc <b>yên ngựa</b>. Một biến thì xem <b>độ cong</b> f″ (bằng 0 thì chưa kết luận); nhiều biến thì xem dấu các trị riêng của <b>Hessian</b> — và trong mạng nơ-ron thì yên ngựa nhiều hơn đáy.</td></tr>
+              <tr><td>f′ = 0 nghĩa là đáy</td><td>Có thể là <b>đỉnh</b>, <b>điểm uốn nằm ngang</b> hoặc <b>yên ngựa</b>. Một biến thì xem <b>độ cong</b> f″ (bằng 0 thì chưa kết luận); nhiều biến thì xem dấu các trị riêng của <b>Hessian</b> (có trị riêng bằng 0 thì cũng chưa kết luận) — và trong mạng nơ-ron thì yên ngựa nhiều hơn đáy.</td></tr>
               <tr><td>Sai số tăng thì mô hình sai</td><td>Nghi <b>α quá lớn</b> trước. Trên f = x², hệ số (1 − 2α) tụt dưới −1 (tức α &gt; 1) là phân kỳ; nói chung, α vượt 2 chia cho độ cong lớn nhất của mặt lỗi là phân kỳ — mặt càng hẹp thì ngưỡng càng thấp (mục 2.5).</td></tr>
               <tr><td>PDF tại một điểm là xác suất</td><td>Là <b>mật độ</b>, có thể lớn hơn 1. Xác suất là <b>diện tích</b>, nên cần một khoảng.</td></tr>
               <tr><td>&ldquo;Và&rdquo; thì luôn nhân</td><td>Chỉ khi <b>độc lập</b>. Cái luôn đúng là P(A)·P(B|A). Giả định độc lập sai là lỗi tốn tiền nhất trong xác suất ứng dụng.</td></tr>
@@ -2616,7 +2618,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                 <tr><td>Chuẩn L1</td><td>|x₁| + |x₂| + &hellip;</td><td>Đi theo phố. Vector (3,4) dài 7.</td></tr>
                 <tr><td>Nhân vô hướng</td><td>Σ uᵢvᵢ = ‖u‖‖v‖cos θ</td><td>Đo cùng hướng. Bằng 0 = vuông góc.</td></tr>
                 <tr><td>Chuyển vị</td><td>(Aᵀ)ᵢⱼ = Aⱼᵢ &nbsp;·&nbsp; (AB)ᵀ = BᵀAᵀ</td><td>Lật qua đường chéo. Cỡ m×n thành n×m. Nhân rồi lật thì <b>đảo thứ tự</b>.</td></tr>
-                <tr><td>Đối xứng</td><td>Aᵀ = A</td><td>Lật xong y nguyên. Trị riêng đều thực, vector riêng vuông góc. Hiệp phương sai luôn thế.</td></tr>
+                <tr><td>Đối xứng</td><td>Aᵀ = A</td><td>Lật xong y nguyên. Trị riêng đều thực, chọn được vector riêng vuông góc. Hiệp phương sai luôn thế.</td></tr>
                 <tr><td>Hạng</td><td>số trụ trong dạng bậc thang</td><td>Số tin tức thật sự, sau khi bỏ những dòng nhắc lại.</td></tr>
                 <tr><td>Trị riêng</td><td>det(A − λI) = 0</td><td>Mũi tên riêng bị nhân lên bấy nhiêu lần dọc theo đường của nó — âm là bị lật.</td></tr>
                 <tr><td>PCA</td><td>vector riêng của ma trận hiệp phương sai</td><td>Quay trục về hướng dữ liệu tãi rộng nhất, rồi bỏ hướng hẹp.</td></tr>
@@ -2672,7 +2674,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                 <tr><td>Giới hạn trung tâm</td><td>trung bình mẫu ≈ chuẩn, tâm μ, độ lệch chuẩn σ/√n</td><td>Dữ liệu gốc hình gì cũng được. Độ chính xác đắt theo bình phương.</td></tr>
                 <tr><td>Sai số chuẩn</td><td>SE = s/√n</td><td>Trung bình mẫu thường lệch khỏi trung bình thật bao nhiêu.</td></tr>
                 <tr><td>MLE</td><td>chọn θ làm P(dữ liệu|θ) lớn nhất</td><td>Tham số nào làm dữ liệu đang thấy đỡ bất ngờ nhất.</td></tr>
-                <tr><td>MAP</td><td>hợp lý × tiên nghiệm</td><td>Có ý kiến trước khi xem dữ liệu. Chính là chính quy hoá.</td></tr>
+                <tr><td>MAP</td><td>hợp lý × tiên nghiệm</td><td>Có ý kiến trước khi xem dữ liệu. Ridge, Lasso chính là nó.</td></tr>
                 <tr><td>L2 / Ridge</td><td>+ λΣw²</td><td>Tin trọng số nhỏ. Mọi w co lại.</td></tr>
                 <tr><td>L1 / Lasso</td><td>+ λΣ|w|</td><td>Tin w nhỏ, dồn sát 0. Nhiều w về đúng 0.</td></tr>
                 <tr><td>Khoảng tin cậy 95%</td><td>x̄ ± 1,96·s/√n</td><td>n nhỏ thì đổi 1,96 sang t*. Lời hứa về quy trình, không về khoảng đang cầm.</td></tr>
@@ -4815,7 +4817,7 @@ var GLOSS = [
 ['vector','vector','Một danh sách số có thứ tự, hình dung được như mũi tên &ldquo;sang phải bao nhiêu, lên trên bao nhiêu&rdquo;.','#s-vector',''],
 ['norm','chuẩn','Độ dài của vector. L2 là bay thẳng (√Σx²), L1 là đi theo phố (Σ|x|).','#s-vector','chuẩn L1|chuẩn L2'],
 ['transpose','chuyển vị','Lật ma trận qua đường chéo chính: ô ở hàng i cột j sang hàng j cột i, nên cỡ m×n thành n×m. Viết Aᵀ. Nhân rồi lật thì ĐẢO thứ tự: (AB)ᵀ = BᵀAᵀ.','#s-transpose','chuyển vị'],
-['symmetric matrix','ma trận đối xứng','Ma trận vuông bằng đúng chuyển vị của chính nó: Aᵀ = A. Mọi trị riêng là số thực và các vector riêng vuông góc nhau — chỗ PCA dựa vào. Ma trận hiệp phương sai luôn đối xứng.','#s-transpose','ma trận đối xứng'],
+['symmetric matrix','ma trận đối xứng','Ma trận vuông bằng đúng chuyển vị của chính nó: Aᵀ = A. Mọi trị riêng là số thực và luôn chọn được một hệ vector riêng vuông góc nhau — chỗ PCA dựa vào. Ma trận hiệp phương sai luôn đối xứng.','#s-transpose','ma trận đối xứng'],
 ['dot product','nhân vô hướng','Nhân từng cặp thành phần rồi cộng. Đo &ldquo;cùng hướng tới mức nào&rdquo;. Bằng 0 = vuông góc.','#s-dot','nhân vô hướng'],
 ['cosine similarity','độ tương đồng cosine','Nhân vô hướng chia cho hai độ dài. Thước &ldquo;hai thứ giống nhau bao nhiêu&rdquo; dùng khắp tìm kiếm và gợi ý.','#s-dot','độ tương đồng cosine'],
 ['orthogonal','vuông góc','Nhân vô hướng bằng 0. Trong dữ liệu (đã trừ trung bình): hai cột vuông góc là tương quan bằng 0 — không có quan hệ THEO ĐƯỜNG THẲNG, chứ chưa chắc là không liên quan (mục 3.10).','#s-dot','vuông góc'],
@@ -4854,11 +4856,11 @@ var GLOSS = [
 ['divergence','phân kỳ','Sai số TĂNG theo cấp số nhân rồi ra NaN. Nguyên nhân số một: α quá lớn.','#s-gd','phân kỳ'],
 ['stochastic gradient descent','tụt dốc ngẫu nhiên','Tính gradient trên một nhúm nhỏ dữ liệu thay vì cả tập: nhanh hơn nhiều, đường đi lắc hơn.','#s-gd','SGD'],
 ['Newton’s method','phương pháp Newton','Dùng cả độ nghiêng và độ cong: x ← x − f′/f″. Hội tụ cực nhanh khi đã ở gần đáy và mặt đất cong lên, nhưng cần ma trận d×d, nên không lên nổi mạng lớn.','#s-newton','phương pháp Newton'],
-['Hessian','ma trận Hessian','Bảng mọi đạo hàm riêng bậc hai, luôn đối xứng. Dấu các trị riêng phân biệt đáy (đều dương), đỉnh (đều âm), yên ngựa (có cả hai); tỉ số giữa chúng cho biết tụt dốc sẽ đi thẳng hay zíc-zắc.','#s-partial','Hessian'],
+['Hessian','ma trận Hessian','Bảng mọi đạo hàm riêng bậc hai ∂²f/∂xᵢ∂xⱼ, đối xứng khi các đạo hàm bậc hai liên tục (mọi hàm mất mát trơn đều thế). Tại chỗ gradient bằng 0, dấu các trị riêng phân biệt đáy (đều dương), đỉnh (đều âm), yên ngựa (có cả hai); có trị riêng bằng 0 thì chưa kết luận được. Tỉ số giữa chúng cho biết tụt dốc sẽ đi thẳng hay zíc-zắc.','#s-partial','Hessian'],
 ['sigmoid','hàm sigmoid','Bóp mọi số thực vào khoảng 0–1. Đạo hàm σ(1−σ), tối đa đúng 0,25 tại x = 0.','#s-rules','sigmoid'],
-['ReLU','hàm ReLU','max(0, x). Đạo hàm bằng 1 ở nửa dương nên không làm tan biến gradient. Tại 0 thì không có đạo hàm, thư viện quy ước lấy 0.','#s-rules','ReLU'],
-['loss function','hàm mất mát','Số đo &ldquo;sai bao nhiêu&rdquo; để đi giảm. Không phải quy ước — nó là giả định của bạn về cách dữ liệu sinh ra.','#s-losses','hàm mất mát'],
-['mean squared error','sai số bình phương trung bình','Trung bình của (đoán − đúng)². Rơi ra từ giả định nhiễu phân phối chuẩn.','#s-losses','MSE|sai số bình phương'],
+['ReLU','hàm ReLU','max(0, x). Đạo hàm bằng 1 ở nửa dương nên không co gradient như sigmoid; ở nửa âm nó bằng 0, và nơ-ron kẹt ở đó với mọi đầu vào thì thôi học (dying ReLU). Tại 0 thì không có đạo hàm, thư viện quy ước lấy 0.','#s-rules','ReLU'],
+['loss function','hàm mất mát','Số đo &ldquo;sai bao nhiêu&rdquo; để đi giảm. MSE và log-loss không phải quy ước mà là giả định về cách dữ liệu sinh ra; vài hàm khác, như hinge loss, là lựa chọn thiết kế.','#s-losses','hàm mất mát'],
+['mean squared error','sai số bình phương trung bình','Trung bình của (đoán − đúng)². Rơi ra từ giả định nhiễu phân phối chuẩn, cùng độ rộng ở mọi điểm.','#s-losses','MSE|sai số bình phương'],
 ['log loss','log-loss','Hàm mất mát cho bài toán có/không: −[y ln p + (1 − y) ln(1 − p)]. Thư viện gọi là binary cross-entropy. Rơi ra từ giả định mỗi nhãn là một lần tung xu thiên vị.','#s-losses','log-loss|cross-entropy'],
 ['linear regression','hồi quy tuyến tính','Đoán một con số bằng tổng có trọng số của các đặc trưng: ŷ = w₁x₁ + w₂x₂ + … + b. Hàm mất mát quen dùng là MSE.','#s-losses','hồi quy tuyến tính'],
 ['logistic regression','hồi quy logistic','Đoán xác suất có/không: đưa tổng có trọng số qua sigmoid. Hàm mất mát là log-loss.','#s-losses','hồi quy logistic'],
@@ -4891,22 +4893,22 @@ var GLOSS = [
 
 /* ── khoá 3, nửa sau: thống kê ────────────────────────────────────────────── */
 ['population','tổng thể','Toàn bộ nhóm bạn muốn nói về. Cái nồi canh.','#s-sample','tổng thể'],
-['law of large numbers','luật số lớn','Mẫu càng lớn thì trung bình mẫu càng sát trung bình thật — với điều kiện mẫu đại diện.','#s-sample','luật số lớn'],
+['law of large numbers','luật số lớn','Các lần lấy độc lập, cùng phân phối, kỳ vọng hữu hạn thì mẫu càng lớn, trung bình mẫu càng sát trung bình của chỗ đang lấy mẫu. Đó là trung bình tổng thể chỉ khi mẫu đại diện.','#s-sample','luật số lớn'],
 ['sampling bias','thiên lệch lấy mẫu','Múc sai chỗ. Tăng cỡ mẫu KHÔNG chữa được, chỉ làm bạn tự tin hơn vào một câu sai.','#s-sample','thiên lệch lấy mẫu'],
 ['central limit theorem','định lý giới hạn trung tâm','Trung bình của n mẫu độc lập tiến về phân phối chuẩn với độ lệch σ/√n, bất kể dữ liệu gốc hình gì — miễn là phương sai hữu hạn (Cauchy thì không).','#s-clt','định lý giới hạn trung tâm'],
 ['standard error','sai số chuẩn','σ/√n — trung bình mẫu thường lệch khỏi trung bình thật bao nhiêu. Khác với σ của dữ liệu.','#s-ci','sai số chuẩn'],
-['maximum likelihood estimation','ước lượng hợp lý cực đại','MLE — chọn tham số làm dữ liệu đang thấy trở nên đỡ bất ngờ nhất. Định nghĩa toán học của &ldquo;huấn luyện&rdquo;.','#s-mle','MLE|ước lượng hợp lý cực đại'],
+['maximum likelihood estimation','ước lượng hợp lý cực đại','MLE — chọn tham số làm dữ liệu đang thấy trở nên đỡ bất ngờ nhất. Cách phổ biến nhất để định nghĩa &ldquo;huấn luyện&rdquo; bằng toán.','#s-mle','MLE|ước lượng hợp lý cực đại'],
 ['likelihood','độ hợp lý','P(dữ liệu | tham số), nhìn như hàm của THAM SỐ trong khi dữ liệu đã cố định. Không phải xác suất của tham số.','#s-mle','độ hợp lý'],
 ['log-likelihood','log-hợp-lý','Log của độ hợp lý: biến dây phép nhân thành phép cộng, dễ đạo hàm và không tràn số.','#s-mle','log-hợp-lý'],
-['maximum a posteriori','ước lượng hậu nghiệm cực đại','MAP — MLE cộng thêm một niềm tin ban đầu. Mọi số hạng chính quy hoá là một MAP viết lại.','#s-map','MAP'],
-['regularization','chính quy hoá','Cộng thêm hình phạt để trọng số đừng quá to. Là niềm tin ban đầu về trọng số, viết bằng toán.','#s-map','chính quy hoá'],
+['maximum a posteriori','ước lượng hậu nghiệm cực đại','MAP — MLE cộng thêm một niềm tin ban đầu. Ridge (L2) và Lasso (L1) là hai MAP viết lại; không phải số hạng chính quy hoá nào cũng vậy.','#s-map','MAP'],
+['regularization','chính quy hoá','Cộng thêm hình phạt để trọng số đừng quá to. Ridge và Lasso là niềm tin ban đầu về trọng số, viết bằng toán.','#s-map','chính quy hoá'],
 ['confidence interval','khoảng tin cậy','x̄ ± t*·s/√n. &ldquo;95%&rdquo; là lời hứa về QUY TRÌNH lặp lại, không phải về khoảng đang cầm trong tay.','#s-ci','khoảng tin cậy'],
 ['t-distribution','phân phối t','Giống chuẩn nhưng đuôi dày hơn, dùng khi n nhỏ vì chính s cũng có nhiễu. Với n = 5 thì hệ số là 2,776 thay vì 1,96.','#s-ci','phân phối t'],
 ['hypothesis testing','kiểm định giả thuyết','Giả vờ &ldquo;chẳng có gì xảy ra&rdquo;, rồi xem dữ liệu đã thấy lạ tới mức nào trong cái thế giới giả vờ đó.','#s-test','kiểm định giả thuyết'],
 ['null hypothesis','giả thuyết không','H₀ — &ldquo;không có khác biệt, chênh lệch chỉ do may rủi&rdquo;. Cái ta giả vờ tin để tính.','#s-test','giả thuyết không'],
 ['p-value','p-value','P(thấy dữ liệu lạ thế này hoặc hơn | H₀ đúng). KHÔNG phải xác suất H₀ đúng, và không nói hiệu ứng lớn hay nhỏ.','#s-test','p-value'],
-['significance level','mức ý nghĩa','α — ngưỡng tự chọn TRƯỚC, thường 0,05. Cũng chính là tỉ lệ báo động giả bạn chấp nhận.','#s-test','mức ý nghĩa'],
-['type I error','sai lầm loại I','Báo động giả: bác bỏ H₀ khi H₀ đúng. Xác suất bằng đúng α.','#s-test','sai lầm loại I'],
+['significance level','mức ý nghĩa','α — ngưỡng tự chọn TRƯỚC, thường 0,05. Cũng là trần của tỉ lệ báo động giả bạn chấp nhận.','#s-test','mức ý nghĩa'],
+['type I error','sai lầm loại I','Báo động giả: bác bỏ H₀ khi H₀ đúng. Xác suất tối đa là α (đúng bằng α khi thống kê kiểm định liên tục).','#s-test','sai lầm loại I'],
 ['type II error','sai lầm loại II','Bỏ sót: không bác bỏ H₀ trong khi thật ra có khác biệt. Xác suất gọi là β.','#s-test','sai lầm loại II'],
 ['statistical power','độ mạnh thống kê','1 − β: khả năng phát hiện được khác biệt NẾU nó có thật. Tăng cỡ mẫu là cách tăng nó.','#s-test','độ mạnh thống kê'],
 ['effect size','cỡ hiệu ứng','Khác biệt LỚN bao nhiêu, đo bằng đơn vị thật. Đây là con số p-value không nói.','#s-traps','cỡ hiệu ứng'],
