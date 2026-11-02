@@ -1912,7 +1912,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </table>
         </div>
 
-        <p><b>Vì sao trung bình điều hoà chứ không phải trung bình cộng:</b> vì nó <i>trừng phạt sự mất cân bằng</i>. Precision 100% và recall 0% cho trung bình cộng 50% — nghe như mô hình dùng được, trong khi nó vô dụng. F1 của cặp đó là <b>0</b>. Trung bình điều hoà luôn bị kéo về phía con số nhỏ hơn, và đó đúng là hành vi ta muốn.</p>
+        <p><b>Vì sao trung bình điều hoà chứ không phải trung bình cộng:</b> vì nó <i>trừng phạt sự mất cân bằng</i>. Lấy ví dụ của Ng: một mô hình luôn báo dương, trên dữ liệu chỉ có 2% ca dương. Recall của nó là 100% (không sót ca nào), precision chỉ 2%. Trung bình cộng là 51% — nghe như mô hình dùng được, trong khi nó vô dụng. F1 của cặp đó chỉ là <b>3,9%</b> (2 × 1 × 0,02 / 1,02 ≈ 0,039). Trung bình điều hoà luôn bị kéo về phía con số nhỏ hơn, và đó đúng là hành vi ta muốn.</p>
 
         <div class="box note">
           <p class="box__k">Một ví dụ có số, chạy hết</p>
@@ -2265,12 +2265,12 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="fx">
           <div class="fx__line sm" data-fx>
-            <span class="tm t-m" data-n="Đầu ra sau khối hai lớp.">a<sup>[l+2]</sup></span><span class="op">=</span><span class="tm t-m" data-n="Hàm kích hoạt, thường là ReLU.">g(</span><span class="tm t-m" data-n="Phần tính toán bình thường của hai lớp: nhân trọng số, cộng độ chệch.">z<sup>[l+2]</sup></span><span class="op">+</span><span class="tm t-m" data-n="<b>Đường tắt.</b> Đầu vào của khối được cộng thẳng vào đầu ra, không qua trọng số nào. Nếu W và b của hai lớp giữa bị regularize về 0, biểu thức thành g(a) = a — <b>hàm đồng nhất, học được miễn phí</b>. Nên thêm khối này vào một mạng đang chạy tốt thì <i>không thể làm nó tệ đi</i>: xấu nhất là khối đó không làm gì.">a<sup>[l]</sup></span><span class="op">)</span>
+            <span class="tm t-m" data-n="Đầu ra sau khối hai lớp.">a<sup>[l+2]</sup></span><span class="op">=</span><span class="tm t-m" data-n="Hàm kích hoạt, thường là ReLU.">g(</span><span class="tm t-m" data-n="Phần tính toán bình thường của hai lớp: nhân trọng số, cộng độ chệch.">z<sup>[l+2]</sup></span><span class="op">+</span><span class="tm t-m" data-n="<b>Đường tắt.</b> Đầu vào của khối được cộng thẳng vào đầu ra, không qua trọng số nào. Nếu W và b của hai lớp giữa bị regularize về 0, biểu thức thành g(a) = a — <b>hàm đồng nhất, học được miễn phí</b>. Nên thêm khối này vào một mạng đang chạy tốt thì <i>về lý thuyết</i> không làm sai số huấn luyện tệ đi: xấu nhất là khối đó không làm gì.">a<sup>[l]</sup></span><span class="op">)</span>
           </div>
           <p class="fx__note">Bấm vào <span class="mono">a<sup>[l]</sup></span> — đó là toàn bộ ý tưởng của ResNet, trong một số hạng cộng thêm.</p>
         </div>
 
-        <p>Cách nói khác, cũng đúng và hay được dùng: đường tắt cho gradient một <b>đường cao tốc</b> chảy ngược thẳng về các lớp đầu, không phải nhân qua hàng chục ma trận. Bệnh gradient tan biến ở <a href="#s-init">chặng 2</a> được chữa từ gốc. Kết nối tắt sau này xuất hiện ở gần như mọi kiến trúc lớn, <b>kể cả Transformer</b>.</p>
+        <p>Cách nói khác hay gặp: đường tắt cho gradient một <b>đường cao tốc</b> chảy ngược thẳng về các lớp đầu, không phải nhân qua hàng chục ma trận. Đường ấy có thật, nhưng nó không phải lời giải của nghịch lý 56 lớp. Bài báo ResNet ghi rằng mạng 56 lớp kia đã có batch norm, và gradient của nó <b>không</b> tan biến như bệnh ở <a href="#s-init">chặng 2</a>. Cái hỏng là một <b>khó khăn tối ưu</b>: bắt nhiều lớp phi tuyến học đúng hàm đồng nhất là khó. Giả thuyết của bài báo: học phần chênh so với đồng nhất (đẩy hai lớp giữa về gần 0) thì dễ hơn. Kết nối tắt sau này xuất hiện ở gần như mọi kiến trúc lớn, <b>kể cả Transformer</b>.</p>
 
         <h3>Tích chập 1×1: chuyện nghe vô nghĩa mà lại rất hữu dụng</h3>
         <p>Bộ lọc 1×1 nhìn <i>đúng một</i> điểm ảnh — nghe như nhân với một số. Nhưng nhớ rằng bộ lọc có chiều sâu: một bộ lọc 1×1×192 thực chất là <b>một nơ-ron kết nối đầy đủ chạy trên trục kênh</b>, áp dụng ở mọi vị trí. Nó dùng để:</p>
@@ -2292,7 +2292,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p><b>Càng ít dữ liệu, càng cần con người thiết kế bằng tay.</b> Nhận dạng giọng nói có rất nhiều dữ liệu → kiến trúc đơn giản, ít mẹo. Phát hiện vật thể có ít dữ liệu gán nhãn hơn (đánh dấu khung tốn công hơn gán nhãn) → kiến trúc phức tạp hơn, nhiều thành phần thiết kế tay hơn. Đây là <b>một quy luật, không phải ngẫu nhiên</b>: khi dữ liệu không nói đủ, tri thức của con người phải bù vào. Và nó dự đoán đúng những gì xảy ra sau này — khi dữ liệu và tính toán bùng nổ, các kiến trúc <i>đơn giản hơn</i> (Transformer) đã thay thế các kiến trúc được thiết kế tinh vi.</p>
         </div>
 
-        <div class="take"><span class="k">Mang theo</span><p>Mỗi kiến trúc là một câu trả lời cho một bức tường cụ thể. Đáng nhớ nhất là ResNet: cộng thêm đường tắt để hàm đồng nhất trở nên dễ học, nhờ đó thêm lớp không bao giờ làm tệ đi. Ý tưởng ấy còn sống trong mọi mô hình lớn hôm nay.</p></div>
+        <div class="take"><span class="k">Mang theo</span><p>Mỗi kiến trúc là một câu trả lời cho một bức tường cụ thể. Đáng nhớ nhất là ResNet: cộng thêm đường tắt để hàm đồng nhất trở nên dễ học, nhờ đó thêm lớp hầu như không làm sai số huấn luyện tệ đi. Ý tưởng ấy còn sống trong mọi mô hình lớn hôm nay.</p></div>
       </section>
 
       <section id="s-detect">
@@ -2323,11 +2323,11 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <li><b>Tích chập chuyển vị</b> (transpose convolution) — phép <i>phóng to</i> có tham số học được, ngược với tích chập thường. Nó đưa bản đồ đặc trưng nhỏ trở lại kích thước ảnh gốc.</li>
           <li><b>Kết nối tắt hình chữ U</b> — đây mới là ý tưởng chính. Nhánh đi xuống nén ảnh lại (biết <i>cái gì</i>, mất <i>ở đâu</i>); nhánh đi lên phóng to trở lại. Và <b>ở mỗi tầng, đặc trưng độ phân giải cao từ nhánh xuống được nối thẳng sang nhánh lên</b>. Nhờ vậy nhánh lên có cả thông tin ngữ nghĩa (từ dưới đáy) lẫn thông tin vị trí chi tiết (từ đường tắt). Hình dạng chữ U ấy là nguồn gốc cái tên.</li>
         </ul>
-        <p>Chú ý: đây <b>lại là kết nối tắt</b>, đúng ý tưởng của ResNet nhưng dùng cho mục đích khác — ResNet nối tắt để gradient chảy được, U-Net nối tắt để <b>chi tiết không gian không bị mất</b>. Cùng một công cụ, hai bài toán.</p>
+        <p>Chú ý: đây <b>lại là kết nối tắt</b>, đúng ý tưởng của ResNet nhưng dùng cho mục đích khác — ResNet nối tắt để mạng sâu dễ tối ưu, U-Net nối tắt để <b>chi tiết không gian không bị mất</b>. Cùng một công cụ, hai bài toán.</p>
 
         <div class="box note">
           <p class="box__k">Nhận diện mẫu hình</p>
-          <p>Bốn lần trong trang này, giải pháp là "<b>nối tắt một thứ vòng qua phần giữa</b>": ResNet (gradient), U-Net (chi tiết không gian), rồi sắp tới là cổng của <a href="#s-lstm">LSTM</a> (trí nhớ xa) và <a href="#s-attn">attention</a> (thông tin từ xa trong câu). Khi bạn thấy một kiến trúc mới, hãy hỏi <i>nó nối tắt cái gì, vòng qua cái gì</i> — câu hỏi ấy thường lộ ra ý tưởng chính nhanh hơn đọc công thức.</p>
+          <p>Bốn lần trong trang này, giải pháp là "<b>rút ngắn đường đi giữa hai điểm xa nhau</b>": ResNet (mạng sâu dễ tối ưu), U-Net (chi tiết không gian), rồi sắp tới là cổng của <a href="#s-lstm">LSTM</a> (trí nhớ xa) và <a href="#s-attn">attention</a> (thông tin từ xa trong câu). Hai lần đầu là kết nối tắt đúng nghĩa; hai lần sau là cùng ý ấy dưới dạng khác. Khi bạn thấy một kiến trúc mới, hãy hỏi <i>nó rút ngắn đường nào, vòng qua cái gì</i> — câu hỏi ấy thường lộ ra ý tưởng chính nhanh hơn đọc công thức.</p>
         </div>
 
         <div class="take"><span class="k">Mang theo</span><p>Phát hiện vật thể = phân loại + bốn số toạ độ, nhân lên khắp ảnh bằng lưới, rồi dọn dẹp bằng NMS. Phân đoạn = giữ độ phân giải bằng đường tắt hình chữ U. Không có phép màu nào ở đây, chỉ có kế toán cẩn thận về việc thông tin nào bị mất ở đâu.</p></div>
@@ -2600,7 +2600,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
                 </div>
                 <div class="row"><span class="k">Đọc bảng</span><pre class="out" id="m11-mout"></pre></div>
               </div>
-              <p class="lab__f"><b>Hàng "nó" là hàng đáng nhìn nhất.</b> Truy vấn của một đại từ chỉ vật đi tìm các khoá "đồ vật", nên nó dồn trọng số về <b>sách</b> chứ không phải <b>bàn</b> — dù bàn đứng gần hơn. Đây là điều RNN rất chật vật: khoảng cách trong câu không còn quan trọng, vì attention <b>nối trực tiếp mọi cặp từ</b>. Đây cũng là lần thứ tư trong trang này lời giải là "nối tắt vòng qua phần giữa".</p>
+              <p class="lab__f"><b>Hàng "nó" là hàng đáng nhìn nhất.</b> Truy vấn của một đại từ chỉ vật đi tìm các khoá "đồ vật", nên nó dồn trọng số về <b>sách</b> chứ không phải <b>bàn</b> — dù bàn đứng gần hơn. Đây là điều RNN rất chật vật: khoảng cách trong câu không còn quan trọng, vì attention <b>nối trực tiếp mọi cặp từ</b>. Đây cũng là lần thứ tư trong trang này lời giải là "rút ngắn đường đi giữa hai điểm xa nhau".</p>
               <p class="lab__f"><b>Bật/tắt phép chia √d với d = 512</b> và xem bảng đổi thế nào: không chia thì bảng gần như <b>đen trắng hoàn toàn</b> — mỗi hàng dồn hết vào một ô. Trông có vẻ "dứt khoát", nhưng đó chính là softmax bão hoà: gradient gần 0, mạng ngừng học. Đây là ví dụ hay về chuyện <i>một hằng số chia trông vụn vặt lại quyết định mô hình huấn luyện được hay không</i>.</p>
             </div>
           </div>
@@ -2947,7 +2947,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <tr><td>Hồi quy (một số thực bất kỳ)</td><td>tuyến tính, 1 nơ-ron</td><td>Bình phương sai lệch (MSE)</td></tr>
               <tr><td>Hồi quy có ngoại lai</td><td>tuyến tính, 1 nơ-ron</td><td>Huber hoặc sai số tuyệt đối</td></tr>
               <tr><td>Phân loại nhị phân</td><td>sigmoid, 1 nơ-ron</td><td>Binary cross-entropy (log loss)</td></tr>
-              <tr><td>Phân loại k lớp, mỗi mẫu một lớp</td><td>softmax, k nơ-ron</td><td>Categorical cross-entropy — nhớ <span class="mono">from_logits=True</span></td></tr>
+              <tr><td>Phân loại k lớp, mỗi mẫu một lớp</td><td>tuyến tính, k nơ-ron (logits); softmax chỉ khi lấy dự đoán</td><td>Categorical cross-entropy — nhớ <span class="mono">from_logits=True</span></td></tr>
               <tr><td>Nhiều nhãn cùng lúc</td><td><b>k sigmoid độc lập</b></td><td>Tổng k binary cross-entropy</td></tr>
               <tr><td>Học biểu diễn / so khớp</td><td>vector embedding</td><td>Triplet loss (nhớ biên α)</td></tr>
               <tr><td>Học tăng cường</td><td>k giá trị Q</td><td>Bình phương sai lệch với mục tiêu Bellman</td></tr>
@@ -4973,8 +4973,8 @@ var GLOSS = [
 ['pooling','gộp vùng','Max pooling 2×2 giữ giá trị lớn nhất mỗi ô 2×2. KHÔNG có tham số nào để học. Nó nói "ở vùng này có đặc trưng đó không", bỏ qua vị trí chính xác.','#s-cnnparts',''],
 ['parameter sharing','chia sẻ tham số','Một bộ dò cạnh dọc dùng được ở mọi vị trí, nên chỉ cần lưu 9 số thay vì học lại cho từng vùng ảnh. Đây là lý do CNN rẻ.','#s-cnn','chia sẻ tham số'],
 ['translation equivariance','đồng biến tịnh tiến','Dịch ảnh sang phải vài pixel thì bản đồ đặc trưng cũng dịch theo, thông tin không mất. Pooling và các lớp sau biến nó thành gần bất biến (invariance): đầu ra gần như không đổi. Tri thức về ảnh được nhét thẳng vào kiến trúc.','#s-cnn','đồng biến tịnh tiến'],
-['ResNet','mạng có kết nối tắt','Kiến trúc thêm đường tắt cộng đầu vào của khối vào đầu ra của nó. Nhờ vậy hàm đồng nhất học được miễn phí, và thêm lớp KHÔNG THỂ làm tệ đi.','#s-cnnarch',''],
-['skip connection','kết nối tắt','Nối đầu vào của một khối thẳng sang đầu ra, vòng qua phần giữa. Xuất hiện bốn lần trong trang: ResNet (cho gradient), U-Net (cho chi tiết không gian), cổng của LSTM (cho trí nhớ xa), attention trong Transformer (cho quan hệ giữa các từ xa nhau).','#s-cnnarch','kết nối tắt|đường tắt'],
+['ResNet','mạng có kết nối tắt','Kiến trúc thêm đường tắt cộng đầu vào của khối vào đầu ra của nó. Nhờ vậy hàm đồng nhất học được miễn phí, nên thêm lớp hầu như không làm sai số huấn luyện tệ đi (mạng 1202 lớp vẫn kém mạng 110 lớp trên tập kiểm thử). Thứ nó chữa là khó khăn tối ưu, không phải gradient tan biến.','#s-cnnarch',''],
+['skip connection','kết nối tắt','Nối đầu vào của một khối thẳng sang đầu ra, vòng qua phần giữa. Gặp trong trang ở ResNet (cho mạng sâu dễ tối ưu), U-Net (cho chi tiết không gian) và mỗi khối con của Transformer (x + Sublayer(x)). Ô nhớ của LSTM và attention dùng một ý gần giống: rút ngắn đường đi giữa hai điểm xa nhau.','#s-cnnarch','kết nối tắt|đường tắt'],
 ['1x1 convolution','tích chập 1×1','Nhìn đúng một điểm ảnh nhưng xuyên hết chiều sâu — thực chất là một nơ-ron kết nối đầy đủ chạy trên trục kênh. Dùng để GIẢM số kênh, rẻ hơn 10 lần.','#s-cnnarch','1×1|nút thắt cổ chai|bottleneck'],
 ['Inception','khối Inception','Thay vì chọn 1×1 hay 3×3 hay 5×5, làm hết rồi ghép lại và để mạng tự chọn qua trọng số. Xoá một siêu tham số khó.','#s-cnnarch',''],
 ['MobileNet','mạng cho điện thoại','Dùng tích chập tách theo chiều sâu: tách một phép conv thành hai bước rẻ hơn. Giảm chi phí tính toán khoảng 10 lần với độ chính xác gần như giữ nguyên.','#s-cnnarch',''],

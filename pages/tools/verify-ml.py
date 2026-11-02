@@ -151,10 +151,18 @@ def run_ml():
     # bài nói "bỏ sót 1/4 số bệnh nhân" — đúng vì recall 75%
     claim('bỏ sót 1/4', abs((1 - rec) - 0.25) < 1e-9, f'tính ra {1 - rec:.4f}')
 
-    # F1 trừng phạt mất cân bằng: P=100%, R=0% → trung bình cộng 50%, F1 = 0
-    claim('trung bình cộng của 100% và 0% là 50%', (1.0 + 0.0) / 2 == 0.5)
-    claim('F1 của P=1, R=0 bằng 0', 2 * 1.0 * 0.0 / (1.0 + 0.0 + 1e-300) < 1e-9,
-          'trung bình điều hoà phải sập về 0, đó là lý do bài chọn nó')
+    # F1 trừng phạt mất cân bằng — ví dụ của Ng (MLS C2 W3): mô hình luôn báo dương, 2% ca dương.
+    # Cặp phải đọc ra được từ một ma trận nhầm lẫn CÓ THẬT (recall 0 thì TP = 0, precision không thể 100%).
+    tp3, fp3, fn3 = 20, 980, 0                                    # 1.000 ca, 20 dương, báo dương cả 1.000
+    p3, r3 = tp3 / (tp3 + fp3), tp3 / (tp3 + fn3)
+    claim('luôn báo dương: precision 2%, recall 100%', abs(p3 - 0.02) < 1e-12 and r3 == 1.0, f'P={p3}, R={r3}')
+    claim('trung bình cộng của 2% và 100% là 51%', abs((p3 + r3) / 2 - 0.51) < 1e-12)
+    f1_3 = 2 * p3 * r3 / (p3 + r3)
+    claim('F1 của P=0,02, R=1 ≈ 3,9%', abs(f1_3 - 0.0392) < 1e-4, f'tính ra {f1_3:.4f}')
+    need('F1 luôn báo dương', f'chỉ là <b>{vi(f1_3 * 100, 1)}%</b>', f1_3)
+    need('trung bình cộng luôn báo dương', f'Trung bình cộng là {vi((p3 + r3) / 2 * 100, 0)}%')
+    claim('không còn cặp precision 100% / recall 0%', 'Precision 100% và recall 0%' not in HTML,
+          'recall 0 nghĩa là TP = 0, nên precision là 0 hoặc không xác định')
 
     # ── chẩn đoán bias / variance ──────────────────────────────────────────
     human, train, dev = 7.5, 8.0, 10.0
@@ -204,6 +212,7 @@ def run_ml():
     claim('từ điển ML không trùng tên EN', not dup, f'trùng: {dup}')
 
     run_ml_models()
+    run_ml_r3()
 
 
 def run_ml_models():
@@ -604,6 +613,31 @@ def run_ml_models():
     claim('M10: ảnh và bản đồ đặc trưng dùng thang xám cố định ("Sáng = kêu to" đúng cả hai theme)',
           'function gray(' in m10 and 'var(--ink)' not in m10[m10.find('function gray('):m10.find('$(\'m10-mat\')')])
 
+
+
+def run_ml_r3():
+    """Lượt rà vòng 3 (học thuật + sư phạm) của machine-learning.html. Mỗi phép kiểm đọc đúng
+    mục của nó; luật được kiểm là luật trong nguồn gốc (bài báo, tài liệu thư viện) mà trang trích."""
+    import re
+
+    def sec(sid):
+        i = HTML.find(f'<section id="{sid}"')
+        return HTML[i:HTML.find('</section>', i)] if i >= 0 else ''
+
+    # Keras: from_logits=True nghĩa là y_pred CHƯA qua softmax — lớp cuối phải là tuyến tính
+    rows = [r for r in re.findall(r'<tr>(.*?)</tr>', sec('s-cheat')) if 'from_logits=True' in r]
+    cells = re.findall(r'<td>(.*?)</td>', rows[0]) if rows else []
+    claim('bảng tra: hàng from_logits=True có lớp ra tuyến tính (logits)',
+          len(cells) >= 2 and cells[1].startswith('tuyến tính') and 'logits' in cells[1],
+          f'ô lớp đầu ra: {cells[1] if len(cells) > 1 else "không thấy hàng"} — softmax rồi from_logits là softmax hai lần')
+
+    # He et al. 2015 §4.1: mạng thường 56 lớp có BN, "neither forward nor backward signals vanish"
+    claim('ResNet: không gán nghịch lý 56 lớp cho gradient tan biến', 'được chữa từ gốc' not in HTML
+          and 'ResNet (cho gradient)' not in HTML and 'ResNet (gradient)' not in HTML)
+    need('ResNet: khó khăn tối ưu', 'là một <b>khó khăn tối ưu</b>')
+    # §4.2: mạng 1202 lớp kém mạng 110 lớp trên tập kiểm thử — "thêm lớp không thể/không bao giờ tệ đi" là sai
+    for bad in ('KHÔNG THỂ làm tệ đi', 'không bao giờ làm tệ đi', '<i>không thể làm nó tệ đi</i>'):
+        claim(f'ResNet: không còn "{bad}"', bad not in HTML)
 
 
 # ════════════════════════ machine-learning-101.html ════════════════════════
