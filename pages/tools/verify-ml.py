@@ -1080,7 +1080,7 @@ def run_101():
     need('lời văn nhắc độ dốc của cái bẻ', 'nếu nó đang bị bẻ về 0 thì phần trách nhiệm là 0')
     need('"cái bẻ" chỉ sang mục dưới ở lần đầu', 'rồi bóp qua cầu trượt chữ S — hoặc một <i>cái bẻ</i> khác, xem mục dưới')
 
-    need('attention chia căn độ dài', 'chia cho căn của độ dài dãy số để softmax')
+    need('attention chia căn độ dài', 'cho căn của độ dài dãy số để softmax')
     need('distortion là trung bình', '<b>trung bình bình phương</b> khoảng cách')
     ds = [r for r in gloss_records(r"\['([^']*)',\s*'([^']*)',\s*'([^']*)'\]") if r[1] == 'distortion']
     claim('GLOSS distortion là trung bình', len(ds) == 1 and ds[0][0].startswith('trung bình bình phương'), f'{ds}')
@@ -1179,9 +1179,74 @@ def run_101():
     claim('tách đẳng biến và bất biến', 'translation equivariance' in G3 and 'translation invariance' in G3)
     need('SGD: tên của khoá khác tên của thư viện', 'gọi cả tụt dốc theo mini-batch là SGD')
     need('ε ngưỡng khác ε làm bừa', 'ε ở đây là một ngưỡng')
+    claim('learning rate chỉ một tên Việt: tốc độ học', 'độ dài bước học' not in HTML and 'tốc độ học' in HTML)
     need('Bellman: quy ước của khoá so với Sutton & Barto', 'cùng ý, lệch chỉ số một bước')
     claim('GLOSS học có giám sát nói "gần như"', G3.get('supervised learning', ('', '', ''))[2].startswith('gần như'))
 
+    # ══ vòng 3: công thức một dòng mà người đọc cần để tự tính lại ═════════
+    # Quy tắc bước và hai đạo hàm của MSE: kiểm bằng sai phân trên đúng ba mươi ngày của m1.
+    need('quy tắc bước', 'w ← w − α · ∂J/∂w<br>b ← b − α · ∂J/∂b')
+    need('đạo hàm MSE', '∂J/∂w = trung bình của 2(ŷ − y)·x<br>∂J/∂b = trung bình của 2(ŷ − y)')
+    D1 = locals().get('D') or []
+    if D1:
+        Jm = lambda w, b: sum((w * x + b - y) ** 2 for x, y in D1) / len(D1)
+        w0, b0, h = 1.2, 24.0, 1e-6
+        gw = sum(2 * (w0 * x + b0 - y) * x for x, y in D1) / len(D1)
+        gb = sum(2 * (w0 * x + b0 - y) for x, y in D1) / len(D1)
+        claim('∂J/∂w, ∂J/∂b khớp sai phân trên dữ liệu m1',
+              abs((Jm(w0 + h, b0) - Jm(w0 - h, b0)) / (2 * h) - gw) < 1e-3 * abs(gw)
+              and abs((Jm(w0, b0 + h) - Jm(w0, b0 - h)) / (2 * h) - gb) < 1e-3 * abs(gb), f'{gw:.4f}, {gb:.4f}')
+    need('m2 in độ nghiêng', "'độ nghiêng    ' + pad(Math.abs(w) > 1e6 ? 'khổng lồ' : vi(dJ(w), 3), 6)")
+    need('m2 in bước', "vi(+sa.value * dJ(w), 3)")
+    # Sigmoid, log loss, softmax.
+    need('sigmoid', 'σ(z) = 1 / (1 + e<sup>−z</sup>)')
+    claim('σ(0) = 1/2', 1 / (1 + math.exp(0)) == 0.5)
+    need('log loss một dòng', 'điểm trừ = −ln p')
+    for pp, shown in ((0.01, '−ln 0,01 ≈ 4,6'), (0.5, 'p = 0,5 → 0,69'), (0.0001, 'p = 0,0001 → 9,2')):
+        claim(f'−ln {pp}', vi(-math.log(pp), 2 if pp == 0.5 else 1) in shown, f'{-math.log(pp):.3f}')
+        need(f'log loss ví dụ {pp}', shown)
+    msx = re.search(r'Ba điểm số (\d) · (\d) · (\d) thành e² ≈ ([\d,]+) · e ≈ ([\d,]+) · e⁰ = 1; tổng ([\d,]+); chia ra (\d+)% · (\d+)% · (\d+)%', HTML)
+    claim('bóc được ví dụ softmax', bool(msx))
+    if msx:
+        z = [int(msx.group(k)) for k in (1, 2, 3)]
+        ez = [math.exp(t) for t in z]
+        claim('softmax: e mũ và tổng', vi(ez[0]) == msx.group(4) and vi(ez[1]) == msx.group(5) and vi(sum(ez)) == msx.group(6),
+              f'{ez}, tổng {sum(ez):.3f}')
+        pc = [round(100 * e / sum(ez)) for e in ez]
+        claim('softmax: phần trăm', pc == [int(msx.group(k)) for k in (7, 8, 9)] and sum(pc) == 100, f'{pc}')
+    # Entropy, Gini, information gain — đúng con số mô hình 7 in ra.
+    H = lambda q: 0 if q in (0, 1) else -q * math.log2(q) - (1 - q) * math.log2(1 - q)
+    need('entropy một dòng', 'H = −p·log₂p − (1 − p)·log₂(1 − p)<br>Gini = 1 − p² − (1 − p)²')
+    need('entropy 4 mèo 1 không', f'H = 0,8 × {vi(-math.log2(0.8), 3)} + 0,2 × {vi(-math.log2(0.2), 3)} = {vi(H(0.8), 3)}')
+    claim('entropy 50–50 = 1, Gini 50–50 = 0,5', H(0.5) == 1 and 1 - 0.25 - 0.25 == 0.5)
+    need('information gain tai vểnh', f'1 − (5/10 × {vi(H(0.8), 3)} + 5/10 × {vi(H(0.8), 3)}) = {vi(1 - H(0.8), 3)}')
+    # Accuracy và F1 của hai máy "nói một câu cho tất cả".
+    P_, R_ = 3 / 1_000_000, 1.0
+    claim('accuracy 99,9997%', vi(100 * (1 - P_), 4) == '99,9997')
+    claim('F1 ≈ 0,0006%', vi(100 * 2 * P_ * R_ / (P_ + R_), 4) == '0,0006', f'{100 * 2 * P_ * R_ / (P_ + R_)}')
+    need('F1 có công thức', 'F1 = 2·P·R / (P + R)')
+    need('F1 máy báo tất cả', 'F1 = 2·P·1/(P + 1) ≈ 0,0006%')
+    # Mọi link sang trang Toán phải trỏ tới một mục có thật.
+    mp = HERE / 'mathematics-for-machine-learning.html'
+    ids = set(re.findall(r'id="([^"]+)"', mp.read_text(encoding='utf-8'))) if mp.exists() else set()
+    tg = sorted(set(re.findall(r'mathematics-for-machine-learning\.html#([\w-]+)', HTML)))
+    claim('link sang trang Toán trỏ tới mục có thật', bool(ids) and all(t in ids for t in tg),
+          f'gãy: {[t for t in tg if t not in ids]}')
+    claim('link trang Toán: có mục 2.4 (đạo hàm riêng) và 1.5 (tích vô hướng)', {'s-partial', 's-dot', 's-inverse'} <= set(tg), f'{tg}')
+    # Tên trang dùng mà trước đây không có trong bảng tên thật.
+    claim('GLOSS có accuracy, fully connected, dying ReLU', {'accuracy', 'fully connected layer', 'dying ReLU'} <= set(G3))
+    claim('"núm" không dùng cho siêu tham số ở bảng 2', '<h3>2 · Núm bắt đầu từ đâu</h3>' not in HTML and '<th>Núm</th>' not in HTML)
+    # Hình lưới / ngẫu nhiên ở chương 7: mỗi ô 25 lần thử; số vạch chiếu xuống trục ngang = số giá trị
+    # khác nhau của α, và phải đúng con số in dưới ô (5 và 25).
+    i = HTML.find('id="fig-search"')
+    fs = HTML[i:HTML.find('</svg>', i)] if i >= 0 else ''
+    cx = [float(v) for v in re.findall(r'<circle cx="([\d.]+)"', fs)]
+    left, right = [v for v in cx if v < 180], [v for v in cx if v >= 180]
+    claim('hình dò: mỗi ô 25 lần thử', len(left) == 25 and len(right) == 25, f'{len(left)} / {len(right)}')
+    claim('hình dò: lưới cho 5 giá trị, ngẫu nhiên cho 25', len(set(left)) == 5 and len(set(right)) == 25,
+          f'{len(set(left))} / {len(set(right))}')
+    claim('hình dò: số vạch đúng số giá trị', len(re.findall(r'<line x1="[\d.]+" y1="158"', fs)) == 30)
+    claim('hình dò: nhãn đúng số đếm', f'>{len(set(left))} giá trị α khác nhau<' in fs and f'>{len(set(right))} giá trị α khác nhau<' in fs)
 
 
 def main():

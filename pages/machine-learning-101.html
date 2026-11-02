@@ -524,7 +524,7 @@ footer a { color:var(--muted); }
     <div class="stat"><b>3 bộ phận</b><span>mọi máy trong trang, từ cái đơn giản nhất tới cái đứng sau ChatGPT, đều chỉ có ba: đoán bằng gì · sai thì trừ bao nhiêu · vặn núm ra sao</span></div>
     <div class="stat"><b>0 dòng toán bắt buộc</b><span>công thức nào cũng có bản tiếng Việt đứng ngay bên; bỏ qua phần ký hiệu vẫn hiểu trọn ý</span></div>
     <div class="stat"><b>13 thứ nghịch được</b><span>kéo cho máy nhảy văng khỏi đáy, tắt một mắt xích cho mạng nhiều lớp sập về một đường thẳng, trượt kính lúp qua từng ô ảnh, kéo γ cho nước đi lật ngược</span></div>
-    <div class="stat"><b><span id="stat-terms">235</span> tên thật</b><span>thuật ngữ của tám khoá gốc và vài tên mới hơn — mỗi phép ví von kèm đúng cái tên mà sách và khoá học dùng</span></div>
+    <div class="stat"><b><span id="stat-terms">238</span> tên thật</b><span>thuật ngữ của tám khoá gốc và vài tên mới hơn — mỗi phép ví von kèm đúng cái tên mà sách và khoá học dùng</span></div>
   </div>
 
   <div class="acts">
@@ -629,7 +629,7 @@ footer a { color:var(--muted); }
           <p class="box__t">"Máy biết nó đang nói về cái gì."</p>
           <div class="row2">
             <span class="k">Nghe có lý vì</span><span>câu trả lời của nó nghe rất tự tin.</span>
-            <span class="k">Chỗ sai</span><span>máy chỉ biết con số nào làm <b>điểm trừ</b> nhỏ nhất. Nó không biết mèo là một con vật, không biết con vật là gì, không biết nó đang được hỏi.</span>
+            <span class="k">Chỗ sai</span><span>máy chỉ biết con số nào làm <b><a href="#s-machine">điểm trừ</a></b> nhỏ nhất — con số đo máy sai bao nhiêu, dựng ở chương 2. Nó không biết mèo là một con vật, không biết con vật là gì, không biết nó đang được hỏi.</span>
             <span class="k">Hệ quả</span><span>độ tự tin của máy không phải lời bảo đảm: nó có thể tin 99% mà sai hoàn toàn, nhất là khi gặp thứ không giống những gì nó từng thấy — vì "tự tin" của nó cũng chỉ là một con số được vặn cho khớp những ví dụ đã học.</span>
           </div>
         </div>
@@ -673,7 +673,7 @@ footer a { color:var(--muted); }
           <span class="v">độ nóng — con số đưa vào — là <span class="nm">feature</span> — đặc trưng; số cốc thật — đáp án đúng — là <span class="nm">label</span> — nhãn. Cả bộ phận này là <span class="nm">model</span> — mô hình. A là <span class="nm">weight (w)</span> — trọng số. B là <span class="nm">bias (b)</span> — độ chệch. Gọi chung: <span class="nm">parameter</span> — tham số. Còn cái máy "đoán một con số bằng một đường thẳng" này có tên riêng, và nó là thuật toán đầu tiên của mọi khoá học: <span class="nm">linear regression</span> — hồi quy tuyến tính.</span>
         </div>
 
-        <p>Phân biệt hai chữ dễ lẫn: <b>tham số</b> là con số <i>máy</i> vặn khi học (A và B). <b>Siêu tham số</b> là con số <i>bạn</i> chọn trước khi học — bước chân dài bao nhiêu, mạng mấy lớp. Tên thật của loại thứ hai: <span class="nm">hyperparameter</span>. Cả trang này chỉ có hai loại số đó, và lẫn chúng là nguồn nhầm lẫn số một của người mới.</p>
+        <p>Phân biệt hai chữ dễ lẫn: <b>tham số</b> là con số <i>máy</i> vặn khi học (A và B). <b>Siêu tham số</b> là con số <i>bạn</i> chọn trước khi học — bước chân (<a href="#s-descent">chương 3</a>) dài bao nhiêu, mạng mấy lớp. Tên thật của loại thứ hai: <span class="nm">hyperparameter</span>. Cả trang này chỉ có hai loại số đó, và lẫn chúng là nguồn nhầm lẫn số một của người mới.</p>
 
         <h3><span class="c-l">Bộ phận 2</span> — sai thì trừ bao nhiêu</h3>
 
@@ -697,7 +697,7 @@ footer a { color:var(--muted); }
 
         <div class="box note">
           <p class="box__k">Một ngoại lệ đáng biết</p>
-          <p>Riêng với đường thẳng, có <b>công thức giải thẳng ra đáp án</b>, không cần dò gì cả — tên nó là <span class="nm">normal equation</span>. Vì sao cả trang này vẫn nói về dò: công thức ấy đòi nghịch đảo một bảng số cỡ (số núm)², tốn công tăng theo (số núm)³, nên từ chừng mười nghìn núm trở lên nó chậm hơn dò, và với mạng nơ-ron thì <b>không tồn tại</b> công thức nào tương tự. Dò là cách duy nhất mở rộng được.</p>
+          <p>Riêng với đường thẳng, có <b>công thức giải thẳng ra đáp án</b>, không cần dò gì cả — tên nó là <span class="nm">normal equation</span>. Vì sao cả trang này vẫn nói về dò? Công thức ấy phải nghịch đảo một bảng số cỡ (số núm)², tức tìm bảng "đi ngược" của nó (<a href="mathematics-for-machine-learning.html#s-inverse">trang Toán cho học máy, mục 1.8</a>). Việc ấy tốn công tăng theo (số núm)³, nên từ chừng mười nghìn núm trở lên nó chậm hơn dò. Với mạng nơ-ron thì <b>không tồn tại</b> công thức nào tương tự. Dò là cách duy nhất mở rộng được.</p>
         </div>
 
         <div class="nmrow">
@@ -749,7 +749,14 @@ footer a { color:var(--muted); }
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v">độ nghiêng dưới chân là <span class="nm">gradient</span> — máy không sờ, nó tính ra bằng công thức. Mỗi bước dài bằng độ nghiêng nhân với một con số bạn chọn trước. Con số ấy — cái "bước chân" suốt trang này — là <span class="nm">learning rate (α)</span> — tốc độ học, hay độ dài bước học. Cả cách làm này là <span class="nm">gradient descent</span> — tụt dốc.</span>
+          <span class="v">độ nghiêng dưới chân là <span class="nm">gradient</span> — máy không sờ, nó tính ra bằng công thức. Mỗi bước dài bằng độ nghiêng nhân với một con số bạn chọn trước. Con số ấy — cái "bước chân" suốt trang này — là <span class="nm">learning rate (α)</span> — tốc độ học. Cả cách làm này là <span class="nm">gradient descent</span> — tụt dốc.</span>
+        </div>
+
+        <div class="fx">
+          <div class="fx__line sm">w ← w − α · ∂J/∂w<br>b ← b − α · ∂J/∂b</div>
+          <div class="fx__vi"><b>J</b> là điểm trừ trên cả tập ở <a href="#s-machine">chương 2</a>; mũi tên ← nghĩa là "thay bằng". Có hai núm thì có hai độ nghiêng. Nhích riêng w một chút, giữ b đứng yên, xem J đổi bao nhiêu: đó là ∂J/∂w, đọc là "đạo hàm riêng của J theo w". Làm y như vậy với b. Hai con số ấy gộp lại thành một mũi tên chỉ hướng lên dốc nhất, và mũi tên ấy mới đúng là gradient. Mỗi núm bước <b>ngược</b> độ nghiêng của chính nó, dài α lần độ nghiêng ấy. Dựng từ đầu: <a href="mathematics-for-machine-learning.html#s-partial">trang Toán cho học máy, mục 2.4</a>.</div>
+          <div class="fx__line sm">∂J/∂w = trung bình của 2(ŷ − y)·x<br>∂J/∂b = trung bình của 2(ŷ − y)</div>
+          <div class="fx__vi">Với đường thẳng và điểm trừ bình phương, hai độ nghiêng ra gọn thế này: đạo hàm (wx&nbsp;+&nbsp;b&nbsp;−&nbsp;y)² theo từng núm như đạo hàm một biến, rồi lấy trung bình trên mọi ngày. Đủ để tự viết vòng lặp tụt dốc.</div>
         </div>
 
         <p>Hai chữ sẽ gặp suốt: máy <b>đi tới đáy và đứng lại</b> gọi là <span class="nm">convergence</span> — hội tụ; máy <b>đi ngược lên và bay ra vô cực</b> gọi là <span class="nm">divergence</span> — phân kỳ. Mô hình dưới đây cho bạn gây ra cả hai bằng một thanh trượt.</p>
@@ -778,13 +785,13 @@ footer a { color:var(--muted); }
               <div class="row"><span class="k">Chạy</span><div class="inline"><button class="btn btn--solid" id="m2-run">Thả bóng</button><button class="btn" id="m2-step">Một bước</button><button class="btn" id="m2-reset">Đặt lại</button></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m2-out"></pre></div>
             </div>
-            <p class="lab__f">Thung lũng ở đây được vẽ ra để nhìn thấy được. Khi máy học thật, sườn đồi có hàng triệu chiều và không ai vẽ nổi — nhưng cái quy tắc thì y nguyên: sờ độ nghiêng, bước xuống, lặp lại. Ở thung lũng này, ranh giới nằm ở 0,5 (dưới đó bóng không nảy) và 1 (trên đó bóng văng). Thung lũng càng hẹp thì ranh giới văng càng thấp — nên cái khe hẹp ở mục dưới bắt bạn phải bước ngắn, và bước ngắn thì bò mãi dọc khe. Bảng năm dòng ở <a href="mathematics-for-machine-learning.html#s-gd">trang Toán cho học máy, mục 2.5</a> tính đúng những ngưỡng này.</p>
+            <p class="lab__f">Thung lũng ở đây được vẽ ra để nhìn thấy được. Khi máy học thật, sườn đồi có hàng triệu chiều và không ai vẽ nổi — nhưng cái quy tắc thì y nguyên: sờ độ nghiêng, bước xuống, lặp lại. Ở thung lũng này, ranh giới nằm ở 0,5 (dưới đó bóng không nảy) và 1 (trên đó bóng văng). Thung lũng càng hẹp thì ranh giới văng càng thấp — nên cái khe hẹp ở mục dưới bắt bạn phải bước ngắn, và bước ngắn thì bò mãi dọc khe. Bảng năm dòng ở <a href="mathematics-for-machine-learning.html#s-gd">trang Toán cho học máy, mục 2.5</a> tính đúng những ngưỡng này. Dòng "độ nghiêng" ở kết quả là 2 × (núm − 0,4), đạo hàm của điểm trừ (núm − 0,4)²; "núm sẽ trừ đi" là α nhân với nó.</p>
           </div>
         </div>
 
-        <h3>Một cái bẫy có thật: hai cái núm khác cỡ nhau</h3>
+        <h3>Một cái bẫy có thật: hai con số đầu vào khác cỡ nhau</h3>
 
-        <p>Bạn đoán giá nhà bằng hai con số: diện tích (từ 20 tới 300) và số phòng ngủ (từ 1 tới 5). Diện tích to hơn số phòng cỡ vài chục lần. Chuyện gì xảy ra: sườn đồi không còn là cái bát tròn nữa, nó thành <b>một cái khe hẹp và dài</b>. Quả bóng dội qua dội lại giữa hai vách khe, mỗi vòng chỉ nhích xuôi theo khe được một chút. Chạy lâu gấp mấy chục lần mà vẫn chưa tới.</p>
+        <p>Bạn đoán giá nhà bằng hai con số: diện tích (từ 20 tới 300) và số phòng ngủ (từ 1 tới 5). Diện tích to hơn số phòng cỡ vài chục lần. Núm đi cùng diện tích nhân với số cỡ trăm, nên nhích nó một chút là lời đoán đổi nhiều: theo hướng núm ấy, sườn đồi dốc đứng. Núm đi cùng số phòng nhân với số cỡ 1–5, nên phải nhích nhiều thì điểm trừ mới đổi: theo hướng ấy, sườn thoải. Vì thế sườn đồi không còn là cái bát tròn nữa, nó thành <b>một cái khe hẹp và dài</b>. Bước chân phải đủ ngắn cho hướng dốc đứng, nên lại quá ngắn cho hướng thoải. Quả bóng dội qua dội lại giữa hai vách khe, mỗi vòng chỉ nhích xuôi theo khe được một chút. Chạy lâu gấp mấy chục lần mà vẫn chưa tới. Bản đồ đường đồng mức của đúng cái khe này, với quả bóng đi zíc-zắc, có ở <a href="mathematics-for-machine-learning.html#s-gd">trang Toán cho học máy, mục 2.5</a> (mô hình 9, chọn "máng hẹp").</p>
 
         <p>Cách sửa mất ba dòng lệnh: <b>kéo mọi con số về cùng một cỡ trước khi học.</b> Với từng loại số — diện tích riêng, số phòng riêng — lấy mỗi giá trị trừ đi trung bình của loại ấy, rồi chia cho <b>độ lệch chuẩn</b> của loại ấy (con số cho biết các giá trị thường nằm cách trung bình bao xa) — xong, cái nào cũng nằm quanh 0 và cùng độ rộng. Khe hẹp thành gần như bát tròn (tròn hẳn khi hai loại số không đi cùng nhau). Đúng phép ấy tên là <span class="nm">z-score normalization</span>.</p>
 
@@ -819,6 +826,11 @@ footer a { color:var(--muted); }
           <li>số vào rất dương → trả ra gần <b>1</b></li>
         </ul>
 
+        <div class="fx">
+          <div class="fx__line sm">σ(z) = 1 / (1 + e<sup>−z</sup>)</div>
+          <div class="fx__vi">Cái cầu trượt viết bằng ký hiệu; σ đọc là "sigma", z là con số đường thẳng trả ra. z rất âm thì e<sup>−z</sup> khổng lồ, kết quả gần 0. z = 0 thì e<sup>0</sup> = 1, kết quả đúng 1/2. z rất dương thì e<sup>−z</sup> gần 0, kết quả gần 1.</div>
+        </div>
+
         <p>Không bao giờ vượt ra ngoài 0 và 1. Giờ có thể đọc kết quả là <b>phần trăm máy tin</b>. Muốn một câu trả lời dứt khoát thì chọn một mốc: trên mốc là "có", dưới mốc là "không". Mốc hay dùng là 0,5, nhưng đó là quy ước chứ không phải luật — hạ mốc xuống thì máy nói "có" dễ hơn, bắt được nhiều ngày bán hết hơn mà cũng báo nhầm nhiều hơn. Tên thật của cái mốc: <span class="nm">threshold</span> — ngưỡng. Chỗ máy chuyển từ "đoán không" sang "đoán có" — với một con số đầu vào như độ nóng thì là một điểm trên trục, với hai con số thì là một đường trên mặt phẳng — tên là <span class="nm">decision boundary</span> — ranh giới quyết định. Bạn sẽ thấy nó hiện ra thành hình ở <a href="#s-nn">chương 6</a>.</p>
 
         <div class="nmrow">
@@ -833,6 +845,11 @@ footer a { color:var(--muted); }
         <p>Chấm bằng thước đo cũ, cái thước "nhân với chính nó": lệch 0,001 → 0,000001. Lệch 0,999 → 0,998. Hai trường hợp cách nhau <b>chưa tới một điểm</b>. Một cú sai thảm bị trừ nhẹ như vậy thì máy không có lý do gì để sợ nó.</p>
 
         <p>Thước đo mới làm ngược lại: <b>càng tự tin mà sai thì bị trừ càng nặng, và không có giới hạn trên.</b> Tin 50% mà sai → trừ 0,7 điểm. Tin 99% mà sai → trừ 4,6 điểm, gần gấp năm lần mức nặng nhất mà thước cũ trừ được. Tin 99,99% mà sai → 9,2. Mỗi chữ số 9 thêm vào độ tự tin là thêm chừng 2,3 điểm trừ — không bao giờ chạm trần.</p>
+
+        <div class="fx">
+          <div class="fx__line sm">điểm trừ = −ln p</div>
+          <div class="fx__vi"><b>p</b> là phần máy dành cho <b>đáp án đúng</b>. Tin 99% mà sai nghĩa là chỉ dành 1% cho đáp án đúng: p = 0,01, và −ln 0,01 ≈ 4,6. Tin 50% thì p = 0,5 → 0,69; tin 99,99% thì p = 0,0001 → 9,2; đúng chắc chắn thì p = 1 → 0. Thêm một chữ số 9 là p nhỏ đi mười lần, nên điểm trừ cộng thêm ln 10 ≈ 2,3.</div>
+        </div>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
@@ -860,7 +877,7 @@ footer a { color:var(--muted); }
 
         <h3>Nhiều hơn hai loại</h3>
 
-        <p>"Ảnh này là mèo, chó, thỏ hay hamster?" Cách làm: cho máy chấm <b>một điểm số cho mỗi loại</b>, rồi biến bốn điểm số ấy thành bốn phần trăm cộng lại đúng bằng 100%. Ai điểm cao hơn thì phần trăm cao hơn, và không ai được âm.</p>
+        <p>"Ảnh này là mèo, chó, thỏ hay hamster?" Cách làm: cho máy chấm <b>một điểm số cho mỗi loại</b>, rồi biến bốn điểm số ấy thành bốn phần trăm cộng lại đúng bằng 100%. Ai điểm cao hơn thì phần trăm cao hơn, và không ai được âm. Cách làm: lấy e mũ từng điểm số — e mũ số nào cũng dương, nên không ai âm — rồi chia mỗi cái cho tổng của chúng, nên cộng lại đúng 100%. Ba điểm số 2 · 1 · 0 thành e² ≈ 7,39 · e ≈ 2,72 · e⁰ = 1; tổng 11,11; chia ra 67% · 24% · 9%.</p>
 
         <p>Chữ "soft" trong tên của nó — <span class="nm">softmax</span> — là vì nó <b>không chọn dứt khoát</b> một loại — nó chia phần tin tưởng: 70% mèo, 25% thỏ, 4% chó, 1% hamster. Bốn con số thô <i>trước khi</i> chia phần trăm có tên riêng, và bạn sẽ gặp nó trong mọi thư viện code: <span class="nm">logits</span>.</p>
 
@@ -936,7 +953,7 @@ footer a { color:var(--muted); }
 
         <div class="steps">
           <div class="step"><div class="n">1</div><div class="b"><p><b>Thêm ví dụ.</b> Nhớ thuộc hai mươi câu thì dễ. Nhớ thuộc hai mươi nghìn câu thì mệt hơn là hiểu quy luật. Đây là cách chắc chắn nhất, và cũng thường là cách đắt nhất. Muốn biết thêm dữ liệu <i>có</i> giúp không thì vẽ điểm-số theo số-bài-đã-học: hình ấy tên là <span class="nm">learning curve</span> — đường cong học. Nếu hai đường (đề ôn, đề thử) đã sát nhau và cùng phẳng thì thêm dữ liệu <b>không giúp gì nữa</b>; nếu chúng còn cách nhau xa thì thêm dữ liệu còn ăn.</p></div></div>
-          <div class="step"><div class="n">2</div><div class="b"><p><b>Bắt máy dùng số nhỏ.</b> Cộng thêm vào điểm trừ một khoản phạt tính theo độ lớn của các núm. Máy vẫn được phép giải thích dữ liệu, nhưng phải giải thích bằng đường <b>mềm</b>, không được vặn vẹo dựng đứng. Tên thật: <span class="nm">regularization</span> — chính quy hoá, và mức phạt gọi là <span class="nm">λ</span> (lambda). λ = 0 là không phạt gì. λ quá to là máy sợ đến mức vẽ luôn một đường ngang. Vì sao phạt núm to lại hợp lý: <a href="mathematics-for-machine-learning.html#s-map">trang Toán cho học máy, mục 4.5</a>.</p></div></div>
+          <div class="step"><div class="n">2</div><div class="b"><p><b>Bắt máy dùng số nhỏ.</b> Cộng thêm vào điểm trừ một khoản phạt tính theo độ lớn của các núm. Máy vẫn được phép giải thích dữ liệu, nhưng phải giải thích bằng đường <b>mềm</b>, không được vặn vẹo dựng đứng. Đường vặn vẹo dựng đứng chỉ vẽ được bằng những núm rất to, dương to và âm to bù trừ nhau (đường ấy làm ra thế nào: đoạn ngay sau ba cách chữa); phạt núm to là cấm đúng kiểu đường ấy. Tên thật: <span class="nm">regularization</span> — chính quy hoá, và mức phạt gọi là <span class="nm">λ</span> (lambda). λ = 0 là không phạt gì. λ quá to là máy sợ đến mức vẽ luôn một đường ngang. Vì sao phạt núm to lại hợp lý: <a href="mathematics-for-machine-learning.html#s-map">trang Toán cho học máy, mục 4.5</a>.</p></div></div>
           <div class="step"><div class="n">3</div><div class="b"><p><b>Làm máy nhỏ lại.</b> Ít núm hơn thì không đủ chỗ để nhớ, buộc phải tóm quy luật. Cách này rẻ nhưng thô — nếu cắt quá tay thì bạn chuyển từ học thuộc lòng sang chưa học đủ.</p></div></div>
         </div>
 
@@ -1063,7 +1080,7 @@ footer a { color:var(--muted); }
 
         <p>Máy đoán sai. Nó có cả trăm cái núm. Núm nào phải vặn, vặn về phía nào, vặn bao nhiêu?</p>
 
-        <p>Cách làm là <b>đi ngược từ đầu ra về đầu vào, chia phần trách nhiệm.</b> Đọc thành lời: "Kết quả đang thấp hơn đáp án 0,3. Nơ-ron này đi vào kết quả qua một cái núm 0,5 — nó nhích lên 1 thì kết quả nhích lên 0,5 — nên phần trách nhiệm của nó là 0,3 × 0,5 = 0,15. Núm của nơ-ron này đang nhân với số vào là 2 — núm nhích lên 1 thì nơ-ron nhích lên 2 (cái bẻ của nó đang ở phía dương nên để nguyên; nếu nó đang bị bẻ về 0 thì phần trách nhiệm là 0) — nên phần trách nhiệm của núm là 0,15 × 2 = 0,3." Núm nào gánh phần lớn thì được vặn nhiều, đúng như ở <a href="#s-descent">chương 3</a>: dốc hơn thì bước dài hơn. Rồi lùi tiếp một lớp, làm y như vậy.</p>
+        <p>Cách làm là <b>đi ngược từ đầu ra về đầu vào, chia phần trách nhiệm.</b> Đọc thành lời: "Kết quả đang thấp hơn đáp án 0,3. Nơ-ron này đi vào kết quả qua một cái núm 0,5 — nó nhích lên 1 thì kết quả nhích lên 0,5 — nên phần trách nhiệm của nó là 0,3 × 0,5 = 0,15. Núm của nơ-ron này đang nhân với số vào là 2, nên núm nhích lên 1 thì nơ-ron nhích lên 2. (Cái bẻ của nó đang ở phía dương nên để nguyên; nếu nó đang bị bẻ về 0 thì phần trách nhiệm là 0.) Vậy phần trách nhiệm của núm là 0,15 × 2 = 0,3." Núm nào gánh phần lớn thì được vặn nhiều, đúng như ở <a href="#s-descent">chương 3</a>: dốc hơn thì bước dài hơn. Rồi lùi tiếp một lớp, làm y như vậy — với một chi tiết: một nơ-ron nối tới nhiều nơ-ron lớp sau thì nhận trách nhiệm theo từng đường ấy, rồi cộng các phần lại (<a href="mathematics-for-machine-learning.html#s-chain">trang Toán cho học máy, mục 2.6</a>).</p>
 
         <p>Mẹo duy nhất khiến nó chạy nhanh: <b>không tính lại thứ đã tính.</b> Phần trách nhiệm của lớp 5 dùng được cho cả lớp 4, lớp 3, lớp 2 — cứ mang theo mà nhân tiếp. Nhờ vậy vặn một tỉ cái núm chỉ tốn khoảng hai lần chi phí của một lần đoán — trong khi nhích thử từng núm một rồi xem điểm trừ đổi ra sao thì tốn một tỉ lần đoán.</p>
 
@@ -1076,7 +1093,7 @@ footer a { color:var(--muted); }
 
         <div class="steps">
           <div class="step"><div class="n">1</div><div class="b"><p><b>Còn cái bẻ nào khác không?</b> Có. <span class="nm">tanh</span> là cầu trượt hình chữ S nhưng bóp về khoảng −1 đến 1 thay vì 0 đến 1, nên số ra nằm quanh 0 — tiện hơn sigmoid ở lớp giữa. Quy tắc ngắn: <b>lớp giữa dùng ReLU</b>; sigmoid để ở lớp cuối khi đáp án là có/không, và làm van trong các cổng ở <a href="#s-text">chương 11</a>.</p></div></div>
-          <div class="step"><div class="n">2</div><div class="b"><p><b>Máy không nhân từng cái núm một.</b> Nó xếp cả lớp thành một bảng số rồi nhân một lần — nhanh gấp hàng trăm lần vòng lặp, vì chip máy tính được chế riêng cho phép nhân bảng. Tên thật: <span class="nm">vectorization</span> — vector hoá, và phép "nhân từng cặp rồi cộng lại" của một nơ-ron là <span class="nm">dot product</span> — tích vô hướng.</p></div></div>
+          <div class="step"><div class="n">2</div><div class="b"><p><b>Máy không nhân từng cái núm một.</b> Nó xếp cả lớp thành một bảng số rồi nhân một lần — nhanh gấp hàng trăm lần vòng lặp, vì chip máy tính được chế riêng cho phép nhân bảng. Tên thật: <span class="nm">vectorization</span> — vector hoá, và phép "nhân từng cặp rồi cộng lại" của một nơ-ron là <span class="nm">dot product</span> — tích vô hướng. Coi mỗi dãy số là một mũi tên thì tích vô hướng lớn khi hai mũi tên chỉ cùng hướng (<a href="mathematics-for-machine-learning.html#s-dot">trang Toán cho học máy, mục 1.5</a>).</p></div></div>
           <div class="step"><div class="n">3</div><div class="b"><p><b>Một lớp ẩn đủ rộng vẽ gần đúng được mọi hình liền nét</b> — sai lệch nhỏ bao nhiêu tuỳ ý, trên một vùng có giới hạn. Đây là một định lý, không phải lời quảng cáo: tên nó là <span class="nm">universal approximation</span> — xấp xỉ phổ quát. Nhưng "vẽ được" không có nghĩa "học được dễ": đủ rộng có thể nghĩa là rộng đến vô lý. Vì thế người ta xếp <i>sâu</i> thay vì xếp <i>rộng</i> — với nhiều hình, mạng sâu cần ít nơ-ron hơn hẳn.</p></div></div>
         </div>
 
@@ -1120,7 +1137,7 @@ footer a { color:var(--muted); }
             <thead><tr><th>Mỗi bước xem</th><th>Tên thật</th><th>Đường đi trông thế nào</th></tr></thead>
             <tbody>
               <tr><td>tất cả ví dụ</td><td><span class="nm">batch gradient descent</span></td><td>mượt, đúng hướng, nhưng mỗi bước rất đắt</td></tr>
-              <tr><td>32–512 ví dụ</td><td><span class="nm">mini-batch</span></td><td>hơi zíc-zắc nhưng nhanh nhất trong thực tế — mặc định nên chọn</td></tr>
+              <tr><td>32–512 ví dụ</td><td><span class="nm">mini-batch</span> — lô nhỏ</td><td>hơi zíc-zắc nhưng nhanh nhất trong thực tế — mặc định nên chọn</td></tr>
               <tr><td>đúng 1 ví dụ</td><td><span class="nm">stochastic gradient descent</span></td><td>zíc-zắc dữ, không tận dụng được phép nhân bảng. Đây là cách khoá gốc dùng tên; sách và thư viện (<span class="mono">torch.optim.SGD</span>) gọi cả tụt dốc theo mini-batch là SGD</td></tr>
             </tbody>
           </table>
@@ -1145,7 +1162,7 @@ footer a { color:var(--muted); }
           <div class="step"><div class="n">1</div><div class="b"><p><b>Phạt núm to.</b> Cộng vào điểm trừ một khoản theo bình phương độ lớn các núm. Tên thật: <span class="nm">L2 regularization</span>, cũng chính là <span class="nm">regularization</span> ở <a href="#s-overfit">chương 5</a>.</p></div></div>
           <div class="step"><div class="n">2</div><div class="b"><p><b>Tắt ngẫu nhiên vài nơ-ron mỗi vòng học.</b> Nghe như phá hoại, thật ra là chống học thuộc lòng: không nơ-ron nào được phép là người duy nhất biết một việc, vì nó có thể vắng mặt bất cứ lúc nào. Cả lớp buộc phải học phần dư cho nhau. Tên thật: <span class="nm">dropout</span>. Lúc dùng thật thì bật lại hết. Cách cài phổ biến chia bù lại cho tỉ lệ nơ-ron còn sống để tổng không tụt, tên là <span class="nm">inverted dropout</span>.</p></div></div>
           <div class="step"><div class="n">3</div><div class="b"><p><b>Làm thêm dữ liệu từ dữ liệu đã có.</b> Lật ngang tấm ảnh mèo thì nó vẫn là mèo. Cắt lệch, xoay nhẹ, đổi màu một chút — một tấm thành hai mươi tấm. Tên thật: <span class="nm">data augmentation</span>. Nó gần như là cách thêm dữ liệu, mà miễn phí.</p></div></div>
-          <div class="step"><div class="n">4</div><div class="b"><p><b>Dừng khi đề thử bắt đầu xấu đi.</b> Cứ theo dõi điểm trên đề thử; đúng lúc nó quay đầu thì ngắt. Tên thật: <span class="nm">early stopping</span>. Rẻ và hiệu quả, nhưng nó gộp hai việc vào một cái núm (học đủ chưa, và thuộc lòng chưa) — nên Andrew Ng, người dạy tám khoá gốc, thường thích phạt núm hơn.</p></div></div>
+          <div class="step"><div class="n">4</div><div class="b"><p><b>Dừng khi đề thử bắt đầu xấu đi.</b> Cứ theo dõi điểm trên đề thử; đúng lúc nó quay đầu thì ngắt. Tên thật: <span class="nm">early stopping</span>. Rẻ và hiệu quả, nhưng nó gộp hai việc vào một nút điều khiển (học đủ chưa, và thuộc lòng chưa) — nên Andrew Ng, người dạy tám khoá gốc, thường thích phạt núm hơn.</p></div></div>
         </div>
 
         <p>Còn <span class="nm">batch normalization</span>: <a href="#s-descent">chương 3</a> kéo các con số <i>đầu vào</i> về cùng cỡ, vì khe hẹp thì bóng lăn chậm. Trong một mạng sâu, các con số ở <b>giữa</b> mạng cũng trôi khỏi thang sau mỗi lớp, và lớp sau lại gặp đúng cái khe hẹp ấy. Nên làm lại phép cùng cỡ sau mỗi lớp. Nó còn có tác dụng phụ là chống thuộc lòng một chút.</p>
@@ -1155,10 +1172,27 @@ footer a { color:var(--muted); }
         <p>Những con số <b>bạn</b> chọn thay vì máy học ra — bước chân α, mức phạt λ, số lớp, số nơ-ron, cỡ mini-batch — gọi là <span class="nm">hyperparameter</span>, siêu tham số. Ba quy tắc dò, đều đi ngược trực giác:</p>
 
         <ul>
-          <li><b>Rút thăm ngẫu nhiên, đừng kẻ lưới.</b> Với hai núm và 25 lần thử: kẻ lưới 5×5 chỉ thử được <b>5 giá trị khác nhau</b> của mỗi núm. Rút ngẫu nhiên 25 điểm thì thử được <b>25 giá trị khác nhau</b> của mỗi núm. Vì bạn chưa biết núm nào quan trọng, ngẫu nhiên thường thắng.</li>
+          <li><b>Rút thăm ngẫu nhiên, đừng kẻ lưới.</b> Với hai siêu tham số và 25 lần thử: kẻ lưới 5×5 chỉ thử được <b>5 giá trị khác nhau</b> của mỗi siêu tham số. Rút ngẫu nhiên 25 điểm thì thử được <b>25 giá trị khác nhau</b> của mỗi siêu tham số. Vì bạn chưa biết cái nào quan trọng, ngẫu nhiên thường thắng.</li>
           <li><b>Dò theo thang chia, không theo thang cộng.</b> Bước chân đáng thử là 0,0001 · 0,001 · 0,01 · 0,1 — chứ không phải 0,1 · 0,2 · 0,3. Rút số ngẫu nhiên trên <b>thang log</b>: rút đều từ 0,0001 tới 1 theo thang cộng thì 90% lần thử dồn vào đúng một nấc 0,1–1, ba nấc nhỏ hơn chia nhau 10% còn lại.</li>
           <li><b>Thô trước, mịn sau.</b> Rải rộng một lượt, tìm ra vùng tốt, rồi rải dày trong đúng vùng đó. Tên thật: <span class="nm">coarse-to-fine</span>.</li>
         </ul>
+
+        <svg class="viz" id="fig-search" role="img" aria-label="Hai ô vuông, mỗi ô 25 lần thử hai siêu tham số. Ô trái kẻ lưới 5×5: chiếu xuống trục ngang chỉ còn 5 vạch, tức 5 giá trị khác nhau của bước chân. Ô phải rút ngẫu nhiên 25 điểm: chiếu xuống thành 25 vạch, 25 giá trị khác nhau." viewBox="0 0 340 232" style="max-width:420px;margin:18px auto">
+          <text x="100" y="20" text-anchor="middle" class="vt">kẻ lưới 5×5</text>
+          <rect x="40" y="30" width="120" height="120" fill="none" stroke="var(--border-2)"/>
+          <g fill="var(--k1)"><circle cx="50" cy="140" r="3.2"/><circle cx="50" cy="115" r="3.2"/><circle cx="50" cy="90" r="3.2"/><circle cx="50" cy="65" r="3.2"/><circle cx="50" cy="40" r="3.2"/><circle cx="75" cy="140" r="3.2"/><circle cx="75" cy="115" r="3.2"/><circle cx="75" cy="90" r="3.2"/><circle cx="75" cy="65" r="3.2"/><circle cx="75" cy="40" r="3.2"/><circle cx="100" cy="140" r="3.2"/><circle cx="100" cy="115" r="3.2"/><circle cx="100" cy="90" r="3.2"/><circle cx="100" cy="65" r="3.2"/><circle cx="100" cy="40" r="3.2"/><circle cx="125" cy="140" r="3.2"/><circle cx="125" cy="115" r="3.2"/><circle cx="125" cy="90" r="3.2"/><circle cx="125" cy="65" r="3.2"/><circle cx="125" cy="40" r="3.2"/><circle cx="150" cy="140" r="3.2"/><circle cx="150" cy="115" r="3.2"/><circle cx="150" cy="90" r="3.2"/><circle cx="150" cy="65" r="3.2"/><circle cx="150" cy="40" r="3.2"/></g>
+          <line x1="40" y1="170" x2="160" y2="170" stroke="var(--border-2)"/>
+          <g stroke="var(--ink)" stroke-width="1"><line x1="50" y1="158" x2="50" y2="170"/><line x1="75" y1="158" x2="75" y2="170"/><line x1="100" y1="158" x2="100" y2="170"/><line x1="125" y1="158" x2="125" y2="170"/><line x1="150" y1="158" x2="150" y2="170"/></g>
+          <text x="100" y="186" text-anchor="middle" class="vs">5 giá trị α khác nhau</text>
+          <text x="260" y="20" text-anchor="middle" class="vt">rút ngẫu nhiên 25 điểm</text>
+          <rect x="200" y="30" width="120" height="120" fill="none" stroke="var(--border-2)"/>
+          <g fill="var(--k1)"><circle cx="270.2" cy="121.8" r="3.2"/><circle cx="302.8" cy="45.4" r="3.2"/><circle cx="287.3" cy="67" r="3.2"/><circle cx="257.1" cy="65.7" r="3.2"/><circle cx="272.6" cy="61.3" r="3.2"/><circle cx="238.3" cy="137" r="3.2"/><circle cx="261.3" cy="48.6" r="3.2"/><circle cx="263.5" cy="54.8" r="3.2"/><circle cx="214.8" cy="54.8" r="3.2"/><circle cx="252.3" cy="50.4" r="3.2"/><circle cx="266" cy="113.5" r="3.2"/><circle cx="247" cy="120.4" r="3.2"/><circle cx="227.2" cy="83.8" r="3.2"/><circle cx="280.4" cy="66.3" r="3.2"/><circle cx="218.2" cy="119.1" r="3.2"/><circle cx="268.4" cy="72" r="3.2"/><circle cx="240.3" cy="54.6" r="3.2"/><circle cx="301.2" cy="56.2" r="3.2"/><circle cx="249.5" cy="117.7" r="3.2"/><circle cx="297.6" cy="111.5" r="3.2"/><circle cx="231.4" cy="88.6" r="3.2"/><circle cx="289.1" cy="103.3" r="3.2"/><circle cx="223.2" cy="57.1" r="3.2"/><circle cx="235.9" cy="88.9" r="3.2"/><circle cx="258.9" cy="120.2" r="3.2"/></g>
+          <line x1="200" y1="170" x2="320" y2="170" stroke="var(--border-2)"/>
+          <g stroke="var(--ink)" stroke-width="1"><line x1="214.8" y1="158" x2="214.8" y2="170"/><line x1="218.2" y1="158" x2="218.2" y2="170"/><line x1="223.2" y1="158" x2="223.2" y2="170"/><line x1="227.2" y1="158" x2="227.2" y2="170"/><line x1="231.4" y1="158" x2="231.4" y2="170"/><line x1="235.9" y1="158" x2="235.9" y2="170"/><line x1="238.3" y1="158" x2="238.3" y2="170"/><line x1="240.3" y1="158" x2="240.3" y2="170"/><line x1="247" y1="158" x2="247" y2="170"/><line x1="249.5" y1="158" x2="249.5" y2="170"/><line x1="252.3" y1="158" x2="252.3" y2="170"/><line x1="257.1" y1="158" x2="257.1" y2="170"/><line x1="258.9" y1="158" x2="258.9" y2="170"/><line x1="261.3" y1="158" x2="261.3" y2="170"/><line x1="263.5" y1="158" x2="263.5" y2="170"/><line x1="266" y1="158" x2="266" y2="170"/><line x1="268.4" y1="158" x2="268.4" y2="170"/><line x1="270.2" y1="158" x2="270.2" y2="170"/><line x1="272.6" y1="158" x2="272.6" y2="170"/><line x1="280.4" y1="158" x2="280.4" y2="170"/><line x1="287.3" y1="158" x2="287.3" y2="170"/><line x1="289.1" y1="158" x2="289.1" y2="170"/><line x1="297.6" y1="158" x2="297.6" y2="170"/><line x1="301.2" y1="158" x2="301.2" y2="170"/><line x1="302.8" y1="158" x2="302.8" y2="170"/></g>
+          <text x="260" y="186" text-anchor="middle" class="vs">25 giá trị α khác nhau</text>
+          <text x="170" y="212" text-anchor="middle" class="vs">ngang: bước chân α — quan trọng</text>
+          <text x="170" y="226" text-anchor="middle" class="vs">dọc: một siêu tham số gần như vô dụng</text>
+        </svg>
 
         <div class="box warn-box">
           <p class="box__k">Thứ tự nên vặn, theo Ng</p>
@@ -1203,7 +1237,7 @@ footer a { color:var(--muted); }
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v">ngưỡng ấy là <span class="nm">human-level performance</span> — mức sai của con người, và người ta dùng nó để ước lượng <span class="nm">Bayes error</span> — sai số Bayes, tức mức sai mà <b>không ai và không máy nào</b> vượt qua được (ảnh mờ quá thì đúng là không đoán nổi). Phải lấy mức của <b>người giỏi nhất</b>, hay cả một nhóm chuyên gia: sai số Bayes chỉ thấp hơn hoặc bằng mức ấy, nên lấy mức của một người bình thường là hạ thấp cái trần, và bạn thôi sửa quá sớm. Khoảng cách từ mức ấy tới đề ôn mới là phần <i>đáng</i> đi sửa, tên là <span class="nm">avoidable bias</span> — bias tránh được. Hai cái bệnh trong bảng là <span class="nm">bias</span> và <span class="nm">variance</span>. Chữ bias ở đây không dính gì tới núm bias (b) ở <a href="#s-machine">chương 2</a> — tiếng Anh dùng một chữ cho hai thứ khác hẳn nhau.</span>
+          <span class="v">ngưỡng ấy là <span class="nm">human-level performance</span> — mức sai của con người, và người ta dùng nó để ước lượng <span class="nm">Bayes error</span> — sai số Bayes, tức mức sai mà <b>không ai và không máy nào</b> vượt qua được (ảnh mờ quá thì đúng là không đoán nổi). Phải lấy mức của <b>người giỏi nhất</b>, hay cả một nhóm chuyên gia. Lý do: sai số Bayes chỉ có thể thấp hơn hoặc bằng mức ấy, nên mốc càng thấp thì càng sát nó. Lấy mức của người bình thường thì bạn tưởng máy đã chạm trần sớm, và thôi sửa quá sớm. Khoảng cách từ mức ấy tới đề ôn mới là phần <i>đáng</i> đi sửa, tên là <span class="nm">avoidable bias</span> — bias tránh được. Hai cái bệnh trong bảng là <span class="nm">bias</span> và <span class="nm">variance</span>. Chữ bias ở đây không dính gì tới núm bias (b) ở <a href="#s-machine">chương 2</a> — tiếng Anh dùng một chữ cho hai thứ khác hẳn nhau.</span>
         </div>
 
         <p>Vì sao phải phân biệt: máy sai 9% nghe như còn nhiều chỗ sửa. Nhưng nếu sai số Bayes là 8%, thì phần tránh được chỉ có <b>1%</b> — và mọi tháng công bạn bỏ vào "làm máy to hơn" sẽ đổi được nhiều nhất một điểm. <b>Con số tuyệt đối không nói gì; khoảng cách tới cái trần mới nói.</b></p>
@@ -1244,15 +1278,15 @@ footer a { color:var(--muted); }
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v">bắt được bao nhiêu phần ca thật là <span class="nm">recall</span>. Báo động đúng bao nhiêu phần là <span class="nm">precision</span>. Cách gộp chúng quen dùng nhất là <span class="nm">F1 score</span> — trung bình điều hoà, nên nó chỉ cao khi <b>cả hai</b> đều cao. Quy tắc "chỉ một số đo" là <span class="nm">single number evaluation metric</span>.</span>
+          <span class="v">bắt được bao nhiêu phần ca thật là <span class="nm">recall</span>. Báo động đúng bao nhiêu phần là <span class="nm">precision</span>. Cách gộp chúng quen dùng nhất là <span class="nm">F1 score</span> — trung bình điều hoà, F1 = 2·P·R / (P + R) với P là precision, R là recall, nên nó chỉ cao khi <b>cả hai</b> đều cao. Quy tắc "chỉ một số đo" là <span class="nm">single number evaluation metric</span>.</span>
         </div>
 
         <div class="box warn-box">
           <p class="box__k">Vì sao "độ chính xác" là một cái bẫy</p>
-          <p>Một triệu giao dịch, ba cái gian. Cái máy nói "không gian" cho <b>tất cả</b> đạt độ chính xác <b>99,9997%</b> — và hoàn toàn vô dụng. Dữ liệu mà một lớp áp đảo lớp kia như vậy gọi là <span class="nm">skewed dataset</span> — dữ liệu lệch lớp, và ở đó <b>đừng bao giờ dùng độ chính xác</b>; dùng recall với precision, gộp bằng F1. Máy nói "không gian" cho tất cả bắt được 0 trong 3 ca — recall bằng 0, F1 bằng 0. Máy ngược lại, nói "gian" cho tất cả, có recall 100% nhưng cứ một triệu lần báo động chỉ đúng 3 lần — precision 0,0003%, F1 cũng gần bằng 0.</p>
+          <p>Một triệu giao dịch, ba cái gian. Cái máy nói "không gian" cho <b>tất cả</b> đạt độ chính xác — <span class="nm">accuracy</span>, tỉ lệ đoán đúng trên mọi ca — <b>99,9997%</b> — và hoàn toàn vô dụng. Dữ liệu mà một lớp áp đảo lớp kia như vậy gọi là <span class="nm">skewed dataset</span> — dữ liệu lệch lớp, và ở đó <b>đừng bao giờ dùng độ chính xác</b>; dùng recall với precision, gộp bằng F1. Máy nói "không gian" cho tất cả bắt được 0 trong 3 ca — recall bằng 0, F1 bằng 0. Máy ngược lại, nói "gian" cho tất cả, có recall 100% nhưng cứ một triệu lần báo động chỉ đúng 3 lần — precision 0,0003%, tức P = 3/1.000.000, nên F1 = 2·P·1/(P + 1) ≈ 0,0006% — cũng gần bằng 0.</p>
         </div>
 
-        <p>Một nguyên tắc bao trùm cả chương: <b>mỗi cái núm nên chỉnh đúng một thứ.</b> Máy chưa học đủ thì vặn núm làm máy to hơn; máy thuộc lòng thì vặn núm phạt; đo sai bia thì đổi <i>tập đề thử</i>, đừng đổi thuật toán. Đừng dùng một thứ để chữa hai bệnh cùng lúc, vì rồi bạn không biết nó đang chữa cái nào. Tên thật: <span class="nm">orthogonalization</span> — trực giao hoá.</p>
+        <p>Một nguyên tắc bao trùm cả chương: <b>mỗi nút điều khiển nên chỉnh đúng một thứ.</b> Máy chưa học đủ thì làm máy to hơn; máy thuộc lòng thì tăng mức phạt λ; đo sai bia thì đổi <i>tập đề thử</i>, đừng đổi thuật toán. Đừng dùng một thứ để chữa hai bệnh cùng lúc, vì rồi bạn không biết nó đang chữa cái nào. Tên thật: <span class="nm">orthogonalization</span> — trực giao hoá. "Trực giao" là vuông góc: mỗi nút đẩy theo đúng một trục, không kéo lệch trục khác.</p>
 
         <h3>Ngồi xem máy sai. Bằng mắt. Một trăm ca.</h3>
 
@@ -1362,7 +1396,12 @@ footer a { color:var(--muted); }
 
         <p>Thước đo lẫn lộn tên là <span class="nm">entropy</span>. Nó bằng <b>0</b> khi nhóm hoàn toàn thuần (toàn mèo, hoặc toàn không-mèo) và bằng <b>1</b> khi chia đôi 50–50 — tức lẫn lộn tối đa. Đáng nhớ: entropy <i>không</i> quan tâm nhóm to hay nhỏ, chỉ quan tâm <b>tỉ lệ</b>. Nhiều thư viện mặc định dùng một thước đo cùng dáng, <span class="nm">Gini impurity</span> — cũng bằng 0 khi thuần, cao nhất (0,5) khi chia đôi — và hai thước đo gần như luôn chọn cùng một câu hỏi.</p>
 
-        <p>Ở mỗi nút, thuật toán thử mọi đặc trưng và mọi ngưỡng, rồi chọn cách tách làm hai nhánh <b>thuần nhất</b>. Đại lượng nó tối đa hoá là <span class="nm">information gain</span> — lượng thông tin thu được: entropy trước khi tách, trừ đi trung bình entropy hai nhánh, <b>có trọng số theo số mẫu rơi vào mỗi nhánh</b>. Trọng số là chi tiết quan trọng — nhờ nó, một nhánh tí hon rất thuần không đánh lừa được thuật toán.</p>
+        <div class="fx">
+          <div class="fx__line sm">H = −p·log₂p − (1 − p)·log₂(1 − p)<br>Gini = 1 − p² − (1 − p)²</div>
+          <div class="fx__vi"><b>p</b> là tỉ lệ mèo trong nhóm. Nhóm 4 mèo 1 không: p = 0,8, H = 0,8 × 0,322 + 0,2 × 2,322 = 0,722. Chia đôi: p = 0,5, H = 0,5 × 1 + 0,5 × 1 = 1 — ra đúng 1 vì log lấy cơ số 2. Nhóm thuần thì một vế là 0 · log 0, quy ước bằng 0, nên H = 0. Gini khi chia đôi: 1 − 0,25 − 0,25 = 0,5.</div>
+        </div>
+
+        <p>Ở mỗi nút, thuật toán thử mọi đặc trưng và mọi ngưỡng, rồi chọn cách tách làm hai nhánh <b>thuần nhất</b>. Đại lượng nó tối đa hoá là <span class="nm">information gain</span> — lượng thông tin thu được: entropy trước khi tách, trừ đi trung bình entropy hai nhánh, <b>có trọng số theo số mẫu rơi vào mỗi nhánh</b>. Trọng số là chi tiết quan trọng — nhờ nó, một nhánh tí hon rất thuần không đánh lừa được thuật toán. Với câu "tai vểnh?" ở mô hình dưới: cả nhóm 5 mèo trên 10 con có H = 1; mỗi nhánh 5 con, lệch 4–1, H = 0,722; thu được 1 − (5/10 × 0,722 + 5/10 × 0,722) = 0,278.</p>
 
         <p>Dừng tách khi nhóm đã thuần, hoặc quá nhỏ, hoặc cây đã quá sâu. Ba cái ngưỡng ấy chính là <span class="nm">hyperparameter</span> của cây, và chúng làm đúng việc của <span class="nm">regularization</span>: cây càng sâu càng học thuộc lòng.</p>
 
@@ -1471,17 +1510,17 @@ footer a { color:var(--muted); }
 
         <div class="tw">
           <table>
-            <thead><tr><th>Núm</th><th>Tên thật</th><th>Nó làm gì</th></tr></thead>
+            <thead><tr><th>Núm bạn tự chọn</th><th>Tên thật</th><th>Nó làm gì</th></tr></thead>
             <tbody>
               <tr><td>cỡ kính lúp</td><td><span class="nm">filter / kernel size</span></td><td>3×3 là mặc định gần như mọi nơi. Lớn hơn thì nhìn rộng hơn nhưng đắt hơn.</td></tr>
               <tr><td>viền thêm</td><td><span class="nm">padding</span></td><td>Đắp một vành số 0 quanh ảnh, để ô ở mép cũng được kính lúp phủ đủ, và để ảnh ra <b>không bị co nhỏ</b>.</td></tr>
               <tr><td>bước trượt</td><td><span class="nm">stride</span></td><td>Trượt 1 ô mỗi lần, hay nhảy 2 ô? Nhảy 2 thì ảnh ra hẹp đi một nửa mỗi chiều, tính nhanh gấp bốn.</td></tr>
-              <tr><td>số kính lúp</td><td><span class="nm">channel</span></td><td>Mỗi kính bắt một loại chi tiết, chạy song song. Kết quả của một kính là một <span class="nm">feature map</span> — bản đồ đặc trưng.</td></tr>
+              <tr><td>số kính lúp = số kênh</td><td><span class="nm">channel</span></td><td>Mỗi kính bắt một loại chi tiết, chạy song song. Kết quả của một kính là một <span class="nm">feature map</span> — bản đồ đặc trưng.</td></tr>
             </tbody>
           </table>
         </div>
 
-        <p>Một chi tiết mà mô hình ở trên giấu đi: tấm ảnh của nó chỉ có một tầng xám. Ảnh màu có ba tầng — đỏ, lục, lam — và sau một lớp 32 kính lúp thì là một chồng 32 bản đồ. Kính lúp của lớp kế tiếp vì vậy <b>dày bằng cả chồng</b>: kính 3×3 đặt lên chồng 32 tầng có 3×3×32 = 288 cái núm, nhân rồi cộng qua mọi tầng cùng lúc, ra đúng một con số.</p>
+        <p>Một chi tiết mà mô hình ở trên giấu đi: tấm ảnh của nó chỉ có một kênh xám. Ảnh màu có ba kênh — đỏ, lục, lam — và sau một lớp 32 kính lúp thì là một chồng 32 bản đồ. Kính lúp của lớp kế tiếp vì vậy <b>dày bằng cả chồng</b>: kính 3×3 đặt lên chồng 32 kênh có 3×3×32 = 288 cái núm, nhân rồi cộng qua mọi kênh cùng lúc, ra đúng một con số.</p>
 
         <div class="fx">
           <div class="fx__line sm">cỡ ra = (cỡ vào + 2·padding − cỡ kính) / stride, bỏ phần lẻ, rồi + 1</div>
@@ -1490,7 +1529,7 @@ footer a { color:var(--muted); }
 
         <p>Thêm một bước nữa sau mỗi lượt: <b>thu nhỏ ảnh lại.</b> Trong từng ô vuông 2×2, giữ con số lớn nhất, bỏ ba cái kia. Vì chi tiết nằm ở đâu <i>chính xác</i> không quan trọng bằng chi tiết ấy <b>có hay không</b>. Tên thật: <span class="nm">max pooling</span> — một kiểu pooling; kiểu kia lấy trung bình. Nó không có cái núm nào để học — chỉ là một phép chọn.</p>
 
-        <p>Xếp nhiều lượt kính lúp + thu nhỏ lên nhau, cuối cùng nối vào vài lớp thường để ra đáp án. Cả cái máy này tên là <span class="nm">convolutional neural network</span> — mạng tích chập, viết tắt <span class="nm">CNN</span>.</p>
+        <p>Xếp nhiều lượt kính lúp + thu nhỏ lên nhau, cuối cùng nối vào vài lớp thường để ra đáp án — lớp mà mỗi nơ-ron nối với mọi con số của lớp trước, như ở chương 6, tên thật <span class="nm">fully connected layer</span> (Keras gọi là Dense). Cả cái máy này tên là <span class="nm">convolutional neural network</span> — mạng tích chập, viết tắt <span class="nm">CNN</span>.</p>
 
         <h3>Lịch sử của đúng một câu hỏi: làm sao xếp được nhiều lớp hơn?</h3>
 
@@ -1556,7 +1595,7 @@ footer a { color:var(--muted); }
           </div>
         </div>
 
-        <p>Bước cuối của loạt này: <b>không cần khung chữ nhật nữa, tô màu từng ô ảnh một.</b> "Ô này thuộc con mèo, ô kia thuộc cái sofa." Tên thật: <span class="nm">semantic segmentation</span> — phân đoạn ngữ nghĩa. Vấn đề kỹ thuật: tích chập và pooling chỉ giữ nguyên hoặc làm ảnh <i>nhỏ</i> đi, không bao giờ làm to ra, mà đầu ra phải <b>to bằng ảnh gốc</b>. Nên cần một phép làm ảnh <i>to</i> ra, tên là <span class="nm">transpose convolution</span> — tích chập chuyển vị. Kiến trúc ghép cả hai nhánh, co nhỏ rồi nở lại, kèm các đường tắt nối ngang từ nhánh co sang nhánh nở để lấy lại chi tiết đã mất (ở đây bản đồ được xếp chồng lên nhau, không cộng như ResNet), trông như chữ U — nên tên nó là <span class="nm">U-Net</span>.</p>
+        <p>Bước cuối của loạt này: <b>không cần khung chữ nhật nữa, tô màu từng ô ảnh một.</b> "Ô này thuộc con mèo, ô kia thuộc cái sofa." Tên thật: <span class="nm">semantic segmentation</span> — phân đoạn ngữ nghĩa. Vấn đề kỹ thuật: tích chập và pooling chỉ giữ nguyên hoặc làm ảnh <i>nhỏ</i> đi, không bao giờ làm to ra, mà đầu ra phải <b>to bằng ảnh gốc</b>. Nên cần một phép làm ảnh <i>to</i> ra, tên là <span class="nm">transpose convolution</span> — tích chập chuyển vị. Tên lấy từ phép <a href="mathematics-for-machine-learning.html#s-transpose">chuyển vị ma trận</a>; chỉ cần nhớ việc nó làm: làm ảnh to ra. Kiến trúc ghép cả hai nhánh, co nhỏ rồi nở lại, kèm các đường tắt nối ngang từ nhánh co sang nhánh nở để lấy lại chi tiết đã mất (ở đây bản đồ được xếp chồng lên nhau, không cộng như ResNet), trông như chữ U — nên tên nó là <span class="nm">U-Net</span>.</p>
 
         <h3>Nhận diện mặt: học một hàm "giống nhau bao nhiêu" thay vì học các lớp</h3>
 
@@ -1600,13 +1639,13 @@ footer a { color:var(--muted); }
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v"><span class="nm">word embedding</span> — biểu diễn từ. Hai cách học nổi tiếng: <span class="nm">word2vec</span> (đoán từ ngữ cảnh, và để khỏi phải tính tổng trên cả 10.000 từ mỗi bước thì chỉ lấy vài từ sai làm đối chứng — mẹo ấy tên <span class="nm">negative sampling</span>) và <span class="nm">GloVe</span> (khớp trực tiếp bảng đếm "từ nào đứng cạnh từ nào"). Đo hai từ gần nhau bằng <span class="nm">cosine similarity</span> — hai dãy số cùng hướng tới đâu (đọc từ góc giữa chúng), không phải cách nhau bao xa.</span>
+          <span class="v"><span class="nm">word embedding</span> — biểu diễn từ. Hai cách học nổi tiếng: <span class="nm">word2vec</span> (đoán từ ngữ cảnh, và để khỏi phải tính tổng trên cả 10.000 từ mỗi bước thì chỉ lấy vài từ sai làm đối chứng — mẹo ấy tên <span class="nm">negative sampling</span>) và <span class="nm">GloVe</span> (khớp trực tiếp bảng đếm "từ nào đứng cạnh từ nào"). Đo hai từ gần nhau bằng <span class="nm">cosine similarity</span> — hai dãy số cùng hướng tới đâu (coi mỗi dãy là một mũi tên rồi đọc góc giữa hai mũi tên: <a href="mathematics-for-machine-learning.html#s-dot">trang Toán cho học máy, mục 1.5</a>), không phải cách nhau bao xa.</span>
         </div>
 
         <div class="box mis">
           <p class="box__k">Cẩn thận</p>
           <p class="box__t">Bản đồ từ học cả định kiến trong sách báo.</p>
-          <p>Vì nó học từ chữ người viết, nó học luôn cả những liên hệ không nên có — kiểu "đàn ông ↔ bác sĩ" đối với "đàn bà ↔ điều dưỡng". Đây không phải lỗi thuật toán, đây là <b>tấm gương của dữ liệu</b>. Việc dò ra trục định kiến rồi trừ nó đi gọi là <span class="nm">debiasing</span>, và nó chỉ chữa được phần bề mặt.</p>
+          <p>Vì nó học từ chữ người viết, nó học luôn cả những liên hệ không nên có — kiểu "đàn ông ↔ bác sĩ" đối với "đàn bà ↔ điều dưỡng". Đây không phải lỗi thuật toán, đây là <b>tấm gương của dữ liệu</b>. Việc dò ra hướng định kiến — ví dụ hiệu của hai dãy số "đàn ông" trừ "đàn bà" — rồi xoá phần của mỗi từ nằm dọc hướng ấy (đúng phép chiếu ở <a href="mathematics-for-machine-learning.html#s-dot">trang Toán cho học máy, mục 1.5</a>) gọi là <span class="nm">debiasing</span>, và nó chỉ chữa được phần bề mặt.</p>
         </div>
 
         <h3>Đời 1 — đọc từng từ, mang theo một cuốn sổ nhớ</h3>
@@ -1642,7 +1681,7 @@ footer a { color:var(--muted); }
           <p>Bước đầu, "is" có xác suất cao nhất vì "Jane is…" là cách mở câu cực kỳ phổ biến; sau "Jane is", từ cao nhất lại là "going", vì "is going" cũng phổ biến. Chọn tham lam cứ thế đi tới "Jane is going to Africa" — nghe được, nhưng xác suất cả câu thấp hơn hẳn "Jane <b>visits</b> Africa in September", câu đi qua đúng cái từ đã bị bỏ ở bước đầu. Chọn tham lam từng bước <b>khoá bạn vào một nhánh tệ mà không quay lại được</b>.</p>
         </div>
 
-        <p>Lối đi giữa: thay vì giữ 1 phương án (tham lam) hay tất cả (bất khả thi — 10.000¹⁰ câu), <b>giữ B phương án tốt nhất ở mỗi bước</b>. B = 3 nghĩa là luôn có ba câu dở dang trong tay, mở rộng cả ba, rồi giữ ba tốt nhất trong số các mở rộng. B = 1 chính là tham lam. Sản phẩm thật dùng B = 3 tới 10; lợi ích giảm rất nhanh sau đó.</p>
+        <p>Lối đi giữa: thay vì giữ 1 phương án (tham lam) hay tất cả (bất khả thi — 10.000¹⁰ câu), <b>giữ B phương án tốt nhất ở mỗi bước</b> (B ở đây là bề rộng chùm, không phải núm B ở chương 2). B = 3 nghĩa là luôn có ba câu dở dang trong tay, mở rộng cả ba, rồi giữ ba tốt nhất trong số các mở rộng. B = 1 chính là tham lam. Sản phẩm thật dùng B = 3 tới 10; lợi ích giảm rất nhanh sau đó.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
@@ -1673,7 +1712,7 @@ footer a { color:var(--muted); }
 
         <p>Cách sửa đến qua hai bước. Bước đầu vẫn giữ RNN, chỉ bỏ cái nút thắt: mỗi lần viết một từ tiếng Anh, decoder được nhìn lại <b>mọi</b> từ tiếng Việt và tự chọn nhìn từ nào nhiều. Bước sau bỏ luôn việc đọc lần lượt: cho <b>mỗi từ tự hỏi</b>: "trong câu này, từ nào liên quan tới tôi?" Rồi nó lấy về thông tin từ đúng những từ đó, nhiều hay ít tuỳ mức liên quan. Trong câu "Con mèo không ăn con cá vì <b>nó</b> đã no", chữ "nó" phải nhìn về "mèo", không nhìn về "cá".</p>
 
-        <p>Cơ chế đúng ba bước, và đáng nhớ vì nó y như tra từ điển: mỗi từ phát ra một <b>câu hỏi</b>, một <b>nhãn</b> để người khác tìm thấy nó, và một <b>nội dung</b> để đưa ra. Đem câu hỏi của tôi nhân từng cặp rồi cộng với nhãn của từng từ — đúng phép của một nơ-ron ở <a href="#s-nn">chương 6</a>, hai dãy số càng cùng hướng thì kết quả càng lớn — ra điểm liên quan, rồi chia cho căn của độ dài dãy số để softmax khỏi bị đẩy ra bãi phẳng; bóp qua softmax → ra phần trăm cộng lại 100%; lấy nội dung của mọi từ trộn theo phần trăm ấy. <b>Attention chỉ là một phép tra cứu mềm</b> — mềm vì thay vì lấy đúng một mục, nó lấy một chút của mọi mục.</p>
+        <p>Cơ chế đúng ba bước, và đáng nhớ vì nó y như tra từ điển: mỗi từ phát ra một <b>câu hỏi</b>, một <b>nhãn</b> để người khác tìm thấy nó, và một <b>nội dung</b> để đưa ra. (1) Nhân câu hỏi của tôi với nhãn của từng từ — nhân từng cặp rồi cộng, đúng phép tích vô hướng của một nơ-ron ở <a href="#s-nn">chương 6</a>; hai dãy số càng cùng hướng thì kết quả càng lớn. Đó là điểm liên quan. Chia điểm ấy cho căn của độ dài dãy số để softmax khỏi bị đẩy ra bãi phẳng: cộng càng nhiều cặp thì điểm càng to, mà điểm to quá thì softmax dồn gần hết về một từ và độ nghiêng gần 0 — giống bãi phẳng ở <a href="#s-classify">chương 4</a>. (2) Bóp qua softmax thành phần trăm cộng lại 100%. (3) Trộn nội dung của mọi từ theo phần trăm ấy. <b>Attention chỉ là một phép tra cứu mềm</b> — mềm vì thay vì lấy đúng một mục, nó lấy một chút của mọi mục.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
@@ -1781,11 +1820,26 @@ footer a { color:var(--muted); }
 
         <p>Chiếu mỗi điểm xuống trục 1 — theo các nét đứt — thì mỗi điểm chỉ còn một con số thay vì hai. Phần bị bỏ đi đúng bằng mấy nét đứt ngắn ấy, tức độ lệch theo trục 2, nên gần như không mất gì.</p>
 
-        <p>Để làm gì: để <b>vẽ được lên giấy</b> (từ năm mươi chiều về hai chiều thì mắt người xem được — và đây là công dụng chính), và để chạy nhanh hơn. Tên thật: <span class="nm">PCA</span>; toán đứng sau nó ở <a href="mathematics-for-machine-learning.html#s-pca">trang Toán cho học máy, mục 1.10</a>. Một cảnh báo của Ng: <b>đừng dùng PCA để chống học thuộc lòng</b> — nghe hợp lý vì nó giảm số núm, nhưng nó bỏ thông tin mà không nhìn đáp án — chiều bị bỏ có thể chính là chiều quyết định đáp án, còn <a href="#s-overfit">phạt núm to</a> thì không. Bắt buộc phải <a href="#s-descent">kéo các con số về cùng cỡ</a> trước khi chạy PCA, nếu không cột nào đo bằng đơn vị lớn sẽ chiếm hết trục đầu tiên.</p>
+        <p>Để làm gì: để <b>vẽ được lên giấy</b> (từ năm mươi chiều về hai chiều thì mắt người xem được — và đây là công dụng chính), và để chạy nhanh hơn. Tên thật: <span class="nm">PCA</span>; toán đứng sau nó ở <a href="mathematics-for-machine-learning.html#s-pca">trang Toán cho học máy, mục 1.10</a>. Một cảnh báo của Ng: <b>đừng dùng PCA để chống học thuộc lòng</b>. Nghe hợp lý vì nó giảm số núm. Nhưng PCA chọn chiều để bỏ mà không nhìn đáp án, nên chiều bị bỏ có thể chính là chiều quyết định đáp án. <a href="#s-overfit">Phạt núm to</a> nằm ngay trong điểm trừ, cạnh phần so với đáp án, nên không bỏ mất chiều nào mà đáp án cần. Bắt buộc phải <a href="#s-descent">kéo các con số về cùng cỡ</a> trước khi chạy PCA, nếu không cột nào đo bằng đơn vị lớn sẽ chiếm hết trục đầu tiên.</p>
 
         <h3>Gợi ý phim</h3>
 
         <p>Bạn chấm điểm năm bộ phim. Máy học <b>cùng một lúc hai thứ</b>: bạn thích kiểu gì, và mỗi bộ phim thuộc kiểu gì. Nghe như con gà và quả trứng, nhưng vặn núm hai bên cùng lúc thì cả hai hội tụ — mỗi bên là gợi ý để đoán bên kia. Điều đáng nhớ: <b>máy chưa bao giờ xem phim.</b> Nó không biết phim nào hay. Nó chỉ khớp bảng điểm.</p>
+
+        <p>Mỗi người là một dãy vài con số — thích hành động bao nhiêu, thích lãng mạn bao nhiêu… — và mỗi phim cũng là một dãy cùng độ dài, nói phim ấy có bao nhiêu hành động, bao nhiêu lãng mạn. Điểm đoán = nhân từng cặp rồi cộng, cộng thêm một số b — đúng phép của một nơ-ron ở <a href="#s-nn">chương 6</a>. Điểm trừ là bình phương sai lệch, chỉ tính trên những ô đã có người chấm, cộng khoản phạt núm to. Cả bài toán là điền các ô "?":</p>
+
+        <div class="tw">
+          <table>
+            <thead><tr><th>Điểm chấm (0–5)</th><th>Lãng mạn 1</th><th>Lãng mạn 2</th><th>Lãng mạn 3</th><th>Hành động 1</th><th>Hành động 2</th></tr></thead>
+            <tbody>
+              <tr><td>Người 1</td><td>5</td><td>5</td><td>?</td><td>0</td><td>0</td></tr>
+              <tr><td>Người 2</td><td>5</td><td>?</td><td>4</td><td>0</td><td>?</td></tr>
+              <tr><td>Người 3</td><td>0</td><td>?</td><td>0</td><td>5</td><td>5</td></tr>
+              <tr><td>Người 4</td><td>?</td><td>0</td><td>?</td><td>4</td><td>?</td></tr>
+              <tr><td>Người mới</td><td>?</td><td>?</td><td>?</td><td>?</td><td>?</td></tr>
+            </tbody>
+          </table>
+        </div>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
@@ -1795,7 +1849,7 @@ footer a { color:var(--muted); }
         <p>Ba chi tiết thực dụng, mỗi cái một dòng:</p>
 
         <ul>
-          <li><span class="nm">mean normalization</span> — trừ đi điểm trung bình của từng bộ phim trước khi học. Không có bước này, một người <b>chưa chấm phim nào</b> sẽ được đoán là chấm 0 cho tất cả, tức là bị gợi ý ngẫu nhiên. Trừ trung bình rồi thì họ được đoán bằng điểm trung bình — hợp lý hơn nhiều.</li>
+          <li><span class="nm">mean normalization</span> — trừ đi điểm trung bình của từng bộ phim trước khi học. Không có bước này, một người <b>chưa chấm phim nào</b> — hàng cuối của bảng trên — sẽ được đoán là chấm 0 cho tất cả. Lý do: không ô nào của họ kéo núm, chỉ khoản phạt núm to kéo dãy số của họ về 0, còn b của họ nằm yên ở 0 lúc khởi đầu; nên điểm đoán ra 0, và họ bị gợi ý ngẫu nhiên. Trừ trung bình rồi thì họ được đoán bằng điểm trung bình — hợp lý hơn nhiều.</li>
           <li><span class="nm">cold start</span> — khởi đầu lạnh: phim mới chưa ai chấm, người mới chưa chấm gì. Collaborative filtering bó tay ở đây; phải mượn content-based.</li>
           <li><span class="nm">retrieval and ranking</span> — truy hồi rồi xếp hạng. Không ai chấm điểm cả một triệu phim cho mỗi lần mở app. Bước 1 <b>truy hồi</b> vài trăm ứng viên bằng cách rẻ (cùng thể loại, cùng người xem, đang thịnh); bước 2 mới đem mô hình đắt ra <b>xếp hạng</b> vài trăm cái đó. Đây là hình dáng của gần như mọi hệ gợi ý thật.</li>
         </ul>
@@ -1900,13 +1954,13 @@ footer a { color:var(--muted); }
           </table>
         </div>
 
-        <h3>2 · Núm bắt đầu từ đâu</h3>
+        <h3>2 · Siêu tham số bắt đầu từ đâu</h3>
 
         <p>Những con số này là mặc định của cả lĩnh vực, không phải kết quả đo trên bài toán của bạn. Đặt chúng vào, cho máy chạy được đã, rồi mới <a href="#s-deep">dò</a> — và dò đúng cái đứng đầu bảng trước.</p>
 
         <div class="tw">
           <table>
-            <thead><tr><th>Núm</th><th>Bắt đầu từ</th><th>Ghi chú</th></tr></thead>
+            <thead><tr><th>Siêu tham số</th><th>Bắt đầu từ</th><th>Ghi chú</th></tr></thead>
             <tbody>
               <tr><td>bước chân α — <span class="nm">learning rate</span></td><td>0,001 nếu dùng Adam</td><td>Quan trọng nhất trong bảng. Dò theo bội số 3 trên thang log: 0,001 → 0,003 → 0,01.</td></tr>
               <tr><td>bộ vặn núm — <span class="nm">optimizer</span></td><td><span class="nm">Adam</span></td><td>β₁ = 0,9 · β₂ = 0,999 · ε = 10⁻⁸ (ε này chỉ để khỏi chia cho 0, không phải ε làm bừa ở dòng cuối bảng). Gần như không ai đổi ba số này.</td></tr>
@@ -1914,7 +1968,7 @@ footer a { color:var(--muted); }
               <tr><td>hàm kích hoạt lớp giữa</td><td><span class="nm">ReLU</span></td><td>Không phân vân thì chọn cái này.</td></tr>
               <tr><td>đặt núm ban đầu</td><td><span class="nm">He initialization</span> với ReLU</td><td>Mặc định của thư viện thường không phải He (Keras: Xavier; PyTorch: rải đều trong ±1/√(số đầu vào)), nên với mạng ReLU sâu thì đặt rõ: <code>he_normal</code> hay <code>kaiming_normal_</code>. Đừng bao giờ đặt tất cả bằng 0.</td></tr>
               <tr><td>phạt núm to λ — <span class="nm">L2 regularization</span></td><td>0, rồi tăng nếu đang thuộc lòng</td><td>Dò 0,01 → 0,1 → 1 → 10.</td></tr>
-              <tr><td><span class="nm">dropout</span></td><td>0,2–0,5 ở lớp dày</td><td>Chỉ bật khi thật sự đang thuộc lòng. Đang <span class="nm">bias</span> mà bật là làm nặng thêm.</td></tr>
+              <tr><td><span class="nm">dropout</span></td><td>0,2–0,5 ở lớp thường (Dense)</td><td>Chỉ bật khi thật sự đang thuộc lòng. Đang <span class="nm">bias</span> mà bật là làm nặng thêm.</td></tr>
               <tr><td>bề rộng chùm — <span class="nm">beam width</span></td><td>3–10</td><td>Lợi ích giảm rất nhanh sau 10.</td></tr>
               <tr><td>chiết khấu γ</td><td>0,9–0,99</td><td>Càng cao càng nhìn xa. Đổi nó có thể lật ngược nước đi ở cả một vùng chỗ đứng, không phải chỉnh cho mượt.</td></tr>
               <tr><td>ε — <span class="nm">epsilon-greedy</span></td><td>1,0 rồi giảm dần về 0,01</td><td>Làm bừa nhiều lúc đầu, ít dần về sau.</td></tr>
@@ -1937,7 +1991,7 @@ footer a { color:var(--muted); }
               <tr><td>Bảng số rất đẹp, đem ra dùng thật thì thất bại</td><td>đề thử không lấy từ dữ liệu thật</td><td>rò rỉ dữ liệu · dữ liệu thật trôi dần theo thời gian</td></tr>
               <tr><td>Điểm trừ răng cưa lên xuống</td><td>bình thường với mini-batch</td><td>biên độ quá lớn thì giảm bước chân, hoặc tăng cỡ lô</td></tr>
               <tr><td>Chạy hai lần ra hai kết quả</td><td>bình thường — mặt đất có nhiều đáy</td><td>chênh quá lớn thì khởi tạo sai thang · dữ liệu quá ít</td></tr>
-              <tr><td>Mọi nơ-ron trong một lớp cho cùng một số</td><td>khởi tạo tất cả bằng 0</td><td>bước chân lớn tới mức mọi ReLU chết hẳn</td></tr>
+              <tr><td>Mọi nơ-ron trong một lớp cho cùng một số</td><td>khởi tạo tất cả bằng 0</td><td>bước chân lớn tới mức mọi ReLU chết hẳn — núm bị đẩy tới chỗ số vào luôn âm, nên ReLU luôn ra 0, độ nghiêng luôn 0, và nơ-ron ấy không học lại được nữa (<span class="nm">dying ReLU</span>)</td></tr>
               <tr><td>Máy luôn đoán đúng một loại</td><td><span class="nm">skewed dataset</span> cộng số đo sai</td><td>mốc để chốt đặt sai · lớp ít có quá ít bài</td></tr>
             </tbody>
           </table>
@@ -2442,6 +2496,8 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
       'bước đã đi   ' + pad(steps, 6) + '\n' +
       'núm đang ở    ' + pad(Math.abs(w) > 1e6 ? 'rất xa' : vi(w, 3), 6) + '\n' +
       'điểm trừ      ' + pad(j > 1e6 ? 'khổng lồ' : vi(j, 3), 6) + '\n' +
+      'độ nghiêng    ' + pad(Math.abs(w) > 1e6 ? 'khổng lồ' : vi(dJ(w), 3), 6) + '\n' +
+      'núm sẽ trừ đi ' + pad(Math.abs(w) > 1e6 ? 'khổng lồ' : vi(+sa.value * dJ(w), 3), 6) + '\n' +
       (up ? '→ ĐANG ĐI LÊN. Bước chân quá dài.'
         : j < 0.001 ? '→ tới đáy rồi'
           : '→ còn cách đáy ' + vi(Math.abs(w - C), 3));
@@ -3795,7 +3851,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     /* ── Chương 3 · tụt dốc ──────────────────────────────────────────────── */
     ['độ nghiêng dưới chân', 'gradient', 'phía nào là xuống, dốc bao nhiêu'],
     ['tụt dốc', 'gradient descent', 'sờ độ nghiêng rồi bước xuống, lặp lại'],
-    ['bước chân', 'learning rate', 'dài quá thì văng, ngắn quá thì không tới'],
+    ['bước chân', 'learning rate', 'tốc độ học; dài quá thì văng, ngắn quá thì không tới'],
     ['tới đáy rồi đứng lại', 'convergence', 'điều bạn muốn'],
     ['bay lên vô cực', 'divergence', 'bước chân quá dài; lỗi số một của người mới'],
     ['sườn đồi hình cái bát', 'convex', 'không có đáy giả: đáy nào tìm được cũng thấp nhất (có thể là cả một rãnh đáy bằng nhau)'],
@@ -3885,10 +3941,11 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['mức người làm sai', 'human-level performance', 'lấy mức người giỏi nhất; mốc để đọc "sai trên đề ôn"'],
     ['cái trần không ai vượt', 'Bayes error', 'ảnh mờ quá thì đúng là không đoán nổi'],
     ['phần đáng đi sửa', 'avoidable bias', 'khoảng cách từ cái trần tới đề ôn'],
-    ['mỗi núm chỉnh đúng một thứ', 'orthogonalization', 'đừng chữa hai bệnh bằng một thứ'],
+    ['mỗi nút điều khiển chỉnh đúng một thứ', 'orthogonalization', 'đừng chữa hai bệnh bằng một thứ'],
     ['gộp thành một số', 'single number evaluation metric', 'hai số đo thì không quyết được'],
     ['tiêu chí cần tối đa hoá', 'optimizing metric', 'cái bạn đi so'],
     ['tiêu chí chỉ cần đạt ngưỡng', 'satisficing metric', '"dưới 100 mili-giây" — đừng gộp vào'],
+    ['độ chính xác', 'accuracy', 'tỉ lệ đoán đúng trên mọi ca; vô dụng khi một lớp áp đảo'],
     ['báo động đúng bao nhiêu', 'precision', 'trong số lần báo động, đúng mấy phần'],
     ['bắt được bao nhiêu ca', 'recall', 'trong số ca thật, bắt được mấy phần'],
     ['gộp recall với precision', 'F1 score', 'chỉ cao khi CẢ HAI đều cao'],
@@ -3921,13 +3978,14 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['kính lúp trượt', 'convolution', 'một bộ núm nhỏ dùng chung khắp ảnh'],
     ['một bộ chín cái núm', 'filter', 'mỗi filter bắt một loại chi tiết'],
     ['kết quả của một filter', 'feature map', 'chỗ nào trong ảnh có chi tiết đó'],
-    ['số loại chi tiết chạy song song', 'channel', 'nhiều kính lúp cùng một lượt'],
+    ['kênh: số loại chi tiết chạy song song', 'channel', 'nhiều kính lúp cùng một lượt'],
     ['đắp vành số 0 quanh ảnh', 'padding', 'để ô ở mép cũng được phủ, và ảnh không co lại'],
     ['trượt mấy ô một lần', 'stride', 'nhảy 2 thì mỗi chiều của ảnh còn một nửa'],
     ['thu nhỏ ảnh', 'max pooling', 'giữ cái lớn nhất; không có núm nào để học'],
     ['chín cái núm dùng chung cả ảnh', 'parameter sharing', 'lý do CNN rẻ hơn mạng thường hàng nghìn lần'],
     ['kết quả dịch theo mèo', 'translation equivariance', 'tích chập: mèo dịch bao nhiêu ô, chỗ sáng dịch bấy nhiêu ô'],
     ['mèo dịch sang phải vẫn là mèo', 'translation invariance', 'nhờ thu nhỏ: mèo dịch một chút thì đáp án gần như không đổi'],
+    ['lớp thường, nối với mọi số của lớp trước', 'fully connected layer', 'Keras gọi là Dense; kiểu lớp của chương 6'],
     ['máy xem ảnh', 'convolutional neural network (CNN)', 'kính lúp + thu nhỏ, xếp nhiều lượt'],
     ['mạng đọc số viết tay', 'LeNet-5', '1998, 60 nghìn núm — xếp thẳng kính lúp và thu nhỏ'],
     ['cùng ý tưởng, to hơn, có ReLU', 'AlexNet', '2012, 60 triệu núm'],
@@ -4026,6 +4084,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
 
     /* ── Tra cứu · tên chỉ xuất hiện ở hai mục tra cứu cuối trang ─────────── */
     ['điểm trừ không sợ ca dị thường', 'Huber loss', 'bình phương ở gần, tuyến tính ở xa'],
+    ['ReLU chết', 'dying ReLU', 'số vào luôn âm → luôn ra 0, độ nghiêng 0, không học lại được'],
     ['bề rộng chùm B', 'beam width', '3–10; lợi ích giảm rất nhanh sau 10'],
 
     /* ── Tra cứu · những tên ra đời sau tám khoá gốc ──────────────────────── */
