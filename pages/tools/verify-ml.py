@@ -639,6 +639,79 @@ def run_ml_r3():
     for bad in ('KHÔNG THỂ làm tệ đi', 'không bao giờ làm tệ đi', '<i>không thể làm nó tệ đi</i>'):
         claim(f'ResNet: không còn "{bad}"', bad not in HTML)
 
+    # ── câu tuyệt đối hoá đã bị nguồn bác: mỗi cặp (mục, chuỗi cấm, nguồn) ──
+    for sid, bad, why in (
+        ('s-nn', 'chính xác là một hồi quy logistic', 'chỉ đúng khi kích hoạt là sigmoid; lớp ẩn dùng ReLU'),
+        ('s-cost', 'chỉ có đúng một đáy', 'lồi: mọi đáy cục bộ là toàn cục, không phải duy nhất'),
+        ('s-trees', 'giống hệt nhau', 'cây bagging khác nhau vì mẫu bootstrap; chúng tương quan (ESL 15.2)'),
+        ('s-scale', 'Tính lại µ, σ trên tập kiểm thử là', 'đó là tiền xử lý không nhất quán, không phải rò rỉ'),
+        ('s-overfit', 'còn gọi là ridge hoặc weight decay', 'L2 = weight decay chỉ với SGD (Loshchilov & Hutter)'),
+        ('s-rl', 'Mọi câu chuyện về AI', 'goal misgeneralization: đặc tả đúng vẫn học sai mục tiêu'),
+        ('s-backprop', 'một lần chạy xuôi', 'chạy ngược tốn cỡ 2–3 lần chạy xuôi (Baydin et al. 2018)'),
+        ('s-transformer', 'thêm đầu', 'Kaplan 2020: hình dạng mạng gần như không ảnh hưởng'),
+        ('s-regdl', 'thường hiệu quả bằng', 'ví dụ tăng cường không quý bằng ví dụ mới độc lập'),
+        ('s-optim', 'mà không cần chuẩn hoá thủ công', 'co giãn theo trục không chữa được khe chéo'),
+        ('s-nn', '<b>không tồn tại</b> trong não', 'câu hỏi còn mở (Lillicrap et al. 2020)'),
+        ('s-detect', 'học y như mọi tham số', 'bx, by, bh, bw là đầu ra, không phải tham số'),
+        ('s-act', 'Đừng dùng.</td>', 'sigmoid vẫn làm cổng LSTM/GRU'),
+        ('s-split', '<b>luôn</b> lạc quan', 'lạc quan theo kỳ vọng; dropout làm sai số huấn luyện cao hơn'),
+        ('s-kmeans', 'phải giảm ở mọi bước', 'hội tụ thì distortion giữ nguyên'),
+        ('s-transformer', 'Chỉ hai mảnh là mới', 'self-attention và mã hoá vị trí có trước 2017'),
+        ('s-gd', 'là không xong', 'Ng: phương trình chuẩn chậm khi n > 10.000, không phải bất khả'),
+        ('s-machine', 'với vài triệu tham số thì không có công thức đóng', 'không có công thức đóng vì phi tuyến'),
+        ('s-nn', 'Một nơ-ron là một hồi quy logistic.', 'chỉ đúng với sigmoid'),
+        ('s-nn', '<p>Nơ-ron = hồi quy logistic. ', 'chỉ đúng với sigmoid'),
+        ('s-gd', 'bát chỉ có một đáy', 'lồi không có nghĩa là một đáy'),
+        ('s-regdl', 'trong học sâu hay gọi là', 'L2 = weight decay chỉ với SGD'),
+        ('s-cheat', '(Keras: Xavier)', 'Keras dùng Glorot bản gốc 2/(n_vào + n_ra)'),
+        ('s-act', '<td><b>Chỉ ở lớp đầu ra</b>, cho phân loại nhiều lớp.</td>', 'softmax có trong attention'),
+        ('s-act', 'là 0 hoặc 1 — không bão hoà,', 'ReLU bão hoà ở nửa âm'),
+        ('s-bias', 'Nó đo mức độ mô hình học thuộc lòng thay vì học quy luật.', 'variance là thay đổi theo tập huấn luyện (ISLR 2.2.2)'),
+        ('s-kmeans', 'Mỗi bước đều giảm distortion', 'hội tụ thì distortion giữ nguyên'),
+        ('s-transformer', 'Bảy mảnh cũ, hai mảnh mới', 'hai mảnh ấy có trước 2017'),
+        ('s-bias', 'con người, bộ công cụ này <b>hết tác dụng</b>', 'variance vẫn đo được khi vượt mức người'),
+        ('s-act', 'nhân lên theo cấp số nhân</b>. Đó là toàn bộ', 'Montúfar 2014: "có thể", không phải luôn'),
+        ('s-deep', 'cùng một hàm, ít tham số hơn', 'chỉ với một số họ hàm'),
+    ):
+        claim(f'{sid}: không còn "{bad}"', bad not in sec(sid), why)
+    gl = {r[0]: r for r in gloss_records(r"\['([^']+)','([^']*)','([^']*)','(#[^']*)','([^']*)'\]")}
+    for key, bad, good in (
+        ('convex', 'ĐÚNG MỘT đáy', 'mọi đáy cục bộ'), ('random forest', 'giống hệt', 'tương quan'),
+        ('L2 regularization', 'λ·Σw²', '(λ/2m)·Σw²'), ('L2 regularization', 'trong học sâu gọi là', 'AdamW'),
+        ('Xavier initialization', 'Phương sai 1/n. ', '2/(n_vào + n_ra)'), ('LSTM', 'Ra đời 1997', '2000'),
+        ('backpropagation', 'một lần chạy xuôi', 'hai, ba lần'), ('scaling laws', 'thêm lớp', 'thêm tham số'),
+        ('ResNet', 'KHÔNG THỂ', 'khó khăn tối ưu'), ('bounding box', 'tham số', 'đầu ra'),
+        ('ReLU', 'không bão hoà,', 'nửa dương'), ('variance', 'Khoảng cách giữa', 'tập huấn luyện khác'),
+        ('training set', 'LUÔN', 'THƯỜNG'), ('distortion', 'Phải giảm', 'không bao giờ được tăng'.capitalize()),
+        ('universal approximation', 'đã xấp xỉ', 'không phải đa thức'), ('1x1 convolution', 'GIẢM số kênh, rẻ', 'Inception'),
+        ('neural network', 'hồi quy logistic', 'hàm kích hoạt'), ('sigmoid', 'Chỉ nên dùng', 'cổng'),
+        ('Bellman equation', 'Q(s,a) = R(s) + γ·max Q(s′,a′). ', 'tất định'),
+    ):
+        g = gl.get(key)
+        claim(f'GLOSS {key}: bỏ "{bad}", có "{good}"', g is not None and bad not in g[2] and good in g[2],
+              (g[2][:90] if g else 'không thấy mục'))
+    need('LSTM: cổng quên thêm năm 2000', 'cổng quên được thêm vào năm 2000')
+    need('Xavier: công thức gốc của Glorot', '<code>2 / (n[l−1] + n[l])</code>')
+    need('Keras mặc định glorot_uniform', '<code>glorot_uniform</code>')
+    need('Bellman: nói rõ dạng tất định', 'Dạng này giả định môi trường tất định')
+    need('xấp xỉ phổ quát: hai điều kiện', 'với hàm kích hoạt không phải đa thức (ReLU, sigmoid, tanh đều được), xấp xỉ được mọi hàm liên tục trên một vùng đầu vào bị chặn')
+    need('XGBoost: đạo hàm bậc hai', 'tức đạo hàm bậc hai')
+    need('bất thường: mật độ, không phải xác suất', 'tính <b>mật độ xác suất</b> của nó')
+    need('PCA: phân biệt điểm, không phải lớp', 'không phải phân biệt các lớp')
+    # J = (1/2m)Σe² nên √(2J) là RMSE, không phải sai lệch tuyệt đối trung bình
+    m1 = HTML[HTML.find('Mô hình 1 —'):HTML.find('Mô hình 2 —')]
+    claim('M1: √(2J) được gọi là RMSE', 'return s / (2 * HOUSE.n);' in HTML and "(RMSE) ≈ ' + fmt(Math.sqrt(2 * J)" in m1
+          and 'sai lệch trung bình mỗi căn' not in m1)
+    m9 = HTML[HTML.find('Mô hình 9 —'):HTML.find('Mô hình 10 —')]
+    claim('M9: vượt mức người thì chỉ nửa bias mất mốc', 'Bộ chẩn đoán này hết tác dụng' not in m9
+          and 'Variance (dev − train) vẫn đọc được' in m9)
+    # dropout: tỉ lệ tắt + keep_prob = 1 ở cả hai đầu khoảng
+    md = re.search(r'tỉ lệ tắt <b>(\d),(\d)–(\d),(\d)</b> \(keep_prob (\d),(\d)–(\d),(\d)\)', sec('s-cheat'))
+    claim('bảng tra: dropout ghi tỉ lệ tắt và keep_prob khớp nhau', md is not None and
+          int(md.group(1)) * 10 + int(md.group(2)) + int(md.group(7)) * 10 + int(md.group(8)) == 10 and
+          int(md.group(3)) * 10 + int(md.group(4)) + int(md.group(5)) * 10 + int(md.group(6)) == 10,
+          'keep_prob = 1 − tỉ lệ tắt')
+
 
 # ════════════════════════ machine-learning-101.html ════════════════════════
 def run_101():
