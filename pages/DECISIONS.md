@@ -48,7 +48,7 @@ Tách trang, tách hay đảo chương thì chỉ đề xuất, không tự làm
 ## PAGES-005 · hidden-curriculum: nằm trong danh sách ẩn
 04/10/2026 · `pages/hidden-curriculum.html`
 
-Trang có mục trong `hold` của `data/collection.json` (REPO-020), không có trong `sections`. Vẫn lên web: đừng
+Trang có mục trong `hold` của `data/collection.json` (REPO-021), không có trong `sections`. Vẫn lên web: đừng
 thêm nó vào `WITHHELD`, `UNLISTED` hay `--exclude` của `deploy.yml`.
 
 ## PAGES-007 · hidden-curriculum: kho mô hình đòn bẩy cao, sâu hơn nhiều

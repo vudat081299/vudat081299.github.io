@@ -234,22 +234,25 @@ async function ready(page) {
     await ready(p);
   }
 
-  /* ---- 6b. danh sách ẩn: giữ ⇧? thì hiện, thả thì mất --------------------------- */
+  /* ---- 6b. danh sách ẩn: ⇧? bật/tắt, bấm ra ngoài thì ẩn, gõ ? vào ô tìm kiếm thì hiện --- */
   if (data.hold && data.hold.items && data.hold.items.length) {
     const H = data.hold.items;
     const vis = () => p.evaluate(() => !document.getElementById('hold').hidden);
     const rows = () => p.evaluate(() =>
       [...document.querySelectorAll('#hold a')].map(a => a.getAttribute('href')));
+    const chord = async () => {
+      await p.keyboard.down('Shift'); await p.keyboard.down('Slash');
+      await p.keyboard.up('Slash'); await p.keyboard.up('Shift');
+    };
     await p.evaluate(() => document.activeElement.blur());
 
     check('danh sách ẩn: mặc định không hiện', !(await vis()));
 
-    await p.keyboard.down('Shift'); await p.keyboard.down('Slash');
-    const shown = await vis();
+    await chord();
     const hrefs = await rows();
-    check('giữ ⇧?: bảng hiện đủ mục trong data.hold',
-      shown && JSON.stringify(hrefs) === JSON.stringify(H.map(i => i.href)), hrefs.join(', '));
-    check('giữ ⇧?: ô tìm kiếm không giành focus',
+    check('⇧? rồi thả: bảng vẫn hiện, đủ mục trong data.hold',
+      (await vis()) && JSON.stringify(hrefs) === JSON.stringify(H.map(i => i.href)), hrefs.join(', '));
+    check('⇧?: ô tìm kiếm không giành focus',
       await p.evaluate(() => document.activeElement.id !== 'q'));
     const leak = await p.evaluate(() => ({
       items: document.querySelectorAll('[data-item]').length,
@@ -260,26 +263,41 @@ async function ready(page) {
     check('bảng ẩn không lọt vào ô đếm, mục lục, chân trang, phím tắt',
       leak.items === N && leak.toc === LABELS.length && leak.foot === LABELS.length
         && leak.count.startsWith(N + ' pages'), `${leak.items} hàng · ${leak.count}`);
-    await p.keyboard.up('Slash');
-    check('thả ?: bảng mất', !(await vis()));
+    await p.evaluate(() => window.dispatchEvent(new Event('blur')));
+    check('mất focus cửa sổ: bảng vẫn hiện', await vis());
+    const box = await p.evaluate(() => {
+      const r = document.getElementById('hold').getBoundingClientRect();
+      return { x: r.left + 8, y: r.top + 8 };
+    });
+    await p.mouse.click(box.x, box.y);
+    check('bấm trong bảng: bảng vẫn hiện', await vis());
 
-    await p.keyboard.down('Slash');
-    check('giữ lại: bảng hiện lại', await vis());
-    await p.keyboard.up('Shift');
-    check('thả Shift (? còn giữ): bảng mất', !(await vis()));
-    await p.keyboard.up('Slash');
+    await chord();
+    check('⇧? lần nữa: bảng ẩn', !(await vis()));
+
+    await chord();
+    await p.mouse.click(5, 5);
+    check('bấm ra ngoài: bảng ẩn', !(await vis()));
+
+    await chord();
+    await p.keyboard.press('Escape');
+    check('Esc: bảng ẩn', !(await vis()));
 
     await p.focus('#q');
-    await p.keyboard.down('Shift'); await p.keyboard.down('Slash');
-    const typed = await p.evaluate(() => document.getElementById('q').value);
-    check('đang gõ trong ô tìm kiếm: ⇧? chỉ gõ dấu ?', !(await vis()) && typed === '?', typed);
-    await p.keyboard.up('Slash'); await p.keyboard.up('Shift');
-    await p.keyboard.press('Escape');
+    await p.keyboard.type('?');
+    const typed = await p.evaluate(() => ({
+      value: document.getElementById('q').value,
+      focus: document.activeElement.id,
+      items: document.querySelectorAll('[data-item]:not([hidden])').length,
+    }));
+    check('gõ ? vào ô tìm kiếm: bảng hiện, ô được xoá, nhả focus, không lọc mất hàng',
+      (await vis()) && typed.value === '' && typed.focus !== 'q' && typed.items === N, JSON.stringify(typed));
+    await p.mouse.click(5, 5);
 
-    await p.keyboard.down('Shift'); await p.keyboard.down('Slash');
-    await p.evaluate(() => window.dispatchEvent(new Event('blur')));
-    check('mất focus cửa sổ khi đang giữ: bảng tự đóng', !(await vis()));
-    await p.keyboard.up('Slash'); await p.keyboard.up('Shift');
+    await p.fill('#q', 'what?');
+    check('gõ chữ có dấu ? ở giữa: không mở bảng', !(await vis()));
+    await p.fill('#q', '');
+    await p.evaluate(() => document.getElementById('q').dispatchEvent(new Event('input')));
 
     const broken = [];
     for (const h of H.map(i => i.href)) {

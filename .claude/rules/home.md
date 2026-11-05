@@ -58,10 +58,12 @@ Trang chủ không có thư mục riêng (GitHub Pages cần `index.html` ở g�
 Chủ trang gọi là "list ẩn"; trên bảng nhãn là `Reserved`.
 
 - Khoá `hold` ở gốc `collection.json`, ngoài `sections`: `label` và `items` (đủ `icon`, `name`, `desc`, `href`;
-  không có `key`). Không có số thứ tự, không vào mục lục, chân trang, ô đếm, tìm kiếm hay phím tắt (REPO-020).
-- Giữ ⇧? (Shift + `Slash`) thì một bảng nổi hiện ở đáy khung nhìn; thả một phím là mất. Dò bằng `e.code`.
-  Blur cửa sổ và đổi tab cũng đóng bảng.
-- `/` không Shift vẫn nhảy vào ô tìm kiếm. Đang gõ trong ô tìm kiếm thì ⇧? chỉ gõ dấu `?`.
+  không có `key`). Không có số thứ tự, không vào mục lục, chân trang, ô đếm, tìm kiếm hay phím tắt (REPO-021).
+- Máy tính: ⇧? (Shift + `Slash`, dò bằng `e.code`) bật bảng nổi ở đáy khung nhìn; thả phím vẫn hiện.
+- ⇧? lần nữa, bấm ra ngoài bảng, hoặc Esc thì ẩn. Blur cửa sổ và đổi tab không đóng bảng.
+- Điện thoại: gõ đúng `?` vào ô tìm kiếm thì ô được xoá, bàn phím ảo đóng, bảng hiện. Chữ có `?` ở giữa thì vẫn là tìm kiếm.
+- Máy hẹp: bảng cao tối đa 66vh để còn chỗ chạm ra ngoài.
+- `/` không Shift vẫn nhảy vào ô tìm kiếm.
 - Trang trong `hold` vẫn lên web: không nằm trong `WITHHELD` / `UNLISTED`, `deploy.yml` không `--exclude`. Đó là
   cách giấu link, không phải bảo mật; URL trực tiếp vẫn mở được.
 - Cổng: `lint-collection.py` kiểm `hold` như `sections`; `smoke-index.js` kiểm hiện/ẩn và không lọt vào số đếm.

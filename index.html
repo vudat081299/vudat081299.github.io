@@ -343,7 +343,7 @@
       .ix-subj__rows .ix-row:last-child { border-bottom: 0; }
 
       /* ==========================================================================
-         DANH SÁCH ẨN — chỉ hiện khi đang giữ phím tắt (xem script ở cuối).
+         DANH SÁCH ẨN — bật/tắt bằng ⇧?, hoặc gõ ? vào ô tìm kiếm (xem script ở cuối).
          Bảng nổi cố định ở đáy khung nhìn, không nằm trong luồng trang: người đang
          cuộn giữa trang vẫn thấy nó, và nó hiện/biến mất không làm trang nhảy.
          ========================================================================== */
@@ -360,6 +360,8 @@
         letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3);
       }
       /* Hai cột từ 1000px như lưới chính; hàng cuối của mỗi cột bỏ gạch chân. */
+      /* Máy hẹp: chừa khoảng trống phía trên để chạm ra ngoài mà đóng; bảng tự cuộn. */
+      @media (max-width: 640px) { .ix-hold { max-height: 66vh; overscroll-behavior: contain; } }
       .ix-hold .ix-rows { padding-bottom: 4px; }
       .ix-hold .ix-row:last-child { border-bottom: 0; }
       @media (min-width: 1000px) {
@@ -669,27 +671,35 @@
           input.value = ''; filter(''); input.focus();
         });
 
-        input.addEventListener('input', function () { filter(this.value); });
-
-        /* Giữ ⇧? (Shift + phím `/`) thì bảng ẩn hiện, thả một phím là mất.
-           Dò bằng e.code: e.key đổi theo bố cục bàn phím. `/` không Shift vẫn nhảy vào ô
-           tìm kiếm. Đang gõ trong ô tìm kiếm thì không bắt, để gõ được dấu `?`. */
+        /* Danh sách ẩn: ⇧? (Shift + phím `/`) bật/tắt, thả phím vẫn hiện. Bấm ra ngoài bảng
+           hoặc Esc thì ẩn. Dò bằng e.code: e.key đổi theo bố cục bàn phím. `/` không Shift vẫn
+           nhảy vào ô tìm kiếm. Trên điện thoại không có ⇧?: gõ đúng `?` vào ô tìm kiếm thì bảng
+           hiện, ô được xoá và bàn phím ảo đóng lại để khỏi che bảng. */
         var hold = document.getElementById('hold');
         var armed = false;     /* true khi collection.json có danh sách ẩn */
         function peek(on) { hold.hidden = !(on && armed); }
+
+        input.addEventListener('input', function () {
+          if (armed && this.value.trim() === '?') {
+            this.value = '';
+            filter('');
+            this.blur();
+            peek(true);
+            return;
+          }
+          filter(this.value);
+        });
 
         document.addEventListener('keydown', function (e) {
           if (e.code !== 'Slash' || !e.shiftKey || e.metaKey || e.ctrlKey || e.altKey) return;
           var t = (e.target && e.target.tagName) || '';
           if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
           if (armed) e.preventDefault();
-          peek(true);
+          if (!e.repeat) peek(hold.hidden);
         });
-        document.addEventListener('keyup', function (e) {
-          if (e.code === 'Slash' || e.key === 'Shift') peek(false);
+        document.addEventListener('pointerdown', function (e) {
+          if (!hold.hidden && !hold.contains(e.target)) peek(false);
         });
-        window.addEventListener('blur', function () { peek(false); });
-        document.addEventListener('visibilitychange', function () { peek(false); });
 
         document.addEventListener('keydown', function (e) {
           if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -705,6 +715,7 @@
             return;
           }
 
+          if (e.key === 'Escape' && !hold.hidden) { peek(false); return; }
           if (e.key === '/') { e.preventDefault(); input.focus(); input.select(); return; }
 
           for (var i = 0; i < items.length; i++) {
