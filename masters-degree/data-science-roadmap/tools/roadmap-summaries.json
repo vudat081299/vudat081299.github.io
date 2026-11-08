@@ -637,10 +637,10 @@
    }
   },
   "f-cyclic": {
-   "tldr": "23h và 0h chỉ cách nhau một giờ thật nhưng biểu diễn số nguyên 0–23 đặt chúng ở hai cực xa nhất của thang đo. Sin/cos hoá uốn đường thẳng thành vòng tròn để bảo toàn khoảng cách — một cột hour thành hai cột hour_sin và hour_cos.",
+   "tldr": "23h và 0h chỉ cách nhau một giờ thật nhưng biểu diễn số nguyên 0–23 đặt chúng ở hai cực xa nhất của thang đo. Sin/cos hoá uốn đường thẳng thành vòng tròn để hai giờ gần nhau trên vòng cũng gần nhau theo khoảng cách — một cột hour thành hai cột hour_sin và hour_cos.",
    "points": [
     "Phải là HAI cột (sin và cos) vì một số duy nhất không đủ xác định vị trí trên vòng tròn — chỉ dùng sin thì 3h và 9h trùng giá trị; công thức sin(2πv/T), cos(2πv/T)",
-    "Hậu quả nếu để nguyên: logistic chỉ học được một hệ số, không biểu diễn được 'cao ở hai đầu thấp ở giữa'; KNN/SVM tính 23h47 và 0h13 cách nhau 23 đơn vị (xa nhất) thay vì 13 phút; NN phải phí nơ-ron dựng lại tính tuần hoàn",
+    "Hậu quả nếu để nguyên: logistic chỉ học được một hệ số, không biểu diễn được 'cao ở hai đầu thấp ở giữa'; KNN/SVM tính 23h47 và 0h13 (hour 23 và 0) cách nhau 23 đơn vị (xa nhất) thay vì 26 phút; NN phải phí nơ-ron dựng lại tính tuần hoàn",
     "Áp cho mọi chu kỳ với đúng T: hour/24, dayofweek/7, month/12, minute/60",
     "Ba mức triển khai theo độ nghiêm túc: 6 dòng numpy trong notebook → hàm add_cyclical trong src/features.py (cùng hàm cho cả API) → FunctionTransformer gắn vào Pipeline rồi joblib.dump một file chứa TẤT CẢ",
     "Đa hài: một cặp sin/cos chỉ dựng được một sóng lên-xuống; thực tế có hai đỉnh (trưa và tối) thì thêm cặp chu kỳ một nửa (lặp k=1,2,3)",
@@ -685,8 +685,8 @@
    "tldr": "Biến cột chữ tự do thành số theo ba mức từ rẻ tới đắt. Với dữ liệu bảng ít text, mức rẻ nhất thường lấy được phần lớn tín hiệu, và TF-IDF thắng embedding vì giữ được khả năng giải thích mà hội đồng thích.",
    "points": [
     "Mức 1 đặc trưng thủ công (desc_len, desc_n_digits, upper_ratio, has_keyword bằng regex 'refund|urgent|verify') — rẻ, bất ngờ hiệu quả, làm trước và đo trước khi lên mức 2",
-    "Mức 2 TF-IDF: một từ quan trọng nếu xuất hiện nhiều trong văn bản NHƯNG hiếm trong toàn tập; công thức tfidf(t,d) = tf(t,d) × log(N/df(t))",
-    "TfidfVectorizer(max_features=300, ngram_range=(1,2), min_df=5): ngram (1,2) lấy cả cặp từ ('chuyển khoản' khác 'chuyển'+'khoản' rời), max_features chặn phình lên hàng chục nghìn cột; cắm vào ColumnTransformer như một nhánh riêng",
+    "Mức 2 TF-IDF: một từ quan trọng nếu xuất hiện nhiều trong văn bản NHƯNG hiếm trong toàn tập; công thức tfidf(t,d) = tf(t,d) × log(N/df(t)) (sklearn mặc định làm mượt idf và chuẩn hoá L2 nên số không khớp tính tay)",
+    "TfidfVectorizer(max_features=300, ngram_range=(1,2), min_df=5): ngram (1,2) lấy cả cặp từ ('chuyển khoản' khác 'chuyển'+'khoản' rời), max_features chặn phình lên hàng chục nghìn cột; cắm vào ColumnTransformer như một nhánh riêng, khai cột bằng tên trần 'description' (bọc trong list thì cả cột thành một văn bản) và fillna trước",
     "Ưu điểm lớn của TF-IDF là giải thích được — chỉ ra được từ nào đẩy điểm rủi ro lên",
     "Mức 3 embedding (SentenceTransformer paraphrase-multilingual-MiniLM-L12-v2, ra 384 cột) biết 'hoàn tiền' và 'refund' gần nghĩa, nhưng mất khả năng giải thích, chậm và đặc; chỉ lên mức 3 khi text là nguồn thông tin chính"
    ],
@@ -719,7 +719,7 @@
    "points": [
     "Với LightGBM và vài trăm cột thường giữ hết ở vòng đầu (heuristic để không sa đà, không phải 'thêm cột thì không mất gì'); chọn lọc khi cần giải thích / giảm chi phí tính lúc chạy thật / số cột >> số mẫu",
     "Lọc thô rẻ làm trước: bỏ cột hằng số (nunique≤1), bỏ một trong hai cột tương quan >0,95 (chúng nói cùng một điều)",
-    "Permutation importance (xáo trộn một cột rồi đo điểm tụt, trên tập VALIDATION, scoring='average_precision') đáng tin hơn feature_importances_ của cây, vì chỉ số mặc định của cây thiên vị cột nhiều giá trị khác nhau (cột ID ngẫu nhiên xếp hạng cao)",
+    "Permutation importance (xáo trộn một cột rồi đo điểm tụt, trên tập VALIDATION, scoring='average_precision') đáng tin hơn feature_importances_ của cây, vì chỉ số mặc định của cây thiên vị cột nhiều giá trị khác nhau (cột ID ngẫu nhiên xếp hạng cao); nhưng hai cột tương quan mạnh thì cả hai trông ít quan trọng, nên đo nhóm bằng cách xáo cả nhóm",
     "RFECV loại dần theo đệ quy là cách sát nhất với chỉ số bạn tối ưu vì nó thử thật, và cũng chậm nhất; kết quả chỉ đúng với ĐÚNG estimator + chỉ số + cách chia CV đưa vào, không phải 'tập cột đúng' tuyệt đối — chỉ dùng khi mọi thứ khác đã chạy ổn",
     "Chọn feature cũng rò rỉ được: chọn top-k theo tương quan với nhãn trên TOÀN BỘ dữ liệu rồi mới cross-validate = điểm CV đẹp giả tạo; cách đúng là đặt bước chọn feature BÊN TRONG Pipeline để chạy lại trong từng fold",
     "Cho luận văn: trình bày độ quan trọng theo NHÓM kèm diễn giải (tốc độ 34%, lệch thói quen 28%, sin/cos 11%...) thay vì liệt kê top-20 — trả lời 'mô hình học được điều gì về gian lận' chứ không phải 'đạt bao nhiêu điểm'"
@@ -934,7 +934,7 @@
    "tldr": "SHAP mượn giá trị Shapley từ lý thuyết trò chơi để chia 'công trạng' dự đoán cho từng feature, và tổng đóng góp + giá trị cơ sở cộng lại đúng bằng kết quả (thang nào là tuỳ đầu ra bạn yêu cầu giải thích — với cây nhị phân ở mặc định model_output='raw' thì là log-odds) nên giải thích không mơ hồ — công cụ trả lời câu hội đồng chắc chắn hỏi 'vì sao mô hình quyết định như vậy'.",
    "points": [
     "Giá trị Shapley: với mỗi feature, xét mọi thứ tự gia nhập có thể, đo phần giá trị tăng thêm khi feature đó vào, rồi lấy trung bình — SHAP đo mỗi feature đóng góp bao nhiêu vào việc đẩy dự đoán lệch khỏi mức trung bình",
-    "Tính chất cộng đúng bằng: tổng mọi đóng góp + giá trị cơ sở = dự đoán cuối, nhưng 'dự đoán cuối' là cái gì thì tuỳ đầu ra bạn yêu cầu giải thích — với cây nhị phân ở mặc định của TreeExplainer (LightGBM/XGBoost, model_output='raw') đó là log-odds (biên thô trước khi bóp về xác suất), đổi sang model_output='probability' thì cộng đúng ở thang xác suất; trình bày hình phải nói rõ trục đang là thang nào",
+    "Tính chất cộng đúng bằng: tổng mọi đóng góp + giá trị cơ sở = dự đoán cuối, nhưng 'dự đoán cuối' là cái gì thì tuỳ đầu ra bạn yêu cầu giải thích — với cây nhị phân ở mặc định của TreeExplainer (LightGBM/XGBoost, model_output='raw') đó là log-odds (biên thô trước khi bóp về xác suất), đổi sang model_output='probability' (phải đưa thêm mẫu nền data=) thì cộng ở thang xác suất; trình bày hình phải nói rõ trục đang là thang nào",
     "Code dùng shap.TreeExplainer(model) rồi exp = explainer(X_t) trên dữ liệu đã transform; ba hình: beeswarm (toàn cục, hình chính), bar (xếp hạng độ quan trọng), waterfall(exp[0]) (một ca cụ thể)",
     "Dùng explainer(X) chứ đừng dùng explainer.shap_values(X): với bài hai lớp, tuỳ phiên bản shap mà shap_values trả về mảng (n_mẫu,n_cột) hoặc danh sách hai mảng, nên shap_values[0] khi thì là mẫu số 0 khi thì là toàn bộ lớp 0 — hình vẫn vẽ ra nhưng sai; API mới trả về Explanation có nhãn rõ ràng",
     "Hai loại hình hai mục đích: summary/beeswarm trả lời 'mô hình học được gì nói chung' (chương Kết quả & thảo luận), force/waterfall trả lời 'vì sao giao dịch NÀY bị chặn' (Nghiên cứu tình huống, rất thuyết phục khi bảo vệ)",
@@ -950,7 +950,7 @@
     "Dùng phân cụm trong luận văn: phân khúc khách hàng rồi cho thấy tỉ lệ gian lận khác nhau giữa các cụm, hoặc dùng nhãn cluster làm một feature cho mô hình có giám sát",
     "Chọn số cụm bằng elbow hoặc silhouette score, nhưng thành thật thì số cụm thường chọn theo ý nghĩa nghiệp vụ chứ không theo chỉ số — nói thẳng điều đó trung thực hơn giả vờ khách quan",
     "Bốn thuật toán phát hiện bất thường: Isolation Forest (điểm lạ bị cô lập bằng ít lần chia ngẫu nhiên hơn, mặc định tốt và nhanh), Local Outlier Factor (so mật độ quanh điểm với mật độ hàng xóm, khi bất thường cục bộ), Autoencoder (nén rồi khôi phục, điểm khó khôi phục là điểm lạ, cho nhiều chiều), One-Class SVM (vẽ ranh giới bao vùng bình thường, cho dữ liệu nhỏ)",
-    "Code IsolationForest(contamination=0.002) fit trên X_train_normal, rồi anomaly_score = -iso.score_samples(X) (cao = lạ hơn)",
+    "Code IsolationForest fit trên giao dịch bình thường của train, rồi anomaly_score = -iso.score_samples(X) (cao = lạ hơn); contamination chỉ đặt ngưỡng cho predict(), không đổi điểm",
     "Cách kết hợp mạnh nhất: đừng chọn một trong hai mà thêm iso_score làm feature cho LightGBM — mô hình có giám sát giỏi kiểu gian lận ĐÃ BIẾT, điểm bất thường bắt cái CHƯA TỪNG THẤY, hai tín hiệu bổ sung nhau",
     "Đánh giá mô hình không giám sát rất khó vì không nhãn thì không có đúng/sai; đánh giá gián tiếp: (a) dùng nhãn có sẵn chỉ để đánh giá không để train, (b) cho chuyên gia xem 50 ca bất thường nhất đếm tỉ lệ đáng ngờ thật, (c) đo mức cải thiện khi thêm điểm bất thường vào mô hình có giám sát — cách (c) dễ bảo vệ nhất"
    ],
@@ -1692,14 +1692,14 @@
   "m-deriv": "bf90a921",
   "m-prob": "7e3b49e7",
   "m-bayes": "d7dd6fd4",
-  "f-what": "d9d2254f",
+  "f-what": "f1aff913",
   "f-numeric": "0e360b89",
   "f-cat": "a1d080f1",
-  "f-cyclic": "d1cc66a3",
+  "f-cyclic": "abae617c",
   "f-time": "94175c06",
-  "f-text": "9413a561",
+  "f-text": "b2f7f6e4",
   "f-pipeline": "0243fd97",
-  "f-select": "33930db9",
+  "f-select": "0f557eaa",
   "f-store": "e994177c",
   "ml-map": "3b1cade0",
   "ml-linear": "7f940022",
@@ -1711,8 +1711,8 @@
   "m-infer": "ffb43d31",
   "ml-imb": "f1dcadfa",
   "ml-tune": "5542bd11",
-  "ml-shap": "c1cee036",
-  "ml-unsup": "6a5353b2",
+  "ml-shap": "2aebb4c3",
+  "ml-unsup": "b2e66fdf",
   "pr-arch": "4521ae12",
   "pr-code": "b31bca49",
   "pr-eval": "1257174e",

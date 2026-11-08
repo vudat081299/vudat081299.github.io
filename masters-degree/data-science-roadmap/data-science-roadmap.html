@@ -5285,7 +5285,7 @@ nb = GaussianNB().fit(X_train, y_train)</div>
   <p>Loại C là loại khó nhất về mặt kỹ thuật và cũng là loại cho tín hiệu mạnh nhất trong bài toán gian lận. Bài <b>Biến theo thời gian</b> nói riêng về nó.</p>
 
   <h2>Một buổi làm feature engineering thật diễn ra thế nào</h2>
-  <p>Để bạn hình dung nhịp làm việc, không phải lý thuyết. <span class="wb-help">(<b>PR-AUC</b> trong đoạn dưới là chỉ số chấm điểm mô hình mà trang này dùng làm chỉ số chính cho dữ liệu lệch nhãn — <b>cao hơn là tốt hơn</b>, và thang của nó không phải 0–1 quen thuộc: xem bài <a href="#/ml-metrics">Đo lường</a>. Ở đây bạn chỉ cần biết nó là con số bạn theo dõi tăng hay giảm.)</span></p>
+  <p>Để bạn hình dung nhịp làm việc, không phải lý thuyết. <span class="wb-help">(<b>PR-AUC</b> trong đoạn dưới là chỉ số chấm điểm mô hình mà trang này dùng làm chỉ số chính cho dữ liệu lệch nhãn — <b>cao hơn là tốt hơn</b>; nó chạy từ 0 tới 1 nhưng mốc “đoán bừa” là tỉ lệ nhãn dương (vài phần nghìn với gian lận), không phải 0,5 như accuracy hay ROC-AUC: xem bài <a href="#/ml-metrics">Đo lường</a>. Ở đây bạn chỉ cần biết nó là con số bạn theo dõi tăng hay giảm.)</span></p>
   <div class="ds-code">1. Mở notebook, load dữ liệu đã sạch, load pipeline hiện tại
 2. Chạy baseline → ghi lại: PR-AUC = 0,367
 3. Nghĩ MỘT giả thuyết bằng lời:
@@ -5448,7 +5448,7 @@ Máy nhìn thấy: [0 1 2 3] 4 5 ... 20 21 [22 23]              ← hai cụm �
   <p>Hậu quả cụ thể theo từng loại mô hình:</p>
   <ul>
     <li><b>Hồi quy logistic:</b> chỉ học được một hệ số duy nhất cho <code>hour</code>, nghĩa là "rủi ro tăng/giảm đều theo giờ". Nó <b>không thể</b> biểu diễn được "cao ở hai đầu, thấp ở giữa". Feature này gần như vô dụng.</li>
-    <li><b>KNN / k-means / SVM:</b> tính khoảng cách. Giao dịch 23h47 và 0h13 cách nhau 13 phút thật, nhưng máy tính ra khoảng cách 23 đơn vị — xa nhất có thể.</li>
+    <li><b>KNN / k-means / SVM:</b> tính khoảng cách. Giao dịch 23h47 và 0h13 cách nhau 26 phút thật, nhưng cột <code>hour</code> của chúng là 23 và 0 — máy tính ra khoảng cách 23 đơn vị, xa nhất có thể.</li>
     <li><b>Mạng nơ-ron:</b> học được, nhưng phải "phí" nhiều nơ-ron để tự dựng lại tính tuần hoàn. Cho sẵn thì hội tụ nhanh hơn nhiều.</li>
   </ul>
 
@@ -5462,18 +5462,19 @@ Máy nhìn thấy: [0 1 2 3] 4 5 ... 20 21 [22 23]              ← hai cụm �
   <h3>Cách 1 · Nhanh nhất, để thử trong notebook</h3>
   <div class="ds-code"><b>import</b> numpy <b>as</b> np
 
-df["hour"] = pd.to_datetime(df["timestamp"]).dt.hour
+ts = pd.to_datetime(df["timestamp"])
+df["hour"] = ts.dt.hour
 
 df["hour_sin"] = np.sin(2 * np.pi * df["hour"] / 24)
 df["hour_cos"] = np.cos(2 * np.pi * df["hour"] / 24)
 
 <i># cùng logic cho các chu kỳ khác</i>
-df["dow"]      = pd.to_datetime(df["timestamp"]).dt.dayofweek
+df["dow"]      = ts.dt.dayofweek
 df["dow_sin"]  = np.sin(2 * np.pi * df["dow"] / 7)
 df["dow_cos"]  = np.cos(2 * np.pi * df["dow"] / 7)
 
-df["month_sin"] = np.sin(2 * np.pi * df["ts"].dt.month / 12)
-df["month_cos"] = np.cos(2 * np.pi * df["ts"].dt.month / 12)</div>
+df["month_sin"] = np.sin(2 * np.pi * ts.dt.month / 12)
+df["month_cos"] = np.cos(2 * np.pi * ts.dt.month / 12)</div>
   <p class="ds-codecap">notebooks/02-experiments.ipynb</p>
   <p>Sáu dòng. Đây là toàn bộ "thao tác thật" mà bạn đang tìm. Không có công cụ đặc biệt nào — chỉ pandas và numpy.</p>
 
@@ -5532,8 +5533,9 @@ score = pipe.predict_proba(pd.DataFrame([tx]))[0, 1]   <i># sin/cos tự chạy 
   <div class="ds-code">"Các đặc trưng thời gian mang bản chất tuần hoàn: 23:00 và 00:00 chỉ
 cách nhau một giờ nhưng biểu diễn số nguyên đặt chúng ở hai cực của
 miền giá trị. Chúng tôi mã hoá mỗi thành phần chu kỳ v với chu kỳ T
-thành cặp (sin(2πv/T), cos(2πv/T)), bảo toàn khoảng cách trên vòng
-tròn đơn vị. Bảng 4.2 cho thấy phép mã hoá này cải thiện PR-AUC của
+thành cặp (sin(2πv/T), cos(2πv/T)), tức một điểm trên vòng tròn đơn
+vị: hai thời điểm càng gần nhau trên vòng thì càng gần nhau theo
+khoảng cách Euclid. Bảng 4.2 cho thấy phép mã hoá này cải thiện PR-AUC của
 mô hình hồi quy logistic từ 0,281 lên 0,343, trong khi ảnh hưởng
 không đáng kể tới LightGBM (0,367 → 0,371) — phù hợp với kỳ vọng lý
 thuyết, do mô hình dựa trên cây không sử dụng khoảng cách Euclid."</div>
@@ -5641,7 +5643,7 @@ df["has_keyword"]   = s.str.lower().str.contains("refund|urgent|verify").astype(
   <p>Với nhiều bài toán, nhóm này đã lấy được phần lớn tín hiệu. Làm nó trước, đo, rồi mới cân nhắc mức 2.</p>
 
   <h2>Mức 2 · TF-IDF — chuẩn mực cho văn bản ngắn</h2>
-  <p>Ý tưởng: một từ quan trọng với một văn bản nếu nó <b>xuất hiện nhiều trong văn bản đó</b> nhưng <b>hiếm trong toàn bộ tập</b>. Từ "và" xuất hiện khắp nơi nên gần như vô giá trị; từ "hoàn tiền khẩn" hiếm nên rất có giá trị.</p>
+  <p>Ý tưởng: một từ quan trọng với một văn bản nếu nó <b>xuất hiện nhiều trong văn bản đó</b> nhưng <b>hiếm trong toàn bộ tập</b>. Từ "và" xuất hiện khắp nơi nên gần như vô giá trị; cụm "hoàn tiền khẩn" hiếm nên rất có giá trị.</p>
   <p>$$\text{tfidf}(t, d) = \underbrace{\text{tf}(t,d)}_{\text{tần suất trong văn bản}} \times \underbrace{\log\frac{N}{\text{df}(t)}}_{\text{độ hiếm trong tập}}$$</p>
   <div class="ds-code"><b>from</b> sklearn.feature_extraction.text <b>import</b> TfidfVectorizer
 TfidfVectorizer(max_features=300, ngram_range=(1, 2), min_df=5)</div>
@@ -5649,7 +5651,8 @@ TfidfVectorizer(max_features=300, ngram_range=(1, 2), min_df=5)</div>
     <li><code>ngram_range=(1,2)</code> — lấy cả từ đơn và cặp từ liền nhau ("chuyển khoản" là một tín hiệu khác "chuyển" và "khoản" rời rạc).</li>
     <li><code>max_features=300</code> — giới hạn số cột, nếu không bảng sẽ phình lên hàng chục nghìn cột.</li>
   </ul>
-  <p>Cắm thẳng vào ColumnTransformer như một nhánh riêng cho cột text. <b>Ưu điểm lớn:</b> giải thích được — bạn chỉ ra được từ nào đẩy điểm rủi ro lên, và đó là thứ hội đồng thích.</p>
+  <p class="wb-help">Số in ra sẽ không khớp tính tay bằng công thức trên: <code>TfidfVectorizer</code> mặc định dùng idf làm mượt $\ln\frac{1+N}{1+\text{df}(t)} + 1$ rồi chuẩn hoá mỗi dòng về độ dài 1 (chuẩn L2). Ý tưởng không đổi: từ càng phổ biến thì trọng số càng nhỏ.</p>
+  <p>Cắm thẳng vào ColumnTransformer như một nhánh riêng cho cột text: <code>("txt", TfidfVectorizer(...), "description")</code>. Hai bẫy, cả hai im lặng hoặc khó hiểu: khai cột bằng <b>tên trần</b>, không bọc trong list — <code>["description"]</code> đưa vào một bảng 2 chiều và vectorizer coi cả cột là <i>một</i> văn bản; và điền chỗ thiếu trước (<code>fillna("")</code> ở bước <code>derive</code>), vì <code>NaN</code> làm nó báo lỗi. <b>Ưu điểm lớn:</b> giải thích được — bạn chỉ ra được từ nào đẩy điểm rủi ro lên, và đó là thứ hội đồng thích.</p>
 
   <h2>Mức 3 · Embedding từ mô hình ngôn ngữ</h2>
   <p>TF-IDF không biết "hoàn tiền" và "refund" liên quan nhau. Embedding thì biết, vì nó đặt các cụm từ gần nghĩa vào những điểm gần nhau trong không gian vector.</p>
@@ -5770,15 +5773,15 @@ score = pipe.predict_proba(pd.DataFrame([tx_dict]))[0, 1]</div>
 <template data-node="f-select">
   <p>Sau vài vòng feature engineering bạn có 200 cột. Câu hỏi: giữ hết hay bỏ bớt?</p>
   <p><b>Câu trả lời thực dụng:</b> với LightGBM và vài trăm cột, thường cứ giữ hết — nó <i>ít bị</i> cột vô dụng làm hỏng hơn hẳn mô hình tuyến tính. Chọn lọc feature đáng làm khi bạn cần <b>giải thích</b>, cần <b>giảm chi phí tính toán lúc chạy thật</b>, hoặc khi số cột vượt xa số mẫu.</p>
-  <p class="wb-help">"Ít bị hỏng" không phải "miễn nhiễm": cột nhiễu vẫn tốn thời gian train, vẫn thỉnh thoảng được chọn làm điểm chia và làm tăng phương sai, và với dữ liệu ít thì vẫn kéo điểm test xuống — chính ví dụ RFECV của scikit-learn dựng ra để cho thấy điều đó. Đây là <b>heuristic để không sa đà</b> ở vòng đầu, không phải kết luận rằng thêm cột thì không mất gì.</p>
+  <p class="wb-help">"Ít bị hỏng" không phải "miễn nhiễm": cột nhiễu vẫn tốn thời gian train, vẫn thỉnh thoảng được chọn làm điểm chia và làm tăng phương sai, và với dữ liệu ít thì vẫn kéo điểm test xuống. Đây là <b>heuristic để không sa đà</b> ở vòng đầu, không phải kết luận rằng thêm cột thì không mất gì.</p>
 
   <h2>Ba cách, theo độ tin cậy</h2>
   <h3>1 · Lọc thô — rẻ, làm trước</h3>
   <div class="ds-code"><i># bỏ cột hằng số</i>
-const = [c <b>for</b> c <b>in</b> X.columns <b>if</b> X[c].nunique() &lt;= 1]
+const = [c <b>for</b> c <b>in</b> X_train.columns <b>if</b> X_train[c].nunique() &lt;= 1]
 
-<i># bỏ một trong hai cột tương quan &gt; 0,95 (chúng nói cùng một điều)</i>
-corr = X.corr().abs()
+<i># bỏ một trong hai cột tương quan &gt; 0,95 (chúng nói cùng một điều) — tính trên train</i>
+corr = X_train.corr(numeric_only=<b>True</b>).abs()
 upper = corr.where(np.triu(np.ones(corr.shape), k=1).astype(<b>bool</b>))
 drop = [c <b>for</b> c <b>in</b> upper.columns <b>if</b> (upper[c] &gt; 0.95).any()]</div>
 
@@ -5787,7 +5790,7 @@ drop = [c <b>for</b> c <b>in</b> upper.columns <b>if</b> (upper[c] &gt; 0.95).an
   <div class="ds-code"><b>from</b> sklearn.inspection <b>import</b> permutation_importance
 r = permutation_importance(pipe, X_valid, y_valid, n_repeats=10,
                            scoring="average_precision", random_state=42)</div>
-  <p>Vì sao đáng tin hơn <code>feature_importances_</code> của cây: chỉ số mặc định của cây <b>thiên vị cột có nhiều giá trị khác nhau</b> (một cột ID ngẫu nhiên có thể xếp hạng cao). Permutation đo tác động thật lên chỉ số bạn quan tâm.</p>
+  <p>Vì sao đáng tin hơn <code>feature_importances_</code> của cây: chỉ số mặc định của cây <b>thiên vị cột có nhiều giá trị khác nhau</b> (một cột ID ngẫu nhiên có thể xếp hạng cao). Permutation đo tác động thật lên chỉ số bạn quan tâm. Giới hạn của nó: hai cột tương quan mạnh thì xáo một cột, cột kia vẫn mang tin, nên <b>cả hai trông ít quan trọng</b>. Muốn đo một nhóm (như bảng ở cuối bài) thì xáo cả nhóm cùng lúc, đừng cộng điểm của từng cột.</p>
 
   <h3>3 · Loại dần theo đệ quy (RFE)</h3>
   <div class="ds-code"><b>from</b> sklearn.feature_selection <b>import</b> RFECV
@@ -6475,7 +6478,7 @@ print(study.best_params, study.best_value)</div>
 
   <h2>Ý tưởng SHAP, không cần công thức</h2>
   <p>Tưởng tượng một nhóm làm chung dự án và được thưởng 100 triệu. Chia thế nào cho công bằng? Lý thuyết trò chơi có một đáp án: với mỗi người, xét mọi thứ tự gia nhập nhóm có thể, đo phần giá trị tăng thêm khi người đó vào, rồi lấy trung bình. Đó là <b>giá trị Shapley</b>.</p>
-  <p>SHAP áp đúng ý tưởng đó cho feature: <b>mỗi feature đóng góp bao nhiêu vào việc đẩy dự đoán lệch khỏi mức trung bình</b>. Tổng mọi đóng góp + giá trị cơ sở = dự đoán cuối. Đây là tính chất quan trọng: nó <b>cộng lại đúng bằng</b> kết quả, nên giải thích không phải là ước lượng mơ hồ. Một chỗ dễ bị hỏi khi bảo vệ: <b>"dự đoán cuối" là cái gì thì tuỳ bạn yêu cầu SHAP giải thích cái gì.</b> Với mô hình cây nhị phân ở cấu hình mặc định của <code>TreeExplainer</code> (LightGBM/XGBoost, <code>model_output="raw"</code>) — đúng cấu hình bài này dùng — thì đó là <b>log-odds</b> (biên thô trước khi bóp về xác suất), nên phép cộng đúng bằng ở thang đó chứ không phải thang xác suất. Đổi sang <code>model_output="probability"</code> thì phép cộng đúng ở thang xác suất. Trình bày hình thì nói rõ trục đang là thang nào.</p>
+  <p>SHAP áp đúng ý tưởng đó cho feature: <b>mỗi feature đóng góp bao nhiêu vào việc đẩy dự đoán lệch khỏi mức trung bình</b>. Tổng mọi đóng góp + giá trị cơ sở = dự đoán cuối. Đây là tính chất quan trọng: nó <b>cộng lại đúng bằng</b> kết quả, nên giải thích không phải là ước lượng mơ hồ. Một chỗ dễ bị hỏi khi bảo vệ: <b>"dự đoán cuối" là cái gì thì tuỳ bạn yêu cầu SHAP giải thích cái gì.</b> Với mô hình cây nhị phân ở cấu hình mặc định của <code>TreeExplainer</code> (LightGBM/XGBoost, <code>model_output="raw"</code>) — đúng cấu hình bài này dùng — thì đó là <b>log-odds</b> (biên thô trước khi bóp về xác suất), nên phép cộng đúng bằng ở thang đó chứ không phải thang xác suất. Đổi sang <code>model_output="probability"</code> thì phép cộng tính ở thang xác suất — nhưng khi đó phải đưa thêm một mẫu nền, <code>shap.TreeExplainer(model, data=X_t.sample(200), model_output="probability")</code>, và giá trị cơ sở là xác suất trung bình trên mẫu nền đó; thiếu <code>data=</code> thì shap báo lỗi. Trình bày hình thì nói rõ trục đang là thang nào.</p>
 
   <div data-viz="shap"></div>
 
@@ -6536,8 +6539,9 @@ df["cluster"] = km.labels_</div>
     <tr><td><b>One-Class SVM</b></td><td>Vẽ ranh giới bao quanh vùng "bình thường"</td><td>Dữ liệu nhỏ</td></tr>
   </table>
   <div class="ds-code"><b>from</b> sklearn.ensemble <b>import</b> IsolationForest
-iso = IsolationForest(contamination=0.002, random_state=42).fit(X_train_normal)
+iso = IsolationForest(random_state=42).fit(X_train_normal)   <i># chỉ dòng của train</i>
 df["anomaly_score"] = -iso.score_samples(X)     <i># cao = lạ hơn</i></div>
+  <p class="wb-help"><code>score_samples</code> cho điểm liên tục và không phụ thuộc <code>contamination</code>; tham số đó chỉ đặt ngưỡng cho <code>predict()</code> (−1 = bất thường), nên dùng điểm thì khỏi đặt. Fit trên giao dịch bình thường là đã dùng nhãn để chọn dòng: khi đưa điểm này vào mô hình có giám sát và cross-validate, fit lại nó bên trong từng fold, như mọi bước học tham số khác.</p>
 
   <h2>Cách kết hợp mạnh nhất cho luận văn</h2>
   <p>Đừng chọn một trong hai. <b>Dùng điểm bất thường làm feature cho mô hình có giám sát:</b></p>
@@ -12652,7 +12656,7 @@ VIZ.clock = el => {
       `Giờ A = ${a}, giờ B = ${b}. Trên trục số thẳng, khoảng cách là ${Math.abs(a - b)}. ` +
       `Sau khi mã hoá sin/cos, khoảng cách trên vòng tròn là ${d.toFixed(2)}. ` +
       (Math.abs(a - b) > 12 ? 'Hai giờ ở hai đầu trục thẳng nhưng nằm sát nhau trên vòng tròn.' :
-       'Hai cách đo cho kết quả tương đối giống nhau ở khoảng cách này.');
+       'Hai giờ cách nhau không quá 12 giờ nên hai cách đo xếp xa gần như nhau; trên vòng tròn, cặp cách nhau đúng 12 giờ là xa nhất (khoảng cách 2, bằng đường kính).');
   };
   el.addEventListener('input', upd); upd();
 };
