@@ -339,7 +339,7 @@ footer.foot code{font-size:var(--fs-xs)}
         <p class="lead">Nhóm bạn đóng vai <strong>bộ phận phân tích rủi ro</strong> của một sàn thương mại điện tử, xây một mô hình <strong>chấm điểm mỗi giao dịch</strong> là gian lận hay không — theo thời gian thực, rồi triển khai và giám sát nó như một sản phẩm thật.</p>
         <div class="box note">
           <div class="box-t">◆ Một điều nếu chỉ nhớ một điều</div>
-          <p>Mô hình tốt nhất đạt <strong>PR-AUC 0,997</strong> (gần như hoàn hảo). Nhưng điểm hay của đồ án <strong>không phải con số đó</strong> — mà là việc nhóm <mark>giải thích được vì sao nó cao đến vậy</mark>, và thành thật gọi đó là <em>hạn chế của dữ liệu mô phỏng</em>, chứ không khoe như thành tích.</p>
+          <p>Mô hình trung thực tốt nhất (Random Forest · Base) đạt <strong>PR-AUC 0,998</strong> (gần như hoàn hảo). Nhưng điểm hay của đồ án <strong>không phải con số đó</strong> — mà là việc nhóm <mark>giải thích được vì sao nó cao đến vậy</mark>, và thành thật gọi đó là <em>hạn chế của dữ liệu mô phỏng</em>, chứ không khoe như thành tích.</p>
         </div>
         <div class="yours-flag">★ Phần của bạn</div>
         <p>Trong nhóm, bạn là <strong>Người A — Data &amp; EDA (Module 1–2)</strong>: nạp dữ liệu PaySim, tự sinh thêm dữ liệu ngữ cảnh bằng Faker, viết data dictionary, và làm <strong>toàn bộ biểu đồ EDA + phân tích tín hiệu tổng hợp</strong>. Đây cũng chính là nơi <strong>ý tưởng quan trọng nhất của cả đồ án ra đời</strong> (mục 02) — vì chính bạn là người sinh ra các đặc trưng đó. Các mục ★ bên dưới là phần bạn cần nắm chắc nhất.</p>
@@ -461,7 +461,7 @@ footer.foot code{font-size:var(--fs-xs)}
         </div>
         <div class="box warn">
           <div class="box-t">⚠ Điểm cần nhớ khi bị hỏi</div>
-          <p>PaySim là dữ liệu <strong>mô phỏng</strong>, không phải giao dịch thật. Gian lận trong đó được “viết kịch bản” khá đều đặn (mục 03·EDA sẽ thấy) — đây là gốc rễ vì sao điểm mô hình cao bất thường.</p>
+          <p>PaySim là dữ liệu <strong>mô phỏng</strong>, không phải giao dịch thật. Gian lận trong đó được “viết kịch bản” khá đều đặn (mục 04 · EDA sẽ thấy) — đây là gốc rễ vì sao điểm mô hình cao bất thường.</p>
         </div>
       </section>
 
@@ -491,7 +491,7 @@ footer.foot code{font-size:var(--fs-xs)}
               <tr><td><code>shipping_billing_mismatch</code></td><td>cờ 0/1</td><td>Bernoulli p=<span class="r">0,40</span> ↔ <span class="g">0,03</span> (lệch địa chỉ giao vs thanh toán)</td></tr>
               <tr><td><code>failed_payment_attempts</code></td><td>số lần</td><td>Poisson λ=<span class="r">2,2</span> ↔ <span class="g">0,12</span> (số lần thanh toán hỏng trước khi thành công)</td></tr>
               <tr><td><code>ip_billing_distance_km</code></td><td>km</td><td>Uniform(500–8000) nếu IP lệch, ngược lại Uniform(0–80)</td></tr>
-              <tr><td><code>account_age_days</code>… <code>home_country</code></td><td>quốc gia</td><td>Chọn ngẫu nhiên đều từ ~240 quốc gia (Faker) — không phụ thuộc nhãn</td></tr>
+              <tr><td><code>home_country</code></td><td>quốc gia</td><td>Chọn ngẫu nhiên đều từ ~240 quốc gia (Faker) — không phụ thuộc nhãn</td></tr>
               <tr><td><code>device_fingerprint</code></td><td>hash</td><td>Vân tay thiết bị, lấy từ pool 5.000 mã SHA1 (Faker)</td></tr>
               <tr><td><code>hour_of_day</code></td><td>giờ 0–23</td><td>Suy trực tiếp từ <code>step % 24</code> (không phải sinh ngẫu nhiên)</td></tr>
               <tr><td><code>channel</code> <span class="badge">EDA only</span></td><td>kênh</td><td>web / mobile / POS / api — <strong>chỉ dùng vẽ EDA, không đưa vào mô hình</strong></td></tr>
@@ -540,7 +540,7 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
           <div class="c-title">Cứ ~775 giao dịch mới có 1 vụ gian lận (0,129%)</div>
           <div class="c-sub">Mỗi chấm = 1 giao dịch · chấm đỏ = gian lận</div>
           <div class="rarity" id="rarity"></div>
-          <div class="c-finding"><strong>Ý nghĩa:</strong> khi lớp “gian lận” quá hiếm, một mô hình lười đoán “không bao giờ gian lận” vẫn đúng 99,87% → <strong>Accuracy (độ chính xác) trở nên vô nghĩa</strong>. Phải dùng chỉ số khác (mục 06 · Model).</p>
+          <div class="c-finding"><strong>Ý nghĩa:</strong> khi lớp “gian lận” quá hiếm, một mô hình lười đoán “không bao giờ gian lận” vẫn đúng 99,87% → <strong>Accuracy (độ chính xác) trở nên vô nghĩa</strong>. Phải dùng chỉ số khác (mục 05 · Module 5).</p>
         </div>
         <div class="box note">
           <div class="box-t">◆ KPI nhóm theo dõi (thay cho Accuracy)</div>
@@ -570,24 +570,24 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
       <section class="concept" data-concept="c8" id="s8">
         <div class="sec-num">04 · Module 2 · ★ Phần của bạn</div>
         <h2 class="h">EDA (c) — Dấu vết số học: <code>errorBalance</code></h2>
-        <p>Đây là phát hiện <strong>giá trị nhất</strong> của cả phần EDA, và về sau thành <strong>đặc trưng số 1</strong> của mô hình. Ý tưởng: gian lận trong PaySim là kịch bản “<strong>rút sạch tài khoản</strong>”, để lại một dấu vết trong <em>sổ sách số dư</em>.</p>
+        <p>Đây là phát hiện <strong>giá trị nhất</strong> của cả phần EDA, và về sau thành <strong>đặc trưng số 1</strong> của mô hình. Ý tưởng: gian lận trong PaySim là kịch bản “<strong>rút sạch tài khoản</strong>” — rút <em>đúng bằng</em> toàn bộ số dư — nên sổ sách số dư của nó khớp tuyệt đối, trong khi giao dịch hợp lệ của PaySim lại hay lệch sổ.</p>
         <div class="box note">
           <div class="box-t">◆ Giải thích 3 tầng</div>
-          <div class="layer"><div class="lb">Tầng 1<br>Ẩn dụ</div><div class="lx"><p>Một giao dịch “khớp sổ sách” thì: số dư sau = số dư trước − số tiền. Nếu phép trừ này <em>không khớp</em>, có gì đó bất thường.</p></div></div>
-          <div class="layer"><div class="lb">Tầng 2<br>Cơ chế</div><div class="lx"><p>Nhóm tạo đặc trưng <strong>lỗi số dư</strong> = phần lệch khỏi 0 của phép tính khớp sổ. Giao dịch sạch → lỗi = 0. Giao dịch “rút sạch” gian lận → lỗi ≠ 0.</p></div></div>
+          <div class="layer"><div class="lb">Tầng 1<br>Ẩn dụ</div><div class="lx"><p>Một giao dịch “khớp sổ sách” thì: số dư sau = số dư trước − số tiền. Kẻ gian rút đúng số dư hiện có (trước 181 → rút 181 → sau 0), nên phép trừ khớp. Giao dịch thường trong PaySim thì hay ghi số tiền <em>lớn hơn</em> số dư mà số dư sau vẫn là 0 (trước 15.325 → rút 229.134 → sau 0) — một tật của trình mô phỏng — nên phép trừ không khớp.</p></div></div>
+          <div class="layer"><div class="lb">Tầng 2<br>Cơ chế</div><div class="lx"><p>Nhóm tạo đặc trưng <strong>lỗi số dư</strong> = phần lệch khỏi 0 của phép tính khớp sổ. Trong TRANSFER + CASH_OUT: <strong>99,5%</strong> vụ gian lận có lỗi = 0, còn <strong>90,6%</strong> giao dịch hợp lệ có lỗi &gt; 0. Tín hiệu nằm ở chỗ giao dịch hợp lệ <em>lệch</em> sổ, không phải ở chỗ gian lận lệch sổ.</p></div></div>
           <div class="layer"><div class="lb">Tầng 3<br>Công thức</div><div class="lx"><p style="font-family:var(--font-mono);font-size:var(--fs-sm)">errorBalanceOrig = newbalanceOrig + amount − oldbalanceOrg</p></div></div>
         </div>
-        <h4 class="h">Giao dịch hợp lệ (khớp)</h4>
+        <h4 class="h">Giao dịch gian lận (rút đúng toàn bộ số dư → khớp)</h4>
         <div class="acct">
-          <span class="chip">newbalanceOrig</span><span class="op">+</span><span class="chip">amount</span><span class="op">−</span><span class="chip">oldbalanceOrg</span><span class="op">=</span><span class="eq">0 ✓</span>
+          <span class="chip">newbalanceOrig</span><span class="op">+</span><span class="chip">amount</span><span class="op">−</span><span class="chip">oldbalanceOrg</span><span class="op">=</span><span class="bad">0 ⚑</span>
         </div>
-        <h4 class="h">Giao dịch gian lận (rút sạch → lệch)</h4>
+        <h4 class="h">Giao dịch hợp lệ trong PaySim (phần lớn lệch)</h4>
         <div class="acct">
-          <span class="chip">newbalanceOrig</span><span class="op">+</span><span class="chip">amount</span><span class="op">−</span><span class="chip">oldbalanceOrg</span><span class="op">=</span><span class="bad">≠ 0 ⚑</span>
+          <span class="chip">newbalanceOrig</span><span class="op">+</span><span class="chip">amount</span><span class="op">−</span><span class="chip">oldbalanceOrg</span><span class="op">=</span><span class="eq">&gt; 0</span>
         </div>
         <div class="box good">
           <div class="box-t">✓ So sánh sắc bén</div>
-          <p>Một quy tắc ngây thơ kiểu “tài khoản bị rút sạch” chỉ cho tỉ lệ gian lận 0,223% (gấp 1,7 lần) — yếu. Nhưng công thức <em>lỗi số dư</em> ở trên sắc hơn nhiều, và chính nó chiếm <strong>53,7%</strong> tầm quan trọng của mô hình cuối. <mark>Cột quan trọng nhất là một đặc trưng THẬT</mark>, không phải đồ tổng hợp.</p>
+          <p>Một quy tắc ngây thơ kiểu “tài khoản bị rút sạch” (số dư sau = 0) chỉ cho tỉ lệ gian lận 0,223% (gấp 1,7 lần) — yếu, vì 90% giao dịch hợp lệ TRANSFER/CASH_OUT cũng kết thúc ở số dư 0. Phép khớp sổ phân biệt được hai nhóm đó: ai về 0 vì rút đúng số dư, ai về 0 mà sổ lệch. <em>Lỗi số dư</em> sắc hơn nhiều, và chính nó chiếm <strong>53,7%</strong> tầm quan trọng của mô hình cuối. <mark>Cột quan trọng nhất là một đặc trưng THẬT</mark>, không phải đồ tổng hợp.</p>
         </div>
       </section>
 
@@ -681,15 +681,16 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
 
         <h3 class="h">Chọn ngưỡng theo chi phí &amp; kết quả nghiệp vụ</h3>
         <p>Ngưỡng mặc định 0,5 vô nghĩa về kinh doanh. Nhóm quy đổi ra tiền: <em>Chi phí(t) = tổng tiền gian lận bỏ sót + C<sub>FP</sub>×số báo động giả</em> (C<sub>FP</sub>=10). Quét mọi ngưỡng → tối ưu tại <strong>t*≈0,17</strong>, giảm tổng chi phí ~14,7%.</p>
+        <p>Vì sao phải quét thay vì dùng công thức τ* = C<sub>FP</sub> / (C<sub>FP</sub> + C<sub>FN</sub>): ở đây C<sub>FN</sub> là số tiền của <em>từng</em> giao dịch nên ngưỡng lý tưởng khác nhau theo số tiền, và class weights 337:1 đẩy điểm của lớp gian lận lên nên điểm không còn là xác suất đã calibrated. Quét ngưỡng phải làm trên tập validation; chọn ngưỡng ngay trên tập test làm con số test lạc quan hơn thực tế.</p>
         <div class="stats s3">
           <div class="stat gv"><div class="stat-value">99,96%</div><div class="stat-label">giá trị gian lận chặn được (tại t*)</div></div>
           <div class="stat"><div class="stat-value">0,032%</div><div class="stat-label">tỉ lệ chặn nhầm (~265 giao dịch)</div></div>
-          <div class="stat gv"><div class="stat-value">2.451</div><div class="stat-label">vụ bắt được / 2.459 (hệ thống luật cũ: chỉ 16)</div></div>
+          <div class="stat gv"><div class="stat-value">2.451</div><div class="stat-label">vụ bắt được / 2.459 vụ gian lận của tập test (luật cũ <code>isFlaggedFraud</code>: 16 vụ trên cả 6,36 triệu dòng)</div></div>
         </div>
 
         <div class="box danger">
           <div class="box-t">⚠ Ý nghĩa thật của con số (slide quan trọng nhất)</div>
-          <p>PR-AUC 0,997 với 1 báo động giả là <strong>không tưởng ngoài đời thật</strong>. Nguyên nhân nằm ở <strong>dữ liệu, không phải mô hình</strong>: PaySim viết kịch bản gian lận kiểu “rút sạch tài khoản” → để lại dấu vết số học <em>gần như tất định</em>, và <code>errorBalanceOrig</code> bắt trúng ngay. Bằng chứng: mô hình tuyến tính vẫn thất bại (0,59) trong khi cây vượt 0,99. Nhóm báo cáo đây là <strong>hạn chế</strong>, không phải thành tích.</p>
+          <p>PR-AUC 0,998 với 1 báo động giả là <strong>không tưởng ngoài đời thật</strong>. Nguyên nhân nằm ở <strong>dữ liệu, không phải mô hình</strong>: PaySim viết kịch bản gian lận kiểu “rút sạch tài khoản” → để lại dấu vết số học <em>gần như tất định</em> (số tiền đúng bằng số dư trước ở 97,8% vụ gian lận và ở 0 giao dịch hợp lệ nào của TRANSFER/CASH_OUT), và <code>errorBalanceOrig</code> bắt trúng ngay. Bằng chứng: mô hình tuyến tính vẫn thất bại (0,59) trong khi cây vượt 0,99. Nhóm báo cáo đây là <strong>hạn chế</strong>, không phải thành tích.</p>
         </div>
       </section>
 
@@ -729,7 +730,7 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
           <div class="gterm"><dt>Label-conditional</dt><dd>“Có điều kiện theo nhãn” — sinh đặc trưng với tham số khác nhau cho nhóm gian lận vs hợp lệ. Chính là nguồn rò rỉ.</dd></div>
           <div class="gterm"><dt>Base / Full</dt><dd>Hai bộ đặc trưng: <strong>Base</strong> chỉ dùng dữ liệu thật (không rò rỉ); <strong>Full</strong> = Base + tín hiệu tổng hợp (có rò rỉ). Train cả hai để <em>đo</em> rò rỉ.</dd></div>
           <div class="gterm"><dt>Uplift</dt><dd>Mức tăng chỉ số khi thêm dữ liệu tổng hợp (Full − Base). Uplift lớn = mô hình phụ thuộc dữ liệu rò rỉ.</dd></div>
-          <div class="gterm"><dt>errorBalance</dt><dd>Đặc trưng “lỗi số dư” = phần lệch khỏi 0 khi kiểm tra khớp sổ số dư. Dấu vết của gian lận “rút sạch”. Đặc trưng #1.</dd></div>
+          <div class="gterm"><dt>errorBalance</dt><dd>Đặc trưng “lỗi số dư” = <code>newbalanceOrig + amount − oldbalanceOrg</code>. Gian lận “rút sạch” gần như luôn có lỗi = 0; phần lớn giao dịch hợp lệ của PaySim có lỗi &gt; 0. Đặc trưng #1.</dd></div>
           <div class="gterm"><dt>Velocity feature</dt><dd>Đặc trưng đo tốc độ hành vi tài khoản (số giao dịch/khoảng thời gian). Vô dụng trên PaySim vì tài khoản không lặp.</dd></div>
         </dl>
 
@@ -751,7 +752,7 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
           <div class="gterm"><dt>Random Forest</dt><dd>Tập hợp nhiều cây quyết định “bỏ phiếu”. Mô hình trung thực tốt nhất ở đồ án này.</dd></div>
           <div class="gterm"><dt>XGBoost</dt><dd>Mô hình boosting cây, mạnh &amp; phổ biến. Được chọn để <em>triển khai</em> vì gọn, nhanh.</dd></div>
           <div class="gterm"><dt>Class weights</dt><dd>Cách xử lý lệch bằng cách <em>phạt nặng hơn</em> khi bỏ sót lớp hiếm — không cần tạo/bớt dữ liệu. Nhóm chọn cách này.</dd></div>
-          <div class="gterm"><dt>SMOTE</dt><dd><em>Synthetic Minority Over-sampling</em> — sinh thêm mẫu gian lận “giả” để cân bằng. Nhóm <em>không</em> dùng.</dd></div>
+          <div class="gterm"><dt>SMOTE</dt><dd><em>Synthetic Minority Over-sampling Technique</em> — sinh mẫu gian lận “giả” bằng cách nội suy giữa một mẫu gian lận và láng giềng gần của nó. Chỉ áp lên tập train sau khi chia (trong cross-validation thì nằm trong pipeline của từng fold); áp trước khi chia thì mẫu giả mang thông tin của tập test, điểm test bị thổi phồng. Nhóm <em>không</em> dùng.</dd></div>
           <div class="gterm"><dt>Undersampling</dt><dd>Bớt bớt mẫu lớp đa số (hợp lệ) để cân bằng. Nhóm <em>không</em> dùng.</dd></div>
           <div class="gterm"><dt>Drift <span class="en">/ trôi dữ liệu</span></dt><dd>Khi phân phối dữ liệu vào thực tế lệch dần khỏi lúc train → mô hình xuống cấp.</dd></div>
           <div class="gterm"><dt>PSI</dt><dd><em>Population Stability Index</em> — số đo mức một biến “trôi” so với lúc train. PSI&gt;0,2 = trôi mạnh.</dd></div>
@@ -784,8 +785,11 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
         <div class="box note"><div class="box-t">Q · Sao dùng PR-AUC mà không dùng Accuracy?</div>
           <p>Vì dữ liệu quá lệch: đoán “không bao giờ gian lận” đã đạt 99,87% accuracy nhưng bắt được 0 vụ. PR-AUC (và Recall, F1) tập trung vào lớp hiếm nên phản ánh đúng chất lượng.</p></div>
 
+        <div class="box note"><div class="box-t">Q · Chia train/test thế nào? Có rò rỉ theo thời gian không?</div>
+          <p>Với giao dịch, cách chia đúng là <strong>theo thời gian</strong>: train trên các <code>step</code> sớm, validation và test trên các <code>step</code> muộn hơn, vì lúc chạy thật mô hình chỉ thấy quá khứ. Chia ngẫu nhiên (kể cả stratified) cho mô hình học cả những giờ nằm xen giữa tập test, nên điểm test lạc quan hơn. Mọi bước fit trên dữ liệu (scaler, encoder, SMOTE nếu có, chọn ngưỡng) chỉ dùng phần train/validation. Nếu nhóm đã chia ngẫu nhiên, nói thẳng đó là một hạn chế.</p></div>
+
         <div class="box warn"><div class="box-t">⚠ Mẹo vàng khi bị hỏi khó</div>
-          <p>Nếu không chắc, nói thẳng: <em>“đây là hạn chế nhóm đã ghi nhận trong báo cáo”</em>. Trung thực ăn điểm hơn đoán bừa — và đề bài <strong>chấm điểm chính sự trung thực đó</strong>. Ba cặp số dễ nhớ nên nhấn: <strong>1 vs 49.287</strong> (báo động giả), <strong>16 vs 2.451</strong> (so hệ thống cũ), <strong>8,8×</strong> (mật độ gian lận trong outlier).</p></div>
+          <p>Nếu không chắc, nói thẳng: <em>“đây là hạn chế nhóm đã ghi nhận trong báo cáo”</em>. Trung thực ăn điểm hơn đoán bừa — và đề bài <strong>chấm điểm chính sự trung thực đó</strong>. Ba cặp số dễ nhớ nên nhấn: <strong>1 vs 49.287</strong> (báo động giả, Random Forest vs Logistic, cùng bộ Base), <strong>2.451/2.459</strong> vụ bắt được trên tập test so với <strong>16</strong> vụ luật cũ gắn cờ trên cả bộ dữ liệu, <strong>8,8×</strong> (mật độ gian lận trong outlier).</p></div>
       </section>
 
       <!-- ============ 8. NÓI GÌ ============ -->
@@ -796,7 +800,7 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
         <div class="box say"><div class="box-t">① Bài toán &amp; KPI</div><p class="quote">“Gian lận chỉ 0,129% nhưng giá trị gấp 8,2 lần. Chặn nhầm cũng tốn tiền — nên mục tiêu là tối thiểu hoá tổng chi phí, không phải bắt tối đa. Vì dữ liệu quá lệch, nhóm không dùng Accuracy mà dùng PR-AUC, Recall, F1.”</p></div>
         <div class="box say"><div class="box-t">② Hai nguồn dữ liệu</div><p class="quote">“Nguồn nền là PaySim — 6,36 triệu giao dịch mô phỏng có nhãn thật. Nhóm sinh thêm 9 đặc trưng ngữ cảnh bằng Faker, ghi đầy đủ trong data dictionary. Điểm cần lưu ý: chúng được sinh có điều kiện theo nhãn — chủ ý để tín hiệu trông thực tế.”</p></div>
         <div class="box say"><div class="box-t">③ Cái bẫy (chậm, nhìn khán giả)</div><p class="quote">“Các đặc trưng này tách hai lớp cực đẹp — lệch IP gấp 25 lần. Nhưng chính nhóm sinh ra chúng từ nhãn. Nhét thẳng vào mô hình là rò rỉ nhãn — tự chấm bài của chính mình. Nhóm chọn xử lý minh bạch: xây hai bộ đặc trưng Base/Full và so sánh.”</p></div>
-        <div class="box say"><div class="box-t">④ EDA — hai phát hiện định hình cả bài</div><p class="quote">“Một: gian lận chỉ ở 2/5 loại giao dịch → lọc trước, mật độ nhãn dương tăng hơn gấp đôi mà không mất thông tin. Hai: gian lận phá vỡ đẳng thức số dư — đặc trưng lỗi số dư này sau thành đặc trưng số một của mô hình.”</p></div>
+        <div class="box say"><div class="box-t">④ EDA — hai phát hiện định hình cả bài</div><p class="quote">“Một: gian lận chỉ ở 2/5 loại giao dịch → lọc trước, mật độ nhãn dương tăng hơn gấp đôi mà không mất thông tin. Hai: gian lận rút đúng toàn bộ số dư nên khớp sổ tuyệt đối, còn giao dịch hợp lệ của PaySim phần lớn lệch sổ — đặc trưng lỗi số dư này sau thành đặc trưng số một của mô hình.”</p></div>
         <div class="box say"><div class="box-t">⑤ Outlier — chốt sự hiểu bài</div><p class="quote">“Sách bảo loại outlier. Nhóm giữ lại toàn bộ, vì tỉ lệ gian lận trong nhóm outlier gấp 8,8 lần. Số tiền lớn ở đây là tín hiệu, không phải nhiễu.”</p></div>
       </section>
 
@@ -848,7 +852,7 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
 /* ===== Rarity dots (imbalance visual) ===== */
 (function(){
   var wrap=document.getElementById('rarity'); if(!wrap) return;
-  var N=300, fraudAt=180; // 1 fraud dot among ~300 shown (visual, not exact)
+  var N=775, fraudAt=430; // 1 fraud dot per 775 transactions (8.213 / 6.362.620)
   var frag=document.createDocumentFragment();
   for(var i=0;i<N;i++){ var d=document.createElement('i'); if(i===fraudAt) d.className='f'; frag.appendChild(d); }
   wrap.appendChild(frag);
