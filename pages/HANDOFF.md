@@ -2,6 +2,8 @@
 
 ## CHƯA LÀM
 
+- `ai-native-workflow.html`, mục 04: chưa có mẫu `marketplace.json` và lệnh cài plugin của đội cho một dev mới.
+  Đối chiếu tài liệu Plugins và Plugin marketplaces trước khi thêm; cổng E phải kiểm mẫu ấy là JSON hợp lệ.
 - `machine-learning.html`, đề xuất của lượt rà sư phạm vòng 3 (cần mô hình hoặc hình mới):
   - M3 (#s-scale): chip GD / Momentum / Adam trên bản chưa chuẩn hoá, cùng α; phải cho thấy momentum bớt nảy
     giữa hai vách khe và Adam đi gần thẳng. Đổi luật "Chạy cả hai" nên phải sửa cả phép kiểm M3 trong cổng.
