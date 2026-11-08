@@ -1809,7 +1809,7 @@
   <p>Kiểm tra thô: $x = 2 \Rightarrow z = 36$; $x = 2{,}01 \Rightarrow z = 36{,}36$. Chênh $0{,}36$ trên $0{,}01$ = 36. Khớp.</p>
   <h4>Vì sao nó là toàn bộ deep learning</h4>
   <p>Một mạng 10 lớp là hàm lồng nhau 10 tầng: $\text{loss}(f_{10}(f_9(\dots f_1(x))))$. Muốn biết trọng số ở lớp 1 ảnh hưởng loss ra sao, bạn nhân 10 đạo hàm dọc theo chuỗi. Đó chính là <b>backpropagation</b> — không có gì hơn thế.</p>
-  <p>Hệ quả trực tiếp: nếu mỗi đạo hàm trong chuỗi nhỏ hơn 1, nhân 10 lần lại thì gần bằng 0 → lớp đầu gần như không học được. Đó là <b>vanishing gradient</b>, và là lý do người ta phát minh ra ReLU, batch-norm và residual connection.</p>
+  <p>Hệ quả trực tiếp: nếu mỗi đạo hàm trong chuỗi nhỏ hẳn hơn 1, nhân 10 lần lại thì gần bằng 0 → lớp đầu gần như không học được. Đạo hàm của sigmoid lớn nhất chỉ 0,25, và $0{,}25^{10} \approx 0{,}000001$; còn nếu mỗi đạo hàm là 0,9 thì $0{,}9^{10} \approx 0{,}35$ — giảm, nhưng chưa biến mất. Đó là <b>vanishing gradient</b>, và là lý do người ta phát minh ra ReLU, batch-norm và residual connection.</p>
 </template>
 
 <template data-mathdef="gdupdate" data-title="Công thức cập nhật — dòng lệnh mà máy chạy hàng triệu lần">
@@ -1843,11 +1843,13 @@
 <template data-mathdef="expvar" data-title="Kỳ vọng, phương sai, độ lệch chuẩn">
   <p>Ba con số này trả lời hai câu hỏi về một cột dữ liệu: <b>“thường là bao nhiêu”</b> và <b>“dao động cỡ nào”</b>.</p>
   <h4>Kỳ vọng = trung bình dài hạn</h4>
-  <p>$$\mathbb{E}[X] = \mu = \frac{1}{n}\sum_{i=1}^{n} x_i$$</p>
+  <p>$\mathbb{E}[X] = \mu$ là trung bình của cả tổng thể (hoặc của vô hạn lần lặp). Trên dữ liệu, bạn chỉ có $n$ giá trị, nên tính <b>trung bình mẫu</b> để ước lượng nó:</p>
+  <p>$$\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i \;\approx\; \mu$$</p>
   <p>Số tiền 5 giao dịch: 100k, 150k, 120k, 3.000k, 130k → $\mu = 700$k. <b>Chú ý:</b> không giao dịch nào gần 700k cả. Trung bình bị một giá trị ngoại lai kéo lệch. Trung vị (median) ở đây là 130k — mô tả “thường là bao nhiêu” tốt hơn nhiều.</p>
   <h4>Phương sai & độ lệch chuẩn = mức dao động</h4>
   <p>$$\sigma^2 = \frac{1}{n}\sum (x_i - \mu)^2, \qquad \sigma = \sqrt{\sigma^2}$$</p>
   <p>Bình phương để chênh lệch âm và dương không triệt tiêu nhau; rồi lấy căn để trở về đúng đơn vị ban đầu (đồng, chứ không phải đồng bình phương). Với dãy trên, $\sigma \approx 1.150$k — to hơn cả trung bình, dấu hiệu rõ ràng của phân phối lệch.</p>
+  <p class="wb-help">Chia cho $n$ hay $n-1$: công thức trên chia cho $n$ (độ lệch chuẩn của chính 5 số này). pandas <code>.std()</code> và <code>describe()</code> mặc định chia cho $n-1$ (<code>ddof=1</code>) để ước lượng σ của tổng thể không bị hụt, nên in ra ≈ 1.286k. numpy <code>np.std</code> mặc định chia cho $n$. Lệch nhau ở đây là đúng, không phải lỗi; với vài nghìn dòng trở lên hai cách gần như trùng.</p>
   <h4>Vì sao bạn cần nó mỗi ngày</h4>
   <ul>
     <li><b>StandardScaler</b> chính là $(x - \mu)/\sigma$ — đưa mọi cột về cùng thang “bao nhiêu độ lệch chuẩn so với trung bình”.</li>
@@ -1901,7 +1903,7 @@
 </template>
 
 <template data-mathdef="logloss" data-title="Cross-entropy (log loss) — sai số cho bài toán phân loại">
-  <p>Bạn cần một cách chấm điểm sự tự tin. Nếu mô hình nói “chắc chắn 99% là giao dịch sạch” mà hoá ra là gian lận, hình phạt phải <b>nặng hơn nhiều</b> so với khi nó nói “50-50”. Bình phương sai số không làm được điều đó; log loss thì có.</p>
+  <p>Bạn cần một cách chấm điểm sự tự tin. Nếu mô hình nói “chắc chắn 99% là giao dịch sạch” mà hoá ra là gian lận, hình phạt phải <b>nặng hơn nhiều</b> so với khi nó nói “50-50”. Bình phương sai số có phạt thêm, nhưng bị chặn ở 1: tự tin 99% mà sai bị phạt 0,98, tự tin 99,99% mà sai cũng chỉ ≈ 1. Log loss thì không có trần.</p>
   <p>$$L = -\big[\,y\log(\hat{p}) + (1-y)\log(1-\hat{p})\,\big]$$</p>
   <p>Nhìn thì rối, nhưng $y$ chỉ nhận 0 hoặc 1 nên lúc nào cũng chỉ còn một vế:</p>
   <table>
@@ -1953,9 +1955,10 @@
     <tr><th></th><th>L2 (Ridge)</th><th>L1 (Lasso)</th></tr>
     <tr><td>Làm gì với trọng số</td><td>co nhỏ đều, hiếm khi về đúng 0</td><td>đẩy hẳn nhiều trọng số <b>về đúng 0</b></td></tr>
     <tr><td>Dùng khi</td><td>mọi feature đều hơi có ích</td><td>muốn <b>tự động chọn feature</b></td></tr>
-    <tr><td>sklearn</td><td><code>penalty='l2'</code> (mặc định)</td><td><code>penalty='l1', solver='liblinear'</code></td></tr>
+    <tr><td>sklearn</td><td><code>l1_ratio=0</code> (mặc định)</td><td><code>l1_ratio=1, solver='liblinear'</code> (hoặc <code>'saga'</code>)</td></tr>
   </table>
-  <p>Trong sklearn, tham số là <code>C = 1/λ</code> — <b>ngược chiều</b>. <code>C</code> nhỏ = phạt mạnh. Đây là chỗ rất nhiều người tune sai chiều mà không biết.</p>
+  <p class="wb-help">sklearn 1.8 bỏ dần tham số <code>penalty</code> của <code>LogisticRegression</code> (gỡ hẳn ở 1.10). Tài liệu cũ viết <code>penalty='l1'</code> thì giờ gõ <code>l1_ratio=1</code>.</p>
+  <p>Trong sklearn, tham số là <code>C</code>, tỉ lệ nghịch với $\lambda$ — <b>ngược chiều</b>. <code>C</code> nhỏ = phạt mạnh. Đây là chỗ rất nhiều người tune sai chiều mà không biết.</p>
   <p>Ở cây/boosting, “regularization” mang hình dạng khác nhưng cùng ý: <code>max_depth</code> thấp hơn, <code>min_child_weight</code> cao hơn, <code>subsample &lt; 1</code>, và <code>reg_lambda</code> trong XGBoost.</p>
 </template>
 
@@ -2096,7 +2099,7 @@ print(f"AUC = {roc_auc_score(y, p):.3f} (95% CI: {lo:.3f}–{hi:.3f})")</div>
   </div></div>
   <div class="wb-alert wb-alert--danger wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Đừng so hai khoảng bằng mắt</p>
-    <p class="wb-alert__msg">Khoảng ở trên là cho <b>một</b> mô hình. So sánh hai mô hình bằng cách nhìn xem hai khoảng có chồng lấn hay không <b>không phải một kiểm định đúng</b>: hai khoảng chồng lấn vẫn có thể tương ứng với một khác biệt có ý nghĩa, đặc biệt khi hai mô hình được chấm trên <i>cùng một tập</i> (sai số của chúng đi kèm nhau, nên hiệu của chúng dao động ít hơn nhiều so với từng cái). Cách đúng: bootstrap <b>ghép cặp</b> — mỗi vòng lấy lại <i>cùng</i> chỉ số hàng, tính $\Delta = \text{metric}_{\text{mới}} - \text{metric}_{\text{baseline}}$, rồi lấy khoảng tin cậy của chính $\Delta$. <b>Nếu khoảng của $\Delta$ chứa 0 → chưa có bằng chứng khác biệt.</b> Code paired bootstrap nằm ở bài <b>Kết quả có ý nghĩa thống kê không</b>.</p>
+    <p class="wb-alert__msg">Khoảng ở trên là cho <b>một</b> mô hình. So sánh hai mô hình bằng cách nhìn xem hai khoảng có chồng lấn hay không <b>không phải một kiểm định đúng</b>: hai khoảng chồng lấn vẫn có thể tương ứng với một khác biệt có ý nghĩa, đặc biệt khi hai mô hình được chấm trên <i>cùng một tập</i> (sai số của chúng đi kèm nhau, nên hiệu của chúng dao động ít hơn nhiều so với từng cái). Cách đúng: bootstrap <b>ghép cặp</b> — mỗi vòng lấy lại <i>cùng</i> chỉ số hàng, tính $\Delta = \text{metric}_{\text{mới}} - \text{metric}_{\text{baseline}}$, rồi lấy khoảng tin cậy của chính $\Delta$. <b>Nếu khoảng của $\Delta$ chứa 0 → chưa có bằng chứng khác biệt.</b> Code paired bootstrap nằm ở bài <a href="#/th-stats">Kết quả có ý nghĩa thống kê không</a>.</p>
   </div></div>
 </template>
 
@@ -4763,7 +4766,7 @@ python -m src.prepare_data --source ieee --nrows 300000   <i># máy yếu: cắt
 
   <h3>1 · Rò rỉ mục tiêu — cột chứa đáp án</h3>
   <p>Cột <code>trang_thai = "đã hoàn tiền"</code> chỉ được điền sau khi xác nhận gian lận. Hay cột <code>so_lan_khieu_nai</code>. Chúng tương quan gần như hoàn hảo với nhãn vì chúng <b>là hệ quả của nhãn</b>, không phải nguyên nhân.</p>
-  <p><b>Cách bắt:</b> chạy <code>df.corr()["label"].abs().sort_values(ascending=False)</code>. Mọi cột &gt; 0,8 đều phải bị thẩm vấn: <i>"cột này được ghi vào lúc nào so với thời điểm dự đoán?"</i></p>
+  <p><b>Cách bắt:</b> sau khi chia tập, chạy trên train <code>df_train.corr(numeric_only=True)["label"].abs().sort_values(ascending=False)</code> (thiếu <code>numeric_only=True</code> thì pandas 2 trở lên báo lỗi khi bảng có cột chữ). Cột nào vượt hẳn các cột còn lại đều phải bị thẩm vấn: <i>"cột này được ghi vào lúc nào so với thời điểm dự đoán?"</i> Đừng chờ một ngưỡng như 0,8: với nhãn hiếm, tương quan bị nén xuống, nên 0,3 đã có thể đáng ngờ (bài <b>EDA</b>).</p>
 
   <h3>2 · Rò rỉ thời gian — dùng tương lai đoán quá khứ</h3>
   <p>Chia ngẫu nhiên một tập dữ liệu có thời gian: giao dịch tháng 12 nằm ở train, giao dịch tháng 6 nằm ở test. Mô hình đã "biết" xu hướng cuối năm khi đoán giữa năm.</p>
@@ -4772,11 +4775,12 @@ python -m src.prepare_data --source ieee --nrows 300000   <i># máy yếu: cắt
   <h3>3 · Rò rỉ tiền xử lý — <code>fit</code> trên toàn bộ dữ liệu</h3>
   <div class="ds-code"><i># ✗ SAI — μ, σ đã nhìn thấy tập test</i>
 X = StandardScaler().fit_transform(X_all)
-X_train, X_test = train_test_split(X)
+X_train, X_test, y_train, y_test = train_test_split(X, y, shuffle=<b>False</b>)
 
 <i># ✓ ĐÚNG — chia trước, và để Pipeline lo phần còn lại</i>
-X_train, X_test = train_test_split(X_all)
-pipe = Pipeline([("scale", StandardScaler()), ("model", LGBMClassifier())])
+<i># shuffle=False: dữ liệu đã sắp theo thời gian thì phần cuối làm test (kiểu 2)</i>
+X_train, X_test, y_train, y_test = train_test_split(X_all, y, shuffle=<b>False</b>)
+pipe = Pipeline([("scale", StandardScaler()), ("model", LogisticRegression(max_iter=1000))])
 pipe.fit(X_train, y_train)</div>
   <p>Áp dụng cho <b>mọi</b> thứ học tham số: scaler, imputer, one-hot, PCA, target encoding, chọn feature.</p>
 
@@ -5011,16 +5015,17 @@ num_pipe = Pipeline([
     <li>Giao dịch 3 tỉ đồng → có thể hoàn toàn thật. <b>Và trong bài toán gian lận, ngoại lai chính là thứ bạn đang đi tìm.</b> Xoá chúng là xoá mất tín hiệu.</li>
   </ul>
   <p>Vì vậy, thay vì xoá, hãy <b>làm dịu ảnh hưởng</b>:</p>
-  <div class="ds-code"><i># cắt ngưỡng (winsorize) — giữ dòng, giới hạn giá trị</i>
-lo, hi = df["amount"].quantile([0.001, 0.999])
-df["amount_clipped"] = df["amount"].clip(lo, hi)
+  <div class="ds-code"><i># cắt ngưỡng (winsorize) — giữ dòng, giới hạn giá trị; ngưỡng học từ TRAIN</i>
+lo, hi = train["amount"].quantile([0.001, 0.999])
+train["amount_clipped"] = train["amount"].clip(lo, hi)
+test["amount_clipped"]  = test["amount"].clip(lo, hi)    <i># dùng lại lo, hi của train</i>
 
-<i># hoặc đổi thang đo</i>
+<i># hoặc đổi thang đo — không học gì từ dữ liệu, nên làm trên df trước khi chia cũng được</i>
 df["amount_log"] = np.log1p(df["amount"])
 
 <i># hoặc dùng scaler miễn nhiễm ngoại lai</i>
 <b>from</b> sklearn.preprocessing <b>import</b> RobustScaler</div>
-  <p><b>Quan trọng:</b> ngưỡng <code>lo</code>/<code>hi</code> phải tính từ <b>tập train</b>, rồi áp cho test. Tính trên toàn bộ dữ liệu là rò rỉ.</p>
+  <p><b>Quan trọng:</b> ngưỡng <code>lo</code>/<code>hi</code> phải tính từ <b>tập train</b>, rồi áp cho test — như code trên. Tính trên toàn bộ dữ liệu là rò rỉ.</p>
 
   <h2>3 · Trùng lặp và kiểu dữ liệu <span class="wb-help">— loại A, chạy TRƯỚC khi chia</span></h2>
   <div class="wb-alert wb-alert--warning">
@@ -5037,7 +5042,7 @@ df["ts"]      = pd.to_datetime(df["timestamp"], errors="coerce")
 df["amount"]  = pd.to_numeric(df["amount"], errors="coerce")
 df["city"]    = df["city"].str.strip().str.lower()   <i># " Hà Nội " và "hà nội" là một</i></div>
   <p><code>errors="coerce"</code> biến giá trị hỏng thành <code>NaN</code> thay vì làm nổ chương trình — rồi bạn đếm được có bao nhiêu cái hỏng bằng <code>.isna().sum()</code>.</p>
-  <p>Chuẩn hoá chuỗi (<code>strip</code>, <code>lower</code>) nghe nhỏ nhặt nhưng thường làm số giá trị khác nhau của một cột giảm 30% — nghĩa là one-hot nhẹ đi 30% và mô hình học tốt hơn.</p>
+  <p>Chuẩn hoá chuỗi (<code>strip</code>, <code>lower</code>) nghe nhỏ nhặt nhưng có thể làm số giá trị khác nhau của một cột giảm đáng kể — one-hot nhẹ đi, và mỗi hạng mục gom được nhiều mẫu hơn để học. Giảm bao nhiêu thì đếm: <code>nunique()</code> trước và sau.</p>
 
   <h2>Ranh giới giữa "làm sạch" và "tạo feature"</h2>
   <p>Câu hỏi hay bị lẫn. Phân biệt đơn giản:</p>
@@ -5527,9 +5532,11 @@ df = df.sort_values(["card_id", "ts"]).set_index("ts")
 
 g = df.groupby("card_id")["amount"]
 <i># closed="left" loại chính giao dịch hiện tại ra khỏi cửa sổ</i>
-df["n_tx_1h"]     = g.rolling("1h",  closed="left").count().to_numpy()
-df["sum_amt_24h"] = g.rolling("24h", closed="left").sum().to_numpy()
+<i># min_periods=0: mặc định là 1, nên cửa sổ RỖNG ra NaN chứ không ra 0</i>
+df["n_tx_1h"]     = g.rolling("1h",  closed="left", min_periods=0).count().to_numpy()
+df["sum_amt_24h"] = g.rolling("24h", closed="left", min_periods=0).sum().to_numpy()
 df = df.reset_index()</div>
+  <p class="wb-help">Thiếu <code>min_periods=0</code> thì "1 giờ qua không có giao dịch nào" thành <code>NaN</code>, và imputer trong Pipeline điền trung vị của người khác vào đó — một giá trị có thật bị coi là dữ liệu thiếu.</p>
   <p><code>closed="left"</code> là chi tiết sống còn: nó loại giao dịch hiện tại ra khỏi cửa sổ. Không có nó, feature "số giao dịch trong 1h" đã chứa chính giao dịch bạn đang đoán → rò rỉ.</p>
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Vì sao <code>.to_numpy()</code> chứ không phải <code>.reset_index(level=0, drop=True)</code></p>
@@ -5594,7 +5601,7 @@ df["hour_dev"] = np.minimum(d, 24 - d)</div>
     <p class="wb-alert__msg">
     <b>1.</b> Đã <code>sort_values("ts")</code> chưa?<br>
     <b>2.</b> Có <code>.shift(1)</code> hoặc <code>closed="left"</code> để loại dòng hiện tại chưa?<br>
-    <b>3.</b> Dòng đầu tiên của mỗi khách có phải là <code>NaN</code> không? <b>Nếu không phải, bạn đang rò rỉ.</b> Khách mới thì không có lịch sử — <code>NaN</code> ở đó là dấu hiệu bạn làm đúng.</p>
+    <b>3.</b> Dòng đầu tiên của mỗi khách có phải là <code>NaN</code> không (feature đếm, tổng có <code>min_periods=0</code> thì là 0)? <b>Nếu nó mang giá trị của chính giao dịch đó, bạn đang rò rỉ.</b> Khách mới thì không có lịch sử — <code>NaN</code> hay 0 ở đó là dấu hiệu bạn làm đúng.</p>
   </div></div>
 </template>
 
@@ -5973,7 +5980,7 @@ print(f"ngưỡng tối ưu {best_t:.3f} — thiệt hại {min(costs)/1e6:.0f} 
   <p>Thực tế nhất: đội xác minh xử lý được 200 ca/ngày. Vậy ngưỡng phải là mức cho ra đúng ~200 cảnh báo/ngày, và chỉ số là <b>precision@200</b>. Cách đóng khung này rất ít luận văn Việt Nam dùng, và nó dễ bảo vệ vì nó đúng cách hệ thống thật hoạt động.</p>
 
   <h2>Hiệu chỉnh xác suất — bắt buộc nếu bạn quy ra tiền</h2>
-  <p>Cách 2 ở trên nhân xác suất với chi phí. Phép nhân đó chỉ hợp lệ nếu con số 0–1 <b>là một xác suất thật</b>: trong tất cả ca được chấm 0,7, khoảng 70% đúng là gian lận. Bài <a href="#/m-prob">Xác suất</a> gọi đó là <i>hiệu chỉnh tốt</i> (calibrated) — giờ bạn đã có mô hình và tập validation nên kiểm được.</p>
+  <p>Cách 2 ở trên <b>không</b> cần điều này: nó đếm FN, FP thật trên validation ở từng ngưỡng, nên chỉ dùng <i>thứ hạng</i> của điểm. Nhưng ngay khi bạn <b>nhân xác suất với tiền</b> — đặt ngưỡng thẳng bằng công thức $t^* = \frac{C_{FP}}{C_{FP}+C_{FN}} = \frac{40.000}{3.040.000} \approx 0{,}013$ mà không dò, hay ước tổn thất kỳ vọng $p \times$ số tiền của từng giao dịch — phép nhân đó chỉ hợp lệ nếu con số 0–1 <b>là một xác suất thật</b>: trong tất cả ca được chấm 0,7, khoảng 70% đúng là gian lận. Bài <a href="#/m-prob">Xác suất</a> gọi đó là <i>hiệu chỉnh tốt</i> (calibrated) — giờ bạn đã có mô hình và tập validation nên kiểm được.</p>
   <p>Hai điều cần phân biệt, vì chúng độc lập nhau:</p>
   <table>
     <tr><th></th><th>Xếp hạng (ranking)</th><th>Hiệu chỉnh (calibration)</th></tr>
@@ -6049,7 +6056,7 @@ cal.fit(X_train, y_train)</div>
     <tr><td>Ví dụ</td><td>Log loss</td><td>PR-AUC, F1, tiền tiết kiệm</td></tr>
   </table>
   <p>Bạn <b>không thể</b> tối ưu trực tiếp F1 bằng gradient descent vì nó không khả vi (nó phụ thuộc vào việc đếm, mà đếm thì nhảy bậc). Nên quy trình thực tế là: train bằng log loss → sau đó <b>chọn ngưỡng</b> để tối ưu chỉ số bạn thật sự quan tâm. Bài <b>Đo lường &amp; ngưỡng</b> làm bước hai.</p>
-  <p class="wb-help">Đọc dòng "Yêu cầu" cho đúng phạm vi: <b>khả vi là điều kiện của cách tối ưu bằng gradient</b>, không phải luật của mọi machine learning. MAE gãy tại 0 nhưng vẫn tối ưu được bằng <i>subgradient</i>; cây quyết định và LightGBM không hạ gradient theo tham số của mô hình chút nào mà chọn điểm chia bằng tìm kiếm tham lam (<button class="ds-aside" data-aside="x-tree-learn">cây và boosting thì "học" thế nào</button>). Ba biến thể dưới đây <i>chỉ</i> nói về họ thuật toán dùng gradient.</p>
+  <p class="wb-help">Đọc dòng "Yêu cầu" cho đúng phạm vi: <b>khả vi là điều kiện của cách tối ưu bằng gradient</b>, không phải luật của mọi machine learning. MAE gãy tại 0 nhưng vẫn tối ưu được bằng <i>subgradient</i>; một cây quyết định đơn lẻ chọn điểm chia bằng tìm kiếm tham lam, không có gradient nào; LightGBM có dùng gradient của loss, nhưng là gradient theo <i>dự đoán</i> để dựng cây tiếp theo, không phải bước $w \leftarrow w - \alpha\nabla J$ trên tham số (<button class="ds-aside" data-aside="x-tree-learn">cây và boosting thì "học" thế nào</button>). Ba biến thể dưới đây <i>chỉ</i> nói về họ thuật toán dùng gradient.</p>
 
   <h2>Gradient descent — ba biến thể bạn sẽ gặp</h2>
   <p><button class="ds-math" data-math="gdupdate">Công thức cập nhật, bóc từng ký hiệu</button></p>
@@ -6120,12 +6127,14 @@ model = LGBMClassifier(
     subsample=0.8, subsample_freq=1,
     colsample_bytree=0.8,
     reg_lambda=1.0,           <i># phạt L2</i>
-    class_weight="balanced",  <i># cho bài toán lệch nhãn</i>
+    class_weight="balanced",  <i># thử cả có và không — bài Dữ liệu lệch nói vì sao</i>
     random_state=42, n_jobs=-1,
 )
 model.fit(X_train, y_train,
           eval_set=[(X_valid, y_valid)], eval_metric="average_precision",
-          callbacks=[early_stopping(100), log_evaluation(100)])
+          <i># first_metric_only: chỉ canh average_precision. Thiếu cờ này thì</i>
+          <i># binary_logloss mặc định cũng được canh, và nó có thể dừng trước.</i>
+          callbacks=[early_stopping(100, first_metric_only=<b>True</b>), log_evaluation(100)])
 print("số cây thực dùng:", model.best_iteration_)</div>
 
   <h3>Ba siêu tham số quan trọng, theo thứ tự</h3>
@@ -6179,7 +6188,7 @@ print("số cây thực dùng:", model.best_iteration_)</div>
     <tr><td>2. Giảm độ phức tạp</td><td><code>num_leaves</code> ↓, <code>max_depth</code> ↓</td><td>Mạnh, dễ làm</td></tr>
     <tr><td>3. Early stopping</td><td>Dừng khi validation ngừng cải thiện</td><td>Mạnh, gần như miễn phí</td></tr>
     <tr><td>4. Regularization</td><td>L1/L2 — <button class="ds-math" data-math="reg">chi tiết</button></td><td>Mạnh cho mô hình tuyến tính và mạng</td></tr>
-    <tr><td>5. Lấy mẫu ngẫu nhiên</td><td><code>subsample=0.8</code>, <code>colsample_bytree=0.8</code></td><td>Vừa</td></tr>
+    <tr><td>5. Lấy mẫu ngẫu nhiên</td><td><code>subsample=0.8</code>, <code>colsample_bytree=0.8</code> (LightGBM: <code>subsample</code> chỉ có tác dụng khi kèm <code>subsample_freq=1</code>)</td><td>Vừa</td></tr>
     <tr><td>6. Bỏ bớt feature</td><td>Ít cột = ít cơ hội học nhiễu</td><td>Vừa</td></tr>
     <tr><td>7. Ensemble</td><td>Trung bình nhiều mô hình</td><td>Vừa, tốn công</td></tr>
   </table>
@@ -6211,6 +6220,7 @@ print("số cây thực dùng:", model.best_iteration_)</div>
   <h2>Code — luôn dùng Pipeline</h2>
   <div class="ds-code"><b>from</b> sklearn.model_selection <b>import</b> cross_val_score, StratifiedKFold
 
+<i># dữ liệu KHÔNG có thời gian; bài gian lận thì đổi sang TimeSeriesSplit (bảng dưới)</i>
 cv = StratifiedKFold(n_splits=5, shuffle=<b>True</b>, random_state=42)
 scores = cross_val_score(pipe, X, y, cv=cv, scoring="average_precision")
 print(f"PR-AUC = {scores.mean():.3f} ± {scores.std():.3f}")</div>
@@ -6254,7 +6264,7 @@ scores = cross_val_score(inner, X, y, cv=5, scoring="average_precision")   <i># 
   <h2>Ba công cụ, theo thứ tự nên dùng</h2>
   <h3>1 · Bootstrap ghép cặp trên <i>hiệu</i> — dùng mặc định để so hai mô hình</h3>
   <p><button class="ds-math" data-math="ci">Bootstrap — 4 bước + code chạy được</button></p>
-  <p>Vì hai mô hình được chấm trên <b>cùng một tập</b>, đừng dựng hai khoảng riêng rồi so bằng mắt: hai khoảng chồng lấn vẫn có thể tương ứng với một khác biệt thật. Thay vào đó, mỗi vòng bootstrap lấy lại <b>cùng</b> chỉ số hàng cho cả hai mô hình, tính $\Delta = \text{metric}_{\text{mới}} - \text{metric}_{\text{baseline}}$, rồi lấy khoảng tin cậy của chính $\Delta$. <b>Nếu khoảng của $\Delta$ chứa 0 → chưa có bằng chứng khác biệt.</b> Cách này dùng được cho AUC, PR-AUC, F1, kể cả “số tiền tiết kiệm được”. Code đầy đủ nằm ở bài <b>Kết quả có ý nghĩa thống kê không</b>.</p>
+  <p>Vì hai mô hình được chấm trên <b>cùng một tập</b>, đừng dựng hai khoảng riêng rồi so bằng mắt: hai khoảng chồng lấn vẫn có thể tương ứng với một khác biệt thật. Thay vào đó, mỗi vòng bootstrap lấy lại <b>cùng</b> chỉ số hàng cho cả hai mô hình, tính $\Delta = \text{metric}_{\text{mới}} - \text{metric}_{\text{baseline}}$, rồi lấy khoảng tin cậy của chính $\Delta$. <b>Nếu khoảng của $\Delta$ chứa 0 → chưa có bằng chứng khác biệt.</b> Cách này dùng được cho AUC, PR-AUC, F1, kể cả “số tiền tiết kiệm được”. Code đầy đủ nằm ở bài <a href="#/th-stats">Kết quả có ý nghĩa thống kê không</a>.</p>
 
   <div class="wb-alert wb-alert--warning">
     <span class="wb-alert__icon">!</span>
@@ -6294,7 +6304,7 @@ Kết quả được lấy trung bình trên 5 hạt giống ngẫu nhiên (42, 
   <p>Câu quyết định là câu về <b>hiệu ghép cặp</b>: nó mới là bằng chứng cho “tốt hơn”, không phải việc hai khoảng riêng có chồng lấn hay không. Hai khoảng riêng chỉ để người đọc thấy độ lớn; McNemar chỉ nói về nhãn tại ngưỡng đã chốt; và năm hạt giống cho thấy kết quả tái lập được. Đó là toàn bộ những gì phần thực nghiệm cần chứng minh.</p>
 
   <h2>Phạm vi của bài này — và một ngoại lệ bắt buộc</h2>
-  <p>Bốn thứ ở trên là toàn bộ thống kê mà phần thực nghiệm của một luận văn thạc sĩ ứng dụng cần. ANOVA, kiểm định phi tham số, thống kê Bayes đầy đủ đều hay nhưng nằm ngoài phạm vi — học riêng nếu người hướng dẫn yêu cầu cụ thể.</p>
+  <p>Ba công cụ ở trên, cùng quy tắc bốc lại theo đơn vị độc lập, là toàn bộ thống kê mà phần thực nghiệm của một luận văn thạc sĩ ứng dụng cần. ANOVA, kiểm định phi tham số, thống kê Bayes đầy đủ đều hay nhưng nằm ngoài phạm vi — học riêng nếu người hướng dẫn yêu cầu cụ thể.</p>
   <p><b>Ngoại lệ, và nó là ngoại lệ cứng:</b> nếu đề tài của bạn có A/B test thì <i>power analysis / tính cỡ mẫu</i> là phần <b>bắt buộc</b>, không phải phần thêm. Nó quyết định thí nghiệm có khả thi không — chạy một A/B test thiếu cỡ mẫu là tiêu tuần làm việc để nhận về một kết luận "không có khác biệt" mà bạn không được phép tin. Xem bài <a href="#/q-causal">A/B testing &amp; tư duy nhân quả</a>.</p>
 </template>
 
@@ -6322,12 +6332,13 @@ Kết quả được lấy trung bình trên 5 hạt giống ngẫu nhiên (42, 
   <h2>1–2 · Chỉ số và ngưỡng — bạn đã làm rồi</h2>
   <p>Hai bước đầu không phải việc mới: bài <b>Đo lường</b> đã cho bạn <code>average_precision_score</code> (PR-AUC) làm chỉ số chính và một ngưỡng quét theo chi phí. Điều đáng nhớ ở đây là <b>vị trí của chúng trong danh sách</b> — đứng trên cùng và không tốn gì. Nếu bạn đang cân nhắc SMOTE mà chưa làm hai bước này thì thứ tự đã sai, và phần còn lại của bài chỉ là tối ưu một thứ bạn chưa đo được.</p>
 
-  <h2>3 · Trọng số lớp — cách rẻ và an toàn nhất</h2>
+  <h2>3 · Trọng số lớp — cách rẻ nhất để thử</h2>
   <p>Thay vì tạo thêm dữ liệu, bảo mô hình rằng <b>một lỗi trên lớp hiếm đắt hơn nhiều</b>. Với tỉ lệ 1:580, mỗi ca gian lận bị bỏ lọt bị phạt gấp 580 lần một báo nhầm.</p>
   <div class="ds-code">LGBMClassifier(class_weight="balanced")           <i># tự tính theo tỉ lệ</i>
 LGBMClassifier(scale_pos_weight=580)              <i># hoặc đặt tay (LightGBM/XGBoost)</i>
 LogisticRegression(class_weight="balanced")</div>
   <p><b>Tác dụng phụ cần biết:</b> xác suất đầu ra không còn được hiệu chỉnh — mô hình sẽ trả về những con số cao hơn thực tế. Nếu bạn cần xác suất thật (để quy ra tiền), phải hiệu chỉnh lại bằng <code>CalibratedClassifierCV</code> và nói rõ trong luận văn.</p>
+  <p><b>Rẻ không có nghĩa là luôn tốt hơn.</b> Trọng số lớp đổi cách dựng cây nên đổi cả thứ hạng, và PR-AUC có thể lên hoặc xuống. Boosting thường đã xếp hạng tốt mà không cần nó: trên bộ mô phỏng ở chặng 6, bật <code>class_weight="balanced"</code> làm PR-AUC <i>tệ đi</i>. Chạy cả hai rồi so trên validation, đừng bật theo phản xạ.</p>
 
   <div data-viz="calib"></div>
 
@@ -6402,6 +6413,7 @@ pipe = ImbPipeline([
         "subsample":         trial.suggest_float("subsample", 0.6, 1.0),
         "colsample_bytree":  trial.suggest_float("colsample_bytree", 0.5, 1.0),
         "reg_lambda":        trial.suggest_float("reg_lambda", 1e-3, 30, log=<b>True</b>),
+        "subsample_freq":    1,   <i># không dò; thiếu nó thì LightGBM bỏ qua subsample</i>
     }
     pipe = build_pipeline(**params)
     <b>return</b> cross_val_score(pipe, X_train, y_train, cv=cv,
@@ -8909,7 +8921,7 @@ LayerNorm
     <tbody>
       <tr><td><b>MAE</b></td><td>“Sai trung bình 8,3 phút”</td><td>Mặc định. Đơn vị giống biến mục tiêu nên nói được với người không kỹ thuật</td><td>Coi sai 1 phút và sai 60 phút là cùng bản chất, chỉ khác độ lớn</td></tr>
       <tr><td><b>RMSE</b></td><td>Cũng đơn vị đó, nhưng phạt nặng sai số lớn</td><td>Khi một cú sai lớn tốn hơn nhiều lần so với nhiều cú sai nhỏ (dự báo tải điện, tồn kho)</td><td>Rất nhạy với ngoại lai — một dòng bẩn kéo lệch cả con số</td></tr>
-      <tr><td><b>MAPE</b></td><td>“Sai trung bình 12%”</td><td>Khi cần so sánh giữa các mặt hàng có quy mô rất khác nhau</td><td><b>Vỡ khi giá trị thật gần 0</b> (chia cho 0), và phạt dự báo cao hơn nhẹ hơn dự báo thấp hơn — nên nó âm thầm khuyến khích mô hình đoán thấp</td></tr>
+      <tr><td><b>MAPE</b></td><td>“Sai trung bình 12%”</td><td>Khi cần so sánh giữa các mặt hàng có quy mô rất khác nhau</td><td><b>Vỡ khi giá trị thật gần 0</b> (chia cho 0), và lệch về phía đoán thấp: đoán thấp thì sai tối đa 100% (đoán 0), đoán cao thì không có trần — nên tối ưu theo MAPE âm thầm kéo dự báo xuống</td></tr>
       <tr><td><b>R²</b></td><td>“Giải thích được 0,72 phương sai”</td><td>Báo cáo học thuật, so với baseline “luôn đoán trung bình”</td><td>Không có đơn vị nên <b>không nói được gì về việc sai đó có chấp nhận được không</b>. R² = 0,9 vẫn có thể sai 3 tiếng mỗi đơn</td></tr>
     </tbody>
   </table></div>
@@ -8967,7 +8979,7 @@ print(f"độ phủ thực tế: {coverage:.1%}  (mong đợi ~80%)")</div>
     <tbody>
       <tr><td><b>Xu hướng</b> (trend)</td><td>Mức nền đi lên hay đi xuống dài hạn</td><td>Mô hình cây <b>không ngoại suy</b> được xu hướng — đây là hạn chế lớn nhất khi dùng LightGBM cho forecasting</td></tr>
       <tr><td><b>Mùa vụ</b> (seasonality)</td><td>Mẫu hình lặp theo chu kỳ cố định: theo giờ, theo thứ, theo tháng</td><td>Đây là chỗ <b>mã hoá sin/cos gặp lại bạn</b>, và cũng là chỗ baseline seasonal-naive lấy sức mạnh</td></tr>
-      <tr><td><b>Tính dừng</b> (stationarity)</td><td>Trung bình và phương sai không đổi theo thời gian</td><td>ARIMA <i>giả định</i> chuỗi dừng — nên phải lấy sai phân trước. Mô hình cây thì không cần, nhưng chuỗi không dừng vẫn làm hỏng cách bạn chia tập</td></tr>
+      <tr><td><b>Tính dừng</b> (stationarity)</td><td>Trung bình và phương sai không đổi theo thời gian</td><td>Phần ARMA <i>giả định</i> chuỗi dừng; chữ I trong ARIMA (tham số $d$) chính là bước lấy sai phân $d$ lần để làm chuỗi dừng trước khi khớp. Mô hình cây thì không cần, nhưng chuỗi không dừng vẫn làm hỏng cách bạn chia tập</td></tr>
       <tr><td><b>Tự tương quan</b> (autocorrelation)</td><td>Giá trị hôm nay tương quan với chính nó cách đây $k$ bước</td><td>Biểu đồ ACF/PACF cho bạn biết <b>nên tạo lag nào</b> — nó thay việc đoán mò bằng bằng chứng</td></tr>
     </tbody>
   </table></div>
@@ -8992,7 +9004,7 @@ tscv = TimeSeriesSplit(n_splits=5, test_size=28, gap=0)
     <i># tr_idx LUÔN nằm trước te_idx — không cần tự kiểm nữa</i>
     model.fit(X.iloc[tr_idx], y.iloc[tr_idx])
     score = mae(y.iloc[te_idx], model.predict(X.iloc[te_idx]))</div>
-  <p><b>Tham số <code>gap</code> là chi tiết ít người dùng và nó rất quan trọng.</b> Nó xử đúng một thứ hẹp: <b>độ trễ dữ liệu</b> — lúc chấm điểm, dữ liệu mới nhất đã cũ mấy bước. Nếu khi chạy thật dữ liệu về trễ 7 ngày, đặt <code>gap=7</code> để mỗi fold train dừng đúng chỗ thực tế dừng. Không đặt là bạn đang tự cho mình dữ liệu mà lúc chạy thật sẽ chưa có. Đừng nhầm <code>gap</code> với <b>tầm dự báo</b> (dự báo trước bao nhiêu bước): tầm dự báo nằm ở <b>cách bạn dựng target</b> — nhãn là giá trị ở bước tương lai nào — chứ không phải ở <code>gap</code>.</p>
+  <p><b>Tham số <code>gap</code> là chi tiết ít người dùng và nó rất quan trọng.</b> Nó xử đúng một thứ hẹp: <b>độ trễ dữ liệu</b> — lúc chấm điểm, dữ liệu mới nhất đã cũ mấy bước. Nếu khi chạy thật dữ liệu về trễ 7 ngày, đặt <code>gap=7</code> để mỗi fold train dừng đúng chỗ thực tế dừng. Không đặt là bạn đang tự cho mình dữ liệu mà lúc chạy thật sẽ chưa có. Đừng nhầm <code>gap</code> với <b>tầm dự báo</b> (dự báo trước bao nhiêu bước): tầm dự báo nằm ở <b>cách bạn dựng feature và target</b> — dự báo trước $h$ bước thì lúc dự báo bạn chưa có $h-1$ giá trị gần nhất, nên mọi lag và rolling phải lùi ít nhất $h$ bước (<code>shift(h)</code>) — chứ không phải ở <code>gap</code>.</p>
 
   <h2>Rò rỉ theo thời gian: ba dạng riêng của forecasting</h2>
   <ul>
@@ -9009,11 +9021,13 @@ pred_naive = y.shift(1)
 <i># 2. SEASONAL NAIVE — dự báo = giá trị cùng kỳ chu kỳ trước</i>
 <i>#    (thứ Ba tuần này ≈ thứ Ba tuần trước) — mạnh bất ngờ</i>
 pred_snaive = y.shift(7)</div>
-  <p>Và đây là lý do có <b>MASE</b> (Mean Absolute Scaled Error): MAE của bạn <i>chia cho</i> một MAE tham chiếu của naive. Định nghĩa chuẩn (Hyndman) lấy mẫu số là MAE của naive <b>một bước, đo trên tập train</b> — một hằng số của chuỗi, cố định khi bạn đổi mô hình.</p>
+  <p>Và đây là lý do có <b>MASE</b> (Mean Absolute Scaled Error): MAE của bạn <i>chia cho</i> một MAE tham chiếu của naive. Định nghĩa chuẩn (Hyndman) lấy mẫu số là MAE của naive <b>một bước, đo trên tập train</b> — một hằng số của chuỗi, cố định khi bạn đổi mô hình. Với chuỗi có mùa vụ chu kỳ $m$, Hyndman dùng seasonal naive làm mẫu số: <code>shift(m)</code> thay cho <code>shift(1)</code>.</p>
   <div class="ds-code"><i># mẫu số MASE chuẩn: MAE của naive-một-bước trên LỊCH SỬ (train), tính một lần</i>
 d = mean_absolute_error(y_train.iloc[1:], y_train.shift(1).iloc[1:])
 mase = mean_absolute_error(y_true, y_pred) / d
-<i># mase &lt; 1 → tốt hơn naive · mase ≥ 1 → mô hình của bạn vô dụng</i></div>
+<i># mase &lt; 1 → sai ít hơn naive-một-bước trên train · mase ≥ 1 → sai nhiều hơn mốc đó</i>
+<i># dự báo nhiều bước thì MASE &gt; 1 vẫn có thể là tốt: mẫu số là naive MỘT bước,</i>
+<i># dễ hơn bài của bạn. Câu "có thắng naive không" → so với naive chạy trên cùng test.</i></div>
   <p>Nếu chia cho MAE của naive tính <i>trên chính tập test</i> — cách nhiều đoạn code viết vội — bạn vẫn có một tỉ số so-với-naive dùng được, nhưng đó là <b>relative MAE</b> chứ không phải MASE: mẫu số đổi theo từng fold test. Với luận văn, gọi đúng tên là điều hội đồng để ý.</p>
   <p>MASE là chỉ số đáng dùng làm chỉ số chính cho forecasting: nó không vỡ khi giá trị bằng 0 (khác MAPE), không phụ thuộc đơn vị nên so sánh được giữa các chuỗi, và quan trọng nhất — <b>nó luôn nhắc bạn con số của mình đang so với cái gì</b>. Một bảng kết quả forecasting không có cột naive là một bảng chưa đọc được.</p>
 
@@ -9039,7 +9053,9 @@ mase = mean_absolute_error(y_true, y_pred) / d
 
   <h2>Feature cho forecasting: lag, cửa sổ trượt, lịch</h2>
   <div data-viz="lag"></div>
-  <div class="ds-code"><i># LAG — giá trị của chính chuỗi ở quá khứ. Chọn lag theo PACF, đừng đoán</i>
+  <div class="ds-code"><i># Code dưới đây cho tầm dự báo 1 bước. Dự báo trước h bước thì lag nhỏ nhất là h</i>
+<i># và rolling dùng shift(h): lag_1 khi h = 7 là dùng dữ liệu chưa có → rò rỉ.</i>
+<i># LAG — giá trị của chính chuỗi ở quá khứ. Chọn lag theo PACF, đừng đoán</i>
 <b>for</b> k <b>in</b> [1, 7, 14, 28]:
     df[f"lag_{k}"] = df["y"].shift(k)
 
@@ -9058,7 +9074,7 @@ df["is_holiday"] = df["ds"].isin(HOLIDAYS).astype(<b>int</b>)</div>
   <h2>Quy trình một dự án forecasting, theo thứ tự</h2>
   <ol>
     <li>Vẽ chuỗi ra. Nhìn bằng mắt trước khi mô hình hoá. Tách STL.</li>
-    <li>Chốt <b>tầm dự báo</b> (dự báo trước bao nhiêu bước) và <b>độ trễ dữ liệu</b> (khi dự báo thì dữ liệu mới nhất cũ bao nhiêu). Hai con số này quyết định <code>gap</code>.</li>
+    <li>Chốt <b>tầm dự báo</b> (dự báo trước bao nhiêu bước) và <b>độ trễ dữ liệu</b> (khi dự báo thì dữ liệu mới nhất cũ bao nhiêu). Độ trễ quyết định <code>gap</code>; tầm dự báo quyết định lag nhỏ nhất được dùng.</li>
     <li>Chạy naive và seasonal-naive. Ghi lại MAE. <b>Đây là mốc.</b></li>
     <li>ETS hoặc ARIMA. Ghi lại.</li>
     <li>Boosting + lag/rolling/lịch. Ghi lại.</li>
@@ -15462,7 +15478,7 @@ VIZ.edapanel = el => {
       ${seeBlock({
         see: 'bốn ô này KHÔNG phải bốn cách vẽ cùng một thứ. Mỗi ô trả lời đúng một câu, và bỏ ô nào thì mất hẳn câu đó: bỏ <b>Thiếu</b> thì bạn điền trung vị cho một cột trống 91%; bỏ <b>Tương quan</b> thì <code>chargeback_flag</code> đi thẳng vào mô hình và bạn có một PR-AUC 0,98 hoàn toàn giả.',
         wrong: '“EDA là vẽ càng nhiều hình càng tốt”. Ngược lại: bốn câu hỏi này là <i>đủ</i> để đi tiếp, và hình thứ năm không trả lời câu nào mới thì chỉ tốn giờ. Cách kiểm tra một biểu đồ có đáng vẽ không: viết ra câu hỏi nó trả lời — không viết được thì đừng vẽ.',
-        code: 'Ô 1 <code>sns.histplot</code> · ô 2 <code>df.groupby("hour")["Class"].mean()</code> · ô 3 <code>df.isna().mean()</code> · ô 4 <code>df.corr()["Class"].abs().sort_values()</code>. Ba ô đầu chạy được ở <b>Thì 1</b>; ô 4 là Thì 2 — nó dùng quan hệ với nhãn nên chỉ chạy trên <b>train</b>.',
+        code: 'Ô 1 <code>sns.histplot</code> · ô 2 <code>df_train.groupby("hour")["Class"].mean()</code> · ô 3 <code>df.isna().mean()</code> · ô 4 <code>df_train.corr(numeric_only=True)["Class"].abs().sort_values()</code>. Chỉ ô 3 thuộc <b>Thì 1</b>: mức thiếu là thuộc tính cấu trúc. Ô 1 xem phân phối feature, ô 2 và ô 4 dùng quan hệ với nhãn — cả ba là Thì 2, chỉ chạy trên <b>train</b>.',
       })}
     </div></div>`;
   const g = el.querySelector('[data-o="g"]'), r = el.querySelector('[data-o="r"]');

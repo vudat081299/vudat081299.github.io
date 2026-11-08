@@ -9,6 +9,29 @@ một dòng "→ quyết định DS-…".
 
 ---
 
+## Phiên 2026-11-08 (ag) — rà đối kháng phần toán, thống kê, ML
+
+Rà các chặng chủ trang học trước (0–2) và mọi chặng nặng toán (3, 5, `q-regress`, `q-forecast`, `q-causal`,
+`th-stats`, 29 popup toán). Code mẫu chạy thử trên sklearn 1.9.1, pandas 3.0.5, LightGBM 4.7.0, statsmodels.
+
+- Popup: `penalty` của `LogisticRegression` bị bỏ từ sklearn 1.8 → `l1_ratio`; kỳ vọng tách khỏi trung bình mẫu,
+  ghi `ddof` của pandas; vanishing gradient có số; trần 1 của bình phương sai số.
+- `ml-metrics`: chọn ngưỡng bằng quét chi phí chỉ cần thứ hạng; hiệu chỉnh cần khi nhân xác suất với tiền.
+- `ml-trees`: `early_stopping(first_metric_only=True)` — thiếu nó logloss có thể dừng trước (đã tái hiện).
+- `ml-overfit`, `ml-tune`: LightGBM bỏ qua `subsample` khi thiếu `subsample_freq`.
+- `ml-imb`: `class_weight` rẻ nhưng không bảo đảm tốt hơn, khớp ablation ở `pr-code`.
+- `d-leak`, `d-clean`, viz `edapanel`: `corr(numeric_only=True)` trên train; winsorize học ngưỡng từ train.
+- `f-time`: `rolling(...).count()` thiếu `min_periods=0` ra NaN ở cửa sổ rỗng, khớp `pr-code`.
+- `q-regress` + quiz: chiều lệch của MAPE viết ngược. `q-forecast`: chữ I của ARIMA, MASE mùa vụ, MASE > 1 với
+  dự báo nhiều bước, lag phải lùi ít nhất tầm dự báo h.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- `eval_set` của LightGBM báo deprecated từ 4.7 (`eval_X`, `eval_y`): giữ `eval_set` vì Colab có thể còn bản cũ.
+- Quiz `gap` của `q-forecast`: giữ quy ước "gap = độ trễ" của bài; bài giờ nói rõ tầm dự báo nằm ở lag.
+- `DEFAULTS` của `f-pipeline` vẫn có `class_weight="balanced"` trong khi `pr-code` bỏ nó: hai bài ở hai giai đoạn,
+  `ml-imb` giờ nói rõ phải đo.
+
 ## Phiên 2026-09-29 (af) — bỏ hook riêng, tài liệu viết ngắn
 
 Chủ repo thấy tài liệu và bộ hook phức tạp quá mức (REPO-017, REPO-018).
