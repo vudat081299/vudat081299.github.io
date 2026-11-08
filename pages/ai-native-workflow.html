@@ -483,7 +483,7 @@
       <div class="aw-facts">
         <div class="aw-fact"><span class="aw-fact__n">0–20%</span><span class="aw-fact__l">phần việc mà hơn một nửa kỹ sư Anthropic nói giao hẳn được cho AI, dù họ dùng Claude trong 59% công việc (khảo sát 08/2025)</span></div>
         <div class="aw-fact"><span class="aw-fact__n">1.000+</span><span class="aw-fact__l">PR mỗi tuần ở Stripe do agent viết toàn bộ; PR nào cũng vẫn qua người review (02/2026)</span></div>
-        <div class="aw-fact"><span class="aw-fact__n">19%</span><span class="aw-fact__l">dev kỳ cựu chậm hơn khi dùng AI đầu 2025, trong khi tin mình đã nhanh hơn 20% (METR, 07/2025)</span></div>
+        <div class="aw-fact"><span class="aw-fact__n">19%</span><span class="aw-fact__l">dev kỳ cựu chậm hơn khi dùng AI đầu 2025, trong khi tin mình đã nhanh hơn 20% (METR, 07/2025; chính METR nay ghi số này đã lỗi thời)</span></div>
       </div>
     </header>
 
@@ -528,7 +528,7 @@
       <ul class="aw-ul">
         <li><b>Nút thắt dời sang khâu kiểm.</b> Ở Anthropic, số thay đổi merge mỗi ngày tăng từ khoảng 2.500 (05/2026) lên hơn 30.000 (09/2026), và chỗ nghẽn thành source control, build, <button type="button" class="tm" data-t="ci">CI</button> — hạ tầng dựng cho tốc độ của người. Chừng ấy diff không ai đọc hết bằng mắt; máy phải kiểm trước.</li>
         <li><b>Nghịch lý giám sát.</b> Kiểm được output của AI cần đúng những kỹ năng mà việc giao hết cho AI làm teo đi — lo ngại do chính kỹ sư Anthropic nêu trong khảo sát 08/2025.</li>
-        <li><b>Cảm giác không phải số đo.</b> Trong thí nghiệm ngẫu nhiên của METR (07/2025), 16 dev kỳ cựu làm 246 issue thật trên repo của mình; khi được dùng AI họ chậm hơn 19%, dù sau đó vẫn tin mình nhanh hơn 20%. Đó là ảnh chụp công cụ đầu 2025; bài học về đo thì không cũ.</li>
+        <li><b>Cảm giác không phải số đo.</b> Trong thí nghiệm ngẫu nhiên của METR (07/2025), 16 dev kỳ cựu làm 246 issue thật trên repo của mình; khi được dùng AI họ chậm hơn 19%, dù sau đó vẫn tin mình nhanh hơn 20%. Đó là ảnh chụp công cụ đầu 2025, và METR nay ghi nó đã lỗi thời; bài học về đo thì không cũ.</li>
       </ul>
       <div class="aw-note">
         <p>Đích đúng là tăng phần việc giao được mà không cần người xem từng bước. Phần ấy tăng theo chất lượng lớp giữa, không theo số giờ ngồi viết prompt. Tài liệu Claude Code tóm phần còn lại của người: khởi động việc, quyết định lần này “xong” nghĩa là gì, và duyệt merge ở cuối.</p>
@@ -559,7 +559,7 @@
           <li><b>Biết “xong” là gì không?</b> Một spec, một test đang đỏ phải chuyển xanh, một điều kiện kiểm được.</li>
           <li><b>Tự kiểm được không?</b> Bộ test, Stop hook, một lượt review.</li>
           <li><b>Được chạm vào đâu?</b> Luật quyền, <button type="button" class="tm" data-t="sandbox">sandbox</button>, <button type="button" class="tm" data-t="worktree">worktree</button>, đúng một nhánh được push.</li>
-          <li><b>Cái gì dừng nó?</b> Giới hạn số lượt, giới hạn chi phí (<code>--max-turns</code>, <code>--max-budget-usd</code>), hạn mức chi.</li>
+          <li><b>Cái gì dừng nó?</b> Giới hạn số lượt, giới hạn chi phí (<code>--max-turns</code>, <code>--max-budget-usd</code> khi chạy <code>claude -p</code>), hạn mức chi.</li>
           <li><b>Kết quả đổ về đâu, ai ký?</b> Một PR, một bình luận, một bản tóm tắt; rồi người duyệt merge, deploy, hay bất cứ gì không lấy lại được.</li>
         </ol>
         <p class="aw-src">Theo tài liệu Claude Code, Best practices, mục “Let Claude run without you”.</p>
@@ -589,16 +589,16 @@
       <p>Model có công cụ và tự quyết bước kế trong vòng lặp ấy gọi là agent; khi code viết sẵn quyết các bước thì gọi là <button type="button" class="tm" data-t="workflow">workflow</button> (Anthropic, <i>Building effective agents</i>, 12/2024). Lời khuyên đầu tiên của bài ấy vẫn đúng: bắt đầu bằng cách đơn giản nhất, chỉ thêm độ phức tạp khi đo được là cần.</p>
 
       <h3>Thứ model thấy trong một lượt</h3>
-      <div class="aw-ctx" role="img" aria-label="Cửa sổ ngữ cảnh chia hai cột. Luôn có mặt, tốn chỗ ở mọi lượt: chỉ dẫn hệ thống và định nghĩa công cụ; CLAUDE.md và rules không có paths; tên và mô tả của skill và subagent; tên công cụ MCP; 200 dòng đầu của MEMORY.md. Chỉ khi cần: rule có paths khi chạm file khớp; thân skill khi được gọi; schema công cụ MCP khi dùng; file đã đọc và output lệnh; subagent chạy ngữ cảnh riêng, chỉ trả tóm tắt; hook không tốn gì trừ khi trả output.">
+      <div class="aw-ctx" role="img" aria-label="Cửa sổ ngữ cảnh chia hai cột. Luôn có mặt, tốn chỗ ở mọi lượt: chỉ dẫn hệ thống và định nghĩa công cụ; CLAUDE.md và rules không có paths; tên và mô tả của subagent và của skill mà model tự gọi được; tên công cụ MCP; 200 dòng đầu của MEMORY.md. Chỉ khi cần: rule có paths khi chạm file khớp; thân skill khi được gọi, và cả mô tả với skill chỉ người gọi; schema công cụ MCP khi dùng; file đã đọc và output lệnh; subagent chạy ngữ cảnh riêng, chỉ trả tóm tắt; hook không tốn gì trừ khi trả output.">
         <div class="aw-ctx__col aw-ctx__col--on">
           <p class="aw-ctx__h">Luôn có mặt</p>
           <p class="aw-ctx__s">tốn chỗ ở mọi lượt, kể cả lượt không liên quan</p>
           <ul>
             <li>Chỉ dẫn hệ thống, định nghĩa công cụ<span>harness tự nạp</span></li>
             <li>CLAUDE.md, rules không có <code>paths</code><span>toàn văn — nên dưới 200 dòng</span></li>
-            <li>Tên và mô tả mọi skill, subagent<span>mỗi cái một mô tả ngắn</span></li>
+            <li>Tên và mô tả mọi subagent, mọi skill model tự gọi được<span>skill có <code>disable-model-invocation: true</code> không tốn gì tới khi người gọi</span></li>
             <li>Tên công cụ MCP<span>schema đầy đủ để dành tới khi dùng</span></li>
-            <li>200 dòng đầu MEMORY.md<span>auto memory, chỉ trên máy này</span></li>
+            <li>200 dòng đầu MEMORY.md<span>tối đa 25 KB; auto memory, chỉ trên máy này</span></li>
           </ul>
         </div>
         <div class="aw-ctx__col">
@@ -615,7 +615,7 @@
         </div>
       </div>
       <p class="aw-src">Theo tài liệu Claude Code, Extend Claude Code, mục “Context cost by feature”. Hình vẽ khoản mục, không vẽ tỉ lệ.</p>
-      <p>Cửa sổ có trần, và đầy chưa phải vấn đề duy nhất: càng nhiều token, model càng nhớ lại kém — Anthropic gọi là <button type="button" class="tm" data-t="context-rot">context rot</button> và khuyên tìm “tập token nhỏ nhất mà nhiều tín hiệu nhất”. Hệ quả cho cách sắp file: cột trái tốn chỗ ở mọi lượt nên phải ngắn; quy trình dài sang cột phải, thành skill hoặc thành <button type="button" class="tm" data-t="rules">rule</button> theo đường dẫn. Việc ồn — đọc 50 file để tìm một hàm — giao cho <button type="button" class="tm" data-t="subagent">subagent</button>, chỉ kết luận quay về.</p>
+      <p>Cửa sổ có trần, và đầy chưa phải vấn đề duy nhất: càng nhiều token, model càng nhớ lại kém — hiện tượng mà các phép thử “mò kim đáy bể” gọi là <button type="button" class="tm" data-t="context-rot">context rot</button>. Anthropic khuyên tìm “tập token nhỏ nhất mà nhiều tín hiệu nhất”. Hệ quả cho cách sắp file: cột trái tốn chỗ ở mọi lượt nên phải ngắn; quy trình dài sang cột phải, thành skill hoặc thành <button type="button" class="tm" data-t="rules">rule</button> theo đường dẫn. Việc ồn — đọc 50 file để tìm một hàm — giao cho <button type="button" class="tm" data-t="subagent">subagent</button>, chỉ kết luận quay về.</p>
 
       <h3>Lời dặn và luật cứng</h3>
       <p>Mọi chỉ dẫn thuộc một trong hai loại. <b>Lời dặn</b> — prompt, CLAUDE.md, skill — được model đọc rồi tự quyết; nó làm theo gần như mọi lần, nhưng không có gì bảo đảm. <b>Luật cứng</b> — hook, luật deny, sandbox, CI, <button type="button" class="tm" data-t="branch-protection">branch protection</button> — do harness hoặc hệ thống ép, bất kể model nghĩ gì.</p>
@@ -624,9 +624,9 @@
           <thead><tr><th>Câu hỏi</th><th>Model quyết (lời dặn)</th><th>Hệ thống ép (luật cứng)</th></tr></thead>
           <tbody>
             <tr><td>Làm gì</td><td data-l="Model quyết">prompt, CLAUDE.md, skill model tự chọn</td><td data-l="Hệ thống ép">hook; skill chỉ người gọi được</td></tr>
-            <tr><td>Được chạm vào đâu</td><td data-l="Model quyết">bộ phân loại của auto mode</td><td data-l="Hệ thống ép">luật deny, sandbox, managed settings</td></tr>
+            <tr><td>Được chạm vào đâu</td><td data-l="Model quyết">bộ phân loại của auto mode</td><td data-l="Hệ thống ép">luật deny, sandbox ở chế độ strict, managed settings</td></tr>
             <tr><td>Khi nào là xong</td><td data-l="Model quyết">đòi bằng chứng, <code>/goal</code>, review</td><td data-l="Hệ thống ép">test, typecheck, Stop hook, CI</td></tr>
-            <tr><td>Tiêu bao nhiêu</td><td data-l="Model quyết">mức effort</td><td data-l="Hệ thống ép"><code>--max-turns</code>, <code>--max-budget-usd</code>, hạn mức chi</td></tr>
+            <tr><td>Tiêu bao nhiêu</td><td data-l="Model quyết">mức effort</td><td data-l="Hệ thống ép"><code>--max-turns</code>, <code>--max-budget-usd</code> (khi chạy <code>-p</code>), hạn mức chi</td></tr>
             <tr><td>Ai có lời cuối</td><td data-l="Model quyết">bản tóm tắt của agent</td><td data-l="Hệ thống ép">branch protection, người duyệt merge</td></tr>
           </tbody>
         </table>
@@ -638,7 +638,7 @@
       <p>Hai chữ hay bị gộp: hook trả lời “khi nào chạy”, <button type="button" class="tm" data-t="gate">cổng</button> trả lời “đạt hay chưa”. Hook sau mỗi lần sửa file gọi linter; pre-commit và CI gọi cùng một script kiểm. Đổi lúc chạy mà giữ phép kiểm, hay ngược lại, đều được — vì thế tách hai khái niệm.</p>
 
       <h3 id="thuat-ngu">Bảng thuật ngữ</h3>
-      <p><span data-count="gloss">39</span> thuật ngữ, chia ba loại: <b>cơ chế sản phẩm</b> có thật trong Claude Code, Codex hay git; <b>quy ước team</b> do đội tự đặt, harness không biết tới; và <b>khái niệm chung</b>.</p>
+      <p><span data-count="gloss">39</span> thuật ngữ, chia ba loại: <b>cơ chế sản phẩm</b> có thật trong Claude Code, Codex, git hay GitHub; <b>quy ước team</b> do đội tự đặt, harness không biết tới; và <b>khái niệm chung</b>.</p>
       <div id="aw-gloss"></div>
       <noscript><p>Bảng thuật ngữ và các popup cần JavaScript.</p></noscript>
     </section>
@@ -680,7 +680,7 @@
         </details>
         <details class="aw-tr" style="--d:2">
           <summary><span class="aw-path">skills/&lt;việc&gt;/SKILL.md</span><span class="aw-what">Quy trình riêng của repo</span><span class="aw-chips"><span class="aw-chip is-mech">cơ chế</span><span class="aw-chip">commit</span></span></summary>
-          <dl class="aw-tr__body"><dt>Ai đọc</dt><dd>Model thấy tên và mô tả ở mọi lượt; thân skill nạp khi dùng.</dd><dt>Ví dụ</dt><dd>Cách thêm một migration, cách chạy e2e trên máy dev.</dd></dl>
+          <dl class="aw-tr__body"><dt>Ai đọc</dt><dd>Model thấy tên và mô tả ở mọi lượt, trừ skill chỉ người gọi; thân skill nạp khi dùng.</dd><dt>Ví dụ</dt><dd>Cách thêm một migration, cách chạy e2e trên máy dev.</dd></dl>
         </details>
         <details class="aw-tr" style="--d:2">
           <summary><span class="aw-path">agents/&lt;vai&gt;.md</span><span class="aw-what">Subagent riêng của repo</span><span class="aw-chips"><span class="aw-chip is-mech">cơ chế</span><span class="aw-chip">commit</span></span></summary>
@@ -713,7 +713,7 @@
       </div>
 
       <h3>Lớp 2 — plugin dùng chung của công ty</h3>
-      <p>Plugin là một thư mục có manifest <code>.claude-plugin/plugin.json</code>; skill, subagent, hook và máy chủ MCP nằm ở gốc thư mục ấy. Skill trong plugin mang tiền tố tên plugin, ví dụ <code>/eng:fix-bug</code>, nên nhiều plugin không giẫm tên nhau. Danh mục plugin của công ty — <button type="button" class="tm" data-t="marketplace">marketplace</button> — là một repo có <code>.claude-plugin/marketplace.json</code>.</p>
+      <p>Plugin là một thư mục: skill, subagent, hook và máy chủ MCP nằm ở gốc thư mục ấy; manifest <code>.claude-plugin/plugin.json</code> là tuỳ chọn, cần khi muốn ghi phiên bản hay xin giá trị từ người dùng. Skill trong plugin mang tiền tố tên plugin, ví dụ <code>/eng:fix-bug</code>, nên nhiều plugin không giẫm tên nhau. Danh mục plugin của công ty — <button type="button" class="tm" data-t="marketplace">marketplace</button> — là một repo có <code>.claude-plugin/marketplace.json</code>.</p>
       <div class="aw-tree">
         <div class="aw-tr aw-tr--dir" style="--d:0"><span class="aw-path">eng/</span><span class="aw-what">plugin của đội kỹ thuật</span><span></span></div>
         <details class="aw-tr" style="--d:1">
@@ -794,7 +794,7 @@ Sửa bug $ARGUMENTS:
 4. Commit, push nhánh fix/$ARGUMENTS, mở PR có link ticket.
 5. Gán reviewer theo CODEOWNERS, chuyển ticket sang In Review.
 6. Báo lại: lệnh đã chạy và output, link PR.</pre>
-        <p class="aw-file__n"><code>disable-model-invocation: true</code>: skill có tác dụng phụ (push, đổi trạng thái ticket) chỉ chạy khi người gọi <code>/eng:fix-bug PROJ-123</code>; model không tự quyết chạy. <code>$ARGUMENTS</code> là phần gõ sau tên skill.</p>
+        <p class="aw-file__n"><code>disable-model-invocation: true</code>: skill có tác dụng phụ (push, đổi trạng thái ticket) chỉ chạy khi người gọi <code>/eng:fix-bug PROJ-123</code>; model không tự quyết chạy, và mô tả của skill không chiếm ngữ cảnh tới lúc ấy. <code>$ARGUMENTS</code> là phần gõ sau tên skill.</p>
       </details>
       <details class="aw-file">
         <summary>agents/reviewer.md <span>vai chỉ đọc</span></summary>
@@ -816,7 +816,8 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
     "PostToolUse": [
       { "matcher": "Write|Edit",
         "hooks": [{ "type": "command",
-                    "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/format.sh\"" }] }
+                    "command": "${CLAUDE_PLUGIN_ROOT}/scripts/format.sh",
+                    "args": [] }] }
     ],
     "Stop": [
       { "hooks": [{ "type": "command",
@@ -824,7 +825,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
     ]
   }
 }</pre>
-        <p class="aw-file__n">Sau mỗi lần ghi hay sửa file, harness chạy formatter. Khi agent định kết thúc lượt, harness chạy script kiểm; mã thoát 2 chặn việc dừng và gửi stderr lại cho agent làm tiếp.</p>
+        <p class="aw-file__n">Sau mỗi lần ghi hay sửa file, harness chạy formatter; có <code>args</code> thì lệnh chạy thẳng, không qua shell, nên đường dẫn có dấu cách vẫn đúng. Khi agent định kết thúc lượt, harness chạy script kiểm qua shell; mã thoát 2 chặn việc dừng và gửi stderr lại cho agent làm tiếp. Claude Code chỉ tự bỏ qua lần chặn thứ 9 liền nhau, và bộ đếm về 0 mỗi khi agent gọi công cụ; nên script đọc trường <code>stop_hook_active</code> trong input để không chặn mãi một lỗi agent không sửa được.</p>
       </details>
       <details class="aw-file">
         <summary>.mcp.json <span>kết nối, không có secret</span></summary>
@@ -839,7 +840,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
     }
   }
 }</pre>
-        <p class="aw-file__n">Hai máy chủ đầu đăng nhập bằng <button type="button" class="tm" data-t="oauth">OAuth</button>: mỗi người đăng nhập một lần qua <code>/mcp</code>, token do Claude Code giữ. Máy chủ thứ ba chỉ nhận API key: file ghi tên biến, giá trị nạp từ trình quản lý bí mật vào môi trường của từng máy hay của CI.</p>
+        <p class="aw-file__n">Hai máy chủ đầu đăng nhập bằng <button type="button" class="tm" data-t="oauth">OAuth</button>: mỗi người đăng nhập một lần qua <code>/mcp</code>, token do Claude Code giữ. Máy chủ thứ ba chỉ nhận API key: file ghi tên biến, giá trị nạp từ trình quản lý bí mật vào môi trường của từng máy hay của CI. Đó là cách viết ở <code>.mcp.json</code> gốc repo; trong plugin, máy chủ ấy lấy token từ mẫu kế tiếp bằng <code>"Bearer ${user_config.billing_api_token}"</code>.</p>
       </details>
       <details class="aw-file">
         <summary>.claude-plugin/plugin.json <span>xin token mà không ghi token</span></summary>
@@ -855,7 +856,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
     }
   }
 }</pre>
-        <p class="aw-file__n">Khi bật plugin, Claude Code hỏi giá trị; <code>"sensitive": true</code> cất nó vào kho bí mật của hệ điều hành thay vì <code>settings.json</code>. Hook đọc qua biến <code>CLAUDE_PLUGIN_OPTION_BILLING_API_TOKEN</code>; trong nội dung skill, giá trị nhạy cảm bị thay bằng chỗ giữ, nên model không thấy nó.</p>
+        <p class="aw-file__n">Khi bật plugin, Claude Code hỏi giá trị; <code>"sensitive": true</code> che chữ khi gõ và cất giá trị vào kho credential của Claude Code (Keychain trên macOS; trên Linux và Windows là file chỉ tài khoản của mình đọc được) thay vì <code>settings.json</code>. <code>.mcp.json</code> của plugin dùng nó qua <code>${user_config.billing_api_token}</code>; hook đọc qua biến <code>CLAUDE_PLUGIN_OPTION_BILLING_API_TOKEN</code>; trong nội dung skill, giá trị nhạy cảm bị thay bằng chỗ giữ, nên model không thấy nó.</p>
       </details>
 
       <h3 id="bi-mat">Mật khẩu và token: đi đường nào</h3>
@@ -864,9 +865,9 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
           <thead><tr><th>Cách</th><th>Dùng khi</th><th>Token nằm ở đâu</th></tr></thead>
           <tbody>
             <tr><td>OAuth của máy chủ MCP</td><td data-l="Dùng khi">Dịch vụ có máy chủ MCP đăng nhập bằng OAuth: Jira, Linear, Sentry, GitHub</td><td data-l="Token nằm ở đâu">Kho credential của harness trên máy từng người; ai cũng chỉ làm được việc tài khoản mình được phép</td></tr>
-            <tr><td><code>userConfig</code> + <code>"sensitive": true</code></td><td data-l="Dùng khi">Plugin cần token riêng của từng người</td><td data-l="Token nằm ở đâu">Kho bí mật của hệ điều hành</td></tr>
+            <tr><td><code>userConfig</code> + <code>"sensitive": true</code></td><td data-l="Dùng khi">Plugin cần token riêng của từng người</td><td data-l="Token nằm ở đâu">Kho credential của Claude Code trên máy từng người: Keychain trên macOS, file chỉ chủ tài khoản đọc được trên Linux, Windows</td></tr>
             <tr><td><code>${VAR}</code> trong <code>.mcp.json</code></td><td data-l="Dùng khi">Dịch vụ chỉ có API key</td><td data-l="Token nằm ở đâu">Biến môi trường, nạp từ trình quản lý bí mật (Vault, 1Password CLI, AWS Secrets Manager…)</td></tr>
-            <tr><td>Secret của CI</td><td data-l="Dùng khi">Agent chạy trong GitHub Actions, GitLab CI</td><td data-l="Token nằm ở đâu">Kho secret của CI; chỉ workflow đọc được</td></tr>
+            <tr><td>Secret của CI</td><td data-l="Dùng khi">Agent chạy trong GitHub Actions, GitLab CI</td><td data-l="Token nằm ở đâu">Kho secret của CI; chỉ job được cấp mới đọc được, kể cả agent chạy trong job ấy, nên cấp quyền hẹp nhất</td></tr>
             <tr class="is-bad"><td>Ghi giá trị vào CLAUDE.md, SKILL.md, plugin.json, .mcp.json</td><td data-l="Dùng khi">Không bao giờ</td><td data-l="Token nằm ở đâu">Lịch sử git, và máy của mọi người đã cài plugin</td></tr>
           </tbody>
         </table>
@@ -875,10 +876,11 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         <li><b>Git không quên.</b> Xoá token ở commit sau thì giá trị vẫn nằm trong lịch sử; plugin được chép nguyên thư mục tới máy mọi người cài. Token đã vào repo coi như đã lộ: thu hồi rồi cấp lại.</li>
         <li><b>Thứ agent đọc được thì nằm trong ngữ cảnh.</b> Nó đi vào transcript của phiên, mà transcript lưu dạng văn bản thường trên máy (<code>~/.claude/projects/</code>).</li>
         <li><b><button type="button" class="tm" data-t="injection">Prompt injection</button>.</b> Một ticket hay trang web có lệnh giấu có thể bảo agent gửi thứ nó đọc được ra ngoài. Token không bao giờ vào ngữ cảnh thì không lộ theo đường này.</li>
+        <li><b>Biến môi trường không kín.</b> Lệnh shell, hook, máy chủ MCP chạy cục bộ mà Claude Code mở đều thừa hưởng môi trường của nó, nên một lệnh <code>env</code> là đọc được token để trong biến. Đặt <code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1</code> để gỡ credential khỏi môi trường các tiến trình con, hoặc khai <code>sandbox.credentials</code>; OAuth và <code>userConfig</code> nhạy cảm thì không nằm trong biến môi trường.</li>
         <li><b>OAuth gắn với từng người.</b> Quyền đúng bằng quyền của tài khoản, nhật ký ghi đúng người, thu hồi một người không ảnh hưởng ai. Đặc tả MCP dựng việc uỷ quyền trên OAuth 2.1 và cấm máy chủ chuyển nguyên token nhận được sang dịch vụ khác.</li>
         <li><b>Quyền tối thiểu.</b> Xin phạm vi nhỏ nhất đủ việc: máy chủ MCP của Linear có địa chỉ chỉ-đọc riêng (<code>/mcp/readonly</code>); reviewer chỉ cần Read, Grep, Glob; token CI chỉ ghi được vào nhánh của nó.</li>
       </ul>
-      <p>Lớp chặn thêm: luật deny <code>Read(./.env)</code> và <code>Read(./secrets/**)</code> trong <code>.claude/settings.json</code>, và quét secret ở pre-commit lẫn CI.</p>
+      <p>Lớp chặn thêm: luật deny <code>Read(./.env)</code> và <code>Read(./secrets/**)</code> trong <code>.claude/settings.json</code>, và quét secret ở pre-commit lẫn CI. Luật deny chỉ chặn công cụ đọc file của Claude Code và các lệnh shell nó nhận ra như <code>cat</code>, <code>head</code>; một script Python tự mở file thì lọt. Muốn chặn mọi tiến trình thì bật sandbox và khai <code>sandbox.filesystem.denyRead</code>.</p>
 
       <h3>Đối chiếu Claude Code và Codex</h3>
       <div class="aw-tw">
@@ -893,7 +895,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
             <tr><td>Hook</td><td data-l="Claude Code">khoá <code>hooks</code> trong <code>.claude/settings.json</code></td><td data-l="Codex"><code>.codex/hooks.json</code> hoặc bảng <code>[hooks]</code></td></tr>
             <tr><td>Quyền</td><td data-l="Claude Code"><code>permissions</code> allow/ask/deny, chế độ quyền, sandbox</td><td data-l="Codex"><code>sandbox_mode</code> (read-only, workspace-write, danger-full-access) và <code>approval_policy</code></td></tr>
             <tr><td>Chữ “rules”</td><td data-l="Claude Code">file chỉ dẫn nạp theo đường dẫn</td><td data-l="Codex">chính sách cho phép lệnh, viết bằng Starlark trong file <code>.rules</code> (thử nghiệm) — cùng chữ, khác hẳn</td></tr>
-            <tr><td>Gói và phát</td><td data-l="Claude Code">plugin + marketplace</td><td data-l="Codex">plugin (skill + app), dùng chung giữa ChatGPT và Codex</td></tr>
+            <tr><td>Gói và phát</td><td data-l="Claude Code">plugin + marketplace</td><td data-l="Codex">plugin (skill, máy chủ MCP, hook) + marketplace; danh mục plugin dùng chung với ChatGPT</td></tr>
             <tr><td>Trong CI</td><td data-l="Claude Code">GitHub Action <code>@claude</code>, GitLab CI, <code>claude -p</code></td><td data-l="Codex">Codex GitHub Action, <code>@codex review</code> trên PR</td></tr>
           </tbody>
         </table>
@@ -1017,7 +1019,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         <li><b>Mô tả không chồng nhau.</b> Model chọn skill theo <code>description</code>; hai mô tả na ná thì chọn nhầm. Mỗi mô tả nói việc gì và khi nào dùng, việc chính đứng đầu.</li>
         <li><b>Luật của vai ở trong vai.</b> Đổ luật QA vào CLAUDE.md chung là bắt mọi phiên của mọi người trả giá ngữ cảnh cho nó.</li>
         <li><b>Skill gọi “tracker”, không gọi “Jira”.</b> Đổi Jira sang Linear thì sửa <code>.mcp.json</code> và một skill tham chiếu, không sửa hai mươi skill.</li>
-        <li><b>Tách plugin theo vai khi bộ đã to.</b> Plugin đang bật thì tên và mô tả mọi skill, subagent trong nó nằm trong ngữ cảnh ở mọi lượt. Tách <code>eng-core</code>, <code>eng-qa</code>, <code>eng-sre</code> trong cùng marketplace để mỗi người bật đúng thứ mình cần; thứ bắt buộc toàn công ty thì đẩy qua managed settings (<code>extraKnownMarketplaces</code>, <code>enabledPlugins</code>).</li>
+        <li><b>Tách plugin theo vai khi bộ đã to.</b> Plugin đang bật thì tên và mô tả mọi subagent, mọi skill model tự gọi được trong nó nằm trong ngữ cảnh ở mọi lượt. Tách <code>eng-core</code>, <code>eng-qa</code>, <code>eng-sre</code> trong cùng marketplace để mỗi người bật đúng thứ mình cần; thứ bắt buộc toàn công ty thì đẩy qua managed settings (<code>extraKnownMarketplaces</code>, <code>enabledPlugins</code>).</li>
         <li><b>Có eval trước khi phát.</b> Vài ca thử cho mỗi skill, chạy bằng <code>claude plugin eval</code> trong CI, để bản sửa hôm nay không làm hỏng hành vi hôm qua; tăng <code>version</code> khi đổi.</li>
       </ol>
     </section>
@@ -1038,7 +1040,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         <article class="aw-cocard">
           <p class="aw-cocard__o">Anthropic · 02/2025 → 08/2025</p>
           <h3 class="aw-cocard__t">Agent đi xa hơn mỗi lượt</h3>
-          <p>Trong transcript Claude Code nội bộ, số lần gọi công cụ liên tiếp tối đa mỗi transcript tăng từ 9,8 lên 21,2 (116%); số lượt người phải nhắn giảm từ 6,2 xuống 4,1. Cũng nghiên cứu ấy ghi nỗi lo “nghịch lý giám sát”: kiểm Claude cần đúng kỹ năng có thể teo đi nếu dùng quá tay.</p>
+          <p>Trong 200.000 transcript Claude Code nội bộ, số lần gọi công cụ liên tiếp nhiều nhất của một transcript, tính trung bình, tăng từ 9,8 lên 21,2 (116%); số lượt người phải nhắn giảm từ 6,2 xuống 4,1. Cũng nghiên cứu ấy ghi nỗi lo “nghịch lý giám sát”: kiểm Claude cần đúng kỹ năng có thể teo đi nếu dùng quá tay.</p>
           <p class="aw-cocard__s">How AI is transforming work at Anthropic, 02/12/2025</p>
         </article>
         <article class="aw-cocard">
@@ -1080,7 +1082,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         <article class="aw-cocard is-unverified">
           <p class="aw-cocard__o">OpenAI · 02/2026 · <span class="aw-uv">[chưa kiểm]</span></p>
           <h3 class="aw-cocard__t">Harness engineering</h3>
-          <p>Bài trên openai.com chặn tải tự động nên chưa đối chiếu được với bản gốc. Theo các bản tóm tắt thứ cấp: một nhóm dựng sản phẩm nội bộ khoảng một triệu dòng mà không viết tay dòng nào, và việc chính của kỹ sư chuyển sang làm cho agent làm được việc.</p>
+          <p>Bài hay được dẫn khi bàn về chữ “harness”: việc của kỹ sư chuyển từ viết code sang dựng môi trường, luật và phép kiểm để agent làm được việc. Bản gốc trên openai.com chặn tải tự động nên chưa đối chiếu được; trang này không dẫn con số nào từ bài.</p>
           <p class="aw-cocard__s">Harness engineering: leveraging Codex in an agent-first world, 11/02/2026</p>
         </article>
         <article class="aw-cocard">
@@ -1092,8 +1094,8 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         <article class="aw-cocard is-counter">
           <p class="aw-cocard__o">METR · 07/2025 · phản chứng</p>
           <h3 class="aw-cocard__t">Thấy nhanh, đo ra chậm</h3>
-          <p>Thí nghiệm ngẫu nhiên có đối chứng: 16 dev kỳ cựu, 246 issue thật trên repo họ đã đóng góp nhiều năm. Khi được dùng công cụ AI đầu 2025, họ mất thêm 19% thời gian, dù trước đó đoán sẽ nhanh hơn 24% và sau đó vẫn tin đã nhanh hơn 20%. Trang của METR ghi đã công bố thêm dữ liệu với công cụ cuối 2025 vào 02/2026; số mới chưa đối chiếu <span class="aw-uv">[chưa kiểm]</span>.</p>
-          <p class="aw-cocard__s">Measuring the impact of early-2025 AI on experienced open-source developer productivity, 10/07/2025</p>
+          <p>Thí nghiệm ngẫu nhiên có đối chứng: 16 dev kỳ cựu, 246 issue thật trên repo họ đã đóng góp nhiều năm. Khi được dùng công cụ AI đầu 2025, họ mất thêm 19% thời gian, dù trước đó đoán sẽ nhanh hơn 24% và sau đó vẫn tin đã nhanh hơn 20%. Đợt đo thứ hai, với công cụ cuối 2025, cho số thô nghiêng về nhanh hơn: thời gian giảm 18% ở 10 dev của đợt đầu, giảm 4% ở 47 dev mới, cả hai khoảng tin cậy 95% đều chứa 0. Chính METR coi số ấy không đáng tin, vì nhiều dev từ chối tham gia hoặc không nộp việc họ không muốn làm thiếu AI; METR cho rằng dev đầu 2026 nhiều khả năng đã nhanh hơn, và ghi kết quả 2025 là đã lỗi thời.</p>
+          <p class="aw-cocard__s">Measuring the impact of early-2025 AI on experienced open-source developer productivity, 10/07/2025 · We are Changing our Developer Productivity Experiment Design, 24/02/2026</p>
         </article>
       </div>
 
@@ -1117,8 +1119,8 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
           <thead><tr><th>Rủi ro</th><th>Xảy ra thế nào</th><th>Chặn bằng gì</th></tr></thead>
           <tbody>
             <tr><td>Prompt injection</td><td data-l="Xảy ra thế nào">Ticket, trang web, log chứa chữ giả làm lệnh; agent đọc rồi làm theo. Nguy nhất khi cùng lúc có ba thứ: đọc được dữ liệu riêng, đọc nội dung lạ, gửi được ra ngoài — “bộ ba chết người” (Simon Willison, 06/2025).</td><td data-l="Chặn bằng gì">Cắt ít nhất một chân của bộ ba; lệnh mạng phải hỏi; sandbox; quyền tối thiểu cho từng máy chủ MCP; người duyệt mọi hành động gửi ra ngoài.</td></tr>
-            <tr><td>Repo lạ</td><td data-l="Xảy ra thế nào">Chạy <code>claude -p</code> trên repo người khác: không có hộp thoại tin cậy, nên hook trong <code>.claude/settings.json</code> của repo ấy chạy luôn.</td><td data-l="Chặn bằng gì">Đọc <code>.claude/</code> trước; chạy với <code>--bare</code> hoặc tắt hook cho lần chạy ấy.</td></tr>
-            <tr><td>Lộ secret</td><td data-l="Xảy ra thế nào">Token trong file bị commit, bị chép theo plugin, hoặc bị đọc vào ngữ cảnh rồi nằm trong transcript.</td><td data-l="Chặn bằng gì">OAuth, kho bí mật, <code>userConfig</code> nhạy cảm; deny <code>Read(./.env)</code>; quét secret ở pre-commit và CI.</td></tr>
+            <tr><td>Repo lạ</td><td data-l="Xảy ra thế nào">Chạy <code>claude -p</code> trên repo người khác: không có hộp thoại tin cậy, nên hook trong <code>.claude/settings.json</code> của repo ấy chạy luôn và máy chủ trong <code>.mcp.json</code> của nó được kết nối.</td><td data-l="Chặn bằng gì">Đọc <code>.claude/</code> và <code>.mcp.json</code> trước; chạy với <code>--bare</code>, hoặc tắt hook cho lần chạy ấy bằng <code>--settings '{"disableAllHooks": true}'</code>.</td></tr>
+            <tr><td>Lộ secret</td><td data-l="Xảy ra thế nào">Token trong file bị commit, bị chép theo plugin, bị một lệnh <code>env</code> in ra từ biến môi trường, hoặc bị đọc vào ngữ cảnh rồi nằm trong transcript.</td><td data-l="Chặn bằng gì">OAuth, kho bí mật, <code>userConfig</code> nhạy cảm; <code>CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1</code>; deny <code>Read(./.env)</code> cộng sandbox; quét secret ở pre-commit và CI.</td></tr>
             <tr><td>Quyền quá rộng</td><td data-l="Xảy ra thế nào">Agent chạy bằng quyền của người: người xoá được gì thì agent xoá được nấy.</td><td data-l="Chặn bằng gì">deny thắng ask thắng allow; sandbox; worktree; nhánh riêng; branch protection mà agent không vượt được; token CI chỉ đủ việc.</td></tr>
             <tr><td>Review mù</td><td data-l="Xảy ra thế nào">Nhiều PR, diff dài, test xanh: bấm approve theo thói quen.</td><td data-l="Chặn bằng gì">Đòi bằng chứng (lệnh và output); reviewer ngữ cảnh sạch; PR nhỏ; lấy mẫu đọc kỹ; đo tỉ lệ lỗi lọt.</td></tr>
             <tr><td>Nợ kỹ thuật do AI</td><td data-l="Xảy ra thế nào">Code sinh nhanh hơn tốc độ hiểu; trùng lặp, mã chết, lớp trừu tượng thừa.</td><td data-l="Chặn bằng gì">Cổng kiến trúc (lint luật phụ thuộc giữa module); review bỏ qua style nhưng giữ thiết kế; lịch dọn dẹp bằng agent.</td></tr>
@@ -1186,7 +1188,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         </div>
       </div>
       <h3>Đo gì</h3>
-      <p>Năm chỉ số giao phần mềm của DORA, chia hai nhóm. Thông lượng: thời gian từ commit tới production, tần suất deploy, thời gian khôi phục sau một lần deploy hỏng. Độ ổn định: tỉ lệ thay đổi phải can thiệp ngay sau deploy, tỉ lệ deploy ngoài kế hoạch vì sự cố. Thêm hai số riêng cho agent: thời gian PR chờ review, và tỉ lệ PR của agent bị trả lại. Chỉ đếm số PR thì thưởng cho PR vụn.</p>
+      <p>Năm chỉ số giao phần mềm của DORA, chia hai nhóm. Thông lượng: thời gian từ commit tới production, tần suất deploy, thời gian khôi phục sau một lần deploy hỏng. Độ bất ổn, càng thấp càng tốt: tỉ lệ thay đổi phải can thiệp ngay sau deploy, tỉ lệ deploy ngoài kế hoạch vì sự cố. Thêm hai số riêng cho agent: thời gian PR chờ review, và tỉ lệ PR của agent bị trả lại. Chỉ đếm số PR thì thưởng cho PR vụn.</p>
     </section>
 
     <!-- ══════════ MANG THEO ══════════ -->
@@ -1217,24 +1219,25 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         <li><a href="https://code.claude.com/docs/en/github-actions">Claude Code GitHub Actions</a>, <a href="https://code.claude.com/docs/en/glossary">Glossary</a>, <a href="https://code.claude.com/docs/en/security">Security</a></li>
         <li><a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md">Custom instructions with AGENTS.md</a>, <a href="https://learn.chatgpt.com/docs/build-skills">Build skills</a>, <a href="https://learn.chatgpt.com/docs/agent-configuration/subagents">Subagents</a>, <a href="https://learn.chatgpt.com/docs/extend/mcp">MCP</a>, <a href="https://learn.chatgpt.com/docs/hooks">Hooks</a>, <a href="https://learn.chatgpt.com/docs/agent-configuration/rules">Rules</a>, <a href="https://learn.chatgpt.com/docs/sandboxing">Sandboxing</a> <span>— tài liệu Codex của OpenAI.</span></li>
         <li><a href="https://agents.md/">AGENTS.md</a>, <a href="https://agentskills.io/">Agent Skills</a> <span>— hai định dạng mở.</span></li>
-        <li><a href="https://www.anthropic.com/engineering/building-effective-agents">Building effective agents</a> <span>— Anthropic, 19/12/2024.</span></li>
-        <li><a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a> <span>— Anthropic, 29/09/2025.</span></li>
-        <li><a href="https://www.anthropic.com/engineering/multi-agent-research-system">How we built our multi-agent research system</a> <span>— Anthropic, 13/06/2025.</span></li>
-        <li><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Effective harnesses for long-running agents</a> <span>— Anthropic, 26/11/2025.</span></li>
-        <li><a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills">Equipping agents for the real world with Agent Skills</a> <span>— Anthropic, 16/10/2025.</span></li>
-        <li><a href="https://claude.com/blog/how-anthropic-teams-use-claude-code">How Anthropic teams use Claude Code</a> <span>— 24/07/2025.</span></li>
+        <li><a href="https://www.anthropic.com/research/building-effective-agents">Building effective agents</a> <span>— Anthropic, 19/12/2024.</span></li>
+        <li><a href="https://www.anthropic.com/research/effective-context-engineering-for-ai-agents">Effective context engineering for AI agents</a> <span>— Anthropic, 29/09/2025.</span></li>
+        <li><a href="https://www.anthropic.com/research/multi-agent-research-system">How we built our multi-agent research system</a> <span>— Anthropic, 13/06/2025.</span></li>
+        <li><a href="https://www.anthropic.com/research/effective-harnesses-for-long-running-agents">Effective harnesses for long-running agents</a> <span>— Anthropic, 26/11/2025.</span></li>
+        <li><a href="https://www.anthropic.com/research/equipping-agents-for-the-real-world-with-agent-skills">Equipping agents for the real world with Agent Skills</a> <span>— Anthropic, 16/10/2025.</span></li>
+        <li><a href="https://claude.com/resources/articles/how-anthropic-teams-use-claude-code">How Anthropic teams use Claude Code</a> <span>— 24/07/2025.</span></li>
         <li><a href="https://www.anthropic.com/research/how-ai-is-transforming-work-at-anthropic">How AI is transforming work at Anthropic</a> <span>— 02/12/2025.</span></li>
-        <li><a href="https://www.anthropic.com/engineering/redesigning-source-control">Redesigning source control at Anthropic</a> <span>— 13/10/2026.</span></li>
+        <li><a href="https://www.anthropic.com/research/redesigning-source-control">Redesigning source control at Anthropic</a> <span>— 13/10/2026.</span></li>
         <li><a href="https://developers.openai.com/blog/skills-agents-sdk">Using skills to accelerate OSS maintenance</a> <span>— OpenAI, 09/03/2026.</span></li>
         <li><a href="https://developers.openai.com/blog/maintaining-software-with-the-gpt-6-family">Maintaining software with the GPT-6 family</a> <span>— OpenAI, 14/10/2026.</span></li>
         <li><a href="https://developers.openai.com/blog/run-long-horizon-tasks-with-codex">Run long horizon tasks with Codex</a> <span>— OpenAI, 23/02/2026.</span></li>
         <li><a href="https://openai.com/index/harness-engineering/">Harness engineering: leveraging Codex in an agent-first world</a> <span>— OpenAI, 11/02/2026.</span> <span class="aw-uv">[chưa kiểm]</span></li>
         <li><a href="https://stripe.dev/blog/minions-stripes-one-shot-end-to-end-coding-agents">Minions: Stripe’s one-shot, end-to-end coding agents</a> <span>— Stripe, 09/02/2026.</span></li>
         <li><a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/">Measuring the impact of early-2025 AI on experienced open-source developer productivity</a> <span>— METR, 10/07/2025.</span></li>
+        <li><a href="https://metr.org/blog/2026-02-24-uplift-update/">We are Changing our Developer Productivity Experiment Design</a> <span>— METR, 24/02/2026: đợt đo với công cụ cuối 2025.</span></li>
         <li><a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">The lethal trifecta for AI agents</a> <span>— Simon Willison, 16/06/2025.</span></li>
         <li><a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">LLM01:2025 Prompt Injection</a> <span>— OWASP.</span></li>
         <li><a href="https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization">MCP Authorization</a> <span>— đặc tả MCP: OAuth 2.1, cấm chuyển tiếp token.</span></li>
-        <li><a href="https://linear.app/docs/mcp">Linear MCP</a>, <a href="https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/">Atlassian MCP</a>, <a href="https://docs.sentry.io/product/sentry-mcp/">Sentry MCP</a> <span>— máy chủ MCP đăng nhập OAuth.</span></li>
+        <li><a href="https://linear.app/docs/mcp">Linear MCP</a>, <a href="https://support.atlassian.com/atlassian-ai-gateway/docs/get-started-with-the-atlassian-remote-mcp-server/">Atlassian MCP</a>, <a href="https://mcp.sentry.dev/">Sentry MCP</a> <span>— máy chủ MCP đăng nhập OAuth.</span></li>
         <li><a href="https://dora.dev/guides/dora-metrics/">DORA’s software delivery performance metrics</a> <span>— năm chỉ số.</span></li>
       </ol>
     </section>
@@ -1399,7 +1402,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
     { "k": "marketplace", "t": "marketplace", "vi": "danh mục plugin", "kind": "co-che",
       "d": "Danh mục liệt kê plugin và nơi tải từng cái, thường là một repo git. Thêm một lần, rồi cài plugin theo tên.", "w": ".claude-plugin/marketplace.json" },
     { "k": "hook", "t": "hook", "vi": "móc sự kiện", "kind": "co-che",
-      "d": "Lệnh harness tự chạy ở một mốc của phiên: trước hoặc sau khi dùng công cụ, khi agent định dừng, khi phiên mở. Chạy bất kể model nghĩ gì; mã thoát 2 chặn hành động.", "w": "khoá hooks trong .claude/settings.json; hooks/hooks.json trong plugin" },
+      "d": "Lệnh harness tự chạy ở một mốc của phiên: trước hoặc sau khi dùng công cụ, khi agent định dừng, khi phiên mở. Chạy bất kể model nghĩ gì; ở mốc chặn được như trước khi dùng công cụ hay khi định dừng, mã thoát 2 chặn hành động.", "w": "khoá hooks trong .claude/settings.json; hooks/hooks.json trong plugin" },
     { "k": "claude-md", "t": "CLAUDE.md", "vi": "", "kind": "co-che",
       "d": "File chỉ dẫn nạp vào mọi phiên: lệnh build và test, quy ước, điều cấm. Nên dưới 200 dòng. Là lời dặn cho model, không phải luật ép buộc.", "w": "./CLAUDE.md, ~/.claude/CLAUDE.md, CLAUDE.local.md" },
     { "k": "agents-md", "t": "AGENTS.md", "vi": "", "kind": "co-che",
@@ -1411,9 +1414,9 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
     { "k": "permissions", "t": "permissions", "vi": "quyền", "kind": "co-che",
       "d": "Luật allow, ask, deny cho từng công cụ và mẫu lệnh. Harness ép, model không tự quyết. deny thắng ask, ask thắng allow.", "w": "khoá permissions trong .claude/settings.json" },
     { "k": "sandbox", "t": "sandbox", "vi": "hộp cát", "kind": "co-che",
-      "d": "Cô lập ở mức hệ điều hành: lệnh agent chạy chỉ thấy thư mục và mạng được phép. Cho bớt hỏi quyền mà không tăng rủi ro.", "w": "cấu hình harness; Codex: sandbox_mode" },
+      "d": "Cô lập ở mức hệ điều hành cho lệnh shell của agent: chỉ ghi được vào thư mục được phép, chỉ ra mạng tới tên miền được phép. Mặc định vẫn đọc được phần lớn máy, nên file bí mật phải chặn thêm. Cho bớt hỏi quyền mà rủi ro vẫn nằm trong rào.", "w": "cấu hình harness; Codex: sandbox_mode" },
     { "k": "headless", "t": "headless", "vi": "chạy không giao diện", "kind": "co-che",
-      "d": "Chạy agent bằng một lệnh rồi thoát, để gắn vào CI, git hook, script; đặt giới hạn lượt và chi phí.", "w": "claude -p \"…\"; Codex GitHub Action" },
+      "d": "Chạy agent bằng một lệnh rồi thoát, để gắn vào CI, git hook, script; đặt giới hạn lượt và chi phí.", "w": "claude -p \"…\"; Codex: codex exec" },
     { "k": "worktree", "t": "worktree", "vi": "bản checkout phụ", "kind": "co-che",
       "d": "Một bản checkout thứ hai của cùng repo, trên nhánh riêng. Mỗi agent một worktree thì sửa song song không giẫm nhau.", "w": "git worktree; claude -w <tên>" },
     { "k": "gate", "t": "cổng", "vi": "gate", "kind": "quy-uoc",
@@ -1439,7 +1442,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
     { "k": "bdd", "t": "BDD", "vi": "phát triển theo hành vi", "kind": "khai-niem",
       "d": "Behavior-driven development: mô tả hành vi bằng kịch bản Given / When / Then; kịch bản vừa là spec vừa chạy được thành test.", "w": "file .feature" },
     { "k": "ci", "t": "CI", "vi": "tích hợp liên tục", "kind": "khai-niem",
-      "d": "Continuous integration: máy chủ chạy build và test trên mỗi thay đổi; đỏ thì không được merge.", "w": "GitHub Actions, GitLab CI" },
+      "d": "Continuous integration: gộp thay đổi vào nhánh chính thường xuyên, mỗi thay đổi được máy chủ tự chạy build và test. Đỏ thì không được merge là luật đi kèm, do branch protection ép.", "w": "GitHub Actions, GitLab CI" },
     { "k": "pr", "t": "PR", "vi": "pull request", "kind": "khai-niem",
       "d": "Đề nghị gộp một nhánh vào nhánh chính, kèm diff để review. GitLab gọi là merge request.", "w": "" },
     { "k": "branch-protection", "t": "branch protection", "vi": "bảo vệ nhánh", "kind": "co-che",

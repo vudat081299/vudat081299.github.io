@@ -21,7 +21,9 @@ Bảy phần:
      trùng số ở thẻ nguồn; phần trăm suy ra được (9,8 → 21,2 là +116%) tính lại.
   E. CƠ CHẾ SẢN PHẨM — đường dẫn và khoá cấu hình đúng tên phải có mặt, những tên sai hay gặp phải vắng;
      ba mẫu JSON (hooks.json, .mcp.json, plugin.json) phải là JSON hợp lệ; tên biến
-     CLAUDE_PLUGIN_OPTION_<KHOÁ> tính từ khoá userConfig trong mẫu; mẫu .mcp.json không có giá trị bí mật.
+     CLAUDE_PLUGIN_OPTION_<KHOÁ> và chỗ thay ${user_config.<khoá>} tính từ khoá userConfig trong mẫu;
+     hook nhắc ${CLAUDE_PLUGIN_ROOT} phải ở exec form (có args) hoặc bọc placeholder trong ngoặc kép;
+     mẫu .mcp.json không có giá trị bí mật.
   F. VỆ SINH REPO PUBLIC — không tên nơi làm việc cũ, không chuỗi trông như token thật.
   G. DÒNG MÃ THEN CHỐT — theme đọc hub-theme trước first paint; popup đóng bằng Esc và chạm ngoài, mở bằng
      rê chuột và focus-visible, không khoá cuộn, không aria-modal; innerHTML chỉ nhận trường _html.
@@ -177,15 +179,16 @@ FACTS = {
     'o_oss': ['457 PR', '316'],
     'o_maint': ['5 kỹ sư', 'hơn 1.400 PR', 'hơn 800.000 dòng', 'hai tuần'],
     'o_long': ['khoảng 25 giờ', 'khoảng 13 triệu token', 'khoảng 30.000 dòng'],
-    # Stripe Minions (09/02/2026), METR (10/07/2025)
+    # Stripe Minions (09/02/2026), METR (10/07/2025), METR uplift update (24/02/2026)
     'stripe': ['Hơn 1.000 PR'],
     'metr': ['16 dev', '246 issue', 'thêm 19%', 'nhanh hơn 24%', 'nhanh hơn 20%'],
+    'metr_2026': ['giảm 18% ở 10 dev', 'giảm 4% ở 47 dev', 'đã lỗi thời'],
 }
 for src, items in FACTS.items():
     for s in items:
         ok(s in CO, f'D: mục Các công ty thiếu “{s}” ({src})')
-for s in ['0–20%', '59%', '1.000+', '19%', '20%']:
-    ok(s in HERO, f'D: đầu trang thiếu “{s}”')
+for s in ['0–20%', '59%', '1.000+', '19%', '20%', 'lỗi thời']:
+    ok(s in HERO, f'D: đầu trang thiếu “{s}” (số METR 2025 phải kèm lời METR đã ghi nó lỗi thời)')
 for s in ['khoảng 2.500 (05/2026)', 'hơn 30.000 (09/2026)', '16 dev', '246 issue', 'chậm hơn 19%', 'nhanh hơn 20%']:
     ok(s in TRA, f'D: mục Câu trả lời ngắn thiếu “{s}” (phải trùng thẻ nguồn)')
 for s in ['khoảng 4 lần', 'khoảng 15 lần']:
@@ -202,11 +205,17 @@ MUST = ['.claude-plugin/plugin.json', '.claude-plugin/marketplace.json', 'hooks/
         '--max-budget-usd', '--max-turns', 'claude plugin eval', 'anthropics/claude-code-action',
         '@AGENTS.md', 'extraKnownMarketplaces', 'enabledPlugins', 'Read(./.env)', 'PostToolUse', 'Stop hook',
         'read-only, workspace-write, danger-full-access', 'approval_policy', '/mcp/readonly', 'OAuth 2.1',
-        '~/.claude/projects/']
+        '~/.claude/projects/', 'stop_hook_active', 'CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1',
+        'sandbox.filesystem.denyRead', '"disableAllHooks": true']
 for s in MUST:
     ok(s in TXT, f'E: thiếu tên cơ chế đúng “{s}”')
+GL = {g['k']: g for g in G}
+ok('codex exec' in GL.get('headless', {}).get('w', ''), 'E: thuật ngữ headless phải ghi lệnh Codex là codex exec')
+# Tên sai hay gặp, và hai khẳng định đã sai: userConfig nhạy cảm không nằm ở "kho bí mật của hệ điều hành"
+# trên mọi máy (Linux, Windows là file quyền 0600), và sandbox mặc định không giới hạn việc đọc.
 WRONG = ['.claude/plugin.json', '.claude/hooks.json', '.claude/mcp.json', 'skill.md', '.codex/skills',
-         'AGENTS.local.md', 'plugin.yaml', 'mcp.yaml']
+         'AGENTS.local.md', 'plugin.yaml', 'mcp.yaml', 'kho bí mật của hệ điều hành',
+         'Kho bí mật của hệ điều hành', 'chỉ thấy thư mục và mạng được phép']
 for s in WRONG:
     ok(s not in TXT, f'E: có tên sai “{s}”')
 
@@ -228,6 +237,7 @@ if isinstance(pj, dict):
         ok(v.get('sensitive') is True, 'E: token trong userConfig phải sensitive: true')
         env = 'CLAUDE_PLUGIN_OPTION_' + k.upper()
         ok(env in TXT, f'E: biến hook cho userConfig phải là {env}')
+        ok('${user_config.%s}' % k in TXT, f'E: .mcp.json của plugin phải gọi token bằng ${{user_config.{k}}}')
 mj = examples.get('.mcp.json')
 if isinstance(mj, dict):
     for name, srv in mj.get('mcpServers', {}).items():
@@ -242,6 +252,14 @@ if isinstance(hj, dict):
     ok(ev <= {'PostToolUse', 'PreToolUse', 'Stop', 'SessionStart', 'UserPromptSubmit'}, f'E: hooks.json có sự kiện lạ: {ev}')
     stop = json.dumps(hj['hooks'].get('Stop', ''))
     ok('exit 2' in stop, 'E: Stop hook trong mẫu phải thoát bằng mã 2 để chặn việc dừng')
+    # Tài liệu Hooks: placeholder đường dẫn thì dùng exec form (có args); shell form phải bọc trong ngoặc kép.
+    for evname, groups in hj['hooks'].items():
+        for g in groups:
+            for h in g.get('hooks', []):
+                cmd = h.get('command', '')
+                if '${CLAUDE_PLUGIN_ROOT}' in cmd and 'args' not in h:
+                    ok(re.search(r'"\$\{CLAUDE_PLUGIN_ROOT\}[^"]*"', cmd) is not None,
+                       f'E: hook {evname} ở shell form phải bọc ${{CLAUDE_PLUGIN_ROOT}} trong ngoặc kép')
 skill = RAW[RAW.find('skills/fix-bug/SKILL.md <span>'):]
 ok(re.search(r'---\nname: fix-bug\ndescription: [^\n]+\ndisable-model-invocation: true\n---', skill) is not None,
    'E: mẫu SKILL.md phải mở bằng frontmatter name, description, disable-model-invocation')
