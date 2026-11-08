@@ -8589,7 +8589,7 @@ optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)</div>
   <h2>Vấn đề nó giải quyết</h2>
   <p>Mạng có 50.000 trọng số. Bạn cần biết: <b>nếu nhích trọng số thứ 37.412 lên một chút, sai số đổi bao nhiêu?</b> — cho cả 50.000 trọng số.</p>
   <p>Cách ngây thơ: nhích từng cái, chạy lại toàn mạng, đo chênh lệch. Cần 50.000 lần chạy cho <b>một</b> bước huấn luyện. Không khả thi.</p>
-  <p>Backprop tính hết 50.000 đạo hàm trong <b>một</b> lần chạy ngược, tốn xấp xỉ bằng một lần chạy xuôi. Đó là toàn bộ giá trị của nó, và là lý do deep learning khả thi về mặt tính toán.</p>
+  <p>Backprop tính hết 50.000 đạo hàm trong <b>một</b> lần chạy ngược, tốn cỡ hai, ba lần một lần chạy xuôi — bất kể mạng có bao nhiêu trọng số. Đó là toàn bộ giá trị của nó, và là lý do deep learning khả thi về mặt tính toán.</p>
 
   <h2>Cơ chế</h2>
   <p><button class="ds-math" data-math="chain">Quy tắc dây chuyền — ví dụ số, kiểm chứng được</button></p>
@@ -8647,7 +8647,7 @@ sched.step()</div>
     <tr><th>Kỹ thuật</th><th>Cơ chế</th><th>Giá trị</th></tr>
     <tr><td><b>Early stopping</b></td><td>Dừng khi validation ngừng cải thiện</td><td>patience = 5–10 epoch</td></tr>
     <tr><td><b>Dropout</b></td><td>Tắt ngẫu nhiên một phần nơ-ron mỗi lượt → mạng không dựa vào một đường duy nhất</td><td>0,1–0,5</td></tr>
-    <tr><td><b>Weight decay</b></td><td>L2 <button class="ds-math" data-math="reg">regularization</button></td><td>0,01 với AdamW</td></tr>
+    <tr><td><b>Weight decay</b></td><td>Kéo mọi trọng số về 0 một chút sau mỗi bước. Với SGD nó tương đương L2 <button class="ds-math" data-math="reg">regularization</button>; với Adam thì không, vì Adam chia gradient theo từng tham số — nên dùng <code>AdamW</code>, bản tách weight decay khỏi gradient</td><td>0,01 với AdamW</td></tr>
     <tr><td><b>Batch/Layer norm</b></td><td>Chuẩn hoá đầu ra mỗi lớp → train ổn định hơn</td><td>Gần như luôn dùng</td></tr>
   </table>
 
@@ -8765,7 +8765,7 @@ vec = emb(torch.tensor([1234]))   <i># → vector 32 chiều của cửa hàng #
   <h2>Vấn đề mà attention sinh ra để giải</h2>
   <p>Câu: <b>"Con mèo không băng qua đường vì <span style="text-decoration:underline">nó</span> quá mệt."</b></p>
   <p>"Nó" chỉ con mèo hay chỉ con đường? Bạn biết ngay là con mèo, vì đường không biết mệt. Nhưng mô hình chỉ thấy một dãy vector. Để biểu diễn từ "nó" cho đúng, mô hình <b>phải nhìn lại các từ khác trong câu</b>.</p>
-  <p>Trước 2017, RNN làm việc này bằng cách mang thông tin đi qua từng bước — như trò tam sao thất bản, thông tin nhoè dần. Attention làm điều đơn giản hơn nhiều: <b>cho mỗi từ hỏi thẳng mọi từ khác, cùng một lúc.</b></p>
+  <p>Trước Transformer (2017), mô hình ngôn ngữ chủ yếu dựa vào RNN (attention đã có từ 2014 nhưng chạy kèm RNN). RNN làm việc này bằng cách mang thông tin đi qua từng bước — như trò tam sao thất bản, thông tin nhoè dần. Attention làm điều đơn giản hơn nhiều: <b>cho mỗi từ hỏi thẳng mọi từ khác, cùng một lúc.</b></p>
 
   <h2>Ẩn dụ: thư viện</h2>
   <p>Bạn vào thư viện với một câu hỏi trong đầu.</p>

@@ -979,7 +979,7 @@
    }
   },
   "dl-backprop": {
-   "tldr": "Backpropagation chỉ là quy tắc dây chuyền của giải tích áp dụng có tổ chức: nó tính hết đạo hàm của mọi trọng số trong một lần chạy ngược, tốn xấp xỉ một lần chạy xuôi — đó là lý do deep learning khả thi về tính toán.",
+   "tldr": "Backpropagation chỉ là quy tắc dây chuyền của giải tích áp dụng có tổ chức: nó tính hết đạo hàm của mọi trọng số trong một lần chạy ngược, tốn cỡ hai, ba lần một lần chạy xuôi — đó là lý do deep learning khả thi về tính toán.",
    "points": [
     "Cách ngây thơ phải nhích từng trọng số rồi chạy lại toàn mạng: 50.000 trọng số = 50.000 lần chạy cho một bước train, không khả thi; backprop làm hết trong một lần chạy ngược",
     "Cơ chế: mạng là hàm lồng nhau loss(f3(f2(f1(x)))); backprop đi từ cuối về đầu, mỗi bước nhân thêm một đạo hàm cục bộ và tái sử dụng tích đã tính ở lớp sau",
@@ -1005,7 +1005,7 @@
    "points": [
     "Từ vựng: epoch (một lượt hết data), batch (số mẫu trước mỗi lần cập nhật, 32–512), step (một lần cập nhật = một batch); 100.000 mẫu với batch 256 = 391 step/epoch",
     "Learning rate là nút quan trọng nhất; lịch chuẩn OneCycleLR warmup rồi giảm dần theo cosine; lr ~1e-3 cho Adam, 1e-5 cho fine-tune",
-    "Chống overfit: early stopping (patience 5–10 epoch), Dropout (0,1–0,5), weight decay L2 (0,01 với AdamW), batch/layer norm",
+    "Chống overfit: early stopping (patience 5–10 epoch), Dropout (0,1–0,5), weight decay (0,01 với AdamW; chỉ tương đương L2 khi dùng SGD), batch/layer norm",
     "Đọc đường cong loss: valid quay đầu đi lên = overfit tại đó; loss nan = gradient nổ hoặc chia 0/log(0); valid tốt hơn train là bình thường khi có dropout (dropout tắt lúc đánh giá)",
     "Gỡ lỗi khi mạng không học: (1) thử overfit 100 mẫu tới loss ≈ 0 — không được là mã có lỗi (nhãn lệch hàng, quên zero_grad); (2) kiểm NaN/scale; (3) quét lr 1e-2/1e-3/1e-4; (4) loss khớp bài toán; (5) kiểm shape pred vs y",
     "Cho luận văn: dùng MLflow hoặc Weights & Biases ghi tự động tham số + đường cong loss; đường cong train/validation là một hình chuẩn mực của chương thực nghiệm"
@@ -1721,11 +1721,11 @@
   "pr-mlops": "3ffa8c82",
   "pr-cost": "71f422d2",
   "dl-nn": "103755a4",
-  "dl-backprop": "e42f3f57",
-  "dl-train": "b517dbc4",
+  "dl-backprop": "82abb53f",
+  "dl-train": "fa1075f1",
   "dl-embed": "c9d596c1",
   "dl-cnn-rnn": "e75141ec",
-  "dl-attn": "6ebeb013",
+  "dl-attn": "bc03fb14",
   "dl-tf": "be58647e",
   "dl-llm": "b6ea09a4",
   "dl-tab": "e06c5e83",
