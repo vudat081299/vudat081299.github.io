@@ -865,6 +865,33 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
 }</pre>
         <p class="aw-file__n">Khi bật plugin, Claude Code hỏi giá trị; <code>"sensitive": true</code> che chữ khi gõ và cất giá trị vào kho credential của Claude Code (Keychain trên macOS; trên Linux và Windows là file chỉ tài khoản của mình đọc được) thay vì <code>settings.json</code>. <code>.mcp.json</code> của plugin dùng nó qua <code>${user_config.billing_api_token}</code>; hook đọc qua biến <code>CLAUDE_PLUGIN_OPTION_BILLING_API_TOKEN</code>; trong nội dung skill, giá trị nhạy cảm bị thay bằng chỗ giữ, nên model không thấy nó.</p>
       </details>
+      <details class="aw-file">
+        <summary>.claude-plugin/marketplace.json <span>danh mục plugin của công ty</span></summary>
+<pre class="aw-code">{
+  "name": "team-ai",
+  "owner": { "name": "Nhóm nền tảng" },
+  "plugins": [
+    { "name": "eng",    "source": "./plugins/eng",
+      "description": "Skill, vai và hook chung của đội kỹ thuật" },
+    { "name": "eng-qa", "source": "./plugins/eng-qa",
+      "description": "Vai QA và skill kiểm thử" }
+  ]
+}</pre>
+        <p class="aw-file__n">File nằm ở gốc repo marketplace, ví dụ <code>example-org/ai-plugins</code>; mỗi plugin là một thư mục dưới <code>plugins/</code>. Bắt buộc có <code>name</code>, <code>owner</code> và <code>plugins</code>; mỗi mục cần <code>name</code> và <code>source</code>. Kiểm trước khi đẩy: <code>claude plugin validate .</code></p>
+      </details>
+      <details class="aw-file">
+        <summary>.claude/settings.json <span>repo tự bật plugin của đội</span></summary>
+<pre class="aw-code">{
+  "extraKnownMarketplaces": {
+    "team-ai": {
+      "source": { "source": "github", "repo": "example-org/ai-plugins" }
+    }
+  },
+  "enabledPlugins": { "eng@team-ai": true },
+  "permissions": { "deny": ["Read(./.env)", "Read(./secrets/**)"] }
+}</pre>
+        <p class="aw-file__n">Dev mới clone repo, chạy <code>claude</code> và chấp nhận hộp thoại tin thư mục; Claude Code đăng ký marketplace rồi nạp <code>eng</code>, vì plugin được liệt kê bằng đường dẫn trong chính repo marketplace. Marketplace riêng tư thì mỗi người cần quyền đọc repo ấy. Cài tay ngoài repo: <code>claude plugin marketplace add example-org/ai-plugins</code>, rồi <code>claude plugin install eng@team-ai</code>. Bắt buộc cho cả công ty thì đặt hai khoá này trong managed settings thay vì trong repo.</p>
+      </details>
 
       <h3 id="bi-mat">Mật khẩu và token: đi đường nào</h3>
       <div class="aw-tw">
@@ -1233,7 +1260,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         <li><a href="https://code.claude.com/docs/en/best-practices">Best practices for Claude Code</a> <span>— lời dặn và luật cứng; năm câu hỏi trước khi chạy không người trông; Stop hook.</span></li>
         <li><a href="https://code.claude.com/docs/en/claude-directory">Explore the .claude directory</a>, <a href="https://code.claude.com/docs/en/memory">Memory</a> <span>— file nào commit, CLAUDE.local.md, AGENTS.md, auto memory.</span></li>
         <li><a href="https://code.claude.com/docs/en/skills">Skills</a>, <a href="https://code.claude.com/docs/en/sub-agents">Subagents</a>, <a href="https://code.claude.com/docs/en/hooks">Hooks reference</a>, <a href="https://code.claude.com/docs/en/permissions">Permissions</a> <span>— frontmatter, mã thoát 2, deny/ask/allow, giới hạn của subagent trong plugin.</span></li>
-        <li><a href="https://code.claude.com/docs/en/mcp">MCP</a>, <a href="https://code.claude.com/docs/en/plugins/manifest-reference">Plugin manifest reference</a>, <a href="https://code.claude.com/docs/en/plugins/org">Plugins for organizations</a> <span>— OAuth, <code>${VAR}</code>, <code>userConfig</code> nhạy cảm, managed settings.</span></li>
+        <li><a href="https://code.claude.com/docs/en/mcp">MCP</a>, <a href="https://code.claude.com/docs/en/plugins/manifest-reference">Plugin manifest reference</a>, <a href="https://code.claude.com/docs/en/plugins/org">Plugins for organizations</a>, <a href="https://code.claude.com/docs/en/plugin-marketplaces">Create a marketplace</a>, <a href="https://code.claude.com/docs/en/env-vars">Environment variables</a>, <a href="https://code.claude.com/docs/en/sandboxing">Sandboxing</a> <span>— OAuth, <code>${VAR}</code>, <code>userConfig</code> nhạy cảm, managed settings, <code>marketplace.json</code>, gỡ credential khỏi tiến trình con.</span></li>
         <li><a href="https://code.claude.com/docs/en/github-actions">Claude Code GitHub Actions</a>, <a href="https://code.claude.com/docs/en/glossary">Glossary</a>, <a href="https://code.claude.com/docs/en/security">Security</a></li>
         <li><a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md">Custom instructions with AGENTS.md</a>, <a href="https://learn.chatgpt.com/docs/build-skills">Build skills</a>, <a href="https://learn.chatgpt.com/docs/agent-configuration/subagents">Subagents</a>, <a href="https://learn.chatgpt.com/docs/extend/mcp">MCP</a>, <a href="https://learn.chatgpt.com/docs/hooks">Hooks</a>, <a href="https://learn.chatgpt.com/docs/agent-configuration/rules">Rules</a>, <a href="https://learn.chatgpt.com/docs/sandboxing">Sandboxing</a> <span>— tài liệu Codex của OpenAI.</span></li>
         <li><a href="https://agents.md/">AGENTS.md</a>, <a href="https://agentskills.io/">Agent Skills</a> <span>— hai định dạng mở.</span></li>

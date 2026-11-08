@@ -20,7 +20,8 @@ Bảy phần:
   D. CON SỐ TỪ NGUỒN — mỗi con số phải có mặt trong đúng mục; số ở đầu trang và ở mục trả lời ngắn phải
      trùng số ở thẻ nguồn; phần trăm suy ra được (9,8 → 21,2 là +116%) tính lại.
   E. CƠ CHẾ SẢN PHẨM — đường dẫn và khoá cấu hình đúng tên phải có mặt, những tên sai hay gặp phải vắng;
-     ba mẫu JSON (hooks.json, .mcp.json, plugin.json) phải là JSON hợp lệ; tên biến
+     năm mẫu JSON (hooks.json, .mcp.json, plugin.json, marketplace.json, .claude/settings.json) phải là
+     JSON hợp lệ, và tên plugin, tên marketplace khớp nhau giữa ba mẫu cuối; tên biến
      CLAUDE_PLUGIN_OPTION_<KHOÁ> và chỗ thay ${user_config.<khoá>} tính từ khoá userConfig trong mẫu;
      hook nhắc ${CLAUDE_PLUGIN_ROOT} phải ở exec form (có args) hoặc bọc placeholder trong ngoặc kép;
      mẫu .mcp.json không có giá trị bí mật.
@@ -222,7 +223,8 @@ for s in WRONG:
 examples = {}
 for title, body in re.findall(r'<summary>([^<]+?) <span>[^<]*</span></summary>\s*<pre class="aw-code">(.*?)</pre>', RAW, re.S):
     examples[title.strip()] = html.unescape(body)
-for name in ('hooks/hooks.json', '.mcp.json', '.claude-plugin/plugin.json'):
+for name in ('hooks/hooks.json', '.mcp.json', '.claude-plugin/plugin.json', '.claude-plugin/marketplace.json',
+             '.claude/settings.json'):
     ok(name in examples, f'E: thiếu mẫu {name}')
     if name in examples:
         try:
@@ -238,6 +240,24 @@ if isinstance(pj, dict):
         env = 'CLAUDE_PLUGIN_OPTION_' + k.upper()
         ok(env in TXT, f'E: biến hook cho userConfig phải là {env}')
         ok('${user_config.%s}' % k in TXT, f'E: .mcp.json của plugin phải gọi token bằng ${{user_config.{k}}}')
+# Tài liệu Plugin marketplaces: marketplace.json bắt buộc name, owner.name, plugins[]; mỗi mục name + source.
+# Settings của repo: khoá extraKnownMarketplaces là name của marketplace; enabledPlugins là <plugin>@<marketplace>.
+mk = examples.get('.claude-plugin/marketplace.json')
+st = examples.get('.claude/settings.json')
+if isinstance(mk, dict) and isinstance(pj, dict):
+    ok(bool(mk.get('name')) and bool(mk.get('owner', {}).get('name')) and isinstance(mk.get('plugins'), list),
+       'E: marketplace.json phải có name, owner.name và mảng plugins')
+    for e in mk.get('plugins', []):
+        ok(bool(e.get('name')) and str(e.get('source', '')).startswith('./'),
+           f'E: mục plugin {e.get("name")} trong marketplace.json cần name và source dạng ./đường-dẫn')
+    ok(pj.get('name') in [e.get('name') for e in mk.get('plugins', [])],
+       'E: plugin trong mẫu plugin.json phải có mặt trong mẫu marketplace.json')
+    if isinstance(st, dict):
+        ok(set(st.get('extraKnownMarketplaces', {})) == {mk['name']},
+           'E: extraKnownMarketplaces phải khoá theo name của marketplace.json')
+        ok(f'{pj.get("name")}@{mk["name"]}' in st.get('enabledPlugins', {}),
+           'E: enabledPlugins phải ghi <plugin>@<marketplace> khớp hai mẫu')
+        ok('Read(./.env)' in st.get('permissions', {}).get('deny', []), 'E: settings mẫu phải deny Read(./.env)')
 mj = examples.get('.mcp.json')
 if isinstance(mj, dict):
     for name, srv in mj.get('mcpServers', {}).items():
