@@ -7,7 +7,6 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-001 · Nội dung trước, UI sau · `repo`
 - REPO-002 · Mô tả trên trang chủ chỉ nói chủ đề · `data/collection.json`
 - REPO-003 · Trang chủ tự chứa, không dùng bộ web-builder · `index.html`
-- REPO-005 · Thứ tự 8 section của trang chủ · `data/collection.json`
 - REPO-006 · Các môn cao học giữ thứ tự hiện có · `data/collection.json`
 - REPO-007 · Danh sách WITHHELD do chủ trang quyết, không ghi lý do · `tools/lint-collection.py`, `.github/workflows/deploy.yml`
 - REPO-008 · Trang sách: cắt câu không mang kiến thức · `pages/*.html`, `cooking/*.html`
@@ -22,6 +21,8 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-018 · Tài liệu .md viết ngắn và thẳng · `repo`
 - REPO-019 · Không chặn force-push ở GitHub · `repo`
 - REPO-021 · Trang chủ có một danh sách ẩn, bật bằng ⇧? hoặc gõ ? vào ô tìm kiếm · `data/collection.json`, `index.html`
+- REPO-022 · Trang chủ gom section thành ba khu, khu đầu là việc đang học · `data/collection.json`
+- REPO-023 · Trang chủ đen, trắng, một màu xanh lá · `index.html`
 
 Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md), [`shop/DECISIONS.md`](shop/DECISIONS.md).
 <!-- index:end -->
@@ -41,12 +42,6 @@ ngụy biện"), đếm bộ phận trang thì không ("16 mô hình tương tá
 21/09/2026 · `index.html`
 
 `index.html` có `<style>` riêng (prefix `ix-`), không link `web-builder.css`. Đừng ráp lại vào bộ.
-
-## REPO-005 · Thứ tự 8 section của trang chủ
-21/09/2026 · `data/collection.json`
-
-`Everyday` · `Cooking` · `Book Summaries` · `Thinking & Communication` · `Tools` · `Science` · `Data & AI` ·
-`Master's Degree`. Đừng tự đổi.
 
 ## REPO-006 · Các môn cao học giữ thứ tự hiện có
 21/09/2026 · `data/collection.json`
@@ -120,10 +115,23 @@ Mỗi dòng một ý, chỉ ghi luật đang áp dụng, không kể lịch sử
 Chủ trang để `main` cho phép force-push. Agent vẫn phải hỏi trước khi force-push (CLAUDE.md gốc, mục Git).
 
 ## REPO-021 · Trang chủ có một danh sách ẩn, bật bằng ⇧? hoặc gõ ? vào ô tìm kiếm
-05/11/2026 · `data/collection.json`, `index.html` · thay cho REPO-020
+08/11/2026 · `data/collection.json`, `index.html` · thay cho REPO-020
 
-Khoá `hold` trong `collection.json` là danh sách ẩn. Máy tính: ⇧? (Shift + phím `/`) bật bảng, thả phím vẫn hiện;
-⇧? lần nữa, bấm ra ngoài bảng hoặc Esc thì ẩn. Điện thoại: gõ đúng `?` vào ô tìm kiếm thì bảng hiện. Trang trong đó
-vẫn deploy; đây là giấu link, không phải bảo mật. Trong đó: Wealth Roadmap, Hidden Curriculum (PAGES-005), Scooter
-Maintenance, Fact, Cashy, Loto, scentsitive.vn, Web Builder. Sáu mục sau chuyển hẳn từ `sections` sang
-(03/10/2026): mất phím tắt, không còn ở chỗ cũ.
+Khoá `hold` trong `collection.json` là danh sách ẩn, chia nhóm: Money & Career (Wealth Roadmap, Hidden Curriculum,
+Cashy), Projects (scentsitive.vn, Web Builder, Loto), Reference (Fact, Scooter Maintenance). Máy tính: ⇧? (Shift +
+phím `/`) bật bảng nổi, thả phím vẫn hiện; ⇧? lần nữa, bấm ra ngoài, nút đóng hoặc Esc thì ẩn. Điện thoại: gõ đúng
+`?` vào ô tìm kiếm thì bảng hiện thành bottom sheet. Trang trong đó vẫn deploy; đây là giấu link, không phải bảo mật.
+
+## REPO-022 · Trang chủ gom section thành ba khu, khu đầu là việc đang học
+08/11/2026 · `data/collection.json` · thay cho REPO-005
+
+Now studying: Master's Degree, Data & AI. Foundations: Science, Thinking & Communication, Book Summaries. Life &
+Tools: Everyday, Cooking, Tools. Khu đầu được tô nổi để việc đang học dễ với tới nhất. Class Schedule đứng đầu
+Master's Degree. Data & AI theo lộ trình: ML 101 → Mathematics for ML → ML & DL → Experimentation & Causal →
+Working with AI. Đừng tự đổi.
+
+## REPO-023 · Trang chủ đen, trắng, một màu xanh lá
+08/11/2026 · `index.html`
+
+Có theme sáng và tối; chưa chọn thì theo hệ điều hành (khoá `hub-theme`). Xanh lá chỉ cho thứ mắt cần tìm: khu
+đang học, số section, chip phím khi rê, focus. Chữ nào cũng ≥ 4,5:1 trên nền thật của nó (`tools/smoke-index.js` đo).
