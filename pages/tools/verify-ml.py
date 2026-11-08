@@ -213,6 +213,7 @@ def run_ml():
 
     run_ml_models()
     run_ml_r3()
+    run_ml_r4()
 
 
 def run_ml_models():
@@ -850,6 +851,138 @@ def run_ml_r3():
           int(md.group(1)) * 10 + int(md.group(2)) + int(md.group(7)) * 10 + int(md.group(8)) == 10 and
           int(md.group(3)) * 10 + int(md.group(4)) + int(md.group(5)) * 10 + int(md.group(6)) == 10,
           'keep_prob = 1 − tỉ lệ tắt')
+
+
+def run_ml_r4():
+    """Lượt rà vòng 4 (đối kháng, công thức) của machine-learning.html: bốn dòng backprop dạng ma
+    trận, Adam đủ hiệu chỉnh chệch, công thức batch norm, information gain bằng số, hai hình mới
+    (#s-deep, #s-trees). Công thức được kiểm bằng cách CHẠY nó, không chỉ tìm chuỗi."""
+    import math
+    import random
+    import re
+
+    def sec(sid):
+        i = HTML.find(f'<section id="{sid}"')
+        return HTML[i:HTML.find('</section>', i)] if i >= 0 else ''
+
+    # ── backprop: bốn dòng in trên trang, rồi chạy đúng bốn dòng ấy trên một mạng 2 lớp và so với sai phân ──
+    bp = sec('s-backprop')
+    for label, s in (('dZ', 'dZ<sup>[l]</sup> = dA<sup>[l]</sup> ⊙ g<sup>[l]</sup>′(Z<sup>[l]</sup>)'),
+                     ('dW', 'dW<sup>[l]</sup> = <sup>1</sup>⁄<sub>m</sub> dZ<sup>[l]</sup> A<sup>[l−1]</sup><sup>T</sup>'),
+                     ('db', 'db<sup>[l]</sup> = <sup>1</sup>⁄<sub>m</sub> Σ<sub>i</sub> dZ<sup>[l](i)</sup>'),
+                     ('dA', 'dA<sup>[l−1]</sup> = W<sup>[l]</sup><sup>T</sup> dZ<sup>[l]</sup>'),
+                     ('lớp ra', 'dZ<sup>[L]</sup> = A<sup>[L]</sup> − Y')):
+        need(f'#s-backprop: dòng {label}', s)
+
+    rnd = random.Random(7)
+    n0, n1, m = 3, 4, 5
+    mat = lambda r, c: [[rnd.gauss(0, 1) for _ in range(c)] for _ in range(r)]
+    X, W1, b1, W2, b2 = mat(n0, m), mat(n1, n0), mat(n1, 1), mat(1, n1), mat(1, 1)
+    Y = [[float(rnd.random() > 0.5) for _ in range(m)]]
+    mm = lambda A, B: [[sum(A[i][k] * B[k][j] for k in range(len(B))) for j in range(len(B[0]))] for i in range(len(A))]
+    T = lambda A: [list(r) for r in zip(*A)]
+    addb = lambda Z, b: [[z + b[i][0] for z in row] for i, row in enumerate(Z)]
+    sg = lambda z: 1 / (1 + math.exp(-z))
+
+    def fwd():
+        Z1 = addb(mm(W1, X), b1)
+        A1 = [[max(0.0, z) for z in r] for r in Z1]
+        A2 = [[sg(z) for z in r] for r in addb(mm(W2, A1), b2)]
+        J = -sum(Y[0][j] * math.log(A2[0][j]) + (1 - Y[0][j]) * math.log(1 - A2[0][j]) for j in range(m)) / m
+        return Z1, A1, A2, J
+
+    Z1, A1, A2, _ = fwd()
+    dZ2 = [[A2[0][j] - Y[0][j] for j in range(m)]]                        # dZ[L] = A[L] − Y
+    dW2 = [[v / m for v in r] for r in mm(dZ2, T(A1))]                    # dW = 1/m dZ A[l−1]ᵀ
+    db2 = [[sum(r) / m] for r in dZ2]                                     # db = 1/m Σ dZ
+    dA1 = mm(T(W2), dZ2)                                                  # dA[l−1] = W[l]ᵀ dZ
+    dZ1 = [[dA1[i][j] * (Z1[i][j] > 0) for j in range(m)] for i in range(n1)]   # dZ = dA ⊙ g′(Z)
+    dW1 = [[v / m for v in r] for r in mm(dZ1, T(X))]
+    db1 = [[sum(r) / m] for r in dZ1]
+    worst = 0.0
+    for P, G in ((W1, dW1), (b1, db1), (W2, dW2), (b2, db2)):
+        claim('#s-backprop: dX cùng kích thước X', len(P) == len(G) and len(P[0]) == len(G[0]))
+        for i in range(len(P)):
+            for j in range(len(P[0])):
+                P[i][j] += 1e-6; jp = fwd()[3]; P[i][j] -= 2e-6; jm = fwd()[3]; P[i][j] += 1e-6
+                worst = max(worst, abs((jp - jm) / 2e-6 - G[i][j]))
+    claim('#s-backprop: bốn dòng khớp gradient sai phân', worst < 1e-6, f'lệch tối đa {worst:.2e}')
+    claim('#s-backprop: link gradient checking trỏ #s-init, không gọi nó là "mục ngay dưới"',
+          '<a href="#s-init">mục ngay dưới</a>' not in HTML)
+
+    # ── #s-deep: hình kích thước — cột của W = hàng của A, Z = hàng W × cột A, b = hàng W × 1 ──
+    fig = HTML[HTML.find('id="deep-dims"'):HTML.find('</svg>', HTML.find('id="deep-dims"'))]
+    dims = re.findall(r'style="font-size:13px">(\d) × (\d)</text>', fig)
+    claim('#s-deep: hình có bốn kích thước W, A, b, Z', len(dims) == 4, f'đọc được {dims}')
+    if len(dims) == 4:
+        (wr, wc), (ar, ac), (br, bc), (zr, zc) = [(int(a), int(b)) for a, b in dims]
+        claim('#s-deep: cột W = hàng A', wc == ar, f'{wr}×{wc} · {ar}×{ac}')
+        claim('#s-deep: Z = hàng W × cột A', (zr, zc) == (wr, ac), f'Z {zr}×{zc}')
+        claim('#s-deep: b là hàng W × 1', (br, bc) == (wr, 1), f'b {br}×{bc}')
+        need('#s-deep: chú thích khớp số', f'Một lớp {wr} nơ-ron, lớp trước {wc} nơ-ron, lô {ac} ví dụ.')
+        # mỗi ô của lưới là một số: ô 20 đơn vị, nên bề rộng/chiều cao rect phải đúng cột/hàng × 20
+        rects = re.findall(r'<rect x="\d+" y="\d+" width="(\d+)" height="(\d+)" rx="3" style="fill:var\(--m-bg\)', fig)
+        claim('#s-deep: lưới ô vẽ đúng kích thước', [(int(w) // 20, int(h) // 20) for w, h in rects]
+              == [(wc, wr), (ac, ar), (bc, br), (zc, zr)], f'{rects}')
+
+    # ── Adam: đủ ba dòng, và hiệu chỉnh chệch ở t = 1 trả lại đúng dw, dw² ──
+    op = sec('s-optim')
+    for s in ('v := β₁v + (1−β₁)·dw', 's := β₂s + (1−β₂)·dw²', 'v̂ = v / (1 − β₁<sup>t</sup>)',
+              'ŝ = s / (1 − β₂<sup>t</sup>)', 'w := w − α·v̂ / (√ŝ + ε)'):
+        claim(f'#s-optim: Adam có "{s}"', s in op)
+    b1_, b2_, g = 0.9, 0.999, 0.37
+    v, s2 = (1 - b1_) * g, (1 - b2_) * g * g
+    claim('Adam t=1: v̂ = dw, ŝ = dw²', abs(v / (1 - b1_) - g) < 1e-12 and abs(s2 / (1 - b2_) - g * g) < 1e-12)
+    claim('Adam t=1: hệ số in trên trang (0,1 và 0,001)', abs((1 - b1_) - 0.1) < 1e-12 and abs((1 - b2_) - 0.001) < 1e-12
+          and 'v = 0,1·dw và s = 0,001·dw²' in op)
+
+    # ── batch norm: công thức, và γ = √(σ²+ε), β = µ trả lại đúng z ──
+    rg = sec('s-regdl')
+    for s in ('z<sub>norm</sub><sup>(i)</sup> = (z<sup>(i)</sup> − µ) / √(σ² + ε)', 'z̃<sup>(i)</sup> = γ·z<sub>norm</sub><sup>(i)</sup> + β',
+              'σ² = <sup>1</sup>⁄<sub>m</sub> Σ<sub>i</sub> (z<sup>(i)</sup> − µ)²'):
+        claim(f'#s-regdl: batch norm có "{s[:30]}…"', s in rg)
+    zs = [rnd.gauss(3, 2) for _ in range(8)]
+    mu = sum(zs) / 8; var = sum((z - mu) ** 2 for z in zs) / 8; eps = 1e-8
+    zn = [(z - mu) / math.sqrt(var + eps) for z in zs]
+    claim('batch norm: z_norm trung bình 0, phương sai ≈ 1', abs(sum(zn) / 8) < 1e-12 and abs(sum(q * q for q in zn) / 8 - 1) < 1e-6)
+    claim('batch norm: γ = √(σ²+ε), β = µ trả lại z', all(abs(math.sqrt(var + eps) * q + mu - z) < 1e-9 for q, z in zip(zn, zs)))
+
+    # ── #s-trees: information gain của ví dụ Ng, và hai hình ──
+    tr = sec('s-trees')
+    H = lambda p: 0.0 if p in (0, 1) else -p * math.log2(p) - (1 - p) * math.log2(1 - p)
+    gain = lambda nl, cl, nr, cr: H(0.5) - (nl / 10 * H(cl / nl) + nr / 10 * H(cr / nr))
+    for name, args, want in (('hình tai', (5, 4, 5, 1), '0,28'), ('mặt tròn', (7, 4, 3, 1), '0,03'), ('có ria', (4, 3, 6, 2), '0,12')):
+        gv = gain(*args)
+        claim(f'#s-trees: gain {name} ≈ {want}', vi(gv, 2) == want, f'tính ra {gv:.4f}')
+        need(f'#s-trees: gain {name}', f'≈ <b>{want}</b>', gv)
+        claim(f'#s-trees: số con {name} cộng đủ 10, số mèo cộng đủ 5', args[0] + args[2] == 10 and args[1] + args[3] == 5)
+    claim('#s-trees: H(0,8) = H(0,2) ≈ 0,72', vi(H(0.8), 2) == '0,72' and abs(H(0.8) - H(0.2)) < 1e-12)
+    need('#s-trees: H(0,8)', 'H(0,8) = H(0,2) ≈ 0,72')
+    claim('#s-trees: hình tai thắng', gain(5, 4, 5, 1) > max(gain(7, 4, 3, 1), gain(4, 3, 6, 2)))
+    # hình hộp: mọi chấm đặc nằm trong một hộp nền xanh, mọi chấm rỗng nằm ngoài
+    box = tr[tr.find('id="tree-boxes"'):tr.find('</svg>', tr.find('id="tree-boxes"'))]
+    regs = [tuple(map(int, r)) for r in re.findall(r'<rect x="(\d+)" y="(\d+)" width="(\d+)" height="(\d+)" style="fill:var\(--m-bg\)"', box)]
+    dots = re.findall(r'<circle cx="(\d+)" cy="(\d+)" r="4.5" style="fill:var\(--(m|surface)\)', box)
+    inside = lambda x, y: any(a <= x <= a + w and b <= y <= b + h for a, b, w, h in regs)
+    bad = [(x, y, f) for x, y, f in dots if inside(int(x), int(y)) != (f == 'm')]
+    claim('#s-trees: hình hộp có hai vùng nền và đủ chấm', len(regs) == 2 and len(dots) >= 20, f'{len(regs)} vùng, {len(dots)} chấm')
+    claim('#s-trees: mỗi chấm nằm đúng hộp của lớp nó', not bad, f'lệch: {bad}')
+    claim('#s-trees: ba nhát cắt', len(re.findall(r'style="stroke:var\(--ink\);stroke-width:1.8"', box)) == 3)
+    # đồ thị H(p): chấm ở p = 0,2 / 0,5 / 0,8 nằm đúng trên đường (trục: x 40→284, y 186→18)
+    ent = tr[tr.find('id="tree-entropy"'):tr.find('</svg>', tr.find('id="tree-entropy"'))]
+    pts = [(float(a), float(b)) for a, b in re.findall(r'<circle cx="([\d.]+)" cy="([\d.]+)" r="4"', ent)]
+    want = [(40 + 244 * p, 186 - 168 * H(p)) for p in (0.2, 0.5, 0.8)]
+    claim('#s-trees: ba chấm của H(p) nằm đúng chỗ', len(pts) == 3 and all(abs(a - c) < 0.1 and abs(b - d) < 0.1
+          for (a, b), (c, d) in zip(pts, want)), f'{pts}')
+
+    # ── sửa chính xác nhỏ (vòng 4) ──
+    for label, s in (('đa thức qua 20 điểm là bậc 19', 'Một đa thức bậc 19 đi qua đúng 20 điểm'),
+                     ('XOR: loại cổng', 'lớp ẩn gồm các cổng AND, OR, NOT thì cần <b>2<sup>n−1</sup></b> cổng'),
+                     ('ResNet: g(a) = a cần a không âm', 'vì a<sup>[l]</sup> đã qua ReLU nên không âm'),
+                     ('beam: chuẩn hoá theo độ dài là T mũ 0,7', '<b>chia cho T<sup>0,7</sup></b>, T là số từ')):
+        need(label, s)
+    claim('thứ tự siêu tham số: không nói quá lời Ng', 'quan trọng hơn tất cả phần còn lại cộng lại' not in HTML)
+    claim('XOR: 2^(n−1) với n = 30 là hơn nửa tỉ', 5e8 < 2 ** 29 < 6e8)
 
 
 # ════════════════════════ machine-learning-101.html ════════════════════════

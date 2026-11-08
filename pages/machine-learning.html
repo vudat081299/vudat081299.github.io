@@ -714,7 +714,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="box__t">"Mô hình khớp dữ liệu càng sát thì càng tốt."</p>
           <div class="row">
             <span class="k">Nghe có lý vì</span><span>ta huấn luyện bằng cách <i>giảm sai số</i>, nên sai số nhỏ hơn nghe hiển nhiên là tốt hơn.</span>
-            <span class="k">Chỗ sai</span><span>sai số nhỏ trên dữ liệu <b>đã thấy</b> không nói gì về dữ liệu <b>chưa thấy</b>. Một đa thức bậc 20 đi qua đúng 20 điểm dữ liệu sẽ có sai số bằng 0 và <i>dự đoán bậy hoàn toàn</i> ở điểm thứ 21. Bạn sẽ tự tay dựng ra thảm hoạ này ở <a href="#s-overfit">mô hình 5</a>.</span>
+            <span class="k">Chỗ sai</span><span>sai số nhỏ trên dữ liệu <b>đã thấy</b> không nói gì về dữ liệu <b>chưa thấy</b>. Một đa thức bậc 19 đi qua đúng 20 điểm dữ liệu sẽ có sai số bằng 0 và <i>dự đoán bậy hoàn toàn</i> ở điểm thứ 21. Bạn sẽ tự tay dựng ra thảm hoạ này ở <a href="#s-overfit">mô hình 5</a>.</span>
           </div>
         </div>
 
@@ -1517,7 +1517,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="box note">
           <p class="box__k">Lập luận toán học, gọn</p>
-          <p>Ng dùng ví dụ từ lý thuyết mạch: tính XOR của <i>n</i> bit. Với một cây nhị phân sâu <span class="mono">log₂ n</span> lớp, bạn cần khoảng <i>n</i> cổng. Ép nó xuống <b>một</b> lớp ẩn thì cần <b>2<sup>n−1</sup></b> cổng — với n = 30 là hơn nửa tỉ. Cùng một hàm, cùng khả năng biểu diễn, nhưng chi phí chênh nhau giữa "chạy được" và "không bao giờ".</p>
+          <p>Ng dùng ví dụ từ lý thuyết mạch logic: tính XOR của <i>n</i> bit. Xếp các cổng XOR thành một cây nhị phân sâu <span class="mono">log₂ n</span> lớp, bạn cần khoảng <i>n</i> cổng. Ép nó xuống <b>một</b> lớp ẩn gồm các cổng AND, OR, NOT thì cần <b>2<sup>n−1</sup></b> cổng — với n = 30 là hơn nửa tỉ. Cùng một hàm, cùng khả năng biểu diễn, nhưng chi phí chênh nhau giữa "chạy được" và "không bao giờ".</p>
         </div>
 
         <div class="lab" id="m7">
@@ -1568,6 +1568,40 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <li><span class="mono">b<sup>[l]</sup></span>: n<sup>[l]</sup> hàng × 1 cột, được cộng vào mọi cột (numpy gọi là broadcasting).</li>
           <li>Kết quả <span class="mono">Z<sup>[l]</sup></span> và <span class="mono">A<sup>[l]</sup></span>: n<sup>[l]</sup> hàng × m cột.</li>
         </ul>
+        <figure style="margin:18px 0 8px">
+          <svg class="viz viz--plain" id="deep-dims" viewBox="0 0 494 200" role="img" aria-label="Phép tính Z bằng W nhân A cộng b với lớp 3 nơ-ron, lớp trước 4 nơ-ron, lô 5 ví dụ: W 3 nhân 4, A 4 nhân 5, b 3 nhân 1 chép ra mọi cột, Z 3 nhân 5" style="max-width:560px;margin:0 auto">
+            <rect x="16" y="54" width="80" height="60" rx="3" style="fill:var(--m-bg);stroke:var(--m);stroke-width:1.6"/>
+            <path d="M36 54V114M56 54V114M76 54V114M16 74H96M16 94H96" style="fill:none;stroke:var(--m);stroke-width:.6;opacity:.45"/>
+            <text class="vm" x="56" y="44" text-anchor="middle" style="font-size:14px">W<tspan dy="-5" style="font-size:10px">[l]</tspan></text>
+            <text class="vm" x="56" y="138" text-anchor="middle" style="font-size:13px">3 × 4</text>
+            <text class="vs" x="56" y="155" text-anchor="middle" style="font-size:12px">n[l] × n[l−1]</text>
+            <text class="vt" x="106" y="90" text-anchor="middle" style="font-size:18px">·</text>
+            <rect x="118" y="44" width="100" height="80" rx="3" style="fill:var(--m-bg);stroke:var(--m);stroke-width:1.6"/>
+            <path d="M138 44V124M158 44V124M178 44V124M198 44V124M118 64H218M118 84H218M118 104H218" style="fill:none;stroke:var(--m);stroke-width:.6;opacity:.45"/>
+            <text class="vm" x="168" y="34" text-anchor="middle" style="font-size:14px">A<tspan dy="-5" style="font-size:10px">[l−1]</tspan></text>
+            <text class="vm" x="168" y="144" text-anchor="middle" style="font-size:13px">4 × 5</text>
+            <text class="vs" x="168" y="161" text-anchor="middle" style="font-size:12px">n[l−1] × m</text>
+            <text class="vt" x="232" y="90" text-anchor="middle" style="font-size:18px">+</text>
+            <rect x="246" y="54" width="20" height="60" rx="3" style="fill:var(--m-bg);stroke:var(--m);stroke-width:1.6"/>
+            <path d="M246 74H266M246 94H266" style="fill:none;stroke:var(--m);stroke-width:.6;opacity:.45"/>
+            <text class="vm" x="256" y="44" text-anchor="middle" style="font-size:14px">b<tspan dy="-5" style="font-size:10px">[l]</tspan></text>
+            <text class="vm" x="256" y="138" text-anchor="middle" style="font-size:13px">3 × 1</text>
+            <text class="vs" x="256" y="155" text-anchor="middle" style="font-size:12px">n[l] × 1</text>
+            <rect x="268" y="54" width="80" height="60" rx="3" style="fill:none;stroke:var(--m);stroke-width:1.6;stroke-dasharray:4 3"/>
+            <path d="M288 54V114M308 54V114M328 54V114M268 74H348M268 94H348" style="fill:none;stroke:var(--m);stroke-width:.6;opacity:.45"/>
+            <text class="vs" x="316" y="46" text-anchor="middle" style="font-size:11px">chép ra mọi cột</text>
+            <text class="vt" x="364" y="90" text-anchor="middle" style="font-size:18px">=</text>
+            <rect x="378" y="54" width="100" height="60" rx="3" style="fill:var(--m-bg);stroke:var(--m);stroke-width:1.6"/>
+            <path d="M398 54V114M418 54V114M438 54V114M458 54V114M378 74H478M378 94H478" style="fill:none;stroke:var(--m);stroke-width:.6;opacity:.45"/>
+            <text class="vm" x="428" y="44" text-anchor="middle" style="font-size:14px">Z<tspan dy="-5" style="font-size:10px">[l]</tspan></text>
+            <text class="vm" x="428" y="138" text-anchor="middle" style="font-size:13px">3 × 5</text>
+            <text class="vs" x="428" y="155" text-anchor="middle" style="font-size:12px">n[l] × m</text>
+            <path d="M16 119H96" style="stroke:var(--ink);stroke-width:3"/>
+            <path d="M113 44V124" style="stroke:var(--ink);stroke-width:3"/>
+            <text class="vs" x="247" y="190" text-anchor="middle" style="font-size:12.5px;fill:var(--ink)">4 cột của W khớp 4 hàng của A; Z lấy số hàng của W, số cột của A</text>
+          </svg>
+          <figcaption style="font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.6">Một lớp 3 nơ-ron, lớp trước 4 nơ-ron, lô 5 ví dụ. Mỗi ô là một số. Hai vạch đậm đánh dấu hai chiều phải bằng nhau.</figcaption>
+        </figure>
         <p>Luật kiểm chiều Ng dạy (<i>Getting your matrix dimensions right</i>): số cột của W<sup>[l]</sup> phải bằng số hàng của A<sup>[l−1]</sup>. Sai chiều là lỗi hay gặp nhất khi tự viết mạng; in <span class="mono">.shape</span> của từng lớp ra là bắt được. Nhân ma trận với ma trận: <a href="mathematics-for-machine-learning.html#s-matrix">trang Toán 1.6</a>.</p>
 
         <div class="take"><span class="k">Mang theo</span><p>Độ sâu không mua thêm khả năng biểu diễn về lý thuyết — nó mua <b>hiệu quả</b>: với nhiều hàm có cấu trúc tầng lớp, cần ít tham số hơn theo cấp số nhân. Và cái giá là bề mặt chi phí không còn lồi, nên kết quả phụ thuộc vào khởi tạo.</p></div>
@@ -1610,9 +1644,28 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           </div>
         </div>
 
+        <h3>Bốn dòng cho cả mạng, cả lô m ví dụ</h3>
+        <p>Mô hình 8 làm cho một nơ-ron và một ví dụ. Với mạng L lớp chạy cả lô (Z, A, W, b và kích thước của chúng ở <a href="#s-deep">mục mạng sâu</a>), Ng viết <span class="mono">dZ<sup>[l]</sup></span> cho ma trận n<sup>[l]</sup> × m mà cột i là ∂L/∂z<sup>[l]</sup> của ví dụ thứ i (<span class="mono">dA<sup>[l]</sup></span> cũng vậy, với a thay z); còn <span class="mono">dW<sup>[l]</sup>, db<sup>[l]</sup></span> là ∂J/∂W<sup>[l]</sup>, ∂J/∂b<sup>[l]</sup>, gradient của chi phí trung bình mà gradient descent cần. Đi từ <span class="mono">l = L</span> lùi về <span class="mono">l = 1</span>, mỗi lớp bốn dòng:</p>
+        <div class="fx">
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-o" data-n="Nhân <b>từng phần tử</b> (⊙) gradient theo đầu ra của lớp với đạo hàm hàm kích hoạt tại Z đã giữ lại từ bước xuôi. ReLU: g′ bằng 1 ở chỗ z &gt; 0, bằng 0 ở chỗ còn lại. Ở lớp ra sigmoid + log loss, dòng này gộp với đạo hàm của mất mát thành đúng <b>dZ<sup>[L]</sup> = A<sup>[L]</sup> − Y</b>, phép triệt tiêu của mô hình 8.">dZ<sup>[l]</sup> = dA<sup>[l]</sup> ⊙ g<sup>[l]</sup>′(Z<sup>[l]</sup>)</span>
+          </div>
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-o" data-n="(n<sup>[l]</sup> × m) nhân (m × n<sup>[l−1]</sup>) ra n<sup>[l]</sup> × n<sup>[l−1]</sup>, đúng cỡ W<sup>[l]</sup>. Tích ma trận cộng sẵn đóng góp của m ví dụ; chia m vì J là <b>trung bình</b> của m mất mát. Để ý chỉ số: dW của lớp l dùng A của lớp <b>l − 1</b>, tức đầu vào của lớp ấy (với l = 1 là X).">dW<sup>[l]</sup> = <sup>1</sup>⁄<sub>m</sub> dZ<sup>[l]</sup> A<sup>[l−1]</sup><sup>T</sup></span>
+          </div>
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-o" data-n="Cộng dZ theo hàng, qua m cột (numpy: <code>np.sum(dZ, axis=1, keepdims=True)</code>), rồi chia m. Ra n<sup>[l]</sup> × 1, đúng cỡ b<sup>[l]</sup>. Lý do: b được cộng vào mọi cột, nên mỗi ví dụ góp một phần vào gradient của nó.">db<sup>[l]</sup> = <sup>1</sup>⁄<sub>m</sub> Σ<sub>i</sub> dZ<sup>[l](i)</sup></span>
+          </div>
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-o" data-n="(n<sup>[l−1]</sup> × n<sup>[l]</sup>) nhân (n<sup>[l]</sup> × m) ra n<sup>[l−1]</sup> × m, đúng cỡ A<sup>[l−1]</sup>. Gradient đi ngược qua một lớp tuyến tính là nhân với <b>chuyển vị</b> của W (trang Toán 2.6). Không có 1/m ở đây: mỗi cột vẫn là gradient của riêng một ví dụ.">dA<sup>[l−1]</sup> = W<sup>[l]</sup><sup>T</sup> dZ<sup>[l]</sup></span>
+          </div>
+          <p class="fx__note">Bấm vào từng dòng. <span class="dim">Chữ T ở trên là chuyển vị; ⊙ là nhân từng phần tử.</span></p>
+        </div>
+        <p>Luật kiểm nhanh: <b>dX luôn cùng kích thước với X</b> — dW với W, db với b, dA với A. Viết xong in <span class="mono">.shape</span> hai bên ra so là bắt được phần lớn lỗi chuyển vị và lỗi chỉ số l. Còn sai dấu hay quên 1/m thì shape vẫn khớp; chỗ đó phải dùng gradient checking ở <a href="#s-init">mục khởi tạo</a>.</p>
+
         <div class="box note">
           <p class="box__k">Trong thực tế bạn không viết backprop</p>
-          <p>PyTorch và TensorFlow <b>tự dựng đồ thị tính toán và tự đi ngược</b> (autodiff). Bạn viết bước xuôi, khung tự lo phần còn lại. Vậy học nó để làm gì? Vì ba triệu chứng sau <b>chỉ đọc được nếu bạn biết đạo hàm chảy thế nào</b>: gradient ra <span class="mono">NaN</span> (thường do log(0) hoặc chia 0 ở đâu đó trong chuỗi), gradient tan biến (tích của nhiều số nhỏ hơn 1), gradient bùng nổ (tích của nhiều số lớn hơn 1). Hai cái sau là nội dung <a href="#s-init">mục ngay dưới</a>.</p>
+          <p>PyTorch và TensorFlow <b>tự dựng đồ thị tính toán và tự đi ngược</b> (autodiff). Bạn viết bước xuôi, khung tự lo phần còn lại. Vậy học nó để làm gì? Vì ba triệu chứng sau <b>chỉ đọc được nếu bạn biết đạo hàm chảy thế nào</b>: gradient ra <span class="mono">NaN</span> (thường do log(0) hoặc chia 0 ở đâu đó trong chuỗi), gradient tan biến (tích của nhiều số nhỏ hơn 1), gradient bùng nổ (tích của nhiều số lớn hơn 1). Hai cái sau là nội dung <a href="#s-init">mục khởi tạo</a>, sau mục softmax.</p>
         </div>
 
         <div class="take"><span class="k">Mang theo</span><p>Backprop = quy tắc chuỗi + không tính lại. Nó cho toàn bộ gradient với giá chỉ cỡ hai, ba lần chạy xuôi. Bạn sẽ không phải viết nó, nhưng bạn phải hiểu nó để đọc được ba triệu chứng: NaN, tan biến, bùng nổ.</p></div>
@@ -1734,9 +1787,15 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
             <span class="tm t-o" data-n="Chia cho căn của s: tham số nào gradient hay lớn thì bước ngắn lại. ε (cỡ 10⁻⁸) chỉ để khỏi chia cho 0.">w := w − α·dw / (√s + ε)</span>
           </div>
           <div class="fx__line sm" data-fx>
-            <span class="op">Adam:</span> <span class="tm t-o" data-n="Giữ cả v (với β₁) và s (với β₂). Ở vòng thứ t, chia v cho (1 − β₁ᵗ) và s cho (1 − β₂ᵗ) để được v̂, ŝ: hai số ấy khởi đầu bằng 0 nên bị lệch về 0 ở những vòng đầu, phép chia sửa lệch ấy.">w := w − α·v̂ / (√ŝ + ε)</span>
+            <span class="op">Adam:</span> <span class="tm t-o" data-n="Hai trung bình trượt chạy song song: v của gradient (như momentum, hệ số β₁) và s của bình phương gradient (như RMSprop, hệ số β₂). Cả hai khởi đầu bằng 0.">v := β₁v + (1−β₁)·dw  ·  s := β₂s + (1−β₂)·dw²</span>
           </div>
-          <p class="fx__note">dw là gradient theo w của lô hiện tại; mọi phép toán làm riêng cho từng tham số. <span class="dim">Màu xanh lục = <b>tối ưu</b>.</span></p>
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-o" data-n="<b>Hiệu chỉnh chệch.</b> t là số bước đã đi, đếm từ 1. Vì v, s khởi đầu bằng 0 nên ở những bước đầu chúng bị kéo về 0: ở t = 1, v = 0,1·dw và s = 0,001·dw². Chia cho 1 − β₁ᵗ = 0,1 và 1 − β₂ᵗ = 0,001 trả lại đúng dw và dw². Khi t lớn, βᵗ về 0 và phép chia không còn tác dụng.">v̂ = v / (1 − β₁<sup>t</sup>)  ·  ŝ = s / (1 − β₂<sup>t</sup>)</span>
+          </div>
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-o" data-n="Bước theo hướng của gradient đã làm mượt (v̂), chia cho độ lớn quen thuộc của gradient tham số này (√ŝ). Dùng v̂, ŝ, không dùng v, s.">w := w − α·v̂ / (√ŝ + ε)</span>
+          </div>
+          <p class="fx__note">dw là gradient theo w của lô hiện tại; mọi phép toán làm riêng cho từng tham số, và b cập nhật y hệt. <span class="dim">β của momentum thành β₁, β của RMSprop thành β₂ khi gộp vào Adam. Màu xanh lục = <b>tối ưu</b>.</span></p>
         </div>
 
         <div class="box good-box">
@@ -1774,6 +1833,18 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <h3>Batch normalization: chuẩn hoá lại ở <i>giữa</i> mạng</h3>
         <p>Ở <a href="#s-scale">chặng 1</a> ta chuẩn hoá đầu vào. Batch norm hỏi câu hiển nhiên tiếp theo: <b>tại sao chỉ chuẩn hoá lớp 0?</b> Đầu vào của lớp 5 chính là đầu ra của lớp 4, và nó cũng có thể lệch thang, cũng làm bề mặt chi phí dẹt đi. Nên: chuẩn hoá <span class="mono">z</span> trong từng lớp về trung bình 0 phương sai 1, rồi <b>nhân với γ và cộng β</b> — hai tham số học được (không phải β của momentum hay γ chiết khấu) — để mạng tự chọn thang đo phù hợp nếu trung bình 0 không phải điều nó muốn.</p>
+        <div class="fx">
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-m" data-n="Trung bình của z qua m ví dụ <b>trong mini-batch này</b>, tính riêng cho từng nơ-ron của lớp.">µ = <sup>1</sup>⁄<sub>m</sub> Σ<sub>i</sub> z<sup>(i)</sup></span><span class="op">  ·  </span><span class="tm t-m" data-n="Phương sai, cũng trên mini-batch, cũng riêng từng nơ-ron.">σ² = <sup>1</sup>⁄<sub>m</sub> Σ<sub>i</sub> (z<sup>(i)</sup> − µ)²</span>
+          </div>
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-m" data-n="Về trung bình 0, phương sai 1. ε (cỡ 10⁻⁸) chỉ để khỏi chia cho 0 khi σ² gần bằng 0.">z<sub>norm</sub><sup>(i)</sup> = (z<sup>(i)</sup> − µ) / √(σ² + ε)</span>
+          </div>
+          <div class="fx__line sm" data-fx>
+            <span class="tm t-m" data-n="γ, β học bằng gradient descent như W. Nếu mạng học ra γ = √(σ² + ε) và β = µ thì z̃ = z: batch norm không ép mạng phải dùng thang chuẩn.">z̃<sup>(i)</sup> = γ·z<sub>norm</sub><sup>(i)</sup> + β</span>
+          </div>
+          <p class="fx__note">Lớp kế tiếp nhận <span class="mono">g(z̃)</span> thay cho <span class="mono">g(z)</span>. <span class="dim">Bước trừ µ xoá mọi hằng số cộng vào z, nên b<sup>[l]</sup> của lớp ấy thừa; Ng bỏ b và để β làm việc dịch.</span></p>
+        </div>
         <ul class="tight">
           <li><b>Lợi ích chính</b>: huấn luyện nhanh hơn rõ rệt, và cho phép dùng α lớn hơn.</li>
           <li><b>Lợi ích phụ</b>: có tác dụng regularize nhẹ, vì trung bình/phương sai tính trên mini-batch nên có nhiễu. Nhưng <b>đừng dùng nó thay dropout</b> — tác dụng phụ này yếu và giảm dần khi lô lớn.</li>
@@ -1787,7 +1858,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <div class="mini"><p class="t">Dò siêu tham số</p><p class="d"><b>Ngẫu nhiên, đừng theo lưới.</b> Với lưới 5×5 bạn chỉ thử 5 giá trị khác nhau cho mỗi tham số; với 25 điểm ngẫu nhiên bạn thử 25. Và dò α trên <b>thang log</b>: chọn đều trong 10⁻⁴…10⁻¹ nghĩa là chọn số mũ đều, không phải chọn giá trị đều.</p></div>
         </div>
 
-        <p><b>Thứ tự ưu tiên khi chỉnh</b>, theo Ng: <b>(1) learning rate α</b> — quan trọng hơn tất cả phần còn lại cộng lại; <b>(2)</b> β của momentum, cỡ lô, số nơ-ron mỗi lớp; <b>(3)</b> số lớp, lịch giảm α; <b>gần như không bao giờ</b> chỉnh β₁, β₂, ε của Adam.</p>
+        <p><b>Thứ tự ưu tiên khi chỉnh</b>, theo Ng: <b>(1) learning rate α</b> — quan trọng nhất; <b>(2)</b> β của momentum, cỡ lô, số nơ-ron mỗi lớp; <b>(3)</b> số lớp, lịch giảm α; <b>gần như không bao giờ</b> chỉnh β₁, β₂, ε của Adam.</p>
 
         <div class="box note">
           <p class="box__k">Gấu trúc hay trứng cá — một khung tư duy nhỏ mà hữu ích</p>
@@ -2134,6 +2205,81 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         </div>
         <p>H(p) không phải một thước mới: nó chính là log loss trung bình (tính bằng log₂) nếu nút đoán xác suất p cho mọi mẫu của nó. Nên "tách để giảm entropy" là "tách để giảm log loss", cùng thước đo với <a href="#s-logistic">hồi quy logistic</a>.</p>
 
+        <p><b>Bằng số, ví dụ của Ng:</b> 10 con vật, 5 con là mèo, nên ở gốc p = 0,5 và H(gốc) = 1 bit. Thử ba cách tách:</p>
+        <ul class="tight">
+          <li><b>Hình tai:</b> tai nhọn 5 con (4 mèo, p = 0,8), tai cụp 5 con (1 mèo, p = 0,2). H(0,8) = H(0,2) ≈ 0,72, nên gain = 1 − (<sup>5</sup>⁄<sub>10</sub>·0,72 + <sup>5</sup>⁄<sub>10</sub>·0,72) ≈ <b>0,28</b>.</li>
+          <li><b>Mặt tròn:</b> 7 con (4 mèo) và 3 con (1 mèo): gain = 1 − (<sup>7</sup>⁄<sub>10</sub>·H(4/7) + <sup>3</sup>⁄<sub>10</sub>·H(1/3)) ≈ <b>0,03</b>.</li>
+          <li><b>Có ria:</b> 4 con (3 mèo) và 6 con (2 mèo): gain ≈ <b>0,12</b>.</li>
+        </ul>
+        <p>Hình tai cho gain lớn nhất nên được đặt ở gốc; rồi lặp lại đúng phép tính ấy trong từng nhánh con với những con vật rơi vào nhánh đó.</p>
+
+        <div class="pair" style="margin:18px 0 8px">
+          <figure>
+            <svg class="viz viz--plain" id="tree-boxes" viewBox="0 0 300 226" role="img" aria-label="Hai lớp điểm trên mặt phẳng hai đặc trưng; ba nhát cắt song song trục chia mặt phẳng thành bốn hộp, mỗi hộp gần như chỉ một lớp">
+                  <rect x="34" y="14" width="125" height="72" style="fill:var(--m-bg)"/>
+                  <rect x="159" y="140" width="125" height="54" style="fill:var(--m-bg)"/>
+                  <path d="M159 14L159 194" style="stroke:var(--ink);stroke-width:1.8"/>
+                  <path d="M34 86L159 86" style="stroke:var(--ink);stroke-width:1.8"/>
+                  <path d="M159 140L284 140" style="stroke:var(--ink);stroke-width:1.8"/>
+                  <circle cx="64" cy="39" r="4.5" style="fill:var(--m);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="94" cy="66" r="4.5" style="fill:var(--m);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="124" cy="32" r="4.5" style="fill:var(--m);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="79" cy="75" r="4.5" style="fill:var(--m);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="139" cy="54" r="4.5" style="fill:var(--m);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="106" cy="46" r="4.5" style="fill:var(--m);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="194" cy="172" r="4.5" style="fill:var(--m);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="236" cy="154" r="4.5" style="fill:var(--m);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="259" cy="180" r="4.5" style="fill:var(--m);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="214" cy="160" r="4.5" style="fill:var(--m);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="179" cy="151" r="4.5" style="fill:var(--m);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="59" cy="158" r="4.5" style="fill:var(--surface);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="99" cy="115" r="4.5" style="fill:var(--surface);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="132" cy="171" r="4.5" style="fill:var(--surface);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="76" cy="129" r="4.5" style="fill:var(--surface);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="142" cy="104" r="4.5" style="fill:var(--surface);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="112" cy="145" r="4.5" style="fill:var(--surface);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="189" cy="93" r="4.5" style="fill:var(--surface);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="224" cy="43" r="4.5" style="fill:var(--surface);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="254" cy="111" r="4.5" style="fill:var(--surface);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="206" cy="68" r="4.5" style="fill:var(--surface);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="264" cy="72" r="4.5" style="fill:var(--surface);stroke:var(--m);stroke-width:1.4"/>
+                  <circle cx="184" cy="118" r="4.5" style="fill:var(--surface);stroke:var(--m);stroke-width:1.4"/>
+                  <text class="vs" x="163" y="27" text-anchor="start" style="font-size:12px;fill:var(--ink)">① x₁ &lt; 5?</text>
+                  <text class="vs" x="38" y="100" text-anchor="start" style="font-size:12px;fill:var(--ink)">② x₂ &lt; 6?</text>
+                  <text class="vs" x="280" y="135" text-anchor="end" style="font-size:12px;fill:var(--ink)">③ x₂ &lt; 3?</text>
+                  <rect x="34" y="14" width="250" height="180" style="fill:none;stroke:var(--border-2)"/>
+                  <text class="vs" x="159" y="216" text-anchor="middle" style="font-size:12px">đặc trưng x₁ →</text>
+                  <text class="vs" x="14" y="104" text-anchor="middle" style="font-size:12px" transform="rotate(-90 14 104)">đặc trưng x₂ →</text>
+            </svg>
+            <figcaption>Ba câu hỏi có/không, đánh số theo thứ tự cây hỏi, cắt mặt phẳng thành bốn <b>hộp</b>. Nền xanh: vùng cây đoán <b>chấm đặc</b>. Mọi đường cắt song song một trục.</figcaption>
+          </figure>
+          <figure>
+            <svg class="viz viz--plain" id="tree-entropy" viewBox="0 0 300 226" role="img" aria-label="Đồ thị entropy H(p) theo p: bằng 0 ở hai đầu, đỉnh bằng 1 bit tại p bằng 0,5, bằng 0,72 tại p bằng 0,2 và 0,8">
+                  <path d="M40 186H284M40 186V18" style="fill:none;stroke:var(--border-2)"/>
+                  <path d="M40.0 186.0L42.4 172.4L44.9 162.2L47.3 153.3L49.8 145.3L52.2 137.9L54.6 131.0L57.1 124.5L59.5 118.4L62.0 112.7L64.4 107.2L66.8 102.0L69.3 97.1L71.7 92.4L74.2 87.8L76.6 83.5L79.0 79.4L81.5 75.5L83.9 71.7L86.4 68.2L88.8 64.7L91.2 61.4L93.7 58.3L96.1 55.3L98.6 52.4L101.0 49.7L103.4 47.1L105.9 44.6L108.3 42.3L110.8 40.1L113.2 37.9L115.6 35.9L118.1 34.1L120.5 32.3L123.0 30.6L125.4 29.1L127.8 27.6L130.3 26.3L132.7 25.0L135.2 23.9L137.6 22.9L140.0 21.9L142.5 21.1L144.9 20.4L147.4 19.7L149.8 19.2L152.2 18.8L154.7 18.4L157.1 18.2L159.6 18.0L162.0 18.0L164.4 18.0L166.9 18.2L169.3 18.4L171.8 18.8L174.2 19.2L176.6 19.7L179.1 20.4L181.5 21.1L184.0 21.9L186.4 22.9L188.8 23.9L191.3 25.0L193.7 26.3L196.2 27.6L198.6 29.1L201.0 30.6L203.5 32.3L205.9 34.1L208.4 35.9L210.8 37.9L213.2 40.1L215.7 42.3L218.1 44.6L220.6 47.1L223.0 49.7L225.4 52.4L227.9 55.3L230.3 58.3L232.8 61.4L235.2 64.7L237.6 68.2L240.1 71.7L242.5 75.5L245.0 79.4L247.4 83.5L249.8 87.8L252.3 92.4L254.7 97.1L257.2 102.0L259.6 107.2L262.0 112.7L264.5 118.4L266.9 124.5L269.4 131.0L271.8 137.9L274.2 145.3L276.7 153.3L279.1 162.2L281.6 172.4L284.0 186.0" style="fill:none;stroke:var(--l);stroke-width:2"/>
+                  <path d="M88.8 186V64.7" style="stroke:var(--l);stroke-width:1;stroke-dasharray:3 3"/>
+                  <circle cx="88.8" cy="64.7" r="4" style="fill:var(--l)"/>
+                  <text class="vm" x="88.8" y="55.7" text-anchor="middle" style="font-size:12px">0,72</text>
+                  <path d="M162.0 186V18.0" style="stroke:var(--l);stroke-width:1;stroke-dasharray:3 3"/>
+                  <circle cx="162.0" cy="18.0" r="4" style="fill:var(--l)"/>
+                  <text class="vm" x="162.0" y="9.0" text-anchor="middle" style="font-size:12px">1</text>
+                  <path d="M235.2 186V64.7" style="stroke:var(--l);stroke-width:1;stroke-dasharray:3 3"/>
+                  <circle cx="235.2" cy="64.7" r="4" style="fill:var(--l)"/>
+                  <text class="vm" x="235.2" y="55.7" text-anchor="middle" style="font-size:12px">0,72</text>
+                  <text class="vs" x="40.0" y="201" text-anchor="middle" style="font-size:11.5px">0</text>
+                  <text class="vs" x="88.8" y="201" text-anchor="middle" style="font-size:11.5px">0,2</text>
+                  <text class="vs" x="162.0" y="201" text-anchor="middle" style="font-size:11.5px">0,5</text>
+                  <text class="vs" x="235.2" y="201" text-anchor="middle" style="font-size:11.5px">0,8</text>
+                  <text class="vs" x="284.0" y="201" text-anchor="middle" style="font-size:11.5px">1</text>
+                  <text class="vs" x="34" y="22" text-anchor="end" style="font-size:11.5px">1</text>
+                  <text class="vs" x="34" y="190" text-anchor="end" style="font-size:11.5px">0</text>
+                  <text class="vs" x="162" y="216" text-anchor="middle" style="font-size:12px">p = tỉ lệ lớp dương trong nhóm</text>
+                  <text class="vs" x="14" y="102" text-anchor="middle" style="font-size:12px" transform="rotate(-90 14 102)">H(p), bit</text>
+            </svg>
+            <figcaption>Entropy của một nhóm theo tỉ lệ p. Đỉnh <b>1 bit</b> ở p = 0,5 (gốc của ví dụ trên); hai nhánh tách theo hình tai cùng ở 0,72.</figcaption>
+          </figure>
+        </div>
+
         <h3>Từ một cây thành một rừng — vì sao cần nhiều cây</h3>
         <p>Một cây rất <b>không ổn định</b>: đổi vài mẫu dữ liệu là cả cấu trúc cây đổi theo. Đó là variance cao. Cách chữa là dựng nhiều cây rồi lấy ý kiến số đông:</p>
         <ul>
@@ -2333,7 +2479,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <div class="fx">
           <div class="fx__line sm" data-fx>
-            <span class="tm t-m" data-n="Đầu ra sau khối hai lớp.">a<sup>[l+2]</sup></span><span class="op">=</span><span class="tm t-m" data-n="Hàm kích hoạt, thường là ReLU.">g(</span><span class="tm t-m" data-n="Phần tính toán bình thường của hai lớp: nhân trọng số, cộng độ chệch.">z<sup>[l+2]</sup></span><span class="op">+</span><span class="tm t-m" data-n="<b>Đường tắt.</b> Đầu vào của khối được cộng thẳng vào đầu ra, không qua trọng số nào. Nếu W và b của hai lớp giữa bị regularize về 0, biểu thức thành g(a) = a — <b>hàm đồng nhất, học được miễn phí</b>. Nên thêm khối này vào một mạng đang chạy tốt thì <i>về lý thuyết</i> không làm sai số huấn luyện tệ đi: xấu nhất là khối đó không làm gì.">a<sup>[l]</sup></span><span class="op">)</span>
+            <span class="tm t-m" data-n="Đầu ra sau khối hai lớp.">a<sup>[l+2]</sup></span><span class="op">=</span><span class="tm t-m" data-n="Hàm kích hoạt, thường là ReLU.">g(</span><span class="tm t-m" data-n="Phần tính toán bình thường của hai lớp: nhân trọng số, cộng độ chệch.">z<sup>[l+2]</sup></span><span class="op">+</span><span class="tm t-m" data-n="<b>Đường tắt.</b> Đầu vào của khối được cộng thẳng vào đầu ra, không qua trọng số nào. Nếu W và b của lớp thứ hai trong khối bị regularize về 0 thì z<sup>[l+2]</sup> = 0 và biểu thức thành g(a<sup>[l]</sup>) = a<sup>[l]</sup>, vì a<sup>[l]</sup> đã qua ReLU nên không âm và ReLU giữ nguyên nó — <b>hàm đồng nhất, học được miễn phí</b>. Nên thêm khối này vào một mạng đang chạy tốt thì <i>về lý thuyết</i> không làm sai số huấn luyện tệ đi: xấu nhất là khối đó không làm gì.">a<sup>[l]</sup></span><span class="op">)</span>
           </div>
           <p class="fx__note">Bấm vào <span class="mono">a<sup>[l]</sup></span> — đó là toàn bộ ý tưởng của ResNet, trong một số hạng cộng thêm.</p>
         </div>
@@ -2593,7 +2739,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
         <ul class="tight">
           <li><b>B lớn</b> → kết quả tốt hơn, chậm hơn, tốn bộ nhớ hơn. B = 1 chính là tham lam.</li>
           <li>Sản phẩm thật thường dùng <b>B = 3 tới 10</b>; bài báo nghiên cứu có khi dùng 1.000 để lấy con số đẹp. Lợi ích <b>giảm dần rất nhanh</b> sau B ≈ 10.</li>
-          <li><b>Chuẩn hoá theo độ dài</b> là chi tiết bắt buộc: xác suất là tích của nhiều số nhỏ hơn 1, nên câu <i>dài</i> luôn có xác suất thấp hơn. Không chuẩn hoá thì beam search <b>thiên vị câu ngắn cụt lủn</b>. Cách chữa: cộng log xác suất rồi <b>chia cho số từ</b> (thường luỹ thừa 0,7).</li>
+          <li><b>Chuẩn hoá theo độ dài</b> là chi tiết bắt buộc: xác suất là tích của nhiều số nhỏ hơn 1, nên câu <i>dài</i> luôn có xác suất thấp hơn. Không chuẩn hoá thì beam search <b>thiên vị câu ngắn cụt lủn</b>. Cách chữa: cộng log xác suất rồi <b>chia cho T<sup>0,7</sup></b>, T là số từ. Ng gọi số mũ ấy là α: mũ 1 là chia hẳn cho số từ, mũ 0 là không chuẩn hoá, 0,7 nằm giữa.</li>
           <li><b>Beam search không đảm bảo tìm ra câu tốt nhất.</b> Nó là heuristic. Đây không phải khuyết điểm cần sửa, mà là bản chất — bạn đang đánh đổi.</li>
         </ul>
 
