@@ -9,6 +9,38 @@ một dòng "→ quyết định DS-…".
 
 ---
 
+## Phiên 2026-11-08 (ah) — rà đối kháng chặng 0–2, 4–5 và số "chạy thật" của chặng 6
+
+Rà các bài phiên (ag) chưa rà. Code mẫu chạy thật: pandas 3.0.5, sklearn 1.9.1, DuckDB, LightGBM 4.6 và 4.7,
+shap 0.54. Repo của `pr-code`/`pr-eval` trích nguyên từ các khối có `ds-codecap`: `prepare_data`, `train`,
+`final_eval` khớp từng chữ số với bản ghi trên trang; 27 test xanh.
+
+- Chặng 0: số chặng ở `s-pipeline`, tuần nặng và tuần đo lường ở `s-plan8w`, baseline hồi quy (trung vị cho
+  MAE, trung bình cho RMSE), ghi chú ngày 9 của `DAYS`; `d-framing` định nghĩa AUC và precision@k tại chỗ.
+- `t-sql`: `EXCLUDE CURRENT ROW` vẫn đếm giao dịch trùng giây, `EXCLUDE GROUP` mới khớp `closed="left"`;
+  ví dụ DuckDB nhóm theo `card_id` trên `creditcard.csv` không có cột đó; hộp NULL khác NaN; `text()` cho tham số.
+- `t-env`: `pip freeze` trần trên Colab in vài trăm gói chỉ có ở đó; lọc đúng thư viện import, thêm `pyarrow`.
+- `t-ai`: bộ test gọi `add_velocity` và cột `ts` không có trong repo; viết lại theo `add_derived`/`add_history`.
+- `t-online`, `t-colab`: Dockerfile thiếu `libgomp1`; `autoreload` chỉ thấy bản mới sau `git pull`.
+- pandas 3 ghi chuỗi là `str`: `t-pandas`, quiz, `select_dtypes(include=["object", "string"])` ở `d-eda`, `f-cat`.
+- `f-cyclic`: 23h47 tới 0h13 là 26 phút, cả trong quiz; code Cách 1 dùng `df["ts"]` chưa tạo.
+- `f-text`: `ColumnTransformer` với `["description"]` cho ra một cột im lặng; `f-select`, `ml-shap`, `ml-unsup`.
+- `pr-eval`: luật thủ công thật ra bắt 44/137 với 3.507 cảnh báo, tốn hơn cả không làm gì; hàm so sánh gọi biến
+  chưa có và dùng `paired_ci` (PR-AUC) cho chi phí, viết lại thành bootstrap ghép cặp trên chi phí từng dòng.
+  Bảng công bằng ghi nhóm `web` mà bộ mô phỏng không sinh; tỉ số FPR thật 1,17× chứ không phải 6,7×.
+- `pr-code`: mốc oracle (seed 42) 0,043 valid, 0,074 test, 0,04–0,12 qua năm seed; Brier của `class_weight`
+  là 0,012; dải hoà vốn chiếm ~1,1% chứ không phải 8%.
+- Chặng 7: weight decay chỉ tương đương L2 với SGD; backprop tốn cỡ hai, ba lần một lần chạy xuôi.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- `requirements.txt` ở `pr-serve` ghim pandas 2.3.3, sklearn 1.6.1: không đổi, vì đổi phiên bản ghim là đổi số
+  của mọi bản ghi chạy thật; số trên trang đã khớp ở cả pandas 3.
+- Câu "IEEE-CIS có chênh FPR theo thiết bị" để ở dạng "có thể": chưa chạy trên IEEE-CIS.
+- Hình `clock` chỉ đổi chữ alt, không chạy `viz-check.mjs` (không có Chrome trong phiên).
+- Chưa rà: `pr-arch`, `pr-serve`, `pr-monitor`, `pr-cost` (chỉ đồng bộ số), `dl-embed`, `dl-cnn-rnn`, `dl-llm`,
+  `dl-tab`, chặng 8–10 trừ các bài phiên (ag) đã rà.
+
 ## Phiên 2026-11-08 (ag) — rà đối kháng phần toán, thống kê, ML
 
 Rà các chặng chủ trang học trước (0–2) và mọi chặng nặng toán (3, 5, `q-regress`, `q-forecast`, `q-causal`,
