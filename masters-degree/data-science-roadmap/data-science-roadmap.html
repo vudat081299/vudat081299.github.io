@@ -1809,7 +1809,7 @@
   <p>Kiểm tra thô: $x = 2 \Rightarrow z = 36$; $x = 2{,}01 \Rightarrow z = 36{,}36$. Chênh $0{,}36$ trên $0{,}01$ = 36. Khớp.</p>
   <h4>Vì sao nó là toàn bộ deep learning</h4>
   <p>Một mạng 10 lớp là hàm lồng nhau 10 tầng: $\text{loss}(f_{10}(f_9(\dots f_1(x))))$. Muốn biết trọng số ở lớp 1 ảnh hưởng loss ra sao, bạn nhân 10 đạo hàm dọc theo chuỗi. Đó chính là <b>backpropagation</b> — không có gì hơn thế.</p>
-  <p>Hệ quả trực tiếp: nếu mỗi đạo hàm trong chuỗi nhỏ hơn 1, nhân 10 lần lại thì gần bằng 0 → lớp đầu gần như không học được. Đó là <b>vanishing gradient</b>, và là lý do người ta phát minh ra ReLU, batch-norm và residual connection.</p>
+  <p>Hệ quả trực tiếp: nếu mỗi đạo hàm trong chuỗi nhỏ hẳn hơn 1, nhân 10 lần lại thì gần bằng 0 → lớp đầu gần như không học được. Đạo hàm của sigmoid lớn nhất chỉ 0,25, và $0{,}25^{10} \approx 0{,}000001$; còn nếu mỗi đạo hàm là 0,9 thì $0{,}9^{10} \approx 0{,}35$ — giảm, nhưng chưa biến mất. Đó là <b>vanishing gradient</b>, và là lý do người ta phát minh ra ReLU, batch-norm và residual connection.</p>
 </template>
 
 <template data-mathdef="gdupdate" data-title="Công thức cập nhật — dòng lệnh mà máy chạy hàng triệu lần">
@@ -1843,11 +1843,13 @@
 <template data-mathdef="expvar" data-title="Kỳ vọng, phương sai, độ lệch chuẩn">
   <p>Ba con số này trả lời hai câu hỏi về một cột dữ liệu: <b>“thường là bao nhiêu”</b> và <b>“dao động cỡ nào”</b>.</p>
   <h4>Kỳ vọng = trung bình dài hạn</h4>
-  <p>$$\mathbb{E}[X] = \mu = \frac{1}{n}\sum_{i=1}^{n} x_i$$</p>
+  <p>$\mathbb{E}[X] = \mu$ là trung bình của cả tổng thể (hoặc của vô hạn lần lặp). Trên dữ liệu, bạn chỉ có $n$ giá trị, nên tính <b>trung bình mẫu</b> để ước lượng nó:</p>
+  <p>$$\bar{x} = \frac{1}{n}\sum_{i=1}^{n} x_i \;\approx\; \mu$$</p>
   <p>Số tiền 5 giao dịch: 100k, 150k, 120k, 3.000k, 130k → $\mu = 700$k. <b>Chú ý:</b> không giao dịch nào gần 700k cả. Trung bình bị một giá trị ngoại lai kéo lệch. Trung vị (median) ở đây là 130k — mô tả “thường là bao nhiêu” tốt hơn nhiều.</p>
   <h4>Phương sai & độ lệch chuẩn = mức dao động</h4>
   <p>$$\sigma^2 = \frac{1}{n}\sum (x_i - \mu)^2, \qquad \sigma = \sqrt{\sigma^2}$$</p>
   <p>Bình phương để chênh lệch âm và dương không triệt tiêu nhau; rồi lấy căn để trở về đúng đơn vị ban đầu (đồng, chứ không phải đồng bình phương). Với dãy trên, $\sigma \approx 1.150$k — to hơn cả trung bình, dấu hiệu rõ ràng của phân phối lệch.</p>
+  <p class="wb-help">Chia cho $n$ hay $n-1$: công thức trên chia cho $n$ (độ lệch chuẩn của chính 5 số này). pandas <code>.std()</code> và <code>describe()</code> mặc định chia cho $n-1$ (<code>ddof=1</code>) để ước lượng σ của tổng thể không bị hụt, nên in ra ≈ 1.286k. numpy <code>np.std</code> mặc định chia cho $n$. Lệch nhau ở đây là đúng, không phải lỗi; với vài nghìn dòng trở lên hai cách gần như trùng.</p>
   <h4>Vì sao bạn cần nó mỗi ngày</h4>
   <ul>
     <li><b>StandardScaler</b> chính là $(x - \mu)/\sigma$ — đưa mọi cột về cùng thang “bao nhiêu độ lệch chuẩn so với trung bình”.</li>
@@ -1901,7 +1903,7 @@
 </template>
 
 <template data-mathdef="logloss" data-title="Cross-entropy (log loss) — sai số cho bài toán phân loại">
-  <p>Bạn cần một cách chấm điểm sự tự tin. Nếu mô hình nói “chắc chắn 99% là giao dịch sạch” mà hoá ra là gian lận, hình phạt phải <b>nặng hơn nhiều</b> so với khi nó nói “50-50”. Bình phương sai số không làm được điều đó; log loss thì có.</p>
+  <p>Bạn cần một cách chấm điểm sự tự tin. Nếu mô hình nói “chắc chắn 99% là giao dịch sạch” mà hoá ra là gian lận, hình phạt phải <b>nặng hơn nhiều</b> so với khi nó nói “50-50”. Bình phương sai số có phạt thêm, nhưng bị chặn ở 1: tự tin 99% mà sai bị phạt 0,98, tự tin 99,99% mà sai cũng chỉ ≈ 1. Log loss thì không có trần.</p>
   <p>$$L = -\big[\,y\log(\hat{p}) + (1-y)\log(1-\hat{p})\,\big]$$</p>
   <p>Nhìn thì rối, nhưng $y$ chỉ nhận 0 hoặc 1 nên lúc nào cũng chỉ còn một vế:</p>
   <table>
@@ -1953,9 +1955,10 @@
     <tr><th></th><th>L2 (Ridge)</th><th>L1 (Lasso)</th></tr>
     <tr><td>Làm gì với trọng số</td><td>co nhỏ đều, hiếm khi về đúng 0</td><td>đẩy hẳn nhiều trọng số <b>về đúng 0</b></td></tr>
     <tr><td>Dùng khi</td><td>mọi feature đều hơi có ích</td><td>muốn <b>tự động chọn feature</b></td></tr>
-    <tr><td>sklearn</td><td><code>penalty='l2'</code> (mặc định)</td><td><code>penalty='l1', solver='liblinear'</code></td></tr>
+    <tr><td>sklearn</td><td><code>l1_ratio=0</code> (mặc định)</td><td><code>l1_ratio=1, solver='liblinear'</code> (hoặc <code>'saga'</code>)</td></tr>
   </table>
-  <p>Trong sklearn, tham số là <code>C = 1/λ</code> — <b>ngược chiều</b>. <code>C</code> nhỏ = phạt mạnh. Đây là chỗ rất nhiều người tune sai chiều mà không biết.</p>
+  <p class="wb-help">sklearn 1.8 bỏ dần tham số <code>penalty</code> của <code>LogisticRegression</code> (gỡ hẳn ở 1.10). Tài liệu cũ viết <code>penalty='l1'</code> thì giờ gõ <code>l1_ratio=1</code>.</p>
+  <p>Trong sklearn, tham số là <code>C</code>, tỉ lệ nghịch với $\lambda$ — <b>ngược chiều</b>. <code>C</code> nhỏ = phạt mạnh. Đây là chỗ rất nhiều người tune sai chiều mà không biết.</p>
   <p>Ở cây/boosting, “regularization” mang hình dạng khác nhưng cùng ý: <code>max_depth</code> thấp hơn, <code>min_child_weight</code> cao hơn, <code>subsample &lt; 1</code>, và <code>reg_lambda</code> trong XGBoost.</p>
 </template>
 
@@ -2096,7 +2099,7 @@ print(f"AUC = {roc_auc_score(y, p):.3f} (95% CI: {lo:.3f}–{hi:.3f})")</div>
   </div></div>
   <div class="wb-alert wb-alert--danger wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Đừng so hai khoảng bằng mắt</p>
-    <p class="wb-alert__msg">Khoảng ở trên là cho <b>một</b> mô hình. So sánh hai mô hình bằng cách nhìn xem hai khoảng có chồng lấn hay không <b>không phải một kiểm định đúng</b>: hai khoảng chồng lấn vẫn có thể tương ứng với một khác biệt có ý nghĩa, đặc biệt khi hai mô hình được chấm trên <i>cùng một tập</i> (sai số của chúng đi kèm nhau, nên hiệu của chúng dao động ít hơn nhiều so với từng cái). Cách đúng: bootstrap <b>ghép cặp</b> — mỗi vòng lấy lại <i>cùng</i> chỉ số hàng, tính $\Delta = \text{metric}_{\text{mới}} - \text{metric}_{\text{baseline}}$, rồi lấy khoảng tin cậy của chính $\Delta$. <b>Nếu khoảng của $\Delta$ chứa 0 → chưa có bằng chứng khác biệt.</b> Code paired bootstrap nằm ở bài <b>Kết quả có ý nghĩa thống kê không</b>.</p>
+    <p class="wb-alert__msg">Khoảng ở trên là cho <b>một</b> mô hình. So sánh hai mô hình bằng cách nhìn xem hai khoảng có chồng lấn hay không <b>không phải một kiểm định đúng</b>: hai khoảng chồng lấn vẫn có thể tương ứng với một khác biệt có ý nghĩa, đặc biệt khi hai mô hình được chấm trên <i>cùng một tập</i> (sai số của chúng đi kèm nhau, nên hiệu của chúng dao động ít hơn nhiều so với từng cái). Cách đúng: bootstrap <b>ghép cặp</b> — mỗi vòng lấy lại <i>cùng</i> chỉ số hàng, tính $\Delta = \text{metric}_{\text{mới}} - \text{metric}_{\text{baseline}}$, rồi lấy khoảng tin cậy của chính $\Delta$. <b>Nếu khoảng của $\Delta$ chứa 0 → chưa có bằng chứng khác biệt.</b> Code paired bootstrap nằm ở bài <a href="#/th-stats">Kết quả có ý nghĩa thống kê không</a>.</p>
   </div></div>
 </template>
 
@@ -6254,7 +6257,7 @@ scores = cross_val_score(inner, X, y, cv=5, scoring="average_precision")   <i># 
   <h2>Ba công cụ, theo thứ tự nên dùng</h2>
   <h3>1 · Bootstrap ghép cặp trên <i>hiệu</i> — dùng mặc định để so hai mô hình</h3>
   <p><button class="ds-math" data-math="ci">Bootstrap — 4 bước + code chạy được</button></p>
-  <p>Vì hai mô hình được chấm trên <b>cùng một tập</b>, đừng dựng hai khoảng riêng rồi so bằng mắt: hai khoảng chồng lấn vẫn có thể tương ứng với một khác biệt thật. Thay vào đó, mỗi vòng bootstrap lấy lại <b>cùng</b> chỉ số hàng cho cả hai mô hình, tính $\Delta = \text{metric}_{\text{mới}} - \text{metric}_{\text{baseline}}$, rồi lấy khoảng tin cậy của chính $\Delta$. <b>Nếu khoảng của $\Delta$ chứa 0 → chưa có bằng chứng khác biệt.</b> Cách này dùng được cho AUC, PR-AUC, F1, kể cả “số tiền tiết kiệm được”. Code đầy đủ nằm ở bài <b>Kết quả có ý nghĩa thống kê không</b>.</p>
+  <p>Vì hai mô hình được chấm trên <b>cùng một tập</b>, đừng dựng hai khoảng riêng rồi so bằng mắt: hai khoảng chồng lấn vẫn có thể tương ứng với một khác biệt thật. Thay vào đó, mỗi vòng bootstrap lấy lại <b>cùng</b> chỉ số hàng cho cả hai mô hình, tính $\Delta = \text{metric}_{\text{mới}} - \text{metric}_{\text{baseline}}$, rồi lấy khoảng tin cậy của chính $\Delta$. <b>Nếu khoảng của $\Delta$ chứa 0 → chưa có bằng chứng khác biệt.</b> Cách này dùng được cho AUC, PR-AUC, F1, kể cả “số tiền tiết kiệm được”. Code đầy đủ nằm ở bài <a href="#/th-stats">Kết quả có ý nghĩa thống kê không</a>.</p>
 
   <div class="wb-alert wb-alert--warning">
     <span class="wb-alert__icon">!</span>
@@ -6294,7 +6297,7 @@ Kết quả được lấy trung bình trên 5 hạt giống ngẫu nhiên (42, 
   <p>Câu quyết định là câu về <b>hiệu ghép cặp</b>: nó mới là bằng chứng cho “tốt hơn”, không phải việc hai khoảng riêng có chồng lấn hay không. Hai khoảng riêng chỉ để người đọc thấy độ lớn; McNemar chỉ nói về nhãn tại ngưỡng đã chốt; và năm hạt giống cho thấy kết quả tái lập được. Đó là toàn bộ những gì phần thực nghiệm cần chứng minh.</p>
 
   <h2>Phạm vi của bài này — và một ngoại lệ bắt buộc</h2>
-  <p>Bốn thứ ở trên là toàn bộ thống kê mà phần thực nghiệm của một luận văn thạc sĩ ứng dụng cần. ANOVA, kiểm định phi tham số, thống kê Bayes đầy đủ đều hay nhưng nằm ngoài phạm vi — học riêng nếu người hướng dẫn yêu cầu cụ thể.</p>
+  <p>Ba công cụ ở trên, cùng quy tắc bốc lại theo đơn vị độc lập, là toàn bộ thống kê mà phần thực nghiệm của một luận văn thạc sĩ ứng dụng cần. ANOVA, kiểm định phi tham số, thống kê Bayes đầy đủ đều hay nhưng nằm ngoài phạm vi — học riêng nếu người hướng dẫn yêu cầu cụ thể.</p>
   <p><b>Ngoại lệ, và nó là ngoại lệ cứng:</b> nếu đề tài của bạn có A/B test thì <i>power analysis / tính cỡ mẫu</i> là phần <b>bắt buộc</b>, không phải phần thêm. Nó quyết định thí nghiệm có khả thi không — chạy một A/B test thiếu cỡ mẫu là tiêu tuần làm việc để nhận về một kết luận "không có khác biệt" mà bạn không được phép tin. Xem bài <a href="#/q-causal">A/B testing &amp; tư duy nhân quả</a>.</p>
 </template>
 
