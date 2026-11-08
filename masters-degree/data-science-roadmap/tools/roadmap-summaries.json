@@ -1155,9 +1155,9 @@
     "Thẻ chưa có lịch sử để NaN chứ không phải 0 (0 = 'đã đo, bằng 0'; NaN = 'chưa biết'); SimpleImputer(add_indicator=True) vừa điền vừa thêm cột cờ báo ô vốn trống",
     "history.py là nhóm feature mạnh nhất và dễ rò rỉ nhất — ba bẫy im lặng: min_periods=0 (cửa sổ rỗng phải là 0 không phải NaN), closed='left' (loại chính giao dịch đang xét), gán bằng .to_numpy() vì timestamp lặp lại được; check_no_leak assert mỗi lần chạy",
     "split.py có ba cách chia = ba câu hỏi tổng quát hoá khác nhau (theo thời gian / theo nhóm card_id / cả hai) + embargo bỏ trống vài ngày vì nhãn đến trễ; báo cáo cách (1) làm chính, (3) làm kiểm tra độ bền",
-    "pipeline.py KHÔNG đặt class_weight='balanced' làm mặc định: trên bộ này nó làm PR-AUC tệ đi (0,029→0,026) và phá hỏng hiệu chỉnh xác suất (Brier 0,0021→0,019)"
+    "pipeline.py KHÔNG đặt class_weight='balanced' làm mặc định: trên bộ này nó làm PR-AUC tệ đi (0,029→0,026) và phá hỏng hiệu chỉnh xác suất (Brier 0,0021→0,012)"
    ],
-   "viz": "Bản ghi chạy thật in PR-AUC 0,0294 với base_rate 0,00213 (gấp 13,8 lần đoán bừa), đọc kèm MỐC ORACLE 0,05–0,07 đo được trên bộ mô phỏng (trần lý thuyết của AP luôn là 1 và vô dụng; mốc oracle là AP khi chấm điểm bằng chính xác suất sinh dữ liệu, phải công bố seed/số lần chạy/khoảng) nên mô hình đạt ~60% mức tối đa đo được.",
+   "viz": "Bản ghi chạy thật in PR-AUC 0,0294 với base_rate 0,00213 (gấp 13,8 lần đoán bừa), đọc kèm MỐC ORACLE 0,043 trên validation (seed 42; 0,04–0,12 qua năm seed) đo được trên bộ mô phỏng (trần lý thuyết của AP luôn là 1 và vô dụng; mốc oracle là AP khi chấm điểm bằng chính xác suất sinh dữ liệu, phải công bố seed/số lần chạy/khoảng) nên mô hình đạt khoảng hai phần ba mức tối đa đo được.",
    "example": {
     "kind": "code",
     "lead": "Cùng một hàm sinh feature chạy trên cả bảng rồi trên đúng một dòng của nó, cho thấy 23h và 0h nằm cạnh nhau sau sin/cos, và thẻ chưa có lịch sử ra NaN chứ không phải một con số.",
@@ -1173,13 +1173,13 @@
    "tldr": "Biến một file .joblib và một PR-AUC validation thành bộ bằng chứng luận văn: quy trình đánh giá không tự lừa (test mở đúng một lần), ngưỡng có lý do bằng tiền, khoảng tin cậy đúng loại, baseline theo luật và bảng công bằng — điểm xuyên suốt là mọi con số phải so được và có ràng buộc vận hành thật.",
    "points": [
     "Tập test không nằm trong vòng lặp phát triển: chọn feature/siêu tham số/ngưỡng/mô hình đều trên validation (bao nhiêu lần cũng được), test chạm đúng MỘT lần khi báo cáo — mỗi lần nhìn test rồi sửa là tinh chỉnh lên test bằng tay",
-    "Ma trận chi phí có BA hành động (ALLOW/REVIEW/BLOCK) × 2 sự thật = 6 ô chi phí, không phải 4; thêm ràng buộc REVIEW_CAPACITY 0,5% lưu lượng để nghiệm 'tối ưu' không đẩy 8% giao dịch sang xác minh",
+    "Ma trận chi phí có BA hành động (ALLOW/REVIEW/BLOCK) × 2 sự thật = 6 ô chi phí, không phải 4; thêm ràng buộc REVIEW_CAPACITY 0,5% lưu lượng để nghiệm 'tối ưu' không đẩy 1,5% giao dịch (gấp ba sức chứa) sang xác minh",
     "Hai biên hoà vốn tính thẳng từ ma trận chi phí (không cần dữ liệu): ALLOW→REVIEW tại p=0,0148, REVIEW→BLOCK tại p=0,2444; bẫy hay gặp là dùng 0,0476 (biên bài toán hai-hành-động) làm biên BLOCK",
     "Bootstrap phải theo đơn vị độc lập: kind='cluster' lấy lại theo THẺ (mặc định), 'block' theo khối ngày; bootstrap theo dòng cho khoảng tin cậy hẹp giả tạo → tuyên bố 'cải thiện có ý nghĩa' cho một nhiễu",
     "paired_ci so hai mô hình bằng bootstrap GHÉP CẶP trên hiệu Δ trên cùng mẫu; 'có ý nghĩa' chỉ khi khoảng của Δ không chứa 0 — không được so hai khoảng riêng xem có chồng lấn",
     "Baseline phải là luật thủ công (src/rules.py — hệ thống thật mô hình phải thay thế), so TẠI ĐIỂM VẬN HÀNH chứ không bằng PR-AUC vì luật cho một điểm còn mô hình cho một đường cong; final_eval khoá bằng --confirm-freeze + freeze_hash + từ chối ghi đè"
    ],
-   "viz": "Khối JSON kết quả cuối thật: PR-AUC 0,0485 (base 0,00228 → ~21 lần đoán bừa, sát MỐC ORACLE 0,05–0,07 đo được trên bộ mô phỏng — đó là mốc thực nghiệm của bộ dữ liệu này, không phải trần lý thuyết của AP vốn luôn bằng 1), recall hiệu dụng 21,8%, tiết kiệm 14,8% chi phí; và bảng công bằng cho FPR nhóm web/pos lệch 6,7×.",
+   "viz": "Khối JSON kết quả cuối thật: PR-AUC 0,0485 (base 0,00228 → ~21 lần đoán bừa, khoảng hai phần ba MỐC ORACLE 0,074 đo được trên chính tập test — đó là mốc thực nghiệm của bộ dữ liệu này, không phải trần lý thuyết của AP vốn luôn bằng 1), recall hiệu dụng 21,8%, tiết kiệm 14,8% chi phí; và bảng FPR theo nhóm thiết bị ra 1,17× — gần 1 đúng như chờ đợi, vì bộ mô phỏng bốc thiết bị ngẫu nhiên.",
    "example": {
     "kind": "code",
     "lead": "Cùng một tập 10.000 giao dịch của 400 thẻ, lấy lại theo dòng và lấy lại theo thẻ cho hai khoảng tin cậy lệch nhau gần năm lần bề rộng.",
@@ -1253,7 +1253,7 @@
     "Phân tích độ nhạy: quét chi phí FP qua [20k, 40k, 80k, 160k], ngưỡng tối ưu đổi (0,214→0,602) nhưng kết luận 'mô hình vượt baseline' ổn định trong toàn khoảng gấp 8 lần",
     "Bảng so sánh cuối phải có cột 'số ca xác minh/ngày' — cột thuyết phục nhất và hay bị bỏ: một hệ thống bắt nhiều hơn nhưng làm phiền gấp ba thì đội vận hành sẽ tắt nó trong hai tuần",
     "Chỉ đổi ngưỡng từ mặc định 0,5 sang ngưỡng theo chi phí đã tiết kiệm thêm ~412 triệu/tháng mà không đổi mô hình",
-    "Dòng baseline luật thủ công phải tự tạo (từ src/rules.py chạy trên đúng tập test), không đi mượn — đó là dòng so sánh duy nhất hội đồng thật sự quan tâm; bảng trong bài dùng số minh hoạ (31%/64%) khác số chạy thật ở pr-eval (12,4%/21,8%)",
+    "Dòng baseline luật thủ công phải tự tạo (từ src/rules.py chạy trên đúng tập test), không đi mượn — đó là dòng so sánh duy nhất hội đồng thật sự quan tâm; bảng trong bài dùng số minh hoạ (31%/64%) khác số chạy thật ở pr-eval (32,1%/21,8%)",
     "Ba câu dùng trong bảo vệ: chỉ số quyết định là tổng thiệt hại quy đổi (không phải PR-AUC); ngưỡng chọn bằng tối thiểu hoá hàm chi phí trên validation, không theo mặc định 0,5; khảo sát độ nhạy gấp 8 lần và kết luận không đổi"
    ],
    "viz": "Hình tương tác vẽ đường chi phí theo ngưỡng (hình chữ U) cùng hai đường ngang so sánh: “không làm gì” và “luật thủ công”. Kéo chi phí FP qua khoảng gấp 8 lần thì đáy dịch sang phải và cao lên, nhưng chưa bao giờ vượt lên trên hai đường ngang — đó chính là câu kết luận của bài, một phát biểu về HÌNH DẠNG chứ không phải về một con số. Quá ~60.000₫ thì luật thủ công tụt xuống dưới cả đường “không làm gì”.",
@@ -1703,7 +1703,7 @@
   "f-store": "e994177c",
   "ml-map": "3b1cade0",
   "ml-linear": "7f940022",
-  "ml-metrics": "9f2e8530",
+  "ml-metrics": "0bf345b7",
   "ml-loss": "c70fc01d",
   "ml-trees": "eed77fc7",
   "ml-overfit": "ad82d8c8",
@@ -1714,12 +1714,12 @@
   "ml-shap": "2aebb4c3",
   "ml-unsup": "b2e66fdf",
   "pr-arch": "4521ae12",
-  "pr-code": "b31bca49",
-  "pr-eval": "1257174e",
+  "pr-code": "b6a99bf6",
+  "pr-eval": "70eb47ab",
   "pr-serve": "c09b6ce0",
   "pr-monitor": "03558fa7",
-  "pr-mlops": "2fb8010a",
-  "pr-cost": "ae2f2235",
+  "pr-mlops": "3ffa8c82",
+  "pr-cost": "71f422d2",
   "dl-nn": "103755a4",
   "dl-backprop": "e42f3f57",
   "dl-train": "b517dbc4",

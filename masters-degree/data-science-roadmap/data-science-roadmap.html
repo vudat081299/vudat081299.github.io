@@ -6036,7 +6036,7 @@ cal.fit(X_train, y_train)</div>
     <p class="wb-alert__msg">Hiểu nhầm sắp xảy ra: bạn nhớ 0,412, rồi tới chặng 6 chạy thật ra <b>0,0485</b>, và kết luận mình làm hỏng ở đâu đó. <b>Không hỏng.</b> Trang này có <b>hai hệ số liệu</b> và luôn nói rõ đang dùng hệ nào:<br>
     · <b>Số minh hoạ</b> — bảng trên và mọi con số 0,281 / 0,367 / 0,412 ở các bài lý thuyết. Chúng ở tầm một bộ dữ liệu thẻ <i>thật</i> (IEEE-CIS), dùng để bạn thấy hình dạng bảng và tập đọc chênh lệch.<br>
     · <b>Số chạy thật</b> — bộ mô phỏng trong repo, ở chặng 6. PR-AUC quanh <b>0,03–0,05</b>.<br>
-    Lý do nằm ngay đoạn trên: <b>PR-AUC không có thang tuyệt đối.</b> Nó chỉ đọc được khi kèm <b>mốc dưới</b> (tỉ lệ dương) và, nếu đo được, một <b>mốc trên</b>. Trần toán học của AP luôn là 1 và vô dụng; cái dùng được là <b>mốc oracle đo trên chính bộ dữ liệu đó</b> — với bộ mô phỏng của trang này là khoảng 0,05–0,07, cách đo nằm ở bài <a href="#/pr-code">Code end-to-end</a> — nên 0,0485 là <i>sát mốc đó</i>, còn 0,412 trên bộ đó là bất khả. Hai con số không mâu thuẫn; chúng ở hai bài toán khác nhau.<br>
+    Lý do nằm ngay đoạn trên: <b>PR-AUC không có thang tuyệt đối.</b> Nó chỉ đọc được khi kèm <b>mốc dưới</b> (tỉ lệ dương) và, nếu đo được, một <b>mốc trên</b>. Trần toán học của AP luôn là 1 và vô dụng; cái dùng được là <b>mốc oracle đo trên chính bộ dữ liệu đó</b> — với bộ mô phỏng của trang này (seed 42) là 0,074 trên tập test, cách đo nằm ở bài <a href="#/pr-code">Code end-to-end</a> — nên 0,0485 là khoảng <i>hai phần ba mốc đó</i>, còn 0,412 trên bộ đó là bất khả. Hai con số không mâu thuẫn; chúng ở hai bài toán khác nhau.<br>
     Câu rút ra, dùng được cả trong luận văn: <b>một con số PR-AUC trần trụi không nói lên điều gì</b> — luôn báo cáo kèm tỉ lệ nền, và nếu biết thì kèm cả trần.</p>
   </div></div>
   <table>
@@ -7087,7 +7087,7 @@ HGB_DEFAULTS = dict(
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Hai quyết định trong file này đáng một đoạn trong luận văn</p>
     <p class="wb-alert__msg"><b>Tách <code>DEFAULTS</code> ra:</b> nếu viết <code>LGBMClassifier(..., random_state=SEED, **kw)</code> thì ngày bạn chạy 5 seed và gọi <code>build_pipeline(random_state=43)</code>, Python báo <code>TypeError: got multiple values for keyword argument</code>. Gộp bằng <code>{**DEFAULTS, **kw}</code> thì tham số truyền vào luôn thắng — bạn sẽ cần đúng tính năng đó ở bài <b>Kết quả có ý nghĩa thống kê không</b>.<br>
-    <b>Không đặt <code>class_weight="balanced"</code>:</b> đây là phản xạ số một khi thấy dữ liệu lệch. Trên bộ này nó làm PR-AUC <i>tệ đi</i> (0,029 → 0,026) <b>và</b> phá hỏng hiệu chỉnh xác suất — điểm Brier nhảy từ 0,0021 lên 0,019 trong khi tỉ lệ nền chỉ 0,0021. Hệ quả thật: ngưỡng bạn chọn không còn đọc được như xác suất, nên bạn mất luôn khả năng đối chiếu nó với ngưỡng hoà vốn tính từ ma trận chi phí. Cây boosting xếp hạng tốt mà không cần nó.</p>
+    <b>Không đặt <code>class_weight="balanced"</code>:</b> đây là phản xạ số một khi thấy dữ liệu lệch. Trên bộ này nó làm PR-AUC <i>tệ đi</i> (0,029 → 0,026) <b>và</b> phá hỏng hiệu chỉnh xác suất — điểm Brier nhảy từ 0,0021 lên 0,012 — gấp gần sáu lần — trong khi tỉ lệ nền chỉ 0,0021. Hệ quả thật: ngưỡng bạn chọn không còn đọc được như xác suất, nên bạn mất luôn khả năng đối chiếu nó với ngưỡng hoà vốn tính từ ma trận chi phí. Cây boosting xếp hạng tốt mà không cần nó.</p>
   </div></div>
 
   <h2>6 · <code>src/train.py</code></h2>
@@ -7230,17 +7230,18 @@ train 277,753 | valid 57,722 | test 60,000 (test KHÔNG được chạm ở file
       <tr><td><b>cost_saved 8,5%</b></td><td>Giá trị kinh doanh</td><td>So với <i>không làm gì</i> (cho qua tất). Đây là con số duy nhất trong bảng mà người không làm kỹ thuật đọc được.</td></tr>
     </tbody>
   </table></div>
-  <p><b>Mốc oracle của bộ mô phỏng.</b> Trần lý thuyết của Average Precision, với mọi bài toán, là <b>1</b> — nên đừng gọi con số dưới đây là "trần lý thuyết". Cái đo được ở đây là một thứ hẹp hơn và cụ thể hơn: chấm mỗi giao dịch bằng <i>chính xác suất sinh gian lận</i> mà bộ mô phỏng dùng để tạo nhãn, rồi tính AP trên cùng tập test. Đó là mô hình tốt nhất có thể tồn tại <i>trên bộ dữ liệu này, với đúng những cột này</i> — gọi cho đúng là <b>mốc oracle đo bằng thực nghiệm</b> (empirical oracle benchmark), không phải một hằng số toán học.</p>
+  <p><b>Mốc oracle của bộ mô phỏng.</b> Trần lý thuyết của Average Precision, với mọi bài toán, là <b>1</b> — nên đừng gọi con số dưới đây là "trần lý thuyết". Cái đo được ở đây là một thứ hẹp hơn và cụ thể hơn: chấm mỗi giao dịch bằng <i>chính xác suất sinh gian lận</i> mà bộ mô phỏng dùng để tạo nhãn, rồi tính AP trên cùng tập test. Nó biết cả thứ không cột nào ghi ra — giao dịch này có thuộc một “chiến dịch” hay không — nên mô hình chỉ nhìn cột <i>trên bộ dữ liệu này</i> không vượt được nó, trừ dao động do mẫu nhỏ — gọi cho đúng là <b>mốc oracle đo bằng thực nghiệm</b> (empirical oracle benchmark), không phải một hằng số toán học.</p>
   <div class="ds-code"><i># tái lập mốc oracle — chạy trong repo của bạn, đừng chép con số của người khác</i>
-p_true = sim.fraud_probability(df_test)          <i># xác suất sinh, chỉ simulator mới biết</i>
-oracle_ap = average_precision_score(y_test, p_true)
+<i># from_simulation không trả xác suất sinh ra ngoài: giữ lại biểu thức nằm trong</i>
+<i># rng.binomial(1, ...) thành cột p_true theo tx_id (_finalize sẽ bỏ cột lạ, nên lưu riêng)</i>
+oracle_ap = average_precision_score(y_test, p_true_test)   <i># p_true của đúng các dòng test</i>
 <i># lặp lại với nhiều seed rồi báo cáo trung vị + khoảng, vì AP dao động theo tập sinh ra</i></div>
-  <p>Trên bộ mô phỏng của trang này, mốc đó rơi vào khoảng <b>0,05–0,07</b>. Mô hình đạt khoảng một nửa tới hai phần ba mốc, và phần thiếu có lý do giải thích được: <code>n_tx_1h</code> chỉ là dấu hiệu <i>gián tiếp</i> của một chiến dịch, và giao dịch <b>đầu tiên</b> của mỗi chiến dịch luôn có <code>n_tx_1h = 0</code> nên mô hình không thể nhìn thấy.</p>
+  <p>Trên bộ mô phỏng của trang này với seed 42, mốc đó là <b>0,043 trên validation</b> và <b>0,074 trên test</b>; chạy năm seed thì nó dao động khoảng 0,04–0,12, vì mỗi tập chỉ có trên dưới 120 ca dương. Mô hình đạt 0,0294 trên validation, khoảng <b>hai phần ba</b> mốc của chính tập đó, và phần thiếu có lý do giải thích được: <code>n_tx_1h</code> chỉ là dấu hiệu <i>gián tiếp</i> của một chiến dịch, và giao dịch <b>đầu tiên</b> của mỗi chiến dịch thường có <code>n_tx_1h = 0</code> nên mô hình không nhìn thấy nó.</p>
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Đưa vào luận văn thì phải kèm cách tạo ra nó</p>
-    <p class="wb-alert__msg">Một mốc oracle chỉ có giá trị khi người đọc tái lập được: ghi rõ <b>seed</b>, <b>số lần chạy</b>, <b>phiên bản bộ sinh dữ liệu</b> và <b>khoảng</b> (không chỉ một con số). Khoảng 0,05–0,07 ở trên là kết quả của <i>bộ sinh trong repo này</i>; đổi tham số chiến dịch là mốc đổi theo. Chạy lại bằng chính script của bạn và báo cáo số của bạn — đó cũng là một dòng kết quả đáng có trong chương phương pháp.</p>
+    <p class="wb-alert__msg">Một mốc oracle chỉ có giá trị khi người đọc tái lập được: ghi rõ <b>seed</b>, <b>số lần chạy</b>, <b>phiên bản bộ sinh dữ liệu</b> và <b>khoảng</b> (không chỉ một con số). Các con số ở trên là kết quả của <i>bộ sinh trong repo này</i>; đổi tham số chiến dịch là mốc đổi theo. Chạy lại bằng chính script của bạn và báo cáo số của bạn — đó cũng là một dòng kết quả đáng có trong chương phương pháp.</p>
   </div></div>
-  <p>Biết mốc của bài toán là thứ phân biệt “mô hình của tôi 0,03” với “mô hình của tôi đạt ~60% mức tối đa đo được trên bộ dữ liệu này”.</p>
+  <p>Biết mốc của bài toán là thứ phân biệt “mô hình của tôi 0,03” với “mô hình của tôi đạt khoảng hai phần ba mức tối đa đo được trên bộ dữ liệu này”.</p>
 
   <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Dừng ở đây được rồi — bạn vừa có một mốc thật</p>
@@ -7281,7 +7282,7 @@ oracle_ap = average_precision_score(y_test, p_true)
       <tr><th>Thật sự hợp lệ</th><td><b>0 ₫</b></td><td>40.000 ₫<br><span class="wb-help">công nhân viên gọi xác minh</span></td><td>150.000 ₫<br><span class="wb-help">mất đơn + mất lòng tin</span></td></tr>
     </tbody>
   </table></div>
-  <p>Cộng thêm một ràng buộc mà bài tập hay bỏ qua nhưng hệ thống thật luôn có: <b>đội xác minh có sức chứa hữu hạn</b>. Ở đây đặt 0,5% tổng lưu lượng. Không có ràng buộc này, nghiệm “tối ưu” thường đẩy 8% giao dịch sang REVIEW — một con số đúng về toán và vô dụng về vận hành.</p>
+  <p>Cộng thêm một ràng buộc mà bài tập hay bỏ qua nhưng hệ thống thật luôn có: <b>đội xác minh có sức chứa hữu hạn</b>. Ở đây đặt 0,5% tổng lưu lượng. Không có ràng buộc này, trên bộ mô phỏng nghiệm “tối ưu” đẩy 1,5% giao dịch sang REVIEW — gấp ba sức chứa: một con số đúng về toán và vô dụng về vận hành.</p>
   <div class="ds-code"><i>"""Ngưỡng và quyết định — MỘT nguồn sự thật cho cả offline lẫn API.
 
 train.py chọn ngưỡng trên VALIDATION và ghi vào artifact.
@@ -7378,7 +7379,7 @@ ALLOW, REVIEW, BLOCK = "ALLOW", "REVIEW", "BLOCK"
 
     Ràng buộc `capacity` là thứ phân biệt bài tập với hệ thống thật: đội xác
     minh có sức chứa hữu hạn, nên nghiệm tối ưu không ràng buộc thường vô
-    dụng (nó đẩy 8% lưu lượng sang REVIEW).
+    dụng (trên bộ mô phỏng nó đẩy 1,5% lưu lượng sang REVIEW, gấp ba sức chứa).
     """</i>
     y = np.asarray(y_true).astype(int)
     p = np.asarray(prob, dtype=float)
@@ -7457,7 +7458,7 @@ REVIEW → BLOCK hoà khi   40.000 + p·0,1·3.000.000 = (1−p)·150.000   → 
   <div class="wb-table-scroll"><table>
     <thead><tr><th>Ngưỡng</th><th>Hoà vốn (sức chứa vô hạn)</th><th>Tìm được trên validation</th><th>Đọc thế nào</th></tr></thead>
     <tbody>
-      <tr><td>REVIEW</td><td>0,0148</td><td><b>0,0411</b></td><td>Cao hơn rõ rệt — vì <b>ràng buộc sức chứa đang cắn</b>: hoà vốn (sức chứa vô hạn) đòi xác minh cả dải 0,0148–0,2444, tức ~8% lưu lượng, nhưng đội chỉ nuốt nổi 0,5%. Nên phải nâng sàn xác minh lên, chỉ giữ lại phần rủi ro nhất</td></tr>
+      <tr><td>REVIEW</td><td>0,0148</td><td><b>0,0411</b></td><td>Cao hơn rõ rệt — vì <b>ràng buộc sức chứa đang cắn</b>: hoà vốn (sức chứa vô hạn) đòi xác minh cả dải 0,0148–0,2444, tức ~1,1% lưu lượng validation, nhưng đội chỉ nuốt nổi 0,5%. Nên phải nâng sàn xác minh lên, chỉ giữ lại phần rủi ro nhất</td></tr>
       <tr><td>BLOCK</td><td>0,2444</td><td><b>0,0806</b></td><td><b>Thấp hơn</b> biên lý thuyết 0,2444 — cũng vì sức chứa. Khi ngân sách xác minh đã cạn, một giao dịch không lọt được vào REVIEW chỉ còn hai lựa chọn ALLOW hay BLOCK, mà biên của <i>cặp đó</i> chính là 0,0476. Validation 0,0806 nằm <b>cùng cỡ với 0,0476</b> chứ không phải với 0,2444 — đúng như dự đoán khi sức chứa cắn</td></tr>
     </tbody>
   </table></div>
@@ -7675,27 +7676,41 @@ RULES = [
   <p class="ds-codecap">src/rules.py</p>
 
   <h3>So ở điểm vận hành, không so bằng PR-AUC</h3>
-  <p>Mô hình cho ra xác suất nên nó có một đường cong; luật cho ra một điểm duy nhất. So một đường cong với một điểm bằng diện tích dưới đường cong là <b>so sai</b>. Cách so đúng: đặt cả hai về cùng ba đại lượng mà người vận hành quan tâm — <i>bắt được bao nhiêu · làm phiền bao nhiêu · tốn bao nhiêu tiền</i> — rồi dùng <code>paired_ci</code> ở mục 3 trên <b>hiệu chi phí mỗi giao dịch</b>, vì cả hai chạy trên đúng cùng những dòng test đó.</p>
-  <div class="ds-code"><b>def</b> compare_at_operating_point(y, p_model, d_raw, t_review, t_block):
+  <p>Mô hình cho ra xác suất nên nó có một đường cong; luật cho ra một điểm duy nhất. So một đường cong với một điểm bằng diện tích dưới đường cong là <b>so sai</b>. Cách so đúng: đặt cả hai về cùng ba đại lượng mà người vận hành quan tâm — <i>bắt được bao nhiêu · làm phiền bao nhiêu · tốn bao nhiêu tiền</i> — rồi bootstrap ghép cặp theo thẻ, như <code>paired_ci</code> ở mục 3, trên <b>hiệu chi phí mỗi giao dịch</b>, vì cả hai chạy trên đúng cùng những dòng test đó.</p>
+  <div class="ds-code"><b>def</b> row_cost(y, actions):
+    <i>"""Chi phí của TỪNG dòng theo ma trận chi phí — để bootstrap được trung bình."""</i>
+    cm = cost_matrix()
+    <b>return</b> np.array([cm[("fraud" <b>if</b> t <b>else</b> "legit", a)] <b>for</b> t, a <b>in</b> zip(y, actions)])
+
+
+<b>def</b> compare_at_operating_point(y, p_model, d_raw, t_review, t_block, n=400, seed=42):
     <i>"""Trả về một dòng cho mỗi hệ thống, cùng đơn vị, cùng tập dòng."""</i>
-    rule = rule_decision(d_raw)
+    rule = rule_decision(d_raw).astype(<b>float</b>)
     rows = {
-        "rules":  decision_report(y, rule.astype(<b>float</b>), 0.5, 0.5),   <i># luật: chỉ ALLOW/BLOCK</i>
+        "rules":  decision_report(y, rule, 0.5, 0.5),           <i># luật: chỉ ALLOW/BLOCK</i>
         "model":  decision_report(y, p_model, t_review, t_block),
     }
-    <i># Hiệu chi phí, bootstrap GHÉP CẶP theo thẻ — cùng thẻ, hai hệ thống.</i>
-    delta = paired_ci(y, cost_per_tx_rules, cost_per_tx_model, groups=d_raw["card_id"])
-    <b>return</b> rows, delta</div>
+    <i># Hiệu chi phí mỗi giao dịch, bootstrap GHÉP CẶP theo thẻ: mỗi vòng lấy lại</i>
+    <i># cùng một tập thẻ cho cả hai hệ thống. paired_ci ở mục 3 làm đúng việc này</i>
+    <i># nhưng cho PR-AUC; ở đây metric là chi phí trung bình nên viết thẳng ra.</i>
+    diff = (row_cost(y, decide(p_model, t_review, t_block))
+            - row_cost(y, decide(rule, 0.5, 0.5)))
+    units = _unit_indices(d_raw["card_id"].to_numpy())
+    rng = np.random.default_rng(seed)
+    boots = [diff[np.concatenate([units[k] <b>for</b> k <b>in</b> rng.integers(0, len(units), len(units))])].mean()
+             <b>for</b> _ <b>in</b> range(n)]
+    lo, hi = np.percentile(boots, [2.5, 97.5])
+    <b>return</b> rows, {"delta": <b>float</b>(diff.mean()), "lo": <b>float</b>(lo), "hi": <b>float</b>(hi)}</div>
   <p class="ds-codecap">src/final_eval.py · phần so sánh</p>
   <table>
     <tr><th>Hệ thống</th><th>Bắt được (recall hiệu dụng)</th><th>Cảnh báo / 60k giao dịch</th><th>Chi phí (triệu ₫)</th></tr>
     <tr><td>Không làm gì</td><td>0,0%</td><td>0</td><td>411,0</td></tr>
-    <tr><td>Luật thủ công (4 luật, OR)</td><td>12,4% <i>(17/137)</i></td><td>1.043</td><td>389,6</td></tr>
+    <tr><td>Luật thủ công (4 luật, OR)</td><td>32,1% <i>(44/137)</i></td><td>3.507</td><td>798,5</td></tr>
     <tr><td><b>Mô hình, ngưỡng theo chi phí</b></td><td><b>21,8%</b> <i>(BLOCK 19 vụ + REVIEW 12 vụ, quy đổi theo <code>REVIEW_CATCH</code>)</i></td><td><b>325</b></td><td><b>350,1</b></td></tr>
   </table>
   <p>Ba con số ở dòng cuối lấy nguyên từ khối JSON của mục 6 bên dưới; hai dòng trên lấy từ chính <code>src/rules.py</code> chạy trên đúng những dòng test đó. Đừng lấy số của hai hệ thống từ hai lần chạy khác nhau — cùng một tập dòng là điều kiện để <code>paired_ci</code> có nghĩa.</p>
-  <p><code>paired_ci</code> trên hiệu chi phí mỗi giao dịch: <b>−658 ₫/giao dịch (KTC 95%: −1.104 … −243)</b>, không chứa 0 → chênh lệch là thật, không phải nhiễu.</p>
-  <p>Câu viết được vào luận văn từ ba dòng này: <i>"Mô hình bắt được nhiều hơn luật thủ công 9,4 điểm phần trăm <b>trong khi phát ra ít hơn ba lần số cảnh báo</b> (325 so với 1.043), và mức giảm chi phí có ý nghĩa thống kê theo bootstrap ghép cặp theo thẻ."</i> Cột giữa là cột thuyết phục nhất và cũng là cột hay bị bỏ: một hệ thống bắt nhiều hơn nhưng làm phiền gấp ba thì đội vận hành sẽ tắt nó trong hai tuần.</p>
+  <p>Bootstrap ghép cặp theo thẻ trên hiệu chi phí mỗi giao dịch (mô hình trừ luật): <b>−7.472 ₫/giao dịch (KTC 95%: −8.145 … −6.760)</b>, không chứa 0 → chênh lệch là thật, không phải nhiễu.</p>
+  <p>Câu viết được vào luận văn từ ba dòng này: <i>"Luật thủ công bắt được nhiều hơn (32,1% so với 21,8%) nhưng <b>phát ra gấp gần 11 lần số cảnh báo</b> (3.507 so với 325) và chặn oan nhiều tới mức tổng chi phí còn cao hơn không làm gì; mô hình giảm chi phí 7.472 ₫ mỗi giao dịch so với luật, có ý nghĩa thống kê theo bootstrap ghép cặp theo thẻ."</i> Cột giữa là cột thuyết phục nhất và cũng là cột hay bị bỏ: chỉ nhìn cột recall thì luật thắng, nhưng một hệ thống bắt nhiều hơn mà làm phiền gấp mười thì đội vận hành sẽ tắt nó trong hai tuần.</p>
 
   <h2>5 · <code>src/final_eval.py</code> — mở tập test đúng một lần</h2>
   <p>“Chỉ chạm một lần” mà chỉ là lời hứa trong đầu thì không phải một quy trình. Ở đây nó là ba cái khoá thật:</p>
@@ -7836,10 +7851,10 @@ $ python -m src.final_eval --confirm-freeze
 
   <h2>Đọc bảng đó</h2>
   <ul>
-    <li><b>0,0485 không mâu thuẫn với 0,412 ở bài <a href="#/ml-metrics">Đo lường</a>.</b> Bảng ở bài đó là <b>số minh hoạ</b>, tầm một bộ dữ liệu thẻ thật; đây là <b>số chạy thật trên bộ mô phỏng</b>. Đọc cho đúng thì phải kẹp giữa hai mốc: tỉ lệ nền của tập test là 137/60.000 = <b>0,00228</b>, nên 0,0485 là <b>gấp ~21 lần đoán bừa</b>; và <b>mốc oracle</b> đo được trên bộ mô phỏng chỉ 0,05–0,07 (cách đo ở bài <a href="#/pr-code">Code end-to-end</a> — đó là mốc thực nghiệm của bộ dữ liệu này, không phải trần lý thuyết của AP, vốn luôn bằng 1), nên bạn đang ở <b>sát mốc đó</b>. Cùng lý do đó, recall 21,8% ở đây không phải "kém hơn 64%" — 64% là con số của bài toán khác. Câu viết vào luận văn là câu có hai mốc, không phải con số trần trụi.</li>
+    <li><b>0,0485 không mâu thuẫn với 0,412 ở bài <a href="#/ml-metrics">Đo lường</a>.</b> Bảng ở bài đó là <b>số minh hoạ</b>, tầm một bộ dữ liệu thẻ thật; đây là <b>số chạy thật trên bộ mô phỏng</b>. Đọc cho đúng thì phải kẹp giữa hai mốc: tỉ lệ nền của tập test là 137/60.000 = <b>0,00228</b>, nên 0,0485 là <b>gấp ~21 lần đoán bừa</b>; và <b>mốc oracle</b> đo được trên chính tập test này chỉ 0,074 (cách đo ở bài <a href="#/pr-code">Code end-to-end</a> — đó là mốc thực nghiệm của bộ dữ liệu này, không phải trần lý thuyết của AP, vốn luôn bằng 1), nên bạn đạt khoảng <b>hai phần ba mốc đó</b>. Cùng lý do đó, recall 21,8% ở đây không phải "kém hơn 64%" — 64% là con số của bài toán khác. Câu viết vào luận văn là câu có hai mốc, không phải con số trần trụi.</li>
     <li><b>Cluster rộng hơn row</b> (0,0507 so với 0,0491). Đúng hướng dự đoán: coi mỗi dòng là độc lập làm bạn tưởng mình có 60.000 quan sát, trong khi thật ra chỉ có <b>3.986 thẻ</b>. Khoảng hẹp giả tạo chính là cách người ta tuyên bố “cải thiện có ý nghĩa” cho một chênh lệch chỉ là nhiễu.</li>
     <li><b>Khoảng block chỉ dựa trên 27 khối ngày.</b> Nó hẹp hơn, nhưng <i>hẹp vì quá ít đơn vị</i> chứ không phải vì chắc chắn hơn. Dưới khoảng 20 khối thì bản thân khoảng tin cậy cũng là nhiễu — hãy nói rõ điều đó thay vì chọn con số đẹp nhất.</li>
-    <li><b>PR-AUC test 0,0485 &gt; valid 0,0294.</b> Đây chỉ là mô tả trên hai giai đoạn dữ liệu khác nhau, <b>không</b> phải bằng chứng mô hình mạnh lên theo thời gian. Không được suy kết luận từ việc hai CI riêng chồng lấn hay không; nếu câu hỏi là so hai mô hình trên cùng mẫu, phải bootstrap ghép cặp trên hiệu metric. Với valid và test thuộc hai giai đoạn khác nhau, hãy báo cáo riêng độ bất định, mô tả distribution shift, và chỉ kiểm định một giả thuyết thời gian đã định trước bằng thiết kế theo khối phù hợp.</li>
+    <li><b>PR-AUC test 0,0485 &gt; valid 0,0294.</b> Đây chỉ là mô tả trên hai giai đoạn dữ liệu khác nhau, <b>không</b> phải bằng chứng mô hình mạnh lên theo thời gian. Mốc oracle của hai tập cũng chênh y như vậy (0,043 trên valid, 0,074 trên test): tập test của seed này đơn giản là dễ xếp hạng hơn, và tỉ lệ mô hình/mốc ở hai tập gần nhau (~0,69 và ~0,65). Không được suy kết luận từ việc hai CI riêng chồng lấn hay không; nếu câu hỏi là so hai mô hình trên cùng mẫu, phải bootstrap ghép cặp trên hiệu metric. Với valid và test thuộc hai giai đoạn khác nhau, hãy báo cáo riêng độ bất định, mô tả distribution shift, và chỉ kiểm định một giả thuyết thời gian đã định trước bằng thiết kế theo khối phù hợp.</li>
     <li><b>Cả ba hành động đều có tác dụng:</b> BLOCK bắt 19/137 vụ, REVIEW thêm 12 vụ nữa, tổng recall hiệu dụng 21,8% và tiết kiệm 14,8% thiệt hại so với không làm gì.</li>
   </ul>
 
@@ -7853,8 +7868,9 @@ $ python -m src.final_eval --confirm-freeze
     <i>"""FPR và precision theo nhóm TẠI NGƯỠNG ĐÃ CHỌN — không phải PR-AUC theo nhóm.
     Người dùng chịu hậu quả của một QUYẾT ĐỊNH, không chịu hậu quả của một đường cong."""</i>
     flagged = p &gt;= t_review                <i># REVIEW hoặc BLOCK đều là bị làm phiền</i>
+    g = pd.Series(np.asarray(groups))        <i># index 0..n-1, khớp vị trí của y và p</i>
     rows = []
-    <b>for</b> gname, idx <b>in</b> pd.Series(groups).groupby(pd.Series(groups)).groups.items():
+    <b>for</b> gname, idx <b>in</b> g.groupby(g).groups.items():
         i = np.asarray(idx)
         neg, pos = y[i] == 0, y[i] == 1
         rows.append({
@@ -7869,20 +7885,20 @@ $ python -m src.final_eval --confirm-freeze
     <i># Con số duy nhất đi vào abstract: nhóm tệ nhất bị làm phiền gấp mấy lần nhóm tốt nhất.</i>
     out.attrs["fpr_ratio_max_min"] = out.fpr.max() / max(out.fpr.min(), 1e-9)
     <b>return</b> out</div>
-  <p class="ds-codecap">src/evaluate.py · gọi trong <code>final_eval.py</code> với nhóm bạn khai ở <code>config.py</code></p>
+  <p class="ds-codecap">src/evaluate.py · gọi sau <code>final_eval.py</code>: <code>group_report(y, p, test["device_type"], t_review, t_block)</code></p>
   <table>
     <tr><th>Nhóm (<code>device_type</code>)</th><th>n</th><th>Gian lận thật</th><th>Bị làm phiền oan (FP)</th><th>FPR</th></tr>
-    <tr><td>web</td><td>9.412</td><td>32 <i>(0,34%)</i></td><td>100</td><td><b>1,07%</b></td></tr>
-    <tr><td>mobile</td><td>44.905</td><td>99 <i>(0,22%)</i></td><td>185</td><td>0,41%</td></tr>
-    <tr><td>pos</td><td>5.683</td><td>6 <i>(0,11%)</i></td><td>9</td><td>0,16%</td></tr>
+    <tr><td>pos</td><td>10.307</td><td>21 <i>(0,20%)</i></td><td>57</td><td><b>0,55%</b></td></tr>
+    <tr><td>desktop</td><td>12.561</td><td>31 <i>(0,25%)</i></td><td>61</td><td>0,49%</td></tr>
+    <tr><td>mobile</td><td>37.132</td><td>85 <i>(0,23%)</i></td><td>176</td><td>0,48%</td></tr>
   </table>
   <p>Ba dòng cộng lại phải khớp với khối JSON ở mục 6, và đó là cách bạn biết mình không cắt nhóm sai: <b>60.000 giao dịch · 137 ca gian lận · 294 báo nhầm</b> — cộng 31 ca bắt đúng thì đúng 325 cảnh báo. FPR mỗi dòng là cột FP chia cho số khách <i>không</i> gian lận của nhóm đó, tự kiểm được bằng máy tính.</p>
-  <p><b>Tỉ lệ FPR cao nhất/thấp nhất = 6,7×.</b> Khách dùng web bị làm phiền oan nhiều hơn khách dùng máy POS gần bảy lần. Một phần là thật — tỉ lệ gian lận nền của web cao gấp ba nhóm POS (0,34% so với 0,11%) — nhưng gấp ba không giải thích được gấp bảy. Phần dư là hậu quả của việc áp <i>một</i> ngưỡng lên ba phân bố khác nhau.</p>
+  <p><b>Tỉ lệ FPR cao nhất/thấp nhất = 1,17×.</b> Trên bộ mô phỏng con số này <i>phải</i> gần 1: <code>from_simulation</code> bốc <code>device_type</code> ngẫu nhiên, độc lập với nhãn và với mọi feature, nên không nhóm nào có lý do bị làm phiền nhiều hơn — phần chênh còn lại là nhiễu của vài chục ca mỗi nhóm. Vậy bảng này là phép thử cho chính code đo: nó ra gần 1 ở chỗ biết chắc đáp án là 1. Trên dữ liệu thật (IEEE-CIS có <code>DeviceType</code>), thiết bị có thể tương quan với số tiền, giờ giao dịch và tỉ lệ gian lận nền, nên một ngưỡng chung áp lên các phân bố khác nhau có thể làm phiền một nhóm nhiều hơn hẳn — và lúc đó mới cần ba việc dưới đây.</p>
   <p>Ba điều phải làm với con số đó, theo thứ tự:</p>
   <ol>
     <li><b>Báo cáo nó.</b> Một bảng, một câu. Hội đồng phát hiện ra chênh lệch mà bạn không nêu thì đó là điểm trừ nặng nhất trong buổi bảo vệ; bạn nêu trước rồi thì nó thành bằng chứng bạn hiểu hệ thống của mình.</li>
     <li><b>Thử ngưỡng riêng cho từng nhóm</b> và báo cáo cả hai phương án. Nó thường giảm chênh lệch, nhưng đổi lại tổng chi phí tăng — và với một số quy định thì việc dùng ngưỡng khác nhau theo nhóm <i>tự nó</i> là điều không được phép. Nêu cả đánh đổi này.</li>
-    <li><b>Đừng tuyên bố “mô hình công bằng”.</b> Bạn đo được một chênh lệch trên một định nghĩa (FPR ngang nhau) trên một tập nhóm bạn quan sát được. Các định nghĩa công bằng khác nhau <b>chứng minh được là không thể cùng thoả mãn</b> khi tỉ lệ nền khác nhau, nên "công bằng" không phải một hộp để tích. Viết: <i>"chênh lệch FPR giữa các nhóm thiết bị là 6,7×; chúng tôi báo cáo nó và không tối ưu theo nó"</i> — thành thật và bảo vệ được.</li>
+    <li><b>Đừng tuyên bố “mô hình công bằng”.</b> Bạn đo được một chênh lệch trên một định nghĩa (FPR ngang nhau) trên một tập nhóm bạn quan sát được. Các định nghĩa công bằng khác nhau <b>chứng minh được là không thể cùng thoả mãn</b> khi tỉ lệ nền khác nhau, nên "công bằng" không phải một hộp để tích. Viết: <i>"chênh lệch FPR giữa các nhóm thiết bị là 1,17×; chúng tôi báo cáo nó và không tối ưu theo nó"</i> — thành thật và bảo vệ được.</li>
   </ol>
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Phạm vi của mục này</p>
@@ -8426,7 +8442,8 @@ mlflow.set_experiment("fraud-detection")
   <p><b>Cách thay thế rẻ hơn cho luận văn:</b> đặt tên file có ngày (<code>transactions_2026-03-14.csv</code>), ghi mã băm MD5 vào README, và đừng bao giờ sửa file trong <code>data/raw/</code>. Đạt được mục tiêu chính (tái lập) mà không thêm công cụ.</p>
 
   <h3>3 · Chốt phiên bản thư viện</h3>
-  <div class="ds-code">pip freeze &gt; requirements.txt</div>
+  <div class="ds-code">pip freeze &gt; requirements.txt        <i># trong .venv của riêng dự án</i></div>
+  <p class="wb-help">Freeze trần chỉ sạch trong một <code>venv</code> chỉ cài thư viện của dự án. Trên Colab nó in ra vài trăm gói của máy Colab; ở đó lọc đúng thư viện bạn import như bài <a href="#/t-env">Chỗ làm việc</a>.</p>
   <p>Không có nó, người phản biện chạy code của bạn với <code>scikit-learn</code> mới hơn và <b>ra số khác</b>. Đây là lỗi tái lập phổ biến nhất và cũng dễ tránh nhất.</p>
 
   <h3>4 · CI tối thiểu — GitHub Actions</h3>
@@ -8489,7 +8506,7 @@ FP= 160,000₫  →  ngưỡng 0,602  |  thiệt hại    944 triệu</div>
   <p>Kết luận viết được: <i>"Ngưỡng tối ưu nhạy với giả định chi phí, nhưng mô hình đề xuất vượt baseline trong toàn bộ khoảng khảo sát 20.000–160.000₫."</i> Câu này mạnh hơn nhiều so với việc chọn đại một con số.</p>
 
   <h2>So sánh cuối cùng nên có</h2>
-  <p>Bảng dưới đây dùng <b>số minh hoạ</b> (cùng hệ với bài <a href="#/ml-metrics">Đo lường</a>) — nó cho bạn thấy <i>hình dạng</i> và <i>các cột phải có</i>. Bảng tương ứng <b>chạy thật trên bộ mô phỏng</b> nằm ở mục 4 bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a>, và nó đọc ra 12,4% / 21,8% chứ không phải 31% / 64%. Hai bảng cùng hình dạng, khác bộ dữ liệu — đừng chờ số của bạn khớp bảng này.</p>
+  <p>Bảng dưới đây dùng <b>số minh hoạ</b> (cùng hệ với bài <a href="#/ml-metrics">Đo lường</a>) — nó cho bạn thấy <i>hình dạng</i> và <i>các cột phải có</i>. Bảng tương ứng <b>chạy thật trên bộ mô phỏng</b> nằm ở mục 4 bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a>, và nó đọc ra 32,1% / 21,8% chứ không phải 31% / 64%. Hai bảng cùng hình dạng, khác bộ dữ liệu — đừng chờ số của bạn khớp bảng này.</p>
   <table>
     <tr><th>Phương án</th><th>Bắt được (% giá trị gian lận)</th><th>Số ca xác minh/ngày</th><th>Thiệt hại ròng/tháng</th></tr>
     <tr><td>Không làm gì</td><td>0%</td><td>0</td><td>1.850 triệu ₫</td></tr>
