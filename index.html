@@ -1,417 +1,577 @@
 <!doctype html>
 <!-- =============================================================================
-     TRANG CHỦ — danh mục mọi trang trong repo.
+     TRANG CHỦ — mục lục mọi trang trong repo. Luật: .claude/rules/home.md.
 
-     THIẾT KẾ LẠI 21/09/2026, VÀ CỐ Ý KHÔNG DÙNG BỘ WEB BUILDER.
-     Bản trước dựng trên skill web-builder (wb-shell + wb-navbar + wb-card…).
-     Chủ trang yêu cầu làm lại không dùng bộ ấy, nên trang này giờ TỰ CHỨA: một
-     <style> riêng, prefix `ix-`, không phụ thuộc web-builder.css. Người sau đừng
-     "sửa giúp" bằng cách ráp lại vào bộ — đó là quyết định, không phải thiếu sót.
-     (Thư mục web-builder/ vẫn còn và vẫn là một mục trong danh mục: nó là một
-     project riêng, trang tài liệu của bộ, không liên quan tới trang này.)
+     Tự chứa (REPO-003): <style> riêng, prefix `ix-`, không link web-builder.css,
+     không mặt chữ icon. Nội dung ở data/collection.json (REPO-001): khu → section →
+     mục. Trang đọc bằng fetch nên phải chạy qua HTTP (`python3 -m http.server`).
 
-     Ý đồ: một TRANG MỤC LỤC, không phải một lưới thẻ. 35 mục mở hằng ngày thì
-     quét dòng nhanh hơn quét thẻ — nên là hàng, có gạch chân mảnh, số section
-     01–08, chip phím tắt bên trái. Bỏ hẳn rail/ngăn kéo của bản cũ: mục lục ngang
-     ngay dưới tiêu đề làm đúng việc ấy mà không cần nút gập, và cũng bỏ luôn chỗ
-     từng gây tràn ngang ở máy 320/360px (thanh nav có slot flex:none không bao
-     giờ co).
-
-     Nội dung nằm ở data/collection.json — sửa nội dung thì sửa file đó, đừng viết
-     thẳng vào đây. Trang đọc bằng fetch nên phải chạy qua HTTP:
-     `python3 -m http.server` rồi mở localhost; mở bằng file:// sẽ rơi vào catch.
+     Màu: đen, trắng, một xanh lá. Xanh chỉ dùng cho thứ cần mắt tìm: khu đang học,
+     số section, chip phím khi rê, focus.
      ========================================================================== -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
-    <title>vudat081299 · Collection</title>
-    <meta name="description" content="A collection of small web pages: tools, self-study courses, recipes, book summaries and graduate course material." />
+    <meta name="theme-color" id="theme-color" content="#f5f6f3" />
+    <title>vudat081299 · Index</title>
+    <meta name="description" content="What I know and what I'm learning: graduate data science, machine learning, science, thinking, books, cooking and a few tools." />
 
     <script>
-      /* Theme TRƯỚC lần vẽ đầu, để người dùng nền tối không thấy chớp trắng.
-         Khoá 'hub-theme' — 40 trang khác trong repo đang dùng đúng khoá này, đổi
-         tên khoá là mất lựa chọn đã lưu của người đọc.
-         Khác bản cũ một điểm: CHƯA từng bấm nút thì theo hệ điều hành, thay vì
-         mặc định sáng. Đã bấm rồi thì lựa chọn của người dùng thắng, luôn luôn. */
+      /* Theme trước lần vẽ đầu, để nền tối không chớp trắng. Khoá 'hub-theme' dùng chung
+         với các trang khác trong repo. Chưa chọn thì theo hệ điều hành. */
       (function () {
         var v;
         try { v = localStorage.getItem('hub-theme'); } catch (e) {}
         var dark = v ? v === 'dark'
                      : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (dark) document.documentElement.classList.add('dark');
+        var m = document.getElementById('theme-color');
+        if (m) m.setAttribute('content', dark ? '#090b0a' : '#f5f6f3');
       })();
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Hai mặt chữ, cả hai CÓ bộ dấu tiếng Việt — bắt buộc, vì mô tả trong
-         collection.json trộn Anh/Việt. (Instrument Serif đẹp hơn cho tiêu đề
-         nhưng không có subset `vietnamese`, nên loại.)
-         XIN ĐÚNG THỨ DÙNG, không xin cả trục biến thiên: bỏ dải nét
-         600..700 (trang chỉ dùng 600) cắt subset latin của Fraunces từ 65 xuống
-         34 KB. NHƯNG GIỮ trục `opsz` — ghim opsz@144 còn 16 KB, rẻ hơn nữa, mà
-         144 là bản khắc cho cỡ chữ RẤT LỚN: tiêu đề section 23–31px hoá ra mảnh
-         như sợi tóc. Trình duyệt tự chọn điểm opsz theo font-size, nên để dải.
-         Tổng font lần mở đầu ~100 KB, sau đó nằm cache trình duyệt. -->
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Be+Vietnam+Pro:wght@400;600&display=swap" rel="stylesheet" />
+    <!-- Ba mặt chữ, cả ba có subset vietnamese (U+1EA0-1EF9). Chỉ xin đúng nét dùng:
+         Space Grotesk 600 cho tiêu đề, Be Vietnam Pro 400/600 cho chữ, JetBrains Mono 500
+         cho chip phím và nhãn. -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&family=Be+Vietnam+Pro:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
 
     <style>
       /* ==========================================================================
-         TOKEN — giấy & mực, một màu nhấn. Đổi ở đây, đừng rải màu vào từng luật.
+         TOKEN — đổi màu ở đây, đừng rải vào từng luật.
+         Tương phản đo bằng tools/smoke-index.js (≥ 4,5:1 trên nền thật của từng chữ).
          ========================================================================== */
       :root {
-        --paper:   #f7f5f0;   /* giấy ấm, không phải trắng tinh */
-        --paper-2: #fffefb;   /* mặt nổi: chip phím, ô tìm kiếm */
-        --ink:     #1a1815;
-        --ink-2:   #5f594f;   /* chữ phụ: mô tả, meta — 6,36:1 trên giấy */
-        --ink-3:   #726b5f;   /* mờ nhất: số thứ tự, đếm — 4,84:1, vẫn qua AA */
-        --rule:    #cbc4b5;   /* gạch đậm: dưới section, quanh ô nhập */
-        --rule-2:  #e7e2d7;   /* gạch mảnh: giữa các hàng */
-        --accent:  #b4441c;
-        --accent-soft: rgba(180, 68, 28, .085);
+        --bg:        #f5f6f3;
+        --surface:   #ffffff;
+        --surface-2: #eceee9;
+        --ink:       #0b0f0c;
+        --ink-2:     #464e48;
+        --ink-3:     #5b645e;
+        --line:      #d6dad4;
+        --line-2:    #e6e9e4;
+        --green:     #0a7a3c;              /* chữ xanh trên nền sáng */
+        --green-hi:  #16a34a;              /* chấm, vạch — không dùng cho chữ */
+        --green-soft: rgba(22, 163, 74, .09);
+        --green-line: rgba(10, 122, 60, .32);
+        --on-green:  #ffffff;
+        --scrim:     rgba(11, 15, 12, .38);
+        --shadow:    0 24px 60px -18px rgba(11, 15, 12, .35), 0 2px 6px rgba(11, 15, 12, .06);
 
-        --wrap: 1100px;
-        --bar-h: 61px;
-        --pad: 28px;
+        --wrap: 1240px;
+        --pad: 32px;
+        --bar-h: 64px;
 
-        --serif: 'Fraunces', Georgia, 'Times New Roman', serif;
-        --sans:  'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-        --mono:  ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+        --display: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --sans:    'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        --mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       }
       html.dark {
-        --paper:   #121110;
-        --paper-2: #1c1a17;
-        --ink:     #ebe6db;
-        --ink-2:   #a8a195;   /* 7,36:1 trên nền tối */
-        --ink-3:   #8f887c;   /* 5,37:1 */
-        --rule:    #3b372f;
-        --rule-2:  #262320;
-        --accent:  #e8794a;
-        --accent-soft: rgba(232, 121, 74, .12);
+        --bg:        #090b0a;
+        --surface:   #101412;
+        --surface-2: #171c19;
+        --ink:       #eef2ed;
+        --ink-2:     #a9b3ac;
+        --ink-3:     #8d9891;
+        --line:      #262d29;
+        --line-2:    #1a201c;
+        --green:     #5be08f;
+        --green-hi:  #5be08f;
+        --green-soft: rgba(91, 224, 143, .09);
+        --green-line: rgba(91, 224, 143, .30);
+        --on-green:  #04130a;
+        --scrim:     rgba(0, 0, 0, .62);
+        --shadow:    0 30px 80px -20px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 255, 255, .02);
       }
 
       /* ==========================================================================
          NỀN
          ========================================================================== */
       *, *::before, *::after { box-sizing: border-box; }
-      /* Lọc bằng thuộc tính `hidden` chuẩn, không bịa class .is-hidden. !important
-         vì nhiều phần tử ở dưới khai display:grid/flex, thắng [hidden] của trình duyệt. */
+      /* Lọc bằng thuộc tính `hidden`; !important vì nhiều phần tử khai display riêng. */
       [hidden] { display: none !important; }
 
       html { -webkit-text-size-adjust: 100%; }
+      @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+      html.ix-locked { overflow: hidden; }
       body {
         margin: 0;
-        background: var(--paper);
+        background: var(--bg);
         color: var(--ink);
-        font-family: var(--sans);
-        font-size: 15px;
-        line-height: 1.55;
+        font: 400 15px/1.55 var(--sans);
         -webkit-font-smoothing: antialiased;
-        /* Trang ngắn (ví dụ: tìm không ra gì) vẫn phải có chân trang chạm đáy,
-           không để một dải giấy trống bên dưới. */
         min-height: 100vh;
         display: flex;
         flex-direction: column;
       }
       a { color: inherit; }
-      ::selection { background: var(--accent); color: #fff; }
-
-      /* Viền focus dùng chung — không tắt outline ở đâu cả. */
-      :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+      ::selection { background: var(--green-hi); color: #fff; }
+      :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: 4px; }
 
       .ix-wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 var(--pad); }
       .ix-sr {
         position: absolute; width: 1px; height: 1px; overflow: hidden;
         clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
       }
+      kbd {
+        font: 500 11px/1 var(--mono); color: var(--ink-2);
+        background: var(--surface); border: 1px solid var(--line); border-bottom-width: 2px;
+        border-radius: 5px; padding: 2px 5px;
+      }
 
       /* ==========================================================================
-         THANH TRÊN — dính, một gạch chân, không đổ bóng.
+         THANH TRÊN — dính ở máy tính; ở điện thoại chỉ thanh chip section dính.
          ========================================================================== */
       .ix-bar {
         position: sticky; top: 0; z-index: 30;
-        background: color-mix(in srgb, var(--paper) 88%, transparent);
-        backdrop-filter: saturate(140%) blur(10px);
-        border-bottom: 1px solid var(--rule);
+        background: color-mix(in srgb, var(--bg) 84%, transparent);
+        backdrop-filter: saturate(160%) blur(12px);
+        -webkit-backdrop-filter: saturate(160%) blur(12px);
+        border-bottom: 1px solid var(--line);
       }
-      @supports not (backdrop-filter: blur(1px)) { .ix-bar { background: var(--paper); } }
+      @supports not (backdrop-filter: blur(1px)) { .ix-bar { background: var(--bg); } }
+      .ix-bar__in { display: flex; align-items: center; gap: 14px; min-height: var(--bar-h); }
 
-      .ix-bar__in {
-        display: flex; align-items: center; gap: 14px;
-        min-height: var(--bar-h); flex-wrap: wrap;
-      }
       .ix-brand {
-        font-family: var(--mono); font-size: 12px; letter-spacing: .14em;
-        text-transform: uppercase; text-decoration: none; white-space: nowrap;
-        /* flex:none nhưng là CHỮ NGẮN cố định — khác bản cũ, chỗ này không phình. */
-        flex: none;
+        display: inline-flex; align-items: center; gap: 10px; flex: none;
+        font: 500 12.5px/1 var(--mono); text-decoration: none; color: var(--ink);
+        min-height: 44px;
       }
-      .ix-brand b { font-weight: 600; }
+      .ix-brand__mark {
+        position: relative; width: 24px; height: 24px; flex: none;
+        border-radius: 7px; background: var(--ink);
+      }
+      .ix-brand__mark::after {
+        content: ''; position: absolute; left: 6px; bottom: 6px; width: 9px; height: 3px;
+        border-radius: 1px; background: var(--green-hi);
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .ix-brand__mark::after { animation: ix-blink 1.1s steps(1) 0s 5; }
+      }
+      @keyframes ix-blink { 50% { opacity: 0; } }
       .ix-brand span { color: var(--ink-3); }
+      .ix-brand b { font-weight: 500; color: var(--ink); }
 
-      /* Ô tìm kiếm là thứ DUY NHẤT được co giãn trong thanh — mọi thứ khác bề ngang
-         cố định, nên không bao giờ có chuyện tổng bề ngang vượt màn. */
-      .ix-search { flex: 1 1 200px; min-width: 0; position: relative; display: flex; }
+      .ix-search {
+        position: relative; display: flex; align-items: center; gap: 14px;
+        flex: 1 1 320px; max-width: 600px; min-width: 0; margin-left: auto;
+      }
+      .ix-search__box { position: relative; display: flex; flex: 1 1 auto; min-width: 0; }
       .ix-search svg {
-        position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
-        width: 15px; height: 15px; color: var(--ink-3); pointer-events: none;
+        position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+        width: 16px; height: 16px; color: var(--ink-3); pointer-events: none;
       }
       .ix-search input {
-        width: 100%; min-width: 0;
-        font: 400 14px/1.4 var(--sans); color: var(--ink);
-        background: var(--paper-2);
-        border: 1px solid var(--rule); border-radius: 7px;
-        padding: 8px 12px 8px 33px;
+        width: 100%; min-width: 0; height: 42px;
+        font: 400 14.5px/1.3 var(--sans); color: var(--ink);
+        background: var(--surface);
+        border: 1px solid var(--line); border-radius: 11px;
+        padding: 0 40px 0 38px;
         -webkit-appearance: none; appearance: none;
+        transition: border-color .15s ease, box-shadow .15s ease;
       }
       .ix-search input::placeholder { color: var(--ink-3); }
-      .ix-search input:focus { outline: none; border-color: var(--accent); }
+      .ix-search input:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px var(--green-soft); }
       .ix-search input::-webkit-search-cancel-button { -webkit-appearance: none; }
+      .ix-search kbd { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+      .ix-search input:focus + kbd, .ix-search input:not(:placeholder-shown) + kbd { display: none; }
 
       .ix-count {
-        font-family: var(--mono); font-size: 11px; color: var(--ink-3);
-        white-space: nowrap; flex: none;
+        flex: none; font: 500 11.5px/1 var(--mono); color: var(--ink-3);
+        white-space: nowrap; font-variant-numeric: tabular-nums;
       }
       .ix-iconbtn {
         flex: none; display: inline-grid; place-items: center;
-        width: 32px; height: 32px; padding: 0;
-        color: var(--ink-2); background: none; border: 1px solid transparent;
-        border-radius: 7px; cursor: pointer;
+        width: 42px; height: 42px; padding: 0;
+        color: var(--ink-2); background: var(--surface);
+        border: 1px solid var(--line); border-radius: 11px; cursor: pointer;
+        transition: color .15s ease, border-color .15s ease;
       }
-      .ix-iconbtn:hover { color: var(--ink); border-color: var(--rule); background: var(--paper-2); }
-      .ix-iconbtn svg { width: 17px; height: 17px; }
+      .ix-iconbtn:hover { color: var(--ink); border-color: var(--ink-3); }
+      .ix-iconbtn svg { width: 18px; height: 18px; }
       html:not(.dark) .ix-icon--moon, html.dark .ix-icon--sun { display: none; }
 
-      /* Máy hẹp: thương hiệu + nút ở hàng trên, ô tìm kiếm chiếm trọn hàng dưới.
-         Thứ tự DOM giữ nguyên, chỉ đổi order — bàn phím vẫn đi đúng chiều đọc. */
-      .ix-break { display: none; }
-      @media (max-width: 620px) {
-        :root { --pad: 20px; }
-        .ix-bar__in { padding: 9px var(--pad) 11px; gap: 10px 12px; }
-        .ix-brand   { order: 1; margin-right: auto; }
-        .ix-iconbtn { order: 2; }
-        .ix-break   { display: block; order: 3; flex: 0 0 100%; height: 0; }
-        .ix-search  { order: 4; flex: 1 1 120px; }
-        .ix-count   { order: 5; flex: none; }
-        /* "· 8 sections" là thứ đã có trong mục lục ngay dưới — bỏ ở đây để ô
-           tìm kiếm còn chỗ thở. Khi đang lọc thì chuỗi vốn đã ngắn. */
-        .ix-count__x { display: none; }
-      }
-
       /* ==========================================================================
-         TIÊU ĐỀ TRANG
+         ĐẦU TRANG — tiêu đề bên trái, mục lục theo khu bên phải (máy tính).
          ========================================================================== */
-      .ix-hero { padding: clamp(40px, 8vw, 84px) 0 clamp(26px, 4vw, 40px); }
+      .ix-main {
+        display: grid; grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: 56px; align-items: end;
+      }
+      .ix-hero { padding: 40px 0 6px; min-width: 0; }
       .ix-eyebrow {
-        margin: 0 0 18px; font-family: var(--mono); font-size: 11px;
-        letter-spacing: .16em; text-transform: uppercase; color: var(--accent);
+        display: flex; align-items: center; gap: 10px;
+        margin: 0 0 16px; font: 500 11.5px/1 var(--mono);
+        letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2);
       }
+      .ix-eyebrow::before { content: ''; width: 18px; height: 2px; background: var(--green-hi); border-radius: 2px; }
       .ix-hero h1 {
-        margin: 0;
-        font-family: var(--serif); font-weight: 600;
-        font-size: clamp(46px, 11vw, 104px);
-        line-height: .92; letter-spacing: -.022em;
-        /* Từ dài trong tiêu đề không được đẩy ngang ở máy hẹp. */
-        overflow-wrap: break-word;
+        margin: 0; max-width: 15ch;
+        font: 600 clamp(32px, 4.6vw, 54px)/1.02 var(--display);
+        letter-spacing: -.035em; overflow-wrap: break-word;
       }
-      .ix-lede {
-        margin: 20px 0 0; max-width: 46ch;
-        font-size: 16px; line-height: 1.6; color: var(--ink-2);
-      }
+      .ix-hero h1 em { font-style: normal; color: var(--green); }
+      .ix-lede { margin: 16px 0 0; max-width: 52ch; font-size: 15px; line-height: 1.6; color: var(--ink-2); }
 
-      /* ==========================================================================
-         MỤC LỤC — thay cho rail của bản cũ. Không nút gập, không ngăn kéo.
-         ========================================================================== */
+      /* ---- mục lục --------------------------------------------------------------
+         Máy tính: ba cột nhỏ, mỗi khu một cột. Điện thoại: thanh chip dính, cuộn ngang. */
       .ix-toc {
-        display: grid; gap: 1px;
-        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-        background: var(--rule-2);
-        border: 1px solid var(--rule-2); border-radius: 10px; overflow: hidden;
-        margin-bottom: clamp(36px, 6vw, 64px);
+        display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, auto);
+        gap: 0 34px; padding-bottom: 6px;
       }
+      .ix-toc__z { display: flex; flex-direction: column; min-width: 0; }
+      .ix-toc__zl {
+        padding-bottom: 8px; margin-bottom: 4px; border-bottom: 1px solid var(--line);
+        font: 500 10.5px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase;
+        color: var(--ink-3); white-space: nowrap;
+      }
+      div.ix-toc__z:first-of-type .ix-toc__zl { color: var(--green); border-bottom-color: var(--green-line); }
       .ix-toc a {
-        display: flex; align-items: baseline; gap: 9px;
-        padding: 11px 13px; text-decoration: none;
-        background: var(--paper);
+        display: flex; align-items: baseline; gap: 10px;
+        padding: 5px 0; text-decoration: none; white-space: nowrap;
       }
-      .ix-toc a:hover { background: var(--accent-soft); }
-      .ix-toc a.is-active { background: var(--accent-soft); }
-      .ix-toc a.is-active .ix-toc__n { color: var(--accent); }
-      .ix-toc__n {
-        font-family: var(--mono); font-size: 11px; color: var(--ink-3);
-        font-variant-numeric: tabular-nums; flex: none;
-      }
-      .ix-toc__l {
-        font-size: 13.5px; font-weight: 600; line-height: 1.3;
-        min-width: 0; overflow-wrap: break-word;
-      }
-      .ix-toc__c {
-        margin-left: auto; font-family: var(--mono); font-size: 11px;
-        color: var(--ink-3); font-variant-numeric: tabular-nums; flex: none;
-      }
+      .ix-toc__n { font: 500 10.5px/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+      .ix-toc__l { font-size: 13.5px; font-weight: 600; line-height: 1.3; }
+      .ix-toc__c { margin-left: auto; padding-left: 14px; font: 500 10.5px/1 var(--mono); color: var(--ink-3); }
+      .ix-toc a:hover .ix-toc__l { color: var(--green); }
+      .ix-toc a.is-active .ix-toc__n { color: var(--green); }
+      .ix-jumpq { display: none; }
 
       /* ==========================================================================
-         SECTION
+         KHU — nhóm các section. Khu đầu (đang học) được tô nổi.
          ========================================================================== */
-      .ix-sec { scroll-margin-top: calc(var(--bar-h) + 18px); margin-bottom: clamp(44px, 7vw, 76px); }
+      #sections { grid-column: 1 / -1; }
+      .ix-zone { margin-top: 44px; scroll-margin-top: calc(var(--bar-h) + 16px); }
+      .ix-zone__head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; min-width: 0; }
+      .ix-zone__t {
+        margin: 0; flex: none;
+        font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink);
+      }
+      .ix-zone__d { margin: 0; min-width: 0; font-size: 13px; line-height: 1.4; color: var(--ink-3); }
+      .ix-zone__head::after { content: ''; flex: 1 1 24px; height: 1px; background: var(--line); }
 
+      .ix-zone__grid {
+        display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 30px 40px; align-items: start;
+      }
+
+      /* Khu đầu: khung viền xanh, ánh xanh rất nhẹ ở góc. */
+      .ix-zone:first-child {
+        margin-top: 36px; padding: 22px 26px 14px;
+        border: 1px solid var(--green-line); border-radius: 20px;
+        background:
+          radial-gradient(120% 90% at 0% 0%, var(--green-soft), transparent 60%),
+          var(--surface);
+      }
+      .ix-zone:first-child .ix-zone__t { color: var(--green); display: inline-flex; align-items: center; gap: 9px; }
+      .ix-zone:first-child .ix-zone__t::before {
+        content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--green-hi);
+        box-shadow: 0 0 0 0 var(--green-line);
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .ix-zone:first-child .ix-zone__t::before { animation: ix-pulse 2.4s ease-out infinite; }
+      }
+      @keyframes ix-pulse {
+        0% { box-shadow: 0 0 0 0 var(--green-line); }
+        70%, 100% { box-shadow: 0 0 0 7px transparent; }
+      }
+      .ix-zone:first-child .ix-zone__head::after { background: var(--green-line); }
+
+      /* ==========================================================================
+         SECTION — không đóng khung: một vạch trên, số, tên, đếm.
+         ========================================================================== */
+      .ix-sec { min-width: 0; scroll-margin-top: calc(var(--bar-h) + 16px); }
       .ix-sec__head {
-        display: flex; align-items: baseline; gap: 14px;
-        padding-bottom: 12px; border-bottom: 2px solid var(--ink);
+        display: flex; align-items: baseline; gap: 10px;
+        padding-top: 12px; border-top: 2px solid var(--ink);
       }
-      .ix-sec__n {
-        font-family: var(--mono); font-size: 12px; color: var(--accent);
-        font-variant-numeric: tabular-nums; flex: none; letter-spacing: .04em;
+      .ix-zone:first-child .ix-sec__head { border-top-color: var(--green-hi); }
+      .ix-sec__n { flex: none; font: 500 11px/1 var(--mono); color: var(--green); font-variant-numeric: tabular-nums; }
+      .ix-sec__t {
+        margin: 0; min-width: 0; overflow-wrap: break-word;
+        font: 600 19px/1.2 var(--display); letter-spacing: -.015em;
       }
-      .ix-sec__head h2 {
-        margin: 0; font-family: var(--serif); font-weight: 600;
-        font-size: clamp(23px, 3.4vw, 31px); line-height: 1.12; letter-spacing: -.015em;
-        min-width: 0; overflow-wrap: break-word;
-      }
-      .ix-sec__c {
-        margin-left: auto; flex: none;
-        font-family: var(--mono); font-size: 11px; color: var(--ink-3);
-        font-variant-numeric: tabular-nums;
-      }
-      .ix-sec__desc {
-        margin: 12px 0 4px; max-width: 62ch;
-        font-size: 13.5px; line-height: 1.6; color: var(--ink-2);
+      .ix-sec__c { margin-left: auto; flex: none; font: 500 11px/1 var(--mono); color: var(--ink-3); }
+      .ix-sec__desc { margin: 5px 0 8px; font-size: 12.5px; line-height: 1.45; color: var(--ink-2); }
+
+      /* Section môn học rộng hai cột ở màn rộng, các môn chảy thành hai cột bên trong. */
+      @media (min-width: 1100px) {
+        .ix-sec[data-kind="subjects"] { grid-column: span 2; }
+        .ix-sec[data-kind="subjects"] .ix-sec__body { columns: 2; column-gap: 40px; }
       }
 
-      /* ---- lưới hàng: hai cột trên màn rộng, một cột ở dưới ------------------
-         Dùng grid (không phải columns) để gạch chân của hai cột thẳng hàng nhau —
-         trông như một bảng mục lục thật chứ không phải hai danh sách rời. */
-      .ix-rows { display: grid; grid-template-columns: 1fr; column-gap: 40px; }
-      @media (min-width: 1000px) { .ix-rows--two { grid-template-columns: 1fr 1fr; } }
-
-      /* ---- một hàng ---------------------------------------------------------- */
+      /* ---- một hàng ------------------------------------------------------------- */
       .ix-row {
-        display: grid;
-        grid-template-columns: 26px minmax(0, 1fr) 16px;
-        align-items: start; gap: 2px 12px;
-        padding: 13px 10px 13px 0;
-        border-bottom: 1px solid var(--rule-2);
+        position: relative; isolation: isolate;
+        display: grid; grid-template-columns: 24px minmax(0, 1fr);
+        column-gap: 12px; align-items: start;
+        min-height: 44px; padding: 9px 0;
+        border-top: 1px solid var(--line-2);
         text-decoration: none;
-        border-radius: 6px 6px 0 0;
-        position: relative;
       }
-      .ix-row:hover { background: var(--accent-soft); }
-      .ix-row:hover .ix-row__go { color: var(--accent); transform: translateX(3px); }
-      .ix-row:hover .ix-row__t { color: var(--accent); }
-      /* Vạch nhấn bên trái khi rê chuột — thay cho việc đổi màu cả khối. */
       .ix-row::before {
-        content: ''; position: absolute; left: -10px; top: 6px; bottom: 6px; width: 2px;
-        background: var(--accent); border-radius: 2px; opacity: 0;
+        content: ''; position: absolute; z-index: -1; inset: 0 -10px;
+        border-radius: 9px; background: var(--green-soft); opacity: 0;
+        transition: opacity .12s ease;
       }
-      .ix-row:hover::before { opacity: 1; }
+      .ix-row:hover::before, .ix-row:focus-visible::before { opacity: 1; }
+      .ix-row:focus-visible { outline-offset: 0; }
 
       .ix-key {
-        grid-row: span 2;
-        display: grid; place-items: center;
-        width: 22px; height: 22px; margin-top: 1px;
-        font-family: var(--mono); font-size: 11px; line-height: 1;
-        color: var(--ink-2); background: var(--paper-2);
-        border: 1px solid var(--rule); border-radius: 5px;
+        grid-row: span 2; margin-top: 1px;
+        display: grid; place-items: center; width: 24px; height: 22px;
+        font: 500 11px/1 var(--mono); color: var(--ink-2);
+        background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px;
+        transition: background-color .12s ease, color .12s ease, border-color .12s ease;
       }
-      /* Mục không có phím thì KHÔNG vẽ chip rỗng — chỉ chừa đúng chỗ để chữ của
-         mọi hàng vẫn thẳng một cột. */
-      .ix-key--none { border-color: transparent; background: none; }
-      .ix-row__t { font-size: 14.5px; font-weight: 600; line-height: 1.35; }
-      .ix-row__d { grid-column: 2; font-size: 13px; line-height: 1.5; color: var(--ink-2); }
+      /* Mục không có phím: giữ chỗ để chữ mọi hàng thẳng cột, không vẽ chip rỗng. */
+      .ix-key--none { visibility: hidden; }
+      .ix-row:hover .ix-key, .ix-row:focus-visible .ix-key {
+        background: var(--green); border-color: var(--green); color: var(--on-green);
+      }
+      .ix-row__t { min-width: 0; font-size: 14px; font-weight: 600; line-height: 1.35; }
+      /* Rộng 0: mũi tên ẩn không được đẩy chữ xuống dòng, chỉ tràn ra sau chữ. */
       .ix-row__go {
-        grid-row: span 2; align-self: center;
-        font-family: var(--mono); font-size: 13px; color: var(--ink-3);
-        transition: transform .14s ease, color .14s ease;
+        display: inline-block; width: 0; padding-left: 6px; white-space: nowrap; color: var(--green);
+        opacity: 0; transform: translateX(-4px);
+        transition: opacity .12s ease, transform .12s ease;
       }
-      @media (prefers-reduced-motion: reduce) { .ix-row__go { transition: none; } }
+      .ix-row:hover .ix-row__go, .ix-row:focus-visible .ix-row__go { opacity: 1; transform: none; }
+      .ix-row__d { grid-column: 2; min-width: 0; font-size: 12.5px; line-height: 1.45; color: var(--ink-2); }
 
-      /* ---- môn học (kind: subjects) -------------------------------------------
-         Một cột: dòng con có `sub` dài tới ~200 ký tự, chia hai cột là ép chữ
-         thành tháp. Nhóm con thụt vào sau một gạch dọc để thấy rõ cấp. */
-      .ix-subj { margin-top: 22px; }
-      .ix-subj__head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-      .ix-subj__t { font-size: 14.5px; font-weight: 600; }
-      .ix-subj__m { font-size: 12.5px; color: var(--ink-3); }
-      .ix-subj__c {
-        margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+      /* ---- môn học (kind: subjects) -------------------------------------------- */
+      .ix-subj { break-inside: avoid; padding-top: 8px; }
+      .ix-subj__head {
+        display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+        padding: 4px 0 6px;
       }
-      .ix-subj__rows {
-        margin-top: 6px; padding-left: 14px; border-left: 1px solid var(--rule-2);
+      .ix-subj__t {
+        font: 500 10.5px/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink);
       }
-      .ix-subj__rows .ix-row:last-child { border-bottom: 0; }
+      .ix-subj__m { font-size: 12px; line-height: 1.3; color: var(--ink-3); }
 
       /* ==========================================================================
-         DANH SÁCH ẨN — bật/tắt bằng ⇧?, hoặc gõ ? vào ô tìm kiếm (xem script ở cuối).
-         Bảng nổi cố định ở đáy khung nhìn, không nằm trong luồng trang: người đang
-         cuộn giữa trang vẫn thấy nó, và nó hiện/biến mất không làm trang nhảy.
+         DANH SÁCH ẨN — máy tính: bảng nổi ở đáy khung nhìn; điện thoại: bottom sheet.
+         Bật/tắt bằng ⇧? hoặc gõ ? vào ô tìm kiếm (xem script).
          ========================================================================== */
+      .ix-scrim {
+        position: fixed; inset: 0; z-index: 40;
+        background: var(--scrim); touch-action: none;
+        -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+      }
       .ix-hold {
-        position: fixed; z-index: 40; left: 50%; bottom: 24px; transform: translateX(-50%);
-        width: min(1040px, calc(100vw - 2 * var(--pad)));
-        max-height: calc(100vh - 48px); overflow-y: auto;
-        padding: 14px 18px 4px;
-        background: var(--paper-2); border: 1px solid var(--rule); border-radius: 10px;
-        box-shadow: 0 14px 44px rgba(0, 0, 0, .2);
+        position: fixed; z-index: 41; left: 0; right: 0; bottom: 24px; margin: 0 auto;
+        width: min(980px, calc(100vw - 2 * var(--pad)));
+        max-height: calc(100vh - 48px);
+        display: flex; flex-direction: column;
+        background: var(--surface); color: var(--ink);
+        border: 1px solid var(--line); border-radius: 18px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
       }
+      .ix-hold:focus { outline: none; }
+      .ix-hold__bar {
+        position: relative; flex: none;
+        display: flex; align-items: center; gap: 12px;
+        padding: 14px 14px 12px 22px; border-bottom: 1px solid var(--line-2);
+      }
+      .ix-hold__grab { display: none; }
       .ix-hold__t {
-        margin: 0 0 2px; font-family: var(--mono); font-size: 11px;
-        letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3);
+        margin: 0; display: inline-flex; align-items: center; gap: 9px;
+        font: 500 11.5px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink);
       }
-      /* Hai cột từ 1000px như lưới chính; hàng cuối của mỗi cột bỏ gạch chân. */
-      /* Máy hẹp: chừa khoảng trống phía trên để chạm ra ngoài mà đóng; bảng tự cuộn. */
-      @media (max-width: 640px) { .ix-hold { max-height: 66vh; overscroll-behavior: contain; } }
-      .ix-hold .ix-rows { padding-bottom: 4px; }
-      .ix-hold .ix-row:last-child { border-bottom: 0; }
-      @media (min-width: 1000px) {
-        .ix-hold .ix-row:nth-last-child(2):nth-child(odd) { border-bottom: 0; }
+      .ix-hold__t::before {
+        content: ''; width: 8px; height: 8px; border-radius: 2px;
+        border: 1.5px solid var(--green-hi);
       }
+      .ix-hold__hint { margin: 0 0 0 auto; font-size: 12px; color: var(--ink-3); display: flex; gap: 6px; align-items: center; }
+      .ix-hold__x {
+        flex: none; display: inline-grid; place-items: center;
+        width: 44px; height: 44px; padding: 0; margin: -6px 0;
+        color: var(--ink-2); background: none; border: 0; border-radius: 12px; cursor: pointer;
+      }
+      .ix-hold__x:hover { color: var(--ink); background: var(--surface-2); }
+      .ix-hold__x svg { width: 18px; height: 18px; }
+      .ix-hold__body {
+        overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 6px 32px; padding: 16px 22px 18px;
+      }
+      .ix-hold__g { min-width: 0; }
+      .ix-hold__gl {
+        margin: 0 0 4px; padding-bottom: 8px; border-bottom: 2px solid var(--ink);
+        font: 600 15px/1.2 var(--display); letter-spacing: -.01em;
+      }
+      .ix-hold .ix-row { grid-template-columns: minmax(0, 1fr); }
+      .ix-hold .ix-row:first-of-type { border-top: 0; }
+      .ix-hold .ix-row__d { grid-column: 1; }
+
+      @media (prefers-reduced-motion: no-preference) {
+        .ix-scrim:not([hidden]) { animation: ix-fade .18s ease-out; }
+        .ix-hold:not([hidden]) { animation: ix-rise .22s cubic-bezier(.2, .8, .2, 1); }
+      }
+      @keyframes ix-fade { from { opacity: 0; } }
+      @keyframes ix-rise { from { opacity: 0; transform: translateY(18px); } }
 
       /* ==========================================================================
          TRẠNG THÁI RỖNG / LỖI
          ========================================================================== */
       .ix-note {
-        border: 1px solid var(--rule); border-radius: 10px;
-        padding: 28px; text-align: center; margin-bottom: 60px;
+        grid-column: 1 / -1;
+        margin: 40px 0 60px; padding: 30px; text-align: center;
+        border: 1px dashed var(--line); border-radius: 18px;
       }
-      .ix-note h2 { margin: 0 0 8px; font-family: var(--serif); font-weight: 600; font-size: 22px; }
+      .ix-note h2 { margin: 0 0 8px; font: 600 22px/1.2 var(--display); letter-spacing: -.01em; }
       .ix-note p { margin: 0 auto; max-width: 48ch; font-size: 14px; color: var(--ink-2); }
       .ix-note code {
-        font-family: var(--mono); font-size: 12.5px;
-        background: var(--paper-2); border: 1px solid var(--rule);
-        border-radius: 4px; padding: 1px 5px;
+        font: 500 12.5px var(--mono); background: var(--surface); border: 1px solid var(--line);
+        border-radius: 5px; padding: 1px 5px;
       }
-      .ix-note--bad { border-color: var(--accent); text-align: left; }
+      .ix-note--bad { border-style: solid; border-color: var(--green); text-align: left; }
       .ix-note--bad p { margin: 0; max-width: 70ch; }
       .ix-btn {
-        margin-top: 16px; font: 600 13.5px var(--sans); color: var(--paper);
-        background: var(--ink); border: 0; border-radius: 7px;
-        padding: 8px 15px; cursor: pointer;
+        margin-top: 16px; min-height: 44px; padding: 0 18px;
+        font: 600 13.5px var(--sans); color: var(--bg); background: var(--ink);
+        border: 0; border-radius: 11px; cursor: pointer;
       }
-      .ix-btn:hover { background: var(--accent); }
+      .ix-btn:hover { background: var(--green); color: var(--on-green); }
 
       /* ==========================================================================
-         CHÂN TRANG
+         CHÂN TRANG — dựng từ chính danh sách khu/section.
          ========================================================================== */
-      .ix-foot { margin-top: auto; border-top: 1px solid var(--rule); padding: 34px 0 44px; }
-      .ix-foot__links {
-        display: flex; flex-wrap: wrap; gap: 8px 22px; margin-bottom: 26px;
+      .ix-foot { margin-top: auto; padding: 56px 0 40px; }
+      .ix-foot__in { border-top: 1px solid var(--line); padding-top: 26px; }
+      .ix-foot__links { display: flex; flex-wrap: wrap; gap: 14px 48px; margin-bottom: 26px; }
+      .ix-foot__z { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+      .ix-foot__zl {
+        margin-bottom: 6px; font: 500 10.5px/1 var(--mono); letter-spacing: .14em;
+        text-transform: uppercase; color: var(--ink-3);
       }
-      .ix-foot__links a { font-size: 13px; color: var(--ink-2); text-decoration: none; }
-      .ix-foot__links a:hover { color: var(--accent); }
+      .ix-foot__links a { font-size: 13px; line-height: 1.3; color: var(--ink-2); text-decoration: none; padding: 3px 0; }
+      .ix-foot__links a:hover { color: var(--green); }
       .ix-foot__bot {
         display: flex; align-items: center; gap: 14px 18px; flex-wrap: wrap;
         font-size: 12.5px; color: var(--ink-2);
       }
-      .ix-foot__bot a { color: var(--ink-2); display: inline-flex; }
+      .ix-foot__bot a { color: var(--ink-2); display: inline-grid; place-items: center; min-width: 44px; min-height: 44px; margin: -10px -10px -10px 0; }
       .ix-foot__bot a:hover { color: var(--ink); }
-      .ix-foot__bot svg { width: 16px; height: 16px; }
-      .ix-hint { margin: 0; margin-right: auto; }
-      kbd {
-        font-family: var(--mono); font-size: 11px; color: var(--ink-2);
-        background: var(--paper-2); border: 1px solid var(--rule);
-        border-radius: 4px; padding: 1px 5px;
+      .ix-foot__bot svg { width: 18px; height: 18px; }
+      .ix-hint { margin: 0; margin-right: auto; line-height: 2; }
+
+      /* ==========================================================================
+         MÀN VỪA
+         ========================================================================== */
+      @media (max-width: 1099px) {
+        .ix-zone__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+      @media (max-width: 960px) {
+        .ix-main { display: block; }
+        .ix-toc { margin-top: 28px; grid-auto-columns: minmax(0, 1fr); }
+      }
+
+      /* ==========================================================================
+         ĐIỆN THOẠI — một cột; thanh trên không dính, thanh chip section dính.
+         ========================================================================== */
+      @media (max-width: 720px) {
+        :root { --pad: 16px; --bar-h: 0px; --jump-h: 54px; }
+
+        .ix-bar { position: static; background: var(--bg); backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom: 0; }
+        .ix-bar__in { flex-wrap: wrap; gap: 10px; padding-top: 10px; padding-bottom: 4px; }
+        .ix-brand { order: 1; margin-right: auto; }
+        .ix-iconbtn { order: 2; width: 44px; height: 44px; }
+        .ix-search { order: 3; flex: 1 1 100%; max-width: none; margin: 0; }
+        .ix-search__box { flex-basis: 100%; }
+        .ix-search input { height: 46px; font-size: 16px; }   /* 16px: iOS không phóng to khi focus */
+        .ix-search kbd { display: none; }
+        .ix-count {
+          position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+          pointer-events: none;
+        }
+        .ix-search input { padding-right: 76px; }
+        .ix-count__x { display: none; }
+
+        .ix-hero { padding: 22px 0 18px; }
+        .ix-eyebrow { margin-bottom: 12px; }
+        .ix-hero h1 { font-size: clamp(30px, 8.6vw, 40px); max-width: none; }
+        .ix-lede { margin-top: 10px; font-size: 14px; }
+
+        /* Thanh chip: dính trên cùng, tràn ngang thì cuộn trong chính nó. */
+        .ix-toc {
+          position: sticky; top: 0; z-index: 25;
+          display: flex; align-items: center; gap: 6px;
+          margin: 0 calc(-1 * var(--pad)); padding: 5px var(--pad);
+          overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none;
+          background: color-mix(in srgb, var(--bg) 90%, transparent);
+          -webkit-backdrop-filter: saturate(160%) blur(12px); backdrop-filter: saturate(160%) blur(12px);
+          border-bottom: 1px solid var(--line);
+        }
+        .ix-toc::-webkit-scrollbar { display: none; }
+        .ix-toc::after { content: ''; flex: 0 0 1px; }
+        .ix-toc__z { display: contents; }
+        .ix-toc__zl { display: none; }
+        .ix-toc__z + .ix-toc__z::before {
+          content: ''; flex: none; width: 1px; height: 22px; margin: 0 4px; background: var(--line);
+        }
+        .ix-toc a, .ix-jumpq {
+          position: relative; isolation: isolate; flex: none;
+          display: inline-flex; align-items: center; gap: 7px;
+          min-height: 44px; padding: 0 13px;
+        }
+        .ix-toc a::before, .ix-jumpq::before {
+          content: ''; position: absolute; z-index: -1; inset: 5px 0;
+          border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+        }
+        .ix-toc__n { display: none; }
+        .ix-toc__l { font-size: 13px; }
+        .ix-toc__c { padding-left: 0; }
+        div.ix-toc__z:first-of-type a::before { border-color: var(--green-line); }
+        .ix-toc a.is-active::before { background: var(--ink); border-color: var(--ink); }
+        .ix-toc a.is-active .ix-toc__l { color: var(--bg); }
+        .ix-toc a.is-active .ix-toc__c { color: var(--green-hi); }
+        html.dark .ix-toc a.is-active .ix-toc__c { color: #0a6b35; }
+        .ix-jumpq {
+          width: 44px; padding: 0; justify-content: center;
+          color: var(--ink-2); background: none; border: 0; cursor: pointer; font: inherit;
+        }
+        .ix-jumpq svg { width: 16px; height: 16px; }
+
+        .ix-zone { margin-top: 30px; scroll-margin-top: calc(var(--jump-h) + 10px); }
+        .ix-zone:first-child { margin-top: 20px; padding: 16px 16px 6px; border-radius: 16px; }
+        .ix-zone__head { flex-wrap: wrap; gap: 6px 12px; margin-bottom: 16px; }
+        .ix-zone__head::after { display: none; }
+        .ix-zone__d { flex-basis: 100%; }
+        .ix-zone__grid { grid-template-columns: minmax(0, 1fr); gap: 26px; }
+        .ix-sec { scroll-margin-top: calc(var(--jump-h) + 10px); }
+        .ix-row { padding: 10px 0; }
+        .ix-row::before { inset: 0 -8px; }
+
+        /* Bottom sheet. */
+        .ix-hold {
+          left: 0; right: 0; bottom: 0; width: 100%;
+          max-height: 66vh; max-height: 66dvh;
+          border-radius: 20px 20px 0 0; border-bottom: 0;
+          padding-bottom: env(safe-area-inset-bottom);
+        }
+        .ix-hold__bar { padding: 18px 8px 10px 18px; }
+        .ix-hold__grab {
+          display: block; position: absolute; left: 50%; top: 7px; transform: translateX(-50%);
+          width: 38px; height: 4px; border-radius: 4px; background: var(--line);
+        }
+        .ix-hold__hint { display: none; }
+        .ix-hold__x { margin-left: auto; }
+        .ix-hold__body { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 12px 18px 22px; }
+        @media (prefers-reduced-motion: no-preference) {
+          .ix-hold:not([hidden]) { animation: ix-sheet .26s cubic-bezier(.2, .8, .2, 1); }
+        }
+        @keyframes ix-sheet { from { transform: translateY(100%); } }
+
+        .ix-foot { padding-top: 40px; }
+        .ix-foot__links { gap: 18px 32px; }
+        .ix-foot__links a { display: flex; align-items: center; min-height: 44px; min-width: 44px; padding: 0; }
+        .ix-foot__z { gap: 0; }
       }
     </style>
   </head>
@@ -420,14 +580,18 @@
     <!-- ============================== THANH TRÊN ============================== -->
     <header class="ix-bar">
       <div class="ix-wrap ix-bar__in">
-        <a class="ix-brand" href="index.html"><b>vudat081299</b> <span>/ collection</span></a>
+        <a class="ix-brand" href="index.html"><span class="ix-brand__mark" aria-hidden="true"></span><span><b>vudat081299</b> / index</span></a>
 
         <div class="ix-search">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-            <circle cx="7" cy="7" r="4.6" /><path d="m10.6 10.6 3.2 3.2" stroke-linecap="round" />
-          </svg>
-          <input id="q" type="search" placeholder="Search pages…" aria-label="Search pages"
-                 aria-describedby="count" autocomplete="off" spellcheck="false" />
+          <div class="ix-search__box">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <circle cx="7" cy="7" r="4.6" /><path d="m10.6 10.6 3.2 3.2" stroke-linecap="round" />
+            </svg>
+            <input id="q" type="search" placeholder="Search pages…" aria-label="Search pages"
+                   aria-describedby="count" autocomplete="off" spellcheck="false" enterkeyhint="go" />
+            <kbd aria-hidden="true">/</kbd>
+          </div>
+          <span class="ix-count" id="count"></span>
         </div>
 
         <button class="ix-iconbtn" id="theme" aria-label="Toggle light / dark" title="Light / dark">
@@ -441,22 +605,14 @@
             <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6" />
           </svg>
         </button>
-
-        <!-- Điểm xuống dòng cố ý ở máy hẹp (xem .ix-break). Để flex tự quyết thì
-             thanh gãy thành ba hàng và chuỗi đếm bị cắt — đã đo ở 390px. -->
-        <span class="ix-break" aria-hidden="true"></span>
-        <span class="ix-count" id="count"></span>
       </div>
     </header>
 
-    <main class="ix-wrap" id="main">
+    <main class="ix-wrap ix-main" id="main">
       <div class="ix-hero">
-        <p class="ix-eyebrow">Index</p>
-        <h1>Collection</h1>
-        <p class="ix-lede">
-          Small web pages written to be re-read — tools, self-study courses,
-          recipes, book summaries and graduate course notes.
-        </p>
+        <p class="ix-eyebrow">Knowledge index</p>
+        <h1>What I know, and what I&rsquo;m <em>learning</em>.</h1>
+        <p class="ix-lede" lang="vi">Tri thức tôi đã biết và tri thức tôi đang học, mỗi trang một chủ đề.</p>
       </div>
 
       <nav class="ix-toc" id="toc" aria-label="Sections"></nav>
@@ -465,7 +621,7 @@
 
       <div class="ix-note" id="empty" hidden>
         <h2>Nothing matches that</h2>
-        <p>Try a shorter word, or clear the search to see the whole collection.</p>
+        <p>Try a shorter word, or clear the search to see the whole index.</p>
         <button class="ix-btn" id="clear">Clear search</button>
       </div>
     </main>
@@ -473,44 +629,60 @@
     <!-- ============================== CHÂN TRANG ============================== -->
     <footer class="ix-foot">
       <div class="ix-wrap">
-        <nav class="ix-foot__links" id="foot-links" aria-label="Sections"></nav>
-        <div class="ix-foot__bot">
-          <p class="ix-hint" id="hint"></p>
-          <a href="https://github.com/vudat081299" target="_blank" rel="noopener" aria-label="vudat081299 on GitHub" title="GitHub">
-            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
-            </svg>
-          </a>
+        <div class="ix-foot__in">
+          <nav class="ix-foot__links" id="foot-links" aria-label="All sections"></nav>
+          <div class="ix-foot__bot">
+            <p class="ix-hint" id="hint"></p>
+            <a href="https://github.com/vudat081299" target="_blank" rel="noopener" aria-label="vudat081299 on GitHub" title="GitHub">
+              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
     </footer>
 
-    <aside class="ix-hold" id="hold" aria-label="Reserved" hidden>
-      <p class="ix-hold__t" id="hold-t"></p>
-      <div class="ix-rows ix-rows--two" id="hold-rows"></div>
+    <!-- Danh sách ẩn: lớp phủ + bảng. Lớp phủ nằm NGOÀI bảng: bấm vào nó là bấm ra ngoài. -->
+    <div class="ix-scrim" id="hold-scrim" hidden></div>
+    <aside class="ix-hold" id="hold" aria-labelledby="hold-t" tabindex="-1" hidden>
+      <div class="ix-hold__bar">
+        <span class="ix-hold__grab" aria-hidden="true"></span>
+        <h2 class="ix-hold__t" id="hold-t"></h2>
+        <p class="ix-hold__hint"><kbd>⇧</kbd><kbd>?</kbd> or <kbd>Esc</kbd> to close</p>
+        <button class="ix-hold__x" id="hold-x" aria-label="Close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </div>
+      <div class="ix-hold__body" id="hold-rows"></div>
     </aside>
 
     <script>
       (function () {
         'use strict';
 
-        var host  = document.getElementById('sections');
-        var toc   = document.getElementById('toc');
-        var input = document.getElementById('q');
-        var count = document.getElementById('count');
-        var empty = document.getElementById('empty');
-        var links = document.getElementById('foot-links');
-        var hint  = document.getElementById('hint');
+        function $(id) { return document.getElementById(id); }
+        var host  = $('sections');
+        var toc   = $('toc');
+        var input = $('q');
+        var count = $('count');
+        var empty = $('empty');
+        var links = $('foot-links');
+        var hint  = $('hint');
+        var hold  = $('hold');
+        var scrim = $('hold-scrim');
         var items = [];        /* mọi hàng mở được — dùng cho phím tắt + tìm kiếm */
+        var armed = false;     /* true khi collection.json có danh sách ẩn */
 
         function esc(t) {
           return String(t == null ? '' : t)
             .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;');
         }
-
-        /* Số section 01…08 — suy ra từ vị trí, không ghi trong data. */
         function two(n) { return (n < 10 ? '0' : '') + n; }
+        function each(sel, fn) { Array.prototype.forEach.call(document.querySelectorAll(sel), fn); }
 
         /* Số mục của một section: đếm từ mảng, không ai phải sửa tay. */
         function countOf(sec) {
@@ -521,68 +693,79 @@
 
         /* ------------------------------- hàng ------------------------------- */
 
-        /* `key` là TUỲ CHỌN: keyspace 36 ô (0-9 + a-z) từng dùng hết. Không có key
-           thì vẽ một ô trong suốt cùng kích thước — không có chip rỗng để đọc
-           nhầm, mà chữ của mọi hàng vẫn thẳng một cột. */
+        /* `plain`: hàng của danh sách ẩn — không data-item, nên không vào ô đếm,
+           tìm kiếm hay phím tắt; không có cột chip phím. */
         function row(o, title, desc, plain) {
           var k = (o.key || '').trim();
           return '<a class="ix-row" href="' + esc(o.href) + '"' +
             (plain ? '' : ' data-item data-key="' + esc(k) + '"') + '>' +
-            '<span class="ix-key' + (k ? '' : ' ix-key--none') + '" aria-hidden="true">' +
-              esc(k).toUpperCase() + '</span>' +
-            '<span class="ix-row__t">' + esc(title) + '</span>' +
-            '<span class="ix-row__go" aria-hidden="true">&rarr;</span>' +
-            '<span class="ix-row__d">' + esc(desc) + '</span>' +
+            (plain ? '' : '<span class="ix-key' + (k ? '' : ' ix-key--none') + '" aria-hidden="true">' +
+              esc(k).toUpperCase() + '</span>') +
+            '<span class="ix-row__t">' + esc(title) +
+              '<span class="ix-row__go" aria-hidden="true">&rarr;</span></span>' +
+            '<span class="ix-row__d" lang="vi">' + esc(desc) + '</span>' +
           '</a>';
         }
 
         function subject(su) {
-          var n = su.files.length;
           return '<div class="ix-subj" data-subject>' +
             '<div class="ix-subj__head">' +
               '<span class="ix-subj__t">' + esc(su.title) + '</span>' +
-              '<span class="ix-subj__m">' + esc(su.meta) + '</span>' +
-              '<span class="ix-subj__c">' + n + ' page' + (n === 1 ? '' : 's') + '</span>' +
+              '<span class="ix-subj__m" lang="vi">' + esc(su.meta) + '</span>' +
             '</div>' +
-            '<div class="ix-subj__rows">' +
-              su.files.map(function (f) { return row(f, f.title, f.sub); }).join('') +
-            '</div>' +
+            su.files.map(function (f) { return row(f, f.title, f.sub); }).join('') +
           '</div>';
         }
 
-        function section(sec, i) {
+        function section(sec, n) {
           var body = sec.kind === 'subjects'
             ? sec.items.map(subject).join('')
-            : '<div class="ix-rows ix-rows--two">' +
-                sec.items.map(function (it) { return row(it, it.name, it.desc); }).join('') +
-              '</div>';
-          return '<section class="ix-sec" id="' + esc(sec.id) + '" data-section>' +
+            : sec.items.map(function (it) { return row(it, it.name, it.desc); }).join('');
+          return '<section class="ix-sec" id="' + esc(sec.id) + '" data-section data-kind="' + esc(sec.kind) +
+              '" aria-labelledby="h-' + esc(sec.id) + '">' +
             '<div class="ix-sec__head">' +
-              '<span class="ix-sec__n">' + two(i + 1) + '</span>' +
-              '<h2>' + esc(sec.label) + '</h2>' +
+              '<span class="ix-sec__n">' + two(n) + '</span>' +
+              '<h2 class="ix-sec__t" id="h-' + esc(sec.id) + '">' + esc(sec.label) + '</h2>' +
               '<span class="ix-sec__c">' + countOf(sec) + '</span>' +
             '</div>' +
-            '<p class="ix-sec__desc">' + esc(sec.desc) + '</p>' +
-            body +
+            '<p class="ix-sec__desc" lang="vi">' + esc(sec.desc) + '</p>' +
+            '<div class="ix-sec__body">' + body + '</div>' +
           '</section>';
         }
 
-        /* Mục lục và chân trang đọc CÙNG mảng sections — không có danh sách mục
-           thứ hai để quên cập nhật. */
-        function tocLink(sec, i) {
-          return '<a href="#' + esc(sec.id) + '" data-toc="' + esc(sec.id) + '">' +
-            '<span class="ix-toc__n">' + two(i + 1) + '</span>' +
-            '<span class="ix-toc__l">' + esc(sec.label) + '</span>' +
-            '<span class="ix-toc__c">' + countOf(sec) + '</span></a>';
+        /* Section đánh số liên tục qua các khu: 01…08, suy ra từ vị trí. */
+        function numbered(zones) {
+          var n = 0;
+          return zones.map(function (z) {
+            return { zone: z, secs: z.sections.map(function (s) { return { sec: s, n: ++n }; }) };
+          });
         }
 
-        function footLink(sec) {
-          return '<a href="#' + esc(sec.id) + '">' + esc(sec.label) + '</a>';
+        /* Mục lục và chân trang đọc CÙNG danh sách khu — không có bản thứ hai để quên. */
+        function tocZone(Z) {
+          return '<div class="ix-toc__z" data-toc-zone>' +
+            '<span class="ix-toc__zl">' + esc(Z.zone.label) + '</span>' +
+            Z.secs.map(function (S) {
+              return '<a href="#' + esc(S.sec.id) + '" data-toc="' + esc(S.sec.id) + '">' +
+                '<span class="ix-toc__n">' + two(S.n) + '</span>' +
+                '<span class="ix-toc__l">' + esc(S.sec.label) + '</span>' +
+                '<span class="ix-toc__c">' + countOf(S.sec) + '</span></a>';
+            }).join('') +
+          '</div>';
+        }
+
+        var SEARCH_ICON = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">' +
+          '<circle cx="7" cy="7" r="4.6" /><path d="m10.6 10.6 3.2 3.2" stroke-linecap="round" /></svg>';
+
+        function footZone(z) {
+          return '<div class="ix-foot__z"><span class="ix-foot__zl">' + esc(z.label) + '</span>' +
+            z.sections.map(function (s) {
+              return '<a href="#' + esc(s.id) + '">' + esc(s.label) + '</a>';
+            }).join('') +
+          '</div>';
         }
 
         /* ----------------------------- tìm kiếm ----------------------------- */
-
-        function each(sel, fn) { Array.prototype.forEach.call(document.querySelectorAll(sel), fn); }
 
         function filter(q) {
           q = (q || '').trim().toLowerCase();
@@ -592,19 +775,22 @@
             a.hidden = !hit;
             if (hit) shown++;
           });
-          /* Nhóm môn học rỗng thì ẩn cả nhóm… */
+          /* Rỗng thì ẩn cả nhóm, cả section, cả khu — và mục lục đi theo. */
           each('[data-subject]', function (g) {
             g.hidden = !g.querySelector('[data-item]:not([hidden])');
           });
-          /* …section rỗng thì ẩn cả section, và mục lục phải đi theo — nếu không
-             thì còn trơ lại tiêu đề của những section không còn mục nào. */
           each('[data-section]', function (sec) {
             var on = !!sec.querySelector('[data-item]:not([hidden])');
             sec.hidden = !on;
             var link = toc.querySelector('[data-toc="' + sec.id + '"]');
             if (link) link.hidden = !on;
           });
-          /* Lọc sạch thì cả khối mục lục cũng đi — không để một khung rỗng. */
+          each('[data-zone]', function (z) {
+            z.hidden = !z.querySelector('[data-item]:not([hidden])');
+          });
+          each('[data-toc-zone]', function (g) {
+            g.hidden = !g.querySelector('[data-toc]:not([hidden])');
+          });
           toc.hidden = !toc.querySelector('[data-toc]:not([hidden])');
           empty.hidden = shown > 0;
           count.innerHTML = q
@@ -621,15 +807,18 @@
             return r.json();
           })
           .then(function (d) {
-            host.innerHTML  = d.sections.map(section).join('');
-            toc.innerHTML   = d.sections.map(tocLink).join('');
-            links.innerHTML = d.sections.map(footLink).join('');
+            var all = { id: 'all', label: 'Sections', sections: d.sections };
+            var Z = numbered([all]);
+            host.innerHTML  = '<div class="ix-zone__grid">' +
+                              Z[0].secs.map(function (S) { return section(S.sec, S.n); }).join('') + '</div>';
+            toc.innerHTML   = '<button class="ix-jumpq" type="button" id="jump-q" aria-label="Search">' +
+                              SEARCH_ICON + '</button>' + Z.map(tocZone).join('');
+            links.innerHTML = footZone(all);
             items = Array.prototype.slice.call(document.querySelectorAll('[data-item]'));
             if (d.hold && d.hold.items && d.hold.items.length) {
-              /* `plain`: không data-item — nên không vào ô đếm, tìm kiếm hay phím tắt. */
-              document.getElementById('hold-t').textContent = d.hold.label;
-              document.getElementById('hold-rows').innerHTML =
-                d.hold.items.map(function (it) { return row(it, it.name, it.desc, true); }).join('');
+              $('hold-t').textContent = d.hold.label;
+              $('hold-rows').innerHTML = '<div class="ix-hold__g">' +
+                d.hold.items.map(function (it) { return row(it, it.name, it.desc, true); }).join('') + '</div>';
               armed = true;
             }
             hint.innerHTML = 'Press <kbd>/</kbd> to search, <kbd>&crarr;</kbd> to open the first hit' +
@@ -654,30 +843,68 @@
           var io = new IntersectionObserver(function (entries) {
             entries.forEach(function (e) {
               var link = toc.querySelector('[data-toc="' + e.target.id + '"]');
-              if (link) link.classList.toggle('is-active', e.isIntersecting);
+              if (!link) return;
+              link.classList.toggle('is-active', e.isIntersecting);
+              /* Thanh chip cuộn ngang (điện thoại): kéo chip đang xem vào tầm mắt. */
+              if (e.isIntersecting && toc.scrollWidth > toc.clientWidth) {
+                var left = link.offsetLeft - (toc.clientWidth - link.offsetWidth) / 2;
+                toc.scrollTo({ left: Math.max(0, left), behavior: reduced() ? 'auto' : 'smooth' });
+              }
             });
-          }, { rootMargin: '-25% 0px -70% 0px' });
+          }, { rootMargin: '-30% 0px -65% 0px' });
           each('[data-section]', function (s) { io.observe(s); });
+        }
+        function reduced() {
+          return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         }
 
         /* ------------------------------ điều khiển ------------------------------ */
 
-        document.getElementById('theme').addEventListener('click', function () {
+        $('theme').addEventListener('click', function () {
           var dark = document.documentElement.classList.toggle('dark');
           try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+          $('theme-color').setAttribute('content', dark ? '#090b0a' : '#f5f6f3');
         });
 
-        document.getElementById('clear').addEventListener('click', function () {
+        $('clear').addEventListener('click', function () {
           input.value = ''; filter(''); input.focus();
         });
 
-        /* Danh sách ẩn: ⇧? (Shift + phím `/`) bật/tắt, thả phím vẫn hiện. Bấm ra ngoài bảng
-           hoặc Esc thì ẩn. Dò bằng e.code: e.key đổi theo bố cục bàn phím. `/` không Shift vẫn
-           nhảy vào ô tìm kiếm. Trên điện thoại không có ⇧?: gõ đúng `?` vào ô tìm kiếm thì bảng
-           hiện, ô được xoá và bàn phím ảo đóng lại để khỏi che bảng. */
-        var hold = document.getElementById('hold');
-        var armed = false;     /* true khi collection.json có danh sách ẩn */
-        function peek(on) { hold.hidden = !(on && armed); }
+        /* Nút kính lúp ở đầu thanh chip (điện thoại): đưa về ô tìm kiếm. */
+        toc.addEventListener('click', function (e) {
+          if (e.target.closest && e.target.closest('#jump-q')) input.focus();
+        });
+
+        /* Danh sách ẩn: ⇧? (Shift + phím `/`) bật/tắt, thả phím vẫn hiện. Bấm lớp phủ, nút
+           đóng hoặc Esc thì ẩn; blur cửa sổ và đổi tab không đóng. Dò bằng e.code: e.key đổi
+           theo bố cục bàn phím. Điện thoại: gõ đúng `?` vào ô tìm kiếm thì bảng hiện, ô được
+           xoá, bàn phím ảo đóng. Mở thì khoá cuộn trang phía sau. */
+        var back = null;       /* phần tử giữ focus trước khi mở, để trả lại khi đóng */
+        /* Khoá cuộn trang; bù bề rộng thanh cuộn để trang không giật sang ngang. */
+        function lock(on) {
+          var html = document.documentElement;
+          var bar = window.innerWidth - html.clientWidth;
+          html.classList.toggle('ix-locked', on);
+          html.style.paddingRight = on && bar > 0 ? bar + 'px' : '';
+        }
+        function peek(on) {
+          on = !!(on && armed);
+          if (on === !hold.hidden) return;
+          hold.hidden = !on;
+          scrim.hidden = !on;
+          lock(on);
+          if (on) {
+            var a = document.activeElement;
+            back = a && a !== document.body && a.tagName !== 'INPUT' ? a : null;
+            hold.scrollTop = 0;
+            $('hold-rows').scrollTop = 0;
+            hold.focus({ preventScroll: true });
+          } else {
+            if (back && document.contains(back)) back.focus({ preventScroll: true });
+            else if (hold.contains(document.activeElement)) document.activeElement.blur();
+            back = null;
+          }
+        }
 
         input.addEventListener('input', function () {
           if (armed && this.value.trim() === '?') {
@@ -690,15 +917,15 @@
           filter(this.value);
         });
 
+        scrim.addEventListener('click', function () { peek(false); });
+        $('hold-x').addEventListener('click', function () { peek(false); });
+
         document.addEventListener('keydown', function (e) {
           if (e.code !== 'Slash' || !e.shiftKey || e.metaKey || e.ctrlKey || e.altKey) return;
           var t = (e.target && e.target.tagName) || '';
           if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
           if (armed) e.preventDefault();
           if (!e.repeat) peek(hold.hidden);
-        });
-        document.addEventListener('pointerdown', function (e) {
-          if (!hold.hidden && !hold.contains(e.target)) peek(false);
         });
 
         document.addEventListener('keydown', function (e) {
@@ -708,7 +935,7 @@
           if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') {
             if (e.key === 'Escape') { input.value = ''; filter(''); input.blur(); }
             if (e.key === 'Enter') {
-              /* ↵ mở kết quả đầu còn hiện — đường đi nhanh nhất khi đã có 35 mục. */
+              /* ↵ mở kết quả đầu còn hiện. */
               var first = document.querySelector('[data-item]:not([hidden])');
               if (first) { e.preventDefault(); window.location.href = first.getAttribute('href'); }
             }

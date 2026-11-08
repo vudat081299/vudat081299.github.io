@@ -22,6 +22,7 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-018 · Tài liệu .md viết ngắn và thẳng · `repo`
 - REPO-019 · Không chặn force-push ở GitHub · `repo`
 - REPO-021 · Trang chủ có một danh sách ẩn, bật bằng ⇧? hoặc gõ ? vào ô tìm kiếm · `data/collection.json`, `index.html`
+- REPO-023 · Trang chủ đen, trắng, một màu xanh lá · `index.html`
 
 Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md), [`shop/DECISIONS.md`](shop/DECISIONS.md).
 <!-- index:end -->
@@ -127,3 +128,9 @@ Khoá `hold` trong `collection.json` là danh sách ẩn. Máy tính: ⇧? (Shif
 vẫn deploy; đây là giấu link, không phải bảo mật. Trong đó: Wealth Roadmap, Hidden Curriculum (PAGES-005), Scooter
 Maintenance, Fact, Cashy, Loto, scentsitive.vn, Web Builder. Sáu mục sau chuyển hẳn từ `sections` sang
 (03/10/2026): mất phím tắt, không còn ở chỗ cũ.
+
+## REPO-023 · Trang chủ đen, trắng, một màu xanh lá
+08/11/2026 · `index.html`
+
+Có theme sáng và tối; chưa chọn thì theo hệ điều hành (khoá `hub-theme`). Xanh lá chỉ cho thứ mắt cần tìm: khu
+đang học, số section, chip phím khi rê, focus. Chữ nào cũng ≥ 4,5:1 trên nền thật của nó (`tools/smoke-index.js` đo).
