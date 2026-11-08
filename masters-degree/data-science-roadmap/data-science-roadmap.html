@@ -5532,9 +5532,11 @@ df = df.sort_values(["card_id", "ts"]).set_index("ts")
 
 g = df.groupby("card_id")["amount"]
 <i># closed="left" loại chính giao dịch hiện tại ra khỏi cửa sổ</i>
-df["n_tx_1h"]     = g.rolling("1h",  closed="left").count().to_numpy()
-df["sum_amt_24h"] = g.rolling("24h", closed="left").sum().to_numpy()
+<i># min_periods=0: mặc định là 1, nên cửa sổ RỖNG ra NaN chứ không ra 0</i>
+df["n_tx_1h"]     = g.rolling("1h",  closed="left", min_periods=0).count().to_numpy()
+df["sum_amt_24h"] = g.rolling("24h", closed="left", min_periods=0).sum().to_numpy()
 df = df.reset_index()</div>
+  <p class="wb-help">Thiếu <code>min_periods=0</code> thì "1 giờ qua không có giao dịch nào" thành <code>NaN</code>, và imputer trong Pipeline điền trung vị của người khác vào đó — một giá trị có thật bị coi là dữ liệu thiếu.</p>
   <p><code>closed="left"</code> là chi tiết sống còn: nó loại giao dịch hiện tại ra khỏi cửa sổ. Không có nó, feature "số giao dịch trong 1h" đã chứa chính giao dịch bạn đang đoán → rò rỉ.</p>
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Vì sao <code>.to_numpy()</code> chứ không phải <code>.reset_index(level=0, drop=True)</code></p>
@@ -5599,7 +5601,7 @@ df["hour_dev"] = np.minimum(d, 24 - d)</div>
     <p class="wb-alert__msg">
     <b>1.</b> Đã <code>sort_values("ts")</code> chưa?<br>
     <b>2.</b> Có <code>.shift(1)</code> hoặc <code>closed="left"</code> để loại dòng hiện tại chưa?<br>
-    <b>3.</b> Dòng đầu tiên của mỗi khách có phải là <code>NaN</code> không? <b>Nếu không phải, bạn đang rò rỉ.</b> Khách mới thì không có lịch sử — <code>NaN</code> ở đó là dấu hiệu bạn làm đúng.</p>
+    <b>3.</b> Dòng đầu tiên của mỗi khách có phải là <code>NaN</code> không (feature đếm, tổng có <code>min_periods=0</code> thì là 0)? <b>Nếu nó mang giá trị của chính giao dịch đó, bạn đang rò rỉ.</b> Khách mới thì không có lịch sử — <code>NaN</code> hay 0 ở đó là dấu hiệu bạn làm đúng.</p>
   </div></div>
 </template>
 
