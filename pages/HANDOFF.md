@@ -53,5 +53,3 @@
 - a-short-history-of-nearly-everything: bảng 7.2 ghi một dòng "xác nhận", dòng song song "bị bác" — đối chiếu
   lại với sách.
 - family-insurance-benefits, wealth-roadmap (không lên web): thanh trên cùng xuống hai hàng ở khoảng 940–1200px.
-- hidden-curriculum: Nisbett, Zukier và Lemley (1981) có trong 12.6 mà thân bài không dẫn; 11.1 nói "bớt kiểm vì
-  tin" hai lần (lời dẫn đầu mục và dấu hiệu 4).
