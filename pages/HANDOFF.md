@@ -48,7 +48,6 @@
   books-in-brief, how-to-lie-with-statistics, a-short-history-of-nearly-everything, cryptography, relativity,
   finance-econ-rulebook. Đổi sang span cắt chữ.
 - `jazz-piano-theory.html` lưu theme ở khoá `nlp-theme`, không phải `hub-theme` chung của site.
-- how-to-lie-with-statistics: ví dụ bại liệt có 680 người đối chứng, không khớp tiêu đề "Không có nhóm để so".
 - a-short-history-of-nearly-everything: bảng 7.2 ghi một dòng "xác nhận", dòng song song "bị bác" — đối chiếu
   lại với sách.
 - family-insurance-benefits, wealth-roadmap (không lên web): thanh trên cùng xuống hai hàng ở khoảng 940–1200px.
