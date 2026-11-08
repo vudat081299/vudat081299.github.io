@@ -354,7 +354,7 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
     <span class="eyebrow">Môn học · Học phần Phân tích kinh doanh</span>
     <h1 class="title">Business <span>Analytics</span></h1>
     <p class="subtitle">Toàn bộ kiến thức môn học — từ khung tư duy CRISP-DM, chất lượng dữ liệu, EDA, đến hồi quy, phân loại, phân cụm và chuỗi thời gian. Tổng hợp, kiểm chứng và sửa lỗi từ 9 tài liệu gốc, trình bày song ngữ Việt–Anh.</p>
-    <p class="meta">11 MODULE · ~120 KHÁI NIỆM · 6 DEMO TƯƠNG TÁC · 16 BÀI TẬP CÓ LỜI GIẢI · CẬP NHẬT <b>2026-07-26</b></p>
+    <p class="meta">11 MODULE · ~120 KHÁI NIỆM · 7 DEMO TƯƠNG TÁC · 16 BÀI TẬP CÓ LỜI GIẢI · CẬP NHẬT <b>2026-07-26</b></p>
   </header>
 
   <article class="concept" data-concept="ov-map">
@@ -744,7 +744,7 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
     <div class="tbl-wrap"><table><thead><tr><th>Họ</th><th>Ý tưởng</th><th>Phương pháp</th></tr></thead><tbody>
       <tr><td><strong>Filter</strong></td><td>Chấm điểm từng feature độc lập với mô hình</td><td>Chi-square, ANOVA F, Mutual Information</td></tr>
       <tr><td><strong>Wrapper</strong></td><td>Dùng hiệu năng mô hình để tìm tập con</td><td>RFE, SFS/SBS</td></tr>
-      <tr><td><strong>Embedded</strong></td><td>Chọn feature ngay trong lúc fit</td><td>Lasso (L1), Ridge (L2), tree importance</td></tr>
+      <tr><td><strong>Embedded</strong></td><td>Chọn feature ngay trong lúc fit</td><td>Lasso (L1), Elastic Net, tree importance (Ridge chỉ co hệ số, không đưa hệ số nào về đúng 0 nên không tự loại feature)</td></tr>
     </tbody></table></div>
     <p class="teaser">Mở rộng: công thức chi-square, ANOVA F, Mutual Information, Lasso/Ridge/ElasticNet, VIF, pipeline chống leakage.</p>
     <button class="expand-btn" data-expand="d-sel">Công thức chi tiết →</button>
@@ -872,7 +872,7 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
         <span class="ro">r² = <b id="reg-r2">–</b></span>
         <span class="ro" id="reg-best"></span>
       </div>
-      <div class="demo-cap">Các thanh dọc đỏ = residual (khoảng cách điểm tới đường). SSE = tổng bình phương chúng. Bấm <b>Khớp OLS</b> để về nghiệm tối ưu $b_0=98.25,\,b_1=0.110$ (SSE nhỏ nhất = 13665.6, r² = 0.581). Không tổ hợp $b_0,b_1$ nào cho SSE thấp hơn.</div>
+      <div class="demo-cap">Các thanh dọc đỏ = residual (khoảng cách điểm tới đường). SSE = tổng bình phương chúng. Bấm <b>Khớp OLS</b> để về nghiệm tối ưu $b_0=98.248,\,b_1=0.10977$ (SSE nhỏ nhất = 13665.6, r² = 0.581). Không tổ hợp $b_0,b_1$ nào cho SSE thấp hơn; thanh kéo nhảy theo bước 0.5 và 0.001 nên kéo tay chỉ tới gần (SSE ≈ 13665.9).</div>
     </div>
   </article>
 
@@ -893,6 +893,7 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
       <tr><td><strong>N</strong></td><td>Normality (sai số phân phối chuẩn)</td><td>Q–Q plot của residual gần đường thẳng</td></tr>
       <tr><td><strong>E</strong></td><td>Equal variance (đồng phương sai)</td><td>Residual vs X có độ tản đều (không hình phễu = heteroscedasticity)</td></tr>
     </tbody></table></div>
+    <p>Thiếu <strong>N</strong> thì $b_0,b_1$ vẫn không chệch; N chỉ cần để t-test, F-test và khoảng tin cậy ở mục 6.5 đúng khi mẫu nhỏ. Vi phạm <strong>I</strong> hoặc <strong>E</strong> thì hệ số vẫn ước lượng được, nhưng sai số chuẩn của nó (dùng ở mục 6.5) tính sai, nên p-value và khoảng tin cậy không còn tin được.</p>
     <p><strong>Durbin–Watson</strong> phát hiện tự tương quan (dữ liệu theo thời gian): $D=\frac{\sum_{i=2}^n(e_i-e_{i-1})^2}{\sum e_i^2}\in[0,4]$; $D\approx2$ tốt, $D&lt;2$ gợi ý tự tương quan dương.</p>
   </article>
 
@@ -916,7 +917,8 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
 
   <article class="concept" data-concept="r-multi">
     <h3><span class="cid">6.6</span> Hồi quy bội</h3>
-    <p>Nhiều biến độc lập: $Y'=a+b_1X_1+\dots+b_kX_k$. $b_j$ = hệ số <em>riêng phần</em> (tác động của $X_j$ khi giữ nguyên các biến khác). $R^2$ = tỉ lệ biến thiên giải thích bởi <em>tập</em> biến. So sánh sức mạnh predictor bằng <strong>hệ số chuẩn hoá (beta)</strong> $\beta_j=b_j\,s_{X_j}/s_Y$.</p>
+    <p>Nhiều biến độc lập: $\hat Y=b_0+b_1X_1+\dots+b_kX_k$. $b_j$ = hệ số <em>riêng phần</em>: khi $X_j$ tăng 1 đơn vị và <em>mọi biến khác trong mô hình giữ nguyên</em>, $\hat Y$ đổi trung bình $b_j$ đơn vị. Đây là liên hệ, chưa phải tác động nhân quả, và $b_j$ đổi khi thêm/bớt biến khác. $R^2$ = tỉ lệ biến thiên giải thích bởi <em>tập</em> biến. So sánh sức mạnh predictor bằng <strong>hệ số chuẩn hoá</strong> $b_j^{*}=b_j\,s_{X_j}/s_Y$ (thay đổi của Y tính bằng độ lệch chuẩn khi $X_j$ tăng 1 độ lệch chuẩn).</p>
+    <div class="callout note"><span class="lbl">Đa cộng tuyến (multicollinearity)</span><p>Khi các $X_j$ tương quan mạnh với nhau, "giữ biến khác không đổi" khó xảy ra trong dữ liệu: OLS khó tách phần của từng biến, sai số chuẩn của $b_j$ phình to, hệ số có thể đổi dấu khi thêm/bớt một biến, dù $R^2$ và dự đoán vẫn tốt. Đo bằng $VIF_j=1/(1-R_j^2)$, với $R_j^2$ là $R^2$ khi hồi quy $X_j$ theo các biến còn lại: VIF = 5 nghĩa là phương sai của $b_j$ gấp 5 lần khi $X_j$ không tương quan với biến nào. VIF &gt; 5 đáng lo, &gt; 10 nghiêm trọng. Xử lý: bỏ/gộp biến trùng thông tin, hoặc Ridge.</p></div>
     <div class="callout warning"><span class="lbl">⚠ $R^2$ luôn tăng khi thêm biến</span><p>Thêm biến (kể cả vô dụng) không bao giờ làm $R^2$ giảm — ví dụ trong tài liệu $R^2$ tăng 0.160 → 0.161 khi thêm một biến <em>không</em> có ý nghĩa. Vì vậy dùng <strong>adjusted $R^2$</strong> hoặc F-test trên chênh lệch $R^2$:</p>$$\bar R^2=1-(1-R^2)\frac{n-1}{n-k-1}$$</div>
     <p class="teaser">Mở rộng: normal equations, gradient descent, regularization (Ridge/Lasso), bias–variance, RMSE/MAE — nền tảng ML không có trong slide gốc.</p>
     <button class="expand-btn" data-expand="r-ml">Mở rộng ML (companion) →</button>
@@ -963,6 +965,17 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
     <h3><span class="cid">7.2</span> Ngưỡng, ROC &amp; PR</h3>
     <p><strong>Cartoon:</strong> model cho <em>điểm số</em>, không phải nhãn. Trượt ngưỡng τ → 4 ô di chuyển → vẽ ra đường ROC/PR.</p>
     <p><strong>ROC:</strong> vẽ TPR (trục y) theo FPR (trục x) khi quét mọi τ. <strong>AUC</strong> = xác suất một điểm dương ngẫu nhiên được xếp hạng cao hơn một điểm âm ngẫu nhiên: $\text{AUC}=P(\text{score}_+&gt;\text{score}_-)$; bất biến với biến đổi đơn điệu, <em>bỏ qua prevalence</em>. <strong>PR curve</strong> (precision theo recall) tốt hơn khi <strong>positive hiếm</strong>; baseline precision = prevalence.</p>
+    <p class="teaser">Mở rộng: điểm số đến từ đâu — logistic regression, log-odds, odds ratio.</p>
+    <button class="expand-btn" data-expand="cl-logit">Logistic regression &amp; odds ratio →</button>
+    <div class="detail-source" id="detail-cl-logit" data-title="Logistic regression & odds ratio">
+      <h4>Mô hình</h4>
+      $$p=P(Y=1\mid X)=\frac{1}{1+e^{-z}},\qquad z=b_0+b_1X_1+\dots+b_kX_k$$
+      <p>Hàm sigmoid ép $z\in(-\infty,\infty)$ về $p\in(0,1)$. Tuyến tính là <em>log-odds</em>, không phải $p$: $\ln\frac{p}{1-p}=z$. Hệ số ước lượng bằng maximum likelihood (tối thiểu log loss), không phải OLS.</p>
+      <h4>Đọc hệ số: odds ratio</h4>
+      <p>Odds $=p/(1-p)$. Khi $X_j$ tăng 1 đơn vị, các biến khác giữ nguyên, log-odds tăng $b_j$, tức odds <strong>nhân</strong> $e^{b_j}$ (odds ratio). $e^{b_j}&gt;1$: tăng khả năng; $=1$: không liên hệ; $&lt;1$: giảm.</p>
+      <p>Ví dụ $b_j=0{,}7$: $e^{0{,}7}\approx2{,}01$, odds gấp đôi. Từ $p=0{,}20$ (odds 0,25 → 0,503) thì $p$ thành 0,335; từ $p=0{,}50$ thì thành 0,668. Cùng một odds ratio nhưng mức tăng xác suất khác nhau tuỳ điểm xuất phát.</p>
+      <div class="callout warning"><span class="lbl">⚠ Hay nhầm</span><p>Odds ratio 2 <em>không</em> có nghĩa "xác suất gấp đôi" (risk ratio); hai thứ chỉ gần bằng nhau khi $p$ nhỏ. Logistic là mô hình tuyến tính trên log-odds nên không tự bắt được tương tác hay quan hệ không đơn điệu: phải tự tạo feature tương tác/bin. Train với class weights làm lệch hệ số chặn $b_0$, nên xác suất ra không còn calibrated.</p></div>
+    </div>
 
     <div class="demo" id="demo-clf">
       <div class="demo-head"><span class="eyebrow">Demo tương tác</span><span>Ngưỡng → confusion matrix → ROC</span></div>
@@ -991,13 +1004,14 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
     <p>Chi phí hai loại lỗi thường <em>bất đối xứng</em> (bỏ sót ung thư ≫ báo động giả; nhưng lọc nhầm email quan trọng ≫ để lọt spam). Ngưỡng tối ưu Bayes:</p>
     <div class="equation">$$\tau^*=\frac{C_{FP}}{C_{FN}+C_{FP}}$$</div>
     <p>Quy tắc: dự đoán dương khi $p&gt;\tau^*$. Dẫn xuất: dự đoán dương khi $(1-p)C_{FP}&lt;p\,C_{FN}\Rightarrow p&gt;C_{FP}/(C_{FN}+C_{FP})$.</p>
+    <p>Hai điều kiện: dự đoán đúng không tốn gì, và $p$ phải là xác suất <em>đã calibrated</em> (mục 7.4). Mô hình train với class weights hay oversampling cho điểm bị đẩy lên, nên không thay thẳng vào công thức được — khi đó quét ngưỡng trên tập validation và chọn ngưỡng có tổng chi phí thấp nhất.</p>
     <div class="callout warning"><span class="lbl">⚠ Sửa lỗi tài liệu (slide 45)</span><p>Slide 45 ghi $\tau^*=C_{FP}/C_{FN}$ — <strong>sai</strong>, mâu thuẫn với công thức đúng ở slide 31. Bản slide 45 có thể vượt quá 1 (vô nghĩa cho ngưỡng) khi $C_{FP}&gt;C_{FN}$. Dùng $\tau^*=C_{FP}/(C_{FN}+C_{FP})$.</p></div>
     <p><strong>Chọn ngưỡng còn theo:</strong> tối đa F1/Fβ trên validation · hình học ROC (gần điểm (0,1) nhất, hoặc max Youden's $J=\text{TPR}-\text{FPR}$) · ràng buộc precision/recall · <strong>top-k</strong> (chỉ hành động được k ca). <strong>Luôn tune τ trên held-out, không phải test set.</strong></p>
   </article>
 
   <article class="concept" data-concept="cl-calib">
     <h3><span class="cid">7.4</span> Calibration &amp; các chỉ số nâng cao</h3>
-    <p><strong>Calibration</strong> đảm bảo "điểm 0.8" thật sự nghĩa là 80% xác suất. Cần khi <em>giá trị xác suất</em> đi vào công thức tài chính (ROI, phí bảo hiểm), không cần khi chỉ xếp hạng (top-k). Random Forest thường <em>over-confident</em> → dùng <strong>Isotonic</strong> hoặc <strong>Platt scaling</strong> để nắn về đường chéo. Calibration cải thiện Brier/log-loss/ECE nhưng <em>không đổi AUC</em>.</p>
+    <p><strong>Calibration</strong> đảm bảo "điểm 0.8" thật sự nghĩa là 80% xác suất. Cần khi <em>giá trị xác suất</em> đi vào công thức tài chính (ROI, phí bảo hiểm), không cần khi chỉ xếp hạng (top-k). Mỗi họ mô hình lệch một kiểu: Random Forest thường <em>under-confident</em> (điểm bị kéo vào giữa, hiếm khi sát 0 hay 1), Naive Bayes thì <em>over-confident</em>; mô hình train với class weights hay SMOTE cho điểm lớp hiếm cao quá thực tế. Dùng <strong>Isotonic</strong> hoặc <strong>Platt scaling</strong> (fit trên tập validation) để nắn về đường chéo. Calibration cải thiện Brier/log-loss/ECE; Platt giữ nguyên thứ hạng nên <em>không đổi AUC</em>, isotonic có thể gộp vài điểm thành bằng nhau nên AUC chỉ xê dịch chút ít.</p>
     <p class="teaser">Mở rộng: Brier, log loss, ECE/MCE · micro vs macro vs weighted averaging · lift/gain.</p>
     <button class="expand-btn" data-expand="cl-more">Công thức &amp; averaging →</button>
     <div class="detail-source" id="detail-cl-more" data-title="Calibration, averaging, lift">
@@ -1072,7 +1086,7 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
       <p><strong>E-step</strong> (soft assignment) — trách nhiệm $\gamma_{ic}$:</p>
       $$\gamma_{ic}=\frac{\pi_c\,\mathcal N(\mathbf x_i\mid\boldsymbol\mu_c,\Sigma_c)}{\sum_j\pi_j\,\mathcal N(\mathbf x_i\mid\boldsymbol\mu_j,\Sigma_j)}$$
       <p><strong>M-step</strong> (cập nhật, có trọng số theo trách nhiệm), $N_c=\sum_i\gamma_{ic}$:</p>
-      $$\boldsymbol\mu_c=\frac1{N_c}\sum_i\gamma_{ic}\mathbf x_i,\quad \pi_c=\frac{N_c}{n}$$
+      $$\boldsymbol\mu_c=\frac1{N_c}\sum_i\gamma_{ic}\mathbf x_i,\quad \Sigma_c=\frac1{N_c}\sum_i\gamma_{ic}(\mathbf x_i-\boldsymbol\mu_c)(\mathbf x_i-\boldsymbol\mu_c)^\top,\quad \pi_c=\frac{N_c}{n}$$
       <p>Lặp E&amp;M tới khi log-likelihood ngừng tăng. Chỉ đạt <em>local optimum</em>.</p>
       <h4>Chọn số thành phần</h4>
       $$\text{AIC}=2p-2\ln\hat L, \qquad \text{BIC}=p\ln n-2\ln\hat L$$
@@ -1095,7 +1109,7 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
       <p>Cột của $V$ = hướng chính; $\Sigma$ ở đây là ma trận <em>giá trị kỳ dị</em> (khác ma trận covariance — trùng ký hiệu!). Quan hệ $\lambda_i=\sigma_i^2/(n-1)$. SVD <strong>chỉ</strong> là PCA khi áp lên dữ liệu đã center.</p>
       <h4>Reconstruction error</h4>
       $$\text{Error}=\frac1m\sum_i\|x^{(i)}-x_{\text{approx}}\|^2$$
-      <p>Càng nhiều PC càng nhỏ; $k=d$ → error 0. Test error có thể tăng lại nếu giữ quá nhiều PC (overfitting).</p>
+      <p>Càng nhiều PC càng nhỏ, kể cả trên dữ liệu mới (chiếu lên không gian con lớn hơn không thể xa hơn); $k=d$ → error 0. Thứ có thể tăng lại khi giữ quá nhiều PC là lỗi test của <em>mô hình dự đoán</em> dùng các PC làm feature (overfitting), không phải reconstruction error.</p>
       <h4>t-SNE / UMAP</h4>
       <p>Phi tuyến, "mở" được manifold cong mà PCA làm phẳng. Nhưng <strong>stochastic</strong>, nhạy hyperparameter (perplexity / n_neighbors), <strong>trục không có nghĩa</strong> — chỉ dùng trực quan, không làm feature. t-SNE không transform điểm mới; UMAP thì có.</p>
       <h4>RFM — phân khúc hành vi</h4>
@@ -1163,7 +1177,8 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
     <h3><span class="cid">9.4</span> Cross-validation &amp; thước đo lỗi</h3>
     <div class="callout warning"><span class="lbl">⚠ Quy tắc vàng</span><p>K-Fold ngẫu nhiên (xáo trộn) là <strong>PHẠM LUẬT</strong> với chuỗi thời gian — phá vỡ phụ thuộc thời gian &amp; "nhìn trộm tương lai". Dùng <strong>Time-Series CV (walk-forward)</strong>: tập test luôn <em>sau</em> tập train. Cửa sổ mở rộng (expanding) dùng hết lịch sử; cửa sổ trượt (rolling) thích nghi structural break.</p></div>
     <div class="equation">$$\text{MAPE}=\text{mean}\left|\frac{y_t-\hat y_t}{y_t}\right|\times100, \qquad \text{MASE}=\frac{\text{MAE}_{\text{model}}}{\text{MAE}_{\text{naive}}}$$</div>
-    <p><strong>MASE là tiêu chuẩn vàng:</strong> &lt;1 nghĩa là mô hình <em>thắng</em> naive; &gt;1 nghĩa là thua (nên dùng naive). Scale-free, xác định cả khi $y_t=0$.</p>
+    <p>MAE $=\text{mean}|y_t-\hat y_t|$ và RMSE $=\sqrt{\text{mean}(y_t-\hat y_t)^2}$ mang đơn vị của $y$ nên chỉ so được trên cùng một chuỗi; RMSE phạt lỗi lớn nặng hơn (bình phương), MAE bền hơn với vài lỗi lớn.</p>
+    <p><strong>MASE là tiêu chuẩn vàng:</strong> mẫu số $\text{MAE}_{\text{naive}}$ là MAE của dự báo naive một bước (hoặc seasonal naive, $\hat y_t=y_{t-m}$) tính <em>trên tập train</em>. MASE &lt;1 nghĩa là lỗi của mô hình nhỏ hơn lỗi naive đó; &gt;1 là lớn hơn, dấu hiệu nên xem lại mô hình hoặc dùng naive. Không phụ thuộc đơn vị, xác định cả khi $y_t=0$ (miễn chuỗi train không hằng).</p>
     <div class="callout warning"><span class="lbl">⚠ Vấn đề của MAPE (và sửa lỗi hướng bất đối xứng)</span><p>MAPE <strong>không xác định khi $y_t=0$</strong> và bùng nổ khi $y_t$ gần 0. Nó <em>bất đối xứng</em>: phạt <strong>over-forecast</strong> nặng hơn under-forecast cùng độ lệch (vì chia cho actual). Ví dụ: actual 100, dự báo 150 → 50%; actual 150, dự báo 100 → 33%. (Slide gốc nói ngược chiều — nên phát biểu không phụ thuộc quy ước: "MAPE phạt dự báo cao hơn thực tế nặng hơn".)</p></div>
     <p><strong>Thông điệp chốt (George Box):</strong> "Mọi mô hình đều sai, một số hữu ích." Mô hình phức tạp (LSTM) thường thua mô hình đơn giản bền vững (ETS) trên dữ liệu tháng nhiễu — <strong>bắt đầu đơn giản</strong>, luôn vượt được ít nhất seasonal naive.</p>
   </article>
@@ -1177,7 +1192,7 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
 
   <article class="concept" data-concept="p-options">
     <h3><span class="cid">10.1</span> Bảy lựa chọn đề tài</h3>
-    <p>Bao phủ đủ 4 họ kỹ thuật của môn: 2 hồi quy, 2 forecasting, 2 clustering, 2 classification (2 đề tài kết hợp):</p>
+    <p>Bao phủ đủ 4 họ kỹ thuật của môn: 2 hồi quy, 2 forecasting, 2 clustering, 2 classification — 8 suất trên 7 đề tài vì một đề tài (Churn &amp; Segmentation) kết hợp hai họ:</p>
     <div class="tbl-wrap"><table>
       <thead><tr><th>Đề tài</th><th>Loại bài toán</th><th>Module chính</th></tr></thead>
       <tbody>
@@ -1190,7 +1205,7 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
         <tr><td><strong>Retail/FMCG Demand Forecasting</strong></td><td>Time-series forecasting</td><td>09</td></tr>
       </tbody>
     </table></div>
-    <p>Mọi đề tài đều dùng thêm module <strong>01</strong> (framing/KPI), <strong>04</strong> (cleaning/feature) &amp; <strong>05</strong> (EDA) cho các giai đoạn đầu vòng đời.</p>
+    <p>Mọi đề tài đều dùng thêm module <strong>01–03</strong> (nền tảng, CRISP-DM, framing/KPI), <strong>04</strong> (cleaning/feature) &amp; <strong>05</strong> (EDA) cho các giai đoạn đầu vòng đời.</p>
   </article>
 
   <article class="concept" data-concept="p-lifecycle">
@@ -1509,8 +1524,8 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
       <div class="q"><p>Trên tập test, mô hình ETS có MAE = 18. Seasonal-naive (dự báo bằng giá trị cùng kỳ mùa trước) có MAE = 24 trên tập train. Tính MASE &amp; kết luận. Nếu một mô hình khác có MAE = 30 thì sao?</p></div>
       <details class="soln"><summary>Xem lời giải</summary>
         <ol>
-          <li>$\text{MASE}=\dfrac{\text{MAE}_{model}}{\text{MAE}_{naive}}=\dfrac{18}{24}=\mathbf{0{,}75}&lt;1$ ⇒ mô hình <strong>tốt hơn</strong> naive (giảm 25% lỗi) — chấp nhận được.</li>
-          <li>Mô hình MAE = 30: $\text{MASE}=30/24=\mathbf{1{,}25}&gt;1$ ⇒ <strong>thua</strong> naive ⇒ vô dụng, nên dùng naive.</li>
+          <li>$\text{MASE}=\dfrac{\text{MAE}_{model}}{\text{MAE}_{naive}}=\dfrac{18}{24}=\mathbf{0{,}75}&lt;1$ ⇒ lỗi của mô hình nhỏ hơn 25% so với lỗi seasonal-naive ⇒ <strong>tốt hơn</strong> naive, chấp nhận được.</li>
+          <li>Mô hình MAE = 30: $\text{MASE}=30/24=\mathbf{1{,}25}&gt;1$ ⇒ <strong>thua</strong> naive ⇒ không đáng dùng, dùng seasonal naive còn hơn.</li>
         </ol>
         <div class="callout warning"><span class="lbl">⚠ Vì sao không dùng MAPE</span><p>MAPE <em>không xác định khi $y_t=0$</em> (cửa hàng đóng cửa) và bất đối xứng (phạt dự báo cao hơn thực tế nặng hơn). MASE không thứ nguyên, xác định cả khi có số 0, luôn có mốc so sánh naive.</p></div>
         <p class="ans">Đáp số: MASE = 0,75 (thắng naive); mô hình 30 → MASE = 1,25 (thua naive).</p>
@@ -1814,10 +1829,10 @@ function catcol(i){return css('--cat-'+((i%7)+1));}
   var cv=document.getElementById('reg-cv');if(!cv)return;
   var X=[1400,1600,1700,1875,1100,1550,2350,2450,1425,1700],Y=[245,312,279,308,199,219,405,324,319,255];
   var ybar=Y.reduce(function(p,q){return p+q;},0)/Y.length,SST=Y.reduce(function(p,q){return p+(q-ybar)*(q-ybar);},0);
-  var b0e=document.getElementById('reg-b0-r'),b1e=document.getElementById('reg-b1-r');
+  var b0e=document.getElementById('reg-b0-r'),b1e=document.getElementById('reg-b1-r'),exact=null;
   function draw(){
-    var b0=+b0e.value,b1=+b1e.value,g=fitCanvas(cv),ctx=g.ctx,t=theme();
-    document.getElementById('reg-b0').textContent=b0.toFixed(1);document.getElementById('reg-b1').textContent=b1.toFixed(3);
+    var b0=exact?exact[0]:+b0e.value,b1=exact?exact[1]:+b1e.value,g=fitCanvas(cv),ctx=g.ctx,t=theme();
+    document.getElementById('reg-b0').textContent=exact?b0.toFixed(2):b0.toFixed(1);document.getElementById('reg-b1').textContent=exact?b1.toFixed(5):b1.toFixed(3);
     ctx.clearRect(0,0,g.w,g.h);
     var pad=42,xmn=1000,xmx=2550,ymn=150,ymx=430;
     function PX(v){return pad+(v-xmn)/(xmx-xmn)*(g.w-pad-20);}
@@ -1835,8 +1850,9 @@ function catcol(i){return css('--cat-'+((i%7)+1));}
     var r2=1-SSE/SST;document.getElementById('reg-r2').textContent=r2.toFixed(3);
     document.getElementById('reg-best').innerHTML=(SSE<13720)?'<b style="color:var(--accent-green)">≈ nghiệm OLS tối ưu ✓</b>':'';
   }
-  b0e.addEventListener('input',draw);b1e.addEventListener('input',draw);
-  document.getElementById('reg-fit').addEventListener('click',function(){b0e.value=98.24833;b1e.value=0.10977;draw();});
+  b0e.addEventListener('input',function(){exact=null;draw();});b1e.addEventListener('input',function(){exact=null;draw();});
+  // slider steps (0.5, 0.001) cannot hold the exact OLS solution, so the button draws it directly
+  document.getElementById('reg-fit').addEventListener('click',function(){exact=[98.24833,0.10977];b0e.value=exact[0];b1e.value=exact[1];draw();});
   onActivate('regression',draw);
 })();
 
