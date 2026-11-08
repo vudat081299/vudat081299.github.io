@@ -975,6 +975,10 @@ footer a { color:var(--muted); }
                 <svg class="viz" id="m4-err" role="img" aria-label="Hai đường điểm trừ theo độ vặn vẹo của mô hình: đường đề ôn đi xuống đều, đường đề thử chạm đáy rồi vọt lên." viewBox="0 0 340 250"></svg>
                 <figcaption>Điểm trừ theo độ vặn vẹo. Đường dưới là đề ôn, đường trên là đề thử.</figcaption>
               </figure>
+              <figure style="grid-column:1 / -1;justify-self:center;width:100%;max-width:400px">
+                <svg class="viz" id="m4-lc" role="img" aria-label="Đường cong học: điểm trừ trên đề ôn và đề thử theo số bài trong đề ôn, từ 8 tới 40, ở bậc và mức phạt đang chọn." viewBox="0 0 340 250"></svg>
+                <figcaption>Đường cong học: giữ nguyên bậc và λ, cho số bài trong đề ôn chạy từ 8 tới 40. Vạch đứt dọc là số bài đang chọn; vạch đứt ngang là sàn nhiễu 0,01 — phần sai do nhiễu sẵn trong dữ liệu, không máy nào bớt được.</figcaption>
+              </figure>
             </div>
             <div style="margin-top:16px">
               <div class="row"><label for="m4-d">Độ vặn vẹo</label><div class="inline"><input type="range" id="m4-d" min="1" max="12" step="1" value="1"><span class="val" id="m4-dv"></span></div></div>
@@ -982,7 +986,7 @@ footer a { color:var(--muted); }
               <div class="row"><label for="m4-m">Số bài trong đề ôn</label><div class="inline"><input type="range" id="m4-m" min="8" max="40" step="1" value="12"><span class="val" id="m4-mv"></span></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m4-out"></pre></div>
             </div>
-            <p class="lab__f">Kéo <b>độ vặn vẹo</b> lên 10 rồi kéo <b>số bài trong đề ôn</b> từ 8 lên 40. Cùng một độ vặn vẹo, nhiều dữ liệu hơn thì bớt học thuộc lòng — đó là cách chữa số 1, nhìn thấy được. Kéo <b>λ</b> lên là cách chữa số 2.</p>
+            <p class="lab__f">Kéo <b>độ vặn vẹo</b> lên 10 rồi kéo <b>số bài trong đề ôn</b> từ 8 lên 40. Cùng một độ vặn vẹo, nhiều dữ liệu hơn thì bớt học thuộc lòng — đó là cách chữa số 1, nhìn thấy được. Hình thứ ba vẽ sẵn cả lượt kéo ấy, và nó là đường cong học mà cách chữa số 1 dạy đọc: ở bậc 10, đề thử từ trên khung tụt dần về sát đề ôn — thêm bài còn ăn. Về bậc 1 thì từ chừng 12 bài trở đi đề thử nằm ngang, và cả hai đường cao gấp sáu lần sàn nhiễu trở lên — thêm bài không kéo chúng xuống được nữa; phải làm máy to hơn. Kéo <b>λ</b> lên là cách chữa số 2.</p>
           </div>
         </div>
 
@@ -2600,12 +2604,13 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
 
 /* ═══════════════════ MÔ HÌNH 4 — HỌC THUỘC HAY HIỂU ═══════════════════ */
 (function () {
-  var svgF = $('m4-fit'), svgE = $('m4-err');
+  var svgF = $('m4-fit'), svgE = $('m4-err'), svgL = $('m4-lc');
   if (!svgF) return;
   var sd = $('m4-d'), sl = $('m4-l'), sm = $('m4-m');
   var vd = $('m4-dv'), vl = $('m4-lv'), vm = $('m4-mv'), out = $('m4-out');
 
   function truth(u) { return 0.55 * Math.sin(3.05 * u + 0.4) + 0.22 * u; }
+  var FLOOR = 0.01;   /* nhiễu σ = 0,1 → sàn của điểm trừ là σ² = 0,01 */
   /* Một đám điểm cố định, cắt lấy m điểm đầu — kéo thanh "số bài" thì các điểm cũ
      đứng nguyên, chỉ thêm điểm mới. Nếu sinh lại thì người đọc không so được. */
   /* Hạt 229: với nó cả ba thí nghiệm mà chữ hứa ra đúng một chiều, không lật qua lật lại — kéo bậc
@@ -2694,6 +2699,40 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     txt(svgE, 320, 32, 'đề thử', 'vs', 'end', 'fill:var(--bad)');
     txt(svgE, 320, 48, 'đề ôn', 'vs', 'end', 'fill:var(--good)');
 
+    /* Đường cong học: cùng bậc, cùng λ, số bài chạy 8 → 40 — đúng hình mà cách chữa số 1 dạy đọc.
+       Trần trục y đọc theo phần từ 20 bài trở đi: bậc cao với dưới ~12 bài có đề thử vọt tới
+       hàng trăm, kéo trần theo thì mọi đoạn còn lại dẹp sát đáy. Phần vượt trần vẽ dính trần. */
+    if (svgL) {
+      clear(svgL);
+      var lc = { tr: [], te: [] }, mm, topL = 0;
+      for (mm = 8; mm <= 40; mm++) {
+        var TRm = POOL.slice(0, mm), wm = fit(TRm, d, lamOff ? 0 : lam);
+        lc.tr.push(err(wm, TRm)); lc.te.push(err(wm, TEST));
+        if (mm >= 20) topL = Math.max(topL, lc.tr[mm - 8], lc.te[mm - 8]);
+      }
+      topL = Math.max(0.12, Math.min(topL * 1.15, 0.95));
+      var g3 = axes(svgL, [50, 18, 324, 206], [8, 40], [0, topL], 'số bài trong đề ôn', 'điểm trừ', 4);
+      for (t = 0; t <= 4; t++) txt(svgL, 44, g3.Y(topL * t / 4) + 4, vi(topL * t / 4, 2), 'vs', 'end');
+      for (t = 8; t <= 40; t += 8) txt(svgL, g3.X(t), 220, String(t), 'vs', 'middle');
+      el(svgL, 'line', { x1: g3.L, y1: g3.Y(FLOOR), x2: g3.R, y2: g3.Y(FLOOR) }, 'stroke:var(--subtle);stroke-width:1.2;stroke-dasharray:2 4');
+      /* nhãn nằm ở chú giải góc trên, không nằm cạnh vạch: cạnh vạch thì đè lên đường cong ở bậc 3–10 */
+      el(svgL, 'line', { x1: 250, y1: 61, x2: 268, y2: 61 }, 'stroke:var(--subtle);stroke-width:1.2;stroke-dasharray:2 4');
+      txt(svgL, 320, 64, 'sàn nhiễu', 'vs', 'end');
+      var lineL = function (arr, style) {
+        var p3 = [], k3;
+        for (k3 = 0; k3 < arr.length; k3++) p3.push(g3.X(k3 + 8) + ',' + g3.Y(Math.min(topL, arr[k3])));
+        el(svgL, 'polyline', { points: p3.join(' '), fill: 'none' }, style);
+      };
+      lineL(lc.te, 'stroke:var(--bad);stroke-width:2.6');
+      lineL(lc.tr, 'stroke:var(--good);stroke-width:2.6');
+      el(svgL, 'line', { x1: g3.X(m), y1: g3.T, x2: g3.X(m), y2: g3.B }, 'stroke:var(--ink);stroke-width:1.4;stroke-dasharray:3 4;opacity:.5');
+      el(svgL, 'circle', { cx: g3.X(m), cy: g3.Y(Math.min(topL, lc.te[m - 8])), r: 5 }, 'fill:var(--bad);stroke:var(--canvas);stroke-width:1.6');
+      el(svgL, 'circle', { cx: g3.X(m), cy: g3.Y(Math.min(topL, lc.tr[m - 8])), r: 5 }, 'fill:var(--good);stroke:var(--canvas);stroke-width:1.6');
+      txt(svgL, 320, 32, 'đề thử', 'vs', 'end', 'fill:var(--bad)');
+      txt(svgL, 320, 48, 'đề ôn', 'vs', 'end', 'fill:var(--good)');
+      txt(svgL, 324, 12, 'bậc ' + d + ' · λ ' + vl.textContent, 'vs', 'end');
+    }
+
     /* bậc tốt nhất theo đề thử — chính là việc mà đề thử tồn tại để làm */
     var bi = 0, k2;
     for (k2 = 1; k2 < 12; k2++) if (curves.te[k2] < curves.te[bi]) bi = k2;
@@ -2704,7 +2743,6 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
        phải thuộc lòng — bản cũ xét ngược nên gọi bậc 2 (ôn 0,040, gấp bốn sàn) là "giỏi đề ôn".
        Ngưỡng thuộc lòng 3 × sàn: ở 2 ×, đề thử dao động quanh 0,02 làm dòng phán lật qua lật lại
        giữa các bậc liền nhau. */
-    var FLOOR = 0.01;
     out.textContent =
       'điểm trừ · đề ôn   ' + pad(vi(eTr, 4), 8) + '\n' +
       'điểm trừ · đề thử  ' + pad(vi(eTe, 4), 8) + '\n' +

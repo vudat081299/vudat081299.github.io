@@ -1259,6 +1259,27 @@ def run_101():
         claim('m4 thí nghiệm 3: kéo λ → thuộc lòng, vừa phải, rồi chưa học đủ', re.fullmatch(r'T+v+C+', seq3) is not None,
               f'dòng phán theo λ là {seq3}')
 
+        # Hình thứ ba, đường cong học (số bài 8 → 40 ở bậc và λ đang chọn). Chữ hứa hai cảnh:
+        # bậc 10 — đề thử từ trên khung (trần ≥ 0,12) tụt về sát đề ôn; bậc 1 — từ 12 bài đề thử
+        # nằm ngang và cả hai đường ≥ 6 × sàn nhiễu 0,01. λ tắt (thanh ở −7) như mặc định.
+        need('m4 đường cong học: cùng bậc, cùng λ', 'var TRm = POOL.slice(0, mm), wm = fit(TRm, d, lamOff ? 0 : lam);')
+        need('m4 đường cong học: trần đọc từ 20 bài', 'if (mm >= 20) topL = Math.max(topL, lc.tr[mm - 8], lc.te[mm - 8]);')
+        need('m4 sàn nhiễu = σ²', 'var FLOOR = 0.01;')
+        claim('m4 sàn nhiễu đúng bằng σ² của dữ liệu', abs(0.1 ** 2 - 0.01) < 1e-15 and 'truth(u) + gauss(r) * 0.1' in m4)
+
+        def lcurve(d):
+            return [(err(w, POOL[:m]), err(w, TEST)) for m in range(8, 41) for w in [fit(POOL[:m], d, 0)]]
+        c10, c1 = lcurve(10), lcurve(1)
+        top10 = max(0.12, min(1.15 * max(max(a, b) for a, b in c10[12:]), 0.95))
+        claim('m4 đường cong học bậc 10: đề thử ở 8 bài vượt khung, ở 40 bài sát đề ôn',
+              c10[0][1] > top10 and c10[-1][1] - c10[-1][0] < 0.015 and c10[-1][1] < c10[4][1] / 10,
+              f'trần {top10:.3f}; đề thử 8 bài {c10[0][1]:.3f}, 12 bài {c10[4][1]:.3f}, 40 bài {c10[-1][1]:.4f} / đề ôn {c10[-1][0]:.4f}')
+        te1 = [b for a, b in c1[4:]]
+        claim('m4 đường cong học bậc 1: từ 12 bài đề thử nằm ngang, cả hai ≥ 6 × sàn nhiễu',
+              max(te1) - min(te1) < 0.01 and min(min(a, b) for a, b in c1[4:]) >= 6 * 0.01,
+              f'đề thử {min(te1):.3f}–{max(te1):.3f}; thấp nhất {min(min(a, b) for a, b in c1[4:]):.3f}')
+        need('m4 đường cong học: lời văn', 'Về bậc 1 thì từ chừng 12 bài trở đi đề thử nằm ngang, và cả hai đường cao gấp sáu lần sàn nhiễu trở lên')
+
     # ══ các câu kiến thức đã từng viết sai ═════════════════════════════════
     import html as _html
     main_i = HTML.find('<main')

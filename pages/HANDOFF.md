@@ -2,8 +2,6 @@
 
 ## CHƯA LÀM
 
-- ML 101 mô hình 4 (`#m4`): thêm hình thứ ba là đường cong học — điểm trừ đề ôn và đề thử theo số bài 8→40, ở bậc
-  và λ đang chọn — để người đọc thấy hình mà chương 5, cách chữa 1 dạy đọc.
 - `machine-learning.html`, đề xuất của lượt rà sư phạm vòng 3 (cần mô hình hoặc hình mới):
   - M3 (#s-scale): chip GD / Momentum / Adam trên bản chưa chuẩn hoá, cùng α; phải cho thấy momentum bớt nảy
     giữa hai vách khe và Adam đi gần thẳng. Đổi luật "Chạy cả hai" nên phải sửa cả phép kiểm M3 trong cổng.
