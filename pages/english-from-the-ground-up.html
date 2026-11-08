@@ -2688,25 +2688,17 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
             </tbody>
           </table>
         </div>
-        <div class="ec-formula">
-<b>Đóng vai, nói</b>  <span class="c">(bật chế độ giọng nói)</span>
-  You are my engineering manager in sprint planning. Ask me one question at a time about
-  my tasks and push back on vague answers. Do not correct my English during the talk.
-  When I say "stop", list my 3 most repeated errors, each with one corrected example.
-
-<b>Phỏng vấn thử</b>
-  Interview me for a senior mobile developer role. Ask behavioral questions one at a
-  time and follow up like a real interviewer. Don't help me. At the end, rate each answer
-  for structure (STAR) and clarity, and name the filler words I overused.
-
-<b>Phản xạ 2 giây</b>
-  Give me short workplace situations, one at a time (e.g. "Your PR broke the build").
-  Wait for my spoken reply, then show one natural reply in a single line. Keep going.
-
-<b>Sửa viết tối thiểu</b>
-  Correct only grammar, word choice and tone in the text below. Keep my wording where
-  it is already correct. Show each change as: original → fix — reason in under 10 words.
-  Do not rewrite the whole text. Reader: [a teammate on Slack / an external client].
+        <p class="ec-p">Bốn prompt mẫu — chép nguyên, thay phần trong ngoặc vuông. Viết bằng tiếng Anh vì câu trả lời của AI cũng là input cho bạn.</p>
+        <div class="ec-tw">
+          <table class="wb-table wb-table--compact">
+            <thead><tr><th style="width:120px">Dùng khi</th><th>Prompt mẫu</th></tr></thead>
+            <tbody>
+              <tr><td><b>Đóng vai, nói</b><br><span class="ec-dim">bật chế độ giọng nói</span></td><td class="ec-mono">You are my engineering manager in sprint planning. Ask me one question at a time about my tasks and push back on vague answers. Do not correct my English during the talk. When I say "stop", list my 3 most repeated errors, each with one corrected example.</td></tr>
+              <tr><td><b>Phỏng vấn thử</b></td><td class="ec-mono">Interview me for a [senior mobile developer] role. Ask behavioral questions one at a time and follow up like a real interviewer. Don't help me. At the end, rate each answer for structure (STAR) and clarity, and name the filler words I overused.</td></tr>
+              <tr><td><b>Phản xạ 2 giây</b></td><td class="ec-mono">Give me short workplace situations, one at a time (e.g. "Your PR broke the build"). Wait for my spoken reply, then show one natural reply in a single line. Keep going.</td></tr>
+              <tr><td><b>Sửa viết tối thiểu</b></td><td class="ec-mono">Correct only grammar, word choice and tone in the text below. Keep my wording where it is already correct. Show each change as: original → fix — reason in under 10 words. Do not rewrite the whole text. Reader: [a teammate on Slack / an external client].</td></tr>
+            </tbody>
+          </table>
         </div>
 
         <div class="ec-quote">
@@ -3510,8 +3502,8 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
     else feel = 'đọc không cần tra — đây là ngưỡng tự học được qua đọc';
     out.textContent = [
       'với ' + n.toLocaleString('vi-VN') + ' họ từ:',
-      '  văn viết   ' + w.toFixed(1) + '%   → khoảng 1 từ lạ mỗi ' + Math.round(gap) + ' từ',
-      '  hội thoại  ' + s.toFixed(1) + '%   (hội thoại dùng từ tần suất cao nhiều hơn — nhưng âm trôi qua, không đọc lại được)',
+      '  văn viết   ' + w.toFixed(1).replace('.', ',') + '%   → khoảng 1 từ lạ mỗi ' + Math.round(gap) + ' từ',
+      '  hội thoại  ' + s.toFixed(1).replace('.', ',') + '%   (hội thoại dùng từ tần suất cao nhiều hơn — nhưng âm trôi qua, không đọc lại được)',
       '',
       'cảm giác thực tế: ' + feel
     ].join('\n');
