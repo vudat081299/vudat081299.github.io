@@ -1181,6 +1181,8 @@ def phan_F2():
         's-ngoloi': [
             ('5 phút', 'Abbey', '1982'), ('Farris và cộng sự', '2008', 'phân biệt kém hơn'),
             ('199 người', 'Perilloux, Easton và Buss', '2012'), ('Kitzinger và Frith', '1999'),
+            # Perilloux và cộng sự (2012), abstract: nam đoán quá mức, nữ đoán thấp mức quan tâm của người kia.
+            ('nam đoán cao, nữ đoán thấp', 'Perilloux, Easton và Buss', 300),
             ('chưa bao giờ được nói dứt khoát', 'Baumeister, Wotman và Stillwell', '1993'),
             ('Joel, Teper và MacDonald', '2014'),
             ('942 nghiên cứu sinh', '385 người', 'Bohns và DeVincent', '2019'),
@@ -1253,7 +1255,7 @@ def phan_F2():
             ('Maggiulli', '2017'), 'Paul Graham (2004)',
         ],
         's-hoaquyen': [('Phân tích gộp 813 mẫu', 'Sabey và cộng sự', '2025'), ('Galinsky và cộng sự', '2006'),
-                       ('20 trường', '2016')],
+                       ('20 trường', 'Ebersole và cộng sự, 2016')],
     }
     for sid, xs in NGUON.items():
         t = chu(muc(sid))
