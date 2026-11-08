@@ -513,7 +513,7 @@
     "Trùng lặp là loại A nên phải bỏ TRƯỚC khi chia tập: nếu chia trước rồi mới bỏ trùng thì một bản có thể ở train và bản kia ở test, mô hình học thuộc đúng dòng nó sắp bị hỏi. drop_duplicates(subset=['tx_id']) rồi assert is_unique; ép kiểu sớm với errors='coerce' (biến giá trị hỏng thành NaN, đếm được bằng .isna().sum()); chuẩn hoá chuỗi strip+lower thường giảm ~30% số giá trị khác nhau nên one-hot nhẹ đi 30%.",
     "Ranh giới làm sạch vs feature engineering: nếu phép biến đổi HỌC tham số từ dữ liệu (trung vị để điền, μ/σ để scale, danh sách hạng mục để one-hot) thì phải nằm trong Pipeline; chỉ phép sửa tuyệt đối (đổi kiểu, bỏ trùng) mới được làm ngoài."
    ],
-   "viz": "Bảng ba kiểu thiếu (ngẫu nhiên / mang thông tin / do cấu trúc) với ví dụ và cách xử lý tương ứng; code winsorize df['amount'].clip(lo, hi) với ngưỡng quantile([0.001, 0.999]).",
+   "viz": "Bảng ba kiểu thiếu (ngẫu nhiên / mang thông tin / do cấu trúc) với ví dụ và cách xử lý tương ứng; code winsorize clip(lo, hi) với ngưỡng quantile([0.001, 0.999]) học từ train rồi áp cho test.",
    "example": {
     "kind": "code",
     "lead": "Ngưỡng winsorize 90% tính từ train ra 1658, tính từ toàn bộ dữ liệu ra 4334 — chênh 2,6 lần chỉ vì giao dịch lớn nằm trong test đã tự nới ngưỡng cho chính nó.",
@@ -529,7 +529,7 @@
    "tldr": "Data leakage là khi mô hình được nhìn thông tin mà lúc dự đoán thật nó sẽ không có, cho điểm đẹp trên giấy nhưng vô dụng khi chạy; đây là lỗi nghiêm trọng nhất — một mô hình bị rò rỉ là một luận văn SAI mà phản biện phát hiện trong 5 phút.",
    "points": [
     "Dấu hiệu duy nhất cần nhớ: kết quả đẹp hơn mức hợp lý (AUC 0,999, accuracy 100%, mô hình đơn giản bỗng thắng mọi thứ) → phản xạ đúng không phải vui mừng mà là 'tôi vừa rò rỉ ở đâu?'.",
-    "Kiểu 1 rò rỉ mục tiêu: cột là HỆ QUẢ của nhãn (trang_thai='đã hoàn tiền', so_lan_khieu_nai) tương quan gần hoàn hảo — bắt bằng df.corr()['label'].abs(), mọi cột >0,8 phải thẩm vấn 'ghi vào lúc nào?'. Kiểu 2 rò rỉ thời gian: chia ngẫu nhiên dữ liệu có thời gian → chữa bằng chia theo thời gian.",
+    "Kiểu 1 rò rỉ mục tiêu: cột là HỆ QUẢ của nhãn (trang_thai='đã hoàn tiền', so_lan_khieu_nai) tương quan gần hoàn hảo — bắt bằng df_train.corr(numeric_only=True)['label'].abs() sau khi chia, cột nào vượt hẳn phần còn lại phải thẩm vấn 'ghi vào lúc nào?' (nhãn hiếm nén tương quan, 0,3 đã có thể đáng ngờ). Kiểu 2 rò rỉ thời gian: chia ngẫu nhiên dữ liệu có thời gian → chữa bằng chia theo thời gian.",
     "Kiểu 3 rò rỉ tiền xử lý: fit scaler/imputer/one-hot/PCA/target encoding trên toàn bộ trước khi chia → chữa bằng chia trước rồi để Pipeline fit chỉ trên train (áp cho MỌI thứ học tham số).",
     "Kiểu 4 rò rỉ nhóm: cùng thực thể (card_id) ở cả hai bên → GroupKFold/GroupShuffleSplit với groups=df['card_id']; nhưng chỉ là rò rỉ khi hệ thống thật phải chấm khách MỚI chưa từng thấy — tuỳ kịch bản triển khai.",
     "Kiểu 5 rò rỉ qua feature tổng hợp: groupby('card_id')['amount'].transform('mean') gồm cả giao dịch TƯƠNG LAI → chữa bằng sort_values('ts') rồi shift(1).expanding().mean(), shift(1) đẩy chuỗi xuống để giao dịch hiện tại không tự tính vào trung bình của chính nó.",
@@ -1684,10 +1684,10 @@
   "t-numpy": "e68d2288",
   "t-sklearn": "0b8382dd",
   "d-data": "0034c30c",
-  "d-leak": "ac3ed8a4",
+  "d-leak": "3045eb5a",
   "d-eda": "23df125e",
   "d-split": "bf87943e",
-  "d-clean": "84688a0c",
+  "d-clean": "656d91c7",
   "m-vector": "60e823c7",
   "m-deriv": "bf90a921",
   "m-prob": "7e3b49e7",

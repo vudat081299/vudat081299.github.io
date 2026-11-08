@@ -4766,7 +4766,7 @@ python -m src.prepare_data --source ieee --nrows 300000   <i># máy yếu: cắt
 
   <h3>1 · Rò rỉ mục tiêu — cột chứa đáp án</h3>
   <p>Cột <code>trang_thai = "đã hoàn tiền"</code> chỉ được điền sau khi xác nhận gian lận. Hay cột <code>so_lan_khieu_nai</code>. Chúng tương quan gần như hoàn hảo với nhãn vì chúng <b>là hệ quả của nhãn</b>, không phải nguyên nhân.</p>
-  <p><b>Cách bắt:</b> chạy <code>df.corr()["label"].abs().sort_values(ascending=False)</code>. Mọi cột &gt; 0,8 đều phải bị thẩm vấn: <i>"cột này được ghi vào lúc nào so với thời điểm dự đoán?"</i></p>
+  <p><b>Cách bắt:</b> sau khi chia tập, chạy trên train <code>df_train.corr(numeric_only=True)["label"].abs().sort_values(ascending=False)</code> (thiếu <code>numeric_only=True</code> thì pandas 2 trở lên báo lỗi khi bảng có cột chữ). Cột nào vượt hẳn các cột còn lại đều phải bị thẩm vấn: <i>"cột này được ghi vào lúc nào so với thời điểm dự đoán?"</i> Đừng chờ một ngưỡng như 0,8: với nhãn hiếm, tương quan bị nén xuống, nên 0,3 đã có thể đáng ngờ (bài <b>EDA</b>).</p>
 
   <h3>2 · Rò rỉ thời gian — dùng tương lai đoán quá khứ</h3>
   <p>Chia ngẫu nhiên một tập dữ liệu có thời gian: giao dịch tháng 12 nằm ở train, giao dịch tháng 6 nằm ở test. Mô hình đã "biết" xu hướng cuối năm khi đoán giữa năm.</p>
@@ -4775,11 +4775,12 @@ python -m src.prepare_data --source ieee --nrows 300000   <i># máy yếu: cắt
   <h3>3 · Rò rỉ tiền xử lý — <code>fit</code> trên toàn bộ dữ liệu</h3>
   <div class="ds-code"><i># ✗ SAI — μ, σ đã nhìn thấy tập test</i>
 X = StandardScaler().fit_transform(X_all)
-X_train, X_test = train_test_split(X)
+X_train, X_test, y_train, y_test = train_test_split(X, y, shuffle=<b>False</b>)
 
 <i># ✓ ĐÚNG — chia trước, và để Pipeline lo phần còn lại</i>
-X_train, X_test = train_test_split(X_all)
-pipe = Pipeline([("scale", StandardScaler()), ("model", LGBMClassifier())])
+<i># shuffle=False: dữ liệu đã sắp theo thời gian thì phần cuối làm test (kiểu 2)</i>
+X_train, X_test, y_train, y_test = train_test_split(X_all, y, shuffle=<b>False</b>)
+pipe = Pipeline([("scale", StandardScaler()), ("model", LogisticRegression(max_iter=1000))])
 pipe.fit(X_train, y_train)</div>
   <p>Áp dụng cho <b>mọi</b> thứ học tham số: scaler, imputer, one-hot, PCA, target encoding, chọn feature.</p>
 
@@ -5014,16 +5015,17 @@ num_pipe = Pipeline([
     <li>Giao dịch 3 tỉ đồng → có thể hoàn toàn thật. <b>Và trong bài toán gian lận, ngoại lai chính là thứ bạn đang đi tìm.</b> Xoá chúng là xoá mất tín hiệu.</li>
   </ul>
   <p>Vì vậy, thay vì xoá, hãy <b>làm dịu ảnh hưởng</b>:</p>
-  <div class="ds-code"><i># cắt ngưỡng (winsorize) — giữ dòng, giới hạn giá trị</i>
-lo, hi = df["amount"].quantile([0.001, 0.999])
-df["amount_clipped"] = df["amount"].clip(lo, hi)
+  <div class="ds-code"><i># cắt ngưỡng (winsorize) — giữ dòng, giới hạn giá trị; ngưỡng học từ TRAIN</i>
+lo, hi = train["amount"].quantile([0.001, 0.999])
+train["amount_clipped"] = train["amount"].clip(lo, hi)
+test["amount_clipped"]  = test["amount"].clip(lo, hi)    <i># dùng lại lo, hi của train</i>
 
-<i># hoặc đổi thang đo</i>
+<i># hoặc đổi thang đo — không học gì từ dữ liệu, nên làm trên df trước khi chia cũng được</i>
 df["amount_log"] = np.log1p(df["amount"])
 
 <i># hoặc dùng scaler miễn nhiễm ngoại lai</i>
 <b>from</b> sklearn.preprocessing <b>import</b> RobustScaler</div>
-  <p><b>Quan trọng:</b> ngưỡng <code>lo</code>/<code>hi</code> phải tính từ <b>tập train</b>, rồi áp cho test. Tính trên toàn bộ dữ liệu là rò rỉ.</p>
+  <p><b>Quan trọng:</b> ngưỡng <code>lo</code>/<code>hi</code> phải tính từ <b>tập train</b>, rồi áp cho test — như code trên. Tính trên toàn bộ dữ liệu là rò rỉ.</p>
 
   <h2>3 · Trùng lặp và kiểu dữ liệu <span class="wb-help">— loại A, chạy TRƯỚC khi chia</span></h2>
   <div class="wb-alert wb-alert--warning">
@@ -5040,7 +5042,7 @@ df["ts"]      = pd.to_datetime(df["timestamp"], errors="coerce")
 df["amount"]  = pd.to_numeric(df["amount"], errors="coerce")
 df["city"]    = df["city"].str.strip().str.lower()   <i># " Hà Nội " và "hà nội" là một</i></div>
   <p><code>errors="coerce"</code> biến giá trị hỏng thành <code>NaN</code> thay vì làm nổ chương trình — rồi bạn đếm được có bao nhiêu cái hỏng bằng <code>.isna().sum()</code>.</p>
-  <p>Chuẩn hoá chuỗi (<code>strip</code>, <code>lower</code>) nghe nhỏ nhặt nhưng thường làm số giá trị khác nhau của một cột giảm 30% — nghĩa là one-hot nhẹ đi 30% và mô hình học tốt hơn.</p>
+  <p>Chuẩn hoá chuỗi (<code>strip</code>, <code>lower</code>) nghe nhỏ nhặt nhưng có thể làm số giá trị khác nhau của một cột giảm đáng kể — one-hot nhẹ đi, và mỗi hạng mục gom được nhiều mẫu hơn để học. Giảm bao nhiêu thì đếm: <code>nunique()</code> trước và sau.</p>
 
   <h2>Ranh giới giữa "làm sạch" và "tạo feature"</h2>
   <p>Câu hỏi hay bị lẫn. Phân biệt đơn giản:</p>
@@ -15470,7 +15472,7 @@ VIZ.edapanel = el => {
       ${seeBlock({
         see: 'bốn ô này KHÔNG phải bốn cách vẽ cùng một thứ. Mỗi ô trả lời đúng một câu, và bỏ ô nào thì mất hẳn câu đó: bỏ <b>Thiếu</b> thì bạn điền trung vị cho một cột trống 91%; bỏ <b>Tương quan</b> thì <code>chargeback_flag</code> đi thẳng vào mô hình và bạn có một PR-AUC 0,98 hoàn toàn giả.',
         wrong: '“EDA là vẽ càng nhiều hình càng tốt”. Ngược lại: bốn câu hỏi này là <i>đủ</i> để đi tiếp, và hình thứ năm không trả lời câu nào mới thì chỉ tốn giờ. Cách kiểm tra một biểu đồ có đáng vẽ không: viết ra câu hỏi nó trả lời — không viết được thì đừng vẽ.',
-        code: 'Ô 1 <code>sns.histplot</code> · ô 2 <code>df.groupby("hour")["Class"].mean()</code> · ô 3 <code>df.isna().mean()</code> · ô 4 <code>df.corr()["Class"].abs().sort_values()</code>. Ba ô đầu chạy được ở <b>Thì 1</b>; ô 4 là Thì 2 — nó dùng quan hệ với nhãn nên chỉ chạy trên <b>train</b>.',
+        code: 'Ô 1 <code>sns.histplot</code> · ô 2 <code>df_train.groupby("hour")["Class"].mean()</code> · ô 3 <code>df.isna().mean()</code> · ô 4 <code>df_train.corr(numeric_only=True)["Class"].abs().sort_values()</code>. Chỉ ô 3 thuộc <b>Thì 1</b>: mức thiếu là thuộc tính cấu trúc. Ô 1 xem phân phối feature, ô 2 và ô 4 dùng quan hệ với nhãn — cả ba là Thì 2, chỉ chạy trên <b>train</b>.',
       })}
     </div></div>`;
   const g = el.querySelector('[data-o="g"]'), r = el.querySelector('[data-o="r"]');
