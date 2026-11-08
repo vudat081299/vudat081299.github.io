@@ -18,6 +18,8 @@
   - Toán: ô TOÁN cho chặng 3–4; khối "span, cơ sở, số chiều" ở chặng 1; hộp "một phía hay hai phía" ở 4.7.
   - Toán: m6 thêm trục thử tự xoay; m8 thêm hướng u xoay được; mô hình đường hợp lý L(p) cho 4.3.
 - jazz-piano-theory: bản rà nội dung của chủ trang (một artifact, không nằm trong repo) chưa đối chiếu hết.
+- english-from-the-ground-up, mục 05: số unit trong bảng ghép Destination, năm ngăn của unit từ vựng và câu "ba
+  quyển không có chữ pronunciation" chưa đối chiếu với sách. Cần bản sách; cổng chỉ kiểm tổng 42 + 28 + 26.
 - Ba trang sách (books-in-brief, how-to-lie-with-statistics, a-short-history-of-nearly-everything): ghi chú
   biên tập cũ (độ dài so với đề bài, thứ tự chương, giọng vài đoạn) đã gỡ khỏi web ở commit 5bb410d. Muốn
   làm tiếp thì xem diff của commit ấy; không bắt buộc.
