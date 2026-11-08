@@ -1879,10 +1879,12 @@ M, D = 200_000, 28               <span class="cm"># 200.000 thí nghiệm A/A, m
 S = rng.standard_normal((M, D)).cumsum(axis=1)  <span class="cm"># chênh lệch cộng dồn</span>
 Z = S / np.sqrt(np.arange(1, D + 1))            <span class="cm"># điểm z cuối mỗi ngày</span>
 
+ti_le = []
 for k in (1, 2, 4, 7, 14, 28):   <span class="cm"># nhìn k lần cách đều</span>
     days = np.arange(1, k + 1) * (D // k) - 1
     bao_dong = (np.abs(Z[:, days]) &gt; 1.959964).any(axis=1)
-    print(k, round(bao_dong.mean(), 3))
+    ti_le.append(round(float(bao_dong.mean()), 3))
+print(*ti_le, sep=' · ')
 <span class="cm"># in ra: 0.05 · 0.083 · 0.126 · 0.165 · 0.22 · 0.275 (numpy 2.0)</span></pre>
 
         <div class="box mis">
