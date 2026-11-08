@@ -228,7 +228,13 @@ ok(b1b2 == (150, 200), 'D: B1 → B2 theo bảng là %s giờ' % (b1b2,))
 has('sprint', '%d–%d giờ' % (lo_h, hi_h), '30 × 1,5–3')
 has('sprint', '%d–%d giờ' % b1b2, 'B2 − B1 theo bảng Cambridge')
 has('sprint', '≈ %s–%s bậc' % (vn(math.floor(lo_h / b1b2[1] * 10) / 10, 1), vn(round(hi_h / b1b2[0], 1), 1)), '45 ÷ 200 tới 90 ÷ 150')
-has('sprint', '15 khung mỗi ngày ≈ %d khung' % (15 * 30), '15 × 30')
+# khung mới mỗi ngày lấy từ khối 3; ngày ôn không thêm khung mới
+kmin, kmax = [int(x) for x in re.search(r'<td>(\d+)–(\d+) khung của tình huống hôm nay', sp).groups()]
+new_days = 30 - 4
+ok(new_days == 30 - len([7, 14, 21, 28]), 'D: số ngày học khung mới')
+has('sprint', '%d–%d khung mỗi ngày × %d ngày học mới ≈ %d–%d khung' % (kmin, kmax, new_days, round(kmin * new_days, -1), kmax * new_days),
+    'khối 3 × 26 ngày')
+has('sprint', 'khoảng %d khung đầu tiên' % round(6 * (kmin + kmax) / 2, -1), 'tuần 1: 6 ngày học mới × 8–10')
 gap = (int(NATION_CEFR['B2'].strip('~').replace(' ', '')) - 3000, int(NATION_CEFR['B2'].strip('~').replace(' ', '')) - 2000)
 has('sprint', 'khoảng %s–%s họ từ giữa B1 và B2' % (vn(gap[0]), vn(gap[1])), 'B2 − B1 theo bảng Nation')
 blk = sp[sp.index('id="sp-blocks"'):sp.index('</table>', sp.index('id="sp-blocks"'))]
@@ -278,7 +284,9 @@ has('memory', 'chỉ ×%s' % vn(base, 2), 'ôn ngay khi vừa học: r = 1')
 has('memory', 'khoảng ×%s–%s' % (vn(min(fac), 1), vn(max(fac), 1)), 'hệ số của lịch 1–3–7–21–60 = %s' % [round(f, 2) for f in fac])
 # mô hình 11: dòng then chốt
 for line in ("wpm: w === null ? null : w / 2", "ppm: p === null ? null : p / 2",
+             "var epw = (e === null || !w) ? null : e / w * 100;", "e: epw,",
              "var dw = (b.wpm - a.wpm) / a.wpm * 100;", "if (dw >= 5 && de !== null && de > 0)",
+             "if (dw >= 5 && de === null)",
              "try { localStorage.setItem(KEY, JSON.stringify(log)); } catch (e) {}"):
     ok(line in JS, 'F: mô hình 11 mất dòng "%s"' % line)
 ok('Số từ / 2 phút' in BODY and 'Lần ngập ≥ 1 giây' in BODY, 'F: nhãn ô nhập mô hình 11 phải nói rõ bản ghi 2 phút')
