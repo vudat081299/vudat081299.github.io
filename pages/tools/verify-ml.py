@@ -1512,6 +1512,82 @@ def run_101():
     k1, k2 = plain.find('như chương 1 đã gọi'), plain.find('self-supervised learning')
     claim('chương 12: học có giám sát gọi tên trước tự giám sát', 0 <= k1 < k2, f'{k1} / {k2}')
 
+    # ── chương 7, hình bốn đường tụt dốc: dựng lại đúng phép tính của trang ──
+    # Lời văn hứa: cùng chỗ xuất phát, cùng α, cùng số bước; cả tập mượt, lô 8 zíc-zắc nhẹ,
+    # từng ví dụ zíc-zắc dữ, lô 8 có quán tính mượt lại. "Zíc-zắc" đo bằng tổng góc rẽ (radian)
+    # giữa các bước liền nhau. Không hứa "quán tính tới gần đáy nhất": qua 300 hạt giống nó chỉ
+    # đúng ở ~60%, nên chữ không được nói thế.
+    i = HTML.find('HÌNH: BỐN ĐƯỜNG TỤT DỐC')
+    fp = HTML[i:HTML.find('MÔ HÌNH 6', i)] if i >= 0 else ''
+    mp4 = re.search(r'var N = (\d+), LOT = (\d+), ALPHA = ([\d.]+), STEPS = (\d+), BETA = ([\d.]+);', fp)
+    ms = re.search(r'var r = rng\((\d+)\), D = \[\], ORD = \[\], i;', fp)
+    claim('hình bốn đường: bóc được tham số và hạt giống', bool(mp4 and ms))
+    need('hình bốn đường: dữ liệu', 'var x1 = gauss(r) * 0.25, x2 = gauss(r); D.push([x1, x2, x1 + x2 + gauss(r) * 0.3]);')
+    need('hình bốn đường: chỗ xuất phát', 'var w = [W0 - 3.2, W1 + 0.5]')
+    need('hình bốn đường: quán tính là trung bình trượt', 'v[0] = beta * v[0] + (1 - beta) * g0;')
+    need('hình bốn đường: khung', 'var PW = 200, PH = 120, XR = 4.4, YR = XR * PH / PW, x0 = W0 - XR * 0.83, y0 = W1 - YR / 2;')
+    if mp4 and ms:
+        N4, LOT, AL, ST, BE = int(mp4.group(1)), int(mp4.group(2)), float(mp4.group(3)), int(mp4.group(4)), float(mp4.group(5))
+        r = lcg(int(ms.group(1)))
+        D4 = []
+        for _ in range(N4):
+            x1 = gauss(r) * 0.25
+            x2 = gauss(r)
+            D4.append((x1, x2, x1 + x2 + gauss(r) * 0.3))
+        ORD = list(range(N4))
+        for k in range(N4 - 1, 0, -1):
+            jj = math.floor(r() * (k + 1))
+            ORD[k], ORD[jj] = ORD[jj], ORD[k]
+        a4 = sum(d[0] * d[0] for d in D4) / N4
+        b4 = sum(d[0] * d[1] for d in D4) / N4
+        c4 = sum(d[1] * d[1] for d in D4) / N4
+        p4 = sum(d[0] * d[2] for d in D4) / N4
+        q4 = sum(d[1] * d[2] for d in D4) / N4
+        det4 = a4 * c4 - b4 * b4
+        W0, W1 = (c4 * p4 - b4 * q4) / det4, (a4 * q4 - b4 * p4) / det4
+
+        def run4(lot, beta):
+            w, v, path, kk = [W0 - 3.2, W1 + 0.5], [0.0, 0.0], [], 0
+            path.append(tuple(w))
+            for _ in range(ST):
+                g0 = g1 = 0.0
+                for n in range(lot):
+                    d = D4[ORD[(kk + n) % N4]]
+                    e = w[0] * d[0] + w[1] * d[1] - d[2]
+                    g0 += 2 * e * d[0]
+                    g1 += 2 * e * d[1]
+                g0, g1, kk = g0 / lot, g1 / lot, kk + lot
+                if beta:
+                    v = [beta * v[0] + (1 - beta) * g0, beta * v[1] + (1 - beta) * g1]
+                    g0, g1 = v
+                w = [w[0] - AL * g0, w[1] - AL * g1]
+                path.append(tuple(w))
+            return path
+
+        def turning(P):
+            s = 0.0
+            for u0, u1, u2 in zip(P, P[1:], P[2:]):
+                ax, ay, bx, by = u1[0] - u0[0], u1[1] - u0[1], u2[0] - u1[0], u2[1] - u1[1]
+                na, nb = math.hypot(ax, ay), math.hypot(bx, by)
+                if na > 1e-12 and nb > 1e-12:
+                    s += math.acos(max(-1.0, min(1.0, (ax * bx + ay * by) / na / nb)))
+            return s
+        runs4 = {'cả tập': run4(N4, 0), 'lô': run4(LOT, 0), 'một': run4(1, 0), 'quán tính': run4(LOT, BE)}
+        tz = {k: turning(P) for k, P in runs4.items()}
+        XR, PW, PH = 4.4, 200, 120
+        YR = XR * PH / PW
+        x0, y0 = W0 - XR * 0.83, W1 - YR / 2
+        inside = all(x0 < x < x0 + XR and y0 < y < y0 + YR for P in runs4.values() for x, y in P)
+        claim('hình bốn đường: mọi đường nằm trong khung', inside)
+        claim('hình bốn đường: zíc-zắc tăng theo nhiễu, quán tính làm mượt lại',
+              tz['một'] > tz['lô'] > 4 * tz['quán tính'] and tz['quán tính'] > tz['cả tập'],
+              ' · '.join(f'{k} {v:.1f}' for k, v in tz.items()))
+        need('hình bốn đường: lời văn đọc đúng tham số',
+             f'cùng bước chân α = {vi(AL, 1)}, đi đúng {ST} bước')
+        need('hình bốn đường: giá một bước',
+             f'một bước của nó đọc {N4} ví dụ, đắt gấp {N4 // LOT} lần một bước lô {LOT} và gấp {N4} lần một bước từng ví dụ')
+        need('hình bốn đường: cửa sổ quán tính', f'trung bình độ nghiêng của chừng {WORD.get(round(1 / (1 - BE)), "?")} lô gần nhất')
+
 
 def main():
     global HTML

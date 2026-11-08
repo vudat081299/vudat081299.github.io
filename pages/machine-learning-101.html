@@ -1154,6 +1154,10 @@ footer a { color:var(--muted); }
           <span class="v">phép lấy trung bình ấy là <span class="nm">exponentially weighted average</span> — trung bình trượt theo cấp số nhân, nền tảng chung của cả ba: <span class="nm">momentum</span> — quán tính (làm mượt hướng đi), <span class="nm">RMSprop</span> (chia bước theo độ lớn gradient, để núm nào dốc quá thì bước ngắn lại), và <span class="nm">Adam</span> — gộp cả hai, và vì thế gần như mọi đoạn code bạn gặp đều dùng nó.</span>
         </div>
 
+        <svg class="viz" id="fig-paths" role="img" aria-label="Bốn bản đồ đường đồng mức của cùng một sườn đồi hình khe. Từ cùng một chỗ xuất phát, cùng bước chân, cùng 40 bước: xem cả tập mỗi bước thì đi mượt; lô 8 ví dụ thì zíc-zắc nhẹ; từng ví dụ một thì zíc-zắc dữ; lô 8 có quán tính thì mượt lại." viewBox="0 0 440 334" style="max-width:520px;margin:18px auto"></svg>
+
+        <p>Bốn khung trên là cùng một sườn đồi: hồi quy hai núm trên 64 ví dụ, hai con số đầu vào khác cỡ nên các đường đồng mức thành elip dẹt — đúng cái khe ở <a href="#s-descent">chương 3</a>. Cả bốn xuất phát cùng chỗ, cùng bước chân α = 0,3, đi đúng 40 bước; chỉ khác mỗi bước nhìn bao nhiêu ví dụ, và có quán tính hay không. Đừng đọc hình này thành "cả tập thắng": một bước của nó đọc 64 ví dụ, đắt gấp 8 lần một bước lô 8 và gấp 64 lần một bước từng ví dụ, nên với cùng công tính thì hai cách kia đã đi được nhiều bước hơn hẳn. Quán tính dùng đúng các lô 8 ấy, nhưng bước theo trung bình độ nghiêng của chừng mười lô gần nhất: phần lắc ngang khe triệt tiêu nhau, phần dọc khe giữ đà, nên đường đi mượt lại.</p>
+
         <p>Thêm một mẹo rẻ: <b>bước ngắn dần theo thời gian.</b> Ở <a href="#s-descent">chương 3</a> bước tự ngắn lại, vì gần đáy độ nghiêng nhỏ. Với mini-batch thì không: độ nghiêng đo trên một nhúm ví dụ luôn lẫn nhiễu, và nhiễu ấy không nhỏ đi khi tới gần đáy, nên độ nghiêng đo được không về 0 và máy cứ lắc quanh đáy. Phải chủ động cho bước ngắn dần thì nó mới đứng yên. Tên thật: <span class="nm">learning rate decay</span>.</p>
 
         <h3>4 · Bốn cách chống học thuộc lòng, ngoài cách thêm dữ liệu</h3>
@@ -2975,6 +2979,85 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
   btnT.addEventListener('click', train);
   btnR.addEventListener('click', reset);
   reset();
+  redraws.push(draw);
+})();
+
+/* ═══════════════════ HÌNH: BỐN ĐƯỜNG TỤT DỐC ═══════════════════ */
+/* Tụt dốc thật trên một bài hồi quy hai núm, không vẽ tay. 64 ví dụ, hai đầu vào khác cỡ
+   (x₁ cỡ 0,25, x₂ cỡ 1) nên sườn đồi là một cái khe. Bốn đường dùng chung chỗ xuất phát, α,
+   số bước và thứ tự xáo; chỉ khác số ví dụ mỗi bước và có quán tính hay không. Hạt 122: với nó
+   cả bốn đường nằm trong khung, và độ zíc-zắc xếp đúng thứ tự lời văn nói — verify-ml.py dựng
+   lại đúng phép tính này và đòi cả hai điều ấy. */
+(function () {
+  var svg = $('fig-paths');
+  if (!svg) return;
+  var N = 64, LOT = 8, ALPHA = 0.3, STEPS = 40, BETA = 0.9;
+  var r = rng(122), D = [], ORD = [], i;
+  for (i = 0; i < N; i++) { var x1 = gauss(r) * 0.25, x2 = gauss(r); D.push([x1, x2, x1 + x2 + gauss(r) * 0.3]); }
+  for (i = 0; i < N; i++) ORD.push(i);
+  for (i = N - 1; i > 0; i--) { var jj = Math.floor(r() * (i + 1)), tmp = ORD[i]; ORD[i] = ORD[jj]; ORD[jj] = tmp; }
+  /* đáy thật: giải thẳng hệ 2×2 — chính là normal equation ở chương 2 */
+  var a = 0, b = 0, c = 0, p = 0, q = 0;
+  D.forEach(function (d) { a += d[0] * d[0] / N; b += d[0] * d[1] / N; c += d[1] * d[1] / N; p += d[0] * d[2] / N; q += d[1] * d[2] / N; });
+  var det = a * c - b * b, W0 = (c * p - b * q) / det, W1 = (a * q - b * p) / det;
+
+  function run(lot, beta) {
+    var w = [W0 - 3.2, W1 + 0.5], v = [0, 0], path = [w.slice()], k = 0, s, n;
+    for (s = 0; s < STEPS; s++) {
+      var g0 = 0, g1 = 0;
+      for (n = 0; n < lot; n++) {
+        var d = D[ORD[(k + n) % N]], e = w[0] * d[0] + w[1] * d[1] - d[2];
+        g0 += 2 * e * d[0]; g1 += 2 * e * d[1];
+      }
+      g0 /= lot; g1 /= lot; k += lot;
+      /* quán tính: trung bình trượt của độ nghiêng, giữ 90% cũ, thêm 10% mới — như lời văn */
+      if (beta) { v[0] = beta * v[0] + (1 - beta) * g0; v[1] = beta * v[1] + (1 - beta) * g1; g0 = v[0]; g1 = v[1]; }
+      w = [w[0] - ALPHA * g0, w[1] - ALPHA * g1];
+      path.push(w.slice());
+    }
+    return path;
+  }
+  var RUNS = [
+    ['Cả tập', run(N, 0)],
+    ['Lô 8', run(LOT, 0)],
+    ['Từng ví dụ một', run(1, 0)],
+    ['Lô 8 + quán tính', run(LOT, BETA)]
+  ];
+  /* đường đồng mức: J − J nhỏ nhất = (w − đáy)ᵀ·A·(w − đáy), A = bảng a b / b c ở trên.
+     Trục riêng của A là trục của elip; trị riêng càng lớn thì elip càng hẹp theo trục ấy. */
+  var mid = (a + c) / 2, rad = Math.sqrt((a - c) * (a - c) / 4 + b * b), l1 = mid + rad, l2 = mid - rad;
+  var ang = Math.atan2(l1 - a, b) * 180 / Math.PI;
+
+  function draw() {
+    clear(svg);
+    var PW = 200, PH = 120, XR = 4.4, YR = XR * PH / PW, x0 = W0 - XR * 0.83, y0 = W1 - YR / 2;
+    RUNS.forEach(function (rw, k) {
+      var ox = 15 + (k % 2) * 215, oy = 30 + Math.floor(k / 2) * 150;
+      var X = function (v) { return ox + (v - x0) / XR * PW; };
+      var Y = function (v) { return oy + PH - (v - y0) / YR * PH; };
+      el(svg, 'rect', { x: ox, y: oy, width: PW, height: PH, rx: 3 }, 'fill:var(--surface);stroke:var(--border);stroke-width:1');
+      var cid = 'fp-clip-' + k, cp = el(svg, 'clipPath', { id: cid });
+      el(cp, 'rect', { x: ox, y: oy, width: PW, height: PH });
+      var g = el(svg, 'g', { 'clip-path': 'url(#' + cid + ')' });
+      [0.05, 0.2, 0.5, 1, 2, 4].forEach(function (lev) {
+        el(g, 'ellipse', {
+          cx: X(W0), cy: Y(W1), rx: Math.sqrt(lev / l1) * PW / XR, ry: Math.sqrt(lev / l2) * PW / XR,
+          transform: 'rotate(' + fmt(-ang, 2) + ' ' + fmt(X(W0), 1) + ' ' + fmt(Y(W1), 1) + ')', fill: 'none'
+        }, 'stroke:var(--border-2);stroke-width:1');
+      });
+      var P = rw[1];
+      el(g, 'polyline', { points: P.map(function (w) { return fmt(X(w[0]), 1) + ',' + fmt(Y(w[1]), 1); }).join(' '), fill: 'none' },
+        'stroke:var(--o);stroke-width:1.7;stroke-linejoin:round');
+      el(g, 'circle', { cx: X(P[0][0]), cy: Y(P[0][1]), r: 3.4 }, 'fill:var(--surface);stroke:var(--ink);stroke-width:1.4');
+      el(g, 'circle', { cx: X(P[P.length - 1][0]), cy: Y(P[P.length - 1][1]), r: 2.8 }, 'fill:var(--o)');
+      el(g, 'circle', { cx: X(W0), cy: Y(W1), r: 3 }, 'fill:var(--ink)');
+      var last = P[P.length - 1], dist = Math.sqrt(Math.pow(last[0] - W0, 2) + Math.pow(last[1] - W1, 2));
+      txt(svg, ox, oy - 8, rw[0], 'vt', 'start');
+      txt(svg, ox + PW, oy - 8, 'cách đáy ' + vi(dist, 2), 'vs', 'end');
+    });
+    txt(svg, 220, 326, '○ chỗ xuất phát · ● đáy · cùng α = ' + vi(ALPHA, 1) + ', cùng ' + STEPS + ' bước', 'vs', 'middle');
+  }
+  draw();
   redraws.push(draw);
 })();
 
