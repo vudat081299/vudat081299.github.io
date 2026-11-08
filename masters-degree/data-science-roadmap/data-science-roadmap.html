@@ -8919,7 +8919,7 @@ LayerNorm
     <tbody>
       <tr><td><b>MAE</b></td><td>“Sai trung bình 8,3 phút”</td><td>Mặc định. Đơn vị giống biến mục tiêu nên nói được với người không kỹ thuật</td><td>Coi sai 1 phút và sai 60 phút là cùng bản chất, chỉ khác độ lớn</td></tr>
       <tr><td><b>RMSE</b></td><td>Cũng đơn vị đó, nhưng phạt nặng sai số lớn</td><td>Khi một cú sai lớn tốn hơn nhiều lần so với nhiều cú sai nhỏ (dự báo tải điện, tồn kho)</td><td>Rất nhạy với ngoại lai — một dòng bẩn kéo lệch cả con số</td></tr>
-      <tr><td><b>MAPE</b></td><td>“Sai trung bình 12%”</td><td>Khi cần so sánh giữa các mặt hàng có quy mô rất khác nhau</td><td><b>Vỡ khi giá trị thật gần 0</b> (chia cho 0), và phạt dự báo cao hơn nhẹ hơn dự báo thấp hơn — nên nó âm thầm khuyến khích mô hình đoán thấp</td></tr>
+      <tr><td><b>MAPE</b></td><td>“Sai trung bình 12%”</td><td>Khi cần so sánh giữa các mặt hàng có quy mô rất khác nhau</td><td><b>Vỡ khi giá trị thật gần 0</b> (chia cho 0), và lệch về phía đoán thấp: đoán thấp thì sai tối đa 100% (đoán 0), đoán cao thì không có trần — nên tối ưu theo MAPE âm thầm kéo dự báo xuống</td></tr>
       <tr><td><b>R²</b></td><td>“Giải thích được 0,72 phương sai”</td><td>Báo cáo học thuật, so với baseline “luôn đoán trung bình”</td><td>Không có đơn vị nên <b>không nói được gì về việc sai đó có chấp nhận được không</b>. R² = 0,9 vẫn có thể sai 3 tiếng mỗi đơn</td></tr>
     </tbody>
   </table></div>
@@ -8977,7 +8977,7 @@ print(f"độ phủ thực tế: {coverage:.1%}  (mong đợi ~80%)")</div>
     <tbody>
       <tr><td><b>Xu hướng</b> (trend)</td><td>Mức nền đi lên hay đi xuống dài hạn</td><td>Mô hình cây <b>không ngoại suy</b> được xu hướng — đây là hạn chế lớn nhất khi dùng LightGBM cho forecasting</td></tr>
       <tr><td><b>Mùa vụ</b> (seasonality)</td><td>Mẫu hình lặp theo chu kỳ cố định: theo giờ, theo thứ, theo tháng</td><td>Đây là chỗ <b>mã hoá sin/cos gặp lại bạn</b>, và cũng là chỗ baseline seasonal-naive lấy sức mạnh</td></tr>
-      <tr><td><b>Tính dừng</b> (stationarity)</td><td>Trung bình và phương sai không đổi theo thời gian</td><td>ARIMA <i>giả định</i> chuỗi dừng — nên phải lấy sai phân trước. Mô hình cây thì không cần, nhưng chuỗi không dừng vẫn làm hỏng cách bạn chia tập</td></tr>
+      <tr><td><b>Tính dừng</b> (stationarity)</td><td>Trung bình và phương sai không đổi theo thời gian</td><td>Phần ARMA <i>giả định</i> chuỗi dừng; chữ I trong ARIMA (tham số $d$) chính là bước lấy sai phân $d$ lần để làm chuỗi dừng trước khi khớp. Mô hình cây thì không cần, nhưng chuỗi không dừng vẫn làm hỏng cách bạn chia tập</td></tr>
       <tr><td><b>Tự tương quan</b> (autocorrelation)</td><td>Giá trị hôm nay tương quan với chính nó cách đây $k$ bước</td><td>Biểu đồ ACF/PACF cho bạn biết <b>nên tạo lag nào</b> — nó thay việc đoán mò bằng bằng chứng</td></tr>
     </tbody>
   </table></div>
@@ -9002,7 +9002,7 @@ tscv = TimeSeriesSplit(n_splits=5, test_size=28, gap=0)
     <i># tr_idx LUÔN nằm trước te_idx — không cần tự kiểm nữa</i>
     model.fit(X.iloc[tr_idx], y.iloc[tr_idx])
     score = mae(y.iloc[te_idx], model.predict(X.iloc[te_idx]))</div>
-  <p><b>Tham số <code>gap</code> là chi tiết ít người dùng và nó rất quan trọng.</b> Nó xử đúng một thứ hẹp: <b>độ trễ dữ liệu</b> — lúc chấm điểm, dữ liệu mới nhất đã cũ mấy bước. Nếu khi chạy thật dữ liệu về trễ 7 ngày, đặt <code>gap=7</code> để mỗi fold train dừng đúng chỗ thực tế dừng. Không đặt là bạn đang tự cho mình dữ liệu mà lúc chạy thật sẽ chưa có. Đừng nhầm <code>gap</code> với <b>tầm dự báo</b> (dự báo trước bao nhiêu bước): tầm dự báo nằm ở <b>cách bạn dựng target</b> — nhãn là giá trị ở bước tương lai nào — chứ không phải ở <code>gap</code>.</p>
+  <p><b>Tham số <code>gap</code> là chi tiết ít người dùng và nó rất quan trọng.</b> Nó xử đúng một thứ hẹp: <b>độ trễ dữ liệu</b> — lúc chấm điểm, dữ liệu mới nhất đã cũ mấy bước. Nếu khi chạy thật dữ liệu về trễ 7 ngày, đặt <code>gap=7</code> để mỗi fold train dừng đúng chỗ thực tế dừng. Không đặt là bạn đang tự cho mình dữ liệu mà lúc chạy thật sẽ chưa có. Đừng nhầm <code>gap</code> với <b>tầm dự báo</b> (dự báo trước bao nhiêu bước): tầm dự báo nằm ở <b>cách bạn dựng feature và target</b> — dự báo trước $h$ bước thì lúc dự báo bạn chưa có $h-1$ giá trị gần nhất, nên mọi lag và rolling phải lùi ít nhất $h$ bước (<code>shift(h)</code>) — chứ không phải ở <code>gap</code>.</p>
 
   <h2>Rò rỉ theo thời gian: ba dạng riêng của forecasting</h2>
   <ul>
@@ -9019,11 +9019,13 @@ pred_naive = y.shift(1)
 <i># 2. SEASONAL NAIVE — dự báo = giá trị cùng kỳ chu kỳ trước</i>
 <i>#    (thứ Ba tuần này ≈ thứ Ba tuần trước) — mạnh bất ngờ</i>
 pred_snaive = y.shift(7)</div>
-  <p>Và đây là lý do có <b>MASE</b> (Mean Absolute Scaled Error): MAE của bạn <i>chia cho</i> một MAE tham chiếu của naive. Định nghĩa chuẩn (Hyndman) lấy mẫu số là MAE của naive <b>một bước, đo trên tập train</b> — một hằng số của chuỗi, cố định khi bạn đổi mô hình.</p>
+  <p>Và đây là lý do có <b>MASE</b> (Mean Absolute Scaled Error): MAE của bạn <i>chia cho</i> một MAE tham chiếu của naive. Định nghĩa chuẩn (Hyndman) lấy mẫu số là MAE của naive <b>một bước, đo trên tập train</b> — một hằng số của chuỗi, cố định khi bạn đổi mô hình. Với chuỗi có mùa vụ chu kỳ $m$, Hyndman dùng seasonal naive làm mẫu số: <code>shift(m)</code> thay cho <code>shift(1)</code>.</p>
   <div class="ds-code"><i># mẫu số MASE chuẩn: MAE của naive-một-bước trên LỊCH SỬ (train), tính một lần</i>
 d = mean_absolute_error(y_train.iloc[1:], y_train.shift(1).iloc[1:])
 mase = mean_absolute_error(y_true, y_pred) / d
-<i># mase &lt; 1 → tốt hơn naive · mase ≥ 1 → mô hình của bạn vô dụng</i></div>
+<i># mase &lt; 1 → sai ít hơn naive-một-bước trên train · mase ≥ 1 → sai nhiều hơn mốc đó</i>
+<i># dự báo nhiều bước thì MASE &gt; 1 vẫn có thể là tốt: mẫu số là naive MỘT bước,</i>
+<i># dễ hơn bài của bạn. Câu "có thắng naive không" → so với naive chạy trên cùng test.</i></div>
   <p>Nếu chia cho MAE của naive tính <i>trên chính tập test</i> — cách nhiều đoạn code viết vội — bạn vẫn có một tỉ số so-với-naive dùng được, nhưng đó là <b>relative MAE</b> chứ không phải MASE: mẫu số đổi theo từng fold test. Với luận văn, gọi đúng tên là điều hội đồng để ý.</p>
   <p>MASE là chỉ số đáng dùng làm chỉ số chính cho forecasting: nó không vỡ khi giá trị bằng 0 (khác MAPE), không phụ thuộc đơn vị nên so sánh được giữa các chuỗi, và quan trọng nhất — <b>nó luôn nhắc bạn con số của mình đang so với cái gì</b>. Một bảng kết quả forecasting không có cột naive là một bảng chưa đọc được.</p>
 
@@ -9049,7 +9051,9 @@ mase = mean_absolute_error(y_true, y_pred) / d
 
   <h2>Feature cho forecasting: lag, cửa sổ trượt, lịch</h2>
   <div data-viz="lag"></div>
-  <div class="ds-code"><i># LAG — giá trị của chính chuỗi ở quá khứ. Chọn lag theo PACF, đừng đoán</i>
+  <div class="ds-code"><i># Code dưới đây cho tầm dự báo 1 bước. Dự báo trước h bước thì lag nhỏ nhất là h</i>
+<i># và rolling dùng shift(h): lag_1 khi h = 7 là dùng dữ liệu chưa có → rò rỉ.</i>
+<i># LAG — giá trị của chính chuỗi ở quá khứ. Chọn lag theo PACF, đừng đoán</i>
 <b>for</b> k <b>in</b> [1, 7, 14, 28]:
     df[f"lag_{k}"] = df["y"].shift(k)
 
@@ -9068,7 +9072,7 @@ df["is_holiday"] = df["ds"].isin(HOLIDAYS).astype(<b>int</b>)</div>
   <h2>Quy trình một dự án forecasting, theo thứ tự</h2>
   <ol>
     <li>Vẽ chuỗi ra. Nhìn bằng mắt trước khi mô hình hoá. Tách STL.</li>
-    <li>Chốt <b>tầm dự báo</b> (dự báo trước bao nhiêu bước) và <b>độ trễ dữ liệu</b> (khi dự báo thì dữ liệu mới nhất cũ bao nhiêu). Hai con số này quyết định <code>gap</code>.</li>
+    <li>Chốt <b>tầm dự báo</b> (dự báo trước bao nhiêu bước) và <b>độ trễ dữ liệu</b> (khi dự báo thì dữ liệu mới nhất cũ bao nhiêu). Độ trễ quyết định <code>gap</code>; tầm dự báo quyết định lag nhỏ nhất được dùng.</li>
     <li>Chạy naive và seasonal-naive. Ghi lại MAE. <b>Đây là mốc.</b></li>
     <li>ETS hoặc ARIMA. Ghi lại.</li>
     <li>Boosting + lag/rolling/lịch. Ghi lại.</li>
