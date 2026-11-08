@@ -106,6 +106,30 @@
   .ec-tw .wb-table th, .ec-tw .wb-table td { font-size: 13.5px; line-height: 1.55; vertical-align: top; }
   .ec-tw .wb-table td code, .ec-tw .wb-table th code { font-size: 12px; }
   .ec-tw .wb-table td b { font-weight: 650; }
+  /* Bảng nhiều cột đọc mỗi ngày (lịch 30 ngày): trên điện thoại mỗi dòng thành một thẻ dọc,
+     nhãn cột hiện bằng ::before thay cho tiêu đề bảng đã ẩn. */
+  @media (max-width: 620px) {
+    .ec-tw .ec-stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .ec-tw .ec-stack, .ec-tw .ec-stack tbody, .ec-tw .ec-stack tr { display: block; }
+    .ec-tw .ec-stack tbody tr { padding: 10px 12px; border-bottom: var(--wb-bw) solid var(--wb-border); }
+    .ec-tw .ec-stack tbody tr:last-child { border-bottom: 0; }
+    .ec-tw .ec-stack tbody td { display: block; padding: 2px 0; border: 0; }
+    .ec-tw .ec-stack tbody td:first-child { padding-bottom: 4px; }
+    .ec-stack td[data-l]::before { content: attr(data-l); color: var(--wb-fg-muted); font-weight: 600; margin-right: 6px; }
+    #sp-blocks tbody td:nth-child(2), #sp-blocks tbody td:nth-child(3), #sp-blocks tbody td:nth-child(4) { display: inline-block; margin-right: 16px; }
+    #sp-blocks tbody td:nth-child(2)::before { content: "Đủ"; }
+    #sp-blocks tbody td:nth-child(3)::before { content: "Chuẩn"; }
+    #sp-blocks tbody td:nth-child(4)::before { content: "Bận"; }
+    #sp-blocks tbody td:nth-child(n+2):nth-child(-n+4)::before { color: var(--wb-fg-muted); font-weight: 600; margin-right: 5px; }
+    #sp-blocks tbody td:nth-child(5) { padding-top: 4px; }
+    .ec-stack td:first-child br { display: none; }
+    .ec-stack td:first-child .ec-dim { margin-left: 8px; }
+    #sp-plan tbody td:nth-child(1)::before { content: "Ngày"; }
+    #sp-plan tbody td:nth-child(3)::before { content: "Viết"; }
+    #sp-plan tbody td:nth-child(2n+1)::before { color: var(--wb-fg-muted); font-weight: 600; margin-right: 5px; }
+    /* khung câu và khuôn viết của lịch 30 ngày: cho xuống dòng thay vì cuộn ngang */
+    .ec-formula--wrap { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12.5px; }
+  }
 
   /* ---- part overview tiles ---- */
   .ec-parts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
@@ -684,7 +708,7 @@
           </table>
         </div>
 
-        <p class="ec-src" style="margin:-8px 0 14px">Vốn từ: CEFR không quy định con số; cột này theo gợi ý của Nation (bảng <i>Vocabulary, the CEFR levels, and word family size</i>). Đo bằng bài test thì người học thật thường thấp hơn ở vùng B2–C (Milton 2009: B2 ≈ 3 250–3 750, C2 ≈ 4 500–5 000 trong 5 000 từ đầu). Giờ học: ước tính của Cambridge.</p>
+        <p class="ec-src" style="margin:-8px 0 14px">Vốn từ: CEFR không quy định con số; cột này theo gợi ý của Nation (bảng <i>Vocabulary, the CEFR levels, and word family size</i>); riêng A1 Nation chỉ ghi khoảng 120 từ và cụm sinh tồn. Đo bằng bài test thì người học thật thường thấp hơn ở vùng B2–C (Milton 2009: B2 ≈ 3 250–3 750, C2 ≈ 4 500–5 000 trong 5 000 từ đầu). Giờ học: ước tính của Cambridge.</p>
 
         <p class="ec-p">Ba con số cần đọc kỹ: <b>giờ học cộng dồn tăng nhanh dần</b> (100 → 200 → 400 → 600 → 800 → 1 200, tức mỗi bước cộng thêm 100, 100, 200, 200, 200 rồi 400), <b>mỗi bước lên vùng C cần thêm một hai nghìn họ từ</b> mà mỗi nghìn từ ấy chỉ thêm khoảng 1% độ phủ văn bản hoặc ít hơn (<a href="#frequency">mục 27</a>), và <b>bước C1→C2 một mình đã bằng cả quãng 0→B1</b>. Đó là lý do phần lớn người học chững lại ở B1–B2: không phải hết khả năng, mà là mỗi giờ học bỗng mua được ít tiến bộ nhìn thấy hơn hẳn.</p>
 
@@ -903,7 +927,7 @@
               <tr><td class="ec-mono"><b>/æ/ vs /e/</b></td><td>/æ/ mở miệng rộng, gần "a"; /e/ hẹp hơn, gần "e".</td><td class="ec-mono">bad–bed · man–men · sad–said · bat–bet · land–lend</td></tr>
               <tr><td class="ec-mono"><b>/ʌ/ vs /ɑː/ vs /æ/</b></td><td>Ba âm, người Việt thường gộp thành một "a".</td><td class="ec-mono">cup–carp–cap · cut–cart–cat · bun–barn–ban</td></tr>
               <tr><td class="ec-mono"><b>/uː/ vs /ʊ/</b></td><td>/ʊ/ ngắn, lỏng, môi không tròn hẳn.</td><td class="ec-mono">pool–pull · fool–full · Luke–look</td></tr>
-              <tr><td class="ec-mono"><b>/ɜː/</b></td><td>Gần "ơ" kéo dài của tiếng Việt, môi không tròn. Bẫy nằm ở chữ viết: <i>work, word</i> đọc bằng âm này, không phải "uốc", "uốt".</td><td class="ec-mono">bird · work · learn · turn · nurse · girl</td></tr>
+              <tr><td class="ec-mono"><b>/ɜː/</b></td><td>Gần "ơ" kéo dài của tiếng Việt, môi không tròn; giọng Mỹ cong thêm lưỡi thành /ɝ/ (như "ơ" kèm /r/). Bẫy nằm ở chữ viết: <i>work, word</i> đọc bằng âm này, không phải "uốc", "uốt".</td><td class="ec-mono">bird · work · learn · turn · nurse · girl</td></tr>
               <tr><td class="ec-mono"><b>/ə/ schwa</b></td><td><b>Âm phổ biến nhất tiếng Anh.</b> Không phải một âm riêng để học — là <i>kết quả của việc không nhấn</i>. Xem <a href="#rhythm">Rhythm</a>.</td><td class="ec-mono">about · teacher · problem · support · banana</td></tr>
               <tr><td class="ec-mono"><b>8 nguyên âm đôi</b></td><td>Trượt từ âm này sang âm kia trong một âm tiết. Tiếng Việt có sẵn cơ chế này nên ít gây khó.</td><td class="ec-mono">/eɪ/ day · /aɪ/ my · /ɔɪ/ boy · /əʊ/ go · /aʊ/ now · /ɪə/ near · /eə/ hair · /ʊə/ pure</td></tr>
             </tbody>
@@ -1058,7 +1082,7 @@ are → <b>/ə/</b>          you → <b>/jə/</b>        your → <b>/jə/</b>  
               <tr><td><b>Chèn âm nối</b><br><span class="ec-dim">intrusion</span></td><td>Hai nguyên âm gặp nhau → chèn /w/, /j/ hoặc /r/ cho trôi.</td><td class="ec-mono">go on → go<b>w</b>on · I am → I<b>y</b>am · law and order → law<b>r</b>and <span class="ec-dim">(/r/ chèn chỉ có ở giọng không cuốn r, như Anh-Anh)</span></td></tr>
               <tr><td><b>Rụng âm</b><br><span class="ec-dim">elision</span></td><td>/t/ và /d/ kẹt giữa hai phụ âm thường rụng hẳn.</td><td class="ec-mono">next day → ne<b>ks</b> day · last night → la<b>s</b> night · must be → mu<b>s</b> be · sandwich → sanwich</td></tr>
               <tr><td><b>Đồng hoá</b><br><span class="ec-dim">assimilation</span></td><td>Âm đổi cho giống hàng xóm. Nổi nhất: <span class="ec-mono">/t/ + /j/ → /tʃ/</span> và <span class="ec-mono">/d/ + /j/ → /dʒ/</span>.</td><td class="ec-mono">did you → di<b>dʒ</b>ə · meet you → mee<b>tʃ</b>ə · ten bikes → te<b>m</b> bikes · good boy → goo<b>b</b> boy</td></tr>
-              <tr><td><b>Đập lưỡi</b><br><span class="ec-dim">flapping · giọng Mỹ</span></td><td>/t/ giữa hai nguyên âm, khi âm sau <b>không nhấn</b>, nghe như /d/ nhẹ. <i>attack, return</i> vẫn giữ /t/.</td><td class="ec-mono">water → wa<b>d</b>er · better → be<b>dd</b>er · get out of → ge<b>d</b>ou<b>d</b>ov</td></tr>
+              <tr><td><b>Đập lưỡi</b><br><span class="ec-dim">flapping · giọng Mỹ</span></td><td>/t/ giữa hai nguyên âm nghe như /d/ nhẹ. Trong một từ, chỉ khi âm tiết sau <b>không nhấn</b>: <i>attack, return</i> vẫn giữ /t/. Ở cuối từ, trước một từ mở bằng nguyên âm, thì đập cả khi từ sau có nhấn: <i>get out, at all</i>.</td><td class="ec-mono">water → wa<b>d</b>er · better → be<b>dd</b>er · get out of → ge<b>d</b>ou<b>d</b>ov</td></tr>
               <tr><td><b>Rụng /h/</b></td><td>Đại từ <span class="ec-mono">he, him, her, his</span> mất /h/ khi không đứng đầu câu.</td><td class="ec-mono">tell him → tell<b>im</b> · ask her → ask<b>er</b> · give his → give<b>is</b></td></tr>
               <tr><td><b>Gói cố định</b><br><span class="ec-dim">reduction</span></td><td>Vài cụm dùng quá nhiều nên đông cứng thành một khối.</td><td class="ec-mono">going to → gonna · want to → wanna · got to → gotta · let me → lemme · kind of → kinda · don't know → dunno</td></tr>
             </tbody>
@@ -1942,7 +1966,7 @@ The build failed <b>and that blocked</b> the release.
               </div>
             </div>
             <div style="margin-top:10px"><pre class="ec-out" id="fq-out"></pre></div>
-            <p class="ec-lab__foot"><b>Nguồn và độ tin cậy:</b> Nation (2006), độ phủ tính cả tên riêng. Văn viết lấy từ tiểu thuyết <i>Lady Chatterley's Lover</i> (bảng 5 của bài); báo chí cần ít hơn một chút (8 000 cho 98%). Hội thoại lấy từ hai kho hội thoại ở bảng 13, các mức bài không đo trực tiếp thì nội suy. Chúng là <b>ước lượng trung bình</b> — văn bản chuyên ngành hẹp có thể dễ hơn (thuật ngữ lặp lại nhiều) hoặc khó hơn nhiều. Dùng để chọn chiến lược, đừng dùng như số đo chính xác.</p>
+            <p class="ec-lab__foot"><b>Nguồn và độ tin cậy:</b> Nation (2006), độ phủ tính cả tên riêng. Văn viết lấy từ tiểu thuyết <i>Lady Chatterley's Lover</i> (bảng 5 của bài); báo chí cần ít hơn một chút (8 000 cho 98%). Hội thoại lấy từ hai kho hội thoại ở bảng 13, bài đo ở mức 2 000, 3 000, 6 000 và 7 000 họ từ; 4 000–5 000 là nội suy, 8 000–10 000 là kéo dài đường cong theo ước lượng. Chúng là <b>ước lượng trung bình</b> — văn bản chuyên ngành hẹp có thể dễ hơn (thuật ngữ lặp lại nhiều) hoặc khó hơn nhiều. Dùng để chọn chiến lược, đừng dùng như số đo chính xác.</p>
           </div>
         </div>
 
@@ -2369,7 +2393,7 @@ The build failed <b>and that blocked</b> the release.
 <b>kiểm tra hiểu</b>  Just to make sure I've got this right — you're saying that…? · So the takeaway is…?
 <b>hoãn chủ đề</b>    Can we park that for now? · Let's take that offline. · Can we come back to that later?
 <b>chốt việc</b>      So who's picking this up? · I'll own that. · I'll follow up by Thursday.
-<b>tóm tắt</b>       To recap where we are… · So the three things we agreed are…
+<b>tóm tắt</b>       To recap where we are… · So the three things we agreed on are…
         </div>
 
         <h3 class="ec-h3">Standup và cập nhật tiến độ</h3>
@@ -2444,7 +2468,7 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
               <tr><td><b>Giảm mức độ</b></td><td class="ec-mono">a bit · slightly · a little · kind of · somewhat</td><td class="ec-mono">This is slow. → This is <b>a bit</b> slow.</td></tr>
               <tr><td><b>Giảm mức chắc chắn</b></td><td class="ec-mono">I think · it seems · probably · might · may · I'd say</td><td class="ec-mono">You're wrong. → <b>I think</b> there <b>might</b> be a problem with that.</td></tr>
               <tr><td><b>Nhận phần lỗi về mình</b></td><td class="ec-mono">I might be missing something · correct me if I'm wrong · I may have misunderstood</td><td class="ec-mono">That doesn't work. → <b>I might be missing something</b>, but I don't think that would work.</td></tr>
-              <tr><td><b>Ghi nhận trước khi phản bác</b></td><td class="ec-mono">That's fair, though… · I see what you mean, but… · I take your point, however…</td><td class="ec-mono">No, we should use Redis. → <b>I see what you mean</b> — <b>though</b> I'd lean towards Redis here.</td></tr>
+              <tr><td><b>Ghi nhận trước khi phản bác</b></td><td class="ec-mono">That's fair, though… · I see what you mean, but… · I take your point, but…</td><td class="ec-mono">No, we should use Redis. → <b>I see what you mean</b> — <b>though</b> I'd lean towards Redis here.</td></tr>
               <tr><td><b>Từ chối mềm</b></td><td class="ec-mono">I'm afraid… · Unfortunately… · I'd love to, but… · I don't think I can</td><td class="ec-mono">No, I can't. → <b>I'm afraid</b> I can't take that on this week.</td></tr>
             </tbody>
           </table>
@@ -2502,7 +2526,7 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
               <tr><td><b>✓ Bớt hẳn 3–5 lỗi lặp nặng nhất</b> khi bạn để ý: đuôi <span class="ec-mono" style="white-space:nowrap">-s/-ed</span>, phụ âm cuối, <i>there have</i>…</td><td>Ghi âm và soi bản ghi mỗi ngày là bước Notice có chủ đích, trên lỗi của chính bạn (<a href="#speaking">mục 34</a>).</td></tr>
               <tr><td><b>✓ Viết email, Slack, PR, tài liệu ngắn</b> đúng giọng và nhanh hơn hẳn.</td><td>Văn bản công việc lặp khuôn; khuôn học một lần dùng mãi (<a href="#writing">mục 36</a>, <a href="#register">37</a>).</td></tr>
               <tr><td><b>✗ Lên một bậc CEFR</b>, chứ đừng nói hai.</td><td>45–90 giờ so với 150–200 giờ cho một bậc.</td></tr>
-              <tr><td><b>✗ Thêm vốn từ đáng kể.</b></td><td>15 khung mỗi ngày ≈ 450 khung một tháng, nhỏ so với khoảng 1 000–2 000 họ từ giữa B1 và B2 (<a href="#levels">mục 04</a>).</td></tr>
+              <tr><td><b>✗ Thêm vốn từ đáng kể.</b></td><td>8–10 khung mỗi ngày × 26 ngày học mới ≈ 210–260 khung một tháng, nhỏ so với khoảng 1 000–2 000 họ từ giữa B1 và B2 (<a href="#levels">mục 04</a>).</td></tr>
               <tr><td><b>✗ Nghe phim, họp đông người ở tốc độ thật</b> nếu tai đang yếu.</td><td>Tai đổi theo tuần và tháng (<a href="#listening">mục 33</a>). Tháng này giữ khối chép chính tả để không tụt, đừng kỳ vọng nhảy vọt.</td></tr>
               <tr><td><b>✗ Hết dịch trong đầu với mọi chủ đề</b>, hết lỗi mạo từ, có giọng bản xứ.</td><td>Chỉ hết dịch với khung đã luyện; chủ đề lạ vẫn phải nghĩ. Mạo từ là lỗi bền nhất (<a href="#articles">mục 17</a>); giọng không phải mục tiêu (<a href="#inventory">mục 06</a>).</td></tr>
             </tbody>
@@ -2510,9 +2534,9 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
         </div>
 
         <h3 class="ec-h3" id="sp-day">Một ngày — ba mức thời lượng, cùng một thứ tự</h3>
-        <p class="ec-p">Tai và miệng trước, lúc đầu còn tỉnh; lấy ra dưới sức ép ở giữa; viết và ôn cuối. Ngày bận thì rơi xuống cột <b>Bận</b>, <b>đừng để trống ngày</b> — chuỗi đứt mới là thứ giết việc học (<a href="#routine">mục 43</a>).</p>
+        <p class="ec-p">Tai và miệng trước, lúc đầu còn tỉnh; lấy ra dưới sức ép ở giữa; viết và ôn cuối. Ngày bận thì rơi xuống cột <b>Bận</b>, <b>đừng để trống ngày</b>: một tháng chỉ có 30 ngày, và luyện rải đều nhớ lâu hơn dồn vào ít buổi (<a href="#memory">mục 32</a>, <a href="#routine">43</a>).</p>
         <div class="ec-tw">
-          <table class="wb-table wb-table--compact" id="sp-blocks">
+          <table class="wb-table wb-table--compact ec-stack" id="sp-blocks">
             <thead><tr><th>Khối</th><th style="width:52px">Đủ</th><th style="width:60px">Chuẩn</th><th style="width:52px">Bận</th><th style="width:40%">Làm gì · <span class="ec-dim">lý thuyết</span></th></tr></thead>
             <tbody>
               <tr><td><b>1 · Shadowing</b></td><td>15'</td><td>10'</td><td>10'</td><td>Cùng một đoạn 1–2 phút suốt tuần — <a href="#sp-drills">cách làm</a> · <a href="#rhythm">mục 09</a>, <a href="#connected">10</a></td></tr>
@@ -2531,13 +2555,13 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
 
         <h3 class="ec-h3" id="sp-weeks">Bốn tuần, mỗi tuần một trọng tâm</h3>
         <div class="ec-tw">
-          <table class="wb-table wb-table--compact">
+          <table class="wb-table wb-table--compact ec-stack">
             <thead><tr><th style="width:76px">Tuần</th><th style="width:30%">Trọng tâm</th><th style="width:26%">Tình huống · Viết</th><th>Xong khi</th></tr></thead>
             <tbody>
-              <tr><td><b>1</b><br><span class="ec-dim">ngày 1–7</span></td><td><b>Âm và khung câu:</b> phụ âm cuối, đuôi <span class="ec-mono" style="white-space:nowrap">-s/-ed</span>, trọng âm từ kỹ thuật, khoảng 40 khung đầu tiên.</td><td>Standup, họp, chuyện phiếm · Slack, email ngắn</td><td>Nói standup 60 giây không đứng quá 1 giây lần nào; nghe lại thấy đuôi <span class="ec-mono" style="white-space:nowrap">-s/-ed</span> có mặt.</td></tr>
-              <tr><td><b>2</b><br><span class="ec-dim">ngày 8–14</span></td><td><b>Phản xạ hội thoại:</b> hỏi lại, đi vòng khi bí từ, đồng ý và phản bác mềm.</td><td>Họp, review code, ước lượng · PR description, comment review</td><td>Câu hỏi bất ngờ trong các tình huống đã luyện: mở miệng trong 2 giây bằng một khung.</td></tr>
-              <tr><td><b>3</b><br><span class="ec-dim">ngày 15–21</span></td><td><b>Nói dài có cấu trúc:</b> demo, giải thích cho người ngoài nghề, kể sự cố, phỏng vấn.</td><td>Demo, phỏng vấn · release note, incident update, đoạn tài liệu</td><td>Nói 3 phút liền mạch theo dàn ý ba ý, không đọc giấy.</td></tr>
-              <tr><td><b>4</b><br><span class="ec-dim">ngày 22–30</span></td><td><b>Áp lực thật:</b> đóng vai trọn buổi, người thật nếu có, tình huống khó.</td><td>Họp thử, phỏng vấn thử, báo tin xấu · đề xuất kỹ thuật, email khó</td><td>Ngày 29: ghi âm một đề <b>chưa luyện</b> và thấy khác ngày 1 trên số đo, không chỉ trên cảm giác.</td></tr>
+              <tr><td data-l="Tuần"><b>1</b><br><span class="ec-dim">ngày 1–7</span></td><td><b>Âm và khung câu:</b> phụ âm cuối, đuôi <span class="ec-mono" style="white-space:nowrap">-s/-ed</span>, trọng âm từ kỹ thuật, khoảng 50 khung đầu tiên.</td><td data-l="Tình huống · Viết">Standup, họp, chuyện phiếm · Slack, email ngắn</td><td data-l="Xong khi">Nói standup 60 giây không ngập quá 1 giây lần nào; nghe lại thấy đuôi <span class="ec-mono" style="white-space:nowrap">-s/-ed</span> có mặt.</td></tr>
+              <tr><td data-l="Tuần"><b>2</b><br><span class="ec-dim">ngày 8–14</span></td><td><b>Phản xạ hội thoại:</b> hỏi lại, đi vòng khi bí từ, đồng ý và phản bác mềm.</td><td data-l="Tình huống · Viết">Họp, review code, ước lượng · PR description, comment review</td><td data-l="Xong khi">Câu hỏi bất ngờ trong các tình huống đã luyện: mở miệng trong 2 giây bằng một khung.</td></tr>
+              <tr><td data-l="Tuần"><b>3</b><br><span class="ec-dim">ngày 15–21</span></td><td><b>Nói dài có cấu trúc:</b> demo, giải thích cho người ngoài nghề, kể sự cố, phỏng vấn.</td><td data-l="Tình huống · Viết">Demo, phỏng vấn · release note, incident update, đoạn tài liệu</td><td data-l="Xong khi">Nói 3 phút liền mạch theo dàn ý ba ý, không đọc giấy.</td></tr>
+              <tr><td data-l="Tuần"><b>4</b><br><span class="ec-dim">ngày 22–30</span></td><td><b>Áp lực thật:</b> đóng vai trọn buổi, người thật nếu có, tình huống khó.</td><td data-l="Tình huống · Viết">Họp thử, phỏng vấn thử, báo tin xấu · đề xuất kỹ thuật, email khó</td><td data-l="Xong khi">Ngày 29: ghi âm một đề <b>chưa luyện</b> và thấy khác ngày 1 trên số đo, không chỉ trên cảm giác.</td></tr>
             </tbody>
           </table>
         </div>
@@ -2545,18 +2569,18 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
         <h3 class="ec-h3" id="sp-days">Từng ngày</h3>
         <p class="ec-p">Cột <b>Nói</b> là đề cho khối 3–4, cột <b>Viết</b> là bài của khối 6. Ngày <b>1, 8, 15, 22, 29</b> bắt đầu bằng 15 phút đo (<a href="#sp-measure">cách đo</a>), lấy từ thời gian khối 2 và 5. Ngày 7, 14, 21, 28 là ngày ôn: không thêm khung mới.</p>
         <div class="ec-tw">
-          <table class="wb-table wb-table--compact wb-table--striped" id="sp-plan">
+          <table class="wb-table wb-table--compact wb-table--striped ec-stack" id="sp-plan">
             <thead><tr><th style="width:44px">Ngày</th><th style="width:56%">Nói · <span class="ec-dim">lý thuyết</span></th><th>Viết</th></tr></thead>
             <tbody>
               <tr><td><b>1</b></td><td><b>Đo mốc.</b> Standup 60 giây: hôm qua xong gì, hôm nay làm gì, đang kẹt gì. <span class="ec-dim">→ <a href="#sp-measure">đo</a> · <a href="#workplace">mục 38</a></span></td><td>Tin Slack tự giới thiệu với team, 5 câu</td></tr>
               <tr><td><b>2</b></td><td>Standup ba lượt, chú ý đuôi quá khứ: <i>fixed, added, merged, tested</i>. <span class="ec-dim">→ <a href="#endings">mục 07</a></span></td><td>Bản standup gửi trên Slack</td></tr>
               <tr><td><b>3</b></td><td>Nhờ giúp khi bị kẹt; hỏi lại khi không nghe rõ. <span class="ec-dim">→ <a href="#politeness">mục 39</a></span></td><td>Tin nhắn nhờ đồng nghiệp chỉ chỗ tìm thông tin</td></tr>
-              <tr><td><b>4</b></td><td>Xin lời, kiểm tra hiểu, chốt việc; tóm tắt một cuộc họp vừa dự trong 90 giây. <span class="ec-dim">→ <a href="#workplace">mục 38</a> · <a href="#writing">mục 36</a></span></td><td>Email tóm tắt họp: 3 ý + ai làm gì</td></tr>
+              <tr><td><b>4</b></td><td>Xin nói chen, kiểm tra hiểu, chốt việc; tóm tắt một cuộc họp vừa dự trong 90 giây. <span class="ec-dim">→ <a href="#workplace">mục 38</a> · <a href="#writing">mục 36</a></span></td><td>Email tóm tắt họp: 3 ý + ai làm gì</td></tr>
               <tr><td><b>5</b></td><td>Giải thích kiến trúc app đang làm, 2 phút. Trọng âm: <i>ARchitecture, deVElopment, enVIronment, inteGRAtion, aNAlysis</i>. <span class="ec-dim">→ <a href="#stress">mục 08</a></span></td><td>Một đoạn README mô tả một thành phần</td></tr>
               <tr><td><b>6</b></td><td>Chuyện phiếm: cuối tuần, đồ ăn, du lịch. Mỗi câu trả lời thêm một ý và hỏi lại một câu. <span class="ec-dim">→ <a href="#workplace">mục 38</a> · <a href="#o-tags">mục 25</a></span></td><td>Tin nhắn cảm ơn người đã giúp mình</td></tr>
               <tr><td><b>7</b></td><td><b>Ôn.</b> Ghi âm lại ba tình huống vấp nhiều nhất trong tuần. <span class="ec-dim">→ <a href="#memory">mục 32</a></span></td><td>Viết lại tin Slack ngày 1 theo danh sách lỗi</td></tr>
               <tr><td><b>8</b></td><td><b>Đo.</b> Đi vòng khi bí từ: tả 8 khái niệm kỹ thuật mà không nói tên của nó, 30 giây mỗi cái. <span class="ec-dim">→ <a href="#speaking">mục 34</a></span></td><td>Định nghĩa 3 thuật ngữ cho người mới vào team</td></tr>
-              <tr><td><b>9</b></td><td>Giải thích một PR của bạn trong 2 phút như đang review cùng nhau. <span class="ec-dim">→ <a href="#sp-write">khuôn</a></span></td><td>PR description theo khuôn What / Why / How / Testing</td></tr>
+              <tr><td><b>9</b></td><td>Giải thích một PR của bạn trong 2 phút như đang review cùng nhau. <span class="ec-dim">→ <a href="#sp-write">khuôn</a></span></td><td>PR description theo khuôn What / Why / Testing</td></tr>
               <tr><td><b>10</b></td><td>Đáp lại góp ý về code: đồng ý, giải thích, phản bác lịch sự. <span class="ec-dim">→ <a href="#workplace">mục 38</a> · <a href="#politeness">mục 39</a></span></td><td>5 comment review: nit, không chặn merge, hỏi thay vì phán</td></tr>
               <tr><td><b>11</b></td><td>4/3/2: "Should we rewrite this module?" — chọn một phía, có lý do. <span class="ec-dim">→ <a href="#politeness">mục 39</a> · <a href="#register">mục 37</a></span></td><td>Slack phản đối mềm một đề xuất</td></tr>
               <tr><td><b>12</b></td><td>AI đóng PM kể một tính năng mơ hồ; bạn hỏi lại năm câu cho rõ. <span class="ec-dim">→ <a href="#order">mục 25</a> · <a href="#reported">mục 21</a></span></td><td>Email xác nhận yêu cầu bằng 3 gạch đầu dòng</td></tr>
@@ -2584,45 +2608,42 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
 
         <h3 class="ec-h3" id="sp-drills">Năm bài tập phản xạ</h3>
         <div class="ec-tw">
-          <table class="wb-table wb-table--compact">
+          <table class="wb-table wb-table--compact ec-stack">
             <thead><tr><th style="width:120px">Bài</th><th style="width:46%">Cách làm</th><th>Luyện gì</th></tr></thead>
             <tbody>
-              <tr><td><b>Shadowing</b></td><td>Một đoạn 1–2 phút, một người nói, có transcript do người làm. Năm lượt: nghe và đọc cho hiểu hết → lẩm nhẩm theo → nói đuổi theo, nhìn chữ → nói đuổi theo, không nhìn → ghi âm lượt cuối, so hai câu khó nhất với bản gốc. Giữ cùng đoạn cả tuần.</td><td>Cơ miệng, nhịp, nối âm — <a href="#speaking">mục 34</a>, <a href="#connected">10</a></td></tr>
-              <tr><td><b>Khung câu, thay ruột</b></td><td>8–10 khung của hôm nay. Mỗi khung đọc to ba lần đúng chỗ nhấn, rồi che đi và nói ba câu thật về việc của bạn, 10 giây mỗi câu. Sau đó <b>phản xạ 2 giây</b>: xáo thứ tự, đọc tình huống <b>bằng tiếng Anh</b> (<i>Your PR broke the build.</i>) và mở miệng trong 2 giây. Chậm được, dừng để dịch thì không. Khung nào vấp hai lần thì thành thẻ.</td><td>Lấy ra dưới sức ép, đi thẳng từ tình huống tới câu — <a href="#chunks">mục 28</a>, <a href="#engine">02</a></td></tr>
-              <tr><td><b>4/3/2</b></td><td>Cùng một chuyện, 4 rồi 3 rồi 2 phút, ghi âm cả ba. Đếm số từ của lượt 2 phút, chia 2, so với lượt 4 phút chia 4.</td><td>Tốc độ lấy ra — <a href="#speaking">mục 34</a></td></tr>
-              <tr><td><b>Đề bấm giờ</b></td><td>Một phút nghĩ, chỉ được ghi 3 từ khoá, không viết câu. Hai phút nói theo <b>Point → Reason → Example → Point</b>. Không dừng quá 1 giây; bí thì đi vòng.</td><td>Nói dài có cấu trúc — <a href="#speaking">mục 34</a> (<i>Khi bí từ</i>)</td></tr>
-              <tr><td><b>Nghe rồi kể lại</b></td><td>Nghe 60–90 giây một cuộc họp hay talk, dừng, kể lại trong 60 giây không nhìn ghi chú: <i>So basically, they're saying that…</i></td><td>Nghe và nói nối nhau như trong họp thật — <a href="#listening">mục 33</a></td></tr>
+              <tr><td><b>Shadowing</b></td><td>Một đoạn 1–2 phút, một người nói, có transcript do người làm. Năm lượt: nghe và đọc cho hiểu hết → lẩm nhẩm theo → nói đuổi theo, nhìn chữ → nói đuổi theo, không nhìn → ghi âm lượt cuối, so hai câu khó nhất với bản gốc. Giữ cùng đoạn cả tuần.</td><td data-l="Luyện">Cơ miệng, nhịp, nối âm — <a href="#speaking">mục 34</a>, <a href="#connected">10</a></td></tr>
+              <tr><td><b>Khung câu, thay ruột</b></td><td>8–10 khung của hôm nay. Mỗi khung đọc to ba lần đúng chỗ nhấn, rồi che đi và nói ba câu thật về việc của bạn, 10 giây mỗi câu. Sau đó <b>phản xạ 2 giây</b>: xáo thứ tự, đọc tình huống <b>bằng tiếng Anh</b> (<i>Your PR broke the build.</i>) và mở miệng trong 2 giây. Chậm được, dừng để dịch thì không. Khung nào vấp hai lần thì thành thẻ.</td><td data-l="Luyện">Lấy ra dưới sức ép, đi thẳng từ tình huống tới câu — <a href="#chunks">mục 28</a>, <a href="#engine">02</a></td></tr>
+              <tr><td><b>4/3/2</b></td><td>Cùng một chuyện, 4 rồi 3 rồi 2 phút, ghi âm cả ba. Bài gốc (Maurice 1983) kể cho ba người nghe khác nhau, mỗi lượt một người, để lượt nào cũng là kể thật; tập một mình thì mỗi lượt hình dung một người nghe mới. Đếm số từ của lượt 2 phút, chia 2, so với lượt 4 phút chia 4.</td><td data-l="Luyện">Tốc độ lấy ra — <a href="#speaking">mục 34</a></td></tr>
+              <tr><td><b>Đề bấm giờ</b></td><td>Một phút nghĩ, chỉ được ghi 3 từ khoá, không viết câu. Hai phút nói theo <b>Point → Reason → Example → Point</b>. Không dừng quá 1 giây; bí thì đi vòng.</td><td data-l="Luyện">Nói dài có cấu trúc — <a href="#speaking">mục 34</a> (<i>Khi bí từ</i>)</td></tr>
+              <tr><td><b>Nghe rồi kể lại</b></td><td>Nghe 60–90 giây một cuộc họp hay talk, dừng, kể lại trong 60 giây không nhìn ghi chú: <i>So basically, they're saying that…</i></td><td data-l="Luyện">Nghe và nói nối nhau như trong họp thật — <a href="#listening">mục 33</a></td></tr>
             </tbody>
           </table>
         </div>
 
         <h3 class="ec-h3" id="sp-chunks">Khung câu cho những tình huống <a href="#workplace">mục 38</a> chưa có</h3>
-        <p class="ec-p">Họp, standup, review code, mở và đóng email, chuyện phiếm: dùng khung ở <a href="#workplace">mục 38</a>. Phản bác và từ chối mềm: <a href="#politeness">mục 39</a>. Dưới đây là phần còn thiếu.</p>
-        <div class="ec-formula">
-<b>Demo</b>             Let me walk you through what we built this sprint.
-                 First I'll show…, then…, and finally…  ·  As you can see here, …
-                 What's happening behind the scenes is…  ·  Let me pause here — any questions so far?
-<b>Giải thích cho</b>    In simple terms, …  ·  Think of it like…  ·  What that means for users is…
-<b>người ngoài nghề</b>  The short version is…; the longer version is…
-<b>Ước lượng, báo trễ</b> My best guess is three days, but it depends on…  ·  I'd say it's about 80% done.
-                 This is going to take longer than we thought, because…
-                 Realistically, we're looking at Friday.  ·  Could we cut scope to hit the date?
-<b>Kể sự cố</b>         We were deploying the fix when the database went down.   <span class="c">past continuous làm nền</span>
-                 It turned out that…  ·  The root cause was…
-                 Since then, we've added…                                  <span class="c">present perfect: kết quả còn tới giờ</span>
-<b>Phỏng vấn</b>        I've been working as a mobile developer for [X] years, mostly on…
-                 The situation was… · My task was to… · What I did was… · As a result, …   <span class="c">STAR</span>
-                 Let me think out loud for a second.  ·  Just to check I understand: …?
-                 One approach would be…, but the trade-off is…  ·  If I had more time, I'd…
-                 What does a typical week look like for this team?        <span class="c">câu hỏi lại cuối buổi</span>
+        <p class="ec-p">Họp, standup, review code, mở và đóng email: dùng khung ở <a href="#workplace">mục 38</a>. Phản bác và từ chối mềm: <a href="#politeness">mục 39</a>. Dưới đây là phần còn thiếu.</p>
+        <div class="ec-tw">
+          <table class="wb-table wb-table--compact ec-stack">
+            <thead><tr><th style="width:130px">Tình huống</th><th>Khung câu</th></tr></thead>
+            <tbody>
+              <tr><td><b>Chuyện phiếm</b></td><td>How was your weekend? · Did you get up to anything fun?<br>Pretty good, actually — I finally got around to… How about you?<br>Oh nice, how was it? · That sounds rough.<br><span class="ec-dim">đáp một ý, thêm một ý, hỏi lại một câu</span></td></tr>
+              <tr><td><b>Demo</b></td><td>Let me walk you through what we built this sprint.<br>First I'll show…, then…, and finally… · As you can see here, …<br>What's happening behind the scenes is… · Let me pause here — any questions so far?</td></tr>
+              <tr><td><b>Giải thích cho người ngoài nghề</b></td><td>In simple terms, … · Think of it like… · What that means for users is…<br>The short version is…; the longer version is…</td></tr>
+              <tr><td><b>Ước lượng, báo trễ</b></td><td>My best guess is three days, but it depends on… · I'd say it's about 80% done.<br>This is going to take longer than we thought, because…<br>Realistically, we're looking at Friday. · Could we cut scope to hit the date?</td></tr>
+              <tr><td><b>Kể sự cố</b></td><td>We were deploying the fix when the database went down.<br>It turned out that… · The root cause was…<br>Since then, we've added…<br><span class="ec-dim">past continuous làm nền cho việc chen vào; present perfect cho kết quả còn tới giờ</span></td></tr>
+              <tr><td><b>Báo tin xấu</b></td><td>Quick heads-up: the deploy didn't go as planned.<br>I'm afraid we're going to miss Friday. · That one's on me.<br>Here's what happened, and here's what we're doing about it.</td></tr>
+              <tr><td><b>Đề xuất</b></td><td>I'd like to propose… · The main benefit is…<br>The biggest risk is…, but we can reduce it by…</td></tr>
+              <tr><td><b>Phỏng vấn</b></td><td>I've been working as a mobile developer for [X] years, mostly on…<br>So the context was… · I was responsible for… · What I ended up doing was… · In the end, …<br>Let me think out loud here. · Just to make sure I understand, …?<br>One approach would be…, but the trade-off is… · If I had more time, I'd…<br>What does a typical week look like for this team?<br><span class="ec-dim">dòng 2 là khung STAR — Situation · Task · Action · Result; câu cuối để hỏi lại cuối buổi</span></td></tr>
+            </tbody>
+          </table>
         </div>
 
         <h3 class="ec-h3" id="sp-write">Bốn khuôn viết dùng hằng tuần</h3>
-        <div class="ec-formula">
+        <div class="ec-formula ec-formula--wrap">
 <b>PR description</b>
   Title:    Fix crash when opening an empty playlist
-  What:     Return early with an empty state in PlaylistViewModel.
-  Why:      The app crashed on launch for users with no saved playlists (#482).
+  What:     Show an empty state in PlaylistViewModel instead of reading the first track.
+  Why:      Opening a playlist with no tracks crashed the app (#482).
   Testing:  Added a unit test for the empty case; checked on iOS 17 and Android 14.
   <span class="c">What viết như mệnh lệnh hoặc hiện tại; Why kể chuyện đã xảy ra bằng quá khứ.</span>
 
@@ -2630,7 +2651,7 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
   [14:20] Login is failing for about 5% of Android users.
   Impact:   users on app 3.2 can't sign in; web is not affected.
   Cause:    still investigating — likely the token change we shipped at 13:05.
-  Next:     rolling back the flag now; next update by 14:50.
+  Next:     rolling back that change now; next update by 14:50.
   <span class="c">Đang diễn ra: hiện tại tiếp diễn. Đã xảy ra: quá khứ. Luôn hẹn giờ cập nhật kế tiếp.</span>
 
 <b>Tin Slack hỏi việc</b>
@@ -2648,9 +2669,9 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
           <table class="wb-table wb-table--compact">
             <thead><tr><th style="width:24%">Đo gì</th><th style="width:44%">Cách đo</th><th>Đọc kết quả</th></tr></thead>
             <tbody>
-              <tr><td><b>Từ mỗi phút</b></td><td>Ghi âm 2 phút với một đề <b>chưa luyện</b>, cùng loại mỗi tuần (vd. <i>Describe a technical decision you made and why</i>). Chép ra chữ — tự chép hoặc chuyển giọng thành chữ rồi sửa. Số từ ÷ 2.</td><td>So với chính bạn ngày 1, không so với người bản xứ (hội thoại quanh 150 từ/phút, con số Nation 2006 dùng).</td></tr>
-              <tr><td><b>Lần ngập</b></td><td>Trong cùng bản ghi, đếm chỗ im hoặc "ừm" kéo dài từ 1 giây trở lên.</td><td>Thước đo phản xạ dễ thấy nhất: ngập ít đi thường nghĩa là lấy ra đã nhanh hơn, bớt phải dịch trong đầu.</td></tr>
-              <tr><td><b>Lỗi lặp</b></td><td>Đếm lỗi thuộc danh sách lỗi của bạn trong bản ghi đó.</td><td>Nói nhanh hơn mà lỗi không tăng là tiến thật. Lỗi tăng theo tốc độ là đang đánh đổi — bình thường ở tuần 2–3.</td></tr>
+              <tr><td><b>Từ mỗi phút</b></td><td>Ghi âm 2 phút với một đề <b>chưa luyện</b>, cùng loại mỗi tuần (vd. <i>Describe a technical decision you made and why</i>). Chép ra chữ — tự chép, hoặc chuyển giọng thành chữ rồi nghe lại và sửa cho đúng cái bạn đã nói, kể cả lỗi. Số từ ÷ 2.</td><td>So với chính bạn ngày 1, không so với người bản xứ: tốc độ của họ đổi nhiều theo kiểu nói, và một tháng không nhằm đuổi kịp họ.</td></tr>
+              <tr><td><b>Lần ngập</b></td><td>Trong cùng bản ghi, đếm chỗ im hoặc "ừm" kéo dài từ 1 giây trở lên.</td><td>Chỗ ngập và tốc độ nói là hai thứ người nghe dựa vào nhiều nhất khi chấm độ trôi chảy; tự sửa lời thì ảnh hưởng ít (Bosker và cộng sự 2013).</td></tr>
+              <tr><td><b>Lỗi lặp</b></td><td>Đếm lỗi thuộc danh sách lỗi của bạn trong bản ghi đó.</td><td>Mô hình 11 đổi ra lỗi trên 100 từ để so được bản ghi nhanh với bản ghi chậm. Nói nhanh hơn mà tỷ lệ lỗi không tăng là tiến thật; tỷ lệ lỗi tăng theo tốc độ là đang đánh đổi chính xác lấy trôi chảy (<a href="#speaking">mục 34</a>).</td></tr>
               <tr><td><b>Chép chính tả</b></td><td>1 phút audio, cùng nguồn, cùng độ khó mỗi tuần. Đếm từ sai.</td><td>Tai đổi chậm; giữ được hoặc giảm nhẹ là đủ cho một tháng.</td></tr>
             </tbody>
           </table>
@@ -2660,7 +2681,7 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
           <div class="ec-lab__head">
             <p class="ec-lab__kick">Model 11 · Sprint log</p>
             <p class="ec-lab__title">Ghi số đo từng mốc — so với ngày 1</p>
-            <p class="ec-lab__hint">Chọn mốc rồi nhập bốn con số đếm được ở bảng trên. Từ mỗi phút và lần ngập mỗi phút được tính từ bản ghi 2 phút. Số chỉ lưu trong trình duyệt này.</p>
+            <p class="ec-lab__hint">Chọn mốc rồi nhập bốn con số đếm được ở bảng trên. Từ mỗi phút và lần ngập mỗi phút được tính từ bản ghi 2 phút; lỗi lặp đổi ra số lỗi trên 100 từ của chính bản ghi ấy. Số chỉ lưu trong trình duyệt này.</p>
           </div>
           <div class="ec-lab__body">
             <div class="ec-lab__row"><span class="k">Mốc</span><div class="ec-chips" id="sl-pick"></div></div>
@@ -2680,7 +2701,8 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
           <table class="wb-table wb-table--compact">
             <thead><tr><th style="width:34%">Luật</th><th>Vì sao</th></tr></thead>
             <tbody>
-              <tr><td><b>Tách hai chế độ.</b> Buổi nói: cấm AI sửa giữa chừng, chỉ hỏi tiếp; sửa dồn cuối buổi. Buổi viết: sửa từng câu.</td><td>Đúng luật buổi trôi chảy và buổi chính xác ở <a href="#speaking">mục 34</a>. Bị sửa giữa câu thì không bao giờ nói được dài.</td></tr>
+              <tr><td><b>Tách hai chế độ.</b> Buổi nói: cấm AI sửa giữa chừng, chỉ hỏi tiếp; sửa dồn cuối buổi. Buổi viết: sửa từng câu.</td><td>Đúng luật buổi trôi chảy và buổi chính xác ở <a href="#speaking">mục 34</a>. Bị sửa giữa câu thì khó nói được dài.</td></tr>
+              <tr><td><b>Lỗi phát âm thì tự soát bản ghi</b>, đừng chờ AI chỉ.</td><td>Chế độ giọng nói nghe bạn qua bộ chuyển giọng thành chữ, vốn hay tự điền lại đuôi <span class="ec-mono" style="white-space:nowrap">-s/-ed</span> và âm cuối bạn nuốt mất. AI chấm được từ và ngữ pháp, không chấm chắc được âm — việc ấy là khối 5.</td></tr>
               <tr><td><b>Sửa tối thiểu, không viết lại.</b></td><td>Bản viết lại đẹp hơn nhưng bạn không thấy mình sai ở đâu — mất bước Notice (<a href="#engine">mục 02</a>).</td></tr>
               <tr><td><b>Bắt AI hỏi dồn</b>, đúng vai, đúng tình huống của ngày.</td><td>Câu hỏi bất ngờ là sức ép thời gian — thứ biến khung câu thành phản xạ.</td></tr>
               <tr><td><b>Kiểm lại giọng và luật.</b></td><td>AI hay viết quá trang trọng, quá hoa mỹ, và đôi khi bịa luật. Luật nghe lạ thì tra từ điển cho người học (<a href="#ref-tools">mục 49</a>).</td></tr>
@@ -2693,16 +2715,16 @@ I'm <b>blocked on</b> the staging credentials — <b>could someone</b> point me 
           <table class="wb-table wb-table--compact">
             <thead><tr><th style="width:120px">Dùng khi</th><th>Prompt mẫu</th></tr></thead>
             <tbody>
-              <tr><td><b>Đóng vai, nói</b><br><span class="ec-dim">bật chế độ giọng nói</span></td><td class="ec-mono">You are my engineering manager in sprint planning. Ask me one question at a time about my tasks and push back on vague answers. Do not correct my English during the talk. When I say "stop", list my 3 most repeated errors, each with one corrected example.</td></tr>
-              <tr><td><b>Phỏng vấn thử</b></td><td class="ec-mono">Interview me for a [senior mobile developer] role. Ask behavioral questions one at a time and follow up like a real interviewer. Don't help me. At the end, rate each answer for structure (STAR) and clarity, and name the filler words I overused.</td></tr>
+              <tr><td><b>Đóng vai, nói</b><br><span class="ec-dim">bật chế độ giọng nói</span></td><td class="ec-mono">You are my engineering manager in sprint planning. Ask me one question at a time about my tasks and push back on vague answers. Keep each of your turns to one or two sentences so I do most of the talking. Do not correct my English during the talk. When I say "feedback time", list my 3 most repeated errors, each with one corrected example.</td></tr>
+              <tr><td><b>Phỏng vấn thử</b></td><td class="ec-mono">Interview me for a [senior mobile developer] role. Ask behavioral questions one at a time, keep your questions short, and follow up like a real interviewer. Don't help me. At the end, rate each answer for structure (STAR) and clarity, and name the filler words I overused.</td></tr>
               <tr><td><b>Phản xạ 2 giây</b></td><td class="ec-mono">Give me short workplace situations, one at a time (e.g. "Your PR broke the build"). Wait for my spoken reply, then show one natural reply in a single line. Keep going.</td></tr>
-              <tr><td><b>Sửa viết tối thiểu</b></td><td class="ec-mono">Correct only grammar, word choice and tone in the text below. Keep my wording where it is already correct. Show each change as: original → fix — reason in under 10 words. Do not rewrite the whole text. Reader: [a teammate on Slack / an external client].</td></tr>
+              <tr><td><b>Sửa viết tối thiểu</b></td><td class="ec-mono">Correct only grammar, word choice and tone in the text below. Keep my wording where it is already correct. Show each change as: original → fix — reason in under 10 words. Do not rewrite the whole text. Reader: [a teammate on Slack / an external client]. Text: [paste your text here]</td></tr>
             </tbody>
           </table>
         </div>
 
         <div class="ec-quote">
-          <b>Sau ngày 30:</b> đừng dừng hẳn. Giữ cột <b>Bận</b> (40 phút) làm sàn, và chuyển sang <a href="#roadmap">lộ trình 12 tháng</a> ở quý hợp với điểm yếu còn lại — tai yếu thì Q2, nói còn đứt thì Q3. Một tháng tăng tốc chỉ giữ được nếu khung câu còn được dùng; không dùng thì vài tuần sau chúng lại về chỗ cũ (<a href="#memory">mục 32</a>).
+          <b>Sau ngày 30:</b> đừng dừng hẳn. Giữ cột <b>Bận</b> (40 phút) làm sàn, và chuyển sang <a href="#roadmap">lộ trình 12 tháng</a> ở quý hợp với điểm yếu còn lại — tai yếu thì Q2, nói còn đứt thì Q3. Một tháng tăng tốc chỉ giữ được nếu khung câu còn được dùng hoặc còn được ôn; bỏ hẳn thì chúng phai như mọi trí nhớ không được gọi lại (<a href="#memory">mục 32</a>).
         </div>
       </section>
 
@@ -3432,7 +3454,7 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
   /* Độ phủ tích luỹ, có tính tên riêng — Nation (2006), Canadian Modern Language Review 63(1).
      Văn viết: tiểu thuyết Lady Chatterley's Lover, bảng 5, làm tròn 0,1.
      Hội thoại: trung bình hai kho ở bảng 13 (3 000, 6 000, 7 000 lấy thẳng; 2 000 cộng ~1,2% tên riêng);
-     1 000 theo kết luận 1 của bài (~85%); 4 000–5 000 và 8 000–10 000 nội suy. */
+     1 000 theo kết luận 1 của bài (~85%); 4 000–5 000 nội suy; 8 000–10 000 ngoại suy (bài không đo quá 7 000). */
   var WRITTEN = [[1000,82.9],[2000,90.1],[3000,93.3],[4000,95.1],[5000,96.1],[6000,96.9],[7000,97.4],[8000,97.9],[9000,98.2],[10000,98.5]];
   var SPOKEN  = [[1000,85],[2000,90.5],[3000,96.3],[4000,96.9],[5000,97.5],[6000,98],[7000,98.3],[8000,98.5],[9000,98.7],[10000,98.8]];
   var X0 = 62, X1 = 690, Y0 = 22, Y1 = 172, NMIN = 1000, NMAX = 10000, PMIN = 80, PMAX = 100;
@@ -3741,8 +3763,10 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
   }
   function rows() {
     return DAYS.map(function (d) {
-      var r = log[d] || {}, w = num(r.w), p = num(r.p);
-      return { d: d, wpm: w === null ? null : w / 2, ppm: p === null ? null : p / 2, e: num(r.e), dict: num(r.d) };
+      var r = log[d] || {}, w = num(r.w), p = num(r.p), e = num(r.e);
+      /* lỗi trên 100 từ: bản ghi nói nhanh hơn có nhiều từ hơn, đếm thô sẽ phạt oan */
+      var epw = (e === null || !w) ? null : e / w * 100;
+      return { d: d, wpm: w === null ? null : w / 2, ppm: p === null ? null : p / 2, e: epw, dict: num(r.d) };
     });
   }
   /* Lời đọc kết quả: so mốc đầu và mốc cuối đã có tốc độ nói. */
@@ -3750,18 +3774,20 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
     var dw = (b.wpm - a.wpm) / a.wpm * 100;
     var dp = (a.ppm !== null && b.ppm !== null) ? b.ppm - a.ppm : null;
     var de = (a.e !== null && b.e !== null) ? b.e - a.e : null;
-    if (dw >= 5 && de !== null && de > 0) return 'Đang đánh đổi: nói nhanh hơn nhưng lỗi lặp tăng. Tuần tới dồn thêm phút cho khối 5 (soi bản ghi).';
-    if (dw >= 5) return 'Tiến thật: nói nhanh hơn mà lỗi lặp không tăng.';
+    if (dw >= 5 && de !== null && de > 0) return 'Đang đánh đổi: nói nhanh hơn nhưng tỷ lệ lỗi lặp tăng. Tuần tới dồn thêm phút cho khối 5 (soi bản ghi).';
+    if (dw >= 5 && de === null) return 'Nói nhanh hơn. Nhập lỗi lặp của cả hai mốc để biết có phải đánh đổi chính xác không.';
+    if (dw >= 5) return 'Tiến thật: nói nhanh hơn mà tỷ lệ lỗi lặp không tăng.';
     if (dw > -5 && dp !== null && dp < 0) return 'Tốc độ chưa đổi nhưng ngập ít đi — phản xạ đang lên.';
     if (dw <= -5) return 'Chậm lại — thường do đề khó hơn đề mốc. Kiểm lại: cùng loại đề, đề chưa luyện.';
     return 'Chưa thấy đổi. Kiểm lại: đề đo có phải đề chưa luyện không, khối 3 và 4 có làm đủ không.';
   }
   function render() {
     var R = rows();
-    var lines = [pad('mốc', 8) + pad('từ/ph', 7) + pad('ngập/ph', 9) + pad('lỗi', 6) + 'chép'];
+    var lines = [pad('mốc', 8) + pad('từ/ph', 7) + pad('ngập/ph', 9) + pad('lỗi%', 6) + 'chép'];
     R.forEach(function (r) {
-      lines.push(pad('ngày ' + r.d, 8) + pad(fmt(r.wpm, 0), 7) + pad(fmt(r.ppm, 1), 9) + pad(fmt(r.e, 0), 6) + fmt(r.dict, 0));
+      lines.push(pad('ngày ' + r.d, 8) + pad(fmt(r.wpm, 0), 7) + pad(fmt(r.ppm, 1), 9) + pad(fmt(r.e, 1), 6) + fmt(r.dict, 0));
     });
+    lines.push('lỗi% = lỗi lặp trên 100 từ của bản ghi');
     var F = R.filter(function (r) { return r.wpm !== null && r.wpm > 0; });
     lines.push('');
     if (F.length < 2) {
@@ -3771,7 +3797,7 @@ function pad(s, n) { s = String(s); while (s.length < n) s += ' '; return s; }
       var a = F[0], b = F[F.length - 1];
       var parts = ['từ/phút ' + signed((b.wpm - a.wpm) / a.wpm * 100, 0) + '%'];
       if (a.ppm !== null && b.ppm !== null) parts.push('ngập/phút ' + signed(b.ppm - a.ppm, 1));
-      if (a.e !== null && b.e !== null) parts.push('lỗi lặp ' + signed(b.e - a.e, 0));
+      if (a.e !== null && b.e !== null) parts.push('lỗi/100 từ ' + signed(b.e - a.e, 1));
       if (a.dict !== null && b.dict !== null) parts.push('chép sai ' + signed(b.dict - a.dict, 0));
       lines.push('ngày ' + b.d + ' so với ngày ' + a.d + ': ' + parts.join(' · '));
       lines.push('→ ' + verdict(a, b));
