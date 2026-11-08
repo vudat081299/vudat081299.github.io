@@ -5976,7 +5976,7 @@ print(f"ngưỡng tối ưu {best_t:.3f} — thiệt hại {min(costs)/1e6:.0f} 
   <p>Thực tế nhất: đội xác minh xử lý được 200 ca/ngày. Vậy ngưỡng phải là mức cho ra đúng ~200 cảnh báo/ngày, và chỉ số là <b>precision@200</b>. Cách đóng khung này rất ít luận văn Việt Nam dùng, và nó dễ bảo vệ vì nó đúng cách hệ thống thật hoạt động.</p>
 
   <h2>Hiệu chỉnh xác suất — bắt buộc nếu bạn quy ra tiền</h2>
-  <p>Cách 2 ở trên nhân xác suất với chi phí. Phép nhân đó chỉ hợp lệ nếu con số 0–1 <b>là một xác suất thật</b>: trong tất cả ca được chấm 0,7, khoảng 70% đúng là gian lận. Bài <a href="#/m-prob">Xác suất</a> gọi đó là <i>hiệu chỉnh tốt</i> (calibrated) — giờ bạn đã có mô hình và tập validation nên kiểm được.</p>
+  <p>Cách 2 ở trên <b>không</b> cần điều này: nó đếm FN, FP thật trên validation ở từng ngưỡng, nên chỉ dùng <i>thứ hạng</i> của điểm. Nhưng ngay khi bạn <b>nhân xác suất với tiền</b> — đặt ngưỡng thẳng bằng công thức $t^* = \frac{C_{FP}}{C_{FP}+C_{FN}} = \frac{40.000}{3.040.000} \approx 0{,}013$ mà không dò, hay ước tổn thất kỳ vọng $p \times$ số tiền của từng giao dịch — phép nhân đó chỉ hợp lệ nếu con số 0–1 <b>là một xác suất thật</b>: trong tất cả ca được chấm 0,7, khoảng 70% đúng là gian lận. Bài <a href="#/m-prob">Xác suất</a> gọi đó là <i>hiệu chỉnh tốt</i> (calibrated) — giờ bạn đã có mô hình và tập validation nên kiểm được.</p>
   <p>Hai điều cần phân biệt, vì chúng độc lập nhau:</p>
   <table>
     <tr><th></th><th>Xếp hạng (ranking)</th><th>Hiệu chỉnh (calibration)</th></tr>
@@ -6052,7 +6052,7 @@ cal.fit(X_train, y_train)</div>
     <tr><td>Ví dụ</td><td>Log loss</td><td>PR-AUC, F1, tiền tiết kiệm</td></tr>
   </table>
   <p>Bạn <b>không thể</b> tối ưu trực tiếp F1 bằng gradient descent vì nó không khả vi (nó phụ thuộc vào việc đếm, mà đếm thì nhảy bậc). Nên quy trình thực tế là: train bằng log loss → sau đó <b>chọn ngưỡng</b> để tối ưu chỉ số bạn thật sự quan tâm. Bài <b>Đo lường &amp; ngưỡng</b> làm bước hai.</p>
-  <p class="wb-help">Đọc dòng "Yêu cầu" cho đúng phạm vi: <b>khả vi là điều kiện của cách tối ưu bằng gradient</b>, không phải luật của mọi machine learning. MAE gãy tại 0 nhưng vẫn tối ưu được bằng <i>subgradient</i>; cây quyết định và LightGBM không hạ gradient theo tham số của mô hình chút nào mà chọn điểm chia bằng tìm kiếm tham lam (<button class="ds-aside" data-aside="x-tree-learn">cây và boosting thì "học" thế nào</button>). Ba biến thể dưới đây <i>chỉ</i> nói về họ thuật toán dùng gradient.</p>
+  <p class="wb-help">Đọc dòng "Yêu cầu" cho đúng phạm vi: <b>khả vi là điều kiện của cách tối ưu bằng gradient</b>, không phải luật của mọi machine learning. MAE gãy tại 0 nhưng vẫn tối ưu được bằng <i>subgradient</i>; một cây quyết định đơn lẻ chọn điểm chia bằng tìm kiếm tham lam, không có gradient nào; LightGBM có dùng gradient của loss, nhưng là gradient theo <i>dự đoán</i> để dựng cây tiếp theo, không phải bước $w \leftarrow w - \alpha\nabla J$ trên tham số (<button class="ds-aside" data-aside="x-tree-learn">cây và boosting thì "học" thế nào</button>). Ba biến thể dưới đây <i>chỉ</i> nói về họ thuật toán dùng gradient.</p>
 
   <h2>Gradient descent — ba biến thể bạn sẽ gặp</h2>
   <p><button class="ds-math" data-math="gdupdate">Công thức cập nhật, bóc từng ký hiệu</button></p>
@@ -6123,12 +6123,14 @@ model = LGBMClassifier(
     subsample=0.8, subsample_freq=1,
     colsample_bytree=0.8,
     reg_lambda=1.0,           <i># phạt L2</i>
-    class_weight="balanced",  <i># cho bài toán lệch nhãn</i>
+    class_weight="balanced",  <i># thử cả có và không — bài Dữ liệu lệch nói vì sao</i>
     random_state=42, n_jobs=-1,
 )
 model.fit(X_train, y_train,
           eval_set=[(X_valid, y_valid)], eval_metric="average_precision",
-          callbacks=[early_stopping(100), log_evaluation(100)])
+          <i># first_metric_only: chỉ canh average_precision. Thiếu cờ này thì</i>
+          <i># binary_logloss mặc định cũng được canh, và nó có thể dừng trước.</i>
+          callbacks=[early_stopping(100, first_metric_only=<b>True</b>), log_evaluation(100)])
 print("số cây thực dùng:", model.best_iteration_)</div>
 
   <h3>Ba siêu tham số quan trọng, theo thứ tự</h3>
@@ -6182,7 +6184,7 @@ print("số cây thực dùng:", model.best_iteration_)</div>
     <tr><td>2. Giảm độ phức tạp</td><td><code>num_leaves</code> ↓, <code>max_depth</code> ↓</td><td>Mạnh, dễ làm</td></tr>
     <tr><td>3. Early stopping</td><td>Dừng khi validation ngừng cải thiện</td><td>Mạnh, gần như miễn phí</td></tr>
     <tr><td>4. Regularization</td><td>L1/L2 — <button class="ds-math" data-math="reg">chi tiết</button></td><td>Mạnh cho mô hình tuyến tính và mạng</td></tr>
-    <tr><td>5. Lấy mẫu ngẫu nhiên</td><td><code>subsample=0.8</code>, <code>colsample_bytree=0.8</code></td><td>Vừa</td></tr>
+    <tr><td>5. Lấy mẫu ngẫu nhiên</td><td><code>subsample=0.8</code>, <code>colsample_bytree=0.8</code> (LightGBM: <code>subsample</code> chỉ có tác dụng khi kèm <code>subsample_freq=1</code>)</td><td>Vừa</td></tr>
     <tr><td>6. Bỏ bớt feature</td><td>Ít cột = ít cơ hội học nhiễu</td><td>Vừa</td></tr>
     <tr><td>7. Ensemble</td><td>Trung bình nhiều mô hình</td><td>Vừa, tốn công</td></tr>
   </table>
@@ -6214,6 +6216,7 @@ print("số cây thực dùng:", model.best_iteration_)</div>
   <h2>Code — luôn dùng Pipeline</h2>
   <div class="ds-code"><b>from</b> sklearn.model_selection <b>import</b> cross_val_score, StratifiedKFold
 
+<i># dữ liệu KHÔNG có thời gian; bài gian lận thì đổi sang TimeSeriesSplit (bảng dưới)</i>
 cv = StratifiedKFold(n_splits=5, shuffle=<b>True</b>, random_state=42)
 scores = cross_val_score(pipe, X, y, cv=cv, scoring="average_precision")
 print(f"PR-AUC = {scores.mean():.3f} ± {scores.std():.3f}")</div>
@@ -6325,12 +6328,13 @@ Kết quả được lấy trung bình trên 5 hạt giống ngẫu nhiên (42, 
   <h2>1–2 · Chỉ số và ngưỡng — bạn đã làm rồi</h2>
   <p>Hai bước đầu không phải việc mới: bài <b>Đo lường</b> đã cho bạn <code>average_precision_score</code> (PR-AUC) làm chỉ số chính và một ngưỡng quét theo chi phí. Điều đáng nhớ ở đây là <b>vị trí của chúng trong danh sách</b> — đứng trên cùng và không tốn gì. Nếu bạn đang cân nhắc SMOTE mà chưa làm hai bước này thì thứ tự đã sai, và phần còn lại của bài chỉ là tối ưu một thứ bạn chưa đo được.</p>
 
-  <h2>3 · Trọng số lớp — cách rẻ và an toàn nhất</h2>
+  <h2>3 · Trọng số lớp — cách rẻ nhất để thử</h2>
   <p>Thay vì tạo thêm dữ liệu, bảo mô hình rằng <b>một lỗi trên lớp hiếm đắt hơn nhiều</b>. Với tỉ lệ 1:580, mỗi ca gian lận bị bỏ lọt bị phạt gấp 580 lần một báo nhầm.</p>
   <div class="ds-code">LGBMClassifier(class_weight="balanced")           <i># tự tính theo tỉ lệ</i>
 LGBMClassifier(scale_pos_weight=580)              <i># hoặc đặt tay (LightGBM/XGBoost)</i>
 LogisticRegression(class_weight="balanced")</div>
   <p><b>Tác dụng phụ cần biết:</b> xác suất đầu ra không còn được hiệu chỉnh — mô hình sẽ trả về những con số cao hơn thực tế. Nếu bạn cần xác suất thật (để quy ra tiền), phải hiệu chỉnh lại bằng <code>CalibratedClassifierCV</code> và nói rõ trong luận văn.</p>
+  <p><b>Rẻ không có nghĩa là luôn tốt hơn.</b> Trọng số lớp đổi cách dựng cây nên đổi cả thứ hạng, và PR-AUC có thể lên hoặc xuống. Boosting thường đã xếp hạng tốt mà không cần nó: trên bộ mô phỏng ở chặng 6, bật <code>class_weight="balanced"</code> làm PR-AUC <i>tệ đi</i>. Chạy cả hai rồi so trên validation, đừng bật theo phản xạ.</p>
 
   <div data-viz="calib"></div>
 
@@ -6405,6 +6409,7 @@ pipe = ImbPipeline([
         "subsample":         trial.suggest_float("subsample", 0.6, 1.0),
         "colsample_bytree":  trial.suggest_float("colsample_bytree", 0.5, 1.0),
         "reg_lambda":        trial.suggest_float("reg_lambda", 1e-3, 30, log=<b>True</b>),
+        "subsample_freq":    1,   <i># không dò; thiếu nó thì LightGBM bỏ qua subsample</i>
     }
     pipe = build_pipeline(**params)
     <b>return</b> cross_val_score(pipe, X_train, y_train, cv=cv,

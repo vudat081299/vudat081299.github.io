@@ -188,14 +188,14 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 | `ml-linear` | Hồi quy tuyến tính & logistic | bắt buộc | 35/20/20 | ✓ | 3 | 3 | 5860–5919 |
 | `ml-metrics` | ★ Đo lường: PR-AUC, ngưỡng, và tiền | bắt buộc | 35/20/35 | ✓ | 3 | 3 | 5920–6025 |
 | `ml-loss` | Hàm mất mát + gradient descent | bắt buộc | 55/25/10 | ✓ | 4 |  | 6026–6072 |
-| `ml-trees` | Cây → Random Forest → Boosting | bắt buộc | 45/35/25 | ✓ | 4 |  | 6073–6149 |
-| `ml-overfit` | Overfitting, bias–variance, regularization | bắt buộc | 40/20/15 | ✓ | 4 |  | 6150–6195 |
-| `ml-cv` | Cross-validation cho đúng | bắt buộc | 30/10/20 | ✓ | 4 |  | 6196–6247 |
-| `m-infer` | Thống kê suy diễn — thứ luận văn cần | bắt buộc | 60/30/10 | ✓ | 4 |  | 6248–6303 |
-| `ml-imb` | ★ Dữ liệu lệch: 0,17% gian lận thì làm gì | bắt buộc | 30/15/30 | ✓ | 4 |  | 6304–6381 |
-| `ml-tune` | Tuning: grid, random, Optuna | nên biết | 25/20/0 |  | 4 |  | 6382–6439 |
-| `ml-shap` | Giải thích mô hình: SHAP | nên biết | 30/15/15 |  | 4 |  | 6440–6485 |
-| `ml-unsup` | Không nhãn: cụm & phát hiện bất thường | nên biết | 45/15/0 |  | 4 |  | 6486–6522 |
+| `ml-trees` | Cây → Random Forest → Boosting | bắt buộc | 45/35/25 | ✓ | 4 |  | 6073–6151 |
+| `ml-overfit` | Overfitting, bias–variance, regularization | bắt buộc | 40/20/15 | ✓ | 4 |  | 6152–6197 |
+| `ml-cv` | Cross-validation cho đúng | bắt buộc | 30/10/20 | ✓ | 4 |  | 6198–6250 |
+| `m-infer` | Thống kê suy diễn — thứ luận văn cần | bắt buộc | 60/30/10 | ✓ | 4 |  | 6251–6306 |
+| `ml-imb` | ★ Dữ liệu lệch: 0,17% gian lận thì làm gì | bắt buộc | 30/15/30 | ✓ | 4 |  | 6307–6385 |
+| `ml-tune` | Tuning: grid, random, Optuna | nên biết | 25/20/0 |  | 4 |  | 6386–6444 |
+| `ml-shap` | Giải thích mô hình: SHAP | nên biết | 30/15/15 |  | 4 |  | 6445–6490 |
+| `ml-unsup` | Không nhãn: cụm & phát hiện bất thường | nên biết | 45/15/0 |  | 4 |  | 6491–6527 |
 
 - **`ml-map`** — Bản đồ năm mô hình, và quy trình chọn theo đúng thứ tự.
   - dẫn tới: Bài sau là baseline không thể thiếu.
@@ -237,13 +237,13 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `pr-arch` | Kiến trúc hệ thống chống gian lận | bắt buộc | 30/5/25 | ✓ | 5 |  | 6527–6596 |
-| `pr-code` | ★ Code end-to-end: repo tới model đã lưu | bắt buộc | 40/50/60 | ✓ | 5 | 3 | 6597–7215 |
-| `pr-eval` | ★ Đánh giá, chọn ngưỡng, và bốn test | bắt buộc | 45/40/50 | ✓ | 5 | 7 | 7216–7900 |
-| `pr-serve` | Đóng gói: FastAPI + Docker | bắt buộc | 35/40/45 | ✓ | 5 | 3 | 7901–8296 |
-| `pr-monitor` | Giám sát: drift, feedback, retrain | bắt buộc | 35/20/25 | ✓ | 5 | 2 | 8297–8370 |
-| `pr-mlops` | MLOps tối thiểu: MLflow, DVC, CI | nên biết | 30/25/20 |  | 5 |  | 8371–8426 |
-| `pr-cost` | Quy ra tiền: ngưỡng theo chi phí | bắt buộc | 25/10/15 |  | 5 | 3 | 8427–8473 |
+| `pr-arch` | Kiến trúc hệ thống chống gian lận | bắt buộc | 30/5/25 | ✓ | 5 |  | 6532–6601 |
+| `pr-code` | ★ Code end-to-end: repo tới model đã lưu | bắt buộc | 40/50/60 | ✓ | 5 | 3 | 6602–7220 |
+| `pr-eval` | ★ Đánh giá, chọn ngưỡng, và bốn test | bắt buộc | 45/40/50 | ✓ | 5 | 7 | 7221–7905 |
+| `pr-serve` | Đóng gói: FastAPI + Docker | bắt buộc | 35/40/45 | ✓ | 5 | 3 | 7906–8301 |
+| `pr-monitor` | Giám sát: drift, feedback, retrain | bắt buộc | 35/20/25 | ✓ | 5 | 2 | 8302–8375 |
+| `pr-mlops` | MLOps tối thiểu: MLflow, DVC, CI | nên biết | 30/25/20 |  | 5 |  | 8376–8431 |
+| `pr-cost` | Quy ra tiền: ngưỡng theo chi phí | bắt buộc | 25/10/15 |  | 5 | 3 | 8432–8478 |
 
 - **`pr-arch`** — Bản vẽ đường đi của một giao dịch, và năm quyết định thiết kế phải nêu trong luận văn.
   - dẫn tới: Có bản vẽ rồi, bài sau viết toàn bộ mã nguồn hiện thực nó.
@@ -271,15 +271,15 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `dl-nn` | Từ logistic regression → mạng nơ-ron | bắt buộc | 50/15/10 | ✓ | 6 |  | 8478–8531 |
-| `dl-backprop` | Backpropagation — thực chất là gì | bắt buộc | 60/15/0 | ✓ | 6 |  | 8532–8568 |
-| `dl-train` | Huấn luyện: epoch, batch, lr, early stop | bắt buộc | 50/15/10 | ✓ | 6 |  | 8569–8626 |
-| `dl-embed` | Embedding — biến ID thành vector | bắt buộc | 40/10/10 | ✓ | 6 |  | 8627–8671 |
-| `dl-cnn-rnn` | CNN & RNN/LSTM — định vị và khi nào còn dùng | nên biết | 55/5/0 |  | 6 |  | 8672–8707 |
-| `dl-attn` | ★ Attention — giải từ số 0 | bắt buộc | 90/20/10 | ✓ | 6 |  | 8708–8754 |
-| `dl-tf` | ★ Transformer — ráp thành kiến trúc | bắt buộc | 70/10/10 | ✓ | 6 |  | 8755–8807 |
-| `dl-llm` | LLM, fine-tune, RAG — dùng sao cho đúng | nên biết | 65/10/0 |  | 6 |  | 8808–8849 |
-| `dl-tab` | Deep learning cho dữ liệu bảng: nên không? | nên biết | 40/5/0 |  | 6 |  | 8850–8885 |
+| `dl-nn` | Từ logistic regression → mạng nơ-ron | bắt buộc | 50/15/10 | ✓ | 6 |  | 8483–8536 |
+| `dl-backprop` | Backpropagation — thực chất là gì | bắt buộc | 60/15/0 | ✓ | 6 |  | 8537–8573 |
+| `dl-train` | Huấn luyện: epoch, batch, lr, early stop | bắt buộc | 50/15/10 | ✓ | 6 |  | 8574–8631 |
+| `dl-embed` | Embedding — biến ID thành vector | bắt buộc | 40/10/10 | ✓ | 6 |  | 8632–8676 |
+| `dl-cnn-rnn` | CNN & RNN/LSTM — định vị và khi nào còn dùng | nên biết | 55/5/0 |  | 6 |  | 8677–8712 |
+| `dl-attn` | ★ Attention — giải từ số 0 | bắt buộc | 90/20/10 | ✓ | 6 |  | 8713–8759 |
+| `dl-tf` | ★ Transformer — ráp thành kiến trúc | bắt buộc | 70/10/10 | ✓ | 6 |  | 8760–8812 |
+| `dl-llm` | LLM, fine-tune, RAG — dùng sao cho đúng | nên biết | 65/10/0 |  | 6 |  | 8813–8854 |
+| `dl-tab` | Deep learning cho dữ liệu bảng: nên không? | nên biết | 40/5/0 |  | 6 |  | 8855–8890 |
 
 - **`dl-nn`** — Mạng nơ-ron nhìn ra là hồi quy logistic xếp chồng, và vòng lặp huấn luyện đầy đủ.
   - dẫn tới: Bài sau là cách mạng đó tự sửa mình.
@@ -313,15 +313,15 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `q-regress` | Hồi quy: dự đoán một con số | bắt buộc | 45/20/10 |  | 7 |  | 8894–8961 |
-| `q-forecast` | ★ Chuỗi thời gian & forecasting | bắt buộc | 70/50/30 |  | 7 |  | 8962–9075 |
-| `q-multi` | Multiclass & multilabel | nên biết | 40/15/5 |  | 7 |  | 9076–9121 |
-| `q-nlp` | NLP: TF-IDF → embedding → Transformer | nên biết | 50/30/10 |  | 7 |  | 9122–9178 |
-| `q-cv` | Computer vision — định vị & mini-lab | nên biết | 35/25/0 |  | 7 |  | 9179–9234 |
-| `q-rec` | Gợi ý & xếp hạng (recommendation) | nên biết | 45/25/5 |  | 7 |  | 9235–9284 |
-| `q-causal` | ★ A/B testing & tư duy nhân quả | bắt buộc | 55/25/10 |  | 7 |  | 9285–9361 |
-| `q-analytics` | Analytics: SQL, KPI, cohort, funnel | nên biết | 45/25/5 |  | 7 |  | 9362–9418 |
-| `q-mini` | ★ Mini-project chuyển giao — làm thật 2/6 | bắt buộc | 45/15/240 |  | 7 | 3 | 9419–9505 |
+| `q-regress` | Hồi quy: dự đoán một con số | bắt buộc | 45/20/10 |  | 7 |  | 8899–8966 |
+| `q-forecast` | ★ Chuỗi thời gian & forecasting | bắt buộc | 70/50/30 |  | 7 |  | 8967–9080 |
+| `q-multi` | Multiclass & multilabel | nên biết | 40/15/5 |  | 7 |  | 9081–9126 |
+| `q-nlp` | NLP: TF-IDF → embedding → Transformer | nên biết | 50/30/10 |  | 7 |  | 9127–9183 |
+| `q-cv` | Computer vision — định vị & mini-lab | nên biết | 35/25/0 |  | 7 |  | 9184–9239 |
+| `q-rec` | Gợi ý & xếp hạng (recommendation) | nên biết | 45/25/5 |  | 7 |  | 9240–9289 |
+| `q-causal` | ★ A/B testing & tư duy nhân quả | bắt buộc | 55/25/10 |  | 7 |  | 9290–9366 |
+| `q-analytics` | Analytics: SQL, KPI, cohort, funnel | nên biết | 45/25/5 |  | 7 |  | 9367–9423 |
+| `q-mini` | ★ Mini-project chuyển giao — làm thật 2/6 | bắt buộc | 45/15/240 |  | 7 | 3 | 9424–9510 |
 
 - **`q-regress`** — Bộ chỉ số cho biến liên tục (MAE/RMSE/MAPE/R²) chọn theo bài toán, và cách báo cáo khoảng dự đoán thay vì một con số trần trụi.
   - dẫn tới: Bài sau là họ bài toán mà mọi thứ bạn biết về chia tập đều phải viết lại.
@@ -351,14 +351,14 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `th-topic` | Đề tài phải có “delta” — tìm khoảng trống | bắt buộc | 30/5/40 | ✓ | 8 | 2 | 9510–9568 |
-| `th-read` | Đọc paper 3 lượt | bắt buộc | 25/35/30 | ✓ | 8 | 3 | 9569–9618 |
-| `th-repro` | Tái lập một paper — bước bắt buộc | bắt buộc | 25/30/30 | ✓ | 8 | 2 | 9619–9678 |
-| `th-design` | Thiết kế thí nghiệm: baseline, ablation | bắt buộc | 35/20/35 | ✓ | 8 | 2 | 9679–9740 |
-| `th-stats` | Kết quả có ý nghĩa thống kê không | bắt buộc | 30/25/30 | ✓ | 8 | 2 | 9741–9802 |
-| `th-write` | Viết: IMRaD và câu nào nằm ở đâu | bắt buộc | 40/5/45 | ✓ | 8 | 3 | 9803–9874 |
-| `th-tools` | Công cụ: Overleaf, Zotero, W&B | nên biết | 25/20/10 |  | 8 |  | 9875–9924 |
-| `th-defense` | ★ Bảo vệ: slide, demo, 24 câu hội đồng hỏi | bắt buộc | 30/5/45 | ✓ | 8 | 3 | 9925–10030 |
+| `th-topic` | Đề tài phải có “delta” — tìm khoảng trống | bắt buộc | 30/5/40 | ✓ | 8 | 2 | 9515–9573 |
+| `th-read` | Đọc paper 3 lượt | bắt buộc | 25/35/30 | ✓ | 8 | 3 | 9574–9623 |
+| `th-repro` | Tái lập một paper — bước bắt buộc | bắt buộc | 25/30/30 | ✓ | 8 | 2 | 9624–9683 |
+| `th-design` | Thiết kế thí nghiệm: baseline, ablation | bắt buộc | 35/20/35 | ✓ | 8 | 2 | 9684–9745 |
+| `th-stats` | Kết quả có ý nghĩa thống kê không | bắt buộc | 30/25/30 | ✓ | 8 | 2 | 9746–9807 |
+| `th-write` | Viết: IMRaD và câu nào nằm ở đâu | bắt buộc | 40/5/45 | ✓ | 8 | 3 | 9808–9879 |
+| `th-tools` | Công cụ: Overleaf, Zotero, W&B | nên biết | 25/20/10 |  | 8 |  | 9880–9929 |
+| `th-defense` | ★ Bảo vệ: slide, demo, 24 câu hội đồng hỏi | bắt buộc | 30/5/45 | ✓ | 8 | 3 | 9930–10035 |
 
 - **`th-topic`** — Một trang đề cương: khoảng trống, câu hỏi nghiên cứu, và cách bạn sẽ chứng minh.
   - dẫn tới: Bài sau là cách đọc 15–30 paper mà vẫn kịp deadline.
@@ -387,11 +387,11 @@ Cột: **ưu tiên** bắt buộc/nên biết/định vị · **r/x/d** phút đ
 
 | id | bài | ưu tiên | r/x/d | F | T | A | dòng |
 |---|---|---|---|---|---|---|---|
-| `r-stack` | ★ Mỗi bước dùng tool gì, và gõ gì | bắt buộc | 60/0/0 |  | 8 |  | 10035–10185 |
-| `r-roadmapsh` | roadmap.sh dịch ra: giữ gì, bỏ gì | nên biết | 45/0/0 |  | 8 |  | 10186–10272 |
-| `r-mistakes` | 20 lỗi người mới hay mắc | bắt buộc | 30/0/0 | ✓ | 8 |  | 10273–10319 |
-| `r-glossary` | Từ điển thuật ngữ | nên biết | 45/0/0 |  | 8 |  | 10320–10396 |
-| `r-books` | Sách / khoá / dataset đáng dùng | nên biết | 30/0/0 |  | 8 |  | 10397–10440 |
+| `r-stack` | ★ Mỗi bước dùng tool gì, và gõ gì | bắt buộc | 60/0/0 |  | 8 |  | 10040–10190 |
+| `r-roadmapsh` | roadmap.sh dịch ra: giữ gì, bỏ gì | nên biết | 45/0/0 |  | 8 |  | 10191–10277 |
+| `r-mistakes` | 20 lỗi người mới hay mắc | bắt buộc | 30/0/0 | ✓ | 8 |  | 10278–10324 |
+| `r-glossary` | Từ điển thuật ngữ | nên biết | 45/0/0 |  | 8 |  | 10325–10401 |
+| `r-books` | Sách / khoá / dataset đáng dùng | nên biết | 30/0/0 |  | 8 |  | 10402–10445 |
 
 - **`r-stack`** — Sổ tay theo bước: mở gì, gõ gì, xong có gì trong tay, bẫy nằm ở đâu.
   - dẫn tới: Bài sau dịch roadmap.sh sang giáo trình này: ô nào giữ, ô nào để sau, ô nào bỏ.
