@@ -1494,6 +1494,24 @@ def run_101():
     claim('hình dò: số vạch đúng số giá trị', len(re.findall(r'<line x1="[\d.]+" y1="158"', fs)) == 30)
     claim('hình dò: nhãn đúng số đếm', f'>{len(set(left))} giá trị α khác nhau<' in fs and f'>{len(set(right))} giá trị α khác nhau<' in fs)
 
+    # ══ vòng 4: câu đơn giản hoá thành sai ═════════════════════════════════
+    # Momentum viết theo trung bình trượt (giữ 90%, thêm 10%): trên một dốc đều, trung bình của
+    # các độ nghiêng bằng nhau vẫn là độ nghiêng ấy, nên bước không dài hơn tụt dốc thường —
+    # "đi nhanh dần lên" chỉ đúng với bản cộng dồn không nhân 10%. Nó giữ đà, và triệt nhiễu.
+    v, g = 0.0, 1.0
+    for _ in range(200):
+        v = 0.9 * v + 0.1 * g
+    claim('momentum trung bình trượt: trên dốc đều bước không vượt độ nghiêng', abs(v - g) < 1e-6, f'{v}')
+    claim('không còn "đi nhanh dần" cho momentum', 'đi nhanh dần' not in HTML)
+    need('momentum giữ đà', 'thì giữ đà mà đi tiếp')
+    # Lượt đi ngược tốn chừng gấp đôi lượt xuôi (Griewank & Walther, Evaluating Derivatives, §4.6).
+    need('chi phí lan truyền ngược', 'mà chỉ tốn chừng gấp đôi một lượt đoán')
+    # Cây (chương 9) và k-means (chương 12) không tụt dốc, nên Bellman không "như mọi chương trước".
+    claim('không còn "tụt dốc như mọi chương trước"', 'như mọi chương trước' not in HTML)
+    # Chương 12: "cách học ấy" phải trỏ về học có giám sát, nên câu tự giám sát đứng sau.
+    k1, k2 = plain.find('như chương 1 đã gọi'), plain.find('self-supervised learning')
+    claim('chương 12: học có giám sát gọi tên trước tự giám sát', 0 <= k1 < k2, f'{k1} / {k2}')
+
 
 def main():
     global HTML

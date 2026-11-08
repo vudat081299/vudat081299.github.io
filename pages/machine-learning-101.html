@@ -754,7 +754,7 @@ footer a { color:var(--muted); }
 
         <div class="fx">
           <div class="fx__line sm">w ← w − α · ∂J/∂w<br>b ← b − α · ∂J/∂b</div>
-          <div class="fx__vi"><b>J</b> là điểm trừ trên cả tập ở <a href="#s-machine">chương 2</a>; mũi tên ← nghĩa là "thay bằng". Có hai núm thì có hai độ nghiêng. Nhích riêng w một chút, giữ b đứng yên, xem J đổi bao nhiêu: đó là ∂J/∂w, đọc là "đạo hàm riêng của J theo w". Làm y như vậy với b. Hai con số ấy gộp lại thành một mũi tên chỉ hướng lên dốc nhất, và mũi tên ấy mới đúng là gradient. Mỗi núm bước <b>ngược</b> độ nghiêng của chính nó, dài α lần độ nghiêng ấy. Dựng từ đầu: <a href="mathematics-for-machine-learning.html#s-partial">trang Toán cho học máy, mục 2.4</a>.</div>
+          <div class="fx__vi"><b>J</b> là điểm trừ trên cả tập ở <a href="#s-machine">chương 2</a>; mũi tên ← nghĩa là "thay bằng". Có hai núm thì có hai độ nghiêng. Nhích riêng w một chút, giữ b đứng yên, lấy phần J đổi chia cho cú nhích ấy (cú nhích càng nhỏ càng đúng): đó là ∂J/∂w, đọc là "đạo hàm riêng của J theo w". Làm y như vậy với b. Hai con số ấy gộp lại thành một mũi tên chỉ hướng lên dốc nhất, và mũi tên ấy mới đúng là gradient. Mỗi núm bước <b>ngược</b> độ nghiêng của chính nó, dài α lần độ nghiêng ấy. Dựng từ đầu: <a href="mathematics-for-machine-learning.html#s-partial">trang Toán cho học máy, mục 2.4</a>.</div>
           <div class="fx__line sm">∂J/∂w = trung bình của 2(ŷ − y)·x<br>∂J/∂b = trung bình của 2(ŷ − y)</div>
           <div class="fx__vi">Với đường thẳng và điểm trừ bình phương, hai độ nghiêng ra gọn thế này: đạo hàm (wx&nbsp;+&nbsp;b&nbsp;−&nbsp;y)² theo từng núm như đạo hàm một biến, rồi lấy trung bình trên mọi ngày. Đủ để tự viết vòng lặp tụt dốc.</div>
         </div>
@@ -877,7 +877,7 @@ footer a { color:var(--muted); }
 
         <h3>Nhiều hơn hai loại</h3>
 
-        <p>"Ảnh này là mèo, chó, thỏ hay hamster?" Cách làm: cho máy chấm <b>một điểm số cho mỗi loại</b>, rồi biến bốn điểm số ấy thành bốn phần trăm cộng lại đúng bằng 100%. Ai điểm cao hơn thì phần trăm cao hơn, và không ai được âm. Cách làm: lấy e mũ từng điểm số — e mũ số nào cũng dương, nên không ai âm — rồi chia mỗi cái cho tổng của chúng, nên cộng lại đúng 100%. Ba điểm số 2 · 1 · 0 thành e² ≈ 7,39 · e ≈ 2,72 · e⁰ = 1; tổng 11,11; chia ra 67% · 24% · 9%.</p>
+        <p>"Ảnh này là mèo, chó, thỏ hay hamster?" Cách làm: cho máy chấm <b>một điểm số cho mỗi loại</b>, rồi biến bốn điểm số ấy thành bốn phần trăm cộng lại đúng bằng 100%. Ai điểm cao hơn thì phần trăm cao hơn, và không ai được âm. Cụ thể: lấy e mũ từng điểm số — e mũ số nào cũng dương, nên không ai âm — rồi chia mỗi cái cho tổng của chúng, nên cộng lại đúng 100%. Ba điểm số 2 · 1 · 0 thành e² ≈ 7,39 · e ≈ 2,72 · e⁰ = 1; tổng 11,11; chia ra 67% · 24% · 9%.</p>
 
         <p>Chữ "soft" trong tên của nó — <span class="nm">softmax</span> — là vì nó <b>không chọn dứt khoát</b> một loại — nó chia phần tin tưởng: 70% mèo, 25% thỏ, 4% chó, 1% hamster. Bốn con số thô <i>trước khi</i> chia phần trăm có tên riêng, và bạn sẽ gặp nó trong mọi thư viện code: <span class="nm">logits</span>.</p>
 
@@ -1082,7 +1082,7 @@ footer a { color:var(--muted); }
 
         <p>Cách làm là <b>đi ngược từ đầu ra về đầu vào, chia phần trách nhiệm.</b> Đọc thành lời: "Kết quả đang thấp hơn đáp án 0,3. Nơ-ron này đi vào kết quả qua một cái núm 0,5 — nó nhích lên 1 thì kết quả nhích lên 0,5 — nên phần trách nhiệm của nó là 0,3 × 0,5 = 0,15. Núm của nơ-ron này đang nhân với số vào là 2, nên núm nhích lên 1 thì nơ-ron nhích lên 2. (Cái bẻ của nó đang ở phía dương nên để nguyên; nếu nó đang bị bẻ về 0 thì phần trách nhiệm là 0.) Vậy phần trách nhiệm của núm là 0,15 × 2 = 0,3." Núm nào gánh phần lớn thì được vặn nhiều, đúng như ở <a href="#s-descent">chương 3</a>: dốc hơn thì bước dài hơn. Rồi lùi tiếp một lớp, làm y như vậy — với một chi tiết: một nơ-ron nối tới nhiều nơ-ron lớp sau thì nhận trách nhiệm theo từng đường ấy, rồi cộng các phần lại (<a href="mathematics-for-machine-learning.html#s-chain">trang Toán cho học máy, mục 2.6</a>).</p>
 
-        <p>Mẹo duy nhất khiến nó chạy nhanh: <b>không tính lại thứ đã tính.</b> Phần trách nhiệm của lớp 5 dùng được cho cả lớp 4, lớp 3, lớp 2 — cứ mang theo mà nhân tiếp. Nhờ vậy vặn một tỉ cái núm chỉ tốn khoảng hai lần chi phí của một lần đoán — trong khi nhích thử từng núm một rồi xem điểm trừ đổi ra sao thì tốn một tỉ lần đoán.</p>
+        <p>Mẹo duy nhất khiến nó chạy nhanh: <b>không tính lại thứ đã tính.</b> Phần trách nhiệm của lớp 5 dùng được cho cả lớp 4, lớp 3, lớp 2 — cứ mang theo mà nhân tiếp. Nhờ vậy lượt đi ngược tính xong phần trách nhiệm của cả một tỉ cái núm mà chỉ tốn chừng gấp đôi một lượt đoán — trong khi nhích thử từng núm một rồi xem điểm trừ đổi ra sao thì tốn một tỉ lần đoán.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
@@ -1147,11 +1147,11 @@ footer a { color:var(--muted); }
 
         <h3>3 · Cho bước chân có quán tính</h3>
 
-        <p>Hướng nào đi mãi vẫn thấy đúng thì đi nhanh dần lên; hướng nào cứ đổi ý liên tục thì đi chậm lại. Cách làm: thay vì dùng độ nghiêng đo được ở đúng bước này, dùng <b>độ nghiêng trung bình của chừng mười bước gần đây</b> (mỗi bước giữ 90% mức trung bình cũ và thêm 10% độ nghiêng mới — hệ số 0,9 ấy gọi là β) — nhiễu tự triệt tiêu, hướng thật còn lại.</p>
+        <p>Hướng nào các bước liên tục chỉ cùng một phía thì giữ đà mà đi tiếp; hướng nào cứ đổi chiều liên tục thì các bước triệt tiêu nhau, và máy thôi lắc qua lắc lại. Cách làm: thay vì dùng độ nghiêng đo được ở đúng bước này, dùng <b>độ nghiêng trung bình của chừng mười bước gần đây</b> (mỗi bước giữ 90% mức trung bình cũ và thêm 10% độ nghiêng mới — hệ số 0,9 ấy gọi là β) — nhiễu tự triệt tiêu, hướng thật còn lại.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v">phép lấy trung bình ấy là <span class="nm">exponentially weighted average</span> — trung bình trượt theo cấp số nhân, nền tảng chung của cả ba: <span class="nm">momentum</span> (làm mượt hướng đi), <span class="nm">RMSprop</span> (chia bước theo độ lớn gradient, để núm nào dốc quá thì bước ngắn lại), và <span class="nm">Adam</span> — gộp cả hai, và vì thế gần như mọi đoạn code bạn gặp đều dùng nó.</span>
+          <span class="v">phép lấy trung bình ấy là <span class="nm">exponentially weighted average</span> — trung bình trượt theo cấp số nhân, nền tảng chung của cả ba: <span class="nm">momentum</span> — quán tính (làm mượt hướng đi), <span class="nm">RMSprop</span> (chia bước theo độ lớn gradient, để núm nào dốc quá thì bước ngắn lại), và <span class="nm">Adam</span> — gộp cả hai, và vì thế gần như mọi đoạn code bạn gặp đều dùng nó.</span>
         </div>
 
         <p>Thêm một mẹo rẻ: <b>bước ngắn dần theo thời gian.</b> Ở <a href="#s-descent">chương 3</a> bước tự ngắn lại, vì gần đáy độ nghiêng nhỏ. Với mini-batch thì không: độ nghiêng đo trên một nhúm ví dụ luôn lẫn nhiễu, và nhiễu ấy không nhỏ đi khi tới gần đáy, nên độ nghiêng đo được không về 0 và máy cứ lắc quanh đáy. Phải chủ động cho bước ngắn dần thì nó mới đứng yên. Tên thật: <span class="nm">learning rate decay</span>.</p>
@@ -1205,7 +1205,7 @@ footer a { color:var(--muted); }
         </div>
       </section>
 
-      <!-- ═══════════════════ CHƯƠNG 7 ═══════════════════ -->
+      <!-- ═══════════════════ CHƯƠNG 8 ═══════════════════ -->
       <section id="s-diagnose">
         <p class="sechead"><b>Chương 8</b> — chẩn đoán, không phải thuật toán</p>
         <h2 class="st">Hai con số nói cho bạn biết phải làm gì tiếp — và hai câu trả lời ngược nhau</h2>
@@ -1755,7 +1755,7 @@ footer a { color:var(--muted); }
         <p class="sechead"><b>Chương 12</b> — <span class="sym">k</span>-means, bắt cái khác thường, PCA, hệ gợi ý</p>
         <h2 class="st">Không nhãn, không đáp án — chỉ có một đống dữ liệu và câu hỏi "trong đây có gì?"</h2>
 
-        <p class="lede">Gần như mọi ví dụ từ chương 1 tới chương 11 đều có đáp án kèm theo: tấm ảnh này <i>là mèo</i>, ngày đó bán <i>42 cốc</i> — kể cả mô hình ngôn ngữ, chỉ có điều đáp án của nó (từ kế tiếp) nằm sẵn trong câu chữ, không cần ai dán. Cách lấy đáp án từ chính dữ liệu ấy có tên riêng: <span class="nm">self-supervised learning</span> — tự giám sát. Cách học ấy, như chương 1 đã gọi, là <span class="nm">supervised learning</span> — học có giám sát. Nhưng phần lớn dữ liệu trên đời <b>không có đáp án</b> — không ai đi dán nhãn cho một tỉ tấm ảnh, và với nhiều câu hỏi thì chẳng có nhãn nào để dán. Học từ dữ liệu không nhãn gọi là <span class="nm">unsupervised learning</span> — học không giám sát.</p>
+        <p class="lede">Gần như mọi ví dụ từ chương 1 tới chương 11 đều có đáp án kèm theo: tấm ảnh này <i>là mèo</i>, ngày đó bán <i>42 cốc</i>. Cách học ấy, như chương 1 đã gọi, là <span class="nm">supervised learning</span> — học có giám sát. Mô hình ngôn ngữ cũng vậy, chỉ có điều đáp án của nó (từ kế tiếp) nằm sẵn trong câu chữ, không cần ai dán; cách lấy đáp án từ chính dữ liệu như thế có tên riêng: <span class="nm">self-supervised learning</span> — tự giám sát. Nhưng phần lớn dữ liệu trên đời <b>không có đáp án</b> — không ai đi dán nhãn cho một tỉ tấm ảnh, và với nhiều câu hỏi thì chẳng có nhãn nào để dán. Học từ dữ liệu không nhãn gọi là <span class="nm">unsupervised learning</span> — học không giám sát.</p>
 
         <h3>Chia nhóm</h3>
 
@@ -1887,7 +1887,7 @@ footer a { color:var(--muted); }
           <div class="fx__vi">Ký hiệu: R(s) là phần thưởng nhận khi đứng ở s — chính là R₁ của dòng tổng thưởng, viết theo chỗ thay vì theo bước. s′ (đọc "s phẩy") là chỗ kế tiếp sau khi làm a, a′ là hành động ở đó; dấu phẩy trên ở đây không phải đạo hàm. Khoá gốc gắn phần thưởng với chỗ đứng. Sách Sutton &amp; Barto gắn nó với bước đi và viết R<sub>t+1</sub> + γR<sub>t+2</sub> + …: cùng ý, lệch chỉ số một bước.</div>
         </div>
 
-        <p>Và đó là mẹo lạ nhất của cả chương: <b>máy tự sinh nhãn cho chính mình</b>. Điểm trừ là bình phương sai lệch giữa Q hiện tại và vế phải của phương trình trên; vặn núm vẫn là tụt dốc như mọi chương trước. Cái mới là <b>nhãn đổi khi mô hình đổi</b> — bạn đang chạy theo một cái đích tự di chuyển, và đó là lý do học tăng cường khó ổn định hơn mọi cách học ở trên.</p>
+        <p>Và đó là mẹo lạ nhất của cả chương: <b>máy tự sinh nhãn cho chính mình</b>. Điểm trừ là bình phương sai lệch giữa Q hiện tại và vế phải của phương trình trên; vặn núm vẫn là tụt dốc như ở chương 3. Cái mới là <b>nhãn đổi khi mô hình đổi</b> — bạn đang chạy theo một cái đích tự di chuyển, và đó là lý do học tăng cường khó ổn định hơn mọi cách học ở trên.</p>
 
         <div class="lab" id="m13">
           <div class="lab__h">
@@ -1990,7 +1990,7 @@ footer a { color:var(--muted); }
               <tr><td>Gần như hoàn hảo ở đề ôn, tệ ở đề thử</td><td>thuộc lòng — <span class="nm">variance</span></td><td>đề thử quá nhỏ · đề ôn và đề thử lấy từ hai nguồn khác nhau (<a href="#s-diagnose">lệch phân phối</a>)</td></tr>
               <tr><td>Bảng số rất đẹp, đem ra dùng thật thì thất bại</td><td>đề thử không lấy từ dữ liệu thật</td><td>rò rỉ dữ liệu · dữ liệu thật trôi dần theo thời gian</td></tr>
               <tr><td>Điểm trừ răng cưa lên xuống</td><td>bình thường với mini-batch</td><td>biên độ quá lớn thì giảm bước chân, hoặc tăng cỡ lô</td></tr>
-              <tr><td>Chạy hai lần ra hai kết quả</td><td>bình thường — mặt đất có nhiều đáy</td><td>chênh quá lớn thì khởi tạo sai thang · dữ liệu quá ít</td></tr>
+              <tr><td>Chạy hai lần ra hai kết quả</td><td>bình thường — khởi tạo và thứ tự lô đều ngẫu nhiên, sườn đồi có nhiều đáy</td><td>chênh quá lớn thì khởi tạo sai thang · dữ liệu quá ít</td></tr>
               <tr><td>Mọi nơ-ron trong một lớp cho cùng một số</td><td>khởi tạo tất cả bằng 0</td><td>bước chân lớn tới mức mọi ReLU chết hẳn — núm bị đẩy tới chỗ số vào luôn âm, nên ReLU luôn ra 0, độ nghiêng luôn 0, và nơ-ron ấy không học lại được nữa (<span class="nm">dying ReLU</span>)</td></tr>
               <tr><td>Máy luôn đoán đúng một loại</td><td><span class="nm">skewed dataset</span> cộng số đo sai</td><td>mốc để chốt đặt sai · lớp ít có quá ít bài</td></tr>
             </tbody>
@@ -3923,7 +3923,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['đúng 1 ví dụ một lần', 'stochastic gradient descent', 'khoá gốc: lô 1 ví dụ; sách và thư viện gọi cả mini-batch là SGD'],
     ['một lượt qua hết dữ liệu', 'epoch', '"10 epoch" = xem mỗi ví dụ mười lần'],
     ['trung bình các bước gần đây, bước mới nặng ký hơn', 'exponentially weighted average', 'nền tảng chung của momentum, RMSprop, Adam'],
-    ['bước chân có quán tính', 'momentum', 'đi mãi vẫn đúng thì đi nhanh dần'],
+    ['bước chân có quán tính', 'momentum', 'hướng đổi chiều liên tục thì triệt tiêu, hướng đều thì giữ đà'],
     ['núm nào dốc quá thì bước ngắn', 'RMSprop', 'chia bước theo độ lớn gradient'],
     ['bộ vặn núm hay dùng nhất', 'Adam', 'gộp quán tính với việc tự chỉnh bước chân'],
     ['bước ngắn dần theo thời gian', 'learning rate decay', 'nhiễu mini-batch không tắt ở đáy, nên phải tự giảm bước'],
