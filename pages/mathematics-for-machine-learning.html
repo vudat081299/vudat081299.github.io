@@ -1729,7 +1729,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <details class="q">
           <summary>Vì sao không nhảy thẳng tới đáy bằng cách giải f′ = 0, như mục 2.3?</summary>
-          <div class="a"><p>Vì với hồi quy tuyến tính thì <b>làm được</b> (có công thức đóng), nhưng với mạng nơ-ron thì phương trình ∇f = 0 là một hệ <b>phi tuyến</b> — không có công thức nào giải nó, bằng tay hay bằng máy; hàng triệu ẩn chỉ làm chuyện tệ thêm. Với hồi quy tuyến tính thì ∇f = 0 là một hệ tuyến tính cỡ d×d (d là số đặc trưng): X<sup>T</sup>Xw = X<sup>T</sup>y, suy ở mục 2.8. Hệ ấy giải bằng khử Gauss của chặng 1 — nhưng với d = 100.000 thì riêng bảng hệ số đã là 10¹⁰ ô, và tụt dốc vẫn nhanh và ít tốn bộ nhớ hơn nhiều.</p></div>
+          <div class="a"><p>Vì với hồi quy tuyến tính thì <b>làm được</b> (có công thức đóng), nhưng với mạng nơ-ron thì phương trình ∇f = 0 là một hệ <b>phi tuyến</b> — không có công thức đóng nào giải nó, nên chỉ còn cách dò dần từng bước, và tụt dốc chính là một cách dò như thế (Newton ở mục 2.7 là cách khác); hàng triệu ẩn chỉ làm chuyện tệ thêm. Với hồi quy tuyến tính thì ∇f = 0 là một hệ tuyến tính cỡ d×d (d là số đặc trưng): X<sup>T</sup>Xw = X<sup>T</sup>y, suy ở mục 2.8. Hệ ấy giải bằng khử Gauss của chặng 1 — nhưng với d = 100.000 thì riêng bảng hệ số đã là 10¹⁰ ô, và tụt dốc vẫn nhanh và ít tốn bộ nhớ hơn nhiều.</p></div>
         </details>
 
         <div class="take"><div class="k">Mang theo</div><p>Gradient descent = <b>đo dốc, bước ngược lại, lặp</b>. α quá lớn thì <b>phân kỳ</b> — sai số tăng vọt thay vì giảm. Thấy sai số tăng: nghi α trước khi nghi mọi thứ khác.</p></div>
