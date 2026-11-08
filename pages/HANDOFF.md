@@ -19,7 +19,8 @@
   - ML 101: tách chương 10 thành "CNN" và "Dùng CNN"; tách transfer / multi-task / end-to-end khỏi chương 8.
   - ML 101: mô hình attention đủ ba bước; PCA tương tác; thanh ngưỡng precision/recall; cổng kiểm mọi chip
     thuật ngữ có trong GLOSS.
-  - Toán: đảo 3.9 (kỳ vọng, phương sai) lên trước 3.7–3.8, vì hai mục ấy dùng σ trước khi định nghĩa.
+  - Toán: đảo 3.9 (kỳ vọng, phương sai) lên trước 3.7–3.8 cho mạch gọn hơn. Không bắt buộc: hộp định nghĩa
+    μ, σ² và σ ở đầu 3.7 đã đủ để đọc theo thứ tự hiện tại.
   - Toán: ô TOÁN cho chặng 3–4; khối "span, cơ sở, số chiều" ở chặng 1; hộp "một phía hay hai phía" ở 4.7.
   - Toán: m6 thêm trục thử tự xoay; m8 thêm hướng u xoay được; mô hình đường hợp lý L(p) cho 4.3.
 - jazz-piano-theory: bản rà nội dung của chủ trang (một artifact, không nằm trong repo) chưa đối chiếu hết.

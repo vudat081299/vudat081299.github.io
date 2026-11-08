@@ -748,6 +748,12 @@ def run_stats():
     need('3.9 phân số', '35/12')
     claim('3.9 tính tay 35/12', sum((v - ev) ** 2 for v in vals) == 17.5 and 2 * 6.25 + 2 * 2.25 + 2 * 0.25 == 17.5)
     need('3.9 tính tay', '(2·6,25 + 2·2,25 + 2·0,25)/6 = 17,5/6')
+    # 3.7 dùng μ, σ trước 3.9: hộp định nghĩa ngắn ở đầu 3.7 phải đứng TRƯỚC mô hình 13 và
+    # mang đúng số của xúc xắc mà 3.9 tính.
+    num('3.7 hộp định nghĩa: σ xúc xắc', math.sqrt(var), 2, ctx='μ = 3,5 và σ ≈ ')
+    box37, m13 = HTML.find('Ba chữ dùng từ đây, định nghĩa đủ ở mục 3.9'), HTML.find('id="m13"')
+    claim('3.7 hộp định nghĩa đứng trước mô hình 13', 0 <= box37 < m13 and HTML.find('id="s-binom"') < box37,
+          'hộp định nghĩa kỳ vọng / phương sai / σ phải nằm trong 3.7, trước mô hình 13')
     # 3.6 mật độ lớn hơn 1: đều trên [0; 0,5] thì cao 2 để diện tích bằng 1
     claim('3.6 mật độ 2', 2 * 0.5 == 1)
     need('3.6 mật độ 2', 'độ cao <b>2</b>')

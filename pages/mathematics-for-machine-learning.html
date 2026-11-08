@@ -1439,7 +1439,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
               <div class="read"><div class="k">Góc trục 1</div><div class="v" id="m6-ang">—</div></div>
             </div>
             <p class="lab__f" id="m6-say">Trục chính 1 luôn nằm dọc theo chiều dài của đám điểm.</p>
-            <p class="lab__f"><b>Hai điều PCA <span class="c-bad">không</span> làm:</b> Một: nó <b>không</b> chọn ra &ldquo;những cột quan trọng&rdquo;. Mỗi trục mới là một <i>trộn lẫn</i> của mọi cột cũ, nên khó giải thích cho người ngoài. Hai: nó <b>không</b> biết bạn định dự đoán gì. Trục nó bỏ đi có thể lại là trục duy nhất tách được hai nhóm bạn cần phân biệt. Thêm nữa, khi các cột <b>lệch thang đo</b> thì phải chuẩn hoá trước (mỗi cột trừ trung bình rồi chia cho độ lệch chuẩn của nó), nếu không cột &ldquo;thu nhập tính bằng đồng&rdquo; sẽ nuốt hết mọi cột khác chỉ vì con số nó to.</p>
+            <p class="lab__f"><b>Hai điều PCA <span class="c-bad">không</span> làm:</b> Một: nó <b>không</b> chọn ra &ldquo;những cột quan trọng&rdquo;. Mỗi trục mới là một <i>trộn lẫn</i> của mọi cột cũ, nên khó giải thích cho người ngoài. Hai: nó <b>không</b> biết bạn định dự đoán gì. Trục nó bỏ đi có thể lại là trục duy nhất tách được hai nhóm bạn cần phân biệt. Thêm nữa, khi các cột <b>lệch thang đo</b> thì phải chuẩn hoá trước (mỗi cột trừ trung bình rồi chia cho độ lệch chuẩn của nó — căn của phương sai), nếu không cột &ldquo;thu nhập tính bằng đồng&rdquo; sẽ nuốt hết mọi cột khác chỉ vì con số nó to.</p>
           </div>
         </div>
 
@@ -2079,6 +2079,11 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
 
         <p class="lede">5 ngửa: <b>24,6%</b>. 10 ngửa: <b>0,098%</b> — khoảng một lần trong 1.024 lượt. Lý do không phải &ldquo;5 dễ hơn&rdquo;, mà là <b>có nhiều cách hơn để ra 5 ngửa</b>: 252 cách, so với đúng 1 cách để ra 10 ngửa. Lại là phép đếm ở mục 3.1.</p>
 
+        <div class="box note">
+          <p class="box__k">Ba chữ dùng từ đây, định nghĩa đủ ở mục 3.9</p>
+          <p><b>Kỳ vọng</b> E[X], còn viết <b>μ</b>: trung bình có trọng số Σ x·P(x), tức trung bình dài hạn nếu lặp lại rất nhiều lần. <b>Phương sai</b> Var(X) = E[(X − μ)²]: trung bình của bình phương độ lệch khỏi μ, nên còn viết σ². <b>Độ lệch chuẩn</b> <b>σ</b> = √Var(X): cùng đơn vị với X, đo &ldquo;thường lệch khỏi μ chừng bao nhiêu&rdquo;. Xúc xắc sáu mặt có μ = 3,5 và σ ≈ 1,71. Cách tính tay và các tính chất: <a href="#s-ev">mục 3.9</a>.</p>
+        </div>
+
         <div class="lab" id="m13">
           <div class="lab__h">
             <p class="lab__k">Mô hình 13 · tăng số lần tung</p>
@@ -2480,7 +2485,7 @@ html.dark .pop { box-shadow:0 10px 34px -6px rgba(0,0,0,.72); }
           <p class="fx__line sm"><span class="op">≈</span> <b>1,43</b> điểm %</p>
           <p class="fx__line sm">z = 3,0 / 1,43 = <b>2,10</b></p>
           <p class="fx__line sm"><span class="op">→</span>&nbsp; p = <b>0,035</b></p>
-          <p class="fx__note">Cả phép kiểm là thế. Trong thế giới H₀, tỉ lệ mua chung là p̄ = 230/2.000 = 11,5%, mỗi bản n = 1.000 người, nên độ lệch chuẩn của chênh lệch — lại là <b>sai số chuẩn</b> (mục 4.2), SE, lần này của một hiệu — là √(0,115 · 0,885 · 2/1.000) ≈ 1,43 điểm %. Căn thức ấy lấy từ mục 3.9: Var(X − Y) = Var(X) + (−1)²·Var(Y), nên phương sai của hiệu hai tỉ lệ độc lập bằng <i>tổng</i> hai phương sai. Mỗi cái là p(1 − p)/n: một lần thử có phương sai p(1 − p) (mục 3.7), trung bình của n lần chia nó cho n (mục 4.2). Chênh lệch đã thấy, 3,0 điểm %, bằng 2,10 lần SE — con số ấy gọi là <b>z</b>. Rồi lấy diện tích hai đuôi ngoài ±2,10 SE của cái chuông. Một đuôi là 1 − Φ(z), với Φ là CDF của phân phối chuẩn tắc (mục 3.6); giữ thêm một chữ số, z = 2,103 và 1 − Φ(2,103) ≈ 0,0177, nên hai đuôi ≈ 0,035. Máy tính làm thay bảng tra: <code>2*scipy.stats.norm.sf(2.103)</code> trong Python, <code>=2*(1-NORM.S.DIST(2.103,TRUE))</code> trong Excel. 2,10 vượt mốc 1,96 ở bảng mục 3.8 một chút, nên hai đuôi còn dưới 5% một chút.</p>
+          <p class="fx__note">Cả phép kiểm là thế. Trong thế giới H₀, tỉ lệ mua chung là p̄ = 230/2.000 = 11,5%, mỗi bản n = 1.000 người, nên độ lệch chuẩn của chênh lệch — lại là <b>sai số chuẩn</b> (mục 4.2), SE, lần này của một hiệu — là √(0,115 · 0,885 · 2/1.000) ≈ 1,43 điểm %. Căn thức ấy lấy từ mục 3.9: Var(X − Y) = Var(X) + (−1)²·Var(Y), nên phương sai của hiệu hai tỉ lệ độc lập bằng <i>tổng</i> hai phương sai. Mỗi cái là p(1 − p)/n: một lần thử có phương sai p(1 − p) (mục 3.7), trung bình của n lần chia nó cho n (mục 4.2). Chênh lệch đã thấy, 3,0 điểm %, bằng 2,10 lần SE — con số ấy gọi là <b>z</b>. Rồi lấy diện tích hai đuôi ngoài ±2,10 SE của cái chuông. Một đuôi là 1 − Φ(z), với Φ là CDF của phân phối chuẩn tắc — cái chuông có μ = 0, σ = 1 (mục 3.6, 3.8); giữ thêm một chữ số, z = 2,103 và 1 − Φ(2,103) ≈ 0,0177, nên hai đuôi ≈ 0,035. Máy tính làm thay bảng tra: <code>2*scipy.stats.norm.sf(2.103)</code> trong Python, <code>=2*(1-NORM.S.DIST(2.103,TRUE))</code> trong Excel. 2,10 vượt mốc 1,96 ở bảng mục 3.8 một chút, nên hai đuôi còn dưới 5% một chút.</p>
         </div>
 
         <div class="tw">
