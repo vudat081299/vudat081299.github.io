@@ -754,7 +754,7 @@ footer a { color:var(--muted); }
 
         <div class="fx">
           <div class="fx__line sm">w ← w − α · ∂J/∂w<br>b ← b − α · ∂J/∂b</div>
-          <div class="fx__vi"><b>J</b> là điểm trừ trên cả tập ở <a href="#s-machine">chương 2</a>; mũi tên ← nghĩa là "thay bằng". Có hai núm thì có hai độ nghiêng. Nhích riêng w một chút, giữ b đứng yên, xem J đổi bao nhiêu: đó là ∂J/∂w, đọc là "đạo hàm riêng của J theo w". Làm y như vậy với b. Hai con số ấy gộp lại thành một mũi tên chỉ hướng lên dốc nhất, và mũi tên ấy mới đúng là gradient. Mỗi núm bước <b>ngược</b> độ nghiêng của chính nó, dài α lần độ nghiêng ấy. Dựng từ đầu: <a href="mathematics-for-machine-learning.html#s-partial">trang Toán cho học máy, mục 2.4</a>.</div>
+          <div class="fx__vi"><b>J</b> là điểm trừ trên cả tập ở <a href="#s-machine">chương 2</a>; mũi tên ← nghĩa là "thay bằng". Có hai núm thì có hai độ nghiêng. Nhích riêng w một chút, giữ b đứng yên, lấy phần J đổi chia cho cú nhích ấy (cú nhích càng nhỏ càng đúng): đó là ∂J/∂w, đọc là "đạo hàm riêng của J theo w". Làm y như vậy với b. Hai con số ấy gộp lại thành một mũi tên chỉ hướng lên dốc nhất, và mũi tên ấy mới đúng là gradient. Mỗi núm bước <b>ngược</b> độ nghiêng của chính nó, dài α lần độ nghiêng ấy. Dựng từ đầu: <a href="mathematics-for-machine-learning.html#s-partial">trang Toán cho học máy, mục 2.4</a>.</div>
           <div class="fx__line sm">∂J/∂w = trung bình của 2(ŷ − y)·x<br>∂J/∂b = trung bình của 2(ŷ − y)</div>
           <div class="fx__vi">Với đường thẳng và điểm trừ bình phương, hai độ nghiêng ra gọn thế này: đạo hàm (wx&nbsp;+&nbsp;b&nbsp;−&nbsp;y)² theo từng núm như đạo hàm một biến, rồi lấy trung bình trên mọi ngày. Đủ để tự viết vòng lặp tụt dốc.</div>
         </div>
@@ -877,7 +877,7 @@ footer a { color:var(--muted); }
 
         <h3>Nhiều hơn hai loại</h3>
 
-        <p>"Ảnh này là mèo, chó, thỏ hay hamster?" Cách làm: cho máy chấm <b>một điểm số cho mỗi loại</b>, rồi biến bốn điểm số ấy thành bốn phần trăm cộng lại đúng bằng 100%. Ai điểm cao hơn thì phần trăm cao hơn, và không ai được âm. Cách làm: lấy e mũ từng điểm số — e mũ số nào cũng dương, nên không ai âm — rồi chia mỗi cái cho tổng của chúng, nên cộng lại đúng 100%. Ba điểm số 2 · 1 · 0 thành e² ≈ 7,39 · e ≈ 2,72 · e⁰ = 1; tổng 11,11; chia ra 67% · 24% · 9%.</p>
+        <p>"Ảnh này là mèo, chó, thỏ hay hamster?" Cách làm: cho máy chấm <b>một điểm số cho mỗi loại</b>, rồi biến bốn điểm số ấy thành bốn phần trăm cộng lại đúng bằng 100%. Ai điểm cao hơn thì phần trăm cao hơn, và không ai được âm. Cụ thể: lấy e mũ từng điểm số — e mũ số nào cũng dương, nên không ai âm — rồi chia mỗi cái cho tổng của chúng, nên cộng lại đúng 100%. Ba điểm số 2 · 1 · 0 thành e² ≈ 7,39 · e ≈ 2,72 · e⁰ = 1; tổng 11,11; chia ra 67% · 24% · 9%.</p>
 
         <p>Chữ "soft" trong tên của nó — <span class="nm">softmax</span> — là vì nó <b>không chọn dứt khoát</b> một loại — nó chia phần tin tưởng: 70% mèo, 25% thỏ, 4% chó, 1% hamster. Bốn con số thô <i>trước khi</i> chia phần trăm có tên riêng, và bạn sẽ gặp nó trong mọi thư viện code: <span class="nm">logits</span>.</p>
 
@@ -975,6 +975,10 @@ footer a { color:var(--muted); }
                 <svg class="viz" id="m4-err" role="img" aria-label="Hai đường điểm trừ theo độ vặn vẹo của mô hình: đường đề ôn đi xuống đều, đường đề thử chạm đáy rồi vọt lên." viewBox="0 0 340 250"></svg>
                 <figcaption>Điểm trừ theo độ vặn vẹo. Đường dưới là đề ôn, đường trên là đề thử.</figcaption>
               </figure>
+              <figure style="grid-column:1 / -1;justify-self:center;width:100%;max-width:400px">
+                <svg class="viz" id="m4-lc" role="img" aria-label="Đường cong học: điểm trừ trên đề ôn và đề thử theo số bài trong đề ôn, từ 8 tới 40, ở bậc và mức phạt đang chọn." viewBox="0 0 340 250"></svg>
+                <figcaption>Đường cong học: giữ nguyên bậc và λ, cho số bài trong đề ôn chạy từ 8 tới 40. Vạch đứt dọc là số bài đang chọn; vạch đứt ngang là sàn nhiễu 0,01 — phần sai do nhiễu sẵn trong dữ liệu, không máy nào bớt được.</figcaption>
+              </figure>
             </div>
             <div style="margin-top:16px">
               <div class="row"><label for="m4-d">Độ vặn vẹo</label><div class="inline"><input type="range" id="m4-d" min="1" max="12" step="1" value="1"><span class="val" id="m4-dv"></span></div></div>
@@ -982,7 +986,7 @@ footer a { color:var(--muted); }
               <div class="row"><label for="m4-m">Số bài trong đề ôn</label><div class="inline"><input type="range" id="m4-m" min="8" max="40" step="1" value="12"><span class="val" id="m4-mv"></span></div></div>
               <div class="row"><span class="k">Kết quả</span><pre class="out" id="m4-out"></pre></div>
             </div>
-            <p class="lab__f">Kéo <b>độ vặn vẹo</b> lên 10 rồi kéo <b>số bài trong đề ôn</b> từ 8 lên 40. Cùng một độ vặn vẹo, nhiều dữ liệu hơn thì bớt học thuộc lòng — đó là cách chữa số 1, nhìn thấy được. Kéo <b>λ</b> lên là cách chữa số 2.</p>
+            <p class="lab__f">Kéo <b>độ vặn vẹo</b> lên 10 rồi kéo <b>số bài trong đề ôn</b> từ 8 lên 40. Cùng một độ vặn vẹo, nhiều dữ liệu hơn thì bớt học thuộc lòng — đó là cách chữa số 1, nhìn thấy được. Hình thứ ba vẽ sẵn cả lượt kéo ấy, và nó là đường cong học mà cách chữa số 1 dạy đọc: ở bậc 10, đề thử từ trên khung tụt dần về sát đề ôn — thêm bài còn ăn. Về bậc 1 thì từ chừng 12 bài trở đi đề thử nằm ngang, và cả hai đường cao gấp sáu lần sàn nhiễu trở lên — thêm bài không kéo chúng xuống được nữa; phải làm máy to hơn. Kéo <b>λ</b> lên là cách chữa số 2.</p>
           </div>
         </div>
 
@@ -1082,7 +1086,7 @@ footer a { color:var(--muted); }
 
         <p>Cách làm là <b>đi ngược từ đầu ra về đầu vào, chia phần trách nhiệm.</b> Đọc thành lời: "Kết quả đang thấp hơn đáp án 0,3. Nơ-ron này đi vào kết quả qua một cái núm 0,5 — nó nhích lên 1 thì kết quả nhích lên 0,5 — nên phần trách nhiệm của nó là 0,3 × 0,5 = 0,15. Núm của nơ-ron này đang nhân với số vào là 2, nên núm nhích lên 1 thì nơ-ron nhích lên 2. (Cái bẻ của nó đang ở phía dương nên để nguyên; nếu nó đang bị bẻ về 0 thì phần trách nhiệm là 0.) Vậy phần trách nhiệm của núm là 0,15 × 2 = 0,3." Núm nào gánh phần lớn thì được vặn nhiều, đúng như ở <a href="#s-descent">chương 3</a>: dốc hơn thì bước dài hơn. Rồi lùi tiếp một lớp, làm y như vậy — với một chi tiết: một nơ-ron nối tới nhiều nơ-ron lớp sau thì nhận trách nhiệm theo từng đường ấy, rồi cộng các phần lại (<a href="mathematics-for-machine-learning.html#s-chain">trang Toán cho học máy, mục 2.6</a>).</p>
 
-        <p>Mẹo duy nhất khiến nó chạy nhanh: <b>không tính lại thứ đã tính.</b> Phần trách nhiệm của lớp 5 dùng được cho cả lớp 4, lớp 3, lớp 2 — cứ mang theo mà nhân tiếp. Nhờ vậy vặn một tỉ cái núm chỉ tốn khoảng hai lần chi phí của một lần đoán — trong khi nhích thử từng núm một rồi xem điểm trừ đổi ra sao thì tốn một tỉ lần đoán.</p>
+        <p>Mẹo duy nhất khiến nó chạy nhanh: <b>không tính lại thứ đã tính.</b> Phần trách nhiệm của lớp 5 dùng được cho cả lớp 4, lớp 3, lớp 2 — cứ mang theo mà nhân tiếp. Nhờ vậy lượt đi ngược tính xong phần trách nhiệm của cả một tỉ cái núm mà chỉ tốn chừng gấp đôi một lượt đoán — trong khi nhích thử từng núm một rồi xem điểm trừ đổi ra sao thì tốn một tỉ lần đoán.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
@@ -1147,12 +1151,16 @@ footer a { color:var(--muted); }
 
         <h3>3 · Cho bước chân có quán tính</h3>
 
-        <p>Hướng nào đi mãi vẫn thấy đúng thì đi nhanh dần lên; hướng nào cứ đổi ý liên tục thì đi chậm lại. Cách làm: thay vì dùng độ nghiêng đo được ở đúng bước này, dùng <b>độ nghiêng trung bình của chừng mười bước gần đây</b> (mỗi bước giữ 90% mức trung bình cũ và thêm 10% độ nghiêng mới — hệ số 0,9 ấy gọi là β) — nhiễu tự triệt tiêu, hướng thật còn lại.</p>
+        <p>Hướng nào các bước liên tục chỉ cùng một phía thì giữ đà mà đi tiếp; hướng nào cứ đổi chiều liên tục thì các bước triệt tiêu nhau, và máy thôi lắc qua lắc lại. Cách làm: thay vì dùng độ nghiêng đo được ở đúng bước này, dùng <b>độ nghiêng trung bình của chừng mười bước gần đây</b> (mỗi bước giữ 90% mức trung bình cũ và thêm 10% độ nghiêng mới — hệ số 0,9 ấy gọi là β) — nhiễu tự triệt tiêu, hướng thật còn lại.</p>
 
         <div class="nmrow">
           <span class="k">Tên thật</span>
-          <span class="v">phép lấy trung bình ấy là <span class="nm">exponentially weighted average</span> — trung bình trượt theo cấp số nhân, nền tảng chung của cả ba: <span class="nm">momentum</span> (làm mượt hướng đi), <span class="nm">RMSprop</span> (chia bước theo độ lớn gradient, để núm nào dốc quá thì bước ngắn lại), và <span class="nm">Adam</span> — gộp cả hai, và vì thế gần như mọi đoạn code bạn gặp đều dùng nó.</span>
+          <span class="v">phép lấy trung bình ấy là <span class="nm">exponentially weighted average</span> — trung bình trượt theo cấp số nhân, nền tảng chung của cả ba: <span class="nm">momentum</span> — quán tính (làm mượt hướng đi), <span class="nm">RMSprop</span> (chia bước theo độ lớn gradient, để núm nào dốc quá thì bước ngắn lại), và <span class="nm">Adam</span> — gộp cả hai, và vì thế gần như mọi đoạn code bạn gặp đều dùng nó.</span>
         </div>
+
+        <svg class="viz" id="fig-paths" role="img" aria-label="Bốn bản đồ đường đồng mức của cùng một sườn đồi hình khe. Từ cùng một chỗ xuất phát, cùng bước chân, cùng 40 bước: xem cả tập mỗi bước thì đi mượt; lô 8 ví dụ thì zíc-zắc nhẹ; từng ví dụ một thì zíc-zắc dữ; lô 8 có quán tính thì mượt lại." viewBox="0 0 440 334" style="max-width:520px;margin:18px auto"></svg>
+
+        <p>Bốn khung trên là cùng một sườn đồi: hồi quy hai núm trên 64 ví dụ, hai con số đầu vào khác cỡ nên các đường đồng mức thành elip dẹt — đúng cái khe ở <a href="#s-descent">chương 3</a>. Cả bốn xuất phát cùng chỗ, cùng bước chân α = 0,3, đi đúng 40 bước; chỉ khác mỗi bước nhìn bao nhiêu ví dụ, và có quán tính hay không. Đừng đọc hình này thành "cả tập thắng": một bước của nó đọc 64 ví dụ, đắt gấp 8 lần một bước lô 8 và gấp 64 lần một bước từng ví dụ, nên với cùng công tính thì hai cách kia đã đi được nhiều bước hơn hẳn. Quán tính dùng đúng các lô 8 ấy, nhưng bước theo trung bình độ nghiêng của chừng mười lô gần nhất: phần lắc ngang khe triệt tiêu nhau, phần dọc khe giữ đà, nên đường đi mượt lại.</p>
 
         <p>Thêm một mẹo rẻ: <b>bước ngắn dần theo thời gian.</b> Ở <a href="#s-descent">chương 3</a> bước tự ngắn lại, vì gần đáy độ nghiêng nhỏ. Với mini-batch thì không: độ nghiêng đo trên một nhúm ví dụ luôn lẫn nhiễu, và nhiễu ấy không nhỏ đi khi tới gần đáy, nên độ nghiêng đo được không về 0 và máy cứ lắc quanh đáy. Phải chủ động cho bước ngắn dần thì nó mới đứng yên. Tên thật: <span class="nm">learning rate decay</span>.</p>
 
@@ -1205,7 +1213,7 @@ footer a { color:var(--muted); }
         </div>
       </section>
 
-      <!-- ═══════════════════ CHƯƠNG 7 ═══════════════════ -->
+      <!-- ═══════════════════ CHƯƠNG 8 ═══════════════════ -->
       <section id="s-diagnose">
         <p class="sechead"><b>Chương 8</b> — chẩn đoán, không phải thuật toán</p>
         <h2 class="st">Hai con số nói cho bạn biết phải làm gì tiếp — và hai câu trả lời ngược nhau</h2>
@@ -1755,7 +1763,7 @@ footer a { color:var(--muted); }
         <p class="sechead"><b>Chương 12</b> — <span class="sym">k</span>-means, bắt cái khác thường, PCA, hệ gợi ý</p>
         <h2 class="st">Không nhãn, không đáp án — chỉ có một đống dữ liệu và câu hỏi "trong đây có gì?"</h2>
 
-        <p class="lede">Gần như mọi ví dụ từ chương 1 tới chương 11 đều có đáp án kèm theo: tấm ảnh này <i>là mèo</i>, ngày đó bán <i>42 cốc</i> — kể cả mô hình ngôn ngữ, chỉ có điều đáp án của nó (từ kế tiếp) nằm sẵn trong câu chữ, không cần ai dán. Cách lấy đáp án từ chính dữ liệu ấy có tên riêng: <span class="nm">self-supervised learning</span> — tự giám sát. Cách học ấy, như chương 1 đã gọi, là <span class="nm">supervised learning</span> — học có giám sát. Nhưng phần lớn dữ liệu trên đời <b>không có đáp án</b> — không ai đi dán nhãn cho một tỉ tấm ảnh, và với nhiều câu hỏi thì chẳng có nhãn nào để dán. Học từ dữ liệu không nhãn gọi là <span class="nm">unsupervised learning</span> — học không giám sát.</p>
+        <p class="lede">Gần như mọi ví dụ từ chương 1 tới chương 11 đều có đáp án kèm theo: tấm ảnh này <i>là mèo</i>, ngày đó bán <i>42 cốc</i>. Cách học ấy, như chương 1 đã gọi, là <span class="nm">supervised learning</span> — học có giám sát. Mô hình ngôn ngữ cũng vậy, chỉ có điều đáp án của nó (từ kế tiếp) nằm sẵn trong câu chữ, không cần ai dán; cách lấy đáp án từ chính dữ liệu như thế có tên riêng: <span class="nm">self-supervised learning</span> — tự giám sát. Nhưng phần lớn dữ liệu trên đời <b>không có đáp án</b> — không ai đi dán nhãn cho một tỉ tấm ảnh, và với nhiều câu hỏi thì chẳng có nhãn nào để dán. Học từ dữ liệu không nhãn gọi là <span class="nm">unsupervised learning</span> — học không giám sát.</p>
 
         <h3>Chia nhóm</h3>
 
@@ -1887,7 +1895,7 @@ footer a { color:var(--muted); }
           <div class="fx__vi">Ký hiệu: R(s) là phần thưởng nhận khi đứng ở s — chính là R₁ của dòng tổng thưởng, viết theo chỗ thay vì theo bước. s′ (đọc "s phẩy") là chỗ kế tiếp sau khi làm a, a′ là hành động ở đó; dấu phẩy trên ở đây không phải đạo hàm. Khoá gốc gắn phần thưởng với chỗ đứng. Sách Sutton &amp; Barto gắn nó với bước đi và viết R<sub>t+1</sub> + γR<sub>t+2</sub> + …: cùng ý, lệch chỉ số một bước.</div>
         </div>
 
-        <p>Và đó là mẹo lạ nhất của cả chương: <b>máy tự sinh nhãn cho chính mình</b>. Điểm trừ là bình phương sai lệch giữa Q hiện tại và vế phải của phương trình trên; vặn núm vẫn là tụt dốc như mọi chương trước. Cái mới là <b>nhãn đổi khi mô hình đổi</b> — bạn đang chạy theo một cái đích tự di chuyển, và đó là lý do học tăng cường khó ổn định hơn mọi cách học ở trên.</p>
+        <p>Và đó là mẹo lạ nhất của cả chương: <b>máy tự sinh nhãn cho chính mình</b>. Điểm trừ là bình phương sai lệch giữa Q hiện tại và vế phải của phương trình trên; vặn núm vẫn là tụt dốc như ở chương 3. Cái mới là <b>nhãn đổi khi mô hình đổi</b> — bạn đang chạy theo một cái đích tự di chuyển, và đó là lý do học tăng cường khó ổn định hơn mọi cách học ở trên.</p>
 
         <div class="lab" id="m13">
           <div class="lab__h">
@@ -1990,7 +1998,7 @@ footer a { color:var(--muted); }
               <tr><td>Gần như hoàn hảo ở đề ôn, tệ ở đề thử</td><td>thuộc lòng — <span class="nm">variance</span></td><td>đề thử quá nhỏ · đề ôn và đề thử lấy từ hai nguồn khác nhau (<a href="#s-diagnose">lệch phân phối</a>)</td></tr>
               <tr><td>Bảng số rất đẹp, đem ra dùng thật thì thất bại</td><td>đề thử không lấy từ dữ liệu thật</td><td>rò rỉ dữ liệu · dữ liệu thật trôi dần theo thời gian</td></tr>
               <tr><td>Điểm trừ răng cưa lên xuống</td><td>bình thường với mini-batch</td><td>biên độ quá lớn thì giảm bước chân, hoặc tăng cỡ lô</td></tr>
-              <tr><td>Chạy hai lần ra hai kết quả</td><td>bình thường — mặt đất có nhiều đáy</td><td>chênh quá lớn thì khởi tạo sai thang · dữ liệu quá ít</td></tr>
+              <tr><td>Chạy hai lần ra hai kết quả</td><td>bình thường — khởi tạo và thứ tự lô đều ngẫu nhiên, sườn đồi có nhiều đáy</td><td>chênh quá lớn thì khởi tạo sai thang · dữ liệu quá ít</td></tr>
               <tr><td>Mọi nơ-ron trong một lớp cho cùng một số</td><td>khởi tạo tất cả bằng 0</td><td>bước chân lớn tới mức mọi ReLU chết hẳn — núm bị đẩy tới chỗ số vào luôn âm, nên ReLU luôn ra 0, độ nghiêng luôn 0, và nơ-ron ấy không học lại được nữa (<span class="nm">dying ReLU</span>)</td></tr>
               <tr><td>Máy luôn đoán đúng một loại</td><td><span class="nm">skewed dataset</span> cộng số đo sai</td><td>mốc để chốt đặt sai · lớp ít có quá ít bài</td></tr>
             </tbody>
@@ -2596,12 +2604,13 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
 
 /* ═══════════════════ MÔ HÌNH 4 — HỌC THUỘC HAY HIỂU ═══════════════════ */
 (function () {
-  var svgF = $('m4-fit'), svgE = $('m4-err');
+  var svgF = $('m4-fit'), svgE = $('m4-err'), svgL = $('m4-lc');
   if (!svgF) return;
   var sd = $('m4-d'), sl = $('m4-l'), sm = $('m4-m');
   var vd = $('m4-dv'), vl = $('m4-lv'), vm = $('m4-mv'), out = $('m4-out');
 
   function truth(u) { return 0.55 * Math.sin(3.05 * u + 0.4) + 0.22 * u; }
+  var FLOOR = 0.01;   /* nhiễu σ = 0,1 → sàn của điểm trừ là σ² = 0,01 */
   /* Một đám điểm cố định, cắt lấy m điểm đầu — kéo thanh "số bài" thì các điểm cũ
      đứng nguyên, chỉ thêm điểm mới. Nếu sinh lại thì người đọc không so được. */
   /* Hạt 229: với nó cả ba thí nghiệm mà chữ hứa ra đúng một chiều, không lật qua lật lại — kéo bậc
@@ -2690,6 +2699,40 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     txt(svgE, 320, 32, 'đề thử', 'vs', 'end', 'fill:var(--bad)');
     txt(svgE, 320, 48, 'đề ôn', 'vs', 'end', 'fill:var(--good)');
 
+    /* Đường cong học: cùng bậc, cùng λ, số bài chạy 8 → 40 — đúng hình mà cách chữa số 1 dạy đọc.
+       Trần trục y đọc theo phần từ 20 bài trở đi: bậc cao với dưới ~12 bài có đề thử vọt tới
+       hàng trăm, kéo trần theo thì mọi đoạn còn lại dẹp sát đáy. Phần vượt trần vẽ dính trần. */
+    if (svgL) {
+      clear(svgL);
+      var lc = { tr: [], te: [] }, mm, topL = 0;
+      for (mm = 8; mm <= 40; mm++) {
+        var TRm = POOL.slice(0, mm), wm = fit(TRm, d, lamOff ? 0 : lam);
+        lc.tr.push(err(wm, TRm)); lc.te.push(err(wm, TEST));
+        if (mm >= 20) topL = Math.max(topL, lc.tr[mm - 8], lc.te[mm - 8]);
+      }
+      topL = Math.max(0.12, Math.min(topL * 1.15, 0.95));
+      var g3 = axes(svgL, [50, 18, 324, 206], [8, 40], [0, topL], 'số bài trong đề ôn', 'điểm trừ', 4);
+      for (t = 0; t <= 4; t++) txt(svgL, 44, g3.Y(topL * t / 4) + 4, vi(topL * t / 4, 2), 'vs', 'end');
+      for (t = 8; t <= 40; t += 8) txt(svgL, g3.X(t), 220, String(t), 'vs', 'middle');
+      el(svgL, 'line', { x1: g3.L, y1: g3.Y(FLOOR), x2: g3.R, y2: g3.Y(FLOOR) }, 'stroke:var(--subtle);stroke-width:1.2;stroke-dasharray:2 4');
+      /* nhãn nằm ở chú giải góc trên, không nằm cạnh vạch: cạnh vạch thì đè lên đường cong ở bậc 3–10 */
+      el(svgL, 'line', { x1: 250, y1: 61, x2: 268, y2: 61 }, 'stroke:var(--subtle);stroke-width:1.2;stroke-dasharray:2 4');
+      txt(svgL, 320, 64, 'sàn nhiễu', 'vs', 'end');
+      var lineL = function (arr, style) {
+        var p3 = [], k3;
+        for (k3 = 0; k3 < arr.length; k3++) p3.push(g3.X(k3 + 8) + ',' + g3.Y(Math.min(topL, arr[k3])));
+        el(svgL, 'polyline', { points: p3.join(' '), fill: 'none' }, style);
+      };
+      lineL(lc.te, 'stroke:var(--bad);stroke-width:2.6');
+      lineL(lc.tr, 'stroke:var(--good);stroke-width:2.6');
+      el(svgL, 'line', { x1: g3.X(m), y1: g3.T, x2: g3.X(m), y2: g3.B }, 'stroke:var(--ink);stroke-width:1.4;stroke-dasharray:3 4;opacity:.5');
+      el(svgL, 'circle', { cx: g3.X(m), cy: g3.Y(Math.min(topL, lc.te[m - 8])), r: 5 }, 'fill:var(--bad);stroke:var(--canvas);stroke-width:1.6');
+      el(svgL, 'circle', { cx: g3.X(m), cy: g3.Y(Math.min(topL, lc.tr[m - 8])), r: 5 }, 'fill:var(--good);stroke:var(--canvas);stroke-width:1.6');
+      txt(svgL, 320, 32, 'đề thử', 'vs', 'end', 'fill:var(--bad)');
+      txt(svgL, 320, 48, 'đề ôn', 'vs', 'end', 'fill:var(--good)');
+      txt(svgL, 324, 12, 'bậc ' + d + ' · λ ' + vl.textContent, 'vs', 'end');
+    }
+
     /* bậc tốt nhất theo đề thử — chính là việc mà đề thử tồn tại để làm */
     var bi = 0, k2;
     for (k2 = 1; k2 < 12; k2++) if (curves.te[k2] < curves.te[bi]) bi = k2;
@@ -2700,7 +2743,6 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
        phải thuộc lòng — bản cũ xét ngược nên gọi bậc 2 (ôn 0,040, gấp bốn sàn) là "giỏi đề ôn".
        Ngưỡng thuộc lòng 3 × sàn: ở 2 ×, đề thử dao động quanh 0,02 làm dòng phán lật qua lật lại
        giữa các bậc liền nhau. */
-    var FLOOR = 0.01;
     out.textContent =
       'điểm trừ · đề ôn   ' + pad(vi(eTr, 4), 8) + '\n' +
       'điểm trừ · đề thử  ' + pad(vi(eTe, 4), 8) + '\n' +
@@ -2975,6 +3017,85 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
   btnT.addEventListener('click', train);
   btnR.addEventListener('click', reset);
   reset();
+  redraws.push(draw);
+})();
+
+/* ═══════════════════ HÌNH: BỐN ĐƯỜNG TỤT DỐC ═══════════════════ */
+/* Tụt dốc thật trên một bài hồi quy hai núm, không vẽ tay. 64 ví dụ, hai đầu vào khác cỡ
+   (x₁ cỡ 0,25, x₂ cỡ 1) nên sườn đồi là một cái khe. Bốn đường dùng chung chỗ xuất phát, α,
+   số bước và thứ tự xáo; chỉ khác số ví dụ mỗi bước và có quán tính hay không. Hạt 122: với nó
+   cả bốn đường nằm trong khung, và độ zíc-zắc xếp đúng thứ tự lời văn nói — verify-ml.py dựng
+   lại đúng phép tính này và đòi cả hai điều ấy. */
+(function () {
+  var svg = $('fig-paths');
+  if (!svg) return;
+  var N = 64, LOT = 8, ALPHA = 0.3, STEPS = 40, BETA = 0.9;
+  var r = rng(122), D = [], ORD = [], i;
+  for (i = 0; i < N; i++) { var x1 = gauss(r) * 0.25, x2 = gauss(r); D.push([x1, x2, x1 + x2 + gauss(r) * 0.3]); }
+  for (i = 0; i < N; i++) ORD.push(i);
+  for (i = N - 1; i > 0; i--) { var jj = Math.floor(r() * (i + 1)), tmp = ORD[i]; ORD[i] = ORD[jj]; ORD[jj] = tmp; }
+  /* đáy thật: giải thẳng hệ 2×2 — chính là normal equation ở chương 2 */
+  var a = 0, b = 0, c = 0, p = 0, q = 0;
+  D.forEach(function (d) { a += d[0] * d[0] / N; b += d[0] * d[1] / N; c += d[1] * d[1] / N; p += d[0] * d[2] / N; q += d[1] * d[2] / N; });
+  var det = a * c - b * b, W0 = (c * p - b * q) / det, W1 = (a * q - b * p) / det;
+
+  function run(lot, beta) {
+    var w = [W0 - 3.2, W1 + 0.5], v = [0, 0], path = [w.slice()], k = 0, s, n;
+    for (s = 0; s < STEPS; s++) {
+      var g0 = 0, g1 = 0;
+      for (n = 0; n < lot; n++) {
+        var d = D[ORD[(k + n) % N]], e = w[0] * d[0] + w[1] * d[1] - d[2];
+        g0 += 2 * e * d[0]; g1 += 2 * e * d[1];
+      }
+      g0 /= lot; g1 /= lot; k += lot;
+      /* quán tính: trung bình trượt của độ nghiêng, giữ 90% cũ, thêm 10% mới — như lời văn */
+      if (beta) { v[0] = beta * v[0] + (1 - beta) * g0; v[1] = beta * v[1] + (1 - beta) * g1; g0 = v[0]; g1 = v[1]; }
+      w = [w[0] - ALPHA * g0, w[1] - ALPHA * g1];
+      path.push(w.slice());
+    }
+    return path;
+  }
+  var RUNS = [
+    ['Cả tập', run(N, 0)],
+    ['Lô 8', run(LOT, 0)],
+    ['Từng ví dụ một', run(1, 0)],
+    ['Lô 8 + quán tính', run(LOT, BETA)]
+  ];
+  /* đường đồng mức: J − J nhỏ nhất = (w − đáy)ᵀ·A·(w − đáy), A = bảng a b / b c ở trên.
+     Trục riêng của A là trục của elip; trị riêng càng lớn thì elip càng hẹp theo trục ấy. */
+  var mid = (a + c) / 2, rad = Math.sqrt((a - c) * (a - c) / 4 + b * b), l1 = mid + rad, l2 = mid - rad;
+  var ang = Math.atan2(l1 - a, b) * 180 / Math.PI;
+
+  function draw() {
+    clear(svg);
+    var PW = 200, PH = 120, XR = 4.4, YR = XR * PH / PW, x0 = W0 - XR * 0.83, y0 = W1 - YR / 2;
+    RUNS.forEach(function (rw, k) {
+      var ox = 15 + (k % 2) * 215, oy = 30 + Math.floor(k / 2) * 150;
+      var X = function (v) { return ox + (v - x0) / XR * PW; };
+      var Y = function (v) { return oy + PH - (v - y0) / YR * PH; };
+      el(svg, 'rect', { x: ox, y: oy, width: PW, height: PH, rx: 3 }, 'fill:var(--surface);stroke:var(--border);stroke-width:1');
+      var cid = 'fp-clip-' + k, cp = el(svg, 'clipPath', { id: cid });
+      el(cp, 'rect', { x: ox, y: oy, width: PW, height: PH });
+      var g = el(svg, 'g', { 'clip-path': 'url(#' + cid + ')' });
+      [0.05, 0.2, 0.5, 1, 2, 4].forEach(function (lev) {
+        el(g, 'ellipse', {
+          cx: X(W0), cy: Y(W1), rx: Math.sqrt(lev / l1) * PW / XR, ry: Math.sqrt(lev / l2) * PW / XR,
+          transform: 'rotate(' + fmt(-ang, 2) + ' ' + fmt(X(W0), 1) + ' ' + fmt(Y(W1), 1) + ')', fill: 'none'
+        }, 'stroke:var(--border-2);stroke-width:1');
+      });
+      var P = rw[1];
+      el(g, 'polyline', { points: P.map(function (w) { return fmt(X(w[0]), 1) + ',' + fmt(Y(w[1]), 1); }).join(' '), fill: 'none' },
+        'stroke:var(--o);stroke-width:1.7;stroke-linejoin:round');
+      el(g, 'circle', { cx: X(P[0][0]), cy: Y(P[0][1]), r: 3.4 }, 'fill:var(--surface);stroke:var(--ink);stroke-width:1.4');
+      el(g, 'circle', { cx: X(P[P.length - 1][0]), cy: Y(P[P.length - 1][1]), r: 2.8 }, 'fill:var(--o)');
+      el(g, 'circle', { cx: X(W0), cy: Y(W1), r: 3 }, 'fill:var(--ink)');
+      var last = P[P.length - 1], dist = Math.sqrt(Math.pow(last[0] - W0, 2) + Math.pow(last[1] - W1, 2));
+      txt(svg, ox, oy - 8, rw[0], 'vt', 'start');
+      txt(svg, ox + PW, oy - 8, 'cách đáy ' + vi(dist, 2), 'vs', 'end');
+    });
+    txt(svg, 220, 326, '○ chỗ xuất phát · ● đáy · cùng α = ' + vi(ALPHA, 1) + ', cùng ' + STEPS + ' bước', 'vs', 'middle');
+  }
+  draw();
   redraws.push(draw);
 })();
 
@@ -3923,7 +4044,7 @@ function axes(svg, box, xr, yr, xlab, ylab, ticks) {
     ['đúng 1 ví dụ một lần', 'stochastic gradient descent', 'khoá gốc: lô 1 ví dụ; sách và thư viện gọi cả mini-batch là SGD'],
     ['một lượt qua hết dữ liệu', 'epoch', '"10 epoch" = xem mỗi ví dụ mười lần'],
     ['trung bình các bước gần đây, bước mới nặng ký hơn', 'exponentially weighted average', 'nền tảng chung của momentum, RMSprop, Adam'],
-    ['bước chân có quán tính', 'momentum', 'đi mãi vẫn đúng thì đi nhanh dần'],
+    ['bước chân có quán tính', 'momentum', 'hướng đổi chiều liên tục thì triệt tiêu, hướng đều thì giữ đà'],
     ['núm nào dốc quá thì bước ngắn', 'RMSprop', 'chia bước theo độ lớn gradient'],
     ['bộ vặn núm hay dùng nhất', 'Adam', 'gộp quán tính với việc tự chỉnh bước chân'],
     ['bước ngắn dần theo thời gian', 'learning rate decay', 'nhiễu mini-batch không tắt ở đáy, nên phải tự giảm bước'],

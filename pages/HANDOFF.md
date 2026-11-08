@@ -2,10 +2,6 @@
 
 ## CHƯA LÀM
 
-- ML 101 chương 7 (`#s-deep`, mục 2–3): hình đường đồng mức elip với bốn đường đi cùng số bước — cả tập (mượt),
-  mini-batch (zíc-zắc nhẹ), một ví dụ (zíc-zắc dữ), momentum (mượt lại). Đặt ngay dưới bảng mini-batch.
-- ML 101 mô hình 4 (`#m4`): thêm hình thứ ba là đường cong học — điểm trừ đề ôn và đề thử theo số bài 8→40, ở bậc
-  và λ đang chọn — để người đọc thấy hình mà chương 5, cách chữa 1 dạy đọc.
 - `machine-learning.html`, đề xuất của lượt rà sư phạm vòng 3 (cần mô hình hoặc hình mới):
   - M3 (#s-scale): chip GD / Momentum / Adam trên bản chưa chuẩn hoá, cùng α; phải cho thấy momentum bớt nảy
     giữa hai vách khe và Adam đi gần thẳng. Đổi luật "Chạy cả hai" nên phải sửa cả phép kiểm M3 trong cổng.
