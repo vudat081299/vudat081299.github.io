@@ -289,6 +289,17 @@ def phan_B():
          f'đặt 12,5% và 37,5% có cùng tốc độ tăng trưởng dài hạn, nhưng sau 100 ván, số người thua là '
          f'{vi(100 * p_lose(0.125, T), 1)}% và {vi(100 * p_lose(0.375, T), 1)}%')
     claim('mức 37,5% chọn được trên thanh trượt', 37.5 % 2.5 == 0)
+    # Lời kép ≈ lời trung bình − σ²/2: mỗi ván lời +0,5f hoặc −0,4f, trung bình 0,05f, độ lệch chuẩn 0,45f.
+    def drag(f):
+        return 0.05 * f - (0.45 * f) ** 2 / 2
+    claim('mức Kelly là nghiệm g′(f) = 0', abs(0.25 / up(0.25) - 0.2 / dn(0.25)) < 1e-12)
+    near('g(50%) = ½ln(1,25 × 0,8) = 0', growth(0.5), 0.0, 1e-12)
+    need('lời kép ≈ lời trung bình − σ²/2, đặt cả tài sản',
+         f'5% − 0,45²/2 ≈ {vi(100 * drag(1), 1)}%, sát con số thật {vi(100 * (math.exp(growth(1)) - 1), 2)}%')
+    near('xấp xỉ σ²/2 ở f = 100% sát con số thật', drag(1), math.exp(growth(1)) - 1, 0.001)
+    need('lời kép ≈ lời trung bình − σ²/2, đặt 25%', f'1,25% − 0,1125²/2 ≈ {vi(100 * drag(0.25), 2)}%')
+    claim('xấp xỉ ở f = 25% khớp con số mô hình tới hai chữ số', vi(100 * drag(0.25), 2) == vi(100 * g25, 2),
+          f'{100 * drag(0.25):.4f} so với {100 * g25:.4f}')
 
     # ── Lỗ và lãi cần để hoà (hình) ────────────────────────────────────────────
     for l, txt in ((0.1, '11,1%'), (0.3, '42,9%'), (0.5, '100%'), (0.7, '233%'), (0.8, '400%'), (0.9, '900%')):
@@ -381,6 +392,7 @@ def phan_B():
         r = (lo + hi) / 2
         lo, hi = (r, hi) if sum(pay / (1 + r) ** k for k in range(1, 13)) > 1 else (lo, r)
     need_t('lãi phẳng 1,5%/tháng quy ra dư nợ thật', f'khoảng {vi(100 * r, 2)}%/tháng trên số còn nợ thật, tức khoảng {vi(1200 * r, 1)}%/năm', r)
+    need_t('lãi phẳng quy ra năm, có lãi chồng lãi', f'tính lãi chồng lãi theo tháng thì {vi(100 * ((1 + r) ** 12 - 1), 1)}%/năm')
 
     # ── Thu nhập (s-thunhap): 7,4% của giá trị hôm nay ở lab-hk ────────────────
     need('7,4% thu nhập cả đời', f'phần chênh ấy đáng khoảng <b>{vi(round(0.074 * hc, -1), 0)} triệu đồng hôm nay</b>',
@@ -455,8 +467,13 @@ def phan_B():
     need('nhũ ảnh trong bài', 'cứ 1.000 phụ nữ đi chụp thì có thêm 1 người không chết vì bệnh này')
     ls, ll = 0.7 ** 3, 0.5 ** 3
     post = 0.05 * ls / (0.05 * ls + 0.95 * ll)
+    o0 = 0.05 / 0.95
     need('Bayes: quỹ thắng ba năm, sức nặng bằng chứng và xác suất sau',
-         f'Sức nặng bằng chứng của ba năm thắng liên tiếp là {vi(ls / ll, 2)}: xác suất giỏi tăng từ 5% lên <b>{vi(100 * post, 1)}%</b>', post)
+         f'Sức nặng bằng chứng của ba năm thắng liên tiếp là (0,7 ÷ 0,5)³ ≈ {vi(ls / ll, 2)} (giả định các năm không '
+         f'ảnh hưởng nhau); tỉ số cược từ 5 : 95 ≈ {vi(o0, 3)} lên {vi(o0, 3)} × {vi(ls / ll, 2)} ≈ '
+         f'{vi(o0 * ls / ll, 3)}, tức xác suất giỏi tăng từ 5% lên <b>{vi(100 * post, 1)}%</b>', post)
+    near('Bayes dạng tỉ số cược khớp công thức đầy đủ', o0 * ls / ll / (1 + o0 * ls / ll), post, 1e-12)
+    need('Bayes: ví dụ tỉ số cược', '(80% là 4 ăn 1)')
 
     def trail(p0, a, b, seq):
         odds = p0 / (1 - p0)
@@ -492,7 +509,11 @@ def phan_B():
     # ── Quyền chọn (s-quyenchon) ─────────────────────────────────────────────
     need('mười phép thử, ít nhất một lần trúng', f'<b>{vi(100 * (1 - 0.9 ** 10), 1)}%</b> cơ hội trúng ít nhất một lần')
     claim('mỗi phép thử có kỳ vọng dương', 0.1 * 300 - 10 > 0)
+    need('kỳ vọng mỗi phép thử trong bài', f'kỳ vọng mỗi lần 10% × 300 − 10 = +{vi(0.1 * 300 - 10, 0)} triệu')
+    need('trượt cả mười', f'vẫn còn {vi(100 * 0.9 ** 10, 1)}% cơ hội trượt cả mười')
     need('chi phí mười phép thử', 'Mười thử nghiệm độc lập tốn 100 triệu')
+    # Công thức đa dạng hoá viết trong bài, cùng công thức bảng và lab-div dùng.
+    need_t('lab-div: công thức trong bài', 'σ·√(ρ + (1 − ρ)/N); N càng lớn, con số càng về σ·√ρ')
 
     # ── Các con số dẫn từ nguồn ở các mục mới (giữ khỏi bị sửa lệch) ─────────────
     need('Atanasov và cộng sự 2020 (s-bayes)', 'người sửa từng bước nhỏ thường đoán đúng hơn (Atanasov và cộng sự, 2020)')
