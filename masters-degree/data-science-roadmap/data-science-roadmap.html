@@ -3403,7 +3403,8 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
     <tr><td>6–8 · Train, tune, đánh giá</td><td>~15%</td><td><b>~80%</b></td></tr>
     <tr><td>9–10 · Đưa lên chạy &amp; giám sát</td><td>~15%</td><td>~5%</td></tr>
   </table>
-  <p>Cảm giác “tôi biết lý thuyết nhưng không biết bắt đầu từ đâu” đến từ đúng khoảng lệch này. Bạn học được phần 15%, còn phần 60% thì chưa ai chỉ. Chặng 3 và 4 của trang này dành để lấp chỗ đó.</p>
+  <p>Cảm giác “tôi biết lý thuyết nhưng không biết bắt đầu từ đâu” đến từ đúng khoảng lệch này. Bạn học được phần 15%, còn phần 60% thì chưa ai chỉ. Chặng 2 (vòng đời dữ liệu) và chặng 4 (feature engineering) của trang này dành để lấp chỗ đó.</p>
+  <p class="wb-help"><span class="ds-claim ds-claim--judgment">nhận định</span> Các phần trăm trong bảng là ước lượng làm tròn của người viết, không phải số đo của một khảo sát. Các khảo sát nghề cho con số khác nhau, nhưng cùng một chiều: phần lấy và chuẩn bị dữ liệu ngốn nhiều thời gian nhất.</p>
 
   <h2>Vòng lặp, không phải đường thẳng</h2>
   <p>Sơ đồ trên vẽ thẳng cho dễ nhìn, nhưng thực tế bạn sẽ đi ngược liên tục: đánh giá ở bước 8 thấy kết quả tệ → quay về bước 5 nghĩ feature mới → thấy thiếu dữ liệu → quay về bước 2. <b>Một dự án bình thường đi vòng 5–15 lần.</b> Đó không phải là làm sai; đó là công việc.</p>
@@ -3424,11 +3425,11 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
     <thead><tr><th>Họ</th><th>Đầu ra</th><th>Baseline bắt buộc</th><th>Chia tập</th><th>Metric chính</th></tr></thead>
     <tbody>
       <tr><td><b>Phân loại nhị phân</b></td><td>Xác suất thuộc lớp dương</td><td>Đoán theo tỉ lệ nền + một luật thủ công</td><td>Theo thời gian nếu có thời gian, còn lại stratified</td><td>Lệch nhãn → PR-AUC; cân bằng → ROC-AUC</td></tr>
-      <tr><td><b>Multiclass / multilabel</b></td><td>Một lớp trong N / một tập lớp</td><td>Luôn đoán lớp phổ biến nhất</td><td>Stratified theo lớp hiếm nhất</td><td>macro-F1 (multiclass) · micro/macro-F1, mAP (multilabel)</td></tr>
-      <tr><td><b>Hồi quy</b></td><td>Một số thực</td><td>Luôn đoán trung vị</td><td>Như phân loại</td><td>MAE nếu có ngoại lai · RMSE nếu sai số lớn đắt hơn</td></tr>
+      <tr><td><b>Multiclass / multilabel</b></td><td>Một lớp trong N / một tập lớp</td><td>Luôn đoán lớp phổ biến nhất</td><td>Stratified theo nhãn, để lớp hiếm nhất có mặt ở mọi tập</td><td>macro-F1 (multiclass) · micro/macro-F1, mAP (multilabel)</td></tr>
+      <tr><td><b>Hồi quy</b></td><td>Một số thực</td><td>Luôn đoán trung vị (tối ưu cho MAE) hoặc trung bình (tối ưu cho RMSE)</td><td>Theo thời gian nếu có thời gian, còn lại ngẫu nhiên</td><td>MAE nếu có ngoại lai · RMSE nếu sai số lớn đắt hơn</td></tr>
       <tr><td><b>Forecasting</b></td><td>Chuỗi giá trị tương lai</td><td>Naive &amp; seasonal-naive</td><td><b>Chỉ theo thời gian</b> · backtest walk-forward</td><td>MASE (so với naive) · MAE · sMAPE</td></tr>
       <tr><td><b>Không giám sát</b></td><td>Cụm / điểm bất thường / chiều rút gọn</td><td>Ngẫu nhiên, hoặc một luật ngưỡng</td><td>Theo thời gian nếu có drift</td><td>Không có metric “thật” — đánh giá gián tiếp</td></tr>
-      <tr><td><b>NLP</b></td><td>Nhãn / chuỗi / vector</td><td><b>TF-IDF + logistic regression</b></td><td>Theo thời gian hoặc theo tác giả/nguồn</td><td>Theo tác vụ: F1, exact-match, ROUGE, độ chính xác con người</td></tr>
+      <tr><td><b>NLP</b></td><td>Nhãn / chuỗi / vector</td><td><b>TF-IDF + logistic regression</b></td><td>Theo thời gian hoặc theo tác giả/nguồn</td><td>Theo tác vụ: F1, exact-match, ROUGE, người chấm</td></tr>
       <tr><td><b>Computer vision</b></td><td>Nhãn / hộp / mặt nạ</td><td>Mô hình pretrained đóng băng + linear probe</td><td>Theo nhóm ảnh (cùng bệnh nhân, cùng camera)</td><td>Accuracy/F1 · mAP (detection) · IoU/Dice (segmentation)</td></tr>
       <tr><td><b>Gợi ý &amp; xếp hạng</b></td><td>Danh sách xếp hạng</td><td><b>Popularity</b> (mục phổ biến nhất)</td><td>Theo thời gian (leave-last-out), không random</td><td>Recall@K, NDCG@K, MAP@K + đo online</td></tr>
       <tr><td><b>Nhân quả / thí nghiệm</b></td><td>Ước lượng tác động khi <i>can thiệp</i></td><td>So sánh trước–sau (và biết vì sao nó sai)</td><td>Không phải train/test — là nhóm treatment/control</td><td>Chênh lệch trung bình + khoảng tin cậy</td></tr>
@@ -3478,7 +3479,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
     <tr><td>“Train tốt, test tệ”</td><td>7</td><td>Overfitting → giảm độ phức tạp, thêm regularization</td></tr>
     <tr><td>“Kết quả đẹp không tưởng (AUC 0,999)”</td><td>2/5</td><td><b>Gần như chắc chắn là data leakage.</b> Đi tìm ngay → bài <b>Data leakage</b></td></tr>
     <tr><td>“Chạy lại ra kết quả khác nhau”</td><td>6</td><td>Chưa cố định <code>random_state</code> / seed</td></tr>
-    <tr><td>“Loss = nan sau vài bước”</td><td>7</td><td>Learning rate quá lớn → <button class="ds-math" data-math="gdupdate">xem bằng hình</button></td></tr>
+    <tr><td>“Loss = nan sau vài bước”</td><td>7</td><td>Learning rate quá lớn → <button class="ds-math" data-math="gdupdate">xem bằng hình</button>. Nếu giảm learning rate mà vẫn <code>nan</code>: tìm NaN/vô cực trong input (<code>np.isfinite(X).all()</code>) hoặc một phép <code>log(0)</code>, chia cho 0</td></tr>
     <tr><td>“Đúng trên máy, sai khi lên production”</td><td>9</td><td>Feature tính khác nhau ở hai nơi (training/serving skew) → dùng <code>Pipeline</code> chung</td></tr>
   </table>
 
@@ -3515,7 +3516,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
 
 <template data-node="s-plan8w">
   <p>Đây là <b>lộ trình chính</b> của trang này: <b><span data-stat="total-hrs">—</span> giờ</b> chia trên 8 tuần (phần <span class="wb-cap wb-cap--solid wb-cap--sm">Bắt buộc</span> ~<span data-stat="core-week">—</span> giờ/tuần). <b>Con số này giả định bạn đã biết lập trình;</b> nếu Python là ngôn ngữ đầu tiên thì ≈ <b><span data-stat="total-beg">—</span> giờ</b>, nên với người từ số 0 đây thực chất là lộ trình <span data-stat="total-beg-weeks">—</span> tuần ở nhịp 8–10 giờ/tuần — <b>“6–8 tuần” không dành cho người bắt đầu từ con số 0 về lập trình.</b> Nó đi hết chiều rộng của chín họ bài toán và chiều sâu của một product demo end-to-end có bằng chứng; luận văn hoàn chỉnh và bảo vệ thật vẫn nằm ngoài ngân sách này. Bản 14 ngày ở bài sau là phiên bản nén của chính lộ trình.</p>
-  <p class="wb-help"><b>Các tuần không bằng nhau, và bảng bên dưới không giả vờ là bằng nhau.</b> Tuần 1, 2 và 7 nặng nhất (~14–16 giờ, người từ số 0 nhân thêm) vì công cụ/toán dồn lên đầu và tuần 7 gồm chín họ bài toán + hai mini-project. Nếu con số đó bất khả thi với bạn, giãn tuần nặng thành hai tuần và chấp nhận lộ trình dài hơn; đừng nén bằng cách bỏ phần thực hành, vì phần đó mới là chỗ kiến thức bám lại.</p>
+  <p class="wb-help"><b>Các tuần không bằng nhau, và bảng bên dưới không giả vờ là bằng nhau.</b> Tuần 1, 7 và 8 nặng nhất (~14–16 giờ, người từ số 0 nhân thêm): tuần 1 dồn cả bộ công cụ, tuần 7 gồm chín họ bài toán + hai mini-project, tuần 8 gồm cả chặng luận văn lẫn các bài tra cứu. Nếu con số đó bất khả thi với bạn, giãn tuần nặng thành hai tuần và chấp nhận lộ trình dài hơn; đừng nén bằng cách bỏ phần thực hành, vì phần đó mới là chỗ kiến thức bám lại.</p>
 
   <div class="wb-alert wb-alert--info">
     <span class="wb-alert__icon">i</span>
@@ -3549,7 +3550,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   <p>Hai chỗ khác cũng cố định, và đây là những chỗ <b>không được đảo</b>:</p>
   <ul>
     <li><b>Chia tập (tuần 2) phải xong trước feature engineering (tuần 3).</b> Làm ngược là công thức chuẩn để rò rỉ dữ liệu.</li>
-    <li><b>Đo lường (tuần 4) phải xong trước tuning.</b> Tune theo một chỉ số sai thì càng tune càng tệ, mà bảng kết quả vẫn đẹp lên.</li>
+    <li><b>Đo lường (tuần 3) phải xong trước tuning (tuần 4).</b> Tune theo một chỉ số sai thì càng tune càng tệ, mà bảng kết quả vẫn đẹp lên.</li>
   </ul>
   <div data-viz="plan8dep"></div>
   <p>Ngoài ba ràng buộc đó, bạn đảo được. Nếu phải nộp đề cương sớm, kéo tuần 8 lên trước tuần 6 — bạn cần biết mình sẽ chứng minh cái gì trước khi biết cách làm.</p>
@@ -3639,7 +3640,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
 
   <h2>Câu 3 là câu quan trọng nhất</h2>
   <p>"Tại thời điểm dự đoán, tôi thực sự có gì trong tay?" — bỏ qua câu này là cách sinh ra <b>data leakage</b>, và leakage là thứ giết luận văn nhiều nhất.</p>
-  <p>Ví dụ có thật và rất dễ mắc: bảng dữ liệu có cột <code>trang_thai_xu_ly</code> với các giá trị "đã hoàn tiền", "đã đóng", "đang điều tra". Cột này tương quan cực mạnh với nhãn gian lận. Mô hình đạt AUC 0,998. Nhưng cột đó chỉ được điền <b>sau khi</b> có kết luận — nghĩa là lúc quẹt thẻ nó rỗng. Mô hình vô dụng, và bạn chỉ phát hiện ra khi đưa lên chạy thật.</p>
+  <p>Ví dụ có thật và rất dễ mắc: bảng dữ liệu có cột <code>trang_thai_xu_ly</code> với các giá trị "đã hoàn tiền", "đã đóng", "đang điều tra". Cột này tương quan cực mạnh với nhãn gian lận. Mô hình đạt AUC 0,998 (AUC là điểm xếp hạng từ 0,5 = đoán mò tới 1 = hoàn hảo; bài <b>Đo lường</b> ở chặng 5 dạy kỹ). Nhưng cột đó chỉ được điền <b>sau khi</b> có kết luận — nghĩa là lúc quẹt thẻ nó rỗng. Mô hình vô dụng, và bạn chỉ phát hiện ra khi đưa lên chạy thật.</p>
   <p><b>Bài kiểm tra một câu:</b> với mỗi cột, hỏi <i>"cột này được ghi vào lúc nào?"</i>. Nếu câu trả lời là "sau sự kiện" thì bỏ.</p>
 
   <h2>Chọn đúng loại bài toán</h2>
@@ -3653,7 +3654,7 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
   </table>
   <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Gợi ý cho luận văn</p>
-    <p class="wb-alert__msg">Đóng khung bài toán gian lận thành <b>ranking</b> thay vì phân loại thường thực tế hơn và cũng dễ có đóng góp mới hơn: đội xác minh chỉ xử lý được N ca mỗi ngày, nên câu hỏi thật là "N ca nào?" chứ không phải "ca nào là gian lận?". Chỉ số đi kèm là precision@k và recall@k — và rất ít luận văn Việt Nam khai thác góc này.</p>
+    <p class="wb-alert__msg">Đóng khung bài toán gian lận thành <b>ranking</b> thay vì phân loại thường thực tế hơn và cũng dễ có đóng góp mới hơn: đội xác minh chỉ xử lý được N ca mỗi ngày, nên câu hỏi thật là "N ca nào?" chứ không phải "ca nào là gian lận?". Chỉ số đi kèm là precision@k (trong k ca đứng đầu danh sách, bao nhiêu phần là gian lận thật) và recall@k (k ca đó bắt được bao nhiêu phần tổng số vụ gian lận). Đây cũng là góc ít được khai thác hơn so với phân loại thường.</p>
   </div></div>
 
   <h2>Viết ra một trang trước khi code</h2>
@@ -3702,10 +3703,12 @@ tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
 
   <h2>Ghim phiên bản — việc quan trọng nhất của bài này</h2>
   <p>Dù chạy ở đâu, thứ bạn <b>phải</b> có là một <code>requirements.txt</code> đã chốt phiên bản. Đây không phải chi tiết vặt: nó là ranh giới giữa “kết quả tái lập được” và “con số của tôi khác con số của người phản biện mà không ai hiểu vì sao”.</p>
-  <div class="ds-code">pip install pandas numpy scikit-learn matplotlib seaborn lightgbm shap
-pip freeze &gt; requirements.txt        <i># khoá lại phiên bản — bắt buộc cho luận văn</i>
+  <div class="ds-code">pip install pandas numpy pyarrow scikit-learn matplotlib seaborn lightgbm shap
+<i># khoá phiên bản của đúng những thư viện bạn import — bắt buộc cho luận văn</i>
+pip freeze | grep -iE '^(pandas|numpy|pyarrow|scikit-learn|matplotlib|seaborn|lightgbm|shap)==' &gt; requirements.txt
 git add requirements.txt &amp;&amp; git commit -m "chot phien ban thu vien"</div>
   <p class="ds-codecap">Colab / Codespaces / terminal — chạy một lần rồi commit</p>
+  <p>Vì sao lọc mà không <code>pip freeze &gt; requirements.txt</code> trần: trên Colab lệnh đó in ra vài trăm gói của riêng máy Colab, có dòng trỏ tới file chỉ tồn tại trên máy đó, nên <code>pip install -r</code> ở Codespaces hay trong Docker sẽ hỏng. Ghim thư viện bạn dùng trực tiếp là đủ để con số tái lập; gói phụ thuộc thì pip tự giải. <code>pyarrow</code> có trong danh sách vì pandas cần nó để ghi file <code>.parquet</code>.</p>
   <p>Từ đó về sau, <b>ô đầu tiên của mọi notebook</b> là <code>!pip install -q -r requirements.txt</code>. Colab nâng cấp thư viện của họ bất cứ lúc nào mà không báo — dòng đó là thứ chặn việc kết quả của bạn trôi theo.</p>
 
   <h3>Nếu bạn làm trên máy: thêm <code>venv</code></h3>
@@ -3758,7 +3761,7 @@ git diff                 <i># xem mình vừa đổi gì</i></div>
 
 <template data-node="t-online">
   <p>Máy yếu <b>không</b> là rào cản cho bài toán này. Không phải vì bạn sẽ chịu khổ, mà vì <b>mọi mắt xích của dự án đều có bản chạy trong tab trình duyệt</b> — kể cả mắt xích ai cũng tưởng bắt buộc phải có máy khoẻ, là đóng gói Docker.</p>
-  <p>Bài này dựng nguyên một đường đi không đụng tới máy bạn quá việc mở Chrome. Đọc trước bài Colab, vì Colab chỉ là <i>một</i> mắt xích trong đường đi này.</p>
+  <p>Bài này dựng nguyên một đường đi không đụng tới máy bạn quá việc mở Chrome. Colab chỉ là <i>một</i> mắt xích trong đường đi này; bài <b>Google Colab</b> ngay sau đi sâu vào riêng nó, nhưng lịch học để bài đó tới lúc cần GPU — hôm nay ô code đầu tiên dưới đây là đủ.</p>
 
   <h2>Mười bước, làm ở đâu trên trình duyệt</h2>
   <table>
@@ -3773,7 +3776,7 @@ git diff                 <i># xem mình vừa đổi gì</i></div>
       <tr><td>7 · Huấn luyện &amp; tinh chỉnh</td><td>Colab (bật GPU nếu cần), W&amp;B để ghi kết quả</td><td>Không gì cả</td></tr>
       <tr><td>8 · Đánh giá &amp; chọn ngưỡng</td><td>Colab</td><td>Không gì cả</td></tr>
       <tr><td>9 · Đưa lên chạy thật</td><td>GitHub Codespaces dựng &amp; chạy thử Docker · Streamlit Community Cloud cho bản demo</td><td>Không gì cả</td></tr>
-      <tr><td>10 · Giám sát</td><td>Colab chạy định kỳ, hoặc GitHub Actions theo lịch</td><td>Không gì cả</td></tr>
+      <tr><td>10 · Giám sát</td><td>Colab chạy tay theo lịch của bạn, hoặc GitHub Actions chạy tự động theo lịch</td><td>Không gì cả</td></tr>
       <tr><td>Viết luận văn</td><td>Overleaf + Zotero</td><td>Gõ chữ</td></tr>
     </tbody>
   </table>
@@ -3804,7 +3807,7 @@ git diff                 <i># xem mình vừa đổi gì</i></div>
 %cd fraud-detection
 !pip install -q -r requirements.txt
 %load_ext autoreload
-%autoreload 2                     <i># sửa src/ ở tab khác là thấy ngay, không cần khởi động lại</i>
+%autoreload 2                     <i># sau mỗi !git pull, hàm trong src/ tự nạp lại — không cần khởi động lại</i>
 
 <b>from</b> google.colab <b>import</b> drive
 drive.mount(<b>'/content/drive'</b>)
@@ -3819,12 +3822,16 @@ DATA = <b>'/content/drive/MyDrive/fraud/data'</b></div>
 docker run -p 8000:8000 fraud-api
 <i># Codespaces tự chuyển tiếp cổng 8000 ra một URL tạm — bấm vào là mở /docs</i></div>
   <div class="ds-codecap">terminal trong Codespaces — chạy trên máy của GitHub, không phải máy bạn</div>
-  <div class="ds-code"><i># Dockerfile</i>
+  <div class="ds-code"><i># Dockerfile — bản rút gọn; bản đầy đủ ở bài Đóng gói (chặng 6)</i>
 FROM python:3.11-slim
+<i># LightGBM cần OpenMP: thiếu dòng này thì build xong vẫn chết lúc import</i>
+RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends libgomp1 \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
+COPY src/ ./src/
+COPY models/ ./models/
 EXPOSE 8000
 CMD ["uvicorn", "src.serve:app", "--host", "0.0.0.0", "--port", "8000"]</div>
   <div class="ds-codecap">Dockerfile — commit vào repo, đây là bằng chứng tái lập được</div>
@@ -3914,7 +3921,7 @@ print(torch.cuda.is_available(), torch.cuda.get_device_name(0) <b>if</b> torch.c
 %cd fraud-detection
 !pip install -q -r requirements.txt
 
-<i># 2. sửa file trong src/ là notebook thấy ngay, không phải khởi động lại</i>
+<i># 2. sau mỗi !git pull, hàm trong src/ tự nạp lại, không phải khởi động lại</i>
 %load_ext autoreload
 %autoreload 2
 
@@ -3928,7 +3935,7 @@ DATA = '/content/drive/MyDrive/fraud/data'
 <b>from</b> src.pipeline <b>import</b> build_pipeline
 <b>from</b> src.features <b>import</b> add_derived</div>
   <p class="ds-codecap">ô đầu tiên của mọi notebook Colab</p>
-  <p>Hai dòng <code>autoreload</code> là thứ khiến quy trình này chịu được: bạn sửa <code>src/features.py</code> bằng trình soạn thảo, chạy lại ô trong Colab, và nó dùng bản mới ngay. Không có nó, bạn phải khởi động lại kernel sau mỗi lần sửa và sẽ bỏ cuộc sau 20 phút.</p>
+  <p>Hai dòng <code>autoreload</code> là thứ khiến quy trình này chịu được: bạn sửa <code>src/features.py</code> ở github.dev rồi commit, chạy <code>!git pull</code> trong Colab, chạy lại ô — và nó dùng bản mới ngay. (Máy ảo Colab giữ bản clone riêng của nó: sửa trên GitHub mà quên <code>git pull</code> thì Colab vẫn chạy bản cũ.) Không có nó, bạn phải khởi động lại kernel sau mỗi lần sửa và sẽ bỏ cuộc sau 20 phút.</p>
 
   <h3>Lấy dữ liệu vào Colab — bốn cách, chọn theo tình huống</h3>
   <div class="ds-code"><i># a) từ Kaggle — dùng Secrets, KHÔNG dán token vào ô code</i>
@@ -3976,7 +3983,7 @@ files.upload()</div>
   <div class="wb-alert wb-alert--warning">
     <span class="wb-alert__icon">!</span>
     <div class="wb-alert__body"><p class="wb-alert__title">Cái bẫy tái lập của Colab — ảnh hưởng trực tiếp tới luận văn</p>
-      <p class="wb-alert__msg">Google nâng cấp thư viện trên Colab bất cứ lúc nào, <b>không báo bạn</b>. Con số bạn chạy hôm nay và con số người phản biện chạy tháng sau có thể khác nhau, và bạn sẽ không hiểu vì sao. Hai biện pháp, làm cả hai: (1) ô đầu tiên luôn có <code>!pip install -q -r requirements.txt</code> với phiên bản đã chốt; (2) in phiên bản ra ngay trong notebook — <code>import sklearn, lightgbm; print(sklearn.__version__, lightgbm.__version__)</code> — để bản in ra kèm luận văn có bằng chứng.</p></div>
+      <p class="wb-alert__msg">Google nâng cấp thư viện trên Colab bất cứ lúc nào, <b>không báo bạn</b>. Con số bạn chạy hôm nay và con số người phản biện chạy tháng sau có thể khác nhau, và bạn sẽ không hiểu vì sao. Hai biện pháp, làm cả hai: (1) ô đầu tiên luôn có <code>!pip install -q -r requirements.txt</code> với phiên bản đã chốt; (2) in phiên bản ra ngay trong notebook — <code>import sklearn, lightgbm; print(sklearn.__version__, lightgbm.__version__)</code> — để bản in ra kèm luận văn có bằng chứng. Nếu ô cài báo phải khởi động lại phiên (hay gặp khi đổi phiên bản numpy hoặc pandas mà Colab đã nạp sẵn), bấm <i>Restart session</i> rồi chạy lại từ đầu; con số phiên bản in ra ở (2) cho bạn biết bản mới đã vào chưa.</p></div>
   </div>
 
   <h2>Việc cần làm sau bài này — 15 phút</h2>
@@ -3987,7 +3994,7 @@ files.upload()</div>
     <li>Chạy <code>drive.mount(...)</code> một lần cho quen giao diện cấp quyền.</li>
     <li>Tải <code>creditcard.csv</code> lên Drive vào thư mục <code>fraud/data/</code>. Từ giờ mọi phiên Colab chỉ mất 5 giây để có dữ liệu.</li>
   </ol>
-  <p>Làm bốn bước này hôm nay, để tới ngày 10 khi cần GPU thì bạn <b>không phải học công cụ mới trong lúc đang gấp</b>.</p>
+  <p>Làm bốn bước này ngay khi đọc bài, để lúc cần GPU bạn <b>không phải học công cụ mới trong lúc đang gấp</b>.</p>
 
   <p class="ds-more"><button class="ds-aside" data-aside="cmp-run">So sánh Colab với các chỗ chạy khác</button><button class="ds-aside" data-aside="cmp-storage">So sánh chỗ để dữ liệu</button></p>
 </template>
@@ -4003,7 +4010,7 @@ files.upload()</div>
     <tbody>
       <tr><td>“Viết cho tôi một hệ thống phát hiện gian lận”</td><td>“Viết hàm <code>add_velocity(df)</code> nhận DataFrame có cột <code>card_id</code>, <code>ts</code>, <code>amount</code>, trả về DataFrame gốc kèm <code>n_tx_1h</code> và <code>sum_amt_24h</code>, cửa sổ <b>không</b> gồm dòng hiện tại”</td><td>Có ràng buộc kiểm được, và bạn biết trước kết quả đúng trông thế nào</td></tr>
       <tr><td>“Cải thiện mô hình của tôi”</td><td>“Đây là <code>train.py</code>. Đề xuất <b>ba</b> thay đổi có thể tăng PR-AUC, xếp theo tỉ lệ hiệu quả/công sức, và với mỗi cái nói rõ nó đánh đổi cái gì”</td><td>Buộc nó xếp hạng và nêu đánh đổi, thay vì đổ ra một danh sách</td></tr>
-      <tr><td>“Sửa lỗi này”</td><td>“Lỗi này là <code>cannot reindex from a duplicate axis</code> ở dòng 34. Giải thích <b>vì sao</b> nó xảy ra với dữ liệu của tôi trước, rồi mới đề xuất sửa”</td><td>Bắt nó chẩn đoán trước khi kê đơn — nếu chẩn đoán sai, bạn phát hiện ngay</td></tr>
+      <tr><td>“Sửa lỗi này”</td><td>“Lỗi này là <code>cannot reindex on an axis with duplicate labels</code> ở dòng 34. Giải thích <b>vì sao</b> nó xảy ra với dữ liệu của tôi trước, rồi mới đề xuất sửa”</td><td>Bắt nó chẩn đoán trước khi kê đơn — nếu chẩn đoán sai, bạn phát hiện ngay</td></tr>
     </tbody>
   </table></div>
 
@@ -4020,30 +4027,36 @@ files.upload()</div>
   <p>Đây là ranh giới thực sự: <b>không tin bất kỳ con số nào sinh ra từ code bạn chưa test.</b> Không cần một bộ test đầy đủ — cần đúng bốn loại assert dưới đây, và AI viết chúng cho bạn trong một phút nếu bạn yêu cầu.</p>
   <div class="ds-code"><b>import</b> pandas <b>as</b> pd, numpy <b>as</b> np
 <b>from</b> src.features <b>import</b> add_derived
-<b>from</b> src.history  <b>import</b> add_velocity
+<b>from</b> src.history  <b>import</b> add_history
+
+<b>def</b> make_df(hours):                     <i># dữ liệu giả, đủ các cột thô mà add_derived đòi</i>
+    <b>return</b> pd.DataFrame({
+        "timestamp": [f"2025-03-14T{h:02d}:00:00" <b>for</b> h <b>in</b> hours],
+        "card_id": "C1", "amount": 100_000.0,
+        "merchant_type": "grocery", "city": "HN", "device_type": "mobile"})
 
 <i># 1. HÌNH DẠNG — số dòng không đổi, cột mới có mặt</i>
-<b>def</b> test_shape_preserved(sample_df):
-    out = add_derived(sample_df)
-    <b>assert</b> len(out) == len(sample_df)
+<b>def</b> test_shape_preserved():
+    df  = make_df([8, 9, 10])
+    out = add_derived(df)
+    <b>assert</b> len(out) == len(df)
     <b>assert</b> {"hour_sin", "hour_cos"} &lt;= <b>set</b>(out.columns)
 
 <i># 2. MỘT DÒNG — thứ phá API mà notebook không bao giờ phát hiện</i>
-<b>def</b> test_single_row(sample_df):
-    <b>assert</b> add_derived(sample_df.head(1)).shape[0] == 1
+<b>def</b> test_single_row():
+    <b>assert</b> add_derived(make_df([10])).shape[0] == 1
 
 <i># 3. GIÁ TRỊ BIẾT TRƯỚC — kiểm bằng toán, không kiểm bằng mắt</i>
 <b>def</b> test_cyclic_encoding_is_correct():
-    df  = pd.DataFrame({"hour": [0, 6, 12, 18]})
-    out = add_derived(df)
+    out = add_derived(make_df([0, 6, 12, 18]))
     np.testing.assert_allclose(out["hour_sin"], [0, 1, 0, -1], atol=1e-9)
 
-<i># 4. KHÔNG RÒ RỈ — dòng đầu của mỗi thẻ chưa có quá khứ, nên phải là 0 (hoặc NaN)</i>
-<b>def</b> test_no_lookahead(sample_df):
-    out   = add_velocity(sample_df)
-    first = out.sort_values("ts").groupby("card_id").head(1)
-    <b>assert</b> first["n_tx_1h"].fillna(0).eq(0).all()</div>
-  <p class="ds-codecap">tests/test_features.py — bốn loại test đáng có ngay từ ngày 2</p>
+<i># 4. KHÔNG RÒ RỈ — giao dịch đầu của mỗi thẻ chưa có quá khứ, nên phải đếm được 0</i>
+<b>def</b> test_no_lookahead():
+    out   = add_history(make_df([8, 9, 10]))
+    first = out.sort_values("timestamp").groupby("card_id").head(1)
+    <b>assert</b> first["n_tx_1h"].eq(0).all()</div>
+  <p class="ds-codecap">tests/test_features.py — bốn loại test; hai hàm được test là <code>add_derived</code> và <code>add_history</code> bạn sẽ viết ở chặng 4, còn khuôn test thì dùng ngay cho hàm đầu tiên của bạn</p>
   <p>Test số 3 và số 4 là hai cái đáng giá nhất. Test 3 vì nó kiểm <i>đúng đắn toán học</i> chứ không chỉ kiểm “chạy không lỗi”. Test 4 vì rò rỉ là lỗi duy nhất trong danh sách này <b>làm điểm số của bạn đẹp lên</b> — nên nó không bao giờ tự lộ ra.</p>
   <p class="wb-help">Cách dùng AI hiệu quả nhất ở đây là đảo chiều: yêu cầu nó <b>viết test trước</b>, bạn đọc test và xác nhận đó đúng là hành vi bạn muốn, rồi mới yêu cầu viết code. Bạn kiểm 10 dòng test dễ hơn nhiều so với kiểm 80 dòng code.</p>
 
@@ -4111,7 +4124,7 @@ df.describe()     <i># min/max/mean/std/tứ phân vị cho cột số</i>
 df.isna().sum()   <i># mỗi cột thiếu bao nhiêu giá trị</i>
 df["Class"].value_counts()              <i># đếm theo nhãn</i>
 df["Class"].value_counts(normalize=<b>True</b>)  <i># ...theo tỉ lệ → 0.00173 = 0,173% gian lận</i></div>
-  <p>Bốn dòng đầu là nghi thức bắt buộc mỗi khi mở một bộ dữ liệu mới. <code>df.info()</code> đặc biệt quan trọng: nó cho biết cột ngày tháng của bạn đang là <code>object</code> (tức là chuỗi text) chứ chưa phải ngày tháng thật — lỗi phổ biến nhất tuần đầu.</p>
+  <p>Bốn dòng đầu là nghi thức bắt buộc mỗi khi mở một bộ dữ liệu mới. <code>df.info()</code> đặc biệt quan trọng: nó cho biết cột ngày tháng của bạn đang là chuỗi text — pandas 2 ghi kiểu <code>object</code>, pandas 3 ghi <code>str</code> — chứ chưa phải <code>datetime64</code> — lỗi phổ biến nhất tuần đầu.</p>
 
   <h2>Nhóm 2 — Chọn và lọc</h2>
   <div class="ds-code">df["Amount"]                    <i># một cột → Series</i>
@@ -4166,7 +4179,8 @@ df["amt_vs_avg"] = df["Amount"] / df["avg_amt"]   <i># ← feature rất mạnh 
   <p><b>Cảnh báo rò rỉ:</b> tính <code>avg_amt</code> trên toàn bộ dữ liệu là sai, vì trung bình đó đã chứa thông tin từ tương lai. Cách đúng nằm ở bài <b>Data leakage</b> và <b>Biến theo thời gian</b>.</p>
 
   <h2>Nhóm 5 — Nối bảng và sắp xếp</h2>
-  <div class="ds-code">df.merge(customers, on="card_id", how="left")   <i># như JOIN trong SQL</i>
+  <div class="ds-code">df.merge(customers, on="card_id", how="left",
+         validate="many_to_one")                <i># như JOIN trong SQL; báo lỗi nếu customers trùng card_id</i>
 pd.concat([df_2023, df_2024])                   <i># chồng dọc</i>
 df.sort_values("ts")                            <i># sắp theo thời gian — làm trước mọi thứ liên quan chuỗi</i>
 df.drop_duplicates(subset=["tx_id"])</div>
@@ -4175,7 +4189,7 @@ df.drop_duplicates(subset=["tx_id"])</div>
     <tr><td><code>left</code></td><td>tất cả dòng bảng trái</td><td><b>Mặc định 95% trường hợp</b> — bạn không muốn mất giao dịch</td></tr>
     <tr><td><code>inner</code></td><td>chỉ dòng khớp cả hai</td><td>khi thiếu thông tin là không dùng được</td></tr>
   </table>
-  <p>Sau mỗi <code>merge</code>, kiểm tra <code>df.shape</code> ngay. Nếu số dòng <b>tăng</b>, bảng bên phải có khoá trùng và bạn vừa nhân bản dữ liệu — lỗi im lặng nguy hiểm nhất trong pandas.</p>
+  <p>Sau mỗi <code>merge</code>, kiểm tra <code>df.shape</code> ngay. Nếu số dòng <b>tăng</b>, bảng bên phải có khoá trùng và bạn vừa nhân bản dữ liệu — lỗi im lặng nguy hiểm nhất trong pandas. <code>validate="many_to_one"</code> biến lỗi im lặng đó thành một <code>MergeError</code> ngay tại dòng merge: nhiều giao dịch được nối với <i>đúng một</i> khách.</p>
 
   <h2>Bài tập bắt buộc trước khi qua bài sau</h2>
   <ol>
@@ -4216,7 +4230,7 @@ LIMIT    100;</div>
   </table>
   <p>Hai hệ quả trực tiếp, giải thích hai lỗi bạn chắc chắn sẽ gặp:</p>
   <ul>
-    <li><b>Không dùng được bí danh của <code>SELECT</code> trong <code>WHERE</code>.</b> <code>WHERE tong_tien &gt; 100</code> báo lỗi “column does not exist”, vì lúc <code>WHERE</code> chạy thì <code>SELECT</code> chưa chạy, cái tên đó chưa tồn tại. Nhưng dùng được trong <code>ORDER BY</code>, vì cái đó chạy sau.</li>
+    <li><b>Không dùng được bí danh của <code>SELECT</code> trong <code>WHERE</code>.</b> <code>WHERE tong_tien &gt; 100</code> báo lỗi “column does not exist”, vì lúc <code>WHERE</code> chạy thì <code>SELECT</code> chưa chạy, cái tên đó chưa tồn tại. Nhưng dùng được trong <code>ORDER BY</code>, vì cái đó chạy sau. (DuckDB và SQLite nới luật này cho bí danh thường, nên lúc tập bằng DuckDB câu viết sai vẫn có thể chạy; viết theo chuẩn để nó chạy được trên Postgres của công ty. Bí danh của một hàm gộp như <code>SUM</code> thì không đâu cho vào <code>WHERE</code>.)</li>
     <li><b><code>WHERE</code> lọc trước khi gom, <code>HAVING</code> lọc sau khi gom.</b> Muốn bỏ giao dịch huỷ → <code>WHERE</code>. Muốn bỏ những thẻ có tổng dưới 1 triệu → <code>HAVING</code>. Đặt nhầm chỗ thì hoặc lỗi, hoặc ra số sai một cách im lặng.</li>
   </ul>
 
@@ -4234,29 +4248,39 @@ LIMIT    100;</div>
   </table>
   <p><code>LEFT JOIN</code> là mặc định đúng trong ~95% trường hợp, cùng lý do như <code>how="left"</code> ở pandas: bạn không muốn âm thầm đánh rơi giao dịch chỉ vì thiếu thông tin khách hàng. Và giống hệt pandas, <b>sau mỗi <code>JOIN</code> hãy đếm lại số dòng</b> — nếu tăng, bảng bên phải có khoá trùng và bạn vừa nhân bản dữ liệu.</p>
 
+  <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
+    <p class="wb-alert__title"><code>NULL</code> của SQL không cư xử như <code>NaN</code> của pandas</p>
+    <p class="wb-alert__msg">So sánh với <code>NULL</code> không ra đúng hay sai mà ra “không biết”, và <code>WHERE</code> chỉ giữ dòng ra <i>đúng</i>. Bốn hệ quả:<br>
+    <b>1.</b> <code>WHERE status &lt;&gt; 'cancelled'</code> bỏ luôn mọi dòng có <code>status</code> là <code>NULL</code>; <code>df[df.status != "cancelled"]</code> thì giữ chúng. Muốn giữ trong SQL: thêm <code>OR status IS NULL</code>.<br>
+    <b>2.</b> <code>WHERE status = NULL</code> không bao giờ đúng với dòng nào. Viết <code>status IS NULL</code>.<br>
+    <b>3.</b> <code>GROUP BY</code> gom mọi <code>NULL</code> thành một nhóm riêng; <code>groupby</code> của pandas bỏ <code>NaN</code> đi, trừ khi bạn ghi <code>dropna=False</code>.<br>
+    <b>4.</b> <code>COUNT(*)</code> đếm mọi dòng, <code>COUNT(cột)</code> bỏ dòng <code>NULL</code>. <code>SUM</code> của một nhóm toàn <code>NULL</code> là <code>NULL</code>, còn <code>.sum()</code> của pandas ra 0.<br>
+    Số dòng hay tổng giữa SQL và pandas lệch nhau thì nghi <code>NULL</code> trước.</p>
+  </div></div>
+
   <h2>Window function — phần đáng giá nhất của bài này</h2>
-  <p>Đây là lý do bài này là <b>bắt buộc</b> chứ không phải “nên biết”. Ở bài <b>Biến theo thời gian</b>, bạn tính <code>hist_mean</code> và <code>n_tx_1h</code> bằng <code>.shift(1).expanding()</code> và <code>.rolling(closed="left")</code>. SQL làm đúng việc đó, và <b>làm ngay trên máy chủ dữ liệu</b> thay vì kéo 50 triệu dòng về máy bạn.</p>
+  <p>Đây là lý do bài này là <b>bắt buộc</b> chứ không phải “nên biết”. Ở bài <b>Biến theo thời gian</b> (chặng 4), bạn sẽ tính <code>hist_mean</code> và <code>n_tx_1h</code> bằng <code>.shift(1).expanding()</code> và <code>.rolling(closed="left")</code>. SQL làm đúng việc đó, và <b>làm ngay trên máy chủ dữ liệu</b> thay vì kéo 50 triệu dòng về máy bạn.</p>
   <div class="ds-code">SELECT
     tx_id, card_id, ts, amount,
 
     <i>-- trung bình lịch sử, KHÔNG gồm dòng hiện tại</i>
     <i>--    = s.shift(1).expanding().mean()</i>
     AVG(amount) OVER (
-        PARTITION BY card_id ORDER BY ts
+        PARTITION BY card_id ORDER BY ts, tx_id     <i>-- tx_id: phân xử hai giao dịch trùng giây</i>
         ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
     ) AS hist_mean,
 
     <i>-- số giao dịch trong 1 giờ ngay trước đó</i>
-    <i>--    = .rolling("1h", closed="left").count()</i>
+    <i>--    = .rolling("1h", closed="left", min_periods=0).count()</i>
     COUNT(*) OVER (
         PARTITION BY card_id ORDER BY ts
         RANGE BETWEEN INTERVAL '1 hour' PRECEDING AND CURRENT ROW
-        EXCLUDE CURRENT ROW
+        EXCLUDE GROUP
     ) AS n_tx_1h,
 
     <i>-- khoảng cách tới giao dịch trước</i>
     EXTRACT(EPOCH FROM ts - LAG(ts) OVER (
-        PARTITION BY card_id ORDER BY ts)) AS secs_since_last
+        PARTITION BY card_id ORDER BY ts, tx_id)) AS secs_since_last
 
 FROM transactions;</div>
   <p class="ds-codecap">point-in-time features, viết thẳng bằng SQL</p>
@@ -4267,8 +4291,8 @@ FROM transactions;</div>
     <tr><td><code>ORDER BY ts</code></td><td>trong mỗi thẻ, sắp theo thời gian</td><td><code>.sort_values("ts")</code></td></tr>
     <tr><td><code>ROWS/RANGE BETWEEN …</code></td><td>cửa sổ nhìn được bao xa</td><td><code>.expanding()</code> / <code>.rolling()</code></td></tr>
   </table>
-  <p><code>ROWS</code> đếm theo <b>số dòng</b>; <code>RANGE</code> đếm theo <b>giá trị của cột <code>ORDER BY</code></b> — nên cửa sổ “1 giờ” phải dùng <code>RANGE</code>. <code>1 PRECEDING</code> và <code>EXCLUDE CURRENT ROW</code> chính là hai cách nói “đừng tính chính nó” — cùng vai trò với <code>.shift(1)</code> và <code>closed="left"</code>.</p>
-  <p class="wb-help">Khác biệt phương ngữ: <code>EXCLUDE CURRENT ROW</code> cần PostgreSQL ≥ 11 hoặc DuckDB. MySQL 8 chưa có — thay bằng <code>… AND CURRENT ROW)</code> rồi trừ đi 1. Cú pháp khoảng thời gian cũng khác nhau (<code>INTERVAL '1 hour'</code> ở Postgres/DuckDB, <code>INTERVAL 1 HOUR</code> ở MySQL).</p>
+  <p><code>ROWS</code> đếm theo <b>số dòng</b>; <code>RANGE</code> đếm theo <b>giá trị của cột <code>ORDER BY</code></b> — nên cửa sổ “1 giờ” phải dùng <code>RANGE</code>. <code>1 PRECEDING</code> và <code>EXCLUDE GROUP</code> chính là hai cách nói “đừng tính chính nó” — cùng vai trò với <code>.shift(1)</code> và <code>closed="left"</code>. <code>EXCLUDE GROUP</code> loại dòng hiện tại <i>cùng mọi dòng trùng đúng mốc <code>ts</code></i> với nó, nên cửa sổ là [t − 1 giờ, t) y như pandas; <code>EXCLUDE CURRENT ROW</code> chỉ loại chính dòng đó và vẫn đếm giao dịch trùng giây. <code>RANGE</code> có khoảng cách chỉ nhận <i>một</i> cột <code>ORDER BY</code>, nên cửa sổ đó không thêm <code>tx_id</code> được.</p>
+  <p class="wb-help">Khác biệt phương ngữ: <code>EXCLUDE GROUP</code> cần PostgreSQL ≥ 11 hoặc DuckDB. MySQL 8 chưa có — thay bằng <code>… AND CURRENT ROW)</code> rồi trừ đi số dòng trùng mốc, <code>COUNT(*) OVER (PARTITION BY card_id, ts)</code>. Cú pháp khoảng thời gian cũng khác nhau (<code>INTERVAL '1 hour'</code> ở Postgres/DuckDB, <code>INTERVAL 1 HOUR</code> ở MySQL).</p>
 
   <div class="wb-alert wb-alert--danger">
     <span class="wb-alert__icon">!</span>
@@ -4282,22 +4306,22 @@ FROM transactions;</div>
   <div class="ds-code"><b>import</b> duckdb
 
 df = duckdb.sql("""
-    SELECT card_id, COUNT(*) AS n, AVG(Amount) AS avg_amt
+    SELECT Class, COUNT(*) AS n, AVG(Amount) AS avg_amt
     FROM 'data/raw/creditcard.csv'      <i>-- đọc thẳng file, không cần nạp trước</i>
-    GROUP BY card_id
-    ORDER BY n DESC
-    LIMIT 10
+    GROUP BY Class
+    ORDER BY Class
 """).df()                               <i># .df() → trả về DataFrame pandas</i></div>
+  <p class="wb-help"><code>creditcard.csv</code> chỉ có <code>Time</code>, <code>V1</code>…<code>V28</code>, <code>Amount</code>, <code>Class</code> — không có cột thẻ, nên ở đây nhóm theo nhãn. Các câu có <code>card_id</code> trong bài chạy trên bộ có mã thẻ ở bài <b>Lấy dữ liệu về</b>.</p>
   <p><b>Đây là cách học SQL nhanh nhất khi bạn chỉ có 2 tuần:</b> không cài Postgres, không tạo user, không import dữ liệu. Trỏ thẳng vào file CSV, gõ truy vấn, nhận DataFrame. DuckDB hỗ trợ đầy đủ window function nên bạn luyện được cả phần quan trọng nhất ở trên.</p>
 
   <h3>Cách 2 · Kết nối cơ sở dữ liệu thật</h3>
   <div class="ds-code"><b>import</b> os, pandas <b>as</b> pd
-<b>from</b> sqlalchemy <b>import</b> create_engine
+<b>from</b> sqlalchemy <b>import</b> create_engine, text
 
 eng = create_engine(os.environ["DB_URL"])   <i># ← KHÔNG viết mật khẩu vào code</i>
-df  = pd.read_sql("SELECT ... FROM transactions WHERE ts &gt;= %(t0)s",
+df  = pd.read_sql(text("SELECT ... FROM transactions WHERE ts &gt;= :t0"),
                   eng, params={"t0": "2026-01-01"})</div>
-  <p>Hai điều bắt buộc ở đây. Thứ nhất, <b>chuỗi kết nối lấy từ biến môi trường</b>, không gõ vào file rồi push lên GitHub — đây là cách rò rỉ mật khẩu phổ biến nhất. Thứ hai, <b>truyền tham số qua <code>params=</code></b> chứ đừng nối chuỗi; nối chuỗi vừa mở đường cho SQL injection vừa hỏng khi giá trị có dấu nháy.</p>
+  <p>Hai điều bắt buộc ở đây. Thứ nhất, <b>chuỗi kết nối lấy từ biến môi trường</b>, không gõ vào file rồi push lên GitHub — đây là cách rò rỉ mật khẩu phổ biến nhất. Thứ hai, <b>truyền tham số qua <code>params=</code></b> chứ đừng nối chuỗi; nối chuỗi vừa mở đường cho SQL injection vừa hỏng khi giá trị có dấu nháy. Bọc câu lệnh trong <code>text()</code> thì tham số viết <code>:t0</code> chạy được với mọi loại cơ sở dữ liệu; để chuỗi trần thì cách viết tham số tuỳ driver (<code>%(t0)s</code> với Postgres, <code>?</code> với SQLite).</p>
 
   <h2>Nguyên tắc chia việc: nặng thì để SQL làm</h2>
   <table>
@@ -4312,7 +4336,7 @@ df  = pd.read_sql("SELECT ... FROM transactions WHERE ts &gt;= %(t0)s",
   <ol>
     <li>Đếm số dòng và tỉ lệ nhãn dương bằng SQL. Đối chiếu với con số pandas đã cho ở bài trước — phải khớp.</li>
     <li>Tính tỉ lệ gian lận theo từng giờ bằng <code>GROUP BY</code>. Cũng phải khớp với kết quả pandas.</li>
-    <li>Viết một window function tính <code>hist_mean</code>, rồi kiểm tra: giao dịch <b>đầu tiên</b> của mỗi thẻ phải ra <code>NULL</code>. Nếu không phải <code>NULL</code>, bạn đang rò rỉ.</li>
+    <li>Viết một window function tính <code>hist_mean</code>, rồi kiểm tra: giao dịch <b>đầu tiên</b> phải ra <code>NULL</code>. Nếu không phải <code>NULL</code>, bạn đang rò rỉ. <code>creditcard.csv</code> không có cột thẻ, nên bỏ <code>PARTITION BY</code> và sắp theo <code>Time</code>: dòng đầu của cả bảng phải ra <code>NULL</code>. Với bộ có <code>card_id</code> thì giao dịch đầu của <i>mỗi thẻ</i> phải ra <code>NULL</code>.</li>
   </ol>
   <p>Bước 3 là bước quan trọng nhất — nó là bản SQL của đúng phép kiểm tra ở bài <b>Biến theo thời gian</b>, và cùng một logic sẽ cứu bạn ở cả hai nơi.</p>
 
@@ -4647,7 +4671,7 @@ ADAPTERS = {"sim": from_simulation, "ieee": from_ieee}</div>
   <h2>Chạy — <code>src/prepare_data.py</code></h2>
   <div class="ds-code"><i>"""Bước 1 của quy trình: dữ liệu thô → data/processed/transactions.parquet.
 
-    python -m src.prepare_data --source sim               # 120k dòng, không cần tải gì
+    python -m src.prepare_data --source sim               # 400k dòng, không cần tải gì
     python -m src.prepare_data --source ieee --nrows 300000
 
 Sau lệnh này, không file nào khác trong repo còn được đọc data/raw/.
@@ -4687,7 +4711,7 @@ Sau lệnh này, không file nào khác trong repo còn được đọc data/raw
         "fraud_rate": float(df["is_fraud"].mean()),
         "from": str(df["timestamp"].min()),
         "to": str(df["timestamp"].max()),
-        "built_at": pd.Timestamp.utcnow().isoformat(),
+        "built_at": pd.Timestamp.now("UTC").isoformat(),
     }
     (DATA_PROC / "datacard.json").write_text(json.dumps(card, indent=2, ensure_ascii=<b>False</b>))
     print(json.dumps(card, indent=2, ensure_ascii=<b>False</b>))
@@ -4843,7 +4867,7 @@ df.info()
 df.duplicated().sum()
 
 <i># 5. Cột hạng mục: bao nhiêu giá trị khác nhau (phát hiện cột ID)</i>
-df.select_dtypes("object").nunique().sort_values(ascending=<b>False</b>)
+df.select_dtypes(include=["object", "string"]).nunique().sort_values(ascending=<b>False</b>)
 
 <i># 6. Cột hằng số hoặc gần như hằng (vô dụng)</i>
 [c <b>for</b> c <b>in</b> df.columns <b>if</b> df[c].nunique() &lt;= 1]
@@ -5342,7 +5366,7 @@ df["night_ratio"]      = df["n_tx_night_30d"] / (df["n_tx_30d"] + 1)</div>
   <p>Mô hình chỉ ăn số. Cột <code>city = "Hà Nội"</code> phải thành số — nhưng cách biến đổi quyết định rất nhiều, và chọn sai thì hoặc là mô hình học sai, hoặc là bảng của bạn phình ra 5.000 cột.</p>
 
   <h2>Câu hỏi đầu tiên: bao nhiêu giá trị khác nhau?</h2>
-  <div class="ds-code">df.select_dtypes("object").nunique().sort_values(ascending=<b>False</b>)</div>
+  <div class="ds-code">df.select_dtypes(include=["object", "string"]).nunique().sort_values(ascending=<b>False</b>)</div>
   <table>
     <tr><th>Số giá trị khác nhau</th><th>Cách xử lý</th></tr>
     <tr><td>2</td><td>Ánh xạ thẳng 0/1</td></tr>
@@ -10706,7 +10730,7 @@ const DAYS = [
     ids:['ml-overfit','ml-cv','m-infer','ml-imb'],
     proof:['ml-cv','m-infer','ml-imb'],
     out:'Bảng thí nghiệm bốn dòng cho phần xử lý lệch (không làm gì · <code>class_weight</code> · SMOTE · ngưỡng theo chi phí) đo trên cùng validation, mỗi dòng kèm trung bình ± độ lệch chuẩn của 5 seed — và một khoảng tin cậy ghép cặp cho dòng tốt nhất so với baseline.',
-    note:'Ba bài đầu chỉ ra ba cách tự lừa mình; bài <b>Thống kê suy diễn</b> đứng ngay sau vì nó trả lời câu mà độ lệch chuẩn giữa các fold vừa đặt ra. Cluster bootstrap trên dữ liệu giao dịch thật để tới ngày 10, khi đã có tập test của sản phẩm.' },
+    note:'Overfitting, cross-validation sai cách và dữ liệu lệch là ba cách tự lừa mình; bài <b>Thống kê suy diễn</b> đứng ngay sau Cross-validation vì nó trả lời câu mà độ lệch chuẩn giữa các fold vừa đặt ra. Cluster bootstrap trên dữ liệu giao dịch thật để tới ngày 10, khi đã có tập test của sản phẩm.' },
   { n:10, t:'Biến thành sản phẩm',
     ids:['pr-arch','pr-code','pr-eval'],
     proof:['pr-code','pr-eval'],
