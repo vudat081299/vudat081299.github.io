@@ -48,6 +48,8 @@ Trang chủ không có thư mục riêng (GitHub Pages cần `index.html` ở g�
 - Tiếng Việt, một dòng ngắn đọc lướt được. `name`, `label` và tên môn giữ tiếng Anh.
 - `desc` của section và của khu nói cái gì gom nhóm ấy lại.
 - Luật này cũng nằm ở trường `note` trong `collection.json`.
+- `tags` (tuỳ chọn, không hiện): từ khoá cho ô tìm kiếm — tên kỹ thuật mà `desc` ngắn đã cắt (`Bayes`, `CUPED`).
+  Tìm kiếm không phân biệt hoa thường và dấu.
 
 ## Xếp mục
 

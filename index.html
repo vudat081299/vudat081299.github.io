@@ -698,7 +698,7 @@
         function row(o, title, desc, plain) {
           var k = (o.key || '').trim();
           return '<a class="ix-row" href="' + esc(o.href) + '"' +
-            (plain ? '' : ' data-item data-key="' + esc(k) + '"') + '>' +
+            (plain ? '' : ' data-item data-key="' + esc(k) + '" data-tags="' + esc(o.tags || '') + '"') + '>' +
             (plain ? '' : '<span class="ix-key' + (k ? '' : ' ix-key--none') + '" aria-hidden="true">' +
               esc(k).toUpperCase() + '</span>') +
             '<span class="ix-row__t">' + esc(title) +
@@ -787,11 +787,16 @@
 
         /* ----------------------------- tìm kiếm ----------------------------- */
 
+        /* Tìm không phân biệt hoa thường và dấu: "hoa hoc" khớp "hoá học". `tags` là từ khoá ẩn của mục. */
+        function fold(t) {
+          return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
+        }
+
         function filter(q) {
-          q = (q || '').trim().toLowerCase();
+          q = fold((q || '').trim());
           var shown = 0;
           items.forEach(function (a) {
-            var hit = !q || a.textContent.toLowerCase().indexOf(q) >= 0;
+            var hit = !q || fold(a.textContent + ' ' + (a.getAttribute('data-tags') || '')).indexOf(q) >= 0;
             a.hidden = !hit;
             if (hit) shown++;
           });

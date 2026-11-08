@@ -24,7 +24,8 @@
                   "icon": "calendar_month",
                   "href": "masters-degree/class-schedule/",
                   "title": "Class Schedule",
-                  "sub": "Từng buổi học: ngày, giờ, phòng, giảng viên"
+                  "sub": "Từng buổi học: ngày, giờ, phòng, giảng viên",
+                  "tags": "Lịch học cao học Khoa học dữ liệu — 32 buổi của 3 môn: ngày học, giờ, phòng, giảng viên từng buổi"
                 }
               ]
             },
@@ -38,7 +39,8 @@
                   "icon": "school",
                   "href": "masters-degree/data-science-roadmap/data-science-roadmap.html",
                   "title": "Data Science — zero to master's",
-                  "sub": "pandas, SQL, feature engineering, transformer, luận văn"
+                  "sub": "pandas, SQL, feature engineering, transformer, luận văn",
+                  "tags": "A browser-only path for weak machines · pandas, SQL & Colab, feature engineering, transformers, shipping a real product, thesis & defense"
                 }
               ]
             },
@@ -52,14 +54,16 @@
                   "icon": "menu_book",
                   "href": "masters-degree/business-analytics/business-analytics.html",
                   "title": "Course Notes",
-                  "sub": "CRISP-DM, KPI, EDA, hồi quy, phân loại, phân cụm, chuỗi thời gian"
+                  "sub": "CRISP-DM, KPI, EDA, hồi quy, phân loại, phân cụm, chuỗi thời gian",
+                  "tags": "CRISP-DM · KPIs · EDA · regression · classification · clustering · time series"
                 },
                 {
                   "key": "f",
                   "icon": "shield",
                   "href": "masters-degree/business-analytics/fraud-detection-project.html",
                   "title": "Fraud Detection — Project",
-                  "sub": "Phát hiện gian lận thanh toán bằng máy học"
+                  "sub": "Phát hiện gian lận thanh toán bằng máy học",
+                  "tags": "Course project — payment fraud detection with machine learning"
                 }
               ]
             },
@@ -73,14 +77,16 @@
                   "icon": "menu_book",
                   "href": "masters-degree/research-proposal-project/research-proposal-project.html",
                   "title": "Research & Thesis Guide",
-                  "sub": "Câu hỏi nghiên cứu, tổng quan tài liệu, viết sáu chương"
+                  "sub": "Câu hỏi nghiên cứu, tổng quan tài liệu, viết sáu chương",
+                  "tags": "Research question · literature review · model comparison · writing the 6 chapters"
                 },
                 {
                   "key": "t",
                   "icon": "checklist",
                   "href": "masters-degree/thesis-topic-selector/thesis-topic-selector.html",
                   "title": "Thesis Topic Selector",
-                  "sub": "Đề tài ứng viên theo tác động, độ khó, rủi ro dữ liệu"
+                  "sub": "Đề tài ứng viên theo tác động, độ khó, rủi ro dữ liệu",
+                  "tags": "Candidate topics rated on real-world impact, difficulty & data risk"
                 }
               ]
             },
@@ -94,7 +100,8 @@
                   "icon": "smart_toy",
                   "href": "masters-degree/system-analysis-design/social-housing-chatbot-project.html",
                   "title": "Social Housing Chatbot — Project",
-                  "sub": "Đồ án nhóm: RAG, cổng DLP, chấm điểm theo luật, toán khoản vay"
+                  "sub": "Đồ án nhóm: RAG, cổng DLP, chấm điểm theo luật, toán khoản vay",
+                  "tags": "Group project, read to present it — RAG pipeline ordered by cost, DLP gate, rule-based scoring & loan maths, 10 test cases · plus 16 places the report contradicts itself and what to say instead"
                 }
               ]
             }
@@ -112,35 +119,40 @@
               "icon": "smart_toy",
               "name": "Machine Learning 101",
               "desc": "Máy học cho người mới: nơ-ron, cây quyết định, attention",
-              "href": "pages/machine-learning-101.html"
+              "href": "pages/machine-learning-101.html",
+              "tags": "Cỗ máy đoán ba bộ phận và cách nó tự vặn núm — tụt dốc, học thuộc lòng, nơ-ron & lan truyền ngược, cây quyết định, tích chập trên ảnh, attention, và học từ phần thưởng"
             },
             {
               "key": "q",
               "icon": "functions",
               "name": "Mathematics for ML & Data Science",
               "desc": "Ba khoá của Luis Serrano: đại số tuyến tính, giải tích, xác suất thống kê",
-              "href": "pages/mathematics-for-machine-learning.html"
+              "href": "pages/mathematics-for-machine-learning.html",
+              "tags": "Luis Serrano's 3 courses, retold in Vietnamese — determinants & eigenvectors, gradients & gradient descent, Bayes & distributions, maximum likelihood, confidence intervals & p-values"
             },
             {
               "key": "n",
               "icon": "model_training",
               "name": "Machine Learning & Deep Learning",
               "desc": "Tám khoá của Andrew Ng: hồi quy, mạng nơ-ron, chẩn đoán mô hình",
-              "href": "pages/machine-learning.html"
+              "href": "pages/machine-learning.html",
+              "tags": "Andrew Ng's 8 courses, retold in Vietnamese — regression & gradient descent, neural nets & backprop, tuning, and diagnosing a model that doesn't work"
             },
             {
               "key": "z",
               "icon": "compare_arrows",
               "name": "Experimentation & Causal Inference",
               "desc": "Thí nghiệm A/B cho đúng, và đo tác động khi không thí nghiệm được",
-              "href": "pages/experimentation-causal-inference.html"
+              "href": "pages/experimentation-causal-inference.html",
+              "tags": "Thí nghiệm A/B cho đúng và đo tác động khi không được thí nghiệm — cỡ mẫu, CUPED, SRM, sơ đồ nhân quả, điểm xu hướng, DiD, RDD, biến công cụ, uplift, double ML"
             },
             {
               "key": "i",
               "icon": "hub",
               "name": "Working with AI",
               "desc": "Làm việc với AI trong team dev: harness, multi-agent, hook, gate",
-              "href": "pages/ai-native-workflow.html"
+              "href": "pages/ai-native-workflow.html",
+              "tags": "Workflow AI cho team dev — harness, multi-agent, skill vs plugin, pipeline, SOT, hook vs gate"
             }
           ]
         }
@@ -163,21 +175,24 @@
               "icon": "encrypted",
               "name": "Cryptography",
               "desc": "Hai khoá của Dan Boneh: giữ bí mật, toàn vẹn, trao đổi khoá",
-              "href": "pages/cryptography.html"
+              "href": "pages/cryptography.html",
+              "tags": "Dan Boneh's two courses, retold in Vietnamese — keeping secrets, proving integrity, combining the two without breaking either, and how two strangers agree on a key"
             },
             {
               "key": "m",
               "icon": "science",
               "name": "Chemistry",
               "desc": "Từ hạt nhân tới hoá hữu cơ: orbital, electron, bảng tuần hoàn",
-              "href": "pages/chemistry.html"
+              "href": "pages/chemistry.html",
+              "tags": "Giáo trình tự học hoá học — từ hạt nhân tới hoá hữu cơ: orbital, cấu hình electron, hình dáng bảng tuần hoàn, và sáu niềm tin nghe rất hợp lý mà làm hỏng phần sau"
             },
             {
               "key": "u",
               "icon": "rocket_launch",
               "name": "Relativity",
               "desc": "Tương đối hẹp và rộng: thời gian giãn, không-thời gian cong",
-              "href": "pages/relativity.html"
+              "href": "pages/relativity.html",
+              "tags": "Thuyết tương đối hẹp & rộng, giải thích từ số không — đồng hồ chạy chậm, Doppler, không-thời gian cong, kèm phương trình thật"
             }
           ]
         },
@@ -193,28 +208,32 @@
               "icon": "gavel",
               "name": "Debate & Argumentation",
               "desc": "Tranh biện: lập luận, phản bác, cân tác động, các thể thức",
-              "href": "pages/debate-argumentation.html"
+              "href": "pages/debate-argumentation.html",
+              "tags": "Giáo trình tự học tranh biện — lập luận, phản bác, cân tác động, các thể thức"
             },
             {
               "key": "9",
               "icon": "record_voice_over",
               "name": "Structured Speaking",
               "desc": "Khung nói: bảy họ khung, bộ xương chung, khi nào phản tác dụng",
-              "href": "pages/structured-speaking.html"
+              "href": "pages/structured-speaking.html",
+              "tags": "Pick the right speaking framework — seven families, the shared skeleton (anchor → tension → exit), and when a framework backfires"
             },
             {
               "key": "y",
               "icon": "neurology",
               "name": "Psychology",
               "desc": "Tâm lý học từ nơ-ron tới xã hội, kèm độ vững của phát hiện",
-              "href": "pages/psychology.html"
+              "href": "pages/psychology.html",
+              "tags": "Giáo trình tự học tâm lý học — từ nơ-ron tới xã hội, kèm độ vững của từng phát hiện"
             },
             {
               "key": "g",
               "icon": "translate",
               "name": "English From the Ground Up",
               "desc": "Tiếng Anh từ gốc: âm, ngữ pháp, từ vựng, lộ trình 12 tháng",
-              "href": "pages/english-from-the-ground-up.html"
+              "href": "pages/english-from-the-ground-up.html",
+              "tags": "Giáo trình tự học tiếng Anh — âm thanh, ngữ pháp, từ vựng, kỹ năng, lộ trình 12 tháng"
             }
           ]
         },
@@ -230,39 +249,45 @@
               "icon": "payments",
               "name": "How Money Works",
               "desc": "DK, 2017 — tiền, doanh nghiệp, ngân hàng trung ương, tài chính cá nhân",
-              "href": "pages/how-money-works.html"
+              "href": "pages/how-money-works.html",
+              "tags": "DK · 2017 — money, business, central banks & personal finance"
             },
             {
               "key": "c",
               "icon": "forum",
               "name": "How to Win Every Argument",
               "desc": "Madsen Pirie — ~79 lối ngụy biện trong 5 nhóm",
-              "href": "pages/how-to-win-every-argument.html"
+              "href": "pages/how-to-win-every-argument.html",
+              "tags": "Madsen Pirie — diễn giải ~79 lối ngụy biện theo 5 nhóm"
             },
             {
               "key": "l",
               "icon": "psychology",
               "name": "The Little Blue Reasoning Book",
               "desc": "Brandon Royal — 50 nguyên tắc tư duy rõ ràng",
-              "href": "pages/the-little-blue-reasoning-book.html"
+              "href": "pages/the-little-blue-reasoning-book.html",
+              "tags": "Brandon Royal — 50 nguyên tắc tư duy rõ ràng, gom theo 5 chặng"
             },
             {
               "icon": "query_stats",
               "name": "How to Lie with Statistics",
               "desc": "Darrell Huff, 1954 — số liệu đánh lừa và cách nhận ra",
-              "href": "pages/how-to-lie-with-statistics.html"
+              "href": "pages/how-to-lie-with-statistics.html",
+              "tags": "Darrell Huff · 1954 — mẹo dùng số liệu và biểu đồ để đánh lừa, và cách nhận ra"
             },
             {
               "icon": "library_books",
               "name": "Books in Brief",
               "desc": "Ý cốt lõi: Kahneman, Haidt, Cialdini, Rosling, Diamond…",
-              "href": "pages/books-in-brief.html"
+              "href": "pages/books-in-brief.html",
+              "tags": "Ý cốt lõi của những cuốn chỉ cần đọc một phần — Kahneman, Haidt, Cialdini, Rosling, Diamond, Acemoglu & Robinson…"
             },
             {
               "icon": "public",
               "name": "A Short History of Nearly Everything",
               "desc": "Bill Bryson, 2003 — vũ trụ, Trái Đất, sự sống, và cách ta biết",
-              "href": "pages/a-short-history-of-nearly-everything.html"
+              "href": "pages/a-short-history-of-nearly-everything.html",
+              "tags": "Bill Bryson · 2003 — loài người đã biết gì về vũ trụ, Trái Đất và sự sống, và biết bằng cách nào"
             }
           ]
         }
@@ -285,14 +310,16 @@
               "icon": "account_balance",
               "name": "Economics Handbook",
               "desc": "Quy tắc kinh tế và tài chính dạng nếu–thì",
-              "href": "pages/finance-econ-rulebook.html"
+              "href": "pages/finance-econ-rulebook.html",
+              "tags": "Rulebook — economic & financial \"if-then\" rules"
             },
             {
               "key": "0",
               "icon": "piano",
               "name": "Jazz Piano Theory",
               "desc": "Nhạc lý tới jazz piano: hợp âm, đệm hát, cảm âm, ngẫu hứng",
-              "href": "pages/jazz-piano-theory.html"
+              "href": "pages/jazz-piano-theory.html",
+              "tags": "Nhạc lý tới jazz piano — hợp âm & vòng hoà thanh, đệm hát cho người khác hát, cảm âm, đọc nốt & học bản nhạc nhanh, ngẫu hứng & lick jazz"
             }
           ]
         },
@@ -308,35 +335,40 @@
               "icon": "soup_kitchen",
               "name": "Vietnamese Home Cooking",
               "desc": "Cơm nhà Việt theo vùng miền, kèm nước chấm",
-              "href": "cooking/vietnamese-home-cooking.html"
+              "href": "cooking/vietnamese-home-cooking.html",
+              "tags": "Vietnamese home-cooking recipes, by region & dipping sauce"
             },
             {
               "key": "k",
               "icon": "rice_bowl",
               "name": "Korean Home Cooking",
               "desc": "Món Hàn phổ biến: canh cay, cơm trộn, kimbap, tteokbokki",
-              "href": "cooking/korean-home-cooking.html"
+              "href": "cooking/korean-home-cooking.html",
+              "tags": "Món Hàn phổ biến — canh cay (kimchi/sundubu/budae), cơm trộn, kimbap, tteokbokki, đồ nướng"
             },
             {
               "key": "e",
               "icon": "ramen_dining",
               "name": "European Savoury",
               "desc": "Món mặn Ý, Pháp: pasta, pizza, món quay, phô mai",
-              "href": "cooking/european-savoury.html"
+              "href": "cooking/european-savoury.html",
+              "tags": "Italian & French mains — pasta, pizza, roasts, salads & a cheese guide"
             },
             {
               "key": "p",
               "icon": "cake",
               "name": "European Baking",
               "desc": "Bánh Pháp, Ý: định lượng, nhiệt lò, sốt ăn kèm",
-              "href": "cooking/european-baking.html"
+              "href": "cooking/european-baking.html",
+              "tags": "French & Italian pastry — weights, oven temps, sauces to serve with"
             },
             {
               "key": "h",
               "icon": "menu_book",
               "name": "Food Fundamentals",
               "desc": "Phần thịt, hải sản, nhiệt độ, kỹ thuật, rượu, kết hợp vị",
-              "href": "cooking/food-fundamentals.html"
+              "href": "cooking/food-fundamentals.html",
+              "tags": "Kiến thức nền: sơ đồ thịt lợn/bò, hải sản, nhiệt độ, kỹ thuật, rượu, kết hợp vị — bổ trợ cho công thức"
             }
           ]
         },
@@ -352,14 +384,16 @@
               "icon": "account_tree",
               "name": "JSON Analysis",
               "desc": "Xem, sửa, tìm và so sánh JSON",
-              "href": "json-analysis/"
+              "href": "json-analysis/",
+              "tags": "Inspect, repair, search & compare JSON"
             },
             {
               "key": "2",
               "icon": "table_chart",
               "name": "Excel → Table",
               "desc": "Đọc file Excel ra bảng",
-              "href": "read-excel-file-to-table/index.html"
+              "href": "read-excel-file-to-table/index.html",
+              "tags": "Read Excel files into a table"
             }
           ]
         }

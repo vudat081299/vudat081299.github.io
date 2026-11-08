@@ -150,6 +150,13 @@ const CONTRAST_JS = `
   const N = SECTIONS.reduce((n, s) => n + (s.kind === 'tiles' ? s.items.length
     : s.items.reduce((m, i) => m + i.files.length, 0)), 0);
   const GROUPS = data.hold && data.hold.groups ? data.hold.groups : [];
+  /* Số hàng mong đợi khi tìm, đếm thẳng từ data (tên, mô tả, tags), bỏ dấu như trang. */
+  const fold = t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
+  const ROWS = SECTIONS.flatMap(s => s.kind === 'tiles'
+    ? s.items.map(i => [i.name, i.desc, i.tags || ''].join(' '))
+    : s.items.flatMap(i => i.files.map(f => [f.title, f.sub, f.tags || ''].join(' '))));
+  const hits = q => ROWS.filter(r => fold(r).includes(fold(q))).length;
+  const DATA_TAGS = { cuped: hits('cuped'), hoahoc: hits('hoá học') };
   const H = GROUPS.flatMap(g => g.items);
   const eq = (a, x) => JSON.stringify(a) === JSON.stringify(x);
 
@@ -276,6 +283,12 @@ const CONTRAST_JS = `
     await type('thesis'); s = await state();
     check('lọc: nhóm môn rỗng tự ẩn', s.emptySubj === 0 && s.emptySecs === 0 && s.emptyZones === 0,
       `"thesis" → ${s.items} hàng`);
+
+    await type('cuped'); s = await state();
+    const tagsN = DATA_TAGS;
+    check('lọc: khớp từ khoá ẩn `tags`', s.items >= 1 && s.items === tagsN.cuped, `"cuped" → ${s.items} hàng`);
+    await type('hoa hoc'); s = await state();
+    check('lọc: không phân biệt dấu', s.items === tagsN.hoahoc, `"hoa hoc" → ${s.items} hàng`);
 
     await type('zzzz'); s = await state();
     const foot = await p.evaluate(() => {
