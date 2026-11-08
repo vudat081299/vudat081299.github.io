@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Cổng cho data/collection.json — nội dung của index.html.
 
-Chỉ kiểm thứ đúng/sai khách quan: JSON hợp lệ, trường bắt buộc có mặt và không rỗng,
-phím tắt không trùng, href trỏ tới thứ tồn tại. KHÔNG kiểm độ dài mô tả: đã đo lại
+Chỉ kiểm thứ đúng/sai khách quan: JSON hợp lệ, cấu trúc khu → section → mục, trường bắt buộc
+có mặt và không rỗng, id không trùng, phím tắt không trùng, href trỏ tới thứ tồn tại. KHÔNG kiểm độ dài mô tả: đã đo lại
 21/09/2026, 35 mô tả đang chạy dài từ 24 tới 193 ký tự (trung vị 77), nên mọi ngưỡng chung
 đều là số bịa và sẽ đánh trượt nội dung thật. Chất lượng một câu là việc của người viết,
 không phải của regex.
@@ -25,6 +25,7 @@ DATA = os.path.join(ROOT, 'data', 'collection.json')
 # `key` KHÔNG bắt buộc: keyspace phím tắt chỉ có 36 ô (0-9 + a-z) và đã dùng hết
 # 20/09/2026. Mục thêm sau đó không có phím riêng và đi bằng ô tìm kiếm — vẫn hợp lệ.
 # Có `key` thì vẫn phải đúng một ký tự thường và không trùng (kiểm ở dưới).
+ZONE_FIELDS = ('id', 'label', 'desc')
 TILE_FIELDS = ('icon', 'name', 'desc', 'href')
 SUBJ_FIELDS = ('icon', 'title', 'meta')
 FILE_FIELDS = ('icon', 'href', 'title', 'sub')
@@ -50,11 +51,26 @@ except Exception as e:
     print('collection: JSON không đọc được — %s' % e)
     sys.exit(1)
 
-if not d.get('sections'):
-    err.append('gốc: thiếu hoặc rỗng "sections"')
+# Khu (zone) gom các section; thứ tự khu và section là thứ tự trên trang (REPO-022).
+# Section chỉ nằm trong khu: một mảng `sections` ở gốc là cấu trúc cũ, trang không đọc nữa.
+if 'sections' in d:
+    err.append('gốc: có "sections" — section phải nằm trong "zones" (index.html chỉ đọc zones)')
+if not d.get('zones'):
+    err.append('gốc: thiếu hoặc rỗng "zones"')
+
+sections, zone_ids = [], {}
+for zi, z in enumerate(d.get('zones', [])):
+    need(z, ZONE_FIELDS, 'zone[%d]' % zi)
+    w = 'zone "%s"' % z.get('label', zi)
+    if z.get('id') in zone_ids:
+        err.append('%s: id "%s" trùng với %s' % (w, z['id'], zone_ids[z['id']]))
+    zone_ids[z.get('id')] = w
+    if not z.get('sections'):
+        err.append('%s: không có section nào' % w)
+    sections += z.get('sections', [])
 
 keys, sec_ids = {}, {}
-for si, sec in enumerate(d.get('sections', [])):
+for si, sec in enumerate(sections):
     w = 'section[%d]' % si
     need(sec, ('id', 'icon', 'label', 'desc', 'kind'), w)
     w = 'section "%s"' % sec.get('label', si)
@@ -62,6 +78,9 @@ for si, sec in enumerate(d.get('sections', [])):
         err.append('%s: kind phải là tiles hoặc subjects, đang là %r' % (w, sec.get('kind')))
     if sec.get('id') in sec_ids:
         err.append('%s: id "%s" trùng với %s' % (w, sec['id'], sec_ids[sec['id']]))
+    if sec.get('id') in zone_ids:
+        err.append('%s: id "%s" trùng với id của %s — cả hai là neo #id trên trang'
+                   % (w, sec['id'], zone_ids[sec['id']]))
     sec_ids[sec.get('id')] = w
     if not sec.get('items'):
         err.append('%s: không có item nào' % w)
@@ -144,23 +163,32 @@ UNLISTED = (
 )
 
 listed = set()
-for sec in d.get('sections', []):
+for sec in sections:
     for it in sec.get('items', []):
         for obj in ([it] if sec.get('kind') == 'tiles' else it.get('files', [])):
             h = str(obj.get('href', '')).strip()
             if h:
                 listed.add(os.path.normpath(h))
 
-# --- Danh sách ẩn: khoá `hold` ở gốc, chỉ hiện khi giữ phím (xem index.html) --------
+# --- Danh sách ẩn: khoá `hold` ở gốc, bật bằng ⇧? (xem index.html, REPO-021) ----------
 # Trang trong đó VẪN được niêm yết (có mục trỏ tới) nên nó tính là "listed": không
 # mồ côi, và cũng không được nằm trong WITHHELD/UNLISTED — chiều ngược ở dưới bắt.
-# Không có `key`: JS không gắn phím tắt cho nó, một `key` ở đây là lời hứa suông.
+# Mục chia nhóm: `groups`, mỗi nhóm `label` + `items`. Không có `key`: JS không gắn phím
+# tắt cho nó, một `key` ở đây là lời hứa suông.
 hold = d.get('hold')
+hold_items = []
 if hold is not None:
     need(hold, ('label',), 'hold')
-    if not hold.get('items'):
-        err.append('hold: không có item nào — bỏ hẳn khoá `hold` nếu không cần danh sách ẩn')
-    for ii, it in enumerate(hold.get('items', [])):
+    if 'items' in hold:
+        err.append('hold: có "items" ở thẳng gốc — mục phải nằm trong "groups" (index.html chỉ đọc groups)')
+    if not hold.get('groups'):
+        err.append('hold: không có nhóm nào — bỏ hẳn khoá `hold` nếu không cần danh sách ẩn')
+    for gi, g in enumerate(hold.get('groups', [])):
+        need(g, ('label',), 'hold › group[%d]' % gi)
+        if not g.get('items'):
+            err.append('hold › nhóm "%s": không có item nào' % g.get('label', gi))
+        hold_items += g.get('items', [])
+    for ii, it in enumerate(hold_items):
         w = 'hold › %s' % it.get('name', ii)
         need(it, TILE_FIELDS, w)
         if 'key' in it:
@@ -217,8 +245,8 @@ if err:
     sys.exit(1)
 
 n = sum(len(s['items']) if s['kind'] == 'tiles'
-        else sum(len(i['files']) for i in s['items']) for s in d['sections'])
-print('collection: OK (%d section, %d mục, %d/36 phím tắt; %s không có trang mồ côi; '
-      '%d trang gỡ khỏi web, %d trang vẫn lên web mà không niêm yết, %d trang trong danh sách ẩn).'
-      % (len(d['sections']), n, len(keys), '/'.join(WATCHED), len(WITHHELD), len(UNLISTED),
-         len((hold or {}).get('items', []))))
+        else sum(len(i['files']) for i in s['items']) for s in sections)
+print('collection: OK (%d khu, %d section, %d mục, %d/36 phím tắt; %s không có trang mồ côi; '
+      '%d trang gỡ khỏi web, %d trang vẫn lên web mà không niêm yết, %d trang trong danh sách ẩn, %d nhóm).'
+      % (len(d['zones']), len(sections), n, len(keys), '/'.join(WATCHED), len(WITHHELD), len(UNLISTED),
+         len(hold_items), len((hold or {}).get('groups', []))))

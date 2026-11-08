@@ -15,8 +15,11 @@ Trang chủ không có thư mục riêng (GitHub Pages cần `index.html` ở g�
 
 - `index.html` tự chứa: `<style>` riêng, prefix `ix-`, không link `web-builder.css`, không mặt chữ icon
   (REPO-003). SVG inline nhỏ thì được.
-- Chữ lặp (section, mục, dòng môn học) ở `data/collection.json`; tiêu đề trang ở HTML (REPO-001). Mục lục,
-  thanh chip và chân trang dựng từ chính mảng `sections`.
+- `collection.json`: `zones` → `sections` → mục. Khu có `id`, `label`, `desc`, `sections`. Không có
+  `sections` ở gốc.
+- Chữ lặp (khu, section, mục, dòng môn học) ở `data/collection.json`; tiêu đề trang ở HTML (REPO-001).
+  Mục lục, thanh chip và chân trang dựng từ chính danh sách `zones`.
+- Khu đầu là việc đang học; trang tự tô nổi khu đầu, data không có cờ nào cho việc ấy.
 - Số suy ra được (số mục của section, số thứ tự 01–08) thì tính từ dữ liệu, đừng ghi tay.
 
 ## Giao diện
@@ -29,8 +32,8 @@ Trang chủ không có thư mục riêng (GitHub Pages cần `index.html` ở g�
 
 ## Cổng
 
-- `python3 tools/lint-collection.py` (nằm trong `tools/check.sh`): trường bắt buộc, phím trùng, href chết,
-  trang mồ côi trong `pages/` và `cooking/`, hai danh sách `WITHHELD` / `UNLISTED`.
+- `python3 tools/lint-collection.py` (nằm trong `tools/check.sh`): cấu trúc khu, trường bắt buộc, id và phím
+  trùng, href chết, trang mồ côi trong `pages/` và `cooking/`, hai danh sách `WITHHELD` / `UNLISTED`.
 - `node tools/smoke-index.js <url>` (CI chạy): đo trong trình duyệt thật — tràn ngang, mép thẳng hàng,
   tương phản trên nền thật, tìm kiếm, bàn phím, mọi href, danh sách ẩn, bottom sheet, vùng chạm, thanh chip.
   Chạy tay: `python3 -m http.server 8347`, rồi `node tools/smoke-index.js http://127.0.0.1:8347/index.html`.
@@ -42,18 +45,19 @@ Trang chủ không có thư mục riêng (GitHub Pages cần `index.html` ở g�
   (`16 mô hình tương tác`, `7 phần`).
 - Giữ: chủ đề (`từ hạt nhân tới hoá hữu cơ`) và đếm nội dung (`~79 lối ngụy biện`). Trang công cụ: việc nó
   làm là chủ đề.
-- `desc` của section nói cái gì gom nhóm ấy lại.
-- Luật này cũng nằm ở trường `note` trong `collection.json`. Không có ngưỡng độ dài.
+- Tiếng Việt, một dòng ngắn đọc lướt được. `name`, `label` và tên môn giữ tiếng Anh.
+- `desc` của section và của khu nói cái gì gom nhóm ấy lại.
+- Luật này cũng nằm ở trường `note` trong `collection.json`.
 
 ## Xếp mục
 
+- Khu và thứ tự section do chủ trang chốt (REPO-022); các môn cao học giữ thứ tự hiện có (REPO-006).
 - Một section một trục: `Tools` là thứ để dùng, các section khác là chủ đề để đọc. Đừng dựng một ô chứa
   mọi thứ.
 - Section lộ trình học (`Data & AI`, `Science`, `Thinking`, `Cooking`, `Master's`): cửa vào trước, kho tra
   cứu cuối.
 - Section cái kệ (`Tools`, `Everyday`, `Books`): cái hay dùng nhất trước.
 - Cùng một mức: cái gần việc chủ trang nhất trước.
-- Thứ tự các section do chủ trang chốt (REPO-005); các môn cao học giữ thứ tự hiện có (REPO-006).
 - Thứ tự không có cổng kiểm: "cửa vào" không đo được.
 
 ## Phím tắt
@@ -65,17 +69,19 @@ Trang chủ không có thư mục riêng (GitHub Pages cần `index.html` ở g�
 
 Chủ trang gọi là "list ẩn"; trên bảng nhãn là `Reserved`.
 
-- Khoá `hold` ở gốc `collection.json`, ngoài `sections`: `label` và `items` (đủ `icon`, `name`, `desc`, `href`;
-  không có `key`). Không có số thứ tự, không vào mục lục, chân trang, ô đếm, tìm kiếm hay phím tắt (REPO-021).
-- Máy tính: ⇧? (Shift + `Slash`, dò bằng `e.code`) bật bảng nổi ở đáy khung nhìn; thả phím vẫn hiện.
+- Khoá `hold` ở gốc `collection.json`, ngoài `zones`: `label` và `groups`; mỗi nhóm có `label` và `items` (đủ
+  `icon`, `name`, `desc`, `href`; không có `key`). Không có số thứ tự, không vào mục lục, chân trang, ô đếm, tìm
+  kiếm hay phím tắt (REPO-021).
+- Máy tính: ⇧? (Shift + `Slash`, dò bằng `e.code`) bật bảng nổi ở đáy khung nhìn, nhóm xếp thành cột; thả phím
+  vẫn hiện.
 - ⇧? lần nữa, bấm lớp phủ, nút đóng, hoặc Esc thì ẩn. Blur cửa sổ và đổi tab không đóng bảng.
-- Điện thoại: gõ đúng `?` vào ô tìm kiếm thì ô được xoá, bàn phím ảo đóng, bảng hiện. Chữ có `?` ở giữa thì vẫn là tìm kiếm.
+- Điện thoại: gõ đúng `?` vào ô tìm kiếm thì ô được xoá, bàn phím ảo đóng, bảng hiện. Chữ có `?` ở giữa thì vẫn
+  là tìm kiếm.
 - Máy hẹp (≤ 720px): bảng là bottom sheet sát đáy, cao tối đa 66vh, có nút đóng, cuộn bên trong.
 - Bảng mở thì trang phía sau không cuộn.
 - `/` không Shift vẫn nhảy vào ô tìm kiếm.
 - Trang trong `hold` vẫn lên web: không nằm trong `WITHHELD` / `UNLISTED`, `deploy.yml` không `--exclude`. Đó là
   cách giấu link, không phải bảo mật; URL trực tiếp vẫn mở được.
-- Cổng: `lint-collection.py` kiểm `hold` như `sections`; `smoke-index.js` kiểm hiện/ẩn và không lọt vào số đếm.
 
 ## `WITHHELD` và `UNLISTED` (trong `tools/lint-collection.py`)
 

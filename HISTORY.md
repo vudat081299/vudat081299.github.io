@@ -3,6 +3,14 @@
 Chuyện đã xảy ra ở mức cả repo: vì sao một luật tồn tại, bản trước sai ra sao. Mới nhất trên đầu.
 Luật đang áp dụng ở `CLAUDE.md`; quyết định của chủ trang ở `DECISIONS.md`.
 
+## 08/11/2026 — trang chủ thiết kế lại: đen–trắng–xanh lá, ba khu
+
+- Chủ trang muốn cuộn là thấy trang cần tìm, khu đang học dễ với nhất. Tám section gom vào ba khu (REPO-022,
+  thay REPO-005); danh sách ẩn chia nhóm, điện thoại là bottom sheet (REPO-021); màu REPO-023.
+- Mũi tên ẩn sau tên mục từng tự xuống dòng ở 768px, mở một khoảng trống giữa tên và mô tả; nay rộng 0.
+- `smoke-index.js` trước đo tương phản so với nền `body`, nên mù với chữ trên mặt nổi; nay trộn nền thật của
+  mọi tổ tiên, kể cả `::before`. Thêm phép kiểm bottom sheet, khoá cuộn, vùng chạm 44px, thanh chip dính.
+
 ## 28/09/2026 — tầng tài liệu cho agent: mỗi loại tri thức một chỗ
 
 - Rà kiến trúc. CLAUDE.md gốc dài 399 dòng, khoảng 3/4 là luật riêng của trang chủ, `pages/` và

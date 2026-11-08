@@ -144,11 +144,13 @@ const CONTRAST_JS = `
   console.log('trang      : ' + URL_ + '\n');
 
   const data = JSON.parse(require('fs').readFileSync(path.join(ROOT, 'data/collection.json'), 'utf8'));
-  const SECTIONS = data.sections;
+  const SECTIONS = data.zones.flatMap(z => z.sections);
   const LABELS = SECTIONS.map(s => s.label);
+  const ZONES = data.zones.map(z => z.label);
   const N = SECTIONS.reduce((n, s) => n + (s.kind === 'tiles' ? s.items.length
     : s.items.reduce((m, i) => m + i.files.length, 0)), 0);
-  const H = data.hold && data.hold.items ? data.hold.items : [];
+  const GROUPS = data.hold && data.hold.groups ? data.hold.groups : [];
+  const H = GROUPS.flatMap(g => g.items);
   const eq = (a, x) => JSON.stringify(a) === JSON.stringify(x);
 
   const browser = await chromium.launch({ executablePath: exe, args: ['--no-sandbox'] });
@@ -202,7 +204,11 @@ const CONTRAST_JS = `
   {
     const r = await p.evaluate(() => ({
       secs:  [...document.querySelectorAll('.ix-sec__t')].map(h => h.textContent.trim()),
+      zones: [...document.querySelectorAll('[data-zone] .ix-zone__t')].map(h => h.textContent.trim()),
+      zoneOf: [...document.querySelectorAll('[data-section]')].map(s => s.closest('[data-zone]').id),
       toc:   [...document.querySelectorAll('[data-toc] .ix-toc__l')].map(h => h.textContent.trim()),
+      tocZ:  [...document.querySelectorAll('[data-toc-zone]')]
+               .map(g => [...g.querySelectorAll('[data-toc]')].map(a => a.dataset.toc)),
       foot:  [...document.querySelectorAll('#foot-links a')].map(h => h.textContent.trim()),
       items: document.querySelectorAll('[data-item]').length,
       keys:  [...document.querySelectorAll('[data-item]')].map(a => a.dataset.key).filter(Boolean),
@@ -211,6 +217,9 @@ const CONTRAST_JS = `
     }));
     check('số hàng khớp collection.json', r.items === N, `${r.items} / ${N}`);
     check('thứ tự section khớp data', eq(r.secs, LABELS), r.secs.join(' · '));
+    check('khu khớp data: thứ tự khu, section nào thuộc khu nào',
+      eq(r.zones, ZONES) && eq(r.zoneOf, data.zones.flatMap(z => z.sections.map(() => z.id)))
+        && eq(r.tocZ, data.zones.map(z => z.sections.map(s => s.id))), r.zones.join(' · '));
     check('mục lục + chân trang cùng một thứ tự', eq(r.toc, LABELS) && eq(r.foot, LABELS));
     check('phím tắt không trùng, không có chip rỗng',
       new Set(r.keys).size === r.keys.length && r.blank === 0, `${r.keys.length} phím`);
@@ -247,8 +256,11 @@ const CONTRAST_JS = `
         .filter(s => !s.hidden && !s.querySelector('[data-item]:not([hidden])')).length,
       emptySubj: [...document.querySelectorAll('[data-subject]')]
         .filter(s => !s.hidden && !s.querySelector('[data-item]:not([hidden])')).length,
+      emptyZones: [...document.querySelectorAll('[data-zone]')]
+        .filter(z => !z.hidden && !z.querySelector('[data-item]:not([hidden])')).length,
       emptyTocZ: [...document.querySelectorAll('[data-toc-zone]')]
         .filter(g => !g.hidden && !g.querySelector('[data-toc]:not([hidden])')).length,
+      zones: [...document.querySelectorAll('[data-zone]')].filter(z => !z.hidden).length,
       toc: [...document.querySelectorAll('[data-toc]')].filter(a => !a.hidden).length,
       tocBox: !document.getElementById('toc').hidden,
       empty: !document.getElementById('empty').hidden,
@@ -256,12 +268,13 @@ const CONTRAST_JS = `
     const type = async v => { await p.fill('#q', v); await p.waitForTimeout(60); };
 
     await type('json'); let s = await state();
-    check('lọc: không trơ lại section/nhóm rỗng',
-      s.items === 1 && s.emptySecs === 0 && s.emptyTocZ === 0 && s.toc === 1,
-      `"json" → ${s.items} hàng, ${s.toc} mục lục`);
+    check('lọc: không trơ lại khu/section/nhóm rỗng',
+      s.items === 1 && s.emptySecs === 0 && s.emptyZones === 0 && s.emptyTocZ === 0
+        && s.toc === 1 && s.zones === 1,
+      `"json" → ${s.items} hàng, ${s.toc} mục lục, ${s.zones} khu`);
 
     await type('thesis'); s = await state();
-    check('lọc: nhóm môn rỗng tự ẩn', s.emptySubj === 0 && s.emptySecs === 0,
+    check('lọc: nhóm môn rỗng tự ẩn', s.emptySubj === 0 && s.emptySecs === 0 && s.emptyZones === 0,
       `"thesis" → ${s.items} hàng`);
 
     await type('zzzz'); s = await state();
@@ -269,11 +282,11 @@ const CONTRAST_JS = `
       const f = document.querySelector('.ix-foot').getBoundingClientRect();
       return f.bottom >= window.innerHeight - 2;
     });
-    check('không kết quả: hiện ô báo, ẩn mục lục, chân trang chạm đáy',
-      s.items === 0 && s.empty && !s.tocBox && foot);
+    check('không kết quả: hiện ô báo, ẩn mục lục và mọi khu, chân trang chạm đáy',
+      s.items === 0 && s.empty && !s.tocBox && s.zones === 0 && foot);
 
     await p.click('#clear'); s = await state();
-    check('nút Clear trả lại đủ hàng', s.items === N && !s.empty);
+    check('nút Clear trả lại đủ hàng', s.items === N && !s.empty && s.zones === ZONES.length);
   }
 
   /* ---- 6. bàn phím -------------------------------------------------------- */
@@ -314,6 +327,12 @@ const CONTRAST_JS = `
     const hrefs = await rows();
     check('⇧? rồi thả: bảng vẫn hiện, đủ mục trong data.hold, đúng thứ tự',
       (await vis()) && eq(hrefs, H.map(i => i.href)), hrefs.join(', '));
+    const g = await p.evaluate(() => [...document.querySelectorAll('#hold .ix-hold__g')].map(x => ({
+      label: x.querySelector('.ix-hold__gl').textContent.trim(),
+      n: x.querySelectorAll('a').length,
+    })));
+    check('bảng ẩn chia nhóm đúng data.hold.groups',
+      eq(g, GROUPS.map(x => ({ label: x.label, n: x.items.length }))), g.map(x => `${x.label} (${x.n})`).join(' · '));
     check('⇧?: ô tìm kiếm không giành focus',
       await p.evaluate(() => document.activeElement.id !== 'q'));
     const leak = await p.evaluate(() => ({
@@ -455,9 +474,9 @@ const CONTRAST_JS = `
 
   /* ---- 7. tương phản chữ ở cả hai nền, máy tính và điện thoại -------------- */
   const SEL = ['.ix-row__t', '.ix-row__d', '.ix-sec__desc', '.ix-sec__n', '.ix-sec__c', '.ix-key',
-               '.ix-subj__t', '.ix-subj__m', '.ix-lede', '.ix-eyebrow',
+               '.ix-subj__t', '.ix-subj__m', '.ix-zone__t', '.ix-zone__d', '.ix-lede', '.ix-eyebrow',
                '.ix-toc__l', '.ix-toc__n', '.ix-toc__c', '.ix-toc__zl', '.ix-hint', '.ix-count', '#q',
-               '.ix-foot__zl', '#foot-links a', '.ix-hold__t', '.ix-hold .ix-row__t',
+               '.ix-foot__zl', '#foot-links a', '.ix-hold__t', '.ix-hold__gl', '.ix-hold .ix-row__t',
                '.ix-hold .ix-row__d', '.ix-hold__hint', '.ix-brand b', '.ix-brand span'];
   for (const [w, scheme] of [[1280, 'light'], [1280, 'dark'], [390, 'light'], [390, 'dark']]) {
     const q = await open(w, { scheme, height: w < 500 ? 844 : 900 });

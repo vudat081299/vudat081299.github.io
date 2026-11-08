@@ -612,7 +612,7 @@
       <div class="ix-hero">
         <p class="ix-eyebrow">Knowledge index</p>
         <h1>What I know, and what I&rsquo;m <em>learning</em>.</h1>
-        <p class="ix-lede" lang="vi">Tri thức tôi đã biết và tri thức tôi đang học, mỗi trang một chủ đề.</p>
+        <p class="ix-lede" lang="vi">Tri thức tôi đã biết và tri thức tôi đang học, gom theo khu.</p>
       </div>
 
       <nav class="ix-toc" id="toc" aria-label="Sections"></nav>
@@ -725,7 +725,7 @@
               '" aria-labelledby="h-' + esc(sec.id) + '">' +
             '<div class="ix-sec__head">' +
               '<span class="ix-sec__n">' + two(n) + '</span>' +
-              '<h2 class="ix-sec__t" id="h-' + esc(sec.id) + '">' + esc(sec.label) + '</h2>' +
+              '<h3 class="ix-sec__t" id="h-' + esc(sec.id) + '">' + esc(sec.label) + '</h3>' +
               '<span class="ix-sec__c">' + countOf(sec) + '</span>' +
             '</div>' +
             '<p class="ix-sec__desc" lang="vi">' + esc(sec.desc) + '</p>' +
@@ -739,6 +739,19 @@
           return zones.map(function (z) {
             return { zone: z, secs: z.sections.map(function (s) { return { sec: s, n: ++n }; }) };
           });
+        }
+
+        function zone(Z) {
+          var z = Z.zone;
+          return '<section class="ix-zone" id="' + esc(z.id) + '" data-zone aria-labelledby="z-' + esc(z.id) + '">' +
+            '<div class="ix-zone__head">' +
+              '<h2 class="ix-zone__t" id="z-' + esc(z.id) + '">' + esc(z.label) + '</h2>' +
+              '<p class="ix-zone__d" lang="vi">' + esc(z.desc) + '</p>' +
+            '</div>' +
+            '<div class="ix-zone__grid">' +
+              Z.secs.map(function (S) { return section(S.sec, S.n); }).join('') +
+            '</div>' +
+          '</section>';
         }
 
         /* Mục lục và chân trang đọc CÙNG danh sách khu — không có bản thứ hai để quên. */
@@ -762,6 +775,13 @@
             z.sections.map(function (s) {
               return '<a href="#' + esc(s.id) + '">' + esc(s.label) + '</a>';
             }).join('') +
+          '</div>';
+        }
+
+        function holdGroup(g) {
+          return '<div class="ix-hold__g">' +
+            '<h3 class="ix-hold__gl">' + esc(g.label) + '</h3>' +
+            g.items.map(function (it) { return row(it, it.name, it.desc, true); }).join('') +
           '</div>';
         }
 
@@ -807,18 +827,15 @@
             return r.json();
           })
           .then(function (d) {
-            var all = { id: 'all', label: 'Sections', sections: d.sections };
-            var Z = numbered([all]);
-            host.innerHTML  = '<div class="ix-zone__grid">' +
-                              Z[0].secs.map(function (S) { return section(S.sec, S.n); }).join('') + '</div>';
+            var Z = numbered(d.zones);
+            host.innerHTML  = Z.map(zone).join('');
             toc.innerHTML   = '<button class="ix-jumpq" type="button" id="jump-q" aria-label="Search">' +
                               SEARCH_ICON + '</button>' + Z.map(tocZone).join('');
-            links.innerHTML = footZone(all);
+            links.innerHTML = d.zones.map(footZone).join('');
             items = Array.prototype.slice.call(document.querySelectorAll('[data-item]'));
-            if (d.hold && d.hold.items && d.hold.items.length) {
+            if (d.hold && d.hold.groups && d.hold.groups.length) {
               $('hold-t').textContent = d.hold.label;
-              $('hold-rows').innerHTML = '<div class="ix-hold__g">' +
-                d.hold.items.map(function (it) { return row(it, it.name, it.desc, true); }).join('') + '</div>';
+              $('hold-rows').innerHTML = d.hold.groups.map(holdGroup).join('');
               armed = true;
             }
             hint.innerHTML = 'Press <kbd>/</kbd> to search, <kbd>&crarr;</kbd> to open the first hit' +
