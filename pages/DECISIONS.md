@@ -21,6 +21,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-016 · hidden-curriculum: hành trang cho người 26 tuổi, rà toàn trang · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-017 · hidden-curriculum: bỏ điều hiển nhiên, giữ điều đúc kết · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-018 · hidden-curriculum: nói chuyện phiếm, tâm thế tán tỉnh, tỏ ý với đồng nghiệp · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+- PAGES-019 · ai-native-workflow: agent làm phần lớn vòng đời, người giữ phần quyết và kiểm · `pages/ai-native-workflow.html`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -137,3 +138,10 @@ Một quy định chỉ ở lại khi trái trực giác và làm sai thì mất
 Nói chuyện phiếm và bắt sóng là kỹ năng cần có trên trang; đặt trong mục nghe và hỏi (6.1), không tách mục riêng.
 Phần yêu đương trả lời được: tâm thế khi bắt đầu tán tỉnh, cách tiến từng bước tới tỏ ý, dấu hiệu dễ đọc sai, và cách làm việc tiếp với đồng nghiệp sau khi bị từ chối.
 Khác biệt trung bình theo giới chỉ nêu khi có nguồn, kèm điều kiện, không dùng để đoán một người cụ thể (PAGES-013).
+
+## PAGES-019 · ai-native-workflow: agent làm phần lớn vòng đời, người giữ phần quyết và kiểm
+08/11/2026 · `pages/ai-native-workflow.html`
+
+Trang dạy dùng AI để agent làm nhiều nhất có thể suốt vòng đời phần mềm (dev, ship, bug, tính năng, bảo trì), con người còn giữ gì, và các công ty hàng đầu đã công bố cách làm nào.
+Viết cho cả dev lẫn người không chuyên: đơn giản trước, sâu sau; ưu tiên sơ đồ và bảng, giao diện tối giản; thuật ngữ khó có popup mở bằng rê chuột, bàn phím và chạm.
+Có bộ AI cho cả đội (file nào, để làm gì, thêm role ra sao) theo đúng cơ chế Claude Code, đối chiếu Codex; secret không bao giờ nằm trong file.

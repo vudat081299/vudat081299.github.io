@@ -150,9 +150,9 @@
               "key": "i",
               "icon": "hub",
               "name": "Working with AI",
-              "desc": "Làm việc với AI trong team dev: harness, multi-agent, hook, gate",
+              "desc": "Giao vòng đời phần mềm cho agent: các bậc, bộ AI của đội dev, phần người giữ",
               "href": "pages/ai-native-workflow.html",
-              "tags": "Workflow AI cho team dev — harness, multi-agent, skill vs plugin, pipeline, SOT, hook vs gate"
+              "tags": "AI agent cho team dev — prompt, context, harness, agent, subagent, MCP, skill, plugin, marketplace, hook, CLAUDE.md, AGENTS.md, Claude Code, Codex, OAuth, secret, prompt injection, code review, hotfix, on-call, vòng đời phần mềm, Anthropic, OpenAI, Stripe, lộ trình 30/60/90"
             }
           ]
         }
