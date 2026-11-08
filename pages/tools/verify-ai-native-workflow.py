@@ -15,7 +15,7 @@ Bảy phần:
   B. THUẬT NGỮ TRONG BÀI — mọi nút .tm trỏ tới một thuật ngữ có thật; id sinh ra (g-…, th-…) không trùng
      id tĩnh.
   C. SỐ ĐẾM — số dự phòng trong [data-count] bằng độ dài dữ liệu; các danh sách mà lời văn đếm bằng chữ
-     (sáu việc, năm câu hỏi, tám chặng, bốn lớp, sáu nguyên tắc, năm chỉ số DORA) có đúng chừng ấy mục;
+     (sáu việc, năm câu hỏi, tám chặng, bốn tầng, sáu nguyên tắc, năm chỉ số DORA) có đúng chừng ấy mục;
      nhãn tiếp cận của bậc thang kể đủ tên bậc theo thứ tự.
   D. CON SỐ TỪ NGUỒN — mỗi con số phải có mặt trong đúng mục; số ở đầu trang và ở mục trả lời ngắn phải
      trùng số ở thẻ nguồn; phần trăm suy ra được (9,8 → 21,2 là +116%) tính lại.
@@ -141,9 +141,9 @@ def count_li(fragment_re):
 ok(count_li(r'<ol class="aw-six">(.*?)</ol>') == 6, 'C: “Sáu việc người giữ” không có đúng 6 mục')
 ok(count_li(r'<ol class="aw-ol" id="aw-five">(.*?)</ol>') == 5, 'C: “Năm câu hỏi” không có đúng 5 mục')
 ok(count_li(r'<ol class="aw-cycle" id="aw-cycle">(.*?)</ol>') == 8, 'C: vòng đời “tám chặng” không có đúng 8 chặng')
-ok(count_li(r'<ol class="aw-layers">(.*?)</ol>') == 4, 'C: “bốn lớp” mở rộng không có đúng 4 lớp')
+ok(count_li(r'<ol class="aw-layers">(.*?)</ol>') == 4, 'C: “bốn tầng” mở rộng không có đúng 4 tầng')
 ok('Tám chặng' in text_of(section('vong-doi')), 'C: lời dẫn vòng đời phải nói “Tám chặng”')
-ok('Tách bốn lớp' in text_of(section('mo-rong')), 'C: lời dẫn mở rộng phải nói “bốn lớp”')
+ok('Tách bốn tầng' in text_of(section('mo-rong')), 'C: lời dẫn mở rộng phải nói “bốn tầng”')
 mm = re.search(r'Sáu nguyên tắc giữ bộ dễ mở rộng</h3>\s*<ol class="aw-ol">(.*?)</ol>', BODY, re.S)
 ok(mm is not None and len(re.findall(r'<li\b', mm.group(1))) == 6, 'C: “Sáu nguyên tắc” không có đúng 6 mục')
 ok(any('năm câu hỏi' in x['next'] for x in L), 'C: bậc trước bậc chạy nền phải trỏ tới năm câu hỏi')

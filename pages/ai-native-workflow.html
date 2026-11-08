@@ -115,6 +115,11 @@
   .aw-h1 { font-size: clamp(27px, 5vw, 40px); line-height: 1.18; letter-spacing: -.025em; font-weight: 700; margin: 0 0 18px; }
   .aw-lede { font-size: 18px; line-height: 1.65; margin: 0 0 14px; }
   .aw-hint { font-size: 14px; color: var(--aw-mut); margin: 0 0 26px; }
+  .aw-route { border: 1px solid var(--aw-line); border-radius: 12px; padding: 12px 16px; margin: 4px 0 14px; font-size: 14.5px; line-height: 1.6; }
+  .aw-route p { margin: 0 0 4px; line-height: 1.5; }
+  .aw-route p:last-child { margin: 0; }
+  .aw-route a { display: inline-flex; align-items: center; min-height: 44px; white-space: nowrap; }
+  .aw-route b { display: block; }
   .aw-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 8px; }
   .aw-fact { border-top: 2px solid var(--aw-fg); padding: 12px 2px 0; }
   .aw-fact__n { display: block; font-size: 28px; font-weight: 700; letter-spacing: -.02em; line-height: 1.1; margin-bottom: 6px; }
@@ -180,7 +185,8 @@
   .aw-layer--agent { background: var(--aw-panel); }
   .aw-link { display: flex; justify-content: space-between; gap: 12px; padding: 6px 16px; font-size: 13px; color: var(--aw-mut); line-height: 1.45; }
   .aw-link span:last-child { text-align: right; }
-  @media (max-width: 560px) { .aw-layer { grid-template-columns: 1fr; } .aw-layer__s { grid-column: 1; } }
+  @media (max-width: 560px) { .aw-layer { grid-template-columns: 1fr; } .aw-layer__s { grid-column: 1; }
+    .aw-link { flex-direction: column; gap: 0; } .aw-link span:last-child { text-align: left; } }
 
   /* ── sáu việc ───────────────────────────────────────────────────────────── */
   .aw-six { list-style: none; padding: 0; margin: 0 0 8px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; counter-reset: six; }
@@ -220,7 +226,7 @@
     .aw-t tr { display: block; padding: 12px 14px; border-top: 1px solid var(--aw-line); }
     .aw-t tbody tr:first-child { border-top: 0; }
     .aw-t td { display: block; padding: 0; border: 0; }
-    .aw-t td[data-l]::before { content: attr(data-l); display: block; font: 600 11px/1.4 var(--wb-font-mono); letter-spacing: .08em;
+    .aw-t td[data-l]::before { content: attr(data-l); display: block; font: 600 12px/1.4 var(--wb-font-mono); letter-spacing: .08em;
                                text-transform: uppercase; color: var(--aw-mut); margin: 10px 0 2px; }
     .aw-t td:first-child { font-size: 15.5px; }
   }
@@ -253,7 +259,7 @@
 
   /* ── bảng thuật ngữ ─────────────────────────────────────────────────────── */
   .aw-gg { margin: 0 0 22px; }
-  .aw-gg__t { font: 600 12px/1.4 var(--wb-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--aw-mut); margin: 18px 0 8px; }
+  .aw-sec .aw-gg__t { font: 600 12px/1.4 var(--wb-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--aw-mut); margin: 18px 0 8px; }
   .aw-gl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; }
   .aw-g { border-top: 1px solid var(--aw-line); padding: 10px 0 12px; }
   .aw-g:target { background: var(--aw-human-soft); }
@@ -272,7 +278,7 @@
   .aw-tr > summary, .aw-tr--dir { display: grid; grid-template-columns: 17em minmax(0, 1fr) auto; gap: 4px 14px; align-items: baseline;
                                   padding: 9px 14px; }
   .aw-tr .aw-path { padding-left: calc(var(--d, 0) * 18px); }
-  .aw-tr > summary { cursor: pointer; list-style: none; }
+  .aw-tr > summary { cursor: pointer; list-style: none; min-height: 44px; box-sizing: border-box; }
   .aw-tr > summary::-webkit-details-marker { display: none; }
   .aw-tr > summary:hover { background: var(--wb-ink-hover); }
   .aw-tr[open] > summary { background: var(--aw-panel); }
@@ -303,7 +309,7 @@
 
   /* ── mẫu file ───────────────────────────────────────────────────────────── */
   .aw-file { border: 1px solid var(--aw-line); border-radius: 12px; margin: 10px 0; overflow: hidden; }
-  .aw-file > summary { padding: 11px 14px; cursor: pointer; font: 500 13.5px/1.4 var(--wb-font-mono); list-style: none; display: flex; gap: 10px; align-items: baseline; }
+  .aw-file > summary { min-height: 44px; box-sizing: border-box; padding: 12px 14px; cursor: pointer; font: 500 13.5px/1.4 var(--wb-font-mono); list-style: none; display: flex; gap: 10px; align-items: baseline; }
   .aw-file > summary::-webkit-details-marker { display: none; }
   .aw-file > summary::before { content: "+"; color: var(--aw-mut); }
   .aw-file[open] > summary::before { content: "−"; }
@@ -367,7 +373,7 @@
   .aw-kv dd { margin: 0; }
   .aw-kv .is-human { color: var(--aw-human); font-weight: 550; }
   .aw-more { border-top: 1px solid var(--aw-line); margin: 0 -16px; padding: 0 16px; }
-  .aw-more > summary { cursor: pointer; padding: 10px 0; font-size: 14px; color: var(--aw-mut); list-style: none; }
+  .aw-more > summary { cursor: pointer; min-height: 44px; box-sizing: border-box; padding: 11px 0; font-size: 14px; color: var(--aw-mut); list-style: none; }
   .aw-more > summary::-webkit-details-marker { display: none; }
   .aw-more > summary::before { content: "+ "; }
   .aw-more[open] > summary::before { content: "− "; }
@@ -386,7 +392,7 @@
   .aw-lay:nth-child(1) .aw-lay__m, .aw-lay:nth-child(1) .aw-lay__f { color: var(--aw-inv-mut); }
   .aw-lay:nth-child(2) { background: var(--aw-panel); }
   .aw-lay__t { font-weight: 650; font-size: 15.5px; }
-  .aw-lay__t::before { content: "Lớp " counter(lay) " · "; font: 500 12px var(--wb-font-mono); letter-spacing: .04em; opacity: .75; }
+  .aw-lay__t::before { content: "Tầng " counter(lay) " · "; font: 500 12px var(--wb-font-mono); letter-spacing: .04em; opacity: .75; }
   .aw-lay__f { font: 500 13px/1.5 var(--wb-font-mono); color: var(--aw-mut); overflow-wrap: anywhere; }
   .aw-lay__m { grid-column: 2; grid-row: 1 / span 2; font-size: 13.5px; color: var(--aw-mut); line-height: 1.5; }
   @media (max-width: 600px) { .aw-lay { grid-template-columns: 1fr; } .aw-lay__m { grid-column: 1; grid-row: auto; } }
@@ -407,7 +413,7 @@
   .aw-ph { border-top: 3px solid var(--aw-fg); padding-top: 12px; }
   .aw-ph__d { font: 600 13px/1.4 var(--wb-font-mono); letter-spacing: .04em; margin: 0 0 2px; }
   .aw-ph__g { font-size: 13.5px; color: var(--aw-mut); margin: 0 0 10px; }
-  .aw-ph__k { font: 600 11px/1.4 var(--wb-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--aw-mut); margin: 12px 0 4px; }
+  .aw-ph__k { font: 600 12px/1.4 var(--wb-font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--aw-mut); margin: 12px 0 4px; }
   .aw-ph ul { margin: 0; padding-left: 18px; font-size: 14.5px; line-height: 1.55; }
   .aw-ph li { margin-bottom: 5px; }
   @media (max-width: 760px) { .aw-plan { grid-template-columns: 1fr; gap: 22px; } }
@@ -469,6 +475,7 @@
       <li><a href="#rui-ro">Rủi ro và giới hạn</a></li>
       <li><a href="#lo-trinh">Lộ trình 30/60/90 ngày</a></li>
       <li><a href="#mang-theo">Mang theo</a></li>
+      <li class="is-plain"><a href="#thuat-ngu">Bảng thuật ngữ</a></li>
       <li class="is-plain"><a href="#nguon">Nguồn</a></li>
     </ol>
   </nav>
@@ -479,10 +486,14 @@
       <p class="aw-eyebrow">AI trong kỹ thuật phần mềm</p>
       <h1 class="aw-h1">AI làm được phần lớn việc gõ. Con người giữ phần chọn đích, gánh rủi ro và dựng hệ thống kiểm.</h1>
       <p class="aw-lede">Muốn agent tự xây và nuôi một sản phẩm — viết, ship, sửa bug, thêm tính năng, bảo trì — thì việc của con người không mất đi mà đổi chỗ: từ gõ code sang viết luật, viết phép kiểm và ký duyệt. Trang đi từ câu trả lời ngắn tới bộ file cụ thể của một đội, theo đúng tên và cơ chế của Claude Code, có đối chiếu Codex của OpenAI.</p>
-      <p class="aw-hint">Chữ gạch chấm là thuật ngữ: rê chuột, nhấn Tab tới hoặc chạm vào để xem nghĩa; Esc hoặc chạm ra ngoài để đóng.</p>
+      <nav class="aw-route" aria-label="Lối đọc">
+        <p><b>Chỉ cần ý chính, không cần biết code:</b> <a href="#tra-loi">01 Câu trả lời ngắn</a> → <a href="#bac-thang">02 Các bậc</a> → <a href="#cong-ty">08 Các công ty</a> → <a href="#rui-ro">09 Rủi ro</a>.</p>
+        <p><b>Dev muốn dựng bộ AI cho đội:</b> đọc thêm <a href="#khai-niem">03 Khái niệm</a> → <a href="#bo-ai">04 Bộ AI</a> → <a href="#vong-doi">05 Vòng đời</a> → <a href="#mot-ngay">06 Một ngày</a> → <a href="#mo-rong">07 Thêm role</a> → <a href="#lo-trinh">10 Lộ trình</a>.</p>
+      </nav>
+      <p class="aw-hint">Chữ gạch chấm là thuật ngữ: rê chuột, nhấn Tab tới hoặc chạm vào để xem nghĩa; Esc hoặc chạm ra ngoài để đóng. Đủ cả <span data-count="gloss">64</span> thuật ngữ ở <a href="#thuat-ngu">bảng cuối trang</a>.</p>
       <div class="aw-facts">
         <div class="aw-fact"><span class="aw-fact__n">0–20%</span><span class="aw-fact__l">phần việc mà hơn một nửa kỹ sư Anthropic nói giao hẳn được cho AI, dù họ dùng Claude trong 59% công việc (khảo sát 08/2025)</span></div>
-        <div class="aw-fact"><span class="aw-fact__n">1.000+</span><span class="aw-fact__l">PR mỗi tuần ở Stripe do agent viết toàn bộ; PR nào cũng vẫn qua người review (02/2026)</span></div>
+        <div class="aw-fact"><span class="aw-fact__n">1.000+</span><span class="aw-fact__l"><button type="button" class="tm" data-t="pr">PR</button> mỗi tuần ở Stripe do agent viết toàn bộ; PR nào cũng vẫn qua người review (02/2026)</span></div>
         <div class="aw-fact"><span class="aw-fact__n">19%</span><span class="aw-fact__l">dev kỳ cựu chậm hơn khi dùng AI đầu 2025, trong khi tin mình đã nhanh hơn 20% (METR, 07/2025)</span></div>
       </div>
     </header>
@@ -493,7 +504,7 @@
       <h2>AI làm bao nhiêu, người còn giữ gì</h2>
       <p class="aw-sec__lede">Agent đã viết, chạy và sửa code được hàng giờ không cần ai nhắn. Thứ nó không làm thay được là chọn đích, gánh rủi ro và ký tên.</p>
 
-      <p>Cách nhìn đúng có ba lớp. Ở dưới, <button type="button" class="tm" data-t="agent">agent</button> làm phần nặng: đọc repo, viết code và test, chạy lệnh, đọc lỗi rồi sửa tiếp. Ở giữa là <button type="button" class="tm" data-t="harness">harness</button> — luật, quyền, phép kiểm mà người viết ra một lần và máy áp ở mọi lượt. Ở trên là người: đặt đích, duyệt những gì không đảo ngược được, và nhận trách nhiệm.</p>
+      <p>Cách nhìn đúng có ba lớp. Ở dưới, <button type="button" class="tm" data-t="agent">agent</button> làm phần nặng: đọc <button type="button" class="tm" data-t="repo">repo</button>, viết code và <button type="button" class="tm" data-t="test">test</button>, chạy lệnh, đọc lỗi rồi sửa tiếp. Ở giữa là <button type="button" class="tm" data-t="harness">harness</button> — luật, quyền, phép kiểm mà người viết ra một lần và máy áp ở mọi lượt. Ở trên là người: đặt đích, duyệt những gì không đảo ngược được, và nhận trách nhiệm.</p>
 
       <div class="aw-stack" role="img" aria-label="Sơ đồ ba lớp. Trên cùng là người: đặt đích, quyết định một chiều, chấp nhận rủi ro, phán xét chất lượng, chịu trách nhiệm. Ở giữa là harness: luật, quyền, hook, cổng kiểm do người viết một lần và máy áp mọi lượt. Dưới cùng là agent: đọc, viết code và test, chạy lệnh, sửa theo lỗi, lặp tới khi qua cổng. Người viết xuống một lần; kết quả đi lên sau khi qua cổng.">
         <div class="aw-layer aw-layer--human">
@@ -517,16 +528,16 @@
       <h3>Sáu việc người giữ</h3>
       <ol class="aw-six">
         <li><b>Chọn đích</b><span>Làm gì, cho ai, “xong” nghĩa là gì. Agent tối ưu đúng thứ được giao; giao sai đích thì sai nhanh hơn.</span></li>
-        <li><b>Quyết định một chiều</b><span>Đổi schema, xoá dữ liệu, công bố API, mô hình bảo mật, giá — những thứ đảo lại tốn kém hoặc không được.</span></li>
-        <li><b>Chấp nhận rủi ro</b><span>Ship hay chưa, bật cho bao nhiêu phần trăm người dùng, rollback lúc nào.</span></li>
+        <li><b><button type="button" class="tm" data-t="one-way">Quyết định một chiều</button></b><span>Đổi schema, xoá dữ liệu, công bố <button type="button" class="tm" data-t="api">API</button>, mô hình bảo mật, giá — những thứ đảo lại tốn kém hoặc không được.</span></li>
+        <li><b>Chấp nhận rủi ro</b><span>Ship hay chưa, bật cho bao nhiêu phần trăm người dùng, <button type="button" class="tm" data-t="rollback">rollback</button> lúc nào.</span></li>
         <li><b>Phán xét chất lượng</b><span>Trải nghiệm có đúng ý không, code có dễ nuôi không — điều mà test xanh không nói.</span></li>
-        <li><b>Chịu trách nhiệm</b><span>Người ký merge, người trực sự cố, người trả lời khách. Phần mềm không gánh trách nhiệm thay ai.</span></li>
+        <li><b>Chịu trách nhiệm</b><span>Người ký <button type="button" class="tm" data-t="merge">merge</button>, người trực sự cố, người trả lời khách. Phần mềm không gánh trách nhiệm thay ai.</span></li>
         <li><b>Dựng hệ thống kiểm</b><span>Test, cổng, quyền, eval: thứ cho phép giao việc mà không phải ngồi xem từng bước.</span></li>
       </ol>
 
       <h3>Vì sao “100%” là sai đích</h3>
       <ul class="aw-ul">
-        <li><b>Nút thắt dời sang khâu kiểm.</b> Ở Anthropic, số thay đổi merge mỗi ngày tăng từ khoảng 2.500 (05/2026) lên hơn 30.000 (09/2026), và chỗ nghẽn thành source control, build, <button type="button" class="tm" data-t="ci">CI</button> — hạ tầng dựng cho tốc độ của người. Chừng ấy diff không ai đọc hết bằng mắt; máy phải kiểm trước.</li>
+        <li><b>Nút thắt dời sang khâu kiểm.</b> Ở Anthropic, số thay đổi merge mỗi ngày tăng từ khoảng 2.500 (05/2026) lên hơn 30.000 (09/2026), và chỗ nghẽn thành source control, build, <button type="button" class="tm" data-t="ci">CI</button> — hạ tầng dựng cho tốc độ của người. Chừng ấy <button type="button" class="tm" data-t="diff">diff</button> không ai đọc hết bằng mắt; máy phải kiểm trước.</li>
         <li><b>Nghịch lý giám sát.</b> Kiểm được output của AI cần đúng những kỹ năng mà việc giao hết cho AI làm teo đi — lo ngại do chính kỹ sư Anthropic nêu trong khảo sát 08/2025.</li>
         <li><b>Cảm giác không phải số đo.</b> Trong thí nghiệm ngẫu nhiên của METR (07/2025), 16 dev kỳ cựu làm 246 issue thật trên repo của mình; khi được dùng AI họ chậm hơn 19%, dù sau đó vẫn tin mình nhanh hơn 20%. Đó là ảnh chụp công cụ đầu 2025; bài học về đo thì không cũ.</li>
       </ul>
@@ -556,11 +567,11 @@
       <div class="aw-box">
         <h3 id="nam-cau-hoi">Năm câu hỏi trước khi để agent chạy không người trông</h3>
         <ol class="aw-ol" id="aw-five">
-          <li><b>Biết “xong” là gì không?</b> Một spec, một test đang đỏ phải chuyển xanh, một điều kiện kiểm được.</li>
+          <li><b>Biết “xong” là gì không?</b> Một <button type="button" class="tm" data-t="spec">spec</button>, một test đang đỏ phải chuyển xanh, một điều kiện kiểm được.</li>
           <li><b>Tự kiểm được không?</b> Bộ test, Stop hook, một lượt review.</li>
-          <li><b>Được chạm vào đâu?</b> Luật quyền, <button type="button" class="tm" data-t="sandbox">sandbox</button>, <button type="button" class="tm" data-t="worktree">worktree</button>, đúng một nhánh được push.</li>
+          <li><b>Được chạm vào đâu?</b> <button type="button" class="tm" data-t="permissions">Luật quyền</button>, <button type="button" class="tm" data-t="sandbox">sandbox</button>, <button type="button" class="tm" data-t="worktree">worktree</button>, đúng một <button type="button" class="tm" data-t="branch">nhánh</button> được <button type="button" class="tm" data-t="push">push</button>.</li>
           <li><b>Cái gì dừng nó?</b> Giới hạn số lượt, giới hạn chi phí (<code>--max-turns</code>, <code>--max-budget-usd</code>), hạn mức chi.</li>
-          <li><b>Kết quả đổ về đâu, ai ký?</b> Một PR, một bình luận, một bản tóm tắt; rồi người duyệt merge, deploy, hay bất cứ gì không lấy lại được.</li>
+          <li><b>Kết quả đổ về đâu, ai ký?</b> Một PR, một bình luận, một bản tóm tắt; rồi người duyệt merge, <button type="button" class="tm" data-t="deploy">deploy</button>, hay bất cứ gì không lấy lại được.</li>
         </ol>
         <p class="aw-src">Theo tài liệu Claude Code, Best practices, mục “Let Claude run without you”.</p>
       </div>
@@ -615,17 +626,17 @@
         </div>
       </div>
       <p class="aw-src">Theo tài liệu Claude Code, Extend Claude Code, mục “Context cost by feature”. Hình vẽ khoản mục, không vẽ tỉ lệ.</p>
-      <p>Cửa sổ có trần, và đầy chưa phải vấn đề duy nhất: càng nhiều token, model càng nhớ lại kém — Anthropic gọi là <button type="button" class="tm" data-t="context-rot">context rot</button> và khuyên tìm “tập token nhỏ nhất mà nhiều tín hiệu nhất”. Hệ quả cho cách sắp file: cột trái tốn chỗ ở mọi lượt nên phải ngắn; quy trình dài sang cột phải, thành skill hoặc thành <button type="button" class="tm" data-t="rules">rule</button> theo đường dẫn. Việc ồn — đọc 50 file để tìm một hàm — giao cho <button type="button" class="tm" data-t="subagent">subagent</button>, chỉ kết luận quay về.</p>
+      <p>Cửa sổ có trần, và đầy chưa phải vấn đề duy nhất: càng nhiều <button type="button" class="tm" data-t="token">token</button>, model càng nhớ lại kém — Anthropic gọi là <button type="button" class="tm" data-t="context-rot">context rot</button> và khuyên tìm “tập token nhỏ nhất mà nhiều tín hiệu nhất”. Hệ quả cho cách sắp file: cột trái tốn chỗ ở mọi lượt nên phải ngắn; quy trình dài sang cột phải, thành skill hoặc thành <button type="button" class="tm" data-t="rules">rule</button> theo đường dẫn. Việc ồn — đọc 50 file để tìm một hàm — giao cho <button type="button" class="tm" data-t="subagent">subagent</button>, chỉ kết luận quay về.</p>
 
       <h3>Lời dặn và luật cứng</h3>
-      <p>Mọi chỉ dẫn thuộc một trong hai loại. <b>Lời dặn</b> — prompt, CLAUDE.md, skill — được model đọc rồi tự quyết; nó làm theo gần như mọi lần, nhưng không có gì bảo đảm. <b>Luật cứng</b> — hook, luật deny, sandbox, CI, <button type="button" class="tm" data-t="branch-protection">branch protection</button> — do harness hoặc hệ thống ép, bất kể model nghĩ gì.</p>
+      <p>Mọi chỉ dẫn thuộc một trong hai loại. <b>Lời dặn</b> — <button type="button" class="tm" data-t="prompt">prompt</button>, CLAUDE.md, skill — được model đọc rồi tự quyết; nó làm theo gần như mọi lần, nhưng không có gì bảo đảm. <b>Luật cứng</b> — hook, luật deny, sandbox, CI, <button type="button" class="tm" data-t="branch-protection">branch protection</button> — do harness hoặc hệ thống ép, bất kể model nghĩ gì.</p>
       <div class="aw-tw">
         <table class="aw-t">
           <thead><tr><th>Câu hỏi</th><th>Model quyết (lời dặn)</th><th>Hệ thống ép (luật cứng)</th></tr></thead>
           <tbody>
             <tr><td>Làm gì</td><td data-l="Model quyết">prompt, CLAUDE.md, skill model tự chọn</td><td data-l="Hệ thống ép">hook; skill chỉ người gọi được</td></tr>
-            <tr><td>Được chạm vào đâu</td><td data-l="Model quyết">bộ phân loại của auto mode</td><td data-l="Hệ thống ép">luật deny, sandbox, managed settings</td></tr>
-            <tr><td>Khi nào là xong</td><td data-l="Model quyết">đòi bằng chứng, <code>/goal</code>, review</td><td data-l="Hệ thống ép">test, typecheck, Stop hook, CI</td></tr>
+            <tr><td>Được chạm vào đâu</td><td data-l="Model quyết">bộ phân loại của <button type="button" class="tm" data-t="auto-mode">auto mode</button></td><td data-l="Hệ thống ép">luật deny, sandbox, <button type="button" class="tm" data-t="managed-settings">managed settings</button></td></tr>
+            <tr><td>Khi nào là xong</td><td data-l="Model quyết">đòi bằng chứng, <code>/goal</code>, review</td><td data-l="Hệ thống ép">test, <button type="button" class="tm" data-t="typecheck">typecheck</button>, Stop hook, CI</td></tr>
             <tr><td>Tiêu bao nhiêu</td><td data-l="Model quyết">mức effort</td><td data-l="Hệ thống ép"><code>--max-turns</code>, <code>--max-budget-usd</code>, hạn mức chi</td></tr>
             <tr><td>Ai có lời cuối</td><td data-l="Model quyết">bản tóm tắt của agent</td><td data-l="Hệ thống ép">branch protection, người duyệt merge</td></tr>
           </tbody>
@@ -635,12 +646,8 @@
       <div class="aw-note">
         <p>Một dòng trong CLAUDE.md đã viết đậm, viết hoa mà vẫn bị bỏ qua thì dòng ấy thuộc về hook. Ngược lại, hook cho chuyện chỉ là sở thích thì nên xoá, để model tự cân nhắc.</p>
       </div>
-      <p>Hai chữ hay bị gộp: hook trả lời “khi nào chạy”, <button type="button" class="tm" data-t="gate">cổng</button> trả lời “đạt hay chưa”. Hook sau mỗi lần sửa file gọi linter; pre-commit và CI gọi cùng một script kiểm. Đổi lúc chạy mà giữ phép kiểm, hay ngược lại, đều được — vì thế tách hai khái niệm.</p>
+      <p>Hai chữ hay bị gộp: hook trả lời “khi nào chạy”, <button type="button" class="tm" data-t="gate">cổng</button> trả lời “đạt hay chưa”. Hook sau mỗi lần sửa file gọi <button type="button" class="tm" data-t="lint">linter</button>; <button type="button" class="tm" data-t="pre-commit">pre-commit</button> và CI gọi cùng một script kiểm. Đổi lúc chạy mà giữ phép kiểm, hay ngược lại, đều được — vì thế tách hai khái niệm.</p>
 
-      <h3 id="thuat-ngu">Bảng thuật ngữ</h3>
-      <p><span data-count="gloss">39</span> thuật ngữ, chia ba loại: <b>cơ chế sản phẩm</b> có thật trong Claude Code, Codex hay git; <b>quy ước team</b> do đội tự đặt, harness không biết tới; và <b>khái niệm chung</b>.</p>
-      <div id="aw-gloss"></div>
-      <noscript><p>Bảng thuật ngữ và các popup cần JavaScript.</p></noscript>
     </section>
 
     <!-- ══════════ BỘ AI CỦA ĐỘI ══════════ -->
@@ -676,7 +683,7 @@
         </details>
         <details class="aw-tr" style="--d:2">
           <summary><span class="aw-path">rules/api.md</span><span class="aw-what">Luật chỉ nạp khi agent chạm file khớp mẫu</span><span class="aw-chips"><span class="aw-chip is-mech">cơ chế</span><span class="aw-chip">commit</span></span></summary>
-          <dl class="aw-tr__body"><dt>Ai đọc</dt><dd>Model, khi làm việc với file khớp <code>paths</code>; rule không có <code>paths</code> nạp ở mọi phiên.</dd><dt>Ví dụ</dt><dd>Frontmatter <code>paths: ["src/api/**"]</code> rồi quy ước đặt tên endpoint, mã lỗi.</dd></dl>
+          <dl class="aw-tr__body"><dt>Ai đọc</dt><dd>Model, khi làm việc với file khớp <code>paths</code>; rule không có <code>paths</code> nạp ở mọi phiên.</dd><dt>Ví dụ</dt><dd><button type="button" class="tm" data-t="frontmatter">Frontmatter</button> <code>paths: ["src/api/**"]</code> rồi quy ước đặt tên endpoint, mã lỗi.</dd></dl>
         </details>
         <details class="aw-tr" style="--d:2">
           <summary><span class="aw-path">skills/&lt;việc&gt;/SKILL.md</span><span class="aw-what">Quy trình riêng của repo</span><span class="aw-chips"><span class="aw-chip is-mech">cơ chế</span><span class="aw-chip">commit</span></span></summary>
@@ -713,7 +720,7 @@
       </div>
 
       <h3>Lớp 2 — plugin dùng chung của công ty</h3>
-      <p>Plugin là một thư mục có manifest <code>.claude-plugin/plugin.json</code>; skill, subagent, hook và máy chủ MCP nằm ở gốc thư mục ấy. Skill trong plugin mang tiền tố tên plugin, ví dụ <code>/eng:fix-bug</code>, nên nhiều plugin không giẫm tên nhau. Danh mục plugin của công ty — <button type="button" class="tm" data-t="marketplace">marketplace</button> — là một repo có <code>.claude-plugin/marketplace.json</code>.</p>
+      <p>Plugin là một thư mục có manifest <code>.claude-plugin/plugin.json</code>; skill, subagent, hook và máy chủ <button type="button" class="tm" data-t="mcp">MCP</button> nằm ở gốc thư mục ấy. Skill trong plugin mang tiền tố tên plugin, ví dụ <code>/eng:fix-bug</code>, nên nhiều plugin không giẫm tên nhau. Danh mục plugin của công ty — <button type="button" class="tm" data-t="marketplace">marketplace</button> — là một repo có <code>.claude-plugin/marketplace.json</code>.</p>
       <div class="aw-tree">
         <div class="aw-tr aw-tr--dir" style="--d:0"><span class="aw-path">eng/</span><span class="aw-what">plugin của đội kỹ thuật</span><span></span></div>
         <details class="aw-tr" style="--d:1">
@@ -772,7 +779,7 @@
         <h3>Ba ý hay gặp khi phác một plugin, và chỗ đúng của chúng</h3>
         <ul class="aw-ul">
           <li><b>“Một file quy trình cho mỗi role.”</b> Vai là subagent: <code>agents/&lt;vai&gt;.md</code> mang system prompt, danh sách công cụ được phép, skill nạp sẵn. Quy trình là skill. Claude Code không có loại file “role” riêng.</li>
-          <li><b>“Một file các tool hay dùng.”</b> Kết nối nằm ở <code>.mcp.json</code>. Cách dùng đúng — trạng thái ticket, nhãn, quy ước nhánh — nằm trong một skill tham chiếu như <code>tracker</code>.</li>
+          <li><b>“Một file các tool hay dùng.”</b> Kết nối nằm ở <code>.mcp.json</code>. Cách dùng đúng — trạng thái <button type="button" class="tm" data-t="ticket">ticket</button>, nhãn, quy ước nhánh — nằm trong một skill tham chiếu như <code>tracker</code>.</li>
           <li><b>“Tài khoản và mật khẩu của các tool.”</b> Không nằm trong file nào của plugin hay repo. Mục ngay sau mẫu file nói chúng nằm ở đâu.</li>
         </ul>
         <p class="aw-src">Subagent đi kèm plugin bỏ qua các khoá <code>hooks</code>, <code>mcpServers</code>, <code>permissionMode</code> vì lý do bảo mật; giới hạn vai bằng <code>tools</code>, còn quyền chung đặt trong settings.</p>
@@ -872,8 +879,8 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         </table>
       </div>
       <ul class="aw-ul">
-        <li><b>Git không quên.</b> Xoá token ở commit sau thì giá trị vẫn nằm trong lịch sử; plugin được chép nguyên thư mục tới máy mọi người cài. Token đã vào repo coi như đã lộ: thu hồi rồi cấp lại.</li>
-        <li><b>Thứ agent đọc được thì nằm trong ngữ cảnh.</b> Nó đi vào transcript của phiên, mà transcript lưu dạng văn bản thường trên máy (<code>~/.claude/projects/</code>).</li>
+        <li><b>Git không quên.</b> Xoá token ở <button type="button" class="tm" data-t="commit">commit</button> sau thì giá trị vẫn nằm trong lịch sử; plugin được chép nguyên thư mục tới máy mọi người cài. Token đã vào repo coi như đã lộ: thu hồi rồi cấp lại.</li>
+        <li><b>Thứ agent đọc được thì nằm trong ngữ cảnh.</b> Nó đi vào <button type="button" class="tm" data-t="transcript">transcript</button> của phiên, mà transcript lưu dạng văn bản thường trên máy (<code>~/.claude/projects/</code>).</li>
         <li><b><button type="button" class="tm" data-t="injection">Prompt injection</button>.</b> Một ticket hay trang web có lệnh giấu có thể bảo agent gửi thứ nó đọc được ra ngoài. Token không bao giờ vào ngữ cảnh thì không lộ theo đường này.</li>
         <li><b>OAuth gắn với từng người.</b> Quyền đúng bằng quyền của tài khoản, nhật ký ghi đúng người, thu hồi một người không ảnh hưởng ai. Đặc tả MCP dựng việc uỷ quyền trên OAuth 2.1 và cấm máy chủ chuyển nguyên token nhận được sang dịch vụ khác.</li>
         <li><b>Quyền tối thiểu.</b> Xin phạm vi nhỏ nhất đủ việc: máy chủ MCP của Linear có địa chỉ chỉ-đọc riêng (<code>/mcp/readonly</code>); reviewer chỉ cần Read, Grep, Glob; token CI chỉ ghi được vào nhánh của nó.</li>
@@ -954,15 +961,16 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         <li class="aw-st is-human"><span class="aw-st__n">2</span><p class="aw-st__t">Spec</p><p><b>Agent:</b> nháp <button type="button" class="tm" data-t="prd">PRD</button> và kịch bản <button type="button" class="tm" data-t="bdd">BDD</button> từ ticket và trao đổi.</p><p><b>Cổng:</b> spec <code>ready</code>.</p><p class="aw-st__h">Người duyệt đích</p></li>
         <li class="aw-st is-human"><span class="aw-st__n">3</span><p class="aw-st__t">Thiết kế, kế hoạch</p><p><b>Agent:</b> tech design; lựa chọn khó đảo ngược thành ADR; chia task, mỗi task một phép kiểm.</p><p><b>Cổng:</b> design <code>ready</code>.</p><p class="aw-st__h">Người duyệt quyết định một chiều</p></li>
         <li class="aw-st"><span class="aw-st__n">4</span><p class="aw-st__t">Code và test</p><p><b>Agent:</b> mỗi task một implementer trong worktree riêng; test trước, code sau.</p><p><b>Cổng:</b> hook sau mỗi lần sửa; Stop hook chạy typecheck và test.</p></li>
-        <li class="aw-st is-human"><span class="aw-st__n">5</span><p class="aw-st__t">Review, CI</p><p><b>Agent:</b> reviewer ngữ cảnh sạch; CI chạy toàn bộ.</p><p><b>Cổng:</b> CI xanh, branch protection.</p><p class="aw-st__h">Người duyệt merge</p></li>
-        <li class="aw-st is-human"><span class="aw-st__n">6</span><p class="aw-st__t">Phát hành</p><p><b>Agent:</b> release note; bật <button type="button" class="tm" data-t="feature-flag">cờ tính năng</button> cho một phần nhỏ người dùng.</p><p><b>Cổng:</b> canary, cờ tắt được ngay.</p><p class="aw-st__h">Người quyết bật rộng</p></li>
+        <li class="aw-st is-human"><span class="aw-st__n">5</span><p class="aw-st__t">Review, CI</p><p><b>Agent:</b> <button type="button" class="tm" data-t="doer-judge">reviewer ngữ cảnh sạch</button>; CI chạy toàn bộ.</p><p><b>Cổng:</b> CI xanh, branch protection.</p><p class="aw-st__h">Người duyệt merge</p></li>
+        <li class="aw-st is-human"><span class="aw-st__n">6</span><p class="aw-st__t">Phát hành</p><p><b>Agent:</b> release note; bật <button type="button" class="tm" data-t="feature-flag">cờ tính năng</button> cho một phần nhỏ người dùng.</p><p><b>Cổng:</b> <button type="button" class="tm" data-t="canary">canary</button>, cờ tắt được ngay.</p><p class="aw-st__h">Người quyết bật rộng</p></li>
         <li class="aw-st"><span class="aw-st__n">7</span><p class="aw-st__t">Vận hành</p><p><b>Agent:</b> đọc lỗi, log, metric qua MCP chỉ đọc; tóm tắt sức khoẻ; mở ticket.</p><p><b>Cổng:</b> cảnh báo theo ngưỡng.</p></li>
-        <li class="aw-st is-human"><span class="aw-st__n">8</span><p class="aw-st__t">Sự cố, bug</p><p><b>Agent:</b> điều tra; đề xuất cầm máu trước (rollback, tắt cờ), rồi bản vá kèm test tái hiện.</p><p><b>Cổng:</b> quyền chỉ đọc trên production.</p><p class="aw-st__h">Người chỉ huy sự cố, quyết rollback</p></li>
+        <li class="aw-st is-human"><span class="aw-st__n">8</span><p class="aw-st__t">Sự cố, bug</p><p><b>Agent:</b> điều tra; đề xuất cầm máu trước (rollback, tắt cờ), rồi bản vá kèm test tái hiện.</p><p><b>Cổng:</b> quyền chỉ đọc trên <button type="button" class="tm" data-t="production">production</button>.</p><p class="aw-st__h">Người chỉ huy sự cố, quyết rollback</p></li>
       </ol>
-      <p class="aw-legend"><b>●</b> chặng người quyết. Tích hợp: tracker (Jira, Linear) và GitHub qua MCP; CI chạy agent bằng <code>claude -p</code> hay GitHub Action; công cụ giám sát lỗi như Sentry qua MCP chỉ đọc. Với app di động, “bật cho một phần nhỏ” là phát hành theo đợt trên App Store hay Google Play, và bản nộp store vẫn qua tay người.</p>
-      <p>Song song với vòng chính là bảo trì nền: agent chạy theo lịch để cập nhật dependency, dọn mã chết, sửa test chập chờn, mỗi việc kết thúc bằng một PR. Khi viết code rẻ đi, phần bảo trì lớn lên chứ không nhỏ đi — mục Các công ty có một đợt dọn hơn 800.000 dòng.</p>
+      <p class="aw-legend"><b>●</b> chặng người quyết. Tích hợp: tracker (Jira, Linear) và GitHub qua MCP; CI chạy agent <button type="button" class="tm" data-t="headless">headless</button> bằng <code>claude -p</code> hay GitHub Action; công cụ giám sát lỗi như Sentry qua MCP chỉ đọc. Với app di động, “bật cho một phần nhỏ” là phát hành theo đợt trên App Store hay Google Play, và bản nộp store vẫn qua tay người.</p>
+      <p>Song song với vòng chính là bảo trì nền: agent chạy theo lịch để cập nhật <button type="button" class="tm" data-t="dependency">dependency</button>, dọn mã chết, sửa test chập chờn, mỗi việc kết thúc bằng một PR. Khi viết code rẻ đi, phần bảo trì lớn lên chứ không nhỏ đi — mục Các công ty có một đợt dọn hơn 800.000 dòng.</p>
 
       <h3>Cổng xếp lớp: lớp sau bắt thứ lớp trước để lọt</h3>
+      <p>Mỗi dòng: lúc cổng chạy, cổng là gì, và dòng chữ xám là thứ nó bắt được.</p>
       <ol class="aw-gates">
         <li class="aw-gate"><span class="aw-gate__w">Trước mỗi hành động</span><span class="aw-gate__g">Quyền và sandbox<span>lệnh nguy hiểm, đọc file bí mật, gọi mạng lạ</span></span></li>
         <li class="aw-gate"><span class="aw-gate__w">Ngay sau khi sửa</span><span class="aw-gate__g">Hook PostToolUse: format, lint<span>lỗi khách quan, phản hồi trong vài giây</span></span></li>
@@ -981,7 +989,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
       <p class="aw-sec__no">Một ngày</p>
       <h2>Một ngày của dev: <span data-count="situations">12</span> tình huống</h2>
       <p class="aw-sec__lede">Mỗi tình huống: cái gì kích hoạt, skill hay agent nào chạy, cổng nào chặn, và phần của người.</p>
-      <p>Tên như <code>/fix-bug</code>, <code>/hotfix</code> là skill của đội, viết theo mẫu ở mục Bộ AI của một đội dev; trong plugin chúng mang tiền tố, ví dụ <code>/eng:fix-bug</code>. <code>/batch</code> và <code>/code-review</code> là skill có sẵn trong Claude Code. Bấm “Các bước và cổng” để xem chi tiết.</p>
+      <p>Tên như <code>/fix-bug</code>, <code>/hotfix</code> là skill của đội, viết theo mẫu ở mục Bộ AI của một đội dev; trong plugin chúng mang tiền tố, ví dụ <code>/eng:fix-bug</code>. Tên không có trong cây plugin mẫu — <code>/add-tests</code>, <code>/refactor</code>, <code>/investigate</code>, <code>/explain-codebase</code> — là skill đội viết thêm theo cùng mẫu khi việc ấy lặp lại. <code>/batch</code> và <code>/code-review</code> là skill có sẵn trong Claude Code. Bấm “Các bước và cổng” để xem chi tiết.</p>
       <div class="aw-cards" id="aw-day"></div>
       <noscript><p>Danh sách tình huống cần JavaScript.</p></noscript>
     </section>
@@ -990,7 +998,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
     <section class="aw-sec" id="mo-rong">
       <p class="aw-sec__no">Mở rộng</p>
       <h2>Thêm một role mới mà không phá cái cũ</h2>
-      <p class="aw-sec__lede">Tách bốn lớp, mỗi lớp một chủ và một nhịp thay đổi. Thêm role là thêm file ở lớp 2 và lớp 3, không sửa lớp 1.</p>
+      <p class="aw-sec__lede">Tách bốn tầng, mỗi tầng một chủ và một nhịp thay đổi. Thêm role là thêm file ở tầng 2 và tầng 3, không sửa tầng 1.</p>
       <ol class="aw-layers">
         <li class="aw-lay"><span class="aw-lay__t">Luật chung</span><span class="aw-lay__f">CLAUDE.md / AGENTS.md của công ty, managed settings</span><span class="aw-lay__m">Đổi hiếm. Chủ: nhóm nền tảng. Bảo mật, quy ước commit, điều cấm.</span></li>
         <li class="aw-lay"><span class="aw-lay__t">Vai</span><span class="aw-lay__f">agents/&lt;vai&gt;.md</span><span class="aw-lay__m">Đổi khi vai đổi cách làm. Chủ: trưởng nhóm của vai.</span></li>
@@ -1010,10 +1018,11 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
           </tbody>
         </table>
       </div>
+      <p>Thứ tự khi thêm một role, ví dụ QA: viết <code>agents/qa.md</code> với danh sách công cụ nhỏ nhất đủ việc; viết một skill cho mỗi việc vai ấy lặp lại; khai tích hợp vai cần ở tầng 4; ghi chủ thư mục mới vào CODEOWNERS, thêm vài ca eval, tăng <code>version</code> của plugin rồi phát.</p>
 
       <h3>Sáu nguyên tắc giữ bộ dễ mở rộng</h3>
       <ol class="aw-ol">
-        <li><b>Thêm bằng file mới, không sửa file của người khác.</b> Mỗi thư mục skill một chủ, ghi trong <code>CODEOWNERS</code>.</li>
+        <li><b>Thêm bằng file mới, không sửa file của người khác.</b> Mỗi thư mục skill một chủ, ghi trong <button type="button" class="tm" data-t="codeowners">CODEOWNERS</button>.</li>
         <li><b>Mô tả không chồng nhau.</b> Model chọn skill theo <code>description</code>; hai mô tả na ná thì chọn nhầm. Mỗi mô tả nói việc gì và khi nào dùng, việc chính đứng đầu.</li>
         <li><b>Luật của vai ở trong vai.</b> Đổ luật QA vào CLAUDE.md chung là bắt mọi phiên của mọi người trả giá ngữ cảnh cho nó.</li>
         <li><b>Skill gọi “tracker”, không gọi “Jira”.</b> Đổi Jira sang Linear thì sửa <code>.mcp.json</code> và một skill tham chiếu, không sửa hai mươi skill.</li>
@@ -1044,7 +1053,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         <article class="aw-cocard">
           <p class="aw-cocard__o">Anthropic · 05/2026 → 09/2026</p>
           <h3 class="aw-cocard__t">Khi code rẻ, hạ tầng thành nút thắt</h3>
-          <p>Số thay đổi merge vào monorepo mỗi ngày: khoảng 2.500 (05/2026), hơn 30.000 (09/2026). Git, build, CI vốn dựng cho tốc độ của người thành chỗ nghẽn; một nhóm 7 người dựng hệ quản lý mã nguồn Scion và công cụ review Antique, chuyển hẳn khỏi git trong 5 tháng.</p>
+          <p>Số thay đổi merge vào <button type="button" class="tm" data-t="monorepo">monorepo</button> mỗi ngày: khoảng 2.500 (05/2026), hơn 30.000 (09/2026). Git, build, CI vốn dựng cho tốc độ của người thành chỗ nghẽn; một nhóm 7 người dựng hệ quản lý mã nguồn Scion và công cụ review Antique, chuyển hẳn khỏi git trong 5 tháng.</p>
           <p class="aw-cocard__s">Redesigning source control at Anthropic, 13/10/2026</p>
         </article>
         <article class="aw-cocard">
@@ -1186,7 +1195,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         </div>
       </div>
       <h3>Đo gì</h3>
-      <p>Năm chỉ số giao phần mềm của DORA, chia hai nhóm. Thông lượng: thời gian từ commit tới production, tần suất deploy, thời gian khôi phục sau một lần deploy hỏng. Độ ổn định: tỉ lệ thay đổi phải can thiệp ngay sau deploy, tỉ lệ deploy ngoài kế hoạch vì sự cố. Thêm hai số riêng cho agent: thời gian PR chờ review, và tỉ lệ PR của agent bị trả lại. Chỉ đếm số PR thì thưởng cho PR vụn.</p>
+      <p>Năm chỉ số giao phần mềm của <button type="button" class="tm" data-t="dora">DORA</button>, chia hai nhóm. Thông lượng: thời gian từ commit tới production, tần suất deploy, thời gian khôi phục sau một lần deploy hỏng. Độ ổn định: tỉ lệ thay đổi phải can thiệp ngay sau deploy, tỉ lệ deploy ngoài kế hoạch vì sự cố. Thêm hai số riêng cho agent: thời gian PR chờ review, và tỉ lệ PR của agent bị trả lại. Chỉ đếm số PR thì thưởng cho PR vụn.</p>
     </section>
 
     <!-- ══════════ MANG THEO ══════════ -->
@@ -1201,6 +1210,15 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
         <li><b>Token không bao giờ ở trong file.</b> OAuth, kho bí mật, biến môi trường; quyền tối thiểu.</li>
         <li><b>Đo bằng số, không bằng cảm giác.</b></li>
       </ol>
+    </section>
+
+    <!-- ══════════ THUẬT NGỮ ══════════ -->
+    <section class="aw-sec aw-sec--plain" id="thuat-ngu">
+      <p class="aw-sec__no">Tra cứu</p>
+      <h2>Bảng thuật ngữ</h2>
+      <p><span data-count="gloss">64</span> thuật ngữ, chia ba loại: <b>cơ chế sản phẩm</b> có thật trong Claude Code, Codex, git hay GitHub; <b>quy ước team</b> do đội tự đặt, harness không biết tới; và <b>khái niệm chung</b>. Popup của mỗi thuật ngữ gạch chấm trong bài có liên kết tới đúng mục ở đây.</p>
+      <div id="aw-gloss"></div>
+      <noscript><p>Bảng thuật ngữ và các popup cần JavaScript.</p></noscript>
     </section>
 
     <!-- ══════════ NGUỒN ══════════ -->
@@ -1447,7 +1465,57 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
     { "k": "oauth", "t": "OAuth", "vi": "đăng nhập uỷ quyền", "kind": "khai-niem",
       "d": "Dịch vụ cấp cho ứng dụng một token thay mặt người dùng, phạm vi giới hạn, thu hồi được; mật khẩu không đi qua ứng dụng.", "w": "" },
     { "k": "feature-flag", "t": "cờ tính năng", "vi": "feature flag", "kind": "khai-niem",
-      "d": "Công tắc bật, tắt một tính năng khi đang chạy mà không deploy lại; dùng để bật dần và tắt khẩn.", "w": "" }
+      "d": "Công tắc bật, tắt một tính năng khi đang chạy mà không deploy lại; dùng để bật dần và tắt khẩn.", "w": "" },
+    { "k": "repo", "t": "repo", "vi": "kho mã nguồn", "kind": "khai-niem",
+      "d": "Thư mục dự án do git quản lý: toàn bộ code, tài liệu, cấu hình, kèm lịch sử mọi lần thay đổi. Bản chung của đội thường nằm trên GitHub hoặc GitLab.", "w": "" },
+    { "k": "commit", "t": "commit", "vi": "lần lưu vào lịch sử", "kind": "khai-niem",
+      "d": "Một lần ghi thay đổi vào lịch sử git, có lời mô tả và tên người làm. Mỗi commit lấy lại được về sau; vì thế thứ đã commit coi như còn mãi.", "w": "" },
+    { "k": "branch", "t": "nhánh", "vi": "branch", "kind": "khai-niem",
+      "d": "Một dòng thay đổi tách khỏi nhánh chính để làm riêng mà không ảnh hưởng ai. Làm xong thì mở PR để gộp lại.", "w": "" },
+    { "k": "push", "t": "push", "vi": "đẩy lên repo chung", "kind": "khai-niem",
+      "d": "Gửi các commit từ máy mình lên repo chung, để người khác và CI thấy.", "w": "" },
+    { "k": "diff", "t": "diff", "vi": "phần khác nhau", "kind": "khai-niem",
+      "d": "Danh sách dòng bị thêm, xoá, sửa giữa hai phiên bản code. Review một PR là đọc diff của nó.", "w": "" },
+    { "k": "merge", "t": "merge", "vi": "gộp nhánh", "kind": "khai-niem",
+      "d": "Gộp thay đổi của một nhánh vào nhánh chính. Sau merge, thay đổi thành một phần của nhánh chính — bản thường được đem đi deploy.", "w": "" },
+    { "k": "test", "t": "test", "vi": "kiểm thử tự động", "kind": "khai-niem",
+      "d": "Đoạn code gọi code thật với đầu vào biết trước rồi so kết quả với kết quả mong đợi. Xanh là đạt, đỏ là sai; chạy lại được bao nhiêu lần cũng được.", "w": "" },
+    { "k": "spec", "t": "spec", "vi": "đặc tả", "kind": "khai-niem",
+      "d": "Văn bản nói phải làm gì và thế nào là đúng, viết trước khi code. Spec càng kiểm được bằng máy thì agent càng tự chạy được xa.", "w": "" },
+    { "k": "ticket", "t": "ticket, tracker", "vi": "phiếu việc, công cụ quản lý việc", "kind": "khai-niem",
+      "d": "Tracker (Jira, Linear) là nơi đội ghi mọi việc phải làm; mỗi việc là một ticket có mã, mô tả, người nhận, trạng thái như To Do → In Progress → Done.", "w": "" },
+    { "k": "deploy", "t": "deploy", "vi": "triển khai", "kind": "khai-niem",
+      "d": "Đưa bản code mới lên máy chủ đang phục vụ người dùng thật. Từ lúc này lỗi chạm tới khách hàng.", "w": "" },
+    { "k": "production", "t": "production", "vi": "môi trường thật", "kind": "khai-niem",
+      "d": "Hệ thống đang chạy với người dùng và dữ liệu thật, khác máy dev hay máy thử. Sai ở đây là sai với khách hàng.", "w": "" },
+    { "k": "rollback", "t": "rollback", "vi": "quay về bản trước", "kind": "khai-niem",
+      "d": "Đưa production về bản đã chạy ổn trước đó khi bản mới gây lỗi. Thường là cách cầm máu nhanh nhất, trước khi tìm ra nguyên nhân.", "w": "" },
+    { "k": "canary", "t": "canary", "vi": "phát hành thử một phần", "kind": "khai-niem",
+      "d": "Cho bản mới chạy với một phần nhỏ người dùng hoặc máy chủ trước, theo dõi lỗi rồi mới mở rộng. Lỗi nếu có chỉ chạm một nhóm nhỏ.", "w": "" },
+    { "k": "api", "t": "API", "vi": "giao diện lập trình", "kind": "khai-niem",
+      "d": "Chỗ một chương trình cho chương trình khác gọi vào. Đã công bố thì người ngoài đã viết code dựa vào nó, nên đổi lại rất tốn.", "w": "" },
+    { "k": "dependency", "t": "dependency", "vi": "thư viện phụ thuộc", "kind": "khai-niem",
+      "d": "Code của người khác mà dự án dùng lại. Phải cập nhật đều để nhận bản vá lỗi và vá bảo mật; bản mới có thể đổi cách gọi.", "w": "package.json, Podfile, pubspec.yaml…" },
+    { "k": "lint", "t": "linter", "vi": "lint", "kind": "khai-niem",
+      "d": "Công cụ đọc code mà không chạy nó, báo lỗi theo mẫu và chỗ sai quy ước. Nhanh, nên hợp để chạy sau mỗi lần sửa.", "w": "" },
+    { "k": "typecheck", "t": "typecheck", "vi": "kiểm kiểu", "kind": "khai-niem",
+      "d": "Công cụ, thường là trình biên dịch, soát xem mỗi giá trị có đúng kiểu dữ liệu đã khai không, ví dụ truyền chữ vào chỗ cần số. Bắt cả lớp lỗi mà không cần chạy chương trình.", "w": "tsc, mypy, trình biên dịch Swift" },
+    { "k": "pre-commit", "t": "pre-commit", "vi": "hook trước commit", "kind": "co-che",
+      "d": "Hook của git chạy ngay trước khi tạo commit; script trả mã khác 0 thì commit bị chặn. Bắt cả thay đổi gõ tay, nhưng bỏ qua được bằng --no-verify, nên vẫn cần CI.", "w": ".git/hooks/pre-commit hoặc khung pre-commit" },
+    { "k": "codeowners", "t": "CODEOWNERS", "vi": "chủ của từng thư mục", "kind": "co-che",
+      "d": "File của GitHub, GitLab ghép mỗi đường dẫn với người hoặc nhóm sở hữu. PR chạm vào đâu thì chủ chỗ ấy tự được mời review; branch protection có thể bắt họ duyệt.", "w": "CODEOWNERS ở gốc repo hoặc .github/" },
+    { "k": "managed-settings", "t": "managed settings", "vi": "cấu hình do tổ chức áp", "kind": "co-che",
+      "d": "Cấu hình Claude Code do quản trị viên của công ty đặt cho mọi máy; người dùng và repo không ghi đè được. Chỗ đặt luật bắt buộc toàn công ty.", "w": "file managed-settings.json do IT phát, hoặc trang quản trị" },
+    { "k": "auto-mode", "t": "auto mode", "vi": "chế độ tự duyệt", "kind": "co-che",
+      "d": "Chế độ quyền của Claude Code: thay vì hỏi người từng lệnh, một bộ phân loại tự xét lệnh nào đủ an toàn để chạy. Vẫn là phán đoán của model, không phải luật cứng.", "w": "" },
+    { "k": "frontmatter", "t": "frontmatter", "vi": "khối khai báo đầu file", "kind": "khai-niem",
+      "d": "Khối YAML nằm giữa hai dòng --- ở đầu file Markdown, chứa các khoá như name, description, paths. Harness đọc khối này; phần dưới là chữ cho model.", "w": "đầu SKILL.md, agents/*.md, rules/*.md" },
+    { "k": "transcript", "t": "transcript", "vi": "bản ghi phiên", "kind": "khai-niem",
+      "d": "Bản ghi đầy đủ một phiên làm việc với agent: lời nhắn, lệnh đã chạy, kết quả công cụ, file đã đọc.", "w": "" },
+    { "k": "monorepo", "t": "monorepo", "vi": "một repo chung", "kind": "khai-niem",
+      "d": "Một repo duy nhất chứa code của nhiều dự án, dịch vụ. Mọi thay đổi của cả công ty đi qua cùng một hệ thống build và CI.", "w": "" },
+    { "k": "dora", "t": "DORA", "vi": "DevOps Research and Assessment", "kind": "khai-niem",
+      "d": "Chương trình nghiên cứu nhiều năm về hiệu quả giao phần mềm. Bộ chỉ số của họ đo một đội giao thay đổi nhanh tới đâu và ổn định tới đâu.", "w": "dora.dev" }
   ]
 }
 </script>
@@ -1551,7 +1619,7 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
     var items = D.gloss.filter(function (g) { return g.kind === K[0]; });
     if (!items.length) return;
     var box = el('div', 'aw-gg');
-    box.appendChild(el('h4', 'aw-gg__t', K[1] + ' · ' + items.length));
+    box.appendChild(el('h3', 'aw-gg__t', K[1] + ' · ' + items.length));
     var list = el('div', 'aw-gl');
     items.forEach(function (g) {
       var it = el('div', 'aw-g');
@@ -1590,7 +1658,13 @@ bảo mật, dữ liệu; bỏ qua style. Mỗi phát hiện: file:dòng, vì sa
     pGo.href = '#g-' + g.k;
   }
   function place(btn) {
-    if (narrow.matches) { pop.style.left = ''; pop.style.top = ''; return; }
+    if (narrow.matches) {
+      pop.style.left = ''; pop.style.top = '';
+      /* Tấm sát đáy không được che chữ vừa chạm: đẩy trang lên cho chữ nằm trên mép tấm. */
+      var tb = btn.getBoundingClientRect(), sheetTop = pop.getBoundingClientRect().top;
+      if (tb.bottom > sheetTop - 12) window.scrollBy(0, Math.ceil(tb.bottom - sheetTop + 24));
+      return;
+    }
     var r = btn.getBoundingClientRect();
     var w = pop.offsetWidth, h = pop.offsetHeight, vw = root.clientWidth;
     var left = Math.min(Math.max(12, r.left - 8), vw - w - 12);
