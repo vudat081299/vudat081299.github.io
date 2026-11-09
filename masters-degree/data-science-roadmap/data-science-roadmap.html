@@ -2631,8 +2631,7 @@ luận văn mà không ai thấy.
 
 <template data-aside="qbank" data-title="24 câu hội đồng hay hỏi"
           data-sub="Chặng 9 · đọc cạnh dàn ý 12 slide">
-  <p>Đọc cột giữa trước, tự trả lời, rồi mới đọc cột phải. Chỗ nào bạn ấp úng chính là chỗ cần ôn — và nó chỉ đúng một slide nào đó đang thiếu một dòng.</p>
-  <p>Đọc cột giữa trước, tự trả lời, rồi mới đọc cột phải. Chỗ nào bạn ấp úng chính là chỗ cần ôn.</p>
+  <p>Đọc cột trái trước, tự trả lời, rồi mới đọc cột phải. Chỗ nào bạn ấp úng chính là chỗ cần ôn — và nó chỉ đúng một slide nào đó đang thiếu một dòng.</p>
 
   <h3>A · Bài toán và dữ liệu</h3>
   <table>
@@ -2647,7 +2646,7 @@ luận văn mà không ai thấy.
   <h3>B · Phương pháp</h3>
   <table>
     <tr><th>Câu hỏi</th><th>Ý cần có trong câu trả lời</th></tr>
-    <tr><td>Vì sao chọn LightGBM mà không phải deep learning?</td><td>Dữ liệu bảng, không có cấu trúc không gian/tuần tự để mạng khai thác; các so sánh quy mô lớn cho thấy boosting vẫn tốt hơn (trích Grinsztajn 2022). <b>Và em có chạy baseline mạng nơ-ron để chứng minh.</b></td></tr>
+    <tr><td>Vì sao chọn LightGBM mà không phải deep learning?</td><td>Dữ liệu bảng, không có cấu trúc không gian/tuần tự để mạng khai thác; trên 45 bộ dữ liệu bảng cỡ vừa, mô hình cây vẫn thắng mạng nơ-ron (trích Grinsztajn và cộng sự, 2022). <b>Và em có chạy baseline mạng nơ-ron để chứng minh.</b></td></tr>
     <tr><td>Vì sao sin/cos mà không phải one-hot 24 cột?</td><td>One-hot mất tính liền kề (23h và 0h vẫn xa nhau y như 23h và 11h) và tốn 24 cột. Em có so cả hai trong bảng ablation.</td></tr>
     <tr><td>Em có tune baseline tử tế không?</td><td>Có — cùng ngân sách tìm kiếm, cùng số trial. Nói rõ con số. Baseline yếu là lỗi nghiêm trọng và họ đang kiểm tra đúng chỗ đó.</td></tr>
     <tr><td>Vì sao chia theo thời gian mà không dùng k-fold ngẫu nhiên?</td><td>Vì mô hình sẽ chạy trên dữ liệu tương lai. Chia ngẫu nhiên cho mô hình nhìn thấy tương lai → điểm thổi phồng. Đưa ra con số cả hai cách nếu có: nó cho thấy chênh lệch là thật.</td></tr>
@@ -2660,7 +2659,7 @@ luận văn mà không ai thấy.
     <tr><td>PR-AUC 0,41 nghe thấp, mô hình có tốt không?</td><td><b>Câu bẫy hay gặp nhất.</b> Đường cơ sở của PR-AUC là tỉ lệ dương (0,0017), không phải 0,5 — nên 0,41 là tốt hơn ngẫu nhiên khoảng 240 lần. Chuẩn bị sẵn câu này.</td></tr>
     <tr><td>Chênh lệch 0,045 có ý nghĩa thống kê không?</td><td>Bootstrap trên <i>hiệu</i>, ghép cặp: Δ = 0,045 (KTC 95%: 0,021–0,068), không chứa 0. Kèm McNemar tại ngưỡng vận hành.</td></tr>
     <tr><td>Em chạy mấy lần? Kết quả có ổn định không?</td><td>5 hạt giống, trung bình ± độ lệch chuẩn. Nếu độ lệch lớn hơn mức cải thiện, <b>phải tự nói ra</b> trước khi họ chỉ.</td></tr>
-    <tr><td>Em chạm vào tập test bao nhiêu lần?</td><td>Một lần, sau khi chốt mọi thứ trên validation. Nếu thực tế nhiều hơn — <b>nói thật</b> và nêu con số validation làm kết quả chính. Nói dối chỗ này là rủi ro không đáng.</td></tr>
+    <tr><td>Em chạm vào tập test bao nhiêu lần?</td><td>Một lần, sau khi chốt mọi thứ trên validation. Nếu thực tế nhiều hơn — <b>nói thật</b>: tập test đó đã thành một tập validation thứ hai, nên con số của nó lạc quan. Kết quả chính khi ấy lấy từ một tập test mới chưa chạm (khoảng thời gian sau cùng), hoặc báo cáo kèm cảnh báo rõ ràng. Nói dối chỗ này là rủi ro không đáng.</td></tr>
     <tr><td>Feature nào quan trọng nhất, và nó có hợp lý về nghiệp vụ không?</td><td>Bảng SHAP theo nhóm + một câu diễn giải nghiệp vụ. Nhớ nói rõ SHAP là đóng góp vào <i>dự đoán</i>, <b>không phải quan hệ nhân quả</b>.</td></tr>
   </table>
 
@@ -2676,9 +2675,9 @@ luận văn mà không ai thấy.
   <p>Nhóm này ngày càng hay được hỏi, và rất ít người chuẩn bị. Chuẩn bị được thì bạn nổi bật ngay.</p>
   <table>
     <tr><th>Câu hỏi</th><th>Ý cần có trong câu trả lời</th></tr>
-    <tr><td>Mô hình có phân biệt đối xử với nhóm khách hàng nào không?</td><td>Em có đo <b>tỉ lệ báo nhầm (FPR) theo từng nhóm</b> — vùng miền, loại thiết bị, mức chi tiêu — <i>tại đúng ngưỡng đang dùng</i>. Tỉ lệ FPR cao nhất/thấp nhất là X lần. Bảng đó làm ở mục 7 bài <a href="#/pr-eval">Đánh giá</a>; nếu bạn chưa có nó thì đây là câu bạn <b>không</b> trả lời được, nên làm trước. Nêu thêm một điểm cho thấy bạn hiểu sâu: <b>các định nghĩa công bằng khác nhau mâu thuẫn nhau về mặt toán học</b>, không thể thoả mãn đồng thời, nên em báo cáo chênh lệch và nói rõ mình không tối ưu theo nó.</td></tr>
+    <tr><td>Mô hình có phân biệt đối xử với nhóm khách hàng nào không?</td><td>Em có đo <b>tỉ lệ báo nhầm (FPR) theo từng nhóm</b> — vùng miền, loại thiết bị, mức chi tiêu — <i>tại đúng ngưỡng đang dùng</i>. Tỉ lệ FPR cao nhất/thấp nhất là X lần. Bảng đó làm ở mục 7 bài <a href="#/pr-eval">Đánh giá</a>; nếu bạn chưa có nó thì đây là câu bạn <b>không</b> trả lời được, nên làm trước. Nêu thêm một điểm cho thấy bạn hiểu sâu: <b>các định nghĩa công bằng khác nhau mâu thuẫn nhau về mặt toán học</b>: khi tỉ lệ gian lận giữa các nhóm khác nhau, không mô hình nào (trừ mô hình hoàn hảo) vừa hiệu chỉnh tốt trong từng nhóm vừa có FPR và FNR bằng nhau giữa các nhóm (Kleinberg và cộng sự, 2016; Chouldechova, 2017), nên em báo cáo chênh lệch và nói rõ mình không tối ưu theo nó.</td></tr>
     <tr><td>Ai chịu chi phí khi mô hình chặn nhầm?</td><td><b>Khách hàng thật</b> — họ bị từ chối giao dịch. Đó chính là lý do em đặt chi phí FP vào hàm chọn ngưỡng thay vì tối đa hoá recall, và vì sao hệ thống có ba mức thay vì chặn/không chặn.</td></tr>
-    <tr><td>Dữ liệu cá nhân có được phép dùng không?</td><td>Nếu dùng dữ liệu công khai: đã ẩn danh sẵn, nêu nguồn và giấy phép. Nếu dữ liệu công ty: có văn bản cho phép, đã băm định danh, không công bố dữ liệu mà chỉ công bố code. <b>Kiểm tra quy định hiện hành về bảo vệ dữ liệu cá nhân tại thời điểm bạn bảo vệ</b> (ở Việt Nam nền tảng là Nghị định 13/2023/NĐ-CP và các văn bản sau đó) và nói được tên văn bản.</td></tr>
+    <tr><td>Dữ liệu cá nhân có được phép dùng không?</td><td>Nếu dùng dữ liệu công khai: đã ẩn danh sẵn, nêu nguồn và giấy phép. Nếu dữ liệu công ty: có văn bản cho phép, đã băm định danh, không công bố dữ liệu mà chỉ công bố code. <b>Kiểm tra quy định hiện hành về bảo vệ dữ liệu cá nhân tại thời điểm bạn bảo vệ</b> (ở Việt Nam là Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15, hiệu lực từ 01/01/2026, thay khung của Nghị định 13/2023/NĐ-CP, cùng nghị định hướng dẫn) và nói được tên văn bản.</td></tr>
   </table>
 
   <h3>F · Ba câu khó</h3>
@@ -2686,7 +2685,7 @@ luận văn mà không ai thấy.
     <tr><th>Câu hỏi</th><th>Cách xử lý</th></tr>
     <tr><td>“Cái này có gì mới đâu, người ta làm hết rồi mà?”</td><td>Đừng phòng thủ. Thừa nhận từng kỹ thuật đều đã có, rồi chỉ chính xác vào cái mới: <i>“từng thành phần đều đã biết; cái chưa có là so sánh có hệ thống năm cách biểu diễn thời gian trên ba họ mô hình, với kiểm định thống kê — và kết quả cho thấy lợi ích phụ thuộc họ mô hình, điều thường bị nói chung chung.”</i></td></tr>
     <tr><td>“Nếu em có thêm 6 tháng, em làm gì?”</td><td>Đây là câu <b>thiện chí</b>, không phải bẫy — họ đang cho bạn khoe tầm nhìn. Trả lời bằng 3 hướng cụ thể lấy từ mục Hạn chế, xếp theo thứ tự ưu tiên và nói rõ vì sao thứ tự đó.</td></tr>
-    <tr><td>Một câu bạn <b>không biết</b> trả lời.</td><td>Xem công thức ngay dưới đây.</td></tr>
+    <tr><td>Một câu bạn <b>không biết</b> trả lời.</td><td>Dùng công thức ba bước ở mục “Khi bạn không biết” của bài Bảo vệ.</td></tr>
   </table>
 
 </template>
@@ -2855,8 +2854,8 @@ luận văn mà không ai thấy.
   <table>
     <thead><tr><th>Công cụ</th><th>Điểm mạnh</th><th>Điểm yếu</th></tr></thead>
     <tbody>
-      <tr><td><b>Zotero</b></td><td>Miễn phí; nút trên trình duyệt lưu paper một cú bấm; xuất BibTeX cho Overleaf và có plugin cho Word</td><td>Dung lượng đồng bộ miễn phí có hạn (lưu file PDF ở Drive thì hết lo)</td></tr>
-      <tr><td><b>Mendeley</b></td><td>Tương tự Zotero, đọc PDF tiện hơn</td><td>Thuộc một nhà xuất bản; ít mở hơn</td></tr>
+      <tr><td><b>Zotero</b></td><td>Miễn phí; nút trên trình duyệt lưu paper một cú bấm; xuất BibTeX cho Overleaf và có plugin cho Word</td><td>Đồng bộ file miễn phí chỉ 300 MB. Hết thì dùng WebDAV hoặc file liên kết (<i>linked files</i>) trong thư mục Drive; đừng đặt cả thư mục dữ liệu Zotero vào Drive/Dropbox — Zotero cảnh báo dễ hỏng cơ sở dữ liệu</td></tr>
+      <tr><td><b>Mendeley</b></td><td>Tương tự Zotero, đọc PDF tiện hơn</td><td>Thuộc Elsevier; mã nguồn đóng, ít plugin hơn</td></tr>
       <tr><td><b>Gõ tay</b></td><td>—</td><td>Đến bài thứ 20 là sai định dạng, và sửa lại thủ công mất cả buổi</td></tr>
     </tbody>
   </table>
@@ -9599,7 +9598,7 @@ so sánh với [BASELINE B], đánh giá bằng [CHỈ SỐ M].</div>
 
   <h2>Cách tìm khoảng trống trong 2 giờ</h2>
   <ol>
-    <li>Tìm Google Scholar: <code>"fraud detection" survey 2024..2026</code>. Lấy 2–3 bài tổng quan.</li>
+    <li>Tìm Google Scholar: <code>"fraud detection" survey</code>, rồi lọc năm ở cột trái (<i>Custom range</i> 2024–2026); Scholar không hiểu cú pháp <code>2024..2026</code> trong ô tìm. Lấy 2–3 bài tổng quan.</li>
     <li>Nhảy thẳng tới mục <b>"Future work"</b> / <b>"Open challenges"</b> — <b>đó là danh sách khoảng trống do chính chuyên gia viết ra</b>.</li>
     <li>Với mỗi hướng, hỏi: làm được trong 2 tuần không? có dữ liệu không? mình đã hiểu nền chưa?</li>
     <li>Kiểm tra chưa ai làm đúng cái đó <i>trong bối cảnh của bạn</i>: thêm từ khoá "Vietnam", hoặc thêm ràng buộc cụ thể của bạn.</li>
@@ -9621,19 +9620,19 @@ so sánh với [BASELINE B], đánh giá bằng [CHỈ SỐ M].</div>
 4. PHƯƠNG PHÁP — dữ liệu, mô hình, baseline, chỉ số, cách chia tập
 5. ĐÓNG GÓP DỰ KIẾN — 2–3 gạch đầu dòng
 6. RỦI RO — điều gì có thể hỏng và kế hoạch dự phòng</div>
-  <p>Nếu bạn không viết được mục 3 thành câu hỏi có/không hoặc so sánh được, đề tài chưa đủ sắc. Ví dụ tốt: <i>"Mã hoá chu kỳ có cải thiện phát hiện gian lận không, và mức cải thiện có phụ thuộc họ mô hình không?"</i></p>
+  <p>Nếu bạn không viết được mục 3 thành câu hỏi có/không hoặc so sánh được, đề tài chưa đủ sắc. Ví dụ tốt: <i>"Mã hoá sin/cos cho giờ và thứ có làm tăng PR-AUC so với mã hoá số nguyên không, và mức tăng có phụ thuộc họ mô hình không?"</i> Câu này đã nói đo bằng gì và so với cái gì; thiếu hai thứ đó thì "cải thiện" chưa kiểm được.</p>
 </template>
 
 <template data-node="th-read">
-  <p>Bạn sẽ cần đọc 15–30 paper. Đọc tuần tự từng chữ là cách chắc chắn không kịp. Đây là phương pháp ba lượt — chuẩn mực trong giới nghiên cứu.</p>
+  <p>Bạn sẽ cần đọc 15–30 paper. Đọc tuần tự từng chữ là cách chắc chắn không kịp. Đây là phương pháp ba lượt của S. Keshav ("How to Read a Paper", 2007), cách đọc được dạy rộng rãi cho nghiên cứu sinh.</p>
 
-  <h2>Lượt 1 · 5 phút — có đáng đọc không?</h2>
+  <h2>Lượt 1 · 5–10 phút — có đáng đọc không?</h2>
   <p>Đọc: tiêu đề → tóm tắt → phần mở đầu → tiêu đề các mục → kết luận → lướt tài liệu tham khảo.</p>
   <p>Trả lời 4 câu: <b>Họ giải bài gì? Cách tiếp cận là gì? Đóng góp chính? Có liên quan tới mình không?</b></p>
-  <p>Sau lượt 1, <b>80% paper bị loại</b>. Đó là mục đích của lượt này.</p>
+  <p>Sau lượt 1, <b>phần lớn paper bị loại</b>. Đó là mục đích của lượt này.</p>
 
   <h2>Lượt 2 · 1 giờ — hiểu họ làm gì</h2>
-  <p>Đọc kỹ, <b>bỏ qua chứng minh toán</b>. Nhìn kỹ hình và bảng — thường 70% nội dung nằm ở đó. Ghi vào sổ:</p>
+  <p>Đọc kỹ, <b>bỏ qua chứng minh toán</b>. Nhìn kỹ hình và bảng — phần lớn bằng chứng của paper nằm ở đó. Ghi vào sổ:</p>
   <div class="ds-code">- Dữ liệu:   bộ nào, bao nhiêu mẫu, tỉ lệ nhãn
 - Phương pháp: một câu
 - Baseline:  họ so với cái gì
@@ -9643,7 +9642,7 @@ so sánh với [BASELINE B], đánh giá bằng [CHỈ SỐ M].</div>
 - Dùng cho:  chương nào trong luận văn mình</div>
 
   <h2>Lượt 3 · 4–5 giờ — chỉ cho 2–3 paper quan trọng nhất</h2>
-  <p>Đọc như thể bạn sẽ phải <b>cài đặt lại</b>. Đặt câu hỏi ở mỗi giả định. Ghi lại chỗ nào bạn thấy đáng ngờ — những chỗ đó là hạt giống của đóng góp.</p>
+  <p>4–5 giờ là mức của người mới; người đọc quen tay mất khoảng một giờ. Đọc như thể bạn sẽ phải <b>cài đặt lại</b>. Đặt câu hỏi ở mỗi giả định. Ghi lại chỗ nào bạn thấy đáng ngờ — những chỗ đó là hạt giống của đóng góp.</p>
   <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Thời lượng bài ≠ thời lượng đọc</p>
     <p class="wb-alert__msg">Con số ~1,5 giờ của <i>bài</i> này là để học <b>phương pháp</b>, dựng reading-note skeleton và áp lượt 1–2 cho một paper. Lượt 3 (4–5 giờ cho mỗi paper × 2–3 paper) là <b>công việc luận văn thật</b>, trải nhiều buổi, <b>không</b> nằm trong ngân sách giờ của bài. Deliverable trong khối lượng của bài vì thế <b>không</b> tuyên bố đã đọc đủ ba lượt: nó gồm skeleton + notes lượt 1–2 và một lịch riêng cho lượt 3.</p>
@@ -9663,7 +9662,7 @@ so sánh với [BASELINE B], đánh giá bằng [CHỈ SỐ M].</div>
     <tr><th>Nguồn</th><th>Dùng để</th></tr>
     <tr><td><b>Google Scholar</b></td><td>Tìm chung; xem "Cited by" để lần tới các bài mới hơn</td></tr>
     <tr><td><b>Connected Papers</b></td><td>Từ một paper, dựng sơ đồ các bài liên quan — cách nhanh nhất để nắm bản đồ một lĩnh vực</td></tr>
-    <tr><td><b>arXiv / Papers with Code</b></td><td>Bài mới, thường kèm mã nguồn</td></tr>
+    <tr><td><b>arXiv · Hugging Face Papers</b></td><td>Bài mới; trang paper trên Hugging Face thường kèm link mã nguồn. Papers with Code đã đóng cửa từ 07/2025 và chuyển hướng về đây</td></tr>
     <tr><td><b>Semantic Scholar</b></td><td>Tóm tắt tự động, đồ thị trích dẫn</td></tr>
   </table>
   <p>Ưu tiên: (1) bài tổng quan gần đây, (2) bài gốc của kỹ thuật bạn dùng, (3) bài cùng bối cảnh với bạn.</p>
@@ -9682,7 +9681,7 @@ so sánh với [BASELINE B], đánh giá bằng [CHỈ SỐ M].</div>
   </div></div>
 
   <h2>Reproduction report — khung bắt buộc điền</h2>
-  <p>Đây là deliverable của bài. Điền đủ tám mục, kể cả khi bạn chưa khớp được số — một báo cáo trung thực về chỗ lệch có giá trị học thuật thật:</p>
+  <p>Đây là deliverable của bài. Điền đủ chín mục, kể cả khi bạn chưa khớp được số — một báo cáo trung thực về chỗ lệch có giá trị học thuật thật:</p>
   <div class="ds-code">paper:            tiêu đề · tác giả · năm · link
 version/commit:   commit hash của repo tác giả (hoặc "không có repo")
 dataset:          tên · phiên bản · số dòng · tỉ lệ nhãn
@@ -9695,10 +9694,10 @@ lệnh tái chạy:    đúng lệnh để chạy lại từ đầu</div>
 
   <h2>Quy trình</h2>
   <ol>
-    <li><b>Chọn một paper có mã nguồn</b> (Papers with Code, GitHub của tác giả). Ưu tiên bài dùng đúng bộ dữ liệu bạn định dùng.</li>
+    <li><b>Chọn một paper có mã nguồn</b> (link GitHub trong paper hoặc trên trang arXiv / Hugging Face Papers). Ưu tiên bài dùng đúng bộ dữ liệu bạn định dùng.</li>
     <li><b>Chạy đúng như họ mô tả.</b> Đừng cải tiến gì cả. Mục tiêu duy nhất: ra được con số gần với bảng của họ.</li>
     <li><b>So sánh — và so với đúng cái mốc.</b> Không có ngưỡng "chênh bao nhiêu phần trăm thì coi là tái lập được"; ai đưa cho bạn một con số như vậy là đang đoán. Ba lý do: "%" của chỉ số nào (chênh 0,01 trên AP 0,05 là 20%, trên AUC 0,9 là 1%), tương đối hay tuyệt đối, và mỗi bài toán có mức nhiễu khác nhau.</li>
-    <li><b>Mốc đúng là độ bất định của chính họ.</b> Nếu paper báo cáo khoảng tin cậy hoặc độ lệch chuẩn qua nhiều seed, thì "tái lập được" nghĩa là <b>số của bạn nằm trong khoảng đó</b>. Nếu paper không báo cáo gì, hãy tự dựng mốc: chạy lại <i>code của họ</i> với 5 seed khác nhau, xem chính nó dao động bao nhiêu — đó mới là ngưỡng để đo mình. Rất thường xuyên, dao động giữa các seed lớn hơn khoảng cách mà bạn đang lo lắng.</li>
+    <li><b>Mốc đúng là độ bất định của chính họ.</b> Nếu paper báo cáo trung bình ± độ lệch chuẩn qua nhiều seed, thì "tái lập được" nghĩa là <b>một lần chạy của bạn nằm trong dải dao động đó</b> (cỡ trung bình ± 2 độ lệch chuẩn). Nếu họ báo khoảng tin cậy của <i>trung bình</i> thì so trung bình của bạn qua cùng số seed với khoảng đó — đừng so một lần chạy lẻ, vì khoảng tin cậy của trung bình hẹp hơn dao động của từng lần chạy. Nếu paper không báo cáo gì, hãy tự dựng mốc: chạy lại <i>code của họ</i> với 5 seed khác nhau, xem chính nó dao động bao nhiêu — đó mới là ngưỡng để đo mình. Rất thường xuyên, dao động giữa các seed lớn hơn khoảng cách mà bạn đang lo lắng.</li>
     <li><b>Khi lệch nhiều hơn mức đó, đi theo thứ tự này:</b> định nghĩa chỉ số (AP hay AUC-của-đường-PR? macro hay micro?) → bản dữ liệu và cách chia → tiền xử lý ẩn không nằm trong repo → phiên bản thư viện → seed. Bốn nguyên nhân đầu gây lệch lớn; seed thường là nguyên nhân nhỏ nhất, và cũng là cái người ta hay đổ lỗi nhất.</li>
     <li><b>Ghi con số bạn đo được, kèm mốc.</b> Câu viết vào luận văn: <i>"tái chạy cho AP 0,381 (5 seed: 0,374–0,389), so với 0,392 báo cáo trong bài; tác giả không công bố độ bất định, nên mốc so sánh là dao động seed của chính mã nguồn của họ."</i> Đó là một câu trung thực, kiểm chứng được, và mạnh hơn hẳn "kết quả gần đúng với bài gốc".</li>
     <li><b>Ghi lại chỗ khác biệt.</b> Đây là dữ liệu quý cho phần thảo luận của bạn.</li>
@@ -9724,9 +9723,9 @@ lệnh tái chạy:    đúng lệnh để chạy lại từ đầu</div>
   <h2>Làm cho công trình của BẠN tái lập được</h2>
   <table>
     <tr><th>Việc</th><th>Cụ thể</th></tr>
-    <tr><td>Cố định seed</td><td>numpy, sklearn <code>random_state</code>, torch, và cả <code>PYTHONHASHSEED</code></td></tr>
-    <tr><td>Chốt phiên bản</td><td><code>pip freeze &gt; requirements.txt</code></td></tr>
-    <tr><td>Một lệnh chạy hết</td><td><code>python -m src.train</code> tái tạo mọi con số trong luận văn</td></tr>
+    <tr><td>Cố định seed</td><td>numpy, sklearn <code>random_state</code>, torch, và cả <code>PYTHONHASHSEED</code> — biến này phải đặt trong shell trước khi chạy Python; gán trong script là đã muộn. Trên GPU, seed chưa đủ: thêm <code>torch.use_deterministic_algorithms(True)</code>; khác GPU hay khác phiên bản CUDA vẫn có thể lệch ở chữ số cuối</td></tr>
+    <tr><td>Chốt phiên bản</td><td>Ghim đúng thư viện bạn import vào <code>requirements.txt</code>, như bài <a href="#/t-env">Chỗ làm việc</a>; <code>pip freeze</code> trần trên Colab kéo theo vài trăm gói của riêng máy đó</td></tr>
+    <tr><td>Một lệnh chạy hết</td><td><code>make all</code> ở bài <a href="#/pr-serve">Đóng gói</a> dựng lại dữ liệu và mô hình từ đầu; mọi con số trong luận văn sinh ra từ lệnh, không chép tay</td></tr>
     <tr><td>Ghi rõ cách chia tập</td><td>In ra khoảng thời gian của từng tập, đưa vào luận văn</td></tr>
     <tr><td>Công bố code</td><td>GitHub công khai, README rõ ràng. Dữ liệu nhạy cảm thì không, và nói lý do</td></tr>
     <tr><td>Báo cáo nhiều seed</td><td>Trung bình ± độ lệch chuẩn của 5 lần chạy</td></tr>
@@ -9748,12 +9747,12 @@ lệnh tái chạy:    đúng lệnh để chạy lại từ đầu</div>
     <tr><td>Đoán bừa / đoán theo tỉ lệ</td><td>Mốc dưới tuyệt đối</td></tr>
     <tr><td>Luật thủ công hiện đang dùng</td><td><b>Mốc quan trọng nhất về mặt thực tiễn</b> — bạn phải thắng cái này</td></tr>
     <tr><td>Logistic regression</td><td>Cho biết bài toán phi tuyến tới mức nào</td></tr>
-    <tr><td>LightGBM mặc định</td><td>Mốc mạnh; đóng góp của bạn phải thắng được nó</td></tr>
+    <tr><td>LightGBM với feature cơ bản</td><td>Mốc mạnh; đóng góp của bạn phải thắng được nó. Tune với cùng ngân sách như mô hình của bạn</td></tr>
   </table>
   <p>Baseline phải được <b>tune tử tế</b>. Cố tình để baseline yếu là một dạng gian lận học thuật, và hội đồng có kinh nghiệm nhận ra ngay.</p>
 
   <h3>Tầng 2 · Ablation — tháo từng mảnh để biết mảnh nào quan trọng</h3>
-  <p>Đây là bảng thuyết phục nhất trong luận văn. Nó chứng minh <b>đóng góp của bạn thực sự là nguyên nhân</b> của cải thiện, chứ không phải may. <i>(Số trong bảng mẫu dưới đây — và trong bảng theo dõi thí nghiệm ở cuối bài — là <b>số minh hoạ</b>, cùng hệ với bài <a href="#/ml-metrics">Đo lường</a>. Số chạy thật trên bộ mô phỏng nhỏ hơn một bậc; lý do ở hộp cảnh báo tại bài đó.)</i></p>
+  <p>Đây là bảng thuyết phục nhất trong luận văn. Nó cho thấy <b>cải thiện đến từ mảnh nào</b>: tháo mảnh nào thì điểm tụt bao nhiêu — với điều kiện mức tụt lớn hơn nhiễu, việc của bài sau. <i>(Số trong bảng mẫu dưới đây — và trong bảng theo dõi thí nghiệm ở cuối bài — là <b>số minh hoạ</b>, cùng hệ với bài <a href="#/ml-metrics">Đo lường</a>. Số chạy thật trên bộ mô phỏng nhỏ hơn một bậc; lý do ở hộp cảnh báo tại bài đó.)</i></p>
   <table>
     <tr><th>Cấu hình</th><th>PR-AUC</th><th>Δ</th></tr>
     <tr><td>Đầy đủ (mô hình đề xuất)</td><td>0,412</td><td>—</td></tr>
@@ -9766,9 +9765,9 @@ lệnh tái chạy:    đúng lệnh để chạy lại từ đầu</div>
 
   <h3>Tầng 3 · Phân tích độ nhạy</h3>
   <ul>
-    <li>Kết quả đổi thế nào theo <b>seed</b>? (chạy 5 lần)</li>
+    <li>Kết quả đổi thế nào theo <b>seed</b>? (chạy 5 lần). Seed chỉ đo nhiễu của <i>thuật toán</i> trên cùng một tập test; nhiễu do <i>tập test</i> là việc của bootstrap ở bài sau. Kiểm định 5×2cv (Dietterich, 1998) chia ngẫu nhiên nên không hợp với dữ liệu chia theo thời gian.</li>
     <li>Theo <b>lượng dữ liệu train</b>? (đường cong học: 25%, 50%, 75%, 100%)</li>
-    <li>Theo <b>giả định chi phí</b>? (bài <b>Quy ra tiền</b>)</li>
+    <li>Theo <b>giả định chi phí</b>? (bài <a href="#/pr-cost">Quy ra tiền</a>)</li>
     <li>Theo <b>giai đoạn thời gian</b>? (mô hình có ổn định qua các tháng không)</li>
   </ul>
 
@@ -9782,7 +9781,7 @@ lệnh tái chạy:    đúng lệnh để chạy lại từ đầu</div>
 | 4 | 03-15 | + velocity 1h/24h  | 21       | LGBM  | 42   | 0.394        | nhảy mạnh ★    |
 | 5 | 03-16 | + z_vs_history     | 23       | LGBM  | 42   | 0.412        |                |
 | 6 | 03-16 | #5 với 5 seed      | 23       | LGBM  | 42-46| 0.409 ±0.006 | ổn định        |</div>
-  <p>Bảng này <b>là</b> chương kết quả của bạn. MLflow tự sinh ra nó; một file CSV cũng được, miễn là bạn ghi kỷ luật.</p>
+  <p>Bảng này <b>là</b> xương sống của chương kết quả. MLflow lưu từng lượt chạy và xuất ra đúng bảng này bằng <code>mlflow.search_runs()</code>; một file CSV cũng được, miễn là bạn ghi kỷ luật. Chỉ ghi điểm valid: điểm test chỉ xuất hiện một lần, ở cuối.</p>
 
   <h2>Năm sai lầm phổ biến trong thiết kế thí nghiệm</h2>
   <table>
@@ -9793,7 +9792,7 @@ lệnh tái chạy:    đúng lệnh để chạy lại từ đầu</div>
     <tr><td>Baseline yếu</td><td>Kết luận không đứng vững</td><td>Tune baseline như tune mô hình của mình</td></tr>
     <tr><td>Không có ablation</td><td>Không tách được đóng góp của từng thành phần</td><td>Bảng tầng 2</td></tr>
   </table>
-  <p class="wb-help"><b>Ablation cho biết gì và không cho biết gì.</b> Bỏ một thành phần rồi đo lại cho bạn <i>đóng góp biên</i> của thành phần đó — <b>trong đúng setup này</b>: đúng bộ feature còn lại, đúng siêu tham số, đúng cách chia, đúng seed. Nó không phải bằng chứng nhân quả theo nghĩa mạnh: các thành phần <b>tương tác</b> với nhau (A vô dụng khi có B nhưng quan trọng khi bỏ B), <b>thứ tự bỏ</b> ảnh hưởng kết quả, và mỗi dòng vẫn có nhiễu theo seed. Viết đúng phạm vi: <i>"bỏ nhóm feature tốc độ giao dịch làm PR-AUC giảm 0,071 (5 seed, ±0,006) trong cấu hình cuối"</i> — chứ không phải <i>"feature tốc độ gây ra 0,071 điểm PR-AUC"</i>. Hai con số đó là <b>dòng thật trong bảng tầng 2 và dòng 6 của bảng theo dõi</b>; ví dụ minh hoạ trong một bài phương pháp phải trích được về bảng của chính bài, nếu không người đọc mất một buổi đi tìm con số không tồn tại.</p>
+  <p class="wb-help"><b>Ablation cho biết gì và không cho biết gì.</b> Bỏ một thành phần rồi đo lại cho bạn <i>đóng góp biên</i> của thành phần đó — <b>trong đúng setup này</b>: đúng bộ feature còn lại, đúng siêu tham số, đúng cách chia, đúng seed. Nó không phải bằng chứng nhân quả theo nghĩa mạnh: các thành phần <b>tương tác</b> với nhau (A vô dụng khi có B nhưng quan trọng khi bỏ B), <b>thứ tự bỏ</b> ảnh hưởng kết quả, và mỗi dòng vẫn có nhiễu theo seed. Viết đúng phạm vi: <i>"bỏ nhóm feature tốc độ giao dịch làm PR-AUC giảm 0,071 trong cấu hình cuối (seed 42; mô hình đầy đủ dao động ±0,006 qua 5 seed)"</i> — chứ không phải <i>"feature tốc độ gây ra 0,071 điểm PR-AUC"</i>. Hai con số đó là <b>dòng thật trong bảng tầng 2 và dòng 6 của bảng theo dõi</b>, và ±0,006 là của mô hình đầy đủ, chưa phải độ bất định của chính Δ; ví dụ minh hoạ trong một bài phương pháp phải trích được về bảng của chính bài, nếu không người đọc mất một buổi đi tìm con số không tồn tại.</p>
 </template>
 
 <template data-node="th-stats">
@@ -9866,12 +9865,12 @@ giống ngẫu nhiên với độ lệch chuẩn 0,006, cho thấy tính ổn đ
     <tr><th>Chương</th><th>Trả lời câu hỏi</th><th>Độ dài</th></tr>
     <tr><td><b>1. Mở đầu</b></td><td>Vấn đề gì, vì sao quan trọng, tôi đóng góp gì</td><td>8–12 trang</td></tr>
     <tr><td><b>2. Tổng quan</b></td><td>Người khác đã làm gì, còn thiếu gì</td><td>15–25 trang</td></tr>
-    <tr><td><b>3. Phương pháp</b></td><td>Tôi làm gì, và vì sao làm thế</td><td>15–25 trang</td></tr>
-    <tr><td><b>4. Thực nghiệm</b></td><td>Dữ liệu nào, cấu hình nào, đo bằng gì</td><td>10–15 trang</td></tr>
+    <tr><td><b>3. Phương pháp</b></td><td>Tôi làm gì, và vì sao làm thế (thiết kế, chưa có con số)</td><td>15–25 trang</td></tr>
+    <tr><td><b>4. Thực nghiệm</b></td><td>Thiết lập cụ thể: bản dữ liệu, khoảng thời gian từng tập, siêu tham số cuối, môi trường, tính tái lập</td><td>10–15 trang</td></tr>
     <tr><td><b>5. Kết quả &amp; thảo luận</b></td><td>Ra cái gì, có nghĩa là gì, hạn chế ở đâu</td><td>15–25 trang</td></tr>
     <tr><td><b>6. Kết luận</b></td><td>Tóm lại đóng góp, hướng tiếp theo</td><td>4–6 trang</td></tr>
   </table>
-  <p class="wb-help">Cột <i>Độ dài</i> là <b>mẫu tham khảo</b>, không phải quy định. Nguồn quyết định là <b>quy chế của trường bạn và yêu cầu của giảng viên hướng dẫn</b> — có nơi đòi 60 trang, có nơi 120, có nơi tính theo số chữ, và một số nơi quy định luôn cả thứ tự chương. Lấy mẫu chính thức của khoa trước khi viết dòng đầu tiên; cái đáng giữ ở bảng này là <b>tỉ lệ tương đối</b> giữa các chương, không phải con số tuyệt đối.</p>
+  <p class="wb-help">Cột <i>Độ dài</i> là <b>mẫu tham khảo</b>, không phải quy định. Nguồn quyết định là <b>quy chế của trường bạn và yêu cầu của giảng viên hướng dẫn</b> — có nơi đòi 60 trang, có nơi 120, có nơi tính theo số chữ, và một số nơi quy định luôn cả thứ tự chương. Lấy mẫu chính thức của khoa trước khi viết dòng đầu tiên; cái đáng giữ ở bảng này là <b>tỉ lệ tương đối</b> giữa các chương, không phải con số tuyệt đối. Một bố cục phổ biến khác gộp dữ liệu và thiết lập vào chương Phương pháp, rồi tách Kết quả (chương 4) khỏi Thảo luận (chương 5); hai bố cục cùng hợp lệ, miễn kết quả và diễn giải không lẫn vào nhau.</p>
 
   <h2>Chương 1 — công thức bốn đoạn</h2>
   <div class="ds-code">Đoạn 1 — BỐI CẢNH:  "Gian lận thẻ gây thiệt hại X tỉ đồng mỗi năm tại
@@ -9884,11 +9883,12 @@ giống ngẫu nhiên với độ lệch chuẩn 0,006, cho thấy tính ổn đ
   <h2>Chương 3 — viết theo trình tự người đọc cần nạp</h2>
   <ol>
     <li>Phát biểu bài toán bằng ký hiệu ($X$, $y$, $\hat p$, ngưỡng $t$)</li>
-    <li>Tổng quan hệ thống (Hình 3.1 — sơ đồ ở bài <b>Kiến trúc</b>)</li>
+    <li>Tổng quan hệ thống (Hình 3.1 — sơ đồ ở bài <a href="#/pr-arch">Kiến trúc</a>)</li>
     <li>Tiền xử lý và feature engineering — <b>chỗ mô tả sin/cos, kèm công thức và lý do</b></li>
     <li>Mô hình và siêu tham số</li>
     <li>Chiến lược chia tập &amp; phòng chống rò rỉ (mục riêng, rất được đánh giá cao)</li>
     <li>Chỉ số đánh giá và cách chọn ngưỡng</li>
+    <li>Kiểm định thống kê và đơn vị bốc lại (bài trước)</li>
   </ol>
 
   <h2>Chương 5 — tách rạch ròi ba tầng</h2>
@@ -9913,11 +9913,11 @@ giống ngẫu nhiên với độ lệch chuẩn 0,006, cho thấy tính ổn đ
 
   <p class="wb-help"><b>Gom các mảnh trên thành một <code>MODEL_CARD.md</code> một trang.</b> Mục đích dùng (từ <code>problem-statement.md</code>), datacard đã có ở bài <a href="#/d-data">Lấy dữ liệu về</a>, chỉ số trên tập test, bảng FPR theo nhóm ở mục 7 bài <a href="#/pr-eval">Đánh giá</a>, và mục hạn chế này — cộng lại là thứ ngành gọi là <b>model card</b> (đặt ra trong "Model Cards for Model Reporting", 2019): "mô hình dùng vào việc gì, đo ra sao, hỏng ở đâu". Nó là bản đối xứng của datacard cho phía mô hình; hội đồng và nhà tuyển dụng ngày càng hỏi đúng cái tên đó, và không tốn thêm giờ vì mọi mảnh đã có sẵn — việc còn lại là gom vào một trang.</p>
 
-  <h2>Chiến thuật viết trong ngày cuối</h2>
+  <h2>Thứ tự viết các chương</h2>
   <ol>
     <li><b>Viết chương 4 và 5 trước</b> — chúng gần dữ liệu nhất, dễ viết nhất, và định hình phần còn lại.</li>
     <li><b>Làm bảng và hình trước khi viết chữ.</b> Sau đó mỗi đoạn văn chỉ là mô tả một bảng.</li>
-    <li><b>Chương 2 viết sau chương 5</b> — lúc đó bạn mới biết cần đối chiếu với ai.</li>
+    <li><b>Chương 2 viết hoàn chỉnh sau chương 5</b> — lúc đó bạn mới biết cần đối chiếu với ai. Bản nháp tổng quan thì đã có từ đề cương và sổ đọc paper.</li>
     <li><b>Chương 1 và 6 viết cuối cùng</b>, và phải khớp nhau từng đóng góp.</li>
     <li>Mỗi hình/bảng phải được <b>nhắc tới trong văn bản</b> và có một câu nói người đọc cần nhìn thấy gì.</li>
   </ol>
@@ -9938,7 +9938,7 @@ giống ngẫu nhiên với độ lệch chuẩn 0,006, cho thấy tính ổn đ
     <tr><th>Vấn đề với Word</th><th>LaTeX xử lý thế nào</th></tr>
     <tr><td>Công thức toán xấu và khó gõ</td><td>Gõ <code>$\sigma(z)=\frac{1}{1+e^{-z}}$</code>, đẹp tự động</td></tr>
     <tr><td>Đánh số hình/bảng lệch khi chèn thêm</td><td><code>\ref{fig:arch}</code> tự cập nhật</td></tr>
-    <tr><td>Tài liệu tham khảo sai định dạng</td><td>BibTeX tự sinh theo chuẩn của trường</td></tr>
+    <tr><td>Tài liệu tham khảo sai định dạng</td><td>BibTeX (hoặc biblatex) tự sinh danh mục theo một style — APA, IEEE, hay file style trường cấp</td></tr>
     <tr><td>File 100 trang bị chậm và vỡ bố cục</td><td>Ổn định</td></tr>
   </table>
   <p>Overleaf chạy trên trình duyệt, không cần cài gì, và nhiều trường có sẵn mẫu. Nếu trường bạn bắt buộc dùng Word thì cứ dùng Word — nhưng hãy dùng MathType hoặc trình soạn công thức tử tế, và Zotero cho tài liệu tham khảo.</p>
@@ -9949,10 +9949,11 @@ giống ngẫu nhiên với độ lệch chuẩn 0,006, cho thấy tính ổn đ
     <li>Đang xem một paper → bấm một nút → nó lưu cả metadata lẫn file PDF.</li>
     <li>Xuất <code>.bib</code> → đưa vào Overleaf → trích dẫn bằng <code>\cite{key}</code>.</li>
   </ol>
+  <p>Cài thêm plugin <b>Better BibTeX</b>: key trích dẫn cố định (<code>chen2016xgboost</code>) và file <code>.bib</code> tự xuất lại khi thư viện đổi. Metadata tự lưu vẫn sai được: paper arXiv đã đăng ở hội nghị thì trích bản đã đăng, và giữ chữ hoa trong tiêu đề bằng ngoặc nhọn (<code>{LightGBM}</code>), vì nhiều style hạ chữ thường cả tiêu đề.</p>
   <p>Nhập tay 40 tài liệu tham khảo mất 3 giờ và chắc chắn có lỗi. Zotero làm việc đó trong 10 phút.</p>
 
   <h2>Theo dõi thí nghiệm — MLflow hoặc W&amp;B</h2>
-  <p>Đã nói ở bài <b>MLOps</b>. Nhắc lại vì nó ảnh hưởng trực tiếp tới chương 5: <b>không ghi từ đầu thì không dựng lại được bảng kết quả</b>.</p>
+  <p>Đã nói ở bài <a href="#/pr-mlops">MLOps tối thiểu</a>. Nhắc lại vì nó ảnh hưởng trực tiếp tới chương 5: <b>không ghi từ đầu thì không dựng lại được bảng kết quả</b>.</p>
 
   <h2>Hình cho luận văn</h2>
   <div class="ds-code"><b>import</b> matplotlib.pyplot <b>as</b> plt
@@ -9961,6 +9962,7 @@ plt.rcParams.update({
     "font.size": 10,
     "savefig.dpi": 300,             <i># in không bị vỡ</i>
     "savefig.bbox": "tight",
+    "pdf.fonttype": 42,             <i># nhúng font TrueType; vài nơi nhận bài từ chối font Type 3 mặc định</i>
 })
 plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi phóng to</i></div>
   <p>Lưu dạng <b>PDF</b> chứ không phải PNG: PDF từ matplotlib là <b>vector</b>, tức hình được mô tả bằng đường và chữ nên phóng to bao nhiêu cũng sắc nét. <b>Chi tiết dễ hiểu nhầm:</b> <code>savefig.dpi</code> ở trên <i>không</i> làm hình vector nét hơn — DPI chỉ có nghĩa với ảnh raster (PNG/JPG, và với ảnh raster được nhúng bên trong PDF). Giữ dòng đó vì bạn vẫn sẽ xuất vài hình PNG (ảnh chụp màn hình, heatmap rất dày điểm), còn hình vector thì thứ quyết định độ nét là <b>cỡ chữ và độ dày nét</b>, không phải DPI. Đặt cỡ chữ trong hình bằng cỡ chữ trong văn bản.</p>
@@ -9986,12 +9988,12 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
 
   <h2>Cấu trúc buổi bảo vệ</h2>
   <table>
-    <tr><th>Phần</th><th>Thời lượng điển hình</th><th>Trọng số thực tế</th></tr>
+    <tr><th>Phần</th><th>Thời lượng điển hình</th><th>Ảnh hưởng tới điểm (ước lượng)</th></tr>
     <tr><td>Bạn trình bày</td><td>15–20 phút</td><td>~30%</td></tr>
     <tr><td>Phản biện đọc nhận xét + bạn trả lời</td><td>10–15 phút</td><td><b>~40%</b></td></tr>
     <tr><td>Hội đồng hỏi tự do</td><td>10–15 phút</td><td>~30%</td></tr>
   </table>
-  <p>Con số cụ thể tuỳ trường, nhưng tỉ lệ thì gần như ở đâu cũng vậy: <b>hỏi đáp chiếm phần lớn.</b></p>
+  <p>Quy chế không chia điểm theo phần: theo Thông tư 23/2021/TT-BGDĐT, điểm luận văn là trung bình điểm của các thành viên hội đồng có mặt, đạt từ 5,5/10; trường có thể thêm điều kiện riêng. Cột cuối vì thế là ước lượng, không phải quy định. Nó nói một điều đứng vững ở mọi trường: <b>thành viên hội đồng hình thành điểm chủ yếu qua phần hỏi đáp.</b></p>
 
   <h2>Mười hai slide, và thời gian cho từng slide</h2>
   <table>
@@ -10037,7 +10039,7 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
   <ul>
     <li><b>Slide:</b> đủ 12 slide, mỗi slide một thông điệp nằm ở tiêu đề, có đánh số trang.</li>
     <li><b>Demo + dự phòng:</b> demo 90 giây chạy được, <b>và</b> một video ghi sẵn cùng màn demo đó để phòng sự cố.</li>
-    <li><b>Diễn tập có bấm giờ:</b> nói to tối thiểu 3 lần, vừa thời lượng cho phép (lần đầu thường vượt 40%).</li>
+    <li><b>Diễn tập có bấm giờ:</b> nói to tối thiểu 3 lần, vừa thời lượng cho phép (lần đầu thường vượt giờ đáng kể).</li>
     <li><b>Bộ câu hỏi tự trả lời:</b> tự viết câu trả lời (3 gạch đầu dòng) cho cả 24 câu; chỗ ấp úng đã ôn.</li>
     <li><b>Rubric tự chấm:</b> chấm bản nháp theo rubric của trường (nếu không có, dùng: rõ đóng góp · đúng phương pháp đánh giá · nêu được hạn chế · trả lời được câu hỏi).</li>
   </ul>
@@ -10059,7 +10061,7 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
     <tr><td>Đọc slide</td><td>Slide là chỗ để số; miệng là chỗ để diễn giải. Nếu bạn đọc y hệt slide thì một trong hai thứ đó thừa.</td></tr>
     <tr><td>Xin lỗi về hạn chế</td><td>Trình bày hạn chế như một <b>lựa chọn có căn cứ</b>: “trong phạm vi một mô hình, em bảo đảm point-in-time bằng…”, không phải “em chưa kịp làm…”.</td></tr>
     <tr><td>Cãi lại phản biện</td><td>Nghe hết, ghi lại, cảm ơn, rồi trả lời phần bạn có bằng chứng. Nếu họ đúng, nói họ đúng — điều đó làm bạn <i>mạnh</i> lên trong mắt hội đồng.</td></tr>
-    <tr><td>Không tập nói thành tiếng lần nào</td><td>Nói to, bấm giờ, tối thiểu 3 lần. Lần đầu bạn sẽ vượt giờ 40%.</td></tr>
+    <tr><td>Không tập nói thành tiếng lần nào</td><td>Nói to, bấm giờ, tối thiểu 3 lần. Lần đầu gần như chắc chắn vượt giờ, thường vài phút.</td></tr>
   </table>
 
   <h2>Lịch chuẩn bị 3 ngày cuối</h2>
