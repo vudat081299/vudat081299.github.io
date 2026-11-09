@@ -9,6 +9,23 @@ một dòng "→ quyết định DS-…".
 
 ---
 
+## Phiên 2026-11-09 (ai-quiz) — rà ngân hàng câu hỏi, ưu tiên chặng 0–5 và phần đã rà của chặng 7
+
+Kiểm đáp án, mồi nhử, lời giải và con số của từng câu. Chạy thử trên sklearn 1.9.1.
+
+- `f-numeric`: bài và quiz nói scaler không xử lý được `NaN`; `StandardScaler` bỏ qua `NaN` lúc fit và giữ
+  nguyên ở đầu ra, lỗi nổ ở mô hình. Sửa câu trong bài, viết lại câu quiz, sửa tóm tắt roadmap.
+- `ml-cv`: hai tập train của 5 fold dùng chung 3/4 số dòng (lời giải ghi 60%, lệch thước với câu 20 fold).
+- `ml-tune`: bốc đều trên [0,01; 0,2] thì ~95% rơi trên 0,02, không phải "hơn 90% rơi vào nửa trên".
+- `m-deriv`: bỏ khẳng định "nhiều tham số làm mặt loss gập ghềnh hơn". `d-clean`: đáp án "không bao giờ đoán
+  nhãn" nói quá so với bán giám sát ở `ml-map`. `f-cat`: `$2^{16}$` thành `2¹⁶`.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- Chặng 6, 8–10 chỉ quét số học (đều khớp); không rà đáp án từng câu vì phiên khác đang sửa các bài đó.
+- `pr-monitor` câu 0 và 7 còn `$P(X)$`, `$P(y \mid X)$` trong quiz: thuộc chặng 6, để phiên của chặng đó sửa.
+- `m-prob`: "gấp ~24 lần" tính từ 0,0017 làm tròn; số đúng 0,04 / 0,001727 ≈ 23. Giữ vì khớp bảng trong bài.
+
 ## Phiên 2026-11-08 (ah) — rà đối kháng chặng 0–2, 4–5 và số "chạy thật" của chặng 6
 
 Rà các bài phiên (ag) chưa rà. Code mẫu chạy thật: pandas 3.0.5, sklearn 1.9.1, DuckDB, LightGBM 4.6 và 4.7,
