@@ -1422,7 +1422,7 @@ def phan_G():
     # Fed Atlanta, wage-growth-data.xlsx sửa ngày 8/10/2026, sheet Job Switcher (12 tháng), cột B/C, 1/1997–9/2026:
     # 325 trên 356 tháng có số liệu nhóm đổi việc cao hơn, chênh bình quân 0,729 điểm; tháng 10/2025 trống.
     need_t('tỷ lệ tháng nhóm đổi việc cao hơn = 325 / 356', f'({vi(100 * 325 / 356, 1)}%)')
-    ditf = chu(muc('s-thuyetphuc'))
+    ditf = chu(muc('s-ranhgioi'))
     claim('Genschow bảng 1: so nhóm sau yêu cầu lớn với nhóm chỉ yêu cầu nhỏ',
           '51%' in ditf and '38%' in ditf and '34%' not in ditf)
     # Galinsky và Mussweiler (2001): lợi thế ra giá trước mất khi bên nhận giá nghĩ tới lựa chọn khác của BÊN RA GIÁ.
