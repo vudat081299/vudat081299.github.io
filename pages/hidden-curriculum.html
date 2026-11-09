@@ -100,7 +100,7 @@
 
   /* ---- nền ---- */
   html { -webkit-text-size-adjust: 100%; }
-  html.hc-locked { overflow: hidden; }
+  html.hc-locked, html.hc-locked body { overflow: hidden; }
   body { background: var(--hc-bg); color: var(--hc-ink); margin: 0; font-family: var(--hc-sans); font-size: 16px; -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--hc-ink); color: var(--hc-bg); }
   [hidden] { display: none !important; }
@@ -127,7 +127,7 @@
       position: absolute; top: calc(100% + 4px); left: 14px; right: auto; z-index: 40;
       flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 2px; padding: 6px;
       min-width: 176px; width: max-content; max-width: calc(100% - 28px);
-      max-height: calc(100vh - 80px); overflow-y: auto;
+      max-height: calc(100vh - 80px); max-height: calc(100dvh - 80px); overflow-y: auto;
       background: var(--hc-surface); border: 1px solid var(--hc-line);
       border-radius: 12px; box-shadow: var(--hc-shadow);
     }
@@ -144,7 +144,7 @@
   @media (max-width: 720px) { .hc-hero { padding-top: 28px; } .hc-sub { font-size: 16.5px; } }
   .hc-sub { color: var(--hc-ink-2); font-size: 18px; line-height: 1.6; max-width: 62ch; margin: 0 0 14px; }
   .hc-sub b { color: var(--hc-ink); font-weight: 600; }
-  .hc-meta { font: 500 11px/1.75 var(--hc-mono); color: var(--hc-ink-3); letter-spacing: .04em; margin: 0; max-width: 90ch; }
+  .hc-meta { font-size: 13.5px; line-height: 1.6; color: var(--hc-ink-3); margin: 0; max-width: 72ch; }
 
   .hc-find { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 26px 0 0; }
   .hc-find .wb-input { flex: 1 1 260px; max-width: 420px; min-width: 0; font-size: 15px; }
@@ -247,7 +247,7 @@
   /* ==========================================================================
      KHUNG ĐỌC — máy tính: bảng đọc trượt từ phải; điện thoại (≤ 720px): tấm kéo lên từ đáy.
      ========================================================================== */
-  .hc-reader { position: fixed; inset: 0; width: 100%; height: 100%; max-width: 100%; max-height: 100%; margin: 0; padding: 0; border: 0; background: transparent; color: var(--hc-ink); overflow: hidden; }
+  .hc-reader { position: fixed; inset: 0; width: 100%; height: 100%; height: 100dvh; max-width: 100%; max-height: 100%; max-height: 100dvh; margin: 0; padding: 0; border: 0; background: transparent; color: var(--hc-ink); overflow: hidden; }
   .hc-reader::backdrop { background: var(--hc-scrim); }
   .hc-reader__panel { position: absolute; top: 0; right: 0; bottom: 0; width: min(920px, calc(100% - 88px)); display: flex; flex-direction: column; background: var(--hc-paper); border-left: 1px solid var(--hc-line); box-shadow: var(--hc-shadow); }
   .hc-reader__bar { flex: none; display: flex; align-items: center; gap: 6px; min-height: 54px; padding: 6px 12px 6px 28px; border-bottom: 1px solid var(--hc-line); background: var(--hc-paper); touch-action: none; }
@@ -490,8 +490,8 @@
   .hc-rel .k { font: 500 10.5px var(--hc-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--hc-ink-3); margin-right: 8px; }
 
   /* ---- lên đầu trang ---- */
-  .hc-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
-  .hc-top.is-on { opacity: 1; pointer-events: auto; }
+  .hc-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .16s ease, visibility 0s linear .16s; }
+  .hc-top.is-on { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .16s ease; }
 
   /* ==========================================================================
      BẢN IN — độc lập với theme, màn hình, tổng quan và khung đọc: in mạch bài theo thứ tự.
@@ -576,7 +576,7 @@
     <p class="hc-eyebrow">Hidden curriculum · 12 phần · 66 mục · 10 mô hình · 34 suy nghĩ · 73 khái niệm</p>
     <h1 class="hc-title">Tiền tài, quyền lực, lòng người&nbsp;— <u>có được, giữ được, dùng được</u></h1>
     <p class="hc-sub">Điều người ta thường chỉ học được sau khi đã trả giá, nhờ một hoàn cảnh hiếm có, hoặc sau khi đã sống qua nó — gom lại để người mới tự lập, trong tay chưa có nhiều, biết sớm hơn: ăn nói, làm giàu, xử lý tình huống, yêu đương, hiểu quyền lực.</p>
-    <p class="hc-meta">MỖI LUẬT CÓ NHÃN ĐỘ TIN: TOÁN HỌC · BẰNG CHỨNG MẠNH · BẰNG CHỨNG VỪA · LÝ THUYẾT · LỊCH SỬ · KINH NGHIỆM · TẬP QUÁN<br>ĐỂ HỌC, KHÔNG PHẢI LỜI KHUYÊN ĐẦU TƯ HAY TƯ VẤN PHÁP LÝ</p>
+    <p class="hc-meta">Mỗi luật có nhãn độ tin: toán học, bằng chứng mạnh, bằng chứng vừa, lý thuyết, lịch sử, kinh nghiệm, tập quán. Để học, không phải lời khuyên đầu tư hay tư vấn pháp lý.</p>
   </header>
   <p class="hc-print-note" id="hc-print-note">Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn. Khi cần tính toán hoặc quyết định lớn, mở chi tiết tại https://vudat081299.github.io/pages/hidden-curriculum.html. Các điểm nội dung cập nhật ngày 25/10/2026; nguồn thay đổi theo thời gian cần kiểm lại.</p>
 
@@ -3310,7 +3310,7 @@
         <p><span class="hc-evi hc-evi--lore">Kinh nghiệm</span></p>
 
         <p class="hc-lede">Vài câu Nho, Lão gợi nhớ các nguyên tắc ở trang này, và vẫn hay được trích khi nói chuyện với người lớn tuổi, người có chức. <b>Câu xưa nói giống không phải là bằng chứng</b>; nhớ sai chữ hay sai ngữ cảnh thì rút ra bài học sai, và lộ ngay trước người đã đọc bản gốc.</p>
-        <p class="hc-paid"><span class="k">Thường học được sau khi</span> trích sai một câu kinh điển trước người đã đọc bản gốc.</p>
+        <p class="hc-paid"><span class="k">Thường học được sau khi</span> viện câu “biết người biết ta, trăm trận trăm thắng” để làm liều, rồi mới biết câu gốc chỉ hứa không nguy, không hứa thắng.</p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
@@ -3405,7 +3405,7 @@
         <p><span class="hc-evi hc-evi--mixed">Bằng chứng vừa</span> <span class="hc-evi hc-evi--theory">Lý thuyết</span> <span class="hc-evi hc-evi--lore">Kinh nghiệm</span></p>
 
         <p class="hc-lede"><b>Trẻ học về tiền qua những khoản nhỏ thật và những cuộc nói chuyện hợp tuổi.</b></p>
-        <p class="hc-paid"><span class="k">Thường học được sau khi</span> lớn lên trong nhà mà cha mẹ bàn chuyện tiền trước mặt con và giao con tự quản một khoản.</p>
+        <p class="hc-paid"><span class="k">Thường học được sau khi</span> lớn lên trong nhà mà cha mẹ cùng con bàn chuyện tiền và giao con tự quản một khoản từ nhỏ.</p>
 
         <div class="hc-key">
           <span class="k">Luật của mục này</span>
@@ -4089,6 +4089,12 @@ var libraryReady = Promise.resolve();
 
 /* Bỏ dấu và hạ chữ thường: lọc “no” khớp cả “nợ”, “Nợ”. */
 function fold(s) { return s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase(); }
+/* Ô lọc chung: khớp từ đầu một tiếng. Gõ không dấu thì khớp mọi dấu (“no” khớp “nợ”, “nói”);
+   gõ có dấu thì khớp đúng dấu (“nợ” không khớp “nói”, “nổi”). */
+function norm(s) { return ' ' + s.normalize('NFC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim() + ' '; }
+function searchable(s) { var r = norm(s); return { raw: r, fold: fold(r) }; }
+function queryWords(v) { return norm(v).trim().split(' ').filter(Boolean); }
+function hit(t, w) { var f = fold(w); return f === w ? t.fold.indexOf(' ' + f) >= 0 : t.raw.indexOf(' ' + w) >= 0; }
 var cardHook = null;      /* thư viện gán: mở một thẻ m-… (bỏ lọc nếu thẻ đang ẩn) */
 var mindFilter = null;    /* khối Gỡ rối gán: lọc suy nghĩ theo ô lọc chung */
 
@@ -4153,7 +4159,9 @@ var reader = (function () {
     n.parentNode.insertBefore(ph, n);
     info[sid] = {
       sec: n, ph: ph, part: part, card: a, li: li, no: txt(eb), short: toc ? txt(toc) : txt(h2s), title: txt(h2s),
-      text: fold([txt(eb), toc ? txt(toc) : '', txt(h2s), txt(paid), txt(lede), txt(key), txt(n.querySelector('.hc-eyebrow-sec'))].join(' '))
+      text: searchable([toc ? txt(toc) : '', txt(n.querySelector('.hc-eyebrow-sec')), txt(paid), txt(lede), txt(key)]
+        .concat(Array.prototype.map.call(n.querySelectorAll('h2, h3, summary'), txt)).join(' ')),
+      all: searchable(txt(n))
     };
     order.push(sid);
   });
@@ -4267,10 +4275,14 @@ var reader = (function () {
     if (!a || a.getAttribute('href').length < 2) return;
     if (go(a.getAttribute('href'), true)) e.preventDefault();
   });
+  /* Đi lùi trong lịch sử, hay cuộn tới #… lúc mở trang, có thể để tiêu điểm rơi về <body> sau khung. */
+  function holdFocus() {
+    setTimeout(function () { if (dlg.open && !dlg.contains(document.activeElement)) body.focus({ preventScroll: true }); }, 0);
+  }
   window.addEventListener('popstate', function () {
     pending = false;
     var r = location.hash && resolve(location.hash);
-    if (r) show(r); else shut();
+    if (r) { show(r); holdFocus(); } else shut();
   });
   /* Esc đóng <dialog> trước; sự kiện close dọn phần còn lại (trả mục về chỗ, lùi lịch sử). */
   dlg.addEventListener('close', function () { if (current) requestClose(); });
@@ -4279,12 +4291,15 @@ var reader = (function () {
   $('hc-reader-prev').addEventListener('click', function () { var i = order.indexOf(current); if (i > 0) go('#' + order[i - 1], true); });
   $('hc-reader-next').addEventListener('click', function () { var i = order.indexOf(current); if (i < order.length - 1) go('#' + order[i + 1], true); });
 
-  /* Điện thoại: kéo thanh trên cùng, hay kéo thân bài khi đã ở đầu, xuống quá 90px thì đóng. */
+  /* Điện thoại: kéo thanh trên cùng, hay kéo thân bài khi đã ở đầu, xuống quá 90px thì đóng.
+     Vuốt ngang (bảng cuộn ngang, thanh trượt của mô hình) không kéo khung. */
   (function () {
-    var y0 = null, dy = 0, from = null;
-    function start(y, src) { y0 = y; dy = 0; from = src; }
-    function move(y, e) {
+    var x0 = 0, y0 = null, dy = 0, from = null, moved = false;
+    function start(t, src) { x0 = t.clientX; y0 = t.clientY; dy = 0; from = src; moved = false; }
+    function move(t, e) {
       if (y0 === null) return;
+      var y = t.clientY;
+      if (!moved) { moved = true; if (Math.abs(t.clientX - x0) > Math.abs(y - y0)) { y0 = null; return; } }
       dy = Math.max(0, y - y0);
       if (from === 'body' && (body.scrollTop > 0 || dy === 0)) { if (body.scrollTop > 0) y0 = null; return; }
       if (e.cancelable) e.preventDefault();
@@ -4301,10 +4316,10 @@ var reader = (function () {
       setTimeout(function () { panel.classList.remove('is-settling'); }, 220);
     }
     var narrow = matchMedia('(max-width: 720px)');
-    $('hc-reader-bar').addEventListener('touchstart', function (e) { if (narrow.matches && !e.target.closest('button')) start(e.touches[0].clientY, 'bar'); }, { passive: true });
-    body.addEventListener('touchstart', function (e) { if (narrow.matches && body.scrollTop <= 0) start(e.touches[0].clientY, 'body'); }, { passive: true });
+    $('hc-reader-bar').addEventListener('touchstart', function (e) { if (narrow.matches && !e.target.closest('button')) start(e.touches[0], 'bar'); }, { passive: true });
+    body.addEventListener('touchstart', function (e) { if (narrow.matches && body.scrollTop <= 0 && !e.target.closest('input, select, textarea')) start(e.touches[0], 'body'); }, { passive: true });
     [$('hc-reader-bar'), body].forEach(function (t) {
-      t.addEventListener('touchmove', function (e) { move(e.touches[0].clientY, e); }, { passive: false });
+      t.addEventListener('touchmove', function (e) { move(e.touches[0], e); }, { passive: false });
       t.addEventListener('touchend', end);
       t.addEventListener('touchcancel', end);
     });
@@ -4313,18 +4328,25 @@ var reader = (function () {
   /* ── lọc nhanh: bỏ dấu, không phân biệt hoa thường, mọi từ phải khớp ── */
   var q = $('hc-q'), main = $('hc-main');
   $('hc-find').hidden = false;
+  /* Lọc trên tên, luật, dòng “Thường học được sau khi” và các tiêu đề con; không mục nào khớp thì
+     mới tìm trong toàn bài. */
   function filter() {
-    var words = fold(q.value.trim()).split(/\s+/).filter(Boolean), shown = 0;
+    var words = queryWords(q.value), shown = 0, deep = false;
     main.classList.toggle('hc-filtering', words.length > 0);
-    order.forEach(function (sid) {
-      var it = info[sid], ok = words.every(function (w) { return it.text.indexOf(w) >= 0; });
-      it.li.hidden = !ok;
-      if (ok) shown++;
-    });
+    function pass(key) {
+      shown = 0;
+      order.forEach(function (sid) {
+        var it = info[sid], ok = words.every(function (w) { return hit(it[key], w); });
+        it.li.hidden = !ok;
+        if (ok) shown++;
+      });
+    }
+    pass('text');
+    if (words.length && !shown) { pass('all'); deep = true; }
     Object.keys(partBlock).forEach(function (id) { partBlock[id].hidden = !partBlock[id].querySelector('li:not([hidden])'); });
     var m = mindFilter ? mindFilter(words) : null;
     $('hc-q-status').textContent = !words.length ? '' :
-      shown + ' / ' + order.length + ' mục' + (m ? ' · ' + m[0] + ' / ' + m[1] + ' suy nghĩ' : '');
+      shown + ' / ' + order.length + ' mục' + (deep && shown ? ' (có nhắc trong bài)' : '') + (m ? ' · ' + m[0] + ' / ' + m[1] + ' suy nghĩ' : '');
   }
   q.addEventListener('input', filter);
 
@@ -4374,6 +4396,8 @@ var reader = (function () {
       history.pushState({ hc: 1 }, '', h);
     }
     show(r);
+    holdFocus();
+    addEventListener('load', holdFocus);
   }
   return { go: go, initial: initial, info: info };
 })();
@@ -4502,7 +4526,14 @@ function median(a) {
   });
 
   var top = $('toTop');
-  function onScroll() { top.classList.toggle('is-on', window.scrollY > 600); }
+  /* Nút chỉ hiện khi đang cuộn lên: lúc đọc xuôi nó không che chữ ở góc phải. */
+  var lastY = window.scrollY;
+  function onScroll() {
+    var y = window.scrollY, dy = y - lastY;
+    if (Math.abs(dy) < 6 && y > 600) return;
+    top.classList.toggle('is-on', y > 600 && dy < 0);
+    lastY = y;
+  }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
   top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
@@ -5277,7 +5308,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.hc-tw--stack table'), f
       box.appendChild(d);
       var first = !seen[m.group];
       seen[m.group] = (seen[m.group] || 0) + 1;
-      return { m: m, d: d, first: first, text: fold([m.thought, m.reframe, m.why].join(' ')) };
+      return { m: m, d: d, first: first, text: searchable([m.thought, m.reframe, m.why].join(' ')) };
     });
     Array.prototype.forEach.call(groups.querySelectorAll('button'), function (btn) {
       var g = btn.getAttribute('data-g');
@@ -5294,7 +5325,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.hc-tw--stack table'), f
     function render() {
       var shown = 0;
       items.forEach(function (it) {
-        var ok = words.length ? words.every(function (w) { return it.text.indexOf(w) >= 0; }) :
+        var ok = words.length ? words.every(function (w) { return hit(it.text, w); }) :
           group !== 'all' ? it.m.group === group : expanded || it.first;
         it.d.hidden = !ok;
         if (ok) shown++;
