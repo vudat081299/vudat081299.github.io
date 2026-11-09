@@ -122,7 +122,7 @@
    "mechanism": "Mỗi ván ngửa tăng 50%, sấp giảm 40%: kỳ vọng mỗi ván là 1,05, nhưng một ngửa một sấp cho 1,5 × 0,6 = 0,9. Trung bình đám đông được kéo lên bởi một nhúm người cực may; người ở giữa teo dần.",
    "mistake": "Nghe “trung bình lãi 5%” rồi tưởng đó là thứ mình sẽ nhận.",
    "example": "Đặt toàn bộ tài sản mỗi ván, sau 100 ván trung bình đám đông là ×131,5 trong khi người ở giữa còn ×0,0052, và 86,4% người chơi nghèo hơn lúc đầu.",
-   "use": "Xét cả kết quả xấu, giữa, tốt; so trung vị với trung bình và khả năng chịu lỗ.",
+   "use": "So trung vị với trung bình, và hỏi kết quả xấu còn để mình chơi tiếp không.",
    "limits": "Khi kết quả cộng dồn chứ không nhân dồn, hoặc mỗi lần đặt rất nhỏ so với tài sản, kỳ vọng và trung bình theo thời gian gần nhau hơn.",
    "remember": "Bạn sống một đường, không sống trung bình của nghìn đường.",
    "related": [
@@ -131,8 +131,7 @@
     "fattails"
    ],
    "sections": [
-    "s-dongxu",
-    "s-phanphoi"
+    "s-dongxu"
    ]
   },
   {
@@ -269,8 +268,7 @@
     "secondorder"
    ],
    "sections": [
-    "s-thoigian",
-    "s-latnguoc"
+    "s-thoigian"
    ]
   },
   {
@@ -296,8 +294,7 @@
     "regression"
    ],
    "sections": [
-    "s-bayes",
-    "s-phanphoi"
+    "s-bayes"
    ]
   },
   {
@@ -323,7 +320,7 @@
     "regression"
    ],
    "sections": [
-    "s-phanphoi",
+    "s-bayes",
     "s-taogiu"
    ]
   },
@@ -350,7 +347,7 @@
     "bayes"
    ],
    "sections": [
-    "s-phanphoi",
+    "s-bayes",
     "s-mauthuan"
    ]
   },
@@ -376,7 +373,6 @@
     "process-outcome"
    ],
    "sections": [
-    "s-phanphoi",
     "s-bayes"
    ]
   },
@@ -394,7 +390,7 @@
    "mechanism": "Chuyện cực đoan xảy ra thường hơn nhiều so với mô hình quen dùng (phân phối chuẩn) dự đoán; giá cổ phiếu theo ngày có những phiên tăng, giảm cực mạnh như vậy.",
    "mistake": "Coi kịch bản trung bình là dự báo, hoặc tin rằng chuyện “trăm năm có một” sẽ không xảy ra trong đời mình.",
    "example": "Một đợt khủng hoảng có thể xoá lãi của nhiều năm: VN-Index từ đỉnh tháng 3/2007 mất khoảng 80% tới tháng 2/2009 và 11 năm sau mới vượt lại.",
-   "use": "Thêm kịch bản cực xấu ngoài xấu–giữa–tốt, rồi kiểm khả năng tiếp tục.",
+   "use": "Ngoài kịch bản thường gặp, xét riêng kịch bản cực xấu rồi kiểm khả năng tiếp tục.",
    "limits": "Không phải đại lượng nào cũng có đuôi dày — chiều cao của người trưởng thành chẳng hạn; và sợ đuôi quá mức có thể làm tê liệt mọi quyết định.",
    "remember": "Cái đuôi quyết định nhiều hơn cái giữa.",
    "related": [
@@ -404,7 +400,6 @@
     "survivorship"
    ],
    "sections": [
-    "s-phanphoi",
     "s-dongxu",
     "s-ruiro",
     "s-cophieu"
@@ -593,7 +588,7 @@
     "process-outcome"
    ],
    "sections": [
-    "s-latnguoc"
+    "s-thoigian"
    ]
   },
   {
@@ -1090,7 +1085,7 @@
    ],
    "sections": [
     "s-moitruong",
-    "s-phanphoi"
+    "s-bayes"
    ]
   },
   {
