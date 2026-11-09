@@ -1134,14 +1134,6 @@ def phan_F2():
             ('Recht và Leslie', '1988', '64 học sinh', 'nửa hiệp'),
             ('120 người tuyển dụng', 'hơn một nửa', 'quan trọng nhất', 'Rivera, 2012', 400),
         ],
-        's-thehe': [
-            ('Gia huấn ca', 'Nguyễn Trãi', 'tồn nghi'), 'Lẽ tục phú',
-            ('Adermon, Lindahl và Waldenström', '2018', 'Thuỵ Điển'), ('cha mẹ và con 0,3–0,4', 'ông bà và cháu chỉ 0,1–0,2', 60),
-            ('thừa kế và quà tặng', 'Ít nhất một nửa'), ('học vấn', 'khoảng một phần tư', 40),
-            ('Gregory Clark', 'The Son Also Rises', '2014'), ('18.869', 'Anh và xứ Wales', '1858', '2012'),
-            ('0,70–0,75', 'ba phần tư'), ('Torche và Corvalán', '2018'),
-            ('Holtz-Eakin, Joulfaian và Rosen', '1993'), ('150.000 USD', 'bốn lần', '25.000 USD', 120),
-        ],
         # PISA 2022 tập IV (OECD, 2024), trung bình các nước OECD tham gia: +12 điểm (nói với cha mẹ về chi tiêu của
         # mình hằng tuần, hằng tháng so với không bao giờ), +30 điểm (tự quyết tiêu tiền) — đối chiếu qua bài của ACER
         # (Teacher, 2024) vì oecd.org chặn truy cập tự động; Deci, Koestner và Ryan (1999): 128 nghiên cứu.
@@ -1149,8 +1141,6 @@ def phan_F2():
             ('PISA 2022', 'OECD, 2024'),
             ('15 tuổi', '20 nước và vùng', 'không có Việt Nam'), ('chi tiêu của chính mình', 'cao hơn 12 điểm', 80),
             ('tự quyết tiêu tiền', 'khoảng 30 điểm', 60), ('Ryan và Deci', '2000'),
-            ('Hart và Risley', '1995', '42 gia đình', 'mỗi tháng một giờ'), ('45 triệu từ', '13 triệu', 80),
-            ('Sperry', '2019'), ('Romeo', '2018'), ('trò chuyện qua lại', 'Romeo', 120),
             ('128 nghiên cứu', 'Deci, Koestner và Ryan', '1999'),
         ],
         's-honnhan': [

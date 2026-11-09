@@ -1696,13 +1696,13 @@
     "custom",
     "lore"
    ],
-   "idea": "Gia đình có thể truyền tài sản, kỹ năng, quan hệ và giá trị; mỗi loại cần cách chuyển khác nhau, không loại nào tự được giữ nguyên.",
-   "why": "Cần quyết để lại gì, cho ai và chuyển thế nào — không chỉ bao nhiêu tiền.",
-   "mechanism": "Ở Thuỵ Điển, thứ hạng tài sản của con giống cha mẹ khá rõ, giống ông bà ít hơn nhiều. Theo dõi cả dòng họ ở Anh thì lợi thế phai chậm hơn. Hai cách đo khác nhau, nên không cho cùng một câu trả lời về độ bền gia sản.",
-   "mistake": "Coi “không ai giàu ba họ” là định luật, hoặc tin một con số truyền miệng về chuyện mất của sau ba đời mà không hỏi nó đo gì, đo ai.",
-   "example": "Con nhà giàu thường vẫn khá hơn mức chung, cháu thì ít hơn hẳn; nhưng cả dòng họ có thể vẫn nhỉnh hơn qua nhiều đời. Không con số nào ở đây cho biết bao nhiêu nhà mất của sau ba đời.",
-   "use": "Mỗi năm một buổi họp gia đình: cập nhật bảng cân đối gia đình, nơi để giấy tờ, và một bài học của nhà mình ghi thành chữ.",
-   "limits": "Số liệu nhiều đời đến từ Thuỵ Điển, Anh và Mỹ; chưa có chuỗi số liệu tương tự cho Việt Nam.",
+   "idea": "Gia đình là một hệ thống chung tài sản, nợ, nghĩa vụ và hiểu biết; mỗi thứ cần một cách giữ và chuyển riêng, không thứ nào tự được giữ nguyên.",
+   "why": "Cần biết cả nhà đang có gì, nợ gì, hứa gì với ai — không chỉ ai đứng tên bao nhiêu tiền.",
+   "mechanism": "Tiền và tài sản chuyển được bằng giấy tờ. Cam kết ngầm như khoản gửi bố mẹ mỗi tháng, ai chăm người già, lời hứa giúp họ hàng, và bài học từ những lần mất tiền chỉ còn khi được nói ra và ghi lại.",
+   "mistake": "Để mọi hiểu biết về tiền của nhà nằm trong đầu một người; tới khi người ấy ốm hay mất thì không ai biết sổ, hợp đồng, khoản nợ để ở đâu.",
+   "example": "Bố giữ hết giấy tờ và chỉ mình bố biết khoản cho người quen vay. Một buổi họp dịp Tết ghi lại những thứ ấy vào hồ sơ chung, có hai người biết chỗ để.",
+   "use": "Mỗi năm một buổi họp gia đình: cập nhật bảng tài sản và nợ của cả nhà, kể cả cam kết ngầm, nơi để giấy tờ, và một bài học của nhà mình ghi thành chữ.",
+   "limits": "Không phải nhà nào cũng sẵn lòng nói chuyện tiền; bắt đầu từ việc ít nhạy cảm nhất, như giấy tờ để ở đâu.",
    "remember": "Tiền truyền được bằng giấy tờ; hiểu biết thì phải truyền bằng lời và việc làm.",
    "related": [
     "estate",
@@ -1711,7 +1711,6 @@
     "compounding"
    ],
    "sections": [
-    "s-thehe",
     "s-von",
     "s-giayto"
    ]
@@ -1740,7 +1739,7 @@
    ],
    "sections": [
     "s-daycon",
-    "s-thehe"
+    "s-giayto"
    ]
   },
   {
@@ -1767,8 +1766,7 @@
    ],
    "sections": [
     "s-giayto",
-    "s-honnhan",
-    "s-thehe"
+    "s-honnhan"
    ]
   },
   {
@@ -2079,8 +2077,7 @@
    "sections": [
     "s-honnhan",
     "s-daycon",
-    "s-giayto",
-    "s-thehe"
+    "s-giayto"
    ],
    "action": "Chọn một cuộc trao đổi hoặc một giấy tờ đang thiếu; ghi người cùng làm và ngày xem lại."
   },
