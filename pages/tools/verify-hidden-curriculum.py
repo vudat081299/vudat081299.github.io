@@ -1048,7 +1048,7 @@ def phan_F2():
     claim('s-lamgiau: tiền trả góp vượt thu nhập cả hộ', tra > 8.374 * 3.4, f'{tra:.1f} so với {8.374 * 3.4:.1f}')
     # Ý kiến thứ hai (s-giayto): Van Such và cộng sự (2017), 62 trên 286 ca.
     claim('Van Such: 62 trên 286 ca là 21%', int(100 * 62 / 286) == 21, f'{100 * 62 / 286:.1f}%')
-    # Odean (1998), bảng I: tỉ lệ lãi được bán 0,148, tỉ lệ lỗ được bán 0,098 → cao hơn khoảng 50% (luật 10, s-muoihai).
+    # Odean (1998), bảng I: tỉ lệ lãi được bán 0,148, tỉ lệ lỗ được bán 0,098 → cao hơn khoảng 50% (luật 7, s-muoihai).
     claim('Odean: 0,148 so với 0,098 là cao hơn khoảng 50%', 45 <= 100 * (0.148 / 0.098 - 1) <= 55,
           f'{100 * (0.148 / 0.098 - 1):.1f}%')
     du_kien('s-giayto', 'Van Such: 62 trên 286 ca', 'Van Such', '2017', '286 bệnh nhân', '62 ca (21%)')
@@ -1057,11 +1057,6 @@ def phan_F2():
     lo = sorted({f'{sid}: {m.group(0)}' for sid in re.findall(r'<section id="(s-[a-z]+)">', HTML) if sid != 's-nguon'
                  for m in so_hieu.finditer(chu(muc(sid)))})
     claim('thân bài không dẫn số điều luật, số hiệu văn bản', not lo, ', '.join(lo[:8]))
-    # Bảng “… ý tưởng làm nền” (s-vanminh): số dòng khớp chữ số ở tiêu đề.
-    tb = re.search(r'<h3 class="hc-h3">(\S+) ý tưởng làm nền</h3>.*?<tbody>(.*?)</tbody>', muc('s-vanminh'), flags=re.S)
-    claim('s-vanminh: số dòng bảng ý tưởng làm nền khớp tiêu đề',
-          bool(tb) and VN.get(tb.group(1).lower()) == tb.group(2).count('<tr>'),
-          f'{tb.group(1) if tb else "?"} so với {tb.group(2).count("<tr>") if tb else "?"} dòng')
     # Dữ kiện lấy từ nguồn, trong đúng mục: tác giả, năm, cỡ mẫu, số đo, ngày tháng. Một chuỗi phải có nguyên văn;
     # một bộ là một dữ kiện (du_kien): các phần phải đứng gần nhau, số nguyên cuối bộ (nếu có) là cỡ cửa sổ.
     NGUON = {
@@ -1125,28 +1120,12 @@ def phan_F2():
         # của bên địa vị cao tạo thêm giá trị.
         's-imlang': [('ba giây', 'Curhan và cộng sự, 2022', 'chỉ quãng im của bên địa vị cao')],
         # Văn hoá: Ambady và Rosenthal (1993) nghiên cứu 1 — 13 giảng viên, ba đoạn 10 giây, r(11) = 0,76;
-        # Recht và Leslie (1988) — 64 học sinh, nửa hiệp.
+        # Recht và Leslie (1988) — 64 học sinh, nửa hiệp; Rivera (2012), ASR 77(6) — 120 người tuyển dụng, “more than half”
+        # xếp fit là tiêu chí quan trọng nhất ở vòng phỏng vấn, trên tư duy phân tích.
         's-vonvanhoa': [
-            ('Ambady và Rosenthal', '1993', '30 giây'), ('13 giảng viên', '0,76', 40), ('Veblen', '1899'),
-            ('Currid-Halkett', '2017', 'hưu trí'),
-        ],
-        's-vanminh': [
-            ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh', 'nửa hiệp'),
-            ('Aronowitz và Giroux', '1988'),
-            ('Socrates', '469–399 TCN', 'Plato'), ('Epictetus', '50–135', 'nô lệ'),
-            ('Hội Hoàng gia Anh', '1660', 'Nullius in verba'), ('Kant', '1784'),
-            ('Adam Smith', 'Của cải của các quốc gia', '1776', '48.000 cây ghim'),
-            ('Hồ Chí Minh, Tuyên ngôn Độc lập', '2/9/1945', 20),
-            ('Phan Kế Bính', 'Việt Nam phong tục', '1915'),
-            ('Bryson', 'A Short History of Nearly Everything', '2003'),
-        ],
-        's-thehe': [
-            ('Gia huấn ca', 'Nguyễn Trãi', 'tồn nghi'), 'Lẽ tục phú',
-            ('Adermon, Lindahl và Waldenström', '2018', 'Thuỵ Điển'), ('cha mẹ và con 0,3–0,4', 'ông bà và cháu chỉ 0,1–0,2', 60),
-            ('thừa kế và quà tặng', 'Ít nhất một nửa'), ('học vấn', 'khoảng một phần tư', 40),
-            ('Gregory Clark', 'The Son Also Rises', '2014'), ('18.869', 'Anh và xứ Wales', '1858', '2012'),
-            ('0,70–0,75', 'ba phần tư'), ('Torche và Corvalán', '2018'),
-            ('Holtz-Eakin, Joulfaian và Rosen', '1993'), ('150.000 USD', 'bốn lần', '25.000 USD', 120),
+            ('Ambady và Rosenthal', '1993', '30 giây'), ('13 giảng viên', '0,76', 40),
+            ('Recht và Leslie', '1988', '64 học sinh', 'nửa hiệp'),
+            ('120 người tuyển dụng', 'hơn một nửa', 'quan trọng nhất', 'Rivera, 2012', 400),
         ],
         # PISA 2022 tập IV (OECD, 2024), trung bình các nước OECD tham gia: +12 điểm (nói với cha mẹ về chi tiêu của
         # mình hằng tuần, hằng tháng so với không bao giờ), +30 điểm (tự quyết tiêu tiền) — đối chiếu qua bài của ACER
@@ -1155,8 +1134,6 @@ def phan_F2():
             ('PISA 2022', 'OECD, 2024'),
             ('15 tuổi', '20 nước và vùng', 'không có Việt Nam'), ('chi tiêu của chính mình', 'cao hơn 12 điểm', 80),
             ('tự quyết tiêu tiền', 'khoảng 30 điểm', 60), ('Ryan và Deci', '2000'),
-            ('Hart và Risley', '1995', '42 gia đình', 'mỗi tháng một giờ'), ('45 triệu từ', '13 triệu', 80),
-            ('Sperry', '2019'), ('Romeo', '2018'), ('trò chuyện qua lại', 'Romeo', 120),
             ('128 nghiên cứu', 'Deci, Koestner và Ryan', '1999'),
         ],
         's-honnhan': [
@@ -1255,7 +1232,9 @@ def phan_F2():
         's-nguonquyen': [('Richard Emerson', '1962'), ('French và Raven', '1959', 'Raven (1965)')],
         's-quyenluc': [('Burt', '2004', '673 quản lý'), ('Ibarra và cộng sự', '2010')],
         's-tochuc': [('Krackhardt và Hanson', '1993'), ('Chesterton', '1929')],
-        's-diavi': [('Henrich và Gil-White', '2001'), ('Cheng và cộng sự', '2013')],
+        's-diavi': [('Henrich và Gil-White', '2001'), ('Cheng và cộng sự', '2013'),
+                    ('Phân tích gộp 813 mẫu', 'Sabey và cộng sự', '2025'), ('Galinsky và cộng sự', '2006'),
+                    ('20 trường', 'Ebersole và cộng sự, 2016')],
         # Làm thuê và làm giàu: VARS IRE qua Đại biểu Nhân dân 21/9/2025 (Hà Nội 2014 tới giữa 2025); VARS IRE qua Znews 25/1/2026 (căn hộ điển hình 20–25 lần thu nhập hộ); Demographia ≤3,
         # ULI ≤5; lãi sau ưu đãi 13–15% (Nhà Đầu tư, 8/2026); Savills: giá thứ cấp Hà Nội giảm quý thứ ba liên tiếp. Abstract: Smith và cộng sự (2019) lợi nhuận giảm ba phần tư khi chủ
         # nghỉ hưu hay mất; Hamilton (2000) trung vị kém 35% sau 10 năm; Raffiee và Feng (2014) nguy cơ rời bỏ thấp hơn 33,3%
@@ -1268,8 +1247,6 @@ def phan_F2():
             ('45 tuổi', '125%', 'Azoulay và cộng sự', '2020'), ('Rosen', '1981'), ('Stutzer', '2004'),
             ('Maggiulli', '2017'), 'Paul Graham (2004)',
         ],
-        's-hoaquyen': [('Phân tích gộp 813 mẫu', 'Sabey và cộng sự', '2025'), ('Galinsky và cộng sự', '2006'),
-                       ('20 trường', 'Ebersole và cộng sự, 2016')],
     }
     for sid, xs in NGUON.items():
         t = chu(muc(sid))
