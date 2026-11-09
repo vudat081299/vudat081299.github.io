@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
+<script>
+/* Theme trước lần vẽ đầu: lựa chọn đã lưu ('ba-theme') thắng; chưa chọn thì theo hệ điều hành. */
+(function(){var v;try{v=localStorage.getItem('ba-theme');}catch(e){}
+  var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');
+  if(v!=='dark'&&v!=='light')v=mq?(mq.matches?'dark':'light'):'dark';
+  document.documentElement.setAttribute('data-theme',v);})();
+</script>
 <title>Business Analytics — Complete course</title>
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1596,8 +1603,11 @@ function gauss(rng){var u=0,v=0;while(u===0)u=rng();while(v===0)v=rng();return M
 
 /* ============ THEME ============ */
 (function(){var root=document.documentElement,btn=document.getElementById('theme-toggle'),lab=document.getElementById('theme-label');
-  try{if(localStorage.getItem('ba-theme')==='light')root.setAttribute('data-theme','light');}catch(e){}
   lab.textContent=root.getAttribute('data-theme').toUpperCase();
+  /* Chưa chọn thì đi theo hệ điều hành, kể cả khi đổi lúc trang đang mở. */
+  var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');
+  function onOS(){var v=null;try{v=localStorage.getItem('ba-theme');}catch(e){}if(v==='dark'||v==='light')return;var n=mq.matches?'dark':'light';if(n===root.getAttribute('data-theme'))return;root.setAttribute('data-theme',n);lab.textContent=n.toUpperCase();document.dispatchEvent(new Event('themechange'));}
+  if(mq){if(mq.addEventListener)mq.addEventListener('change',onOS);else if(mq.addListener)mq.addListener(onOS);}
   btn.addEventListener('click',function(){var n=root.getAttribute('data-theme')==='light'?'dark':'light';root.setAttribute('data-theme',n);lab.textContent=n.toUpperCase();try{localStorage.setItem('ba-theme',n);}catch(e){}document.dispatchEvent(new Event('themechange'));});
 })();
 
