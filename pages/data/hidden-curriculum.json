@@ -568,8 +568,7 @@
    ],
    "sections": [
     "s-quyenchon",
-    "s-baohiem",
-    "s-donbay"
+    "s-baohiem"
    ]
   },
   {
@@ -702,7 +701,6 @@
     "sizing"
    ],
    "sections": [
-    "s-donbay",
     "s-quyenchon"
    ]
   },
@@ -1004,7 +1002,7 @@
    ],
    "sections": [
     "s-vonnguoi",
-    "s-tichluy",
+    "s-moitruong",
     "s-thunhap"
    ]
   },
@@ -1033,9 +1031,8 @@
     "learningrate"
    ],
    "sections": [
-    "s-tichluy",
-    "s-thunhap",
-    "s-donbay"
+    "s-moitruong",
+    "s-thunhap"
    ]
   },
   {
@@ -1062,8 +1059,7 @@
     "compounding"
    ],
    "sections": [
-    "s-moitruong",
-    "s-tichluy"
+    "s-moitruong"
    ]
   },
   {
@@ -1116,8 +1112,7 @@
     "environment"
    ],
    "sections": [
-    "s-moitruong",
-    "s-donbay"
+    "s-moitruong"
    ]
   },
   {
@@ -1993,7 +1988,7 @@
     "s-no",
     "s-baohiem",
     "s-vonnguoi",
-    "s-tichluy"
+    "s-moitruong"
    ],
    "action": "Ghi tài sản, nợ, chi thiết yếu; chọn một rủi ro cần giảm và một kỹ năng sẽ luyện."
   },
@@ -2049,7 +2044,7 @@
     "s-vonnguoi",
     "s-thunhap",
     "s-dinhgia",
-    "s-donbay"
+    "s-kinhdoanh"
    ],
    "action": "Viết ra núm đang mạnh nhất với mình, một việc tăng thu nhập trong quý này và mức sống mình coi là đủ."
   },
@@ -2157,7 +2152,7 @@
    "sections": [
     "s-moitruong",
     "s-thuongluong",
-    "s-tichluy"
+    "s-thunhap"
    ]
   },
   {
