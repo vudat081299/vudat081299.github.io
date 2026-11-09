@@ -1390,12 +1390,12 @@
    "tldr": "Phần lớn giá trị hằng ngày của data team đến từ trả lời câu hỏi bằng dữ liệu đã có, không train gì; sai lầm tốn kém nhất của người mới là mang mô hình dự đoán tới một câu hỏi analytics ('vì sao doanh số giảm' cần truy vấn tách nhỏ, không cần mô hình).",
    "points": [
     "Ba nghề ba loại câu hỏi: analytics ('chuyện gì ĐÃ xảy ra' — SQL/dashboard, sai lầm đọc tương quan thành nguyên nhân), predictive ('chuyện gì SẼ xảy ra' — LightGBM), causal ('nếu tôi LÀM X' — A/B test)",
-    "Cohort: nhóm theo thời điểm bắt đầu; không nhóm theo cohort thì thay đổi tỉ lệ giữ chân lẫn với thay đổi cơ cấu khách mới. SQL dùng DATE_TRUNC('month', MIN(order_ts)) làm cohort rồi DATE_DIFF ra month_n; bảng hàng=tháng đăng ký, cột=số tháng kể từ đó",
-    "Funnel: hai chi tiết hay sai — phải theo đúng thứ tự và trong một cửa sổ thời gian (xem hôm nay mua tháng sau không cùng phễu), và đếm theo NGƯỜI không theo sự kiện (xem 8 lần không phải 8 người)",
-    "Segmentation: cắt theo nhóm để thấy con số tổng đang giấu gì; nghịch lý Simpson (xu hướng đúng trong mọi nhóm con nhưng đảo chiều khi gộp) là lý do bước này không bỏ được; rẻ nhất là RFM trước khi nghĩ tới phân cụm",
+    "Cohort: nhóm theo thời điểm bắt đầu; không nhóm theo cohort thì thay đổi tỉ lệ giữ chân lẫn với thay đổi cơ cấu khách mới. SQL dùng DATE_TRUNC('month', MIN(order_ts)) (tháng đơn đầu tiên) làm cohort rồi DATE_DIFF ra month_n; tỉ lệ giữ chân = người còn mua ở tháng n ÷ người ở tháng 0 (tbl.div(tbl[0], axis=0)); ô cuối mỗi hàng thường là tháng chưa hết",
+    "Funnel: hai chi tiết hay sai — phải theo đúng thứ tự và trong một cửa sổ thời gian (xem hôm nay mua tháng sau không cùng phễu), và đếm theo NGƯỜI không theo sự kiện (xem 8 lần không phải 8 người); truy vấn mẫu neo vào lần xem đầu, bước sau phải sau bước trước và trong 7 ngày",
+    "Segmentation: cắt theo nhóm để thấy con số tổng đang giấu gì; nghịch lý Simpson (máy tính 5,0→5,4%, di động 2,0→2,2%, nhưng tổng 3,5→2,84% vì lưu lượng dồn sang di động) là lý do bước này không bỏ được; rẻ nhất là RFM (Recency, Frequency, Monetary, mỗi cái 5 mức theo ngũ phân vị) trước khi nghĩ tới phân cụm",
     "KPI hai câu hỏi trước khi thêm vào dashboard: 'ai làm gì khác đi khi con số đổi?' (không trả lời được thì là trang trí), 'nó bị lách bằng cách nào?' (đo 'ticket đã đóng' thì ticket bị đóng nhanh mà không giải quyết — dùng cặp đôi bảo vệ: số đóng VÀ tỉ lệ mở lại)",
     "Chỉ số cần ngữ cảnh: mọi con số dashboard nên kèm ít nhất một trong ba — so kỳ trước, so mục tiêu, so dải dao động bình thường",
-    "Dashboard: một dashboard trả lời một câu hỏi, định nghĩa chỉ số nằm trong git không nằm trong công cụ BI, số tuyệt đối đi kèm tương đối ('tăng 300%' trên nền 2 ca là 6 ca)"
+    "Dashboard: một dashboard trả lời một câu hỏi, định nghĩa chỉ số nằm trong git không nằm trong công cụ BI, số tuyệt đối đi kèm tương đối ('tăng 300%' trên nền 2 ca là từ 2 lên 8 ca)"
    ],
    "viz": "Truy vấn cohort SQL với WITH first_order (DATE_TRUNC month của MIN order_ts) JOIN để ra bảng cohort hàng=tháng đăng ký × cột=month_n."
   },
@@ -1736,7 +1736,7 @@
   "q-cv": "bdf86127",
   "q-rec": "5a49fd28",
   "q-causal": "cc1d604f",
-  "q-analytics": "cf9e701d",
+  "q-analytics": "f5a47804",
   "q-mini": "bc401ddb",
   "th-topic": "b1e1b294",
   "th-read": "7ab77bf8",

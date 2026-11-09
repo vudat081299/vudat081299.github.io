@@ -9467,7 +9467,11 @@ stat, pval = proportions_ztest([conv_b, conv_a], [n_b, n_a])</div>
        <b>COUNT</b>(<b>DISTINCT</b> o.user_id) <b>AS</b> active_users
 <b>FROM</b> orders o <b>JOIN</b> first_order f <b>USING</b> (user_id)
 <b>GROUP BY</b> 1, 2 <b>ORDER BY</b> 1, 2;</div>
-  <p>Kết quả xoay thành bảng cohort — hàng là tháng đăng ký, cột là số tháng kể từ đó. Đọc theo hàng thấy vòng đời một nhóm; đọc theo cột so sánh các nhóm ở cùng độ tuổi. Đây là một trong những bảng có mật độ thông tin cao nhất trong analytics.</p>
+  <p>Bảng <code>orders</code> không có ngày đăng ký, nên truy vấn lấy tháng của <b>đơn đầu tiên</b> làm cohort; có bảng <code>users.signup_ts</code> thì dùng nó. <code>active_users</code> mới là số người, chưa phải tỉ lệ. <b>Tỉ lệ giữ chân</b> tháng $n$ = số người của cohort còn mua ở tháng $n$ ÷ số người của cohort ở tháng 0:</p>
+  <div class="ds-code">cohort_df = duckdb.sql(cohort_sql).df()   <i># cohort_sql: chuỗi chứa truy vấn trên</i>
+tbl = cohort_df.pivot(index="cohort", columns="month_n", values="active_users")
+retention = tbl.div(tbl[0], axis=0)     <i># chia từng hàng cho cột tháng 0</i></div>
+  <p>Hàng là tháng bắt đầu, cột là số tháng kể từ đó. Đọc theo hàng thấy vòng đời một nhóm; đọc theo cột so sánh các nhóm ở cùng độ tuổi. Ô cuối của mỗi hàng thường là tháng chưa hết, nên trông thấp giả; bỏ nó hoặc đánh dấu khi đọc. Đây là một trong những bảng có mật độ thông tin cao nhất trong analytics.</p>
 
   <h3>2 · Funnel — rơi rụng qua từng bước</h3>
   <p>Câu hỏi: “trong 100 người vào trang, bao nhiêu người thanh toán, và rụng nhiều nhất ở bước nào?” Hai chi tiết hay làm sai:</p>
@@ -9475,16 +9479,47 @@ stat, pval = proportions_ztest([conv_b, conv_a], [n_b, n_a])</div>
     <li><b>Phải theo đúng thứ tự và trong một cửa sổ thời gian.</b> Người xem sản phẩm hôm nay và mua tháng sau không nên tính là cùng một phễu.</li>
     <li><b>Đếm theo người, không theo sự kiện.</b> Một người xem 8 lần không phải 8 người.</li>
   </ul>
+  <p>Truy vấn dưới làm cả hai: mỗi người một dòng ở mỗi bước, bước sau phải xảy ra sau bước trước và trong 7 ngày kể từ lần xem đầu.</p>
+  <div class="ds-code"><b>WITH</b> v <b>AS</b> (                      <i>-- bước 1: lần xem đầu tiên của mỗi người</i>
+  <b>SELECT</b> user_id, <b>MIN</b>(ts) <b>AS</b> t1 <b>FROM</b> events
+  <b>WHERE</b> event = 'view_product' <b>GROUP BY</b> user_id
+), c <b>AS</b> (                        <i>-- bước 2: thêm giỏ SAU lần xem, trong 7 ngày</i>
+  <b>SELECT</b> v.user_id, v.t1, <b>MIN</b>(e.ts) <b>AS</b> t2
+  <b>FROM</b> v <b>JOIN</b> events e <b>USING</b> (user_id)
+  <b>WHERE</b> e.event = 'add_to_cart'
+    <b>AND</b> e.ts <b>BETWEEN</b> v.t1 <b>AND</b> v.t1 + <b>INTERVAL</b> 7 <b>DAY</b>
+  <b>GROUP BY</b> v.user_id, v.t1
+), p <b>AS</b> (                        <i>-- bước 3: mua SAU khi thêm giỏ, cùng cửa sổ</i>
+  <b>SELECT DISTINCT</b> c.user_id
+  <b>FROM</b> c <b>JOIN</b> events e <b>USING</b> (user_id)
+  <b>WHERE</b> e.event = 'purchase'
+    <b>AND</b> e.ts <b>BETWEEN</b> c.t2 <b>AND</b> c.t1 + <b>INTERVAL</b> 7 <b>DAY</b>
+)
+<b>SELECT</b> (<b>SELECT COUNT</b>(*) <b>FROM</b> v) <b>AS</b> xem,
+       (<b>SELECT COUNT</b>(*) <b>FROM</b> c) <b>AS</b> them_gio,
+       (<b>SELECT COUNT</b>(*) <b>FROM</b> p) <b>AS</b> mua;</div>
+  <p>Truy vấn neo vào lần xem <i>đầu tiên</i>: người quay lại xem sau một tháng rồi mua trong 7 ngày đó vẫn không được tính. Đó là một lựa chọn; muốn tính cả lần quay lại thì neo theo từng phiên (session) thay vì theo người, và ghi rõ trong định nghĩa chỉ số. Thử nó trên bốn người tự dựng — một người thêm giỏ trước khi xem, một người mua sau 10 ngày — để thấy mỗi điều kiện loại đúng ai.</p>
 
   <div data-viz="funnel"></div>
 
   <h3>3 · Segmentation — cắt theo nhóm</h3>
-  <p>Câu hỏi: “con số tổng đang giấu chuyện gì?” Một tỉ lệ chuyển đổi đứng yên có thể là nhóm di động tăng bù cho nhóm máy tính giảm. <b>Nghịch lý Simpson</b> — xu hướng đúng trong mọi nhóm con nhưng đảo chiều khi gộp lại — là lý do bước này không bỏ được. Cách làm rẻ nhất là RFM (gần đây / tần suất / giá trị) trước khi nghĩ tới phân cụm.</p>
+  <p>Câu hỏi: “con số tổng đang giấu chuyện gì?” Một tỉ lệ chuyển đổi đứng yên có thể là nhóm di động tăng bù cho nhóm máy tính giảm. Tệ hơn là <b>nghịch lý Simpson</b>: xu hướng đúng trong mọi nhóm con nhưng đảo chiều khi gộp lại. Ví dụ: quý 1 máy tính chuyển đổi 50/1.000 = 5,0%, di động 20/1.000 = 2,0%, tổng 70/2.000 = 3,5%. Quý 2 máy tính 27/500 = 5,4%, di động 44/2.000 = 2,2%: cả hai nhóm đều tăng, nhưng tổng là 71/2.500 = 2,84%, giảm. Lưu lượng dồn sang di động, nhóm vốn chuyển đổi thấp, nên kéo tổng xuống. Chỉ nhìn tổng thì bạn đi sửa nhầm chỗ, nên bước này không bỏ được.</p>
+  <p>Cách phân khúc khách rẻ nhất là <b>RFM</b>, làm trước khi nghĩ tới phân cụm. Mỗi khách có ba con số tính tới một ngày chốt: <b>R</b>ecency = số ngày từ đơn gần nhất, <b>F</b>requency = số đơn, <b>M</b>onetary = tổng tiền. Mỗi con số chia thành 5 mức theo ngũ phân vị; R đảo chiều, vì mua càng gần đây càng tốt. Khách “5-5-5” là nhóm tốt nhất, “1-1-1” là nhóm đã rời.</p>
+  <div class="ds-code">asof = orders["order_ts"].max() + pd.Timedelta(days=1)
+rfm = orders.groupby("user_id").agg(
+    recency=("order_ts", <b>lambda</b> s: (asof - s.max()).days),
+    frequency=("order_ts", "size"),
+    monetary=("amount", "sum"))
+rfm["R"] = pd.qcut(rfm.recency, 5, labels=[5, 4, 3, 2, 1]).astype(int)
+<i># số đơn trùng nhau rất nhiều (đa số khách chỉ 1–2 đơn): qcut báo trùng mốc chia,</i>
+<i># nên xếp hạng trước; cái giá là hai khách cùng số đơn có thể rơi vào hai mức kề nhau</i>
+rfm["F"] = pd.qcut(rfm.frequency.rank(method="first"), 5, labels=[1, 2, 3, 4, 5]).astype(int)
+rfm["M"] = pd.qcut(rfm.monetary, 5, labels=[1, 2, 3, 4, 5]).astype(int)</div>
 
   <h2>KPI: hai câu hỏi trước khi thêm một chỉ số vào dashboard</h2>
   <ul>
     <li><b>Ai sẽ làm gì khác đi khi con số này thay đổi?</b> Không trả lời được thì đó không phải KPI, đó là trang trí.</li>
-    <li><b>Nó bị lách được bằng cách nào?</b> Mọi chỉ số bị đặt làm mục tiêu đều sớm bị tối ưu theo cách bạn không muốn — đo “số ticket đã đóng” thì ticket sẽ được đóng nhanh mà không giải quyết. Cặp đôi bảo vệ (số ticket đóng <i>và</i> tỉ lệ mở lại) là cách chống thông dụng nhất.</li>
+    <li><b>Nó bị lách được bằng cách nào?</b> Mọi chỉ số bị đặt làm mục tiêu đều sớm bị tối ưu theo cách bạn không muốn (định luật Goodhart) — đo “số ticket đã đóng” thì ticket sẽ được đóng nhanh mà không giải quyết. Cặp đôi bảo vệ (số ticket đóng <i>và</i> tỉ lệ mở lại) là cách chống thông dụng nhất.</li>
   </ul>
   <p>Và một chỉ số không có <b>ngữ cảnh</b> thì không đọc được. Mọi con số trên dashboard nên đi kèm ít nhất một trong ba: so với kỳ trước, so với mục tiêu, hoặc so với dải dao động bình thường.</p>
 
@@ -9492,7 +9527,7 @@ stat, pval = proportions_ztest([conv_b, conv_a], [n_b, n_a])</div>
   <ul>
     <li><b>Một dashboard trả lời một câu hỏi.</b> Dashboard “tổng quan mọi thứ” là dashboard không ai mở tới lần thứ ba.</li>
     <li><b>Định nghĩa chỉ số nằm trong git, không nằm trong công cụ BI.</b> Khi “khách hàng hoạt động” được định nghĩa lại trong Tableau mà không ai biết, mọi con số lịch sử ngầm đổi nghĩa.</li>
-    <li><b>Số tuyệt đối đi kèm số tương đối.</b> “Tăng 300%” trên nền 2 ca là 6 ca.</li>
+    <li><b>Số tuyệt đối đi kèm số tương đối.</b> “Tăng 300%” trên nền 2 ca nghĩa là từ 2 lên 8 ca.</li>
   </ul>
   <p class="wb-help">Với luận văn: phần analytics thường thuộc chương mô tả dữ liệu, không phải chương đóng góp. Làm nó bằng SQL/pandas + matplotlib rồi xuất hình là đủ — không cần dựng Tableau/Power BI, và dựng lên cũng không cộng điểm.</p>
 </template>
