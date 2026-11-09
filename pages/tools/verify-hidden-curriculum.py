@@ -40,7 +40,8 @@ Bảy phần, bảy loại sai khác nhau:
      hoặc để lời ấy dài quá 25 chữ.
   M. GỠ RỐI TRONG ĐẦU — khoá "mind" của file dữ liệu: đủ và đúng thứ tự các trường, id duy nhất, nhóm và
      nhãn độ tin hợp lệ, mục đọc thêm có thật, chữ thuần không HTML; câu gỡ và lý do mỗi thứ một câu, không
-     quá 35 chữ; nhãn bằng chứng phải kèm nguồn; hai phép tính trong dữ liệu tính lại được.
+     quá 35 chữ; nhãn bằng chứng phải kèm nguồn; hai phép tính trong dữ liệu tính lại được; nút nhóm trên
+     trang khớp dữ liệu và đầu trang đếm đúng số suy nghĩ.
 
 Cổng không kiểm bảng tóm tắt (s-tomtat) khớp lời từng khung luật, cũng không kiểm mỗi nguồn trong
 s-nguon còn được thân bài dẫn: hai việc ấy rà bằng tay khi sửa một mục.
@@ -596,7 +597,6 @@ def phan_B():
     claim('tự soát: KEYS trong mã đúng các nhóm, đúng thứ tự', bool(keys) and [k.strip(" '") for k in keys.group(1).split(',')] == list(groups))
     need('bài tự soát, tiêu đề', f'{so_chu(nau).capitalize()} câu: năm loại vốn, quyền lực và gia đình', nau)
     need('bài tự soát ở đầu phần Thực hành', f'bài tự soát {so_chu(nau)} câu', nau)
-    need('bài tự soát ở thẻ phần', f'tự soát {nau} câu')
     npl = len(re.findall(r'id="pl-[a-c]\d"', HTML))
     claim('lộ trình: 23 việc', npl == 23, f'thấy {npl} ô')
     books = re.search(r'Mười cuốn để đọc theo nhu cầu</h3>\s*<ol class="hc-ol">(.*?)</ol>', HTML, flags=re.S)
@@ -947,6 +947,11 @@ def phan_M():
                  'tối đa ba mục đọc thêm có thật, không trùng'):
         claim('suy nghĩ: ' + what, not bad[what], 'sai ở ' + ', '.join(map(str, bad[what][:10])))
     claim('suy nghĩ: mỗi nhóm có ít nhất một suy nghĩ', MIND_GROUPS <= {e.get('group') for e in mind})
+    # Nút lọc nhóm trên trang khớp đúng các nhóm trong dữ liệu; đầu trang đếm đúng số suy nghĩ.
+    chips = re.findall(r'<button class="hc-chipbtn"[^>]*data-g="([a-z]+)"', HTML)
+    claim('suy nghĩ: nút nhóm trên trang khớp các nhóm', chips[:1] == ['all'] and set(chips[1:]) == MIND_GROUPS
+          and len(chips) == len(MIND_GROUPS) + 1, str(chips))
+    need('số suy nghĩ ở đầu trang', f'· {len(mind)} suy nghĩ ·', len(mind))
     claim('suy nghĩ: không có trường _html (REPO-001)', not any(k.endswith('_html') for e in mind for k in e))
     # Hai câu tự tính trong dữ liệu: lãi 10% trên 50 triệu so với để dành 1 triệu mỗi tháng; số lần gặp bố mẹ.
     by = {e.get('id'): e for e in mind}
