@@ -1027,10 +1027,10 @@
    "points": [
     "One-hot 50.000 mã cửa hàng có ba vấn đề: tốn bộ nhớ, mọi thực thể cách đều nhau (kim hoàn xa quán phở như xa vàng bạc), và thực thể ít giao dịch gần như không học được gì",
     "nn.Embedding(num_embeddings=50_000, embedding_dim=32) thực chất là một bảng tra 50.000×32, mọi ô đều là tham số học được; emb(id) trả vector 32 chiều",
-    "Quy tắc chọn số chiều: min(50, n^0.25) hay đơn giản n^0.25; với 50.000 giá trị → khoảng 15–32 chiều",
-    "Vector gần nhau nổi lên vì nó làm giảm loss khi các thực thể xuất hiện trong bối cảnh tương tự — không ai gán, ý nghĩa nổi lên từ ngữ cảnh (cùng cơ chế word embedding: vua ≈ hoàng đế)",
+    "Chọn số chiều: quy tắc kinh nghiệm căn bậc bốn của n, thường chặn trên 50; 50.000 giá trị → ≈15, rồi thử 16, 32 trên validation. Tra bảng đúng bằng one-hot nhân ma trận. Mã quá hiếm vẫn học kém: gom vào một mã \"hiếm\", dành một mã cho cửa hàng mới",
+    "Vector gần nhau nổi lên vì nó làm giảm loss khi các thực thể xuất hiện trong bối cảnh tương tự — gần theo đúng điều loss quan tâm. word2vec làm cùng việc bằng cách đoán từ xung quanh; \"gần\" của vector từ thường đo bằng cosine similarity",
     "Ví von hỏng: embedding không hiểu nghĩa, chỉ mã hoá thống kê đồng xuất hiện — nên nó học luôn cả định kiến trong dữ liệu, là vấn đề đạo đức thật",
-    "Mẹo thực dụng: train embedding bằng mạng nơ-ron rồi lấy 16 cột đó làm feature cho LightGBM; kết hợp thường tốt hơn cả hai cách riêng lẻ"
+    "Mẹo thực dụng: train embedding bằng mạng nơ-ron (chỉ trên tập train, như target encoding) rồi lấy 16 cột đó làm feature cho LightGBM; Guo & Berkhahn 2016 thấy nó giúp, trên dữ liệu của bạn thì phải đo"
    ],
    "viz": "Hình tương tác vẽ ma trận khoảng cách 6×6 giữa sáu cửa hàng (ba tiệm trang sức, ba hàng ăn). One-hot: mọi ô ngoài đường chéo đúng 1,41 = √2, bảng phẳng tuyệt đối, không mang một chút thông tin nào về việc ai giống ai. Embedding sau train: hai khối vuông đậm hiện ra theo nghề, và số cột tụt từ n xuống ⌈n^0,25⌉ (50.000 → 15).",
    "example": {
@@ -1047,10 +1047,10 @@
   "dl-cnn-rnn": {
    "tldr": "CNN và RNN/LSTM thống trị 2012–2017; RNN thì đã bị Transformer thay gần hết TRONG XỬ LÝ NGÔN NGỮ, còn CNN vẫn rất phổ biến và cạnh tranh trong thị giác máy tính (nhất là khi dữ liệu vừa phải, cần chạy nhanh, hoặc chạy trên thiết bị nhúng), nhưng vẫn là baseline hợp lệ khi dữ liệu ít, tài nguyên hạn chế hoặc chuỗi ngắn — điều quyết định là hiểu vì sao chúng bị thay.",
    "points": [
-    "CNN: một bộ lọc nhỏ (vd 3×3) trượt khắp ảnh tìm mẫu cục bộ; hai ý tưởng cốt lõi là chia sẻ tham số (một bộ lọc dùng mọi vị trí) và bất biến tịnh tiến",
+    "CNN: một bộ lọc nhỏ (vd 3×3) trượt khắp ảnh tìm mẫu cục bộ; chia sẻ tham số làm Conv2d(3, 64, 3) chỉ có 1.792 tham số, so với ~9,6 triệu của một lớp đầy đủ nối ảnh 224×224×3 tới 64 nơ-ron. Cỡ đầu ra ⌊(W − K + 2P)/S⌋ + 1",
     "Nói chính xác: convolution một mình chỉ tương biến (equivariant) với dịch chuyển; tính bất biến (invariance) chỉ có được một phần nhờ pooling, tăng cường dữ liệu và cả kiến trúc gộp lại. CNN dùng cho ảnh và Conv1D cho chuỗi thời gian 1 chiều",
-    "RNN/LSTM/GRU đọc chuỗi từng phần tử mang theo trạng thái ẩn (trí nhớ ngắn hạn); LSTM/GRU có cổng để nhớ lâu hơn",
-    "Hai lý do RNN bị thay: không song song hoá được (phải xử lý xong phần tử 5 mới tới 6) và quên cái ở xa (thông tin token 1 phải đi 500 bước, pha loãng dần — cùng cơ chế vanishing gradient)",
+    "RNN/LSTM/GRU đọc chuỗi từng phần tử mang theo trạng thái ẩn; LSTM cập nhật trí nhớ bằng phép cộng c_t = f_t⊙c_{t−1} + i_t⊙c̃_t, cổng quên gần 1 thì gradient đi xa được",
+    "Hai lý do RNN bị thay: không song song hoá được, và khó học phụ thuộc xa — gradient ngược 500 bước với hệ số 0,9 còn 0,9^500 ≈ 10^−23 (vanishing gradient theo thời gian)",
     "Transformer giải cả hai: mọi vị trí nhìn mọi vị trí trực tiếp và cùng lúc, nên song song hoá tốt khi huấn luyện — nhưng khi sinh văn bản vẫn phải tuần tự từng token",
     "So sánh LSTM vs Transformer trên chuỗi giao dịch của một thẻ là thiết kế thí nghiệm luận văn hợp lý, nhiều tài liệu tham khảo"
    ],
@@ -1104,11 +1104,11 @@
   "dl-llm": {
    "tldr": "LLM là một Transformer decoder-only rất lớn huấn luyện đúng một nhiệm vụ là đoán token tiếp theo; mọi khả năng khác nổi lên từ đó, và hallucination là hệ quả trực tiếp của cách nó sinh token chứ không phải lỗi vặt sẽ được vá.",
    "points": [
-    "Đoán token tiếp theo mới là tiền huấn luyện; khả năng bám chỉ dẫn và từ chối yêu cầu hại chỉ có sau hậu huấn luyện: tinh chỉnh trên ví dụ mẫu (SFT) rồi học từ phản hồi người (RLHF). Decoder-only là phổ biến nhất, không phải duy nhất",
+    "Đoán token tiếp theo mới là tiền huấn luyện; khả năng bám chỉ dẫn và từ chối yêu cầu hại chỉ có sau hậu huấn luyện: SFT trên ví dụ mẫu rồi học từ cặp câu trả lời người đã chọn (RLHF qua mô hình chấm điểm, hoặc DPO học thẳng). Decoder-only là phổ biến nhất, không phải duy nhất",
     "LLM không tra cứu cơ sở dữ liệu, không có chỗ lưu sự thật — nó sinh token xác suất cao theo mẫu đã học, nên bịa thông tin nghe hợp lý (hallucination) là hệ quả trực tiếp",
     "Bốn cách dùng từ rẻ tới đắt: prompting (~0, luôn thử trước), few-shot (3–10 ví dụ trong prompt), RAG (tìm tài liệu nhét vào prompt), fine-tune (cao)",
     "Hiểu nhầm về fine-tune: nó chủ yếu dạy mô hình cách nói (giọng, định dạng), không phải cách đáng tin để cập nhật kiến thức; muốn mô hình biết chính sách nội bộ thì RAG thường đúng công cụ hơn và rẻ hơn",
-    "RAG ba bước: cắt tài liệu thành đoạn → embedding → vector database; câu hỏi thành vector, tìm đoạn gần nhất bằng cosine similarity; nhét đoạn vào prompt. Bản chất chỉ là tìm kiếm ngữ nghĩa + prompt, chất lượng quyết định bởi bước tìm kiếm",
+    "RAG ba bước: cắt tài liệu thành đoạn → embedding → vector database; câu hỏi thành vector, tìm đoạn gần nhất bằng cosine similarity; nhét đoạn vào prompt. Bản chất chỉ là tìm kiếm ngữ nghĩa + prompt; trả lời sai thì soi bước tìm kiếm trước",
     "Cho dự án gian lận: KHÔNG dùng LLM chấm điểm rủi ro (chậm, đắt, kém chính xác hơn LightGBM, không giải thích được cho kiểm toán); NÊN dùng để chuẩn hoá tên cửa hàng lộn xộn, và chuyển đầu ra SHAP thành đoạn tiếng Việt cho nhân viên xác minh"
    ],
    "viz": "Bảng bốn cách dùng LLM (Prompting/Few-shot/RAG/Fine-tune) với cột cơ chế, chi phí và khi nào dùng"
@@ -1118,10 +1118,10 @@
    "points": [
     "Bảng không có cấu trúc hình học để khai thác: cột 3 và cột 4 không có quan hệ hình học, hoán vị cột không đổi gì — khác ảnh (CNN) hay token (Transformer)",
     "Đặc trưng không đồng nhất (một cột tiền, một cột mã danh mục, một cột tỉ lệ): cây xử lý tự nhiên, mạng nơ-ron cần chuẩn hoá cẩn thận từng loại",
-    "Cây bất biến với phép biến đổi đơn điệu (log hay không log cho kết quả y hệt) còn mạng rất nhạy; ranh giới quyết định dạng bậc thang/ngưỡng ('trên 50 tuổi') cây làm bằng một lần chia, mạng phải xấp xỉ bằng nhiều nơ-ron",
-    "Đây không phải ý kiến cá nhân mà được kiểm chứng lại nhiều lần trong so sánh quy mô lớn — Grinsztajn và cộng sự 2022 là nguồn hay trích, làm phần 'lựa chọn mô hình' của luận văn vững hẳn; nhưng phát biểu cho đúng phạm vi (bộ cỡ ~10 nghìn mẫu, không pretraining/multimodal) vì benchmark khác như TabZilla cho thấy kết quả phụ thuộc bộ dữ liệu",
+    "Cây chỉ so thứ tự nên log hay không log vẫn chia dữ liệu train y hệt, còn mạng rất nhạy; ranh giới bậc thang/ngưỡng ('trên 50 tuổi') cây làm bằng một lần chia, mạng phải xấp xỉ bằng nhiều nơ-ron",
+    "Grinsztajn và cộng sự 2022 (45 bộ dữ liệu) là nguồn hay trích, với ba nguyên nhân phía mạng: thiên về hàm trơn, dễ bị cột vô ích làm nhiễu, MLP không đổi khi xoay trục. Trích kèm điều kiện: train cắt còn 10.000 dòng, lớp cân bằng 50/50, không ô thiếu, bỏ cột hạng mục quá 20 giá trị; TabZilla (176 bộ) cho thấy kết quả phụ thuộc bộ dữ liệu",
     "Deep learning thực sự lợi khi: cột hạng mục lực lượng rất lớn (embedding cho 50.000 cửa hàng), có dữ liệu chuỗi, có nhiều loại dữ liệu (multi-modal), hoặc học biểu diễn chung từ dữ liệu không nhãn",
-    "Cách dùng thông minh nhất trong 2 tuần: đừng thay LightGBM, hãy train mạng nhỏ có nn.Embedding cho merchant_id, lấy ma trận embedding 50.000×16, nối vào bảng feature rồi train LightGBM — điểm thường tốt hơn cả hai cách riêng, chi phí một buổi"
+    "Cách dùng thông minh nhất trong 2 tuần: đừng thay LightGBM; train mạng nhỏ có nn.Embedding cho merchant_id chỉ trên tập train, tra 16 cột theo merchant_id nối vào bảng feature, rồi so LightGBM có và không có chúng trên cùng tập valid — chi phí một buổi"
    ],
    "viz": "Code bốn bước embedding→LightGBM, kèm hình chiếu ma trận embedding xuống 2 chiều tô màu theo tỉ lệ gian lận"
   },
@@ -1723,12 +1723,12 @@
   "dl-nn": "103755a4",
   "dl-backprop": "82abb53f",
   "dl-train": "fa1075f1",
-  "dl-embed": "c9d596c1",
-  "dl-cnn-rnn": "e75141ec",
+  "dl-embed": "5e9a69b8",
+  "dl-cnn-rnn": "a57cb923",
   "dl-attn": "bc03fb14",
   "dl-tf": "be58647e",
-  "dl-llm": "b6ea09a4",
-  "dl-tab": "e06c5e83",
+  "dl-llm": "cd647e48",
+  "dl-tab": "9a99e265",
   "q-regress": "4d84aa5d",
   "q-forecast": "82cba130",
   "q-multi": "4f49b0d6",

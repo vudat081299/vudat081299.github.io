@@ -2916,24 +2916,26 @@ luận văn mà không ai thấy.
   <table>
     <tr><th>Loại</th><th>Cấu trúc</th><th>Giỏi gì</th><th>Ví dụ</th></tr>
     <tr><td><b>Encoder-only</b></td><td>Nhìn cả hai chiều</td><td>Hiểu, phân loại, embedding</td><td>BERT, PhoBERT (tiếng Việt)</td></tr>
-    <tr><td><b>Decoder-only</b></td><td>Masked, chỉ nhìn quá khứ</td><td>Sinh văn bản</td><td>GPT, LLaMA, Claude</td></tr>
+    <tr><td><b>Decoder-only</b></td><td>Masked, chỉ nhìn quá khứ</td><td>Sinh văn bản</td><td>GPT, Llama, Qwen</td></tr>
     <tr><td><b>Encoder-decoder</b></td><td>Cả hai + cross-attention</td><td>Dịch, tóm tắt</td><td>T5, mô hình gốc 2017</td></tr>
   </table>
 
   <h2>Đọc lại paper gốc</h2>
-  <p>Paper <i>Attention Is All You Need</i> (Vaswani và cộng sự, 2017) chỉ dài 11 trang. Sau bài này bạn đọc được hình 1 và mục 3 của nó. <b>Đọc một paper gốc từ đầu tới cuối là một trải nghiệm nên có trước khi viết luận văn</b> — nó cho bạn thấy một đóng góp thật trông như thế nào.</p>
+  <p>Paper <i>Attention Is All You Need</i> (Vaswani và cộng sự, 2017) có phần chính chỉ khoảng 10 trang. Sau bài này bạn đọc được hình 1 và mục 3 của nó. <b>Đọc một paper gốc từ đầu tới cuối là một trải nghiệm nên có trước khi viết luận văn</b> — nó cho bạn thấy một đóng góp thật trông như thế nào.</p>
 </template>
 
 <template data-aside="x-tab-dl-zoo" data-title="Các kiến trúc deep learning cho dữ liệu bảng"
           data-sub="Nhánh phụ — biết tên để trả lời khi bị hỏi, không cái nào là mặc định">
-  <p>Có cả một dòng mô hình deep learning thiết kế riêng cho dữ liệu bảng. Với bài của bạn, biết tên là đủ: chưa cái nào đánh bật được boosting một cách nhất quán, nên chúng chỉ đáng là <b>câu trả lời cho hội đồng</b> ("tôi có biết chúng, và đây là lý do không chọn"), không phải mô hình để dùng.</p>
+  <p>Có cả một dòng mô hình deep learning thiết kế riêng cho dữ liệu bảng. Với bài của bạn, biết tên là đủ: chưa cái nào đánh bật được boosting một cách nhất quán trên bảng cỡ lớn, nên chúng chỉ đáng là <b>câu trả lời cho hội đồng</b> ("tôi có biết chúng, và đây là lý do không chọn"), không phải mô hình để dùng.</p>
   <table>
     <tr><th>Mô hình</th><th>Ý tưởng</th><th>Thực tế</th></tr>
-    <tr><td><b>TabNet</b></td><td>Attention chọn feature theo từng bước</td><td>Nổi nhất, kết quả không nhất quán khi tái lập</td></tr>
-    <tr><td><b>FT-Transformer</b></td><td>Coi mỗi feature như một token, dùng Transformer</td><td>Cạnh tranh được, nhưng cần tune nhiều</td></tr>
-    <tr><td><b>NODE</b></td><td>Cây quyết định "mềm" khả vi</td><td>Ít dùng</td></tr>
-    <tr><td><b>SAINT</b></td><td>Attention trên cả hàng lẫn cột</td><td>Nghiên cứu</td></tr>
+    <tr><td><b>TabNet</b> (Arik &amp; Pfister 2019)</td><td>Attention chọn feature theo từng bước</td><td>Nổi nhất; trên các bộ dữ liệu ngoài paper gốc thì thua XGBoost (Shwartz-Ziv &amp; Armon 2022)</td></tr>
+    <tr><td><b>FT-Transformer</b> (Gorishniy và cộng sự 2021)</td><td>Coi mỗi feature như một token, dùng Transformer</td><td>Cạnh tranh được, nhưng cần tune nhiều và tốn hơn hẳn boosting; cùng paper cho thấy một ResNet đơn giản đã là baseline mạnh</td></tr>
+    <tr><td><b>NODE</b> (Popov và cộng sự 2019)</td><td>Cây quyết định "mềm" khả vi</td><td>Ít dùng</td></tr>
+    <tr><td><b>SAINT</b> (Somepalli và cộng sự 2021)</td><td>Attention trên cả cột lẫn giữa các hàng</td><td>Nghiên cứu</td></tr>
+    <tr><td><b>TabPFN</b> (Hollmann và cộng sự 2025)</td><td>Transformer train sẵn trên hàng triệu bảng giả lập; nhận cả tập train làm đầu vào và đoán ngay, không train lại</td><td>Ngoại lệ đáng biết: thắng boosting đã tune trên bảng nhỏ (bản v2: tới 10.000 dòng). Bản 2.5 nới tới khoảng 50.000 dòng, số liệu mới do chính tác giả báo cáo</td></tr>
   </table>
+  <p>Với bảng hàng trăm nghìn dòng và lớp lệch nặng như bài gian lận, chưa mô hình nào trong bảng này có bằng chứng độc lập là thắng boosting.</p>
 </template>
 
 <template data-aside="x-attn-kinds" data-title="Ba loại attention bạn sẽ gặp tên"
@@ -2941,8 +2943,17 @@ luận văn mà không ai thấy.
   <table>
     <tr><th>Loại</th><th>Ai nhìn ai</th><th>Dùng ở</th></tr>
     <tr><td><b>Self-attention</b></td><td>Token trong một chuỗi nhìn nhau</td><td>Mọi khối Transformer</td></tr>
-    <tr><td><b>Masked self-attention</b></td><td>Chỉ nhìn về <b>quá khứ</b>, che tương lai</td><td>GPT và mọi mô hình sinh văn bản — nếu không nó sẽ "nhìn trộm" từ cần đoán</td></tr>
+    <tr><td><b>Masked self-attention</b></td><td>Chỉ nhìn về <b>quá khứ</b>, che tương lai</td><td>GPT và mọi mô hình sinh văn bản từng token một — lúc train, nếu không che thì nó "nhìn trộm" đúng từ cần đoán</td></tr>
     <tr><td><b>Cross-attention</b></td><td>Chuỗi A nhìn chuỗi B</td><td>Dịch máy: câu đích nhìn câu nguồn</td></tr>
+  </table>
+
+  <h2>Ba cách làm attention rẻ hơn</h2>
+  <p>Lúc sinh, mô hình giữ lại $K$ và $V$ của mọi token đã có để khỏi tính lại (gọi là <b>KV cache</b>); với context dài, cache này chiếm phần lớn bộ nhớ GPU, và đọc nó ở mỗi token là nút thắt tốc độ. Hai cái tên đầu dưới đây nhắm vào KV cache; cái thứ ba nhắm vào ma trận $n \times n$ lúc train và lúc đọc prompt.</p>
+  <table>
+    <tr><th>Tên</th><th>Đổi gì</th><th>Được gì, mất gì</th></tr>
+    <tr><td><b>MQA</b> (multi-query, Shazeer 2019)</td><td>Mọi đầu dùng chung một bộ $K, V$; chỉ $Q$ riêng từng đầu</td><td>KV cache nhỏ đi đúng bằng số đầu; chất lượng có thể giảm chút</td></tr>
+    <tr><td><b>GQA</b> (grouped-query, Ainslie và cộng sự 2023)</td><td>Chia các đầu thành nhóm, mỗi nhóm chung một bộ $K, V$</td><td>Điểm giữa multi-head thường và MQA. Llama 3 8B: 32 đầu $Q$, 8 bộ $K, V$ → cache nhỏ 4 lần</td></tr>
+    <tr><td><b>FlashAttention</b> (Dao và cộng sự 2022)</td><td>Không đổi phép toán: tính theo từng khối trong bộ nhớ nhanh của GPU, không ghi ma trận $n \times n$ ra bộ nhớ chính</td><td>Kết quả như attention thường, nhanh hơn, bộ nhớ tăng tuyến tính theo $n$; số phép tính vẫn tăng theo $n^2$</td></tr>
   </table>
 </template>
 
@@ -2950,10 +2961,13 @@ luận văn mà không ai thấy.
           data-sub="Nhánh phụ — tra khi nghe người khác dùng những từ này">
   <table>
     <tr><th>Từ</th><th>Nghĩa gọn</th></tr>
-    <tr><td>Token</td><td>Mảnh từ. ~1 token ≈ 4 ký tự tiếng Anh; tiếng Việt tốn token hơn</td></tr>
-    <tr><td>Context window</td><td>Số token tối đa mô hình nhìn được một lần</td></tr>
-    <tr><td>Temperature</td><td>Độ ngẫu nhiên khi sinh. 0 = ổn định nhất <button class="ds-math" data-math="softmax">(cơ chế)</button></td></tr>
-    <tr><td>LoRA / QLoRA</td><td>Fine-tune chỉ một phần nhỏ tham số — rẻ hơn nhiều lần</td></tr>
+    <tr><td>Token</td><td>Mảnh từ mà mô hình đọc và sinh. ~1 token ≈ 4 ký tự tiếng Anh; tiếng Việt tốn token hơn cho cùng nội dung</td></tr>
+    <tr><td>BPE (byte-pair encoding)</td><td>Cách phổ biến nhất để có bộ token: bắt đầu từ từng ký tự (hoặc từng byte), lặp lại việc ghép cặp hay đứng cạnh nhau nhất trong dữ liệu thành một mảnh mới, tới khi đủ vài chục tới vài trăm nghìn mảnh. Ngôn ngữ ít có trong dữ liệu đó, như tiếng Việt, bị cắt vụn hơn</td></tr>
+    <tr><td>Context window</td><td>Số token tối đa mô hình xử lý trong một lượt, tính cả prompt lẫn phần nó sinh ra</td></tr>
+    <tr><td>Temperature</td><td>Chia điểm của mỗi token cho $T$ trước softmax: $T &lt; 1$ làm phân phối nhọn hơn, $T &gt; 1$ làm phẳng hơn, ngẫu nhiên hơn. $T = 0$ thường nghĩa là luôn chọn token điểm cao nhất <button class="ds-math" data-math="softmax">(cơ chế)</button></td></tr>
+    <tr><td>Top-p (nucleus sampling)</td><td>Chỉ bốc thăm trong nhóm token nhỏ nhất có tổng xác suất ≥ $p$ (ví dụ 0,9), bỏ phần đuôi token hiếm</td></tr>
+    <tr><td>SFT · RLHF · DPO</td><td>Ba bước hậu huấn luyện: học theo ví dụ mẫu; học theo điểm của một mô hình chấm điểm; học thẳng từ cặp câu trả lời người đã chọn (bài chính có giải thích)</td></tr>
+    <tr><td>LoRA / QLoRA</td><td>Đóng băng trọng số gốc. Với mỗi ma trận $W$ cỡ $d \times k$ được chọn, chỉ học thêm hai ma trận nhỏ $B$ ($d \times r$) và $A$ ($r \times k$), trọng số dùng là $W + BA$. Với $d = k = 4.096$, $r = 8$: học 65.536 số thay vì 16,8 triệu (0,39%). Tiết kiệm chủ yếu ở bộ nhớ cho gradient và optimizer; QLoRA nén thêm mô hình gốc xuống 4-bit</td></tr>
     <tr><td>Quantization</td><td>Giảm độ chính xác số (16-bit → 4-bit) để chạy trên máy nhỏ</td></tr>
     <tr><td>Hallucination</td><td>Bịa ra thông tin nghe hợp lý nhưng sai</td></tr>
   </table>
@@ -8684,7 +8698,7 @@ sched.step()</div>
   <h2>Vấn đề</h2>
   <p>Bạn có 50.000 mã cửa hàng. One-hot cho ra 50.000 cột, mỗi dòng có đúng một số 1. Ba vấn đề:</p>
   <ul>
-    <li>Tốn bộ nhớ khủng khiếp.</li>
+    <li>Bảng phình ra 50.000 cột — lưu dạng đặc thì tốn bộ nhớ khủng khiếp.</li>
     <li>Mọi cửa hàng <b>cách đều nhau</b> — "cửa hàng vàng bạc" và "tiệm kim hoàn" xa nhau y như "tiệm kim hoàn" và "quán phở".</li>
     <li>Cửa hàng chỉ có 3 giao dịch thì cột của nó gần như không học được gì.</li>
   </ul>
@@ -8695,13 +8709,16 @@ sched.step()</div>
   <div class="ds-code">emb = nn.Embedding(num_embeddings=50_000, embedding_dim=32)
 <i># thực chất là một bảng tra cứu 50.000 × 32, và mọi ô đều là tham số học được</i>
 vec = emb(torch.tensor([1234]))   <i># → vector 32 chiều của cửa hàng #1234</i></div>
-  <p>Quy tắc chọn số chiều: $\min(50, \sqrt[4]{n})$ hoặc đơn giản là $n^{0{,}25}$. Với 50.000 giá trị → khoảng 15–32 chiều.</p>
+  <p>Bảng tra cứu này không có gì bí ẩn: lấy dòng 1234 của nó cho đúng kết quả của vector one-hot 50.000 chiều nhân với ma trận 50.000 × 32, tức một lớp <code>nn.Linear</code> không bias đặt sau one-hot. Embedding chỉ bỏ qua phép nhân với hàng nghìn số 0.</p>
+  <p>Chọn số chiều: không có công thức đúng, chỉ có quy tắc kinh nghiệm. Hay gặp nhất là căn bậc bốn của số giá trị khác nhau $n$, thường chặn trên ở 50: $\min(50, \sqrt[4]{n})$. Với 50.000 giá trị, $\sqrt[4]{50\,000} \approx 15$. Lấy đó làm điểm khởi đầu, rồi thử vài giá trị như 16 và 32 trên tập validation.</p>
+  <p><b>Một vấn đề embedding không tự giải:</b> cửa hàng chỉ có 3 giao dịch thì dòng của nó trong bảng cũng chỉ được cập nhật từ 3 dòng dữ liệu, nên vector gần như vẫn là số ngẫu nhiên lúc khởi tạo. Cách thường làm: gom các mã xuất hiện quá ít trong train vào một mã chung "hiếm", và dành một mã cho cửa hàng chưa từng gặp — lúc chạy thật, mã mới không có dòng nào trong bảng.</p>
 
   <div data-viz="embed"></div>
 
   <h2>Vì sao "gần nhau" lại có nghĩa</h2>
-  <p>Không ai bảo mô hình rằng hai cửa hàng giống nhau. Nhưng nếu chúng xuất hiện trong những bối cảnh tương tự (cùng loại khách, cùng khoảng tiền, cùng khung giờ), thì đặt vector của chúng gần nhau <b>làm giảm loss</b> — nên gradient descent tự đẩy chúng lại gần.</p>
-  <p>Đây chính là cơ chế đằng sau word embedding: "vua" và "hoàng đế" gần nhau vì chúng xuất hiện trong những câu tương tự. <b>Ý nghĩa nổi lên từ ngữ cảnh, không ai gán.</b></p>
+  <p>Không ai bảo mô hình rằng hai cửa hàng giống nhau. Nhưng nếu chúng xuất hiện trong những bối cảnh tương tự (cùng loại khách, cùng khoảng tiền, cùng khung giờ), thì đặt vector của chúng gần nhau <b>làm giảm loss</b> — nên gradient descent tự đẩy chúng lại gần. "Giống nhau" ở đây là giống theo đúng điều loss quan tâm: với mô hình gian lận, đó là giống nhau về rủi ro, không nhất thiết về ngành hàng.</p>
+  <p>Word embedding nổi lên theo cùng logic, chỉ khác bài toán dùng để train: word2vec (Mikolov và cộng sự, 2013) học vector của mỗi từ bằng cách đoán các từ đứng quanh nó trong câu, không cần nhãn. "vua" và "hoàng đế" có những từ xung quanh tương tự, nên đặt hai vector gần nhau giúp đoán đúng hơn. <b>Ý nghĩa nổi lên từ ngữ cảnh, không ai gán.</b></p>
+  <p>"Gần" đo bằng gì: hình ở trên dùng khoảng cách Euclid. Với vector từ và vector văn bản, người ta hay dùng <button class="ds-math" data-math="dot">cosine similarity</button>: chỉ so hướng của hai vector, bỏ qua độ dài, cho số từ −1 tới 1.</p>
   <p><b>Chỗ ví von hỏng:</b> người ta hay nói embedding "hiểu nghĩa". Nó không hiểu gì cả — nó chỉ mã hoá <i>thống kê đồng xuất hiện</i>. Vì thế nó cũng học luôn cả định kiến có trong dữ liệu, và đó là một vấn đề đạo đức thật, không phải giả định.</p>
 
   <h2>Dùng trong bài toán của bạn</h2>
@@ -8716,11 +8733,11 @@ vec = emb(torch.tensor([1234]))   <i># → vector 32 chiều của cửa hàng #
     <b>def</b> forward(self, merchant_id, x_num):
         e = self.merchant_emb(merchant_id)         <i># (batch, 16)</i>
         <b>return</b> self.mlp(torch.cat([e, x_num], dim=1))</div>
-  <p>Sau khi train, <code>merchant_emb.weight</code> là ma trận 50.000 × 16. Bạn có thể giảm chiều bằng UMAP/t-SNE và vẽ ra — <b>một hình rất tốt cho luận văn</b>, cho thấy mô hình đã tự nhóm các cửa hàng rủi ro cao vào một vùng.</p>
-  <p>Mẹo thực dụng: có thể huấn luyện embedding bằng mạng nơ-ron rồi <b>lấy 16 cột đó làm feature cho LightGBM</b>. Kết hợp này thường tốt hơn cả hai cách riêng lẻ, và là một đóng góp hợp lệ cho luận văn.</p>
+  <p>Sau khi train, <code>merchant_emb.weight</code> là ma trận 50.000 × 16. Bạn có thể chiếu nó xuống 2 chiều bằng UMAP hoặc t-SNE (hai cách chiếu cố giữ hàng xóm gần của mỗi điểm) rồi tô màu theo tỉ lệ gian lận của cửa hàng. Nếu cửa hàng rủi ro cao dồn về một vùng, đó là <b>một hình tốt cho luận văn</b>. Đọc hình cho đúng: hai cách chiếu này không giữ khoảng cách xa, nên khoảng cách giữa hai cụm trên hình không mang nghĩa.</p>
+  <p>Mẹo thực dụng: huấn luyện embedding bằng mạng nơ-ron rồi <b>lấy 16 cột đó làm feature cho LightGBM</b>. Guo &amp; Berkhahn (2016, <i>Entity Embeddings of Categorical Variables</i>) thấy cách này làm mọi mô hình họ thử tốt lên trên dữ liệu doanh số Rossmann; trên dữ liệu của bạn thì phải đo. Điều kiện bắt buộc: embedding học từ nhãn, nên cũng như target encoding ở bài <a href="#/f-cat">Biến hạng mục</a>, nó chỉ được học trên tập train. Học trên cả validation hay test là rò rỉ.</p>
 
   <h2>Cầu nối sang Transformer</h2>
-  <p>Trong mô hình ngôn ngữ, mỗi <b>token</b> (từ hoặc mảnh từ) có một embedding. Câu "thẻ này vừa quẹt" trở thành 4 vector. Rồi Transformer làm cho các vector đó <b>trao đổi thông tin với nhau</b> — và cơ chế trao đổi đó chính là attention, bài tiếp theo.</p>
+  <p>Trong mô hình ngôn ngữ, mỗi <b>token</b> (từ hoặc mảnh từ) có một embedding. Câu "thẻ này vừa quẹt" trở thành một dãy vector, mỗi token một vector: 4 vector nếu mỗi tiếng là một token, nhiều hơn nếu bộ tách token cắt nhỏ hơn. Rồi Transformer làm cho các vector đó <b>trao đổi thông tin với nhau</b> — và cơ chế trao đổi đó chính là <a href="#/dl-attn">attention</a>, hai bài sau bài này.</p>
 </template>
 
 <template data-node="dl-cnn-rnn">
@@ -8738,16 +8755,19 @@ vec = emb(torch.tensor([1234]))   <i># → vector 32 chiều của cửa hàng #
     <li><b>Chia sẻ tham số</b> — một bộ lọc dùng ở mọi vị trí, nên số tham số nhỏ hơn nhiều so với mạng đầy đủ.</li>
     <li><b>Bất biến tịnh tiến</b> — con mèo ở góc nào cũng là con mèo. Nói cho chính xác: một mình phép convolution chỉ <i>tương biến</i> (equivariant) với dịch chuyển — mẫu hình dịch đi thì bản đồ đặc trưng cũng dịch theo. Tính <i>bất biến</i> (vị trí không còn quan trọng) chỉ có được một phần, nhờ pooling, tăng cường dữ liệu và toàn bộ kiến trúc gộp lại.</li>
   </ul>
+  <p>Chia sẻ tham số rẻ cỡ nào, tính trên một ảnh màu 224 × 224 (3 kênh). Lớp <code>nn.Conv2d(3, 64, kernel_size=3, padding=1)</code> có 64 bộ lọc, mỗi bộ $3 \times 3 \times 3 = 27$ trọng số cộng 1 bias: tổng $64 \times 28 = 1.792$ tham số. Một lớp đầy đủ nối 150.528 giá trị của ảnh tới chỉ 64 nơ-ron đã cần $150.528 \times 64 + 64 \approx 9{,}6$ triệu.</p>
+  <p>Cỡ đầu ra theo mỗi chiều là $\lfloor (W - K + 2P)/S \rfloor + 1$, với $W$ cạnh đầu vào, $K$ cạnh bộ lọc, $P$ padding (số ô viền thêm mỗi bên), $S$ stride (bước trượt). Lớp trên có $W=224, K=3, P=1, S=1$ nên ra 224, giữ nguyên cỡ ảnh; đổi sang $S=2$ thì ra $\lfloor 223/2 \rfloor + 1 = 112$, còn một nửa.</p>
   <p>Dùng cho: ảnh, và <b>chuỗi thời gian 1 chiều</b> (Conv1D) — cái sau có thể liên quan tới bài của bạn nếu bạn xử lý chuỗi giao dịch.</p>
 
   <h2>RNN / LSTM — cho dữ liệu tuần tự</h2>
   <p>Ý tưởng: đọc chuỗi từng phần tử một, mang theo một "trạng thái ẩn" như trí nhớ ngắn hạn. LSTM và GRU là các biến thể có cổng để nhớ được lâu hơn.</p>
+  <p>Cổng là một vector số trong khoảng 0–1 mà mạng tự tính ở mỗi bước, quyết định giữ bao nhiêu phần trí nhớ cũ và nhận bao nhiêu phần thông tin mới. Điểm mấu chốt của LSTM: trí nhớ $c_t$ (cell state) được cập nhật bằng <i>phép cộng</i>, $c_t = f_t \odot c_{t-1} + i_t \odot \tilde c_t$, với $f_t$ là cổng quên, $i_t$ là cổng vào, $\tilde c_t$ là thông tin mới đề xuất, $\odot$ là nhân từng phần tử. Khi $f_t$ gần 1, thông tin và gradient đi qua nhiều bước mà không bị nhân nhỏ dần. GRU gộp lại còn hai cổng; cùng kích thước thì nó có ba khối trọng số thay vì bốn, nhẹ hơn LSTM một phần tư.</p>
   <p><b>Hai vấn đề khiến chúng bị thay thế:</b></p>
   <ol>
     <li><b>Không song song hoá được.</b> Phải xử lý phần tử thứ 5 xong mới tới thứ 6. Với chuỗi dài và GPU hiện đại, đây là nút cổ chai chí mạng.</li>
-    <li><b>Quên cái ở xa.</b> Thông tin từ token 1 phải đi qua 500 bước để tới token 500, và bị pha loãng dần — cùng cơ chế với vanishing gradient.</li>
+    <li><b>Quên cái ở xa.</b> Thông tin từ token 1 phải đi qua 500 bước để tới token 500. Lúc học, gradient đi ngược đúng 500 bước đó và bị nhân với một hệ số ở mỗi bước: hệ số 0,9 thì sau 500 bước còn $0{,}9^{500} \approx 10^{-23}$. Đó là <button class="ds-math" data-math="chain">vanishing gradient</button>, chỉ khác là theo chiều thời gian thay vì chiều sâu. Cổng của LSTM/GRU làm chậm việc này chứ không xoá được.</li>
   </ol>
-  <p>Transformer giải cả hai: mọi vị trí nhìn thấy mọi vị trí <b>trực tiếp</b> (không qua trung gian) và <b>cùng lúc</b>. Nhờ vậy <b>lúc huấn luyện</b> nó song song hoá tốt hơn hẳn RNN — đó là toàn bộ lý do nó thắng và vì sao 2017 là bước ngoặt. (Một lưu ý để không hớ: khi <i>sinh văn bản</i>, mô hình vẫn phải làm tuần tự từng token một, vì token sau phụ thuộc token trước — phần song song nằm ở huấn luyện, không phải ở lúc sinh.)</p>
+  <p>Transformer giải cả hai: mọi vị trí nhìn thấy mọi vị trí <b>trực tiếp</b> (không qua trung gian) và <b>cùng lúc</b>. Nhờ vậy <b>lúc huấn luyện</b> nó song song hoá tốt hơn hẳn RNN — hai điều đó là lý do chính nó thắng và vì sao 2017 là bước ngoặt. Cái giá: mỗi vị trí nhìn mọi vị trí nên chi phí tăng theo bình phương độ dài chuỗi, còn RNN chỉ tăng tuyến tính. (Một lưu ý để không hớ: khi <i>sinh văn bản</i>, mô hình vẫn phải làm tuần tự từng token một, vì token sau phụ thuộc token trước — phần song song nằm ở huấn luyện, không phải ở lúc sinh.)</p>
 
   <h2>Còn dùng ở đâu năm 2026</h2>
   <table>
@@ -8864,7 +8884,7 @@ LayerNorm
 
   <h2>LLM là gì, bỏ hết hào quang</h2>
   <p>Một Transformer decoder-only rất lớn, huấn luyện trên khối lượng văn bản khổng lồ với đúng <b>một</b> nhiệm vụ: <b>đoán token tiếp theo</b>. Mọi khả năng khác — trả lời, viết code, dịch — đều nổi lên từ nhiệm vụ đó, không được lập trình riêng.</p>
-  <p><b>Cần nói thêm cho chuẩn:</b> đó mới là bước <b>tiền huấn luyện</b>. Việc mô hình biết bám theo chỉ dẫn và từ chối yêu cầu hại chỉ có sau một bước <b>hậu huấn luyện</b> chồng lên — tinh chỉnh trên ví dụ mẫu (SFT) rồi học từ phản hồi của người (RLHF). Và "decoder-only" là kiến trúc phổ biến nhất chứ không phải duy nhất; vẫn có LLM encoder-decoder.</p>
+  <p><b>Cần nói thêm cho chuẩn:</b> đó mới là bước <b>tiền huấn luyện</b>. Việc mô hình biết bám theo chỉ dẫn và từ chối yêu cầu hại chỉ có sau một bước <b>hậu huấn luyện</b> chồng lên — tinh chỉnh trên ví dụ mẫu (SFT) rồi học từ phản hồi của người. Phản hồi ấy thường là các cặp câu trả lời người đã chọn cái tốt hơn. RLHF dùng các cặp đó train một mô hình chấm điểm, rồi tối ưu LLM theo điểm bằng học tăng cường; DPO học thẳng từ các cặp, không cần mô hình chấm điểm. Và "decoder-only" là kiến trúc phổ biến nhất chứ không phải duy nhất; vẫn có LLM encoder-decoder.</p>
   <p><b>Hiểu nhầm cần gỡ:</b> LLM không tra cứu một cơ sở dữ liệu. Nó không "biết" theo nghĩa có một chỗ lưu sự thật. Nó sinh ra token có xác suất cao dựa trên mẫu hình đã học. Đó là lý do nó <b>bịa ra thông tin nghe rất hợp lý</b> (hallucination) — không phải lỗi vặt sẽ được vá, mà là hệ quả trực tiếp của cách nó hoạt động.</p>
 
   <h2>Bốn cách dùng, từ rẻ tới đắt</h2>
@@ -8873,11 +8893,11 @@ LayerNorm
     <tr><td><b>Prompting</b></td><td>Viết chỉ dẫn tốt</td><td>Gần như 0</td><td>Luôn thử trước</td></tr>
     <tr><td><b>Few-shot</b></td><td>Đưa 3–10 ví dụ ngay trong prompt</td><td>Thấp</td><td>Cần định dạng đầu ra nhất quán</td></tr>
     <tr><td><b>RAG</b></td><td>Tìm tài liệu liên quan, nhét vào prompt</td><td>Vừa</td><td>Cần trả lời dựa trên tài liệu riêng của bạn</td></tr>
-    <tr><td><b>Fine-tune</b></td><td>Huấn luyện tiếp trên dữ liệu của bạn</td><td>Cao</td><td>Cần <i>phong cách/định dạng</i> riêng, hoặc lĩnh vực rất hẹp</td></tr>
+    <tr><td><b>Fine-tune</b></td><td>Huấn luyện tiếp trên dữ liệu của bạn</td><td>Cao; LoRA (xem từ vựng cuối bài) hạ được phần bộ nhớ GPU</td><td>Cần <i>phong cách/định dạng</i> riêng, hoặc lĩnh vực rất hẹp</td></tr>
   </table>
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Hiểu nhầm rất phổ biến về fine-tuning</p>
-    <p class="wb-alert__msg">Fine-tune chủ yếu dạy mô hình <b>cách nói</b> — giọng điệu, định dạng, thích ứng với một tác vụ. Nó <i>có thể</i> nhét thêm sự thật mới, nhưng đó không phải cách đáng tin để cập nhật kiến thức: tốn kém, dễ quên thứ cũ, và mỗi lần dữ liệu đổi lại phải train lại. Muốn mô hình biết chính sách nội bộ công ty bạn, RAG thường là đúng công cụ. Rất nhiều dự án tốn hàng chục triệu để fine-tune cho một vấn đề mà RAG giải quyết tốt hơn với chi phí thấp hơn.</p>
+    <p class="wb-alert__msg">Fine-tune chủ yếu dạy mô hình <b>cách nói</b> — giọng điệu, định dạng, thích ứng với một tác vụ. Nó <i>có thể</i> nhét thêm sự thật mới, nhưng đó không phải cách đáng tin để cập nhật kiến thức: tốn kém, dễ quên thứ cũ, và mỗi lần dữ liệu đổi lại phải train lại. Muốn mô hình biết chính sách nội bộ công ty bạn, RAG thường là đúng công cụ. Lỗi hay gặp là fine-tune cho một vấn đề mà RAG giải quyết tốt hơn với chi phí thấp hơn.</p>
   </div></div>
 
   <h2>RAG trong ba câu</h2>
@@ -8886,7 +8906,7 @@ LayerNorm
     <li>Khi có câu hỏi, biến câu hỏi thành vector, tìm các đoạn có vector gần nhất <button class="ds-math" data-math="dot">(cosine similarity)</button>.</li>
     <li>Nhét các đoạn đó vào prompt: <i>"Dựa trên các đoạn sau, hãy trả lời..."</i></li>
   </ol>
-  <p>Nhìn từ góc độ này, RAG chỉ là <b>tìm kiếm ngữ nghĩa + prompt</b>. Nó không huyền bí, và cái quyết định chất lượng là bước tìm kiếm chứ không phải mô hình.</p>
+  <p>Nhìn từ góc độ này, RAG chỉ là <b>tìm kiếm ngữ nghĩa + prompt</b>. Nó không huyền bí. Khi RAG trả lời sai, chỗ hỏng hay gặp nhất là bước tìm kiếm (lấy về đoạn không liên quan), nên in các đoạn đã lấy ra và soi chúng trước khi đổi mô hình.</p>
 
   <h2>LLM giúp gì cho dự án gian lận của bạn</h2>
   <table>
@@ -8902,27 +8922,27 @@ LayerNorm
   </template>
 
 <template data-node="dl-tab">
-  <p>Câu hỏi thẳng: dữ liệu của bạn là bảng, vậy có nên dùng deep learning không? <b>Câu trả lời ngắn: không, nhưng phải biết vì sao để trả lời hội đồng.</b></p>
+  <p>Câu hỏi thẳng: dữ liệu của bạn là bảng, vậy có nên dùng deep learning không? <b>Câu trả lời ngắn cho bài của bạn: không dùng làm mô hình chính, nhưng phải biết vì sao để trả lời hội đồng.</b></p>
 
   <h2>Vì sao boosting vẫn thắng trên dữ liệu bảng</h2>
   <ul>
     <li><b>Dữ liệu bảng không có cấu trúc để khai thác.</b> CNN thắng nhờ tính cục bộ trong ảnh; Transformer thắng nhờ quan hệ giữa các token. Cột 3 và cột 4 trong bảng của bạn không có quan hệ hình học nào — hoán vị cột không đổi gì.</li>
     <li><b>Đặc trưng không đồng nhất.</b> Một cột là tiền, một cột là mã danh mục, một cột là tỉ lệ. Cây xử lý tự nhiên; mạng nơ-ron cần chuẩn hoá cẩn thận cho từng loại.</li>
-    <li><b>Cây bất biến với phép biến đổi đơn điệu.</b> Log hay không log, cây cho kết quả y hệt. Mạng nơ-ron thì rất nhạy.</li>
+    <li><b>Cây bất biến với phép biến đổi đơn điệu.</b> Cây chỉ so thứ tự, nên log hay không log thì nó vẫn chia dữ liệu train y hệt nhau. Mạng nơ-ron thì rất nhạy.</li>
     <li><b>Ranh giới quyết định dạng bậc thang.</b> Nhiều quy luật thật trong dữ liệu bảng có dạng ngưỡng ("trên 50 tuổi thì..."), và cây mô hình hoá điều đó bằng đúng một lần chia; mạng phải xấp xỉ bằng nhiều nơ-ron.</li>
   </ul>
-  <p>Đây không phải ý kiến cá nhân — nó được kiểm chứng lại nhiều lần trong các so sánh quy mô lớn (Grinsztajn và cộng sự 2022 là tài liệu hay trích dẫn nhất). <b>Trích dẫn được một nguồn cho nhận định này làm phần "lựa chọn mô hình" trong luận văn của bạn vững hẳn.</b></p>
+  <p>Đây không phải ý kiến cá nhân — kết luận "boosting thường thắng" được kiểm chứng lại nhiều lần trong các so sánh quy mô lớn. Tài liệu hay trích dẫn nhất là Grinsztajn và cộng sự (2022), so trên 45 bộ dữ liệu. Họ tìm ra ba nguyên nhân phía mạng nơ-ron: thiên về hàm trơn nên khó học ranh giới bậc thang (gạch cuối ở trên); dễ bị các cột vô ích làm nhiễu, trong khi cây tự bỏ qua chúng; và MLP không đổi khi xoay trục toạ độ, trong khi mỗi cột của bảng có nghĩa riêng nên trộn cột là phá nghĩa đó. <b>Trích dẫn được một nguồn cho nhận định này làm phần "lựa chọn mô hình" trong luận văn của bạn vững hẳn.</b></p>
   <div class="wb-alert wb-alert--info">
     <span class="wb-alert__icon">i</span>
     <div class="wb-alert__body"><p class="wb-alert__title">Phát biểu cho đúng mức — hội đồng sẽ soi đúng chỗ này</p>
-      <p class="wb-alert__msg">Câu an toàn là "<b>boosting là baseline rất mạnh trên dữ liệu bảng cỡ vừa</b>", không phải "boosting luôn thắng deep learning". Grinsztajn 2022 đo trên các bộ cỡ ~10 nghìn mẫu và <i>không có</i> pretraining hay multimodal; các benchmark khác (ví dụ TabZilla 2023) cho thấy kết quả <b>phụ thuộc bộ dữ liệu</b> — nhiều chỗ chênh lệch rất nhỏ, và có bộ mạng nơ-ron thắng. Nói "thường thắng, trong điều kiện X" thì không ai bắt bẻ được; nói "luôn thắng" thì chỉ cần một phản ví dụ là đổ.</p></div>
+      <p class="wb-alert__msg">Câu an toàn là "<b>boosting là baseline rất mạnh trên dữ liệu bảng cỡ vừa</b>", không phải "boosting luôn thắng deep learning". Grinsztajn 2022 cắt tập train còn 10.000 dòng (phụ lục thử 50.000), bỏ mọi dòng thiếu dữ liệu, cân bằng hai lớp 50/50, bỏ cột hạng mục có hơn 20 giá trị, và <i>không có</i> pretraining hay multimodal. Bài gian lận chắc chắn khác ở một điểm (lớp lệch nặng), và có thể khác thêm ở cột hạng mục nhiều giá trị như <code>merchant_id</code> hay ô thiếu (IEEE-CIS có rất nhiều) — nên trích nó kèm điều kiện. Các benchmark khác (ví dụ TabZilla 2023, 176 bộ dữ liệu) cho thấy kết quả <b>phụ thuộc bộ dữ liệu</b> — nhiều chỗ chênh lệch rất nhỏ, và có bộ mạng nơ-ron thắng. Nói "thường thắng, trong điều kiện X" thì không ai bắt bẻ được; nói "luôn thắng" thì chỉ cần một phản ví dụ là đổ.</p></div>
   </div>
 
   <p class="ds-more"><button class="ds-aside" data-aside="x-tab-dl-zoo">Điểm tên các kiến trúc deep learning cho dữ liệu bảng (TabNet, FT-Transformer…)</button></p>
 
   <h2>Khi nào deep learning THỰC SỰ có lợi cho bài của bạn</h2>
   <ol>
-    <li><b>Cột hạng mục lực lượng rất lớn</b> — embedding cho 50.000 cửa hàng thường tốt hơn one-hot hay target encoding.</li>
+    <li><b>Cột hạng mục lực lượng rất lớn</b> — embedding cho 50.000 cửa hàng thường tốt hơn one-hot; có hơn target encoding không thì phải đo. Đây cũng là vùng Grinsztajn 2022 không xét.</li>
     <li><b>Có dữ liệu chuỗi</b> — chuỗi giao dịch của một thẻ theo thời gian. Đây là chỗ Transformer/LSTM có đất diễn thật.</li>
     <li><b>Có nhiều loại dữ liệu (multi-modal)</b> — bảng + văn bản + ảnh hoá đơn. Kết hợp chúng <i>end-to-end trong một mô hình</i> thường phải là mạng nơ-ron — dù bạn vẫn có thể trích embedding từ mỗi loại rồi đưa vào LightGBM, đúng cách làm ở mục cuối bài.</li>
     <li><b>Học biểu diễn chung</b> — huấn luyện trên dữ liệu không nhãn khổng lồ rồi tinh chỉnh cho tác vụ có nhãn ít.</li>
@@ -8930,11 +8950,11 @@ LayerNorm
 
   <h2>Cách dùng thông minh nhất trong 2 tuần</h2>
   <p>Đừng thay LightGBM. Hãy <b>dùng deep learning để tạo feature cho LightGBM</b>:</p>
-  <div class="ds-code">1. Huấn luyện một mạng nhỏ có nn.Embedding cho merchant_id
+  <div class="ds-code">1. Huấn luyện một mạng nhỏ có nn.Embedding cho merchant_id, CHỈ trên tập train
 2. Lấy ma trận embedding đã học (50.000 × 16)
-3. Nối 16 cột đó vào bảng feature
-4. Train LightGBM như bình thường</div>
-  <p>Cách này cho bạn: điểm số thường tốt hơn cả hai cách riêng lẻ, một đóng góp rõ ràng để viết, và <b>một hình đẹp</b> (chiếu embedding xuống 2 chiều, tô màu theo tỉ lệ gian lận). Chi phí: một buổi.</p>
+3. Tra 16 cột theo merchant_id, nối vào bảng feature của train, valid và test
+4. Train LightGBM như bình thường, so với LightGBM không có 16 cột đó trên cùng tập valid</div>
+  <p>Cách này cho bạn: một thí nghiệm có đối chứng — tốt hơn thì là đóng góp rõ ràng để viết, không hơn thì là một dòng ablation trung thực — và <b>một hình</b> (chiếu embedding xuống 2 chiều, tô màu theo tỉ lệ gian lận). Chi phí: một buổi. Bước 1 là chỗ dễ rò rỉ: embedding học từ nhãn, giống target encoding (bài <a href="#/dl-embed">Embedding</a>).</p>
 </template>
 
 <!-- ============================================================
