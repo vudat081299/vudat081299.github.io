@@ -8753,7 +8753,7 @@ vec = emb(torch.tensor([1234]))   <i># → vector 32 chiều của cửa hàng #
   <p>Hai ý tưởng cốt lõi đáng nhớ, vì chúng xuất hiện lại ở nhiều nơi:</p>
   <ul>
     <li><b>Chia sẻ tham số</b> — một bộ lọc dùng ở mọi vị trí, nên số tham số nhỏ hơn nhiều so với mạng đầy đủ.</li>
-    <li><b>Bất biến tịnh tiến</b> — con mèo ở góc nào cũng là con mèo. Nói cho chính xác: một mình phép convolution chỉ <i>tương biến</i> (equivariant) với dịch chuyển — mẫu hình dịch đi thì bản đồ đặc trưng cũng dịch theo. Tính <i>bất biến</i> (vị trí không còn quan trọng) chỉ có được một phần, nhờ pooling, tăng cường dữ liệu và toàn bộ kiến trúc gộp lại.</li>
+    <li><b>Tương biến tịnh tiến</b> — con mèo ở góc nào cũng là con mèo. Nói cho chính xác: một mình phép convolution chỉ <i>tương biến</i> (equivariant) với dịch chuyển — mẫu hình dịch đi thì bản đồ đặc trưng cũng dịch theo. Tính <i>bất biến</i> (vị trí không còn quan trọng) chỉ có được một phần, nhờ pooling, tăng cường dữ liệu và toàn bộ kiến trúc gộp lại.</li>
   </ul>
   <p>Chia sẻ tham số rẻ cỡ nào, tính trên một ảnh màu 224 × 224 (3 kênh). Lớp <code>nn.Conv2d(3, 64, kernel_size=3, padding=1)</code> có 64 bộ lọc, mỗi bộ $3 \times 3 \times 3 = 27$ trọng số cộng 1 bias: tổng $64 \times 28 = 1.792$ tham số. Một lớp đầy đủ nối 150.528 giá trị của ảnh tới chỉ 64 nơ-ron đã cần $150.528 \times 64 + 64 \approx 9{,}6$ triệu.</p>
   <p>Cỡ đầu ra theo mỗi chiều là $\lfloor (W - K + 2P)/S \rfloor + 1$, với $W$ cạnh đầu vào, $K$ cạnh bộ lọc, $P$ padding (số ô viền thêm mỗi bên), $S$ stride (bước trượt). Lớp trên có $W=224, K=3, P=1, S=1$ nên ra 224, giữ nguyên cỡ ảnh; đổi sang $S=2$ thì ra $\lfloor 223/2 \rfloor + 1 = 112$, còn một nửa.</p>

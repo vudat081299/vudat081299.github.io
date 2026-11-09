@@ -18,7 +18,8 @@ Nguồn đối chiếu: PDF của Grinsztajn 2022 (mục 3.2), abstract TabZilla
   cho cửa hàng mới; tra bảng = one-hot nhân ma trận; word2vec và cosine; "bài tiếp theo" trỏ sai bài.
   Embedding → LightGBM: bỏ "thường tốt hơn cả hai", thêm điều kiện chỉ học trên train.
 - `dl-cnn-rnn`: thêm con số chia sẻ tham số (1.792 so với ~9,6 triệu) và công thức cỡ đầu ra; cổng LSTM cộng dồn;
-  vanishing gradient có số theo chiều thời gian; Transformer tốn bình phương độ dài.
+  vanishing gradient có số theo chiều thời gian; Transformer tốn bình phương độ dài. Tích chập tương biến tịnh
+  tiến, pooling mới cho bất biến một phần: sửa nhãn gạch đầu dòng và câu quiz đầu tiên.
 - `dl-llm`: RLHF và DPO tách rõ; bỏ số tiền không nguồn; RAG "chỗ hỏng hay gặp" thay cho "cái quyết định".
 - `dl-tab`: điều kiện thật của Grinsztajn 2022 (train 10.000 dòng, lớp cân bằng, không ô thiếu, bỏ cột hạng mục quá
   20 giá trị) và ba nguyên nhân của paper; quy trình embedding → LightGBM có đối chứng.

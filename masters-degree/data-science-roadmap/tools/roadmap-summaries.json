@@ -1724,7 +1724,7 @@
   "dl-backprop": "82abb53f",
   "dl-train": "fa1075f1",
   "dl-embed": "5e9a69b8",
-  "dl-cnn-rnn": "a57cb923",
+  "dl-cnn-rnn": "dbc8847c",
   "dl-attn": "bc03fb14",
   "dl-tf": "be58647e",
   "dl-llm": "cd647e48",
