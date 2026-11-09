@@ -4,10 +4,21 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JSON Analysis — inspect, repair, search & compare JSON (even broken JSON)</title>
+  <script>
+    /* Theme before first paint. 'jt-theme' holds an explicit 'light' or 'dark';
+       nothing saved (or 'system') follows the OS, like web-builder's 'wb-theme'. */
+    (function () {
+      var s = null;
+      try { s = localStorage.getItem('jt-theme'); } catch (e) {}
+      var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (s === 'dark' || (s !== 'light' && sysDark)) document.documentElement.classList.add('dark');
+    })();
+  </script>
   <link rel="stylesheet" href="web-builder.css" />
   <style>
     /* ---- JSON Analysis specific tokens (theme-aware, built on web-builder tokens) ---- */
     :root {
+      color-scheme: light;
       --ja-key:      #4f46e5;   /* indigo — object keys        */
       --ja-string:   #15803d;   /* green  — string values      */
       --ja-number:   #b45309;   /* amber  — number values      */
@@ -18,6 +29,7 @@
                  "Liberation Mono", "Courier New", monospace;
     }
     .dark {
+      color-scheme: dark;
       --ja-key:     #a5b4fc;
       --ja-string:  #4ade80;
       --ja-number:  #fbbf24;
@@ -2057,14 +2069,25 @@
   $('btnMaximize').addEventListener('click', () => setViewMaximized(!isViewMaximized()));
   viewBackdrop.addEventListener('click', () => setViewMaximized(false));
 
-  // theme toggle (persisted)
+  // theme toggle (persisted). The pre-paint script in <head> applies the saved
+  // choice, or the OS theme when nothing is saved; a click saves an explicit one.
   const root = document.documentElement;
-  const savedTheme = localStorage.getItem('jt-theme');
-  if (savedTheme === 'dark') root.classList.add('dark');
+  const themeMQ = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function themeMode() {
+    let s = null;
+    try { s = localStorage.getItem('jt-theme'); } catch (e) {}
+    return s === 'light' || s === 'dark' ? s : 'system';
+  }
   $('themeToggle').addEventListener('click', () => {
     root.classList.toggle('dark');
-    localStorage.setItem('jt-theme', root.classList.contains('dark') ? 'dark' : 'light');
+    try { localStorage.setItem('jt-theme', root.classList.contains('dark') ? 'dark' : 'light'); } catch (e) {}
   });
+  // In system mode, track OS light/dark changes live.
+  if (themeMQ) {
+    const onOS = () => { if (themeMode() === 'system') root.classList.toggle('dark', themeMQ.matches); };
+    if (themeMQ.addEventListener) themeMQ.addEventListener('change', onOS);
+    else if (themeMQ.addListener) themeMQ.addListener(onOS);
+  }
 
   /* ============================================================================
      9) Compare — diff two JSON snippets
