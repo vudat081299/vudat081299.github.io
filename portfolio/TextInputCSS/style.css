@@ -118,3 +118,22 @@ body .form-group {
 body .form-group:not(:last-child) {
   margin-bottom: 32px;
 }
+
+/* Dark theme: follows the system; the light theme above is unchanged. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --input-color: #D3DBEC;
+    --input-border: #2E3A55;
+    --input-background: #161D2E;
+    --input-placeholder: #8490AB;
+    --input-border-focus: #6F93FF;
+    --group-color: #AEB9D2;
+    --group-background: #1E2840;
+    --group-color-focus: #fff;
+    --group-background-focus: #3F67E6;
+  }
+  :root:not([data-theme="light"]) body {
+    background: #0E1322;
+  }
+}

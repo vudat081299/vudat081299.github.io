@@ -95,6 +95,17 @@ if (selectedTheme) {
   // If the validation is fulfilled, we ask what the issue was to know if we activated or deactivated the dark
   document.body.classList[selectedTheme === 'dark' ? 'add' : 'remove'](darkTheme)
   themeButton.classList[selectedIcon === 'bxs-moon' ? 'add' : 'remove'](iconTheme)
+} else {
+  // No saved choice: the inline script at the top of <body> already followed the system; match the icon and keep following it
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)')
+  const followSystem = () => {
+    document.body.classList[systemDark.matches ? 'add' : 'remove'](darkTheme)
+    themeButton.classList[systemDark.matches ? 'add' : 'remove'](iconTheme)
+  }
+  followSystem()
+  systemDark.addEventListener('change', () => {
+    if (!localStorage.getItem('selected-theme')) followSystem()
+  })
 }
 
 // Activate / deactivate the theme manually with the button

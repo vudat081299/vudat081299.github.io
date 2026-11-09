@@ -212,3 +212,53 @@ img{
     bottom: 15%;
   }
 }
+
+/*========== DARK THEME (follows the system; light stays as above) ==========*/
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --body-color: #0f1528;
+    --title-color: #EEF0FA;
+    --text-color: #B3B6CC;
+  }
+
+  :root:not([data-theme="light"]) body{
+    background-color: var(--body-color);
+  }
+
+  :root:not([data-theme="light"]) .card__glass{
+    background: linear-gradient(130deg,
+                rgba(255,255,255,.14),
+                rgba(255,255,255,.04));
+    box-shadow: inset 1px 1px 1px rgba(255,255,255,.18),
+                0 18px 40px rgba(0,0,0,.3);
+  }
+
+  :root:not([data-theme="light"]) .card__img{
+    border-color: rgba(244,244,251,.75);
+  }
+
+  :root:not([data-theme="light"]) .card__button{
+    background: linear-gradient(130deg,
+                rgba(255,255,255,.22),
+                rgba(255,255,255,.06));
+  }
+
+  :root:not([data-theme="light"]) .card__button:hover{
+    background: linear-gradient(130deg,
+                rgba(255,255,255,.32),
+                rgba(255,255,255,.1));
+  }
+
+  :root:not([data-theme="light"]) .card__circle{
+    background: linear-gradient(130deg,
+                rgba(98,94,230,.85),
+                rgba(98,94,230,.06));
+  }
+
+  :root:not([data-theme="light"]) .card__circle2{
+    background: linear-gradient(130deg,
+                rgba(5,219,242,.75),
+                rgba(5,219,242,.05));
+  }
+}
