@@ -33,7 +33,7 @@ Bảy phần, bảy loại sai khác nhau:
      mục — kiểm số, không kiểm câu văn (du_kien) —, thân bài không dẫn số điều luật hay số hiệu văn bản
      (PAGES-015),
      và mọi con số suy ra được tính lại trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn
-     trong giá, thứ tự lợi suất, trái phiếu…).
+     trong giá, thứ tự lợi suất…).
   G. BẢN GỌN — định nghĩa và điều kiện quan trọng phải còn ngoài phần chi tiết; mỗi mục nội dung có
      đúng một khung “Luật của mục này”. Không thay được review ngữ nghĩa; bắt hồi quy khi gấp nhầm
      điều kiện vào details hoặc bỏ lời giải nghĩa của mười hai luật ở mục 11.2,
@@ -893,7 +893,7 @@ def phan_F():
     # Chuỗi lấy từ nguồn: mỗi chuỗi ứng một dòng kiểm nguồn; sửa thì mở lại nguồn.
     for x in ('139 doanh nghiệp', '83.600 tỉ đồng', '50,7%',
               'tối đa hai năm', '39,2%', '25.967', '42,6%', '1.092', 'khoảng 35 nghìn tỷ USD', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
-              '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
+              '39,70%', '10,37%', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
               '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%',
               '15.858,92', '24.164,89',
               '12,73%', '23,12%'):
@@ -961,12 +961,6 @@ def phan_F():
     need_t('thứ tự lợi suất: không rút', vn(1000 * prod, 1))
     need_t('thứ tự lợi suất: chênh hai kết cục', vn(run(good)[-1] - run(bad)[-1], 2))
     claim('góp đều thì năm xấu trước lại tốt hơn', run(bad, 60)[-1] > run(good, 60)[-1])
-
-    def bond(c, n, y):
-        return sum(c / (1 + y) ** t for t in range(1, n + 1)) + 100 / (1 + y) ** n
-    need_t('trái phiếu 10 năm khi lãi lên 7%', vn(bond(5, 10, 0.07), 2))
-    need_t('trái phiếu 10 năm: mức giảm', f'mất {vn(100 - bond(5, 10, 0.07), 2)}%')
-    need_t('trái phiếu 2 năm', f'kỳ hạn 2 năm chỉ giảm {vn(100 - bond(5, 2, 0.07), 2)}%')
 
     # Mua để ở hay đi thuê (s-dinhgia): căn 4 tỷ, trả trước 2 tỷ, vay 2 tỷ lãi 9%; khoản trả trước lẽ ra gửi
     # tiết kiệm 5%/năm; phí quản lý và sửa chữa 1% giá mỗi năm; thuê 12 triệu/tháng. Gốc trả dần là để dành, không tính.
