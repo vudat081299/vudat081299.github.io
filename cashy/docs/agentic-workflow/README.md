@@ -10,7 +10,7 @@
 | B | **Loan redesign** (transaction-linked) | ⏳ not started — **next** | v10 |
 | C | **Stats aggregation toggle** (Dashboard) | ⏳ not started | — |
 
-Build convention this programme used: **build-on-`main` directly** (no feature worktree), per the user's choice. kv pipeline artifacts were originally written to **repo-root** `docs/agentic-workflow/…` + `features/…` because the tracing hooks are `$repo`-anchored; they were **moved under `cashy/` on 2026-08-02** (they are Cashy-only, and the root of this repo is a published GitHub Pages site). If you re-run the pipeline it will recreate the root folders — move them back under `cashy/` when it does, or re-point the hooks. App code is under `cashy/src/`.
+Build convention this programme used: **build-on-`main` directly** (no feature worktree), per the user's choice. Agent-pipeline artifacts were originally written to **repo-root** `docs/agentic-workflow/…` + `features/…` because the tracing hooks are `$repo`-anchored; they were **moved under `cashy/` on 2026-08-02** (they are Cashy-only, and the root of this repo is a published GitHub Pages site). If you re-run the pipeline it will recreate the root folders — move them back under `cashy/` when it does, or re-point the hooks. App code is under `cashy/src/`.
 
 ---
 
@@ -86,7 +86,7 @@ pnpm build       # clean
 - **Resolve these ❓ at the START of slice B's `/spec`** (worked example implies subtract-repayments-then-apply-interest, e.g. 100 → repay 20 → 80 → ×1.10 = 88): VND rounding rule + order; multi-tranche compounding anchor; overpayment-excess handling; progress-% denominator once interest applies; whether interest freezes on archive.
 - Carry the architecture directive (UI/logic split; BE-ready query layer; per-feature sub-modules — CASHY-016) into slice B's `to-tech-design`.
 
-**To kick off slice B:** run the kv pipeline again — `discovery` is effectively done (decisions above), so write the slice-B handoff and run `/spec`, then `/bdd` → `/design` → `/plan` → exec-plan. Same build-on-`main` convention (or switch to a worktree if you prefer isolation).
+**To kick off slice B:** run the agent pipeline again — `discovery` is effectively done (decisions above), so write the slice-B handoff and run `/spec`, then `/bdd` → `/design` → `/plan` → exec-plan. Same build-on-`main` convention (or switch to a worktree if you prefer isolation).
 
 ### Slice C — Stats aggregation toggle
 Dashboard multi-select filter: pure spending / + subscription / + loans. Default = spending + subscription (loans off). (CASHY-015)

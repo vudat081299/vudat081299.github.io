@@ -137,7 +137,7 @@ Full list: `docs/data-model.md` §6 and `docs/architecture.md` §1.2.
 
 ### 9.1 Handoffs
 
-- The open handoff is `docs/agentic-workflow/README.md`: loan-redesign slices B and C. kv-pipeline artifacts belong under
+- The open handoff is `docs/agentic-workflow/README.md`: loan-redesign slices B and C. Agent-pipeline artifacts belong under
   `cashy/docs/agentic-workflow/` and `cashy/features/`; if the pipeline recreates them at the repo root, move them back.
 - A handoff is a temporary work queue. Each open item says `OPEN`, its owner or current state, its acceptance criteria
   and the next safe action.
@@ -153,4 +153,4 @@ Full list: `docs/data-model.md` §6 and `docs/architecture.md` §1.2.
   per screen), `docs/cashy-web-spec.md` (what ships). `ARCHITECTURE-WALKTHROUGH.md` is a narrative tour, not normative.
 - `docs/cashy-vision.md`, `docs/cashy-v1-spec.md`: native-iOS vision and v1 spec, left as they are (CASHY-020).
 - `docs/wallets-plan.md`, `docs/loans-plan.md`, `docs/PLAN.md`: design records of shipped work.
-- `docs/agentic-workflow/`: kv-pipeline artifacts for the loan redesign; BDD scenarios in `features/`.
+- `docs/agentic-workflow/`: agent-pipeline artifacts for the loan redesign; BDD scenarios in `features/`.
