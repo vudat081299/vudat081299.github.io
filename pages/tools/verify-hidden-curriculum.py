@@ -33,7 +33,7 @@ Bảy phần, bảy loại sai khác nhau:
      mục — kiểm số, không kiểm câu văn (du_kien) —, thân bài không dẫn số điều luật hay số hiệu văn bản
      (PAGES-015),
      và mọi con số suy ra được tính lại trên chữ đã bóc thẻ của trang (bảng, công thức, kỳ vọng ẩn
-     trong giá, thứ tự lợi suất, trái phiếu…).
+     trong giá, thứ tự lợi suất…).
   G. BẢN GỌN — định nghĩa và điều kiện quan trọng phải còn ngoài phần chi tiết; mỗi mục nội dung có
      đúng một khung “Luật của mục này”. Không thay được review ngữ nghĩa; bắt hồi quy khi gấp nhầm
      điều kiện vào details hoặc bỏ lời giải nghĩa của mười hai luật ở mục 11.2,
@@ -893,7 +893,7 @@ def phan_F():
     # Chuỗi lấy từ nguồn: mỗi chuỗi ứng một dòng kiểm nguồn; sửa thì mở lại nguồn.
     for x in ('139 doanh nghiệp', '83.600 tỉ đồng', '50,7%',
               'tối đa hai năm', '39,2%', '25.967', '42,6%', '1.092', 'khoảng 35 nghìn tỷ USD', '5,8 triệu USD', 'gần ba phần tư nhận 0', '62%', '89%', '2/12/2001',
-              '39,70%', '10,37%', 'owner earnings', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
+              '39,70%', '10,37%', '29 công ty', '39 công ty', 'khoảng 1%/năm', 'trên 12%/năm',
               '97 biến', '58%', 'ít nhất 10 năm', '36,55%', '20,10%', '−18,04%', '−17,83%',
               '15.858,92', '24.164,89',
               '12,73%', '23,12%'):
@@ -962,12 +962,6 @@ def phan_F():
     need_t('thứ tự lợi suất: chênh hai kết cục', vn(run(good)[-1] - run(bad)[-1], 2))
     claim('góp đều thì năm xấu trước lại tốt hơn', run(bad, 60)[-1] > run(good, 60)[-1])
 
-    def bond(c, n, y):
-        return sum(c / (1 + y) ** t for t in range(1, n + 1)) + 100 / (1 + y) ** n
-    need_t('trái phiếu 10 năm khi lãi lên 7%', vn(bond(5, 10, 0.07), 2))
-    need_t('trái phiếu 10 năm: mức giảm', f'mất {vn(100 - bond(5, 10, 0.07), 2)}%')
-    need_t('trái phiếu 2 năm', f'kỳ hạn 2 năm chỉ giảm {vn(100 - bond(5, 2, 0.07), 2)}%')
-
     # Mua để ở hay đi thuê (s-dinhgia): căn 4 tỷ, trả trước 2 tỷ, vay 2 tỷ lãi 9%; khoản trả trước lẽ ra gửi
     # tiết kiệm 5%/năm; phí quản lý và sửa chữa 1% giá mỗi năm; thuê 12 triệu/tháng. Gốc trả dần là để dành, không tính.
     h_price, h_down, h_loan, h_dep, h_keep, h_rent = 4000, 2000, 0.09, 0.05, 0.01, 12      # triệu đồng
@@ -1010,20 +1004,20 @@ def phan_F():
 def phan_F2():
     """Nghề và gia đình: các phép tính trong bài và vài con số dẫn từ nguồn."""
     vn = vi
-    # Quỹ đạo lương (s-tichluy): A 20 triệu +3%/năm, B 15 triệu +10%/năm; lương năm = 12 × lương tháng.
+    # Quỹ đạo lương (s-moitruong): A 20 triệu +3%/năm, B 15 triệu +10%/năm; lương năm = 12 × lương tháng.
     A = [20 * 1.03 ** (n - 1) for n in range(1, 21)]
     B = [15 * 1.10 ** (n - 1) for n in range(1, 21)]
     first = next(n for n in range(1, 21) if B[n - 1] > A[n - 1])
     cum = next(n for n in range(1, 21) if sum(B[:n]) > sum(A[:n]))
-    du_kien('s-tichluy', 'lương tháng của B vượt A', 'Lương tháng', f'năm thứ {first}', w=60)
-    du_kien('s-tichluy', 'tổng tiền đã nhận của B vượt A', 'đã nhận', f'năm thứ {cum}', w=60)
-    du_kien('s-tichluy', 'năm thứ 20', 'Năm thứ 20', f'{vn(A[-1], 1)} triệu/tháng', f'{vn(B[-1], 1)} triệu', w=120)
+    du_kien('s-moitruong', 'lương tháng của B vượt A', 'Lương tháng', f'năm thứ {first}', w=60)
+    du_kien('s-moitruong', 'tổng tiền đã nhận của B vượt A', 'đã nhận', f'năm thứ {cum}', w=60)
+    du_kien('s-moitruong', 'năm thứ 20', 'Năm thứ 20', f'{vn(A[-1], 1)} triệu/tháng', f'{vn(B[-1], 1)} triệu', w=120)
     b20 = 15 * 1.10 ** 10 * 1.03 ** 9          # mười lần tăng 10%, rồi 3% như A
-    du_kien('s-tichluy', 'giả định khắc nghiệt hơn', f'{vn(b20, 1)} triệu/tháng', f'khoảng {round(100 * (b20 / A[-1] - 1))}%', w=80)
+    du_kien('s-moitruong', 'giả định khắc nghiệt hơn', f'{vn(b20, 1)} triệu/tháng', f'khoảng {round(100 * (b20 / A[-1] - 1))}%', w=80)
     # “khoảng cách ấy giữ nguyên tới cuối”: từ năm 11 cả hai cùng tăng 3%/năm, nên tỉ số B/A không đổi.
     ba = [15 * 1.10 ** min(n - 1, 10) * 1.03 ** max(n - 11, 0) / (20 * 1.03 ** (n - 1)) for n in range(11, 41)]
     claim('từ năm 11, tỉ số lương B/A không đổi', max(ba) - min(ba) < 1e-9, f'{min(ba):.6f}…{max(ba):.6f}')
-    du_kien('s-tichluy', 'khoảng cách giữ nguyên', 'giữ nguyên tới cuối', 'theo phần trăm', w=80)
+    du_kien('s-moitruong', 'khoảng cách giữ nguyên', 'giữ nguyên tới cuối', 'theo phần trăm', w=80)
     # Bốn núm vặn (s-lamgiau): 25 triệu/tháng tăng 4%/năm như mô hình 7, để dành 30% (90 triệu năm đầu), gửi cuối mỗi
     # năm, 10 năm, tiền danh nghĩa. Gốc phải cùng tăng như mô hình 7: để thu nhập đứng yên thì phần “thu nhập tăng” gộp cả
     # phần tăng chung ai cũng có, và thứ tự các núm đổi.
@@ -1071,12 +1065,6 @@ def phan_F2():
     # Dữ kiện lấy từ nguồn, trong đúng mục: tác giả, năm, cỡ mẫu, số đo, ngày tháng. Một chuỗi phải có nguyên văn;
     # một bộ là một dữ kiện (du_kien): các phần phải đứng gần nhau, số nguyên cuối bộ (nếu có) là cỡ cửa sổ.
     NGUON = {
-        's-tichluy': [
-            ('hiệu ứng Matthew', 'Merton', '1968', 'Khung 2/3'), ('Mincer', '1974'), ('Lagakos', '2018', '18 nước', 'toàn thời gian'),
-            ('Mỹ, Đức, Canada, Anh', '20–24 năm', 'dưới 5 năm', '89,3%'), ('Brazil, Chile, Mexico, Jamaica', '47,6%'),
-            ('Việt Nam', '1998', '2002', 'dưới 50%'), ('A khởi điểm 20 triệu/tháng', 'tăng 3%'),
-            ('B khởi điểm 15 triệu', 'tăng 10%'), ('Brynjolfsson', '2025', '15%'), ('Becker', '1962'),
-        ],
         # Bằng chứng về chọn mã và giữ lâu (s-cophieu): Barber, Lee, Liu và Odean (2014); Chague, De-Losso và
         # Giovannetti (2020) — thị trường hợp đồng tương lai chỉ số; SPIVA Year-End 2024; Morningstar Mind the Gap
         # 2026; đỉnh VN-Index 2007, 2022.
@@ -1113,6 +1101,11 @@ def phan_F2():
             'hơn trung bình khoảng 0,7 điểm phần trăm', 'trung bình 12 tháng', 'thiếu tháng 10/2025',
             # Gallup, State of the American Manager (2015); ô số ≥ 70% ở đầu trang trỏ về câu này.
             ('Gallup', 'ít nhất 70% chênh lệch mức gắn bó'),
+            # Mục 4.3 gộp cả dòng và kho của một năm làm việc.
+            ('Mincer', '1974'), ('Lagakos', '2018', '18 nước', 'toàn thời gian'),
+            ('Mỹ, Đức, Canada, Anh', '20–24 năm', 'dưới 5 năm', '89,3%'), ('Brazil, Chile, Mexico, Jamaica', '47,6%'),
+            ('Việt Nam', '1998', '2002', 'dưới 50%'), ('A khởi điểm 20 triệu/tháng', 'tăng 3%'),
+            ('B khởi điểm 15 triệu', 'tăng 10%'), ('Brynjolfsson', '2025', '15%'), ('Becker', '1962'),
         ],
         # Chuyện phiếm (s-noi), abstract trên PubMed/Crossref, 10/2026: Mastroianni và cộng sự (2021) — 932 cuộc trò
         # chuyện; Montoya, Horton và Kirchner (2008) — 313 nghiên cứu, 460 hệ số; Methot và cộng sự (2021) — ba tuần lấy
