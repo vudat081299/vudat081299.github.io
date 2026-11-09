@@ -2134,14 +2134,13 @@
    ]
   },
   {
-   "id": "message",
-   "title": "Một lời từ chối nhẹ",
-   "prompt": "Bạn mời gặp, người kia nói đang bận và chưa gợi ý lúc khác. Bạn nghĩ họ đang thử mình. Đâu là dữ kiện, đâu là suy đoán, và bước tiếp nào vừa mức?",
-   "answer": "Dữ kiện là họ nói bận; “đang thử mình” là suy đoán. Một lần chưa cho biết động cơ. Có thể để họ chủ động hẹn lúc tiện; lời mời vẫn không được đáp thì ngừng nhắc. Không dùng ẩn ý mình đoán để gạt lời từ chối hay vượt ranh giới.",
+   "id": "guarantee",
+   "title": "Người thân nhờ đứng tên vay",
+   "prompt": "Một người họ hàng nhờ bạn đứng tên vay hộ một khoản, hứa tự trả hằng tháng, và nói “chỉ là thủ tục, cả nhà đều tin em”. Bạn cần nghĩ gì trước khi trả lời, và từ chối thế nào để còn giữ quan hệ?",
+   "answer": "Người đứng tên là người nợ: họ ngừng trả thì ngân hàng đòi bạn, và lịch sử tín dụng của bạn mang nợ xấu, khó vay về sau. Chỉ nhận khi bạn sẵn sàng tự trả cả khoản ấy. Không thì từ chối bằng một quy tắc chung, như “mình đã hứa với nhà là không đứng tên, không bảo lãnh cho ai”; muốn giúp thì giúp một khoản nhỏ mình chịu mất được.",
    "sections": [
-    "s-docnguoi",
-    "s-nhantin",
-    "s-ngoloi"
+    "s-ranhgioi",
+    "s-muoihai"
    ]
   },
   {
