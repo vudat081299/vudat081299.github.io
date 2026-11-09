@@ -1,6 +1,6 @@
 # CLAUDE.md — business-analytics
 
-Tài liệu môn Business Analytics của chương trình cao học: hai trang HTML tự chứa, không build,
+Tài liệu môn Business Data Analytics của chương trình cao học: hai trang HTML tự chứa, không build,
 không cổng riêng.
 
 | file | là gì |

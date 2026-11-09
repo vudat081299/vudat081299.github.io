@@ -15,7 +15,7 @@ nằm ở CLAUDE.md trong thư mục của nó; Claude Code tự nạp file ấy
 | `cashy/` | project | app chi tiêu Vite + React, thứ duy nhất cần build |
 | `masters-degree/data-science-roadmap/` | project | trang dạy Data Science |
 | `masters-degree/thesis-topic-selector/` | project | bảng chấm và xếp hạng đề tài luận văn |
-| `masters-degree/business-analytics/` | project | môn Business Analytics và đồ án |
+| `masters-degree/business-analytics/` | project | môn Business Data Analytics và đồ án |
 | `masters-degree/system-analysis-design/` | project | đồ án Phân tích thiết kế hệ thống |
 | `masters-degree/research-proposal-project/` | project | đề cương nghiên cứu, từ đồ án tới luận văn |
 | `masters-degree/class-schedule/` | project | lịch học cao học: ba môn, từng buổi, giảng viên, phòng |

@@ -11,7 +11,7 @@
   if(v!=='dark'&&v!=='light')v=mq?(mq.matches?'dark':'light'):'dark';
   document.documentElement.setAttribute('data-theme',v);})();
 </script>
-<title>Business Analytics — Complete course</title>
+<title>Business Data Analytics — Complete course</title>
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -75,6 +75,7 @@ p{margin:0 0 var(--sp-3)}
 .appbar .brand{display:flex;align-items:center;gap:var(--sp-2);font-family:var(--font-display);font-size:20px;letter-spacing:.05em;color:var(--text-primary)}
 .brand-mark{display:grid;place-items:center;width:28px;height:28px;background:var(--accent-identity);color:#fff;border-radius:var(--r-sm);font-size:17px}
 .brand b{color:var(--accent-identity);font-weight:400}
+@media (max-width:480px){.appbar .brand{white-space:nowrap;font-size:16px;letter-spacing:.03em}}
 .appbar .spacer{flex:1}
 .appbar-crumb{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw}
 .icon-btn{background:transparent;border:1px solid var(--border);color:var(--text-secondary);border-radius:var(--r-sm);height:34px;padding:0 var(--sp-3);cursor:pointer;font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:.08em;display:inline-flex;align-items:center;gap:6px;transition:all var(--dur-fast)}
@@ -328,7 +329,7 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
 
 <header class="appbar">
   <button class="icon-btn" id="menu-toggle" aria-label="Menu">☰</button>
-  <span class="brand"><span class="brand-mark">◧</span>BUSINESS <b>ANALYTICS</b></span>
+  <span class="brand"><span class="brand-mark">◧</span>BUSINESS DATA <b>ANALYTICS</b></span>
   <span class="spacer"></span>
   <span class="appbar-crumb" id="crumb">Tổng quan</span>
   <button class="icon-btn" id="theme-toggle" aria-label="Đổi giao diện"><span id="theme-label">DARK</span></button>
@@ -338,7 +339,7 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
   <div class="side-sec">Bắt đầu</div>
   <a class="nav-link" data-go="overview"><span class="nk">00</span><span class="lab">Tổng quan môn học</span><span class="done-dot"></span></a>
   <div class="side-sec">Nền tảng &amp; khung làm việc</div>
-  <a class="nav-link" data-go="foundations"><span class="nk">01</span><span class="lab">Nền tảng BA &amp; 4 loại phân tích</span><span class="done-dot"></span></a>
+  <a class="nav-link" data-go="foundations"><span class="nk">01</span><span class="lab">Nền tảng BDA &amp; 4 loại phân tích</span><span class="done-dot"></span></a>
   <a class="nav-link" data-go="crispdm"><span class="nk">02</span><span class="lab">CRISP-DM &amp; vòng đời dự án</span><span class="done-dot"></span></a>
   <a class="nav-link" data-go="kpi"><span class="nk">03</span><span class="lab">KPI Tree &amp; Problem Framing</span><span class="done-dot"></span></a>
   <div class="side-sec">Dữ liệu</div>
@@ -358,15 +359,15 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
 <main class="content" id="content">
   <section class="module" id="m-overview" data-module="overview">
   <header class="page-head">
-    <span class="eyebrow">Môn học · Học phần Phân tích kinh doanh</span>
-    <h1 class="title">Business <span>Analytics</span></h1>
+    <span class="eyebrow">Môn học · Phân tích dữ liệu kinh doanh</span>
+    <h1 class="title">Business Data <span>Analytics</span></h1>
     <p class="subtitle">Toàn bộ kiến thức môn học — từ khung tư duy CRISP-DM, chất lượng dữ liệu, EDA, đến hồi quy, phân loại, phân cụm và chuỗi thời gian. Tổng hợp, kiểm chứng và sửa lỗi từ 9 tài liệu gốc, trình bày song ngữ Việt–Anh.</p>
     <p class="meta">11 MODULE · ~120 KHÁI NIỆM · 7 DEMO TƯƠNG TÁC · 16 BÀI TẬP CÓ LỜI GIẢI · CẬP NHẬT <b>2026-07-26</b></p>
   </header>
 
   <article class="concept" data-concept="ov-map">
     <h3><span class="cid">Bức tranh lớn</span> Môn học này dạy gì?</h3>
-    <p class="lead">Business Analytics = <strong>biến dữ liệu thành insight và hành động</strong>. Toàn bộ môn học là <em>một vòng đời dự án</em>: bắt đầu từ <strong>câu hỏi kinh doanh</strong>, đi qua dữ liệu, rồi tới mô hình, và kết thúc bằng <strong>một quyết định</strong> đo lường được. Bản đồ dưới đây chính là trình tự đó — bấm vào từng ô để học.</p>
+    <p class="lead">Business Data Analytics = <strong>biến dữ liệu thành insight và hành động</strong>. Toàn bộ môn học là <em>một vòng đời dự án</em>: bắt đầu từ <strong>câu hỏi kinh doanh</strong>, đi qua dữ liệu, rồi tới mô hình, và kết thúc bằng <strong>một quyết định</strong> đo lường được. Bản đồ dưới đây chính là trình tự đó — bấm vào từng ô để học.</p>
 
     <div class="svg-fig">
       <div class="lifecycle">
@@ -381,7 +382,7 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
     </div>
 
     <div class="grid g2">
-      <div class="mapcard" data-goto="foundations"><span class="mk">01</span><h4>Nền tảng BA</h4><p>BA là gì · BA vs Data Analytics vs Data Science · 4 loại phân tích · tiến trình 6 bước.</p></div>
+      <div class="mapcard" data-goto="foundations"><span class="mk">01</span><h4>Nền tảng BDA</h4><p>BDA là gì · BDA vs Data Analytics vs Data Science · 4 loại phân tích · tiến trình 6 bước.</p></div>
       <div class="mapcard" data-goto="crispdm"><span class="mk">02</span><h4>CRISP-DM</h4><p>6 pha chuẩn của một dự án phân tích, Project Charter, cạm bẫy thường gặp.</p></div>
       <div class="mapcard" data-goto="kpi"><span class="mk">03</span><h4>KPI Tree &amp; Framing</h4><p>North Star → driver → lever, cây KPI doanh thu, DOC, A/B testing. <span class="pill">demo</span></p></div>
       <div class="mapcard" data-goto="dataquality"><span class="mk">04</span><h4>Data Quality &amp; FE</h4><p>Chất lượng dữ liệu, missing data, leakage, encoding, scaling, feature engineering. <span class="pill">demo</span></p></div>
@@ -428,23 +429,23 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
   <section class="module" id="m-foundations" data-module="foundations">
   <header class="page-head">
     <span class="eyebrow">Module 01 · Foundations</span>
-    <h1 class="title">Nền tảng <span>Business Analytics</span></h1>
-    <p class="subtitle">BA là gì, khác gì Data Analytics và Data Science, tại sao quan trọng, tiến hoá qua các thời kỳ, các thành phần cấu tạo, và tiến trình 6 bước.</p>
+    <h1 class="title">Nền tảng <span>Business Data Analytics</span></h1>
+    <p class="subtitle">BDA là gì, khác gì Data Analytics và Data Science, tại sao quan trọng, tiến hoá qua các thời kỳ, các thành phần cấu tạo, và tiến trình 6 bước.</p>
   </header>
 
   <article class="concept" data-concept="f-def">
-    <h3><span class="cid">1.1</span> Business Analytics là gì? <span class="en">(definition)</span></h3>
-    <p><strong>Cartoon:</strong> BA giống một cỗ máy biến <em>dữ liệu thô</em> ở đầu vào thành <em>quyết định tốt hơn</em> ở đầu ra.</p>
-    <p><strong>Cơ chế:</strong> BA là <strong>quá trình lặp lại</strong> dùng dữ liệu + công cụ thống kê/phân tích + một quy trình rõ ràng để rút ra insight <em>fact-based</em> (dựa trên bằng chứng) giúp nhà quản lý ra quyết định. Nó nằm ở <strong>giao của hiểu biết kinh doanh và dữ liệu</strong>.</p>
-    <div class="callout def"><span class="lbl">Định nghĩa gọn</span><p>BA = <strong>Dữ liệu + Công cụ + Quy trình lặp → insight hành động được</strong>. Bao trùm 3 tầng: descriptive (đã xảy ra gì), predictive (sẽ xảy ra gì), prescriptive (nên làm gì).</p></div>
-    <p><strong>Ba tính chất của BA tốt:</strong> <span class="pill">Purposive</span> biết <em>vì sao</em> phân tích (gắn với mục tiêu quản lý) · <span class="pill">Intuitive</span> phải ra insight mới, cause-and-effect có giá trị nhất · <span class="pill">Expedient</span> khuyến nghị phải <em>làm được</em>.</p>
+    <h3><span class="cid">1.1</span> Business Data Analytics là gì? <span class="en">(definition)</span></h3>
+    <p><strong>Cartoon:</strong> BDA giống một cỗ máy biến <em>dữ liệu thô</em> ở đầu vào thành <em>quyết định tốt hơn</em> ở đầu ra.</p>
+    <p><strong>Cơ chế:</strong> BDA là <strong>quá trình lặp lại</strong> dùng dữ liệu + công cụ thống kê/phân tích + một quy trình rõ ràng để rút ra insight <em>fact-based</em> (dựa trên bằng chứng) giúp nhà quản lý ra quyết định. Nó nằm ở <strong>giao của hiểu biết kinh doanh và dữ liệu</strong>.</p>
+    <div class="callout def"><span class="lbl">Định nghĩa gọn</span><p>BDA = <strong>Dữ liệu + Công cụ + Quy trình lặp → insight hành động được</strong>. Bao trùm 3 tầng: descriptive (đã xảy ra gì), predictive (sẽ xảy ra gì), prescriptive (nên làm gì).</p></div>
+    <p><strong>Ba tính chất của BDA tốt:</strong> <span class="pill">Purposive</span> biết <em>vì sao</em> phân tích (gắn với mục tiêu quản lý) · <span class="pill">Intuitive</span> phải ra insight mới, cause-and-effect có giá trị nhất · <span class="pill">Expedient</span> khuyến nghị phải <em>làm được</em>.</p>
   </article>
 
   <article class="concept" data-concept="f-vs">
-    <h3><span class="cid">1.2</span> BA vs Data Analytics vs Data Science</h3>
-    <p>Ba khái niệm chồng lấn nhưng khác trọng tâm. Nhớ 1 câu: <strong>Data Science</strong> rộng nhất về <em>kỹ thuật</em> · <strong>Business Analytics</strong> gần <em>quyết định kinh doanh</em> nhất · <strong>Data Analytics</strong> nằm giữa, trả lời câu hỏi cụ thể từ dữ liệu. Đọc theo cột:</p>
+    <h3><span class="cid">1.2</span> BDA vs Data Analytics vs Data Science</h3>
+    <p>Ba khái niệm chồng lấn nhưng khác trọng tâm. Nhớ 1 câu: <strong>Data Science</strong> rộng nhất về <em>kỹ thuật</em> · <strong>Business Data Analytics</strong> gần <em>quyết định kinh doanh</em> nhất · <strong>Data Analytics</strong> nằm giữa, trả lời câu hỏi cụ thể từ dữ liệu. Đọc theo cột:</p>
     <div class="tbl-wrap"><table>
-      <thead><tr><th></th><th>Business Analytics (BA)</th><th>Data Analytics (DA)</th><th>Data Science (DS)</th></tr></thead>
+      <thead><tr><th></th><th>Business Data Analytics (BDA)</th><th>Data Analytics (DA)</th><th>Data Science (DS)</th></tr></thead>
       <tbody>
         <tr><td>Câu hỏi cốt lõi</td><td><em>"Nên làm gì"</em> để đạt mục tiêu kinh doanh?</td><td><em>"Đã/đang xảy ra gì"</em> và vì sao?</td><td><em>"Có thể dự đoán/tự động hoá gì"</em> từ dữ liệu?</td></tr>
         <tr><td>Trọng tâm</td><td>Gắn insight với <strong>quyết định &amp; ROI</strong>, hiểu bối cảnh KD</td><td>Mô tả &amp; chẩn đoán trên dữ liệu <strong>có cấu trúc</strong></td><td>Xây <strong>thuật toán/mô hình</strong> mới; dữ liệu lớn, phi cấu trúc</td></tr>
@@ -453,8 +454,8 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
         <tr><td>Phạm vi</td><td>Hẹp &amp; sâu về <em>kinh doanh</em></td><td>Hẹp, quanh câu hỏi cụ thể</td><td>Rộng nhất (bao trùm DA + ML + kỹ thuật)</td></tr>
       </tbody>
     </table></div>
-    <div class="callout note"><span class="lbl">Góc nhìn từ slide: 2 trục "dữ liệu ↔ kinh nghiệm" &amp; "quá khứ ↔ tương lai"</span><p>Slide xếp các hoạt động lên 2 trục để phân biệt BA với DA: <em>business case study</em> (kinh nghiệm · quá khứ) · <em>qualitative analytics</em> (kinh nghiệm · tương lai) · <em>báo cáo/dashboard</em> (dữ liệu · quá khứ) · <em>forecasting</em> (dữ liệu · tương lai — nằm ở giao của BA &amp; dữ liệu). Việc <strong>gắn với quyết định kinh doanh</strong> là thứ kéo một hoạt động vào vùng BA.</p></div>
-    <p>Về vai trò: <strong>Data Analyst</strong> làm dữ liệu có cấu trúc, dùng công cụ BI (Excel, SQL, Tableau), suy luận tĩnh. <strong>Data Scientist</strong> rộng &amp; sâu hơn — dữ liệu có + phi cấu trúc, ML, công cụ big-data (Python/R/Spark). <strong>Business Analytics</strong> gần với <em>quyết định kinh doanh</em> nhất.</p>
+    <div class="callout note"><span class="lbl">Góc nhìn từ slide: 2 trục "dữ liệu ↔ kinh nghiệm" &amp; "quá khứ ↔ tương lai"</span><p>Slide xếp các hoạt động lên 2 trục để phân biệt BDA với DA: <em>business case study</em> (kinh nghiệm · quá khứ) · <em>qualitative analytics</em> (kinh nghiệm · tương lai) · <em>báo cáo/dashboard</em> (dữ liệu · quá khứ) · <em>forecasting</em> (dữ liệu · tương lai — nằm ở giao của BDA &amp; dữ liệu). Việc <strong>gắn với quyết định kinh doanh</strong> là thứ kéo một hoạt động vào vùng BDA.</p></div>
+    <p>Về vai trò: <strong>Data Analyst</strong> làm dữ liệu có cấu trúc, dùng công cụ BI (Excel, SQL, Tableau), suy luận tĩnh. <strong>Data Scientist</strong> rộng &amp; sâu hơn — dữ liệu có + phi cấu trúc, ML, công cụ big-data (Python/R/Spark). <strong>Business Data Analytics</strong> gần với <em>quyết định kinh doanh</em> nhất.</p>
     <p class="teaser">Mở rộng: bảng Data Scientist vs Data Analyst · dữ liệu có/phi/bán cấu trúc · học có giám sát vs không giám sát.</p>
     <button class="expand-btn" data-expand="f-vs">Chi tiết →</button>
     <div class="detail-source" id="detail-f-vs" data-title="Vai trò & loại dữ liệu">
@@ -472,13 +473,13 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
   </article>
 
   <article class="concept" data-concept="f-why">
-    <h3><span class="cid">1.3</span> Vì sao BA quan trọng trong ra quyết định</h3>
+    <h3><span class="cid">1.3</span> Vì sao BDA quan trọng trong ra quyết định</h3>
     <p>Bốn trụ cột: <span class="pill">Data-Driven</span> chọn chiến lược nhờ phân tích xu hướng · <span class="pill">Risk Mitigation</span> nhận diện rủi ro sớm · <span class="pill">Performance Measurement</span> theo dõi KPI · <span class="pill">Customer Insights</span> hiểu hành vi khách hàng.</p>
     <div class="callout note"><span class="lbl">Nguyên tắc số 1</span><p><strong>Bắt đầu từ quyết định cần hỗ trợ — không bắt đầu từ "ta có dữ liệu gì".</strong> Đây là ý tưởng quan trọng nhất của cả môn, lặp lại ở CRISP-DM (Business Understanding) và Problem Framing.</p></div>
   </article>
 
   <article class="concept" data-concept="f-steps">
-    <h3><span class="cid">1.4</span> Tiến trình BA 6 bước &amp; ROI</h3>
+    <h3><span class="cid">1.4</span> Tiến trình BDA 6 bước &amp; ROI</h3>
     <p>Đây là dạng <em>quy trình có thứ tự</em> — chính là bản rút gọn của CRISP-DM (module 02):</p>
     <ol>
       <li><strong>Xác định vấn đề</strong> — hiểu kết quả mong đợi, chia nhỏ mục tiêu, quyết định dữ liệu cần.</li>
@@ -492,10 +493,10 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
       $$\text{ROI} = \frac{\text{Gain} - \text{Cost}}{\text{Cost}} \times 100\%$$
       <p style="margin-top:8px">Gain = tổng giá trị dự án mang lại, Cost = tổng chi phí đầu tư. ROI &gt; 0 ⇒ tạo giá trị.</p>
     </div>
-    <p class="teaser">Mở rộng: 7 thành phần của BA · tiến hoá qua 5 thời kỳ · ánh xạ 6 bước ↔ CRISP-DM.</p>
+    <p class="teaser">Mở rộng: 7 thành phần của BDA · tiến hoá qua 5 thời kỳ · ánh xạ 6 bước ↔ CRISP-DM.</p>
     <button class="expand-btn" data-expand="f-more">Chi tiết →</button>
-    <div class="detail-source" id="detail-f-more" data-title="Thành phần & tiến hoá của BA">
-      <h4>7 thành phần của BA</h4>
+    <div class="detail-source" id="detail-f-more" data-title="Thành phần & tiến hoá của BDA">
+      <h4>7 thành phần của BDA</h4>
       <p>Data (nền tảng) · Tools (xử lý &amp; trực quan) · Techniques (thống kê) · People (con người) · Processes (quy trình) · Insights (hiểu biết) · Impact (tác động lên hiệu quả KD). <em>(Slide gọi là "key components" nhưng vẽ đúng 7 ô.)</em></p>
       <h4>Tiến hoá qua 5 thời kỳ</h4>
       <ol>
@@ -1097,7 +1098,7 @@ details.soln .ans{margin:var(--sp-3) 0 0;padding:var(--sp-2) var(--sp-4);backgro
       <p>Lặp E&amp;M tới khi log-likelihood ngừng tăng. Chỉ đạt <em>local optimum</em>.</p>
       <h4>Chọn số thành phần</h4>
       $$\text{AIC}=2p-2\ln\hat L, \qquad \text{BIC}=p\ln n-2\ln\hat L$$
-      <p>Log-likelihood luôn tăng theo số thành phần → cần phạt độ phức tạp. <strong>Thấp hơn là tốt hơn.</strong> BIC phạt mạnh hơn ($p\ln n &gt; 2p$ khi $n\ge8$) → mô hình đơn giản hơn, an toàn cho BA.</p>
+      <p>Log-likelihood luôn tăng theo số thành phần → cần phạt độ phức tạp. <strong>Thấp hơn là tốt hơn.</strong> BIC phạt mạnh hơn ($p\ln n &gt; 2p$ khi $n\ge8$) → mô hình đơn giản hơn, an toàn cho BDA.</p>
     </div>
   </article>
 
@@ -1612,7 +1613,7 @@ function gauss(rng){var u=0,v=0;while(u===0)u=rng();while(v===0)v=rng();return M
 })();
 
 /* ============ MODULE NAV ============ */
-var CRUMB={overview:'Tổng quan',foundations:'01 · Nền tảng BA',crispdm:'02 · CRISP-DM',kpi:'03 · KPI & Framing',dataquality:'04 · Data Quality & FE',eda:'05 · EDA',regression:'06 · Hồi quy tuyến tính',classification:'07 · Đánh giá phân loại',clustering:'08 · Phân cụm & PCA',timeseries:'09 · Chuỗi thời gian',projects:'10 · Dự án',exercises:'11 · Bài tập & lời giải'};
+var CRUMB={overview:'Tổng quan',foundations:'01 · Nền tảng BDA',crispdm:'02 · CRISP-DM',kpi:'03 · KPI & Framing',dataquality:'04 · Data Quality & FE',eda:'05 · EDA',regression:'06 · Hồi quy tuyến tính',classification:'07 · Đánh giá phân loại',clustering:'08 · Phân cụm & PCA',timeseries:'09 · Chuỗi thời gian',projects:'10 · Dự án',exercises:'11 · Bài tập & lời giải'};
 window.__activateHooks={};
 function onActivate(mod,fn){(window.__activateHooks[mod]=window.__activateHooks[mod]||[]).push(fn);}
 function goModule(mod,push){
@@ -1721,8 +1722,8 @@ window.addEventListener('scroll',onScroll,{passive:true});window.addEventListene
   }
   function badge(){var c=document.getElementById('nl-count');c.textContent=notes.length;c.hidden=notes.length===0;}
   function download(name,text,type){try{var b=new Blob([text],{type:type});var u=URL.createObjectURL(b);var a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(e){}}
-  document.getElementById('notes-export-json').addEventListener('click',function(){download('ghi-chu-BA.json',JSON.stringify(notes,null,2),'application/json');});
-  document.getElementById('notes-export-md').addEventListener('click',function(){var g={};notes.forEach(function(n){(g[n.label]=g[n.label]||[]).push(n);});var out='# Ghi chú — Business Analytics\n\n';Object.keys(g).forEach(function(k){out+='## '+k+'\n\n';g[k].forEach(function(n){out+='- '+n.text.replace(/\n/g,'\n  ')+'\n';});out+='\n';});download('ghi-chu-BA.md',out,'text/markdown');});
+  document.getElementById('notes-export-json').addEventListener('click',function(){download('ghi-chu-BDA.json',JSON.stringify(notes,null,2),'application/json');});
+  document.getElementById('notes-export-md').addEventListener('click',function(){var g={};notes.forEach(function(n){(g[n.label]=g[n.label]||[]).push(n);});var out='# Ghi chú — Business Data Analytics\n\n';Object.keys(g).forEach(function(k){out+='## '+k+'\n\n';g[k].forEach(function(n){out+='- '+n.text.replace(/\n/g,'\n  ')+'\n';});out+='\n';});download('ghi-chu-BDA.md',out,'text/markdown');});
   var msg=document.getElementById('notes-msg');
   document.getElementById('notes-import').addEventListener('click',function(){document.getElementById('notes-file').click();});
   document.getElementById('notes-file').addEventListener('change',function(ev){var f=ev.target.files[0];if(!f)return;var rdr=new FileReader();rdr.onload=function(){var added=0,dup=0;try{var incoming=[];if(f.name.endsWith('.json')){incoming=JSON.parse(rdr.result)||[];}else{var lbl='Chung';rdr.result.split(/\r?\n/).forEach(function(ln){var hm=ln.match(/^##\s+(.*)/);if(hm){lbl=hm[1].trim();return;}var bm=ln.match(/^-\s+(.*)/);if(bm)incoming.push({text:bm[1],label:lbl});});}var seen={};notes.forEach(function(n){seen[(n.cid||'')+'\0'+n.text.trim()]=1;});incoming.forEach(function(n){if(!n||!n.text)return;var key=(n.cid||'')+'\0'+n.text.trim();if(seen[key]){dup++;return;}seen[key]=1;notes.push({id:'n'+Date.now()+Math.floor(Math.random()*10000),text:n.text,cid:n.cid||'_general',label:n.label||'Chung',ts:n.ts||Date.now()});added++;});save();render();badge();msg.hidden=false;msg.textContent='Đã thêm '+added+' · bỏ qua '+dup+' trùng';setTimeout(function(){msg.hidden=true;},4000);}catch(e){msg.hidden=false;msg.style.color='var(--accent-red)';msg.textContent='Không đọc được tệp.';}};rdr.readAsText(f);ev.target.value='';});
