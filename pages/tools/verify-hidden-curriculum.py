@@ -1181,9 +1181,6 @@ def phan_F2():
         # Patel, Mahar và Webster (2022), abstract: liên hệ giữa hài lòng với nhịp nhắn và chất lượng quan hệ mạnh hơn
         # ở người lo âu gắn bó.
         's-nhantin': ['Patel, Mahar và Webster (2022) khảo sát 302 sinh viên Mỹ', ('302 sinh viên Mỹ', 'rõ nhất ở người hay lo', 300)],
-        # Overall và McNulty (2017), abstract: phản đối thẳng hại khi người kia không đủ tự tin, an toàn để đáp lại; giao tiếp
-        # hợp tác, công nhận cảm xúc hại khi vấn đề lớn cần đổi. Giữ cả hai điều kiện.
-        's-batdong': [('Overall và McNulty', '2017'), ('chưa đủ vững để đáp lại', 'vấn đề lớn cần đổi', 120)],
         's-henho': [
             'Aron và cộng sự (1997)', 'trong 45 phút', ('Laurenceau và cộng sự', '1998'), 'Bộ Công an, 2025',
         ],
@@ -1204,8 +1201,11 @@ def phan_F2():
             ('88 cặp', '15 phút', 'Abbey, Zawacki và McAuslan', '2000'),
             'Đây là xu hướng trung bình ở sinh viên Mỹ, đo ý muốn tình dục chứ không phải tình cảm',
         ],
+        # Overall và McNulty (2017), abstract: phản đối thẳng hại khi người kia không đủ tự tin, an toàn để đáp lại; giao tiếp
+        # hợp tác, công nhận cảm xúc hại khi vấn đề lớn cần đổi. Giữ cả hai điều kiện.
         's-quanhe': [
             'một phần ba số cặp đã đoàn tụ chia tay trong ba tháng',
+            ('Overall và McNulty', '2017'), ('chưa đủ vững để đáp lại', 'vấn đề lớn cần đổi', 120),
         ],
         's-dunglai': [
             'tổng hợp trên hơn 50.000 người xác nhận cả ba, mạnh nhất là mức hài lòng',
@@ -1331,8 +1331,8 @@ def phan_G():
         's-thuongluong': ['phương án tốt nhất ấy là BATNA', 'không dùng làm lời đe doạ'],
         's-noi': ['không để trao tin', 'hỏi tiếp từ chi tiết người kia tự kể thêm', 'kết bằng một câu rõ ràng',
                   'đoán kém lúc người kia muốn dừng', 'Đừng mở bằng lương'],
-        's-memcung': ['chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
-        's-ranhgioi': ['Từ chối bằng một nguyên tắc chung', 'vừa bị giục vừa được chiều chuộng'],
+        's-ranhgioi': ['Từ chối bằng một nguyên tắc chung', 'vừa bị giục vừa được chiều chuộng',
+                       'chênh lệch quyền lực', 'Chuyện an toàn hoặc sai luật'],
         's-quyenluc': ['Cố vấn cho lời khuyên', 'người bảo trợ dùng uy tín để đề cử'],
         's-vonvanhoa': ['không đo đúng năng lực hay nhân cách'],
         's-kinhdien': ['trăm trận không nguy', 'hai lần là đủ', 'chưa rõ xuất xứ'],
@@ -1346,8 +1346,7 @@ def phan_G():
         's-henho': ['mời theo cách dễ từ chối'],
         's-ngoloi': ['chỉ lên bậc khi bậc trước được đáp lại', 'Lịch sự, thân thiện chưa phải là thích',
                      'kể cả “không” nhẹ', 'không mời lại', 'chấm điểm họ thì đừng mời', 'không kể với ai'],
-        's-quanhe': ['đừng coi kiểm soát là bằng chứng yêu'],
-        's-batdong': ['không coi là lỗi đôi bên'],
+        's-quanhe': ['đừng coi kiểm soát là bằng chứng yêu', 'không coi là lỗi đôi bên'],
         's-dunglai': ['Không phải chứng minh người kia xấu mới được rời đi', 'lúc rời đi có thể nguy hiểm hơn'],
         's-honnhan': ['đừng dựa vào một dấu hiệu'],
         's-lamgiau': ['đừng săn lợi suất cao', 'đo được riêng', 'chủ ở mức giữa kiếm ít hơn người làm công',
@@ -1415,7 +1414,7 @@ def phan_G():
     # Fed Atlanta, wage-growth-data.xlsx sửa ngày 8/10/2026, sheet Job Switcher (12 tháng), cột B/C, 1/1997–9/2026:
     # 325 trên 356 tháng có số liệu nhóm đổi việc cao hơn, chênh bình quân 0,729 điểm; tháng 10/2025 trống.
     need_t('tỷ lệ tháng nhóm đổi việc cao hơn = 325 / 356', f'({vi(100 * 325 / 356, 1)}%)')
-    ditf = chu(muc('s-thuyetphuc'))
+    ditf = chu(muc('s-ranhgioi'))
     claim('Genschow bảng 1: so nhóm sau yêu cầu lớn với nhóm chỉ yêu cầu nhỏ',
           '51%' in ditf and '38%' in ditf and '34%' not in ditf)
     # Galinsky và Mussweiler (2001): lợi thế ra giá trước mất khi bên nhận giá nghĩ tới lựa chọn khác của BÊN RA GIÁ.
