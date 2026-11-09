@@ -3,10 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Theme trước lần vẽ đầu: lựa chọn đã lưu ('detai-hust-theme-v1') thắng; chưa chọn thì theo hệ điều hành. */
+(function(){var v;try{v=localStorage.getItem('detai-hust-theme-v1');}catch(e){}
+  var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');
+  if(v!=='dark'&&v!=='light')v=mq?(mq.matches?'dark':'light'):'light';
+  document.documentElement.setAttribute('data-theme',v);})();
+</script>
 <title>Thesis Topic Selector — 199 Data Science topics ranked by impact</title>
 <style>
 /* ============ TOKENS ============ */
 :root{
+  color-scheme:light;
   --bg:#ffffff; --surface:#ffffff; --ink:#111111; --ink-soft:#474747; --muted:#858585;
   --line:#e2e2e2; --line-strong:#c9c9c9;
   --good:#16a34a; --warn:#c2760a; --bad:#dc2626; --gold:#b58900;
@@ -26,6 +34,7 @@
   --z-sticky:10; --z-modal:1100;
 }
 [data-theme="dark"]{
+  color-scheme:dark;
   --bg:#131313; --surface:#1d1d1d; --ink:#f2f2f2; --ink-soft:#c9c9c9; --muted:#909090;
   --line:#313131; --line-strong:#494949;
   --good:#4ade80; --warn:#fbbf24; --bad:#f87171; --gold:#facc15;
@@ -4846,6 +4855,19 @@ function initTheme(){
     lsSet(K_THEME, next);
     btn.querySelector(".theme-label").textContent = next.toUpperCase();
   });
+  /* Chưa chọn thì đi theo hệ điều hành, kể cả khi đổi lúc trang đang mở. */
+  const mq = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+  if (mq) {
+    const onOS = () => {
+      const v = lsGet(K_THEME);
+      if (v === "dark" || v === "light") return;
+      const next = mq.matches ? "dark" : "light";
+      root.setAttribute("data-theme", next);
+      btn.querySelector(".theme-label").textContent = next.toUpperCase();
+    };
+    if (mq.addEventListener) mq.addEventListener("change", onOS);
+    else if (mq.addListener) mq.addListener(onOS);
+  }
 }
 
 /* ===== Khởi động ===== */
