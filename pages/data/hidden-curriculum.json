@@ -1977,7 +1977,7 @@
     "contingent-worth"
    ],
    "sections": [
-    "s-batdong",
+    "s-quanhe",
     "s-dunglai",
     "s-ranhgioi"
    ]
@@ -2068,8 +2068,8 @@
    "title": "Đang yêu, có bất đồng",
    "sections": [
     "s-quanhe",
-    "s-batdong",
-    "s-dunglai"
+    "s-dunglai",
+    "s-honnhan"
    ],
    "action": "Ghi việc đã xảy ra, điều mình cần và một đề nghị cụ thể."
   },
