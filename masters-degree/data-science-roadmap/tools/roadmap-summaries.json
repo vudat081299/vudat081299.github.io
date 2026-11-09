@@ -1353,11 +1353,11 @@
   "q-rec": {
    "tldr": "Gợi ý là họ bài toán mà độ chính xác gần như vô nghĩa vì người dùng xem một danh sách top-K chứ không xem một dự đoán; toàn bộ tư duy chuyển sang 'thứ đúng có nằm trong top-K và ở vị trí nào', và offline tốt không đảm bảo online tốt.",
    "points": [
-    "Ba cách tiếp cận: popularity (không cần mô hình, rất khó đánh bại, không cá nhân hoá), collaborative filtering (người giống bạn đã thích, tìm sở thích bất ngờ nhưng khởi đầu lạnh với người/mục mới), content-based (dựa thuộc tính/embedding, xử lý mục mới và giải thích được nhưng tạo bong bóng); hệ thực tế luôn là tổ hợp",
-    "Popularity là baseline bắt buộc và khó thắng — nhiều bài báo gợi ý bị phản biện chỉ vì không so với popularity",
-    "Ba metric xếp hạng: Recall@K (không quan tâm thứ tự), MAP@K (có quan tâm thứ tự), NDCG@K (chiết khấu theo vị trí bằng log, nhận mức liên quan nhiều bậc, mạnh nhất và là chuẩn báo cáo)",
+    "Ba cách tiếp cận: popularity (không cần mô hình, khó thắng hơn bạn tưởng, không cá nhân hoá), collaborative filtering (người giống bạn đã thích, tìm sở thích bất ngờ nhưng khởi đầu lạnh với người/mục mới), content-based (dựa thuộc tính/embedding, xử lý mục mới và giải thích được nhưng tạo bong bóng); hệ thực tế luôn là tổ hợp",
+    "Popularity là baseline bắt buộc, cùng một baseline cá nhân hoá đơn giản như item-kNN — Dacrema và cộng sự (RecSys 2019): 6 trong 7 mô hình neural tái lập được thường thua baseline đơn giản đã chỉnh tử tế. Collaborative filtering có hai họ: láng giềng (item-kNN, cosine giữa cột mục) và matrix factorization (điểm = p_u · q_i; người mới không có p_u nên khởi đầu lạnh). Dữ liệu thật thường là implicit feedback (click, mua): ô trống là 'chưa thấy', không phải 'không thích' — ALS cho implicit, BPR",
+    "Ba metric xếp hạng: Recall@K (không quan tâm thứ tự), MAP@K (trung bình Precision@i tại các vị trí có mục đúng; chỉ liên quan nhị phân), NDCG@K (chiết khấu 1/log2(i+1), chia cho thứ tự lý tưởng, nhận mức liên quan nhiều bậc). Ví dụ 3 mục đúng, trả 5 mục, đúng ở vị trí 1 và 3: Recall@5 = 0,667, AP@5 = 0,556, NDCG@5 = 0,704; mẫu số AP và tập lý tưởng của NDCG mỗi thư viện một kiểu",
     "Chọn K theo giao diện thật: màn hình hiện 6 mục thì đo @6, đừng đo @20 vì số đẹp hơn",
-    "Chia tập leave-last-out theo thời gian: tương tác cuối mỗi user để test, hoặc chặt hơn là cắt theo một mốc thời gian chung (cutoff = quantile(0.8)) vì gần thực tế triển khai hơn",
+    "Chia tập theo thời gian: leave-last-out (tương tác cuối mỗi user để test) vẫn rò rỉ vì mốc mỗi người một khác; chặt hơn là cắt theo một mốc chung (cutoff = quantile(0.8)), tái hiện lúc triển khai — cái giá là có người dùng mới trong test, báo riêng nhóm khởi đầu lạnh đó",
     "Vì sao offline tốt mà online tệ: vòng phản hồi (dữ liệu chỉ ghi thứ hệ thống cũ đã gợi ý), vị trí gây thiên lệch (mục vị trí 1 được bấm nhiều chỉ vì ở vị trí 1), chỉ số offline không phải chỉ số kinh doanh (NDCG tăng 5% không đảm bảo doanh thu)",
     "Kết luận cho luận văn: báo cáo offline nhưng nói rõ giới hạn và mô tả thí nghiệm online SẼ chạy (chia lưu lượng, chỉ số chính, cỡ mẫu) — mô tả được thiết kế A/B đúng có giá trị bằng chạy nó"
    ],
@@ -1734,7 +1734,7 @@
   "q-multi": "4f49b0d6",
   "q-nlp": "ca0376a6",
   "q-cv": "bdf86127",
-  "q-rec": "e9539b60",
+  "q-rec": "5a49fd28",
   "q-causal": "cc1d604f",
   "q-analytics": "cf9e701d",
   "q-mini": "bc401ddb",

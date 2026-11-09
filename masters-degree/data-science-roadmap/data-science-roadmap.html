@@ -9297,28 +9297,51 @@ tf = transforms.Compose([
   <div class="wb-table-scroll"><table>
     <thead><tr><th>Cách</th><th>Ý tưởng</th><th>Mạnh</th><th>Yếu</th></tr></thead>
     <tbody>
-      <tr><td><b>Popularity</b></td><td>Gợi ý những mục phổ biến nhất, cho mọi người như nhau</td><td>Không cần mô hình; <b>rất khó đánh bại</b> trên nhiều tập dữ liệu</td><td>Không cá nhân hoá; khuếch đại thứ vốn đã phổ biến</td></tr>
+      <tr><td><b>Popularity</b></td><td>Gợi ý những mục phổ biến nhất, cho mọi người như nhau</td><td>Không cần mô hình; <b>khó thắng hơn bạn tưởng</b> khi vài mục chiếm phần lớn tương tác</td><td>Không cá nhân hoá; khuếch đại thứ vốn đã phổ biến</td></tr>
       <tr><td><b>Collaborative filtering</b></td><td>“Người giống bạn đã thích thứ này”. Học từ ma trận người dùng × mục</td><td>Tìm được sở thích bất ngờ mà nội dung không gợi ý</td><td><b>Khởi đầu lạnh</b> — người mới, mục mới thì không có gì để dựa vào</td></tr>
       <tr><td><b>Content-based</b></td><td>“Thứ này giống thứ bạn đã thích”. Dựa trên thuộc tính/embedding của mục</td><td>Xử lý được mục mới; giải thích được cho người dùng</td><td>Dễ tạo bong bóng — chỉ gợi ý mãi một loại</td></tr>
     </tbody>
   </table></div>
   <p>Hệ thống thật gần như luôn là <b>tổ hợp</b>: content-based cho người mới, collaborative khi đã đủ lịch sử, và popularity làm lưới an toàn. Nói được điều đó là đã hiểu bài toán hơn phần lớn người mới.</p>
-  <p><b>Popularity là baseline bắt buộc,</b> và bạn nên chuẩn bị tinh thần rằng nó khó thắng. Rất nhiều bài báo gợi ý bị phản biện chỉ vì không so với popularity.</p>
+  <p><b>Popularity là baseline bắt buộc,</b> cùng một baseline cá nhân hoá đơn giản như item-kNN (bên dưới). Mô hình mới thường chỉ hơn chúng một khoảng nhỏ. Dacrema và cộng sự (RecSys 2019) chạy lại 18 mô hình neural mới công bố: chỉ 7 tái lập được, và 6 trong 7 thường thua một phương pháp láng giềng hay đồ thị đơn giản đã chỉnh tham số tử tế.</p>
+
+  <h3>Collaborative filtering chạy thế nào</h3>
+  <p>Có hai họ. <b>Láng giềng</b> (item-kNN): hai mục giống nhau nếu cùng được một nhóm người tương tác, đo bằng cosine giữa hai cột của ma trận người dùng × mục; mỗi người được gợi ý những mục giống nhất với thứ họ đã dùng. <b>Matrix factorization</b>: gán mỗi người dùng $u$ một vector $p_u$ và mỗi mục $i$ một vector $q_i$, vài chục chiều, học sao cho tích vô hướng $p_u \cdot q_i$ khớp các tương tác đã thấy; điểm của một mục chưa thấy là $p_u \cdot q_i$. Khởi đầu lạnh hiện ngay trong công thức: người dùng mới chưa có tương tác nào nên không học được $p_u$.</p>
+  <p>Dữ liệu thật hiếm khi là số sao (<i>explicit feedback</i>). Thường nó là <b>implicit feedback</b>: click, lượt xem, đơn mua. Chỉ có tín hiệu dương; một ô trống nghĩa là “chưa thấy”, không phải “không thích”. Phương pháp viết cho loại dữ liệu này xử lý ô trống khác ô có tương tác: ALS cho implicit (Hu, Koren, Volinsky 2008) coi ô trống là 0 với độ tin thấp; BPR (Rendle và cộng sự 2009) chỉ học thứ tự “mục đã tương tác xếp trên một mục lấy ngẫu nhiên”.</p>
 
   <h2>Metric xếp hạng: ba cái cần biết</h2>
   <div class="wb-table-scroll"><table>
     <thead><tr><th>Metric</th><th>Đo gì</th><th>Có quan tâm thứ tự không</th></tr></thead>
     <tbody>
       <tr><td><b>Recall@K</b></td><td>Trong những thứ người dùng thật sự thích, bao nhiêu phần trăm lọt vào top-K</td><td>Không — nằm ở vị trí 1 hay 10 đều tính như nhau</td></tr>
-      <tr><td><b>MAP@K</b></td><td>Precision trung bình dọc theo danh sách</td><td>Có</td></tr>
-      <tr><td><b>NDCG@K</b></td><td>Như MAP nhưng chiết khấu theo vị trí bằng hàm log, và nhận được mức độ liên quan nhiều bậc</td><td>Có — <b>mạnh nhất</b>, và là chuẩn báo cáo trong các bài báo xếp hạng</td></tr>
+      <tr><td><b>MAP@K</b></td><td>Với mỗi người: lấy Precision@$i$ tại từng vị trí $i$ có mục đúng, cộng lại rồi chia (đó là AP@K); MAP là trung bình AP qua mọi người dùng</td><td>Có, nhưng chỉ nhận liên quan nhị phân (đúng / không)</td></tr>
+      <tr><td><b>NDCG@K</b></td><td>Cộng điểm liên quan của từng vị trí, chiết khấu bằng $1/\log_2(i+1)$, rồi chia cho điểm của thứ tự lý tưởng</td><td>Có, và nhận được mức liên quan nhiều bậc; metric hay gặp nhất trong bài báo xếp hạng</td></tr>
     </tbody>
   </table></div>
+  <p>Tính tay một lần cho chắc. Một người dùng có 3 mục đúng trong tập test; mô hình trả 5 mục, mục đúng nằm ở vị trí 1 và 3, mục đúng thứ ba không lọt top-5.</p>
+  <div class="ds-code"><b>import</b> numpy <b>as</b> np
+
+<b>def</b> metrics_at_k(rel, n_relevant, k):
+    rel = np.asarray(rel[:k])            <i># 1 = mục đúng, theo thứ tự trả về</i>
+    hits = rel.cumsum()
+    recall = hits[-1] / n_relevant
+    prec_at_hit = hits[rel == 1] / (np.flatnonzero(rel) + 1)
+    ap = prec_at_hit.sum() / min(k, n_relevant)
+    disc = 1 / np.log2(np.arange(2, k + 2))   <i># 1/log2(i+1), i = 1..k</i>
+    dcg = (rel * disc).sum()
+    idcg = disc[:min(k, n_relevant)].sum()    <i># 3 mục đúng xếp ở 1, 2, 3</i>
+    <b>return</b> recall, ap, dcg / idcg
+
+metrics_at_k([1, 0, 1, 0, 0], n_relevant=3, k=5)
+<i># Recall@5 = 2/3 = 0,667</i>
+<i># AP@5     = (1/1 + 2/3) / 3 = 0,556</i>
+<i># NDCG@5   = (1 + 1/log2 4) / (1 + 1/log2 3 + 1/log2 4) = 1,5 / 2,131 = 0,704</i></div>
+  <p>Hai chỗ hay lệch giữa các thư viện. Mẫu số của AP@K: đoạn trên chia cho $\min(K, \text{số mục đúng})$; có nơi chia cho số mục đúng đã lọt top-K (ở đây là 2, ra 0,833). Và NDCG phải tính lý tưởng trên <i>mọi</i> mục đúng, kể cả mục không lọt top-K. <code>sklearn.metrics.ndcg_score(..., k=5)</code> chỉ ra 0,704 khi mảng đầu vào có cả mục đúng bị trượt (6 mục); đưa riêng 5 mục đã trả thì nó ra 0,920, vì lý tưởng chỉ còn 2 mục đúng. Ghi rõ định nghĩa bạn dùng trong luận văn.</p>
   <p>Chọn <b>K</b> theo giao diện thật, không theo thói quen: nếu màn hình hiện 6 mục thì đo @6, đừng đo @20 vì thấy số đẹp hơn.</p>
 
   <h2>Chia tập: leave-last-out theo thời gian</h2>
   <p>Chia ngẫu nhiên các tương tác là sai theo đúng cách của forecasting: mô hình được thấy thứ người dùng mua tháng sau để đoán thứ họ mua tháng này.</p>
-  <div class="ds-code"><i># đúng: với mỗi người dùng, tương tác CUỐI CÙNG dùng để test</i>
+  <div class="ds-code"><i># phổ biến: với mỗi người dùng, tương tác CUỐI CÙNG dùng để test</i>
 df = df.sort_values(["user_id", "ts"])
 test  = df.groupby("user_id").tail(1)
 train = df.drop(test.index)
@@ -9326,7 +9349,7 @@ train = df.drop(test.index)
 <i># chặt chẽ hơn: cắt theo một MỐC THỜI GIAN chung cho mọi người dùng</i>
 cutoff = df["ts"].quantile(0.8)
 train, test = df[df.ts &lt;= cutoff], df[df.ts &gt; cutoff]</div>
-  <p>Cách thứ hai chặt hơn và gần với thực tế hơn (bạn triển khai mô hình tại một thời điểm, không phải tại “tương tác cuối của mỗi người”). Nêu rõ bạn chọn cách nào và vì sao — đó là một quyết định thiết kế hội đồng sẽ hỏi.</p>
+  <p>Cách thứ nhất vẫn rò rỉ một ít: mốc cắt của mỗi người một khác. Khi đoán món cuối của người A (mua tháng 3), train đã chứa tương tác tháng 9 của người B, nên mô hình biết trước mục nào sắp nổi. Cách thứ hai tái hiện đúng lúc triển khai: mô hình ra đời tại một thời điểm, chỉ biết quá khứ của mọi người. Cái giá của nó: tập test có người dùng chưa từng xuất hiện trong train. Báo riêng nhóm khởi đầu lạnh đó, đừng lặng lẽ bỏ đi. Nêu rõ bạn chọn cách nào và vì sao — đó là một quyết định thiết kế hội đồng sẽ hỏi.</p>
 
   <h2>Vì sao offline tốt mà online vẫn tệ</h2>
   <p>Đây là đặc điểm quan trọng nhất của họ bài toán này, và là chỗ nó chạm vào bài <b>A/B testing</b> ngay sau đây.</p>
