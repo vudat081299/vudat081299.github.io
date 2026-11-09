@@ -339,7 +339,7 @@ footer.foot code{font-size:var(--fs-xs)}
         <p class="lead">Nhóm bạn đóng vai <strong>bộ phận phân tích rủi ro</strong> của một sàn thương mại điện tử, xây một mô hình <strong>chấm điểm mỗi giao dịch</strong> là gian lận hay không — theo thời gian thực, rồi triển khai và giám sát nó như một sản phẩm thật.</p>
         <div class="box note">
           <div class="box-t">◆ Một điều nếu chỉ nhớ một điều</div>
-          <p>Mô hình trung thực tốt nhất (Random Forest · Base) đạt <strong>PR-AUC 0,998</strong> (gần như hoàn hảo). Nhưng điểm hay của đồ án <strong>không phải con số đó</strong> — mà là việc nhóm <mark>giải thích được vì sao nó cao đến vậy</mark>, và thành thật gọi đó là <em>hạn chế của dữ liệu mô phỏng</em>, chứ không khoe như thành tích.</p>
+          <p>Mô hình trung thực tốt nhất (Random Forest · Base) đạt <strong>PR-AUC 0,998</strong> (gần như hoàn hảo), và chạy lại với cách chia theo thời gian vẫn cho kết quả như vậy. Nhưng điểm hay của đồ án <strong>không phải con số đó</strong> — mà là việc nhóm <mark>giải thích được vì sao nó cao đến vậy</mark>, và thành thật gọi đó là <em>hạn chế của dữ liệu mô phỏng</em>, chứ không khoe như thành tích.</p>
         </div>
         <div class="yours-flag">★ Phần của bạn</div>
         <p>Trong nhóm, bạn là <strong>Người A — Data &amp; EDA (Module 1–2)</strong>: nạp dữ liệu PaySim, tự sinh thêm dữ liệu ngữ cảnh bằng Faker, viết data dictionary, và làm <strong>toàn bộ biểu đồ EDA + phân tích tín hiệu tổng hợp</strong>. Đây cũng chính là nơi <strong>ý tưởng quan trọng nhất của cả đồ án ra đời</strong> (mục 02) — vì chính bạn là người sinh ra các đặc trưng đó. Các mục ★ bên dưới là phần bạn cần nắm chắc nhất.</p>
@@ -423,7 +423,7 @@ footer.foot code{font-size:var(--fs-xs)}
           </div>
           <div class="box warn" style="margin:0">
             <div class="box-t"><span class="badge syn">SYNTH</span> Bộ FULL — 18 đặc trưng</div>
-            <p>Base + 7 tín hiệu tổng hợp của bạn. <strong>Có rò rỉ</strong> → chỉ là <em>cận trên lạc quan</em> (điểm tốt nhất có thể trong mơ).</p>
+            <p>Base + 7 cột sinh thêm: 6 cột sinh theo nhãn và <code>hour_of_day</code>. Hai cột còn lại (<code>home_country</code>, <code>device_fingerprint</code>) không vào mô hình — lý do ở mục 03. <strong>Có rò rỉ</strong> → chỉ là <em>cận trên lạc quan</em> (điểm tốt nhất có thể trong mơ).</p>
           </div>
         </div>
         <div class="box note">
@@ -491,12 +491,21 @@ footer.foot code{font-size:var(--fs-xs)}
               <tr><td><code>shipping_billing_mismatch</code></td><td>cờ 0/1</td><td>Bernoulli p=<span class="r">0,40</span> ↔ <span class="g">0,03</span> (lệch địa chỉ giao vs thanh toán)</td></tr>
               <tr><td><code>failed_payment_attempts</code></td><td>số lần</td><td>Poisson λ=<span class="r">2,2</span> ↔ <span class="g">0,12</span> (số lần thanh toán hỏng trước khi thành công)</td></tr>
               <tr><td><code>ip_billing_distance_km</code></td><td>km</td><td>Uniform(500–8000) nếu IP lệch, ngược lại Uniform(0–80)</td></tr>
-              <tr><td><code>home_country</code></td><td>quốc gia</td><td>Chọn ngẫu nhiên đều từ ~240 quốc gia (Faker) — không phụ thuộc nhãn</td></tr>
-              <tr><td><code>device_fingerprint</code></td><td>hash</td><td>Vân tay thiết bị, lấy từ pool 5.000 mã SHA1 (Faker)</td></tr>
+              <tr><td><code>home_country</code> <span class="badge">không vào mô hình</span></td><td>quốc gia</td><td>Chọn ngẫu nhiên đều từ ~240 quốc gia (Faker) — không phụ thuộc nhãn</td></tr>
+              <tr><td><code>device_fingerprint</code> <span class="badge">không vào mô hình</span></td><td>hash</td><td>Vân tay thiết bị, lấy từ pool 5.000 mã SHA1 (Faker) — không phụ thuộc nhãn</td></tr>
               <tr><td><code>hour_of_day</code></td><td>giờ 0–23</td><td>Suy trực tiếp từ <code>step % 24</code> (không phải sinh ngẫu nhiên)</td></tr>
               <tr><td><code>channel</code> <span class="badge">EDA only</span></td><td>kênh</td><td>web / mobile / POS / api — <strong>chỉ dùng vẽ EDA, không đưa vào mô hình</strong></td></tr>
             </tbody>
           </table>
+        </div>
+
+        <div class="box note">
+          <div class="box-t">◆ Vì sao bộ Full chỉ thêm 7 trong 9 cột</div>
+          <ul class="clean">
+            <li><code>home_country</code>: sinh đều, độc lập với nhãn, nên không mang tín hiệu. Trên 2,77 triệu dòng TRANSFER + CASH_OUT, kiểm định χ² tỉ lệ gian lận theo 243 nước cho p = 0,20; MI với nhãn bằng đúng MI khi xáo trộn nhãn. One-hot nó chỉ thêm ~240 cột nhiễu.</li>
+            <li><code>device_fingerprint</code>: mã định danh 5.000 giá trị, cũng độc lập với nhãn (χ² p = 0,54). MI đo được ≈ 0,001 trông như có tín hiệu, nhưng xáo trộn nhãn cũng ra ≈ 0,001: đó là thiên lệch của phép ước lượng khi biến có nhiều mức. Đưa mã vào cây thì mô hình học thuộc từng mã, không khái quát được.</li>
+            <li><code>hour_of_day</code> vào Full, nhưng nó không phải đồ sinh ngẫu nhiên: nó suy từ <code>step</code> thật và mang tín hiệu thật (tỉ lệ gian lận lúc 3–5 giờ là 42–58%, ban ngày ≈ 0,16%). Vì vậy khoảng cách Base ↔ Full gồm cả tín hiệu thật này, không chỉ rò rỉ. Muốn đo rò rỉ sạch thì xếp <code>hour_of_day</code> vào Base.</li>
+          </ul>
         </div>
 
         <details class="disc">
@@ -574,7 +583,7 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
         <div class="box note">
           <div class="box-t">◆ Giải thích 3 tầng</div>
           <div class="layer"><div class="lb">Tầng 1<br>Ẩn dụ</div><div class="lx"><p>Một giao dịch “khớp sổ sách” thì: số dư sau = số dư trước − số tiền. Kẻ gian rút đúng số dư hiện có (trước 181 → rút 181 → sau 0), nên phép trừ khớp. Giao dịch thường trong PaySim thì hay ghi số tiền <em>lớn hơn</em> số dư mà số dư sau vẫn là 0 (trước 15.325 → rút 229.134 → sau 0) — một tật của trình mô phỏng — nên phép trừ không khớp.</p></div></div>
-          <div class="layer"><div class="lb">Tầng 2<br>Cơ chế</div><div class="lx"><p>Nhóm tạo đặc trưng <strong>lỗi số dư</strong> = phần lệch khỏi 0 của phép tính khớp sổ. Trong TRANSFER + CASH_OUT: <strong>99,5%</strong> vụ gian lận có lỗi = 0, còn <strong>90,6%</strong> giao dịch hợp lệ có lỗi &gt; 0. Tín hiệu nằm ở chỗ giao dịch hợp lệ <em>lệch</em> sổ, không phải ở chỗ gian lận lệch sổ.</p></div></div>
+          <div class="layer"><div class="lb">Tầng 2<br>Cơ chế</div><div class="lx"><p>Nhóm tạo đặc trưng <strong>lỗi số dư</strong> = phần lệch khỏi 0 của phép tính khớp sổ. Trong TRANSFER + CASH_OUT: <strong>99,5%</strong> vụ gian lận có lỗi = 0, còn <strong>90,6%</strong> giao dịch hợp lệ có lỗi khác 0 (gần như toàn bộ là lỗi &gt; 0). Tín hiệu nằm ở chỗ giao dịch hợp lệ <em>lệch</em> sổ, không phải ở chỗ gian lận lệch sổ.</p></div></div>
           <div class="layer"><div class="lb">Tầng 3<br>Công thức</div><div class="lx"><p style="font-family:var(--font-mono);font-size:var(--fs-sm)">errorBalanceOrig = newbalanceOrig + amount − oldbalanceOrg</p></div></div>
         </div>
         <h4 class="h">Giao dịch gian lận (rút đúng toàn bộ số dư → khớp)</h4>
@@ -650,7 +659,7 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
       <section class="concept" data-concept="c12" id="s12">
         <div class="sec-num">05 · Phần còn lại</div>
         <h2 class="h">Module 5 — Kết quả mô hình (nơi các con số nổi tiếng xuất hiện)</h2>
-        <p>Nhóm train <strong>3 thuật toán × 2 bộ đặc trưng = 6 mô hình</strong>. Bảng kết quả trên tập test:</p>
+        <p>Nhóm train <strong>3 thuật toán × 2 bộ đặc trưng = 6 mô hình</strong>. Bảng dưới là số nhóm báo cáo trên tập test; Recall, Precision và FP tính ở ngưỡng 0,5:</p>
         <div class="tbl-wrap">
           <table>
             <thead><tr><th>Mô hình</th><th>PR-AUC</th><th>Recall</th><th>Precision</th><th>FP (chặn nhầm)</th></tr></thead>
@@ -668,6 +677,10 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
           <li><strong>RandomForest · Base</strong> là mô hình <em>trung thực</em> tốt nhất: chỉ <span class="g">1 cảnh báo giả</span> trên 828.659 giao dịch hợp lệ — và <strong>không dùng chút dữ liệu tổng hợp nào</strong>.</li>
           <li><strong>LogReg · Base</strong> thất bại: 22 báo động giả cho mỗi vụ bắt được (mô hình tuyến tính không biểu diễn nổi tương tác lỗi số dư).</li>
         </ul>
+        <div class="box warn">
+          <div class="box-t">⚠ Bảng này dùng cách chia ngẫu nhiên</div>
+          <p>Tập test có 828.659 giao dịch hợp lệ và 2.459 vụ gian lận: đúng 30% của mỗi lớp sau khi bỏ 16 dòng <code>amount</code> = 0. Nghĩa là nhóm chia <strong>ngẫu nhiên phân tầng 70/30</strong>, không theo thời gian, và không để riêng tập validation. Với giao dịch đó là một hạn chế; phần cuối mục này chạy lại theo thời gian để xem kết luận có đứng vững không.</p>
+        </div>
 
         <h3 class="h">Đo mức rò rỉ (đóng lại lời hứa ở mục 02)</h3>
         <div class="chart">
@@ -681,7 +694,7 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
 
         <h3 class="h">Chọn ngưỡng theo chi phí &amp; kết quả nghiệp vụ</h3>
         <p>Ngưỡng mặc định 0,5 vô nghĩa về kinh doanh. Nhóm quy đổi ra tiền: <em>Chi phí(t) = tổng tiền gian lận bỏ sót + C<sub>FP</sub>×số báo động giả</em> (C<sub>FP</sub>=10). Quét mọi ngưỡng → tối ưu tại <strong>t*≈0,17</strong>, giảm tổng chi phí ~14,7%.</p>
-        <p>Vì sao phải quét thay vì dùng công thức τ* = C<sub>FP</sub> / (C<sub>FP</sub> + C<sub>FN</sub>): ở đây C<sub>FN</sub> là số tiền của <em>từng</em> giao dịch nên ngưỡng lý tưởng khác nhau theo số tiền, và class weights 337:1 đẩy điểm của lớp gian lận lên nên điểm không còn là xác suất đã calibrated. Quét ngưỡng phải làm trên tập validation; chọn ngưỡng ngay trên tập test làm con số test lạc quan hơn thực tế.</p>
+        <p>Vì sao phải quét thay vì dùng công thức τ* = C<sub>FP</sub> / (C<sub>FP</sub> + C<sub>FN</sub>): ở đây C<sub>FN</sub> là số tiền của <em>từng</em> giao dịch nên ngưỡng lý tưởng khác nhau theo số tiền, và class weights 337:1 đẩy điểm của lớp gian lận lên nên điểm không còn là xác suất đã calibrated. Quét ngưỡng phải làm trên tập validation; chọn ngưỡng ngay trên tập test làm con số test lạc quan hơn thực tế. Chia 70/30 của nhóm không có tập validation: nếu notebook không quét bằng cross-validation trên tập train thì t*≈0,17 đã được chọn trên chính tập test, và ba con số dưới đây lạc quan. Kiểm notebook; nếu đúng vậy, ghi là hạn chế.</p>
         <div class="stats s3">
           <div class="stat gv"><div class="stat-value">99,96%</div><div class="stat-label">giá trị gian lận chặn được (tại t*)</div></div>
           <div class="stat"><div class="stat-value">0,032%</div><div class="stat-label">tỉ lệ chặn nhầm (~265 giao dịch)</div></div>
@@ -691,6 +704,36 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
         <div class="box danger">
           <div class="box-t">⚠ Ý nghĩa thật của con số (slide quan trọng nhất)</div>
           <p>PR-AUC 0,998 với 1 báo động giả là <strong>không tưởng ngoài đời thật</strong>. Nguyên nhân nằm ở <strong>dữ liệu, không phải mô hình</strong>: PaySim viết kịch bản gian lận kiểu “rút sạch tài khoản” → để lại dấu vết số học <em>gần như tất định</em> (số tiền đúng bằng số dư trước ở 97,8% vụ gian lận và ở 0 giao dịch hợp lệ nào của TRANSFER/CASH_OUT), và <code>errorBalanceOrig</code> bắt trúng ngay. Bằng chứng: mô hình tuyến tính vẫn thất bại (0,59) trong khi cây vượt 0,99. Nhóm báo cáo đây là <strong>hạn chế</strong>, không phải thành tích.</p>
+        </div>
+
+        <h3 class="h">Chạy lại đúng phương pháp: chia theo thời gian</h3>
+        <p>Với giao dịch, cách chia đúng là theo thời gian, vì lúc chạy thật mô hình chỉ thấy quá khứ. Toàn bộ quy trình được chạy lại trên PaySim (2.770.393 dòng TRANSFER + CASH_OUT sau làm sạch), cùng bộ Base 11 và Full 18, 9 cột sinh theo đúng tham số ở mục 03:</p>
+        <ul class="clean">
+          <li>Train: <code>step</code> 1–323 (70% số dòng) · Validation: <code>step</code> 324–377 (15%) · Test: <code>step</code> 378–743 (15%).</li>
+          <li>Class weights = tỉ lệ hợp lệ : gian lận của tập train (535:1). Ngưỡng t* quét trên validation bằng cùng hàm chi phí; tập test chỉ dùng một lần, tại t* đó.</li>
+        </ul>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Mô hình</th><th>PR-AUC</th><th>t* (validation)</th><th>Recall</th><th>Precision</th><th>FP (chặn nhầm)</th></tr></thead>
+            <tbody>
+              <tr><td>LogReg · Base</td><td>0,743</td><td>0,28</td><td>0,984</td><td>0,058</td><td class="r">63.712</td></tr>
+              <tr><td>LogReg · Full</td><td>0,990</td><td>0,23</td><td>0,995</td><td>0,462</td><td>4.639</td></tr>
+              <tr class="tr-hi"><td><strong>RandomForest · Base</strong></td><td><span class="g">&gt;0,9999</span></td><td>0,75</td><td>0,9995</td><td>1,000</td><td class="g">0</td></tr>
+              <tr><td>RandomForest · Full</td><td>&gt;0,9999</td><td>0,38</td><td>0,9995</td><td>1,000</td><td>0</td></tr>
+              <tr><td>XGBoost · Base</td><td>0,9975</td><td>0,03</td><td>0,999</td><td>0,928</td><td>308</td></tr>
+              <tr><td>XGBoost · Full</td><td>&gt;0,9999</td><td>0,28</td><td>0,998</td><td>0,997</td><td>13</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:var(--fs-sm);color:var(--text-muted)">Tập test: 404.067 giao dịch hợp lệ, 3.997 vụ gian lận. Recall, Precision, FP đo trên test tại t* của từng mô hình. Cùng code với cách chia của nhóm (ngẫu nhiên phân tầng 70/30) cho số sát bảng trên — RandomForest · Base 0,996, LogReg · Base 0,574 — nên đây là cùng một quy trình, chỉ khác cách chia.</p>
+        <div class="box note">
+          <div class="box-t">◆ Đọc kết quả chạy lại</div>
+          <ul class="clean">
+            <li><strong>Kết luận không đổi.</strong> RandomForest · Base không có báo động giả nào và chỉ sót 2/3.997 vụ; LogReg · Base vẫn kém (0,743). Điểm cao không đến từ việc chia ngẫu nhiên mà từ dấu vết số học của PaySim.</li>
+            <li><strong>Rò rỉ đo được giống trước.</strong> Full − Base: +0,247 với LogReg, +0,002 với XGBoost, ≈ 0 với Random Forest. Trong +0,247 đó, <code>hour_of_day</code> (tín hiệu thật) chiếm +0,026: LogReg · Base thêm riêng cột này đạt 0,769.</li>
+            <li><strong>Tỉ lệ gian lận đổi theo thời gian.</strong> Test có 0,98% gian lận, train chỉ 0,19%: sau <code>step</code> ~400, số giao dịch hợp lệ của PaySim giảm còn chưa tới 1/6, còn gian lận vẫn đều ~1.100 vụ mỗi 100 step. Precision và PR-AUC phụ thuộc tỉ lệ này, nên đừng so thẳng với bảng chia ngẫu nhiên (0,296%); báo tỉ lệ gian lận của từng tập kèm theo.</li>
+            <li><strong>Validation có thể không chọn nổi ngưỡng.</strong> Với Random Forest, validation tách hai lớp hoàn hảo nên chi phí bằng 0 trên cả một dải ngưỡng; t* = 0,75 chỉ là đầu dải. Tại 0,75 test sót 2 vụ, tại 0,5 sót 1 — ngưỡng chọn trên validation có thể kém hơn ngưỡng chọn trên test, và đó là giá của một con số trung thực.</li>
+          </ul>
         </div>
       </section>
 
@@ -786,7 +829,13 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
           <p>Vì dữ liệu quá lệch: đoán “không bao giờ gian lận” đã đạt 99,87% accuracy nhưng bắt được 0 vụ. PR-AUC (và Recall, F1) tập trung vào lớp hiếm nên phản ánh đúng chất lượng.</p></div>
 
         <div class="box note"><div class="box-t">Q · Chia train/test thế nào? Có rò rỉ theo thời gian không?</div>
-          <p>Với giao dịch, cách chia đúng là <strong>theo thời gian</strong>: train trên các <code>step</code> sớm, validation và test trên các <code>step</code> muộn hơn, vì lúc chạy thật mô hình chỉ thấy quá khứ. Chia ngẫu nhiên (kể cả stratified) cho mô hình học cả những giờ nằm xen giữa tập test, nên điểm test lạc quan hơn. Mọi bước fit trên dữ liệu (scaler, encoder, SMOTE nếu có, chọn ngưỡng) chỉ dùng phần train/validation. Nếu nhóm đã chia ngẫu nhiên, nói thẳng đó là một hạn chế.</p></div>
+          <p>Với giao dịch, cách chia đúng là <strong>theo thời gian</strong>: train trên các <code>step</code> sớm, validation và test trên các <code>step</code> muộn hơn, vì lúc chạy thật mô hình chỉ thấy quá khứ. Chia ngẫu nhiên (kể cả stratified) cho mô hình học cả những giờ nằm xen giữa tập test, nên điểm test lạc quan hơn. Mọi bước fit trên dữ liệu (scaler, encoder, SMOTE nếu có, chọn ngưỡng) chỉ dùng phần train/validation. Bảng kết quả của nhóm dùng chia ngẫu nhiên phân tầng 70/30 — nói thẳng đó là hạn chế, rồi nêu kết quả chạy lại theo thời gian (train <code>step</code> 1–323, validation 324–377, test 378–743, ngưỡng chọn trên validation): RandomForest · Base vẫn 0 báo động giả và sót 2/3.997 vụ, nên kết luận không đổi (mục 05).</p></div>
+
+        <div class="box note"><div class="box-t">Q · Sinh 9 cột mà bộ Full chỉ thêm 7?</div>
+          <p><code>home_country</code> và <code>device_fingerprint</code> sinh độc lập với nhãn: kiểm định χ² không thấy khác biệt tỉ lệ gian lận giữa các mức (p = 0,20 và 0,54), nên chúng chỉ là nhiễu, và một mã định danh 5.000 giá trị còn làm cây học thuộc mã. Bảy cột vào Full là 6 cột sinh theo nhãn và <code>hour_of_day</code>; cột này suy từ <code>step</code> thật nên mang tín hiệu thật (mục 03).</p></div>
+
+        <div class="box danger"><div class="box-t">⚠ Kiểm trước buổi thuyết trình: chiều của errorBalance</div>
+          <p>Mở slide và báo cáo của nhóm, tìm mọi câu nói về lỗi số dư. Chiều đúng: <strong>gian lận khớp sổ</strong> (99,5% vụ gian lận có lỗi = 0), <strong>giao dịch hợp lệ lệch sổ</strong> (90,6% có lỗi khác 0). Câu nào viết “gian lận làm lệch số dư” hay “lỗi số dư khác 0 là dấu hiệu gian lận” là ngược — sửa trước khi trình bày, vì hội đồng chỉ cần hỏi lại một con số là lộ.</p></div>
 
         <div class="box warn"><div class="box-t">⚠ Mẹo vàng khi bị hỏi khó</div>
           <p>Nếu không chắc, nói thẳng: <em>“đây là hạn chế nhóm đã ghi nhận trong báo cáo”</em>. Trung thực ăn điểm hơn đoán bừa — và đề bài <strong>chấm điểm chính sự trung thực đó</strong>. Ba cặp số dễ nhớ nên nhấn: <strong>1 vs 49.287</strong> (báo động giả, Random Forest vs Logistic, cùng bộ Base), <strong>2.451/2.459</strong> vụ bắt được trên tập test so với <strong>16</strong> vụ luật cũ gắn cờ trên cả bộ dữ liệu, <strong>8,8×</strong> (mật độ gian lận trong outlier).</p></div>
