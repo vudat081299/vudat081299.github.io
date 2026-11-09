@@ -9141,11 +9141,12 @@ df["is_holiday"] = df["ds"].isin(HOLIDAYS).astype(<b>int</b>)</div>
       <tr><td>Nhãn</td><td>Một số nguyên</td><td>Một vector 0/1 độ dài N</td></tr>
       <tr><td>Tầng cuối</td><td><b>softmax</b> — các xác suất cộng lại bằng 1 <button class="ds-math" data-math="softmax">(công thức)</button></td><td><b>sigmoid cho từng nhãn</b> — độc lập, không cộng lại bằng 1</td></tr>
       <tr><td>Loss</td><td>Cross-entropy</td><td>Binary cross-entropy cộng trên các nhãn</td></tr>
-      <tr><td>sklearn</td><td><code>LGBMClassifier</code> tự nhận</td><td><code>MultiOutputClassifier</code>, hoặc một mô hình cho mỗi nhãn</td></tr>
+      <tr><td>Code</td><td><code>LGBMClassifier</code> tự nhận (đủ 3 lớp trở lên là chuyển sang mục tiêu softmax)</td><td><code>MultiOutputClassifier(LGBMClassifier())</code>: một mô hình nhị phân cho mỗi nhãn; <code>ClassifierChain</code> khi các nhãn phụ thuộc nhau</td></tr>
       <tr><td>Ngưỡng</td><td>Lấy <code>argmax</code>, thường không cần ngưỡng</td><td><b>Một ngưỡng cho mỗi nhãn</b>, và chúng nên khác nhau</td></tr>
     </tbody>
   </table></div>
   <p>Dùng softmax cho bài multilabel là lỗi thiết kế hay gặp: nó ép mô hình phải chọn <i>một</i> nhãn, trong khi đề bài cho phép nhiều. Triệu chứng là recall thấp một cách khó hiểu ở mọi nhãn.</p>
+  <p>Multiclass còn một cách thứ hai ngoài softmax: <b>one-vs-rest</b> (OvR) — train N mô hình nhị phân “lớp k hay không phải lớp k”, rồi chọn lớp có điểm cao nhất. Xác suất của N mô hình rời nhau không cộng lại bằng 1; <code>OneVsRestClassifier</code> của sklearn chia cho tổng để ép về 1. Với multilabel, “một mô hình nhị phân cho mỗi nhãn” chính là OvR, chỉ khác là giữ mọi nhãn vượt ngưỡng thay vì lấy argmax. <code>LogisticRegression</code> bản sklearn mới luôn dùng softmax khi có từ 3 lớp (tham số <code>multi_class</code> đã bị bỏ); muốn OvR thì bọc nó trong <code>OneVsRestClassifier</code>.</p>
 
   <h2>Ba kiểu trung bình hoá — chọn sai là báo cáo sai</h2>
   <p>Đây là phần đáng đọc kỹ nhất của bài. Giả sử 3 lớp: A có 900 mẫu và F1 = 0,95; B có 80 mẫu và F1 = 0,60; C có 20 mẫu và F1 = 0,10.</p>
@@ -9153,14 +9154,16 @@ df["is_holiday"] = df["ds"].isin(HOLIDAYS).astype(<b>int</b>)</div>
     <thead><tr><th>Kiểu</th><th>Tính thế nào</th><th>Ra bao nhiêu</th><th>Trả lời câu hỏi</th></tr></thead>
     <tbody>
       <tr><td><b>macro</b></td><td>Trung bình cộng F1 của các lớp, <b>không</b> nhân trọng số</td><td>(0,95+0,60+0,10)/3 = <b>0,55</b></td><td>“Mô hình làm tốt trên <i>mọi lớp</i> chứ?” — lớp hiếm có tiếng nói ngang lớp phổ biến</td></tr>
-      <tr><td><b>weighted</b></td><td>Trung bình có trọng số theo số mẫu mỗi lớp</td><td>≈ <b>0,90</b></td><td>“Trên một mẫu ngẫu nhiên thì sao?” — bị lớp phổ biến chi phối</td></tr>
-      <tr><td><b>micro</b></td><td>Gộp hết TP/FP/FN rồi mới tính một lần</td><td>≈ accuracy trong multiclass</td><td>“Tổng thể đúng bao nhiêu ca?”</td></tr>
+      <tr><td><b>weighted</b></td><td>Trung bình có trọng số theo số mẫu mỗi lớp</td><td>(900·0,95 + 80·0,60 + 20·0,10)/1000 = <b>0,905</b></td><td>“Trên một mẫu ngẫu nhiên thì sao?” — bị lớp phổ biến chi phối</td></tr>
+      <tr><td><b>micro</b></td><td>Gộp hết TP/FP/FN rồi mới tính một lần</td><td>Bằng đúng accuracy khi mỗi mẫu có một nhãn: mỗi ca sai là một FP của lớp bị đoán và một FN của lớp thật, nên tổng FP = tổng FN và precision = recall = accuracy</td><td>“Tổng thể đúng bao nhiêu ca?”</td></tr>
     </tbody>
   </table></div>
-  <p>Chênh lệch 0,55 và 0,90 <b>trên cùng một mô hình</b>. Cả hai đều đúng về mặt tính toán, và chọn con số nào để in đậm trong tóm tắt là một quyết định trung thực hay không trung thực. Quy tắc: <b>nếu lớp hiếm mới là lớp quan trọng — mà thường là vậy — báo cáo macro và nói rõ.</b> Và luôn kèm bảng F1 <i>từng lớp</i>; con số gộp giấu đi đúng thứ đáng nhìn.</p>
+  <p>Chênh lệch 0,55 và 0,905 <b>trên cùng một mô hình</b>. Cả hai đều đúng về mặt tính toán, và chọn con số nào để in đậm trong tóm tắt là một quyết định trung thực hay không trung thực. Quy tắc: <b>nếu lớp hiếm mới là lớp quan trọng — mà thường là vậy — báo cáo macro và nói rõ.</b> Và luôn kèm bảng F1 <i>từng lớp</i>; con số gộp giấu đi đúng thứ đáng nhìn.</p>
   <div class="ds-code"><b>from</b> sklearn.metrics <b>import</b> classification_report, confusion_matrix
 
-print(classification_report(y_va, pred, digits=3))   <i># có cả từng lớp lẫn ba kiểu gộp</i>
+print(classification_report(y_va, pred, digits=3))
+<i># in F1 từng lớp, dòng macro avg, weighted avg; micro không có dòng riêng
+# vì với multiclass nó chính là dòng accuracy</i>
 
 <i># ma trận nhầm lẫn CHUẨN HOÁ theo hàng — đọc được cặp lớp nào hay bị lẫn</i>
 cm = confusion_matrix(y_va, pred, normalize="true")</div>
@@ -9170,7 +9173,7 @@ cm = confusion_matrix(y_va, pred, normalize="true")</div>
 
   <h2>Ba việc cần làm thêm khi lên nhiều lớp</h2>
   <ul>
-    <li><b>Chia tập stratify theo lớp hiếm nhất.</b> Với 12 lớp mà lớp hiếm nhất chỉ có 30 mẫu, một lần chia không may là tập test có 2 mẫu — mọi chỉ số của lớp đó thành nhiễu.</li>
+    <li><b>Chia tập có stratify theo nhãn</b> (<code>stratify=y</code>), vì lớp hiếm nhất. Với 12 lớp mà lớp hiếm nhất chỉ có 30 mẫu, tập test 20% đáng lẽ có 6 mẫu của lớp đó; một lần chia ngẫu nhiên không may chỉ để lại 2 — mọi chỉ số của lớp đó thành nhiễu. Stratify giữ tỉ lệ của <i>mọi</i> lớp ở cả hai tập.</li>
     <li><b>Gộp các lớp quá hiếm thành “KHÁC”</b> nếu chúng quá ít mẫu để học được và nghiệp vụ cho phép. (Mốc ~50 mẫu hay được dùng làm điểm khởi đầu; con số thật phụ thuộc số cột, độ khó của lớp và chỉ số bạn đo — hãy nhìn F1 <i>từng lớp</i> để quyết định.) Thà có một lớp “KHÁC” xử lý được còn hơn ba lớp không bao giờ đoán đúng.</li>
     <li><b>Cân nhắc cấu trúc phân cấp.</b> Nếu 12 lớp thực ra là 3 nhóm lớn × 4 lớp con, một mô hình hai tầng thường tốt hơn và giải thích dễ hơn.</li>
   </ul>
@@ -9189,16 +9192,53 @@ cm = confusion_matrix(y_va, pred, normalize="true")</div>
       <tr><td><b>3 · Fine-tune Transformer</b></td><td>Huấn luyện tiếp một mô hình pretrained trên nhãn của bạn</td><td>Hàng chục phút tới vài giờ GPU</td><td>Mức 2 chạm trần, bạn có <b>đủ</b> mẫu có nhãn, và độ chính xác thật sự đáng số giờ đó. (Mốc hay được nhắc là vài nghìn — cỡ ~2.000 cho bài phân loại đơn giản — nhưng đây là điểm khởi đầu minh hoạ: số cần thiết phụ thuộc số lớp, độ khó và mức độ gần giữa dữ liệu của bạn với dữ liệu pretrain. Cách chắc chắn là vẽ <i>learning curve</i>: thêm nhãn dần và xem điểm còn tăng không.)</td></tr>
     </tbody>
   </table></div>
-  <div class="ds-code"><i># MỨC 1 — chạy trước mọi thứ khác. 6 dòng.</i>
+  <div class="ds-code"><i># MỨC 1 — chạy trước mọi thứ khác.</i>
 <b>from</b> sklearn.feature_extraction.text <b>import</b> TfidfVectorizer
 <b>from</b> sklearn.linear_model <b>import</b> LogisticRegression
 <b>from</b> sklearn.pipeline <b>import</b> make_pipeline
 
 pipe = make_pipeline(
-    TfidfVectorizer(ngram_range=(1, 2), min_df=3, max_features=50_000),
+    TfidfVectorizer(ngram_range=(1, 2), min_df=3, max_features=50_000,
+                    token_pattern=r"(?u)\b\w+\b"),  <i># giữ “ý”, “ở”: xem dưới</i>
     LogisticRegression(max_iter=1000, class_weight="balanced"),
 ).fit(text_tr, y_tr)</div>
-  <p>Với tiếng Việt, TF-IDF hoạt động khá tốt ngay cả khi không tách từ, nhưng tách từ (ví dụ bằng <code>underthesea</code> hoặc <code>pyvi</code>) thường cải thiện rõ vì tiếng Việt có nhiều từ ghép hai âm tiết. Thử cả hai và ghi lại — đó là một dòng thí nghiệm hợp lệ.</p>
+  <p>Ba việc tiền xử lý riêng cho tiếng Việt, đều kiểm được bằng cách in <code>vectorizer.vocabulary_</code>:</p>
+  <ul>
+    <li><b>Chuẩn hoá Unicode về NFC trước mọi thứ</b> (<code>unicodedata.normalize("NFC", s)</code>). Cùng chữ “Việt” có thể lưu dạng dựng sẵn (NFC) hoặc dạng chữ + dấu rời (NFD, hay gặp khi chép từ macOS hay Word). Bộ cắt token coi dấu rời là ranh giới từ: “Tiếng Việt có dấu” dạng NFD vỡ thành <code>tie</code>, <code>ng</code>, <code>vie</code>, <code>t</code>…</li>
+    <li><b>Giữ âm tiết một chữ cái.</b> <code>token_pattern</code> mặc định chỉ nhận token từ hai ký tự trở lên, nên “ý”, “ở”, “ạ” bị xoá trước cả bước ghép n-gram: “có ý kiến” chỉ còn <code>có kiến</code>. Đặt <code>token_pattern=r"(?u)\b\w+\b"</code>.</li>
+    <li><b>Tách từ là thí nghiệm, không phải bước bắt buộc.</b> Cắt theo khoảng trắng cho âm tiết, không cho từ: “học sinh” thành “học” và “sinh”. <code>ngram_range=(1, 2)</code> ở trên đã giữ cặp âm tiết liền nhau nên bắt được phần lớn từ ghép hai âm tiết; tách từ (<code>underthesea</code>, <code>pyvi</code>) nối thành một token <code>học_sinh</code> và có thể nhích thêm, nhất là với từ ba, bốn âm tiết. Chạy cả hai và ghi lại — đó là một dòng thí nghiệm hợp lệ.</li>
+  </ul>
+  <p>Mức 3 trông như dưới đây với thư viện <code>transformers</code> (bản 5). Code cũ trên mạng viết <code>evaluation_strategy=</code> và <code>Trainer(tokenizer=…)</code>: bản 5 đã bỏ cả hai, thay bằng <code>eval_strategy=</code> và <code>processing_class=</code>.</p>
+  <div class="ds-code"><i># MỨC 3 — fine-tune trên GPU Colab; text_*: list chuỗi, y_*: list số nguyên</i>
+<b>from</b> datasets <b>import</b> Dataset
+<b>from</b> sklearn.metrics <b>import</b> f1_score
+<b>from</b> transformers <b>import</b> (AutoTokenizer, AutoModelForSequenceClassification,
+                          Trainer, TrainingArguments)
+
+name = "vinai/phobert-base-v2"   <i># PhoBERT: văn bản vào phải TÁCH TỪ sẵn</i>
+tok = AutoTokenizer.from_pretrained(name)
+model = AutoModelForSequenceClassification.from_pretrained(
+    name, num_labels=N_CLASSES)
+
+<b>def</b> enc(b): <b>return</b> tok(b["text"], truncation=True, max_length=256)
+<b>def</b> to_ds(x, y):
+    <b>return</b> Dataset.from_dict({"text": x, "label": y}).map(enc, batched=True)
+ds_tr, ds_va = to_ds(text_tr, y_tr), to_ds(text_va, y_va)
+
+<b>def</b> metrics(p):                <i># cùng macro-F1 với mốc TF-IDF, để so được</i>
+    pred = p.predictions.argmax(-1)
+    <b>return</b> {"macro_f1": f1_score(p.label_ids, pred, average="macro")}
+
+args = TrainingArguments("out", eval_strategy="epoch", save_strategy="epoch",
+                         learning_rate=2e-5, num_train_epochs=3,
+                         per_device_train_batch_size=16,
+                         load_best_model_at_end=True,
+                         metric_for_best_model="macro_f1")
+trainer = Trainer(model=model, args=args, train_dataset=ds_tr,
+                  eval_dataset=ds_va, processing_class=tok,
+                  compute_metrics=metrics)
+trainer.train()</div>
+  <p>PhoBERT được pretrain trên văn bản đã tách từ (<code>nghiên_cứu_viên</code> là một token). Đưa câu chưa tách vào thì nó không báo lỗi mà cắt thành <code>nghiên</code>, <code>cứu</code>, <code>viên</code> — những token nó ít gặp lúc pretrain — và điểm tụt lặng lẽ. Tách bằng đúng bộ tách mà tác giả PhoBERT khuyên dùng (RDRSegmenter của VnCoreNLP). <code>max_length=256</code> là trần của PhoBERT: nó chỉ có 258 vị trí, hai vị trí dành cho token đầu và cuối câu.</p>
 
   <h2>Fine-tune và RAG: hai thứ khác nhau, hay bị dùng lẫn</h2>
   <div class="wb-table-scroll"><table>
@@ -9250,35 +9290,76 @@ pipe = make_pipeline(
 
   <div data-viz="cvtask"></div>
 
+  <h2>Đọc chỉ số detection: IoU, mAP, NMS</h2>
+  <p><b>IoU</b> (intersection over union) của hai hộp = diện tích phần chồng nhau ÷ diện tích phần hợp. Hộp đoán (0, 0, 10, 10) và hộp thật (5, 0, 15, 10), viết theo (x1, y1, x2, y2): phần chồng 5 × 10 = 50, phần hợp 100 + 100 − 50 = 150, IoU = 1/3. Một hộp đoán là <b>trúng</b> (TP) khi IoU của nó với một hộp thật cùng lớp đạt ngưỡng, thường 0,5; mỗi hộp thật chỉ ghép được với một hộp đoán. Hộp đoán không ghép được là FP, hộp thật không ai ghép là FN. Segmentation dùng cùng công thức, chỉ đếm pixel thay vì diện tích hộp.</p>
+  <p><b>AP</b> của một lớp: xếp mọi hộp đoán của lớp đó theo điểm tin cậy giảm dần, đi dần xuống danh sách để vẽ đường precision–recall, rồi lấy diện tích dưới đường — cùng ý với PR-AUC ở bài <b>Đo lường</b>, nhưng recall chia cho <i>tổng số vật thật</i>, kể cả vật không có hộp đoán nào. <b>mAP</b> là trung bình AP trên các lớp. Hai cách ghi hay gặp: <code>mAP@0.5</code> (một ngưỡng IoU 0,5, kiểu bộ PASCAL VOC) và <code>mAP@[.5:.95]</code> (trung bình trên mười ngưỡng 0,50; 0,55; …; 0,95, kiểu bộ COCO), khắt khe hơn với hộp kéo lệch. Báo cáo con số nào thì ghi rõ con số ấy.</p>
+  <p><b>NMS</b> (non-maximum suppression) là bước hậu xử lý đứng giữa mô hình và chỉ số: mô hình thường đề xuất nhiều hộp chồng nhau quanh cùng một vật. NMS giữ hộp điểm cao nhất, xoá mọi hộp có IoU với nó vượt ngưỡng (thường 0,5), rồi lặp lại với các hộp còn lại. Ngưỡng NMS quá cao thì một vật bị đếm hai lần (thêm FP); quá thấp thì hai vật đứng sát nhau mất một (thêm FN).</p>
+  <div class="ds-code"><b>import</b> torch
+<b>from</b> torchvision.ops <b>import</b> box_iou, batched_nms
+
+a = torch.tensor([[0., 0, 10, 10]]); b = torch.tensor([[5., 0, 15, 10]])
+print(box_iou(a, b))                    <i># tensor([[0.3333]])</i>
+
+boxes  = torch.tensor([[0., 0, 10, 10], [1, 0, 11, 10], [20, 20, 30, 30]])
+scores = torch.tensor([0.9, 0.8, 0.7])
+labels = torch.tensor([0, 0, 0])
+print(batched_nms(boxes, scores, labels, iou_threshold=0.5))
+<i># tensor([0, 2]): hộp 1 chồng hộp 0 với IoU 0,82 nên bị xoá.</i>
+<i># nms() bỏ qua nhãn; batched_nms chỉ xoá hộp chồng nhau CÙNG lớp</i></div>
+  <p>Đừng tính mAP bằng <code>average_precision_score</code> của sklearn: nó chỉ thấy các hộp đã đoán, nên vật thật bị bỏ sót hoàn toàn không kéo recall xuống. Dùng <code>torchmetrics.detection.MeanAveragePrecision</code> hoặc <code>pycocotools</code>, hai thứ cài sẵn phép ghép hộp theo IoU.</p>
+
   <h2>CNN và vision transformer — định vị</h2>
   <p>Bài <b>CNN &amp; RNN</b> ở chặng 7 đã giải thích ý tưởng CNN. Phần cần thêm ở đây gọn:</p>
   <ul>
-    <li><b>CNN</b> có sẵn giả định “thông tin cục bộ, bất biến tịnh tiến” cài trong kiến trúc, nên nó học tốt với <b>ít dữ liệu hơn</b>. Vẫn là lựa chọn hợp lý cho phần lớn dự án cỡ luận văn.</li>
-    <li><b>Vision Transformer (ViT)</b> cắt ảnh thành các mảnh rồi coi chúng như token — chính xác là cơ chế bạn học ở bài Attention. Nó không có giả định cục bộ cài sẵn, nên <b>cần nhiều dữ liệu hơn hoặc phải pretrain rồi fine-tune</b>. Với dữ liệu vừa và nhỏ, một CNN pretrained thường ngang hoặc hơn.</li>
+    <li><b>CNN</b> có sẵn hai giả định cài trong kiến trúc: thông tin nằm <i>cục bộ</i> (mỗi bộ lọc chỉ nhìn một ô nhỏ) và <i>đồng biến tịnh tiến</i> (cùng bộ lọc trượt khắp ảnh, nên vật dịch chỗ thì bản đồ đặc trưng dịch theo; lớp pooling biến nó thành gần bất biến). Nhờ vậy nó học tốt với <b>ít dữ liệu hơn</b>. Vẫn là lựa chọn hợp lý cho phần lớn dự án cỡ luận văn.</li>
+    <li><b>Vision Transformer (ViT)</b> cắt ảnh thành các mảnh rồi coi chúng như token — chính xác là cơ chế bạn học ở bài Attention. Nó không có giả định cục bộ cài sẵn, nên phải học lấy từ dữ liệu: train từ đầu trên ImageNet-1k (1,3 triệu ảnh), ViT gốc còn thua ResNet cỡ tương đương, và chỉ đuổi kịp rồi vượt khi pretrain trên 14–300 triệu ảnh (Dosovitskiy và cộng sự, 2021). Khi fine-tune từ bản pretrained thì cả hai đều dùng được; với ít ảnh và GPU Colab, một CNN pretrained nhỏ là mặc định rẻ và chắc.</li>
     <li>Trong thực tế bạn hầu như luôn <b>fine-tune một mô hình pretrained</b>, không train từ đầu. Train từ đầu cần lượng dữ liệu mà bạn không có.</li>
   </ul>
 
   <h2>Mini-lab: transfer learning, chạy được trong Colab</h2>
-  <p>Mục tiêu của lab này là <b>trải nghiệm</b>, không phải điểm số. Chọn một bộ dữ liệu nhỏ (ví dụ hoa, hoặc ảnh sản phẩm đạt/lỗi), và làm đúng ba bước.</p>
+  <p>Mục tiêu của lab này là <b>trải nghiệm</b>, không phải điểm số. Chọn một bộ dữ liệu nhỏ (ví dụ hoa, hoặc ảnh sản phẩm đạt/lỗi), xếp ảnh thành <code>data/train/&lt;tên lớp&gt;/*.jpg</code> và <code>data/val/&lt;tên lớp&gt;/*.jpg</code>, rồi làm ba bước chuẩn bị và một vòng train.</p>
   <div class="ds-code"><b>import</b> torch, torch.nn <b>as</b> nn
-<b>from</b> torchvision <b>import</b> models, transforms
+<b>from</b> torch.utils.data <b>import</b> DataLoader
+<b>from</b> torchvision <b>import</b> datasets, models, transforms
+dev = "cuda" <b>if</b> torch.cuda.is_available() <b>else</b> "cpu"
 
-<i># 1. lấy mô hình đã học sẵn trên ImageNet</i>
-net = models.resnet18(weights="IMAGENET1K_V1")
+<i># 1. lấy mô hình đã học sẵn trên ImageNet. Code cũ viết pretrained=True:</i>
+<i>#    torchvision 0.13 đã thay bằng weights=</i>
+net = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
 
 <i># 2. ĐÓNG BĂNG phần thân, chỉ thay và học lại lớp cuối</i>
 <b>for</b> p <b>in</b> net.parameters():
     p.requires_grad = <b>False</b>
 net.fc = nn.Linear(net.fc.in_features, N_CLASSES)   <i># chỉ lớp này được học</i>
+net = net.to(dev)
 
 <i># 3. chuẩn hoá ĐÚNG như lúc pretrain — sai chỗ này là điểm tụt không hiểu vì sao</i>
-tf = transforms.Compose([
+norm = transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+tf_train = transforms.Compose([           <i># augmentation: chỉ ở tập train</i>
+    transforms.RandomResizedCrop(224),
+    transforms.RandomHorizontalFlip(),    <i># chỉ khi lật không đổi nhãn (xem dưới)</i>
+    transforms.ToTensor(), norm])
+tf_eval = transforms.Compose([
     transforms.Resize(256), transforms.CenterCrop(224),
-    transforms.ToTensor(),
-    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
-])</div>
-  <p>Ba bước này thường cho kết quả rất tốt sau vài phút GPU. Chỉ khi nó chạm trần mới nghĩ tới việc mở băng vài lớp cuối của phần thân và train tiếp với learning rate nhỏ hơn nhiều (khoảng 1/10).</p>
-  <p><b>Baseline bắt buộc trước khi fine-tune bất cứ thứ gì:</b> đóng băng toàn bộ mạng, lấy vector đặc trưng ở lớp áp chót, đưa vào một logistic regression. Đó là <i>linear probe</i>, chạy mất một phút, và nó cho bạn biết đặc trưng pretrained đã đủ tốt chưa.</p>
+    transforms.ToTensor(), norm])
+dl_tr = DataLoader(datasets.ImageFolder("data/train", tf_train),
+                   batch_size=32, shuffle=True)
+dl_va = DataLoader(datasets.ImageFolder("data/val", tf_eval), batch_size=64)
+
+<i># 4. train lớp cuối, chấm trên val sau mỗi epoch</i>
+opt = torch.optim.Adam(net.fc.parameters(), lr=1e-3)
+<b>for</b> epoch <b>in</b> range(5):
+    net.eval()   <i># thân đóng băng vẫn phải ở eval: ở train(), BatchNorm vẫn</i>
+                 <i># cập nhật trung bình chạy dù requires_grad=False</i>
+    <b>for</b> x, y <b>in</b> dl_tr:
+        loss = nn.functional.cross_entropy(net(x.to(dev)), y.to(dev))
+        opt.zero_grad(); loss.backward(); opt.step()
+    <b>with</b> torch.no_grad():
+        ok = sum((net(x.to(dev)).argmax(1).cpu() == y).sum().item()
+                 <b>for</b> x, y <b>in</b> dl_va)
+    print(epoch, ok / len(dl_va.dataset))</div>
+  <p><code>Resize(256)</code>, <code>CenterCrop(224)</code> và bộ số của <code>Normalize</code> là đúng phép biến đổi mà bộ trọng số khai trong <code>models.ResNet18_Weights.IMAGENET1K_V1.transforms()</code>; đổi sang mô hình khác thì in dòng đó ra thay vì chép số. Accuracy đọc được khi các lớp gần cân bằng; lớp lệch thì in thêm macro-F1 như bài Multiclass.</p>
+  <p><b>Mốc rẻ nhất, chạy trước cả vòng train:</b> <i>linear probe</i>. Đặt <code>net.fc = nn.Identity()</code>, chạy mọi ảnh qua mạng một lần ở <code>net.eval()</code> (không augmentation) để lấy vector 512 chiều ở lớp áp chót, rồi đưa vào <code>LogisticRegression</code> của sklearn. Nó chạy trong vài phút và cho biết đặc trưng pretrained đã đủ tốt chưa. Bước 2–4 ở trên là cùng ý tưởng, chỉ khác là học bằng gradient và có augmentation. Khi cả hai chạm trần mới nghĩ tới việc mở băng vài lớp cuối của phần thân (<code>net.layer4</code>) và train tiếp với learning rate nhỏ hơn nhiều (khoảng 1/10).</p>
 
   <h2>Ba chỗ hỏng riêng của CV</h2>
   <ol>
@@ -15846,7 +15927,7 @@ VIZ.confmat = el => {
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
         see: 'ở <b>Số đếm</b>, ô “hợp lệ → hợp lệ” với 4.960 làm mọi ô khác thành đen kịt như nhau — bảng trông như một mô hình hoàn hảo. Đổi sang <b>chuẩn hoá theo hàng</b>: bốn lớp gian lận hiện nguyên hình, và bạn thấy phần lớn ca bị đẩy nhầm vào cột “hợp lệ”. Ba con số F1 dưới hình chênh nhau rất xa trên <i>cùng</i> ma trận này.',
-        wrong: '“báo cáo F1 là đủ”. F1 <i>nào</i>? <b>micro</b> gần bằng accuracy nên bị lớp đông áp đảo; <b>weighted</b> cũng vậy; chỉ <b>macro</b> cho mỗi lớp một phiếu bằng nhau. Với bài toán mà lớp hiếm mới là lớp quan trọng, chọn con số nào để in đậm là một quyết định trung thực hay không trung thực.',
+        wrong: '“báo cáo F1 là đủ”. F1 <i>nào</i>? <b>micro</b> bằng đúng accuracy nên bị lớp đông áp đảo; <b>weighted</b> cũng vậy; chỉ <b>macro</b> cho mỗi lớp một phiếu bằng nhau. Với bài toán mà lớp hiếm mới là lớp quan trọng, chọn con số nào để in đậm là một quyết định trung thực hay không trung thực.',
         code: '<code>ConfusionMatrixDisplay.from_predictions(y, p, normalize="true")</code> — <code>normalize="true"</code> là chuẩn hoá theo HÀNG (recall từng lớp). Luôn kèm <code>classification_report</code> để có bảng F1 <b>từng lớp</b>; con số gộp giấu đi đúng thứ đáng nhìn.',
       })}
     </div></div>`;
