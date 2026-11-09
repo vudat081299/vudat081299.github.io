@@ -12,6 +12,7 @@ lịch tháng / tuần / danh sách, panel chi tiết môn và buổi. Niêm y�
 - `src/views/`: `dashboard.js`, `calendar.js` (tháng, tuần, danh sách), `panel.js`, `parts.js` (mảnh dùng chung).
 - `src/main.js`: nạp dữ liệu, sự kiện, vẽ lại từng vùng.
 - `styles.css`: token màu trên `:root`, dark mode qua `prefers-color-scheme` và `data-theme`.
+- Màu và font theo trang chủ (SCHED-001, [DECISIONS.md](DECISIONS.md)). Mã màu chỉ khai ở token; vùng chạm ở điện thoại ≥ 40px.
 
 ## Luật dữ liệu
 

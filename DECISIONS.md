@@ -24,7 +24,7 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-022 · Trang chủ gom section thành ba khu, khu đầu là việc đang học · `data/collection.json`
 - REPO-023 · Trang chủ đen, trắng, một màu xanh lá · `index.html`
 
-Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md), [`shop/DECISIONS.md`](shop/DECISIONS.md).
+Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/class-schedule/DECISIONS.md`](masters-degree/class-schedule/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md), [`shop/DECISIONS.md`](shop/DECISIONS.md).
 <!-- index:end -->
 
 ## REPO-001 · Nội dung trước, UI sau
