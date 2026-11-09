@@ -38,6 +38,9 @@ Bảy phần, bảy loại sai khác nhau:
      đúng một khung “Luật của mục này”. Không thay được review ngữ nghĩa; bắt hồi quy khi gấp nhầm
      điều kiện vào details hoặc bỏ lời giải nghĩa của mười hai luật ở mục 11.2,
      hoặc để lời ấy dài quá 25 chữ.
+  M. GỠ RỐI TRONG ĐẦU — khoá "mind" của file dữ liệu: đủ và đúng thứ tự các trường, id duy nhất, nhóm và
+     nhãn độ tin hợp lệ, mục đọc thêm có thật, chữ thuần không HTML; câu gỡ và lý do mỗi thứ một câu, không
+     quá 35 chữ; nhãn bằng chứng phải kèm nguồn; hai phép tính trong dữ liệu tính lại được.
 
 Cổng không kiểm bảng tóm tắt (s-tomtat) khớp lời từng khung luật, cũng không kiểm mỗi nguồn trong
 s-nguon còn được thân bài dẫn: hai việc ấy rà bằng tay khi sửa một mục.
@@ -886,6 +889,76 @@ def phan_E():
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# M. Gỡ rối trong đầu
+# ══════════════════════════════════════════════════════════════════════════════
+MIND = ['id', 'group', 'thought', 'reframe', 'why', 'evi', 'src', 'see']
+MIND_GROUPS = {'tien', 'yeu', 'vithe', 'nghe', 'giadinh', 'banthan'}
+
+
+def chu_dem(t):
+    """Số chữ (âm tiết) của một câu: bỏ dấu câu đứng riêng như “—”."""
+    return len([w for w in t.split() if re.search(r'\w', w)])
+
+
+def mot_cau(t):
+    """Một câu: kết bằng dấu chấm, không có dấu kết câu nào ở giữa (“33.000” không tính)."""
+    return t.endswith('.') and not re.search(r'[.!?…]["”»)]?\s', t[:-1])
+
+
+def phan_M():
+    data = json.loads(DATA.read_text(encoding='utf-8'))
+    mind = data.get('mind')
+    ok = isinstance(mind, list) and bool(mind) and all(isinstance(e, dict) for e in mind)
+    claim('suy nghĩ: danh sách không rỗng, mỗi mục là object', ok)
+    if not ok:
+        return
+    secs = set(re.findall(r'<section id="(s-[a-z]+)">', HTML))
+    ids = [e.get('id') for e in mind]
+    claim('suy nghĩ: id duy nhất', len(ids) == len(set(ids)), 'trùng ' + ', '.join(sorted(set(i for i in ids if ids.count(i) > 1))))
+    bad = collections.defaultdict(list)
+    for e in mind:
+        eid = e.get('id')
+        if list(e) != MIND:
+            bad['đủ và đúng thứ tự các trường'].append(eid)
+            continue
+        if not all(isinstance(e[f], str) and not re.search(r'[<>]', e[f]) for f in MIND if f != 'see'):
+            bad['chữ thuần, không HTML'].append(eid)
+            continue
+        if not re.fullmatch(r'[a-z][a-z0-9-]*', eid):
+            bad['id chữ thường nối bằng -'].append(eid)
+        if not all(e[f].strip() for f in ('thought', 'reframe', 'evi')):
+            bad['có câu nghĩ, câu gỡ và nhãn độ tin'].append(eid)
+        if e['group'] not in MIND_GROUPS:
+            bad['nhóm hợp lệ'].append(eid)
+        if e['evi'] not in KINDS:
+            bad['nhãn độ tin hợp lệ'].append(eid)
+        if e['evi'] in ('solid', 'mixed', 'theory', 'hist') and not e['src'].strip():
+            bad['nhãn bằng chứng có nguồn'].append(eid)
+        if not (mot_cau(e['reframe']) and chu_dem(e['reframe']) <= 35):
+            bad['câu gỡ: một câu, tối đa 35 chữ'].append(eid)
+        if e['why'] and not (mot_cau(e['why']) and chu_dem(e['why']) <= 35):
+            bad['lý do: rỗng hoặc một câu, tối đa 35 chữ'].append(eid)
+        see = e['see']
+        if not (isinstance(see, list) and len(see) <= 3 and len(set(see)) == len(see) and set(see) <= secs):
+            bad['tối đa ba mục đọc thêm có thật, không trùng'].append(eid)
+    for what in ('đủ và đúng thứ tự các trường', 'chữ thuần, không HTML', 'id chữ thường nối bằng -',
+                 'có câu nghĩ, câu gỡ và nhãn độ tin', 'nhóm hợp lệ', 'nhãn độ tin hợp lệ', 'nhãn bằng chứng có nguồn',
+                 'câu gỡ: một câu, tối đa 35 chữ', 'lý do: rỗng hoặc một câu, tối đa 35 chữ',
+                 'tối đa ba mục đọc thêm có thật, không trùng'):
+        claim('suy nghĩ: ' + what, not bad[what], 'sai ở ' + ', '.join(map(str, bad[what][:10])))
+    claim('suy nghĩ: mỗi nhóm có ít nhất một suy nghĩ', MIND_GROUPS <= {e.get('group') for e in mind})
+    claim('suy nghĩ: không có trường _html (REPO-001)', not any(k.endswith('_html') for e in mind for k in e))
+    # Hai câu tự tính trong dữ liệu: lãi 10% trên 50 triệu so với để dành 1 triệu mỗi tháng; số lần gặp bố mẹ.
+    by = {e.get('id'): e for e in mind}
+    late = by.get('money-late-start', {}).get('why', '')
+    claim('suy nghĩ money-late-start: 50 triệu × 10% = 5 triệu, 1 triệu × 12 tháng = 12 triệu',
+          f'Vốn 50 triệu lãi 10% một năm cho {round(50 * 0.10)} triệu' in late and f'mỗi tháng đã là {1 * 12} triệu' in late)
+    ptime = by.get('parents-time', {}).get('why', '')
+    claim('suy nghĩ parents-time: bốn lần mỗi năm × hai mươi năm = tám mươi lần',
+          'bốn lần một năm trong hai mươi năm' in ptime and so_chu(4 * 20) + ' lần gặp' in ptime)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # F. Vốn, nghề, gia đình
 # ══════════════════════════════════════════════════════════════════════════════
 def phan_F():
@@ -1447,6 +1520,7 @@ def main():
         phan_E()
         phan_F()
         phan_G()
+        phan_M()
     print()
     if fails:
         print('verify-hidden-curriculum: %d chỗ KHÔNG khớp (trên %d phép kiểm):' % (len(fails), checks))

@@ -2152,5 +2152,410 @@
     "s-quyenluc"
    ]
   }
+ ],
+ "mind": [
+  {
+   "id": "money-safety",
+   "group": "tien",
+   "thought": "Phải có thật nhiều tiền mới thấy yên; lần nào tiêu tiền, đầu mình lại tính đi tính lại.",
+   "reframe": "Yên lòng đến từ chịu được một cú sốc, không từ số dư: có sẵn vài tháng chi tiêu rút được ngay thì chi trong ngân sách khỏi tính lại.",
+   "why": "Tiền rút được ngay đi cùng cảm giác yên tâm hơn cả thu nhập hay đầu tư, và phần lợi giảm nhanh khi đã qua mức đủ.",
+   "evi": "mixed",
+   "src": "Ruberton, Gladstone và Lyubomirsky, 2016, Emotion",
+   "see": [
+    "s-bang",
+    "s-baohiem",
+    "s-khanhiem"
+   ]
+  },
+  {
+   "id": "money-more-happy",
+   "group": "tien",
+   "thought": "Kiếm thêm được nhiều tiền nữa thì chắc mình sẽ vui.",
+   "reframe": "Thu nhập cao hơn có làm mỗi ngày vui hơn, nhưng theo tỉ lệ: từ 10 lên 20 triệu thêm một nấc bằng từ 50 lên 100 triệu.",
+   "why": "Ở hơn 33.000 người Mỹ đi làm, cảm xúc hằng ngày tăng một nấc mỗi lần thu nhập nhân đôi; chỉ nhóm kém vui nhất chững lại quanh 100.000 USD.",
+   "evi": "mixed",
+   "src": "Killingsworth, 2021, PNAS; Killingsworth, Kahneman và Mellers, 2023, PNAS",
+   "see": []
+  },
+  {
+   "id": "money-buy-time",
+   "group": "tien",
+   "thought": "Thuê người dọn nhà hay đặt đồ ăn là phí, mình tự làm được mà.",
+   "reframe": "Khi khoản đệm đã đủ, trả tiền để khỏi làm việc mình ghét là mua thời gian, thường đem lại nhiều dễ chịu hơn một món đồ cùng giá.",
+   "why": "Cùng 40 USD, người đi làm vui hơn và thấy bớt gấp gáp vào cuối tuần tiêu cho việc tiết kiệm thời gian so với cuối tuần mua đồ.",
+   "evi": "mixed",
+   "src": "Whillans, Dunn, Smeets, Bekkers và Norton, 2017, PNAS",
+   "see": []
+  },
+  {
+   "id": "money-peers-visible",
+   "group": "tien",
+   "thought": "Bạn cùng tuổi đã mua nhà mua xe, mình vẫn đi thuê.",
+   "reframe": "Mình chỉ thấy thứ họ mua, không thấy khoản nợ hay phần bố mẹ góp, nên đang so cả sổ sách của mình với một tấm ảnh của họ.",
+   "why": "",
+   "evi": "lore",
+   "src": "",
+   "see": [
+    "s-bang",
+    "s-tinhieu"
+   ]
+  },
+  {
+   "id": "money-late-start",
+   "group": "tien",
+   "thought": "Hai mươi sáu tuổi rồi mà chưa để dành được gì, chắc muộn rồi.",
+   "reframe": "Ở tuổi này, tài sản lớn nhất là khả năng kiếm tiền ba mươi năm tới; vốn còn nhỏ thì tăng phần để dành mạnh hơn mọi mức lãi.",
+   "why": "Vốn 50 triệu lãi 10% một năm cho 5 triệu; để dành thêm 1 triệu mỗi tháng đã là 12 triệu.",
+   "evi": "math",
+   "src": "",
+   "see": [
+    "s-vonnguoi",
+    "s-lamgiau"
+   ]
+  },
+  {
+   "id": "money-lend-friend",
+   "group": "tien",
+   "thought": "Bạn thân hỏi vay, từ chối thì mất bạn.",
+   "reframe": "Chỉ cho vay số mình sẵn lòng coi như cho luôn: thứ làm mất bạn thường là món nợ đòi không được, không phải lời từ chối tử tế.",
+   "why": "",
+   "evi": "lore",
+   "src": "",
+   "see": [
+    "s-ranhgioi",
+    "s-cho"
+   ]
+  },
+  {
+   "id": "partner-ex",
+   "group": "yeu",
+   "thought": "Cứ nghĩ tới người yêu cũ của người ấy là mình khó chịu, lại đem mình ra so.",
+   "reframe": "Chuyện cũ của người ấy đã khép lại, không có mình để hơn thua; điều nói về hai người là hôm nay họ đối xử với mình ra sao.",
+   "why": "Hỏi thêm chi tiết hay xem trang của người cũ chỉ nuôi vòng nghĩ; nghĩ hàng giờ mỗi ngày dù biết vô lý có thể là ám ảnh cưỡng chế, chữa được.",
+   "evi": "lore",
+   "src": "",
+   "see": [
+    "s-quanhe"
+   ]
+  },
+  {
+   "id": "not-first",
+   "group": "yeu",
+   "thought": "Mình không phải người đầu tiên của người ấy.",
+   "reframe": "Người đến trước là người gặp sớm, còn mình được chọn khi người ấy đã có điều để so; tình cảm đo bằng cách đối xử bây giờ, không bằng thứ tự.",
+   "why": "Gộp 43 nghiên cứu với 11.196 cặp, mối quan hệ tốt đi cùng cảm nhận về hiện tại: người kia cam kết, trân trọng mình, ít xung đột.",
+   "evi": "mixed",
+   "src": "Joel và cộng sự, 2020, PNAS",
+   "see": [
+    "s-quanhe"
+   ]
+  },
+  {
+   "id": "fight-means-wrong",
+   "group": "yeu",
+   "thought": "Cãi nhau hoài, chắc hai đứa không hợp.",
+   "reframe": "Cặp nào cũng bất đồng; đáng lo là cách cãi — chê con người thay vì việc, khinh miệt, im lặng đóng cửa — và sau đó có làm lành được không.",
+   "why": "Ở 79 cặp vợ chồng theo dõi 14 năm, cảm xúc tiêu cực khi cãi đi cùng ly hôn sớm; mẫu nhỏ, nên chỉ coi là dấu hiệu.",
+   "evi": "mixed",
+   "src": "Gottman và Levenson, 2000, Journal of Marriage and Family",
+   "see": [
+    "s-quanhe",
+    "s-honnhan"
+   ]
+  },
+  {
+   "id": "the-one",
+   "group": "yeu",
+   "thought": "Nếu đúng người thì mọi thứ phải tự nhiên, đâu cần cố.",
+   "reframe": "Tin “đúng người thì tự hợp” khiến mình coi mỗi trục trặc là bằng chứng chọn sai rồi né; coi sự hợp là thứ vun được thì mình xử lý trục trặc.",
+   "why": "Người tin vào định mệnh né tránh nhiều hơn khi có chuyện căng, và quan hệ của họ phụ thuộc nhiều hơn vào việc lúc đầu có hài lòng không.",
+   "evi": "mixed",
+   "src": "Knee, 1998, Journal of Personality and Social Psychology",
+   "see": [
+    "s-quanhe"
+   ]
+  },
+  {
+   "id": "desire-gap",
+   "group": "yeu",
+   "thought": "Người ấy ít khi muốn trước, chắc không còn thấy mình hấp dẫn.",
+   "reframe": "Nhất là khi đã bên nhau lâu, ham muốn hay đến sau khi bắt đầu gần gũi chứ không đến trước, nên ít chủ động chưa phải là hết thích.",
+   "why": "Mô hình ham muốn “đáp ứng” của Basson, dựng từ phụ nữ trong quan hệ lâu năm, coi đây là bình thường chứ không phải rối loạn.",
+   "evi": "theory",
+   "src": "Basson, 2000, Journal of Sex & Marital Therapy",
+   "see": [
+    "s-quanhe"
+   ]
+  },
+  {
+   "id": "sunk-years",
+   "group": "yeu",
+   "thought": "Yêu nhau ba năm rồi, giờ chia tay thì phí hết.",
+   "reframe": "Ba năm ấy đã sống xong, ở hay đi cũng không lấy lại được; câu còn quyết được là ba năm tới với người này có đáng không.",
+   "why": "",
+   "evi": "math",
+   "src": "",
+   "see": [
+    "s-dunglai",
+    "s-muoihai"
+   ]
+  },
+  {
+   "id": "married-friends",
+   "group": "yeu",
+   "thought": "Bạn bè cưới hết rồi, mình vẫn một mình, sắp trễ rồi.",
+   "reframe": "Tuổi cưới của bạn bè là mốc của họ, không phải hạn chót của mình; cưới vội cho khỏi bị hỏi là trả giá lớn cho một phiền nhỏ.",
+   "why": "",
+   "evi": "lore",
+   "src": "",
+   "see": [
+    "s-honnhan",
+    "s-thoigian"
+   ]
+  },
+  {
+   "id": "power-timid",
+   "group": "vithe",
+   "thought": "Đứng trước người giàu hay có chức, tự dưng mình rụt lại, nói không ra lời.",
+   "reframe": "Họ hơn mình về tiền hay quyền chứ không hơn về giá trị con người; rụt lại là phản xạ nhường người có thế, cứ nói lịch sự, thẳng, có nội dung.",
+   "why": "Xã hội nào cũng có lối tự nguyện nhường người được coi là giỏi hay có thế, nên cảm giác ấy không nói gì về giá trị của mình.",
+   "evi": "theory",
+   "src": "Henrich và Gil-White, 2001, Evolution and Human Behavior",
+   "see": [
+    "s-diavi",
+    "s-tutrong"
+   ]
+  },
+  {
+   "id": "spotlight-slip",
+   "group": "vithe",
+   "thought": "Mình vừa nói hớ trước cả nhóm, chắc ai cũng để ý.",
+   "reframe": "Mỗi người đang bận lo hình ảnh của chính họ, nên điều mình thấy là thảm hoạ thường ít người nhận ra hơn mình tưởng nhiều.",
+   "why": "Người mặc chiếc áo gây ngượng đoán số người để ý cao gấp khoảng đôi thực tế; phỏng vấn hay thuyết trình thì khác, lúc ấy người ta nhìn thật.",
+   "evi": "mixed",
+   "src": "Gilovich, Medvec và Savitsky, 2000, Journal of Personality and Social Psychology",
+   "see": [
+    "s-chudong"
+   ]
+  },
+  {
+   "id": "liking-after-talk",
+   "group": "vithe",
+   "thought": "Nói chuyện xong cứ nghĩ người ta thấy mình nhạt.",
+   "reframe": "Sau khi trò chuyện, gần như ai cũng đoán thấp mức người kia thích mình, nên cảm giác “mình nhạt” cần trừ hao trước khi tin.",
+   "why": "Sai lệch này lặp lại ở người lạ, bạn cùng ký túc và người đi học kỹ năng, nhưng không cho biết ai đó có thích mình theo kiểu yêu đương.",
+   "evi": "mixed",
+   "src": "Boothby, Cooney, Sandstrom và Clark, 2018, Psychological Science",
+   "see": [
+    "s-chudong",
+    "s-noi"
+   ]
+  },
+  {
+   "id": "others-seem-fine",
+   "group": "vithe",
+   "thought": "Ai cũng có vẻ ổn, chỉ mình là chật vật.",
+   "reframe": "Người ta giấu buồn chỗ đông người và khoe lúc vui, nên mình đang so phần bên trong của mình với phần bên ngoài của họ.",
+   "why": "Người ta đoán thấp mức cả bạn quen cũng đang buồn, và ai đoán thấp hơn thì cô đơn hơn, nghĩ quẩn nhiều hơn.",
+   "evi": "mixed",
+   "src": "Jordan và cộng sự, 2011, Personality and Social Psychology Bulletin",
+   "see": []
+  },
+  {
+   "id": "money-is-success",
+   "group": "vithe",
+   "thought": "Phải kiếm được nhiều tiền thì mới là người thành công.",
+   "reframe": "Đo tiền bằng thứ nó mua được — an toàn, thời gian, lựa chọn — chứ đừng dùng nó để đo mình.",
+   "why": "Ở hơn 33.000 người đi làm, ai càng coi tiền là dấu hiệu thành công thì càng kém vui, ở mọi mức thu nhập; đây là tương quan.",
+   "evi": "mixed",
+   "src": "Killingsworth, 2021, PNAS",
+   "see": [
+    "s-tinhieu"
+   ]
+  },
+  {
+   "id": "passion-find",
+   "group": "nghe",
+   "thought": "Mình chưa tìm ra đam mê nên chưa biết làm nghề gì.",
+   "reframe": "Coi đam mê là thứ nằm sẵn chờ tìm thì gặp khó là bỏ; coi nó là thứ lớn dần theo năng lực thì mình ở lại đủ lâu để thích.",
+   "why": "Người được dẫn tới tin đam mê là thứ “tìm thấy” mất hứng nhanh hơn khi tài liệu trở nên khó.",
+   "evi": "mixed",
+   "src": "O'Keefe, Dweck và Walton, 2018, Psychological Science",
+   "see": [
+    "s-tutrong",
+    "s-moitruong"
+   ]
+  },
+  {
+   "id": "impostor",
+   "group": "nghe",
+   "thought": "Mình được nhận chắc do may, sớm muộn người ta sẽ phát hiện mình không giỏi.",
+   "reframe": "Cảm giác “không xứng” không phải phép đo: kiểm nó bằng kết quả và phản hồi, phần thiếu thật thì thành việc cần học, phần còn lại thôi nghĩ.",
+   "why": "",
+   "evi": "lore",
+   "src": "",
+   "see": [
+    "s-tutrong"
+   ]
+  },
+  {
+   "id": "loyalty-leave",
+   "group": "nghe",
+   "thought": "Công ty đối xử tốt với mình, nghỉ việc thì thấy có lỗi.",
+   "reframe": "Việc làm là trao đổi hai chiều, công ty cũng cắt giảm khi cần; biết ơn thì trả bằng bàn giao tử tế và giữ liên lạc, không bằng việc ở lại.",
+   "why": "",
+   "evi": "lore",
+   "src": "",
+   "see": [
+    "s-moitruong"
+   ]
+  },
+  {
+   "id": "work-visible",
+   "group": "nghe",
+   "thought": "Cứ làm thật chăm, sếp sẽ tự thấy.",
+   "reframe": "Người quyết chỉ biết điều họ thấy, nên kết quả không ai báo coi như chưa có; báo ngắn và đều đặn là phần của công việc, không phải khoe.",
+   "why": "",
+   "evi": "lore",
+   "src": "",
+   "see": [
+    "s-quyenluc"
+   ]
+  },
+  {
+   "id": "rest-guilt",
+   "group": "nghe",
+   "thought": "Nghỉ một ngày là thấy tội lỗi, như đang bị bỏ lại.",
+   "reframe": "Quá một ngưỡng, mỗi giờ làm thêm cho ra ít dần, nên nghỉ là để những giờ làm sau còn đáng giá, không phải bớt đi phần đời làm việc.",
+   "why": "Ở công nhân xưởng đạn Anh thời Thế chiến I, 70 giờ mỗi tuần cho ra gần bằng 56 giờ; việc trí óc chưa được đo kỹ như vậy.",
+   "evi": "mixed",
+   "src": "Pencavel, 2015, Economic Journal",
+   "see": []
+  },
+  {
+   "id": "parents-path",
+   "group": "giadinh",
+   "thought": "Không làm theo ý bố mẹ thì mình là đứa con bất hiếu.",
+   "reframe": "Thương bố mẹ và tự quyết không loại trừ nhau: cho bố mẹ thấy kế hoạch và đường lui thường làm họ yên hơn cãi xem ai đúng.",
+   "why": "Bố mẹ thường lo con không an toàn theo tấm bản đồ đời họ.",
+   "evi": "lore",
+   "src": "",
+   "see": []
+  },
+  {
+   "id": "parents-compare",
+   "group": "giadinh",
+   "thought": "Bố mẹ cứ đem mình ra so với con nhà người ta.",
+   "reframe": "Câu so ấy thường là nỗi lo nói vụng, không phải bản chấm điểm con; đáp vào nỗi lo — mình đang làm gì, tới đâu — thì câu so thưa dần.",
+   "why": "",
+   "evi": "lore",
+   "src": "",
+   "see": []
+  },
+  {
+   "id": "family-money",
+   "group": "giadinh",
+   "thought": "Gửi tiền về nhà còn chưa đủ, giữ lại để dành cho mình thấy ích kỷ.",
+   "reframe": "Gửi một khoản đều đặn và giữ khoản đệm cho mình mới giúp được lâu: cho hết hôm nay thì lúc nhà có chuyện lớn sẽ không còn gì để đỡ.",
+   "why": "",
+   "evi": "lore",
+   "src": "",
+   "see": [
+    "s-cho",
+    "s-baohiem"
+   ]
+  },
+  {
+   "id": "parents-time",
+   "group": "giadinh",
+   "thought": "Bố mẹ già đi mà mình chưa làm được gì cho họ.",
+   "reframe": "Thời gian còn lại với bố mẹ đếm bằng số lần gặp, nhỏ hơn mình tưởng: về và gọi đều từ bây giờ, đừng đợi làm được việc lớn.",
+   "why": "Về nhà bốn lần một năm trong hai mươi năm tới là tám mươi lần gặp.",
+   "evi": "math",
+   "src": "",
+   "see": []
+  },
+  {
+   "id": "regret-hindsight",
+   "group": "banthan",
+   "thought": "Giá hồi đó mình chọn khác thì giờ đã khác.",
+   "reframe": "Mình đang chấm quyết định cũ bằng thông tin có về sau; hỏi “với điều biết lúc ấy, chọn vậy có hợp lý không” — có thì là xui, không phải sai.",
+   "why": "Biết kết quả rồi, người ta tin mình đã đoán được từ đầu; hiệu ứng này lặp lại qua 95 nghiên cứu.",
+   "evi": "solid",
+   "src": "Guilbault, Bryant, Brockway và Posavac, 2004, Basic and Applied Social Psychology",
+   "see": [
+    "s-bayes"
+   ]
+  },
+  {
+   "id": "regret-inaction",
+   "group": "banthan",
+   "thought": "Thôi không thử, lỡ thất bại thì xấu hổ lắm.",
+   "reframe": "Về lâu dài, người ta tiếc điều chưa làm nhiều hơn điều đã làm hỏng, nên khi cái giá của thất bại chịu được thì cứ thử.",
+   "why": "Việc làm hỏng gây tiếc nhiều lúc đầu, việc bỏ lỡ gây tiếc nhiều về sau.",
+   "evi": "mixed",
+   "src": "Gilovich và Medvec, 1995, Psychological Review",
+   "see": [
+    "s-chudong"
+   ]
+  },
+  {
+   "id": "rumination",
+   "group": "banthan",
+   "thought": "Đêm nào cũng nghĩ đi nghĩ lại một chuyện, mong nghĩ ra cách.",
+   "reframe": "Nghĩ quẩn tưởng là đang giải quyết nhưng hiếm ra lời giải: hỏi “bước tiếp theo là gì?”, có thì ghi ra và hẹn giờ, không thì gác sang một giờ lo cố định.",
+   "why": "Ở người đang buồn, nghiền ngẫm làm giải quyết vấn đề kém đi; nghĩ quẩn nhiều tuần kèm mất ngủ có thể là trầm cảm hay lo âu, chữa được.",
+   "evi": "mixed",
+   "src": "Lyubomirsky và Nolen-Hoeksema, 1995, Journal of Personality and Social Psychology; McGowan và Behar, 2013, Behavior Modification",
+   "see": []
+  },
+  {
+   "id": "day-plan",
+   "group": "banthan",
+   "thought": "Ngày nào cũng định làm nhiều việc, tối lại thấy mình vô dụng.",
+   "reframe": "Kế hoạch hụt vì mình đoán theo kịch bản suôn sẻ, không vì mình kém: đoán theo lần trước việc tương tự mất bao lâu, và chấm mình theo tuần.",
+   "why": "Người ta đoán thấp thời gian của chính mình vì chỉ nhìn kế hoạch phía trước; nối với những lần trước thì sai lệch ấy biến mất.",
+   "evi": "mixed",
+   "src": "Buehler, Griffin và Ross, 1994, Journal of Personality and Social Psychology",
+   "see": []
+  },
+  {
+   "id": "friend-drift",
+   "group": "banthan",
+   "thought": "Bạn cũ lâu không liên lạc, chắc họ không còn quý mình.",
+   "reframe": "Bạn bè tuổi đi làm thường xa nhau vì hết dịp gặp chứ không vì hết quý, và một tin hỏi thăm làm người nhận vui hơn mình đoán.",
+   "why": "Qua nhiều thí nghiệm với hơn 5.900 người, người chủ động hỏi thăm đều đoán thấp mức người nhận thấy vui, nhất là khi quan hệ đã lỏng.",
+   "evi": "mixed",
+   "src": "Liu, Rim, Min và Min, 2023, Journal of Personality and Social Psychology",
+   "see": [
+    "s-mangluoi"
+   ]
+  },
+  {
+   "id": "friend-new",
+   "group": "banthan",
+   "thought": "Ngoài hai lăm tuổi rồi, khó mà có thêm bạn thân.",
+   "reframe": "Tình bạn làm bằng giờ ở cạnh nhau, nên thứ thiếu là dịp gặp lặp lại chứ không phải tuổi: chọn một nhóm gặp đều và ở lại đủ lâu.",
+   "why": "Ước tính cần khoảng 50 giờ bên nhau để thành bạn xã giao, 90 giờ để thành bạn và hơn 200 giờ để thành bạn thân.",
+   "evi": "mixed",
+   "src": "Hall, 2019, Journal of Social and Personal Relationships",
+   "see": [
+    "s-mangluoi"
+   ]
+  },
+  {
+   "id": "criticism-sticks",
+   "group": "banthan",
+   "thought": "Một lời chê là mình nghĩ cả tuần, mười lời khen thì quên ngay.",
+   "reframe": "Đầu óc giữ cái xấu lâu hơn để tránh nguy, không phải vì lời chê đúng hơn: giữ phần nói về một việc sửa được, phần còn lại để trôi.",
+   "why": "Phản hồi, thông tin và sự kiện xấu tác động mạnh hơn cái tốt tương đương ở hầu hết mảng tâm lý đã được đo.",
+   "evi": "mixed",
+   "src": "Baumeister, Bratslavsky, Finkenauer và Vohs, 2001, Review of General Psychology",
+   "see": [
+    "s-tutrong",
+    "s-imlang"
+   ]
+  }
  ]
 }
