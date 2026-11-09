@@ -2577,7 +2577,7 @@ luận văn mà không ai thấy.
       <tr><td><b>Google Drive</b></td><td>100%</td><td><code>drive.mount()</code> một dòng là có; sửa file lần nào cũng thấy ngay</td><td>Đọc file nhỏ lẻ rất chậm — nên copy sang <code>/content</code> trước khi chạy vòng lặp</td><td>Mặc định trong suốt 14 ngày</td></tr>
       <tr><td><b>Kaggle Dataset</b></td><td>100%</td><td>Có phiên bản; gắn vào notebook là đọc tốc độ cao; chia sẻ được link cho người hướng dẫn</td><td>Tải lên chậm; sửa là phải tạo phiên bản mới</td><td>Bản dữ liệu đã chốt, dùng cho kết quả cuối</td></tr>
       <tr><td><b>Hugging Face Datasets</b></td><td>100%</td><td>Là một repo git, có lịch sử thay đổi thật; hợp nếu bạn cũng deploy trên HF</td><td>Phải học thêm một công cụ; công khai theo mặc định</td><td>Muốn mọi thứ nằm trên một nền tảng</td></tr>
-      <tr><td><b>Git LFS</b></td><td>Không</td><td>Dữ liệu đi cùng code, đúng một lệnh <code>clone</code></td><td>Hạn mức miễn phí của GitHub nhỏ, vượt là mất tiền; dễ nhân đôi dung lượng repo</td><td>Chỉ cho file dưới ~50 MB</td></tr>
+      <tr><td><b>Git LFS</b></td><td>Không</td><td>Dữ liệu đi cùng code, đúng một lệnh <code>clone</code></td><td>Bậc miễn phí của GitHub có 10 GiB lưu trữ và 10 GiB tải xuống mỗi tháng (kiểm 11/2026); mỗi lần ai đó clone là trừ băng thông của chủ repo, hết thì bị chặn tới tháng sau trừ khi gắn thẻ trả tiền</td><td>Vài file dữ liệu đã chốt, cần đi cùng code; repo ít người clone</td></tr>
       <tr><td><b>Để thẳng trong repo</b></td><td>—</td><td>—</td><td>Repo phình, <code>clone</code> lâu, và không lùi lại được</td><td><b>Không bao giờ.</b> Thêm <code>data/</code> vào <code>.gitignore</code> ngay hôm nay</td></tr>
     </tbody>
   </table>
@@ -2592,7 +2592,7 @@ luận văn mà không ai thấy.
     <tbody>
       <tr><td><b>pandas <code>read_csv</code></b></td><td>Chạy ở đâu cũng được</td><td>Một dòng là xong; ai cũng biết</td><td>Nạp cả file vào RAM — file 1 GB có thể ngốn 3–5 GB</td><td>File nhỏ, dưới vài trăm MB</td></tr>
       <tr><td><b>DuckDB</b></td><td>Chạy ở đâu cũng được</td><td>Đọc thẳng CSV/Parquet bằng SQL, chỉ nạp cột nào cần; nhanh hơn pandas ở phép nhóm và nối bảng</td><td>Một thư viện nữa phải học (nhưng cú pháp là SQL chuẩn)</td><td>Mặc định. Cả khi chỉ để luyện SQL</td></tr>
-      <tr><td><b>SQLite</b></td><td>Chạy ở đâu cũng được</td><td>Có sẵn trong Python, một file là một cơ sở dữ liệu</td><td>Chậm với phép tổng hợp lớn; thiếu nhiều hàm cửa sổ nâng cao</td><td>Cần lưu trạng thái giữa các lần chạy</td></tr>
+      <tr><td><b>SQLite</b></td><td>Chạy ở đâu cũng được</td><td>Có sẵn trong Python, một file là một cơ sở dữ liệu</td><td>Chậm với phép tổng hợp lớn vì lưu theo dòng; không có sẵn độ lệch chuẩn, phương sai; không có kiểu ngày giờ riêng (ngày lưu dạng chuỗi hoặc số). Hàm cửa sổ thì đủ, từ bản 3.25</td><td>Cần lưu trạng thái giữa các lần chạy</td></tr>
       <tr><td><b>PostgreSQL / MySQL thật</b></td><td>Tuỳ nơi đặt</td><td>Là thứ bạn sẽ gặp khi đi làm; xử lý được dữ liệu lớn hơn máy</td><td>Phải có máy chủ, có quyền, có mật khẩu</td><td>Dữ liệu thật của công ty</td></tr>
     </tbody>
   </table>
@@ -2601,14 +2601,15 @@ luận văn mà không ai thấy.
 
 <template data-aside="cmp-eda" data-title="Nhìn dữ liệu: tự viết hay để công cụ sinh báo cáo"
           data-sub="Bước 3 · công cụ sinh báo cáo tự động tiện, nhưng có một cái bẫy">
-  <p><b>Chọn nhanh:</b> chạy <b>ydata-profiling</b> một lần để có bản đồ tổng, rồi <b>tự viết pandas + matplotlib</b> cho bốn biểu đồ thật sự vào luận văn. Đừng dừng ở báo cáo tự động.</p>
+  <p><b>Chọn nhanh:</b> chạy <b>skrub <code>TableReport</code></b> một lần để có bản đồ tổng, rồi <b>tự viết pandas + matplotlib</b> cho bốn biểu đồ thật sự vào luận văn. Đừng dừng ở báo cáo tự động.</p>
   <table>
     <thead><tr><th>Công cụ</th><th>Online?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
     <tbody>
       <tr><td><b>pandas + matplotlib tự viết</b></td><td>Chạy ở đâu cũng được</td><td>Bạn kiểm soát từng con số, và hình xuất ra dùng thẳng cho luận văn</td><td>Tốn thời gian gõ</td><td>Bốn biểu đồ cuối cùng đưa vào bài</td></tr>
-      <tr><td><b>ydata-profiling</b></td><td>Chạy ở đâu cũng được</td><td>Một dòng ra một báo cáo HTML: phân phối, thiếu, tương quan, trùng lặp</td><td>Rất chậm với dữ liệu lớn; và <b>ru ngủ</b> — đọc xong tưởng đã hiểu dữ liệu</td><td>Lần đầu mở một bộ dữ liệu lạ</td></tr>
+      <tr><td><b>skrub <code>TableReport</code></b></td><td>Chạy ở đâu cũng được</td><td>Một dòng ra một bảng tương tác: phân phối từng cột, thiếu, tương quan giữa các cột; nhận cả pandas lẫn polars; chạy với pandas 3</td><td>Thêm một thư viện; và <b>ru ngủ</b> — đọc xong tưởng đã hiểu dữ liệu</td><td>Lần đầu mở một bộ dữ liệu lạ</td></tr>
+      <tr><td><b>ydata-profiling</b></td><td>Chạy ở đâu cũng được</td><td>Báo cáo HTML dài nhất: phân phối, thiếu, tương quan, trùng lặp, cảnh báo</td><td>Rất chậm với dữ liệu lớn; bản 4.18 (4/2026) đòi <code>pandas&lt;3</code> nên <code>pip install</code> sẽ hạ pandas của môi trường dự án — chỉ chạy nó ở một notebook riêng</td><td>Cần đúng báo cáo dạng đó và chấp nhận một môi trường riêng</td></tr>
       <tr><td><b>Colab <code>data_table</code></b></td><td>100%</td><td>Bật một dòng là mọi DataFrame thành bảng lọc/sắp xếp được bằng chuột</td><td>Chỉ để nhìn, không xuất được hình</td><td>Đang trong Colab và muốn soi vài dòng cụ thể</td></tr>
-      <tr><td><b>Excel / Google Sheets</b></td><td>Sheets thì có</td><td>Nhanh với vài nghìn dòng; ai cũng đọc được</td><td>Chết với vài trăm nghìn dòng; và mọi thao tác tay đều <b>không tái lập được</b></td><td>Chỉ để liếc mắt. Không bao giờ để xử lý</td></tr>
+      <tr><td><b>Excel / Google Sheets</b></td><td>Sheets thì có</td><td>Nhanh với vài nghìn dòng; ai cũng đọc được</td><td>Trần cứng: Excel 1.048.576 dòng, Sheets 10 triệu ô (284.807 dòng × 31 cột đã ~8,8 triệu); ì từ vài trăm nghìn dòng; và mọi thao tác tay đều <b>không tái lập được</b></td><td>Chỉ để liếc mắt. Không bao giờ để xử lý</td></tr>
     </tbody>
   </table>
   <p>Cái bẫy của báo cáo tự động: nó trả lời “dữ liệu <i>trông</i> thế nào”, không trả lời “dữ liệu <i>có vấn đề gì với bài toán của tôi</i>”. Rò rỉ thời gian, nhãn đến trễ, một cột bị điền sẵn sau khi sự việc xảy ra — không công cụ nào tự thấy được.</p>
@@ -2621,9 +2622,9 @@ luận văn mà không ai thấy.
     <thead><tr><th>Công cụ</th><th>Online?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
     <tbody>
       <tr><td><b>pandas</b></td><td>Chạy ở đâu cũng được</td><td>Hệ sinh thái lớn nhất; mọi ví dụ trên mạng đều bằng pandas; nối thẳng vào sklearn</td><td>Ngốn RAM; chậm ở phép nhóm lớn</td><td>Mặc định cho cả dự án này</td></tr>
-      <tr><td><b>polars</b></td><td>Chạy ở đâu cũng được</td><td>Nhanh hơn nhiều lần, dùng ít RAM hơn, có chế độ lười (lazy) tự tối ưu</td><td>API khác hẳn; ít ví dụ; phải đổi sang pandas trước khi vào sklearn</td><td>Dự án sau, hoặc khi pandas thật sự hết RAM. Đổi giữa chừng một dự án đang chạy thì không đáng</td></tr>
+      <tr><td><b>polars</b></td><td>Chạy ở đâu cũng được</td><td>Nhanh hơn nhiều lần, dùng ít RAM hơn, có chế độ lười (lazy) tự tối ưu</td><td>API khác hẳn; ít ví dụ hơn. sklearn (từ 1.4, <code>set_output(transform="polars")</code>) và LightGBM nhận thẳng DataFrame polars, nhưng nhiều thư viện và ví dụ khác vẫn giả định pandas</td><td>Dự án sau, hoặc khi pandas thật sự hết RAM. Đổi giữa chừng một dự án đang chạy thì không đáng</td></tr>
       <tr><td><b>DuckDB (SQL)</b></td><td>Chạy ở đâu cũng được</td><td>Làm phép nặng ngoài RAM; và bạn đang cần luyện SQL cho lúc đi làm</td><td>Không tiện cho thao tác lắt nhắt từng cột</td><td>Nhóm, nối bảng, window function</td></tr>
-      <tr><td><b>Dask / Spark</b></td><td>Cần cụm máy</td><td>Dữ liệu hàng chục GB trở lên</td><td>Phức tạp gấp bội, và bạn không có dữ liệu cỡ đó</td><td><b>Không dùng.</b> Biết tên là đủ</td></tr>
+      <tr><td><b>Dask / Spark</b></td><td>Chạy được trên một máy, nhưng sinh ra cho cụm máy</td><td>Dữ liệu hàng chục GB trở lên</td><td>Phức tạp gấp bội, và bạn không có dữ liệu cỡ đó</td><td><b>Không dùng.</b> Biết tên là đủ</td></tr>
     </tbody>
   </table>
   <p>Ngưỡng thực tế (kinh nghiệm tương đối, không phải con số cứng): quanh mức ~2 triệu dòng thì pandas trong Colab thường vẫn chạy thoải mái — nhưng ngưỡng này co giãn mạnh theo <b>số cột, kiểu dữ liệu, phép tính bạn chạy và RAM có sẵn</b> (một bảng 500 cột nặng hơn nhiều một bảng 10 cột cùng số dòng). Khi bắt đầu chạm trần, thứ cần đổi <b>không phải thư viện</b> mà là chỗ làm việc — đẩy phép nhóm xuống SQL.</p>
@@ -2699,7 +2700,7 @@ luận văn mà không ai thấy.
       <tr><td><b>IEEE-CIS</b><br><span class="wb-help">Kaggle competition</span></td><td>~590.000 dòng · 434 cột · 3,5% gian lận</td><td>Có (<code>TransactionDT</code>, dạng số giây)</td><td>Gần đúng (<code>card1</code>)</td><td><b>Bộ chính.</b> Dữ liệu thật, đủ cột để làm feature engineering theo thời gian</td></tr>
       <tr><td><b>Bộ mô phỏng</b><br><span class="wb-help">nằm trong repo</span></td><td>400.000 dòng · 0,2% gian lận</td><td>Có</td><td>Có</td><td><b>Bộ chạy thử.</b> Không cần tải, không cần tài khoản, chạy trong 2 giây — và bạn biết trước đáp án</td></tr>
       <tr><td><b>Credit Card Fraud (ULB)</b><br><code>creditcard.csv</code></td><td>284.807 dòng · 0,172% gian lận</td><td>Chỉ có số giây tương đối</td><td><b>Không</b></td><td>Không dùng được ở đây: không có <code>card_id</code> thì <i>toàn bộ</i> nhóm feature lịch sử và cách chia theo nhóm đều vô hiệu</td></tr>
-      <tr><td><b>PaySim</b></td><td>6,3 triệu dòng mô phỏng</td><td>Chỉ có <code>step</code> (giờ thứ n)</td><td>Có</td><td>Dùng được, nhưng quy luật đơn giản hơn thực tế — xem mục dưới</td></tr>
+      <tr><td><b>PaySim</b></td><td>6,36 triệu dòng mô phỏng · 0,13% gian lận</td><td>Chỉ có <code>step</code> (giờ thứ n, 744 giờ)</td><td>Có cột <code>nameOrig</code>, nhưng 99,85% mã khách chỉ xuất hiện <b>một lần</b></td><td>Feature lịch sử theo khách gần như rỗng; quy luật đơn giản hơn thực tế — xem mục PaySim ở bài <a href="#/d-data">Lấy dữ liệu</a></td></tr>
     </tbody>
   </table></div>
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
@@ -2717,7 +2718,7 @@ luận văn mà không ai thấy.
       <tr><td><b>LightGBM</b></td><td>Có sẵn trên Colab</td><td>Nhanh nhất trên CPU; nhận cột hạng mục trực tiếp; ít tốn RAM</td><td>Mọc cây theo lá nên dễ overfit trên dữ liệu nhỏ — phải chặn bằng <code>min_child_samples</code></td><td>Mặc định cho bài của bạn</td></tr>
       <tr><td><b>XGBoost</b></td><td>Có sẵn trên Colab</td><td>Được trích dẫn nhiều nhất, hội đồng quen tên; rất ổn định</td><td>Chậm hơn LightGBM ở cùng cấu hình; xử lý cột hạng mục kém tự nhiên hơn</td><td>Cần một baseline “ai cũng công nhận”</td></tr>
       <tr><td><b>CatBoost</b></td><td>Phải <code>pip install</code></td><td>Mạnh nhất khi có cột hạng mục nhiều giá trị; mặc định đã tốt, ít phải tinh chỉnh</td><td>Huấn luyện chậm hơn; file mô hình nặng hơn</td><td>Dữ liệu có mã cửa hàng, mã thiết bị, mã tỉnh…</td></tr>
-      <tr><td><b>sklearn <code>HistGradientBoosting</code></b></td><td>Không cần cài gì</td><td>Không thêm phụ thuộc; đủ nhanh; nhận cột hạng mục từ bản 1.0</td><td>Ít nút vặn hơn; cộng đồng nhỏ hơn</td><td>Môi trường bị cấm cài thêm thư viện</td></tr>
+      <tr><td><b>sklearn <code>HistGradientBoosting</code></b></td><td>Không cần cài gì</td><td>Không thêm phụ thuộc; đủ nhanh; nhận cột hạng mục trực tiếp (từ 0.24; từ 1.6 tự nhận cột kiểu <code>category</code> mà không cần khai)</td><td>Ít nút vặn hơn; cộng đồng nhỏ hơn</td><td>Môi trường bị cấm cài thêm thư viện</td></tr>
     </tbody>
   </table>
   <p>Chênh lệch giữa bốn cái này thường <b>nhỏ hơn</b> chênh lệch do một nhóm feature tốt mang lại. Nếu còn ít thời gian, dồn vào feature, đừng dồn vào việc thử đủ bốn thư viện.</p>
@@ -2729,7 +2730,7 @@ luận văn mà không ai thấy.
   <table>
     <thead><tr><th>Cách</th><th>Cần cài?</th><th>Điểm mạnh</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
     <tbody>
-      <tr><td><b>GridSearchCV</b></td><td>Có sẵn</td><td>Dễ giải thích; chạy hết mọi tổ hợp nên không bỏ sót</td><td>Số tổ hợp nhân lên theo cấp số nhân; phần lớn thời gian chạy ở vùng vô vọng</td><td>Chỉ khi có đúng 2 tham số, mỗi cái 3 giá trị</td></tr>
+      <tr><td><b>GridSearchCV</b></td><td>Có sẵn</td><td>Dễ giải thích; chạy hết mọi tổ hợp nên không bỏ sót điểm nào <i>trong lưới</i></td><td>Số tổ hợp nhân lên theo cấp số nhân; phần lớn thời gian chạy ở vùng vô vọng</td><td>Chỉ khi có đúng 2 tham số, mỗi cái 3 giá trị</td></tr>
       <tr><td><b>RandomizedSearchCV</b></td><td>Có sẵn</td><td>Bạn ấn định số lần chạy, nên biết trước tốn bao lâu; thường bằng grid với ít lần hơn nhiều</td><td>Không học từ những lần đã thử</td><td>Ngân sách chặt. Lựa chọn an toàn</td></tr>
       <tr><td><b>Optuna</b></td><td><code>pip install</code></td><td>Học từ các lần trước; cắt sớm nhánh vô vọng (pruning); vẽ được hình tầm quan trọng của từng tham số đưa vào luận văn</td><td>Thêm một thư viện; dễ để nó chạy quá lâu</td><td>Có một buổi để chạy và muốn một hình đẹp cho chương 4</td></tr>
     </tbody>
@@ -2760,9 +2761,9 @@ luận văn mà không ai thấy.
     <thead><tr><th>Cách</th><th>Chi phí máy</th><th>Trả lời được gì</th><th>Điểm yếu</th><th>Chọn khi</th></tr></thead>
     <tbody>
       <tr><td><b><code>feature_importances_</code></b></td><td>Miễn phí</td><td>Cột nào được cây dùng nhiều</td><td><b>Thiên vị</b> cột nhiều giá trị khác nhau; đo trên tập train nên dễ đánh lừa</td><td>Liếc nhanh trong lúc làm. Không đưa vào luận văn một mình</td></tr>
-      <tr><td><b>Permutation importance</b></td><td>Vừa</td><td>Bỏ cột này đi thì điểm tụt bao nhiêu — đo trên tập test</td><td>Cho kết quả lệch khi hai cột tương quan mạnh với nhau</td><td>Bảng tầm quan trọng chính của luận văn</td></tr>
-      <tr><td><b>SHAP</b></td><td>Nặng nhất</td><td>Từng dòng: cột nào đẩy điểm lên, cột nào kéo xuống, bao nhiêu</td><td>Chậm; và hình dễ bị đọc thành quan hệ nhân quả — phải nói rõ nó không phải</td><td>Giải thích một giao dịch cụ thể trước hội đồng</td></tr>
-      <tr><td><b>LIME</b></td><td>Vừa</td><td>Gần giống SHAP nhưng xấp xỉ cục bộ</td><td>Kết quả không ổn định giữa các lần chạy; gần như đã bị SHAP thay thế</td><td>Chỉ khi người hướng dẫn yêu cầu đích danh</td></tr>
+      <tr><td><b>Permutation importance</b></td><td>Vừa</td><td>Xáo trộn ngẫu nhiên riêng cột này (không train lại) thì điểm tụt bao nhiêu — đo trên dữ liệu mô hình chưa thấy (valid, bản cuối trên test)</td><td>Cho kết quả lệch khi hai cột tương quan mạnh với nhau</td><td>Bảng tầm quan trọng chính của luận văn</td></tr>
+      <tr><td><b>SHAP</b></td><td>Với mô hình cây (TreeSHAP): cỡ permutation importance. Với mô hình khác (KernelSHAP): nặng nhất bảng</td><td>Từng dòng: cột nào đẩy điểm lên, cột nào kéo xuống, bao nhiêu</td><td>Rất chậm ngoài mô hình cây; và hình dễ bị đọc thành quan hệ nhân quả — phải nói rõ nó không phải</td><td>Giải thích một giao dịch cụ thể trước hội đồng</td></tr>
+      <tr><td><b>LIME</b></td><td>Vừa</td><td>Cũng giải thích từng dòng như SHAP, bằng một mô hình tuyến tính khớp với dự đoán quanh dòng đó</td><td>Kết quả không ổn định giữa các lần chạy; gần như đã bị SHAP thay thế</td><td>Chỉ khi người hướng dẫn yêu cầu đích danh</td></tr>
       <tr><td><b>Partial dependence plot</b></td><td>Vừa</td><td><i>Hình dạng</i> quan hệ giữa một cột và dự đoán — tăng dần hay có ngưỡng gãy</td><td>Sai lệch khi các cột tương quan với nhau</td><td>Muốn một hình dễ đọc cho chương kết quả</td></tr>
       <tr><td><b>Counterfactual</b></td><td>Vừa</td><td>“Cần đổi gì để giao dịch này được duyệt?”</td><td>Ít thư viện chín; dễ sinh ra kịch bản phi thực tế</td><td>Cần giải thích cho chính khách hàng bị chặn</td></tr>
     </tbody>
@@ -2884,30 +2885,32 @@ luận văn mà không ai thấy.
 <template data-aside="x-la-skip" data-title="Đại số tuyến tính: phần bỏ qua được"
           data-sub="Nhánh phụ — ba ý ở mạch chính là đủ để đi tiếp">
   <p>Để bạn khỏi lo: định thức, ma trận nghịch đảo tính bằng tay, không gian con, hạng, chéo hoá, phân rã Jordan. Chúng có trong giáo trình đại số tuyến tính nhưng bạn sẽ không gõ chúng lần nào trong cả lộ trình này — kể cả bản 8 tuần.</p>
-  <p>Một ngoại lệ đáng biết tên: <b>trị riêng / vector riêng</b> — vì PCA (giảm chiều) chạy trên nó. Nhưng bạn dùng <code>PCA(n_components=10)</code> chứ không tự tính. Biết nó nghĩa là “tìm các hướng mà dữ liệu trải rộng nhất” là đủ.</p>
+  <p>Một ngoại lệ đáng biết tên: <b>trị riêng / vector riêng</b> — vì PCA (giảm chiều) chạy trên nó (sklearn tính qua phân rã SVD, cho cùng các hướng). Nhưng bạn dùng <code>PCA(n_components=10)</code> chứ không tự tính. Biết nó nghĩa là “tìm các hướng mà dữ liệu trải rộng nhất” là đủ.</p>
 </template>
 
 <template data-aside="x-tree-gradient" data-title="Cây quyết định và XGBoost có dùng gradient không?"
           data-sub="Nhánh phụ — trả lời một thắc mắc hay gặp, không cản đường">
-  <p>Có, nhưng khác. Một cây đơn lẻ <b>không</b> dùng gradient descent — nó chọn ngưỡng chia bằng cách thử hết và lấy cái giảm độ hỗn loạn nhiều nhất <button class="ds-math" data-math="entropy">(entropy/Gini)</button>. Nhưng <b>Gradient Boosting</b> thì đúng như tên: mỗi cây mới được huấn luyện để dự đoán <i>phần gradient còn lại</i> của các cây trước. Nên hiểu gradient vẫn cần, kể cả khi bạn chỉ dùng LightGBM.</p>
+  <p>Có, nhưng không theo kiểu nhích tham số $w$ ngược dốc. Một cây đơn lẻ <b>không</b> dùng gradient: nó thử hết các ngưỡng chia và lấy cái giảm độ hỗn loạn nhiều nhất <button class="ds-math" data-math="entropy">(entropy/Gini)</button>; cây dự đoán số thì lấy cái giảm sai số bình phương nhiều nhất.</p>
+  <p><b>Gradient Boosting</b> thì có dùng, đúng như tên. Mỗi vòng, nó tính đạo hàm của hàm sai số (loss) theo <i>dự đoán hiện tại</i> của từng dòng, rồi cho cây mới học dự đoán đạo hàm đó đổi dấu (gọi là <i>pseudo-residual</i>; với sai số bình phương thì nó chính là phần dư $y - \hat y$). Cộng cây mới vào là nhích <i>dự đoán</i> một bước ngược dốc. XGBoost và LightGBM dùng thêm đạo hàm bậc hai, và chọn ngưỡng chia theo mức giảm loss tính từ hai đạo hàm đó chứ không theo Gini. Nên hiểu gradient vẫn cần, kể cả khi bạn chỉ dùng LightGBM.</p>
 
   <div class="wb-alert wb-alert--info">
     <span class="wb-alert__icon">i</span>
-    <div class="wb-alert__body"><p class="wb-alert__title">Bạn sẽ không phải tính đạo hàm bằng tay, một lần nào</p>
-      <p class="wb-alert__msg">PyTorch/TensorFlow có <b>autograd</b>: bạn viết phép tính xuôi, thư viện tự dựng đồ thị và tính ngược. Bạn cần hiểu <i>ý nghĩa</i> để đọc được vì sao loss không giảm — không cần kỹ năng đạo hàm.</p></div>
+    <div class="wb-alert__body"><p class="wb-alert__title">Trong code, bạn không phải tự viết đạo hàm</p>
+      <p class="wb-alert__msg">PyTorch/TensorFlow có <b>autograd</b>: bạn viết phép tính xuôi, thư viện tự dựng đồ thị và tính ngược. LightGBM có sẵn đạo hàm của các loss thông dụng. Bạn cần hiểu <i>ý nghĩa</i> để đọc được vì sao loss không giảm — không cần kỹ năng biến đổi đạo hàm.</p></div>
   </div>
 </template>
 
 <template data-aside="x-memorize" data-title="Mô hình có phải “học thuộc” không?"
           data-sub="Nhánh phụ — làm rõ một cách nói dễ gây hiểu nhầm">
   <p>Một hiểu nhầm phổ biến cần gỡ: nhiều người nghĩ mô hình <i>ghi nhớ</i> dữ liệu huấn luyện rồi tra cứu lại. Nghe hợp lý vì "học" trong tiếng Việt gợi ý học thuộc, và vì mô hình đúng là hoạt động tốt hơn trên dữ liệu đã thấy.</p>
-  <p>Nhưng cái mô hình giữ lại chỉ là <b>một bộ tham số</b> — với logistic regression là 30 con số, dữ liệu gốc bị vứt đi hoàn toàn. Nó nén hàng trăm nghìn dòng thành vài chục tham số, nên nó <b>bắt buộc</b> phải bỏ qua chi tiết và giữ lại quy luật. Khi mô hình <i>overfit</i>, đó chính là lúc nó tiến gần tới học thuộc — và đó là lỗi, không phải mục tiêu.</p>
+  <p>Nhưng cái phần lớn mô hình giữ lại chỉ là <b>một bộ tham số</b> — logistic regression trên 30 feature giữ đúng 31 con số (30 trọng số và một hệ số chặn), dữ liệu gốc bị vứt đi hoàn toàn. Nó nén hàng trăm nghìn dòng thành vài chục tham số, nên nó <b>bắt buộc</b> phải bỏ qua chi tiết và giữ lại quy luật.</p>
+  <p>Hai giới hạn của câu trên. KNN là ngoại lệ: nó giữ nguyên dữ liệu train và lúc dự đoán thì tra k dòng train gần nhất — đúng là tra lại thật. Và mô hình càng nhiều tham số (cây sâu, hàng nghìn cây, mạng lớn) thì càng đủ chỗ để nhớ cả nhiễu. Khi mô hình <i>overfit</i>, đó chính là lúc nó tiến gần tới học thuộc — và đó là lỗi, không phải mục tiêu.</p>
 </template>
 
 <template data-aside="x-tree-learn" data-title="Cây và boosting thì “học” thế nào"
           data-sub="Nhánh phụ — nối lại với gia đình mô hình bạn sẽ dùng">
   <p>Cây đơn lẻ không dùng gradient — nó thử mọi ngưỡng chia và giữ cái làm giảm độ hỗn loạn nhiều nhất <button class="ds-math" data-math="entropy">(Gini/entropy)</button>.</p>
-  <p>Nhưng <b>Gradient Boosting</b> đúng như tên gọi: mỗi cây mới được huấn luyện để dự đoán <b>phần gradient còn lại</b> của tổ hợp các cây trước. Nói cách khác, cây thứ $k$ học cách sửa lỗi của $k-1$ cây trước đó. Đó là ý nghĩa của chữ "boosting", và là lý do bạn vẫn cần hiểu gradient dù chỉ dùng LightGBM.</p>
+  <p>Nhưng <b>Gradient Boosting</b> đúng như tên gọi: mỗi cây mới được huấn luyện để dự đoán <b>gradient đổi dấu của loss</b>, tính theo dự đoán hiện tại của tổ hợp các cây trước (với MSE, đó chính là phần dư $y - \hat y$). Nói cách khác, cây thứ $k$ học cách sửa lỗi của $k-1$ cây trước đó. Ghép tuần tự nhiều cây yếu, cây sau sửa lỗi cây trước, là ý nghĩa của chữ "boosting"; còn chữ "gradient" là lý do bạn vẫn cần hiểu gradient dù chỉ dùng LightGBM.</p>
 </template>
 
 <template data-aside="x-tf-variants" data-title="Ba biến thể Transformer, và paper gốc"
@@ -3033,13 +3036,16 @@ pd.Series(imp, index=names).sort_values(ascending=<b>False</b>).head(20)</div>
 
 <template data-aside="x-split-other" data-title="Hai cách chia khác: phân tầng và theo nhóm"
           data-sub="Nhánh phụ — bài của bạn chia theo thời gian; hai cách này cho bài toán khác">
+  <h3>Phân tầng</h3>
   <div class="ds-code"><b>from</b> sklearn.model_selection <b>import</b> train_test_split
 X_tr, X_te, y_tr, y_te = train_test_split(
     X, y, test_size=0.2, stratify=y, random_state=42)   <i># ← stratify là bắt buộc khi lệch</i></div>
-  <p>Không có <code>stratify=y</code>, với 0,17% dương, một tập test 1.000 dòng có thể tình cờ chứa 0 ca gian lận — và mọi chỉ số thành vô nghĩa.</p>
+  <p>Không có <code>stratify=y</code>, với 0,17% dương, một tập test 1.000 dòng chia ngẫu nhiên có xác suất $(1-0{,}0017)^{1000} \approx 18\%$ chứa 0 ca gian lận — và mọi chỉ số thành vô nghĩa.</p>
 
   <h3>Theo nhóm</h3>
+  <p>Dùng khi mô hình sẽ gặp <i>thẻ mới</i>: mọi giao dịch của một thẻ nằm trọn bên train hoặc trọn bên test, để mô hình không được chấm điểm trên thẻ nó đã thấy thói quen.</p>
   <div class="ds-code"><b>from</b> sklearn.model_selection <b>import</b> GroupShuffleSplit
+<i># test_size = 20% số THẺ, không phải 20% số dòng</i>
 gss = GroupShuffleSplit(test_size=0.2, random_state=42)
 tr_idx, te_idx = <b>next</b>(gss.split(X, y, groups=df["card_id"]))</div>
 </template>
@@ -10284,10 +10290,14 @@ plt.savefig("reports/figures/pr_curve.pdf")   <i># PDF = vector, không vỡ khi
     <tr><td><b>Bẫy</b></td><td>Sửa tay một ô trong <code>data/raw/</code>. Ngày bạn làm thế là ngày kết quả của bạn hết tái lập được.</td></tr>
   </table>
   <div class="ds-code">pip install kaggle duckdb
-kaggle datasets download -d mlg-ulb/creditcardfraud -p data/raw --unzip
+<i># IEEE-CIS: cần token Kaggle và bấm đồng ý điều lệ cuộc thi trên web trước</i>
+kaggle competitions download -c ieee-fraud-detection -p data/raw
+unzip -o data/raw/ieee-fraud-detection.zip -d data/raw
 
 <i># hoặc từ CSDL công ty — lưu câu truy vấn vào sql/extract.sql</i>
-psql "$DB_URL" -f sql/extract.sql -o data/raw/tx.csv</div>
+<i># --csv: thiếu nó psql ghi ra bảng căn lề cho người đọc, không phải CSV</i>
+psql "$DB_URL" --csv -f sql/extract.sql -o data/raw/tx.csv</div>
+  <p class="wb-help">Lấy token và lỗi 403 hay gặp: mục <i>Tải IEEE-CIS</i> ở bài <a href="#/d-data">Lấy dữ liệu</a>. <code>psql --csv</code> có từ PostgreSQL 12.</p>
 
   <p class="ds-more"><button class="ds-aside" data-aside="cmp-query">Cách lấy dữ liệu ra</button><button class="ds-aside" data-aside="cmp-storage">Chỗ để dữ liệu</button></p>
 
@@ -10306,7 +10316,7 @@ psql "$DB_URL" -f sql/extract.sql -o data/raw/tx.csv</div>
     <tr><td style="width:110px"><b>Công cụ</b></td><td><b>pandas</b> cho phép sửa tuyệt đối · <b><code>sklearn.impute</code></b> cho phép học tham số</td></tr>
     <tr><td><b>Gõ gì</b></td><td><code>pd.to_datetime(..., errors="coerce")</code>, <code>drop_duplicates</code>, <code>.str.strip().str.lower()</code></td></tr>
     <tr><td><b>Xong thì có</b></td><td><code>data/processed/</code> — sinh ra <b>hoàn toàn bằng code</b> từ <code>raw/</code></td></tr>
-    <tr><td><b>Bẫy</b></td><td>Điền giá trị thiếu bằng <code>SimpleImputer</code> <i>ngoài</i> Pipeline. Nó học trung vị từ cả tập test → rò rỉ.</td></tr>
+    <tr><td><b>Bẫy</b></td><td><code>fit</code> <code>SimpleImputer</code> trên toàn bộ dữ liệu trước khi chia. Nó học trung vị từ cả tập test → rò rỉ. Đặt nó trong Pipeline thì chỉ học từ train.</td></tr>
   </table>
 
   <h2>Bước 5 · Feature engineering ← chỗ sin/cos nằm</h2>
@@ -10321,7 +10331,7 @@ df["hour_sin"] = np.sin(2*np.pi*df["hour"]/24)
 df["hour_cos"] = np.cos(2*np.pi*df["hour"]/24)
 
 <i># src/history.py — cần nhiều dòng, chạy TRƯỚC khi vào Pipeline</i>
-g.rolling("1h", closed="left").count()</div>
+g.rolling("1h", closed="left", min_periods=0).count()   <i># thiếu min_periods: NaN thay vì 0</i></div>
 
   <p class="ds-more"><button class="ds-aside" data-aside="cmp-dataframe">pandas · polars · SQL</button></p>
 
@@ -10410,11 +10420,11 @@ streamlit run app.py                          <i># bản demo kéo thanh trượ
   <p>Cảm giác “rối, không biết bắt đầu từ đâu” của bạn <b>không</b> đến từ việc có quá nhiều ô. Lộ trình <i>AI and Data Scientist</i> chỉ có tám ô, và ba trong số đó thậm chí không dạy gì — chúng chỉ là cửa dẫn sang một lộ trình khác:</p>
   <table>
     <tr><th>Ô trên roadmap.sh</th><th>Nội dung thật của ô</th><th>Mức</th></tr>
-    <tr><td><b>Mathematics</b></td><td>Một đoạn mô tả + link sách đại số tuyến tính</td><td><b>Giữ — chỉ 3 ý</b> (vector, tích vô hướng, shape). Chặng 2 của trang này</td></tr>
+    <tr><td><b>Mathematics</b></td><td>Một đoạn mô tả + link sách đại số tuyến tính</td><td><b>Giữ — chỉ 3 ý</b> (vector, tích vô hướng, shape). Chặng 3 của trang này</td></tr>
     <tr><td><b>Statistics</b></td><td>Mô tả + Khan Academy, OpenIntro, StatQuest</td><td><b>Giữ hết.</b> Đây là phần hội đồng soi</td></tr>
     <tr><td><b>Econometrics</b></td><td>Mô tả + MIT OCW, Coursera</td><td><b>Bỏ.</b> Là kinh tế lượng, phục vụ nghiên cứu kinh tế — không dùng cho ML ứng dụng</td></tr>
     <tr><td><b>Coding</b></td><td>Python <i>và</i> R, link tutorial</td><td><b>Giữ Python, bỏ R.</b> Chọn một ngôn ngữ</td></tr>
-    <tr><td><b>Exploratory Data Analysis</b></td><td>Mô tả + tài liệu pandas</td><td><b>Giữ.</b> Chặng 3</td></tr>
+    <tr><td><b>Exploratory Data Analysis</b></td><td>Mô tả + tài liệu pandas</td><td><b>Giữ.</b> Chặng 2</td></tr>
     <tr><td><b>Machine Learning</b></td><td>Một đoạn mô tả, rồi <i>“Visit the Dedicated Machine Learning Roadmap”</i></td><td>Cửa sang lộ trình 150 ô</td></tr>
     <tr><td><b>Deep Learning</b></td><td>Cũng chỉ trỏ sang <b>đúng lộ trình đó</b></td><td>Cửa, trùng với ô trên</td></tr>
     <tr><td><b>MLOps</b></td><td>Trỏ sang lộ trình MLOps</td><td>Cửa sang lộ trình 62 ô</td></tr>
@@ -10434,12 +10444,12 @@ streamlit run app.py                          <i># bản demo kéo thanh trượ
     <tr><th>Nhóm ô</th><th>Mức</th><th>Ghi chú</th></tr>
     <tr><td><code>python</code>, <code>numpy</code>, <code>pandas</code>, <code>matplotlib</code>, <code>seaborn</code>, <code>scikit-learn</code></td><td><b>Giữ hết</b></td><td>Đúng chặng 1 của trang này</td></tr>
     <tr><td><code>databases-sql-no-sql</code>, <code>csv</code>, <code>json</code>, <code>data-loading</code>, <code>data-sources</code></td><td><b>Giữ</b></td><td>Xem bài <b>SQL</b>. <code>parquet</code>, <code>iot</code>, <code>excel</code> thì bỏ</td></tr>
-    <tr><td><code>linear-algebra</code>, <code>calculus</code>, <code>derivatives-partial-derivatives</code>, <code>chain-rule-of-derivation</code>, <code>probability</code>, <code>descriptive-statistics</code>, <code>inferential-statistics</code></td><td><b>Giữ</b></td><td>Chặng 2</td></tr>
+    <tr><td><code>linear-algebra</code>, <code>calculus</code>, <code>derivatives-partial-derivatives</code>, <code>chain-rule-of-derivation</code>, <code>probability</code>, <code>descriptive-statistics</code>, <code>inferential-statistics</code></td><td><b>Giữ</b></td><td>Chặng 3; thống kê suy diễn ở bài <b>Thống kê suy diễn</b> (chặng 5)</td></tr>
     <tr><td><code>determinants-inverse-of-matrix</code>, <code>eigenvalues-diagonalization</code>, <code>singular-value-decomposition</code>, <code>gradient-jacobian-hessian</code>, <code>discrete-mathematics</code></td><td><b>Bỏ</b></td><td>Đây chính là năm ô làm người ta bỏ cuộc ở tuần đầu. Bạn không gõ chúng lần nào</td></tr>
     <tr><td><code>feature-engineering</code>, <code>feature-scaling--normalization</code>, <code>feature-selection</code>, <code>preprocessing-techniques</code>, <code>data-cleaning</code></td><td><b>Giữ — ưu tiên cao nhất</b></td><td>Chặng 4. Ảnh hưởng lớn hơn chọn mô hình</td></tr>
     <tr><td><code>linear-regression</code>, <code>logistic-regression</code>, <code>decision-trees-random-forest</code>, <code>gradient-boosting-machines</code></td><td><b>Giữ</b></td><td>Chặng 5</td></tr>
     <tr><td><code>train---test-data</code>, <code>k-fold-cross-validation</code>, <code>validation-techniques</code>, <code>confusion-matrix</code>, <code>precision</code>, <code>recall</code>, <code>f1-score</code>, <code>roc-auc</code>, <code>log-loss</code>, <code>tuning</code></td><td><b>Giữ</b></td><td>Chặng 5. Nhưng đọc kỹ mục “thiếu gì” ở cuối bài</td></tr>
-    <tr><td><code>neural-network-nn-basics</code>, <code>forward-propagation</code>, <code>back-propagation</code>, <code>activation-functions</code>, <code>loss-functions</code>, <code>embeddings</code>, <code>self-attention</code>, <code>multi-head-attention</code>, <code>transformers</code>, <code>pytorch</code></td><td><b>Giữ — hiểu ý tưởng</b></td><td>Chặng 6</td></tr>
+    <tr><td><code>neural-network-nn-basics</code>, <code>forward-propagation</code>, <code>back-propagation</code>, <code>activation-functions</code>, <code>loss-functions</code>, <code>embeddings</code>, <code>self-attention</code>, <code>multi-head-attention</code>, <code>transformers</code>, <code>pytorch</code></td><td><b>Giữ — hiểu ý tưởng</b></td><td>Chặng 7</td></tr>
     <tr><td><code>explainable-ai</code></td><td><b>Giữ</b></td><td>SHAP. Hội đồng sẽ hỏi</td></tr>
     <tr><td><code>clustering</code>, <code>dimensionality-reduction</code>, <code>principal-component-analysis</code>, <code>k-nearest-neighbors-knn</code>, <code>support-vector-machines</code></td><td>Để sau</td><td>Biết tên; dùng làm baseline nếu còn giờ</td></tr>
     <tr><td><code>convolution</code>, <code>pooling</code>, <code>padding</code>, <code>strides</code>, <code>image-classification</code>, <code>image-segmentation</code>, <code>rnn</code>, <code>lstm</code>, <code>gru</code>, <code>autoencoders</code></td><td>Biết tên là đủ</td><td>Trừ khi bạn mô hình hoá <i>chuỗi</i> giao dịch — lúc đó <code>lstm</code> thành baseline hợp lệ</td></tr>
@@ -10514,7 +10524,7 @@ streamlit run app.py                          <i># bản demo kéo thanh trượ
     <tr><td>12</td><td>Báo cáo một seed duy nhất</td><td>5 seed, trung bình ± độ lệch chuẩn</td></tr>
     <tr><td>13</td><td>Không có baseline hoặc baseline yếu</td><td>Tune baseline tử tế như tune mô hình chính</td></tr>
     <tr><td>14</td><td>SMOTE trước khi chia tập</td><td><code>imblearn.pipeline</code></td></tr>
-    <tr><td>15</td><td>Cân bằng về đúng 50/50</td><td>Một tỉ lệ vừa phải (thường 5–10%, tuỳ dữ liệu) thay vì 50/50, vốn phá hỏng hiệu chỉnh xác suất</td></tr>
+    <tr><td>15</td><td>Cân bằng về đúng 50/50</td><td>Thử <code>class_weight</code> hoặc một tỉ lệ vừa phải (thường 5–10%, tuỳ dữ liệu) và đo xem có hơn không. Mọi cách cân bằng lại đều làm xác suất lệch khỏi tỉ lệ thật — 50/50 lệch nặng nhất — nên dùng xác suất để tính tiền thì phải hiệu chỉnh lại</td></tr>
   </table>
 
   <h2>Kỹ thuật &amp; quy trình</h2>
@@ -10566,7 +10576,7 @@ streamlit run app.py                          <i># bản demo kéo thanh trượ
     <tr><td><b>Target / label</b></td><td>Cột cần dự đoán ($y$)</td></tr>
     <tr><td><b>Feature engineering</b></td><td>Biến dữ liệu thô thành cột mô hình học được</td></tr>
     <tr><td><b>One-hot encoding</b></td><td>Mỗi giá trị hạng mục thành một cột 0/1</td></tr>
-    <tr><td><b>Target encoding</b></td><td>Thay hạng mục bằng tỉ lệ nhãn dương trung bình của nó</td></tr>
+    <tr><td><b>Target encoding</b></td><td>Thay hạng mục bằng tỉ lệ nhãn dương trung bình của nó — tính trên train, và mỗi dòng lấy tỉ lệ tính từ các fold khác (out-of-fold); nếu không, nhãn của chính dòng đó rò vào feature</td></tr>
     <tr><td><b>Cyclical encoding</b></td><td>Mã hoá biến chu kỳ bằng cặp sin/cos để 23h gần 0h</td></tr>
     <tr><td><b>Embedding</b></td><td>Vector số học được, đại diện cho một thực thể rời rạc</td></tr>
     <tr><td><b>Data leakage</b></td><td>Mô hình thấy thông tin lúc chạy thật sẽ không có</td></tr>
@@ -10582,7 +10592,7 @@ streamlit run app.py                          <i># bản demo kéo thanh trượ
     <tr><td><b>Epoch / batch / step</b></td><td>Một lượt hết dữ liệu / một nhóm mẫu / một lần cập nhật</td></tr>
     <tr><td><b>Backpropagation</b></td><td>Tính gradient cho mọi tham số bằng quy tắc dây chuyền</td></tr>
     <tr><td><b>Overfitting</b></td><td>Học thuộc train, kém trên dữ liệu mới</td></tr>
-    <tr><td><b>Regularization</b></td><td>Phạt tham số lớn để chống overfit</td></tr>
+    <tr><td><b>Regularization</b></td><td>Phạt tham số lớn (L1/L2) để chống overfit. Nghĩa rộng: mọi cách ràng buộc mô hình, kể cả dropout</td></tr>
     <tr><td><b>Early stopping</b></td><td>Dừng khi điểm validation ngừng cải thiện</td></tr>
     <tr><td><b>Hyperparameter</b></td><td>Tham số bạn đặt trước khi train (khác với tham số mô hình học ra)</td></tr>
   </table>
@@ -10619,28 +10629,28 @@ streamlit run app.py                          <i># bản demo kéo thanh trượ
   <h2>Sách — chọn tối đa một</h2>
   <table>
     <tr><th>Sách</th><th>Hợp với</th><th>Cách dùng trong 2 tuần</th></tr>
-    <tr><td><b>Hands-On Machine Learning</b> — Aurélien Géron</td><td>Người thực hành, nhiều code</td><td>Tra chương 2 (dự án đầu-cuối) và chương về ensemble</td></tr>
-    <tr><td><b>An Introduction to Statistical Learning</b> (ISL)</td><td>Nền thống kê, miễn phí bản PDF chính thức</td><td>Tra chương 4 (phân loại) và 5 (resampling) khi cần trích dẫn</td></tr>
-    <tr><td><b>The Elements of Statistical Learning</b> (ESL)</td><td>Nâng cao, nặng toán</td><td>Chỉ để trích dẫn, đừng đọc trong 2 tuần</td></tr>
-    <tr><td><b>Designing Machine Learning Systems</b> — Chip Huyen</td><td>Phần hệ thống, triển khai, giám sát</td><td>Rất hợp cho chương kiến trúc và phần drift</td></tr>
+    <tr><td><b>Hands-On Machine Learning with Scikit-Learn and PyTorch</b> — Aurélien Géron, O'Reilly, 10/2025</td><td>Người thực hành, nhiều code. Bản này dùng PyTorch như trang; bản cũ (3rd ed., 2022) dùng Keras/TensorFlow</td><td>Tra chương 2 (dự án đầu-cuối) và chương 6 (ensemble, random forest)</td></tr>
+    <tr><td><b>An Introduction to Statistical Learning with Applications in Python</b> (ISLP) — James, Witten, Hastie, Tibshirani, Taylor, Springer 2023</td><td>Nền thống kê, miễn phí bản PDF chính thức ở statlearning.com. Bản gốc (ISL, 2nd ed. 2021) dùng R</td><td>Tra chương 4 (phân loại) và 5 (resampling) khi cần trích dẫn</td></tr>
+    <tr><td><b>The Elements of Statistical Learning</b> (ESL) — Hastie, Tibshirani, Friedman, 2nd ed., Springer 2009</td><td>Nâng cao, nặng toán; cũng có PDF miễn phí chính thức</td><td>Chỉ để trích dẫn, đừng đọc trong 2 tuần</td></tr>
+    <tr><td><b>Designing Machine Learning Systems</b> — Chip Huyen, O'Reilly 2022</td><td>Phần hệ thống, triển khai, giám sát</td><td>Rất hợp cho chương kiến trúc và phần drift</td></tr>
   </table>
 
   <h2>Paper nên đọc</h2>
   <ul>
-    <li><b>Attention Is All You Need</b> (2017) — 11 trang, đọc sau bài Transformer</li>
-    <li><b>SMOTE</b> (Chawla và cộng sự, 2002) — trích dẫn khi nói về dữ liệu lệch</li>
-    <li><b>XGBoost / LightGBM</b> — paper gốc, trích dẫn khi mô tả mô hình</li>
-    <li><b>SHAP</b> (Lundberg &amp; Lee, 2017) — trích dẫn khi nói về giải thích mô hình</li>
+    <li><b>Attention Is All You Need</b> (Vaswani và cộng sự, NeurIPS 2017) — 11 trang, đọc sau bài Transformer</li>
+    <li><b>SMOTE</b> (Chawla và cộng sự, JAIR 2002) — trích dẫn khi nói về dữ liệu lệch</li>
+    <li><b>XGBoost</b> (Chen &amp; Guestrin, KDD 2016) và <b>LightGBM</b> (Ke và cộng sự, NeurIPS 2017) — paper gốc, trích dẫn khi mô tả mô hình</li>
+    <li><b>SHAP</b> (Lundberg &amp; Lee, NeurIPS 2017); TreeSHAP cho mô hình cây (Lundberg và cộng sự, <i>Nature Machine Intelligence</i> 2020) — trích dẫn khi nói về giải thích mô hình</li>
     <li>Một <b>survey về fraud detection</b> xuất bản trong 2 năm gần nhất — nguồn tốt nhất để tìm khoảng trống</li>
-    <li>So sánh <b>deep learning vs boosting trên dữ liệu bảng</b> (Grinsztajn và cộng sự, 2022) — để biện minh lựa chọn mô hình</li>
+    <li>So sánh <b>deep learning vs boosting trên dữ liệu bảng</b> (Grinsztajn, Oyallon &amp; Varoquaux, NeurIPS 2022) — để biện minh lựa chọn mô hình. Đọc kèm <b>TabPFN</b> (Hollmann và cộng sự, <i>Nature</i> 2025): mô hình dựng sẵn này thắng boosting đã tune trên các bảng tới 10.000 dòng, nên câu "boosting thắng" cần kèm điều kiện cỡ dữ liệu (bài <a href="#/dl-tab">Deep learning cho dữ liệu bảng</a>)</li>
   </ul>
 
   <h2>Dữ liệu</h2>
   <table>
     <tr><th>Bộ</th><th>Ghi chú</th></tr>
     <tr><td><b>IEEE-CIS Fraud Detection</b> (Kaggle)</td><td>Khuyên dùng làm bộ chính — có cột thời gian nên FE làm được</td></tr>
-    <tr><td><b>Credit Card Fraud</b> (ULB, Kaggle)</td><td>Nhỏ, sạch, chạy nhanh — dùng để học pipeline</td></tr>
-    <tr><td><b>PaySim</b></td><td>Mô phỏng, quy luật đơn giản hơn thực tế</td></tr>
+    <tr><td><b>Credit Card Fraud</b> (ULB, Kaggle)</td><td>Nhỏ, sạch, chạy nhanh — dùng để học pipeline; không có mã thẻ nên không làm được feature lịch sử</td></tr>
+    <tr><td><b>PaySim</b></td><td>Mô phỏng, quy luật đơn giản hơn thực tế; gần như mỗi khách chỉ một giao dịch</td></tr>
     <tr><td><b>UCI ML Repository</b></td><td>Nhiều bộ nhỏ cho bài tập</td></tr>
   </table>
 

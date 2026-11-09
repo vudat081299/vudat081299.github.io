@@ -1587,9 +1587,9 @@
    "tldr": "Ở mỗi bước của quy trình 10 bước có một bộ công cụ cố định, một lệnh mở màn, và một hiện vật (file/artifact) phải có khi xong — bám theo bộ này thì mỗi bước để lại đúng thứ dùng lại được cho luận văn và cho bước sau.",
    "points": [
     "Bước 1 viết docs/problem-statement.md bằng file văn bản (không notebook) — nó thành chương 1 luận văn; bẫy là mở notebook trước rồi code sai câu hỏi 3 ngày.",
-    "Bước 2 lấy dữ liệu bằng SQL/Kaggle CLI vào data/raw/ và từ đó CHỈ ĐỌC; sửa tay một ô raw là mất tái lập.",
-    "Bước 4–6: SimpleImputer/scaler/encoder phải nằm TRONG Pipeline (fit ngoài → học trung vị từ test → rò rỉ); dữ liệu thời gian chia bằng sort_values + iloc 70/15/15 chứ không train_test_split ngẫu nhiên.",
-    "Bước 5 feature: sin/cos hoá giờ trong src/features.py gắn qua FunctionTransformer; feature cần lịch sử (rolling '1h', closed='left') tính TRƯỚC khi vào Pipeline; viết logic feature lần hai trong serve.py sẽ lệch âm thầm.",
+    "Bước 2 lấy dữ liệu bằng SQL (psql --csv) hoặc Kaggle CLI (bộ chính IEEE-CIS) vào data/raw/ và từ đó CHỈ ĐỌC; sửa tay một ô raw là mất tái lập.",
+    "Bước 4–6: SimpleImputer/scaler/encoder phải nằm TRONG Pipeline (fit trên toàn bộ dữ liệu trước khi chia → học trung vị từ test → rò rỉ); dữ liệu thời gian chia bằng sort_values + iloc 70/15/15 chứ không train_test_split ngẫu nhiên.",
+    "Bước 5 feature: sin/cos hoá giờ trong src/features.py gắn qua FunctionTransformer; feature cần lịch sử (rolling '1h', closed='left', min_periods=0) tính TRƯỚC khi vào Pipeline; viết logic feature lần hai trong serve.py sẽ lệch âm thầm.",
     "Bước 7 dùng LightGBM + Optuna + MLflow + joblib, artifact fraud_v1.joblib phải chứa cả feature engineering; feature xong mới tune (feature thường cải thiện nhiều hơn tuning).",
     "Bước 8 dùng average_precision_score (PR-AUC), quét ngưỡng bằng np.linspace trên validation, SHAP beeswarm; bẫy là báo accuracy, để ngưỡng 0,5, chọn ngưỡng trên test.",
     "Bước 9 phục vụ bằng FastAPI/uvicorn + Docker (dựng trong Codespaces nếu máy yếu) + Streamlit demo; nạp joblib MỘT lần lúc khởi động chứ không mỗi request (200ms phá ngân sách 50ms).",
@@ -1627,11 +1627,11 @@
     "Rò rỉ tiền xử lý: fit scaler/encoder trên toàn bộ dữ liệu → để trong Pipeline; cùng một khách ở cả train và test → GroupKFold.",
     "Cột chỉ tồn tại sau sự kiện phải loại — hỏi 'cột này được ghi lúc nào?' cho từng cột.",
     "Đánh giá: dùng accuracy cho dữ liệu lệch → PR-AUC; dùng predict thay predict_proba → lấy xác suất rồi tự chọn ngưỡng; ngưỡng 0,5 mặc định → chọn theo chi phí trên validation; tune trên test → tune trên valid, test chạm một lần.",
-    "Mất cân bằng nhãn: SMOTE trước khi chia tập → imblearn.pipeline; cân về 50/50 phá hiệu chỉnh xác suất → giữ tỉ lệ vừa phải (thường 5–10%).",
+    "Mất cân bằng nhãn: SMOTE trước khi chia tập → imblearn.pipeline; mọi cách cân bằng lại đều làm lệch xác suất, 50/50 lệch nặng nhất → thử class_weight hoặc tỉ lệ vừa phải (thường 5–10%), đo xem có hơn không, và hiệu chỉnh lại nếu dùng xác suất để tính tiền.",
     "Tái lập: báo một seed → 5 seed trung bình ± độ lệch chuẩn, random_state=42; notebook chạy lộn xộn → Restart & Run All trước khi tin con số; ghi thí nghiệm bằng MLflow/CSV từ ngày đầu.",
     "Feature engineering viết hai lần cho train và serve → một Pipeline, một file .joblib; feature xong mới tune."
    ],
-   "viz": "Ba bảng #/Lỗi/Sửa (Dữ liệu, Mô hình, Kỹ thuật) 20 dòng; điển hình dòng 15: cân về 50/50 phá hiệu chỉnh xác suất, nên giữ 5–10%.",
+   "viz": "Ba bảng #/Lỗi/Sửa (Dữ liệu, Mô hình, Kỹ thuật) 20 dòng; điển hình dòng 15: cân về 50/50 làm xác suất lệch nặng nhất, nên thử tỉ lệ vừa phải rồi hiệu chỉnh lại.",
    "example": {
     "kind": "num",
     "lead": "Trên cùng 100.000 giao dịch, đặt một mô hình rỗng cạnh một mô hình dùng được rồi đọc hai chỉ số: accuracy xếp cái rỗng lên trên, recall xếp ngược lại.",
@@ -1648,7 +1648,7 @@
    "points": [
     "Phân biệt cặp hay lẫn: parameter (model tự học) vs hyperparameter (đặt tay); metric (người đọc) vs loss (máy tối ưu); algorithm (cách học) vs model (vật đã học); correlation vs causation.",
     "Grain = một dòng đại diện cho cái gì; không xác định được grain thì chưa train được.",
-    "Feature nhóm: cyclical encoding = cặp sin/cos để 23h gần 0h; target encoding = thay hạng mục bằng tỉ lệ nhãn dương trung bình; data leakage = model thấy thông tin lúc chạy thật sẽ không có; point-in-time correctness = mỗi dòng chỉ chứa thông tin có tại thời điểm đó.",
+    "Feature nhóm: cyclical encoding = cặp sin/cos để 23h gần 0h; target encoding = thay hạng mục bằng tỉ lệ nhãn dương trung bình, tính trên train và out-of-fold; data leakage = model thấy thông tin lúc chạy thật sẽ không có; point-in-time correctness = mỗi dòng chỉ chứa thông tin có tại thời điểm đó.",
     "Đánh giá: Precision = trong số bị báo động bao nhiêu đúng; Recall = trong số dương thật bắt được bao nhiêu; PR-AUC là chỉ số chính khi lệch nhãn; ROC-AUC có thể che chất lượng lớp hiếm nên đọc kèm PR-AUC; base rate = tỉ lệ lớp dương.",
     "Huấn luyện: gradient descent nhích tham số ngược hướng gradient, learning rate là độ dài mỗi bước, backpropagation tính gradient bằng quy tắc dây chuyền; overfit chống bằng regularization + early stopping.",
     "Triển khai: Pipeline = chuỗi biến đổi + mô hình đóng thành một đối tượng; training/serving skew = feature tính khác nhau lúc train và chạy thật; shadow mode = chạy song song chưa dùng quyết định."
@@ -1658,9 +1658,9 @@
   "r-books": {
    "tldr": "Danh sách nguồn ngắn có chủ ý để TRA CỨU chứ không đọc tuần tự; trong 14 ngày tỉ lệ nên là 1 giờ đọc : 3 giờ làm vì học data science bằng cách làm hỏng rồi sửa.",
    "points": [
-    "Sách chọn tối đa một: Hands-On ML (Géron) tra chương 2 dự án đầu-cuối + ensemble; ISL (miễn phí PDF) tra chương 4 phân loại và 5 resampling để trích dẫn; ESL chỉ để trích dẫn; Designing ML Systems (Chip Huyen) cho chương kiến trúc và drift.",
-    "Paper trích dẫn: Attention Is All You Need (2017, 11 trang), SMOTE (Chawla 2002) cho dữ liệu lệch, XGBoost/LightGBM gốc, SHAP (Lundberg & Lee 2017), một survey fraud detection 2 năm gần nhất để tìm khoảng trống, Grinsztajn 2022 (deep learning vs boosting trên dữ liệu bảng) để biện minh chọn mô hình.",
-    "Dataset: IEEE-CIS Fraud (Kaggle) làm bộ chính vì có cột thời gian nên FE làm được; Credit Card Fraud ULB nhỏ-sạch để học pipeline; PaySim mô phỏng đơn giản; UCI cho bài tập nhỏ.",
+    "Sách chọn tối đa một: Hands-On ML with Scikit-Learn and PyTorch (Géron, 10/2025) tra chương 2 dự án đầu-cuối + chương 6 ensemble; ISLP (bản Python, 2023, miễn phí PDF) tra chương 4 phân loại và 5 resampling để trích dẫn; ESL chỉ để trích dẫn; Designing ML Systems (Chip Huyen) cho chương kiến trúc và drift.",
+    "Paper trích dẫn: Attention Is All You Need (2017, 11 trang), SMOTE (Chawla 2002) cho dữ liệu lệch, XGBoost/LightGBM gốc, SHAP (Lundberg & Lee 2017), một survey fraud detection 2 năm gần nhất để tìm khoảng trống, Grinsztajn 2022 (deep learning vs boosting trên dữ liệu bảng) để biện minh chọn mô hình, đọc kèm TabPFN (Nature 2025) thắng boosting trên bảng tới 10.000 dòng.",
+    "Dataset: IEEE-CIS Fraud (Kaggle) làm bộ chính vì có cột thời gian nên FE làm được; Credit Card Fraud ULB nhỏ-sạch để học pipeline; PaySim mô phỏng đơn giản, gần như mỗi khách một giao dịch; UCI cho bài tập nhỏ.",
     "Khi bí: User Guide của scikit-learn, Kaggle notebooks cuộc thi IEEE-CIS (xem người khác làm FE trên đúng bộ của bạn), Cross Validated cho câu hỏi thống kê.",
     "Nguyên tắc thời gian: mỗi giờ đọc thêm là một giờ không gõ code, giữ tỉ lệ 1 đọc : 3 làm."
    ],
@@ -1747,10 +1747,10 @@
   "th-write": "2c947566",
   "th-tools": "519be50d",
   "th-defense": "570e5399",
-  "r-stack": "5e0908e5",
-  "r-roadmapsh": "a102c7b9",
-  "r-mistakes": "bc16e4f4",
-  "r-glossary": "938c2318",
-  "r-books": "49669c04"
+  "r-stack": "53c9dc1e",
+  "r-roadmapsh": "45941758",
+  "r-mistakes": "0a438115",
+  "r-glossary": "05340188",
+  "r-books": "22bd65b3"
  }
 }
