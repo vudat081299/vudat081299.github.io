@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="color-scheme" content="light dark" />
 <title>Cashy v1.0 — Implementation Spec Summary</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,14 +14,14 @@
     --paper-2:      #efece4;
     --ink:          #111111;
     --ink-soft:     #2a2a28;
-    --ink-mute:     #6b6a64;
+    --ink-mute:     #64635d;
     --ink-fade:     #a5a39b;
     --rule:         #1c1c1a;
     --rule-soft:    #d8d4c8;
     --accent:       #1f6f43;
-    --accent-warm:  #b54420;
+    --accent-warm:  #a63d1c;
     --accent-blue:  #2a4d8f;
-    --accent-amber: #c08a1f;
+    --accent-amber: #825c10;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
@@ -805,7 +806,7 @@
   footer .colophon {
     margin-top: 36px;
     font-size: 12px;
-    color: rgba(246,244,238,0.45);
+    color: rgba(246,244,238,0.6);
     max-width: 600px;
     margin-left: auto; margin-right: auto;
     line-height: 1.7;
@@ -832,6 +833,56 @@
     .hero { padding-top: 50px; padding-bottom: 40px; }
     .reject-row { grid-template-columns: 1fr; gap: 4px; }
     .reject-row .arrow { display: none; }
+  }
+  /* dark theme: follows the OS. Night paper: warm charcoal ground, warm off-white ink,
+     the same editorial rules and accents lifted to read on dark. */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --paper:        #151513;
+      --paper-2:      #1f1e1b;
+      --ink:          #ece8de;
+      --ink-soft:     #cdc9bd;
+      --ink-mute:     #9d998e;
+      --ink-fade:     #6c6a63;
+      --rule:         #cfcbc0;
+      --rule-soft:    #34322d;
+      --accent:       #6ec48e;
+      --accent-warm:  #ec8a66;
+      --accent-blue:  #94b4ee;
+      --accent-amber: #e2b456;
+    }
+    :root:not([data-theme="light"]) body::before {
+      background-image:
+        radial-gradient(rgba(246,244,238,0.03) 1px, transparent 1px),
+        radial-gradient(rgba(246,244,238,0.02) 1px, transparent 1px);
+      mix-blend-mode: screen;
+    }
+    /* the two inverted blocks stay dark panels instead of turning light */
+    :root:not([data-theme="light"]) .arch {
+      background: #201f1c;
+      color: #f6f4ee;
+      border: 1px solid var(--rule-soft);
+    }
+    :root:not([data-theme="light"]) footer {
+      background: #0d0d0c;
+      color: #f6f4ee;
+      border-top: 1px solid var(--rule-soft);
+    }
+    :root:not([data-theme="light"]) .layer .body small,
+    :root:not([data-theme="light"]) .layer .deps { color: rgba(246,244,238,0.62); }
+    :root:not([data-theme="light"]) .tree .tree-node.root .meta { color: rgba(21,21,19,0.62); }
+    /* tinted callouts: same hues, a little more alpha so they show on dark */
+    :root:not([data-theme="light"]) .recovery { background: rgba(236,138,102,0.08); }
+    :root:not([data-theme="light"]) .tca-note { background: rgba(110,196,142,0.07); }
+    :root:not([data-theme="light"]) .mixed-note { background: rgba(148,180,238,0.07); }
+    :root:not([data-theme="light"]) .pending-callout { background: rgba(226,180,86,0.08); }
+    :root:not([data-theme="light"]) .pending-callout .role-card { border-color: rgba(226,180,86,0.3); }
+    :root:not([data-theme="light"]) .rules .do { background: rgba(110,196,142,0.05); }
+    :root:not([data-theme="light"]) .rules .dont { background: rgba(236,138,102,0.05); }
+    :root:not([data-theme="light"]) .entity ul li.new { background: rgba(110,196,142,0.1); }
+    :root:not([data-theme="light"]) .tx-card .tx-type-badge { background: rgba(236,138,102,0.14); }
+    :root:not([data-theme="light"]) .tx-card .tag.pending { background: rgba(226,180,86,0.12); }
   }
 </style>
 </head>
