@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
+<script>
+/* Theme trước lần vẽ đầu: lựa chọn đã lưu ('hieu-theme') thắng; chưa chọn thì theo hệ điều hành. */
+(function(){var v;try{v=localStorage.getItem('hieu-theme');}catch(e){}
+  var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');
+  if(v!=='dark'&&v!=='light')v=mq?(mq.matches?'dark':'light'):'dark';
+  document.documentElement.setAttribute('data-theme',v);})();
+</script>
 <title>Fraud Detection — Course project</title>
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -889,12 +896,22 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
 (function(){
   var root=document.documentElement, btn=document.getElementById('theme-toggle'),
       label=btn.querySelector('.theme-label');
-  try{ if(localStorage.getItem('hieu-theme')==='light') root.setAttribute('data-theme','light'); }catch(e){}
   label.textContent=root.getAttribute('data-theme').toUpperCase();
+  /* Chưa chọn thì đi theo hệ điều hành, kể cả khi đổi lúc trang đang mở. */
+  var mq=window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+  function onOS(){
+    var v=null; try{ v=localStorage.getItem('hieu-theme'); }catch(e){}
+    if(v==='dark'||v==='light') return;
+    var next=mq.matches?'dark':'light';
+    root.setAttribute('data-theme',next); label.textContent=next.toUpperCase();
+    document.dispatchEvent(new Event('themechange'));
+  }
+  if(mq){ if(mq.addEventListener) mq.addEventListener('change',onOS); else if(mq.addListener) mq.addListener(onOS); }
   btn.addEventListener('click',function(){
     var next=root.getAttribute('data-theme')==='light'?'dark':'light';
     root.setAttribute('data-theme',next); label.textContent=next.toUpperCase();
     try{ localStorage.setItem('hieu-theme',next); }catch(e){}
+    document.dispatchEvent(new Event('themechange'));
   });
 })();
 

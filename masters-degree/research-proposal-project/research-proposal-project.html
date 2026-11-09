@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
+<script>
+/* Theme trước lần vẽ đầu: lựa chọn đã lưu ('rl-theme') thắng; chưa chọn thì theo hệ điều hành. */
+(function(){var v;try{v=localStorage.getItem('rl-theme');}catch(e){}
+  var mq=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)');
+  if(v!=='dark'&&v!=='light')v=mq?(mq.matches?'dark':'light'):'dark';
+  document.documentElement.setAttribute('data-theme',v);})();
+</script>
 <title>Research Proposal Project — From project to master thesis</title>
 
 <!-- Fonts: single request -->
@@ -1974,7 +1981,18 @@ print(pareto_front(pts, models))
     }
     var saved = null;
     try { saved = localStorage.getItem("rl-theme"); } catch (e) {}
-    applyTheme(saved === "light" ? "light" : "dark");
+    /* Chưa chọn thì đi theo hệ điều hành, kể cả khi đổi lúc trang đang mở. */
+    var osDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+    applyTheme(saved === "light" || saved === "dark" ? saved : (osDark && !osDark.matches ? "light" : "dark"));
+    if (osDark) {
+      var onOS = function () {
+        var v = null;
+        try { v = localStorage.getItem("rl-theme"); } catch (e) {}
+        if (v !== "light" && v !== "dark") applyTheme(osDark.matches ? "dark" : "light");
+      };
+      if (osDark.addEventListener) osDark.addEventListener("change", onOS);
+      else if (osDark.addListener) osDark.addListener(onOS);
+    }
     if (toggle) {
       toggle.addEventListener("click", function () {
         var next = (root.getAttribute("data-theme") === "dark") ? "light" : "dark";
