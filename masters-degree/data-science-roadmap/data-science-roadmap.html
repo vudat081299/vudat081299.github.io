@@ -5359,7 +5359,7 @@ df["night_ratio"]      = df["n_tx_night_30d"] / (df["n_tx_30d"] + 1)</div>
 3. Điền giá trị thiếu                          ← SimpleImputer trong Pipeline
 4. Scale                                       ← StandardScaler trong Pipeline
 5. Đưa vào mô hình</div>
-  <p>Điền thiếu <b>trước</b> khi scale, vì scale không xử lý được <code>NaN</code>. Tạo feature tỉ lệ <b>trước</b> khi scale, vì bạn muốn tỉ lệ của giá trị gốc chứ không phải của giá trị đã chuẩn hoá.</p>
+  <p>Điền thiếu <b>trước</b> khi scale. <code>StandardScaler</code> bỏ qua <code>NaN</code> lúc học μ, σ và để nguyên nó ở đầu ra, nên ô trống đi thẳng tới mô hình — và hồi quy logistic, KNN, SVM gặp <code>NaN</code> là báo lỗi; điền trước thì μ, σ cũng được tính trên đúng cột mà mô hình sẽ thấy. Tạo feature tỉ lệ <b>trước</b> khi scale, vì bạn muốn tỉ lệ của giá trị gốc chứ không phải của giá trị đã chuẩn hoá.</p>
 </template>
 
 <template data-node="f-cat">

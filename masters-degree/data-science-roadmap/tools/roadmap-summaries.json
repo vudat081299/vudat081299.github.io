@@ -600,7 +600,7 @@
     "Clip/winsorize theo quantile [0.001, 0.999] lấy từ TRAIN rồi áp lại cho test; trong bài gian lận giá trị cực đoan có thể chính là tín hiệu → giữ cả bản đã cắt lẫn cột cờ is_extreme",
     "Feature tỉ lệ (amount/user_avg, tx_per_day, night_ratio) biến 'giao dịch 5 triệu' thành 'gấp 42 lần mức bình thường của chính khách này' — luôn +1 ở mẫu để tránh chia 0",
     "Binning bằng pd.cut cho quan hệ phi tuyến hình chữ U, nhưng với cây/boosting binning gần như luôn làm tệ đi (ép ngưỡng của bạn lên cây đã tự tìm ngưỡng tối ưu, mất thông tin)",
-    "Thứ tự đúng: sửa lỗi (ngoài Pipeline) → tạo feature tỉ lệ/log/sin-cos → điền thiếu (SimpleImputer) → scale; điền thiếu TRƯỚC scale vì scale không xử lý NaN, tạo tỉ lệ TRƯỚC scale vì muốn tỉ lệ của giá trị gốc"
+    "Thứ tự đúng: sửa lỗi (ngoài Pipeline) → tạo feature tỉ lệ/log/sin-cos → điền thiếu (SimpleImputer) → scale; điền thiếu TRƯỚC scale vì StandardScaler để nguyên NaN cho mô hình (logistic, KNN, SVM báo lỗi) và để μ, σ tính trên đúng cột mô hình thấy, tạo tỉ lệ TRƯỚC scale vì muốn tỉ lệ của giá trị gốc"
    ],
    "viz": "Ví dụ số: 'giao dịch này gấp 42 lần mức bình thường của chính khách hàng này' là một tín hiệu, trong khi 'giao dịch 5 triệu' chỉ là một con số vô ngữ cảnh.",
    "example": {
@@ -1693,7 +1693,7 @@
   "m-prob": "7e3b49e7",
   "m-bayes": "d7dd6fd4",
   "f-what": "f1aff913",
-  "f-numeric": "0e360b89",
+  "f-numeric": "b0e7f504",
   "f-cat": "a1d080f1",
   "f-cyclic": "abae617c",
   "f-time": "94175c06",
