@@ -9296,28 +9296,51 @@ tf = transforms.Compose([
   <div class="wb-table-scroll"><table>
     <thead><tr><th>Cách</th><th>Ý tưởng</th><th>Mạnh</th><th>Yếu</th></tr></thead>
     <tbody>
-      <tr><td><b>Popularity</b></td><td>Gợi ý những mục phổ biến nhất, cho mọi người như nhau</td><td>Không cần mô hình; <b>rất khó đánh bại</b> trên nhiều tập dữ liệu</td><td>Không cá nhân hoá; khuếch đại thứ vốn đã phổ biến</td></tr>
+      <tr><td><b>Popularity</b></td><td>Gợi ý những mục phổ biến nhất, cho mọi người như nhau</td><td>Không cần mô hình; <b>khó thắng hơn bạn tưởng</b> khi vài mục chiếm phần lớn tương tác</td><td>Không cá nhân hoá; khuếch đại thứ vốn đã phổ biến</td></tr>
       <tr><td><b>Collaborative filtering</b></td><td>“Người giống bạn đã thích thứ này”. Học từ ma trận người dùng × mục</td><td>Tìm được sở thích bất ngờ mà nội dung không gợi ý</td><td><b>Khởi đầu lạnh</b> — người mới, mục mới thì không có gì để dựa vào</td></tr>
       <tr><td><b>Content-based</b></td><td>“Thứ này giống thứ bạn đã thích”. Dựa trên thuộc tính/embedding của mục</td><td>Xử lý được mục mới; giải thích được cho người dùng</td><td>Dễ tạo bong bóng — chỉ gợi ý mãi một loại</td></tr>
     </tbody>
   </table></div>
   <p>Hệ thống thật gần như luôn là <b>tổ hợp</b>: content-based cho người mới, collaborative khi đã đủ lịch sử, và popularity làm lưới an toàn. Nói được điều đó là đã hiểu bài toán hơn phần lớn người mới.</p>
-  <p><b>Popularity là baseline bắt buộc,</b> và bạn nên chuẩn bị tinh thần rằng nó khó thắng. Rất nhiều bài báo gợi ý bị phản biện chỉ vì không so với popularity.</p>
+  <p><b>Popularity là baseline bắt buộc,</b> cùng một baseline cá nhân hoá đơn giản như item-kNN (bên dưới). Mô hình mới thường chỉ hơn chúng một khoảng nhỏ. Dacrema và cộng sự (RecSys 2019) chạy lại 18 mô hình neural mới công bố: chỉ 7 tái lập được, và 6 trong 7 thường thua một phương pháp láng giềng hay đồ thị đơn giản đã chỉnh tham số tử tế.</p>
+
+  <h3>Collaborative filtering chạy thế nào</h3>
+  <p>Có hai họ. <b>Láng giềng</b> (item-kNN): hai mục giống nhau nếu cùng được một nhóm người tương tác, đo bằng cosine giữa hai cột của ma trận người dùng × mục; mỗi người được gợi ý những mục giống nhất với thứ họ đã dùng. <b>Matrix factorization</b>: gán mỗi người dùng $u$ một vector $p_u$ và mỗi mục $i$ một vector $q_i$, vài chục chiều, học sao cho tích vô hướng $p_u \cdot q_i$ khớp các tương tác đã thấy; điểm của một mục chưa thấy là $p_u \cdot q_i$. Khởi đầu lạnh hiện ngay trong công thức: người dùng mới chưa có tương tác nào nên không học được $p_u$.</p>
+  <p>Dữ liệu thật hiếm khi là số sao (<i>explicit feedback</i>). Thường nó là <b>implicit feedback</b>: click, lượt xem, đơn mua. Chỉ có tín hiệu dương; một ô trống nghĩa là “chưa thấy”, không phải “không thích”. Phương pháp viết cho loại dữ liệu này xử lý ô trống khác ô có tương tác: ALS cho implicit (Hu, Koren, Volinsky 2008) coi ô trống là 0 với độ tin thấp; BPR (Rendle và cộng sự 2009) chỉ học thứ tự “mục đã tương tác xếp trên một mục lấy ngẫu nhiên”.</p>
 
   <h2>Metric xếp hạng: ba cái cần biết</h2>
   <div class="wb-table-scroll"><table>
     <thead><tr><th>Metric</th><th>Đo gì</th><th>Có quan tâm thứ tự không</th></tr></thead>
     <tbody>
       <tr><td><b>Recall@K</b></td><td>Trong những thứ người dùng thật sự thích, bao nhiêu phần trăm lọt vào top-K</td><td>Không — nằm ở vị trí 1 hay 10 đều tính như nhau</td></tr>
-      <tr><td><b>MAP@K</b></td><td>Precision trung bình dọc theo danh sách</td><td>Có</td></tr>
-      <tr><td><b>NDCG@K</b></td><td>Như MAP nhưng chiết khấu theo vị trí bằng hàm log, và nhận được mức độ liên quan nhiều bậc</td><td>Có — <b>mạnh nhất</b>, và là chuẩn báo cáo trong các bài báo xếp hạng</td></tr>
+      <tr><td><b>MAP@K</b></td><td>Với mỗi người: lấy Precision@$i$ tại từng vị trí $i$ có mục đúng, cộng lại rồi chia (đó là AP@K); MAP là trung bình AP qua mọi người dùng</td><td>Có, nhưng chỉ nhận liên quan nhị phân (đúng / không)</td></tr>
+      <tr><td><b>NDCG@K</b></td><td>Cộng điểm liên quan của từng vị trí, chiết khấu bằng $1/\log_2(i+1)$, rồi chia cho điểm của thứ tự lý tưởng</td><td>Có, và nhận được mức liên quan nhiều bậc; metric hay gặp nhất trong bài báo xếp hạng</td></tr>
     </tbody>
   </table></div>
+  <p>Tính tay một lần cho chắc. Một người dùng có 3 mục đúng trong tập test; mô hình trả 5 mục, mục đúng nằm ở vị trí 1 và 3, mục đúng thứ ba không lọt top-5.</p>
+  <div class="ds-code"><b>import</b> numpy <b>as</b> np
+
+<b>def</b> metrics_at_k(rel, n_relevant, k):
+    rel = np.asarray(rel[:k])            <i># 1 = mục đúng, theo thứ tự trả về</i>
+    hits = rel.cumsum()
+    recall = hits[-1] / n_relevant
+    prec_at_hit = hits[rel == 1] / (np.flatnonzero(rel) + 1)
+    ap = prec_at_hit.sum() / min(k, n_relevant)
+    disc = 1 / np.log2(np.arange(2, k + 2))   <i># 1/log2(i+1), i = 1..k</i>
+    dcg = (rel * disc).sum()
+    idcg = disc[:min(k, n_relevant)].sum()    <i># 3 mục đúng xếp ở 1, 2, 3</i>
+    <b>return</b> recall, ap, dcg / idcg
+
+metrics_at_k([1, 0, 1, 0, 0], n_relevant=3, k=5)
+<i># Recall@5 = 2/3 = 0,667</i>
+<i># AP@5     = (1/1 + 2/3) / 3 = 0,556</i>
+<i># NDCG@5   = (1 + 1/log2 4) / (1 + 1/log2 3 + 1/log2 4) = 1,5 / 2,131 = 0,704</i></div>
+  <p>Hai chỗ hay lệch giữa các thư viện. Mẫu số của AP@K: đoạn trên chia cho $\min(K, \text{số mục đúng})$; có nơi chia cho số mục đúng đã lọt top-K (ở đây là 2, ra 0,833). Và NDCG phải tính lý tưởng trên <i>mọi</i> mục đúng, kể cả mục không lọt top-K. <code>sklearn.metrics.ndcg_score(..., k=5)</code> chỉ ra 0,704 khi mảng đầu vào có cả mục đúng bị trượt (6 mục); đưa riêng 5 mục đã trả thì nó ra 0,920, vì lý tưởng chỉ còn 2 mục đúng. Ghi rõ định nghĩa bạn dùng trong luận văn.</p>
   <p>Chọn <b>K</b> theo giao diện thật, không theo thói quen: nếu màn hình hiện 6 mục thì đo @6, đừng đo @20 vì thấy số đẹp hơn.</p>
 
   <h2>Chia tập: leave-last-out theo thời gian</h2>
   <p>Chia ngẫu nhiên các tương tác là sai theo đúng cách của forecasting: mô hình được thấy thứ người dùng mua tháng sau để đoán thứ họ mua tháng này.</p>
-  <div class="ds-code"><i># đúng: với mỗi người dùng, tương tác CUỐI CÙNG dùng để test</i>
+  <div class="ds-code"><i># phổ biến: với mỗi người dùng, tương tác CUỐI CÙNG dùng để test</i>
 df = df.sort_values(["user_id", "ts"])
 test  = df.groupby("user_id").tail(1)
 train = df.drop(test.index)
@@ -9325,7 +9348,7 @@ train = df.drop(test.index)
 <i># chặt chẽ hơn: cắt theo một MỐC THỜI GIAN chung cho mọi người dùng</i>
 cutoff = df["ts"].quantile(0.8)
 train, test = df[df.ts &lt;= cutoff], df[df.ts &gt; cutoff]</div>
-  <p>Cách thứ hai chặt hơn và gần với thực tế hơn (bạn triển khai mô hình tại một thời điểm, không phải tại “tương tác cuối của mỗi người”). Nêu rõ bạn chọn cách nào và vì sao — đó là một quyết định thiết kế hội đồng sẽ hỏi.</p>
+  <p>Cách thứ nhất vẫn rò rỉ một ít: mốc cắt của mỗi người một khác. Khi đoán món cuối của người A (mua tháng 3), train đã chứa tương tác tháng 9 của người B, nên mô hình biết trước mục nào sắp nổi. Cách thứ hai tái hiện đúng lúc triển khai: mô hình ra đời tại một thời điểm, chỉ biết quá khứ của mọi người. Cái giá của nó: tập test có người dùng chưa từng xuất hiện trong train. Báo riêng nhóm khởi đầu lạnh đó, đừng lặng lẽ bỏ đi. Nêu rõ bạn chọn cách nào và vì sao — đó là một quyết định thiết kế hội đồng sẽ hỏi.</p>
 
   <h2>Vì sao offline tốt mà online vẫn tệ</h2>
   <p>Đây là đặc điểm quan trọng nhất của họ bài toán này, và là chỗ nó chạm vào bài <b>A/B testing</b> ngay sau đây.</p>
@@ -9443,7 +9466,11 @@ stat, pval = proportions_ztest([conv_b, conv_a], [n_b, n_a])</div>
        <b>COUNT</b>(<b>DISTINCT</b> o.user_id) <b>AS</b> active_users
 <b>FROM</b> orders o <b>JOIN</b> first_order f <b>USING</b> (user_id)
 <b>GROUP BY</b> 1, 2 <b>ORDER BY</b> 1, 2;</div>
-  <p>Kết quả xoay thành bảng cohort — hàng là tháng đăng ký, cột là số tháng kể từ đó. Đọc theo hàng thấy vòng đời một nhóm; đọc theo cột so sánh các nhóm ở cùng độ tuổi. Đây là một trong những bảng có mật độ thông tin cao nhất trong analytics.</p>
+  <p>Bảng <code>orders</code> không có ngày đăng ký, nên truy vấn lấy tháng của <b>đơn đầu tiên</b> làm cohort; có bảng <code>users.signup_ts</code> thì dùng nó. <code>active_users</code> mới là số người, chưa phải tỉ lệ. <b>Tỉ lệ giữ chân</b> tháng $n$ = số người của cohort còn mua ở tháng $n$ ÷ số người của cohort ở tháng 0:</p>
+  <div class="ds-code">cohort_df = duckdb.sql(cohort_sql).df()   <i># cohort_sql: chuỗi chứa truy vấn trên</i>
+tbl = cohort_df.pivot(index="cohort", columns="month_n", values="active_users")
+retention = tbl.div(tbl[0], axis=0)     <i># chia từng hàng cho cột tháng 0</i></div>
+  <p>Hàng là tháng bắt đầu, cột là số tháng kể từ đó. Đọc theo hàng thấy vòng đời một nhóm; đọc theo cột so sánh các nhóm ở cùng độ tuổi. Ô cuối của mỗi hàng thường là tháng chưa hết, nên trông thấp giả; bỏ nó hoặc đánh dấu khi đọc. Đây là một trong những bảng có mật độ thông tin cao nhất trong analytics.</p>
 
   <h3>2 · Funnel — rơi rụng qua từng bước</h3>
   <p>Câu hỏi: “trong 100 người vào trang, bao nhiêu người thanh toán, và rụng nhiều nhất ở bước nào?” Hai chi tiết hay làm sai:</p>
@@ -9451,16 +9478,47 @@ stat, pval = proportions_ztest([conv_b, conv_a], [n_b, n_a])</div>
     <li><b>Phải theo đúng thứ tự và trong một cửa sổ thời gian.</b> Người xem sản phẩm hôm nay và mua tháng sau không nên tính là cùng một phễu.</li>
     <li><b>Đếm theo người, không theo sự kiện.</b> Một người xem 8 lần không phải 8 người.</li>
   </ul>
+  <p>Truy vấn dưới làm cả hai: mỗi người một dòng ở mỗi bước, bước sau phải xảy ra sau bước trước và trong 7 ngày kể từ lần xem đầu.</p>
+  <div class="ds-code"><b>WITH</b> v <b>AS</b> (                      <i>-- bước 1: lần xem đầu tiên của mỗi người</i>
+  <b>SELECT</b> user_id, <b>MIN</b>(ts) <b>AS</b> t1 <b>FROM</b> events
+  <b>WHERE</b> event = 'view_product' <b>GROUP BY</b> user_id
+), c <b>AS</b> (                        <i>-- bước 2: thêm giỏ SAU lần xem, trong 7 ngày</i>
+  <b>SELECT</b> v.user_id, v.t1, <b>MIN</b>(e.ts) <b>AS</b> t2
+  <b>FROM</b> v <b>JOIN</b> events e <b>USING</b> (user_id)
+  <b>WHERE</b> e.event = 'add_to_cart'
+    <b>AND</b> e.ts <b>BETWEEN</b> v.t1 <b>AND</b> v.t1 + <b>INTERVAL</b> 7 <b>DAY</b>
+  <b>GROUP BY</b> v.user_id, v.t1
+), p <b>AS</b> (                        <i>-- bước 3: mua SAU khi thêm giỏ, cùng cửa sổ</i>
+  <b>SELECT DISTINCT</b> c.user_id
+  <b>FROM</b> c <b>JOIN</b> events e <b>USING</b> (user_id)
+  <b>WHERE</b> e.event = 'purchase'
+    <b>AND</b> e.ts <b>BETWEEN</b> c.t2 <b>AND</b> c.t1 + <b>INTERVAL</b> 7 <b>DAY</b>
+)
+<b>SELECT</b> (<b>SELECT COUNT</b>(*) <b>FROM</b> v) <b>AS</b> xem,
+       (<b>SELECT COUNT</b>(*) <b>FROM</b> c) <b>AS</b> them_gio,
+       (<b>SELECT COUNT</b>(*) <b>FROM</b> p) <b>AS</b> mua;</div>
+  <p>Truy vấn neo vào lần xem <i>đầu tiên</i>: người quay lại xem sau một tháng rồi mua trong 7 ngày đó vẫn không được tính. Đó là một lựa chọn; muốn tính cả lần quay lại thì neo theo từng phiên (session) thay vì theo người, và ghi rõ trong định nghĩa chỉ số. Thử nó trên bốn người tự dựng — một người thêm giỏ trước khi xem, một người mua sau 10 ngày — để thấy mỗi điều kiện loại đúng ai.</p>
 
   <div data-viz="funnel"></div>
 
   <h3>3 · Segmentation — cắt theo nhóm</h3>
-  <p>Câu hỏi: “con số tổng đang giấu chuyện gì?” Một tỉ lệ chuyển đổi đứng yên có thể là nhóm di động tăng bù cho nhóm máy tính giảm. <b>Nghịch lý Simpson</b> — xu hướng đúng trong mọi nhóm con nhưng đảo chiều khi gộp lại — là lý do bước này không bỏ được. Cách làm rẻ nhất là RFM (gần đây / tần suất / giá trị) trước khi nghĩ tới phân cụm.</p>
+  <p>Câu hỏi: “con số tổng đang giấu chuyện gì?” Một tỉ lệ chuyển đổi đứng yên có thể là nhóm di động tăng bù cho nhóm máy tính giảm. Tệ hơn là <b>nghịch lý Simpson</b>: xu hướng đúng trong mọi nhóm con nhưng đảo chiều khi gộp lại. Ví dụ: quý 1 máy tính chuyển đổi 50/1.000 = 5,0%, di động 20/1.000 = 2,0%, tổng 70/2.000 = 3,5%. Quý 2 máy tính 27/500 = 5,4%, di động 44/2.000 = 2,2%: cả hai nhóm đều tăng, nhưng tổng là 71/2.500 = 2,84%, giảm. Lưu lượng dồn sang di động, nhóm vốn chuyển đổi thấp, nên kéo tổng xuống. Chỉ nhìn tổng thì bạn đi sửa nhầm chỗ, nên bước này không bỏ được.</p>
+  <p>Cách phân khúc khách rẻ nhất là <b>RFM</b>, làm trước khi nghĩ tới phân cụm. Mỗi khách có ba con số tính tới một ngày chốt: <b>R</b>ecency = số ngày từ đơn gần nhất, <b>F</b>requency = số đơn, <b>M</b>onetary = tổng tiền. Mỗi con số chia thành 5 mức theo ngũ phân vị; R đảo chiều, vì mua càng gần đây càng tốt. Khách “5-5-5” là nhóm tốt nhất, “1-1-1” là nhóm đã rời.</p>
+  <div class="ds-code">asof = orders["order_ts"].max() + pd.Timedelta(days=1)
+rfm = orders.groupby("user_id").agg(
+    recency=("order_ts", <b>lambda</b> s: (asof - s.max()).days),
+    frequency=("order_ts", "size"),
+    monetary=("amount", "sum"))
+rfm["R"] = pd.qcut(rfm.recency, 5, labels=[5, 4, 3, 2, 1]).astype(int)
+<i># số đơn trùng nhau rất nhiều (đa số khách chỉ 1–2 đơn): qcut báo trùng mốc chia,</i>
+<i># nên xếp hạng trước; cái giá là hai khách cùng số đơn có thể rơi vào hai mức kề nhau</i>
+rfm["F"] = pd.qcut(rfm.frequency.rank(method="first"), 5, labels=[1, 2, 3, 4, 5]).astype(int)
+rfm["M"] = pd.qcut(rfm.monetary, 5, labels=[1, 2, 3, 4, 5]).astype(int)</div>
 
   <h2>KPI: hai câu hỏi trước khi thêm một chỉ số vào dashboard</h2>
   <ul>
     <li><b>Ai sẽ làm gì khác đi khi con số này thay đổi?</b> Không trả lời được thì đó không phải KPI, đó là trang trí.</li>
-    <li><b>Nó bị lách được bằng cách nào?</b> Mọi chỉ số bị đặt làm mục tiêu đều sớm bị tối ưu theo cách bạn không muốn — đo “số ticket đã đóng” thì ticket sẽ được đóng nhanh mà không giải quyết. Cặp đôi bảo vệ (số ticket đóng <i>và</i> tỉ lệ mở lại) là cách chống thông dụng nhất.</li>
+    <li><b>Nó bị lách được bằng cách nào?</b> Mọi chỉ số bị đặt làm mục tiêu đều sớm bị tối ưu theo cách bạn không muốn (định luật Goodhart) — đo “số ticket đã đóng” thì ticket sẽ được đóng nhanh mà không giải quyết. Cặp đôi bảo vệ (số ticket đóng <i>và</i> tỉ lệ mở lại) là cách chống thông dụng nhất.</li>
   </ul>
   <p>Và một chỉ số không có <b>ngữ cảnh</b> thì không đọc được. Mọi con số trên dashboard nên đi kèm ít nhất một trong ba: so với kỳ trước, so với mục tiêu, hoặc so với dải dao động bình thường.</p>
 
@@ -9468,7 +9526,7 @@ stat, pval = proportions_ztest([conv_b, conv_a], [n_b, n_a])</div>
   <ul>
     <li><b>Một dashboard trả lời một câu hỏi.</b> Dashboard “tổng quan mọi thứ” là dashboard không ai mở tới lần thứ ba.</li>
     <li><b>Định nghĩa chỉ số nằm trong git, không nằm trong công cụ BI.</b> Khi “khách hàng hoạt động” được định nghĩa lại trong Tableau mà không ai biết, mọi con số lịch sử ngầm đổi nghĩa.</li>
-    <li><b>Số tuyệt đối đi kèm số tương đối.</b> “Tăng 300%” trên nền 2 ca là 6 ca.</li>
+    <li><b>Số tuyệt đối đi kèm số tương đối.</b> “Tăng 300%” trên nền 2 ca nghĩa là từ 2 lên 8 ca.</li>
   </ul>
   <p class="wb-help">Với luận văn: phần analytics thường thuộc chương mô tả dữ liệu, không phải chương đóng góp. Làm nó bằng SQL/pandas + matplotlib rồi xuất hình là đủ — không cần dựng Tableau/Power BI, và dựng lên cũng không cộng điểm.</p>
 </template>
@@ -9490,17 +9548,17 @@ stat, pval = proportions_ztest([conv_b, conv_a], [n_b, n_a])</div>
     <li>Chạy <b>một</b> mô hình thật. Ghi con số. Dừng lại — đừng tune.</li>
     <li>Viết <b>bảng “giữ gì / đổi gì”</b> so với dự án gian lận. <b>Đây là sản phẩm thật của mini-project.</b></li>
   </ol>
-  <p>Thời gian mục tiêu cho <b>một</b> mini-project làm thật: <b>khoảng 2–2,5 giờ</b> nếu bạn bám đúng năm bước và <i>không</i> tune — bạn đã đi qua toàn bộ vòng đời ở dự án fraud, nên phần lặp lại nhanh hơn nhiều so với lần đầu. Nếu một cái ngốn quá một buổi, gần như chắc chắn bạn đang tối ưu thay vì đang học chuyển giao — dừng và viết bảng bước 5. Hai cái × ~2,5 giờ là ngân sách 5 giờ của bài.</p>
+  <p>Thời gian mục tiêu cho <b>một</b> mini-project làm thật: <b>khoảng 2 giờ</b> nếu bạn bám đúng năm bước và <i>không</i> tune — bạn đã đi qua toàn bộ vòng đời ở dự án fraud, nên phần lặp lại nhanh hơn nhiều so với lần đầu. Nếu một cái ngốn quá một buổi, gần như chắc chắn bạn đang tối ưu thay vì đang học chuyển giao — dừng và viết bảng bước 5. Hai cái × ~2 giờ là 4 giờ; cộng 45 phút đọc bài và 15 phút chạy code A/B bên dưới là đủ 5 giờ của bài.</p>
 
   <h2>Sáu dự án (thực đơn — chọn 2 làm thật)</h2>
   <div class="wb-table-scroll"><table>
     <thead><tr><th>#</th><th>Họ</th><th>Đề bài</th><th>Nguồn dữ liệu gợi ý</th><th>Điều nó dạy mà fraud không dạy</th></tr></thead>
     <tbody>
       <tr><td>1</td><td><b>Forecasting</b></td><td>Dự báo tiêu thụ điện / lượt truy cập theo ngày, tầm 28 ngày</td><td>Chuỗi tiêu thụ điện theo giờ, hoặc lượt xem Wikipedia — cả hai có bản công khai tải trực tiếp bằng URL</td><td>Backtest walk-forward, baseline seasonal-naive, MASE, và việc cây <b>không ngoại suy được xu hướng</b></td></tr>
-      <tr><td>2</td><td><b>Hồi quy</b></td><td>Dự đoán giá nhà hoặc thời gian giao hàng</td><td><code>fetch_california_housing()</code> có sẵn trong scikit-learn — không cần tải gì</td><td>MAE vs RMSE vs MAPE, phân tích phần dư, và <b>khoảng dự đoán</b> kèm kiểm tra độ phủ</td></tr>
-      <tr><td>3</td><td><b>Multiclass / CV</b></td><td>Phân loại ảnh nhiều lớp bằng transfer learning</td><td>Một bộ ảnh nhỏ nhiều lớp (hoa, thức ăn, chữ số) tải qua <code>torchvision.datasets</code></td><td>macro vs weighted F1, ma trận nhầm lẫn chuẩn hoá, linear probe làm baseline</td></tr>
+      <tr><td>2</td><td><b>Hồi quy</b></td><td>Dự đoán giá nhà hoặc thời gian giao hàng</td><td><code>fetch_california_housing()</code> của scikit-learn — lần gọi đầu tự tải chưa tới 1 MB rồi lưu cache</td><td>MAE vs RMSE vs MAPE, phân tích phần dư, và <b>khoảng dự đoán</b> kèm kiểm tra độ phủ</td></tr>
+      <tr><td>3</td><td><b>Multiclass / CV</b></td><td>Phân loại ảnh nhiều lớp bằng transfer learning</td><td>Một bộ ảnh nhỏ nhiều lớp (hoa <code>Flowers102</code>, ảnh nhỏ <code>CIFAR10</code>) tải qua <code>torchvision.datasets</code>; tránh <code>Food101</code>, nó nặng cỡ 5 GB</td><td>macro vs weighted F1, ma trận nhầm lẫn chuẩn hoá, linear probe làm baseline</td></tr>
       <tr><td>4</td><td><b>NLP</b></td><td>Phân loại cảm xúc hoặc phân loại ticket hỗ trợ</td><td>Một bộ đánh giá sản phẩm hoặc tin tức có nhãn trên Kaggle/Hugging Face</td><td>TF-IDF làm mốc bắt buộc, khử trùng lặp trước khi chia, đọc tay 50 ca sai</td></tr>
-      <tr><td>5</td><td><b>Gợi ý</b></td><td>Gợi ý top-10 mục cho mỗi người dùng</td><td>Một bộ đánh giá phim hoặc lịch sử mua hàng công khai</td><td>Popularity rất khó thắng, Recall@K/NDCG@K, chia leave-last-out theo thời gian</td></tr>
+      <tr><td>5</td><td><b>Gợi ý</b></td><td>Gợi ý top-10 mục cho mỗi người dùng</td><td>Một bộ đánh giá phim hoặc lịch sử mua hàng công khai</td><td>Popularity khó thắng hơn bạn tưởng, Recall@K/NDCG@K, chia theo thời gian</td></tr>
       <tr><td>6</td><td><b>Nhân quả</b></td><td>Phân tích một A/B test: có tác động thật không, lớn cỡ nào</td><td><b>Tự sinh</b> bằng <code>numpy</code> — xem code bên dưới. Tốt hơn dữ liệu thật vì bạn biết đáp án</td><td>Cỡ mẫu, khoảng tin cậy, và bốn cách làm hỏng một thí nghiệm</td></tr>
     </tbody>
   </table></div>
@@ -9513,7 +9571,7 @@ stat, pval = proportions_ztest([conv_b, conv_a], [n_b, n_a])</div>
     <li><b>Tải được bằng một dòng</b> trong notebook (URL trực tiếp, <code>kagglehub</code>, hoặc có sẵn trong thư viện).</li>
     <li><b>Có giấy phép rõ ràng</b> — bắt buộc nếu định đưa vào luận văn. Ghi giấy phép vào <code>data/README.md</code>.</li>
     <li><b>Không cần GPU mạnh.</b> Với ảnh, chọn bộ có ảnh nhỏ hoặc ít lớp.</li>
-    <li><b>Phù hợp bài học, không phải nổi tiếng.</b> Titanic nổi tiếng nhưng không dạy được gì về rò rỉ theo thời gian; MNIST nổi tiếng nhưng đã bão hoà tới mức mọi mô hình đều &gt;99%, nên nó không phân biệt được gì.</li>
+    <li><b>Phù hợp bài học, không phải nổi tiếng.</b> Titanic nổi tiếng nhưng không dạy được gì về rò rỉ theo thời gian; MNIST nổi tiếng nhưng đã bão hoà: một CNN nhỏ đã quá 99%, các cách làm tốt chỉ còn chênh nhau vài phần nghìn, nên nó không phân biệt được gì.</li>
   </ul>
 
   <h2>Dữ liệu A/B test tự sinh — cho mini-project 6</h2>
@@ -9541,8 +9599,8 @@ df = pd.DataFrame({"heavy": heavy,
 naive = df.groupby("t_obs").y_obs.mean().diff().iloc[-1]
 rct   = df.groupby("t_rct").y_rct.mean().diff().iloc[-1]
 print(f"quan sát thô: {naive:.4f}   thí nghiệm: {rct:.4f}   sự thật: {TRUE_EFFECT}")</div>
-  <p>Chạy đoạn này và nhìn: ước lượng từ dữ liệu quan sát lệch <b>gấp nhiều lần</b> tác động thật, còn ước lượng từ thí nghiệm ngẫu nhiên thì bám sát. Cùng dữ liệu, cùng công thức, khác nhau đúng một chỗ — cách nhóm điều trị được gán. Sau đó thử tự sửa ước lượng quan sát bằng cách phân tầng theo <code>heavy</code> và xem nó về gần sự thật tới đâu.</p>
-  <p>Đây là bài tập có tỉ lệ hiểu-biết trên thời gian cao nhất trong cả chặng: mười lăm phút, và bạn thấy tận mắt vì sao “mô hình rất chính xác” không đồng nghĩa với “kết luận đúng”.</p>
+  <p>Chạy đoạn này và nhìn: với seed 7 nó in <code>quan sát thô: 0.0827   thí nghiệm: 0.0222   sự thật: 0.02</code>. Ước lượng từ dữ liệu quan sát lệch <b>gấp khoảng bốn lần</b> tác động thật, còn ước lượng từ thí nghiệm ngẫu nhiên thì bám sát. Cùng dữ liệu, cùng công thức, khác nhau đúng một chỗ — cách nhóm điều trị được gán. “Bám sát” vẫn kèm sai số: sai số chuẩn của nhánh thí nghiệm cỡ 0,005, nên đổi seed bạn sẽ thấy từ khoảng 0,01 tới 0,03; còn nhánh quan sát ở seed nào cũng quanh 0,075, không bao giờ gần 0,02. Sau đó thử tự sửa ước lượng quan sát bằng cách phân tầng theo <code>heavy</code>: tính chênh lệch trong từng tầng rồi lấy trung bình có trọng số theo cỡ tầng, và xem nó về gần sự thật tới đâu.</p>
+  <p>Đây là bài tập có tỉ lệ hiểu-biết trên thời gian cao nhất trong cả chặng: mười lăm phút, và bạn thấy tận mắt vì sao một phép so sánh tính đúng từng chữ số vẫn có thể cho kết luận sai.</p>
 
   <h2>Bảng “giữ gì / đổi gì” — mẫu để chép</h2>
   <p>Mỗi mini-project kết thúc bằng một bảng như thế này trong <code>README</code> của notebook. <b>Hai bảng hoàn chỉnh</b> từ hai notebook đã chạy, cộng bốn bảng phác thảo, là bằng chứng đúng với khối lượng giờ mà trang đã cấp — và là thứ đáng nói nhất trong một buổi phỏng vấn.</p>

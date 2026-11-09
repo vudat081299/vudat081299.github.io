@@ -1353,11 +1353,11 @@
   "q-rec": {
    "tldr": "Gợi ý là họ bài toán mà độ chính xác gần như vô nghĩa vì người dùng xem một danh sách top-K chứ không xem một dự đoán; toàn bộ tư duy chuyển sang 'thứ đúng có nằm trong top-K và ở vị trí nào', và offline tốt không đảm bảo online tốt.",
    "points": [
-    "Ba cách tiếp cận: popularity (không cần mô hình, rất khó đánh bại, không cá nhân hoá), collaborative filtering (người giống bạn đã thích, tìm sở thích bất ngờ nhưng khởi đầu lạnh với người/mục mới), content-based (dựa thuộc tính/embedding, xử lý mục mới và giải thích được nhưng tạo bong bóng); hệ thực tế luôn là tổ hợp",
-    "Popularity là baseline bắt buộc và khó thắng — nhiều bài báo gợi ý bị phản biện chỉ vì không so với popularity",
-    "Ba metric xếp hạng: Recall@K (không quan tâm thứ tự), MAP@K (có quan tâm thứ tự), NDCG@K (chiết khấu theo vị trí bằng log, nhận mức liên quan nhiều bậc, mạnh nhất và là chuẩn báo cáo)",
+    "Ba cách tiếp cận: popularity (không cần mô hình, khó thắng hơn bạn tưởng, không cá nhân hoá), collaborative filtering (người giống bạn đã thích, tìm sở thích bất ngờ nhưng khởi đầu lạnh với người/mục mới), content-based (dựa thuộc tính/embedding, xử lý mục mới và giải thích được nhưng tạo bong bóng); hệ thực tế luôn là tổ hợp",
+    "Popularity là baseline bắt buộc, cùng một baseline cá nhân hoá đơn giản như item-kNN — Dacrema và cộng sự (RecSys 2019): 6 trong 7 mô hình neural tái lập được thường thua baseline đơn giản đã chỉnh tử tế. Collaborative filtering có hai họ: láng giềng (item-kNN, cosine giữa cột mục) và matrix factorization (điểm = p_u · q_i; người mới không có p_u nên khởi đầu lạnh). Dữ liệu thật thường là implicit feedback (click, mua): ô trống là 'chưa thấy', không phải 'không thích' — ALS cho implicit, BPR",
+    "Ba metric xếp hạng: Recall@K (không quan tâm thứ tự), MAP@K (trung bình Precision@i tại các vị trí có mục đúng; chỉ liên quan nhị phân), NDCG@K (chiết khấu 1/log2(i+1), chia cho thứ tự lý tưởng, nhận mức liên quan nhiều bậc). Ví dụ 3 mục đúng, trả 5 mục, đúng ở vị trí 1 và 3: Recall@5 = 0,667, AP@5 = 0,556, NDCG@5 = 0,704; mẫu số AP và tập lý tưởng của NDCG mỗi thư viện một kiểu",
     "Chọn K theo giao diện thật: màn hình hiện 6 mục thì đo @6, đừng đo @20 vì số đẹp hơn",
-    "Chia tập leave-last-out theo thời gian: tương tác cuối mỗi user để test, hoặc chặt hơn là cắt theo một mốc thời gian chung (cutoff = quantile(0.8)) vì gần thực tế triển khai hơn",
+    "Chia tập theo thời gian: leave-last-out (tương tác cuối mỗi user để test) vẫn rò rỉ vì mốc mỗi người một khác; chặt hơn là cắt theo một mốc chung (cutoff = quantile(0.8)), tái hiện lúc triển khai — cái giá là có người dùng mới trong test, báo riêng nhóm khởi đầu lạnh đó",
     "Vì sao offline tốt mà online tệ: vòng phản hồi (dữ liệu chỉ ghi thứ hệ thống cũ đã gợi ý), vị trí gây thiên lệch (mục vị trí 1 được bấm nhiều chỉ vì ở vị trí 1), chỉ số offline không phải chỉ số kinh doanh (NDCG tăng 5% không đảm bảo doanh thu)",
     "Kết luận cho luận văn: báo cáo offline nhưng nói rõ giới hạn và mô tả thí nghiệm online SẼ chạy (chia lưu lượng, chỉ số chính, cỡ mẫu) — mô tả được thiết kế A/B đúng có giá trị bằng chạy nó"
    ],
@@ -1390,12 +1390,12 @@
    "tldr": "Phần lớn giá trị hằng ngày của data team đến từ trả lời câu hỏi bằng dữ liệu đã có, không train gì; sai lầm tốn kém nhất của người mới là mang mô hình dự đoán tới một câu hỏi analytics ('vì sao doanh số giảm' cần truy vấn tách nhỏ, không cần mô hình).",
    "points": [
     "Ba nghề ba loại câu hỏi: analytics ('chuyện gì ĐÃ xảy ra' — SQL/dashboard, sai lầm đọc tương quan thành nguyên nhân), predictive ('chuyện gì SẼ xảy ra' — LightGBM), causal ('nếu tôi LÀM X' — A/B test)",
-    "Cohort: nhóm theo thời điểm bắt đầu; không nhóm theo cohort thì thay đổi tỉ lệ giữ chân lẫn với thay đổi cơ cấu khách mới. SQL dùng DATE_TRUNC('month', MIN(order_ts)) làm cohort rồi DATE_DIFF ra month_n; bảng hàng=tháng đăng ký, cột=số tháng kể từ đó",
-    "Funnel: hai chi tiết hay sai — phải theo đúng thứ tự và trong một cửa sổ thời gian (xem hôm nay mua tháng sau không cùng phễu), và đếm theo NGƯỜI không theo sự kiện (xem 8 lần không phải 8 người)",
-    "Segmentation: cắt theo nhóm để thấy con số tổng đang giấu gì; nghịch lý Simpson (xu hướng đúng trong mọi nhóm con nhưng đảo chiều khi gộp) là lý do bước này không bỏ được; rẻ nhất là RFM trước khi nghĩ tới phân cụm",
+    "Cohort: nhóm theo thời điểm bắt đầu; không nhóm theo cohort thì thay đổi tỉ lệ giữ chân lẫn với thay đổi cơ cấu khách mới. SQL dùng DATE_TRUNC('month', MIN(order_ts)) (tháng đơn đầu tiên) làm cohort rồi DATE_DIFF ra month_n; tỉ lệ giữ chân = người còn mua ở tháng n ÷ người ở tháng 0 (tbl.div(tbl[0], axis=0)); ô cuối mỗi hàng thường là tháng chưa hết",
+    "Funnel: hai chi tiết hay sai — phải theo đúng thứ tự và trong một cửa sổ thời gian (xem hôm nay mua tháng sau không cùng phễu), và đếm theo NGƯỜI không theo sự kiện (xem 8 lần không phải 8 người); truy vấn mẫu neo vào lần xem đầu, bước sau phải sau bước trước và trong 7 ngày",
+    "Segmentation: cắt theo nhóm để thấy con số tổng đang giấu gì; nghịch lý Simpson (máy tính 5,0→5,4%, di động 2,0→2,2%, nhưng tổng 3,5→2,84% vì lưu lượng dồn sang di động) là lý do bước này không bỏ được; rẻ nhất là RFM (Recency, Frequency, Monetary, mỗi cái 5 mức theo ngũ phân vị) trước khi nghĩ tới phân cụm",
     "KPI hai câu hỏi trước khi thêm vào dashboard: 'ai làm gì khác đi khi con số đổi?' (không trả lời được thì là trang trí), 'nó bị lách bằng cách nào?' (đo 'ticket đã đóng' thì ticket bị đóng nhanh mà không giải quyết — dùng cặp đôi bảo vệ: số đóng VÀ tỉ lệ mở lại)",
     "Chỉ số cần ngữ cảnh: mọi con số dashboard nên kèm ít nhất một trong ba — so kỳ trước, so mục tiêu, so dải dao động bình thường",
-    "Dashboard: một dashboard trả lời một câu hỏi, định nghĩa chỉ số nằm trong git không nằm trong công cụ BI, số tuyệt đối đi kèm tương đối ('tăng 300%' trên nền 2 ca là 6 ca)"
+    "Dashboard: một dashboard trả lời một câu hỏi, định nghĩa chỉ số nằm trong git không nằm trong công cụ BI, số tuyệt đối đi kèm tương đối ('tăng 300%' trên nền 2 ca là từ 2 lên 8 ca)"
    ],
    "viz": "Truy vấn cohort SQL với WITH first_order (DATE_TRUNC month của MIN order_ts) JOIN để ra bảng cohort hàng=tháng đăng ký × cột=month_n."
   },
@@ -1404,21 +1404,21 @@
    "points": [
     "Mini-project KHÔNG cần production hoá: không API, không Docker, không tuning — mỗi cái một notebook làm đúng năm việc, và việc thứ năm mới là việc chính",
     "Năm việc: (1) tải dữ liệu định vị bằng tám câu hỏi, (2) chia tập đúng kiểu của họ đó + viết assert chứng minh đúng, (3) chạy baseline bắt buộc ghi con số, (4) chạy MỘT mô hình thật ghi con số rồi DỪNG đừng tune, (5) viết bảng 'giữ gì/đổi gì' so với dự án gian lận — đây là sản phẩm thật",
-    "Bắt buộc làm thật 2/6, chọn hai họ khác nhất so với fraud (gợi ý Forecasting + một trong NLP/Gợi ý/Nhân quả); bốn cái còn lại chỉ cần bảng phác thảo; ngân sách 5 giờ = hai notebook × ~2,5 giờ, nếu một cái quá một buổi là đang tối ưu thay vì học chuyển giao",
-    "Sáu đề kèm điều dạy mà fraud không dạy: Forecasting (walk-forward, seasonal-naive, MASE, cây không ngoại suy xu hướng), Hồi quy (fetch_california_housing, MAE/RMSE/MAPE, khoảng dự đoán), Multiclass/CV (macro vs weighted F1, ma trận chuẩn hoá, linear probe), NLP (TF-IDF mốc, khử trùng lặp, đọc tay 50 ca sai), Gợi ý (popularity khó thắng, Recall@K/NDCG@K, leave-last-out), Nhân quả (cỡ mẫu, KTC, bốn cách làm hỏng)",
-    "Tiêu chí chọn dataset: công khai không cần xin quyền, nhỏ/vừa dưới vài trăm MB vừa RAM Colab, tải bằng một dòng, có giấy phép rõ (ghi vào data/README.md), không cần GPU mạnh, phù hợp bài học không phải nổi tiếng (Titanic không dạy rò rỉ thời gian, MNIST bão hoà >99%)",
+    "Bắt buộc làm thật 2/6, chọn hai họ khác nhất so với fraud (gợi ý Forecasting + một trong NLP/Gợi ý/Nhân quả); bốn cái còn lại chỉ cần bảng phác thảo; ngân sách 5 giờ = hai notebook × ~2 giờ + 1 giờ đọc và chạy code A/B; nếu một cái quá một buổi là đang tối ưu thay vì học chuyển giao",
+    "Sáu đề kèm điều dạy mà fraud không dạy: Forecasting (walk-forward, seasonal-naive, MASE, cây không ngoại suy xu hướng), Hồi quy (fetch_california_housing tự tải lần đầu, MAE/RMSE/MAPE, khoảng dự đoán), Multiclass/CV (macro vs weighted F1, ma trận chuẩn hoá, linear probe), NLP (TF-IDF mốc, khử trùng lặp, đọc tay 50 ca sai), Gợi ý (popularity khó thắng hơn bạn tưởng, Recall@K/NDCG@K, chia theo thời gian), Nhân quả (cỡ mẫu, KTC, bốn cách làm hỏng)",
+    "Tiêu chí chọn dataset: công khai không cần xin quyền, nhỏ/vừa dưới vài trăm MB vừa RAM Colab, tải bằng một dòng, có giấy phép rõ (ghi vào data/README.md), không cần GPU mạnh, phù hợp bài học không phải nổi tiếng (Titanic không dạy rò rỉ thời gian, MNIST bão hoà: CNN nhỏ đã quá 99%)",
     "Bảng 'giữ gì/đổi gì' bảy chiều so với dự án fraud: họ bài toán, chia tập, baseline, metric chính (fraud = PR-AUC + chi phí quy tiền), rủi ro rò rỉ chính, có cần deep learning, sai lầm đặc trưng"
    ],
-   "viz": "Code A/B tự sinh (mini-project 6): confounder heavy, TRUE_EFFECT=0.02; ước lượng quan sát thô lệch gấp nhiều lần sự thật còn ước lượng RCT bám sát 0,02 — mười lăm phút thấy vì sao 'mô hình chính xác' không bằng 'kết luận đúng'.",
+   "viz": "Code A/B tự sinh (mini-project 6): confounder heavy, TRUE_EFFECT=0.02; seed 7 in quan sát thô 0,0827 (gấp ~4 lần sự thật) còn RCT 0,0222 với sai số chuẩn ~0,005 — mười lăm phút thấy vì sao một phép so sánh tính đúng vẫn cho kết luận sai.",
    "example": {
     "kind": "num",
-    "lead": "Đặt ngân sách 5 giờ của bài cạnh giá thật của một notebook làm tới cùng, để thấy thực đơn 6 đề chỉ đủ chỗ cho 2 và một buổi trót đi tune thì xoá đúng cái nào.",
-    "code": "ngân sách bài: 5,0 giờ  ·  một mini-project 5 bước, KHÔNG tune: ~2,5 giờ\n\nlàm thật cả 6 đề:  6 × 2,5 = 15,0 giờ  →  15,0 / 5,0 = gấp 3,0 ngân sách\nlàm thật 2 đề:     2 × 2,5 =  5,0 giờ  →  khớp ngân sách\n4 đề còn lại:      4 bảng × 7 chiều = 28 ô phác thảo, để tra sau\n\nmột notebook trượt sang 4,0 giờ vì đi tune:\n  4,0 + 2,5 = 6,5 giờ > 5,0  →  mất hẳn đề thứ hai\n  1,5 giờ tuning đổi lấy 0 dòng cho bảng ở bước 5",
-    "out": "2 notebook × 2,5 giờ = 5,0 giờ khớp ngân sách; 6 notebook = 15,0 giờ thì không\nnộp được: 2 bảng hoàn chỉnh + 4 bảng phác thảo = 6 × 7 = 42 ô đã điền\n1,5 giờ tuning ngoài kế hoạch xoá đúng 1 trong 2 họ bài toán mới"
+    "lead": "Đặt 4 giờ làm notebook của bài (5 giờ trừ 1 giờ đọc và chạy code A/B) cạnh giá thật của một notebook làm tới cùng, để thấy thực đơn 6 đề chỉ đủ chỗ cho 2 và một buổi trót đi tune thì xoá đúng cái nào.",
+    "code": "giờ cho notebook: 5,0 − 1,0 (đọc, code A/B) = 4,0 giờ\nmột mini-project 5 bước, KHÔNG tune: ~2,0 giờ\n\nlàm thật cả 6 đề:  6 × 2,0 = 12,0 giờ  →  gấp 3,0 lần 4,0 giờ\nlàm thật 2 đề:     2 × 2,0 =  4,0 giờ  →  khớp ngân sách\n4 đề còn lại:      4 bảng × 7 chiều = 28 ô phác thảo, để tra sau\n\nmột notebook trượt sang 3,5 giờ vì đi tune:\n  3,5 + 2,0 = 5,5 giờ > 4,0  →  mất hẳn đề thứ hai\n  1,5 giờ tuning đổi lấy 0 dòng cho bảng ở bước 5",
+    "out": "2 notebook × 2,0 giờ = 4,0 giờ khớp ngân sách; 6 notebook = 12,0 giờ thì không\nnộp được: 2 bảng hoàn chỉnh + 4 bảng phác thảo = 6 × 7 = 42 ô đã điền\n1,5 giờ tuning ngoài kế hoạch xoá đúng 1 trong 2 họ bài toán mới"
    },
    "check": {
-    "q": "Notebook forecasting đã ngốn 4 giờ, MASE đang 0,91 và bạn vừa nghĩ ra ba tham số nữa muốn thử — bạn làm gì tiếp?",
-    "a": "Dừng thử tham số, ghi lại con số đang có rồi viết bảng giữ gì / đổi gì, vì sản phẩm của mini-project là bảng đó chứ không phải MASE thấp nhất. Quá một buổi cho một cái là dấu hiệu đang tối ưu thay vì đang học chuyển giao, và 1,5 giờ còn lại là toàn bộ chỗ dành cho họ bài toán thứ hai."
+    "q": "Notebook forecasting đã ngốn 3,5 giờ, MASE đang 0,91 và bạn vừa nghĩ ra ba tham số nữa muốn thử — bạn làm gì tiếp?",
+    "a": "Dừng thử tham số, ghi lại con số đang có rồi viết bảng giữ gì / đổi gì, vì sản phẩm của mini-project là bảng đó chứ không phải MASE thấp nhất. Quá một buổi cho một cái là dấu hiệu đang tối ưu thay vì đang học chuyển giao, và 4,0 − 3,5 = 0,5 giờ còn lại không đủ cho họ bài toán thứ hai — mỗi phút tune thêm là lấy từ nó."
    }
   },
   "th-topic": {
@@ -1734,10 +1734,10 @@
   "q-multi": "4f49b0d6",
   "q-nlp": "ca0376a6",
   "q-cv": "bdf86127",
-  "q-rec": "e9539b60",
+  "q-rec": "5a49fd28",
   "q-causal": "cc1d604f",
-  "q-analytics": "cf9e701d",
-  "q-mini": "bc401ddb",
+  "q-analytics": "f5a47804",
+  "q-mini": "b82fd6d7",
   "th-topic": "cd9dda26",
   "th-read": "453aafcf",
   "th-repro": "71c78e54",
