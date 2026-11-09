@@ -7,6 +7,9 @@
 - Mở thẳng `loto.html` là chạy. Nút "Cập nhật mới nhất" tải từ `raw.githubusercontent.com`
   (`khiemdoan/vietnam-lottery-xsmb-analysis`); không có mạng thì dùng dữ liệu nhúng.
 - Không có cổng. Sửa xong thì mở trang ở khổ điện thoại và khổ rộng.
-- Chỉ có nền tối, không dùng khoá theme `hub-theme`; `localStorage` chỉ giữ bảng màu (`loto-pal`).
+- Nền sáng/tối theo `prefers-color-scheme`, không có nút đổi, không dùng khoá `hub-theme`.
+- Màu nằm ở biến CSS trên `:root`; khối `@media (prefers-color-scheme: light)` cuối `<style>` ghi đè cho nền sáng.
+- SVG vẽ bằng JS tô màu qua `style="stroke:var(--…)"`; thuộc tính `stroke=`/`fill=` không nhận `var()`.
+- `localStorage` chỉ giữ bảng màu chế độ gọn (`loto-pal`); chưa lưu thì dùng `DEF` hoặc `DEF_LIGHT` theo theme.
 - Trang chủ trỏ tới `loto/loto.html`, và `tools/smoke-index.js` tìm "loto" rồi đòi đúng một kết quả. Đổi tên
   thì sửa cả hai.

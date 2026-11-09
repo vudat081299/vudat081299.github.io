@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <title>Loto — Lottery heatmap &amp; statistics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +37,14 @@
   --gold:#f4c64f;           /* nhấn: gan / overdue / cột mới nhất */
 
   --accent:#8aa0ff;         /* nhấn cho điều khiển */
+  --on-accent:#0a0c12;      /* chữ trên nền --accent */
+  --hot:#ff9b6a; --cold:#6fb0ff; --out:#9d8cff; --warm:#ff8a59;
+  /* biểu đồ SVG (vẽ bằng JS) */
+  --ch-grid:#1f2636; --ch-axis:#2a3142; --ch-zero:#566079; --ch-lab:#8b93a8; --ch-xlab:#525a6e;
+  --bar-a:#8aa0ff; --bar-b:#5566c9; --curve:#f4c64f;
+  /* màu đường của từng chiến lược (tab Thí nghiệm) */
+  --s-l30:#37e0ac; --s-l60:#6fb0ff; --s-l100:#ffd23a; --s-sea:#c08aff; --s-l60s:#ff9636; --s-rnd:#9aa3b8;
+  color-scheme:dark;
   --r:14px;
   --cell:30px;
   --font-d:'Space Grotesk','Inter',system-ui,sans-serif;
@@ -105,7 +114,6 @@ body{
 input[type=date]{
   font-family:var(--font-m);font-size:13px;color:var(--ink);
   background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 9px;
-  color-scheme:dark;
 }
 input[type=date]:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
 .presets{display:flex;gap:6px;background:var(--bg);padding:4px;border-radius:10px;border:1px solid var(--line)}
@@ -114,7 +122,7 @@ input[type=date]:focus,textarea:focus{outline:2px solid var(--accent);outline-of
   background:transparent;border:0;border-radius:7px;padding:6px 11px;transition:.15s;
 }
 .presets button:hover{color:var(--ink)}
-.presets button.on{background:var(--accent);color:#0a0c12;font-weight:600}
+.presets button.on{background:var(--accent);color:var(--on-accent);font-weight:600}
 .spacer{flex:1 1 40px}
 .stats{display:flex;gap:10px;flex-wrap:wrap}
 .stat{
@@ -156,14 +164,14 @@ input[type=date]:focus,textarea:focus{outline:2px solid var(--accent);outline-of
 .track{width:40px;height:23px;border-radius:999px;background:var(--raise);border:1px solid var(--line);position:relative;transition:.2s;flex:0 0 auto}
 .knob{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:var(--ink-dim);transition:.2s}
 .switch input:checked + .track{background:var(--accent);border-color:var(--accent)}
-.switch input:checked + .track .knob{left:19px;background:#0a0c12}
+.switch input:checked + .track .knob{left:19px;background:var(--on-accent)}
 .switch input:focus-visible + .track{outline:2px solid var(--accent);outline-offset:2px}
 .seg{display:flex;align-items:center;gap:6px}
 .seg .seg-lab{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);margin-right:2px}
 .seg .grp{display:flex;gap:5px;background:var(--bg);padding:4px;border-radius:9px;border:1px solid var(--line)}
 .seg button{font-family:var(--font-m);font-size:11.5px;color:var(--ink-dim);cursor:pointer;background:transparent;border:0;border-radius:6px;padding:5px 10px;transition:.15s}
 .seg button:hover{color:var(--ink)}
-.seg button.on{background:var(--accent);color:#0a0c12;font-weight:600}
+.seg button.on{background:var(--accent);color:var(--on-accent);font-weight:600}
 
 /* ============ heatmap ============ */
 .board-wrap{
@@ -253,14 +261,14 @@ table.board{border-collapse:separate;border-spacing:0;font-family:var(--font-m)}
 .split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .split h4{font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 11px;display:flex;align-items:center;gap:7px}
 .split h4 .tag{width:8px;height:8px;border-radius:50%}
-.split h4.hot{color:#ff9b6a}.split h4.hot .tag{background:#ff9b6a}
-.split h4.cold{color:#6fb0ff}.split h4.cold .tag{background:#6fb0ff}
+.split h4.hot{color:var(--hot)}.split h4.hot .tag{background:var(--hot)}
+.split h4.cold{color:var(--cold)}.split h4.cold .tag{background:var(--cold)}
 .frow{display:grid;grid-template-columns:34px 1fr 30px;align-items:center;gap:9px;margin-bottom:8px}
 .frow .n{font-family:var(--font-m);font-size:14px;font-weight:700}
 .frow .bar{position:relative;height:5px;border-radius:3px;background:rgba(255,255,255,.05);overflow:hidden}
 .frow .bar i{position:absolute;top:0;bottom:0;left:0;min-width:3px;border-radius:3px}
-.frow.hot .n{color:#ff9b6a}.frow.hot .bar i{background:linear-gradient(90deg,#ff9b6a,#ffc46a)}
-.frow.cold .n{color:#6fb0ff}.frow.cold .bar i{background:linear-gradient(90deg,#3a6db5,#6fb0ff)}
+.frow.hot .n{color:var(--hot)}.frow.hot .bar i{background:linear-gradient(90deg,#ff9b6a,#ffc46a)}
+.frow.cold .n{color:var(--cold)}.frow.cold .bar i{background:linear-gradient(90deg,#3a6db5,#6fb0ff)}
 .frow .c{font-family:var(--font-m);font-size:12px;color:var(--ink-dim);text-align:right}
 
 /* đầu/đuôi column chart */
@@ -286,7 +294,7 @@ table.board{border-collapse:separate;border-spacing:0;font-family:var(--font-m)}
 .sug .big{font-family:var(--font-m);font-size:27px;font-weight:700;color:var(--ink);line-height:1}
 .sug.first .big{color:var(--gold)}
 .sug .gan{font-size:11px;color:var(--ink-dim);margin-top:6px}
-.sug .gan b{color:#ff8a59;font-weight:700}
+.sug .gan b{color:var(--warm);font-weight:700}
 .sug .meta{font-family:var(--font-m);font-size:10px;color:var(--ink-faint);margin-top:5px}
 .note{font-size:11.5px;color:var(--ink-faint);line-height:1.55;font-style:italic;border-top:1px dashed var(--line);padding-top:12px}
 
@@ -321,9 +329,9 @@ table.board{border-collapse:separate;border-spacing:0;font-family:var(--font-m)}
 .pcol{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:12px}
 .pcol .ph{font-size:11px;letter-spacing:.04em;text-transform:uppercase;margin-bottom:9px;display:flex;align-items:center;gap:6px}
 .pcol .ph .d{width:7px;height:7px;border-radius:50%}
-.pcol.due .ph{color:#f4c64f}.pcol.due .ph .d{background:#f4c64f}
-.pcol.hot .ph{color:#ff9b6a}.pcol.hot .ph .d{background:#ff9b6a}
-.pcol.out .ph{color:#9d8cff}.pcol.out .ph .d{background:#9d8cff}
+.pcol.due .ph{color:var(--gold)}.pcol.due .ph .d{background:var(--gold)}
+.pcol.hot .ph{color:var(--hot)}.pcol.hot .ph .d{background:var(--hot)}
+.pcol.out .ph{color:var(--out)}.pcol.out .ph .d{background:var(--out)}
 .pchips{display:flex;flex-wrap:wrap;gap:6px}
 .pchip{font-family:var(--font-m);font-size:15px;font-weight:700;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:5px 9px;min-width:38px;text-align:center}
 .pchip small{display:block;font-size:9px;color:var(--ink-faint);font-weight:500;margin-top:1px}
@@ -348,7 +356,7 @@ table.board{border-collapse:separate;border-spacing:0;font-family:var(--font-m)}
 .ev-h{font-family:var(--font-d);font-weight:600;font-size:14px;display:flex;align-items:baseline;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .ev-h span{font-family:var(--font-b);font-weight:400;font-size:11.5px;color:var(--ink-faint)}
 .ev-in{font-size:12.5px;color:var(--ink-dim);display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.ev-in input{width:64px;font-family:var(--font-m);font-size:13px;background:var(--panel-2);border:1px solid var(--line);border-radius:7px;padding:5px 8px;color:var(--ink);color-scheme:dark}
+.ev-in input{width:64px;font-family:var(--font-m);font-size:13px;background:var(--panel-2);border:1px solid var(--line);border-radius:7px;padding:5px 8px;color:var(--ink)}
 .ev-in input:focus{outline:2px solid var(--accent);outline-offset:1px}
 .ev-out{font-family:var(--font-m);font-size:15px;font-weight:700;display:flex;gap:14px;flex-wrap:wrap}
 .ev-out .neg{color:var(--de)} .ev-out .pos{color:var(--c1)}
@@ -389,12 +397,11 @@ table.board{border-collapse:separate;border-spacing:0;font-family:var(--font-m)}
 textarea{
   width:100%;min-height:120px;resize:vertical;font-family:var(--font-m);font-size:12px;
   background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:12px;color:var(--ink);
-  color-scheme:dark;
 }
 .dataz .actions{display:flex;align-items:center;gap:12px;margin-top:11px;flex-wrap:wrap}
 .btn{
   font-family:var(--font-b);font-size:13px;font-weight:600;cursor:pointer;
-  background:var(--accent);color:#0a0c12;border:0;border-radius:9px;padding:9px 16px;transition:.15s;
+  background:var(--accent);color:var(--on-accent);border:0;border-radius:9px;padding:9px 16px;transition:.15s;
 }
 .btn:hover{filter:brightness(1.08)}
 .btn:disabled{opacity:.6;cursor:progress}
@@ -410,7 +417,7 @@ textarea{
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 input[type=url]{
   flex:1;min-width:240px;font-family:var(--font-m);font-size:12.5px;color:var(--ink);
-  background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 12px;color-scheme:dark;
+  background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:9px 12px;
 }
 input[type=url]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
 
@@ -497,7 +504,7 @@ footer{margin-top:30px;text-align:center;color:var(--ink-faint);font-size:11.5px
 .exp-doc{font-size:12.5px;color:var(--ink-faint);margin:0}
 .exp-doc code,.exp-desc code{font-family:var(--font-m);background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:.92em;color:var(--ink-dim)}
 .exp-bar{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
-.exp-bar input[type=number]{width:72px;font-family:var(--font-m);font-size:13px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:7px 9px;color:var(--ink);color-scheme:dark}
+.exp-bar input[type=number]{width:72px;font-family:var(--font-m);font-size:13px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:7px 9px;color:var(--ink)}
 .exp-bar input[type=number]:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
 .eb-group{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
 .strat-group{flex-direction:column;align-items:flex-start;gap:7px}
@@ -548,6 +555,62 @@ footer{margin-top:30px;text-align:center;color:var(--ink-faint);font-size:11.5px
 }
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
+}
+/* ============ nền sáng: theo hệ điều hành ============ */
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    color-scheme:light;
+    --bg:#f3f4f8;
+    --panel:#ffffff;
+    --panel-2:#f8f9fc;
+    --raise:#eaedf5;
+    --line:#d6dbe6;
+    --line-soft:#e5e8f0;
+    --ink:#141824;
+    --ink-dim:#4b5468;
+    --ink-faint:#5d6578;
+    --ghost:#c2c8d4;
+    --c1:#077a56;  --c1-bg:rgba(16,170,120,.13);
+    --c2:#1a5cc0;  --c2-bg:rgba(47,130,240,.14);
+    --c3:#7f5c00;  --c3-bg:rgba(240,190,20,.26);
+    --c4:#a84400;  --c4-bg:rgba(255,130,40,.20);
+    --de:#c41b31;  --de-bg:rgba(230,50,70,.17);
+    --de-ink:#c41b31;
+    --gold:#8f6200;
+    --accent:#4357d1;
+    --on-accent:#ffffff;
+    --hot:#b8470f; --cold:#1a5cc0; --out:#6244d0; --warm:#b8470f;
+    --ch-grid:#e5e8f0; --ch-axis:#c9cfdb; --ch-zero:#8790a5; --ch-lab:#4b5468; --ch-xlab:#5d6578;
+    --bar-a:#7f94f4; --bar-b:#4357d1; --curve:#b07a00;
+    --s-l30:#0c9a6c; --s-l60:#2a72d6; --s-l100:#b98400; --s-sea:#8a4ee0; --s-l60s:#e0640c; --s-rnd:#7d8597;
+  }
+  :root:not([data-theme="dark"]) body{
+    background:
+      radial-gradient(1200px 560px at 78% -8%, rgba(67,87,209,.07), transparent 60%),
+      radial-gradient(900px 480px at 8% 4%, rgba(212,160,0,.07), transparent 55%),
+      var(--bg);
+  }
+  :root:not([data-theme="dark"]) .mark{background:linear-gradient(145deg,#ffffff,#eef0f6);box-shadow:0 6px 16px rgba(30,40,80,.10)}
+  :root:not([data-theme="dark"]) .board-wrap{box-shadow:0 14px 34px rgba(30,40,80,.08)}
+  :root:not([data-theme="dark"]) .board-wrap::-webkit-scrollbar-thumb{background:#c5cbd8}
+  :root:not([data-theme="dark"]) .rk .bar,
+  :root:not([data-theme="dark"]) .frow .bar,
+  :root:not([data-theme="dark"]) .fair-box .bar{background:rgba(20,30,70,.07)}
+  :root:not([data-theme="dark"]) .rk .bar i{background:linear-gradient(90deg,#e0a800,#f0702c)}
+  :root:not([data-theme="dark"]) .cc .col .cb{background:linear-gradient(180deg,var(--bar-a),var(--bar-b))}
+  :root:not([data-theme="dark"]) .cc .col.max .cb{background:linear-gradient(180deg,#e0a800,#f0702c)}
+  :root:not([data-theme="dark"]) .cc .col.min .cb{background:linear-gradient(180deg,#c3c9d7,#aeb6c7)}
+  :root:not([data-theme="dark"]) .frow.hot .bar i{background:linear-gradient(90deg,#f07a3c,#f5a524)}
+  :root:not([data-theme="dark"]) .frow.cold .bar i{background:linear-gradient(90deg,#2a64c4,#5c9cf0)}
+  :root:not([data-theme="dark"]) .fair-box .bar i{background:linear-gradient(90deg,#14b886,#2c7fe8)}
+  :root:not([data-theme="dark"]) .de-chip{background:linear-gradient(180deg,rgba(220,40,60,.09),rgba(220,40,60,.03));border-color:rgba(200,30,50,.30)}
+  :root:not([data-theme="dark"]) .sug.first{border-color:rgba(176,122,0,.45);background:linear-gradient(180deg,rgba(224,168,0,.12),var(--bg))}
+  :root:not([data-theme="dark"]) .dz-h .badge{background:rgba(16,170,120,.13)}
+  :root:not([data-theme="dark"]) .etbl tbody tr:hover td{background:rgba(20,30,70,.03)}
+  :root:not([data-theme="dark"]) .tabs button.on{background:var(--panel);box-shadow:0 2px 8px rgba(30,40,80,.12)}
+  :root:not([data-theme="dark"]) .preview-strip i{box-shadow:0 2px 6px rgba(30,40,80,.18)}
+  :root:not([data-theme="dark"]) #tip{background:#ffffff;box-shadow:0 8px 22px rgba(30,40,80,.16)}
+  :root:not([data-theme="dark"]) #toast{background:#ffffff;box-shadow:0 10px 28px rgba(30,40,80,.18)}
 }
 </style>
 </head>
@@ -660,8 +723,8 @@ footer{margin-top:30px;text-align:center;color:var(--ink-faint);font-size:11.5px
       <p class="sub">Trong 100 số, có bao nhiêu số về <b>k lần</b>? Nếu quay công bằng, biểu đồ sẽ bám sát đường cong lý thuyết (phân phối Poisson/chuẩn). Số nằm xa hai đuôi là <b>bất thường thật sự</b>; phần lớn “nóng/lạnh” chỉ là dao động ngẫu nhiên.</p>
       <div class="bell-wrap" id="bellBox"></div>
       <div class="bell-legend">
-        <div class="it"><span class="bx" style="background:linear-gradient(180deg,#8aa0ff,#5566c9)"></span>Thực tế (số lượng số)</div>
-        <div class="it"><span class="bx" style="background:rgba(244,198,79,.85)"></span>Kỳ vọng ngẫu nhiên</div>
+        <div class="it"><span class="bx" style="background:linear-gradient(180deg,var(--bar-a),var(--bar-b))"></span>Thực tế (số lượng số)</div>
+        <div class="it"><span class="bx" style="background:var(--curve);opacity:.85"></span>Kỳ vọng ngẫu nhiên</div>
       </div>
       <div class="bell-stats" id="bellStats"></div>
     </div>
@@ -795,13 +858,13 @@ footer{margin-top:30px;text-align:center;color:var(--ink-faint);font-size:11.5px
       </div>
 
       <div class="g-item">
-        <h4>Phân phối tần suất — đường cong chuông <span class="tag" style="background:rgba(138,160,255,.16);color:#8aa0ff">quan trọng</span></h4>
+        <h4>Phân phối tần suất — đường cong chuông <span class="tag" style="background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)">quan trọng</span></h4>
         <p>Trục ngang = <b>số lần về</b> (k), trục dọc = <b>có bao nhiêu số</b> (trong 100 số) về đúng k lần. Cột xanh là thực tế, đường vàng là <b>kỳ vọng nếu quay hoàn toàn ngẫu nhiên</b> (phân phối Poisson/chuẩn). Đường nét đứt là giá trị trung bình.</p>
         <p>Cách đọc: nếu các cột bám sát đường vàng ⇒ bộ số đang chạy đúng ngẫu nhiên. Số nằm <b>xa hẳn về hai phía</b> mới thật sự bất thường; còn “nóng/lạnh” quanh giữa chỉ là dao động. Chỉ số <b>z</b> cho biết một số lệch bao nhiêu “lệch chuẩn” so với kỳ vọng (|z| &gt; 2 mới đáng chú ý).</p>
       </div>
 
       <div class="g-item">
-        <h4>Kiểm định ngẫu nhiên &amp; tính độc lập <span class="tag" style="background:rgba(138,160,255,.16);color:#8aa0ff">quan trọng</span></h4>
+        <h4>Kiểm định ngẫu nhiên &amp; tính độc lập <span class="tag" style="background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)">quan trọng</span></h4>
         <p><b>Kiểm định χ²</b>: đo độ lệch giữa thực tế và “100 số đều như nhau”. Quan trọng là <b>p-value</b>: nếu <span class="k">p ≥ 0.05</span> ⇒ không có bằng chứng bộ số bị lệch ⇒ kết luận “phù hợp ngẫu nhiên”. p càng nhỏ càng nghi ngờ có sai lệch.</p>
         <p><b>Entropy</b>: thước đo mức ngẫu nhiên, hiển thị theo % so với mức tối đa. Gần 100% nghĩa là 100 số xuất hiện càng đồng đều.</p>
         <p><b>Hôm nay → hôm sau</b>: so sánh 3 tỉ lệ — xác suất một số về ở mức nền, xác suất nó về <i>khi hôm qua đã về</i>, và <i>khi hôm qua không về</i>. Nếu cả ba <b>xấp xỉ nhau</b> ⇒ các kỳ <b>độc lập</b>, tức quá khứ không dự đoán được tương lai.</p>
@@ -8715,13 +8778,13 @@ function renderBell(a){
   const Y=v=> padT + plotH - (v/ymax)*plotH;
   const barW=(plotW/span)*w;
   let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="phân phối tần suất">`;
-  s+=`<defs><linearGradient id="bg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8aa0ff"/><stop offset="1" stop-color="#5566c9"/></linearGradient></defs>`;
-  s+=`<line x1="${padL}" y1="${padT+plotH}" x2="${W-padR}" y2="${padT+plotH}" stroke="#2a3142"/>`;
+  s+=`<defs><linearGradient id="bg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--bar-a)"/><stop offset="1" style="stop-color:var(--bar-b)"/></linearGradient></defs>`;
+  s+=`<line x1="${padL}" y1="${padT+plotH}" x2="${W-padR}" y2="${padT+plotH}" style="stroke:var(--ch-axis)"/>`;
   for(let i=0;i<nb;i++){ const x=X(xlo+i*w), h=(bins[i]/ymax)*plotH; s+=`<rect x="${(x+1).toFixed(1)}" y="${(padT+plotH-h).toFixed(1)}" width="${Math.max(1,barW-2).toFixed(1)}" height="${Math.max(0,h).toFixed(1)}" rx="2" fill="url(#bg1)"/>`; }
   let d=""; cur.forEach((p,i)=>{ d+=(i?"L":"M")+X(p[0]).toFixed(1)+" "+Y(p[1]).toFixed(1)+" "; });
-  s+=`<path d="${d}" fill="none" stroke="#f4c64f" stroke-width="2"/>`;
-  s+=`<line x1="${X(lam).toFixed(1)}" y1="${padT}" x2="${X(lam).toFixed(1)}" y2="${padT+plotH}" stroke="#f4c64f" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>`;
-  const lab=(v,x)=>`<text x="${x.toFixed(1)}" y="${H-8}" fill="#8b93a8" font-size="9" font-family="'JetBrains Mono',monospace" text-anchor="middle">${v}</text>`;
+  s+=`<path d="${d}" fill="none" style="stroke:var(--curve)" stroke-width="2"/>`;
+  s+=`<line x1="${X(lam).toFixed(1)}" y1="${padT}" x2="${X(lam).toFixed(1)}" y2="${padT+plotH}" style="stroke:var(--curve)" stroke-width="1" stroke-dasharray="3 3" opacity="0.5"/>`;
+  const lab=(v,x)=>`<text x="${x.toFixed(1)}" y="${H-8}" style="fill:var(--ch-lab)" font-size="9" font-family="'JetBrains Mono',monospace" text-anchor="middle">${v}</text>`;
   s+=lab(xlo,X(xlo))+lab(Math.round(lam),X(lam))+lab(xhi,X(xhi));
   s+=`</svg>`;
   $("#bellBox").innerHTML=s;
@@ -9028,6 +9091,9 @@ qa(".tabs button").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.t
 /* ---------------- BỘ THỬ MÀU (chỉ ảnh hưởng chế độ gọn) ---------------- */
 const PK=["k1","k2","k3","k4","kde"];
 const DEF=["#21e6a4","#2f9bff","#ffd21e","#ff7a2f","#ff3b6b"];
+const DEF_LIGHT=["#14b886","#2c7fe8","#e8a700","#ef5f14","#df2457"];   /* nền sáng: đậm hơn để ô đặc nổi trên nền trắng */
+const LIGHT_MQ=window.matchMedia?matchMedia("(prefers-color-scheme: light)"):null;
+const defPal=()=>(LIGHT_MQ&&LIGHT_MQ.matches?DEF_LIGHT:DEF).slice();
 const PRESETS=[
   {name:"Mặc định tươi", c:DEF.slice()},
   {name:"Neon",          c:["#39ff14","#00e5ff","#fff200","#ff6d00","#ff1493"]},
@@ -9061,24 +9127,24 @@ function initTester(){
     if(ti)ti.addEventListener("change",()=>{ let v=ti.value.trim(); if(/^#?[0-9a-fA-F]{6}$/.test(v)){ if(v[0]!=="#")v="#"+v; const c=readInputs(); c[PK.indexOf(k)]=v; applyPalette(c,true);} });
   });
   const rb=q("#palRandom"); if(rb)rb.addEventListener("click",()=>applyPalette(randBright(),true));
-  const rs=q("#palReset");  if(rs)rs.addEventListener("click",()=>applyPalette(DEF.slice(),true));
+  const rs=q("#palReset");  if(rs)rs.addEventListener("click",()=>{ try{localStorage.removeItem("loto-pal");}catch(e){} applyPalette(defPal(),false); });
   const tg=q("#palToggle"); if(tg)tg.addEventListener("click",()=>{
     const t=q("#tester"); const show=t.hidden; t.hidden=!show;
     if(show){ const cb=q("#compactToggle"); if(cb&&!cb.checked){ cb.checked=true; cb.dispatchEvent(new Event("change")); } }
   });
-  let pal=DEF.slice();
-  try{ const s=JSON.parse(localStorage.getItem("loto-pal")); if(Array.isArray(s)&&s.length===5)pal=s; }catch(e){}
-  applyPalette(pal,false);
+  const saved=()=>{ try{ const s=JSON.parse(localStorage.getItem("loto-pal")); if(Array.isArray(s)&&s.length===5)return s; }catch(e){} return null; };
+  applyPalette(saved()||defPal(),false);
+  if(LIGHT_MQ&&LIGHT_MQ.addEventListener) LIGHT_MQ.addEventListener("change",()=>{ if(!saved())applyPalette(defPal(),false); });
 }
 
 /* ---------------- THÍ NGHIỆM ---------------- */
 const STRATS=[
-  {key:"L30", name:"30 ngày",                color:"#37e0ac"},
-  {key:"L60", name:"60 ngày",                color:"#6fb0ff"},
-  {key:"L100",name:"100 ngày",               color:"#ffd23a"},
-  {key:"SEA", name:"Cùng ngày các năm",      color:"#c08aff"},
-  {key:"L60S",name:"60 ngày + mùa vụ",       color:"#ff9636"},
-  {key:"RND", name:"Ngẫu nhiên (đối chứng)", color:"#9aa3b8", dash:true},
+  {key:"L30", name:"30 ngày",                color:"var(--s-l30)"},
+  {key:"L60", name:"60 ngày",                color:"var(--s-l60)"},
+  {key:"L100",name:"100 ngày",               color:"var(--s-l100)"},
+  {key:"SEA", name:"Cùng ngày các năm",      color:"var(--s-sea)"},
+  {key:"L60S",name:"60 ngày + mùa vụ",       color:"var(--s-l60s)"},
+  {key:"RND", name:"Ngẫu nhiên (đối chứng)", color:"var(--s-rnd)", dash:true},
 ];
 const NMAX=40;
 let SIG="", PREFIX=null, SEAS=null, EXP=null, inited=false;
@@ -9146,18 +9212,18 @@ function chartLines(series,o){
   const X=v=>L+(v-xs)/((xe-xs)||1)*pw, Y=v=>T+ph-(v-lo)/(hi-lo)*ph;
   let s=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" class="chart" role="img">`;
   for(let i=0;i<=4;i++){ const val=lo+(hi-lo)*i/4,y=Y(val);
-    s+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="#1f2636"/>`;
-    s+=`<text x="${L-7}" y="${(y+3).toFixed(1)}" fill="#8b93a8" font-size="9" text-anchor="end" font-family="'JetBrains Mono',monospace">${o.yfmt?o.yfmt(val):val.toFixed(0)}</text>`; }
-  if(lo<0&&hi>0){ const y=Y(0); s+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="#566079" stroke-dasharray="4 3"/>`; }
-  if(o.refY!=null && o.refY>=lo && o.refY<=hi){ const y=Y(o.refY); s+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" stroke="${o.refColor||'#f4c64f'}" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.8"/>`; if(o.refLabel)s+=`<text x="${W-R-2}" y="${(y-4).toFixed(1)}" fill="${o.refColor||'#f4c64f'}" font-size="8.5" text-anchor="end">${o.refLabel}</text>`; }
+    s+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" style="stroke:var(--ch-grid)"/>`;
+    s+=`<text x="${L-7}" y="${(y+3).toFixed(1)}" style="fill:var(--ch-lab)" font-size="9" text-anchor="end" font-family="'JetBrains Mono',monospace">${o.yfmt?o.yfmt(val):val.toFixed(0)}</text>`; }
+  if(lo<0&&hi>0){ const y=Y(0); s+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" style="stroke:var(--ch-zero)" stroke-dasharray="4 3"/>`; }
+  if(o.refY!=null && o.refY>=lo && o.refY<=hi){ const y=Y(o.refY); s+=`<line x1="${L}" y1="${y.toFixed(1)}" x2="${W-R}" y2="${y.toFixed(1)}" style="stroke:${o.refColor||'var(--curve)'}" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.8"/>`; if(o.refLabel)s+=`<text x="${W-R-2}" y="${(y-4).toFixed(1)}" style="fill:${o.refColor||'var(--curve)'}" font-size="8.5" text-anchor="end">${o.refLabel}</text>`; }
   (o.xticks||[]).forEach(t=>{ const x=X(t);
-    s+=`<line x1="${x.toFixed(1)}" y1="${T+ph}" x2="${x.toFixed(1)}" y2="${T+ph+4}" stroke="#2a3142"/>`;
-    s+=`<text x="${x.toFixed(1)}" y="${H-14}" fill="#8b93a8" font-size="9" text-anchor="middle" font-family="'JetBrains Mono',monospace">${o.xfmt?o.xfmt(t):t}</text>`; });
-  if(o.xlabel) s+=`<text x="${(L+pw/2).toFixed(0)}" y="${H-2}" fill="#525a6e" font-size="9.5" text-anchor="middle">${o.xlabel}</text>`;
+    s+=`<line x1="${x.toFixed(1)}" y1="${T+ph}" x2="${x.toFixed(1)}" y2="${T+ph+4}" style="stroke:var(--ch-axis)"/>`;
+    s+=`<text x="${x.toFixed(1)}" y="${H-14}" style="fill:var(--ch-lab)" font-size="9" text-anchor="middle" font-family="'JetBrains Mono',monospace">${o.xfmt?o.xfmt(t):t}</text>`; });
+  if(o.xlabel) s+=`<text x="${(L+pw/2).toFixed(0)}" y="${H-2}" style="fill:var(--ch-xlab)" font-size="9.5" text-anchor="middle">${o.xlabel}</text>`;
   series.forEach(se=>{ if(!se.pts||!se.pts.length)return; let d="";
     se.pts.forEach((p,i)=>{ d+=(i?"L":"M")+X(p[0]).toFixed(1)+" "+Y(p[1]).toFixed(1)+" "; });
-    s+=`<path d="${d}" fill="none" stroke="${se.color}" stroke-width="2" ${se.dash?'stroke-dasharray="5 4"':''} opacity="0.95"/>`;
-    if(se.mark!=null&&se.pts[se.mark]){ const p=se.pts[se.mark]; s+=`<circle cx="${X(p[0]).toFixed(1)}" cy="${Y(p[1]).toFixed(1)}" r="4" fill="${se.color}"/>`; } });
+    s+=`<path d="${d}" fill="none" style="stroke:${se.color}" stroke-width="2" ${se.dash?'stroke-dasharray="5 4"':''} opacity="0.95"/>`;
+    if(se.mark!=null&&se.pts[se.mark]){ const p=se.pts[se.mark]; s+=`<circle cx="${X(p[0]).toFixed(1)}" cy="${Y(p[1]).toFixed(1)}" r="4" style="fill:${se.color}"/>`; } });
   return s+"</svg>";
 }
 function legendHTML(keys){ return keys.map(k=>{const m=STRATS.find(s=>s.key===k); return `<span class="cl-item"><i style="background:${m.color};${m.dash?'opacity:.55':''}"></i>${m.name}</span>`;}).join(""); }
