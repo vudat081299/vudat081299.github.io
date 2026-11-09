@@ -830,3 +830,128 @@ body {
 .double-line-verse:hover .index-of-verse, .double-line-verse:hover .index-of-verse {
   opacity: 0.2;
 }
+
+
+/*========== DARK THEME ==========*/
+/* Mực trên giấy sẫm. Theo prefers-color-scheme, không có nút đổi. */
+:root { color-scheme: light; }
+
+/* Xám mặc định #6c757d trên navbar đen chỉ đạt 3.7:1. */
+.navbar-brand .text-secondary { color: #a1a8ae !important; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --body-color: #1c1814;
+    --title-color: #f2e9d8;
+    --text-color: #b9ab94;
+    --ink: #e8dfcd;
+    --ink-soft: rgba(232, 223, 205, .78);
+    --ink-muted: #ab9d86;
+    --paper-raised: #241f19;
+    --paper-deep: #14110d;
+    --rule: #3b3229;
+    --wash: rgba(232, 223, 205, .08);
+  }
+
+  :root:not([data-theme="light"]) body {
+    color: var(--ink);
+    background-color: var(--body-color);
+  }
+
+  :root:not([data-theme="light"]) ::selection {
+    color: var(--paper-deep);
+    background-color: #d9b779;
+  }
+
+  /* Navbar */
+  :root:not([data-theme="light"]) .navbar.bg-dark {
+    background-color: var(--paper-deep) !important;
+    border-bottom: 1px solid var(--rule);
+  }
+  :root:not([data-theme="light"]) .navbar-brand .text-secondary {
+    color: var(--ink-muted) !important;
+  }
+
+  /* Sidebar */
+  :root:not([data-theme="light"]) .sidebar.bg-light {
+    background-color: var(--paper-raised) !important;
+    box-shadow: inset -1px 0 0 var(--rule);
+  }
+  :root:not([data-theme="light"]) .btn-toggle {
+    color: var(--ink-soft);
+  }
+  :root:not([data-theme="light"]) .btn-toggle:hover,
+  :root:not([data-theme="light"]) .btn-toggle:focus,
+  :root:not([data-theme="light"]) .btn-toggle[aria-expanded="true"] {
+    color: var(--ink);
+  }
+  :root:not([data-theme="light"]) .btn-toggle:focus {
+    box-shadow: 0 0 0 .2rem rgba(217, 183, 121, .45);
+  }
+  :root:not([data-theme="light"]) .btn-toggle::before {
+    content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%28232,223,205,.6%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+  }
+  :root:not([data-theme="light"]) .link-dark,
+  :root:not([data-theme="light"]) .text-dark {
+    color: var(--ink) !important;
+  }
+  :root:not([data-theme="light"]) .link-dark:hover,
+  :root:not([data-theme="light"]) .link-dark:focus {
+    color: var(--title-color) !important;
+  }
+  :root:not([data-theme="light"]) .btn-toggle-nav a:hover,
+  :root:not([data-theme="light"]) .btn-toggle-nav a:focus {
+    background-color: var(--wash);
+  }
+  :root:not([data-theme="light"]) .text-muted {
+    color: var(--ink-muted) !important;
+  }
+  :root:not([data-theme="light"]) .border-top,
+  :root:not([data-theme="light"]) .border-bottom {
+    border-color: var(--rule) !important;
+  }
+
+  /* Thẻ "Powered by": kính mờ thành tấm giấy sẫm, ảnh dịu bớt */
+  :root:not([data-theme="light"]) .card__glass {
+    background: linear-gradient(130deg,
+                rgba(255, 238, 210, .07),
+                rgba(255, 238, 210, .015));
+    box-shadow: inset 0 0 0 1px rgba(255, 238, 210, .07),
+                0 1rem 2.5rem rgba(0, 0, 0, .25);
+  }
+  :root:not([data-theme="light"]) .card__img {
+    border-color: var(--rule);
+    filter: brightness(.86) saturate(.9);
+  }
+  :root:not([data-theme="light"]) .card__button {
+    background: linear-gradient(130deg,
+                rgba(255, 238, 210, .16),
+                rgba(255, 238, 210, .06));
+    box-shadow: inset 0 0 0 1px rgba(255, 238, 210, .08);
+  }
+  :root:not([data-theme="light"]) .card__button:hover {
+    background: linear-gradient(130deg,
+                rgba(255, 238, 210, .24),
+                rgba(255, 238, 210, .1));
+  }
+
+  /* Ô tìm câu thơ */
+  :root:not([data-theme="light"]) .input-group-text {
+    color: var(--ink-muted);
+    background-color: var(--paper-raised);
+    border-color: var(--rule);
+  }
+  :root:not([data-theme="light"]) .form-control {
+    color: var(--ink);
+    background-color: var(--paper-deep);
+    border-color: var(--rule);
+  }
+  :root:not([data-theme="light"]) .form-control::placeholder {
+    color: var(--ink-muted);
+  }
+  :root:not([data-theme="light"]) .form-control:focus {
+    border-color: #8a7350;
+    box-shadow: 0 0 0 .25rem rgba(217, 183, 121, .2);
+  }
+}
