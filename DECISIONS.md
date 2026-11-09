@@ -23,6 +23,7 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-021 · Trang chủ có một danh sách ẩn, bật bằng ⇧? hoặc gõ ? vào ô tìm kiếm · `data/collection.json`, `index.html`
 - REPO-022 · Trang chủ gom section thành ba khu, khu đầu là việc đang học · `data/collection.json`
 - REPO-023 · Trang chủ đen, trắng, một màu xanh lá · `index.html`
+- REPO-024 · Mọi trang theo theme hệ điều hành ở lần mở đầu · `repo`
 
 Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/class-schedule/DECISIONS.md`](masters-degree/class-schedule/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md), [`shop/DECISIONS.md`](shop/DECISIONS.md).
 <!-- index:end -->
@@ -135,3 +136,9 @@ Working with AI. Đừng tự đổi.
 
 Có theme sáng và tối; chưa chọn thì theo hệ điều hành (khoá `hub-theme`). Xanh lá chỉ cho thứ mắt cần tìm: khu
 đang học, số section, chip phím khi rê, focus. Chữ nào cũng ≥ 4,5:1 trên nền thật của nó (`tools/smoke-index.js` đo).
+
+## REPO-024 · Mọi trang theo theme hệ điều hành ở lần mở đầu
+09/11/2026 · `repo`
+
+Chưa lưu lựa chọn thì trang theo `prefers-color-scheme`, đặt trước lần vẽ đầu. Trang có nút đổi theme thì lựa
+chọn đã lưu thắng. Trang chỉ có một theme phải làm thêm theme còn lại. `tools/smoke-theme.js` đo mọi trang.
