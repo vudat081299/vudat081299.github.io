@@ -2641,7 +2641,7 @@ luận văn mà không ai thấy.
     <tr><td>Vì sao bài toán này cần machine learning, luật thủ công không đủ à?</td><td>Luật cố định, kẻ gian học được ngưỡng; luật không kết hợp được nhiều tín hiệu yếu. <b>Kèm số:</b> luật bắt bao nhiêu, mô hình bắt bao nhiêu, và mỗi bên phát ra bao nhiêu cảnh báo — lấy từ bảng ba dòng ở mục 4 bài <a href="#/pr-eval">Đánh giá</a>. Không có bảng đó thì câu này chỉ là ý kiến.</td></tr>
     <tr><td>Nhãn “gian lận” của em đến từ đâu, ai gán?</td><td>Từ khiếu nại của khách, trễ 30–60 ngày. Nêu luôn hệ quả: dữ liệu gần nhất có nhãn chưa đầy đủ nên em cắt vùng đệm.</td></tr>
     <tr><td>Dữ liệu công khai thì đóng góp nằm ở đâu?</td><td>Đóng góp không nằm ở dữ liệu mà ở [cách biểu diễn thời gian / khung đánh giá theo chi phí / cách kết hợp]. Nói thẳng và tự tin — đây là chuẩn mực hợp lệ cho thạc sĩ ứng dụng.</td></tr>
-    <tr><td>Dữ liệu chỉ 284.807 dòng, có đủ không?</td><td>Cái quyết định là <b>số ca dương</b> (492), không phải tổng dòng. Nêu khoảng tin cậy rộng như một hạn chế đã được đo, không phải điều bị bỏ sót.</td></tr>
+    <tr><td>Dữ liệu có đủ không?</td><td>Cái quyết định là <b>số ca dương</b>, không phải tổng dòng: IEEE-CIS có 590.540 giao dịch, khoảng 3,5% gian lận; bộ ULB chỉ có 492 ca trên 284.807 dòng. Nêu khoảng tin cậy rộng như một hạn chế đã được đo, không phải điều bị bỏ sót.</td></tr>
   </table>
 
   <h3>B · Phương pháp</h3>
@@ -10005,7 +10005,7 @@ lệnh tái chạy:    đúng lệnh để chạy lại từ đầu</div>
 </template>
 
 <template data-node="th-stats">
-  <p>Bạn có hai con số: 0,412 và 0,367 — lấy từ bảng ablation ở bài trước, hệ <b>số minh hoạ</b>. Bài này về cách chứng minh chênh lệch đó là thật — và cách nói trung thực khi nó không phải. Quy trình dưới đây không phụ thuộc vào độ lớn của con số, nên áp nguyên vào số chạy thật của bạn.</p>
+  <p>Bạn có hai con số: 0,412 của mô hình đề xuất (dòng đầu bảng ablation ở bài trước) và 0,367 của LightGBM baseline (bảng ở bài <a href="#/ml-metrics">Đo lường</a>), cùng hệ <b>số minh hoạ</b>. Bài này về cách chứng minh chênh lệch đó là thật — và cách nói trung thực khi nó không phải. Quy trình dưới đây không phụ thuộc vào độ lớn của con số, nên áp nguyên vào số chạy thật của bạn.</p>
 
   <h2>Ba việc, làm cả ba</h2>
   <h3>1 · Chạy nhiều seed</h3>
@@ -10391,7 +10391,7 @@ g.rolling("1h", closed="left", min_periods=0).count()   <i># thiếu min_periods
   <table>
     <tr><td style="width:110px"><b>Công cụ</b></td><td><b>LightGBM</b> (mô hình chính) · <b>Optuna</b> (dò tham số) · <b>MLflow</b> (ghi lại) · <b>joblib</b> (lưu)</td></tr>
     <tr><td><b>Gõ gì</b></td><td><code>python -m src.train</code></td></tr>
-    <tr><td><b>Xong thì có</b></td><td><code>models/fraud_v1.joblib</code> (chứa <b>cả</b> feature engineering) + <code>models/metrics.json</code> + các lần chạy trong MLflow</td></tr>
+    <tr><td><b>Xong thì có</b></td><td><code>models/fraud-*.joblib</code> (chứa <b>cả</b> feature engineering) + <code>models/*.meta.json</code> + các lần chạy trong MLflow</td></tr>
     <tr><td><b>Bẫy</b></td><td>Tune trước khi feature xong. Bậc độ lớn thường gặp: feature tốt cải thiện nhiều hơn hẳn tuning (ví dụ +0,10 so với +0,01 — con số minh hoạ, không phải quy luật).</td></tr>
   </table>
   <div class="ds-code">python -m src.train          <i># in PR-AUC, lưu model</i>
