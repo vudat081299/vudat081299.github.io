@@ -12843,7 +12843,7 @@ VIZ.clock = el => {
     out('alt').textContent =
       `Giờ A = ${a}, giờ B = ${b}. Trên trục số thẳng, khoảng cách là ${Math.abs(a - b)}. ` +
       `Sau khi mã hoá sin/cos, khoảng cách trên vòng tròn là ${d.toFixed(2)}. ` +
-      (Math.abs(a - b) > 12 ? 'Hai giờ ở hai đầu trục thẳng nhưng nằm sát nhau trên vòng tròn.' :
+      (Math.abs(a - b) > 12 ? `Trên trục thẳng hai giờ cách nhau ${Math.abs(a - b)}, nhưng đi vòng qua nửa đêm thì chỉ cách ${24 - Math.abs(a - b)} giờ — vòng tròn đo đúng khoảng ngắn đó.` :
        'Hai giờ cách nhau không quá 12 giờ nên hai cách đo xếp xa gần như nhau; trên vòng tròn, cặp cách nhau đúng 12 giờ là xa nhất (khoảng cách 2, bằng đường kính).');
   };
   el.addEventListener('input', upd); upd();
@@ -12862,35 +12862,42 @@ VIZ.gd = el => {
         <path data-o="curve" fill="none" stroke="var(--wb-border-strong)" stroke-width="1.5"/>
         <g data-o="dots"></g>
       </svg>
-      <p class="ds-viz__readout" data-o="res">Sai số cuối: 0,004</p>
+      <p class="ds-viz__readout" data-o="res">Sai số cuối: 0,0008</p>
       <p class="ds-viz__alt" data-o="alt"></p>
-      <p class="ds-viz__see"><b>Điều cần thấy:</b> α nhỏ → bò chậm nhưng chắc chắn tới đáy. α vừa → tới nhanh. α quá lớn (kéo về cuối) → mỗi bước nhảy qua đáy, sai số to dần rồi bay ra ngoài. Đây đúng là cảnh “loss = nan” khi bạn train model.</p>
+      <p class="ds-viz__see"><b>Điều cần thấy:</b> hình chạy đúng ví dụ chạy tay, J(w) = w², nên mỗi bước nhân w với (1 − 2α). α dưới 0,5 → lăn thẳng xuống đáy, α càng nhỏ càng chậm. α từ 0,5 tới 1 → nảy qua lại hai bên đáy nhưng vẫn tới. α = 1 → nảy mãi giữa hai điểm, không xuống được. α trên 1 (kéo về cuối) → mỗi bước nhảy qua đáy xa hơn bước trước, sai số to dần rồi bay ra ngoài. Đây đúng là cảnh “loss = nan” khi bạn train model.</p>
     </div></div>`;
-  const f = x => 0.5 * x * x, df = x => x;
+  /* Cùng hàm với ví dụ chạy tay ở popup gdupdate (J = w², α = 1,1 thì văng). Bản trước
+     dùng J = w²/2 nên ngưỡng văng là α = 2, và kéo α = 1,1 thì hình lại hội tụ — ngược
+     với chính câu chữ đặt ngay trên hình. */
+  const f = x => x * x, df = x => 2 * x;
   const out = k => el.querySelector(`[data-o="${k}"]`);
   const upd = () => {
-    const lr = +el.querySelector('[data-i="lr"]').value / 50;
+    const lr = +el.querySelector('[data-i="lr"]').value / 100;
     const n  = +el.querySelector('[data-i="n"]').value;
     out('lr').textContent = lr.toFixed(2).replace('.', ',');
     out('n').textContent = n;
-    const X = x => 160 + x * 55, Y = y => 138 - Math.min(y, 4.6) * 28;
+    const X = x => 160 + x * 55, Y = y => 138 - Math.min(y, 7) * 18;
     let d = '';
     for (let x = -2.6; x <= 2.6; x += 0.05) d += (d ? 'L' : 'M') + X(x) + ' ' + Y(f(x)) + ' ';
     out('curve').setAttribute('d', d);
-    let x = -2.4, pts = '';
+    let x = -2.4, pts = '', out3 = false;
     for (let i = 0; i < n; i++) {
       x = x - lr * df(x);
-      if (!isFinite(x) || Math.abs(x) > 3) { x = Math.sign(x) * 3; pts += `<circle cx="${X(x)}" cy="${Y(f(x))}" r="3" fill="var(--wb-danger)"/>`; break; }
+      if (!isFinite(x) || Math.abs(x) > 2.6) { out3 = true; x = Math.sign(x) * 2.6; pts += `<circle cx="${X(x)}" cy="${Y(f(x))}" r="3" fill="var(--wb-danger)"/>`; break; }
       pts += `<circle cx="${X(x)}" cy="${Y(f(x))}" r="3" fill="var(--wb-fg)" opacity="${0.25 + 0.75 * i / n}"/>`;
     }
     out('dots').innerHTML = pts;
     const err = f(x);
-    const blew = err > 4;
-    out('res').textContent = 'Sai số cuối: ' + (blew ? 'văng ra ngoài ✗' : err.toFixed(4).replace('.', ','));
+    const r = 1 - 2 * lr;
+    const kind = r > 0 ? 'lan' : r > -1 ? 'nay' : Math.abs(r + 1) < 1e-9 ? 'ket' : 'vang';
+    out('res').textContent = 'Sai số cuối: ' + (out3 ? 'văng ra ngoài ✗' : err.toFixed(4).replace('.', ',')) +
+      (kind === 'ket' ? ' — nảy mãi, không xuống' : kind === 'vang' && !out3 ? ' — đang to dần' : '');
     out('alt').textContent =
-      `Bước học ${lr.toFixed(2)}, chạy ${n} bước từ điểm xuất phát bên trái parabol. ` +
-      (blew ? 'Quả bóng nhảy qua đáy mỗi bước, sai số to dần rồi văng ra ngoài khung — đây là cảnh loss = nan.'
-            : `Quả bóng lăn về đáy, sai số cuối ${err.toFixed(4)}.`);
+      `Bước học ${lr.toFixed(2)}, chạy ${n} bước trên parabol J(w) = w², xuất phát bên trái đáy. ` +
+      (kind === 'lan' ? `Quả bóng lăn thẳng về đáy, sai số cuối ${err.toFixed(4)}.`
+        : kind === 'nay' ? `Quả bóng nảy qua lại hai bên đáy nhưng biên độ nhỏ dần, sai số cuối ${err.toFixed(4)}.`
+        : kind === 'ket' ? 'Quả bóng nảy mãi giữa hai điểm đối xứng, sai số đứng yên ở mức ban đầu.'
+        : 'Quả bóng nhảy qua đáy mỗi bước và xa hơn bước trước, sai số to dần rồi văng ra ngoài khung — đây là cảnh loss = nan.');
   };
   el.addEventListener('input', upd); upd();
 };
@@ -12951,7 +12958,7 @@ VIZ.overfit = el => {
     <div class="wb-card"><div class="wb-card__body">
       <p class="ds-viz__label">Kéo “độ phức tạp” — mô hình đi từ ngu tới thuộc lòng</p>
       <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name">Bậc đa thức (độ phức tạp)</span><span class="ds-ctrl__val" data-o="d">3</span></div>
-        <input class="wb-range" type="range" min="1" max="14" value="3" data-i="d"></div>
+        <input class="wb-range" type="range" min="1" max="11" value="3" data-i="d"></div>
       <svg viewBox="0 0 320 150" aria-hidden="true">
         <path data-o="fit" fill="none" stroke="var(--wb-fg)" stroke-width="2"/>
         <g data-o="pts"></g>
@@ -12961,33 +12968,41 @@ VIZ.overfit = el => {
         <div><p class="ds-viz__sub">Sai số trên tập test</p><p class="ds-viz__readout" data-o="te">—</p></div>
       </div>
       <p class="ds-viz__alt" data-o="alt"></p>
-      <p class="ds-viz__see"><b>Điều cần thấy:</b> sai số train luôn giảm khi tăng độ phức tạp. Sai số test giảm rồi <b>quay đầu tăng</b>. Điểm quay đầu là chỗ bạn nên dừng. Nếu chỉ nhìn train, bạn sẽ chọn bậc 14 và tin rằng mình vừa làm ra mô hình tuyệt vời.</p>
+      <p class="ds-viz__see"><b>Điều cần thấy:</b> sai số train không bao giờ tăng khi tăng độ phức tạp. Sai số test giảm tới đáy ở bậc 4 rồi <b>quay đầu tăng</b>. Điểm quay đầu là chỗ bạn nên dừng. Nếu chỉ nhìn train, bạn sẽ chọn bậc 11 — đường cong đi qua đúng cả 12 điểm, sai số train bằng 0 — và tin rằng mình vừa làm ra mô hình tuyệt vời.</p>
     </div></div>`;
   const xs = [.05,.14,.22,.31,.39,.48,.55,.63,.71,.8,.88,.95];
   const noise = [.06,-.05,.03,.08,-.07,.02,.05,-.06,.04,-.03,.07,-.04];
   const truth = x => Math.sin(x * Math.PI * 1.15) * 0.7 + 0.15;
   const ys = xs.map((x, i) => truth(x) + noise[i]);
   const out = k => el.querySelector(`[data-o="${k}"]`);
-  const fitPoly = (xs, ys, deg) => {           // bình phương tối thiểu, giải bằng khử Gauss
-    const n = deg + 1, A = [], b = [];
-    for (let i = 0; i < n; i++) {
-      A.push(Array.from({length:n}, (_, j) => xs.reduce((s, x) => s + Math.pow(x, i + j), 0)));
-      b.push(xs.reduce((s, x, k) => s + Math.pow(x, i) * ys[k], 0));
+  /* Bình phương tối thiểu bằng QR Householder trên ma trận Vandermonde của t = 2x − 1.
+     KHÔNG giải phương trình chuẩn (AᵀA)c = Aᵀy: từ bậc 10 ma trận đó mất hết chữ số
+     có nghĩa, và bản cũ cho sai số train bậc 11 = 0,039 trong khi 12 điểm với 12 hệ số
+     phải khớp đúng (= 0). Bậc tối đa 11 = số điểm − 1; cao hơn thì nghiệm không duy nhất.
+     Số khớp numpy.polynomial.polyfit tới 4 chữ số. */
+  const fitPoly = (xs, ys, deg) => {
+    const n = deg + 1, m = xs.length;
+    const A = xs.map(x => Array.from({ length: n }, (_, j) => Math.pow(2 * x - 1, j)));
+    const b = ys.slice();
+    for (let k = 0; k < n; k++) {
+      let s = 0; for (let i = k; i < m; i++) s += A[i][k] * A[i][k];
+      const nrm = Math.sqrt(s); if (!nrm) continue;
+      const v = Array(m).fill(0); for (let i = k; i < m; i++) v[i] = A[i][k];
+      v[k] -= A[k][k] > 0 ? -nrm : nrm;
+      let vv = 0; for (let i = k; i < m; i++) vv += v[i] * v[i];
+      if (!vv) continue;
+      for (let j = k; j < n; j++) { let d = 0; for (let i = k; i < m; i++) d += v[i] * A[i][j]; d = 2 * d / vv; for (let i = k; i < m; i++) A[i][j] -= d * v[i]; }
+      let d = 0; for (let i = k; i < m; i++) d += v[i] * b[i]; d = 2 * d / vv; for (let i = k; i < m; i++) b[i] -= d * v[i];
     }
-    for (let i = 0; i < n; i++) {
-      let p = i; for (let r = i + 1; r < n; r++) if (Math.abs(A[r][i]) > Math.abs(A[p][i])) p = r;
-      [A[i], A[p]] = [A[p], A[i]]; [b[i], b[p]] = [b[p], b[i]];
-      if (Math.abs(A[i][i]) < 1e-12) continue;
-      for (let r = 0; r < n; r++) { if (r === i) continue; const f = A[r][i] / A[i][i];
-        for (let c = i; c < n; c++) A[r][c] -= f * A[i][c]; b[r] -= f * b[i]; }
-    }
-    return b.map((v, i) => Math.abs(A[i][i]) < 1e-12 ? 0 : v / A[i][i]);
+    const c = Array(n).fill(0);
+    for (let k = n - 1; k >= 0; k--) { let s = b[k]; for (let j = k + 1; j < n; j++) s -= A[k][j] * c[j]; c[k] = s / A[k][k]; }
+    return c;
   };
   const upd = () => {
     const d = +el.querySelector('[data-i="d"]').value;
     out('d').textContent = d;
     const c = fitPoly(xs, ys, d);
-    const ev = x => c.reduce((s, k, i) => s + k * Math.pow(x, i), 0);
+    const ev = x => c.reduce((s, k, i) => s + k * Math.pow(2 * x - 1, i), 0);
     const X = x => 12 + x * 296, Y = y => 130 - y * 105;
     let p = '';
     for (let x = 0; x <= 1.001; x += 0.005) { const y = Math.max(-0.3, Math.min(1.3, ev(x))); p += (p ? 'L' : 'M') + X(x) + ' ' + Y(y) + ' '; }
@@ -12996,12 +13011,13 @@ VIZ.overfit = el => {
     const tr = Math.sqrt(xs.reduce((s, x, i) => s + (ev(x) - ys[i]) ** 2, 0) / xs.length);
     const te = Math.sqrt([.1,.28,.45,.6,.75,.92].reduce((s, x) => s + (ev(x) - truth(x)) ** 2, 0) / 6);
     out('tr').textContent = tr.toFixed(3).replace('.', ',');
-    out('te').textContent = (te > 9 ? '≫ 9' : te.toFixed(3).replace('.', ','));
+    out('te').textContent = te.toFixed(3).replace('.', ',');
     out('alt').textContent =
       `Đa thức bậc ${d} khớp qua 12 điểm dữ liệu. Sai số trên tập train ${tr.toFixed(3)}, ` +
-      `trên tập test ${te > 9 ? 'lớn hơn 9' : te.toFixed(3)}. ` +
-      (d >= 9 ? 'Đường cong uốn lượn qua đúng từng điểm — mô hình đang học thuộc nhiễu.'
-              : d <= 2 ? 'Đường cong quá thẳng để bám được quy luật.'
+      `trên tập test ${te.toFixed(3)}. ` +
+      (d >= 10 ? 'Đường cong đi qua (gần) đúng từng điểm và vọt khỏi khung ở khoảng trống giữa chúng — mô hình đang học thuộc nhiễu.'
+              : d >= 7 ? 'Đường cong bắt đầu uốn theo nhiễu: train vẫn giảm nhẹ, test đã tăng gấp bốn lần so với đáy.'
+              : d === 1 ? 'Đường thẳng không bám được quy luật cong.'
               : 'Đường cong bám quy luật mà không đuổi theo từng điểm.');
   };
   el.addEventListener('input', upd); upd();
@@ -13294,8 +13310,7 @@ VIZ.walkforward = el => {
         <input class="wb-range" type="range" min="2" max="6" value="4" data-i="k" aria-label="Số fold"></div>
       <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name">Gap — độ trễ dữ liệu thật</span><span class="ds-ctrl__val" data-o="g">0 tuần</span></div>
         <input class="wb-range" type="range" min="0" max="4" value="0" data-i="g" aria-label="Gap tính bằng tuần"></div>
-      <!-- 146 chứ không 140: hàng cuối lố xuống 2,4 đơn vị ở mức thanh trượt cao nhất. -->
-      <svg viewBox="0 0 320 146" aria-hidden="true"><g data-o="rows"></g></svg>
+      <svg viewBox="0 0 320 142" aria-hidden="true"><g data-o="rows"></g></svg>
       ${key([['var(--wb-fg)','train'],['var(--wb-surface-2)','gap (bỏ trống)'],['var(--wb-neutral-strong)','test']])}
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
@@ -13311,7 +13326,10 @@ VIZ.walkforward = el => {
     const mode = el.querySelector('[data-seg][aria-pressed="true"]').dataset.seg;
     el.querySelector('[data-o="k"]').textContent = k;
     el.querySelector('[data-o="g"]').textContent = g + ' tuần';
-    const W = 300, X0 = 14, UNITS = 20, u = W / UNITS, h = Math.min(18, 120 / k);
+    /* Cao hàng tính để hàng cuối kết thúc ở 126, trên nhãn trục (y = 136). Bản cũ lấy
+       min(18, 120/k): ở 6 fold hàng cuối chạy tới 146 và chữ "thời gian →" nằm đè lên
+       khối train đen (viz-check không bắt vì khối không có viền). */
+    const W = 300, X0 = 14, UNITS = 20, u = W / UNITS, h = Math.min(18, (118 - 6 * (k - 1)) / k);
     let out = '';
     for (let i = 0; i < k; i++) {
       const teLen = 2, teStart = UNITS - (k - i) * teLen;
@@ -13423,8 +13441,10 @@ VIZ.lag = el => {
 /* -- 6.13 Bốn kiểu fold cross-validation ---------------------- */
 VIZ.cvfolds = el => {
   const N = 20, kinds = { kf:'KFold', st:'StratifiedKFold', ts:'TimeSeriesSplit', gp:'GroupKFold' };
-  // 10% dương, và 5 nhóm (mỗi thực thể 4 dòng)
-  const pos = new Set([2, 17]), grp = Array.from({ length: N }, (_, i) => Math.floor(i / 4));
+  // 4 dòng dương (20%) dồn ở hai đầu — như dữ liệu đã sắp theo thời gian — và 5 nhóm
+  // (mỗi thực thể 4 dòng). Bản cũ chỉ có 2 dòng dương: StratifiedKFold với k ≥ 3 khi đó
+  // cũng không tránh được fold rỗng, nên hình không cho thấy nó hơn KFold ở chỗ nào.
+  const pos = new Set([1, 3, 16, 18]), grp = Array.from({ length: N }, (_, i) => Math.floor(i / 4));
   el.innerHTML = `
     <div class="wb-card"><div class="wb-card__body">
       <p class="ds-viz__label">Cùng 20 dòng, bốn cách chia fold — chọn kiểu và xem fold nào hỏng</p>
@@ -13437,7 +13457,7 @@ VIZ.cvfolds = el => {
         <p class="wb-alert__msg" data-o="note"></p></div></div>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see:'chọn <b>KFold</b> với k = 4: chỉ 2 dòng dương trong 20, nên có fold validation <i>không chứa dòng dương nào</i> — mọi chỉ số của fold đó vô nghĩa. <b>StratifiedKFold</b> rải chúng ra. <b>TimeSeriesSplit</b> thì fold đầu train rất ít, và không fold nào nhìn thấy tương lai.',
+        see:'chọn <b>KFold</b> với k = 4: chỉ 4 dòng dương trong 20, lại dồn ở hai đầu, nên 2 fold validation <i>không chứa dòng dương nào</i> — mọi chỉ số của fold đó vô nghĩa. <b>StratifiedKFold</b> rải chúng ra, mỗi fold một dòng. <b>TimeSeriesSplit</b> thì fold đầu train rất ít, và không fold nào nhìn thấy tương lai.',
         wrong:'“cross-validation luôn đáng tin hơn một lần chia”. Chỉ đúng nếu <i>kiểu</i> fold khớp với cấu trúc dữ liệu. Chia sai kiểu nhưng chạy 10 fold thì bạn chỉ nhận được một con số sai với sai số chuẩn nhỏ.',
         code:'<code>StratifiedKFold(5, shuffle=True, random_state=42)</code> · <code>TimeSeriesSplit(5)</code> · <code>GroupKFold(5).split(X, y, groups=df["card_id"])</code>',
       })}
@@ -13449,11 +13469,22 @@ VIZ.cvfolds = el => {
     el.querySelector('[data-o="k"]').textContent = k;
     // fold[i] = chỉ số fold mà dòng i thuộc về phần validation (−1 = không bao giờ)
     let fold;
+    /* Bốn cách gán dưới đây cho ra đúng fold mà sklearn 1.9 trả về (shuffle=False) với
+       cùng 20 dòng — đã đối chiếu từng dòng cho k = 2…5. */
     if (kind === 'kf')      fold = i => Math.floor(i / (N / k));
-    else if (kind === 'st') fold = i => i % k;                       // rải đều nên lớp hiếm chia được
-    else if (kind === 'gp') fold = i => grp[i] % k;
-    else                    fold = i => { const s = Math.floor(N / (k + 1)); const f = Math.floor(i / s) - 1;
-                                          return f >= 0 && f < k ? f : -1; };
+    else if (kind === 'st') {
+      // StratifiedKFold: chia số dòng của TỪNG lớp cho các fold theo bincount(y_sorted[f::k]),
+      // rồi phát fold cho các dòng của lớp đó theo thứ tự xuất hiện.
+      const ys = Array.from({ length: N }, (_, i) => pos.has(i) ? 1 : 0), srt = ys.slice().sort((a, b) => a - b);
+      const per = c => Array.from({ length: k }, (_, f) => srt.filter((v, j) => j % k === f && v === c).length);
+      const asg = new Array(N);
+      [0, 1].forEach(c => { const q = per(c).flatMap((n, f) => Array(n).fill(f)); let t = 0;
+        ys.forEach((v, i) => { if (v === c) asg[i] = q[t++]; }); });
+      fold = i => asg[i];
+    }
+    else if (kind === 'gp') fold = i => (4 - grp[i]) % k;             // nhóm to nhất (hoà thì chỉ số lớn) vào fold nhẹ nhất
+    else                    fold = i => { const s = Math.floor(N / (k + 1)), st = N - k * s;   // test_size = N // (k+1), khối cuối sát mép phải
+                                          return i >= st ? Math.floor((i - st) / s) : -1; };
     const bw = 13.6, gap = 1.6, h = Math.min(16, 96 / k);
     let out = '', emptyFolds = 0;
     for (let f = 0; f < k; f++) {
@@ -13481,7 +13512,8 @@ VIZ.cvfolds = el => {
     note.innerHTML =
       `<b>Fold validation không có dòng dương nào:</b> ${emptyFolds ? `<b>${emptyFolds}/${k}</b> — chỉ số của các fold đó vô nghĩa` : 'không có'}<br>
        <b>Nhóm bị tách ra nhiều fold:</b> ${shared ? `<b>${shared}/5 nhóm</b> — mô hình học thuộc thực thể` : 'không có'}` +
-      (kind === 'ts' ? '<br><b>Nhìn thấy tương lai:</b> không — mỗi fold chỉ train trên phần bên trái' : '');
+      (kind === 'ts' ? '<br><b>Nhìn thấy tương lai:</b> không — mỗi fold chỉ train trên phần bên trái' : '') +
+      (kind === 'st' && k > pos.size ? `<br><b>k = ${k} lớn hơn số dòng dương (${pos.size}):</b> phân tầng cũng không tạo thêm dòng dương được — sklearn in cảnh báo đúng chuyện này` : '');
     alt.textContent = `${kinds[kind]} với k = ${k}. ${emptyFolds} trên ${k} fold validation không chứa dòng dương nào; ` +
       `${shared} trên 5 nhóm bị tách ra nhiều fold.`;
   };
@@ -13515,14 +13547,18 @@ VIZ.learncurve = el => {
         code:'<code>sklearn.model_selection.learning_curve(model, X, y, cv=5)</code> — vẽ hình này trước khi quyết định thu thập thêm dữ liệu.',
       })}
     </div></div>`;
-  const P = { simple:{ irr:.30, gap:.03 }, good:{ irr:.13, gap:.13 }, complex:{ irr:.06, gap:.42 } };
+  /* dip = train thấp hơn mức cuối bao nhiêu khi ít dữ liệu, tức mô hình học thuộc được
+     bao nhiêu. Mô hình quá đơn giản thì gần như không học thuộc được (dip nhỏ): bản cũ cho
+     nó cùng dip với hai mô hình kia nên ở 500–1.000 mẫu nó mở khe hở 0,14–0,17 và hình
+     khuyên "thêm dữ liệu" cho một mô hình bias cao — ngược với dòng "Điều cần thấy". */
+  const P = { simple:{ irr:.30, gap:.03, dip:.10 }, good:{ irr:.13, gap:.13, dip:.55 }, complex:{ irr:.06, gap:.42, dip:.55 } };
   const alt = el.querySelector('[data-o="alt"]');
   const upd = () => {
     const m = el.querySelector('[data-seg][aria-pressed="true"]').dataset.seg;
     const nUnit = +el.querySelector('[data-i="n"]').value, n = nUnit * 500;
     el.querySelector('[data-o="n"]').textContent = n.toLocaleString('vi-VN');
     const p = P[m];
-    const trE = x => p.irr * (1 - 0.55 * Math.exp(-x / 6)) + 0.02;
+    const trE = x => p.irr * (1 - p.dip * Math.exp(-x / 6)) + 0.02;
     const vaE = x => p.irr + p.gap * Math.exp(-x / 7) + 0.02;
     const X = x => 14 + (x / 20) * 296, Y = v => 106 - Math.min(v, 0.55) * 178;
     const path = f => { let d = ''; for (let x = 1; x <= 20; x += 0.5) d += (d ? 'L' : 'M') + X(x).toFixed(1) + ' ' + Y(f(x)).toFixed(1) + ' '; return d; };
@@ -13532,8 +13568,11 @@ VIZ.learncurve = el => {
     cur.setAttribute('x1', X(nUnit)); cur.setAttribute('x2', X(nUnit));
     const gap = vaE(nUnit) - trE(nUnit), va = vaE(nUnit);
     el.querySelector('[data-o="gap"]').textContent = gap.toFixed(3).replace('.', ',');
+    /* Chẩn đoán theo đúng hai câu của bài: khe hở lớn = variance; khe hở nhỏ mà chính
+       sai số TRAIN đã cao = bias. Bản cũ dùng sai số validation cho vế sau, nên mô hình
+       "Vừa" ở 2.000 mẫu bị khuyên "thêm feature". */
     const advice = gap > 0.12 ? 'Thêm dữ liệu, hoặc regularize mạnh hơn'
-                 : va > 0.22  ? 'Thêm feature / mô hình mạnh hơn'
+                 : trE(nUnit) > 0.2 ? 'Thêm feature / mô hình mạnh hơn'
                  : 'Đang cân bằng — dừng lại được';
     el.querySelector('[data-o="do"]').textContent = advice;
     alt.textContent = `Mô hình ${m === 'simple' ? 'quá đơn giản' : m === 'good' ? 'vừa' : 'quá phức tạp'}, ` +
@@ -13566,16 +13605,20 @@ VIZ.drift = el => {
       })}
     </div></div>`;
   const bars = el.querySelector('[data-o="bars"]'), alt = el.querySelector('[data-o="alt"]');
-  const base = [.05, .13, .24, .25, .17, .09, .05, .02];
+  // Phân phối tháng m: chuông rời rạc trên 8 nhóm, đỉnh trôi sang phải và loe dần.
+  const distAt = m => {
+    const v = Array.from({ length: BINS }, (_, i) =>
+      Math.exp(-Math.pow(i - (2.6 + m * 0.16), 2) / (2 * Math.pow(1.5 + m * 0.04, 2))));
+    const s = v.reduce((a, b) => a + b, 0); return v.map(x => x / s);
+  };
+  /* Tham chiếu = đúng phân phối tháng 0. Bản cũ gõ tay một mảng khác nên PSI tháng 0
+     ra 0,063 rồi GIẢM ở tháng 1–2 — vừa sai định nghĩa (tháng triển khai phải là 0)
+     vừa ngược với câu "drift tích tụ". */
+  const base = distAt(0);
   const upd = () => {
     const m = +el.querySelector('[data-i="m"]').value;
     el.querySelector('[data-o="m"]').textContent = m;
-    const shift = m * 0.16;
-    let cur = base.map((_, i) => {
-      const c = 2.6 + shift;                                   // đỉnh trôi dần sang phải
-      return Math.exp(-Math.pow(i - c, 2) / (2 * Math.pow(1.5 + m * 0.04, 2)));
-    });
-    const s = cur.reduce((a, b) => a + b, 0); cur = cur.map(v => v / s);
+    const cur = distAt(m);
     // PSI = Σ (cur − ref) · ln(cur / ref); kẹp sàn để không chia cho 0
     const eps = 1e-4;
     const psi = base.reduce((acc, r, i) => {
@@ -13630,7 +13673,7 @@ VIZ.prcurve = el => {
       </div>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see:'kéo tỉ lệ dương từ 10% xuống 0,1%. <b>ROC-AUC gần như đứng yên</b>, còn <b>PR-AUC tụt thẳng đứng</b>. Mô hình không hề đổi — chỉ bài toán khó hơn. Đường đứt trong hình PR là mức của một mô hình đoán bừa, và nó tụt xuống sát đáy: đó là lý do PR-AUC 0,4 trên dữ liệu 0,2% dương là một kết quả <i>tốt</i>.',
+        see:'kéo tỉ lệ dương từ 10% xuống 0,1%. <b>ROC-AUC đứng yên</b>, còn <b>PR-AUC tụt gần một nửa</b>, từ 0,75 xuống 0,41. Mô hình không hề đổi — chỉ bài toán khó hơn. Đường đứt trong hình PR là mức của một mô hình đoán bừa, và nó tụt xuống sát đáy: đó là lý do PR-AUC 0,4 trên dữ liệu 0,2% dương là một kết quả <i>tốt</i>.',
         wrong:'“ROC-AUC 0,95 nghĩa là mô hình rất tốt”. Với lớp dương cực hiếm, ROC-AUC cao là chuyện bình thường vì mẫu số của FPR là số ca âm khổng lồ. Luôn báo cáo PR-AUC <b>kèm tỉ lệ nền</b>, vì không có tỉ lệ nền thì PR-AUC cũng không đọc được.',
         code:'<code>average_precision_score(y, p)</code> cho PR-AUC · <code>roc_auc_score(y, p)</code> · và luôn in kèm <code>y.mean()</code>.',
       })}
@@ -13640,17 +13683,24 @@ VIZ.prcurve = el => {
     const prev = +el.querySelector('[data-i="p"]').value / 1000;     // 0,001 … 0,100
     el.querySelector('[data-o="p"]').textContent =
       (prev * 100).toFixed(prev < 0.01 ? 2 : 1).replace('.', ',') + '%';
-    // một mô hình cố định: TPR(t) và FPR(t) không phụ thuộc tỉ lệ nền
-    const tpr = t => Math.pow(1 - t, 0.42), fpr = t => Math.pow(1 - t, 3.6);
-    let rocD = '', prD = '', auc = 0, ap = 0, prevR = 0;
-    for (let i = 0; i <= 100; i++) {
-      const t = i / 100, R = tpr(t), F = fpr(t);
-      rocD += (rocD ? 'L' : 'M') + (14 + F * 126).toFixed(1) + ' ' + (112 - R * 104).toFixed(1) + ' ';
+    /* Một mô hình cố định: TPR và FPR là hàm của u = 1 − ngưỡng, KHÔNG phụ thuộc tỉ lệ nền.
+       Tích phân trên lưới mịn theo u, và chốt điểm cuối đúng giới hạn: khi u → 0 thì
+       FPR/TPR = u^3,18 → 0 nên precision → 1. Bản cũ lấy 101 ngưỡng cách đều và gán
+       precision = 0 tại ngưỡng 1 (0/0), nên bỏ mất cả đoạn recall 0 → 0,14 ở precision ≈ 1:
+       PR-AUC hụt 0,13–0,14 (0,613 thay vì 0,748 ở 10%) và đường PR cắm xuống gốc. */
+    const tpr = u => Math.pow(u, 0.42), fpr = u => Math.pow(u, 3.6);
+    const NU = 2000;
+    let rocD = '', prD = '', auc = 0, ap = 0, pR = 1, pF = 1, pP = prev;
+    for (let i = NU; i >= 0; i--) {
+      const u = i / NU, R = tpr(u), F = fpr(u);
       // precision suy ra từ TPR/FPR và tỉ lệ nền — đây là toàn bộ điểm của khối này
-      const P = (R * prev) / (R * prev + F * (1 - prev) || 1e-9);
-      prD += (prD ? 'L' : 'M') + (14 + R * 126).toFixed(1) + ' ' + (112 - P * 104).toFixed(1) + ' ';
-      if (i) { const t0 = (i - 1) / 100; auc += (fpr(t0) - F) * (R + tpr(t0)) / 2; ap += (R - prevR) * P; }
-      prevR = R;
+      const P = i ? (R * prev) / (R * prev + F * (1 - prev)) : 1;
+      if (i % 20 === 0) {
+        rocD += (rocD ? 'L' : 'M') + (14 + F * 126).toFixed(1) + ' ' + (112 - R * 104).toFixed(1) + ' ';
+        prD += (prD ? 'L' : 'M') + (14 + R * 126).toFixed(1) + ' ' + (112 - P * 104).toFixed(1) + ' ';
+      }
+      if (i < NU) { auc += (pF - F) * (R + pR) / 2; ap += (pR - R) * (P + pP) / 2; }
+      pR = R; pF = F; pP = P;
     }
     el.querySelector('[data-o="roc"]').setAttribute('d', rocD);
     el.querySelector('[data-o="pr"]').setAttribute('d', prD);
@@ -13965,12 +14015,12 @@ VIZ.shap = el => {
     block: { t:'Bị chặn (0,374)', base:0.002, f:[
       ['n_tx_1h = 6',        +0.210, 'thẻ vừa quẹt 6 lần trong 1 giờ'],
       ['hour_sin/cos ≈ 3h',  +0.092, 'rạng sáng'],
-      ['amount_log = 15,9',  +0.061, '8,5 triệu — gấp 40 lần trung bình của thẻ'],
+      ['amount_log = 16,0',  +0.061, '8,5 triệu — gấp 40 lần trung bình của thẻ'],
       ['secs_since_last=42', +0.024, 'cách lần trước 42 giây'],
       ['device = mobile',    -0.008, 'thiết bị quen thuộc, kéo điểm xuống một chút'],
       ['city = HN',          -0.007, 'thành phố quen'],
     ]},
-    allow: { t:'Cho qua (0,0003)', base:0.002, f:[
+    allow: { t:'Cho qua (0,0002)', base:0.002, f:[
       ['n_tx_1h = 0',        -0.0009, 'không có giao dịch nào trong 1 giờ qua'],
       ['hour_sin/cos ≈ 14h', -0.0005, 'giữa trưa'],
       ['amount_log = 11,9',  -0.0003, '150 nghìn — dưới mức trung bình của thẻ'],
@@ -14008,7 +14058,7 @@ VIZ.shap = el => {
         v >= 0 ? `left:50%;width:${w}%` : `right:50%;width:${w}%`};${
         v >= 0 ? 'background:var(--wb-fg)' : 'background:var(--wb-border-strong)'}"></span></span>`;
     };
-    const fmt = v => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(4).replace('.', ',');
+    const fmt = v => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(Math.abs(v) < 1e-4 ? 5 : 4).replace('.', ',');
     rows.innerHTML =
       `<div class="ds-wfrow"><span class="ds-wfrow__n">điểm gốc (tỉ lệ nền)</span>
          <span class="ds-wfrow__bar"></span><span class="ds-wfrow__v">${c.base.toFixed(4).replace('.', ',')}</span></div>` +
@@ -14179,8 +14229,8 @@ VIZ.plan14 = el => {
         <p class="wb-alert__msg" data-o="detail"></p></div></div>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see:'chuyển sang <b>Loại thời gian</b>: phần <i>deliverable</i> chiếm dải trên của gần như mọi ngày từ ngày 5 trở đi. Đó là phần mà lịch học tự làm thường quên tính, và là lý do người ta trượt lịch từ tuần thứ hai chứ không phải vì đọc chậm.',
-        wrong:'“ngày nào bận thì đọc bù hôm sau”. Bù được phần <i>đọc</i>. Phần <b>deliverable</b> thì không, vì bài hôm sau lấy đúng file hôm nay làm đầu vào — bỏ deliverable ngày 8 (<code>pipeline.py</code>) là ngày 12 không có gì để đóng gói.',
+        see:'chuyển sang <b>Loại thời gian</b>: dải <i>deliverable</i> trên cùng không phải phần lẻ — ở ba ngày mốc nó chiếm từ một phần tư tới gần một nửa thời gian của ngày. Đó là phần mà lịch học tự làm thường quên tính, và là lý do người ta trượt lịch từ tuần thứ hai chứ không phải vì đọc chậm.',
+        wrong:'“ngày nào bận thì đọc bù hôm sau”. Bù được phần <i>đọc</i>. Phần <b>deliverable</b> thì không, vì bài hôm sau lấy đúng file hôm nay làm đầu vào — bỏ deliverable ngày 8 (<code>pipeline.py</code>) là ngày 10 không có gì để huấn luyện thành <code>.joblib</code>, và ngày 11 không có gì để đóng gói.',
         code:'không có code — đây là dữ liệu <code>DAYS</code> trong chính trang này, và cùng dữ liệu đó sinh ra lịch bên dưới lẫn các con số ở trang chủ.',
       })}
     </div></div>`;
@@ -14321,7 +14371,7 @@ VIZ.loop10 = el => {
       ${seeBlock({
         see: 'ở chế độ <b>thực tế</b>, gần như mọi mũi tên quay lui đều xuất phát từ <b>bước 8 — Đánh giá</b>. Đánh giá không phải vạch đích, nó là chỗ bạn <i>biết được mình phải quay lại đâu</i>. Bật sang chế độ "thẳng một mạch" để thấy tấm bản đồ mà người mới mang trong đầu — và vì sao nó làm họ hoảng khi vòng đầu tiên cho kết quả xấu.',
         wrong: '“làm xong bước n thì bước n vĩnh viễn xong”. Không bước nào xong hẳn cho tới khi cả hệ thống xong. Ngược lại cũng sai: quay lui <b>không</b> phải dấu hiệu bạn làm hỏng — nó là hình dạng bình thường của công việc này.',
-        code: 'lịch 8 tuần ở bài <b>Lộ trình chuẩn</b> đã tính sẵn các vòng này — đó là lý do tuần 4 và tuần 5 đều có chỗ cho “quay lại feature”.',
+        code: 'lịch 8 tuần ở bài <b>Lộ trình chuẩn</b> giữ nguyên pipeline và cách chia tập từ tuần 3 sang tuần 4 chính là để vòng 8 → 5 (thêm feature, đo lại) chạy được mà không phải dựng lại từ đầu.',
       })}
     </div></div>`;
   const X = i => 22 + i * 34.5, Y = 96;
@@ -14446,7 +14496,7 @@ VIZ.baserate = el => {
       <p class="ds-viz__sub">trong số ca bị báo động, tỉ lệ thật sự là gian lận (precision)</p>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see: 'để recall 90% và FPR 5% cố định — đã là một mô hình tốt — rồi kéo <b>tỉ lệ nền</b> từ 20% xuống 0,2%. Số ô sẫm (bắt đúng) teo lại còn vài ô, trong khi khối vàng (báo nhầm) gần như không đổi. Cùng một mô hình, precision rơi từ ~82% xuống ~3%. <b>Chất lượng mô hình không đổi; cái đổi là bài toán.</b>',
+        see: 'để recall 90% và FPR 5% cố định — đã là một mô hình tốt — rồi kéo <b>tỉ lệ nền</b> từ 20% xuống 0,2%. Số ô sẫm (bắt đúng) teo từ 180 còn 2 ô, trong khi khối vàng (báo nhầm) còn nhích lên, từ 40 thành 50 ô. Cùng một mô hình, precision rơi từ ~82% xuống ~4%. <b>Chất lượng mô hình không đổi; cái đổi là bài toán.</b>',
         wrong: '“mô hình chính xác 99% thì 99% cảnh báo của nó là đúng”. Hai con số đó không liên quan gì nhau. Cái quyết định tỉ lệ cảnh báo đúng là <b>tỉ lệ nền</b>, và trong bài gian lận nó thường dưới 1%.',
         code: 'đây là lý do bài <b>Đo lường</b> báo cáo PR-AUC (nhạy với tỉ lệ nền) chứ không phải ROC-AUC, và <b>luôn kèm tỉ lệ nền</b>.',
       })}
@@ -14486,7 +14536,8 @@ VIZ.baserate = el => {
    Khối này không nhắc lại câu đó mà cho kéo đúng đại lượng sinh ra hiện
    tượng: mức tương quan giữa hai mô hình. Khoảng của TỪNG mô hình đứng
    yên khi kéo, khoảng của HIỆU thì co lại — thấy được thì không cần tin.
-   Mốc mặc định rho = 0,52 tái tạo đúng ba con số của bài. */
+   Mốc mặc định rho = 0,52 tái tạo ba khoảng của bài, lệch tối đa 0,001 mỗi đầu (xấp xỉ
+   chuẩn đối xứng so với bootstrap phân vị). */
 VIZ.bootci = el => {
   const MA = 0.367, MB = 0.412, SA = 0.0120, SB = 0.0125, Z = 1.96;
   el.innerHTML = `
@@ -14500,7 +14551,7 @@ VIZ.bootci = el => {
       <p class="ds-viz__readout" data-o="verdict">—</p>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see: 'hai điều cùng lúc, và cái thứ hai mới là điểm chính. <b>Một:</b> kéo ρ suốt từ 0 tới 0,95, hai thanh A và B <i>không hề nhúc nhích</i>, trong khi thanh Δ co lại gần <b>bốn lần</b> (từ [0,011; 0,079] xuống [0,037; 0,053]) — cùng một dữ liệu, phép đo chênh lệch chính xác hơn hẳn chỉ nhờ ghép cặp. <b>Hai:</b> ở <i>mọi</i> giá trị ρ, khoảng A và khoảng B vẫn <b>chồng lấn</b> nhau (quanh 0,387–0,391) trong khi khoảng Δ <b>luôn nằm bên phải 0</b>. Nếu bạn kết luận bằng cách nhìn hai khoảng riêng chồng nhau, bạn đã kết luận <i>ngược</i> — trên đúng bộ số của bài này.',
+        see: 'hai điều cùng lúc, và cái thứ hai mới là điểm chính. <b>Một:</b> kéo ρ suốt từ 0 tới 0,95, hai thanh A và B <i>không hề nhúc nhích</i>, trong khi thanh Δ co lại hơn <b>bốn lần</b> (từ [0,011; 0,079] xuống [0,037; 0,053]) — cùng một dữ liệu, phép đo chênh lệch chính xác hơn hẳn chỉ nhờ ghép cặp. <b>Hai:</b> ở <i>mọi</i> giá trị ρ, khoảng A và khoảng B vẫn <b>chồng lấn</b> nhau (quanh 0,387–0,391) trong khi khoảng Δ <b>luôn nằm bên phải 0</b>. Nếu bạn kết luận bằng cách nhìn hai khoảng riêng chồng nhau, bạn đã kết luận <i>ngược</i> — trên đúng bộ số của bài này.',
         wrong: '“hai khoảng tin cậy chồng lấn ⇒ khác biệt không có ý nghĩa”. Sai, và là lỗi hay gặp nhất trong chương kết quả — khối này là một phản ví dụ chạy được. Chồng lấn ở mức nào cũng <b>không</b> trả lời được câu hỏi; phải dựng khoảng cho chính <b>hiệu</b> rồi xem nó có chứa 0 không. Chiều ngược lại cũng cần nhớ: ρ cao <i>không</i> làm chênh lệch to ra, nó chỉ làm phép đo chênh lệch <b>hẹp hơn</b> — nghĩa là với một chênh lệch nhỏ hơn, ghép cặp có thể là thứ duy nhất còn phát hiện nổi.',
         code: '<code>paired_ci</code> trong <code>src/evaluate.py</code> — mỗi vòng bootstrap lấy <b>cùng</b> bộ chỉ số hàng cho cả hai mô hình rồi tính Δ; cờ <code>significant</code> bật khi khoảng của Δ không chứa 0. Với quyết định nhị phân tại một ngưỡng thì dùng <b>McNemar</b>.',
       })}
@@ -14556,7 +14607,7 @@ VIZ.bootci = el => {
       `Mô hình B: 0,412, khoảng ${f3(bl)} đến ${f3(bh)}. Hai khoảng này giữ nguyên với mọi giá trị ρ. ` +
       `Với ρ = ${rho.toFixed(2).replace('.', ',')}, khoảng của hiệu Δ = 0,045 là ${f3(dl)} đến ${f3(dh)} — ` +
       (sig ? 'nằm hoàn toàn bên phải mốc 0.' : 'có chứa mốc 0.') +
-      ` Ở mốc mặc định ρ = 0,52, ba con số này khớp đúng ví dụ trong bài.`;
+      ` Ở mốc mặc định ρ = 0,52, ba khoảng này lệch ví dụ trong bài nhiều nhất 0,001 ở mỗi đầu: hình dựng khoảng bằng xấp xỉ chuẩn nên hai đầu đối xứng, còn khoảng bootstrap trong bài lấy theo phân vị nên hơi lệch một bên.`;
   };
   el.addEventListener('input', upd); upd();
 };
@@ -14619,7 +14670,7 @@ VIZ.logskew = el => {
         ? `Cột cao nhất chỉ còn ${(top * 100).toFixed(0)}% — phân phối trải ra thành hình chuông, đọc được hình dạng`
         : `Cột cao nhất ${(top * 100).toFixed(0)}%, nhưng 3 giao dịch lớn nhất (180 / 320 / 500 triệu ₫) giờ bị ép về CÙNG một giá trị`;
     const fmtv = x => mode === 'log' ? x.toFixed(2).replace('.', ',')
-      : x >= 1000 ? Math.round(x / 1000) + ' triệu ₫' : Math.round(x) + ' nghìn ₫';
+      : x >= 1000 ? (x / 1000).toFixed(x >= 10000 ? 0 : 1).replace('.', ',') + ' triệu ₫' : Math.round(x) + ' nghìn ₫';   // ngưỡng cắt 1.483 nghìn in ra 1,5 triệu, không làm tròn thành 1
     alt.textContent = `Histogram 300 giao dịch, thang ${mode === 'raw' ? 'thô' : mode === 'log' ? 'log1p' : 'đã cắt 1% đuôi trên'}. ` +
       `Giá trị nhỏ nhất ${fmtv(lo)}, lớn nhất ${fmtv(hi)}. ` +
       `Khoảng chia cao nhất chứa ${(top * 100).toFixed(0)}% số quan sát.`;
@@ -14837,7 +14888,7 @@ VIZ.treesplit = el => {
   el.innerHTML = `
     <div class="wb-card"><div class="wb-card__body">
       <p class="ds-viz__label">120 giao dịch trên hai trục. Nền tô theo xác suất mô hình gán cho vùng đó</p>
-      ${seg('Mô hình', [{ k: 'one', t: 'Một cây' }, { k: 'rf', t: 'Random Forest (40 cây song song)' }, { k: 'gb', t: 'Boosting (cây nông, tuần tự)' }], 'one')}
+      ${seg('Mô hình', [{ k: 'one', t: 'Một cây' }, { k: 'rf', t: 'Random Forest (30 cây song song)' }, { k: 'gb', t: 'Boosting (cây nông, tuần tự)' }], 'one')}
       <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name" data-o="dn">Độ sâu cây</span><span class="ds-ctrl__val" data-o="do">3</span></div>
         <input class="wb-range" type="range" min="1" max="8" value="3" data-i="d" aria-label="Độ sâu cây"></div>
       <svg viewBox="0 0 320 150" aria-hidden="true"><g data-o="g"></g></svg>
@@ -14845,14 +14896,18 @@ VIZ.treesplit = el => {
       <p class="ds-viz__readout" data-o="r">—</p>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see: 'với <b>một cây</b>, kéo độ sâu từ 1 lên 8: ranh giới luôn là các <b>hình chữ nhật vuông góc trục</b> — cây chỉ biết cắt theo một cột mỗi lần. Tới độ sâu 6–8 nó bắt đầu vẽ những ô tí hon quanh <i>từng điểm nhiễu lẻ</i>: đó chính là học thuộc, nhìn thấy được. Bật <b>Random Forest</b>: vẫn là các hình chữ nhật, nhưng trung bình 40 cây làm nền chuyển màu mượt và các ô nhiễu biến mất. Bật <b>Boosting</b>: cây chỉ sâu 2, từng cây một sửa phần dư của cây trước — ranh giới sắc nét dần theo số vòng chứ không đến từ một cây to.',
+        see: 'với <b>một cây</b>, kéo độ sâu từ 1 lên 8: ranh giới luôn là các <b>hình chữ nhật vuông góc trục</b> — cây chỉ biết cắt theo một cột mỗi lần. Từ độ sâu 4–5 nó bắt đầu cắt những dải mảnh như sợi chỉ chỉ để ôm <i>từng điểm nhiễu lẻ</i>, và số sai trên train về 0: đó chính là học thuộc, nhìn thấy được. Bật <b>Random Forest</b>: vẫn là các hình chữ nhật, nhưng trung bình 30 cây làm nền chuyển màu mượt và các dải nhiễu mờ hẳn đi, vì mỗi cây chỉ thấy điểm nhiễu trong khoảng hai phần ba số lần bốc mẫu. Bật <b>Boosting</b>: cây chỉ sâu 2, từng cây một sửa phần dư của cây trước — ranh giới sắc nét dần theo số vòng chứ không đến từ một cây to.',
         wrong: '“cây sâu hơn thì mô hình tốt hơn”. Độ sâu là <b>núm chỉnh overfit</b>, không phải núm chỉnh chất lượng. Và “Random Forest với Boosting đều là nhiều cây nên na ná nhau” cũng sai: rừng trồng các cây <i>song song rồi lấy trung bình</i> để giảm phương sai, boosting trồng <i>tuần tự, mỗi cây sửa lỗi cây trước</i> để giảm độ chệch — hai cơ chế ngược nhau.',
-        code: '<code>max_depth</code> và <code>min_samples_leaf</code> cho cây; với LightGBM thì núm tương đương là <code>num_leaves</code> và <code>min_child_samples</code> — bài này để mặc định <code>min_samples_leaf = 4</code>.',
+        code: '<code>max_depth</code> và <code>min_samples_leaf</code> cho cây; với LightGBM thì núm tương đương là <code>num_leaves</code> và <code>min_child_samples</code>. Hình này để <code>min_samples_leaf = 1</code> như mặc định của sklearn — chính vì thế cây mới khoanh được từng điểm; đặt 4 thì các dải mảnh biến mất.',
       })}
     </div></div>`;
   const g = el.querySelector('[data-o="g"]'), alt = el.querySelector('[data-o="alt"]');
   let mode = 'one';
-  const NROUND = d => d * 5, NTREE = 30;
+  /* MINLEAF = 1 như mặc định của sklearn. Với 4 (bản cũ) không lá nào ôm được một điểm
+     nhiễu lẻ: sai trên train dừng ở 5/120 từ độ sâu 4 và không có ô tí hon nào để thấy,
+     nên câu "nhìn thấy học thuộc" ở dưới không đúng với hình. Với 1, cây độ sâu 5 khoanh
+     từng điểm nhiễu và sai trên train về 0. */
+  const NROUND = d => d * 5, NTREE = 30, MINLEAF = 1;
   /* Huấn luyện là phần đắt (rừng 30 cây, boosting tới 40 vòng). Nhớ lại theo
      khoá mode+d để kéo qua kéo lại không phải train lại, và gộp các sự kiện
      input trong cùng một khung hình để kéo thanh không giật. */
@@ -14861,12 +14916,12 @@ VIZ.treesplit = el => {
     const k = mode + d;
     if (CACHE.has(k)) return CACHE.get(k);
     let s;
-    if (mode === 'one') { const t = build(D, 0, d, 4); s = (x, y) => pred(t, x, y); }
+    if (mode === 'one') { const t = build(D, 0, d, MINLEAF); s = (x, y) => pred(t, x, y); s.tree = t; }
     else if (mode === 'rf') {
       /* Bagging: mỗi cây một mẫu bootstrap, seed cố định theo chỉ số cây. */
       const trees = Array.from({ length: NTREE }, (_, i) => {
         const R = (sd => () => (sd = (sd * 1103515245 + 12345) % 2147483648) / 2147483648)(i * 7 + 3);
-        return build(Array.from({ length: D.length }, () => D[Math.floor(R() * D.length)]), 0, d, 4);
+        return build(Array.from({ length: D.length }, () => D[Math.floor(R() * D.length)]), 0, d, MINLEAF);
       });
       s = (x, y) => trees.reduce((a, t) => a + pred(t, x, y), 0) / trees.length;
     } else {
@@ -14887,11 +14942,24 @@ VIZ.treesplit = el => {
     el.querySelector('[data-o="do"]').textContent = mode === 'gb' ? NROUND(d) : d;
     el.querySelector('[data-o="dn"]').textContent = mode === 'gb' ? 'Số vòng boosting (cây sâu 2)' : 'Độ sâu cây';
     const scorer = scorerFor(mode, d);
-    const NX = 36, NY = 24, cw = 288 / NX, chh = 124 / NY;
     let cells = '';
-    for (let i = 0; i < NX; i++) for (let j = 0; j < NY; j++) {
-      const q = scorer((i + 0.5) / NX, 1 - (j + 0.5) / NY);
-      cells += `<rect x="${16 + i * cw}" y="${8 + j * chh}" width="${cw + 0.4}" height="${chh + 0.4}" fill="var(--wb-fg)" opacity="${(q * 0.55).toFixed(3)}"/>`;
+    if (scorer.tree) {
+      /* Một cây: vẽ đúng hình chữ nhật của từng lá, không lấy mẫu lưới. Lá ôm một điểm
+         nhiễu có thể chỉ rộng 0,005 trục — lưới 36 × 24 ô bỏ lọt nó, tức bỏ lọt đúng thứ
+         hình này muốn cho thấy. Lá quá mảnh được nới tới 1,2 đơn vị để mắt còn thấy. */
+      const leafBoxes = (n, b) => n.leaf !== undefined ? [{ ...b, v: n.leaf }]
+        : leafBoxes(n.lo, n.f === 0 ? { ...b, x1: n.t } : { ...b, y1: n.t })
+            .concat(leafBoxes(n.hi, n.f === 0 ? { ...b, x0: n.t } : { ...b, y0: n.t }));
+      cells = leafBoxes(scorer.tree, { x0: 0, x1: 1, y0: 0, y1: 1 }).map(b => {
+        const w = Math.max(1.2, (b.x1 - b.x0) * 288), h = Math.max(1.2, (b.y1 - b.y0) * 124);
+        return `<rect x="${(16 + b.x0 * 288).toFixed(2)}" y="${(8 + (1 - b.y1) * 124).toFixed(2)}" width="${w.toFixed(2)}" height="${h.toFixed(2)}" fill="var(--wb-fg)" opacity="${(b.v * 0.55).toFixed(3)}"/>`;
+      }).join('');
+    } else {
+      const NX = 36, NY = 24, cw = 288 / NX, chh = 124 / NY;
+      for (let i = 0; i < NX; i++) for (let j = 0; j < NY; j++) {
+        const q = scorer((i + 0.5) / NX, 1 - (j + 0.5) / NY);
+        cells += `<rect x="${16 + i * cw}" y="${8 + j * chh}" width="${cw + 0.4}" height="${chh + 0.4}" fill="var(--wb-fg)" opacity="${(q * 0.55).toFixed(3)}"/>`;
+      }
     }
     const dots = D.map(([x, y, c]) =>
       `<circle cx="${16 + x * 288}" cy="${8 + (1 - y) * 124}" r="2.4" fill="${c ? 'var(--wb-fg)' : 'var(--wb-canvas)'}" stroke="${c ? 'var(--wb-canvas)' : 'var(--wb-border-strong)'}" stroke-width=".8"/>`).join('');
@@ -14900,7 +14968,7 @@ VIZ.treesplit = el => {
     /* Sai số trên chính tập train: càng sâu càng nhỏ, và đó là cái bẫy. */
     const err = D.filter(([x, y, c]) => (scorer(x, y) > 0.5 ? 1 : 0) !== c).length;
     el.querySelector('[data-o="r"]').textContent =
-      mode === 'one' ? `Độ sâu ${d} · sai ${err}/120 trên chính tập train — số này luôn giảm khi tăng độ sâu, nên KHÔNG dùng nó để chọn độ sâu`
+      mode === 'one' ? `Độ sâu ${d} · sai ${err}/120 trên chính tập train — số này chỉ giảm hoặc đứng yên khi tăng độ sâu, nên KHÔNG dùng nó để chọn độ sâu`
         : mode === 'rf' ? `${NTREE} cây độ sâu ${d}, lấy trung bình · sai ${err}/120 trên train — nền mượt hơn hẳn một cây cùng độ sâu`
           : `${NROUND(d)} vòng, mỗi vòng một cây sâu 2 · sai ${err}/120 trên train — ranh giới sắc dần theo số vòng`;
     alt.textContent = `Mặt phẳng hai chiều (số tiền theo trục ngang, thời điểm/tần suất theo trục dọc) với 120 giao dịch. ` +
@@ -14935,9 +15003,9 @@ VIZ.calib = el => {
       <p class="ds-viz__readout" data-o="r">—</p>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see: 'ở bản <b>chưa hiệu chỉnh</b>, cả đường nằm <i>dưới</i> đường chéo rất xa: mô hình nói “85%” nhưng thực tế chỉ 47% số ca đó là gian lận. Bật <b>đã hiệu chỉnh</b>, đường bám sát đường chéo. Và để ý dòng số: <b>ROC-AUC không đổi một chữ số nào</b> — vì hiệu chỉnh là một phép biến đổi <i>đơn điệu tăng</i>, nó không đảo thứ tự của bất kỳ cặp giao dịch nào.',
+        see: 'ở bản <b>chưa hiệu chỉnh</b>, cả đường nằm <i>dưới</i> đường chéo rất xa: mô hình nói “85%” nhưng thực tế chỉ 47% số ca đó là gian lận. Bật <b>đã hiệu chỉnh</b>, đường bám sát đường chéo. Và để ý dòng số: <b>ROC-AUC không đổi một chữ số nào</b> — vì hiệu chỉnh ở đây là một hàm <i>tăng chặt</i> áp lên chính mô hình cũ (kiểu sigmoid/Platt), nó không đảo thứ tự của bất kỳ cặp giao dịch nào.',
         wrong: '“AUC cao nghĩa là xác suất của tôi dùng được”. Không. AUC chỉ đo <b>thứ tự xếp hạng</b>. Một mô hình có thể xếp hạng hoàn hảo (AUC = 1,0) mà mọi xác suất nó in ra đều sai gấp mười lần. Thứ tự đủ cho “chọn 200 ca rủi ro nhất hôm nay”; nhưng hễ bạn <b>nhân xác suất với tiền</b> — công thức ngưỡng hoà vốn ở bài Quy ra tiền — thì con số phải đúng, không chỉ đúng thứ tự.',
-        code: '<code>CalibratedClassifierCV(base, method="isotonic", cv=5)</code>, khớp trên <b>validation</b> chứ không phải train. Kiểm bằng <code>calibration_curve</code> + Brier, nhưng nhớ Brier thấp một mình chưa chứng minh hiệu chỉnh tốt khi lớp dương hiếm.',
+        code: 'muốn giữ nguyên thứ hạng như hình thì hiệu chỉnh <i>mô hình đã train</i> bằng một hàm tăng chặt, trên một tập hiệu chỉnh riêng: <code>CalibratedClassifierCV(FrozenEstimator(model), method="sigmoid").fit(X_cal, y_cal)</code> (<code>FrozenEstimator</code> ở <code>sklearn.frozen</code>, từ 1.6; <code>cv="prefit"</code> cũ đã bị bỏ). Cách <code>cv=5</code> ở trên train lại 5 bản sao của mô hình, còn isotonic là hàm bậc thang gộp nhiều điểm về cùng một giá trị — cả hai đều làm AUC xê dịch chút ít, không sai nhưng không còn "không đổi một chữ số". Kiểm bằng <code>calibration_curve</code> + Brier, nhưng nhớ Brier thấp một mình chưa chứng minh hiệu chỉnh tốt khi lớp dương hiếm.',
       })}
     </div></div>`;
   const g = el.querySelector('[data-o="g"]'), alt = el.querySelector('[data-o="alt"]');
@@ -15014,10 +15082,13 @@ VIZ.nngraph = el => {
       `<text x="160" y="98" font-size="7" text-anchor="middle" fill="var(--wb-fg-subtle)">chạy xuôi: dữ liệu → dự đoán → loss</text>`;
     g.innerHTML = h;
     const first = Math.pow(step, L - 1);
-    const sci = first >= 1e-4 && first < 1e4 ? first.toFixed(3).replace('.', ',') : first.toExponential(1).replace('.', ',');
+    /* Dưới 0,01 thì in dạng mũ: bản cũ in 0,25⁶ = 0,000244 thành "0,000", trông như gradient bằng 0. */
+    const sci = first >= 0.01 && first < 1e3 ? first.toFixed(3).replace('.', ',') : first.toExponential(1).replace('.', ',');
     el.querySelector('[data-o="r"]').textContent =
       `${ACT[act].d.toFixed(2).replace('.', ',')}${res ? ' + 1 (nối tắt)' : ''} luỹ thừa ${L - 1} = ${sci} — ` +
-      (first < 1e-6 ? 'lớp đầu gần như không nhận được tín hiệu nào' : first < 0.05 ? 'tín hiệu tới lớp đầu đã yếu đi nhiều' : 'gradient tới được lớp đầu, mạng học được');
+      (first < 1e-6 ? 'lớp đầu gần như không nhận được tín hiệu nào' : first < 0.05 ? 'tín hiệu tới lớp đầu đã yếu đi nhiều'
+        : first <= 1e3 ? (res ? 'không teo: mỗi lớp nhân ít nhất 1 nhờ nhánh đi thẳng, nên gradient tới được lớp đầu' : 'gradient tới được lớp đầu, mạng học được')
+        : 'không teo nữa nhưng lại PHÌNH (exploding) — đây là trần khi mọi lớp đều nhân đủ 1 + đạo hàm; mạng thật giữ nhánh f(x) nhỏ bằng khởi tạo và LayerNorm nên hệ số mỗi lớp gần 1');
     alt.textContent = `Chuỗi ${L} lớp. Mỗi lớp nhân gradient với hệ số ${step.toFixed(2)} khi chạy ngược ` +
       `(hàm kích hoạt ${ACT[act].t}${res ? ', có nối tắt residual' : ''}). ` +
       `Tới lớp đầu tiên, gradient còn lại cỡ ${sci} so với lớp cuối. Các ô được tô đậm nhạt theo độ lớn đó.`;
@@ -15030,7 +15101,12 @@ VIZ.nngraph = el => {
    Sơ đồ ASCII trong bài đã tả một khối. Thứ nó không tả được là hệ quả
    của việc xếp chồng, và đó lại chính là chỗ câu "vô hạn" từng sai. */
 VIZ.tfblock = el => {
-  const SEQ = 512, DM = 768;
+  /* Bộ nhớ activation khi train, mỗi khối, một mẫu, fp16, không tính lại:
+     s·h·(34 + 5·a·s/h) byte (Korthikanti và cộng sự 2022, "Reducing Activation
+     Recomputation in Large Transformer Models"), a = 12 đầu như BERT-base. Bản cũ lấy
+     2 tensor (s, h) fp32 mỗi khối = 3,1 MB, thấp hơn gần mười lần con số thật ~29 MB. */
+  const SEQ = 512, DM = 768, HEADS = 12;
+  const actMB = n => n * SEQ * DM * (34 + 5 * HEADS * SEQ / DM) / 1e6;
   el.innerHTML = `
     <div class="wb-card"><div class="wb-card__body">
       <p class="ds-viz__label">Kéo số khối: shape có đổi không, và cái gì thì đổi?</p>
@@ -15045,7 +15121,7 @@ VIZ.tfblock = el => {
       <p class="ds-viz__readout" data-o="r">—</p>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see: 'dòng shape <b>(512, 768)</b> giữ nguyên ở đầu vào và đầu ra của <i>mọi</i> khối — đó là toàn bộ lý do xếp chồng được, và là thứ duy nhất "không đổi". Kéo lên 96 khối: số tham số và bộ nhớ activation tăng <b>tuyến tính theo số khối</b>, còn thanh "độ khó tối ưu" thì tăng theo — đó là hai thứ thật sự chặn độ sâu.',
+        see: 'dòng shape <b>(512, 768)</b> giữ nguyên ở đầu vào và đầu ra của <i>mọi</i> khối — đó là toàn bộ lý do xếp chồng được, và là thứ duy nhất "không đổi". Kéo lên 96 khối: hai thanh số tham số và bộ nhớ activation tăng <b>tuyến tính theo số khối</b> — cùng với độ ổn định khi huấn luyện (dòng chữ dưới hình), đó là những thứ thật sự chặn độ sâu.',
         wrong: '“shape khớp nghĩa là xếp bao nhiêu cũng được”. Shape khớp chỉ là điều kiện <i>cần</i>. GPT-3 dừng ở 96 khối không phải vì khối thứ 97 sai shape, mà vì compute, bộ nhớ và độ ổn định khi huấn luyện. Đây cũng là lý do residual + LayerNorm nằm sẵn trong mỗi khối chứ không phải tuỳ chọn.',
         code: 'trong PyTorch là <code>nn.TransformerEncoderLayer</code> lặp <code>num_layers</code> lần. Số tham số xấp xỉ <code>12 · n · d²</code> — đổi <code>d</code> đắt hơn đổi <code>n</code> rất nhiều vì nó vào bình phương.',
       })}
@@ -15068,7 +15144,7 @@ VIZ.tfblock = el => {
     const bars = [
       ['shape đầu ra', 0, '(512, 768) — hằng số'],
       ['tham số', n / 96, `~${(12 * n * DM * DM / 1e6).toFixed(0)} triệu`],
-      ['bộ nhớ activation', n / 96, `~${(n * SEQ * DM * 2 * 4 / 1e6).toFixed(0)} MB/mẫu`],
+      ['bộ nhớ activation', n / 96, `~${actMB(n).toLocaleString('vi', { maximumFractionDigits: 0 })} MB/mẫu`],
     ];
     bars.forEach(([lab, v, txt], i) => {
       const y = yb + 14 + i * 12;
@@ -15082,7 +15158,7 @@ VIZ.tfblock = el => {
       `${n} khối · shape vẫn (${SEQ}, ${DM}) · ~${(12 * n * DM * DM / 1e6).toFixed(0)} triệu tham số · ` +
       (n <= 12 ? 'độ sâu này train được trên một GPU đơn' : n <= 48 ? 'độ sâu này cần chú ý lr warmup và bộ nhớ' : 'độ sâu này cần hạ tầng nhiều GPU — shape vẫn khớp, nhưng đó không còn là ràng buộc chính');
     alt.textContent = `Sơ đồ ${n} khối Transformer xếp chồng. Đầu vào và đầu ra của mọi khối đều có shape (${SEQ}, ${DM}) — không đổi theo số khối. ` +
-      `Số tham số xấp xỉ ${(12 * n * DM * DM / 1e6).toFixed(0)} triệu và bộ nhớ activation xấp xỉ ${(n * SEQ * DM * 2 * 4 / 1e6).toFixed(0)} MB mỗi mẫu, cả hai tăng tuyến tính theo số khối.`;
+      `Số tham số xấp xỉ ${(12 * n * DM * DM / 1e6).toFixed(0)} triệu và bộ nhớ activation khi train xấp xỉ ${actMB(n).toFixed(0)} MB mỗi mẫu (fp16), cả hai tăng tuyến tính theo số khối.`;
   };
   el.addEventListener('input', upd); upd();
 };
@@ -15347,13 +15423,15 @@ VIZ.funnel = el => {
    ra thứ bảng che mất: có dòng chênh lệch nhỏ hơn chính độ bất định của
    nó, và dòng "Δ = 0" lại là dòng đắt nhất về tiền. */
 VIZ.ablation = el => {
-  /* [tên, PR-AUC, nửa bề rộng KTC, ghi chú]. Cùng hệ số minh hoạ với bài. */
+  /* [tên, PR-AUC, đầu dưới KTC, đầu trên KTC, ghi chú]. Cùng hệ số minh hoạ với bài:
+     hai dòng 0,412 và 0,367 lấy đúng khoảng bootstrap bài in (0,388–0,437 và 0,344–0,391);
+     hai dòng còn lại là số minh hoạ cùng bề rộng. */
   const A = [
-    ['Đầy đủ (đề xuất)', 0.412, 0.024, ''],
-    ['− feature chu kỳ (sin/cos)', 0.398, 0.023, 'nhỏ nhưng ổn định qua các seed'],
-    ['− feature tốc độ giao dịch', 0.341, 0.026, 'đóng góp lớn nhất'],
-    ['− lệch so với thói quen', 0.367, 0.025, ''],
-    ['− chọn ngưỡng theo chi phí', 0.412, 0.024, 'PR-AUC không đổi, nhưng thiệt hại +23%'],
+    ['Đầy đủ (đề xuất)', 0.412, 0.388, 0.437, ''],
+    ['− feature chu kỳ (sin/cos)', 0.398, 0.375, 0.421, 'nhỏ nhưng ổn định qua các seed'],
+    ['− feature tốc độ giao dịch', 0.341, 0.315, 0.367, 'đóng góp lớn nhất'],
+    ['− lệch so với thói quen', 0.367, 0.344, 0.391, ''],
+    ['− chọn ngưỡng theo chi phí', 0.412, 0.388, 0.437, 'PR-AUC không đổi, nhưng thiệt hại +23%'],
   ];
   el.innerHTML = `
     <div class="wb-card"><div class="wb-card__body">
@@ -15369,25 +15447,28 @@ VIZ.ablation = el => {
     </div></div>`;
   const g = el.querySelector('[data-o="g"]'), alt = el.querySelector('[data-o="alt"]');
   const LO = 0.30, HI = 0.46, px = v => 132 + (v - LO) / (HI - LO) * 172;
-  g.innerHTML = A.map(([t, m, s], i) => {
-    const y = 12 + i * 20, base = A[0][1];
-    const overlap = i > 0 && (m + s) >= (base - A[0][2]);
+  const overlaps = A.map(([, , lo, hi], i) => i > 0 && hi >= A[0][2] && lo <= A[0][3]);
+  g.innerHTML = A.map(([t, m, lo, hi], i) => {
+    const y = 12 + i * 20, overlap = overlaps[i];
     return `<text x="128" y="${y + 3}" font-size="6.5" text-anchor="end" fill="var(--wb-fg-muted)">${t}</text>` +
-      `<line x1="${px(m - s)}" y1="${y}" x2="${px(m + s)}" y2="${y}" stroke="${i ? (overlap ? 'var(--wb-neutral-strong)' : 'var(--wb-fg)') : 'var(--wb-fg)'}" stroke-width="1.6"/>` +
-      `<line x1="${px(m - s)}" y1="${y - 3}" x2="${px(m - s)}" y2="${y + 3}" stroke="var(--wb-neutral-strong)" stroke-width="1"/>` +
-      `<line x1="${px(m + s)}" y1="${y - 3}" x2="${px(m + s)}" y2="${y + 3}" stroke="var(--wb-neutral-strong)" stroke-width="1"/>` +
+      `<line x1="${px(lo)}" y1="${y}" x2="${px(hi)}" y2="${y}" stroke="${i ? (overlap ? 'var(--wb-neutral-strong)' : 'var(--wb-fg)') : 'var(--wb-fg)'}" stroke-width="1.6"/>` +
+      `<line x1="${px(lo)}" y1="${y - 3}" x2="${px(lo)}" y2="${y + 3}" stroke="var(--wb-neutral-strong)" stroke-width="1"/>` +
+      `<line x1="${px(hi)}" y1="${y - 3}" x2="${px(hi)}" y2="${y + 3}" stroke="var(--wb-neutral-strong)" stroke-width="1"/>` +
       `<circle cx="${px(m)}" cy="${y}" r="2.8" fill="var(--wb-fg)"/>` +
-      (i && overlap ? `<text x="${px(m + s) + 4}" y="${y + 2.5}" font-size="5.5" fill="var(--wb-warning)">chồng lấn</text>` : '');
+      (overlap ? `<text x="${px(hi) + 4}" y="${y + 2.5}" font-size="5.5" fill="var(--wb-warning)">chồng lấn</text>` : '');
   }).join('') +
     `<line x1="${px(A[0][1])}" y1="4" x2="${px(A[0][1])}" y2="104" stroke="var(--wb-fg)" stroke-width=".8" stroke-dasharray="3 2.5" opacity=".5"/>` +
     `<text x="132" y="114" font-size="6.5" fill="var(--wb-fg-subtle)">PR-AUC ${LO.toFixed(2).replace('.', ',')}</text>` +
     `<text x="304" y="114" font-size="6.5" text-anchor="end" fill="var(--wb-fg-subtle)">${HI.toFixed(2).replace('.', ',')}</text>`;
+  /* Đếm từ dữ liệu, không gõ tay: bản cũ ghi "2/4 mảnh tách hẳn" trong khi chỉ một
+     khoảng (tốc độ giao dịch) không chạm khoảng của mô hình đầy đủ. */
+  const sep = A.filter((_, i) => i > 0 && !overlaps[i]).map(a => a[0].replace('− ', ''));
   el.querySelector('[data-o="r"]').textContent =
-    'Chỉ 2/4 mảnh có khoảng tách hẳn khỏi mô hình đầy đủ — hai mảnh còn lại cần bootstrap ghép cặp mới kết luận được';
+    `Chỉ ${sep.length}/4 mảnh có khoảng tách hẳn khỏi mô hình đầy đủ (${sep.join(', ')}) — hai mảnh feature còn lại cần bootstrap ghép cặp mới kết luận được, còn mảnh ngưỡng phải đo bằng tiền`;
   el.querySelector('[data-o="alt"]').textContent =
-    'Biểu đồ khoảng tin cậy cho năm cấu hình. ' + A.map(([t, m, s]) =>
-      `${t}: PR-AUC ${m.toFixed(3)}, khoảng ${(m - s).toFixed(3)} đến ${(m + s).toFixed(3)}`).join('; ') +
-    '. Khoảng của cấu hình bỏ feature chu kỳ và của cấu hình bỏ lệch thói quen đều chồng lấn khoảng của cấu hình đầy đủ.';
+    'Biểu đồ khoảng tin cậy cho năm cấu hình. ' + A.map(([t, m, lo, hi]) =>
+      `${t}: PR-AUC ${m.toFixed(3)}, khoảng ${lo.toFixed(3)} đến ${hi.toFixed(3)}`).join('; ') +
+    '. Khoảng của cấu hình bỏ feature chu kỳ và của cấu hình bỏ lệch thói quen đều chồng lấn khoảng của cấu hình đầy đủ; chỉ cấu hình bỏ feature tốc độ nằm tách hẳn.';
 };
 
 /* -- 6.40 Cửa sổ trượt: bỏ một mảnh cú pháp thì hỏng những gì --
@@ -15491,7 +15572,7 @@ VIZ.meanmed = el => {
       <p class="ds-viz__readout" data-o="r">—</p>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see: 'ở mức nhỏ nhất hai vạch gần như chồng lên nhau. Kéo sang phải: <b>trung vị đứng yên</b> vì nó chỉ hỏi “giá trị ở giữa là bao nhiêu”, còn <b>trung bình chạy theo đuôi</b> — chỉ ba giao dịch cũng kéo được nó ra khỏi vùng mà 97% dữ liệu nằm. Đọc dòng số dưới hình: tỉ lệ giao dịch <i>dưới mức trung bình</i> tăng dần tới hơn 80%. Trục cố ý <b>cắt ở phân vị 95</b> để phần thân còn đọc được — mấy giao dịch ra ngoài khung được ghi thành một dòng ở góc dưới phải, không dồn vào cột cuối.',
+        see: 'ở mức nhỏ nhất hai vạch gần như chồng lên nhau. Kéo sang phải: <b>trung vị đứng yên</b> vì nó chỉ hỏi “giá trị ở giữa là bao nhiêu”, còn <b>trung bình chạy theo đuôi</b> — chỉ ba giao dịch cũng kéo được nó ra khỏi vùng mà 97% dữ liệu nằm. Đọc dòng số dưới hình: tỉ lệ giao dịch <i>dưới mức trung bình</i> đi từ 50% lên 97% — từ mức “gấp 18 lần” trở đi, toàn bộ 100 giao dịch thường đều nằm dưới trung bình. Trục cố ý <b>cắt ở phân vị 95</b> để phần thân còn đọc được — mấy giao dịch ra ngoài khung được ghi thành một dòng ở góc dưới phải, không dồn vào cột cuối.',
         wrong: '“trung bình là con số đại diện”. Nó đại diện cho <i>tổng chia đều</i>, chứ không cho <i>một giao dịch điển hình</i>. Với tiền, thu nhập, lượt xem — mọi thứ có đuôi dài — câu hỏi “một giao dịch thường là bao nhiêu” phải trả lời bằng trung vị. Trung bình vẫn đúng chỗ của nó: khi bạn cần TỔNG (doanh thu, thiệt hại cả tháng), vì tổng = trung bình × số dòng.',
         code: '<code>df.describe()</code> in sẵn cả hai: hàng <code>mean</code> và hàng <code>50%</code>. Hai hàng đó lệch nhau nhiều là dấu hiệu đuôi dài — và là lúc nên xem thêm <code>np.log1p</code> ở bài Biến số.',
       })}
@@ -15721,7 +15802,7 @@ VIZ.edapanel = el => {
     } else if (k === 'rate') {
       g.innerHTML = bars(HOURS, HOURS.map((_, i) => i % 3 === 0 ? i : null), v => v > 1.8 ? 'var(--wb-warning)' : 'var(--wb-border-strong)')
         + `<text x="16" y="14" font-size="7" fill="var(--wb-fg-subtle)">tỉ lệ gian lận (%) theo giờ trong ngày</text>`;
-      r.innerHTML = 'Rạng sáng (0–3h) cao gấp <b>~4 lần</b> ban ngày. Đây chính là chỗ bạn tự tìm ra động lực cho mã hoá sin/cos — và nó không nhìn ra được từ bảng <code>describe()</code>.';
+      r.innerHTML = 'Rạng sáng (0–3h) cao gấp <b>hơn 3 lần</b> ban ngày. Đây chính là chỗ bạn tự tìm ra động lực cho mã hoá sin/cos — và nó không nhìn ra được từ bảng <code>describe()</code>.';
       alt.textContent = 'Biểu đồ cột tỉ lệ gian lận theo 24 giờ: cao nhất khoảng 2,6 phần trăm lúc 1 giờ sáng, thấp nhất khoảng 0,4 phần trăm lúc 7 giờ sáng.';
     } else if (k === 'miss') {
       g.innerHTML = bars(MISS.map(m => m[1]), MISS.map(m => m[0]), v => v > 50 ? 'var(--wb-warning)' : 'var(--wb-border-strong)', v => v + '%');
@@ -15768,7 +15849,8 @@ VIZ.nnforward = el => {
       { t: 'đầu vào', s: [B, IN], p: 0, k: 'io' },
       { t: 'Linear(' + IN + ',' + H + ')', s: [B, H], p: IN * H + H, k: 'lin' },
       { t: 'ReLU', s: [B, H], p: 0, k: 'act' },
-      { t: 'Linear(' + H + ',' + H / 2 + ')', s: [B, Math.max(1, Math.round(H / 2))], p: H * Math.max(1, Math.round(H / 2)) + Math.max(1, Math.round(H / 2)), k: 'lin' },
+      /* nhãn dùng đúng số cột đã làm tròn: bản cũ in H / 2 trần, ra "Linear(33,16.5)" với H lẻ */
+      { t: 'Linear(' + H + ',' + Math.max(1, Math.round(H / 2)) + ')', s: [B, Math.max(1, Math.round(H / 2))], p: H * Math.max(1, Math.round(H / 2)) + Math.max(1, Math.round(H / 2)), k: 'lin' },
       { t: 'ReLU', s: [B, Math.max(1, Math.round(H / 2))], p: 0, k: 'act' },
       { t: 'Linear(' + Math.max(1, Math.round(H / 2)) + ',1)', s: [B, 1], p: Math.max(1, Math.round(H / 2)) + 1, k: 'lin' },
       { t: 'sigmoid', s: [B, 1], p: 0, k: 'act' },
@@ -15877,17 +15959,23 @@ VIZ.losscurve = el => {
    q-regress dạy MAE/RMSE rồi dạy khoảng dự đoán. Người mới hay gộp hai thứ đó
    làm một; residual plot cộng khoảng phủ tách chúng ra bằng hình. */
 VIZ.residual = el => {
-  /* 60 điểm cố định: y thật, dự đoán, và độ rộng khoảng dự đoán. */
+  /* 60 điểm cố định. Nhiễu e ~ N(0, 1) giả lập bằng tổng ba số băm (không random, để
+     hình luôn như nhau). Bản cũ dùng sin(1,9i) + 1,4·sin(0,7i) nhân (1 + x/40): phần dư
+     của chính "Mô hình ổn" đã có sóng và loe gấp ba, và chế độ "Sai số nở" dùng lại y
+     hệt dữ liệu đó, chỉ đổi dải — nên chuyển chế độ thì phần dư không đổi gì. */
+  const fr = v => v - Math.floor(v), hz = (i, k) => fr(Math.sin(i * 12.9898 + k * 78.233) * 43758.5453);
   const P = Array.from({ length: 60 }, (_, i) => {
     const x = 5 + i * 1.5;
-    const wob = Math.sin(i * 1.9) * 1.0 + Math.sin(i * 0.7) * 1.4;
-    return { x, y: x * 0.8 + 4 + wob * (1 + x / 40), yhat: x * 0.8 + 4 };
+    return { x, e: (hz(i, 1) + hz(i, 2) + hz(i, 3) - 1.5) * 2, yhat: x * 0.8 + 4 };
   });
   const M = {
-    ok:   { t: 'Mô hình ổn', f: p => p },
-    bias: { t: 'Thiếu một phi tuyến', f: p => ({ ...p, yhat: p.yhat + (p.x - 50) * (p.x - 50) * 0.006 - 2.5 }) },
-    het:  { t: 'Sai số nở theo x', f: p => p },
+    ok:   { t: 'Mô hình ổn', f: p => ({ ...p, y: p.yhat + p.e }) },
+    /* dự đoán thiếu một số hạng bậc hai, trừ đi trung bình của nó để phần dư vẫn quanh 0 */
+    bias: { t: 'Thiếu một phi tuyến', f: p => ({ ...p, y: p.yhat + p.e, yhat: p.yhat - 0.0015 * ((p.x - 49.25) ** 2 - 653) }) },
+    /* cùng nhiễu, độ lệch chuẩn tăng tuyến tính theo x (gấp sáu từ trái sang phải) */
+    het:  { t: 'Sai số nở theo x', f: p => ({ ...p, y: p.yhat + p.e * (0.25 + p.x / 50) / 1.24 }) },
   };
+  const maeOf = k => P.map(M[k].f).reduce((s, p) => s + Math.abs(p.y - p.yhat), 0) / P.length;
   el.innerHTML = `
     <div class="wb-card"><div class="wb-card__body">
       <p class="ds-viz__label">Phần dư nói mô hình sai <i>ở đâu</i> — MAE chỉ nói sai <i>bao nhiêu</i></p>
@@ -15898,7 +15986,7 @@ VIZ.residual = el => {
       <p class="ds-viz__readout" data-o="r">—</p>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see: 'ở <b>Mô hình ổn</b>, phần dư rải đều quanh vạch 0 — không hình dạng nào. Đổi sang <b>Thiếu một phi tuyến</b>: MAE chỉ nhích lên một chút, nhưng phần dư vẽ thành một đường cong rõ ràng — mô hình sai <i>có hệ thống</i> ở hai đầu. Đổi sang <b>Sai số nở</b>: phần dư loe ra hình phễu, nghĩa là một khoảng dự đoán rộng cố định sẽ vừa quá rộng ở đầu này vừa quá hẹp ở đầu kia.',
+        see: 'ở <b>Mô hình ổn</b>, phần dư rải đều quanh vạch 0 — không hình dạng nào. Đổi sang <b>Thiếu một phi tuyến</b>: MAE tăng lên, nhưng con số đó không cho biết sai ở đâu — phần dư thì vẽ thành một đường cong rõ ràng: mô hình sai <i>có hệ thống</i> ở hai đầu. Đổi sang <b>Sai số nở</b>: phần dư loe ra hình phễu, nghĩa là một khoảng dự đoán rộng cố định sẽ vừa quá rộng ở đầu này vừa quá hẹp ở đầu kia.',
         wrong: '“MAE thấp là mô hình tốt”. MAE là một con số duy nhất cho toàn bộ tập — nó không phân biệt được “sai đều ở mọi nơi” với “rất đúng ở giữa, sai hệ thống ở hai đầu”, mà hai thứ đó dẫn tới hai hành động hoàn toàn khác nhau. Vẽ phần dư <b>trước</b> khi tin MAE.',
         code: '<code>resid = y_true - y_pred</code> rồi <code>plt.scatter(y_pred, resid)</code> và một đường ngang ở 0. Với khoảng dự đoán, con số phải báo cáo là <b>độ phủ thực tế</b> (bao nhiêu phần trăm điểm thật rơi vào khoảng), không phải độ rộng bạn đặt ra.',
       })}
@@ -15912,7 +16000,10 @@ VIZ.residual = el => {
     const res = pts.map(p => p.y - p.yhat);
     const sd = Math.sqrt(res.reduce((s, x) => s + x * x, 0) / res.length);
     const mae = res.reduce((s, x) => s + Math.abs(x), 0) / res.length;
-    const band = k === 'het' ? pts.map(p => w * sd * (0.4 + p.x / 55)) : pts.map(() => w * sd);
+    /* Một khoảng rộng ĐỀU ±w·σ ở cả ba chế độ — đúng thứ người ta hay làm, và đúng thứ
+       chế độ "Sai số nở" muốn cho thấy là hỏng. */
+    const band = pts.map(() => w * sd);
+    const covAt = (a, b) => { const r = res.slice(a, b); return r.filter((e, i) => Math.abs(e) <= band[a + i]).length / r.length * 100; };
     const cov = res.filter((e, i) => Math.abs(e) <= band[i]).length / res.length * 100;
     const mx = Math.max(...res.map(Math.abs), ...band) * 1.15;
     const X = p => 20 + ((p.x - 5) / 88) * 286, Y = v => 56 - (v / mx) * 44;
@@ -15923,11 +16014,11 @@ VIZ.residual = el => {
       + `<line x1="20" y1="56" x2="308" y2="56" stroke="var(--wb-border-strong)" stroke-width="1.2"/>`
       + pts.map((p, i) => `<circle cx="${X(p).toFixed(1)}" cy="${Y(res[i]).toFixed(1)}" r="2.1" fill="${Math.abs(res[i]) <= band[i] ? 'var(--wb-fg)' : 'var(--wb-warning)'}"/>`).join('')
       + `<text x="22" y="12" font-size="6.5" fill="var(--wb-fg-subtle)">phần dư = thật − dự đoán</text>`
-      + `<text x="22" y="60" font-size="6.5" fill="var(--wb-fg-subtle)">0</text>`
+      + `<text x="17" y="58.5" font-size="6.5" text-anchor="end" fill="var(--wb-fg-subtle)">0</text>`
       + `<text x="306" y="106" font-size="6.5" text-anchor="end" fill="var(--wb-fg-subtle)">giá trị dự đoán →</text>`;
     r.innerHTML = `MAE <b>${mae.toFixed(2).replace('.', ',')}</b> · độ phủ thực tế của khoảng: <b>${cov.toFixed(0)}%</b>`
-      + (k === 'bias' ? ' — MAE chỉ nhích lên, nhưng phần dư đã cong: mô hình sai <b>có hệ thống</b>, không phải sai ngẫu nhiên.'
-        : k === 'het' ? ' — khoảng rộng đều là sai loại: nó quá rộng ở bên trái và quá hẹp ở bên phải, dù độ phủ trung bình trông ổn.'
+      + (k === 'bias' ? ` — MAE từ ${maeOf('ok').toFixed(2).replace('.', ',')} lên ${mae.toFixed(2).replace('.', ',')}: con số chỉ nói sai nhiều hơn, không nói sai ở đâu. Phần dư thì đã cong — mô hình sai <b>có hệ thống</b> ở hai đầu.`
+        : k === 'het' ? ` — khoảng rộng đều là sai loại: một phần ba bên trái phủ ${covAt(0, 20).toFixed(0)}%, một phần ba bên phải chỉ phủ ${covAt(40, 60).toFixed(0)}%, dù độ phủ trung bình trông ổn.`
           : ' — phần dư không có hình dạng nào, đúng như mong đợi. Chỉnh thanh trượt tới khi độ phủ đạt mức bạn hứa (thường 90 hoặc 95%).');
     alt.textContent = `Biểu đồ phần dư, tình huống ${M[k].t.toLowerCase()}, dải khoảng dự đoán rộng ${w.toFixed(1)} lần độ lệch chuẩn. `
       + `MAE bằng ${mae.toFixed(2)}, độ phủ thực tế ${cov.toFixed(0)} phần trăm.`;
@@ -15956,8 +16047,8 @@ VIZ.confmat = el => {
       <p class="ds-viz__readout" data-o="r">—</p>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see: 'ở <b>Số đếm</b>, ô “hợp lệ → hợp lệ” với 4.960 làm mọi ô khác thành đen kịt như nhau — bảng trông như một mô hình hoàn hảo. Đổi sang <b>chuẩn hoá theo hàng</b>: bốn lớp gian lận hiện nguyên hình, và bạn thấy phần lớn ca bị đẩy nhầm vào cột “hợp lệ”. Ba con số F1 dưới hình chênh nhau rất xa trên <i>cùng</i> ma trận này.',
-        wrong: '“báo cáo F1 là đủ”. F1 <i>nào</i>? <b>micro</b> bằng đúng accuracy nên bị lớp đông áp đảo; <b>weighted</b> cũng vậy; chỉ <b>macro</b> cho mỗi lớp một phiếu bằng nhau. Với bài toán mà lớp hiếm mới là lớp quan trọng, chọn con số nào để in đậm là một quyết định trung thực hay không trung thực.',
+        see: 'ở <b>Số đếm</b>, ô “hợp lệ → hợp lệ” với 4.960 đậm hẳn, còn mọi ô khác nhạt gần như nhau — bảng trông như một mô hình hoàn hảo. Đổi sang <b>chuẩn hoá theo hàng</b>: bốn lớp gian lận hiện nguyên hình, và bạn thấy phần lớn ca bị đẩy nhầm vào cột “hợp lệ”. Ba con số F1 dưới hình chênh nhau rất xa trên <i>cùng</i> ma trận này.',
+        wrong: '“báo cáo F1 là đủ”. F1 <i>nào</i>? <b>micro</b> bằng đúng accuracy (mỗi dòng một nhãn) nên bị lớp đông áp đảo; <b>weighted</b> cũng vậy; chỉ <b>macro</b> cho mỗi lớp một phiếu bằng nhau. Với bài toán mà lớp hiếm mới là lớp quan trọng, chọn con số nào để in đậm là một quyết định trung thực hay không trung thực.',
         code: '<code>ConfusionMatrixDisplay.from_predictions(y, p, normalize="true")</code> — <code>normalize="true"</code> là chuẩn hoá theo HÀNG (recall từng lớp). Luôn kèm <code>classification_report</code> để có bảng F1 <b>từng lớp</b>; con số gộp giấu đi đúng thứ đáng nhìn.',
       })}
     </div></div>`;
@@ -16012,7 +16103,7 @@ VIZ.plan8dep = el => {
     { k: 'split', w: [2, 3], a: 'Chia tập · T2', b: 'Feature · T3',
       why: 'Feature chỉ được học thống kê trên phần train.',
       broke: 'Tính scale, target-encoding hay tần suất trên cả bảng rồi mới chia: số của test đã lọt vào train. Điểm validation đẹp lên, chạy thật thì tụt, và không có dòng nào trong bảng kết quả tố giác việc đó.' },
-    { k: 'metric', w: [4], a: 'Đo lường · T4', b: 'Tuning · T4',
+    { k: 'metric', w: [3, 4], a: 'Đo lường · T3', b: 'Tuning · T4',
       why: 'Tuning tối đa hoá đúng con số bạn đưa cho nó.',
       broke: 'Tune theo accuracy trong bài chỉ có 0,2% gian lận: 60 lần thử đều đi về phía “đoán sạch hết”. Bảng kết quả vẫn đẹp lên từng dòng trong khi mô hình tệ đi.' },
     { k: 'dl', w: [6, 7], a: 'Deep learning · T6', b: 'Họ bài toán · T7',
@@ -16086,7 +16177,7 @@ VIZ.plan8dep = el => {
 VIZ.textlevels = el => {
   const SA = 'HOÀN TIỀN khẩn 24h'.normalize('NFC'), SB = 'urgent refund now'.normalize('NFC');
   const f1 = s => [s.length, (s.match(/\d/g) || []).length,
-    (s.match(/[A-Z]/g) || []).length / (s.length + 1), /refund|urgent|verify/.test(s.toLowerCase()) ? 1 : 0];
+    (s.match(/\p{Lu}/gu) || []).length / (s.length + 1), /refund|urgent|verify/.test(s.toLowerCase()) ? 1 : 0];   // \p{Lu}: [A-Z] bỏ sót À, Ề
   const vA = f1(SA), vB = f1(SB);
   const cos = (p, q) => {
     const d = p.reduce((s, x, i) => s + x * q[i], 0);
@@ -16114,7 +16205,7 @@ VIZ.textlevels = el => {
       <p class="ds-viz__sub" data-o="note">—</p>
       <p class="ds-viz__alt" data-o="alt"></p>
       ${seeBlock({
-        see: 'mức 1 báo <b>giống 99%</b> — và đó là con số <i>tệ nhất</i> trong ba mức, vì nó giống nhờ <b>độ dài</b> (18 và 17 ký tự). Cột duy nhất mang nghĩa, <code>has_keyword</code>, lệch nhau 0 và 1, nhưng nó bị ba cột kia lớn hơn hàng chục lần dìm mất. Mức 2 báo <b>0,00</b>: đúng theo định nghĩa của nó (không chung một từ nào) và sai theo nghĩa. Chỉ mức 3 báo một số phản ánh nghĩa.',
+        see: 'mức 1 báo <b>giống 99%</b> — và đó là con số <i>tệ nhất</i> trong ba mức, vì nó giống nhờ <b>độ dài</b> (18 và 17 ký tự). Cột duy nhất mang nghĩa, <code>has_keyword</code>, lệch nhau 0 và 1, nhưng nó bị cột độ dài, lớn hơn hàng chục lần, dìm mất. Mức 2 báo <b>0,00</b>: đúng theo định nghĩa của nó (không chung một từ nào) và sai theo nghĩa. Chỉ mức 3 báo một số phản ánh nghĩa.',
         wrong: '“cosine cao thì hai văn bản gần nghĩa”. Cosine không biết gì về nghĩa — nó chỉ đo góc giữa hai vector, nên nó tốt đúng bằng cái vector bạn đưa vào. Ở mức 1, chưa scale thì cosine gần như chỉ đo cột có giá trị lớn nhất.',
         code: 'đó là lý do đặc trưng thủ công phải đi qua <code>StandardScaler</code> trước mọi phép đo khoảng cách, và là lý do bài <b>Chuẩn hoá</b> đứng trước bài này trong lộ trình.',
       })}
@@ -16140,7 +16231,7 @@ VIZ.textlevels = el => {
         });
       });
       s += rowLab(32.5, 'A') + rowLab(58.5, 'B');
-      s += `<text x="160" y="72" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">4 cột — ba cột đầu cỡ hàng chục, cột cuối cỡ 0–1</text>`;
+      s += `<text x="160" y="72" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">4 cột — cột độ dài cỡ hàng chục, ba cột còn lại cỡ 0–2</text>`;
     } else {
       const capTop = m === 'm2' ? '24 trong 300 cột đầu — ô tô đậm là cột có giá trị khác 0'
         : '24 trong 384 cột đầu — cột nào cũng có giá trị';
@@ -16165,7 +16256,7 @@ VIZ.textlevels = el => {
       o('sim').textContent = n2(c);
       o('exp').textContent = 'Được';
       o('note').innerHTML = `Vector A = [${vA[0]}, ${vA[1]}, ${n2(vA[2])}, ${vA[3]}], B = [${vB[0]}, ${vB[1]}, ${n2(vB[2])}, ${vB[3]}]. `
-        + `Cosine ${n2(c)} — <b>gần như hoàn toàn do cột “độ dài”</b>: 18 × 17 đã chiếm hết tử số. Cột <code>has_keyword</code> lệch 0 với 1 — cột duy nhất mang nghĩa — nhưng nó góp 0 vào tử số và bị ba cột cỡ hàng chục dìm mất.`;
+        + `Cosine ${n2(c)} — <b>gần như hoàn toàn do cột “độ dài”</b>: 18 × 17 đã chiếm hết tử số. Cột <code>has_keyword</code> lệch 0 với 1 — cột duy nhất mang nghĩa — nhưng nó góp 0 vào tử số và bị cột độ dài cỡ hàng chục dìm mất.`;
     } else if (m === 'm2') {
       o('nc').textContent = '300';
       o('sim').textContent = n2(0);
@@ -16301,13 +16392,14 @@ VIZ.unsupmix = el => {
   for (let i = 0; i < 6; i++) PTS.push({ g: 2, x: MC[0] + gauss() * MSD, y: MC[1] + gauss() * MSD });
   const SUP_R = 0.105;
   const d = (p, c) => Math.hypot(p.x - c[0], p.y - c[1]);
+  const DIST = PTS.map(p => d(p, NC)).sort((a, b) => b - a);   // xa tâm đám sạch nhất trước
   el.innerHTML = `
     <div class="wb-card"><div class="wb-card__body">
       <p class="ds-viz__label">188 giao dịch. Kéo độ nhạy của bộ phát hiện bất thường, đổi qua ba cách chặn</p>
       ${seg('Cách chặn', [{ k: 'sup', t: 'Chỉ mô hình có giám sát' }, { k: 'iso', t: 'Chỉ điểm bất thường' },
         { k: 'both', t: 'Cộng cả hai' }], 'sup')}
       <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name">Độ nhạy bộ bất thường (<code>contamination</code>)</span><span class="ds-ctrl__val" data-o="sv">—</span></div>
-        <input class="wb-range" type="range" min="1" max="100" value="50" data-i="s" aria-label="Độ nhạy bộ phát hiện bất thường"></div>
+        <input class="wb-range" type="range" min="1" max="40" value="10" data-i="s" aria-label="Độ nhạy bộ phát hiện bất thường, nửa phần trăm"></div>
       <svg viewBox="0 0 320 150" aria-hidden="true"><g data-o="g"></g></svg>
       ${key([['var(--wb-fg)', 'gian lận kiểu ĐÃ CÓ NHÃN (12)'], ['var(--wb-warning)', 'gian lận kiểu MỚI (6)'], ['var(--wb-border-strong)', 'giao dịch sạch (170)']])}
       <div class="wb-grid wb-grid--3" style="margin-top:10px">
@@ -16328,9 +16420,13 @@ VIZ.unsupmix = el => {
   const px = x => X0 + x * (X1 - X0), py = y => Y1 - y * (Y1 - Y0);
   const draw = () => {
     const mode = el.querySelector('[data-seg][aria-pressed="true"]').dataset.seg;
-    const sv = +el.querySelector('[data-i="s"]').value;
-    const R = 0.44 - (sv / 100) * 0.26;
-    el.querySelector('[data-o="sv"]').textContent = (sv / 10).toFixed(1).replace('.', ',') + '%';
+    const sv = +el.querySelector('[data-i="s"]').value, pct = sv / 2;
+    /* contamination = tỉ lệ điểm mà bộ dò gắn cờ, đúng định nghĩa của IsolationForest:
+       bán kính đặt sao cho đúng pct% trong 188 điểm nằm ngoài. Bản cũ cho bán kính chạy
+       tuyến tính theo thanh, nên ở "9,2%" nó gắn cờ 49/188 = 26% số điểm. */
+    const nFlag = Math.round(pct / 100 * PTS.length);
+    const R = nFlag ? (DIST[nFlag - 1] + DIST[nFlag]) / 2 : DIST[0] + 0.01;
+    el.querySelector('[data-o="sv"]').textContent = pct.toFixed(1).replace('.', ',') + '%';
     const flag = p => {
       const bySup = d(p, KC) <= SUP_R, byIso = d(p, NC) >= R;
       return mode === 'sup' ? bySup : mode === 'iso' ? byIso : (bySup || byIso);
@@ -16367,7 +16463,7 @@ VIZ.unsupmix = el => {
     o('alt').textContent =
       `Biểu đồ tán xạ 188 giao dịch trên hai trục đặc trưng. 170 điểm sạch tụ thành một đám ở giữa; 12 điểm gian lận đã có nhãn tụ thành cụm nhỏ nằm ngay mép phải đám sạch; 6 điểm gian lận kiểu mới tụ thành cụm ở góc trên bên trái, tách hẳn. `
       + `Cách chặn đang chọn: ${mode === 'sup' ? 'chỉ mô hình có giám sát — một đường nét đứt bao quanh cụm đã có nhãn' : mode === 'iso' ? `chỉ điểm bất thường — một đường tròn bán kính ${R.toFixed(2)} quanh tâm đám sạch, ngoài đường là bị chặn` : `cộng cả hai — cả đường nét đứt lẫn đường tròn bán kính ${R.toFixed(2)}`}. `
-      + `Độ nhạy ${(sv / 10).toFixed(1)}%. Kết quả: bắt ${C[1]} trên ${T[1]} ca gian lận đã có nhãn, ${C[2]} trên ${T[2]} ca gian lận kiểu mới, và chặn oan ${C[0]} trên ${T[0]} ca sạch. Điểm bị chặn được vẽ viền đậm.`;
+      + `Độ nhạy ${pct.toFixed(1)}%. Kết quả: bắt ${C[1]} trên ${T[1]} ca gian lận đã có nhãn, ${C[2]} trên ${T[2]} ca gian lận kiểu mới, và chặn oan ${C[0]} trên ${T[0]} ca sạch. Điểm bị chặn được vẽ viền đậm.`;
   };
   el.addEventListener('input', draw); wireSeg(el, draw); draw();
 };
@@ -16376,17 +16472,25 @@ VIZ.unsupmix = el => {
    pr-cost in ra bốn dòng kết quả rồi rút một câu kết luận. Câu đó ("kết luận
    không đổi trong toàn khoảng") là thứ đáng nhất trong bài, nhưng đọc bốn dòng
    số thì không thấy được — nó là một phát biểu về HÌNH DẠNG của đường chi phí.
-   Hình này vẽ đúng đường đó và hai mốc so sánh, nên câu kết luận đọc ra được. */
+   Hình này vẽ đúng đường đó và hai mốc so sánh, nên câu kết luận đọc ra được.
+   Đường cong là một mô hình trơn KHỚP bốn dòng in ngay trên hình (ngưỡng lệch ≤ 0,003,
+   thiệt hại lệch ≤ 6 triệu). Bản cũ dùng một mô hình khác hẳn — 200 vụ, ngưỡng tối ưu
+   0,58–0,75, thiệt hại 216–315 triệu — nên kéo tới 40.000₫ thì hình nói ngưỡng 0,58 trong
+   khi dòng in ngay trên nói 0,318. Cách khớp: 274 vụ có điểm tăng dần theo t^2,46, 165 vụ
+   điểm gần 0 (mô hình không thấy), 6.980 giao dịch sạch có điểm giảm theo (1 − t)^1,85,
+   phần sạch còn lại điểm ≈ 0 nên không vào khung ngưỡng 0,1–0,8. */
 VIZ.sens = el => {
-  const NPOS = 200, NNEG = 99800, CFN = 3e6, VER = 40000, YMAX = 950e6, T0 = 0.55, T1 = 0.98;
-  const TP = t => NPOS * (1 - Math.pow(t, 3)), FP = t => NNEG * Math.pow(1 - t, 4);
+  const NSEEN = 274, NBLIND = 165, NPOS = NSEEN + NBLIND, NTAIL = 6980;
+  const CFN = 3e6, VER = 40000, YMAX = 1700e6, T0 = 0.1, T1 = 0.8;   // luật thủ công ở 160.000₫ là 1.620 triệu
+  const TP = t => NSEEN * (1 - Math.pow(t, 2.46)), FP = t => NTAIL * Math.pow(1 - t, 1.85);
   const cost = (t, c) => (NPOS - TP(t)) * CFN + FP(t) * c + TP(t) * VER;
-  const rule = c => 138 * CFN + 3038 * c + 62 * VER;
+  /* luật thủ công: bắt 62 vụ với 3.038 cảnh báo nhầm — hoà với "không làm gì" ở 60.400₫ */
+  const rule = c => (NPOS - 62) * CFN + 3038 * c + 62 * VER;
   const tr = v => Math.round(v / 1e6).toLocaleString('vi');
   const n3 = v => v.toFixed(3).replace('.', ',');
   el.innerHTML = `
     <div class="wb-card"><div class="wb-card__body">
-      <p class="ds-viz__label">100.000 giao dịch · 200 vụ gian lận · mỗi vụ để lọt mất 3 triệu. Kéo chi phí một lần báo nhầm</p>
+      <p class="ds-viz__label">Cùng bài toán với bốn dòng in ở trên: 100.000 giao dịch · 439 vụ gian lận · mỗi vụ để lọt mất 3 triệu. Kéo chi phí một lần báo nhầm</p>
       <div class="ds-ctrl"><div class="ds-ctrl__top"><span class="ds-ctrl__name">Chi phí một ca báo nhầm (FP) — con số bạn <b>không</b> biết chắc</span><span class="ds-ctrl__val" data-o="cv">40.000₫</span></div>
         <input class="wb-range" type="range" min="20" max="160" value="40" data-i="c" aria-label="Chi phí một ca báo nhầm, nghìn đồng"></div>
       <svg viewBox="0 0 320 150" aria-hidden="true"><g data-o="g"></g></svg>
@@ -16400,7 +16504,7 @@ VIZ.sens = el => {
       ${seeBlock({
         see: 'kéo thanh từ đầu tới cuối — gấp <b>8 lần</b> chi phí FP. Đáy của đường cong <b>dịch sang phải</b> (chặn ít hơn, vì mỗi lần chặn oan giờ đắt hơn) và <b>cao lên</b>. Nhưng nó <b>chưa bao giờ</b> vượt lên trên hai đường ngang. Đó chính là câu kết luận của bài này, và nó là một phát biểu về <i>hình dạng</i> — bốn dòng số in ra ở trên không cho thấy được.',
         wrong: '“không biết chi phí FP thì không quy ra tiền được”. Ngược lại: chính vì không biết mà phải quét cả khoảng — và nếu kết luận giữ nguyên trên toàn khoảng thì <b>việc không biết đã không còn là điểm yếu</b>. Đó là toàn bộ ý của phân tích độ nhạy.',
-        code: 'kéo lên quá ~60.000₫ thì <b>luật thủ công tụt xuống dưới đường “không làm gì”</b> — một luật chặn quá tay đắt hơn là không chặn gì. Đó là con số mạnh nhất bạn có thể đưa cho hội đồng, và nó chỉ hiện ra khi có ma trận chi phí.',
+        code: 'kéo lên quá ~60.000₫ thì <b>đường luật thủ công vượt lên trên đường “không làm gì”</b> — một luật chặn quá tay đắt hơn là không chặn gì. Đó là con số mạnh nhất bạn có thể đưa cho hội đồng, và nó chỉ hiện ra khi có ma trận chi phí.',
       })}
     </div></div>`;
   const g = el.querySelector('[data-o="g"]');
@@ -16411,12 +16515,12 @@ VIZ.sens = el => {
     const c = +el.querySelector('[data-i="c"]').value * 1000;
     el.querySelector('[data-o="cv"]').textContent = c.toLocaleString('vi') + '₫';
     let bt = T0, bv = Infinity;
-    for (let i = 0; i <= 430; i++) { const t = T0 + i * 0.001, v = cost(t, c); if (v < bv) { bv = v; bt = t; } }
+    for (let i = 0; i <= Math.round((T1 - T0) * 1000); i++) { const t = T0 + i * 0.001, v = cost(t, c); if (v < bv) { bv = v; bt = t; } }
     const rv = rule(c), nv = NPOS * CFN;
     let d = '';
     for (let i = 0; i <= 90; i++) { const t = T0 + (T1 - T0) * i / 90; d += (i ? 'L' : 'M') + px(t).toFixed(1) + ' ' + py(cost(t, c)).toFixed(1); }
     let s = `<rect x="${X0}" y="${Y0}" width="${X1 - X0}" height="${Y1 - Y0}" fill="none" stroke="var(--wb-border)" stroke-width="1"/>`;
-    [0, 300e6, 600e6, 900e6].forEach(v => {
+    [0, 500e6, 1000e6, 1500e6].forEach(v => {
       s += `<line x1="${X0}" y1="${py(v).toFixed(1)}" x2="${X1}" y2="${py(v).toFixed(1)}" stroke="var(--wb-border)" stroke-width="0.6"/>`
         + `<text x="30" y="${(py(v) + 2).toFixed(1)}" text-anchor="end" font-size="6" fill="var(--wb-fg-subtle)">${tr(v)}</text>`;
     });
@@ -16428,7 +16532,7 @@ VIZ.sens = el => {
     s += `<line x1="${px(bt).toFixed(1)}" y1="${py(bv).toFixed(1)}" x2="${px(bt).toFixed(1)}" y2="${Y1}" stroke="var(--wb-fg)" stroke-width="1" stroke-dasharray="3 2"/>`
       + `<circle cx="${px(bt).toFixed(1)}" cy="${py(bv).toFixed(1)}" r="3.2" fill="var(--wb-fg)"/>`
       + `<text x="${Math.max(X0 + 26, Math.min(X1 - 26, px(bt))).toFixed(1)}" y="${(py(bv) - 6).toFixed(1)}" text-anchor="middle" font-size="6.5" fill="var(--wb-fg)">ngưỡng ${bt.toFixed(2).replace('.', ',')}</text>`;
-    [T0, 0.7, 0.85, T1].forEach(t => {
+    [T0, 0.3, 0.5, T1].forEach(t => {
       s += `<text x="${px(t).toFixed(1)}" y="133" text-anchor="middle" font-size="6" fill="var(--wb-fg-subtle)">${t.toFixed(2).replace('.', ',')}</text>`;
     });
     s += `<text x="170" y="144" text-anchor="middle" font-size="6.5" fill="var(--wb-fg-muted)">ngưỡng chặn</text>`
@@ -16438,14 +16542,14 @@ VIZ.sens = el => {
     o('t').textContent = n3(bt);
     o('c').textContent = tr(bv) + ' triệu';
     o('d').textContent = tr(rv - bv) + ' triệu';
-    o('note').innerHTML = `Ở mức ${(c / 1000).toLocaleString('vi')}.000₫ mỗi ca báo nhầm: ngưỡng tối ưu <b>${n3(bt)}</b> (không phải 0,5), chặn ${Math.round(TP(bt))} vụ gian lận và ${Math.round(FP(bt))} ca sạch. `
+    o('note').innerHTML = `Ở mức ${(c / 1000).toLocaleString('vi')}.000₫ mỗi ca báo nhầm: ngưỡng tối ưu <b>${n3(bt)}</b>${Math.abs(bt - 0.5) < 0.0005 ? ' (trùng 0,5 chỉ là tình cờ của mức chi phí này)' : ' (không phải 0,5)'}, chặn ${Math.round(TP(bt))} vụ gian lận và ${Math.round(FP(bt))} ca sạch. `
       + `Thiệt hại <b>${tr(bv)} triệu</b>, so với ${tr(rv)} triệu của luật thủ công và ${tr(nv)} triệu nếu không làm gì. `
       + (rv > nv ? '<b>Ở mức chi phí này luật thủ công đã đắt hơn cả việc không chặn gì</b> — nó chặn quá tay.' : 'Luật thủ công vẫn còn tốt hơn việc không làm gì, nhưng mô hình rẻ hơn nó ' + tr(rv - bv) + ' triệu.');
     o('alt').textContent =
-      `Đường chi phí theo ngưỡng chặn, từ ngưỡng 0,55 tới 0,98, trục dọc là thiệt hại quy ra tiền từ 0 tới 950 triệu đồng. `
+      `Đường chi phí theo ngưỡng chặn, từ ngưỡng ${T0.toFixed(2).replace('.', ',')} tới ${T1.toFixed(2).replace('.', ',')}, trục dọc là thiệt hại quy ra tiền từ 0 tới ${tr(YMAX)} triệu đồng. `
       + `Với chi phí một ca báo nhầm ${c.toLocaleString('vi')} đồng: đường cong hình chữ U, đáy ở ngưỡng ${n3(bt)} với thiệt hại ${tr(bv)} triệu đồng. `
       + `Hai đường ngang để so sánh: “không làm gì” ở ${tr(nv)} triệu, và “luật thủ công” ở ${tr(rv)} triệu. `
-      + `Đáy đường cong nằm thấp hơn cả hai đường ngang. Ở ngưỡng tối ưu, mô hình chặn ${Math.round(TP(bt))} trong 200 vụ gian lận và chặn oan ${Math.round(FP(bt))} ca sạch.`;
+      + `Đáy đường cong nằm thấp hơn cả hai đường ngang. Ở ngưỡng tối ưu, mô hình chặn ${Math.round(TP(bt))} trong ${NPOS} vụ gian lận và chặn oan ${Math.round(FP(bt))} ca sạch.`;
   };
   el.addEventListener('input', draw); draw();
 };

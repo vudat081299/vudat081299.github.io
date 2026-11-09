@@ -119,6 +119,25 @@ Optuna 5.0.0, skrub 0.11.0, kaggle CLI 2.2.5; PaySim tải về và đếm bằn
 - Số ô của roadmap.sh (150/62/157) không đếm lại: API GitHub bị chặn trong phiên; bài đã ghi ngày đối chiếu.
 - Hạn mức Colab/Kaggle/Codespaces ở `cmp-run` giữ nguyên: có ghi ngày kiểm và đã nói sẽ lỗi thời.
 - `qbank` (bài `th-defense`) dùng số của bộ ULB (284.807 dòng, 492 ca) trong khi bộ chính là IEEE-CIS: ngoài phạm vi.
+## Phiên 2026-11-09 (ai-viz) — rà JS tính số trong 58 hình động
+
+Đọc JS từng hình, tính lại bằng Python (numpy 2.5, sklearn 1.9.1, scipy 1.18), bấm mọi nút và thanh trượt
+trong Chromium; `viz-check.mjs` sạch, không tràn ngang ở 320/390/1280, không lỗi console.
+
+- `gd`: chạy đúng J = w² của popup `gdupdate`; bản cũ dùng w²/2 nên α = 1,1 lại hội tụ.
+- `overfit`: QR thay phương trình chuẩn (bậc 10–11 sai), tối đa bậc 11; số khớp `numpy.polyfit`.
+- `cvfolds`: fold của bốn kiểu khớp sklearn từng dòng; 4 dòng dương để StratifiedKFold có gì hơn KFold.
+- `prcurve`: PR-AUC hụt ~0,13 vì gán precision 0 tại ngưỡng 1. `drift`: PSI tháng 0 = 0.
+- `learncurve`: mô hình bias cao không còn bị khuyên "thêm dữ liệu". `treesplit`: vẽ đúng lá, `min_samples_leaf = 1`.
+- `sens`: khớp bốn dòng in ngay trên hình (bản cũ: ngưỡng 0,58 khi dòng in nói 0,318).
+- `residual`, `unsupmix`, `ablation`, `tfblock`, `nngraph`, `shap`, `textlevels`, `walkforward`: số hoặc nhãn sai.
+- Chữ cạnh hình: `calib` (`cv=5` và isotonic làm AUC xê dịch; `FrozenEstimator` + sigmoid thì không),
+  `plan8dep` (Đo lường ở T3), `plan14`, `loop10`, `bootci`, `baserate`, `meanmed`, `confmat`, `edapanel`.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- `viz-check.mjs` không bắt chữ đè lên khối tô màu không viền (lỗi `walkforward` ở 6 fold); chưa sửa công cụ.
+- Thân `pr-cost`, `ml-metrics` không sửa: hình được chỉnh cho khớp chữ, không ngược lại.
 
 ## Phiên 2026-11-08 (ah) — rà đối kháng chặng 0–2, 4–5 và số "chạy thật" của chặng 6
 
