@@ -1063,11 +1063,6 @@ def phan_F2():
     lo = sorted({f'{sid}: {m.group(0)}' for sid in re.findall(r'<section id="(s-[a-z]+)">', HTML) if sid != 's-nguon'
                  for m in so_hieu.finditer(chu(muc(sid)))})
     claim('thân bài không dẫn số điều luật, số hiệu văn bản', not lo, ', '.join(lo[:8]))
-    # Bảng “… ý tưởng làm nền” (s-vanminh): số dòng khớp chữ số ở tiêu đề.
-    tb = re.search(r'<h3 class="hc-h3">(\S+) ý tưởng làm nền</h3>.*?<tbody>(.*?)</tbody>', muc('s-vanminh'), flags=re.S)
-    claim('s-vanminh: số dòng bảng ý tưởng làm nền khớp tiêu đề',
-          bool(tb) and VN.get(tb.group(1).lower()) == tb.group(2).count('<tr>'),
-          f'{tb.group(1) if tb else "?"} so với {tb.group(2).count("<tr>") if tb else "?"} dòng')
     # Dữ kiện lấy từ nguồn, trong đúng mục: tác giả, năm, cỡ mẫu, số đo, ngày tháng. Một chuỗi phải có nguyên văn;
     # một bộ là một dữ kiện (du_kien): các phần phải đứng gần nhau, số nguyên cuối bộ (nếu có) là cỡ cửa sổ.
     NGUON = {
@@ -1132,20 +1127,12 @@ def phan_F2():
         # của bên địa vị cao tạo thêm giá trị.
         's-imlang': [('ba giây', 'Curhan và cộng sự, 2022', 'chỉ quãng im của bên địa vị cao')],
         # Văn hoá: Ambady và Rosenthal (1993) nghiên cứu 1 — 13 giảng viên, ba đoạn 10 giây, r(11) = 0,76;
-        # Recht và Leslie (1988) — 64 học sinh, nửa hiệp.
+        # Recht và Leslie (1988) — 64 học sinh, nửa hiệp; Rivera (2012), ASR 77(6) — 120 người tuyển dụng, “more than half”
+        # xếp fit là tiêu chí quan trọng nhất ở vòng phỏng vấn, trên tư duy phân tích.
         's-vonvanhoa': [
-            ('Ambady và Rosenthal', '1993', '30 giây'), ('13 giảng viên', '0,76', 40), ('Veblen', '1899'),
-            ('Currid-Halkett', '2017', 'hưu trí'),
-        ],
-        's-vanminh': [
-            ('Hirsch', 'Cultural Literacy', '1987'), ('Recht và Leslie', '1988', '64 học sinh', 'nửa hiệp'),
-            ('Aronowitz và Giroux', '1988'),
-            ('Socrates', '469–399 TCN', 'Plato'), ('Epictetus', '50–135', 'nô lệ'),
-            ('Hội Hoàng gia Anh', '1660', 'Nullius in verba'), ('Kant', '1784'),
-            ('Adam Smith', 'Của cải của các quốc gia', '1776', '48.000 cây ghim'),
-            ('Hồ Chí Minh, Tuyên ngôn Độc lập', '2/9/1945', 20),
-            ('Phan Kế Bính', 'Việt Nam phong tục', '1915'),
-            ('Bryson', 'A Short History of Nearly Everything', '2003'),
+            ('Ambady và Rosenthal', '1993', '30 giây'), ('13 giảng viên', '0,76', 40),
+            ('Recht và Leslie', '1988', '64 học sinh', 'nửa hiệp'),
+            ('120 người tuyển dụng', 'hơn một nửa', 'quan trọng nhất', 'Rivera, 2012', 400),
         ],
         's-thehe': [
             ('Gia huấn ca', 'Nguyễn Trãi', 'tồn nghi'), 'Lẽ tục phú',

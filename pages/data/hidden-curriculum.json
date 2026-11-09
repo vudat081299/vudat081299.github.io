@@ -1643,8 +1643,8 @@
    "idea": "Cách nói, cách cư xử, gu, hiểu biết và bằng cấp là một loại vốn: nó mở cửa các nhóm và đổi được sang tiền và quan hệ.",
    "why": "Tập quán quen thuộc ảnh hưởng cách mình được đón nhận, ngoài năng lực chuyên môn.",
    "mechanism": "Bourdieu chia ba dạng: thấm vào người (cách nói, hiểu biết), đồ vật (sách, tranh) và bằng cấp. Gia đình truyền chúng qua sinh hoạt hằng ngày; học được quy ước vẫn khác với có cơ hội bước vào.",
-   "mistake": "Đồng nhất vốn văn hoá với hàng hiệu; nhiều người khá giả lại chi cho thứ ít ai thấy: học vấn, sức khoẻ, thời gian.",
-   "example": "Trẻ nhà trung lưu Mỹ được dạy hỏi và đề nghị người lớn giúp mình; ở trường, các em xin giúp nhiều và thẳng hơn nên được giúp nhiều hơn (Lareau; Calarco).",
+   "mistake": "Đồng nhất vốn văn hoá với hàng hiệu. Thứ người tuyển chọn đọc là sở thích, trải nghiệm, cách nói và cách trình bày.",
+   "example": "Ở các ngân hàng đầu tư, công ty tư vấn, hãng luật hàng đầu của Mỹ, hơn một nửa người tuyển dụng xếp “hợp với công ty” là tiêu chí quan trọng nhất ở vòng phỏng vấn (Rivera, 2012).",
    "use": "Quan sát quy ước của môi trường muốn tham gia, thử và xin phản hồi từ người tin cậy.",
    "limits": "Quy ước khác theo nhóm và theo thời. Vốn văn hoá không thay được năng lực, và học nó để khoe là đi ngược mục đích.",
    "remember": "Vốn văn hoá là một ngôn ngữ: học được, và người khác đọc được.",
@@ -1656,7 +1656,6 @@
    "sections": [
     "s-von",
     "s-vonvanhoa",
-    "s-vanminh",
     "s-thuongluong"
    ]
   },
@@ -1669,13 +1668,13 @@
     "mixed",
     "theory"
    ],
-   "idea": "Người nói thường bỏ qua kiến thức nền họ cho là chung. Thiếu vốn ấy, ta có thể hiểu từng chữ mà vẫn không theo được ý.",
-   "why": "Kiến thức nền giúp hiểu điều người nói cho là đã biết.",
+   "idea": "Người trong nghề nói tắt những điều họ cho là ai cũng biết. Thiếu vốn nền ấy, ta có thể hiểu từng chữ mà vẫn không theo được ý.",
+   "why": "Kiến thức nền giúp theo được câu chuyện và được coi là người trong cuộc ở nơi mới.",
    "mechanism": "64 học sinh đọc tường thuật nửa hiệp bóng chày: em nào biết bóng chày nhớ và kể lại tốt hơn hẳn, dù đọc giỏi hay đọc kém (Recht và Leslie, 1988).",
    "mistake": "Biến nó thành học thuộc danh sách để khoe; biết tên một ý tưởng chưa phải là hiểu nó.",
-   "example": "Biết khẩu hiệu Nullius in verba của Hội Hoàng gia Anh — không dựa vào lời uy quyền — giúp nhớ hỏi bằng chứng và đọc phương pháp của nghiên cứu.",
-   "use": "Mỗi tuần đọc một văn bản gốc ngắn — một đoạn Luận ngữ, vài trang Epictetus, Tuyên ngôn Độc lập — và tự hỏi nó còn sống ở đâu trong cách người ta nghĩ hôm nay.",
-   "limits": "Danh sách nào cũng là lựa chọn của một nền văn hoá, một thời: Hirsch viết cho người Mỹ năm 1987. Vốn chung đổi theo nhóm và theo thế hệ.",
+   "example": "Mới vào một ngành, người ta nhắc tên một vụ đổ vỡ, một quy định, một nhân vật mà không giải thích; ghi lại từng cái và tra trong tuần ấy.",
+   "use": "Đến một nơi mới, lập danh sách thuật ngữ, người và sự kiện ai cũng nhắc; hỏi một người trong cuộc những thứ mình chưa biết.",
+   "limits": "Vốn chung là lựa chọn của một nhóm, một thời, và đổi theo thế hệ; biết tên một ý tưởng chưa phải là hiểu nó.",
    "remember": "Hiểu biết nền là giàn giáo để hiểu cái mới, không phải đồ trang sức.",
    "related": [
     "cultural-capital",
@@ -1683,7 +1682,6 @@
     "compounding"
    ],
    "sections": [
-    "s-vanminh",
     "s-vonvanhoa",
     "s-kinhdien"
    ]
