@@ -100,7 +100,7 @@
 
   /* ---- nền ---- */
   html { -webkit-text-size-adjust: 100%; }
-  html.hc-locked { overflow: hidden; }
+  html.hc-locked, html.hc-locked body { overflow: hidden; }
   body { background: var(--hc-bg); color: var(--hc-ink); margin: 0; font-family: var(--hc-sans); font-size: 16px; -webkit-font-smoothing: antialiased; }
   ::selection { background: var(--hc-ink); color: var(--hc-bg); }
   [hidden] { display: none !important; }
@@ -127,7 +127,7 @@
       position: absolute; top: calc(100% + 4px); left: 14px; right: auto; z-index: 40;
       flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 2px; padding: 6px;
       min-width: 176px; width: max-content; max-width: calc(100% - 28px);
-      max-height: calc(100vh - 80px); overflow-y: auto;
+      max-height: calc(100vh - 80px); max-height: calc(100dvh - 80px); overflow-y: auto;
       background: var(--hc-surface); border: 1px solid var(--hc-line);
       border-radius: 12px; box-shadow: var(--hc-shadow);
     }
@@ -247,7 +247,7 @@
   /* ==========================================================================
      KHUNG ĐỌC — máy tính: bảng đọc trượt từ phải; điện thoại (≤ 720px): tấm kéo lên từ đáy.
      ========================================================================== */
-  .hc-reader { position: fixed; inset: 0; width: 100%; height: 100%; max-width: 100%; max-height: 100%; margin: 0; padding: 0; border: 0; background: transparent; color: var(--hc-ink); overflow: hidden; }
+  .hc-reader { position: fixed; inset: 0; width: 100%; height: 100%; height: 100dvh; max-width: 100%; max-height: 100%; max-height: 100dvh; margin: 0; padding: 0; border: 0; background: transparent; color: var(--hc-ink); overflow: hidden; }
   .hc-reader::backdrop { background: var(--hc-scrim); }
   .hc-reader__panel { position: absolute; top: 0; right: 0; bottom: 0; width: min(920px, calc(100% - 88px)); display: flex; flex-direction: column; background: var(--hc-paper); border-left: 1px solid var(--hc-line); box-shadow: var(--hc-shadow); }
   .hc-reader__bar { flex: none; display: flex; align-items: center; gap: 6px; min-height: 54px; padding: 6px 12px 6px 28px; border-bottom: 1px solid var(--hc-line); background: var(--hc-paper); touch-action: none; }
@@ -4275,10 +4275,14 @@ var reader = (function () {
     if (!a || a.getAttribute('href').length < 2) return;
     if (go(a.getAttribute('href'), true)) e.preventDefault();
   });
+  /* Đi lùi trong lịch sử, hay cuộn tới #… lúc mở trang, có thể để tiêu điểm rơi về <body> sau khung. */
+  function holdFocus() {
+    setTimeout(function () { if (dlg.open && !dlg.contains(document.activeElement)) body.focus({ preventScroll: true }); }, 0);
+  }
   window.addEventListener('popstate', function () {
     pending = false;
     var r = location.hash && resolve(location.hash);
-    if (r) show(r); else shut();
+    if (r) { show(r); holdFocus(); } else shut();
   });
   /* Esc đóng <dialog> trước; sự kiện close dọn phần còn lại (trả mục về chỗ, lùi lịch sử). */
   dlg.addEventListener('close', function () { if (current) requestClose(); });
@@ -4287,12 +4291,15 @@ var reader = (function () {
   $('hc-reader-prev').addEventListener('click', function () { var i = order.indexOf(current); if (i > 0) go('#' + order[i - 1], true); });
   $('hc-reader-next').addEventListener('click', function () { var i = order.indexOf(current); if (i < order.length - 1) go('#' + order[i + 1], true); });
 
-  /* Điện thoại: kéo thanh trên cùng, hay kéo thân bài khi đã ở đầu, xuống quá 90px thì đóng. */
+  /* Điện thoại: kéo thanh trên cùng, hay kéo thân bài khi đã ở đầu, xuống quá 90px thì đóng.
+     Vuốt ngang (bảng cuộn ngang, thanh trượt của mô hình) không kéo khung. */
   (function () {
-    var y0 = null, dy = 0, from = null;
-    function start(y, src) { y0 = y; dy = 0; from = src; }
-    function move(y, e) {
+    var x0 = 0, y0 = null, dy = 0, from = null, moved = false;
+    function start(t, src) { x0 = t.clientX; y0 = t.clientY; dy = 0; from = src; moved = false; }
+    function move(t, e) {
       if (y0 === null) return;
+      var y = t.clientY;
+      if (!moved) { moved = true; if (Math.abs(t.clientX - x0) > Math.abs(y - y0)) { y0 = null; return; } }
       dy = Math.max(0, y - y0);
       if (from === 'body' && (body.scrollTop > 0 || dy === 0)) { if (body.scrollTop > 0) y0 = null; return; }
       if (e.cancelable) e.preventDefault();
@@ -4309,10 +4316,10 @@ var reader = (function () {
       setTimeout(function () { panel.classList.remove('is-settling'); }, 220);
     }
     var narrow = matchMedia('(max-width: 720px)');
-    $('hc-reader-bar').addEventListener('touchstart', function (e) { if (narrow.matches && !e.target.closest('button')) start(e.touches[0].clientY, 'bar'); }, { passive: true });
-    body.addEventListener('touchstart', function (e) { if (narrow.matches && body.scrollTop <= 0) start(e.touches[0].clientY, 'body'); }, { passive: true });
+    $('hc-reader-bar').addEventListener('touchstart', function (e) { if (narrow.matches && !e.target.closest('button')) start(e.touches[0], 'bar'); }, { passive: true });
+    body.addEventListener('touchstart', function (e) { if (narrow.matches && body.scrollTop <= 0 && !e.target.closest('input, select, textarea')) start(e.touches[0], 'body'); }, { passive: true });
     [$('hc-reader-bar'), body].forEach(function (t) {
-      t.addEventListener('touchmove', function (e) { move(e.touches[0].clientY, e); }, { passive: false });
+      t.addEventListener('touchmove', function (e) { move(e.touches[0], e); }, { passive: false });
       t.addEventListener('touchend', end);
       t.addEventListener('touchcancel', end);
     });
@@ -4389,6 +4396,8 @@ var reader = (function () {
       history.pushState({ hc: 1 }, '', h);
     }
     show(r);
+    holdFocus();
+    addEventListener('load', holdFocus);
   }
   return { go: go, initial: initial, info: info };
 })();
