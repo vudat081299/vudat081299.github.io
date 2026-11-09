@@ -9549,17 +9549,17 @@ rfm["M"] = pd.qcut(rfm.monetary, 5, labels=[1, 2, 3, 4, 5]).astype(int)</div>
     <li>Chạy <b>một</b> mô hình thật. Ghi con số. Dừng lại — đừng tune.</li>
     <li>Viết <b>bảng “giữ gì / đổi gì”</b> so với dự án gian lận. <b>Đây là sản phẩm thật của mini-project.</b></li>
   </ol>
-  <p>Thời gian mục tiêu cho <b>một</b> mini-project làm thật: <b>khoảng 2–2,5 giờ</b> nếu bạn bám đúng năm bước và <i>không</i> tune — bạn đã đi qua toàn bộ vòng đời ở dự án fraud, nên phần lặp lại nhanh hơn nhiều so với lần đầu. Nếu một cái ngốn quá một buổi, gần như chắc chắn bạn đang tối ưu thay vì đang học chuyển giao — dừng và viết bảng bước 5. Hai cái × ~2,5 giờ là ngân sách 5 giờ của bài.</p>
+  <p>Thời gian mục tiêu cho <b>một</b> mini-project làm thật: <b>khoảng 2 giờ</b> nếu bạn bám đúng năm bước và <i>không</i> tune — bạn đã đi qua toàn bộ vòng đời ở dự án fraud, nên phần lặp lại nhanh hơn nhiều so với lần đầu. Nếu một cái ngốn quá một buổi, gần như chắc chắn bạn đang tối ưu thay vì đang học chuyển giao — dừng và viết bảng bước 5. Hai cái × ~2 giờ là 4 giờ; cộng 45 phút đọc bài và 15 phút chạy code A/B bên dưới là đủ 5 giờ của bài.</p>
 
   <h2>Sáu dự án (thực đơn — chọn 2 làm thật)</h2>
   <div class="wb-table-scroll"><table>
     <thead><tr><th>#</th><th>Họ</th><th>Đề bài</th><th>Nguồn dữ liệu gợi ý</th><th>Điều nó dạy mà fraud không dạy</th></tr></thead>
     <tbody>
       <tr><td>1</td><td><b>Forecasting</b></td><td>Dự báo tiêu thụ điện / lượt truy cập theo ngày, tầm 28 ngày</td><td>Chuỗi tiêu thụ điện theo giờ, hoặc lượt xem Wikipedia — cả hai có bản công khai tải trực tiếp bằng URL</td><td>Backtest walk-forward, baseline seasonal-naive, MASE, và việc cây <b>không ngoại suy được xu hướng</b></td></tr>
-      <tr><td>2</td><td><b>Hồi quy</b></td><td>Dự đoán giá nhà hoặc thời gian giao hàng</td><td><code>fetch_california_housing()</code> có sẵn trong scikit-learn — không cần tải gì</td><td>MAE vs RMSE vs MAPE, phân tích phần dư, và <b>khoảng dự đoán</b> kèm kiểm tra độ phủ</td></tr>
-      <tr><td>3</td><td><b>Multiclass / CV</b></td><td>Phân loại ảnh nhiều lớp bằng transfer learning</td><td>Một bộ ảnh nhỏ nhiều lớp (hoa, thức ăn, chữ số) tải qua <code>torchvision.datasets</code></td><td>macro vs weighted F1, ma trận nhầm lẫn chuẩn hoá, linear probe làm baseline</td></tr>
+      <tr><td>2</td><td><b>Hồi quy</b></td><td>Dự đoán giá nhà hoặc thời gian giao hàng</td><td><code>fetch_california_housing()</code> của scikit-learn — lần gọi đầu tự tải chưa tới 1 MB rồi lưu cache</td><td>MAE vs RMSE vs MAPE, phân tích phần dư, và <b>khoảng dự đoán</b> kèm kiểm tra độ phủ</td></tr>
+      <tr><td>3</td><td><b>Multiclass / CV</b></td><td>Phân loại ảnh nhiều lớp bằng transfer learning</td><td>Một bộ ảnh nhỏ nhiều lớp (hoa <code>Flowers102</code>, ảnh nhỏ <code>CIFAR10</code>) tải qua <code>torchvision.datasets</code>; tránh <code>Food101</code>, nó nặng cỡ 5 GB</td><td>macro vs weighted F1, ma trận nhầm lẫn chuẩn hoá, linear probe làm baseline</td></tr>
       <tr><td>4</td><td><b>NLP</b></td><td>Phân loại cảm xúc hoặc phân loại ticket hỗ trợ</td><td>Một bộ đánh giá sản phẩm hoặc tin tức có nhãn trên Kaggle/Hugging Face</td><td>TF-IDF làm mốc bắt buộc, khử trùng lặp trước khi chia, đọc tay 50 ca sai</td></tr>
-      <tr><td>5</td><td><b>Gợi ý</b></td><td>Gợi ý top-10 mục cho mỗi người dùng</td><td>Một bộ đánh giá phim hoặc lịch sử mua hàng công khai</td><td>Popularity rất khó thắng, Recall@K/NDCG@K, chia leave-last-out theo thời gian</td></tr>
+      <tr><td>5</td><td><b>Gợi ý</b></td><td>Gợi ý top-10 mục cho mỗi người dùng</td><td>Một bộ đánh giá phim hoặc lịch sử mua hàng công khai</td><td>Popularity khó thắng hơn bạn tưởng, Recall@K/NDCG@K, chia theo thời gian</td></tr>
       <tr><td>6</td><td><b>Nhân quả</b></td><td>Phân tích một A/B test: có tác động thật không, lớn cỡ nào</td><td><b>Tự sinh</b> bằng <code>numpy</code> — xem code bên dưới. Tốt hơn dữ liệu thật vì bạn biết đáp án</td><td>Cỡ mẫu, khoảng tin cậy, và bốn cách làm hỏng một thí nghiệm</td></tr>
     </tbody>
   </table></div>
@@ -9572,7 +9572,7 @@ rfm["M"] = pd.qcut(rfm.monetary, 5, labels=[1, 2, 3, 4, 5]).astype(int)</div>
     <li><b>Tải được bằng một dòng</b> trong notebook (URL trực tiếp, <code>kagglehub</code>, hoặc có sẵn trong thư viện).</li>
     <li><b>Có giấy phép rõ ràng</b> — bắt buộc nếu định đưa vào luận văn. Ghi giấy phép vào <code>data/README.md</code>.</li>
     <li><b>Không cần GPU mạnh.</b> Với ảnh, chọn bộ có ảnh nhỏ hoặc ít lớp.</li>
-    <li><b>Phù hợp bài học, không phải nổi tiếng.</b> Titanic nổi tiếng nhưng không dạy được gì về rò rỉ theo thời gian; MNIST nổi tiếng nhưng đã bão hoà tới mức mọi mô hình đều &gt;99%, nên nó không phân biệt được gì.</li>
+    <li><b>Phù hợp bài học, không phải nổi tiếng.</b> Titanic nổi tiếng nhưng không dạy được gì về rò rỉ theo thời gian; MNIST nổi tiếng nhưng đã bão hoà: một CNN nhỏ đã quá 99%, các cách làm tốt chỉ còn chênh nhau vài phần nghìn, nên nó không phân biệt được gì.</li>
   </ul>
 
   <h2>Dữ liệu A/B test tự sinh — cho mini-project 6</h2>
@@ -9600,8 +9600,8 @@ df = pd.DataFrame({"heavy": heavy,
 naive = df.groupby("t_obs").y_obs.mean().diff().iloc[-1]
 rct   = df.groupby("t_rct").y_rct.mean().diff().iloc[-1]
 print(f"quan sát thô: {naive:.4f}   thí nghiệm: {rct:.4f}   sự thật: {TRUE_EFFECT}")</div>
-  <p>Chạy đoạn này và nhìn: ước lượng từ dữ liệu quan sát lệch <b>gấp nhiều lần</b> tác động thật, còn ước lượng từ thí nghiệm ngẫu nhiên thì bám sát. Cùng dữ liệu, cùng công thức, khác nhau đúng một chỗ — cách nhóm điều trị được gán. Sau đó thử tự sửa ước lượng quan sát bằng cách phân tầng theo <code>heavy</code> và xem nó về gần sự thật tới đâu.</p>
-  <p>Đây là bài tập có tỉ lệ hiểu-biết trên thời gian cao nhất trong cả chặng: mười lăm phút, và bạn thấy tận mắt vì sao “mô hình rất chính xác” không đồng nghĩa với “kết luận đúng”.</p>
+  <p>Chạy đoạn này và nhìn: với seed 7 nó in <code>quan sát thô: 0.0827   thí nghiệm: 0.0222   sự thật: 0.02</code>. Ước lượng từ dữ liệu quan sát lệch <b>gấp khoảng bốn lần</b> tác động thật, còn ước lượng từ thí nghiệm ngẫu nhiên thì bám sát. Cùng dữ liệu, cùng công thức, khác nhau đúng một chỗ — cách nhóm điều trị được gán. “Bám sát” vẫn kèm sai số: sai số chuẩn của nhánh thí nghiệm cỡ 0,005, nên đổi seed bạn sẽ thấy từ khoảng 0,01 tới 0,03; còn nhánh quan sát ở seed nào cũng quanh 0,075, không bao giờ gần 0,02. Sau đó thử tự sửa ước lượng quan sát bằng cách phân tầng theo <code>heavy</code>: tính chênh lệch trong từng tầng rồi lấy trung bình có trọng số theo cỡ tầng, và xem nó về gần sự thật tới đâu.</p>
+  <p>Đây là bài tập có tỉ lệ hiểu-biết trên thời gian cao nhất trong cả chặng: mười lăm phút, và bạn thấy tận mắt vì sao một phép so sánh tính đúng từng chữ số vẫn có thể cho kết luận sai.</p>
 
   <h2>Bảng “giữ gì / đổi gì” — mẫu để chép</h2>
   <p>Mỗi mini-project kết thúc bằng một bảng như thế này trong <code>README</code> của notebook. <b>Hai bảng hoàn chỉnh</b> từ hai notebook đã chạy, cộng bốn bảng phác thảo, là bằng chứng đúng với khối lượng giờ mà trang đã cấp — và là thứ đáng nói nhất trong một buổi phỏng vấn.</p>

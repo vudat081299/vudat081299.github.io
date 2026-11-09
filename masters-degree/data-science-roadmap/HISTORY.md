@@ -9,6 +9,25 @@ một dòng "→ quyết định DS-…".
 
 ---
 
+## Phiên 2026-11-09 (ai-q2) — rà đối kháng `q-rec`, `q-analytics`, `q-mini`
+
+Code mẫu chạy thật: pandas 3.0.5, numpy 2.5.3, sklearn 1.9.1, DuckDB 2.0.0.
+
+- `q-rec`: popularity không "rất khó đánh bại" — dẫn Dacrema và cộng sự (RecSys 2019) ở thân bài và quiz.
+  Thêm cách CF chạy (item-kNN, matrix factorization) và implicit feedback; định nghĩa MAP@K, NDCG@K; ví dụ
+  tính tay khớp `ndcg_score`; leave-last-out vẫn rò rỉ giữa người dùng.
+- `q-analytics`: quiz gọi "tăng bù giảm" là nghịch lý Simpson; đổi tình huống thành hai nhóm cùng tăng, tổng
+  giảm, kèm số ở thân bài. "Tăng 300% trên nền 2 ca" là lên 8 ca. Thêm tỉ lệ giữ chân, truy vấn phễu có thứ
+  tự và cửa sổ 7 ngày, RFM chạy được.
+- `q-mini`: hai notebook × 2 giờ + 1 giờ đọc mới khớp `r45/x15/d240`; tóm tắt roadmap có phép trừ sai
+  (5 − 4 = 1 chứ không 1,5). `fetch_california_housing` có tải; `Food101` nặng 5 GB; MNIST: CNN nhỏ quá 99%,
+  không phải mọi mô hình. Code A/B in 0,0827 / 0,0222 ở seed 7; qua 50 seed nhánh thí nghiệm 0,01–0,03.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- Không thêm CLV hay A/B vào `q-analytics`: A/B ở `q-causal` (đã rà), CLV ngoài phạm vi bài.
+- Chữ `see` của viz `rankk` nói "chỉ NDCG/MAP mới đo được" vị trí: giữ, vì trong top-K đúng là vậy; không sửa JS dùng chung.
+
 ## Phiên 2026-11-08 (ah) — rà đối kháng chặng 0–2, 4–5 và số "chạy thật" của chặng 6
 
 Rà các bài phiên (ag) chưa rà. Code mẫu chạy thật: pandas 3.0.5, sklearn 1.9.1, DuckDB, LightGBM 4.6 và 4.7,

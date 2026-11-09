@@ -1404,21 +1404,21 @@
    "points": [
     "Mini-project KHÔNG cần production hoá: không API, không Docker, không tuning — mỗi cái một notebook làm đúng năm việc, và việc thứ năm mới là việc chính",
     "Năm việc: (1) tải dữ liệu định vị bằng tám câu hỏi, (2) chia tập đúng kiểu của họ đó + viết assert chứng minh đúng, (3) chạy baseline bắt buộc ghi con số, (4) chạy MỘT mô hình thật ghi con số rồi DỪNG đừng tune, (5) viết bảng 'giữ gì/đổi gì' so với dự án gian lận — đây là sản phẩm thật",
-    "Bắt buộc làm thật 2/6, chọn hai họ khác nhất so với fraud (gợi ý Forecasting + một trong NLP/Gợi ý/Nhân quả); bốn cái còn lại chỉ cần bảng phác thảo; ngân sách 5 giờ = hai notebook × ~2,5 giờ, nếu một cái quá một buổi là đang tối ưu thay vì học chuyển giao",
-    "Sáu đề kèm điều dạy mà fraud không dạy: Forecasting (walk-forward, seasonal-naive, MASE, cây không ngoại suy xu hướng), Hồi quy (fetch_california_housing, MAE/RMSE/MAPE, khoảng dự đoán), Multiclass/CV (macro vs weighted F1, ma trận chuẩn hoá, linear probe), NLP (TF-IDF mốc, khử trùng lặp, đọc tay 50 ca sai), Gợi ý (popularity khó thắng, Recall@K/NDCG@K, leave-last-out), Nhân quả (cỡ mẫu, KTC, bốn cách làm hỏng)",
-    "Tiêu chí chọn dataset: công khai không cần xin quyền, nhỏ/vừa dưới vài trăm MB vừa RAM Colab, tải bằng một dòng, có giấy phép rõ (ghi vào data/README.md), không cần GPU mạnh, phù hợp bài học không phải nổi tiếng (Titanic không dạy rò rỉ thời gian, MNIST bão hoà >99%)",
+    "Bắt buộc làm thật 2/6, chọn hai họ khác nhất so với fraud (gợi ý Forecasting + một trong NLP/Gợi ý/Nhân quả); bốn cái còn lại chỉ cần bảng phác thảo; ngân sách 5 giờ = hai notebook × ~2 giờ + 1 giờ đọc và chạy code A/B; nếu một cái quá một buổi là đang tối ưu thay vì học chuyển giao",
+    "Sáu đề kèm điều dạy mà fraud không dạy: Forecasting (walk-forward, seasonal-naive, MASE, cây không ngoại suy xu hướng), Hồi quy (fetch_california_housing tự tải lần đầu, MAE/RMSE/MAPE, khoảng dự đoán), Multiclass/CV (macro vs weighted F1, ma trận chuẩn hoá, linear probe), NLP (TF-IDF mốc, khử trùng lặp, đọc tay 50 ca sai), Gợi ý (popularity khó thắng hơn bạn tưởng, Recall@K/NDCG@K, chia theo thời gian), Nhân quả (cỡ mẫu, KTC, bốn cách làm hỏng)",
+    "Tiêu chí chọn dataset: công khai không cần xin quyền, nhỏ/vừa dưới vài trăm MB vừa RAM Colab, tải bằng một dòng, có giấy phép rõ (ghi vào data/README.md), không cần GPU mạnh, phù hợp bài học không phải nổi tiếng (Titanic không dạy rò rỉ thời gian, MNIST bão hoà: CNN nhỏ đã quá 99%)",
     "Bảng 'giữ gì/đổi gì' bảy chiều so với dự án fraud: họ bài toán, chia tập, baseline, metric chính (fraud = PR-AUC + chi phí quy tiền), rủi ro rò rỉ chính, có cần deep learning, sai lầm đặc trưng"
    ],
-   "viz": "Code A/B tự sinh (mini-project 6): confounder heavy, TRUE_EFFECT=0.02; ước lượng quan sát thô lệch gấp nhiều lần sự thật còn ước lượng RCT bám sát 0,02 — mười lăm phút thấy vì sao 'mô hình chính xác' không bằng 'kết luận đúng'.",
+   "viz": "Code A/B tự sinh (mini-project 6): confounder heavy, TRUE_EFFECT=0.02; seed 7 in quan sát thô 0,0827 (gấp ~4 lần sự thật) còn RCT 0,0222 với sai số chuẩn ~0,005 — mười lăm phút thấy vì sao một phép so sánh tính đúng vẫn cho kết luận sai.",
    "example": {
     "kind": "num",
-    "lead": "Đặt ngân sách 5 giờ của bài cạnh giá thật của một notebook làm tới cùng, để thấy thực đơn 6 đề chỉ đủ chỗ cho 2 và một buổi trót đi tune thì xoá đúng cái nào.",
-    "code": "ngân sách bài: 5,0 giờ  ·  một mini-project 5 bước, KHÔNG tune: ~2,5 giờ\n\nlàm thật cả 6 đề:  6 × 2,5 = 15,0 giờ  →  15,0 / 5,0 = gấp 3,0 ngân sách\nlàm thật 2 đề:     2 × 2,5 =  5,0 giờ  →  khớp ngân sách\n4 đề còn lại:      4 bảng × 7 chiều = 28 ô phác thảo, để tra sau\n\nmột notebook trượt sang 4,0 giờ vì đi tune:\n  4,0 + 2,5 = 6,5 giờ > 5,0  →  mất hẳn đề thứ hai\n  1,5 giờ tuning đổi lấy 0 dòng cho bảng ở bước 5",
-    "out": "2 notebook × 2,5 giờ = 5,0 giờ khớp ngân sách; 6 notebook = 15,0 giờ thì không\nnộp được: 2 bảng hoàn chỉnh + 4 bảng phác thảo = 6 × 7 = 42 ô đã điền\n1,5 giờ tuning ngoài kế hoạch xoá đúng 1 trong 2 họ bài toán mới"
+    "lead": "Đặt 4 giờ làm notebook của bài (5 giờ trừ 1 giờ đọc và chạy code A/B) cạnh giá thật của một notebook làm tới cùng, để thấy thực đơn 6 đề chỉ đủ chỗ cho 2 và một buổi trót đi tune thì xoá đúng cái nào.",
+    "code": "giờ cho notebook: 5,0 − 1,0 (đọc, code A/B) = 4,0 giờ\nmột mini-project 5 bước, KHÔNG tune: ~2,0 giờ\n\nlàm thật cả 6 đề:  6 × 2,0 = 12,0 giờ  →  gấp 3,0 lần 4,0 giờ\nlàm thật 2 đề:     2 × 2,0 =  4,0 giờ  →  khớp ngân sách\n4 đề còn lại:      4 bảng × 7 chiều = 28 ô phác thảo, để tra sau\n\nmột notebook trượt sang 3,5 giờ vì đi tune:\n  3,5 + 2,0 = 5,5 giờ > 4,0  →  mất hẳn đề thứ hai\n  1,5 giờ tuning đổi lấy 0 dòng cho bảng ở bước 5",
+    "out": "2 notebook × 2,0 giờ = 4,0 giờ khớp ngân sách; 6 notebook = 12,0 giờ thì không\nnộp được: 2 bảng hoàn chỉnh + 4 bảng phác thảo = 6 × 7 = 42 ô đã điền\n1,5 giờ tuning ngoài kế hoạch xoá đúng 1 trong 2 họ bài toán mới"
    },
    "check": {
-    "q": "Notebook forecasting đã ngốn 4 giờ, MASE đang 0,91 và bạn vừa nghĩ ra ba tham số nữa muốn thử — bạn làm gì tiếp?",
-    "a": "Dừng thử tham số, ghi lại con số đang có rồi viết bảng giữ gì / đổi gì, vì sản phẩm của mini-project là bảng đó chứ không phải MASE thấp nhất. Quá một buổi cho một cái là dấu hiệu đang tối ưu thay vì đang học chuyển giao, và 1,5 giờ còn lại là toàn bộ chỗ dành cho họ bài toán thứ hai."
+    "q": "Notebook forecasting đã ngốn 3,5 giờ, MASE đang 0,91 và bạn vừa nghĩ ra ba tham số nữa muốn thử — bạn làm gì tiếp?",
+    "a": "Dừng thử tham số, ghi lại con số đang có rồi viết bảng giữ gì / đổi gì, vì sản phẩm của mini-project là bảng đó chứ không phải MASE thấp nhất. Quá một buổi cho một cái là dấu hiệu đang tối ưu thay vì đang học chuyển giao, và 4,0 − 3,5 = 0,5 giờ còn lại không đủ cho họ bài toán thứ hai — mỗi phút tune thêm là lấy từ nó."
    }
   },
   "th-topic": {
@@ -1737,7 +1737,7 @@
   "q-rec": "5a49fd28",
   "q-causal": "cc1d604f",
   "q-analytics": "f5a47804",
-  "q-mini": "bc401ddb",
+  "q-mini": "b82fd6d7",
   "th-topic": "b1e1b294",
   "th-read": "7ab77bf8",
   "th-repro": "f5a6eb2e",
