@@ -2778,7 +2778,7 @@ luận văn mà không ai thấy.
   <div class="wb-alert wb-alert--warning wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">Hugging Face Spaces: <b>đừng lên kế hoạch dựa vào nó</b> cho đường Docker</p>
     <p class="wb-alert__msg"><span class="ds-claim ds-claim--judgment">nhận định</span> Trạng thái bậc miễn phí của HF Spaces là chỗ <b>mờ nhất</b> trong cả bảng này, nên trang này khuyên bạn không đặt kế hoạch triển khai lên nó.<br>
-    <span class="ds-claim ds-claim--quota">hạn mức</span> Phần chắc chắn: <b>Static Space</b> (HTML/JS tĩnh) miễn phí, còn Space chạy compute — Gradio, Streamlit, Docker — gắn với hạ tầng có tính phí. Riêng <b>ZeroGPU</b>, tài liệu chính thức của Hugging Face ở các trang khác nhau mô tả điều kiện của tài khoản miễn phí <b>không thống nhất</b> (số Space được host, yêu cầu tài khoản, và việc nó có nằm sau gói PRO không). <b>Trang này không khẳng định con số nào</b>, vì bất kỳ con số nào viết ra đây cũng có thể sai vào lúc bạn đọc.<br>
+    <span class="ds-claim ds-claim--quota">hạn mức</span> Kiểm ngày 9/11/2026 trên <a href="https://huggingface.co/docs/hub/spaces-overview" target="_blank" rel="noopener">trang tổng quan Spaces</a>: <b>Static Space</b> (HTML/JS tĩnh) miễn phí; <b>tạo Space Gradio hay Docker cần gói trả phí</b> (PRO cho tài khoản cá nhân); tài khoản miễn phí chỉ còn host được tối đa 2 Space Gradio chạy trên <b>ZeroGPU</b>. SDK chỉ còn ba lựa chọn — Gradio, Docker, static; Streamlit phải đi qua Docker. Điều kiện này đã đổi nhiều lần (bản kiểm 3/8/2026 còn thấy các trang tài liệu nói khác nhau), nên kiểm lại trước khi chọn.<br>
     <span class="ds-claim ds-claim--fact">ổn định</span> Phần không đổi và đủ để bạn quyết: <b>ZeroGPU chỉ chạy Gradio, không chạy Docker.</b> Nên kể cả khi bạn đủ điều kiện, nó vẫn <i>không</i> phải chỗ để đẩy <code>FastAPI + Dockerfile</code>.<br>
     <b>Việc cần làm trước khi chọn:</b> mở <a href="https://huggingface.co/docs/hub/spaces-overview" target="_blank" rel="noopener">tài liệu Spaces</a> và <a href="https://huggingface.co/pricing" target="_blank" rel="noopener">trang giá</a>, rồi mở chính trang tạo Space trong tài khoản của bạn — <b>giao diện tài khoản mới là nguồn đáng tin nhất</b>, vì nó phản ánh đúng thứ tài khoản đó được phép làm hôm nay. Nếu hai nguồn mâu thuẫn, tin giao diện.</p>
   </div></div>
@@ -2790,7 +2790,7 @@ luận văn mà không ai thấy.
       <tr><td><b>FastAPI</b></td><td>Hệ thống khác</td><td>Tự sinh trang tài liệu thử được ngay tại <code>/docs</code>; kiểm tra kiểu dữ liệu đầu vào giúp bạn</td><td>Không có giao diện cho người xem</td><td>Sản phẩm chính của luận văn</td></tr>
       <tr><td><b>Flask</b></td><td>Hệ thống khác</td><td>Đơn giản hơn, nhiều ví dụ cũ</td><td>Không kiểm tra kiểu; không có <code>/docs</code></td><td>Chỉ khi bạn đã có sẵn code Flask</td></tr>
       <tr><td><b>Streamlit</b></td><td>Con người</td><td>Vài chục dòng ra một trang bấm được; có nền tảng host miễn phí của chính họ</td><td>Không phải API thật; mỗi thao tác chạy lại cả file</td><td><b>Đường demo mặc định</b> — bên cạnh API, không thay API</td></tr>
-      <tr><td><b>Gradio</b></td><td>Con người</td><td>Ít dòng nhất; là SDK được HF Spaces hỗ trợ trực tiếp</td><td>Ít tuỳ biến bố cục; trên HF thì điều kiện bậc miễn phí không rõ ràng — kiểm trong tài khoản trước</td><td>Bạn đã dùng hệ sinh thái Hugging Face và tài khoản đủ điều kiện</td></tr>
+      <tr><td><b>Gradio</b></td><td>Con người</td><td>Ít dòng nhất; là SDK được HF Spaces hỗ trợ trực tiếp</td><td>Ít tuỳ biến bố cục; trên HF, tài khoản miễn phí chỉ host Gradio qua ZeroGPU (tối đa 2 Space) — kiểm trong tài khoản trước</td><td>Bạn đã dùng hệ sinh thái Hugging Face và tài khoản đủ điều kiện</td></tr>
     </tbody>
   </table>
 
@@ -2798,9 +2798,9 @@ luận văn mà không ai thấy.
   <table>
     <thead><tr><th>Nơi đặt</th><th>Cần Docker trên máy?</th><th>Tình trạng miễn phí (3/8/2026)</th><th>Ghi chú</th></tr></thead>
     <tbody>
-      <tr><td><b>Streamlit Community Cloud</b></td><td>Không</td><td>Miễn phí, nối repo GitHub</td><td>Tài liệu ghi hạn mức <i>tính tới 2/2024</i>: CPU 0,078–2 nhân, RAM 690 MB–2,7 GB, lưu trữ tới 50 GB, và nói rõ <b>“các hạn mức này có thể đổi bất cứ lúc nào mà không báo trước”</b>. Đủ rộng cho một mô hình LightGBM</td></tr>
-      <tr><td><b>GitHub Codespaces</b></td><td>Không — Docker chạy <i>trong</i> Codespace</td><td>120 core-hour + 15 GB-tháng/tháng ở bậc GitHub Free</td><td><span class="ds-claim ds-claim--judgment">nhận định</span> <b>Lựa chọn thực tế nhất để dựng và chạy thử Docker khi máy yếu</b>, với điều kiện bạn còn hạn mức trong tháng. Nhưng nó là môi trường phát triển, không phải chỗ host dịch vụ lâu dài</td></tr>
-      <tr><td><b>Hugging Face Spaces</b></td><td>Không</td><td>Static miễn phí; Space chạy compute gắn với hạ tầng tính phí. Điều kiện của bậc miễn phí (kể cả ZeroGPU) <b>tài liệu chính thức mô tả không thống nhất</b> — kiểm trong tài khoản của bạn trước khi chọn</td><td>Space chạy trên phần cứng miễn phí sẽ <b>ngủ khi không ai dùng</b>. Mã nguồn công khai trừ khi đặt riêng tư</td></tr>
+      <tr><td><b>Streamlit Community Cloud</b></td><td>Không</td><td>Miễn phí, nối repo GitHub</td><td>Tài liệu ghi hạn mức <i>tính tới 2/2024</i>: CPU 0,078–2 nhân, RAM 690 MB–2,7 GB, lưu trữ tới 50 GB, và nói rõ <b>“các hạn mức này có thể đổi bất cứ lúc nào mà không báo trước”</b>. Đủ rộng cho một mô hình LightGBM. App không ai mở trong 12 giờ thì ngủ: mở nó trước buổi bảo vệ để đánh thức</td></tr>
+      <tr><td><b>GitHub Codespaces</b></td><td>Không — Docker chạy <i>trong</i> Codespace</td><td>120 core-hour + 15 GB-tháng/tháng ở bậc GitHub Free — tức 60 giờ trên máy 2 nhân</td><td><span class="ds-claim ds-claim--judgment">nhận định</span> <b>Lựa chọn thực tế nhất để dựng và chạy thử Docker khi máy yếu</b>, với điều kiện bạn còn hạn mức trong tháng. Nhưng nó là môi trường phát triển, không phải chỗ host dịch vụ lâu dài</td></tr>
+      <tr><td><b>Hugging Face Spaces</b></td><td>Không</td><td>Static miễn phí; tạo Space Gradio hay Docker cần gói trả phí; tài khoản miễn phí host được tối đa 2 Space Gradio trên ZeroGPU (9/11/2026) — kiểm trong tài khoản của bạn trước khi chọn</td><td>Space chạy trên phần cứng miễn phí sẽ <b>ngủ khi không ai dùng</b>. Mã nguồn công khai trừ khi đặt riêng tư</td></tr>
       <tr><td><b>Render / Railway / Fly.io / Cloud Run</b></td><td>Không</td><td><b>Thay đổi liên tục</b>, và phần lớn nay yêu cầu thẻ thanh toán kể cả ở bậc thấp nhất</td><td>Kiểm bảng giá của họ ngay trước khi phụ thuộc vào. Đừng ghi con số nào vào luận văn</td></tr>
       <tr><td><b>Docker trên máy bạn</b></td><td>Có</td><td>—</td><td>Không phụ thuộc ai, chạy được cả khi mất mạng; nhưng máy yếu là khổ và không gửi được đường dẫn cho hội đồng bấm thử</td></tr>
     </tbody>
@@ -2991,7 +2991,7 @@ luận văn mà không ai thấy.
   <div class="ds-code">names = pipe.named_steps["prep"].get_feature_names_out()
 imp = pipe.named_steps["model"].feature_importances_
 pd.Series(imp, index=names).sort_values(ascending=<b>False</b>).head(20)</div>
-  <p>Cần <code>verbose_feature_names_out=False</code> trong ColumnTransformer để tên gọn (<code>city_HaNoi</code> thay vì <code>cat__city_HaNoi</code>).</p>
+  <p>Cần <code>verbose_feature_names_out=False</code> trong ColumnTransformer để tên gọn (<code>city_HN</code> thay vì <code>cat__city_HN</code>); <code>build_pipeline</code> ở bài <a href="#/pr-code">Code end-to-end</a> đã đặt sẵn. Danh sách tên có cả cột <code>missingindicator_*</code> do <code>SimpleImputer(add_indicator=True)</code> sinh ra, nên dài hơn <code>NUM_FEATURES</code> cộng số hạng mục. Với LightGBM, <code>feature_importances_</code> mặc định đếm số lần cột được dùng để tách, không phải mức giảm sai số.</p>
 
   <h3>“FunctionTransformer của tôi lỗi khi dự đoán một dòng”</h3>
   <p>Hàm của bạn phải chạy được với DataFrame <b>một dòng</b>. Kiểm tra ngay khi viết:</p>
@@ -6593,7 +6593,7 @@ Quyết định theo ngưỡng
   <div class="wb-alert wb-alert--info wb-alert--plain"><div class="wb-alert__body">
     <p class="wb-alert__title">0,90 và 0,40 trong hình là <b>số minh hoạ</b> — đừng chép vào hệ thống của bạn</p>
     <p class="wb-alert__msg">Hình trên vẽ <i>hình dạng</i> của kiến trúc: ba mức quyết định, và ngưỡng đọc từ đâu. Hai con số tròn 0,90 / 0,40 chỉ để hình dễ đọc; chúng <b>không</b> phải kết quả của bất kỳ phép tính nào trên trang này.<br>
-    Ngưỡng thật của dự án được <b>tính</b> ở bài <a href="#/pr-eval">Đánh giá, chọn ngưỡng, và bốn test</a> từ ma trận chi phí và ràng buộc sức chứa, rồi <b>ghi vào chính artifact của mô hình</b> (<code>meta["thresholds"]</code> trong file <code>.joblib</code>, và <code>models/metrics.json</code> để đọc bằng mắt). API đọc ngưỡng từ đó, không viết cứng — và đó chính là quyết định thiết kế mà bài này đang dạy. <b>Một nguồn sự thật duy nhất cho ngưỡng: file artifact.</b> Bất cứ con số ngưỡng nào bạn thấy ở bài khác đều phải kèm nhãn nó thuộc hệ nào.</p>
+    Ngưỡng thật của dự án được <b>tính</b> ở bài <a href="#/pr-eval">Đánh giá, chọn ngưỡng, và bốn test</a> từ ma trận chi phí và ràng buộc sức chứa, rồi <b>ghi vào chính artifact của mô hình</b> (<code>meta["thresholds"]</code> trong file <code>.joblib</code>, và bản sao <code>models/&lt;phiên bản&gt;.meta.json</code> để đọc bằng mắt). API đọc ngưỡng từ đó, không viết cứng — và đó chính là quyết định thiết kế mà bài này đang dạy. <b>Một nguồn sự thật duy nhất cho ngưỡng: file artifact.</b> Bất cứ con số ngưỡng nào bạn thấy ở bài khác đều phải kèm nhãn nó thuộc hệ nào.</p>
   </div></div>
 
   <div data-viz="prodloop"></div>
@@ -6617,14 +6617,14 @@ Quyết định theo ngưỡng
     <tr><td>Ghi log + quyết định</td><td>5 ms</td><td>Ghi bất đồng bộ</td></tr>
     <tr><td><b>Tổng</b></td><td><b>~50 ms</b></td><td>Ngân sách công nghiệp thường là 100ms</td></tr>
   </table>
-  <p>Đây là lý do <b>không dùng LLM để chấm điểm giao dịch</b>: một lần gọi LLM mất 500–3000ms, gấp 10–60 lần toàn bộ ngân sách.</p>
+  <p>Đây là lý do <b>không dùng LLM để chấm điểm giao dịch</b>: một lần gọi LLM mất 500–3000ms, gấp 10–60 lần tổng ~50 ms ở trên, và gấp 5–30 lần cả trần 100 ms.</p>
 
   <h2>Vòng phản hồi — phần khiến bài toán này khó hơn vẻ ngoài</h2>
   <div class="wb-alert wb-alert--warning">
     <span class="wb-alert__icon">!</span>
     <div class="wb-alert__body"><p class="wb-alert__title">Ba vấn đề mà mọi hệ thống chống gian lận đều gặp</p>
       <p class="wb-alert__msg">
-      <b>1. Nhãn đến trễ.</b> Bạn chỉ biết một giao dịch là gian lận khi khách khiếu nại — 30–60 ngày sau. Nên dữ liệu gần nhất luôn có nhãn không đầy đủ.<br>
+      <b>1. Nhãn đến trễ.</b> Bạn chỉ biết một giao dịch là gian lận khi khách khiếu nại — thường 30–60 ngày sau, và hạn khiếu nại của các tổ chức thẻ kéo dài tới cỡ 120 ngày. Nên dữ liệu gần nhất luôn có nhãn không đầy đủ: giao dịch chưa bị khiếu nại chưa chắc là sạch.<br>
       <b>2. Nhãn bị kiểm duyệt.</b> Giao dịch bị bạn chặn thì <b>không bao giờ biết</b> nó có thật sự gian lận không. Mô hình chỉ học được từ những gì nó cho qua — một dạng thiên lệch tự tạo.<br>
       <b>3. Đối thủ thích nghi.</b> Kẻ gian thử nghiệm và đổi chiến thuật khi bị chặn. Phân phối dữ liệu thay đổi <i>vì</i> mô hình của bạn tồn tại.</p></div>
   </div>
@@ -7996,6 +7996,12 @@ model trong cùng một file .joblib, và tests/test_serve.py so từng dòng qu
 log = logging.getLogger("fraud")
 _BUNDLE = <b>None</b>
 
+<i># Thẻ mới gửi None. Với ba cột ĐẾM, "chưa có lịch sử" nghĩa là 0 — đúng giá trị
+# add_history sinh cho giao dịch đầu tiên lúc train. Để None thì imputer điền
+# median (hist_n = 54 trên bộ mô phỏng): thẻ mới bị chấm như thẻ đã quẹt 54 lần.</i>
+COUNT_COLS = ("hist_n", "n_tx_1h", "n_tx_24h")
+<b>assert</b> set(COUNT_COLS) &lt;= set(HISTORY_COLS)
+
 
 <b>def</b> model_dir():
     <b>return</b> os.environ.get("FRAUD_MODEL_DIR", MODEL_DIR)
@@ -8038,7 +8044,8 @@ app = FastAPI(title="Fraud Scoring API", version="2.0", lifespan=lifespan)
 
 <b>class</b> Transaction(BaseModel):
     <i>"""Đúng schema chuẩn + sáu cột lịch sử. Thiếu cột lịch sử là hợp lệ (thẻ
-    mới): pipeline điền bằng median của tập train và bật cờ báo thiếu."""</i>
+    mới): ba cột đếm thành 0 như lúc train; ba cột còn lại để trống, pipeline
+    điền median của tập train và bật cờ báo thiếu."""</i>
     timestamp: str
     amount: float = Field(gt=0)
     card_id: str
@@ -8094,8 +8101,9 @@ app = FastAPI(title="Fraud Scoring API", version="2.0", lifespan=lifespan)
     b = get_bundle()
     <b>try</b>:
         row = tx.model_dump()
-        <b>for</b> c <b>in</b> HISTORY_COLS:
-            row.setdefault(c, <b>None</b>)
+        <b>for</b> c <b>in</b> COUNT_COLS:
+            <b>if</b> row[c] <b>is</b> <b>None</b>:
+                row[c] = 0.0
         p, act = score_frame(pd.DataFrame([row]))
     <b>except</b> Exception <b>as</b> e:                <i># noqa: BLE001 — biên ngoài cùng</i>
         log.exception("scoring failed")
@@ -8210,15 +8218,22 @@ app = FastAPI(title="Fraud Scoring API", version="2.0", lifespan=lifespan)
     <b>assert</b> 0.0 &lt;= r.json()["risk_score"] &lt;= 1.0
 
 
-<b>def</b> test_new_card_without_history_is_scored(client, splits):
+<b>def</b> test_new_card_without_history_is_scored(client, deployed, splits):
+    <i>"""Thẻ mới gửi sáu cột None phải được chấm ĐÚNG như giao dịch đầu tiên của
+    một thẻ lúc train: đếm = 0, trung bình và khoảng cách = NaN."""</i>
     _, valid, _ = splits
+    first = valid.iloc[[0]].copy()
+    first[["hist_n", "n_tx_1h", "n_tx_24h"]] = 0.0
+    first[["hist_mean", "hist_std", "secs_since_last"]] = float("nan")
+    p_off = deployed.get_bundle()["pipeline"].predict_proba(first)[:, 1][0]
+
     row = payload(valid.iloc[0])
     row["card_id"] = "C-CHUA-TUNG-THAY"
     <b>for</b> c <b>in</b> HISTORY_COLS:
         row[c] = <b>None</b>
     r = client.post("/score", json=row)
     <b>assert</b> r.status_code == 200
-    <b>assert</b> r.json()["decision"] <b>in</b> ("ALLOW", "REVIEW", "BLOCK")
+    <b>assert</b> r.json()["risk_score"] == pytest.approx(p_off, abs=1e-6)
 
 
 <b>def</b> test_bad_input_is_rejected(client, splits):
@@ -8232,7 +8247,8 @@ app = FastAPI(title="Fraud Scoring API", version="2.0", lifespan=lifespan)
   <h2>Thử</h2>
   <div class="ds-code">$ curl -s localhost:8000/health
 {"status":"ok","model_version":"fraud-20260803-065740","schema_version":1,
- "thresholds":{"review":0.0411,"block":0.0806},"trained_at":"2026-08-03T06:57:40Z"}
+ "thresholds":{"review":0.04111430114683326,"block":0.08061920450814715},
+ "trained_at":"2026-08-03T06:57:40.297102+00:00"}
 
 <i># rạng sáng · tiền lớn · thẻ vừa quẹt 6 lần trong 1 giờ</i>
 $ curl -s -X POST localhost:8000/score -H "Content-Type: application/json" -d '{
@@ -8240,7 +8256,8 @@ $ curl -s -X POST localhost:8000/score -H "Content-Type: application/json" -d '{
     "merchant_type":"gaming", "city":"HN", "device_type":"mobile",
     "hist_mean":210000, "hist_std":95000, "hist_n":40,
     "secs_since_last":42, "n_tx_1h":6, "n_tx_24h":11 }'
-{"risk_score":0.373957,"decision":"BLOCK","t_review":0.0411,"t_block":0.0806,
+{"risk_score":0.373957,"decision":"BLOCK",
+ "t_review":0.04111430114683326,"t_block":0.08061920450814715,
  "model_version":"fraud-20260803-065740","latency_ms":8.62}
 
 <i># cùng thẻ đó · ban ngày · tiền nhỏ · không dồn dập</i>
@@ -8249,7 +8266,8 @@ $ curl -s -X POST localhost:8000/score -H "Content-Type: application/json" -d '{
     "merchant_type":"grocery", "city":"HN", "device_type":"pos",
     "hist_mean":210000, "hist_std":95000, "hist_n":40,
     "secs_since_last":86400, "n_tx_1h":0, "n_tx_24h":1 }'
-{"risk_score":0.000276,"decision":"ALLOW","t_review":0.0411,"t_block":0.0806,
+{"risk_score":0.000276,"decision":"ALLOW",
+ "t_review":0.04111430114683326,"t_block":0.08061920450814715,
  "model_version":"fraud-20260803-065740","latency_ms":6.92}</div>
   <p>Hai lời gọi trên khác nhau <b>1.355 lần</b> về điểm rủi ro, trên cùng một thẻ. Đó là ba nhóm feature bạn đã viết đang làm việc: chu kỳ giờ, log số tiền, và đếm theo cửa sổ. Trang <code>/docs</code> bấm được — đó là <b>thứ nên demo trước hội đồng</b>.</p>
 
@@ -8355,7 +8373,7 @@ uvicorn src.serve:app --port 8000           <i># → http://localhost:8000/docs<
     <tr><th>Loại</th><th>Cái gì đổi</th><th>Ví dụ</th><th>Phát hiện bằng</th></tr>
     <tr><td><b>Data drift</b></td><td>Phân phối đầu vào $P(X)$</td><td>Tết đến, số tiền trung bình tăng gấp ba</td><td>So phân phối từng cột giữa tháng này và lúc train</td></tr>
     <tr><td><b>Concept drift</b></td><td>Quan hệ $P(y \mid X)$</td><td>Kẻ gian đổi chiêu: giờ chia nhỏ thành nhiều giao dịch bé</td><td>Cần nhãn → phát hiện trễ</td></tr>
-    <tr><td><b>Label drift</b></td><td>Tỉ lệ nhãn $P(y)$</td><td>Chiến dịch lừa đảo mới làm tỉ lệ gian lận tăng gấp đôi</td><td>Theo dõi tỉ lệ dương theo tuần</td></tr>
+    <tr><td><b>Label drift</b></td><td>Tỉ lệ nhãn $P(y)$</td><td>Chiến dịch lừa đảo mới làm tỉ lệ gian lận tăng gấp đôi</td><td>Theo dõi tỉ lệ dương theo tuần — chỉ ở những tuần nhãn đã về đủ, vì tuần gần đây luôn thấp giả</td></tr>
   </table>
   <p>Concept drift là loại nguy hiểm nhất vì <b>đầu vào trông vẫn bình thường</b> — chỉ có điều mối liên hệ với nhãn đã đổi. Trong bài toán gian lận nó xảy ra liên tục, vì bên kia là con người đang chủ động thích nghi.</p>
 
@@ -8371,14 +8389,16 @@ uvicorn src.serve:app --port 8000           <i># → http://localhost:8000/docs<
     e = np.histogram(expected, edges)[0] / len(expected) + 1e-6
     a = np.histogram(actual,   edges)[0] / len(actual)   + 1e-6
     <b>return</b> <b>float</b>(((a - e) * np.log(a / e)).sum())</div>
-  <p class="wb-help">Dòng <code>np.unique</code> đáng giữ, nhưng <b>không phải vì nó chặn một lỗi</b>: với cột mà hơn 10% giá trị bằng 0 (rất phổ biến — <code>n_tx_1h</code> chẳng hạn), các phân vị thấp trùng nhau, và <code>np.histogram</code> <i>vẫn chạy</i> — nó chỉ ném <i>“bins must increase monotonically”</i> khi cạnh <b>giảm</b>, còn cạnh bằng nhau thì đi qua. Cái bạn mất im lặng hơn một lỗi: khoảng bề rộng 0 thì luôn rỗng, nên bạn xin 10 khoảng mà nhận về ít hơn — đo trên cột gamma pha số 0 thì 30% số 0 còn <b>8</b> khoảng thật, 60% còn <b>5</b> — và PSI được tính trên lưới thô hơn bạn tưởng. <code>np.unique</code> không cứu số khoảng; nó chỉ làm chỗ hụt đó hiện ra thay vì trốn trong một mảng cạnh trùng.</p>
+  <p class="wb-help">Dòng <code>np.unique</code> đáng giữ, nhưng <b>không phải vì nó chặn một lỗi</b>: với cột mà hơn 10% giá trị bằng 0 (rất phổ biến — <code>n_tx_1h</code> chẳng hạn), các phân vị thấp trùng nhau, và <code>np.histogram</code> <i>vẫn chạy</i> — nó chỉ ném <i>“bins must increase monotonically”</i> khi cạnh <b>giảm</b>, còn cạnh bằng nhau thì đi qua. Cái bạn mất im lặng hơn một lỗi: khoảng bề rộng 0 thì luôn rỗng, nên bạn xin 10 khoảng mà nhận về ít hơn — đo trên cột gamma pha số 0 thì 30% số 0 còn <b>7–8</b> khoảng thật, 60% còn <b>4–5</b> (tuỳ tỉ lệ số 0 nhỉnh hơn hay kém con số tròn) — và PSI được tính trên lưới thô hơn bạn tưởng. <code>np.unique</code> không cứu số khoảng; nó chỉ làm chỗ hụt đó hiện ra thay vì trốn trong một mảng cạnh trùng.</p>
   <table>
     <tr><th>PSI</th><th>Kết luận</th><th>Hành động</th></tr>
     <tr><td>&lt; 0,10</td><td>Ổn định</td><td>Không làm gì</td></tr>
     <tr><td>0,10 – 0,25</td><td>Có dịch chuyển vừa</td><td>Theo dõi sát, chuẩn bị retrain</td></tr>
     <tr><td>&gt; 0,25</td><td>Dịch chuyển đáng kể</td><td>Retrain</td></tr>
   </table>
-  <p>Các ngưỡng này là quy ước ngành (dùng rộng rãi trong credit scoring), không phải định lý — hãy trích dẫn nguồn chứ đừng trình bày như chân lý.</p>
+  <p>Các ngưỡng này là quy ước ngành (dùng rộng rãi trong credit scoring), không phải định lý — hãy trích dẫn nguồn chứ đừng trình bày như chân lý. Nguồn hay được dẫn: Siddiqi, <i>Credit Risk Scorecards</i> (Wiley, 2006); tính chất thống kê của PSI: Yurdakul (luận án, Western Michigan University, 2018).</p>
+  <p><b>PSI còn phụ thuộc cỡ mẫu.</b> Không có drift nào, hai mẫu vẫn lệch nhau vì ngẫu nhiên, nên PSI không bao giờ bằng 0: trung bình nó vào khoảng $(B-1)/n$, với $B$ là số khoảng và $n$ là số dòng của tập hiện tại (khi tập tham chiếu lớn hơn hẳn). Đo thử trên hai mẫu chuẩn cùng phân phối: $n = 200$ cho PSI trung bình 0,049 và 5% số lần vượt 0,09 — sát ngưỡng 0,10 mà chẳng có gì đổi; $n = 5.000$ chỉ còn 0,002. Nên đừng tính PSI trên cửa sổ vài trăm giao dịch, hoặc phải nâng ngưỡng cho cửa sổ nhỏ.</p>
+  <p class="wb-help">Vì sao không dùng p-value của kiểm định Kolmogorov–Smirnov (KS) cho việc này: ở cỡ mẫu giám sát, nó bác bỏ cả những lệch vô hại. Hai mẫu 100.000 dòng, trung bình lệch 0,02 độ lệch chuẩn: KS cho $p \approx 10^{-6}$, còn PSI chỉ 0,0006. Muốn dùng KS thì đọc chính thống kê $D$ (khoảng cách lớn nhất giữa hai hàm phân phối tích luỹ) như một độ lớn, đừng đọc $p$.</p>
 
   <h2>Bảng theo dõi tối thiểu</h2>
   <table>
@@ -8389,15 +8409,16 @@ uvicorn src.serve:app --port 8000           <i># → http://localhost:8000/docs<
     <tr><td>Chất lượng</td><td>Precision/recall trên nhãn đã có (trễ 30–60 ngày)</td><td>Precision giảm &gt; 20%</td></tr>
     <tr><td>Kinh doanh</td><td>Tổng tiền gian lận lọt qua, số cuộc gọi xác minh</td><td>Theo tháng</td></tr>
   </table>
-  <p><b>Nhóm "Đầu ra" là nhóm quý nhất</b>: nó không cần nhãn, nên bạn phát hiện bất thường <i>ngay lập tức</i> thay vì chờ 60 ngày. Nếu tỉ lệ chặn nhảy từ 0,4% lên 3% trong một đêm, có gì đó đã hỏng — và bạn biết trước khi khách hàng gọi tổng đài.</p>
+  <p><b>Nhóm "Đầu ra" là nhóm quý nhất</b>: nó không cần nhãn, nên bạn phát hiện bất thường <i>ngay lập tức</i> thay vì chờ 60 ngày. Nếu tỉ lệ chặn nhảy từ 0,26% (mức trên validation của dự án) lên 3% trong một đêm, có gì đó đã hỏng — và bạn biết trước khi khách hàng gọi tổng đài.</p>
 
   <h2>Chiến lược huấn luyện lại</h2>
   <table>
     <tr><th>Cách</th><th>Cơ chế</th><th>Đánh giá</th></tr>
-    <tr><td>Theo lịch</td><td>Mỗi tháng train lại trên 12 tháng gần nhất</td><td>Đơn giản, dễ vận hành. <b>Chọn cái này cho luận văn.</b></td></tr>
+    <tr><td>Theo lịch</td><td>Mỗi tháng train lại trên 12 tháng gần nhất đã đủ nhãn</td><td>Đơn giản, dễ vận hành. <b>Chọn cái này cho luận văn.</b></td></tr>
     <tr><td>Theo kích hoạt</td><td>Train khi PSI hoặc precision vượt ngưỡng</td><td>Hiệu quả hơn, phức tạp hơn</td></tr>
     <tr><td>Học trực tuyến</td><td>Cập nhật liên tục theo từng mẫu</td><td>Rủi ro cao trong tài chính — khó kiểm toán, dễ bị đầu độc dữ liệu</td></tr>
   </table>
+  <p><b>"12 tháng gần nhất" phải trừ phần nhãn chưa chín.</b> Giao dịch của một, hai tháng cuối phần lớn chưa kịp bị khiếu nại, nên đang mang nhãn "sạch" dù không phải. Đưa chúng vào train là dạy mô hình rằng kiểu gian lận mới nhất là sạch. Cửa sổ train dừng trước hôm nay ít nhất bằng độ trễ nhãn (ví dụ từ 14 tháng trước tới 2 tháng trước, vẫn đủ 12 tháng), hoặc chỉ lấy những giao dịch đã qua hạn khiếu nại.</p>
   <p>Sau khi train lại, <b>đừng thay ngay</b>: chạy song song (shadow mode) một tuần, so quyết định của bản mới với bản cũ, rồi mới chuyển. Nếu có thể thì A/B test trên 5% lưu lượng.</p>
 
   <div class="wb-alert wb-alert--warning">
@@ -8427,18 +8448,25 @@ uvicorn src.serve:app --port 8000           <i># → http://localhost:8000/docs<
   <h2>Bốn thứ đáng làm trong 2 tuần</h2>
   <h3>1 · Ghi lại thí nghiệm — MLflow</h3>
   <div class="ds-code"><b>import</b> mlflow
+<b>from</b> .evaluate <b>import</b> plot_pr
 
+<i># trong main() của src/train.py: pipe, train, valid, C, valid_metrics đã có sẵn</i>
 mlflow.set_experiment("fraud-detection")
 <b>with</b> mlflow.start_run(run_name="lgbm + cyclical + velocity"):
-    mlflow.log_params({"num_leaves": 31, "lr": 0.05, "features": len(NUM_FEATURES)})
-    pipe.fit(train, y_tr)
-    mlflow.log_metrics({"pr_auc_valid": ap_va, "pr_auc_test": ap_te})
-    mlflow.sklearn.log_model(pipe, "model")
-    mlflow.log_artifact("reports/figures/pr_curve.png")</div>
-  <p><code>mlflow ui</code> mở một web app so sánh mọi lần chạy. <b>Đây là thứ trực tiếp biến thành bảng kết quả trong luận văn</b> — bạn xuất ra CSV chứ không dựng lại từ trí nhớ. Nếu thấy MLflow nặng, một file CSV mà bạn ghi kỷ luật cũng đạt 80% giá trị.</p>
+    mlflow.log_params({"num_leaves": 31, "learning_rate": 0.05,
+                       "n_features": len(C.NUM_FEATURES) + len(C.CAT_FEATURES)})
+    pipe.fit(train, train[C.TARGET])
+    y_va, p_va = valid[C.TARGET].to_numpy(), pipe.predict_proba(valid)[:, 1]
+    mlflow.log_metrics(valid_metrics(y_va, p_va))      <i># CHỈ validation</i>
+    mlflow.log_artifact(str(plot_pr(y_va, p_va)))
+    <i># ... phần còn lại của main(): chọn ngưỡng, joblib.dump ra file art ...</i>
+    mlflow.log_artifact(str(art))                       <i># đúng file .joblib mà serve.py đọc</i></div>
+  <p class="ds-codecap">chạy thử trên MLflow 3.18 · <code>mlflow.sklearn.log_model(pipe, name="model")</code> bị từ chối ở bản này: MLflow lưu mô hình sklearn bằng skops và không tin hàm <code>add_derived</code> tự viết trong Pipeline. Log thẳng file <code>.joblib</code> vừa tránh lỗi đó vừa giữ một artifact duy nhất</p>
+  <p><b>Không có dòng nào ghi điểm test.</b> Mỗi lần chạy ở đây là một lần thử cấu hình; ghi điểm test vào từng lần là nhìn test 40 lần rồi chọn lần đẹp nhất — đúng việc <code>src/train.py</code> cấm. Điểm test có đúng một lần, do <code>src.final_eval</code> ghi sau khi đã đóng băng cấu hình (bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a>).</p>
+  <p><code>mlflow ui</code> mở một web app so sánh mọi lần chạy. <b>Đây là thứ trực tiếp biến thành bảng kết quả trong luận văn</b> — <code>mlflow.search_runs()</code> trả về một DataFrame, <code>.to_csv()</code> là ra bảng, không dựng lại từ trí nhớ. Chạy bằng script (không phải notebook) trong một repo git thì MLflow tự ghi mã commit vào thẻ <code>mlflow.source.git.commit</code> của mỗi lần chạy. Nếu thấy MLflow nặng, một file CSV mà bạn ghi kỷ luật cũng đạt 80% giá trị.</p>
 
   <h3>2 · Phiên bản hoá dữ liệu — DVC (hoặc kỷ luật thủ công)</h3>
-  <p>Git không lưu file 1GB. DVC lưu con trỏ tới dữ liệu trong git và lưu file thật ở nơi khác, để <code>git checkout</code> một commit cũ sẽ lấy đúng phiên bản dữ liệu của commit đó.</p>
+  <p>GitHub từ chối file trên 100 MB, và git nói chung xử lý file dữ liệu lớn rất tệ. DVC lưu con trỏ tới dữ liệu trong git và lưu file thật ở nơi khác: <code>git checkout</code> một commit cũ rồi <code>dvc checkout</code> là lấy đúng phiên bản dữ liệu của commit đó.</p>
   <p><b>Cách thay thế rẻ hơn cho luận văn:</b> đặt tên file có ngày (<code>transactions_2026-03-14.csv</code>), ghi mã băm MD5 vào README, và đừng bao giờ sửa file trong <code>data/raw/</code>. Đạt được mục tiêu chính (tái lập) mà không thêm công cụ.</p>
 
   <h3>3 · Chốt phiên bản thư viện</h3>
@@ -8459,7 +8487,7 @@ jobs:
         with: {python-version: "3.11"}
       - run: pip install -r requirements.txt
       - run: pytest -q</div>
-  <p>Mười lăm dòng, và mỗi lần push bạn biết ngay code còn chạy không. Dấu tick xanh trên repo cũng là một tín hiệu chất lượng khi hội đồng xem.</p>
+  <p>Mười hai dòng, và mỗi lần push bạn biết ngay code còn chạy không. Bộ test tự sinh dữ liệu mô phỏng trong <code>conftest.py</code> và dùng mô hình <code>hgb</code>, nên CI không cần tải dữ liệu hay cài thêm thư viện hệ thống. Dấu tick xanh trên repo cũng là một tín hiệu chất lượng khi hội đồng xem.</p>
 
   <div data-viz="repro"></div>
 
@@ -8468,11 +8496,11 @@ jobs:
   <ul>
     <li><code>README.md</code> — mô tả bài toán, cách cài, cách chạy, kết quả chính</li>
     <li><code>requirements.txt</code> đã chốt phiên bản</li>
-    <li>Chạy được từ đầu bằng <b>đúng một lệnh</b>: <code>python -m src.train</code></li>
+    <li>Chạy được từ đầu bằng <b>đúng một lệnh</b>: <code>make all</code> (sinh dữ liệu → train → test, <code>Makefile</code> ở bài <a href="#/pr-serve">Đóng gói</a>)</li>
     <li>Seed cố định ở mọi chỗ ngẫu nhiên</li>
     <li><code>tests/</code> có ít nhất bốn test ở bài trước, và chúng xanh</li>
     <li>Không có dữ liệu nhạy cảm, không có khoá API trong repo</li>
-    <li><code>models/metrics.json</code> khớp với con số trong luận văn</li>
+    <li><code>models/&lt;phiên bản&gt;.meta.json</code> (validation) và <code>reports/final_eval_*.json</code> (test) khớp với con số trong luận văn</li>
   </ul>
 
   <p class="ds-more"><button class="ds-aside" data-aside="cmp-track">So sánh CSV · MLflow · W&amp;B</button></p>
@@ -8482,28 +8510,44 @@ jobs:
   <p>Đây là bài ngắn nhưng có tỉ lệ giá trị trên công sức cao nhất trong cả trang. <b>Một bảng quy ra tiền làm luận văn của bạn khác hẳn phần lớn luận văn cùng khoá.</b></p>
 
   <h2>Ma trận chi phí</h2>
+  <p>Dự án có ba hành động nên ma trận có ba cột. Bảng này chính là <code>cost_matrix()</code> trong <code>src/thresholds.py</code>, hằng số lấy từ <code>src/config.py</code> (bài <a href="#/pr-code">Code end-to-end</a>). Đơn vị: đồng cho mỗi giao dịch.</p>
   <table>
-    <tr><th></th><th>Thực tế: gian lận</th><th>Thực tế: sạch</th></tr>
-    <tr><th>Chặn</th><td>TP: <b>tiết kiệm</b> 3.000.000₫ (trừ 40.000₫ xác minh)</td><td>FP: <b>tốn</b> 40.000₫ + rủi ro mất khách</td></tr>
-    <tr><th>Cho qua</th><td>FN: <b>mất</b> 3.000.000₫</td><td>TN: 0₫</td></tr>
+    <tr><th></th><th>Cho qua (ALLOW)</th><th>Xác minh (REVIEW)</th><th>Chặn (BLOCK)</th></tr>
+    <tr><th>Thực tế: gian lận</th><td><b>mất</b> 3.000.000₫</td><td>40.000₫ + 10% × 3.000.000₫ = 340.000₫ <i>(nhân viên bắt được 90%)</i></td><td>0₫</td></tr>
+    <tr><th>Thực tế: sạch</th><td>0₫</td><td>40.000₫</td><td>150.000₫ <i>(mất đơn, mất lòng tin)</i></td></tr>
   </table>
   <p>Lấy số ở đâu:</p>
   <ul>
-    <li><b>Chi phí FN</b> = giá trị trung bình một vụ gian lận. Tính từ chính dữ liệu: <code>df[df.Class==1].amount.mean()</code>, cộng chi phí xử lý khiếu nại.</li>
-    <li><b>Chi phí FP</b> = thời gian nhân viên xác minh × lương giờ, cộng ước lượng chi phí khách bực. Con số sau khó — <b>hãy nói rõ đó là giả định và làm phân tích độ nhạy</b>.</li>
+    <li><b><code>COST_FN</code></b> = giá trị trung bình một vụ gian lận, cộng chi phí xử lý khiếu nại. Phần đầu tính từ chính dữ liệu: <code>df.loc[df["is_fraud"] == 1, "amount"].mean()</code>. Trên bộ mô phỏng dòng này ra khoảng 1,13 triệu, nên 3 triệu trong <code>config.py</code> là một giả định — ghi rõ như vậy trong luận văn.</li>
+    <li><b><code>COST_REVIEW</code></b> = thời gian nhân viên xác minh × lương giờ. Đo được.</li>
+    <li><b><code>COST_FP_BLOCK</code></b> = chặn nhầm một khách thật: mất đơn, cộng ước lượng chi phí khách bực. Con số này khó nhất — <b>nói rõ đó là giả định và làm phân tích độ nhạy</b>.</li>
   </ul>
 
   <h2>Phân tích độ nhạy — biến điểm yếu thành điểm mạnh</h2>
-  <p>Bạn không biết chính xác chi phí FP. Thay vì đoán một số rồi giấu, hãy cho thấy kết luận của bạn <b>ổn định trong một khoảng rộng</b>:</p>
-  <div class="ds-code"><b>for</b> cost_fp <b>in</b> [20_000, 40_000, 80_000, 160_000]:
-    t, total = pick_threshold(y_valid, p_valid, COST_FN=3e6, COST_FP=cost_fp)
-    print(f"FP={cost_fp:>8,}₫  →  ngưỡng {t:.3f}  |  thiệt hại {total/1e6:>6.0f} triệu")</div>
-  <div class="ds-code">FP=  20,000₫  →  ngưỡng 0,214  |  thiệt hại    612 triệu
-FP=  40,000₫  →  ngưỡng 0,318  |  thiệt hại    698 triệu
-FP=  80,000₫  →  ngưỡng 0,447  |  thiệt hại    801 triệu
-FP= 160,000₫  →  ngưỡng 0,602  |  thiệt hại    944 triệu</div>
+  <p>Bạn không biết chính xác chi phí chặn nhầm. Thay vì đoán một số rồi giấu, quét nó qua khoảng gấp 8 lần quanh 150.000₫, mỗi mức chọn lại ngưỡng, rồi so với hai phương án không cần mô hình. Đoạn dưới chạy sau khi đã có <code>valid</code>, <code>y_va</code>, <code>p_va</code> như trong <code>src/train.py</code>:</p>
+  <div class="ds-code"><b>import</b> src.thresholds <b>as</b> T
+<b>from</b> src.rules <b>import</b> rule_decision
+
+rule = rule_decision(valid)                      <i># luật: 1 = BLOCK, 0 = ALLOW</i>
+nothing = y_va.sum() * C.COST_FN                 <i># cho qua tất</i>
+<b>for</b> fp <b>in</b> [75_000, 150_000, 300_000, 600_000]:
+    T.COST_FP_BLOCK = fp                         <i># cost_matrix() đọc hằng số này mỗi lần gọi</i>
+    th = T.pick_thresholds(y_va, p_va)
+    model = T.total_cost(y_va, p_va, th["review"], th["block"])
+    rules = T.total_cost(y_va, rule, 0.5, 0.5)
+    print(f"FP={fp:&gt;7,}₫  ngưỡng {th['review']:.3f}/{th['block']:.3f}  |  mô hình {model/1e6:3.0f}"
+          f"  luật {rules/1e6:5,.0f}  không làm gì {nothing/1e6:3.0f} triệu")
+T.COST_FP_BLOCK = C.COST_FP_BLOCK                <i># trả lại giá trị gốc</i></div>
+  <div class="ds-code">FP= 75,000₫  ngưỡng 0.017/0.024  |  mô hình 318  luật   495  không làm gì 369 triệu
+FP=150,000₫  ngưỡng 0.041/0.081  |  mô hình 338  luật   732  không làm gì 369 triệu
+FP=300,000₫  ngưỡng 0.081/0.364  |  mô hình 343  luật 1,207  không làm gì 369 triệu
+FP=600,000₫  ngưỡng 0.081/0.364  |  mô hình 343  luật 2,155  không làm gì 369 triệu</div>
+  <p class="ds-codecap">chạy thật trên bộ mô phỏng: tập validation 57.722 giao dịch, 123 vụ gian lận · pandas 2.3.3, scikit-learn 1.6.1, LightGBM 4.6.0</p>
+  <p>Đọc bảng: <b>ngưỡng</b> rất nhạy với giả định — ngưỡng chặn đi từ 0,024 tới 0,364. <b>Kết luận</b> thì không: ở cả bốn mức, mô hình rẻ hơn không làm gì (7–14%) và rẻ hơn hẳn luật thủ công, còn luật thì đắt hơn cả không làm gì vì nó chặn oan hàng nghìn khách. Hai mức trên cùng cho cùng một cặp ngưỡng: chặn nhầm đã đắt tới mức mô hình chỉ chặn những ca rất chắc và đẩy phần còn lại sang xác minh. Mức tiết kiệm nhỏ là có thật: bài <a href="#/pr-eval">Đánh giá</a> đo trên test được 14,8%.</p>
+  <p class="wb-help">Hai điều kiện khi đọc bảng. Chi phí ở đây tính trên chính tập validation đã dùng để chọn ngưỡng, nên lạc quan; con số đưa vào luận văn lấy từ <code>src.final_eval</code> trên test. Và <code>COST_FN</code> cũng là giả định: chạy lại với 1,13 triệu thì mô hình vẫn rẻ hơn không làm gì, nhưng chỉ còn khoảng 4–5%.</p>
+  <p>Hình dưới là một mô hình <b>đồ chơi</b> hai hành động (chặn hoặc cho qua, 100.000 giao dịch, điểm chưa hiệu chỉnh nên ngưỡng tốt nằm quanh 0,58–0,75). Nó không dùng số của dự án; nó cho thấy <i>hình dạng</i> mà bảng số trên không vẽ ra.</p>
   <div data-viz="sens"></div>
-  <p>Kết luận viết được: <i>"Ngưỡng tối ưu nhạy với giả định chi phí, nhưng mô hình đề xuất vượt baseline trong toàn bộ khoảng khảo sát 20.000–160.000₫."</i> Câu này mạnh hơn nhiều so với việc chọn đại một con số.</p>
+  <p>Kết luận viết được: <i>"Ngưỡng tối ưu nhạy với giả định chi phí chặn nhầm, nhưng trong toàn bộ khoảng khảo sát 75.000–600.000₫ mô hình đề xuất luôn rẻ hơn cả việc không làm gì lẫn luật thủ công."</i> Câu này mạnh hơn nhiều so với việc chọn đại một con số.</p>
 
   <h2>So sánh cuối cùng nên có</h2>
   <p>Bảng dưới đây dùng <b>số minh hoạ</b> (cùng hệ với bài <a href="#/ml-metrics">Đo lường</a>) — nó cho bạn thấy <i>hình dạng</i> và <i>các cột phải có</i>. Bảng tương ứng <b>chạy thật trên bộ mô phỏng</b> nằm ở mục 4 bài <a href="#/pr-eval">Đánh giá &amp; bốn test</a>, và nó đọc ra 32,1% / 21,8% chứ không phải 31% / 64%. Hai bảng cùng hình dạng, khác bộ dữ liệu — đừng chờ số của bạn khớp bảng này.</p>

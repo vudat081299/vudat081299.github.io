@@ -1130,8 +1130,8 @@
    "points": [
     "Quyết định theo ba mức ngưỡng chứ không phải chặn/cho-qua. HAI CON SỐ TRÒN DƯỚI ĐÂY LÀ SỐ MINH HOẠ cho hình dạng kiến trúc, không phải kết quả tính toán nào — ngưỡng thật được TÍNH ở bài Đánh giá rồi ghi vào chính artifact của mô hình, API đọc từ đó chứ không viết cứng. Minh hoạ: điểm ≥0,90 CHẶN + gửi OTP, ≥0,40 cho qua nhưng đẩy vào hàng đợi xác minh, <0,40 cho qua thẳng",
     "Ngân sách độ trễ tổng ~50ms (mạng 10 + tra feature lịch sử 15 + pipeline+model 20 + log 5); mức công nghiệp thường là 100ms",
-    "Không dùng LLM để chấm điểm giao dịch: một lần gọi mất 500–3000ms, gấp 10–60 lần toàn bộ ngân sách độ trễ",
-    "Nhãn đến trễ 30–60 ngày (phải chờ khiếu nại/chargeback) nên dữ liệu gần nhất luôn có nhãn không đầy đủ",
+    "Không dùng LLM để chấm điểm giao dịch: một lần gọi mất 500–3000ms, gấp 10–60 lần tổng ~50ms (5–30 lần trần 100ms)",
+    "Nhãn đến trễ, thường 30–60 ngày (phải chờ khiếu nại/chargeback; hạn khiếu nại tới cỡ 120 ngày) nên dữ liệu gần nhất luôn có nhãn không đầy đủ",
     "Selective labels problem: giao dịch đã bị chặn thì không bao giờ biết có thật gian lận không → mô hình chỉ học từ cái nó cho qua, một thiên lệch tự tạo",
     "Phải ghi log đầy đủ cả feature đã tính, nếu không thì không debug, không đo drift, không retrain được"
    ],
@@ -1197,7 +1197,7 @@
     "serve.py đọc ngưỡng TỪ artifact (không viết trong file); test_api_matches_offline_decisions so từng dòng điểm+quyết định+ngưỡng của API với bản offline trên 60 giao dịch, và test_no_hardcoded_thresholds đọc chính mã service bắt hằng số ngưỡng",
     "Nạp model lười — để container thiếu model báo lỗi rõ ở /health (503) thay vì chết lúc import — nhưng chỉ nạp MỘT lần vì joblib.load mất ~200ms, gọi mỗi request là phá sạch ngân sách độ trễ (lifespan nạp sẵn lúc khởi động)",
     "Ba endpoint: /score, /health, /model-card; /model-card trả cả ma trận chi phí và cửa sổ huấn luyện để trả lời 'ngưỡng ở đâu ra' trong buổi bảo vệ",
-    "Nguồn train–serve skew thứ hai: sáu cột hist_*/n_tx_* lúc serve lấy ở đâu — ba cách (caller cung cấp / kho trạng thái Redis với state_from_history / tính lại tại chỗ); tính khác lúc train thì model vẫn chạy, vẫn trả xác suất, chỉ là sai",
+    "Nguồn train–serve skew thứ hai: sáu cột hist_*/n_tx_* lúc serve lấy ở đâu — ba cách (caller cung cấp / kho trạng thái Redis với state_from_history / tính lại tại chỗ); tính khác lúc train thì model vẫn chạy, vẫn trả xác suất, chỉ là sai. Thẻ mới gửi None: ba cột đếm phải thành 0 như add_history sinh lúc train, không để imputer điền median (hist_n = 54)",
     "Dockerfile phải apt-get install libgomp1 vì LightGBM cần OpenMP; thiếu nó thì container build xong bình thường rồi mới chết lúc import với 'OSError: libgomp.so.1: cannot open shared object file' (trên macOS cùng nguyên nhân nhưng báo khác hẳn: 'Library not loaded: libomp.dylib', chữa bằng brew install libomp, hoặc MODEL_KIND='hgb' chỉ cần scikit-learn)",
     "Ghim đúng phiên bản trong requirements.txt: 'không tái lập được' là lỗi nặng nhất một luận văn có thể mắc vì nó vô hiệu hoá mọi con số; toàn bộ quy trình từ thư mục rỗng ~19 giây tính toán"
    ],
@@ -1218,12 +1218,13 @@
    "points": [
     "Ba loại drift: data drift đổi P(X), concept drift đổi P(y|X) — nguy hiểm nhất vì đầu vào trông vẫn bình thường, label drift đổi P(y)",
     "Đo drift bằng PSI = Σ(aᵢ−eᵢ)·ln(aᵢ/eᵢ) so phân phối hiện tại với lúc train; <0,10 ổn định (không làm gì), 0,10–0,25 theo dõi sát, >0,25 retrain — các ngưỡng là quy ước ngành credit scoring, phải trích dẫn",
-    "Trong code psi() nên np.unique(edges) để bỏ cạnh phân vị trùng — KHÔNG phải để chặn lỗi (np.histogram chỉ ném 'bins must increase monotonically' khi cạnh GIẢM, cạnh bằng nhau đi qua) mà vì khoảng bề rộng 0 luôn rỗng: cột nhiều số 0 như n_tx_1h xin 10 khoảng chỉ nhận 8 (30% số 0) hay 5 (60%), nên PSI tính trên lưới thô hơn tưởng",
+    "Trong code psi() nên np.unique(edges) để bỏ cạnh phân vị trùng — KHÔNG phải để chặn lỗi (np.histogram chỉ ném 'bins must increase monotonically' khi cạnh GIẢM, cạnh bằng nhau đi qua) mà vì khoảng bề rộng 0 luôn rỗng: cột nhiều số 0 như n_tx_1h xin 10 khoảng chỉ nhận 7–8 (30% số 0) hay 4–5 (60%), nên PSI tính trên lưới thô hơn tưởng",
+    "PSI phụ thuộc cỡ mẫu: không drift vẫn dao động quanh (B−1)/n — n = 200 cho trung bình 0,049, sát ngưỡng 0,10; đừng đọc p-value của KS ở cỡ mẫu giám sát (100.000 dòng lệch 0,02 độ lệch chuẩn cho p ≈ 10⁻⁶, PSI 0,0006)",
     "Nhóm chỉ số 'Đầu ra' (phân phối điểm rủi ro, tỉ lệ CHẶN/XÁC MINH) quý nhất vì không cần nhãn → phát hiện bất thường ngay lập tức thay vì chờ nhãn trễ 60 ngày",
-    "Retrain theo lịch (mỗi tháng trên 12 tháng gần nhất) là lựa chọn cho luận văn; sau khi train lại chạy shadow mode một tuần so quyết định bản mới với bản cũ, nếu được thì A/B test trên 5% lưu lượng",
+    "Retrain theo lịch (mỗi tháng trên 12 tháng gần nhất đã đủ nhãn — bỏ một, hai tháng cuối nhãn chưa về) là lựa chọn cho luận văn; sau khi train lại chạy shadow mode một tuần so quyết định bản mới với bản cũ, nếu được thì A/B test trên 5% lưu lượng",
     "Vòng phản hồi tự đầu độc (selective labels): mô hình chặn → không có nhãn thật → dữ liệu train tương lai chỉ chứa cái cho qua; nêu được vấn đề này trong luận văn đã là điểm cộng. Cách hay được nhắc là cho qua ngẫu nhiên một tỉ lệ nhỏ giao dịch đáng lẽ bị chặn — nhưng đó là can thiệp rủi ro bằng tiền thật của khách, KHÔNG có tỉ lệ phổ quát, và phải có người đủ thẩm quyền quyết định, trần thiệt hại, đường khiếu nại. Phương án rẻ hơn và an toàn hơn cho luận văn: xác minh THỦ CÔNG một mẫu ngẫu nhiên trong vùng bị chặn"
    ],
-   "viz": "Bảng ngưỡng PSI ba mức hành động; ví dụ tỉ lệ chặn nhảy từ 0,4% lên 3% trong một đêm là tín hiệu hỏng phát hiện được ngay không cần nhãn.",
+   "viz": "Bảng ngưỡng PSI ba mức hành động; ví dụ tỉ lệ chặn nhảy từ 0,26% (mức validation của dự án) lên 3% trong một đêm là tín hiệu hỏng phát hiện được ngay không cần nhãn.",
    "example": {
     "kind": "code",
     "lead": "Một cột có 30% giá trị bằng 0 làm bạn xin 10 khoảng phân vị mà chỉ nhận về 8, nên PSI đọc được đang tính trên lưới thô hơn bạn tưởng.",
@@ -1238,19 +1239,19 @@
   "pr-mlops": {
    "tldr": "Chỉ cần một phần rất nhỏ của MLOps để dự án tái lập được và biến trực tiếp thành bảng kết quả luận văn: ghi lại thí nghiệm, phiên bản hoá dữ liệu, chốt phiên bản thư viện, và một CI tối thiểu.",
    "points": [
-    "MLflow log_params/log_metrics/log_model rồi 'mlflow ui' so mọi lần chạy → xuất CSV thành bảng kết quả luận văn thay vì dựng lại từ trí nhớ; nếu thấy nặng thì một file CSV ghi kỷ luật cũng đạt 80% giá trị",
-    "DVC lưu con trỏ dữ liệu trong git và file thật ở nơi khác (git checkout commit cũ lấy đúng phiên bản dữ liệu); cách rẻ hơn cho luận văn: đặt tên file có ngày + ghi MD5 vào README + không bao giờ sửa file trong data/raw/",
+    "MLflow log_params/log_metrics (CHỈ validation — test chỉ chạm một lần ở final_eval), log_artifact chính file .joblib (log_model của MLflow 3.18 từ chối hàm tự viết trong Pipeline) rồi 'mlflow ui' so mọi lần chạy → xuất CSV thành bảng kết quả luận văn thay vì dựng lại từ trí nhớ; nếu thấy nặng thì một file CSV ghi kỷ luật cũng đạt 80% giá trị",
+    "DVC lưu con trỏ dữ liệu trong git và file thật ở nơi khác (git checkout commit cũ rồi dvc checkout là lấy đúng phiên bản dữ liệu); cách rẻ hơn cho luận văn: đặt tên file có ngày + ghi MD5 vào README + không bao giờ sửa file trong data/raw/",
     "pip freeze > requirements.txt: thiếu nó thì người phản biện chạy với scikit-learn mới hơn ra số khác — lỗi tái lập phổ biến nhất và dễ tránh nhất",
-    "CI GitHub Actions ~15 dòng chạy pytest -q mỗi lần push; tick xanh trên repo cũng là một tín hiệu chất lượng khi hội đồng xem",
-    "Checklist repo trước khi nộp: README (bài toán/cài/chạy/kết quả), requirements chốt phiên bản, chạy được bằng đúng một lệnh, seed cố định mọi chỗ ngẫu nhiên, tests xanh, không có khoá API, metrics.json khớp số trong luận văn"
+    "CI GitHub Actions 12 dòng chạy pytest -q mỗi lần push; tick xanh trên repo cũng là một tín hiệu chất lượng khi hội đồng xem",
+    "Checklist repo trước khi nộp: README (bài toán/cài/chạy/kết quả), requirements chốt phiên bản, chạy được bằng đúng một lệnh (make all), seed cố định mọi chỗ ngẫu nhiên, tests xanh, không có khoá API, models/<phiên bản>.meta.json và reports/final_eval_*.json khớp số trong luận văn"
    ],
    "viz": "Hình tương tác vẽ chuỗi tái lập gồm năm mắt (code → dữ liệu → thư viện → seed → con số) với bốn việc của bài canh bốn mắt. Bỏ một mắt thì chuỗi đứt ở đúng chỗ đó và triệu chứng khác nhau hẳn: mất sạch · ra số khác mà không có lỗi nào · nhiễu chạy lại lớn hơn hiệu ứng đang đo · chạy được nhưng không viết được bảng."
   },
   "pr-cost": {
    "tldr": "Một bảng quy mọi quyết định ra tiền là thứ làm luận văn khác hẳn phần lớn cùng khoá; và vì chi phí FP là một giả định không chắc, phân tích độ nhạy biến chính điểm yếu đó thành điểm mạnh.",
    "points": [
-    "Ma trận chi phí quy ra tiền: FN mất 3.000.000₫ (giá trị trung bình một vụ gian lận, tính từ df[df.Class==1].amount.mean() cộng chi phí khiếu nại), FP tốn 40.000₫ + rủi ro mất khách",
-    "Phân tích độ nhạy: quét chi phí FP qua [20k, 40k, 80k, 160k], ngưỡng tối ưu đổi (0,214→0,602) nhưng kết luận 'mô hình vượt baseline' ổn định trong toàn khoảng gấp 8 lần",
+    "Ma trận chi phí ba hành động (cost_matrix() của src/thresholds.py): gian lận cho qua mất 3.000.000₫, đưa xác minh tốn 40.000₫ + 10% × 3.000.000₫ = 340.000₫, chặn 0₫; khách sạch cho qua 0₫, xác minh 40.000₫, chặn nhầm 150.000₫. COST_FN tính từ df.loc[df['is_fraud'] == 1, 'amount'].mean() ra ~1,13 triệu trên bộ mô phỏng, nên 3 triệu là giả định phải ghi rõ",
+    "Phân tích độ nhạy chạy thật trên validation: quét chi phí chặn nhầm qua 75k–600k (gấp 8 lần), ngưỡng chặn đổi từ 0,024 tới 0,364 nhưng mô hình luôn rẻ hơn không làm gì (318–343 so với 369 triệu) và rẻ hơn hẳn luật thủ công (495–2.155 triệu)",
     "Bảng so sánh cuối phải có cột 'số ca xác minh/ngày' — cột thuyết phục nhất và hay bị bỏ: một hệ thống bắt nhiều hơn nhưng làm phiền gấp ba thì đội vận hành sẽ tắt nó trong hai tuần",
     "Chỉ đổi ngưỡng từ mặc định 0,5 sang ngưỡng theo chi phí đã tiết kiệm thêm ~412 triệu/tháng mà không đổi mô hình",
     "Dòng baseline luật thủ công phải tự tạo (từ src/rules.py chạy trên đúng tập test), không đi mượn — đó là dòng so sánh duy nhất hội đồng thật sự quan tâm; bảng trong bài dùng số minh hoạ (31%/64%) khác số chạy thật ở pr-eval (32,1%/21,8%)",
@@ -1713,13 +1714,13 @@
   "ml-tune": "5542bd11",
   "ml-shap": "2aebb4c3",
   "ml-unsup": "b2e66fdf",
-  "pr-arch": "4521ae12",
+  "pr-arch": "60ac15bb",
   "pr-code": "b6a99bf6",
   "pr-eval": "70eb47ab",
-  "pr-serve": "c09b6ce0",
-  "pr-monitor": "03558fa7",
-  "pr-mlops": "3ffa8c82",
-  "pr-cost": "71f422d2",
+  "pr-serve": "6f4fb32f",
+  "pr-monitor": "4b5b619e",
+  "pr-mlops": "4a871471",
+  "pr-cost": "d072b510",
   "dl-nn": "103755a4",
   "dl-backprop": "82abb53f",
   "dl-train": "fa1075f1",

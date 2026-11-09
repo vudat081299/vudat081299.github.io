@@ -9,6 +9,32 @@ một dòng "→ quyết định DS-…".
 
 ---
 
+## Phiên 2026-11-09 (ai-pr) — rà đối kháng chặng 6: pr-arch, pr-serve, pr-monitor, pr-mlops, pr-cost
+
+Repo trích từ các khối `ds-codecap` chạy với đúng `requirements.txt` của `pr-serve` (Python 3.11, pandas 2.3.3,
+sklearn 1.6.1, LightGBM 4.6.0, FastAPI 0.128.8): 27 test xanh, ngưỡng 0,0411/0,0806 và hai lời gọi `curl`
+(0,373957 · 0,000276) khớp từng chữ số. MLflow thử trên 3.18.
+
+- `pr-serve`: thẻ mới gửi `None` thì imputer điền `hist_n` = 54 (median) thay vì 0 như lúc train; `serve.py`
+  điền 0 cho ba cột đếm, test thẻ mới giờ so điểm với bản offline. `curl` in ngưỡng đủ chữ số như API trả.
+- `pr-cost`: ma trận hai hành động (FP 40.000₫) lệch `config.py`; thay bằng ma trận ba hành động. Bảng độ nhạy
+  cũ là số bịa (Python không in `0,214`), gọi hàm không có; thay bằng code chạy thật trên validation.
+- `pr-mlops`: bỏ `pr_auc_test` khỏi mỗi lượt chạy MLflow; `log_model` bị MLflow 3.18 từ chối (skops) → log
+  file `.joblib`; `models/metrics.json` không tồn tại; CI 12 dòng; `dvc checkout`; `make all`.
+- `pr-monitor`: số khoảng PSI là 7–8 / 4–5; PSI phụ thuộc cỡ mẫu và p-value KS vô dụng ở cỡ mẫu lớn (đo bằng
+  scipy 1.18); cửa sổ retrain bỏ phần nhãn chưa chín; label drift chỉ đọc trên tuần đã đủ nhãn.
+- `pr-arch`: hạn khiếu nại tới ~120 ngày; `cmp-serve`: HF Spaces kiểm lại 9/11/2026, Codespaces = 60 giờ máy
+  2 nhân, Streamlit ngủ sau 12 giờ; `x-pipeline-bugs`: tên cột khớp bộ mô phỏng.
+- Quiz: `$…$` ở `pr-monitor`, FPR 6,7× ở `pr-eval` thành tình huống giả định, và các câu theo số mới.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- Hình `sens` của `pr-cost` vẫn là mô hình đồ chơi hai hành động; bài giờ nói rõ nó không dùng số dự án.
+- Không đổi `COST_FN` = 3 triệu trong `config.py` (bộ mô phỏng cho ~1,13 triệu): đổi là đổi mọi số của
+  `pr-code`/`pr-eval`; bài nói rõ đó là giả định và kết luận vẫn đứng ở 1,13 triệu.
+- Thời gian chạy (19 giây, 7–9 ms/request) không đo lại được: máy dùng chung đang tải ~20.
+- Chưa dựng ảnh Docker (máy không có Docker daemon); đã kiểm `lib_lightgbm.so` cần `libgomp.so.1` của hệ thống.
+
 ## Phiên 2026-11-08 (ah) — rà đối kháng chặng 0–2, 4–5 và số "chạy thật" của chặng 6
 
 Rà các bài phiên (ag) chưa rà. Code mẫu chạy thật: pandas 3.0.5, sklearn 1.9.1, DuckDB, LightGBM 4.6 và 4.7,
