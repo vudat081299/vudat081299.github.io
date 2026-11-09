@@ -79,6 +79,27 @@ datasets 5.1, torchmetrics 1.9. Mọi khối `ds-code` của ba bài trích nguy
 
 - Quiz `dl-cnn-rnn` vẫn gọi CNN là "bất biến tịnh tiến": ngoài phạm vi nhóm này.
 - Không chạy `viz-check.mjs`: không đổi hình nào.
+## Phiên 2026-11-09 (ai-dl) — rà đối kháng `dl-embed`, `dl-cnn-rnn`, `dl-llm`, `dl-tab` và bốn ngăn phụ
+
+Code chạy thật trên torch 2.15.0 (CPU): `nn.Embedding`, `FraudNet`, `Conv2d`, `LSTM`/`GRU`, đếm tham số LoRA.
+Nguồn đối chiếu: PDF của Grinsztajn 2022 (mục 3.2), abstract TabZilla 2023, Guo & Berkhahn 2016, TabPFN-2.5.
+
+- `dl-embed`: quy tắc số chiều viết như hai công thức khác nhau; embedding không cứu mã hiếm, cần mã "hiếm" và mã
+  cho cửa hàng mới; tra bảng = one-hot nhân ma trận; word2vec và cosine; "bài tiếp theo" trỏ sai bài.
+  Embedding → LightGBM: bỏ "thường tốt hơn cả hai", thêm điều kiện chỉ học trên train.
+- `dl-cnn-rnn`: thêm con số chia sẻ tham số (1.792 so với ~9,6 triệu) và công thức cỡ đầu ra; cổng LSTM cộng dồn;
+  vanishing gradient có số theo chiều thời gian; Transformer tốn bình phương độ dài. Tích chập tương biến tịnh
+  tiến, pooling mới cho bất biến một phần: sửa nhãn gạch đầu dòng và câu quiz đầu tiên.
+- `dl-llm`: RLHF và DPO tách rõ; bỏ số tiền không nguồn; RAG "chỗ hỏng hay gặp" thay cho "cái quyết định".
+- `dl-tab`: điều kiện thật của Grinsztajn 2022 (train 10.000 dòng, lớp cân bằng, không ô thiếu, bỏ cột hạng mục quá
+  20 giá trị) và ba nguyên nhân của paper; quy trình embedding → LightGBM có đối chứng.
+- Ngăn phụ: MQA, GQA, FlashAttention, KV cache; BPE, top-p, SFT/RLHF/DPO, LoRA có số; TabPFN; bỏ Claude khỏi ví dụ
+  decoder-only vì kiến trúc chưa công bố.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- Hình `embed` vẫn đo khoảng cách Euclid và giữ "chặn trên 50": khớp chữ bài.
+- Câu "boosting vẫn tốt hơn (trích Grinsztajn 2022)" ở bảng câu hỏi bảo vệ luận văn: ngoài phạm vi nhóm này.
 
 ## Phiên 2026-11-08 (ah) — rà đối kháng chặng 0–2, 4–5 và số "chạy thật" của chặng 6
 
