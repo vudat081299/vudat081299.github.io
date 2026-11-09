@@ -1262,7 +1262,9 @@ def phan_F2():
         's-nguonquyen': [('Richard Emerson', '1962'), ('French và Raven', '1959', 'Raven (1965)')],
         's-quyenluc': [('Burt', '2004', '673 quản lý'), ('Ibarra và cộng sự', '2010')],
         's-tochuc': [('Krackhardt và Hanson', '1993'), ('Chesterton', '1929')],
-        's-diavi': [('Henrich và Gil-White', '2001'), ('Cheng và cộng sự', '2013')],
+        's-diavi': [('Henrich và Gil-White', '2001'), ('Cheng và cộng sự', '2013'),
+                    ('Phân tích gộp 813 mẫu', 'Sabey và cộng sự', '2025'), ('Galinsky và cộng sự', '2006'),
+                    ('20 trường', 'Ebersole và cộng sự, 2016')],
         # Làm thuê và làm giàu: VARS IRE qua Đại biểu Nhân dân 21/9/2025 (Hà Nội 2014 tới giữa 2025); VARS IRE qua Znews 25/1/2026 (căn hộ điển hình 20–25 lần thu nhập hộ); Demographia ≤3,
         # ULI ≤5; lãi sau ưu đãi 13–15% (Nhà Đầu tư, 8/2026); Savills: giá thứ cấp Hà Nội giảm quý thứ ba liên tiếp. Abstract: Smith và cộng sự (2019) lợi nhuận giảm ba phần tư khi chủ
         # nghỉ hưu hay mất; Hamilton (2000) trung vị kém 35% sau 10 năm; Raffiee và Feng (2014) nguy cơ rời bỏ thấp hơn 33,3%
@@ -1275,8 +1277,6 @@ def phan_F2():
             ('45 tuổi', '125%', 'Azoulay và cộng sự', '2020'), ('Rosen', '1981'), ('Stutzer', '2004'),
             ('Maggiulli', '2017'), 'Paul Graham (2004)',
         ],
-        's-hoaquyen': [('Phân tích gộp 813 mẫu', 'Sabey và cộng sự', '2025'), ('Galinsky và cộng sự', '2006'),
-                       ('20 trường', 'Ebersole và cộng sự, 2016')],
     }
     for sid, xs in NGUON.items():
         t = chu(muc(sid))
