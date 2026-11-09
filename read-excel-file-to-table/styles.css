@@ -129,3 +129,42 @@ input[type="file"] {
 	max-width: 100%;
 	box-sizing: border-box;
 }
+
+/* Nền tối theo hệ điều hành; nền sáng giữ nguyên như trên. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+  :root:not([data-theme="light"]) body {
+    background: #15181e;
+    color: #e4e7ec;
+  }
+  :root:not([data-theme="light"]) .btn,
+  :root:not([data-theme="light"]) .btn:hover {
+    color: #e4e7ec;
+  }
+  :root:not([data-theme="light"]) .custom-btn {
+    box-shadow: inset 1px 1px 1px 0px rgba(255,255,255,.12),
+      7px 7px 20px 0px rgba(0,0,0,.4),
+      4px 4px 5px 0px rgba(0,0,0,.35);
+  }
+  :root:not([data-theme="light"]) .btn:after {
+    box-shadow:
+      -7px -7px 20px 0px rgba(255,255,255,.05),
+      -4px -4px 5px 0px rgba(255,255,255,.05),
+      7px 7px 20px 0px rgba(0,0,0,.45),
+      4px 4px 5px 0px rgba(0,0,0,.35);
+  }
+  :root:not([data-theme="light"]) textarea {
+    background: #1d2129;
+    color: #e4e7ec;
+    border: 1px solid #3a404c;
+  }
+  :root:not([data-theme="light"]) #exceltable td,
+  :root:not([data-theme="light"]) #exceltable th {
+    border-color: #343a45;
+  }
+  :root:not([data-theme="light"]) #exceltable tr:nth-child(even) { background-color: #1d2129; }
+  :root:not([data-theme="light"]) #exceltable tr:hover { background-color: #2a303b; }
+  :root:not([data-theme="light"]) #exceltable th { background-color: #0a4f96; }
+}
