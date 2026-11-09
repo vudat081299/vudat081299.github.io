@@ -583,7 +583,7 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
         <div class="box note">
           <div class="box-t">◆ Giải thích 3 tầng</div>
           <div class="layer"><div class="lb">Tầng 1<br>Ẩn dụ</div><div class="lx"><p>Một giao dịch “khớp sổ sách” thì: số dư sau = số dư trước − số tiền. Kẻ gian rút đúng số dư hiện có (trước 181 → rút 181 → sau 0), nên phép trừ khớp. Giao dịch thường trong PaySim thì hay ghi số tiền <em>lớn hơn</em> số dư mà số dư sau vẫn là 0 (trước 15.325 → rút 229.134 → sau 0) — một tật của trình mô phỏng — nên phép trừ không khớp.</p></div></div>
-          <div class="layer"><div class="lb">Tầng 2<br>Cơ chế</div><div class="lx"><p>Nhóm tạo đặc trưng <strong>lỗi số dư</strong> = phần lệch khỏi 0 của phép tính khớp sổ. Trong TRANSFER + CASH_OUT: <strong>99,5%</strong> vụ gian lận có lỗi = 0, còn <strong>90,6%</strong> giao dịch hợp lệ có lỗi &gt; 0. Tín hiệu nằm ở chỗ giao dịch hợp lệ <em>lệch</em> sổ, không phải ở chỗ gian lận lệch sổ.</p></div></div>
+          <div class="layer"><div class="lb">Tầng 2<br>Cơ chế</div><div class="lx"><p>Nhóm tạo đặc trưng <strong>lỗi số dư</strong> = phần lệch khỏi 0 của phép tính khớp sổ. Trong TRANSFER + CASH_OUT: <strong>99,5%</strong> vụ gian lận có lỗi = 0, còn <strong>90,6%</strong> giao dịch hợp lệ có lỗi khác 0 (gần như toàn bộ là lỗi &gt; 0). Tín hiệu nằm ở chỗ giao dịch hợp lệ <em>lệch</em> sổ, không phải ở chỗ gian lận lệch sổ.</p></div></div>
           <div class="layer"><div class="lb">Tầng 3<br>Công thức</div><div class="lx"><p style="font-family:var(--font-mono);font-size:var(--fs-sm)">errorBalanceOrig = newbalanceOrig + amount − oldbalanceOrg</p></div></div>
         </div>
         <h4 class="h">Giao dịch gian lận (rút đúng toàn bộ số dư → khớp)</h4>
@@ -796,6 +796,9 @@ df[<span class="st">"failed_payment_attempts"</span>] = rng.<span class="nm">poi
 
         <div class="box note"><div class="box-t">Q · Chia train/test thế nào? Có rò rỉ theo thời gian không?</div>
           <p>Với giao dịch, cách chia đúng là <strong>theo thời gian</strong>: train trên các <code>step</code> sớm, validation và test trên các <code>step</code> muộn hơn, vì lúc chạy thật mô hình chỉ thấy quá khứ. Chia ngẫu nhiên (kể cả stratified) cho mô hình học cả những giờ nằm xen giữa tập test, nên điểm test lạc quan hơn. Mọi bước fit trên dữ liệu (scaler, encoder, SMOTE nếu có, chọn ngưỡng) chỉ dùng phần train/validation. Nếu nhóm đã chia ngẫu nhiên, nói thẳng đó là một hạn chế.</p></div>
+
+        <div class="box danger"><div class="box-t">⚠ Kiểm trước buổi thuyết trình: chiều của errorBalance</div>
+          <p>Mở slide và báo cáo của nhóm, tìm mọi câu nói về lỗi số dư. Chiều đúng: <strong>gian lận khớp sổ</strong> (99,5% vụ gian lận có lỗi = 0), <strong>giao dịch hợp lệ lệch sổ</strong> (90,6% có lỗi khác 0). Câu nào viết “gian lận làm lệch số dư” hay “lỗi số dư khác 0 là dấu hiệu gian lận” là ngược — sửa trước khi trình bày, vì hội đồng chỉ cần hỏi lại một con số là lộ.</p></div>
 
         <div class="box warn"><div class="box-t">⚠ Mẹo vàng khi bị hỏi khó</div>
           <p>Nếu không chắc, nói thẳng: <em>“đây là hạn chế nhóm đã ghi nhận trong báo cáo”</em>. Trung thực ăn điểm hơn đoán bừa — và đề bài <strong>chấm điểm chính sự trung thực đó</strong>. Ba cặp số dễ nhớ nên nhấn: <strong>1 vs 49.287</strong> (báo động giả, Random Forest vs Logistic, cùng bộ Base), <strong>2.451/2.459</strong> vụ bắt được trên tập test so với <strong>16</strong> vụ luật cũ gắn cờ trên cả bộ dữ liệu, <strong>8,8×</strong> (mật độ gian lận trong outlier).</p></div>
