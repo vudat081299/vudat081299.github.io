@@ -22,6 +22,9 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-017 · hidden-curriculum: bỏ điều hiển nhiên, giữ điều đúc kết · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-018 · hidden-curriculum: nói chuyện phiếm, tâm thế tán tỉnh, tỏ ý với đồng nghiệp · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-019 · ai-native-workflow: agent làm phần lớn vòng đời, người giữ phần quyết và kiểm · `pages/ai-native-workflow.html`
+- PAGES-020 · hidden-curriculum: điều thường chỉ học được sau khi trả giá · `pages/hidden-curriculum.html`
+- PAGES-021 · hidden-curriculum: tổng quan trước, đọc trong khung · `pages/hidden-curriculum.html`
+- PAGES-022 · hidden-curriculum: Gỡ rối trong đầu · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -145,3 +148,25 @@ Khác biệt trung bình theo giới chỉ nêu khi có nguồn, kèm điều ki
 Trang dạy dùng AI để agent làm nhiều nhất có thể suốt vòng đời phần mềm (dev, ship, bug, tính năng, bảo trì), con người còn giữ gì, và các công ty hàng đầu đã công bố cách làm nào.
 Viết cho cả dev lẫn người không chuyên: đơn giản trước, sâu sau; ưu tiên sơ đồ và bảng, giao diện tối giản; thuật ngữ khó có popup mở bằng rê chuột, bàn phím và chạm.
 Có bộ AI cho cả đội (file nào, để làm gì, thêm role ra sao) theo đúng cơ chế Claude Code, đối chiếu Codex; secret không bao giờ nằm trong file.
+
+## PAGES-020 · hidden-curriculum: điều thường chỉ học được sau khi trả giá
+09/11/2026 · `pages/hidden-curriculum.html`
+
+Trang dạy điều người thường chỉ học được sau khi trả giá, nhờ một hoàn cảnh hiếm có, hoặc sau khi đã sống qua.
+Mỗi mục nội dung có một dòng `hc-paid` “Thường học được sau khi …”; dòng ấy hiện trên thẻ tổng quan và trong mục.
+
+## PAGES-021 · hidden-curriculum: tổng quan trước, đọc trong khung
+09/11/2026 · `pages/hidden-curriculum.html`
+
+Mở trang là thấy tổng quan một lượt: mục đích, bản đồ các phần, Gỡ rối trong đầu, rồi mỗi mục một thẻ.
+Bấm thẻ thì mục mở trong khung đọc: bảng bên phải ở máy tính, tấm kéo từ đáy ở điện thoại (≤ 720px).
+Esc, nút Đóng, Back và vuốt xuống đều đóng khung; liên kết `#s-…` mở thẳng mục, kể cả khi mở trang.
+Mạch bài vẫn nằm trong HTML cho bản in và khi không có JS; mọi id, mô hình và liên kết giữ nguyên.
+Màu và chữ theo trang chủ: mực, trắng, giấy ấm, một xanh lá; thêm vàng đất cho dòng “Thường học được sau khi”.
+
+## PAGES-022 · hidden-curriculum: Gỡ rối trong đầu
+09/11/2026 · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
+
+Khối riêng gần đầu trang, ngoài các phần đánh số: những vòng nghĩ quen về tiền, yêu đương, ánh nhìn người khác,
+công việc, gia đình và chính mình, mỗi cái một câu gỡ. Câu gỡ một câu, chỉ dài hơn khi thật cần; lý do tối đa
+một câu ngắn; bỏ câu sáo rỗng. Mỗi suy nghĩ có nhãn độ tin, nguồn khi có, và mục đọc thêm.

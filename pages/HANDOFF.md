@@ -49,3 +49,5 @@
 - a-short-history-of-nearly-everything: bảng 7.2 ghi một dòng "xác nhận", dòng song song "bị bác" — đối chiếu
   lại với sách.
 - family-insurance-benefits, wealth-roadmap (không lên web): thanh trên cùng xuống hai hàng ở khoảng 940–1200px.
+- hidden-curriculum: khung đọc chưa có smoke trình duyệt trong CI. Cổng tĩnh không giữ được: thẻ mở đúng mục,
+  liên kết sâu `#s-…`, Back và Esc đóng khung, liên kết chéo trong khung, mô hình chạy trong khung, vuốt xuống ở 390px.
