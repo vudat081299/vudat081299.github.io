@@ -426,7 +426,7 @@ def phan_B():
                                 f'mỗi năm hụt {vi(interest - net_m, 0)} triệu')
     need('P/E 20', f'lợi suất lợi nhuận 1/20 = {vi(100 / 20, 0)}%/năm')
 
-    # ── Phạt là giá (mục 4.4): bảng 1 của Gneezy & Rustichini (2000), lượt đón muộn mỗi tuần ──
+    # ── Phạt là giá (mục 8.5): bảng 1 của Gneezy & Rustichini (2000), lượt đón muộn mỗi tuần ──
     TEST = [[8, 8, 7, 6, 8, 9, 9, 12, 13, 13, 15, 13, 14, 16, 14, 15, 16, 13, 15, 17],
             [6, 7, 3, 5, 2, 11, 14, 9, 16, 12, 10, 14, 14, 16, 12, 17, 14, 10, 14, 15],
             [8, 9, 8, 9, 3, 5, 15, 18, 16, 14, 20, 18, 25, 22, 27, 19, 20, 23, 23, 22],
@@ -443,7 +443,7 @@ def phan_B():
                                         f'{vi(wk(TEST, last), 0)} trong bốn tuần cuối')
     need('nhà trẻ Haifa, nhóm đối chứng', f'nhóm không phạt đi từ {vi(wk(CTRL, first), 0)} xuống {vi(wk(CTRL, last), 0)}')
 
-    # ── Lời cảm ơn (mục 3.3): bảng 3 của Grant & Gino (2010), thí nghiệm 3 ──────
+    # ── Lời cảm ơn (mục 5.3): bảng 3 của Grant & Gino (2010), thí nghiệm 3 ──────
     g0, g1, c0, c1 = 41.40, 62.60, 39.76, 41.38
     claim('cảm ơn: "hơn 50%"', g1 / g0 - 1 > 0.5, f'tính được {g1 / g0 - 1:.3f}')
     need('cảm ơn, số cuộc gọi', f'từ trung bình {vi(g0, 1)} lên {vi(g1, 1)} — hơn 50%; nhóm không được cảm ơn gần như '
