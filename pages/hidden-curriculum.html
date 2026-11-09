@@ -144,7 +144,7 @@
   @media (max-width: 720px) { .hc-hero { padding-top: 28px; } .hc-sub { font-size: 16.5px; } }
   .hc-sub { color: var(--hc-ink-2); font-size: 18px; line-height: 1.6; max-width: 62ch; margin: 0 0 14px; }
   .hc-sub b { color: var(--hc-ink); font-weight: 600; }
-  .hc-meta { font: 500 11px/1.75 var(--hc-mono); color: var(--hc-ink-3); letter-spacing: .04em; margin: 0; max-width: 90ch; }
+  .hc-meta { font-size: 13.5px; line-height: 1.6; color: var(--hc-ink-3); margin: 0; max-width: 72ch; }
 
   .hc-find { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 26px 0 0; }
   .hc-find .wb-input { flex: 1 1 260px; max-width: 420px; min-width: 0; font-size: 15px; }
@@ -490,8 +490,8 @@
   .hc-rel .k { font: 500 10.5px var(--hc-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--hc-ink-3); margin-right: 8px; }
 
   /* ---- lên đầu trang ---- */
-  .hc-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; pointer-events: none; transition: opacity .16s ease; }
-  .hc-top.is-on { opacity: 1; pointer-events: auto; }
+  .hc-top { position: fixed; right: 18px; bottom: 18px; z-index: 20; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .16s ease, visibility 0s linear .16s; }
+  .hc-top.is-on { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .16s ease; }
 
   /* ==========================================================================
      BẢN IN — độc lập với theme, màn hình, tổng quan và khung đọc: in mạch bài theo thứ tự.
@@ -576,7 +576,7 @@
     <p class="hc-eyebrow">Hidden curriculum · 12 phần · 66 mục · 10 mô hình · 34 suy nghĩ · 73 khái niệm</p>
     <h1 class="hc-title">Tiền tài, quyền lực, lòng người&nbsp;— <u>có được, giữ được, dùng được</u></h1>
     <p class="hc-sub">Điều người ta thường chỉ học được sau khi đã trả giá, nhờ một hoàn cảnh hiếm có, hoặc sau khi đã sống qua nó — gom lại để người mới tự lập, trong tay chưa có nhiều, biết sớm hơn: ăn nói, làm giàu, xử lý tình huống, yêu đương, hiểu quyền lực.</p>
-    <p class="hc-meta">MỖI LUẬT CÓ NHÃN ĐỘ TIN: TOÁN HỌC · BẰNG CHỨNG MẠNH · BẰNG CHỨNG VỪA · LÝ THUYẾT · LỊCH SỬ · KINH NGHIỆM · TẬP QUÁN<br>ĐỂ HỌC, KHÔNG PHẢI LỜI KHUYÊN ĐẦU TƯ HAY TƯ VẤN PHÁP LÝ</p>
+    <p class="hc-meta">Mỗi luật có nhãn độ tin: toán học, bằng chứng mạnh, bằng chứng vừa, lý thuyết, lịch sử, kinh nghiệm, tập quán. Để học, không phải lời khuyên đầu tư hay tư vấn pháp lý.</p>
   </header>
   <p class="hc-print-note" id="hc-print-note">Bản gọn — nguyên lý, gợi ý và điều kiện quan trọng; lược diễn giải, mô hình, bài tự soát, bảng ôn tập, thư viện và nguồn. Khi cần tính toán hoặc quyết định lớn, mở chi tiết tại https://vudat081299.github.io/pages/hidden-curriculum.html. Các điểm nội dung cập nhật ngày 25/10/2026; nguồn thay đổi theo thời gian cần kiểm lại.</p>
 
@@ -4526,7 +4526,14 @@ function median(a) {
   });
 
   var top = $('toTop');
-  function onScroll() { top.classList.toggle('is-on', window.scrollY > 600); }
+  /* Nút chỉ hiện khi đang cuộn lên: lúc đọc xuôi nó không che chữ ở góc phải. */
+  var lastY = window.scrollY;
+  function onScroll() {
+    var y = window.scrollY, dy = y - lastY;
+    if (Math.abs(dy) < 6 && y > 600) return;
+    top.classList.toggle('is-on', y > 600 && dy < 0);
+    lastY = y;
+  }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
   top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
