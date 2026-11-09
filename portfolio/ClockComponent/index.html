@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="color-scheme" content="light dark">
 
         <!--==================== BOXICONS ====================-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
@@ -13,7 +14,16 @@
         <title>Clock Ui</title>
     </head>
     <body>
-      
+        <!-- Theme before first paint: saved choice wins, otherwise follow the system. -->
+        <script>
+          (function () {
+            var t = null;
+            try { t = localStorage.getItem('selected-theme'); } catch (e) {}
+            var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (dark) document.body.classList.add('dark-theme');
+          })();
+        </script>
+
         <section class="clock container">
           <a href="../index-portfolio.html" class="clock__logo">Home</a>
             <div class="clock__container grid">

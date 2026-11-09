@@ -94,3 +94,25 @@ canvas{
   background-position: 50% 50%;
   background-repeat: no-repeat;
 }
+
+
+/* ---- light: a pale dawn sky; the night sky above stays the dark theme ---- */
+/* Star colours for each theme are in js/app.js. */
+
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    color-scheme: light;
+    background: #eef0f7;
+  }
+  :root:not([data-theme="dark"]) body{
+    background: #eef0f7;
+  }
+  :root:not([data-theme="dark"]) #particles-js{
+    background-image: linear-gradient(to bottom, #d6e2f4 0%, #eceff7 48%, #f8e8da 82%, #fbdcc6 100%);
+  }
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+  }
+}

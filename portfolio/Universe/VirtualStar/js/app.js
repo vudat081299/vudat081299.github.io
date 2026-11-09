@@ -11,9 +11,14 @@ particlesJS.load('particles-js', 'particles.json', function() {
 
 /* Otherwise just put the config content (json): */
 
-particlesJS('particles-js',
-  
-  {
+/* Theme: white stars on the night sky (dark), ink-blue stars on a dawn sky (light).
+   The sky itself is in css/style.css; the stars are drawn on canvas, so they are re-created when the system theme changes. */
+var starTheme = window.matchMedia ? window.matchMedia('(prefers-color-scheme: light)') : null;
+
+function starConfig(light) {
+  var star = light ? '#1f2a4d' : '#ffffff';
+  var link = light ? '#3a4770' : '#ffffff';
+  return {
     "particles": {
       "number": {
         "value": 80,
@@ -23,7 +28,7 @@ particlesJS('particles-js',
         }
       },
       "color": {
-        "value": "#ffffff"
+        "value": star
       },
       "shape": {
         "type": "circle",
@@ -63,7 +68,7 @@ particlesJS('particles-js',
       "line_linked": {
         "enable": true,
         "distance": 50,
-        "color": "#ffffff",
+        "color": link,
         "opacity": 0.4,
         "width": 1
       },
@@ -128,6 +133,19 @@ particlesJS('particles-js',
       "background_repeat": "no-repeat",
       "background_size": "cover"
     }
-  }
+  };
+}
 
-);
+function startStars() {
+  particlesJS('particles-js', starConfig(!!(starTheme && starTheme.matches)));
+}
+
+startStars();
+
+if (starTheme && starTheme.addEventListener) {
+  starTheme.addEventListener('change', function () {
+    if (window.pJSDom && window.pJSDom.length) window.pJSDom[0].pJS.fn.vendors.destroypJS();
+    window.pJSDom = [];
+    startStars();
+  });
+}

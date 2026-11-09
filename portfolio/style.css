@@ -509,3 +509,62 @@ img{
   .card__circle1 { left: 0; }
   .card__circle2 { right: 0; }
 }
+
+/* Nền tối theo hệ điều hành: trời đêm xanh thẫm, chữ sáng, thẻ kính tối. Nền sáng giữ nguyên như trên. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --body-color: #0e1526;
+    --title-color: #eef2fa;
+    --text-color: #aab3c7;
+  }
+  :root:not([data-theme="light"]) body,
+  :root:not([data-theme="light"]) #canvas {
+    background-color: #0e1526;
+  }
+  :root:not([data-theme="light"]) .tags,
+  :root:not([data-theme="light"]) .home-page h1::before,
+  :root:not([data-theme="light"]) .home-page h1::after {
+    color: #9fb0ff;
+  }
+  :root:not([data-theme="light"]) .home-page h1 {
+    color: #e6ecfb;
+  }
+  :root:not([data-theme="light"]) .home-page .blast:hover {
+    color: #7fa0ff;
+  }
+  :root:not([data-theme="light"]) .home-page h2 {
+    color: #aab3c7;
+  }
+  :root:not([data-theme="light"]) .home-page .flat-button {
+    color: #c9d1e2;
+    border-color: #8f99b0;
+  }
+  :root:not([data-theme="light"]) .home-page .flat-button:hover {
+    background: #e6ecfb;
+    color: #0e1526;
+  }
+  :root:not([data-theme="light"]) li > a {
+    color: #e6ecfb;
+  }
+  :root:not([data-theme="light"]) .cursor {
+    background: #fff;
+  }
+  :root:not([data-theme="light"]) .card__glass {
+    background: linear-gradient(130deg, rgba(255,255,255,.13), rgba(255,255,255,.04));
+    box-shadow: inset 1px 1px 1px rgba(255,255,255,.18),
+                0 20px 50px rgba(0,0,0,.35);
+  }
+  :root:not([data-theme="light"]) .card__img {
+    border-color: rgba(255,255,255,.7);
+  }
+  :root:not([data-theme="light"]) .card__button {
+    background: linear-gradient(130deg, rgba(255,255,255,.2), rgba(255,255,255,.06));
+  }
+  :root:not([data-theme="light"]) .card__button:hover {
+    background: linear-gradient(130deg, rgba(255,255,255,.3), rgba(255,255,255,.1));
+  }
+  :root:not([data-theme="light"]) .card__circle2 {
+    background: linear-gradient(130deg, rgba(255,187,0,.75), rgba(255,187,0,.04));
+  }
+}
