@@ -58,17 +58,6 @@ Ba câu, tự trả lời bằng chữ trước khi đi:
   một shop thật vận hành. **Đó là một phương án dự phòng tử tế** — người có phương án dự phòng
   tử tế thì đàm phán bình tĩnh hơn hẳn.
 
-Một chuyện nữa, không phải chuyện đàm phán nhưng phải nghĩ trước: **Đạt đang làm cho một công ty
-phần mềm bán lẻ, và bộ tài liệu này khuyên chị ấy dùng KiotViet.** Hai điều cần tự kiểm:
-hợp đồng lao động có điều khoản nào về làm ngoài hoặc về sản phẩm cạnh tranh không; và nếu có
-khuyến nghị KiotViet thật thì **nói thẳng rằng mình làm ở đó**. Lời khuyên ấy vẫn đúng
-([adr/0004](adr/0004-dont-rebuild-retail-software.md)) — nhưng nó chỉ giữ được sức nặng khi
-người nghe biết ai đang nói. Để chị ấy tự phát hiện sau thì mất sạch.
-
-Từ 24/09/2026 lời khuyên ấy phủ thêm một khâu — nửa định lượng của sổ mẻ sản xuất
-([06](06-VALUE-CHAIN.md) §5) — và bản đề xuất dẫn thẳng hướng dẫn sử dụng KiotViet làm nguồn. Nói
-ra càng phải sớm.
-
 ---
 
 ## 1. Tư thế: không bán phần mềm, mà thử việc làm cộng sự
