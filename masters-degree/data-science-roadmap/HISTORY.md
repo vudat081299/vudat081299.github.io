@@ -9,6 +9,26 @@ một dòng "→ quyết định DS-…".
 
 ---
 
+## Phiên 2026-11-09 (ai-ref) — rà đối kháng chặng 10, ngăn so sánh công cụ và ngăn giải thích
+
+Kiểm bằng thư viện thật: pandas 3.0.5, polars 2.1.0, sklearn 1.9.1, LightGBM 4.7.0, shap 0.54.1, DuckDB 2.0.0,
+Optuna 5.0.0, skrub 0.11.0, kaggle CLI 2.2.5; PaySim tải về và đếm bằng DuckDB.
+
+- `cmp-dataframe`: sklearn (từ 1.4) và LightGBM nhận thẳng polars. `cmp-gbdt`: HGB nhận cột hạng mục từ 0.24.
+- `cmp-eda`: ydata-profiling 4.18 ghim `pandas<3`, cài vào là hạ pandas; chọn nhanh đổi sang skrub `TableReport`.
+- `cmp-data`, `r-books`: PaySim có `nameOrig` nhưng 99,85% mã khách chỉ một giao dịch; 0,13% gian lận.
+- `cmp-explain`: permutation là xáo trộn cột, không bỏ cột; TreeSHAP tốn cỡ permutation, chỉ KernelSHAP nặng.
+- `cmp-query`: SQLite có đủ hàm cửa sổ, thiếu độ lệch chuẩn. `cmp-storage`: hạn mức Git LFS 10 GiB.
+- `x-tree-gradient`, `x-tree-learn`: cây mới học gradient đổi dấu theo dự đoán, không phải "phần gradient còn lại".
+- `r-stack`: bước 2 tải IEEE-CIS thay ULB, `psql --csv`; `min_periods=0`. `r-roadmapsh`: bốn số chặng lệch.
+- `r-books`: tác giả, năm, ấn bản; Géron bản PyTorch 2025, ISLP 2023, TabPFN 2025.
+
+### Cố ý KHÔNG làm trong phiên này
+
+- Số ô của roadmap.sh (150/62/157) không đếm lại: API GitHub bị chặn trong phiên; bài đã ghi ngày đối chiếu.
+- Hạn mức Colab/Kaggle/Codespaces ở `cmp-run` giữ nguyên: có ghi ngày kiểm và đã nói sẽ lỗi thời.
+- `qbank` (bài `th-defense`) dùng số của bộ ULB (284.807 dòng, 492 ca) trong khi bộ chính là IEEE-CIS: ngoài phạm vi.
+
 ## Phiên 2026-11-08 (ah) — rà đối kháng chặng 0–2, 4–5 và số "chạy thật" của chặng 6
 
 Rà các bài phiên (ag) chưa rà. Code mẫu chạy thật: pandas 3.0.5, sklearn 1.9.1, DuckDB, LightGBM 4.6 và 4.7,
