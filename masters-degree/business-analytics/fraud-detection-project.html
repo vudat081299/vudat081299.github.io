@@ -423,7 +423,7 @@ footer.foot code{font-size:var(--fs-xs)}
           </div>
           <div class="box warn" style="margin:0">
             <div class="box-t"><span class="badge syn">SYNTH</span> Bộ FULL — 18 đặc trưng</div>
-            <p>Base + 7 tín hiệu tổng hợp của bạn. <strong>Có rò rỉ</strong> → chỉ là <em>cận trên lạc quan</em> (điểm tốt nhất có thể trong mơ).</p>
+            <p>Base + 7 cột sinh thêm: 6 cột sinh theo nhãn và <code>hour_of_day</code>. Hai cột còn lại (<code>home_country</code>, <code>device_fingerprint</code>) không vào mô hình — lý do ở mục 03. <strong>Có rò rỉ</strong> → chỉ là <em>cận trên lạc quan</em> (điểm tốt nhất có thể trong mơ).</p>
           </div>
         </div>
         <div class="box note">
@@ -491,12 +491,21 @@ footer.foot code{font-size:var(--fs-xs)}
               <tr><td><code>shipping_billing_mismatch</code></td><td>cờ 0/1</td><td>Bernoulli p=<span class="r">0,40</span> ↔ <span class="g">0,03</span> (lệch địa chỉ giao vs thanh toán)</td></tr>
               <tr><td><code>failed_payment_attempts</code></td><td>số lần</td><td>Poisson λ=<span class="r">2,2</span> ↔ <span class="g">0,12</span> (số lần thanh toán hỏng trước khi thành công)</td></tr>
               <tr><td><code>ip_billing_distance_km</code></td><td>km</td><td>Uniform(500–8000) nếu IP lệch, ngược lại Uniform(0–80)</td></tr>
-              <tr><td><code>home_country</code></td><td>quốc gia</td><td>Chọn ngẫu nhiên đều từ ~240 quốc gia (Faker) — không phụ thuộc nhãn</td></tr>
-              <tr><td><code>device_fingerprint</code></td><td>hash</td><td>Vân tay thiết bị, lấy từ pool 5.000 mã SHA1 (Faker)</td></tr>
+              <tr><td><code>home_country</code> <span class="badge">không vào mô hình</span></td><td>quốc gia</td><td>Chọn ngẫu nhiên đều từ ~240 quốc gia (Faker) — không phụ thuộc nhãn</td></tr>
+              <tr><td><code>device_fingerprint</code> <span class="badge">không vào mô hình</span></td><td>hash</td><td>Vân tay thiết bị, lấy từ pool 5.000 mã SHA1 (Faker) — không phụ thuộc nhãn</td></tr>
               <tr><td><code>hour_of_day</code></td><td>giờ 0–23</td><td>Suy trực tiếp từ <code>step % 24</code> (không phải sinh ngẫu nhiên)</td></tr>
               <tr><td><code>channel</code> <span class="badge">EDA only</span></td><td>kênh</td><td>web / mobile / POS / api — <strong>chỉ dùng vẽ EDA, không đưa vào mô hình</strong></td></tr>
             </tbody>
           </table>
+        </div>
+
+        <div class="box note">
+          <div class="box-t">◆ Vì sao bộ Full chỉ thêm 7 trong 9 cột</div>
+          <ul class="clean">
+            <li><code>home_country</code>: sinh đều, độc lập với nhãn, nên không mang tín hiệu. Trên 2,77 triệu dòng TRANSFER + CASH_OUT, kiểm định χ² tỉ lệ gian lận theo 243 nước cho p = 0,20; MI với nhãn bằng đúng MI khi xáo trộn nhãn. One-hot nó chỉ thêm ~240 cột nhiễu.</li>
+            <li><code>device_fingerprint</code>: mã định danh 5.000 giá trị, cũng độc lập với nhãn (χ² p = 0,54). MI đo được ≈ 0,001 trông như có tín hiệu, nhưng xáo trộn nhãn cũng ra ≈ 0,001: đó là thiên lệch của phép ước lượng khi biến có nhiều mức. Đưa mã vào cây thì mô hình học thuộc từng mã, không khái quát được.</li>
+            <li><code>hour_of_day</code> vào Full, nhưng nó không phải đồ sinh ngẫu nhiên: nó suy từ <code>step</code> thật và mang tín hiệu thật (tỉ lệ gian lận lúc 3–5 giờ là 42–58%, ban ngày ≈ 0,16%). Vì vậy khoảng cách Base ↔ Full gồm cả tín hiệu thật này, không chỉ rò rỉ. Muốn đo rò rỉ sạch thì xếp <code>hour_of_day</code> vào Base.</li>
+          </ul>
         </div>
 
         <details class="disc">
