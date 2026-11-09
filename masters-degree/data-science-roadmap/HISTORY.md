@@ -25,6 +25,24 @@ Kiểm đáp án, mồi nhử, lời giải và con số của từng câu. Ch�
 - Chặng 6, 8–10 chỉ quét số học (đều khớp); không rà đáp án từng câu vì phiên khác đang sửa các bài đó.
 - `pr-monitor` câu 0 và 7 còn `$P(X)$`, `$P(y \mid X)$` trong quiz: thuộc chặng 6, để phiên của chặng đó sửa.
 - `m-prob`: "gấp ~24 lần" tính từ 0,0017 làm tròn; số đúng 0,04 / 0,001727 ≈ 23. Giữ vì khớp bảng trong bài.
+## Phiên 2026-11-09 (ai-th) — rà đối kháng chặng 9 trừ `th-stats`, cùng `qbank`, `cmp-write`, `cmp-figure`
+
+Matplotlib 3.11.2 cho `pdf.fonttype`; nguồn ngoài: Keshav 2007, Thông tư 23/2021, Luật 91/2025/QH15, Zotero.
+
+- `th-read`, `th-repro`: Papers with Code đóng từ 07/2025; ba lượt ghi nguồn Keshav, bỏ số 80%/70% bịa.
+- `th-repro`: chín mục chứ không tám; một lần chạy so với dải seed, trung bình so với khoảng tin cậy của trung bình;
+  `PYTHONHASHSEED` đặt trước khi chạy Python; ghim phiên bản theo `t-env`; một lệnh là `make all`.
+- `th-design`: baseline LightGBM phải tune; ablation không "chứng minh nguyên nhân"; ±0,006 là của mô hình đầy
+  đủ, không phải của Δ (cả quiz và ví dụ ở roadmap, nhiễu của hiệu là √2 × σ); seed không đo nhiễu tập test.
+- `th-write`: ranh giới chương 3/4, bố cục Kết quả/Thảo luận tách chương; `th-tools`: style BibTeX, Better BibTeX,
+  font Type 3; `th-defense`: cột trọng số là ước lượng, quy chế lấy trung bình điểm hội đồng.
+- `qbank`: luật dữ liệu cá nhân 2025, điều kiện của định lý bất khả công bằng, câu "chạm test nhiều lần".
+
+### Cố ý KHÔNG làm trong phiên này
+
+- `th-stats` gọi 0,367 là "LightGBM baseline" trong khi `th-design` có 0,367 là dòng ablation bỏ lệch thói quen
+  (baseline LightGBM là 0,339): ngoài phạm vi nhóm; `th-write`, `qbank` giữ chữ "baseline" chung chung.
+- `pr-mlops` ghi `pr_auc_test` ở mọi lượt chạy, ngược với "test chạm một lần": ngoài phạm vi nhóm.
 
 ## Phiên 2026-11-08 (ah) — rà đối kháng chặng 0–2, 4–5 và số "chạy thật" của chặng 6
 

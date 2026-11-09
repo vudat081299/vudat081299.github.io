@@ -1426,7 +1426,7 @@
    "points": [
     "Công thức đề tài: [KỸ THUẬT X] cho [BÀI TOÁN Y] trên [BỐI CẢNH Z], so sánh [BASELINE B], đánh giá bằng [CHỈ SỐ M] — delta nằm ở ít nhất một ô",
     "5 chỗ đặt delta theo độ khó: bối cảnh Z mới (dễ nhất, hợp lệ cho thạc sĩ ứng dụng) < kết hợp mới ≈ chỉ số M mới ≈ so sánh có hệ thống < kỹ thuật X mới (thường vượt phạm vi 2 tuần)",
-    "Tìm khoảng trống trong 2 giờ: Google Scholar tìm survey 2024..2026, nhảy thẳng tới mục \"Future work\"/\"Open challenges\" — đó là danh sách khoảng trống do chính chuyên gia viết",
+    "Tìm khoảng trống trong 2 giờ: Google Scholar tìm survey rồi lọc năm 2024–2026 bằng Custom range ở cột trái, nhảy thẳng tới mục \"Future work\"/\"Open challenges\" — đó là danh sách khoảng trống do chính chuyên gia viết",
     "4 bẫy: quá rộng (không câu hỏi cụ thể), không baseline, phụ thuộc dữ liệu chưa có trong tay (rủi ro số một — xác nhận có dữ liệu TRƯỚC khi chốt đề tài), chỉ \"thử 5 mô hình xem cái nào tốt\"",
     "Đề cương 1 trang gồm 6 mục: bối cảnh, khoảng trống (dẫn nguồn), câu hỏi nghiên cứu, phương pháp, đóng góp dự kiến, rủi ro — mục câu hỏi phải viết được thành dạng có/không hoặc so sánh được, không thì đề tài chưa đủ sắc"
    ],
@@ -1443,18 +1443,18 @@
    }
   },
   "th-read": {
-   "tldr": "Đọc 15-30 paper tuần tự từng chữ là cách chắc chắn không kịp; phương pháp ba lượt (chuẩn mực nghiên cứu) sàng nhanh rồi mới đọc sâu, và mọi phần Kết quả phải được đọc hoài nghi.",
+   "tldr": "Đọc 15-30 paper tuần tự từng chữ là cách chắc chắn không kịp; phương pháp ba lượt của S. Keshav sàng nhanh rồi mới đọc sâu, và mọi phần Kết quả phải được đọc hoài nghi.",
    "points": [
-    "Lượt 1 (5 phút): đọc tiêu đề→tóm tắt→mở đầu→tiêu đề mục→kết luận→lướt tham khảo, trả lời 4 câu (giải bài gì, cách tiếp cận, đóng góp chính, có liên quan không) — sau lượt này 80% paper bị loại",
-    "Lượt 2 (1 giờ): đọc kỹ nhưng bỏ qua chứng minh toán, nhìn kỹ hình+bảng (thường chứa 70% nội dung), ghi sổ 7 dòng gồm cả \"hạn chế họ tự thừa nhận\" — chỗ tìm đề tài cho mình",
-    "Lượt 3 (4-5 giờ, chỉ 2-3 paper quan trọng nhất): đọc như thể phải cài đặt lại, đặt câu hỏi ở mỗi giả định — đây là công việc luận văn thật, không nằm trong ngân sách giờ của bài",
+    "Lượt 1 (5-10 phút): đọc tiêu đề→tóm tắt→mở đầu→tiêu đề mục→kết luận→lướt tham khảo, trả lời 4 câu (giải bài gì, cách tiếp cận, đóng góp chính, có liên quan không) — sau lượt này phần lớn paper bị loại",
+    "Lượt 2 (1 giờ): đọc kỹ nhưng bỏ qua chứng minh toán, nhìn kỹ hình+bảng (chứa phần lớn bằng chứng), ghi sổ 7 dòng gồm cả \"hạn chế họ tự thừa nhận\" — chỗ tìm đề tài cho mình",
+    "Lượt 3 (4-5 giờ với người mới, chỉ 2-3 paper quan trọng nhất): đọc như thể phải cài đặt lại, đặt câu hỏi ở mỗi giả định — đây là công việc luận văn thật, không nằm trong ngân sách giờ của bài",
     "4 câu hỏi hoài nghi khi đọc Kết quả: baseline có được tune tử tế không, có khoảng tin cậy/độ lệch chuẩn không, chia tập thế nào (dữ liệu thời gian chia ngẫu nhiên = thổi phồng), báo cáo bao nhiêu cấu hình",
-    "Nguồn tìm paper: Google Scholar (\"Cited by\"), Connected Papers (dựng sơ đồ bài liên quan), arXiv/Papers with Code (bài mới kèm mã), Semantic Scholar — không bao giờ trích dẫn bài chưa đọc tới ít nhất lượt 1"
+    "Nguồn tìm paper: Google Scholar (\"Cited by\"), Connected Papers (dựng sơ đồ bài liên quan), arXiv/Hugging Face Papers (bài mới kèm link mã; Papers with Code đã đóng từ 07/2025), Semantic Scholar — không bao giờ trích dẫn bài chưa đọc tới ít nhất lượt 1"
    ],
    "viz": "Ví dụ số cảnh báo: \"AUC 0,921 vs 0,918\" không chứng minh gì nếu độ lệch chuẩn giữa các seed là 0,01",
    "example": {
     "kind": "num",
-    "lead": "Ngân sách giờ cho 30 paper khi lượt 1 làm đúng việc của nó là loại 80%: ba lượt tốn 22 giờ, còn đọc tuần tự từng chữ tốn 135 giờ.",
+    "lead": "Ngân sách giờ cho 30 paper, giả sử lượt 1 loại 80% (bài chỉ nói \"phần lớn\"): ba lượt tốn 22 giờ, còn đọc tuần tự từng chữ tốn 135 giờ.",
     "code": "30 paper × 5 phút   (lượt 1)      = 150 phút = 2,5 giờ\nloại 80% → còn 30 × 0,20          = 6 paper\n6 paper × 60 phút   (lượt 2)      = 360 phút = 6,0 giờ\n3 paper × 4,5 giờ   (lượt 3)      = 13,5 giờ\ntổng ba lượt = 2,5 + 6,0 + 13,5   = 22,0 giờ\n\nđọc tuần tự: 30 × 4,5 giờ = 135 giờ → gấp 135/22 = 6,1 lần",
     "out": "ba lượt:      22,0 giờ (2,5 sàng + 6,0 đọc hiểu + 13,5 đọc sâu)\ntuần tự:     135,0 giờ\nlượt 1 tốn 2,5/22 = 11% ngân sách và cắt đi 24 trong 30 paper"
    },
@@ -1468,9 +1468,9 @@
    "points": [
     "Deliverable là reproduction report 9 mục điền đủ (kể cả chưa khớp số): paper, version/commit hash, dataset (số dòng+tỉ lệ nhãn), môi trường (Python+lib+phần cứng), kết quả kỳ vọng (ghi rõ bảng/hàng), kết quả tái lập, sai lệch (Δ tuyệt đối+tương đối), nguyên nhân đã kiểm, lệnh tái chạy",
     "Quy trình: chọn paper CÓ mã nguồn, chạy đúng như mô tả (đừng cải tiến gì), so sánh, ghi lại khác biệt, RỒI mới thay đổi một thứ = chính là đóng góp của bạn",
-    "KHÔNG có ngưỡng 'chênh bao nhiêu phần trăm thì coi là tái lập được': '%' của chỉ số nào (chênh 0,01 trên AP 0,05 là 20%, trên AUC 0,9 là 1%), tương đối hay tuyệt đối, và mỗi bài toán một mức nhiễu. Mốc đúng là khoảng tin cậy / độ lệch seed mà bài gốc báo cáo; nếu họ không báo cáo thì tự dựng bằng cách chạy lại CHÍNH MÃ NGUỒN CỦA HỌ với 5 seed. Thứ tự truy nguyên khi lệch nhiều hơn mức đó: định nghĩa chỉ số → bản dữ liệu và cách chia → tiền xử lý ẩn → phiên bản thư viện → seed",
+    "KHÔNG có ngưỡng 'chênh bao nhiêu phần trăm thì coi là tái lập được': '%' của chỉ số nào (chênh 0,01 trên AP 0,05 là 20%, trên AUC 0,9 là 1%), tương đối hay tuyệt đối, và mỗi bài toán một mức nhiễu. Mốc đúng là dải dao động seed (trung bình ± 2 độ lệch chuẩn) mà bài gốc báo cáo — so một lần chạy với dải đó, còn khoảng tin cậy của trung bình thì so với trung bình của bạn qua cùng số seed; nếu họ không báo cáo thì tự dựng bằng cách chạy lại CHÍNH MÃ NGUỒN CỦA HỌ với 5 seed. Thứ tự truy nguyên khi lệch nhiều hơn mức đó: định nghĩa chỉ số → bản dữ liệu và cách chia → tiền xử lý ẩn → phiên bản thư viện → seed",
     "Khi không tái lập được, thứ tự kiểm: khác phiên bản dữ liệu (đối chiếu số dòng+tỉ lệ nhãn), khác cách chia tập (nhiều paper không nói rõ — đó là phát hiện đáng nêu), tiền xử lý ẩn trong code, \"AUC\" là ROC hay PR, khác phiên bản lib (thử đúng requirements.txt của họ)",
-    "Làm công trình của mình tái lập được: cố định seed (numpy, sklearn random_state, torch, PYTHONHASHSEED), pip freeze > requirements.txt, một lệnh chạy hết (python -m src.train), in rõ khoảng thời gian từng tập, công bố code GitHub, báo cáo trung bình ± độ lệch chuẩn của 5 lần chạy"
+    "Làm công trình của mình tái lập được: cố định seed (numpy, sklearn random_state, torch, PYTHONHASHSEED đặt trong shell trước khi chạy Python), ghim đúng thư viện import vào requirements.txt (không pip freeze trần trên Colab), một lệnh chạy hết (make all), in rõ khoảng thời gian từng tập, công bố code GitHub, báo cáo trung bình ± độ lệch chuẩn của 5 lần chạy"
    ],
    "viz": "Bảng chẩn đoán khi không khớp số (5 nghi ngờ × cách kiểm) và quy tắc thay cho ngưỡng phần trăm: mốc so sánh là độ bất định của chính bài gốc, hoặc dao động seed khi chạy lại mã nguồn của họ",
    "example": {
@@ -1485,21 +1485,21 @@
    }
   },
   "th-design": {
-   "tldr": "Phần thực nghiệm là nơi luận văn được chấm thật: mỗi thí nghiệm phải trả lời đúng một câu hỏi định trước, và bảng ablation là thứ chứng minh đóng góp của bạn thực sự LÀ nguyên nhân của cải thiện chứ không phải may.",
+   "tldr": "Phần thực nghiệm là nơi luận văn được chấm thật: mỗi thí nghiệm phải trả lời đúng một câu hỏi định trước, và bảng ablation cho thấy cải thiện đến từ mảnh nào — với điều kiện mức tụt lớn hơn nhiễu.",
    "points": [
     "Quy tắc vàng: trước khi chạy, viết ra \"nếu kết quả A thì kết luận ___, nếu B thì kết luận ___\" — không điền được vế sau thì thí nghiệm vô giá trị bất kể kết quả",
-    "Tầng 1 Baseline (bắt buộc, làm trước): đoán theo tỉ lệ (mốc dưới), luật thủ công đang dùng (mốc quan trọng nhất phải thắng), logistic regression (mức phi tuyến), LightGBM mặc định (mốc mạnh) — baseline phải tune tử tế, để baseline yếu là gian lận học thuật",
+    "Tầng 1 Baseline (bắt buộc, làm trước): đoán theo tỉ lệ (mốc dưới), luật thủ công đang dùng (mốc quan trọng nhất phải thắng), logistic regression (mức phi tuyến), LightGBM với feature cơ bản (mốc mạnh, tune cùng ngân sách) — baseline phải tune tử tế, để baseline yếu là gian lận học thuật",
     "Tầng 2 Ablation: tháo từng mảnh đo Δ PR-AUC — bảng thuyết phục nhất; nó cho câu kết luận có nội dung như \"feature tốc độ đóng góp lớn nhất, mã hoá chu kỳ nhỏ nhưng ổn định trên các seed\"",
-    "Tầng 3 Phân tích độ nhạy: theo seed (5 lần), lượng dữ liệu train (đường cong học 25/50/75/100%), giả định chi phí, giai đoạn thời gian",
-    "Bảng theo dõi thí nghiệm ghi từ ngày đầu (#, ngày, mô tả, features, model, seed, PR-AUC valid, ghi chú) — MLflow tự sinh hoặc CSV; bảng này CHÍNH LÀ chương kết quả",
+    "Tầng 3 Phân tích độ nhạy: theo seed (5 lần; seed chỉ đo nhiễu thuật toán, nhiễu tập test là việc của bootstrap), lượng dữ liệu train (đường cong học 25/50/75/100%), giả định chi phí, giai đoạn thời gian",
+    "Bảng theo dõi thí nghiệm ghi từ ngày đầu (#, ngày, mô tả, features, model, seed, PR-AUC valid, ghi chú) — MLflow lưu và xuất ra bằng search_runs(), hoặc CSV; chỉ ghi điểm valid; bảng này là xương sống của chương kết quả",
     "5 sai lầm: đổi nhiều thứ cùng lúc (sửa: một biến mỗi lần), chỉ một seed (5 seed ± std), tune trên test (tune valid, test chạm một lần), baseline yếu, không có ablation"
    ],
    "viz": "Bảng ablation minh hoạ (đọc đúng phạm vi: ablation cho ĐÓNG GÓP BIÊN trong đúng setup này, không phải bằng chứng nhân quả — các thành phần tương tác nhau, thứ tự bỏ ảnh hưởng kết quả, mỗi dòng vẫn có nhiễu seed): đầy đủ PR-AUC 0,412; −sin/cos −0,014; −feature tốc độ −0,071 (lớn nhất); −lệch thói quen −0,045; −chọn ngưỡng theo chi phí Δ=0 nhưng thiệt hại +23%",
    "example": {
     "kind": "num",
-    "lead": "Bốn dòng ablation của cùng một bảng đặt cạnh độ lệch chuẩn 0,006 giữa 5 seed, để thấy dòng nào đã cho phép viết một câu kết luận và dòng nào chưa.",
-    "code": "độ lệch chuẩn giữa 5 seed (dòng 6 bảng theo dõi) = 0,006\n\n− feature tốc độ giao dịch   Δ = −0,071 → |Δ|/std = 11,8\n− lệch so với thói quen      Δ = −0,045 → |Δ|/std =  7,5\n− feature chu kỳ (sin/cos)   Δ = −0,014 → |Δ|/std =  2,3\n− chọn ngưỡng theo chi phí   Δ =  0,000 → |Δ|/std =  0,0",
-    "out": "tốc độ và lệch thói quen: 11,8 và 7,5 lần nhiễu seed → nói được\nsin/cos: 2,3 lần, Δ trần chưa tách khỏi nhiễu → cần khoảng tin cậy\nngưỡng chi phí: 0,0 lần ở PR-AUC, nhưng bỏ đi thì thiệt hại +23%"
+    "lead": "Bốn dòng ablation của cùng một bảng đặt cạnh nhiễu seed của một hiệu — √2 × 0,006, vì hai cấu hình đều dao động — để thấy dòng nào đã cho phép viết một câu kết luận và dòng nào chưa.",
+    "code": "độ lệch chuẩn giữa 5 seed (dòng 6 bảng theo dõi) = 0,006\nnhiễu seed của một HIỆU hai cấu hình ≈ √2 × 0,006 = 0,0085\n\n− feature tốc độ giao dịch   Δ = −0,071 → |Δ|/0,0085 = 8,4\n− lệch so với thói quen      Δ = −0,045 → |Δ|/0,0085 = 5,3\n− feature chu kỳ (sin/cos)   Δ = −0,014 → |Δ|/0,0085 = 1,6\n− chọn ngưỡng theo chi phí   Δ =  0,000 → |Δ|/0,0085 = 0,0",
+    "out": "tốc độ và lệch thói quen: 8,4 và 5,3 lần nhiễu seed → nói được\nsin/cos: 1,6 lần, Δ trần chưa tách khỏi nhiễu → cần khoảng tin cậy\nngưỡng chi phí: 0,0 lần ở PR-AUC, nhưng bỏ đi thì thiệt hại +23%"
    },
    "check": {
     "q": "Dòng tháo chọn ngưỡng theo chi phí cho Δ PR-AUC bằng 0 nhưng thiệt hại tăng 23%. Bạn kết luận gì về thành phần đó, và báo cáo dòng đó bằng chỉ số nào?",
@@ -1533,9 +1533,9 @@
    "points": [
     "Khung IMRaD mở rộng 6 chương với câu hỏi cố định + số trang THAM KHẢO (quy chế của trường và giảng viên hướng dẫn mới là nguồn quyết định — có nơi đòi 60 trang, có nơi 120; thứ đáng giữ ở bảng này là TỈ LỆ giữa các chương): Mở đầu (8-12tr), Tổng quan (15-25tr), Phương pháp (15-25tr), Thực nghiệm (10-15tr), Kết quả & thảo luận (15-25tr), Kết luận (4-6tr)",
     "Chương 1 gồm 4 đoạn: bối cảnh (có số liệu), vấn đề (các hạn chế), ĐÓNG GÓP (đánh số 1-2-3, đoạn quan trọng nhất cả luận văn, giữ đúng cách đánh số đó ở chương 6), bố cục",
-    "Chương 3 viết theo trình tự người đọc cần nạp: phát biểu bài toán bằng ký hiệu (X, y, p̂, ngưỡng t) → tổng quan hệ thống → tiền xử lý+feature (chỗ mô tả sin/cos kèm công thức+lý do) → mô hình+siêu tham số → chia tập & phòng rò rỉ (mục riêng, rất được đánh giá cao) → chỉ số+chọn ngưỡng",
+    "Chương 3 viết theo trình tự người đọc cần nạp: phát biểu bài toán bằng ký hiệu (X, y, p̂, ngưỡng t) → tổng quan hệ thống → tiền xử lý+feature (chỗ mô tả sin/cos kèm công thức+lý do) → mô hình+siêu tham số → chia tập & phòng rò rỉ (mục riêng, rất được đánh giá cao) → chỉ số+chọn ngưỡng → kiểm định thống kê và đơn vị bốc lại",
     "Mục Hạn chế viết nghiêm túc vì hội đồng SẼ tìm ra: dữ liệu một tổ chức/giai đoạn, nhãn trễ 30-60 ngày + selective labels, chi phí FP là giả định, chưa A/B test, tác động công bằng — nêu trước thì kiểm soát được câu chuyện",
-    "Chiến thuật ngày cuối: viết chương 4-5 trước (gần dữ liệu nhất), làm bảng/hình trước rồi mỗi đoạn văn chỉ mô tả một bảng, chương 2 viết sau chương 5, chương 1 và 6 viết cuối và phải khớp nhau từng đóng góp"
+    "Thứ tự viết các chương: viết chương 4-5 trước (gần dữ liệu nhất), làm bảng/hình trước rồi mỗi đoạn văn chỉ mô tả một bảng, chương 2 viết hoàn chỉnh sau chương 5 (nháp đã có từ đề cương), chương 1 và 6 viết cuối và phải khớp nhau từng đóng góp"
    ],
    "viz": "Bảng 3 tầng chương Kết quả: Kết quả=\"đạt PR-AUC 0,412 so với 0,367 baseline\" (chỉ số), Diễn giải=\"cải thiện đến từ feature tốc độ\" (cơ chế), Hàm ý=\"ngân hàng nên ưu tiên hạ tầng feature thời gian thực\" (nói rõ là suy luận của bạn)",
    "example": {
@@ -1552,8 +1552,8 @@
   "th-tools": {
    "tldr": "Công cụ đúng tiết kiệm hàng chục giờ ở giai đoạn viết: Overleaf/LaTeX trị công thức và đánh số tự động, Zotero trị tài liệu tham khảo, MLflow/W&B trị bảng kết quả — cài trong một buổi tối.",
    "points": [
-    "Overleaf (LaTeX): công thức gõ $\\sigma(z)=\\frac{1}{1+e^{-z}}$ đẹp tự động, \\ref{fig:arch} tự cập nhật số khi chèn thêm, BibTeX tự sinh tham khảo đúng chuẩn, ổn định với file 100 trang; chạy trên trình duyệt không cần cài — buộc dùng Word thì kèm MathType + Zotero",
-    "Zotero: cài + tiện ích trình duyệt, đang xem paper bấm một nút là lưu cả metadata lẫn PDF, xuất .bib đưa vào Overleaf rồi \\cite{key}; nhập tay 40 tham khảo mất 3 giờ và chắc chắn lỗi, Zotero làm trong 10 phút",
+    "Overleaf (LaTeX): công thức gõ $\\sigma(z)=\\frac{1}{1+e^{-z}}$ đẹp tự động, \\ref{fig:arch} tự cập nhật số khi chèn thêm, BibTeX/biblatex tự sinh danh mục theo một style (APA, IEEE, hay style trường cấp), ổn định với file 100 trang; chạy trên trình duyệt không cần cài — buộc dùng Word thì kèm MathType + Zotero",
+    "Zotero: cài + tiện ích trình duyệt, đang xem paper bấm một nút là lưu cả metadata lẫn PDF, xuất .bib đưa vào Overleaf rồi \\cite{key}; nhập tay 40 tham khảo mất 3 giờ và chắc chắn lỗi, Zotero làm trong 10 phút; thêm Better BibTeX cho key cố định và vẫn soát lại metadata",
     "Hình cho luận văn bằng matplotlib rcParams: figsize (5.5, 3.5) vừa một cột A4, font.size 10, savefig.dpi 300, bbox tight; lưu PDF (vector) chứ không PNG để không vỡ khi phóng to, và đặt cỡ chữ trong hình bằng cỡ chữ văn bản",
     "MLflow/W&B ảnh hưởng trực tiếp chương 5: không ghi thí nghiệm từ đầu thì không dựng lại được bảng kết quả",
     "Bảng kiểm cuối: mọi hình/bảng có chú thích + được nhắc trong văn bản, trích dẫn khớp hai chiều, ký hiệu toán nhất quán (đừng lúc p lúc ŷ), số thập phân cùng một kiểu (dấu phẩy cho tiếng Việt) + cùng số chữ số, link repo chạy được, đọc to phần tóm tắt"
@@ -1563,19 +1563,19 @@
   "th-defense": {
    "tldr": "Buổi bảo vệ không chấm bạn chủ yếu ở phần trình bày mà ở phần hỏi đáp — nơi lộ ra bạn HIỂU hay chỉ CHẠY ĐƯỢC; nên dành 1/3 thời gian chuẩn bị cho slide và 2/3 cho câu hỏi, và hội đồng tìm bằng chứng bạn biết giới hạn công trình chứ không tìm luận văn hoàn hảo.",
    "points": [
-    "Cấu trúc buổi bảo vệ theo trọng số thực tế: bạn trình bày 15-20 phút (~30%), phản biện + trả lời 10-15 phút (~40%, nặng nhất), hội đồng hỏi tự do 10-15 phút (~30%)",
+    "Cấu trúc buổi bảo vệ, kèm ước lượng ảnh hưởng tới điểm (quy chế không chia điểm theo phần — Thông tư 23/2021/TT-BGDĐT lấy trung bình điểm các thành viên hội đồng, đạt từ 5,5): bạn trình bày 15-20 phút (~30%), phản biện + trả lời 10-15 phút (~40%, nặng nhất), hội đồng hỏi tự do 10-15 phút (~30%)",
     "12 slide, mỗi slide một thông điệp; slide quan trọng nhất là Đóng góp (3 gạch đánh số); slide Phòng chống rò rỉ (4 biện pháp) \"mua được rất nhiều tín nhiệm\"; slide Kết quả có khoảng tin cậy + cột quy ra tiền",
     "3 quy tắc slide: một slide một thông điệp và thông điệp đó LÀ tiêu đề (đặt \"giảm 40% thiệt hại so với luật hiện tại\" chứ không phải \"Kết quả\"), số phải nằm trên slide không nằm trong lời nói, đánh số trang",
     "Demo 90 giây theo kịch bản đổi từng biến (giao dịch bình thường→điểm thấp; đổi giờ 14h→2h sáng→điểm nhảy = feature chu kỳ; số giao dịch/giờ 1→8→vùng CHẶN = feature tốc độ) và LUÔN quay sẵn video dự phòng vì máy chiếu/Wi-Fi/cổng 8000 đều đã hỏng với ai đó",
     "Khi không biết — công thức 3 bước: THỪA NHẬN \"chỗ này em chưa kiểm chứng\" → NÓI PHẦN BIẾT \"em nghĩ theo hướng… nhưng chưa đo\" → CHUYỂN THÀNH VIỆC \"đây là thí nghiệm em sẽ chạy\"; tuyệt đối không bịa số, nói vòng vo, hay trả lời câu khác",
-    "5 lỗi trình bày: dồn 10 phút lý thuyết nền còn 5 phút kết quả (đảo tỉ lệ), đọc slide, xin lỗi về hạn chế (trình bày như lựa chọn có căn cứ), cãi phản biện, không tập nói thành tiếng (lần đầu thường vượt giờ 40% — nói to bấm giờ tối thiểu 3 lần)"
+    "5 lỗi trình bày: dồn 10 phút lý thuyết nền còn 5 phút kết quả (đảo tỉ lệ), đọc slide, xin lỗi về hạn chế (trình bày như lựa chọn có căn cứ), cãi phản biện, không tập nói thành tiếng (lần đầu gần như luôn vượt giờ vài phút — nói to bấm giờ tối thiểu 3 lần)"
    ],
    "viz": "Bảng 12 slide × phút × thông điệp duy nhất, và lịch 3 ngày cuối T−3 dựng slide (bảng/hình trước) / T−2 tập nói + quay video demo / T−1 luyện 24 câu hỏi đáp",
    "example": {
     "kind": "num",
-    "lead": "Cộng cột Phút của 12 slide ra 18,5 phút, nghe như vừa trần 20 phút — cho tới khi nhân với mức vượt giờ 40% của lần nói to đầu tiên.",
-    "code": "cộng cột Phút của 12 slide:\n0,5+1,5+1,5+1,5+1,5+1,5+2+1,5+2,5+1,5+1,5+1,5 = 18,5 phút\ntrần cho phép                                 = 20 phút\n\nlần nói to đầu tiên vượt 40%: 18,5 × 1,40     = 25,9 phút\n                        → tràn 25,9 − 20      =  5,9 phút\nkịch bản phải rút về:         20 / 1,40       = 14,3 phút\nphải cắt:                     18,5 − 14,3     =  4,2 phút\n\ntrọng số điểm ở hỏi đáp: 40% + 30% = 70% → ngân sách ôn 2/3",
-    "out": "kịch bản như thiết kế: 18,5 phút, nằm trong 15–20 phút\nsau mức vượt 40% của lần đầu: 25,9 phút → tràn 5,9 phút\nmuốn an toàn phải cắt 4,2 phút, về kịch bản 14,3 phút\nvà 70% điểm nằm ở 20–30 phút hỏi đáp mà slide không nói hộ được"
+    "lead": "Cộng cột Phút của 12 slide ra 18,5 phút, nghe như vừa trần 20 phút — cho tới khi giả sử lần nói to đầu tiên vượt giờ 40%, một mức vượt hay gặp.",
+    "code": "cộng cột Phút của 12 slide:\n0,5+1,5+1,5+1,5+1,5+1,5+2+1,5+2,5+1,5+1,5+1,5 = 18,5 phút\ntrần cho phép                                 = 20 phút\n\nlần nói to đầu tiên vượt 40%: 18,5 × 1,40     = 25,9 phút\n                        → tràn 25,9 − 20      =  5,9 phút\nkịch bản phải rút về:         20 / 1,40       = 14,3 phút\nphải cắt:                     18,5 − 14,3     =  4,2 phút\n\nước lượng phần điểm hình thành ở hỏi đáp: 40% + 30% = 70% → ngân sách ôn 2/3",
+    "out": "kịch bản như thiết kế: 18,5 phút, nằm trong 15–20 phút\nsau mức vượt 40% của lần đầu: 25,9 phút → tràn 5,9 phút\nmuốn an toàn phải cắt 4,2 phút, về kịch bản 14,3 phút\nvà theo ước lượng, ~70% điểm hình thành ở 20–30 phút hỏi đáp mà slide không nói hộ được"
    },
    "check": {
     "q": "Bạn phải cắt 4,2 phút khỏi kịch bản 18,5 phút; slide Kết quả chính đang 2,5 phút và slide Kiến trúc hệ thống 1,5 phút đều còn dài. Bạn cắt ở đâu?",
@@ -1738,14 +1738,14 @@
   "q-causal": "cc1d604f",
   "q-analytics": "cf9e701d",
   "q-mini": "bc401ddb",
-  "th-topic": "b1e1b294",
-  "th-read": "7ab77bf8",
-  "th-repro": "f5a6eb2e",
-  "th-design": "f860cdef",
+  "th-topic": "cd9dda26",
+  "th-read": "453aafcf",
+  "th-repro": "71c78e54",
+  "th-design": "bb4623f2",
   "th-stats": "4e3460f0",
-  "th-write": "a7bdd1b0",
-  "th-tools": "4bb1fb71",
-  "th-defense": "0a02a241",
+  "th-write": "2c947566",
+  "th-tools": "519be50d",
+  "th-defense": "570e5399",
   "r-stack": "5e0908e5",
   "r-roadmapsh": "a102c7b9",
   "r-mistakes": "bc16e4f4",
