@@ -4089,6 +4089,12 @@ var libraryReady = Promise.resolve();
 
 /* Bỏ dấu và hạ chữ thường: lọc “no” khớp cả “nợ”, “Nợ”. */
 function fold(s) { return s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toLowerCase(); }
+/* Ô lọc chung: khớp từ đầu một tiếng. Gõ không dấu thì khớp mọi dấu (“no” khớp “nợ”, “nói”);
+   gõ có dấu thì khớp đúng dấu (“nợ” không khớp “nói”, “nổi”). */
+function norm(s) { return ' ' + s.normalize('NFC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim() + ' '; }
+function searchable(s) { var r = norm(s); return { raw: r, fold: fold(r) }; }
+function queryWords(v) { return norm(v).trim().split(' ').filter(Boolean); }
+function hit(t, w) { var f = fold(w); return f === w ? t.fold.indexOf(' ' + f) >= 0 : t.raw.indexOf(' ' + w) >= 0; }
 var cardHook = null;      /* thư viện gán: mở một thẻ m-… (bỏ lọc nếu thẻ đang ẩn) */
 var mindFilter = null;    /* khối Gỡ rối gán: lọc suy nghĩ theo ô lọc chung */
 
@@ -4153,7 +4159,9 @@ var reader = (function () {
     n.parentNode.insertBefore(ph, n);
     info[sid] = {
       sec: n, ph: ph, part: part, card: a, li: li, no: txt(eb), short: toc ? txt(toc) : txt(h2s), title: txt(h2s),
-      text: fold([txt(eb), toc ? txt(toc) : '', txt(h2s), txt(paid), txt(lede), txt(key), txt(n.querySelector('.hc-eyebrow-sec'))].join(' '))
+      text: searchable([toc ? txt(toc) : '', txt(n.querySelector('.hc-eyebrow-sec')), txt(paid), txt(lede), txt(key)]
+        .concat(Array.prototype.map.call(n.querySelectorAll('h2, h3, summary'), txt)).join(' ')),
+      all: searchable(txt(n))
     };
     order.push(sid);
   });
@@ -4313,18 +4321,25 @@ var reader = (function () {
   /* ── lọc nhanh: bỏ dấu, không phân biệt hoa thường, mọi từ phải khớp ── */
   var q = $('hc-q'), main = $('hc-main');
   $('hc-find').hidden = false;
+  /* Lọc trên tên, luật, dòng “Thường học được sau khi” và các tiêu đề con; không mục nào khớp thì
+     mới tìm trong toàn bài. */
   function filter() {
-    var words = fold(q.value.trim()).split(/\s+/).filter(Boolean), shown = 0;
+    var words = queryWords(q.value), shown = 0, deep = false;
     main.classList.toggle('hc-filtering', words.length > 0);
-    order.forEach(function (sid) {
-      var it = info[sid], ok = words.every(function (w) { return it.text.indexOf(w) >= 0; });
-      it.li.hidden = !ok;
-      if (ok) shown++;
-    });
+    function pass(key) {
+      shown = 0;
+      order.forEach(function (sid) {
+        var it = info[sid], ok = words.every(function (w) { return hit(it[key], w); });
+        it.li.hidden = !ok;
+        if (ok) shown++;
+      });
+    }
+    pass('text');
+    if (words.length && !shown) { pass('all'); deep = true; }
     Object.keys(partBlock).forEach(function (id) { partBlock[id].hidden = !partBlock[id].querySelector('li:not([hidden])'); });
     var m = mindFilter ? mindFilter(words) : null;
     $('hc-q-status').textContent = !words.length ? '' :
-      shown + ' / ' + order.length + ' mục' + (m ? ' · ' + m[0] + ' / ' + m[1] + ' suy nghĩ' : '');
+      shown + ' / ' + order.length + ' mục' + (deep && shown ? ' (có nhắc trong bài)' : '') + (m ? ' · ' + m[0] + ' / ' + m[1] + ' suy nghĩ' : '');
   }
   q.addEventListener('input', filter);
 
@@ -5277,7 +5292,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.hc-tw--stack table'), f
       box.appendChild(d);
       var first = !seen[m.group];
       seen[m.group] = (seen[m.group] || 0) + 1;
-      return { m: m, d: d, first: first, text: fold([m.thought, m.reframe, m.why].join(' ')) };
+      return { m: m, d: d, first: first, text: searchable([m.thought, m.reframe, m.why].join(' ')) };
     });
     Array.prototype.forEach.call(groups.querySelectorAll('button'), function (btn) {
       var g = btn.getAttribute('data-g');
@@ -5294,7 +5309,7 @@ Array.prototype.forEach.call(document.querySelectorAll('.hc-tw--stack table'), f
     function render() {
       var shown = 0;
       items.forEach(function (it) {
-        var ok = words.length ? words.every(function (w) { return it.text.indexOf(w) >= 0; }) :
+        var ok = words.length ? words.every(function (w) { return hit(it.text, w); }) :
           group !== 'all' ? it.m.group === group : expanded || it.first;
         it.d.hidden = !ok;
         if (ok) shown++;
