@@ -9,6 +9,25 @@ một dòng "→ quyết định DS-…".
 
 ---
 
+## Phiên 2026-11-09 (ai-q1) — rà đối kháng `q-multi`, `q-nlp`, `q-cv`
+
+Code mẫu chạy thật: sklearn 1.9.1, LightGBM 4.7.0, torch 2.15 CPU, torchvision 0.29, transformers 5.22,
+datasets 5.1, torchmetrics 1.9. Mọi khối `ds-code` của ba bài trích nguyên từ HTML rồi chạy được.
+
+- `q-multi`: micro-F1 bằng đúng accuracy (không "xấp xỉ"); weighted = 0,905; `classification_report` in dòng
+  accuracy thay cho micro; stratify theo nhãn; thêm one-vs-rest và `multi_class` đã bị bỏ khỏi `LogisticRegression`.
+- `q-nlp`: `token_pattern` mặc định xoá âm tiết một chữ cái ("ý", "ở"); chữ NFD vỡ thành mảnh; tách từ là thí
+  nghiệm vì n-gram 1–2 đã bắt từ ghép. Thêm code mức 3 (`eval_strategy`, `processing_class`) và PhoBERT cần tách từ.
+- `q-cv`: mini-lab thành code chạy được (ImageFolder, augmentation chỉ ở train, vòng train, `net.eval()` vì
+  BatchNorm vẫn trôi khi đóng băng); linear probe đặt đúng vai; CNN đồng biến tịnh tiến; ViT kèm số liệu
+  Dosovitskiy 2021; thêm mục IoU, mAP, NMS.
+- Quiz: sửa các câu theo chữ mới, thêm bốn câu (OvR, PhoBERT, NMS, BatchNorm).
+
+### Cố ý KHÔNG làm trong phiên này
+
+- Quiz `dl-cnn-rnn` vẫn gọi CNN là "bất biến tịnh tiến": ngoài phạm vi nhóm này.
+- Không chạy `viz-check.mjs`: không đổi hình nào.
+
 ## Phiên 2026-11-08 (ah) — rà đối kháng chặng 0–2, 4–5 và số "chạy thật" của chặng 6
 
 Rà các bài phiên (ag) chưa rà. Code mẫu chạy thật: pandas 3.0.5, sklearn 1.9.1, DuckDB, LightGBM 4.6 và 4.7,
