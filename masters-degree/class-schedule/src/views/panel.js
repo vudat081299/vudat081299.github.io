@@ -3,9 +3,9 @@
 
 import { html } from '../html.js';
 import { icon } from '../icons.js';
-import { instructorsOf, nextSession, progressOf, sessionsOf, statusOf } from '../model.js';
+import { instructorsOf, progressOf, sessionsOf, statusOf } from '../model.js';
 import { fmtDate, fmtDuration, relativeDay, weekdayLong, weekdayName, weekdayShort } from '../time.js';
-import { progressBar, statusBadge } from './parts.js';
+import { meter } from './parts.js';
 
 /** @typedef {import('../state.js').AppState} AppState */
 
@@ -19,7 +19,6 @@ export function renderPanel(state) {
   const own = sessionsOf(schedule, course);
   const p = progressOf(own, now.ms);
   const teachers = instructorsOf(schedule, course);
-  const next = nextSession(schedule.sessions, now.ms);
   const ownNext = own.find((s) => s.endMs > now.ms) ?? null;
   const days = course.weekdays.map((d) => weekdayName(d)).join(' và ');
 
@@ -28,20 +27,16 @@ export function renderPanel(state) {
   if (session) {
     const status = statusOf(session, now.ms);
     const when = status === 'live'
-      ? `Kết thúc sau ${fmtDuration(session.endMs - now.ms)}`
-      : status === 'upcoming' ? `Bắt đầu sau ${fmtDuration(session.startMs - now.ms)}` : 'Đã diễn ra';
+      ? `Đang học · kết thúc sau ${fmtDuration(session.endMs - now.ms)}`
+      : status === 'upcoming' ? `${relativeDay(session.date, now.key)} · bắt đầu sau ${fmtDuration(session.startMs - now.ms)}` : `${relativeDay(session.date, now.key)} · đã học`;
     focus = html`<section class="p-session" aria-label="Buổi đang xem">
-      <div class="p-session-head">
-        <span class="muted">Buổi ${session.index}/${session.total}</span>
-        ${statusBadge(status, session === next)}
-      </div>
-      <p class="p-session-date">${weekdayLong(session.date)}, <span class="num">${fmtDate(session.date)}</span></p>
-      <p class="muted p-session-rel">${relativeDay(session.date, now.key)} · ${when}</p>
-      <dl class="facts">
-        <div><dt>${icon('clock')}<span class="sr">Giờ</span></dt><dd class="num">${session.start} – ${session.end}</dd></div>
-        <div><dt>${icon('map-pin')}<span class="sr">Phòng</span></dt><dd>Phòng <strong>${session.room}</strong></dd></div>
-        <div><dt>${icon('user')}<span class="sr">Giảng viên buổi này</span></dt><dd>${session.instructor.name}</dd></div>
-        <div><dt>${icon('mail')}<span class="sr">Email</span></dt><dd><a href="mailto:${session.instructor.email}">${session.instructor.email}</a></dd></div>
+      <p class="p-session-date">${weekdayLong(session.date)}, ${fmtDate(session.date)}</p>
+      <p class="p-session-rel${status === 'live' ? ' is-live' : ''}">Buổi ${session.index}/${session.total} · ${when}</p>
+      <dl class="p-facts">
+        <div><dt>Giờ</dt><dd>${session.start} – ${session.end}</dd></div>
+        <div><dt>Phòng</dt><dd>${session.room}</dd></div>
+        <div><dt>Giảng viên</dt><dd>${session.instructor.name}</dd></div>
+        <div><dt>Email</dt><dd><a href="mailto:${session.instructor.email}">${session.instructor.email}</a></dd></div>
       </dl>
     </section>`;
   }
@@ -51,7 +46,7 @@ export function renderPanel(state) {
     <header class="panel-head">
       <span class="grabber" aria-hidden="true"></span>
       <div class="panel-titles">
-        <p class="panel-kicker"><span class="tone-dot" aria-hidden="true"></span>${course.shortName}</p>
+        <p class="panel-kicker"><span class="dot" aria-hidden="true"></span>${course.shortName}</p>
         <h2 id="panel-title">${course.name}</h2>
       </div>
       <button type="button" class="icon-btn" data-action="close-panel" aria-label="Đóng">${icon('x')}</button>
@@ -61,18 +56,18 @@ export function renderPanel(state) {
 
       <section class="p-block">
         <h3>Tiến độ môn</h3>
-        ${progressBar(p.percent, `Tiến độ ${course.shortName}`)}
-        <p class="p-progress num"><span><strong>${p.done}</strong> đã học</span><span><strong>${p.remaining}</strong> còn lại</span><span><strong>${p.total}</strong> buổi</span><span>${p.percent}%</span></p>
+        <p class="p-progress"><strong>${p.done}/${p.total}</strong><span>buổi đã học · còn ${p.remaining} · ${p.percent}%</span></p>
+        ${meter(p.percent, `Tiến độ ${course.shortName}`)}
       </section>
 
       <section class="p-block">
-        <h3>Thông tin học phần</h3>
+        <h3>Học phần</h3>
         <dl class="info">
-          <div><dt>Mã học phần</dt><dd class="num">${course.code}</dd></div>
-          <div><dt>Số tín chỉ</dt><dd class="num">${course.credits}</dd></div>
+          <div><dt>Mã</dt><dd>${course.code}</dd></div>
+          <div><dt>Tín chỉ</dt><dd>${course.credits}</dd></div>
           <div><dt>Lịch</dt><dd>${days}</dd></div>
-          <div><dt>Giờ học</dt><dd class="num">${course.start} – ${course.end}${course.periods ? html` <span class="muted">· ${course.periods}</span>` : ''}</dd></div>
-          <div><dt>Phòng học</dt><dd>${course.room}</dd></div>
+          <div><dt>Giờ học</dt><dd>${course.start} – ${course.end}${course.periods ? html` <span class="muted">· ${course.periods}</span>` : ''}</dd></div>
+          <div><dt>Phòng</dt><dd>${course.room}</dd></div>
           <div><dt>Khoa</dt><dd>${course.faculty}</dd></div>
           <div><dt>Hình thức</dt><dd>${course.mode
             ? html`${course.mode}${course.mode === 'Hybrid Learning' ? html`<span class="muted"> · kết hợp trực tiếp và trực tuyến</span>` : ''}`
@@ -83,38 +78,28 @@ export function renderPanel(state) {
       <section class="p-block">
         <h3>${teachers.length > 1 ? `Giảng viên · ${teachers.length} người dạy luân phiên` : 'Giảng viên'}</h3>
         <ul class="teachers">
-          ${teachers.map((t) => {
-            const taught = own.filter((s) => s.instructor === t);
-            return html`<li class="${session && session.instructor === t ? 'is-current' : ''}">
-              <span class="avatar" aria-hidden="true">${initials(t.name)}</span>
-              <span class="t-main"><span class="t-name">${t.name}</span><a href="mailto:${t.email}">${t.email}</a></span>
-              <span class="muted num">${taught.length} buổi</span>
-            </li>`;
-          })}
+          ${teachers.map((t) => html`<li class="${session && session.instructor === t ? 'is-current' : ''}">
+            <span class="t-name">${t.name}</span>
+            <a href="mailto:${t.email}">${t.email}</a>
+            <span class="muted">${own.filter((s) => s.instructor === t).length} buổi</span>
+          </li>`)}
         </ul>
       </section>
 
       <section class="p-block">
-        <h3>Tất cả buổi học · <span class="num">${own.length}</span></h3>
+        <h3>Tất cả buổi học · ${own.length}</h3>
         <ol class="p-dates">
           ${own.map((s) => {
             const st = statusOf(s, now.ms);
             const cls = ['p-date', `is-${st}`, s === session ? 'is-current' : '', s === ownNext ? 'is-own-next' : ''].join(' ');
             return html`<li><button type="button" class="${cls}" data-session="${s.id}" aria-current="${s === session ? 'true' : 'false'}">
-              <span class="p-idx num">${s.index}</span>
-              <span class="p-when"><span class="num">${weekdayShort(s.date)} ${fmtDate(s.date)}</span>${teachers.length > 1 ? html`<span class="muted">${s.instructor.name}</span>` : ''}</span>
-              <span class="p-st">${st === 'past' ? icon('check') : st === 'live' ? html`<span class="pulse"></span>` : s === ownNext ? html`<span class="badge badge-next">Tới</span>` : ''}</span>
+              <span class="p-idx">${s.index}</span>
+              <span class="p-when"><span>${weekdayShort(s.date)} ${fmtDate(s.date)}</span>${teachers.length > 1 ? html`<span class="muted">${s.instructor.name}</span>` : ''}</span>
+              <span class="p-st">${st === 'past' ? html`${icon('check')}<span class="sr">Đã học</span>` : st === 'live' ? 'Đang học' : s === ownNext ? 'Tiếp theo' : ''}</span>
             </button></li>`;
           })}
         </ol>
       </section>
     </div>
   </aside>`;
-}
-
-/** @param {string} name */
-function initials(name) {
-  const parts = name.trim().split(/\s+/);
-  // Họ + tên: "Bùi Quốc Trung" → "BT".
-  return (parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : parts[0].slice(0, 2)).toUpperCase();
 }

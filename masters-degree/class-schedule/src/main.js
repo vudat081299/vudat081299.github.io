@@ -72,9 +72,7 @@ async function start() {
   };
 
   bindEvents();
-  document.documentElement.classList.add('intro');
   renderAll();
-  setTimeout(() => document.documentElement.classList.remove('intro'), 900);
   setInterval(tick, TICK_MS);
 }
 
@@ -141,8 +139,8 @@ function renderToolbar() {
   }
   replace($('filters'), html`${state.schedule.courses.map((c) => {
     const on = !state.hidden.has(c.id);
-    return html`<button type="button" class="chip tone-${c.tone}" data-action="toggle-course" data-id="${c.id}" aria-pressed="${String(on)}">
-      <span class="chip-dot" aria-hidden="true"></span>${c.shortName}
+    return html`<button type="button" class="chip tone-${c.tone}" data-action="toggle-course" data-id="${c.id}" aria-pressed="${String(on)}" title="${on ? 'Ẩn' : 'Hiện'} ${c.name}">
+      <span class="dot" aria-hidden="true"></span>${c.shortName}
     </button>`;
   })}`);
   const count = visibleSessions(state).length;

@@ -39,10 +39,27 @@ function byDate(sessions) {
   return map;
 }
 
-/** Ô chú thích khi bộ lọc làm trống view. @param {AppState} state @param {ClassSession[]} list */
+/** Dòng báo khi bộ lọc làm trống view. @param {AppState} state @param {ClassSession[]} list */
 function filterNote(state, list) {
   if (list.length || !hasFilters(state)) return '';
   return html`<p class="filter-note">Không có buổi nào khớp bộ lọc trong khoảng này. <button type="button" class="link" data-action="reset-filters">Xoá bộ lọc</button></p>`;
+}
+
+/**
+ * Một ngày trong danh sách: cột ngày bên trái, các buổi bên phải.
+ * @param {AppState} state @param {string} key @param {ClassSession[]} list @param {ClassSession|null} next
+ */
+function dayBlock(state, key, list, next) {
+  const { now } = state;
+  const cls = ['ag-day', key === now.key ? 'is-today' : '', key < now.key ? 'is-before' : '', list.length ? '' : 'is-empty'].join(' ');
+  return html`<section class="${cls}" data-date="${key}" aria-label="${weekdayLong(key)}, ${fmtDate(key)} · ${relativeDay(key, now.key)}">
+    <p class="ag-date" aria-hidden="true"><span class="ag-wd">${weekdayShort(key)}</span><span class="ag-d">${parseKey(key).d}</span></p>
+    <div class="ag-rows">
+      ${list.length
+        ? list.map((s) => sessionRow(s, { nowMs: now.ms, next }))
+        : html`<p class="ag-empty">Không có buổi học</p>`}
+    </div>
+  </section>`;
 }
 
 /* ---------- Tháng ---------- */
@@ -61,39 +78,41 @@ function monthView(state) {
   const inMonth = visible.filter((s) => s.date.slice(0, 7) === first.slice(0, 7));
   const selected = state.selectedDay && state.selectedDay.slice(0, 7) === first.slice(0, 7) ? state.selectedDay : null;
 
-  const cells = [];
-  for (let i = 0; i < weeks * 7; i++) {
-    const key = addDays(gridStart, i);
-    const list = days.get(key) ?? [];
-    const out = parseKey(key).m !== m;
-    const cls = ['day', out ? 'is-out' : '', key === now.key ? 'is-today' : '', key === selected ? 'is-selected' : '',
-      key < now.key ? 'is-before' : '', list.length ? 'has-events' : ''].join(' ');
-    const label = `${weekdayLong(key)}, ${fmtDate(key)}${list.length ? `, ${list.length} buổi học` : ''}`;
-    cells.push(html`<div class="${cls}" data-day="${key}">
-      <button type="button" class="day-num num" data-day="${key}" aria-label="${label}" aria-current="${key === now.key ? 'date' : 'false'}">${parseKey(key).d}</button>
-      ${list.length
-        ? html`<span class="day-events">${list.map((s) => {
-            const { status, isNext } = stateOf(s, now.ms, next);
-            return html`<button type="button" class="ev tone-${s.course.tone} is-${status}${isNext ? ' is-next' : ''}" data-session="${s.id}" title="${s.course.name} · ${s.start}–${s.end} · ${s.room} · ${s.instructor.name}">
-              <span class="ev-time num">${s.start}</span><span class="ev-name">${s.course.shortName}</span><span class="ev-room">${s.room}</span>
-            </button>`;
-          })}</span>
-          <span class="day-dots" aria-hidden="true">${list.map((s) => html`<span class="dot tone-${s.course.tone} is-${statusOf(s, now.ms)}"></span>`)}</span>`
-        : ''}
-    </div>`);
+  const rows = [];
+  for (let w = 0; w < weeks; w++) {
+    const keys = Array.from({ length: 7 }, (_, i) => addDays(gridStart, w * 7 + i));
+    const busy = keys.some((k) => days.has(k));
+    rows.push(html`<div class="m-week${busy ? ' has-events' : ''}">${keys.map((key) => {
+      const list = days.get(key) ?? [];
+      const cls = ['day', parseKey(key).m !== m ? 'is-out' : '', key === now.key ? 'is-today' : '', key === selected ? 'is-selected' : '',
+        key < now.key ? 'is-before' : ''].join(' ');
+      const label = `${weekdayLong(key)}, ${fmtDate(key)}${list.length ? `, ${list.length} buổi học` : ''}`;
+      return html`<div class="${cls}" data-day="${key}">
+        <button type="button" class="day-num" data-day="${key}" aria-label="${label}" aria-current="${key === now.key ? 'date' : 'false'}">${parseKey(key).d}</button>
+        ${list.length
+          ? html`<span class="day-events">${list.map((s) => {
+              const { status, isNext } = stateOf(s, now.ms, next);
+              return html`<button type="button" class="ev tone-${s.course.tone} is-${status}${isNext ? ' is-next' : ''}" data-session="${s.id}" title="${s.course.name} · ${s.start}–${s.end} · ${s.room} · ${s.instructor.name}">
+                <span class="dot" aria-hidden="true"></span><span class="ev-name">${s.course.shortName}</span><span class="ev-time">${s.start} · ${s.room}</span>
+              </button>`;
+            })}</span>
+            <span class="day-dots" aria-hidden="true">${list.map((s) => html`<span class="dot tone-${s.course.tone} is-${statusOf(s, now.ms)}"></span>`)}</span>`
+          : ''}
+      </div>`;
+    })}</div>`);
   }
 
   const dayList = selected ? days.get(selected) ?? [] : [];
   return html`<div class="month" aria-label="${fmtMonthTitle(first)}">
-      <div class="month-head" aria-hidden="true">${WEEK_HEADERS.map((h) => html`<span>${h}</span>`)}</div>
-      <div class="month-body" style="--weeks:${weeks}">${cells}</div>
+      <div class="m-head" aria-hidden="true">${WEEK_HEADERS.map((h) => html`<span>${h}</span>`)}</div>
+      ${rows}
     </div>
     ${filterNote(state, inMonth)}
-    <div class="month-daylist" aria-live="polite">
+    <div class="daylist" aria-live="polite">
       ${selected
-        ? html`<p class="daylist-title">${weekdayLong(selected)}, <span class="num">${fmtDate(selected)}</span> <span class="muted">· ${relativeDay(selected, now.key)}</span></p>
+        ? html`<p class="daylist-title">${weekdayLong(selected)}, ${fmtDate(selected)} <span class="muted">· ${relativeDay(selected, now.key)}</span></p>
           ${dayList.length
-            ? html`<div class="srows">${dayList.map((s) => sessionRow(s, { nowMs: now.ms, next }))}</div>`
+            ? dayList.map((s) => sessionRow(s, { nowMs: now.ms, next }))
             : html`<p class="muted">Không có buổi học.</p>`}`
         : html`<p class="muted">Chạm vào một ngày để xem buổi học.</p>`}
     </div>`;
@@ -115,45 +134,32 @@ function weekView(state) {
   const inWeek = keys.flatMap((k) => days.get(k) ?? []);
 
   if (state.narrow) {
-    return html`<div class="week-list">
-      ${keys.map((k) => {
-        const list = days.get(k) ?? [];
-        return html`<section class="wl-day${k === now.key ? ' is-today' : ''}${k < now.key ? ' is-before' : ''}">
-          <h3 class="wl-head"><span class="wl-wd">${weekdayShort(k)}</span><span class="num">${fmtDate(k)}</span>${k === now.key ? html`<span class="pill pill-today">Hôm nay</span>` : ''}</h3>
-          ${list.length
-            ? html`<div class="srows">${list.map((s) => sessionRow(s, { nowMs: now.ms, next }))}</div>`
-            : html`<p class="muted wl-empty">Không có buổi học</p>`}
-        </section>`;
-      })}
-    </div>${filterNote(state, inWeek)}`;
+    return html`<div class="agenda">${keys.map((k) => dayBlock(state, k, days.get(k) ?? [], next))}</div>${filterNote(state, inWeek)}`;
   }
 
   const hours = [];
   for (let t = DAY_START; t < DAY_END; t += 60) hours.push(t / 60);
   const nowInWeek = keys.includes(now.key) && now.minutes >= DAY_START && now.minutes <= DAY_END;
+  const pct = (/** @type {number} */ min) => ((min - DAY_START) / (DAY_END - DAY_START)) * 100;
 
   return html`<div class="week" style="--rows:${hours.length}">
-      <div class="week-head">
+      <div class="w-head">
         <span></span>
-        ${keys.map((k) => html`<span class="wh${k === now.key ? ' is-today' : ''}"><span class="wh-wd">${weekdayShort(k)}</span><span class="wh-d num">${parseKey(k).d}</span></span>`)}
+        ${keys.map((k) => html`<span class="wh${k === now.key ? ' is-today' : ''}"><span>${weekdayShort(k)}</span><span class="wh-d">${parseKey(k).d}</span></span>`)}
       </div>
-      <div class="week-body">
-        <div class="week-gutter" aria-hidden="true">${hours.map((h) => html`<span class="num">${String(h).padStart(2, '0')}:00</span>`)}</div>
-        ${keys.map((k) => html`<div class="week-col${k === now.key ? ' is-today' : ''}" aria-label="${weekdayLong(k)}, ${fmtDate(k)}">
+      <div class="w-body">
+        <div class="w-gutter" aria-hidden="true">${hours.map((h) => html`<span>${String(h).padStart(2, '0')}:00</span>`)}</div>
+        ${keys.map((k) => html`<div class="w-col${k === now.key ? ' is-today' : ''}" aria-label="${weekdayLong(k)}, ${fmtDate(k)}">
           ${(days.get(k) ?? []).map((s) => {
-            const top = ((minutesOf(s.start) - DAY_START) / (DAY_END - DAY_START)) * 100;
-            const height = ((minutesOf(s.end) - minutesOf(s.start)) / (DAY_END - DAY_START)) * 100;
             const { status, isNext } = stateOf(s, now.ms, next);
-            return html`<button type="button" class="wev tone-${s.course.tone} is-${status}${isNext ? ' is-next' : ''}" data-session="${s.id}" style="top:${top}%;height:${height}%">
+            return html`<button type="button" class="wev tone-${s.course.tone} is-${status}${isNext ? ' is-next' : ''}" data-session="${s.id}" style="top:${pct(minutesOf(s.start))}%;height:${pct(minutesOf(s.end)) - pct(minutesOf(s.start))}%">
               <span class="wev-name">${s.course.shortName}</span>
-              <span class="wev-time num">${s.start} – ${s.end}</span>
+              <span class="wev-time">${s.start} – ${s.end}</span>
               <span class="wev-room">${s.room}</span>
               <span class="wev-who">${s.instructor.name}</span>
             </button>`;
           })}
-          ${nowInWeek && k === now.key
-            ? html`<span class="now-line" style="top:${((now.minutes - DAY_START) / (DAY_END - DAY_START)) * 100}%" aria-hidden="true"></span>`
-            : ''}
+          ${nowInWeek && k === now.key ? html`<span class="now-line" style="top:${pct(now.minutes)}%" aria-hidden="true"></span>` : ''}
         </div>`)}
       </div>
     </div>${filterNote(state, inWeek)}`;
@@ -173,27 +179,15 @@ function agendaView(state) {
     return emptyState('Không có buổi học nào', hasFilters(state) ? 'Không buổi nào khớp bộ lọc hiện tại.' : 'Dữ liệu chưa có buổi học.', hasFilters(state));
   }
 
-  const groups = byDate(shown);
   /** @type {unknown[]} */
   const out = [];
   let month = '';
-  for (const [key, list] of groups) {
-    const mk = key.slice(0, 7);
-    if (mk !== month) {
-      month = mk;
+  for (const [key, list] of byDate(shown)) {
+    if (key.slice(0, 7) !== month) {
+      month = key.slice(0, 7);
       out.push(html`<h3 class="ag-month">${fmtMonthTitle(key)}</h3>`);
     }
-    const cls = ['ag-day', key === now.key ? 'is-today' : '', key < now.key ? 'is-before' : ''].join(' ');
-    out.push(html`<section class="${cls}" data-date="${key}">
-      <div class="ag-date">
-        <span class="ag-wd">${weekdayShort(key)}</span>
-        <span class="ag-d num">${parseKey(key).d}</span>
-      </div>
-      <div class="ag-body">
-        <p class="ag-label">${weekdayLong(key)}, <span class="num">${fmtDate(key)}</span> <span class="muted">· ${relativeDay(key, now.key)}</span></p>
-        <div class="srows">${list.map((s) => sessionRow(s, { nowMs: now.ms, next }))}</div>
-      </div>
-    </section>`);
+    out.push(dayBlock(state, key, list, next));
   }
 
   return html`<div class="agenda">

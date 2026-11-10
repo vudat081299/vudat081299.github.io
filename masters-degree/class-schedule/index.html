@@ -9,11 +9,11 @@
 <meta name="theme-color" content="#090b0a" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Như trang chủ: Space Grotesk tiêu đề, Be Vietnam Pro chữ, JetBrains Mono nhãn; cả ba có subset vietnamese. -->
+<!-- SCHED-001: Space Grotesk tiêu đề và số lớn, Be Vietnam Pro chữ, JetBrains Mono phím tắt. -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&family=Be+Vietnam+Pro:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
 <link rel="stylesheet" href="styles.css">
 <script>
-  // Đặt theme trước khi vẽ để khỏi nháy.
+  // Đặt theme đã lưu trước lần vẽ đầu; chưa lưu thì theo hệ điều hành (REPO-024).
   try {
     var p = JSON.parse(localStorage.getItem('class-schedule:prefs:v1') || '{}');
     if (p.theme === 'light' || p.theme === 'dark') document.documentElement.dataset.theme = p.theme;
@@ -24,21 +24,16 @@
 <body>
 <a class="skip" href="#cal">Bỏ qua tới lịch</a>
 
-<header class="topbar">
-  <div class="wrap topbar-inner">
-    <a class="home" href="../../index.html" aria-label="Về trang chủ">
-      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-    </a>
-    <div class="brand">
-      <span class="brand-name">Class Schedule</span>
-      <span class="brand-sub">Cao học · Khoa học dữ liệu</span>
-    </div>
-    <button type="button" class="icon-btn" id="theme-btn" data-action="theme" aria-label="Đổi giao diện sáng/tối"></button>
-  </div>
+<header class="wrap top">
+  <a class="icon-btn" href="../../index.html" aria-label="Về trang chủ">
+    <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+  </a>
+  <p class="brand"><span class="brand-name">Class Schedule</span><span class="brand-sub">Cao học Khoa học dữ liệu</span></p>
+  <button type="button" class="icon-btn" id="theme-btn" data-action="theme" aria-label="Đổi giao diện sáng/tối"></button>
 </header>
 
 <div class="wrap app-error" id="app-error" hidden>
-  <p class="empty-title" data-msg>Không tải được dữ liệu lịch học.</p>
+  <p class="h-lg" data-msg>Không tải được dữ liệu lịch học.</p>
   <p class="muted" data-detail></p>
   <p class="muted">Trang đọc dữ liệu bằng <code>fetch</code>, nên phải mở qua HTTP: chạy
     <code>python3 -m http.server</code> ở gốc repo rồi mở
@@ -47,42 +42,41 @@
 
 <main class="wrap" id="app">
   <noscript><p class="muted">Trang cần JavaScript để hiện lịch học.</p></noscript>
-  <div id="dashboard" class="dashboard" aria-live="off"></div>
+  <div id="dashboard" class="dash" aria-live="off"></div>
 
   <section class="cal" id="cal" aria-labelledby="cal-title" tabindex="-1">
-    <div class="cal-toolbar">
-      <div class="cal-row">
-        <h2 class="cal-title num" id="cal-title">Lịch học</h2>
-        <div class="cal-nav">
-          <button type="button" class="icon-btn" data-action="prev" aria-label="Trước">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
-          </button>
-          <button type="button" class="btn" data-action="today">Hôm nay</button>
-          <button type="button" class="icon-btn" data-action="next" aria-label="Sau">
-            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-          </button>
-        </div>
-        <div class="seg" role="group" aria-label="Chế độ xem">
-          <button type="button" data-view="month" aria-pressed="false">Tháng</button>
-          <button type="button" data-view="week" aria-pressed="false">Tuần</button>
-          <button type="button" data-view="agenda" aria-pressed="false">Danh sách</button>
-        </div>
+    <div class="bar">
+      <h2 class="cal-title" id="cal-title">Lịch học</h2>
+      <div class="nav">
+        <button type="button" class="icon-btn" data-action="prev" aria-label="Trước">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        </button>
+        <button type="button" class="text-btn" data-action="today">Hôm nay</button>
+        <button type="button" class="icon-btn" data-action="next" aria-label="Sau">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
       </div>
-      <div class="cal-row cal-row-filters">
-        <div class="chips" id="filters" role="group" aria-label="Lọc theo môn"></div>
-        <label class="search">
-          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <span class="sr">Tìm buổi học</span>
-          <input id="search" type="search" placeholder="Tìm môn, giảng viên, phòng…" autocomplete="off" enterkeyhint="search">
-        </label>
-        <span class="result-count muted num" id="result-count" aria-live="polite"></span>
+      <div class="tabs" role="group" aria-label="Chế độ xem">
+        <button type="button" data-view="month" aria-pressed="false">Tháng</button>
+        <button type="button" data-view="week" aria-pressed="false">Tuần</button>
+        <button type="button" data-view="agenda" aria-pressed="false">Danh sách</button>
       </div>
+    </div>
+    <div class="bar bar-filters">
+      <div class="chips" id="filters" role="group" aria-label="Lọc theo môn"></div>
+      <span class="result-count muted" id="result-count" aria-live="polite"></span>
+      <label class="search">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <span class="sr">Tìm buổi học</span>
+        <input id="search" type="search" placeholder="Tìm môn, giảng viên, phòng" autocomplete="off" enterkeyhint="search">
+      </label>
     </div>
     <div id="cal-view" class="cal-view"></div>
   </section>
 
   <footer class="foot muted">
-    Giờ Việt Nam (UTC+7) · Phím tắt: <kbd>T</kbd> hôm nay, <kbd>←</kbd> <kbd>→</kbd> trước/sau, <kbd>/</kbd> tìm, <kbd>Esc</kbd> đóng
+    <span>Giờ Việt Nam (UTC+7)</span>
+    <span class="keys">Phím tắt: <kbd>T</kbd> hôm nay · <kbd>←</kbd> <kbd>→</kbd> trước/sau · <kbd>/</kbd> tìm · <kbd>Esc</kbd> đóng</span>
   </footer>
 </main>
 
