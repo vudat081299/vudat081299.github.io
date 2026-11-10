@@ -1,0 +1,1823 @@
+<!doctype html>
+<!-- Trang tóm tắt một cuốn sách. CSS và JS trong khối "BK CORE" giống hệt ở mọi trang sách;
+     phần riêng của trang nằm ở khối <style> và <script> thứ hai. -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" id="bk-theme-color" content="#fbfaf7">
+<title>The Art of Doing Science and Engineering — book notes</title>
+<meta name="description" content="Tóm tắt The Art of Doing Science and Engineering của Richard Hamming: tầm nhìn, chọn bài toán quan trọng, mã Hamming, chuyên gia, dữ liệu không tin được, mô phỏng, đo lường, kỹ thuật hệ thống, không gian nhiều chiều.">
+<script>
+  /* Theme trước lần vẽ đầu (REPO-024): lựa chọn đã lưu ở 'hub-theme' thắng; chưa lưu thì theo hệ điều hành. */
+  (function () {
+    var t = null, r = document.documentElement;
+    try { t = localStorage.getItem('hub-theme'); } catch (e) {}
+    var dark = t ? t === 'dark' : !!(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+    if (dark) r.classList.add('dark');
+    r.classList.add('js');
+    var m = document.getElementById('bk-theme-color');
+    if (m) m.setAttribute('content', dark ? '#101211' : '#fbfaf7');
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Hai mặt chữ, cả hai có subset vietnamese: Literata cho chữ đọc và tiêu đề, Be Vietnam Pro cho nhãn và điều hướng. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&amp;display=swap">
+<style>
+  /* ==========================================================================
+     BK CORE — giống hệt nhau ở mọi trang sách. Sửa ở một trang thì chép sang trang kia.
+     Luật dùng: DESIGN.md. Màu chỉ khai ở hai khối token dưới đây.
+     ========================================================================== */
+  :root {
+    --bg: #fbfaf7;          /* giấy ấm */
+    --surface: #ffffff;
+    --surface-2: #f1f0eb;
+    --ink: #151714;
+    --ink-2: #454a44;       /* chữ phụ, 8.6:1 trên --bg */
+    --ink-3: #5e655e;       /* nhãn, 5.8:1 trên --bg */
+    --line: #e3e1da;
+    --line-2: #cbc9c1;
+    --accent: #0a7a3c;      /* xanh của trang chủ; chữ xanh 5.3:1 */
+    --accent-soft: rgba(10, 122, 60, .07);
+    --accent-line: rgba(10, 122, 60, .34);
+    --on-accent: #ffffff;
+    --warn: #8a4a0c;        /* chỉ cho Giới hạn / Phản biện */
+    --warn-soft: rgba(176, 104, 24, .09);
+    --warn-line: rgba(138, 74, 12, .38);
+    --shadow: 0 1px 2px rgba(21, 23, 20, .05), 0 18px 40px -22px rgba(21, 23, 20, .28);
+    --serif: 'Literata', Georgia, 'Times New Roman', serif;
+    --sans: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --measure: 40rem;       /* khoảng 66 ký tự */
+    --gutter: clamp(16px, 4vw, 40px);
+    --bar-h: 52px;
+    color-scheme: light;
+  }
+  .dark {
+    --bg: #101211;
+    --surface: #161917;
+    --surface-2: #1d211e;
+    --ink: #e9ece7;
+    --ink-2: #b8beb7;
+    --ink-3: #9aa29a;
+    --line: #272c28;
+    --line-2: #3a403b;
+    --accent: #6fd99b;
+    --accent-soft: rgba(111, 217, 155, .08);
+    --accent-line: rgba(111, 217, 155, .34);
+    --on-accent: #06140c;
+    --warn: #e4b26d;
+    --warn-soft: rgba(228, 178, 109, .09);
+    --warn-line: rgba(228, 178, 109, .38);
+    --shadow: 0 0 0 1px rgba(255, 255, 255, .03), 0 22px 48px -24px rgba(0, 0, 0, .85);
+    color-scheme: dark;
+  }
+
+  /* ---- nền ---- */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--bar-h) + 20px); }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 400 1.0625rem/1.72 var(--serif); font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased; overflow-wrap: break-word;
+  }
+  @media (min-width: 768px) { body { font-size: 1.125rem; } }
+  h1, h2, h3, h4, h5 { margin: 0; font-weight: 600; line-height: 1.2; text-wrap: balance; }
+  p { margin: 0 0 1em; }
+  ul, ol { margin: 0 0 1em; padding-left: 1.25em; }
+  li + li { margin-top: .35em; }
+  strong, b { font-weight: 600; }
+  svg { max-width: 100%; }
+  a { color: inherit; text-decoration-color: var(--accent-line); text-decoration-thickness: 1px; text-underline-offset: .2em; }
+  a:hover { color: var(--accent); text-decoration-color: currentColor; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  ::selection { background: var(--accent); color: var(--on-accent); }
+  [hidden] { display: none !important; }
+  .bk-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .bk-skip { position: absolute; left: 12px; top: -60px; z-index: 50; padding: 10px 14px; background: var(--ink); color: var(--bg); font: 600 .875rem/1 var(--sans); border-radius: 8px; text-decoration: none; }
+  .bk-skip:focus { top: 10px; color: var(--bg); }
+  .bk-wrap { max-width: 76rem; margin-inline: auto; padding-inline: var(--gutter); }
+
+  /* ---- thanh trên cùng: về trang chủ, tên trang, mục lục (điện thoại), theme; vạch tiến độ ---- */
+  .bk-bar { position: sticky; top: 0; z-index: 30; height: var(--bar-h); background: var(--bg); background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .bk-bar__in { height: 100%; max-width: 80rem; margin: 0 auto; padding-inline: var(--gutter); display: flex; align-items: center; gap: 10px; }
+  .bk-home { flex: none; display: inline-flex; align-items: center; gap: 6px; margin-left: -8px; padding: 8px; border-radius: 8px; font: 500 .875rem/1 var(--sans); color: var(--ink-2); text-decoration: none; }
+  .bk-home:hover { background: var(--surface-2); color: var(--ink); }
+  .bk-name { flex: 1; min-width: 0; margin: 0; font: 600 .9375rem/1.2 var(--sans); letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bk-name span { color: var(--ink-3); font-weight: 500; }
+  .bk-btn { flex: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); font: 500 .8125rem/1 var(--sans); cursor: pointer; }
+  .bk-btn:hover { border-color: var(--line-2); }
+  .bk-btn--icon { width: 36px; padding: 0; }
+  .bk-btn svg { width: 16px; height: 16px; }
+  .bk-tocbtn { max-width: 46vw; }
+  .bk-tocbtn [data-bk-current] { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bk-progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--accent); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+  @media (max-width: 479px) { .bk-home__txt, .bk-name span { display: none; } }
+  @media (max-width: 359px) { .js .bk-name { visibility: hidden; } }
+  @media (min-width: 1024px) { .bk-tocbtn { display: none; } }
+
+  /* ---- đầu trang ---- */
+  .bk-hero { padding-block: clamp(28px, 5vw, 56px) clamp(24px, 3.5vw, 40px); }
+  .bk-hero__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  @media (min-width: 900px) { .bk-hero__grid { grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 56px; align-items: end; } }
+  @media (max-width: 899px) { .bk-hero__grid { gap: 24px; } }
+  .bk-kicker { margin: 0 0 16px; font: 600 .8125rem/1.4 var(--sans); color: var(--accent); }
+  .bk-title { margin: 0 0 10px; font: 600 clamp(2rem, 5.4vw, 3.375rem)/1.06 var(--serif); letter-spacing: -.022em; }
+  .bk-orig { margin: 0 0 20px; font: italic 400 1.125rem/1.45 var(--serif); color: var(--ink-2); }
+  .bk-lede { margin: 0 0 24px; max-width: 36rem; font-size: 1.125rem; line-height: 1.6; color: var(--ink-2); }
+  .bk-facts { display: flex; flex-wrap: wrap; gap: 10px 32px; margin: 0; font: 400 .875rem/1.4 var(--sans); }
+  .bk-facts dt { color: var(--ink-3); margin: 0 0 2px; }
+  .bk-facts dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* So hai thời lượng đọc: số và độ dài vạch do JS tính (data-out, --w). */
+  .bk-time { padding: 18px 20px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); font-family: var(--sans); }
+  .bk-time__row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 0 8px; font-size: .875rem; color: var(--ink-2); }
+  .bk-time__row b { font-size: 1.0625rem; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .bk-time__bar { height: 8px; margin: 0 0 14px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+  .bk-time__bar i { display: block; height: 100%; width: var(--w, 100%); min-width: 6px; border-radius: inherit; background: var(--ink-3); }
+  .bk-time__bar--page i { background: var(--accent); }
+  .bk-time__note { margin: 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: .875rem; line-height: 1.5; color: var(--ink-2); }
+  .bk-time__note b { color: var(--ink); }
+
+  /* ---- tiêu đề khối lớn và nhãn khối nhỏ ---- */
+  .bk-sec-title { margin: 0 0 8px; font: 600 clamp(1.625rem, 3.4vw, 2.25rem)/1.15 var(--serif); letter-spacing: -.016em; }
+  .bk-sec-sub { margin: 0 0 36px; max-width: 40rem; font: 400 1rem/1.6 var(--sans); color: var(--ink-2); }
+  .bk-label { display: flex; align-items: center; gap: 12px; margin: 0 0 16px; font: 600 .8125rem/1.4 var(--sans); color: var(--ink-3); }
+  .bk-label::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+
+  /* ---- TỔNG QUAN ---- */
+  .bk-ov { padding-bottom: clamp(40px, 7vw, 80px); scroll-margin-top: calc(var(--bar-h) + 20px); }
+  .bk-ov__card { padding: clamp(20px, 3.4vw, 36px); background: var(--surface); border: 1px solid var(--line); border-radius: 20px; }
+  .bk-ov__card > .bk-sec-title { margin-bottom: 24px; font-size: clamp(1.5rem, 2.8vw, 1.875rem); }
+  .bk-ov__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  @media (min-width: 900px) {
+    .bk-ov__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); grid-template-areas: "thesis idx" "chain idx"; gap: 36px 56px; align-items: start; }
+    .bk-ov__thesis { grid-area: thesis; } .bk-ov__idx { grid-area: idx; } .bk-ov__chain { grid-area: chain; }
+  }
+  .bk-thesis { margin: 0; max-width: 46rem; font: 400 clamp(1.125rem, 1.8vw, 1.25rem)/1.6 var(--serif); }
+  .bk-thesis strong { font-weight: 600; box-shadow: inset 0 -.38em 0 var(--accent-soft); }
+
+  /* Mạch lập luận: dọc ở điện thoại, ngang từ 900px. Mỗi bước nói nó nối với bước trước thế nào. */
+  .bk-chain { list-style: none; margin: 0; padding: 0; counter-reset: step; display: grid; }
+  .bk-step { position: relative; margin: 0; padding: 0 0 22px 40px; counter-increment: step; }
+  .bk-step::before { content: counter(step); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border: 1.5px solid var(--accent); border-radius: 50%; background: var(--surface); color: var(--accent); font: 600 .8125rem/23px var(--sans); text-align: center; }
+  .bk-step::after { content: ""; position: absolute; left: 12px; top: 30px; bottom: 4px; width: 2px; background: var(--line-2); }
+  .bk-step:last-child { padding-bottom: 0; }
+  .bk-step:last-child::after { display: none; }
+  .bk-step__rel { display: block; margin: 0 0 2px; font: 600 .75rem/1.6 var(--sans); color: var(--accent); }
+  .bk-step__name { display: block; font: 600 1rem/1.35 var(--sans); }
+  .bk-step__name a { text-decoration: none; }
+  .bk-step__name a:hover { text-decoration: underline; }
+  .bk-step__text { display: block; margin-top: 4px; font-size: .9375rem; line-height: 1.55; color: var(--ink-2); }
+  /* .bk-chain--row: mạch nằm ngang khi khối rộng hết trang (đặt --n = số bước). */
+  @media (min-width: 900px) {
+    .bk-chain--row { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 0 28px; }
+    .bk-chain--row .bk-step { padding: 40px 0 0; }
+    .bk-chain--row .bk-step::after { left: 34px; right: -22px; top: 12px; bottom: auto; width: auto; height: 2px; }
+    .bk-chain--row .bk-step:last-child::after { display: none; }
+  }
+
+  /* Danh sách mục: JS dựng từ các .bk-unit (tên, ý chính một dòng, phút đọc). */
+  .bk-idx { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 25rem), 1fr)); column-gap: 40px; }
+  .bk-idx > li { margin: 0; border-top: 1px solid var(--line); }
+  .bk-idx a { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto; gap: 0 14px; padding: 14px 8px 15px 4px; color: inherit; text-decoration: none; border-radius: 10px; }
+  .bk-idx a:hover { background: var(--surface-2); color: inherit; }
+  .bk-idx__n { font: 600 1.125rem/1.45 var(--serif); color: var(--ink-3); font-variant-numeric: lining-nums tabular-nums; }
+  .bk-idx__t { display: block; font: 600 1rem/1.4 var(--sans); }
+  .bk-idx__by { display: block; font: 400 .8125rem/1.5 var(--sans); color: var(--ink-3); }
+  .bk-idx__g { display: block; margin-top: 3px; font-size: .9375rem; line-height: 1.5; color: var(--ink-2); }
+  .bk-idx__m { font: 500 .8125rem/1.7 var(--sans); color: var(--ink-3); white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
+  .is-done .bk-idx__n, .is-done .bk-idx__m { color: var(--accent); }
+  .bk-idx__m .bk-tick { margin-left: 4px; }
+  @media (max-width: 559px) {
+    .bk-idx a { grid-template-columns: 1.5rem minmax(0, 1fr); gap: 0 10px; }
+    .bk-idx__m { grid-column: 2; text-align: left; margin-top: 2px; }
+  }
+  .bk-idxgrps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: 32px 48px; }
+  .bk-idxgrp__t { margin: 0 0 10px; font: 600 1.0625rem/1.35 var(--sans); }
+  .bk-idxgrp__t span { margin-left: 8px; font-weight: 400; font-size: .8125rem; color: var(--ink-3); }
+  .bk-idx-sum { margin: 14px 0 0; font: 400 .875rem/1.5 var(--sans); color: var(--ink-3); }
+  .bk-tick { display: inline-block; width: .9em; height: .9em; vertical-align: -.1em; }
+
+  /* ---- thân: mục lục bám bên trái (≥1024px) hoặc bảng thả từ thanh trên (điện thoại) ---- */
+  .bk-shell { max-width: 80rem; margin: 0 auto; padding: 0 var(--gutter) clamp(56px, 8vw, 96px); display: grid; grid-template-columns: minmax(0, 1fr); }
+  .bk-main { min-width: 0; }
+  .bk-rail { font-family: var(--sans); }
+  .bk-rail__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 0 0 10px; padding: 0 10px; }
+  .bk-rail__title { margin: 0; font: 600 .8125rem/1.4 var(--sans); color: var(--ink-3); }
+  .bk-rail__stat { margin: 0; font: 500 .75rem/1.4 var(--sans); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .bk-toc { list-style: none; margin: 0; padding: 0; }
+  .bk-toc li { margin: 0; }
+  .bk-toc a { display: flex; align-items: baseline; gap: 10px; padding: 6px 10px; border-radius: 8px; font-size: .875rem; line-height: 1.4; color: var(--ink-2); text-decoration: none; }
+  .bk-toc a:hover { background: var(--surface-2); color: var(--ink); }
+  .bk-toc a[aria-current] { background: var(--surface-2); color: var(--ink); font-weight: 600; box-shadow: inset 2px 0 0 var(--accent); }
+  .bk-toc__n { flex: none; min-width: 1.1em; font-weight: 600; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .bk-toc__grp { margin: 12px 0 2px; padding: 0 10px; font-size: .75rem; font-weight: 600; color: var(--ink-3); }
+  .bk-toc .bk-tick { margin-left: auto; flex: none; color: var(--accent); }
+  .bk-toc__sep { height: 1px; margin: 8px 10px; background: var(--line); }
+  @media (min-width: 1024px) {
+    .bk-shell { grid-template-columns: 14.5rem minmax(0, 1fr); gap: 56px; }
+    .bk-rail { position: sticky; top: calc(var(--bar-h) + 28px); align-self: start; max-height: calc(100vh - var(--bar-h) - 56px); overflow-y: auto; padding: 4px 0 12px; margin-top: clamp(24px, 4vw, 48px); }
+  }
+  @media (max-width: 1023px) {
+    .js .bk-rail { display: none; position: fixed; z-index: 29; top: calc(var(--bar-h) + 6px); left: var(--gutter); right: var(--gutter); max-height: min(70vh, 560px); overflow-y: auto; padding: 14px 6px 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+    .js .bk-rail.is-open { display: block; }
+    .bk-toc a { padding: 9px 10px; font-size: .9375rem; }
+  }
+
+  /* ---- một mục (chương hoặc một cuốn) ---- */
+  .bk-unit { padding-top: clamp(56px, 8vw, 96px); }
+  .bk-main > .bk-unit:first-child, .bk-main > .bk-shelf:first-child { padding-top: clamp(24px, 4vw, 48px); }
+  .bk-unit__head { max-width: 48rem; margin: 0 0 32px; }
+  .bk-unit__num { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 0 0 12px; font: 600 .8125rem/1.5 var(--sans); color: var(--accent); }
+  .bk-unit__min, .bk-unit__by { font-weight: 500; color: var(--ink-3); }
+  .bk-unit__state { display: inline-flex; align-items: center; gap: 4px; color: var(--accent); }
+  .bk-unit__title { margin: 0 0 12px; font: 600 clamp(1.75rem, 3.6vw, 2.5rem)/1.12 var(--serif); letter-spacing: -.018em; }
+  h3.bk-unit__title { font-size: clamp(1.625rem, 3.2vw, 2.25rem); }
+  .bk-unit__orig { margin: -4px 0 12px; font: italic 400 1rem/1.4 var(--serif); color: var(--ink-3); }
+  .bk-unit__gist { margin: 0; font: italic 400 1.1875rem/1.5 var(--serif); color: var(--ink-2); }
+
+  /* Khuôn cố định: nhãn bên trái ở màn rộng, nằm trên ở màn hẹp. */
+  .bk-slot { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 22px 0 24px; border-top: 1px solid var(--line); }
+  .bk-slot__label { margin: 0; font: 600 .8125rem/1.6 var(--sans); color: var(--ink-3); }
+  .bk-slot__body { min-width: 0; max-width: var(--measure); }
+  .bk-slot__body > :first-child { margin-top: 0; }
+  .bk-slot__body > :last-child { margin-bottom: 0; }
+  .bk-slot--idea .bk-slot__label, .bk-slot--use .bk-slot__label { color: var(--accent); }
+  .bk-slot--idea .bk-slot__body { font-size: 1.25rem; line-height: 1.55; font-weight: 600; letter-spacing: -.005em; }
+  .bk-slot--limit .bk-slot__label { color: var(--warn); }
+  .bk-slot--limit .bk-slot__body { padding-left: 16px; border-left: 2px solid var(--warn-line); }
+  @media (min-width: 1200px) {
+    .bk-slot { grid-template-columns: 8.5rem minmax(0, var(--measure)); gap: 32px; }
+    .bk-slot__label { padding-top: .3em; }
+    .bk-slot--idea .bk-slot__label { padding-top: .45em; }
+  }
+
+  /* ---- thành phần trong mục ---- */
+  dfn { font-style: normal; font-weight: 600; }
+  .bk-terms { display: grid; gap: 10px; margin: 1.25em 0; }
+  .bk-terms > div { padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+  .bk-terms dt { font: 600 .9375rem/1.45 var(--sans); }
+  .bk-terms dt span { font-weight: 400; color: var(--ink-3); }
+  .bk-terms dd { margin: 3px 0 0; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+  .bk-quote { margin: 1.5em 0; padding: 2px 0 2px 20px; border-left: 3px solid var(--accent); }
+  .bk-quote p { margin: 0 0 .5em; font: italic 400 1.1875rem/1.55 var(--serif); }
+  .bk-quote cite { font: normal 500 .8125rem/1.4 var(--sans); color: var(--ink-3); }
+  .bk-table-wrap { margin: 1.5em 0; overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+  .bk-table { width: 100%; border-collapse: collapse; font: 400 .9375rem/1.5 var(--sans); }
+  .bk-table--wide { min-width: 34rem; }
+  @media (max-width: 559px) { .bk-table { font-size: .875rem; } .bk-table th, .bk-table td { padding: 8px 10px; } }
+  .bk-table caption { padding: 12px 14px 0; text-align: left; font-weight: 600; font-size: .875rem; color: var(--ink-2); }
+  .bk-table th, .bk-table td { padding: 10px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .bk-table thead th { font-size: .8125rem; font-weight: 600; color: var(--ink-2); background: var(--surface-2); }
+  .bk-table tbody th { font-weight: 600; }
+  .bk-table tbody tr:last-child > * { border-bottom: 0; }
+  .bk-model { margin: 1.75em 0; padding: 20px 22px; background: var(--accent-soft); border: 1px solid var(--accent-line); border-radius: 14px; font-family: var(--sans); }
+  .bk-model__kicker { margin: 0 0 4px; font: 600 .75rem/1.5 var(--sans); color: var(--accent); }
+  .bk-model__name { margin: 0 0 6px; font: 600 1.125rem/1.35 var(--sans); }
+  .bk-model__when { margin: 0 0 10px; font-size: .9375rem; line-height: 1.55; color: var(--ink-2); }
+  .bk-model ol { margin: 0; font-size: .9688rem; line-height: 1.55; }
+  .bk-fig { margin: 1.75em 0; }
+  .bk-fig svg { display: block; width: 100%; max-width: 27rem; height: auto; font-family: var(--sans); }
+  .bk-fig figcaption { max-width: 27rem; margin-top: 10px; font: 400 .875rem/1.55 var(--sans); color: var(--ink-3); }
+  .bk-case { margin: 0 0 1em; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+  .bk-case > :last-child { margin-bottom: 0; }
+  .bk-use { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .bk-use > li { margin: 0; padding-left: 16px; border-left: 2px solid var(--accent-line); }
+  .bk-use__when { display: block; font: 600 .875rem/1.5 var(--sans); }
+  .bk-tag { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); font: 600 .75rem/1.6 var(--sans); color: var(--ink-2); vertical-align: .08em; }
+
+  /* Màu cho hình SVG: dùng class, không ghi mã màu trong thuộc tính. */
+  .f-surface { fill: var(--surface); } .f-soft { fill: var(--surface-2); } .f-accent { fill: var(--accent); }
+  .f-accent-soft { fill: var(--accent-soft); } .f-warn-soft { fill: var(--warn-soft); } .f-ink3 { fill: var(--ink-3); } .f-none { fill: none; }
+  .s-line { stroke: var(--line-2); } .s-ink { stroke: var(--ink-2); } .s-accent { stroke: var(--accent); } .s-warn { stroke: var(--warn); }
+  .t-ink { fill: var(--ink); } .t-muted { fill: var(--ink-2); } .t-faint { fill: var(--ink-3); } .t-accent { fill: var(--accent); } .t-warn { fill: var(--warn); }
+  .t-b { font-weight: 600; }
+
+  /* Nút "đã đọc" cuối mỗi mục (JS chèn). */
+  .bk-done { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; padding: 10px 16px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--surface); color: var(--ink); font: 500 .875rem/1.2 var(--sans); cursor: pointer; }
+  .bk-done:hover { border-color: var(--accent); }
+  .bk-done[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
+  /* ---- cuối trang ---- */
+  .bk-end { padding-top: clamp(64px, 9vw, 112px); }
+  .bk-end > .bk-sec-title { max-width: 48rem; }
+  .bk-tools { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+  .bk-tools > li { margin: 0; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; font-family: var(--sans); }
+  .bk-tools__name { font: 600 1rem/1.35 var(--sans); }
+  .bk-tools__use { font-size: .9375rem; line-height: 1.55; color: var(--ink-2); }
+  .bk-tools__src { margin-top: auto; padding-top: 4px; font-size: .8125rem; color: var(--ink-3); }
+  .bk-quiz { list-style: none; margin: 0; padding: 0; max-width: 48rem; border-top: 1px solid var(--line); }
+  .bk-quiz > li { margin: 0; border-bottom: 1px solid var(--line); }
+  .bk-quiz summary { position: relative; padding: 16px 4.5rem 16px 0; cursor: pointer; list-style: none; font: 500 1rem/1.55 var(--sans); }
+  .bk-quiz summary::-webkit-details-marker { display: none; }
+  .bk-quiz summary::after { content: "Đáp án"; position: absolute; right: 0; top: 18px; font-size: .75rem; font-weight: 600; color: var(--accent); }
+  .bk-quiz details[open] summary::after { content: "Ẩn"; }
+  .bk-quiz summary:focus-visible { outline-offset: 4px; }
+  .bk-quiz__n { margin-right: 8px; font-weight: 600; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .bk-quiz__a { padding: 0 0 18px; }
+  .bk-quiz__a > :last-child { margin-bottom: 0; }
+  .bk-quiz__see { font: 400 .875rem/1.5 var(--sans); color: var(--ink-3); }
+  .bk-reads { list-style: none; margin: 0; padding: 0; max-width: 48rem; }
+  .bk-reads > li { margin: 0; padding: 14px 0; border-top: 1px solid var(--line); }
+  .bk-reads__t { display: block; font: 600 1rem/1.45 var(--sans); }
+  .bk-reads__why { display: block; margin-top: 2px; font-size: .9688rem; color: var(--ink-2); }
+  .bk-foot { margin-top: clamp(56px, 8vw, 96px); padding: 24px 0 40px; border-top: 1px solid var(--line); font: 400 .875rem/1.6 var(--sans); color: var(--ink-3); }
+  .bk-foot p { margin: 0 0 6px; }
+
+  /* ---- trang gom nhiều sách: kệ chủ đề, ý chính đánh số, lộ trình ---- */
+  .bk-shelf { padding-top: clamp(64px, 9vw, 112px); }
+  .bk-shelf__head { max-width: 48rem; }
+  .bk-shelf__kicker { margin: 0 0 8px; font: 600 .8125rem/1.5 var(--sans); color: var(--accent); }
+  .bk-shelf__title { margin: 0 0 10px; font: 600 clamp(1.875rem, 4vw, 2.75rem)/1.1 var(--serif); letter-spacing: -.02em; }
+  .bk-shelf__sub { margin: 0; font: 400 1rem/1.6 var(--sans); color: var(--ink-2); }
+  .bk-shelf .bk-unit { margin-top: clamp(40px, 6vw, 64px); padding-top: clamp(28px, 4vw, 40px); border-top: 2px solid var(--ink); }
+  .bk-ideas { list-style: none; margin: 0; padding: 0; counter-reset: idea; display: grid; gap: 20px; }
+  .bk-ideas > li { position: relative; margin: 0; padding-left: 2.25rem; counter-increment: idea; }
+  .bk-ideas > li::before { content: counter(idea); position: absolute; left: 0; top: .15em; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--surface-2); color: var(--ink-2); font: 600 .75rem/1.5rem var(--sans); text-align: center; }
+  .bk-ideas p { margin: 0 0 .4em; }
+  .bk-ideas > li > :last-child { margin-bottom: 0; }
+  .bk-ideas__t { display: block; margin-bottom: 2px; font: 600 1.0625rem/1.45 var(--sans); }
+  .bk-ideas__ex { font-size: .9688rem; color: var(--ink-2); }
+  .bk-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+  .bk-chip { min-height: 38px; padding: 0 16px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--surface); color: var(--ink); font: 500 .875rem/1.2 var(--sans); cursor: pointer; }
+  .bk-chip:hover { border-color: var(--ink-3); }
+  .bk-chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .js .bk-route:not(.is-on) { display: none; }
+  .bk-route + .bk-route { margin-top: 24px; }
+  .js .bk-route + .bk-route { margin-top: 0; }
+  .bk-route__why { margin: 0 0 12px; max-width: 44rem; font: 400 .9375rem/1.6 var(--sans); color: var(--ink-2); }
+  .bk-route__steps { list-style: none; margin: 0; padding: 0; counter-reset: rs; max-width: 48rem; }
+  .bk-route__steps > li { position: relative; margin: 0; padding: 12px 0 12px 40px; border-top: 1px solid var(--line); counter-increment: rs; }
+  .bk-route__steps > li::before { content: counter(rs); position: absolute; left: 0; top: 13px; width: 26px; height: 26px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font: 600 .8125rem/26px var(--sans); text-align: center; }
+  .bk-route__steps a { font: 600 1rem/1.5 var(--sans); }
+  .bk-route__steps span { display: block; font-size: .9375rem; line-height: 1.55; color: var(--ink-2); }
+  .bk-unit__num::before { content: ""; width: 24px; height: 2px; background: currentColor; }
+
+  /* ---- bản in: một cột, chữ đen trên giấy trắng, mở hết đáp án ---- */
+  @media print {
+    :root, .dark { --bg: #fff; --surface: #fff; --surface-2: #f2f2f2; --ink: #000; --ink-2: #222; --ink-3: #444; --line: #ccc; --line-2: #999; --accent: #0a5c2e; --accent-soft: #f1f6f2; --accent-line: #9bb8a6; --warn: #6b3a08; --warn-line: #b99; color-scheme: light; }
+    html { font-size: 12.5px; }
+    body { font-size: 1rem; line-height: 1.55; }
+    .bk-bar, .bk-rail, .bk-done, .bk-skip, .bk-chips, .bk-unit__state { display: none !important; }
+    .bk-shell { display: block; padding: 0; }
+    .bk-hero, .bk-unit, .bk-end { padding-top: 18pt; }
+    .bk-time, .bk-ov__card, .bk-tools > li { box-shadow: none; }
+    .bk-unit__head, .bk-slot__label, .bk-sec-title { break-after: avoid; }
+    .bk-unit__num::before { display: none; }
+    .bk-model, .bk-fig, .bk-table-wrap, .bk-terms > div, .bk-tools > li, .bk-ideas > li, .bk-quiz > li { break-inside: avoid; }
+    .bk-time__bar { display: none; }
+    .bk-slot { grid-template-columns: 7rem minmax(0, 1fr); gap: 14pt; padding: 8pt 0; }
+    .bk-table { min-width: 0; }
+    .bk-quiz summary::after { content: none; }
+    a { text-decoration: none; }
+    .js .bk-route { display: block !important; }
+  }
+</style>
+<style>
+  /* ---- riêng trang này: ba mô hình tương tác (người say, mã Hamming, n chiều). Chỉ dùng token của BK CORE. ---- */
+  .bk-walk-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: -0.75em 0 1.5em; font: 400 .875rem/1.5 var(--sans); color: var(--ink-2); }
+  .bk-walk .w-free { stroke: var(--ink-3); opacity: .55; }
+  .bk-walk .w-dir { stroke: var(--accent); opacity: .7; }
+  .bk-ham-hint, .bk-nd-hint { margin: 0 0 8px; font: 500 .8125rem/1.5 var(--sans); color: var(--ink-3); }
+  .bk-ham, .bk-nd { margin: 0 0 1.5em; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; font-family: var(--sans); }
+  .bk-ham__bits { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; max-width: 24rem; }
+  .bk-ham__bit { min-height: 44px; padding: 2px 0 0; border: 1px solid var(--line-2); border-radius: 8px; background: var(--bg); color: var(--ink); font: 600 1.125rem/1.1 var(--sans); cursor: pointer; }
+  .bk-ham__bit small { display: block; font: 500 .6875rem/1.3 var(--sans); color: var(--ink-3); }
+  .bk-ham__bit.is-check { background: var(--surface-2); }
+  .bk-ham__bit.is-flip { border-color: var(--warn); background: var(--warn-soft); color: var(--warn); }
+  .bk-ham__bit:hover { border-color: var(--ink-3); }
+  .bk-ham__out { margin: 12px 0 0; font-size: .9375rem; line-height: 1.55; color: var(--ink-2); }
+  .bk-ham__out b { color: var(--ink); }
+  .bk-nd__row { display: grid; gap: 4px; margin: 0 0 12px; font-size: .875rem; color: var(--ink-2); }
+  .bk-nd__row b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .bk-nd__row input { width: 100%; min-height: 32px; accent-color: var(--accent); }
+  .bk-nd__out { display: grid; gap: 6px; margin: 4px 0 0; }
+  .bk-nd__out > div { display: flex; justify-content: space-between; gap: 12px; padding-top: 6px; border-top: 1px solid var(--line); font-size: .875rem; }
+  .bk-nd__out dt { color: var(--ink-2); }
+  .bk-nd__out dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+  html:not(.js) .bk-walk-ctl, html:not(.js) .bk-ham, html:not(.js) .bk-nd, html:not(.js) .bk-ham-hint, html:not(.js) .bk-nd-hint { display: none; }
+</style>
+</head>
+<body>
+<a class="bk-skip" href="#noi-dung">Bỏ qua, tới nội dung</a>
+<header class="bk-bar">
+  <div class="bk-bar__in">
+    <a class="bk-home" href="../index.html" aria-label="Về trang chủ">
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><path d="M10 3.5L5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="bk-home__txt">Trang chủ</span>
+    </a>
+    <p class="bk-name">Book Notes <span>· The Art of Doing Science and Engineering</span></p>
+    <button class="bk-btn bk-tocbtn" id="bk-tocbtn" type="button" aria-controls="bk-rail" aria-expanded="false">
+      <svg aria-hidden="true" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span data-bk-current>Mục lục</span>
+    </button>
+    <button class="bk-btn bk-btn--icon" id="bk-theme" type="button" aria-label="Đổi nền sáng hoặc tối">
+      <svg aria-hidden="true" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor"/></svg>
+    </button>
+  </div>
+  <div class="bk-progress" aria-hidden="true"></div>
+</header>
+
+<main id="noi-dung">
+
+  <!-- ================= ĐẦU TRANG ================= -->
+  <div class="bk-hero bk-wrap" data-pages="432">
+    <div class="bk-hero__grid">
+      <div>
+        <p class="bk-kicker">Tóm tắt sách · Khoa học và kỹ thuật</p>
+        <h1 class="bk-title">Nghệ thuật làm khoa học và kỹ thuật: học cách học</h1>
+        <p class="bk-orig">The Art of Doing Science and Engineering: Learning to Learn</p>
+        <dl class="bk-facts">
+          <div><dt>Tác giả</dt><dd>Richard W. Hamming</dd></div>
+          <div><dt>Xuất bản</dt><dd>1997 · Stripe Press 2020</dd></div>
+          <div><dt>Độ dài</dt><dd data-out="pages">—</dd></div>
+          <div><dt>Trang này</dt><dd><span data-out="units">—</span> mục</dd></div>
+        </dl>
+      </div>
+      <div class="bk-time bk-noread">
+        <p class="bk-time__row"><span>Đọc sách gốc</span><b data-out="book">—</b></p>
+        <div class="bk-time__bar" aria-hidden="true"><i></i></div>
+        <p class="bk-time__row"><span>Đọc trang này</span><b data-out="page">—</b></p>
+        <div class="bk-time__bar bk-time__bar--page" aria-hidden="true"><i></i></div>
+        <p class="bk-time__note">Ít hơn <b data-out="ratio">—</b>. Bỏ đi: lịch sử máy tính, AI nhìn từ năm 1995, toán mã hoá và lọc số, cáp quang, cơ học lượng tử. <a href="#bo-qua">Bảng chương đã bỏ</a> ở cuối trang.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TỔNG QUAN ================= -->
+  <section class="bk-ov bk-wrap" id="tong-quan" data-toc="Tổng quan" aria-labelledby="tong-quan-h">
+    <div class="bk-ov__card">
+      <h2 class="bk-sec-title" id="tong-quan-h">Tổng quan</h2>
+      <div class="bk-ov__grid">
+        <div class="bk-ov__thesis">
+          <h3 class="bk-label">Luận điểm</h3>
+          <p class="bk-thesis">Kiến thức kỹ thuật hết hạn nhanh; thứ mang theo được cả đời là <strong>phong cách nghĩ</strong>: có hướng đi cho sự nghiệp, làm bài toán quan trọng mà mình có cách tấn công, nghi ngờ dữ liệu, chuyên gia và mô phỏng, và luôn hỏi cả hệ thống cần gì. Hamming cho rằng phong cách không truyền được bằng định nghĩa, như hội hoạ, nên ông dạy bằng chuyện của chính mình qua 30 năm ở Bell Labs.</p>
+        </div>
+        <div class="bk-ov__idx">
+          <h3 class="bk-label">Các mục</h3>
+          <div data-bk-index></div>
+        </div>
+        <div class="bk-ov__chain">
+          <h3 class="bk-label">Mạch lập luận</h3>
+          <ol class="bk-chain">
+            <li class="bk-step">
+              <span class="bk-step__rel">Điểm xuất phát</span>
+              <span class="bk-step__name"><a href="#m1">Có hướng</a></span>
+              <span class="bk-step__text">Không có hướng, n lựa chọn ngẫu nhiên chỉ đưa ta đi xa cỡ √n bước.</span>
+            </li>
+            <li class="bk-step">
+              <span class="bk-step__rel">Có hướng rồi, chọn việc</span>
+              <span class="bk-step__name"><a href="#m2">Bài toán quan trọng</a></span>
+              <span class="bk-step__text">Quan trọng nghĩa là có cách tấn công, không phải to tát.</span>
+            </li>
+            <li class="bk-step">
+              <span class="bk-step__rel">Khi bắt tay làm</span>
+              <span class="bk-step__name"><a href="#m3">Cách làm việc</a></span>
+              <span class="bk-step__text">Làm bền, cửa mở, bán được ý; điều kiện xấu thường là lối vào.</span>
+            </li>
+            <li class="bk-step">
+              <span class="bk-step__rel">Kiểm điều mình tin</span>
+              <span class="bk-step__name"><a href="#m6">Chuyên gia, dữ liệu, mô phỏng, thước đo</a></span>
+              <span class="bk-step__text">Mỗi nguồn niềm tin dựa trên giả định phải soi.</span>
+            </li>
+            <li class="bk-step">
+              <span class="bk-step__rel">Nhìn cả hệ</span>
+              <span class="bk-step__name"><a href="#m10">Hệ thống và nhiều chiều</a></span>
+              <span class="bk-step__text">Tối ưu từng phần làm hỏng cái chung; trực giác ba chiều hỏng trong n chiều.</span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="bk-shell">
+    <nav class="bk-rail bk-noread" id="bk-rail" aria-label="Mục lục">
+      <div class="bk-rail__head"><p class="bk-rail__title">Mục lục</p><p class="bk-rail__stat"><span data-out="done">0</span> đã đọc</p></div>
+      <ol class="bk-toc" data-bk-toc></ol>
+    </nav>
+
+    <div class="bk-main">
+
+      <!-- ================= MỤC 1 ================= -->
+      <section class="bk-unit" id="m1" data-toc="Có hướng" aria-labelledby="m1-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 1 · Lời nói đầu, chương 1</p>
+          <h2 class="bk-unit__title" id="m1-h">Có hướng hay trôi: người say và người có đích</h2>
+          <p class="bk-unit__gist">Nhiều lựa chọn nhỏ không có hướng thì triệt tiêu nhau; có hướng thì chúng cộng dồn.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Một đời làm nghề là hàng nghìn lựa chọn nhỏ. Nếu mỗi lựa chọn là một bước ngẫu nhiên, sau n bước ta chỉ cách chỗ xuất phát cỡ √n; nếu các bước nghiêng về một hướng, quãng đường tỉ lệ với n. Tầm nhìn đúng hay sai ít quan trọng hơn ta tưởng: đi tới đâu đó vẫn hơn trôi.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Từ thời Newton, kiến thức khoa học kỹ thuật tăng gấp đôi khoảng 17 năm một lần; Hamming thấy đúng nhịp ấy ở số nhân viên Bell Labs trong 30 năm ông làm ở đó. Ông dẫn thêm một ước lượng phổ biến: một nửa kiến thức kỹ thuật học ở trường lỗi thời sau khoảng 15 năm. Vậy phần lớn thứ ta cần lúc đỉnh sự nghiệp chưa tồn tại lúc ta đi học.</p>
+            <p>Lối ra có hai vế. Một là học <dfn>nền tảng</dfn>: thứ đã đứng vững lâu, và từ đó suy ra được phần còn lại của ngành. Hai là tập tự học ngành mới, vì không ai dạy lại những gì ra đời sau khi ta rời trường.</p>
+            <blockquote class="bk-quote">
+              <p>Education is what, when, and why to do things, Training is how to do it.</p>
+              <cite>Chương 1</cite>
+            </blockquote>
+            <p>Giáo dục là biết làm gì, khi nào, vì sao; đào tạo là biết làm thế nào. Cuốn sách chỉ nhắm vào vế đầu.</p>
+            <p>Chương này cũng làm mẫu một thói quen ông thấy ở người giỏi: nghe con số nào là dựng mô hình thô để thử. Hai câu hay nghe là "kiến thức gấp đôi mỗi 17 năm" và "90% nhà khoa học từng sống hiện còn sống". Nếu số nhà khoa học tăng theo hàm mũ, gấp đôi mỗi D năm, và mỗi người ở trong nghề L năm, thì tỉ lệ còn sống là 1 − 2<sup>−L/D</sup>. Muốn bằng 90% thì L = D × log₂10 ≈ 17 × 3,32 ≈ 56 năm: hợp lý, nên hai câu khớp nhau.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <p>Mỗi đường dưới đây là một người đi 400 bước, mỗi bước tiến hoặc lùi một ô. Nhóm xám tung đồng xu công bằng; nhóm xanh nghiêng về một hướng với xác suất 60%.</p>
+            <figure class="bk-fig">
+              <svg id="walk-svg" viewBox="0 0 340 230" role="img" aria-labelledby="walk-t">
+                <title id="walk-t">Hai nhóm người, mỗi người đi 400 bước ngẫu nhiên. Nhóm không có hướng tản quanh vạch xuất phát, khoảng cách trung bình cỡ 16 bước. Nhóm nghiêng 60 phần trăm về một phía đi xa trung bình cỡ 80 bước.</title>
+                <line class="s-line" x1="34" y1="150" x2="334" y2="150" stroke-width="1"/>
+                <line class="s-line" x1="34" y1="10" x2="34" y2="200" stroke-width="1"/>
+                <text class="t-faint" x="28" y="154" text-anchor="end" font-size="13">0</text>
+                <text class="t-faint" x="28" y="34" text-anchor="end" font-size="13">100</text>
+                <text class="t-faint" x="334" y="218" text-anchor="end" font-size="13">400 bước</text>
+                <g id="walk-paths"></g>
+              </svg>
+              <figcaption>Không hướng thì các bước triệt tiêu: khoảng cách trung bình chỉ cỡ √(2n/π) ≈ 16 bước. Nghiêng 60/40 thì trung bình đi được 0,2n = 80 bước, gấp năm lần, dù mỗi bước vẫn chỉ thắng thế một chút.</figcaption>
+            </figure>
+            <p class="bk-noread bk-walk-ctl"><button class="bk-btn" id="walk-run" type="button">Chạy lại</button> <span id="walk-out" aria-live="polite"></span></p>
+            <p>Hamming áp bài này cho chính mình: nhiều năm ông dành chiều thứ Sáu, khoảng 10% thời gian, để nghĩ xem máy tính sẽ thay đổi khoa học ra sao (mục 2).</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi chọn đề tài luận văn</span>Hỏi đề tài đẩy mình về đâu sau 5–10 năm. Đề tài cùng hướng với nghề muốn tới thì một năm luận văn cộng dồn với bảy năm làm mobile, không phải một bước lạc.</li>
+              <li><span class="bk-use__when">Khi chia giờ học</span>Giờ cho xác suất thống kê, đại số tuyến tính, thiết kế thí nghiệm có lãi lâu hơn giờ học thuộc giao diện một thư viện.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>17 năm và 15 năm là ước lượng thô; chính Hamming tin con số 17 hơn con số 90%. Hình người say giả định các bước độc lập và cùng cỡ, trong khi sự nghiệp thật có vài bước rất lớn, như đổi ngành. Theo một tầm nhìn sai quá lâu cũng tốn; Hamming vá chỗ này bằng lời khuyên đổi mảng khoảng bảy năm một lần (mục 3).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 2 ================= -->
+      <section class="bk-unit" id="m2" data-toc="Bài toán quan trọng" aria-labelledby="m2-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 2 · Chương 30 và bài nói 1986</p>
+          <h2 class="bk-unit__title" id="m2-h">Làm bài toán quan trọng, loại có cách tấn công</h2>
+          <p class="bk-unit__gist">Không làm bài toán quan trọng thì khó có kết quả quan trọng; quan trọng là có lối vào, không phải to tát.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Phần lớn người làm nghiên cứu tiêu gần hết thời gian vào việc chính họ tin là không quan trọng. Muốn có kết quả lớn, trước hết phải chọn bài toán quan trọng; và một bài toán chỉ quan trọng khi có cách tấn công hợp lý.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Chương 30 viết lại bài nói "You and Your Research" ở Bell Communications Research ngày 7/3/1986; bản ghi bài nói đọc miễn phí được, và các ý ở mục này và mục 3 đã đối chiếu với cả hai bản.</p>
+            <blockquote class="bk-quote">
+              <p>If you do not work on an important problem, it's unlikely you'll do important work.</p>
+              <cite>Bài nói 1986</cite>
+            </blockquote>
+            <p>Du hành thời gian, dịch chuyển tức thời và phản trọng lực là ba bài ai giải được cũng có giải Nobel, vậy mà ở Bell Labs không ai làm, vì không ai có cách tấn công. Hậu quả to tát không làm một bài toán quan trọng; có lối vào hợp lý mới làm.</p>
+            <dl class="bk-terms">
+              <div><dt>Cách tấn công <span>· attack</span></dt><dd>Một hướng cụ thể để bắt đầu: dữ liệu có sẵn, công cụ đủ mạnh, một ý mà người khác chưa có.</dd></div>
+            </dl>
+            <p>Người làm việc lớn giữ trong đầu 10–20 bài toán quan trọng chưa biết cách giải. Khi một ý mới xuất hiện, họ nhận ra nó dính tới bài nào, bỏ việc khác và lao vào, nên thường về trước. Hamming nhắc mãi câu của Pasteur: may mắn đến với đầu óc có chuẩn bị.</p>
+            <p>Chiều ngược lại: người đã nổi tiếng thường chỉ chịu làm bài lớn, nên thôi gieo "hạt sồi", những việc nhỏ có thể lớn lên. Ông thấy điều đó ở Brattain sau giải Nobel và ở Shannon sau lý thuyết thông tin.</p>
+            <p>Để giữ mắt trên bài toán lớn, ông lập <dfn>giờ ý lớn</dfn> (Great Thoughts Time): từ trưa thứ Sáu chỉ bàn những câu như "máy tính sẽ thay đổi khoa học thế nào". Từ đó ông nói với các phó chủ tịch rằng thí nghiệm sẽ từ 9 phần trong phòng lab, 1 phần trên máy, đảo thành ngược lại. Họ không tin; ông đúng.</p>
+            <aside class="bk-model" aria-label="Mô hình tư duy: Chọn bài toán theo Hamming">
+              <p class="bk-model__kicker">Mô hình tư duy</p>
+              <p class="bk-model__name">Ba câu hỏi chọn bài toán</p>
+              <p class="bk-model__when">Dùng khi chọn đề tài, dự án, hay hướng học tiếp.</p>
+              <ol>
+                <li>Viết ra mười bài toán quan trọng nhất của mảng.</li>
+                <li>Với từng bài: mình có lối vào nào, bằng dữ liệu, công cụ hay hiểu biết mà người khác thiếu?</li>
+                <li>Chọn giao của "quan trọng" và "có lối vào". Xem lại danh sách định kỳ để nhận ra khi một lối vào mới mở.</li>
+              </ol>
+            </aside>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Hamming sang ngồi bàn ăn của nhóm hoá học ở Bell Labs. Đầu tiên ông hỏi: bài toán quan trọng của ngành các anh là gì? Ít lâu sau: các anh đang làm bài quan trọng nào? Rồi một hôm: nếu việc các anh làm không quan trọng và không dẫn tới gì quan trọng, sao lại làm nó? Sau câu ấy ông phải sang bàn khác.</p>
+              <p>Mùa thu, một người ở bàn ấy chặn ông ngoài hành lang: câu hỏi làm anh nghĩ suốt mùa hè về các bài toán quan trọng của ngành; anh chưa đổi đề tài, nhưng thấy đáng. Vài tháng sau anh lên trưởng nhóm, nhiều năm sau vào Viện Hàn lâm Kỹ thuật Hoa Kỳ. Hamming không nghe ai khác ở bàn ấy được nhắc tới trong giới khoa học.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi xếp hạng đề tài luận văn</span><a href="../masters-degree/thesis-topic-selector/thesis-topic-selector.html">Bảng đề tài</a> đã chấm tác động và độ khó. Hamming thêm câu bảng không chấm hộ được: với đề tài này, mình có lối vào nào người khác không có? Bảy năm làm app là một lối vào thật: dữ liệu hành vi trong app, mô hình chạy trên điện thoại.</li>
+              <li><span class="bk-use__when">Khi gặp thầy hướng dẫn</span>Hỏi "bài toán quan trọng nhất của mảng này là gì, vì sao chưa ai giải" trước khi hỏi "em nên làm gì".</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Lời khuyên rút từ người thành công ở Bell Labs, nơi độc quyền và giàu tài nguyên hiếm có; chính Hamming nhận mẫu của ông lệch vì chưa từng hỏi người không làm được việc lớn. Sinatra và cộng sự (2016) xem sự nghiệp của hàng nghìn nhà khoa học ở bảy ngành và thấy công trình có tác động lớn nhất rơi ngẫu nhiên ở bất kỳ vị trí nào trong chuỗi công trình của một người. Số lần thử cũng quan trọng; chọn đúng bài là một kênh, không phải kênh duy nhất.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 3 ================= -->
+      <section class="bk-unit" id="m3" data-toc="Cách làm việc" aria-labelledby="m3-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 3 · Chương 30 và bài nói 1986</p>
+          <h2 class="bk-unit__title" id="m3-h">Làm bền, cửa mở, và bán được ý tưởng</h2>
+          <p class="bk-unit__gist">Năng suất cộng dồn như lãi kép, nhưng chỉ khi đặt đúng chỗ và được người khác thấy, dùng.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Chọn đúng bài mới là điều kiện cần. Phần còn lại là thói quen: làm thêm một chút mỗi ngày, gắn bó với bài toán, để cửa mở, chịu được mơ hồ, trình bày cho người khác dùng được, và làm cùng hệ thống thay vì đánh nhau với nó.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Hamming gạt hai cái cớ trước. May mắn có thật, nhưng việc lớn cứ lặp lại ở cùng một số người (Shannon, Einstein). Trí thông minh cũng không đủ: Bill Pfann, người nghĩ ra phương pháp tinh chế vùng nóng chảy, không giỏi toán và bị chính phòng mình coi nhẹ, nhưng về sau nhận đủ giải thưởng của ngành.</p>
+            <p>Bảng dưới gom các thói quen còn lại, kèm nơi mỗi ý xuất hiện: bài nói 1986, chương 30, hay cả hai.</p>
+            <div class="bk-table-wrap" role="region" aria-label="Bảng các thói quen làm việc, đối chiếu bài nói 1986 và chương 30" tabindex="0">
+              <table class="bk-table">
+                <caption>Thói quen làm việc lớn, đối chiếu hai bản</caption>
+                <thead><tr><th scope="col">Thói quen</th><th scope="col">Hamming nói</th><th scope="col">Có ở</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Dũng khí</th><td>Không biết dựng mã tốt, Shannon hỏi: mã chọn ngẫu nhiên trung bình tốt cỡ nào? Ông chứng minh mã trung bình tốt tuỳ ý, vậy phải có một mã tốt.</td><td>cả hai</td></tr>
+                  <tr><th scope="row">Lãi kép</th><td>Sếp bảo Hamming: anh sẽ ngạc nhiên mình biết bao nhiêu nếu làm chăm như John Tukey chừng ấy năm. Thêm một giờ nghĩ mỗi ngày, cả đời làm ra hơn gấp đôi. Nhưng chăm sai hướng không đưa tới đâu.</td><td>cả hai</td></tr>
+                  <tr><th scope="row">Gắn bó cảm xúc</th><td>Ý mới đến từ tiềm thức, và tiềm thức nhai lại điều chiếm đầu óc ban ngày. Bám một bài toán liên tục thì tiềm thức chỉ còn nó để làm.</td><td>bài nói, chương 25</td></tr>
+                  <tr><th scope="row">Chịu mơ hồ</th><td>Tin lý thuyết đủ để đi tiếp, ngờ đủ để thấy chỗ hở. Darwin ghi lại mọi bằng chứng trái ý mình kẻo quên.</td><td>cả hai</td></tr>
+                  <tr><th scope="row">Cửa mở</th><td>Người đóng cửa làm được nhiều hơn hôm nay, nhưng mười năm sau làm hơi lệch bài đáng làm. Ông chỉ thấy tương quan.</td><td>cả hai</td></tr>
+                  <tr><th scope="row">Giải cả lớp bài</th><td>Không giải một bài lẻ, trừ khi nó đại diện cho cả một lớp; làm sao cho người sau đứng trên vai mình được.</td><td>bài nói; chương 30 một phần</td></tr>
+                  <tr><th scope="row">Bán ý tưởng</th><td>Viết rõ, nói trước hội nghị, và nói ứng biến giữa cuộc họp. Ít nhất một nửa thời gian cho trình bày.</td><td>cả hai; con số chỉ ở bài nói</td></tr>
+                  <tr><th scope="row">Làm cùng hệ thống</th><td>Người tự làm hết vì không tin ai chỉ đi xa được bằng sức một người. Hamming đổi cách ăn mặc khi thấy nó làm mình bị phục vụ chậm. Bực thì được, giận thì không.</td><td>bài nói</td></tr>
+                  <tr><th scope="row">Đọc có chọn lọc</th><td>Đọc để biết bài toán nào đang mở, không để lấy lời giải; đọc mọi thứ thì nghĩ giống mọi người.</td><td>hỏi đáp của bài nói</td></tr>
+                  <tr><th scope="row">Đổi mảng</th><td>Khoảng bảy năm đổi mảng một lần vì ý tưởng sẽ cạn. Sau mã sửa lỗi, ông thôi đọc bài trong ngành ấy để buộc mình làm việc khác.</td><td>hỏi đáp của bài nói</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Ông tóm lý do người có năng lực vẫn không làm được việc lớn thành bốn điều, dùng được như một phép tự kiểm.</p>
+            <aside class="bk-model" aria-label="Mô hình tư duy: Bốn câu tự kiểm cuối tháng">
+              <p class="bk-model__kicker">Mô hình tư duy</p>
+              <p class="bk-model__name">Bốn câu tự kiểm</p>
+              <p class="bk-model__when">Dùng cuối mỗi tháng, hay khi thấy mình bận mà không tiến.</p>
+              <ol>
+                <li>Việc mình đang làm có quan trọng, theo nghĩa có lối vào không?</li>
+                <li>Mình có thật sự gắn bó với nó, hay chỉ làm trong giờ?</li>
+                <li>Chỗ khó nhất có biến được thành một bài dễ làm hơn mà vẫn quan trọng không?</li>
+                <li>Mình đang tự kể lý do nào để giải thích vì sao chưa làm?</li>
+              </ol>
+            </aside>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Hamming cho các nhóm khác mượn lập trình viên của phòng mình, kèm điều kiện: bài báo nào dùng sức họ phải cảm ơn người lập trình đích danh. Vài năm sau, ông đếm trong một năm tạp chí kỹ thuật của hệ thống Bell tỉ lệ bài có lời cảm ơn ấy, rồi đem tới sếp: tạp chí quan trọng bao nhiêu thì máy tính quan trọng bấy nhiêu. Sếp phải chịu.</p>
+            </div>
+            <p>Một chuyện, ba thói quen: làm cùng hệ thống, bán ý bằng bằng chứng, và gieo trước một phép đo để vài năm sau dùng.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi lập kế hoạch luận văn</span>Dành sẵn nhiều thời gian cho viết và trình bày. Buổi bảo vệ là bán ý: nói vì sao bài toán quan trọng trước, rồi mới vào chi tiết.</li>
+              <li><span class="bk-use__when">Khi viết code thí nghiệm</span>Để người sau chạy lại được: dữ liệu, hạt giống ngẫu nhiên, hướng dẫn chạy. Người khác đứng được trên vai mình thì mới trích dẫn mình.</li>
+              <li><span class="bk-use__when">Khi học nhóm hay đi làm</span>Nói ý ngay trong cuộc họp, đừng gửi email sau khi đã chốt. Bàn ý với người biết phản biện, không chỉ người gật đầu.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Lời khuyên ăn mặc và chiều theo hệ thống phản ánh công sở Mỹ những năm 1950. Cái giá của làm thêm có thật: ông kể suốt những năm ở Bell Labs mình chớm loét dạ dày. Về tuổi, Hamming cho rằng nhà toán học và vật lý làm việc lớn nhất khi còn trẻ; Sinatra và cộng sự (2016) thấy đỉnh sớm chủ yếu vì người trẻ công bố nhiều hơn, còn xác suất một công trình thành lớn không đổi theo tuổi.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 4 ================= -->
+      <section class="bk-unit" id="m4" data-toc="Lật ngược bài toán" aria-labelledby="m4-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 4 · Chương 12, 30</p>
+          <h2 class="bk-unit__title" id="m4-h">Biến điều kiện xấu thành lối vào: mã Hamming</h2>
+          <p class="bk-unit__gist">Máy đã biết có lỗi thì cũng có thể biết lỗi ở đâu; một câu hỏi bực bội sinh ra mã sửa lỗi.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Điều kiện mình mong hiếm khi là điều kiện tốt nhất cho mình. Khi bị chặn, thử lật bài toán: cái đang là khuyết điểm có thể dẫn tới việc quan trọng hơn.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Hamming kể ba lần lật. Bell Labs không cho ông cả đội lập trình viên viết mã máy bằng tay; ông tự hỏi sao không bắt máy tự viết chương trình, và thế là vào lập trình tự động từ rất sớm. Lần khác, đang giải trên máy số một bài vi phân mà máy tương tự chưa giải nổi, ông nhận ra việc thật không phải ra đáp số mà là chứng minh máy số thắng máy tương tự trên sân nhà; ông viết lại phương pháp cho gọn, và nó được dùng nhiều năm dưới tên "Hamming's method".</p>
+            <p>Lần thứ ba là mã sửa lỗi, khoảng 1947–1948. Ông chỉ được dùng máy rơ-le Model 5 vào cuối tuần. Gặp lỗi, máy thử lại ba lần rồi bỏ bài. Hai cuối tuần liền, máy hỏng ngay tối thứ Sáu và ông nhận về gần như không có gì.</p>
+            <blockquote class="bk-quote">
+              <p>If the machine can locate there is an error, why can it not locate where it is, and then fix it by simply changing the bit to the opposite state?</p>
+              <cite>Chương 12</cite>
+            </blockquote>
+            <p>Ông có sẵn nền: đã hiểu tận gốc phép kiểm chẵn lẻ. Ý đầu là xếp bit thành hình chữ nhật, kiểm từng hàng và từng cột; hàng lỗi và cột lỗi chỉ ra bit sai. Vài tuần sau, ngồi xe thư của công ty, ông thấy hình tam giác tốn ít bit kiểm hơn, rồi khối lập phương, rồi khối nhiều chiều. Cuối cùng ông nghĩ thẳng: kết quả các phép kiểm, đọc như một số nhị phân, nên chính là số thứ tự của bit lỗi. Tất cả mất ba tới sáu tháng làm lúc rảnh; bài báo in năm 1950.</p>
+            <dl class="bk-terms">
+              <div><dt>Bit kiểm chẵn lẻ <span>· parity bit</span></dt><dd>Bit thêm vào để một nhóm bit luôn có số chữ số 1 chẵn; nhóm nào ra lẻ là có lỗi.</dd></div>
+              <div><dt>Hội chứng <span>· syndrome</span></dt><dd>Dãy kết quả của các phép kiểm, 0 là đúng, 1 là sai. Trong mã Hamming, nó là số nhị phân chỉ vị trí bit lỗi.</dd></div>
+            </dl>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <p>Mã (7,4): 7 bit gửi đi, 4 bit dữ liệu. Bit kiểm đặt ở vị trí 1, 2, 4; dữ liệu ở 3, 5, 6, 7. Phép kiểm 1 gom các vị trí có chữ số cuối là 1 khi viết nhị phân (1, 3, 5, 7); kiểm 2 gom vị trí có chữ số giữa là 1 (2, 3, 6, 7); kiểm 4 gom vị trí có chữ số đầu là 1 (4, 5, 6, 7). Mỗi nhóm phải có số chữ số 1 chẵn.</p>
+            <figure class="bk-fig">
+              <svg viewBox="0 0 340 262" role="img" aria-labelledby="ham-t">
+                <title id="ham-t">Ví dụ mã Hamming 7,4 của chính Hamming. Dữ liệu 1001 đặt vào vị trí 3, 5, 6, 7; ba bit kiểm ở vị trí 1, 2, 4 là 0, 0, 1; từ mã gửi đi 0011001. Lỗi làm lật bit thứ 6, nhận 0011011. Phép kiểm 1 trên vị trí 1, 3, 5, 7 có hai số 1, đúng, ra 0. Phép kiểm 2 trên vị trí 2, 3, 6, 7 có ba số 1, sai, ra 1. Phép kiểm 4 trên vị trí 4, 5, 6, 7 có ba số 1, sai, ra 1. Đọc từ kiểm 4 xuống kiểm 1 được 110, tức 6: lật bit 6 thì được lại từ mã.</title>
+                <text class="t-muted" x="4" y="22" font-size="13">Vị trí</text>
+                <text class="t-muted" x="4" y="46" font-size="13">Nhị phân</text>
+                <text class="t-muted" x="4" y="74" font-size="13">Gửi</text>
+                <text class="t-muted" x="4" y="104" font-size="13">Nhận</text>
+                <g font-size="14" text-anchor="middle">
+                  <text class="t-ink t-b" x="105" y="22">1</text><text class="t-ink t-b" x="137" y="22">2</text><text class="t-ink t-b" x="169" y="22">3</text><text class="t-ink t-b" x="201" y="22">4</text><text class="t-ink t-b" x="233" y="22">5</text><text class="t-ink t-b" x="265" y="22">6</text><text class="t-ink t-b" x="297" y="22">7</text>
+                  <text class="t-faint" x="105" y="46" font-size="13">001</text><text class="t-faint" x="137" y="46" font-size="13">010</text><text class="t-faint" x="169" y="46" font-size="13">011</text><text class="t-faint" x="201" y="46" font-size="13">100</text><text class="t-faint" x="233" y="46" font-size="13">101</text><text class="t-faint" x="265" y="46" font-size="13">110</text><text class="t-faint" x="297" y="46" font-size="13">111</text>
+                </g>
+                <rect class="f-soft" x="91" y="56" width="28" height="26" rx="5"/><rect class="f-soft" x="123" y="56" width="28" height="26" rx="5"/><rect class="f-soft" x="187" y="56" width="28" height="26" rx="5"/>
+                <g font-size="15" text-anchor="middle" class="t-ink">
+                  <text x="105" y="74">0</text><text x="137" y="74">0</text><text x="169" y="74">1</text><text x="201" y="74">1</text><text x="233" y="74">0</text><text x="265" y="74">0</text><text x="297" y="74">1</text>
+                  <text x="105" y="104">0</text><text x="137" y="104">0</text><text x="169" y="104">1</text><text x="201" y="104">1</text><text x="233" y="104">0</text><text x="297" y="104">1</text>
+                </g>
+                <rect class="f-warn-soft s-warn" x="251" y="86" width="28" height="26" rx="5"/>
+                <text class="t-warn t-b" x="265" y="104" text-anchor="middle" font-size="15">1</text>
+                <line class="s-line" x1="4" y1="122" x2="336" y2="122" stroke-width="1"/>
+                <text class="t-muted" x="4" y="146" font-size="13">Kiểm 1</text>
+                <text class="t-muted" x="4" y="176" font-size="13">Kiểm 2</text>
+                <text class="t-muted" x="4" y="206" font-size="13">Kiểm 4</text>
+                <g class="f-ink3">
+                  <circle cx="105" cy="141" r="4.5"/><circle cx="169" cy="141" r="4.5"/><circle cx="233" cy="141" r="4.5"/><circle cx="297" cy="141" r="4.5"/>
+                  <circle cx="137" cy="171" r="4.5"/><circle cx="169" cy="171" r="4.5"/><circle cx="265" cy="171" r="4.5"/><circle cx="297" cy="171" r="4.5"/>
+                  <circle cx="201" cy="201" r="4.5"/><circle cx="233" cy="201" r="4.5"/><circle cx="265" cy="201" r="4.5"/><circle cx="297" cy="201" r="4.5"/>
+                </g>
+                <text class="t-accent t-b" x="336" y="146" text-anchor="end" font-size="14">0</text>
+                <text class="t-warn t-b" x="336" y="176" text-anchor="end" font-size="14">1</text>
+                <text class="t-warn t-b" x="336" y="206" text-anchor="end" font-size="14">1</text>
+                <line class="s-line" x1="4" y1="222" x2="336" y2="222" stroke-width="1"/>
+                <text class="t-ink t-b" x="170" y="248" text-anchor="middle" font-size="14">Đọc kiểm 4, 2, 1: 110 = 6 → lật bit 6</text>
+              </svg>
+              <figcaption>Đây là ví dụ Hamming tự làm trong chương 12. Bit 6 viết nhị phân là 110, nên nó nằm trong đúng hai nhóm kiểm 4 và kiểm 2; lỗi ở đó làm sai đúng hai phép kiểm ấy. Vị trí nào cũng vậy, nên hội chứng luôn đọc ra chỗ sai.</figcaption>
+            </figure>
+            <p class="bk-noread bk-ham-hint">Bấm một bit để lật nó; ba phép kiểm tính lại ngay.</p>
+            <div class="bk-noread bk-ham" id="ham-live">
+              <div class="bk-ham__bits" role="group" aria-label="Bảy bit nhận được, bấm để lật"></div>
+              <p class="bk-ham__out" id="ham-out" aria-live="polite"></p>
+            </div>
+            <p>Ba phép kiểm cho 2³ = 8 kết quả: 7 vị trí có thể sai và 1 trường hợp không lỗi, vừa khít. Thêm một bit chẵn lẻ trên cả từ mã thì phát hiện được thêm trường hợp hai lỗi, dù không sửa được.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi đề tài bị chặn vì thiếu tài nguyên</span>Hỏi: nếu cái thiếu là đặc điểm của bài toán thì bài nào trở nên hay? Thiếu nhãn dẫn tới học bán giám sát; thiếu GPU dẫn tới mô hình nhỏ chạy trên điện thoại, đúng chỗ người làm mobile có lợi thế.</li>
+              <li><span class="bk-use__when">Khi vừa giải xong một bài</span>Hỏi nó đại diện cho lớp bài nào, rồi viết lại lời giải cho cả lớp.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Chính Hamming dặn đừng tin hẳn lời kể của người phát minh: ông chỉ thấy được phần ý thức của quá trình. Câu "ai ở vị trí tôi cũng làm được nếu đã chuẩn bị" khó kiểm, vì ta không thấy những người cũng chuẩn bị mà không gặp dịp.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 5 ================= -->
+      <section class="bk-unit" id="m5" data-toc="Sáng tạo" aria-labelledby="m5-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 5 · Chương 25</p>
+          <h2 class="bk-unit__title" id="m5-h">Sáng tạo: mới lạ chưa đủ, phải có giá trị</h2>
+          <p class="bk-unit__gist">Nhân hai số mười chữ số chọn bừa là việc gần như chắc chưa ai làm, và chẳng có giá trị gì.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Sáng tạo là ghép một cách có ích những thứ trước đó không ai thấy liên quan. Khoảng cách trong đầu giữa hai thứ càng xa, cú ghép càng đáng giá, dù làm ra có khi rất dễ.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Một người bạn muốn làm "điều gì đó chưa ai làm" với máy tính. Hamming bảo: nhân hai số mười chữ số chọn bừa, gần như chắc chưa ai từng làm. Người bạn không vui; anh ta sẽ vui nếu tìm được số nguyên tố lớn nhất từng biết. Khác nhau ở giá trị.</p>
+            <p>Từ chuyện của mình và tiểu sử người khác, ông thấy một nhịp lặp lại:</p>
+            <ol>
+              <li>Nhận ra vấn đề một cách lờ mờ.</li>
+              <li>Mài lại cách phát biểu. Vội thì đặt bài theo dạng quen và nhận lời giải quen.</li>
+              <li>Nghĩ dồn dập một thời gian dài, đôi khi tạm bỏ hẳn.</li>
+              <li>Lời giải loé ra. Lần đầu thường sai, nhưng cái sai thu hẹp các hướng còn lại.</li>
+              <li>Trình bày lại cho người khác, việc này thường làm chính mình hiểu sâu hơn.</li>
+            </ol>
+            <p>Khi bí, ông tự hỏi: nếu có lời giải rồi thì nó trông thế nào, phải thoả định luật bảo toàn hay đối xứng nào, và mỗi giả định có cần thật không?</p>
+            <p>Công cụ chính là <dfn>loại suy</dfn>: thấy cái này giống cái kia. Loại suy không cần sát, chỉ cần gợi bước tiếp. Muốn có nó, kiến thức phải có nhiều "móc". Hamming thấy John Tukey hay nhớ ra đúng thông tin cần, và đoán lý do: Tukey quen lật đi lật lại cái mới học. Từ đó, học gì mới ông cũng nghĩ thêm những chỗ khác có thể dùng nó.</p>
+            <p>Hai mẹo tự quản lý: hứa trước một kết quả vào một ngày rồi, như chuột bị dồn vào góc, phải tìm ra; và biết bỏ bài sai, như Einstein không biết bỏ lý thuyết thống nhất suốt nửa sau đời. Brainstorm theo lịch thì ông thấy ít hiệu quả; tung hứng ý với một hai người bạn thì có.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Hamming từng áp phương pháp bình phương tối thiểu vào một bài từ học, và định không ký bài báo vì "chỉ là áp một phương pháp ai cũng biết". Một nhà vật lý bạn ông nói bài được xin bản in nhiều nhất của anh ta là bài áp phân tích mạch điện chuẩn vào vật lý chất rắn. Bài của Hamming mới với lĩnh vực ấy, vậy nên ký.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi lo đề tài "chỉ là áp dụng"</span>Áp một phương pháp có sẵn vào nơi chưa ai áp vẫn là đóng góp thật. Đem hiểu biết sâu về mobile sang dữ liệu là một khoảng cách xa mà ít người trong lớp có.</li>
+              <li><span class="bk-use__when">Sau mỗi buổi học</span>Viết hai dòng: kỹ thuật này còn dùng được ở đâu ngoài ví dụ của giảng viên.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Nhịp chuẩn bị, ủ, loé sáng, kiểm lại gần trùng mô hình bốn giai đoạn của Graham Wallas (1926); Hamming không đưa thêm bằng chứng. Bằng chứng sau này ủng hộ một phần: phân tích gộp của Sio và Ormerod (2009) thấy tạm bỏ bài toán giúp giải tốt hơn, nhất là bài cần nhiều ý; Diehl và Stroebe (1987) thấy nhóm brainstorm ra ít ý hơn cùng số người nghĩ riêng rồi gộp lại.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 6 ================= -->
+      <section class="bk-unit" id="m6" data-toc="Chuyên gia" aria-labelledby="m6-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 6 · Chương 26</p>
+          <h2 class="bk-unit__title" id="m6-h">Chuyên gia: tin khi họ bảo làm được, hỏi thêm khi họ bảo không thể</h2>
+          <p class="bk-unit__gist">Mọi chứng minh "bất khả" đều dựa trên giả định; cái mới hay đến từ ngoài ngành.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Chuyên gia cần thiết nhưng hay chặn cái mới, vì họ nhìn mọi thứ qua khung đã giúp họ thành công. Khi họ nói "không thể", hỏi lời ấy dựa trên giả định nào và giả định đó còn đúng không.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <blockquote class="bk-quote">
+              <p>All impossibility proofs must rest on a number of assumptions which may or may not apply in the particular situation.</p>
+              <cite>Chương 26</cite>
+            </blockquote>
+            <p>Hamming dựa vào Thomas Kuhn: một ngành phần lớn thời gian chạy theo một <dfn>hệ hình</dfn> (paradigm), bộ giả định và phương pháp được dạy như lẽ tự nhiên; mâu thuẫn bị lờ đi cho tới khi dồn đủ để hệ hình đổi. Thuyết lục địa trôi là mẫu: Wegener bị giới địa chất chế giễu nhiều thập kỷ (xem <a href="a-short-history-of-nearly-everything.html#c12">trang Bryson</a>), tới sau Thế chiến II mới được nhận, và khi ấy nhiều người nói mình vẫn luôn tin.</p>
+            <p>Cái mới thường đến từ ngoài: định tuổi bằng carbon đến với khảo cổ từ vật lý; Einstein viết các bài báo năm 1905 khi đang làm ở cục sáng chế.</p>
+            <p>Các sếp đầu tiên của ông thành công bằng giải tích và coi máy tính là thứ thấp kém. Từ đó ông rút ra: điều giúp mình thành công rất có thể phản tác dụng về sau. Lên cao, ông tự cấm mình tham gia quyết định chọn máy tính cho công ty. Khi tranh luận, ông khuyên hỏi cả đối phương lẫn mình: bằng chứng nào sẽ khiến bạn thấy mình sai?</p>
+            <blockquote class="bk-quote">
+              <p>If an expert says something can be done he is probably correct, but if he says it is impossible then consider getting another opinion.</p>
+              <cite>Chương 26, Hamming dẫn một câu nói cũ</cite>
+            </blockquote>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Sách giáo khoa nói không thể hút nước lên quá 33 feet (khoảng 10 m), và cục sáng chế bác một đơn xin cấp bằng tuyên bố làm được. Người nộp đơn đem máy tới bơm nước lên mái toà nhà của cục. Máy dùng sóng dừng trong cột nước: khi áp suất thấp của sóng tới đáy thì van đáy mở cho nước vào, khi áp suất cao tới đỉnh thì van trên mở cho nước ra.</p>
+            </div>
+            <p>Giới hạn ấy là thật, nhưng chỉ cho bơm hút: áp suất khí quyển (khoảng 101 kPa) chỉ đỡ được cột nước cao chừng 10,3 m. Máy kia đẩy chứ không hút, nên giả định của chứng minh không áp vào. Các chuyên gia nhớ kết luận, không nhớ nó dựa trên gì.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi ai đó nói "hướng này không làm được"</span>Hỏi lời ấy dựa trên dữ liệu, phần cứng hay giả định nào. Nhiều cái "không thể" của học máy mười năm trước là giả định về lượng dữ liệu và sức tính.</li>
+              <li><span class="bk-use__when">Với chính mình</span>Thói quen giúp làm iOS giỏi có thể sai trong phân tích dữ liệu. Và khi là người rành mobile nhất lớp, đừng thành người chặn ý người khác.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Ngoài ngành có vô số ý gàn dở, như Hamming thừa nhận; người nói "chuyên gia sai rồi" phần lớn là chính họ sai. Chuyện máy bơm chỉ có lời ông kể, không tên, không năm. Tetlock (2005) thấy chuyên gia dự báo chính trị không hơn, có khi thua, mô hình thống kê đơn giản (<a href="books-in-brief.html#tetlock">tóm tắt</a>), nhưng đó là dự báo; trong đo đạc, sửa máy hay chẩn đoán, chuyên gia vẫn hơn hẳn người ngoài.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 7 ================= -->
+      <section class="bk-unit" id="m7" data-toc="Dữ liệu không tin được" aria-labelledby="m7-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 7 · Chương 27</p>
+          <h2 class="bk-unit__title" id="m7-h">Dữ liệu kém chính xác hơn lời quảng cáo nhiều</h2>
+          <p class="bk-unit__gist">Không xử lý dữ liệu nào trước khi tự kiểm lỗi, dù nó quý và gấp đến đâu.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Dữ liệu thường kém chính xác hơn người cung cấp nói, có khi tới năm lần. Sai số đến từ dụng cụ, người đo, định nghĩa đổi dần theo thời gian, và từ chính mô hình dùng để đọc nó.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Hamming không có lý thuyết chung về sai số, nên ông xếp ví dụ thành loại. Phần lấy mẫu lệch đã có ở <a href="how-to-lie-with-statistics.html#c1">trang Huff</a>; đây là sai từ nguồn.</p>
+            <ul>
+              <li><b>Dụng cụ kiểm kém tin hơn thứ bị kiểm.</b> Xem thiết bị thử tuổi thọ đèn điện tử cho tuyến cáp thoại ngầm đầu tiên, ông hỏi: sao tin thiết bị thử đáng tin hơn thứ đang bị thử?</li>
+              <li><b>Máy tự ghi về chính nó vẫn sai.</b> Dữ liệu cuộc gọi do chính tổng đài ghi chứa một tỉ lệ lớn cuộc gọi tới những tổng đài không tồn tại.</li>
+              <li><b>Chỉnh máy cho ít dao động rồi đo dao động.</b> Phòng thí nghiệm chỉnh thiết bị tới khi các lần chạy khớp nhau, rồi đưa chính dữ liệu ấy cho nhà thống kê ước lượng độ biến thiên.</li>
+              <li><b>Định nghĩa đổi mà không ai ghi.</b> Luật thuế đổi cách báo cáo tồn kho, trong khi tồn kho là một chỉ báo kinh tế. Mọi chuỗi thời gian đều có rủi ro này.</li>
+            </ul>
+            <p>So hai bảng hằng số vật lý cơ bản cách nhau 24 năm, ông thấy giá trị mới lệch khỏi giá trị cũ trung bình khoảng năm lần sai số bảng cũ công bố. Ông đúc thành một luật, và tự nói là phóng đại cho dễ nhớ:</p>
+            <blockquote class="bk-quote">
+              <p>90% of the time the next independent measurement will fall outside the previous 90% confidence limits!</p>
+              <cite>Chương 27, "luật Hamming"</cite>
+            </blockquote>
+            <p>Đo càng chính xác thì phần sai do mô hình càng chiếm tỉ trọng lớn, chẳng hạn giả định phân phối chuẩn trong khi đuôi thật dày hơn.</p>
+            <p>Về thu thập, câu ông nhắc nhiều nhất: mẫu nhỏ làm kỹ tốt hơn mẫu lớn làm ẩu.</p>
+            <aside class="bk-model" aria-label="Mô hình tư duy: Kiểm dữ liệu trước khi chạy">
+              <p class="bk-model__kicker">Mô hình tư duy</p>
+              <p class="bk-model__name">Năm câu trước khi chạy mô hình</p>
+              <p class="bk-model__when">Dùng mỗi lần nhận một bộ dữ liệu, kể cả bộ "đã làm sạch".</p>
+              <ol>
+                <li>Ai ghi, bằng máy gì, để làm gì?</li>
+                <li>Định nghĩa các cột có đổi trong khoảng thời gian của dữ liệu không?</li>
+                <li>Có bản ghi nào không thể xảy ra không: rút kho khi kho trống, thời điểm trong tương lai?</li>
+                <li>Ngoại lai là hiện tượng thật hay lỗi ghi?</li>
+                <li>Nới rộng khoảng tin cậy công bố, và giả định đuôi dày hơn phân phối chuẩn.</li>
+              </ol>
+            </aside>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Làm nghiên cứu tồn kho cho Western Electric trên 18 tháng sổ sách của khoảng 100 mặt hàng, Hamming hỏi: dữ liệu có nhất quán không, có lần rút hàng khi kho trống không? Họ đáp đã thêm vài giao dịch giả để chuyện ấy không xảy ra. Ông tin. Gần cuối dự án mới thấy dữ liệu vẫn mâu thuẫn, phải sửa rồi chạy lại từ đầu. Từ đó ông không xử lý dữ liệu nào trước khi tự kiểm lỗi, và gần như lần nào cũng tìm thấy lỗi.</p>
+            </div>
+            <div class="bk-case">
+              <p>Một nhà thống kê bạn ông nghi số đo sai, nhưng trưởng phòng không cho đo lại vì máy có nhãn ghi độ chính xác. Anh báo đã bỏ quên cặp trên tàu, mất hết số liệu. Phòng buộc phải đo lại; khi số mới về, anh lấy bản gốc ra cho thấy số cũ lệch bao xa.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Trong môn Dữ liệu lớn</span>Nhiều dữ liệu không cứu được dữ liệu lệch. Meng (2018) tính rằng chỉ cần việc có mặt trong dữ liệu tương quan −0,005 với điều cần đo, một mẫu tự khai 2,3 triệu người có sai số bình phương trung bình như một mẫu ngẫu nhiên thật khoảng 400 người.</li>
+              <li><span class="bk-use__when">Với log sự kiện từ app</span>App tự ghi về chính nó vẫn sai: sự kiện gửi trùng khi mất mạng, đồng hồ máy lệch, bản cũ đặt tên sự kiện khác. Kiểm trước khi tính chỉ số.</li>
+              <li><span class="bk-use__when">Trong môn Quản trị dữ liệu</span>Ghi nguồn gốc và định nghĩa từng cột, kèm ngày định nghĩa đổi.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Con số 90% là phóng đại có chủ ý. Bằng chứng độc lập ủng hộ hướng chứ không ủng hộ con số: Henrion và Fischhoff (1986) thấy sai số công bố của hằng số vật lý bị đánh giá thấp có hệ thống; Bailey (2017) phân tích 41.000 phép đo của 3.200 đại lượng, thấy độ lệch 5σ phổ biến hơn kỳ vọng tới năm bậc độ lớn, phân phối gần Cauchy hơn phân phối chuẩn. Ông chê dữ liệu kinh tế và xã hội nặng hơn nhưng tự nhận chỉ có kinh nghiệm ít ỏi.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 8 ================= -->
+      <section class="bk-unit" id="m8" data-toc="Mô phỏng" aria-labelledby="m8-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 8 · Chương 18–20</p>
+          <h2 class="bk-unit__title" id="m8-h">Mô phỏng: trước khi viết code, trả lời vì sao nên tin nó</h2>
+          <p class="bk-unit__gist">Hỏi độ tin cậy mà nhận về số người làm và cỡ máy là nhận một câu trả lời lạc đề.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Trước khi bắt đầu một mô phỏng phải trả lời: <em>Why should anyone believe the simulation is relevant?</em> Vì sao ai đó nên tin nó liên quan tới thực tế? Câu hỏi phủ cả độ đúng của mô hình lẫn của phép tính.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Hamming dùng máy tính làm thí nghiệm từ thời dự án bom nguyên tử, nơi không có thí nghiệm nhỏ. Ông tin mô phỏng là tương lai, và vì thế đòi nó tự chứng minh. Hỏi độ tin cậy của một mô phỏng, ông thường được nghe bao nhiêu người đã làm, máy lớn thế nào, bài toán quan trọng ra sao; không câu nào trả lời câu được hỏi. Bộ câu kiểm của ông:</p>
+            <ul>
+              <li>Ngành nền có ủng hộ các định luật được giả định không? Có hiệu ứng nhỏ mà sống còn nào bị bỏ sót không?</li>
+              <li>Dữ liệu đầu vào có tin được không (mục 7)?</li>
+              <li>Hệ ổn định hay bất ổn?</li>
+              <li>Có so được với kinh nghiệm đã biết, hay có phép kiểm bên trong như bảo toàn năng lượng không? Không có dư thừa thì không có cách kiểm, đúng như bài học của mã sửa lỗi.</li>
+            </ul>
+            <p>Chương 20 lật câu "rác vào, rác ra": nó sai theo cả hai chiều. Nếu các đường nghiệm hội tụ, sai lệch ban đầu tự co lại và đầu vào thô vẫn cho kết quả tốt. Nếu chúng phân kỳ, sai lệch nhỏ phình to và đầu vào chính xác vẫn ra rác.</p>
+            <figure class="bk-fig">
+              <svg viewBox="0 0 340 200" role="img" aria-labelledby="gigo-t">
+                <title id="gigo-t">Hai khung. Bên trái, hệ hội tụ: năm đường xuất phát cách xa nhau rồi chụm lại, đầu vào thô vẫn ra kết quả tốt. Bên phải, hệ phân kỳ: năm đường xuất phát gần như trùng nhau rồi toả rộng, đầu vào chính xác vẫn ra kết quả tồi.</title>
+                <rect class="f-surface s-line" x="4" y="24" width="160" height="140" rx="10"/>
+                <rect class="f-surface s-line" x="176" y="24" width="160" height="140" rx="10"/>
+                <text class="t-accent t-b" x="84" y="16" text-anchor="middle" font-size="14">Hội tụ</text>
+                <text class="t-warn t-b" x="256" y="16" text-anchor="middle" font-size="14">Phân kỳ</text>
+                <g class="s-accent f-none" stroke-width="1.6">
+                  <path d="M16 44 C70 52 100 92 152 94"/><path d="M16 69 C70 72 100 92 152 94"/><path d="M16 94 C70 94 100 94 152 94"/><path d="M16 119 C70 116 100 96 152 94"/><path d="M16 144 C70 136 100 96 152 94"/>
+                </g>
+                <g class="s-warn f-none" stroke-width="1.6">
+                  <path d="M188 92 C240 92 270 80 324 40"/><path d="M188 93 C240 93 270 88 324 67"/><path d="M188 94 C240 94 270 94 324 94"/><path d="M188 95 C240 95 270 100 324 121"/><path d="M188 96 C240 96 270 108 324 148"/>
+                </g>
+                <text class="t-muted" x="84" y="186" text-anchor="middle" font-size="13">đầu vào thô, kết quả tốt</text>
+                <text class="t-muted" x="256" y="186" text-anchor="middle" font-size="13">đầu vào kỹ, kết quả tồi</text>
+              </svg>
+              <figcaption>Muốn biết đầu vào cần chính xác tới đâu, xem hệ hội tụ hay phân kỳ trước. Phân tích độ nhạy là cách đo điều đó.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Sau một hội thảo ở Pasadena, Hamming ngồi ăn tối cạnh người phụ trách độ tin cậy mô phỏng cho các chuyến bay vũ trụ đầu tiên. Người ấy nói không phóng khi độ tin cậy chưa vượt 99 phẩy mấy phần trăm. Hamming đáp: mới khoảng tám lần phóng, một lần diễn tập đã làm chết các phi hành gia trên mặt đất, một lần thất bại rõ ràng, sao cao thế được? Bị dồn, ông ta nhận đó là độ tin cậy của mô phỏng, không phải của chuyến bay, và bảo ai cũng hiểu. "Kể cả vị giám đốc ký duyệt chuyến bay?" Ông ta không trả lời.</p>
+            </div>
+            <div class="bk-case">
+              <p>Chiều ngược lại: hai trong sáu lần bắn thử tên lửa Nike vỡ giữa đường, và số liệu đo từ xa trước lúc vỡ không rõ. Hamming cứ đoán cả bảy điều kiện ban đầu rồi cho tính tay, vì hệ dẫn đường tự kéo tên lửa về quỹ đạo, tức hệ hội tụ. Đồ thị cho thấy dao động dọc và ngang chuyền năng lượng qua lại và lớn dần; các kỹ sư nhận ra ngay tương tác họ đã quên.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi luận văn dùng dữ liệu giả lập</span>Viết trước một đoạn: vì sao kết quả trên dữ liệu giả nói được gì về dữ liệu thật, và sẽ kiểm chéo bằng gì.</li>
+              <li><span class="bk-use__when">Khi báo cáo chỉ số offline</span>Độ chính xác trên tập kiểm tra là độ tin cậy của mô phỏng, chưa phải độ tin cậy khi chạy thật.</li>
+              <li><span class="bk-use__when">Trước khi tốn công làm sạch một đầu vào</span>Đổi nó ±10% và xem đầu ra đổi bao nhiêu. Đầu ra gần như đứng yên thì không cần chính xác hơn.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Hai chuyện kể chỉ có lời Hamming. Các câu kiểm của ông nay thành một lĩnh vực có quy trình riêng, kiểm định và thẩm định mô hình (verification and validation).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 9 ================= -->
+      <section class="bk-unit" id="m9" data-toc="Đo gì được nấy" aria-labelledby="m9-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 9 · Chương 29, 13</p>
+          <h2 class="bk-unit__title" id="m9-h">Đo gì được nấy</h2>
+          <p class="bk-unit__gist">Cách chọn thước đo quyết định phần lớn chuyện xảy ra, không chỉ độ chính xác của con số.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Thước đo không chỉ ghi lại hệ thống mà còn đổi nó: người bị đo đổi hành vi, cách đo quyết định hình dạng kết quả, và định nghĩa dần quyết định nghĩa của khái niệm.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Eddington kể chuyện ngư dân đánh cá bằng lưới, xem cỡ cá bắt được rồi kết luận biển có một cỡ cá nhỏ nhất. Dụng cụ quyết định điều ta thấy.</p>
+            <ul>
+              <li><b>Người bị đo đổi hành vi.</b> Lợi nhuận từng quý làm ra công ty chỉ nghĩ ngắn hạn. Đo năng suất lập trình bằng số dòng code làm phần mềm phình ra.</li>
+              <li><b>Thang khởi điểm cao chọn ra người an toàn.</b> Ai cũng bắt đầu ở 95% thì gần như chỉ còn đường giảm; người tránh rủi ro lên tới đỉnh, và cấp cao hết người dám liều để chọn.</li>
+              <li><b>Chính xác khác liên quan.</b> Ta hay chộp phép đo cứng, dễ lặp lại, dù nó ít liên quan tới mục tiêu.</li>
+              <li><b>Cách đo tạo ra hình dạng.</b> Điểm IQ có phân phối chuẩn vì đề được hiệu chỉnh cho ra như thế. Người ra đề biết lớp thì tạo được gần như mọi phân phối điểm.</li>
+            </ul>
+            <p>Định nghĩa cũng là thước đo. Shannon đo "thông tin" bằng độ bất ngờ, −log p, nên dãy số sinh từ một công thức đã biết không mang thông tin nào. Hamming cho rằng lẽ ra nên gọi nó là lý thuyết truyền tin, vì tên "thông tin" khiến người ta tưởng nó đo ý nghĩa. Về lâu dài, định nghĩa quyết định nghĩa của khái niệm. Với câu "máy có nghĩ được không", ông kết luận nghĩ có lẽ là chuyện mức độ, không phải có hay không.</p>
+            <p>Luật Goodhart nói cùng điều theo cách khác: khi thước đo thành mục tiêu, nó thôi là thước đo tốt (<a href="experimentation-causal-inference.html#s-oec">trang thí nghiệm</a> có cách chọn chỉ số bảo vệ).</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <p>Thang 1 tới 10, 5 là trung bình, và phần đông chỉ cho 4, 5, 6. Bạn thích một đề án và cho 6; tôi không thích và dùng hết dải, cho 2.</p>
+            <figure class="bk-fig">
+              <svg viewBox="0 0 340 150" role="img" aria-labelledby="scale-t">
+                <title id="scale-t">Thang điểm từ 1 tới 10, mốc trung bình 5. Người chấm hẹp cho 6, lệch 1 điểm trên trung bình. Người chấm rộng cho 2, lệch 3 điểm dưới trung bình. Điểm trung bình của hai người là 4, nằm dưới mốc 5: ý người dùng hết dải lấn ý người kia.</title>
+                <line class="s-ink" x1="30" y1="80" x2="318" y2="80" stroke-width="1.5"/>
+                <g class="t-faint" font-size="13" text-anchor="middle">
+                  <text x="30" y="104">1</text><text x="62" y="104">2</text><text x="94" y="104">3</text><text x="126" y="104">4</text><text x="158" y="104">5</text><text x="190" y="104">6</text><text x="222" y="104">7</text><text x="254" y="104">8</text><text x="286" y="104">9</text><text x="318" y="104">10</text>
+                </g>
+                <g class="s-line" stroke-width="1"><line x1="30" y1="75" x2="30" y2="85"/><line x1="62" y1="75" x2="62" y2="85"/><line x1="94" y1="75" x2="94" y2="85"/><line x1="126" y1="75" x2="126" y2="85"/><line x1="222" y1="75" x2="222" y2="85"/><line x1="254" y1="75" x2="254" y2="85"/><line x1="286" y1="75" x2="286" y2="85"/><line x1="318" y1="75" x2="318" y2="85"/></g>
+                <line class="s-ink" x1="158" y1="66" x2="158" y2="94" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <text class="t-muted" x="158" y="60" text-anchor="middle" font-size="13">trung bình 5</text>
+                <circle class="f-accent" cx="190" cy="80" r="7"/>
+                <text class="t-accent t-b" x="196" y="40" font-size="13">bạn: 6 (+1)</text>
+                <circle class="f-ink3" cx="62" cy="80" r="7"/>
+                <text class="t-muted t-b" x="40" y="40" font-size="13">tôi: 2 (−3)</text>
+                <circle class="f-warn-soft s-warn" cx="126" cy="80" r="7" stroke-width="2"/>
+                <text class="t-warn t-b" x="126" y="140" text-anchor="middle" font-size="14">trung bình 4</text>
+              </svg>
+              <figcaption>Hai người lệch về hai phía, nhưng tôi lệch xa gấp ba nên trung bình nghiêng hẳn về tôi. Khi điểm được cộng mù, người chấm hẹp tự làm mất tiếng của mình.</figcaption>
+            </figure>
+            <p>Một điểm số mang nhiều thông tin nhất khi mọi mức được dùng đều nhau. Dùng đều mười mức thì mỗi điểm mang log₂10 ≈ 3,32 bit; chỉ dùng 4, 5, 6 thì tối đa log₂3 ≈ 1,58 bit; chỉ cho A và B thì tối đa 1 bit.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi chấm bảng đề tài hay chấm bạn cùng nhóm</span>Dùng hết dải thang. Trên <a href="../masters-degree/thesis-topic-selector/thesis-topic-selector.html">bảng đề tài</a>, thang độ khó 1–5 gần như chỉ dùng hai mức, nên chỉ còn khoảng 1 bit.</li>
+              <li><span class="bk-use__when">Khi chọn chỉ số cho một sản phẩm số</span>Trước khi gắn thưởng cho một chỉ số, viết ra người làm sẽ đổi hành vi ra sao để đẩy nó lên. Cách dễ nhất mà hại người dùng thì đổi chỉ số.</li>
+              <li><span class="bk-use__when">Khi trực quan hoá</span>Thang log và thang tuyến tính kể hai chuyện khác nhau từ cùng dữ liệu; Hamming lấy thang Richter làm ví dụ. Chọn thang theo câu hỏi và ghi rõ trên trục.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Chương này có vài nhận xét định kiến không kèm dữ liệu, như cho rằng người vào ngành tâm lý học "rối trí hơn trung bình"; trang không dựa vào chúng. Chương 22 kể hiệu ứng Hawthorne (người được thử làm tốt hơn chỉ vì biết mình được chú ý) như sự thật; Levitt và List (2011) đọc lại dữ liệu gốc và thấy bằng chứng yếu hơn nhiều so với huyền thoại.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 10 ================= -->
+      <section class="bk-unit" id="m10" data-toc="Kỹ thuật hệ thống" aria-labelledby="m10-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 10 · Chương 28, 2</p>
+          <h2 class="bk-unit__title" id="m10-h">Tối ưu từng phần làm hỏng cả hệ</h2>
+          <p class="bk-unit__gist">Giữ mục tiêu lớn trong đầu; điều khách hàng kể là triệu chứng, chưa phải nguyên nhân.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Kỹ thuật hệ thống là luôn giữ mục tiêu lớn trong đầu. Luật thứ nhất của nó nghe ngược đời: <em>If you optimize the components you will probably ruin the system performance.</em> Tối ưu từng bộ phận thì rất có thể làm hỏng cả hệ.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Một người đi xem xây nhà thờ lớn. Thợ đẽo đá nói "tôi đang đẽo đá", thợ chạm nói "tôi đang chạm tượng"; một bà lão quét sân nói "tôi đang góp phần xây nhà thờ". Phần đông chúng ta là người thợ, chìm trong phần việc của mình.</p>
+            <p>Nhưng không có một bức tranh lớn duy nhất. Mới nắm máy tính, Hamming nghĩ mục tiêu là chạy nhiều phép tính nhất mỗi ngày; rồi hiểu đó phải là phép tính <em>quan trọng</em>; rồi là phép tính cho cả phòng nghiên cứu, rồi để các nhà khoa học tự dùng máy, rồi cả Bell Labs, AT&amp;T. Biên của bài toán nở ra sau mỗi vòng giải.</p>
+            <p>Luật 2: thiết kế phải chuẩn bị cho thay đổi, để sửa một phần không làm hỏng phần khác. Luật 3: thiết kế càng sát thông số, quá tải càng sụp nhanh; thiết kế tốt suy giảm từ từ.</p>
+            <p>Lời giải cũng đổi hệ. Phòng máy của ông dành mỗi buổi một giờ cho bài dưới 3 phút; người có bài 10 phút bèn cắt thành ba mảnh, nhờ ba người chạy. Tối ưu của từng người ngược tối ưu của cả phòng, và việc của người làm hệ thống là chặn bớt tối ưu cục bộ.</p>
+            <p>Khách hàng biết triệu chứng, hiếm khi biết nguyên nhân; Hamming đã thấy rất nhiều lời giải giải đúng một bài sai.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Máy giải phương trình vi phân của Hamming được đặt thêm một máy thứ hai nối với máy cũ, và nhà sản xuất cải tiến luôn bộ khuếch đại. Ngày nghiệm thu, ông chạy bài thử y″ = −y, nghiệm cos t: vẽ y theo y′ phải ra đường tròn khép lại vòng này qua vòng khác. Nó không khép. Thủ phạm: bộ khuếch đại tốt hơn đẩy dòng lớn hơn qua dây tiếp đất quá mảnh, gây rò ngược. Thay dây đồng to hơn là xong.</p>
+            </div>
+            <p>Hamming áp luật này cả vào việc học: học dồn để qua từng môn là tối ưu bộ phận, trong khi thứ cần là cái còn lại sau nhiều năm.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi chỉnh một mô hình học máy</span>Thêm vài điểm độ chính xác offline có thể làm hỏng mục tiêu sản phẩm: chậm hơn, tốn pin trên điện thoại. Đo cả hệ bằng chỉ số cuối cùng của người dùng.</li>
+              <li><span class="bk-use__when">Khi học ba môn cùng lúc</span>Dữ liệu lớn, quản trị dữ liệu và khởi nghiệp số là ba mảnh của một hệ: thu, giữ, và biến dữ liệu thành giá trị. Học để nối chúng cho luận văn, không chỉ để qua từng môn.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Ba luật là quan sát nghề, không phải định lý: đôi khi tối ưu đúng khâu nghẽn là cách nhanh nhất cải thiện cả hệ. Hamming dựa nhiều vào bộ tiểu luận chưa xuất bản của H. R. Westerman (1975), nên không kiểm được.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 11 ================= -->
+      <section class="bk-unit" id="m11" data-toc="Không gian n chiều" aria-labelledby="m11-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 11 · Chương 9</p>
+          <h2 class="bk-unit__title" id="m11-h">Trực giác ba chiều hỏng trong không gian nhiều chiều</h2>
+          <p class="bk-unit__gist">Khi số chiều lớn, gần hết thể tích quả cầu nằm sát vỏ, và hai hướng ngẫu nhiên gần như vuông góc.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Ta xây vật ba chiều nhưng thiết kế chúng trong không gian n chiều, mỗi chiều là một tham số. Trực giác học từ ba chiều sai ở đó, và điểm tối ưu thường nằm ở biên chứ không ở giữa.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Bốn kết quả, mỗi cái chỉ cần định lý Pythagoras và tích vô hướng (<a href="mathematics-for-machine-learning.html#s-dot">ôn lại ở đây</a>):</p>
+            <ul>
+              <li><b>Quả cầu teo lại.</b> Thể tích quả cầu bán kính 1 đạt cực đại khoảng 5,26 ở năm chiều, rồi giảm: 2,55 ở mười chiều, 0,026 ở hai mươi chiều, tiến về 0.</li>
+              <li><b>Thể tích dồn ra vỏ.</b> Phần thể tích trong lớp vỏ dày ε lần bán kính là 1 − (1 − ε)<sup>n</sup>. Với vỏ 10%: 27% ở ba chiều, 65% ở mười chiều, 99,997% ở một trăm chiều.</li>
+              <li><b>Đường chéo gần vuông góc với mọi trục.</b> Góc giữa đường chéo hình lập phương và một trục có cos bằng 1/√n: 54,7° ở ba chiều, 84,3° ở một trăm chiều. Hai vector ngẫu nhiên toạ độ ±1 có cos dao động quanh 0 với độ lệch chuẩn 1/√n, nên gần như vuông góc.</li>
+              <li><b>Nghịch lý bốn hình tròn</b> (hình dưới).</li>
+            </ul>
+            <figure class="bk-fig">
+              <svg viewBox="0 0 340 214" role="img" aria-labelledby="ndim-t">
+                <title id="ndim-t">Đồ thị phần thể tích quả cầu nằm trong lớp vỏ ngoài, theo số chiều từ 1 tới 1000 trên trục log. Với vỏ dày 10 phần trăm bán kính: 27 phần trăm ở 3 chiều, 65 phần trăm ở 10 chiều, gần 100 phần trăm từ 100 chiều. Với vỏ dày 1 phần trăm: 63 phần trăm ở 100 chiều, gần 100 phần trăm ở 1000 chiều.</title>
+                <line class="s-line" x1="46" y1="170" x2="331" y2="170" stroke-width="1"/>
+                <line class="s-line" x1="46" y1="30" x2="331" y2="30" stroke-width="1" stroke-dasharray="3 3"/>
+                <line class="s-line" x1="46" y1="100" x2="331" y2="100" stroke-width="1" stroke-dasharray="3 3"/>
+                <text class="t-faint" x="40" y="174" text-anchor="end" font-size="13">0%</text>
+                <text class="t-faint" x="40" y="104" text-anchor="end" font-size="13">50%</text>
+                <text class="t-faint" x="40" y="34" text-anchor="end" font-size="13">100%</text>
+                <g class="t-faint" font-size="13" text-anchor="middle"><text x="46" y="190">1</text><text x="141" y="190">10</text><text x="236" y="190">100</text><text x="320" y="190">1000</text></g>
+                <text class="t-faint" x="188" y="208" text-anchor="middle" font-size="13">số chiều n</text>
+                <polyline class="s-accent f-none" stroke-width="2.2" points="46.0,156.0 62.7,149.5 74.6,143.4 91.3,132.1 103.2,121.9 112.4,112.7 126.3,97.0 141.0,78.8 154.9,62.0 169.6,47.0 186.3,35.9 198.2,32.1 207.4,30.7 221.3,30.1 236.0,30.0 249.9,30.0 264.6,30.0 281.3,30.0 293.2,30.0 302.4,30.0 316.3,30.0 331.0,30.0"/>
+                <polyline class="s-ink f-none" stroke-width="2" stroke-dasharray="5 4" points="46.0,168.6 62.7,167.9 74.6,167.2 91.3,165.8 103.2,164.5 112.4,163.1 126.3,160.5 141.0,156.6 154.9,151.6 169.6,144.5 186.3,133.6 198.2,123.7 207.4,114.7 221.3,99.3 236.0,81.2 249.9,64.3 264.6,48.8 281.3,36.9 293.2,32.5 302.4,30.9 316.3,30.1 331.0,30.0"/>
+                <circle class="f-accent" cx="91.3" cy="132.1" r="3.5"/><circle class="f-accent" cx="141" cy="78.8" r="3.5"/><circle class="f-ink3" cx="236" cy="81.2" r="3.5"/>
+                <text class="t-accent t-b" x="96" y="146" font-size="13">27%</text>
+                <text class="t-accent t-b" x="146" y="92" font-size="13">65%</text>
+                <text class="t-muted t-b" x="242" y="96" font-size="13">63%</text>
+                <text class="t-accent t-b" x="150" y="22" font-size="13">vỏ 10%</text>
+                <text class="t-muted t-b" x="262" y="22" font-size="13">vỏ 1%</text>
+              </svg>
+              <figcaption>Vỏ chỉ dày 1% bán kính mà ở một trăm chiều đã chứa gần hai phần ba thể tích. Trong không gian nhiều chiều, "ở giữa" gần như trống.</figcaption>
+            </figure>
+            <p class="bk-noread bk-nd-hint">Kéo để đổi số chiều và độ dày vỏ.</p>
+            <div class="bk-noread bk-nd" id="nd-live">
+              <label class="bk-nd__row"><span>Số chiều n = <b id="nd-n-v">10</b></span><input type="range" id="nd-n" min="1" max="300" value="10"></label>
+              <label class="bk-nd__row"><span>Vỏ dày <b id="nd-e-v">10</b>% bán kính</span><input type="range" id="nd-e" min="1" max="30" value="10"></label>
+              <dl class="bk-nd__out" id="nd-out"></dl>
+            </div>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <p>Hình vuông cạnh 4, bốn hình tròn bán kính 1 ở bốn góc, và một hình tròn ở tâm vừa chạm cả bốn: bán kính của nó là √2 − 1 ≈ 0,41. Ở n chiều có 2<sup>n</sup> quả cầu ở các góc, và quả cầu giữa có bán kính √n − 1.</p>
+            <figure class="bk-fig">
+              <svg viewBox="0 0 340 170" role="img" aria-labelledby="circ-t">
+                <title id="circ-t">Hình vuông cạnh 4 với bốn hình tròn bán kính 1 ở bốn góc và một hình tròn nhỏ ở tâm, bán kính căn 2 trừ 1, khoảng 0,41. Bên phải là bảng bán kính quả cầu giữa theo số chiều: 2 chiều 0,41; 3 chiều 0,73; 4 chiều 1; 9 chiều 2, chạm mặt hộp; 10 chiều 2,16, lòi ra ngoài hộp có nửa cạnh 2.</title>
+                <rect class="f-surface s-ink" x="10" y="10" width="148" height="148" stroke-width="1.5"/>
+                <g class="f-soft s-line" stroke-width="1.2"><circle cx="47" cy="47" r="37"/><circle cx="121" cy="47" r="37"/><circle cx="47" cy="121" r="37"/><circle cx="121" cy="121" r="37"/></g>
+                <circle class="f-accent-soft s-accent" cx="84" cy="84" r="15.3" stroke-width="1.6"/>
+                <g font-size="13">
+                  <text class="t-muted t-b" x="180" y="28">n</text><text class="t-muted t-b" x="320" y="28" text-anchor="end">bán kính giữa</text>
+                  <text class="t-ink" x="180" y="52">2</text><text class="t-ink" x="320" y="52" text-anchor="end">0,41</text>
+                  <text class="t-ink" x="180" y="74">3</text><text class="t-ink" x="320" y="74" text-anchor="end">0,73</text>
+                  <text class="t-ink" x="180" y="96">4</text><text class="t-ink" x="320" y="96" text-anchor="end">1,00</text>
+                  <text class="t-ink" x="180" y="118">9</text><text class="t-ink" x="320" y="118" text-anchor="end">2,00 chạm hộp</text>
+                  <text class="t-warn t-b" x="180" y="140">10</text><text class="t-warn t-b" x="320" y="140" text-anchor="end">2,16 lòi ra</text>
+                </g>
+              </svg>
+              <figcaption>Hộp có nửa cạnh 2. Từ mười chiều, quả cầu nằm "giữa" 1.024 quả cầu nhỏ lại thò ra ngoài hộp, dù nó lồi và chạm từng quả từ bên trong.</figcaption>
+            </figure>
+            <p>Lý do: khoảng cách từ tâm hộp tới tâm một quả cầu góc là √n, tăng theo số chiều, trong khi nửa cạnh hộp đứng yên ở 2. Hamming gợi ý đo bằng khoảng cách L1, tổng các chênh lệch toạ độ, thì "quả cầu" là hình vuông dựng trên một đỉnh và nghịch lý dễ hình dung hơn. L1 trên chuỗi bit chính là khoảng cách Hamming của mục 4.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi dùng kNN hay phân cụm trên nhiều đặc trưng</span>Beyer và cộng sự (1999) chứng minh rằng với một lớp rộng phân phối, khi số chiều tăng thì khoảng cách tới điểm gần nhất và xa nhất gần bằng nhau. Chọn đặc trưng hay giảm chiều trước khi tin vào khoảng cách.</li>
+              <li><span class="bk-use__when">Khi đọc độ tương đồng cosine</span>Hai vector ngẫu nhiên 768 chiều có cos quanh 0 với độ lệch chuẩn cỡ 1/√768 ≈ 0,036, nên so với mốc ấy, cos 0,3 là rất xa ngẫu nhiên. Embedding thật không ngẫu nhiên đều, nên mốc thật phải đo trên dữ liệu.</li>
+              <li><span class="bk-use__when">Khi dò siêu tham số</span>Tối ưu hay nằm ở biên. Giá trị tốt nhất chạm cận của dải thì mở rộng dải rồi dò lại.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Đây là hình học của không gian trống. Dữ liệu thật thường nằm gần một mặt ít chiều hơn nhiều so với số cột, nên "lời nguyền số chiều" thực tế nhẹ hơn tính toán thô. Đặc trưng thật tương quan với nhau thì góc không gần 90° như với vector ±1 độc lập.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CUỐI TRANG ================= -->
+      <section class="bk-end" id="bo-qua" data-toc="Chương đã bỏ" data-toc-sep aria-labelledby="bo-qua-h">
+        <h2 class="bk-sec-title" id="bo-qua-h">Chương đã bỏ, và vì sao</h2>
+        <p class="bk-sec-sub">Hamming nói rõ phần kỹ thuật chỉ là vật minh hoạ cho phong cách nghĩ. Trang giữ phong cách, bỏ phần minh hoạ đã cũ hoặc thuần toán.</p>
+        <div class="bk-table-wrap" role="region" aria-label="Bảng các chương đã bỏ và lý do" tabindex="0">
+          <table class="bk-table bk-table--wide">
+            <caption>Chương bỏ toàn bộ hoặc phần lớn</caption>
+            <thead><tr><th scope="col">Chương</th><th scope="col">Nội dung</th><th scope="col">Vì sao bỏ</th><th scope="col">Còn giữ</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">2 (nửa sau)</th><td>Robot, xã hội thông tin, chi phí đi dây</td><td>Số liệu năm 1992–1993, đã cũ</td><td>Không</td></tr>
+              <tr><th scope="row">3–5</th><td>Lịch sử phần cứng, phần mềm, ứng dụng máy tính</td><td>Chi tiết máy thập niên 1940–1990</td><td>Lập trình viên chống ngôn ngữ bậc cao rồi rơi khỏi nghề (mục 6)</td></tr>
+              <tr><th scope="row">6–8</th><td>Giới hạn của trí tuệ nhân tạo</td><td>Quan điểm năm 1995, trước học sâu</td><td>"Nghĩ" là chuyện mức độ (mục 9)</td></tr>
+              <tr><th scope="row">10–11</th><td>Lý thuyết mã: mã Huffman, bất đẳng thức Kraft</td><td>Toán kỹ thuật, không mang ý về phong cách</td><td>Không</td></tr>
+              <tr><th scope="row">12 (phần toán)</th><td>Mã sửa lỗi tổng quát</td><td>Chỉ cần mã (7,4) để thấy cơ chế</td><td>Chuyện phát minh và mã (7,4) (mục 4)</td></tr>
+              <tr><th scope="row">13 (phần toán)</th><td>Entropy, bất đẳng thức Gibbs, dung lượng kênh</td><td>Toán kỹ thuật</td><td>Định nghĩa "thông tin" đo bất ngờ (mục 9)</td></tr>
+              <tr><th scope="row">14–17</th><td>Lọc số</td><td>Toán xử lý tín hiệu</td><td>Không</td></tr>
+              <tr><th scope="row">18–20 (phần kỹ thuật)</th><td>Tích phân số, ví dụ thời tiết và quần vợt</td><td>Phương pháp đã cũ</td><td>Câu hỏi về độ tin cậy, hội tụ và phân kỳ (mục 8)</td></tr>
+              <tr><th scope="row">21</th><td>Cáp quang</td><td>Xa người đọc, đã cũ</td><td>Không</td></tr>
+              <tr><th scope="row">22</th><td>Dạy học bằng máy tính</td><td>Bàn công nghệ giáo dục thập niên 1990</td><td>Hiệu ứng Hawthorne, kèm phản biện (mục 9)</td></tr>
+              <tr><th scope="row">23</th><td>Toán học: Plato, trường phái hình thức, trực giác</td><td>Triết học toán, dài và ít dùng được</td><td>Không</td></tr>
+              <tr><th scope="row">24</th><td>Cơ học lượng tử</td><td>Xa người đọc</td><td>Không</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="bk-end" id="cong-cu" data-toc="Công cụ tư duy" aria-labelledby="cong-cu-h">
+        <h2 class="bk-sec-title" id="cong-cu-h">Công cụ tư duy rút ra</h2>
+        <p class="bk-sec-sub">Mỗi công cụ là một câu hỏi mang theo được.</p>
+        <ul class="bk-tools">
+          <li><span class="bk-tools__name">Người say và người có đích</span><span class="bk-tools__use">Lựa chọn của mình đang cộng dồn về một hướng, hay triệt tiêu nhau?</span><a class="bk-tools__src" href="#m1">Mục 1</a></li>
+          <li><span class="bk-tools__name">Quan trọng nhân lối vào</span><span class="bk-tools__use">Bài này có quan trọng không, và mình có cách tấn công nào người khác không có?</span><a class="bk-tools__src" href="#m2">Mục 2</a></li>
+          <li><span class="bk-tools__name">Giờ ý lớn</span><span class="bk-tools__use">Một khối giờ cố định mỗi tuần chỉ để hỏi ngành và mình đang đi đâu.</span><a class="bk-tools__src" href="#m2">Mục 2</a></li>
+          <li><span class="bk-tools__name">Lật khuyết điểm</span><span class="bk-tools__use">Nếu cái đang thiếu là đặc điểm của bài toán, thì bài nào trở nên hay?</span><a class="bk-tools__src" href="#m4">Mục 4</a></li>
+          <li><span class="bk-tools__name">Giả định của chữ "không thể"</span><span class="bk-tools__use">Lời "không làm được" dựa trên giả định nào, và nó còn đúng không?</span><a class="bk-tools__src" href="#m6">Mục 6</a></li>
+          <li><span class="bk-tools__name">Kiểm trước khi chạy</span><span class="bk-tools__use">Ai ghi, định nghĩa có đổi không, có bản ghi nào không thể xảy ra không?</span><a class="bk-tools__src" href="#m7">Mục 7</a></li>
+          <li><span class="bk-tools__name">Vì sao nên tin mô phỏng</span><span class="bk-tools__use">Trả lời trước khi viết code; xem hệ hội tụ hay phân kỳ.</span><a class="bk-tools__src" href="#m8">Mục 8</a></li>
+          <li><span class="bk-tools__name">Đo gì được nấy</span><span class="bk-tools__use">Người bị đo sẽ đổi hành vi thế nào để đẩy con số lên? Và chấm thì dùng hết dải.</span><a class="bk-tools__src" href="#m9">Mục 9</a></li>
+          <li><span class="bk-tools__name">Mục tiêu của cả hệ</span><span class="bk-tools__use">Cải tiến bộ phận này có làm xấu chỉ số cuối cùng không?</span><a class="bk-tools__src" href="#m10">Mục 10</a></li>
+          <li><span class="bk-tools__name">Nghi trực giác n chiều</span><span class="bk-tools__use">Khoảng cách và "ở giữa" còn nghĩa gì khi có hàng trăm đặc trưng?</span><a class="bk-tools__src" href="#m11">Mục 11</a></li>
+        </ul>
+      </section>
+
+      <section class="bk-end" id="tu-kiem" data-toc="Tự kiểm" aria-labelledby="tu-kiem-h">
+        <h2 class="bk-sec-title" id="tu-kiem-h">Tự kiểm</h2>
+        <p class="bk-sec-sub">Trả lời trong đầu trước, rồi mở đáp án.</p>
+        <ol class="bk-quiz">
+          <li><details>
+            <summary><span class="bk-quiz__n">1</span>Vì sao Hamming nói du hành thời gian không phải bài toán quan trọng, dù ai giải được sẽ có giải Nobel?</summary>
+            <div class="bk-quiz__a"><p>Vì chưa ai có cách tấn công hợp lý. Một bài toán quan trọng khi có lối vào, không phải khi hậu quả của nó to lớn.</p><p class="bk-quiz__see">Xem lại: <a href="#m2">Mục 2</a></p></div>
+          </details></li>
+          <li><details>
+            <summary><span class="bk-quiz__n">2</span>Trong mã (7,4), từ mã 0011001 bị lật bit thứ 5. Ba phép kiểm cho ra gì?</summary>
+            <div class="bk-quiz__a"><p>Nhận 0011101. Kiểm 1 (vị trí 1, 3, 5, 7) có ba số 1, sai, ra 1. Kiểm 2 (2, 3, 6, 7) có hai số 1, đúng, ra 0. Kiểm 4 (4, 5, 6, 7) có ba số 1, sai, ra 1. Đọc 101 = 5: lật bit 5.</p><p class="bk-quiz__see">Xem lại: <a href="#m4">Mục 4</a></p></div>
+          </details></li>
+          <li><details>
+            <summary><span class="bk-quiz__n">3</span>Một nhóm báo mô hình đạt "độ tin cậy 99%" trên dữ liệu giả lập. Hamming sẽ hỏi gì trước tiên?</summary>
+            <div class="bk-quiz__a"><p>Vì sao ai đó nên tin giả lập này liên quan tới thực tế. 99% là độ tin cậy của mô phỏng, chưa phải của hệ thật; cần kiểm chéo với dữ liệu thật và xem hệ hội tụ hay phân kỳ.</p><p class="bk-quiz__see">Xem lại: <a href="#m8">Mục 8</a></p></div>
+          </details></li>
+          <li><details>
+            <summary><span class="bk-quiz__n">4</span>Hai người chấm một đề án trên thang 1–10. Một người cho 6, một người cho 2. Vì sao kết quả nghiêng về người cho 2?</summary>
+            <div class="bk-quiz__a"><p>Trung bình là 4. Người cho 6 chỉ lệch 1 điểm trên mốc 5, người cho 2 lệch 3 điểm dưới mốc. Khi điểm được cộng mù, ai dùng hết dải thì tiếng nói lớn hơn.</p><p class="bk-quiz__see">Xem lại: <a href="#m9">Mục 9</a></p></div>
+          </details></li>
+          <li><details>
+            <summary><span class="bk-quiz__n">5</span>Một bộ dữ liệu tự khai có 2,3 triệu người. Vì sao nó có thể kém một mẫu ngẫu nhiên vài trăm người?</summary>
+            <div class="bk-quiz__a"><p>Nếu việc có mặt trong dữ liệu tương quan dù rất nhẹ với điều cần đo, sai số không giảm theo cỡ mẫu mà lớn dần theo cỡ quần thể. Meng (2018) tính tương quan −0,005 đủ làm 2,3 triệu người chỉ đáng bằng khoảng 400 người chọn ngẫu nhiên.</p><p class="bk-quiz__see">Xem lại: <a href="#m7">Mục 7</a></p></div>
+          </details></li>
+        </ol>
+      </section>
+
+      <section class="bk-end" id="doc-tiep" data-toc="Đọc tiếp và nguồn" aria-labelledby="doc-tiep-h">
+        <h2 class="bk-sec-title" id="doc-tiep-h">Đọc tiếp và nguồn</h2>
+        <ul class="bk-reads">
+          <li><span class="bk-reads__t">Bản gốc: The Art of Doing Science and Engineering: Learning to Learn — Richard W. Hamming, Gordon and Breach 1997; Stripe Press 2020, 432 trang</span><span class="bk-reads__why">Đọc bản đầy đủ khi cần phần toán mã hoá, lọc số và mô phỏng mà trang đã bỏ.</span></li>
+          <li><span class="bk-reads__t"><a href="https://www.cs.virginia.edu/~robins/YouAndYourResearch.html">You and Your Research — bản ghi bài nói ngày 7/3/1986</a></span><span class="bk-reads__why">Có phần hỏi đáp mà chương 30 không chép.</span></li>
+          <li><span class="bk-reads__t"><a href="https://savage.nps.edu/hamming/HammingLearningToLearnRecovered/">Bài giảng gốc tại Naval Postgraduate School, 1995</a></span><span class="bk-reads__why">Video của khoá học mà cuốn sách viết lại.</span></li>
+          <li><span class="bk-reads__t">Henrion M, Fischhoff B. Assessing uncertainty in physical constants. American Journal of Physics, 1986</span><span class="bk-reads__why">Mục 7. doi:10.1119/1.14447</span></li>
+          <li><span class="bk-reads__t">Bailey DC. Not Normal: the uncertainties of scientific measurements. Royal Society Open Science, 2017</span><span class="bk-reads__why">Bản định lượng của luật Hamming (mục 7). doi:10.1098/rsos.160600</span></li>
+          <li><span class="bk-reads__t">Meng XL. Statistical paradises and paradoxes in big data (I). Annals of Applied Statistics, 2018</span><span class="bk-reads__why">Chất lượng dữ liệu thắng cỡ dữ liệu, có công thức (mục 7). doi:10.1214/18-AOAS1161SF</span></li>
+          <li><span class="bk-reads__t">Sinatra R và cộng sự. Quantifying the evolution of individual scientific impact. Science, 2016</span><span class="bk-reads__why">Mục 2, 3. doi:10.1126/science.aaf5239</span></li>
+          <li><span class="bk-reads__t">Beyer K và cộng sự. When is "nearest neighbor" meaningful? ICDT 1999</span><span class="bk-reads__why">Mục 11. doi:10.1007/3-540-49257-7_15</span></li>
+          <li><span class="bk-reads__t">Levitt SD, List JA. Was there really a Hawthorne effect at the Hawthorne plant? AEJ: Applied Economics, 2011</span><span class="bk-reads__why">Mục 9. doi:10.1257/app.3.1.224</span></li>
+          <li><span class="bk-reads__t">Thomas Kuhn — The Structure of Scientific Revolutions, 1962</span><span class="bk-reads__why">Nguồn của khái niệm hệ hình (mục 6).</span></li>
+          <li><span class="bk-reads__t">Oskar Morgenstern — On the Accuracy of Economic Observations, 1950; bản 2, 1963</span><span class="bk-reads__why">Cuốn Hamming dựa vào khi viết về dữ liệu kinh tế (mục 7).</span></li>
+        </ul>
+      </section>
+
+      <footer class="bk-foot">
+        <p>Trích dẫn tiếng Anh đã đối chiếu với văn bản sách bản 1997 và bản ghi bài nói 1986.</p>
+        <p><a href="../index.html">Về trang chủ</a></p>
+      </footer>
+    </div>
+  </div>
+</main>
+<script>
+/* ==========================================================================
+   BK CORE JS — giống hệt nhau ở mọi trang sách. Luật dùng: DESIGN.md.
+   Đọc HTML, không chèn chữ bằng innerHTML: mọi chữ đi qua textContent.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  /* Hằng số đọc: chỉ khai ở đây. */
+  var READING = {
+    wpm: 200,              /* từ/phút, tiếng Việt, đọc hiểu */
+    wordsPerBookPage: 300  /* từ trên một trang sách in */
+  };
+
+  var doc = document, root = doc.documentElement;
+  function $(s, el) { return (el || doc).querySelector(s); }
+  function $$(s, el) { return Array.prototype.slice.call((el || doc).querySelectorAll(s)); }
+  function make(tag, cls, text) {
+    var n = doc.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  /* ---- đếm chữ, đổi ra phút ---- */
+  function countWords(el) {
+    var c = el.cloneNode(true);
+    $$('svg, button, script, style, .bk-noread', c).forEach(function (n) { n.remove(); });
+    var t = c.textContent.trim();
+    return t ? t.split(/\s+/).length : 0;
+  }
+  function toMinutes(words) { return Math.max(1, Math.round(words / READING.wpm)); }
+  function fmtMinutes(m) {
+    if (m < 60) return m + ' phút';
+    m = Math.round(m / 10) * 10;
+    var h = Math.floor(m / 60), r = m % 60;
+    return h + ' giờ' + (r ? ' ' + r + ' phút' : '');
+  }
+
+  var main = $('#noi-dung');
+  var units = $$('.bk-unit');
+  var pageWords = main ? countWords(main) : 0;
+  var pageMin = toMinutes(pageWords);
+  var bookPages = $$('[data-pages]').reduce(function (s, el) { return s + (+el.getAttribute('data-pages') || 0); }, 0);
+  var bookMin = Math.round(bookPages * READING.wordsPerBookPage / READING.wpm);
+
+  var info = units.map(function (u, i) {
+    var head = $('.bk-unit__head', u);
+    var title = $('.bk-unit__title', u);
+    var gist = $('.bk-unit__gist', u);
+    var by = $('.bk-unit__by', u);
+    var shelf = u.closest('.bk-shelf');
+    var m = toMinutes(countWords(u));
+    var minEl = $('.bk-unit__min', u);
+    if (!minEl && head) {
+      var num = $('.bk-unit__num', head);
+      minEl = make('span', 'bk-unit__min');
+      if (num) num.appendChild(minEl);
+    }
+    if (minEl) minEl.textContent = m + ' phút đọc';
+    return {
+      el: u, id: u.id, n: i + 1, min: m,
+      title: u.getAttribute('data-toc') || (title ? title.textContent.trim() : u.id),
+      full: title ? title.textContent.trim() : u.id,
+      gist: gist ? gist.textContent.trim() : '',
+      by: by ? by.textContent.trim() : '',
+      pages: +u.getAttribute('data-pages') || 0,
+      shelf: shelf
+    };
+  });
+
+  /* ---- số tính sẵn: data-out="page|book|ratio|units|done" ---- */
+  function out(name, text) { $$('[data-out="' + name + '"]').forEach(function (n) { n.textContent = text; }); }
+  out('page', '≈ ' + fmtMinutes(pageMin));
+  out('units', String(units.length));
+  if (bookMin) {
+    out('book', '≈ ' + fmtMinutes(bookMin));
+    out('pages', bookPages.toLocaleString('vi-VN') + ' trang');
+    out('ratio', 'khoảng ' + Math.max(1, Math.round(bookMin / pageMin)) + ' lần');
+    $$('.bk-time__bar--page').forEach(function (b) {
+      b.style.setProperty('--w', Math.max(1.5, 100 * pageMin / bookMin).toFixed(1) + '%');
+    });
+  }
+
+  /* ---- đánh dấu đã đọc (localStorage, có thể không dùng được) ---- */
+  var KEY = 'bk-done:' + location.pathname;
+  var done = {};
+  try { (JSON.parse(localStorage.getItem(KEY)) || []).forEach(function (id) { done[id] = 1; }); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(Object.keys(done))); } catch (e) {} }
+
+  var TICK = 'M3.5 8.5l3 3 6-7';
+  function tick() {
+    var s = doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('viewBox', '0 0 16 16'); s.setAttribute('class', 'bk-tick'); s.setAttribute('aria-hidden', 'true');
+    var p = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', TICK); p.setAttribute('fill', 'none'); p.setAttribute('stroke', 'currentColor');
+    p.setAttribute('stroke-width', '2'); p.setAttribute('stroke-linecap', 'round'); p.setAttribute('stroke-linejoin', 'round');
+    s.appendChild(p);
+    return s;
+  }
+
+  /* ---- lưới tổng quan: [data-bk-index] ---- */
+  var idxRows = {};
+  function row(u) {
+    var li = make('li');
+    var a = make('a'); a.href = '#' + u.id;
+    a.appendChild(make('span', 'bk-idx__n', String(u.n)));
+    var mid = make('span');
+    mid.appendChild(make('span', 'bk-idx__t', u.full));
+    if (u.by) mid.appendChild(make('span', 'bk-idx__by', u.by));
+    if (u.gist) mid.appendChild(make('span', 'bk-idx__g', u.gist));
+    a.appendChild(mid);
+    var m = make('span', 'bk-idx__m', u.min + ' phút');
+    a.appendChild(m);
+    var sr = make('span', 'bk-sr', ', đã đọc'); sr.hidden = true; a.appendChild(sr);
+    li.appendChild(a);
+    idxRows[u.id] = li;
+    return li;
+  }
+  $$('[data-bk-index]').forEach(function (box) {
+    box.textContent = '';
+    box.classList.add('bk-noread');
+    var shelves = [];
+    info.forEach(function (u) { if (u.shelf && shelves.indexOf(u.shelf) < 0) shelves.push(u.shelf); });
+    if (!shelves.length) {
+      var ol = make('ol', 'bk-idx');
+      info.forEach(function (u) { ol.appendChild(row(u)); });
+      box.appendChild(ol);
+    } else {
+      var grps = make('div', 'bk-idxgrps');
+      box.appendChild(grps);
+      shelves.forEach(function (sh) {
+        var list = info.filter(function (u) { return u.shelf === sh; });
+        var g = make('div', 'bk-idxgrp');
+        var t = make('h3', 'bk-idxgrp__t', sh.getAttribute('data-toc') || '');
+        var sum = list.reduce(function (s, u) { return s + u.min; }, 0);
+        t.appendChild(make('span', null, list.length + ' cuốn · ' + sum + ' phút'));
+        g.appendChild(t);
+        var ol = make('ol', 'bk-idx');
+        list.forEach(function (u) { ol.appendChild(row(u)); });
+        g.appendChild(ol);
+        grps.appendChild(g);
+      });
+    }
+    var total = make('p', 'bk-idx-sum', info.length + ' mục, ' + fmtMinutes(info.reduce(function (s, u) { return s + u.min; }, 0)) + ' · cả trang ' + fmtMinutes(pageMin));
+    box.appendChild(total);
+  });
+
+  /* ---- mục lục bám: [data-bk-toc] dựng từ mọi phần tử có data-toc, theo thứ tự trong trang ---- */
+  var tocLinks = [];
+  var tocList = $('[data-bk-toc]');
+  if (tocList) {
+    tocList.textContent = '';
+    $$('[data-toc]').forEach(function (el) {
+      var li = make('li');
+      if (el.classList.contains('bk-shelf')) {
+        li.className = 'bk-toc__grp';
+        li.textContent = el.getAttribute('data-toc');
+        tocList.appendChild(li);
+        return;
+      }
+      if (el.hasAttribute('data-toc-sep')) tocList.appendChild(make('li', 'bk-toc__sep'));
+      var a = make('a'); a.href = '#' + el.id;
+      var u = info.filter(function (x) { return x.el === el; })[0];
+      if (u) a.appendChild(make('span', 'bk-toc__n', String(u.n)));
+      a.appendChild(make('span', null, el.getAttribute('data-toc') || (u && u.title) || el.id));
+      li.appendChild(a);
+      tocList.appendChild(li);
+      tocLinks.push({ a: a, el: el, label: el.getAttribute('data-toc') || (u && u.title) || '' , u: u });
+    });
+  }
+
+  /* ---- trạng thái đã đọc: nút cuối mục, dấu ở tổng quan, mục lục, đầu mục ---- */
+  function paint() {
+    var n = 0;
+    info.forEach(function (u) {
+      var on = !!done[u.id];
+      if (on) n++;
+      var li = idxRows[u.id];
+      if (li) {
+        li.classList.toggle('is-done', on);
+        var m = $('.bk-idx__m', li), t = $('.bk-tick', m);
+        if (on && !t) m.appendChild(tick()); else if (!on && t) t.remove();
+        $('.bk-sr', li).hidden = !on;
+      }
+      tocLinks.forEach(function (l) {
+        if (l.u !== u) return;
+        var t = $('.bk-tick', l.a);
+        if (on && !t) l.a.appendChild(tick()); else if (!on && t) t.remove();
+      });
+      var st = $('.bk-unit__state', u.el);
+      if (st) st.hidden = !on;
+      var b = $('.bk-done', u.el);
+      if (b) { b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.lastChild.textContent = on ? 'Đã đọc' : 'Đánh dấu đã đọc'; }
+    });
+    out('done', n + '/' + info.length);
+  }
+  info.forEach(function (u) {
+    var num = $('.bk-unit__num', u.el);
+    if (num) {
+      var st = make('span', 'bk-unit__state'); st.hidden = true;
+      st.appendChild(tick()); st.appendChild(doc.createTextNode('Đã đọc'));
+      num.appendChild(st);
+    }
+    var b = make('button', 'bk-done'); b.type = 'button';
+    b.appendChild(tick()); b.appendChild(doc.createTextNode(''));
+    b.addEventListener('click', function () {
+      if (done[u.id]) delete done[u.id]; else done[u.id] = 1;
+      save(); paint();
+    });
+    u.el.appendChild(b);
+  });
+  paint();
+
+  /* ---- mục lục trên điện thoại: nút ở thanh trên mở bảng thả ---- */
+  var rail = $('#bk-rail'), tocBtn = $('#bk-tocbtn');
+  function setOpen(open, focusBack) {
+    if (!rail || !tocBtn) return;
+    rail.classList.toggle('is-open', open);
+    tocBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) { var cur = $('a[aria-current]', rail) || $('a', rail); if (cur) cur.focus(); }
+    else if (focusBack) tocBtn.focus();
+  }
+  if (tocBtn && rail) {
+    tocBtn.addEventListener('click', function () { setOpen(!rail.classList.contains('is-open')); });
+    rail.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
+    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && rail.classList.contains('is-open')) setOpen(false, true); });
+    doc.addEventListener('click', function (e) {
+      if (rail.classList.contains('is-open') && !rail.contains(e.target) && !tocBtn.contains(e.target)) setOpen(false);
+    });
+  }
+
+  /* ---- mục đang đọc + vạch tiến độ ---- */
+  var bar = $('.bk-progress'), current = $('[data-bk-current]'), ticking = false;
+  function onScroll() {
+    ticking = false;
+    var max = root.scrollHeight - innerHeight;
+    if (bar) bar.style.setProperty('--p', max > 0 ? Math.min(1, Math.max(0, scrollY / max)).toFixed(4) : '0');
+    var line = innerHeight * 0.3, act = null;
+    tocLinks.forEach(function (l) { if (l.el.getBoundingClientRect().top <= line) act = l; });
+    tocLinks.forEach(function (l) { if (l === act) l.a.setAttribute('aria-current', 'location'); else l.a.removeAttribute('aria-current'); });
+    if (current) current.textContent = act ? (act.u ? act.u.n + '. ' : '') + act.label : 'Mục lục';
+  }
+  addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  addEventListener('resize', onScroll);
+  onScroll();
+
+  /* ---- theme: lựa chọn đã lưu ở 'hub-theme' thắng; chưa lưu thì theo hệ điều hành ---- */
+  var themeBtn = $('#bk-theme'), meta = $('#bk-theme-color');
+  function applyTheme(dark) {
+    root.classList.toggle('dark', dark);
+    if (meta) meta.setAttribute('content', dark ? '#101211' : '#fbfaf7');
+    if (themeBtn) themeBtn.setAttribute('aria-label', dark ? 'Chuyển sang nền sáng' : 'Chuyển sang nền tối');
+  }
+  applyTheme(root.classList.contains('dark'));
+  if (themeBtn) themeBtn.addEventListener('click', function () {
+    var dark = !root.classList.contains('dark');
+    applyTheme(dark);
+    try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+  if (window.matchMedia) {
+    var mq = matchMedia('(prefers-color-scheme: dark)');
+    var follow = function (e) { var t = null; try { t = localStorage.getItem('hub-theme'); } catch (x) {} if (!t) applyTheme(e.matches); };
+    if (mq.addEventListener) mq.addEventListener('change', follow);
+  }
+
+  /* ---- lộ trình (trang gom nhiều sách): nút [data-route] hiện khung [data-route-panel] cùng tên ---- */
+  var routeBtns = $$('[data-route]');
+  function showRoute(name) {
+    routeBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-route') === name ? 'true' : 'false'); });
+    $$('[data-route-panel]').forEach(function (p) { p.classList.toggle('is-on', p.getAttribute('data-route-panel') === name); });
+  }
+  routeBtns.forEach(function (b) { b.addEventListener('click', function () { showRoute(b.getAttribute('data-route')); }); });
+  if (routeBtns.length) showRoute(routeBtns[0].getAttribute('data-route'));
+
+  /* ---- bản in: mở hết đáp án, in xong trả lại ---- */
+  var closed = [];
+  addEventListener('beforeprint', function () { closed = $$('details:not([open])'); closed.forEach(function (d) { d.open = true; }); });
+  addEventListener('afterprint', function () { closed.forEach(function (d) { d.open = false; }); closed = []; });
+})();
+</script>
+<script>
+/* Riêng trang này: ba mô hình tương tác. Chữ vào DOM bằng textContent. */
+(function () {
+  'use strict';
+  var doc = document, NS = 'http://www.w3.org/2000/svg';
+  function $(id) { return doc.getElementById(id); }
+  function el(tag, cls, text) { var n = doc.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function vi(x, d) { return x.toLocaleString('vi-VN', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+
+  /* ---- Mục 1: người say (p = 0,5) và người có hướng (p = 0,6), n = 400 bước ---- */
+  var WALK = { n: 400, pDir: 0.6, shown: 12, stat: 2000 };
+  function walkEnd(p) { var x = 0; for (var i = 0; i < WALK.n; i++) x += Math.random() < p ? 1 : -1; return x; }
+  function walkPath(p) {
+    var x = 0, pts = ['34,150'];
+    for (var i = 1; i <= WALK.n; i++) {
+      x += Math.random() < p ? 1 : -1;
+      if (i % 4 === 0) pts.push((34 + 300 * i / WALK.n).toFixed(1) + ',' + Math.max(8, Math.min(206, 150 - 1.2 * x)).toFixed(1));
+    }
+    return pts.join(' ');
+  }
+  function runWalk() {
+    var g = $('walk-paths'), out = $('walk-out');
+    if (!g) return;
+    while (g.firstChild) g.removeChild(g.firstChild);
+    g.setAttribute('class', 'bk-walk');
+    [[0.5, 'w-free'], [WALK.pDir, 'w-dir']].forEach(function (k) {
+      for (var j = 0; j < WALK.shown; j++) {
+        var pl = doc.createElementNS(NS, 'polyline');
+        pl.setAttribute('points', walkPath(k[0]));
+        pl.setAttribute('class', k[1]);
+        pl.setAttribute('fill', 'none');
+        pl.setAttribute('stroke-width', '1.3');
+        g.appendChild(pl);
+      }
+    });
+    var a = 0, b = 0;
+    for (var i = 0; i < WALK.stat; i++) { a += Math.abs(walkEnd(0.5)); b += Math.abs(walkEnd(WALK.pDir)); }
+    if (out) out.textContent = 'Lần chạy này, trên ' + vi(WALK.stat, 0) + ' người mỗi nhóm: không hướng đi xa trung bình ' + vi(a / WALK.stat, 1) + ' bước, có hướng ' + vi(b / WALK.stat, 1) + ' bước.';
+  }
+  var wb = $('walk-run');
+  if (wb) wb.addEventListener('click', runWalk);
+  runWalk();
+
+  /* ---- Mục 4: mã Hamming (7,4). Kiểm k gom mọi vị trí i có (i & k) ≠ 0. ---- */
+  var SENT = [0, 0, 1, 1, 0, 0, 1];          /* từ mã của dữ liệu 1001, ví dụ trong chương 12 */
+  var recv = [0, 0, 1, 1, 0, 1, 1];          /* bit 6 bị lật */
+  function syndrome(w) {
+    var s = 0;
+    [1, 2, 4].forEach(function (k) {
+      var par = 0;
+      for (var i = 1; i <= 7; i++) if (i & k) par ^= w[i - 1];
+      if (par) s |= k;
+    });
+    return s;
+  }
+  var bitsBox = doc.querySelector('#ham-live .bk-ham__bits'), hamOut = $('ham-out'), btns = [];
+  function paintHam() {
+    var s = syndrome(recv), diff = 0;
+    btns.forEach(function (b, i) {
+      b.firstChild.textContent = String(recv[i]);
+      var flip = recv[i] !== SENT[i];
+      if (flip) diff++;
+      b.classList.toggle('is-flip', flip);
+      b.setAttribute('aria-pressed', flip ? 'true' : 'false');
+    });
+    var bin = [4, 2, 1].map(function (k) { return s & k ? '1' : '0'; }).join('');
+    hamOut.textContent = '';
+    hamOut.appendChild(doc.createTextNode('Kiểm 4, 2, 1 cho ' + bin + ' → '));
+    hamOut.appendChild(el('b', null, s ? 'sửa bit ' + s : 'không thấy lỗi'));
+    hamOut.appendChild(doc.createTextNode('. '));
+    var note;
+    if (diff === 0) note = 'Từ nhận được trùng từ mã gửi đi.';
+    else if (diff === 1) note = 'Đúng một bit khác từ mã gửi đi, nên hội chứng chỉ đúng chỗ.';
+    else note = 'Có ' + diff + ' bit khác từ mã gửi đi. Mã (7,4) chỉ sửa được một lỗi; với nhiều lỗi, hội chứng chỉ nhầm chỗ hoặc báo không lỗi.';
+    hamOut.appendChild(doc.createTextNode(note));
+  }
+  if (bitsBox && hamOut) {
+    for (var i = 0; i < 7; i++) {
+      var b = el('button', 'bk-ham__bit' + ([0, 1, 3].indexOf(i) >= 0 ? ' is-check' : ''));
+      b.type = 'button';
+      b.appendChild(doc.createTextNode(''));
+      b.appendChild(el('small', null, 'vị trí ' + (i + 1)));
+      b.setAttribute('aria-label', 'Bit ở vị trí ' + (i + 1) + ([0, 1, 3].indexOf(i) >= 0 ? ', bit kiểm' : ', bit dữ liệu'));
+      (function (k) { b.addEventListener('click', function () { recv[k] ^= 1; paintHam(); }); })(i);
+      bitsBox.appendChild(b);
+      btns.push(b);
+    }
+    paintHam();
+  }
+
+  /* ---- Mục 11: n chiều. V(n) = V(n−2)·2π/n, V(0) = 1, V(1) = 2. ---- */
+  function ballVolume(n) { var v = [1, 2]; for (var k = 2; k <= n; k++) v[k] = v[k - 2] * 2 * Math.PI / k; return v[n]; }
+  function shellFraction(n, e) { return 1 - Math.pow(1 - e, n); }
+  var nIn = $('nd-n'), eIn = $('nd-e'), ndOut = $('nd-out');
+  function pct(f) {
+    var p = 100 * f;
+    if (p >= 99.995) return p >= 100 - 1e-9 ? '≈ 100%' : vi(p, 4) + '%';
+    return vi(p, p < 10 ? 2 : 1) + '%';
+  }
+  function num(x) { return x < 0.001 ? x.toExponential(1).replace('.', ',') : vi(x, x < 1 ? 3 : 2); }
+  function paintNd() {
+    var n = +nIn.value, e = +eIn.value / 100;
+    $('nd-n-v').textContent = String(n);
+    $('nd-e-v').textContent = String(+eIn.value);
+    var rows = [
+      ['Phần thể tích trong vỏ', pct(shellFraction(n, e))],
+      ['Thể tích quả cầu bán kính 1', num(ballVolume(n))],
+      ['Góc đường chéo với một trục', vi(Math.acos(1 / Math.sqrt(n)) * 180 / Math.PI, 1) + '°'],
+      ['Độ lệch chuẩn cos của hai vector ±1 ngẫu nhiên', vi(1 / Math.sqrt(n), 3)],
+      ['Bán kính quả cầu giữa (nửa cạnh hộp là 2)', vi(Math.sqrt(n) - 1, 2)]
+    ];
+    ndOut.textContent = '';
+    rows.forEach(function (r) { var d = el('div'); d.appendChild(el('dt', null, r[0])); d.appendChild(el('dd', null, r[1])); ndOut.appendChild(d); });
+  }
+  if (nIn && eIn && ndOut) { nIn.addEventListener('input', paintNd); eIn.addEventListener('input', paintNd); paintNd(); }
+})();
+</script>
+</body>
+</html>

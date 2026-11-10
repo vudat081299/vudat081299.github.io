@@ -276,6 +276,13 @@
               "tags": "Darrell Huff · 1954 — mẹo dùng số liệu và biểu đồ để đánh lừa, và cách nhận ra"
             },
             {
+              "icon": "lightbulb",
+              "name": "The Art of Doing Science and Engineering",
+              "desc": "Richard Hamming, 1997 — chọn bài toán quan trọng, nghi ngờ dữ liệu và mô phỏng",
+              "href": "pages/the-art-of-doing-science-and-engineering.html",
+              "tags": "Richard Hamming · 1997 — You and Your Research, Learning to Learn, mã Hamming, error-correcting code, chuyên gia, unreliable data, Hamming's rule, mô phỏng, simulation, you get what you measure, systems engineering, n-dimensional space, curse of dimensionality, Bell Labs"
+            },
+            {
               "icon": "library_books",
               "name": "Books in Brief",
               "desc": "Ý cốt lõi: Kahneman, Haidt, Cialdini, Rosling, Diamond…",
