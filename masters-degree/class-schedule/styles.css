@@ -262,9 +262,12 @@ button.now-title:hover { text-decoration: underline; text-decoration-thickness: 
 .ag-day.is-before .ag-d { color: var(--ink-3); }
 .ag-rows { display: grid; gap: 2px; min-width: 0; }
 .ag-empty { padding: 8px 0; font-size: 14px; color: var(--ink-3); }
-.ag-day.is-empty .ag-date { flex-direction: row; justify-content: center; gap: 6px; padding-top: 0; }
-.ag-day.is-empty .ag-d { width: auto; height: 36px; font-size: 15px; }
-.ag-day.is-empty .ag-wd { line-height: 36px; }
+.ag-day:first-child { border-top: 0; }
+/* Ngày trống: cùng cột ngày với dòng có buổi, chỉ thấp hơn. */
+.ag-day.is-empty { align-items: center; }
+.ag-day.is-empty .ag-date { padding-top: 0; gap: 0; }
+.ag-day.is-empty .ag-d { width: auto; height: 20px; font-size: 14px; color: var(--ink-3); }
+.ag-day.is-empty .ag-empty { padding: 0; }
 
 .srow {
   display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center; gap: 4px 16px;
