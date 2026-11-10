@@ -25,7 +25,7 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-020 · hidden-curriculum: điều thường chỉ học được sau khi trả giá · `pages/hidden-curriculum.html`
 - PAGES-021 · hidden-curriculum: tổng quan trước, đọc trong khung · `pages/hidden-curriculum.html`
 - PAGES-022 · hidden-curriculum: Gỡ rối trong đầu · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
-- PAGES-023 · Trang sách: nắm đủ tư duy với ít thời gian đọc nhất · `pages/books-in-brief.html`, `pages/a-short-history-of-nearly-everything.html`, `pages/how-to-lie-with-statistics.html`, `pages/how-to-win-every-argument.html`, `pages/the-little-blue-reasoning-book.html`, `pages/how-money-works.html`
+- PAGES-023 · Trang sách: nắm đủ tư duy với ít thời gian đọc nhất · `pages/books-in-brief.html`, `pages/seeing-like-a-state.html`, `pages/the-art-of-doing-science-and-engineering.html`, `pages/a-short-history-of-nearly-everything.html`, `pages/how-to-lie-with-statistics.html`, `pages/how-to-win-every-argument.html`, `pages/the-little-blue-reasoning-book.html`, `pages/how-money-works.html`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -173,7 +173,7 @@ công việc, gia đình và chính mình, mỗi cái một câu gỡ. Câu gỡ
 một câu ngắn; bỏ câu sáo rỗng. Mỗi suy nghĩ có nhãn độ tin, nguồn khi có, và mục đọc thêm.
 
 ## PAGES-023 · Trang sách: nắm đủ tư duy với ít thời gian đọc nhất
-10/11/2026 · `pages/books-in-brief.html`, `pages/a-short-history-of-nearly-everything.html`, `pages/how-to-lie-with-statistics.html`, `pages/how-to-win-every-argument.html`, `pages/the-little-blue-reasoning-book.html`, `pages/how-money-works.html`
+10/11/2026 · `pages/books-in-brief.html`, `pages/seeing-like-a-state.html`, `pages/the-art-of-doing-science-and-engineering.html`, `pages/a-short-history-of-nearly-everything.html`, `pages/how-to-lie-with-statistics.html`, `pages/how-to-win-every-argument.html`, `pages/the-little-blue-reasoning-book.html`, `pages/how-money-works.html`
 
 Mục đích cao nhất: người đọc nắm đủ tư duy và kiến thức của sách mà tốn ít thời gian hơn nhiều so với đọc bản đầy đủ; bố cục logic trước, trang trí sau.
 Sách mà giá trị nằm ở cả mạch lập luận thì có trang riêng; sách chỉ cần lõi ý và cách nghĩ thì vào `books-in-brief.html`.

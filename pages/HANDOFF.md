@@ -9,6 +9,9 @@
 
 ## CHỜ CHỦ TRANG
 
+- Năm trang sách cũ (how-money-works, how-to-win-every-argument, the-little-blue-reasoning-book,
+  how-to-lie-with-statistics, a-short-history-of-nearly-everything) còn khuôn web-builder. Chuyển sang khuôn
+  PAGES-023 (`.claude/rules/book-pages.md`, mục *Trang tóm tắt sách*) khi chủ trang gọi.
 - ML 101 và Toán cho ML — đề xuất cấu trúc, chỉ làm khi chủ trang gọi (PAGES-004):
   - ML 101: tách chương 10 thành "CNN" và "Dùng CNN"; tách transfer / multi-task / end-to-end khỏi chương 8.
   - ML 101: mô hình attention đủ ba bước; PCA tương tác; thanh ngưỡng precision/recall; cổng kiểm mọi chip
