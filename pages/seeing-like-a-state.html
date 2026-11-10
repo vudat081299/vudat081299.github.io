@@ -1,0 +1,1546 @@
+<!doctype html>
+<!-- Trang tóm tắt một cuốn sách. CSS và JS trong khối "BK CORE" giống hệt ở mọi trang sách. -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" id="bk-theme-color" content="#fbfaf7">
+<title>Seeing Like a State — book notes</title>
+<meta name="description" content="Tóm tắt Seeing Like a State của James C. Scott: nhà nước làm cho xã hội đọc được, bốn điều kiện của thảm hoạ, các ca từ rừng Phổ tới làng ujamaa, mētis, và bài học cho người làm dữ liệu.">
+<script>
+  /* Theme trước lần vẽ đầu (REPO-024): lựa chọn đã lưu ở 'hub-theme' thắng; chưa lưu thì theo hệ điều hành. */
+  (function () {
+    var t = null, r = document.documentElement;
+    try { t = localStorage.getItem('hub-theme'); } catch (e) {}
+    var dark = t ? t === 'dark' : !!(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+    if (dark) r.classList.add('dark');
+    r.classList.add('js');
+    var m = document.getElementById('bk-theme-color');
+    if (m) m.setAttribute('content', dark ? '#101211' : '#fbfaf7');
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Hai mặt chữ, cả hai có subset vietnamese: Literata cho chữ đọc và tiêu đề, Be Vietnam Pro cho nhãn và điều hướng. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&amp;family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&amp;display=swap">
+<style>
+  /* ==========================================================================
+     BK CORE — giống hệt nhau ở mọi trang sách. Sửa ở một trang thì chép sang trang kia.
+     Luật dùng: DESIGN.md. Màu chỉ khai ở hai khối token dưới đây.
+     ========================================================================== */
+  :root {
+    --bg: #fbfaf7;          /* giấy ấm */
+    --surface: #ffffff;
+    --surface-2: #f1f0eb;
+    --ink: #151714;
+    --ink-2: #454a44;       /* chữ phụ, 8.6:1 trên --bg */
+    --ink-3: #5e655e;       /* nhãn, 5.8:1 trên --bg */
+    --line: #e3e1da;
+    --line-2: #cbc9c1;
+    --accent: #0a7a3c;      /* xanh của trang chủ; chữ xanh 5.3:1 */
+    --accent-soft: rgba(10, 122, 60, .07);
+    --accent-line: rgba(10, 122, 60, .34);
+    --on-accent: #ffffff;
+    --warn: #8a4a0c;        /* chỉ cho Giới hạn / Phản biện */
+    --warn-soft: rgba(176, 104, 24, .09);
+    --warn-line: rgba(138, 74, 12, .38);
+    --shadow: 0 1px 2px rgba(21, 23, 20, .05), 0 18px 40px -22px rgba(21, 23, 20, .28);
+    --serif: 'Literata', Georgia, 'Times New Roman', serif;
+    --sans: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --measure: 40rem;       /* khoảng 66 ký tự */
+    --gutter: clamp(16px, 4vw, 40px);
+    --bar-h: 52px;
+    color-scheme: light;
+  }
+  .dark {
+    --bg: #101211;
+    --surface: #161917;
+    --surface-2: #1d211e;
+    --ink: #e9ece7;
+    --ink-2: #b8beb7;
+    --ink-3: #9aa29a;
+    --line: #272c28;
+    --line-2: #3a403b;
+    --accent: #6fd99b;
+    --accent-soft: rgba(111, 217, 155, .08);
+    --accent-line: rgba(111, 217, 155, .34);
+    --on-accent: #06140c;
+    --warn: #e4b26d;
+    --warn-soft: rgba(228, 178, 109, .09);
+    --warn-line: rgba(228, 178, 109, .38);
+    --shadow: 0 0 0 1px rgba(255, 255, 255, .03), 0 22px 48px -24px rgba(0, 0, 0, .85);
+    color-scheme: dark;
+  }
+
+  /* ---- nền ---- */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--bar-h) + 20px); }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 400 1.0625rem/1.72 var(--serif); font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased; overflow-wrap: break-word;
+  }
+  @media (min-width: 768px) { body { font-size: 1.125rem; } }
+  h1, h2, h3, h4, h5 { margin: 0; font-weight: 600; line-height: 1.2; text-wrap: balance; }
+  p { margin: 0 0 1em; }
+  ul, ol { margin: 0 0 1em; padding-left: 1.25em; }
+  li + li { margin-top: .35em; }
+  strong, b { font-weight: 600; }
+  svg { max-width: 100%; }
+  a { color: inherit; text-decoration-color: var(--accent-line); text-decoration-thickness: 1px; text-underline-offset: .2em; }
+  a:hover { color: var(--accent); text-decoration-color: currentColor; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  ::selection { background: var(--accent); color: var(--on-accent); }
+  [hidden] { display: none !important; }
+  .bk-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .bk-skip { position: absolute; left: 12px; top: -60px; z-index: 50; padding: 10px 14px; background: var(--ink); color: var(--bg); font: 600 .875rem/1 var(--sans); border-radius: 8px; text-decoration: none; }
+  .bk-skip:focus { top: 10px; color: var(--bg); }
+  .bk-wrap { max-width: 76rem; margin-inline: auto; padding-inline: var(--gutter); }
+
+  /* ---- thanh trên cùng: về trang chủ, tên trang, mục lục (điện thoại), theme; vạch tiến độ ---- */
+  .bk-bar { position: sticky; top: 0; z-index: 30; height: var(--bar-h); background: var(--bg); background: color-mix(in srgb, var(--bg) 90%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .bk-bar__in { height: 100%; max-width: 80rem; margin: 0 auto; padding-inline: var(--gutter); display: flex; align-items: center; gap: 10px; }
+  .bk-home { flex: none; display: inline-flex; align-items: center; gap: 6px; margin-left: -8px; padding: 8px; border-radius: 8px; font: 500 .875rem/1 var(--sans); color: var(--ink-2); text-decoration: none; }
+  .bk-home:hover { background: var(--surface-2); color: var(--ink); }
+  .bk-name { flex: 1; min-width: 0; margin: 0; font: 600 .9375rem/1.2 var(--sans); letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bk-name span { color: var(--ink-3); font-weight: 500; }
+  .bk-btn { flex: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); font: 500 .8125rem/1 var(--sans); cursor: pointer; }
+  .bk-btn:hover { border-color: var(--line-2); }
+  .bk-btn--icon { width: 36px; padding: 0; }
+  .bk-btn svg { width: 16px; height: 16px; }
+  .bk-tocbtn { max-width: 46vw; }
+  .bk-tocbtn [data-bk-current] { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bk-progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--accent); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+  @media (max-width: 479px) { .bk-home__txt, .bk-name span { display: none; } }
+  @media (max-width: 359px) { .js .bk-name { visibility: hidden; } }
+  @media (min-width: 1024px) { .bk-tocbtn { display: none; } }
+
+  /* ---- đầu trang ---- */
+  .bk-hero { padding-block: clamp(28px, 5vw, 56px) clamp(24px, 3.5vw, 40px); }
+  .bk-hero__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  @media (min-width: 900px) { .bk-hero__grid { grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 56px; align-items: end; } }
+  @media (max-width: 899px) { .bk-hero__grid { gap: 24px; } }
+  .bk-kicker { margin: 0 0 16px; font: 600 .8125rem/1.4 var(--sans); color: var(--accent); }
+  .bk-title { margin: 0 0 10px; font: 600 clamp(2rem, 5.4vw, 3.375rem)/1.06 var(--serif); letter-spacing: -.022em; }
+  .bk-orig { margin: 0 0 20px; font: italic 400 1.125rem/1.45 var(--serif); color: var(--ink-2); }
+  .bk-lede { margin: 0 0 24px; max-width: 36rem; font-size: 1.125rem; line-height: 1.6; color: var(--ink-2); }
+  .bk-facts { display: flex; flex-wrap: wrap; gap: 10px 32px; margin: 0; font: 400 .875rem/1.4 var(--sans); }
+  .bk-facts dt { color: var(--ink-3); margin: 0 0 2px; }
+  .bk-facts dd { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* So hai thời lượng đọc: số và độ dài vạch do JS tính (data-out, --w). */
+  .bk-time { padding: 18px 20px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); font-family: var(--sans); }
+  .bk-time__row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0 0 8px; font-size: .875rem; color: var(--ink-2); }
+  .bk-time__row b { font-size: 1.0625rem; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .bk-time__bar { height: 8px; margin: 0 0 14px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+  .bk-time__bar i { display: block; height: 100%; width: var(--w, 100%); min-width: 6px; border-radius: inherit; background: var(--ink-3); }
+  .bk-time__bar--page i { background: var(--accent); }
+  .bk-time__note { margin: 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: .875rem; line-height: 1.5; color: var(--ink-2); }
+  .bk-time__note b { color: var(--ink); }
+
+  /* ---- tiêu đề khối lớn và nhãn khối nhỏ ---- */
+  .bk-sec-title { margin: 0 0 8px; font: 600 clamp(1.625rem, 3.4vw, 2.25rem)/1.15 var(--serif); letter-spacing: -.016em; }
+  .bk-sec-sub { margin: 0 0 36px; max-width: 40rem; font: 400 1rem/1.6 var(--sans); color: var(--ink-2); }
+  .bk-label { display: flex; align-items: center; gap: 12px; margin: 0 0 16px; font: 600 .8125rem/1.4 var(--sans); color: var(--ink-3); }
+  .bk-label::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+
+  /* ---- TỔNG QUAN ---- */
+  .bk-ov { padding-bottom: clamp(40px, 7vw, 80px); scroll-margin-top: calc(var(--bar-h) + 20px); }
+  .bk-ov__card { padding: clamp(20px, 3.4vw, 36px); background: var(--surface); border: 1px solid var(--line); border-radius: 20px; }
+  .bk-ov__card > .bk-sec-title { margin-bottom: 24px; font-size: clamp(1.5rem, 2.8vw, 1.875rem); }
+  .bk-ov__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  @media (min-width: 900px) {
+    .bk-ov__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); grid-template-areas: "thesis idx" "chain idx"; gap: 36px 56px; align-items: start; }
+    .bk-ov__thesis { grid-area: thesis; } .bk-ov__idx { grid-area: idx; } .bk-ov__chain { grid-area: chain; }
+  }
+  .bk-thesis { margin: 0; max-width: 46rem; font: 400 clamp(1.125rem, 1.8vw, 1.25rem)/1.6 var(--serif); }
+  .bk-thesis strong { font-weight: 600; box-shadow: inset 0 -.38em 0 var(--accent-soft); }
+
+  /* Mạch lập luận: dọc ở điện thoại, ngang từ 900px. Mỗi bước nói nó nối với bước trước thế nào. */
+  .bk-chain { list-style: none; margin: 0; padding: 0; counter-reset: step; display: grid; }
+  .bk-step { position: relative; margin: 0; padding: 0 0 22px 40px; counter-increment: step; }
+  .bk-step::before { content: counter(step); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border: 1.5px solid var(--accent); border-radius: 50%; background: var(--surface); color: var(--accent); font: 600 .8125rem/23px var(--sans); text-align: center; }
+  .bk-step::after { content: ""; position: absolute; left: 12px; top: 30px; bottom: 4px; width: 2px; background: var(--line-2); }
+  .bk-step:last-child { padding-bottom: 0; }
+  .bk-step:last-child::after { display: none; }
+  .bk-step__rel { display: block; margin: 0 0 2px; font: 600 .75rem/1.6 var(--sans); color: var(--accent); }
+  .bk-step__name { display: block; font: 600 1rem/1.35 var(--sans); }
+  .bk-step__name a { text-decoration: none; }
+  .bk-step__name a:hover { text-decoration: underline; }
+  .bk-step__text { display: block; margin-top: 4px; font-size: .9375rem; line-height: 1.55; color: var(--ink-2); }
+  /* .bk-chain--row: mạch nằm ngang khi khối rộng hết trang (đặt --n = số bước). */
+  @media (min-width: 900px) {
+    .bk-chain--row { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: 0 28px; }
+    .bk-chain--row .bk-step { padding: 40px 0 0; }
+    .bk-chain--row .bk-step::after { left: 34px; right: -22px; top: 12px; bottom: auto; width: auto; height: 2px; }
+    .bk-chain--row .bk-step:last-child::after { display: none; }
+  }
+
+  /* Danh sách mục: JS dựng từ các .bk-unit (tên, ý chính một dòng, phút đọc). */
+  .bk-idx { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 25rem), 1fr)); column-gap: 40px; }
+  .bk-idx > li { margin: 0; border-top: 1px solid var(--line); }
+  .bk-idx a { display: grid; grid-template-columns: 2rem minmax(0, 1fr) auto; gap: 0 14px; padding: 14px 8px 15px 4px; color: inherit; text-decoration: none; border-radius: 10px; }
+  .bk-idx a:hover { background: var(--surface-2); color: inherit; }
+  .bk-idx__n { font: 600 1.125rem/1.45 var(--serif); color: var(--ink-3); font-variant-numeric: lining-nums tabular-nums; }
+  .bk-idx__t { display: block; font: 600 1rem/1.4 var(--sans); }
+  .bk-idx__by { display: block; font: 400 .8125rem/1.5 var(--sans); color: var(--ink-3); }
+  .bk-idx__g { display: block; margin-top: 3px; font-size: .9375rem; line-height: 1.5; color: var(--ink-2); }
+  .bk-idx__m { font: 500 .8125rem/1.7 var(--sans); color: var(--ink-3); white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
+  .is-done .bk-idx__n, .is-done .bk-idx__m { color: var(--accent); }
+  .bk-idx__m .bk-tick { margin-left: 4px; }
+  @media (max-width: 559px) {
+    .bk-idx a { grid-template-columns: 1.5rem minmax(0, 1fr); gap: 0 10px; }
+    .bk-idx__m { grid-column: 2; text-align: left; margin-top: 2px; }
+  }
+  .bk-idxgrps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: 32px 48px; }
+  .bk-idxgrp__t { margin: 0 0 10px; font: 600 1.0625rem/1.35 var(--sans); }
+  .bk-idxgrp__t span { margin-left: 8px; font-weight: 400; font-size: .8125rem; color: var(--ink-3); }
+  .bk-idx-sum { margin: 14px 0 0; font: 400 .875rem/1.5 var(--sans); color: var(--ink-3); }
+  .bk-tick { display: inline-block; width: .9em; height: .9em; vertical-align: -.1em; }
+
+  /* ---- thân: mục lục bám bên trái (≥1024px) hoặc bảng thả từ thanh trên (điện thoại) ---- */
+  .bk-shell { max-width: 80rem; margin: 0 auto; padding: 0 var(--gutter) clamp(56px, 8vw, 96px); display: grid; grid-template-columns: minmax(0, 1fr); }
+  .bk-main { min-width: 0; }
+  .bk-rail { font-family: var(--sans); }
+  .bk-rail__head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 0 0 10px; padding: 0 10px; }
+  .bk-rail__title { margin: 0; font: 600 .8125rem/1.4 var(--sans); color: var(--ink-3); }
+  .bk-rail__stat { margin: 0; font: 500 .75rem/1.4 var(--sans); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .bk-toc { list-style: none; margin: 0; padding: 0; }
+  .bk-toc li { margin: 0; }
+  .bk-toc a { display: flex; align-items: baseline; gap: 10px; padding: 6px 10px; border-radius: 8px; font-size: .875rem; line-height: 1.4; color: var(--ink-2); text-decoration: none; }
+  .bk-toc a:hover { background: var(--surface-2); color: var(--ink); }
+  .bk-toc a[aria-current] { background: var(--surface-2); color: var(--ink); font-weight: 600; box-shadow: inset 2px 0 0 var(--accent); }
+  .bk-toc__n { flex: none; min-width: 1.1em; font-weight: 600; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .bk-toc__grp { margin: 12px 0 2px; padding: 0 10px; font-size: .75rem; font-weight: 600; color: var(--ink-3); }
+  .bk-toc .bk-tick { margin-left: auto; flex: none; color: var(--accent); }
+  .bk-toc__sep { height: 1px; margin: 8px 10px; background: var(--line); }
+  @media (min-width: 1024px) {
+    .bk-shell { grid-template-columns: 14.5rem minmax(0, 1fr); gap: 56px; }
+    .bk-rail { position: sticky; top: calc(var(--bar-h) + 28px); align-self: start; max-height: calc(100vh - var(--bar-h) - 56px); overflow-y: auto; padding: 4px 0 12px; margin-top: clamp(24px, 4vw, 48px); }
+  }
+  @media (max-width: 1023px) {
+    .js .bk-rail { display: none; position: fixed; z-index: 29; top: calc(var(--bar-h) + 6px); left: var(--gutter); right: var(--gutter); max-height: min(70vh, 560px); overflow-y: auto; padding: 14px 6px 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); }
+    .js .bk-rail.is-open { display: block; }
+    .bk-toc a { padding: 9px 10px; font-size: .9375rem; }
+  }
+
+  /* ---- một mục (chương hoặc một cuốn) ---- */
+  .bk-unit { padding-top: clamp(56px, 8vw, 96px); }
+  .bk-main > .bk-unit:first-child, .bk-main > .bk-shelf:first-child { padding-top: clamp(24px, 4vw, 48px); }
+  .bk-unit__head { max-width: 48rem; margin: 0 0 32px; }
+  .bk-unit__num { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 0 0 12px; font: 600 .8125rem/1.5 var(--sans); color: var(--accent); }
+  .bk-unit__min, .bk-unit__by { font-weight: 500; color: var(--ink-3); }
+  .bk-unit__state { display: inline-flex; align-items: center; gap: 4px; color: var(--accent); }
+  .bk-unit__title { margin: 0 0 12px; font: 600 clamp(1.75rem, 3.6vw, 2.5rem)/1.12 var(--serif); letter-spacing: -.018em; }
+  h3.bk-unit__title { font-size: clamp(1.625rem, 3.2vw, 2.25rem); }
+  .bk-unit__orig { margin: -4px 0 12px; font: italic 400 1rem/1.4 var(--serif); color: var(--ink-3); }
+  .bk-unit__gist { margin: 0; font: italic 400 1.1875rem/1.5 var(--serif); color: var(--ink-2); }
+
+  /* Khuôn cố định: nhãn bên trái ở màn rộng, nằm trên ở màn hẹp. */
+  .bk-slot { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 22px 0 24px; border-top: 1px solid var(--line); }
+  .bk-slot__label { margin: 0; font: 600 .8125rem/1.6 var(--sans); color: var(--ink-3); }
+  .bk-slot__body { min-width: 0; max-width: var(--measure); }
+  .bk-slot__body > :first-child { margin-top: 0; }
+  .bk-slot__body > :last-child { margin-bottom: 0; }
+  .bk-slot--idea .bk-slot__label, .bk-slot--use .bk-slot__label { color: var(--accent); }
+  .bk-slot--idea .bk-slot__body { font-size: 1.25rem; line-height: 1.55; font-weight: 600; letter-spacing: -.005em; }
+  .bk-slot--limit .bk-slot__label { color: var(--warn); }
+  .bk-slot--limit .bk-slot__body { padding-left: 16px; border-left: 2px solid var(--warn-line); }
+  @media (min-width: 1200px) {
+    .bk-slot { grid-template-columns: 8.5rem minmax(0, var(--measure)); gap: 32px; }
+    .bk-slot__label { padding-top: .3em; }
+    .bk-slot--idea .bk-slot__label { padding-top: .45em; }
+  }
+
+  /* ---- thành phần trong mục ---- */
+  dfn { font-style: normal; font-weight: 600; }
+  .bk-terms { display: grid; gap: 10px; margin: 1.25em 0; }
+  .bk-terms > div { padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+  .bk-terms dt { font: 600 .9375rem/1.45 var(--sans); }
+  .bk-terms dt span { font-weight: 400; color: var(--ink-3); }
+  .bk-terms dd { margin: 3px 0 0; font-size: 1rem; line-height: 1.6; color: var(--ink-2); }
+  .bk-quote { margin: 1.5em 0; padding: 2px 0 2px 20px; border-left: 3px solid var(--accent); }
+  .bk-quote p { margin: 0 0 .5em; font: italic 400 1.1875rem/1.55 var(--serif); }
+  .bk-quote cite { font: normal 500 .8125rem/1.4 var(--sans); color: var(--ink-3); }
+  .bk-table-wrap { margin: 1.5em 0; overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+  .bk-table { width: 100%; border-collapse: collapse; font: 400 .9375rem/1.5 var(--sans); }
+  .bk-table--wide { min-width: 34rem; }
+  @media (max-width: 559px) { .bk-table { font-size: .875rem; } .bk-table th, .bk-table td { padding: 8px 10px; } }
+  .bk-table caption { padding: 12px 14px 0; text-align: left; font-weight: 600; font-size: .875rem; color: var(--ink-2); }
+  .bk-table th, .bk-table td { padding: 10px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+  .bk-table thead th { font-size: .8125rem; font-weight: 600; color: var(--ink-2); background: var(--surface-2); }
+  .bk-table tbody th { font-weight: 600; }
+  .bk-table tbody tr:last-child > * { border-bottom: 0; }
+  .bk-model { margin: 1.75em 0; padding: 20px 22px; background: var(--accent-soft); border: 1px solid var(--accent-line); border-radius: 14px; font-family: var(--sans); }
+  .bk-model__kicker { margin: 0 0 4px; font: 600 .75rem/1.5 var(--sans); color: var(--accent); }
+  .bk-model__name { margin: 0 0 6px; font: 600 1.125rem/1.35 var(--sans); }
+  .bk-model__when { margin: 0 0 10px; font-size: .9375rem; line-height: 1.55; color: var(--ink-2); }
+  .bk-model ol { margin: 0; font-size: .9688rem; line-height: 1.55; }
+  .bk-fig { margin: 1.75em 0; }
+  .bk-fig svg { display: block; width: 100%; max-width: 27rem; height: auto; font-family: var(--sans); }
+  .bk-fig figcaption { max-width: 27rem; margin-top: 10px; font: 400 .875rem/1.55 var(--sans); color: var(--ink-3); }
+  .bk-case { margin: 0 0 1em; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+  .bk-case > :last-child { margin-bottom: 0; }
+  .bk-use { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .bk-use > li { margin: 0; padding-left: 16px; border-left: 2px solid var(--accent-line); }
+  .bk-use__when { display: block; font: 600 .875rem/1.5 var(--sans); }
+  .bk-tag { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); font: 600 .75rem/1.6 var(--sans); color: var(--ink-2); vertical-align: .08em; }
+
+  /* Màu cho hình SVG: dùng class, không ghi mã màu trong thuộc tính. */
+  .f-surface { fill: var(--surface); } .f-soft { fill: var(--surface-2); } .f-accent { fill: var(--accent); }
+  .f-accent-soft { fill: var(--accent-soft); } .f-warn-soft { fill: var(--warn-soft); } .f-ink3 { fill: var(--ink-3); } .f-none { fill: none; }
+  .s-line { stroke: var(--line-2); } .s-ink { stroke: var(--ink-2); } .s-accent { stroke: var(--accent); } .s-warn { stroke: var(--warn); }
+  .t-ink { fill: var(--ink); } .t-muted { fill: var(--ink-2); } .t-faint { fill: var(--ink-3); } .t-accent { fill: var(--accent); } .t-warn { fill: var(--warn); }
+  .t-b { font-weight: 600; }
+
+  /* Nút "đã đọc" cuối mỗi mục (JS chèn). */
+  .bk-done { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; padding: 10px 16px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--surface); color: var(--ink); font: 500 .875rem/1.2 var(--sans); cursor: pointer; }
+  .bk-done:hover { border-color: var(--accent); }
+  .bk-done[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
+  /* ---- cuối trang ---- */
+  .bk-end { padding-top: clamp(64px, 9vw, 112px); }
+  .bk-end > .bk-sec-title { max-width: 48rem; }
+  .bk-tools { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+  .bk-tools > li { margin: 0; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; font-family: var(--sans); }
+  .bk-tools__name { font: 600 1rem/1.35 var(--sans); }
+  .bk-tools__use { font-size: .9375rem; line-height: 1.55; color: var(--ink-2); }
+  .bk-tools__src { margin-top: auto; padding-top: 4px; font-size: .8125rem; color: var(--ink-3); }
+  .bk-quiz { list-style: none; margin: 0; padding: 0; max-width: 48rem; border-top: 1px solid var(--line); }
+  .bk-quiz > li { margin: 0; border-bottom: 1px solid var(--line); }
+  .bk-quiz summary { position: relative; padding: 16px 4.5rem 16px 0; cursor: pointer; list-style: none; font: 500 1rem/1.55 var(--sans); }
+  .bk-quiz summary::-webkit-details-marker { display: none; }
+  .bk-quiz summary::after { content: "Đáp án"; position: absolute; right: 0; top: 18px; font-size: .75rem; font-weight: 600; color: var(--accent); }
+  .bk-quiz details[open] summary::after { content: "Ẩn"; }
+  .bk-quiz summary:focus-visible { outline-offset: 4px; }
+  .bk-quiz__n { margin-right: 8px; font-weight: 600; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .bk-quiz__a { padding: 0 0 18px; }
+  .bk-quiz__a > :last-child { margin-bottom: 0; }
+  .bk-quiz__see { font: 400 .875rem/1.5 var(--sans); color: var(--ink-3); }
+  .bk-reads { list-style: none; margin: 0; padding: 0; max-width: 48rem; }
+  .bk-reads > li { margin: 0; padding: 14px 0; border-top: 1px solid var(--line); }
+  .bk-reads__t { display: block; font: 600 1rem/1.45 var(--sans); }
+  .bk-reads__why { display: block; margin-top: 2px; font-size: .9688rem; color: var(--ink-2); }
+  .bk-foot { margin-top: clamp(56px, 8vw, 96px); padding: 24px 0 40px; border-top: 1px solid var(--line); font: 400 .875rem/1.6 var(--sans); color: var(--ink-3); }
+  .bk-foot p { margin: 0 0 6px; }
+
+  /* ---- trang gom nhiều sách: kệ chủ đề, ý chính đánh số, lộ trình ---- */
+  .bk-shelf { padding-top: clamp(64px, 9vw, 112px); }
+  .bk-shelf__head { max-width: 48rem; }
+  .bk-shelf__kicker { margin: 0 0 8px; font: 600 .8125rem/1.5 var(--sans); color: var(--accent); }
+  .bk-shelf__title { margin: 0 0 10px; font: 600 clamp(1.875rem, 4vw, 2.75rem)/1.1 var(--serif); letter-spacing: -.02em; }
+  .bk-shelf__sub { margin: 0; font: 400 1rem/1.6 var(--sans); color: var(--ink-2); }
+  .bk-shelf .bk-unit { margin-top: clamp(40px, 6vw, 64px); padding-top: clamp(28px, 4vw, 40px); border-top: 2px solid var(--ink); }
+  .bk-ideas { list-style: none; margin: 0; padding: 0; counter-reset: idea; display: grid; gap: 20px; }
+  .bk-ideas > li { position: relative; margin: 0; padding-left: 2.25rem; counter-increment: idea; }
+  .bk-ideas > li::before { content: counter(idea); position: absolute; left: 0; top: .15em; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--surface-2); color: var(--ink-2); font: 600 .75rem/1.5rem var(--sans); text-align: center; }
+  .bk-ideas p { margin: 0 0 .4em; }
+  .bk-ideas > li > :last-child { margin-bottom: 0; }
+  .bk-ideas__t { display: block; margin-bottom: 2px; font: 600 1.0625rem/1.45 var(--sans); }
+  .bk-ideas__ex { font-size: .9688rem; color: var(--ink-2); }
+  .bk-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+  .bk-chip { min-height: 38px; padding: 0 16px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--surface); color: var(--ink); font: 500 .875rem/1.2 var(--sans); cursor: pointer; }
+  .bk-chip:hover { border-color: var(--ink-3); }
+  .bk-chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .js .bk-route:not(.is-on) { display: none; }
+  .bk-route + .bk-route { margin-top: 24px; }
+  .js .bk-route + .bk-route { margin-top: 0; }
+  .bk-route__why { margin: 0 0 12px; max-width: 44rem; font: 400 .9375rem/1.6 var(--sans); color: var(--ink-2); }
+  .bk-route__steps { list-style: none; margin: 0; padding: 0; counter-reset: rs; max-width: 48rem; }
+  .bk-route__steps > li { position: relative; margin: 0; padding: 12px 0 12px 40px; border-top: 1px solid var(--line); counter-increment: rs; }
+  .bk-route__steps > li::before { content: counter(rs); position: absolute; left: 0; top: 13px; width: 26px; height: 26px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font: 600 .8125rem/26px var(--sans); text-align: center; }
+  .bk-route__steps a { font: 600 1rem/1.5 var(--sans); }
+  .bk-route__steps span { display: block; font-size: .9375rem; line-height: 1.55; color: var(--ink-2); }
+  .bk-unit__num::before { content: ""; width: 24px; height: 2px; background: currentColor; }
+
+  /* ---- bản in: một cột, chữ đen trên giấy trắng, mở hết đáp án ---- */
+  @media print {
+    :root, .dark { --bg: #fff; --surface: #fff; --surface-2: #f2f2f2; --ink: #000; --ink-2: #222; --ink-3: #444; --line: #ccc; --line-2: #999; --accent: #0a5c2e; --accent-soft: #f1f6f2; --accent-line: #9bb8a6; --warn: #6b3a08; --warn-line: #b99; color-scheme: light; }
+    html { font-size: 12.5px; }
+    body { font-size: 1rem; line-height: 1.55; }
+    .bk-bar, .bk-rail, .bk-done, .bk-skip, .bk-chips, .bk-unit__state { display: none !important; }
+    .bk-shell { display: block; padding: 0; }
+    .bk-hero, .bk-unit, .bk-end { padding-top: 18pt; }
+    .bk-time, .bk-ov__card, .bk-tools > li { box-shadow: none; }
+    .bk-unit__head, .bk-slot__label, .bk-sec-title { break-after: avoid; }
+    .bk-unit__num::before { display: none; }
+    .bk-model, .bk-fig, .bk-table-wrap, .bk-terms > div, .bk-tools > li, .bk-ideas > li, .bk-quiz > li { break-inside: avoid; }
+    .bk-time__bar { display: none; }
+    .bk-slot { grid-template-columns: 7rem minmax(0, 1fr); gap: 14pt; padding: 8pt 0; }
+    .bk-table { min-width: 0; }
+    .bk-quiz summary::after { content: none; }
+    a { text-decoration: none; }
+    .js .bk-route { display: block !important; }
+  }
+</style>
+</head>
+<body>
+<a class="bk-skip" href="#noi-dung">Bỏ qua, tới nội dung</a>
+<header class="bk-bar">
+  <div class="bk-bar__in">
+    <a class="bk-home" href="../index.html" aria-label="Về trang chủ">
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16"><path d="M10 3.5L5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="bk-home__txt">Trang chủ</span>
+    </a>
+    <p class="bk-name">Book Notes <span>· Seeing Like a State</span></p>
+    <button class="bk-btn bk-tocbtn" id="bk-tocbtn" type="button" aria-controls="bk-rail" aria-expanded="false">
+      <svg aria-hidden="true" viewBox="0 0 16 16"><path d="M3 4.5h10M3 8h10M3 11.5h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span data-bk-current>Mục lục</span>
+    </button>
+    <button class="bk-btn bk-btn--icon" id="bk-theme" type="button" aria-label="Đổi nền sáng hoặc tối">
+      <svg aria-hidden="true" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 2a6 6 0 0 1 0 12z" fill="currentColor"/></svg>
+    </button>
+  </div>
+  <div class="bk-progress" aria-hidden="true"></div>
+</header>
+
+<main id="noi-dung">
+
+  <!-- ================= ĐẦU TRANG ================= -->
+  <div class="bk-hero bk-wrap" data-pages="445">
+    <div class="bk-hero__grid">
+      <div>
+        <p class="bk-kicker">Tóm tắt sách · Nhà nước, dữ liệu và kế hoạch</p>
+        <h1 class="bk-title">Nhìn bằng mắt nhà nước</h1>
+        <p class="bk-orig">Seeing Like a State: How Certain Schemes to Improve the Human Condition Have Failed</p>
+        <dl class="bk-facts">
+          <div><dt>Tác giả</dt><dd>James C. Scott</dd></div>
+          <div><dt>Xuất bản</dt><dd>Yale University Press, 1998</dd></div>
+          <div><dt>Độ dài</dt><dd data-out="pages">—</dd></div>
+          <div><dt>Trang này</dt><dd><span data-out="units">—</span> mục</dd></div>
+        </dl>
+      </div>
+      <div class="bk-time bk-noread">
+        <p class="bk-time__row"><span>Đọc sách gốc</span><b data-out="book">—</b></p>
+        <div class="bk-time__bar" aria-hidden="true"><i></i></div>
+        <p class="bk-time__row"><span>Đọc trang này</span><b data-out="page">—</b></p>
+        <div class="bk-time__bar bk-time__bar--page" aria-hidden="true"><i></i></div>
+        <p class="bk-time__note">Ít hơn <b data-out="ratio">—</b>. Giữ đủ các ca, vì mỗi ca thêm một mảnh của lập luận. Bỏ: phần chú thích (tr. 359–432), lịch sử chi tiết Liên Xô và Lenin, Chandigarh, ca Ethiopia, các ví dụ thứ hai của cùng một ý.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TỔNG QUAN ================= -->
+  <section class="bk-ov bk-wrap" id="tong-quan" data-toc="Tổng quan" aria-labelledby="tong-quan-h">
+    <div class="bk-ov__card">
+      <h2 class="bk-sec-title" id="tong-quan-h">Tổng quan</h2>
+      <div class="bk-ov__grid">
+        <div class="bk-ov__thesis">
+          <h3 class="bk-label">Luận điểm</h3>
+          <p class="bk-thesis">Nhà nước chỉ điều hành được thứ nó đọc được, nên nó rút rừng, đất, tên người, thành phố thành vài con số và ô vuông. Phép đơn giản hoá ấy là công cụ thường ngày của cả phúc lợi lẫn áp bức; nó thành thảm hoạ khi đi cùng niềm tin mù quáng vào thiết kế “khoa học”, một nhà nước sẵn sàng cưỡng ép và một xã hội hết sức chống lại. Kế hoạch hỏng vì <strong>nó phá đúng thứ tri thức thực hành tại chỗ (mētis) mà mọi trật tự đang chạy được đều dựa vào</strong>.</p>
+        </div>
+        <div class="bk-ov__idx">
+          <h3 class="bk-label">Các mục</h3>
+          <div data-bk-index></div>
+        </div>
+        <div class="bk-ov__chain">
+          <h3 class="bk-label">Mạch lập luận</h3>
+          <ol class="bk-chain">
+            <li class="bk-step">
+              <span class="bk-step__rel">Điểm xuất phát</span>
+              <span class="bk-step__name"><a href="#ch-1">Đọc được</a></span>
+              <span class="bk-step__text">Muốn đếm, thu thuế, điều hành, nhà nước phải đơn giản hoá thực tế.</span>
+            </li>
+            <li class="bk-step">
+              <span class="bk-step__rel">Nhưng bản đồ không chỉ ghi</span>
+              <span class="bk-step__name"><a href="#ch-2">Bản đồ đổi lãnh thổ</a></span>
+              <span class="bk-step__text">Có quyền lực sau lưng, phép đơn giản hoá ép thực tế giống nó.</span>
+            </li>
+            <li class="bk-step">
+              <span class="bk-step__rel">Thêm niềm tin và quyền lực</span>
+              <span class="bk-step__name"><a href="#ch-4">Bốn điều kiện</a></span>
+              <span class="bk-step__text">Đủ bản đồ, ý thức hệ, cưỡng ép và xã hội kiệt sức thì thành thảm hoạ.</span>
+            </li>
+            <li class="bk-step">
+              <span class="bk-step__rel">Kiểm bằng các ca</span>
+              <span class="bk-step__name"><a href="#ch-5">Thành phố, nông thôn, ruộng</a></span>
+              <span class="bk-step__text">Brasília, tập thể hoá, làng ujamaa, nông nghiệp một loài.</span>
+            </li>
+            <li class="bk-step">
+              <span class="bk-step__rel">Vì sao hỏng</span>
+              <span class="bk-step__name"><a href="#ch-10">Mētis</a></span>
+              <span class="bk-step__text">Kế hoạch chính thức sống nhờ tri thức không viết ra được.</span>
+            </li>
+            <li class="bk-step">
+              <span class="bk-step__rel">Vậy khi buộc phải can thiệp</span>
+              <span class="bk-step__name"><a href="#ch-11">Bốn quy tắc</a></span>
+              <span class="bk-step__text">Bước nhỏ, đảo ngược được, chờ bất ngờ, chừa chỗ cho người.</span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="bk-shell">
+    <nav class="bk-rail bk-noread" id="bk-rail" aria-label="Mục lục">
+      <div class="bk-rail__head"><p class="bk-rail__title">Mục lục</p><p class="bk-rail__stat"><span data-out="done">0</span> đã đọc</p></div>
+      <ol class="bk-toc" data-bk-toc></ol>
+    </nav>
+
+    <div class="bk-main">
+
+      <!-- ================= MỤC 1 ================= -->
+      <section class="bk-unit" id="ch-1" data-toc="Rừng tính toán" aria-labelledby="ch-1-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 1 · Chương 1</p>
+          <h2 class="bk-unit__title" id="ch-1-h">Rừng tính toán: đo gì thì thấy nấy</h2>
+          <p class="bk-unit__gist">Người quản lý chỉ thấy thứ mình đo; phần không đo vẫn đang giữ cho hệ thống sống.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Làm cho đọc được nghĩa là cắt thực tế xuống còn vài thứ đếm được. Thứ được nhìn rõ thì quản được; thứ bị cắt đi không biến mất, nó chỉ không còn ai trông.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Scott bắt đầu từ một câu hỏi nhỏ: vì sao nhà nước nào cũng khó chịu với dân du mục, dân du canh, người không chỗ ở cố định? Vì nhà nước tiền hiện đại gần như mù. Nó không biết ai có gì, ở đâu, bao nhiêu. Muốn thu thuế, bắt lính, dẹp loạn, nó phải biến xã hội thành bảng biểu.</p>
+            <dl class="bk-terms">
+              <div><dt>Đọc được <span>· legibility</span></dt><dd>Xã hội hay tự nhiên được sắp xếp sao cho người ở trung tâm đếm, so, ra lệnh được mà không cần hiểu chuyện tại chỗ.</dd></div>
+              <div><dt>Đơn giản hoá mỏng <span>· thin simplification</span></dt><dd>Bản mô tả chỉ giữ vài thuộc tính phục vụ một mục đích, bỏ hết phần còn lại.</dd></div>
+            </dl>
+            <p>Rừng là ca mẫu, và Scott dùng nó làm ẩn dụ cho cả cuốn sách.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Phổ và Sachsen, khoảng 1765–1800. Với ngân khố, rừng chỉ là doanh thu gỗ. Các nhà toán học tính thể tích gỗ bán được của một “cây chuẩn” (<i>Normalbaum</i>) theo cỡ và tuổi, rồi lập bảng. Sau đó người ta làm rừng thật giống bảng: dọn bụi, trồng một loài, thường là vân sam Na Uy, cùng tuổi, thẳng hàng.</p>
+              <p>Vòng trồng đầu lãi lớn. Tới vòng thứ hai, rừng thuần loài thoái hoá: đất kiệt, sâu bệnh, cây yếu. Một nguồn Scott dẫn ghi hai, ba thế hệ vân sam thuần làm mất 20–30% sản lượng. Hậu quả mất khoảng một thế kỷ mới lộ rõ.</p>
+            </div>
+            <figure class="bk-fig">
+              <svg viewBox="0 0 360 300" role="img" aria-labelledby="fig-forest-t">
+                <title id="fig-forest-t">Hai khu rừng nhìn từ trên xuống. Rừng tự nhiên: cây to nhỏ khác loài, có bụi rậm; người dân thấy ở đó củi, lá, quả, thuốc, chỗ chăn thả, thú săn, nấm và bụi giữ đất. Rừng tính toán: mười sáu cây giống hệt xếp lưới bốn nhân bốn; bảng tính chỉ thấy thể tích gỗ bán được. Rừng tính toán lãi lớn ở vòng trồng đầu, mất 20 đến 30 phần trăm sản lượng sau hai ba thế hệ.</title>
+                <text class="t-ink t-b" x="90" y="18" text-anchor="middle" font-size="14">Rừng tự nhiên</text>
+                <text class="t-ink t-b" x="270" y="18" text-anchor="middle" font-size="14">Rừng tính toán</text>
+                <rect class="f-surface s-line" x="8" y="28" width="164" height="150" rx="10"/>
+                <rect class="f-surface s-line" x="188" y="28" width="164" height="150" rx="10"/>
+                <g class="f-soft s-line">
+                  <circle cx="30" cy="160" r="6"/><circle cx="72" cy="94" r="5"/><circle cx="150" cy="58" r="6"/><circle cx="118" cy="162" r="5"/><circle cx="58" cy="50" r="4"/><circle cx="104" cy="118" r="4"/><circle cx="152" cy="132" r="5"/>
+                </g>
+                <g class="f-accent-soft s-accent">
+                  <circle cx="38" cy="62" r="20"/><circle cx="96" cy="52" r="12"/><circle cx="138" cy="90" r="22"/><circle cx="44" cy="124" r="15"/><circle cx="88" cy="150" r="18"/><circle cx="148" cy="160" r="9"/><circle cx="78" cy="102" r="8"/>
+                </g>
+                <g class="f-accent-soft s-accent">
+                  <circle cx="216" cy="52" r="12"/><circle cx="252" cy="52" r="12"/><circle cx="288" cy="52" r="12"/><circle cx="324" cy="52" r="12"/>
+                  <circle cx="216" cy="86" r="12"/><circle cx="252" cy="86" r="12"/><circle cx="288" cy="86" r="12"/><circle cx="324" cy="86" r="12"/>
+                  <circle cx="216" cy="120" r="12"/><circle cx="252" cy="120" r="12"/><circle cx="288" cy="120" r="12"/><circle cx="324" cy="120" r="12"/>
+                  <circle cx="216" cy="154" r="12"/><circle cx="252" cy="154" r="12"/><circle cx="288" cy="154" r="12"/><circle cx="324" cy="154" r="12"/>
+                </g>
+                <text class="t-faint" x="12" y="202" font-size="13">Người dân thấy:</text>
+                <text class="t-muted" x="12" y="220" font-size="13">củi, lá, quả, thuốc,</text>
+                <text class="t-muted" x="12" y="237" font-size="13">chỗ chăn thả, thú săn,</text>
+                <text class="t-muted" x="12" y="254" font-size="13">nấm, bụi giữ đất</text>
+                <text class="t-faint" x="192" y="202" font-size="13">Bảng tính thấy:</text>
+                <text class="t-muted" x="192" y="220" font-size="13">m³ gỗ bán được</text>
+                <text class="t-muted" x="192" y="237" font-size="13">theo cỡ và tuổi cây</text>
+                <text class="t-accent t-b" x="192" y="268" font-size="13">Vòng 1: lãi lớn</text>
+                <text class="t-warn t-b" x="192" y="288" font-size="13">2–3 thế hệ: mất 20–30%</text>
+              </svg>
+              <figcaption>Phần bị cắt khỏi bảng (bụi, nấm, côn trùng, đất) chính là phần nuôi rừng. Thất bại đến chậm, nên lúc vòng đầu thắng lớn không ai thấy nó.</figcaption>
+            </figure>
+            <p>Tiếng Đức có thêm từ <i>Waldsterben</i>, “rừng chết”, cho những ca nặng nhất. Người dân cũng mất: cây có giá thành “gỗ”, cây cạnh tranh thành “cây tạp”; củi, chỗ chăn thả, thú săn biến mất khỏi khu rừng chỉ còn một loài.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi chọn KPI cho dashboard hay hàm mục tiêu cho mô hình</span>Viết ra những gì chỉ số không thấy (bụi rậm và đất của hệ thống), rồi đặt cạnh nó ít nhất một chỉ số chậm như tỉ lệ giữ chân hay khiếu nại.</li>
+              <li><span class="bk-use__when">Khi đánh giá một mô hình gợi ý hay một chính sách</span>Cửa sổ đánh giá phải dài hơn chu kỳ phản hồi. A/B test một tuần không thấy được “vòng trồng thứ hai”.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Rừng chết ở Đức thập niên 1980 có nhiều nguyên nhân, trong đó có mưa axit; Scott dùng từ này cho các ca rừng thuần loài suy thoái, đừng đọc thành một nguyên nhân duy nhất. Rừng ở đây là ẩn dụ: nó cho thấy cơ chế, chưa chứng minh mọi phép đơn giản hoá đều hỏng như thế.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 2 ================= -->
+      <section class="bk-unit" id="ch-2" data-toc="Đo, đất, thuế" aria-labelledby="ch-2-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 2 · Chương 1</p>
+          <h2 class="bk-unit__title" id="ch-2-h">Đơn vị đo, địa chính và thuế cửa sổ</h2>
+          <p class="bk-unit__gist">Cách đo và ghi sổ tại chỗ rất hợp lý với người trong cuộc, nhưng người ngoài không đọc được.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Mỗi cách đo, mỗi cuốn sổ là một phép chọn: làm rõ thứ trung tâm cần, xoá thứ người tại chỗ cần. Khi được dùng để thu thuế hay chia quyền, nó còn đổi luôn cái nó đo.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Trước hệ mét, đơn vị đo gắn với việc đang làm. Dây được đo bằng khoảng từ ngón cái tới khuỷu tay, vì người ta quấn dây như thế. “Đủ mưa” nghĩa là đủ cho cây đang trồng. Mỗi vùng một cái giạ, và cỡ cái giạ là chuyện tranh chấp: theo sử gia Witold Kula, cái giạ dùng thu tô ở Pháp to thêm một phần ba từ 1674 tới 1716. Hệ mét, do Cách mạng Pháp và nhà nước Napoléon áp đặt, làm mọi thứ so được với nhau: lợi cho buôn bán, cho thuế, cho bình đẳng trước luật. Cái giá là mất nghĩa tại chỗ.</p>
+            <p>Đất cũng vậy. Quyền dùng đất ở làng thường chồng lớp: người này cày, người kia mót lúa, cả làng chăn thả sau mùa gặt. Bản đồ địa chính thay tất cả bằng một chủ, một thửa, một mức thuế.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Làng Novoselok, Nga, trước cải cách ruộng đất Stolypin đầu thế kỷ 20. Mỗi hộ có tới 10–15 mảnh ruộng rải khắp mọi vùng sinh thái của làng; Scott gọi đó là “một mẫu đại diện” các vùng đất và vi khí hậu. Cách chia ấy rải rủi ro của từng hộ. Đất được chia lại khi hộ đông lên hay ít đi. Người đo địa chính nhìn vào thì chóng mặt; giấc mơ của quan chức là gom thành trang trại liền khối, mỗi hộ một chủ, một sổ.</p>
+            </div>
+            <figure class="bk-fig">
+              <svg viewBox="0 0 360 262" role="img" aria-labelledby="fig-strip-t">
+                <title id="fig-strip-t">Sơ đồ minh hoạ, không phải bản đồ thật. Trên: trước cải cách, ba hộ A, B, C mỗi hộ có dải ruộng ở cả ba vùng đất cao, đất trũng, đồng cỏ. Dưới: sau khi gom thửa, mỗi hộ một khối liền nằm trọn trong một vùng; năm hạn hộ A mất mùa, năm lụt hộ B mất mùa.</title>
+                <text class="t-ink t-b" x="8" y="16" font-size="13">Trước: mỗi hộ có dải ở mọi vùng</text>
+                <text class="t-muted" x="8" y="44" font-size="13">Đất cao</text>
+                <text class="t-muted" x="8" y="74" font-size="13">Đất trũng</text>
+                <text class="t-muted" x="8" y="104" font-size="13">Đồng cỏ</text>
+                <g class="s-line" stroke-width="1">
+                  <rect class="f-accent-soft s-accent" x="84" y="26" width="30" height="26"/><rect class="f-warn-soft s-warn" x="114" y="26" width="30" height="26"/><rect class="f-soft" x="144" y="26" width="30" height="26"/><rect class="f-accent-soft s-accent" x="174" y="26" width="30" height="26"/><rect class="f-soft" x="204" y="26" width="30" height="26"/><rect class="f-warn-soft s-warn" x="234" y="26" width="30" height="26"/><rect class="f-soft" x="264" y="26" width="30" height="26"/><rect class="f-accent-soft s-accent" x="294" y="26" width="28" height="26"/><rect class="f-warn-soft s-warn" x="322" y="26" width="30" height="26"/>
+                  <rect class="f-warn-soft s-warn" x="84" y="56" width="30" height="26"/><rect class="f-soft" x="114" y="56" width="30" height="26"/><rect class="f-accent-soft s-accent" x="144" y="56" width="30" height="26"/><rect class="f-warn-soft s-warn" x="174" y="56" width="30" height="26"/><rect class="f-accent-soft s-accent" x="204" y="56" width="30" height="26"/><rect class="f-soft" x="234" y="56" width="30" height="26"/><rect class="f-accent-soft s-accent" x="264" y="56" width="30" height="26"/><rect class="f-soft" x="294" y="56" width="28" height="26"/><rect class="f-warn-soft s-warn" x="322" y="56" width="30" height="26"/>
+                  <rect class="f-soft" x="84" y="86" width="30" height="26"/><rect class="f-accent-soft s-accent" x="114" y="86" width="30" height="26"/><rect class="f-warn-soft s-warn" x="144" y="86" width="30" height="26"/><rect class="f-soft" x="174" y="86" width="30" height="26"/><rect class="f-warn-soft s-warn" x="204" y="86" width="30" height="26"/><rect class="f-accent-soft s-accent" x="234" y="86" width="30" height="26"/><rect class="f-warn-soft s-warn" x="264" y="86" width="30" height="26"/><rect class="f-accent-soft s-accent" x="294" y="86" width="28" height="26"/><rect class="f-soft" x="322" y="86" width="30" height="26"/>
+                </g>
+                <g font-size="13" text-anchor="middle" class="t-muted">
+                  <text x="99" y="44">A</text><text x="129" y="44">B</text><text x="159" y="44">C</text><text x="189" y="44">A</text><text x="219" y="44">C</text><text x="249" y="44">B</text><text x="279" y="44">C</text><text x="308" y="44">A</text><text x="337" y="44">B</text>
+                  <text x="99" y="74">B</text><text x="129" y="74">C</text><text x="159" y="74">A</text><text x="189" y="74">B</text><text x="219" y="74">A</text><text x="249" y="74">C</text><text x="279" y="74">A</text><text x="308" y="74">C</text><text x="337" y="74">B</text>
+                  <text x="99" y="104">C</text><text x="129" y="104">A</text><text x="159" y="104">B</text><text x="189" y="104">C</text><text x="219" y="104">B</text><text x="249" y="104">A</text><text x="279" y="104">B</text><text x="308" y="104">A</text><text x="337" y="104">C</text>
+                </g>
+                <text class="t-ink t-b" x="8" y="146" font-size="13">Sau: mỗi hộ một khối, một sổ</text>
+                <text class="t-muted" x="8" y="174" font-size="13">Đất cao</text>
+                <text class="t-muted" x="8" y="204" font-size="13">Đất trũng</text>
+                <text class="t-muted" x="8" y="234" font-size="13">Đồng cỏ</text>
+                <g class="s-line" stroke-width="1">
+                  <rect class="f-accent-soft s-accent" x="84" y="156" width="268" height="26"/>
+                  <rect class="f-warn-soft s-warn" x="84" y="186" width="268" height="26"/>
+                  <rect class="f-soft" x="84" y="216" width="268" height="26"/>
+                </g>
+                <text class="t-ink" x="218" y="174" text-anchor="middle" font-size="13">Hộ A · năm hạn mất mùa</text>
+                <text class="t-ink" x="218" y="204" text-anchor="middle" font-size="13">Hộ B · năm lụt mất mùa</text>
+                <text class="t-ink" x="218" y="234" text-anchor="middle" font-size="13">Hộ C · chỉ còn đồng cỏ</text>
+              </svg>
+              <figcaption>Chia dải theo vùng là lấy mẫu phân tầng để chia rủi ro. Bản đồ gọn hơn thì rủi ro dồn vào từng hộ.</figcaption>
+            </figure>
+            <div class="bk-case">
+              <p>Thuế cửa ra vào và cửa sổ ở Pháp, đặt thời Đốc chính (1795–1799), tới 1917 mới bỏ. Người đặt thuế đoán số cửa tỉ lệ với cỡ nhà, nên nhân viên thuế chỉ cần đứng ngoài đường mà đếm. Dân xây và sửa nhà cho ít lỗ cửa nhất. Theo Scott, hậu quả với sức khoẻ nông dân kéo dài hơn một thế kỷ.</p>
+            </div>
+            <p>Scott gọi đây là “nguyên lý Heisenberg của thuế”: phép đo đổi vật được đo. Đây là cùng một hiện tượng với luật Goodhart, đã giảng ở <a href="experimentation-causal-inference.html#s-oec">trang thực nghiệm và suy luận nhân quả</a>.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi thiết kế schema, ở môn Quản trị dữ liệu hay trong dự án</span>Mỗi enum, mỗi đơn vị quy đổi là một quyết định bỏ thông tin. Ghi vào data dictionary trường đó bỏ gì (ô “Khác” gom những gì, đơn vị gốc là gì) để người sau không tưởng nó đầy đủ.</li>
+              <li><span class="bk-use__when">Khi một chỉ số sắp thành căn cứ thưởng phạt hay chấm điểm</span>Đoán trước người bị đo sẽ “bít cửa sổ” thế nào, và theo dõi song song một thước đo khó lách.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Đo lường tại chỗ cũng là chỗ kẻ mạnh tại chỗ gian lận: cái giạ to dần chính là tô tăng ngầm. Chuẩn hoá đo lường bảo vệ người yếu. Scott có kể điều này nhưng ít đặt nó lên cân với cái mất.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 3 ================= -->
+      <section class="bk-unit" id="ch-3" data-toc="Họ, tuổi, phố" aria-labelledby="ch-3-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 3 · Chương 2</p>
+          <h2 class="bk-unit__title" id="ch-3-h">Làm cho con người đọc được</h2>
+          <p class="bk-unit__gist">Họ cố định, tuổi chính xác, phố thẳng, điều tra dân số: cùng một việc là làm cho dân đếm được.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Con người cũng được đơn giản hoá như rừng. Cùng một công cụ vừa là nền của quyền công dân và phúc lợi, vừa là công cụ để vây bắt.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Họ cố định phần lớn do nhà nước đặt ra: thuế, lính, toà án cần biết ai là ai. Tuổi chính xác cũng vậy. Trong cuộc điều tra <i>catasto</i> của Florence năm 1427, người dân khai tuổi tròn 5, 10 năm, vì ở làng biết “con cả”, “con út” là đủ. Nhà nước thì cần đúng tuổi, vì 18 là tuổi chịu thuế và đi lính, quá 60 thì hết thuế thân. Kết quả: số người khai ngay dưới 18 và ngay trên 60 đông bất thường.</p>
+            <div class="bk-table-wrap" role="region" aria-label="Bảng xã hội khó đọc và dễ đọc theo Scott" tabindex="0">
+              <table class="bk-table">
+                <caption>Khó đọc và dễ đọc với nhà nước (rút từ bảng của Scott)</caption>
+                <thead><tr><th scope="col"></th><th scope="col">Khó đọc</th><th scope="col">Dễ đọc</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Nơi ở</th><td>Trại du mục, du canh</td><td>Làng cố định, đồn điền</td></tr>
+                  <tr><th scope="row">Thành phố</th><td>Phố cổ tự mọc (medina Damascus)</td><td>Thành phố lưới (Chicago, Brasília)</td></tr>
+                  <tr><th scope="row">Đất</th><td>Đất chung, sổ làng</td><td>Sở hữu tư nhân, địa chính quốc gia</td></tr>
+                  <tr><th scope="row">Danh tính</th><td>Tên theo tục địa phương</td><td>Họ cố định, căn cước, hộ chiếu</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <blockquote class="bk-quote">
+              <p>Chúng thiết yếu cho phúc lợi và tự do của ta, cũng như cho mưu đồ của một kẻ muốn làm chuyên chế hiện đại.</p>
+              <cite>Scott, phần Mở đầu, nói về các phép đơn giản hoá của nhà nước (dịch)</cite>
+            </blockquote>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Philippines, sắc lệnh ngày 21/11/1849 của Toàn quyền Narciso Clavería. Dân dùng tên thánh lấy từ một nhóm nhỏ, nên sổ sách “lẫn lộn”. Giải pháp là một cuốn danh mục họ xếp theo vần chữ cái; mỗi viên chức địa phương được phát một số trang. Kết quả là cả thị trấn mang họ bắt đầu bằng cùng một chữ, và ở vùng ít người di cư dấu vết ấy vẫn trải trên bản đồ hơn 150 năm sau.</p>
+            </div>
+            <div class="bk-case">
+              <p>Paris thời Haussmann, 1853–1869. Đại lộ thẳng, rộng mang lại không khí, vệ sinh, giao thông, và an ninh: chiến luỹ đã dựng lên chín lần trong 25 năm trước 1851, nên thành phố mới được thiết kế trước hết để chống nổi dậy.</p>
+            </div>
+            <p>Mặt tối của cùng công cụ: tháng 5/1941, ở Amsterdam dưới sự chiếm đóng của Đức, bản đồ “phân bố người Do Thái” được lập từ sổ đăng ký dân, mỗi chấm mười người. Khoảng 65.000 người bị trục xuất.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi làm sạch dữ liệu khảo sát hay hồ sơ</span>Vẽ histogram theo từng giá trị trước khi tin. Dồn đống ở số tròn hay ngay dưới một ngưỡng (tuổi 17, thu nhập ngay dưới mức chịu thuế) nghĩa là người khai đang trả lời luật, không trả lời câu hỏi.</li>
+              <li><span class="bk-use__when">Khi thiết kế định danh khách hàng cho một sản phẩm</span>Cùng một khoá giúp phục vụ đúng người và giúp theo dõi họ. Chốt từ đầu: gộp những bản ghi nào, ai được tra, giữ bao lâu.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>J. Bradford DeLong (“Perhaps. And Sometimes.”, Cato Unbound, 2010) dẫn ca hoàng đế Justinian năm 542: ở vùng nhà nước không đọc được, địa chủ lớn thuê lính của triều đình làm tay chân riêng để ép tá điền. Chỗ không đọc được chưa chắc là tự do; đọc được có thể là cách người yếu được luật bảo vệ. Scott thừa nhận điều này trên nguyên tắc, nhưng các ca trong sách gần như chỉ kể chiều ngược lại.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 4 ================= -->
+      <section class="bk-unit" id="ch-4" data-toc="Bốn điều kiện" aria-labelledby="ch-4-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 4 · Chương 3</p>
+          <h2 class="bk-unit__title" id="ch-4-h">Hiện đại cao và bốn điều kiện của thảm hoạ</h2>
+          <p class="bk-unit__gist">Đơn giản hoá chỉ thành thảm hoạ khi có đủ bản đồ, niềm tin, quyền lực, và không ai chống lại.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Thiếu một trong bốn điều kiện thì có kế hoạch tồi, chưa có thảm hoạ toàn diện. Cái nguy không nằm ở việc lập kế hoạch, mà ở kế hoạch không ai cản được.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <dl class="bk-terms">
+              <div><dt>Hiện đại cao <span>· high modernism</span></dt><dd>Niềm tin “cơ bắp” vào tiến bộ kỹ thuật, chế ngự tự nhiên (kể cả bản tính người) và thiết kế trật tự xã hội theo lý trí. Nó mượn uy tín của khoa học nhưng không hoài nghi như khoa học.</dd></div>
+            </dl>
+            <p>Đỉnh cao của nó là nền kinh tế huy động thời chiến của Đức trong Thế chiến I, cộng với cách Frederick Taylor chia lao động nhà máy thành từng động tác. Nó có mặt cả bên trái lẫn bên phải: Scott kể Le Corbusier, Walther Rathenau, Robert Moses, Lenin, Nyerere. Người theo nó có hai thói quen. Họ nhìn trật tự bằng mắt: thẳng hàng, đều ô nghĩa là hiệu quả. Và khi kế hoạch lớn vấp, họ lui về <dfn>thu nhỏ</dfn>: làng mẫu, thành phố mẫu, trang trại trình diễn, nơi kiểm soát được mọi biến.</p>
+            <blockquote class="bk-quote">
+              <p>Cả bốn đều cần thì mới thành một thảm hoạ toàn diện.</p>
+              <cite>Scott, phần Mở đầu (dịch)</cite>
+            </blockquote>
+            <figure class="bk-fig">
+              <svg viewBox="0 0 360 262" role="img" aria-labelledby="fig-four-t">
+                <title id="fig-four-t">Bốn điều kiện cùng đổ về một ô thảm hoạ toàn diện. Sắp xếp hành chính cho năng lực. Ý thức hệ hiện đại cao cho ý muốn. Nhà nước độc đoán cho quyết tâm. Xã hội dân sự kiệt sức cho mặt bằng trống. Phải đủ cả bốn.</title>
+                <rect class="f-surface s-line" x="4" y="8" width="174" height="62" rx="10"/>
+                <rect class="f-surface s-line" x="182" y="8" width="174" height="62" rx="10"/>
+                <rect class="f-surface s-line" x="4" y="80" width="174" height="62" rx="10"/>
+                <rect class="f-surface s-line" x="182" y="80" width="174" height="62" rx="10"/>
+                <text class="t-ink t-b" x="92" y="34" text-anchor="middle" font-size="13">Sắp xếp hành chính</text>
+                <text class="t-accent" x="92" y="55" text-anchor="middle" font-size="13">cho năng lực</text>
+                <text class="t-ink t-b" x="268" y="34" text-anchor="middle" font-size="13">Ý thức hệ hiện đại cao</text>
+                <text class="t-accent" x="268" y="55" text-anchor="middle" font-size="13">cho ý muốn</text>
+                <text class="t-ink t-b" x="92" y="106" text-anchor="middle" font-size="13">Nhà nước độc đoán</text>
+                <text class="t-accent" x="92" y="127" text-anchor="middle" font-size="13">cho quyết tâm</text>
+                <text class="t-ink t-b" x="268" y="106" text-anchor="middle" font-size="13">Xã hội dân sự kiệt sức</text>
+                <text class="t-accent" x="268" y="127" text-anchor="middle" font-size="13">cho mặt bằng trống</text>
+                <path class="s-ink f-none" d="M92 142 V166 H268 V142 M180 166 V188" stroke-width="1.5"/>
+                <path class="s-ink f-none" d="M174 182 L180 190 L186 182" stroke-width="1.5"/>
+                <rect class="f-warn-soft s-warn" x="70" y="194" width="220" height="40" rx="10"/>
+                <text class="t-warn t-b" x="180" y="219" text-anchor="middle" font-size="14">Thảm hoạ toàn diện</text>
+                <text class="t-muted" x="180" y="254" text-anchor="middle" font-size="13">phải đủ cả bốn</text>
+              </svg>
+              <figcaption>Ô đầu tiên là công cụ thường ngày của mọi nhà nước. Ba ô sau mới biến nó thành vũ khí, và ô cuối là thứ duy nhất người bị ảnh hưởng tự giữ được.</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <p>Chương này dựng khung; các ca ở mục 5–9 là phép thử. Đặt cạnh nhau, chúng cho thấy điều kiện thứ tư quyết định mức thiệt hại. Scott dẫn Amartya Sen cho cùng ý: nạn đói hiếm xảy ra nơi có báo chí tự do và bầu cử, vì ở đó cái đói được nói ra và người cầm quyền phải trả giá.</p>
+            <div class="bk-table-wrap" role="region" aria-label="Bảng ba ca so theo bốn điều kiện" tabindex="0">
+              <table class="bk-table">
+                <caption>Ba ca, cùng ý thức hệ, khác điều kiện thứ tư</caption>
+                <thead><tr><th scope="col">Ca</th><th scope="col">Xã hội còn chống được?</th><th scope="col">Kết cục</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Brasília</th><td>Có: bầu cử cạnh tranh, người nghèo tổ chức đòi đất</td><td>Thành phố khác bản vẽ, không thảm hoạ</td></tr>
+                  <tr><th scope="row">Tanzania</th><td>Yếu: nhà nước một đảng, ít kênh phản đối</td><td>Thất bại kinh tế và sinh thái</td></tr>
+                  <tr><th scope="row">Liên Xô</th><td>Không: nội chiến và trấn áp đã bẻ gãy</td><td>Nạn đói, nông nghiệp trì trệ nửa thế kỷ</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Nếu đề tài luận văn là hệ hỗ trợ ra quyết định cho một tổ chức lớn</span>Kiểm điều kiện thứ tư: người bị hệ chấm điểm có kênh khiếu nại, sửa dữ liệu sai về mình, hay từ chối không? Không có thì đó là rủi ro chính, lớn hơn độ chính xác của mô hình.</li>
+              <li><span class="bk-use__when">Khi thấy mình thích một kiến trúc hay dashboard vì nó gọn</span>Hỏi nó gọn vì chạy tốt hay vì thẳng hàng. Gọn trên sơ đồ là thẩm mỹ hiện đại cao, chưa phải bằng chứng.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Scott Alexander (Slate Star Codex, 2017) cho rằng Scott gần như tự nhận đã “xếp sẵn xúc xắc”: sách chọn toàn ca thất bại, trong khi quy hoạch vệ sinh đô thị và nông nghiệp khoa học như Cách mạng Xanh đã cứu hàng triệu người. Bốn điều kiện cũng được rút ra từ vài ca sau khi đã biết kết cục, nên khó kiểm định: chưa có cách đo trước xã hội “kiệt sức” tới đâu thì đủ.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 5 ================= -->
+      <section class="bk-unit" id="ch-5" data-toc="Brasília" aria-labelledby="ch-5-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 5 · Chương 4</p>
+          <h2 class="bk-unit__title" id="ch-5-h">Thành phố vẽ từ trên cao: Brasília</h2>
+          <p class="bk-unit__gist">Thành phố quy hoạch đẹp trên bản vẽ nhưng mất đời sống phố; phần sống được là phần không ai vẽ.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Trật tự nhìn thấy (hình học, mỗi khu một chức năng) khác trật tự trải nghiệm (phố đông, dùng lẫn). Quy hoạch hiện đại cao tối ưu cái thứ nhất và giết cái thứ hai.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Le Corbusier muốn xoá phố cổ, coi thành phố là cỗ máy: tách nơi ở, nơi làm, nơi chơi, đường xe, và thiết kế tất cả từ một bàn vẽ. Phần lớn đồ án của ông không được xây, nhưng học thuyết của ông, qua hội kiến trúc sư CIAM, định hình quy hoạch hiện đại.</p>
+            <p>Jane Jacobs (<i>The Death and Life of Great American Cities</i>, 1961) là phản đề. Phố an toàn cần ranh giới công tư rõ, “mắt trên phố” và người qua lại suốt ngày. Trật tự ấy đến từ dùng lẫn: cửa hàng, nhà ở, quán xá chen nhau. Khu phố đa dạng cũng bền hơn trước suy thoái, như rừng hỗn giao bền hơn rừng một loài.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Tổng thống Kubitschek hứa “năm mươi năm tiến bộ trong năm năm”. Năm 1957 Lúcio Costa thắng cuộc thi thiết kế thủ đô mới bằng vài phác thảo, Oscar Niemeyer lo các công trình; cả hai theo học thuyết Le Corbusier. Thành phố mọc trên đất trống ở cao nguyên trung tâm.</p>
+              <p>Brasília không có góc phố, quảng trường nhỏ, quán vỉa hè; chỉ có không gian công cộng chính thức như sân vận động, nhà hát. Cư dân đời đầu đặt ra một bệnh giễu: <i>brasilite</i>, nỗi trống trải khi thiếu đời sống ngoài trời của các thành phố Brazil khác.</p>
+              <p>Hơn 60.000 thợ xây được giả định sẽ xây xong rồi lặng lẽ rời đi. Họ ở lại, dựng nhà trên đất chiếm, tổ chức đòi đất và dịch vụ, và được nghe vì có phiếu bầu. Tới 1980, 75% dân Brasília sống ở những khu không có trong kế hoạch, còn thành phố quy hoạch chưa đạt nửa số dân dự kiến 557.000.</p>
+            </div>
+            <p>Le Corbusier tự xây được Chandigarh, thủ phủ bang Punjab của Ấn Độ; kết cục cũng là một thành phố tự mọc ở rìa, trái hẳn trật tự ở giữa.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi thiết kế app hay dashboard cho dự án khởi nghiệp</span>Chấm thiết kế bằng cách người dùng thật đi qua nó (event log, phỏng vấn), không bằng độ gọn của wireframe. Lối tắt người dùng tự tạo, như khu tự mọc quanh Brasília, là dữ liệu về nhu cầu thật.</li>
+              <li><span class="bk-use__when">Khi chọn giữa module sạch và hệ chồng chức năng</span>Đừng mặc định cái sạch hơn là tốt hơn; hỏi cái nào còn chạy khi một phần hỏng.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Brasília vẫn làm được việc của một thủ đô. Phố cổ “sống động” cũng từng chật, thiếu cống, bệnh tật; Scott Alexander nhắc rằng chính Scott thừa nhận dân phố cũ tuổi thọ thấp, chết vì dịch tả. Jacobs viết về đô thị Mỹ giữa thế kỷ 20; không phải trật tự tự phát nào cũng tốt.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 6 ================= -->
+      <section class="bk-unit" id="ch-6" data-toc="Đảng tiên phong" aria-labelledby="ch-6-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 6 · Chương 5</p>
+          <h2 class="bk-unit__title" id="ch-6-h">Đảng tiên phong: kỹ sư hay bà đỡ</h2>
+          <p class="bk-unit__gist">Cùng một khuôn áp vào chính trị: Lenin muốn chỉ huy cách mạng như kỹ sư, Luxemburg coi nó như ca sinh nở.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Một phong trào xã hội cũng là hệ phức tạp. Người lập kế hoạch tin mình biết hết sẽ coi sáng kiến của số đông là nhiễu.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Trong <i>Làm gì?</i> (1902), Lenin xếp đảng vào vai thầy giáo và sĩ quan: công nhân tự mình chỉ đòi lương, đảng phải nâng họ lên ý thức chính trị và điều quân. Sau 1917 ông ca ngợi Taylor và kinh tế thời chiến Đức. Rosa Luxemburg phản bác: đảng là thầy thuốc và bà đỡ, không phải tổng tham mưu; cách làm cách mạng tạo ra chính giai cấp công nhân, nên sức tự phát của họ không thể bị đúc theo khuôn.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <p>Theo Scott, cách mạng 1917 gần như không do đảng tiên phong làm ra. Công nhân tự chiếm nhà máy và chính quyền thành phố; Bolshevik giỏi ở chỗ nắm lấy cuộc cách mạng đã xảy ra. Hannah Arendt tóm lại: họ thấy quyền lực nằm ngoài đường và nhặt lên. Một tháng trước Cách mạng Tháng Hai, chính Lenin còn viết thế hệ ông có thể không kịp thấy trận quyết định.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi viết lại lịch sử một dự án thành công</span>Tách phần kế hoạch thật sự quyết định khỏi phần mình chỉ nắm được sau khi nó đã xảy ra. Bài học rút sai sẽ thành kế hoạch sai cho lần sau.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Chương này dựa gần như hoàn toàn vào văn bản của Lenin và Luxemburg, không có dữ liệu. Nó cho thấy khuôn hiện đại cao không chỉ nằm ở bản vẽ vật chất, nhưng không thêm cơ chế mới.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 7 ================= -->
+      <section class="bk-unit" id="ch-7" data-toc="Tập thể hoá" aria-labelledby="ch-7-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 7 · Chương 6</p>
+          <h2 class="bk-unit__title" id="ch-7-h">Tập thể hoá Xô viết, giấc mơ tư bản</h2>
+          <p class="bk-unit__gist">Nông trang khổng lồ là để thu thóc và kiểm soát; về sản xuất nó hỏng, và sống được nhờ phần phi chính thức.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Đủ cả bốn điều kiện, kế hoạch vẫn thắng ở việc nhà nước cần (thu thóc, dẹp phản kháng) và thua ở việc nó hứa (ruộng năng suất cao). Trồng gì thì tập trung được cũng có quy luật.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Giấc mơ trang trại công nghiệp không riêng gì phe xã hội chủ nghĩa. Năm 1918 Thomas Campbell lập ở Montana một trang trại lúa mì 95.000 mẫu Anh, gọi vốn như một công ty, tuyên bố làm nông là “90% kỹ thuật, 10% nông nghiệp”. Kỹ sư nông nghiệp Nga sang Mỹ hầu như đều ghé thăm. Tháng 12/1928, vài chuyên gia Mỹ lên kế hoạch cho một nông trường lúa mì Xô viết 500.000 mẫu Anh, từ bố trí ruộng tới lịch làm việc, trong hai tuần ở một phòng khách sạn Chicago.</p>
+            <p>Ở Liên Xô, tập thể hoá toàn diện từ mùa đông 1929–30 sinh ra từ cuộc chiến giành thóc với nông dân. Năm 1931 nhà nước thu khoảng 63% toàn bộ vụ mùa. Ở Velikie Luki, khi đề án 80.000 ha quá cồng kềnh, người ta chia nó thành 32 ô vuông bằng nhau trên bản đồ, mỗi ô một nông trang, không ngó tới làng, sông, đồi, đầm lầy.</p>
+            <p>Kết quả: Scott dẫn các ước tính người chết vì tập thể hoá và nạn đói theo sau từ 3–4 triệu tới hơn 20 triệu. Suốt nửa thế kỷ, năng suất nhiều cây trì trệ hoặc thấp hơn thập niên 1920. Hệ thống đứng được sáu mươi năm nhờ chợ đen, đổi chác và mảnh vườn riêng, như Brasília sống nhờ phần không có trong bản vẽ.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-table-wrap" role="region" aria-label="Bảng so lúa mì và mâm xôi" tabindex="0">
+              <table class="bk-table">
+                <caption>Cây “vô sản” và cây “tiểu tư sản” (chữ của Scott)</caption>
+                <thead><tr><th scope="col"></th><th scope="col">Lúa mì</th><th scope="col">Mâm xôi</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Chăm sóc</th><td>Gieo xong gần như để đó</td><td>Cần đúng đất, tỉa mỗi năm</td></tr>
+                  <tr><th scope="row">Thu hoạch</th><td>Máy gặt đập một lượt</td><td>Hái tay, nhiều đợt</td></tr>
+                  <tr><th scope="row">Bảo quản</th><td>Để lâu, ít hao</td><td>Hỏng sau vài giờ nếu xếp chặt hay nóng</td></tr>
+                  <tr><th scope="row">Ở Liên Xô</th><td>Nông trang tập thể trồng được</td><td>Đến từ mảnh vườn riêng của xã viên</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Việc chuẩn hoá được, chịu được thô bạo, ít cần phán đoán tại chỗ thì tập trung hoá làm tốt. Việc cần chăm từng chút, cần tốc độ và người có lợi ích trực tiếp thì không.</p>
+            <div class="bk-case">
+              <p>Một ca gần: hợp tác xã nông nghiệp miền Bắc Việt Nam. Những năm 1960, Bí thư Tỉnh uỷ Vĩnh Phúc Kim Ngọc cho khoán tới hộ; mô hình bị dừng và bị phê phán. Nhiều nơi nông dân vẫn lén khoán (“khoán chui”). Chỉ thị 100-CT/TW của Ban Bí thư (13/1/1981) mở rộng khoán sản phẩm đến nhóm lao động; Nghị quyết 10-NQ/TW của Bộ Chính trị (5/4/1988, “Khoán 10”) giao ruộng ổn định khoảng 15 năm và để hộ nhận khoán giữ khoảng 40% sản lượng khoán trở lên. Từ chỗ nhập lương thực, vài năm sau Việt Nam đã thành nước xuất khẩu gạo lớn.</p>
+              <p>Benedict Kerkvliet (<i>The Power of Everyday Politics</i>, 2005) lập luận hợp tác xã sụp từ bên trong: nông dân lặng lẽ làm trái từng chút một, và chính sách đi theo.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi chọn việc để tự động hoá hay đưa về một hệ trung tâm</span>Xếp từng việc vào cột “lúa mì” (chuẩn, lặp, sai ít hại) hay “mâm xôi” (ngoại lệ nhiều, cần người có trách nhiệm tại chỗ). Tự động hoá cột đầu trước; cột sau thì làm công cụ hỗ trợ người, đừng thay họ.</li>
+              <li><span class="bk-use__when">Khi một hệ thống “vẫn chạy” dù quy trình chính thức tệ</span>Tìm phần phi chính thức đang gánh nó (bảng tính riêng, nhóm chat, người quen việc) trước khi thay hệ mới; xoá nó là xoá thứ đang giữ hệ sống.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Chính Scott viết thất bại của nông nghiệp Xô viết có nhiều nguyên nhân ngoài hiện đại cao: lý thuyết sai của Lysenko, ý riêng của Stalin, chiến tranh, thời tiết. Mục đích chính của tập thể hoá là thu thóc, nên đây là ca quyền lực nhiều hơn ca “tầm nhìn khoa học”.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 8 ================= -->
+      <section class="bk-unit" id="ch-8" data-toc="Làng ujamaa" aria-labelledby="ch-8-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 8 · Chương 7</p>
+          <h2 class="bk-unit__title" id="ch-8-h">Làng ujamaa ở Tanzania: thẩm mỹ và thu nhỏ</h2>
+          <p class="bk-unit__gist">Ngay cả bản “mềm”, thiện chí, ít bạo lực của hiện đại cao vẫn hỏng vì bỏ qua tri thức tại chỗ.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Làng mới được xây theo cách một bộ máy dễ làm và dễ nhìn, không theo cách nông dân sống được. Kiểm soát được dân không có nghĩa là dân sản xuất được.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p><i>Ujamaa</i> trong tiếng Swahili là “tình gia đình”. Tổng thống Julius Nyerere muốn đưa nông dân sống rải rác vào làng để có trường, trạm xá, nước sạch và ruộng tập thể. Ông nói không ai bị ép. Nhưng với lệnh tháng 12/1973, cả bộ máy nhà nước dồn vào di dân bắt buộc. Từ 1973 tới 1976, ít nhất 5 triệu người phải chuyển chỗ; Scott gọi đó là cuộc tái định cư cưỡng bức lớn nhất ở châu Phi độc lập tới lúc ấy.</p>
+            <p>Bạo lực ít hơn Liên Xô nhiều, nhưng kết quả cùng một kiểu: thất bại cả về kinh tế lẫn sinh thái.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Quan chức thích đặt làng dọc đường lớn, nơi dễ tới và dễ giám sát. Nyerere tới Shinyanga năm 1975 và thấy có làng là “một dãy nhà dài hàng dặm như toa tàu”. Nhà sát nhau, thẳng hàng; ruộng ở ngoài làng, chia khối, mỗi khối một loại cây, để cán bộ khuyến nông dễ kiểm tra.</p>
+              <p>Hậu quả: nông dân bị dời khỏi đất ngập hằng năm, nơi họ cấy theo lũ, lên đất xấu trên cao; nhà xa ruộng nên không canh được chim và sâu; người và gia súc tập trung làm bùng dịch tả và dịch gia súc. Với dân du mục như người Maasai, dồn bò về một chỗ là tai hoạ cho đồng cỏ.</p>
+            </div>
+            <p>Khi kế hoạch lớn vấp, bộ máy lui về làng mẫu và trang trại trình diễn: ít biến lạ, dễ kiểm soát, đẹp để khoe với cấp trên. Scott ví với “làng Potemkin”.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi xem demo một mô hình hay pilot thành công</span>Hỏi pilot đã loại bớt những biến nào (dữ liệu sạch tay, người dùng chọn lọc, nhóm làm thêm giờ). Làng mẫu chạy tốt chưa nói gì về khi nhân ra cả nước.</li>
+              <li><span class="bk-use__when">Khi buộc người dùng chuyển sang hệ mới cho dễ báo cáo</span>Đo cái họ mất (thời gian, lối tắt cũ, dữ liệu không còn chỗ ghi), đừng chỉ đo cái quản lý được thấy thêm.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Scott tự nhận mình là “dân nghiệp dư” về châu Phi, và chương này dựa nhiều vào tư liệu thứ cấp, trong đó có một khoá luận đại học. Ông cũng thừa nhận chuyên gia của Nyerere có đóng góp thật; cái hỏng là họ đòi độc quyền tri thức.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 9 ================= -->
+      <section class="bk-unit" id="ch-9" data-toc="Nông nghiệp một loài" aria-labelledby="ch-9-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 9 · Chương 8</p>
+          <h2 class="bk-unit__title" id="ch-9-h">Nông nghiệp đọc được: độc canh và đa canh</h2>
+          <p class="bk-unit__gist">Thí nghiệm cô lập một biến rất mạnh, nhưng chính vì thế mà mù trước độ phức tạp của cánh đồng thật.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Khoa học nông nghiệp không sai; nó sai khi đòi làm đế quốc, tức không nhận tri thức nào ngoài khuôn của mình.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <p>Từ 1945 tới 1975, mô hình nông nghiệp Mỹ (cơ giới, độc canh, phân bón, đập thuỷ lợi kiểu TVA) được xuất khẩu khắp thế giới. Scott nêu bốn lý do khiến nhiều đề án thất bại:</p>
+            <ol>
+              <li>Giả định mang từ vùng ôn đới công nghiệp hoá, áp vào nhiệt đới không hợp.</li>
+              <li>Đề án bị bẻ theo quyền lực và vị thế của quan chức.</li>
+              <li>Tầm nhìn một mắt: chỉ thấy quan hệ đầu vào với sản lượng, bỏ qua kết quả dài hạn (đất, nước, quyền sở hữu) và tác động lên bên thứ ba cho tới khi chúng làm giảm sản lượng.</li>
+              <li>Thí nghiệm cô lập một biến trên ô thí nghiệm không xử lý được ruộng thật, nơi mọi thứ tương tác.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Chuyên gia nông nghiệp thuộc địa tới Tây Phi thấy ruộng trồng xen tới bốn loại cây cùng lúc và cho là lộn xộn, ấu trĩ. Về sau đa canh được nghiên cứu nghiêm túc, một phần vì các đề án độc canh thay nó cứ hỏng. Nó hợp với đất nghèo. Trồng dày lấn được cỏ dại; ngũ cốc xen cây họ đậu lấy dinh dưỡng ở các tầng đất khác nhau; ruộng nhiều loài không để sâu bệnh tích tụ như ruộng một loài. Trồng nhiều giống với thời gian chín, sức chịu hạn và sức kháng sâu bệnh khác nhau là cách chia rủi ro và có cái ăn trong mùa giáp hạt. Scott dẫn số liệu: các dạng đa canh chiếm 80% đất canh tác ở Tây Phi.</p>
+            </div>
+            <p>Nông dân chọn giống còn theo những tiêu chí ô thí nghiệm không đo: nấu có ngon không, để được bao lâu, ai trong nhà được quyền thu hoạch.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi một A/B test thắng trên một chỉ số</span>Hỏi ba câu của Scott: chỉ số có bỏ qua tác động dài hạn không, có tác động lên bên thứ ba không (người bán, nhóm người dùng khác), và kết quả trên mẫu thử có còn đúng khi tương tác với tính năng khác không.</li>
+              <li><span class="bk-use__when">Khi mô hình tốt trên tập kiểm định mà kém ngoài thực tế</span>Đó là khoảng cách giữa ô thí nghiệm và ruộng thật. Kiểm sự lệch phân phối (distribution shift) trước khi chỉnh thêm siêu tham số.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Jason Crawford (Roots of Progress, 2024) nêu Cách mạng Xanh của Borlaug (giống lúa mì, lúa nước năng suất cao từ thập niên 1960) là phản ví dụ lớn mà sách gần như bỏ qua. Chương này mạnh ở chỗ chỉ ra điểm mù của độc canh, yếu ở chỗ cân lợi hại tổng thể.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 10 ================= -->
+      <section class="bk-unit" id="ch-10" data-toc="Mētis" aria-labelledby="ch-10-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 10 · Chương 9</p>
+          <h2 class="bk-unit__title" id="ch-10-h">Mētis: mắt xích còn thiếu</h2>
+          <p class="bk-unit__gist">Mọi trật tự chạy được đều dựa vào tri thức thực hành không viết ra được; kế hoạch chính thức sống nhờ nó.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Kế hoạch chính thức ký sinh vào những thực hành phi chính thức mà tự nó không tạo ra hay duy trì được. Đè bẹp chúng là tự cắt chân mình.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <dl class="bk-terms">
+              <div><dt>Mētis <span>· tiếng Hy Lạp, “mưu trí”</span></dt><dd>Tri thức thực hành, gắn với một nơi và một việc, học bằng làm và bắt chước. Người Hy Lạp khen Odysseus có nhiều mētis.</dd></div>
+              <div><dt>Techne</dt><dd>Tri thức phổ quát, suy diễn được, viết thành quy tắc và kiểm chứng được ở bất cứ đâu.</dd></div>
+            </dl>
+            <p>Hiện đại cao coi chỉ techne là tri thức. Taylor hoá lao động là ví dụ rõ: tách tay nghề thành động tác để thay thợ giỏi bằng thợ không cần nghề, và làm mất luôn cái mà chỉ thợ giỏi biết.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <div class="bk-case">
+              <p>Đình công làm đúng luật (<i>work-to-rule</i>). Khi muốn gây sức ép lên thành phố, tài xế taxi Paris chỉ cần tuân thủ đúng từng điều của luật giao thông, và giao thông trung tâm Paris đứng lại. Xe cộ chạy được là nhờ những thói quen tài xế tự học, nằm ngoài và đôi khi trái với luật.</p>
+            </div>
+            <div class="bk-case">
+              <p>Theo một truyền thuyết, người da đỏ Squanto dặn những người Anh định cư đầu tiên ở New England: trồng ngô khi lá sồi to bằng tai sóc. Câu ấy gói sẵn nhiệt độ đất và tiến trình mùa xuân của chính vùng ấy, chính xác hơn một ngày cố định trên lịch, và dùng được ở bất cứ đâu có sồi và sóc.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi đề tài dùng dữ liệu vận hành (bán lẻ, y tế, logistics)</span>Phỏng vấn người làm thật trước khi tin feature. Log không ghi lại thủ thuật không chính thức: nhân viên nhập mã tạm cho kịp, ca đêm làm khác ca ngày.</li>
+              <li><span class="bk-use__when">Khi viết quy tắc hay pipeline thay cho phán đoán của người</span>Thử “làm đúng luật”: nếu ai cũng chỉ làm đúng những gì quy tắc ghi, hệ có đứng lại không? Chỗ đứng lại là chỗ mētis đang gánh.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Sách lãng mạn hoá mētis. Nó không cho tiêu chí tách tri thức địa phương tốt khỏi tập tục có hại, cũng không nói khi nào chuyên gia nên thắng. Chính Scott có nhắc tục chia đất làng thường bất công với phụ nữ độc thân, con trai thứ và người ngoài.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= MỤC 11 ================= -->
+      <section class="bk-unit" id="ch-11" data-toc="Bốn quy tắc" aria-labelledby="ch-11-h">
+        <header class="bk-unit__head">
+          <p class="bk-unit__num">Mục 11 · Chương 10</p>
+          <h2 class="bk-unit__title" id="ch-11-h">Kết luận: bốn quy tắc khi buộc phải can thiệp</h2>
+          <p class="bk-unit__gist">Gốc của thảm hoạ là coi thường sự mình không biết; quy tắc nào cũng xuất phát từ đó.</p>
+        </header>
+
+        <div class="bk-slot bk-slot--idea">
+          <h3 class="bk-slot__label">Ý chính</h3>
+          <div class="bk-slot__body">
+            <p>Ta không biết trước hậu quả của một can thiệp vào hệ phức tạp. Vậy hãy thiết kế để học được và sửa được, không thiết kế để đúng ngay lần đầu.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Lập luận</h3>
+          <div class="bk-slot__body">
+            <ol>
+              <li><b>Đi từng bước nhỏ.</b> Bước một bước, lùi lại quan sát, rồi mới tính bước sau.</li>
+              <li><b>Ưu tiên việc đảo ngược được.</b> Can thiệp không gỡ được thì hậu quả cũng không gỡ được.</li>
+              <li><b>Lên kế hoạch cho bất ngờ.</b> Chọn phương án chừa chỗ nhiều nhất cho điều chưa lường: ruộng trồng được nhiều cây, nhà đổi được công năng.</li>
+              <li><b>Lên kế hoạch cho sự sáng tạo của con người.</b> Giả định người tham gia sau sẽ có kinh nghiệm để làm tốt hơn thiết kế ban đầu.</li>
+            </ol>
+            <p>Scott dẫn Aldo Leopold: quy tắc đầu tiên của việc mày mò thông minh là giữ lại mọi bộ phận.</p>
+          </div>
+        </div>
+
+        <div class="bk-slot">
+          <h3 class="bk-slot__label">Ví dụ then chốt</h3>
+          <div class="bk-slot__body">
+            <p>Mỗi quy tắc là một ca trong sách đọc ngược: rừng Phổ đổi cả vùng trong một vòng trồng (không bước nhỏ); làng ujamaa phá nhà cũ (không đảo ngược); nông trang 500.000 mẫu Anh vẽ trong hai tuần (không chừa bất ngờ); Brasília coi cư dân là người thi hành bản vẽ (không chừa sáng tạo).</p>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--use">
+          <h3 class="bk-slot__label">Dùng vào đâu</h3>
+          <div class="bk-slot__body">
+            <ul class="bk-use">
+              <li><span class="bk-use__when">Khi triển khai một mô hình vào sản phẩm</span>Bốn quy tắc là canary release, feature flag, nút rollback và một trường ghi chú tự do cho người vận hành ghi đè quyết định của mô hình.</li>
+              <li><span class="bk-use__when">Khi chọn đề tài luận văn</span>Chọn đề tài có một bản nhỏ làm xong được trong vài tuần, rồi mới mở rộng. Đừng chọn đề tài chỉ có giá trị khi mọi phần đều xong.</li>
+              <li><span class="bk-use__when">Khi lập kế hoạch nghề năm năm tới</span>Đừng “quy hoạch Brasília” cho đời mình. Giữ các lựa chọn đảo ngược được (học thêm, dự án phụ) cho tới khi thông tin đủ để chốt cửa một chiều.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bk-slot bk-slot--limit">
+          <h3 class="bk-slot__label">Giới hạn</h3>
+          <div class="bk-slot__body">
+            <p>Bốn quy tắc khó vận hành: “nhỏ” là bao nhiêu? Có việc phải đổi một lần cho cả hệ, như một chuẩn kết nối, và bước nhỏ không có nghĩa. Sách cũng gần như chỉ nhìn nhà nước. Fernando Coronil (“Smelling Like a Market”, <i>American Historical Review</i>, 2001) cho rằng thị trường cũng đơn giản hoá như thế; Marion Fourcade và Kieran Healy (“Seeing like a market”, <i>Socio-Economic Review</i>, 2017) chỉ ra nền tảng số và thị trường đang phân loại, chấm điểm con người như nhà nước từng làm.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CUỐI TRANG ================= -->
+      <section class="bk-end" id="cong-cu" data-toc="Công cụ tư duy" data-toc-sep aria-labelledby="cong-cu-h">
+        <h2 class="bk-sec-title" id="cong-cu-h">Công cụ tư duy rút ra</h2>
+        <p class="bk-sec-sub">Mỗi công cụ là một câu hỏi mang theo được.</p>
+        <ul class="bk-tools">
+          <li><span class="bk-tools__name">Cái bị cắt khỏi bảng</span><span class="bk-tools__use">Chỉ số này không thấy gì, và phần không thấy ấy đang giữ hệ thống sống ra sao?</span><a class="bk-tools__src" href="#ch-1">Mục 1</a></li>
+          <li><span class="bk-tools__name">Bít cửa sổ</span><span class="bk-tools__use">Khi thước đo thành căn cứ thưởng phạt, người bị đo sẽ đổi gì?</span><a class="bk-tools__src" href="#ch-2">Mục 2</a></li>
+          <li><span class="bk-tools__name">Đọc được cho ai</span><span class="bk-tools__use">Dữ liệu này bảo vệ người bị ghi, hay giúp vây bắt họ? Thường là cả hai.</span><a class="bk-tools__src" href="#ch-3">Mục 3</a></li>
+          <li><span class="bk-tools__name">Bốn điều kiện</span><span class="bk-tools__use">Có bản đồ, niềm tin, quyền lực; còn ai đủ sức nói không?</span><a class="bk-tools__src" href="#ch-4">Mục 4</a></li>
+          <li><span class="bk-tools__name">Lúa mì hay mâm xôi</span><span class="bk-tools__use">Việc này chuẩn hoá được, hay cần người có lợi ích trực tiếp chăm từng chút?</span><a class="bk-tools__src" href="#ch-7">Mục 7</a></li>
+          <li><span class="bk-tools__name">Ô thí nghiệm và ruộng thật</span><span class="bk-tools__use">Kết quả một biến còn đúng khi mọi thứ tương tác không?</span><a class="bk-tools__src" href="#ch-9">Mục 9</a></li>
+          <li><span class="bk-tools__name">Phép thử làm đúng luật</span><span class="bk-tools__use">Nếu ai cũng chỉ làm đúng quy trình, hệ có đứng lại không?</span><a class="bk-tools__src" href="#ch-10">Mục 10</a></li>
+          <li><span class="bk-tools__name">Bốn quy tắc</span><span class="bk-tools__use">Bước nhỏ, đảo ngược được, chừa bất ngờ, chừa chỗ cho người.</span><a class="bk-tools__src" href="#ch-11">Mục 11</a></li>
+        </ul>
+      </section>
+
+      <section class="bk-end" id="tu-kiem" data-toc="Tự kiểm" aria-labelledby="tu-kiem-h">
+        <h2 class="bk-sec-title" id="tu-kiem-h">Tự kiểm</h2>
+        <p class="bk-sec-sub">Trả lời trong đầu trước, rồi mở đáp án.</p>
+        <ol class="bk-quiz">
+          <li><details>
+            <summary><span class="bk-quiz__n">1</span>Rừng vân sam thuần loài lãi lớn ở vòng đầu. Vì sao người ta không thấy vấn đề sớm hơn?</summary>
+            <div class="bk-quiz__a"><p>Vì phần nuôi rừng (bụi, nấm, côn trùng, đất) nằm ngoài bảng tính, và hậu quả chỉ lộ ra ở vòng trồng thứ hai, khoảng một thế kỷ sau. Chỉ số đo đúng thứ nó đo, nhưng cửa sổ quan sát quá ngắn.</p><p class="bk-quiz__see">Xem lại: <a href="#ch-1">Mục 1</a></p></div>
+          </details></li>
+          <li><details>
+            <summary><span class="bk-quiz__n">2</span>Mỗi hộ ở Novoselok có 10–15 mảnh ruộng rải khắp làng. Đó là lộn xộn hay có lý?</summary>
+            <div class="bk-quiz__a"><p>Có lý: các mảnh là một mẫu đại diện mọi vùng sinh thái, nên năm hạn hay năm lụt không hộ nào mất trắng. Gom thành một khối thì dễ ghi sổ hơn nhưng dồn rủi ro vào từng hộ.</p><p class="bk-quiz__see">Xem lại: <a href="#ch-2">Mục 2</a></p></div>
+          </details></li>
+          <li><details>
+            <summary><span class="bk-quiz__n">3</span>Trong dữ liệu tuổi khai thuế, số người 17 tuổi đông gấp đôi số 18 tuổi. Đọc thế nào?</summary>
+            <div class="bk-quiz__a"><p>Như catasto Florence 1427: người khai né ngưỡng chịu thuế. Dữ liệu phản ánh luật cộng với hành vi né luật, không phản ánh tháp tuổi thật.</p><p class="bk-quiz__see">Xem lại: <a href="#ch-3">Mục 3</a></p></div>
+          </details></li>
+          <li><details>
+            <summary><span class="bk-quiz__n">4</span>Brasília và tập thể hoá Xô viết cùng mang ý thức hệ hiện đại cao. Vì sao một bên chỉ thành thành phố khác bản vẽ, bên kia thành nạn đói?</summary>
+            <div class="bk-quiz__a"><p>Điều kiện thứ tư. Ở Brazil có bầu cử cạnh tranh, người nghèo tổ chức đòi đất và được nghe. Ở Liên Xô xã hội đã bị nội chiến và trấn áp bẻ gãy, không còn ai cản được kế hoạch.</p><p class="bk-quiz__see">Xem lại: <a href="#ch-4">Mục 4</a></p></div>
+          </details></li>
+          <li><details>
+            <summary><span class="bk-quiz__n">5</span>Một mô hình gợi ý tăng tỉ lệ bấm 8% trong A/B test hai tuần. Theo chương nông nghiệp, cần hỏi thêm gì trước khi bật cho mọi người?</summary>
+            <div class="bk-quiz__a"><p>Tác động dài hạn (người dùng có chán, có rời đi), tác động lên bên thứ ba (người bán nhỏ, nội dung khác), và tương tác với các tính năng khác ngoài điều kiện thử. Đó là ba điểm mù của tầm nhìn một mắt và thí nghiệm một biến.</p><p class="bk-quiz__see">Xem lại: <a href="#ch-9">Mục 9</a></p></div>
+          </details></li>
+          <li><details>
+            <summary><span class="bk-quiz__n">6</span>Vì sao đình công làm đúng luật lại làm sản xuất gần như dừng?</summary>
+            <div class="bk-quiz__a"><p>Vì quy trình chính thức không đủ để vận hành; nó dựa vào vô số thói quen và ứng biến không ghi ra (mētis). Bỏ phần ấy, chỉ làm đúng chữ, thì hệ đứng lại.</p><p class="bk-quiz__see">Xem lại: <a href="#ch-10">Mục 10</a></p></div>
+          </details></li>
+        </ol>
+      </section>
+
+      <section class="bk-end" id="doc-tiep" data-toc="Đọc tiếp và nguồn" aria-labelledby="doc-tiep-h">
+        <h2 class="bk-sec-title" id="doc-tiep-h">Đọc tiếp và nguồn</h2>
+        <ul class="bk-reads">
+          <li><span class="bk-reads__t">Bản gốc: Seeing Like a State — James C. Scott, Yale University Press, 1998, 445 trang</span><span class="bk-reads__why">Đọc bản đầy đủ khi cần chi tiết lịch sử của tập thể hoá và Tanzania, hoặc phần Lenin và Luxemburg. Thân sách hết ở tr. 357; phần còn lại là chú thích.</span></li>
+          <li><span class="bk-reads__t">The Modernist City: An Anthropological Critique of Brasília — James Holston, 1989</span><span class="bk-reads__why">Nguồn chính của chương Brasília, có ảnh và phỏng vấn cư dân.</span></li>
+          <li><span class="bk-reads__t">The Death and Life of Great American Cities — Jane Jacobs, 1961</span><span class="bk-reads__why">Phản đề đầy đủ của quy hoạch hiện đại cao: phố dùng lẫn, mắt trên phố.</span></li>
+          <li><span class="bk-reads__t">The Power of Everyday Politics — Benedict J. Tria Kerkvliet, 2005</span><span class="bk-reads__why">Hợp tác xã nông nghiệp miền Bắc Việt Nam sụp từ bên trong thế nào; ca Việt Nam của mục 7.</span></li>
+          <li><span class="bk-reads__t">Seeing like a market — Marion Fourcade và Kieran Healy, 2017</span><span class="bk-reads__why">Nền tảng số và thị trường phân loại, chấm điểm người: phần tiếp của Scott cho người làm dữ liệu.</span></li>
+          <li><span class="bk-reads__t">Phản biện: Scott Alexander, “Book Review: Seeing Like A State” (2017); Jason Crawford, “A review of Seeing Like a State in six tweets” (2024); J. Bradford DeLong, “Perhaps. And Sometimes.” (2010); Fernando Coronil, “Smelling Like a Market” (2001)</span><span class="bk-reads__why">Ba hướng: sách chọn ca thất bại và bỏ qua Cách mạng Xanh; không đọc được thì kẻ mạnh tại chỗ bóc lột; thị trường cũng đơn giản hoá.</span></li>
+          <li><span class="bk-reads__t">Trên site: <a href="experimentation-causal-inference.html#s-oec">luật Goodhart</a> · <a href="books-in-brief.html#acemoglu">Acemoglu và Robinson</a> · <a href="books-in-brief.html#tetlock">Tetlock: nhím và cáo</a></span><span class="bk-reads__why">Goodhart là mục 2 nói theo ngôn ngữ chỉ số. Acemoglu nói thể chế bòn rút làm nước nghèo; Scott thêm rằng thể chế tốt vẫn hỏng vì tầm nhìn đơn giản hoá. Con nhím một ý lớn của Tetlock là tư duy hiện đại cao.</span></li>
+        </ul>
+      </section>
+
+      <footer class="bk-foot">
+        <p>Trích dẫn và số liệu đối chiếu với toàn văn sách. Ca Việt Nam đối chiếu với văn bản Nghị quyết 10-NQ/TW và báo chí trong nước.</p>
+        <p><a href="../index.html">Về trang chủ</a></p>
+      </footer>
+    </div>
+  </div>
+</main>
+<script>
+/* ==========================================================================
+   BK CORE JS — giống hệt nhau ở mọi trang sách. Luật dùng: DESIGN.md.
+   Đọc HTML, không chèn chữ bằng innerHTML: mọi chữ đi qua textContent.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  /* Hằng số đọc: chỉ khai ở đây. */
+  var READING = {
+    wpm: 200,              /* từ/phút, tiếng Việt, đọc hiểu */
+    wordsPerBookPage: 300  /* từ trên một trang sách in */
+  };
+
+  var doc = document, root = doc.documentElement;
+  function $(s, el) { return (el || doc).querySelector(s); }
+  function $$(s, el) { return Array.prototype.slice.call((el || doc).querySelectorAll(s)); }
+  function make(tag, cls, text) {
+    var n = doc.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  /* ---- đếm chữ, đổi ra phút ---- */
+  function countWords(el) {
+    var c = el.cloneNode(true);
+    $$('svg, button, script, style, .bk-noread', c).forEach(function (n) { n.remove(); });
+    var t = c.textContent.trim();
+    return t ? t.split(/\s+/).length : 0;
+  }
+  function toMinutes(words) { return Math.max(1, Math.round(words / READING.wpm)); }
+  function fmtMinutes(m) {
+    if (m < 60) return m + ' phút';
+    m = Math.round(m / 10) * 10;
+    var h = Math.floor(m / 60), r = m % 60;
+    return h + ' giờ' + (r ? ' ' + r + ' phút' : '');
+  }
+
+  var main = $('#noi-dung');
+  var units = $$('.bk-unit');
+  var pageWords = main ? countWords(main) : 0;
+  var pageMin = toMinutes(pageWords);
+  var bookPages = $$('[data-pages]').reduce(function (s, el) { return s + (+el.getAttribute('data-pages') || 0); }, 0);
+  var bookMin = Math.round(bookPages * READING.wordsPerBookPage / READING.wpm);
+
+  var info = units.map(function (u, i) {
+    var head = $('.bk-unit__head', u);
+    var title = $('.bk-unit__title', u);
+    var gist = $('.bk-unit__gist', u);
+    var by = $('.bk-unit__by', u);
+    var shelf = u.closest('.bk-shelf');
+    var m = toMinutes(countWords(u));
+    var minEl = $('.bk-unit__min', u);
+    if (!minEl && head) {
+      var num = $('.bk-unit__num', head);
+      minEl = make('span', 'bk-unit__min');
+      if (num) num.appendChild(minEl);
+    }
+    if (minEl) minEl.textContent = m + ' phút đọc';
+    return {
+      el: u, id: u.id, n: i + 1, min: m,
+      title: u.getAttribute('data-toc') || (title ? title.textContent.trim() : u.id),
+      full: title ? title.textContent.trim() : u.id,
+      gist: gist ? gist.textContent.trim() : '',
+      by: by ? by.textContent.trim() : '',
+      pages: +u.getAttribute('data-pages') || 0,
+      shelf: shelf
+    };
+  });
+
+  /* ---- số tính sẵn: data-out="page|book|ratio|units|done" ---- */
+  function out(name, text) { $$('[data-out="' + name + '"]').forEach(function (n) { n.textContent = text; }); }
+  out('page', '≈ ' + fmtMinutes(pageMin));
+  out('units', String(units.length));
+  if (bookMin) {
+    out('book', '≈ ' + fmtMinutes(bookMin));
+    out('pages', bookPages.toLocaleString('vi-VN') + ' trang');
+    out('ratio', 'khoảng ' + Math.max(1, Math.round(bookMin / pageMin)) + ' lần');
+    $$('.bk-time__bar--page').forEach(function (b) {
+      b.style.setProperty('--w', Math.max(1.5, 100 * pageMin / bookMin).toFixed(1) + '%');
+    });
+  }
+
+  /* ---- đánh dấu đã đọc (localStorage, có thể không dùng được) ---- */
+  var KEY = 'bk-done:' + location.pathname;
+  var done = {};
+  try { (JSON.parse(localStorage.getItem(KEY)) || []).forEach(function (id) { done[id] = 1; }); } catch (e) {}
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(Object.keys(done))); } catch (e) {} }
+
+  var TICK = 'M3.5 8.5l3 3 6-7';
+  function tick() {
+    var s = doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    s.setAttribute('viewBox', '0 0 16 16'); s.setAttribute('class', 'bk-tick'); s.setAttribute('aria-hidden', 'true');
+    var p = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d', TICK); p.setAttribute('fill', 'none'); p.setAttribute('stroke', 'currentColor');
+    p.setAttribute('stroke-width', '2'); p.setAttribute('stroke-linecap', 'round'); p.setAttribute('stroke-linejoin', 'round');
+    s.appendChild(p);
+    return s;
+  }
+
+  /* ---- lưới tổng quan: [data-bk-index] ---- */
+  var idxRows = {};
+  function row(u) {
+    var li = make('li');
+    var a = make('a'); a.href = '#' + u.id;
+    a.appendChild(make('span', 'bk-idx__n', String(u.n)));
+    var mid = make('span');
+    mid.appendChild(make('span', 'bk-idx__t', u.full));
+    if (u.by) mid.appendChild(make('span', 'bk-idx__by', u.by));
+    if (u.gist) mid.appendChild(make('span', 'bk-idx__g', u.gist));
+    a.appendChild(mid);
+    var m = make('span', 'bk-idx__m', u.min + ' phút');
+    a.appendChild(m);
+    var sr = make('span', 'bk-sr', ', đã đọc'); sr.hidden = true; a.appendChild(sr);
+    li.appendChild(a);
+    idxRows[u.id] = li;
+    return li;
+  }
+  $$('[data-bk-index]').forEach(function (box) {
+    box.textContent = '';
+    box.classList.add('bk-noread');
+    var shelves = [];
+    info.forEach(function (u) { if (u.shelf && shelves.indexOf(u.shelf) < 0) shelves.push(u.shelf); });
+    if (!shelves.length) {
+      var ol = make('ol', 'bk-idx');
+      info.forEach(function (u) { ol.appendChild(row(u)); });
+      box.appendChild(ol);
+    } else {
+      var grps = make('div', 'bk-idxgrps');
+      box.appendChild(grps);
+      shelves.forEach(function (sh) {
+        var list = info.filter(function (u) { return u.shelf === sh; });
+        var g = make('div', 'bk-idxgrp');
+        var t = make('h3', 'bk-idxgrp__t', sh.getAttribute('data-toc') || '');
+        var sum = list.reduce(function (s, u) { return s + u.min; }, 0);
+        t.appendChild(make('span', null, list.length + ' cuốn · ' + sum + ' phút'));
+        g.appendChild(t);
+        var ol = make('ol', 'bk-idx');
+        list.forEach(function (u) { ol.appendChild(row(u)); });
+        g.appendChild(ol);
+        grps.appendChild(g);
+      });
+    }
+    var total = make('p', 'bk-idx-sum', info.length + ' mục, ' + fmtMinutes(info.reduce(function (s, u) { return s + u.min; }, 0)) + ' · cả trang ' + fmtMinutes(pageMin));
+    box.appendChild(total);
+  });
+
+  /* ---- mục lục bám: [data-bk-toc] dựng từ mọi phần tử có data-toc, theo thứ tự trong trang ---- */
+  var tocLinks = [];
+  var tocList = $('[data-bk-toc]');
+  if (tocList) {
+    tocList.textContent = '';
+    $$('[data-toc]').forEach(function (el) {
+      var li = make('li');
+      if (el.classList.contains('bk-shelf')) {
+        li.className = 'bk-toc__grp';
+        li.textContent = el.getAttribute('data-toc');
+        tocList.appendChild(li);
+        return;
+      }
+      if (el.hasAttribute('data-toc-sep')) tocList.appendChild(make('li', 'bk-toc__sep'));
+      var a = make('a'); a.href = '#' + el.id;
+      var u = info.filter(function (x) { return x.el === el; })[0];
+      if (u) a.appendChild(make('span', 'bk-toc__n', String(u.n)));
+      a.appendChild(make('span', null, el.getAttribute('data-toc') || (u && u.title) || el.id));
+      li.appendChild(a);
+      tocList.appendChild(li);
+      tocLinks.push({ a: a, el: el, label: el.getAttribute('data-toc') || (u && u.title) || '' , u: u });
+    });
+  }
+
+  /* ---- trạng thái đã đọc: nút cuối mục, dấu ở tổng quan, mục lục, đầu mục ---- */
+  function paint() {
+    var n = 0;
+    info.forEach(function (u) {
+      var on = !!done[u.id];
+      if (on) n++;
+      var li = idxRows[u.id];
+      if (li) {
+        li.classList.toggle('is-done', on);
+        var m = $('.bk-idx__m', li), t = $('.bk-tick', m);
+        if (on && !t) m.appendChild(tick()); else if (!on && t) t.remove();
+        $('.bk-sr', li).hidden = !on;
+      }
+      tocLinks.forEach(function (l) {
+        if (l.u !== u) return;
+        var t = $('.bk-tick', l.a);
+        if (on && !t) l.a.appendChild(tick()); else if (!on && t) t.remove();
+      });
+      var st = $('.bk-unit__state', u.el);
+      if (st) st.hidden = !on;
+      var b = $('.bk-done', u.el);
+      if (b) { b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.lastChild.textContent = on ? 'Đã đọc' : 'Đánh dấu đã đọc'; }
+    });
+    out('done', n + '/' + info.length);
+  }
+  info.forEach(function (u) {
+    var num = $('.bk-unit__num', u.el);
+    if (num) {
+      var st = make('span', 'bk-unit__state'); st.hidden = true;
+      st.appendChild(tick()); st.appendChild(doc.createTextNode('Đã đọc'));
+      num.appendChild(st);
+    }
+    var b = make('button', 'bk-done'); b.type = 'button';
+    b.appendChild(tick()); b.appendChild(doc.createTextNode(''));
+    b.addEventListener('click', function () {
+      if (done[u.id]) delete done[u.id]; else done[u.id] = 1;
+      save(); paint();
+    });
+    u.el.appendChild(b);
+  });
+  paint();
+
+  /* ---- mục lục trên điện thoại: nút ở thanh trên mở bảng thả ---- */
+  var rail = $('#bk-rail'), tocBtn = $('#bk-tocbtn');
+  function setOpen(open, focusBack) {
+    if (!rail || !tocBtn) return;
+    rail.classList.toggle('is-open', open);
+    tocBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) { var cur = $('a[aria-current]', rail) || $('a', rail); if (cur) cur.focus(); }
+    else if (focusBack) tocBtn.focus();
+  }
+  if (tocBtn && rail) {
+    tocBtn.addEventListener('click', function () { setOpen(!rail.classList.contains('is-open')); });
+    rail.addEventListener('click', function (e) { if (e.target.closest('a')) setOpen(false); });
+    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && rail.classList.contains('is-open')) setOpen(false, true); });
+    doc.addEventListener('click', function (e) {
+      if (rail.classList.contains('is-open') && !rail.contains(e.target) && !tocBtn.contains(e.target)) setOpen(false);
+    });
+  }
+
+  /* ---- mục đang đọc + vạch tiến độ ---- */
+  var bar = $('.bk-progress'), current = $('[data-bk-current]'), ticking = false;
+  function onScroll() {
+    ticking = false;
+    var max = root.scrollHeight - innerHeight;
+    if (bar) bar.style.setProperty('--p', max > 0 ? Math.min(1, Math.max(0, scrollY / max)).toFixed(4) : '0');
+    var line = innerHeight * 0.3, act = null;
+    tocLinks.forEach(function (l) { if (l.el.getBoundingClientRect().top <= line) act = l; });
+    tocLinks.forEach(function (l) { if (l === act) l.a.setAttribute('aria-current', 'location'); else l.a.removeAttribute('aria-current'); });
+    if (current) current.textContent = act ? (act.u ? act.u.n + '. ' : '') + act.label : 'Mục lục';
+  }
+  addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  addEventListener('resize', onScroll);
+  onScroll();
+
+  /* ---- theme: lựa chọn đã lưu ở 'hub-theme' thắng; chưa lưu thì theo hệ điều hành ---- */
+  var themeBtn = $('#bk-theme'), meta = $('#bk-theme-color');
+  function applyTheme(dark) {
+    root.classList.toggle('dark', dark);
+    if (meta) meta.setAttribute('content', dark ? '#101211' : '#fbfaf7');
+    if (themeBtn) themeBtn.setAttribute('aria-label', dark ? 'Chuyển sang nền sáng' : 'Chuyển sang nền tối');
+  }
+  applyTheme(root.classList.contains('dark'));
+  if (themeBtn) themeBtn.addEventListener('click', function () {
+    var dark = !root.classList.contains('dark');
+    applyTheme(dark);
+    try { localStorage.setItem('hub-theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+  if (window.matchMedia) {
+    var mq = matchMedia('(prefers-color-scheme: dark)');
+    var follow = function (e) { var t = null; try { t = localStorage.getItem('hub-theme'); } catch (x) {} if (!t) applyTheme(e.matches); };
+    if (mq.addEventListener) mq.addEventListener('change', follow);
+  }
+
+  /* ---- lộ trình (trang gom nhiều sách): nút [data-route] hiện khung [data-route-panel] cùng tên ---- */
+  var routeBtns = $$('[data-route]');
+  function showRoute(name) {
+    routeBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-route') === name ? 'true' : 'false'); });
+    $$('[data-route-panel]').forEach(function (p) { p.classList.toggle('is-on', p.getAttribute('data-route-panel') === name); });
+  }
+  routeBtns.forEach(function (b) { b.addEventListener('click', function () { showRoute(b.getAttribute('data-route')); }); });
+  if (routeBtns.length) showRoute(routeBtns[0].getAttribute('data-route'));
+
+  /* ---- bản in: mở hết đáp án, in xong trả lại ---- */
+  var closed = [];
+  addEventListener('beforeprint', function () { closed = $$('details:not([open])'); closed.forEach(function (d) { d.open = true; }); });
+  addEventListener('afterprint', function () { closed.forEach(function (d) { d.open = false; }); closed = []; });
+})();
+</script>
+</body>
+</html>
