@@ -14,9 +14,10 @@
 <link rel="stylesheet" href="styles.css">
 <script>
   // Đặt theme đã lưu trước lần vẽ đầu; chưa lưu thì theo hệ điều hành (REPO-024).
+  // Khoá 'hub-theme' dùng chung cả site: đổi theme ở trang nào thì mọi trang theo.
   try {
-    var p = JSON.parse(localStorage.getItem('class-schedule:prefs:v1') || '{}');
-    if (p.theme === 'light' || p.theme === 'dark') document.documentElement.dataset.theme = p.theme;
+    var t = localStorage.getItem('hub-theme');
+    if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
   } catch (e) { /* không đọc được thì theo hệ thống */ }
 </script>
 <script type="module" src="src/main.js"></script>
