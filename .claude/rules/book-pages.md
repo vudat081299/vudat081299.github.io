@@ -36,6 +36,23 @@ Luật riêng của từng thư mục ở `pages/CLAUDE.md` và `cooking/CLAUDE.
 - Tính lại mọi demo (nốt, phách, con số nó thật sự sinh ra) rồi so với nhãn nút và lời văn.
 - Kết luận "trang thiếu X" thì ghi các từ đã tìm (có dấu, không dấu, tiếng Anh).
 
+## Trang tóm tắt sách (PAGES-023)
+
+- Một cuốn: chép khung (khối CSS/JS `BK CORE`) từ `pages/seeing-like-a-state.html`. Nhiều cuốn: từ
+  `pages/books-in-brief.html`. Không dùng `web-builder.css`; màu chỉ qua token trong `BK CORE`.
+- Thứ tự trang: thanh trên → hero (so thời gian đọc) → `#tong-quan` (luận điểm, mạch lập luận, mọi mục) →
+  các mục → công cụ tư duy, tự kiểm, nguồn.
+- Một mục của trang một cuốn: Ý chính → Lập luận → Ví dụ then chốt → Dùng vào đâu → Giới hạn. Không bỏ ô.
+- Một cuốn trong trang nhiều cuốn: Luận điểm → Ý chính (3–7, mỗi ý một ví dụ) → Mô hình tư duy → Đọc bản đầy
+  đủ khi → Phản biện.
+- Phút đọc, lưới tổng quan và mục lục do JS tính từ trang. "Chương n" / "Cuốn n" viết tay, phải khớp thứ tự.
+- Chữ trong SVG dùng class `f-*` / `s-*` / `t-*`, không ghi mã màu.
+
+## Link
+
+- Trang không nằm trong `hold` của `data/collection.json` không link tới trang trong `hold`, cũng không nhắc
+  tên nó.
+
 ## Giao diện
 
 - Mặc định dùng `../web-builder/web-builder.css`; màu, bán kính, bóng đi qua token `--wb-*`.
