@@ -9,10 +9,16 @@ lịch tháng / tuần / danh sách, panel chi tiết môn và buổi. Niêm y�
 - `src/time.js`: ngày giờ theo `Asia/Ho_Chi_Minh`, không phụ thuộc múi giờ máy người xem.
 - `src/model.js`: kiểm dữ liệu và dựng `ClassSession`; không đụng DOM, chạy được trong Node.
 - `src/state.js`, `src/store.js`: trạng thái trang và tuỳ chọn trong `localStorage`.
-- `src/views/`: `dashboard.js`, `calendar.js` (tháng, tuần, danh sách), `panel.js`, `parts.js` (mảnh dùng chung).
+- `src/views/`: `dashboard.js` (khối hôm nay + buổi tiếp theo, khối tiến độ + dòng môn mở panel môn), `calendar.js`
+  (tháng, tuần, danh sách), `panel.js`, `parts.js` (mảnh dùng chung).
 - `src/main.js`: nạp dữ liệu, sự kiện, vẽ lại từng vùng.
 - `styles.css`: token màu trên `:root`, dark mode qua `prefers-color-scheme` và `data-theme`.
 - Màu và font theo trang chủ (SCHED-001, [DECISIONS.md](DECISIONS.md)). Mã màu chỉ khai ở token; vùng chạm ở điện thoại ≥ 40px.
+
+## Giao diện
+
+- Tối giản theo SCHED-002: không thêm thẻ có viền, pill hay nhãn mono in hoa.
+- Buổi tiếp theo chỉ ở khối đầu; lịch ở khối dưới. Điện thoại: khối đầu nằm trong màn hình đầu (smoke kiểm).
 
 ## Luật dữ liệu
 
@@ -35,4 +41,5 @@ lịch tháng / tuần / danh sách, panel chi tiết môn và buổi. Niêm y�
 - `node tools/verify.mjs`: dữ liệu khớp lịch gốc từng buổi, giờ Việt Nam, trạng thái, tiến độ, tìm kiếm.
 - `tsc -p tsconfig.json`: kiểm kiểu JSDoc (dùng `tsc` toàn cục, hoặc của `cashy/node_modules`).
 - Cổng không bấm nút. CI chạy thêm `node tools/smoke.cjs <url>`: bấm thật điều hướng, chip lọc, panel, tìm
-  kiếm, giảng viên theo ngày, tràn ngang ở 375px. Sửa sự kiện hay view thì chạy nó trước khi commit.
+  kiếm, giảng viên theo ngày, dòng môn, chọn ngày trên điện thoại, tràn ngang. Sửa sự kiện hay view thì chạy nó
+  trước khi commit.
