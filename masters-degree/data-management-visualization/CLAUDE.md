@@ -11,7 +11,11 @@
 - `data-management-visualization.html` (kem) và `data-management-visualization-green.html` (màu trang chủ: đen,
   trắng, một xanh lá, tiêu đề Space Grotesk) có cùng `<body>` và JS; chỉ khác `<style>` và `aria-current` trong `nav.ver`.
 - Sửa nội dung thì sửa cả hai file giống hệt nhau. Mục trên trang chủ trỏ bản kem.
-- Bản xanh: cả hai phần dùng `--a` làm màu nhấn; `--b` (than chì) chỉ còn cho tuyến B trên bản đồ.
+- Bản xanh dùng năm màu: trắng, đen, xanh lá, trắng pha xanh (`--a-soft`), đen pha xanh (`--a`). Cả hai phần
+  dùng `--a` làm `--acc`.
+- Bản xanh: xanh tươi `--green` / `--green-hi` chỉ cho chi tiết nhỏ (gạch nhãn, thanh tiến độ, mục đang đọc, gạch
+  chân link, nút đã mở); không tô khối lớn. Trong `.map`, `--a` đổi sang `--green-hi` cho tuyến A.
+- Bản xanh: biểu đồ dùng `--c1…--c6` trầm (lục, lam than, vàng đất, mận, xám, xanh đá); chữ trắng trên chúng đạt 4.5:1.
 
 ## Cấu trúc trang
 
@@ -38,12 +42,17 @@
 - Bảng màu biểu đồ `--c1…--c6`: lam, cam đất, lục, tím hồng, xám đá, xanh ngọc. Chú giải gọi tên màu phải khớp.
 - Chữ trắng `.t-on` trên `--c1…--c6`, `--a`, `--b` đạt 4.5:1 ở theme sáng; đổi token thì tính lại.
 - SVG tô bằng lớp `f-*`, `s-*`, `t-*`; không ghi mã màu. Mũi tên dùng chung: `url(#arr)`, `url(#arr-a)`, `url(#arr-b)`.
+- Marker cố định 8 đơn vị hình (`markerUnits="userSpaceOnUse"`, `refX="4"`): đầu nhọn nằm 4.8 đơn vị sau điểm cuối
+  của nét. Nét có mũi tên dừng ở mép đích − 6 (đầu nhọn cách mép 1.2); nét không mũi tên chạm đúng mép hộp.
+- Mỗi `path` mang marker chỉ có một nét con (một `M`); nhiều nhánh thì nhiều `path`.
+- Nhãn chữ trong hình không nằm đè lên nét.
 - `rect.s-line` dùng `--stroke` (3:1 với nền); `path`/`line` `.s-line` giữ `--line-2` cho lưới.
 - SVG có `min-width` theo bề rộng viewBox (JS gán `--vbw`), hẹp hơn thì cuộn ngang kèm gợi ý; `.fit` bỏ min-width.
 - Ở ≤ 600px, `.skel` hiện danh sách nút do JS dựng; hình khung xương mở bằng nút "Xem hình khung xương".
 - localStorage: `hub-theme` (theme, chỉ ghi khi bấm nút), `dmv-opened` (nút đã mở), `dmv-read-all` (công tắc Đọc liền).
 - Nút mở bằng code (Đọc liền, Mở hết, in) chỉ tính "đã mở" khi người đọc thấy nó trên màn hình.
 - In: `beforeprint` mở mọi `details`, `afterprint` trả lại.
+- Viền một hoặc hai cạnh thì không bo góc (REPO-025).
 
 ## Nội dung
 

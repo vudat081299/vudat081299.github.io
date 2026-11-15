@@ -17,11 +17,12 @@
 <style>
 /* ═══ TOKEN ═══ Màu chỉ khai ở đây. Bản sáng chép lại trong @media print. */
 :root{
-  --bg:#f5f6f3; --surface:#ffffff; --sunk:#eceee9; --line:#d6dad4; --line-2:#c6ccc5; --stroke:#848e87;
+  --bg:#f5f6f3; --surface:#ffffff; --sunk:#eef1ec; --line:#d6dad4; --line-2:#c6ccc5; --stroke:#848e87;
   --ink:#0b0f0c; --ink-2:#464e48; --ink-3:#5b645e; --on-acc:#ffffff;
-  --a:#0a7a3c; --a-soft:#e4f2e8; --b:#1d2420; --b-soft:#eceee9;
+  --a:#173d29; --a-soft:#eaf3ed; --b:#0b0f0c; --b-soft:#eef1ec;
+  --green:#0a7a3c; --green-hi:#16a34a;
   --good:#0a7a3c; --good-soft:#e4f2e8; --bad:#b42318; --bad-soft:#fbe6e3; --warn:#7a5f00; --warn-soft:#f5eed3;
-  --c1:#0a7a3c; --c2:#3d4741; --c3:#2b6a8f; --c4:#8e3b7f; --c5:#6b756f; --c6:#8a5a00;
+  --c1:#2f7a52; --c2:#3b4a63; --c3:#8f6516; --c4:#8c4a6b; --c5:#6b756f; --c6:#376f7b;
   --shadow:0 1px 2px rgba(11,15,12,.05),0 12px 32px -14px rgba(11,15,12,.18);
   --display:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
   --font:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -30,11 +31,12 @@
   --acc:var(--ink-2); --acc-soft:var(--sunk);
 }
 [data-theme="dark"]{
-  --bg:#090b0a; --surface:#101412; --sunk:#171c19; --line:#262d29; --line-2:#333b36; --stroke:#5f6a63;
-  --ink:#eef2ed; --ink-2:#a9b3ac; --ink-3:#8d9891; --on-acc:#04130a;
-  --a:#5be08f; --a-soft:#122a1b; --b:#d3dbd5; --b-soft:#1a201c;
+  --bg:#090b0a; --surface:#101412; --sunk:#151b17; --line:#262d29; --line-2:#333b36; --stroke:#5f6a63;
+  --ink:#eef2ed; --ink-2:#a9b3ac; --ink-3:#8d9891; --on-acc:#06140c;
+  --a:#cfe8d7; --a-soft:#13241a; --b:#eef2ed; --b-soft:#151b17;
+  --green:#5be08f; --green-hi:#5be08f;
   --good:#5be08f; --good-soft:#122a1b; --bad:#f2877c; --bad-soft:#341815; --warn:#e3c45c; --warn-soft:#2c260f;
-  --c1:#5be08f; --c2:#c5ccc7; --c3:#7cc4f0; --c4:#e29ad6; --c5:#8d9891; --c6:#e0b45a;
+  --c1:#6fcf97; --c2:#9fb0cc; --c3:#e0b45a; --c4:#d99abb; --c5:#8d9891; --c6:#7cc0cc;
   --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -18px rgba(0,0,0,.8);
 }
 .part-a{--acc:var(--a);--acc-soft:var(--a-soft)}
@@ -308,50 +310,67 @@ input[type=range]{accent-color:var(--acc);width:100%}
 .src li{font-size:16px;color:var(--ink-2)}
 footer{border-top:1px solid var(--line);margin-top:64px;padding:20px 0;font-size:14px;color:var(--ink-3)}
 
-/* ═══ BẢN MÀU TRANG CHỦ ═══ đen, trắng, một xanh lá; tiêu đề Space Grotesk, nhãn mono như trang chủ. */
-::selection{background:#16a34a;color:#fff}
+/* ═══ BẢN MÀU TRANG CHỦ ═══ Năm màu: trắng, đen, xanh lá, trắng pha xanh (--a-soft), đen pha xanh (--a).
+   Xanh tươi (--green) chỉ cho chi tiết nhỏ: gạch nhãn, thanh tiến độ, mục đang đọc, gạch chân link.
+   Viền một hoặc hai cạnh thì không bo góc; viền đủ bốn cạnh mới bo. */
+::selection{background:var(--green-hi);color:#fff}
+:focus-visible{outline-color:var(--green)}
 h1,h2,.hero h1,.block>h2,.part-banner h2,.chap-head h2{font-family:var(--display);font-weight:600;letter-spacing:-.025em}
 .hero h1{font-size:clamp(32px,5vw,52px);line-height:1.04;margin:14px 0 16px}
 .eyebrow,.part-banner .eyebrow,.chap-head .eyebrow{display:flex;align-items:center;gap:10px;font:500 11.5px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
-.eyebrow::before{content:"";flex:none;width:18px;height:2px;border-radius:2px;background:var(--a)}
+.eyebrow::before{content:"";flex:none;width:18px;height:2px;background:var(--green-hi)}
 .side-h{font:500 10.5px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.toc .no{color:var(--ink-3)}
 .toc a.on{background:var(--surface);box-shadow:0 0 0 1px var(--line)}
+.toc a.on .no,.toc .cnt.full{color:var(--green)}
 .top{background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:saturate(160%) blur(12px);-webkit-backdrop-filter:saturate(160%) blur(12px)}
 .top-name{font:600 15px var(--display);letter-spacing:-.01em}
 .top-cur{font-family:var(--font)}
 .icon-btn,.ver{border-radius:11px}
-.bar{background:var(--a)}
+.bar{background:var(--green-hi)}
 .btn-start{border-radius:11px;font-family:var(--display);letter-spacing:-.005em}
-.btn-start:not(.alt){background:var(--a);color:var(--on-acc)}
-.btn-start:not(.alt):hover{background:var(--ink)}
-.howto li,.routes li,.ccard,details.node,details.quiz,.skel,.chap-nav a{border-color:var(--line)}
-.howto li::before{background:var(--a);color:var(--on-acc)}
-.ccard{border-left-width:1px;border-radius:14px;position:relative;overflow:hidden}
-.ccard::before{content:"";position:absolute;left:14px;top:0;width:22px;height:3px;border-radius:0 0 2px 2px;background:var(--a)}
-.ccard .k b{color:var(--ink)}
-.ccard:hover{border-color:var(--a);box-shadow:var(--shadow)}
-.map,.skel{border-radius:16px}
-.part-banner{border:1px solid color-mix(in srgb,var(--a) 32%,transparent);border-radius:20px;padding:22px 26px;
-  background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--a) 9%,transparent),transparent 60%),var(--surface)}
-.chap-no{border-width:2px;border-color:var(--ink);color:var(--ink);background:var(--surface);font-weight:500}
+main a:not([class]){color:var(--ink);text-decoration-color:var(--green-hi);text-decoration-thickness:1.5px}
+main a:not([class]):hover{color:var(--green)}
+.howto li,.routes li,.ccard,details.node,details.quiz,.skel,.chap-nav a,.card,.try{border-color:var(--line)}
+.ccard{border-radius:14px}
+.ccard .k b{color:var(--green)}
+.ccard:hover,.chap-nav a:hover{border-color:var(--stroke);box-shadow:var(--shadow)}
+.routes .path a:hover{background:var(--a-soft)}
+.map{--a:var(--green-hi);--a-soft:var(--sunk);border-radius:16px}
+.skel{border-radius:16px}
+.part-banner{border:1px solid var(--line);border-radius:20px;padding:22px 26px;
+  background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--green-hi) 7%,transparent),transparent 60%),var(--surface)}
+.chap-no{border-width:1.5px;border-color:var(--ink);color:var(--ink);background:var(--surface)}
 details.node{border-radius:14px}
 details.node>summary{border-radius:14px}
-details.node[open]{border-color:color-mix(in srgb,var(--a) 45%,var(--line))}
-.node-k{background:none;border:1px solid color-mix(in srgb,var(--a) 40%,var(--line));color:var(--a)}
+details.node>summary:hover{background:var(--sunk)}
+details.node[open]{border-color:var(--stroke)}
+.node-k{background:var(--sunk);color:var(--ink-2)}
 .node-t{font-family:var(--display);font-weight:600;letter-spacing:-.015em}
 .node-body h4{font-family:var(--display);font-weight:600}
 figure.dg,.demo{border-radius:12px}
-.card{border-radius:12px;background:var(--surface);border-color:var(--line)}
+.card{border-radius:12px;background:var(--surface)}
+.card.acc{background:var(--a-soft);border-color:var(--line)}
+.note{background:var(--a-soft);border-color:var(--line)}
 .tbl th{font:500 11.5px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
-.pill{background:none;border:1px solid color-mix(in srgb,var(--a) 40%,var(--line))}
-.recap{border-style:solid;border-color:color-mix(in srgb,var(--a) 35%,var(--line));border-radius:16px;
-  background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--a) 8%,transparent),transparent 60%),var(--surface)}
+.pill{background:var(--sunk);color:var(--ink-2)}
+.recap{border:1px solid var(--line);border-radius:16px;
+  background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--green-hi) 6%,transparent),transparent 60%),var(--surface)}
 .recap h3{font-family:var(--display);font-weight:600}
 details.quiz>summary::before{background:var(--ink);color:var(--bg)}
-details.quiz[open]>summary::before{background:var(--a);color:var(--on-acc)}
-.try{border-left-color:var(--a)}
+details.quiz[open]>summary::before{background:var(--green);color:#fff}
+.try b{color:var(--green)}
+.prog-bar i{background:var(--green-hi)}
+.sk-list .n{color:var(--ink-3)}
+.sk-list li.seen a::after{background:var(--green-hi);border-color:var(--green-hi)}
+.skel a.sk:hover rect,.skel a.sk:focus-visible rect{stroke:var(--ink)}
+.skel a.sk.seen rect{stroke:var(--green-hi)}
+.skel a.sk.seen rect.f-surface,.skel a.sk.seen rect.f-sunk{fill:var(--surface)}
+.sk-check circle{fill:var(--green-hi)}
+.sk-check text{fill:#fff}
 .chip,.btn{border-color:var(--line)}
-.chip:hover,.btn:hover{border-color:var(--a)}
+.chip:hover,.btn:hover{border-color:var(--stroke)}
+input[type=range]{accent-color:var(--green-hi)}
 
 /* ═══ MÀN HẸP ═══ */
 @media (max-width:960px){
@@ -410,11 +429,12 @@ details.quiz[open]>summary::before{background:var(--a);color:var(--on-acc)}
 /* ═══ IN ═══ JS mở mọi details trước khi in (beforeprint) rồi trả lại (afterprint). */
 @media print{
   :root,[data-theme="dark"]{color-scheme:light;
-    --bg:#ffffff; --surface:#ffffff; --sunk:#eceee9; --line:#d6dad4; --line-2:#c6ccc5; --stroke:#848e87;
+    --bg:#ffffff; --surface:#ffffff; --sunk:#eef1ec; --line:#d6dad4; --line-2:#c6ccc5; --stroke:#848e87;
     --ink:#0b0f0c; --ink-2:#464e48; --ink-3:#5b645e; --on-acc:#ffffff;
-    --a:#0a7a3c; --a-soft:#e4f2e8; --b:#1d2420; --b-soft:#eceee9;
+    --a:#173d29; --a-soft:#eaf3ed; --b:#0b0f0c; --b-soft:#eef1ec;
+    --green:#0a7a3c; --green-hi:#16a34a;
     --good:#0a7a3c; --good-soft:#e4f2e8; --bad:#b42318; --bad-soft:#fbe6e3; --warn:#7a5f00; --warn-soft:#f5eed3;
-    --c1:#0a7a3c; --c2:#3d4741; --c3:#2b6a8f; --c4:#8e3b7f; --c5:#6b756f; --c6:#8a5a00; --shadow:none}
+    --c1:#2f7a52; --c2:#3b4a63; --c3:#8f6516; --c4:#8c4a6b; --c5:#6b756f; --c6:#376f7b; --shadow:none}
   @page{margin:16mm 14mm}
   html{scroll-behavior:auto}
   body{font-size:11pt;line-height:1.5;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
