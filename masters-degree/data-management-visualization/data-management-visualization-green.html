@@ -719,11 +719,12 @@ input[type=range]{accent-color:var(--green-hi)}
           </svg>
         </div><figcaption>Dải dưới cùng: vòng đời đầu-cuối mà cả hai tầng phủ lên.</figcaption></figure>
         <p>Data governance là tập hợp quy trình, vai trò, chính sách, tiêu chuẩn và chỉ số bảo đảm thông tin được dùng hiệu quả trong toàn bộ vòng đời dữ liệu. Nói gọn: bộ hướng dẫn cho cách con người hành xử và ra quyết định về dữ liệu.</p>
-        <p>Tên môn, Data Management, là quản lý dữ liệu. Trang này dùng chữ “quản trị” chỉ cho governance: Bài 1 (quản trị) đặt luật, bài 2–5 (quản lý) làm theo luật bằng kỹ thuật.</p>
+        <p>Đề cương gọi môn là “Quản trị dữ liệu và trực quan hoá” (Data management and visualization), còn slide bìa ghi “Data governance and visualization”. Để tách hai khái niệm, trang này dịch management là “quản lý” và chỉ dùng “quản trị” cho governance: Bài 1 (quản trị) đặt luật, bài 2–5 (quản lý) làm theo luật.</p>
         <div class="cols">
           <div class="card acc"><b>Governance</b>Quyết định cái gì phải đúng, ai chịu trách nhiệm, đo bằng gì. Không có triển khai thì chỉ là tài liệu.</div>
           <div class="card"><b>Management</b>Phần kỹ thuật đáp ứng nhu cầu vòng đời dữ liệu của tổ chức; quản lý dữ liệu doanh nghiệp giúp thực thi và cưỡng chế chính sách.</div>
         </div>
+        <p class="slide-note">Slide gọi management là “triển khai kỹ thuật” của governance. DAMA-DMBOK2 định nghĩa rộng hơn: management là phát triển, thực thi và giám sát kế hoạch, chính sách, chương trình và thực hành để giao, kiểm soát, bảo vệ và nâng giá trị dữ liệu suốt vòng đời; governance là thực thi quyền hạn và kiểm soát (lập kế hoạch, giám sát, cưỡng chế) đối với việc quản lý tài sản dữ liệu. DMBOK2 đặt governance ở tâm, giữa mười lĩnh vực còn lại của management: kiến trúc, mô hình hoá và thiết kế, lưu trữ và vận hành, bảo mật, tích hợp, tài liệu và nội dung, dữ liệu tham chiếu và dữ liệu gốc, kho dữ liệu và BI, metadata, chất lượng dữ liệu.</p>
       </div>
     </details>
 
@@ -750,10 +751,10 @@ input[type=range]{accent-color:var(--green-hi)}
           </svg>
         </div><figcaption>Ba câu hỏi để biện minh cho một chương trình quản trị dữ liệu.</figcaption></figure>
         <div class="cols">
-          <div class="card"><b>Giá trị</b>Quyết định nhanh hơn, dựa trên bằng chứng, vì dữ liệu đồng nhất và ít lỗi báo cáo; từ đó tăng doanh thu.</div>
+          <div class="card"><b>Giá trị</b>Quyết định nhanh hơn, dựa trên bằng chứng, vì dữ liệu đồng nhất và ít lỗi báo cáo; từ đó tăng doanh thu qua sản phẩm mới, chăm sóc khách tốt hơn, tối ưu marketing.</div>
           <div class="card"><b>Chi phí</b>IBM ước tính dữ liệu kém chất lượng làm kinh tế Mỹ mất 3,1 nghìn tỷ USD mỗi năm.</div>
-          <div class="card"><b>Rủi ro</b>Ngân hàng quản rủi ro theo từng sản phẩm: khách vỡ nợ khoản vay mà vài tuần sau mới hạ được hạn mức thẻ, vì không có “một phiên bản sự thật” về khách.</div>
-          <div class="card"><b>Tuân thủ và đạo đức</b>GDPR (EU) và các luật tương tự đòi kiểm soát truy cập, thời hạn lưu và xoá, nhật ký kiểm toán. Câu hỏi đạo đức: ai chịu trách nhiệm khi thuật toán gây hại, như công cụ tuyển dụng phân biệt phụ nữ.</div>
+          <div class="card"><b>Rủi ro</b>Ba loại: bị đánh cắp (theft), bị lạm dụng (misuse, vd AT&amp;T 2015), bị hỏng (corruption: ra quyết định kinh doanh trên dữ liệu sai). Ví dụ: ngân hàng quản rủi ro theo từng sản phẩm: khách vỡ nợ khoản vay mà vài tuần sau mới hạ được hạn mức thẻ, vì không có “một phiên bản sự thật” về khách.</div>
+          <div class="card"><b>Tuân thủ và đạo đức</b>GDPR (EU) và các luật tương tự đòi kiểm soát truy cập, thời hạn lưu và xoá, nhật ký kiểm toán, phân loại dữ liệu nhạy cảm (sensitive data classes). Câu hỏi đạo đức: ai chịu trách nhiệm khi thuật toán gây hại, như công cụ tuyển dụng phân biệt phụ nữ.</div>
         </div>
         <p class="muted">Ví dụ khác trong slide: Gartner (2014) dự báo khủng hoảng thông tin ở các tập đoàn lớn; nhân viên tổng đài AT&amp;T bán thông tin khách (2015); đại lý nhập khách cũ thành khách mới để ăn hoa hồng; sáp nhập làm trùng khách; xe tự lái gây tử vong (2018).</p>
       </div>
@@ -951,19 +952,20 @@ input[type=range]{accent-color:var(--green-hi)}
           <dt>7 · Integrate</dt><dd>Gộp dữ liệu nhiều nguồn thành một góc nhìn thống nhất, vượt qua tính không đồng nhất (xem bài 3).</dd>
           <dt>8 · Analyze</dt><dd>Rút ra giá trị, hiểu biết từ dữ liệu (xem bài 4, 5).</dd>
         </dl>
+        <p class="slide-note">Tám chặng này là vòng đời dữ liệu nghiên cứu của DataONE; slide không ghi nguồn. Dải sáu chặng ở <a href="#b1-dinh-nghia">1.2</a> (thu thập tới xoá) là vòng đời theo góc nhìn quản trị. Vòng DataONE không có chặng xoá; DMBOK2 có chặng Dispose (lưu kho, xoá theo chính sách lưu giữ), chỗ GDPR đòi hỏi ở <a href="#b1-vi-sao">1.3</a>.</p>
       </div>
     </details>
 
   </div>
   <div class="recap"><h3>Mang theo</h3><ul>
     <li>Quản trị dữ liệu là chuyện con người trước, dữ liệu sau: vai trò, quy trình, văn bản và sự ủng hộ của lãnh đạo.</li>
-    <li>Governance đặt luật; data management là triển khai kỹ thuật của luật đó. Thiếu triển khai thì chỉ là giấy.</li>
+    <li>Governance đặt luật; data management thực thi luật đó (slide: triển khai kỹ thuật; DMBOK: gồm cả kế hoạch và thực hành nghiệp vụ). Thiếu triển khai thì chỉ là giấy.</li>
     <li>Ba động lực: giá trị, chi phí, rủi ro (gồm tuân thủ GDPR và đạo đức).</li>
     <li>Bốn bậc trưởng thành: Undisciplined → Reactive → Proactive → Governed; MDM là dấu hiệu của hai bậc cuối.</li>
     <li>Phần mềm giúp được, nhưng không sửa được quy trình hay tổ chức hỏng; bắt đầu đã khó, duy trì còn khó hơn.</li>
   </ul></div>
   <div class="quiz-list">
-    <details class="quiz"><summary>Phân biệt data governance với data management. Vì sao nói “governance không có triển khai chỉ là tài liệu”?</summary><div>Governance định ra quy trình, vai trò, chính sách, tiêu chuẩn và chỉ số (ai quyết gì về dữ liệu). Management là phần kỹ thuật thực thi: làm sạch, chuẩn hoá, che và mã hoá, lưu trữ và xoá. Chính sách chỉ có tác dụng khi hệ thống cưỡng chế được nó, nên thiếu tầng management thì governance nằm trên giấy.</div></details>
+    <details class="quiz"><summary>Phân biệt data governance với data management. Vì sao nói “governance không có triển khai chỉ là tài liệu”?</summary><div>Governance định ra quy trình, vai trò, chính sách, tiêu chuẩn và chỉ số (ai quyết gì về dữ liệu). Management là phần thực thi (slide gọi là triển khai kỹ thuật): làm sạch, chuẩn hoá, che và mã hoá, lưu trữ và xoá. Chính sách chỉ có tác dụng khi hệ thống cưỡng chế được nó, nên thiếu tầng management thì governance nằm trên giấy.</div></details>
     <details class="quiz"><summary>Một ngân hàng mất vài tuần mới hạ hạn mức thẻ tín dụng của khách vừa vỡ nợ khoản vay. Vấn đề quản trị nào, và nó ở bậc trưởng thành nào?</summary><div>Mỗi sản phẩm có hệ thống rủi ro riêng, dữ liệu khách theo silo, không có “một phiên bản sự thật”. Đó là dấu hiệu bậc Reactive (nghĩ toàn cục, làm cục bộ, nhiều góc nhìn cho cùng dữ liệu). Lên Proactive cần MDM khách hàng và định nghĩa dữ liệu dùng chung.</div></details>
     <details class="quiz"><summary>Data owner và data steward khác nhau thế nào? Mỗi người trả lời câu hỏi nào?</summary><div>Owner ở tầng chiến lược: quyết định mục tiêu, cơ hội, ai được dùng dữ liệu. Steward ở tầng chiến thuật: giữ chất lượng, quy tắc và ngữ nghĩa dữ liệu hằng ngày. Custodian, producer, consumer ở tầng vận hành: giữ, tạo và dùng dữ liệu trong hệ thống.</div></details>
   </div>
@@ -975,7 +977,7 @@ input[type=range]{accent-color:var(--green-hi)}
     <div class="eyebrow">Bài 2.1 · File systems</div>
     <h2>Hệ thống file: từ ổ cục bộ tới phân tán</h2>
     <p class="chap-q">Khi file nằm rải trên nhiều máy, làm sao người dùng vẫn đọc ghi như trên ổ của mình?</p>
-    <p class="chap-links">Dùng lại ở: <a href="#b2-2">Bài 2.2</a> (HDFS là một hệ thống file phân tán kiểu client–server), <a href="#b3-kho">3.9</a> (data lake đặt trên HDFS hay kho đối tượng)</p>
+    <p class="chap-links">Dùng lại ở: <a href="#b2-2">Bài 2.2</a> (HDFS là một hệ thống file phân tán kiểu client–server), <a href="#b3-kho">3.10</a> (data lake đặt trên HDFS hay kho đối tượng)</p>
   </div>
   <figure class="skel">
     <div class="lbl">Khung xương bài</div>
@@ -1043,7 +1045,7 @@ input[type=range]{accent-color:var(--green-hi)}
         <p>File là tài nguyên lưu thông tin bền vững: tắt máy vẫn còn, lúc nào cũng truy cập lại được; bản chất là một dãy bit. Hệ thống file (file system) kiểm soát cách file được cất và lấy ra; thư mục gom file thành nhóm riêng.</p>
         <div class="cols">
           <div class="card"><b>FS cục bộ</b>Gắn với một máy: FAT32, NTFS, ext4.</div>
-          <div class="card acc"><b>FS phân tán</b>Nhiều máy cùng phục vụ một không gian file: NFS (Network File System, hệ thống file mạng của Sun), GFS (Google File System, tiền thân của HDFS), HDFS, PVFS.</div>
+          <div class="card acc"><b>FS phân tán</b>Nhiều máy cùng phục vụ một không gian file: NFS (Network File System, hệ thống file mạng của Sun), GFS (Google File System, 2003; HDFS làm theo thiết kế của GFS, khởi đầu trong dự án Nutch), HDFS, PVFS.</div>
         </div>
       </div>
     </details>
@@ -1079,9 +1081,10 @@ input[type=range]{accent-color:var(--green-hi)}
         </div><figcaption>Độc lập vị trí kéo theo trong suốt vị trí; điều ngược lại không chắc đúng.</figcaption></figure>
         <p>Hệ thống file là lớp trừu tượng che thiết bị lưu; bản phân tán đưa lớp ấy cho tiến trình ở xa dùng. Lợi ích: chia sẻ file, mọi client thấy cùng một hệ thống, quản trị tập trung.</p>
         <div class="cols">
-          <div class="card acc"><b>Trong suốt truy cập (network/access transparency)</b>Truy cập file qua mạng dễ như file cục bộ, không cần biết vị trí vật lý. Giải bằng cơ chế đặt tên và gắn (mount).</div>
+          <div class="card acc"><b>Trong suốt mạng (network transparency)</b>Cùng thao tác cho file cục bộ và file ở xa (trong suốt truy cập), và tên file không lộ máy chứa (trong suốt vị trí). Giải bằng đặt tên và gắn (mount).</div>
           <div class="card acc"><b>Sẵn sàng (availability)</b>File luôn truy cập nhanh dù nhiều người dùng hay có máy hỏng. Giải chủ yếu bằng nhân bản (replication).</div>
         </div>
+        <p class="slide-note">Slide gộp truy cập và vị trí làm một mục tiêu. Giáo trình hệ phân tán (Tanenbaum và van Steen) tách thành access transparency và location transparency, và còn kể trong suốt di trú, nhân bản, đồng thời, lỗi.</p>
       </div>
     </details>
 
@@ -1408,7 +1411,7 @@ input[type=range]{accent-color:var(--green-hi)}
     <div class="eyebrow">Bài 2.2 · Hadoop distributed file system (HDFS)</div>
     <h2>HDFS: chia file lớn thành khối và nhân bản</h2>
     <p class="chap-q">Làm sao lưu file hàng TB trên máy rẻ tiền mà máy hỏng vẫn không mất dữ liệu?</p>
-    <p class="chap-links">Dựa vào: <a href="#b2-1-phan-tan">2.1.2</a> (trong suốt, sẵn sàng), <a href="#b2-1-cache">2.1.8</a> (bản sao) · Dùng lại ở: <a href="#b3-kho">3.9</a> (data lake thường đặt trên HDFS)</p>
+    <p class="chap-links">Dựa vào: <a href="#b2-1-phan-tan">2.1.2</a> (trong suốt, sẵn sàng), <a href="#b2-1-cache">2.1.8</a> (bản sao) · Dùng lại ở: <a href="#b3-kho">3.10</a> (data lake thường đặt trên HDFS)</p>
   </div>
   <figure class="skel">
     <div class="lbl">Khung xương bài</div>
@@ -1476,7 +1479,7 @@ input[type=range]{accent-color:var(--green-hi)}
           <dt>Chỉ nối thêm</dt><dd>Không sửa giữa file nên giảm đồng bộ giữa các bản sao.</dd>
           <dt>Khối lớn</dt><dd>Mặc định 128 MB từ Hadoop 2 (Hadoop 1: 64 MB). Khối lớn thì ít metadata và ít trao đổi mạng. Khối cuối chỉ chiếm đúng phần dữ liệu còn lại.</dd>
           <dt>Nhân bản</dt><dd>Mỗi khối thường có 3 bản trên 3 node khác nhau.</dd>
-          <dt>Chịu lỗi</dt><dd>Datanode hỏng thì nhân bản lại. Namenode có Secondary Namenode (trợ lý gộp nhật ký định kỳ) và cặp Active/Standby (Namenode chính và Namenode dự phòng); chi tiết ở <a href="#b2-2-chiu-loi">2.2.5</a>.</dd>
+          <dt>Chịu lỗi</dt><dd>Datanode hỏng thì nhân bản lại. Namenode được bảo vệ bằng Secondary Namenode (trợ lý gộp nhật ký định kỳ, cụm không HA) hoặc bằng cặp Active/Standby (Namenode chính và Namenode dự phòng, cụm HA); chi tiết ở <a href="#b2-2-chiu-loi">2.2.5</a>.</dd>
         </dl>
         <p class="slide-note">Slide ghi khối 64 MB: đó là mặc định của Hadoop 1; từ Hadoop 2 là 128 MB.</p>
       </div>
@@ -1535,7 +1538,7 @@ input[type=range]{accent-color:var(--green-hi)}
     </details>
 
     <details class="node" id="b2-2-ban-sao">
-      <summary><span class="node-k">2.2.3</span><h3 class="node-t">Đặt bản sao và cân bằng lại</h3><span class="node-g">Bản 1 ở node ghi, bản 2 và 3 trên một rack khác; đọc từ bản gần nhất.</span></summary>
+      <summary><span class="node-k">2.2.3</span><h3 class="node-t">Đặt bản sao và cân bằng lại</h3><span class="node-g">Bản 1 ở node ghi nếu client chạy trên Datanode; bản 2 và 3 ở hai node của một rack khác; đọc từ bản gần nhất.</span></summary>
       <div class="node-body">
         <figure class="dg"><div class="dg-scroll">
           <svg viewBox="0 0 680 220" role="img" aria-label="Chiến lược đặt ba bản sao theo rack: bản thứ nhất trên node cục bộ của rack 1, bản thứ hai trên một node của rack 2, bản thứ ba trên một node khác cũng ở rack 2">
@@ -1558,17 +1561,18 @@ input[type=range]{accent-color:var(--green-hi)}
             <text x="300" y="20" class="t-m t-c">qua switch giữa rack: 1 lần</text>
             <path d="M455 100 L455 126" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
           </svg>
-        </div><figcaption>Bản thêm (nếu hệ số &gt; 3) đặt ngẫu nhiên. Mũi tên cong đi qua switch giữa hai rack; mũi tên ngắn nằm trong một rack. Đường ống ghi chi tiết ở 2.2.4.</figcaption></figure>
-        <p>Cách đặt này giữ được dữ liệu khi cả một rack sập, mà chỉ phải gửi qua switch giữa các rack một lần cho mỗi khối. Client đọc từ bản gần nhất.</p>
+        </div><figcaption>Client không chạy trên Datanode thì bản 1 đặt ở một Datanode ngẫu nhiên cùng rack với client. Bản thứ 4 trở đi đặt ngẫu nhiên, mỗi rack không quá (số bản − 1)/số rack + 2 bản. Mũi tên cong đi qua switch giữa hai rack; mũi tên ngắn nằm trong một rack. Đường ống ghi chi tiết ở 2.2.4.</figcaption></figure>
+        <p>Cách đặt này giữ được dữ liệu khi cả một rack sập (với điều kiện cụm đã khai báo rack, xem thẻ cuối), mà chỉ phải gửi qua switch giữa các rack một lần cho mỗi khối. Client đọc từ bản gần nhất.</p>
         <div class="cols">
           <div class="card"><b>Khi Datanode hỏng</b>Namenode phát hiện qua heartbeat, chọn Datanode mới để tạo lại bản sao còn thiếu, đồng thời cân bằng mức dùng đĩa và lưu lượng.</div>
           <div class="card"><b>Rebalancer</b>Mục tiêu: % đĩa đầy trên các Datanode gần như nhau. Thường chạy khi thêm Datanode mới; cụm vẫn chạy; bị giới hạn băng thông để không nghẽn mạng; là công cụ dòng lệnh (<code>hdfs balancer</code>).</div>
+          <div class="card"><b>Namenode biết rack nhờ đâu</b>Quản trị viên khai báo ánh xạ node → rack, bằng một script (cấu hình ở <code>net.topology.script.file.name</code>) hoặc một lớp Java. Không khai báo thì mọi node ở <code>/default-rack</code>: ba bản chỉ khác node, cụm không chịu được sập rack.</div>
         </div>
       </div>
     </details>
 
     <details class="node" id="b2-2-ghi-doc">
-      <summary><span class="node-k">2.2.4</span><h3 class="node-t">Ghi theo đường ống, đọc có kiểm tổng</h3><span class="node-g">Client ghi vào Datanode đầu, dữ liệu chảy tiếp; mỗi 512 byte có một CRC32.</span></summary>
+      <summary><span class="node-k">2.2.4</span><h3 class="node-t">Ghi theo đường ống, đọc có kiểm tổng</h3><span class="node-g">Client ghi vào Datanode đầu, dữ liệu chảy tiếp; mỗi 512 byte có một checksum CRC32C.</span></summary>
       <div class="node-body">
         <figure class="dg"><div class="dg-scroll">
           <svg viewBox="0 0 700 290" role="img" aria-label="Luồng ghi HDFS bảy bước: client tạo file, báo Namenode tạo tên file, ghi gói tin vào Datanode thứ nhất, gói chảy tiếp sang Datanode hai và ba, xác nhận chảy ngược về, client đóng file và báo Namenode hoàn tất">
@@ -1601,8 +1605,9 @@ input[type=range]{accent-color:var(--green-hi)}
           <div class="card"><b>Đọc</b><ol><li>Client hỏi Namenode vị trí các khối của file.</li><li>Namenode trả danh sách Datanode, xếp theo khoảng cách.</li><li>Client đọc từng khối từ bản gần nhất, kèm checksum.</li><li>Kiểm tổng sai thì đọc bản sao khác.</li></ol></div>
         </div>
         <dl class="terms">
-          <dt>Checksum</dt><dd>CRC32. Lúc tạo file, client tính một checksum cho mỗi 512 byte, Datanode lưu lại. Lúc đọc, client lấy cả dữ liệu lẫn checksum để tự kiểm.</dd>
+          <dt>Checksum</dt><dd>CRC32C (slide ghi CRC32). Lúc tạo file, client tính một checksum cho mỗi 512 byte, Datanode lưu lại. Lúc đọc, client lấy cả dữ liệu lẫn checksum để tự kiểm.</dd>
         </dl>
+        <p class="slide-note">Slide ghi CRC32. Từ Hadoop 2, mặc định <code>dfs.checksum.type</code> là CRC32C (HDFS-2130), vẫn 512 byte mỗi checksum.</p>
       </div>
     </details>
 
@@ -1649,8 +1654,8 @@ input[type=range]{accent-color:var(--green-hi)}
           <dt>FsImage</dt><dd>Ảnh chụp toàn bộ không gian tên tại một thời điểm.</dd>
           <dt>EditLog</dt><dd>Nhật ký các thay đổi sau ảnh chụp. Khởi động lại = nạp FsImage rồi chạy lại EditLog.</dd>
           <dt>Secondary NN</dt><dd>Định kỳ gộp hai thứ trên thành FsImage mới (checkpoint), theo <code>dfs.namenode.checkpoint.period</code>, mặc định 3600 giây, hoặc khi EditLog đủ số giao dịch. Nhờ vậy EditLog không phình to và Namenode khởi động lại nhanh. Chỉ là trợ lý checkpoint.</dd>
-          <dt>HA</dt><dd>Chỉ Active Namenode được ghi nhật ký; Standby đọc nhật ký và áp vào không gian tên của mình. Nơi giữ nhật ký chung là nhóm Quorum Journal Node hoặc một thư mục dùng chung trên NFS.</dd>
-          <dt>Quorum Journal Node</dt><dd>Nhóm máy (thường 3) cùng giữ nhật ký; một lần ghi chỉ thành công khi đa số xác nhận.</dd>
+          <dt>HA</dt><dd>Chỉ Active Namenode được ghi nhật ký; Standby đọc nhật ký và áp vào không gian tên của mình. Nơi giữ nhật ký chung là nhóm Quorum Journal Node hoặc một thư mục dùng chung trên NFS. Standby cũng làm luôn việc checkpoint, nên cụm HA không chạy Secondary NN (Apache coi đó là lỗi). Từ Hadoop 3 có thể có nhiều hơn một Standby (khuyến nghị 3 Namenode, không quá 5).</dd>
+          <dt>Quorum Journal Node</dt><dd>Nhóm máy (ít nhất 3, nên số lẻ) cùng giữ nhật ký; một lần ghi chỉ thành công khi đa số xác nhận.</dd>
           <dt>ZooKeeper, failover controller</dt><dd>ZooKeeper là dịch vụ điều phối, giữ một khoá để chỉ một Namenode được làm Active. Failover controller chạy cạnh mỗi Namenode, theo dõi sức khoẻ và chuyển Standby lên khi Active hỏng.</dd>
         </dl>
         <p class="slide-note">Slide ghi việc gộp xảy ra “khi Namenode khởi động lại”: không đúng. Secondary NN làm checkpoint theo chu kỳ, để lúc Namenode khởi động lại chỉ phải chạy một EditLog ngắn.</p>
@@ -1740,10 +1745,11 @@ input[type=range]{accent-color:var(--green-hi)}
           <tr><th>Định dạng</th><th>Bố cục</th><th>Nén, chia nhỏ</th><th>Điểm chính</th></tr>
           <tr><td>Text (CSV, TSV, JSON)</td><td>dòng</td><td>không nén theo khối</td><td>Người đọc được, dễ trao đổi; truy vấn chậm. Hợp để bắt đầu, không đủ cho thực tế.</td></tr>
           <tr><td>SequenceFile</td><td>dòng, cặp khoá–giá trị nhị phân</td><td>nén; chia nhỏ được cả khi đã nén</td><td>Truyền dữ liệu giữa các job MapReduce; gói nhiều file nhỏ thành một.</td></tr>
-          <tr><td>Avro</td><td>dòng</td><td>nén theo đối tượng; chia nhỏ được</td><td>Schema JSON đi kèm file nên lược đồ linh hoạt; kiểu nguyên thuỷ và phức hợp; phát hiện hỏng dữ liệu.</td></tr>
+          <tr><td>Avro</td><td>dòng</td><td>nén theo khối nhiều bản ghi; có sync marker nên chia nhỏ được</td><td>Schema JSON đi kèm file nên lược đồ linh hoạt; kiểu nguyên thuỷ và phức hợp; phát hiện hỏng dữ liệu.</td></tr>
           <tr><td>Parquet</td><td>cột</td><td>nén theo page; chia nhỏ được</td><td>Tiết kiệm I/O khi chỉ đọc vài cột; hỗ trợ cột lồng nhau (Dremel). Row group 128 MB, page 1 MB mặc định.</td></tr>
           <tr><td>ORC</td><td>nhóm dòng (stripe), trong stripe lưu theo cột</td><td>nén theo khối; chia nhỏ theo stripe</td><td>Chỉ mục nhẹ với min, max, sum, count từng cột để bỏ qua khối dòng không liên quan. Kế thừa RCFile.</td></tr>
         </table></div>
+        <p class="slide-note">Slide ghi Avro nén theo đối tượng (“object compression”). Theo đặc tả Avro, file chứa các khối, mỗi khối gồm nhiều bản ghi và được nén cả khối; sync marker giữa các khối cho phép chia nhỏ.</p>
       </div>
     </details>
 
@@ -1751,7 +1757,7 @@ input[type=range]{accent-color:var(--green-hi)}
   <div class="recap"><h3>Mang theo</h3><ul>
     <li>HDFS hợp với file lớn, ghi một lần đọc nhiều, máy rẻ; không hợp với nhiều file nhỏ hay sửa giữa file.</li>
     <li>Một Namenode giữ metadata trong RAM; nhiều Datanode giữ khối, báo heartbeat 3 giây một lần và block report định kỳ.</li>
-    <li>Ba bản sao: một ở node ghi, hai trên một rack khác; ghi theo đường ống, đọc bản gần nhất, kiểm CRC32 mỗi 512 byte.</li>
+    <li>Ba bản sao: một ở node ghi (nếu client là Datanode), hai trên một rack khác; ghi theo đường ống, đọc bản gần nhất, kiểm CRC32C mỗi 512 byte.</li>
     <li>Secondary Namenode chỉ gộp checkpoint; muốn thay thế tức thì cần HA với Standby Namenode và Journal Node.</li>
     <li>Truy vấn vài cột trên bảng rộng: chọn Parquet hoặc ORC; trao đổi dữ liệu có lược đồ đổi dần: Avro.</li>
   </ul></div>
@@ -1773,7 +1779,7 @@ input[type=range]{accent-color:var(--green-hi)}
   <figure class="skel">
     <div class="lbl">Khung xương bài</div>
     <div class="dg-scroll">
-      <svg viewBox="0 0 720 320" role="img" aria-label="Khung xương bài 3: hàng trên là tích hợp dữ liệu gồm định nghĩa và thách thức, kho dữ liệu với ETL, tích hợp ảo cùng luồng việc và dịch vụ web, và công cụ Apache NiFi; hàng giữa là làm sạch và tiền xử lý gồm chất lượng dữ liệu, xử lý thiếu, nhiễu, mâu thuẫn, chuẩn hoá và rút gọn, phát hiện thuộc tính dư thừa bằng r và chi bình phương; hàng dưới, theo đề cương, là kho dữ liệu và OLAP: OLTP hay OLAP, lược đồ sao, khối dữ liệu, Data Lake">
+      <svg viewBox="0 0 720 320" role="img" aria-label="Khung xương bài 3: hàng trên là tích hợp dữ liệu gồm định nghĩa và thách thức, kho dữ liệu với ETL, tích hợp ảo cùng luồng việc và dịch vụ web, và công cụ Apache NiFi; hàng giữa là làm sạch và tiền xử lý gồm chất lượng dữ liệu, xử lý thiếu, nhiễu, mâu thuẫn, chuẩn hoá và rút gọn, phát hiện thuộc tính dư thừa bằng r và chi bình phương; hàng dưới, theo đề cương, là mô hình ER, khoá và giao dịch ACID, rồi kho dữ liệu và OLAP: OLTP hay OLAP, lược đồ sao, khối dữ liệu, Data Lake">
         <text x="10" y="16" class="t-m t-mono">TÍCH HỢP · NHIỀU NGUỒN → MỘT CÁCH TRUY CẬP</text>
         <a href="#b3-tich-hop" class="sk"><rect x="10" y="24" width="160" height="58" rx="10" class="f-surface s-line"/>
         <text x="22" y="46" class="t-m t-acc t-mono">3.1</text><text x="22" y="68" class="t-h">Là gì, vì sao khó</text></a>
@@ -1802,8 +1808,11 @@ input[type=range]{accent-color:var(--green-hi)}
         <text x="90" y="226" class="t-m t-c">đo cái gì hỏng</text><text x="270" y="226" class="t-m t-c">thiếu, nhiễu, mâu thuẫn</text>
         <text x="450" y="226" class="t-m t-c">đưa về thang chung</text><text x="630" y="226" class="t-m t-c">thuộc tính trùng ý</text>
         <text x="10" y="262" class="t-m t-mono">MÔ HÌNH HOÁ ĐỂ PHÂN TÍCH · ĐỀ CƯƠNG CÓ, SLIDE KHÔNG CÓ</text>
-        <a href="#b3-kho" class="sk"><rect x="10" y="270" width="700" height="40" rx="10" class="f-sunk"/>
-        <text x="24" y="295" class="t-m t-acc t-mono">3.9</text><text x="64" y="295" class="t-b">Kho dữ liệu và OLAP: OLTP hay OLAP · lược đồ sao · khối (cube) · Data Lake</text></a>
+        <a href="#b3-mo-hinh" class="sk"><rect x="10" y="270" width="220" height="40" rx="10" class="f-sunk"/>
+        <text x="24" y="295" class="t-m t-acc t-mono">3.9</text><text x="64" y="295" class="t-b">ER · khoá · ACID</text></a>
+        <path d="M230 290 L244 290" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
+        <a href="#b3-kho" class="sk"><rect x="250" y="270" width="460" height="40" rx="10" class="f-sunk"/>
+        <text x="264" y="295" class="t-m t-acc t-mono">3.10</text><text x="310" y="295" class="t-b">Kho dữ liệu, OLAP: lược đồ sao · khối · Data Lake</text></a>
       </svg>
     </div>
   </figure>
@@ -1863,7 +1872,7 @@ input[type=range]{accent-color:var(--green-hi)}
           <div class="card good"><b>ETL đem lại</b><ul><li>Sửa lỗi, làm sạch, ghi lại mức tin cậy của dữ liệu.</li><li>Ghi nhận dòng chảy dữ liệu giao dịch.</li><li>Khớp (conform) dữ liệu nhiều nguồn để dùng chung.</li><li>Dựng cấu trúc cho công cụ BI dùng được.</li></ul></div>
           <div class="card bad"><b>Nhược điểm của kho</b><ul><li>Phải làm sạch mọi định dạng khác nhau.</li><li>Phải chứa mọi dữ liệu có thể sẽ được hỏi: tốn chỗ.</li><li>Phải cập nhật định kỳ, trong khi nguồn tự trị đổi nội dung không báo trước.</li></ul></div>
         </div>
-        <p class="muted">OLTP (xử lý giao dịch trực tuyến): hệ thống ghi giao dịch hằng ngày như đơn hàng, chuyển khoản. OLAP (xử lý phân tích trực tuyến): phân tích dữ liệu đã tổng hợp theo nhiều chiều, trên khối (cube) như thời gian × sản phẩm × cửa hàng. BI (business intelligence): báo cáo và phân tích phục vụ ra quyết định; chi tiết ở <a href="#b3-kho">3.9</a>.</p>
+        <p class="muted">OLTP (xử lý giao dịch trực tuyến): hệ thống ghi giao dịch hằng ngày như đơn hàng, chuyển khoản. OLAP (xử lý phân tích trực tuyến): phân tích dữ liệu đã tổng hợp theo nhiều chiều, trên khối (cube) như thời gian × sản phẩm × cửa hàng. BI (business intelligence): báo cáo và phân tích phục vụ ra quyết định; chi tiết ở <a href="#b3-kho">3.10</a>.</p>
       </div>
     </details>
 
@@ -1898,6 +1907,7 @@ input[type=range]{accent-color:var(--green-hi)}
         <dl class="terms">
           <dt>Lược đồ trung gian</dt><dd>Lược đồ chung để hỏi; khó thiết kế vì mỗi nguồn một lược đồ.</dd>
           <dt>Reformulation</dt><dd>Viết lại câu hỏi trên lược đồ trung gian thành câu hỏi trên lược đồ của từng nguồn.</dd>
+          <dt>GAV và LAV</dt><dd>Hai cách mô tả quan hệ giữa lược đồ trung gian và nguồn. GAV (global-as-view): mỗi quan hệ của lược đồ trung gian là một view trên các nguồn; viết lại câu hỏi chỉ là thay định nghĩa vào (unfolding), nhưng thêm nguồn thì phải sửa định nghĩa. LAV (local-as-view): mỗi nguồn là một view trên lược đồ trung gian; thêm nguồn dễ, nhưng viết lại câu hỏi khó hơn (trả lời câu hỏi bằng view).</dd>
           <dt>Wrapper</dt><dd>Chương trình riêng cho từng nguồn, đổi định dạng gốc (HTML) sang dạng trung gian (XML); đặt ở phía nguồn hay phía mediator đều được; nguồn đổi giao diện thì phải sửa.</dd>
           <dt>Catalog</dt><dd>Metadata về nguồn: nội dung, khả năng, độ đầy đủ, thống kê, độ tin cậy.</dd>
           <dt>Khó khăn</dt><dd>Thống kê nguồn thiếu hay cũ; mạng chập chờn; nguồn chồng lấn, mâu thuẫn. Nguồn tự chạy được câu hỏi thì gửi câu hỏi con (query shipping).</dd>
@@ -1914,6 +1924,7 @@ input[type=range]{accent-color:var(--green-hi)}
           <tr><td>Tốc độ hỏi</td><td>Nhanh, đã tổng hợp sẵn</td><td>Phụ thuộc mạng và nguồn chậm nhất</td></tr>
           <tr><td>Chi phí chính</td><td>Làm sạch và chỗ chứa</td><td>Viết lại, tối ưu câu hỏi; bảo trì wrapper</td></tr>
         </table></div>
+        <p class="slide-note">Slide hỏi “How would we do the reformulation?” và không trả lời; GAV và LAV là câu trả lời thường gặp (xem Lenzerini, “Data Integration: A Theoretical Perspective”, PODS 2002).</p>
       </div>
     </details>
 
@@ -1948,8 +1959,8 @@ input[type=range]{accent-color:var(--green-hi)}
           <tr><td>Subnet</td><td>Process group</td><td>Gói một cụm processor thành thành phần mới, giao tiếp qua cổng</td></tr>
         </table></div>
         <dl class="terms">
-          <dt>Tính năng</dt><dd>Bảo đảm giao nhận · hàng đợi có ưu tiên · QoS theo luồng (trễ hay thông lượng, chịu mất hay không) · data provenance: nhật ký chi tiết đường đi từng gói · đẩy và kéo · giao diện kéo thả · template · bảo mật đa người dùng · mở rộng được, chạy cụm.</dd>
-          <dt>Hệ sinh thái</dt><dd>Hơn 260 processor và 48 controller service có sẵn.</dd>
+          <dt>Tính năng</dt><dd>Bảo đảm giao nhận · hàng đợi có ưu tiên · QoS theo luồng (trễ hay thông lượng, chịu mất hay không) · data provenance: nhật ký chi tiết đường đi từng gói · đẩy và kéo · giao diện kéo thả · template (NiFi 2 bỏ template XML, thay bằng định nghĩa luồng JSON) · bảo mật đa người dùng · mở rộng được, chạy cụm.</dd>
+          <dt>Hệ sinh thái</dt><dd>Hơn 260 processor và 48 controller service có sẵn (số trong slide).</dd>
         </dl>
       </div>
     </details>
@@ -2030,6 +2041,7 @@ input[type=range]{accent-color:var(--green-hi)}
           <tr><td>Nhiều bảng</td><td>Biểu diễn khác nhau (heterogeneous representations, vd đơn vị) · khác độ chi tiết · vi phạm toàn vẹn tham chiếu · đồng nghĩa, đồng âm · gần trùng · vi phạm ràng buộc</td><td>Mét và inch; nhóm tuổi 0–30/31–60 và 0–25/26–40</td></tr>
         </table></div>
         <p>Việc làm sạch nào ứng với mức nào: điền giá trị thiếu ở mức giá trị; sửa nhiễu ở mức giá trị hoặc bản ghi; sửa mâu thuẫn ở mức bản ghi, cột, bảng hoặc nhiều bảng.</p>
+        <p class="slide-note">Bộ sáu chiều ở trên lấy từ slide. Bộ sáu của DAMA UK (2013) là Completeness, Uniqueness, Timeliness, Validity, Accuracy, Consistency: trùng lặp thuộc Uniqueness, không có Integrity.</p>
       </div>
     </details>
 
@@ -2061,6 +2073,13 @@ input[type=range]{accent-color:var(--green-hi)}
           <div class="card"><b>Nhiễu</b><ul><li>Chia thùng rồi làm trơn theo trung bình, trung vị hay biên.</li><li>Phân cụm: điểm nằm ngoài mọi cụm là ngoại lai.</li><li>Hồi quy: khớp hàm rồi thay bằng giá trị trên hàm.</li><li>Bán tự động: máy phát hiện, người kiểm.</li></ul></div>
           <div class="card"><b>Mâu thuẫn</b><ul><li>Sửa tay theo nguồn tham chiếu ngoài.</li><li>Công cụ bán tự động phát hiện vi phạm phụ thuộc hàm, ràng buộc; xử lý dữ liệu dư thừa.</li></ul></div>
         </div>
+        <dl class="terms">
+          <dt>Chọn theo cơ chế thiếu</dt><dd>Trước khi chọn cách xử lý giá trị thiếu, hỏi vì sao thiếu (phân loại của Rubin, 1976).</dd>
+          <dt>MCAR</dt><dd>Thiếu hoàn toàn ngẫu nhiên: bỏ dòng không làm lệch ước lượng, chỉ mất bớt dữ liệu.</dd>
+          <dt>MAR</dt><dd>Thiếu phụ thuộc biến đã quan sát: điền theo lớp hay theo mô hình dùng các biến ấy.</dd>
+          <dt>MNAR</dt><dd>Thiếu phụ thuộc chính giá trị bị thiếu (vd người thu nhập cao hay bỏ trống thu nhập): cách điền đơn giản đều có thể lệch, cần mô hình cho cơ chế thiếu.</dd>
+          <dt>Lưu ý</dt><dd>Điền trung bình làm phương sai nhỏ đi và làm lệch quan hệ giữa các biến.</dd>
+        </dl>
         <h4>Quy trình làm sạch</h4>
         <ol>
           <li>Tách các trường liên quan; chuẩn hoá trường của bản ghi.</li>
@@ -2071,8 +2090,8 @@ input[type=range]{accent-color:var(--green-hi)}
         <h4>Công cụ</h4>
         <dl class="terms">
           <dt>OpenRefine</dt><dd>Trước gọi là Google Refine; ứng dụng chạy trên máy nên dữ liệu nhạy cảm không rời máy. Lọc theo facet, gom cụm giá trị gần giống, sửa hàng loạt.</dd>
-          <dt>Trifacta Wrangler</dt><dd>Thân thiện với người dùng, tự gợi ý biến đổi.</dd>
-          <dt>Python</dt><dd>Kiểm soát nhiều nhất: pandas, numpy, chardet (đoán mã ký tự), datetime, fuzzywuzzy (khớp chuỗi gần đúng), scipy, seaborn.</dd>
+          <dt>Trifacta Wrangler</dt><dd>Thân thiện với người dùng, tự gợi ý biến đổi. Trifacta nay thuộc Alteryx.</dd>
+          <dt>Python</dt><dd>Kiểm soát nhiều nhất: pandas, numpy, chardet (đoán mã ký tự), datetime, fuzzywuzzy (khớp chuỗi gần đúng; nay đổi tên thành thefuzz), scipy, seaborn.</dd>
         </dl>
       </div>
     </details>
@@ -2107,9 +2126,10 @@ input[type=range]{accent-color:var(--green-hi)}
         <p>Bài 5 dùng lại min-max và z-score để co giãn đặc trưng cho mô hình, và thêm chuẩn hoá L2 theo dòng: xem <a href="#b5-co-gian">5.3</a>.</p>
         <div class="cols">
           <div class="card"><b>Các việc khác</b><ul><li>Làm trơn: bỏ nhiễu.</li><li>Tổng hợp: trung bình, trung vị…</li><li>Khái quát hoá: leo hệ phân cấp khái niệm (phường → quận → thành phố).</li><li>Tạo thuộc tính mới (feature engineering, xem <a href="#b5">bài 5</a>).</li></ul></div>
-          <div class="card acc"><b>Rút gọn dữ liệu</b><ul><li>Giảm chiều: chọn đặc trưng (vd giải thuật di truyền) hoặc trích đặc trưng, vd PCA (phân tích thành phần chính, xem <a href="#b4-pca">4.8</a>).</li><li>Nén: đổi chữ thành số.</li><li>Phân cụm: thay nhóm điểm bằng đại diện (phân cụm ở <a href="#b4-phan-cum">4.7</a>).</li><li>Rời rạc hoá: liên tục thành hạng mục, vd tuổi trong [0, 12) → 1, [12, 25) → 2.</li></ul></div>
+          <div class="card acc"><b>Rút gọn dữ liệu</b><ul><li>Giảm chiều: chọn đặc trưng (vd giải thuật di truyền) hoặc trích đặc trưng, vd PCA (phân tích thành phần chính, xem <a href="#b4-pca">4.8</a>).</li><li>Nén: biểu diễn gọn hơn, có hoặc không mất mát (vd mã hoá từ điển đổi chữ thành số nguyên; wavelet, PCA).</li><li>Phân cụm: thay nhóm điểm bằng đại diện (phân cụm ở <a href="#b4-phan-cum">4.7</a>).</li><li>Rời rạc hoá: liên tục thành hạng mục, vd tuổi trong [0, 12) → 1, [12, 25) → 2.</li></ul></div>
         </div>
         <p class="slide-note">Ví dụ rời rạc hoá trong slide ghi [0, 12] và [12, 25], chồng nhau ở 12; ở đây dùng khoảng nửa mở.</p>
+        <p class="slide-note">Slide ghi nén là “đổi chữ thành số”. Đổi chữ thành số nói chung là mã hoá thuộc tính (xem <a href="#b5-ma-hoa">5.4</a>) và có thể làm dữ liệu to ra (one-hot); nó chỉ là nén khi dữ liệu nhỏ đi.</p>
       </div>
     </details>
 
@@ -2146,8 +2166,69 @@ input[type=range]{accent-color:var(--green-hi)}
         <p class="slide-note">Slide ghi “r = 0: independent”: sai. Độc lập kéo theo r = 0, nhưng r = 0 không kéo theo độc lập.</p>
       </div>
     </details>
+    <details class="node" id="b3-mo-hinh">
+      <summary><span class="node-k">3.9</span><h3 class="node-t">Mô hình ER, khoá và giao dịch</h3><span class="node-g">Vẽ thực thể và bản số, đổi ra bảng nối nhau bằng khoá; mỗi giao dịch OLTP phải đạt ACID.</span></summary>
+      <div class="node-body">
+        <figure class="dg"><div class="dg-scroll">
+          <svg viewBox="0 0 720 230" role="img" aria-label="Trên: sơ đồ ER ba thực thể khách hàng, đơn hàng, sản phẩm; một khách đặt nhiều đơn (1–N), một đơn gồm nhiều sản phẩm và một sản phẩm nằm trong nhiều đơn (N–N). Dưới: bốn bảng Customer, Order, OrderLine, Product; Order có khoá ngoại customer_id trỏ tới Customer; liên kết N–N thành bảng OrderLine có hai khoá ngoại order_id, product_id ghép thành khoá chính, cùng cột qty">
+            <text x="10" y="14" class="t-m t-mono">ER · THỰC THỂ, LIÊN KẾT, BẢN SỐ</text>
+            <rect x="20" y="24" width="150" height="44" rx="8" class="f-surface s-line"/>
+            <text x="95" y="51" class="t-h t-c">Khách hàng</text>
+            <rect x="285" y="24" width="150" height="44" rx="8" class="f-surface s-line"/>
+            <text x="360" y="51" class="t-h t-c">Đơn hàng</text>
+            <rect x="550" y="24" width="150" height="44" rx="8" class="f-surface s-line"/>
+            <text x="625" y="51" class="t-h t-c">Sản phẩm</text>
+            <path d="M170 46 L285 46" class="s-ink"/>
+            <text x="178" y="38" class="t-m t-acc">1</text><text x="227" y="38" class="t-m t-c">đặt</text><text x="277" y="38" class="t-m t-acc t-e">N</text>
+            <path d="M435 46 L550 46" class="s-ink"/>
+            <text x="443" y="38" class="t-m t-acc">N</text><text x="476" y="38" class="t-m t-c">gồm</text><text x="542" y="38" class="t-m t-acc t-e">N</text>
+            <path d="M492 46 L492 114" class="s-ink dash"/>
+            <text x="500" y="88" class="t-m">N–N thành bảng</text>
+            <text x="10" y="104" class="t-m t-mono">BẢNG · PK, FK</text>
+            <rect x="10" y="114" width="160" height="100" rx="8" class="f-surface s-line"/>
+            <text x="20" y="136" class="t-h">Customer</text>
+            <text x="20" y="158" class="t-m t-mono">customer_id (PK)</text>
+            <text x="20" y="176" class="t-m t-mono">name</text>
+            <rect x="190" y="114" width="160" height="100" rx="8" class="f-surface s-line"/>
+            <text x="200" y="136" class="t-h">Order</text>
+            <text x="200" y="158" class="t-m t-mono">order_id (PK)</text>
+            <text x="200" y="176" class="t-m t-mono">customer_id (FK)</text>
+            <text x="200" y="194" class="t-m t-mono">date</text>
+            <rect x="370" y="114" width="160" height="100" rx="8" class="f-acc-soft s-acc"/>
+            <text x="380" y="136" class="t-h">OrderLine</text>
+            <text x="380" y="158" class="t-m t-mono">order_id (PK, FK)</text>
+            <text x="380" y="176" class="t-m t-mono">product_id (PK, FK)</text>
+            <text x="380" y="194" class="t-m t-mono">qty</text>
+            <rect x="550" y="114" width="160" height="100" rx="8" class="f-surface s-line"/>
+            <text x="560" y="136" class="t-h">Product</text>
+            <text x="560" y="158" class="t-m t-mono">product_id (PK)</text>
+            <text x="560" y="176" class="t-m t-mono">name</text>
+            <text x="560" y="194" class="t-m t-mono">price</text>
+            <path d="M190 172 L183 172 L183 154 L176 154" class="f-none s-ink" marker-end="url(#arr)"/>
+            <path d="M370 154 L356 154" class="s-ink" marker-end="url(#arr)"/>
+            <path d="M530 172 L537 172 L537 154 L544 154" class="f-none s-ink" marker-end="url(#arr)"/>
+          </svg>
+        </div><figcaption>Trên: sơ đồ ER với bản số. Dưới: các bảng tương ứng; mũi tên đi từ khoá ngoại tới bảng có khoá chính được trỏ. Liên kết N–N thành bảng trung gian OrderLine.</figcaption></figure>
+        <p>Mô hình thực thể–liên kết (ER, Chen 1976) vẽ thực thể, thuộc tính của chúng và liên kết giữa chúng. Bản số cho biết mỗi bên tham gia bao nhiêu lần: một khách có nhiều đơn (1–N); một đơn có nhiều sản phẩm và một sản phẩm nằm trong nhiều đơn (N–N).</p>
+        <dl class="terms">
+          <dt>Khoá chính (PK)</dt><dd>Cột hay nhóm cột xác định duy nhất một dòng, vd <code>order_id</code>.</dd>
+          <dt>Khoá ngoại (FK)</dt><dd>Cột trỏ tới khoá chính của bảng khác; liên kết 1–N đặt FK ở phía N (<code>Order.customer_id</code>). Toàn vẹn tham chiếu: mọi giá trị FK phải có ở bảng được trỏ (lỗi ⑥ ở <a href="#b3-chat-luong">3.5</a>).</dd>
+          <dt>Liên kết N–N</dt><dd>Đổi thành bảng trung gian <code>OrderLine(order_id, product_id, qty)</code>: hai FK ghép thành khoá chính; thuộc tính của liên kết (qty) nằm ở bảng này.</dd>
+        </dl>
+        <h4>Giao dịch và ACID</h4>
+        <p>CSDL OLTP chạy nhiều giao dịch ngắn cùng lúc. Một giao dịch là nhóm thao tác phải đi cùng nhau, vd chuyển tiền từ tài khoản A sang B: trừ A và cộng B. ACID (Härder và Reuter, 1983) là bốn bảo đảm cho giao dịch:</p>
+        <dl class="terms">
+          <dt>Atomicity</dt><dd>Tất cả hoặc không: trừ A xong mà lỗi trước khi cộng B thì huỷ cả hai.</dd>
+          <dt>Consistency</dt><dd>Đi từ trạng thái hợp lệ sang trạng thái hợp lệ: mọi ràng buộc (khoá, số dư không âm) vẫn đúng.</dd>
+          <dt>Isolation</dt><dd>Các giao dịch chạy đồng thời cho kết quả như khi chạy lần lượt.</dd>
+          <dt>Durability</dt><dd>Đã xác nhận (commit) thì còn, kể cả khi mất điện ngay sau đó.</dd>
+        </dl>
+        <p>Ba mức mô hình, chuẩn hoá 3NF và bảng so OLTP với OLAP ở <a href="#b3-kho">3.10</a>.</p>
+        <p class="slide-note">Phần này theo đề cương (chương III: mô hình dữ liệu, CSDL OLTP); bộ slide không có bài riêng.</p>
+      </div>
+    </details>
     <details class="node" id="b3-kho">
-      <summary><span class="node-k">3.9</span><h3 class="node-t">Kho dữ liệu, OLAP và Data Lake</h3><span class="node-g">OLTP ghi giao dịch; kho dữ liệu theo lược đồ sao phục vụ OLAP; Data Lake giữ dữ liệu thô, định lược đồ lúc đọc.</span></summary>
+      <summary><span class="node-k">3.10</span><h3 class="node-t">Kho dữ liệu, OLAP và Data Lake</h3><span class="node-g">OLTP ghi giao dịch; kho dữ liệu theo lược đồ sao phục vụ OLAP; Data Lake giữ dữ liệu thô, định lược đồ lúc đọc.</span></summary>
       <div class="node-body">
         <figure class="dg"><div class="dg-scroll">
           <svg viewBox="0 0 720 290" role="img" aria-label="Hai đường đưa dữ liệu tới phân tích. Đường trên: các nguồn OLTP qua ETL vào kho dữ liệu theo lược đồ sao, dựng thành khối OLAP, rồi tới báo cáo BI; lược đồ định trước khi ghi. Đường dưới: mọi loại nguồn được nạp thô vào Data Lake trên HDFS hay kho đối tượng, biến đổi lúc đọc, phục vụ khoa học dữ liệu và học máy; lược đồ định lúc đọc. Mũi tên nét đứt: dữ liệu trong lake được lọc rồi nạp tiếp vào kho">
@@ -2193,7 +2274,7 @@ input[type=range]{accent-color:var(--green-hi)}
             <text x="433" y="204" class="t-m">lọc, làm sạch, nạp tiếp</text>
           </svg>
         </div><figcaption>Lát tô đậm, xuyên hết chiều sâu khối, là một slice: cố định thời gian = quý 1, còn lại hai chiều. Nét đứt dọc: lake thường làm vùng chứa thô, phần đã sạch được nạp tiếp vào kho.</figcaption></figure>
-        <p>Đề cương có Chương III (mô hình dữ liệu, OLTP, OLAP, Data Lake), nhưng bộ slide không có file riêng. Nút này tóm tắt theo sách chuẩn: Kimball và Ross, <i>The Data Warehouse Toolkit</i>; Inmon, <i>Building the Data Warehouse</i>.</p>
+        <p>Đề cương có Chương III (mô hình dữ liệu, OLTP, OLAP, Data Lake), nhưng bộ slide không có file riêng. Nút này và <a href="#b3-mo-hinh">3.9</a> (ER, khoá, ACID) tóm tắt theo sách chuẩn: Kimball và Ross, <i>The Data Warehouse Toolkit</i>; Inmon, <i>Building the Data Warehouse</i>.</p>
         <h4>Mô hình dữ liệu và OLTP</h4>
         <dl class="terms">
           <dt>Ba mức mô hình</dt><dd>Khái niệm (thực thể và quan hệ, vẽ bằng sơ đồ ER) → logic (bảng, khoá chính, khoá ngoại) → vật lý (kiểu cột, chỉ mục, phân vùng trên một hệ quản trị CSDL cụ thể).</dd>
@@ -2256,7 +2337,7 @@ input[type=range]{accent-color:var(--green-hi)}
           <tr><th></th><th>Kho dữ liệu</th><th>Data Lake</th></tr>
           <tr><td>Dữ liệu</td><td>Đã làm sạch, có cấu trúc</td><td>Thô, mọi kiểu: bảng, JSON, log, ảnh, văn bản</td></tr>
           <tr><td>Lược đồ</td><td>Schema-on-write: định trước, dữ liệu phải khớp mới được ghi</td><td>Schema-on-read: ghi nguyên dạng, định lược đồ lúc đọc</td></tr>
-          <tr><td>Nạp</td><td>ETL: biến đổi rồi mới nạp</td><td>ELT: nạp trước, biến đổi khi cần</td></tr>
+          <tr><td>Nạp</td><td>Thường ETL: biến đổi rồi mới nạp (kho đám mây hay nạp trước rồi biến đổi bằng SQL, tức ELT)</td><td>ELT: nạp trước, biến đổi khi cần</td></tr>
           <tr><td>Lưu ở đâu</td><td>CSDL phân tích, chi phí cao hơn</td><td>File trên HDFS (<a href="#b2-2">bài 2.2</a>) hay kho đối tượng như S3, rẻ</td></tr>
           <tr><td>Người dùng</td><td>Nhà phân tích, báo cáo BI</td><td>Nhà khoa học dữ liệu, học máy</td></tr>
           <tr><td>Rủi ro</td><td>Đổi lược đồ tốn công</td><td>Thiếu metadata và quản trị (<a href="#b1">bài 1</a>) thì thành “đầm lầy dữ liệu” (data swamp)</td></tr>
@@ -2271,12 +2352,13 @@ input[type=range]{accent-color:var(--green-hi)}
     <li>Chất lượng dữ liệu có sáu chiều; lỗi xếp theo năm mức từ giá trị tới nhiều bảng, và sửa theo đúng thứ tự ấy.</li>
     <li>Thiếu: điền thông minh (trung bình theo lớp, mô hình); nhiễu: chia thùng, phân cụm, hồi quy.</li>
     <li>Chuẩn hoá min-max, z-score, decimal scaling; rút gọn bằng giảm chiều, nén, phân cụm, rời rạc hoá.</li>
-    <li>Theo đề cương: OLTP chuẩn hoá cho giao dịch, OLAP phi chuẩn hoá cho phân tích; kho dùng lược đồ sao và khối (roll-up, drill-down, slice, dice), schema-on-write; data lake giữ dữ liệu thô, schema-on-read.</li>
+    <li>Theo đề cương: ER đổi ra bảng nối nhau bằng khoá chính, khoá ngoại, liên kết N–N thành bảng trung gian; giao dịch OLTP phải đạt ACID. OLTP chuẩn hoá cho giao dịch, OLAP phi chuẩn hoá cho phân tích; kho dùng lược đồ sao và khối (roll-up, drill-down, slice, dice), schema-on-write; data lake giữ dữ liệu thô, schema-on-read.</li>
   </ul></div>
   <div class="quiz-list">
     <details class="quiz"><summary>Công ty có năm hệ thống nguồn đổi dữ liệu liên tục, người dùng cần số liệu tươi theo giờ và ít câu hỏi lặp lại. Chọn kho dữ liệu hay tích hợp ảo? Vì sao?</summary><div>Tích hợp ảo: dữ liệu để tại nguồn nên câu trả lời luôn tươi, không phải nạp lại theo chu kỳ, không tốn chỗ chứa mọi thứ. Đổi lại phải chịu tốc độ của nguồn chậm nhất và chi phí viết lại câu hỏi. Nếu câu hỏi phân tích nặng và lặp nhiều, kho dữ liệu sẽ hợp hơn.</div></details>
     <details class="quiz"><summary>Cột lương có một giá trị 1 tỷ giữa hàng nghìn giá trị cỡ chục triệu. Chuẩn hoá min-max cho ra gì, z-score có cứu được không?</summary><div>Min-max dựa vào đúng hai điểm cực trị: max = 1 tỷ nên mọi giá trị khác dồn vào khoảng [0; 0,1], gần như không phân biệt được. Z-score cũng là biến đổi tuyến tính, μ và σ cũng bị ngoại lai kéo lên, nên không xoá được ảnh hưởng ấy. Phải xử lý ngoại lai trước: kiểm tra và sửa, cắt ngưỡng, lấy log, hoặc co giãn theo trung vị và IQR (khoảng tứ phân vị, xem <a href="#b4-mot-bien">4.5</a>).</div></details>
     <details class="quiz"><summary>Chuỗi bán lẻ muốn xem doanh thu theo quý, vùng và nhóm hàng. Vì sao không chạy thẳng trên CSDL bán hàng? Nên thiết kế gì?</summary><div>CSDL bán hàng là OLTP, chuẩn hoá cho giao dịch ngắn; truy vấn tổng hợp hàng triệu dòng qua nhiều phép nối sẽ chậm và tranh tài nguyên với giao dịch. Dựng kho dữ liệu nạp bằng ETL theo lược đồ sao: fact Sales (qty, revenue) nối Dim_Date, Dim_Store, Dim_Product; roll-up từ tháng lên quý, từ cửa hàng lên vùng.</div></details>
+    <details class="quiz"><summary>Vì sao chuyển khoản cần ACID, còn báo cáo doanh thu quý trên kho dữ liệu thì không đòi hỏi như vậy?</summary><div>Chuyển khoản ghi hai chỗ: dừng giữa chừng thì tiền mất hoặc tự sinh (cần atomicity), nhiều giao dịch cùng chạm một tài khoản (cần isolation), đã báo thành công thì không được mất (cần durability). Báo cáo quý chỉ đọc dữ liệu lịch sử đã nạp vào kho, không ghi gì, nên không có trạng thái dở dang phải bảo vệ; lỗi thì chạy lại.</div></details>
     <details class="quiz"><summary>Bản ghi (2765-175, Estoril) và (2765-175, Oeiras) là lỗi ở mức nào? Cách phát hiện?</summary><div>Mức quan hệ: vi phạm phụ thuộc hàm zip → place (một mã bưu chính phải ứng với một nơi). Phát hiện bằng cách gom theo zip và đếm số place khác nhau; sửa theo nguồn tham chiếu ngoài như danh mục bưu chính.</div></details>
   </div>
 </section>
