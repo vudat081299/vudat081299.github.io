@@ -4,7 +4,8 @@
   thứ tự các file slide (1, 2, 3.1, 3.3, 4.1, 4.2, 4.3, 4.6, 5 … 10).
 - Chỉ nạp font Google. Không build, mở thẳng là chạy. Có mục trên trang chủ (section Master's Degree).
 - Hai bản giao diện, cùng nội dung, để chủ trang so sánh: `big-data-storage-processing.html` (màu theo chặng)
-  và `big-data-storage-processing-v2.html` (bảng màu trang chủ: đen, trắng, một xanh lá; tiêu đề Space Grotesk).
+  và `big-data-storage-processing-v2.html` (khung theo trang chủ: trắng pha xanh, đen pha xanh, xanh lá để nhấn; tiêu đề Space Grotesk;
+  màu chặng dịu chỉ trong sơ đồ và nhãn chặng; khung chú ý xanh dương / hổ phách).
   Hai bản chỉ khác `<style>`, các marker mũi tên và thanh trên. Sửa nội dung thì sửa cả hai file.
 - Nút `.vswitch` trên thanh trên chuyển qua lại giữa hai bản, giữ bài đang đọc.
 - Không có cổng riêng. Cổng tĩnh của `pages/` chạy tay được, với đường dẫn tuyệt đối:
@@ -30,7 +31,7 @@
 - Màu chỉ khai ở token `:root` / `html.dark`. Mỗi chặng một màu (`--found` … `--query`), áp vào bài qua `--acc`.
 - SVG mang class `dg`; tô bằng lớp `bx`, `bxa`, `bxh`, `ln`, `lna`, `t2`, `ta`…, không ghi mã màu.
   Thành phần thuộc chặng khác (HDFS, Kafka…) luôn bọc `<g class="c-<chặng>">` + `.bxa`; `--acc` chỉ cho thứ bài đang dạy.
-  Bản v2: mọi bài nhấn bằng xanh; `c-<chặng khác>` vẽ bằng mực (`--other`); mũi tên lấy màu nét (`context-stroke`). Mũi tên: `url(#ah)`, `url(#ah-<stage>)`, `url(#ah-bad)`.
+  Bản v2: mũi tên lấy màu nét (`context-stroke`). Mũi tên: `url(#ah)`, `url(#ah-<stage>)`, `url(#ah-bad)`.
 - Hình chạy từng bước: `figure.fig.stepper` + `ol.steps`; phần tử SVG có `data-s`, `data-only`, `data-dim`.
   JS chung tự thêm nút.
 - Tab: `.tabs > section.tab[data-label]`.

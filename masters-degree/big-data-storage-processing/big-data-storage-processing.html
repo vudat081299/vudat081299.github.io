@@ -79,7 +79,7 @@ strong{font-weight:600}
 .toc-btn{display:none}
 @media (max-width:420px){.top .name{display:none}}
 .vswitch{flex:none;display:inline-flex;padding:3px;gap:2px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
-.vswitch a{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border-radius:7px;font-family:var(--mono);font-size:12px;color:var(--fg-2);text-decoration:none;white-space:nowrap}
+.vswitch a{display:inline-flex;align-items:center;gap:5px;min-height:30px;padding:0 10px;border-radius:7px;font-family:var(--mono);font-size:12px;color:var(--fg-2);text-decoration:none;white-space:nowrap}
 .vswitch a:hover{color:var(--fg);background:var(--surface-2)}
 .vswitch a[aria-current="page"]{background:var(--fg);color:var(--bg)}
 @media (max-width:640px){.vswitch .lg{display:none}.vswitch a{padding:0 8px}}
@@ -96,7 +96,7 @@ main{min-width:0;padding:28px 32px 120px;max-width:900px}
 .toc a:hover{background:var(--surface-2);color:var(--fg)}
 .toc a .n{flex:none;font-family:var(--mono);font-size:11.5px;color:var(--acc,var(--fg-3));min-width:30px}
 .toc a .dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--acc,var(--fg-3));transform:translateY(-1px)}
-.toc a.on{background:var(--surface);color:var(--fg);box-shadow:inset 3px 0 0 var(--acc,var(--fg))}
+.toc a.on{background:color-mix(in srgb,var(--acc,var(--fg)) 9%,var(--surface));color:var(--fg);box-shadow:0 0 0 1px color-mix(in srgb,var(--acc,var(--fg)) 35%,var(--line))}
 .toc a.done .n::after{content:" ✓";color:var(--ok)}
 /* nhóm theo chặng: chữ tên chặng + ô màu, để không chỉ dựa vào màu */
 .toc li.grp{display:flex;align-items:center;gap:7px;margin:12px 8px 2px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--fg-2)}
@@ -120,8 +120,9 @@ main{min-width:0;padding:28px 32px 120px;max-width:900px}
 .hero h1{font-size:clamp(30px,5.2vw,48px);font-weight:700;letter-spacing:-.025em;margin:0 0 14px}
 .hero .sub{font-size:18px;color:var(--fg-2);max-width:62ch}
 .flow{margin:28px 0 10px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:26px 22px;position:relative}
-.stage{position:relative;background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--acc);border-radius:var(--r);padding:14px 14px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.stage{position:relative;background:var(--surface);border:1px solid color-mix(in srgb,var(--acc) 35%,var(--line));border-radius:var(--r);padding:14px 14px 12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
 .flow .stage:not(:last-child)::after{content:"";position:absolute;right:-19px;top:34px;width:16px;height:16px;background:var(--fg-3);clip-path:polygon(0 15%,60% 15%,60% 0,100% 50%,60% 100%,60% 85%,0 85%)}
+.stage .st-n::before,.base .st-n::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--acc);margin-right:7px;transform:translateY(-1px)}
 .stage .st-n{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:.06em;text-transform:uppercase;font-weight:500}
 .stage h2{font-size:17px}
 .stage p{font-size:13.5px;color:var(--fg-2);margin:0}
@@ -129,7 +130,7 @@ main{min-width:0;padding:28px 32px 120px;max-width:900px}
 .chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;line-height:1.2;padding:5px 9px;border-radius:999px;border:1px solid color-mix(in srgb,var(--acc) 45%,var(--line));background:color-mix(in srgb,var(--acc) 9%,var(--surface));color:var(--fg);text-decoration:none}
 .chip b{font-family:var(--mono);font-weight:500;font-size:11.5px;color:var(--acc)}
 .chip:hover{background:color-mix(in srgb,var(--acc) 18%,var(--surface))}
-.base{grid-column:1/-1;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--acc);box-shadow:var(--shadow);border-radius:var(--r);padding:12px 14px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.base{grid-column:1/-1;background:var(--surface);border:1px solid color-mix(in srgb,var(--acc) 35%,var(--line));box-shadow:var(--shadow);border-radius:var(--r);padding:12px 14px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
 .base .st-n{font-family:var(--mono);font-size:11px;color:var(--acc);letter-spacing:.06em;text-transform:uppercase;font-weight:500}
 .base p{margin:0;font-size:13.5px;color:var(--fg-2);flex:1 1 280px}
 .base .chips{margin:0;padding:0}
@@ -173,7 +174,7 @@ main{min-width:0;padding:28px 32px 120px;max-width:900px}
 
 /* ---- hình ---- */
 .fig{margin:18px 0 22px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 16px 12px;box-shadow:var(--shadow)}
-.fig.map{border-top:3px solid var(--acc)}
+.fig.map{border-color:color-mix(in srgb,var(--acc) 35%,var(--line))}
 .fig .canvas{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
 .fig svg{display:block;width:100%;height:auto;min-width:520px}
 .fig.small svg{min-width:0;max-width:520px;margin:0 auto}
@@ -301,7 +302,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
 
 /* ---- tóm tắt cuối bài ---- */
 /* hộp "Nhớ": đứng trước quiz, là thứ đọc lại khi ôn */
-.recap{margin:32px 0 0;padding:14px 18px 6px;border-radius:var(--r);background:color-mix(in srgb,var(--acc) 7%,var(--surface));border:1px solid color-mix(in srgb,var(--acc) 28%,var(--line));border-left:4px solid var(--acc)}
+.recap{margin:32px 0 0;padding:14px 18px 6px;border-radius:var(--r);background:color-mix(in srgb,var(--acc) 7%,var(--surface));border:1px solid color-mix(in srgb,var(--acc) 35%,var(--line))}
 .chap .recap h3{font-size:16px;font-weight:700;margin:0 0 6px;color:var(--fg)}
 .recap ul{margin:0 0 8px;padding-left:1.2em;max-width:var(--measure)}
 .recap li{font-size:15px;color:var(--fg);margin:.25em 0}
@@ -311,7 +312,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
 .review>h2{font-size:clamp(25px,3.6vw,34px);font-weight:700;letter-spacing:-.02em;margin:0 0 10px}
 .review>.lede{--acc:var(--fg-3);margin-bottom:22px}
 .rv-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
-.rv{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--acc);border-radius:var(--r);padding:12px 14px 4px}
+.rv{background:var(--surface);border:1px solid color-mix(in srgb,var(--acc) 30%,var(--line));border-radius:var(--r);padding:12px 14px 4px}
 .rv h3{font-size:16px;margin:0 0 6px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .rv h3 a{color:var(--fg);text-decoration:none}
 .rv h3 a:hover{text-decoration:underline}

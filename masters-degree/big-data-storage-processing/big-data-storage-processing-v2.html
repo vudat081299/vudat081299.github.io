@@ -18,22 +18,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* ============ TOKENS — bảng màu của trang chủ: đen, trắng, một xanh lá ============ */
+/* ============ TOKENS ============
+   Khung trang theo trang chủ: trắng pha xanh, đen pha xanh, một xanh lá để nhấn.
+   Màu khác chỉ dùng theo ngữ cảnh: sơ đồ (màu chặng, đã làm dịu), khung chú ý (xanh dương, hổ phách, đỏ). */
 :root{
-  --bg:#f5f6f3; --surface:#ffffff; --surface-2:#eceee9; --line:#d6dad4; --line-2:#e6e9e4; --line-strong:#a9b0aa;
-  --fg:#0b0f0c; --fg-2:#3f4741; --fg-3:#59625c;
-  --green:#0a7a3c;            /* chữ xanh trên nền sáng */
-  --green-hi:#16a34a;         /* chấm, vạch — không dùng cho chữ */
-  --green-soft:rgba(22,163,74,.09);
-  --green-line:rgba(10,122,60,.32);
-  --link:var(--green);
-  /* chặng không có màu riêng: thứ bài đang dạy là xanh, thành phần của chặng khác là mực */
-  --other:#3f4741;
-  --found:var(--other); --ingest:var(--other); --store:var(--other); --process:var(--other); --query:var(--other);
-  --ok:#0a7a3c; --warn:#3f4741; --bad:#b42318;
+  --bg:#f7f8f6; --surface:#ffffff; --surface-2:#f1f4f1; --tint:#ecf5ef; --tint-line:#cfe5d7;
+  --line:#dfe4e0; --line-2:#ebefeb; --line-strong:#aab5ad;
+  --fg:#0f1a14; --fg-2:#3a4840; --fg-3:#5c6a61;
+  --deep:#13261b; --on-deep:#eef6f0;          /* khối đen pha xanh */
+  --green:#0a7a3c; --green-hi:#16a34a;        /* chữ xanh / chấm, vạch */
+  --link:#0a6b35;
+  /* màu chặng — chỉ dùng trong sơ đồ và nhãn chặng */
+  --found:#3f4d44; --ingest:#94570a; --store:#1d6684; --process:#0a7a3c; --query:#62489c;
+  --info:#1f5fa8; --warn:#9a5b06; --bad:#b42318; --ok:#0a7a3c;
   --on-acc:#ffffff;
-  --code-bg:#0b0f0c; --code-fg:#e8ece8; --code-c:#8d9891; --code-k:#ffffff; --code-s:#5be08f; --code-f:#c9d6cd; --code-o:#5be08f;
-  --shadow:0 1px 2px rgb(11 15 12 / .05);
+  --code-bg:#13261b; --code-fg:#e3ece5; --code-c:#8fa596; --code-k:#ffc978; --code-s:#7fe0a5; --code-f:#a9d4ff; --code-o:#ffc978;
   --display:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
   --font:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'JetBrains Mono','SF Mono',Menlo,Consolas,monospace;
@@ -42,21 +41,23 @@
   --measure:36rem;
 }
 html.dark{
-  --bg:#090b0a; --surface:#101412; --surface-2:#171c19; --line:#262d29; --line-2:#1a201c; --line-strong:#3c4540;
-  --fg:#eef2ed; --fg-2:#b4bdb6; --fg-3:#949f98;
-  --green:#5be08f; --green-hi:#5be08f; --green-soft:rgba(91,224,143,.09); --green-line:rgba(91,224,143,.30);
-  --other:#c9d1cb;
-  --ok:#5be08f; --warn:#c9d1cb; --bad:#ff8a80;
-  --on-acc:#04130a;
-  --code-bg:#050706; --code-fg:#e8ece8; --code-c:#8d9891; --code-k:#ffffff; --code-s:#5be08f; --code-f:#c9d6cd; --code-o:#5be08f;
-  --shadow:0 0 0 1px rgb(255 255 255 / .02);
+  --bg:#0a0e0c; --surface:#111613; --surface-2:#171e1a; --tint:#122019; --tint-line:#1f3a2a;
+  --line:#242d28; --line-2:#1b221e; --line-strong:#3c4a42;
+  --fg:#e9f0eb; --fg-2:#b5c1b9; --fg-3:#929f97;
+  --deep:#dcebe1; --on-deep:#0f1a14;
+  --green:#5be08f; --green-hi:#5be08f;
+  --link:#7fe6a8;
+  --found:#c4cec7; --ingest:#e6ab5c; --store:#6fc2e0; --process:#5be08f; --query:#b9a3f2;
+  --info:#8dbbf5; --warn:#f0b65c; --bad:#ff8a80; --ok:#5be08f;
+  --on-acc:#0a0e0c;
+  --code-bg:#0d1611; --code-fg:#e3ece5; --code-c:#8fa596; --code-k:#ffc978; --code-s:#7fe0a5; --code-f:#a9d4ff; --code-o:#ffc978;
 }
-/* bài nào cũng lấy xanh làm màu nhấn */
-[data-stage]{--acc:var(--green)}
-/* trong sơ đồ: thành phần của chặng khác vẽ bằng mực, của chính chặng bài đang dạy vẽ bằng xanh */
-.c-found,.c-ingest,.c-store,.c-process,.c-query{--acc:var(--other)}
-[data-stage="found"] .c-found,[data-stage="ingest"] .c-ingest,[data-stage="store"] .c-store,
-[data-stage="process"] .c-process,[data-stage="query"] .c-query{--acc:var(--green)}
+/* sơ đồ của mỗi bài lấy màu chặng của bài; thành phần chặng khác giữ màu chặng của nó */
+[data-stage="found"]{--acc:var(--found)} [data-stage="ingest"]{--acc:var(--ingest)}
+[data-stage="store"]{--acc:var(--store)} [data-stage="process"]{--acc:var(--process)}
+[data-stage="query"]{--acc:var(--query)}
+.c-found{--acc:var(--found)} .c-ingest{--acc:var(--ingest)} .c-store{--acc:var(--store)}
+.c-process{--acc:var(--process)} .c-query{--acc:var(--query)}
 
 /* ============ BASE ============ */
 *,*::before,*::after{box-sizing:border-box}
@@ -96,7 +97,6 @@ strong{font-weight:600}
 .vswitch a{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 10px;border-radius:8px;font:500 11.5px/1 var(--mono);color:var(--fg-2);text-decoration:none;white-space:nowrap}
 .vswitch a:hover{color:var(--fg);background:var(--surface-2)}
 .vswitch a[aria-current="page"]{background:var(--fg);color:var(--bg)}
-.vswitch .lg{display:inline}
 @media (max-width:640px){.vswitch .lg{display:none}.vswitch a{padding:0 9px}.top{padding:0 12px;gap:8px}}
 
 /* ============ LAYOUT ============ */
@@ -106,25 +106,23 @@ main{min-width:0;padding:36px 40px 120px;max-width:920px}
 .toc h2{font:500 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3);margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
 .toc ol{list-style:none;margin:0 0 18px;padding:0}
 .toc li{margin:0}
-.toc a{display:flex;align-items:baseline;gap:10px;padding:6px 8px;margin:0 -8px;border-radius:9px;color:var(--fg);text-decoration:none;line-height:1.3;font-size:13.5px;font-weight:600}
-.toc a:hover{background:var(--green-soft)}
-.toc a:hover{color:var(--fg)}
+.toc a{display:flex;align-items:baseline;gap:10px;padding:6px 8px;margin:0 -8px;border-radius:9px;color:var(--fg-2);text-decoration:none;line-height:1.3;font-size:13.5px;font-weight:600}
+.toc a:hover{background:var(--surface-2);color:var(--fg)}
 .toc a .n{flex:none;font:500 10.5px/1 var(--mono);color:var(--fg-3);min-width:28px;font-variant-numeric:tabular-nums}
 .toc a .dot{display:none}
-.toc a.on{background:var(--green-soft)}
-.toc a.on .n{color:var(--green)}
+.toc a.on{background:var(--surface);color:var(--fg);box-shadow:0 0 0 1px var(--line)}
 .toc a.done .n::after{content:" ✓";color:var(--green)}
 .toc li.grp{display:flex;align-items:center;gap:8px;margin:16px 0 4px;font:500 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--fg-3)}
 .toc li.grp:first-child{margin-top:6px}
-.toc li.grp i{display:none}
+.toc li.grp i{flex:none;width:6px;height:6px;border-radius:50%;background:var(--acc)}
 .toc li.grp::after{content:"";flex:1 1 12px;height:1px;background:var(--line)}
 .toc .note{margin:2px 0 0;font-size:12px;color:var(--fg-3);line-height:1.5}
 @media (max-width:980px){
   .wrap{grid-template-columns:minmax(0,1fr)}
-  .toc{position:fixed;z-index:60;left:0;top:var(--top-h);bottom:0;height:auto;width:min(86vw,320px);background:var(--bg);transform:translateX(-102%);transition:transform .25s ease;box-shadow:0 24px 60px -18px rgb(11 15 12 / .35)}
+  .toc{position:fixed;z-index:60;left:0;top:var(--top-h);bottom:0;height:auto;width:min(86vw,320px);background:var(--bg);transform:translateX(-102%);transition:transform .25s ease;box-shadow:0 24px 60px -18px rgb(15 26 20 / .35)}
   body.toc-open .toc{transform:none}
   .toc-btn{display:grid}
-  .scrim{position:fixed;inset:var(--top-h) 0 0 0;background:rgb(11 15 12 / .38);z-index:55;display:none}
+  .scrim{position:fixed;inset:var(--top-h) 0 0 0;background:rgb(15 26 20 / .38);z-index:55;display:none}
   body.toc-open .scrim{display:block}
   main{padding:24px 16px 100px}
   .top .prog{display:none}
@@ -139,18 +137,19 @@ main{min-width:0;padding:36px 40px 120px;max-width:920px}
 .flow{margin:34px 0 10px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:30px 26px;position:relative}
 .stage{position:relative;padding-top:12px;border-top:2px solid var(--fg);display:flex;flex-direction:column;gap:8px}
 .flow .stage:not(:last-child)::after{content:"→";position:absolute;right:-21px;top:-9px;font:500 13px/1 var(--mono);color:var(--fg-3)}
-.stage .st-n{font:500 11px/1 var(--mono);color:var(--green);letter-spacing:.08em;text-transform:uppercase}
+.stage .st-n{display:inline-flex;align-items:center;gap:7px;font:500 11px/1 var(--mono);color:var(--fg-2);letter-spacing:.08em;text-transform:uppercase}
+.stage .st-n::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--acc)}
 .stage h2{font:600 19px/1.2 var(--display);letter-spacing:-.015em}
 .stage p{font-size:13.5px;line-height:1.5;color:var(--fg-2);margin:0}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
 .chip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;line-height:1.2;padding:6px 10px 6px 6px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none;transition:border-color .12s ease,background-color .12s ease}
 .chip b{display:grid;place-items:center;min-width:26px;height:20px;padding:0 4px;font:500 10.5px/1 var(--mono);color:var(--fg-2);background:var(--surface-2);border:1px solid var(--line);border-radius:5px}
-.chip:hover{border-color:var(--green-line);background:var(--green-soft)}
-.chip:hover b{background:var(--green);border-color:var(--green);color:var(--on-acc)}
-/* nền móng: khung viền xanh như khu đầu của trang chủ */
-.base{grid-column:1/-1;padding:18px 20px;border:1px solid var(--green-line);border-radius:18px;background:radial-gradient(120% 90% at 0% 0%,var(--green-soft),transparent 60%),var(--surface);display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.chip:hover{border-color:var(--fg-3)}
+.chip:hover b{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+/* nền móng: khối trắng pha xanh, viền mảnh */
+.base{grid-column:1/-1;padding:16px 18px;border:1px solid var(--tint-line);border-radius:16px;background:var(--tint);display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
 .base .st-n{display:inline-flex;align-items:center;gap:9px;font:500 11px/1 var(--mono);color:var(--green);letter-spacing:.12em;text-transform:uppercase}
-.base .st-n::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green-hi)}
+.base .st-n::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green-hi)}
 .base p{margin:0;font-size:13.5px;color:var(--fg-2);flex:1 1 280px}
 .base .chips{margin:0;padding:0}
 @media (max-width:760px){
@@ -167,19 +166,20 @@ main{min-width:0;padding:36px 40px 120px;max-width:920px}
 .layers{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;list-style:none;padding:0;margin:0 0 12px;counter-reset:ly;border-top:1px solid var(--line-2)}
 .layers li{counter-increment:ly;margin:0;padding:12px 14px 10px 0;font-size:13px;line-height:1.5;color:var(--fg-2)}
 .layers li b{display:block;color:var(--fg);font-size:14px;margin-bottom:4px}
-.layers li b::before{content:"0" counter(ly) "  ";font:500 11px/1 var(--mono);color:var(--green)}
+.layers li b::before{content:"0" counter(ly) "  ";font:500 11px/1 var(--mono);color:var(--fg-3)}
 @media (max-width:760px){.layers{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 
 /* ============ BÀI (CHAPTER) ============ */
 .chap{margin-top:96px;padding-top:0}
 .chap-head{position:relative;margin-bottom:24px}
 .eyebrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:0 0 16px;font:500 11.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3)}
-.eyebrow .lec{display:inline-flex;align-items:center;gap:9px;color:var(--green);letter-spacing:.14em}
+.eyebrow .lec{display:inline-flex;align-items:center;gap:9px;color:var(--fg);letter-spacing:.14em}
 .eyebrow .lec::before{content:"";width:18px;height:2px;border-radius:2px;background:var(--green-hi)}
 .eyebrow .where{display:inline-flex;gap:3px;align-items:center}
 .eyebrow .where i{width:16px;height:4px;border-radius:2px;background:var(--line)}
-.eyebrow .where i.on{background:var(--fg)}
-.eyebrow .stg{color:var(--fg-2)}
+.eyebrow .where i.on{background:var(--acc)}
+.eyebrow .stg{display:inline-flex;align-items:center;gap:7px;color:var(--fg-2)}
+.eyebrow .stg::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--acc)}
 .chap h2{font:600 clamp(28px,4vw,40px)/1.08 var(--display);letter-spacing:-.03em;margin:0 0 14px;max-width:24ch}
 .lede{font-size:17px;line-height:1.6;color:var(--fg-2);max-width:62ch;margin:0}
 .chap h3{font-size:17px;font-weight:600;margin:0 0 8px}
@@ -191,15 +191,15 @@ main{min-width:0;padding:36px 40px 120px;max-width:920px}
 .chap>p:not(.lede),.chap>ul,.chap>ol,.deep-body>p,.deep-body>ul,.deep-body>ol,.tabs .tab>p,.tabs .tab>ul,.tabs .tab>ol{max-width:var(--measure)}
 
 /* ---- hình ---- */
-.fig{margin:18px 0 24px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:18px 18px 14px}
-.fig.map{border-color:var(--green-line);background:radial-gradient(90% 60% at 0% 0%,var(--green-soft),transparent 55%),var(--surface)}
+.fig{margin:18px 0 24px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 20px 14px}
 .fig .canvas{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+/* vẽ 1:1 theo viewBox (JS đặt --vbw): không phóng to, nét và chữ sắc hơn */
 .fig svg{display:block;width:100%;height:auto;min-width:520px}
 .fig.small svg{min-width:0;max-width:520px;margin:0 auto}
 .fig figcaption{font-size:14px;max-width:var(--measure);color:var(--fg-2);margin-top:12px;line-height:1.55}
 .fig figcaption b{color:var(--fg)}
 .fig .fig-t{display:flex;align-items:center;gap:9px;font:500 11px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--fg-2);margin:0 0 14px}
-.fig .fig-t::before{content:"";flex:none;width:8px;height:8px;border-radius:2px;background:var(--green-hi)}
+.fig .fig-t::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--acc)}
 .fig .canvas.scrolls::after{content:"← vuốt ngang để xem hết hình →";display:block;position:sticky;left:0;text-align:center;font:500 11px/1 var(--mono);color:var(--fg-3);padding-top:8px}
 @media (max-width:600px){.fig{padding:12px 10px 10px;margin-left:-4px;margin-right:-4px}.fig svg,.fig.small svg{min-width:var(--vbw,720px);max-width:none}}
 
@@ -215,12 +215,12 @@ main{min-width:0;padding:36px 40px 120px;max-width:920px}
 .dg .te{text-anchor:end}
 .dg .ta{fill:var(--acc)}
 .dg .ton{fill:var(--on-acc)}
-.dg .bx{fill:var(--surface);stroke:var(--line-strong);stroke-width:1.2}
+.dg .bx{fill:var(--surface);stroke:var(--line-strong);stroke-width:1}
 .dg .bx2{fill:var(--surface-2);stroke:var(--line);stroke-width:1}
-.dg .bxa{fill:color-mix(in srgb,var(--acc) 9%,var(--surface));stroke:var(--acc);stroke-width:1.4}
+.dg .bxa{fill:color-mix(in srgb,var(--acc) 8%,var(--surface));stroke:var(--acc);stroke-width:1.25}
 .dg .bxh{fill:var(--acc);stroke:var(--acc)}
-.dg .grp{fill:none;stroke:var(--line-strong);stroke-width:1.2;stroke-dasharray:5 4}
-.dg .grpa{fill:color-mix(in srgb,var(--acc) 5%,transparent);stroke:var(--acc);stroke-width:1.2;stroke-dasharray:5 4}
+.dg .grp{fill:none;stroke:var(--line-strong);stroke-width:1;stroke-dasharray:4 4}
+.dg .grpa{fill:color-mix(in srgb,var(--acc) 4%,transparent);stroke:color-mix(in srgb,var(--acc) 70%,var(--surface));stroke-width:1;stroke-dasharray:4 4}
 .dg .ln{fill:none;stroke:var(--fg-3);stroke-width:1.5}
 .dg .lna{fill:none;stroke:var(--acc);stroke-width:2}
 .dg .lnb{fill:none;stroke:var(--bad);stroke-width:2}
@@ -238,12 +238,12 @@ main{min-width:0;padding:36px 40px 120px;max-width:920px}
 .st-ctl button{font:500 12.5px/1 var(--mono);min-height:36px;padding:0 13px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;transition:border-color .12s ease,background-color .12s ease}
 .st-ctl button:hover:not(:disabled){border-color:var(--fg-3)}
 .st-ctl button:disabled{opacity:.4;cursor:default}
-.st-ctl button.pri{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.st-ctl button.pri{background:var(--deep);border-color:var(--deep);color:var(--on-deep)}
 .st-ctl button.pri:hover:not(:disabled){background:var(--green);border-color:var(--green);color:var(--on-acc)}
 .st-ctl .cnt{font:500 11.5px/1 var(--mono);color:var(--fg-3);margin-left:auto;font-variant-numeric:tabular-nums}
 .st-ctl .dots{display:flex;gap:4px}
 .st-ctl .dots i{width:14px;height:4px;border-radius:2px;background:var(--line)}
-.st-ctl .dots i.on{background:var(--green-hi)}
+.st-ctl .dots i.on{background:var(--fg-2)}
 [data-s],[data-only]{transition:opacity .3s ease}
 .s-hide{opacity:0!important;pointer-events:none}
 .s-dim{opacity:.18!important}
@@ -262,45 +262,45 @@ details.deep{margin:14px 0;border:1px solid var(--line);border-radius:var(--r);b
 details.deep>summary{list-style:none;cursor:pointer;padding:14px 16px 14px 48px;position:relative;font-weight:600;font-size:15.5px;transition:background-color .12s ease}
 details.deep>summary::-webkit-details-marker{display:none}
 details.deep>summary::before{content:"+";position:absolute;left:14px;top:50%;transform:translateY(-50%);width:24px;height:22px;border-radius:6px;display:grid;place-items:center;background:var(--surface-2);border:1px solid var(--line);color:var(--fg-2);font:500 13px/1 var(--mono)}
-details.deep>summary:hover::before,details.deep[open]>summary::before{background:var(--green);border-color:var(--green);color:var(--on-acc)}
+details.deep>summary:hover::before,details.deep[open]>summary::before{background:var(--deep);border-color:var(--deep);color:var(--on-deep)}
 details.deep[open]>summary::before{content:"−"}
 details.deep>summary .hint{display:block;font-weight:400;font-size:13px;color:var(--fg-3);margin-top:2px}
-details.deep>summary:hover{background:var(--green-soft)}
+details.deep>summary:hover{background:var(--surface-2)}
 .deep-body{padding:6px 16px 16px;border-top:1px solid var(--line)}
-.deep-body .fig{background:var(--bg)}
+.deep-body .fig{background:var(--surface)}
 .quiz{margin:18px 0 0;padding:16px 18px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line)}
 .quiz h3{display:flex;align-items:center;gap:9px;margin:0 0 10px;font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--fg-2)}
-.quiz h3::before{content:"?";display:grid;place-items:center;width:20px;height:20px;border-radius:6px;background:var(--fg);color:var(--bg);font:600 12px/1 var(--mono);letter-spacing:0}
+.quiz h3::before{content:"?";display:grid;place-items:center;width:20px;height:20px;border-radius:6px;background:var(--deep);color:var(--on-deep);font:600 12px/1 var(--mono);letter-spacing:0}
 .quiz details{border-top:1px solid var(--line-2);padding:11px 0;max-width:calc(var(--measure) + 40px)}
 .quiz details:first-of-type{border-top:0}
 .quiz summary{cursor:pointer;font-size:15.5px;font-weight:600;list-style-position:outside;margin-left:18px}
-.quiz summary::marker{color:var(--green)}
+.quiz summary::marker{color:var(--fg-3)}
 .quiz details>div,.quiz details>p{font-size:15.5px;color:var(--fg);margin:8px 0 0 18px;padding-left:12px;border-left:2px solid var(--green-hi)}
 
-/* ---- khung chú ý ---- */
-.callout{margin:16px 0;padding:13px 16px 5px 46px;border-radius:var(--r);position:relative;font-size:15.5px;max-width:calc(var(--measure) + 62px);border:1px solid var(--line);background:var(--surface)}
-.callout::before{position:absolute;left:14px;top:13px;display:grid;place-items:center;width:20px;height:20px;border-radius:6px;font:600 12px/1 var(--mono)}
-.callout.note::before{content:"i";background:var(--surface-2);color:var(--fg-2);border:1px solid var(--line)}
-.callout.trap{border-color:var(--fg-3)}
-.callout.trap::before{content:"!";background:var(--fg);color:var(--bg)}
-.callout.idea{border-color:var(--green-line);background:radial-gradient(120% 120% at 0% 0%,var(--green-soft),transparent 60%),var(--surface)}
-.callout.idea::before{content:"✦";background:var(--green);color:var(--on-acc)}
+/* ---- khung chú ý: màu theo ngữ cảnh ---- */
+.callout{--cc:var(--fg-3);margin:16px 0;padding:13px 16px 5px 46px;border-radius:var(--r);position:relative;font-size:15.5px;max-width:calc(var(--measure) + 62px);border:1px solid color-mix(in srgb,var(--cc) 30%,var(--line));background:var(--surface)}
+.callout::before{position:absolute;left:14px;top:13px;display:grid;place-items:center;width:20px;height:20px;border-radius:6px;font:600 12px/1 var(--mono);background:color-mix(in srgb,var(--cc) 12%,var(--surface));color:var(--cc)}
+.callout.note{--cc:var(--info)}
+.callout.note::before{content:"i"}
+.callout.trap{--cc:var(--warn);background:color-mix(in srgb,var(--warn) 5%,var(--surface))}
+.callout.trap::before{content:"!"}
+.callout.idea{--cc:var(--green);background:var(--tint);border-color:var(--tint-line)}
+.callout.idea::before{content:"✦";background:var(--surface)}
 .callout b:first-child{color:var(--fg)}
 
 /* ---- bảng so sánh ---- */
 .tbl{overflow-x:auto;margin:14px 0 20px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
 .tbl table{border-collapse:collapse;width:100%;font-size:15px;min-width:520px}
 .tbl th,.tbl td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line-2);vertical-align:top}
-.tbl th{font:500 10.5px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--fg-3);background:var(--surface);border-bottom:2px solid var(--fg)}
+.tbl th{font:500 10.5px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--fg-3);background:var(--surface-2);border-bottom:1px solid var(--line)}
 .tbl tr:last-child td{border-bottom:0}
 .tbl td:first-child{font-weight:600;color:var(--fg)}
 .tbl td{color:var(--fg-2)}
-.tbl tbody tr:hover td{background:var(--green-soft)}
 .tbl .y{color:var(--ok);font-weight:600} .tbl .n{color:var(--bad);font-weight:600}
 
 /* ---- code ---- */
 pre.code{margin:14px 0 18px;padding:14px 16px;border-radius:var(--r);background:var(--code-bg);color:var(--code-fg);font-family:var(--mono);font-size:13px;line-height:1.65;overflow-x:auto;border:1px solid var(--line)}
-pre.code .c{color:var(--code-c)} pre.code .k{color:var(--code-k);font-weight:500} pre.code .s{color:var(--code-s)} pre.code .f{color:var(--code-f)} pre.code .o{color:var(--code-o)}
+pre.code .c{color:var(--code-c)} pre.code .k{color:var(--code-k)} pre.code .s{color:var(--code-s)} pre.code .f{color:var(--code-f)} pre.code .o{color:var(--code-o)}
 pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--code-c);margin-bottom:8px}
 
 /* ---- tab ---- */
@@ -318,13 +318,13 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
 .vs>div p,.vs>div li{font-size:15px;color:var(--fg)}
 @media (max-width:600px){.vs{grid-template-columns:minmax(0,1fr)}}
 
-/* ---- hộp "Nhớ": khung viền xanh như khu đầu trang chủ ---- */
-.recap{margin:40px 0 0;padding:18px 22px 10px;border-radius:18px;border:1px solid var(--green-line);background:radial-gradient(120% 90% at 0% 0%,var(--green-soft),transparent 60%),var(--surface)}
+/* ---- hộp "Nhớ": khối trắng pha xanh ---- */
+.recap{margin:40px 0 0;padding:18px 22px 10px;border-radius:16px;border:1px solid var(--tint-line);background:var(--tint)}
 .chap .recap h3{display:inline-flex;align-items:center;gap:9px;margin:0 0 10px;font:500 11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
-.chap .recap h3::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green-hi)}
+.chap .recap h3::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--green-hi)}
 .recap ul{margin:0 0 8px;padding-left:1.2em;max-width:var(--measure)}
 .recap li{font-size:15.5px;color:var(--fg);margin:.3em 0}
-.recap li::marker{color:var(--green)}
+.recap li::marker{color:var(--fg-3)}
 /* ôn tập */
 .review{margin-top:110px;padding-top:0}
 .review>h2{font:600 clamp(28px,4vw,40px)/1.08 var(--display);letter-spacing:-.03em;margin:0 0 12px}
@@ -333,27 +333,29 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
 .rv{padding-top:12px;border-top:2px solid var(--fg)}
 .rv h3{font:600 17px/1.25 var(--display);letter-spacing:-.01em;margin:0 0 8px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .rv h3 a{color:var(--fg);text-decoration:none}
-.rv h3 a:hover{color:var(--green)}
-.rv h3 .n{font:500 11px/1 var(--mono);color:var(--green)}
-.rv h3 .stg{font:500 10.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3);margin-left:auto}
+.rv h3 a:hover{color:var(--link)}
+.rv h3 .n{font:500 11px/1 var(--mono);color:var(--fg-3)}
+.rv h3 .stg{display:inline-flex;align-items:center;gap:6px;font:500 10.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3);margin-left:auto}
+.rv h3 .stg::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--acc)}
 .rv ul{margin:0 0 8px;padding-left:1.2em}
 .rv li{font-size:14.5px;color:var(--fg-2);margin:.25em 0}
-.rv li::marker{color:var(--green)}
 .rv-link{margin:16px 0 0;font-size:14.5px;color:var(--fg-2)}
 .rv-link a{font-weight:600}
 .next{display:flex;justify-content:flex-end;margin-top:22px}
 .next a{display:inline-flex;align-items:center;min-height:42px;font:500 12.5px/1 var(--mono);text-decoration:none;color:var(--fg);border:1px solid var(--line);border-radius:11px;padding:0 16px;background:var(--surface);transition:border-color .12s ease,background-color .12s ease}
-.next a:hover{border-color:var(--green);background:var(--green-soft)}
+.next a:hover{border-color:var(--fg-3);background:var(--surface-2)}
 
 .foot{margin-top:80px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--fg-3)}
 .noscript{padding:10px 14px;border:1px solid var(--line);border-radius:9px;background:var(--surface);margin:12px 0;font-size:14px}
 
 /* ============ IN ============ */
 @media print{
-  html.dark{--bg:#ffffff; --surface:#ffffff; --surface-2:#eceee9; --line:#d6dad4; --line-2:#e6e9e4; --line-strong:#a9b0aa;
-    --fg:#0b0f0c; --fg-2:#3f4741; --fg-3:#59625c; --green:#0a7a3c; --green-hi:#16a34a;
-    --green-soft:rgba(22,163,74,.09); --green-line:rgba(10,122,60,.32); --other:#3f4741;
-    --ok:#0a7a3c; --warn:#3f4741; --bad:#b42318; --on-acc:#ffffff}
+  html.dark{--bg:#ffffff; --surface:#ffffff; --surface-2:#f1f4f1; --tint:#ecf5ef; --tint-line:#cfe5d7;
+    --line:#dfe4e0; --line-2:#ebefeb; --line-strong:#aab5ad;
+    --fg:#0f1a14; --fg-2:#3a4840; --fg-3:#5c6a61; --deep:#13261b; --on-deep:#eef6f0;
+    --green:#0a7a3c; --green-hi:#16a34a; --link:#0a6b35;
+    --found:#3f4d44; --ingest:#94570a; --store:#1d6684; --process:#0a7a3c; --query:#62489c;
+    --info:#1f5fa8; --warn:#9a5b06; --bad:#b42318; --ok:#0a7a3c; --on-acc:#ffffff}
   :root{--bg:#ffffff}
   html{scroll-behavior:auto}
   *{transition:none!important}
