@@ -98,6 +98,11 @@ strong{font-weight:600}
 .vswitch a:hover{color:var(--fg);background:var(--surface-2)}
 .vswitch a[aria-current="page"]{background:var(--fg);color:var(--bg)}
 @media (max-width:640px){.vswitch .lg{display:none}.vswitch a{padding:0 9px}.top{padding:0 12px;gap:8px}}
+/* nút Đọc liền: mở mọi khối Đào sâu; máy hẹp chỉ còn biểu tượng */
+.read-btn{width:auto;display:inline-flex;align-items:center;gap:8px;padding:0 13px;font:500 11.5px/1 var(--mono);white-space:nowrap}
+.read-btn[aria-pressed="true"],.read-btn[aria-pressed="true"]:hover{background:var(--deep);border-color:var(--deep);color:var(--on-deep)}
+@media (max-width:640px){.read-btn{width:42px;padding:0;justify-content:center}.read-btn .lbl{display:none}}
+@media (max-width:380px){.top{gap:6px;padding:0 10px}.ibtn,.read-btn{width:38px;height:38px}.vswitch a{padding:0 7px}}
 
 /* ============ LAYOUT ============ */
 .wrap{display:grid;grid-template-columns:var(--toc-w) minmax(0,1fr);gap:0;padding-top:var(--top-h);max-width:1240px;margin:0 auto}
@@ -265,6 +270,7 @@ details.deep>summary::before{content:"+";position:absolute;left:14px;top:50%;tra
 details.deep>summary:hover::before,details.deep[open]>summary::before{background:var(--deep);border-color:var(--deep);color:var(--on-deep)}
 details.deep[open]>summary::before{content:"−"}
 details.deep>summary .hint{display:block;font-weight:400;font-size:13px;color:var(--fg-3);margin-top:2px}
+details.deep>summary .dmeta{display:block;margin-bottom:5px;font:500 10.5px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3)}
 details.deep>summary:hover{background:var(--surface-2)}
 .deep-body{padding:6px 16px 16px;border-top:1px solid var(--line)}
 .deep-body .fig{background:var(--surface)}
@@ -405,6 +411,10 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <span class="spacer"></span>
   <span class="prog" id="prog" aria-live="off"></span>
   <nav class="vswitch" aria-label="Chọn giao diện để so sánh"><a href="big-data-storage-processing.html"><span class="lg">Màu </span>gốc</a><a href="big-data-storage-processing-v2.html" aria-current="page"><span class="lg">Màu </span>trang chủ</a></nav>
+  <button class="ibtn read-btn" id="readBtn" type="button" aria-pressed="false" aria-label="Đọc liền" title="Đọc liền: mở mọi khối Đào sâu để đọc một mạch. Đáp án tự kiểm tra vẫn gập.">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3zM21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/></svg>
+    <span class="lbl">Đọc liền</span>
+  </button>
   <button class="ibtn" id="themeBtn" type="button" aria-label="Đổi giao diện sáng / tối">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
   </button>
@@ -471,7 +481,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <li><b>Ý chính</b>Một câu ngay dưới tiêu đề.</li>
         <li><b>Bản đồ bài</b>Một sơ đồ cho thấy các phần của bài nối với nhau thế nào.</li>
         <li><b>Khái niệm cốt lõi</b>Vài thẻ ngắn, mỗi thẻ một ý.</li>
-        <li><b>Đào sâu</b>Khối gập (+). Mở khi cần chi tiết, thuật toán, code.</li>
+        <li><b>Đào sâu</b>Khối gập (+), ghi sẵn số phút đọc. Mở khi cần chi tiết; nút Đọc liền mở tất cả.</li>
         <li><b>Nhớ và tự kiểm tra</b>Hộp “Nhớ” gom ý chính, rồi câu hỏi bấm để xem đáp án.</li>
       </ol>
       <p style="font-size:14px;color:var(--fg-2)">Hình có nút <b>Sau ›</b> là hình chạy từng bước: bấm để thấy cơ chế diễn ra lần lượt. Dải vạch cạnh số bài và tên chặng ghi bên cạnh cho biết bài ấy thuộc chặng nào trên bản đồ. Mục <a href="#on-tap">Ôn tập</a> cuối trang gom mọi hộp “Nhớ”.</p>
@@ -5490,14 +5500,20 @@ model = <span class="f">KMeans</span>(k=<span class="o">2</span>, seed=<span cla
     prog.textContent=n+'/'+chaps.length+' bài đã đọc';
   }
   function markRead(id){ if(isRead(id)) return; seen[id]='r'; try{localStorage.setItem('bd-seen',JSON.stringify(seen));}catch(e){} paintRead(); }
+  /* holdSeen: lúc in, trang mở mọi khối gập; khi ấy không tính bài nào là đã đọc. */
+  var io=null, timers=new Map(), holdSeen=false;
+  function watchSeen(){
+    if(!io) return;
+    timers.forEach(function(t){clearTimeout(t);}); timers.clear(); io.disconnect();
+    chaps.forEach(function(c){[].forEach.call(c.querySelectorAll('.recap, .quiz'),function(el){io.observe(el);});});
+  }
   if('IntersectionObserver' in window){
-    var timers=new Map();
-    var io=new IntersectionObserver(function(es){es.forEach(function(en){
+    io=new IntersectionObserver(function(es){es.forEach(function(en){
       var id='#'+en.target.closest('section.chap').id;
-      if(en.isIntersecting){ if(!timers.has(en.target)) timers.set(en.target,setTimeout(function(){markRead(id);},1200)); }
+      if(en.isIntersecting){ if(!timers.has(en.target)) timers.set(en.target,setTimeout(function(){if(!holdSeen)markRead(id);},1200)); }
       else { clearTimeout(timers.get(en.target)); timers.delete(en.target); }
     });},{threshold:0.6});
-    chaps.forEach(function(c){[].forEach.call(c.querySelectorAll('.recap, .quiz'),function(el){io.observe(el);});});
+    watchSeen();
   }
   function onScroll(){
     var y=window.scrollY+window.innerHeight*0.3, cur=0;
@@ -5594,6 +5610,54 @@ model = <span class="f">KMeans</span>(k=<span class="o">2</span>, seed=<span cla
     sel(0);
   });
 
+  /* ---- Đào sâu: nhãn "Đào sâu · n phút" tính từ số chữ: 150 chữ/phút, thêm 1 phút mỗi hình, nửa phút mỗi bảng hay khối code ---- */
+  var deeps=[].slice.call(document.querySelectorAll('details.deep'));
+  deeps.forEach(function(d){
+    var s=d.querySelector(':scope > summary'), body=d.querySelector(':scope > .deep-body'); if(!s||!body) return;
+    var c=body.cloneNode(true); [].forEach.call(c.querySelectorAll('svg'),function(x){x.remove();});
+    var words=(c.textContent.match(/\S+/g)||[]).length, figs=body.querySelectorAll('svg').length;
+    var tbls=body.querySelectorAll('table').length, codes=body.querySelectorAll('pre').length;
+    var has=[]; if(figs) has.push('hình'); if(tbls) has.push('bảng'); if(codes) has.push('code');
+    var m=document.createElement('span'); m.className='dmeta';
+    m.textContent='Đào sâu · '+Math.max(1,Math.round(words/150+figs+(tbls+codes)/2))+' phút'+(has.length?' · có '+has.join(', '):'');
+    s.insertBefore(m,s.firstChild);
+  });
+
+  /* ---- Đọc liền: mở mọi khối Đào sâu; đáp án tự kiểm tra vẫn gập. Khoá bd-read-all: '1' = bật.
+     Bật/tắt giữ nguyên chỗ đang đọc: lấy phần tử ở mép trên khung nhìn làm mốc. ---- */
+  var readBtn=document.getElementById('readBtn'), RKEY='bd-read-all';
+  function topLine(){var t=document.querySelector('.top'); return (t?t.getBoundingClientRect().bottom:0)+8;}
+  function anchorNow(){
+    var mn=document.getElementById('main'); if(!mn) return null;
+    var x=mn.getBoundingClientRect().left+(parseFloat(getComputedStyle(mn).paddingLeft)||0)+24;
+    for(var y=topLine(); y<window.innerHeight; y+=24){
+      var el=document.elementFromPoint(x,y);
+      if(!el || !mn.contains(el) || el===mn || /^(SECTION|DIV)$/.test(el.tagName) && !el.closest('.fig, .key, .callout, .recap, .quiz, .tbl, details.deep > summary')) continue;
+      var body=el.closest('.deep-body');
+      return {el:el, deep:body?body.parentElement:null, top:el.getBoundingClientRect().top};
+    }
+    return null;
+  }
+  function applyRead(on,keep){
+    readBtn.setAttribute('aria-pressed',on?'true':'false');
+    readBtn.title=on?'Đang đọc liền: mọi khối Đào sâu đã mở. Bấm để gập lại.':'Đọc liền: mở mọi khối Đào sâu để đọc một mạch. Đáp án tự kiểm tra vẫn gập.';
+    var a=keep?anchorNow():null;
+    deeps.forEach(function(d){d.open=on;});
+    if(a){
+      /* mốc nằm trong khối vừa gập: đưa đầu khối ấy lên mép trên */
+      var dy=(!on && a.deep) ? a.deep.getBoundingClientRect().top-topLine() : a.el.getBoundingClientRect().top-a.top;
+      if(Math.abs(dy)>0.5) window.scrollBy({top:dy,behavior:'instant'});
+    }
+    markScroll();
+  }
+  readBtn.addEventListener('click',function(){
+    var on=readBtn.getAttribute('aria-pressed')!=='true';
+    try{ if(on) localStorage.setItem(RKEY,'1'); else localStorage.removeItem(RKEY); }catch(e){}
+    applyRead(on,true);
+  });
+  var readOn=false; try{readOn=localStorage.getItem(RKEY)==='1';}catch(e){}
+  if(readOn) applyRead(true,false);
+
   /* ---- liên kết trong trang tới chỗ nằm trong khối gập / tab ẩn: mở ra trước rồi mới cuộn ---- */
   function reveal(el){
     var changed=false;
@@ -5622,17 +5686,26 @@ model = <span class="f">KMeans</span>(k=<span class="o">2</span>, seed=<span cla
 
   /* ---- in: mở mọi khối gập, đưa hình từng bước tới bước cuối; in xong trả lại như cũ ---- */
   var printState=null;
-  window.addEventListener('beforeprint',function(){
-    printState={d:[],s:[]};
+  function beforePrint(){
+    if(printState) return;
+    holdSeen=true; printState={d:[],s:[],y:window.scrollY};
     [].forEach.call(document.querySelectorAll('details:not([open])'),function(d){d.open=true; printState.d.push(d);});
     [].forEach.call(document.querySelectorAll('.stepper'),function(f){ if(f._stepTo){printState.s.push([f,f._stepNow()]); f._stepTo(f._stepN);} });
-  });
-  window.addEventListener('afterprint',function(){
+  }
+  function afterPrint(){
     if(!printState) return;
     printState.d.forEach(function(d){d.open=false;});
     printState.s.forEach(function(p){p[0]._stepTo(p[1]);});
+    window.scrollTo({top:printState.y,behavior:'instant'});
     printState=null;
-  });
+    setTimeout(function(){holdSeen=false; watchSeen();},300);
+  }
+  window.addEventListener('beforeprint',beforePrint);
+  window.addEventListener('afterprint',afterPrint);
+  if(window.matchMedia){
+    var mqp=window.matchMedia('print'), onP=function(m){ if(m.matches) beforePrint(); else afterPrint(); };
+    if(mqp.addEventListener) mqp.addEventListener('change',onP); else if(mqp.addListener) mqp.addListener(onP);
+  }
 })();
 </script>
 <!-- @SCRIPTS -->

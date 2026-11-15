@@ -8,6 +8,9 @@
   màu chặng dịu chỉ trong sơ đồ và nhãn chặng; khung chú ý xanh dương / hổ phách).
   Hai bản chỉ khác `<style>`, các marker mũi tên và thanh trên. Sửa nội dung thì sửa cả hai file.
 - Nút `.vswitch` trên thanh trên chuyển qua lại giữa hai bản, giữ bài đang đọc.
+- Nút `#readBtn` "Đọc liền" (`aria-pressed`) mở mọi `details.deep`; đáp án `.quiz` vẫn gập để người đọc tự trả lời trước.
+- Trạng thái Đọc liền lưu ở `localStorage['bd-read-all']` (`'1'` = bật), áp cho cả hai bản. Bật/tắt giữ nguyên chỗ đang đọc.
+- Máy ≤ 640px nút chỉ còn biểu tượng; thanh trên ở 320px không được tràn ngang.
 - Không có cổng riêng. Cổng tĩnh của `pages/` chạy tay được, với đường dẫn tuyệt đối:
   `python3 pages/tools/lint-pages.py "$PWD/masters-degree/big-data-storage-processing/big-data-storage-processing.html"`.
 
@@ -21,6 +24,7 @@
 - Thứ tự trong bài: `.chap-head` (h2 + `.lede` một câu) → `.fig.map` (bản đồ bài, xem trước cả bài) → `.keys`
   (thẻ khái niệm) → các mục `h3.sec` → `section.recap` (h3 "Nhớ" + `ul`) → `.quiz`.
 - Mỗi mục tối đa một `details.deep`, đặt cuối mục. Ý cần để hiểu bài thì để ở thân bài, không gập.
+- Nhãn "Đào sâu · n phút · có hình…" trên `summary` do JS tính từ số chữ, hình, bảng, code; đừng viết tay.
 - Thuật ngữ giải nghĩa ở lần dùng đầu tiên; từ viết tắt viết đủ một lần.
 - Mục "Ôn tập" cuối trang do JS gom từ các `.recap`; đừng viết tay.
 - Đoạn văn tối đa ba câu. Cơ chế vẽ được thì vẽ bằng SVG inline, không nhúng ảnh slide.
@@ -39,6 +43,8 @@
   JS chung tự thêm nút.
 - Tab: `.tabs > section.tab[data-label]`.
 - Theme: khoá `localStorage['hub-theme']`; bài đã mở lưu ở `bd-seen`.
+- Mở khối gập bằng JS (Đọc liền, in) không được làm bài thành đã đọc trong `bd-seen`.
+- In: JS mở mọi `details` (cả đáp án) rồi trả lại như cũ.
 
 ## Nội dung
 
