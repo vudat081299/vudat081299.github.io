@@ -25,6 +25,7 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-023 · Trang chủ đen, trắng, một màu xanh lá · `index.html`
 - REPO-024 · Mọi trang theo theme hệ điều hành ở lần mở đầu · `repo`
 - REPO-025 · Viền một hoặc hai cạnh thì không bo góc · `repo`
+- REPO-026 · Trang dạy học đọc được ở hai độ sâu: khung xương và Đọc liền · `masters-degree/**`, `pages/*.html`
 
 Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/class-schedule/DECISIONS.md`](masters-degree/class-schedule/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md), [`shop/DECISIONS.md`](shop/DECISIONS.md).
 <!-- index:end -->
@@ -150,3 +151,10 @@ chọn đã lưu thắng. Trang chỉ có một theme phải làm thêm theme c�
 Khối chỉ có viền ở một hoặc hai cạnh (kể cả vạch bằng `box-shadow: inset`) thì để góc vuông, vì bo góc làm vạch
 mỏng dần ở hai đầu. Viền đủ bốn cạnh thì bo góc tuỳ ý. Muốn nhấn một cạnh thì đổi sang viền đủ bốn cạnh hoặc
 một chấm, nhãn màu.
+
+## REPO-026 · Trang dạy học đọc được ở hai độ sâu: khung xương và Đọc liền
+15/11/2026 · `masters-degree/**`, `pages/*.html`
+
+Mặc định trang chỉ mở khung xương: mỗi mục một sơ đồ cơ chế và vài câu ý lõi, đủ thấy cả bài và dẫn người đọc
+tự đi tìm chi tiết. Chi tiết nằm trong khối gập đặt ngay sau ý nó mở rộng; nút Đọc liền mở tất cả để đọc trọn
+như một bài viết. Luật chi tiết và cách rà: `masters-degree/big-data-storage-processing/CLAUDE.md`.
