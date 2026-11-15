@@ -2512,10 +2512,10 @@ input[type=range]{accent-color:var(--green-hi)}
             <text x="20" y="20" class="t-m"><tspan class="t-good">— mode</tspan>   <tspan>— median</tspan>   <tspan class="t-bad">— mean</tspan></text>
           </svg>
         </div><figcaption>Hình minh hoạ. Trung bình thường bị kéo về phía đuôi dài.</figcaption></figure>
-        <p>Phương sai (variance) là trung bình bình phương độ lệch khỏi trung bình; độ lệch chuẩn (standard deviation) là căn bậc hai của phương sai, cùng đơn vị với dữ liệu. Skewness đo độ lệch về một phía; kurtosis đo độ nặng của đuôi.</p>
+        <p>Phương sai (variance) đo mức trải rộng bằng bình phương độ lệch khỏi trung bình: với tổng thể là trung bình các bình phương ấy, với mẫu thì chia n − 1 thay cho n; độ lệch chuẩn (standard deviation) là căn bậc hai của phương sai, cùng đơn vị với dữ liệu. Skewness đo độ lệch về một phía; kurtosis đo độ nặng của đuôi.</p>
         <dl class="terms">
-          <dt>Phương sai</dt><dd>Mẫu: <code>s² = Σ(xᵢ − x̄)² / (n − 1)</code>. Tổng thể: <code>σ² = Σ(xᵢ − μ)² / n</code>. Độ lệch chuẩn là căn bậc hai. pandas mặc định chia n − 1, numpy mặc định chia n; demo z-score ở <a href="#b3-tien-xu-ly">3.7</a> dùng σ tổng thể.</dd>
-          <dt>Skewness</dt><dd>Đo độ bất đối xứng: <code>(1/n)·Σ(xᵢ − x̄)³ / σ³</code>. Lớn hơn 0: lệch phải; nhỏ hơn 0: lệch trái; bằng 0: đối xứng.</dd>
+          <dt>Phương sai</dt><dd>Mẫu: <code>s² = Σ(xᵢ − x̄)² / (n − 1)</code>. Tổng thể: <code>σ² = Σ(xᵢ − μ)² / n</code>. Chia n − 1 vì x̄ tính từ chính mẫu nên các độ lệch nhỏ hơn độ lệch so với μ thật; chia n − 1 bù lại, cho ước lượng không chệch của σ² (hiệu chỉnh Bessel). Độ lệch chuẩn là căn bậc hai. pandas mặc định chia n − 1, numpy mặc định chia n; demo z-score ở <a href="#b3-tien-xu-ly">3.7</a> dùng σ tổng thể.</dd>
+          <dt>Skewness</dt><dd>Đo độ bất đối xứng: <code>(1/n)·Σ(xᵢ − x̄)³ / σ³</code>. Lớn hơn 0: lệch phải; nhỏ hơn 0: lệch trái. Phân phối đối xứng có skewness bằng 0, nhưng chiều ngược lại không luôn đúng: phân phối có một đuôi dài và mỏng, đuôi kia ngắn và dày vẫn có thể có skewness bằng 0.</dd>
           <dt>Kurtosis</dt><dd>Đo độ nặng của đuôi so với phân phối chuẩn (NIST): <code>(1/n)·Σ(xᵢ − x̄)⁴ / σ⁴</code>; phân phối chuẩn có kurtosis 3 (excess kurtosis = kurtosis − 3). Cao: đuôi nặng, nhiều ngoại lai; thấp: đuôi nhẹ, như phân phối đều.</dd>
         </dl>
         <p class="slide-note">Công thức skewness và kurtosis trong slide thiếu thừa số 1/n. Slide mô tả kurtosis là “nhọn hay bẹt”: cách hiểu cũ. Kurtosis gần như chỉ phản ánh đuôi; phân phối đỉnh nhọn mà đuôi nhẹ vẫn có thể có kurtosis thấp (Westfall, 2014).</p>
@@ -2523,7 +2523,7 @@ input[type=range]{accent-color:var(--green-hi)}
     </details>
 
     <details class="node" id="b4-mot-bien">
-      <summary><span class="node-k">4.5</span><h3 class="node-t">Biểu đồ một biến</h3><span class="node-g">Run sequence cho chuỗi thời gian, bar cho phân loại, histogram và box plot cho phân phối số.</span></summary>
+      <summary><span class="node-k">4.5</span><h3 class="node-t">Biểu đồ một biến</h3><span class="node-g">Run sequence cho chuỗi thời gian, bar cho phân loại, histogram, box plot và Q-Q plot cho phân phối số.</span></summary>
       <div class="node-body">
         <figure class="dg"><div class="dg-scroll">
           <svg viewBox="0 0 720 200" role="img" aria-label="Ba biểu đồ một biến với số liệu minh hoạ: biểu đồ chuỗi chạy cho thấy mức dịch lên giữa chừng, biểu đồ cột cho bốn hạng mục, histogram lệch phải">
@@ -2608,6 +2608,64 @@ input[type=range]{accent-color:var(--green-hi)}
           </svg>
         </div><figcaption>Số liệu tự sinh để minh hoạ.</figcaption></figure>
         <figure class="dg"><div class="dg-scroll">
+<svg viewBox="0 0 720 200" role="img" aria-label="Sáu dạng histogram hay gặp: đều, các cột cao gần bằng nhau; hình chuông, cao ở giữa thấp hai bên; chữ U, cao ở hai đầu thấp ở giữa; tăng đều; giảm đều; tăng theo hàm mũ, thấp lâu rồi vọt lên ở cuối">
+<text x="20" y="16" class="t-b t-acc">Đều</text>
+<line x1="20" y1="92" x2="220" y2="92" class="s-line"/>
+<rect x="29" y="42.4" width="26" height="49.6" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="55" y="38.7" width="26" height="53.3" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="81" y="46.1" width="26" height="45.9" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="107" y="36.2" width="26" height="55.8" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="133" y="43.6" width="26" height="48.4" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="159" y="48.6" width="26" height="43.4" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="185" y="39.9" width="26" height="52.1" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<text x="260" y="16" class="t-b t-acc">Hình chuông</text>
+<line x1="260" y1="92" x2="460" y2="92" class="s-line"/>
+<rect x="269" y="87" width="26" height="5" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="295" y="79.6" width="26" height="12.4" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="321" y="61" width="26" height="31" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="347" y="30" width="26" height="62" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="373" y="64.1" width="26" height="27.9" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="399" y="80.8" width="26" height="11.2" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="425" y="87.7" width="26" height="4.3" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<text x="500" y="16" class="t-b t-acc">Chữ U (hai đỉnh)</text>
+<line x1="500" y1="92" x2="700" y2="92" class="s-line"/>
+<rect x="509" y="30" width="26" height="62" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="535" y="69.7" width="26" height="22.3" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="561" y="79.6" width="26" height="12.4" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="587" y="83.3" width="26" height="8.7" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="613" y="79.6" width="26" height="12.4" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="639" y="61" width="26" height="31" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="665" y="36.2" width="26" height="55.8" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<text x="20" y="118" class="t-b t-acc">Tăng đều</text>
+<line x1="20" y1="194" x2="220" y2="194" class="s-line"/>
+<rect x="29" y="186.6" width="26" height="7.4" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="55" y="179.1" width="26" height="14.9" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="81" y="170.4" width="26" height="23.6" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="107" y="160.5" width="26" height="33.5" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="133" y="151.8" width="26" height="42.2" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="159" y="143.2" width="26" height="50.8" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="185" y="134.5" width="26" height="59.5" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<text x="260" y="118" class="t-b t-acc">Giảm đều</text>
+<line x1="260" y1="194" x2="460" y2="194" class="s-line"/>
+<rect x="269" y="134.5" width="26" height="59.5" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="295" y="149.4" width="26" height="44.6" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="321" y="159.9" width="26" height="34.1" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="347" y="169.2" width="26" height="24.8" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="373" y="176.6" width="26" height="17.4" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="399" y="181.6" width="26" height="12.4" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="425" y="187.8" width="26" height="6.2" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<text x="500" y="118" class="t-b t-acc">Tăng theo hàm mũ</text>
+<line x1="500" y1="194" x2="700" y2="194" class="s-line"/>
+<rect x="509" y="190.9" width="26" height="3.1" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="535" y="189" width="26" height="5" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="561" y="186.6" width="26" height="7.4" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="587" y="181.6" width="26" height="12.4" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="613" y="172.3" width="26" height="21.7" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="639" y="156.8" width="26" height="37.2" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+<rect x="665" y="132" width="26" height="62" class="f-acc" stroke-width="1" style="stroke:var(--surface)"/>
+</svg>
+        </div><figcaption>Sáu dạng histogram hay gặp, số liệu tự đặt. Hai đỉnh (như chữ U) thường cho thấy dữ liệu trộn từ hai nhóm khác nhau.</figcaption></figure>
+        <figure class="dg"><div class="dg-scroll">
           <svg viewBox="0 0 680 230" role="img" aria-label="Giải phẫu box plot cho tám tuổi: tứ phân vị dưới 20, trung vị 22,5, tứ phân vị trên 23, khoảng tứ phân vị 3, rào trên 27,5, giá trị 38 nằm ngoài rào là ngoại lai, râu dưới tới 17, trung bình 23,25">
             <line x1="60" y1="120" x2="640" y2="120" class="s-line"/>
             <g class="t-m">
@@ -2638,14 +2696,101 @@ input[type=range]{accent-color:var(--green-hi)}
             <text x="60" y="220" class="t-m">Q1, Q3 lấy bằng trung vị của nửa dưới (17 19 21 22) và nửa trên (23 23 23 38).</text>
           </svg>
         </div><figcaption>Dùng lại tám tuổi của demo 4.3. Phần mềm khác nhau có thể tính tứ phân vị hơi khác.</figcaption></figure>
+        <figure class="dg"><div class="dg-scroll">
+<svg viewBox="0 0 720 200" role="img" aria-label="Ba Q-Q plot so dữ liệu với phân phối chuẩn, trục ngang là phân vị chuẩn lý thuyết, trục dọc là dữ liệu đã chuẩn hoá và xếp thứ tự: dữ liệu gần chuẩn nằm dọc đường chéo; dữ liệu lệch phải tạo một đường cong một chiều; dữ liệu đuôi dài có đầu dưới rơi dưới đường chéo và đầu trên vượt lên trên">
+<line x1="20" y1="160" x2="230" y2="160" class="s-line"/>
+<line x1="20" y1="30" x2="20" y2="160" class="s-line"/>
+<text x="20" y="20" class="t-b t-acc">Gần chuẩn</text>
+<text x="230" y="174" class="t-m t-e">phân vị chuẩn</text>
+<text x="24" y="40" class="t-m">dữ liệu</text>
+<line x1="38.6" y1="146.1" x2="211.4" y2="43.9" class="s-ink dash"/>
+<circle cx="62.9" cy="132.9" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="78.4" cy="123.1" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="87.5" cy="118.6" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="94.5" cy="112.6" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="100.3" cy="111.4" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="105.4" cy="105.9" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="110.1" cy="105.4" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="114.6" cy="101" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="118.8" cy="99.4" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="122.9" cy="96.2" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="127.1" cy="94" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="131.2" cy="91.1" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="135.4" cy="88.8" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="139.9" cy="85.3" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="144.6" cy="83.6" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="149.7" cy="78.3" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="155.5" cy="77.9" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="162.5" cy="70.6" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="171.6" cy="68" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="187.1" cy="56.1" r="2.4" class="f-acc" fill-opacity=".8"/>
+<text x="125" y="192" class="t-m t-c">nằm dọc đường chéo</text>
+<line x1="260" y1="160" x2="470" y2="160" class="s-line"/>
+<line x1="260" y1="30" x2="260" y2="160" class="s-line"/>
+<text x="260" y="20" class="t-b t-acc">Lệch phải</text>
+<text x="470" y="174" class="t-m t-e">phân vị chuẩn</text>
+<text x="264" y="40" class="t-m">dữ liệu</text>
+<line x1="278.6" y1="146.1" x2="451.4" y2="43.9" class="s-ink dash"/>
+<circle cx="302.9" cy="118.9" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="318.4" cy="116" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="327.5" cy="113.8" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="334.5" cy="111.8" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="340.3" cy="110" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="345.4" cy="108.3" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="350.1" cy="106.5" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="354.6" cy="104.7" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="358.8" cy="102.8" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="362.9" cy="100.8" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="367.1" cy="98.7" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="371.2" cy="96.4" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="375.4" cy="93.9" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="379.9" cy="91.1" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="384.6" cy="87.8" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="389.7" cy="83.8" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="395.5" cy="78.9" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="402.5" cy="72.3" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="411.6" cy="62.3" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="427.1" cy="41.1" r="2.4" class="f-acc" fill-opacity=".8"/>
+<text x="365" y="192" class="t-m t-c">cong một chiều</text>
+<line x1="500" y1="160" x2="710" y2="160" class="s-line"/>
+<line x1="500" y1="30" x2="500" y2="160" class="s-line"/>
+<text x="500" y="20" class="t-b t-acc">Đuôi dài</text>
+<text x="710" y="174" class="t-m t-e">phân vị chuẩn</text>
+<text x="504" y="40" class="t-m">dữ liệu</text>
+<line x1="518.6" y1="146.1" x2="691.4" y2="43.9" class="s-ink dash"/>
+<circle cx="542.9" cy="141.4" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="558.4" cy="122.1" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="567.5" cy="113.9" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="574.5" cy="109" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="580.3" cy="105.5" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="585.4" cy="102.9" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="590.1" cy="100.8" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="594.6" cy="98.9" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="598.8" cy="97.3" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="602.9" cy="95.8" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="607.1" cy="94.2" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="611.2" cy="92.7" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="615.4" cy="91.1" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="619.9" cy="89.2" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="624.6" cy="87.1" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="629.7" cy="84.5" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="635.5" cy="81" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="642.5" cy="76.1" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="651.6" cy="67.9" r="2.4" class="f-acc" fill-opacity=".8"/>
+<circle cx="667.1" cy="48.6" r="2.4" class="f-acc" fill-opacity=".8"/>
+<text x="605" y="192" class="t-m t-c">đầu dưới thấp hơn, đầu trên cao hơn</text>
+</svg>
+        </div><figcaption>Q-Q plot: mỗi điểm là một quan sát, trục ngang là giá trị mà phân phối chuẩn dự đoán cho thứ hạng của nó. Số liệu tự sinh, đã chuẩn hoá về trung bình 0, độ lệch chuẩn 1.</figcaption></figure>
         <div class="tbl-wrap"><table class="tbl">
           <tr><th>Biểu đồ</th><th>Trả lời câu hỏi</th></tr>
           <tr><td>Run sequence</td><td>Dữ liệu theo thứ tự thời gian: có dịch mức không, có đổi độ phân tán không, có ngoại lai không?</td></tr>
           <tr><td>Bar chart</td><td>Tần suất tương đối của từng hạng mục; chiều dài cột tỉ lệ với giá trị.</td></tr>
           <tr><td>Histogram</td><td>Phân phối gốc là loại gì, nằm ở đâu, trải rộng bao nhiêu, đối xứng hay lệch, có ngoại lai không?</td></tr>
           <tr><td>Box plot</td><td>Yếu tố có ảnh hưởng không, vị trí và độ phân tán có khác giữa các nhóm không, có ngoại lai không? Mạnh nhất khi đặt nhiều hộp cạnh nhau.</td></tr>
+          <tr><td>Q-Q plot (normal probability plot)</td><td>Dữ liệu có gần phân phối chuẩn không? Điểm nằm dọc đường chéo: khớp; cong một chiều: lệch; đầu dưới rơi dưới đường chéo còn đầu trên vượt lên: đuôi dài hơn chuẩn, ngược lại là đuôi ngắn hơn.</td></tr>
         </table></div>
         <p>Bài 8 học cách chọn và vẽ đúng các biểu đồ này: <a href="#b8-mot-phan-phoi">một phân phối</a> và <a href="#b8-nhieu-phan-phoi">so nhiều phân phối</a>.</p>
+        <p class="slide-note">Chữ ở slide 26 nói box plot hiện giá trị nhỏ nhất và lớn nhất; hình cùng slide và hình trên dùng quy ước Tukey: râu dừng ở giá trị xa nhất còn trong rào 1,5·IQR, điểm ngoài rào vẽ riêng.</p>
       </div>
     </details>
 
@@ -4219,7 +4364,8 @@ input[type=range]{accent-color:var(--green-hi)}
           </svg>
         </div><figcaption>Dấu × là tâm. Bảng ③ là kết quả sau khi hội tụ; mũi tên nối tâm ban đầu với tâm cuối. Số liệu tự sinh.</figcaption></figure>
         <p>K-means cần: thước đo khoảng cách, số cụm k, và tâm khởi đầu. Kết quả là tâm cuối cùng và nhãn cụm của từng điểm. Tâm khởi đầu khác nhau có thể cho kết quả khác nhau, nên thường chạy nhiều lần.</p>
-        <p class="slide-note">Hình luật liên kết ở slide 59 vẽ khoảng cách giữa hai tâm nhưng gọi là average; đó là centroid linkage.</p>
+        <p>K-means chọn tâm sao cho tổng bình phương khoảng cách Euclid từ mỗi điểm tới tâm cụm của nó (inertia) nhỏ nhất; thuật toán luôn hội tụ nhưng có thể chỉ tới một cực tiểu cục bộ. Chọn k: vẽ inertia theo k rồi tìm chỗ gãy (elbow), hoặc dùng hệ số silhouette. Co giãn các biến trước khi chạy, vì khoảng cách Euclid nhạy thang đo (xem <a href="#b5-co-gian">5.3</a>).</p>
+        <p class="slide-note">Hình luật liên kết ở slide 59 vẽ khoảng cách giữa hai tâm nhưng gọi là average; đó là centroid linkage. Slide ghi k-means cần một “thước đo khoảng cách”, nhưng k-means chuẩn (tâm là trung bình) gắn với bình phương khoảng cách Euclid; dùng thước đo khác thì cần biến thể như k-medoids.</p>
       </div>
     </details>
 
@@ -4350,6 +4496,7 @@ input[type=range]{accent-color:var(--green-hi)}
           <dt>Lời nguyền số chiều</dt><dd>Số mẫu cần để giữ cùng độ chính xác tăng theo hàm mũ với số biến. Số mẫu thực tế cố định, nên quá một ngưỡng thì thêm đặc trưng làm bộ phân loại kém đi.</dd>
           <dt>Vì sao giảm</dt><dd>Chiều nội tại thường nhỏ; đặc trưng thừa và nhiễu làm mô hình rối. Giảm chiều giúp trực quan hoá (chiếu xuống 2D, 3D), nén dữ liệu, khử nhiễu.</dd>
           <dt>PCA</dt><dd>Từ n chiều xuống k chiều: tìm k véc tơ u⁽¹⁾…u⁽ᵏ⁾ để chiếu dữ liệu lên sao cho sai số chiếu nhỏ nhất. Các véc tơ ấy là hướng có phương sai lớn nhất, tính được bằng phân tích trị riêng của ma trận hiệp phương sai hoặc SVD.</dd>
+          <dt>Chọn k</dt><dd>Mỗi thành phần giữ một phần phương sai bằng trị riêng của nó chia tổng các trị riêng (<code>explained_variance_ratio_</code> trong scikit-learn). Chọn k nhỏ nhất sao cho phần giữ lại cộng dồn đạt mức mong muốn, vd 95% (<code>PCA(n_components=0.95)</code>), hoặc nhìn scree plot: phương sai từng thành phần theo thứ tự, cắt ở chỗ đường gãy.</dd>
         </dl>
         <p class="muted">Trước PCA: trừ trung bình mỗi cột (bắt buộc), và co giãn nếu các cột khác đơn vị, nếu không biến có số lớn sẽ chiếm hướng chính.</p>
         <p>Bài 3 đã nhắc PCA như một cách rút gọn dữ liệu: xem <a href="#b3-tien-xu-ly">3.7</a>.</p>
@@ -4670,6 +4817,7 @@ input[type=range]{accent-color:var(--green-hi)}
           <tr><td>L2</td><td><code>x / ‖x‖₂</code> theo dòng; tổng bình phương mỗi dòng = 1</td><td>[[0,41; −0,41; 0,82], [1; 0; 0], [0; 0,71; −0,71]]</td></tr>
         </table></div>
         <p class="muted">Min-max giữ số 0 của dữ liệu thưa khi min = 0 và chịu được cột có độ lệch chuẩn rất nhỏ. Trong scikit-learn: <code>MinMaxScaler</code>, <code>StandardScaler</code> hay <code>preprocessing.scale</code>, <code>Normalizer(norm='l2')</code>. σ dùng ở đây là độ lệch chuẩn tổng thể (chia n).</p>
+        <p>Tính min, max, μ, σ chỉ trên tập huấn luyện rồi áp nguyên các số ấy cho tập kiểm tra: <code>fit</code> trên train, <code>transform</code> trên test. Tính trên cả bộ dữ liệu thì thông tin của tập kiểm tra rò vào mô hình và điểm kiểm tra có thể đẹp hơn thực tế. Mọi bước học số từ dữ liệu (scaler, encoder, bộ chọn đặc trưng) đều theo luật này.</p>
       </div>
     </details>
 
@@ -4713,6 +4861,7 @@ input[type=range]{accent-color:var(--green-hi)}
           <dt>One-hot</dt><dd>k hạng mục thành k cột 0/1, mỗi dòng đúng một cột bằng 1. Với hồi quy tuyến tính có hệ số chặn, bỏ một cột (k − 1 cột) để tránh cộng tuyến hoàn toàn (bẫy biến giả, dummy variable trap): <code>drop='first'</code> trong <code>OneHotEncoder</code>, <code>drop_first=True</code> trong <code>pandas.get_dummies</code>.</dd>
           <dt>Target mean</dt><dd>Với mỗi hạng mục: a = tổng target, b = số dòng, mã = a/b. Mạnh nhưng dễ rò rỉ nhãn (dùng nhãn của chính dòng đang dự đoán, nên điểm trên tập huấn luyện đẹp giả); phải tính trên tập huấn luyện, thường theo từng fold (phần chia của kiểm định chéo).</dd>
         </dl>
+        <p class="slide-note">Slide mã hoá tần suất bằng số đếm thô (red 5, green 3, blue 4); trang chia cho số dòng ra tỉ lệ, cùng thứ tự với số đếm. Ví dụ ordinal trong slide có [male, female], một biến định danh không có thứ bậc; còn ví dụ label encoding lại có các khoảng tuổi vốn có thứ tự.</p>
       </div>
     </details>
 
@@ -4763,7 +4912,7 @@ input[type=range]{accent-color:var(--green-hi)}
         <figure class="dg"><div class="dg-scroll">
           <svg viewBox="0 0 700 120" role="img" aria-label="Năm bước chuẩn bị văn bản: làm sạch, tách token, loại bỏ, đưa về gốc từ, làm giàu">
             <g>
-              <rect x="10" y="20" width="124" height="80" rx="8" class="f-surface s-line"/><text x="72" y="42" class="t-b t-c" font-weight="600">Làm sạch</text><text x="72" y="62" class="t-m t-c">chữ thường</text><text x="72" y="78" class="t-m t-c">bỏ dấu, ký tự lạ</text>
+              <rect x="10" y="20" width="124" height="80" rx="8" class="f-surface s-line"/><text x="72" y="42" class="t-b t-c" font-weight="600">Làm sạch</text><text x="72" y="62" class="t-m t-c">chữ thường</text><text x="72" y="78" class="t-m t-c">bỏ ký tự lạ</text>
               <rect x="150" y="20" width="124" height="80" rx="8" class="f-surface s-line"/><text x="212" y="42" class="t-b t-c" font-weight="600">Tách token</text><text x="212" y="62" class="t-m t-c">n-gram, skip-gram</text><text x="212" y="78" class="t-m t-c">char-gram</text>
               <rect x="290" y="20" width="124" height="80" rx="8" class="f-surface s-line"/><text x="352" y="42" class="t-b t-c" font-weight="600">Loại bỏ</text><text x="352" y="62" class="t-m t-c">stopword, từ hiếm,</text><text x="352" y="78" class="t-m t-c">từ quá phổ biến</text>
               <rect x="430" y="20" width="124" height="80" rx="8" class="f-surface s-line"/><text x="492" y="42" class="t-b t-c" font-weight="600">Về gốc từ</text><text x="492" y="62" class="t-m t-c">sửa chính tả</text><text x="492" y="78" class="t-m t-c">stem, lemmatize</text>
@@ -4800,10 +4949,12 @@ input[type=range]{accent-color:var(--green-hi)}
           <dt>Chunking</dt><dd>Chia câu thành cụm từ có nghĩa ngữ pháp như cụm danh từ, cụm động từ; mức trên token, dưới cả câu.</dd>
           <dt>tf-idf</dt><dd>tf(t, d): số lần t xuất hiện trong d. df(t): số văn bản chứa t. <code>idf = log(N/df)</code>; lấy log để làm dịu. Trọng số = tf × idf: tăng theo số lần xuất hiện trong văn bản và theo độ hiếm trong kho. Từ hiếm như “arachnocentric” nhiều thông tin hơn từ phổ biến.</dd>
           <dt>Lọc</dt><dd>Bỏ stopword; lọc theo tần suất (từ phổ biến riêng của kho); bỏ từ hiếm (từ lạ hay lỗi chính tả); stemming chặt đuôi từ về gốc, lemmatization đưa từ về dạng từ điển.</dd>
-          <dt>Embedding</dt><dd>Mỗi từ là một véc tơ dày ít chiều, từ giống nghĩa có véc tơ gần nhau, dựa trên ý “biết một từ qua những từ đi cùng nó” (Firth, 1957). Word2vec (Mikolov và cộng sự, 2013): mạng nơ-ron nông học véc tơ từ bằng cách đoán từ lân cận, không cần nhãn. BERT (Google, 2018): mô hình ngôn ngữ transformer cho véc tơ theo ngữ cảnh, dùng được cho cả câu.</dd>
+          <dt>Embedding</dt><dd>Mỗi từ là một véc tơ dày ít chiều, từ giống nghĩa có véc tơ gần nhau, dựa trên ý “biết một từ qua những từ đi cùng nó” (Firth, 1957). Word2vec (Mikolov và cộng sự, 2013): mạng nơ-ron nông học véc tơ từ bằng cách đoán từ lân cận, không cần nhãn. BERT (Google, 2018): mô hình ngôn ngữ transformer cho véc tơ theo ngữ cảnh. Véc tơ câu so được bằng cosine cần mô hình huấn luyện riêng cho câu, như Sentence-BERT hay LaBSE (slide); lấy thẳng đầu ra của BERT thô cho kết quả kém.</dd>
           <dt>Topic model</dt><dd>LDA biểu diễn mỗi văn bản bằng tỉ lệ các chủ đề ẩn.</dd>
         </dl>
         <p>Bài 11 đi lại đường ống này (tách token, stop word, stemming, bag of words) để trực quan hoá văn bản: xem <a href="#b11-duong-ong">đường ống văn bản</a>.</p>
+        <p class="slide-note">Slide có bước bỏ dấu (convert accented characters) vì viết cho tiếng Anh. Tiếng Việt thì đừng bỏ dấu: ma, má, mà là ba từ khác nhau. Chỉ đưa văn bản về một dạng Unicode (NFC) và một kiểu đặt dấu (hoà hay hòa).</p>
+        <p class="slide-note">Slide về tf-idf ghi trọng số <code>w = log(1 + tf) × log₁₀(N/df)</code>, tức tf đã được nén bằng log; đó là một biến thể, sách của Manning và cộng sự nén bằng <code>1 + log tf</code> khi tf &gt; 0, còn bảng trên dùng tf thô. scikit-learn mặc định cũng dùng tf thô nhưng idf làm trơn <code>ln((1 + N)/(1 + df)) + 1</code> rồi chuẩn hoá L2 từng dòng, nên số của <code>TfidfVectorizer</code> khác bảng. Với idf ấy, từ có ở mọi văn bản có idf = 1 chứ không phải 0.</p>
       </div>
     </details>
 
@@ -4883,6 +5034,7 @@ input[type=range]{accent-color:var(--green-hi)}
           <tr><td>Ví dụ</td><td>Tương quan, χ², ANOVA, information gain</td><td>Forward selection, backward elimination, stepwise</td><td>LASSO, Elastic Net, Ridge; cây quyết định chọn đặc trưng ở mỗi lần tách</td></tr>
         </table></div>
         <p class="muted">Ridge (phạt L2) chỉ làm hệ số nhỏ lại chứ không đưa về 0; LASSO (phạt L1) mới thật sự loại đặc trưng.</p>
+        <p class="muted">Chọn đặc trưng cũng chỉ được dùng tập huấn luyện; khi kiểm định chéo thì làm lại trong từng fold. Gói tiền xử lý, chọn đặc trưng và mô hình vào một <code>Pipeline</code> của scikit-learn để mỗi bước chỉ <code>fit</code> trên phần huấn luyện.</p>
         <p class="slide-note">Slide gọi tìm vét cạn là “greedy”: sai. Vét cạn thử mọi tổ hợp; tham lam (forward, backward) thêm hoặc bớt từng đặc trưng một.</p>
       </div>
     </details>
@@ -4898,7 +5050,7 @@ input[type=range]{accent-color:var(--green-hi)}
   <div class="quiz-list">
     <details class="quiz"><summary>Cột “tỉnh/thành” có 34 giá trị, dùng cho hồi quy tuyến tính. Vì sao label encoding là lựa chọn kém? Nên dùng gì?</summary><div>Label encoding gán 0…33 theo thứ tự tuỳ ý; mô hình tuyến tính sẽ coi tỉnh 32 “lớn gấp đôi” tỉnh 16, một quan hệ không có thật. Dùng one-hot (33 cột 0/1, bỏ một tỉnh làm mốc để tránh cộng tuyến với hệ số chặn) hoặc target mean encoding tính trên tập huấn luyện nếu muốn gọn.</div></details>
     <details class="quiz"><summary>Biến số lượt mua có vài khách mua hàng nghìn lần, đa số mua 1–5 lần. Chia thùng đều độ rộng hay đều tần suất? Có cách nào khác?</summary><div>Đều độ rộng sẽ dồn gần hết khách vào thùng đầu, các thùng sau gần rỗng. Đều tần suất (theo phân vị) cho mỗi thùng số khách như nhau. Cách khác: lấy log để nén đuôi dài, hoặc nhị phân hoá nếu chỉ cần biết có mua hay không.</div></details>
-    <details class="quiz"><summary>Trong tf-idf, vì sao từ xuất hiện ở mọi văn bản có trọng số 0 dù nó xuất hiện nhiều lần?</summary><div>idf = log(N/df); df = N nên idf = log 1 = 0, kéo tf × idf về 0. Từ có mặt ở mọi văn bản không giúp phân biệt văn bản này với văn bản khác, giống stopword.</div></details>
+    <details class="quiz"><summary>Trong tf-idf, vì sao từ xuất hiện ở mọi văn bản có trọng số 0 dù nó xuất hiện nhiều lần?</summary><div>Theo công thức sách, idf = log(N/df); df = N nên idf = log 1 = 0, kéo tf × idf về 0. (idf làm trơn mặc định của scikit-learn cho từ ấy idf = 1, vẫn nhỏ nhất trong kho.) Từ có mặt ở mọi văn bản không giúp phân biệt văn bản này với văn bản khác, giống stopword.</div></details>
   </div>
 </section>
 
@@ -5947,6 +6099,7 @@ input[type=range]{accent-color:var(--green-hi)}
           <li>Density plot vẽ một đường liên tục ước lượng phân phối xác suất bên dưới, phổ biến nhất là kernel density estimation (KDE). Kết quả phụ thuộc kernel và băng thông, như histogram phụ thuộc bin.</li>
           <li>KDE có thể kéo đuôi sang vùng không có dữ liệu, thậm chí vùng không thể có (tuổi âm).</li>
           <li>Histogram và box plot đã gặp ở <a href="#b4-mot-bien">Bài 4</a> như công cụ EDA để tự mình nhìn dữ liệu; bài này bàn cách chọn tham số và trình bày chúng cho người khác xem.</li>
+          <li>ECDF (hàm phân phối tích luỹ thực nghiệm: tỉ lệ quan sát nhỏ hơn hoặc bằng x) và Q-Q plot không cần chọn bin hay băng thông và hiện mọi điểm dữ liệu (Wilke, chương 8); cách đọc Q-Q plot ở <a href="#b4-mot-bien">4.5</a>.</li>
         </ul>
       </div>
     </details>
