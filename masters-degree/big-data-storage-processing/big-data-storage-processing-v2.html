@@ -194,8 +194,8 @@ main{min-width:0;padding:36px 40px 120px;max-width:920px}
 .fig{margin:18px 0 24px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:20px 20px 14px}
 .fig .canvas{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
 /* vẽ 1:1 theo viewBox (JS đặt --vbw): không phóng to, nét và chữ sắc hơn */
-.fig svg{display:block;width:100%;height:auto;min-width:520px}
-.fig.small svg{min-width:0;max-width:520px;margin:0 auto}
+.fig svg{display:block;width:100%;height:auto;min-width:520px;max-width:var(--vbw,100%);margin:0 auto}
+.fig.small svg{min-width:0;max-width:min(520px,var(--vbw,520px))}
 .fig figcaption{font-size:14px;max-width:var(--measure);color:var(--fg-2);margin-top:12px;line-height:1.55}
 .fig figcaption b{color:var(--fg)}
 .fig .fig-t{display:flex;align-items:center;gap:9px;font:500 11px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--fg-2);margin:0 0 14px}
@@ -204,7 +204,7 @@ main{min-width:0;padding:36px 40px 120px;max-width:920px}
 @media (max-width:600px){.fig{padding:12px 10px 10px;margin-left:-4px;margin-right:-4px}.fig svg,.fig.small svg{min-width:var(--vbw,720px);max-width:none}}
 
 /* ---- từ vựng SVG dùng chung cho mọi sơ đồ (.dg) ---- */
-.dg{font-family:var(--font);font-size:13px}
+.dg{font-family:var(--font);font-size:13px;shape-rendering:geometricPrecision;text-rendering:geometricPrecision}
 .dg text{fill:var(--fg)}
 .dg .t2{fill:var(--fg-2);font-size:12px}
 .dg .t3{fill:var(--fg-3);font-size:11px}
@@ -384,13 +384,13 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
-    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--fg-3)"/></marker>
-    <marker id="ah-found" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--found);fill:context-stroke"/></marker>
-    <marker id="ah-ingest" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--ingest);fill:context-stroke"/></marker>
-    <marker id="ah-store" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--store);fill:context-stroke"/></marker>
-    <marker id="ah-process" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--process);fill:context-stroke"/></marker>
-    <marker id="ah-query" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--query);fill:context-stroke"/></marker>
-    <marker id="ah-bad" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" style="fill:var(--bad);fill:context-stroke"/></marker>
+    <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 L2.6 5 z" style="fill:var(--fg-3);fill:context-stroke"/></marker>
+    <marker id="ah-found" viewBox="0 0 10 10" refX="7" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 L2.6 5 z" style="fill:var(--found);fill:context-stroke"/></marker>
+    <marker id="ah-ingest" viewBox="0 0 10 10" refX="7" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 L2.6 5 z" style="fill:var(--ingest);fill:context-stroke"/></marker>
+    <marker id="ah-store" viewBox="0 0 10 10" refX="7" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 L2.6 5 z" style="fill:var(--store);fill:context-stroke"/></marker>
+    <marker id="ah-process" viewBox="0 0 10 10" refX="7" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 L2.6 5 z" style="fill:var(--process);fill:context-stroke"/></marker>
+    <marker id="ah-query" viewBox="0 0 10 10" refX="7" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 L2.6 5 z" style="fill:var(--query);fill:context-stroke"/></marker>
+    <marker id="ah-bad" viewBox="0 0 10 10" refX="7" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 L2.6 5 z" style="fill:var(--bad);fill:context-stroke"/></marker>
   </defs>
 </svg>
 
@@ -491,7 +491,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx" x="10" y="82" width="170" height="30" rx="8"/><text x="95" y="102" class="tc">Mạng xã hội</text>
       <rect class="bx" x="10" y="120" width="170" height="30" rx="8"/><text x="95" y="140" class="tc">Internet of Things</text>
       <rect class="bx" x="10" y="158" width="170" height="30" rx="8"/><text x="95" y="178" class="tc">Thí nghiệm khoa học</text>
-      <line class="ln" x1="182" y1="118" x2="230" y2="118" marker-end="url(#ah)"/>
+      <line class="ln" x1="182" y1="118" x2="228.7" y2="118" marker-end="url(#ah)"/>
 
       <text x="360" y="22" class="t2 tb tc">Năm chữ V</text>
       <rect class="grpa" x="232" y="30" width="256" height="176" rx="12"/>
@@ -500,7 +500,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bxh" x="290" y="98" width="140" height="40" rx="8"/><text x="360" y="114" class="ton tb tc">Value</text><text x="360" y="130" class="ton tc" style="font-size:12px">giá trị, đích đến</text>
       <rect class="bx" x="244" y="152" width="104" height="44" rx="8"/><text x="296" y="171" class="tb tc">Variety</text><text x="296" y="188" class="t2 tc">nhiều dạng</text>
       <rect class="bx" x="372" y="152" width="104" height="44" rx="8"/><text x="424" y="171" class="tb tc">Veracity</text><text x="424" y="188" class="t2 tc">độ tin cậy</text>
-      <line class="ln" x1="490" y1="118" x2="528" y2="118" marker-end="url(#ah)"/>
+      <line class="ln" x1="488" y1="118" x2="526.7" y2="118" marker-end="url(#ah)"/>
 
       <text x="620" y="30" class="t2 tb tc">Giá trị theo ngành</text>
       <rect class="bx2" x="530" y="40" width="180" height="28" rx="8"/><text x="620" y="59" class="tc">Giáo dục</text>
@@ -512,10 +512,10 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <line class="ln" x1="360" y1="206" x2="360" y2="234"/>
       <text x="368" y="226" class="t3">muốn rút được giá trị</text>
       <line class="ln" x1="93" y1="234" x2="627" y2="234"/>
-      <line class="ln" x1="93" y1="234" x2="93" y2="250" marker-end="url(#ah)"/>
-      <line class="ln" x1="271" y1="234" x2="271" y2="250" marker-end="url(#ah)"/>
-      <line class="ln" x1="449" y1="234" x2="449" y2="250" marker-end="url(#ah)"/>
-      <line class="ln" x1="627" y1="234" x2="627" y2="250" marker-end="url(#ah)"/>
+      <line class="ln" x1="93" y1="234" x2="93" y2="248.7" marker-end="url(#ah)"/>
+      <line class="ln" x1="271" y1="234" x2="271" y2="248.7" marker-end="url(#ah)"/>
+      <line class="ln" x1="449" y1="234" x2="449" y2="248.7" marker-end="url(#ah)"/>
+      <line class="ln" x1="627" y1="234" x2="627" y2="248.7" marker-end="url(#ah)"/>
       <rect class="bxa" x="10" y="252" width="166" height="56" rx="8"/><text x="93" y="275" class="tb tc">Quản lý dữ liệu</text><text x="93" y="294" class="t2 tc">lưu, đọc, ghi co giãn</text>
       <rect class="bxa" x="188" y="252" width="166" height="56" rx="8"/><text x="271" y="275" class="tb tc">Thu nạp và xử lý</text><text x="271" y="294" class="t2 tc">theo lô và theo luồng</text>
       <rect class="bxa" x="366" y="252" width="166" height="56" rx="8"/><text x="449" y="275" class="tb tc">Thuật toán phân tích</text><text x="449" y="294" class="t2 tc">học máy quy mô lớn</text>
@@ -581,7 +581,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx2" x="10" y="20" width="92" height="210" rx="10"/>
       <text x="56" y="44" class="tb tc">Nguồn</text>
       <text x="56" y="84" class="t2 tc">log</text><text x="56" y="106" class="t2 tc">cảm biến</text><text x="56" y="128" class="t2 tc">giao dịch</text><text x="56" y="150" class="t2 tc">mạng xã hội</text>
-      <line class="ln" x1="102" y1="125" x2="122" y2="125" marker-end="url(#ah)"/>
+      <line class="ln" x1="102" y1="125" x2="120.7" y2="125" marker-end="url(#ah)"/>
 
       <g class="c-ingest">
         <rect class="bxa" x="124" y="20" width="130" height="210" rx="10"/>
@@ -589,7 +589,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <a href="#b5"><rect class="bx" x="132" y="70" width="114" height="28" rx="7"/><text x="189" y="89" class="tc"><tspan class="tb">Kafka</tspan> · 5</text></a>
         <a href="#b2"><rect class="bx" x="132" y="102" width="114" height="28" rx="7"/><text x="189" y="121" class="tc"><tspan class="tb">Sqoop</tspan> · 2</text></a>
       </g>
-      <line class="ln" x1="254" y1="125" x2="272" y2="125" marker-end="url(#ah)"/>
+      <line class="ln" x1="254" y1="125" x2="270.7" y2="125" marker-end="url(#ah)"/>
 
       <g class="c-store">
         <rect class="bxa" x="274" y="20" width="130" height="210" rx="10"/>
@@ -598,7 +598,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <a href="#b4-1"><rect class="bx" x="282" y="102" width="114" height="28" rx="7"/><text x="339" y="121" class="tc"><tspan class="tb">NoSQL</tspan> · 4.1</text></a>
         <a href="#b4-3"><rect class="bx" x="282" y="134" width="114" height="28" rx="7"/><text x="339" y="153" class="tc"><tspan class="tb">DynamoDB</tspan> · 4.3</text></a>
       </g>
-      <line class="ln" x1="404" y1="125" x2="422" y2="125" marker-end="url(#ah)"/>
+      <line class="ln" x1="404" y1="125" x2="420.7" y2="125" marker-end="url(#ah)"/>
 
       <g class="c-process">
         <rect class="bxa" x="424" y="20" width="130" height="210" rx="10"/>
@@ -608,7 +608,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <a href="#b8"><rect class="bx" x="432" y="134" width="114" height="28" rx="7"/><text x="489" y="153" class="tc"><tspan class="tb">Streaming</tspan> · 8</text></a>
         <a href="#b9"><rect class="bx" x="432" y="166" width="114" height="28" rx="7"/><text x="489" y="185" class="tc"><tspan class="tb">Lambda</tspan> · 9</text></a>
       </g>
-      <line class="ln" x1="554" y1="125" x2="572" y2="125" marker-end="url(#ah)"/>
+      <line class="ln" x1="554" y1="125" x2="570.7" y2="125" marker-end="url(#ah)"/>
 
       <g class="c-query">
         <rect class="bxa" x="574" y="20" width="130" height="210" rx="10"/>
@@ -674,7 +674,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text x="24" y="112" class="t3 tc" transform="rotate(-90 24 112)">độ chính xác</text>
       <text x="275" y="228" class="t3 tc">số đặc trưng (số chiều), số mẫu giữ cố định</text>
       <path class="lna" d="M60,185 C140,70 210,55 250,58 S380,110 490,170"/>
-      <line class="ln dash" x1="248" y1="58" x2="248" y2="200"/>
+      <line class="ln dash" x1="248" y1="62" x2="248" y2="200"/>
       <circle class="fa" cx="248" cy="58" r="4"/>
       <text x="248" y="44" class="t2 tc">điểm tối ưu</text>
       <text x="110" y="172" class="t2">thêm chiều: tốt lên</text>
@@ -705,10 +705,10 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx" x="196" y="60" width="150" height="56" rx="8"/><text x="271" y="84" class="tb tc">2 · Thu thập</text><text x="271" y="102" class="t2 tc">gom, làm sạch</text>
       <rect class="bx" x="372" y="60" width="150" height="56" rx="8"/><text x="447" y="84" class="tb tc">3 · Phân tích</text><text x="447" y="102" class="t2 tc">mô hình, đánh giá</text>
       <rect class="bx" x="548" y="60" width="150" height="56" rx="8"/><text x="623" y="84" class="tb tc">4 · Sản phẩm</text><text x="623" y="102" class="t2 tc">triển khai, đo lường</text>
-      <line class="ln" x1="170" y1="88" x2="194" y2="88" marker-end="url(#ah)"/>
-      <line class="ln" x1="346" y1="88" x2="370" y2="88" marker-end="url(#ah)"/>
-      <line class="ln" x1="522" y1="88" x2="546" y2="88" marker-end="url(#ah)"/>
-      <path class="ln dash" d="M623,116 V164 H95 V118" marker-end="url(#ah)"/>
+      <line class="ln" x1="170" y1="88" x2="192.7" y2="88" marker-end="url(#ah)"/>
+      <line class="ln" x1="346" y1="88" x2="368.7" y2="88" marker-end="url(#ah)"/>
+      <line class="ln" x1="522" y1="88" x2="544.7" y2="88" marker-end="url(#ah)"/>
+      <path class="ln dash" d="M 623 116 V 164 H 95 V 119.3" marker-end="url(#ah)"/>
       <text x="360" y="186" class="t3 tc">lặp lại với câu hỏi mới, dữ liệu mới</text>
 
       <g data-only="1"><rect class="bxh" x="20" y="60" width="150" height="56" rx="8"/><text x="95" y="84" class="ton tb tc">1 · Đặt câu hỏi</text><text x="95" y="102" class="ton tc" style="font-size:12px">định nghĩa bài toán</text></g>
@@ -716,7 +716,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <rect class="bxa" x="211" y="24" width="120" height="24" rx="12"/><text x="271" y="40" class="tb tc" style="font-size:12px">≈ 80% thời gian</text></g>
       <g data-only="3"><rect class="bxh" x="372" y="60" width="150" height="56" rx="8"/><text x="447" y="84" class="ton tb tc">3 · Phân tích</text><text x="447" y="102" class="ton tc" style="font-size:12px">mô hình, đánh giá</text></g>
       <g data-only="4"><rect class="bxh" x="548" y="60" width="150" height="56" rx="8"/><text x="623" y="84" class="ton tb tc">4 · Sản phẩm</text><text x="623" y="102" class="ton tc" style="font-size:12px">triển khai, đo lường</text></g>
-      <g data-only="5"><path class="lna" d="M623,116 V164 H95 V118" marker-end="url(#ah-found)"/></g>
+      <g data-only="5"><path class="lna" d="M 623 116 V 164 H 95 V 119.3" marker-end="url(#ah-found)"/></g>
     </svg></div>
     <ol class="steps">
       <li><b>Đặt câu hỏi.</b> Câu hỏi nghiệp vụ phải đổi được thành bài toán dữ liệu: dự đoán gì, đo bằng gì.</li>
@@ -829,9 +829,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <div class="canvas"><svg class="dg" viewBox="0 0 720 200" role="img" aria-label="So sánh scale up và scale out. Scale up thay máy bằng máy to dần, giá tăng nhanh và có trần phần cứng. Scale out thêm nhiều máy thường vào cụm, giá tăng tuyến tính, máy hỏng thì việc chuyển sang máy khác.">
       <text x="175" y="26" class="tb tc">Scale up: máy to hơn</text>
       <rect class="bx" x="40" y="110" width="40" height="40" rx="6"/>
-      <line class="ln" x1="82" y1="130" x2="116" y2="130" marker-end="url(#ah)"/>
+      <line class="ln" x1="80" y1="130" x2="116.7" y2="130" marker-end="url(#ah)"/>
       <rect class="bx" x="120" y="80" width="56" height="70" rx="6"/>
-      <line class="ln" x1="178" y1="130" x2="206" y2="130" marker-end="url(#ah)"/>
+      <line class="ln" x1="176" y1="130" x2="206.7" y2="130" marker-end="url(#ah)"/>
       <rect class="bxa" x="210" y="40" width="76" height="110" rx="6"/>
       <text x="248" y="100" class="t3 tc">siêu máy</text>
       <text x="175" y="174" class="t2 tc">giá tăng nhanh hơn sức mạnh, có trần phần cứng;</text>
@@ -884,8 +884,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text x="85" y="64" class="tm tc">1, An, 20</text><text x="85" y="84" class="tm tc">2, Bình, 15</text><text x="85" y="104" class="tm tc">3, An, 10</text>
       <rect class="bx" x="10" y="134" width="150" height="78" rx="8"/>
       <text x="85" y="158" class="tm tc">4, Chi, 30</text><text x="85" y="178" class="tm tc">5, Bình, 25</text><text x="85" y="198" class="tm tc">6, An, 5</text>
-      <line class="ln" x1="160" y1="79" x2="188" y2="79" marker-end="url(#ah)"/>
-      <line class="ln" x1="160" y1="173" x2="188" y2="173" marker-end="url(#ah)"/>
+      <line class="ln" x1="160" y1="79" x2="186.7" y2="79" marker-end="url(#ah)"/>
+      <line class="ln" x1="160" y1="173" x2="186.7" y2="173" marker-end="url(#ah)"/>
       <rect class="bxa" x="190" y="40" width="140" height="78" rx="8"/>
       <text x="260" y="64" class="tm tc">(An, 20)</text><text x="260" y="84" class="tm tc">(Bình, 15)</text><text x="260" y="104" class="tm tc">(An, 10)</text>
       <rect class="bxa" x="190" y="134" width="140" height="78" rx="8"/>
@@ -899,9 +899,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx" x="370" y="40" width="150" height="44" rx="8"/><text x="445" y="67" class="tm tc">An: [20, 10, 5]</text>
       <rect class="bx" x="370" y="96" width="150" height="44" rx="8"/><text x="445" y="123" class="tm tc">Bình: [15, 25]</text>
       <rect class="bx" x="370" y="152" width="150" height="44" rx="8"/><text x="445" y="179" class="tm tc">Chi: [30]</text>
-      <line class="ln" x1="520" y1="62" x2="558" y2="62" marker-end="url(#ah)"/>
-      <line class="ln" x1="520" y1="118" x2="558" y2="118" marker-end="url(#ah)"/>
-      <line class="ln" x1="520" y1="174" x2="558" y2="174" marker-end="url(#ah)"/>
+      <line class="ln" x1="520" y1="62" x2="556.7" y2="62" marker-end="url(#ah)"/>
+      <line class="ln" x1="520" y1="118" x2="556.7" y2="118" marker-end="url(#ah)"/>
+      <line class="ln" x1="520" y1="174" x2="556.7" y2="174" marker-end="url(#ah)"/>
       <rect class="bxh" x="560" y="40" width="150" height="44" rx="8"/><text x="635" y="67" class="tm ton tc">(An, 35)</text>
       <rect class="bxh" x="560" y="96" width="150" height="44" rx="8"/><text x="635" y="123" class="tm ton tc">(Bình, 40)</text>
       <rect class="bxh" x="560" y="152" width="150" height="44" rx="8"/><text x="635" y="179" class="tm ton tc">(Chi, 30)</text>
@@ -916,13 +916,13 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <p class="fig-t">Mỗi công cụ đứng ở đâu</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 356" role="img" aria-label="Hệ sinh thái Hadoop. Giữa là lõi: MapReduce trên YARN trên HDFS. Phía trên: Pig và Hive nhận script từ máy client và dịch thành job MapReduce. Bên trái: Kafka nhận luồng sự kiện từ producer và chuyển cho tầng xử lý; Sqoop nhập xuất dữ liệu giữa CSDL quan hệ và HDFS. Bên phải: Oozie lập lịch chạy các job; HBase là kho NoSQL dạng cột lưu trên HDFS. Dưới cùng: ZooKeeper điều phối cho cả cụm.">
       <rect class="bx2" x="20" y="20" width="180" height="54" rx="8"/><text x="110" y="42" class="tb tc">Máy client</text><text x="110" y="60" class="t2 tc">script Pig Latin, HiveQL</text>
-      <line class="ln" x1="200" y1="47" x2="248" y2="47" marker-end="url(#ah)"/>
+      <line class="ln" x1="200" y1="47" x2="246.7" y2="47" marker-end="url(#ah)"/>
       <g class="c-query">
         <rect class="bxa" x="250" y="20" width="104" height="54" rx="8"/><text x="302" y="42" class="tb tc">Pig</text><text x="302" y="60" class="t2 tc">Pig Latin</text>
         <rect class="bxa" x="366" y="20" width="104" height="54" rx="8"/><text x="418" y="42" class="tb tc">Hive</text><text x="418" y="60" class="t2 tc">HiveQL ≈ SQL</text>
       </g>
-      <line class="ln" x1="280" y1="74" x2="280" y2="100" marker-end="url(#ah)"/>
-      <line class="ln" x1="440" y1="74" x2="440" y2="100" marker-end="url(#ah)"/>
+      <line class="ln" x1="280" y1="74" x2="280" y2="98.7" marker-end="url(#ah)"/>
+      <line class="ln" x1="440" y1="74" x2="440" y2="98.7" marker-end="url(#ah)"/>
       <text x="360" y="88" class="t3 tc">sinh job MapReduce</text>
 
       <rect class="grpa" x="240" y="96" width="240" height="178" rx="12"/>
@@ -932,21 +932,21 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text x="246" y="290" class="t3">lõi Hadoop</text>
 
       <rect class="bx2" x="20" y="102" width="80" height="46" rx="8"/><text x="60" y="121" class="tb tc">Producer</text><text x="60" y="139" class="t2 tc">log, app</text>
-      <line class="ln" x1="100" y1="125" x2="116" y2="125" marker-end="url(#ah)"/>
+      <line class="ln" x1="100" y1="125" x2="114.7" y2="125" marker-end="url(#ah)"/>
       <g class="c-ingest">
         <rect class="bxa" x="118" y="102" width="104" height="46" rx="8"/><text x="170" y="121" class="tb tc">Kafka</text><text x="170" y="139" class="t2 tc">luồng sự kiện</text>
         <rect class="bxa" x="118" y="218" width="104" height="46" rx="8"/><text x="170" y="237" class="tb tc">Sqoop</text><text x="170" y="255" class="t2 tc">nhập / xuất</text>
       </g>
-      <line class="ln" x1="222" y1="125" x2="248" y2="125" marker-end="url(#ah)"/>
+      <line class="ln" x1="222" y1="125" x2="246.7" y2="125" marker-end="url(#ah)"/>
       <rect class="bx2" x="20" y="218" width="74" height="46" rx="8"/><text x="57" y="237" class="tb tc">RDBMS</text><text x="57" y="255" class="t2 tc">MySQL…</text>
-      <line class="ln" x1="96" y1="241" x2="116" y2="241" marker-start="url(#ah)" marker-end="url(#ah)"/>
-      <line class="ln" x1="224" y1="241" x2="248" y2="241" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      <line class="ln" x1="97.3" y1="241" x2="114.7" y2="241" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      <line class="ln" x1="225.3" y1="241" x2="246.7" y2="241" marker-start="url(#ah)" marker-end="url(#ah)"/>
 
       <rect class="bxa" x="520" y="20" width="150" height="54" rx="8"/><text x="595" y="42" class="tb tc">Oozie</text><text x="595" y="60" class="t2 tc">lịch chạy job (DAG)</text>
-      <line class="ln dash" x1="520" y1="47" x2="472" y2="47" marker-end="url(#ah)"/>
-      <path class="ln dash" d="M545,74 V125 H472" marker-end="url(#ah)"/>
+      <line class="ln dash" x1="520" y1="47" x2="473.3" y2="47" marker-end="url(#ah)"/>
+      <path class="ln dash" d="M 545 74 V 125 H 473.3" marker-end="url(#ah)"/>
       <g class="c-store"><rect class="bxa" x="520" y="218" width="150" height="46" rx="8"/><text x="595" y="237" class="tb tc">HBase</text><text x="595" y="255" class="t2 tc">NoSQL cột trên HDFS</text></g>
-      <line class="ln" x1="520" y1="241" x2="472" y2="241" marker-end="url(#ah)"/>
+      <line class="ln" x1="520" y1="241" x2="473.3" y2="241" marker-end="url(#ah)"/>
 
       <rect class="bx2" x="20" y="306" width="680" height="40" rx="8"/>
       <text x="360" y="331" class="tc"><tspan class="tb">ZooKeeper</tspan>: điều phối cụm, bầu leader, giữ cấu hình, theo dõi trạng thái</text>
@@ -986,30 +986,30 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <g data-only="4,5"><rect class="bxh" x="580" y="100" width="120" height="50" rx="8"/><text x="640" y="120" class="ton tb tc">Learner</text><text x="640" y="138" class="ton tc" style="font-size:12px">đã chọn: X</text></g>
 
       <g data-only="1,3">
-        <line class="lna" x1="140" y1="121" x2="298" y2="46" marker-end="url(#ah-found)"/>
-        <line class="lna" x1="140" y1="121" x2="298" y2="125" marker-end="url(#ah-found)"/>
-        <line class="lna" x1="140" y1="121" x2="298" y2="204" marker-end="url(#ah-found)"/>
+        <line class="lna" x1="140" y1="121" x2="297.02" y2="46.47" marker-end="url(#ah-found)"/>
+        <line class="lna" x1="140" y1="121" x2="296.7" y2="124.97" marker-end="url(#ah-found)"/>
+        <line class="lna" x1="140" y1="121" x2="297.08" y2="203.52" marker-end="url(#ah-found)"/>
       </g>
       <g data-only="1"><text x="250" y="104" class="tm tc">Prepare(5)</text></g>
       <g data-only="3"><text x="250" y="104" class="tm tc">Accept(5, X)</text></g>
       <g data-only="2">
-        <line class="lna dash" x1="300" y1="46" x2="142" y2="120" marker-end="url(#ah-found)"/>
-        <line class="lna dash" x1="300" y1="125" x2="142" y2="122" marker-end="url(#ah-found)"/>
+        <line class="lna dash" x1="300" y1="46" x2="142.99" y2="119.54" marker-end="url(#ah-found)"/>
+        <line class="lna dash" x1="300" y1="125" x2="143.3" y2="122.02" marker-end="url(#ah-found)"/>
         <line class="lnb dash" x1="300" y1="204" x2="200" y2="160"/>
         <text x="186" y="172" class="t2 tc" style="fill:var(--bad)">✗</text>
         <text x="250" y="104" class="tm tc">Promise(5)</text>
       </g>
       <g data-only="4">
-        <line class="lna" x1="420" y1="45" x2="578" y2="118" marker-end="url(#ah-found)"/>
-        <line class="lna" x1="420" y1="125" x2="578" y2="125" marker-end="url(#ah-found)"/>
-        <line class="lna" x1="420" y1="205" x2="578" y2="132" marker-end="url(#ah-found)"/>
+        <line class="lna" x1="420" y1="45" x2="577" y2="117.54" marker-end="url(#ah-found)"/>
+        <line class="lna" x1="420" y1="125" x2="576.7" y2="125" marker-end="url(#ah-found)"/>
+        <line class="lna" x1="420" y1="205" x2="577" y2="132.46" marker-end="url(#ah-found)"/>
         <text x="470" y="108" class="tm tc">Accepted</text>
       </g>
       <g data-only="5">
         <rect class="bx" x="20" y="186" width="120" height="50" rx="8"/><text x="80" y="207" class="tb tc">Proposer P2</text><text x="80" y="225" class="t2 tc">số đề xuất n = 4</text>
-        <line class="lnb" x1="140" y1="205" x2="298" y2="52" marker-end="url(#ah-bad)"/>
-        <line class="lnb" x1="140" y1="208" x2="298" y2="130" marker-end="url(#ah-bad)"/>
-        <line class="lnb" x1="140" y1="212" x2="298" y2="206" marker-end="url(#ah-bad)"/>
+        <line class="lnb" x1="140" y1="205" x2="297.63" y2="52.36" marker-end="url(#ah-bad)"/>
+        <line class="lnb" x1="140" y1="208" x2="297.04" y2="130.47" marker-end="url(#ah-bad)"/>
+        <line class="lnb" x1="140" y1="212" x2="296.7" y2="206.05" marker-end="url(#ah-bad)"/>
         <text x="220" y="246" class="t2 tc">Prepare(4): bị từ chối</text>
       </g>
     </svg></div>
@@ -1050,23 +1050,23 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <rect class="bxa" x="520" y="172" width="120" height="34" rx="6"/><text x="580" y="194" class="tb tc">task 2</text>
       </g>
 
-      <g data-only="1"><line class="lna" x1="160" y1="60" x2="258" y2="60" marker-end="url(#ah-found)"/><text x="210" y="52" class="t2 tc">nộp ứng dụng</text></g>
-      <g data-only="2"><line class="lna" x1="330" y1="90" x2="330" y2="170" marker-end="url(#ah-found)"/><text x="322" y="135" class="t2 te">chạy AM trong container</text></g>
-      <g data-only="3"><line class="lna" x1="400" y1="172" x2="400" y2="92" marker-end="url(#ah-found)"/><text x="408" y="135" class="t2">xin container</text></g>
+      <g data-only="1"><line class="lna" x1="160" y1="60" x2="256.7" y2="60" marker-end="url(#ah-found)"/><text x="210" y="52" class="t2 tc">nộp ứng dụng</text></g>
+      <g data-only="2"><line class="lna" x1="330" y1="90" x2="330" y2="168.7" marker-end="url(#ah-found)"/><text x="322" y="135" class="t2 te">chạy AM trong container</text></g>
+      <g data-only="3"><line class="lna" x1="400" y1="172" x2="400" y2="93.3" marker-end="url(#ah-found)"/><text x="408" y="135" class="t2">xin container</text></g>
       <g data-only="4">
-        <line class="lna dash" x1="330" y1="90" x2="330" y2="170" marker-end="url(#ah-found)"/><text x="322" y="135" class="t2 te">cấp chỗ ở NM1, NM3</text>
-        <line class="lna" x1="300" y1="189" x2="202" y2="189" marker-end="url(#ah-found)"/>
-        <line class="lna" x1="420" y1="189" x2="518" y2="189" marker-end="url(#ah-found)"/>
+        <line class="lna dash" x1="330" y1="90" x2="330" y2="168.7" marker-end="url(#ah-found)"/><text x="322" y="135" class="t2 te">cấp chỗ ở NM1, NM3</text>
+        <line class="lna" x1="300" y1="189" x2="203.3" y2="189" marker-end="url(#ah-found)"/>
+        <line class="lna" x1="420" y1="189" x2="516.7" y2="189" marker-end="url(#ah-found)"/>
       </g>
       <g data-only="5">
-        <line class="lna dash" x1="200" y1="189" x2="298" y2="189" marker-end="url(#ah-found)"/>
-        <line class="lna dash" x1="520" y1="189" x2="422" y2="189" marker-end="url(#ah-found)"/>
-        <line class="ln dash" x1="140" y1="160" x2="262" y2="92" marker-end="url(#ah)"/>
-        <line class="ln dash" x1="360" y1="160" x2="360" y2="92" marker-end="url(#ah)"/>
-        <line class="ln dash" x1="580" y1="160" x2="458" y2="92" marker-end="url(#ah)"/>
+        <line class="lna dash" x1="200" y1="189" x2="296.7" y2="189" marker-end="url(#ah-found)"/>
+        <line class="lna dash" x1="520" y1="189" x2="423.3" y2="189" marker-end="url(#ah-found)"/>
+        <line class="ln dash" x1="140" y1="160" x2="262.71" y2="91.61" marker-end="url(#ah)"/>
+        <line class="ln dash" x1="360" y1="160" x2="360" y2="93.3" marker-end="url(#ah)"/>
+        <line class="ln dash" x1="580" y1="160" x2="457.29" y2="91.61" marker-end="url(#ah)"/>
         <text x="186" y="116" class="t3 te">heartbeat</text>
       </g>
-      <g data-only="6"><line class="lna" x1="400" y1="172" x2="400" y2="92" marker-end="url(#ah-found)"/><text x="408" y="135" class="t2">xong, huỷ đăng ký</text></g>
+      <g data-only="6"><line class="lna" x1="400" y1="172" x2="400" y2="93.3" marker-end="url(#ah-found)"/><text x="408" y="135" class="t2">xong, huỷ đăng ký</text></g>
     </svg></div>
     <ol class="steps">
       <li><b>Nộp.</b> Client nộp ứng dụng (vd một job MapReduce) cho <b>ResourceManager</b>, máy chủ duy nhất nắm tài nguyên cả cụm.</li>
@@ -1120,12 +1120,12 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="grp" x="10" y="20" width="190" height="150" rx="12"/>
       <text x="105" y="40" class="tb tc">Tệp cục bộ</text>
       <rect class="bx" x="25" y="50" width="160" height="26" rx="7"/><text x="105" y="68" class="tc">Ứng dụng</text>
-      <line class="ln" x1="105" y1="76" x2="105" y2="88" marker-end="url(#ah)"/>
+      <line class="ln" x1="105" y1="76" x2="105" y2="86.7" marker-end="url(#ah)"/>
       <rect class="bx" x="25" y="90" width="160" height="26" rx="7"/><text x="105" y="108" class="tc">FS: NTFS, ext4</text>
-      <line class="ln" x1="105" y1="116" x2="105" y2="128" marker-end="url(#ah)"/>
+      <line class="ln" x1="105" y1="116" x2="105" y2="126.7" marker-end="url(#ah)"/>
       <rect class="bx2" x="25" y="130" width="160" height="26" rx="7"/><text x="105" y="148" class="tc">Đĩa cục bộ</text>
 
-      <line class="ln" x1="200" y1="95" x2="248" y2="95" marker-end="url(#ah)"/>
+      <line class="ln" x1="200" y1="95" x2="246.7" y2="95" marker-end="url(#ah)"/>
       <text x="224" y="86" class="t3 tc">qua mạng</text>
 
       <rect class="grpa" x="250" y="20" width="460" height="150" rx="12"/>
@@ -1133,12 +1133,12 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx" x="266" y="52" width="100" height="28" rx="7"/><text x="316" y="71" class="tc">Client 1</text>
       <rect class="bx" x="266" y="90" width="100" height="28" rx="7"/><text x="316" y="109" class="tc">Client 2</text>
       <rect class="bx" x="266" y="128" width="100" height="28" rx="7"/><text x="316" y="147" class="tc">Client 3</text>
-      <line class="ln" x1="366" y1="66" x2="408" y2="90"/>
-      <line class="ln" x1="366" y1="104" x2="408" y2="105"/>
-      <line class="ln" x1="366" y1="142" x2="408" y2="120"/>
+      <line class="ln" x1="366" y1="66" x2="410" y2="91.14"/>
+      <line class="ln" x1="366" y1="104" x2="410" y2="105.05"/>
+      <line class="ln" x1="366" y1="142" x2="410" y2="118.95"/>
       <rect class="bx2" x="410" y="60" width="90" height="90" rx="40"/><text x="455" y="110" class="tc">Mạng</text>
-      <line class="ln" x1="500" y1="92" x2="542" y2="76" marker-end="url(#ah)"/>
-      <line class="ln" x1="500" y1="118" x2="542" y2="130" marker-end="url(#ah)"/>
+      <line class="ln" x1="500" y1="92" x2="540.92" y2="76.41" marker-end="url(#ah)"/>
+      <line class="ln" x1="500" y1="118" x2="540.83" y2="129.66" marker-end="url(#ah)"/>
       <rect class="bxa" x="544" y="56" width="150" height="40" rx="8"/><text x="619" y="73" class="tb tc">File server A</text><text x="619" y="89" class="t3 tc">đĩa + cache</text>
       <rect class="bxa" x="544" y="110" width="150" height="40" rx="8"/><text x="619" y="127" class="tb tc">File server B</text><text x="619" y="143" class="t3 tc">đĩa + cache</text>
 
@@ -1178,9 +1178,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx" x="17" y="170" width="56" height="30" rx="7"/><text x="45" y="190" class="tc">C1</text>
       <rect class="bx" x="87" y="170" width="56" height="30" rx="7"/><text x="115" y="190" class="tc">C2</text>
       <rect class="bx" x="157" y="170" width="56" height="30" rx="7"/><text x="185" y="190" class="tc">C3</text>
-      <line class="ln" x1="45" y1="170" x2="88" y2="98" marker-end="url(#ah)"/>
-      <line class="ln" x1="115" y1="170" x2="115" y2="98" marker-end="url(#ah)"/>
-      <line class="ln" x1="185" y1="170" x2="142" y2="98" marker-end="url(#ah)"/>
+      <line class="ln" x1="45" y1="170" x2="87.5" y2="98.83" marker-end="url(#ah)"/>
+      <line class="ln" x1="115" y1="170" x2="115" y2="99.3" marker-end="url(#ah)"/>
+      <line class="ln" x1="185" y1="170" x2="142.5" y2="98.83" marker-end="url(#ah)"/>
       <text x="115" y="228" class="t2 tc">một chỗ lưu, quản lý tập trung</text>
 
       <line class="ln dash" x1="237" y1="10" x2="237" y2="236"/>
@@ -1188,14 +1188,14 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text x="360" y="22" class="tb tc">Cluster-based</text><text x="360" y="38" class="t3 tc">GFS, HDFS</text>
       <rect class="bx" x="250" y="56" width="70" height="40" rx="8"/><text x="285" y="81" class="tb tc">Client</text>
       <rect class="bxh" x="400" y="56" width="70" height="40" rx="8"/><text x="435" y="81" class="ton tb tc">Master</text>
-      <line class="ln dash" x1="320" y1="76" x2="398" y2="76" marker-end="url(#ah)"/>
+      <line class="ln dash" x1="320" y1="76" x2="396.7" y2="76" marker-end="url(#ah)"/>
       <text x="359" y="68" class="t3 tc">metadata</text>
       <rect class="bxa" x="255" y="150" width="60" height="40" rx="8"/><text x="285" y="175" class="tc">CS1</text>
       <rect class="bxa" x="330" y="150" width="60" height="40" rx="8"/><text x="360" y="175" class="tc">CS2</text>
       <rect class="bxa" x="405" y="150" width="60" height="40" rx="8"/><text x="435" y="175" class="tc">CS3</text>
-      <line class="lna" x1="285" y1="96" x2="285" y2="148" marker-end="url(#ah-store)"/>
-      <line class="lna" x1="305" y1="96" x2="352" y2="148" marker-end="url(#ah-store)"/>
-      <line class="ln dash" x1="435" y1="96" x2="435" y2="148"/>
+      <line class="lna" x1="285" y1="96" x2="285" y2="146.7" marker-end="url(#ah-store)"/>
+      <line class="lna" x1="305" y1="96" x2="351.59" y2="147.55" marker-end="url(#ah-store)"/>
+      <line class="ln dash" x1="435" y1="96" x2="435" y2="150"/>
       <text x="360" y="228" class="t2 tc">metadata tách khỏi dữ liệu</text>
 
       <line class="ln dash" x1="482" y1="10" x2="482" y2="236"/>
@@ -1241,8 +1241,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <circle class="ff" cx="130" cy="130" r="5"/><text x="130" y="116" class="t2 tc">open</text>
       <circle class="ff" cx="390" cy="130" r="5"/><text x="390" y="116" class="t2 tc tb">read</text>
       <circle class="ff" cx="600" cy="130" r="5"/><text x="600" y="116" class="t2 tc tb">open lại, read</text>
-      <line class="ln dash" x1="390" y1="136" x2="390" y2="224"/>
-      <line class="ln dash" x1="600" y1="136" x2="600" y2="224"/>
+      <line class="ln dash" x1="390" y1="135" x2="390" y2="224"/>
+      <line class="ln dash" x1="600" y1="135" x2="600" y2="224"/>
       <text x="10" y="182" class="tb">UNIX</text>
       <text x="10" y="216" class="tb">Session</text>
       <rect class="bx" x="335" y="164" width="110" height="26" rx="13"/><text x="390" y="182" class="t2 tc">đọc được 2</text>
@@ -1282,7 +1282,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text x="263" y="74" class="tb tc">Đĩa client</text>
       <text x="263" y="96" class="t2 tc">cache được tệp lớn</text><text x="263" y="114" class="t2 tc">quản lý bộ nhớ ảo</text><text x="263" y="132" class="t2 tc">đơn giản hơn</text><text x="263" y="150" class="t2 tc">chạy được khi mất mạng</text>
 
-      <line class="ln" x1="352" y1="110" x2="378" y2="110" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      <line class="ln" x1="353.3" y1="110" x2="376.7" y2="110" marker-start="url(#ah)" marker-end="url(#ah)"/>
       <text x="365" y="100" class="t3 tc">mạng</text>
 
       <rect class="grp" x="380" y="20" width="330" height="160" rx="12"/>
@@ -1316,14 +1316,14 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <g data-only="5"><text x="580" y="222" class="tm ta tb tc">cache: v2</text></g>
 
       <g data-only="1">
-        <line class="lna" x1="300" y1="84" x2="152" y2="168" marker-end="url(#ah-store)"/>
-        <line class="lna" x1="420" y1="84" x2="568" y2="168" marker-end="url(#ah-store)"/>
+        <line class="lna" x1="300" y1="84" x2="151.35" y2="168.37" marker-end="url(#ah-store)"/>
+        <line class="lna" x1="420" y1="84" x2="568.65" y2="168.37" marker-end="url(#ah-store)"/>
         <text x="200" y="112" class="t2 te">đọc f</text><text x="520" y="112" class="t2">đọc f</text>
       </g>
       <g data-only="2"><text x="140" y="158" class="t2 ta tc">A sửa f thành v2</text><text x="360" y="108" class="t3 tc">delayed write: v2 mới ở cache của A, server vẫn giữ v1</text></g>
-      <g data-only="3"><line class="lna" x1="170" y1="168" x2="318" y2="86" marker-end="url(#ah-store)"/><text x="225" y="120" class="t2 te">A close: đẩy v2 về server</text></g>
+      <g data-only="3"><line class="lna" x1="166.39" y1="170" x2="318.72" y2="85.6" marker-end="url(#ah-store)"/><text x="225" y="120" class="t2 te">A close: đẩy v2 về server</text></g>
       <g data-only="5">
-        <line class="lna dash" x1="420" y1="84" x2="568" y2="168" marker-end="url(#ah-store)"/>
+        <line class="lna dash" x1="420" y1="84" x2="568.65" y2="168.37" marker-end="url(#ah-store)"/>
         <text x="500" y="112" class="t2">B mở lại f, kiểm phiên bản,</text><text x="500" y="128" class="t2">tải lại v2</text>
       </g>
     </svg></div>
@@ -1366,7 +1366,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <p class="fig-t">Bản đồ bài</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 310" role="img" aria-label="Bản đồ bài 3.3: client hỏi NameNode về metadata rồi đọc ghi dữ liệu thẳng với DataNode. NameNode giữ ánh xạ tên tệp tới block và block tới DataNode, toàn bộ trong RAM; bên cạnh là Secondary NameNode làm checkpoint, hoặc (khi bật HA) Standby NameNode. Sáu DataNode chia trong hai rack gửi heartbeat và block report về NameNode. Tệp log.txt ghi từ DN1 có hai block: b1 có bản sao trên DN1, DN4, DN5; b2 trên DN1, DN6, DN4.">
       <rect class="bx" x="20" y="40" width="130" height="60" rx="8"/><text x="85" y="64" class="tb tc">Client</text><text x="85" y="84" class="t3 tc">hdfs dfs, Java API</text>
-      <line class="ln dash" x1="150" y1="60" x2="248" y2="60" marker-end="url(#ah)"/>
+      <line class="ln dash" x1="150" y1="60" x2="246.7" y2="60" marker-end="url(#ah)"/>
       <text x="199" y="52" class="t3 tc">metadata</text>
       <rect class="bxh" x="250" y="20" width="220" height="96" rx="10"/>
       <text x="360" y="42" class="ton tb tc">NameNode</text>
@@ -1376,13 +1376,13 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx2" x="540" y="16" width="160" height="40" rx="8"/><text x="620" y="33" class="tb tc">Secondary NN</text><text x="620" y="49" class="t3 tc">checkpoint</text>
       <text x="620" y="69" class="t3 tb tc">hoặc</text>
       <rect class="bx2" x="540" y="76" width="160" height="40" rx="8"/><text x="620" y="93" class="tb tc">Standby NN</text><text x="620" y="109" class="t3 tc">HA, thay ngay khi cần</text>
-      <line class="ln dash" x1="470" y1="36" x2="538" y2="36"/>
-      <line class="ln dash" x1="470" y1="96" x2="538" y2="96"/>
+      <line class="ln dash" x1="470" y1="36" x2="540" y2="36"/>
+      <line class="ln dash" x1="470" y1="96" x2="540" y2="96"/>
 
-      <path class="lna" d="M85,100 V226 H180" marker-end="url(#ah-store)"/>
+      <path class="lna" d="M 85 100 V 226 H 178.7" marker-end="url(#ah-store)"/>
       <text x="93" y="170" class="t3">dữ liệu</text>
       <line class="ln dash" x1="240" y1="170" x2="300" y2="118" marker-end="url(#ah)"/>
-      <line class="ln dash" x1="600" y1="170" x2="430" y2="118" marker-end="url(#ah)"/>
+      <line class="ln dash" x1="600" y1="170" x2="426.62" y2="116.97" marker-end="url(#ah)"/>
       <text x="395" y="150" class="t3 tc">heartbeat 3 s · block report</text>
 
       <rect class="grpa" x="172" y="170" width="252" height="130" rx="12"/>
@@ -1481,21 +1481,21 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <rect class="bxa" x="599" y="202" width="52" height="20" rx="4"/><text x="625" y="216" class="tm tc" style="font-size:11px">blk 1</text>
       </g>
 
-      <g data-only="1,2,5"><path class="lna" d="M70,170 V40 H288" marker-end="url(#ah-store)"/></g>
+      <g data-only="1,2,5"><path class="lna" d="M 70 170 V 40 H 286.7" marker-end="url(#ah-store)"/></g>
       <g data-only="1"><text x="180" y="32" class="tm t2 tc">create(/logs/log.txt)</text></g>
       <g data-only="2"><text x="180" y="32" class="tm t2 tc">addBlock()</text>
-        <path class="lna dash" d="M290,52 H100 V168" marker-end="url(#ah-store)"/>
+        <path class="lna dash" d="M 290 52 H 100 V 166.7" marker-end="url(#ah-store)"/>
         <text x="194" y="72" class="tm t2 tc">[DN1, DN4, DN5]</text></g>
       <g data-only="3">
-        <line class="lna" x1="140" y1="190" x2="213" y2="190" marker-end="url(#ah-store)"/>
-        <line class="lna" x1="335" y1="190" x2="403" y2="190" marker-end="url(#ah-store)"/>
-        <line class="lna" x1="525" y1="190" x2="563" y2="190" marker-end="url(#ah-store)"/>
+        <line class="lna" x1="140" y1="190" x2="211.7" y2="190" marker-end="url(#ah-store)"/>
+        <line class="lna" x1="335" y1="190" x2="401.7" y2="190" marker-end="url(#ah-store)"/>
+        <line class="lna" x1="525" y1="190" x2="561.7" y2="190" marker-end="url(#ah-store)"/>
         <text x="177" y="182" class="t3 tc">packet</text>
       </g>
       <g data-only="4">
-        <line class="lna dash" x1="565" y1="214" x2="527" y2="214" marker-end="url(#ah-store)"/>
-        <line class="lna dash" x1="405" y1="214" x2="337" y2="214" marker-end="url(#ah-store)"/>
-        <line class="lna dash" x1="215" y1="214" x2="142" y2="214" marker-end="url(#ah-store)"/>
+        <line class="lna dash" x1="565" y1="214" x2="528.3" y2="214" marker-end="url(#ah-store)"/>
+        <line class="lna dash" x1="405" y1="214" x2="338.3" y2="214" marker-end="url(#ah-store)"/>
+        <line class="lna dash" x1="215" y1="214" x2="143.3" y2="214" marker-end="url(#ah-store)"/>
         <text x="177" y="208" class="t3 tc">ack</text>
       </g>
       <g data-only="5"><text x="180" y="32" class="tm t2 tc">addBlock(), complete()</text>
@@ -1516,15 +1516,15 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <div class="canvas"><svg class="dg" viewBox="0 0 520 210" role="img" aria-label="Đọc log.txt từ một client chạy trên DN5 ở rack 2: client hỏi NameNode vị trí các block; đọc b1 ngay trên DN5, đọc b2 từ DN6 cùng rack; nếu checksum bản ở DN5 sai thì chuyển sang bản ở DN4.">
       <rect class="bx" x="10" y="90" width="100" height="50" rx="8"/><text x="60" y="112" class="tb tc">Client</text><text x="60" y="129" class="t3 tc">trên DN5</text>
       <rect class="bxh" x="190" y="10" width="140" height="44" rx="8"/><text x="260" y="37" class="ton tb tc">NameNode</text>
-      <path class="ln dash" d="M60,90 V32 H188" marker-start="url(#ah)" marker-end="url(#ah)"/>
+      <path class="ln dash" d="M 60 86.7 V 32 H 186.7" marker-start="url(#ah)" marker-end="url(#ah)"/>
       <text x="124" y="24" class="t2 tc">① vị trí các block</text>
       <rect class="bxa" x="400" y="80" width="110" height="34" rx="8"/><text x="455" y="102" class="tm tc">DN5 · b1</text>
       <rect class="bx" x="400" y="124" width="110" height="34" rx="8"/><text x="455" y="146" class="tm tc">DN4 · b1</text>
       <rect class="bxa" x="400" y="168" width="110" height="34" rx="8"/><text x="455" y="190" class="tm tc">DN6 · b2</text>
-      <line class="lna" x1="110" y1="110" x2="398" y2="97" marker-end="url(#ah-store)"/>
+      <line class="lna" x1="110" y1="110" x2="396.7" y2="97.06" marker-end="url(#ah-store)"/>
       <text x="250" y="94" class="t2 tc">② đọc b1</text>
-      <line class="ln dash" x1="110" y1="117" x2="398" y2="141" marker-end="url(#ah)"/>
-      <line class="lna" x1="110" y1="125" x2="398" y2="185" marker-end="url(#ah-store)"/>
+      <line class="ln dash" x1="110" y1="117" x2="396.71" y2="140.89" marker-end="url(#ah)"/>
+      <line class="lna" x1="110" y1="125" x2="396.77" y2="184.74" marker-end="url(#ah-store)"/>
       <text x="230" y="182" class="t2 tc">③ đọc b2</text>
     </svg></div>
     <figcaption>Đọc lại <code>log.txt</code>, lần này từ một client chạy trên DN5 (rack 2). NameNode trả danh sách DataNode cho từng block, xếp theo khoảng cách: b1 có ngay trên DN5, b2 lấy ở DN6 cùng rack. Đường đứt: checksum bản ở DN5 sai thì client đọc bản ở DN4 và báo NameNode về bản hỏng.</figcaption>
@@ -1553,12 +1553,12 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <rect class="bx2" x="570" y="80" width="112" height="36" rx="7"/><text x="626" y="103" class="tm tc">edits_101-950</text>
       </g>
       <g data-s="4">
-        <line class="ln" x1="508" y1="116" x2="546" y2="158" marker-end="url(#ah)"/>
-        <line class="ln" x1="626" y1="116" x2="586" y2="158" marker-end="url(#ah)"/>
+        <line class="ln" x1="508" y1="116" x2="545.6" y2="157.55" marker-end="url(#ah)"/>
+        <line class="ln" x1="626" y1="116" x2="586.37" y2="157.61" marker-end="url(#ah)"/>
         <rect class="bxh" x="490" y="160" width="150" height="40" rx="8"/><text x="565" y="185" class="tm ton tc">fsimage_950</text>
       </g>
-      <g data-only="3"><line class="lna" x1="322" y1="152" x2="450" y2="100" marker-end="url(#ah-store)"/><text x="380" y="86" class="t2 tc">cuộn log, tải về</text></g>
-      <g data-only="5"><line class="lna" x1="488" y1="182" x2="304" y2="140" marker-end="url(#ah-store)"/><text x="385" y="184" class="t2 tc">gửi fsimage_950</text></g>
+      <g data-only="3"><line class="lna" x1="320" y1="152.81" x2="448.94" y2="100.43" marker-end="url(#ah-store)"/><text x="380" y="86" class="t2 tc">cuộn log, tải về</text></g>
+      <g data-only="5"><line class="lna" x1="490" y1="182.46" x2="303.22" y2="139.82" marker-end="url(#ah-store)"/><text x="385" y="184" class="t2 tc">gửi fsimage_950</text></g>
     </svg></div>
     <ol class="steps">
       <li><b>Hai loại tệp trên đĩa.</b> NameNode phục vụ mọi thứ từ RAM. Trên đĩa có <code>fsimage_100</code> (ảnh chụp namespace sau giao dịch số 100) và đoạn EditLog đang ghi <code>edits_inprogress_101</code> (mọi thay đổi từ giao dịch 101, ghi nối).</li>
@@ -1579,17 +1579,17 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
           <rect class="bxh" x="60" y="40" width="180" height="50" rx="8"/><text x="150" y="62" class="ton tb tc">Active NameNode</text><text x="150" y="80" class="ton tc" style="font-size:12px">phục vụ client</text>
           <rect class="bx2" x="290" y="40" width="140" height="50" rx="8"/><text x="360" y="62" class="tb tc">ZooKeeper</text><text x="360" y="80" class="t2 tc">khoá leader</text>
           <rect class="bx" x="480" y="40" width="180" height="50" rx="8"/><text x="570" y="62" class="tb tc">Standby NameNode</text><text x="570" y="80" class="t2 tc">đọc edits, chờ thay</text>
-          <line class="ln dash" x1="240" y1="65" x2="288" y2="65"/><text x="264" y="57" class="t3 tc">ZKFC</text>
-          <line class="ln dash" x1="432" y1="65" x2="480" y2="65"/><text x="456" y="57" class="t3 tc">ZKFC</text>
+          <line class="ln dash" x1="240" y1="65" x2="290" y2="65"/><text x="264" y="57" class="t3 tc">ZKFC</text>
+          <line class="ln dash" x1="430" y1="65" x2="480" y2="65"/><text x="456" y="57" class="t3 tc">ZKFC</text>
           <text x="360" y="114" class="t3 tc">JournalNode: quorum giữ edits</text>
           <rect class="grpa" x="250" y="122" width="220" height="56" rx="10"/>
           <rect class="bx" x="262" y="132" width="60" height="36" rx="7"/><text x="292" y="155" class="tc">JN1</text>
           <rect class="bx" x="330" y="132" width="60" height="36" rx="7"/><text x="360" y="155" class="tc">JN2</text>
           <rect class="bx" x="398" y="132" width="60" height="36" rx="7"/><text x="428" y="155" class="tc">JN3</text>
           <line class="lna" x1="210" y1="90" x2="248" y2="140" marker-end="url(#ah-store)"/><text x="222" y="130" class="t2 te">ghi edits</text>
-          <line class="lna dash" x1="472" y1="140" x2="510" y2="92" marker-end="url(#ah-store)"/><text x="498" y="130" class="t2">đọc edits</text>
-          <line class="ln dash" x1="130" y1="210" x2="130" y2="92" marker-end="url(#ah)"/>
-          <line class="ln dash" x1="590" y1="210" x2="590" y2="92" marker-end="url(#ah)"/>
+          <line class="lna dash" x1="470" y1="142.53" x2="509.54" y2="92.59" marker-end="url(#ah-store)"/><text x="498" y="130" class="t2">đọc edits</text>
+          <line class="ln dash" x1="130" y1="210" x2="130" y2="93.3" marker-end="url(#ah)"/>
+          <line class="ln dash" x1="590" y1="210" x2="590" y2="93.3" marker-end="url(#ah)"/>
           <text x="360" y="200" class="t3 tc">DataNode gửi block report, heartbeat cho cả hai</text>
           <rect class="bx" x="80" y="210" width="100" height="34" rx="7"/><text x="130" y="232" class="tc">DataNode</text>
           <rect class="bx" x="240" y="210" width="100" height="34" rx="7"/><text x="290" y="232" class="tc">DataNode</text>
@@ -1733,12 +1733,12 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text class="tb tc" x="117" y="42">RDBMS cho mọi tải</text>
       <text class="t2 tc" x="117" y="60">one size fits all, tới ~2005</text>
       <text class="t3 tc" x="117" y="74">gánh cả OLTP lẫn OLAP</text>
-      <path class="ln" d="M224 52 H251" marker-end="url(#ah)"/>
+      <path class="ln" d="M 224 52 H 249.7" marker-end="url(#ah)"/>
       <rect class="bx" x="253" y="24" width="214" height="56" rx="8"/>
       <text class="tb tc" x="360" y="42">Web cần khác</text>
       <text class="t2 tc" x="360" y="60">mở rộng ngang, luôn sẵn sàng</text>
       <text class="t3 tc" x="360" y="74">ít cần giao dịch, join phức tạp</text>
-      <path class="ln" d="M467 52 H494" marker-end="url(#ah)"/>
+      <path class="ln" d="M 467 52 H 492.7" marker-end="url(#ah)"/>
       <rect class="bxa" x="496" y="24" width="214" height="56" rx="8"/>
       <text class="tb tc" x="603" y="42">NoSQL</text>
       <text class="t2 tc" x="603" y="60">nới ACID, bốn mô hình dữ liệu</text>
@@ -1748,10 +1748,10 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bxa" x="10" y="8" width="700" height="52" rx="8"/>
       <text class="t3 tc" x="360" y="27">cùng một dữ liệu mẫu</text>
       <text class="tc" x="360" y="48">Người dùng u1 (An) · đơn o1: 2 sách, o2: 1 bút · An theo dõi Bình</text>
-      <path class="ln" d="M94.5 60 V92" marker-end="url(#ah)"/>
-      <path class="ln" d="M271.5 60 V92" marker-end="url(#ah)"/>
-      <path class="ln" d="M448.5 60 V92" marker-end="url(#ah)"/>
-      <path class="ln" d="M625.5 60 V92" marker-end="url(#ah)"/>
+      <path class="ln" d="M 94.5 60 V 92.7" marker-end="url(#ah)"/>
+      <path class="ln" d="M 271.5 60 V 92.7" marker-end="url(#ah)"/>
+      <path class="ln" d="M 448.5 60 V 92.7" marker-end="url(#ah)"/>
+      <path class="ln" d="M 625.5 60 V 92.7" marker-end="url(#ah)"/>
 
       <!-- Key-value -->
       <rect class="bx" x="10" y="96" width="169" height="222" rx="8"/>
@@ -1760,17 +1760,17 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <path class="ln" d="M20 144 H169" style="stroke-width:1"/>
       <rect class="bxa" x="20" y="160" width="66" height="24" rx="5"/>
       <text class="tm tc" x="53" y="176">user:u1</text>
-      <path class="ln" d="M86 172 H96" marker-end="url(#ah)"/>
+      <path class="ln" d="M 86 172 H 94.7" marker-end="url(#ah)"/>
       <rect class="bx2" x="98" y="160" width="72" height="24" rx="5"/>
       <text class="t2 tc" x="134" y="176">khối byte</text>
       <rect class="bxa" x="20" y="194" width="66" height="24" rx="5"/>
       <text class="tm tc" x="53" y="210">order:o1</text>
-      <path class="ln" d="M86 206 H96" marker-end="url(#ah)"/>
+      <path class="ln" d="M 86 206 H 94.7" marker-end="url(#ah)"/>
       <rect class="bx2" x="98" y="194" width="72" height="24" rx="5"/>
       <text class="t2 tc" x="134" y="210">khối byte</text>
       <rect class="bxa" x="20" y="228" width="66" height="24" rx="5"/>
       <text class="tm tc" x="53" y="244">order:o2</text>
-      <path class="ln" d="M86 240 H96" marker-end="url(#ah)"/>
+      <path class="ln" d="M 86 240 H 94.7" marker-end="url(#ah)"/>
       <rect class="bx2" x="98" y="228" width="72" height="24" rx="5"/>
       <text class="t2 tc" x="134" y="244">khối byte</text>
       <text class="t2 tc" x="94.5" y="284">GET · PUT · DELETE</text>
@@ -1797,11 +1797,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text class="tb tc" x="448.5" y="118">Graph</text>
       <text class="t3 tc" x="448.5" y="134">Neo4j</text>
       <path class="ln" d="M374 144 H523" style="stroke-width:1"/>
-      <path class="ln" d="M430 177 L478 172" marker-end="url(#ah)"/>
+      <path class="ln" d="M 430 177 L 476.8 172.13" marker-end="url(#ah)"/>
       <text class="t3 tc" x="455" y="164">theo dõi</text>
-      <path class="ln" d="M406 200 L401 242" marker-end="url(#ah)"/>
+      <path class="ln" d="M 406.05 199.61 L 401.15 240.74" marker-end="url(#ah)"/>
       <text class="t3 te" x="398" y="224">đặt</text>
-      <path class="ln" d="M424 195 L476 247" marker-end="url(#ah)"/>
+      <path class="ln" d="M 423.63 194.63 L 475.45 246.45" marker-end="url(#ah)"/>
       <text class="t3" x="458" y="214">đặt</text>
       <circle class="bxa" cx="410" cy="180" r="20"/>
       <text class="tc tb" x="410" y="185">An</text>
@@ -1985,10 +1985,10 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
           <rect class="bx" x="580" y="36" width="130" height="50" rx="8"/>
           <text class="tc tb" x="645" y="57">CSDL quan hệ</text>
           <text class="t3 tc" x="645" y="74">bảng</text>
-          <path class="ln" d="M160 50 H286" marker-end="url(#ah)"/><text class="tm tc" x="225" y="44">T1</text>
-          <path class="ln" d="M290 72 H164" marker-end="url(#ah)"/><text class="tm tc" x="225" y="88">T4</text>
-          <path class="ln" d="M450 50 H576" marker-end="url(#ah)"/><text class="tm tc" x="515" y="44">T2</text>
-          <path class="ln" d="M580 72 H454" marker-end="url(#ah)"/><text class="tm tc" x="515" y="88">T3</text>
+          <path class="ln" d="M 160 50 H 286.7" marker-end="url(#ah)"/><text class="tm tc" x="225" y="44">T1</text>
+          <path class="ln" d="M 290 72 H 163.3" marker-end="url(#ah)"/><text class="tm tc" x="225" y="88">T4</text>
+          <path class="ln" d="M 450 50 H 576.7" marker-end="url(#ah)"/><text class="tm tc" x="515" y="44">T2</text>
+          <path class="ln" d="M 580 72 H 453.3" marker-end="url(#ah)"/><text class="tm tc" x="515" y="88">T3</text>
           <text class="t3 tc" x="225" y="106">HTML ↔ đối tượng</text>
           <text class="t3 tc" x="515" y="106">đối tượng ↔ hàng (xé ra, ráp lại)</text>
           <text class="t3" x="20" y="138">Document: ứng dụng và CSDL cùng giữ một tài liệu</text>
@@ -1998,7 +1998,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
           <rect class="bxa" x="430" y="150" width="280" height="46" rx="8"/>
           <text class="tc tb" x="570" y="170">CSDL document</text>
           <text class="t3 tc" x="570" y="187">lưu nguyên tài liệu</text>
-          <path class="lna" d="M304 178 H426" marker-start="url(#ah-store)" marker-end="url(#ah-store)"/>
+          <path class="lna" d="M 303.3 178 H 426.7" marker-start="url(#ah-store)" marker-end="url(#ah-store)"/>
           <text class="t3 tc" x="365" y="168">không xé, không ráp</text>
         </svg></div>
         <figcaption>Thêm một web service ở giữa là thêm T5, T6 (đối tượng ↔ XML). ORM thành một trong những phần phức tạp nhất của ứng dụng.</figcaption>
@@ -2021,8 +2021,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <div class="canvas"><svg class="dg" viewBox="0 0 720 262" role="img" aria-label="Kiến trúc MongoDB: ứng dụng gọi router mongos, mongos hỏi config server rồi chuyển yêu cầu tới ba shard, mỗi shard là một replica set gồm một bản chính và hai bản phụ">
           <rect class="bx" x="290" y="10" width="140" height="36" rx="8"/>
           <text class="tc" x="360" y="33">Ứng dụng (driver)</text>
-          <path class="ln" d="M330 46 L280 76" marker-end="url(#ah)"/>
-          <path class="ln" d="M390 46 L440 76" marker-end="url(#ah)"/>
+          <path class="ln" d="M 330 46 L 279.5 76.3" marker-end="url(#ah)"/>
+          <path class="ln" d="M 390 46 L 440.5 76.3" marker-end="url(#ah)"/>
           <rect class="bxa" x="200" y="78" width="130" height="36" rx="8"/>
           <text class="tc" x="265" y="101">mongos (router)</text>
           <rect class="bxa" x="390" y="78" width="130" height="36" rx="8"/>
@@ -2031,11 +2031,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
           <text class="tc tb" x="640" y="90">Config servers</text>
           <text class="t3 tc" x="640" y="106">metadata: chunk nào</text>
           <text class="t3 tc" x="640" y="120">nằm ở shard nào</text>
-          <path class="ln dash" d="M520 96 H566" marker-end="url(#ah)"/>
+          <path class="ln dash" d="M 520 96 H 566.7" marker-end="url(#ah)"/>
           <path class="ln" d="M265 114 V140 M455 114 V140 M120 140 H600"/>
-          <path class="ln" d="M120 140 V156" marker-end="url(#ah)"/>
-          <path class="ln" d="M360 140 V156" marker-end="url(#ah)"/>
-          <path class="ln" d="M600 140 V156" marker-end="url(#ah)"/>
+          <path class="ln" d="M 120 140 V 156.7" marker-end="url(#ah)"/>
+          <path class="ln" d="M 360 140 V 156.7" marker-end="url(#ah)"/>
+          <path class="ln" d="M 600 140 V 156.7" marker-end="url(#ah)"/>
           <g>
             <rect class="grpa" x="10" y="160" width="220" height="90" rx="8"/>
             <text class="t3" x="22" y="178">Shard 1 · replica set</text>
@@ -2139,21 +2139,21 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bxa" x="20" y="148" width="90" height="24" rx="4"/><text class="t2 tc" x="65" y="165">chunk 5</text>
       <rect class="bx2" x="20" y="176" width="90" height="24" rx="4"/><text class="t2 tc" x="65" y="193">chunk 6</text>
       <text class="t3 tc" x="65" y="220">file lớn</text>
-      <path class="ln" d="M110 48 L196 58" marker-end="url(#ah)"/>
-      <path class="ln" d="M110 76 L196 74" marker-end="url(#ah)"/>
-      <path class="ln" d="M110 104 L196 122" marker-end="url(#ah)"/>
-      <path class="ln" d="M110 132 L196 138" marker-end="url(#ah)"/>
-      <path class="ln" d="M110 160 L196 186" marker-end="url(#ah)"/>
-      <path class="ln" d="M110 188 L196 202" marker-end="url(#ah)"/>
+      <path class="ln" d="M 110 48 L 196.72 58.08" marker-end="url(#ah)"/>
+      <path class="ln" d="M 110 76 L 196.7 73.98" marker-end="url(#ah)"/>
+      <path class="ln" d="M 110 104 L 196.77 122.16" marker-end="url(#ah)"/>
+      <path class="ln" d="M 110 132 L 196.71 138.05" marker-end="url(#ah)"/>
+      <path class="ln" d="M 110 160 L 196.84 186.25" marker-end="url(#ah)"/>
+      <path class="ln" d="M 110 188 L 196.74 202.12" marker-end="url(#ah)"/>
       <rect class="bx" x="200" y="40" width="140" height="52" rx="8"/><text class="tb tc" x="270" y="61">Máy 1</text><text class="t2 tc" x="270" y="80">chunk 1, 2</text>
       <rect class="bx" x="200" y="104" width="140" height="52" rx="8"/><text class="tb tc" x="270" y="125">Máy 2</text><text class="t2 tc" x="270" y="144">chunk 3, 4</text>
       <rect class="bx" x="200" y="168" width="140" height="52" rx="8"/><text class="tb tc" x="270" y="189">Máy 3</text><text class="t2 tc" x="270" y="208">chunk 5, 6</text>
       <path class="ln dash" d="M370 14 V222" style="stroke-width:1"/>
       <text class="t3" x="390" y="22">Replication: nhân bản</text>
       <rect class="bxh" x="400" y="100" width="120" height="50" rx="8"/><text class="ton tb tc" x="460" y="130">Máy chính</text>
-      <path class="lna" d="M520 116 L596 64" marker-end="url(#ah-store)"/>
-      <path class="lna" d="M520 125 H596" marker-end="url(#ah-store)"/>
-      <path class="lna" d="M520 134 L596 186" marker-end="url(#ah-store)"/>
+      <path class="lna" d="M 520 116 L 597.28 63.13" marker-end="url(#ah-store)"/>
+      <path class="lna" d="M 520 125 H 596.7" marker-end="url(#ah-store)"/>
+      <path class="lna" d="M 520 134 L 597.28 186.87" marker-end="url(#ah-store)"/>
       <rect class="bxa" x="600" y="40" width="110" height="40" rx="8"/><text class="tc" x="655" y="65">Bản sao 1</text>
       <rect class="bxa" x="600" y="105" width="110" height="40" rx="8"/><text class="tc" x="655" y="130">Bản sao 2</text>
       <rect class="bxa" x="600" y="170" width="110" height="40" rx="8"/><text class="tc" x="655" y="195">Bản sao 3</text>
@@ -2168,15 +2168,15 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <div class="canvas"><svg class="dg" viewBox="0 0 720 190" role="img" aria-label="Bản sao 1 cộng 1000 rồi tính lãi 5 phần trăm được 2100; bản sao 2 tính lãi trước rồi cộng 1000 được 2050; hai bản lệch nhau">
       <text class="tb" x="20" y="72">Bản sao 1</text><text class="t3" x="20" y="88">E1 rồi E2</text>
       <rect class="bx" x="170" y="55" width="90" height="40" rx="8"/><text class="tm tc" x="215" y="80">Bal=1000</text>
-      <path class="ln" d="M260 75 H356" marker-end="url(#ah)"/><text class="t2 tc" x="308" y="68">E1: +1000</text>
+      <path class="ln" d="M 260 75 H 356.7" marker-end="url(#ah)"/><text class="t2 tc" x="308" y="68">E1: +1000</text>
       <rect class="bx" x="360" y="55" width="90" height="40" rx="8"/><text class="tm tc" x="405" y="80">Bal=2000</text>
-      <path class="ln" d="M450 75 H546" marker-end="url(#ah)"/><text class="t2 tc" x="498" y="68">E2: ×1,05</text>
+      <path class="ln" d="M 450 75 H 546.7" marker-end="url(#ah)"/><text class="t2 tc" x="498" y="68">E2: ×1,05</text>
       <rect class="bxa" x="550" y="55" width="90" height="40" rx="8"/><text class="tm tc tb" x="595" y="80">Bal=2100</text>
       <text class="tb" x="20" y="152">Bản sao 2</text><text class="t3" x="20" y="168">E2 rồi E1</text>
       <rect class="bx" x="170" y="135" width="90" height="40" rx="8"/><text class="tm tc" x="215" y="160">Bal=1000</text>
-      <path class="ln" d="M260 155 H356" marker-end="url(#ah)"/><text class="t2 tc" x="308" y="148">E2: ×1,05</text>
+      <path class="ln" d="M 260 155 H 356.7" marker-end="url(#ah)"/><text class="t2 tc" x="308" y="148">E2: ×1,05</text>
       <rect class="bx" x="360" y="135" width="90" height="40" rx="8"/><text class="tm tc" x="405" y="160">Bal=1050</text>
-      <path class="ln" d="M450 155 H546" marker-end="url(#ah)"/><text class="t2 tc" x="498" y="148">E1: +1000</text>
+      <path class="ln" d="M 450 155 H 546.7" marker-end="url(#ah)"/><text class="t2 tc" x="498" y="148">E1: +1000</text>
       <rect class="bxa" x="550" y="135" width="90" height="40" rx="8"/><text class="tm tc tb" x="595" y="160">Bal=2050</text>
       <text class="tl fbad tc" x="595" y="122">≠</text>
       <text class="t2" x="652" y="122">lệch 50</text>
@@ -2204,20 +2204,20 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <path class="lnb" d="M352 120 L368 133 L352 146 L368 159 L352 172"/>
         <text class="t2 fbad tc" x="360" y="106">mạng đứt</text>
       </g>
-      <g data-s="3"><path class="lna" d="M220 50 V106" marker-end="url(#ah-store)"/><text class="t2" x="228" y="84">ghi x = v1</text></g>
-      <g data-s="4"><path class="ln" d="M490 50 V106" marker-end="url(#ah)"/><text class="t2 te" x="482" y="84">đọc x</text></g>
+      <g data-s="3"><path class="lna" d="M 220 50 V 106.7" marker-end="url(#ah-store)"/><text class="t2" x="228" y="84">ghi x = v1</text></g>
+      <g data-s="4"><path class="ln" d="M 490 50 V 106.7" marker-end="url(#ah)"/><text class="t2 te" x="482" y="84">đọc x</text></g>
       <g data-only="5">
-        <path class="lnb" d="M530 110 V54" marker-end="url(#ah-bad)"/><text class="t2 fbad" x="540" y="84">trả v0 (cũ)</text>
+        <path class="lnb" d="M 530 110 V 53.3" marker-end="url(#ah-bad)"/><text class="t2 fbad" x="540" y="84">trả v0 (cũ)</text>
         <rect class="lnb" x="440" y="196" width="120" height="30" rx="8"/><text class="fbad tb tc" x="500" y="216">mất C</text>
       </g>
       <g data-only="6">
-        <path class="ln dash" d="M530 110 V54" marker-end="url(#ah)"/><text class="t2" x="540" y="84">chờ… rồi báo lỗi</text>
+        <path class="ln dash" d="M 530 110 V 53.3" marker-end="url(#ah)"/><text class="t2" x="540" y="84">chờ… rồi báo lỗi</text>
         <rect class="lnb" x="440" y="196" width="120" height="30" rx="8"/><text class="fbad tb tc" x="500" y="216">mất A</text>
       </g>
       <g data-only="7">
-        <path class="lna" d="M290 145 H426" marker-end="url(#ah-store)"/><text class="t2 ta tc" x="360" y="138">chép v1</text>
+        <path class="lna" d="M 290 145 H 426.7" marker-end="url(#ah-store)"/><text class="t2 ta tc" x="360" y="138">chép v1</text>
         <text class="tm tc tb ta" x="500" y="160">x = v1</text>
-        <path class="lna" d="M530 110 V54" marker-end="url(#ah-store)"/><text class="t2 ta" x="540" y="84">trả v1</text>
+        <path class="lna" d="M 530 110 V 53.3" marker-end="url(#ah-store)"/><text class="t2 ta" x="540" y="84">trả v1</text>
         <text class="t2 tc" x="360" y="216">C và A cùng có — chỉ vì mạng không đứt</text>
       </g>
     </svg></div>
@@ -2254,7 +2254,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <figure class="fig" id="b4-2-ec">
     <div class="canvas"><svg class="dg" viewBox="0 0 720 250" role="img" aria-label="Bốn bản sao R1 đến R4. Bản cập nhật A phẩy tới R1 lúc t0 rồi lan dần tới R2, R3, R4; từ t3 mọi bản giống nhau. Client đọc ở R4 trước t3 nhận bản cũ; giao thức đọc-bản-mình-ghi chuyển việc đọc sang R1">
       <text class="t2 tc" x="180" y="22">client ghi A′</text>
-      <path class="lna" d="M180 28 V46" marker-end="url(#ah-store)"/>
+      <path class="lna" d="M 180 28 V 45.7" marker-end="url(#ah-store)"/>
       <text class="tb" x="20" y="64">R1</text><text class="tb" x="20" y="109">R2</text><text class="tb" x="20" y="154">R3</text><text class="tb" x="20" y="199">R4</text>
       <rect class="bx2" x="90" y="49" width="90" height="22" rx="4"/><rect class="bxa" x="180" y="49" width="520" height="22" rx="4"/>
       <rect class="bx2" x="90" y="94" width="210" height="22" rx="4"/><rect class="bxa" x="300" y="94" width="400" height="22" rx="4"/>
@@ -2264,9 +2264,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text class="t2" x="100" y="109">A</text><text class="ta tb te" x="690" y="109">A′</text>
       <text class="t2" x="100" y="154">A</text><text class="ta tb te" x="690" y="154">A′</text>
       <text class="t2" x="100" y="199">A</text><text class="ta tb te" x="690" y="199">A′</text>
-      <path class="ln dash" d="M182 71 L298 94" marker-end="url(#ah)"/>
-      <path class="ln dash" d="M182 71 L418 139" marker-end="url(#ah)"/>
-      <path class="ln dash" d="M182 71 L518 184" marker-end="url(#ah)"/>
+      <path class="ln dash" d="M 182 71 L 294.76 93.36" marker-end="url(#ah)"/>
+      <path class="ln dash" d="M 182 71 L 414.83 138.09" marker-end="url(#ah)"/>
+      <path class="ln dash" d="M 182 71 L 514.87 182.95" marker-end="url(#ah)"/>
       <path class="ln dash" d="M520 40 V212" style="stroke-width:1"/>
       <text class="t2 ta" x="530" y="40">từ t3: mọi bản = A′</text>
       <circle class="fbad" cx="400" cy="195" r="6"/>
@@ -2324,46 +2324,46 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
 
       <rect class="bx2" x="10" y="40" width="200" height="48" rx="8"/>
       <text class="tb tc" x="110" y="61">Chia dữ liệu</text><text class="t3 tc" x="110" y="78">partitioning</text>
-      <path class="ln" d="M210 64 H246" marker-end="url(#ah)"/>
+      <path class="ln" d="M 210 64 H 246.7" marker-end="url(#ah)"/>
       <a href="#b4-3-ring"><rect class="bxa" x="250" y="40" width="230" height="48" rx="8"/>
       <text class="tb tc" x="365" y="61">Băm nhất quán</text><text class="t3 tc" x="365" y="78">consistent hashing, virtual node</text></a>
-      <path class="lna" d="M480 64 H516" marker-end="url(#ah-store)"/>
+      <path class="lna" d="M 480 64 H 516.7" marker-end="url(#ah-store)"/>
       <rect class="bx" x="520" y="40" width="190" height="48" rx="8"/>
       <text class="t2 tc" x="615" y="60">Mở rộng dần:</text><text class="t2 tc" x="615" y="77">thêm từng máy một</text>
 
       <rect class="bx2" x="10" y="98" width="200" height="48" rx="8"/>
       <text class="tb tc" x="110" y="119">Ghi luôn được</text><text class="t3 tc" x="110" y="136">high availability for writes</text>
-      <path class="ln" d="M210 122 H246" marker-end="url(#ah)"/>
+      <path class="ln" d="M 210 122 H 246.7" marker-end="url(#ah)"/>
       <a href="#b4-3-vc"><rect class="bxa" x="250" y="98" width="230" height="48" rx="8"/>
       <text class="tb tc" x="365" y="119">Vector clock</text><text class="t3 tc" x="365" y="136">hoà giải xung đột khi đọc</text></a>
-      <path class="lna" d="M480 122 H516" marker-end="url(#ah-store)"/>
+      <path class="lna" d="M 480 122 H 516.7" marker-end="url(#ah-store)"/>
       <rect class="bx" x="520" y="98" width="190" height="48" rx="8"/>
       <text class="t2 tc" x="615" y="118">Kích thước phiên bản</text><text class="t2 tc" x="615" y="135">tách khỏi tốc độ cập nhật</text>
 
       <rect class="bx2" x="10" y="156" width="200" height="48" rx="8"/>
       <text class="tb tc" x="110" y="177">Lỗi tạm thời</text><text class="t3 tc" x="110" y="194">temporary failures</text>
-      <path class="ln" d="M210 180 H246" marker-end="url(#ah)"/>
+      <path class="ln" d="M 210 180 H 246.7" marker-end="url(#ah)"/>
       <a href="#b4-3-sloppy"><rect class="bxa" x="250" y="156" width="230" height="48" rx="8"/>
       <text class="tb tc" x="365" y="177">Sloppy quorum</text><text class="t3 tc" x="365" y="194">+ hinted handoff</text></a>
-      <path class="lna" d="M480 180 H516" marker-end="url(#ah-store)"/>
+      <path class="lna" d="M 480 180 H 516.7" marker-end="url(#ah-store)"/>
       <rect class="bx" x="520" y="156" width="190" height="48" rx="8"/>
       <text class="t2 tc" x="615" y="176">Vẫn sẵn sàng và bền khi</text><text class="t2 tc" x="615" y="193">vài bản sao vắng mặt</text>
 
       <rect class="bx2" x="10" y="214" width="200" height="48" rx="8"/>
       <text class="tb tc" x="110" y="235">Lỗi vĩnh viễn</text><text class="t3 tc" x="110" y="252">permanent failures</text>
-      <path class="ln" d="M210 238 H246" marker-end="url(#ah)"/>
+      <path class="ln" d="M 210 238 H 246.7" marker-end="url(#ah)"/>
       <a href="#b4-3-merkle"><rect class="bxa" x="250" y="214" width="230" height="48" rx="8"/>
       <text class="tb tc" x="365" y="235">Anti-entropy</text><text class="t3 tc" x="365" y="252">so khớp bằng Merkle tree</text></a>
-      <path class="lna" d="M480 238 H516" marker-end="url(#ah-store)"/>
+      <path class="lna" d="M 480 238 H 516.7" marker-end="url(#ah-store)"/>
       <rect class="bx" x="520" y="214" width="190" height="48" rx="8"/>
       <text class="t2 tc" x="615" y="234">Đồng bộ bản sao lệch</text><text class="t2 tc" x="615" y="251">ở chế độ nền</text>
 
       <rect class="bx2" x="10" y="272" width="200" height="48" rx="8"/>
       <text class="tb tc" x="110" y="293">Thành viên, phát hiện lỗi</text><text class="t3 tc" x="110" y="310">membership &amp; failure detection</text>
-      <path class="ln" d="M210 296 H246" marker-end="url(#ah)"/>
+      <path class="ln" d="M 210 296 H 246.7" marker-end="url(#ah)"/>
       <a href="#b4-3-gossip"><rect class="bxa" x="250" y="272" width="230" height="48" rx="8"/>
       <text class="tb tc" x="365" y="293">Gossip</text><text class="t3 tc" x="365" y="310">lan truyền thành viên, phát hiện lỗi</text></a>
-      <path class="lna" d="M480 296 H516" marker-end="url(#ah-store)"/>
+      <path class="lna" d="M 480 296 H 516.7" marker-end="url(#ah-store)"/>
       <rect class="bx" x="520" y="272" width="190" height="48" rx="8"/>
       <text class="t2 tc" x="615" y="292">Đối xứng, không cần</text><text class="t2 tc" x="615" y="309">registry trung tâm</text>
     </svg></div>
@@ -2491,8 +2491,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <div class="canvas"><svg class="dg" viewBox="0 0 720 222" role="img" aria-label="N bằng 3, preference list của K là B, C, D. B tạm sập nên bản sao gửi sang E kèm gợi ý thuộc về B; khi B sống lại E gửi trả và xoá bản của mình">
       <text class="t2" x="20" y="24">N = 3 · preference list của K = [B, C, D]</text>
       <rect class="bx" x="300" y="36" width="130" height="30" rx="8"/><text class="tc" x="365" y="56">① lần ghi K</text>
-      <path class="lnb dash" d="M310 66 L236 90" marker-end="url(#ah-bad)"/>
-      <path class="lna" d="M360 66 V88" marker-end="url(#ah-store)"/>
+      <path class="lnb dash" d="M 310 66 L 232.97 90.98" marker-end="url(#ah-bad)"/>
+      <path class="lna" d="M 360 66 V 88.7" marker-end="url(#ah-store)"/>
       <path class="lna" d="M395 66 L490 88" marker-end="url(#ah-store)"/>
       <path class="lna" d="M430 58 L626 88" marker-end="url(#ah-store)"/>
       <path class="ln" d="M20 120 H704" marker-end="url(#ah)"/>
@@ -2503,7 +2503,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bxa" x="310" y="92" width="100" height="56" rx="8"/><text class="tb tc" x="360" y="114">C</text><text class="t3 tc" x="360" y="134">bản sao</text>
       <rect class="bxa" x="450" y="92" width="100" height="56" rx="8"/><text class="tb tc" x="500" y="114">D</text><text class="t3 tc" x="500" y="134">bản sao</text>
       <rect class="bxa" x="590" y="92" width="100" height="56" rx="8"/><text class="tb tc" x="640" y="114">E</text><text class="t3 tc" x="640" y="134">gợi ý: của B</text>
-      <path class="lna dash" d="M640 148 V186 H220 V152" marker-end="url(#ah-store)"/>
+      <path class="lna dash" d="M 640 148 V 186 H 220 V 151.3" marker-end="url(#ah-store)"/>
       <text class="t2 ta tc" x="430" y="208">② B sống lại → E gửi trả bản sao, rồi xoá bản của mình</text>
     </svg></div>
     <figcaption>Quorum “lỏng”: W bản được tính trên N node khoẻ đầu tiên đi theo vòng, không nhất thiết đúng N node trong preference list. Nhờ vậy vẫn “always writeable” khi một node vắng mặt.</figcaption>
@@ -2547,7 +2547,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <text class="tb tc" x="80" y="127">D1</text><text class="tm tc" x="80" y="145">[Sx,1]</text>
       </g>
       <g data-s="2">
-        <path class="ln" d="M140 130 H186" marker-end="url(#ah)"/><text class="t3 tc" x="163" y="122">Sx</text>
+        <path class="ln" d="M 140 130 H 186.7" marker-end="url(#ah)"/><text class="t3 tc" x="163" y="122">Sx</text>
         <rect class="bxa" x="190" y="105" width="120" height="50" rx="8"/>
         <text class="tb tc" x="250" y="127">D2</text><text class="tm tc" x="250" y="145">[Sx,2]</text>
       </g>
@@ -2555,10 +2555,10 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <text class="t2 ta tb tc" x="450" y="132">song song: xung đột</text>
         <text class="t2 tc" x="450" y="264">get() trả cả D3 lẫn D4</text></g>
       <g data-s="3">
-        <path class="ln" d="M310 118 L366 62" marker-end="url(#ah)"/><text class="t3 te" x="306" y="84">qua Sy</text>
+        <path class="ln" d="M 310 118 L 367.67 60.33" marker-end="url(#ah)"/><text class="t3 te" x="306" y="84">qua Sy</text>
         <rect class="bxa" x="370" y="30" width="160" height="50" rx="8"/>
         <text class="tb tc" x="450" y="52">D3</text><text class="tm tc" x="450" y="70">[Sx,2],[Sy,1]</text>
-        <path class="ln" d="M310 142 L366 198" marker-end="url(#ah)"/><text class="t3 te" x="306" y="186">qua Sz</text>
+        <path class="ln" d="M 310 142 L 367.67 199.67" marker-end="url(#ah)"/><text class="t3 te" x="306" y="186">qua Sz</text>
         <rect class="bxa" x="370" y="180" width="160" height="50" rx="8"/>
         <text class="tb tc" x="450" y="202">D4</text><text class="tm tc" x="450" y="220">[Sx,2],[Sz,1]</text>
       </g>
@@ -2671,7 +2671,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx" x="20" y="14" width="200" height="46" rx="8"/>
       <text class="tb tc" x="120" y="34">Client</text>
       <text class="t3 tc" x="120" y="51">CLI · JDBC/ODBC · BI tool</text>
-      <path class="lna" d="M220 37 H276" marker-end="url(#ah-query)"/>
+      <path class="lna" d="M 220 37 H 276.7" marker-end="url(#ah-query)"/>
       <text class="t3 tc" x="248" y="30">SQL</text>
       <rect class="bxh" x="280" y="14" width="240" height="78" rx="10"/>
       <text class="ton tl tc" x="400" y="40">Coordinator</text>
@@ -2680,11 +2680,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx2" x="570" y="24" width="140" height="48" rx="8"/>
       <text class="tb tc" x="640" y="44">Discovery</text>
       <text class="t3 tc" x="640" y="62">service</text>
-      <path class="ln dash" d="M570 48 H524" marker-end="url(#ah)"/>
-      <path class="ln dash" d="M630 140 V76" marker-end="url(#ah)"/>
+      <path class="ln dash" d="M 570 48 H 523.3" marker-end="url(#ah)"/>
+      <path class="ln dash" d="M 630 140 V 75.3" marker-end="url(#ah)"/>
       <text class="t3" x="636" y="112">đăng ký</text>
       <path class="lna" d="M340 92 L236 136" marker-end="url(#ah-query)"/>
-      <path class="lna" d="M400 92 V136" marker-end="url(#ah-query)"/>
+      <path class="lna" d="M 400 92 V 136.7" marker-end="url(#ah-query)"/>
       <path class="lna" d="M460 92 L564 136" marker-end="url(#ah-query)"/>
       <rect class="bxa" x="155" y="140" width="150" height="56" rx="8"/>
       <text class="tb tc" x="230" y="163">Worker</text><text class="t3 tc" x="230" y="182">task chạy trong RAM</text>
@@ -2692,16 +2692,16 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text class="tb tc" x="400" y="163">Worker</text><text class="t3 tc" x="400" y="182">task chạy trong RAM</text>
       <rect class="bxa" x="495" y="140" width="150" height="56" rx="8"/>
       <text class="tb tc" x="570" y="163">Worker</text><text class="t3 tc" x="570" y="182">task chạy trong RAM</text>
-      <path class="ln dash" d="M280 80 H90 V208" marker-end="url(#ah)"/>
+      <path class="ln dash" d="M 280 80 H 90 V 208.7" marker-end="url(#ah)"/>
       <text class="t3 te" x="84" y="140">metadata,</text>
       <text class="t3 te" x="84" y="156">vị trí split</text>
       <path class="ln" d="M230 196 V212 M400 196 V212 M570 196 V212"/>
       <rect class="grpa" x="40" y="212" width="660" height="28" rx="6"/>
       <text class="t2 ta tc" x="370" y="231">Connector API: metadata · data location · data source · data sink</text>
-      <path class="ln" d="M130 262 V244" marker-end="url(#ah)"/>
-      <path class="ln" d="M290 262 V244" marker-end="url(#ah)"/>
-      <path class="ln" d="M450 262 V244" marker-end="url(#ah)"/>
-      <path class="ln" d="M610 262 V244" marker-end="url(#ah)"/>
+      <path class="ln" d="M 130 262 V 243.3" marker-end="url(#ah)"/>
+      <path class="ln" d="M 290 262 V 243.3" marker-end="url(#ah)"/>
+      <path class="ln" d="M 450 262 V 243.3" marker-end="url(#ah)"/>
+      <path class="ln" d="M 610 262 V 243.3" marker-end="url(#ah)"/>
       <g class="c-store">
         <rect class="bxa" x="60" y="262" width="140" height="44" rx="8"/><text class="tb tc" x="130" y="289">Hive · HDFS</text>
         <rect class="bxa" x="220" y="262" width="140" height="44" rx="8"/><text class="tb tc" x="290" y="289">Cassandra</text>
@@ -2735,22 +2735,22 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <div class="canvas"><svg class="dg" viewBox="0 0 720 226" role="img" aria-label="Trước Presto: dữ liệu MySQL, Cassandra phải chép vào HDFS, Hive chạy batch rồi chép kết quả sang CSDL tương tác cho dashboard. Với Presto: dashboard gửi SQL tới Presto, Presto đọc thẳng HDFS, MySQL, Cassandra">
       <text class="t3" x="20" y="20">Trước: chép qua chép lại</text>
       <g class="c-store"><rect class="bxa" x="20" y="40" width="100" height="40" rx="8"/><text class="tc" x="70" y="58">MySQL,</text><text class="t3 tc" x="70" y="73">Cassandra</text></g>
-      <path class="ln" d="M120 60 H146" marker-end="url(#ah)"/><text class="t3 tc" x="133" y="50">chép</text>
+      <path class="ln" d="M 120 60 H 146.7" marker-end="url(#ah)"/><text class="t3 tc" x="133" y="50">chép</text>
       <g class="c-store"><rect class="bxa" x="150" y="40" width="80" height="40" rx="8"/><text class="tb tc" x="190" y="65">HDFS</text></g>
-      <path class="ln" d="M230 60 H256" marker-end="url(#ah)"/>
+      <path class="ln" d="M 230 60 H 256.7" marker-end="url(#ah)"/>
       <rect class="bx" x="260" y="40" width="85" height="40" rx="8"/><text class="tb tc" x="302" y="58">Hive</text><text class="t3 tc" x="302" y="73">chậm</text>
-      <path class="ln" d="M302 80 V126" marker-end="url(#ah)"/><text class="t3 te" x="296" y="108">kết quả theo ngày</text>
+      <path class="ln" d="M 302 80 V 126.7" marker-end="url(#ah)"/><text class="t3 te" x="296" y="108">kết quả theo ngày</text>
       <g class="c-store"><rect class="bxa" x="150" y="130" width="195" height="40" rx="8"/><text class="tb tc" x="247" y="148">CSDL tương tác</text><text class="t3 tc" x="247" y="163">PostgreSQL, Redshift: đắt</text></g>
-      <path class="ln" d="M150 150 H124" marker-end="url(#ah)"/>
+      <path class="ln" d="M 150 150 H 123.3" marker-end="url(#ah)"/>
       <rect class="bx" x="20" y="130" width="100" height="40" rx="8"/><text class="tc" x="70" y="148">Dashboard</text><text class="t3 tc" x="70" y="163">BI tool</text>
       <text class="t3 tc" x="180" y="204">dữ liệu nằm ba nơi, chép ở hai chỗ</text>
       <path class="ln dash" d="M360 12 V214" style="stroke-width:1"/>
       <text class="t3" x="380" y="20">Với Presto: hỏi thẳng nơi dữ liệu nằm</text>
       <rect class="bx" x="460" y="34" width="160" height="38" rx="8"/><text class="tc" x="540" y="58">Dashboard · BI tool</text>
-      <path class="lna" d="M540 72 V96" marker-end="url(#ah-query)"/>
+      <path class="lna" d="M 540 72 V 96.7" marker-end="url(#ah-query)"/>
       <rect class="bxh" x="460" y="100" width="160" height="40" rx="8"/><text class="ton tb tc" x="540" y="125">Presto</text>
       <path class="lna" d="M500 140 L436 166" marker-end="url(#ah-query)"/>
-      <path class="lna" d="M540 140 V166" marker-end="url(#ah-query)"/>
+      <path class="lna" d="M 540 140 V 166.7" marker-end="url(#ah-query)"/>
       <path class="lna" d="M580 140 L644 166" marker-end="url(#ah-query)"/>
       <g class="c-store">
         <rect class="bxa" x="380" y="170" width="100" height="36" rx="8"/><text class="tc" x="430" y="193">HDFS · Hive</text>
@@ -2804,8 +2804,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx" x="20" y="58" width="140" height="36" rx="8"/><text class="tc" x="90" y="81">Output</text>
       <rect class="bx" x="20" y="138" width="140" height="42" rx="8"/><text class="tc" x="90" y="156">Aggregate</text><text class="t3 tc" x="90" y="172">SUM theo status</text>
       <rect class="bx" x="20" y="222" width="140" height="36" rx="8"/><text class="tc" x="90" y="245">Scan orders</text>
-      <path class="ln" d="M90 222 V184" marker-end="url(#ah)"/>
-      <path class="ln" d="M90 138 V98" marker-end="url(#ah)"/>
+      <path class="ln" d="M 90 222 V 183.3" marker-end="url(#ah)"/>
+      <path class="ln" d="M 90 138 V 97.3" marker-end="url(#ah)"/>
       <g data-s="2">
         <rect class="grpa" x="220" y="50" width="490" height="62" rx="8"/>
         <text class="tb" x="232" y="78">Stage 0</text><text class="t3" x="232" y="96">trả kết quả</text>
@@ -2813,9 +2813,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <text class="tb" x="232" y="160">Stage 1</text><text class="t3" x="232" y="178">gộp cuối</text>
         <rect class="grpa" x="220" y="214" width="490" height="62" rx="8"/>
         <text class="tb" x="232" y="242">Stage 2 · lá</text><text class="t3" x="232" y="260">quét + gộp sơ bộ</text>
-        <path class="ln dash" d="M160 76 L216 81" marker-end="url(#ah)"/>
-        <path class="ln dash" d="M160 159 L216 163" marker-end="url(#ah)"/>
-        <path class="ln dash" d="M160 240 L216 245" marker-end="url(#ah)"/>
+        <path class="ln dash" d="M 160 76 L 216.71 81.06" marker-end="url(#ah)"/>
+        <path class="ln dash" d="M 160 159 L 216.71 163.05" marker-end="url(#ah)"/>
+        <path class="ln dash" d="M 160 240 L 216.71 245.06" marker-end="url(#ah)"/>
       </g>
       <g data-s="3">
         <rect class="bxa" x="500" y="62" width="100" height="38" rx="6"/><text class="tc" x="550" y="86">task · w3</text>
@@ -2828,24 +2828,24 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <g data-s="4">
         <rect class="bx2" x="364" y="288" width="44" height="20" rx="4"/><text class="t3 tc" x="386" y="302">split</text>
         <rect class="bx2" x="412" y="288" width="44" height="20" rx="4"/><text class="t3 tc" x="434" y="302">split</text>
-        <path class="ln" d="M410 286 V268" marker-end="url(#ah)"/>
+        <path class="ln" d="M 410 286 V 267.3" marker-end="url(#ah)"/>
         <rect class="bx2" x="484" y="288" width="44" height="20" rx="4"/><text class="t3 tc" x="506" y="302">split</text>
         <rect class="bx2" x="532" y="288" width="44" height="20" rx="4"/><text class="t3 tc" x="554" y="302">split</text>
-        <path class="ln" d="M530 286 V268" marker-end="url(#ah)"/>
+        <path class="ln" d="M 530 286 V 267.3" marker-end="url(#ah)"/>
         <rect class="bx2" x="604" y="288" width="44" height="20" rx="4"/><text class="t3 tc" x="626" y="302">split</text>
         <rect class="bx2" x="652" y="288" width="44" height="20" rx="4"/><text class="t3 tc" x="674" y="302">split</text>
-        <path class="ln" d="M650 286 V268" marker-end="url(#ah)"/>
+        <path class="ln" d="M 650 286 V 267.3" marker-end="url(#ah)"/>
         <text class="t3 tc" x="530" y="328">split = đường dẫn file + offset, giao dần cho task</text>
       </g>
       <g data-s="5">
-        <path class="lna" d="M410 226 L466 186" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
+        <path class="lna" d="M 410 226 L 468.91 183.92" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
         <path class="lna" d="M410 226 L626 186" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
-        <path class="lna" d="M530 226 L470 186" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
+        <path class="lna" d="M 530 226 L 466.75 183.83" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
         <path class="lna" d="M530 226 L630 186" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
         <path class="lna" d="M650 226 L474 186" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
-        <path class="lna" d="M650 226 L634 186" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
-        <path class="lna" d="M470 144 L546 104" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
-        <path class="lna" d="M630 144 L554 104" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
+        <path class="lna" d="M 650 226 L 633.63 185.06" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
+        <path class="lna" d="M470 144 L550.68 101.54" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
+        <path class="lna" d="M630 144 L549.32 101.54" marker-end="url(#ah-query)" style="stroke-width:1.5"/>
         <path class="lna" d="M600 81 H690" marker-end="url(#ah-query)"/>
         <text class="t3 tc" x="645" y="74">về client</text>
       </g>
@@ -2973,7 +2973,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         </g>
         <path class="fa" style="opacity:.8" d="M614 166 V108 H609 L617 96 L625 108 H620 V166 Z"/>
         <text class="t2" x="631" y="136">đọc 1/365</text>
-        <path class="ln dash" d="M450 92 V166" marker-end="url(#ah)"/>
+        <path class="ln dash" d="M 450 92 V 166.7" marker-end="url(#ah)"/>
         <text class="t3" x="460" y="124">domain đẩy xuống:</text><text class="tm ta" x="460" y="142">ds ∈ [2019-03-01]</text>
         <path class="ln dash" d="M360 10 V236" style="stroke-width:1"/>
     </svg></div>
@@ -3036,9 +3036,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx" x="10" y="70" width="110" height="34" rx="8"/><text class="tc" x="65" y="92">Producer</text>
       <rect class="bx" x="10" y="140" width="110" height="34" rx="8"/><text class="tc" x="65" y="162">Producer</text>
       <rect class="bx" x="10" y="210" width="110" height="34" rx="8"/><text class="tc" x="65" y="232">Producer</text>
-      <path class="lna" d="M120 87 L161 118" marker-end="url(#ah-ingest)"/>
-      <path class="lna" d="M120 157 H161" marker-end="url(#ah-ingest)"/>
-      <path class="lna" d="M120 227 L161 196" marker-end="url(#ah-ingest)"/>
+      <path class="lna" d="M 120 87 L 162.37 119.03" marker-end="url(#ah-ingest)"/>
+      <path class="lna" d="M 120 157 H 161.7" marker-end="url(#ah-ingest)"/>
+      <path class="lna" d="M 120 227 L 162.37 194.97" marker-end="url(#ah-ingest)"/>
       <rect class="grpa" x="165" y="20" width="360" height="280" rx="10"/>
       <text class="ta tb" x="177" y="40">Kafka cluster · topic orders, 3 partition, RF = 2</text>
       <rect class="bx2" x="175" y="52" width="105" height="188" rx="8"/><text class="tb tc" x="227.5" y="72">Broker 1</text>
@@ -3050,13 +3050,13 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx2" x="410" y="52" width="105" height="188" rx="8"/><text class="tb tc" x="462.5" y="72">Broker 3</text>
       <rect class="bxa" x="420" y="86" width="85" height="50" rx="6"/><text class="tb tc" x="462.5" y="108">P2</text><text class="t3 tc" x="462.5" y="126">leader</text>
       <rect class="bx" x="420" y="152" width="85" height="50" rx="6"/><text class="tb tc" x="462.5" y="174">P1</text><text class="t3 tc" x="462.5" y="192">follower</text>
-      <path class="lna dash" d="M270 120 L300 168" marker-end="url(#ah-ingest)"/>
-      <path class="lna dash" d="M387 120 L417 168" marker-end="url(#ah-ingest)"/>
-      <path class="lna dash" d="M505 120 H517 V222 H227.5 V206" marker-end="url(#ah-ingest)"/>
+      <path class="lna dash" d="M 270 120 L 300.25 168.4" marker-end="url(#ah-ingest)"/>
+      <path class="lna dash" d="M 387 120 L 418.25 170" marker-end="url(#ah-ingest)"/>
+      <path class="lna dash" d="M 505 120 H 517 V 222 H 227.5 V 205.3" marker-end="url(#ah-ingest)"/>
       <rect class="bx" x="175" y="252" width="340" height="36" rx="8"/>
       <text class="t2 tc" x="345" y="275">Controller (ZooKeeper / KRaft): chọn leader</text>
-      <path class="lna" d="M525 95 H546" marker-end="url(#ah-ingest)"/>
-      <path class="lna" d="M525 220 H546" marker-end="url(#ah-ingest)"/>
+      <path class="lna" d="M 525 95 H 546.7" marker-end="url(#ah-ingest)"/>
+      <path class="lna" d="M 525 220 H 546.7" marker-end="url(#ah-ingest)"/>
       <rect class="grpa" x="550" y="30" width="160" height="134" rx="10"/>
       <text class="t3" x="562" y="48">nhóm A · 3 consumer</text>
       <rect class="bxa" x="562" y="58" width="136" height="28" rx="6"/><text class="tm tc" x="630" y="77">C1 ← P0</text>
@@ -3114,22 +3114,22 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx" x="250" y="40" width="100" height="34" rx="8"/><text class="tc" x="300" y="62">Hadoop</text>
       <rect class="bx" x="380" y="40" width="90" height="34" rx="8"/><text class="tc" x="425" y="62">Nguồn 1</text>
       <rect class="bx" x="620" y="40" width="90" height="34" rx="8"/><text class="tc" x="665" y="62">Hadoop</text>
-      <path class="lna" d="M470 57 H511" marker-end="url(#ah-ingest)"/><path class="lna" d="M585 57 H616" marker-end="url(#ah-ingest)"/>
+      <path class="lna" d="M 470 57 H 511.7" marker-end="url(#ah-ingest)"/><path class="lna" d="M 585 57 H 616.7" marker-end="url(#ah-ingest)"/>
       <rect class="bx" x="20" y="92" width="90" height="34" rx="8"/><text class="tc" x="65" y="114">Nguồn 2</text>
       <rect class="bx" x="250" y="92" width="100" height="34" rx="8"/><text class="tc" x="300" y="114">Bảo mật</text>
       <rect class="bx" x="380" y="92" width="90" height="34" rx="8"/><text class="tc" x="425" y="114">Nguồn 2</text>
       <rect class="bx" x="620" y="92" width="90" height="34" rx="8"/><text class="tc" x="665" y="114">Bảo mật</text>
-      <path class="lna" d="M470 109 H511" marker-end="url(#ah-ingest)"/><path class="lna" d="M585 109 H616" marker-end="url(#ah-ingest)"/>
+      <path class="lna" d="M 470 109 H 511.7" marker-end="url(#ah-ingest)"/><path class="lna" d="M 585 109 H 616.7" marker-end="url(#ah-ingest)"/>
       <rect class="bx" x="20" y="144" width="90" height="34" rx="8"/><text class="tc" x="65" y="166">Nguồn 3</text>
       <rect class="bx" x="250" y="144" width="100" height="34" rx="8"/><text class="tc" x="300" y="166">Giám sát</text>
       <rect class="bx" x="380" y="144" width="90" height="34" rx="8"/><text class="tc" x="425" y="166">Nguồn 3</text>
       <rect class="bx" x="620" y="144" width="90" height="34" rx="8"/><text class="tc" x="665" y="166">Giám sát</text>
-      <path class="lna" d="M470 161 H511" marker-end="url(#ah-ingest)"/><path class="lna" d="M585 161 H616" marker-end="url(#ah-ingest)"/>
+      <path class="lna" d="M 470 161 H 511.7" marker-end="url(#ah-ingest)"/><path class="lna" d="M 585 161 H 616.7" marker-end="url(#ah-ingest)"/>
       <rect class="bx" x="20" y="196" width="90" height="34" rx="8"/><text class="tc" x="65" y="218">Nguồn 4</text>
       <rect class="bx" x="250" y="196" width="100" height="34" rx="8"/><text class="tc" x="300" y="218">Kho DL</text>
       <rect class="bx" x="380" y="196" width="90" height="34" rx="8"/><text class="tc" x="425" y="218">Nguồn 4</text>
       <rect class="bx" x="620" y="196" width="90" height="34" rx="8"/><text class="tc" x="665" y="218">Kho DL</text>
-      <path class="lna" d="M470 213 H511" marker-end="url(#ah-ingest)"/><path class="lna" d="M585 213 H616" marker-end="url(#ah-ingest)"/>
+      <path class="lna" d="M 470 213 H 511.7" marker-end="url(#ah-ingest)"/><path class="lna" d="M 585 213 H 616.7" marker-end="url(#ah-ingest)"/>
       <rect class="bxh" x="515" y="40" width="70" height="190" rx="10"/><text class="ton tb tc" x="550" y="140">Kafka</text>
     </svg></div>
     <figcaption>n nguồn và m đích nối thẳng cần n × m đường, mỗi đường một định dạng, một tốc độ. Qua Kafka còn n + m: producer không biết consumer là ai, consumer đọc theo nhịp của mình.</figcaption>
@@ -3172,7 +3172,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx2" x="420" y="40" width="30" height="30" rx="4"/><text class="tm tc" x="435" y="60">10</text>
       <rect class="bx2" x="454" y="40" width="30" height="30" rx="4"/><text class="tm tc" x="469" y="60">11</text>
       <rect class="grpa" x="488" y="40" width="30" height="30" rx="4"/><text class="t3 tc ta" x="503" y="59">12</text>
-      <path class="lna" d="M600 55 H522" marker-end="url(#ah-ingest)"/><text class="t2" x="606" y="59">producer ghi</text>
+      <path class="lna" d="M 600 55 H 521.3" marker-end="url(#ah-ingest)"/><text class="t2" x="606" y="59">producer ghi</text>
       <text class="tb" x="20" y="150">P1</text>
       <rect class="bx2" x="80" y="130" width="30" height="30" rx="4"/><text class="tm tc" x="95" y="150">0</text>
       <rect class="bx2" x="114" y="130" width="30" height="30" rx="4"/><text class="tm tc" x="129" y="150">1</text>
@@ -3184,7 +3184,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx2" x="318" y="130" width="30" height="30" rx="4"/><text class="tm tc" x="333" y="150">7</text>
       <rect class="bx2" x="352" y="130" width="30" height="30" rx="4"/><text class="tm tc" x="367" y="150">8</text>
       <rect class="grpa" x="386" y="130" width="30" height="30" rx="4"/><text class="t3 tc ta" x="401" y="149">9</text>
-      <path class="lna" d="M600 145 H420" marker-end="url(#ah-ingest)"/><text class="t2" x="606" y="149">ghi</text>
+      <path class="lna" d="M 600 145 H 419.3" marker-end="url(#ah-ingest)"/><text class="t2" x="606" y="149">ghi</text>
       <text class="tb" x="20" y="200">P2</text>
       <rect class="bx2" x="80" y="180" width="30" height="30" rx="4"/><text class="tm tc" x="95" y="200">0</text>
       <rect class="bx2" x="114" y="180" width="30" height="30" rx="4"/><text class="tm tc" x="129" y="200">1</text>
@@ -3197,8 +3197,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx2" x="352" y="180" width="30" height="30" rx="4"/><text class="tm tc" x="367" y="200">8</text>
       <rect class="bx2" x="386" y="180" width="30" height="30" rx="4"/><text class="tm tc" x="401" y="200">9</text>
       <rect class="grpa" x="420" y="180" width="30" height="30" rx="4"/><text class="t3 tc ta" x="435" y="199">10</text>
-      <path class="lna" d="M600 195 H454" marker-end="url(#ah-ingest)"/><text class="t2" x="606" y="199">ghi</text>
-      <path class="lna" d="M401 98 V74" marker-end="url(#ah-ingest)"/><text class="t2 tc" x="401" y="114">nhóm A đọc ở offset 9</text>
+      <path class="lna" d="M 600 195 H 453.3" marker-end="url(#ah-ingest)"/><text class="t2" x="606" y="199">ghi</text>
+      <path class="lna" d="M 401 98 V 73.3" marker-end="url(#ah-ingest)"/><text class="t2 tc" x="401" y="114">nhóm A đọc ở offset 9</text>
       <path class="ln" d="M80 220 H516" marker-end="url(#ah)"/><text class="t3" x="80" y="234">cũ</text><text class="t3 te" x="516" y="234">mới</text>
     </svg></div>
     <figcaption>Thứ tự chỉ được giữ <b>trong một partition</b>. Đọc không xoá bản ghi: mỗi nhóm consumer chỉ dời offset của riêng mình (ở đây nhóm A đọc offset 9 trong khi producer ghi offset 12).</figcaption>
@@ -3211,7 +3211,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <div class="canvas"><svg class="dg" viewBox="0 0 720 290" role="img" aria-label="Partition P0 trên ba broker. Leader ở broker 1, follower ở broker 2 và 3. Broker 3 tụt lại bị loại khỏi ISR, broker 1 chết, broker 2 trong ISR thành leader mới, broker 3 bắt kịp và vào lại ISR">
       <g transform="translate(-75 0)">
       <rect class="bx" x="290" y="14" width="120" height="34" rx="8"/><text class="tc" x="350" y="36">Producer</text>
-      <g data-only="1,2,3"><path class="lna" d="M350 48 V74" marker-end="url(#ah-ingest)"/><text class="t3" x="356" y="66">ghi</text></g>
+      <g data-only="1,2,3"><path class="lna" d="M 350 48 V 74.7" marker-end="url(#ah-ingest)"/><text class="t3" x="356" y="66">ghi</text></g>
       <g data-dim="4"><rect class="bx" x="160" y="78" width="420" height="50" rx="8"/><text class="tb" x="172" y="102">Broker 1</text><g><rect class="bx2" x="290" y="88" width="30" height="30" rx="4"/><text class="tm tc" x="305" y="108">0</text><rect class="bx2" x="324" y="88" width="30" height="30" rx="4"/><text class="tm tc" x="339" y="108">1</text><rect class="bx2" x="358" y="88" width="30" height="30" rx="4"/><text class="tm tc" x="373" y="108">2</text><rect class="bx2" x="392" y="88" width="30" height="30" rx="4"/><text class="tm tc" x="407" y="108">3</text><rect class="bx2" x="426" y="88" width="30" height="30" rx="4"/><text class="tm tc" x="441" y="108">4</text><rect class="bx2" x="460" y="88" width="30" height="30" rx="4"/><text class="tm tc" x="475" y="108">5</text></g></g>
       <g data-only="1,2,3"><text class="t3 ta tb" x="172" y="120">leader</text></g>
       <g data-s="4"><text class="t3 fbad tb" x="172" y="120">đã chết</text><text class="tl fbad" x="552" y="110">✕</text></g>
@@ -3227,8 +3227,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <g data-only="1,2"><text class="t3" x="172" y="260">follower</text></g>
       <g data-only="3,4"><text class="t3 fwarn" x="172" y="260">tụt lại, ngoài ISR</text></g>
       <g data-only="5"><text class="t3" x="172" y="260">follower, bắt kịp</text></g>
-      <g data-only="2"><path class="lna" d="M458 128 V144" marker-end="url(#ah-ingest)"/><text class="t3" x="496" y="141">kéo 4, 5</text></g>
-      <g data-only="5"><path class="lna" d="M410 31 H592 V173 H584" marker-end="url(#ah-ingest)"/><text class="t3 te" x="588" y="64">ghi</text></g>
+      <g data-only="2"><path class="lna" d="M 458 128 V 144.7" marker-end="url(#ah-ingest)"/><text class="t3" x="496" y="141">kéo 4, 5</text></g>
+      <g data-only="5"><path class="lna" d="M 410 31 H 592 V 173 H 583.3" marker-end="url(#ah-ingest)"/><text class="t3 te" x="588" y="64">ghi</text></g>
       <g data-only="1,2"><path class="lna dash" d="M424 70 V272"/><text class="t3 ta tb" x="428" y="68">HW</text></g>
       <g data-only="3,4"><path class="lna dash" d="M492 70 V272"/><text class="t3 ta tb" x="496" y="68">HW</text></g>
       <g data-only="5"><path class="lna dash" d="M526 70 V272"/><text class="t3 ta tb" x="530" y="68">HW</text></g>
@@ -3325,20 +3325,20 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <div class="canvas"><svg class="dg" viewBox="0 0 720 180" role="img" aria-label="Đường thường: đĩa, page cache, bộ đệm ứng dụng, bộ đệm socket, card mạng: bốn lần chép. Sendfile: đĩa, page cache, card mạng, dữ liệu không qua không gian người dùng">
       <text class="t3" x="20" y="22">read() + send(): 4 lần chép, dữ liệu đi lên user space rồi xuống lại</text>
       <rect class="bx2" x="20" y="34" width="110" height="44" rx="8"/><text class="tb tc" x="75" y="61">Đĩa</text>
-      <path class="ln" d="M130 56 H157" marker-end="url(#ah)"/><text class="t3 tc" x="144" y="48">1</text>
+      <path class="ln" d="M 130 56 H 156.7" marker-end="url(#ah)"/><text class="t3 tc" x="144" y="48">1</text>
       <rect class="bx" x="160" y="34" width="110" height="44" rx="8"/><text class="tb tc" x="215" y="54">Page cache</text><text class="t3 tc" x="215" y="70">kernel</text>
-      <path class="ln" d="M270 56 H297" marker-end="url(#ah)"/><text class="t3 tc" x="284" y="48">2</text>
+      <path class="ln" d="M 270 56 H 296.7" marker-end="url(#ah)"/><text class="t3 tc" x="284" y="48">2</text>
       <rect class="bxa" x="300" y="34" width="110" height="44" rx="8"/><text class="tb tc" x="355" y="54">Bộ đệm</text><text class="t3 tc" x="355" y="70">ứng dụng (user)</text>
-      <path class="ln" d="M410 56 H437" marker-end="url(#ah)"/><text class="t3 tc" x="424" y="48">3</text>
+      <path class="ln" d="M 410 56 H 436.7" marker-end="url(#ah)"/><text class="t3 tc" x="424" y="48">3</text>
       <rect class="bx" x="440" y="34" width="110" height="44" rx="8"/><text class="tb tc" x="495" y="54">Socket buffer</text><text class="t3 tc" x="495" y="70">kernel</text>
-      <path class="ln" d="M550 56 H577" marker-end="url(#ah)"/><text class="t3 tc" x="564" y="48">4</text>
+      <path class="ln" d="M 550 56 H 576.7" marker-end="url(#ah)"/><text class="t3 tc" x="564" y="48">4</text>
       <rect class="bx2" x="580" y="34" width="110" height="44" rx="8"/><text class="tb tc" x="635" y="54">Card mạng</text><text class="t3 tc" x="635" y="70">NIC</text>
       <text class="t3" x="20" y="112">sendfile(): không qua user space, bớt 1–2 lần chép và 2 lần chuyển ngữ cảnh</text>
       <rect class="bx2" x="20" y="124" width="110" height="44" rx="8"/><text class="tb tc" x="75" y="151">Đĩa</text>
       <rect class="bx" x="160" y="124" width="110" height="44" rx="8"/><text class="tb tc" x="215" y="144">Page cache</text><text class="t3 tc" x="215" y="160">kernel</text>
       <rect class="bx2" x="580" y="124" width="110" height="44" rx="8"/><text class="tb tc" x="635" y="144">Card mạng</text><text class="t3 tc" x="635" y="160">NIC</text>
-      <path class="lna" d="M130 146 H157" marker-end="url(#ah-ingest)"/>
-      <path class="lna" d="M270 146 H577" marker-end="url(#ah-ingest)"/><text class="t2 ta tc" x="424" y="138">sendfile(): kernel chuyển thẳng</text>
+      <path class="lna" d="M 130 146 H 156.7" marker-end="url(#ah-ingest)"/>
+      <path class="lna" d="M 270 146 H 576.7" marker-end="url(#ah-ingest)"/><text class="t2 ta tc" x="424" y="138">sendfile(): kernel chuyển thẳng</text>
         </svg></div>
         <figcaption>Dữ liệu không phải đi lên không gian người dùng rồi xuống lại kernel. Vì log lưu đúng định dạng gửi đi, broker không cần đọc hay sửa nội dung bản ghi.</figcaption>
       </figure>
@@ -3351,23 +3351,23 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text class="tb" x="10" y="50">At-most-once</text><text class="t3" x="10" y="68">commit trước</text>
       <text class="tb" x="10" y="150">At-least-once</text><text class="t3" x="10" y="168">xử lý trước</text>
       <rect class="bx" x="120" y="30" width="100" height="46" rx="8"/><text class="t2 tb tc" x="170" y="49">poll 5–9</text><text class="t3 tc" x="170" y="66">nhận 5 bản ghi</text>
-      <path class="ln" d="M220 53 H234" marker-end="url(#ah)"/>
+      <path class="ln" d="M 220 53 H 233.7" marker-end="url(#ah)"/>
       <rect class="bxa" x="237" y="30" width="100" height="46" rx="8"/><text class="t2 tb tc" x="287" y="49">commit</text><text class="t3 tc" x="287" y="66">offset = 10</text>
-      <path class="ln" d="M337 53 H351" marker-end="url(#ah)"/>
+      <path class="ln" d="M 337 53 H 350.7" marker-end="url(#ah)"/>
       <rect class="bx" x="354" y="30" width="100" height="46" rx="8"/><text class="t2 tb tc" x="404" y="49">xong 5, 6</text><text class="t3 tc" x="404" y="66">đang xử lý 7</text>
-      <path class="ln" d="M454 53 H468" marker-end="url(#ah)"/>
+      <path class="ln" d="M 454 53 H 467.7" marker-end="url(#ah)"/>
       <rect class="bx" x="471" y="30" width="100" height="46" rx="8"/><rect class="lnb" x="471" y="30" width="100" height="46" rx="8"/><text class="t2 tb tc fbad" x="521" y="49">✕ sập</text><text class="t3 tc" x="521" y="66">giữa lúc xử lý</text>
-      <path class="ln" d="M571 53 H585" marker-end="url(#ah)"/>
+      <path class="ln" d="M 571 53 H 584.7" marker-end="url(#ah)"/>
       <rect class="bx" x="588" y="30" width="100" height="46" rx="8"/><text class="t2 tb tc" x="638" y="49">khởi động lại</text><text class="t3 tc" x="638" y="66">đọc từ 10</text>
       <text class="t2 fbad" x="120" y="96">→ 7, 8, 9 không bao giờ được xử lý: mất</text>
       <rect class="bx" x="120" y="130" width="100" height="46" rx="8"/><text class="t2 tb tc" x="170" y="149">poll 5–9</text><text class="t3 tc" x="170" y="166">nhận 5 bản ghi</text>
-      <path class="ln" d="M220 153 H234" marker-end="url(#ah)"/>
+      <path class="ln" d="M 220 153 H 233.7" marker-end="url(#ah)"/>
       <rect class="bx" x="237" y="130" width="100" height="46" rx="8"/><text class="t2 tb tc" x="287" y="149">xử lý 5–9</text><text class="t3 tc" x="287" y="166">ghi kết quả</text>
-      <path class="ln" d="M337 153 H351" marker-end="url(#ah)"/>
+      <path class="ln" d="M 337 153 H 350.7" marker-end="url(#ah)"/>
       <rect class="bx" x="354" y="130" width="100" height="46" rx="8"/><rect class="lnb" x="354" y="130" width="100" height="46" rx="8"/><text class="t2 tb tc fbad" x="404" y="149">✕ sập</text><text class="t3 tc" x="404" y="166">chưa kịp commit</text>
-      <path class="ln" d="M454 153 H468" marker-end="url(#ah)"/>
+      <path class="ln" d="M 454 153 H 467.7" marker-end="url(#ah)"/>
       <rect class="bx" x="471" y="130" width="100" height="46" rx="8"/><text class="t2 tb tc" x="521" y="149">khởi động lại</text><text class="t3 tc" x="521" y="166">đọc từ 5</text>
-      <path class="ln" d="M571 153 H585" marker-end="url(#ah)"/>
+      <path class="ln" d="M 571 153 H 584.7" marker-end="url(#ah)"/>
       <rect class="bxa" x="588" y="130" width="100" height="46" rx="8"/><text class="t2 tb tc" x="638" y="149">xử lý 5–9</text><text class="t3 tc" x="638" y="166">lần thứ hai</text>
       <text class="t2 fwarn" x="120" y="196">→ 5–9 bị xử lý hai lần: trùng, nên xử lý phải idempotent</text>
     </svg></div>
@@ -3484,27 +3484,27 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bxa" x="20" y="195" width="110" height="50" rx="8"/><text class="tc" x="75" y="218">split 3</text><text class="t3 tc" x="75" y="235">block HDFS</text>
       </g>
 
-      <line class="ln" x1="130" y1="80" x2="173" y2="80" marker-end="url(#ah)"/>
-      <line class="ln" x1="130" y1="150" x2="173" y2="150" marker-end="url(#ah)"/>
-      <line class="ln" x1="130" y1="220" x2="173" y2="220" marker-end="url(#ah)"/>
+      <line class="ln" x1="130" y1="80" x2="171.7" y2="80" marker-end="url(#ah)"/>
+      <line class="ln" x1="130" y1="150" x2="171.7" y2="150" marker-end="url(#ah)"/>
+      <line class="ln" x1="130" y1="220" x2="171.7" y2="220" marker-end="url(#ah)"/>
 
       <rect class="bxa" x="175" y="55" width="100" height="50" rx="8"/><text class="tb tc" x="225" y="78">map 1</text><text class="t3 tc" x="225" y="95">node giữ block</text>
       <rect class="bxa" x="175" y="125" width="100" height="50" rx="8"/><text class="tb tc" x="225" y="148">map 2</text><text class="t3 tc" x="225" y="165">node giữ block</text>
       <rect class="bxa" x="175" y="195" width="100" height="50" rx="8"/><text class="tb tc" x="225" y="218">map 3</text><text class="t3 tc" x="225" y="235">node giữ block</text>
 
       <rect class="grpa" x="300" y="45" width="160" height="210" rx="10"/>
-      <line class="ln" x1="275" y1="80" x2="483" y2="110" marker-end="url(#ah)"/>
-      <line class="ln" x1="275" y1="80" x2="483" y2="190" marker-end="url(#ah)"/>
-      <line class="ln" x1="275" y1="150" x2="483" y2="110" marker-end="url(#ah)"/>
-      <line class="ln" x1="275" y1="150" x2="483" y2="190" marker-end="url(#ah)"/>
-      <line class="ln" x1="275" y1="220" x2="483" y2="110" marker-end="url(#ah)"/>
-      <line class="ln" x1="275" y1="220" x2="483" y2="190" marker-end="url(#ah)"/>
+      <line class="ln" x1="275" y1="80" x2="481.73" y2="109.82" marker-end="url(#ah)"/>
+      <line class="ln" x1="275" y1="80" x2="482.08" y2="189.51" marker-end="url(#ah)"/>
+      <line class="ln" x1="275" y1="150" x2="481.76" y2="110.24" marker-end="url(#ah)"/>
+      <line class="ln" x1="275" y1="150" x2="481.76" y2="189.76" marker-end="url(#ah)"/>
+      <line class="ln" x1="275" y1="220" x2="482.08" y2="110.49" marker-end="url(#ah)"/>
+      <line class="ln" x1="275" y1="220" x2="481.73" y2="190.18" marker-end="url(#ah)"/>
 
       <rect class="bxa" x="485" y="80" width="100" height="60" rx="8"/><text class="tb tc" x="535" y="106">reduce 1</text><text class="t3 tc" x="535" y="124">partition 0</text>
       <rect class="bxa" x="485" y="160" width="100" height="60" rx="8"/><text class="tb tc" x="535" y="186">reduce 2</text><text class="t3 tc" x="535" y="204">partition 1</text>
 
-      <line class="ln" x1="585" y1="110" x2="628" y2="110" marker-end="url(#ah)"/>
-      <line class="ln" x1="585" y1="190" x2="628" y2="190" marker-end="url(#ah)"/>
+      <line class="ln" x1="585" y1="110" x2="626.7" y2="110" marker-end="url(#ah)"/>
+      <line class="ln" x1="585" y1="190" x2="626.7" y2="190" marker-end="url(#ah)"/>
       <g class="c-store">
       <rect class="bxa" x="630" y="85" width="110" height="50" rx="8"/><text class="tm tc" x="685" y="115">part-r-00000</text>
       <rect class="bxa" x="630" y="165" width="110" height="50" rx="8"/><text class="tm tc" x="685" y="195">part-r-00001</text>
@@ -3543,9 +3543,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx2" x="15" y="128" width="135" height="70" rx="8"/><text class="t3 tc" x="82" y="152">split 2</text><text class="tm tc" x="82" y="174">car car river</text>
       <rect class="bx2" x="15" y="208" width="135" height="70" rx="8"/><text class="t3 tc" x="82" y="232">split 3</text><text class="tm tc" x="82" y="254">deer car bear</text>
 
-      <line class="ln" x1="150" y1="83" x2="183" y2="83" marker-end="url(#ah)"/>
-      <line class="ln" x1="150" y1="163" x2="183" y2="163" marker-end="url(#ah)"/>
-      <line class="ln" x1="150" y1="243" x2="183" y2="243" marker-end="url(#ah)"/>
+      <line class="ln" x1="150" y1="83" x2="181.7" y2="83" marker-end="url(#ah)"/>
+      <line class="ln" x1="150" y1="163" x2="181.7" y2="163" marker-end="url(#ah)"/>
+      <line class="ln" x1="150" y1="243" x2="181.7" y2="243" marker-end="url(#ah)"/>
       <rect class="bxa" x="185" y="48" width="130" height="70" rx="8"/>
       <rect class="bxa" x="185" y="128" width="130" height="70" rx="8"/>
       <rect class="bxa" x="185" y="208" width="130" height="70" rx="8"/>
@@ -3564,12 +3564,12 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <text class="tm tc ta tb" x="250" y="148">(car, 1)</text><text class="tm tc ta tb" x="250" y="166">(car, 1)</text><text class="tm tc" x="250" y="184">(river, 1)</text>
         <text class="tm tc" x="250" y="228">(deer, 1)</text><text class="tm tc ta tb" x="250" y="246">(car, 1)</text><text class="tm tc ta tb" x="250" y="264">(bear, 1)</text>
 
-        <line class="ln" x1="315" y1="83" x2="373" y2="100" marker-end="url(#ah)"/>
-        <line class="ln" x1="315" y1="83" x2="373" y2="220" marker-end="url(#ah)"/>
-        <line class="ln" x1="315" y1="163" x2="373" y2="100" marker-end="url(#ah)"/>
-        <line class="ln" x1="315" y1="163" x2="373" y2="220" marker-end="url(#ah)"/>
-        <line class="ln" x1="315" y1="243" x2="373" y2="100" marker-end="url(#ah)"/>
-        <line class="ln" x1="315" y1="243" x2="373" y2="220" marker-end="url(#ah)"/>
+        <line class="ln" x1="315" y1="83" x2="371.83" y2="99.66" marker-end="url(#ah)"/>
+        <line class="ln" x1="315" y1="83" x2="373.71" y2="221.69" marker-end="url(#ah)"/>
+        <line class="ln" x1="315" y1="163" x2="372.76" y2="100.26" marker-end="url(#ah)"/>
+        <line class="ln" x1="315" y1="163" x2="372.65" y2="219.65" marker-end="url(#ah)"/>
+        <line class="ln" x1="315" y1="243" x2="373.76" y2="98.13" marker-end="url(#ah)"/>
+        <line class="ln" x1="315" y1="243" x2="371.93" y2="220.42" marker-end="url(#ah)"/>
 
         <rect class="bx" x="375" y="60" width="140" height="80" rx="8"/>
         <text class="t3 tc ta" x="445" y="77">→ reducer 1</text>
@@ -3582,8 +3582,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <text class="t3 tc" x="380" y="306">Giả sử partitioner đưa bear, car về reducer 1 (tô màu); deer, river về reducer 2.</text>
       </g>
       <g data-s="4">
-        <line class="lna" x1="515" y1="100" x2="583" y2="100" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="515" y1="220" x2="583" y2="220" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="515" y1="100" x2="581.7" y2="100" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="515" y1="220" x2="581.7" y2="220" marker-end="url(#ah-process)"/>
         <rect class="bxa" x="585" y="60" width="150" height="80" rx="8"/>
         <text class="t3 tc" x="660" y="77">part-r-00000</text>
         <text class="tm tc tb" x="660" y="102">(bear, 2)</text>
@@ -3645,11 +3645,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
           <text class="tb" x="29" y="164">6 · Hoàn tất</text>
           <text class="t2" x="29" y="184">báo client; task lỗi đã được</text>
           <text class="t2" x="29" y="201">chạy lại trên node khác</text>
-          <line class="ln" x1="225" y1="65" x2="253" y2="65" marker-end="url(#ah)"/>
-          <line class="ln" x1="465" y1="65" x2="493" y2="65" marker-end="url(#ah)"/>
-          <line class="ln" x1="600" y1="100" x2="600" y2="138" marker-end="url(#ah)"/>
-          <line class="ln" x1="495" y1="175" x2="467" y2="175" marker-end="url(#ah)"/>
-          <line class="ln" x1="255" y1="175" x2="227" y2="175" marker-end="url(#ah)"/>
+          <line class="ln" x1="225" y1="65" x2="251.7" y2="65" marker-end="url(#ah)"/>
+          <line class="ln" x1="465" y1="65" x2="491.7" y2="65" marker-end="url(#ah)"/>
+          <line class="ln" x1="600" y1="100" x2="600" y2="136.7" marker-end="url(#ah)"/>
+          <line class="ln" x1="495" y1="175" x2="468.3" y2="175" marker-end="url(#ah)"/>
+          <line class="ln" x1="255" y1="175" x2="228.3" y2="175" marker-end="url(#ah)"/>
         </svg></div>
       </figure>
       <p>Output trung gian của map nằm trên đĩa cục bộ, không lên HDFS: nó chỉ sống tới khi job xong. Reduce không thể bắt đầu hàm reduce trước khi mọi map xong, vì key nào cũng có thể còn giá trị ở mapper chưa chạy xong.</p>
@@ -3667,16 +3667,16 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx2" x="20" y="30" width="170" height="50" rx="8"/><text class="tm tc" x="105" y="52">M1: pear, apple</text><text class="t3 tc" x="105" y="70">phát (pear,_) (apple,_)</text>
       <rect class="bx2" x="20" y="100" width="170" height="50" rx="8"/><text class="tm tc" x="105" y="122">M2: kiwi, tea</text><text class="t3 tc" x="105" y="140">phát (kiwi,_) (tea,_)</text>
       <rect class="bx2" x="20" y="170" width="170" height="50" rx="8"/><text class="tm tc" x="105" y="192">M3: fig, plum</text><text class="t3 tc" x="105" y="210">phát (fig,_) (plum,_)</text>
-      <line class="ln" x1="190" y1="55" x2="418" y2="80" marker-end="url(#ah)"/>
-      <line class="ln" x1="190" y1="55" x2="418" y2="170" marker-end="url(#ah)"/>
-      <line class="ln" x1="190" y1="125" x2="418" y2="80" marker-end="url(#ah)"/>
-      <line class="ln" x1="190" y1="125" x2="418" y2="170" marker-end="url(#ah)"/>
-      <line class="ln" x1="190" y1="195" x2="418" y2="80" marker-end="url(#ah)"/>
-      <line class="ln" x1="190" y1="195" x2="418" y2="170" marker-end="url(#ah)"/>
+      <line class="ln" x1="190" y1="55" x2="416.72" y2="79.86" marker-end="url(#ah)"/>
+      <line class="ln" x1="190" y1="55" x2="417.05" y2="169.52" marker-end="url(#ah)"/>
+      <line class="ln" x1="190" y1="125" x2="416.76" y2="80.24" marker-end="url(#ah)"/>
+      <line class="ln" x1="190" y1="125" x2="416.76" y2="169.76" marker-end="url(#ah)"/>
+      <line class="ln" x1="190" y1="195" x2="417.05" y2="80.48" marker-end="url(#ah)"/>
+      <line class="ln" x1="190" y1="195" x2="416.72" y2="170.14" marker-end="url(#ah)"/>
       <rect class="bxa" x="420" y="45" width="150" height="70" rx="8"/><text class="tb tc" x="495" y="72">R1 · a–m</text><text class="tm tc" x="495" y="96">apple fig kiwi</text>
       <rect class="bxa" x="420" y="135" width="150" height="70" rx="8"/><text class="tb tc" x="495" y="162">R2 · n–z</text><text class="tm tc" x="495" y="186">pear plum tea</text>
-      <line class="ln" x1="570" y1="80" x2="608" y2="80" marker-end="url(#ah)"/>
-      <line class="ln" x1="570" y1="170" x2="608" y2="170" marker-end="url(#ah)"/>
+      <line class="ln" x1="570" y1="80" x2="606.7" y2="80" marker-end="url(#ah)"/>
+      <line class="ln" x1="570" y1="170" x2="606.7" y2="170" marker-end="url(#ah)"/>
       <g class="c-store">
       <rect class="bxa" x="610" y="55" width="95" height="50" rx="8"/><text class="tm tc" x="657" y="85">part-0</text>
       <rect class="bxa" x="610" y="145" width="95" height="50" rx="8"/><text class="tm tc" x="657" y="175">part-1</text>
@@ -3713,17 +3713,17 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bxa" x="20" y="40" width="210" height="48" rx="8"/><text class="tb" x="32" y="60">Job 1 · (từ, doc)</text><text class="t2" x="32" y="78">n: đếm từ trong từng doc</text>
       <rect class="bx2" x="250" y="40" width="260" height="48" rx="8"/><text class="tm" x="262" y="69">((word, doc), n)</text>
       <rect class="bx" x="530" y="40" width="210" height="48" rx="8"/><text class="tm" x="542" y="69">((big, d1), 2)</text>
-      <line class="ln" x1="125" y1="88" x2="125" y2="106" marker-end="url(#ah)"/>
+      <line class="ln" x1="125" y1="88" x2="125" y2="104.7" marker-end="url(#ah)"/>
 
       <rect class="bxa" x="20" y="108" width="210" height="48" rx="8"/><text class="tb" x="32" y="128">Job 2 · doc</text><text class="t2" x="32" y="146">N: tổng số từ của doc</text>
       <rect class="bx2" x="250" y="108" width="260" height="48" rx="8"/><text class="tm" x="262" y="137">((word, doc), (n, N))</text>
       <rect class="bx" x="530" y="108" width="210" height="48" rx="8"/><text class="tm" x="542" y="137">((big, d1), (2, 3))</text>
-      <line class="ln" x1="125" y1="156" x2="125" y2="174" marker-end="url(#ah)"/>
+      <line class="ln" x1="125" y1="156" x2="125" y2="172.7" marker-end="url(#ah)"/>
 
       <rect class="bxa" x="20" y="176" width="210" height="48" rx="8"/><text class="tb" x="32" y="196">Job 3 · từ</text><text class="t2" x="32" y="214">d: số doc có chứa từ</text>
       <rect class="bx2" x="250" y="176" width="260" height="48" rx="8"/><text class="tm" x="262" y="205">((word, doc), (n, N, d))</text>
       <rect class="bx" x="530" y="176" width="210" height="48" rx="8"/><text class="tm" x="542" y="205">((big, d1), (2, 3, 1))</text>
-      <line class="ln" x1="125" y1="224" x2="125" y2="242" marker-end="url(#ah)"/>
+      <line class="ln" x1="125" y1="224" x2="125" y2="240.7" marker-end="url(#ah)"/>
 
       <rect class="bxa" x="20" y="244" width="210" height="48" rx="8"/><text class="tb" x="32" y="264">Job 4 · chỉ map</text><text class="t2" x="32" y="282">n/N × log(|D|/d)</text>
       <rect class="bx2" x="250" y="244" width="260" height="48" rx="8"/><text class="tm" x="262" y="273">((word, doc), tf-idf)</text>
@@ -3770,25 +3770,25 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <figure class="fig stepper" id="b6-bfs">
     <p class="fig-t">Khoảng cách từ A, mỗi vòng một job</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 760 300" role="img" aria-label="BFS bằng MapReduce trên đồ thị sáu đỉnh A đến F: vòng 1 tìm B và C cách 1, vòng 2 tìm D và E cách 2, vòng 3 tìm F cách 3, vòng 4 không đổi nên dừng">
-      <line class="ln" x1="77.9" y1="137.2" x2="145.5" y2="88.9" marker-end="url(#ah)"/>
-      <line class="ln" x1="77.9" y1="162.8" x2="145.5" y2="211.1" marker-end="url(#ah)"/>
-      <line class="ln" x1="187" y1="75" x2="261" y2="75" marker-end="url(#ah)"/>
-      <line class="ln" x1="178.7" y1="207.8" x2="270" y2="93.7" marker-end="url(#ah)"/>
-      <line class="ln" x1="187" y1="225" x2="261" y2="225" marker-end="url(#ah)"/>
-      <line class="ln" x1="302.6" y1="88.2" x2="365.8" y2="135.6" marker-end="url(#ah)"/>
-      <line class="ln" x1="302.6" y1="211.8" x2="365.8" y2="164.4" marker-end="url(#ah)"/>
+      <line class="ln" x1="77.9" y1="137.2" x2="144.4" y2="89.69" marker-end="url(#ah)"/>
+      <line class="ln" x1="77.9" y1="162.8" x2="144.4" y2="210.31" marker-end="url(#ah)"/>
+      <line class="ln" x1="187" y1="75" x2="259.7" y2="75" marker-end="url(#ah)"/>
+      <line class="ln" x1="178.7" y1="207.8" x2="269.17" y2="94.74" marker-end="url(#ah)"/>
+      <line class="ln" x1="187" y1="225" x2="259.7" y2="225" marker-end="url(#ah)"/>
+      <line class="ln" x1="302.6" y1="88.2" x2="364.76" y2="134.82" marker-end="url(#ah)"/>
+      <line class="ln" x1="302.6" y1="211.8" x2="364.76" y2="165.18" marker-end="url(#ah)"/>
       <g data-only="2">
-        <line class="lna" x1="77.9" y1="137.2" x2="145.5" y2="88.9" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="77.9" y1="162.8" x2="145.5" y2="211.1" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="77.9" y1="137.2" x2="144.4" y2="89.69" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="77.9" y1="162.8" x2="144.4" y2="210.31" marker-end="url(#ah-process)"/>
       </g>
       <g data-only="3">
-        <line class="lna" x1="187" y1="75" x2="261" y2="75" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="178.7" y1="207.8" x2="270" y2="93.7" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="187" y1="225" x2="261" y2="225" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="187" y1="75" x2="259.7" y2="75" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="178.7" y1="207.8" x2="269.17" y2="94.74" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="187" y1="225" x2="259.7" y2="225" marker-end="url(#ah-process)"/>
       </g>
       <g data-only="4">
-        <line class="lna" x1="302.6" y1="88.2" x2="365.8" y2="135.6" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="302.6" y1="211.8" x2="365.8" y2="164.4" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="302.6" y1="88.2" x2="364.76" y2="134.82" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="302.6" y1="211.8" x2="364.76" y2="165.18" marker-end="url(#ah-process)"/>
       </g>
 
       <circle class="bx" cx="165" cy="75" r="22"/><text class="tb tc" x="165" y="80">B</text>
@@ -3887,11 +3887,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <figure class="fig small" id="b6-pr">
     <p class="fig-t">Chạy PageRank từng vòng (d = 0.85, khởi đầu PR = 1)</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 480 270" role="img" aria-label="Đồ thị bốn trang: A trỏ tới B và C, B trỏ tới C, C trỏ tới A, D trỏ tới C; số trong mỗi nút là PageRank hiện tại">
-      <line class="lna" x1="120" y1="80" x2="268" y2="80" marker-end="url(#ah-process)"/>
-      <line class="lna" x1="281.6" y1="103.7" x2="214.6" y2="189.7" marker-end="url(#ah-process)"/>
-      <line class="lna" x1="370" y1="215" x2="227" y2="215" marker-end="url(#ah-process)"/>
-      <path class="lna" d="M115.2 96.3 Q166.2 129.1 184.8 184.7" marker-end="url(#ah-process)"/>
-      <path class="lna" d="M169.8 198.7 Q118.8 165.9 100.2 110.3" marker-end="url(#ah-process)"/>
+      <line class="lna" x1="120" y1="80" x2="266.7" y2="80" marker-end="url(#ah-process)"/>
+      <line class="lna" x1="281.6" y1="103.7" x2="215.4" y2="188.68" marker-end="url(#ah-process)"/>
+      <line class="lna" x1="370" y1="215" x2="228.3" y2="215" marker-end="url(#ah-process)"/>
+      <path class="lna" d="M 115.2 96.3 Q 166.2 129.1 184.36 183.45" marker-end="url(#ah-process)"/>
+      <path class="lna" d="M 169.8 198.7 Q 118.8 165.9 100.64 111.55" marker-end="url(#ah-process)"/>
       <circle class="bxa" cx="90" cy="80" r="30"/><text class="tb tc" x="90" y="75">A</text><text class="tm tc" x="90" y="93" id="b6-pr-A">1.000</text>
       <circle class="bxa" cx="300" cy="80" r="30"/><text class="tb tc" x="300" y="75">B</text><text class="tm tc" x="300" y="93" id="b6-pr-B">1.000</text>
       <circle class="bxa" cx="195" cy="215" r="30"/><text class="tb tc" x="195" y="210">C</text><text class="tm tc" x="195" y="228" id="b6-pr-C">1.000</text>
@@ -3998,10 +3998,10 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text class="tb" x="544" y="123">Worker · Executor</text>
       <text class="t3" x="544" y="142">task · task · cache trong RAM</text>
 
-      <line class="ln" x1="210" y1="68" x2="283" y2="68" marker-end="url(#ah)"/>
-      <line class="ln" x1="455" y1="60" x2="528" y2="56" marker-end="url(#ah)"/>
-      <line class="ln" x1="455" y1="80" x2="528" y2="120" marker-end="url(#ah)"/>
-      <line class="lna dash" x1="212" y1="140" x2="528" y2="140" marker-start="url(#ah-process)" marker-end="url(#ah-process)"/>
+      <line class="ln" x1="210" y1="68" x2="281.7" y2="68" marker-end="url(#ah)"/>
+      <line class="ln" x1="455" y1="60" x2="526.7" y2="56.07" marker-end="url(#ah)"/>
+      <line class="ln" x1="455" y1="80" x2="527.11" y2="119.51" marker-end="url(#ah)"/>
+      <line class="lna dash" x1="213.3" y1="140" x2="526.7" y2="140" marker-start="url(#ah-process)" marker-end="url(#ah-process)"/>
       <text class="t3 tc" x="370" y="132">task đi, kết quả về</text>
 
       <text class="t3 tb" x="20" y="192">MỘT JOB ĐI QUA (BA BƯỚC ĐẦU DIỄN RA TRONG DRIVER)</text>
@@ -4021,10 +4021,10 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text class="tb" x="587" y="228">Task</text>
       <text class="t2" x="587" y="248">một task / partition,</text>
       <text class="t2" x="587" y="265">chạy trên executor</text>
-      <line class="ln" x1="185" y1="240" x2="203" y2="240" marker-end="url(#ah)"/>
-      <line class="ln" x1="370" y1="240" x2="388" y2="240" marker-end="url(#ah)"/>
-      <line class="ln" x1="555" y1="240" x2="573" y2="240" marker-end="url(#ah)"/>
-      <line class="lna dash" x1="657" y1="205" x2="657" y2="160" marker-end="url(#ah-process)"/>
+      <line class="ln" x1="185" y1="240" x2="201.7" y2="240" marker-end="url(#ah)"/>
+      <line class="ln" x1="370" y1="240" x2="386.7" y2="240" marker-end="url(#ah)"/>
+      <line class="ln" x1="555" y1="240" x2="571.7" y2="240" marker-end="url(#ah)"/>
+      <line class="lna dash" x1="657" y1="205" x2="657" y2="159.3" marker-end="url(#ah-process)"/>
       <text class="t2 tc" x="380" y="306">Mất partition → tính lại theo lineage · cache() giữ RDD trong RAM để nhiều action dùng lại</text>
     </svg></div>
     <figcaption>Nửa trên là <b>ai chạy</b>: driver điều phối, cluster manager cấp tài nguyên, executor làm việc. Nửa dưới là <b>chạy cái gì</b>: code khai báo RDD và DAG được dựng dần, action nộp DAG đi chạy, DAG cắt thành stage, stage thành task gửi xuống executor.</figcaption>
@@ -4051,11 +4051,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bxa" x="430" y="45" width="80" height="40" rx="8"/><text class="tc" x="470" y="70">vòng 2</text>
       <g class="c-store"><rect class="bxa" x="540" y="45" width="70" height="40" rx="8"/><text class="tc" x="575" y="70">HDFS</text></g>
       <rect class="bxa" x="640" y="45" width="70" height="40" rx="8"/><text class="tc" x="675" y="70">vòng 3</text>
-      <line class="ln" x1="190" y1="65" x2="218" y2="65" marker-end="url(#ah)"/>
-      <line class="lnb" x1="300" y1="65" x2="328" y2="65" marker-end="url(#ah-bad)"/>
-      <line class="ln" x1="400" y1="65" x2="428" y2="65" marker-end="url(#ah)"/>
-      <line class="lnb" x1="510" y1="65" x2="538" y2="65" marker-end="url(#ah-bad)"/>
-      <line class="ln" x1="610" y1="65" x2="638" y2="65" marker-end="url(#ah)"/>
+      <line class="ln" x1="190" y1="65" x2="216.7" y2="65" marker-end="url(#ah)"/>
+      <line class="lnb" x1="300" y1="65" x2="326.7" y2="65" marker-end="url(#ah-bad)"/>
+      <line class="ln" x1="400" y1="65" x2="426.7" y2="65" marker-end="url(#ah)"/>
+      <line class="lnb" x1="510" y1="65" x2="536.7" y2="65" marker-end="url(#ah-bad)"/>
+      <line class="ln" x1="610" y1="65" x2="636.7" y2="65" marker-end="url(#ah)"/>
       <text class="t3 tc" x="365" y="102">ghi đĩa + 3 bản sao qua mạng</text>
       <text class="t3 tc" x="575" y="102">rồi đọc lại</text>
 
@@ -4066,11 +4066,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bxa" x="430" y="135" width="80" height="40" rx="8"/><text class="tc" x="470" y="160">vòng 2</text>
       <rect class="bxh" x="540" y="135" width="70" height="40" rx="8"/><text class="tc ton tb" x="575" y="160">RAM</text>
       <rect class="bxa" x="640" y="135" width="70" height="40" rx="8"/><text class="tc" x="675" y="160">vòng 3</text>
-      <line class="ln" x1="190" y1="155" x2="218" y2="155" marker-end="url(#ah)"/>
-      <line class="lna" x1="300" y1="155" x2="328" y2="155" marker-end="url(#ah-process)"/>
-      <line class="lna" x1="400" y1="155" x2="428" y2="155" marker-end="url(#ah-process)"/>
-      <line class="lna" x1="510" y1="155" x2="538" y2="155" marker-end="url(#ah-process)"/>
-      <line class="lna" x1="610" y1="155" x2="638" y2="155" marker-end="url(#ah-process)"/>
+      <line class="ln" x1="190" y1="155" x2="216.7" y2="155" marker-end="url(#ah)"/>
+      <line class="lna" x1="300" y1="155" x2="326.7" y2="155" marker-end="url(#ah-process)"/>
+      <line class="lna" x1="400" y1="155" x2="426.7" y2="155" marker-end="url(#ah-process)"/>
+      <line class="lna" x1="510" y1="155" x2="536.7" y2="155" marker-end="url(#ah-process)"/>
+      <line class="lna" x1="610" y1="155" x2="636.7" y2="155" marker-end="url(#ah-process)"/>
       <text class="t3 tc" x="155" y="192">đọc một lần</text>
       <text class="t3 tc" x="470" y="192">dữ liệu làm việc được cache() trong RAM</text>
     </svg></div>
@@ -4138,33 +4138,33 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
       <rect class="grp" x="15" y="245" width="160" height="55" rx="8"/><text class="t3 tc" x="95" y="269" data-only="1,2,3">partition 4</text><text class="t3 tc" x="95" y="285" data-only="1,2,3">chưa đọc</text>
 
       <g data-s="2">
-        <line class="ln dash" x1="175" y1="77.5" x2="253" y2="77.5" marker-end="url(#ah)"/>
-        <line class="ln dash" x1="175" y1="142.5" x2="253" y2="142.5" marker-end="url(#ah)"/>
-        <line class="ln dash" x1="175" y1="207.5" x2="253" y2="207.5" marker-end="url(#ah)"/>
-        <line class="ln dash" x1="175" y1="272.5" x2="253" y2="272.5" marker-end="url(#ah)"/>
+        <line class="ln dash" x1="175" y1="77.5" x2="251.7" y2="77.5" marker-end="url(#ah)"/>
+        <line class="ln dash" x1="175" y1="142.5" x2="251.7" y2="142.5" marker-end="url(#ah)"/>
+        <line class="ln dash" x1="175" y1="207.5" x2="251.7" y2="207.5" marker-end="url(#ah)"/>
+        <line class="ln dash" x1="175" y1="272.5" x2="251.7" y2="272.5" marker-end="url(#ah)"/>
         <rect class="grp" x="255" y="50" width="150" height="55" rx="8"/><text class="t3 tc" x="330" y="82" data-only="2,3">chưa tính</text>
         <rect class="grp" x="255" y="115" width="150" height="55" rx="8"/><text class="t3 tc" x="330" y="147" data-only="2,3">chưa tính</text>
         <rect class="grp" x="255" y="180" width="150" height="55" rx="8"/><text class="t3 tc" x="330" y="212" data-only="2,3">chưa tính</text>
         <rect class="grp" x="255" y="245" width="150" height="55" rx="8"/><text class="t3 tc" x="330" y="277" data-only="2,3">chưa tính</text>
       </g>
       <g data-s="3">
-        <line class="ln dash" x1="405" y1="77.5" x2="483" y2="100" marker-end="url(#ah)"/>
-        <line class="ln dash" x1="405" y1="142.5" x2="483" y2="142.5" marker-end="url(#ah)"/>
-        <line class="ln dash" x1="405" y1="207.5" x2="483" y2="185" marker-end="url(#ah)"/>
-        <line class="ln dash" x1="405" y1="272.5" x2="483" y2="272.5" marker-end="url(#ah)"/>
+        <line class="ln dash" x1="405" y1="77.5" x2="481.83" y2="99.66" marker-end="url(#ah)"/>
+        <line class="ln dash" x1="405" y1="142.5" x2="481.7" y2="142.5" marker-end="url(#ah)"/>
+        <line class="ln dash" x1="405" y1="207.5" x2="481.83" y2="185.34" marker-end="url(#ah)"/>
+        <line class="ln dash" x1="405" y1="272.5" x2="481.7" y2="272.5" marker-end="url(#ah)"/>
         <rect class="grp" x="485" y="50" width="140" height="185" rx="8"/><text class="t3 tc" x="555" y="147" data-only="3">chưa tính</text>
         <rect class="grp" x="485" y="245" width="140" height="55" rx="8"/><text class="t3 tc" x="555" y="277" data-only="3">chưa tính</text>
       </g>
 
       <g data-s="4">
-        <line class="lna" x1="175" y1="77.5" x2="253" y2="77.5" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="175" y1="142.5" x2="253" y2="142.5" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="175" y1="207.5" x2="253" y2="207.5" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="175" y1="272.5" x2="253" y2="272.5" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="405" y1="77.5" x2="483" y2="100" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="405" y1="142.5" x2="483" y2="142.5" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="405" y1="207.5" x2="483" y2="185" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="405" y1="272.5" x2="483" y2="272.5" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="175" y1="77.5" x2="251.7" y2="77.5" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="175" y1="142.5" x2="251.7" y2="142.5" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="175" y1="207.5" x2="251.7" y2="207.5" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="175" y1="272.5" x2="251.7" y2="272.5" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="405" y1="77.5" x2="481.83" y2="99.66" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="405" y1="142.5" x2="481.7" y2="142.5" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="405" y1="207.5" x2="481.83" y2="185.34" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="405" y1="272.5" x2="481.7" y2="272.5" marker-end="url(#ah-process)"/>
         <rect class="bx" x="15" y="50" width="160" height="55" rx="8"/>
         <text class="t2" x="27" y="68">Error, ts, msg1</text><text class="t2" x="27" y="82">Warn, ts, msg2</text><text class="t2" x="27" y="96">Error, ts, msg1</text>
         <rect class="bx" x="15" y="115" width="160" height="55" rx="8"/>
@@ -4189,8 +4189,8 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
         <text class="t2" x="497" y="269">Error, ts, msg4</text><text class="t2" x="497" y="285">Error, ts, msg1</text>
       </g>
       <g data-s="5">
-        <line class="lna" x1="625" y1="142.5" x2="678" y2="150" marker-end="url(#ah-process)"/>
-        <line class="lna" x1="625" y1="272.5" x2="678" y2="215" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="625" y1="142.5" x2="676.73" y2="149.82" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="625" y1="272.5" x2="677.76" y2="215.26" marker-end="url(#ah-process)"/>
         <rect class="bxh" x="680" y="100" width="70" height="140" rx="8"/>
         <text class="t2 ton tc" x="715" y="128">msg1</text><text class="t2 ton tc" x="715" y="146">msg1</text><text class="t2 ton tc" x="715" y="164">msg3</text><text class="t2 ton tc" x="715" y="182">msg4</text><text class="t2 ton tc" x="715" y="200">msg1</text>
         <text class="ton tb tc" x="715" y="226">5 dòng</text>
@@ -4219,9 +4219,9 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
 
       <rect class="bx2" x="30" y="40" width="60" height="26" rx="6"/><rect class="bx2" x="30" y="80" width="60" height="26" rx="6"/><rect class="bx2" x="30" y="120" width="60" height="26" rx="6"/>
       <rect class="bxa" x="150" y="40" width="60" height="26" rx="6"/><rect class="bxa" x="150" y="80" width="60" height="26" rx="6"/><rect class="bxa" x="150" y="120" width="60" height="26" rx="6"/>
-      <line class="ln" x1="90" y1="53" x2="148" y2="53" marker-end="url(#ah)"/>
-      <line class="ln" x1="90" y1="93" x2="148" y2="93" marker-end="url(#ah)"/>
-      <line class="ln" x1="90" y1="133" x2="148" y2="133" marker-end="url(#ah)"/>
+      <line class="ln" x1="90" y1="53" x2="146.7" y2="53" marker-end="url(#ah)"/>
+      <line class="ln" x1="90" y1="93" x2="146.7" y2="93" marker-end="url(#ah)"/>
+      <line class="ln" x1="90" y1="133" x2="146.7" y2="133" marker-end="url(#ah)"/>
       <text class="t3 tc" x="120" y="172">mỗi cha → đúng một con</text>
       <text class="t3 tc" x="120" y="187">không qua mạng</text>
 
@@ -4229,18 +4229,18 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
       <text class="t3 tc" x="300" y="50">p1</text><text class="t3 tc" x="300" y="82">p2</text><text class="t3 tc" x="300" y="114">p3</text><text class="t3 tc" x="300" y="146">p4</text>
       <rect class="bxa" x="390" y="66" width="60" height="24" rx="6"/><rect class="bxa" x="390" y="130" width="60" height="24" rx="6"/>
       <text class="t3 tc" x="420" y="82">c1</text><text class="t3 tc" x="420" y="146">c2</text>
-      <line class="ln" x1="330" y1="46" x2="388" y2="74" marker-end="url(#ah)"/>
-      <line class="ln" x1="330" y1="78" x2="388" y2="78" marker-end="url(#ah)"/>
-      <line class="ln" x1="330" y1="110" x2="388" y2="82" marker-end="url(#ah)"/>
-      <line class="ln" x1="330" y1="142" x2="388" y2="142" marker-end="url(#ah)"/>
+      <line class="ln" x1="330" y1="46" x2="387.03" y2="73.53" marker-end="url(#ah)"/>
+      <line class="ln" x1="330" y1="78" x2="386.7" y2="78" marker-end="url(#ah)"/>
+      <line class="ln" x1="330" y1="110" x2="387.03" y2="82.47" marker-end="url(#ah)"/>
+      <line class="ln" x1="330" y1="142" x2="386.7" y2="142" marker-end="url(#ah)"/>
       <text class="t3 tc" x="360" y="172">nhiều cha → một con, nhưng</text>
       <text class="t3 tc" x="360" y="187">mỗi cha chỉ vào một con</text>
 
       <rect class="bx2" x="510" y="40" width="60" height="26" rx="6"/><rect class="bx2" x="510" y="80" width="60" height="26" rx="6"/><rect class="bx2" x="510" y="120" width="60" height="26" rx="6"/>
       <rect class="bxa" x="630" y="40" width="60" height="26" rx="6"/><rect class="bxa" x="630" y="80" width="60" height="26" rx="6"/><rect class="bxa" x="630" y="120" width="60" height="26" rx="6"/>
-      <line class="ln" x1="570" y1="53" x2="628" y2="53" marker-end="url(#ah)"/><line class="ln" x1="570" y1="53" x2="628" y2="93" marker-end="url(#ah)"/><line class="ln" x1="570" y1="53" x2="628" y2="133" marker-end="url(#ah)"/>
-      <line class="ln" x1="570" y1="93" x2="628" y2="53" marker-end="url(#ah)"/><line class="ln" x1="570" y1="93" x2="628" y2="93" marker-end="url(#ah)"/><line class="ln" x1="570" y1="93" x2="628" y2="133" marker-end="url(#ah)"/>
-      <line class="ln" x1="570" y1="133" x2="628" y2="53" marker-end="url(#ah)"/><line class="ln" x1="570" y1="133" x2="628" y2="93" marker-end="url(#ah)"/><line class="ln" x1="570" y1="133" x2="628" y2="133" marker-end="url(#ah)"/>
+      <line class="ln" x1="570" y1="53" x2="626.7" y2="53" marker-end="url(#ah)"/><line class="ln" x1="570" y1="53" x2="627.28" y2="92.51" marker-end="url(#ah)"/><line class="ln" x1="570" y1="53" x2="628" y2="133" marker-end="url(#ah)"/>
+      <line class="ln" x1="570" y1="93" x2="627.28" y2="53.49" marker-end="url(#ah)"/><line class="ln" x1="570" y1="93" x2="626.7" y2="93" marker-end="url(#ah)"/><line class="ln" x1="570" y1="93" x2="627.28" y2="132.51" marker-end="url(#ah)"/>
+      <line class="ln" x1="570" y1="133" x2="628" y2="53" marker-end="url(#ah)"/><line class="ln" x1="570" y1="133" x2="627.28" y2="93.49" marker-end="url(#ah)"/><line class="ln" x1="570" y1="133" x2="626.7" y2="133" marker-end="url(#ah)"/>
       <text class="t3 tc" x="600" y="172">mỗi cha → nhiều con</text>
       <text class="t3 tc" x="600" y="187">shuffle qua mạng</text>
 
@@ -4250,14 +4250,14 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
       <rect class="bx" x="30" y="232" width="100" height="30" rx="6"/><text class="tm tc" x="80" y="252">textFile</text>
       <rect class="bx" x="150" y="232" width="100" height="30" rx="6"/><text class="tm tc" x="200" y="252">map</text>
       <rect class="bx" x="270" y="232" width="100" height="30" rx="6"/><text class="tm tc" x="320" y="252">filter</text>
-      <line class="ln" x1="130" y1="247" x2="148" y2="247" marker-end="url(#ah)"/>
-      <line class="ln" x1="250" y1="247" x2="268" y2="247" marker-end="url(#ah)"/>
-      <line class="lna" x1="380" y1="247" x2="468" y2="247" marker-end="url(#ah-process)"/>
+      <line class="ln" x1="130" y1="247" x2="146.7" y2="247" marker-end="url(#ah)"/>
+      <line class="ln" x1="250" y1="247" x2="266.7" y2="247" marker-end="url(#ah)"/>
+      <line class="lna" x1="380" y1="247" x2="466.7" y2="247" marker-end="url(#ah-process)"/>
       <text class="t2 ta tc" x="424" y="240">shuffle</text>
       <rect class="grpa" x="470" y="224" width="240" height="46" rx="8"/>
       <rect class="bx" x="480" y="232" width="110" height="30" rx="6"/><text class="tm tc" x="535" y="252">reduceByKey</text>
       <rect class="bx" x="610" y="232" width="90" height="30" rx="6"/><text class="tm tc" x="655" y="252">collect</text>
-      <line class="ln" x1="590" y1="247" x2="608" y2="247" marker-end="url(#ah)"/>
+      <line class="ln" x1="590" y1="247" x2="606.7" y2="247" marker-end="url(#ah)"/>
     </svg></div>
     <figcaption>Narrow nghĩa là mỗi partition cha được dùng bởi tối đa một partition con; con có thể đọc nhiều cha, như coalesce. Wide nghĩa là một partition cha bị chia cho nhiều con, phải shuffle; join là wide, trừ khi hai input đã chia partition giống nhau thì thành narrow. DAG scheduler gom các phép narrow liên tiếp vào một stage, cắt stage ở mỗi wide; stage sau chỉ chạy khi stage trước đã ghi xong output shuffle.</figcaption>
   </figure>
@@ -4273,9 +4273,9 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
       <g class="c-store"><rect class="bxa" x="30" y="45" width="160" height="44" rx="8"/><text class="tc" x="110" y="72">block 1</text></g>
       <g class="c-store"><rect class="bxa" x="30" y="105" width="160" height="44" rx="8"/><text class="tc" x="110" y="132">block 2</text></g>
       <g class="c-store"><rect class="bxa" x="30" y="165" width="160" height="44" rx="8"/><text class="tc" x="110" y="192">block 3</text></g>
-      <line class="ln" x1="190" y1="67" x2="328" y2="67" marker-end="url(#ah)"/>
-      <line class="ln" x1="190" y1="127" x2="328" y2="127" marker-end="url(#ah)"/>
-      <line class="ln" x1="190" y1="187" x2="328" y2="187" marker-end="url(#ah)" data-only="1"/>
+      <line class="ln" x1="190" y1="67" x2="326.7" y2="67" marker-end="url(#ah)"/>
+      <line class="ln" x1="190" y1="127" x2="326.7" y2="127" marker-end="url(#ah)"/>
+      <line class="ln" x1="190" y1="187" x2="326.7" y2="187" marker-end="url(#ah)" data-only="1"/>
       <text class="tm t2 tc" x="259" y="60">filter</text>
       <text class="tm t2 tc" x="259" y="120">filter</text>
       <text class="tm t2 tc" x="259" y="180" data-only="1">filter</text>
@@ -4288,7 +4288,7 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
         <text class="fbad tb tc" x="430" y="228">worker 3 chết: partition 3 mất</text>
       </g>
       <g data-s="3">
-        <line class="lna" x1="190" y1="187" x2="328" y2="187" marker-end="url(#ah-process)"/>
+        <line class="lna" x1="190" y1="187" x2="326.7" y2="187" marker-end="url(#ah-process)"/>
         <text class="tm ta tb tc" x="259" y="180">filter</text>
         <rect class="bxh" x="330" y="165" width="200" height="44" rx="8"/><text class="ton" x="344" y="192">partition 3</text><text class="t2 ton te" x="518" y="192">tính lại · worker 1</text>
       </g>
@@ -4410,17 +4410,17 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
       <text class="t2 tc" x="75" y="194">Twitter</text>
       <text class="t2 tc" x="75" y="218">Kinesis</text>
       </g>
-      <line class="ln" x1="130" y1="100" x2="158" y2="82" marker-end="url(#ah)"/>
-      <line class="ln" x1="130" y1="236" x2="158" y2="236" marker-end="url(#ah)"/>
+      <line class="ln" x1="130" y1="100" x2="157.22" y2="82.5" marker-end="url(#ah)"/>
+      <line class="ln" x1="130" y1="236" x2="156.7" y2="236" marker-end="url(#ah)"/>
 
       <text class="t3 tb" x="160" y="40">PHẦN 1 · DSTREAM: DÒNG = CHUỖI RDD</text>
       <rect class="bxa" x="160" y="58" width="70" height="48" rx="8"/><text class="tb tc" x="195" y="79">RDD</text><text class="t3 tc" x="195" y="96">0–1 s</text>
       <rect class="bxa" x="240" y="58" width="70" height="48" rx="8"/><text class="tb tc" x="275" y="79">RDD</text><text class="t3 tc" x="275" y="96">1–2 s</text>
       <rect class="bxa" x="320" y="58" width="70" height="48" rx="8"/><text class="tb tc" x="355" y="79">RDD</text><text class="t3 tc" x="355" y="96">2–3 s</text>
       <text class="t3" x="160" y="124">mỗi batch interval (1 s) thành một lô</text>
-      <line class="ln" x1="390" y1="82" x2="438" y2="82" marker-end="url(#ah)"/>
+      <line class="ln" x1="390" y1="82" x2="436.7" y2="82" marker-end="url(#ah)"/>
       <rect class="bx" x="440" y="58" width="130" height="48" rx="8"/><text class="tb tc" x="505" y="79">Spark engine</text><text class="t3 tc" x="505" y="96">phép RDD mỗi lô</text>
-      <line class="ln" x1="570" y1="82" x2="628" y2="82" marker-end="url(#ah)"/>
+      <line class="ln" x1="570" y1="82" x2="626.7" y2="82" marker-end="url(#ah)"/>
 
       <text class="t3 tb" x="160" y="160">PHẦN 2 · STRUCTURED STREAMING: DÒNG = BẢNG LỚN DẦN</text>
       <rect class="bx" x="160" y="176" width="150" height="110" rx="8"/>
@@ -4432,11 +4432,11 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
       <line class="ln" x1="166" y1="249" x2="304" y2="249"/>
       <text class="tm" x="174" y="266">owl cat</text>
       <text class="t3" x="174" y="281">… dòng mới nối vào cuối</text>
-      <line class="ln" x1="310" y1="231" x2="338" y2="231" marker-end="url(#ah)"/>
+      <line class="ln" x1="310" y1="231" x2="336.7" y2="231" marker-end="url(#ah)"/>
       <rect class="bxa" x="340" y="198" width="110" height="66" rx="8"/><text class="tb tc" x="395" y="220">Truy vấn</text><text class="t3 tc" x="395" y="237">DataFrame, chạy</text><text class="t3 tc" x="395" y="252">tăng dần</text>
-      <line class="ln" x1="450" y1="231" x2="478" y2="231" marker-end="url(#ah)"/>
+      <line class="ln" x1="450" y1="231" x2="476.7" y2="231" marker-end="url(#ah)"/>
       <rect class="bx" x="480" y="198" width="120" height="66" rx="8"/><text class="tb tc" x="540" y="222">Bảng kết quả</text><text class="t3 tc" x="540" y="239">ghi ra sink theo</text><text class="t3 tc" x="540" y="254">output mode</text>
-      <line class="ln" x1="600" y1="231" x2="628" y2="231" marker-end="url(#ah)"/>
+      <line class="ln" x1="600" y1="231" x2="626.7" y2="231" marker-end="url(#ah)"/>
 
       <g class="c-store">
       <rect class="bxa" x="630" y="56" width="110" height="230" rx="8"/>
@@ -4480,14 +4480,14 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
     <div class="canvas"><svg class="dg" viewBox="0 0 720 212" role="img" aria-label="Hệ dòng truyền thống: bản ghi đi vào node 1 và node 2, mỗi node giữ state khả biến rồi gửi tiếp cho node 3; node 2 chết thì state của nó mất">
       <text class="t2" x="20" y="64">bản ghi vào</text>
       <text class="t2" x="20" y="154">bản ghi vào</text>
-      <line class="ln" x1="98" y1="60" x2="198" y2="60" marker-end="url(#ah)"/>
-      <line class="ln" x1="98" y1="150" x2="198" y2="150" marker-end="url(#ah)"/>
+      <line class="ln" x1="98" y1="60" x2="196.7" y2="60" marker-end="url(#ah)"/>
+      <line class="ln" x1="98" y1="150" x2="196.7" y2="150" marker-end="url(#ah)"/>
       <rect class="bx" x="200" y="30" width="150" height="60" rx="8"/><text class="tb" x="214" y="54">node 1</text><text class="tm t2" x="214" y="76">state: count = 42</text>
       <rect class="bx" x="200" y="120" width="150" height="60" rx="8" style="stroke:var(--bad)"/><text class="tb" x="214" y="144">node 2</text><text class="tm t2" x="214" y="166">state: count = 17</text>
       <line class="lnb" x1="326" y1="128" x2="340" y2="142"/><line class="lnb" x1="326" y1="142" x2="340" y2="128"/>
       <text class="fbad tb" x="200" y="198">node chết: state mất</text>
-      <line class="ln" x1="350" y1="60" x2="438" y2="95" marker-end="url(#ah)"/>
-      <line class="ln" x1="350" y1="150" x2="438" y2="115" marker-end="url(#ah)"/>
+      <line class="ln" x1="350" y1="60" x2="436.93" y2="94.58" marker-end="url(#ah)"/>
+      <line class="ln" x1="350" y1="150" x2="436.93" y2="115.42" marker-end="url(#ah)"/>
       <rect class="bx" x="440" y="75" width="150" height="60" rx="8"/><text class="tb" x="454" y="99">node 3</text><text class="tm t2" x="454" y="121">state: tổng</text>
       <line class="ln" x1="590" y1="105" x2="648" y2="105" marker-end="url(#ah)"/>
       <text class="t2" x="652" y="109">kết quả</text>
@@ -4518,10 +4518,10 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
       <rect class="bxa" x="275" y="120" width="120" height="34" rx="6"/><text class="t2 tc" x="335" y="141">RDD @ 1–2 s</text>
       <rect class="bxa" x="420" y="120" width="120" height="34" rx="6"/><text class="t2 tc" x="480" y="141">RDD @ 2–3 s</text>
       <rect class="bxa" x="565" y="120" width="120" height="34" rx="6"/><text class="t2 tc" x="625" y="141">RDD @ 3–4 s</text>
-      <line class="lna" x1="190" y1="64" x2="190" y2="118" marker-end="url(#ah-process)"/>
-      <line class="lna" x1="335" y1="64" x2="335" y2="118" marker-end="url(#ah-process)"/>
-      <line class="lna" x1="480" y1="64" x2="480" y2="118" marker-end="url(#ah-process)"/>
-      <line class="lna" x1="625" y1="64" x2="625" y2="118" marker-end="url(#ah-process)"/>
+      <line class="lna" x1="190" y1="64" x2="190" y2="116.7" marker-end="url(#ah-process)"/>
+      <line class="lna" x1="335" y1="64" x2="335" y2="116.7" marker-end="url(#ah-process)"/>
+      <line class="lna" x1="480" y1="64" x2="480" y2="116.7" marker-end="url(#ah-process)"/>
+      <line class="lna" x1="625" y1="64" x2="625" y2="116.7" marker-end="url(#ah-process)"/>
       <text class="tm ta" x="196" y="96">flatMap</text><text class="tm ta" x="341" y="96">flatMap</text><text class="tm ta" x="486" y="96">flatMap</text><text class="tm ta" x="631" y="96">flatMap</text>
       <line class="ln" x1="130" y1="172" x2="700" y2="172" marker-end="url(#ah)"/>
       <text class="t3 te" x="700" y="165">thời gian</text>
@@ -4626,12 +4626,12 @@ context.<span class="f">start</span>()         <span class="c">// từ đây job
       <text class="tm" x="66" y="170" data-s="3">owl</text>
       <text class="t3" x="66" y="196">… còn nữa</text>
 
-      <line class="ln" x1="240" y1="120" x2="283" y2="120" marker-end="url(#ah)"/>
+      <line class="ln" x1="240" y1="120" x2="281.7" y2="120" marker-end="url(#ah)"/>
       <rect class="bxa" x="285" y="80" width="150" height="80" rx="8"/>
       <text class="tb tc" x="360" y="104">Truy vấn</text>
       <text class="tm tc" x="360" y="126">groupBy(word)</text>
       <text class="tm tc" x="360" y="146">.count()</text>
-      <line class="ln" x1="435" y1="120" x2="478" y2="120" marker-end="url(#ah)"/>
+      <line class="ln" x1="435" y1="120" x2="476.7" y2="120" marker-end="url(#ah)"/>
 
       <text class="t3 tb" x="480" y="26">BẢNG KẾT QUẢ</text>
       <rect class="bx" x="480" y="36" width="200" height="120" rx="8"/>
@@ -4758,7 +4758,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       <text class="tl tc" x="182" y="68">+</text><text class="tl tc" x="362" y="68">+</text><text class="tl tc" x="542" y="68">+</text>
       <line class="ln" x1="92" y1="106" x2="92" y2="128"/><line class="ln" x1="272" y1="106" x2="272" y2="128"/><line class="ln" x1="452" y1="106" x2="452" y2="128"/><line class="ln" x1="632" y1="106" x2="632" y2="128"/>
       <line class="ln" x1="92" y1="128" x2="632" y2="128"/>
-      <line class="lna" x1="362" y1="128" x2="362" y2="156" marker-end="url(#ah-process)"/>
+      <line class="lna" x1="362" y1="128" x2="362" y2="154.7" marker-end="url(#ah-process)"/>
       <rect class="bxh" x="222" y="158" width="280" height="48" rx="8"/>
       <text class="ton tb tc" x="362" y="187">exactly-once end-to-end</text>
     </svg></div>
@@ -4800,13 +4800,13 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
     <div class="canvas"><svg class="dg" viewBox="0 0 760 340" role="img" aria-label="Kiến trúc Lambda: dữ liệu mới vào Kafka rồi chia hai nhánh; batch layer ghi master dataset bất biến trên HDFS và tính lại batch view; speed layer dùng Spark Streaming cập nhật real-time view; truy vấn gộp batch view với real-time view">
       <rect class="bx2" x="15" y="135" width="105" height="70" rx="8"/>
       <text class="tb tc" x="67" y="164">Dữ liệu mới</text><text class="t3 tc" x="67" y="182">sự kiện, log</text>
-      <line class="ln" x1="120" y1="170" x2="138" y2="170" marker-end="url(#ah)"/>
+      <line class="ln" x1="120" y1="170" x2="136.7" y2="170" marker-end="url(#ah)"/>
       <g class="c-ingest">
         <rect class="bxa" x="140" y="135" width="100" height="70" rx="8"/>
         <text class="tb tc" x="190" y="164">Kafka</text><text class="t3 tc" x="190" y="182">nhận, phát lại</text>
       </g>
-      <line class="ln" x1="240" y1="152" x2="283" y2="88" marker-end="url(#ah)"/>
-      <line class="ln" x1="240" y1="188" x2="283" y2="270" marker-end="url(#ah)"/>
+      <line class="ln" x1="240" y1="152" x2="283.16" y2="87.76" marker-end="url(#ah)"/>
+      <line class="ln" x1="240" y1="188" x2="283.47" y2="270.89" marker-end="url(#ah)"/>
 
       <rect class="grp" x="270" y="18" width="300" height="117" rx="10"/>
       <text class="t3 tb" x="282" y="36">BATCH LAYER</text>
@@ -4814,7 +4814,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
         <rect class="bxa" x="285" y="48" width="125" height="74" rx="8"/>
         <text class="tb" x="297" y="70">Master dataset</text><text class="t3" x="297" y="89">HDFS, ghi thêm,</text><text class="t3" x="297" y="105">bất biến</text>
       </g>
-      <line class="ln" x1="410" y1="85" x2="428" y2="85" marker-end="url(#ah)"/>
+      <line class="ln" x1="410" y1="85" x2="426.7" y2="85" marker-end="url(#ah)"/>
       <g class="c-process">
         <rect class="bxa" x="430" y="48" width="125" height="74" rx="8"/>
         <text class="tb" x="442" y="70">Tính lại hết</text><text class="t3" x="442" y="89">Spark / MapReduce,</text><text class="t3" x="442" y="105">vài giờ một lần</text>
@@ -4828,14 +4828,14 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       </g>
 
       <g class="c-query">
-        <line class="ln" x1="555" y1="85" x2="598" y2="85" marker-end="url(#ah)"/>
-        <line class="ln" x1="555" y1="275" x2="598" y2="275" marker-end="url(#ah)"/>
+        <line class="ln" x1="555" y1="85" x2="596.7" y2="85" marker-end="url(#ah)"/>
+        <line class="ln" x1="555" y1="275" x2="596.7" y2="275" marker-end="url(#ah)"/>
         <rect class="bxa" x="600" y="48" width="145" height="74" rx="8"/>
         <text class="tb" x="612" y="70">Batch view</text><text class="t3" x="612" y="89">serving layer</text><text class="t3" x="612" y="105">HBase, Cassandra…</text>
         <rect class="bxa" x="600" y="244" width="145" height="62" rx="8"/>
         <text class="tb" x="612" y="267">Real-time view</text><text class="t3" x="612" y="287">Cassandra, Redis…</text>
-        <line class="lna" x1="672" y1="122" x2="672" y2="146" marker-end="url(#ah-query)"/>
-        <line class="lna" x1="672" y1="244" x2="672" y2="206" marker-end="url(#ah-query)"/>
+        <line class="lna" x1="672" y1="122" x2="672" y2="144.7" marker-end="url(#ah-query)"/>
+        <line class="lna" x1="672" y1="244" x2="672" y2="207.3" marker-end="url(#ah-query)"/>
         <rect class="bxh" x="600" y="148" width="145" height="56" rx="8"/>
         <text class="ton tb tc" x="672" y="172">Truy vấn</text><text class="ton t2 tc" x="672" y="191">gộp hai view</text>
       </g>
@@ -4859,9 +4859,9 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       <g class="c-process"><rect class="bxa" x="195" y="20" width="150" height="50" rx="8"/><text class="tc" x="270" y="41">ETL</text><text class="t3 tc" x="270" y="58">theo lô, chạy đêm</text></g>
       <g class="c-store"><rect class="bxa" x="375" y="20" width="150" height="50" rx="8"/><text class="tc" x="450" y="41">Kho dữ liệu</text><text class="t3 tc" x="450" y="58">SQL, có cấu trúc</text></g>
       <g class="c-query"><rect class="bxa" x="555" y="20" width="150" height="50" rx="8"/><text class="tc" x="630" y="41">Báo cáo BI</text><text class="t3 tc" x="630" y="58">số liệu hôm qua</text></g>
-      <line class="ln" x1="165" y1="45" x2="193" y2="45" marker-end="url(#ah)"/>
-      <line class="ln" x1="345" y1="45" x2="373" y2="45" marker-end="url(#ah)"/>
-      <line class="ln" x1="525" y1="45" x2="553" y2="45" marker-end="url(#ah)"/>
+      <line class="ln" x1="165" y1="45" x2="191.7" y2="45" marker-end="url(#ah)"/>
+      <line class="ln" x1="345" y1="45" x2="371.7" y2="45" marker-end="url(#ah)"/>
+      <line class="ln" x1="525" y1="45" x2="551.7" y2="45" marker-end="url(#ah)"/>
       <text class="t3 tb" x="15" y="100">HADOOP</text>
       <rect class="bx" x="15" y="110" width="220" height="56" rx="8"/><text class="tb fok" x="29" y="133">✓ Volume</text><text class="t2" x="29" y="153">HDFS chia dữ liệu ra nhiều máy</text>
       <rect class="bx" x="250" y="110" width="220" height="56" rx="8"/><text class="tb fok" x="264" y="133">✓ Variety</text><text class="t2" x="264" y="153">lưu thô, schema áp khi đọc</text>
@@ -4899,23 +4899,23 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
         <rect class="bx2" x="15" y="120" width="120" height="60" rx="8"/>
         <text class="tm tc" x="75" y="146">/home</text><text class="t3 tc" x="75" y="164">xem lúc 09:12</text>
       </g>
-      <line class="ln" x1="135" y1="150" x2="158" y2="150" marker-end="url(#ah)"/>
+      <line class="ln" x1="135" y1="150" x2="156.7" y2="150" marker-end="url(#ah)"/>
       <g class="c-ingest"><rect class="bxa" x="160" y="120" width="90" height="60" rx="8"/><text class="tb tc" x="205" y="155">Kafka</text></g>
-      <line class="ln" x1="250" y1="135" x2="288" y2="72" marker-end="url(#ah)"/>
-      <line class="ln" x1="250" y1="165" x2="288" y2="240" marker-end="url(#ah)"/>
+      <line class="ln" x1="250" y1="135" x2="288.3" y2="71.51" marker-end="url(#ah)"/>
+      <line class="ln" x1="250" y1="165" x2="288.51" y2="241" marker-end="url(#ah)"/>
 
       <g class="c-store">
         <rect class="bxa" x="290" y="30" width="150" height="70" rx="8"/>
         <text class="tb" x="302" y="54">Master dataset</text><text class="t3" x="302" y="73">mọi lượt xem từ đầu,</text><text class="t3" x="302" y="89">chỉ ghi thêm</text>
       </g>
       <g data-only="2" class="c-store"><rect class="bxh" x="400" y="78" width="32" height="18" rx="4"/><text class="ton t3 tc" x="416" y="91">+1</text></g>
-      <line class="ln" x1="440" y1="65" x2="498" y2="65" marker-end="url(#ah)"/>
+      <line class="ln" x1="440" y1="65" x2="496.7" y2="65" marker-end="url(#ah)"/>
       <text class="t3 tc" x="469" y="56">batch job</text>
       <g class="c-process">
         <rect class="bxa" x="290" y="205" width="150" height="70" rx="8"/>
         <text class="tb" x="302" y="229">Speed layer</text><text class="t3" x="302" y="248">đếm tăng dần</text><text class="t3" x="302" y="264">ngay khi sự kiện đến</text>
       </g>
-      <line class="ln" x1="440" y1="240" x2="498" y2="240" marker-end="url(#ah)"/>
+      <line class="ln" x1="440" y1="240" x2="496.7" y2="240" marker-end="url(#ah)"/>
 
       <g class="c-query">
         <rect class="bxa" x="500" y="30" width="240" height="70" rx="8"/>
@@ -4934,8 +4934,8 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
         <text class="tm tb ta" x="512" y="259" data-s="5">/home: 95</text>
 
         <g data-s="4">
-          <line class="lna" x1="620" y1="100" x2="620" y2="116" marker-end="url(#ah-query)"/>
-          <line class="lna" x1="620" y1="205" x2="620" y2="190" marker-end="url(#ah-query)"/>
+          <line class="lna" x1="620" y1="100" x2="620" y2="114.7" marker-end="url(#ah-query)"/>
+          <line class="lna" x1="620" y1="205" x2="620" y2="191.3" marker-end="url(#ah-query)"/>
           <rect class="bxh" x="500" y="118" width="240" height="70" rx="8"/>
         </g>
         <g data-only="4"><text class="ton tb tc" x="620" y="145">Truy vấn lúc 09:15</text><text class="ton tm tc" x="620" y="168">10 000 + 421 = 10 421</text></g>
@@ -5011,12 +5011,12 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       <rect class="bx" x="310" y="32" width="120" height="50" rx="8"/><text class="tb tc" x="370" y="53">HashingTF</text><text class="t3 tc" x="370" y="70">Transformer</text>
       <rect class="bxa" x="460" y="32" width="150" height="50" rx="8"/><text class="tb tc" x="535" y="53">LogisticRegression</text><text class="t3 tc" x="535" y="70">Estimator · fit()</text>
       <rect class="bxa" x="640" y="32" width="105" height="50" rx="8"/><text class="tb tc" x="692" y="53">LR Model</text><text class="t3 tc" x="692" y="70">Transformer</text>
-      <line class="ln" x1="125" y1="57" x2="158" y2="57" marker-end="url(#ah)"/>
-      <line class="ln" x1="280" y1="57" x2="308" y2="57" marker-end="url(#ah)"/>
-      <line class="ln" x1="430" y1="57" x2="458" y2="57" marker-end="url(#ah)"/>
-      <line class="lna" x1="610" y1="57" x2="638" y2="57" marker-end="url(#ah-query)"/>
+      <line class="ln" x1="125" y1="57" x2="156.7" y2="57" marker-end="url(#ah)"/>
+      <line class="ln" x1="280" y1="57" x2="306.7" y2="57" marker-end="url(#ah)"/>
+      <line class="ln" x1="430" y1="57" x2="456.7" y2="57" marker-end="url(#ah)"/>
+      <line class="lna" x1="610" y1="57" x2="636.7" y2="57" marker-end="url(#ah-query)"/>
 
-      <path class="lna dash" d="M692 82 L692 105 L560 105 L560 141" marker-end="url(#ah-query)"/>
+      <path class="lna dash" d="M 692 82 L 692 105 L 560 105 L 560 139.7" marker-end="url(#ah-query)"/>
       <text class="t3 ta" x="575" y="99">mô hình đã học</text>
 
       <text class="t3 tb" x="15" y="126">DỰ ĐOÁN: model.transform(test)</text>
@@ -5026,10 +5026,10 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       <rect class="bx" x="310" y="143" width="120" height="50" rx="8"/><text class="tb tc" x="370" y="164">HashingTF</text><text class="t3 tc" x="370" y="181">cùng tham số</text>
       <rect class="bxh" x="460" y="143" width="150" height="50" rx="8"/><text class="tb tc ton" x="535" y="164">LR Model</text><text class="t2 tc ton" x="535" y="181">transform()</text>
       <rect class="bx2" x="640" y="143" width="105" height="50" rx="8"/><text class="tb tc" x="692" y="164">Dự đoán</text><text class="t3 tc" x="692" y="181">+ cột prediction</text>
-      <line class="ln" x1="125" y1="168" x2="158" y2="168" marker-end="url(#ah)"/>
-      <line class="ln" x1="280" y1="168" x2="308" y2="168" marker-end="url(#ah)"/>
-      <line class="ln" x1="430" y1="168" x2="458" y2="168" marker-end="url(#ah)"/>
-      <line class="ln" x1="610" y1="168" x2="638" y2="168" marker-end="url(#ah)"/>
+      <line class="ln" x1="125" y1="168" x2="156.7" y2="168" marker-end="url(#ah)"/>
+      <line class="ln" x1="280" y1="168" x2="306.7" y2="168" marker-end="url(#ah)"/>
+      <line class="ln" x1="430" y1="168" x2="456.7" y2="168" marker-end="url(#ah)"/>
+      <line class="ln" x1="610" y1="168" x2="636.7" y2="168" marker-end="url(#ah)"/>
       <text class="t3 tb ta" x="160" y="218">PipelineModel = các Transformer đã sẵn sàng</text>
 
       <line class="ln dash" x1="15" y1="234" x2="745" y2="234"/>
@@ -5039,11 +5039,11 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       <rect class="bxa" x="315" y="266" width="135" height="64" rx="8"/><text class="tb tc" x="382" y="293">map · gán tâm</text><text class="tm t3 tc" x="382" y="312">(k, (p, 1))</text>
       <rect class="bxa" x="475" y="266" width="135" height="64" rx="8"/><text class="tb tc" x="542" y="293">reduceByKey</text><text class="tm t3 tc" x="542" y="312">(k, (Σp, n))</text>
       <rect class="bxh" x="635" y="266" width="110" height="64" rx="8"/><text class="tb tc ton" x="690" y="293">Driver</text><text class="t2 tc ton" x="690" y="312">tâm = Σp / n</text>
-      <line class="ln" x1="135" y1="298" x2="158" y2="298" marker-end="url(#ah)"/>
-      <line class="ln" x1="290" y1="298" x2="313" y2="298" marker-end="url(#ah)"/>
-      <line class="ln" x1="450" y1="298" x2="473" y2="298" marker-end="url(#ah)"/>
-      <line class="ln" x1="610" y1="298" x2="633" y2="298" marker-end="url(#ah)"/>
-      <path class="lna" d="M690 330 L690 352 L382 352 L382 333" marker-end="url(#ah-query)"/>
+      <line class="ln" x1="135" y1="298" x2="156.7" y2="298" marker-end="url(#ah)"/>
+      <line class="ln" x1="290" y1="298" x2="311.7" y2="298" marker-end="url(#ah)"/>
+      <line class="ln" x1="450" y1="298" x2="471.7" y2="298" marker-end="url(#ah)"/>
+      <line class="ln" x1="610" y1="298" x2="631.7" y2="298" marker-end="url(#ah)"/>
+      <path class="lna" d="M 690 330 L 690 352 L 382 352 L 382 333.3" marker-end="url(#ah-query)"/>
       <text class="t3 ta tc" x="536" y="372">gửi K tâm mới cho vòng sau, lặp tới khi tâm dịch chuyển &lt; ε</text>
     </svg></div>
     <figcaption>Trên: <b>Pipeline</b> là một Estimator; <code>fit()</code> chạy lần lượt các stage, stage nào là Estimator thì được fit thành Transformer, và <b>PipelineModel</b> áp đúng các bước ấy cho dữ liệu mới. Dưới: <b>K-means</b> trên Spark đọc dữ liệu một lần rồi <code>cache()</code>; mỗi vòng map gán điểm, reduceByKey cộng tổng và số điểm, driver chia ra tâm mới. Thân bài đi theo thứ tự slide: máy học là gì, MLlib có gì, lọc cộng tác, pipeline, rồi K-means.</figcaption>
@@ -5064,12 +5064,12 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
   <figure class="fig">
     <div class="canvas"><svg class="dg" viewBox="0 0 720 235" role="img" aria-label="Ba loại máy học: có giám sát gồm phân loại và hồi quy, không giám sát gồm phân cụm, học tăng cường như agent chơi Mario">
       <rect class="bxh" x="300" y="12" width="120" height="40" rx="8"/><text class="ton tb tc" x="360" y="37">Máy học</text>
-      <line class="ln" x1="360" y1="52" x2="120" y2="83"/><line class="ln" x1="360" y1="52" x2="360" y2="83"/><line class="ln" x1="360" y1="52" x2="600" y2="83"/>
+      <line class="ln" x1="360" y1="52" x2="120" y2="83"/><line class="ln" x1="360" y1="52" x2="360" y2="85"/><line class="ln" x1="360" y1="52" x2="600" y2="83"/>
       <rect class="bxa" x="15" y="85" width="210" height="50" rx="8"/><text class="tb tc" x="120" y="106">Có giám sát</text><text class="t3 tc" x="120" y="124">có input lẫn output mẫu</text>
       <rect class="bxa" x="255" y="85" width="210" height="50" rx="8"/><text class="tb tc" x="360" y="106">Không giám sát</text><text class="t3 tc" x="360" y="124">không nhãn, tự tìm cấu trúc</text>
       <rect class="bxa" x="495" y="85" width="210" height="50" rx="8"/><text class="tb tc" x="600" y="106">Học tăng cường</text><text class="t3 tc" x="600" y="124">môi trường động, đạt mục tiêu</text>
-      <line class="ln" x1="120" y1="135" x2="66" y2="163"/><line class="ln" x1="120" y1="135" x2="174" y2="163"/>
-      <line class="ln" x1="360" y1="135" x2="360" y2="163"/><line class="ln" x1="600" y1="135" x2="600" y2="163"/>
+      <line class="ln" x1="120" y1="135" x2="62.14" y2="165"/><line class="ln" x1="120" y1="135" x2="177.86" y2="165"/>
+      <line class="ln" x1="360" y1="135" x2="360" y2="165"/><line class="ln" x1="600" y1="135" x2="600" y2="165"/>
       <rect class="bx" x="15" y="165" width="102" height="60" rx="8"/><text class="tb tc" x="66" y="186">Phân loại</text><text class="t3 tc" x="66" y="203">classification</text><text class="t3 tc" x="66" y="218">email spam?</text>
       <rect class="bx" x="123" y="165" width="102" height="60" rx="8"/><text class="tb tc" x="174" y="186">Hồi quy</text><text class="t3 tc" x="174" y="203">regression</text><text class="t3 tc" x="174" y="218">giá trị liên tục</text>
       <rect class="bx" x="255" y="165" width="210" height="60" rx="8"/><text class="tb tc" x="360" y="186">Phân cụm</text><text class="t3 tc" x="360" y="203">clustering · K-means</text><text class="t3 tc" x="360" y="218">gom điểm gần nhau</text>
@@ -5173,7 +5173,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       <text class="t2" x="20" y="146" data-only="3"><tspan class="tm ta">HashingTF.transform()</tspan> băm mỗi từ vào 1 trong 1000 ô, đếm số lần: vector thưa</text>
       <g data-s="4">
         <text class="t2" x="20" y="146" data-only="4"><tspan class="tm ta">LogisticRegression.fit()</tspan> đọc features và label, học trọng số</text>
-        <line class="lna" x1="560" y1="116" x2="560" y2="168" marker-end="url(#ah-query)"/>
+        <line class="lna" x1="560" y1="116" x2="560" y2="166.7" marker-end="url(#ah-query)"/>
         <rect class="bxh" x="470" y="170" width="180" height="50" rx="8"/>
         <text class="ton tb tc" x="560" y="192">LogisticRegressionModel</text>
         <text class="ton t2 tc" x="560" y="210">trọng số cho 1000 ô</text>
@@ -5271,18 +5271,18 @@ model.<span class="f">transform</span>(test).<span class="f">select</span>(<span
       <text class="t3 tc" x="85" y="86">gửi tâm (broadcast)</text>
       <rect class="bxh" x="15" y="95" width="140" height="70" rx="8"/>
       <text class="ton tb tc" x="85" y="122">Driver</text><text class="ton t2 tc" x="85" y="142">tâm c1 … cK</text>
-      <line class="ln" x1="155" y1="112" x2="228" y2="50" marker-end="url(#ah)"/>
-      <line class="ln" x1="155" y1="130" x2="228" y2="122" marker-end="url(#ah)"/>
-      <line class="ln" x1="155" y1="148" x2="228" y2="194" marker-end="url(#ah)"/>
+      <line class="ln" x1="155" y1="112" x2="227.48" y2="50.44" marker-end="url(#ah)"/>
+      <line class="ln" x1="155" y1="130" x2="226.72" y2="122.14" marker-end="url(#ah)"/>
+      <line class="ln" x1="155" y1="148" x2="227.21" y2="193.5" marker-end="url(#ah)"/>
       <rect class="bxa" x="230" y="20" width="180" height="58" rx="8"/><text class="tb" x="242" y="42">partition 1 · RAM</text><text class="tm t2" x="242" y="63">map → (k, (p, 1))</text>
       <rect class="bxa" x="230" y="93" width="180" height="58" rx="8"/><text class="tb" x="242" y="115">partition 2 · RAM</text><text class="tm t2" x="242" y="136">map → (k, (p, 1))</text>
       <rect class="bxa" x="230" y="166" width="180" height="58" rx="8"/><text class="tb" x="242" y="188">partition 3 · RAM</text><text class="tm t2" x="242" y="209">map → (k, (p, 1))</text>
-            <line class="ln" x1="410" y1="49" x2="483" y2="112" marker-end="url(#ah)"/>
-      <line class="ln" x1="410" y1="122" x2="483" y2="130" marker-end="url(#ah)"/>
-      <line class="ln" x1="410" y1="195" x2="483" y2="148" marker-end="url(#ah)"/>
+            <line class="ln" x1="410" y1="49" x2="482.5" y2="111.57" marker-end="url(#ah)"/>
+      <line class="ln" x1="410" y1="122" x2="481.72" y2="129.86" marker-end="url(#ah)"/>
+      <line class="ln" x1="410" y1="195" x2="482.23" y2="148.5" marker-end="url(#ah)"/>
       <rect class="bx" x="485" y="95" width="220" height="70" rx="8"/>
       <text class="tb" x="499" y="120">reduceByKey</text><text class="tm t2" x="499" y="142">(k, (Σp, n))</text><text class="t3" x="499" y="157">cộng gộp sẵn trên mỗi partition</text>
-      <path class="lna" d="M595 165 L595 232 L85 232 L85 167" marker-end="url(#ah-query)"/>
+      <path class="lna" d="M 595 165 L 595 232 L 85 232 L 85 168.3" marker-end="url(#ah-query)"/>
       <text class="t2 ta tc" x="340" y="250">tâm mới = Σp / n; lặp tới khi tâm dịch chuyển &lt; ε</text>
     </svg></div>
     <figcaption>Dữ liệu được <code>cache()</code> nên mỗi vòng chỉ đọc RAM; thứ đi qua mạng mỗi vòng chỉ là K tâm, và mỗi partition phát tối đa K cặp (tổng, số điểm). Đây là lý do K-means trên Spark nhanh hơn hẳn trên Hadoop.</figcaption>

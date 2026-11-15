@@ -31,7 +31,10 @@
 - Màu chỉ khai ở token `:root` / `html.dark`. Mỗi chặng một màu (`--found` … `--query`), áp vào bài qua `--acc`.
 - SVG mang class `dg`; tô bằng lớp `bx`, `bxa`, `bxh`, `ln`, `lna`, `t2`, `ta`…, không ghi mã màu.
   Thành phần thuộc chặng khác (HDFS, Kafka…) luôn bọc `<g class="c-<chặng>">` + `.bxa`; `--acc` chỉ cho thứ bài đang dạy.
-  Bản v2: mũi tên lấy màu nét (`context-stroke`). Mũi tên: `url(#ah)`, `url(#ah-<stage>)`, `url(#ah-bad)`.
+  Mũi tên: `url(#ah)`, `url(#ah-<stage>)`, `url(#ah-bad)`; bản v2 lấy màu nét (`context-stroke`).
+- Marker cỡ cố định (`userSpaceOnUse`, 9 đơn vị, `refX=7`). Đầu có mũi tên dừng cách mép hộp 3,3 đơn vị để
+  mũi nhọn chạm mép; đầu không mũi tên chạm đúng mép.
+- Sơ đồ vẽ 1:1 (`max-width` = bề rộng `viewBox`, JS đặt `--vbw`).
 - Hình chạy từng bước: `figure.fig.stepper` + `ol.steps`; phần tử SVG có `data-s`, `data-only`, `data-dim`.
   JS chung tự thêm nút.
 - Tab: `.tabs > section.tab[data-label]`.
