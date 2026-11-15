@@ -6666,7 +6666,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
           <li>Trên trục tuyến tính, cột luôn bắt đầu từ 0. Trục bắt đầu ở 50.000 USD làm khoảng cách giữa hạt thấp nhất và bốn hạt kia trông lớn gấp nhiều lần thực tế.</li>
           <li>Biểu đồ miền giá cổ phiếu cũng vậy: trục y cắt ở 110 khiến một cú giảm nhẹ trông như sụp đổ.</li>
           <li>Muốn nhấn khác biệt nhỏ thì vẽ thẳng hiệu số: cột "thay đổi thu nhập 2010–2015", miền "mức giảm so với ngày 22/10". Cột có thể âm, miễn nói rõ đang vẽ hiệu.</li>
-          <li>Trên trục log, độ dài cột phụ thuộc điểm gốc tuỳ ý nên vô nghĩa; đặt chấm tại giá trị thay cho cột.</li>
+          <li>Trên trục log, độ dài cột phụ thuộc điểm gốc tuỳ ý nên vô nghĩa với lượng; đặt chấm tại giá trị thay cho cột. Nếu dữ liệu là tỉ số (gấp mấy lần) thì cột trên trục log hợp lệ, bắt đầu từ 1.</li>
         </ul>
       </div>
     </details>
@@ -7365,7 +7365,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
           <dt>Khi nào xảy ra</dt><dd>Dữ liệu rất lớn; hoặc dữ liệu nhỏ nhưng ghi với độ chính xác thấp, làm tròn, nên nhiều quan sát trùng giá trị. Biểu đồ phân tán ở <a href="#b4-quan-he">Bài 4</a> gặp đúng chuyện này.</dd>
           <dt>Trong suốt</dt><dd>Điểm chồng nhau hiện đậm hơn.</dd>
           <dt>Jitter</dt><dd>Dịch mỗi điểm một chút ngẫu nhiên để thấy các điểm trùng. Jitter quá tay làm hình không còn đúng dữ liệu.</dd>
-          <dt>2D histogram</dt><dd>Hàng chục nghìn điểm (giờ cất cánh và độ trễ chuyến bay): chia mặt phẳng thành ô chữ nhật hoặc lục giác, đếm và tô màu theo số đếm.</dd>
+          <dt>2D histogram</dt><dd>Hơn 100.000 điểm (giờ cất cánh và độ trễ của mọi chuyến bay rời sân bay Newark năm 2013): chia mặt phẳng thành ô chữ nhật hoặc lục giác, đếm và tô màu theo số đếm.</dd>
           <dt>Đường đồng mức</dt><dd>Ước lượng mật độ điểm rồi vẽ đường nối vùng cùng mật độ, có thể tô đậm dần vào tâm; tách màu theo nhóm hoặc mỗi nhóm một panel (giá kim cương theo carat và chất lượng cắt).</dd>
         </dl>
       </div>
@@ -7424,7 +7424,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
         <ul>
           <li>Mã hoá quá nhiều hoặc thông tin không liên quan: thang định tính chỉ hợp 3 – 5 nhóm. 51 bang mỗi bang một màu thì nên tô theo vùng và ghi tên bang trực tiếp. Tô màu chỉ để có màu, không mục đích, cũng là lỗi.</li>
           <li>Thang không đơn điệu: thang tuần tự phải cho thấy giá trị nào lớn hơn và hiệu giữa các màu tương ứng hiệu giữa giá trị. Cầu vồng (rainbow) nhảy độ sáng lên xuống, quá bão hoà, che đặc điểm thật và làm nổi chỗ tuỳ ý.</li>
-          <li>Không thiết kế cho người thiếu sắc giác (CVD): đỏ–lục (deuteranomaly, protanomaly) hay xanh dương–lục (tritanomaly) có thể không phân biệt được. Thang tuần tự đi từ tối tới sáng thường an toàn; thang phân kỳ chọn PiYG (hồng–lục vàng); thang định tính dùng bảng Okabe–Ito (2008).</li>
+          <li>Không thiết kế cho người thiếu sắc giác (CVD): đỏ–lục (protan, deutan) hay lam–vàng (tritan; cặp lam–lục khó tách) có thể không phân biệt được. Mỗi loại có dạng giảm nhạy (-anomaly, từ nhẹ tới nặng) và dạng mất hẳn một loại tế bào nón (-anopia). Thang tuần tự đi từ tối tới sáng thường an toàn; thang phân kỳ chọn PiYG (hồng–lục vàng); thang định tính dùng bảng Okabe–Ito (2008).</li>
           <li>Phần tử nhỏ (điểm, đường mảnh) càng khó phân biệt màu, càng tệ với người CVD.</li>
         </ul>
       </div>
@@ -7802,7 +7802,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
   </ul></div>
   <div class="quiz-list">
     <details class="quiz"><summary>Biểu đồ cột thu nhập năm hạt có trục y bắt đầu từ 50.000 USD. Sai ở đâu, chữa thế nào?</summary><div>Vi phạm nguyên tắc mực tỉ lệ: chiều cao cột không còn tỉ lệ với giá trị, nên hạt 52 nghìn trông chỉ bằng 1/11 hạt 72 nghìn trong khi thực tế bằng 72%. Chữa: trục từ 0; nếu muốn nhấn khác biệt thì vẽ hiệu so với một mốc, hoặc dùng dot plot.</div></details>
-    <details class="quiz"><summary>Biểu đồ phân tán 50.000 chuyến bay thành một mảng đen. Nên làm gì?</summary><div>Trong suốt và jitter không đủ với số điểm cỡ này: vùng dày thành khối đặc, vùng thưa gần như biến mất. Dùng 2D histogram (ô chữ nhật hoặc lục giác tô theo số đếm) hoặc đường đồng mức mật độ.</div></details>
+    <details class="quiz"><summary>Biểu đồ phân tán hơn 100.000 chuyến bay thành một mảng đen. Nên làm gì?</summary><div>Trong suốt và jitter không đủ với số điểm cỡ này: vùng dày thành khối đặc, vùng thưa gần như biến mất. Dùng 2D histogram (ô chữ nhật hoặc lục giác tô theo số đếm) hoặc đường đồng mức mật độ.</div></details>
     <details class="quiz"><summary>Vì sao nên mã hoá dư (màu + hình dạng) và ghi nhãn trực tiếp?</summary><div>Khoảng 8% nam giới thiếu sắc giác, bản in đen trắng mất màu, điểm nhỏ khó phân biệt màu; thêm hình dạng giữ được thông tin khi màu thất bại. Nhãn trực tiếp bỏ bước dò chú giải, giảm tải trí nhớ của người xem.</div></details>
   </div>
 </section>
@@ -8195,7 +8195,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
           <li>Multi-level: giảm kích thước đồ thị bằng cách gộp đỉnh, tính phân hoạch hay bố cục trên đồ thị thu gọn, rồi chiếu kết quả về đồ thị gốc.</li>
         </ul>
         <div class="cols">
-          <div class="card"><b>Lấy mẫu (sampling)</b>Đồ thị lớn làm quá tải công cụ và người xem; lấy một tập con vừa sức. Ngẫu nhiên; theo bậc (giữ đỉnh trung tâm); ego-network (một đỉnh và láng giềng); theo cộng đồng. Mỗi cách làm nổi một khía cạnh khác.</div>
+          <div class="card"><b>Lấy mẫu (sampling)</b>Đồ thị lớn làm quá tải công cụ và người xem; lấy một tập con vừa sức. Ngẫu nhiên; theo bậc (giữ các đỉnh bậc cao, tức hub); ego-network (một đỉnh và láng giềng); theo cộng đồng. Mỗi cách làm nổi một khía cạnh khác.</div>
           <div class="card"><b>Thu gọn / mở rộng</b>Hợp với đồ thị phân cấp: gập hay mở từng cây con khi cần. Rõ hơn vì bớt rối; mở rộng được vì phần đang gập không phải vẽ.</div>
         </div>
       </div>
@@ -8394,10 +8394,11 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
 <text x="405.0" y="212" class="t-m t-c">ô (i, j) tô = có cạnh; đối xứng vì đồ thị vô hướng</text>
         </svg></div><figcaption>Cạnh: A–B, A–C, B–C, B–D, C–E, D–E, như ví dụ trong slide.</figcaption></figure>
         <div class="cols">
-          <div class="card good"><b>Ưu</b>Biểu diễn được hầu hết đồ thị (trừ siêu đồ thị); tập trung vào cạnh thay vì đỉnh; không phải lo bố cục, không có cạnh cắt nhau. Sắp lại hàng và cột thì cụm hiện thành khối vuông dọc đường chéo.</div>
+          <div class="card good"><b>Ưu</b>Biểu diễn được hầu hết đồ thị (trừ siêu đồ thị); tập trung vào cạnh thay vì đỉnh; không phải đặt toạ độ đỉnh và không có cạnh cắt nhau. Nhưng thứ tự hàng và cột quyết định điều thấy được: sắp lại (seriation) thì cụm hiện thành khối vuông dọc đường chéo, sắp tuỳ ý thì gần như không thấy gì.</div>
           <div class="card bad"><b>Nhược</b>Khó nhận ra quan hệ như đường đi, chu trình; tốn diện tích n × n kể cả khi đồ thị thưa.</div>
         </div>
         <p>Bố cục lai (hybrid, kiểu NodeTrix) vẽ các cụm dày thành ma trận nhỏ và nối các cụm bằng cạnh node-link: tận dụng ma trận ở chỗ dày và node-link ở chỗ thưa, như mạng đồng tác giả gồm vài nhóm nghiên cứu.</p>
+        <p class="slide-note">Slide ghi "không phải lo bố cục". Ma trận bỏ bài toán đặt toạ độ đỉnh nhưng thay bằng bài toán sắp thứ tự hàng và cột, như hai ma trận ở slide trước cho thấy.</p>
       </div>
     </details>
 
@@ -8601,7 +8602,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
 <circle cx="300" cy="54" r="5" class="f-c2"/><text x="309" y="58" class="t-m">Tennis</text>
 <circle cx="350" cy="80" r="5" class="f-c2"/><text x="359" y="84" class="t-m">Chạy bộ</text>
 <circle cx="296" cy="106" r="5" class="f-c2"/><text x="305" y="110" class="t-m">Bơi</text>
-<circle cx="372" cy="118" r="5" class="f-c2"/><text x="381" y="122" class="t-m">Leo núi</text>
+<circle cx="372" cy="118" r="5" class="f-c2"/><text x="381" y="122" class="t-m">Đi bộ đường dài</text>
 <circle cx="540" cy="56" r="5" class="f-c3"/><text x="549" y="60" class="t-m">Hong Kong</text>
 <circle cx="560" cy="92" r="5" class="f-c3"/><text x="569" y="96" class="t-m">San Francisco</text>
 <circle cx="600" cy="126" r="5" class="f-c3"/><text x="609" y="130" class="t-m">Bay Area</text>
@@ -8610,7 +8611,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
         </svg></div><figcaption>Vị trí minh hoạ. Từ gần nghĩa nằm gần nhau; "Piano" xếp chung danh sách sở thích nhưng không cùng nhóm thể thao.</figcaption></figure>
         <dl class="terms">
           <dt>Số lượng</dt><dd>Từ vựng rất lớn nên không thể vẽ hết; phải chọn từ hoặc gộp từ.</dd>
-          <dt>Quan hệ của từ</dt><dd>Tương quan (Hong Kong, San Francisco, Bay Area); thứ tự (các tháng); thành viên nhóm (tennis, chạy, bơi, leo núi, khác với piano); phân cấp, trái nghĩa, đồng nghĩa, thực thể.</dd>
+          <dt>Quan hệ của từ</dt><dd>Tương quan (Hong Kong, San Francisco, Bay Area); thứ tự (các tháng); thành viên nhóm (tennis, chạy, bơi, đi bộ đường dài, khác với piano); phân cấp, trái nghĩa, đồng nghĩa, thực thể.</dd>
           <dt>Word embedding</dt><dd>Mỗi từ là một vector; chiếu xuống 2D (như t-SNE) để thấy cụm nghĩa.</dd>
         </dl>
       </div>
@@ -8669,7 +8670,8 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
           <tr><td>mercy</td><td style="text-align:right">2</td><td style="text-align:right">0</td><td style="text-align:right">3</td><td style="text-align:right">5</td><td style="text-align:right">5</td><td style="text-align:right">1</td></tr>
           <tr><td>worser</td><td style="text-align:right">2</td><td style="text-align:right">0</td><td style="text-align:right">1</td><td style="text-align:right">1</td><td style="text-align:right">1</td><td style="text-align:right">0</td></tr>
         </table></div>
-        <p>Ma trận tài liệu–từ của sáu vở Shakespeare (số lần xuất hiện, theo slide). Mỗi cột là vector của một vở: hai vở La Mã giống nhau ở Antony, Caesar; "mercy" rải đều nên ít phân biệt.</p>
+        <p>Ma trận từ–tài liệu (term–document) của sáu vở Shakespeare (số lần xuất hiện, theo slide). Mỗi cột là vector của một vở: hai vở La Mã giống nhau ở Antony, Caesar; "mercy" rải đều nên ít phân biệt.</p>
+        <p class="slide-note">Slide gọi bảng này là "Document-Term Matrix", nhưng hàng là từ, cột là vở, tức ma trận từ–tài liệu. Chuyển vị thì ra ma trận tài liệu–từ, mỗi hàng một tài liệu như kết quả của demo ở trên.</p>
       </div>
     </details>
 
@@ -8909,6 +8911,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
         <ol>
           <li>Hiểu bối cảnh.</li><li>Chọn cách hiển thị phù hợp.</li><li>Dùng mã hoá dư.</li><li>Bỏ rác thị giác.</li><li>Dẫn sự chú ý của người xem.</li><li>Thêm lời giải thích.</li><li>Kể một câu chuyện.</li>
         </ol>
+        <p class="slide-note">Knaflic có sáu bài học: hiểu bối cảnh, chọn hình hiệu quả, bỏ rác, dẫn chú ý, nghĩ như nhà thiết kế, kể chuyện. Slide giữ năm bài, thêm bước mã hoá dư, và rút bài "nghĩ như nhà thiết kế" còn một trang về thẩm mỹ. Bước "thêm lời giải thích" (chú thích, tiêu đề) ứng với phần dùng chữ trong bài ấy.</p>
       </div>
     </details>
 
@@ -9090,7 +9093,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
           <dt>Bao quanh</dt><dd>Một vùng nền nhạt gom các phần tử bên trong thành nhóm, như tô nền một giai đoạn hay vùng dự báo. Không cần khung đậm.</dd>
           <dt>Khép kín</dt><dd>Mắt tự nối chỗ hở thành hình trọn, nên bỏ khung quanh biểu đồ mà hình vẫn đứng được (bước "Bỏ khung, lưới").</dd>
           <dt>Liên tục</dt><dd>Mắt đi theo đường trơn và mép thẳng hàng. Các cột ngang căn thẳng một mép trái nên bỏ được trục (bước "Sắp xếp, nhãn trực tiếp").</dd>
-          <dt>Kết nối</dt><dd>Phần tử nối bằng đường được đọc là liên quan, mạnh hơn cả gần nhau và giống nhau. Vì thế biểu đồ đường nối các điểm cùng một chuỗi.</dd>
+          <dt>Kết nối</dt><dd>Phần tử nối bằng đường được đọc là liên quan, mạnh hơn cả cùng màu, cùng cỡ hay cùng hình (theo Knaflic). Vì thế biểu đồ đường nối các điểm cùng một chuỗi.</dd>
         </dl>
       </div>
     </details>
@@ -9256,7 +9259,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
         </svg></div><figcaption>Số liệu theo slide: CDC/NCHS, National Health Interview Survey 2010–2015; 9,2% là số 6 tháng đầu năm 2015 (cả năm 2015: 9,1%).</figcaption></figure>
         <ul>
           <li>Thuộc tính tiền chú ý (preattentive) là tính chất thị giác ta nhận ra không cần cố gắng: hướng, hình dạng, độ dài, độ dày, kích thước, độ cong, dấu thêm, bao quanh, màu, cường độ, vị trí, chuyển động. Dùng có chủ đích thì người xem thấy điều cần thấy trước khi biết mình đang thấy.</li>
-          <li>Dùng màu tiết kiệm: một màu nhấn trên nền xám. Màu cho cả bảng 8 nước × 5 loại thuốc thì không gì nổi lên.</li>
+          <li>Dùng màu tiết kiệm: một màu nhấn trên nền xám. Tô cầu vồng cho cả bảng hạng bán của 14 nước × 5 loại thuốc (hạng 1 màu đỏ, hạng 10 trở đi màu tím đậm) thì không gì nổi lên; bản sửa tô xanh cho hạng 1–4 (hạng 1 xanh đậm nhất, hạng 4 nhạt nhất) và để hạng 5 trở đi màu xám. Lỗi thang cầu vồng ở <a href="#b9-loi-mau">9.3</a>.</li>
           <li>Tạo thứ bậc thông tin: cỡ chữ, độ đậm và màu dẫn người xem từ ý lớn tới chi tiết. Thiết kế đẹp (canh lề, khoảng trắng) làm người xem kiên nhẫn hơn với hình.</li>
           <li>Chữ trong hình: chú thích trực tiếp các điểm quan trọng (đỉnh, đáy, mốc sự kiện); tiêu đề là câu nói ra thông điệp, không chỉ là tên biến.</li>
         </ul>
@@ -9295,12 +9298,12 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
 <rect x="225" y="200" width="270" height="44" rx="22" class="f-sunk"/><text x="360" y="218" class="t-b t-c" style="font-weight:600">Yếu tố bên ngoài</text><text x="360" y="236" class="t-m t-c">khán giả mục tiêu · bối cảnh · phương tiện</text>
 <path d="M225 222 H95 V176 M495 222 H612 V176 M300 200 V176 M442 200 V176" class="f-none s-ink" stroke-width="1.2"/>
         </svg></div><figcaption>Vẽ lại sơ đồ của Lee và cộng sự (2015) trong slide.</figcaption></figure>
-        <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 720 190" role="img" aria-label="Trái: cung truyện năm phần mở đầu, cao trào tăng, đỉnh, thoái trào, kết. Phải: cấu trúc mở, thân, kết bằng nhiều hình: mở bằng một con số gây chú ý, thân dùng vài biểu đồ lần lượt bộc lộ từng mặt, kết bằng thông điệp và điều cần làm">
+        <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 720 190" role="img" aria-label="Trái: cung truyện năm phần mở đầu, phát triển, cao trào, thoái trào, kết. Phải: cấu trúc mở, thân, kết bằng nhiều hình: mở bằng một con số gây chú ý, thân dùng vài biểu đồ lần lượt bộc lộ từng mặt, kết bằng thông điệp và điều cần làm">
           <text x="185" y="20" class="t-b t-c">Cung truyện</text>
 <path d="M30 160 L100 150 C140 140 160 60 190 50 C220 60 240 120 280 132 L340 142" class="f-none s-acc" stroke-width="3"/>
 <text x="50" y="178" class="t-m t-c">mở đầu</text>
-<text x="138" y="104" class="t-m t-e">cao trào tăng</text>
-<text x="190" y="40" class="t-m t-c">đỉnh</text>
+<text x="138" y="104" class="t-m t-e">phát triển</text>
+<text x="190" y="40" class="t-m t-c">cao trào</text>
 <text x="236" y="92" class="t-m">thoái trào</text>
 <text x="330" y="162" class="t-m t-c">kết</text>
 <text x="545" y="20" class="t-b t-c">Mở – thân – kết bằng nhiều hình</text>
@@ -9326,16 +9329,17 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
     <details class="node" id="b12-the-loai">
       <summary><span class="node-k">12.8</span><h3 class="node-t">Kiểu dẫn dắt và bảy thể loại</h3><span class="node-g">Tác giả dẫn hay người đọc dẫn; bảy thể loại từ poster tĩnh tới phim.</span></summary>
       <div class="node-body">
-        <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 720 176" role="img" aria-label="Thang kiểu dẫn dắt: đầu trái là tác giả dẫn với thứ tự cảnh cố định, thông điệp nói rõ và dày, không tương tác; đầu phải là người đọc dẫn với không thứ tự định sẵn, không áp thông điệp, tương tác tự do; ở giữa là kiểu lai martini glass">
+        <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 720 176" role="img" aria-label="Thang kiểu dẫn dắt: đầu trái là tác giả dẫn với thứ tự cảnh cố định, thông điệp nói rõ và dày, không tương tác; đầu phải là người đọc dẫn với không thứ tự định sẵn, không áp thông điệp, tương tác tự do; ở giữa là ba kiểu lai: martini glass thiên về tác giả, interactive slideshow cân bằng, drill-down story thiên về người đọc">
 <rect x="30" y="36" width="660" height="14" rx="7" class="f-acc" fill-opacity="0.2"/><rect x="30" y="36" width="90" height="14" rx="7" class="f-acc"/><rect x="600" y="36" width="90" height="14" rx="7" class="f-c1"/>
-<text x="30" y="24" class="t-b t-acc">Tác giả dẫn</text><text x="690" y="24" class="t-b t-e">Người đọc dẫn</text><text x="360" y="24" class="t-b t-c">kiểu lai</text>
+<text x="30" y="24" class="t-b t-acc">Tác giả dẫn</text><text x="690" y="24" class="t-b t-e">Người đọc dẫn</text><text x="250" y="24" class="t-m t-c">martini glass</text><text x="360" y="24" class="t-m t-c">slideshow</text><text x="470" y="24" class="t-m t-c">drill-down</text>
+<circle cx="250" cy="43" r="5" class="f-surface s-ink" stroke-width="1.5"/><circle cx="360" cy="43" r="5" class="f-surface s-ink" stroke-width="1.5"/><circle cx="470" cy="43" r="5" class="f-surface s-ink" stroke-width="1.5"/>
 <g class="t-m"><text x="30" y="80">· thứ tự cảnh cố định</text><text x="30" y="100">· thông điệp nói rõ, dày đặc</text><text x="30" y="120">· không tương tác</text></g>
 <g class="t-m t-e"><text x="690" y="80">không thứ tự định sẵn ·</text><text x="690" y="100">không áp thông điệp ·</text><text x="690" y="120">tương tác tự do ·</text></g>
-<g class="t-m t-c"><text x="360" y="80">martini glass:</text><text x="360" y="100">dẫn vài cảnh đầu,</text><text x="360" y="120">rồi thả cho người đọc</text></g>
+<g class="t-m t-c"><text x="360" y="80">martini glass: dẫn vài cảnh đầu rồi thả</text><text x="360" y="100">slideshow: mỗi cảnh cho tương tác</text><text x="360" y="120">drill-down: người đọc chọn ví dụ đào sâu</text></g>
 <text x="360" y="160" class="t-m t-c">video, slide ← · · · → công cụ khám phá</text>
-        </svg></div></figure>
-        <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 720 176" role="img" aria-label="Bảy thể loại chuyện dữ liệu vẽ thành biểu tượng. Nhóm tĩnh, đọc tự do: kiểu tạp chí là chữ có biểu đồ chen giữa; biểu đồ có chú thích; poster chia bốn ô. Nhóm có trình tự: sơ đồ luồng, truyện tranh ba khung, trình chiếu với chấm tiến độ, phim có nút phát và thanh thời gian">
-<g class="t-m t-mono t-c"><text x="153" y="18">TĨNH, ĐỌC TỰ DO</text><text x="506" y="18">CÓ TRÌNH TỰ</text></g>
+        </svg></div><figcaption>Phổ kiểu dẫn dắt và ba cấu trúc lai theo Segel &amp; Heer (2010).</figcaption></figure>
+        <figure class="dg"><div class="dg-scroll"><svg viewBox="0 0 720 176" role="img" aria-label="Bảy thể loại chuyện dữ liệu vẽ thành biểu tượng. Nhóm ít hoặc không có thứ tự đọc: kiểu tạp chí là chữ có biểu đồ chen giữa; biểu đồ có chú thích; poster chia bốn ô. Nhóm có thứ tự đọc: sơ đồ luồng, truyện tranh ba khung, trình chiếu với chấm tiến độ, phim có nút phát và thanh thời gian">
+<g class="t-m t-mono t-c"><text x="153" y="18">ÍT HOẶC KHÔNG CÓ THỨ TỰ ĐỌC</text><text x="506" y="18">CÓ THỨ TỰ ĐỌC</text></g>
 <line x1="306" y1="30" x2="306" y2="126" class="s-line dash" stroke-width="1"/>
 <rect x="15" y="30" width="88" height="96" rx="8" class="f-surface s-line" stroke-width="1"/>
 <text x="59" y="144" class="t-m t-c">kiểu tạp chí</text>
@@ -9367,10 +9371,11 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
 <rect x="613" y="42" width="68" height="46" rx="4" class="f-sunk s-line" stroke-width="1"/><polygon points="640,54 640,76 658,65" class="f-acc"/><line x1="613" y1="104" x2="681" y2="104" class="s-line" stroke-width="3" stroke-linecap="round"/><line x1="613" y1="104" x2="635.5" y2="104" class="s-acc" stroke-width="3" stroke-linecap="round"/><circle cx="640" cy="104" r="4.5" class="f-acc"/>
 </svg></div><figcaption>Bảy thể loại của Segel &amp; Heer (2010), vẽ lại thành biểu tượng.</figcaption></figure>
         <div class="cols">
-          <div class="card"><b>Tĩnh, đọc tự do</b>Magazine style (hình chen trong bài viết), annotated chart (biểu đồ có chú thích), partitioned poster (poster chia ô).</div>
-          <div class="card"><b>Có trình tự</b>Flow chart (sơ đồ luồng), comic strip (truyện tranh), slide show (trình chiếu), film/video/animation.</div>
+          <div class="card"><b>Ít hoặc không có thứ tự đọc</b>Magazine style (hình chen trong bài viết), annotated chart (biểu đồ có chú thích), partitioned poster (poster chia ô).</div>
+          <div class="card"><b>Có thứ tự đọc</b>Flow chart (sơ đồ luồng), comic strip (truyện tranh), slide show (trình chiếu), film/video/animation.</div>
         </div>
-        <p>Kiểu lai hay gặp nhất là martini glass: tác giả dẫn qua vài cảnh đầu như thân ly hẹp, rồi mở ra cho người đọc tự khám phá như miệng ly. Ví dụ trong slide: NYT so dự báo ngân sách với thực tế (porcupine chart), số người chết vì súng ở Mỹ (Periscopic), phim "The Fallen of World War II".</p>
+        <p>Kiểu lai hay gặp nhất là martini glass (Segel &amp; Heer, 2010): tác giả dẫn qua vài cảnh đầu như thân ly hẹp, rồi mở ra cho người đọc tự khám phá như miệng ly. Hai kiểu lai còn lại là interactive slideshow (từng cảnh, mỗi cảnh cho tương tác, cân bằng hai cực) và drill-down story (nêu một chủ đề, người đọc chọn ví dụ để xem chi tiết, thiên về người đọc).</p>
+        <p>Ngay sau hai kiểu dẫn dắt, slide đưa năm ví dụ: bài nói của Rosling (video, gần cực tác giả dẫn); TensorFlow Playground (công cụ khám phá, gần cực người đọc dẫn); biểu đồ NYT so dự báo ngân sách với thực tế (Segel &amp; Heer xếp vào interactive slideshow); số người chết vì súng ở Mỹ của Periscopic (hoạt cảnh dẫn đầu rồi cho lọc, gần martini glass); phim "The Fallen of World War II" (có điểm dừng để người xem tương tác với biểu đồ).</p>
       </div>
     </details>
 
@@ -9445,10 +9450,14 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
     <li>Bộ slide của môn IT5425, mười ba file, theo thứ tự trên trang này.</li>
     <li>Đề cương học phần IT5425 Data management and visualization.</li>
     <li>Knaflic, C. N. <i>Storytelling with Data: A Data Visualization Guide for Business Professionals</i>. Wiley, 2015.</li>
-    <li>Wilke, C. O. <i>Fundamentals of Data Visualization</i>. O'Reilly, 2019 — nguồn của bài 8 và bài 9.</li>
+    <li>Wilke, C. O. <i>Fundamentals of Data Visualization</i>. O'Reilly, 2019 — nguồn của bài 8 và bài 9. Bản online ở <a href="https://clauswilke.com/dataviz/">clauswilke.com/dataviz</a>, giấy phép CC BY-NC-ND 4.0.</li>
     <li>Munzner, T. <i>Visualization Analysis and Design</i>. CRC Press, 2014 — khung marks &amp; channels của bài 7.</li>
-    <li>Telea, A. C. <i>Data Visualization: Principles and Practice</i>. CRC Press, 2014.</li>
-    <li>Ward, M. O., Grinstein, G., Keim, D. <i>Interactive Data Visualization: Foundations, Techniques, and Applications</i>. CRC Press, 2015.</li>
+  </ul>
+  <h3>Đọc thêm: sách tham khảo của đề cương, trang chưa dựa vào</h3>
+  <ul class="src">
+    <li>Hu, W.-C., Kaabouch, N. (chủ biên). <i>Big Data Management, Technologies, and Applications</i>. IGI Global, 2014.</li>
+    <li>Telea, A. C. <i>Data Visualization: Principles and Practice</i>, bản 2. A K Peters/CRC Press, 2014.</li>
+    <li>Ward, M. O., Grinstein, G., Keim, D. <i>Interactive Data Visualization: Foundations, Techniques, and Applications</i>, bản 2. CRC Press, 2015.</li>
   </ul>
   <footer>Ghi chép học tập, viết lại bằng tiếng Việt từ slide của môn.</footer>
 </section>
@@ -10331,7 +10340,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
     /* Từ do người dùng gõ: gán bằng textContent, không qua innerHTML. */
     var labels = svg.querySelectorAll('text.t-e');
     top.forEach(function(w, i){ if (labels[i]) labels[i].textContent = w; });
-    out.textContent = toks.length + ' token · bỏ ' + nStop + ' stop word · còn ' + kept.length + ' token, ' + Object.keys(cnt).length + ' từ khác nhau. Đây là một hàng của ma trận tài liệu–từ.';
+    out.textContent = toks.length + ' token · bỏ ' + nStop + ' stop word · còn ' + kept.length + ' token, ' + Object.keys(cnt).length + ' từ khác nhau. Đây là vector của một tài liệu: một hàng của ma trận tài liệu–từ, hay một cột của bảng từ–tài liệu bên dưới.';
   }
   [ta, cStop, cStem].forEach(function(el){ el.addEventListener('input', run); el.addEventListener('change', run); });
   run();
