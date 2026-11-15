@@ -644,7 +644,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <text x="160" y="226" class="t3 tc">1</text><text x="270" y="226" class="t3 tc">10</text><text x="380" y="226" class="t3 tc">100</text><text x="490" y="226" class="t3 tc">1 000</text><text x="600" y="226" class="t3 tc">10 000 MB/s</text>
       <text x="160" y="244" class="t3">trục log, mỗi vạch × 10 · ms là độ trễ truy cập ngẫu nhiên</text>
     </svg></div>
-    <figcaption>RAM nhanh hơn HDD khoảng 100 lần; mạng sang rack khác chậm hơn cả đĩa. Vì thế hệ big data <b>đưa tính toán tới chỗ dữ liệu</b> và giữ dữ liệu trong RAM khi được (Spark, bài 7).</figcaption>
+    <figcaption>RAM nhanh hơn HDD khoảng 100 lần; mạng sang rack khác chậm hơn cả đĩa. Vì thế hệ big data <b>đưa tính toán tới chỗ dữ liệu</b> và giữ dữ liệu trong RAM khi được (Spark, bài 7). Số trong slide là của giữa thập niên 2010; nay mạng trong trung tâm dữ liệu thường 10–100 Gb/s và SSD đời mới đọc vài GB/s, nên khoảng cách giữa mạng và đĩa đã hẹp lại.</figcaption>
   </figure>
   <div class="callout idea"><p><b>Vì sao phải nhiều máy.</b> Đọc 1 TB từ một HDD 100 MB/s mất 10¹² / 10⁸ = 10 000 s, gần 2,8 giờ. Chia 1 TB ra 100 đĩa đọc song song thì còn khoảng 100 s. Cái nghẽn là tốc độ đọc đĩa, không phải dung lượng.</p></div>
 
@@ -743,7 +743,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </details>
 
 
-  <section class="recap"><h3>Nhớ</h3><ul><li>Big data: lớn, nhanh, nhiều dạng, nhiễu; giá trị là đích đến (5V).</li><li>Đơn vị tăng nghìn lần mỗi bậc; big data thường từ hàng terabyte.</li><li>Hệ co giãn cần bốn thứ: mở rộng, truy cập nhanh, trong suốt, sẵn sàng.</li><li>Nghẽn là tốc độ đọc đĩa: 1 TB ở 100 MB/s mất gần 3 giờ.</li><li>Mạng khác rack chậm hơn đĩa, nên mang tính toán tới chỗ dữ liệu.</li><li>Khoảng 80% công sức data science là thu thập và làm sạch dữ liệu.</li></ul></section>
+  <section class="recap"><h3>Nhớ</h3><ul><li>Big data: lớn, nhanh, nhiều dạng, nhiễu; giá trị là đích đến (5V).</li><li>Đơn vị tăng nghìn lần mỗi bậc; big data thường từ hàng terabyte.</li><li>Hệ co giãn cần bốn thứ: mở rộng, truy cập nhanh, trong suốt, sẵn sàng.</li><li>Nghẽn là tốc độ đọc đĩa: 1 TB ở 100 MB/s mất gần 3 giờ.</li><li>Theo số trong slide, mạng khác rack chậm hơn đĩa, nên Hadoop mang tính toán tới chỗ dữ liệu.</li><li>Khoảng 80% công sức data science là thu thập và làm sạch dữ liệu.</li></ul></section>
 
   <div class="quiz">
     <h3>Tự kiểm tra</h3>
@@ -900,7 +900,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <rect class="bxh" x="560" y="152" width="150" height="44" rx="8"/><text x="635" y="179" class="tm ton tc">(Chi, 30)</text>
       </g>
     </svg></div>
-    <figcaption>Map đọc từng đơn hàng, phát cặp (tên, số tiền). Shuffle &amp; sort gom mọi giá trị cùng khoá về một reducer; tập khoá giao cho một reducer gọi là <b>partition</b>. Reduce cộng: An = 20 + 10 + 5 = 35; cơ chế đầy đủ ở <a href="#b6">bài 6</a>.</figcaption>
+    <figcaption>Map đọc từng đơn hàng, phát cặp (tên, số tiền). Shuffle &amp; sort gom mọi giá trị cùng khoá về một reducer; tập khoá giao cho một reducer gọi là <b>partition</b>. Reduce cộng: An = 20 + 10 + 5 = 35; cơ chế đầy đủ và ví dụ word count (đếm số lần mỗi từ xuất hiện) ở <a href="#b6">bài 6</a>.</figcaption>
   </figure>
 
   <h3 class="sec">Hệ sinh thái quanh lõi</h3>
@@ -938,7 +938,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <rect class="bxa" x="520" y="20" width="150" height="54" rx="8"/><text x="595" y="42" class="tb tc">Oozie</text><text x="595" y="60" class="t2 tc">lịch chạy job (DAG)</text>
       <line class="ln dash" x1="520" y1="47" x2="473.3" y2="47" marker-end="url(#ah)"/>
       <path class="ln dash" d="M 545 74 V 125 H 473.3" marker-end="url(#ah)"/>
-      <g class="c-store"><rect class="bxa" x="520" y="218" width="150" height="46" rx="8"/><text x="595" y="237" class="tb tc">HBase</text><text x="595" y="255" class="t2 tc">NoSQL cột trên HDFS</text></g>
+      <g class="c-store"><rect class="bxa" x="520" y="218" width="150" height="46" rx="8"/><text x="595" y="237" class="tb tc">HBase</text><text x="595" y="255" class="t2 tc">NoSQL column family</text></g>
       <line class="ln" x1="520" y1="241" x2="473.3" y2="241" marker-end="url(#ah)"/>
 
       <rect class="bx2" x="20" y="306" width="680" height="40" rx="8"/>
@@ -946,18 +946,18 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <line class="ln dash" x1="420" y1="264" x2="420" y2="306"/>
       <line class="ln dash" x1="595" y1="264" x2="595" y2="306"/>
     </svg></div>
-    <figcaption>Pig và Hive chạy ở máy client, dịch script thành job MapReduce rồi nộp lên cụm. Sqoop và Kafka đưa dữ liệu vào; HBase lưu bảng trên HDFS; Oozie nối các job thành luồng; ZooKeeper giữ cho các thành phần phân tán đồng thuận với nhau (Kafka, HBase, HDFS HA đều dùng nó).</figcaption>
+    <figcaption>Theo slide, Pig và Hive chạy ở máy client, dịch script thành job MapReduce rồi nộp lên cụm. Sqoop và Kafka đưa dữ liệu vào; HBase lưu bảng trên HDFS; Oozie nối các job thành luồng; ZooKeeper giữ cho các thành phần phân tán đồng thuận với nhau (HBase, HDFS HA dùng nó; Kafka bản cũ cũng dùng, từ Kafka 4.0 thay bằng cơ chế đồng thuận riêng KRaft, tức Kafka Raft).</figcaption>
   </figure>
   <div class="tbl"><table>
     <thead><tr><th>Công cụ</th><th>Làm gì</th><th>Ghi nhớ</th></tr></thead>
     <tbody>
       <tr><td>Pig</td><td>Xử lý dữ liệu mức cao bằng Pig Latin; mạnh ở join và biến đổi.</td><td>Trình thông dịch chạy ở client, sinh job MapReduce.</td></tr>
-      <tr><td>Hive</td><td>Truy vấn bằng HiveQL giống SQL, rút ngắn thời gian viết job.</td><td>Cũng chạy ở client, cũng sinh job MapReduce.</td></tr>
-      <tr><td>HBase</td><td>"CSDL của Hadoop": kho dạng cột, bảng tới hàng nghìn cột, hàng trăm nghìn lượt ghi mỗi giây.</td><td>NoSQL: không có ngôn ngữ truy vấn mức cao, dùng API get, put, scan theo khoá.</td></tr>
-      <tr><td>Sqoop</td><td>Chuyển dữ liệu khối lớn giữa Hadoop và CSDL quan hệ, cả hai chiều.</td><td>Import bằng job chỉ có map; kết quả là thư mục tệp text phân tách bằng dấu phẩy trong HDFS.</td></tr>
-      <tr><td>Kafka</td><td>Hàng đợi thông điệp phân tán, tách producer khỏi consumer.</td><td>Consumer tự giữ offset của mình. Bài 5.</td></tr>
-      <tr><td>Oozie</td><td>Lập lịch luồng công việc: DAG các hành động (MapReduce, Pig, Hive, Java, shell, lệnh HDFS, SSH, email).</td><td>Workflow là đồ thị có hướng không chu trình.</td></tr>
-      <tr><td>ZooKeeper</td><td>Dịch vụ điều phối tin cậy: thành viên nhóm, bầu leader, cấu hình động, theo dõi trạng thái.</td><td>Dựa trên giao thức đồng thuận họ Paxos (ZAB).</td></tr>
+      <tr><td>Hive</td><td>Truy vấn bằng HiveQL giống SQL, rút ngắn thời gian viết job.</td><td>Cũng chạy ở client, cũng sinh job MapReduce. Hive bản mới chạy trên Tez (engine gộp cả chuỗi bước thành một job trên YARN); Hive-on-MapReduce bị loại dần từ Hive 2.</td></tr>
+      <tr><td>HBase</td><td>"CSDL của Hadoop": kho column family (wide-column, xem <a href="#b4-1">bài 4.1</a>), bảng tới hàng nghìn cột, hàng trăm nghìn lượt ghi mỗi giây.</td><td>NoSQL: không có ngôn ngữ truy vấn mức cao, dùng API get, put, scan theo khoá.</td></tr>
+      <tr><td>Sqoop</td><td>Chuyển dữ liệu khối lớn giữa Hadoop và CSDL quan hệ, cả hai chiều.</td><td>Import bằng job chỉ có map; kết quả là thư mục tệp text phân tách bằng dấu phẩy trong HDFS. Apache đã cho dự án ngừng phát triển năm 2021.</td></tr>
+      <tr><td>Kafka</td><td>Nhật ký (log) thông điệp phân tán, tách producer khỏi consumer; đọc xong không xoá.</td><td>Consumer tự quyết đọc tới vị trí (offset) nào và commit offset vào topic nội bộ <code>__consumer_offsets</code> của Kafka. Bài 5.</td></tr>
+      <tr><td>Oozie</td><td>Lập lịch luồng công việc: DAG các hành động (MapReduce, Pig, Hive, Java, shell, lệnh HDFS, SSH, email).</td><td>Workflow là đồ thị có hướng không chu trình. Apache đã cho dự án ngừng phát triển năm 2025.</td></tr>
+      <tr><td>ZooKeeper</td><td>Dịch vụ điều phối tin cậy: thành viên nhóm, bầu leader, cấu hình động, theo dõi trạng thái.</td><td>Dùng giao thức ZAB: giống Paxos ở chỗ cần đa số đồng ý, nhưng không phải Paxos.</td></tr>
     </tbody>
   </table></div>
 
@@ -1011,7 +1011,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <li><b>Promise.</b> Acceptor chưa hứa với số nào lớn hơn thì hứa: từ nay bỏ qua mọi đề xuất có n &lt; 5, và gửi kèm giá trị nó đã chấp nhận (nếu có). A3 không trả lời, nhưng A1, A2 đã là đa số 2/3.</li>
       <li><b>Accept.</b> Có đa số hứa, P1 gửi <code>Accept(5, X)</code>. X là giá trị P1 muốn, vì không acceptor nào báo đã chấp nhận giá trị khác; nếu có, P1 buộc phải đề xuất giá trị kèm số n lớn nhất trong các báo cáo.</li>
       <li><b>Accepted.</b> Acceptor chấp nhận vì chưa hứa với số nào lớn hơn 5, rồi báo learner. Đa số đã chấp nhận (5, X): X được chọn và không bao giờ đổi.</li>
-      <li><b>Đề xuất cũ bị chặn.</b> P2 đến muộn với n = 4. A1, A2 đã hứa, A3 đã chấp nhận số 5, nên cả ba từ chối n = 4. Hai đa số bất kỳ luôn có ít nhất một acceptor chung, nên không thể có hai giá trị cùng được chọn.</li>
+      <li><b>Đề xuất cũ bị chặn.</b> P2 đến muộn với n = 4. Cả ba đã chấp nhận đề xuất số 5, tức đã cam kết bỏ qua mọi n &lt; 5, nên cả ba từ chối n = 4. Hai đa số bất kỳ luôn có ít nhất một acceptor chung, nên không thể có hai giá trị cùng được chọn.</li>
     </ol>
   </figure>
 
@@ -1085,7 +1085,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       </table></div>
       <p>Ở Hadoop 1, JobTracker vừa lập lịch vừa theo dõi mọi task của mọi job, nên nghẽn quanh 4 000 node. YARN tách việc theo dõi về AM của từng ứng dụng, nên ResourceManager nhẹ đi và cụm lớn được hơn.</p>
       <h4>Nền tảng đóng gói</h4>
-      <p>Các bản phân phối như Hortonworks Data Platform (HDP) đóng gói sẵn HDFS, YARN, Hive, Pig, HBase, Sqoop, Kafka, Oozie, ZooKeeper; bản Sandbox là máy ảo một node để thử.</p>
+      <p>Các bản phân phối như Hortonworks Data Platform (HDP) đóng gói sẵn HDFS, YARN, Hive, Pig, HBase, Sqoop, Kafka, Oozie, ZooKeeper; bản Sandbox là máy ảo một node để thử. HDP đã ngừng sau khi Hortonworks sáp nhập vào Cloudera (2019); bản kế tục là Cloudera Data Platform.</p>
     </div>
   </details>
 
@@ -1409,10 +1409,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <tr><td>Phân phối dữ liệu</td><td>Cắt tệp thành block lớn</td><td>Ít metadata hơn, ít trao đổi mạng hơn; thời gian seek được chia đều cho một lần đọc tuần tự dài</td></tr>
       <tr><td>Nhân bản</td><td>Mỗi block thường có 3 bản trên 3 node</td><td>Sống sót qua hỏng đĩa, hỏng node, hỏng rack</td></tr>
       <tr><td>Chịu lỗi</td><td>DataNode hỏng: nhân bản lại. NameNode: Secondary NameNode, cặp Active/Standby</td><td>Hỏng hóc trên phần cứng rẻ là chuyện thường, không là sự cố</td></tr>
-      <tr><td>Mang tính toán tới dữ liệu</td><td>Lộ vị trí block cho bộ lập lịch</td><td>Task chạy ngay trên node giữ block, không chở dữ liệu qua mạng</td></tr>
+      <tr><td>Mang tính toán tới dữ liệu</td><td>Lộ vị trí block cho bộ lập lịch</td><td>Task được ưu tiên chạy trên node giữ block, nên phần lớn dữ liệu không đi qua mạng</td></tr>
     </tbody>
   </table></div>
   <div class="callout idea"><p><b>Tính thử.</b> Tệp 1 GB, block 128 MB: 1024 / 128 = 8 block; nhân 3 bản là 24 bản block, chiếm 3 GB đĩa thô. Mỗi tệp, thư mục, block tốn khoảng 150 byte RAM ở NameNode, nên một triệu tệp nhỏ (mỗi tệp một block, tức hai triệu đối tượng) đã ngốn khoảng 300 MB RAM. HDFS hợp với ít tệp lớn, không hợp với nhiều tệp nhỏ.</p></div>
+  <div class="callout note"><p><b>Sau thời điểm slide.</b> Từ Hadoop 3, HDFS có thêm erasure coding: thay 3 bản sao bằng 6 khối dữ liệu cộng 3 khối chẵn lẻ Reed–Solomon, mất bất kỳ 3 khối nào vẫn dựng lại được. Phần đĩa tốn thêm giảm từ 200% xuống 50%, đổi lại đọc ghi tốn CPU và mạng hơn, nên hợp với dữ liệu ít đụng tới.</p></div>
 
   <h3 class="sec">NameNode và DataNode nói chuyện thế nào</h3>
   <div class="keys">
@@ -1452,7 +1453,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <rect class="bx" x="592" y="140" width="86" height="70" rx="8"/><text x="635" y="160" class="tb tc">DN6</text>
       <text x="670" y="232" class="t3 te">rack 2</text>
     </svg></div>
-    <figcaption>Bản 1 trên chính node ghi (ghi cục bộ, nhanh); client ở ngoài cụm thì bản 1 đặt ở một node ngẫu nhiên. Bản 2 sang rack khác: cả rack 1 mất điện hay hỏng switch thì vẫn còn dữ liệu. Bản 3 cùng rack với bản 2 nhưng khác node, nên đường ghi chỉ băng qua core switch một lần; bản thứ 4 trở đi đặt ngẫu nhiên.</figcaption>
+    <figcaption>Bản 1 trên chính node ghi (ghi cục bộ, nhanh); client ở ngoài cụm thì bản 1 đặt ở một node ngẫu nhiên, ưu tiên cùng rack với client. Bản 2 sang rack khác: cả rack 1 mất điện hay hỏng switch thì vẫn còn dữ liệu. Bản 3 cùng rack với bản 2 nhưng khác node, nên đường ghi chỉ băng qua core switch một lần; bản thứ 4 trở đi đặt ngẫu nhiên nhưng mỗi rack chỉ giữ một số bản giới hạn.</figcaption>
   </figure>
   <p>Khi đọc, client lấy bản sao gần nhất (cùng node, rồi cùng rack, rồi rack khác). Khi phát hiện DataNode chết, NameNode chọn DataNode mới cho các bản thiếu, cân cả dung lượng đĩa lẫn lưu lượng tới từng node.</p>
 
@@ -1619,7 +1620,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
 
 <span class="c"># Quản trị</span>
 <span class="f">hdfs</span> dfsadmin -report          <span class="c"># dung lượng, DataNode sống/chết</span>
-<span class="f">hdfs</span> dfsadmin -safemode get
+<span class="f">hdfs</span> dfsadmin -safemode get        <span class="c"># safe mode: NameNode mới khởi động chỉ cho đọc, chờ đủ block report rồi mới cho ghi</span>
 <span class="f">hdfs</span> balancer -threshold <span class="o">10</span>   <span class="c"># cân đĩa, lệch tối đa 10%</span></pre>
   <p>Giao diện khác: Java API, Thrift API, FUSE (mount HDFS như ổ đĩa), WebDAV, WebHDFS (REST). Giao diện web của NameNode ở cổng 9870 (Hadoop 3; Hadoop 2 là 50070) hiện dung lượng, DataNode, và duyệt tệp.</p>
 
@@ -1656,7 +1657,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <ul>
         <li>CSV, TSV, mỗi dòng một bản ghi JSON.</li>
         <li>Người đọc được, dễ trao đổi giữa ứng dụng và script.</li>
-        <li>Không nén theo block; truy vấn kém hiệu quả.</li>
+        <li>Không nén theo block: nén cả tệp (gzip) thì không cắt (split) ra để xử lý song song được, trừ bzip2. Truy vấn kém hiệu quả.</li>
         <li>Hợp lúc bắt đầu, chưa đủ cho hệ thống thật.</li>
       </ul>
     </section>
@@ -1669,7 +1670,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     </section>
     <section class="tab" data-label="Avro">
       <ul>
-        <li>Theo hàng; nén và split được.</li>
+        <li>Theo hàng; nén và split được. Sau phần đầu tệp là các khối dữ liệu, mỗi khối kết thúc bằng một dấu đồng bộ (sync marker) 16 byte, nên đọc từ giữa tệp vẫn tìm được chỗ khối mới bắt đầu.</li>
         <li>Lược đồ (schema) viết bằng JSON, lưu ngay trong đầu tệp: đọc tệp không cần biết trước lược đồ, và lược đồ tiến hoá được.</li>
         <li>Kiểu nguyên thuỷ (null, boolean, int, long…) và phức hợp (record, array, map…); mã hoá nhị phân hoặc JSON; phát hiện dữ liệu hỏng.</li>
       </ul>
@@ -1686,6 +1687,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <ul>
         <li>Nhị phân, theo cột: đọc rất ít I/O khi chỉ cần vài cột.</li>
         <li>Tệp chia thành row group (<code>parquet.block.size</code>, mặc định 128 MB), mỗi row group có một column chunk cho mỗi cột, mỗi chunk chia thành page (<code>parquet.page.size</code>, 1 MB).</li>
+        <li>Cuối tệp là footer chứa metadata: lược đồ, vị trí từng row group và column chunk, min và max của từng cột; trình đọc đọc footer trước rồi nhảy thẳng tới chunk cần.</li>
         <li>Mã hoá từ điển (bật mặc định), nén theo page (mặc định trong slide là UNCOMPRESSED; tuỳ chọn SNAPPY, GZIP, LZO); split được.</li>
         <li>Hỗ trợ cột lồng nhau bằng cách mã hoá của Dremel (repetition level, definition level).</li>
       </ul>
@@ -1693,7 +1695,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <section class="tab" data-label="ORC">
       <ul>
         <li>Optimized Row Columnar, kế thừa RCFile (mỗi cột nén riêng trong một nhóm dòng).</li>
-        <li>Tệp chia thành stripe: một tập dòng, bên trong lưu theo cột, sắp thứ tự trong stripe; nén theo block; nhiều kiểu dữ liệu.</li>
+        <li>Tệp chia thành stripe: một tập dòng, bên trong lưu theo cột, giữ nguyên thứ tự dòng trong stripe (ORC không tự sắp xếp); nén theo block; nhiều kiểu dữ liệu.</li>
         <li>Chỉ mục nhẹ với min, max, sum, count từng cột (mặc định mỗi 10 000 dòng): truy vấn có điều kiện bỏ qua được cả khối dòng không liên quan.</li>
         <li>Split được: xử lý song song các stripe.</li>
       </ul>
@@ -1877,6 +1879,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <tr><td>Ưu tiên</td><td>ACID, giao dịch</td><td>Sẵn sàng, mở rộng; nhất quán cuối cùng</td></tr>
     </tbody>
   </table></div>
+  <div class="callout note"><p><b>Bảng là xu hướng, không phải luật.</b> HBase nhất quán mạnh trên từng hàng; Neo4j, và MongoDB từ bản 4.0, có giao dịch ACID; Cassandra có CQL, Neo4j có Cypher, đều là ngôn ngữ truy vấn khai báo. Ngược lại, cũng có CSDL SQL chạy phân tán trên nhiều máy, gọi là NewSQL (Spanner, CockroachDB).</p></div>
   <div class="callout note"><p><b>Khi nào cần NoSQL.</b> Khối lượng khổng lồ (volume), tải truy vấn cực lớn (velocity), cần sẵn sàng liên tục, hoặc lược đồ thay đổi thường xuyên.</p></div>
 
   <h3 class="sec">Bốn mô hình dữ liệu</h3>
@@ -1889,7 +1892,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
         <tbody>
           <tr><td>Memcached</td><td>Cache trong RAM, rải trên nhiều web server; giảm tải cho CSDL chính.</td></tr>
           <tr><td>Redis</td><td>Trong RAM, tuỳ chọn ghi bền; value là list, set, hash; có expiration, pub/sub, partitioning.</td></tr>
-          <tr><td>DynamoDB</td><td>Dịch vụ của Amazon; thông lượng và độ trễ đọc ghi dự đoán được.</td></tr>
+          <tr><td>DynamoDB</td><td>Dịch vụ của Amazon; thông lượng và độ trễ đọc ghi dự đoán được. Ngoài tra theo khoá còn truy vấn được theo dải của khoá sắp xếp (sort key) và qua chỉ mục phụ.</td></tr>
           <tr><td>Riak</td><td>Theo thiết kế Dynamo, viết bằng Erlang; nhân bản, tự chia shard, cân bằng lại khi lỗi.</td></tr>
         </tbody>
       </table></div>
@@ -1961,7 +1964,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
           <tr><td>Document</td><td>Từng cây dữ liệu</td><td>Cả khu rừng: cây, cành, gốc nối nhau</td></tr>
         </tbody>
       </table></div>
-      <p><b>Neo4j:</b> lưu trên đĩa, ACID đầy đủ, nhúng được vào ứng dụng Java hoặc gọi qua REST. Theo slide: tới 32 tỉ nút, 32 tỉ quan hệ, 64 tỉ thuộc tính.</p>
+      <p><b>Neo4j:</b> lưu trên đĩa, ACID đầy đủ, nhúng được vào ứng dụng Java hoặc gọi qua mạng (slide ghi REST; bản mới dùng giao thức Bolt và HTTP). Slide ghi giới hạn 32 tỉ nút, 32 tỉ quan hệ, 64 tỉ thuộc tính; từ Neo4j 3.0 (2016) định dạng lưu trữ high_limit của bản Enterprise nâng giới hạn lên cỡ 2⁵⁰, còn định dạng standard giữ giới hạn cũ.</p>
       <p><b>Dùng khi</b> câu hỏi là về đường đi: mạng xã hội, gợi ý, phát hiện gian lận, linked open data.</p>
     </section>
     <section class="tab" data-label="Document">
@@ -2100,7 +2103,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <text class="ta tb" x="24" y="143">CA · không chịu P</text>
       <text class="t2" x="24" y="162">RDBMS một máy,</text>
       <text class="t2" x="24" y="179">cụm commit hai pha (2PC)</text>
-      <text class="t3" x="24" y="196">(giả định mạng không đứt)</text>
+      <text class="t3" x="24" y="196">(đứt mạng: 2PC chờ, mất A)</text>
       <rect class="bxa" x="510" y="135" width="190" height="70" rx="8"/>
       <text class="ta tb" x="522" y="156">CP · đứt mạng thì bỏ A</text>
       <text class="t2" x="522" y="175">HBase, Bigtable,</text>
@@ -2109,13 +2112,13 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <text class="ta tb tc" x="360" y="338">AP · đứt mạng thì bỏ C</text>
       <text class="t2 tc" x="360" y="358">Dynamo, Cassandra, Riak, CouchDB</text>
     </svg></div>
-    <figcaption>Hệ phân tán chia sẻ dữ liệu có tối đa hai trong ba tính chất. Mạng ở quy mô lớn chắc chắn có lúc đứt, nên lựa chọn thực tế nằm trên hai cạnh <b>CP</b> và <b>AP</b>.</figcaption>
+    <figcaption>Hệ phân tán chia sẻ dữ liệu có tối đa hai trong ba tính chất. Mạng ở quy mô lớn chắc chắn có lúc đứt, nên lựa chọn thực tế nằm trên hai cạnh <b>CP</b> và <b>AP</b>. Slide xếp “consensus protocols” vào CA và Redis vào CP; thực ra đồng thuận (Paxos, Raft) là CP, còn Redis nhân bản bất đồng bộ nên không CP, và MongoDB chỉ CP tuỳ cấu hình, ZooKeeper chỉ CP khi đọc kèm sync.</figcaption>
   </figure>
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
   <div class="keys two">
-    <article class="key"><h3><span class="ix">C</span>Consistency</h3><p>Mọi node thấy cùng dữ liệu tại mọi thời điểm (nhất quán chặt): đọc ở đâu cũng ra bản ghi mới nhất.</p></article>
-    <article class="key"><h3><span class="ix">A</span>Availability</h3><p>Hệ vẫn trả lời mọi yêu cầu khi có node sập, hay phần cứng, phần mềm đang nâng cấp.</p></article>
+    <article class="key"><h3><span class="ix">C</span>Consistency</h3><p>Mọi node thấy cùng dữ liệu (nhất quán chặt). Chính xác hơn: mọi lần đọc thấy lần ghi đã xong gần nhất, như thể chỉ có một bản (linearizability).</p></article>
+    <article class="key"><h3><span class="ix">A</span>Availability</h3><p>Hệ vẫn trả lời mọi yêu cầu khi có node sập, hay phần cứng, phần mềm đang nâng cấp. Trong chứng minh CAP: mọi node còn sống nhận yêu cầu đều phải trả lời, và trả lời lỗi không tính.</p></article>
     <article class="key"><h3><span class="ix">P</span>Partition tolerance</h3><p>Hệ vẫn chạy khi mạng chia cụm thành các nhóm không liên lạc được với nhau.</p></article>
     <article class="key"><h3><span class="ix">∴</span>Định lý</h3><p>Eric Brewer nêu ở PODC 2000; Gilbert và Lynch chứng minh năm 2002. Tối đa hai trong ba.</p></article>
   </div>
@@ -2224,7 +2227,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <li><b>Muốn cả C và A.</b> G2 phải nhận được v1 từ G1, tức là mạng không được đứt: hệ không chịu phân hoạch (“Not Partition Tolerant”).</li>
     </ol>
   </figure>
-  <div class="callout trap"><p><b>“Chọn 2 trong 3” chỉ có nghĩa khi đang có phân hoạch.</b> Không bỏ được P trong một hệ phân tán thật, vì mạng hỏng không do mình chọn. Khi mạng lành, hệ có thể vừa C vừa A; đánh đổi lúc ấy là giữa nhất quán và độ trễ (Brewer, “CAP twelve years later”, 2012).</p></div>
+  <div class="callout trap"><p><b>“Chọn 2 trong 3” chỉ có nghĩa khi đang có phân hoạch.</b> Không bỏ được P trong một hệ phân tán thật, vì mạng hỏng không do mình chọn. Khi mạng lành, hệ có thể vừa C vừa A; đánh đổi lúc ấy là giữa nhất quán và độ trễ (Brewer, “CAP twelve years later”, 2012; Abadi gọi gọn là PACELC: có Partition thì chọn A hay C, Else thì chọn Latency hay C).</p></div>
 
   <h3 class="sec">Từ ACID sang BASE</h3>
   <p>RDBMS dựa trên ACID, nên một RDBMS phân tán thật sự sẽ cần cả C, A và P: điều CAP nói là không thể. Google, Amazon cần sẵn sàng 24/7 (vài phút ngừng là mất doanh thu) trên hàng nghìn máy nơi lỗi mạng là chuyện thường, nên họ hy sinh nhất quán chặt.</p>
@@ -2287,7 +2290,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
           <tr><td>Cuối cùng (eventual)</td><td>Chỉ hứa hội tụ khi ngừng ghi; không hứa lúc nào.</td></tr>
         </tbody>
       </table></div>
-      <p>Đi từ trên xuống: dễ làm hơn, nhanh hơn, sẵn sàng hơn; đổi lại ứng dụng phải chịu nhiều kiểu bất thường hơn.</p>
+      <p>Chặt mạnh hơn nhân quả; nhân quả bao hàm cả read your own writes lẫn monotonic reads, còn hai mức này không so được với nhau; cuối cùng là yếu nhất. Mức càng yếu càng dễ làm, nhanh và sẵn sàng hơn; đổi lại ứng dụng phải chịu nhiều kiểu bất thường hơn.</p>
     </div>
   </details>
 
@@ -2442,7 +2445,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       </g>
 
       <g data-only="5">
-        <text class="tb" x="420" y="84">preference list của k1, N = 3</text>
+        <text class="tb" x="420" y="84">3 node đầu preference list của k1</text>
         <text class="tm ta tb" x="420" y="114">[A, D, B]</text>
         <text class="t2" x="420" y="146">A: node đầu tiên sau k1, điều phối ghi</text>
         <text class="t2" x="420" y="168">D, B: hai node kế tiếp theo chiều kim</text>
@@ -2456,7 +2459,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <li><b>Key thuộc về ai.</b> Đi theo chiều kim đồng hồ từ vị trí của key, node đầu tiên gặp là node giữ key. k6 ở 300° vòng qua 0° về A.</li>
       <li><b>Thêm node D ở 90°.</b> Chỉ cung (30°, 90°] đổi chủ: k2, k3 dời từ B sang D. Mọi key khác đứng yên. Với băm kiểu <code>hash mod n</code>, đổi n làm gần như mọi key dời chỗ.</li>
       <li><b>Virtual node.</b> Hình bên phải là một vòng riêng, chỉ ba máy A, B, C. Mỗi máy giữ nhiều điểm trên vòng. Máy sập thì tải của nó chia đều cho các máy còn lại; máy mới nhận một ít từ mọi máy; máy mạnh được cấp nhiều điểm hơn.</li>
-      <li><b>Nhân bản.</b> Mỗi key lưu ở N node: node đầu tiên sau key và N − 1 node kế tiếp theo chiều kim đồng hồ. Danh sách ấy là preference list.</li>
+      <li><b>Nhân bản.</b> Mỗi key lưu ở N node: node đầu tiên sau key và N − 1 node kế tiếp theo chiều kim đồng hồ. Danh sách node chịu trách nhiệm cho key là preference list; nó dài hơn N để có node dự phòng, bình thường N node đứng đầu giữ bản sao.</li>
     </ol>
   </figure>
 
@@ -2475,14 +2478,14 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin-right:10px"><span class="tm">R</span><button type="button" data-k="R" data-d="-1" aria-label="Giảm R">−</button><b class="tm" id="b4-3-q-R">2</b><button type="button" data-k="R" data-d="1" aria-label="Tăng R">+</button></span>
     </div>
     <p id="b4-3-q-out" aria-live="polite" style="font-size:14.5px;color:var(--fg-2);margin:12px 0 0"></p>
-    <figcaption>Hình vẽ trường hợp xấu nhất: W node nhận bản ghi nằm đầu hàng, R node trả lời lần đọc nằm cuối hàng. Mặc định (N, R, W) = (3, 2, 2) là cấu hình bài báo Dynamo nêu là phổ biến. Đảm bảo “luôn chạm bản mới” chỉ đúng với quorum chặt trên đúng N node của preference list; Dynamo dùng sloppy quorum nên khi có node vắng vẫn có thể đọc phải bản cũ, rồi hoà giải bằng vector clock.</figcaption>
+    <figcaption>Hình vẽ trường hợp xấu nhất: W node nhận bản ghi nằm đầu hàng, R node trả lời lần đọc nằm cuối hàng. Mặc định (N, R, W) = (3, 2, 2) là cấu hình bài báo Dynamo nêu là phổ biến. Đảm bảo “luôn chạm bản mới” chỉ đúng với quorum chặt trên đúng N node đầu của preference list; Dynamo dùng sloppy quorum nên khi có node vắng vẫn có thể đọc phải bản cũ, rồi hoà giải bằng vector clock.</figcaption>
   </figure>
   <div class="callout idea"><p><b>Vì sao R, W thường nhỏ hơn N.</b> Lần get (put) phải chờ node chậm nhất trong R (W) bản. R = 1, W = N cho đọc nhanh; W = 1 cho ghi nhanh nhất nhưng ít bền nhất.</p></div>
 
   <h3 class="sec">Lỗi tạm thời: sloppy quorum và hinted handoff</h3>
   <figure class="fig" id="b4-3-sloppy">
-    <div class="canvas"><svg class="dg" viewBox="0 0 720 222" role="img" aria-label="N bằng 3, preference list của K là B, C, D. B tạm sập nên bản sao gửi sang E kèm gợi ý thuộc về B; khi B sống lại E gửi trả và xoá bản của mình">
-      <text class="t2" x="20" y="24">N = 3 · preference list của K = [B, C, D]</text>
+    <div class="canvas"><svg class="dg" viewBox="0 0 720 222" role="img" aria-label="N bằng 3, preference list của K là B, C, D, E và các node kế tiếp. B tạm sập nên bản sao gửi sang E kèm gợi ý thuộc về B; khi B sống lại E gửi trả và xoá bản của mình">
+      <text class="t2" x="20" y="24">N = 3 · preference list của K = [B, C, D, E, …]</text>
       <rect class="bx" x="300" y="36" width="130" height="30" rx="8"/><text class="tc" x="365" y="56">① lần ghi K</text>
       <path class="lnb dash" d="M 310 66 L 232.97 90.98" marker-end="url(#ah-bad)"/>
       <path class="lna" d="M 360 66 V 88.7" marker-end="url(#ah-store)"/>
@@ -2499,7 +2502,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <path class="lna dash" d="M 640 148 V 186 H 220 V 151.3" marker-end="url(#ah-store)"/>
       <text class="t2 ta tc" x="430" y="208">② B sống lại → E gửi trả bản sao, rồi xoá bản của mình</text>
     </svg></div>
-    <figcaption>Quorum “lỏng”: W bản được tính trên N node khoẻ đầu tiên đi theo vòng, không nhất thiết đúng N node trong preference list. Nhờ vậy vẫn “always writeable” khi một node vắng mặt.</figcaption>
+    <figcaption>Quorum “lỏng”: đọc và ghi đi tới N node khoẻ đầu tiên trong preference list, bỏ qua node đang sập, nên không nhất thiết là N node đầu tiên trên vòng. B sập thì E, node kế tiếp trong danh sách, nhận bản sao kèm hint (ghi chú: bản này của B). Nhờ vậy vẫn “always writeable” khi một node vắng mặt.</figcaption>
   </figure>
 
   <h3 class="sec" id="b4-3-merkle">Lỗi vĩnh viễn: anti-entropy bằng Merkle tree</h3>
@@ -2596,7 +2599,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     </div>
   </details>
 
-  <section class="recap"><h3>Nhớ</h3><ul><li>Dynamo luôn ghi được: xung đột để lúc đọc mới hoà giải.</li><li>Vòng băm nhất quán: thêm hay bớt node chỉ dời key của một cung.</li><li>Virtual node rải tải đều, máy mạnh giữ nhiều điểm hơn.</li><li>Mỗi key ở N node của preference list; R + W &gt; N thì tập đọc chạm bản mới.</li><li>Node vắng: sloppy quorum ghi tạm sang node khác kèm hint, trả lại sau.</li><li>Anti-entropy so Merkle tree, chỉ chép nhánh lệch.</li><li>Vector clock: mọi bộ đếm ≤ là tổ tiên; không so được là xung đột.</li></ul></section>
+  <section class="recap"><h3>Nhớ</h3><ul><li>Dynamo luôn ghi được: xung đột để lúc đọc mới hoà giải.</li><li>Vòng băm nhất quán: thêm hay bớt node chỉ dời key của một cung.</li><li>Virtual node rải tải đều, máy mạnh giữ nhiều điểm hơn.</li><li>Mỗi key ở N node đầu của preference list; R + W &gt; N thì tập đọc chạm bản mới (với quorum chặt).</li><li>Node vắng: sloppy quorum ghi tạm sang node khác kèm hint, trả lại sau.</li><li>Anti-entropy so Merkle tree, chỉ chép nhánh lệch.</li><li>Vector clock: mọi bộ đếm ≤ là tổ tiên; không so được là xung đột.</li></ul></section>
 
   <div class="quiz">
     <h3>Tự kiểm tra</h3>
@@ -2716,7 +2719,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   <h3 class="sec">Khái niệm cốt lõi</h3>
   <div class="keys two">
     <article class="key"><h3><span class="ix">01</span>Không phải CSDL</h3><p>Presto không có kho lưu riêng. Nó đem SQL (ANSI) tới các kho đã có.</p></article>
-    <article class="key"><h3><span class="ix">02</span>Coordinator</h3><p>Nhận SQL qua HTTP + JSON, phân tích, lập kế hoạch, chia việc cho worker, gom kết quả trả client.</p></article>
+    <article class="key"><h3><span class="ix">02</span>Coordinator</h3><p>Nhận SQL qua HTTP + JSON, phân tích, lập kế hoạch, chia việc cho worker, kéo kết quả từ worker rồi trả client (slide vẽ client lấy thẳng từ worker). Chỉ có một coordinator nên nó là điểm hỏng duy nhất; slide vẽ thêm phương án HA (high availability) với hai coordinator.</p></article>
     <article class="key"><h3><span class="ix">03</span>Worker</h3><p>Chạy task trong bộ nhớ, đọc dữ liệu qua connector, trao đổi kết quả trung gian với worker khác.</p></article>
     <article class="key"><h3><span class="ix">04</span>Discovery service</h3><p>Danh bạ của cụm: worker khởi động thì đăng ký và báo còn sống. Coordinator hỏi nó để biết worker nào giao task được.</p></article>
     <article class="key"><h3><span class="ix">05</span>Connector</h3><p>Plugin viết bằng Java: đưa schema bảng cho coordinator, đưa hàng dữ liệu cho worker.</p></article>
@@ -2751,7 +2754,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
         <rect class="bxa" x="600" y="170" width="100" height="36" rx="8"/><text class="tc" x="650" y="193">Cassandra</text>
       </g>
     </svg></div>
-    <figcaption>Hive quá chậm cho dashboard, ODBC chập chờn; kết quả batch phải chép sang một CSDL tương tác đắt và khó mở rộng; dữ liệu ngoài HDFS phải chép vào HDFS mới phân tích được.</figcaption>
+    <figcaption>Hive quá chậm cho dashboard, ODBC chập chờn; kết quả batch phải chép sang một CSDL tương tác đắt và khó mở rộng; dữ liệu ngoài HDFS phải chép vào HDFS mới phân tích được. Dashboard chỉ thấy bản chép theo ngày, không hỏi thẳng dữ liệu mới nhất, và phải vận hành hai nền tảng (batch, trực quan hoá).</figcaption>
   </figure>
 
   <div class="vs">
@@ -2767,7 +2770,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <div>
       <h4>Lịch sử và quy mô (theo slide)</h4>
       <ul>
-        <li>Thu 2012: bắt đầu ở Facebook; đông 2013: mở mã nguồn</li>
+        <li>Thu 2012: bắt đầu ở Facebook; đầu 2013: chạy production; 11/2013: mở mã nguồn (slide ghi đông 2013)</li>
         <li>2013 tại Facebook: nhiều vùng địa lý, 1.000 node, hơn 1.000 nhân viên chạy hơn 30.000 truy vấn mỗi ngày, xử lý 1 PB/ngày</li>
         <li>2019: hơn 300 người đóng góp</li>
         <li>MapReduce và Hive vẫn dùng cho ETL</li>
@@ -2788,7 +2791,14 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   <p>Connector có sẵn theo slide: Hive, Cassandra, MySQL qua JDBC; hoặc tự viết. Client có binding cho Java (JDBC), Python, Ruby, PHP, R, Node.js.</p>
 
   <h3 class="sec">Mô hình thực thi: query → stage → task → split</h3>
-  <p>Presto không phải MapReduce: kế hoạch là một DAG, gần với Apache Tez hay CSDL MPP (xử lý song song quy mô lớn) truyền thống. Coordinator gồm SQL parser, query planner và execution planner; worker có bộ lập lịch thực thi task.</p>
+  <p>Presto không phải MapReduce: kế hoạch là một DAG, gần với Apache Tez hay CSDL MPP (xử lý song song quy mô lớn) truyền thống. Trong coordinator, câu SQL đi qua bốn bước:</p>
+  <ol>
+    <li><b>SQL parser</b> dựng cây cú pháp (AST, abstract syntax tree).</li>
+    <li><b>Logical planner</b> hỏi metadata (schema bảng) qua connector, chạy optimizer, ra logical plan.</li>
+    <li><b>Distributed planner</b> chèn toán tử Exchange (nhận dữ liệu từ stage khác) vào chỗ cần trao đổi giữa máy, cắt plan thành stage.</li>
+    <li><b>Execution planner</b> lấy danh sách node từ discovery service để đặt task lên worker.</li>
+  </ol>
+  <p>Trên worker, bộ lập lịch chạy task bằng nhiều luồng: mỗi split do một luồng xử lý, nên một task ở stage lá chạy nhiều split song song.</p>
   <figure class="fig stepper" id="b4-6-exec">
     <p class="fig-t">Một câu GROUP BY đi qua bốn tầng</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 340" role="img" aria-label="Câu SELECT orderstatus, SUM(totalprice) FROM orders GROUP BY orderstatus thành logical plan ba bước, chia thành ba stage, mỗi stage thành task trên worker, stage lá nhận split, dữ liệu chảy qua shuffle lên stage trên">
@@ -2848,7 +2858,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <li><b>Stage.</b> Planner cắt cây ở những chỗ cần trao đổi dữ liệu giữa máy (shuffle). Mỗi stage là một phần kế hoạch chạy song song trên nhiều worker: cùng phép tính, khác dữ liệu đầu vào.</li>
       <li><b>Task.</b> Coordinator giao mỗi stage cho worker dưới dạng task: một task thuộc một stage, chạy trên một worker. Trong task là các pipeline, mỗi pipeline là một chuỗi toán tử.</li>
       <li><b>Split.</b> Stage lá đọc dữ liệu theo split: tay cầm mờ trỏ tới một đoạn dữ liệu, như đường dẫn file HDFS cộng offset. Split được giao dần trong lúc chạy.</li>
-      <li><b>Chảy liên tục.</b> Task stage 2 gộp sơ bộ rồi băm theo orderstatus gửi lên stage 1; stage 1 gộp cuối, stage 0 trả client. Dữ liệu đi qua bộ đệm trong RAM, các stage chạy cùng lúc.</li>
+      <li><b>Chảy liên tục.</b> Task stage 2 gộp sơ bộ (partial aggregation), toán tử Sink băm theo orderstatus gửi lên stage 1, kiểu phân lại theo key (REPARTITION); Exchange của stage 1 nhận, gộp cuối (final aggregation) rồi gom về một (GATHER) ở stage 0, từ đó kết quả về client. Dữ liệu đi qua bộ đệm trong RAM, các stage chạy cùng lúc.</li>
     </ol>
   </figure>
   <div class="callout trap"><p><b>Shuffle có giá.</b> Mỗi lần trao đổi giữa stage thêm độ trễ, chiếm bộ đệm và tốn CPU. Planner cố giảm số stage.</p></div>
@@ -2991,7 +3001,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       </ul>
     </div>
   </div>
-  <div class="callout note"><p><b>Sau thời điểm slide.</b> Bản sau của Presto thêm spill ra đĩa cho join và aggregation lớn. Năm 2019 nhóm tác giả gốc tách nhánh PrestoSQL, đổi tên thành Trino năm 2020; nhánh Facebook là PrestoDB.</p></div>
+  <div class="callout note"><p><b>Sau thời điểm slide.</b> Năm 2019 nhóm tác giả gốc tách nhánh PrestoSQL, đổi tên thành Trino năm 2020; nhánh Facebook là PrestoDB. Cả hai đã thêm spill ra đĩa cho join và aggregation lớn, và có cách chạy job dài chịu lỗi (Trino: fault-tolerant execution, chạy lại task hỏng; PrestoDB: Presto on Spark). Discovery service nay nằm sẵn trong coordinator; PrestoDB có chế độ nhiều coordinator, Trino vẫn một.</p></div>
 
   <details class="deep">
     <summary>Benchmark trên slide<span class="hint">Qubole, Netflix, Cloudera, ORC reader — chỉ ghi lại thiết lập</span></summary>
@@ -3009,7 +3019,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
 
   <div class="quiz">
     <h3>Tự kiểm tra</h3>
-    <details><summary>Presto có thay được Hive cho các job ETL hằng đêm không?</summary><p>Theo slide thì không: MapReduce và Hive vẫn dùng cho ETL. Presto nhắm truy vấn tương tác, và một task lỗi là cả truy vấn lỗi, không hợp job dài.</p></details>
+    <details><summary>Presto có thay được Hive cho các job ETL hằng đêm không?</summary><p>Theo slide thì không: MapReduce và Hive vẫn dùng cho ETL. Presto thời đó nhắm truy vấn tương tác, và một task lỗi là cả truy vấn lỗi, không hợp job dài. Bản sau có chế độ chịu lỗi cho ETL (xem ghi chú “Sau thời điểm slide”).</p></details>
     <details><summary>Một task thuộc bao nhiêu stage và chạy trên bao nhiêu worker?</summary><p>Một stage, một worker. Một stage có nhiều task trên nhiều worker.</p></details>
     <details><summary>Vì sao split được giao lười thay vì liệt kê hết từ đầu?</summary><p>Truy vấn bắt đầu trả kết quả sớm, coordinator đỡ tốn bộ nhớ metadata, và split đi tới worker đang rảnh nhất.</p></details>
     <details><summary>Bảng phân vùng theo ngày, truy vấn một ngày. Pushdown đổi lượng đọc thế nào?</summary><p>Từ 365 phân vùng xuống 1: connector nhận domain của cột ngày và bỏ qua mọi phân vùng không khớp trước khi đọc.</p></details>
@@ -3234,7 +3244,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       </g>
     </svg></div>
     <ol class="steps">
-      <li><b>Ban đầu.</b> Leader ở Broker 1 nhận mọi lần đọc ghi của P0; Broker 2, 3 là follower; ISR (in-sync replicas) = cả ba. Bản ghi 0–3 đã có ở mọi ISR nên đã committed, còn 4, 5 mới chỉ có ở leader. High watermark (HW), mốc committed, nằm sau offset 3.</li>
+      <li><b>Ban đầu.</b> Leader ở Broker 1 nhận mọi lần đọc ghi của P0; Broker 2, 3 là follower, tự kéo (fetch) dữ liệu từ leader; ISR (in-sync replicas) = cả ba. Bản ghi 0–3 đã có ở mọi ISR nên đã committed, còn 4, 5 mới chỉ có ở leader. High watermark (HW), mốc committed, nằm sau offset 3.</li>
       <li><b>Follower kéo dữ liệu.</b> Broker 2 kéo được 4, 5. Broker 3 chậm, vẫn ở 3. HW chưa tiến: bản ghi chỉ committed khi mọi ISR đã ghi, và consumer chỉ đọc tới HW.</li>
       <li><b>Loại khỏi ISR.</b> Broker 3 tụt lại quá lâu nên bị loại: ISR = {B1, B2}. HW tiến tới sau offset 5: 4, 5 committed dù chỉ có hai bản. Nếu đặt <code>min.insync.replicas=2</code>, producer dùng acks=all sẽ nhận lỗi khi ISR còn dưới hai.</li>
       <li><b>Leader chết.</b> Broker 1 sập. Controller chọn leader mới trong ISR: Broker 2, vốn có đủ mọi bản ghi đã committed. Broker 3 không được chọn vì ở ngoài ISR, nên 4, 5 giờ chỉ còn một bản.</li>
@@ -3243,7 +3253,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </figure>
   <div class="callout idea"><p><b>Đảm bảo.</b> Bản ghi từ một producer vào một partition giữ đúng thứ tự gửi; consumer thấy đúng thứ tự trong log. Bản ghi committed không mất <b>chừng nào còn ít nhất một ISR sống</b>. Hệ số nhân bản N chịu được tới N − 1 broker hỏng chỉ khi cả N bản còn trong ISR.</p></div>
   <div class="callout trap"><p><b>ISR có thể co lại.</b> Bản ghi committed chỉ nằm trên các ISR lúc ghi, nên ISR co còn một thì một lần hỏng nữa là mất. Muốn đảm bảo thật: producer dùng <code>acks=all</code> và topic đặt <code>min.insync.replicas=2</code> (với N = 3).</p></div>
-  <p>Mỗi broker vừa là leader của một số partition vừa là follower của số khác, nên tải đọc ghi rải đều trên cụm.</p>
+  <p>Mỗi broker vừa là leader của một số partition vừa là follower của số khác, nên tải đọc ghi rải đều trên cụm. Slide ghi leader nhận mọi lần đọc; từ Kafka 2.4, consumer có thể đọc từ follower gần nhất (KIP-392), còn ghi vẫn chỉ qua leader.</p>
 
   <h3 class="sec">Retention</h3>
   <p>Kafka giữ mọi bản ghi đã ghi, dù đã đọc hay chưa, cho tới khi hết hạn theo thời gian (vd 3 ngày, 2 tuần), theo dung lượng, hoặc bị compaction (chỉ giữ bản mới nhất của mỗi key). Retention xoá theo cả segment. Tốc độ đọc không phụ thuộc log dài bao nhiêu.</p>
@@ -3255,7 +3265,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <div class="tbl" style="margin:4px 0 10px"><table>
         <thead><tr><th>acks</th><th>Xác nhận khi</th><th>Độ bền</th></tr></thead>
         <tbody>
-          <tr><td>all (−1)</td><td>mọi ISR đã nhận</td><td>cao nhất, trễ nhất</td></tr>
+          <tr><td>all (−1)</td><td>mọi ISR đã nhận; mặc định từ Kafka 3.0</td><td>cao nhất, trễ nhất</td></tr>
           <tr><td>1</td><td>leader đã nhận</td><td>trung bình</td></tr>
           <tr><td>0</td><td>không chờ</td><td>thấp nhất, nhanh nhất</td></tr>
         </tbody>
@@ -3264,8 +3274,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <div>
       <h4>Chọn partition</h4>
       <ul>
-        <li><b>Có key:</b> <code>hash(key) mod số partition</code>. Mọi sự kiện cùng key (vd cùng <code>employeeId</code>) vào cùng partition, nên giữ thứ tự.</li>
-        <li><b>Không key:</b> rải đều (round-robin) để cân tải.</li>
+        <li><b>Có key:</b> <code>hash(key) mod số partition</code>. Mọi sự kiện cùng key (vd cùng <code>employeeId</code>) vào cùng partition, nên giữ thứ tự. Tăng số partition làm đổi kết quả mod: key cũ có thể sang partition khác.</li>
+        <li><b>Không key:</b> slide ghi rải đều (round-robin); từ Kafka 2.4, producer dồn vào một partition tới khi đầy một lô (batch) rồi mới đổi (sticky), về lâu dài vẫn đều mà lô to hơn.</li>
         <li>Mọi broker trả lời được câu hỏi metadata: broker nào sống, leader của partition nào ở đâu.</li>
       </ul>
     </div>
@@ -3308,7 +3318,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   <div class="keys two">
     <article class="key"><h3><span class="ix">01</span>Ghi tuần tự</h3><p>Chỉ nối đuôi log; ghi tuần tự xuống hệ thống file rất nhanh (slide: từ 700 MB/s).</p></article>
     <article class="key"><h3><span class="ix">02</span>Page cache</h3><p>Dựa vào page cache của Linux: tự dùng hết RAM rảnh; bộ lập lịch I/O gộp các lần ghi nhỏ và sắp lại để đầu đĩa ít di chuyển.</p></article>
-    <article class="key"><h3><span class="ix">03</span>Zero-copy</h3><p>Gửi dữ liệu từ page cache thẳng ra socket bằng <code>sendfile()</code> (Java <code>FileChannel.transferTo</code>).</p></article>
+    <article class="key"><h3><span class="ix">03</span>Zero-copy</h3><p>Gửi dữ liệu từ page cache thẳng ra socket bằng <code>sendfile()</code> (Java <code>FileChannel.transferTo</code>). Bật TLS thì mất lợi ích này, vì dữ liệu phải mã hoá trong ứng dụng (user space).</p></article>
     <article class="key"><h3><span class="ix">04</span>Batch, nén</h3><p>Gom nhiều bản ghi thành lô từ producer tới đĩa tới consumer; nén cả lô hiệu quả hơn nén từng bản.</p></article>
   </div>
   <details class="deep">
@@ -3380,7 +3390,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <ul>
         <li><b>Producer:</b> gửi rồi mất kết nối trước khi nhận ack thì không biết bản ghi đã vào chưa. Slide: dùng một writer cho mỗi partition, sau lỗi mạng đọc lại bản ghi committed cuối cùng rồi mới gửi tiếp.</li>
         <li><b>Consumer:</b> gắn ID duy nhất (UUID) vào mỗi bản ghi và lọc trùng, hoặc lưu offset cùng chỗ và cùng giao dịch với kết quả xử lý.</li>
-        <li>Từ Kafka 0.11 (2017): producer idempotent (broker bỏ bản gửi trùng theo số thứ tự) và giao dịch ghi nhiều partition cùng offset nguyên tử, cho exactly-once trong luồng đọc–xử lý–ghi trên Kafka.</li>
+        <li>Từ Kafka 0.11 (2017): producer idempotent (broker bỏ bản gửi trùng theo số thứ tự) và giao dịch ghi nhiều partition cùng offset nguyên tử, cho exactly-once trong luồng đọc–xử lý–ghi trên Kafka. Từ Kafka 3.0 producer idempotent bật sẵn, nên gửi lại khi lỗi không còn tạo bản trùng trong log.</li>
       </ul>
     </div>
   </details>
@@ -3403,7 +3413,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <h3>Tự kiểm tra</h3>
     <details><summary>Topic có 4 partition, một nhóm có 6 consumer. Bao nhiêu consumer rỗi?</summary><p>2. Mỗi partition chỉ thuộc một consumer trong nhóm, nên tối đa 4 consumer có việc; hai consumer còn lại chờ để thay khi có consumer chết.</p></details>
     <details><summary>Kafka đảm bảo thứ tự ở mức nào?</summary><p>Trong một partition. Hai bản ghi ở hai partition khác nhau không có thứ tự chung; cần thứ tự theo thực thể thì dùng thực thể làm key.</p></details>
-    <details><summary>Hệ số nhân bản 3. Mất tối đa bao nhiêu broker mà không mất bản ghi đã committed?</summary><p>Tối đa 2 (N − 1), nhưng chỉ khi cả ba bản còn trong ISR. ISR co lại thì chịu được ít hơn: ở bước 4 của hình ISR, B3 đã ngoài ISR, nên B1 hỏng rồi thêm B2 hỏng (mới hai broker) là mất 4, 5. Vì vậy dùng acks=all cùng <code>min.insync.replicas=2</code>.</p></details>
+    <details><summary>Hệ số nhân bản 3. Mất tối đa bao nhiêu broker mà không mất bản ghi đã committed?</summary><p>Tối đa 2 (N − 1), nhưng chỉ khi cả ba bản còn trong ISR. ISR co lại thì chịu được ít hơn: ở bước 4 của hình ISR, B3 đã ngoài ISR, nên B1 hỏng rồi thêm B2 hỏng (mới hai broker) là mất 4, 5. Vì vậy dùng acks=all cùng <code>min.insync.replicas=2</code>: mỗi bản ghi đã xác nhận nằm trên ít nhất 2 bản, nên chắc chắn chịu được 1 broker hỏng.</p></details>
     <details><summary>Consumer commit offset ngay khi nhận lô rồi mới xử lý. Đó là ngữ nghĩa gì, rủi ro gì?</summary><p>At-most-once. Sập giữa lúc xử lý thì lần sau đọc từ offset đã commit, phần chưa xử lý của lô bị bỏ qua vĩnh viễn.</p></details>
     <details><summary>acks=1 có thể mất bản ghi khi nào?</summary><p>Leader xác nhận rồi chết trước khi follower chép kịp; follower lên làm leader không có bản ghi đó.</p></details>
   </div>
@@ -3515,11 +3525,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
   <div class="keys">
-    <article class="key"><h3><span class="ix">01</span>Mô hình lập trình</h3><p>MapReduce là một kiểu xử lý dữ liệu do Google đưa ra, không phải ngôn ngữ. Nó là engine xử lý mặc định của Hadoop. Điểm mạnh theo slide: đơn giản, linh hoạt, mở rộng được.</p></article>
+    <article class="key"><h3><span class="ix">01</span>Mô hình lập trình</h3><p>MapReduce là một kiểu xử lý dữ liệu do Google đưa ra, không phải ngôn ngữ. Slide ghi đây là engine xử lý mặc định của Hadoop; từ Hadoop 2 nó là một ứng dụng chạy trên YARN, cạnh Spark và các engine khác. Điểm mạnh theo slide: đơn giản, linh hoạt, mở rộng được.</p></article>
     <article class="key"><h3><span class="ix">02</span>Job = các task cô lập</h3><p>Job chia thành nhiều task độc lập, xếp lịch rải trên các node. Task không trao đổi với nhau khi đang chạy, vì giữ dữ liệu đồng bộ liên tục giữa các node sẽ chặn đường mở rộng.</p></article>
-    <article class="key"><h3><span class="ix">03</span>Đưa code tới dữ liệu</h3><p>Input nằm trên hệ tệp phân tán (HDFS), cắt thành chunk trên nhiều node. Map task chạy ngay trên node giữ chunk (data locality), nên chỉ code được gửi đi, input không phải đi qua mạng.</p></article>
+    <article class="key"><h3><span class="ix">03</span>Đưa code tới dữ liệu</h3><p>Input nằm trên hệ tệp phân tán (HDFS), cắt thành chunk trên nhiều node. Map task được ưu tiên xếp lên node giữ chunk (data locality), không được thì lên node cùng rack, nên phần lớn input không phải đi qua mạng.</p></article>
     <article class="key"><h3><span class="ix">04</span>Cặp (K, V)</h3><p>Mọi dữ liệu là cặp key–value. <code>map</code>: (K, V) → danh sách (K′, V′). <code>reduce</code>: (K′, [V′…]) → danh sách (K″, V″).</p></article>
-    <article class="key"><h3><span class="ix">05</span>Partition</h3><p>Không gian key trung gian chia thành các phần, mỗi reducer nhận một phần. Mọi cặp cùng key về cùng một reducer, nên reducer thấy đủ giá trị của key ấy.</p></article>
+    <article class="key"><h3><span class="ix">05</span>Partition</h3><p>Không gian key trung gian chia thành các phần, mỗi reducer nhận một phần. Mọi cặp cùng key về cùng một reducer, nên reducer thấy đủ giá trị của key ấy. Mặc định, hàm chọn reducer (partitioner) là hash(key) mod số reducer.</p></article>
     <article class="key"><h3><span class="ix">06</span>Shuffle &amp; sort</h3><p>Framework tự gom output của mọi map task, sắp theo key, gộp các giá trị cùng key rồi chuyển cho reducer. Đây là pha tốn mạng nhất của job.</p></article>
   </div>
 
@@ -3595,7 +3605,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     </ol>
   </figure>
 
-  <div class="callout idea"><p><b>Combiner</b> là một reduce chạy ngay trên output của từng mapper, trước khi gửi qua mạng. Với combiner, map 2 gửi (car, 2), (river, 1) thay vì ba cặp. Chỉ dùng được khi phép gộp giao hoán và kết hợp (cộng, max, min).</p></div>
+  <div class="callout idea"><p><b>Combiner</b> là một reduce chạy ngay trên output của từng mapper, trước khi gửi qua mạng. Với combiner, map 2 gửi (car, 2), (river, 1) thay vì ba cặp. Chỉ dùng được khi phép gộp giao hoán và kết hợp (cộng, max, min), vì framework có thể chạy combiner 0, 1 hay nhiều lần; tính trung bình thì combiner phải phát (tổng, đếm).</p></div>
 
   <details class="deep">
     <summary>Ví dụ doanh số của slide, và vòng đời một job<span class="hint">Cùng bốn pha trên năm đơn hàng; từ lúc client nộp job tới lúc output nằm trên HDFS</span></summary>
@@ -3682,7 +3692,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <div class="deep-body">
   <ul>
     <li><b>Mapper:</b> đưa value lên làm key: (k, v) → (v, _). Input key là (tên file, số dòng), value là nội dung dòng.</li>
-    <li><b>Partitioner:</b> phải giữ thứ tự: k1 &lt; k2 ⇒ partition(k1) ≤ partition(k2). Slide gọi nó là hàm băm, nhưng hàm băm thường trộn thứ tự, nên phải chọn hàm chia theo khoảng phù hợp với dữ liệu.</li>
+    <li><b>Partitioner:</b> phải giữ thứ tự: k1 &lt; k2 ⇒ partition(k1) ≤ partition(k2). Slide gọi nó là hàm băm, nhưng hàm băm thường trộn thứ tự, nên phải chọn hàm chia theo khoảng phù hợp với dữ liệu (Hadoop có sẵn TotalOrderPartitioner, lấy mẫu key để đặt ranh giới).</li>
     <li><b>Reducer:</b> hàm đồng nhất (k′, _) → (k′, ""). Việc sắp xếp do shuffle &amp; sort làm.</li>
   </ul>
     </div>
@@ -3851,7 +3861,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <h4>Đường đi ngắn nhất có trọng số, điều kiện dừng</h4>
       <p>Định nghĩa quy nạp: DistanceTo(start) = 0; với node n đạt được từ tập S, DistanceTo(n) = min<sub>m∈S</sub>(DistanceTo(m) + w(m, n)). Bài toán gọi là single-source shortest path (SSSP).</p>
       <ul>
-        <li><b>Có trọng số:</b> danh sách kề mang thêm trọng số w; map phát (p, D + w<sub>p</sub>). Đúng với trọng số dương.</li>
+        <li><b>Có trọng số:</b> danh sách kề mang thêm trọng số w; map phát (p, D + w<sub>p</sub>). Slide ghi "trọng số dương"; thực ra đúng với mọi trọng số không âm.</li>
         <li><b>Dừng:</b> khi một vòng không tìm ra khoảng cách nào tốt hơn. Có trọng số thì số vòng có thể vượt độ sâu theo số cạnh.</li>
       </ul>
       <p>Ví dụ: A→B (1), A→C (4), B→C (2), C→D (1).</p>
@@ -3867,7 +3877,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       </table></div>
       <div class="vs">
         <div><h4>Dijkstra (một máy)</h4><p>Mỗi bước chỉ mở rộng node có chi phí nhỏ nhất trong biên. Ít việc thừa hơn, nhưng tuần tự và cần hàng đợi ưu tiên dùng chung.</p></div>
-        <div><h4>Bản MapReduce</h4><p>Mở rộng mọi đường song song mỗi vòng, làm nhiều việc thừa hơn, nhưng chia được cho cả cụm. Với trọng số 1 thì cho kết quả như Dijkstra.</p></div>
+        <div><h4>Bản MapReduce</h4><p>Mở rộng mọi đường song song mỗi vòng, làm nhiều việc thừa hơn, nhưng chia được cho cả cụm. Khoảng cách cuối giống hệt Dijkstra với mọi trọng số không âm; khi mọi trọng số là 1, nó còn tiến đúng từng lớp như BFS, nên số vòng bằng độ sâu.</p></div>
       </div>
     </div>
   </details>
@@ -3875,7 +3885,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   <h3 class="sec">PageRank: chia hạng cho láng giềng, cộng lại, lặp</h3>
   <p>PageRank là xác suất một người lướt web ngẫu nhiên (bấm link, thỉnh thoảng gõ một URL bất kỳ) đang đứng ở một trang. Trang được nhiều trang có hạng cao trỏ tới thì hạng cao.</p>
   <p style="text-align:center;font-family:var(--mono);font-size:14.5px">PR(A) = (1 − d) + d · ( PR(T<sub>1</sub>)/C(T<sub>1</sub>) + … + PR(T<sub>n</sub>)/C(T<sub>n</sub>) )</p>
-  <p>T<sub>1</sub>…T<sub>n</sub> là các trang trỏ tới A, C(P) là số link ra của P, d là hệ số damping (thường 0.85). PR<sub>i+1</sub> tính từ PR<sub>i</sub>: map chia hạng của mỗi trang đều cho các trang nó trỏ tới, reduce cộng các mảnh nhận được. Ở dạng này tổng hạng bằng số trang N, nên PR lớn hơn 1 là bình thường; chia cho N mới ra xác suất người lướt web đứng ở trang đó.</p>
+  <p>T<sub>1</sub>…T<sub>n</sub> là các trang trỏ tới A, C(P) là số link ra của P, d là hệ số damping (thường 0.85): người lướt bấm tiếp một link với xác suất d, nhảy tới một trang ngẫu nhiên với xác suất 1 − d (slide gọi d là hệ số "URL ngẫu nhiên", dễ hiểu ngược). PR<sub>i+1</sub> tính từ PR<sub>i</sub>: map chia hạng của mỗi trang đều cho các trang nó trỏ tới, reduce cộng các mảnh nhận được. Ở dạng này tổng hạng bằng số trang N, nên PR lớn hơn 1 là bình thường; chia cho N mới ra xác suất người lướt web đứng ở trang đó.</p>
 
   <figure class="fig small" id="b6-pr">
     <p class="fig-t">Chạy PageRank từng vòng (d = 0.85, khởi đầu PR = 1)</p>
@@ -3918,7 +3928,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     </div>
   </details>
 
-  <section class="recap"><h3>Nhớ</h3><ul><li>Chỉ viết map và reduce trên cặp (K, V); framework lo chia task, shuffle, chạy lại.</li><li>Map chạy trên node giữ block, nên input không phải đi qua mạng.</li><li>Shuffle &amp; sort đưa mọi cặp cùng key về một reducer, đã sắp theo key.</li><li>Combiner gộp sớm trên mapper, chỉ với phép giao hoán và kết hợp.</li><li>Thuật toán lặp (BFS, PageRank) là chuỗi job; mỗi vòng đọc, ghi lại HDFS.</li><li>PageRank: map chia hạng cho link ra, reduce cộng mảnh rồi áp (1 − d) + d·Σ.</li></ul></section>
+  <section class="recap"><h3>Nhớ</h3><ul><li>Chỉ viết map và reduce trên cặp (K, V); framework lo chia task, shuffle, chạy lại.</li><li>Map được ưu tiên chạy trên node giữ block, nên phần lớn input không đi qua mạng.</li><li>Shuffle &amp; sort đưa mọi cặp cùng key về một reducer, đã sắp theo key.</li><li>Combiner gộp sớm trên mapper, chỉ với phép giao hoán và kết hợp.</li><li>Thuật toán lặp (BFS, PageRank) là chuỗi job; mỗi vòng đọc, ghi lại HDFS.</li><li>PageRank: map chia hạng cho link ra, reduce cộng mảnh rồi áp (1 − d) + d·Σ.</li></ul></section>
 
   <div class="quiz">
     <h3>Tự kiểm tra</h3>
@@ -3982,7 +3992,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
 
       <rect class="bx" x="285" y="40" width="170" height="56" rx="8"/>
       <text class="tb tc" x="370" y="63">Cluster manager</text>
-      <text class="t3 tc" x="370" y="82">Standalone · YARN · Mesos</text>
+      <text class="t3 tc" x="370" y="82">Standalone · YARN · K8s</text>
 
       <rect class="bxa" x="530" y="30" width="210" height="56" rx="8"/>
       <text class="tb" x="544" y="53">Worker · Executor</text>
@@ -4020,7 +4030,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <line class="lna dash" x1="657" y1="205" x2="657" y2="159.3" marker-end="url(#ah-process)"/>
       <text class="t2 tc" x="380" y="306">Mất partition → tính lại theo lineage · cache() giữ RDD trong RAM để nhiều action dùng lại</text>
     </svg></div>
-    <figcaption>Nửa trên là <b>ai chạy</b>: driver điều phối, cluster manager cấp tài nguyên, executor làm việc. Nửa dưới là <b>chạy cái gì</b>: code khai báo RDD và DAG được dựng dần, action nộp DAG đi chạy, DAG cắt thành stage, stage thành task gửi xuống executor.</figcaption>
+    <figcaption>Nửa trên là <b>ai chạy</b>: driver điều phối, cluster manager (Standalone, YARN hoặc Kubernetes, viết tắt K8s) cấp tài nguyên, executor làm việc. Nửa dưới là <b>chạy cái gì</b>: code khai báo RDD và DAG được dựng dần, action nộp DAG đi chạy, DAG cắt thành stage, stage thành task gửi xuống executor.</figcaption>
   </figure>
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
@@ -4071,7 +4081,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </figure>
 
   <h3 class="sec">RAM là đĩa mới</h3>
-  <p>Số liệu trong slide cho một node điển hình. RAM đọc 10 GB/s, HDD 100 MB/s: chênh hai bậc độ lớn. Spark là engine phân tích hợp nhất cho dữ liệu lớn: hỗ trợ tốt thuật toán lặp và khai phá tương tác, vẫn chịu lỗi, giữ data locality, mở rộng được, và giấu phần phân tán khỏi người viết.</p>
+  <p>Số liệu trong slide cho một node điển hình của giữa thập niên 2010; nay SSD NVMe đạt vài GB/s và mạng 10–100 Gb/s, nhưng RAM vẫn nhanh nhất. RAM đọc 10 GB/s, HDD 100 MB/s: chênh hai bậc độ lớn. Spark là engine phân tích hợp nhất cho dữ liệu lớn: hỗ trợ tốt thuật toán lặp và khai phá tương tác, vẫn chịu lỗi, giữ data locality, mở rộng được, và giấu phần phân tán khỏi người viết.</p>
   <details class="deep">
     <summary>Số liệu tốc độ, bảng so sánh Hadoop MR với Spark, kỷ lục sort 2014<span class="hint">RAM, SSD, HDD, mạng; Spark sort 100 TB nhanh gấp 3 lần với số máy ít hơn 10 lần</span></summary>
     <div class="deep-body">
@@ -4092,7 +4102,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <tr><td>Lưu trữ</td><td>chỉ đĩa</td><td>trong bộ nhớ hoặc đĩa</td></tr>
       <tr><td>Phép toán</td><td>map và reduce</td><td>nhiều transformation và action, gồm cả map, reduce</td></tr>
       <tr><td>Mô hình chạy</td><td>batch</td><td>batch, lặp, streaming</td></tr>
-      <tr><td>Ngôn ngữ</td><td>Java</td><td>Scala, Java, Python, R</td></tr>
+      <tr><td>Ngôn ngữ</td><td>Java (ngôn ngữ khác qua Hadoop Streaming)</td><td>Scala, Java, Python, R</td></tr>
     </tbody>
   </table></div>
 
@@ -4300,7 +4310,7 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
   <div class="callout note"><p>Chịu lỗi nhờ lineage rẻ hơn nhân bản dữ liệu trong RAM: không tốn bộ nhớ, không tốn băng thông lúc bình thường. Cái giá là lineage quá dài thì tính lại lâu; khi ấy dùng checkpoint ghi RDD xuống đĩa.</p></div>
 
   <h3 class="sec">DataFrame: RDD có cột và có bộ tối ưu</h3>
-  <p>DataFrame là trừu tượng chính từ Spark 2.0: bất biến, giữ lineage để tính lại phần mất, xử lý song song. Tạo từ collection Python, từ Spark/pandas DataFrame khác, hoặc từ file trên HDFS và hệ lưu trữ khác.</p>
+  <p>DataFrame là trừu tượng chính từ Spark 2.0: bất biến, giữ lineage để tính lại phần mất, xử lý song song. Tạo từ collection Python, từ Spark/pandas DataFrame khác, hoặc từ file trên HDFS và hệ lưu trữ khác. Code dưới dùng <code>spark</code>, tức SparkSession: điểm vào chung từ Spark 2.0, gói sẵn SparkContext; slide dùng <code>sqlContext</code> của Spark 1.x.</p>
   <div class="vs">
     <div><h4>Transformation (lười)</h4><p><code>select</code>, <code>drop</code>, <code>filter</code> / <code>where</code>, <code>distinct</code>, <code>sort</code>, <code>groupBy</code>. Trả về DataFrame mới; Spark chỉ lưu công thức.</p></div>
     <div><h4>Action (chạy)</h4><p><code>show(n)</code>, <code>take(n)</code>, <code>collect()</code>, <code>count()</code>, <code>describe()</code>. Bắt Spark thực thi công thức và đưa kết quả ra ngoài.</p></div>
@@ -4349,14 +4359,14 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
   </details>
 
   <h3 class="sec">Kiến trúc và vòng đời job</h3>
-  <p>Kiến trúc master–worker: driver gửi việc cho worker, bảo chúng đọc dữ liệu từ bộ nhớ hay từ đĩa, S3, HDFS. Chương trình bắt đầu bằng <code>SparkContext</code>; tham số <code>master</code> chọn loại cụm.</p>
+  <p>Kiến trúc master–worker: driver gửi việc cho worker, bảo chúng đọc dữ liệu từ bộ nhớ hay từ đĩa, S3, HDFS. Chương trình bắt đầu bằng <code>SparkContext</code>; tham số <code>master</code> chọn loại cụm. Slide còn dòng <code>mesos://</code>; Mesos, một cluster manager khác, bị bỏ từ Spark 4.0, thay bằng Kubernetes.</p>
   <div class="tbl"><table>
     <thead><tr><th>master</th><th>Ý nghĩa</th></tr></thead>
     <tbody>
       <tr><td><code>local</code></td><td>chạy cục bộ, một luồng worker, không song song</td></tr>
       <tr><td><code>local[K]</code></td><td>chạy cục bộ, K luồng (nên đặt bằng số lõi)</td></tr>
       <tr><td><code>spark://HOST:PORT</code></td><td>nối vào cụm Spark standalone</td></tr>
-      <tr><td><code>mesos://HOST:PORT</code></td><td>nối vào cụm Mesos</td></tr>
+      <tr><td><code>k8s://HOST:PORT</code></td><td>nối vào cụm Kubernetes</td></tr>
       <tr><td><code>yarn</code></td><td>nối vào cụm YARN</td></tr>
     </tbody>
   </table></div>
@@ -4378,7 +4388,7 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
 
   <div class="quiz">
     <h3>Tự kiểm tra</h3>
-    <details><summary>Một thuật toán lặp 10 vòng trên cùng tập dữ liệu. MapReduce và Spark khác nhau ở đâu về I/O?</summary><p>MapReduce chạy 10 job, mỗi job đọc input từ HDFS và ghi output (3 bản sao) xuống HDFS. Spark đọc HDFS một lần, <code>cache()</code> dữ liệu làm việc trong RAM, 10 vòng sau đọc từ RAM nhanh hơn khoảng hai bậc độ lớn.</p></details>
+    <details><summary>Một thuật toán lặp 10 vòng trên cùng tập dữ liệu. MapReduce và Spark khác nhau ở đâu về I/O?</summary><p>MapReduce chạy 10 job, mỗi job đọc input từ HDFS và ghi output (3 bản sao) xuống HDFS. Spark đọc HDFS một lần, <code>cache()</code> dữ liệu làm việc trong RAM, 10 vòng sau đọc từ RAM. Riêng phần đọc nhanh hơn khoảng hai bậc độ lớn; cả vòng nhanh hơn ít hơn vì còn tốn CPU (bài 10: K-means 2–3 lần, logistic regression 12–25 lần).</p></details>
     <details><summary>Gọi <code>errors = logs.filter(isError)</code> trên file 1 TB. Bao lâu thì xong?</summary><p>Gần như tức thì: filter là transformation, chỉ ghi vào DAG. Việc đọc và lọc 1 TB chỉ xảy ra khi có action như <code>errors.count()</code>.</p></details>
     <details><summary>Vì sao RDD bất biến lại giúp chịu lỗi rẻ?</summary><p>Bất biến và tạo bằng phép thô nên mỗi partition hoàn toàn xác định bởi lineage. Mất partition nào chạy lại phép trên partition cha tương ứng, không cần giữ bản sao dữ liệu hay log từng thay đổi.</p></details>
     <details><summary><code>textFile → map → reduceByKey → map → collect</code> có mấy stage?</summary><p>Hai. textFile và map đầu là narrow, chạy chung stage 1; reduceByKey cần shuffle nên mở stage 2, map sau và collect nằm trong stage 2.</p></details>
@@ -4388,7 +4398,7 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
 <section class="chap" id="b8" data-stage="process" data-lec="8" data-short="Spark Streaming">
   <header class="chap-head">
     <h2>Spark Streaming — xử lý dòng dữ liệu</h2>
-    <p class="lede">Biến dòng dữ liệu vô tận thành chuỗi lô rất nhỏ để dùng lại engine batch của Spark (DStream), rồi nâng lên thành một bảng lớn dần mà truy vấn DataFrame chạy tăng dần trên đó (Structured Streaming), với bảo đảm exactly-once từ đầu tới cuối.</p>
+    <p class="lede">Biến dòng dữ liệu vô tận thành chuỗi lô rất nhỏ để dùng lại engine batch của Spark (DStream), rồi nâng lên thành một bảng lớn dần mà truy vấn DataFrame chạy tăng dần trên đó (Structured Streaming), với bảo đảm exactly-once từ đầu tới cuối khi nguồn phát lại được và sink idempotent.</p>
   </header>
 
   <figure class="fig map">
@@ -4498,7 +4508,7 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
   </details>
 
   <h3 class="sec">Phần 1 · DStream: dòng là chuỗi RDD</h3>
-  <p>Spark Streaming (bài báo Discretized Streams, SOSP 2013) nhận dòng từ nguồn, cắt thành lô rất nhỏ và tất định, coi mỗi lô là một RDD và xử lý bằng phép RDD, rồi đẩy kết quả ra theo lô. Điểm vào là <code>StreamingContext(conf, batchInterval)</code>.</p>
+  <p>Spark Streaming (bài báo Discretized Streams, SOSP 2013) nhận dòng từ nguồn, cắt thành lô rất nhỏ và tất định, coi mỗi lô là một RDD và xử lý bằng phép RDD, rồi đẩy kết quả ra theo lô; điểm vào là <code>StreamingContext(conf, batchInterval)</code>. Đây là API thế hệ cũ: tài liệu Spark hiện ghi Spark Streaming là dự án legacy (chỉ giữ lại, không còn cập nhật), ứng dụng mới dùng Structured Streaming ở Phần 2.</p>
   <figure class="fig">
     <div class="canvas"><svg class="dg" viewBox="0 0 720 180" role="img" aria-label="DStream lines gồm bốn RDD theo thời gian; flatMap áp lên từng RDD sinh ra DStream words gồm bốn RDD tương ứng">
       <text class="tb te" x="110" y="51">lines</text>
@@ -4528,7 +4538,7 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
   <div class="tbl"><table>
     <thead><tr><th>Nhóm phép</th><th>Gồm</th></tr></thead>
     <tbody>
-      <tr><td>Input</td><td>mỗi input DStream gắn một Receiver. Nguồn cơ bản: <code>socketTextStream</code>, <code>fileStream</code>; nguồn nâng cao: Kafka, Twitter.</td></tr>
+      <tr><td>Input</td><td>input DStream thường gắn một Receiver, task chạy dài hạn trên executor để nhận dữ liệu (slide ghi "mọi"; file stream và Kafka direct stream không cần). Nguồn cơ bản: <code>socketTextStream</code>, <code>fileStream</code>; nguồn nâng cao: Kafka, Twitter.</td></tr>
       <tr><td>Transformation</td><td><code>map</code>, <code>flatMap</code>, <code>filter</code>, <code>count</code>, <code>countByValue</code>, <code>reduce</code>, <code>reduceByKey</code>, <code>union</code>, <code>join</code>; cộng các phép cửa sổ và có trạng thái.</td></tr>
       <tr><td>Output</td><td><code>print</code> (10 phần tử đầu mỗi lô), <code>saveAsTextFiles</code>, <code>saveAsHadoopFiles</code>, <code>foreachRDD(func)</code>.</td></tr>
     </tbody>
@@ -4603,6 +4613,7 @@ context.<span class="f">start</span>()         <span class="c">// từ đây job
 
   <h3 class="sec">Mô hình mới: bảng lớn dần, truy vấn chạy tăng dần</h3>
   <p>Input là bảng chỉ thêm hàng. Trigger quy định bao lâu kiểm tra dữ liệu mới. Truy vấn là map, filter, reduce, cửa sổ thông thường trên bảng; kết quả là một bảng được cập nhật sau mỗi trigger.</p>
+  <p>Trigger có bốn kiểu: mặc định (lô sau chạy ngay khi lô trước xong), <code>processingTime</code> (nhịp cố định, vd 10 s), <code>availableNow</code> (xử lý hết dữ liệu đang có rồi dừng) và <code>continuous</code> (thử nghiệm, trễ cỡ mili giây nhưng chỉ at-least-once). Ngoài cửa sổ cố định và trượt, slide nhắc cửa sổ phiên: <code>session_window</code> (từ Spark 3.2) đóng cửa sổ của một key khi key ấy im lặng quá một khoảng cho trước.</p>
   <figure class="fig stepper" id="b8-ss">
     <p class="fig-t">Đếm từ trên dòng văn bản, ba trigger</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 250" role="img" aria-label="Bảng input nhận thêm dòng sau mỗi trigger; truy vấn groupBy count chỉ xử lý dòng mới và cập nhật bảng kết quả: sau trigger 1 cat 1 dog 3, sau trigger 2 cat 2 dog 3 owl 1, sau trigger 3 cat 2 dog 4 owl 2">
@@ -4696,9 +4707,9 @@ query = result.writeStream.<span class="f">format</span>(<span class="s">"parque
 input.<span class="f">agg</span>(<span class="f">avg</span>(<span class="s">"signal"</span>))
 input.<span class="f">groupBy</span>(<span class="s">"device-type"</span>).<span class="f">avg</span>(<span class="s">"signal"</span>)
 
-<span class="c"># Theo loại thiết bị trong từng cửa sổ 10 phút theo event time (DStream không làm được)</span>
+<span class="c"># Theo loại thiết bị trong từng cửa sổ 10 phút theo event time (DStream không hỗ trợ sẵn)</span>
 input.<span class="f">groupBy</span>(<span class="f">col</span>(<span class="s">"device-type"</span>), <span class="f">window</span>(<span class="f">col</span>(<span class="s">"event-time"</span>), <span class="s">"10 minutes"</span>)).<span class="f">avg</span>(<span class="s">"signal"</span>)</pre>
-      <p>Cùng một truy vấn cửa sổ chạy được cả trên dòng lẫn trên batch; slide nhấn mạnh DStream không làm được việc tính theo event time này.</p>
+      <p>Cùng một truy vấn cửa sổ chạy được cả trên dòng lẫn trên batch. Slide ghi DStream không làm được việc này; đúng hơn là DStream không hỗ trợ sẵn, nên phải tự viết logic event time.</p>
       <h4>Join với dữ liệu tĩnh, quản lý query</h4>
       <pre class="code" data-lang="python"><span class="c"># Làm giàu dòng Kafka bằng bảng thiết bị tĩnh đọc qua JDBC, viết như join thường</span>
 stream = spark.readStream.<span class="f">format</span>(<span class="s">"kafka"</span>).<span class="f">option</span>(<span class="s">"subscribe"</span>, <span class="s">"iot-updates"</span>)...<span class="f">load</span>()
@@ -4755,7 +4766,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       <rect class="bxh" x="222" y="158" width="280" height="48" rx="8"/>
       <text class="ton tb tc" x="362" y="187">exactly-once end-to-end</text>
     </svg></div>
-    <figcaption>Planner ghi khoảng offset của mỗi lần chạy vào write-ahead log trên HDFS rồi mới chạy. Sau sự cố, nó đọc log, xin nguồn phát lại <b>đúng</b> khoảng offset ấy, dùng <b>đúng</b> phiên bản state, và sink bỏ qua lần ghi lặp.</figcaption>
+    <figcaption>Planner ghi khoảng offset của mỗi lần chạy vào write-ahead log trên HDFS rồi mới chạy. Sau sự cố, nó đọc log, xin nguồn phát lại <b>đúng</b> khoảng offset ấy, dùng <b>đúng</b> phiên bản state, và sink bỏ qua lần ghi lặp. Không phải sink nào cũng idempotent: file sink cho exactly-once, còn Kafka sink và foreach chỉ at-least-once, chạy lại có thể ghi trùng.</figcaption>
   </figure>
 
   <details class="deep">
@@ -4863,7 +4874,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
     <figcaption>Hadoop lưu rẻ khối dữ liệu khổng lồ, đủ loại, nhưng mỗi câu trả lời là một job batch. Lambda thêm một lớp dòng để lấp khoảng trễ đó.</figcaption>
   </figure>
 
-  <p>Lambda là kiến trúc xử lý khối dữ liệu lớn bằng cả batch lẫn stream. Theo slide, Spark là một trong số ít framework ghép được batch và stream liền mạch, trên hàng petabyte, trong cùng một ứng dụng: speed layer dùng Spark Streaming (bài 8), batch layer dùng Spark (bài 7), chung code.</p>
+  <p>Lambda là kiến trúc xử lý khối dữ liệu lớn bằng cả batch lẫn stream. Theo slide, Spark là một trong số ít framework ghép được batch và stream liền mạch, trên hàng petabyte, trong cùng một ứng dụng: speed layer dùng Spark Streaming (bài 8), batch layer dùng Spark (bài 7). Với DStream hai lớp chỉ dùng chung được một phần code; Structured Streaming mới cho cùng một truy vấn DataFrame chạy cả batch lẫn dòng.</p>
   <p>Spark Streaming coi tính toán dòng là chuỗi job batch rất nhỏ, tất định: cắt dòng thành lô X giây, mỗi lô là một RDD xử lý bằng phép RDD, rồi trả kết quả theo lô.</p>
 
   <h3 class="sec">Độ liên quan của dữ liệu theo thời gian</h3>
@@ -5068,7 +5079,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       <rect class="bx" x="255" y="165" width="210" height="60" rx="8"/><text class="tb tc" x="360" y="186">Phân cụm</text><text class="t3 tc" x="360" y="203">clustering · K-means</text><text class="t3 tc" x="360" y="218">gom điểm gần nhau</text>
       <rect class="bx" x="495" y="165" width="210" height="60" rx="8"/><text class="tb tc" x="600" y="186">Agent chơi Mario</text><text class="t3 tc" x="600" y="203">quan sát, bấm phím</text><text class="t3 tc" x="600" y="218">tối đa hoá điểm</text>
     </svg></div>
-    <figcaption>Phân loại email spam dùng logistic regression; hồi quy tuyến tính tìm đường thẳng gần mọi điểm nhất; phân cụm gom điểm theo một định nghĩa "gần".</figcaption>
+    <figcaption>Phân loại email spam dùng logistic regression; hồi quy tuyến tính tìm đường thẳng có tổng bình phương sai số tới các điểm nhỏ nhất; phân cụm gom điểm theo một định nghĩa "gần".</figcaption>
   </figure>
   <p>Ứng dụng trong slide: gợi ý bạn bè và sản phẩm, phân loại nội dung, tìm chủ đề trong kho văn bản, thị giác máy tính, xử lý ngôn ngữ tự nhiên, phát hiện bất thường, xếp hạng kết quả tìm kiếm, phân tích cảm xúc, tin sinh học.</p>
 
@@ -5078,7 +5089,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       <tr><td>vài dòng</td><td>dữ liệu mẫu</td><td>bảng trắng</td></tr>
       <tr><td>KB – vài MB</td><td>phân tích và trực quan hoá nguyên mẫu</td><td>Matlab, Octave, R, Processing</td></tr>
       <tr><td>MB – vài GB</td><td>phân tích dữ liệu trực tuyến</td><td>NumPy, SciPy, Weka; vẽ bằng Flare, AmCharts, Raphael, Protovis</td></tr>
-      <tr><td>GB – TB – PB</td><td>phân tích big data</td><td>MLlib, SparkR, GraphX, Mahout, Giraph</td></tr>
+      <tr><td>GB – TB – PB</td><td>phân tích big data</td><td>MLlib, SparkR (deprecated, tức bị đánh dấu bỏ dần, từ Spark 4.0), GraphX, Mahout, Giraph</td></tr>
     </tbody>
   </table></div>
 
@@ -5093,7 +5104,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
     <tbody>
       <tr><td>Thuật toán</td><td>phân loại, hồi quy, phân cụm, lọc cộng tác</td></tr>
       <tr><td>Đặc trưng</td><td>trích xuất, biến đổi, giảm chiều, chọn đặc trưng</td></tr>
-      <tr><td>Pipeline</td><td>dựng, đánh giá, tinh chỉnh quy trình ML</td></tr>
+      <tr><td>Pipeline</td><td>dựng, đánh giá, tinh chỉnh quy trình ML: Evaluator chấm mô hình; CrossValidator, TrainValidationSplit thử nhiều bộ tham số trên nguyên Pipeline</td></tr>
       <tr><td>Lưu trữ</td><td>lưu và nạp thuật toán, mô hình, pipeline</td></tr>
       <tr><td>Tiện ích</td><td>đại số tuyến tính, thống kê, xử lý dữ liệu; hàm tối ưu cấp thấp</td></tr>
     </tbody>
@@ -5224,6 +5235,7 @@ model.<span class="f">transform</span>(test).<span class="f">select</span>(<span
     <li>Dời mỗi tâm về trung bình các điểm của cụm.</li>
     <li>Lặp bước 2–3 tới khi tâm dịch chuyển ít hơn ε.</li>
   </ol>
+  <p>K-means chỉ hội tụ tới cực tiểu cục bộ (tốt nhất quanh điểm xuất phát, chưa chắc tốt nhất toàn cục): tâm khởi tạo khác có thể cho cụm khác. Vì vậy MLlib khởi tạo bằng k-means|| (chọn các tâm đầu rải xa nhau) thay vì lấy mẫu ngẫu nhiên như slide.</p>
 
   <figure class="fig small" id="b10-km">
     <p class="fig-t">Chạy K-means trên 9 điểm</p>
@@ -5278,7 +5290,7 @@ model.<span class="f">transform</span>(test).<span class="f">select</span>(<span
       <path class="lna" d="M 595 165 L 595 232 L 85 232 L 85 168.3" marker-end="url(#ah-query)"/>
       <text class="t2 ta tc" x="340" y="250">tâm mới = Σp / n; lặp tới khi tâm dịch chuyển &lt; ε</text>
     </svg></div>
-    <figcaption>Dữ liệu được <code>cache()</code> nên mỗi vòng chỉ đọc RAM; thứ đi qua mạng mỗi vòng chỉ là K tâm, và mỗi partition phát tối đa K cặp (tổng, số điểm). Đây là lý do K-means trên Spark nhanh hơn hẳn trên Hadoop.</figcaption>
+    <figcaption>Dữ liệu được <code>cache()</code> nên mỗi vòng chỉ đọc RAM; thứ đi qua mạng mỗi vòng chỉ là K tâm, và mỗi partition phát tối đa K cặp (tổng, số điểm). Nhờ vậy mỗi vòng K-means trên Spark nhanh hơn Hadoop 2–3 lần (bảng cuối bài).</figcaption>
   </figure>
 
   <details class="deep">
@@ -5286,12 +5298,13 @@ model.<span class="f">transform</span>(test).<span class="f">select</span>(<span
     <div class="deep-body">
       <pre class="code" data-lang="scala"><span class="k">val</span> data = lines.<span class="f">map</span>(line =&gt; <span class="f">parseVector</span>(line)).<span class="f">cache</span>()
 <span class="k">var</span> centers = data.<span class="f">takeSample</span>(<span class="k">false</span>, K, seed)
+<span class="k">var</span> d = Double.MaxValue
 <span class="k">while</span> (d &gt; ɛ) {
   <span class="k">val</span> closest = data.<span class="f">map</span>(p =&gt; (<span class="f">closestPoint</span>(p, centers), p))        <span class="c">// gán</span>
   <span class="k">val</span> pointsGroup = closest.<span class="f">groupByKey</span>()
-  <span class="k">val</span> newCenters = pointsGroup.<span class="f">mapValues</span>(ps =&gt; <span class="f">average</span>(ps))     <span class="c">// dời tâm</span>
+  <span class="k">val</span> newCenters = pointsGroup.<span class="f">mapValues</span>(ps =&gt; <span class="f">average</span>(ps)).<span class="f">collectAsMap</span>()   <span class="c">// dời tâm, về driver</span>
   d = <span class="f">distance</span>(centers, newCenters)
-  centers = newCenters.<span class="f">collectAsMap</span>()
+  centers = Array.<span class="f">tabulate</span>(K)(newCenters)   <span class="c">// slide: newCenters.map(_), không chạy được</span>
 }</pre>
       <p><code>groupByKey</code> gửi mọi điểm của một cụm qua mạng. Dùng <code>map(p =&gt; (closestPoint(p, centers), (p, 1)))</code> rồi <code>reduceByKey</code> cộng (tổng, đếm) thì mỗi partition chỉ gửi K cặp.</p>
       <pre class="code" data-lang="python"><span class="k">from</span> pyspark.ml.clustering <span class="k">import</span> KMeans
