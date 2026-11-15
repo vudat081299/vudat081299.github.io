@@ -77,6 +77,12 @@ strong{font-weight:600}
 .ibtn:hover{border-color:var(--line-strong)}
 .ibtn svg{width:18px;height:18px}
 .toc-btn{display:none}
+@media (max-width:420px){.top .name{display:none}}
+.vswitch{flex:none;display:inline-flex;padding:3px;gap:2px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.vswitch a{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border-radius:7px;font-family:var(--mono);font-size:12px;color:var(--fg-2);text-decoration:none;white-space:nowrap}
+.vswitch a:hover{color:var(--fg);background:var(--surface-2)}
+.vswitch a[aria-current="page"]{background:var(--fg);color:var(--bg)}
+@media (max-width:640px){.vswitch .lg{display:none}.vswitch a{padding:0 8px}}
 .bar{position:fixed;left:0;top:var(--top-h);height:2px;background:var(--fg);width:0;z-index:51;transition:width .1s linear}
 
 /* ============ LAYOUT ============ */
@@ -379,6 +385,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </a>
   <span class="spacer"></span>
   <span class="prog" id="prog" aria-live="off"></span>
+  <nav class="vswitch" aria-label="Chọn giao diện để so sánh"><a href="big-data-storage-processing.html" aria-current="page"><span class="lg">Màu </span>gốc</a><a href="big-data-storage-processing-v2.html"><span class="lg">Màu </span>trang chủ</a></nav>
   <button class="ibtn" id="themeBtn" type="button" aria-label="Đổi giao diện sáng / tối">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
   </button>
@@ -5610,5 +5617,16 @@ model = <span class="f">KMeans</span>(k=<span class="o">2</span>, seed=<span cla
 })();
 </script>
 <!-- @SCRIPTS -->
+<script>
+/* Đổi giữa hai bản giao diện, giữ nguyên bài đang đọc. */
+(function(){
+  document.querySelectorAll('.vswitch a:not([aria-current])').forEach(function(a){
+    a.addEventListener('click',function(){
+      var on=document.querySelector('.toc a.on'), h=on?on.getAttribute('href'):location.hash;
+      if(h&&h.charAt(0)==='#') a.href=a.getAttribute('href').split('#')[0]+h;
+    });
+  });
+})();
+</script>
 </body>
 </html>
