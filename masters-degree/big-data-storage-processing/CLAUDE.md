@@ -8,13 +8,16 @@
 
 ## Cấu trúc trang
 
-- Thứ tự: thanh trên → `#tong-quan` (bản đồ bốn chặng + nền móng, đường đọc theo slide) → cách đọc → 14 bài.
+- Thứ tự: thanh trên → `#tong-quan` (bản đồ bốn chặng + nền móng, đường đọc theo slide) → cách đọc → 14 bài → `#on-tap` (Ôn tập).
 - Một bài là `<section class="chap" id="b…" data-stage data-lec data-short>`. `data-stage` là một trong
   `found`, `ingest`, `store`, `process`, `query`.
 - Số bài, dải chặng, mục lục, chip trên bản đồ, đường đọc và nút "sang bài sau" do JS dựng từ các section ấy;
   đừng viết tay.
-- Thứ tự trong bài: `.chap-head` (h2 + `.lede` một câu) → `.fig.map` (bản đồ bài) → `.keys` (thẻ khái niệm)
-  → sơ đồ cơ chế → `details.deep` (chi tiết, đóng sẵn) → `.quiz` → `.recap`.
+- Thứ tự trong bài: `.chap-head` (h2 + `.lede` một câu) → `.fig.map` (bản đồ bài, xem trước cả bài) → `.keys`
+  (thẻ khái niệm) → các mục `h3.sec` → `section.recap` (h3 "Nhớ" + `ul`) → `.quiz`.
+- Mỗi mục tối đa một `details.deep`, đặt cuối mục. Ý cần để hiểu bài thì để ở thân bài, không gập.
+- Thuật ngữ giải nghĩa ở lần dùng đầu tiên; từ viết tắt viết đủ một lần.
+- Mục "Ôn tập" cuối trang do JS gom từ các `.recap`; đừng viết tay.
 - Đoạn văn tối đa ba câu. Cơ chế vẽ được thì vẽ bằng SVG inline, không nhúng ảnh slide.
 - `id` trong bài bắt đầu bằng id của bài: `b5-…`, `b4-3-…`.
 
@@ -22,7 +25,7 @@
 
 - Màu chỉ khai ở token `:root` / `html.dark`. Mỗi chặng một màu (`--found` … `--query`), áp vào bài qua `--acc`.
 - SVG mang class `dg`; tô bằng lớp `bx`, `bxa`, `bxh`, `ln`, `lna`, `t2`, `ta`…, không ghi mã màu.
-  Màu chặng khác trong một hình: bọc `<g class="c-store">`. Mũi tên: `url(#ah)`, `url(#ah-<stage>)`, `url(#ah-bad)`.
+  Thành phần thuộc chặng khác (HDFS, Kafka…) luôn bọc `<g class="c-<chặng>">` + `.bxa`; `--acc` chỉ cho thứ bài đang dạy. Mũi tên: `url(#ah)`, `url(#ah-<stage>)`, `url(#ah-bad)`.
 - Hình chạy từng bước: `figure.fig.stepper` + `ol.steps`; phần tử SVG có `data-s`, `data-only`, `data-dim`.
   JS chung tự thêm nút.
 - Tab: `.tabs > section.tab[data-label]`.
