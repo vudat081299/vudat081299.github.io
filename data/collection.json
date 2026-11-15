@@ -104,6 +104,21 @@
                   "tags": "Group project, read to present it — RAG pipeline ordered by cost, DLP gate, rule-based scoring & loan maths, 10 test cases · plus 16 places the report contradicts itself and what to say instead"
                 }
               ]
+            },
+            {
+              "icon": "insights",
+              "title": "Data Management and Visualization",
+              "meta": "Từ lưu trữ dữ liệu tới kể chuyện bằng hình",
+              "files": [
+                {
+                  "key": "w",
+                  "icon": "menu_book",
+                  "href": "masters-degree/data-management-visualization/data-management-visualization.html",
+                  "title": "Course Notes",
+                  "sub": "HDFS, tiền xử lý, EDA, mã hoá thị giác, chọn biểu đồ, kể chuyện",
+                  "tags": "Data governance · file system · HDFS · data integration · NiFi · data quality · OpenRefine · EDA · feature engineering · visual encoding · marks & channels · biểu đồ · heatmap · graph · text visualization · storytelling with data"
+                }
+              ]
             }
           ]
         },
