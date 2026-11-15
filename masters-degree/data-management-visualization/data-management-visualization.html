@@ -72,6 +72,10 @@ strong{font-weight:600;color:var(--ink)}
 .read-btn{width:auto;gap:7px;padding:0 12px;font:600 14px var(--font)}
 .read-btn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 .menu-btn{display:none}
+.ver{display:inline-flex;flex:none;padding:3px;gap:2px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.ver a{display:inline-flex;align-items:center;min-height:32px;padding:0 10px;border-radius:7px;font:600 13.5px var(--font);color:var(--ink-2);text-decoration:none}
+.ver a:hover{color:var(--ink);background:var(--sunk)}
+.ver a[aria-current]{background:var(--ink);color:var(--bg)}
 .bar{position:absolute;left:0;bottom:-1px;height:2px;width:0;background:linear-gradient(90deg,var(--a),var(--b))}
 
 /* ═══ BỐ CỤC ═══ */
@@ -330,6 +334,8 @@ footer{border-top:1px solid var(--line);margin-top:64px;padding:20px 0;font-size
   body{--fs:16.5px}
   .top{gap:8px;padding:0 10px}
   .read-btn{padding:0;width:40px}
+  .ver a[aria-current]{display:none}
+  .ver a{min-height:32px;padding:0 9px}
   .read-btn span{display:none}
   .hero{padding-top:30px}
   .lede{font-size:18px}
@@ -366,7 +372,7 @@ footer{border-top:1px solid var(--line);margin-top:64px;padding:20px 0;font-size
   @page{margin:16mm 14mm}
   html{scroll-behavior:auto}
   body{font-size:11pt;line-height:1.5;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .top,.side,.scrim,.chap-tools,.menu-btn,.seg,.btn,input,select,.bar,.chap-nav,.hero-act,.sk-list,.sk-fig-btn,.scroll-hint{display:none!important}
+  .top,.ver,.side,.scrim,.chap-tools,.menu-btn,.seg,.btn,input,select,.bar,.chap-nav,.hero-act,.sk-list,.sk-fig-btn,.scroll-hint{display:none!important}
   .layout{display:block;max-width:none}
   main{padding:0}
   .wrap{max-width:none}
@@ -397,6 +403,7 @@ footer{border-top:1px solid var(--line);margin-top:64px;padding:20px 0;font-size
     <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 8.5 9 3l6 5.5V15H11v-4H7v4H3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
   </a>
   <div class="top-name" id="topName"><span class="top-course">Data Management &amp; Visualization</span><span class="top-cur" id="topCur">IT5425</span></div>
+  <nav class="ver" aria-label="Chọn giao diện để so sánh"><a href="data-management-visualization.html" aria-current="page" title="Giao diện kem (bản đầu)">Kem</a><a href="data-management-visualization-green.html" title="Giao diện theo màu trang chủ">Xanh</a></nav>
   <button class="icon-btn read-btn" id="readBtn" aria-pressed="false" title="Đọc liền: mở mọi nút kiến thức. Bấm lại để thu gọn.">
     <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 3.5h5a2 2 0 0 1 2 2V15a1.6 1.6 0 0 0-1.6-1.6H2zM16 3.5h-5a2 2 0 0 0-2 2V15a1.6 1.6 0 0 1 1.6-1.6H16z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
     <span>Đọc liền</span>
@@ -9525,6 +9532,17 @@ footer{border-top:1px solid var(--line);margin-top:64px;padding:20px 0;font-size
   }
   window.addEventListener('scroll', function(){ if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
   onScroll();
+})();
+/* Nút chọn giao diện: sang bản kia ở đúng bài đang đọc. */
+(function(){
+  document.querySelectorAll('.ver a[href]:not([aria-current])').forEach(function(a){
+    a.addEventListener('click', function(){
+      var h = location.hash, secs = document.querySelectorAll('main section[id]'), id = '';
+      for (var i = 0; i < secs.length; i++) { if (secs[i].getBoundingClientRect().top < 90) id = secs[i].id; }
+      if (!h && id) h = '#' + id;
+      a.href = a.getAttribute('href').split('#')[0] + h;
+    });
+  });
 })();
 </script>
 <script>

@@ -3,7 +3,15 @@
 - Một trang tự chứa, `data-management-visualization.html`: dạy lại môn Data Management and Visualization theo
   đúng thứ tự mười ba file slide (1, 2.1, 2.2, 3 … 12).
 - Chỉ nạp font Google. Không build, mở thẳng là chạy. Có mục trên trang chủ (section Master's Degree).
-- Không có cổng riêng. Cổng tĩnh của `pages/` chạy tay được: `python3 pages/tools/lint-pages.py <file>`.
+- Không có cổng riêng. Cổng tĩnh của `pages/` chạy tay được, với đường dẫn tuyệt đối:
+  `python3 pages/tools/lint-pages.py "$PWD/masters-degree/data-management-visualization/<file>"`.
+
+## Hai bản giao diện (tạm, chờ chủ trang chọn — xem HANDOFF.md)
+
+- `data-management-visualization.html` (kem) và `data-management-visualization-green.html` (màu trang chủ: đen,
+  trắng, một xanh lá, tiêu đề Space Grotesk) có cùng `<body>` và JS; chỉ khác `<style>` và `aria-current` trong `nav.ver`.
+- Sửa nội dung thì sửa cả hai file giống hệt nhau. Mục trên trang chủ trỏ bản kem.
+- Bản xanh: cả hai phần dùng `--a` làm màu nhấn; `--b` (than chì) chỉ còn cho tuyến B trên bản đồ.
 
 ## Cấu trúc trang
 
