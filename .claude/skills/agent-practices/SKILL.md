@@ -1,6 +1,6 @@
 ---
 name: agent-practices
-description: Mẹo làm việc đã phải trả giá mới rút ra trong repo này, không riêng project nào. Dùng khi chạy nhiều subagent song song, sửa hàng loạt bằng script, trích nguồn hay con số (facts/, shop/docs/), đo hoặc chụp một trang trong trình duyệt, làm lại giao diện mà phải giữ nguyên hành vi, hoặc làm việc trong worktree. KHÔNG dùng để tra luật của một project cụ thể — luật ấy ở CLAUDE.md của project đó.
+description: Mẹo làm việc đã phải trả giá mới rút ra trong repo này, không riêng project nào. Dùng khi chạy nhiều subagent song song, sửa hàng loạt bằng script, trích nguồn hay con số (facts/, shop/docs/), đo hoặc chụp một trang trong trình duyệt, làm lại giao diện mà phải giữ nguyên hành vi, vẽ giao diện hay sơ đồ SVG, hoặc làm việc trong worktree. KHÔNG dùng để tra luật của một project cụ thể — luật ấy ở CLAUDE.md của project đó.
 ---
 
 # Mẹo làm việc chung trong repo này
@@ -59,6 +59,15 @@ Mỗi mục từng làm mất thời gian hoặc sinh lỗi thật. Luật của
 4. So chữ đã bóc thẻ của từng mục.
 
 Phép này chỉ chứng minh hành vi không đổi, không chứng minh hành vi đúng.
+
+## Vẽ giao diện và sơ đồ
+
+- Viền một hoặc hai cạnh (kể cả `box-shadow: inset` một bên) không đi cùng `border-radius`: góc bo làm vạch
+  thon nhọn ở hai đầu. Viền đủ bốn cạnh thì bo thoải mái. Rà: grep selector có cả hai.
+- Đầu đường nối trong SVG phải chạm đúng mép hộp. Đo bằng trình duyệt (tia từ điểm kế cuối, giao với
+  `getBBox` của hình gần nhất), rồi sửa toạ độ trong nguồn; đừng nắn bằng JS lúc chạy.
+- Mũi tên: `markerUnits="userSpaceOnUse"` cho cỡ cố định; nếu không, đầu mũi tên to nhỏ theo `stroke-width`.
+- SVG phóng to theo cột (720 → 800px) thì nét 1px bị nhoè: giới hạn `max-width` bằng bề rộng `viewBox`.
 
 ## Đường dẫn và worktree
 
