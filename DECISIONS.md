@@ -24,6 +24,7 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-022 · Trang chủ gom section thành ba khu, khu đầu là việc đang học · `data/collection.json`
 - REPO-023 · Trang chủ đen, trắng, một màu xanh lá · `index.html`
 - REPO-024 · Mọi trang theo theme hệ điều hành ở lần mở đầu · `repo`
+- REPO-025 · Viền một hoặc hai cạnh thì không bo góc · `repo`
 
 Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/class-schedule/DECISIONS.md`](masters-degree/class-schedule/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md), [`shop/DECISIONS.md`](shop/DECISIONS.md).
 <!-- index:end -->
@@ -142,3 +143,10 @@ Có theme sáng và tối; chưa chọn thì theo hệ điều hành (khoá `hub
 
 Chưa lưu lựa chọn thì trang theo `prefers-color-scheme`, đặt trước lần vẽ đầu. Trang có nút đổi theme thì lựa
 chọn đã lưu thắng. Trang chỉ có một theme phải làm thêm theme còn lại. `tools/smoke-theme.js` đo mọi trang.
+
+## REPO-025 · Viền một hoặc hai cạnh thì không bo góc
+15/11/2026 · `repo`
+
+Khối chỉ có viền ở một hoặc hai cạnh (kể cả vạch bằng `box-shadow: inset`) thì để góc vuông, vì bo góc làm vạch
+mỏng dần ở hai đầu. Viền đủ bốn cạnh thì bo góc tuỳ ý. Muốn nhấn một cạnh thì đổi sang viền đủ bốn cạnh hoặc
+một chấm, nhãn màu.

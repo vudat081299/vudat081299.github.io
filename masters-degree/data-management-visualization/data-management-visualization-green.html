@@ -132,7 +132,7 @@ main{min-width:0;padding:0 40px 120px}
 .legend i{display:inline-block;width:22px;height:6px;border-radius:3px;margin-right:6px;vertical-align:middle}
 .legend i.dash-i{height:0;border-top:2px dashed var(--ink-3);border-radius:0}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
-.ccard{display:block;background:var(--surface);border:1px solid var(--line-2);border-left:4px solid var(--acc);border-radius:10px;padding:12px 14px;color:var(--ink);text-decoration:none;transition:border-color .15s}
+.ccard{display:block;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;color:var(--ink);text-decoration:none;transition:border-color .15s}
 .ccard:hover{border-color:var(--acc)}
 .ccard .k{font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .ccard .k b{font:500 13px var(--mono);color:var(--acc)}
@@ -299,7 +299,7 @@ details.quiz>div{padding:0 14px 12px 42px;font-size:16px;color:var(--ink)}
 .btn:hover{border-color:var(--acc)}
 .demo{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;margin:16px 0}
 .demo .dg-scroll{overflow-x:auto}
-.try{margin:0 0 12px;padding:8px 12px;border-left:3px solid var(--acc);border-radius:0 8px 8px 0;background:var(--surface);font-size:15.5px;line-height:1.55;color:var(--ink)}
+.try{margin:0 0 12px;padding:8px 12px;border:1px solid color-mix(in srgb,var(--acc) 35%,var(--line));border-radius:8px;background:var(--surface);font-size:15.5px;line-height:1.55;color:var(--ink)}
 .try b{color:var(--acc)}
 .demo-out{font-size:15px;color:var(--ink-2);margin-top:8px}
 input[type=range]{accent-color:var(--acc);width:100%}
@@ -315,7 +315,7 @@ h1,h2,.hero h1,.block>h2,.part-banner h2,.chap-head h2{font-family:var(--display
 .eyebrow,.part-banner .eyebrow,.chap-head .eyebrow{display:flex;align-items:center;gap:10px;font:500 11.5px/1.2 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
 .eyebrow::before{content:"";flex:none;width:18px;height:2px;border-radius:2px;background:var(--a)}
 .side-h{font:500 10.5px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
-.toc a.on{background:var(--surface);box-shadow:inset 2px 0 0 var(--a)}
+.toc a.on{background:var(--surface);box-shadow:0 0 0 1px var(--line)}
 .top{background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:saturate(160%) blur(12px);-webkit-backdrop-filter:saturate(160%) blur(12px)}
 .top-name{font:600 15px var(--display);letter-spacing:-.01em}
 .top-cur{font-family:var(--font)}
@@ -334,7 +334,6 @@ h1,h2,.hero h1,.block>h2,.part-banner h2,.chap-head h2{font-family:var(--display
 .part-banner{border:1px solid color-mix(in srgb,var(--a) 32%,transparent);border-radius:20px;padding:22px 26px;
   background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--a) 9%,transparent),transparent 60%),var(--surface)}
 .chap-no{border-width:2px;border-color:var(--ink);color:var(--ink);background:var(--surface);font-weight:500}
-.chap-head .chap-no{box-shadow:inset 0 -3px 0 var(--a)}
 details.node{border-radius:14px}
 details.node>summary{border-radius:14px}
 details.node[open]{border-color:color-mix(in srgb,var(--a) 45%,var(--line))}
@@ -353,7 +352,6 @@ details.quiz[open]>summary::before{background:var(--a);color:var(--on-acc)}
 .try{border-left-color:var(--a)}
 .chip,.btn{border-color:var(--line)}
 .chip:hover,.btn:hover{border-color:var(--a)}
-.seg button[aria-pressed="true"]{box-shadow:inset 0 -2px 0 var(--a)}
 
 /* ═══ MÀN HẸP ═══ */
 @media (max-width:960px){
