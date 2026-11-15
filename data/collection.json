@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-08",
+  "updated": "2026-11-15",
   "note": "Nội dung của index.html; luật ở .claude/rules/home.md. Cấu trúc: zones → sections → items. Khu đầu là việc đang học. Thứ tự khu và section: REPO-022; môn cao học giữ thứ tự (REPO-006). desc nói trang dạy gì, không kể tính năng trang; tiếng Việt, một dòng ngắn (REPO-002). name tiếng Anh. key tuỳ chọn, không trùng; không đổi phím của mục cũ. Số đếm tính từ dữ liệu, không ghi tay. hold: danh sách ẩn chia nhóm, không key; không vào mục lục, chân trang, ô đếm, tìm kiếm (REPO-021). Giấu link, không phải bảo mật.",
   "zones": [
     {
@@ -117,6 +117,21 @@
                   "title": "Course Notes",
                   "sub": "HDFS, tiền xử lý, EDA, mã hoá thị giác, chọn biểu đồ, kể chuyện",
                   "tags": "Data governance · file system · HDFS · data integration · NiFi · data quality · OpenRefine · EDA · feature engineering · visual encoding · marks & channels · biểu đồ · heatmap · graph · text visualization · storytelling with data"
+                }
+              ]
+            },
+            {
+              "icon": "storage",
+              "title": "Big Data Storage and Processing",
+              "meta": "Lưu trữ phân tán và xử lý song song",
+              "files": [
+                {
+                  "key": "o",
+                  "icon": "menu_book",
+                  "href": "masters-degree/big-data-storage-processing/big-data-storage-processing.html",
+                  "title": "Course Notes",
+                  "sub": "HDFS, NoSQL và CAP, Kafka, MapReduce, Spark, kiến trúc Lambda",
+                  "tags": "Hadoop · HDFS · distributed file system · NoSQL · CAP · DynamoDB · Presto · Kafka · MapReduce · PageRank · Spark · RDD · Spark Streaming · Lambda architecture · MLlib · K-means"
                 }
               ]
             }
