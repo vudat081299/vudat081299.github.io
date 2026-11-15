@@ -58,3 +58,4 @@
 
 - Không ghi tên giảng viên hay người soạn slide.
 - Slide chỉ có hình mà mang kiến thức thì vẽ lại bằng SVG, không nhúng ảnh.
+- Kiến thức đề cương có mà slide không dạy: nút ngắn trong bài gần nhất, cuối nút có `p.slide-note` ghi theo đề cương.
