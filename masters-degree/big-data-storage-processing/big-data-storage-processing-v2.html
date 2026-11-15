@@ -271,6 +271,7 @@ details.deep>summary:hover::before,details.deep[open]>summary::before{background
 details.deep[open]>summary::before{content:"−"}
 details.deep>summary .hint{display:block;font-weight:400;font-size:13px;color:var(--fg-3);margin-top:2px}
 details.deep>summary .dmeta{display:block;margin-bottom:5px;font:500 10.5px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3)}
+details.deep>summary .dmeta span{white-space:nowrap}
 details.deep>summary:hover{background:var(--surface-2)}
 .deep-body{padding:6px 16px 16px;border-top:1px solid var(--line)}
 .deep-body .fig{background:var(--surface)}
@@ -5631,8 +5632,12 @@ model = <span class="f">KMeans</span>(k=<span class="o">2</span>, seed=<span cla
     var words=(c.textContent.match(/\S+/g)||[]).length, figs=body.querySelectorAll('svg').length;
     var tbls=body.querySelectorAll('table').length, codes=body.querySelectorAll('pre').length;
     var has=[]; if(figs) has.push('hình'); if(tbls) has.push('bảng'); if(codes) has.push('code');
+    /* mỗi đoạn một span không ngắt dòng: nhãn chỉ xuống dòng ở dấu "·" */
+    var parts=['Đào sâu', Math.max(1,Math.round(words/150+figs+(tbls+codes)/2))+' phút'];
+    if(has.length) parts.push('có '+has.join(', '));
     var m=document.createElement('span'); m.className='dmeta';
-    m.textContent='Đào sâu · '+Math.max(1,Math.round(words/150+figs+(tbls+codes)/2))+' phút'+(has.length?' · có '+has.join(', '):'');
+    parts.forEach(function(p,i){ if(i) m.appendChild(document.createTextNode(' · '));
+      var sp=document.createElement('span'); sp.textContent=p; m.appendChild(sp); });
     s.insertBefore(m,s.firstChild);
   });
 
@@ -5640,32 +5645,70 @@ model = <span class="f">KMeans</span>(k=<span class="o">2</span>, seed=<span cla
      Bật/tắt giữ nguyên chỗ đang đọc: lấy phần tử ở mép trên khung nhìn làm mốc. ---- */
   var readBtn=document.getElementById('readBtn'), RKEY='bd-read-all';
   function topLine(){var t=document.querySelector('.top'); return (t?t.getBoundingClientRect().bottom:0)+8;}
+  /* mốc: đi từ #main xuống con đầu tiên còn chạm hoặc nằm dưới mép trên, tới một khối lá (đo khung, không hit-test) */
+  var LEAF=/^(P|H1|H2|H3|H4|H5|H6|LI|DT|DD|SUMMARY|FIGURE|PRE|TABLE|BLOCKQUOTE|IMG|svg)$/;
   function anchorNow(){
-    var mn=document.getElementById('main'); if(!mn) return null;
-    var x=mn.getBoundingClientRect().left+(parseFloat(getComputedStyle(mn).paddingLeft)||0)+24;
-    for(var y=topLine(); y<window.innerHeight; y+=24){
-      var el=document.elementFromPoint(x,y);
-      if(!el || !mn.contains(el) || el===mn || /^(SECTION|DIV)$/.test(el.tagName) && !el.closest('.fig, .key, .callout, .recap, .quiz, .tbl, details.deep > summary')) continue;
-      var body=el.closest('.deep-body');
-      return {el:el, deep:body?body.parentElement:null, top:el.getBoundingClientRect().top};
+    var node=document.getElementById('main'), y=topLine(), el=null; if(!node) return null;
+    while(node){
+      var next=null;
+      for(var i=0;i<node.children.length;i++){
+        var c=node.children[i], r=c.getBoundingClientRect();
+        if(!r.width && !r.height) continue;
+        if(r.bottom>y){next=c; break;}
+      }
+      if(!next) break;
+      el=next;
+      if(next.getBoundingClientRect().top>=y || LEAF.test(next.tagName) || (next.tagName==='DETAILS' && !next.open) || !next.children.length) break;
+      node=next;
     }
-    return null;
+    if(!el) return null;
+    var body=el.closest('.deep-body');
+    return {el:el, deep:body?body.parentElement:null, top:el.getBoundingClientRect().top};
   }
+  /* sau khi bật/tắt: chưa tính "đã đọc" cho tới khi người đọc tự cuộn (hộp Nhớ bị kéo vào khung nhìn không tính) */
+  var seenRelease=null;
+  function holdSeenUntilScroll(){
+    holdSeen=true; timers.forEach(function(t){clearTimeout(t);}); timers.clear();
+    if(seenRelease) window.removeEventListener('scroll',seenRelease);
+    var t0=Date.now();
+    seenRelease=function(){
+      if(Date.now()-t0<400) return;
+      window.removeEventListener('scroll',seenRelease); seenRelease=null;
+      if(!printState){holdSeen=false; watchSeen();}
+    };
+    window.addEventListener('scroll',seenRelease,{passive:true});
+  }
+  /* cuộn mượt đang chạy (vừa bấm liên kết #…) nhắm toạ độ cũ: ghi lại đích để nhắm lại sau khi bật/tắt */
+  var navHash='', navT=0, scrollT=0;
+  document.addEventListener('click',function(e){var a=e.target.closest('a[href^="#"]'); if(a){navHash=a.getAttribute('href'); navT=Date.now();}},true);
+  window.addEventListener('hashchange',function(){navHash=location.hash; navT=Date.now();});
+  window.addEventListener('scroll',function(){scrollT=Date.now();},{passive:true});
   function applyRead(on,keep){
     readBtn.setAttribute('aria-pressed',on?'true':'false');
     readBtn.title=on?'Đang đọc liền: mọi khối Đào sâu đã mở. Bấm để gập lại.':'Đọc liền: mở mọi khối Đào sâu để đọc một mạch. Đáp án tự kiểm tra vẫn gập.';
-    var a=keep?anchorNow():null;
+    var now=Date.now(), retarget=keep && navHash && now-navT<2000 && now-scrollT<200 ? navHash : '';
+    /* dừng cuộn mượt đang chạy trước khi đo mốc */
+    if(keep) window.scrollTo({top:window.scrollY,behavior:'instant'});
+    var a=keep && !retarget ? anchorNow() : null;
     deeps.forEach(function(d){d.open=on;});
-    if(a){
+    markScroll(); /* gợi ý "vuốt ngang" đổi chiều cao hình: đặt xong rồi mới đo */
+    var t=retarget ? targetOf(retarget) : null;
+    function place(){
+      if(t){ t.scrollIntoView({block:'start',behavior:'instant'}); return; }
+      if(!a) return;
       /* mốc nằm trong khối vừa gập: đưa đầu khối ấy lên mép trên */
       var dy=(!on && a.deep) ? a.deep.getBoundingClientRect().top-topLine() : a.el.getBoundingClientRect().top-a.top;
       if(Math.abs(dy)>0.5) window.scrollBy({top:dy,behavior:'instant'});
     }
-    markScroll();
+    /* khung sau, cuộn mượt cũ hay neo cuộn của trình duyệt còn đẩy thêm một nhịp: đặt lại lần nữa */
+    if(t || a){ place(); requestAnimationFrame(place); }
   }
   readBtn.addEventListener('click',function(){
     var on=readBtn.getAttribute('aria-pressed')!=='true';
     try{ if(on) localStorage.setItem(RKEY,'1'); else localStorage.removeItem(RKEY); }catch(e){}
+    /* máy hẹp: đóng mục lục để thấy ngay chỗ đang đọc */
+    if(document.body.classList.contains('toc-open')) setToc(false);
+    holdSeenUntilScroll();
     applyRead(on,true);
   });
   var readOn=false; try{readOn=localStorage.getItem(RKEY)==='1';}catch(e){}
