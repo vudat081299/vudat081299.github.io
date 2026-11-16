@@ -3350,7 +3350,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
   <div class="keys">
-    <article class="key"><h3><span class="ix">01</span>Topic, partition</h3><p>Topic là một dòng bản ghi có tên (<code>/orders</code>). Topic chia thành partition: log có thứ tự, bất biến, chỉ ghi nối đuôi. Trên đĩa, mỗi partition là chuỗi segment (file log).</p></article>
+    <article class="key"><h3><span class="ix">01</span>Topic, partition</h3><p>Topic là một dòng bản ghi có tên (<code>orders</code>). Topic chia thành partition: log có thứ tự, bất biến, chỉ ghi nối đuôi. Trên đĩa, mỗi partition là chuỗi segment (file log).</p></article>
     <article class="key"><h3><span class="ix">02</span>Offset</h3><p>Số thứ tự của bản ghi trong một partition. Bản ghi gồm key (tuỳ chọn), value, timestamp.</p></article>
     <article class="key"><h3><span class="ix">03</span>Producer</h3><p>Tiến trình đẩy (push) bản ghi vào topic. Producer chọn partition.</p></article>
     <article class="key"><h3><span class="ix">04</span>Consumer, group</h3><p>Consumer kéo (pull) bản ghi theo offset. Nhóm consumer là một subscriber; mỗi bản ghi tới đúng một consumer trong nhóm.</p></article>
