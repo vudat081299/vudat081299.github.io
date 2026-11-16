@@ -3337,7 +3337,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <a href="#b5-fast"><rect class="bx" x="516" y="326" width="96" height="46" rx="8"/><text class="t2 tb tc" x="564" y="345">Vì sao nhanh</text><text class="t3 tc" x="564" y="362">tuần tự, batch</text></a>
       <a href="#b5-sem"><rect class="bx" x="618" y="326" width="96" height="46" rx="8"/><text class="t2 tb tc" x="666" y="345">Giao nhận</text><text class="t3 tc" x="666" y="362">mất hay trùng</text></a>
     </svg></div>
-    <figcaption>Topic chia thành partition rải trên các broker; mỗi partition có một leader nhận đọc ghi và follower chép lại (mũi tên đứt). Mỗi nhóm consumer đọc toàn bộ topic một cách độc lập; trong một nhóm, mỗi partition chỉ thuộc một consumer. Dải dưới là lộ trình bài.</figcaption>
+    <figcaption>Topic chia thành partition rải trên các broker; mỗi partition có một leader nhận đọc ghi và follower chép lại (mũi tên đứt), RF = 2 (replication factor, hệ số nhân bản: số bản sao của mỗi partition). Mỗi nhóm consumer đọc toàn bộ topic một cách độc lập; trong một nhóm, mỗi partition chỉ thuộc một consumer. Dải dưới là lộ trình bài.</figcaption>
   </figure>
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
@@ -3345,7 +3345,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <article class="key"><h3><span class="ix">01</span>Topic, partition</h3><p>Topic là một dòng bản ghi có tên (<code>orders</code>). Topic chia thành partition: log có thứ tự, bất biến, chỉ ghi nối đuôi. Trên đĩa, mỗi partition là chuỗi segment (file log).</p></article>
     <article class="key"><h3><span class="ix">02</span>Offset</h3><p>Số thứ tự của bản ghi trong một partition. Bản ghi gồm key (tuỳ chọn), value, timestamp.</p></article>
     <article class="key"><h3><span class="ix">03</span>Producer</h3><p>Tiến trình đẩy (push) bản ghi vào topic. Producer chọn partition.</p></article>
-    <article class="key"><h3><span class="ix">04</span>Consumer, group</h3><p>Consumer kéo (pull) bản ghi theo offset. Nhóm consumer là một subscriber; mỗi bản ghi tới đúng một consumer trong nhóm.</p></article>
+    <article class="key"><h3><span class="ix">04</span>Consumer, group</h3><p>Consumer kéo (pull) bản ghi theo offset. Nhóm consumer là một subscriber trong mô hình publish–subscribe (bên gửi đăng lên topic, mọi bên đăng ký topic đều nhận); mỗi bản ghi tới đúng một consumer trong nhóm.</p></article>
     <article class="key"><h3><span class="ix">05</span>Broker</h3><p>Một máy chủ Kafka, có ID số, giữ một phần partition. Nối tới một broker là biết cả cụm (bootstrap).</p></article>
     <article class="key"><h3><span class="ix">06</span>Controller: ZooKeeper / KRaft</h3><p>Một node làm controller: theo dõi broker vào ra và chọn leader cho từng partition. Bản cũ bầu controller qua ZooKeeper; bản mới dùng KRaft (quorum Raft của các node controller), Kafka 4.0 bỏ hẳn ZooKeeper. Mọi thành phần nói chuyện bằng API nhị phân trên TCP.</p></article>
   </div>
@@ -3397,7 +3397,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <figcaption>n nguồn và m đích nối thẳng cần n × m đường, mỗi đường một định dạng, một tốc độ. Qua Kafka còn n + m: producer không biết consumer là ai, consumer đọc theo nhịp của mình.</figcaption>
   </figure>
   <details class="deep">
-    <summary>Kafka là gì, dùng vào việc gì?<span class="hint">Publish–subscribe bền; pipeline thời gian thực, metric, commit log</span></summary>
+    <summary>Kafka là gì, dùng vào việc gì?<span class="hint">Pipeline thời gian thực, metric, commit log</span></summary>
     <div class="deep-body">
   <div class="vs">
     <div>
@@ -3421,13 +3421,14 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     </div>
   </details>
   <details class="deep">
-    <summary>Khi nào không nên dùng Kafka?<span class="hint">Theo slide: file lớn, bảo mật, biến đổi dữ liệu</span></summary>
+    <summary>Giới hạn của Kafka theo slide, nay còn đúng không?<span class="hint">File lớn, biến đổi dữ liệu, bảo mật</span></summary>
     <div class="deep-body">
+      <p>Hai giới hạn còn đúng, một đã lỗi thời; mục còn lại slide nêu là việc Kafka làm tốt.</p>
       <ul>
         <li><b>Chuyển file rất lớn:</b> không hợp; Kafka thiết kế cho thông điệp. Dùng truyền file thường, hoặc cắt file thành dòng rồi đẩy vào.</li>
-        <li><b>Thay MQ, RabbitMQ, Tibco:</b> thường được, hiệu năng vượt trội, cho consumer đến rồi đi, chịu lỗi tốt.</li>
-        <li><b>Bảo mật trên broker và đường truyền:</b> slide nói chưa có. Từ Kafka 0.9 (2015) đã có SSL/TLS, SASL và ACL.</li>
         <li><b>Biến đổi dữ liệu:</b> tự nó thì không; cần Kafka Streams, Spark Streaming hay engine xử lý dòng khác.</li>
+        <li><b>Bảo mật trên broker và đường truyền:</b> slide nói chưa có, nhưng từ Kafka 0.9 (2015) đã có mã hoá SSL/TLS, xác thực bằng SSL hoặc SASL, và phân quyền đọc ghi bằng ACL (access control list).</li>
+        <li><b>Thay MQ, RabbitMQ, Tibco:</b> thường được, hiệu năng vượt trội, cho consumer đến rồi đi, chịu lỗi tốt.</li>
       </ul>
     </div>
   </details>
@@ -3481,7 +3482,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     </svg></div>
     <figcaption>Thứ tự chỉ được giữ <b>trong một partition</b>. Đọc không xoá bản ghi: mỗi nhóm consumer chỉ dời offset của riêng mình (ở đây nhóm A đọc offset 9 trong khi producer ghi offset 12).</figcaption>
   </figure>
-  <p>Partition là đơn vị mở rộng: các partition của một topic nằm trên nhiều máy, nhiều đĩa; nhiều producer ghi song song vào các partition khác nhau, nhiều nhóm consumer đọc song song.</p>
+  <p>Partition là đơn vị mở rộng: các partition của một topic nằm trên nhiều máy, nên nhiều producer ghi và nhiều nhóm consumer đọc song song.</p>
 
   <h3 class="sec">Nhân bản: leader, follower, ISR</h3>
   <figure class="fig stepper" id="b5-isr">
@@ -3519,36 +3520,35 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       </g>
     </svg></div>
     <ol class="steps">
-      <li><b>Ban đầu.</b> Leader ở Broker 1 nhận mọi lần đọc ghi của P0; Broker 2, 3 là follower, tự kéo (fetch) dữ liệu từ leader; ISR (in-sync replicas) = cả ba. Bản ghi 0–3 đã có ở mọi ISR nên đã committed, còn 4, 5 mới chỉ có ở leader. High watermark (HW), mốc committed, nằm sau offset 3.</li>
-      <li><b>Follower kéo dữ liệu.</b> Broker 2 kéo được 4, 5. Broker 3 chậm, vẫn ở 3. HW chưa tiến: bản ghi chỉ committed khi mọi ISR đã ghi, và consumer chỉ đọc tới HW.</li>
-      <li><b>Loại khỏi ISR.</b> Broker 3 tụt lại quá lâu nên bị loại: ISR = {B1, B2}. HW tiến tới sau offset 5: 4, 5 committed dù chỉ có hai bản.</li>
-      <li><b>Leader chết.</b> Broker 1 sập. Controller chọn leader mới trong ISR: Broker 2, vốn có đủ mọi bản ghi đã committed. Broker 3 không được chọn vì ở ngoài ISR, nên 4, 5 giờ chỉ còn một bản.</li>
-      <li><b>Chạy tiếp.</b> Producer ghi offset 6 vào Broker 2. Broker 3 bắt kịp 4, 5, 6 và vào lại ISR. Không mất bản ghi committed nào, vì lúc nào cũng còn ít nhất một ISR sống.</li>
+      <li><b>Ban đầu.</b> Leader ở Broker 1 nhận mọi lần đọc ghi của P0; Broker 2, 3 là follower. ISR (in-sync replicas, các bản sao bắt kịp leader) = cả ba. Bản ghi 0–3 đã có ở mọi ISR nên đã committed; mốc ấy là high watermark (HW).</li>
+      <li><b>Follower kéo dữ liệu.</b> Follower tự kéo (fetch) từ leader: Broker 2 kéo được 4, 5; Broker 3 chậm. HW chưa tiến vì bản ghi chỉ committed khi mọi ISR đã ghi; consumer chỉ đọc tới HW.</li>
+      <li><b>Loại khỏi ISR.</b> Broker 3 tụt lại quá lâu nên bị loại. HW tiến: 4, 5 committed dù chỉ có hai bản.</li>
+      <li><b>Leader chết.</b> Controller chọn leader mới trong ISR: Broker 2, vốn có đủ mọi bản ghi đã committed.</li>
+      <li><b>Chạy tiếp.</b> Producer ghi offset 6 vào Broker 2; Broker 3 bắt kịp và vào lại ISR. Không mất bản ghi committed nào.</li>
     </ol>
   </figure>
   <div class="callout idea"><p><b>Đảm bảo.</b> Bản ghi từ một producer vào một partition giữ đúng thứ tự gửi; consumer thấy đúng thứ tự trong log. Bản ghi committed không mất <b>chừng nào còn ít nhất một ISR sống</b>.</p></div>
-  <div class="callout trap"><p><b>ISR có thể co lại.</b> Bản ghi committed chỉ nằm trên các ISR lúc ghi, nên ISR co còn một thì một lần hỏng nữa là mất. Muốn đảm bảo thật: producer dùng <code>acks=all</code> (chờ mọi ISR nhận, xem mục Producer) và topic đặt <code>min.insync.replicas=2</code> (với N = 3).</p></div>
+  <div class="callout trap"><p><b>ISR có thể co lại.</b> Bản ghi committed chỉ nằm trên các ISR lúc ghi, nên ISR co còn một thì một lần hỏng nữa là mất. Muốn đảm bảo thật: producer dùng <code>acks=all</code> (chờ mọi ISR nhận) và topic đặt <code>min.insync.replicas=2</code> (với hệ số nhân bản N = 3).</p></div>
   <details class="deep">
-    <summary>Hệ số nhân bản N chịu được bao nhiêu broker hỏng?<span class="hint">N − 1, nhưng chỉ khi cả N bản còn trong ISR</span></summary>
+    <summary>Hệ số nhân bản N chịu được bao nhiêu broker hỏng?<span class="hint">N − 1, và khi ISR co lại</span></summary>
     <div class="deep-body">
-      <p>Tới N − 1 broker, nhưng chỉ khi cả N bản còn trong ISR. ISR co lại thì chịu được ít hơn.</p>
+      <p>Tới N − 1 broker, nhưng chỉ khi cả N bản còn trong ISR. ISR co lại thì chịu được ít hơn: ở bước 4 của hình, Broker 3 ngoài ISR nên không được chọn làm leader, và 4, 5 giờ chỉ còn một bản trên Broker 2.</p>
       <p>Nếu đặt <code>min.insync.replicas=2</code>, producer dùng acks=all sẽ nhận lỗi khi ISR còn dưới hai.</p>
     </div>
   </details>
-  <p>Mỗi broker vừa là leader của một số partition vừa là follower của số khác, nên tải đọc ghi rải đều trên cụm.</p>
   <details class="deep">
-    <summary>Consumer có đọc từ follower được không?<span class="hint">Slide nói không; từ Kafka 2.4 thì được</span></summary>
+    <summary>Consumer có đọc từ follower được không?<span class="hint">Từ Kafka 2.4 (KIP-392)</span></summary>
     <div class="deep-body">
       <p>Slide ghi leader nhận mọi lần đọc. Từ Kafka 2.4, consumer có thể đọc từ follower gần nhất (KIP-392), còn ghi vẫn chỉ qua leader.</p>
     </div>
   </details>
 
   <h3 class="sec">Retention</h3>
-  <p>Kafka giữ mọi bản ghi đã ghi, dù đã đọc hay chưa, cho tới khi hết hạn theo thời gian, theo dung lượng, hoặc bị compaction (chỉ giữ bản mới nhất của mỗi key).</p>
+  <p>Kafka giữ mọi bản ghi đã ghi, dù đã đọc hay chưa, tới khi hết thời hạn giữ (retention) mới xoá.</p>
   <details class="deep">
-    <summary>Giữ bao lâu, xoá thế nào, log dài có làm đọc chậm không?<span class="hint">Xoá theo segment</span></summary>
+    <summary>Hạn tính theo gì, xoá thế nào, log dài có làm đọc chậm không?<span class="hint">Thời gian, dung lượng, compaction</span></summary>
     <div class="deep-body">
-      <p>Hạn theo thời gian, ví dụ: 3 ngày, 2 tuần. Retention xoá theo cả segment. Tốc độ đọc không phụ thuộc log dài bao nhiêu.</p>
+      <p>Hạn tính theo thời gian (ví dụ 3 ngày, 2 tuần) hoặc theo dung lượng; topic cũng có thể bật compaction (chỉ giữ bản mới nhất của mỗi key). Retention xoá theo cả segment. Tốc độ đọc không phụ thuộc log dài bao nhiêu.</p>
     </div>
   </details>
 
@@ -3558,14 +3558,19 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
         <thead><tr><th>acks</th><th>Xác nhận khi</th><th>Độ bền</th></tr></thead>
         <tbody>
           <tr><td>all (−1)</td><td>mọi ISR đã nhận; mặc định từ Kafka 3.0</td><td>cao nhất, trễ nhất</td></tr>
-          <tr><td>1</td><td>leader đã nhận</td><td>trung bình</td></tr>
+          <tr><td>1</td><td>leader đã nhận</td><td>trung bình: mất nếu leader chết trước khi follower chép kịp</td></tr>
           <tr><td>0</td><td>không chờ</td><td>thấp nhất, nhanh nhất</td></tr>
         </tbody>
       </table></div>
-  <p>Với acks=1, leader ghi vào log của nó rồi báo thành công ngay, không chờ follower. Leader chết trước khi follower chép kịp thì follower lên thay không có bản ghi đó: bản ghi mất dù producer đã nhận xác nhận.</p>
-  <p>Producer cũng chọn partition. Có key thì dùng <code>hash(key) mod số partition</code>: mọi sự kiện cùng key (vd cùng <code>employeeId</code>) vào cùng partition, nên giữ thứ tự, miễn là số partition không đổi.</p>
   <details class="deep">
-    <summary>Thêm partition thì sao, và không có key thì chọn thế nào?<span class="hint">Mod đổi kết quả; round-robin và sticky; metadata</span></summary>
+    <summary>Vì sao acks=1 đã xác nhận mà vẫn mất?<span class="hint">Leader báo trước khi follower chép</span></summary>
+    <div class="deep-body">
+      <p>Leader ghi vào log của nó rồi báo thành công ngay, không chờ follower. Follower lên thay không có bản ghi đó, nên bản ghi mất dù producer đã nhận xác nhận.</p>
+    </div>
+  </details>
+  <p>Producer cũng chọn partition. Có key thì dùng <code>hash(key) mod số partition</code>: mọi sự kiện cùng key vào cùng partition, nên giữ thứ tự, miễn là số partition không đổi.</p>
+  <details class="deep">
+    <summary>Thêm partition thì sao, và không có key thì chọn thế nào?<span class="hint">Round-robin, sticky; metadata</span></summary>
     <div class="deep-body">
       <ul>
         <li><b>Tăng số partition</b> làm đổi kết quả mod: key cũ có thể sang partition khác.</li>
@@ -3589,7 +3594,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <figcaption>Gán theo kiểu range: chia 4 partition thành các dải liền nhau, consumer đầu nhận phần dư. Consumer vào hoặc rời nhóm thì nhóm cân bằng lại (rebalance).</figcaption>
   </figure>
   <details class="deep">
-    <summary>Hàng đợi hay phát rộng? Offset lưu ở đâu, đọc được tới đâu?<span class="hint">Ba mẫu dùng nhóm; failover; log end offset</span></summary>
+    <summary>Hàng đợi hay phát rộng? Offset lưu ở đâu, đọc được tới đâu?<span class="hint">Ba mẫu dùng nhóm; topic __consumer_offsets; log end offset</span></summary>
     <div class="deep-body">
   <div class="tbl"><table>
     <thead><tr><th>Mẫu dùng</th><th>Cách đặt</th><th>Kết quả</th></tr></thead>
@@ -3600,14 +3605,20 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     </tbody>
   </table></div>
   <ul>
-    <li><b>Failover:</b> offset đã commit lưu ở topic <code>__consumer_offsets</code>. Consumer chết sau khi xử lý mà trước khi commit thì vài bản ghi bị xử lý lại.</li>
+    <li><b>Offset lưu ở đâu:</b> topic <code>__consumer_offsets</code>, nên consumer thay chỗ biết chạy tiếp từ đâu. Bản ghi đã xử lý mà chưa kịp commit thì bị xử lý lại.</li>
     <li><b>Đọc được tới đâu:</b> log end offset là chỗ producer ghi tiếp. Phần từ high watermark tới đó chưa chép đủ cho ISR, nên consumer chưa đọc được.</li>
   </ul>
     </div>
   </details>
 
   <h3 class="sec">Broker</h3>
-  <p>Nên bắt đầu với ít nhất 3 broker; cụm có thể lên 10, 100, 1.000 broker.</p>
+  <p>Mỗi broker vừa là leader của một số partition vừa là follower của số khác, nên tải đọc ghi rải đều trên cụm.</p>
+  <details class="deep">
+    <summary>Cụm cần bao nhiêu broker?<span class="hint">Từ 3 tới 1.000</span></summary>
+    <div class="deep-body">
+      <p>Nên bắt đầu với ít nhất 3 broker; cụm có thể lên 10, 100, 1.000 broker.</p>
+    </div>
+  </details>
 
   <h3 class="sec" id="b5-fast">Vì sao Kafka nhanh</h3>
   <div class="keys two">
@@ -3670,8 +3681,12 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <rect class="bxa" x="588" y="130" width="100" height="46" rx="8"/><text class="t2 tb tc" x="638" y="149">xử lý 5–9</text><text class="t3 tc" x="638" y="166">lần thứ hai</text>
       <text class="t2 fwarn" x="120" y="196">→ 5–9 bị xử lý hai lần: trùng, nên xử lý phải idempotent</text>
     </svg></div>
-    <figcaption>Thứ tự commit offset và xử lý quyết định ngữ nghĩa. Kafka mặc định cho <b>at-least-once</b>: không mất, nhưng có thể trùng.</figcaption>
+    <figcaption>Thứ tự commit offset và xử lý quyết định ngữ nghĩa: commit trước là <b>at-most-once</b> (có thể mất), xử lý trước là <b>at-least-once</b> (có thể trùng). Kafka mặc định at-least-once, nên xử lý phải idempotent (chạy lại vẫn cho cùng kết quả).</figcaption>
   </figure>
+  <details class="deep">
+    <summary>Producer phải làm gì cho mỗi ngữ nghĩa, và exactly-once (đúng một lần) đạt thế nào?<span class="hint">Bảng ba ngữ nghĩa; Kafka từ 0.11</span></summary>
+    <div class="deep-body">
+  <p>Mỗi ngữ nghĩa cần cả phía consumer lẫn phía producer khớp theo:</p>
   <div class="tbl"><table>
     <thead><tr><th>Ngữ nghĩa</th><th>Hứa gì</th><th>Cách có</th></tr></thead>
     <tbody>
@@ -3680,9 +3695,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <tr><td>Exactly once</td><td>Đúng một lần</td><td>Khó nhất: phải lo cả phía ghi lẫn phía đọc</td></tr>
     </tbody>
   </table></div>
-  <details class="deep">
-    <summary>Làm sao tiến tới exactly-once?<span class="hint">Phía producer, phía consumer, và cách Kafka làm sau này</span></summary>
-    <div class="deep-body">
+      <p>Exactly-once cần chặn trùng ở cả hai phía:</p>
       <ul>
         <li><b>Producer:</b> gửi rồi mất kết nối trước khi nhận ack thì không biết bản ghi đã vào chưa. Slide: dùng một writer cho mỗi partition, sau lỗi mạng đọc lại bản ghi committed cuối cùng rồi mới gửi tiếp.</li>
         <li><b>Consumer:</b> gắn ID duy nhất (UUID) vào mỗi bản ghi và lọc trùng, hoặc lưu offset cùng chỗ và cùng giao dịch với kết quả xử lý.</li>
