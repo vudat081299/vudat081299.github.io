@@ -22,8 +22,8 @@
    Khung trang theo trang chủ: trắng pha xanh, đen pha xanh, một xanh lá để nhấn.
    Màu khác chỉ dùng theo ngữ cảnh: sơ đồ (màu chặng, đã làm dịu), khung chú ý (xanh dương, hổ phách, đỏ). */
 :root{
-  --bg:#f7f8f6; --surface:#ffffff; --surface-2:#f1f4f1; --tint:#ecf5ef; --tint-line:#cfe5d7;
-  --line:#dfe4e0; --line-2:#ebefeb; --line-strong:#aab5ad;
+  --bg:#f5f6f3; --surface:#ffffff; --surface-2:#eceee9; --tint:#ecf5ef; --tint-line:#cfe5d7;   /* nền, lớp phụ, viền = trang chủ */
+  --line:#d6dad4; --line-2:#e6e9e4; --line-strong:#aab5ad;
   --fg:#0f1a14; --fg-2:#3a4840; --fg-3:#5c6a61;
   --deep:#13261b; --on-deep:#eef6f0;          /* khối đen pha xanh */
   --green:#0a7a3c; --green-hi:#16a34a;        /* chữ xanh / chấm, vạch */
@@ -365,8 +365,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
 
 /* ============ IN ============ */
 @media print{
-  html.dark{--bg:#ffffff; --surface:#ffffff; --surface-2:#f1f4f1; --tint:#ecf5ef; --tint-line:#cfe5d7;
-    --line:#dfe4e0; --line-2:#ebefeb; --line-strong:#aab5ad;
+  html.dark{--bg:#ffffff; --surface:#ffffff; --surface-2:#eceee9; --tint:#ecf5ef; --tint-line:#cfe5d7;
+    --line:#d6dad4; --line-2:#e6e9e4; --line-strong:#aab5ad;
     --fg:#0f1a14; --fg-2:#3a4840; --fg-3:#5c6a61; --deep:#13261b; --on-deep:#eef6f0;
     --green:#0a7a3c; --green-hi:#16a34a; --link:#0a6b35;
     --found:#3f4d44; --ingest:#94570a; --store:#1d6684; --process:#0a7a3c; --query:#62489c;
