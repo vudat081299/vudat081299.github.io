@@ -3101,11 +3101,12 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </details>
 
   <h3 class="sec" id="b4-6-sched">Lập lịch stage và task</h3>
-  <p>Để chạy một truy vấn, scheduler ra hai nhóm quyết định: lập lịch stage nào lúc nào (all-at-once hay phased), và bao nhiêu task, đặt ở worker nào.</p>
+  <p>Để chạy một truy vấn, scheduler ra hai nhóm quyết định: lập lịch stage nào lúc nào (all-at-once hay phased), và bao nhiêu task, đặt ở worker nào. Stage lá (stage đọc dữ liệu qua connector) thường được một task trên mỗi worker: giải nén, giải mã, lọc dữ liệu chiếm phần lớn CPU và chia song song được, nên càng nhiều máy càng xong sớm.</p>
   <details class="deep">
-    <summary>Task được đặt lên worker nào?<span class="hint">Stage lá và stage trung gian</span></summary>
+    <summary>Khi nào stage lá không trải lên mọi worker, và stage trung gian có bao nhiêu task?<span class="hint">Ràng buộc của connector; số task stage trung gian</span></summary>
     <div class="deep-body">
-      <p>Stage lá bám chỗ dữ liệu nằm và ràng buộc của connector; stage trung gian đặt đâu cũng được.</p>
+      <p>Stage lá chỉ trải lên mọi worker khi không vướng ràng buộc và dữ liệu chia được đủ split. Nếu không, nó bám ràng buộc của mạng và connector: triển khai shared-nothing buộc task nằm cùng máy với dữ liệu, và scheduler có thể ưu tiên đọc trong cùng rack.</p>
+      <p>Stage trung gian chỉ xử lý kết quả của stage khác nên đặt ở worker nào cũng được. Số task của nó tuỳ cấu hình connector, tính chất của plan, layout dữ liệu cần và cấu hình triển khai; có lúc engine đổi số task ngay khi đang chạy.</p>
     </div>
   </details>
   <p>Ví dụ dưới là một hash join: stage <b>build</b> quét bảng nhỏ và gửi dòng sang stage <b>join</b>, nơi task join dựng bảng băm trong RAM; stage <b>probe</b> quét bảng lớn và gửi dòng sang để join dò vào bảng băm. Join chỉ dò được khi bảng băm đã dựng xong.</p>
