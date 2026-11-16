@@ -861,7 +861,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
   <div class="keys">
-    <article class="key"><h3><span class="ix">01</span>Apache Hadoop</h3><p>Khung phần mềm lưu và xử lý phân tán tập dữ liệu lớn trên cụm máy, bằng mô hình lập trình đơn giản. Chịu lỗi ở tầng ứng dụng thay vì trông vào phần cứng đắt. Lấy cảm hứng từ GFS và MapReduce của Google.</p></article>
+    <article class="key"><h3><span class="ix">01</span>Apache Hadoop</h3><p>Khung phần mềm lưu và xử lý phân tán tập dữ liệu lớn trên cụm máy, bằng mô hình lập trình đơn giản. Chịu lỗi ở tầng ứng dụng thay vì trông vào phần cứng đắt. Lấy cảm hứng từ GFS (Google File System) và MapReduce của Google.</p></article>
     <article class="key"><h3><span class="ix">02</span>HDFS</h3><p>Tầng lưu trữ: hệ thống tệp phân tán, chia tệp thành block lớn và nhân bản trên nhiều node.</p></article>
     <article class="key"><h3><span class="ix">03</span>MapReduce</h3><p>Tầng xử lý mặc định: chia một job thành nhiều task độc lập chạy song song trên các node.</p></article>
     <article class="key"><h3><span class="ix">04</span>YARN</h3><p>Yet Another Resource Negotiator: lập lịch job và quản lý CPU, RAM của cả cụm. Có từ Hadoop 2.</p></article>
@@ -896,12 +896,17 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text x="546" y="174" class="t2 tc">máy thường, giá tăng tuyến tính, tới hàng nghìn node;</text>
       <text x="546" y="192" class="t2 tc">node hỏng thì phần việc chuyển sang node khác</text>
     </svg></div>
-    <figcaption>Hadoop chọn bên phải. Cái giá: phải chấp nhận <b>hỏng hóc là chuyện thường ngày</b>, nên dư thừa được thiết kế sẵn ở cả tầng lưu trữ lẫn tầng xử lý.</figcaption>
+    <figcaption>Hadoop chọn bên phải. Cái giá: phải chấp nhận <b>hỏng hóc là chuyện thường ngày</b>, nên dư thừa được thiết kế sẵn: block có bản sao trên nhiều node, task hỏng được chạy lại ở node khác.</figcaption>
   </figure>
+  <details class="deep">
+    <summary>Node hỏng thì dữ liệu và việc của nó ra sao?<span class="hint">Chịu lỗi ở tầng lưu trữ và ở tầng xử lý</span></summary>
+    <div class="deep-body">
   <div class="vs">
-    <div><h4>Chịu lỗi ở tầng lưu trữ</h4><p>Tệp nạp vào HDFS được nhân bản trên nhiều node. Node hỏng thì block của nó được sao lại từ một bản còn sống.</p></div>
-    <div><h4>Chịu lỗi ở tầng xử lý</h4><p>Job chia thành task nhỏ, mỗi task đọc một phần dữ liệu. Task hỏng được lập lịch lại ở node khác; không mất dữ liệu.</p></div>
+    <div><h4>Chịu lỗi ở tầng lưu trữ</h4><p>Node hỏng thì block của nó được sao lại từ một bản còn sống.</p></div>
+    <div><h4>Chịu lỗi ở tầng xử lý</h4><p>Job chia thành task nhỏ, mỗi task đọc một phần dữ liệu, nên chạy lại một task ở node khác không mất dữ liệu.</p></div>
   </div>
+    </div>
+  </details>
 
   <h3 class="sec">HDFS và MapReduce, lướt qua</h3>
   <p>HDFS là hệ thống tệp phân tán cho tệp lớn: ghi một lần, đọc nhiều lần. <b>NameNode</b> giữ không gian tên và metadata, <b>DataNode</b> giữ dữ liệu thật; chi tiết ở <a href="#b3-3">bài 3.3</a>.</p>
@@ -953,21 +958,23 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bxh" x="560" y="152" width="150" height="44" rx="8"/><text x="635" y="179" class="tm ton tc">(Chi, 30)</text>
       </g>
     </svg></div>
-    <figcaption>Map đọc từng đơn hàng, phát cặp (tên, số tiền). Shuffle &amp; sort gom mọi giá trị cùng khoá về một reducer; tập khoá giao cho một reducer gọi là <b>partition</b>. Reduce cộng: An = 20 + 10 + 5 = 35; cơ chế đầy đủ và ví dụ word count (đếm số lần mỗi từ xuất hiện) ở <a href="#b6">bài 6</a>.</figcaption>
+    <figcaption>Map đọc từng đơn hàng, phát cặp (tên, số tiền). Shuffle &amp; sort gom mọi giá trị cùng khoá về một reducer. Reduce cộng: An = 20 + 10 + 5 = 35; cơ chế đầy đủ ở <a href="#b6">bài 6</a>.</figcaption>
   </figure>
   <details class="deep">
-    <summary>MapReduce chia việc ra sao, và vì sao task chạy cô lập?<span class="hint">Mô hình chứ không phải ngôn ngữ; số map task; task không đồng bộ với nhau</span></summary>
+    <summary>MapReduce chia việc ra sao, và vì sao task chạy cô lập?<span class="hint">Mô hình chứ không phải ngôn ngữ; số map task, partition, task cô lập; word count</span></summary>
     <div class="deep-body">
       <ul>
         <li>Mô hình này là kiểu xử lý dữ liệu do Google đề ra, không phải ngôn ngữ. Ba cái hay: đơn giản, linh hoạt, co giãn.</li>
         <li>Số map task do lượng input quyết định: mỗi phần input (split) một task. Mỗi bản ghi đi vào map phát ra 0 hoặc nhiều cặp.</li>
+        <li>Tập khoá giao cho một reducer gọi là <b>partition</b>.</li>
         <li>Các task chạy cô lập: đồng bộ liên tục giữa các node sẽ giết hiệu năng ở quy mô lớn.</li>
+        <li>Bài 6 có thêm ví dụ word count (đếm số lần mỗi từ xuất hiện).</li>
       </ul>
     </div>
   </details>
 
   <h3 class="sec">Hệ sinh thái quanh lõi</h3>
-  <p>Nhiều công cụ tích hợp với Hadoop để phân tích dữ liệu, nối với CSDL, quản lý luồng công việc. Chúng không thuộc "lõi Hadoop" mà thuộc hệ sinh thái; phần lớn là dự án Apache mã nguồn mở.</p>
+  <p>Nhiều công cụ tích hợp với Hadoop để phân tích dữ liệu, nối với CSDL, quản lý luồng công việc. Chúng không thuộc "lõi Hadoop" mà thuộc hệ sinh thái.</p>
   <figure class="fig" id="b2-fig-eco">
     <p class="fig-t">Mỗi công cụ đứng ở đâu</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 356" role="img" aria-label="Hệ sinh thái Hadoop. Giữa là lõi: MapReduce trên YARN trên HDFS. Phía trên: Pig và Hive nhận script từ máy client và dịch thành job MapReduce. Bên trái: Kafka nhận luồng sự kiện từ producer và chuyển cho tầng xử lý; Sqoop nhập xuất dữ liệu giữa CSDL quan hệ và HDFS. Bên phải: Oozie lập lịch chạy các job; HBase là kho NoSQL dạng cột lưu trên HDFS. Dưới cùng: ZooKeeper điều phối cho cả cụm.">
@@ -1012,8 +1019,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <figcaption>Theo slide, Pig và Hive chạy ở máy client, dịch script thành job MapReduce rồi nộp lên cụm. Sqoop và Kafka đưa dữ liệu vào; HBase lưu bảng trên HDFS; Oozie nối các job thành luồng; ZooKeeper giữ cho các thành phần phân tán đồng thuận với nhau.</figcaption>
   </figure>
   <details class="deep">
-    <summary>Từng công cụ làm gì, cần nhớ gì?<span class="hint">Pig, Hive, HBase, Sqoop, Kafka, Oozie, ZooKeeper; dự án nào đã ngừng</span></summary>
+    <summary>Từng công cụ làm gì, cài cả bộ bằng gì?<span class="hint">Pig, Hive, HBase, Sqoop, Kafka, Oozie, ZooKeeper; dự án đã ngừng; bản phân phối</span></summary>
     <div class="deep-body">
+      <p>Phần lớn các công cụ này là dự án Apache mã nguồn mở.</p>
   <div class="tbl"><table>
     <thead><tr><th>Công cụ</th><th>Làm gì</th><th>Ghi nhớ</th></tr></thead>
     <tbody>
@@ -1027,11 +1035,6 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     </tbody>
   </table></div>
       <p>ZooKeeper được HBase và HDFS HA dùng. Kafka bản cũ cũng dùng nó; từ Kafka 4.0, Kafka thay nó bằng cơ chế đồng thuận riêng KRaft (Kafka Raft).</p>
-    </div>
-  </details>
-  <details class="deep">
-    <summary>Cài cả hệ sinh thái một lần bằng gì?<span class="hint">Bản phân phối: Hortonworks Data Platform, Sandbox, Cloudera</span></summary>
-    <div class="deep-body">
       <p>Các bản phân phối như Hortonworks Data Platform (HDP) đóng gói sẵn HDFS, YARN, Hive, Pig, HBase, Sqoop, Kafka, Oozie, ZooKeeper; bản Sandbox là máy ảo một node để thử. HDP đã ngừng sau khi Hortonworks sáp nhập vào Cloudera (2019); bản kế tục là Cloudera Data Platform.</p>
     </div>
   </details>
@@ -1083,22 +1086,22 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     </svg></div>
     <ol class="steps">
       <li><b>Prepare.</b> P1 chọn số đề xuất n = 5 (lớn hơn mọi số nó từng dùng) và gửi <code>Prepare(5)</code> tới các acceptor.</li>
-      <li><b>Promise.</b> Acceptor chưa hứa với số nào lớn hơn thì hứa: từ nay bỏ qua mọi đề xuất có n &lt; 5. A3 không trả lời, nhưng A1, A2 đã là đa số 2/3.</li>
-      <li><b>Accept.</b> Có đa số hứa, P1 gửi <code>Accept(5, X)</code>. X là giá trị P1 muốn, vì chưa acceptor nào chấp nhận giá trị khác.</li>
-      <li><b>Accepted.</b> Acceptor chấp nhận vì chưa hứa với số nào lớn hơn 5, rồi báo learner. Đa số đã chấp nhận (5, X): X được chọn và không bao giờ đổi.</li>
-      <li><b>Đề xuất cũ bị chặn.</b> P2 đến muộn với n = 4. Cả ba đã chấp nhận đề xuất số 5, tức đã cam kết bỏ qua mọi n &lt; 5, nên cả ba từ chối n = 4. Đề xuất sau có số lớn hơn cũng không đổi được X: hai đa số bất kỳ luôn có ít nhất một acceptor chung, acceptor ấy báo lại (5, X) ở bước Promise, và proposer buộc phải đề xuất lại X.</li>
+      <li><b>Promise.</b> A1, A2 hứa từ nay bỏ qua mọi đề xuất có n &lt; 5. A3 không trả lời, nhưng A1, A2 đã là đa số 2/3.</li>
+      <li><b>Accept.</b> Có đa số hứa, P1 gửi <code>Accept(5, X)</code>, với X là giá trị nó muốn.</li>
+      <li><b>Accepted.</b> Các acceptor chấp nhận rồi báo learner. Đa số đã chấp nhận (5, X): X được chọn và không bao giờ đổi.</li>
+      <li><b>Đề xuất cũ bị chặn.</b> P2 đến muộn với n = 4. Cả ba đã chấp nhận đề xuất số 5, tức đã cam kết bỏ qua mọi n &lt; 5, nên cả ba từ chối. Đề xuất sau có số lớn hơn cũng không đổi được X, vì hai đa số bất kỳ luôn có ít nhất một acceptor chung.</li>
     </ol>
   </figure>
   <details class="deep">
-    <summary>Nếu acceptor đã chấp nhận một giá trị khác thì sao?<span class="hint">Promise gửi kèm giá trị cũ; proposer phải đề xuất lại nó</span></summary>
+    <summary>Acceptor theo luật nào, và acceptor chung giữ X lại ra sao?<span class="hint">Promise gửi kèm giá trị đã chấp nhận; proposer phải đề xuất lại nó</span></summary>
     <div class="deep-body">
-      <p>Ở vòng trên, lúc P1 gửi Prepare(5) chưa acceptor nào chấp nhận gì, nên Promise không kèm giá trị cũ và P1 được đề xuất X của mình.</p>
-      <p>Nếu các Promise báo về nhiều giá trị khác nhau, P1 lấy giá trị kèm số n lớn nhất trong các báo cáo, thay cho giá trị của mình.</p>
+      <p>Acceptor chỉ hứa, hay chấp nhận, một đề xuất khi chưa hứa với số nào lớn hơn số của đề xuất ấy. Ở vòng trên, lúc P1 gửi Prepare(5) chưa acceptor nào chấp nhận gì, nên Promise không kèm giá trị cũ và P1 được đề xuất X của mình.</p>
+      <p>Với đề xuất sau, acceptor chung của hai đa số báo lại (5, X) trong Promise, và proposer buộc phải đề xuất lại X. Nếu các Promise báo về nhiều giá trị khác nhau, proposer lấy giá trị kèm số n lớn nhất trong các báo cáo, thay cho giá trị của mình.</p>
     </div>
   </details>
 
   <h3 class="sec">YARN: tách quản lý tài nguyên khỏi xử lý</h3>
-  <p>Ở Hadoop 1, MapReduce làm cả hai việc: quản lý tài nguyên cụm (JobTracker) và xử lý dữ liệu, nên cụm chỉ chạy được job MapReduce. Hadoop 2 giao việc quản lý tài nguyên cho YARN; MapReduce chỉ còn là một trong nhiều engine xử lý, chạy cạnh Spark, Tez trên cùng cụm.</p>
+  <p>Ở Hadoop 1, MapReduce vừa quản lý tài nguyên cụm vừa xử lý dữ liệu, nên cụm chỉ chạy được job MapReduce. Hadoop 2 giao việc quản lý tài nguyên cho YARN; MapReduce chỉ còn là một trong nhiều engine xử lý, chạy cạnh Spark và engine khác trên cùng cụm.</p>
   <figure class="fig stepper" id="b2-fig-yarn">
     <p class="fig-t">Một ứng dụng chạy trên YARN</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 300" role="img" aria-label="YARN chạy một ứng dụng: client nộp ứng dụng cho ResourceManager; ResourceManager mở container chạy ApplicationMaster trên NodeManager 2; ApplicationMaster xin container; được cấp container trên NodeManager 1 và 3 để chạy task; task báo tiến độ cho ApplicationMaster, NodeManager gửi heartbeat; xong thì ApplicationMaster huỷ đăng ký và container được giải phóng.">
@@ -1142,8 +1145,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     </svg></div>
     <ol class="steps">
       <li><b>Nộp.</b> Client nộp ứng dụng (vd một job MapReduce) cho <b>ResourceManager</b>, máy chủ duy nhất nắm tài nguyên cả cụm.</li>
-      <li><b>Khởi động AM.</b> ResourceManager chọn một <b>NodeManager</b> còn chỗ, mở một container và chạy <b>ApplicationMaster</b> của ứng dụng trong đó. Mỗi ứng dụng có AM riêng.</li>
-      <li><b>Xin tài nguyên.</b> AM đăng ký với ResourceManager rồi xin container: cần bao nhiêu CPU, RAM, ưu tiên node nào (node đang giữ block dữ liệu).</li>
+      <li><b>Khởi động AM.</b> ResourceManager chọn một <b>NodeManager</b> (tiến trình trông coi một node) còn chỗ, mở một container (một phần CPU, RAM của node) và chạy <b>ApplicationMaster</b> của ứng dụng trong đó. Mỗi ứng dụng có AM riêng.</li>
+      <li><b>Xin tài nguyên.</b> AM đăng ký với ResourceManager rồi xin container, ưu tiên node đang giữ block dữ liệu.</li>
       <li><b>Chạy task.</b> Scheduler cấp container ở NM1 và NM3. AM bảo các NodeManager ấy khởi chạy task trong container.</li>
       <li><b>Theo dõi.</b> Task báo tiến độ cho AM; task hỏng thì AM xin container khác chạy lại. NodeManager gửi heartbeat định kỳ báo tài nguyên còn trống cho ResourceManager.</li>
       <li><b>Kết thúc.</b> Mọi task xong, AM báo kết quả, huỷ đăng ký với ResourceManager; các container được thu hồi cho ứng dụng khác.</li>
@@ -1162,7 +1165,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
           <tr><td>Container</td><td>nhiều</td><td>Một phần CPU và RAM của một node, chạy một task.</td></tr>
         </tbody>
       </table></div>
-      <p>Ở Hadoop 1, JobTracker vừa lập lịch vừa theo dõi mọi task của mọi job, nên nghẽn quanh 4 000 node. YARN chuyển phần lớn việc của JobTracker, nhất là việc theo dõi task, sang ApplicationMaster của từng ứng dụng, nên ResourceManager nhẹ đi và cụm lớn được hơn.</p>
+      <p>JobTracker của Hadoop 1 vừa lập lịch vừa theo dõi mọi task của mọi job, nên nghẽn quanh 4 000 node. YARN chuyển phần lớn việc của JobTracker, nhất là việc theo dõi task, sang ApplicationMaster của từng ứng dụng, nên ResourceManager nhẹ đi và cụm lớn được hơn.</p>
     </div>
   </details>
 
