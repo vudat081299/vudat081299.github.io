@@ -7206,12 +7206,13 @@ input[type=range]{accent-color:var(--green-hi)}
 </svg></div><figcaption>Số liệu minh hoạ; bên phải 20 điểm, nhiều điểm nằm ngoài dải tin cậy của đường hồi quy.</figcaption></figure>
         <p>Biểu đồ đường nối các điểm theo một thứ tự, thường là thời gian; nhiều chuỗi thì ghi nhãn ngay đầu mỗi đường thay cho chú giải.</p>
         <details class="more">
-          <summary>Nhiều chuỗi, tô miền, dải trục: lưu ý gì?</summary>
+          <summary>Nhiều chuỗi, tô miền, miền chồng, dải trục: lưu ý gì?</summary>
           <div class="more-body">
             <ul>
               <li>Cách dùng theo Wilke, chương 13. Nhãn ở đầu đường giúp người xem khỏi dò màu.</li>
               <li>Hơn chừng bốn chuỗi thì tách small multiples, hoặc chỉ số hoá về 100 (bảng ở <a href="#b8-chon-bieu-do">8.7</a>).</li>
               <li>Tô miền dưới đường thì trục y phải bắt đầu từ 0, như cột (<a href="#b9-muc-ti-le">9.1</a>). Đường không tô mã hoá bằng vị trí nên không bị luật ấy ràng buộc, nhưng chọn dải trục vẫn đổi ấn tượng người xem nhận, và tỉ lệ khung hình đổi độ dốc (<a href="#b8-he-truc">8.1</a>).</li>
+              <li id="b8-mien-chong">Miền chồng (stacked area): mỗi chuỗi là một lớp tô đặt lên lớp trước, nên mép trên cùng là tổng và độ dày mỗi lớp là giá trị của chuỗi ấy. Tổng dễ đọc, nhưng các lớp trên không có đáy phẳng, trôi theo lớp dưới, nên khó so từng chuỗi. ThemeRiver ở <a href="#b11-chu-de">bài 11</a> là miền chồng đặt đối xứng quanh trục giữa thay vì xếp từ trục x lên (Byron và Wattenberg, 2008).</li>
             </ul>
           </div>
         </details>
@@ -9333,7 +9334,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
     <div class="eyebrow">Bài 11 · Visualization for text data</div>
     <h2>Trực quan hoá văn bản</h2>
     <p class="chap-q">Làm sao nắm được nội dung của hàng nghìn tài liệu mà không phải đọc hết?</p>
-    <p class="chap-links">Dựa vào: <a href="#b5-van-ban">dữ liệu văn bản ở Bài 5</a> (token, túi từ, tf-idf), <a href="#b10">Bài 10</a> (đồ thị), <a href="#b8-chon-bieu-do">Bài 8</a> (miền chồng, dáng gốc của ThemeRiver)</p>
+    <p class="chap-links">Dựa vào: <a href="#b5-van-ban">dữ liệu văn bản ở Bài 5</a> (token, túi từ, tf-idf), <a href="#b10">Bài 10</a> (đồ thị), <a href="#b8-mien-chong">Bài 8</a> (miền chồng: các chuỗi tô miền xếp lớp lên nhau theo thời gian, dáng gốc của ThemeRiver)</p>
   </div>
   <figure class="skel">
     <div class="lbl">Bản đồ bài</div>
