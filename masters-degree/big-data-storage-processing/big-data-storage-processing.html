@@ -4008,7 +4008,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <p class="fig-t">Chuỗi 4 job, theo dõi một cặp (từ, tài liệu)</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 760 305" role="img" aria-label="Bốn job TF-IDF: job 1 đếm n, job 2 thêm N, job 3 thêm d, job 4 tính tf-idf; cặp big trong d1 đi từ 2 tới 0.318">
       <text class="t3 tb" x="20" y="26">JOB · GOM THEO</text>
-      <text class="t3 tb" x="250" y="26">OUTPUT CỦA REDUCE (KEY, VALUE)</text>
+      <text class="t3 tb" x="250" y="26">OUTPUT CỦA JOB (KEY, VALUE)</text>
       <text class="t3 tb" x="530" y="26">CẶP (big, d1)</text>
 
       <rect class="bxa" x="20" y="40" width="210" height="48" rx="8"/><text class="tb" x="32" y="60">Job 1 · (từ, doc)</text><text class="t2" x="32" y="78">n: đếm từ trong từng doc</text>
@@ -4042,7 +4042,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
           <tr><td>1</td><td>(doc, nội dung) → ((word, doc), 1)</td><td>cộng → ((word, doc), n). Combiner = reducer.</td></tr>
           <tr><td>2</td><td>((word, doc), n) → (doc, (word, n))</td><td>cộng các n cùng doc ra N, cho dữ liệu gốc đi qua → ((word, doc), (n, N))</td></tr>
           <tr><td>3</td><td>((word, doc), (n, N)) → (word, (doc, n, N, 1))</td><td>cộng các số 1 ra d → ((word, doc), (n, N, d))</td></tr>
-          <tr><td>4</td><td>((word, doc), (n, N, d)) → ((word, doc), tf × idf); |D| coi như đã biết</td><td>hàm đồng nhất</td></tr>
+          <tr><td>4</td><td>((word, doc), (n, N, d)) → ((word, doc), tf × idf); |D| coi như đã biết</td><td>không cần: map đã ra kết quả cuối (slide ghi hàm đồng nhất, ra đúng các cặp ấy)</td></tr>
         </tbody>
       </table></div>
       <h4>Nhận xét của slide</h4>
