@@ -3518,11 +3518,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       </g>
     </svg></div>
     <ol class="steps">
-      <li><b>Ban đầu.</b> Leader ở Broker 1 nhận mọi lần đọc ghi của P0; Broker 2, 3 là follower. ISR (in-sync replicas, các bản sao bắt kịp leader) = cả ba. Bản ghi 0–3 đã có ở mọi ISR nên đã committed; mốc ấy là high watermark (HW).</li>
-      <li><b>Follower kéo dữ liệu.</b> Follower tự kéo (fetch) từ leader: Broker 2 kéo được 4, 5; Broker 3 chậm. HW chưa tiến vì bản ghi chỉ committed khi mọi ISR đã ghi; consumer chỉ đọc tới HW.</li>
-      <li><b>Loại khỏi ISR.</b> Broker 3 tụt lại quá lâu nên bị loại. HW tiến: 4, 5 committed dù chỉ có hai bản.</li>
-      <li><b>Leader chết.</b> Controller chọn leader mới trong ISR: Broker 2, vốn có đủ mọi bản ghi đã committed.</li>
-      <li><b>Chạy tiếp.</b> Producer ghi offset 6 vào Broker 2; Broker 3 bắt kịp và vào lại ISR. Không mất bản ghi committed nào.</li>
+      <li><b>Ban đầu.</b> Leader ở Broker 1 nhận mọi lần đọc ghi của P0; Broker 2, 3 là follower; ISR (in-sync replicas, các bản sao bắt kịp leader) = cả ba. Bản ghi 0–3 đã có ở mọi ISR nên đã committed, còn 4, 5 mới chỉ có ở leader. High watermark (HW), mốc committed, nằm sau offset 3.</li>
+      <li><b>Follower kéo dữ liệu.</b> Follower tự kéo (fetch) từ leader: Broker 2 kéo được 4, 5; Broker 3 chậm, vẫn ở 3. HW chưa tiến vì bản ghi chỉ committed khi mọi ISR đã ghi; consumer chỉ đọc tới HW.</li>
+      <li><b>Loại khỏi ISR.</b> Broker 3 tụt lại quá lâu nên bị loại: ISR = {B1, B2}. HW tiến tới sau offset 5: 4, 5 committed dù chỉ có hai bản.</li>
+      <li><b>Leader chết.</b> Broker 1 sập. Controller chọn leader mới trong ISR: Broker 2, vốn có đủ mọi bản ghi đã committed. Broker 3 không được chọn vì ở ngoài ISR, nên 4, 5 giờ chỉ còn một bản.</li>
+      <li><b>Chạy tiếp.</b> Producer ghi offset 6 vào Broker 2; Broker 3 bắt kịp 4, 5, 6 và vào lại ISR. Không mất bản ghi committed nào.</li>
     </ol>
   </figure>
   <div class="callout idea"><p><b>Đảm bảo.</b> Bản ghi từ một producer vào một partition giữ đúng thứ tự gửi; consumer thấy đúng thứ tự trong log. Bản ghi committed không mất <b>chừng nào còn ít nhất một ISR sống</b>.</p></div>
@@ -3530,7 +3530,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <details class="deep">
     <summary>Hệ số nhân bản N chịu được bao nhiêu broker hỏng?<span class="hint">N − 1, và khi ISR co lại</span></summary>
     <div class="deep-body">
-      <p>Tới N − 1 broker, nhưng chỉ khi cả N bản còn trong ISR. ISR co lại thì chịu được ít hơn: ở bước 4 của hình, Broker 3 ngoài ISR nên không được chọn làm leader, và 4, 5 giờ chỉ còn một bản trên Broker 2.</p>
+      <p>Tới N − 1 broker, nhưng chỉ khi cả N bản còn trong ISR. ISR co lại thì chịu được ít hơn: ở bước 4 của hình, chỉ cần Broker 2 hỏng nữa là mất 4, 5.</p>
       <p>Nếu đặt <code>min.insync.replicas=2</code>, producer dùng acks=all sẽ nhận lỗi khi ISR còn dưới hai.</p>
     </div>
   </details>
@@ -3542,11 +3542,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
 
   <h3 class="sec">Retention</h3>
-  <p>Kafka giữ mọi bản ghi đã ghi, dù đã đọc hay chưa, tới khi hết thời hạn giữ (retention) mới xoá.</p>
+  <p>Kafka giữ mọi bản ghi đã ghi, dù đã đọc hay chưa, cho tới khi hết hạn giữ (retention), tính theo thời gian hoặc theo dung lượng.</p>
   <details class="deep">
-    <summary>Hạn tính theo gì, xoá thế nào, log dài có làm đọc chậm không?<span class="hint">Thời gian, dung lượng, compaction</span></summary>
+    <summary>Giữ bao lâu, xoá thế nào, log dài có làm đọc chậm không?<span class="hint">Compaction; xoá theo segment</span></summary>
     <div class="deep-body">
-      <p>Hạn tính theo thời gian (ví dụ 3 ngày, 2 tuần) hoặc theo dung lượng; topic cũng có thể bật compaction (chỉ giữ bản mới nhất của mỗi key). Retention xoá theo cả segment. Tốc độ đọc không phụ thuộc log dài bao nhiêu.</p>
+      <p>Hạn theo thời gian, ví dụ: 3 ngày, 2 tuần. Topic cũng có thể bật compaction (chỉ giữ bản mới nhất của mỗi key). Retention xoá theo cả segment. Tốc độ đọc không phụ thuộc log dài bao nhiêu.</p>
     </div>
   </details>
 
@@ -3566,7 +3566,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <p>Leader ghi vào log của nó rồi báo thành công ngay, không chờ follower. Follower lên thay không có bản ghi đó, nên bản ghi mất dù producer đã nhận xác nhận.</p>
     </div>
   </details>
-  <p>Producer cũng chọn partition. Có key thì dùng <code>hash(key) mod số partition</code>: mọi sự kiện cùng key vào cùng partition, nên giữ thứ tự, miễn là số partition không đổi.</p>
+  <p>Producer cũng chọn partition. Có key thì dùng <code>hash(key) mod số partition</code>: mọi sự kiện cùng key (vd cùng <code>employeeId</code>) vào cùng partition, nên giữ thứ tự, miễn là số partition không đổi.</p>
   <details class="deep">
     <summary>Thêm partition thì sao, và không có key thì chọn thế nào?<span class="hint">Round-robin, sticky; metadata</span></summary>
     <div class="deep-body">
@@ -3654,6 +3654,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
 
   <h3 class="sec">Ngữ nghĩa giao nhận</h3>
+  <p>Ngữ nghĩa giao nhận là lời hứa mỗi bản ghi được xử lý bao nhiêu lần; cả phía consumer lẫn phía producer phải làm khớp theo.</p>
   <figure class="fig" id="b5-sem">
     <div class="canvas"><svg class="dg" viewBox="0 0 720 215" role="img" aria-label="Hai dòng thời gian. Commit offset trước khi xử lý rồi sập: bản ghi 7 đến 9 bị mất. Xử lý xong rồi sập trước khi commit: bản ghi 5 đến 9 bị xử lý hai lần">
       <text class="tb" x="10" y="50">At-most-once</text><text class="t3" x="10" y="68">commit trước</text>
@@ -3679,12 +3680,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bxa" x="588" y="130" width="100" height="46" rx="8"/><text class="t2 tb tc" x="638" y="149">xử lý 5–9</text><text class="t3 tc" x="638" y="166">lần thứ hai</text>
       <text class="t2 fwarn" x="120" y="196">→ 5–9 bị xử lý hai lần: trùng, nên xử lý phải idempotent</text>
     </svg></div>
-    <figcaption>Thứ tự commit offset và xử lý quyết định ngữ nghĩa: commit trước là <b>at-most-once</b> (có thể mất), xử lý trước là <b>at-least-once</b> (có thể trùng). Kafka mặc định at-least-once, nên xử lý phải idempotent (chạy lại vẫn cho cùng kết quả).</figcaption>
+    <figcaption>Thứ tự commit offset và xử lý quyết định ngữ nghĩa. Kafka mặc định cho <b>at-least-once</b>: không mất, nhưng có thể trùng, nên xử lý phải idempotent (chạy lại vẫn cho cùng kết quả).</figcaption>
   </figure>
-  <details class="deep">
-    <summary>Producer phải làm gì cho mỗi ngữ nghĩa, và exactly-once (đúng một lần) đạt thế nào?<span class="hint">Bảng ba ngữ nghĩa; Kafka từ 0.11</span></summary>
-    <div class="deep-body">
-  <p>Mỗi ngữ nghĩa cần cả phía consumer lẫn phía producer khớp theo:</p>
   <div class="tbl"><table>
     <thead><tr><th>Ngữ nghĩa</th><th>Hứa gì</th><th>Cách có</th></tr></thead>
     <tbody>
@@ -3693,7 +3690,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <tr><td>Exactly once</td><td>Đúng một lần</td><td>Khó nhất: phải lo cả phía ghi lẫn phía đọc</td></tr>
     </tbody>
   </table></div>
-      <p>Exactly-once cần chặn trùng ở cả hai phía:</p>
+  <details class="deep">
+    <summary>Làm sao tiến tới exactly-once?<span class="hint">Phía producer, phía consumer, và cách Kafka làm từ 0.11</span></summary>
+    <div class="deep-body">
       <ul>
         <li><b>Producer:</b> gửi rồi mất kết nối trước khi nhận ack thì không biết bản ghi đã vào chưa. Slide: dùng một writer cho mỗi partition, sau lỗi mạng đọc lại bản ghi committed cuối cùng rồi mới gửi tiếp.</li>
         <li><b>Consumer:</b> gắn ID duy nhất (UUID) vào mỗi bản ghi và lọc trùng, hoặc lưu offset cùng chỗ và cùng giao dịch với kết quả xử lý.</li>
