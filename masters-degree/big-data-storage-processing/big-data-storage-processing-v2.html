@@ -2061,7 +2061,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <p>Mô hình quan hệ làm mốc so sánh: lưu theo hàng, lược đồ định trước, join gộp nhiều bảng. Ưu: ACID chín muồi, bảo mật mịn. Nhược: phải mô hình hoá trước, khó mở rộng ngang.</p>
   <div class="tabs">
     <section class="tab" data-label="Key–value">
-      <p>Một bảng hai cột với ba thao tác: <code>PUT(key, value)</code>, <code>GET(key)</code>, <code>DELETE(key)</code>. Value chứa gì cũng được, CSDL không nhìn vào. Không join nên chia ra nhiều máy rất dễ.</p>
+      <p>Một bảng hai cột với ba thao tác: <code>PUT(key, value)</code>, <code>GET(key)</code>, <code>DELETE(key)</code>. Value chứa gì cũng được, CSDL không nhìn vào. Không join nên chia ra nhiều máy rất dễ: băm khoá là biết máy nào giữ nó.</p>
       <p><b>Dùng khi</b> chỉ cần tra theo khoá: cache, phiên đăng nhập, giỏ hàng, hồ sơ người dùng.</p>
       <details class="deep">
         <summary>Memcached, Redis, DynamoDB, Riak khác nhau ra sao?<span class="hint">Bốn hệ key–value trong slide</span></summary>
@@ -2120,7 +2120,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
           <li><b>Row key.</b> Hàng được sắp theo row key. Tên miền viết ngược (com.cnn.www) để mọi trang cùng site nằm cạnh nhau trên đĩa.</li>
           <li><b>Column family.</b> Family khai báo trước (contents:, anchor:); cột trong family thêm tự do lúc ghi, như anchor:cnnsi.com.</li>
           <li><b>Timestamp.</b> Mỗi ô giữ nhiều phiên bản theo thời gian: contents: có ba bản t3, t5, t6. Bản cũ được dọn theo luật giữ n bản gần nhất hoặc theo tuổi.</li>
-          <li><b>Đọc một ô.</b> Ba toạ độ (row, column, timestamp) xác định đúng một giá trị.</li>
+          <li><b>Đọc một ô.</b> Ba toạ độ (row, column, timestamp) xác định đúng một giá trị. Bỏ timestamp thì nhận bản có timestamp lớn nhất: contents: trả bản t6.</li>
         </ol>
       </figure>
       <p><b>Dùng khi</b> dữ liệu thưa, rất rộng, đọc theo dải khoá: log sự kiện, chuỗi thời gian, chỉ mục web.</p>
@@ -2141,7 +2141,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       </details>
     </section>
     <section class="tab" data-label="Graph">
-      <p>Ba khái niệm: nút, quan hệ (cạnh) và thuộc tính gắn trên cả hai. Mỗi nút biết các nút kề, nên truy vấn là phép duyệt cạnh chứ không phải join.</p>
+      <p>Ba khái niệm: nút, quan hệ (cạnh) và thuộc tính gắn trên cả hai. Mỗi nút biết các nút kề, nên truy vấn là phép duyệt cạnh chứ không phải join. Bảng quan hệ thì mỗi bước đi theo quan hệ là một lần join bảng với chính nó (self-join), nên càng nhiều bước càng đắt.</p>
       <p><b>Dùng khi</b> câu hỏi là về đường đi: mạng xã hội, gợi ý, phát hiện gian lận, linked open data.</p>
       <details class="deep">
         <summary>Graph tối ưu cho việc gì, và Neo4j lớn tới đâu?<span class="hint">Mỗi mô hình tối ưu cho gì; giới hạn số nút theo slide và nay</span></summary>
@@ -2263,7 +2263,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <div class="quiz">
     <h3>Tự kiểm tra</h3>
     <details><summary>Vì sao key–value dễ chia ra nhiều máy hơn bảng quan hệ?</summary><p>Mọi thao tác chỉ chạm một khoá, không có join. Băm khoá là biết máy nào giữ nó, không cần phối hợp nhiều máy cho một yêu cầu.</p></details>
-    <details><summary>Một ô trong Bigtable được xác định bởi những gì?</summary><p>Ba toạ độ: row key, cột (family:qualifier) và timestamp. Bỏ timestamp thì nhận bản mới nhất.</p></details>
+    <details><summary>Một ô trong Bigtable được xác định bởi những gì?</summary><p>Ba toạ độ: row key, cột (family:qualifier) và timestamp. Bỏ timestamp thì nhận bản có timestamp lớn nhất, tức bản mới nhất.</p></details>
     <details><summary>Ứng dụng gợi ý “bạn của bạn” nên chọn mô hình nào, vì sao?</summary><p>Graph. Câu hỏi là duyệt cạnh hai bước; với bảng quan hệ đó là self-join lặp lại, càng sâu càng đắt.</p></details>
     <details><summary>Chuyển khoản giữa hai tài khoản: nên dùng hệ ACID hay hệ nhất quán cuối cùng?</summary><p>ACID. Với nhất quán cuối cùng, hai lần rút tiền đồng thời ở hai bản sao có thể cùng thành công trước khi các bản hội tụ, làm số dư âm. Lượt thích hay giỏ hàng thì chịu được vài giây lệch.</p></details>
     <details><summary>Document store bỏ được bước nào so với kiến trúc ba tầng có ORM?</summary><p>Bước xé đối tượng thành hàng ở nhiều bảng (T2) và ráp lại khi đọc (T3). Tài liệu trong ứng dụng và trong CSDL là một.</p></details>
