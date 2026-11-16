@@ -2827,7 +2827,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <li><b>D2.</b> Client cập nhật, Sx lại xử lý: Sx lên 2. Mọi bộ đếm của D1 ≤ D2 nên D1 là tổ tiên, bỏ được.</li>
       <li><b>Hai nhánh.</b> Hai client cùng cập nhật D2, một qua Sy (thành D3), một qua Sz (thành D4).</li>
       <li><b>Xung đột.</b> D3 hơn ở Sy, D4 hơn ở Sz: không bản nào ≤ bản kia ở mọi node, nên chúng song song và <code>get()</code> trả cả hai.</li>
-      <li><b>Hoà giải.</b> Client gộp hai bản rồi ghi qua Sx: lấy max từng bộ đếm, tăng Sx thành 3. D5 ≥ cả D3 lẫn D4.</li>
+      <li><b>Hoà giải.</b> Client gộp hai bản (vd gộp giỏ hàng) rồi ghi qua Sx: lấy max từng bộ đếm, tăng Sx thành 3. D5 ≥ cả D3 lẫn D4.</li>
     </ol>
   </figure>
   <details class="deep">
