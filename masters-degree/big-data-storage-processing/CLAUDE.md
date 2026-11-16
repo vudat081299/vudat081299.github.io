@@ -3,13 +3,10 @@
 - Một trang tự chứa, `big-data-storage-processing.html`: dạy lại môn Lưu trữ và xử lý dữ liệu lớn theo đúng
   thứ tự các file slide (1, 2, 3.1, 3.3, 4.1, 4.2, 4.3, 4.6, 5 … 10).
 - Chỉ nạp font Google. Không build, mở thẳng là chạy. Có mục trên trang chủ (section Master's Degree).
-- Hai bản giao diện, cùng nội dung, giữ cả hai (BIGDATA-002): `big-data-storage-processing.html` (màu theo chặng)
-  và `big-data-storage-processing-v2.html` (khung theo trang chủ: trắng pha xanh, đen pha xanh, xanh lá để nhấn; tiêu đề Space Grotesk;
-  màu chặng dịu chỉ trong sơ đồ và nhãn chặng; khung chú ý xanh dương / hổ phách).
-  Hai bản chỉ khác `<style>`, các marker mũi tên và thanh trên. Sửa nội dung thì sửa cả hai file.
-- Nút `.vswitch` trên thanh trên chuyển qua lại giữa hai bản, giữ bài đang đọc.
+- Một bản giao diện (BIGDATA-003): khung theo trang chủ (trắng pha xanh, đen pha xanh, xanh lá để nhấn; tiêu đề
+  Space Grotesk); màu chặng dịu chỉ trong sơ đồ và nhãn chặng; khung chú ý xanh dương / hổ phách.
 - Nút `#readBtn` "Đọc liền" (`aria-pressed`) mở mọi khối Chi tiết `details.deep`; đáp án `.quiz` vẫn gập để người đọc tự trả lời trước.
-- Trạng thái Đọc liền lưu ở `localStorage['bd-read-all']` (`'1'` = bật), áp cho cả hai bản. Bật/tắt giữ nguyên chỗ đang đọc.
+- Trạng thái Đọc liền lưu ở `localStorage['bd-read-all']` (`'1'` = bật). Bật/tắt giữ nguyên chỗ đang đọc.
 - Máy ≤ 640px nút chỉ còn biểu tượng; thanh trên ở 320px không được tràn ngang.
 - Không có cổng riêng. Cổng tĩnh của `pages/` chạy tay được, với đường dẫn tuyệt đối:
   `python3 pages/tools/lint-pages.py "$PWD/masters-degree/big-data-storage-processing/big-data-storage-processing.html"`.
@@ -66,7 +63,7 @@ Khung xương đạt khi:
 - Màu chỉ khai ở token `:root` / `html.dark`. Mỗi chặng một màu (`--found` … `--query`), áp vào bài qua `--acc`.
 - SVG mang class `dg`; tô bằng lớp `bx`, `bxa`, `bxh`, `ln`, `lna`, `t2`, `ta`…, không ghi mã màu.
   Thành phần thuộc chặng khác (HDFS, Kafka…) luôn bọc `<g class="c-<chặng>">` + `.bxa`; `--acc` chỉ cho thứ bài đang dạy.
-  Mũi tên: `url(#ah)`, `url(#ah-<stage>)`, `url(#ah-bad)`; bản v2 lấy màu nét (`context-stroke`).
+  Mũi tên: `url(#ah)`, `url(#ah-<stage>)`, `url(#ah-bad)`; mũi tên lấy màu nét (`context-stroke`).
 - Marker cỡ cố định (`userSpaceOnUse`, 9 đơn vị, `refX=7`). Đầu có mũi tên dừng cách mép hộp 3,3 đơn vị để
   mũi nhọn chạm mép; đầu không mũi tên chạm đúng mép.
 - Sơ đồ vẽ 1:1 (`max-width` = bề rộng `viewBox`, JS đặt `--vbw`).
