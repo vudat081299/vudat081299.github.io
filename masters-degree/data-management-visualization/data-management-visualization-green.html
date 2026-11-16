@@ -17,7 +17,7 @@
 <style>
 /* ═══ TOKEN ═══ Màu chỉ khai ở đây. Bản sáng chép lại trong @media print. */
 :root{
-  --bg:#f5f6f3; --surface:#ffffff; --sunk:#eef1ec; --line:#d6dad4; --line-2:#c6ccc5; --stroke:#848e87;
+  --bg:#f5f6f3; --surface:#ffffff; --inset:#ffffff; --sunk:#eef1ec; --line:#d6dad4; --line-2:#c6ccc5; --stroke:#848e87;
   --ink:#0b0f0c; --ink-2:#464e48; --ink-3:#5b645e; --on-acc:#ffffff;
   --a:#173d29; --a-soft:#eaf3ed; --b:#0b0f0c; --b-soft:#eef1ec;
   --green:#0a7a3c; --green-hi:#16a34a;
@@ -31,7 +31,7 @@
   --acc:var(--ink-2); --acc-soft:var(--sunk);
 }
 [data-theme="dark"]{
-  --bg:#090b0a; --surface:#101412; --sunk:#151b17; --line:#262d29; --line-2:#333b36; --stroke:#5f6a63;
+  --bg:#090b0a; --surface:#101412; --inset:#090b0a; --sunk:#151b17; --line:#262d29; --line-2:#333b36; --stroke:#5f6a63;
   --ink:#eef2ed; --ink-2:#a9b3ac; --ink-3:#8d9891; --on-acc:#06140c;
   --a:#cfe8d7; --a-soft:#13241a; --b:#eef2ed; --b-soft:#151b17;
   --green:#5be08f; --green-hi:#5be08f;
@@ -206,7 +206,7 @@ article.node{background:var(--surface);border:1px solid var(--line-2);border-rad
 .node-h .node-k{flex:none}
 .node-h .node-t{flex:1;min-width:0}
 details.more{margin:12px 0 14px}
-details.more>summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;gap:10px;padding:9px 14px;border:1px solid var(--line-2);border-radius:var(--r-sm);background:var(--bg);color:var(--ink);font-weight:600;font-size:15.5px;line-height:1.45}
+details.more>summary{list-style:none;cursor:pointer;display:flex;align-items:baseline;gap:10px;padding:9px 14px;border:1px solid var(--line-2);border-radius:var(--r-sm);background:var(--inset);color:var(--ink);font-weight:600;font-size:15.5px;line-height:1.45}
 details.more>summary::-webkit-details-marker{display:none}
 details.more>summary::before{content:"";flex:none;width:7px;height:7px;border-right:2px solid var(--acc);border-bottom:2px solid var(--acc);transform:translateY(-2px) rotate(-45deg);transition:transform .2s}
 details.more>summary:hover{border-color:var(--acc)}
@@ -220,7 +220,7 @@ details.more[open]>summary:hover{color:var(--ink)}
 .read-all .chap-tools .chip{display:none}
 
 /* Hình */
-figure.dg{margin:16px 0;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px}
+figure.dg{margin:16px 0;background:var(--inset);border:1px solid var(--line);border-radius:10px;padding:12px}
 .dg-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 /* --vbw: bề rộng viewBox (JS gán). Hẹp hơn mức này thì cuộn ngang, để chữ t-m trong hình không nhỏ dưới ~10px. */
 figure.dg svg,.skel svg,.demo svg{display:block;width:100%;height:auto;min-width:calc(var(--vbw,620) * .84px)}
@@ -229,7 +229,7 @@ figure.dg figcaption{font-size:14.5px;color:var(--ink-2);margin-top:10px;line-he
 .fig-no{font-weight:700;color:var(--ink)}
 .scroll-hint{display:block;margin:6px 0 0;font-size:13px;color:var(--ink-2);text-align:center}
 .scroll-hint[hidden]{display:none}
-.dg-scroll.is-scroll,.tbl-wrap.is-scroll{--sh:var(--hint-bg,var(--bg));
+.dg-scroll.is-scroll,.tbl-wrap.is-scroll{--sh:var(--hint-bg,var(--inset));
   background:
     linear-gradient(to right,var(--sh) 30%,transparent) left center/28px 100% no-repeat local,
     linear-gradient(to left,var(--sh) 30%,transparent) right center/28px 100% no-repeat local,
@@ -239,7 +239,7 @@ figure.dg figcaption{font-size:14.5px;color:var(--ink-2);margin-top:10px;line-he
 .tbl-wrap{--hint-bg:var(--surface)}
 svg text{font-family:var(--font)}
 /* Lớp màu cho SVG — dùng lớp, không ghi mã màu */
-.f-surface{fill:var(--surface)} .f-bg{fill:var(--bg)} .f-sunk{fill:var(--sunk)} .f-line{fill:var(--line)} .f-ink{fill:var(--ink)} .f-ink3{fill:var(--ink-3)} .f-none{fill:none}
+.f-surface{fill:var(--surface)} .f-bg{fill:var(--inset)} .f-sunk{fill:var(--sunk)} .f-line{fill:var(--line)} .f-ink{fill:var(--ink)} .f-ink3{fill:var(--ink-3)} .f-none{fill:none}
 .f-acc{fill:var(--acc)} .f-acc-soft{fill:var(--acc-soft)} .f-a{fill:var(--a)} .f-a-soft{fill:var(--a-soft)} .f-b{fill:var(--b)} .f-b-soft{fill:var(--b-soft)}
 .f-good{fill:var(--good)} .f-good-soft{fill:var(--good-soft)} .f-bad{fill:var(--bad)} .f-bad-soft{fill:var(--bad-soft)} .f-warn{fill:var(--warn)} .f-warn-soft{fill:var(--warn-soft)}
 .f-c1{fill:var(--c1)} .f-c2{fill:var(--c2)} .f-c3{fill:var(--c3)} .f-c4{fill:var(--c4)} .f-c5{fill:var(--c5)} .f-c6{fill:var(--c6)}
@@ -311,7 +311,7 @@ details.quiz>div{padding:0 14px 12px 42px;font-size:16px;color:var(--ink)}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow);font-weight:600}
 .btn{font:inherit;font-size:14.5px;border:1px solid var(--stroke);background:var(--surface);color:var(--ink);padding:6px 14px;min-height:36px;border-radius:9px;cursor:pointer}
 .btn:hover{border-color:var(--acc)}
-.demo{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;margin:16px 0}
+.demo{background:var(--inset);border:1px solid var(--line);border-radius:10px;padding:12px;margin:16px 0}
 .demo .dg-scroll{overflow-x:auto}
 .try{margin:0 0 12px;padding:8px 12px;border:1px solid color-mix(in srgb,var(--acc) 35%,var(--line));border-radius:8px;background:var(--surface);font-size:15.5px;line-height:1.55;color:var(--ink)}
 .try b{color:var(--acc)}
@@ -446,7 +446,7 @@ input[type=range]{accent-color:var(--green-hi)}
 /* ═══ IN ═══ JS mở mọi details trước khi in (beforeprint) rồi trả lại (afterprint). */
 @media print{
   :root,[data-theme="dark"]{color-scheme:light;
-    --bg:#ffffff; --surface:#ffffff; --sunk:#eef1ec; --line:#d6dad4; --line-2:#c6ccc5; --stroke:#848e87;
+    --bg:#ffffff; --surface:#ffffff; --inset:#ffffff; --sunk:#eef1ec; --line:#d6dad4; --line-2:#c6ccc5; --stroke:#848e87;
     --ink:#0b0f0c; --ink-2:#464e48; --ink-3:#5b645e; --on-acc:#ffffff;
     --a:#173d29; --a-soft:#eaf3ed; --b:#0b0f0c; --b-soft:#eef1ec;
     --green:#0a7a3c; --green-hi:#16a34a;

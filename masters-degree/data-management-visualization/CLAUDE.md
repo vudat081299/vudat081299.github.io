@@ -17,6 +17,8 @@
   dùng `--a` làm `--acc`.
 - Bản xanh: xanh tươi `--green` / `--green-hi` chỉ cho chi tiết nhỏ (gạch nhãn, thanh tiến độ, mục đang đọc, gạch
   chân link, mục đã xem); không tô khối lớn. Trong `.map`, `--a` đổi sang `--green-hi` cho tuyến A.
+- Bản xanh: hình, `.demo`, `summary` đóng và `.f-bg` nằm trong thẻ trắng nên tô `--inset` (trắng ở theme sáng);
+  không đặt `--bg` xám trong thẻ trắng.
 - Bản xanh: biểu đồ dùng `--c1…--c6` trầm (lục, lam than, vàng đất, mận, xám, xanh đá); chữ trắng trên chúng đạt 4.5:1.
 
 ## Cấu trúc trang
