@@ -2576,7 +2576,6 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <div class="deep-body">
       <p>Dynamo là hệ nội bộ của Amazon cho giỏ hàng và các dịch vụ thương mại điện tử: chịu được hỏng máy chủ, hỏng cả trung tâm dữ liệu và mạng bị chia cắt; chủ dịch vụ tự chỉnh N, R, W.</p>
       <p>DynamoDB là dịch vụ quản lý trên AWS, giữ ý chia dữ liệu theo hash của key nhưng đổi cách nhân bản. Mỗi partition có ba bản ở ba vùng sẵn sàng (AZ); một bản làm leader, bầu bằng Multi-Paxos, và mọi lần ghi đi qua leader (bài báo DynamoDB, USENIX ATC 2022). Vì vậy không có sloppy quorum hay vector clock trả cho client, và có tuỳ chọn đọc nhất quán chặt từ leader.</p>
-      <p>Slide bài 4.1: thông lượng và độ trễ dự đoán được, tích hợp với S3 và Elastic MapReduce.</p>
     </div>
   </details>
 
