@@ -3817,7 +3817,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <text class="tm tc" x="535" y="290">(K″, V″)</text><text class="t3 tc" x="535" y="308">gọi reduce mỗi key</text>
       <text class="tm tc" x="685" y="290">HDFS</text><text class="t3 tc" x="685" y="308">một file / reducer</text>
     </svg></div>
-    <figcaption>Người lập trình chỉ viết hai loại hộp màu xử lý: <b>map</b> và <b>reduce</b>; hộp màu lưu trữ là HDFS. Cắt split, xếp task cạnh dữ liệu, shuffle, sort, ghi file và chạy lại task hỏng đều do framework làm. Nửa sau của bài dùng đúng khuôn này cho sort, search, TF-IDF, BFS và PageRank.</figcaption>
+    <figcaption>Người lập trình chỉ viết hai loại hộp màu xử lý: <b>map</b> và <b>reduce</b>; hộp màu lưu trữ là HDFS. Cắt split, xếp task cạnh dữ liệu, shuffle, sort, ghi file và chạy lại task hỏng đều do framework làm. Nửa sau của bài dùng đúng khuôn này cho sort, search, TF-IDF (term frequency–inverse document frequency), BFS (breadth-first search, duyệt đồ thị theo chiều rộng) và PageRank.</figcaption>
   </figure>
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
@@ -3966,9 +3966,10 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
 
   <div class="callout idea"><p><b>Combiner</b> là một reduce chạy ngay trên output của từng mapper, trước khi gửi qua mạng. Với combiner, map 2 gửi (car, 2), (river, 1) thay vì ba cặp. Chỉ dùng được khi phép gộp giao hoán và kết hợp (cộng, max, min).</p></div>
   <details class="deep">
-    <summary>Vì sao combiner đòi phép giao hoán, kết hợp? Tính trung bình thì sao?<span class="hint">Framework chạy combiner bao nhiêu lần cũng được</span></summary>
+    <summary>Vì sao combiner đòi phép giao hoán, kết hợp? Tính trung bình thì sao?<span class="hint">Framework gộp theo thứ tự và cách nhóm nào cũng được; trung bình phải phát (tổng, đếm)</span></summary>
     <div class="deep-body">
-      <p>Vì framework có thể chạy combiner 0, 1 hay nhiều lần. Tính trung bình thì combiner phải phát (tổng, đếm).</p>
+      <p>Vì framework có thể chạy combiner 0, 1 hay nhiều lần. Nó gộp từng phần output của mapper, rồi reducer gộp tiếp các phần ấy, theo thứ tự và cách nhóm nào cũng được; kết quả chỉ không đổi khi phép gộp giao hoán (đổi thứ tự không sao) và kết hợp (nhóm kiểu nào cũng vậy).</p>
+      <p>Trung bình không kết hợp: trung bình của (trung bình của 1 và 2) với 3 là 2.25, còn trung bình của 1, 2, 3 là 2. Tính trung bình thì combiner phải phát (tổng, đếm). Vì thế mapper phát (giá trị, 1), combiner cộng riêng tổng và đếm, reducer cũng cộng riêng rồi mới chia tổng cho đếm.</p>
     </div>
   </details>
 
@@ -3977,7 +3978,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   <p>Slide đi qua năm thuật toán theo độ khó tăng dần: sort, search, TF-IDF, BFS, PageRank. Ba cái đầu là một hoặc vài job nối nhau; hai cái sau phải lặp job nhiều vòng.</p>
 
   <h3 class="sec">Sort: để framework sắp hộ</h3>
-  <p>Sort được dùng để đo tốc độ thô của Hadoop (một "cuộc đua I/O"). Mẹo: reducer vốn nhận key theo thứ tự, và các reducer cũng có thứ tự. Map đưa giá trị lên làm key, partitioner chia key theo khoảng, rồi nối output các reducer là ra dãy đã sắp.</p>
+  <p>Sort được dùng để đo tốc độ thô của Hadoop (một "cuộc đua I/O"). Mẹo: reducer vốn nhận key theo thứ tự, và các reducer cũng có thứ tự. Map đưa giá trị lên làm key (value bỏ trống, viết <code>_</code>), partitioner chia key theo khoảng, rồi nối output các reducer là ra dãy đã sắp.</p>
   <figure class="fig">
     <div class="canvas"><svg class="dg" viewBox="0 0 720 240" role="img" aria-label="Sort bằng MapReduce: map phát giá trị làm key, partitioner theo khoảng đưa a đến m về R1, n đến z về R2, nối output R1 rồi R2 được dãy đã sắp xếp">
       <text class="t2 tc" x="305" y="20">partitioner theo khoảng: a–m → R1, n–z → R2</text>
@@ -4013,7 +4014,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </details>
 
   <h3 class="sec">Search: grep phân tán</h3>
-  <p>Input là các file văn bản và một mẫu cần tìm, gửi cho mapper như tham số. Mapper đọc từng dòng (key vẫn là offset byte, value là nội dung dòng) và biết dòng thuộc file nào; dòng khớp mẫu thì phát (tên file, _). Reducer là hàm đồng nhất.</p>
+  <p>Input là các file văn bản và một mẫu cần tìm, gửi cho mapper như tham số. Mapper đọc từng dòng (key là offset byte của dòng, value là nội dung dòng) và biết dòng thuộc file nào; dòng khớp mẫu thì phát (tên file, _). Reducer là hàm đồng nhất: trả nguyên cặp nhận vào.</p>
   <details class="deep">
     <summary>Một file khớp nhiều dòng thì sao?<span class="hint">Tối ưu bằng combiner</span></summary>
     <div class="deep-body">
@@ -4093,11 +4094,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </details>
 
   <h3 class="sec">BFS và đường đi ngắn nhất: lặp job, mỗi vòng thêm một lớp</h3>
-  <p>BFS là thuật toán lặp: biên (frontier) tiến xa thêm một bước sau mỗi lượt. MapReduce không có vòng lặp, nên một chương trình bên ngoài chạy job nhiều lần, output vòng này là input vòng sau.</p>
-  <p>Đồ thị phải biểu diễn sao cho mỗi map task chỉ cần một dòng: <b>danh sách kề</b> (adjacency list), mỗi bản ghi là <code>node → (D, danh sách node trỏ tới)</code> với D là khoảng cách tốt nhất đã biết.</p>
+  <p>BFS là thuật toán lặp: biên (frontier) tiến xa thêm một bước sau mỗi lượt. MapReduce không có vòng lặp, nên một chương trình bên ngoài chạy job nhiều lần, output vòng này là input vòng sau. Mỗi bản ghi là một node, kèm D (khoảng cách tốt nhất đã biết) và <b>danh sách kề</b> (adjacency list: các node nó trỏ tới).</p>
   <details class="deep">
-    <summary>Vì sao chọn danh sách kề?<span class="hint">So với tham chiếu trực tiếp và ma trận kề</span></summary>
+    <summary>Bản ghi trông ra sao, và vì sao chọn danh sách kề?<span class="hint">So với tham chiếu trực tiếp và ma trận kề</span></summary>
     <div class="deep-body">
+      <p>Đồ thị phải biểu diễn sao cho mỗi map task chỉ cần một dòng: mỗi bản ghi là <code>node → (D, danh sách node trỏ tới)</code>.</p>
       <ul>
         <li><b>Tham chiếu trực tiếp</b> (object giữ con trỏ tới láng giềng): cần bộ nhớ dùng chung và đồng bộ, khó tuần tự hoá ra file. Không hợp với task cô lập.</li>
         <li><b>Ma trận kề</b>: M[i][j] = 1 nếu có cạnh i → j; duyệt từng dòng rất tự nhiên. Nhưng đồ thị lớn như web gần như toàn số 0, mỗi dòng dài vô lý.</li>
@@ -4182,7 +4183,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <li><b>Bước 5 · Vòng 4.</b> Chạy lại không có khoảng cách nào giảm, nên chương trình điều khiển ngừng lặp. Mỗi vòng là một job đọc và ghi lại toàn bộ đồ thị lên HDFS.</li>
     </ol>
   </figure>
-  <div class="callout trap"><p><b>Danh sách kề đi đâu?</b> Nếu map chỉ phát (p, D+1), vòng sau mất cấu trúc đồ thị. Mapper phải phát thêm <code>(n, danh sách kề)</code> và <code>(n, D hiện tại)</code> cho chính node n, để reducer ghi lại bản ghi đầy đủ.</p></div>
+  <div class="callout trap"><p><b>Danh sách kề đi đâu?</b> Map chỉ phát (p, D+1) thì vòng sau mất cấu trúc đồ thị, nên mapper phát thêm <code>(n, danh sách kề)</code> và <code>(n, D hiện tại)</code> cho chính node n để reducer ghi lại bản ghi đầy đủ.</p></div>
 
   <details class="deep">
     <summary>Đồ thị có trọng số thì sao, và so với Dijkstra?<span class="hint">Chỉ đổi D+1 thành D+w; điều kiện dừng; tính tay bốn vòng</span></summary>
@@ -4211,15 +4212,16 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </details>
 
   <h3 class="sec">PageRank: chia hạng cho láng giềng, cộng lại, lặp</h3>
-  <p>PageRank là xác suất một người lướt web ngẫu nhiên (bấm link, thỉnh thoảng gõ một URL bất kỳ) đang đứng ở một trang. Trang được nhiều trang có hạng cao trỏ tới thì hạng cao.</p>
+  <p>PageRank là xác suất một người lướt web ngẫu nhiên (bấm link, thỉnh thoảng gõ một URL bất kỳ) đang đứng ở một trang; trang được nhiều trang có hạng cao trỏ tới thì hạng cao.</p>
   <p style="text-align:center;font-family:var(--mono);font-size:14.5px">PR(A) = (1 − d) + d · ( PR(T<sub>1</sub>)/C(T<sub>1</sub>) + … + PR(T<sub>n</sub>)/C(T<sub>n</sub>) )</p>
-  <p>T<sub>1</sub>…T<sub>n</sub> là các trang trỏ tới A, C(P) là số link ra của P, d là hệ số damping (thường 0.85): người lướt bấm tiếp một link với xác suất d, nhảy tới một trang ngẫu nhiên với xác suất 1 − d. PR<sub>i+1</sub> tính từ PR<sub>i</sub>: map chia hạng của mỗi trang đều cho các trang nó trỏ tới, reduce cộng các mảnh nhận được. Như ở BFS, mapper còn phát (URL, url_list), với url_list là danh sách trang mà URL trỏ tới, để reducer ghi lại cấu trúc đồ thị cho vòng sau.</p>
-  <p>Ở dạng này, khi trang nào cũng có link ra, tổng hạng bằng số trang N, nên PR lớn hơn 1 là bình thường; chia cho N mới ra xác suất người lướt web đứng ở trang đó.</p>
+  <p>T<sub>1</sub>…T<sub>n</sub> là các trang trỏ tới A, C(P) là số link ra của P, d là hệ số damping (thường 0.85): người lướt bấm tiếp một link với xác suất d, nhảy tới một trang ngẫu nhiên với xác suất 1 − d.</p>
+  <p>PR<sub>i+1</sub> tính từ PR<sub>i</sub>: map chia hạng của mỗi trang đều cho các trang nó trỏ tới, reduce cộng các mảnh nhận được. Như ở BFS, mapper còn phát (URL, url_list), với url_list là danh sách trang mà URL trỏ tới, để reducer ghi lại cấu trúc đồ thị cho vòng sau.</p>
   <details class="deep">
-    <summary>Slide gọi d là gì, và vì sao sách khác ra tổng bằng 1?<span class="hint">Hai dạng công thức PageRank</span></summary>
+    <summary>Xác suất mà sao PR lớn hơn 1 được?<span class="hint">Hai dạng công thức PageRank; slide gọi d là gì</span></summary>
     <div class="deep-body">
-      <p>Slide gọi d là hệ số "URL ngẫu nhiên", dễ hiểu ngược: d là xác suất bấm tiếp link, không phải xác suất nhảy ngẫu nhiên.</p>
+      <p>Ở dạng này, khi trang nào cũng có link ra, tổng hạng bằng số trang N, nên PR lớn hơn 1 là bình thường; chia cho N mới ra xác suất người lướt web đứng ở trang đó.</p>
       <p>Bài báo gốc (Brin &amp; Page, 1998) dùng đúng dạng của slide; nhiều sách sau chuẩn hoá thành (1 − d)/N + d·Σ để tổng bằng 1. Khi không có trang cụt, hai dạng chỉ khác nhau một hệ số N.</p>
+      <p>Slide gọi d là hệ số "URL ngẫu nhiên", dễ hiểu ngược: d là xác suất bấm tiếp link, không phải xác suất nhảy ngẫu nhiên.</p>
     </div>
   </details>
 
