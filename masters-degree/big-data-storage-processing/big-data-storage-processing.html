@@ -5259,50 +5259,61 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
 
   <h3 class="sec">Vì sao cần Lambda</h3>
   <figure class="fig">
-    <p class="fig-t">BI truyền thống, rồi Hadoop: ba chữ V</p>
-    <div class="canvas"><svg class="dg" viewBox="0 0 720 180" role="img" aria-label="BI truyền thống: nguồn qua ETL theo lô vào kho dữ liệu rồi ra báo cáo. Hadoop giải Volume và Variety nhưng không giải Velocity">
-      <rect class="bx2" x="15" y="20" width="150" height="50" rx="8"/><text class="tc" x="90" y="41">Nguồn</text><text class="t3 tc" x="90" y="58">OLTP, file</text>
-      <g class="c-process"><rect class="bxa" x="195" y="20" width="150" height="50" rx="8"/><text class="tc" x="270" y="41">ETL</text><text class="t3 tc" x="270" y="58">theo lô, chạy đêm</text></g>
-      <g class="c-store"><rect class="bxa" x="375" y="20" width="150" height="50" rx="8"/><text class="tc" x="450" y="41">Kho dữ liệu</text><text class="t3 tc" x="450" y="58">SQL, có cấu trúc</text></g>
-      <g class="c-query"><rect class="bxa" x="555" y="20" width="150" height="50" rx="8"/><text class="tc" x="630" y="41">Báo cáo BI</text><text class="t3 tc" x="630" y="58">số liệu hôm qua</text></g>
-      <line class="ln" x1="165" y1="45" x2="191.7" y2="45" marker-end="url(#ah)"/>
-      <line class="ln" x1="345" y1="45" x2="371.7" y2="45" marker-end="url(#ah)"/>
-      <line class="ln" x1="525" y1="45" x2="551.7" y2="45" marker-end="url(#ah)"/>
-      <text class="t3 tb" x="15" y="100">HADOOP</text>
-      <rect class="bx" x="15" y="110" width="220" height="56" rx="8"/><text class="tb fok" x="29" y="133">✓ Volume</text><text class="t2" x="29" y="153">HDFS chia dữ liệu ra nhiều máy</text>
-      <rect class="bx" x="250" y="110" width="220" height="56" rx="8"/><text class="tb fok" x="264" y="133">✓ Variety</text><text class="t2" x="264" y="153">lưu thô, schema áp khi đọc</text>
-      <rect class="bx" x="485" y="110" width="220" height="56" rx="8"/><text class="tb fbad" x="499" y="133">✗ Velocity</text><text class="t2" x="499" y="153">batch: kết quả trễ hàng giờ</text>
+    <p class="fig-t">Hadoop giải hai trong ba chữ V</p>
+    <div class="canvas"><svg class="dg" viewBox="0 0 720 76" role="img" aria-label="Hadoop giải Volume và Variety nhưng không giải Velocity">
+      <rect class="bx" x="15" y="10" width="220" height="56" rx="8"/><text class="tb fok" x="29" y="33">✓ Volume</text><text class="t2" x="29" y="53">HDFS chia dữ liệu ra nhiều máy</text>
+      <rect class="bx" x="250" y="10" width="220" height="56" rx="8"/><text class="tb fok" x="264" y="33">✓ Variety</text><text class="t2" x="264" y="53">lưu thô, schema áp khi đọc</text>
+      <rect class="bx" x="485" y="10" width="220" height="56" rx="8"/><text class="tb fbad" x="499" y="33">✗ Velocity</text><text class="t2" x="499" y="53">batch: kết quả trễ hàng giờ</text>
     </svg></div>
-    <figcaption>Hadoop lưu rẻ khối dữ liệu khổng lồ, đủ loại, nhưng mỗi câu trả lời là một job batch. Lambda thêm một lớp dòng để lấp khoảng trễ đó.</figcaption>
+    <figcaption>Mỗi câu trả lời của Hadoop là một job batch; Lambda thêm một lớp dòng để lấp khoảng trễ đó.</figcaption>
   </figure>
-
-  <p>Lớp batch và lớp dòng của Lambda dựng được bằng chính các công cụ ở bài 7 và bài 8.</p>
   <details class="deep">
-    <summary>Dựng Lambda bằng Spark thế nào?<span class="hint">Spark cho batch layer, Spark Streaming cho speed layer; bản hiện thực mã nguồn mở</span></summary>
+    <summary>Trước Hadoop, báo cáo lấy số liệu thế nào?<span class="hint">BI truyền thống: ETL chạy đêm vào kho SQL</span></summary>
     <div class="deep-body">
-      <p>Theo slide, Spark là một trong số ít framework ghép được batch và stream liền mạch, trên hàng petabyte, trong cùng một ứng dụng: speed layer dùng Spark Streaming (bài 8), batch layer dùng Spark (bài 7). Với DStream hai lớp chỉ dùng chung được một phần code; Structured Streaming mới cho cùng một truy vấn DataFrame chạy cả batch lẫn dòng.</p>
-      <p>Spark Streaming coi tính toán dòng là chuỗi job batch rất nhỏ, tất định: cắt dòng thành lô X giây, mỗi lô là một RDD xử lý bằng phép RDD, rồi trả kết quả theo lô.</p>
-      <p>Slide dẫn một số bản hiện thực Lambda mã nguồn mở bằng Kafka, Spark, Spark Streaming và Cassandra, và Oryx (Lambda cho máy học).</p>
+      <p>BI truyền thống (business intelligence: báo cáo, phân tích phục vụ ra quyết định) lấy dữ liệu từ các hệ OLTP (online transaction processing: cơ sở dữ liệu ghi giao dịch hằng ngày) và từ file. ETL (trích, biến đổi, nạp; xem <a href="#b4-6">bài 4.6</a>) chạy theo lô mỗi đêm, nạp vào kho dữ liệu SQL chỉ nhận dữ liệu có cấu trúc. Báo cáo vì thế luôn là số liệu hôm qua.</p>
+      <figure class="fig">
+        <div class="canvas"><svg class="dg" viewBox="0 0 720 90" role="img" aria-label="BI truyền thống: nguồn qua ETL theo lô vào kho dữ liệu rồi ra báo cáo">
+          <rect class="bx2" x="15" y="20" width="150" height="50" rx="8"/><text class="tc" x="90" y="41">Nguồn</text><text class="t3 tc" x="90" y="58">OLTP, file</text>
+          <g class="c-process"><rect class="bxa" x="195" y="20" width="150" height="50" rx="8"/><text class="tc" x="270" y="41">ETL</text><text class="t3 tc" x="270" y="58">theo lô, chạy đêm</text></g>
+          <g class="c-store"><rect class="bxa" x="375" y="20" width="150" height="50" rx="8"/><text class="tc" x="450" y="41">Kho dữ liệu</text><text class="t3 tc" x="450" y="58">SQL, có cấu trúc</text></g>
+          <g class="c-query"><rect class="bxa" x="555" y="20" width="150" height="50" rx="8"/><text class="tc" x="630" y="41">Báo cáo BI</text><text class="t3 tc" x="630" y="58">số liệu hôm qua</text></g>
+          <line class="ln" x1="165" y1="45" x2="191.7" y2="45" marker-end="url(#ah)"/>
+          <line class="ln" x1="345" y1="45" x2="371.7" y2="45" marker-end="url(#ah)"/>
+          <line class="ln" x1="525" y1="45" x2="551.7" y2="45" marker-end="url(#ah)"/>
+        </svg></div>
+      </figure>
+    </div>
+  </details>
+  <details class="deep">
+    <summary>Vì sao chia dữ liệu theo tuổi cho hai lớp?<span class="hint">Giá trị của dữ liệu theo tuổi</span></summary>
+    <div class="deep-body">
+      <figure class="fig">
+        <div class="canvas"><svg class="dg" viewBox="0 0 720 220" role="img" aria-label="Giá trị của dữ liệu cho quyết định tức thời tăng khi dữ liệu càng mới; batch layer phủ toàn bộ lịch sử tới lần chạy cuối, speed layer phủ vài giờ gần nhất">
+          <g class="c-process"><rect class="grpa" x="60" y="30" width="470" height="150" rx="6"/></g>
+          <g class="c-process"><rect class="grpa" x="536" y="30" width="144" height="150" rx="6"/></g>
+          <text class="t2 tb" x="72" y="50">batch layer: toàn bộ lịch sử</text>
+          <text class="t3" x="72" y="68">tới lần batch cuối · chính xác</text>
+          <g class="c-process"><text class="t2 tb ta" x="546" y="150">speed layer</text><text class="t3" x="546" y="167">vài giờ gần nhất</text></g>
+          <path class="lna" d="M60 170 C 380 166, 520 130, 680 42"/>
+          <line class="ln" x1="60" y1="180" x2="690" y2="180" marker-end="url(#ah)"/>
+          <text class="t3" x="60" y="198">quá khứ xa</text>
+          <text class="t3 te" x="530" y="198">lần batch cuối</text>
+          <text class="t3 te" x="690" y="198">bây giờ</text>
+          <text class="t3" x="60" y="214">giá trị cho quyết định tức thời tăng khi dữ liệu càng mới</text>
+        </svg></div>
+        <figcaption>Dữ liệu vài phút tuổi quyết định cảnh báo, gợi ý, giá; dữ liệu nhiều năm tuổi quyết định xu hướng. Lambda giao mỗi phần cho lớp hợp với nó.</figcaption>
+      </figure>
     </div>
   </details>
 
-  <h3 class="sec">Độ liên quan của dữ liệu theo thời gian</h3>
-  <figure class="fig">
-    <div class="canvas"><svg class="dg" viewBox="0 0 720 220" role="img" aria-label="Giá trị của dữ liệu cho quyết định tức thời tăng khi dữ liệu càng mới; batch layer phủ toàn bộ lịch sử tới lần chạy cuối, speed layer phủ vài giờ gần nhất">
-      <g class="c-process"><rect class="grpa" x="60" y="30" width="470" height="150" rx="6"/></g>
-      <g class="c-process"><rect class="grpa" x="536" y="30" width="144" height="150" rx="6"/></g>
-      <text class="t2 tb" x="72" y="50">batch layer: toàn bộ lịch sử</text>
-      <text class="t3" x="72" y="68">tới lần batch cuối · chính xác</text>
-      <g class="c-process"><text class="t2 tb ta" x="546" y="150">speed layer</text><text class="t3" x="546" y="167">vài giờ gần nhất</text></g>
-      <path class="lna" d="M60 170 C 380 166, 520 130, 680 42"/>
-      <line class="ln" x1="60" y1="180" x2="690" y2="180" marker-end="url(#ah)"/>
-      <text class="t3" x="60" y="198">quá khứ xa</text>
-      <text class="t3 te" x="530" y="198">lần batch cuối</text>
-      <text class="t3 te" x="690" y="198">bây giờ</text>
-      <text class="t3" x="60" y="214">giá trị cho quyết định tức thời tăng khi dữ liệu càng mới</text>
-    </svg></div>
-    <figcaption>Dữ liệu vài phút tuổi quyết định cảnh báo, gợi ý, giá; dữ liệu nhiều năm tuổi quyết định xu hướng. Lambda giao mỗi phần cho lớp hợp với nó.</figcaption>
-  </figure>
+  <p>Cả hai lớp dựng được bằng Spark của bài 7 và bài 8.</p>
+  <details class="deep">
+    <summary>Dựng Lambda bằng Spark thế nào?<span class="hint">Lớp nào dùng gì; bản hiện thực mã nguồn mở</span></summary>
+    <div class="deep-body">
+      <p>Theo slide, Spark là một trong số ít framework ghép được batch và stream liền mạch, trên hàng petabyte, trong cùng một ứng dụng: speed layer dùng Spark Streaming (<a href="#b8">bài 8</a>), batch layer dùng Spark (<a href="#b7">bài 7</a>). Với DStream hai lớp chỉ dùng chung được một phần code; Structured Streaming mới cho cùng một truy vấn DataFrame chạy cả batch lẫn dòng.</p>
+      <p>Slide dẫn một số bản hiện thực Lambda mã nguồn mở bằng Kafka, Spark, Spark Streaming và Cassandra, và Oryx (Lambda cho máy học).</p>
+    </div>
+  </details>
 
   <h3 class="sec">Một lượt xem trang đi qua kiến trúc</h3>
   <figure class="fig stepper" id="b9-pv">
@@ -5356,20 +5367,26 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       </g>
     </svg></div>
     <ol class="steps">
-      <li><b>Bước 1 · Sự kiện.</b> Một lượt xem /home lúc 09:12 vào Kafka. Kafka giao cùng sự kiện cho cả hai lớp.</li>
-      <li><b>Bước 2 · Batch layer.</b> Sự kiện được ghi thêm vào master dataset. Batch view hiện có tính từ dữ liệu tới 06:00 (/home = 10 000), nên chưa có lượt này.</li>
-      <li><b>Bước 3 · Speed layer.</b> Cộng ngay vào real-time view, vốn đếm mọi lượt sau 06:00: 420 → 421.</li>
-      <li><b>Bước 4 · Truy vấn lúc 09:15.</b> Truy vấn đọc batch view ở serving layer và real-time view ở speed layer rồi gộp: 10 000 + 421 = 10 421. Không lượt nào bị đếm hai lần vì hai view phủ hai khoảng thời gian rời nhau.</li>
-      <li><b>Bước 5 · Batch mới.</b> Lần batch tính dữ liệu tới 09:00 xong lúc 12:00: 10 000 + 400 lượt (06:00–09:00) = 10 400. Speed layer bỏ phần trước 09:00, giữ 95 lượt sau 09:00 (21 tới 09:15, 74 sau đó). Truy vấn: 10 495.</li>
+      <li><b>Bước 1 · Sự kiện.</b> Lượt xem /home lúc 09:12 vào Kafka; Kafka giao nó cho cả hai lớp.</li>
+      <li><b>Bước 2 · Batch layer.</b> Ghi thêm vào master dataset; batch view chỉ tính tới 06:00 nên chưa có lượt này.</li>
+      <li><b>Bước 3 · Speed layer.</b> Cộng ngay vào real-time view, vốn đếm mọi lượt sau 06:00.</li>
+      <li><b>Bước 4 · Truy vấn lúc 09:15.</b> Gộp hai view. Hai view phủ hai khoảng thời gian rời nhau nên không lượt nào bị đếm hai lần.</li>
+      <li><b>Bước 5 · Batch mới.</b> Batch tính tới 09:00 xong lúc 12:00; speed layer bỏ phần trước 09:00, chỉ giữ lượt sau đó.</li>
     </ol>
   </figure>
+  <details class="deep">
+    <summary>10 400 và 95 ở bước 5 từ đâu ra?<span class="hint">Tách 421 lượt quanh mốc 09:00</span></summary>
+    <div class="deep-body">
+      <p>Lần batch mới cộng 400 lượt trong 06:00–09:00 vào 10 000, ra 10 400. Trong 421 lượt real-time view đếm lúc 09:15, 21 lượt rơi sau 09:00; thêm 74 lượt tới 12:00 thành 95.</p>
+    </div>
+  </details>
 
-  <div class="callout idea"><p><b>Lỗi ở speed layer chỉ sống vài giờ.</b> Real-time view là kết quả tạm, tính bằng thuật toán tăng dần phức tạp hơn. Batch view mới tính lại từ master dataset bất biến sẽ thay nó, nên sai sót ở lớp nhanh tự biến mất.</p></div>
+  <div class="callout idea"><p><b>Lỗi ở speed layer chỉ sống vài giờ:</b> batch view mới, tính lại từ master dataset bất biến, sẽ thay real-time view.</p></div>
 
   <h3 class="sec">Stream và batch</h3>
-  <p>Batch layer xử lý theo lô, speed layer xử lý theo dòng; hai kiểu khác nhau ở phạm vi dữ liệu, cỡ mỗi lần xử lý, độ trễ và độ phức tạp của phân tích.</p>
+  <p>Batch layer quét cả khối dữ liệu lớn, trễ phút tới giờ; speed layer xử lý từng bản ghi hay cửa sổ nhỏ, trễ mili giây tới giây.</p>
   <details class="deep">
-    <summary>Batch và stream khác nhau cụ thể ra sao?<span class="hint">Phạm vi, kích thước, độ trễ, kiểu phân tích</span></summary>
+    <summary>Mỗi lần xử lý bao nhiêu dữ liệu, làm được phân tích gì?<span class="hint">Bảng so sánh batch và stream</span></summary>
     <div class="deep-body">
   <div class="tbl"><table>
     <thead><tr><th></th><th>Batch</th><th>Stream</th></tr></thead>
@@ -5381,10 +5398,11 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       <tr><td>Trong Lambda</td><td>batch layer</td><td>speed layer</td></tr>
     </tbody>
   </table></div>
+      <p>Kiểu phân tích của speed layer đơn giản hơn, nhưng real-time view tính bằng thuật toán tăng dần phức tạp hơn và chỉ là kết quả tạm.</p>
     </div>
   </details>
   <details class="deep">
-    <summary>Ngoài Spark còn những hệ xử lý dòng nào?<span class="hint">Storm, Trident, Spark Streaming, Flink, Samza, Kafka Streams</span></summary>
+    <summary>Ngoài Spark còn những hệ xử lý dòng nào?<span class="hint">Storm, Flink, Samza, Kafka Streams…</span></summary>
     <div class="deep-body">
       <div class="tbl"><table>
         <thead><tr><th>Hệ</th><th>Mô hình</th><th>Ghi chú</th></tr></thead>
@@ -5400,7 +5418,13 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
     </div>
   </details>
 
-  <div class="callout trap"><p><b>Phản biện: kiến trúc Kappa.</b> Lambda bắt viết và vận hành cùng một logic hai lần, cho hai hệ khác nhau. Kappa (Jay Kreps, 2014) bỏ batch layer: mọi thứ là dòng, giữ log đủ lâu trong Kafka, cần tính lại thì phát lại log qua một job dòng mới.</p></div>
+  <div class="callout trap"><p><b>Phản biện: kiến trúc Kappa.</b> Lambda bắt viết và vận hành cùng một logic hai lần, cho hai hệ khác nhau. Kappa bỏ batch layer: mọi thứ là dòng, cần tính lại thì phát lại log.</p></div>
+  <details class="deep">
+    <summary>Kappa phát lại log từ đâu?<span class="hint">Log giữ lâu trong Kafka, job dòng mới</span></summary>
+    <div class="deep-body">
+      <p>Kappa do Jay Kreps đề xuất năm 2014. Log được giữ đủ lâu trong Kafka; cần tính lại thì phát lại log qua một job dòng mới.</p>
+    </div>
+  </details>
 
   <section class="recap"><h3>Nhớ</h3><ul><li>Hadoop giải Volume và Variety; Lambda thêm một lớp dòng để giải Velocity.</li><li>Dữ liệu thô chỉ ghi thêm; code sai thì sửa rồi tính lại từ đầu.</li><li>Batch view và real-time view phủ hai khoảng thời gian rời nhau, cộng lại không trùng.</li><li>Batch view mới ra thì speed layer bỏ phần đã được tính.</li><li>Lỗi ở speed layer chỉ sống tới lần batch kế tiếp.</li><li>Cái giá: một logic viết hai lần; Kappa bỏ batch, tính lại bằng phát lại log.</li></ul></section>
 
