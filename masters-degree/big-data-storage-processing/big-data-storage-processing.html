@@ -3108,7 +3108,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <p>Stage lá bám chỗ dữ liệu nằm và ràng buộc của connector; stage trung gian đặt đâu cũng được.</p>
     </div>
   </details>
-  <p>Ví dụ dưới là một hash join: stage <b>build</b> quét bảng nhỏ và dựng bảng băm trong RAM; stage <b>probe</b> quét bảng lớn rồi dò từng dòng vào bảng băm. Join chỉ chạy được khi bảng băm đã dựng xong.</p>
+  <p>Ví dụ dưới là một hash join: stage <b>build</b> quét bảng nhỏ và gửi dòng sang stage <b>join</b>, nơi task join dựng bảng băm trong RAM; stage <b>probe</b> quét bảng lớn và gửi dòng sang để join dò vào bảng băm. Join chỉ dò được khi bảng băm đã dựng xong.</p>
   <figure class="fig">
     <p class="fig-t">Hai chính sách lập lịch stage cho cùng một hash join, chung trục thời gian</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 312" role="img" aria-label="Hai biểu đồ thời gian cùng trục. All-at-once: mọi stage được lập lịch ngay; probe đọc trước vào bộ đệm trong lúc build chạy, join và output giữ chỗ chờ; truy vấn xong ở mốc sớm hơn. Phased: probe, join, output chỉ được lập lịch sau khi build xong nên không giữ bộ nhớ khi chờ, nhưng truy vấn xong muộn hơn">
