@@ -2358,6 +2358,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <p>Các bản sao có thể nhận cùng sự kiện theo thứ tự khác nhau, rồi lệch nhau.</p>
 
   <figure class="fig">
+    <p class="fig-t">Hai bản sao, cùng hai sự kiện, khác thứ tự</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 190" role="img" aria-label="Bản sao 1 cộng 1000 rồi tính lãi 5 phần trăm được 2100; bản sao 2 tính lãi trước rồi cộng 1000 được 2050; hai bản lệch nhau">
       <text class="tb" x="20" y="72">Bản sao 1</text><text class="t3" x="20" y="88">E1 rồi E2</text>
       <rect class="bx" x="170" y="55" width="90" height="40" rx="8"/><text class="tm tc" x="215" y="80">Bal=1000</text>
@@ -2431,7 +2432,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <p>Slide xếp “consensus protocols” vào CA và Redis vào CP. Thực ra giao thức đồng thuận (Paxos, Raft: đa số node thống nhất một giá trị) là CP, còn Redis nhân bản bất đồng bộ nên không CP. MongoDB chỉ CP tuỳ cấu hình, ZooKeeper chỉ CP khi đọc kèm sync.</p>
     </div>
   </details>
-  <div class="callout trap"><p><b>“Chọn 2 trong 3” chỉ có nghĩa khi đang có phân hoạch.</b> Khi mạng lành, hệ có thể vừa C vừa A.</p></div>
+  <div class="callout trap"><p><b>“Chọn 2 trong 3” chỉ có nghĩa khi đang có phân hoạch.</b> Không bỏ được P trong một hệ phân tán thật, vì mạng hỏng không do mình chọn. Khi mạng lành, hệ có thể vừa C vừa A.</p></div>
   <details class="deep">
     <summary>Lúc mạng lành, hệ còn đánh đổi gì?<span class="hint">Nhất quán và độ trễ: PACELC</span></summary>
     <div class="deep-body">
@@ -2440,17 +2441,17 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
 
   <h3 class="sec">Từ ACID sang BASE</h3>
-  <p>Các hệ web lớn không giữ ACID trên nhiều máy: họ chọn A, hy sinh nhất quán chặt, và theo mô hình BASE: <b>B</b>asically <b>A</b>vailable (luôn ưu tiên trả lời), <b>S</b>oft state (trạng thái có thể tự đổi theo thời gian), <b>E</b>ventual consistency (rồi sẽ nhất quán).</p>
+  <p>RDBMS dựa trên ACID (trọn vẹn, nhất quán, cô lập, bền), nên một RDBMS phân tán thật sự sẽ cần cả C, A và P: điều CAP nói là không thể. Các hệ web lớn chọn A, hy sinh nhất quán chặt, và theo mô hình BASE: <b>B</b>asically <b>A</b>vailable (luôn ưu tiên trả lời), <b>S</b>oft state (trạng thái có thể tự đổi theo thời gian), <b>E</b>ventual consistency (rồi sẽ nhất quán).</p>
   <details class="deep">
     <summary>Vì sao các hệ web chịu bỏ ACID, và BASE đổi được gì?<span class="hint">Sẵn sàng 24/7; bốn tính chất ACID; chặt so với lỏng</span></summary>
     <div class="deep-body">
       <p>Google, Amazon cần sẵn sàng 24/7: vài phút ngừng là mất doanh thu. Hệ của họ chạy trên hàng nghìn máy, nơi lỗi mạng là chuyện thường.</p>
-      <ul><li><b>A</b>tomicity: giao dịch làm trọn hoặc không</li><li><b>C</b>onsistency: luôn thoả ràng buộc toàn vẹn (khoá, số dư không âm…)</li><li><b>I</b>solation: giao dịch không thấy nhau</li><li><b>D</b>urability: đã commit là không mất</li></ul>
-      <p>ACID trải ra nhiều bản sao thì cần thêm nhất quán chặt (C của CAP): khó làm, chậm. Một RDBMS phân tán thật sự sẽ cần cả C, A và P, điều CAP nói là không thể. BASE (NoSQL kiểu AP) chấp nhận nhất quán lỏng: dễ làm, hiệu quả.</p>
+      <ul><li><b>A</b>tomicity: giao dịch làm trọn hoặc không</li><li><b>C</b>onsistency: luôn thoả ràng buộc toàn vẹn</li><li><b>I</b>solation: giao dịch không thấy nhau</li><li><b>D</b>urability: đã commit là không mất</li></ul>
+      <p>ACID trải ra nhiều bản sao thì cần thêm nhất quán chặt (C của CAP): khó làm, chậm. BASE (NoSQL kiểu AP) chấp nhận nhất quán lỏng: dễ làm, hiệu quả.</p>
       <div class="callout idea"><p><b>Nhất quán vừa đủ tuỳ ứng dụng.</b> Giỏ hàng chịu được vài giây lệch; số dư tài khoản thì không.</p></div>
     </div>
   </details>
-  <div class="callout trap"><p><b>Hai chữ C khác nhau.</b> C của ACID: mỗi giao dịch giữ dữ liệu thoả ràng buộc. C của CAP: mọi bản sao trả cùng giá trị mới nhất, như thể chỉ có một bản.</p></div>
+  <div class="callout trap"><p><b>Hai chữ C khác nhau.</b> C của ACID: mỗi giao dịch giữ dữ liệu thoả ràng buộc (khoá, số dư không âm…). C của CAP: mọi bản sao trả cùng giá trị mới nhất, như thể chỉ có một bản.</p></div>
 
   <h3 class="sec">Nhất quán cuối cùng và đọc bản mình ghi</h3>
   <figure class="fig" id="b4-2-ec">
