@@ -5233,7 +5233,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
     <article class="key"><h3><span class="ix">01</span>Master dataset</h3><p>Mọi dữ liệu thô từ trước tới nay, chỉ ghi thêm, không sửa, không xoá. Là nguồn sự thật duy nhất.</p></article>
     <article class="key"><h3><span class="ix">02</span>Batch layer</h3><p>Định kỳ tính lại view từ toàn bộ master dataset. Chậm, nhưng đơn giản và tự sửa: code sai thì sửa code rồi tính lại.</p></article>
     <article class="key"><h3><span class="ix">03</span>Speed layer</h3><p>Xử lý dòng, cập nhật tăng dần real-time view cho phần dữ liệu batch chưa kịp tính. Kết quả tạm, bị thay khi batch view mới ra.</p></article>
-    <article class="key"><h3><span class="ix">04</span>Serving layer</h3><p>Lưu batch view sao cho đọc ngẫu nhiên nhanh. Truy vấn = hàm gộp(batch view, real-time view).</p></article>
+    <article class="key"><h3><span class="ix">04</span>Serving layer</h3><p>Lưu batch view sao cho đọc ngẫu nhiên nhanh. Real-time view nằm ở speed layer; truy vấn đọc cả hai rồi gộp: kết quả = gộp(batch view, real-time view).</p></article>
   </div>
 
   <h3 class="sec">Vì sao cần Lambda</h3>
@@ -5338,7 +5338,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       <li><b>Bước 1 · Sự kiện.</b> Một lượt xem /home lúc 09:12 vào Kafka. Kafka giao cùng sự kiện cho cả hai lớp.</li>
       <li><b>Bước 2 · Batch layer.</b> Sự kiện được ghi thêm vào master dataset. Batch view hiện có tính từ dữ liệu tới 06:00 (/home = 10 000), nên chưa có lượt này.</li>
       <li><b>Bước 3 · Speed layer.</b> Cộng ngay vào real-time view, vốn đếm mọi lượt sau 06:00: 420 → 421.</li>
-      <li><b>Bước 4 · Truy vấn lúc 09:15.</b> Serving gộp hai view: 10 000 + 421 = 10 421. Không lượt nào bị đếm hai lần vì hai view phủ hai khoảng thời gian rời nhau.</li>
+      <li><b>Bước 4 · Truy vấn lúc 09:15.</b> Truy vấn đọc batch view ở serving layer và real-time view ở speed layer rồi gộp: 10 000 + 421 = 10 421. Không lượt nào bị đếm hai lần vì hai view phủ hai khoảng thời gian rời nhau.</li>
       <li><b>Bước 5 · Batch mới.</b> Lần batch tính dữ liệu tới 09:00 xong lúc 12:00: 10 000 + 400 lượt (06:00–09:00) = 10 400. Speed layer bỏ phần trước 09:00, giữ 95 lượt sau 09:00 (21 tới 09:15, 74 sau đó). Truy vấn: 10 495.</li>
     </ol>
   </figure>
