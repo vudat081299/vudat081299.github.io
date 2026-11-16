@@ -681,12 +681,13 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text x="160" y="226" class="t3 tc">1</text><text x="270" y="226" class="t3 tc">10</text><text x="380" y="226" class="t3 tc">100</text><text x="490" y="226" class="t3 tc">1 000</text><text x="600" y="226" class="t3 tc">10 000 MB/s</text>
       <text x="160" y="244" class="t3">trục log, mỗi vạch × 10 · ms là độ trễ truy cập ngẫu nhiên</text>
     </svg></div>
-    <figcaption>RAM nhanh hơn HDD khoảng 100 lần; mạng sang rack khác chậm hơn cả đĩa. Vì thế hệ big data <b>đưa tính toán tới chỗ dữ liệu</b> và giữ dữ liệu trong RAM khi được (Spark, bài 7).</figcaption>
+    <figcaption>Theo số của slide, RAM nhanh hơn HDD khoảng 100 lần và mạng sang rack khác chậm hơn cả đĩa. Vì thế hệ big data <b>đưa tính toán tới chỗ dữ liệu</b> và giữ dữ liệu trong RAM khi được (Spark, bài 7).</figcaption>
   </figure>
   <details class="deep">
     <summary>Số trong hình còn đúng không?<span class="hint">Mạng và SSD hôm nay so với slide</span></summary>
     <div class="deep-body">
-      <p>Số trong slide là của giữa thập niên 2010. Nay mạng trong trung tâm dữ liệu thường 10–100 Gb/s và SSD đời mới đọc vài GB/s, nên khoảng cách giữa mạng và đĩa đã hẹp lại.</p>
+      <p>Số trong slide là của giữa thập niên 2010. Nay mạng trong trung tâm dữ liệu thường 10–100 Gb/s (1,25–12,5 GB/s), còn một ổ HDD đọc tuần tự chỉ khoảng 0,1–0,25 GB/s, nên mạng đã nhanh hơn một ổ HDD. SSD đời mới đọc vài GB/s, ngang tầm mạng.</p>
+      <p>Đưa tính toán tới chỗ dữ liệu vẫn có lợi: cả cụm đọc đĩa cục bộ song song, còn đường lên giữa các rack thường hẹp hơn tổng băng thông của các máy trong rack.</p>
     </div>
   </details>
 
