@@ -1281,9 +1281,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </details>
 
   <h3 class="sec">Vấn đề 1 · Đặt tên và phân giải tên</h3>
-  <p>Không gian tên là tập mọi tên; phân giải tên là ánh xạ một tên tới đối tượng thật. Trong các cách đặt tên truyền thống, chỉ một thư mục toàn cục duy nhất, như của AFS (Andrew File System), mới có thể cho độc lập vị trí.</p>
+  <p>Không gian tên là tập mọi tên; phân giải tên là ánh xạ một tên tới đối tượng thật. Có ba cách truyền thống: ghép tên máy vào tên tệp, mount thư mục xa vào cây cục bộ, hoặc dùng một thư mục toàn cục duy nhất như của AFS (Andrew File System). Chỉ cách thứ ba có thể cho độc lập vị trí.</p>
   <details class="deep">
-    <summary>Có những cách đặt tên nào, cách nào trong suốt?<span class="hint">Ghép tên máy, mount kiểu NFS, thư mục toàn cục kiểu AFS, HDFS</span></summary>
+    <summary>Ba cách đặt tên: ví dụ, và cách nào trong suốt?<span class="hint">Ghép tên máy, mount kiểu NFS, thư mục toàn cục kiểu AFS, HDFS</span></summary>
     <div class="deep-body">
   <div class="tbl"><table>
     <thead><tr><th>Cách</th><th>Ví dụ</th><th>Trong suốt?</th></tr></thead>
@@ -1297,7 +1297,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </details>
 
   <h3 class="sec">Vấn đề 2 · Ngữ nghĩa chia sẻ tệp</h3>
-  <p>Hai tiến trình cùng mở một tệp, một bên ghi, bên kia đọc: bên đọc thấy gì? Ngữ nghĩa chia sẻ là lời hứa của hệ thống về thứ tự đọc ghi đồng thời, tức là mức nhất quán.</p>
+  <p>Hai tiến trình cùng mở một tệp, một bên ghi, bên kia đọc: bên đọc thấy gì? Ngữ nghĩa chia sẻ là lời hứa của hệ thống về thứ tự đọc ghi đồng thời, tức là mức nhất quán. Giả định mỗi phiên là open, đọc ghi, close.</p>
   <p>Có bốn kiểu: UNIX (bản ghi hiện ra ngay với mọi người đang mở tệp), session (chỉ phiên mở sau khi người ghi close mới thấy), immutable shared files (tệp chia sẻ không sửa được) và transaction (tất cả hoặc không gì cả). Immutable dễ cài đặt nhất: tệp không bao giờ bị sửa nên mọi bản sao và cache luôn đúng, không có gì phải đồng bộ.</p>
   <figure class="fig" id="b3-1-fig-sem">
     <p class="fig-t">Cùng một kịch bản, hai ngữ nghĩa</p>
@@ -1325,9 +1325,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <figcaption>Khác biệt nằm ở ô tô đậm: theo session semantics, phiên của B mở trước khi A đóng tệp nên không thấy bản ghi của A.</figcaption>
   </figure>
   <details class="deep">
-    <summary>Bốn ngữ nghĩa cài đặt khó cỡ nào, gặp ở đâu?<span class="hint">Giả định về phiên; UNIX, session, immutable, transaction; ví dụ transaction trong slide</span></summary>
+    <summary>Bốn ngữ nghĩa cài đặt khó cỡ nào, gặp ở đâu?<span class="hint">UNIX, session, immutable, transaction; ví dụ transaction trong slide</span></summary>
     <div class="deep-body">
-      <p>Cả bốn kiểu đều giả định mỗi phiên là open, đọc ghi, close.</p>
   <div class="tbl"><table>
     <thead><tr><th>Ngữ nghĩa</th><th>Cài đặt</th><th>Gặp ở</th></tr></thead>
     <tbody>
@@ -1344,7 +1343,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </details>
 
   <h3 class="sec">Vấn đề 3 · Cache</h3>
-  <p>Cache giữ một bản dữ liệu tệp gần nơi dùng để ít phải truy cập xa: giảm tải mạng và tải server. Đổi lại, bản trong cache có thể đã cũ; đó là bài toán nhất quán cache.</p>
+  <p>Cache giữ một bản dữ liệu tệp gần nơi dùng để ít phải truy cập xa: giảm tải mạng và tải server. Cache có thể nằm ở RAM hay đĩa, phía client hay phía server. Ở client, RAM nhanh nhất nhưng tranh chỗ với bộ nhớ ảo; đĩa chứa được tệp lớn, để việc quản lý bộ nhớ ảo đơn giản hơn và cho máy làm việc tiếp khi mất mạng.</p>
+  <p>Đổi lại, bản trong cache có thể đã cũ; đó là bài toán nhất quán cache.</p>
   <figure class="fig stepper" id="b3-1-fig-coh">
     <p class="fig-t">Cache làm dữ liệu cũ đi thế nào</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 256" role="img" aria-label="Hai client A và B cùng cache tệp f phiên bản 1 từ server. A sửa f thành phiên bản 2 trong cache, theo delayed write chưa gửi đi. A close tệp, bản 2 được đẩy về server. B vẫn đọc bản 1 trong cache của mình, cũ hơn server. B mở lại tệp, kiểm phiên bản với server và tải bản 2.">
@@ -1373,14 +1373,13 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       </g>
     </svg></div>
     <ol class="steps">
-      <li><b>Cùng đọc.</b> A và B đều giữ bản v1 của tệp f trong cache của mình.</li>
+      <li><b>Cùng đọc.</b> A và B đều đọc tệp f, mỗi bên giữ một bản v1 trong cache của mình.</li>
       <li><b>A sửa trong cache.</b> Bản sửa nằm ở cache của A, chỉ gửi về server sau (<i>delayed write</i>).</li>
-      <li><b>A close.</b> Bản sửa được đẩy về server; server giờ có v2.</li>
-      <li><b>B thấy bản cũ.</b> B vẫn đang mở f và đọc v1 trong cache của mình, cũ hơn server; session semantics cho phép điều này. Write-through (gửi mỗi lần ghi ngay về server) cũng không tránh được bước này, vì nó không cập nhật cache của B.</li>
-      <li><b>Giữ nhất quán.</b> Khi B mở lại f, nó phải thấy v2: client hỏi server phiên bản mới nhất mỗi lần open (như NFS), hoặc server chủ động báo các client đang cache f rằng bản ấy hết hạn (callback, như AFS).</li>
+      <li><b>A close.</b> Đóng tệp thì bản sửa được đẩy về server; server giờ có v2.</li>
+      <li><b>B thấy bản cũ.</b> B vẫn đang mở f và đọc v1 trong cache của mình, cũ hơn server. Session semantics cho phép điều này, vì phiên của B mở trước lúc A close. Write-through (gửi mỗi lần ghi ngay về server) cũng không tránh được bước này, vì nó không cập nhật cache của B.</li>
+      <li><b>Giữ nhất quán.</b> Khi B mở lại f, nó phải thấy v2. Có hai cách: client hỏi server phiên bản mới nhất mỗi lần open (như NFS), hoặc server chủ động báo các client đang cache f rằng bản ấy hết hạn (callback, như AFS).</li>
     </ol>
   </figure>
-  <p>Cache có thể nằm ở RAM hay đĩa, phía client hay phía server. Ở client, RAM nhanh nhất nhưng tranh chỗ với bộ nhớ ảo; đĩa chứa được tệp lớn, để việc quản lý bộ nhớ ảo đơn giản hơn và cho máy làm việc tiếp khi mất mạng.</p>
   <details class="deep">
     <summary>Delayed write hay write-through, và đặt cache ở đâu?<span class="hint">Khi nào bản sửa về server; RAM hay đĩa, client hay server</span></summary>
     <div class="deep-body">
