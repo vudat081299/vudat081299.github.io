@@ -1583,7 +1583,7 @@ input[type=range]{accent-color:var(--green-hi)}
           </div>
           <p class="demo-out" id="b2-2-calc-out">—</p>
         </div>
-        <p>HDFS dành cho file rất lớn (100 MB tới vài TB), ghi một lần đọc nhiều lần (chỉ cho nối thêm), trên phần cứng phổ thông. Một Namenode giữ danh mục (file nào gồm khối nào, khối nằm ở Datanode nào), nhiều Datanode giữ các khối. File cắt thành khối 128 MB, khối lớn để Namenode giữ ít metadata và ít trao đổi mạng; mỗi khối thường có 3 bản trên 3 node khác nhau.</p>
+        <p>HDFS dành cho file rất lớn (100 MB tới vài TB), ghi một lần đọc nhiều lần (chỉ cho nối thêm), trên phần cứng phổ thông. Một Namenode giữ danh mục trong RAM (file nào gồm khối nào, khối nằm ở Datanode nào), nhiều Datanode giữ các khối. File cắt thành khối 128 MB, mỗi khối thường có 3 bản trên 3 node khác nhau; khối lớn để danh mục nhỏ và ít trao đổi mạng, nên hàng triệu file nhỏ, mỗi file một mục riêng trong danh mục, làm đầy RAM Namenode dù tổng dung lượng chẳng bao nhiêu.</p>
         <details class="more">
           <summary>Vì sao chỉ nối thêm, khối cuối ra sao, và slide ghi 64 MB là sao?</summary>
           <div class="more-body">
@@ -1593,6 +1593,13 @@ input[type=range]{accent-color:var(--green-hi)}
               <dt>Khối cuối</dt><dd>Khối cuối chỉ chiếm đúng phần dữ liệu còn lại.</dd>
             </dl>
             <p class="slide-note">Slide ghi khối 64 MB: đó là mặc định của Hadoop 1; từ Hadoop 2 là 128 MB.</p>
+          </div>
+        </details>
+        <details class="more">
+          <summary>Một file nhỏ tốn bao nhiêu RAM Namenode, và gộp file nhỏ thế nào?</summary>
+          <div class="more-body">
+            <p>Mỗi file, thư mục và khối là một đối tượng trong RAM Namenode, ước lượng thô khoảng 150 byte mỗi đối tượng. Mười triệu file, mỗi file một khối, là hai mươi triệu đối tượng, cỡ 3 GB RAM, dù mỗi file chỉ vài KB. Đọc cũng chậm: mỗi file nhỏ là một lần hỏi Namenode và một lần nhảy sang Datanode khác, thay cho một lần đọc tuần tự dài.</p>
+            <p>Cách chữa là gộp nhiều file nhỏ thành ít file lớn. SequenceFile (<a href="#b2-2-dinh-dang">2.2.7</a>) lấy tên file làm khoá, nội dung làm giá trị, nén được và vẫn chia được cho nhiều tác vụ đọc song song. HAR (Hadoop Archive, lệnh <code>hadoop archive</code>) giảm số đối tượng trong RAM Namenode nhưng đọc không nhanh hơn.</p>
           </div>
         </details>
       </div>
