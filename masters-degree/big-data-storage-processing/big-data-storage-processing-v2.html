@@ -1520,7 +1520,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <tr><td>Mẫu I/O</td><td>Chỉ append, ghi một lần đọc nhiều</td><td>Giảm đồng bộ; tối ưu đọc tuần tự thông lượng cao</td></tr>
       <tr><td>Phân phối dữ liệu</td><td>Cắt tệp thành block lớn</td><td>Ít metadata hơn, ít trao đổi mạng hơn; thời gian seek được chia đều cho một lần đọc tuần tự dài</td></tr>
       <tr><td>Nhân bản</td><td>Mỗi block thường có 3 bản trên 3 node</td><td>Sống sót qua hỏng đĩa, hỏng node, hỏng rack</td></tr>
-      <tr><td>Chịu lỗi</td><td>DataNode hỏng: nhân bản lại. NameNode: Secondary NameNode, cặp Active/Standby</td><td>Hỏng hóc trên phần cứng rẻ là chuyện thường, không là sự cố</td></tr>
+      <tr><td>Chịu lỗi</td><td>DataNode hỏng: nhân bản lại. NameNode: cặp Active/Standby (Secondary NameNode chỉ làm checkpoint, không thay thế)</td><td>Hỏng hóc trên phần cứng rẻ là chuyện thường, không là sự cố</td></tr>
       <tr><td>Mang tính toán tới dữ liệu</td><td>Lộ vị trí block cho bộ lập lịch</td><td>Task được ưu tiên chạy trên node giữ block, nên phần lớn dữ liệu không đi qua mạng</td></tr>
     </tbody>
   </table></div>
