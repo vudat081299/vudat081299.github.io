@@ -8806,7 +8806,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
               <dt>Tập độc lập</dt><dd>Tập đỉnh mà không hai đỉnh nào kề nhau (stable set, coclique).</dd>
               <dt>Clique</dt><dd>Tập đỉnh của đồ thị vô hướng mà mọi cặp đỉnh khác nhau đều kề nhau.</dd>
               <dt>Cây</dt><dd>Định nghĩa tương đương: đồ thị vô hướng mà hai đỉnh bất kỳ nối nhau bằng đúng một đường đi.</dd>
-              <dt>Song liên thông</dt><dd>Liên thông và gỡ một đỉnh bất kỳ vẫn liên thông, tức không có điểm khớp.</dd>
+              <dt>Song liên thông (2-connected)</dt><dd>Có ít nhất 3 đỉnh, liên thông, và gỡ một đỉnh bất kỳ vẫn liên thông, tức không có điểm khớp. Đồ thị chỉ có hai đỉnh nối nhau bằng một cạnh không có điểm khớp nhưng thường không được coi là song liên thông.</dd>
               <dt>Hai phía (bipartite)</dt><dd>Đỉnh chia được thành hai tập rời U, V sao cho mọi cạnh nối một đỉnh của U với một đỉnh của V.</dd>
               <dt>Bậc deg(v)</dt><dd>Số cạnh gắn với đỉnh v.</dd>
               <dt>Đường kính diam(G)</dt><dd>Khoảng cách (độ dài đường đi ngắn nhất) lớn nhất giữa mọi cặp đỉnh.</dd>
@@ -9321,7 +9321,7 @@ fig.savefig("doanh-thu.png", dpi=200, bbox_inches="tight")</code></pre>
   </ul></div>
   <div class="quiz-list">
     <details class="quiz"><summary>Mạng 500 người, mật độ cạnh cao. Node-link hay ma trận kề? Vì sao?</summary><div>Ma trận kề: đồ thị dày vẽ node-link thành "búi tóc" vì cạnh cắt nhau dày đặc; ma trận không có cạnh cắt, sắp lại hàng cột thì cụm hiện thành khối. Nếu câu hỏi là dò đường đi giữa hai người thì node-link (kèm lọc, lấy mẫu ego-network) lại tốt hơn.</div></details>
-    <details class="quiz"><summary>Điểm khớp là gì và vì sao quan trọng khi phân tích mạng?</summary><div>Đỉnh mà gỡ đi thì đồ thị mất liên thông. Trong mạng thực, đó là nút "cầu nối" duy nhất giữa các phần (một router, một người môi giới); hỏng nó thì các phần bị cô lập. Đồ thị song liên thông thì không có điểm khớp.</div></details>
+    <details class="quiz"><summary>Điểm khớp là gì và vì sao quan trọng khi phân tích mạng?</summary><div>Đỉnh mà gỡ đi thì đồ thị mất liên thông. Trong mạng thực, đó là nút "cầu nối" duy nhất giữa các phần (một router, một người môi giới); hỏng nó thì các phần bị cô lập. Đồ thị song liên thông (ít nhất 3 đỉnh, gỡ đỉnh nào cũng vẫn liên thông) thì không có điểm khớp.</div></details>
     <details class="quiz"><summary>So sánh treemap và cây node-link khi vẽ cấu trúc thư mục có kích thước file.</summary><div>Treemap dùng toàn bộ diện tích, diện tích tỉ lệ dung lượng nên thấy ngay thư mục nào chiếm chỗ; nhưng cấu trúc sâu khó đọc. Cây node-link cho thấy rõ cấp bậc và độ sâu nhưng tốn chỗ, và kích thước file phải mã hoá thêm bằng kênh khác.</div></details>
   </div>
 </section>
