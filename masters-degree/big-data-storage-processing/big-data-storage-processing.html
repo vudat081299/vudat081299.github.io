@@ -5370,7 +5370,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
           <tr><td>Trident</td><td>micro-batch trên Storm</td><td>exactly-once nhờ giao dịch, chậm hơn</td></tr>
           <tr><td>Spark Streaming</td><td>micro-batch</td><td>chung engine và API với Spark batch</td></tr>
           <tr><td>Flink</td><td>dòng thuần, từng bản ghi</td><td>state có checkpoint, exactly-once, event time</td></tr>
-          <tr><td>Samza</td><td>từng bản ghi</td><td>gắn chặt với Kafka và YARN</td></tr>
+          <tr><td>Samza</td><td>từng bản ghi</td><td>đọc Kafka, HDFS, Kinesis, Event Hubs…; chạy trên YARN, Kubernetes hoặc như thư viện độc lập</td></tr>
           <tr><td>Kafka Streams</td><td>thư viện, từng bản ghi</td><td>chạy trong ứng dụng, không cần cụm riêng</td></tr>
         </tbody>
       </table></div>
