@@ -2445,7 +2445,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </details>
   <div class="callout trap"><p><b>Hai chữ C khác nhau.</b> C của ACID: mỗi giao dịch giữ dữ liệu thoả ràng buộc (khoá, số dư không âm…). C của CAP: mọi bản sao trả cùng giá trị mới nhất, như thể chỉ có một bản.</p></div>
 
-  <h3 class="sec">Nhất quán cuối cùng và đọc-sau-ghi</h3>
+  <h3 class="sec">Nhất quán cuối cùng và đọc bản mình ghi</h3>
   <figure class="fig" id="b4-2-ec">
     <div class="canvas"><svg class="dg" viewBox="0 0 720 250" role="img" aria-label="Bốn bản sao R1 đến R4. Bản cập nhật A phẩy tới R1 lúc t0 rồi lan dần tới R2, R3, R4; từ t3 mọi bản giống nhau. Client đọc ở R4 trước t3 nhận bản cũ; giao thức đọc-bản-mình-ghi chuyển việc đọc sang R1">
       <text class="t2 tc" x="180" y="22">client ghi A′</text>
@@ -2475,9 +2475,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <figcaption><b>Nhất quán cuối cùng:</b> khi không còn cập nhật mới, mọi bản sao dần giống nhau. Trong lúc lan truyền, client vừa ghi A′ có thể đọc ở R4 và thấy lại A: giao thức <b>Read Your Own Writes</b> buộc lần đọc đó tới bản sao đã có bản ghi của chính nó.</figcaption>
   </figure>
   <details class="deep">
-    <summary>Ví dụ của slide: Amazon S3, nay đã khác<span class="hint">Đọc-sau-ghi cho object mới, rồi nhất quán chặt từ 12/2020</span></summary>
+    <summary>Ví dụ của slide: Amazon S3, nay đã khác<span class="hint">Read-after-write khác read your own writes; S3 nhất quán chặt từ 12/2020</span></summary>
     <div class="deep-body">
-      <p>Slide lấy S3 làm ví dụ read-after-write: trước đây S3 chỉ đảm bảo đọc-sau-ghi cho object mới tạo, còn ghi đè thì nhất quán cuối cùng. Từ 12/2020, S3 nhất quán chặt đọc-sau-ghi cho mọi thao tác.</p>
+      <p>Slide lấy S3 làm ví dụ read-after-write (đọc-sau-ghi), một hứa hẹn mạnh hơn read your own writes: ghi xong thì mọi lần đọc sau đó, từ bất kỳ client nào, đều thấy bản mới. Trước đây S3 chỉ đảm bảo đọc-sau-ghi cho object mới tạo, còn ghi đè thì nhất quán cuối cùng. Từ 12/2020, S3 nhất quán chặt đọc-sau-ghi cho mọi thao tác.</p>
     </div>
   </details>
 
