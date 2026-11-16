@@ -2787,7 +2787,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </figure>
 
   <h3 class="sec">Phiên bản: vector clock</h3>
-  <p><code>put()</code> có thể trả về trước khi mọi bản sao được cập nhật, nên <code>get()</code> có thể thấy nhiều phiên bản của cùng một object. Vector clock là danh sách cặp (node, bộ đếm) gắn với từng phiên bản, cho biết bản nào là tổ tiên của bản nào.</p>
+  <p><code>put()</code> có thể trả về trước khi mọi bản sao được cập nhật, nên <code>get()</code> có thể thấy nhiều phiên bản của cùng một object. Vector clock là danh sách cặp (node, bộ đếm) gắn với từng phiên bản, cho biết bản nào là tổ tiên của bản nào. Mỗi node chỉ có một cặp: điều phối thêm lần ghi thì chỉ tăng bộ đếm của nó, nên clock dài theo số node đã điều phối ghi chứ không theo số lần cập nhật.</p>
   <figure class="fig stepper" id="b4-3-vc">
     <p class="fig-t">Ví dụ kinh điển của bài báo Dynamo</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 280" role="img" aria-label="D1 với Sx bằng 1, D2 với Sx bằng 2, hai nhánh song song D3 qua Sy và D4 qua Sz, rồi bản hoà giải D5 với Sx bằng 3, Sy bằng 1, Sz bằng 1">
