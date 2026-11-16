@@ -9,7 +9,9 @@ Làm xong mục nào thì xoá mục ấy. Số dòng trỏ vào `big-data-stora
   lại, bỏ nút `.vswitch`, sửa mục "Hai bản giao diện" trong `CLAUDE.md`.
 - Quiz hỏi ý chỉ có trong khối gập (1 Q4, 2 Q3, 3.1 Q3–Q5, 3.3 Q3 Q5, 6 Q5, 7 Q3): giữ, hay đưa ý ấy lên khung xương?
 
-## CHƯA LÀM — sai kiến thức
+## CHƯA LÀM
+
+### Sai kiến thức
 
 - 1 (~669): "khoảng cách mạng và đĩa đã hẹp lại" — theo số trong khối, mạng 10–100 Gb/s đã nhanh hơn một HDD.
 - 3.3 (~1508): bảng ghi Secondary NameNode là cách chịu lỗi; callout dưới nói đúng là nó chỉ làm checkpoint.
@@ -24,7 +26,7 @@ Làm xong mục nào thì xoá mục ấy. Số dòng trỏ vào `big-data-stora
   Kafka 700 MB/s (bài 5, tài liệu ghi ~600), "consumer tự giữ offset" (bài 5), nguồn Twitter/Kinesis của
   Structured Streaming (bài 8), sơ đồ "Trước Presto" có Redshift (bài 4.6).
 
-## CHƯA LÀM — thiếu nhất quán
+### Thiếu nhất quán
 
 - 3.1 (~1424): khối gập hứa bài 3.3 dạy generation stamp và lease; bài 3.3 không có.
 - 3.1 quiz Q3: đáp án "sống qua khởi động lại" không có trong thân; ý "bộ nhớ ảo đơn giản hơn" của hình lại thiếu.
@@ -38,7 +40,7 @@ Làm xong mục nào thì xoá mục ấy. Số dòng trỏ vào `big-data-stora
 - 9 (5338): "Serving gộp hai view" lệch hình (hộp Truy vấn gộp).
 - 1: "ba bài toán" nhưng bảng có 4 hàng; nhãn khối "bao nhiêu vòng" không có số vòng; Nhớ ghi "Hadoop" thay vì "hệ big data".
 
-## CHƯA LÀM — khung xương và Đọc liền
+### Khung xương và Đọc liền
 
 - Tỉ lệ khung xương lệch xa tiêu chí 50–65%: 4.3 (77%), 9 (77–80%); hơi quá: 1 (69%), 2 (68%), 3.1 (72%), 4.6 (66%).
 - Thuật ngữ dùng ở khung xương mà chưa giải nghĩa: rack, NFS/AFS/GFS, HA, Tez, chunkserver, NewSQL, 2PC, RF,
