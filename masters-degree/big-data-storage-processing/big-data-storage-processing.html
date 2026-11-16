@@ -3554,6 +3554,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
           <tr><td>0</td><td>không chờ</td><td>thấp nhất, nhanh nhất</td></tr>
         </tbody>
       </table></div>
+  <p>Với acks=1, leader ghi vào log của nó rồi báo thành công ngay, không chờ follower. Leader chết trước khi follower chép kịp thì follower lên thay không có bản ghi đó: bản ghi mất dù producer đã nhận xác nhận.</p>
   <p>Producer cũng chọn partition. Có key thì dùng <code>hash(key) mod số partition</code>: mọi sự kiện cùng key (vd cùng <code>employeeId</code>) vào cùng partition, nên giữ thứ tự, miễn là số partition không đổi.</p>
   <details class="deep">
     <summary>Thêm partition thì sao, và không có key thì chọn thế nào?<span class="hint">Mod đổi kết quả; round-robin và sticky; metadata</span></summary>
