@@ -3286,7 +3286,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
 <section class="chap" id="b5" data-stage="ingest" data-lec="5" data-short="Kafka">
   <header class="chap-head">
     <h2>Kafka — hàng đợi thông điệp phân tán</h2>
-    <p class="lede">Kafka tách bên gửi khỏi bên nhận bằng một log chỉ ghi nối đuôi, chia thành partition trên nhiều broker và nhân bản để chịu lỗi; consumer tự giữ offset nên đọc lại được, và nhiều nhóm đọc cùng một dữ liệu mà không ảnh hưởng nhau.</p>
+    <p class="lede">Kafka tách bên gửi khỏi bên nhận bằng một log chỉ ghi nối đuôi, chia thành partition trên nhiều broker và nhân bản để chịu lỗi; consumer tự quyết vị trí đọc (offset) nên đọc lại được, và nhiều nhóm đọc cùng một dữ liệu mà không ảnh hưởng nhau.</p>
   </header>
 
   <figure class="fig map">
@@ -3325,7 +3325,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="grpa" x="550" y="180" width="160" height="72" rx="10"/>
       <text class="t3" x="562" y="198">nhóm B · 1 consumer</text>
       <rect class="bxa" x="562" y="210" width="136" height="30" rx="6"/><text class="tm tc" x="630" y="230">C4 ← P0, P1, P2</text>
-      <text class="t3 tc" x="630" y="280">kéo dữ liệu, tự giữ offset</text>
+      <text class="t3 tc" x="630" y="280">kéo dữ liệu, tự quyết offset</text>
       <text class="t3" x="6" y="318">Lộ trình bài, trái sang phải · bấm để tới phần đó</text>
       <a href="#b5-why"><rect class="bx" x="6" y="326" width="96" height="46" rx="8"/><text class="t2 tb tc" x="54" y="345">Vì sao Kafka</text><text class="t3 tc" x="54" y="362">n + m thay n × m</text></a>
       <a href="#b5-topic"><rect class="bx" x="108" y="326" width="96" height="46" rx="8"/><text class="t2 tb tc" x="156" y="345">Partition</text><text class="t3 tc" x="156" y="362">offset, thứ tự</text></a>
