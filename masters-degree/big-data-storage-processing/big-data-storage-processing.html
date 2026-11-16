@@ -3603,7 +3603,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
 
   <h3 class="sec" id="b5-fast">Vì sao Kafka nhanh</h3>
   <div class="keys two">
-    <article class="key"><h3><span class="ix">01</span>Ghi tuần tự</h3><p>Chỉ nối đuôi log; ghi tuần tự xuống hệ thống file rất nhanh (slide: từ 700 MB/s).</p></article>
+    <article class="key"><h3><span class="ix">01</span>Ghi tuần tự</h3><p>Chỉ nối đuôi log; ghi tuần tự xuống hệ thống file rất nhanh: tài liệu Kafka đo khoảng 600 MB/s trên mảng 6 ổ HDD RAID-5, trong khi ghi ngẫu nhiên chỉ khoảng 100 kB/s.</p></article>
     <article class="key"><h3><span class="ix">02</span>Page cache</h3><p>Dựa vào page cache của Linux: tự dùng hết RAM rảnh; bộ lập lịch I/O gộp các lần ghi nhỏ và sắp lại để đầu đĩa ít di chuyển.</p></article>
     <article class="key"><h3><span class="ix">03</span>Zero-copy</h3><p>Gửi dữ liệu từ page cache thẳng ra socket bằng <code>sendfile()</code> (Java <code>FileChannel.transferTo</code>).</p></article>
     <article class="key"><h3><span class="ix">04</span>Batch, nén</h3><p>Gom nhiều bản ghi thành lô từ producer tới đĩa tới consumer; nén cả lô hiệu quả hơn nén từng bản.</p></article>
