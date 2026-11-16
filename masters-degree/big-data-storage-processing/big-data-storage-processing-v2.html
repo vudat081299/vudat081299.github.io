@@ -698,7 +698,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
 
   <h3 class="sec">Thu nạp và xử lý, phân tích, diễn giải</h3>
-  <p>Ngoài quản lý dữ liệu còn ba bài toán: thu nạp và xử lý kịp lúc, chạy nổi thuật toán phân tích trên khối lượng và số chiều lớn, và diễn giải đúng kết quả mà không làm lộ thông tin riêng tư.</p>
+  <p>Ngoài quản lý dữ liệu còn ba bài toán: thu nạp và xử lý kịp lúc, chạy nổi thuật toán phân tích trên khối lượng và số chiều lớn (với số mẫu cố định, thêm đặc trưng quá một ngưỡng thì dữ liệu thưa dần và mô hình kém đi: lời nguyền số chiều), và diễn giải đúng kết quả mà không làm lộ thông tin riêng tư.</p>
   <details class="deep">
     <summary>Mỗi bài toán khó ở đâu, giải bằng gì?<span class="hint">Bảng ba bài toán; lời nguyền số chiều: số mẫu cần tăng theo hàm mũ của số chiều</span></summary>
     <div class="deep-body">
@@ -1016,7 +1016,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <line class="ln dash" x1="420" y1="264" x2="420" y2="306"/>
       <line class="ln dash" x1="595" y1="264" x2="595" y2="306"/>
     </svg></div>
-    <figcaption>Theo slide, Pig và Hive chạy ở máy client, dịch script thành job MapReduce rồi nộp lên cụm. Sqoop và Kafka đưa dữ liệu vào; HBase lưu bảng trên HDFS; Oozie nối các job thành luồng; ZooKeeper giữ cho các thành phần phân tán đồng thuận với nhau.</figcaption>
+    <figcaption>Theo slide, Pig và Hive chạy ở máy client, dịch script thành job MapReduce rồi nộp lên cụm. Sqoop nhập bảng từ CSDL quan hệ bằng một job MapReduce chỉ có map (mỗi mapper đọc một phần bảng, ra thư mục tệp text trong HDFS); Kafka đưa dòng sự kiện vào; HBase lưu bảng trên HDFS; Oozie nối các job thành luồng; ZooKeeper giữ cho các thành phần phân tán đồng thuận với nhau.</figcaption>
   </figure>
   <details class="deep">
     <summary>Từng công cụ làm gì, cài cả bộ bằng gì?<span class="hint">Pig, Hive, HBase, Sqoop, Kafka, Oozie, ZooKeeper; dự án đã ngừng; bản phân phối</span></summary>
@@ -1317,7 +1317,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
 
   <h3 class="sec">Vấn đề 2 · Ngữ nghĩa chia sẻ tệp</h3>
   <p>Hai tiến trình cùng mở một tệp, một bên ghi, bên kia đọc: bên đọc thấy gì? Ngữ nghĩa chia sẻ là lời hứa của hệ thống về thứ tự đọc ghi đồng thời, tức là mức nhất quán.</p>
-  <p>Có bốn kiểu: UNIX (bản ghi hiện ra ngay với mọi người đang mở tệp), session (chỉ phiên mở sau khi người ghi close mới thấy), immutable shared files (tệp chia sẻ không sửa được) và transaction (tất cả hoặc không gì cả).</p>
+  <p>Có bốn kiểu: UNIX (bản ghi hiện ra ngay với mọi người đang mở tệp), session (chỉ phiên mở sau khi người ghi close mới thấy), immutable shared files (tệp chia sẻ không sửa được) và transaction (tất cả hoặc không gì cả). Immutable dễ cài đặt nhất: tệp không bao giờ bị sửa nên mọi bản sao và cache luôn đúng, không có gì phải đồng bộ.</p>
   <figure class="fig" id="b3-1-fig-sem">
     <p class="fig-t">Cùng một kịch bản, hai ngữ nghĩa</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 236" role="img" aria-label="Dòng thời gian hai client. Tệp ban đầu x bằng 1. B mở tệp, A mở tệp, A ghi x bằng 2, B đọc, A đóng tệp, B mở lại và đọc. Với ngữ nghĩa UNIX, B đọc được 2 ở cả hai lần. Với ngữ nghĩa session, lần đọc đầu B được 1 vì A chưa đóng tệp, lần đọc sau khi mở lại B được 2.">
@@ -1395,15 +1395,16 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <li><b>Cùng đọc.</b> A và B đều giữ bản v1 của tệp f trong cache của mình.</li>
       <li><b>A sửa trong cache.</b> Bản sửa nằm ở cache của A, chỉ gửi về server sau (<i>delayed write</i>).</li>
       <li><b>A close.</b> Bản sửa được đẩy về server; server giờ có v2.</li>
-      <li><b>B thấy bản cũ.</b> B vẫn đang mở f và đọc v1 trong cache của mình, cũ hơn server; session semantics cho phép điều này.</li>
+      <li><b>B thấy bản cũ.</b> B vẫn đang mở f và đọc v1 trong cache của mình, cũ hơn server; session semantics cho phép điều này. Write-through (gửi mỗi lần ghi ngay về server) cũng không tránh được bước này, vì nó không cập nhật cache của B.</li>
       <li><b>Giữ nhất quán.</b> Khi B mở lại f, nó phải thấy v2: client hỏi server phiên bản mới nhất mỗi lần open (như NFS), hoặc server chủ động báo các client đang cache f rằng bản ấy hết hạn (callback, như AFS).</li>
     </ol>
   </figure>
+  <p>Cache có thể nằm ở RAM hay đĩa, phía client hay phía server. Ở client, RAM nhanh nhất nhưng tranh chỗ với bộ nhớ ảo; đĩa chứa được tệp lớn, để việc quản lý bộ nhớ ảo đơn giản hơn và cho máy làm việc tiếp khi mất mạng.</p>
   <details class="deep">
     <summary>Delayed write hay write-through, và đặt cache ở đâu?<span class="hint">Khi nào bản sửa về server; RAM hay đĩa, client hay server</span></summary>
     <div class="deep-body">
       <p>Delayed write (còn gọi write-back) gửi bản sửa về server khi close, khi bị đẩy khỏi cache, hoặc định kỳ. Nhanh, nhưng A sập ở bước 2 là mất bản sửa.</p>
-      <p>Write-through gửi mỗi lần ghi ngay về server, nên bước 2 và 3 nhập làm một: A sập cũng không mất bản sửa, đổi lại ghi chậm hơn. Nó vẫn không cập nhật cache của B, nên bước 4 vẫn xảy ra.</p>
+      <p>Với write-through, bước 2 và 3 nhập làm một: A sập cũng không mất bản sửa, đổi lại mỗi lần ghi chậm hơn.</p>
       <h4>Đặt cache ở đâu</h4>
   <figure class="fig" id="b3-1-fig-cache">
     <p class="fig-t">Cache đặt ở đâu</p>
@@ -1886,7 +1887,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <details><summary>Client chạy trên một DataNode ở rack 1 ghi một block. Ba bản sao nằm ở đâu?</summary><p>Bản 1 trên chính node đó; bản 2 trên một node ở rack khác; bản 3 trên một node khác cùng rack với bản 2.</p></details>
     <details><summary>NameNode chết. Secondary NameNode có tự lên thay không?</summary><p>Không. Nó chỉ làm checkpoint fsimage. Muốn chuyển đổi tự động phải cấu hình HA: Active, Standby, JournalNode, ZooKeeper.</p></details>
     <details><summary>Vì sao một triệu tệp 1 KB làm khổ HDFS hơn một tệp 1 GB?</summary><p>Mỗi tệp và mỗi block là một đối tượng khoảng 150 byte trong RAM NameNode: một triệu tệp nhỏ ngốn khoảng 300 MB RAM, còn tệp 1 GB chỉ có 9 đối tượng (1 tệp, 8 block). Ngoài ra mỗi tệp nhỏ thành một map task riêng.</p></details>
-    <details><summary>Bảng 100 cột, truy vấn chỉ tính trung bình 2 cột. Chọn Avro hay Parquet?</summary><p>Parquet (hoặc ORC): lưu theo cột nên chỉ đọc 2 column chunk thay vì quét cả 100 cột của mọi dòng.</p></details>
+    <details><summary>Bảng 100 cột, truy vấn chỉ tính trung bình 2 cột. Chọn Avro hay Parquet?</summary><p>Parquet (hoặc ORC): lưu theo cột nên chỉ đọc dữ liệu của 2 cột thay vì quét cả 100 cột của mọi dòng.</p></details>
   </div>
 </section>
 
