@@ -1457,21 +1457,21 @@ footer{border-top:1px solid var(--line);margin-top:64px;padding:20px 0;font-size
   <figure class="skel">
     <div class="lbl">Bản đồ bài</div>
     <div class="dg-scroll">
-      <svg viewBox="0 0 720 260" role="img" aria-label="Bản đồ bài 2.2: nguyên lý thiết kế HDFS dẫn tới kiến trúc một Namenode và nhiều Datanode; Datanode lo đặt bản sao, đường ống ghi và kiểm tổng; Namenode được bảo vệ bằng Secondary Namenode và cơ chế sẵn sàng cao; người dùng dùng HDFS qua dòng lệnh và chọn định dạng file">
+      <svg viewBox="0 0 720 260" role="img" aria-label="Bản đồ bài 2.2: nguyên lý thiết kế HDFS dẫn tới kiến trúc một Namenode và nhiều Datanode; khối đi đâu: Namenode chọn chỗ đặt bản sao theo rack, Datanode lưu khối và chuyển tiếp theo đường ống ghi, client kiểm tổng khi đọc; Namenode được bảo vệ bằng Secondary Namenode và cơ chế sẵn sàng cao; người dùng dùng HDFS qua dòng lệnh và chọn định dạng file">
         <a href="#b2-2-nguyen-ly" class="sk"><rect x="10" y="20" width="200" height="60" rx="10" class="f-surface s-line"/>
         <text x="24" y="42" class="t-m t-acc t-mono">2.2.1</text><text x="24" y="64" class="t-h">Nguyên lý, khối</text></a>
         <a href="#b2-2-kien-truc" class="sk"><rect x="260" y="20" width="200" height="60" rx="10" class="f-acc-soft s-acc"/>
         <text x="274" y="42" class="t-m t-acc t-mono">2.2.2</text><text x="274" y="64" class="t-h">Namenode, Datanode</text></a>
         <path d="M210 50 L254 50" class="s-acc" stroke-width="1.6" marker-end="url(#arr-a)"/>
         <text x="510" y="44" class="t-m">một master giữ metadata,</text><text x="510" y="62" class="t-m">nhiều slave giữ khối</text>
-        <text x="40" y="118" class="t-m t-mono">PHÍA DATANODE</text>
+        <text x="10" y="118" class="t-m t-mono">KHỐI ĐI ĐÂU</text>
         <a href="#b2-2-ban-sao" class="sk"><rect x="10" y="126" width="200" height="50" rx="10" class="f-surface s-line"/>
         <text x="24" y="148" class="t-m t-acc t-mono">2.2.3</text><text x="74" y="148" class="t-h">Đặt bản sao</text>
         <text x="74" y="166" class="t-m">theo rack</text></a>
         <a href="#b2-2-ghi-doc" class="sk"><rect x="230" y="126" width="230" height="50" rx="10" class="f-surface s-line"/>
         <text x="244" y="148" class="t-m t-acc t-mono">2.2.4</text><text x="294" y="148" class="t-h">Ghi, đọc</text>
         <text x="294" y="166" class="t-m">đường ống, checksum</text></a>
-        <text x="710" y="118" class="t-m t-mono t-e">PHÍA NAMENODE</text>
+        <text x="710" y="118" class="t-m t-mono t-e">BẢO VỆ NAMENODE</text>
         <a href="#b2-2-chiu-loi" class="sk"><rect x="490" y="126" width="220" height="50" rx="10" class="f-surface s-line"/>
         <text x="504" y="148" class="t-m t-acc t-mono">2.2.5</text><text x="554" y="148" class="t-h">Chịu lỗi</text>
         <text x="554" y="166" class="t-m">Secondary NN, HA</text></a>
