@@ -1440,7 +1440,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <details class="deep">
     <summary>HDFS né bài toán nhất quán bản sao thế nào?<span class="hint">Một người ghi, pipeline xác nhận, số phiên bản block</span></summary>
     <div class="deep-body">
-      <p>HDFS thu hẹp bài toán: mỗi tệp chỉ một người ghi, một lần ghi chỉ xong khi mọi bản sao trong pipeline xác nhận, và bản sao lỡ cập nhật bị loại nhờ số phiên bản của block (<a href="#b3-3">bài 3.3</a>).</p>
+      <p>HDFS thu hẹp bài toán: mỗi tệp chỉ một người ghi, một lần ghi chỉ xong khi mọi bản sao trong pipeline xác nhận, và bản sao lỡ cập nhật bị nhận ra là lỗi thời nhờ số phiên bản của block (<a href="#b3-3">bài 3.3</a>).</p>
     </div>
   </details>
 
@@ -1642,10 +1642,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     </ol>
   </figure>
   <details class="deep">
-    <summary>DataNode hỏng giữa chừng thì sao, và khi nào tệp được chốt?<span class="hint">Gỡ khỏi pipeline, nhân bản bù; complete</span></summary>
+    <summary>DataNode hỏng giữa chừng thì sao, khi nào tệp được chốt, ai được ghi?<span class="hint">Gỡ khỏi pipeline, số phiên bản block, nhân bản bù; complete; lease một người ghi</span></summary>
     <div class="deep-body">
-      <p>Một DataNode hỏng giữa chừng thì bị gỡ khỏi pipeline; block được nhân bản bù sau.</p>
+      <p>Một DataNode hỏng giữa chừng thì bị gỡ khỏi pipeline: client dựng lại pipeline từ các node còn tốt, và các bản sao ấy được nâng lên một số phiên bản block mới (generation stamp) do NameNode cấp. Bản trên node hỏng giữ số cũ, nên khi node ấy quay lại, NameNode nhận ra đó là bản lỗi thời. Block được nhân bản bù sau cho đủ số bản.</p>
       <p>Ở block 2, hai bản sau cùng (DN6, DN4) nằm ở rack 2. Ghi xong, client gọi <code>complete</code>; NameNode chốt tệp khi đủ số bản tối thiểu.</p>
+      <p>Từ lúc tạo tới lúc đóng tệp, client giữ một hợp đồng thuê (lease) trên tệp, do NameNode cấp và client gia hạn định kỳ, nên mỗi tệp chỉ có một người ghi; client khác vẫn đọc được. Đóng tệp thì lease được trả lại.</p>
     </div>
   </details>
 
