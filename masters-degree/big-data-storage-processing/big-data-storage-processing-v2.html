@@ -3104,8 +3104,15 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
 
   <h3 class="sec" id="b4-6-sched">Lập lịch stage và task</h3>
-  <p>Để chạy một truy vấn, scheduler quyết định hai việc: stage nào chạy lúc nào (all-at-once hay phased), và mỗi stage bao nhiêu task, đặt ở worker nào.</p>
-  <p>Ví dụ dưới là một hash join: stage <b>build</b> quét bảng nhỏ để stage <b>join</b> dựng bảng băm trong RAM; stage <b>probe</b> quét bảng lớn để join dò vào bảng băm, nên join chỉ dò được khi bảng băm đã xong.</p>
+  <p>Để chạy một truy vấn, scheduler quyết định hai việc: stage nào chạy lúc nào (all-at-once hay phased), và mỗi stage bao nhiêu task, đặt ở worker nào. Stage lá thường được một task trên mỗi worker: giải nén, giải mã, lọc dữ liệu chiếm phần lớn CPU và chia song song được, nên càng nhiều máy càng xong sớm.</p>
+  <details class="deep">
+    <summary>Khi nào stage lá không trải lên mọi worker, và stage trung gian có bao nhiêu task?<span class="hint">Ràng buộc của connector; số task stage trung gian</span></summary>
+    <div class="deep-body">
+      <p>Stage lá chỉ trải lên mọi worker khi không vướng ràng buộc và dữ liệu chia được đủ split. Nếu không, nó bám ràng buộc của mạng và connector: triển khai shared-nothing buộc task nằm cùng máy với dữ liệu, và scheduler có thể ưu tiên đọc trong cùng rack.</p>
+      <p>Stage trung gian chỉ xử lý kết quả của stage khác nên đặt ở worker nào cũng được. Số task của nó tuỳ cấu hình connector, tính chất của plan, layout dữ liệu cần và cấu hình triển khai; có lúc engine đổi số task ngay khi đang chạy.</p>
+    </div>
+  </details>
+  <p>Ví dụ dưới là một hash join: stage <b>build</b> quét bảng nhỏ và gửi dòng sang stage <b>join</b>, nơi task join dựng bảng băm trong RAM; stage <b>probe</b> quét bảng lớn và gửi dòng sang để join dò vào bảng băm. Join chỉ dò được khi bảng băm đã dựng xong.</p>
   <figure class="fig">
     <p class="fig-t">Hai chính sách lập lịch stage cho cùng một hash join, chung trục thời gian</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 312" role="img" aria-label="Hai biểu đồ thời gian cùng trục. All-at-once: mọi stage được lập lịch ngay; probe đọc trước vào bộ đệm trong lúc build chạy, join và output giữ chỗ chờ; truy vấn xong ở mốc sớm hơn. Phased: probe, join, output chỉ được lập lịch sau khi build xong nên không giữ bộ nhớ khi chờ, nhưng truy vấn xong muộn hơn">
@@ -3141,17 +3148,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     </svg></div>
     <figcaption><b>All-at-once</b> lập lịch mọi stage ngay: probe đọc trước trong lúc build chạy, nên truy vấn xong sớm hơn; hợp truy vấn tương tác. <b>Phased</b> lập lịch probe, join, output chỉ sau khi build xong: không task nào ngồi giữ bộ nhớ (khung đứt), đổi lại xong muộn hơn; hợp phân tích batch.</figcaption>
   </figure>
-  <details class="deep">
-    <summary>Còn việc thứ hai: mỗi stage bao nhiêu task, đặt ở worker nào?<span class="hint">Stage lá: một task mỗi worker, trừ khi vướng connector; stage trung gian</span></summary>
-    <div class="deep-body">
-      <p>Stage lá thường được một task trên mỗi worker: giải nén, giải mã, lọc dữ liệu chiếm phần lớn CPU và chia song song được, nên càng nhiều máy càng xong sớm. Điều đó chỉ đúng khi không vướng ràng buộc và dữ liệu chia được đủ split.</p>
-      <p>Nếu vướng, stage lá bám ràng buộc của mạng và connector: triển khai shared-nothing buộc task nằm cùng máy với dữ liệu, và scheduler có thể ưu tiên đọc trong cùng rack.</p>
-      <p>Stage trung gian chỉ xử lý kết quả của stage khác nên đặt ở worker nào cũng được. Số task của nó tuỳ cấu hình connector, tính chất của plan, layout dữ liệu cần và cấu hình triển khai; có lúc engine đổi số task ngay khi đang chạy.</p>
-    </div>
-  </details>
 
   <h3 class="sec" id="b4-6-split">Lập lịch split</h3>
-  <p>Ngoài đoạn dữ liệu ở kho ngoài, split còn có thể trỏ tới kết quả trung gian của worker khác. Split được liệt kê dần trong lúc truy vấn chạy, không liệt kê hết từ đầu, và giao lười cho task có hàng đợi ngắn nhất.</p>
+  <p>Split không chỉ trỏ tới dữ liệu ở kho ngoài mà còn có thể trỏ tới kết quả trung gian của worker khác. Split được liệt kê dần trong lúc truy vấn chạy, không liệt kê hết từ đầu, và giao lười cho task có hàng đợi ngắn nhất.</p>
   <div class="callout idea"><p><b>Split giao lười có ba lợi.</b> Truy vấn trả kết quả trước khi đọc hết dữ liệu (vd có LIMIT); coordinator không phải giữ metadata của mọi split trong RAM; worker nhanh tự nhận nhiều việc hơn.</p></div>
 
   <h3 class="sec">Tối ưu truy vấn</h3>
