@@ -2573,6 +2573,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </div>
 
   <h3 class="sec">Chia dữ liệu: vòng băm nhất quán</h3>
+  <p>Đầu ra của hàm băm (MD5, 128 bit) được xem như một vòng tròn.</p>
   <figure class="fig stepper" id="b4-3-ring">
     <p class="fig-t">Vòng băm, thêm node, nhân bản</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 320" role="img" aria-label="Vòng băm với ba node A ở 30 độ, B ở 150 độ, C ở 270 độ và sáu key. Thêm node D ở 90 độ thì chỉ key k2 và k3 dời từ B sang D. Bước sau là virtual node và preference list của k1 gồm A, D, B">
@@ -2650,25 +2651,17 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       </g>
     </svg></div>
     <ol class="steps">
-      <li><b>Vòng băm.</b> Đầu ra hàm băm xem như một vòng; key và node đều băm lên vòng: A, B, C ở 30°, 150°, 270°.</li>
-      <li><b>Key thuộc về ai.</b> Từ key đi theo chiều kim đồng hồ, node đầu tiên gặp giữ key.</li>
-      <li><b>Thêm node D ở 90°.</b> Chỉ cung (30°, 90°] đổi chủ; mọi key khác đứng yên.</li>
-      <li><b>Virtual node.</b> Mỗi máy giữ nhiều điểm trên vòng nên tải rải đều; máy mạnh được cấp nhiều điểm hơn.</li>
-      <li><b>Nhân bản.</b> Key lưu ở node đầu tiên sau nó và N − 1 node kế tiếp. Danh sách node cho key (preference list) dài hơn N để có node dự phòng.</li>
+      <li><b>Vòng băm.</b> Băm cả key lẫn node vào cùng một vòng. Ba node A, B, C nằm ở 30°, 150°, 270°; sáu key rải trên vòng.</li>
+      <li><b>Key thuộc về ai.</b> Đi theo chiều kim đồng hồ từ vị trí của key, node đầu tiên gặp là node giữ key. k6 ở 300° vòng qua 0° về A.</li>
+      <li><b>Thêm node D ở 90°.</b> Chỉ cung (30°, 90°] đổi chủ: k2, k3 dời từ B sang D. Mọi key khác đứng yên. Với băm kiểu <code>hash mod n</code>, đổi n làm gần như mọi key dời chỗ.</li>
+      <li><b>Virtual node.</b> Hình bên phải là một vòng riêng, chỉ ba máy A, B, C. Mỗi máy giữ nhiều điểm trên vòng. Máy sập thì tải của nó chia đều cho các máy còn lại; máy mới nhận một ít từ mọi máy; máy mạnh được cấp nhiều điểm hơn.</li>
+      <li><b>Nhân bản.</b> Mỗi key lưu ở N node: node đầu tiên sau key và N − 1 node kế tiếp theo chiều kim đồng hồ. Danh sách node chịu trách nhiệm cho key là preference list; nó dài hơn N để có node dự phòng, bình thường N node đứng đầu giữ bản sao.</li>
     </ol>
   </figure>
-  <details class="deep">
-    <summary>Sao không dùng hash mod n, và virtual node đỡ gì khi máy sập?<span class="hint">MD5; key qua 0°; thêm, bớt máy</span></summary>
-    <div class="deep-body">
-      <p>Dynamo băm bằng MD5, không gian 128 bit. Key nằm sau node cuối cùng thì vòng qua 0°: k6 ở 300° thuộc về A. Với băm kiểu <code>hash mod n</code>, đổi n làm gần như mọi key dời chỗ.</p>
-      <p>Có virtual node, máy sập thì tải của nó chia đều cho các máy còn lại; máy mới nhận một ít từ mọi máy. Bình thường chỉ N node đứng đầu preference list giữ bản sao.</p>
-    </div>
-  </details>
-  <p>Các node giữ cùng một góc nhìn về vòng nhờ gossip: chúng truyền tai nhau thông tin thành viên.</p>
+  <p>Dynamo là DHT (bảng băm phân tán) “zero-hop”: node nào cũng biết cả vòng nên chuyển yêu cầu thẳng tới đúng chỗ. Các node giữ cùng một góc nhìn về vòng nhờ gossip: chúng truyền tai nhau thông tin thành viên, không cần máy chủ danh bạ.</p>
   <details class="deep" id="b4-3-gossip">
-    <summary>Gossip chạy thế nào, và node biết node khác chết ra sao?<span class="hint">Zero-hop; seed; phát hiện lỗi</span></summary>
+    <summary>Gossip chạy thế nào, và node biết node khác chết ra sao?<span class="hint">Thêm, gỡ node; seed; phát hiện lỗi cục bộ</span></summary>
     <div class="deep-body">
-      <p>Gossip không cần máy chủ danh bạ. Nhờ biết cả vòng, node nào cũng chuyển yêu cầu thẳng tới đúng chỗ: Dynamo là một bảng băm phân tán (DHT) “zero-hop”, không nhảy qua node trung gian.</p>
       <ul>
         <li>Quản trị viên thêm hoặc gỡ node bằng lệnh; thay đổi được ghi bền tại node nhận lệnh.</li>
         <li>Mỗi giây, mỗi node chọn ngẫu nhiên một node khác và trao đổi lịch sử thành viên cùng bảng token trên vòng. Thông tin lan khắp cụm sau vài vòng.</li>
@@ -2686,7 +2679,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </div>
   <p>Nếu R + W &gt; N, tập node đọc và tập node ghi trong đúng N node ấy (quorum chặt) luôn chung ít nhất một node, nên lần đọc chạm bản mới.</p>
   <figure class="fig" id="b4-3-quorum">
-    <p class="fig-t">Chỉnh N, R, W</p>
+    <p class="fig-t">Chỉnh N, R, W và xem tập đọc có chạm bản mới không</p>
     <div class="canvas"><svg class="dg" id="b4-3-q-svg" viewBox="0 0 720 160" role="img" aria-label="N bản sao xếp thành hàng; W bản đầu nhận bản ghi mới, R bản cuối trả lời lần đọc; ô đậm là chỗ hai tập giao nhau"></svg></div>
     <div class="st-ctl" id="b4-3-q-ctl">
       <span style="display:inline-flex;align-items:center;gap:6px;white-space:nowrap;margin-right:10px"><span class="tm">N</span><button type="button" data-k="N" data-d="-1" aria-label="Giảm N">−</button><b class="tm" id="b4-3-q-N">3</b><button type="button" data-k="N" data-d="1" aria-label="Tăng N">+</button></span>
@@ -2723,18 +2716,17 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <path class="lna dash" d="M 640 148 V 186 H 220 V 151.3" marker-end="url(#ah-store)"/>
       <text class="t2 ta tc" x="430" y="208">② B sống lại → E gửi trả bản sao, rồi xoá bản của mình</text>
     </svg></div>
-    <figcaption>Quorum “lỏng”: đọc, ghi đi tới N node khoẻ đầu tiên trong preference list, bỏ qua node sập. B sập thì E giữ hộ bản sao kèm hint “của B” và trả lại khi B sống lại (hinted handoff), nên vẫn ghi được.</figcaption>
+    <figcaption>Quorum “lỏng”: đọc và ghi đi tới N node khoẻ đầu tiên trong preference list, bỏ qua node đang sập, nên không nhất thiết là N node đầu tiên trên vòng. B sập thì E, node kế tiếp trong danh sách, nhận bản sao kèm hint (ghi chú: bản này của B) và trả lại cho B khi B sống lại (hinted handoff). Nhờ vậy vẫn “always writeable” khi một node vắng mặt.</figcaption>
   </figure>
   <details class="deep">
     <summary>Sloppy quorum có giữ được đảm bảo R + W &gt; N không?<span class="hint">Khi có node vắng thì không</span></summary>
     <div class="deep-body">
-      <p>Không trọn vẹn. Vì bỏ qua node sập, N node được dùng không nhất thiết là N node đầu tiên trên vòng: E, node kế tiếp trong danh sách, đứng thay B. Slide gọi tính chất này là “always writeable”.</p>
-      <p>Đảm bảo “R + W &gt; N thì chạm bản mới” chỉ đúng với quorum chặt trên đúng N node đầu của preference list. Với sloppy quorum, khi có node vắng vẫn có thể đọc phải bản cũ, rồi hoà giải bằng vector clock.</p>
+      <p>Không trọn vẹn. Đảm bảo “R + W &gt; N thì chạm bản mới” chỉ đúng với quorum chặt trên đúng N node đầu của preference list. Với sloppy quorum, khi có node vắng vẫn có thể đọc phải bản cũ, rồi hoà giải bằng vector clock.</p>
     </div>
   </details>
 
   <h3 class="sec" id="b4-3-merkle">Lỗi vĩnh viễn: anti-entropy bằng Merkle tree</h3>
-  <p>Anti-entropy là tiến trình chạy nền: so hai bản sao của cùng một dải key bằng Merkle tree (cây hash: lá là hash từng key, node cha là hash các con) rồi chỉ chép phần lệch.</p>
+  <p>Anti-entropy là tiến trình chạy nền: so hai bản sao của cùng một dải key rồi chép phần lệch. Để không phải gửi cả dữ liệu qua mạng, mỗi node giữ một Merkle tree cho từng dải key nó phụ trách: lá là hash giá trị của từng key, node cha là hash của các con.</p>
   <figure class="fig">
     <div class="canvas"><svg class="dg" viewBox="0 0 720 200" role="img" aria-label="Hai Merkle tree của bản sao A và B; root và nhánh h34 khác nhau, nhánh h12 giống nhau; chỉ key k3 cần đồng bộ">
       <text class="tb tc" x="180" y="18">Bản sao A</text>
@@ -2758,15 +2750,8 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <text class="t3 fok te" x="452" y="80">giống → bỏ qua</text>
       <text class="t3 fbad" x="628" y="80">khác → xuống</text>
     </svg></div>
-    <figcaption>Root khác → xuống nhánh khác (h34) → chỉ k3 lệch, chỉ k3 phải gửi.</figcaption>
+    <figcaption>Root khác → so h12 (giống, bỏ cả nhánh) và h34 (khác) → so lá: chỉ k3 lệch, chỉ k3 phải gửi qua mạng. Mỗi nhánh kiểm được độc lập, không cần tải cả cây.</figcaption>
   </figure>
-  <details class="deep">
-    <summary>Hai node so cây từng bước ra sao, và đỡ được gì?<span class="hint">Bỏ nhánh giống; không gửi cả dữ liệu</span></summary>
-    <div class="deep-body">
-      <p>Root khác thì so tiếp h12 và h34: h12 giống nên bỏ cả nhánh, h34 khác nên xuống tới lá và thấy chỉ k3 lệch. Mỗi nhánh kiểm được độc lập, không cần tải cả cây.</p>
-      <p>Mỗi node giữ một Merkle tree cho từng dải key nó phụ trách, để không phải gửi cả dữ liệu qua mạng khi so.</p>
-    </div>
-  </details>
 
   <h3 class="sec">Phiên bản: vector clock</h3>
   <p><code>put()</code> có thể trả về trước khi mọi bản sao được cập nhật, nên <code>get()</code> có thể thấy nhiều phiên bản của cùng một object. Vector clock là danh sách cặp (node, bộ đếm) gắn với từng phiên bản, cho biết bản nào là tổ tiên của bản nào.</p>
@@ -2804,11 +2789,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       </g>
     </svg></div>
     <ol class="steps">
-      <li><b>D1.</b> Client ghi object mới qua node Sx: bộ đếm Sx là 1.</li>
-      <li><b>D2.</b> Client cập nhật, Sx lại xử lý: Sx lên 2. Mọi bộ đếm của D1 ≤ D2 nên D1 là tổ tiên, bỏ được.</li>
-      <li><b>Hai nhánh.</b> Hai client cùng cập nhật D2, một qua Sy (thành D3), một qua Sz (thành D4).</li>
-      <li><b>Xung đột.</b> D3 hơn ở Sy, D4 hơn ở Sz: không bản nào ≤ bản kia ở mọi node, nên chúng song song và <code>get()</code> trả cả hai.</li>
-      <li><b>Hoà giải.</b> Client gộp hai bản (vd gộp giỏ hàng) rồi ghi qua Sx: lấy max từng bộ đếm, tăng Sx thành 3. D5 ≥ cả D3 lẫn D4.</li>
+      <li><b>D1.</b> Client ghi object mới; node Sx xử lý, tạo D1 với clock [(Sx, 1)].</li>
+      <li><b>D2.</b> Client cập nhật, Sx lại xử lý: D2 [(Sx, 2)]. Mọi bộ đếm của D1 ≤ D2 nên D1 là tổ tiên và có thể bỏ.</li>
+      <li><b>Hai nhánh.</b> Hai client cập nhật D2 cùng lúc, một qua Sy, một qua Sz: D3 [(Sx, 2), (Sy, 1)] và D4 [(Sx, 2), (Sz, 1)].</li>
+      <li><b>Xung đột.</b> So D3 với D4: Sy là 1 &gt; 0, nhưng Sz là 0 &lt; 1. Không bản nào ≤ bản kia ở mọi node, nên chúng song song. Một node có cả hai thì <code>get()</code> trả cả hai.</li>
+      <li><b>Hoà giải.</b> Client gộp hai bản (vd gộp giỏ hàng) rồi ghi; Sx xử lý: lấy max từng bộ đếm, tăng Sx thành 3: D5 [(Sx, 3), (Sy, 1), (Sz, 1)]. D5 lớn hơn hoặc bằng cả D3 lẫn D4.</li>
     </ol>
   </figure>
   <details class="deep">
