@@ -4657,7 +4657,7 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
       <text class="t3" x="577" y="134">đủ để dựng lại</text>
     </svg></div>
     <ol class="steps">
-      <li><b>Bước 1 · Bình thường.</b> Sau <code>cache()</code>, ba partition của errorsRDD nằm trong RAM của ba worker. Spark không giữ bản sao dữ liệu này, chỉ giữ lineage: textFile rồi filter.</li>
+      <li><b>Bước 1 · Bình thường.</b> Ví dụ gọn, khác ví dụ log ở trên: errorsRDD chỉ có ba partition. Sau <code>cache()</code>, ba partition nằm trong RAM của ba worker. Spark không giữ bản sao dữ liệu này, chỉ giữ lineage: textFile rồi filter.</li>
       <li><b>Bước 2 · Hỏng.</b> Worker 3 chết, partition 3 mất. Partition 1 và 2 không bị ảnh hưởng.</li>
       <li><b>Bước 3 · Tính lại.</b> Theo lineage, partition 3 = filter(block 3). Spark đọc block 3 từ một bản sao HDFS và chạy lại filter cho riêng partition ấy trên worker còn sống.</li>
     </ol>
