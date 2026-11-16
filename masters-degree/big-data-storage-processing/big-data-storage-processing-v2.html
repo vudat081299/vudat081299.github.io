@@ -1653,7 +1653,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <summary>DataNode hỏng giữa chừng thì sao, khi nào tệp được chốt, ai được ghi?<span class="hint">Gỡ khỏi pipeline, số phiên bản block, nhân bản bù; complete; lease một người ghi</span></summary>
     <div class="deep-body">
       <p>Một DataNode hỏng giữa chừng thì bị gỡ khỏi pipeline: client dựng lại pipeline từ các node còn tốt, và các bản sao ấy được nâng lên một số phiên bản block mới (generation stamp) do NameNode cấp. Bản trên node hỏng giữ số cũ, nên khi node ấy quay lại, NameNode nhận ra đó là bản lỗi thời. Block được nhân bản bù sau cho đủ số bản.</p>
-      <p>Ở block 2, hai bản sau cùng (DN6, DN4) nằm ở rack 2. Ghi xong, client gọi <code>complete</code>; NameNode chốt tệp khi đủ số bản tối thiểu.</p>
+      <p>Ghi xong, client gọi <code>complete</code>; NameNode chốt tệp khi đủ số bản tối thiểu.</p>
       <p>Từ lúc tạo tới lúc đóng tệp, client giữ một hợp đồng thuê (lease) trên tệp, do NameNode cấp và client gia hạn định kỳ, nên mỗi tệp chỉ có một người ghi; client khác vẫn đọc được. Đóng tệp thì lease được trả lại.</p>
     </div>
   </details>
@@ -1727,10 +1727,10 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       </ul>
     </div>
   </details>
-  <div class="callout trap"><p><b>Secondary NameNode không phải NameNode dự phòng.</b> Nó chỉ làm checkpoint: NameNode chết thì Secondary không tự lên thay, và fsimage nó giữ có thể đã cũ tới một giờ. Muốn có máy thay thế ngay phải dùng NameNode HA (Active/Standby); khi ấy Standby làm luôn việc checkpoint, không chạy Secondary nữa.</p></div>
+  <div class="callout trap"><p><b>Secondary NameNode không phải NameNode dự phòng.</b> Nó chỉ làm checkpoint: NameNode chết thì Secondary không tự lên thay, và fsimage nó giữ có thể đã cũ tới một giờ. Muốn có máy thay thế ngay phải dùng NameNode HA (High Availability, sẵn sàng cao: cặp Active/Standby); khi ấy Standby làm luôn việc checkpoint, không chạy Secondary nữa.</p></div>
 
   <details class="deep">
-    <summary>Muốn có NameNode thay thế ngay thì làm sao?<span class="hint">High Availability: Active/Standby, JournalNode, ZooKeeper failover</span></summary>
+    <summary>Muốn có NameNode thay thế ngay thì làm sao?<span class="hint">Active/Standby, JournalNode, ZooKeeper failover</span></summary>
     <div class="deep-body">
       <p>Không có HA, NameNode là điểm chết duy nhất (single point of failure): nó sập là cả cụm dừng. Từ Hadoop 2 có HA với Quorum Journal Manager:</p>
       <figure class="fig">
