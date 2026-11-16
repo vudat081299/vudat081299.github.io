@@ -3807,7 +3807,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       </g>
 
       <line class="ln dash" x1="20" y1="268" x2="740" y2="268"/>
-      <text class="tm tc" x="75" y="290">(K, V)</text><text class="t3 tc" x="75" y="308">K = offset dòng</text>
+      <text class="tm tc" x="75" y="290">(K, V)</text><text class="t3 tc" x="75" y="308">K = offset byte</text>
       <text class="tm tc" x="225" y="290">(K′, V′)</text><text class="t3 tc" x="225" y="308">ghi ra đĩa cục bộ</text>
       <text class="tm tc" x="380" y="290">K′ → [V′, V′, …]</text><text class="t3 tc" x="380" y="308">cùng key, cùng reducer</text>
       <text class="tm tc" x="535" y="290">(K″, V″)</text><text class="t3 tc" x="535" y="308">gọi reduce mỗi key</text>
@@ -4001,7 +4001,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <summary>Viết mapper, partitioner, reducer cho sort thế nào?<span class="hint">Vì sao partitioner băm thường không dùng được</span></summary>
     <div class="deep-body">
   <ul>
-    <li><b>Mapper:</b> (k, v) → (v, _). Input key là (tên file, số dòng), value là nội dung dòng.</li>
+    <li><b>Mapper:</b> (k, v) → (v, _). Input key là offset byte của dòng trong file (slide viết là (tên file, số dòng)), value là nội dung dòng; mapper bỏ key.</li>
     <li><b>Partitioner:</b> phải giữ thứ tự: k1 &lt; k2 ⇒ partition(k1) ≤ partition(k2). Slide gọi nó là hàm băm, nhưng hàm băm thường trộn thứ tự, nên phải chọn hàm chia theo khoảng phù hợp với dữ liệu (Hadoop có sẵn TotalOrderPartitioner, lấy mẫu key để đặt ranh giới).</li>
     <li><b>Reducer:</b> hàm đồng nhất (k′, _) → (k′, ""). Việc sắp xếp do shuffle &amp; sort làm.</li>
   </ul>
@@ -4009,7 +4009,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
 
   <h3 class="sec">Search: grep phân tán</h3>
-  <p>Input là các file văn bản và một mẫu cần tìm, gửi cho mapper như tham số. Mapper nhận (tên file, dòng); dòng khớp mẫu thì phát (tên file, _). Reducer là hàm đồng nhất.</p>
+  <p>Input là các file văn bản và một mẫu cần tìm, gửi cho mapper như tham số. Mapper đọc từng dòng (key vẫn là offset byte, value là nội dung dòng) và biết dòng thuộc file nào; dòng khớp mẫu thì phát (tên file, _). Reducer là hàm đồng nhất.</p>
   <details class="deep">
     <summary>Một file khớp nhiều dòng thì sao?<span class="hint">Tối ưu bằng combiner</span></summary>
     <div class="deep-body">
