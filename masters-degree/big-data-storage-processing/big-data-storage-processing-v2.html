@@ -4209,7 +4209,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <h3 class="sec">PageRank: chia hạng cho láng giềng, cộng lại, lặp</h3>
   <p>PageRank là xác suất một người lướt web ngẫu nhiên (bấm link, thỉnh thoảng gõ một URL bất kỳ) đang đứng ở một trang. Trang được nhiều trang có hạng cao trỏ tới thì hạng cao.</p>
   <p style="text-align:center;font-family:var(--mono);font-size:14.5px">PR(A) = (1 − d) + d · ( PR(T<sub>1</sub>)/C(T<sub>1</sub>) + … + PR(T<sub>n</sub>)/C(T<sub>n</sub>) )</p>
-  <p>T<sub>1</sub>…T<sub>n</sub> là các trang trỏ tới A, C(P) là số link ra của P, d là hệ số damping (thường 0.85): người lướt bấm tiếp một link với xác suất d, nhảy tới một trang ngẫu nhiên với xác suất 1 − d. PR<sub>i+1</sub> tính từ PR<sub>i</sub>: map chia hạng của mỗi trang đều cho các trang nó trỏ tới, reduce cộng các mảnh nhận được.</p>
+  <p>T<sub>1</sub>…T<sub>n</sub> là các trang trỏ tới A, C(P) là số link ra của P, d là hệ số damping (thường 0.85): người lướt bấm tiếp một link với xác suất d, nhảy tới một trang ngẫu nhiên với xác suất 1 − d. PR<sub>i+1</sub> tính từ PR<sub>i</sub>: map chia hạng của mỗi trang đều cho các trang nó trỏ tới, reduce cộng các mảnh nhận được. Như ở BFS, mapper còn phát (URL, url_list), với url_list là danh sách trang mà URL trỏ tới, để reducer ghi lại cấu trúc đồ thị cho vòng sau.</p>
   <p>Ở dạng này, khi trang nào cũng có link ra, tổng hạng bằng số trang N, nên PR lớn hơn 1 là bình thường; chia cho N mới ra xác suất người lướt web đứng ở trang đó.</p>
   <details class="deep">
     <summary>Slide gọi d là gì, và vì sao sách khác ra tổng bằng 1?<span class="hint">Hai dạng công thức PageRank</span></summary>
