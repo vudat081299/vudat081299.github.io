@@ -3013,7 +3013,6 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <li>Thu 2012: bắt đầu ở Facebook; đầu 2013: chạy production; 11/2013: mở mã nguồn (slide ghi đông 2013)</li>
         <li>2013 tại Facebook: nhiều vùng địa lý, 1.000 node, hơn 1.000 nhân viên chạy hơn 30.000 truy vấn mỗi ngày, xử lý 1 PB/ngày</li>
         <li>2019: hơn 300 người đóng góp</li>
-        <li>MapReduce và Hive vẫn dùng cho ETL</li>
       </ul>
     </div>
   </div>
@@ -3260,6 +3259,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <h4>Cái giá (theo slide)</h4>
       <ul>
         <li>Một task lỗi thì cả truy vấn lỗi, không chạy lại từng phần như MapReduce</li>
+        <li>Job ETL dài (Extract, Transform, Load: trích, biến đổi rồi nạp dữ liệu vào kho) vẫn để MapReduce và Hive chạy</li>
         <li>Dữ liệu gộp không vừa RAM thì truy vấn lỗi; worker vẫn sống vì bộ nhớ mọi truy vấn được quản lý</li>
       </ul>
     </div>
