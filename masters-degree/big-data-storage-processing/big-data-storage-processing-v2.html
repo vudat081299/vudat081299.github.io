@@ -2952,13 +2952,13 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <a href="#b4-6-pushdown"><rect class="bx" x="516" y="338" width="96" height="46" rx="8"/><text class="t2 tb tc" x="564" y="357">Pushdown</text><text class="t3 tc" x="564" y="374">lọc tại nguồn</text></a>
       <a href="#b4-6-mem"><rect class="bx" x="618" y="338" width="96" height="46" rx="8"/><text class="t2 tb tc" x="666" y="357">Trong RAM</text><text class="t3 tc" x="666" y="374">không ghi đĩa</text></a>
     </svg></div>
-    <figcaption>Ba loại máy chủ: coordinator, worker, discovery service. Dữ liệu và metadata đều đi qua connector (plugin), nên thêm một nguồn mới là viết thêm một connector. Dải dưới là lộ trình bài.</figcaption>
+    <figcaption>Ba loại máy chủ: coordinator, worker, discovery service; client gửi SQL qua CLI hoặc JDBC/ODBC (Java / Open Database Connectivity, chuẩn để ứng dụng và BI tool, tức công cụ báo cáo, nối vào CSDL). Dữ liệu và metadata đều đi qua connector (plugin), nên thêm một nguồn mới là viết thêm một connector. Dải dưới là lộ trình bài.</figcaption>
   </figure>
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
   <div class="keys two">
     <article class="key"><h3><span class="ix">01</span>Không phải CSDL</h3><p>Presto không có kho lưu riêng. Nó đem SQL (ANSI) tới các kho đã có.</p></article>
-    <article class="key"><h3><span class="ix">02</span>Coordinator</h3><p>Nhận SQL qua HTTP + JSON, phân tích, lập kế hoạch, chia việc cho worker, kéo kết quả từ worker rồi trả client (slide vẽ client lấy thẳng từ worker). Chỉ có một coordinator nên nó là điểm hỏng duy nhất; slide vẽ thêm phương án HA (high availability) với hai coordinator.</p></article>
+    <article class="key"><h3><span class="ix">02</span>Coordinator</h3><p>Nhận SQL qua HTTP + JSON, phân tích, lập kế hoạch, chia việc cho worker, kéo kết quả từ worker rồi trả client (slide vẽ client lấy thẳng từ worker). Bản gốc (và Trino ngày nay) chỉ có một coordinator nên nó là điểm hỏng duy nhất; slide vẽ thêm phương án HA (high availability) với hai coordinator.</p></article>
     <article class="key"><h3><span class="ix">03</span>Worker</h3><p>Chạy task trong bộ nhớ, đọc dữ liệu qua connector, trao đổi kết quả trung gian với worker khác.</p></article>
     <article class="key"><h3><span class="ix">04</span>Discovery service</h3><p>Danh bạ của cụm: worker khởi động thì đăng ký và báo còn sống. Coordinator hỏi nó để biết worker nào giao task được.</p></article>
     <article class="key"><h3><span class="ix">05</span>Connector</h3><p>Plugin viết bằng Java: đưa schema bảng cho coordinator, đưa hàng dữ liệu cho worker.</p></article>
@@ -2966,7 +2966,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </div>
 
   <h3 class="sec" id="b4-6-why">Vì sao Facebook viết Presto</h3>
-  <p>Presto ra đời để dashboard hỏi thẳng dữ liệu bằng SQL, trả lời từ mili giây tới vài phút, thay cho đường đi vòng qua Hive.</p>
+  <p>Presto ra đời để dashboard hỏi thẳng dữ liệu bằng SQL, thay cho đường đi vòng qua Hive.</p>
   <figure class="fig">
     <div class="canvas"><svg class="dg" viewBox="0 0 720 226" role="img" aria-label="Trước Presto: dữ liệu MySQL, Cassandra phải chép vào HDFS, Hive chạy batch rồi chép kết quả sang CSDL tương tác cho dashboard. Với Presto: dashboard gửi SQL tới Presto, Presto đọc thẳng HDFS, MySQL, Cassandra">
       <text class="t3" x="20" y="20">Trước: chép qua chép lại</text>
@@ -2994,20 +2994,20 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <rect class="bxa" x="600" y="170" width="100" height="36" rx="8"/><text class="tc" x="650" y="193">Cassandra</text>
       </g>
     </svg></div>
-    <figcaption>Hive quá chậm cho dashboard, ODBC chập chờn; kết quả batch phải chép sang một CSDL tương tác đắt và khó mở rộng; dữ liệu ngoài HDFS phải chép vào HDFS mới phân tích được. Dashboard chỉ thấy bản chép theo ngày, không hỏi thẳng dữ liệu mới nhất, và phải vận hành hai nền tảng (batch, trực quan hoá).</figcaption>
+    <figcaption>Đường cũ: dữ liệu nằm ba nơi và bị chép ở hai chỗ, nên dashboard chỉ thấy bản chép theo ngày.</figcaption>
   </figure>
 
   <details class="deep">
-    <summary>Presto làm được gì, ra đời khi nào, chạy lớn tới đâu?<span class="hint">ODBC/JDBC, nhiều nguồn trong một truy vấn; 1.000 node, 1 PB/ngày năm 2013</span></summary>
+    <summary>Đường cũ vướng ở đâu, Presto gỡ thế nào, chạy lớn tới đâu?<span class="hint">Hive chậm, chép sang CSDL đắt; 1 PB/ngày năm 2013</span></summary>
     <div class="deep-body">
   <div class="vs">
     <div>
-      <h4>Presto làm được</h4>
+      <h4>Đường cũ vướng, Presto gỡ</h4>
       <ul>
-        <li>SQL ANSI, trả lời từ mili giây tới vài phút</li>
-        <li>Kết nối ODBC/JDBC ổn định cho BI tool, dashboard</li>
-        <li>Một truy vấn đọc nhiều nguồn: Hive, HBase, Cassandra, CSDL thương mại</li>
-        <li>Gộp phân tích batch và trực quan hoá vào một nền tảng</li>
+        <li>Hive quá chậm cho dashboard, ODBC chập chờn: Presto có kết nối ODBC/JDBC ổn định cho BI tool, dashboard</li>
+        <li>Kết quả batch phải chép sang một CSDL tương tác đắt, khó mở rộng: Presto hỏi thẳng dữ liệu mới nhất</li>
+        <li>Dữ liệu ngoài HDFS phải chép vào HDFS mới phân tích được: một truy vấn Presto đọc nhiều nguồn (Hive, HBase, Cassandra, CSDL thương mại)</li>
+        <li>Phải vận hành hai nền tảng (batch, trực quan hoá): Presto gộp vào một</li>
       </ul>
     </div>
     <div>
@@ -3041,7 +3041,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
 
   <h3 class="sec">Mô hình thực thi: query → stage → task → split</h3>
-  <p>Presto không phải MapReduce: kế hoạch là một DAG (đồ thị có hướng không chu trình: các bước nối một chiều, không quay vòng), gần với Apache Tez hay CSDL MPP (xử lý song song quy mô lớn) truyền thống. Hình dưới theo một câu SQL từ kế hoạch tới stage, task và split.</p>
+  <p>Presto không phải MapReduce: kế hoạch là một DAG (đồ thị có hướng không chu trình: các bước nối một chiều, không quay vòng).</p>
   <figure class="fig stepper" id="b4-6-exec">
     <p class="fig-t">Một câu GROUP BY đi qua bốn tầng</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 340" role="img" aria-label="Câu SELECT orderstatus, SUM(totalprice) FROM orders GROUP BY orderstatus thành logical plan ba bước, chia thành ba stage, mỗi stage thành task trên worker, stage lá nhận split, dữ liệu chảy qua shuffle lên stage trên">
@@ -3099,36 +3099,31 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <ol class="steps">
       <li><b>Logical plan.</b> Coordinator phân tích SQL thành cây toán tử: Scan → Aggregate → Output.</li>
       <li><b>Stage.</b> Planner cắt cây ở những chỗ cần trao đổi dữ liệu giữa máy (shuffle). Mỗi stage là một phần kế hoạch chạy song song trên nhiều worker: cùng phép tính, khác dữ liệu đầu vào.</li>
-      <li><b>Task.</b> Coordinator giao mỗi stage cho worker dưới dạng task: một task thuộc một stage, chạy trên một worker. Trong task là các pipeline, mỗi pipeline là một chuỗi toán tử.</li>
-      <li><b>Split.</b> Stage lá đọc dữ liệu theo split: tay cầm mờ trỏ tới một đoạn dữ liệu, như đường dẫn file HDFS cộng offset. Split được giao dần trong lúc chạy.</li>
-      <li><b>Chảy liên tục.</b> Task stage 2 gộp sơ bộ (partial aggregation), toán tử Sink băm theo orderstatus gửi lên stage 1, kiểu phân lại theo key (REPARTITION); Exchange của stage 1 (toán tử nhận dữ liệu từ stage khác) nhận, gộp cuối (final aggregation) rồi gom về một (GATHER) ở stage 0, từ đó kết quả về client. Dữ liệu đi qua bộ đệm trong RAM, các stage chạy cùng lúc.</li>
+      <li><b>Task.</b> Coordinator giao mỗi stage cho worker dưới dạng task: một task thuộc một stage, chạy trên một worker.</li>
+      <li><b>Split.</b> Stage lá (stage đọc dữ liệu qua connector) đọc theo split: tay cầm mờ trỏ tới một đoạn dữ liệu, như đường dẫn file HDFS cộng offset.</li>
+      <li><b>Chảy liên tục.</b> Task stage 2 gộp sơ bộ rồi băm theo orderstatus gửi lên stage 1; Exchange của stage 1 (toán tử nhận dữ liệu từ stage khác) gộp cuối rồi gom về stage 0 để trả client. Dữ liệu đi qua bộ đệm trong RAM, các stage chạy cùng lúc.</li>
     </ol>
   </figure>
   <div class="callout trap"><p><b>Shuffle có giá.</b> Mỗi lần trao đổi giữa stage thêm độ trễ, chiếm bộ đệm và tốn CPU. Planner cố giảm số stage.</p></div>
   <details class="deep">
-    <summary>Coordinator biến SQL thành task qua những bước nào?<span class="hint">Parser, logical planner, distributed planner, execution planner</span></summary>
+    <summary>Coordinator cắt stage qua những bước nào, dữ liệu đổi chỗ giữa stage ra sao?<span class="hint">Bốn bước trong coordinator; REPARTITION, GATHER</span></summary>
     <div class="deep-body">
-  <p>Trong coordinator, câu SQL đi qua bốn bước:</p>
+  <p>Việc cắt stage là của distributed planner, bước thứ ba trong bốn bước câu SQL đi qua trong coordinator:</p>
   <ol>
     <li><b>SQL parser</b> dựng cây cú pháp (AST, abstract syntax tree).</li>
     <li><b>Logical planner</b> hỏi metadata (schema bảng) qua connector, chạy optimizer, ra logical plan.</li>
-    <li><b>Distributed planner</b> chèn toán tử Exchange (nhận dữ liệu từ stage khác) vào chỗ cần trao đổi giữa máy, cắt plan thành stage.</li>
+    <li><b>Distributed planner</b> chèn Exchange vào mỗi chỗ shuffle: đó là ranh giới stage ở bước 2 của hình.</li>
     <li><b>Execution planner</b> lấy danh sách node từ discovery service để đặt task lên worker.</li>
   </ol>
-  <p>Trên worker, bộ lập lịch chạy task bằng nhiều luồng: mỗi split do một luồng xử lý, nên một task ở stage lá chạy nhiều split song song.</p>
+  <p>Ở bước 5 của hình, stage 2 gộp sơ bộ (partial aggregation), rồi toán tử Sink băm theo orderstatus và phân lại theo key (REPARTITION) sang các task stage 1. Stage 1 gộp cuối (final aggregation) rồi gom về một chỗ (GATHER) ở stage 0.</p>
+  <p>Trong mỗi task là các pipeline, mỗi pipeline là một chuỗi toán tử. Trên worker, bộ lập lịch chạy task bằng nhiều luồng: mỗi split do một luồng xử lý, nên một task ở stage lá chạy nhiều split song song.</p>
+  <p>So với hệ khác, mô hình DAG của Presto gần với Apache Tez hay CSDL MPP (xử lý song song quy mô lớn) truyền thống.</p>
     </div>
   </details>
 
   <h3 class="sec" id="b4-6-sched">Lập lịch stage và task</h3>
-  <p>Để chạy một truy vấn, scheduler ra hai nhóm quyết định: lập lịch stage nào lúc nào (all-at-once hay phased), và bao nhiêu task, đặt ở worker nào. Stage lá (stage đọc dữ liệu qua connector) thường được một task trên mỗi worker: giải nén, giải mã, lọc dữ liệu chiếm phần lớn CPU và chia song song được, nên càng nhiều máy càng xong sớm.</p>
-  <details class="deep">
-    <summary>Khi nào stage lá không trải lên mọi worker, và stage trung gian có bao nhiêu task?<span class="hint">Ràng buộc của connector; số task stage trung gian</span></summary>
-    <div class="deep-body">
-      <p>Stage lá chỉ trải lên mọi worker khi không vướng ràng buộc và dữ liệu chia được đủ split. Nếu không, nó bám ràng buộc của mạng và connector: triển khai shared-nothing buộc task nằm cùng máy với dữ liệu, và scheduler có thể ưu tiên đọc trong cùng rack.</p>
-      <p>Stage trung gian chỉ xử lý kết quả của stage khác nên đặt ở worker nào cũng được. Số task của nó tuỳ cấu hình connector, tính chất của plan, layout dữ liệu cần và cấu hình triển khai; có lúc engine đổi số task ngay khi đang chạy.</p>
-    </div>
-  </details>
-  <p>Ví dụ dưới là một hash join: stage <b>build</b> quét bảng nhỏ và gửi dòng sang stage <b>join</b>, nơi task join dựng bảng băm trong RAM; stage <b>probe</b> quét bảng lớn và gửi dòng sang để join dò vào bảng băm. Join chỉ dò được khi bảng băm đã dựng xong.</p>
+  <p>Để chạy một truy vấn, scheduler quyết định hai việc: stage nào chạy lúc nào (all-at-once hay phased), và mỗi stage bao nhiêu task, đặt ở worker nào.</p>
+  <p>Ví dụ dưới là một hash join: stage <b>build</b> quét bảng nhỏ để stage <b>join</b> dựng bảng băm trong RAM; stage <b>probe</b> quét bảng lớn để join dò vào bảng băm, nên join chỉ dò được khi bảng băm đã xong.</p>
   <figure class="fig">
     <p class="fig-t">Hai chính sách lập lịch stage cho cùng một hash join, chung trục thời gian</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 312" role="img" aria-label="Hai biểu đồ thời gian cùng trục. All-at-once: mọi stage được lập lịch ngay; probe đọc trước vào bộ đệm trong lúc build chạy, join và output giữ chỗ chờ; truy vấn xong ở mốc sớm hơn. Phased: probe, join, output chỉ được lập lịch sau khi build xong nên không giữ bộ nhớ khi chờ, nhưng truy vấn xong muộn hơn">
@@ -3162,18 +3157,27 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <path class="ln dash" d="M240 28 V80 M240 96 V286" style="stroke-width:1"/><text class="t3" x="244" y="162">build xong</text>
       <path class="ln" d="M140 298 H704" marker-end="url(#ah)"/><text class="t3 te" x="704" y="310">thời gian</text>
     </svg></div>
-    <figcaption>Cùng một hash join, chung trục thời gian. <b>All-at-once</b> lập lịch mọi stage ngay: probe đọc trước trong lúc build chạy, join bắt đầu ngay khi bảng băm xong, nên truy vấn xong sớm hơn; hợp truy vấn tương tác, A/B testing. <b>Phased</b> lập lịch probe, join, output chỉ sau khi build xong: không task nào ngồi giữ bộ nhớ (khung đứt), đổi lại xong muộn hơn; hợp phân tích batch.</figcaption>
+    <figcaption><b>All-at-once</b> lập lịch mọi stage ngay: probe đọc trước trong lúc build chạy, nên truy vấn xong sớm hơn; hợp truy vấn tương tác. <b>Phased</b> lập lịch probe, join, output chỉ sau khi build xong: không task nào ngồi giữ bộ nhớ (khung đứt), đổi lại xong muộn hơn; hợp phân tích batch.</figcaption>
   </figure>
+  <details class="deep">
+    <summary>Còn việc thứ hai: mỗi stage bao nhiêu task, đặt ở worker nào?<span class="hint">Stage lá: một task mỗi worker, trừ khi vướng connector; stage trung gian</span></summary>
+    <div class="deep-body">
+      <p>Stage lá thường được một task trên mỗi worker: giải nén, giải mã, lọc dữ liệu chiếm phần lớn CPU và chia song song được, nên càng nhiều máy càng xong sớm. Điều đó chỉ đúng khi không vướng ràng buộc và dữ liệu chia được đủ split.</p>
+      <p>Nếu vướng, stage lá bám ràng buộc của mạng và connector: triển khai shared-nothing buộc task nằm cùng máy với dữ liệu, và scheduler có thể ưu tiên đọc trong cùng rack.</p>
+      <p>Stage trung gian chỉ xử lý kết quả của stage khác nên đặt ở worker nào cũng được. Số task của nó tuỳ cấu hình connector, tính chất của plan, layout dữ liệu cần và cấu hình triển khai; có lúc engine đổi số task ngay khi đang chạy.</p>
+    </div>
+  </details>
+
   <h3 class="sec" id="b4-6-split">Lập lịch split</h3>
-  <p>Split trỏ tới một đoạn dữ liệu ở kho ngoài (vd đường dẫn file HDFS + offset) hoặc kết quả trung gian của worker khác. Split được liệt kê trong lúc truy vấn chạy, không liệt kê hết từ đầu, và giao lười cho task có hàng đợi ngắn nhất.</p>
+  <p>Ngoài đoạn dữ liệu ở kho ngoài, split còn có thể trỏ tới kết quả trung gian của worker khác. Split được liệt kê dần trong lúc truy vấn chạy, không liệt kê hết từ đầu, và giao lười cho task có hàng đợi ngắn nhất.</p>
   <div class="callout idea"><p><b>Split giao lười có ba lợi.</b> Truy vấn trả kết quả trước khi đọc hết dữ liệu (vd có LIMIT); coordinator không phải giữ metadata của mọi split trong RAM; worker nhanh tự nhận nhiều việc hơn.</p></div>
 
   <h3 class="sec">Tối ưu truy vấn</h3>
-  <p>Optimizer dùng tính chất vật lý của dữ liệu (data layout), và đẩy điều kiện lọc xuống tận connector (predicate pushdown) để khỏi đọc dữ liệu không thể khớp.</p>
+  <p>Optimizer dùng data layout (tính chất vật lý của dữ liệu: phân vùng, sắp xếp, nhóm, chỉ mục), và đẩy điều kiện lọc xuống tận connector (predicate pushdown) để khỏi đọc dữ liệu không thể khớp.</p>
   <details class="deep">
-    <summary>Data layout gồm gì, và optimizer chọn layout ra sao?<span class="hint">Phân vùng, sắp xếp, nhóm, chỉ mục</span></summary>
+    <summary>Một bảng có mấy layout, optimizer chọn cái nào?<span class="hint">Nhiều layout, mỗi layout một phần cột hoặc dòng</span></summary>
     <div class="deep-body">
-      <p>Tính chất vật lý gồm phân vùng, sắp xếp, nhóm, chỉ mục. Một bảng có thể có nhiều layout, mỗi layout giữ một phần cột hoặc dòng; optimizer chọn layout hợp nhất với truy vấn.</p>
+      <p>Một bảng có thể có nhiều layout, mỗi layout giữ một phần cột hoặc dòng; optimizer chọn layout hợp nhất với truy vấn.</p>
     </div>
   </details>
   <figure class="fig" id="b4-6-pushdown">
@@ -3253,7 +3257,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <div>
       <h4>Cách chạy</h4>
       <ul>
-        <li>SQL thành stage, task, split; mọi task chạy song song</li>
+        <li>Mọi task chạy song song</li>
         <li>Không chờ giữa các stage (pipelined)</li>
         <li>Truyền dữ liệu bộ nhớ sang bộ nhớ, không ghi đĩa</li>
       </ul>
@@ -3262,20 +3266,21 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <h4>Cái giá (theo slide)</h4>
       <ul>
         <li>Một task lỗi thì cả truy vấn lỗi, không chạy lại từng phần như MapReduce</li>
-        <li>Job ETL dài (Extract, Transform, Load: trích, biến đổi rồi nạp dữ liệu vào kho) vẫn để MapReduce và Hive chạy</li>
-        <li>Dữ liệu gộp không vừa RAM thì truy vấn lỗi; worker vẫn sống vì bộ nhớ mọi truy vấn được quản lý</li>
+        <li>Job ETL dài (Extract, Transform, Load: trích, biến đổi, nạp vào kho) vẫn để MapReduce và Hive chạy</li>
+        <li>Dữ liệu gộp không vừa RAM thì truy vấn lỗi</li>
       </ul>
     </div>
   </div>
   <details class="deep">
-    <summary>Sau thời điểm slide: hai cái giá ấy còn không?<span class="hint">Trino và PrestoDB; spill ra đĩa, chạy chịu lỗi</span></summary>
+    <summary>Sau thời điểm slide, Presto đã đổi gì?<span class="hint">Spill ra đĩa, chạy chịu lỗi; Trino và PrestoDB; discovery, nhiều coordinator</span></summary>
     <div class="deep-body">
-      <p>Năm 2019 nhóm tác giả gốc tách nhánh PrestoSQL, đổi tên thành Trino năm 2020; nhánh Facebook là PrestoDB. Cả hai đã thêm spill ra đĩa cho join và aggregation lớn, và có cách chạy job dài chịu lỗi (Trino: fault-tolerant execution, chạy lại task hỏng; PrestoDB: Presto on Spark). Discovery service nay nằm sẵn trong coordinator; PrestoDB có chế độ nhiều coordinator, Trino vẫn một.</p>
+      <p>Cái giá trên phần lớn đã được gỡ: các bản sau thêm spill ra đĩa cho join và aggregation lớn, và có cách chạy job dài chịu lỗi (Trino: fault-tolerant execution, chạy lại task hỏng; PrestoDB: Presto on Spark). Ngay ở bản theo slide, truy vấn hết RAM chỉ làm chính nó lỗi: worker vẫn sống vì bộ nhớ mọi truy vấn được quản lý.</p>
+      <p>Trino và PrestoDB là hai nhánh: năm 2019 nhóm tác giả gốc tách nhánh PrestoSQL, đổi tên thành Trino năm 2020; nhánh Facebook là PrestoDB. Kiến trúc cũng đổi: discovery service nay nằm sẵn trong coordinator; PrestoDB có chế độ nhiều coordinator, Trino vẫn một.</p>
     </div>
   </details>
 
   <details class="deep">
-    <summary>Các benchmark trên slide đo gì?<span class="hint">Qubole, Netflix, Cloudera, ORC reader — chỉ ghi lại thiết lập</span></summary>
+    <summary>Các benchmark trên slide đo gì?<span class="hint">Qubole, Netflix, Cloudera, ORC reader</span></summary>
     <div class="deep-body">
       <ul>
         <li><b>Netflix:</b> ba truy vấn (một group-by, một join kèm group-by, một “needle in a haystack” quét bảng) trên file Parquet ở S3, 140–210 GB, cụm 40 node m2.4xlarge.</li>
