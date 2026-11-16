@@ -1358,7 +1358,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <div class="deep-body">
   <figure class="fig" id="b3-1-fig-cache">
     <p class="fig-t">Cache đặt ở đâu</p>
-    <div class="canvas"><svg class="dg" viewBox="0 0 720 190" role="img" aria-label="Bốn chỗ có thể giữ dữ liệu tệp. Phía client: RAM client nhanh nhất, máy không đĩa vẫn dùng được, nhưng tranh RAM với bộ nhớ ảo; đĩa client cache được tệp lớn và chạy được khi mất mạng. Phía server: RAM server tránh đọc đĩa nhưng vẫn chịu trễ mạng; đĩa server là bản gốc.">
+    <div class="canvas"><svg class="dg" viewBox="0 0 720 190" role="img" aria-label="Bốn chỗ có thể giữ dữ liệu tệp. Phía client: RAM client nhanh nhất, máy không đĩa vẫn dùng được, nhưng tranh RAM với bộ nhớ ảo; đĩa client cache được tệp lớn, quản lý bộ nhớ ảo đơn giản hơn và chạy được khi mất mạng. Phía server: RAM server tránh đọc đĩa nhưng vẫn chịu trễ mạng; đĩa server là bản gốc.">
       <rect class="grp" x="10" y="20" width="340" height="160" rx="12"/>
       <text x="180" y="40" class="tb tc">Máy client</text>
       <rect class="bxa" x="20" y="52" width="158" height="116" rx="8"/>
@@ -1450,7 +1450,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <h3>Tự kiểm tra</h3>
     <details><summary>Theo session semantics, B mở tệp trước, A ghi rồi close, sau đó B đọc mà không mở lại. B thấy giá trị nào?</summary><p>Giá trị cũ. Bản ghi của A chỉ hiện ra cho các phiên mở sau khi A close; phiên của B mở trước đó.</p></details>
     <details><summary>Tên <code>/home/a.txt</code> có được mount từ <code>server1</code>. Nó trong suốt vị trí không? Độc lập vị trí không?</summary><p>Trong suốt: tên không lộ máy. Chưa độc lập: dời tệp sang máy khác phải sửa bảng mount ở các client.</p></details>
-    <details><summary>Cache trên đĩa client có lợi gì mà cache trong RAM client không có?</summary><p>Chứa được tệp lớn, sống qua lần khởi động lại, và cho máy làm việc tiếp khi mất mạng.</p></details>
+    <details><summary>Cache trên đĩa client có lợi gì mà cache trong RAM client không có?</summary><p>Chứa được tệp lớn, quản lý bộ nhớ ảo đơn giản hơn vì cache không tranh RAM với bộ nhớ ảo, và cho máy làm việc tiếp khi mất mạng.</p></details>
     <details><summary>Write-through có giải quyết được bài toán nhất quán cache không?</summary><p>Không hẳn. Nó giữ server luôn mới, nhưng client khác vẫn có thể đọc bản cũ trong cache của chính họ. Cần thêm callback hoặc kiểm tra phiên bản khi open.</p></details>
     <details><summary>Ngữ nghĩa nào dễ cài đặt nhất, và vì sao?</summary><p>Immutable shared files: tệp không bao giờ bị sửa, nên mọi bản sao và mọi cache luôn đúng; không có gì để đồng bộ.</p></details>
   </div>
