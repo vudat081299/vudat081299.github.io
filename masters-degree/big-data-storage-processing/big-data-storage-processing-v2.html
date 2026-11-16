@@ -1243,7 +1243,12 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <div class="callout trap"><p><b>Một chiều thôi.</b> Độc lập vị trí kéo theo trong suốt vị trí, nhưng ngược lại thì không. Tệp mount từ <code>server1</code> vào <code>/home</code> là trong suốt; dời nó sang <code>server2</code> thì phải sửa bảng mount ở mọi client, nên chưa độc lập.</p></div>
 
   <h3 class="sec">Kiến trúc</h3>
-  <p>Có ba cách tổ chức: client–server (nhiều client nối tới một file server, như NFS), cluster-based (master giữ metadata, dữ liệu đi thẳng giữa client và các chunkserver, như GFS, HDFS) và đối xứng (các peer ngang hàng, không có máy chủ trung tâm).</p>
+  <p>Có ba cách tổ chức:</p>
+  <ul>
+    <li>Client–server: nhiều client nối tới một file server, như NFS (Network File System).</li>
+    <li>Cluster-based: master giữ metadata, dữ liệu đi thẳng giữa client và các chunkserver (máy chứa dữ liệu), như GFS, HDFS.</li>
+    <li>Đối xứng (P2P, peer-to-peer): các peer ngang hàng, không có máy chủ trung tâm, như Ivy trên Chord DHT (bảng băm phân tán, các peer xếp thành vòng).</li>
+  </ul>
   <figure class="fig" id="b3-1-fig-arch">
     <p class="fig-t">Ba cách tổ chức một hệ thống tệp phân tán</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 240" role="img" aria-label="Ba kiến trúc. Client–server như NFS: nhiều client nối tới một file server. Cluster-based như GFS và HDFS: client hỏi master về metadata rồi đọc ghi thẳng với các chunkserver. Đối xứng như Ivy trên Chord DHT: các peer xếp thành vòng, không có máy chủ trung tâm.">
@@ -1285,13 +1290,19 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text x="605" y="132" class="t2 tc">DHT</text>
       <text x="605" y="228" class="t2 tc">không có máy chủ trung tâm</text>
     </svg></div>
-    <figcaption>Slide xếp GFS chung nhóm client–server; nhiều giáo trình (Tanenbaum) tách riêng nhóm <b>cluster-based</b> vì điểm khác cốt lõi: master chỉ giữ metadata, dữ liệu đi thẳng giữa client và chunkserver. HDFS đi theo lối này (<a href="#b3-3">bài 3.3</a>).</figcaption>
+    <figcaption>HDFS đi theo lối <b>cluster-based</b> (<a href="#b3-3">bài 3.3</a>).</figcaption>
   </figure>
+  <details class="deep">
+    <summary>Slide xếp GFS vào nhóm nào?<span class="hint">Client–server trong slide, cluster-based theo Tanenbaum</span></summary>
+    <div class="deep-body">
+      <p>Slide xếp GFS chung nhóm client–server; nhiều giáo trình (Tanenbaum) tách riêng nhóm cluster-based vì điểm khác cốt lõi: master chỉ giữ metadata, dữ liệu không đi qua nó.</p>
+    </div>
+  </details>
 
   <h3 class="sec">Vấn đề 1 · Đặt tên và phân giải tên</h3>
-  <p>Không gian tên là tập mọi tên; phân giải tên là ánh xạ một tên tới đối tượng thật. Có ba cách truyền thống: ghép tên máy vào tên tệp, mount thư mục xa vào cây cục bộ, hoặc dùng một thư mục toàn cục duy nhất. Chỉ cách thứ ba có thể cho độc lập vị trí.</p>
+  <p>Không gian tên là tập mọi tên; phân giải tên là ánh xạ một tên tới đối tượng thật. Trong các cách đặt tên truyền thống, chỉ một thư mục toàn cục duy nhất, như của AFS (Andrew File System), mới có thể cho độc lập vị trí.</p>
   <details class="deep">
-    <summary>Ba cách đặt tên: ví dụ, và cách nào trong suốt?<span class="hint">server1:/home/a.txt, mount kiểu NFS, thư mục toàn cục kiểu AFS, HDFS</span></summary>
+    <summary>Có những cách đặt tên nào, cách nào trong suốt?<span class="hint">Ghép tên máy, mount kiểu NFS, thư mục toàn cục kiểu AFS, HDFS</span></summary>
     <div class="deep-body">
   <div class="tbl"><table>
     <thead><tr><th>Cách</th><th>Ví dụ</th><th>Trong suốt?</th></tr></thead>
@@ -1305,7 +1316,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
 
   <h3 class="sec">Vấn đề 2 · Ngữ nghĩa chia sẻ tệp</h3>
-  <p>Hai tiến trình cùng mở một tệp, một bên ghi, bên kia đọc: bên đọc thấy gì? Ngữ nghĩa chia sẻ là lời hứa của hệ thống về thứ tự đọc ghi đồng thời, tức là mức nhất quán. Giả định mỗi phiên là open, đọc ghi, close.</p>
+  <p>Hai tiến trình cùng mở một tệp, một bên ghi, bên kia đọc: bên đọc thấy gì? Ngữ nghĩa chia sẻ là lời hứa của hệ thống về thứ tự đọc ghi đồng thời, tức là mức nhất quán.</p>
   <p>Có bốn kiểu: UNIX (bản ghi hiện ra ngay với mọi người đang mở tệp), session (chỉ phiên mở sau khi người ghi close mới thấy), immutable shared files (tệp chia sẻ không sửa được) và transaction (tất cả hoặc không gì cả).</p>
   <figure class="fig" id="b3-1-fig-sem">
     <p class="fig-t">Cùng một kịch bản, hai ngữ nghĩa</p>
@@ -1330,18 +1341,19 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <rect class="bx" x="545" y="164" width="110" height="26" rx="13"/><text x="600" y="182" class="t2 tc">đọc được 2</text>
       <rect class="bx" x="545" y="198" width="110" height="26" rx="13"/><text x="600" y="216" class="t2 tc">đọc được 2</text>
     </svg></div>
-    <figcaption>Khác biệt nằm ở ô tô đậm: theo session semantics, phiên của B mở trước khi A đóng tệp nên không thấy bản ghi của A. Chỉ phiên mở <b>sau</b> lúc A close mới thấy.</figcaption>
+    <figcaption>Khác biệt nằm ở ô tô đậm: theo session semantics, phiên của B mở trước khi A đóng tệp nên không thấy bản ghi của A.</figcaption>
   </figure>
   <details class="deep">
-    <summary>Bốn ngữ nghĩa: bản ghi hiện ra khi nào, cài đặt khó cỡ nào?<span class="hint">UNIX, session, immutable, transaction; ví dụ transaction trong slide</span></summary>
+    <summary>Bốn ngữ nghĩa cài đặt khó cỡ nào, gặp ở đâu?<span class="hint">Giả định về phiên; UNIX, session, immutable, transaction; ví dụ transaction trong slide</span></summary>
     <div class="deep-body">
+      <p>Cả bốn kiểu đều giả định mỗi phiên là open, đọc ghi, close.</p>
   <div class="tbl"><table>
-    <thead><tr><th>Ngữ nghĩa</th><th>Bản ghi của A hiện ra khi nào</th><th>Cài đặt</th><th>Gặp ở</th></tr></thead>
+    <thead><tr><th>Ngữ nghĩa</th><th>Cài đặt</th><th>Gặp ở</th></tr></thead>
     <tbody>
-      <tr><td>UNIX</td><td>Ngay lập tức với mọi ai đang mở tệp. Đọc luôn trả giá trị của lần ghi cuối.</td><td>Dễ khi chỉ có một server và không cache</td><td>Tệp cục bộ</td></tr>
-      <tr><td>Session</td><td>Khi A close; chỉ các phiên mở sau đó thấy.</td><td>Vừa phải</td><td>AFS; NFS gần giống (close-to-open)</td></tr>
-      <tr><td>Immutable shared files</td><td>Không bao giờ: tệp chia sẻ không sửa được, tên không dùng lại; muốn đổi thì tạo tệp mới.</td><td>Đơn giản</td><td>HDFS gần kiểu này: ghi một lần, chỉ append</td></tr>
-      <tr><td>Transaction</td><td>Tất cả hoặc không gì cả, như một giao dịch.</td><td>Khó nhất</td><td>CSDL</td></tr>
+      <tr><td>UNIX</td><td>Dễ khi chỉ có một server và không cache</td><td>Tệp cục bộ</td></tr>
+      <tr><td>Session</td><td>Vừa phải</td><td>AFS; NFS gần giống (close-to-open)</td></tr>
+      <tr><td>Immutable shared files</td><td>Đơn giản: tên không dùng lại, muốn đổi thì tạo tệp mới</td><td>HDFS gần kiểu này: ghi một lần, chỉ append</td></tr>
+      <tr><td>Transaction</td><td>Khó nhất</td><td>CSDL</td></tr>
     </tbody>
   </table></div>
       <h4>Ví dụ transaction trong slide: vì sao W1, R1, R2, W2 bị cấm</h4>
@@ -1351,10 +1363,48 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
 
   <h3 class="sec">Vấn đề 3 · Cache</h3>
-  <p>Cache giữ một bản dữ liệu tệp gần nơi dùng (RAM hay đĩa của client, RAM của server) để ít phải truy cập xa: giảm tải mạng và tải server. Đổi lại, bản trong cache có thể đã cũ; đó là bài toán nhất quán cache.</p>
+  <p>Cache giữ một bản dữ liệu tệp gần nơi dùng để ít phải truy cập xa: giảm tải mạng và tải server. Đổi lại, bản trong cache có thể đã cũ; đó là bài toán nhất quán cache.</p>
+  <figure class="fig stepper" id="b3-1-fig-coh">
+    <p class="fig-t">Cache làm dữ liệu cũ đi thế nào</p>
+    <div class="canvas"><svg class="dg" viewBox="0 0 720 256" role="img" aria-label="Hai client A và B cùng cache tệp f phiên bản 1 từ server. A sửa f thành phiên bản 2 trong cache, theo delayed write chưa gửi đi. A close tệp, bản 2 được đẩy về server. B vẫn đọc bản 1 trong cache của mình, cũ hơn server. B mở lại tệp, kiểm phiên bản với server và tải bản 2.">
+      <rect class="bx" x="270" y="20" width="180" height="64" rx="8"/><text x="360" y="44" class="tb tc">File server</text>
+      <g data-only="1,2"><text x="360" y="68" class="tm tc">f = v1</text></g>
+      <g data-s="3"><text x="360" y="68" class="tm ta tb tc">f = v2</text></g>
+      <rect class="bx" x="40" y="170" width="200" height="70" rx="8"/><text x="140" y="194" class="tb tc">Client A</text>
+      <g data-only="1"><text x="140" y="222" class="tm tc">cache: v1</text></g>
+      <g data-only="2"><text x="140" y="222" class="tm ta tb tc">cache: v2 (chưa gửi)</text></g>
+      <g data-s="3"><text x="140" y="222" class="tm ta tc">cache: v2</text></g>
+      <rect class="bx" x="480" y="170" width="200" height="70" rx="8"/><text x="580" y="194" class="tb tc">Client B</text>
+      <g data-only="1,2,3"><text x="580" y="222" class="tm tc">cache: v1</text></g>
+      <g data-only="4"><text x="580" y="222" class="tm tb tc" style="fill:var(--bad)">cache: v1 (cũ hơn server)</text><text x="580" y="158" class="t2 tc" style="fill:var(--bad)">B vẫn mở f, đọc v1 từ cache</text></g>
+      <g data-only="5"><text x="580" y="222" class="tm ta tb tc">cache: v2</text></g>
+
+      <g data-only="1">
+        <line class="lna" x1="300" y1="84" x2="151.35" y2="168.37" marker-end="url(#ah-store)"/>
+        <line class="lna" x1="420" y1="84" x2="568.65" y2="168.37" marker-end="url(#ah-store)"/>
+        <text x="200" y="112" class="t2 te">đọc f</text><text x="520" y="112" class="t2">đọc f</text>
+      </g>
+      <g data-only="2"><text x="140" y="158" class="t2 ta tc">A sửa f thành v2</text><text x="360" y="108" class="t3 tc">delayed write: v2 mới ở cache của A, server vẫn giữ v1</text></g>
+      <g data-only="3"><line class="lna" x1="166.39" y1="170" x2="318.72" y2="85.6" marker-end="url(#ah-store)"/><text x="225" y="120" class="t2 te">A close: đẩy v2 về server</text></g>
+      <g data-only="5">
+        <line class="lna dash" x1="420" y1="84" x2="568.65" y2="168.37" marker-end="url(#ah-store)"/>
+        <text x="500" y="112" class="t2">B mở lại f, kiểm phiên bản,</text><text x="500" y="128" class="t2">tải lại v2</text>
+      </g>
+    </svg></div>
+    <ol class="steps">
+      <li><b>Cùng đọc.</b> A và B đều giữ bản v1 của tệp f trong cache của mình.</li>
+      <li><b>A sửa trong cache.</b> Bản sửa nằm ở cache của A, chỉ gửi về server sau (<i>delayed write</i>).</li>
+      <li><b>A close.</b> Bản sửa được đẩy về server; server giờ có v2.</li>
+      <li><b>B thấy bản cũ.</b> B vẫn đang mở f và đọc v1 trong cache của mình, cũ hơn server; session semantics cho phép điều này.</li>
+      <li><b>Giữ nhất quán.</b> Khi B mở lại f, nó phải thấy v2: client hỏi server phiên bản mới nhất mỗi lần open (như NFS), hoặc server chủ động báo các client đang cache f rằng bản ấy hết hạn (callback, như AFS).</li>
+    </ol>
+  </figure>
   <details class="deep">
-    <summary>Đặt cache ở đâu, được gì và mất gì?<span class="hint">RAM hay đĩa, client hay server; hai lợi, một hại ngoài giảm tải và bản cũ</span></summary>
+    <summary>Delayed write hay write-through, và đặt cache ở đâu?<span class="hint">Khi nào bản sửa về server; RAM hay đĩa, client hay server</span></summary>
     <div class="deep-body">
+      <p>Delayed write (còn gọi write-back) gửi bản sửa về server khi close, khi bị đẩy khỏi cache, hoặc định kỳ. Nhanh, nhưng A sập ở bước 2 là mất bản sửa.</p>
+      <p>Write-through gửi mỗi lần ghi ngay về server, nên bước 2 và 3 nhập làm một: A sập cũng không mất bản sửa, đổi lại ghi chậm hơn. Nó vẫn không cập nhật cache của B, nên bước 4 vẫn xảy ra.</p>
+      <h4>Đặt cache ở đâu</h4>
   <figure class="fig" id="b3-1-fig-cache">
     <p class="fig-t">Cache đặt ở đâu</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 190" role="img" aria-label="Bốn chỗ có thể giữ dữ liệu tệp. Phía client: RAM client nhanh nhất, máy không đĩa vẫn dùng được, nhưng tranh RAM với bộ nhớ ảo; đĩa client cache được tệp lớn, quản lý bộ nhớ ảo đơn giản hơn và chạy được khi mất mạng. Phía server: RAM server tránh đọc đĩa nhưng vẫn chịu trễ mạng; đĩa server là bản gốc.">
@@ -1387,58 +1437,16 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </div>
     </div>
   </details>
-  <figure class="fig stepper" id="b3-1-fig-coh">
-    <p class="fig-t">Cache làm dữ liệu cũ đi thế nào</p>
-    <div class="canvas"><svg class="dg" viewBox="0 0 720 256" role="img" aria-label="Hai client A và B cùng cache tệp f phiên bản 1 từ server. A sửa f thành phiên bản 2 trong cache, theo delayed write chưa gửi đi. A close tệp, bản 2 được đẩy về server. B vẫn đọc bản 1 trong cache của mình, cũ hơn server. B mở lại tệp, kiểm phiên bản với server và tải bản 2.">
-      <rect class="bx" x="270" y="20" width="180" height="64" rx="8"/><text x="360" y="44" class="tb tc">File server</text>
-      <g data-only="1,2"><text x="360" y="68" class="tm tc">f = v1</text></g>
-      <g data-s="3"><text x="360" y="68" class="tm ta tb tc">f = v2</text></g>
-      <rect class="bx" x="40" y="170" width="200" height="70" rx="8"/><text x="140" y="194" class="tb tc">Client A</text>
-      <g data-only="1"><text x="140" y="222" class="tm tc">cache: v1</text></g>
-      <g data-only="2"><text x="140" y="222" class="tm ta tb tc">cache: v2 (chưa gửi)</text></g>
-      <g data-s="3"><text x="140" y="222" class="tm ta tc">cache: v2</text></g>
-      <rect class="bx" x="480" y="170" width="200" height="70" rx="8"/><text x="580" y="194" class="tb tc">Client B</text>
-      <g data-only="1,2,3"><text x="580" y="222" class="tm tc">cache: v1</text></g>
-      <g data-only="4"><text x="580" y="222" class="tm tb tc" style="fill:var(--bad)">cache: v1 (cũ hơn server)</text><text x="580" y="158" class="t2 tc" style="fill:var(--bad)">B vẫn mở f, đọc v1 từ cache</text></g>
-      <g data-only="5"><text x="580" y="222" class="tm ta tb tc">cache: v2</text></g>
-
-      <g data-only="1">
-        <line class="lna" x1="300" y1="84" x2="151.35" y2="168.37" marker-end="url(#ah-store)"/>
-        <line class="lna" x1="420" y1="84" x2="568.65" y2="168.37" marker-end="url(#ah-store)"/>
-        <text x="200" y="112" class="t2 te">đọc f</text><text x="520" y="112" class="t2">đọc f</text>
-      </g>
-      <g data-only="2"><text x="140" y="158" class="t2 ta tc">A sửa f thành v2</text><text x="360" y="108" class="t3 tc">delayed write: v2 mới ở cache của A, server vẫn giữ v1</text></g>
-      <g data-only="3"><line class="lna" x1="166.39" y1="170" x2="318.72" y2="85.6" marker-end="url(#ah-store)"/><text x="225" y="120" class="t2 te">A close: đẩy v2 về server</text></g>
-      <g data-only="5">
-        <line class="lna dash" x1="420" y1="84" x2="568.65" y2="168.37" marker-end="url(#ah-store)"/>
-        <text x="500" y="112" class="t2">B mở lại f, kiểm phiên bản,</text><text x="500" y="128" class="t2">tải lại v2</text>
-      </g>
-    </svg></div>
-    <ol class="steps">
-      <li><b>Cùng đọc.</b> A và B đều đọc tệp f, mỗi bên giữ một bản v1 trong cache của mình.</li>
-      <li><b>A sửa trong cache.</b> Hình này dùng <i>delayed write</i> (write-back): bản sửa nằm ở cache của A, chỉ gửi về server sau.</li>
-      <li><b>A close.</b> Đóng tệp thì bản sửa được đẩy về server. Server giờ có v2.</li>
-      <li><b>B thấy bản cũ.</b> B vẫn đang mở f và đọc từ cache của mình: v1, cũ hơn server. Theo session semantics điều này được phép, vì phiên của B mở trước lúc A close.</li>
-      <li><b>Giữ nhất quán.</b> Khi B mở lại f, nó phải thấy v2. Hai cách: client hỏi server phiên bản mới nhất mỗi lần open (như NFS), hoặc server chủ động báo các client đang cache f rằng bản của họ hết hạn (callback, như AFS).</li>
-    </ol>
-  </figure>
-  <details class="deep">
-    <summary>Delayed write hay write-through?<span class="hint">Khi nào bản sửa về server; A sập thì mất gì; B vẫn đọc bản cũ</span></summary>
-    <div class="deep-body">
-      <p>Delayed write gửi bản sửa về server khi close, khi bị đẩy khỏi cache, hoặc định kỳ. Nhanh, nhưng A sập ở bước 2 là mất bản sửa.</p>
-      <p>Write-through gửi mỗi lần ghi ngay về server, nên bước 2 và 3 nhập làm một: A sập cũng không mất bản sửa, đổi lại ghi chậm hơn. Nó vẫn không cập nhật cache của B, nên bước 4 vẫn xảy ra.</p>
-    </div>
-  </details>
 
   <h3 class="sec">Vấn đề 4 · Nhân bản</h3>
   <div class="keys two">
     <article class="key"><h3><span class="ix">01</span>Vì sao nhân bản</h3><p>Dữ liệu tệp được sao lên nhiều server để tăng độ tin cậy, tăng tính sẵn sàng, và chia tải đọc cho nhiều máy.</p></article>
     <article class="key"><h3><span class="ix">02</span>Hai câu hỏi khó</h3><ul><li>Làm sao để client không phải biết có bao nhiêu bản (trong suốt nhân bản)?</li><li>Làm sao giữ các bản nhất quán khi một server sập lúc đang cập nhật, hoặc mạng bị chia cắt?</li></ul></article>
   </div>
-  <div class="callout idea"><p><b>Câu hỏi thứ hai dẫn tới cả một bài.</b> Khi mạng bị chia cắt, hệ thống phải chọn giữa trả lời ngay (có thể sai) và chờ cho tới khi nhất quán: đó là định lý CAP ở <a href="#b4-2">bài 4.2</a>.</p></div>
   <details class="deep">
-    <summary>HDFS né bài toán nhất quán bản sao thế nào?<span class="hint">Một người ghi, pipeline xác nhận, số phiên bản block</span></summary>
+    <summary>Câu hỏi thứ hai khó tới đâu, HDFS né nó thế nào?<span class="hint">Định lý CAP; một người ghi, pipeline xác nhận, số phiên bản block</span></summary>
     <div class="deep-body">
+      <p>Câu hỏi thứ hai dẫn tới cả một bài. Khi mạng bị chia cắt, hệ thống phải chọn giữa trả lời ngay (có thể sai) và chờ cho tới khi nhất quán: đó là định lý CAP ở <a href="#b4-2">bài 4.2</a>.</p>
       <p>HDFS thu hẹp bài toán: mỗi tệp chỉ một người ghi, một lần ghi chỉ xong khi mọi bản sao trong pipeline xác nhận, và bản sao lỡ cập nhật bị nhận ra là lỗi thời nhờ số phiên bản của block (<a href="#b3-3">bài 3.3</a>).</p>
     </div>
   </details>
