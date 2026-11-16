@@ -11,18 +11,9 @@ Làm xong mục nào thì xoá mục ấy. Số dòng trỏ vào `big-data-stora
 
 ## CHƯA LÀM
 
-### Sai kiến thức
+### Cần kiểm nguồn
 
-- 1 (~669): "khoảng cách mạng và đĩa đã hẹp lại" — theo số trong khối, mạng 10–100 Gb/s đã nhanh hơn một HDD.
-- 3.3 (~1508): bảng ghi Secondary NameNode là cách chịu lỗi; callout dưới nói đúng là nó chỉ làm checkpoint.
-- 2 (~1073): Paxos bước 5 kết luận thiếu quy tắc "proposer lấy lại giá trị đã được chấp nhận" (nằm trong khối gập).
-- 4.2 (2371, 2504): "cộng và nhân không giao hoán" — đúng là hai thao tác +1000 và ×1,05 không giao hoán.
-- 4.6 (3110): stage build không dựng bảng băm; task của stage join dựng (bài báo Presto ICDE'19, IV-D).
-- 5 (3335): tên topic `/orders` không hợp lệ trong Kafka (`[a-zA-Z0-9._-]`); dùng `orders`.
-- 6 (4193): "tổng hạng bằng N" thiếu điều kiện "trang nào cũng có link ra" ngay trong câu.
-- 7 (4739), 10 (5497, 5701, 5730): "Spark nhanh hơn Hadoop n lần" thiếu điều kiện "từ vòng 2, 100 GB"; "tới 20 lần" lệch 25,3×.
-- 9 (5372): Samza không còn gắn chặt Kafka và YARN (samza.apache.org).
-- Nghi, cần kiểm: LHC 15 PB/năm (bài 1, số cũ), Hive chạy ở client (bài 2), `coalesce(2)` vẽ 3+1 (bài 7),
+- Nghi, chưa kiểm được: LHC 15 PB/năm (bài 1, số cũ), Hive chạy ở client (bài 2), `coalesce(2)` vẽ 3+1 (bài 7),
   Kafka 700 MB/s (bài 5, tài liệu ghi ~600), "consumer tự giữ offset" (bài 5), nguồn Twitter/Kinesis của
   Structured Streaming (bài 8), sơ đồ "Trước Presto" có Redshift (bài 4.6).
 
