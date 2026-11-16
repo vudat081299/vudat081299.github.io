@@ -1528,10 +1528,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
   <p>Mỗi tệp, thư mục, block là một đối tượng trong RAM của NameNode, nên HDFS hợp với ít tệp lớn, không hợp với nhiều tệp nhỏ.</p>
   <details class="deep">
-    <summary>Tính tay: tệp 1 GB, và một triệu tệp nhỏ<span class="hint">Số block, dung lượng đĩa thô, RAM NameNode</span></summary>
+    <summary>Tính tay: tệp 1 GB, và một triệu tệp nhỏ<span class="hint">Số block, dung lượng đĩa thô, RAM NameNode, số map task</span></summary>
     <div class="deep-body">
       <p>Tệp 1 GB, block 128 MB: 1024 / 128 = 8 block; nhân 3 bản là 24 bản block, chiếm 3 GB đĩa thô.</p>
       <p>Mỗi đối tượng ấy (tệp, thư mục, block) tốn khoảng 150 byte RAM ở NameNode, nên một triệu tệp nhỏ (mỗi tệp một block, tức hai triệu đối tượng) đã ngốn khoảng 300 MB RAM.</p>
+      <p>Đem xử lý bằng MapReduce (<a href="#b6">bài 6</a>) còn thêm một cái giá. Với định dạng đầu vào mặc định, mỗi map task thường đọc một block, nên tệp 1 GB cần 8 map task; nhưng mỗi tệp nhỏ thành một map task riêng, nên một triệu tệp là một triệu task, task nào cũng tốn công quản lý mà chỉ xử lý rất ít dữ liệu.</p>
     </div>
   </details>
 
