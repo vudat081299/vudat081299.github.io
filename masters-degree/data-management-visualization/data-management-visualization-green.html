@@ -1650,7 +1650,7 @@ input[type=range]{accent-color:var(--green-hi)}
             <path d="M436 222 L470 222" class="s-ink" stroke-width="1.6" marker-end="url(#arr)"/>
           </svg>
         </div><figcaption>Mỗi màu là một khối; mỗi khối có bản sao trên hai rack; mũi tên ngắn DN4 → DN5 là Datanode chép khối cho nhau. Dữ liệu đi thẳng giữa client và Datanode, không qua Namenode.</figcaption></figure>
-        <p>Namenode giữ toàn bộ danh mục ấy (không gian tên cùng metadata) trong RAM. Datanode, xếp trong các rack (tủ máy), lưu khối, gửi nhịp tim (heartbeat) 3 giây một lần và định kỳ gửi block report (danh sách khối mình có); mất heartbeat thì Namenode coi là hỏng.</p>
+        <p>Danh mục ấy là không gian tên (cây thư mục và tên file) cùng metadata của từng file. Datanode, xếp trong các rack (tủ máy), lưu khối, gửi nhịp tim (heartbeat) 3 giây một lần và định kỳ gửi block report (danh sách khối mình có); mất heartbeat thì Namenode coi là hỏng.</p>
         <details class="more">
           <summary>Namenode và Datanode còn giữ, còn làm những gì?</summary>
           <div class="more-body">
