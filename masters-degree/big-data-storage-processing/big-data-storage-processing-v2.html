@@ -5367,20 +5367,14 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
     </svg></div>
     <ol class="steps">
       <li><b>Bước 1 · Sự kiện.</b> Lượt xem /home lúc 09:12 vào Kafka; Kafka giao nó cho cả hai lớp.</li>
-      <li><b>Bước 2 · Batch layer.</b> Ghi thêm vào master dataset; batch view chỉ tính tới 06:00 nên chưa có lượt này.</li>
-      <li><b>Bước 3 · Speed layer.</b> Cộng ngay vào real-time view, vốn đếm mọi lượt sau 06:00.</li>
-      <li><b>Bước 4 · Truy vấn lúc 09:15.</b> Gộp hai view. Hai view phủ hai khoảng thời gian rời nhau nên không lượt nào bị đếm hai lần.</li>
-      <li><b>Bước 5 · Batch mới.</b> Batch tính tới 09:00 xong lúc 12:00; speed layer bỏ phần trước 09:00, chỉ giữ lượt sau đó.</li>
+      <li><b>Bước 2 · Batch layer.</b> Sự kiện được ghi thêm vào master dataset. Batch view hiện có tính từ dữ liệu tới 06:00 (/home = 10 000), nên chưa có lượt này.</li>
+      <li><b>Bước 3 · Speed layer.</b> Cộng ngay vào real-time view, vốn đếm mọi lượt sau 06:00: 420 → 421.</li>
+      <li><b>Bước 4 · Truy vấn lúc 09:15.</b> Truy vấn đọc batch view ở serving layer và real-time view ở speed layer rồi gộp: 10 000 + 421 = 10 421. Không lượt nào bị đếm hai lần vì hai view phủ hai khoảng thời gian rời nhau.</li>
+      <li><b>Bước 5 · Batch mới.</b> Lần batch tính dữ liệu tới 09:00 xong lúc 12:00: 10 000 + 400 lượt (06:00–09:00) = 10 400. Speed layer bỏ phần trước 09:00, giữ 95 lượt sau 09:00 (21 tới 09:15, 74 sau đó). Truy vấn: 10 495.</li>
     </ol>
   </figure>
-  <details class="deep">
-    <summary>10 400 và 95 ở bước 5 từ đâu ra?<span class="hint">Tách 421 lượt quanh mốc 09:00</span></summary>
-    <div class="deep-body">
-      <p>Lần batch mới cộng 400 lượt trong 06:00–09:00 vào 10 000, ra 10 400. Trong 421 lượt real-time view đếm lúc 09:15, 21 lượt rơi sau 09:00; thêm 74 lượt tới 12:00 thành 95.</p>
-    </div>
-  </details>
 
-  <div class="callout idea"><p><b>Lỗi ở speed layer chỉ sống vài giờ:</b> batch view mới, tính lại từ master dataset bất biến, sẽ thay real-time view.</p></div>
+  <div class="callout idea"><p><b>Lỗi ở speed layer chỉ sống vài giờ.</b> Real-time view là kết quả tạm, tính bằng thuật toán tăng dần phức tạp hơn. Batch view mới tính lại từ master dataset bất biến sẽ thay nó, nên sai sót ở lớp nhanh tự biến mất.</p></div>
 
   <h3 class="sec">Stream và batch</h3>
   <p>Batch layer quét cả khối dữ liệu lớn, trễ phút tới giờ; speed layer xử lý từng bản ghi hay cửa sổ nhỏ, trễ mili giây tới giây.</p>
@@ -5397,7 +5391,6 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
       <tr><td>Trong Lambda</td><td>batch layer</td><td>speed layer</td></tr>
     </tbody>
   </table></div>
-      <p>Kiểu phân tích của speed layer đơn giản hơn, nhưng real-time view tính bằng thuật toán tăng dần phức tạp hơn và chỉ là kết quả tạm.</p>
     </div>
   </details>
   <details class="deep">
@@ -5417,13 +5410,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
     </div>
   </details>
 
-  <div class="callout trap"><p><b>Phản biện: kiến trúc Kappa.</b> Lambda bắt viết và vận hành cùng một logic hai lần, cho hai hệ khác nhau. Kappa bỏ batch layer: mọi thứ là dòng, cần tính lại thì phát lại log.</p></div>
-  <details class="deep">
-    <summary>Kappa phát lại log từ đâu?<span class="hint">Log giữ lâu trong Kafka, job dòng mới</span></summary>
-    <div class="deep-body">
-      <p>Kappa do Jay Kreps đề xuất năm 2014. Log được giữ đủ lâu trong Kafka; cần tính lại thì phát lại log qua một job dòng mới.</p>
-    </div>
-  </details>
+  <div class="callout trap"><p><b>Phản biện: kiến trúc Kappa.</b> Lambda bắt viết và vận hành cùng một logic hai lần, cho hai hệ khác nhau. Kappa (Jay Kreps, 2014) bỏ batch layer: mọi thứ là dòng, giữ log đủ lâu trong Kafka, cần tính lại thì phát lại log qua một job dòng mới.</p></div>
 
   <section class="recap"><h3>Nhớ</h3><ul><li>Hadoop giải Volume và Variety; Lambda thêm một lớp dòng để giải Velocity.</li><li>Dữ liệu thô chỉ ghi thêm; code sai thì sửa rồi tính lại từ đầu.</li><li>Batch view và real-time view phủ hai khoảng thời gian rời nhau, cộng lại không trùng.</li><li>Batch view mới ra thì speed layer bỏ phần đã được tính.</li><li>Lỗi ở speed layer chỉ sống tới lần batch kế tiếp.</li><li>Cái giá: một logic viết hai lần; Kappa bỏ batch, tính lại bằng phát lại log.</li></ul></section>
 
