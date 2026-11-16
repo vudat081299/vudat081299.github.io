@@ -5416,10 +5416,10 @@ footer{border-top:1px solid var(--line);margin-top:64px;padding:20px 0;font-size
             <div class="tbl-wrap"><table class="tbl">
               <tr><th></th><th>Filter</th><th>Wrapper</th><th>Embedded</th></tr>
               <tr><td>Tốc độ</td><td>Nhanh nhất</td><td>Chậm: mỗi tập con huấn luyện một mô hình</td><td>Ở giữa</td></tr>
-              <tr><td>Quá khớp</td><td>Ít</td><td>Dễ quá khớp</td><td>Phạt hệ số lớn để giảm quá khớp</td></tr>
-              <tr><td>Ví dụ</td><td>Tương quan, χ², ANOVA, information gain</td><td>Forward selection, backward elimination, stepwise</td><td>LASSO, Elastic Net, Ridge; cây quyết định chọn đặc trưng ở mỗi lần tách</td></tr>
+              <tr><td>Quá khớp</td><td>Ít</td><td>Dễ quá khớp</td><td>Mô hình tuyến tính: phạt hệ số lớn (regularization). Cây: giới hạn độ sâu hay cắt tỉa</td></tr>
+              <tr><td>Ví dụ</td><td>Tương quan, χ², ANOVA, information gain</td><td>Forward selection, backward elimination, stepwise</td><td>LASSO, Elastic Net: phạt L1 đưa hệ số của đặc trưng thừa về 0. Cây quyết định, rừng ngẫu nhiên: mỗi lần tách nút chọn một đặc trưng; đặc trưng có độ quan trọng thấp thì bỏ</td></tr>
             </table></div>
-            <p class="muted">Ridge (phạt L2) chỉ làm hệ số nhỏ lại chứ không đưa về 0; LASSO (phạt L1) mới thật sự loại đặc trưng.</p>
+            <p class="muted">Ridge (phạt L2) chỉ làm hệ số nhỏ lại chứ không đưa về 0, nên giảm quá khớp nhưng không tự chọn đặc trưng. LASSO (phạt L1) và Elastic Net (trộn L1 với L2) mới đưa một số hệ số về 0, tức loại đặc trưng.</p>
             <p class="slide-note">Slide gọi tìm vét cạn là “greedy”: sai. Vét cạn thử mọi tổ hợp; tham lam (forward, backward) thêm hoặc bớt từng đặc trưng một.</p>
           </div>
         </details>
