@@ -4988,10 +4988,10 @@ context.<span class="f">start</span>()         <span class="c">// từ đây job
   <h3 class="sec">Mô hình mới: bảng lớn dần, truy vấn chạy tăng dần</h3>
   <p>Input là bảng chỉ thêm hàng. Trigger quy định bao lâu kiểm tra dữ liệu mới. Truy vấn là map, filter, reduce, cửa sổ thông thường trên bảng; kết quả là một bảng được cập nhật sau mỗi trigger.</p>
   <details class="deep">
-    <summary>Trigger có mấy kiểu? Ngoài cửa sổ cố định và trượt còn loại nào?<span class="hint">processingTime, availableNow, continuous; session_window</span></summary>
+    <summary>Trigger có mấy kiểu? Ngoài cửa sổ trượt còn loại nào?<span class="hint">processingTime, availableNow, continuous; tumbling, session_window</span></summary>
     <div class="deep-body">
       <p>Trigger có bốn kiểu: mặc định (lô sau chạy ngay khi lô trước xong), <code>processingTime</code> (nhịp cố định, vd 10 s), <code>availableNow</code> (xử lý hết dữ liệu đang có rồi dừng) và <code>continuous</code> (thử nghiệm, trễ cỡ mili giây nhưng chỉ at-least-once).</p>
-      <p>Ngoài cửa sổ cố định và trượt, slide nhắc cửa sổ phiên: <code>session_window</code> (từ Spark 3.2) đóng cửa sổ của một key khi key ấy im lặng quá một khoảng cho trước.</p>
+      <p>Cửa sổ cố định (tumbling) là cửa sổ trượt có slide interval bằng window length: các khoảng dài bằng nhau, liền nhau, không chồng nhau. Ngoài hai loại ấy, slide nhắc cửa sổ phiên: <code>session_window</code> (từ Spark 3.2) đóng cửa sổ của một key khi key ấy im lặng quá một khoảng cho trước.</p>
     </div>
   </details>
   <figure class="fig stepper" id="b8-ss">
