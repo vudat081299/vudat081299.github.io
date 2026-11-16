@@ -26,6 +26,7 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-024 · Mọi trang theo theme hệ điều hành ở lần mở đầu · `repo`
 - REPO-025 · Viền một hoặc hai cạnh thì không bo góc · `repo`
 - REPO-026 · Trang dạy học đọc được ở hai độ sâu: khung xương và Đọc liền · `masters-degree/**`, `pages/*.html`
+- REPO-027 · Khung xương đúng và đủ; tỉ lệ chữ chỉ là chỉ báo · `masters-degree/**`, `pages/*.html`
 
 Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/big-data-storage-processing/DECISIONS.md`](masters-degree/big-data-storage-processing/DECISIONS.md), [`masters-degree/class-schedule/DECISIONS.md`](masters-degree/class-schedule/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md), [`shop/DECISIONS.md`](shop/DECISIONS.md).
 <!-- index:end -->
@@ -158,3 +159,10 @@ một chấm, nhãn màu.
 Mặc định trang chỉ mở khung xương: mỗi mục một sơ đồ cơ chế và vài câu ý lõi, đủ thấy cả bài và dẫn người đọc
 tự đi tìm chi tiết. Chi tiết nằm trong khối gập đặt ngay sau ý nó mở rộng; nút Đọc liền mở tất cả để đọc trọn
 như một bài viết. Luật chi tiết và cách rà: `masters-degree/big-data-storage-processing/CLAUDE.md`.
+
+## REPO-027 · Khung xương đúng và đủ; tỉ lệ chữ chỉ là chỉ báo
+16/11/2026 · `masters-degree/**`, `pages/*.html`
+
+Khung xương giữ mọi thứ cần để hiểu bài: cơ chế, các bước, con số và ví dụ mà lời giải thích dựa vào.
+Chỉ chuyển vào khối gập thứ thật sự là chi tiết. Tỉ lệ chữ khung xương / cả bài chỉ để phát hiện bài lệch xa;
+không cắt khung xương cho đạt con số, và bài vượt chỉ báo mà vẫn đúng, đủ, gọn thì giữ nguyên.

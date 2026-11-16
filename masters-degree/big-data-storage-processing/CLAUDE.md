@@ -50,6 +50,8 @@ Khung xương đạt khi:
 - Sơ đồ chỉ vào khối gập khi nó minh hoạ chi tiết, không phải cơ chế lõi.
 - Chỉ báo cỡ: thân mục để mở (ngoài đầu bài, bản đồ, thẻ, Nhớ, câu hỏi quiz) khoảng 30–40% số chữ của bài,
   không tính đáp án quiz; cả khung xương thường 50–65%.
+- Tỉ lệ chỉ để phát hiện bài lệch xa, không phải đích (REPO-027): không cắt khung xương cho đạt số; thứ cần để
+  hiểu cơ chế (bước, con số, ví dụ mà lời giải thích dựa vào) ở lại khung xương.
 
 Đọc liền đạt khi:
 

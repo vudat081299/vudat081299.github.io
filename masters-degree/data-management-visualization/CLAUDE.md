@@ -43,7 +43,8 @@
 - Khung xương đứng một mình: không trỏ tới thứ chỉ có trong khối gập; thuật ngữ ở câu lõi, recap, câu quiz được giải
   nghĩa ngay ở phần mở.
 - Mở hết thì đọc liền: câu đầu khối gập nối từ ý ngay trên, không lặp, không định nghĩa lại.
-- Cỡ khung xương khoảng 25–35% số chữ của bài (chỉ báo, đo bằng `tools/measure-modes.py`).
+- Cỡ khung xương khoảng 25–35% số chữ của bài: chỉ báo để phát hiện bài lệch xa, đo bằng `tools/measure-modes.py`;
+  không cắt khung xương cho đạt số (REPO-027).
 - Trong một mục và trong một khối gập: hình trước, chữ sau; đoạn văn tối đa ba câu.
 - Ghi chú đối chiếu slide: `<p class="slide-note">` cuối `more-body` của khối nó đối chiếu; CSS thêm nhãn "Đối chiếu slide".
 
