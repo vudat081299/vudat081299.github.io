@@ -1008,7 +1008,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <thead><tr><th>Công cụ</th><th>Làm gì</th><th>Ghi nhớ</th></tr></thead>
     <tbody>
       <tr><td>Pig</td><td>Xử lý dữ liệu mức cao bằng Pig Latin; mạnh ở join và biến đổi.</td><td>Trình thông dịch chạy ở client, sinh job MapReduce.</td></tr>
-      <tr><td>Hive</td><td>Truy vấn bằng HiveQL giống SQL, rút ngắn thời gian viết job.</td><td>Cũng chạy ở client, cũng sinh job MapReduce. Hive bản mới chạy trên Tez; Hive-on-MapReduce bị loại dần từ Hive 2.</td></tr>
+      <tr><td>Hive</td><td>Truy vấn bằng HiveQL giống SQL, rút ngắn thời gian viết job.</td><td>Hive CLI cũng chạy ở client và sinh job MapReduce; nay Hive bỏ dần CLI ấy, chuyển sang Beeline nối tới HiveServer2. Hive bản mới chạy trên Tez; Hive-on-MapReduce bị loại dần từ Hive 2.</td></tr>
       <tr><td>HBase</td><td>"CSDL của Hadoop": kho column family (wide-column, xem <a href="#b4-1">bài 4.1</a>), bảng tới hàng nghìn cột, hàng trăm nghìn lượt ghi mỗi giây.</td><td>NoSQL: không có ngôn ngữ truy vấn mức cao, dùng API get, put, scan theo khoá.</td></tr>
       <tr><td>Sqoop</td><td>Chuyển dữ liệu khối lớn giữa Hadoop và CSDL quan hệ, cả hai chiều.</td><td>Import bằng job chỉ có map; kết quả là thư mục tệp text phân tách bằng dấu phẩy trong HDFS. Apache đã cho dự án ngừng phát triển năm 2021.</td></tr>
       <tr><td>Kafka</td><td>Nhật ký (log) thông điệp phân tán, tách producer khỏi consumer; đọc xong không xoá.</td><td>Consumer tự quyết đọc tới vị trí (offset) nào và commit offset vào topic nội bộ <code>__consumer_offsets</code> của Kafka. Bài 5.</td></tr>
@@ -1155,7 +1155,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   <div class="quiz">
     <h3>Tự kiểm tra</h3>
     <details><summary>Hadoop đạt chịu lỗi bằng phần cứng đắt tiền hay bằng phần mềm?</summary><p>Bằng phần mềm: dữ liệu có bản sao trên nhiều node, task hỏng được chạy lại ở node khác. Phần cứng là máy thường, hỏng hóc được coi là chuyện bình thường.</p></details>
-    <details><summary>Một câu HiveQL được thực thi thế nào trong cụm Hadoop dùng MapReduce?</summary><p>Trình thông dịch Hive ở máy client dịch câu lệnh thành một hay nhiều job MapReduce rồi nộp lên cụm; cụm chạy chúng như mọi job khác.</p></details>
+    <details><summary>Một câu HiveQL được thực thi thế nào trong cụm Hadoop dùng MapReduce?</summary><p>Theo slide, trình thông dịch Hive ở máy client dịch câu lệnh thành một hay nhiều job MapReduce rồi nộp lên cụm; cụm chạy chúng như mọi job khác.</p></details>
     <details><summary>Sqoop import một bảng vào HDFS bằng cơ chế gì, và kết quả trông ra sao?</summary><p>Một job MapReduce chỉ có map, mỗi mapper đọc một phần bảng; kết quả là một thư mục trong HDFS gồm các tệp text phân tách bằng dấu phẩy.</p></details>
     <details><summary>Vì sao Paxos chỉ cần đa số acceptor chứ không cần tất cả?</summary><p>Hai đa số bất kỳ luôn giao nhau ít nhất một acceptor, nên đề xuất sau luôn biết giá trị đã được chọn. Cần tất cả thì một máy chết là cả hệ đứng.</p></details>
     <details><summary>Trong YARN, ai chạy lại một task bị hỏng?</summary><p>ApplicationMaster của ứng dụng đó: nó xin container mới từ ResourceManager rồi chạy lại task. ResourceManager chỉ cấp tài nguyên.</p></details>
