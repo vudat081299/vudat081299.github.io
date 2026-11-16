@@ -4822,7 +4822,7 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
       </g>
       <text class="t2 tc" x="380" y="318">Structured Streaming: nguồn phát lại + WAL offset + state checkpoint + sink idempotent = exactly-once</text>
     </svg></div>
-    <figcaption>Cả hai phần cùng một ý: <b>dòng là một chuỗi phép tính batch nhỏ, tất định</b>. DStream lộ chuỗi RDD ra cho người viết; Structured Streaming giấu nó sau một bảng và một truy vấn giống hệt truy vấn batch. WAL (write-ahead log) là nhật ký ghi khoảng offset của mỗi lô xuống HDFS trước khi chạy, để sau sự cố chạy lại đúng khoảng ấy.</figcaption>
+    <figcaption>Cả hai phần cùng một ý: <b>dòng là một chuỗi phép tính batch nhỏ, tất định</b>. DStream lộ chuỗi RDD ra cho người viết; Structured Streaming giấu nó sau một bảng và một truy vấn giống hệt truy vấn batch. WAL (write-ahead log) là nhật ký ghi khoảng offset của mỗi lô xuống HDFS trước khi chạy, để sau sự cố chạy lại đúng khoảng ấy. Danh sách nguồn theo slide; tài liệu Spark hiện nay cho Structured Streaming có sẵn file, Kafka, socket, rate, còn Kinesis là nguồn nâng cao của DStream.</figcaption>
   </figure>
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
@@ -4916,7 +4916,7 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
   <div class="tbl"><table>
     <thead><tr><th>Nhóm phép</th><th>Gồm</th></tr></thead>
     <tbody>
-      <tr><td>Input</td><td>input DStream thường gắn một Receiver, task chạy dài hạn trên executor để nhận dữ liệu (slide ghi "mọi"; file stream và Kafka direct stream không cần). Nguồn cơ bản: <code>socketTextStream</code>, <code>fileStream</code>; nguồn nâng cao: Kafka, Twitter.</td></tr>
+      <tr><td>Input</td><td>input DStream thường gắn một Receiver, task chạy dài hạn trên executor để nhận dữ liệu (slide ghi "mọi"; file stream và Kafka direct stream không cần). Nguồn cơ bản: <code>socketTextStream</code>, <code>fileStream</code>; nguồn nâng cao: Kafka, Kinesis (slide ghi Kafka, Twitter; tài liệu Spark hiện nay không còn liệt kê Twitter).</td></tr>
       <tr><td>Transformation</td><td><code>map</code>, <code>flatMap</code>, <code>filter</code>, <code>count</code>, <code>countByValue</code>, <code>reduce</code>, <code>reduceByKey</code>, <code>union</code>, <code>join</code>; cộng các phép cửa sổ và có trạng thái.</td></tr>
       <tr><td>Output</td><td><code>print</code> (10 phần tử đầu mỗi lô), <code>saveAsTextFiles</code>, <code>saveAsHadoopFiles</code>, <code>foreachRDD(func)</code>.</td></tr>
     </tbody>
