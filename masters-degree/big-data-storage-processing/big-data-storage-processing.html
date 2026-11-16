@@ -4367,7 +4367,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <line class="lna dash" x1="657" y1="205" x2="657" y2="159.3" marker-end="url(#ah-process)"/>
       <text class="t2 tc" x="380" y="306">Mất partition → tính lại theo lineage · cache() giữ RDD trong RAM để nhiều action dùng lại</text>
     </svg></div>
-    <figcaption>Nửa trên là <b>ai chạy</b>: driver điều phối, cluster manager (Standalone, YARN hoặc Kubernetes, viết tắt K8s) cấp tài nguyên, executor làm việc. Nửa dưới là <b>chạy cái gì</b>: code khai báo RDD và DAG (đồ thị có hướng không chu trình: các bước tính nối một chiều, không quay vòng) được dựng dần, action nộp DAG đi chạy, DAG cắt thành stage, stage thành task gửi xuống executor.</figcaption>
+    <figcaption>Nửa trên là <b>ai chạy</b>: driver điều phối, cluster manager (Standalone, YARN hoặc Kubernetes, viết tắt K8s) cấp tài nguyên, executor làm việc. Nửa dưới là <b>chạy cái gì</b>: code khai báo RDD và DAG (đồ thị có hướng không chu trình: các bước tính nối một chiều, không quay vòng) được dựng dần, action nộp DAG đi chạy, DAG cắt thành stage (đoạn chạy liền một mạch, không phải chia lại dữ liệu qua mạng), stage thành task gửi xuống executor.</figcaption>
   </figure>
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
@@ -4435,7 +4435,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   </table></div>
     </div>
   </details>
-  <p>Spark là engine phân tích hợp nhất cho dữ liệu lớn: hỗ trợ tốt thuật toán lặp và khai phá tương tác, vẫn chịu lỗi, giữ data locality, mở rộng được, và giấu phần phân tán khỏi người viết.</p>
+  <p>Spark giữ dữ liệu làm việc trong RAM để hưởng chênh lệch ấy, và gói nó thành một engine phân tích hợp nhất cho dữ liệu lớn: hỗ trợ tốt thuật toán lặp và khai phá tương tác, vẫn chịu lỗi, giữ data locality, mở rộng được, và giấu phần phân tán khỏi người viết.</p>
   <details class="deep">
     <summary>Spark hơn Hadoop MapReduce ở đâu?<span class="hint">Lưu trữ, phép toán, mô hình chạy, ngôn ngữ; kỷ lục sort 100 TB năm 2014</span></summary>
     <div class="deep-body">
@@ -4552,7 +4552,7 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
       <li><b>Bước 1 · textFile.</b> Tạo <code>logLinesRDD</code> với 4 partition. Chưa đọc byte nào: Spark chỉ ghi nhận nguồn dữ liệu.</li>
       <li><b>Bước 2 · filter(λ).</b> Transformation trả về <code>errorsRDD</code> mới, chỉ là một nút thêm vào DAG. Vẫn chưa chạy gì.</li>
       <li><b>Bước 3 · coalesce(2).</b> Gộp 4 partition còn 2 mà không cần shuffle; Spark cố chia đều, nên mỗi partition mới gom hai partition cũ (slide vẽ 3 + 1). Vẫn chỉ là công thức.</li>
-      <li><b>Bước 4 · collect().</b> Action: driver nộp DAG đi chạy. coalesce(2) không shuffle nên cả chuỗi là một stage (đoạn chạy liền không cần chia lại dữ liệu qua mạng, xem mục ngay dưới) với 2 task, mỗi task ứng với một partition của cleanedRDD: task 1 đọc và lọc partition gốc 1–2 rồi gộp, task 2 làm việc ấy với partition 3–4.</li>
+      <li><b>Bước 4 · collect().</b> Action: driver nộp DAG đi chạy. coalesce(2) không shuffle nên cả chuỗi là một stage với 2 task, mỗi task ứng với một partition của cleanedRDD: task 1 đọc và lọc partition gốc 1–2 rồi gộp, task 2 làm việc ấy với partition 3–4.</li>
       <li><b>Bước 5 · Về driver.</b> Năm dòng Error về driver. <code>collect()</code> kéo toàn bộ kết quả về một máy, chỉ dùng khi kết quả nhỏ.</li>
     </ol>
   </figure>
@@ -4566,7 +4566,7 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
   </details>
 
   <h3 class="sec">Narrow, wide và ranh giới stage</h3>
-  <p>Stage là một đoạn DAG chạy liền một mạch, không phải chia lại dữ liệu qua mạng; mỗi stage chạy một task cho mỗi partition của RDD cuối stage. DAG scheduler gom các phép narrow liên tiếp vào một stage, cắt stage ở mỗi phụ thuộc wide.</p>
+  <p>DAG scheduler gom các phép narrow liên tiếp vào một stage và cắt stage ở mỗi phụ thuộc wide, chỗ dữ liệu phải chia lại qua mạng. Mỗi stage chạy một task cho mỗi partition của RDD cuối stage.</p>
   <figure class="fig">
     <div class="canvas"><svg class="dg" viewBox="0 0 720 280" role="img" aria-label="Phụ thuộc narrow: mỗi partition cha được dùng bởi tối đa một partition con. Với map, filter thì một cha một con; với coalesce(2) thì bốn cha gộp vào hai con, hai cha vào mỗi con, vẫn không shuffle. Phụ thuộc wide: mỗi partition cha bị chia cho nhiều partition con, phải shuffle qua mạng. Stage bị cắt tại shuffle">
       <text class="tb tc" x="120" y="22">Narrow · map, filter</text>
@@ -4620,10 +4620,10 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
     <figcaption>Narrow nghĩa là mỗi partition cha được dùng bởi tối đa một partition con; con có thể đọc nhiều cha, như coalesce. Wide nghĩa là một partition cha bị chia cho nhiều con, phải shuffle. Stage sau chỉ chạy khi stage trước đã ghi xong output shuffle.</figcaption>
   </figure>
   <details class="deep">
-    <summary>Join là narrow hay wide? Chuỗi log ở trên có mấy stage?<span class="hint">Ngoại lệ của join; vì sao slide 23 vẽ 4 task</span></summary>
+    <summary>Join là narrow hay wide? Sao slide vẽ chuỗi log với 4 task?<span class="hint">Ngoại lệ của join; slide 23 đếm task thế nào</span></summary>
     <div class="deep-body">
       <p>Join là wide, trừ khi hai input đã chia partition giống nhau thì thành narrow.</p>
-      <p>Chuỗi log ở trên là một stage, 2 task (bước 4 của hình). Slide 23 vẽ 4 task vì chỉ xét riêng filter trên 4 partition của logLinesRDD.</p>
+      <p>Slide 23 vẽ 4 task thay vì 2 như bước 4 của hình vì chỉ xét riêng filter trên 4 partition của logLinesRDD.</p>
     </div>
   </details>
 
