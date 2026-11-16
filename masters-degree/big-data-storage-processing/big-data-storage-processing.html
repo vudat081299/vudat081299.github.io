@@ -674,16 +674,15 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     </div>
   </details>
 
-  <h3 class="sec">Thu nạp, xử lý, phân tích, diễn giải</h3>
+  <h3 class="sec">Thu nạp và xử lý, phân tích, diễn giải</h3>
   <p>Ngoài quản lý dữ liệu còn ba bài toán: thu nạp và xử lý kịp lúc dữ liệu từ nhiều nguồn khác định dạng, chạy nổi thuật toán phân tích trên khối lượng và số chiều lớn, và diễn giải đúng kết quả mà không làm lộ thông tin riêng tư.</p>
   <details class="deep">
-    <summary>Mỗi bài toán khó ở đâu, giải bằng gì?<span class="hint">Thu nạp, xử lý, thuật toán phân tích, diễn giải và riêng tư</span></summary>
+    <summary>Mỗi bài toán khó ở đâu, giải bằng gì?<span class="hint">Thu nạp và xử lý, thuật toán phân tích, diễn giải và riêng tư</span></summary>
     <div class="deep-body">
   <div class="tbl"><table>
     <thead><tr><th>Bài toán</th><th>Khó ở đâu</th><th>Cách giải</th></tr></thead>
     <tbody>
-      <tr><td>Thu nạp</td><td>Nhiều nguồn khác định dạng, khác lược đồ; giữ an toàn, riêng tư khi gộp</td><td>Hàng đợi phân tán, công cụ nhập khối (Kafka, Sqoop)</td></tr>
-      <tr><td>Xử lý</td><td>Khối lớn phải xong kịp lúc, luồng phải gần thời gian thực. OpenMP, MPI khó học, co giãn hạn chế, chịu lỗi khó, hạ tầng đắt</td><td>Khung trên máy thường (Hadoop, Spark): mô hình đơn giản, tự chạy lại phần hỏng; mini-batch (Spark Streaming), complex event processing (Flink)</td></tr>
+      <tr><td>Thu nạp và xử lý</td><td>Thu nạp: nhiều nguồn khác định dạng, khác lược đồ; giữ an toàn, riêng tư khi gộp.<br>Xử lý: khối lớn phải xong kịp lúc, luồng phải gần thời gian thực. OpenMP, MPI khó học, co giãn hạn chế, chịu lỗi khó, hạ tầng đắt</td><td>Thu nạp: hàng đợi phân tán, công cụ nhập khối (Kafka, Sqoop).<br>Xử lý: khung trên máy thường (Hadoop, Spark): mô hình đơn giản, tự chạy lại phần hỏng; mini-batch (Spark Streaming), complex event processing (Flink)</td></tr>
       <tr><td>Thuật toán phân tích</td><td>Khối lượng lớn, số chiều lớn, cần trả lời thời gian thực</td><td>Thu nhỏ cho vừa một máy: lấy mẫu con, PCA, chọn đặc trưng. Song song hoá: k-NN bằng MapReduce, SVM chia để trị</td></tr>
       <tr><td>Diễn giải, riêng tư</td><td>Đọc đúng kết quả; trực quan hoá hàng triệu điểm; gộp nguồn làm lộ thông tin</td><td>Chuyên gia lĩnh vực đi cùng; trực quan hoá co giãn; bảo vệ dữ liệu ngay từ khâu thu nạp</td></tr>
     </tbody>
