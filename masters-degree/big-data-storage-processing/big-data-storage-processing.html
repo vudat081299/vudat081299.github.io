@@ -839,7 +839,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <a href="#b2-fig-paxos"><rect class="bx" x="247" y="362" width="226" height="66" rx="8"/><text x="360" y="384" class="tb tc">Đồng thuận: Paxos</text><text x="360" y="404" class="t2 tc">nhiều máy chốt một giá trị</text><text x="360" y="418" class="t3 tc">nhờ đa số chấp nhận</text></a>
       <a href="#b2-fig-yarn"><rect class="bx" x="484" y="362" width="226" height="66" rx="8"/><text x="597" y="384" class="tb tc">YARN chạy một ứng dụng</text><text x="597" y="404" class="t2 tc">ResourceManager → AppMaster</text><text x="597" y="418" class="t3 tc">→ container trên NodeManager</text></a>
     </svg></div>
-    <figcaption>Ba tầng lõi của Hadoop 2: <b>HDFS</b> giữ dữ liệu, <b>YARN</b> chia tài nguyên, engine xử lý chạy bên trên. Tầng đáy là cụm máy; mỗi máy góp cả đĩa lẫn CPU nên tính toán chạy được ngay chỗ dữ liệu nằm. Hàng dưới là ba phần còn lại của bài; bấm để tới.</figcaption>
+    <figcaption>Ba tầng lõi của Hadoop 2: <b>HDFS</b> giữ dữ liệu, <b>YARN</b> chia tài nguyên, engine xử lý chạy bên trên (Tez: engine gộp cả chuỗi bước thành một job). Tầng đáy là cụm máy; mỗi máy góp cả đĩa lẫn CPU nên tính toán chạy được ngay chỗ dữ liệu nằm. Hàng dưới là ba phần còn lại của bài; bấm để tới.</figcaption>
   </figure>
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
@@ -882,7 +882,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <figcaption>Hadoop chọn bên phải. Cái giá: phải chấp nhận <b>hỏng hóc là chuyện thường ngày</b>, nên dư thừa được thiết kế sẵn: block có bản sao trên nhiều node, task hỏng được chạy lại ở node khác.</figcaption>
   </figure>
   <details class="deep">
-    <summary>Node hỏng thì dữ liệu và việc của nó ra sao?<span class="hint">Chịu lỗi ở tầng lưu trữ và ở tầng xử lý</span></summary>
+    <summary>Node hỏng thì dữ liệu và việc của nó ra sao?<span class="hint">Chịu lỗi ở hai tầng</span></summary>
     <div class="deep-body">
   <div class="vs">
     <div><h4>Chịu lỗi ở tầng lưu trữ</h4><p>Node hỏng thì block của nó được sao lại từ một bản còn sống.</p></div>
@@ -1009,7 +1009,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
     <thead><tr><th>Công cụ</th><th>Làm gì</th><th>Ghi nhớ</th></tr></thead>
     <tbody>
       <tr><td>Pig</td><td>Xử lý dữ liệu mức cao bằng Pig Latin; mạnh ở join và biến đổi.</td><td>Trình thông dịch chạy ở client, sinh job MapReduce.</td></tr>
-      <tr><td>Hive</td><td>Truy vấn bằng HiveQL giống SQL, rút ngắn thời gian viết job.</td><td>Cũng chạy ở client, cũng sinh job MapReduce. Hive bản mới chạy trên Tez (engine gộp cả chuỗi bước thành một job trên YARN); Hive-on-MapReduce bị loại dần từ Hive 2.</td></tr>
+      <tr><td>Hive</td><td>Truy vấn bằng HiveQL giống SQL, rút ngắn thời gian viết job.</td><td>Cũng chạy ở client, cũng sinh job MapReduce. Hive bản mới chạy trên Tez; Hive-on-MapReduce bị loại dần từ Hive 2.</td></tr>
       <tr><td>HBase</td><td>"CSDL của Hadoop": kho column family (wide-column, xem <a href="#b4-1">bài 4.1</a>), bảng tới hàng nghìn cột, hàng trăm nghìn lượt ghi mỗi giây.</td><td>NoSQL: không có ngôn ngữ truy vấn mức cao, dùng API get, put, scan theo khoá.</td></tr>
       <tr><td>Sqoop</td><td>Chuyển dữ liệu khối lớn giữa Hadoop và CSDL quan hệ, cả hai chiều.</td><td>Import bằng job chỉ có map; kết quả là thư mục tệp text phân tách bằng dấu phẩy trong HDFS. Apache đã cho dự án ngừng phát triển năm 2021.</td></tr>
       <tr><td>Kafka</td><td>Nhật ký (log) thông điệp phân tán, tách producer khỏi consumer; đọc xong không xoá.</td><td>Consumer tự quyết đọc tới vị trí (offset) nào và commit offset vào topic nội bộ <code>__consumer_offsets</code> của Kafka. Bài 5.</td></tr>
