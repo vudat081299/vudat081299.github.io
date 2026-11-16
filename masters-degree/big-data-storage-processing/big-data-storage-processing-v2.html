@@ -4091,11 +4091,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
 
   <h3 class="sec">BFS và đường đi ngắn nhất: lặp job, mỗi vòng thêm một lớp</h3>
-  <p>BFS là thuật toán lặp: biên (frontier) tiến xa thêm một bước sau mỗi lượt. MapReduce không có vòng lặp, nên một chương trình bên ngoài chạy job nhiều lần, output vòng này là input vòng sau. Mỗi bản ghi là một node, kèm D (khoảng cách tốt nhất đã biết) và <b>danh sách kề</b> (adjacency list: các node nó trỏ tới).</p>
+  <p>BFS là thuật toán lặp: biên (frontier) tiến xa thêm một bước sau mỗi lượt. MapReduce không có vòng lặp, nên một chương trình bên ngoài chạy job nhiều lần, output vòng này là input vòng sau.</p>
+  <p>Đồ thị phải biểu diễn sao cho mỗi map task chỉ cần một dòng: <b>danh sách kề</b> (adjacency list), mỗi bản ghi là <code>node → (D, danh sách node trỏ tới)</code> với D là khoảng cách tốt nhất đã biết.</p>
   <details class="deep">
-    <summary>Bản ghi trông ra sao, và vì sao chọn danh sách kề?<span class="hint">So với tham chiếu trực tiếp và ma trận kề</span></summary>
+    <summary>Vì sao chọn danh sách kề?<span class="hint">So với tham chiếu trực tiếp và ma trận kề</span></summary>
     <div class="deep-body">
-      <p>Đồ thị phải biểu diễn sao cho mỗi map task chỉ cần một dòng: mỗi bản ghi là <code>node → (D, danh sách node trỏ tới)</code>.</p>
       <ul>
         <li><b>Tham chiếu trực tiếp</b> (object giữ con trỏ tới láng giềng): cần bộ nhớ dùng chung và đồng bộ, khó tuần tự hoá ra file. Không hợp với task cô lập.</li>
         <li><b>Ma trận kề</b>: M[i][j] = 1 nếu có cạnh i → j; duyệt từng dòng rất tự nhiên. Nhưng đồ thị lớn như web gần như toàn số 0, mỗi dòng dài vô lý.</li>
@@ -4213,12 +4213,12 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <p style="text-align:center;font-family:var(--mono);font-size:14.5px">PR(A) = (1 − d) + d · ( PR(T<sub>1</sub>)/C(T<sub>1</sub>) + … + PR(T<sub>n</sub>)/C(T<sub>n</sub>) )</p>
   <p>T<sub>1</sub>…T<sub>n</sub> là các trang trỏ tới A, C(P) là số link ra của P, d là hệ số damping (thường 0.85): người lướt bấm tiếp một link với xác suất d, nhảy tới một trang ngẫu nhiên với xác suất 1 − d.</p>
   <p>PR<sub>i+1</sub> tính từ PR<sub>i</sub>: map chia hạng của mỗi trang đều cho các trang nó trỏ tới, reduce cộng các mảnh nhận được. Như ở BFS, mapper còn phát (URL, url_list), với url_list là danh sách trang mà URL trỏ tới, để reducer ghi lại cấu trúc đồ thị cho vòng sau.</p>
+  <p>Ở dạng này, khi trang nào cũng có link ra, tổng hạng bằng số trang N, nên PR lớn hơn 1 là bình thường; chia cho N mới ra xác suất người lướt web đứng ở trang đó.</p>
   <details class="deep">
-    <summary>Xác suất mà sao PR lớn hơn 1 được?<span class="hint">Hai dạng công thức PageRank; slide gọi d là gì</span></summary>
+    <summary>Slide gọi d là gì, và vì sao sách khác ra tổng bằng 1?<span class="hint">Hai dạng công thức PageRank</span></summary>
     <div class="deep-body">
-      <p>Ở dạng này, khi trang nào cũng có link ra, tổng hạng bằng số trang N, nên PR lớn hơn 1 là bình thường; chia cho N mới ra xác suất người lướt web đứng ở trang đó.</p>
-      <p>Bài báo gốc (Brin &amp; Page, 1998) dùng đúng dạng của slide; nhiều sách sau chuẩn hoá thành (1 − d)/N + d·Σ để tổng bằng 1. Khi không có trang cụt, hai dạng chỉ khác nhau một hệ số N.</p>
       <p>Slide gọi d là hệ số "URL ngẫu nhiên", dễ hiểu ngược: d là xác suất bấm tiếp link, không phải xác suất nhảy ngẫu nhiên.</p>
+      <p>Bài báo gốc (Brin &amp; Page, 1998) dùng đúng dạng của slide; nhiều sách sau chuẩn hoá thành (1 − d)/N + d·Σ để tổng bằng 1. Khi không có trang cụt, hai dạng chỉ khác nhau một hệ số N.</p>
     </div>
   </details>
 
