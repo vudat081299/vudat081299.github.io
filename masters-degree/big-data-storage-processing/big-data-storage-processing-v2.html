@@ -2307,30 +2307,23 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text class="ta tb tc" x="360" y="338">AP · đứt mạng thì bỏ C</text>
       <text class="t2 tc" x="360" y="358">Dynamo, Cassandra, Riak, CouchDB</text>
     </svg></div>
-    <figcaption>Hệ phân tán chia sẻ dữ liệu có tối đa hai trong ba tính chất. Mạng ở quy mô lớn chắc chắn có lúc đứt, nên lựa chọn thực tế nằm trên hai cạnh <b>CP</b> và <b>AP</b>.</figcaption>
+    <figcaption>Hệ phân tán chia sẻ dữ liệu có tối đa hai trong ba tính chất. Commit hai pha (2PC): một máy điều phối cho mọi node cùng commit hoặc cùng huỷ; cụm 2PC nằm ở CA vì chỉ giữ được C và A khi mạng lành. Mạng ở quy mô lớn chắc chắn có lúc đứt, nên lựa chọn thực tế nằm trên hai cạnh <b>CP</b> và <b>AP</b>.</figcaption>
   </figure>
-
-  <details class="deep">
-    <summary>Slide xếp hệ nào vào sai cạnh?<span class="hint">Đồng thuận, Redis, MongoDB, ZooKeeper</span></summary>
-    <div class="deep-body">
-      <p>Slide xếp “consensus protocols” vào CA và Redis vào CP. Thực ra đồng thuận (Paxos, Raft) là CP, còn Redis nhân bản bất đồng bộ nên không CP. MongoDB chỉ CP tuỳ cấu hình, ZooKeeper chỉ CP khi đọc kèm sync.</p>
-    </div>
-  </details>
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
   <div class="keys two">
-    <article class="key"><h3><span class="ix">C</span>Consistency</h3><p>Mọi node thấy cùng dữ liệu (nhất quán chặt). Chính xác hơn: mọi lần đọc thấy lần ghi đã xong gần nhất, như thể chỉ có một bản (linearizability).</p></article>
+    <article class="key"><h3><span class="ix">C</span>Consistency</h3><p>Mọi node thấy cùng dữ liệu (nhất quán chặt): mọi lần đọc thấy lần ghi đã xong gần nhất.</p></article>
     <article class="key"><h3><span class="ix">A</span>Availability</h3><p>Hệ vẫn trả lời mọi yêu cầu khi có node sập, hay phần cứng, phần mềm đang nâng cấp. Trong chứng minh CAP: mọi node còn sống nhận yêu cầu đều phải trả lời, và trả lời lỗi không tính.</p></article>
     <article class="key"><h3><span class="ix">P</span>Partition tolerance</h3><p>Hệ vẫn chạy khi mạng chia cụm thành các nhóm không liên lạc được với nhau.</p></article>
     <article class="key"><h3><span class="ix">∴</span>Định lý</h3><p>Eric Brewer nêu ở PODC 2000; Gilbert và Lynch chứng minh năm 2002. Tối đa hai trong ba.</p></article>
   </div>
 
   <h3 class="sec">Vì sao nhất quán thành vấn đề</h3>
-  <p>Một máy không to mãi được, nên hệ lớn mở rộng theo chiều ngang: thêm máy, chia dữ liệu (sharding) và nhân bản (replication). Có nhân bản thì mỗi lần ghi phải tới mọi bản sao.</p>
+  <p>Hệ lớn mở rộng theo chiều ngang: thêm máy, chia dữ liệu (sharding) và nhân bản (replication). Có nhân bản thì mỗi lần ghi phải tới mọi bản sao.</p>
   <details class="deep">
-    <summary>Sharding và nhân bản: được gì, vướng ở đâu?<span class="hint">Chiều dọc so với chiều ngang; giới hạn của mở rộng ngang</span></summary>
+    <summary>Sao không nâng cấp một máy, và chiều ngang vướng gì?<span class="hint">Trần chiều dọc; hình chia và nhân bản</span></summary>
     <div class="deep-body">
-      <p>Mở rộng theo chiều dọc (CPU, RAM, đĩa to hơn) bị chặn bởi giới hạn một máy. Mở rộng theo chiều ngang cũng có giới hạn: tỉ lệ đọc/ghi và chi phí liên lạc giữa các máy.</p>
+      <p>Mở rộng theo chiều dọc (thêm CPU, RAM, đĩa cho một máy) bị chặn bởi giới hạn một máy. Mở rộng theo chiều ngang cũng có giới hạn: tỉ lệ đọc/ghi và chi phí liên lạc giữa các máy.</p>
   <figure class="fig">
     <div class="canvas"><svg class="dg" viewBox="0 0 720 232" role="img" aria-label="Bên trái: một file lớn chia thành sáu chunk rải trên ba máy. Bên phải: một máy chính nhân bản sang ba bản sao">
       <text class="t3" x="20" y="22">Sharding: chia dữ liệu</text>
@@ -2366,10 +2359,9 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </figure>
     </div>
   </details>
-  <p>Các bản sao có thể nhận cùng các sự kiện theo thứ tự khác nhau, và từ đó lệch nhau.</p>
+  <p>Các bản sao có thể nhận cùng sự kiện theo thứ tự khác nhau, rồi lệch nhau.</p>
 
   <figure class="fig">
-    <p class="fig-t">Hai bản sao, cùng hai sự kiện, khác thứ tự</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 190" role="img" aria-label="Bản sao 1 cộng 1000 rồi tính lãi 5 phần trăm được 2100; bản sao 2 tính lãi trước rồi cộng 1000 được 2050; hai bản lệch nhau">
       <text class="tb" x="20" y="72">Bản sao 1</text><text class="t3" x="20" y="88">E1 rồi E2</text>
       <rect class="bx" x="170" y="55" width="90" height="40" rx="8"/><text class="tm tc" x="215" y="80">Bal=1000</text>
@@ -2387,7 +2379,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text class="t2" x="652" y="122">lệch 50</text>
       <text class="t3" x="20" y="28">E1 = nạp $1000 · E2 = cộng lãi 5%</text>
     </svg></div>
-    <figcaption>Hai thao tác “cộng 1000” và “nhân 1,05” không giao hoán với nhau, nên thứ tự áp dụng quyết định kết quả. Giữ mọi bản sao cùng thứ tự đòi hỏi phối hợp qua mạng, và đó là chỗ CAP bắt đầu.</figcaption>
+    <figcaption>“Cộng 1000” và “nhân 1,05” không giao hoán, nên thứ tự áp dụng quyết định kết quả. Giữ mọi bản sao cùng thứ tự đòi hỏi phối hợp qua mạng: đó là chỗ CAP bắt đầu.</figcaption>
   </figure>
 
   <h3 class="sec">Chứng minh bằng hai node</h3>
@@ -2427,16 +2419,23 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       </g>
     </svg></div>
     <ol class="steps">
-      <li><b>Bình thường.</b> G1 và G2 cùng giữ x = v0 và đồng bộ qua mạng.</li>
-      <li><b>Phân hoạch.</b> Mạng giữa G1 và G2 đứt. Hệ chịu phân hoạch (P) thì vẫn phải phục vụ cả hai phía.</li>
-      <li><b>Ghi vào G1.</b> Client ghi x = v1 vào G1. G1 không gửi được bản mới sang G2.</li>
-      <li><b>Đọc ở G2.</b> Một client khác hỏi G2 giá trị x. G2 chỉ có hai cách phản ứng.</li>
-      <li><b>Cách 1: trả lời ngay.</b> G2 trả v0. Hệ sẵn sàng nhưng client đọc phải dữ liệu cũ: mất nhất quán (slide: “Not Consistent”).</li>
-      <li><b>Cách 2: chờ cập nhật.</b> G2 chờ tới khi nhận được v1, hoặc báo lỗi. Dữ liệu đúng nhưng yêu cầu không được trả lời: mất sẵn sàng (“Not Available”).</li>
-      <li><b>Muốn cả C và A.</b> G2 phải nhận được v1 từ G1, tức là mạng không được đứt: hệ không chịu phân hoạch (“Not Partition Tolerant”).</li>
+      <li><b>Bình thường.</b> G1 và G2 cùng giữ x = v0, đồng bộ qua mạng.</li>
+      <li><b>Phân hoạch.</b> Mạng giữa G1 và G2 đứt; hệ chịu phân hoạch (P) thì vẫn phục vụ cả hai phía.</li>
+      <li><b>Ghi vào G1.</b> Client ghi x = v1 vào G1; G1 không gửi được sang G2.</li>
+      <li><b>Đọc ở G2.</b> Client khác hỏi G2 giá trị x; G2 chỉ có hai cách.</li>
+      <li><b>Cách 1: trả lời ngay.</b> G2 trả v0 cũ: sẵn sàng nhưng mất nhất quán (C).</li>
+      <li><b>Cách 2: chờ cập nhật.</b> G2 chờ nhận v1, hoặc báo lỗi: đúng nhưng không trả lời, mất sẵn sàng (A).</li>
+      <li><b>Muốn cả C và A.</b> Mạng phải không đứt để G2 nhận được v1: hệ không chịu phân hoạch (P).</li>
     </ol>
   </figure>
-  <div class="callout trap"><p><b>“Chọn 2 trong 3” chỉ có nghĩa khi đang có phân hoạch.</b> Không bỏ được P trong một hệ phân tán thật, vì mạng hỏng không do mình chọn. Khi mạng lành, hệ có thể vừa C vừa A.</p></div>
+  <details class="deep">
+    <summary>Slide gọi ba kết cục là gì, và xếp sai hệ nào?<span class="hint">Tên ba kết cục; đồng thuận, Redis, MongoDB, ZooKeeper</span></summary>
+    <div class="deep-body">
+      <p>Slide gọi ba kết cục trên là “Not Consistent”, “Not Available” và “Not Partition Tolerant”.</p>
+      <p>Slide xếp “consensus protocols” vào CA và Redis vào CP. Thực ra giao thức đồng thuận (Paxos, Raft: đa số node thống nhất một giá trị) là CP, còn Redis nhân bản bất đồng bộ nên không CP. MongoDB chỉ CP tuỳ cấu hình, ZooKeeper chỉ CP khi đọc kèm sync.</p>
+    </div>
+  </details>
+  <div class="callout trap"><p><b>“Chọn 2 trong 3” chỉ có nghĩa khi đang có phân hoạch.</b> Khi mạng lành, hệ có thể vừa C vừa A.</p></div>
   <details class="deep">
     <summary>Lúc mạng lành, hệ còn đánh đổi gì?<span class="hint">Nhất quán và độ trễ: PACELC</span></summary>
     <div class="deep-body">
@@ -2445,22 +2444,17 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
 
   <h3 class="sec">Từ ACID sang BASE</h3>
-  <p>RDBMS dựa trên ACID, nên một RDBMS phân tán thật sự sẽ cần cả C, A và P: điều CAP nói là không thể. Các hệ web lớn chọn A, hy sinh nhất quán chặt, và theo mô hình BASE: <b>B</b>asically <b>A</b>vailable (luôn ưu tiên trả lời), <b>S</b>oft state (trạng thái có thể tự đổi theo thời gian), <b>E</b>ventual consistency (rồi sẽ nhất quán).</p>
+  <p>Các hệ web lớn không giữ ACID trên nhiều máy: họ chọn A, hy sinh nhất quán chặt, và theo mô hình BASE: <b>B</b>asically <b>A</b>vailable (luôn ưu tiên trả lời), <b>S</b>oft state (trạng thái có thể tự đổi theo thời gian), <b>E</b>ventual consistency (rồi sẽ nhất quán).</p>
   <details class="deep">
-    <summary>Vì sao Google, Amazon chịu bỏ nhất quán chặt?<span class="hint">Sẵn sàng 24/7; nhất quán vừa đủ tuỳ ứng dụng</span></summary>
+    <summary>Vì sao các hệ web chịu bỏ ACID, và BASE đổi được gì?<span class="hint">Sẵn sàng 24/7; bốn tính chất ACID; chặt so với lỏng</span></summary>
     <div class="deep-body">
       <p>Google, Amazon cần sẵn sàng 24/7: vài phút ngừng là mất doanh thu. Hệ của họ chạy trên hàng nghìn máy, nơi lỗi mạng là chuyện thường.</p>
+      <ul><li><b>A</b>tomicity: giao dịch làm trọn hoặc không</li><li><b>C</b>onsistency: luôn thoả ràng buộc toàn vẹn (khoá, số dư không âm…)</li><li><b>I</b>solation: giao dịch không thấy nhau</li><li><b>D</b>urability: đã commit là không mất</li></ul>
+      <p>ACID trải ra nhiều bản sao thì cần thêm nhất quán chặt (C của CAP): khó làm, chậm. Một RDBMS phân tán thật sự sẽ cần cả C, A và P, điều CAP nói là không thể. BASE (NoSQL kiểu AP) chấp nhận nhất quán lỏng: dễ làm, hiệu quả.</p>
       <div class="callout idea"><p><b>Nhất quán vừa đủ tuỳ ứng dụng.</b> Giỏ hàng chịu được vài giây lệch; số dư tài khoản thì không.</p></div>
     </div>
   </details>
-  <details class="deep">
-    <summary>ACID gồm gì, và đổi sang BASE được gì?<span class="hint">Bốn tính chất của giao dịch quan hệ; nhất quán chặt so với lỏng</span></summary>
-    <div class="deep-body">
-      <ul><li><b>A</b>tomicity: giao dịch làm trọn hoặc không</li><li><b>C</b>onsistency: luôn thoả ràng buộc toàn vẹn</li><li><b>I</b>solation: giao dịch không thấy nhau</li><li><b>D</b>urability: đã commit là không mất</li></ul>
-      <p>ACID trải ra nhiều bản sao thì cần thêm nhất quán chặt (C của CAP): khó làm, chậm. BASE (NoSQL kiểu AP) chấp nhận nhất quán lỏng: dễ làm, hiệu quả.</p>
-    </div>
-  </details>
-  <div class="callout trap"><p><b>Hai chữ C khác nhau.</b> C của ACID: mỗi giao dịch giữ dữ liệu thoả ràng buộc (khoá, số dư không âm…). C của CAP: mọi bản sao trả cùng giá trị mới nhất, như thể chỉ có một bản.</p></div>
+  <div class="callout trap"><p><b>Hai chữ C khác nhau.</b> C của ACID: mỗi giao dịch giữ dữ liệu thoả ràng buộc. C của CAP: mọi bản sao trả cùng giá trị mới nhất, như thể chỉ có một bản.</p></div>
 
   <h3 class="sec">Nhất quán cuối cùng và đọc bản mình ghi</h3>
   <figure class="fig" id="b4-2-ec">
@@ -2489,17 +2483,10 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text class="tm tc" x="180" y="242">t0</text><text class="tm tc" x="300" y="242">t1</text><text class="tm tc" x="420" y="242">t2</text><text class="tm tc" x="520" y="242">t3</text>
       <text class="t3 te" x="700" y="242">thời gian</text>
     </svg></div>
-    <figcaption><b>Nhất quán cuối cùng:</b> khi không còn cập nhật mới, mọi bản sao dần giống nhau, nhưng không hứa sau bao lâu. Trong lúc lan truyền, client vừa ghi A′ có thể đọc ở R4 và thấy lại A: giao thức <b>Read Your Own Writes</b> buộc lần đọc đó tới bản sao đã có bản ghi của chính nó.</figcaption>
+    <figcaption><b>Nhất quán cuối cùng:</b> khi không còn cập nhật mới, mọi bản sao dần giống nhau, nhưng không hứa sau bao lâu. Trong lúc lan truyền, client vừa ghi A′ có thể đọc ở R4 và thấy lại A: giao thức <b>Read Your Own Writes</b> đưa lần đọc ấy tới bản sao đã có bản ghi của nó.</figcaption>
   </figure>
   <details class="deep">
-    <summary>Ví dụ của slide: Amazon S3, nay đã khác<span class="hint">Read-after-write khác read your own writes; S3 nhất quán chặt từ 12/2020</span></summary>
-    <div class="deep-body">
-      <p>Slide lấy S3 làm ví dụ read-after-write (đọc-sau-ghi), một hứa hẹn mạnh hơn read your own writes: ghi xong thì mọi lần đọc sau đó, từ bất kỳ client nào, đều thấy bản mới. Trước đây S3 chỉ đảm bảo đọc-sau-ghi cho object mới tạo, còn ghi đè thì nhất quán cuối cùng. Từ 12/2020, S3 nhất quán chặt đọc-sau-ghi cho mọi thao tác.</p>
-    </div>
-  </details>
-
-  <details class="deep">
-    <summary>Giữa “chặt” và “cuối cùng” còn những mức nào?<span class="hint">Causal, read your own writes, monotonic reads</span></summary>
+    <summary>Giữa “chặt” và “cuối cùng” còn những mức nào, và S3 hứa mức nào?<span class="hint">Causal, read your own writes, monotonic reads; S3 từ 12/2020</span></summary>
     <div class="deep-body">
       <div class="tbl"><table>
         <thead><tr><th>Mức</th><th>Đảm bảo</th></tr></thead>
@@ -2512,6 +2499,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         </tbody>
       </table></div>
       <p>Chặt mạnh hơn nhân quả; nhân quả bao hàm cả read your own writes lẫn monotonic reads, còn hai mức này không so được với nhau; cuối cùng là yếu nhất. Mức càng yếu càng dễ làm, nhanh và sẵn sàng hơn; đổi lại ứng dụng phải chịu nhiều kiểu bất thường hơn.</p>
+      <p>Slide lấy S3 làm ví dụ read-after-write (đọc-sau-ghi), một hứa hẹn mạnh hơn read your own writes: ghi xong thì mọi lần đọc sau đó, từ bất kỳ client nào, đều thấy bản mới. Trước đây S3 chỉ đảm bảo đọc-sau-ghi cho object mới tạo, còn ghi đè thì nhất quán cuối cùng. Từ 12/2020, S3 nhất quán chặt đọc-sau-ghi cho mọi thao tác.</p>
     </div>
   </details>
 
