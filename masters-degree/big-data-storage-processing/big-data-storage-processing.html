@@ -1017,7 +1017,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       <tr><td>ZooKeeper</td><td>Dịch vụ điều phối tin cậy: thành viên nhóm, bầu leader, cấu hình động, theo dõi trạng thái.</td><td>Dùng giao thức ZAB: giống Paxos ở chỗ cần đa số đồng ý, nhưng không phải Paxos.</td></tr>
     </tbody>
   </table></div>
-      <p>ZooKeeper được HBase và HDFS HA dùng. Kafka bản cũ cũng dùng nó; từ Kafka 4.0, Kafka thay nó bằng cơ chế đồng thuận riêng KRaft (Kafka Raft).</p>
+      <p>ZooKeeper được HBase và HDFS HA (High Availability, chế độ có NameNode dự phòng tự lên thay, bài 3.3) dùng. Kafka bản cũ cũng dùng nó; từ Kafka 4.0, Kafka thay nó bằng cơ chế đồng thuận riêng KRaft (Kafka Raft).</p>
       <p>Các bản phân phối như Hortonworks Data Platform (HDP) đóng gói sẵn HDFS, YARN, Hive, Pig, HBase, Sqoop, Kafka, Oozie, ZooKeeper; bản Sandbox là máy ảo một node để thử. HDP đã ngừng sau khi Hortonworks sáp nhập vào Cloudera (2019); bản kế tục là Cloudera Data Platform.</p>
     </div>
   </details>
