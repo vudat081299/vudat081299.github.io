@@ -2,13 +2,6 @@
 
 Làm xong mục nào thì xoá mục ấy.
 
-## CHỜ CHỦ TRANG
-
-- Chọn một trong hai giao diện: bản kem `data-management-visualization.html` hay bản màu trang chủ
-  `data-management-visualization-green.html`. Nút "Kem | Xanh" trên thanh trên chuyển qua lại.
-- Chọn xong: giữ bản thắng ở tên `data-management-visualization.html`, xoá bản kia, gỡ `nav.ver` và đoạn JS đi kèm,
-  sửa mục "Hai bản giao diện" trong CLAUDE.md.
-
 ## NỢ
 
 - Khung xương cả trang 44%, trên chỉ báo 25–35%. Theo REPO-027 không cắt cho đạt số: chỉ rà bài nặng nhất (2.1 54%,

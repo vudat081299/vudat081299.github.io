@@ -3,7 +3,7 @@
 - Một trang tự chứa, `big-data-storage-processing.html`: dạy lại môn Lưu trữ và xử lý dữ liệu lớn theo đúng
   thứ tự các file slide (1, 2, 3.1, 3.3, 4.1, 4.2, 4.3, 4.6, 5 … 10).
 - Chỉ nạp font Google. Không build, mở thẳng là chạy. Có mục trên trang chủ (section Master's Degree).
-- Hai bản giao diện, cùng nội dung, để chủ trang so sánh: `big-data-storage-processing.html` (màu theo chặng)
+- Hai bản giao diện, cùng nội dung, giữ cả hai (BIGDATA-002): `big-data-storage-processing.html` (màu theo chặng)
   và `big-data-storage-processing-v2.html` (khung theo trang chủ: trắng pha xanh, đen pha xanh, xanh lá để nhấn; tiêu đề Space Grotesk;
   màu chặng dịu chỉ trong sơ đồ và nhãn chặng; khung chú ý xanh dương / hổ phách).
   Hai bản chỉ khác `<style>`, các marker mũi tên và thanh trên. Sửa nội dung thì sửa cả hai file.

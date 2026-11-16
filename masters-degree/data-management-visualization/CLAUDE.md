@@ -8,7 +8,7 @@
 - Đo hai chế độ đọc (chạy tay, không phải cổng):
   `python3 masters-degree/data-management-visualization/tools/measure-modes.py <file> -v`.
 
-## Hai bản giao diện (tạm, chờ chủ trang chọn — xem HANDOFF.md)
+## Hai bản giao diện (giữ cả hai, DMV-001)
 
 - `data-management-visualization.html` (kem) và `data-management-visualization-green.html` (màu trang chủ: đen,
   trắng, một xanh lá, tiêu đề Space Grotesk) có cùng `<body>` và JS; chỉ khác `<style>` và `aria-current` trong `nav.ver`.
