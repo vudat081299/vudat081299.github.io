@@ -4662,7 +4662,7 @@ linesRDD = sc.<span class="f">textFile</span>(<span class="s">"/path/to/README.m
       <li><b>Bước 3 · Tính lại.</b> Theo lineage, partition 3 = filter(block 3). Spark đọc block 3 từ một bản sao HDFS và chạy lại filter cho riêng partition ấy trên worker còn sống.</li>
     </ol>
   </figure>
-  <div class="callout note"><p>Chịu lỗi nhờ lineage rẻ hơn nhân bản dữ liệu trong RAM: không tốn bộ nhớ, không tốn băng thông lúc bình thường. Cái giá là lineage quá dài thì tính lại lâu; khi ấy dùng checkpoint ghi RDD xuống đĩa.</p></div>
+  <div class="callout note"><p>Tính lại ra đúng dữ liệu đã mất vì RDD bất biến (partition cha không bị ai sửa sau khi tạo) và mỗi phép trong lineage tất định (cùng input luôn cho cùng output). Chịu lỗi nhờ lineage rẻ hơn nhân bản dữ liệu trong RAM: không tốn bộ nhớ, không tốn băng thông lúc bình thường. Cái giá là lineage quá dài thì tính lại lâu; khi ấy dùng checkpoint ghi RDD xuống đĩa.</p></div>
 
   <h3 class="sec">DataFrame: RDD có cột và có bộ tối ưu</h3>
   <p>DataFrame là trừu tượng chính từ Spark 2.0: bất biến, giữ lineage để tính lại phần mất, xử lý song song. Như RDD, transformation trên DataFrame lười, action mới chạy.</p>
