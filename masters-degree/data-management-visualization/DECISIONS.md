@@ -1,11 +1,10 @@
 # Quyết định — data-management-visualization
 
 <!-- index:start -->
-- DMV-001 · Giữ cả hai bản giao diện · `masters-degree/data-management-visualization/*.html`
+- DMV-002 · Một bản giao diện, màu trang chủ · `masters-degree/data-management-visualization/*.html`
 <!-- index:end -->
 
-## DMV-001 · Giữ cả hai bản giao diện
-16/11/2026 · `masters-degree/data-management-visualization/*.html`
+## DMV-002 · Một bản giao diện, màu trang chủ
+16/11/2026 · `masters-degree/data-management-visualization/*.html` · thay cho DMV-001
 
-Bản kem (`data-management-visualization.html`) và bản màu trang chủ (`-green.html`) cùng ở lại, nút "Kem | Xanh"
-chuyển qua lại. Hai bản giữ cùng `<body>` và JS: sửa chữ thì sửa cả hai.
+Chỉ giữ bản màu trang chủ, ở tên `data-management-visualization.html`. Bỏ bản kem và nút "Kem | Xanh".

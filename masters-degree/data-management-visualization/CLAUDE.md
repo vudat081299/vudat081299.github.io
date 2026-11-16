@@ -8,18 +8,14 @@
 - Đo hai chế độ đọc (chạy tay, không phải cổng):
   `python3 masters-degree/data-management-visualization/tools/measure-modes.py <file> -v`.
 
-## Hai bản giao diện (giữ cả hai, DMV-001)
+## Bảng màu (DMV-002)
 
-- `data-management-visualization.html` (kem) và `data-management-visualization-green.html` (màu trang chủ: đen,
-  trắng, một xanh lá, tiêu đề Space Grotesk) có cùng `<body>` và JS; chỉ khác `<style>` và `aria-current` trong `nav.ver`.
-- Sửa nội dung thì sửa cả hai file giống hệt nhau. Mục trên trang chủ trỏ bản kem.
-- Bản xanh dùng năm màu: trắng, đen, xanh lá, trắng pha xanh (`--a-soft`), đen pha xanh (`--a`). Cả hai phần
-  dùng `--a` làm `--acc`.
-- Bản xanh: xanh tươi `--green` / `--green-hi` chỉ cho chi tiết nhỏ (gạch nhãn, thanh tiến độ, mục đang đọc, gạch
-  chân link, mục đã xem); không tô khối lớn. Trong `.map`, `--a` đổi sang `--green-hi` cho tuyến A.
-- Bản xanh: hình, `.demo`, `summary` đóng và `.f-bg` nằm trong thẻ trắng nên tô `--inset` (trắng ở theme sáng);
+- Một bản giao diện, màu trang chủ: đen, trắng, một xanh lá, tiêu đề Space Grotesk.
+- Năm màu: trắng, đen, xanh lá, trắng pha xanh (`--a-soft`), đen pha xanh (`--a`). Cả hai phần dùng `--a` làm `--acc`.
+- Xanh tươi `--green` / `--green-hi` chỉ cho chi tiết nhỏ (gạch nhãn, thanh tiến độ, mục đang đọc, gạch chân link,
+  mục đã xem); không tô khối lớn. Trong `.map`, `--a` đổi sang `--green-hi` cho tuyến A.
+- Hình, `.demo`, `summary` đóng và `.f-bg` nằm trong thẻ trắng nên tô `--inset` (trắng ở theme sáng);
   không đặt `--bg` xám trong thẻ trắng.
-- Bản xanh: biểu đồ dùng `--c1…--c6` trầm (lục, lam than, vàng đất, mận, xám, xanh đá); chữ trắng trên chúng đạt 4.5:1.
 
 ## Cấu trúc trang
 
@@ -53,8 +49,7 @@
 ## Giao diện
 
 - Màu chỉ khai ở token `:root` / `[data-theme="dark"]`, chép lại bản sáng trong `@media print`.
-- Phần A dùng `--a` (xanh), Phần B `--b` (cam), qua `--acc`.
-- Bảng màu biểu đồ `--c1…--c6`: lam, cam đất, lục, tím hồng, xám đá, xanh ngọc. Chú giải gọi tên màu phải khớp.
+- Bảng màu biểu đồ `--c1…--c6` trầm: lục, lam than, vàng đất, mận, xám, xanh đá. Chú giải gọi tên màu phải khớp.
 - Chữ trắng `.t-on` trên `--c1…--c6`, `--a`, `--b` đạt 4.5:1 ở theme sáng; đổi token thì tính lại.
 - SVG tô bằng lớp `f-*`, `s-*`, `t-*`; không ghi mã màu. Mũi tên dùng chung: `url(#arr)`, `url(#arr-a)`, `url(#arr-b)`.
 - Marker cố định 8 đơn vị hình (`markerUnits="userSpaceOnUse"`, `refX="4"`): đầu nhọn nằm 4.8 đơn vị sau điểm cuối
