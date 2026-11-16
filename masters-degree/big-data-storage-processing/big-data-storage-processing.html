@@ -2028,16 +2028,16 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
   <h3 class="sec">SQL và NoSQL</h3>
   <p>Xu hướng chung, không phải luật: CSDL quan hệ thường chạy tập trung, lược đồ ổn định, truy vấn bằng SQL có join, ưu tiên giao dịch ACID. NoSQL thường chạy phân tán, dữ liệu bán cấu trúc không cần lược đồ, ưu tiên sẵn sàng và mở rộng, chấp nhận nhất quán cuối cùng.</p>
   <details class="deep">
-    <summary>Khi nào đáng chọn NoSQL, và xu hướng ấy có ngoại lệ nào?<span class="hint">Volume, velocity, quy mô; RDBMS mạnh, yếu ở đâu; NoSQL có ACID, SQL chạy phân tán</span></summary>
+    <summary>Hai phía khác nhau về quy mô, cách truy vấn ra sao, và có ngoại lệ nào?<span class="hint">GB–TB so với PB–ZB; API theo mô hình; NoSQL có ACID, SQL chạy phân tán</span></summary>
     <div class="deep-body">
-  <p>NoSQL đáng chọn khi khối lượng khổng lồ (volume), tải truy vấn cực lớn (velocity), cần sẵn sàng liên tục, hoặc lược đồ thay đổi thường xuyên. Về quy mô, CSDL quan hệ thường ở mức GB tới TB, NoSQL ở mức PB tới EB, ZB.</p>
-  <p>Truy vấn NoSQL thường qua API theo mô hình dữ liệu, trên cấu trúc lồng nhau. CSDL quan hệ có ACID chín muồi và bảo mật mịn, đổi lại phải mô hình hoá trước và khó mở rộng ngang.</p>
+  <p>Về quy mô, CSDL quan hệ thường ở mức GB tới TB, NoSQL ở mức PB tới EB, ZB. Truy vấn NoSQL thường qua API theo mô hình dữ liệu, trên cấu trúc lồng nhau.</p>
   <div class="callout note"><p><b>Ngoại lệ có ở cả hai phía.</b> HBase nhất quán mạnh trên từng hàng; Neo4j, và MongoDB từ bản 4.0, có giao dịch ACID; Cassandra có CQL, Neo4j có Cypher, đều là ngôn ngữ truy vấn khai báo. Ngược lại, NewSQL (Spanner, CockroachDB) đưa SQL lên nhiều máy.</p></div>
     </div>
   </details>
+  <div class="callout note"><p><b>Khi nào cần NoSQL.</b> Khối lượng khổng lồ (volume), tải truy vấn cực lớn (velocity), cần sẵn sàng liên tục, hoặc lược đồ thay đổi thường xuyên.</p></div>
 
   <h3 class="sec">Bốn mô hình dữ liệu</h3>
-  <p>Mô hình quan hệ làm mốc so sánh: lưu theo hàng, lược đồ định trước, join gộp nhiều bảng.</p>
+  <p>Mô hình quan hệ làm mốc so sánh: lưu theo hàng, lược đồ định trước, join gộp nhiều bảng. Ưu: ACID chín muồi, bảo mật mịn. Nhược: phải mô hình hoá trước, khó mở rộng ngang.</p>
   <div class="tabs">
     <section class="tab" data-label="Key–value">
       <p>Một bảng hai cột với ba thao tác: <code>PUT(key, value)</code>, <code>GET(key)</code>, <code>DELETE(key)</code>. Value chứa gì cũng được, CSDL không nhìn vào. Không join nên chia ra nhiều máy rất dễ: băm khoá là biết máy nào giữ nó.</p>
@@ -2058,7 +2058,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       </details>
     </section>
     <section class="tab" data-label="Column family">
-      <p>Lược đồ động, hướng cột: cột gom thành column family, đọc được cả family một lần. Một hàng có thể có hàng triệu cột nhưng phần lớn trống, ô trống không tốn chỗ.</p>
+      <p>Lược đồ động, hướng cột; bài báo Bigtable gọi mô hình này là một map thưa, phân tán, bền, có thứ tự, nhiều chiều. Cột gom thành column family, đọc được cả family một lần. Một hàng có thể có hàng triệu cột nhưng phần lớn trống, ô trống không tốn chỗ.</p>
       <figure class="fig stepper" id="b4-1-bigtable">
         <p class="fig-t">Đọc một ô trong Bigtable</p>
         <div class="canvas"><svg class="dg" viewBox="0 0 720 272" role="img" aria-label="Bảng webtable của Bigtable: row key com.cnn.www, family contents có ba phiên bản theo thời gian, family anchor có hai cột">
@@ -2096,18 +2096,17 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
           </g>
         </svg></div>
         <ol class="steps">
-          <li><b>Row key.</b> Hàng được sắp theo row key, ở đây là tên miền viết ngược (com.cnn.www).</li>
+          <li><b>Row key.</b> Hàng được sắp theo row key. Tên miền viết ngược (com.cnn.www) để mọi trang cùng site nằm cạnh nhau trên đĩa.</li>
           <li><b>Column family.</b> Family khai báo trước (contents:, anchor:); cột trong family thêm tự do lúc ghi, như anchor:cnnsi.com.</li>
-          <li><b>Timestamp.</b> Mỗi ô giữ nhiều phiên bản theo thời gian: contents: có ba bản t3, t5, t6.</li>
+          <li><b>Timestamp.</b> Mỗi ô giữ nhiều phiên bản theo thời gian: contents: có ba bản t3, t5, t6. Bản cũ được dọn theo luật giữ n bản gần nhất hoặc theo tuổi.</li>
           <li><b>Đọc một ô.</b> Ba toạ độ (row, column, timestamp) xác định đúng một giá trị. Bỏ timestamp thì nhận bản có timestamp lớn nhất: contents: trả bản t6.</li>
         </ol>
       </figure>
       <p><b>Dùng khi</b> dữ liệu thưa, rất rộng, đọc theo dải khoá: log sự kiện, chuỗi thời gian, chỉ mục web.</p>
       <details class="deep">
-        <summary>Column family khác bảng quan hệ ở đâu, hệ nào dùng nó?<span class="hint">Ma trận thưa; tên miền viết ngược, dọn bản cũ; super column; Bigtable, HBase, Cassandra</span></summary>
+        <summary>Column family khác bảng quan hệ ở đâu, hệ nào dùng nó?<span class="hint">Ma trận thưa lai hàng và cột; super column và chỗ slide viết lệch; Bigtable, HBase, Cassandra</span></summary>
         <div class="deep-body">
-      <p>Bài báo Bigtable định nghĩa mô hình này là một map thưa, phân tán, bền, có thứ tự, nhiều chiều. So với bảng quan hệ, đó là ma trận thưa, lai giữa lưu theo hàng và theo cột.</p>
-      <p>Trong webtable, tên miền viết ngược để mọi trang cùng site nằm cạnh nhau trên đĩa; bản cũ của một ô được dọn theo luật giữ n bản gần nhất hoặc theo tuổi.</p>
+      <p>So với bảng quan hệ: ma trận thưa, lai giữa lưu theo hàng và theo cột; thêm cột mới không cần <code>ALTER TABLE</code>.</p>
       <p>Cassandra bản cũ còn có super column (một cột chứa nhiều cột con), nay đã bỏ. Slide viết “gom family thành super column”; cách hiểu đúng là cột gom thành column family, còn super column là một cột chứa nhiều cột con.</p>
       <div class="tbl"><table>
         <thead><tr><th>Hệ</th><th>Đặc điểm</th></tr></thead>
@@ -2121,12 +2120,11 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:11px
       </details>
     </section>
     <section class="tab" data-label="Graph">
-      <p>Ba khái niệm: nút, quan hệ (cạnh) và thuộc tính gắn trên cả hai. Mỗi nút biết các nút kề, nên truy vấn là phép duyệt cạnh chứ không phải join.</p>
+      <p>Ba khái niệm: nút, quan hệ (cạnh) và thuộc tính gắn trên cả hai. Mỗi nút biết các nút kề, nên truy vấn là phép duyệt cạnh chứ không phải join. Bảng quan hệ thì mỗi bước đi theo quan hệ là một lần join bảng với chính nó (self-join), nên càng nhiều bước càng đắt.</p>
       <p><b>Dùng khi</b> câu hỏi là về đường đi: mạng xã hội, gợi ý, phát hiện gian lận, linked open data.</p>
       <details class="deep">
-        <summary>Graph hơn bảng quan hệ ở đâu, và Neo4j lớn tới đâu?<span class="hint">Self-join; mỗi mô hình tối ưu cho gì; giới hạn số nút theo slide và nay</span></summary>
+        <summary>Graph tối ưu cho việc gì, và Neo4j lớn tới đâu?<span class="hint">Mỗi mô hình tối ưu cho gì; giới hạn số nút theo slide và nay</span></summary>
         <div class="deep-body">
-      <p>Với bảng quan hệ, mỗi bước đi theo quan hệ là một lần join bảng với chính nó (self-join), nên càng nhiều bước càng đắt.</p>
       <div class="tbl"><table>
         <thead><tr><th>So với</th><th>Hệ kia tối ưu cho</th><th>Graph tối ưu cho</th></tr></thead>
         <tbody>
