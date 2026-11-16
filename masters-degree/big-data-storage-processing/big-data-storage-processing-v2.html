@@ -297,7 +297,8 @@ details.deep>summary:hover{background:var(--surface-2)}
 .callout::before{position:absolute;left:14px;top:13px;display:grid;place-items:center;width:20px;height:20px;border-radius:6px;font:600 12px/1 var(--mono);background:color-mix(in srgb,var(--cc) 12%,var(--surface));color:var(--cc)}
 .callout.note{--cc:var(--info)}
 .callout.note::before{content:"i"}
-.callout.trap{--cc:var(--warn);background:color-mix(in srgb,var(--warn) 5%,var(--surface))}
+/* hổ phách chỉ ở viền (pha với trắng) và ô dấu: nền hổ phách nhạt ra màu kem, pha với viền xám xanh ra kaki */
+.callout.trap{--cc:var(--warn);border-color:color-mix(in srgb,var(--warn) 34%,var(--surface))}
 .callout.trap::before{content:"!"}
 .callout.idea{--cc:var(--green);background:var(--tint);border-color:var(--tint-line)}
 .callout.idea::before{content:"✦";background:var(--surface)}
