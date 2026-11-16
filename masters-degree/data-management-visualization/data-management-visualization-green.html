@@ -23,7 +23,7 @@
   --green:#0a7a3c; --green-hi:#16a34a;
   --good:#0a7a3c; --good-soft:#e4f2e8; --bad:#b42318; --bad-soft:#fbe6e3; --warn:#7a5f00; --warn-soft:#f2f0e8;
   --c1:#2f7a52; --c2:#3b4a63; --c3:#8f6516; --c4:#8c4a6b; --c5:#6b756f; --c6:#376f7b;
-  --shadow:0 1px 2px rgba(11,15,12,.05),0 12px 32px -14px rgba(11,15,12,.18);
+  --shadow:0 1px 2px rgba(11,15,12,.05),0 12px 32px -14px rgba(11,15,12,.18); --scrim:rgba(0,0,0,.35);
   --display:'Space Grotesk',system-ui,-apple-system,'Segoe UI',sans-serif;
   --font:'Be Vietnam Pro',system-ui,-apple-system,'Segoe UI',sans-serif;
   --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
@@ -37,7 +37,7 @@
   --green:#5be08f; --green-hi:#5be08f;
   --good:#5be08f; --good-soft:#122a1b; --bad:#f2877c; --bad-soft:#341815; --warn:#e3c45c; --warn-soft:#2c260f;
   --c1:#6fcf97; --c2:#9fb0cc; --c3:#e0b45a; --c4:#d99abb; --c5:#8d9891; --c6:#7cc0cc;
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -18px rgba(0,0,0,.8);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 18px 40px -18px rgba(0,0,0,.8); --scrim:rgba(0,0,0,.35);
 }
 .part-a{--acc:var(--a);--acc-soft:var(--a-soft)}
 .part-b{--acc:var(--a);--acc-soft:var(--a-soft)}
@@ -372,7 +372,7 @@ figure.dg,.demo{border-radius:12px}
   background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--green-hi) 6%,transparent),transparent 60%),var(--surface)}
 .recap h3{font-family:var(--display);font-weight:600}
 details.quiz>summary::before{background:var(--ink);color:var(--bg)}
-details.quiz[open]>summary::before{background:var(--green);color:#fff}
+details.quiz[open]>summary::before{background:var(--green);color:var(--on-acc)}
 .try b{color:var(--green)}
 .prog-bar i{background:var(--green-hi)}
 .sk-list .n{color:var(--ink-3)}
@@ -381,7 +381,7 @@ details.quiz[open]>summary::before{background:var(--green);color:#fff}
 .skel a.sk.seen rect{stroke:var(--green-hi)}
 .skel a.sk.seen rect.f-surface,.skel a.sk.seen rect.f-sunk{fill:var(--surface)}
 .sk-check circle{fill:var(--green-hi)}
-.sk-check text{fill:#fff}
+.sk-check text{fill:var(--on-acc)}
 .chip,.btn{border-color:var(--line)}
 .chip:hover,.btn:hover{border-color:var(--stroke)}
 input[type=range]{accent-color:var(--green-hi)}
@@ -392,7 +392,7 @@ input[type=range]{accent-color:var(--green-hi)}
   .menu-btn{display:inline-flex}
   .side{position:fixed;top:56px;left:0;bottom:0;width:min(300px,86vw);height:auto;z-index:30;background:var(--bg);transform:translateX(-102%);transition:transform .25s;box-shadow:var(--shadow)}
   body.toc-open .side{transform:none}
-  .scrim{position:fixed;inset:56px 0 0 0;background:rgba(0,0,0,.35);z-index:25;display:none}
+  .scrim{position:fixed;inset:56px 0 0 0;background:var(--scrim);z-index:25;display:none}
   body.toc-open .scrim{display:block}
   main{padding:0 16px 96px}
   .top-name.has-cur .top-course{display:none}
