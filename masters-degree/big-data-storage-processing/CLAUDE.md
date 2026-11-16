@@ -44,6 +44,7 @@ Khung xương đạt khi:
 - Thuật ngữ dùng ở khung xương được giải nghĩa ngay ở khung xương.
 - Mỗi mục: tiêu đề, một sơ đồ cơ chế, 1–3 câu ý lõi; mục không có cơ chế để vẽ thì chỉ 1–3 câu.
 - Luôn mở: bản đồ bài, thẻ khái niệm, hộp "Nhớ", câu hỏi quiz.
+- Câu hỏi quiz trả lời được chỉ bằng khung xương; ý nó cần không nằm riêng trong khối gập (BIGDATA-001).
 - Nhãn khối gập nói bên trong có gì, tốt nhất là câu người đọc sẽ hỏi tiếp; không ghi "Xem thêm" hay "Chi tiết" trơn.
 - Vào khối gập: ví dụ tính tay dài, code, bảng tham số hay lệnh, bảng so sánh chi tiết, ngoại lệ, lịch sử phiên bản, ghi chú "slide cũ", số liệu phụ.
 - Sơ đồ chỉ vào khối gập khi nó minh hoạ chi tiết, không phải cơ chế lõi.
