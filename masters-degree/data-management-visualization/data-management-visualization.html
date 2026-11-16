@@ -4436,7 +4436,7 @@ footer{border-top:1px solid var(--line);margin-top:64px;padding:20px 0;font-size
         </details>
         <p>Phân cấp gộp dần (AHC) gộp dần hai cụm gần nhất cho tới khi còn một, cho ra dendrogram như hình trên; cắt ở độ cao nào thì được bấy nhiêu cụm.</p>
         <details class="more">
-          <summary>AHC chạy từng bước ra sao, khoảng cách giữa hai cụm đo thế nào?</summary>
+          <summary>AHC chạy từng bước ra sao, khoảng cách giữa hai cụm đo thế nào, tốn bao nhiêu tính toán?</summary>
           <div class="more-body">
             <ol><li>Mỗi điểm là một cụm.</li><li>Gộp hai cụm gần nhất.</li><li>Cập nhật khoảng cách, lặp tới khi còn một cụm.</li></ol>
             <p>AHC cần thước đo khoảng cách và luật liên kết (linkage), tức cách đo khoảng cách giữa hai cụm:</p>
@@ -4499,11 +4499,12 @@ footer{border-top:1px solid var(--line);margin-top:64px;padding:20px 0;font-size
     <path d="M661.7 74 l8 8 m0 -8 l-8 8" class="s-bad" stroke-width="2.4"/>
               </svg>
             </div><figcaption>Cùng hai cụm, bốn cách đo khoảng cách giữa cụm. Toạ độ tự đặt.</figcaption></figure>
+            <p>Cái giá của AHC là tính toán: bản cài chuẩn giữ khoảng cách của mọi cặp điểm (bộ nhớ cỡ O(n²)) và mỗi bước xét mọi cặp cụm có thể gộp, nên thời gian cỡ O(n³) với n điểm. Dùng hàng đợi ưu tiên (heap) thì còn O(n² log n); riêng liên kết single và complete có thuật toán O(n²) (SLINK, CLINK). Vì vậy AHC hợp tập nhỏ và vừa, còn với dữ liệu lớn thì tốn bộ nhớ và chạy chậm.</p>
           </div>
         </details>
         <p>K-means chọn k tâm ban đầu, gán mỗi điểm vào tâm gần nhất, cập nhật tâm rồi lặp tới khi hội tụ.</p>
         <details class="more">
-          <summary>K-means chạy qua từng vòng thế nào, và chọn k ra sao?</summary>
+          <summary>K-means chạy qua từng vòng thế nào, chọn k ra sao, hợp với cụm hình gì?</summary>
           <div class="more-body">
             <figure class="dg"><div class="dg-scroll">
               <svg viewBox="0 0 720 240" role="img" aria-label="K-means trên ba bảng: chọn ba tâm ban đầu, gán mỗi điểm vào tâm gần nhất và tô màu theo cụm, rồi tính lại tâm và lặp tới khi tâm đứng yên; mũi tên cho thấy tâm dịch chuyển">
@@ -4658,6 +4659,7 @@ footer{border-top:1px solid var(--line);margin-top:64px;padding:20px 0;font-size
             </div><figcaption>Dấu × là tâm. Bảng ③ là kết quả sau khi hội tụ; mũi tên nối tâm ban đầu với tâm cuối. Số liệu tự sinh.</figcaption></figure>
             <p>K-means cần: thước đo khoảng cách, số cụm k, và tâm khởi đầu. Kết quả là tâm cuối cùng và nhãn cụm của từng điểm. Tâm khởi đầu khác nhau có thể cho kết quả khác nhau, nên thường chạy nhiều lần.</p>
             <p>K-means chọn tâm sao cho tổng bình phương khoảng cách Euclid từ mỗi điểm tới tâm cụm của nó (inertia) nhỏ nhất; thuật toán luôn hội tụ nhưng có thể chỉ tới một cực tiểu cục bộ. Chọn k: vẽ inertia theo k rồi tìm chỗ gãy (elbow), hoặc dùng hệ số silhouette. Co giãn các biến trước khi chạy, vì khoảng cách Euclid nhạy thang đo (xem <a href="#b5-co-gian">5.3</a>).</p>
+            <p>K-means chạy tốt trên số mẫu rất lớn, nhưng tiêu chí inertia giả định các cụm lồi, đẳng hướng (trải đều mọi hướng, gần tròn) và có độ phân tán tương đương. Cụm dài, cong hay lồng vào nhau thì k-means cắt sai; khi đó AHC liên kết single thường tách đúng hơn.</p>
             <p class="slide-note">Hình luật liên kết ở slide 59 vẽ khoảng cách giữa hai tâm nhưng gọi là average; đó là centroid linkage. Slide ghi k-means cần một “thước đo khoảng cách”, nhưng k-means chuẩn (tâm là trung bình) gắn với bình phương khoảng cách Euclid; dùng thước đo khác thì cần biến thể như k-medoids.</p>
           </div>
         </details>
@@ -4820,7 +4822,7 @@ footer{border-top:1px solid var(--line);margin-top:64px;padding:20px 0;font-size
   <div class="quiz-list">
     <details class="quiz"><summary>Thu nhập hộ gia đình của một tỉnh lệch phải mạnh. Báo cáo “thu nhập tiêu biểu” bằng trung bình hay trung vị? Vẽ biểu đồ gì để thấy điều đó?</summary><div>Trung vị: vài hộ thu nhập rất cao kéo trung bình lên trên mức đa số hộ đạt được. Histogram cho thấy đuôi phải dài; box plot cho thấy trung vị lệch về phía Q1 và nhiều điểm ngoài rào trên.</div></details>
     <details class="quiz"><summary>Muốn so phân phối điểm thi của 5 lớp cùng lúc. Chọn histogram hay box plot? Vì sao?</summary><div>Box plot đặt cạnh nhau: mỗi hộp gói trung vị, IQR, râu, ngoại lai trong một cột hẹp, nên năm nhóm so được vị trí và độ phân tán trên cùng trục. Năm histogram chồng nhau sẽ rối; tách riêng thì khó so.</div></details>
-    <details class="quiz"><summary>So sánh phân cụm phân cấp gộp dần với k-means: cần đầu vào gì, cho ra gì?</summary><div>AHC cần khoảng cách và luật liên kết, không cần biết trước số cụm; cho ra dendrogram, cắt ở độ cao nào thì được bấy nhiêu cụm, nhưng tốn tính toán với dữ liệu lớn. K-means cần khoảng cách, số k và tâm khởi đầu; cho ra k tâm và nhãn từng điểm, nhanh nhưng phụ thuộc khởi tạo và hợp với cụm dạng tròn.</div></details>
+    <details class="quiz"><summary>So sánh phân cụm phân cấp gộp dần với k-means: cần đầu vào gì, cho ra gì?</summary><div>AHC cần khoảng cách và luật liên kết, không cần biết trước số cụm; cho ra dendrogram, cắt ở độ cao nào thì được bấy nhiêu cụm, nhưng tốn tính toán với dữ liệu lớn. K-means cần khoảng cách, số k và tâm khởi đầu; cho ra k tâm và nhãn từng điểm, nhanh nhưng phụ thuộc khởi tạo và hợp với cụm lồi, gần tròn, độ phân tán tương đương.</div></details>
   </div>
 </section>
 
