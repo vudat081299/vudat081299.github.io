@@ -1091,14 +1091,14 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <li><b>Promise.</b> Acceptor chưa hứa với số nào lớn hơn thì hứa: từ nay bỏ qua mọi đề xuất có n &lt; 5. A3 không trả lời, nhưng A1, A2 đã là đa số 2/3.</li>
       <li><b>Accept.</b> Có đa số hứa, P1 gửi <code>Accept(5, X)</code>. X là giá trị P1 muốn, vì chưa acceptor nào chấp nhận giá trị khác.</li>
       <li><b>Accepted.</b> Acceptor chấp nhận vì chưa hứa với số nào lớn hơn 5, rồi báo learner. Đa số đã chấp nhận (5, X): X được chọn và không bao giờ đổi.</li>
-      <li><b>Đề xuất cũ bị chặn.</b> P2 đến muộn với n = 4. Cả ba đã chấp nhận đề xuất số 5, tức đã cam kết bỏ qua mọi n &lt; 5, nên cả ba từ chối n = 4. Hai đa số bất kỳ luôn có ít nhất một acceptor chung, nên không thể có hai giá trị cùng được chọn.</li>
+      <li><b>Đề xuất cũ bị chặn.</b> P2 đến muộn với n = 4. Cả ba đã chấp nhận đề xuất số 5, tức đã cam kết bỏ qua mọi n &lt; 5, nên cả ba từ chối n = 4. Đề xuất sau có số lớn hơn cũng không đổi được X: hai đa số bất kỳ luôn có ít nhất một acceptor chung, acceptor ấy báo lại (5, X) ở bước Promise, và proposer buộc phải đề xuất lại X.</li>
     </ol>
   </figure>
   <details class="deep">
     <summary>Nếu acceptor đã chấp nhận một giá trị khác thì sao?<span class="hint">Promise gửi kèm giá trị cũ; proposer phải đề xuất lại nó</span></summary>
     <div class="deep-body">
-      <p>Khi hứa ở bước Promise, acceptor gửi kèm giá trị nó đã chấp nhận (nếu có). Trong vòng trên không acceptor nào báo, nên P1 được đề xuất X.</p>
-      <p>Nếu có báo cáo, P1 buộc phải đề xuất giá trị kèm số n lớn nhất trong các báo cáo, thay cho giá trị của mình.</p>
+      <p>Ở vòng trên, lúc P1 gửi Prepare(5) chưa acceptor nào chấp nhận gì, nên Promise không kèm giá trị cũ và P1 được đề xuất X của mình.</p>
+      <p>Nếu các Promise báo về nhiều giá trị khác nhau, P1 lấy giá trị kèm số n lớn nhất trong các báo cáo, thay cho giá trị của mình.</p>
     </div>
   </details>
 
