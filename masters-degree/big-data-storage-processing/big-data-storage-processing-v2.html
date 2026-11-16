@@ -30,6 +30,7 @@
   --link:#0a6b35;
   /* màu chặng — chỉ dùng trong sơ đồ và nhãn chặng */
   --found:#3f4d44; --ingest:#94570a; --store:#1d6684; --process:#0a7a3c; --query:#62489c;
+  --acc-mix:8%; --ingest-mix:5%;            /* độ pha màu chặng vào nền .bxa (.grpa một nửa); nâu thu nạp pha 8% ra kem */
   --info:#1f5fa8; --warn:#9a5b06; --bad:#b42318; --ok:#0a7a3c;
   --on-acc:#ffffff;
   --code-bg:#13261b; --code-fg:#e3ece5; --code-c:#8fa596; --code-k:#ffc978; --code-s:#7fe0a5; --code-f:#a9d4ff; --code-o:#ffc978;
@@ -48,15 +49,17 @@ html.dark{
   --green:#5be08f; --green-hi:#5be08f;
   --link:#7fe6a8;
   --found:#c4cec7; --ingest:#e6ab5c; --store:#6fc2e0; --process:#5be08f; --query:#b9a3f2;
+  --ingest-mix:8%;
   --info:#8dbbf5; --warn:#f0b65c; --bad:#ff8a80; --ok:#5be08f;
   --on-acc:#0a0e0c;
   --code-bg:#0d1611; --code-fg:#e3ece5; --code-c:#8fa596; --code-k:#ffc978; --code-s:#7fe0a5; --code-f:#a9d4ff; --code-o:#ffc978;
 }
 /* sơ đồ của mỗi bài lấy màu chặng của bài; thành phần chặng khác giữ màu chặng của nó */
-[data-stage="found"]{--acc:var(--found)} [data-stage="ingest"]{--acc:var(--ingest)}
+[data-stage],.c-found,.c-store,.c-process,.c-query{--mix:var(--acc-mix)}
+[data-stage="found"]{--acc:var(--found)} [data-stage="ingest"]{--acc:var(--ingest);--mix:var(--ingest-mix)}
 [data-stage="store"]{--acc:var(--store)} [data-stage="process"]{--acc:var(--process)}
 [data-stage="query"]{--acc:var(--query)}
-.c-found{--acc:var(--found)} .c-ingest{--acc:var(--ingest)} .c-store{--acc:var(--store)}
+.c-found{--acc:var(--found)} .c-ingest{--acc:var(--ingest);--mix:var(--ingest-mix)} .c-store{--acc:var(--store)}
 .c-process{--acc:var(--process)} .c-query{--acc:var(--query)}
 
 /* ============ BASE ============ */
@@ -223,10 +226,10 @@ main{min-width:0;padding:36px 40px 120px;max-width:920px}
 .dg .ton{fill:var(--on-acc)}
 .dg .bx{fill:var(--surface);stroke:var(--line-strong);stroke-width:1}
 .dg .bx2{fill:var(--surface-2);stroke:var(--line);stroke-width:1}
-.dg .bxa{fill:color-mix(in srgb,var(--acc) 8%,var(--surface));stroke:var(--acc);stroke-width:1.25}
+.dg .bxa{fill:color-mix(in srgb,var(--acc) var(--mix,8%),var(--surface));stroke:var(--acc);stroke-width:1.25}
 .dg .bxh{fill:var(--acc);stroke:var(--acc)}
 .dg .grp{fill:none;stroke:var(--line-strong);stroke-width:1;stroke-dasharray:4 4}
-.dg .grpa{fill:color-mix(in srgb,var(--acc) 4%,transparent);stroke:color-mix(in srgb,var(--acc) 70%,var(--surface));stroke-width:1;stroke-dasharray:4 4}
+.dg .grpa{fill:color-mix(in srgb,var(--acc) calc(var(--mix,8%) / 2),transparent);stroke:color-mix(in srgb,var(--acc) 70%,var(--surface));stroke-width:1;stroke-dasharray:4 4}
 .dg .ln{fill:none;stroke:var(--fg-3);stroke-width:1.5}
 .dg .lna{fill:none;stroke:var(--acc);stroke-width:2}
 .dg .lnb{fill:none;stroke:var(--bad);stroke-width:2}
@@ -370,7 +373,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     --line:#d6dad4; --line-2:#e6e9e4; --line-strong:#aab5ad;
     --fg:#0f1a14; --fg-2:#3a4840; --fg-3:#5c6a61; --deep:#13261b; --on-deep:#eef6f0;
     --green:#0a7a3c; --green-hi:#16a34a; --link:#0a6b35;
-    --found:#3f4d44; --ingest:#94570a; --store:#1d6684; --process:#0a7a3c; --query:#62489c;
+    --found:#3f4d44; --ingest:#94570a; --store:#1d6684; --process:#0a7a3c; --query:#62489c; --ingest-mix:5%;
     --info:#1f5fa8; --warn:#9a5b06; --bad:#b42318; --ok:#0a7a3c; --on-acc:#ffffff}
   :root{--bg:#ffffff}
   html{scroll-behavior:auto}
