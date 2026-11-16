@@ -4839,7 +4839,7 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
   </div>
 
   <h3 class="sec">Vì sao cần xử lý dòng</h3>
-  <p>Xu hướng mạng xã hội, thống kê website, phát hiện xâm nhập phải cho kết quả gần thời gian thực, độ trễ vài giây, trên cụm lớn. Ngoài trễ thấp và mở rộng được, framework xử lý dòng còn phải dùng chung logic với batch và chịu lỗi khi tính toán có trạng thái.</p>
+  <p>Xu hướng mạng xã hội, thống kê website, phát hiện xâm nhập phải cho kết quả gần thời gian thực, độ trễ vài giây, trên cụm lớn.</p>
   <details class="deep">
     <summary>Framework xử lý dòng cần đáp ứng gì, và thiếu thì sao?<span class="hint">Năm yêu cầu của slide; case Conviva chạy hai stack song song</span></summary>
     <div class="deep-body">
@@ -4959,7 +4959,7 @@ context.<span class="f">start</span>()         <span class="c">// từ đây job
 
   <h3 class="sec">Cửa sổ trượt</h3>
   <figure class="fig stepper" id="b8-win">
-    <p class="fig-t">countByWindow, window length 3 s, slide interval 2 s, lô 1 s</p>
+    <p class="fig-t">countByWindow (đếm số phần tử trong cửa sổ), window length 3 s, slide interval 2 s, lô 1 s</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 760 220" role="img" aria-label="Bảy lô một giây có 4, 2, 5, 1, 3, 6, 2 sự kiện; cửa sổ ba giây trượt hai giây cho kết quả 11 tại giây 3, 9 tại giây 5, 11 tại giây 7">
       <g data-only="2"><rect class="grpa" x="34" y="78" width="287" height="70" rx="10"/><text class="ta tb tc" x="177" y="66">t = 3 s: 4 + 2 + 5 = 11</text></g>
       <g data-only="3"><rect class="grpa" x="224" y="78" width="287" height="70" rx="10"/><text class="ta tb tc" x="367" y="66">t = 5 s: 5 + 1 + 3 = 9</text></g>
