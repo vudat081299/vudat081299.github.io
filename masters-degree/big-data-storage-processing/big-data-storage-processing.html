@@ -4706,7 +4706,7 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
   </details>
 
   <h3 class="sec">Kiến trúc và vòng đời job</h3>
-  <p>Kiến trúc master–worker: driver gửi việc cho worker, bảo chúng đọc dữ liệu từ bộ nhớ hay từ đĩa, S3, HDFS. Chương trình bắt đầu bằng <code>SparkContext</code>; tham số <code>master</code> chọn loại cụm.</p>
+  <p>Chương trình chính (driver) bắt đầu bằng <code>SparkContext</code>, xin tài nguyên từ cluster manager và được cấp executor: tiến trình chạy trên các worker. Driver gửi task cho executor; executor đọc dữ liệu từ bộ nhớ hay từ đĩa, S3, HDFS. Tham số <code>master</code> của SparkContext là địa chỉ cluster manager, nên cũng chọn loại cụm.</p>
   <details class="deep">
     <summary>Tham số master nhận những giá trị nào?<span class="hint">local, local[K], standalone, Kubernetes, YARN; Mesos đã bị bỏ</span></summary>
     <div class="deep-body">
