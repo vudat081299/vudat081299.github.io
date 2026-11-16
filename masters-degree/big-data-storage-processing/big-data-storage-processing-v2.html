@@ -3571,7 +3571,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
           <tr><td>0</td><td>không chờ</td><td>thấp nhất, nhanh nhất</td></tr>
         </tbody>
       </table></div>
-  <p>Producer cũng chọn partition. Có key thì dùng <code>hash(key) mod số partition</code>: mọi sự kiện cùng key (vd cùng <code>employeeId</code>) vào cùng partition, nên giữ thứ tự.</p>
+  <p>Producer cũng chọn partition. Có key thì dùng <code>hash(key) mod số partition</code>: mọi sự kiện cùng key (vd cùng <code>employeeId</code>) vào cùng partition, nên giữ thứ tự, miễn là số partition không đổi.</p>
   <details class="deep">
     <summary>Thêm partition thì sao, và không có key thì chọn thế nào?<span class="hint">Mod đổi kết quả; round-robin và sticky; metadata</span></summary>
     <div class="deep-body">
@@ -3699,7 +3699,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     </div>
   </details>
 
-  <section class="recap"><h3>Nhớ</h3><ul><li>Kafka là log chỉ ghi nối đuôi; đọc không xoá, retention mới xoá.</li><li>Thứ tự chỉ đảm bảo trong một partition; cùng key thì cùng partition.</li><li>Mỗi partition có một leader; follower bắt kịp thì nằm trong ISR.</li><li>Committed = mọi ISR đã ghi; consumer chỉ đọc tới high watermark.</li><li>Không mất dữ liệu cần acks=all, min.insync.replicas ≥ 2.</li><li>Trong một nhóm, mỗi partition thuộc đúng một consumer; consumer thừa thì rỗi.</li><li>Mặc định at-least-once: xử lý rồi mới commit, nên xử lý phải idempotent.</li></ul></section>
+  <section class="recap"><h3>Nhớ</h3><ul><li>Kafka là log chỉ ghi nối đuôi; đọc không xoá, retention mới xoá.</li><li>Thứ tự chỉ đảm bảo trong một partition; cùng key thì cùng partition khi số partition không đổi.</li><li>Mỗi partition có một leader; follower bắt kịp thì nằm trong ISR.</li><li>Committed = mọi ISR đã ghi; consumer chỉ đọc tới high watermark.</li><li>Không mất dữ liệu cần acks=all, min.insync.replicas ≥ 2.</li><li>Trong một nhóm, mỗi partition thuộc đúng một consumer; consumer thừa thì rỗi.</li><li>Mặc định at-least-once: xử lý rồi mới commit, nên xử lý phải idempotent.</li></ul></section>
 
   <div class="quiz">
     <h3>Tự kiểm tra</h3>
