@@ -2386,7 +2386,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text class="t2" x="652" y="122">lệch 50</text>
       <text class="t3" x="20" y="28">E1 = nạp $1000 · E2 = cộng lãi 5%</text>
     </svg></div>
-    <figcaption>Cộng và nhân không giao hoán, nên thứ tự áp dụng quyết định kết quả. Giữ mọi bản sao cùng thứ tự đòi hỏi phối hợp qua mạng, và đó là chỗ CAP bắt đầu.</figcaption>
+    <figcaption>Hai thao tác “cộng 1000” và “nhân 1,05” không giao hoán với nhau, nên thứ tự áp dụng quyết định kết quả. Giữ mọi bản sao cùng thứ tự đòi hỏi phối hợp qua mạng, và đó là chỗ CAP bắt đầu.</figcaption>
   </figure>
 
   <h3 class="sec">Chứng minh bằng hai node</h3>
@@ -2519,7 +2519,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   <div class="quiz">
     <h3>Tự kiểm tra</h3>
     <details><summary>Một CSDL quan hệ chạy trên một máy thuộc cạnh nào của tam giác, và vì sao?</summary><p>CA. Không có mạng giữa các bản sao nên không có phân hoạch để chịu; trong điều kiện đó nó vừa nhất quán vừa sẵn sàng.</p></details>
-    <details><summary>Ở ví dụ ngân hàng, vì sao hai bản sao lệch 50 dù nhận đủ cả hai sự kiện?</summary><p>(1000 + 1000) × 1,05 = 2100 nhưng 1000 × 1,05 + 1000 = 2050. Hai phép không giao hoán, mỗi bản áp theo thứ tự nó nhận được.</p></details>
+    <details><summary>Ở ví dụ ngân hàng, vì sao hai bản sao lệch 50 dù nhận đủ cả hai sự kiện?</summary><p>(1000 + 1000) × 1,05 = 2100 nhưng 1000 × 1,05 + 1000 = 2050. Hai thao tác “cộng 1000” và “nhân 1,05” không giao hoán với nhau, mỗi bản áp theo thứ tự nó nhận được.</p></details>
     <details><summary>Lúc mạng không đứt, hệ AP có bắt buộc trả dữ liệu cũ không?</summary><p>Không. CAP chỉ buộc chọn khi có phân hoạch; lúc mạng lành, hệ AP thường vẫn hội tụ nhanh. Nó chỉ không hứa nhất quán chặt.</p></details>
     <details><summary>Eventual consistency đảm bảo điều gì, và không đảm bảo điều gì?</summary><p>Đảm bảo các bản sao hội tụ nếu ngừng cập nhật. Không đảm bảo khi nào, và không đảm bảo một lần đọc giữa chừng thấy bản mới.</p></details>
   </div>
