@@ -545,7 +545,6 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </figure>
 
   <h3 class="sec">Khái niệm cốt lõi</h3>
-  <div class="callout note"><p><b>Định nghĩa.</b> Big data là những tập dữ liệu lớn hoặc phức tạp tới mức phần mềm xử lý dữ liệu truyền thống không đáp ứng nổi (Wikipedia, theo slide).</p></div>
   <div class="keys">
     <article class="key"><h3><span class="ix">01</span>Volume</h3><p>Khối lượng: từ terabyte tới petabyte. Một máy không chứa nổi, cũng không đọc kịp.</p></article>
     <article class="key"><h3><span class="ix">02</span>Velocity</h3><p>Tốc độ sinh: dữ liệu đổ về liên tục (click, cảm biến, giao dịch) và cần xử lý gần như tức thời.</p></article>
@@ -553,6 +552,12 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     <article class="key"><h3><span class="ix">04</span>Veracity</h3><p>Độ tin cậy: dữ liệu nhiễu, thiếu, trùng, mâu thuẫn. Phải làm sạch trước khi tin.</p></article>
     <article class="key"><h3><span class="ix">05</span>Value</h3><p>Giá trị: lý do của mọi công sức trên. "Data is the new oil": dầu thô chỉ đáng tiền sau khi lọc.</p></article>
   </div>
+  <details class="deep">
+    <summary>Slide định nghĩa big data thế nào?<span class="hint">Câu định nghĩa slide dẫn từ Wikipedia</span></summary>
+    <div class="deep-body">
+      <p>Slide dẫn định nghĩa của Wikipedia: big data là những tập dữ liệu lớn hoặc phức tạp tới mức phần mềm xử lý dữ liệu truyền thống không đáp ứng nổi.</p>
+    </div>
+  </details>
 
   <h3 class="sec">Lớn cỡ nào</h3>
   <figure class="fig" id="b1-fig-units">
@@ -681,20 +686,21 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <text x="160" y="226" class="t3 tc">1</text><text x="270" y="226" class="t3 tc">10</text><text x="380" y="226" class="t3 tc">100</text><text x="490" y="226" class="t3 tc">1 000</text><text x="600" y="226" class="t3 tc">10 000 MB/s</text>
       <text x="160" y="244" class="t3">trục log, mỗi vạch × 10 · ms là độ trễ truy cập ngẫu nhiên</text>
     </svg></div>
-    <figcaption>Theo số của slide, RAM nhanh hơn HDD khoảng 100 lần và mạng sang rack khác chậm hơn cả đĩa. Vì thế hệ big data <b>đưa tính toán tới chỗ dữ liệu</b> và giữ dữ liệu trong RAM khi được (Spark, bài 7).</figcaption>
+    <figcaption>Rack là một giá máy: các node trong đó nối chung một switch. Theo số của slide, mạng sang rack khác chậm hơn cả đĩa, nên hệ big data <b>đưa tính toán tới chỗ dữ liệu</b>.</figcaption>
   </figure>
   <details class="deep">
-    <summary>Số trong hình còn đúng không?<span class="hint">Mạng và SSD hôm nay so với slide</span></summary>
+    <summary>RAM thì sao, và số trong hình còn đúng không?<span class="hint">RAM nhanh hơn HDD trăm lần; mạng và SSD hôm nay so với slide</span></summary>
     <div class="deep-body">
+      <p>Cũng theo slide, RAM nhanh hơn HDD khoảng 100 lần, nên hệ big data giữ dữ liệu trong RAM khi được (Spark, bài 7).</p>
       <p>Số trong slide là của giữa thập niên 2010. Nay mạng trong trung tâm dữ liệu thường 10–100 Gb/s (1,25–12,5 GB/s), còn một ổ HDD đọc tuần tự chỉ khoảng 0,1–0,25 GB/s, nên mạng đã nhanh hơn một ổ HDD. SSD đời mới đọc vài GB/s, ngang tầm mạng.</p>
       <p>Đưa tính toán tới chỗ dữ liệu vẫn có lợi: cả cụm đọc đĩa cục bộ song song, còn đường lên giữa các rack thường hẹp hơn tổng băng thông của các máy trong rack.</p>
     </div>
   </details>
 
   <h3 class="sec">Thu nạp và xử lý, phân tích, diễn giải</h3>
-  <p>Ngoài quản lý dữ liệu còn ba bài toán: thu nạp và xử lý kịp lúc dữ liệu từ nhiều nguồn khác định dạng, chạy nổi thuật toán phân tích trên khối lượng và số chiều lớn, và diễn giải đúng kết quả mà không làm lộ thông tin riêng tư.</p>
+  <p>Ngoài quản lý dữ liệu còn ba bài toán: thu nạp và xử lý kịp lúc, chạy nổi thuật toán phân tích trên khối lượng và số chiều lớn, và diễn giải đúng kết quả mà không làm lộ thông tin riêng tư.</p>
   <details class="deep">
-    <summary>Mỗi bài toán khó ở đâu, giải bằng gì?<span class="hint">Thu nạp và xử lý, thuật toán phân tích, diễn giải và riêng tư</span></summary>
+    <summary>Mỗi bài toán khó ở đâu, giải bằng gì?<span class="hint">Bảng ba bài toán; lời nguyền số chiều: số mẫu cần tăng theo hàm mũ của số chiều</span></summary>
     <div class="deep-body">
   <div class="tbl"><table>
     <thead><tr><th>Bài toán</th><th>Khó ở đâu</th><th>Cách giải</th></tr></thead>
@@ -704,11 +710,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
       <tr><td>Diễn giải, riêng tư</td><td>Đọc đúng kết quả; trực quan hoá hàng triệu điểm; gộp nguồn làm lộ thông tin</td><td>Chuyên gia lĩnh vực đi cùng; trực quan hoá co giãn; bảo vệ dữ liệu ngay từ khâu thu nạp</td></tr>
     </tbody>
   </table></div>
-    </div>
-  </details>
-  <details class="deep">
-    <summary>Vì sao thêm đặc trưng lại có thể hại?<span class="hint">Lời nguyền số chiều: số mẫu cần tăng theo hàm mũ của số chiều</span></summary>
-    <div class="deep-body">
+      <h4>Vì sao thêm đặc trưng lại có thể hại?</h4>
   <figure class="fig small" id="b1-fig-curse">
     <p class="fig-t">Lời nguyền số chiều</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 520 240" role="img" aria-label="Đường cong độ chính xác của bộ phân lớp theo số đặc trưng khi số mẫu huấn luyện cố định: tăng lên tới một điểm tối ưu rồi giảm dần khi thêm chiều.">
@@ -729,7 +731,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
   </details>
 
   <h3 class="sec">Quy trình data science</h3>
-  <p>Data science rút giá trị từ dữ liệu qua một vòng lặp: đặt câu hỏi, thu thập và làm sạch, phân tích, đưa vào dùng, rồi lặp lại. Bước thu thập và làm sạch ngốn khoảng 80% công sức.</p>
+  <p>Data science rút giá trị từ dữ liệu qua một vòng lặp bốn bước. Bước thu thập và làm sạch ngốn khoảng 80% công sức.</p>
   <figure class="fig stepper" id="b1-fig-ds">
     <p class="fig-t">Một vòng data science (theo IBM, 2015, rút gọn bốn bước)</p>
     <div class="canvas"><svg class="dg" viewBox="0 0 720 210" role="img" aria-label="Vòng data science bốn bước: đặt câu hỏi, thu thập dữ liệu, phân tích, sản phẩm, rồi lặp lại. Bước thu thập và chuẩn bị chiếm khoảng 80 phần trăm thời gian.">
@@ -759,14 +761,7 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
     </ol>
   </figure>
   <details class="deep">
-    <summary>Một dự án thật lặp vòng ấy bao lâu?<span class="hint">IBM Watson, 2007–2010</span></summary>
-    <div class="deep-body">
-      <p>IBM Watson (DeepQA) đi nhiều vòng như vậy từ 2007 tới 2010 mới đạt độ chính xác ngang nhà vô địch Jeopardy!.</p>
-    </div>
-  </details>
-
-  <details class="deep">
-    <summary>80% công sức ấy đi vào đâu?<span class="hint">Thu thập, làm sạch, và phần việc bị coi là chán nhất</span></summary>
+    <summary>80% công sức ấy đi vào đâu, và vòng lặp kéo dài bao lâu?<span class="hint">Thu thập, làm sạch, phần việc bị coi là chán nhất; IBM Watson</span></summary>
     <div class="deep-body">
       <figure class="fig">
         <div class="canvas"><svg class="dg" viewBox="0 0 720 124" role="img" aria-label="Thanh chia thời gian của người làm data science: làm sạch và sắp xếp 60 phần trăm, thu thập 19 phần trăm, khai phá mẫu 9 phần trăm, tinh chỉnh thuật toán 4 phần trăm, tạo tập huấn luyện 3 phần trăm, việc khác 5 phần trăm.">
@@ -784,12 +779,13 @@ pre.code[data-lang]::before{content:attr(data-lang);display:block;font-size:10.5
         <li>Chuẩn bị dữ liệu (thu thập + làm sạch) chiếm khoảng 80% công việc: 60% + 19%.</li>
         <li>57% người được hỏi coi làm sạch và sắp xếp là phần chán nhất; 19% coi thu thập là phần chán nhất.</li>
       </ul>
+      <p>Vòng ấy còn phải lặp nhiều lần: IBM Watson (DeepQA) đi nhiều vòng từ 2007 tới 2010 mới đạt độ chính xác ngang nhà vô địch Jeopardy!.</p>
     </div>
   </details>
   <details class="deep">
     <summary>Làm nghề big data cần kỹ năng gì?<span class="hint">Thị trường, bốn mảng kỹ năng, cách bắt đầu</span></summary>
     <div class="deep-body">
-      <p>Tin tuyển dụng big data tăng đều, người có kỹ năng thì thiếu. Bộ kỹ năng gồm bốn mảng:</p>
+      <p>Đi trọn vòng ấy trên dữ liệu lớn cần người có kỹ năng, mà người như thế đang thiếu: tin tuyển dụng big data tăng đều. Bộ kỹ năng gồm bốn mảng:</p>
       <ul>
         <li>Lập trình: Python, Java hoặc Scala, SQL. Học qua Coursera, Udacity, freeCodeCamp, Codecademy.</li>
         <li>Toán, thống kê, máy học: luyện trên Kaggle.</li>
