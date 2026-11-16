@@ -4819,7 +4819,7 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
   </div>
 
   <h3 class="sec">Vì sao cần xử lý dòng</h3>
-  <p>Xu hướng mạng xã hội, thống kê website, phát hiện xâm nhập phải cho kết quả gần thời gian thực, độ trễ vài giây, trên cụm lớn.</p>
+  <p>Xu hướng mạng xã hội, thống kê website, phát hiện xâm nhập phải cho kết quả gần thời gian thực, độ trễ vài giây, trên cụm lớn. Ngoài trễ thấp và mở rộng được, framework xử lý dòng còn phải dùng chung logic với batch và chịu lỗi khi tính toán có trạng thái.</p>
   <details class="deep">
     <summary>Framework xử lý dòng cần đáp ứng gì, và thiếu thì sao?<span class="hint">Năm yêu cầu của slide; case Conviva chạy hai stack song song</span></summary>
     <div class="deep-body">
