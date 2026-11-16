@@ -4737,7 +4737,7 @@ df.write.<span class="f">format</span>(<span class="s">"parquet"</span>).<span c
 
   <div class="quiz">
     <h3>Tự kiểm tra</h3>
-    <details><summary>Một thuật toán lặp 10 vòng trên cùng tập dữ liệu. MapReduce và Spark khác nhau ở đâu về I/O?</summary><p>MapReduce chạy 10 job, mỗi job đọc input từ HDFS và ghi output (3 bản sao) xuống HDFS. Spark đọc HDFS một lần, <code>cache()</code> dữ liệu làm việc trong RAM, 10 vòng sau đọc từ RAM. Riêng phần đọc nhanh hơn khoảng hai bậc độ lớn; cả vòng nhanh hơn ít hơn vì còn tốn CPU (bài 10: K-means 2–3 lần, logistic regression 12–25 lần).</p></details>
+    <details><summary>Một thuật toán lặp 10 vòng trên cùng tập dữ liệu. MapReduce và Spark khác nhau ở đâu về I/O?</summary><p>MapReduce chạy 10 job, mỗi job đọc input từ HDFS và ghi output (3 bản sao) xuống HDFS. Spark đọc HDFS ở vòng đầu, <code>cache()</code> dữ liệu làm việc trong RAM, các vòng sau đọc từ RAM. Riêng phần đọc nhanh hơn khoảng hai bậc độ lớn; cả vòng nhanh hơn ít hơn vì còn tốn CPU (bài 10, từ vòng thứ hai, 100 GB: K-means 2–3 lần, logistic regression 12–25 lần; vòng đầu chỉ nhanh hơn vừa phải).</p></details>
     <details><summary>Gọi <code>errors = logs.filter(isError)</code> trên file 1 TB. Bao lâu thì xong?</summary><p>Gần như tức thì: filter là transformation, chỉ ghi vào DAG. Việc đọc và lọc 1 TB chỉ xảy ra khi có action như <code>errors.count()</code>.</p></details>
     <details><summary>Vì sao RDD bất biến lại giúp chịu lỗi rẻ?</summary><p>Bất biến và tạo bằng phép thô nên mỗi partition hoàn toàn xác định bởi lineage. Mất partition nào chạy lại phép trên partition cha tương ứng, không cần giữ bản sao dữ liệu hay log từng thay đổi.</p></details>
     <details><summary><code>textFile → map → reduceByKey → map → collect</code> có mấy stage?</summary><p>Hai. textFile và map đầu là narrow, chạy chung stage 1; reduceByKey cần shuffle nên mở stage 2, map sau và collect nằm trong stage 2.</p></details>
@@ -5495,7 +5495,7 @@ query.<span class="f">stop</span>(); query.<span class="f">awaitTermination</spa
   </details>
 
   <h3 class="sec">Vì sao máy học hợp với Spark, và MLlib có gì</h3>
-  <p>Thuật toán học lặp nhiều vòng trên cùng dữ liệu. RDD chia sẻ dữ liệu hiệu quả và cache trong RAM tăng tốc, theo slide tới 20 lần so với Hadoop; API cấp cao viết thuật toán phức tạp trong khoảng 100 dòng.</p>
+  <p>Thuật toán học lặp nhiều vòng trên cùng dữ liệu. RDD chia sẻ dữ liệu hiệu quả và cache trong RAM tăng tốc, theo bài báo RDD tới khoảng 20 lần so với Hadoop ở các vòng sau vòng đầu; API cấp cao viết thuật toán phức tạp trong khoảng 100 dòng.</p>
   <div class="vs">
     <div><h4>spark.mllib</h4><p>API cũ trên RDD. Còn chứa thống kê cơ bản và một số thuật toán; chỉ được bảo trì, không thêm tính năng.</p></div>
     <div><h4>spark.ml</h4><p>API trên DataFrame, có Pipeline. Đây là API chính của MLlib hiện nay.</p></div>
@@ -5699,7 +5699,7 @@ model.<span class="f">transform</span>(test).<span class="f">select</span>(<span
       <path class="lna" d="M 595 165 L 595 232 L 85 232 L 85 168.3" marker-end="url(#ah-query)"/>
       <text class="t2 ta tc" x="340" y="250">tâm mới = Σp / n; lặp tới khi tâm dịch chuyển &lt; ε</text>
     </svg></div>
-    <figcaption>Dữ liệu được <code>cache()</code> nên mỗi vòng chỉ đọc RAM; thứ đi qua mạng mỗi vòng chỉ là K tâm, và mỗi partition phát tối đa K cặp (tổng, số điểm). Nhờ vậy mỗi vòng K-means trên Spark nhanh hơn Hadoop 2–3 lần (mục cuối bài).</figcaption>
+    <figcaption>Dữ liệu được <code>cache()</code> nên mỗi vòng chỉ đọc RAM; thứ đi qua mạng mỗi vòng chỉ là K tâm, và mỗi partition phát tối đa K cặp (tổng, số điểm). Nhờ vậy, từ vòng thứ hai, mỗi vòng K-means trên Spark nhanh hơn Hadoop 2–3 lần (mục cuối bài).</figcaption>
   </figure>
 
   <details class="deep">
@@ -5728,7 +5728,7 @@ model = <span class="f">KMeans</span>(k=<span class="o">2</span>, seed=<span cla
   </details>
 
   <h3 class="sec">Dễ dùng và nhanh</h3>
-  <p>K-means viết bằng Spark khoảng 90 dòng; bằng Hadoop/Mahout là 4 file, hơn 300 dòng. Shell tương tác tiện cho trích đặc trưng và tiền xử lý. Mỗi vòng, Spark nhanh hơn Hadoop khoảng 2 tới 3 lần với K-means và 12 tới 25 lần với logistic regression.</p>
+  <p>K-means viết bằng Spark khoảng 90 dòng; bằng Hadoop/Mahout là 4 file, hơn 300 dòng. Shell tương tác tiện cho trích đặc trưng và tiền xử lý. Từ vòng thứ hai trên 100 GB dữ liệu, mỗi vòng Spark nhanh hơn Hadoop khoảng 2 tới 3 lần với K-means và 12 tới 25 lần với logistic regression; vòng đầu còn phải đọc HDFS nên chỉ nhanh hơn vừa phải.</p>
   <details class="deep">
     <summary>Vì sao logistic regression được lợi nhiều hơn K-means?<span class="hint">Thời gian một vòng trên 25, 50, 100 máy, theo bài báo RDD</span></summary>
     <div class="deep-body">
