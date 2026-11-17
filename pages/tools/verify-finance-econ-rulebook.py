@@ -262,6 +262,14 @@ def phan_C():
     # luật vàng đã sửa: "cả hai vượt" không được kết luận là "cầu trú ẩn thật"
     claim('kết luận vàng đã sửa', "t = 'Cầu trú ẩn thật'" not in HTML and "t = 'Cầu trong nước lớn hơn lượng vàng nhập được'" in HTML)
     claim('R-D06 đã sửa', 'đó là cầu trú ẩn <b>thật</b>' not in HTML)
+    # P/E = 1/(r − g): P/E co lại có thể do g kỳ vọng, không chỉ do lãi suất
+    claim('P/E không bị gán trọn cho lãi suất',
+          'không liên quan gì tới doanh nghiệp' not in HTML and 'tín hiệu về lãi suất, không phải về doanh nghiệp' not in HTML)
+    # vàng–lãi thực và USD–hàng hoá là quan hệ thống kê (vỡ 2023–2025, 2022), không phải no-arbitrage
+    for rid in ('R-D01', 'R-B07'):
+        claim(f'{rid} là T3', f'id="{rid}" data-tag="T3"' in HTML)
+    # khi cửa nhập mở, chênh lệch co về chi phí nhập khẩu (R-D07), không về 0
+    claim('khoản mất của vàng miếng là phần vượt chi phí nhập', 'Khoản mất ngay nếu cửa nhập mở' not in HTML)
 
     # dựng lại g* bằng lối khác: so tài sản cuối năm của hai lựa chọn, tìm g bằng chia đôi
     def wealth_gap(g, P=5000, R=144, L=0.5, i=0.10, d=0.065):
