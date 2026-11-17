@@ -228,6 +228,14 @@ def phan_B():
     need('trần tiền gửi', '1 đến dưới 6 tháng 4,75%')
     need('Fed', '3,75–4,00%')
     need('bảo hiểm tiền gửi', '350 triệu đồng')
+    # điều đã sai ở bản trước: NHNN có chào bán USD kỳ hạn (8/2025, 3/2026); Nghị định 390/2026 hạ ngưỡng
+    # thanh toán vàng không dùng tiền mặt từ 20 xuống 5 triệu; FTSE đưa vào rổ theo bốn đợt
+    claim('can thiệp ngoại tệ: không còn câu "chưa phải bán" trống trơn',
+          'từ 2025 tới 10/2026 chưa phải bán ngoại tệ can thiệp' not in HTML)
+    need('chào bán USD kỳ hạn 8/2025', '26.550 đ (25/8/2025)')
+    need('chào bán USD kỳ hạn 3/2026', '26.850 đ (24/3/2026)')
+    need('Nghị định 390/2026', 'hạ ngưỡng này xuống 5 triệu đồng/ngày')
+    need('FTSE bốn đợt', 'bốn đợt từ 9/2026 tới 9/2027')
     need('ngày số liệu', 'CẬP NHẬT 17·11·2026')
     # số quy tắc in trong bài = số thẻ trong danh mục
     cards = re.findall(r'<div class="wb-card rb-rule" id="(R-[A-Z]+\d+)" data-tag="(T\d)" data-cat="([A-Z])"', HTML)
