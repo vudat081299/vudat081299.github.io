@@ -2,8 +2,8 @@ name: Deploy site (build Cashy)
 
 # Đưa cả site lên GitHub Pages, chỉ sau khi "Cổng chất lượng" xanh trên một lần push vào main.
 # Trang tĩnh chép nguyên; cashy/ là app Vite nên được build rồi đặt ở /cashy/ (thư viện component ở /cashy-wb/).
-# Các dòng --exclude có cổng giữ: tools/lint-collection.py (trang WITHHELD phải có, trang UNLISTED không được có)
-# và shop/tools/lint-shop.py (shop/docs phải lên web). Đừng thêm hay bớt dòng nào mà không hỏi chủ trang.
+# Các dòng --exclude có cổng giữ: tools/lint-collection.py (trang WITHHELD phải có, trang UNLISTED không được có).
+# Đừng thêm hay bớt dòng nào mà không hỏi chủ trang.
 # Cài một lần: Settings → Pages → Source = "GitHub Actions".
 
 on:

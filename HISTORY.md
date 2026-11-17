@@ -13,8 +13,8 @@ Luật đang áp dụng ở `CLAUDE.md`; quyết định của chủ trang ở `
 
 ## 28/09/2026 — tầng tài liệu cho agent: mỗi loại tri thức một chỗ
 
-- Rà kiến trúc. CLAUDE.md gốc dài 399 dòng, khoảng 3/4 là luật riêng của trang chủ, `pages/` và
-  `shop/`; nó tăng từ 83 dòng (09/08) qua 33 commit. `pages/` — khu sửa nhiều nhất — không có
+- Rà kiến trúc. CLAUDE.md gốc dài 399 dòng, khoảng 3/4 là luật riêng của trang chủ và
+  `pages/`; nó tăng từ 83 dòng (09/08) qua 33 commit. `pages/` — khu sửa nhiều nhất — không có
   CLAUDE.md; luật của nó rải ở CLAUDE.md gốc và trong memory của một máy.
 - Bộ điều phối hook tìm bằng `find` nên nhặt cả hook trong `.claude/worktrees/` và bản nháp của các
   phiên: 88 hook pre-commit, 81 là bản sao; mỗi hook con bị gọi 10–14 lần một commit, và một commit
@@ -52,9 +52,6 @@ Luật đang áp dụng ở `CLAUDE.md`; quyết định của chủ trang ở `
   không kiểm độ dài.
 - `gates.yml` trước đó chỉ chạy `lint-pages.py`, dù CLAUDE.md nói lớp 4 chạy cổng của mọi project: hai
   cổng `verify-*` sống vài tuần chỉ trên máy người viết. Thêm vào `gates.yml`; từ 28/09 CI tự tìm.
-- Tài liệu về `lint-shop.py` từng hứa hai phép kiểm không tồn tại ("`cat` phải trỏ vào danh mục có
-  thật", "tag của bộ chọn mùi phải khớp `mood`") — `cat` thậm chí không phải một trường của
-  `shop.json`. Tài liệu hứa nhiều hơn cổng làm là cách một cổng chết mà không ai biết.
 - Ba phép kiểm svg / cây tiêu đề / aria-label vào `lint-pages.py` theo kiểu bánh cóc: bốn trang cũ còn
   nợ, ghi trong bảng `DEBT`.
 
@@ -64,8 +61,6 @@ Luật đang áp dụng ở `CLAUDE.md`; quyết định của chủ trang ở `
 - `family-insurance-benefits.html` và `jazz-piano-theory.html` đã viết xong mà nằm ngoài danh mục
   nhiều tháng: mở được bằng URL trực tiếp nên không gì tự lộ ra. → `lint-collection.py` kiểm chiều
   ngược: mọi trang `pages/` và `cooking/` phải có một mục.
-- `shop/` có CLAUDE.md riêng vì năm trang dùng chung một shell, nội dung ở `data/shop.json`, và giá
-  suy ra chứ không ghi tay.
 - `desc` của section vi phạm luật chủ đề ở ba chỗ (Cooking, Science, Master's) → luật áp cả cho `desc`
   của section. Một section một trục: bỏ ô `Pages` chứa lẫn công cụ với giáo trình.
 

@@ -38,7 +38,7 @@
 ## NỢ
 
 - `machine-learning.html`: 608 thuật ngữ gạch chân là 608 điểm dừng Tab (hơn nửa số điểm dừng của trang).
-- Bốn trang ML / ML 101 / Toán / Causal chưa có smoke trình duyệt (mẫu `shop/tools/smoke.js`, CI chạy). Cổng tĩnh
+- Bốn trang ML / ML 101 / Toán / Causal chưa có smoke trình duyệt (mẫu `masters-degree/class-schedule/tools/smoke.cjs`, CI chạy). Cổng tĩnh
   không giữ được: popup thuật ngữ mở bằng phím rồi cuộn, ngăn mục lục (inert), aria-live chỉ đọc khi chữ đổi, tab
   bằng phím mũi tên, bản in theme tối giống bản in sáng (đủ tab, `details` mở), nhãn SVG không chồng/cắt (m6, m8,
   m11 của ML 101; M8 của ML), chữ nút chạy/Dừng, câu tự sinh của các mô hình chưa dựng lại được trong cổng

@@ -474,12 +474,6 @@
         "label": "Projects",
         "items": [
           {
-            "icon": "storefront",
-            "name": "scentsitive.vn",
-            "desc": "Nến thơm thủ công, năm mùi",
-            "href": "shop/"
-          },
-          {
             "icon": "dashboard_customize",
             "name": "Web Builder",
             "desc": "Bộ UI tối giản và tài liệu component",

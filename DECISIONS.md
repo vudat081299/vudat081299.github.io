@@ -28,7 +28,7 @@ Tra theo file: `python3 tools/decisions.py find <file>`.
 - REPO-026 · Trang dạy học đọc được ở hai độ sâu: khung xương và Đọc liền · `masters-degree/**`, `pages/*.html`
 - REPO-027 · Khung xương đúng và đủ; tỉ lệ chữ chỉ là chỉ báo · `masters-degree/**`, `pages/*.html`
 
-Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/big-data-storage-processing/DECISIONS.md`](masters-degree/big-data-storage-processing/DECISIONS.md), [`masters-degree/class-schedule/DECISIONS.md`](masters-degree/class-schedule/DECISIONS.md), [`masters-degree/data-management-visualization/DECISIONS.md`](masters-degree/data-management-visualization/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md), [`shop/DECISIONS.md`](shop/DECISIONS.md).
+Sổ của từng project: [`cashy/DECISIONS.md`](cashy/DECISIONS.md), [`facts/DECISIONS.md`](facts/DECISIONS.md), [`masters-degree/big-data-storage-processing/DECISIONS.md`](masters-degree/big-data-storage-processing/DECISIONS.md), [`masters-degree/class-schedule/DECISIONS.md`](masters-degree/class-schedule/DECISIONS.md), [`masters-degree/data-management-visualization/DECISIONS.md`](masters-degree/data-management-visualization/DECISIONS.md), [`masters-degree/data-science-roadmap/DECISIONS.md`](masters-degree/data-science-roadmap/DECISIONS.md), [`masters-degree/thesis-topic-selector/DECISIONS.md`](masters-degree/thesis-topic-selector/DECISIONS.md), [`pages/DECISIONS.md`](pages/DECISIONS.md).
 <!-- index:end -->
 
 ## REPO-001 · Nội dung trước, UI sau
@@ -99,7 +99,7 @@ Deploy chạy sau khi "Cổng chất lượng" xanh trên một lần push vào 
 ## REPO-016 · Tiêu đề tab và tên trang trên thanh trên cùng bằng tiếng Anh
 03/08/2026 · `pages/*.html`, `cooking/*.html`, `masters-degree/**/*.html`
 
-Link điều hướng và thân trang giữ tiếng Việt. Ngoại lệ: `shop/` (cửa hàng cho khách Việt), `<title>` của data-science-roadmap
+Link điều hướng và thân trang giữ tiếng Việt. Ngoại lệ: `<title>` của data-science-roadmap
 (DS-016), `web-builder/templates/` (bản chép từ kit gốc, đồng bộ sẽ ghi đè). Nguồn: 7db789b.
 
 ## REPO-017 · Hai lớp cổng: commit và CI
@@ -122,7 +122,7 @@ Chủ trang để `main` cho phép force-push. Agent vẫn phải hỏi trước
 08/11/2026 · `data/collection.json`, `index.html` · thay cho REPO-020
 
 Khoá `hold` trong `collection.json` là danh sách ẩn, chia nhóm: Money & Career (Wealth Roadmap, Hidden Curriculum,
-Cashy), Projects (scentsitive.vn, Web Builder, Loto), Reference (Fact, Scooter Maintenance). Máy tính: ⇧? (Shift +
+Cashy), Projects (Web Builder, Loto), Reference (Fact, Scooter Maintenance). Máy tính: ⇧? (Shift +
 phím `/`) bật bảng nổi, thả phím vẫn hiện; ⇧? lần nữa, bấm ra ngoài, nút đóng hoặc Esc thì ẩn. Điện thoại: gõ đúng
 `?` vào ô tìm kiếm thì bảng hiện thành bottom sheet. Trang trong đó vẫn deploy; đây là giấu link, không phải bảo mật.
 
