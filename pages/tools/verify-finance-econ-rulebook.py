@@ -127,6 +127,10 @@ def phan_A():
         need('chênh vàng trong lời văn', 'khoảng 16–17 triệu đồng/lượng')
         need('R-I04: chênh theo %', 'khoảng ' + vi(round(sjc - world)) + ' triệu đồng/lượng, tức 13–14%')
         claim('13–14% đúng', 13 <= (sjc / world - 1) * 100 <= 14, f'{(sjc / world - 1) * 100:.2f}%')
+        # chênh lệch mua–bán SJC: mua 134,2, bán = giá bán trong ô nhập
+        buy = 134.2
+        need('SJC mua–bán', 'SJC mua ' + vi(buy, 1) + ', bán ' + vi(sjc, 1) + ' triệu')
+        need('mất khi bán lại ngay', 'mất ' + vi(sjc - buy) + ' triệu đồng/lượng, khoảng ' + vi((sjc - buy) / sjc * 100, 1) + '%')
 
     # B03 — xăng 10% × 3,6%
     need('xăng → CPI', vi(10 * 0.036, 2) + ' điểm')
