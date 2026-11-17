@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
-<title>Economics Handbook — the economy → Vietnamese stocks &amp; gold</title>
-<meta name="description" content="Bản học tương tác cho người không có nền kinh tế học: vòng tiền chảy, lãi suất thực, chu kỳ, chứng khoán Việt Nam và vàng — kèm sổ tay ~60 quy tắc &quot;nếu…thì…&quot; gắn thẻ độ cứng T0–T4.">
+<title>Economics Handbook — from the economy to Vietnamese assets</title>
+<meta name="description" content="Bản học tương tác cho người không có nền kinh tế học: vòng tiền chảy, lãi suất thực, chu kỳ, công cụ của Ngân hàng Nhà nước và các bên điều hành khác, chứng khoán, vàng, nhà, USD, dầu, tiền gửi, và cách so từng tài sản với tiền gửi khi đang cầm tiền mặt — kèm sổ tay ~75 quy tắc &quot;nếu…thì…&quot; gắn thẻ độ cứng T0–T4.">
 
 <meta name="theme-color" id="theme-color" content="#f5f6f3">
 <script>
@@ -321,6 +321,18 @@
 </style>
 </head>
 <body>
+<style>
+  /* Sơ đồ cơ chế của các chương A5, A6, A10 (nội dung bổ sung 11/2026).
+     Tách khỏi khối style chính để lớp giao diện tô lại được; chỉ dùng token --wb-*. */
+  .rb-viz svg.rb-dg { max-width: 560px; margin: 0 auto; }
+  .rb-dg-box { fill: var(--wb-surface); stroke: var(--wb-border-strong); stroke-width: 1; }
+  .rb-dg-boxa { fill: var(--wb-surface-2); stroke: var(--wb-fg-muted); stroke-width: 1; }
+  .rb-dg-ln { stroke: var(--wb-fg-muted); stroke-width: 1.2; fill: none; }
+  .rb-dg-ah { fill: var(--wb-fg-muted); }
+  .rb-dg-t { fill: var(--wb-fg); font-size: 10px; font-weight: 600; font-family: var(--wb-font); }
+  .rb-dg-ts { fill: var(--wb-fg-muted); font-size: 9px; font-family: var(--wb-font); }
+  .rb-dg-h { fill: var(--wb-fg-subtle); font-size: 8.5px; font-family: var(--wb-font-mono); letter-spacing: .08em; text-transform: uppercase; }
+</style>
 
 <div class="wb-navbar wb-navbar--sticky">
   <a class="wb-navbar__brand" href="../index.html"><span class="wb-navbar__mark" aria-hidden="true">§</span> <span class="rb-brand-name">Economics Handbook</span></a>
@@ -337,10 +349,10 @@
 <main class="wb-container wb-container--wide">
 
   <header class="rb-hero">
-    <p class="rb-eyebrow">Bản học tương tác · kinh tế · chứng khoán Việt Nam · vàng</p>
+    <p class="rb-eyebrow">Bản học tương tác · kinh tế Việt Nam · NHNN · chứng khoán · vàng · nhà · tỷ giá</p>
     <h1 class="rb-title">Từ nền kinh tế đến bảng giá — <u>một chuỗi nhân quả</u>, không phải một đống tin tức.</h1>
-    <p class="rb-sub">Trang này viết cho người <b style="color:var(--wb-fg)">không có nền kinh tế học</b>, đã có ít kinh nghiệm thực chiến với chứng khoán và vàng, và muốn hiểu <em>vì sao</em> giá chạy chứ không chỉ nhớ <em>giá đã chạy</em>. Đọc xong Phần A, bạn phải tự trả lời được: "Fed vừa làm X — chuyện gì sẽ đi qua những mắt xích nào để tới cổ phiếu tôi đang cầm, và mất bao lâu?"</p>
-    <p class="rb-meta">CẬP NHẬT 31·07·2026 · SỐ LIỆU ĐẾN PHIÊN 29·07·2026 · MỤC ĐÍCH HỌC TẬP, KHÔNG PHẢI KHUYẾN NGHỊ ĐẦU TƯ</p>
+    <p class="rb-sub">Trang này viết cho người <b style="color:var(--wb-fg)">không có nền kinh tế học</b>, đã có ít kinh nghiệm thực chiến với chứng khoán và vàng, và muốn hiểu <em>vì sao</em> giá chạy chứ không chỉ nhớ <em>giá đã chạy</em>. Đọc xong Phần A, bạn phải tự trả lời được: "Fed hay Ngân hàng Nhà nước vừa làm X — chuyện gì sẽ đi qua những mắt xích nào để tới tài sản tôi đang cầm, và mất bao lâu?" và "đang cầm tiền mặt, hôm nay từng tài sản đắt hay rẻ so với để yên trong tiền gửi?"</p>
+    <p class="rb-meta">CẬP NHẬT 17·11·2026 · SỐ LIỆU ĐẾN SÁNG 17·11·2026 · MỤC ĐÍCH HỌC TẬP, KHÔNG PHẢI KHUYẾN NGHỊ ĐẦU TƯ</p>
   </header>
 
   <div class="wb-alert wb-alert--plain" style="margin-bottom:14px">
@@ -348,7 +360,7 @@
       <div class="wb-cluster wb-cluster--between" style="gap:14px;align-items:flex-start">
         <div>
           <p class="wb-alert__title" style="margin-bottom:2px">Lần đầu đọc trang này?</p>
-          <p class="wb-alert__msg" style="margin:0">Bật công tắc để <b>ẩn Phần B</b> (sổ tay tra cứu ~60 quy tắc). Chỉ còn 8 chương của Phần A — có ví von, có số, có <b>hình kéo được</b>. Bật lại lúc nào cũng được; máy sẽ nhớ lựa chọn.</p>
+          <p class="wb-alert__msg" style="margin:0">Bật công tắc để <b>ẩn Phần B</b> (sổ tay tra cứu <span data-rule-total>75</span> quy tắc). Chỉ còn 12 chương của Phần A — có ví von, có số, có <b>hình kéo được</b>. Bật lại lúc nào cũng được; máy sẽ nhớ lựa chọn.</p>
         </div>
         <label class="wb-switch" style="flex:none"><input type="checkbox" id="noviceMode"><span class="wb-switch__track"></span> Chế độ người mới</label>
       </div>
@@ -361,7 +373,7 @@
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">A</span>
         <div class="wb-media__body">
           <p class="wb-media__title">Phần A — Hiểu hệ thống <span class="wb-cap wb-cap--sm">đọc theo thứ tự</span></p>
-          <p class="wb-media__text">Sáu chương nội dung kể một mạch: tiền chảy thế nào → lãi suất thực là gì → ai đặt lãi suất → Việt Nam đứng ở đâu → chứng khoán VN vận hành ra sao → vàng vận hành ra sao; rồi <b>A7</b> để bạn tự kiểm và <b>A8</b> là từ điển. Chương nội dung nào cũng chạy hết ít nhất một ví dụ có số. Bốn chương đầu mở bằng một phép ví von — kèm luôn chỗ ví von ấy hỏng; A1, A3, A5 và A6 gỡ một điều "gần như ai cũng tin" mà sai.</p>
+          <p class="wb-media__text">Mười chương nội dung kể một mạch: tiền chảy thế nào → lãi suất thực là gì → ai đặt lãi suất → Việt Nam đứng ở đâu → Ngân hàng Nhà nước cầm những cần gạt nào → ai khác cầm lái → chứng khoán → vàng → nhà, USD, dầu, tiền gửi → đang cầm tiền mặt thì hỏi gì, theo thứ tự nào; rồi <b>A11</b> để bạn tự kiểm và <b>A12</b> là từ điển. Chương nội dung nào cũng chạy hết ít nhất một ví dụ có số. Năm chương đầu mở bằng một phép ví von — kèm luôn chỗ ví von ấy hỏng; A1, A3, A7 và A8 gỡ một điều "gần như ai cũng tin" mà sai.</p>
         </div>
       </div>
     </div>
@@ -370,7 +382,7 @@
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">B</span>
         <div class="wb-media__body">
           <p class="wb-media__title">Phần B — Sổ tay tra cứu <span class="wb-cap wb-cap--dashed wb-cap--sm">tra khi cần</span></p>
-          <p class="wb-media__text">~60 quy tắc "nếu… thì…" có gắn thẻ độ cứng T0–T4, bảng cầu nối thế giới → VN, và nền toán học phía sau. Không đọc tuần tự — đọc sau khi đã nắm Phần A, hoặc tra khi gặp một tình huống cụ thể.</p>
+          <p class="wb-media__text"><span data-rule-total>75</span> quy tắc "nếu… thì…" có gắn thẻ độ cứng T0–T4, bảng cầu nối thế giới → VN, và nền toán học phía sau. Không đọc tuần tự — đọc sau khi đã nắm Phần A, hoặc tra khi gặp một tình huống cụ thể.</p>
         </div>
       </div>
     </div>
@@ -385,10 +397,14 @@
       <a class="wb-sidenav__link" href="#a2-laisuat-thuc">A2 · Lãi suất thực</a>
       <a class="wb-sidenav__link" href="#a3-chuky">A3 · Chu kỳ &amp; ngân hàng TW</a>
       <a class="wb-sidenav__link" href="#a4-vietnam">A4 · Việt Nam đứng ở đâu</a>
-      <a class="wb-sidenav__link" href="#a5-chungkhoan">A5 · Chứng khoán Việt Nam</a>
-      <a class="wb-sidenav__link" href="#a6-vang">A6 · Vàng</a>
-      <a class="wb-sidenav__link" href="#a7-baochi">A7 · Bảy câu báo hay viết</a>
-      <a class="wb-sidenav__link" href="#a8-tudien">A8 · Từ điển thuật ngữ</a>
+      <a class="wb-sidenav__link" href="#a5-nhnn">A5 · Bảng điều khiển NHNN</a>
+      <a class="wb-sidenav__link" href="#a6-thuc-the">A6 · Ai khác cầm lái</a>
+      <a class="wb-sidenav__link" href="#a7-chungkhoan">A7 · Chứng khoán Việt Nam</a>
+      <a class="wb-sidenav__link" href="#a8-vang">A8 · Vàng</a>
+      <a class="wb-sidenav__link" href="#a9-taisan">A9 · Nhà, USD, dầu, tiền gửi</a>
+      <a class="wb-sidenav__link" href="#a10-hanhdong">A10 · Đang cầm tiền mặt</a>
+      <a class="wb-sidenav__link" href="#a11-baochi">A11 · Bảy câu báo hay viết</a>
+      <a class="wb-sidenav__link" href="#a12-tudien">A12 · Từ điển thuật ngữ</a>
 
       <div class="wb-sidenav__section" data-part="b" style="margin-top:14px">Phần B — Sổ tay tra cứu</div>
       <a class="wb-sidenav__link" data-part="b" href="#s0-cach-doc">00 · Cách đọc sổ tay</a>
@@ -416,7 +432,7 @@
       <div class="rb-part-head">
         <p class="rb-kicker">Phần A · đọc theo thứ tự</p>
         <h2>Hiểu hệ thống trước, tra quy tắc sau</h2>
-        <p>Tám chương dưới đây không giả định bạn biết bất cứ thuật ngữ kinh tế nào. Mỗi thuật ngữ bắt buộc phải dùng đều được định nghĩa ngay lần đầu xuất hiện; những từ còn lại nằm trong <a href="#a8-tudien">từ điển ở A8</a>.</p>
+        <p>Mười hai chương dưới đây không giả định bạn biết bất cứ thuật ngữ kinh tế nào. Mỗi thuật ngữ bắt buộc phải dùng đều được định nghĩa ngay lần đầu xuất hiện; những từ còn lại nằm trong <a href="#a12-tudien">từ điển ở A12</a>.</p>
       </div>
 
       <!-- ============ A1 — VÒNG TIỀN CHẢY ============ -->
@@ -572,7 +588,7 @@
               </div></div>
             </div>
           </div>
-          <div class="rb-viz__foot">Điều cần thấy: <b>kéo cả hai tay cầm lên cùng một mức thì con số ở giữa không nhúc nhích.</b> Đó là lý do một lần "tăng lãi suất" trên báo có thể chẳng thắt chặt gì cả. Khi số này xuống dưới 0, giữ tiền là chắc chắn mất sức mua — nhớ ô này, nó là toàn bộ lý do vàng tăng giá ở <a href="#a6-vang">A6</a>.</div>
+          <div class="rb-viz__foot">Điều cần thấy: <b>kéo cả hai tay cầm lên cùng một mức thì con số ở giữa không nhúc nhích.</b> Đó là lý do một lần "tăng lãi suất" trên báo có thể chẳng thắt chặt gì cả. Khi số này xuống dưới 0, giữ tiền là chắc chắn mất sức mua — nhớ ô này, nó là toàn bộ lý do vàng tăng giá ở <a href="#a8-vang">A8</a>.</div>
         </div>
 
         <p class="rb-prose" style="color:var(--wb-fg-muted);font-size:13.5px">Viết gọn theo ký hiệu sách vở — vẫn là ba số ở khối trên, không thêm gì: $r$ lãi suất thực, $i$ lãi suất danh nghĩa, $\pi$ lạm phát kỳ vọng.</p>
@@ -783,9 +799,282 @@
 
       <hr class="wb-divider">
 
-      <!-- ============ A5 — CHỨNG KHOÁN VN ============ -->
-      <section id="a5-chungkhoan">
-        <p class="rb-sec-eyebrow"><b>A5</b> — Chứng khoán Việt Nam</p>
+      <!-- ============ A5 — NHNN: BẢNG ĐIỀU KHIỂN ============ -->
+      <section id="a5-nhnn">
+        <p class="rb-sec-eyebrow"><b>A5</b> — Người cầm lái trong nước</p>
+        <h2 class="rb-sec-title">Ngân hàng Nhà nước không có một cần gạt — nó có cả một bảng điều khiển</h2>
+        <p class="rb-lede">Tít báo gọi chung là "NHNN điều hành lãi suất". Nhưng lãi suất điều hành của Việt Nam <b>đứng yên ở 4,5% từ tháng 6/2023 tới nay</b>, trong khi tiền trong hệ thống vẫn lúc căng lúc dư, tỷ giá lúc sát trần lúc sát sàn. Mọi điều chỉnh của ba năm ấy đi qua những cần gạt khác — và muốn đoán tài sản của mình sắp bị kéo về đâu thì phải biết cần gạt nào nối với cái gì.</p>
+
+        <div class="wb-alert wb-alert--plain">
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Ví von — phòng điều khiển một nhà máy nước</p>
+            <p class="wb-alert__msg">Có <b>van giá</b> (đặt giá nước cho các trạm: lãi suất điều hành), <b>van lượng</b> (mỗi trạm được xả bao nhiêu khối mỗi năm: room tín dụng), <b>bơm tay</b> bơm vào hoặc hút ra vài ngày một lần (thị trường mở), <b>cửa xả ra biển</b> có hàng rào mực nước (tỷ giá trung tâm ±5%), và <b>khoá an toàn</b> tự ngắt khi một trạm xả quá tay (các tỷ lệ an toàn). Người vận hành ít khi chạm van giá; phần lớn thời gian họ chỉnh bơm tay và cửa xả.</p>
+            <p class="wb-alert__msg"><b>Chỗ ví von này hỏng:</b> nước không đoán trước người vận hành. Ngân hàng và người dân thì có — một công văn "đề nghị giảm lãi suất" hay một lời hứa giữ tỷ giá đổi hành vi trước khi bất kỳ van nào được vặn.</p>
+          </div>
+        </div>
+
+        <div class="rb-viz" id="viz-nhnn-map">
+          <div class="rb-viz__head">
+            <p class="rb-viz__title">Cần gạt → biến bị kéo → tài sản</p>
+            <p class="rb-viz__hint">Đọc từ trái qua phải. Cột giữa là chỗ quan sát được: mỗi biến ở đó có số công bố hằng ngày hoặc hằng tháng.</p>
+          </div>
+          <div class="rb-viz__body">
+            <svg class="rb-dg" viewBox="0 0 360 284" role="img" aria-labelledby="nhnnMapTitle">
+              <title id="nhnnMapTitle">Năm nhóm công cụ của Ngân hàng Nhà nước, biến mỗi nhóm kéo, và tài sản chịu tác động</title>
+              <defs>
+                <marker id="rbAh" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto"><path class="rb-dg-ah" d="M0,0 L8,4 L0,8 z"></path></marker>
+              </defs>
+              <text class="rb-dg-h" x="52" y="14" text-anchor="middle">Cần gạt</text>
+              <text class="rb-dg-h" x="182" y="14" text-anchor="middle">Biến bị kéo</text>
+              <text class="rb-dg-h" x="310" y="14" text-anchor="middle">Tài sản</text>
+              <g>
+                <rect class="rb-dg-box" x="2" y="26" width="100" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="52" y="44" text-anchor="middle">Lãi điều hành</text><text class="rb-dg-ts" x="52" y="57" text-anchor="middle">trần lãi tiền gửi</text>
+                <rect class="rb-dg-box" x="2" y="78" width="100" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="52" y="96" text-anchor="middle">OMO, tín phiếu</text><text class="rb-dg-ts" x="52" y="109" text-anchor="middle">dự trữ bắt buộc</text>
+                <rect class="rb-dg-box" x="2" y="130" width="100" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="52" y="148" text-anchor="middle">Room tín dụng</text><text class="rb-dg-ts" x="52" y="161" text-anchor="middle">tỷ lệ an toàn</text>
+                <rect class="rb-dg-box" x="2" y="182" width="100" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="52" y="200" text-anchor="middle">Tỷ giá trung tâm</text><text class="rb-dg-ts" x="52" y="213" text-anchor="middle">mua, bán USD</text>
+                <rect class="rb-dg-box" x="2" y="234" width="100" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="52" y="252" text-anchor="middle">Quản lý vàng</text><text class="rb-dg-ts" x="52" y="265" text-anchor="middle">cấp phép, hạn ngạch</text>
+              </g>
+              <g>
+                <rect class="rb-dg-boxa" x="132" y="26" width="100" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="182" y="44" text-anchor="middle">Lãi huy động</text><text class="rb-dg-ts" x="182" y="57" text-anchor="middle">và lãi cho vay</text>
+                <rect class="rb-dg-boxa" x="132" y="78" width="100" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="182" y="96" text-anchor="middle">Lãi qua đêm</text><text class="rb-dg-ts" x="182" y="109" text-anchor="middle">liên ngân hàng</text>
+                <rect class="rb-dg-boxa" x="132" y="130" width="100" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="182" y="148" text-anchor="middle">Tín dụng mới</text><text class="rb-dg-ts" x="182" y="161" text-anchor="middle">lượng tiền vay ra</text>
+                <rect class="rb-dg-boxa" x="132" y="182" width="100" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="182" y="200" text-anchor="middle">USD/VND</text><text class="rb-dg-ts" x="182" y="213" text-anchor="middle">ở ngân hàng</text>
+                <rect class="rb-dg-boxa" x="132" y="234" width="100" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="182" y="252" text-anchor="middle">Chênh lệch vàng</text><text class="rb-dg-ts" x="182" y="265" text-anchor="middle">trong nước − thế giới</text>
+              </g>
+              <g>
+                <rect class="rb-dg-box" x="262" y="26" width="96" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="310" y="44" text-anchor="middle">Tiền gửi</text><text class="rb-dg-ts" x="310" y="57" text-anchor="middle">trái phiếu</text>
+                <rect class="rb-dg-box" x="262" y="78" width="96" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="310" y="96" text-anchor="middle">Cổ phiếu</text><text class="rb-dg-ts" x="310" y="109" text-anchor="middle">P/E, margin</text>
+                <rect class="rb-dg-box" x="262" y="130" width="96" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="310" y="148" text-anchor="middle">Bất động sản</text><text class="rb-dg-ts" x="310" y="161" text-anchor="middle">giá, thanh khoản</text>
+                <rect class="rb-dg-box" x="262" y="182" width="96" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="310" y="207" text-anchor="middle">Giữ USD</text>
+                <rect class="rb-dg-box" x="262" y="234" width="96" height="42" rx="5"></rect>
+                <text class="rb-dg-t" x="310" y="259" text-anchor="middle">Vàng SJC, nhẫn</text>
+              </g>
+              <g>
+                <line class="rb-dg-ln" x1="102" y1="47" x2="132" y2="47" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="102" y1="99" x2="132" y2="99" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="102" y1="151" x2="132" y2="151" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="102" y1="203" x2="132" y2="203" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="102" y1="196" x2="132" y2="112" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="102" y1="255" x2="132" y2="255" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="182" y1="78" x2="182" y2="68" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="232" y1="47" x2="262" y2="47" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="232" y1="56" x2="262" y2="90" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="232" y1="99" x2="262" y2="99" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="232" y1="144" x2="262" y2="108" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="232" y1="151" x2="262" y2="151" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="232" y1="203" x2="262" y2="203" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="232" y1="212" x2="262" y2="246" marker-end="url(#rbAh)"></line>
+                <line class="rb-dg-ln" x1="232" y1="255" x2="262" y2="255" marker-end="url(#rbAh)"></line>
+              </g>
+            </svg>
+          </div>
+          <div class="rb-viz__foot">Hai đường chéo đáng nhớ: <b>mua hay bán USD đổi luôn lượng VND</b> trong hệ thống (bán 1 tỷ USD là hút về khoảng 26 nghìn tỷ đồng), nên giữ tỷ giá làm lãi liên ngân hàng tăng; và <b>tỷ giá đi vào giá vàng trong nước</b> vì giá vàng quy đổi = XAU × tỷ giá. Độ trễ thường gặp: liên ngân hàng trong ngày; lãi huy động và cho vay sau vài tuần tới 1–3 tháng; tín dụng mới và BĐS sau 1–2 quý; kinh tế thực sau 12–18 tháng <span class="wb-cap wb-cap--sm">R-A05</span>.</div>
+        </div>
+
+        <p class="rb-prose">Ba điều làm bảng điều khiển này khác Fed. Thứ nhất, <b>van lượng mạnh hơn van giá</b>: mỗi đầu năm NHNN giao chỉ tiêu tăng trưởng tín dụng cho cả hệ thống (năm 2026 định hướng khoảng 15%) rồi chia cho từng ngân hàng theo xếp hạng — người ta gọi là "room". Hết room thì lãi suất thấp mấy cũng không cho vay thêm được <span class="wb-cap wb-cap--sm">R-F05</span>. Thứ hai, <b>lãi tiền gửi ngắn hạn bị trần</b> (dưới 6 tháng tối đa 4,75%/năm), nên áp lực vốn không lộ ở kỳ hạn ngắn mà dồn sang kỳ hạn từ 6 tháng trở lên và sang lãi liên ngân hàng. Thứ ba, <b>tỷ giá được giữ trong hàng rào</b> ±5% quanh tỷ giá trung tâm công bố mỗi sáng — đây là cách Việt Nam thực thi lựa chọn "tỷ giá ổn định + tự quyết lãi suất" của bộ ba bất khả thi ở A4.</p>
+        <p class="rb-prose">Hệ quả thực dụng: <b>đừng chờ tin "NHNN giảm lãi suất" mới biết chính sách đã đổi.</b> Nhìn ba con số ở cột giữa: lãi qua đêm liên ngân hàng (đổi trong ngày khi NHNN bơm hay hút), lãi huy động 12 tháng của các ngân hàng lớn (đổi trong vài tuần), và giá bán USD ở ngân hàng so với trần (đổi mỗi sáng).</p>
+
+        <h3 class="rb-sub-title">Bảng điều khiển, tính đến 17/11/2026</h3>
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Cần gạt</th><th>Mức hiện hành</th><th>Kéo gì, sau bao lâu</th><th>Đọc ở đâu</th></tr></thead>
+          <tbody>
+            <tr><td><b>Lãi tái cấp vốn · tái chiết khấu · cho vay qua đêm</b></td><td>4,5% · 3,0% · 5,0%/năm (QĐ 1123/QĐ-NHNN, áp dụng từ 19/6/2023)</td><td class="wb-cell-muted">Giá vốn ngân hàng vay của NHNN; neo cho lãi liên ngân hàng; tới lãi cho vay sau 1–3 tháng</td><td class="wb-cell-muted">sbv.gov.vn, mục Lãi suất</td></tr>
+            <tr><td><b>Trần lãi tiền gửi VND</b></td><td>Không kỳ hạn và dưới 1 tháng 0,5%; 1 đến dưới 6 tháng 4,75%; từ 6 tháng trở lên tự do (QĐ 2411/QĐ-NHNN)</td><td class="wb-cell-muted">Giữ giá vốn ngắn hạn; khi thiếu vốn, ngân hàng nâng lãi kỳ hạn dài</td><td class="wb-cell-muted">Biểu lãi suất từng ngân hàng</td></tr>
+            <tr><td><b>Thị trường mở (OMO) · tín phiếu NHNN</b></td><td>Chào thầu gần như mỗi ngày; bơm ròng hay hút ròng đổi theo tuần</td><td class="wb-cell-muted">Lãi qua đêm liên ngân hàng trong 1–3 ngày</td><td class="wb-cell-muted">sbv.gov.vn, kết quả nghiệp vụ thị trường mở</td></tr>
+            <tr><td><b>Dự trữ bắt buộc</b></td><td>VND không kỳ hạn và dưới 12 tháng 3%, từ 12 tháng 1%; giảm 50% cho ngân hàng nhận chuyển giao bắt buộc ngân hàng yếu</td><td class="wb-cell-muted">Lượng tiền ngân hàng được cho vay ra; hiếm khi đổi</td><td class="wb-cell-muted">Thông tư của NHNN</td></tr>
+            <tr><td><b>Room tín dụng</b></td><td>2026: định hướng khoảng 15% toàn hệ thống; không tính room cho nhà ở xã hội, khu công nghiệp; Chính phủ yêu cầu thí điểm bỏ room từ 2026</td><td class="wb-cell-muted">Lượng tín dụng mới → BĐS, cổ phiếu sau 1–2 quý</td><td class="wb-cell-muted">Họp báo quý của NHNN; số tín dụng tháng</td></tr>
+            <tr><td><b>Tỷ lệ an toàn</b></td><td>Cho vay/tiền gửi (LDR) ≤ 85%; vốn ngắn hạn cho vay trung–dài hạn ≤ 30%; Thông tư 50/2026 (hiệu lực 1/12/2026) đổi cách tính LDR, trần 95% và thêm LCR, NSFR từ 2028</td><td class="wb-cell-muted">Trần cứng ở từng ngân hàng; chạm trần thì lãi huy động dài hạn tăng</td><td class="wb-cell-muted">Báo cáo tài chính quý của ngân hàng</td></tr>
+            <tr><td><b>Tỷ giá trung tâm ±5%</b></td><td>25.652 đ/USD ngày 17/11/2026 → trần 26.935, sàn 24.369</td><td class="wb-cell-muted">Hàng rào cho giá USD ở ngân hàng; tới CPI sau 2–4 tháng (R-C05)</td><td class="wb-cell-muted">sbv.gov.vn, mỗi sáng</td></tr>
+            <tr><td><b>Mua, bán ngoại tệ · hoán đổi</b></td><td>11/2026: mua USD giao ngay giá 25.500 đ (từ 11/11), hoán đổi USD/VND 182 ngày tới 2 tỷ USD (6/11); từ 2025 tới 10/2026 chưa phải bán ngoại tệ can thiệp</td><td class="wb-cell-muted">Đổi lượng VND ngay lập tức: mua USD là bơm, bán USD là hút</td><td class="wb-cell-muted">Thông cáo của NHNN</td></tr>
+            <tr><td><b>Thị trường vàng</b></td><td>Đấu thầu 4/2024 → bán thẳng qua 4 ngân hàng nhà nước và SJC từ 6/2024 → Nghị định 232/2025 bỏ độc quyền, cấp phép</td><td class="wb-cell-muted">Chênh lệch vàng trong nước − thế giới (A8)</td><td class="wb-cell-muted">Giá SJC, nhẫn so với XAU quy đổi</td></tr>
+            <tr><td><b>Dẫn dắt kỳ vọng</b></td><td>Họp báo quý, công văn yêu cầu giảm lãi suất, công bố room đầu năm, cam kết giữ tỷ giá</td><td class="wb-cell-muted">Kỳ vọng đổi trước khi số đổi (R-A04)</td><td class="wb-cell-muted">Phát biểu của lãnh đạo NHNN</td></tr>
+          </tbody>
+        </table></div></div>
+
+        <div class="rb-viz" id="viz-fx">
+          <div class="rb-viz__head">
+            <p class="rb-viz__title">Kéo thử — giá USD ở ngân hàng còn cách hàng rào bao xa?</p>
+            <p class="rb-viz__hint">Ngân hàng chỉ được bán USD trong khoảng ±5% quanh tỷ giá trung tâm. Số điền sẵn của sáng 17/11/2026: tỷ giá trung tâm 25.652 đ, Vietcombank bán ra 25.950 đ.</p>
+          </div>
+          <div class="rb-viz__body rb-viz__body--split">
+            <div style="display:grid;gap:14px">
+              <div class="wb-field"><label class="wb-label" for="fxCentral">Tỷ giá trung tâm (đồng/USD)</label><input class="wb-input" type="number" id="fxCentral" value="25652" step="1" inputmode="decimal"></div>
+              <div class="rb-viz__ctrl">
+                <div class="rb-viz__ctrl-top">
+                  <span class="rb-viz__ctrl-label">Giá bán USD ở ngân hàng</span>
+                  <span class="rb-viz__ctrl-val" id="fxBankVal">25.950 đ</span>
+                </div>
+                <input class="wb-range" type="range" id="fxBank" min="24000" max="27400" step="10" value="25950" aria-label="Giá bán USD ở ngân hàng">
+              </div>
+              <div class="rb-out-row">
+                <div class="rb-out"><span class="rb-out__label">Còn tới trần</span><span class="rb-out__val" id="fxRoom">3,8%</span><span class="rb-out__sub" id="fxEdges">trần 26.935 · sàn 24.369</span></div>
+                <div class="rb-out"><span class="rb-out__label">So với trung tâm</span><span class="rb-out__val" id="fxPos">+1,2%</span><span class="rb-out__sub" id="fxMoney">1 tỷ USD ↔ 25.950 tỷ đồng</span></div>
+              </div>
+            </div>
+            <div>
+              <svg viewBox="0 0 320 92" role="img" aria-labelledby="fxSvgTitle">
+                <title id="fxSvgTitle">Hàng rào tỷ giá: sàn, tỷ giá trung tâm, trần và vị trí giá USD ở ngân hàng</title>
+                <rect id="fxBand" x="40" y="30" width="240" height="22" rx="3" style="fill:var(--wb-surface-2);stroke:var(--wb-border-strong)"></rect>
+                <line id="fxMid" class="wb-axis-line" x1="160" y1="24" x2="160" y2="58"></line>
+                <line id="fxMark" x1="175" y1="20" x2="175" y2="62" style="stroke:var(--wb-danger-text);stroke-width:2.5"></line>
+                <text class="wb-axis-label" id="fxFloorLab" x="40" y="74" text-anchor="middle">sàn</text>
+                <text class="wb-axis-label" id="fxMidLab" x="160" y="74" text-anchor="middle">trung tâm</text>
+                <text class="wb-axis-label" id="fxCeilLab" x="280" y="74" text-anchor="middle">trần</text>
+                <text class="wb-axis-label" id="fxMarkLab" x="175" y="14" text-anchor="middle">giá ngân hàng</text>
+              </svg>
+              <div class="wb-alert wb-alert--plain" style="margin:8px 0 0"><div class="wb-alert__body">
+                <p class="wb-alert__title" id="fxVerdictT" style="margin-bottom:2px">Trong hàng rào</p>
+                <p class="wb-alert__msg" id="fxVerdictM" style="margin:0;font-size:12.5px">NHNN không buộc phải làm gì.</p>
+              </div></div>
+            </div>
+          </div>
+          <div class="rb-viz__foot" id="fxFoot">Điều cần thấy: hàng rào ±5% rộng gần 2.600 đồng, nên thứ đáng nhìn không phải "tỷ giá bao nhiêu" mà là <b>còn bao xa tới trần</b> và <b>NHNN đang mua hay bán USD</b>. Kéo giá sát trần: lựa chọn còn lại chỉ là bán USD dự trữ (hút VND, lãi liên ngân hàng tăng) hoặc nâng tỷ giá trung tâm (VND trượt) <span class="wb-cap wb-cap--info wb-cap--sm">R-C03</span>.</div>
+        </div>
+
+        <div class="wb-accordion">
+          <details class="wb-accordion__item"><summary>Lãi điều hành đứng yên hơn ba năm — vậy NHNN điều chỉnh bằng gì?</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Bằng <b>bơm tay</b>. Nghiệp vụ thị trường mở (OMO) là NHNN cho ngân hàng vay vài ngày tới vài tuần, có cầm cố giấy tờ có giá — đó là bơm. Phát hành tín phiếu NHNN là vay lại tiền của ngân hàng — đó là hút. Hai việc này đổi lãi qua đêm liên ngân hàng trong một hai ngày, nhanh hơn mọi quyết định lãi điều hành.</p>
+            <p class="rb-prose">Lãi cho vay qua đêm 5,0% của NHNN chỉ là trần mềm: ngân hàng nào không đủ giấy tờ có giá để cầm cố thì vẫn phải vay nhau đắt hơn. Ngày 1/6/2026 lãi qua đêm liên ngân hàng lên 10,66–11%/năm; NHNN chào thầu OMO lớn và hoán đổi 1 tỷ USD, tới 3/6 lãi về 5,4% <span class="wb-cap wb-cap--sm">R-BR01</span>. Ngày 13/11/2026 lãi qua đêm bình quân là 5,54%.</p>
+            <p class="rb-prose">Tháng 11/2026 là chiều ngược lại: VND mạnh lên (tỷ giá liên ngân hàng cuối tháng 10 thấp hơn đầu năm 1,8%), nên NHNN mua USD vào dự trữ với giá 25.500 đ và hoán đổi USD lấy VND kỳ hạn 182 ngày. Mỗi tỷ USD mua vào là 25.500 tỷ đồng được bơm ra — tức là cùng một thao tác vừa giữ tỷ giá không giảm quá nhanh, vừa nới thanh khoản.</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Room tín dụng chia thế nào, và bỏ room thì đổi gì?</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Đầu năm NHNN công bố định hướng tăng trưởng tín dụng cả hệ thống, rồi giao cho từng ngân hàng một hạn mức theo kết quả xếp hạng: ngân hàng khoẻ được nhiều hơn. Giữa năm có thể nới cho ngân hàng dùng hết room sớm. Năm 2026 có thêm ngoại lệ: dư nợ tăng thêm cho nhà ở xã hội, khu công nghiệp, khu chế xuất không tính vào room.</p>
+            <p class="rb-prose">Room là công cụ <b>lượng</b>: nó chặn tín dụng bất kể giá. Vì thế ở Việt Nam, "lãi suất thấp" chưa chắc là "tiền dễ vay" — câu hỏi đúng là ngân hàng của khoản vay ấy còn room không. Công điện 128/CĐ-TTg (8/2025) yêu cầu NHNN thí điểm bỏ giao chỉ tiêu từ 2026 cho các ngân hàng đủ chuẩn an toàn. Bỏ room không phải buông lỏng: giới hạn chuyển sang vốn tự có và thanh khoản (CAR, LDR, LCR, NSFR) — tức là tín dụng sẽ phản ứng với <em>giá</em> nhiều hơn với <em>giấy phép</em>, giống Fed hơn.</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Các tỷ lệ an toàn chặn tín dụng ở chỗ nào?</summary><div class="wb-accordion__body">
+            <p class="rb-prose"><b>LDR</b> (dư nợ cho vay trên tiền gửi) ≤ 85% theo Thông tư 22/2019: muốn cho vay thêm 85 đồng phải huy động thêm 100 đồng tiền gửi. <b>Tỷ lệ vốn ngắn hạn dùng cho vay trung–dài hạn</b> ≤ 30%: ngân hàng không được lấy quá nhiều tiền gửi ngắn để cho vay mua nhà 20 năm. Chạm một trong hai trần, ngân hàng không có cách nào khác ngoài <b>nâng lãi huy động kỳ hạn dài</b> — đó là lý do có lúc lãi tiết kiệm 12 tháng tăng dù NHNN không đổi gì <span class="wb-cap wb-cap--sm">R-F06</span>.</p>
+            <p class="rb-prose">Cho vay kinh doanh bất động sản bị tính <b>hệ số rủi ro</b> cao hơn khi tính tỷ lệ an toàn vốn (CAR), nên mỗi đồng cho vay BĐS "ăn" nhiều vốn tự có hơn một đồng cho vay sản xuất. Thông tư 50/2026 (hiệu lực 1/12/2026) đổi mẫu số LDR, nâng trần lên 95% và đưa vào LCR, NSFR theo chuẩn Basel III từ 10/2028; ngân hàng đạt cả hai tỷ lệ ở 100% thì không bị trần LDR.</p>
+            <p class="rb-prose"><b>Cơ cấu lại nợ giữ nguyên nhóm</b> (Thông tư 02/2023, gia hạn tới 31/12/2024) cho phép ngân hàng giãn khoản vay khó trả mà không chuyển sang nợ xấu. Tác dụng phụ: nợ xấu trên báo cáo thấp hơn nợ xấu thật trong lúc chính sách còn hiệu lực, và nhảy bậc khi nó hết hạn <span class="wb-cap wb-cap--sm">R-F07</span>.</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Trần lãi tiền gửi và lãi USD 0% làm gì với người gửi tiền?</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Trần 4,75% cho kỳ hạn dưới 6 tháng giữ giá vốn ngắn hạn thấp, nhưng làm lãi ngắn hạn mất giá trị tín hiệu: hầu hết ngân hàng niêm yết đúng mức trần. Tín hiệu thật nằm ở kỳ hạn 6 và 12 tháng (không bị trần) — tháng 11/2026 lãi tiết kiệm trực tuyến 12 tháng ở nhiều ngân hàng là 6,1–7%/năm.</p>
+            <p class="rb-prose">Lãi tiền gửi USD của cá nhân bị trần <b>0%/năm</b> (QĐ 2410/QĐ-NHNN, áp dụng từ 20/11/2024; mức 0% có từ cuối 2015). Đây là công cụ chống đô la hoá: gửi USD ở ngân hàng Việt Nam không sinh lãi, nên giữ USD chỉ có lời khi VND mất giá nhanh hơn lãi tiền gửi VND (A9, <span class="wb-cap wb-cap--info wb-cap--sm">R-C09</span>).</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>NHNN dẫn dắt kỳ vọng bằng lời nói thế nào?</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Ba kênh hay gặp: <b>công văn yêu cầu ngân hàng giảm lãi suất</b> (ngân hàng thường làm theo ở kỳ hạn mới phát sinh, dù không có quyết định lãi điều hành), <b>họp báo quý</b> (con số tín dụng, tỷ giá, định hướng room), và <b>cam kết giữ tỷ giá</b> kèm số dự trữ. Logic giống R-A04: thị trường phản ứng với phần bất ngờ. Một lời hứa giữ tỷ giá chỉ có sức nặng khi người ta tin kho USD đủ dày — vì thế dự trữ ngoại hối là con số đáng theo dõi ngang tỷ giá.</p>
+          </div></details>
+        </div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A6 — AI KHÁC CẦM LÁI ============ -->
+      <section id="a6-thuc-the">
+        <p class="rb-sec-eyebrow"><b>A6</b> — Ngoài NHNN</p>
+        <h2 class="rb-sec-title">NHNN chỉ giữ cần gạt tiền tệ — ngân sách, giá xăng, đất đai và luật chơi chứng khoán nằm ở tay người khác</h2>
+        <p class="rb-lede">Một nền kinh tế có <b>nhiều người lái cùng lúc</b>, và họ không nhất thiết muốn cùng một thứ. Quốc hội giao mục tiêu tăng trưởng và lạm phát cho cùng một năm; khi một cú sốc kéo hai mục tiêu đi hai hướng, ai nhường ai quyết định lãi suất, tỷ giá và giá xăng — tức quyết định tài sản của bạn đi về đâu.</p>
+
+        <div class="rb-viz" id="viz-actors">
+          <div class="rb-viz__head">
+            <p class="rb-viz__title">Ba lớp người lái, một cửa ra</p>
+            <p class="rb-viz__hint">Lớp trên tác động vào lớp dưới; cả ba lớp cùng đổ vào bốn biến ở đáy hình, và giá tài sản chỉ nhìn thấy bốn biến ấy.</p>
+          </div>
+          <div class="rb-viz__body">
+            <svg class="rb-dg" viewBox="0 0 360 270" role="img" aria-labelledby="actorsTitle">
+              <title id="actorsTitle">Các thực thể tác động tới kinh tế Việt Nam: bên ngoài, nhà nước, người chơi thị trường, cùng đổ vào tỷ giá, lãi suất, tín dụng và giá điều hành</title>
+              <text class="rb-dg-h" x="2" y="14">Bên ngoài</text>
+              <rect class="rb-dg-box" x="2" y="20" width="76" height="38" rx="5"></rect><text class="rb-dg-t" x="40" y="36" text-anchor="middle">Fed, DXY</text><text class="rb-dg-ts" x="40" y="49" text-anchor="middle">lợi suất Mỹ</text>
+              <rect class="rb-dg-box" x="82" y="20" width="76" height="38" rx="5"></rect><text class="rb-dg-t" x="120" y="36" text-anchor="middle">Trung Quốc</text><text class="rb-dg-ts" x="120" y="49" text-anchor="middle">CNY, hàng hoá</text>
+              <rect class="rb-dg-box" x="162" y="20" width="76" height="38" rx="5"></rect><text class="rb-dg-t" x="200" y="36" text-anchor="middle">OPEC+</text><text class="rb-dg-ts" x="200" y="49" text-anchor="middle">giá dầu</text>
+              <rect class="rb-dg-box" x="242" y="20" width="76" height="38" rx="5"></rect><text class="rb-dg-t" x="280" y="36" text-anchor="middle">Mỹ</text><text class="rb-dg-ts" x="280" y="49" text-anchor="middle">thuế quan</text>
+
+              <text class="rb-dg-h" x="2" y="80">Nhà nước Việt Nam</text>
+              <rect class="rb-dg-boxa" x="2" y="86" width="316" height="22" rx="5"></rect><text class="rb-dg-t" x="160" y="101" text-anchor="middle">Quốc hội, Chính phủ: mục tiêu GDP, CPI; ngân sách; thuế</text>
+              <line class="rb-dg-ln" x1="40" y1="108" x2="40" y2="122" marker-end="url(#rbAh)"></line>
+              <line class="rb-dg-ln" x1="120" y1="108" x2="120" y2="122" marker-end="url(#rbAh)"></line>
+              <line class="rb-dg-ln" x1="200" y1="108" x2="200" y2="122" marker-end="url(#rbAh)"></line>
+              <line class="rb-dg-ln" x1="280" y1="108" x2="280" y2="122" marker-end="url(#rbAh)"></line>
+              <rect class="rb-dg-box" x="2" y="122" width="76" height="38" rx="5"></rect><text class="rb-dg-t" x="40" y="138" text-anchor="middle">NHNN</text><text class="rb-dg-ts" x="40" y="151" text-anchor="middle">tiền, tỷ giá</text>
+              <rect class="rb-dg-box" x="82" y="122" width="76" height="38" rx="5"></rect><text class="rb-dg-t" x="120" y="138" text-anchor="middle">Bộ Tài chính</text><text class="rb-dg-ts" x="120" y="151" text-anchor="middle">thuế, UBCKNN</text>
+              <rect class="rb-dg-box" x="162" y="122" width="76" height="38" rx="5"></rect><text class="rb-dg-t" x="200" y="138" text-anchor="middle" textLength="70" lengthAdjust="spacingAndGlyphs">Bộ Công Thương</text><text class="rb-dg-ts" x="200" y="151" text-anchor="middle">giá xăng</text>
+              <rect class="rb-dg-box" x="242" y="122" width="76" height="38" rx="5"></rect><text class="rb-dg-t" x="280" y="138" text-anchor="middle">UBND tỉnh</text><text class="rb-dg-ts" x="280" y="151" text-anchor="middle">giá đất</text>
+
+              <text class="rb-dg-h" x="2" y="182">Người chơi trên thị trường</text>
+              <rect class="rb-dg-box" x="2" y="188" width="76" height="38" rx="5"></rect><text class="rb-dg-t" x="40" y="204" text-anchor="middle">Ngân hàng</text><text class="rb-dg-ts" x="40" y="217" text-anchor="middle">thương mại</text>
+              <rect class="rb-dg-box" x="82" y="188" width="76" height="38" rx="5"></rect><text class="rb-dg-t" x="120" y="204" text-anchor="middle">DN nhà nước</text><text class="rb-dg-ts" x="120" y="217" text-anchor="middle">điện, xăng dầu</text>
+              <rect class="rb-dg-box" x="162" y="188" width="76" height="38" rx="5"></rect><text class="rb-dg-t" x="200" y="204" text-anchor="middle">Khối ngoại</text><text class="rb-dg-ts" x="200" y="217" text-anchor="middle">FDI, FII</text>
+              <rect class="rb-dg-box" x="242" y="188" width="76" height="38" rx="5"></rect><text class="rb-dg-t" x="280" y="204" text-anchor="middle">Cá nhân</text><text class="rb-dg-ts" x="280" y="217" text-anchor="middle">&gt;85% giao dịch</text>
+
+              <line class="rb-dg-ln" x1="318" y1="39" x2="342" y2="39"></line>
+              <line class="rb-dg-ln" x1="318" y1="141" x2="342" y2="141"></line>
+              <line class="rb-dg-ln" x1="318" y1="207" x2="342" y2="207"></line>
+              <line class="rb-dg-ln" x1="342" y1="39" x2="342" y2="236" marker-end="url(#rbAh)"></line>
+              <rect class="rb-dg-boxa" x="2" y="236" width="356" height="32" rx="5"></rect>
+              <text class="rb-dg-t" x="180" y="250" text-anchor="middle">Tỷ giá · lãi suất · tín dụng · giá điều hành</text>
+              <text class="rb-dg-ts" x="180" y="262" text-anchor="middle">→ giá cổ phiếu, nhà, vàng, USD</text>
+            </svg>
+          </div>
+          <div class="rb-viz__foot">Fed không chạm được cổ phiếu Việt Nam trực tiếp; nó đi qua tỷ giá và lãi suất (A7). OPEC+ không chạm CPI trực tiếp; nó đi qua giá xăng mà liên Bộ Công Thương – Tài chính điều hành. Biết một tin thuộc ô nào thì biết nó phải đi qua cửa nào, và ai có quyền chặn cửa ấy.</div>
+        </div>
+
+        <p class="rb-prose">Năm 2026 là một ví dụ sống của chuyện nhiều người lái. Quốc hội giao <b>GDP tăng từ 10% trở lên và CPI bình quân khoảng 4,5%</b> (Nghị quyết 244/2025/QH15). Từ 28/2/2026 xung đột quanh eo Hormuz đẩy Brent lên tới khoảng 120 USD/thùng vào tháng 4 — một cú sốc <em>chi phí đẩy</em>, loại kéo hai mục tiêu về hai hướng (A3). Kết quả tới tháng 10: GDP 9 tháng tăng 9,01%, CPI bình quân 10 tháng tăng 4,57% — đã vượt mục tiêu — trong khi Fed <b>tăng</b> lãi suất lên 3,75–4,00% (9/2026). NHNN không đổi lãi điều hành mà dùng thanh khoản và tỷ giá; Quốc hội và Chính phủ dùng thuế và quỹ bình ổn để cắt bớt giá xăng. Mỗi người lái cầm một cần gạt khác nhau, và tổng lực mới là thứ thị trường thấy.</p>
+
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Ai</th><th>Cần gạt</th><th>Kéo tài sản nào</th><th>Đọc tín hiệu ở đâu</th></tr></thead>
+          <tbody>
+            <tr><td><b>Quốc hội</b></td><td>Mục tiêu GDP, CPI năm; dự toán ngân sách; thuế (VAT, thuế xăng dầu); luật đất đai, chứng khoán</td><td class="wb-cell-muted">Mọi thứ, qua mức chịu đựng lạm phát và tín dụng</td><td class="wb-cell-muted">Nghị quyết kỳ họp tháng 5–6 và 10–11</td></tr>
+            <tr><td><b>Chính phủ</b></td><td>Giải ngân đầu tư công; giá điều hành (điện, y tế, giáo dục); công điện chỉ đạo NHNN, các bộ</td><td class="wb-cell-muted">Cổ phiếu xây dựng, vật liệu; CPI theo bậc</td><td class="wb-cell-muted">Số giải ngân tháng; công điện của Thủ tướng</td></tr>
+            <tr><td><b>Bộ Tài chính</b></td><td>Thuế; phát hành trái phiếu chính phủ qua Kho bạc; quản lý UBCKNN; Cục Thống kê</td><td class="wb-cell-muted">Lợi suất TPCP; chi phí vốn dài hạn</td><td class="wb-cell-muted">Kết quả đấu thầu TPCP</td></tr>
+            <tr><td><b>UBCKNN</b></td><td>Luật chơi chứng khoán: ký quỹ ban đầu tối thiểu 50%, danh sách mã được margin, hệ thống giao dịch, điều kiện cho nhà đầu tư nước ngoài</td><td class="wb-cell-muted">Cổ phiếu: thanh khoản, đòn bẩy, dòng vốn ngoại</td><td class="wb-cell-muted">Thông tư, quyết định của UBCKNN</td></tr>
+            <tr><td><b>Bộ Công Thương + Bộ Tài chính</b></td><td>Giá xăng dầu theo giá thế giới bình quân giữa hai kỳ điều hành; trích, chi Quỹ bình ổn giá</td><td class="wb-cell-muted">CPI (xăng dầu ~3,6% rổ), chi phí vận tải</td><td class="wb-cell-muted">Thông cáo điều hành giá trên moit.gov.vn</td></tr>
+            <tr><td><b>UBND tỉnh</b></td><td>Bảng giá đất, hệ số điều chỉnh; giao đất, phê duyệt dự án</td><td class="wb-cell-muted">Giá vốn dự án BĐS, nguồn cung nhà mới</td><td class="wb-cell-muted">Quyết định bảng giá đất của tỉnh</td></tr>
+            <tr><td><b>Ngân hàng thương mại</b></td><td>Chia room cho ai; lãi huy động kỳ hạn dài; chuẩn cho vay BĐS</td><td class="wb-cell-muted">BĐS, margin, cổ phiếu ngân hàng</td><td class="wb-cell-muted">Biểu lãi suất, báo cáo quý</td></tr>
+            <tr><td><b>Doanh nghiệp nhà nước</b></td><td>Thời điểm tăng giá điện; vốn hoá lớn trên sàn</td><td class="wb-cell-muted">CPI; trụ VN-Index</td><td class="wb-cell-muted">Quyết định giá điện</td></tr>
+            <tr><td><b>Khối ngoại</b></td><td>Mua, bán ròng cổ phiếu (FII); giải ngân nhà máy (FDI)</td><td class="wb-cell-muted">Cổ phiếu vốn hoá lớn; cung USD</td><td class="wb-cell-muted">Giao dịch khối ngoại mỗi phiên; FDI tháng</td></tr>
+            <tr><td><b>Nhà đầu tư cá nhân</b></td><td>Hơn 85% giá trị giao dịch; margin</td><td class="wb-cell-muted">Biên độ dao động (A7)</td><td class="wb-cell-muted">Dư nợ margin quý</td></tr>
+            <tr><td><b>Fed, DXY, lợi suất Mỹ</b></td><td>Fed funds 3,75–4,00% (giữ ngày 28/10/2026)</td><td class="wb-cell-muted">USD/VND, khối ngoại, vàng</td><td class="wb-cell-muted">federalreserve.gov</td></tr>
+            <tr><td><b>Trung Quốc</b></td><td>CNY, giá nguyên liệu, chính sách kích thích</td><td class="wb-cell-muted">Chi phí nhập khẩu, xuất khẩu nông sản</td><td class="wb-cell-muted">Tỷ giá CNY, PMI Trung Quốc</td></tr>
+            <tr><td><b>OPEC+</b></td><td>Hạn ngạch sản lượng (họp tháng)</td><td class="wb-cell-muted">Dầu → xăng → CPI; cổ phiếu dầu khí</td><td class="wb-cell-muted">Thông cáo OPEC, giá Brent</td></tr>
+            <tr><td><b>Chính sách thương mại Mỹ</b></td><td>Thuế quan, kiểm soát xuất xứ hàng hoá</td><td class="wb-cell-muted">Đơn hàng xuất khẩu; FDI</td><td class="wb-cell-muted">Quyết định của Nhà Trắng, phán quyết toà Mỹ</td></tr>
+          </tbody>
+        </table></div></div>
+
+        <div class="wb-accordion">
+          <details class="wb-accordion__item"><summary>Quốc hội và Chính phủ cầm những cần gạt nào, và chúng đụng vào cần gạt của NHNN ở đâu?</summary><div class="wb-accordion__body">
+            <p class="rb-prose"><b>Mục tiêu năm.</b> Nghị quyết 244/2025/QH15 giao cho 2026: GDP từ 10% trở lên, CPI bình quân khoảng 4,5%. Kế hoạch 2026–2030 (Nghị quyết 25/2026/QH16) giữ mục tiêu tăng bình quân từ 10%/năm. Mục tiêu tăng trưởng cao là áp lực lên NHNN: room rộng hơn, lãi vay thấp hơn. Mục tiêu lạm phát kéo ngược lại. Khi CPI đã chạm trần mục tiêu, dư địa nới tiền tệ co lại <span class="wb-cap wb-cap--warning wb-cap--sm">R-A11</span>.</p>
+            <p class="rb-prose"><b>Thuế.</b> Thuế VAT 10% được giảm còn 8% cho phần lớn hàng hoá, dịch vụ tới hết 31/12/2026 (Nghị quyết 204/2025/QH15); năm 2026 Quốc hội còn giảm thuế với xăng dầu (Nghị quyết 19/2026/QH16) để đệm cú sốc dầu. Giảm thuế đẩy CPI xuống ngay tháng áp dụng — và đẩy lên đúng tháng hết hạn, một bước nhảy biết trước lịch.</p>
+            <p class="rb-prose"><b>Ngân sách.</b> Chi đầu tư công (cầu, đường, sân bay) là phần ngân sách tác động nhanh nhất tới GDP qua số nhân ở A1. Thâm hụt được bù bằng trái phiếu chính phủ do Kho bạc phát hành; phát hành nhiều thì lợi suất TPCP nhích lên và ngân hàng giữ TPCP thay vì cho vay. Đẳng thức ba túi ở A1 nói phần còn lại: nhà nước thâm hụt hơn thì tư nhân phải dư hơn hoặc xuất siêu phải nhỏ lại.</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>UBCKNN đổi luật chơi chứng khoán thế nào, và vì sao nâng hạng lại là chuyện của luật?</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Ủy ban Chứng khoán Nhà nước (thuộc Bộ Tài chính) đặt sàn cho <b>tỷ lệ ký quỹ ban đầu</b> (50%: vay tối đa bằng số tiền tự có) và duyệt danh sách mã được cho vay margin — tức là trực tiếp chỉnh bộ khuếch đại ở A7. Siết margin trong lúc thị trường nóng là một trong số ít cách hạ nhiệt mà không đụng tới lãi suất.</p>
+            <p class="rb-prose">Ba thay đổi kỹ thuật mở đường cho nâng hạng: cho tổ chức nước ngoài mua cổ phiếu không cần ký quỹ đủ tiền trước (Thông tư 68/2024, hiệu lực 2/11/2024), hệ thống giao dịch KRX (5/2025), và quy trình xử lý giao dịch lỗi. FTSE Russell ghi nhận đúng các thay đổi ấy khi xác nhận (4/2026) đưa Việt Nam từ Cận biên lên <b>Mới nổi thứ cấp, hiệu lực 21/9/2026</b>. Quỹ chỉ số theo rổ FTSE Mới nổi buộc phải mua theo lịch <span class="wb-cap wb-cap--sm">R-H06</span> — nên phần lớn hiệu ứng đã vào giá trước ngày hiệu lực.</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Giá xăng: ai quyết, theo công thức gì, và quỹ bình ổn đệm được bao nhiêu?</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Liên Bộ Công Thương – Tài chính công bố giá trần bán lẻ ở mỗi kỳ điều hành (thường vào thứ Năm), tính từ <b>giá thành phẩm thế giới bình quân giữa hai kỳ</b> cộng thuế, phí, chi phí. Họ có thêm hai cái đệm: <b>trích</b> vào Quỹ bình ổn giá khi giá thế giới giảm và <b>chi</b> quỹ khi giá tăng; và thuế, do Quốc hội quyết. Ngày 11/3/2026, giữa cú sốc Hormuz, liên Bộ chi quỹ 4.000 đ/lít xăng và 5.000 đ/lít dầu diesel; quỹ cạn tới mức các kỳ điều hành sau đó ghi rõ nguồn trích, chi là "tạm ứng từ ngân sách nhà nước".</p>
+            <p class="rb-prose">Hệ quả: CPI Việt Nam phản ứng với dầu <b>chậm khoảng một kỳ điều hành và yếu hơn</b> Brent, nhưng chỉ chừng nào quỹ còn tiền và thuế còn dư địa giảm. Quỹ cạn là lúc giá xăng bắt kịp giá thế giới một lần, theo bậc <span class="wb-cap wb-cap--sm">R-B10</span>.</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Đất đai: luật, bảng giá đất và vì sao một quyết định của tỉnh đổi giá nhà</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Luật Đất đai 2024 (hiệu lực 1/8/2024) bỏ khung giá đất của Trung ương; mỗi tỉnh tự ban hành <b>bảng giá đất</b>, và từ 1/1/2026 các tỉnh (34 tỉnh, thành sau sáp nhập) áp dụng bảng giá mới, cùng cơ chế tháo gỡ của Nghị quyết 254/2025/QH15. Bảng giá đất là căn cứ tính tiền sử dụng đất, thuế, bồi thường. Bảng giá tiến gần giá thị trường thì giá vốn của dự án mới tăng, và người mua nhà sơ cấp trả phần đó.</p>
+            <p class="rb-prose">Bất động sản Việt Nam vì thế chịu ba người lái cùng lúc: NHNN (room, hệ số rủi ro cho vay BĐS), tỉnh (bảng giá đất, tốc độ duyệt dự án) và Quốc hội (luật). Tin "nới room BĐS" và tin "bảng giá đất tăng" đẩy giá nhà cùng chiều lên nhưng vì hai lý do khác nhau: một bên là cầu có thêm tiền vay, một bên là cung đắt hơn.</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Bên ngoài: Fed, Trung Quốc, OPEC+ và thuế quan Mỹ — mỗi cái đi qua cửa nào?</summary><div class="wb-accordion__body">
+            <p class="rb-prose"><b>Fed.</b> Tăng 0,25 điểm % ngày 16/9/2026 lên 3,75–4,00% và giữ ngày 28/10/2026, với hai phiếu muốn tăng tiếp. Lãi thực Mỹ cao giữ DXY mạnh; với Việt Nam nó đi qua USD/VND và dòng vốn ngoại (A7, bước 1–5).</p>
+            <p class="rb-prose"><b>Trung Quốc.</b> Nguồn nhập khẩu nguyên liệu lớn nhất và thị trường nông sản lớn: CNY yếu làm hàng Trung Quốc rẻ đi (CPI Việt Nam dịu) nhưng cũng làm hàng Việt Nam kém cạnh tranh. Kênh này song song và độc lập với kênh Fed (5.5).</p>
+            <p class="rb-prose"><b>OPEC+ và eo Hormuz.</b> Năm 2026 nguồn cung bị chặn bởi xung đột chứ không bởi hạn ngạch: Brent lên khoảng 120 USD/thùng (4/2026), về khoảng 93 USD ngày 11/11/2026 khi OPEC+ tăng sản lượng thêm hơn 2 triệu thùng/ngày trong tháng 10. Dầu tăng vì cung là cú sốc chi phí đẩy, đúng góc đình lạm ở mục 04 — góc Việt Nam chịu thiệt nhất <span class="wb-cap wb-cap--warning wb-cap--sm">R-REG01</span>.</p>
+            <p class="rb-prose"><b>Thuế quan Mỹ.</b> Mức thuế đối ứng áp cho hàng Việt Nam năm 2025 dựa trên luật quyền hạn kinh tế khẩn cấp (IEEPA); ngày 20/2/2026 Toà án Tối cao Mỹ phán luật ấy không cho phép áp thuế, và các mức thay thế đổi theo từng quyết định sau đó. Đây là cầu nối loại D: nó đổi theo phán quyết và đàm phán, không theo số liệu kinh tế, nên mô hình dự báo nào dựa trên dữ liệu quá khứ cũng mù ở đây <span class="wb-cap wb-cap--sm">R-G04</span>.</p>
+          </div></details>
+        </div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A7 — CHỨNG KHOÁN VN ============ -->
+      <section id="a7-chungkhoan">
+        <p class="rb-sec-eyebrow"><b>A7</b> — Chứng khoán Việt Nam</p>
         <h2 class="rb-sec-title">Giá cổ phiếu chỉ có hai bộ phận — và ở Việt Nam, bộ phận thứ hai quậy mạnh hơn</h2>
         <p class="rb-lede">Giá một cổ phiếu = <b>lợi nhuận doanh nghiệp làm ra trên mỗi cổ phiếu</b> × <b>số tiền thị trường sẵn lòng trả cho mỗi đồng lợi nhuận đó</b>. Chỉ có hai thứ, nên mọi biến động giá phải quy về một trong hai. Không có khả năng thứ ba.</p>
 
@@ -841,7 +1130,7 @@
         </div>
 
         <p class="rb-prose" style="color:var(--wb-fg-muted);font-size:13.5px">Viết gọn — vẫn là phép nhân ở trên:</p>
-        <div class="rb-formula">$$\text{Giá} \;=\; \underbrace{\frac{P}{E}}_{\text{thị trường chịu trả}} \times \underbrace{EPS}_{\text{doanh nghiệp lãi}}$$</div>
+        <div class="rb-formula" id="eq-stock">$$\text{Giá} \;=\; \underbrace{\frac{P}{E}}_{\text{thị trường chịu trả}} \times \underbrace{EPS}_{\text{doanh nghiệp lãi}}$$</div>
 
         <h3 class="rb-sub-title">Bốn thứ làm thị trường Việt Nam hành xử khác</h3>
         <p class="rb-prose">Bốn đặc điểm dưới đây không phải chi tiết kỹ thuật vụn vặt — chúng giải thích phần lớn những chuyện "vô lý" mà nhà đầu tư cá nhân gặp phải.</p>
@@ -949,7 +1238,7 @@
         </div>
 
         <h3 class="rb-sub-title">Chạy hết một ví dụ: Fed bất ngờ cứng rắn → danh mục của bạn</h3>
-        <p class="rb-prose">Đây là bài kiểm tra xem bạn đã nắm A1–A5 chưa. Giả sử Fed họp và <b>bất ngờ</b> phát tín hiệu giữ lãi suất cao lâu hơn thị trường đang định giá. Chuỗi sự kiện:</p>
+        <p class="rb-prose">Đây là bài kiểm tra xem bạn đã nắm A1–A7 chưa. Giả sử Fed họp và <b>bất ngờ</b> phát tín hiệu giữ lãi suất cao lâu hơn thị trường đang định giá. Chuỗi sự kiện:</p>
         <div class="wb-card"><div class="wb-card__body">
           <ol class="wb-steps">
             <li class="wb-steps__item is-done"><span class="wb-steps__marker">1</span><div class="wb-steps__content">
@@ -958,7 +1247,7 @@
               <span class="wb-steps__note">R-A04 · R-C01</span></div></li>
             <li class="wb-steps__item is-done"><span class="wb-steps__marker">2</span><div class="wb-steps__content">
               <p class="wb-steps__title">Cùng ngày — vàng thế giới giảm, cổ phiếu mới nổi giảm</p>
-              <p class="wb-steps__desc">Giữ vàng giờ tốn kém hơn (A6). Đồng thời USD mạnh khiến tài sản thị trường mới nổi kém hấp dẫn.</p>
+              <p class="wb-steps__desc">Giữ vàng giờ tốn kém hơn (A8). Đồng thời USD mạnh khiến tài sản thị trường mới nổi kém hấp dẫn.</p>
               <span class="wb-steps__note">R-D01 · R-C02</span></div></li>
             <li class="wb-steps__item is-done"><span class="wb-steps__marker">3</span><div class="wb-steps__content">
               <p class="wb-steps__title">Ngày → tuần — áp lực dồn lên cái cửa duy nhất: USD/VND</p>
@@ -989,9 +1278,9 @@
 
       <hr class="wb-divider">
 
-      <!-- ============ A6 — VÀNG ============ -->
-      <section id="a6-vang">
-        <p class="rb-sec-eyebrow"><b>A6</b> — Vàng</p>
+      <!-- ============ A8 — VÀNG ============ -->
+      <section id="a8-vang">
+        <p class="rb-sec-eyebrow"><b>A8</b> — Vàng</p>
         <h2 class="rb-sec-title">Vàng không trả bạn đồng nào — nên giá nó là câu chuyện về chi phí cơ hội</h2>
         <p class="rb-lede">Cổ phiếu trả cổ tức, trái phiếu trả lãi, nhà cho thuê ra tiền. <b>Vàng không sinh ra dòng tiền nào cả.</b> Vì thế thứ duy nhất quyết định giá nó là: <b>bạn mất gì khi giữ vàng thay vì giữ một tài sản có lãi?</b> Cái "mất gì" đó chính là lãi suất thực ở A2.</p>
 
@@ -1018,59 +1307,260 @@
           <thead><tr><th>Loại</th><th>Là gì</th><th>Bị chi phối bởi</th><th>Bám giá thế giới</th></tr></thead>
           <tbody>
             <tr><td><b>XAU/USD</b></td><td>Vàng thế giới, tính bằng USD/ounce</td><td>Lãi suất thực Mỹ, niềm tin vào hệ thống</td><td class="wb-cell-muted">— là chuẩn</td></tr>
-            <tr><td><b>Vàng nhẫn 9999</b></td><td>Vàng trơn, không thương hiệu độc quyền</td><td>XAU × tỷ giá + phí gia công</td><td><span class="wb-cap wb-cap--success wb-cap--sm">Bám khá sát</span></td></tr>
-            <tr><td><b>Vàng miếng SJC</b></td><td>Thương hiệu do Nhà nước độc quyền sản xuất</td><td>XAU × tỷ giá + phí + <b>địa tô độc quyền</b></td><td><span class="wb-cap wb-cap--danger wb-cap--sm">Lệch dai dẳng</span></td></tr>
+            <tr><td><b>Vàng nhẫn 9999</b></td><td>Vàng trơn, không thương hiệu độc quyền, làm từ vàng nguyên liệu</td><td>XAU × tỷ giá + phí gia công + <b>độ chặt của hạn ngạch nhập vàng nguyên liệu</b></td><td><span class="wb-cap wb-cap--warning wb-cap--sm">Bám khi nhập được</span></td></tr>
+            <tr><td><b>Vàng miếng SJC</b></td><td>Thương hiệu Nhà nước độc quyền sản xuất tới 10/2025; nay sản xuất vàng miếng phải xin phép</td><td>XAU × tỷ giá + phí + <b>địa tô độc quyền</b></td><td><span class="wb-cap wb-cap--danger wb-cap--sm">Lệch dai dẳng</span></td></tr>
           </tbody>
         </table></div></div>
 
         <div class="rb-viz" id="viz-gold">
           <div class="rb-viz__head">
             <p class="rb-viz__title">Tự tính thử — hôm nay bạn đang trả thêm bao nhiêu, và trả cho cái gì?</p>
-            <p class="rb-viz__hint">Một lượng vàng = 37,5 gam = <b>1,20565 ounce</b> (hằng số, không phải ước lượng). Điền bốn con số của ngày bạn đọc — giá thế giới và tỷ giá tra trên mạng mất 30 giây.</p>
+            <p class="rb-viz__hint">Một lượng vàng = 37,5 gam = <b>1,20565 ounce</b> (hằng số, không phải ước lượng). Số điền sẵn là của sáng 17/11/2026: XAU 3.860 USD/oz (Kitco), giá bán USD ở Vietcombank 25.950 đ, SJC bán 137,2 tr, nhẫn PNJ bán 136,6 tr. Điền số của ngày bạn đọc để xem hôm nay.</p>
           </div>
           <div class="rb-viz__body rb-viz__body--split">
             <div style="display:grid;gap:10px">
-              <div class="wb-field"><label class="wb-label" for="gXau">Giá vàng thế giới (USD/ounce)</label><input class="wb-input" type="number" id="gXau" value="3300" step="10" inputmode="decimal"></div>
-              <div class="wb-field"><label class="wb-label" for="gFx">Tỷ giá (đồng / USD)</label><input class="wb-input" type="number" id="gFx" value="26000" step="100" inputmode="decimal"></div>
-              <div class="wb-field"><label class="wb-label" for="gSjc">Vàng miếng SJC niêm yết (triệu/lượng)</label><input class="wb-input" type="number" id="gSjc" value="120" step="0.5" inputmode="decimal"></div>
-              <div class="wb-field"><label class="wb-label" for="gRing">Vàng nhẫn 9999 niêm yết (triệu/lượng)</label><input class="wb-input" type="number" id="gRing" value="105" step="0.5" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="gXau">Giá vàng thế giới (USD/ounce)</label><input class="wb-input" type="number" id="gXau" value="3860" step="10" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="gFx">Tỷ giá (đồng / USD)</label><input class="wb-input" type="number" id="gFx" value="25950" step="100" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="gSjc">Vàng miếng SJC niêm yết (triệu/lượng)</label><input class="wb-input" type="number" id="gSjc" value="137.2" step="0.5" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="gRing">Vàng nhẫn 9999 niêm yết (triệu/lượng)</label><input class="wb-input" type="number" id="gRing" value="136.6" step="0.5" inputmode="decimal"></div>
             </div>
             <div style="display:grid;gap:12px">
               <div class="rb-out">
                 <span class="rb-out__label">Giá thế giới quy ra tiền Việt</span>
-                <span class="rb-out__val" id="gWorld">103,4 tr/lượng</span>
-                <span class="rb-out__sub" id="gCalc">3.300 × 1,20565 × 26.000</span>
+                <span class="rb-out__val" id="gWorld">120,8 tr/lượng</span>
+                <span class="rb-out__sub" id="gCalc">3.860 × 1,20565 × 25.950</span>
               </div>
               <div class="rb-cmp">
-                <div class="rb-cmp__row"><span class="rb-cmp__name">SJC trả thêm</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--danger" id="gBarS" style="width:60%"></span></span><span class="rb-cmp__val" id="gGapS">+16,6 tr</span></div>
-                <div class="rb-cmp__row"><span class="rb-cmp__name">Nhẫn trả thêm</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--muted" id="gBarR" style="width:6%"></span></span><span class="rb-cmp__val" id="gGapR">+1,6 tr</span></div>
+                <div class="rb-cmp__row"><span class="rb-cmp__name">SJC trả thêm</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--danger" id="gBarS" style="width:100%"></span></span><span class="rb-cmp__val" id="gGapS">+16,4 tr</span></div>
+                <div class="rb-cmp__row"><span class="rb-cmp__name">Nhẫn trả thêm</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--muted" id="gBarR" style="width:96%"></span></span><span class="rb-cmp__val" id="gGapR">+15,8 tr</span></div>
               </div>
               <div class="wb-alert wb-alert--plain" style="margin:0"><div class="wb-alert__body">
-                <p class="wb-alert__title" id="gVerdictT" style="margin-bottom:2px">Chuyện thương hiệu, không phải chuyện kinh tế</p>
-                <p class="wb-alert__msg" id="gVerdictM" style="margin:0;font-size:12.5px">Nhẫn bám sát giá thế giới, chỉ mình SJC vượt xa. Khoản chênh đó là giá của việc gần như không ai được nhập vàng về bán rẻ hơn — bạn đang trả cho một hàng rào giấy tờ, không phải cho vàng.</p>
+                <p class="wb-alert__title" id="gVerdictT" style="margin-bottom:2px">Cầu trong nước lớn hơn lượng vàng nhập được</p>
+                <p class="wb-alert__msg" id="gVerdictM" style="margin:0;font-size:12.5px">Cả hai loại cùng vượt giá thế giới.</p>
               </div></div>
             </div>
           </div>
-          <div class="rb-viz__foot">Cách đọc: <b>cả hai cùng vượt</b> → người dân đang thật sự đổ tiền vào vàng. <b>Chỉ SJC vượt</b> → chuyện độc quyền thương hiệu, đừng đọc thành tín hiệu kinh tế <span class="wb-cap wb-cap--warning wb-cap--sm">R-D06</span>. Quy tắc này chỉ có được nhờ tách ba thị trường ra; gộp làm một là mất sạch thông tin.</div>
+          <div class="rb-viz__foot">Cách đọc: <b>chỉ SJC vượt</b> → chuyện thương hiệu vàng miếng, đừng đọc thành tín hiệu kinh tế. <b>Cả hai cùng vượt</b> → cầu trong nước đang lớn hơn lượng vàng nhập về được; chênh lệch chỉ đứng được vì cửa nhập vàng nguyên liệu cũng bị hạn ngạch <span class="wb-cap wb-cap--warning wb-cap--sm">R-D06</span>. Quy tắc này chỉ có được nhờ tách ba thị trường ra; gộp làm một là mất sạch thông tin.</div>
         </div>
 
         <div class="wb-alert wb-alert--success" style="margin-top:14px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">check</span></span><div class="wb-alert__body">
           <p class="wb-alert__title">Quy tắc chẩn đoán — chỉ có được nhờ tách ba thị trường</p>
           <p class="wb-alert__msg">Khi thấy vàng trong nước "sốt", so <b>cả hai</b> loại với giá thế giới quy đổi:</p>
-          <p class="wb-alert__msg">· <b>Cả SJC và nhẫn cùng vượt</b> → cầu trú ẩn <b>thật</b>, người dân đang thực sự chuyển tài sản sang vàng.<br>· <b>Chỉ SJC vượt, nhẫn bám sát</b> → hiện tượng <b>thương hiệu và độc quyền</b>, không phải tín hiệu kinh tế. <span class="wb-cap wb-cap--warning wb-cap--sm">R-D06</span></p>
+          <p class="wb-alert__msg">· <b>Chỉ SJC vượt, nhẫn bám sát</b> → hiện tượng <b>thương hiệu và độc quyền</b>, không phải tín hiệu kinh tế.<br>· <b>Cả SJC và nhẫn cùng vượt</b> → cầu trong nước <b>thật</b> lớn hơn lượng vàng nhập được. Hai điều kiện cùng có mặt: người dân đang mua (trú ẩn, hoặc lãi thực tiền gửi thấp), <em>và</em> cửa nhập vàng nguyên liệu bị chặn. Thiếu điều kiện sau thì nhà nhập khẩu đã kéo chênh lệch về. <span class="wb-cap wb-cap--warning wb-cap--sm">R-D06</span></p>
+          <p class="wb-alert__msg">Sáng 17/11/2026 là trường hợp thứ hai: giá thế giới ở đáy một năm mà SJC và nhẫn cùng cao hơn giá quy đổi khoảng 16–17 triệu đồng/lượng.</p>
         </div></div>
 
         <h3 class="rb-sub-title">Vì sao chênh lệch tồn tại, và điều kiện để nó biến mất</h3>
-        <p class="rb-prose">Thông thường, chênh lệch giá giữa hai thị trường bị <b>arbitrage</b> — mua rẻ ở nơi này, bán đắt ở nơi kia — kéo về sát nhau. Cơ chế đó chỉ chạy khi hàng hoá <em>di chuyển được</em>. Nghị định 24/2012 trao cho Nhà nước độc quyền sản xuất vàng miếng và siết nhập khẩu, tức là <b>chặn đúng cái chân của arbitrage</b>. Chênh lệch SJC vì thế không tự đóng, và từng lên tới 18–20 triệu đồng/lượng vào cuối 2023.</p>
-        <p class="rb-prose">Nghị định 232/2025 (hiệu lực 10/10/2025) sửa đổi Nghị định 24 với kỳ vọng thu hẹp chênh lệch. Điều này cho một <b>dự đoán khả bác</b> — loại phát biểu tốt nhất bạn có thể có: nếu rào cản nhập khẩu thực sự được nới, chênh lệch <b>phải</b> co về mức chi phí nhập khẩu cận biên cộng chi phí giao dịch <span class="wb-cap wb-cap--info wb-cap--sm">R-D07</span>. Nếu sau một thời gian đủ dài mà nó không co, kết luận đúng là <em>rào cản chưa thực sự được nới</em>, chứ không phải "thị trường bất hợp lý". Cách kiểm chứng bằng dữ liệu nằm ở <a href="#s9-kiemchung">Phần 09</a>.</p>
+        <p class="rb-prose">Thông thường, chênh lệch giá giữa hai thị trường bị <b>arbitrage</b> — mua rẻ ở nơi này, bán đắt ở nơi kia — kéo về sát nhau. Cơ chế đó chỉ chạy khi hàng hoá <em>di chuyển được</em>. Nghị định 24/2012 trao cho Nhà nước độc quyền sản xuất vàng miếng và cấp hạn ngạch nhập vàng nguyên liệu, tức là <b>chặn đúng cái chân của arbitrage</b>. Chênh lệch SJC vì thế không tự đóng, và từng lên tới 18–20 triệu đồng/lượng vào cuối 2023. Khi cầu dồn sang vàng nhẫn, nhẫn cũng chênh theo, vì nhẫn làm từ chính thứ vàng nguyên liệu bị hạn ngạch ấy.</p>
+        <p class="rb-prose">Năm 2024 NHNN thử bơm cung thay vì mở cửa: đấu thầu vàng miếng từ tháng 4, rồi từ 3/6/2024 bán thẳng qua bốn ngân hàng thương mại nhà nước và Công ty SJC. Chênh lệch co lại trong lúc kho còn bán, rồi giãn trở lại: đỉnh 22 triệu đồng/lượng ngày 4/11/2025, tức sau cả ngày Nghị định 232 có hiệu lực. Bơm một lượng cố định không thay được một cửa arbitrage mở.</p>
+        <p class="rb-prose">Nghị định 232/2025 (hiệu lực 10/10/2025) sửa Nghị định 24: bỏ độc quyền sản xuất vàng miếng và độc quyền nhập vàng nguyên liệu để làm vàng miếng, chuyển sang cấp phép (doanh nghiệp cần vốn điều lệ từ 1.000 tỷ đồng), và bắt mọi giao dịch vàng từ 20 triệu đồng/ngày trở lên đi qua tài khoản ngân hàng. Điều này cho một <b>dự đoán khả bác</b> — loại phát biểu tốt nhất bạn có thể có: nếu rào cản nhập khẩu thực sự được nới, chênh lệch <b>phải</b> co về mức chi phí nhập khẩu cận biên cộng chi phí giao dịch <span class="wb-cap wb-cap--info wb-cap--sm">R-D07</span>. Nếu sau một thời gian đủ dài mà nó không co, kết luận đúng là <em>rào cản chưa thực sự được nới</em>, chứ không phải "thị trường bất hợp lý". Kiểm tới 17/11/2026: tới giữa tháng 4/2026 NHNN mới nhận 11 hồ sơ xin phép sản xuất vàng miếng và còn đang thẩm định; vàng nguyên liệu chỉ được xét nhập sau khi có giấy phép sản xuất; chênh lệch vẫn khoảng 17 triệu đồng/lượng. Theo đúng quy tắc trên: luật đã đổi, cửa nhập thì chưa mở. Cách kiểm chứng bằng dữ liệu nằm ở <a href="#s9-kiemchung">Phần 09</a>.</p>
         <p class="rb-prose">Còn một kênh nội địa nữa, độc lập với thế giới: khi <b>lãi suất tiết kiệm VND thấp hơn lạm phát</b> — tức lãi thực âm — hộ gia đình chuyển một phần tiết kiệm sang vàng đơn giản vì gửi ngân hàng là chắc chắn mất sức mua. Cầu vàng trong nước có thể tăng ngay cả khi giá thế giới đứng yên <span class="wb-cap wb-cap--warning wb-cap--sm">R-D08</span>.</p>
       </section>
 
       <hr class="wb-divider">
 
-      <!-- ============ A7 — BÁO CHÍ ============ -->
-      <section id="a7-baochi">
-        <p class="rb-sec-eyebrow"><b>A7</b> — Kiểm tra lại trực giác</p>
+      <!-- ============ A9 — BĐS, USD, DẦU, TIỀN GỬI ============ -->
+      <section id="a9-taisan">
+        <p class="rb-sec-eyebrow"><b>A9</b> — Các lớp tài sản còn lại</p>
+        <h2 class="rb-sec-title">Nhà, đô la, dầu và tiền gửi: cùng một phép tính "dòng tiền chia cho mức đòi hỏi", khác nhau ở chỗ dòng tiền đến từ đâu</h2>
+        <p class="rb-lede">Mỗi tài sản trả bạn bằng hai thứ: <b>dòng tiền</b> trong lúc giữ (tiền thuê, lãi, cổ tức — vàng và USD gửi ở Việt Nam thì bằng 0) và <b>thay đổi giá</b> lúc bán. Tài sản nào dòng tiền thấp hơn lãi tiền gửi thì toàn bộ phần lời phải đến từ giá tăng — và chính phần đó là phần nhạy nhất với lãi suất thực, tín dụng và chính sách.</p>
+
+        <h3 class="rb-sub-title">Năm cú sốc, sáu tài sản: dấu thường gặp</h3>
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Cú sốc</th><th>Tiền gửi VND</th><th>Trái phiếu</th><th>Cổ phiếu VN</th><th>BĐS</th><th>Vàng trong nước</th><th>Giữ USD</th></tr></thead>
+          <tbody>
+            <tr><td><b>Lãi thực VN tăng</b></td><td><span class="wb-num wb-num--pos">↑</span> lãi mới cao hơn</td><td><span class="wb-num wb-num--neg">↓</span> giá giảm</td><td><span class="wb-num wb-num--neg">↓</span> P/E co</td><td><span class="wb-num wb-num--neg">↓</span> chậm 12–24 th</td><td><span class="wb-num wb-num--neg">↓</span></td><td><span class="wb-num wb-num--neg">↓</span> VND hấp dẫn hơn</td></tr>
+            <tr><td><b>VND mất giá mạnh</b></td><td><span class="wb-num wb-num--neg">↓</span> tính bằng USD</td><td>~</td><td><span class="wb-num wb-num--neg">↓</span> khối ngoại bán</td><td>~</td><td><span class="wb-num wb-num--pos">↑</span> quy đổi đắt hơn</td><td><span class="wb-num wb-num--pos">↑</span></td></tr>
+            <tr><td><b>Room tín dụng nới</b></td><td>~</td><td>~</td><td><span class="wb-num wb-num--pos">↑</span> margin rẻ, dễ</td><td><span class="wb-num wb-num--pos">↑↑</span></td><td>~</td><td>~</td></tr>
+            <tr><td><b>Dầu tăng vì cung</b></td><td><span class="wb-num wb-num--neg">↓</span> lãi thực mỏng đi</td><td><span class="wb-num wb-num--neg">↓</span></td><td><span class="wb-num wb-num--neg">↓</span> trừ nhóm dầu khí</td><td>~</td><td><span class="wb-num wb-num--pos">↑</span> nếu lãi thực giảm</td><td><span class="wb-num wb-num--pos">↑</span></td></tr>
+            <tr><td><b>Cửa nhập vàng mở</b></td><td>~</td><td>~</td><td>~</td><td>~</td><td><span class="wb-num wb-num--neg">↓↓</span> chênh lệch co</td><td>~</td></tr>
+          </tbody>
+        </table></div>
+          <div class="wb-card__foot"><span>Dấu hay gặp, không phải luật: độ lớn và có khi cả dấu tuỳ nền kinh tế đang ở ô nào của mục 04 <span class="wb-cap wb-cap--warning wb-cap--sm">T3</span>. Hai dòng chắc hơn cả là dòng đầu (cơ chế mẫu số ở A2) và dòng cuối (arbitrage ở A8).</span></div>
+        </div>
+
+        <h3 class="rb-sub-title">Bất động sản — dòng tiền mỏng, nên giá đi theo tín dụng</h3>
+        <p class="rb-prose">Lợi suất cho thuê căn hộ ở hai thành phố lớn đã xuống rất thấp: <b>khoảng 2,8%/năm ở TP.HCM (nửa đầu 2025) và 3,1% ở Hà Nội (quý I/2025)</b> theo Batdongsan, vì giá bán tăng nhanh hơn giá thuê nhiều lần. Trong khi đó tiền gửi 12 tháng trả 6,1–7% (11/2026), còn vay mua nhà thì đắt hơn tiền gửi. Nghĩa là: mua nhà cho thuê bằng tiền vay thì <b>mỗi năm dòng tiền âm</b>, và cả khoản đầu tư sống nhờ giá nhà tăng. Mô hình dưới tính chính xác giá phải tăng bao nhiêu mỗi năm chỉ để hoà với gửi tiết kiệm.</p>
+
+        <div class="rb-viz" id="viz-house">
+          <div class="rb-viz__head">
+            <p class="rb-viz__title">Tự tính — mua căn nhà cho thuê bằng một phần tiền vay, hay gửi tiết kiệm?</p>
+            <p class="rb-viz__hint">Số điền sẵn là một ví dụ: căn 5 tỷ cho thuê 12 triệu/tháng (lợi suất 2,9%), vay một nửa, lãi vay giả định 10%/năm, tiền gửi 6,5%/năm. Chưa tính thuế, phí môi giới, tháng trống khách và sửa chữa — tức mức hoà vốn thật còn cao hơn.</p>
+          </div>
+          <div class="rb-viz__body rb-viz__body--split">
+            <div style="display:grid;gap:10px">
+              <div class="wb-field"><label class="wb-label" for="hPrice">Giá nhà (tỷ đồng)</label><input class="wb-input" type="number" id="hPrice" value="5" step="0.1" min="0.1" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="hRent">Tiền thuê (triệu đồng/tháng)</label><input class="wb-input" type="number" id="hRent" value="12" step="0.5" min="0" inputmode="decimal"></div>
+              <div class="rb-viz__ctrl">
+                <div class="rb-viz__ctrl-top"><span class="rb-viz__ctrl-label">Phần vay trên giá nhà</span><span class="rb-viz__ctrl-val" id="hLoanVal">50%</span></div>
+                <input class="wb-range" type="range" id="hLoan" min="0" max="80" step="5" value="50" aria-label="Phần vay trên giá nhà">
+              </div>
+              <div class="wb-field"><label class="wb-label" for="hRate">Lãi vay (%/năm)</label><input class="wb-input" type="number" id="hRate" value="10" step="0.1" min="0" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="hDep">Lãi tiền gửi bỏ lỡ (%/năm)</label><input class="wb-input" type="number" id="hDep" value="6.5" step="0.1" min="0" inputmode="decimal"></div>
+            </div>
+            <div style="display:grid;gap:12px">
+              <div class="rb-out">
+                <span class="rb-out__label">Giá nhà phải tăng mỗi năm để hoà</span>
+                <span class="rb-out__val" id="hBreak">5,4%/năm</span>
+                <span class="rb-out__sub" id="hBreakSub">Thấp hơn mức này thì gửi tiết kiệm lời hơn.</span>
+              </div>
+              <div class="rb-cmp">
+                <div class="rb-cmp__row"><span class="rb-cmp__name">Lợi suất cho thuê</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--muted" id="hBarY" style="width:35%"></span></span><span class="rb-cmp__val" id="hY">2,9%</span></div>
+                <div class="rb-cmp__row"><span class="rb-cmp__name">Chi phí vốn bình quân</span><span class="rb-cmp__track"><span class="rb-cmp__fill" id="hBarK" style="width:100%"></span></span><span class="rb-cmp__val" id="hK">8,3%</span></div>
+                <div class="rb-cmp__row"><span class="rb-cmp__name">Phần giá phải bù</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--danger" id="hBarG" style="width:65%"></span></span><span class="rb-cmp__val" id="hG">5,4%</span></div>
+              </div>
+              <div class="rb-out">
+                <span class="rb-out__label">Dòng tiền mỗi năm (thuê − lãi vay)</span>
+                <span class="rb-out__val" id="hCash">−106 triệu</span>
+                <span class="rb-out__sub" id="hCashSub">144 triệu tiền thuê − 250 triệu lãi vay.</span>
+              </div>
+            </div>
+          </div>
+          <div class="rb-viz__foot" id="hFoot">Điều cần thấy: mức hoà vốn là <b>chi phí vốn bình quân trừ lợi suất cho thuê</b> — phần vay tính bằng lãi vay, phần tiền tự có tính bằng lãi gửi bỏ lỡ. Kéo phần vay lên: mức hoà vốn tăng theo, vì lãi vay cao hơn lãi gửi. Đây đúng là phép chia ở A2 chạy ngược: nhà chỉ "rẻ" khi tiền thuê đủ trả chi phí vốn, hoặc khi bạn tin chắc giá còn tăng nhanh hơn mức trên <span class="wb-cap wb-cap--success wb-cap--sm">R-F08</span>.</div>
+        </div>
+        <p class="rb-prose" style="color:var(--wb-fg-muted);font-size:13.5px">Viết gọn, với $L$ phần vay, $i$ lãi vay, $d$ lãi gửi bỏ lỡ, $y$ lợi suất cho thuê — đúng theo định nghĩa, bỏ qua thuế, phí và lãi kép:</p>
+        <div class="rb-formula">$$g^{*} \;=\; \underbrace{L\,i + (1-L)\,d}_{\text{chi phí vốn bình quân}} \;-\; y$$</div>
+
+        <h3 class="rb-sub-title">USD, dầu, tiền gửi — mỗi thứ một câu</h3>
+        <p class="rb-prose"><b>Giữ USD</b> ở Việt Nam không sinh lãi (trần lãi tiền gửi USD của cá nhân là 0%), nên nó chỉ thắng VND khi <b>VND mất giá nhanh hơn lãi tiền gửi VND</b>. Với tiền gửi 6,5%/năm, VND phải mất hơn 6,5% một năm thì giữ USD mới có lời <span class="wb-cap wb-cap--info wb-cap--sm">R-C09</span>. Năm 2026 thì ngược lại: tới cuối tháng 10, USD trên thị trường liên ngân hàng rẻ hơn đầu năm 1,8%. <b>Dầu</b> thì người Việt gần như không mua được trực tiếp; nó tới túi tiền qua giá xăng, CPI và cổ phiếu dầu khí (A6). <b>Tiền gửi</b> có lãi thực dương khi lãi 12 tháng cao hơn lạm phát — tháng 11/2026 là 6,1–7% so với CPI bình quân 10 tháng 4,57%.</p>
+
+        <div class="wb-accordion">
+          <details class="wb-accordion__item"><summary>Vì sao giá nhà Việt Nam đi theo tín dụng và giấy tờ hơn là theo tiền thuê?</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Khi lợi suất cho thuê thấp hơn lãi vay, người mua bằng vay không sống nhờ tiền thuê mà nhờ <b>người mua sau</b> — tức nhờ tiền vay mới chảy vào thị trường. Vì thế tín dụng BĐS (room, hệ số rủi ro, chuẩn cho vay của ngân hàng) là biến chi phối, và vòng phản hồi ở R-F03 chạy cả hai chiều: tín dụng nới thì giá tăng, tài sản thế chấp tăng giá, ngân hàng cho vay thêm; tín dụng siết thì ngược lại.</p>
+            <p class="rb-prose">Bên cung chậm và đi theo giấy tờ: dự án cần pháp lý, giao đất, bảng giá đất của tỉnh (A6). Cung chậm cộng tín dụng nhanh là công thức của giá tăng dồn; giá tăng dồn cộng lợi suất cho thuê 2–3% là công thức của một thị trường mà phần lớn lợi nhuận đã là kỳ vọng <span class="wb-cap wb-cap--warning wb-cap--sm">R-F09</span>. Không phải ai mua nhà cũng để đầu tư: nhà để ở thì phép so đúng là tiền thuê một căn tương tự so với chi phí vốn của căn mua.</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Giữ USD: được phép đến đâu, và phép so với VND ra sao?</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Cá nhân được giữ USD tiền mặt và gửi USD ở ngân hàng, nhưng mua USD ở ngân hàng cần mục đích hợp lệ (du học, chữa bệnh, đi nước ngoài…), và mua bán ngoại tệ ở nơi không được phép là vi phạm hành chính. Gửi USD lãi 0%. Nên phép so chỉ có một dòng: lời của USD = mức VND mất giá; lời của VND = lãi tiền gửi VND. Đây là ngang giá lãi suất ở mục 08 viết cho một hộ gia đình <span class="wb-cap wb-cap--info wb-cap--sm">R-C09</span>.</p>
+            <p class="rb-prose">Hai dấu hiệu VND đang chịu áp lực thật, đều quan sát được hằng ngày: giá bán USD ở ngân hàng áp sát trần (A5, hình hàng rào), và giá USD tự do cao hơn giá ngân hàng nhiều <span class="wb-cap wb-cap--warning wb-cap--sm">R-C07</span>. Sáng 17/11/2026 cả hai đều thoải: Vietcombank bán 25.950 đ, còn khoảng 3,8% tới trần; giá tự do bán 26.057 đ, cao hơn ngân hàng 0,4%.</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Dầu: cú sốc 2026 đi vào túi tiền người Việt qua những đường nào?</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Ba đường. <b>Xăng</b>: giá bán lẻ đi theo giá thành phẩm thế giới bình quân mỗi kỳ, bị quỹ bình ổn và thuế cắt bớt (A6); xăng dầu chiếm khoảng 3,6% rổ CPI, nên xăng tăng 10% góp trực tiếp khoảng 0,36 điểm % CPI <span class="wb-cap wb-cap--sm">R-B03</span>. <b>Chi phí đầu vào</b>: vận tải, phân bón, nhựa — đi vào giá hàng sau vài tháng. <b>Tỷ giá</b>: nhập khẩu xăng dầu đắt hơn làm tăng cầu USD.</p>
+            <p class="rb-prose">Với danh mục, dầu tăng vì cung là cú sốc chi phí đẩy: xấu cho đa số cổ phiếu, tốt cho nhóm khai thác dầu khí, và đẩy nền kinh tế về góc đình lạm (mục 04). Dầu tăng vì cầu thế giới khoẻ thì ngược lại — tỷ lệ giá đồng trên giá dầu là cách phân biệt rẻ nhất <span class="wb-cap wb-cap--warning wb-cap--sm">R-B06</span>.</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Tiền gửi và trái phiếu: an toàn tới đâu, và lãi cao hơn mặt bằng nghĩa là gì?</summary><div class="wb-accordion__body">
+            <p class="rb-prose"><b>Bảo hiểm tiền gửi</b> trả tối đa <b>350 triệu đồng</b> cho tất cả các khoản tiền gửi (gốc và lãi) của một người tại một ngân hàng, từ 13/7/2026 (Thông tư 05/2026/TT-NHNN; trước đó 125 triệu). Số tiền lớn hơn mức ấy thì rủi ro ngân hàng là rủi ro của chính bạn; chia ra nhiều ngân hàng là cách rẻ nhất để nằm trong hạn mức.</p>
+            <p class="rb-prose"><b>Trái phiếu</b> trả lãi cố định, nên giá của nó đi ngược lãi suất thị trường — đúng phép chia ở A2. Trái phiếu doanh nghiệp, sản phẩm "tiết kiệm" kèm bảo hiểm hay chứng chỉ trả lãi cao hơn tiền gửi vài điểm % không phải quà: phần lãi dư là <b>phần bù cho rủi ro không được trả</b> — không có bữa trưa miễn phí <span class="wb-cap wb-cap--info wb-cap--sm">R-F10</span>. Năm 2022 nhiều người mua trái phiếu doanh nghiệp BĐS học điều này bằng tiền thật.</p>
+          </div></details>
+        </div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A10 — ĐANG CẦM TIỀN MẶT ============ -->
+      <section id="a10-hanhdong">
+        <p class="rb-sec-eyebrow"><b>A10</b> — Từ hiểu sang làm</p>
+        <h2 class="rb-sec-title">Đang cầm tiền mặt: bốn câu hỏi theo đúng thứ tự, và lúc nào giữ tiền là quyết định đúng</h2>
+        <p class="rb-lede">Không có quy tắc nào trên trang này nói "mua ngày nào". Thứ các chương trước cho bạn là <b>một thứ tự hỏi</b> và <b>một phép so</b>: mọi tài sản đều được so với việc để tiền nằm yên trong tiền gửi. Giữ tiền chờ không phải là "không làm gì" — nó là một khoản đầu tư có lãi suất thực của riêng nó.</p>
+
+        <div class="wb-alert wb-alert--warning">
+          <span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">warning</span></span>
+          <div class="wb-alert__body">
+            <p class="wb-alert__title">Chương này là khung suy nghĩ, không phải lời khuyên đầu tư</p>
+            <p class="wb-alert__msg">Các ngưỡng trong mô hình bên dưới do chính người đọc đặt. Mọi tín hiệu định giá ở đây là <span class="wb-cap wb-cap--warning wb-cap--sm">T3</span>: đúng trung bình trên nhiều năm, sai thường xuyên trong từng năm.</p>
+          </div>
+        </div>
+
+        <div class="rb-viz" id="viz-steps">
+          <div class="rb-viz__head">
+            <p class="rb-viz__title">Bốn câu hỏi, hỏi theo thứ tự — chưa qua câu trên thì chưa sang câu dưới</p>
+          </div>
+          <div class="rb-viz__body">
+            <svg class="rb-dg" viewBox="0 0 360 254" role="img" aria-labelledby="stepsTitle">
+              <title id="stepsTitle">Thứ tự quyết định khi đang có tiền mặt: thời hạn của tiền, chế độ kinh tế, định giá so với tiền gửi, cỡ tiền và nhịp giải ngân</title>
+              <rect class="rb-dg-boxa" x="2" y="4" width="236" height="46" rx="6"></rect>
+              <text class="rb-dg-t" x="12" y="22">1 · Tiền này cần dùng lúc nào?</text>
+              <text class="rb-dg-ts" x="12" y="38">quỹ dự phòng, nợ lãi cao, khoản chi trong 2 năm</text>
+              <line class="rb-dg-ln" x1="120" y1="50" x2="120" y2="68" marker-end="url(#rbAh)"></line>
+              <rect class="rb-dg-boxa" x="2" y="68" width="236" height="46" rx="6"></rect>
+              <text class="rb-dg-t" x="12" y="86">2 · Nền kinh tế đang ở ô nào?</text>
+              <text class="rb-dg-ts" x="12" y="102">tăng trưởng, lạm phát so với kỳ vọng (mục 04)</text>
+              <line class="rb-dg-ln" x1="120" y1="114" x2="120" y2="132" marker-end="url(#rbAh)"></line>
+              <rect class="rb-dg-boxa" x="2" y="132" width="236" height="46" rx="6"></rect>
+              <text class="rb-dg-t" x="12" y="150">3 · Mỗi tài sản đắt hay rẻ so với tiền gửi?</text>
+              <text class="rb-dg-ts" x="12" y="166">bốn phép so ở mô hình dưới</text>
+              <line class="rb-dg-ln" x1="120" y1="178" x2="120" y2="196" marker-end="url(#rbAh)"></line>
+              <rect class="rb-dg-boxa" x="2" y="196" width="236" height="46" rx="6"></rect>
+              <text class="rb-dg-t" x="12" y="214">4 · Đặt bao nhiêu, chia mấy đợt, khi nào dừng?</text>
+              <text class="rb-dg-ts" x="12" y="230">cỡ tiền (R-M08), giải ngân dần, điều kiện bán</text>
+              <line class="rb-dg-ln" x1="238" y1="27" x2="262" y2="27" marker-end="url(#rbAh)"></line>
+              <rect class="rb-dg-box" x="262" y="10" width="96" height="34" rx="5"></rect>
+              <text class="rb-dg-ts" x="310" y="24" text-anchor="middle">chưa xong →</text><text class="rb-dg-ts" x="310" y="36" text-anchor="middle">tiền gửi ngắn hạn</text>
+              <line class="rb-dg-ln" x1="238" y1="155" x2="262" y2="155" marker-end="url(#rbAh)"></line>
+              <rect class="rb-dg-box" x="262" y="138" width="96" height="34" rx="5"></rect>
+              <text class="rb-dg-ts" x="310" y="152" text-anchor="middle">tất cả đều đắt →</text><text class="rb-dg-ts" x="310" y="164" text-anchor="middle">giữ tiền, chờ</text>
+            </svg>
+          </div>
+          <div class="rb-viz__foot">Thứ tự có lý do: câu 1 là ràng buộc cứng (tiền cần dùng sớm không chịu được một năm xấu), câu 2 cho biết tài sản nào đang có gió thuận (bảng ở mục 04), câu 3 cho biết gió ấy đã vào giá chưa, câu 4 quyết định một lần sai có làm bạn bật khỏi cuộc chơi không.</div>
+        </div>
+
+        <p class="rb-prose"><b>Câu 1.</b> Tiền cần trong vòng hai năm — học phí, tiền đặt cọc nhà, quỹ dự phòng vài tháng chi tiêu — không thuộc về cổ phiếu hay BĐS: một năm xấu là đủ. Năm 2022 VN-Index mất 32,8% (từ 1.498,28 xuống 1.007,09 điểm), và biên độ cùng margin làm việc bán ra chậm hơn tốc độ giá rơi (A7) <span class="wb-cap wb-cap--warning wb-cap--sm">R-I01</span>. Nợ có lãi cao hơn mức lời bạn kỳ vọng thì trả trước: trả nợ là khoản đầu tư duy nhất có lợi nhuận chắc chắn.</p>
+        <p class="rb-prose"><b>Câu 2.</b> Đọc bốn ô ở mục 04 bằng số hiện hành, và nhớ rằng ô được xác định bằng <em>so với kỳ vọng</em>, không bằng mức. Tới tháng 11/2026: GDP 9 tháng tăng 9,01% — cao nhất 15 năm cho cùng kỳ, nhưng dưới mục tiêu 10%; CPI bình quân 10 tháng 4,57% — trên mục tiêu 4,5%; Fed đang tăng lãi suất; dầu đã hạ từ đỉnh tháng 4. Ai đã kỳ vọng tăng trưởng 7–8% thì thấy ô <b>quá nóng</b>; ai đã tin vào mốc 10% thì thấy ô <b>đình lạm</b>. Muốn biết thị trường đang tin gì, nhìn giá: lợi suất trái phiếu, P/E, tỷ giá. Đây là một cách đọc <span class="wb-cap wb-cap--warning wb-cap--sm">T3</span>, không phải một kết luận.</p>
+        <p class="rb-prose"><b>Câu 3.</b> Mỗi tài sản được so với cùng một chuẩn: <b>lãi thực của tiền gửi</b>, tức chi phí của việc chờ. Lãi thực dương và dày thì chờ được trả công; âm thì chờ là lỗ chắc <span class="wb-cap wb-cap--success wb-cap--sm">R-I02</span>. Mô hình dưới gom bốn phép so vào một chỗ.</p>
+
+        <div class="rb-viz" id="viz-sig">
+          <div class="rb-viz__head">
+            <p class="rb-viz__title">Bốn phép so với tiền gửi — điền số của ngày bạn đọc</p>
+            <p class="rb-viz__hint">Số điền sẵn (tính đến 17/11/2026): tiết kiệm 12 tháng 6,5% (giữa vùng 6,1–7%), CPI bình quân 10 tháng 4,57%, P/E VN-Index 10,7 (3/11/2026, BSC), lợi suất cho thuê 2,8% (TP.HCM, nửa đầu 2025), lãi vay mua nhà 10% (giả định), vàng và tỷ giá sáng 17/11/2026. Hai ô "mức tôi đòi" là của riêng bạn.</p>
+          </div>
+          <div class="rb-viz__body rb-viz__body--split">
+            <div style="display:grid;gap:10px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+              <div class="wb-field"><label class="wb-label" for="sDep">Tiết kiệm 12 tháng (%)</label><input class="wb-input" type="number" id="sDep" value="6.5" step="0.1" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="sInf">Lạm phát kỳ vọng (%)</label><input class="wb-input" type="number" id="sInf" value="4.57" step="0.1" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="sPe">P/E VN-Index</label><input class="wb-input" type="number" id="sPe" value="10.7" step="0.1" min="1" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="sErp">Phần bù tôi đòi (%)</label><input class="wb-input" type="number" id="sErp" value="6" step="0.5" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="sRent">Lợi suất cho thuê (%)</label><input class="wb-input" type="number" id="sRent" value="2.8" step="0.1" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="sMort">Lãi vay mua nhà (%)</label><input class="wb-input" type="number" id="sMort" value="10" step="0.1" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="sGold">Vàng SJC bán (tr/lượng)</label><input class="wb-input" type="number" id="sGold" value="137.2" step="0.1" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="sWorld">Thế giới quy đổi (tr/lượng)</label><input class="wb-input" type="number" id="sWorld" value="120.8" step="0.1" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="sUsdBank">USD ngân hàng bán (đ)</label><input class="wb-input" type="number" id="sUsdBank" value="25950" step="10" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="sUsdFree">USD tự do bán (đ)</label><input class="wb-input" type="number" id="sUsdFree" value="26057" step="10" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="sCentral">Tỷ giá trung tâm (đ)</label><input class="wb-input" type="number" id="sCentral" value="25652" step="1" inputmode="decimal"></div>
+            </div>
+            <div class="wb-table-scroll"><table class="wb-table">
+              <thead><tr><th>Phép so</th><th>Số</th><th>Đọc là</th></tr></thead>
+              <tbody>
+                <tr><td><b>Chờ</b><br><span class="wb-cell-muted">lãi tiết kiệm − lạm phát</span></td><td id="sigReal">+1,9%</td><td id="sigRealV">Chờ được trả công</td></tr>
+                <tr><td><b>Cổ phiếu</b><br><span class="wb-cell-muted">1/(P/E) − lãi thực</span></td><td id="sigErp">+7,4%</td><td id="sigErpV">Rẻ hơn mức bạn đòi</td></tr>
+                <tr><td><b>Nhà cho thuê</b><br><span class="wb-cell-muted">lãi vay − lợi suất thuê</span></td><td id="sigHouse">7,2 điểm</td><td id="sigHouseV">Vay toàn bộ thì giá phải tăng 7,2%/năm mới bù lãi</td></tr>
+                <tr><td><b>Vàng miếng</b><br><span class="wb-cell-muted">chênh so với thế giới</span></td><td id="sigGold">+13,6%</td><td id="sigGoldV">Khoản mất ngay nếu cửa nhập mở</td></tr>
+                <tr><td><b>USD</b><br><span class="wb-cell-muted">tự do − ngân hàng; còn tới trần</span></td><td id="sigUsd">+0,4% · 3,8%</td><td id="sigUsdV">Áp lực tỷ giá thấp</td></tr>
+              </tbody>
+            </table></div>
+          </div>
+          <div class="rb-viz__foot" id="sigFoot">Cách đọc: dòng <b>Chờ</b> là thước đo cho mọi dòng dưới. Cổ phiếu được so bằng <b>phần bù rủi ro ước tính</b>: lợi nhuận trên giá (1/(P/E)) là một lợi suất "thực" vì lợi nhuận doanh nghiệp lớn lên theo giá cả, nên phải trừ lãi <em>thực</em> của tiền gửi chứ không phải lãi danh nghĩa. Mỗi dòng là một tín hiệu cho vài năm, không cho tháng tới <span class="wb-cap wb-cap--warning wb-cap--sm">R-I03</span>. Ngưỡng chữ ở cột "Đọc là": chờ ±0,25 điểm; cổ phiếu ±1 điểm quanh mức bạn đòi; vàng 3%; USD khi giá tự do cao hơn ngân hàng 2% hoặc còn dưới 1% tới trần — ngưỡng để đọc nhanh, không phải luật.</div>
+        </div>
+
+        <p class="rb-prose"><b>Câu 4.</b> Cỡ tiền quyết định nhiều hơn đúng sai về hướng (R-M08 ở mục 06). Hai quy tắc dùng được ngay: không đặt vào một tài sản số tiền mà mất một phần ba của nó sẽ làm bạn phải bán; và <b>chia khoản tiền lớn thành nhiều đợt</b> theo lịch định trước, không theo tin tức.</p>
+
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Bốn đợt mua bằng nhau, giá lúc mua</th><th>Giá vốn bình quân</th><th>Giá cuối</th><th>Mua một lần ở 100</th><th>Chia bốn đợt</th></tr></thead>
+          <tbody>
+            <tr><td>Giá đi xuống rồi lên: 100 · 90 · 80 · 90</td><td>89,4</td><td>100</td><td>0%</td><td><span class="wb-num wb-num--pos">+11,8%</span></td></tr>
+            <tr><td>Giá đi lên đều: 100 · 105 · 110 · 115</td><td>107,2</td><td>115</td><td><span class="wb-num wb-num--pos">+15,0%</span></td><td>+7,3%</td></tr>
+          </tbody>
+        </table></div>
+          <div class="wb-card__foot"><span>Chia đều tiền mỗi đợt thì giá vốn là <b>trung bình điều hoà</b> của các giá mua — luôn thấp hơn trung bình cộng, vì đợt giá thấp mua được nhiều đơn vị hơn <span class="wb-cap wb-cap--success wb-cap--sm">R-I05</span>. Nhưng khi giá đi lên đều thì mua một lần thắng: chia đợt là trả một khoản lợi nhuận kỳ vọng để mua sự yên tâm trước khả năng mua đúng đỉnh.</span></div>
+        </div>
+
+        <h3 class="rb-sub-title">Khi nào giữ tiền là quyết định đúng</h3>
+        <p class="rb-prose">Giữ tiền gửi và chờ là hợp lý khi <b>ba điều cùng đúng</b>: lãi thực tiền gửi dương (chờ được trả công); các phép so ở câu 3 đều nói "đắt so với mức tôi đòi"; và bạn chưa giải thích được bằng cơ chế vì sao một tài sản sẽ tăng — chỉ có tin đồn hay biểu đồ. Ngược lại, chờ là một vụ cược tốn kém khi lãi thực âm: mỗi tháng chờ là một phần sức mua mất chắc chắn, và đó chính là lúc người ta đổ tiền vào vàng và nhà (A2, A8).</p>
+
+        <div class="wb-accordion">
+          <details class="wb-accordion__item"><summary>Ba lỗi hay gặp nhất của người đã hiểu cơ chế</summary><div class="wb-accordion__body">
+            <p class="rb-prose"><b>Hành động theo tin đã vào giá.</b> Tin Fed, tin nâng hạng, tin room đều có lịch; lúc thành tít báo thì giá đã chứa nó <span class="wb-cap wb-cap--info wb-cap--sm">R-A04</span>. <b>Mua vàng miếng khi chênh lệch lớn</b> là đặt cược rằng cửa nhập vẫn đóng; phần chênh là khoản lỗ ngay ngày chính sách đổi <span class="wb-cap wb-cap--sm">R-I04</span>. <b>Dùng margin cho một luận điểm đúng</b>: luận điểm đúng sau hai năm không cứu được tài khoản bị bán cưỡng chế sau hai tuần (A7).</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Vì sao so cổ phiếu với lãi thực, không phải với lãi danh nghĩa?</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Lấy P/E 10,7: mỗi 100 đồng bỏ ra mua được khoảng 9,3 đồng lợi nhuận một năm. Phần lợi nhuận ấy lớn lên cùng giá cả — doanh nghiệp bán đắt hơn khi mọi thứ đắt lên — nên 9,3% gần với một lợi suất thực. Tiền gửi 6,5% thì là danh nghĩa; trừ lạm phát 4,57% còn khoảng 1,9%. So 9,3% với 6,5% (cách hay gặp trên báo) đánh giá thấp cổ phiếu khi lạm phát cao và đánh giá cao nó khi lạm phát thấp. Hiệu là phần bù rủi ro ước tính, khoảng 7,4 điểm.</p>
+            <p class="rb-prose">Giới hạn: lợi nhuận một năm có thể đang ở đỉnh chu kỳ (P/E thấp giả), và P/E chung của VN-Index bị vài mã lớn kéo — ngày 3/11/2026 BSC tính P/E 10,70, còn 9,58 nếu bỏ bốn mã họ Vingroup. Tín hiệu định giá đúng nhất ở tầm 3–5 năm <span class="wb-cap wb-cap--warning wb-cap--sm">R-E07</span>.</p>
+          </div></details>
+        </div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A11 — BÁO CHÍ ============ -->
+      <section id="a11-baochi">
+        <p class="rb-sec-eyebrow"><b>A11</b> — Kiểm tra lại trực giác</p>
         <h2 class="rb-sec-title">Bảy câu hay đọc được, và điều thực sự đang xảy ra</h2>
         <p class="rb-lede">Nếu kiến thức của bạn đến từ báo chí, bảy câu dưới đây gần như chắc chắn đã nằm sẵn trong đầu. Không câu nào <em>hoàn toàn</em> vô lý — mỗi câu đều có một logic nghe được, nếu không nó đã không lan rộng. Nhưng mỗi câu đều hỏng ở một chỗ cụ thể.</p>
 
@@ -1116,16 +1606,16 @@
         </table></div></div>
 
         <div class="wb-alert wb-alert--plain" style="margin-top:14px"><div class="wb-alert__body">
-          <p class="wb-alert__title">Tự kiểm — nếu trả lời được ba câu này, Phần A đã xong việc của nó</p>
-          <p class="wb-alert__msg">1. Ngân hàng Nhà nước hạ lãi suất điều hành 0,5 điểm % nhưng lạm phát kỳ vọng cũng tăng 0,5 điểm % — tiền đang rẻ đi hay đắt lên?<br>2. Giá dầu tăng 15%. Cần biết thêm <em>một</em> con số nào nữa mới đoán được cổ phiếu sẽ lên hay xuống?<br>3. Vàng nhẫn bám sát giá thế giới quy đổi, còn SJC vượt 15 triệu/lượng. Đây là tín hiệu về nhu cầu trú ẩn hay về chính sách?</p>
+          <p class="wb-alert__title">Tự kiểm — nếu trả lời được năm câu này, Phần A đã xong việc của nó</p>
+          <p class="wb-alert__msg">1. Ngân hàng Nhà nước hạ lãi suất điều hành 0,5 điểm % nhưng lạm phát kỳ vọng cũng tăng 0,5 điểm % — tiền đang rẻ đi hay đắt lên?<br>2. Giá dầu tăng 15%. Cần biết thêm <em>một</em> con số nào nữa mới đoán được cổ phiếu sẽ lên hay xuống?<br>3. Vàng nhẫn bám sát giá thế giới quy đổi, còn SJC vượt 15 triệu/lượng. Đây là tín hiệu về nhu cầu trú ẩn hay về chính sách?<br>4. Giá bán USD ở ngân hàng chỉ còn cách trần 0,5%. NHNN còn hai việc có thể làm — mỗi việc đẩy lãi qua đêm liên ngân hàng đi hướng nào?<br>5. Tiết kiệm 12 tháng trả 5%, lạm phát kỳ vọng 6%, P/E VN-Index 16. Giữ tiền chờ đang được trả công hay đang mất, và phần bù rủi ro cổ phiếu ước tính là bao nhiêu?</p>
         </div></div>
       </section>
 
       <hr class="wb-divider">
 
-      <!-- ============ A8 — TỪ ĐIỂN ============ -->
-      <section id="a8-tudien">
-        <p class="rb-sec-eyebrow"><b>A8</b> — Từ điển</p>
+      <!-- ============ A12 — TỪ ĐIỂN ============ -->
+      <section id="a12-tudien">
+        <p class="rb-sec-eyebrow"><b>A12</b> — Từ điển</p>
         <h2 class="rb-sec-title">Thuật ngữ, mỗi từ một dòng — và vì sao nó đáng quan tâm</h2>
         <p class="rb-sec-intro">Tra khi gặp một từ lạ ở Phần B. Cột thứ ba là phần quan trọng: một định nghĩa không nói cho bạn biết <b>khi nào thì cần đến nó</b>.</p>
 
@@ -1170,9 +1660,13 @@
               <thead><tr><th style="min-width:150px">Thuật ngữ</th><th>Nghĩa</th><th>Vì sao cần quan tâm</th></tr></thead>
               <tbody>
                 <tr><td><b>DXY</b></td><td>Chỉ số đo sức mạnh USD so với rổ tiền tệ lớn</td><td class="wb-cell-muted">DXY mạnh gần như luôn xấu với tài sản thị trường mới nổi</td></tr>
-                <tr><td><b>XAU</b></td><td>Ký hiệu vàng thế giới, tính USD/ounce</td><td class="wb-cell-muted">Chuẩn để quy đổi ra giá vàng trong nước (A6)</td></tr>
+                <tr><td><b>XAU</b></td><td>Ký hiệu vàng thế giới, tính USD/ounce</td><td class="wb-cell-muted">Chuẩn để quy đổi ra giá vàng trong nước (A8)</td></tr>
                 <tr><td><b>QE / QT</b></td><td>Ngân hàng trung ương mua (QE) hoặc bán (QT) tài sản để bơm/hút thanh khoản</td><td class="wb-cell-muted">Công cụ <em>độc lập</em> với lãi suất — 2020–2021 lãi suất bằng 0 nhưng QE mới là biến chi phối</td></tr>
-                <tr><td><b>Trần tăng trưởng tín dụng</b></td><td>Hạn mức NHNN cấp cho từng ngân hàng mỗi năm</td><td class="wb-cell-muted">Với VN, công cụ này chi phối hơn cả lãi suất</td></tr>
+                <tr><td><b>Room tín dụng</b><br><span class="wb-cell-muted">trần tăng trưởng tín dụng</span></td><td>Hạn mức tăng dư nợ NHNN giao cho từng ngân hàng mỗi năm; 2026 định hướng khoảng 15% toàn hệ thống</td><td class="wb-cell-muted">Với VN, công cụ này chi phối hơn cả lãi suất (A5)</td></tr>
+                <tr><td><b>Lãi tái cấp vốn / tái chiết khấu</b></td><td>Lãi NHNN cho ngân hàng vay có cầm cố, hoặc chiết khấu giấy tờ có giá — hai mức thường gọi là "lãi suất điều hành"</td><td class="wb-cell-muted">4,5% và 3,0% từ 6/2023; đứng yên không có nghĩa chính sách đứng yên (A5)</td></tr>
+                <tr><td><b>Trần lãi tiền gửi</b></td><td>Lãi tối đa ngân hàng được trả: VND dưới 6 tháng 4,75%/năm, USD 0%</td><td class="wb-cell-muted">Tín hiệu giá vốn thật nằm ở kỳ hạn từ 6 tháng trở lên</td></tr>
+                <tr><td><b>Dự trữ bắt buộc</b></td><td>Phần tiền gửi ngân hàng phải để lại ở NHNN, không được cho vay</td><td class="wb-cell-muted">Cần gạt chậm, hiếm khi đổi</td></tr>
+                <tr><td><b>Hoán đổi ngoại tệ</b><br><span class="wb-cell-muted">FX swap</span></td><td>NHNN mua USD hôm nay và cam kết bán lại sau một kỳ hạn</td><td class="wb-cell-muted">Bơm VND có thời hạn mà không đổi dự trữ vĩnh viễn</td></tr>
                 <tr><td><b>Bộ ba bất khả thi</b></td><td>Tỷ giá ổn định + vốn tự do + lãi suất độc lập: chọn hai</td><td class="wb-cell-muted">Khung giải thích mọi thế kẹt của NHNN (A4)</td></tr>
                 <tr><td><b>Dự trữ ngoại hối</b></td><td>Kho USD của NHNN, hay đo bằng "đủ bao nhiêu tháng nhập khẩu"</td><td class="wb-cell-muted">Đạn để giữ tỷ giá — hữu hạn, nên đếm được</td></tr>
                 <tr><td><b>FDI / FII</b></td><td>Vốn ngoại vào nhà máy (FDI) và vào chứng khoán (FII)</td><td class="wb-cell-muted">FDI dính chặt, FII rút trong một phiên</td></tr>
@@ -1198,12 +1692,12 @@
                 <tr><td><b>VIX / MOVE</b></td><td>Thước đo biến động kỳ vọng của cổ phiếu (VIX) và trái phiếu (MOVE)</td><td class="wb-cell-muted">MOVE thường động trước VIX — trái phiếu dẫn đường</td></tr>
                 <tr><td><b>Đuôi dày</b></td><td>Biến cố cực đoan xảy ra <em>thường xuyên hơn nhiều</em> so với đường hình chuông dự đoán</td><td class="wb-cell-muted">Bẫy lớn nhất với người từ nền toán/kỹ thuật bước vào tài chính — đo bằng độ nhọn, chữa bằng Student-t, cả hai ở nhóm thống kê dưới (mục 06)</td></tr>
                 <tr><td><b>Free-float</b></td><td>Phần cổ phiếu thực sự tự do giao dịch</td><td class="wb-cell-muted">Cơ sở tính trọng số của VN30/VNAllshare — <b>không phải</b> của VN-Index, vốn dùng vốn hoá toàn phần</td></tr>
-                <tr><td><b>Margin / call margin</b></td><td>Vay tiền công ty chứng khoán để mua; bị bán cưỡng chế khi tỷ lệ ký quỹ thủng ngưỡng</td><td class="wb-cell-muted">Nguồn phi tuyến lớn nhất của thị trường VN (A5)</td></tr>
-                <tr><td><b>Nâng hạng thị trường</b></td><td>Được FTSE/MSCI xếp lên nhóm cao hơn</td><td class="wb-cell-muted">Quỹ chỉ số <em>buộc phải</em> mua bất kể giá — sự kiện biết trước lịch</td></tr>
+                <tr><td><b>Margin / call margin</b></td><td>Vay tiền công ty chứng khoán để mua; bị bán cưỡng chế khi tỷ lệ ký quỹ thủng ngưỡng</td><td class="wb-cell-muted">Nguồn phi tuyến lớn nhất của thị trường VN (A7)</td></tr>
+                <tr><td><b>Nâng hạng thị trường</b></td><td>Được FTSE/MSCI xếp lên nhóm cao hơn. FTSE nâng Việt Nam lên Mới nổi thứ cấp từ 21/9/2026</td><td class="wb-cell-muted">Quỹ chỉ số <em>buộc phải</em> mua bất kể giá — sự kiện biết trước lịch</td></tr>
                 <tr><td><b>ERP</b><br><span class="wb-cell-muted">phần bù rủi ro cổ phiếu</span></td><td>Phần lời cộng thêm nhà đầu tư đòi khi mua cổ phiếu thay vì trái phiếu chính phủ</td><td class="wb-cell-muted">Nó co lại nghĩa là thị trường đang <b>ít sợ</b>, tức đắt hơn vẻ ngoài</td></tr>
                 <tr><td><b>Độ rộng thị trường</b></td><td>Bao nhiêu mã tăng so với bao nhiêu mã giảm trong một phiên</td><td class="wb-cell-muted">Trả lời "danh mục tôi hôm nay ra sao", điều VN-Index <b>không</b> trả lời</td></tr>
                 <tr><td><b>T+2</b></td><td>Mua hôm nay thì hai ngày làm việc sau cổ phiếu mới thực sự về tài khoản</td><td class="wb-cell-muted">Không bán lại được trong phiên → sổ lệnh mỏng, lệnh lớn đẩy giá đi xa hơn</td></tr>
-                <tr><td><b>Biên độ giá</b></td><td>Mức tăng/giảm tối đa cho phép trong một phiên (HoSE ±7%, HNX ±10%, UPCoM ±15%)</td><td class="wb-cell-muted">Không hoá giải cú sốc, chỉ <b>rải nó ra nhiều phiên</b> (A5)</td></tr>
+                <tr><td><b>Biên độ giá</b></td><td>Mức tăng/giảm tối đa cho phép trong một phiên (HoSE ±7%, HNX ±10%, UPCoM ±15%)</td><td class="wb-cell-muted">Không hoá giải cú sốc, chỉ <b>rải nó ra nhiều phiên</b> (A7)</td></tr>
                 <tr><td><b>Momentum / hoàn nguyên</b></td><td>Xu hướng có quán tính trong 3–12 tháng, nhưng có xu hướng quay về mức trung bình trong 3–5 năm</td><td class="wb-cell-muted">Hai hiệu ứng <b>ngược nhau ở hai khung thời gian</b> — nói "thị trường luôn hồi" mà không nói khung là vô nghĩa</td></tr>
               </tbody>
             </table></div></div>
@@ -1221,8 +1715,9 @@
                 <tr><td><b>NPL</b></td><td>Tỷ lệ nợ xấu</td><td class="wb-cell-muted">Đi sau tăng trưởng tín dụng 18–36 tháng</td></tr>
                 <tr><td><b>LDR</b></td><td>Dư nợ cho vay trên tiền gửi — đo mức căng thanh khoản</td><td class="wb-cell-muted">Cao thì ngân hàng hết dư địa cho vay thêm</td></tr>
                 <tr><td><b>CAR</b></td><td>Tỷ lệ an toàn vốn — vốn tự có so với tài sản rủi ro</td><td class="wb-cell-muted">Trần cứng cho tăng trưởng tín dụng</td></tr>
+                <tr><td><b>LCR / NSFR</b></td><td>Tài sản thanh khoản cao so với dòng tiền ra 30 ngày / vốn ổn định so với nhu cầu vốn ổn định</td><td class="wb-cell-muted">Chuẩn Basel III, bắt buộc ở VN từ 10/2028 (Thông tư 50/2026); thay dần vai trò của room và LDR</td></tr>
                 <tr><td><b>Không có bữa trưa miễn phí</b><br><span class="wb-cell-muted">no-arbitrage</span></td><td>Nếu có cách kiếm lời chắc chắn không rủi ro, người ta sẽ làm cho tới khi cơ hội đó biến mất</td><td class="wb-cell-muted">Nền của mọi quy tắc <span class="wb-cap wb-cap--info wb-cap--sm">T1</span>. Chênh lệch nào <b>tồn tại dai dẳng</b> thì phải có ai đó bị chặn không cho làm</td></tr>
-                <tr><td><b>Địa tô độc quyền</b></td><td>Phần tiền thu thêm được chỉ nhờ vị thế độc quyền, không nhờ làm ra giá trị gì thêm</td><td class="wb-cell-muted">Đúng bản chất khoản chênh của vàng miếng SJC (A6)</td></tr>
+                <tr><td><b>Địa tô độc quyền</b></td><td>Phần tiền thu thêm được chỉ nhờ vị thế độc quyền, không nhờ làm ra giá trị gì thêm</td><td class="wb-cell-muted">Đúng bản chất khoản chênh của vàng miếng SJC (A8)</td></tr>
                 <tr><td><b>Mắt xích</b><br><span class="wb-cell-muted">node</span></td><td>Một biến trong chuỗi nhân quả — giá dầu, CPI, tỷ giá… mỗi thứ là một mắt xích</td><td class="wb-cell-muted">Tách mắt xích đủ nhỏ mới thấy được cơ chế; gộp to là mất thông tin</td></tr>
                 <tr><td><b>Cầu nối</b></td><td>Đoạn nối một mắt xích thế giới với một mắt xích Việt Nam, có <b>độ mạnh</b> và <b>độ trễ</b> riêng</td><td class="wb-cell-muted">Biết cầu nối nào <em>đứt</em> quan trọng ngang biết cái nào thông (Phần 05)</td></tr>
               </tbody>
@@ -1256,7 +1751,7 @@
 
         <div class="wb-alert wb-alert--info" style="margin-top:16px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span><div class="wb-alert__body">
           <p class="wb-alert__title">Hết Phần A — từ đây trở xuống là sổ tay tra cứu</p>
-          <p class="wb-alert__msg">Phần B nén những cơ chế vừa đọc thành ~60 mệnh đề "nếu… thì…", mỗi mệnh đề gắn một <b>thẻ độ cứng</b> nói cho bạn biết được phép tin nó đến mức nào. Đọc <a href="#s0-cach-doc">mục 00</a> trước để hiểu hệ thẻ, rồi dùng bộ lọc ở <a href="#s3-quytac">mục 03</a>.</p>
+          <p class="wb-alert__msg">Phần B nén những cơ chế vừa đọc thành <span data-rule-total>75</span> mệnh đề "nếu… thì…", mỗi mệnh đề gắn một <b>thẻ độ cứng</b> nói cho bạn biết được phép tin nó đến mức nào. Đọc <a href="#s0-cach-doc">mục 00</a> trước để hiểu hệ thẻ, rồi dùng bộ lọc ở <a href="#s3-quytac">mục 03</a>.</p>
         </div></div>
       </section>
 
@@ -1449,7 +1944,7 @@
               <tbody>
                 <tr><td>Fed</td><td>Fed funds, dot plot, <b>bảng cân đối (QE/QT)</b>, reverse repo, hàm phản ứng</td></tr>
                 <tr><td>NHTW khác</td><td>ECB, <b>BOJ</b> (carry trade yen — nguồn thanh khoản toàn cầu), PBoC</td></tr>
-                <tr><td>NHNN</td><td>Lãi suất điều hành, OMO, tín phiếu, <b>trần tăng trưởng tín dụng</b>, dự trữ ngoại hối, tỷ giá trung tâm ±5%</td></tr>
+                <tr><td>NHNN</td><td>Lãi tái cấp vốn, tái chiết khấu, cho vay qua đêm; trần lãi tiền gửi; OMO, tín phiếu, hoán đổi ngoại tệ; dự trữ bắt buộc; <b>room tín dụng</b>; tỷ lệ an toàn (LDR, vốn ngắn hạn cho vay trung–dài hạn); tỷ giá trung tâm ±5%, mua bán ngoại tệ, dự trữ ngoại hối; quản lý vàng (A5)</td></tr>
                 <tr><td>Tài khóa</td><td>Thâm hụt, phát hành TPCP, <b>giải ngân đầu tư công</b></td></tr>
               </tbody>
             </table></div></div>
@@ -1493,7 +1988,7 @@
       <!-- ============ 03 — DANH MỤC QUY TẮC ============ -->
       <section id="s3-quytac" data-part="b">
         <p class="rb-sec-eyebrow"><b>03</b> — Danh mục quy tắc</p>
-        <h2 class="rb-sec-title">~60 quy tắc "nếu… thì…"</h2>
+        <h2 class="rb-sec-title"><span data-rule-total>75</span> quy tắc "nếu… thì…"</h2>
         <p class="rb-sec-intro"><b>Đừng đọc mục này từ trên xuống.</b> Gõ từ khoá ("vàng", "Fed", "tỷ giá") hoặc bấm nhãn để lọc. Mẹo dùng: tắt hết chỉ để lại <span class="wb-cap wb-cap--warning wb-cap--sm">T3</span> — bạn sẽ thấy đúng danh sách những quy tắc <b>có thể quay ngược 180°</b>, tức là những câu đáng nghi nhất mỗi khi nghe ai đó phát biểu chúng chắc nịch.</p>
         <p class="rb-sec-intro" style="margin-bottom:12px">Ký hiệu trong thẻ: <b>Δt</b> là độ trễ — bao lâu thì chuyện mới xảy ra. Dấu <b>⚠</b> là điều kiện làm quy tắc đó ngừng đúng.</p>
 
@@ -1520,6 +2015,7 @@
             <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-cat="F" data-active="true">F · Tín dụng</button>
             <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-cat="G" data-active="true">G · Địa chính trị</button>
             <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-cat="H" data-active="true">H · Cấu trúc VN</button>
+            <button type="button" class="wb-cap wb-cap--elevated rb-chip" data-cat="I" data-active="true">I · Hành động</button>
           </div>
         </div>
 
@@ -1534,6 +2030,9 @@
           <div class="wb-card rb-rule" id="R-A06" data-tag="T3" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span><span class="rb-lag">Δt: 6–18 tháng</span></div><p class="rb-body"><b>Nếu</b> đường cong lợi suất đảo (2s10s &lt; 0), <b>thì</b> suy thoái theo sau với độ trễ 6–18 tháng.</p><p class="rb-note">⚠ Đã có tiền lệ tín hiệu giả; độ trễ rất biến động.</p></div>
           <div class="wb-card rb-rule" id="R-A07" data-tag="T2" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A07</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> lãi suất bằng 0 nhưng bảng cân đối NHTW mở rộng, <b>thì</b> <b>thanh khoản</b> là biến chi phối giá tài sản, không phải lãi suất.</p><p class="rb-note">Lãi suất và lượng tiền là hai công cụ độc lập.</p></div>
           <div class="wb-card rb-rule" id="R-A08" data-tag="T3" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A08</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> biến động thị trường trái phiếu (MOVE) tăng, <b>thì</b> biến động cổ phiếu thường theo sau. Trái phiếu <b>dẫn trước</b>.</p></div>
+          <div class="wb-card rb-rule" id="R-A09" data-tag="T2" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A09</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: 1–3 ngày</span></div><p class="rb-body"><b>Nếu</b> NHNN đổi chiều thị trường mở (từ hút ròng sang bơm ròng hay ngược lại) mà không đổi lãi điều hành, <b>thì</b> chính sách <b>đã đổi</b>: lãi qua đêm liên ngân hàng phản ứng trong vài ngày, lãi huy động sau vài tuần.</p><p class="rb-note">Lãi điều hành 4,5% đứng yên từ 6/2023 tới 11/2026; mọi điều chỉnh trong thời gian ấy đi qua OMO, tín phiếu, hoán đổi và mua bán ngoại tệ.</p></div>
+          <div class="wb-card rb-rule" id="R-A10" data-tag="T3" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A10</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> lãi qua đêm liên ngân hàng vượt lãi cho vay qua đêm của NHNN (5,0%), <b>thì</b> thanh khoản đang căng hơn mức NHNN muốn — thường kèm bơm OMO hoặc hoán đổi ngoại tệ trong vài phiên.</p><p class="rb-note">⚠ Có thể vượt dai dẳng khi ngân hàng thiếu giấy tờ có giá để cầm cố. Ngày 1/6/2026 lãi qua đêm 10,66–11%, hai phiên sau về 5,4%.</p></div>
+          <div class="wb-card rb-rule" id="R-A11" data-tag="T3" data-cat="A"><div class="rb-rule-head"><span class="rb-id">R-A11</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> mục tiêu tăng trưởng năm cao trong lúc CPI đã chạm mục tiêu lạm phát, <b>thì</b> dư địa nới tiền tệ co lại: NHNN thường giữ lãi điều hành và chỉnh bằng công cụ lượng (room, thị trường mở) thay vì hạ lãi.</p><p class="rb-note">2026: Quốc hội giao GDP từ 10%, CPI bình quân khoảng 4,5%; CPI bình quân 10 tháng đã là 4,57%.</p></div>
 
           <div class="wb-divider--label rb-cat-head" data-cat="B">B · Lạm phát &amp; hàng hóa</div>
           <div class="wb-card rb-rule" id="R-B01" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B01</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> cầu ngắn hạn không co giãn ($|\varepsilon|&lt;0{,}1$), <b>thì</b> mất 1% cung → giá tăng 10–20%. Xem mục 7.1.</p></div>
@@ -1545,6 +2044,7 @@
           <div class="wb-card rb-rule" id="R-B07" data-tag="T1" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B07</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> USD mạnh, <b>thì</b> giá hàng hóa tính bằng USD giảm — kênh gần như thuần định giá.</p></div>
           <div class="wb-card rb-rule" id="R-B08" data-tag="T3" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B08</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> cú sốc là <b>cost-push</b>, <b>thì</b> lạm phát ↑ <b>và</b> sản lượng ↓ đồng thời → NHTW không có lựa chọn tốt.</p><p class="rb-note">Khác demand-pull, nơi lạm phát ↑ đi kèm sản lượng ↑.</p></div>
           <div class="wb-card rb-rule" id="R-B09" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B09</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> độ co giãn dài hạn &gt; ngắn hạn, <b>thì</b> giá hàng hóa <b>bật cao rồi hồi về</b>.</p></div>
+          <div class="wb-card rb-rule" id="R-B10" data-tag="T2" data-cat="B"><div class="rb-rule-head"><span class="rb-id">R-B10</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: một kỳ điều hành</span></div><p class="rb-body"><b>Nếu</b> giá dầu thế giới tăng, <b>thì</b> giá xăng Việt Nam đi theo giá thành phẩm bình quân giữa hai kỳ điều hành, nhưng Quỹ bình ổn và thuế có thể cắt bớt — CPI Việt Nam tăng <b>chậm hơn và ít hơn</b> Brent.</p><p class="rb-note">⚠ Chỉ khi quỹ còn tiền và thuế còn dư địa giảm; hết đệm thì giá xăng bắt kịp một lần, theo bậc. Ngày 11/3/2026 liên Bộ chi quỹ 5.000 đ/lít dầu diesel.</p></div>
 
           <div class="wb-divider--label rb-cat-head" data-cat="C">C · Tiền tệ &amp; tỷ giá</div>
           <div class="wb-card rb-rule" id="R-C01" data-tag="T1" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C01</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> chênh lệch <b>lãi suất thực</b> Mỹ với phần còn lại nới ra, <b>thì</b> USD mạnh lên.</p><p class="rb-note">Node đúng là $r_{thực}(Mỹ)-r_{thực}(khác)$, không phải "Fed tăng lãi suất".</p></div>
@@ -1554,14 +2054,16 @@
           <div class="wb-card rb-rule" id="R-C05" data-tag="T2" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C05</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: 2–4 tháng</span></div><p class="rb-body"><b>Nếu</b> tỷ giá USD/VND tăng, <b>thì</b> CPI Việt Nam tăng sau <b>2–4 tháng</b> qua kênh nhập khẩu.</p></div>
           <div class="wb-card rb-rule" id="R-C06" data-tag="T2" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C06</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> kiều hối (~16–20 tỷ USD/năm) là <b>ngược chu kỳ</b>, <b>thì</b> VN có một tấm đệm tỷ giá mà các nước khu vực không có ở mức tương đương.</p></div>
           <div class="wb-card rb-rule" id="R-C07" data-tag="T3" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C07</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> chênh lệch tỷ giá tự do với tỷ giá niêm yết nới ra, <b>thì</b> áp lực thật lên VND đang lớn hơn mức tỷ giá chính thức thể hiện.</p></div>
+          <div class="wb-card rb-rule" id="R-C08" data-tag="T2" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C08</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> giá bán USD ở ngân hàng áp sát trần (tỷ giá trung tâm × 1,05), <b>thì</b> NHNN chỉ còn hai lựa chọn: <b>bán USD dự trữ</b> (hút VND, lãi liên ngân hàng tăng) hoặc <b>nâng tỷ giá trung tâm</b>. VND mạnh thì ngược lại: mua USD, bơm VND.</p><p class="rb-note">Mỗi tỷ USD mua hay bán ở giá 25.950 đ là 25.950 tỷ đồng bơm ra hay hút về. Tháng 11/2026 NHNN mua USD ở 25.500 đ.</p></div>
+          <div class="wb-card rb-rule" id="R-C09" data-tag="T1" data-cat="C"><div class="rb-rule-head"><span class="rb-id">R-C09</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> giữ USD (lãi tiền gửi 0%) thay cho VND, <b>thì</b> chỉ có lời khi VND mất giá <b>nhiều hơn lãi tiền gửi VND</b> cùng kỳ hạn.</p><p class="rb-note">Ngang giá lãi suất ở mục 08, viết cho một hộ gia đình. Tới cuối tháng 10/2026, USD trên thị trường liên ngân hàng rẻ hơn đầu năm 1,8%.</p></div>
 
           <div class="wb-divider--label rb-cat-head" data-cat="D">D · Vàng — tách làm ba thị trường</div>
           <div class="wb-card rb-rule" id="R-D01" data-tag="T1" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D01</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> <b>lãi suất thực</b> tăng, <b>thì</b> vàng thế giới (XAU) giảm.</p><p class="rb-note">Vàng tương quan nghịch với <b>lãi suất thực</b>, không phải lạm phát. 2022: lạm phát Mỹ ~9% mà vàng đi ngang rồi giảm.</p></div>
           <div class="wb-card rb-rule" id="R-D02" data-tag="T2" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D02</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body">Vàng <b>không phải</b> hàng rào chống lạm phát — mà là hàng rào cho <b>lãi suất thực âm</b> và <b>mất niềm tin</b> vào tiền pháp định/hệ thống. Hai động lực này đôi khi xung đột.</p></div>
           <div class="wb-card rb-rule" id="R-D03" data-tag="T3" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D03</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> bình thường, <b>thì</b> vàng và USD nghịch nhau.</p><p class="rb-note">⚠ Khủng hoảng hệ thống/địa chính trị → cả hai cùng tăng.</p></div>
           <div class="wb-card rb-rule" id="R-D04" data-tag="T2" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D04</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> vàng miếng bị áp độc quyền sản xuất và hạn chế nhập khẩu, <b>thì</b> $\beta(XAU\to SJC)&lt;1$ và chênh lệch <b>tồn tại dai dẳng</b> — địa tô độc quyền.</p></div>
-          <div class="wb-card rb-rule" id="R-D05" data-tag="T2" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D05</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body">$\beta(XAU\to\text{vàng nhẫn})>\beta(XAU\to SJC)$, vì nhẫn không bị ràng buộc độc quyền thương hiệu.</p></div>
-          <div class="wb-card rb-rule" id="R-D06" data-tag="T3" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu cả</b> SJC <b>và</b> nhẫn cùng vượt giá thế giới quy đổi, <b>thì</b> đó là cầu trú ẩn <b>thật</b>. Nếu <b>chỉ</b> SJC vượt, đó là hiện tượng thương hiệu/độc quyền.</p><p class="rb-note">Quy tắc này chỉ có được nhờ tách ba thị trường ra; gộp làm một là mất sạch thông tin.</p></div>
+          <div class="wb-card rb-rule" id="R-D05" data-tag="T2" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D05</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> vàng nguyên liệu nhập được theo nhu cầu, <b>thì</b> $\beta(XAU\to\text{vàng nhẫn})>\beta(XAU\to SJC)$, vì nhẫn không bị ràng buộc độc quyền thương hiệu.</p><p class="rb-note">⚠ Khi hạn ngạch nhập vàng nguyên liệu cũng chặt (từ 2024), nhẫn chênh gần bằng SJC và quy tắc này ngừng phân biệt được hai loại.</p></div>
+          <div class="wb-card rb-rule" id="R-D06" data-tag="T3" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu chỉ</b> SJC vượt giá thế giới quy đổi, <b>thì</b> đó là hiện tượng thương hiệu/độc quyền. <b>Nếu cả</b> SJC <b>và</b> nhẫn cùng vượt, <b>thì</b> cầu trong nước đang lớn hơn lượng vàng nhập được — cần cả cầu thật lẫn cửa nhập bị chặn.</p><p class="rb-note">Quy tắc này chỉ có được nhờ tách ba thị trường ra; gộp làm một là mất sạch thông tin. ⚠ Không tách được "cầu trú ẩn" khỏi "lãi thực tiền gửi thấp": xem thêm R-D08.</p></div>
           <div class="wb-card rb-rule" id="R-D07" data-tag="T1" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D07</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> rào cản nhập khẩu được nới, <b>thì</b> chênh lệch phải co về <b>chi phí nhập khẩu cận biên + chi phí giao dịch</b>.</p></div>
           <div class="wb-card rb-rule" id="R-D08" data-tag="T3" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D08</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> lãi suất thực tiền gửi VND âm, <b>thì</b> cầu vàng nội địa tăng (thay thế trong tiết kiệm hộ gia đình).</p></div>
 
@@ -1582,11 +2084,17 @@
           <div class="wb-card rb-rule" id="R-F03" data-tag="T2" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F03</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> bất động sản là tài sản thế chấp chính của bank, <b>thì</b> BĐS giảm → chất lượng tài sản giảm → tín dụng co → BĐS giảm thêm. Vòng phản hồi dương.</p></div>
           <div class="wb-card rb-rule" id="R-F04" data-tag="T2" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F04</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> bank Việt Nam gần như không có nợ ngoại tệ và tài khoản vốn chưa mở hoàn toàn, <b>thì</b> $\beta(\text{stress bank TG}\to\text{bank VN})\approx 0$.</p><p class="rb-note">Cầu nối đứt. Biết cầu nối nào đứt quan trọng ngang biết cầu nối nào thông.</p></div>
           <div class="wb-card rb-rule" id="R-F05" data-tag="T2" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F05</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> NHNN áp <b>trần tăng trưởng tín dụng</b>, <b>thì</b> công cụ định lượng này chi phối hơn lãi suất — đặc thù VN.</p></div>
+          <div class="wb-card rb-rule" id="R-F06" data-tag="T2" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F06</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> một ngân hàng chạm room tín dụng, trần LDR hoặc trần vốn ngắn hạn cho vay trung–dài hạn, <b>thì</b> nó nâng lãi huy động kỳ hạn từ 6 tháng (không bị trần) dù NHNN không đổi lãi điều hành.</p><p class="rb-note">Lãi 12 tháng tăng một mình là tín hiệu về ràng buộc ở ngân hàng, không phải về chính sách.</p></div>
+          <div class="wb-card rb-rule" id="R-F07" data-tag="T2" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F07</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: khi chính sách hết hạn</span></div><p class="rb-body"><b>Nếu</b> ngân hàng được cơ cấu lại nợ mà giữ nguyên nhóm nợ, <b>thì</b> nợ xấu báo cáo <b>thấp hơn</b> nợ xấu thật trong lúc chính sách còn hiệu lực và <b>nhảy bậc</b> khi nó hết.</p><p class="rb-note">Thông tư 02/2023, gia hạn tới 31/12/2024. Đọc NPL quanh mốc hết hạn, đừng đọc như một xu hướng trơn.</p></div>
+          <div class="wb-card rb-rule" id="R-F08" data-tag="T0" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F08</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> mua nhà cho thuê với phần vay $L$, <b>thì</b> giá phải tăng ít nhất $g^* = L\,i + (1-L)\,d - y$ mỗi năm mới hoà với gửi tiết kiệm ($i$ lãi vay, $d$ lãi gửi bỏ lỡ, $y$ lợi suất cho thuê).</p><p class="rb-note">Bỏ qua thuế, phí, tháng trống khách và sửa chữa — mức hoà vốn thật còn cao hơn. Mô hình ở A9.</p></div>
+          <div class="wb-card rb-rule" id="R-F09" data-tag="T3" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F09</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> lợi suất cho thuê thấp hơn lãi tiền gửi trong thời gian dài, <b>thì</b> giá BĐS đang dựa vào kỳ vọng tăng giá và tín dụng mới; tín dụng siết thì nhóm này điều chỉnh trước.</p><p class="rb-note">⚠ Cung bị chặn bởi pháp lý có thể giữ giá lâu hơn logic này gợi ý. Lợi suất cho thuê căn hộ TP.HCM khoảng 2,8% (nửa đầu 2025, Batdongsan).</p></div>
+          <div class="wb-card rb-rule" id="R-F10" data-tag="T1" data-cat="F"><div class="rb-rule-head"><span class="rb-id">R-F10</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> một khoản tiền gửi, trái phiếu hay sản phẩm "tiết kiệm" trả cao hơn mặt bằng vài điểm %, <b>thì</b> phần dư là <b>phần bù cho rủi ro</b> vỡ nợ hoặc thanh khoản — không phải quà.</p><p class="rb-note">Bảo hiểm tiền gửi trả tối đa 350 triệu đồng cho một người tại một ngân hàng (từ 13/7/2026); trái phiếu doanh nghiệp không được bảo hiểm.</p></div>
 
           <div class="wb-divider--label rb-cat-head" data-cat="G">G · Địa chính trị &amp; cú sốc</div>
           <div class="wb-card rb-rule" id="R-G01" data-tag="T2" data-cat="G"><div class="rb-rule-head"><span class="rb-id">R-G01</span><span class="wb-cap wb-cap--sm">T2</span><span class="rb-lag">Δt: giờ–ngày</span></div><p class="rb-body"><b>Nếu</b> xung đột <b>thực sự chặn</b> một điểm nghẽn (Hormuz, Suez, Malacca), <b>thì</b> giá dầu phản ứng trong <b>giờ</b>. Nếu chỉ đe dọa, tan nhanh.</p></div>
           <div class="wb-card rb-rule" id="R-G02" data-tag="T3" data-cat="G"><div class="rb-rule-head"><span class="rb-id">R-G02</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> xung đột bùng phát, <b>thì</b> thị trường giảm mạnh rồi <b>hồi phục nhanh</b> — <b>trừ khi</b> chặn được điểm nghẽn năng lượng/chuỗi cung ứng thực.</p><p class="rb-note">"Chiến tranh" không tác động trực tiếp lên chứng khoán — nó tác động qua dầu và phần bù rủi ro.</p></div>
           <div class="wb-card rb-rule" id="R-G03" data-tag="T2" data-cat="G"><div class="rb-rule-head"><span class="rb-id">R-G03</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> là chiến tranh <b>thương mại</b>, <b>thì</b> cơ chế khác hẳn: cú sốc cung <b>dai dẳng</b> + phân mảnh chuỗi giá trị.</p><p class="rb-note">Với VN (XK/GDP &gt; 90%), thuế quan quan trọng hơn chiến tranh nổ súng.</p></div>
+          <div class="wb-card rb-rule" id="R-G04" data-tag="T2" data-cat="G"><div class="rb-rule-head"><span class="rb-id">R-G04</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> thuế quan dựa trên một quyết định hành pháp, <b>thì</b> nó là cầu nối loại D: đổi theo phán quyết toà và đàm phán, không theo số liệu kinh tế — mô hình học từ dữ liệu quá khứ không dự báo được nó.</p><p class="rb-note">Ngày 20/2/2026 Toà án Tối cao Mỹ phán luật IEEPA không cho phép áp thuế đối ứng; các mức áp cho hàng Việt Nam đổi theo từng quyết định sau đó.</p></div>
 
           <div class="wb-divider--label rb-cat-head" data-cat="H">H · Cấu trúc thị trường Việt Nam</div>
           <div class="wb-card rb-rule" id="R-H01" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H01</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> có biên độ giá (HoSE ±7%, HNX ±10%, UPCoM ±15%), <b>thì</b> biên độ <b>không loại bỏ cú sốc mà rải nó ra nhiều phiên</b>.</p><p class="rb-note">Lý do chuỗi giảm sàn liên tiếp tồn tại ở VN mà không ở Mỹ.</p></div>
@@ -1594,9 +2102,17 @@
           <div class="wb-card rb-rule" id="R-H03" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H03</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> mã mất thanh khoản không bán được, <b>thì</b> công ty chứng khoán bán mã <b>còn</b> thanh khoản để thu hồi nợ → <b>call margin chéo</b> → lây sang cổ phiếu không liên quan.</p><p class="rb-note">Cùng kiểu domino: viên sau đổ vì viên trước vừa đổ, không vì ai đẩy nó.</p></div>
           <div class="wb-card rb-rule" id="R-H04" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H04</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> chỉ số có trọng số theo vốn hoá (mã càng lớn càng nặng ký), <b>thì</b> <b>VN-Index không đo thị trường, nó đo nhóm trụ</b>.</p><p class="rb-note">Muốn đo sức khỏe thật: xem độ rộng và chỉ số bình quân giản đơn.</p></div>
           <div class="wb-card rb-rule" id="R-H05" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H05</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> thanh toán T+2, <b>thì</b> không bán được thứ vừa mua trong cùng phiên → thanh khoản mỏng hơn thị trường T+0.</p></div>
-          <div class="wb-card rb-rule" id="R-H06" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H06</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> một mã vào/ra rổ MSCI hoặc FTSE, <b>thì</b> dòng tiền thụ động <b>buộc phải</b> mua/bán bất chấp giá.</p><p class="rb-note">Sự kiện biết trước lịch.</p></div>
+          <div class="wb-card rb-rule" id="R-H06" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H06</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> một mã vào/ra rổ MSCI hoặc FTSE, <b>thì</b> dòng tiền thụ động <b>buộc phải</b> mua/bán bất chấp giá.</p><p class="rb-note">Sự kiện biết trước lịch, nên phần lớn đã vào giá trước ngày hiệu lực (R-A04). FTSE Russell chốt (4/2026) đưa Việt Nam lên nhóm Mới nổi thứ cấp, hiệu lực từ 21/9/2026.</p></div>
           <div class="wb-card rb-rule" id="R-H07" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H07</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> tỷ lệ NĐT cá nhân rất cao (&gt;85% giá trị giao dịch), <b>thì</b> biên độ phản ứng lớn hơn cú sốc gốc.</p></div>
           <div class="wb-card rb-rule" id="R-H08" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H08</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> VN là nền kinh tế nhỏ mở, <b>thì</b> ảnh hưởng chỉ đi <b>một chiều</b>: thế giới tác động mạnh vào VN, VN tác động ngược lại gần như bằng 0. VN là <b>người nhận giá</b>, gần như tuyệt đối.</p></div>
+
+          <div class="wb-divider--label rb-cat-head" data-cat="I">I · Hành động khi đang cầm tiền mặt</div>
+          <div class="wb-card rb-rule" id="R-I01" data-tag="T3" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I01</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> tiền cần dùng trong vòng hai năm, <b>thì</b> không đặt vào cổ phiếu hay BĐS: một năm xấu đủ xoá một phần ba, và biên độ, margin làm việc bán ra chậm hơn tốc độ giá rơi.</p><p class="rb-note">VN-Index năm 2022: từ 1.498,28 xuống 1.007,09 điểm, tức −32,8%.</p></div>
+          <div class="wb-card rb-rule" id="R-I02" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I02</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> giữ tiền gửi để chờ, <b>thì</b> chi phí của việc chờ chính là <b>lãi thực của tiền gửi</b>: dương thì chờ được trả công, âm thì mỗi tháng chờ mất sức mua chắc chắn.</p><p class="rb-note">11/2026: tiết kiệm 12 tháng 6,1–7%, CPI bình quân 10 tháng 4,57% — chờ đang được trả khoảng 1,5–2,4%/năm.</p></div>
+          <div class="wb-card rb-rule" id="R-I03" data-tag="T3" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I03</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> 1/(P/E) trừ lãi thực tiền gửi — phần bù rủi ro ước tính — cao hơn mức bạn đòi, <b>thì</b> cổ phiếu rẻ tương đối so với chờ; thấp hơn thì đắt.</p><p class="rb-note">⚠ Tín hiệu cho 3–5 năm, không cho tháng tới (R-E07). P/E của một năm lợi nhuận đỉnh trông rẻ giả.</p></div>
+          <div class="wb-card rb-rule" id="R-I04" data-tag="T2" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I04</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> mua vàng miếng khi chênh lệch với giá thế giới quy đổi lớn, <b>thì</b> đang đặt cược rằng cửa nhập vẫn đóng; phần chênh là khoản lỗ ngay khi cửa mở (R-D07).</p><p class="rb-note">Sáng 17/11/2026 khoản ấy là khoảng 16 triệu đồng/lượng, tức 13–14% giá thế giới.</p></div>
+          <div class="wb-card rb-rule" id="R-I05" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I05</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> chia một khoản tiền thành nhiều đợt mua bằng nhau, <b>thì</b> giá vốn là <b>trung bình điều hoà</b> của các giá mua — không bao giờ cao hơn trung bình cộng; nhưng khi giá đi lên đều, mua một lần lời hơn.</p><p class="rb-note">Chia đợt là trả một phần lợi nhuận kỳ vọng để khỏi mua đúng đỉnh. Ví dụ có số ở A10.</p></div>
+          <div class="wb-card rb-rule" id="R-I06" data-tag="T3" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> giá USD tự do sát giá ngân hàng và giá ngân hàng còn xa trần, <b>thì</b> áp lực tỷ giá thấp; giữ USD lúc ấy là trả lãi VND bỏ lỡ cho một sự bảo vệ ít cần.</p><p class="rb-note">Sáng 17/11/2026: giá tự do cao hơn ngân hàng 0,4%, ngân hàng còn 3,8% tới trần.</p></div>
 
         </div>
         <div class="wb-empty" id="ruleEmpty" style="display:none">
@@ -1666,7 +2182,7 @@
           </tbody>
         </table></div></div>
 
-        <div class="wb-card rb-rule" id="R-BR01" data-tag="T2" style="margin-top:14px"><div class="rb-rule-head"><span class="rb-id">R-BR01</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> cầu nối là loại <b>D</b>, <b>thì</b> đừng suy luận cơ học. Lãi suất VND liên ngân hàng qua đêm có lúc lên <b>11%/năm</b> cuối tháng 5 đầu tháng 6/2026 — không đến từ Fed mà từ thanh khoản nội địa.</p></div>
+        <div class="wb-card rb-rule" id="R-BR01" data-tag="T2" style="margin-top:14px"><div class="rb-rule-head"><span class="rb-id">R-BR01</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> cầu nối là loại <b>D</b>, <b>thì</b> đừng suy luận cơ học. Lãi suất VND liên ngân hàng qua đêm lên <b>10,66–11%/năm</b> ngày 1/6/2026 rồi về 5,4% ngày 3/6 — không đến từ Fed mà từ thanh khoản nội địa.</p></div>
 
         <h3 class="rb-sub-title">5.2 — Khoảng chênh giữa giá Việt Nam và giá thế giới là một tín hiệu, không phải nhiễu</h3>
         <p class="rb-sec-intro" style="margin-bottom:12px">Lấy giá trong nước trừ đi giá thế giới quy ra tiền Việt. Nhiều người coi phần dư đó là chuyện lặt vặt. Thực ra nó là <b>một thông tin riêng về Việt Nam</b> mà bạn quan sát được miễn phí, hằng ngày, không cần chờ ai công bố số liệu:</p>
@@ -1844,7 +2360,7 @@
               <div class="rb-out">
                 <span class="rb-out__label">Theo phân phối đuôi dày</span>
                 <span class="rb-out__val" id="tailFat" style="color:var(--wb-danger-text)">1 lần / 1,9 năm</span>
-                <span class="rb-out__sub" id="tailRatio">Gấp <b>136 lần</b> thường xuyên hơn.</span>
+                <span class="rb-out__sub" id="tailRatio">Gấp <b>134 lần</b> thường xuyên hơn.</span>
               </div>
             </div>
             <div>
@@ -1872,7 +2388,7 @@
         <div class="wb-card rb-rule" style="margin-top:10px">
           <div class="rb-rule-head"><span class="rb-id">R-M06 · Xuống thang nhanh hơn lên thang</span><span class="wb-cap wb-cap--danger wb-cap--sm">T4</span></div>
           <p class="rb-body">Thị trường bò lên chậm rãi hàng tháng rồi rơi hết chỗ đó trong vài phiên. Đây không phải cảm giác — một tin xấu làm thị trường náo động <b>mạnh hơn</b> một tin tốt cùng cỡ.</p>
-          <p class="rb-note">Lý do một phần nằm ở <a href="#a5-chungkhoan">A5</a>: khi giá giảm, những người vay tiền mua bị buộc phải bán, nên chiều xuống có thêm lực đẩy mà chiều lên không có. Hệ quả cho bạn: <b>thời gian bạn có để phản ứng khi mọi thứ xấu đi ngắn hơn nhiều so với lúc mọi thứ tốt lên.</b></p>
+          <p class="rb-note">Lý do một phần nằm ở <a href="#a7-chungkhoan">A7</a>: khi giá giảm, những người vay tiền mua bị buộc phải bán, nên chiều xuống có thêm lực đẩy mà chiều lên không có. Hệ quả cho bạn: <b>thời gian bạn có để phản ứng khi mọi thứ xấu đi ngắn hơn nhiều so với lúc mọi thứ tốt lên.</b></p>
         </div>
 
         <div class="wb-card rb-rule" id="R-M08" style="margin-top:10px">
@@ -1961,7 +2477,7 @@
 
           <details class="wb-accordion__item"><summary>7.3 — Độc quyền tạo chênh lệch giá: trường hợp vàng SJC</summary><div class="wb-accordion__body">
             <p class="rb-body"><span class="wb-cap">T2</span>&nbsp; <b>Nếu</b> một mặt hàng có thể arbitrage bị áp đặt độc quyền sản xuất và hạn chế nhập khẩu, <b>thì</b> giá nội địa tách khỏi giá thế giới và phần chênh là <b>địa tô độc quyền</b>, không phải tín hiệu cung–cầu.</p>
-            <p class="wb-help" style="margin-top:10px">Nghị định 24/2012 cho Nhà nước độc quyền sản xuất vàng miếng. Chênh lệch SJC từng lên 18–20 triệu đồng/lượng (cuối 2023). Nghị định 232/2025 (hiệu lực 10/10/2025) sửa đổi NĐ 24 với kỳ vọng thu hẹp chênh lệch.</p>
+            <p class="wb-help" style="margin-top:10px">Nghị định 24/2012 cho Nhà nước độc quyền sản xuất vàng miếng và cấp hạn ngạch nhập vàng nguyên liệu. Chênh lệch SJC từng lên 18–20 triệu đồng/lượng (cuối 2023). Nghị định 232/2025 (hiệu lực 10/10/2025) bỏ độc quyền, chuyển sang cấp phép; tới 11/2026 chênh lệch vẫn khoảng 17 triệu đồng/lượng vì chưa nhà sản xuất mới nào nhập được nguyên liệu (mục A8).</p>
             <div class="wb-alert wb-alert--success" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">check</span></span><div class="wb-alert__body"><p class="wb-alert__title">Suy ra T1 — dự đoán khả bác</p><p class="wb-alert__msg">Khi rào cản được nới, chênh lệch phải co về <b>chi phí nhập khẩu cận biên + chi phí giao dịch</b>.</p></div></div>
           </div></details>
 
@@ -2079,8 +2595,40 @@
             <tr><td>VN-Index, giá cổ phiếu, dữ liệu tài chính</td><td><code>vnstock</code> (Python)</td></tr>
             <tr><td>Foreign net flow, dư nợ margin</td><td>vietstock, fireant</td></tr>
             <tr><td>Giá vàng SJC, vàng nhẫn, tỷ giá</td><td>website doanh nghiệp vàng, NHNN</td></tr>
-            <tr><td>CPI VN và trọng số rổ</td><td>Tổng cục Thống kê</td></tr>
+            <tr><td>CPI VN và trọng số rổ, GDP</td><td>Cục Thống kê, Bộ Tài chính (nso.gov.vn; trước 3/2025 là Tổng cục Thống kê)</td></tr>
             <tr><td>Lãi suất liên ngân hàng, dự trữ ngoại hối</td><td>NHNN, SBV</td></tr>
+          </tbody>
+        </table></div></div>
+        <h3 class="rb-sub-title">Nguồn của các con số hiện hành, tính đến 17/11/2026</h3>
+        <p class="rb-prose" style="color:var(--wb-fg-muted);font-size:13.5px">Các chương A5–A10 dùng số của một ngày cụ thể. Số nào đổi thì mô hình vẫn đúng; chỉ cần điền số mới vào ô nhập. Văn bản pháp luật ghi theo số hiệu; tin báo ghi theo ngày đăng.</p>
+        <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
+          <thead><tr><th>Con số</th><th>Nguồn</th><th>Ngày</th></tr></thead>
+          <tbody>
+            <tr><td>Lãi tái cấp vốn 4,5%, tái chiết khấu 3,0%; lãi liên ngân hàng qua đêm 5,54%</td><td><a href="https://sbv.gov.vn/en/l%C3%A3i-su%E1%BA%A5t1">sbv.gov.vn — Lãi suất</a> (QĐ 1123/QĐ-NHNN)</td><td>13/11/2026</td></tr>
+            <tr><td>Lãi cho vay qua đêm 5,0%</td><td>QĐ 1123/QĐ-NHNN ngày 16/6/2023</td><td>áp dụng từ 19/6/2023</td></tr>
+            <tr><td>Trần lãi tiền gửi VND 0,5% / 4,75%; USD 0%</td><td>QĐ 2411/QĐ-NHNN, QĐ 2410/QĐ-NHNN (Thông tư 48/2024, 46/2024)</td><td>áp dụng từ 20/11/2024</td></tr>
+            <tr><td>Tỷ giá trung tâm 25.652 đ; Vietcombank 25.540–25.950 đ</td><td><a href="https://www.vietnamplus.vn/gia-vang-sjc-giam-nhe-ty-gia-trung-tam-tang-manh-toi-13-dong-post1148756.vnp">VietnamPlus</a></td><td>17/11/2026</td></tr>
+            <tr><td>Giá USD tự do bán 26.057 đ</td><td>Gia đình &amp; Xã hội, khảo sát 8h40</td><td>17/11/2026</td></tr>
+            <tr><td>NHNN mua USD giao ngay 25.500 đ; hoán đổi 182 ngày tới 2 tỷ USD; tỷ giá liên ngân hàng −1,8% so với đầu năm; chưa bán ngoại tệ can thiệp từ 2025</td><td><a href="https://www.vietnamplus.vn/ngan-hang-nha-nuoc-phoi-hop-cac-cong-cu-on-dinh-ty-gia-cuoi-nam-post1147879.vnp">VietnamPlus</a></td><td>12/11/2026</td></tr>
+            <tr><td>Lãi qua đêm 10,66–11% ngày 1/6/2026, 5,4% ngày 3/6</td><td>VnEconomy, Nhà đầu tư</td><td>6/2026</td></tr>
+            <tr><td>Room tín dụng 2026 khoảng 15%; thí điểm bỏ room</td><td>VTV; Công điện 128/CĐ-TTg</td><td>1/2026; 8/2025</td></tr>
+            <tr><td>Thông tư 50/2026: LDR 95%, LCR, NSFR từ 10/2028</td><td><a href="https://www.vietnamplus.vn/ngan-hang-nha-nuoc-nang-tran-ty-le-cho-vay-tren-tien-gui-len-95-post1139453.vnp">VietnamPlus</a></td><td>1/10/2026</td></tr>
+            <tr><td>Bảo hiểm tiền gửi 350 triệu đồng</td><td>Thông tư 05/2026/TT-NHNN (<a href="https://www.vietnamplus.vn/chi-tra-bao-hiem-tien-gui-duoc-nang-han-muc-len-toi-da-350-trieu-dong-post1125278.vnp">VietnamPlus</a>)</td><td>áp dụng từ 13/7/2026</td></tr>
+            <tr><td>SJC 134,2–137,2 tr; nhẫn PNJ 132,4–136,6 tr; XAU 3.860 USD/oz</td><td><a href="https://dttc.sggp.org.vn/vang-sjc-giam-ve-sat-moc-137-trieu-dong-moi-luong-post139381.html">SGGP Đầu tư Tài chính</a> (Kitco 9h)</td><td>17/11/2026</td></tr>
+            <tr><td>Nghị định 232/2025: bỏ độc quyền, vốn 1.000 tỷ, giao dịch từ 20 triệu qua tài khoản</td><td><a href="https://www.sggp.org.vn/chinh-thuc-xoa-bo-co-che-nha-nuoc-doc-quyen-san-xuat-vang-mieng-post810260.html">SGGP</a></td><td>26/8/2025</td></tr>
+            <tr><td>11 hồ sơ xin sản xuất vàng miếng, đang thẩm định</td><td><a href="https://bnews.vn/da-co-11-ho-so-cho-cap-phep-san-xuat-vang-mieng/417379.html">BNews</a> (họp báo NHNN)</td><td>14/4/2026</td></tr>
+            <tr><td>Chênh SJC − thế giới đỉnh 22,01 triệu đồng/lượng ngày 4/11/2025</td><td><a href="https://vneconomy.vn/chenh-lech-gia-vang-trong-nuoc-va-the-gioi-giam-gan-28-tu-phien-dinh-411.htm">VnEconomy</a></td><td>22/12/2025</td></tr>
+            <tr><td>CPI bình quân 10 tháng 4,57%; tháng 10 +5,09% so với cùng kỳ</td><td>Cục Thống kê (<a href="https://nhandan.vn/10-thang-nam-2026-cpi-tang-457-so-voi-cung-ky-post999862.html">Nhân Dân</a>)</td><td>3/11/2026</td></tr>
+            <tr><td>GDP quý III +9,95%, 9 tháng +9,01%</td><td>Cục Thống kê, họp báo quý III</td><td>3/10/2026</td></tr>
+            <tr><td>Mục tiêu 2026: GDP từ 10%, CPI khoảng 4,5%; VAT 8% tới 31/12/2026</td><td>Nghị quyết 244/2025/QH15; Nghị quyết 204/2025/QH15</td><td>11/2025; 6/2025</td></tr>
+            <tr><td>Fed tăng 0,25 điểm % (16/9), giữ 3,75–4,00% (28/10)</td><td><a href="https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm">federalreserve.gov</a></td><td>28/10/2026</td></tr>
+            <tr><td>Brent tới khoảng 120 USD (4/2026); khoảng 93 USD; OPEC+ tăng 2,04 triệu thùng/ngày tháng 10</td><td><a href="https://www.thenationalnews.com/business/energy/2026/08/10/oil-surges-back-to-85-per-barrel-as-hormuz-deal-remains-elusive/">The National</a>; Invezz (báo cáo tháng của OPEC)</td><td>10/8/2026; 11/11/2026</td></tr>
+            <tr><td>Giá xăng, chi Quỹ bình ổn 4.000–5.000 đ/lít</td><td><a href="https://moit.gov.vn/tin-tuc/thong-tin-ve-viec-dieu-hanh-gia-xang-dau-ngay-11-3-2026.html">moit.gov.vn</a></td><td>11/3/2026; 15/10/2026</td></tr>
+            <tr><td>FTSE: Việt Nam lên Mới nổi thứ cấp từ 21/9/2026</td><td><a href="https://www.lseg.com/en/media-centre/press-releases/ftse-russell/2026/ftse-russell-announces-results-march-2026-semi-annual-country-classification-review-equities-fixed-income">LSEG — FTSE Russell</a></td><td>7/4/2026</td></tr>
+            <tr><td>Phán quyết IEEPA của Toà án Tối cao Mỹ</td><td><a href="https://www.vietnam-briefing.com/news/us-supreme-court-blocks-trumps-tariffs-implications-for-vietnam-us-trade.html/">Vietnam Briefing</a></td><td>27/2/2026</td></tr>
+            <tr><td>P/E VN-Index 10,70 (9,58 nếu bỏ bốn mã họ Vingroup)</td><td>BSC (<a href="https://cafef.vn/mot-tin-hieu-la-bat-ngo-xuat-hien-tren-ttck-sau-3-nam-188261106154712795.chn">CafeF</a>)</td><td>3/11/2026</td></tr>
+            <tr><td>Lợi suất cho thuê căn hộ 2,8% (TP.HCM), 3,1% (Hà Nội)</td><td>Batdongsan (<a href="https://vnbusiness.vn/chu-nha-binh-chan-nhu-vai-du-gia-loi-suat-cho-thue-di-giat-lui.html">VnBusiness</a>)</td><td>nửa đầu 2025; quý I/2025</td></tr>
+            <tr><td>Tiết kiệm trực tuyến 12 tháng 6,1–7%</td><td>VietnamPlus, khảo sát biểu lãi</td><td>11/2026</td></tr>
           </tbody>
         </table></div></div>
       </section>
@@ -2090,7 +2638,7 @@
       <div class="wb-alert wb-alert--plain">
         <div class="wb-alert__body">
           <p class="wb-alert__title">Về tài liệu này</p>
-          <p class="wb-alert__msg">Tổng hợp phục vụ <b>mục đích học tập</b> — không phải khuyến nghị đầu tư. Các mốc chính sách và con số thị trường nên được kiểm tra lại tại thời điểm sử dụng; cách tự kiểm chứng bằng dữ liệu nằm ở <a href="#s9-kiemchung">Phần 09</a>. Cập nhật 31/7/2026, số liệu đến phiên 29/7/2026.</p>
+          <p class="wb-alert__msg">Tổng hợp phục vụ <b>mục đích học tập</b> — không phải khuyến nghị đầu tư. Các mốc chính sách và con số thị trường nên được kiểm tra lại tại thời điểm sử dụng; cách tự kiểm chứng bằng dữ liệu nằm ở <a href="#s9-kiemchung">Phần 09</a>. Cập nhật 17/11/2026, số liệu đến sáng 17/11/2026; mỗi con số hiện hành ghi kèm ngày và nguồn.</p>
         </div>
       </div>
 
@@ -2115,13 +2663,17 @@
           <a class="wb-footer__link" href="#a2-laisuat-thuc">Lãi suất thực</a>
           <a class="wb-footer__link" href="#a3-chuky">Chu kỳ &amp; ngân hàng TW</a>
           <a class="wb-footer__link" href="#a4-vietnam">Việt Nam đứng ở đâu</a>
+          <a class="wb-footer__link" href="#a5-nhnn">Bảng điều khiển NHNN</a>
+          <a class="wb-footer__link" href="#a6-thuc-the">Ai khác cầm lái</a>
         </div>
         <div class="wb-footer__col">
           <h4 class="wb-footer__title">Thị trường</h4>
-          <a class="wb-footer__link" href="#a5-chungkhoan">Chứng khoán Việt Nam</a>
-          <a class="wb-footer__link" href="#a6-vang">Vàng</a>
-          <a class="wb-footer__link" href="#a7-baochi">Bảy câu báo hay viết</a>
-          <a class="wb-footer__link" href="#a8-tudien">Từ điển thuật ngữ</a>
+          <a class="wb-footer__link" href="#a7-chungkhoan">Chứng khoán Việt Nam</a>
+          <a class="wb-footer__link" href="#a8-vang">Vàng</a>
+          <a class="wb-footer__link" href="#a9-taisan">Nhà, USD, dầu, tiền gửi</a>
+          <a class="wb-footer__link" href="#a10-hanhdong">Đang cầm tiền mặt</a>
+          <a class="wb-footer__link" href="#a11-baochi">Bảy câu báo hay viết</a>
+          <a class="wb-footer__link" href="#a12-tudien">Từ điển thuật ngữ</a>
         </div>
         <div class="wb-footer__col" data-part="b">
           <h4 class="wb-footer__title">Phần B — Tra cứu</h4>
@@ -2204,6 +2756,7 @@
   /* ---- rule catalog filter (Part 5) ---- */
   var cards = [].slice.call(document.querySelectorAll('#ruleGrid .rb-rule'));
   document.getElementById('ruleTotal').textContent = cards.length;
+  [].forEach.call(document.querySelectorAll('[data-rule-total]'), function (el) { el.textContent = cards.length; });
   var tagChips = [].slice.call(document.querySelectorAll('#tagChips .rb-chip[data-tag]'));
   var catChips = [].slice.call(document.querySelectorAll('#catChips .rb-chip[data-cat]'));
   var searchInput = document.getElementById('ruleSearch');
@@ -2399,7 +2952,7 @@
     render();
   })();
 
-  /* A5 — P/E × EPS */
+  /* A7 — P/E × EPS */
   bind(['peEps', 'pePe'], function () {
     var e = +$('peEps').value / 100, p = +$('pePe').value / 100;
     var price = 60000 * (1 + e) * (1 + p), chg = price / 60000 - 1;
@@ -2417,7 +2970,7 @@
     $('peDiag').innerHTML = m;
   });
 
-  /* A5 — biên độ giá */
+  /* A7 — biên độ giá */
   (function () {
     var band = 7, slider = $('bandX');
     if (!slider) return;
@@ -2446,7 +2999,7 @@
     render();
   })();
 
-  /* A5 — ngưỡng margin */
+  /* A7 — ngưỡng margin */
   bind(['mgDebt', 'mgDrop'], function () {
     var D = +$('mgDebt').value, drop = +$('mgDrop').value / 100, V = 100 + D;
     var mv = V * (1 - drop), eq = mv - D, ratio = mv > 0 ? eq / mv * 100 : -100;
@@ -2463,7 +3016,7 @@
     else $('mgSub').innerHTML = 'Giá chỉ cần giảm thêm <b>' + vn(brk - +$('mgDrop').value, 1) + ' điểm %</b> nữa là chạm mức tối thiểu.';
   });
 
-  /* A6 — quy đổi giá vàng */
+  /* A8 — quy đổi giá vàng */
   bind(['gXau', 'gFx', 'gSjc', 'gRing'], function () {
     var OZ = 1.20565;
     var xau = +$('gXau').value || 0, fx = +$('gFx').value || 0;
@@ -2479,8 +3032,8 @@
     $('gBarR').style.width = Math.min(100, Math.abs(gr) / scale * 100) + '%';
     var lim = world * 0.03, t, m;
     if (gs > lim && gr > lim) {
-      t = 'Cầu trú ẩn thật';
-      m = '<b>Cả hai loại cùng vượt giá thế giới.</b> Người dân đang thực sự chuyển tài sản sang vàng — đây là tín hiệu kinh tế, đáng để ý.';
+      t = 'Cầu trong nước lớn hơn lượng vàng nhập được';
+      m = '<b>Cả hai loại cùng vượt giá thế giới.</b> Người dân đang thật sự mua vàng, và cửa nhập vàng nguyên liệu không đủ rộng để kéo giá về. Khoản chênh là thứ bạn mất ngay nếu cửa ấy mở.';
     } else if (gs > lim) {
       t = 'Chuyện thương hiệu, không phải chuyện kinh tế';
       m = 'Nhẫn bám sát giá thế giới, chỉ mình SJC vượt xa. Khoản chênh đó là giá của việc gần như không ai được nhập vàng về bán rẻ hơn — <b>bạn đang trả cho một hàng rào giấy tờ, không phải cho vàng</b>.';
@@ -2493,6 +3046,93 @@
     }
     $('gVerdictT').textContent = t;
     $('gVerdictM').innerHTML = m;
+  });
+
+  /* A5 — hàng rào tỷ giá: trần, sàn = trung tâm × (1 ± 5%) */
+  bind(['fxCentral', 'fxBank'], function () {
+    var c = +$('fxCentral').value || 0, p = +$('fxBank').value;
+    if (c <= 0) return;
+    var ceil = c * 1.05, floor = c * 0.95;
+    var room = (ceil / p - 1) * 100, pos = (p / c - 1) * 100;
+    var lo = c * 0.94, hi = c * 1.06;
+    function X(v) { return 20 + Math.max(0, Math.min(1, (v - lo) / (hi - lo))) * 280; }
+    $('fxBankVal').textContent = vn(p) + ' đ';
+    $('fxRoom').textContent = room <= 0 ? 'chạm trần' : vn(room, 1) + '%';
+    $('fxEdges').textContent = 'trần ' + vn(ceil) + ' · sàn ' + vn(floor);
+    $('fxPos').textContent = pct(pos);
+    $('fxMoney').textContent = '1 tỷ USD ↔ ' + vn(p) + ' tỷ đồng';
+    $('fxBand').setAttribute('x', X(floor).toFixed(1));
+    $('fxBand').setAttribute('width', (X(ceil) - X(floor)).toFixed(1));
+    ['fxMid', 'fxMidLab'].forEach(function (id) { var e = $(id); e.setAttribute(e.tagName === 'line' ? 'x1' : 'x', X(c).toFixed(1)); if (e.tagName === 'line') e.setAttribute('x2', X(c).toFixed(1)); });
+    $('fxFloorLab').setAttribute('x', X(floor).toFixed(1));
+    $('fxCeilLab').setAttribute('x', X(ceil).toFixed(1));
+    $('fxMark').setAttribute('x1', X(p).toFixed(1)); $('fxMark').setAttribute('x2', X(p).toFixed(1));
+    $('fxMarkLab').setAttribute('x', Math.max(40, Math.min(280, X(p))).toFixed(1));
+    var t, m;
+    if (p >= ceil) {
+      t = 'Chạm trần';
+      m = 'Ngân hàng không được bán cao hơn. Cầu USD dư ra chỉ có hai lối: NHNN bán USD từ dự trữ, hoặc nâng tỷ giá trung tâm — tức để VND trượt.';
+    } else if (ceil - p < c * 0.01) {
+      t = 'Sát trần';
+      m = 'NHNN thường bán USD dự trữ và phát hành tín phiếu hút VND. Mỗi tỷ USD bán ra rút khoảng ' + vn(p) + ' tỷ đồng khỏi hệ thống, nên lãi liên ngân hàng tăng.';
+    } else if (p - floor < c * 0.01) {
+      t = 'Sát sàn';
+      m = 'VND mạnh. NHNN mua USD vào dự trữ và bơm VND ra — thao tác ngược với lúc giữ trần.';
+    } else {
+      t = 'Trong hàng rào';
+      m = 'NHNN không buộc phải làm gì. Khi VND mạnh như tháng 11/2026, NHNN vẫn có thể chủ động mua USD tích dự trữ, đồng thời bơm VND.';
+    }
+    $('fxVerdictT').textContent = t;
+    $('fxVerdictM').textContent = m;
+  });
+
+  /* A9 — mua nhà cho thuê bằng vay: g* = L·i + (1−L)·d − y */
+  bind(['hPrice', 'hRent', 'hLoan', 'hRate', 'hDep'], function () {
+    var P = (+$('hPrice').value || 0) * 1000, R = (+$('hRent').value || 0) * 12;
+    var L = +$('hLoan').value / 100, i = (+$('hRate').value || 0) / 100, d = (+$('hDep').value || 0) / 100;
+    $('hLoanVal').textContent = vn(L * 100) + '%';
+    if (P <= 0) return;
+    var y = R / P, k = L * i + (1 - L) * d, g = k - y, interest = L * P * i, cash = R - interest;
+    var top = Math.max(k, y, Math.abs(g), 1e-9);
+    $('hY').textContent = vn(y * 100, 1) + '%';
+    $('hK').textContent = vn(k * 100, 1) + '%';
+    $('hG').textContent = g > 0 ? vn(g * 100, 1) + '%' : '0%';
+    $('hBarY').style.width = y / top * 100 + '%';
+    $('hBarK').style.width = k / top * 100 + '%';
+    $('hBarG').style.width = Math.max(g, 0) / top * 100 + '%';
+    $('hBreak').textContent = g > 0 ? vn(g * 100, 1) + '%/năm' : 'không cần tăng';
+    $('hBreakSub').textContent = g > 0
+      ? 'Thấp hơn mức này thì gửi tiết kiệm lời hơn.'
+      : 'Tiền thuê đã trả đủ chi phí vốn: giá chỉ cần không giảm.';
+    $('hCash').textContent = (cash < 0 ? '−' : '+') + vn(Math.abs(cash)) + ' triệu';
+    $('hCash').style.color = cash < 0 ? 'var(--wb-danger-text)' : 'var(--wb-success-text)';
+    $('hCashSub').textContent = vn(R) + ' triệu tiền thuê − ' + vn(interest) + ' triệu lãi vay.';
+  });
+
+  /* A10 — bốn phép so với tiền gửi */
+  bind(['sDep', 'sInf', 'sPe', 'sErp', 'sRent', 'sMort', 'sGold', 'sWorld', 'sUsdBank', 'sUsdFree', 'sCentral'], function () {
+    function v(id) { return +$(id).value || 0; }
+    var real = v('sDep') - v('sInf');
+    $('sigReal').textContent = pct(real);
+    $('sigRealV').textContent = real > 0.25 ? 'Chờ được trả công' : real >= -0.25 ? 'Hoà: chờ không mất, không được' : 'Chờ là mất sức mua chắc chắn';
+    if (v('sPe') > 0) {
+      var erp = 100 / v('sPe') - real, gap = erp - v('sErp');
+      $('sigErp').textContent = pct(erp);
+      $('sigErpV').textContent = gap > 1 ? 'Rẻ hơn mức bạn đòi' : gap >= -1 ? 'Ngang mức bạn đòi' : 'Đắt hơn mức bạn đòi';
+    }
+    var carry = v('sMort') - v('sRent');
+    $('sigHouse').textContent = vn(carry, 1) + ' điểm';
+    $('sigHouseV').textContent = carry > 0 ? 'Vay toàn bộ thì giá phải tăng ' + vn(carry, 1) + '%/năm mới bù lãi' : 'Tiền thuê đã trả đủ lãi vay';
+    if (v('sWorld') > 0) {
+      var prem = (v('sGold') / v('sWorld') - 1) * 100;
+      $('sigGold').textContent = pct(prem);
+      $('sigGoldV').textContent = prem > 3 ? 'Khoản mất ngay nếu cửa nhập mở' : 'Sát giá thế giới';
+    }
+    if (v('sUsdBank') > 0 && v('sCentral') > 0) {
+      var fg = (v('sUsdFree') / v('sUsdBank') - 1) * 100, room = (v('sCentral') * 1.05 / v('sUsdBank') - 1) * 100;
+      $('sigUsd').textContent = pct(fg) + ' · ' + vn(room, 1) + '%';
+      $('sigUsdV').textContent = (room < 1 || fg > 2) ? 'Áp lực tỷ giá đang lớn' : 'Áp lực tỷ giá thấp';
+    }
   });
 
   /* 06 — đuôi dày. So sánh hai giả định có cùng độ dao động, khác hình dạng đuôi. */
