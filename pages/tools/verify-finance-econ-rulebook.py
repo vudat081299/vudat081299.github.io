@@ -241,6 +241,15 @@ def phan_B():
     need('Nghị định 390/2026', 'hạ ngưỡng này xuống 5 triệu đồng/ngày')
     need('FTSE bốn đợt', 'bốn đợt từ 9/2026 tới 9/2027')
     need('ngày số liệu', 'CẬP NHẬT 17·11·2026')
+    # số đã đối chiếu lần hai (17/11/2026): lãi qua đêm 13/11 khoảng 5,6% (5,54% không có nguồn nào ghi);
+    # USD tự do 25.980–26.030; lợi suất cho thuê quý III/2026 — 3,1% là số TP.HCM quý I/2025, không phải Hà Nội
+    need('lãi qua đêm 13/11', 'Phiên 13/11/2026 lãi qua đêm liên ngân hàng khoảng 5,6%')
+    claim('không còn số 5,54%', '5,54' not in HTML)
+    claim('USD tự do: mô hình và bảng nguồn', attr('sUsdFree') == 26030 and 'khoảng 25.980–26.030 đ (mô hình dùng 26.030)' in HTML)
+    claim('lợi suất cho thuê: mô hình dùng số TP.HCM quý III/2026', attr('sRent') == 3.4)
+    need('lợi suất cho thuê trong bài', '<b>khoảng 3,4%/năm ở TP.HCM cũ và 2,4% ở Hà Nội (quý III/2026)</b>')
+    need('lợi suất cho thuê trong gợi ý A10', 'lợi suất cho thuê 3,4% (TP.HCM cũ, quý III/2026)')
+    claim('3,1% không còn gán cho Hà Nội', '3,1% ở Hà Nội' not in HTML and '3,1% (Hà Nội)' not in HTML)
     # số quy tắc in trong bài = số thẻ trong danh mục
     cards = re.findall(r'<div class="wb-card rb-rule" id="(R-[A-Z]+\d+)" data-tag="(T\d)" data-cat="([A-Z])"', HTML)
     shown = set(re.findall(r'<span data-rule-total>(\d+)</span>', HTML))
