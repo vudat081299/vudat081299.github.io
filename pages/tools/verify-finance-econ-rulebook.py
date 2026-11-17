@@ -127,6 +127,10 @@ def phan_A():
         need('chênh vàng trong lời văn', 'khoảng 16–17 triệu đồng/lượng')
         need('R-I04: chênh theo %', 'khoảng ' + vi(round(sjc - world)) + ' triệu đồng/lượng, tức 13–14%')
         claim('13–14% đúng', 13 <= (sjc / world - 1) * 100 <= 14, f'{(sjc / world - 1) * 100:.2f}%')
+        # chênh lệch mua–bán SJC: mua 134,2, bán = giá bán trong ô nhập
+        buy = 134.2
+        need('SJC mua–bán', 'SJC mua ' + vi(buy, 1) + ', bán ' + vi(sjc, 1) + ' triệu')
+        need('mất khi bán lại ngay', 'mất ' + vi(sjc - buy) + ' triệu đồng/lượng, khoảng ' + vi((sjc - buy) / sjc * 100, 1) + '%')
 
     # B03 — xăng 10% × 3,6%
     need('xăng → CPI', vi(10 * 0.036, 2) + ' điểm')
@@ -228,6 +232,14 @@ def phan_B():
     need('trần tiền gửi', '1 đến dưới 6 tháng 4,75%')
     need('Fed', '3,75–4,00%')
     need('bảo hiểm tiền gửi', '350 triệu đồng')
+    # điều đã sai ở bản trước: NHNN có chào bán USD kỳ hạn (8/2025, 3/2026); Nghị định 390/2026 hạ ngưỡng
+    # thanh toán vàng không dùng tiền mặt từ 20 xuống 5 triệu; FTSE đưa vào rổ theo bốn đợt
+    claim('can thiệp ngoại tệ: không còn câu "chưa phải bán" trống trơn',
+          'từ 2025 tới 10/2026 chưa phải bán ngoại tệ can thiệp' not in HTML)
+    need('chào bán USD kỳ hạn 8/2025', '26.550 đ (25/8/2025)')
+    need('chào bán USD kỳ hạn 3/2026', '26.850 đ (24/3/2026)')
+    need('Nghị định 390/2026', 'hạ ngưỡng này xuống 5 triệu đồng/ngày')
+    need('FTSE bốn đợt', 'bốn đợt từ 9/2026 tới 9/2027')
     need('ngày số liệu', 'CẬP NHẬT 17·11·2026')
     # số quy tắc in trong bài = số thẻ trong danh mục
     cards = re.findall(r'<div class="wb-card rb-rule" id="(R-[A-Z]+\d+)" data-tag="(T\d)" data-cat="([A-Z])"', HTML)
@@ -254,6 +266,14 @@ def phan_C():
     # luật vàng đã sửa: "cả hai vượt" không được kết luận là "cầu trú ẩn thật"
     claim('kết luận vàng đã sửa', "t = 'Cầu trú ẩn thật'" not in HTML and "t = 'Cầu trong nước lớn hơn lượng vàng nhập được'" in HTML)
     claim('R-D06 đã sửa', 'đó là cầu trú ẩn <b>thật</b>' not in HTML)
+    # P/E = 1/(r − g): P/E co lại có thể do g kỳ vọng, không chỉ do lãi suất
+    claim('P/E không bị gán trọn cho lãi suất',
+          'không liên quan gì tới doanh nghiệp' not in HTML and 'tín hiệu về lãi suất, không phải về doanh nghiệp' not in HTML)
+    # vàng–lãi thực và USD–hàng hoá là quan hệ thống kê (vỡ 2023–2025, 2022), không phải no-arbitrage
+    for rid in ('R-D01', 'R-B07'):
+        claim(f'{rid} là T3', f'id="{rid}" data-tag="T3"' in HTML)
+    # khi cửa nhập mở, chênh lệch co về chi phí nhập khẩu (R-D07), không về 0
+    claim('khoản mất của vàng miếng là phần vượt chi phí nhập', 'Khoản mất ngay nếu cửa nhập mở' not in HTML)
 
     # dựng lại g* bằng lối khác: so tài sản cuối năm của hai lựa chọn, tìm g bằng chia đôi
     def wealth_gap(g, P=5000, R=144, L=0.5, i=0.10, d=0.065):
