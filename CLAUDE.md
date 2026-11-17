@@ -11,7 +11,6 @@ nằm ở CLAUDE.md trong thư mục của nó; Claude Code tự nạp file ấy
 | `pages/` | bộ sưu tập | trang dạy học và tóm tắt sách, mỗi trang một file HTML |
 | `cooking/` | bộ sưu tập | công thức nấu ăn và kiến thức bếp |
 | `facts/` | project | thư viện fact có kiểm chứng |
-| `shop/` | project | cửa hàng nến thơm |
 | `cashy/` | project | app chi tiêu Vite + React, thứ duy nhất cần build |
 | `masters-degree/data-science-roadmap/` | project | trang dạy Data Science |
 | `masters-degree/thesis-topic-selector/` | project | bảng chấm và xếp hạng đề tài luận văn |
@@ -78,7 +77,7 @@ quyết định và việc dở ở `DECISIONS.md` / `HANDOFF.md` gốc. Luật 
   cho mỗi bản clone: `sh tools/install-hooks.sh` (phiên Claude Code tự chạy lúc bắt đầu).
 - Push lên `main`: CI chạy mọi cổng; deploy chỉ chạy khi CI xanh (REPO-014).
 - Cổng không bấm nút. Trang có JS thì đo thêm trong trình duyệt thật: `tools/smoke-index.js`,
-  `shop/tools/smoke.js`, `masters-degree/class-schedule/tools/smoke.cjs` (CI chạy cả ba).
+  `masters-degree/class-schedule/tools/smoke.cjs` (CI chạy cả hai).
 - Mọi trang lên web theo theme hệ điều hành ở lần mở đầu; nút đổi theme chỉ thắng sau khi người dùng bấm
   (REPO-024). CI đo bằng `tools/smoke-theme.js`.
 - Cổng mới: viết script trong `<project>/tools/`, gọi nó từ `tools/check.sh` của project. Không khai tên ở

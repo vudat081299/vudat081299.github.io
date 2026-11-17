@@ -1,6 +1,6 @@
 ---
 name: agent-practices
-description: Mẹo làm việc đã phải trả giá mới rút ra trong repo này, không riêng project nào. Dùng khi chạy nhiều subagent song song, sửa hàng loạt bằng script, trích nguồn hay con số (facts/, shop/docs/), đo hoặc chụp một trang trong trình duyệt, làm lại giao diện mà phải giữ nguyên hành vi, vẽ giao diện hay sơ đồ SVG, hoặc làm việc trong worktree. KHÔNG dùng để tra luật của một project cụ thể — luật ấy ở CLAUDE.md của project đó.
+description: Mẹo làm việc đã phải trả giá mới rút ra trong repo này, không riêng project nào. Dùng khi chạy nhiều subagent song song, sửa hàng loạt bằng script, trích nguồn hay con số (facts/), đo hoặc chụp một trang trong trình duyệt, làm lại giao diện mà phải giữ nguyên hành vi, vẽ giao diện hay sơ đồ SVG, hoặc làm việc trong worktree. KHÔNG dùng để tra luật của một project cụ thể — luật ấy ở CLAUDE.md của project đó.
 ---
 
 # Mẹo làm việc chung trong repo này

@@ -17,7 +17,7 @@
  * Chạy:  node tools/smoke-index.js [url]
  * Mặc định url là http://localhost:8000/index.html
  *
- * Cần playwright (hoặc playwright-core) và một bản Chromium — y như shop/tools/smoke.js.
+ * Cần playwright (hoặc playwright-core) và một bản Chromium.
  * Không có thì thoát với mã 2 (BỎ QUA), không phải mã 1: thiếu công cụ không đồng nghĩa với
  * trang hỏng.
  */
@@ -27,7 +27,7 @@ const path = require('path');
 const URL_ = process.argv[2] || 'http://localhost:8000/index.html';
 const ROOT = path.dirname(__dirname);
 
-/* Thử CẢ HAI tên gói. shop/tools/smoke.js chỉ thử `playwright-core`, và trên máy này
+/* Thử CẢ HAI tên gói. Trên máy này
  * playwright-core nằm LỒNG trong `playwright` (npm i -g playwright) nên require thẳng nó
  * trượt — cổng sẽ BỎ QUA mãi mãi. Một cổng bỏ qua mãi mãi là một cổng đã chết. */
 let chromium;
@@ -40,8 +40,7 @@ if (!chromium) {
   process.exit(2);
 }
 
-/* Giống hệt shop/tools/smoke.js — cùng một repo thì cùng một cách tìm trình duyệt.
- * Phải nhận CẢ bản đầy đủ (`chrome`) lẫn headless shell: `playwright install chromium` bản
+/* Tìm trình duyệt. Phải nhận CẢ bản đầy đủ (`chrome`) lẫn headless shell: `playwright install chromium` bản
  * mới chỉ tải headless_shell, và ta chạy headless nên nó dùng tốt. */
 function findChrome() {
   const fs = require('fs');

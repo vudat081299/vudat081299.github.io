@@ -42,7 +42,7 @@ jobs:
           exit $FAIL
 
   smoke:
-    name: Chạy thật trong trình duyệt (shop/, trang chủ, lịch học, theme)
+    name: Chạy thật trong trình duyệt (trang chủ, lịch học, theme)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -57,10 +57,9 @@ jobs:
         run: |
           python3 -m http.server 8347 >/dev/null 2>&1 &
           for i in $(seq 1 60); do
-            curl -sf -o /dev/null http://127.0.0.1:8347/shop/ && break
+            curl -sf -o /dev/null http://127.0.0.1:8347/index.html && break
             sleep 0.25
           done
-          node shop/tools/smoke.js http://127.0.0.1:8347/shop/
           node tools/smoke-index.js http://127.0.0.1:8347/index.html
           node masters-degree/class-schedule/tools/smoke.cjs http://127.0.0.1:8347/masters-degree/class-schedule/
           node tools/smoke-theme.js http://127.0.0.1:8347/
