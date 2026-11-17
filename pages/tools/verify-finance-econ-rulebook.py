@@ -244,6 +244,50 @@ def phan_A():
     need('thuế: nhà 2%', 'bán nhà đất chịu <b>2% giá chuyển nhượng</b>')
     need('thuế: cổ tức 5%', 'chịu <b>5%</b>, khấu trừ')
 
+    # A11 — đa dạng hoá. Hai tài sản: σp² = wc²σc² + wv²σv² + 2·wc·wv·ρ·σc·σv; số điền sẵn 17,6 / 15 / ρ = 0 / 30% vàng
+    sc, sv, wv, rho = attr('divSs'), attr('divSg'), attr('divW') / 100, attr('divR') / 100
+
+    def sig(x, r=rho):
+        return math.sqrt(max(0.0, (1 - x) ** 2 * sc * sc + x * x * sv * sv + 2 * (1 - x) * x * r * sc * sv))
+    sp, avg = sig(wv), (1 - wv) * sc + wv * sv
+    need('đa dạng hoá: dao động phần rủi ro', 'id="divSp">' + vi(sp, 1) + '%')
+    need('đa dạng hoá: lời dưới số', 'Trung bình có trọng số của hai dao động là ' + vi(avg, 1) + '%; trộn bớt được ' + vi(avg - sp, 1) + ' điểm.')
+    claim('ρ < 1 thì luôn dưới trung bình có trọng số', all(sig(k / 20, r / 10) <= (1 - k / 20) * sc + k / 20 * sv + 1e-9
+                                                               for k in range(21) for r in range(-10, 11)))
+    claim('ρ = 1 thì bằng đúng trung bình (đường đứt là đường thẳng)', all(abs(sig(k / 20, 1) - ((1 - k / 20) * sc + k / 20 * sv)) < 1e-9 for k in range(21)))
+    need('dao động cổ phiếu có nguồn', 'Cổ phiếu 17,6%: độ biến động năm của quỹ ETF VN30 (E1VFVN30)')
+    claim('ô dao động cổ phiếu = số có nguồn', sc == 17.6)
+    # N mã cùng σ = 30%, tương quan bình quân 0,35
+    def sig_n(n, s1=30, rb=0.35):
+        return s1 * math.sqrt(1 / n + (1 - 1 / n) * rb)
+    need('N mã trong bài', 'một mã %s%%, mười mã %s%%, ba mươi mã %s%%, và không bao giờ xuống dưới %s%%'
+         % (vi(sig_n(1)), vi(sig_n(10), 1), vi(sig_n(30), 1), vi(30 * math.sqrt(0.35), 1)))
+    need('R-I10: số', 'mười mã %s%%, sàn %s%%' % (vi(sig_n(10), 1), vi(30 * math.sqrt(0.35), 1)))
+    # tỷ trọng theo mức lỗ chịu được: 300 triệu, chịu mất 30 triệu, năm xấu −32,8% (VN-Index 2022)
+    d22 = 1 - 1007.09 / 1498.28
+    need('năm xấu = VN-Index 2022', 'VN-Index mất ' + vi(d22 * 100, 1) + '%: cổ phiếu tối đa 30 / ' + vi(round(d22, 3), 3))
+    need('tỷ trọng tối đa', '≈ %s triệu, khoảng %s%% khoản tiền; %s triệu còn lại'
+         % (vi(30 / round(d22, 3)), vi(round(30 / round(d22, 3) / 300 * 100, -1)), vi(300 - round(30 / round(d22, 3)))))
+    need('chịu mất 100 triệu', '(300 × 0,328 ≈ %s triệu)' % vi(300 * 0.328))
+    claim('100 triệu đủ cho toàn bộ bằng cổ phiếu', 300 * 0.328 <= 100)
+    need('R-I11: số', 'cổ phiếu tối đa khoảng %s triệu' % vi(30 / 0.328))
+    # tái cân bằng 60/40, cổ phiếu +30%, tiền gửi +6,5%; bán chịu 0,15% môi giới + 0,1% thuế
+    st, dp = 60 * 1.3, 40 * 1.065
+    tot = st + dp
+    sell = st - 0.6 * tot
+    need('tái cân bằng: cuối năm', '%s · %s%%</text><text class="rb-dg-ts" x="311" y="65" text-anchor="middle">%s</text>'
+         % (vi(st), vi(st / tot * 100, 1), vi(dp, 1)))
+    need('tái cân bằng: kéo về', '%s · 60%%</text><text class="rb-dg-ts" x="305" y="107" text-anchor="middle">%s · 40%%'
+         % (vi(0.6 * tot, 2), vi(0.4 * tot, 2)))
+    need('tái cân bằng: phải bán', 'bán %s triệu cổ phiếu, mất khoảng %s nghìn đồng' % (vi(sell, 2), vi(sell * 0.0025 * 1000)))
+    need('R-I12: số', 'cuối năm cổ phiếu chiếm %s%%' % vi(st / tot * 100, 1))
+    for lbl, frac, x0, w0 in (('đầu năm', 0.6, 92, 160), ('cuối năm', st / tot, 92, 172), ('kéo về', 0.6, 92, 160)):
+        claim('vạch tái cân bằng ' + lbl, abs(266 * frac - w0) < 1, f'{266 * frac:.1f} ≠ {w0}')
+    # quỹ: số có nguồn
+    need('E1VFVN30 phí quản lý', 'phí quản lý 0,65%/năm, tỷ lệ chi phí 12 tháng khoảng 0,8%')
+    need('sai số bám SSIAM', 'lệch chỉ số 0,29% tính tới 25/12/2025')
+    need('2025: VN30 và NAV', 'chỉ số VN30 tăng 51,00% trong khi giá trị tài sản ròng mỗi chứng chỉ quỹ ETF VN30 của SSIAM tăng 51,28%')
+
     # VN-Index 2022
     need('VN-Index 2022', 'mất ' + vi((1007.09 / 1498.28 - 1) * -100, 1) + '%')
     need('R-I01 note', vi(1498.28, 2) + ' xuống ' + vi(1007.09, 2) + ' điểm, tức ' + vi((1007.09 / 1498.28 - 1) * 100, 1) + '%')
@@ -334,6 +378,7 @@ def phan_C():
         ('quy đổi vàng', 'var world = xau * OZ * fx / 1e6;'),
         ('hằng số ounce', 'var OZ = 1.20565;'),
         ('số nhân', 'total = 100 / (1 - c)'),
+        ('đa dạng hoá: công thức', 'function sp(x) { return Math.sqrt(Math.max(0, (1 - x) * (1 - x) * sc * sc + x * x * sv * sv + 2 * (1 - x) * x * r * sc * sv)); }'),
         ('phí trong phép so', "var hold = Math.max(v('sHold'), 0.25), stockCost = 0.4 / hold + v('sFee'), houseCost = 2.5 / hold;"),
         ('cổ phiếu so sau phí', "net = erp - stockCost, gap = net - v('sErp');"),
         ('chi phí một vòng: cổ phiếu', 'stock: 0.15 * 2 + 0.1,'),

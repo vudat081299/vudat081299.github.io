@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
 <title>Economics Handbook — from the economy to Vietnamese assets</title>
-<meta name="description" content="Bản học tương tác cho người không có nền kinh tế học: vòng tiền chảy, lãi suất thực, chu kỳ, công cụ của Ngân hàng Nhà nước và các bên điều hành khác, chứng khoán, vàng, nhà, USD, dầu, tiền gửi, và cách so từng tài sản với tiền gửi khi đang cầm tiền mặt — kèm sổ tay ~77 quy tắc &quot;nếu…thì…&quot; gắn thẻ độ cứng T0–T4.">
+<meta name="description" content="Bản học tương tác cho người không có nền kinh tế học: vòng tiền chảy, lãi suất thực, chu kỳ, công cụ của Ngân hàng Nhà nước và các bên điều hành khác, chứng khoán, vàng, nhà, USD, dầu, tiền gửi, và cách so từng tài sản với tiền gửi khi đang cầm tiền mặt — kèm sổ tay ~81 quy tắc &quot;nếu…thì…&quot; gắn thẻ độ cứng T0–T4.">
 
 <meta name="theme-color" id="theme-color" content="#f5f6f3">
 <script>
@@ -324,7 +324,7 @@
 </head>
 <body>
 <style>
-  /* Sơ đồ cơ chế của các chương A5, A6, A11 (nội dung bổ sung 11/2026).
+  /* Sơ đồ cơ chế của các chương A5, A6, A12 (nội dung bổ sung 11/2026).
      Tách khỏi khối style chính để lớp giao diện tô lại được; chỉ dùng token --wb-*. */
   .rb-viz svg.rb-dg { max-width: 560px; margin: 0 auto; }
   .rb-dg-box { fill: var(--wb-surface); stroke: var(--wb-border-strong); stroke-width: 1; }
@@ -363,7 +363,7 @@
       <div class="wb-cluster wb-cluster--between" style="gap:14px;align-items:flex-start">
         <div>
           <p class="wb-alert__title" style="margin-bottom:2px">Lần đầu đọc trang này?</p>
-          <p class="wb-alert__msg" style="margin:0">Bật công tắc để <b>ẩn Phần B</b> (sổ tay tra cứu <span data-rule-total>77</span> quy tắc). Chỉ còn 13 chương của Phần A — có ví von, có số, có <b>hình kéo được</b>. Bật lại lúc nào cũng được; máy sẽ nhớ lựa chọn.</p>
+          <p class="wb-alert__msg" style="margin:0">Bật công tắc để <b>ẩn Phần B</b> (sổ tay tra cứu <span data-rule-total>81</span> quy tắc). Chỉ còn 14 chương của Phần A — có ví von, có số, có <b>hình kéo được</b>. Bật lại lúc nào cũng được; máy sẽ nhớ lựa chọn.</p>
         </div>
         <label class="wb-switch" style="flex:none"><input type="checkbox" id="noviceMode"><span class="wb-switch__track"></span> Chế độ người mới</label>
       </div>
@@ -376,7 +376,7 @@
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">A</span>
         <div class="wb-media__body">
           <p class="wb-media__title">Phần A — Hiểu hệ thống <span class="wb-cap wb-cap--sm">đọc theo thứ tự</span></p>
-          <p class="wb-media__text">Mười một chương nội dung kể một mạch: tiền chảy thế nào → lãi suất thực là gì → ai đặt lãi suất → Việt Nam đứng ở đâu → Ngân hàng Nhà nước cầm những cần gạt nào → ai khác cầm lái → chứng khoán → vàng → nhà, USD, dầu, tiền gửi → mỗi vòng mua bán tốn bao nhiêu phí và thuế → đang cầm tiền mặt thì hỏi gì, theo thứ tự nào; rồi <b>A12</b> để bạn tự kiểm và <b>A13</b> là từ điển. Chương nội dung nào cũng chạy hết ít nhất một ví dụ có số. Năm chương đầu mở bằng một phép ví von — kèm luôn chỗ ví von ấy hỏng; A1, A3, A7 và A8 gỡ một điều "gần như ai cũng tin" mà sai.</p>
+          <p class="wb-media__text">Mười hai chương nội dung kể một mạch: tiền chảy thế nào → lãi suất thực là gì → ai đặt lãi suất → Việt Nam đứng ở đâu → Ngân hàng Nhà nước cầm những cần gạt nào → ai khác cầm lái → chứng khoán → vàng → nhà, USD, dầu, tiền gửi → mỗi vòng mua bán tốn bao nhiêu phí và thuế → chia tiền giữa các lớp tài sản thế nào → đang cầm tiền mặt thì hỏi gì, theo thứ tự nào; rồi <b>A13</b> để bạn tự kiểm và <b>A14</b> là từ điển. Chương nội dung nào cũng chạy hết ít nhất một ví dụ có số. Năm chương đầu mở bằng một phép ví von — kèm luôn chỗ ví von ấy hỏng; A1, A3, A7 và A8 gỡ một điều "gần như ai cũng tin" mà sai.</p>
         </div>
       </div>
     </div>
@@ -385,7 +385,7 @@
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">B</span>
         <div class="wb-media__body">
           <p class="wb-media__title">Phần B — Sổ tay tra cứu <span class="wb-cap wb-cap--dashed wb-cap--sm">tra khi cần</span></p>
-          <p class="wb-media__text"><span data-rule-total>77</span> quy tắc "nếu… thì…" có gắn thẻ độ cứng T0–T4, bảng cầu nối thế giới → VN, và nền toán học phía sau. Không đọc tuần tự — đọc sau khi đã nắm Phần A, hoặc tra khi gặp một tình huống cụ thể.</p>
+          <p class="wb-media__text"><span data-rule-total>81</span> quy tắc "nếu… thì…" có gắn thẻ độ cứng T0–T4, bảng cầu nối thế giới → VN, và nền toán học phía sau. Không đọc tuần tự — đọc sau khi đã nắm Phần A, hoặc tra khi gặp một tình huống cụ thể.</p>
         </div>
       </div>
     </div>
@@ -406,9 +406,10 @@
       <a class="wb-sidenav__link" href="#a8-vang">A8 · Vàng</a>
       <a class="wb-sidenav__link" href="#a9-taisan">A9 · Nhà, USD, dầu, tiền gửi</a>
       <a class="wb-sidenav__link" href="#a10-chiphi">A10 · Chi phí và thuế</a>
-      <a class="wb-sidenav__link" href="#a11-hanhdong">A11 · Đang cầm tiền mặt</a>
-      <a class="wb-sidenav__link" href="#a12-baochi">A12 · Bảy câu báo hay viết</a>
-      <a class="wb-sidenav__link" href="#a13-tudien">A13 · Từ điển thuật ngữ</a>
+      <a class="wb-sidenav__link" href="#a11-chiatien">A11 · Chia tiền</a>
+      <a class="wb-sidenav__link" href="#a12-hanhdong">A12 · Đang cầm tiền mặt</a>
+      <a class="wb-sidenav__link" href="#a13-baochi">A13 · Bảy câu báo hay viết</a>
+      <a class="wb-sidenav__link" href="#a14-tudien">A14 · Từ điển thuật ngữ</a>
 
       <div class="wb-sidenav__section" data-part="b" style="margin-top:14px">Phần B — Sổ tay tra cứu</div>
       <a class="wb-sidenav__link" data-part="b" href="#s0-cach-doc">00 · Cách đọc sổ tay</a>
@@ -436,7 +437,7 @@
       <div class="rb-part-head">
         <p class="rb-kicker">Phần A · đọc theo thứ tự</p>
         <h2>Hiểu hệ thống trước, tra quy tắc sau</h2>
-        <p>Mười ba chương dưới đây không giả định bạn biết bất cứ thuật ngữ kinh tế nào. Mỗi thuật ngữ bắt buộc phải dùng đều được định nghĩa ngay lần đầu xuất hiện; những từ còn lại nằm trong <a href="#a13-tudien">từ điển ở A13</a>. Mỗi chương mở sẵn phần lõi: sơ đồ, ý chính, con số. Chi tiết nằm trong các khối gập ngay sau ý nó mở rộng; nút <b>Đọc liền</b> ở thanh trên mở mọi khối để đọc trọn một mạch, bấm lại để về phần lõi.</p>
+        <p>Mười bốn chương dưới đây không giả định bạn biết bất cứ thuật ngữ kinh tế nào. Mỗi thuật ngữ bắt buộc phải dùng đều được định nghĩa ngay lần đầu xuất hiện; những từ còn lại nằm trong <a href="#a14-tudien">từ điển ở A14</a>. Mỗi chương mở sẵn phần lõi: sơ đồ, ý chính, con số. Chi tiết nằm trong các khối gập ngay sau ý nó mở rộng; nút <b>Đọc liền</b> ở thanh trên mở mọi khối để đọc trọn một mạch, bấm lại để về phần lõi.</p>
       </div>
 
       <!-- ============ A1 — VÒNG TIỀN CHẢY ============ -->
@@ -1536,9 +1537,117 @@
 
       <hr class="wb-divider">
 
-      <!-- ============ A11 — ĐANG CẦM TIỀN MẶT ============ -->
-      <section id="a11-hanhdong">
-        <p class="rb-sec-eyebrow"><b>A11</b> — Từ hiểu sang làm</p>
+      <!-- ============ A11 — CHIA TIỀN ============ -->
+      <section id="a11-chiatien">
+        <p class="rb-sec-eyebrow"><b>A11</b> — Chia tiền</p>
+        <h2 class="rb-sec-title">Chia tiền giữa các lớp tài sản: đa dạng hoá giảm biến động nhờ tương quan, không nhờ số mã</h2>
+        <p class="rb-lede">Biết từng tài sản đắt hay rẻ rồi, câu hỏi kế tiếp là bỏ bao nhiêu vào mỗi thứ. <b>Không có một tỷ lệ đúng cho mọi người.</b> Tỷ lệ đi theo ba thứ của riêng bạn: tiền này để làm gì, khi nào cần, và một năm xấu bạn mất được bao nhiêu mà không phải bán. Phần chung cho mọi người là phép tính phía sau: hai tài sản không lên xuống cùng nhịp thì gộp lại dao động ít hơn trung bình của hai cái.</p>
+
+        <div class="rb-viz" id="viz-div">
+          <div class="rb-viz__head">
+            <p class="rb-viz__title">Kéo thử — trộn cổ phiếu với vàng thì độ dao động của cả phần rủi ro còn bao nhiêu?</p>
+            <p class="rb-viz__hint">Độ dao động là độ lệch chuẩn của lợi nhuận một năm. Cổ phiếu 17,6%: độ biến động năm của quỹ ETF VN30 (E1VFVN30) từ 10/2014 tới 7/2024, theo tờ thông tin của quỹ. Vàng 15% và tương quan 0 là <b>giả định</b> để kéo thử, không phải số đo.</p>
+          </div>
+          <div class="rb-viz__body rb-viz__body--split">
+            <div style="display:grid;gap:12px">
+              <div class="rb-viz__ctrl">
+                <div class="rb-viz__ctrl-top"><span class="rb-viz__ctrl-label">Phần vàng trong phần rủi ro</span><span class="rb-viz__ctrl-val" id="divWVal">30%</span></div>
+                <input class="wb-range" type="range" id="divW" min="0" max="100" step="5" value="30" aria-label="Tỷ trọng vàng trong phần rủi ro">
+              </div>
+              <div class="rb-viz__ctrl">
+                <div class="rb-viz__ctrl-top"><span class="rb-viz__ctrl-label">Tương quan cổ phiếu – vàng (ρ)</span><span class="rb-viz__ctrl-val" id="divRVal">0,0</span></div>
+                <input class="wb-range" type="range" id="divR" min="-100" max="100" step="10" value="0" aria-label="Hệ số tương quan giữa cổ phiếu và vàng">
+              </div>
+              <div style="display:grid;gap:10px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+                <div class="wb-field"><label class="wb-label" for="divSs">Dao động cổ phiếu (%)</label><input class="wb-input" type="number" id="divSs" value="17.6" step="0.5" min="0" inputmode="decimal"></div>
+                <div class="wb-field"><label class="wb-label" for="divSg">Dao động vàng (%)</label><input class="wb-input" type="number" id="divSg" value="15" step="0.5" min="0" inputmode="decimal"></div>
+              </div>
+            </div>
+            <div style="display:grid;gap:10px">
+              <div class="rb-out-row">
+                <div class="rb-out"><span class="rb-out__label">Dao động của phần rủi ro</span><span class="rb-out__val" id="divSp">13,1%</span><span class="rb-out__sub" id="divSub">Trung bình có trọng số của hai dao động là 16,8%; trộn bớt được 3,7 điểm.</span></div>
+              </div>
+              <svg viewBox="0 0 320 150" role="img" aria-labelledby="divSvgTitle">
+                <title id="divSvgTitle">Độ dao động của phần rủi ro theo tỷ trọng vàng: đường cong khi tương quan đang chọn, đường thẳng khi tương quan bằng 1</title>
+                <line class="wb-axis-line" x1="34" y1="124" x2="310" y2="124"></line>
+                <line class="wb-axis-line" x1="34" y1="12" x2="34" y2="124"></line>
+                <text class="wb-axis-label" x="30" y="127" text-anchor="end">0</text>
+                <text class="wb-axis-label" x="30" y="71" text-anchor="end">10%</text>
+                <text class="wb-axis-label" x="30" y="17" text-anchor="end">20%</text>
+                <text class="wb-axis-label" x="34" y="142">0% vàng</text>
+                <text class="wb-axis-label" x="310" y="142" text-anchor="end">100% vàng</text>
+                <polyline id="divLine1" fill="none" style="stroke:var(--wb-fg-subtle);stroke-width:1.5;stroke-dasharray:5 3" points=""></polyline>
+                <polyline id="divCurve" fill="none" style="stroke:var(--wb-fg);stroke-width:2" points=""></polyline>
+                <circle id="divDot" cx="117" cy="51" r="4.5" style="fill:var(--wb-danger-text)"></circle>
+              </svg>
+              <p class="rb-viz__hint" style="margin:0">Đường đứt: tương quan bằng 1, không bớt được gì. Đường liền: tương quan đang chọn. Chấm đỏ: tỷ trọng đang chọn.</p>
+            </div>
+          </div>
+          <div class="rb-viz__foot" id="divFoot">Điều cần thấy: với tương quan dưới 1, trộn một phần vàng vào cổ phiếu làm dao động giảm <b>nhanh hơn</b> trung bình có trọng số, vì phần hai tài sản bù trừ nhau không cộng vào. Kéo ρ lên 1 thì đường cong duỗi thành đường thẳng: không còn lợi ích. Phần tiền gửi có dao động gần bằng 0, nên nó chỉ thu nhỏ cả danh mục theo tỷ lệ, không đổi hình dạng này <span class="wb-cap wb-cap--success wb-cap--sm">R-I09</span>.</div>
+        </div>
+        <div class="rb-formula">$$\sigma_p^2 = w_c^2\sigma_c^2 + w_v^2\sigma_v^2 + 2\,w_c w_v\,\rho\,\sigma_c\sigma_v$$</div>
+
+        <p class="rb-prose"><b>Mua nhiều mã không giống đa dạng hoá.</b> Các cổ phiếu cùng một sàn chịu chung lãi suất, tỷ giá, dòng vốn ngoại và margin (A7), nên chúng tương quan với nhau. Với $N$ mã cùng độ dao động $\sigma$ và tương quan bình quân $\bar\rho$, danh mục chia đều có độ dao động $\sigma\sqrt{1/N + (1-1/N)\bar\rho}$: thêm mã chỉ bớt được phần riêng của từng doanh nghiệp, còn phần chung chạm sàn $\sigma\sqrt{\bar\rho}$. Lấy giả định một mã dao động 30%/năm, tương quan bình quân 0,35: một mã 30%, mười mã 19,3%, ba mươi mã 18,3%, và không bao giờ xuống dưới 17,7% <span class="wb-cap wb-cap--success wb-cap--sm">R-I10</span>. Muốn bớt phần chung, phải trộn lớp tài sản khác — tiền gửi, vàng, trái phiếu — chứ không phải thêm mã.</p>
+
+        <h3 class="rb-sub-title">Chọn tỷ trọng: bắt đầu từ ngày cần tiền và mức lỗ chịu được</h3>
+        <p class="rb-prose">Ba bước, theo thứ tự. <b>Một:</b> tiền cần trong vòng hai năm để ở tiền gửi, kỳ hạn khớp ngày cần (A10, rút trước hạn mất lãi). <b>Hai:</b> với phần còn lại, tự trả lời "một năm xấu, tôi mất tối đa bao nhiêu tiền mà vẫn không phải bán". Tỷ trọng cổ phiếu tối đa là số ấy chia cho mức giảm của một năm xấu: $w \le L / (V\cdot d)$. <b>Ba:</b> chia phần cổ phiếu qua một quỹ đa dạng, và giải ngân nhiều đợt (A12).</p>
+        <p class="rb-prose">Ví dụ có số: 300 triệu để dài hạn, chịu mất tối đa 30 triệu trong một năm xấu. Lấy năm xấu là 2022, khi VN-Index mất 32,8%: cổ phiếu tối đa 30 / 0,328 ≈ 91 triệu, khoảng 30% khoản tiền; 209 triệu còn lại ở tiền gửi và vàng. Người chịu mất 100 triệu thì giữ được toàn bộ bằng cổ phiếu (300 × 0,328 ≈ 98 triệu) — cùng thị trường, hai tỷ lệ khác hẳn, và cả hai đều đúng với người của nó <span class="wb-cap wb-cap--warning wb-cap--sm">R-I11</span>. Năm xấu sau có thể xấu hơn 2022: mức $d$ lấy từ quá khứ là chỗ yếu nhất của phép tính.</p>
+
+        <h3 class="rb-sub-title">Quỹ chỉ số, quỹ ETF, chứng chỉ quỹ mở — cách thực tế để có cổ phiếu đa dạng</h3>
+        <p class="rb-prose">Người không chuyên muốn giữ cổ phiếu đa dạng thì mua <b>quỹ</b> thay vì tự chọn mã. <b>Quỹ ETF</b> niêm yết trên sàn, mua bán như một cổ phiếu, và bám một chỉ số: E1VFVN30 bám VN30 (30 mã lớn), phí quản lý 0,65%/năm, tỷ lệ chi phí 12 tháng khoảng 0,8%. <b>Quỹ mở</b> mua bán qua công ty quản lý quỹ theo giá trị tài sản ròng mỗi kỳ giao dịch, thường do người quản lý chọn mã: một quỹ cổ phiếu lớn thu 1,75%/năm cộng phí bán 2% nếu giữ dưới 12 tháng. Ba thứ phải đọc trước khi mua: <b>phí</b> (A10), <b>sai số bám chỉ số</b> — quỹ ETF VN30 của SSIAM lệch chỉ số 0,29% tính tới 25/12/2025 — và <b>rủi ro</b>: quỹ chỉ số vẫn giảm cùng thị trường; nó bỏ được rủi ro của từng doanh nghiệp, không bỏ được năm 2022.</p>
+
+        <h3 class="rb-sub-title">Tái cân bằng: đưa tỷ trọng về chỗ đã chọn</h3>
+        <div class="rb-viz" id="viz-rebal">
+          <div class="rb-viz__head">
+            <p class="rb-viz__title">Một năm cổ phiếu tăng 30%, tiền gửi 6,5%: tỷ trọng tự trôi, rồi được kéo về</p>
+          </div>
+          <div class="rb-viz__body">
+            <svg class="rb-dg" viewBox="0 0 360 132" role="img" aria-labelledby="rebalTitle">
+              <title id="rebalTitle">Ba thanh: đầu năm 60 triệu cổ phiếu và 40 triệu tiền gửi; cuối năm 78 và 42,6, cổ phiếu chiếm 64,7%; sau tái cân bằng bán 5,64 triệu cổ phiếu để về 60 trên 40</title>
+              <text class="rb-dg-h" x="2" y="22">Đầu năm</text>
+              <rect class="rb-dg-boxa" x="92" y="10" width="160" height="18" rx="3"></rect><rect class="rb-dg-box" x="252" y="10" width="106" height="18" rx="3"></rect>
+              <text class="rb-dg-t" x="172" y="23" text-anchor="middle">cổ phiếu 60</text><text class="rb-dg-ts" x="305" y="23" text-anchor="middle">tiền gửi 40</text>
+              <text class="rb-dg-h" x="2" y="64">Cuối năm</text>
+              <rect class="rb-dg-boxa" x="92" y="52" width="172" height="18" rx="3"></rect><rect class="rb-dg-box" x="264" y="52" width="94" height="18" rx="3"></rect>
+              <text class="rb-dg-t" x="178" y="65" text-anchor="middle">78 · 64,7%</text><text class="rb-dg-ts" x="311" y="65" text-anchor="middle">42,6</text>
+              <text class="rb-dg-h" x="2" y="106">Kéo về</text>
+              <rect class="rb-dg-boxa" x="92" y="94" width="160" height="18" rx="3"></rect><rect class="rb-dg-box" x="252" y="94" width="106" height="18" rx="3"></rect>
+              <text class="rb-dg-t" x="172" y="107" text-anchor="middle">72,36 · 60%</text><text class="rb-dg-ts" x="305" y="107" text-anchor="middle">48,24 · 40%</text>
+              <text class="rb-dg-ts" x="2" y="128">bán 5,64 triệu cổ phiếu, mất khoảng 14 nghìn đồng phí và thuế</text>
+            </svg>
+          </div>
+          <div class="rb-viz__foot">Không làm gì thì sau mỗi năm cổ phiếu tăng, tỷ trọng cổ phiếu tự lớn lên, nên rủi ro của cả danh mục cũng lớn lên mà không ai quyết định điều đó <span class="wb-cap wb-cap--success wb-cap--sm">R-I12</span>. Tái cân bằng là bán bớt phần vừa tăng, mua thêm phần vừa giảm, theo lịch (một năm một lần) hoặc khi lệch quá một ngưỡng (ví dụ 5 điểm %). Phép cộng trừ ở đây chắc chắn; còn tái cân bằng có làm lời thêm hay không thì tuỳ thị trường quay đầu hay chạy tiếp một chiều.</div>
+        </div>
+
+        <div class="wb-accordion">
+          <details class="wb-accordion__item"><summary>Quỹ ETF và quỹ mở khác nhau ở đâu?</summary><div class="wb-accordion__body">
+            <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table wb-table--compact">
+              <thead><tr><th></th><th>Quỹ ETF</th><th>Quỹ mở</th></tr></thead>
+              <tbody>
+                <tr><td><b>Mua bán ở đâu</b></td><td>Trên sàn, qua tài khoản chứng khoán, trong phiên</td><td>Qua công ty quản lý quỹ hoặc đại lý, theo kỳ giao dịch</td></tr>
+                <tr><td><b>Giá</b></td><td>Giá khớp lệnh, có thể lệch giá trị tài sản ròng</td><td>Đúng giá trị tài sản ròng của kỳ</td></tr>
+                <tr><td><b>Danh mục</b></td><td>Bám một chỉ số</td><td>Thường do người quản lý chọn; một số quỹ mở cũng bám chỉ số</td></tr>
+                <tr><td><b>Phí</b></td><td>Phí quản lý thấp (ví dụ 0,65%/năm) + môi giới mỗi chiều</td><td>Phí quản lý cao hơn (ví dụ 1,75%/năm) + phí bán theo thời gian giữ</td></tr>
+                <tr><td><b>Thuế khi bán</b></td><td>0,1% giá bán</td><td>0,1%, miễn nếu đã giữ từ 2 năm</td></tr>
+              </tbody>
+            </table></div></div>
+            <p class="rb-prose" style="margin-top:12px">Quỹ chủ động phải thắng chỉ số nhiều hơn phần phí cao hơn, đều đặn qua nhiều năm, thì người giữ nó mới hơn người giữ quỹ chỉ số. Một năm thắng chưa nói được gì: Fmarket ghi nhận nửa đầu 2026 nhiều quỹ mở khó theo kịp VN-Index vì đà tăng tập trung ở vài mã lớn.</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Sai số bám chỉ số đo gì, và vì sao quỹ có lúc "thắng" chỉ số?</summary><div class="wb-accordion__body">
+            <p class="rb-prose"><b>Sai số bám</b> (tracking error) là độ lệch chuẩn của chênh lợi nhuận giữa quỹ và chỉ số nó bám: số nhỏ thì quỹ đi sát chỉ số. Nó khác với chênh lợi nhuận cả năm. Năm 2025 chỉ số VN30 tăng 51,00% trong khi giá trị tài sản ròng mỗi chứng chỉ quỹ ETF VN30 của SSIAM tăng 51,28%: quỹ nhận cổ tức tiền mặt còn chỉ số VN30 là chỉ số giá, không cộng cổ tức, nên quỹ có thể "thắng" chỉ số dù đã trả phí. Chỉ số so đúng phải là chỉ số tổng thu nhập; E1VFVN30 ghi mục tiêu bám VN30 tổng thu nhập (VN30-TRI) sau phí.</p>
+            <p class="rb-prose">Với quỹ ETF còn một độ lệch nữa: giá khớp trên sàn có thể cao hoặc thấp hơn giá trị tài sản ròng của mỗi chứng chỉ. Thành viên lập quỹ (thường là công ty chứng khoán lớn) được đổi rổ cổ phiếu lấy chứng chỉ quỹ và ngược lại, nên độ lệch này thường nhỏ, nhưng nới ra lúc thị trường hoảng loạn.</p>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Một quỹ VN-Index hay VN30 đã đủ đa dạng chưa?</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Chưa đủ, theo hai nghĩa. Trong cổ phiếu, chỉ số theo vốn hoá dồn trọng số vào vài ngành: cuối 2025 tài chính chiếm 37,9% và bất động sản 27,2% vốn hoá VN-Index (báo cáo năm của quỹ ETF VN30 SSIAM) — hai ngành cùng nhạy với tín dụng và lãi suất (A9). Ngoài cổ phiếu, mọi quỹ cổ phiếu Việt Nam cùng chịu một tỷ giá, một NHNN, một dòng vốn ngoại. Đa dạng hoá thật cần thêm lớp tài sản có tương quan thấp, như tiền gửi, vàng, trái phiếu chính phủ, chứ không cần thêm quỹ cổ phiếu thứ hai.</p>
+          </div></details>
+        </div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A12 — ĐANG CẦM TIỀN MẶT ============ -->
+      <section id="a12-hanhdong">
+        <p class="rb-sec-eyebrow"><b>A12</b> — Từ hiểu sang làm</p>
         <h2 class="rb-sec-title">Đang cầm tiền mặt: bốn câu hỏi theo đúng thứ tự, và lúc nào giữ tiền là quyết định đúng</h2>
         <p class="rb-lede">Không có quy tắc nào trên trang này nói "mua ngày nào". Thứ các chương trước cho bạn là <b>một thứ tự hỏi</b> và <b>một phép so</b>: mọi tài sản đều được so với việc để tiền nằm yên trong tiền gửi. Giữ tiền chờ không phải là "không làm gì" — nó là một khoản đầu tư có lãi suất thực của riêng nó.</p>
 
@@ -1650,9 +1759,9 @@
 
       <hr class="wb-divider">
 
-      <!-- ============ A12 — BÁO CHÍ ============ -->
-      <section id="a12-baochi">
-        <p class="rb-sec-eyebrow"><b>A12</b> — Kiểm tra lại trực giác</p>
+      <!-- ============ A13 — BÁO CHÍ ============ -->
+      <section id="a13-baochi">
+        <p class="rb-sec-eyebrow"><b>A13</b> — Kiểm tra lại trực giác</p>
         <h2 class="rb-sec-title">Bảy câu hay đọc được, và điều thực sự đang xảy ra</h2>
         <p class="rb-lede">Nếu kiến thức của bạn đến từ báo chí, bảy câu dưới đây gần như chắc chắn đã nằm sẵn trong đầu. Không câu nào <em>hoàn toàn</em> vô lý — mỗi câu đều có một logic nghe được, nếu không nó đã không lan rộng. Nhưng mỗi câu đều hỏng ở một chỗ cụ thể.</p>
 
@@ -1705,9 +1814,9 @@
 
       <hr class="wb-divider">
 
-      <!-- ============ A13 — TỪ ĐIỂN ============ -->
-      <section id="a13-tudien">
-        <p class="rb-sec-eyebrow"><b>A13</b> — Từ điển</p>
+      <!-- ============ A14 — TỪ ĐIỂN ============ -->
+      <section id="a14-tudien">
+        <p class="rb-sec-eyebrow"><b>A14</b> — Từ điển</p>
         <h2 class="rb-sec-title">Thuật ngữ, mỗi từ một dòng — và vì sao nó đáng quan tâm</h2>
         <p class="rb-sec-intro">Tra khi gặp một từ lạ ở Phần B. Cột thứ ba là phần quan trọng: một định nghĩa không nói cho bạn biết <b>khi nào thì cần đến nó</b>.</p>
 
@@ -1843,7 +1952,7 @@
 
         <div class="wb-alert wb-alert--info" style="margin-top:16px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span><div class="wb-alert__body">
           <p class="wb-alert__title">Hết Phần A — từ đây trở xuống là sổ tay tra cứu</p>
-          <p class="wb-alert__msg">Phần B nén những cơ chế vừa đọc thành <span data-rule-total>77</span> mệnh đề "nếu… thì…", mỗi mệnh đề gắn một <b>thẻ độ cứng</b> nói cho bạn biết được phép tin nó đến mức nào. Đọc <a href="#s0-cach-doc">mục 00</a> trước để hiểu hệ thẻ, rồi dùng bộ lọc ở <a href="#s3-quytac">mục 03</a>.</p>
+          <p class="wb-alert__msg">Phần B nén những cơ chế vừa đọc thành <span data-rule-total>81</span> mệnh đề "nếu… thì…", mỗi mệnh đề gắn một <b>thẻ độ cứng</b> nói cho bạn biết được phép tin nó đến mức nào. Đọc <a href="#s0-cach-doc">mục 00</a> trước để hiểu hệ thẻ, rồi dùng bộ lọc ở <a href="#s3-quytac">mục 03</a>.</p>
         </div></div>
       </section>
 
@@ -2080,7 +2189,7 @@
       <!-- ============ 03 — DANH MỤC QUY TẮC ============ -->
       <section id="s3-quytac" data-part="b">
         <p class="rb-sec-eyebrow"><b>03</b> — Danh mục quy tắc</p>
-        <h2 class="rb-sec-title"><span data-rule-total>77</span> quy tắc "nếu… thì…"</h2>
+        <h2 class="rb-sec-title"><span data-rule-total>81</span> quy tắc "nếu… thì…"</h2>
         <p class="rb-sec-intro"><b>Đừng đọc mục này từ trên xuống.</b> Gõ từ khoá ("vàng", "Fed", "tỷ giá") hoặc bấm nhãn để lọc. Mẹo dùng: tắt hết chỉ để lại <span class="wb-cap wb-cap--warning wb-cap--sm">T3</span> — bạn sẽ thấy đúng danh sách những quy tắc <b>có thể quay ngược 180°</b>, tức là những câu đáng nghi nhất mỗi khi nghe ai đó phát biểu chúng chắc nịch.</p>
         <p class="rb-sec-intro" style="margin-bottom:12px">Ký hiệu trong thẻ: <b>Δt</b> là độ trễ — bao lâu thì chuyện mới xảy ra. Dấu <b>⚠</b> là điều kiện làm quy tắc đó ngừng đúng.</p>
 
@@ -2203,10 +2312,14 @@
           <div class="wb-card rb-rule" id="R-I02" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I02</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> giữ tiền gửi để chờ, <b>thì</b> chi phí của việc chờ chính là <b>lãi thực của tiền gửi</b>: dương thì chờ được trả công, âm thì mỗi tháng chờ mất sức mua chắc chắn.</p><p class="rb-note">11/2026: tiết kiệm 12 tháng 6,1–7%, CPI bình quân 10 tháng 4,57% — chờ đang được trả khoảng 1,5–2,4%/năm.</p></div>
           <div class="wb-card rb-rule" id="R-I03" data-tag="T3" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I03</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> 1/(P/E) trừ lãi thực tiền gửi — phần bù rủi ro ước tính — cao hơn mức bạn đòi, <b>thì</b> cổ phiếu rẻ tương đối so với chờ; thấp hơn thì đắt.</p><p class="rb-note">⚠ Tín hiệu cho 3–5 năm, không cho tháng tới (R-E07). P/E của một năm lợi nhuận đỉnh trông rẻ giả.</p></div>
           <div class="wb-card rb-rule" id="R-I04" data-tag="T2" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I04</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> mua vàng miếng khi chênh lệch với giá thế giới quy đổi lớn, <b>thì</b> đang đặt cược rằng cửa nhập vẫn đóng; phần chênh vượt chi phí nhập khẩu là khoản lỗ khi cửa mở (R-D07).</p><p class="rb-note">Sáng 17/11/2026 khoản ấy là khoảng 16 triệu đồng/lượng, tức 13–14% giá thế giới.</p></div>
-          <div class="wb-card rb-rule" id="R-I05" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I05</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> chia một khoản tiền thành nhiều đợt mua bằng nhau, <b>thì</b> giá vốn là <b>trung bình điều hoà</b> của các giá mua — không bao giờ cao hơn trung bình cộng; nhưng khi giá đi lên đều, mua một lần lời hơn.</p><p class="rb-note">Chia đợt là trả một phần lợi nhuận kỳ vọng để khỏi mua đúng đỉnh. Ví dụ có số ở A11.</p></div>
+          <div class="wb-card rb-rule" id="R-I05" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I05</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> chia một khoản tiền thành nhiều đợt mua bằng nhau, <b>thì</b> giá vốn là <b>trung bình điều hoà</b> của các giá mua — không bao giờ cao hơn trung bình cộng; nhưng khi giá đi lên đều, mua một lần lời hơn.</p><p class="rb-note">Chia đợt là trả một phần lợi nhuận kỳ vọng để khỏi mua đúng đỉnh. Ví dụ có số ở A12.</p></div>
           <div class="wb-card rb-rule" id="R-I06" data-tag="T3" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> giá USD tự do sát giá ngân hàng và giá ngân hàng còn xa trần, <b>thì</b> áp lực tỷ giá thấp; giữ USD lúc ấy là trả lãi VND bỏ lỡ cho một sự bảo vệ ít cần.</p><p class="rb-note">Sáng 17/11/2026: giá tự do cao hơn ngân hàng 0,3%, ngân hàng còn 3,8% tới trần.</p></div>
           <div class="wb-card rb-rule" id="R-I07" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I07</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> một vòng mua–bán tốn $c$ (chênh giá, phí, thuế) và giữ $H$ năm, <b>thì</b> chi phí là $c/H$ mỗi năm; còn phí trừ hằng năm $f$ thì không giảm theo thời gian giữ, và sau $n$ năm chỉ còn $(1-f)^n$.</p><p class="rb-note">Sáng 17/11/2026 một vòng: vàng nhẫn PNJ 3,1%, SJC 2,2%, USD ở Vietcombank 1,6%, nhà ít nhất 2,5%, cổ phiếu khoảng 0,4%. Phí quản lý 1,75%/năm trong 10 năm lấy đi 16,2% tài sản cuối kỳ.</p></div>
           <div class="wb-card rb-rule" id="R-I08" data-tag="T2" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I08</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> rút tiền gửi trước hạn, <b>thì</b> phần rút chỉ được lãi không kỳ hạn thấp nhất của ngân hàng ấy, phần còn lại giữ lãi cũ — nên khoản có ngày cần tiền phải gửi kỳ hạn khớp ngày ấy, và khoản lớn nên chia nhiều sổ.</p><p class="rb-note">Thông tư 04/2022/TT-NHNN, sửa bởi Thông tư 47/2024/TT-NHNN. Lãi tiền gửi miễn thuế thu nhập cá nhân (Luật 109/2025/QH15).</p></div>
+          <div class="wb-card rb-rule" id="R-I09" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I09</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> hai tài sản có tương quan $\rho &lt; 1$, <b>thì</b> danh mục trộn hai thứ dao động ít hơn trung bình có trọng số của hai dao động; $\rho = 1$ thì không bớt được gì.</p><p class="rb-note">⚠ Phép tính chắc chắn, nhưng $\rho$ ước từ quá khứ là T3: tương quan có thể tăng vọt đúng lúc khủng hoảng (mục 06).</p></div>
+          <div class="wb-card rb-rule" id="R-I10" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I10</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> chia đều cho $N$ mã cùng độ dao động $\sigma$, tương quan bình quân $\bar\rho$, <b>thì</b> danh mục dao động $\sigma\sqrt{1/N + (1-1/N)\bar\rho}$ — thêm mã chỉ bớt phần riêng, phần chung chạm sàn $\sigma\sqrt{\bar\rho}$.</p><p class="rb-note">Giả định $\sigma$ = 30%, $\bar\rho$ = 0,35: mười mã 19,3%, sàn 17,7%. Bớt phần chung phải trộn lớp tài sản khác.</p></div>
+          <div class="wb-card rb-rule" id="R-I11" data-tag="T3" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I11</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> một năm xấu bạn chỉ chịu mất $L$ đồng mà không phải bán, trên khoản $V$, <b>thì</b> tỷ trọng cổ phiếu tối đa là $L/(V\cdot d)$, với $d$ là mức giảm của một năm xấu.</p><p class="rb-note">⚠ $d$ lấy từ quá khứ (VN-Index 2022: 32,8%); năm xấu sau có thể sâu hơn. 300 triệu, chịu mất 30 triệu: cổ phiếu tối đa khoảng 91 triệu.</p></div>
+          <div class="wb-card rb-rule" id="R-I12" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I12</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> không tái cân bằng, <b>thì</b> tỷ trọng tự trôi về tài sản vừa tăng nhanh hơn, nên rủi ro danh mục lớn dần sau mỗi năm thị trường lên.</p><p class="rb-note">60/40, cổ phiếu +30%, tiền gửi +6,5%: cuối năm cổ phiếu chiếm 64,7%. Tái cân bằng có làm lời thêm hay không là T3.</p></div>
 
         </div>
         <div class="wb-empty" id="ruleEmpty" style="display:none">
@@ -2694,7 +2807,7 @@
           </tbody>
         </table></div></div>
         <h3 class="rb-sub-title">Nguồn của các con số hiện hành, tính đến 17/11/2026</h3>
-        <p class="rb-prose" style="color:var(--wb-fg-muted);font-size:13.5px">Các chương A5–A11 dùng số của một ngày cụ thể. Số nào đổi thì mô hình vẫn đúng; chỉ cần điền số mới vào ô nhập. Văn bản pháp luật ghi theo số hiệu; tin báo ghi theo ngày đăng.</p>
+        <p class="rb-prose" style="color:var(--wb-fg-muted);font-size:13.5px">Các chương A5–A12 dùng số của một ngày cụ thể. Số nào đổi thì mô hình vẫn đúng; chỉ cần điền số mới vào ô nhập. Văn bản pháp luật ghi theo số hiệu; tin báo ghi theo ngày đăng.</p>
         <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
           <thead><tr><th>Con số</th><th>Nguồn</th><th>Ngày</th></tr></thead>
           <tbody>
@@ -2732,6 +2845,15 @@
             <tr><td>P/E VN-Index 10,70 (9,58 nếu bỏ bốn mã họ Vingroup)</td><td>BSC (<a href="https://cafef.vn/mot-tin-hieu-la-bat-ngo-xuat-hien-tren-ttck-sau-3-nam-188261106154712795.chn">CafeF</a>)</td><td>3/11/2026</td></tr>
             <tr><td>Lợi suất cho thuê căn hộ quý III/2026: TP.HCM cũ 3,4%, Hà Nội 2,4%, Đà Nẵng 4,5%. Cùng nguồn ghi TP.HCM 3,1% quý I/2025 và 2,2% quý III/2025</td><td><a href="https://wiki.batdongsan.com.vn/tin-tuc/thi-truong-bat-dong-san-quy-32026-gia-ha-nhiet-chung-cu-tiep-tuc-dan-dat-nhu-cau-857618">Batdongsan, báo cáo quý III/2026</a>; <a href="https://vnexpress.net/ty-suat-cho-thue-can-ho-tp-hcm-cham-day-4985472.html">VnExpress</a> (số 2025)</td><td>đọc 17/11/2026; 24/11/2025</td></tr>
             <tr><td>Tiết kiệm trực tuyến 12 tháng 6,1–7%</td><td>VietnamPlus, khảo sát biểu lãi</td><td>11/2026</td></tr>
+            <tr><td>Thuế TNCN: chứng khoán 0,1% giá bán, đầu tư vốn (cổ tức) 5%, bất động sản 2%, vàng miếng 0,1%; miễn thuế lãi tiền gửi và chứng chỉ quỹ mở giữ từ 2 năm</td><td>Luật 109/2025/QH15, Công báo số 37 (<a href="https://legalzone.vn/wp-content/uploads/legal-sources/pit/luat-thue-tncn-109-2025-qh15.pdf">bản Công báo</a>)</td><td>hiệu lực 1/7/2026</td></tr>
+            <tr><td>Chưa thu thuế chuyển nhượng vàng miếng</td><td>Bộ Tài chính (<a href="https://thitruongtaichinhtiente.vn/chua-thu-thue-thu-nhap-ca-nhan-doi-voi-hoat-dong-chuyen-nhuong-vang-mieng-tu-ngay-1-7-2026-83939.html">Thị trường Tài chính Tiền tệ</a>); chưa thấy nghị định quy định ngưỡng tới ngày đọc</td><td>30/6/2026; đọc 17/11/2026</td></tr>
+            <tr><td>Lệ phí trước bạ nhà, đất 0,5%</td><td>Nghị định 10/2022/NĐ-CP (sửa bởi Nghị định 175/2025/NĐ-CP)</td><td>đọc 17/11/2026</td></tr>
+            <tr><td>Rút trước hạn: lãi không kỳ hạn thấp nhất cho phần rút, phần còn lại giữ lãi cũ</td><td>Thông tư 04/2022/TT-NHNN, Thông tư 47/2024/TT-NHNN (<a href="https://div.gov.vn/quy-dinh-moi-ve-cac-hinh-thuc-tien-gui-rut-truoc-han">Bảo hiểm tiền gửi Việt Nam</a>)</td><td>áp dụng từ 20/11/2024</td></tr>
+            <tr><td>Phí môi giới cổ phiếu: thường 0,1–0,35% mỗi chiều, có nơi 0%; trang giả định 0,15%</td><td>Biểu phí các công ty chứng khoán (<a href="https://www.dsc.com.vn/kien-thuc/phi-giao-dich-chung-khoan">DSC</a>)</td><td>đọc 17/11/2026</td></tr>
+            <tr><td>E1VFVN30: phí quản lý 0,65%/năm, tỷ lệ chi phí 12 tháng 0,8%, độ biến động năm 17,6% (10/2014–7/2024); mục tiêu bám VN30 tổng thu nhập</td><td>Tờ thông tin quỹ DCVFMVN30 của Dragon Capital (<a href="https://masvn.com/api/attachment/file/1726108134914-C%E1%BA%ADpnh%E1%BA%ADtho%E1%BA%A1t%C4%91%E1%BB%99ngqu%E1%BB%B9DCVFMVN30VN7.24.pdf">bản PDF</a>)</td><td>31/7/2024</td></tr>
+            <tr><td>Quỹ ETF VN30 của SSIAM: sai số bám 0,29%; năm 2025 VN30 +51,00%, giá trị tài sản ròng mỗi chứng chỉ +51,28%; tài chính 37,9%, bất động sản 27,2% vốn hoá VN-Index</td><td><a href="https://ssiam.com.vn/upload/files/QuanLyQuy/Bao%20cao%20ket%20qua%20hoat%20dong%20quy%20ETF%202025%20va%20phuong%20huong%202026_VN30%20(ENG).pdf">SSIAM, báo cáo hoạt động quỹ 2025</a></td><td>25/12/2025</td></tr>
+            <tr><td>Quỹ mở VESAF: phí quản lý 1,75%/năm; phí bán 2,0% dưới 12 tháng, 1,5% từ 12 tháng, 0,5% từ 24 tháng</td><td><a href="https://vinacapital.com/wp-content/uploads/2025/06/20250616-VINACAPITAL-VESAF_Monthly-Factsheet_May-2025-VN.pdf">VinaCapital, tờ thông tin quỹ</a></td><td>5/2025</td></tr>
+            <tr><td>Nhiều quỹ mở khó theo kịp VN-Index nửa đầu 2026</td><td><a href="https://files.fmarket.vn/pro/document/Fmarket_Fund_Report_01_07_2026.pdf">Fmarket, báo cáo hiệu suất quỹ mở</a></td><td>1/7/2026</td></tr>
           </tbody>
         </table></div></div>
       </section>
@@ -2775,9 +2897,10 @@
           <a class="wb-footer__link" href="#a8-vang">Vàng</a>
           <a class="wb-footer__link" href="#a9-taisan">Nhà, USD, dầu, tiền gửi</a>
           <a class="wb-footer__link" href="#a10-chiphi">Chi phí và thuế</a>
-          <a class="wb-footer__link" href="#a11-hanhdong">Đang cầm tiền mặt</a>
-          <a class="wb-footer__link" href="#a12-baochi">Bảy câu báo hay viết</a>
-          <a class="wb-footer__link" href="#a13-tudien">Từ điển thuật ngữ</a>
+          <a class="wb-footer__link" href="#a11-chiatien">Chia tiền</a>
+          <a class="wb-footer__link" href="#a12-hanhdong">Đang cầm tiền mặt</a>
+          <a class="wb-footer__link" href="#a13-baochi">Bảy câu báo hay viết</a>
+          <a class="wb-footer__link" href="#a14-tudien">Từ điển thuật ngữ</a>
         </div>
         <div class="wb-footer__col" data-part="b">
           <h4 class="wb-footer__title">Phần B — Tra cứu</h4>
@@ -3324,7 +3447,26 @@
     render();
   })();
 
-  /* A11 — bốn phép so với tiền gửi */
+  /* A11 — đa dạng hoá hai tài sản: σp² = wc²σc² + wv²σv² + 2·wc·wv·ρ·σc·σv (wc = 1 − wv) */
+  bind(['divW', 'divR', 'divSs', 'divSg'], function () {
+    var w = +$('divW').value / 100, r = +$('divR').value / 100;
+    var sc = +$('divSs').value || 0, sv = +$('divSg').value || 0;
+    function sp(x) { return Math.sqrt(Math.max(0, (1 - x) * (1 - x) * sc * sc + x * x * sv * sv + 2 * (1 - x) * x * r * sc * sv)); }
+    function X(x) { return 34 + x * 276; }
+    function Y(v) { return 124 - Math.min(v, 20) / 20 * 112; }
+    var p = sp(w), avg = (1 - w) * sc + w * sv, pts = [];
+    $('divWVal').textContent = vn(w * 100) + '%';
+    $('divRVal').textContent = (r < 0 ? '−' : '') + vn(Math.abs(r), 1);
+    $('divSp').textContent = vn(p, 1) + '%';
+    $('divSub').textContent = 'Trung bình có trọng số của hai dao động là ' + vn(avg, 1) + '%; trộn bớt được ' + vn(avg - p, 1) + ' điểm.';
+    for (var k = 0; k <= 50; k++) pts.push(X(k / 50).toFixed(1) + ',' + Y(sp(k / 50)).toFixed(1));
+    $('divCurve').setAttribute('points', pts.join(' '));
+    $('divLine1').setAttribute('points', X(0) + ',' + Y(sc).toFixed(1) + ' ' + X(1) + ',' + Y(sv).toFixed(1));
+    $('divDot').setAttribute('cx', X(w).toFixed(1));
+    $('divDot').setAttribute('cy', Y(p).toFixed(1));
+  });
+
+  /* A12 — bốn phép so với tiền gửi */
   bind(['sDep', 'sInf', 'sPe', 'sErp', 'sRent', 'sMort', 'sGold', 'sWorld', 'sUsdBank', 'sUsdFree', 'sCentral', 'sHold', 'sFee'], function () {
     function v(id) { return +$(id).value || 0; }
     var real = v('sDep') - v('sInf');
