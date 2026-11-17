@@ -9,8 +9,6 @@
 
 - `finance-econ-rulebook.html`: số hiện hành ở A5–A12 cần làm mới định kỳ — sửa ô nhập mặc định và bảng nguồn
   mục 09; cổng `verify-finance-econ-rulebook.py` giữ chúng nhất quán.
-- `finance-econ-rulebook.html`, lỗ hổng sư phạm còn lại (theo mức quan trọng):
-  - A12 (Đang cầm tiền mặt) thiếu một ví dụ chạy trọn bốn câu hỏi với một khoản tiền cụ thể.
 
 ## CHỜ CHỦ TRANG
 

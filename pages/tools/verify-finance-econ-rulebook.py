@@ -6,15 +6,20 @@ không biết mô hình nhà cho thuê còn tính g* = L·i + (1−L)·d − y k
 trong bài còn khớp với danh mục không. Cổng này kiểm bốn phần:
 
   A. CON SỐ TRONG BÀI — tính lại từ đầu rồi đòi trang có đúng chuỗi ấy: số nhân, căn nhà ở A2,
-     P/E × EPS, biên độ, margin, quy đổi vàng, hàng rào tỷ giá, nhà cho thuê, bốn phép so với tiền
-     gửi, giải ngân dần, VN-Index 2022, Kelly, đuôi dày.
-  B. SỐ HIỆN HÀNH NHẤT QUÁN — cùng một con số (tỷ giá trung tâm, giá vàng, lãi tiết kiệm, P/E) phải
-     giống nhau ở mọi chỗ trang dùng nó: bảng, ô nhập mặc định, lời văn.
+     P/E × EPS, biên độ, margin, quy đổi vàng, hàng rào tỷ giá, nhà cho thuê, chi phí một vòng mua–bán
+     (A10), đa dạng hoá, tỷ trọng theo mức lỗ, tái cân bằng (A11), lạm phát kỳ vọng, bốn phép so với
+     tiền gửi có trừ phí, ví dụ 500 triệu chạy trọn bốn câu hỏi (A12), giải ngân dần, VN-Index 2022,
+     Kelly, đuôi dày.
+  B. SỐ HIỆN HÀNH NHẤT QUÁN — cùng một con số (tỷ giá trung tâm, giá vàng, lãi tiết kiệm, P/E, lợi suất
+     cho thuê, USD tự do) phải giống nhau ở mọi chỗ trang dùng nó: bảng, ô nhập mặc định, lời văn; bội
+     chi, nợ công, thuế quan Mỹ ở A6 khớp nhau.
   C. LUẬT TRONG MÃ — các dòng JS then chốt còn nguyên hình (trần/sàn ±5%, công thức g*, phần bù rủi ro,
-     quy đổi vàng, đếm quy tắc), và lời kết luận vàng đã sửa ("cả hai cùng vượt" không còn là "cầu trú
-     ẩn thật").
+     phí trong phép so, c/H + f, σ danh mục, quy đổi vàng, đếm quy tắc, nút Đọc liền, margin một chữ
+     số), mũi tên sơ đồ A6 chạm đúng mép, và lời kết luận vàng đã sửa ("cả hai cùng vượt" không còn là
+     "cầu trú ẩn thật").
   D. CẤU TRÚC SỔ TAY — mỗi thẻ quy tắc có id duy nhất, nhãn T khớp màu chip, nhóm có chip lọc, mọi mã
-     R-… được trích trong bài đều tồn tại; chương A1…A12 đúng thứ tự, mục lục khớp tiêu đề.
+     R-… được trích trong bài đều tồn tại; chương A1…An đúng thứ tự (n đếm từ trang), mục lục, chân
+     trang và các câu nói số chương khớp tiêu đề.
 
 Số hiện hành (lãi điều hành, tỷ giá, giá vàng…) có nguồn và ngày ghi ngay trong trang; cổng không tra
 lại nguồn, chỉ giữ cho chúng nhất quán và tính đúng từ nhau. Chỉ dùng thư viện chuẩn.
@@ -181,6 +186,34 @@ def phan_A():
     need('sigErpV theo số sau phí', 'id="sigErpV">' + verdict)
     house_need = v['sMort'] - v['sRent'] + 2.5 / hold
     need('sigHouseV có phí', 'id="sigHouseV">Vay toàn bộ thì giá phải tăng ' + vi(house_need, 1) + '%/năm mới bù lãi và phí vào–ra')
+    # A12 — ví dụ chạy trọn: 500 triệu, 150 triệu cần sau 12 tháng, chịu mất 40 triệu một năm xấu. Mọi số tính
+    # từ ô nhập của bảng bốn phép so, nên đổi số điền sẵn mà quên ví dụ thì đỏ.
+    need('vd câu 1', 'Lãi %s%% cho %s triệu' % (vi(v['sDep'], 1), vi(150 * v['sDep'] / 100, 2)))
+    lo_r, hi_r = v['sDep'] - 5.09, v['sDep'] - 4.5
+    need('vd câu 3: chờ', 'Chờ: lãi thực %s (%s đến %s tuỳ ô lạm phát)' % (pct(real), pct(lo_r), pct(hi_r)))
+    need('vd câu 3: cổ phiếu', 'phần bù %s, sau phí %s, %s mức đòi %s%%'
+         % (pct(erp), pct(net), verdict.split()[0].lower(), vi(attr('sErp'))))
+    need('vd câu 3: nhà', 'giá phải tăng %s%%/năm mới hoà' % vi(house_need, 1))
+    need('vd câu 3: vàng', 'đắt hơn giá thế giới %s%%, cộng %s%% chênh mua–bán'
+         % (vi((v['sGold'] / v['sWorld'] - 1) * 100, 1), vi(3 / 137.2 * 100, 1)))
+    need('vd câu 3: USD', 'tự do cao hơn ngân hàng %s%%, còn %s%% tới trần' % (vi(fg, 1), vi(room, 1)))
+    d22 = 1 - 1007.09 / 1498.28
+    cap, buy = 40 / d22, 120
+    claim('vd: 120 triệu nằm dưới trần', buy <= cap)
+    need('vd câu 4: trần', '40 / %s ≈ %s triệu' % (vi(round(d22, 3), 3), vi(cap)))
+    need('vd câu 4: năm xấu', 'lấy đi %s triệu, phí khoảng %s triệu/năm' % (vi(buy * d22, 1), vi(buy * (0.4 / hold + fee) / 100, 1)))
+    dep_total = 500 - buy
+    need('vd: tiền gửi', 'tiền gửi %s triệu, lãi năm đầu khoảng %s triệu' % (vi(dep_total), vi(dep_total * v['sDep'] / 100, 1)))
+    claim('vd: mỗi ngân hàng dưới hạn mức bảo hiểm 350 triệu', 150 <= 350 and dep_total - 150 <= 350 and dep_total - 150 == 230)
+    for x0, w0, amt in ((2, 107, 150), (109, 164, 230), (273, 85, 120)):
+        claim('vd: vạch %d triệu' % amt, f'x="{x0}" y="8" width="{w0}" height="30"' in HTML and abs(amt / 500 * 356 - w0) < 1)
+    # ngưỡng P/E để kết luận đổi: sau phí lệch mức đòi quá 1 điểm (cùng ngưỡng với cột "Đọc là")
+    cost_y = 0.4 / hold + fee
+    pe_hi, pe_lo = 100 / (attr('sErp') - 1 + real + cost_y), 100 / (attr('sErp') + 1 + real + cost_y)
+    need('vd: P/E trên', 'P/E VN-Index vượt %s' % vi(pe_hi, 1))
+    need('vd: P/E dưới', 'P/E xuống dưới %s' % vi(pe_lo, 1))
+    claim('vd: P/E hiện tại nằm giữa hai ngưỡng', pe_lo < v['sPe'] < pe_hi)
+    need('vd: lãi thực âm khi lạm phát vượt lãi gửi', 'lạm phát kỳ vọng vượt %s%%' % vi(v['sDep'], 1))
     need('R-I06 lời văn', 'giá tự do cao hơn ngân hàng ' + vi(fg, 1) + '%, ngân hàng còn ' + vi(room, 1) + '% tới trần')
     need('A9 lời văn USD', 'cao hơn ngân hàng ' + vi(fg, 1) + '%')
     need('E/P trong lời văn', 'khoảng ' + vi(100 / v['sPe'], 1) + ' đồng lợi nhuận')
