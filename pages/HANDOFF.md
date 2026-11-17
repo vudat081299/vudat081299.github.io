@@ -7,12 +7,11 @@
     giữa hai vách khe và Adam đi gần thẳng. Đổi luật "Chạy cả hai" nên phải sửa cả phép kiểm M3 trong cổng.
   - M8 (#s-backprop): thêm một nút có hai đầu ra để bước ngược cho thấy hai đạo hàm cộng vào một nút.
 
-- `finance-econ-rulebook.html`: số hiện hành ở A5–A10 cần làm mới định kỳ — sửa ô nhập mặc định và bảng nguồn
+- `finance-econ-rulebook.html`: số hiện hành ở A5–A11 cần làm mới định kỳ — sửa ô nhập mặc định và bảng nguồn
   mục 09; cổng `verify-finance-econ-rulebook.py` giữ chúng nhất quán.
 - `finance-econ-rulebook.html`, lỗ hổng sư phạm còn lại (theo mức quan trọng):
   - Chưa có chia tiền: đa dạng hoá, tỷ trọng giữa các lớp tài sản, quỹ chỉ số / ETF / chứng chỉ quỹ.
-  - Chưa có chi phí và thuế: thuế 0,1% khi bán cổ phiếu, phí môi giới, rút tiết kiệm trước hạn.
-  - A10 thiếu một ví dụ chạy trọn bốn câu hỏi với một khoản tiền cụ thể.
+  - A11 (Đang cầm tiền mặt) thiếu một ví dụ chạy trọn bốn câu hỏi với một khoản tiền cụ thể.
   - Chưa giải thích VN thiếu thước đo thị trường cho lạm phát kỳ vọng.
 
 ## CHỜ CHỦ TRANG

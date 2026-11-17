@@ -171,6 +171,16 @@ def phan_A():
     need('sigGold', 'id="sigGold">' + pct((v['sGold'] / v['sWorld'] - 1) * 100))
     fg, room = (v['sUsdFree'] / v['sUsdBank'] - 1) * 100, (v['sCentral'] * 1.05 / v['sUsdBank'] - 1) * 100
     need('sigUsd', 'id="sigUsd">' + pct(fg) + ' · ' + vi(room, 1) + '%')
+    # phép so có phí (A10): một vòng chia số năm giữ + phí quỹ năm; ô phí quỹ điền sẵn đúng tỷ lệ chi phí ETF VN30
+    hold, fee = attr('sHold'), attr('sFee')
+    claim('phí quỹ mặc định = tỷ lệ chi phí ETF VN30', fee == 0.8 and 'Quỹ ETF VN30 · 0,4% + 0,8%/năm' in HTML)
+    net = erp - (0.4 / hold + fee)
+    need('sigErpNet', 'id="sigErpNet">sau phí ' + pct(net))
+    gap = net - attr('sErp')
+    verdict = 'Rẻ hơn mức bạn đòi' if gap > 1 else 'Ngang mức bạn đòi' if gap >= -1 else 'Đắt hơn mức bạn đòi'
+    need('sigErpV theo số sau phí', 'id="sigErpV">' + verdict)
+    house_need = v['sMort'] - v['sRent'] + 2.5 / hold
+    need('sigHouseV có phí', 'id="sigHouseV">Vay toàn bộ thì giá phải tăng ' + vi(house_need, 1) + '%/năm mới bù lãi và phí vào–ra')
     need('R-I06 lời văn', 'giá tự do cao hơn ngân hàng ' + vi(fg, 1) + '%, ngân hàng còn ' + vi(room, 1) + '% tới trần')
     need('A9 lời văn USD', 'cao hơn ngân hàng ' + vi(fg, 1) + '%')
     need('E/P trong lời văn', 'khoảng ' + vi(100 / v['sPe'], 1) + ' đồng lợi nhuận')
@@ -189,6 +199,50 @@ def phan_A():
         dca = (end / hm - 1) * 100
         need('lãi khi chia đợt', vi(dca, 1) + '%')
         need('mua một lần', '<td>' + (lump if lump == '0%' else '<span class="wb-num wb-num--pos">' + lump + '</span>') + '</td>')
+
+    # A10 — chi phí một vòng mua–bán, quy ra %/năm. Chênh mua–bán lấy từ đúng các giá trong bài
+    # (SJC 134,2–137,2; nhẫn PNJ 132,4–136,6; Vietcombank 25.540–25.950), mặc định giữ 12 tháng.
+    need('giá mua–bán trong bảng nguồn', 'SJC 134,2–137,2 tr; nhẫn PNJ 132,4–136,6 tr')
+    need('USD mua–bán trong bảng nguồn', 'Vietcombank 25.540–25.950 đ')
+    claim('chênh vàng, USD trong mã khớp ô nhập A8', attr('gSjc') == 137.2 and attr('gRing') == 136.6 and attr('gFx') == 25950)
+    one = {'stock': 0.15 * 2 + 0.1, 'usd': (25950 - 25540) / 25950 * 100, 'sjc': (137.2 - 134.2) / 137.2 * 100,
+           'ring': (136.6 - 132.4) / 136.6 * 100, 'house': 2 + 0.5}
+
+    def costs(m):
+        h = m / 12
+        fund = (2 if m < 12 else 1.5 if m < 24 else 0.5) + (0.1 if m < 24 else 0)
+        return {'Dep': 0, 'Stock': one['stock'] / h, 'Etf': one['stock'] / h + 0.8, 'Fund': fund / h + 1.75,
+                'Usd': one['usd'] / h, 'Sjc': one['sjc'] / h, 'Ring': one['ring'] / h, 'House': one['house'] / h}
+    m0 = int(attr('costH'))
+    claim('chi phí: mặc định giữ 12 tháng', m0 == 12)
+    c0 = costs(m0)
+    for k_, val in c0.items():
+        need('chi phí ' + k_, 'id="cost%s">%s%%/năm' % (k_, vi(val, 1)), val)
+    top = max(c0.values())
+    for k_, val in c0.items():
+        mm = re.search(r'id="costBar%s" style="width:(\d+)%%"' % k_, HTML)
+        claim('vạch chi phí ' + k_, bool(mm) and abs(int(mm.group(1)) - val / top * 100) < 1, mm and mm.group(1))
+    need('nhãn USD', 'USD ở ngân hàng · %s%% một vòng' % vi(one['usd'], 1))
+    need('nhãn SJC', 'Vàng miếng SJC · %s%% một vòng' % vi(one['sjc'], 1))
+    need('nhãn nhẫn', 'Vàng nhẫn PNJ · %s%% một vòng' % vi(one['ring'], 1))
+    need('R-I07: số một vòng', 'vàng nhẫn PNJ %s%%, SJC %s%%, USD ở Vietcombank %s%%' % (vi(one['ring'], 1), vi(one['sjc'], 1), vi(one['usd'], 1)))
+    c6, c60 = costs(6), costs(60)
+    claim('giữ năm năm thì cổ phiếu tự mua rẻ nhất',
+          min((v_, k_) for k_, v_ in c60.items() if k_ != 'Dep')[1] == 'Stock')
+    claim('chân hình: giữ ngắn vàng đắt hơn ETF, giữ dài quỹ phí năm đắt hơn vàng', c60['Fund'] > c60['Ring'] and c6['Ring'] > c6['Etf'])
+
+    def lose(f, n):
+        return (1 - (1 - f) ** n) * 100
+    need('phí 1,75% sau 10 năm', 'mất <b>%s%%</b> tài sản cuối kỳ' % vi(lose(0.0175, 10), 1))
+    need('phí 0,8% sau 10 năm', 'mất %s%%. Quỹ chủ động' % vi(lose(0.008, 10), 1))
+    need('R-I07: phí sau 10 năm', 'lấy đi %s%% tài sản cuối kỳ' % vi(lose(0.0175, 10), 1))
+    # rút trước hạn: 100 triệu, kỳ 12 tháng, rút sau 6 tháng ở lãi không kỳ hạn 0,1%; so với kỳ 6 tháng ở trần 4,75%
+    need('rút trước hạn', 'nhận %s triệu tiền lãi' % vi(100 * 0.001 * 0.5, 2))
+    need('kỳ 6 tháng ở trần', 'thì nhận %s triệu' % vi(100 * 0.0475 * 0.5, 3))
+    need('trần 4,75% khớp A5', '1 đến dưới 6 tháng 4,75%')
+    need('thuế: chứng khoán 0,1%', 'bán chứng khoán chịu <b>0,1% giá bán</b>')
+    need('thuế: nhà 2%', 'bán nhà đất chịu <b>2% giá chuyển nhượng</b>')
+    need('thuế: cổ tức 5%', 'chịu <b>5%</b>, khấu trừ')
 
     # VN-Index 2022
     need('VN-Index 2022', 'mất ' + vi((1007.09 / 1498.28 - 1) * -100, 1) + '%')
@@ -280,6 +334,11 @@ def phan_C():
         ('quy đổi vàng', 'var world = xau * OZ * fx / 1e6;'),
         ('hằng số ounce', 'var OZ = 1.20565;'),
         ('số nhân', 'total = 100 / (1 - c)'),
+        ('phí trong phép so', "var hold = Math.max(v('sHold'), 0.25), stockCost = 0.4 / hold + v('sFee'), houseCost = 2.5 / hold;"),
+        ('cổ phiếu so sau phí', "net = erp - stockCost, gap = net - v('sErp');"),
+        ('chi phí một vòng: cổ phiếu', 'stock: 0.15 * 2 + 0.1,'),
+        ('chi phí: c/H + f', "return { dep: 0, stock: ONE.stock / h, etf: ONE.stock / h + 0.8, fund: fundOne(m) / h + 1.75,"),
+        ('chi phí: phí bán quỹ mở', 'function fundOne(m) { return (m < 12 ? 2 : m < 24 ? 1.5 : 0.5) + (m < 24 ? 0.1 : 0); }'),
         ('đếm quy tắc', "document.querySelectorAll('[data-rule-total]'), function (el) { el.textContent = cards.length; }"),
     ]:
         need('mã: ' + label, line)
@@ -353,15 +412,22 @@ def phan_D():
         claim('mã được trích phải có thẻ: ' + code, False)
     # chương A1…A12 đúng thứ tự, mục lục khớp
     eyebrows = re.findall(r'<p class="rb-sec-eyebrow"><b>(A\d+)</b>', HTML)
-    claim('chương A1…A12 theo thứ tự', eyebrows == ['A%d' % k for k in range(1, 13)], str(eyebrows))
+    nchap = len(eyebrows)
+    claim('chương A1…A%d theo thứ tự' % nchap, eyebrows == ['A%d' % k for k in range(1, nchap + 1)], str(eyebrows))
     toc = re.findall(r'<a class="wb-sidenav__link" href="#(a\d+-[a-z-]+)">(A\d+) ·', HTML)
     ids = re.findall(r'<section id="(a\d+-[a-z-]+)"', HTML)
     claim('mục lục trỏ đúng thứ tự chương', [t[0] for t in toc] == ids and [t[1] for t in toc] == eyebrows,
           f'{toc} / {ids}')
     for sid in ids:
         claim(f'id {sid} mang đúng số chương', sid.split('-')[0].upper() == eyebrows[ids.index(sid)])
-    need('số chương trong lời dẫn', 'Mười hai chương dưới đây')
-    need('số chương ở chế độ người mới', 'Chỉ còn 12 chương của Phần A')
+    words = {10: 'Mười', 11: 'Mười một', 12: 'Mười hai', 13: 'Mười ba', 14: 'Mười bốn', 15: 'Mười lăm'}
+    need('số chương trong lời dẫn', words[nchap] + ' chương dưới đây')
+    need('số chương ở chế độ người mới', 'Chỉ còn %d chương của Phần A' % nchap)
+    # hai chương cuối là tự kiểm và từ điển; còn lại là chương nội dung
+    need('số chương nội dung ở thẻ Phần A', words[nchap - 2] + ' chương nội dung kể một mạch')
+    need('thẻ Phần A trỏ đúng hai chương cuối', 'rồi <b>A%d</b> để bạn tự kiểm và <b>A%d</b> là từ điển' % (nchap - 1, nchap))
+    foot = re.findall(r'<a class="wb-footer__link" href="#(a\d+-[a-z-]+)">', HTML)
+    claim('chân trang có mọi chương', foot == ids, f'{foot} / {ids}')
 
 
 def main():

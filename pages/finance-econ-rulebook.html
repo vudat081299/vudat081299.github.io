@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
 <title>Economics Handbook — from the economy to Vietnamese assets</title>
-<meta name="description" content="Bản học tương tác cho người không có nền kinh tế học: vòng tiền chảy, lãi suất thực, chu kỳ, công cụ của Ngân hàng Nhà nước và các bên điều hành khác, chứng khoán, vàng, nhà, USD, dầu, tiền gửi, và cách so từng tài sản với tiền gửi khi đang cầm tiền mặt — kèm sổ tay ~75 quy tắc &quot;nếu…thì…&quot; gắn thẻ độ cứng T0–T4.">
+<meta name="description" content="Bản học tương tác cho người không có nền kinh tế học: vòng tiền chảy, lãi suất thực, chu kỳ, công cụ của Ngân hàng Nhà nước và các bên điều hành khác, chứng khoán, vàng, nhà, USD, dầu, tiền gửi, và cách so từng tài sản với tiền gửi khi đang cầm tiền mặt — kèm sổ tay ~77 quy tắc &quot;nếu…thì…&quot; gắn thẻ độ cứng T0–T4.">
 
 <meta name="theme-color" id="theme-color" content="#f5f6f3">
 <script>
@@ -324,7 +324,7 @@
 </head>
 <body>
 <style>
-  /* Sơ đồ cơ chế của các chương A5, A6, A10 (nội dung bổ sung 11/2026).
+  /* Sơ đồ cơ chế của các chương A5, A6, A11 (nội dung bổ sung 11/2026).
      Tách khỏi khối style chính để lớp giao diện tô lại được; chỉ dùng token --wb-*. */
   .rb-viz svg.rb-dg { max-width: 560px; margin: 0 auto; }
   .rb-dg-box { fill: var(--wb-surface); stroke: var(--wb-border-strong); stroke-width: 1; }
@@ -363,7 +363,7 @@
       <div class="wb-cluster wb-cluster--between" style="gap:14px;align-items:flex-start">
         <div>
           <p class="wb-alert__title" style="margin-bottom:2px">Lần đầu đọc trang này?</p>
-          <p class="wb-alert__msg" style="margin:0">Bật công tắc để <b>ẩn Phần B</b> (sổ tay tra cứu <span data-rule-total>75</span> quy tắc). Chỉ còn 12 chương của Phần A — có ví von, có số, có <b>hình kéo được</b>. Bật lại lúc nào cũng được; máy sẽ nhớ lựa chọn.</p>
+          <p class="wb-alert__msg" style="margin:0">Bật công tắc để <b>ẩn Phần B</b> (sổ tay tra cứu <span data-rule-total>77</span> quy tắc). Chỉ còn 13 chương của Phần A — có ví von, có số, có <b>hình kéo được</b>. Bật lại lúc nào cũng được; máy sẽ nhớ lựa chọn.</p>
         </div>
         <label class="wb-switch" style="flex:none"><input type="checkbox" id="noviceMode"><span class="wb-switch__track"></span> Chế độ người mới</label>
       </div>
@@ -376,7 +376,7 @@
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">A</span>
         <div class="wb-media__body">
           <p class="wb-media__title">Phần A — Hiểu hệ thống <span class="wb-cap wb-cap--sm">đọc theo thứ tự</span></p>
-          <p class="wb-media__text">Mười chương nội dung kể một mạch: tiền chảy thế nào → lãi suất thực là gì → ai đặt lãi suất → Việt Nam đứng ở đâu → Ngân hàng Nhà nước cầm những cần gạt nào → ai khác cầm lái → chứng khoán → vàng → nhà, USD, dầu, tiền gửi → đang cầm tiền mặt thì hỏi gì, theo thứ tự nào; rồi <b>A11</b> để bạn tự kiểm và <b>A12</b> là từ điển. Chương nội dung nào cũng chạy hết ít nhất một ví dụ có số. Năm chương đầu mở bằng một phép ví von — kèm luôn chỗ ví von ấy hỏng; A1, A3, A7 và A8 gỡ một điều "gần như ai cũng tin" mà sai.</p>
+          <p class="wb-media__text">Mười một chương nội dung kể một mạch: tiền chảy thế nào → lãi suất thực là gì → ai đặt lãi suất → Việt Nam đứng ở đâu → Ngân hàng Nhà nước cầm những cần gạt nào → ai khác cầm lái → chứng khoán → vàng → nhà, USD, dầu, tiền gửi → mỗi vòng mua bán tốn bao nhiêu phí và thuế → đang cầm tiền mặt thì hỏi gì, theo thứ tự nào; rồi <b>A12</b> để bạn tự kiểm và <b>A13</b> là từ điển. Chương nội dung nào cũng chạy hết ít nhất một ví dụ có số. Năm chương đầu mở bằng một phép ví von — kèm luôn chỗ ví von ấy hỏng; A1, A3, A7 và A8 gỡ một điều "gần như ai cũng tin" mà sai.</p>
         </div>
       </div>
     </div>
@@ -385,7 +385,7 @@
         <span class="wb-avatar wb-avatar--solid wb-avatar--sm">B</span>
         <div class="wb-media__body">
           <p class="wb-media__title">Phần B — Sổ tay tra cứu <span class="wb-cap wb-cap--dashed wb-cap--sm">tra khi cần</span></p>
-          <p class="wb-media__text"><span data-rule-total>75</span> quy tắc "nếu… thì…" có gắn thẻ độ cứng T0–T4, bảng cầu nối thế giới → VN, và nền toán học phía sau. Không đọc tuần tự — đọc sau khi đã nắm Phần A, hoặc tra khi gặp một tình huống cụ thể.</p>
+          <p class="wb-media__text"><span data-rule-total>77</span> quy tắc "nếu… thì…" có gắn thẻ độ cứng T0–T4, bảng cầu nối thế giới → VN, và nền toán học phía sau. Không đọc tuần tự — đọc sau khi đã nắm Phần A, hoặc tra khi gặp một tình huống cụ thể.</p>
         </div>
       </div>
     </div>
@@ -405,9 +405,10 @@
       <a class="wb-sidenav__link" href="#a7-chungkhoan">A7 · Chứng khoán Việt Nam</a>
       <a class="wb-sidenav__link" href="#a8-vang">A8 · Vàng</a>
       <a class="wb-sidenav__link" href="#a9-taisan">A9 · Nhà, USD, dầu, tiền gửi</a>
-      <a class="wb-sidenav__link" href="#a10-hanhdong">A10 · Đang cầm tiền mặt</a>
-      <a class="wb-sidenav__link" href="#a11-baochi">A11 · Bảy câu báo hay viết</a>
-      <a class="wb-sidenav__link" href="#a12-tudien">A12 · Từ điển thuật ngữ</a>
+      <a class="wb-sidenav__link" href="#a10-chiphi">A10 · Chi phí và thuế</a>
+      <a class="wb-sidenav__link" href="#a11-hanhdong">A11 · Đang cầm tiền mặt</a>
+      <a class="wb-sidenav__link" href="#a12-baochi">A12 · Bảy câu báo hay viết</a>
+      <a class="wb-sidenav__link" href="#a13-tudien">A13 · Từ điển thuật ngữ</a>
 
       <div class="wb-sidenav__section" data-part="b" style="margin-top:14px">Phần B — Sổ tay tra cứu</div>
       <a class="wb-sidenav__link" data-part="b" href="#s0-cach-doc">00 · Cách đọc sổ tay</a>
@@ -435,7 +436,7 @@
       <div class="rb-part-head">
         <p class="rb-kicker">Phần A · đọc theo thứ tự</p>
         <h2>Hiểu hệ thống trước, tra quy tắc sau</h2>
-        <p>Mười hai chương dưới đây không giả định bạn biết bất cứ thuật ngữ kinh tế nào. Mỗi thuật ngữ bắt buộc phải dùng đều được định nghĩa ngay lần đầu xuất hiện; những từ còn lại nằm trong <a href="#a12-tudien">từ điển ở A12</a>. Mỗi chương mở sẵn phần lõi: sơ đồ, ý chính, con số. Chi tiết nằm trong các khối gập ngay sau ý nó mở rộng; nút <b>Đọc liền</b> ở thanh trên mở mọi khối để đọc trọn một mạch, bấm lại để về phần lõi.</p>
+        <p>Mười ba chương dưới đây không giả định bạn biết bất cứ thuật ngữ kinh tế nào. Mỗi thuật ngữ bắt buộc phải dùng đều được định nghĩa ngay lần đầu xuất hiện; những từ còn lại nằm trong <a href="#a13-tudien">từ điển ở A13</a>. Mỗi chương mở sẵn phần lõi: sơ đồ, ý chính, con số. Chi tiết nằm trong các khối gập ngay sau ý nó mở rộng; nút <b>Đọc liền</b> ở thanh trên mở mọi khối để đọc trọn một mạch, bấm lại để về phần lõi.</p>
       </div>
 
       <!-- ============ A1 — VÒNG TIỀN CHẢY ============ -->
@@ -1450,9 +1451,94 @@
 
       <hr class="wb-divider">
 
-      <!-- ============ A10 — ĐANG CẦM TIỀN MẶT ============ -->
-      <section id="a10-hanhdong">
-        <p class="rb-sec-eyebrow"><b>A10</b> — Từ hiểu sang làm</p>
+      <!-- ============ A10 — CHI PHÍ VÀ THUẾ ============ -->
+      <section id="a10-chiphi">
+        <p class="rb-sec-eyebrow"><b>A10</b> — Chi phí và thuế</p>
+        <h2 class="rb-sec-title">Mỗi vòng mua rồi bán mất một khoản chắc chắn — giữ càng ngắn, khoản ấy ăn càng nhiều</h2>
+        <p class="rb-lede">Lời của một tài sản là chuyện có thể xảy ra; chi phí để mua rồi bán nó là chuyện chắc chắn. Có ba loại: <b>chênh giá mua–bán</b> (tiệm vàng, quầy đổi tiền mua vào thấp hơn bán ra), <b>phí</b> (môi giới, quản lý quỹ) và <b>thuế</b>. Chênh giá, phí môi giới và thuế chuyển nhượng trả một lần mỗi vòng, nên chia cho số năm giữ; phí quản lý quỹ thì bị trừ đều mỗi năm. Cùng một tài sản, giữ một năm và giữ năm năm là hai mức chi phí khác hẳn.</p>
+
+        <div class="rb-viz" id="viz-cost">
+          <div class="rb-viz__head">
+            <p class="rb-viz__title">Kéo thử — một vòng mua–bán tốn bao nhiêu mỗi năm, nếu giữ chừng này tháng?</p>
+            <p class="rb-viz__hint">Chênh mua–bán là của sáng 17/11/2026 (bảng nguồn ở mục 09). Phí môi giới giả định 0,15% mỗi chiều; công ty của bạn có thể thu từ 0 tới khoảng 0,35%. Quỹ mở lấy biểu phí của một quỹ cổ phiếu lớn (VESAF); quỹ khác có biểu khác.</p>
+          </div>
+          <div class="rb-viz__body rb-viz__body--split">
+            <div style="display:grid;gap:12px">
+              <div class="rb-viz__ctrl">
+                <div class="rb-viz__ctrl-top">
+                  <span class="rb-viz__ctrl-label">Giữ bao lâu rồi bán</span>
+                  <span class="rb-viz__ctrl-val" id="costHVal">12 tháng</span>
+                </div>
+                <input class="wb-range" type="range" id="costH" min="3" max="60" step="1" value="12" aria-label="Số tháng giữ trước khi bán">
+              </div>
+              <svg viewBox="0 0 320 156" role="img" aria-labelledby="costSvgTitle">
+                <title id="costSvgTitle">Chi phí mỗi năm theo số tháng giữ: vàng nhẫn và nhà giảm dần theo một chia cho thời gian, quỹ mở và quỹ ETF chạm sàn bằng phí quản lý năm, cổ phiếu tự mua gần bằng không</title>
+                <line class="wb-axis-line" x1="34" y1="128" x2="312" y2="128"></line>
+                <line class="wb-axis-line" x1="34" y1="10" x2="34" y2="128"></line>
+                <text class="wb-axis-label" x="30" y="131" text-anchor="end">0</text>
+                <text class="wb-axis-label" x="30" y="72" text-anchor="end">3%</text>
+                <text class="wb-axis-label" x="30" y="16" text-anchor="end">6%</text>
+                <text class="wb-axis-label" x="34" y="146" text-anchor="middle">3 th</text>
+                <text class="wb-axis-label" x="78" y="146" text-anchor="middle">12</text>
+                <text class="wb-axis-label" x="136" y="146" text-anchor="middle">24</text>
+                <text class="wb-axis-label" x="195" y="146" text-anchor="middle">36</text>
+                <text class="wb-axis-label" x="312" y="146" text-anchor="end">60 tháng</text>
+                <polyline id="costLnRing" fill="none" style="stroke:var(--wb-danger-text);stroke-width:2" points=""></polyline>
+                <polyline id="costLnFund" fill="none" style="stroke:var(--wb-fg);stroke-width:2" points=""></polyline>
+                <polyline id="costLnEtf" fill="none" style="stroke:var(--wb-fg-subtle);stroke-width:2;stroke-dasharray:5 3" points=""></polyline>
+                <polyline id="costLnStock" fill="none" style="stroke:var(--wb-success-text);stroke-width:2" points=""></polyline>
+                <line id="costMark" x1="77.9" y1="10" x2="77.9" y2="128" style="stroke:var(--wb-border-strong);stroke-width:1.5"></line>
+              </svg>
+              <div class="wb-cluster" style="gap:6px 14px;font-size:12px;color:var(--wb-fg-muted)">
+                <span><span style="display:inline-block;width:14px;height:2px;vertical-align:middle;background:var(--wb-danger-text)"></span> vàng nhẫn</span>
+                <span><span style="display:inline-block;width:14px;height:2px;vertical-align:middle;background:var(--wb-fg)"></span> quỹ mở cổ phiếu</span>
+                <span><span style="display:inline-block;width:14px;height:0;vertical-align:middle;border-top:2px dashed var(--wb-fg-subtle)"></span> quỹ ETF VN30</span>
+                <span><span style="display:inline-block;width:14px;height:2px;vertical-align:middle;background:var(--wb-success-text)"></span> cổ phiếu tự mua</span>
+              </div>
+            </div>
+            <div class="rb-cmp" id="costBars">
+              <div class="rb-cmp__row"><span class="rb-cmp__name">Tiền gửi giữ đủ kỳ hạn</span><span class="rb-cmp__track"><span class="rb-cmp__fill" id="costBarDep" style="width:0%"></span></span><span class="rb-cmp__val" id="costDep">0,0%/năm</span></div>
+              <div class="rb-cmp__row"><span class="rb-cmp__name">Cổ phiếu tự mua · 0,4% một vòng</span><span class="rb-cmp__track"><span class="rb-cmp__fill" id="costBarStock" style="width:12%"></span></span><span class="rb-cmp__val" id="costStock">0,4%/năm</span></div>
+              <div class="rb-cmp__row"><span class="rb-cmp__name">Quỹ ETF VN30 · 0,4% + 0,8%/năm</span><span class="rb-cmp__track"><span class="rb-cmp__fill" id="costBarEtf" style="width:36%"></span></span><span class="rb-cmp__val" id="costEtf">1,2%/năm</span></div>
+              <div class="rb-cmp__row"><span class="rb-cmp__name">Quỹ mở cổ phiếu · phí bán + 1,75%/năm</span><span class="rb-cmp__track"><span class="rb-cmp__fill" id="costBarFund" style="width:100%"></span></span><span class="rb-cmp__val" id="costFund">3,4%/năm</span></div>
+              <div class="rb-cmp__row"><span class="rb-cmp__name">USD ở ngân hàng · 1,6% một vòng</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--muted" id="costBarUsd" style="width:47%"></span></span><span class="rb-cmp__val" id="costUsd">1,6%/năm</span></div>
+              <div class="rb-cmp__row"><span class="rb-cmp__name">Vàng miếng SJC · 2,2% một vòng</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--muted" id="costBarSjc" style="width:65%"></span></span><span class="rb-cmp__val" id="costSjc">2,2%/năm</span></div>
+              <div class="rb-cmp__row"><span class="rb-cmp__name">Vàng nhẫn PNJ · 3,1% một vòng</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--danger" id="costBarRing" style="width:92%"></span></span><span class="rb-cmp__val" id="costRing">3,1%/năm</span></div>
+              <div class="rb-cmp__row"><span class="rb-cmp__name">Nhà · thuế 2% + trước bạ 0,5%</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--muted" id="costBarHouse" style="width:75%"></span></span><span class="rb-cmp__val" id="costHouse">2,5%/năm</span></div>
+            </div>
+          </div>
+          <div class="rb-viz__foot" id="costFoot">Điều cần thấy: khoản trả một lần chia cho số năm giữ nên tụt nhanh theo đường $c/H$ — vàng và nhà giữ dưới một năm là đắt, giữ năm năm thì rẻ. Phí quản lý quỹ thì không tụt: nó là sàn mỗi năm, nên giữ càng lâu, quỹ có phí năm cao càng đắt so với tự mua <span class="wb-cap wb-cap--success wb-cap--sm">R-I07</span>. Nhà còn công chứng, môi giới chưa tính ở đây.</div>
+        </div>
+
+        <p class="rb-prose"><b>Thuế</b> theo Luật Thuế thu nhập cá nhân 109/2025/QH15, hiệu lực từ 1/7/2026: bán chứng khoán chịu <b>0,1% giá bán</b> mỗi lần, kể cả khi bán lỗ; cổ tức tiền mặt và lãi từ đầu tư vốn chịu <b>5%</b>, khấu trừ trước khi tiền về tài khoản; bán nhà đất chịu <b>2% giá chuyển nhượng</b>, cũng không phụ thuộc lời hay lỗ; <b>lãi tiền gửi và lãi trái phiếu chính phủ được miễn</b>; bán chứng chỉ quỹ mở đã giữ từ 2 năm được miễn. Vàng miếng có trong luật với mức 0,1%, nhưng Chính phủ chưa quy định ngưỡng và ngày bắt đầu thu, nên tới 17/11/2026 chưa thu. Người mua nhà còn nộp lệ phí trước bạ 0,5%.</p>
+        <p class="rb-prose"><b>Rút tiết kiệm trước hạn</b> chỉ được lãi không kỳ hạn thấp nhất của chính ngân hàng ấy cho phần rút (Thông tư 04/2022/TT-NHNN) — thường 0,1–0,5%/năm. Gửi 100 triệu kỳ 12 tháng lãi 6,5% rồi phải rút sau 6 tháng, với lãi không kỳ hạn 0,1%, thì nhận 0,05 triệu tiền lãi; gửi ngay từ đầu kỳ 6 tháng ở mức trần 4,75% thì nhận 2,375 triệu. Phần không rút vẫn giữ lãi cũ, nên khoản nào có ngày cần tiền thì gửi kỳ hạn khớp ngày ấy, và chia khoản lớn thành nhiều sổ <span class="wb-cap wb-cap--sm">R-I08</span>.</p>
+
+        <div class="wb-accordion">
+          <details class="wb-accordion__item"><summary>Bảng thuế, phí từng tài sản và văn bản quy định</summary><div class="wb-accordion__body">
+            <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table wb-table--compact">
+              <thead><tr><th>Tài sản</th><th>Khoản phải trả</th><th>Tính trên</th><th>Căn cứ</th></tr></thead>
+              <tbody>
+                <tr><td><b>Cổ phiếu, chứng chỉ quỹ ETF</b></td><td>Thuế 0,1% khi bán; phí môi giới mỗi chiều; cổ tức tiền mặt chịu 5%</td><td class="wb-cell-muted">Giá bán, mỗi lần</td><td class="wb-cell-muted">Luật 109/2025/QH15, Điều 12, 13; biểu phí của công ty chứng khoán</td></tr>
+                <tr><td><b>Chứng chỉ quỹ mở</b></td><td>Phí mua (thường 0%), phí bán giảm theo thời gian giữ; thuế 0,1% khi bán, miễn nếu đã giữ từ 2 năm; phí quản lý trừ vào giá trị quỹ mỗi ngày</td><td class="wb-cell-muted">Giá trị bán; tài sản quỹ</td><td class="wb-cell-muted">Luật 109/2025/QH15; điều lệ, bản cáo bạch của quỹ</td></tr>
+                <tr><td><b>Nhà, đất</b></td><td>Người bán: thuế 2%. Người mua: lệ phí trước bạ 0,5%. Thêm công chứng, môi giới</td><td class="wb-cell-muted">Giá chuyển nhượng; giá tính lệ phí</td><td class="wb-cell-muted">Luật 109/2025/QH15, Điều 14; Nghị định 10/2022/NĐ-CP</td></tr>
+                <tr><td><b>Vàng miếng, vàng nhẫn</b></td><td>Chênh mua–bán của tiệm; thuế 0,1% với vàng miếng có trong luật, chưa thu</td><td class="wb-cell-muted">Giá bán ra</td><td class="wb-cell-muted">Luật 109/2025/QH15, Điều 3, 19; Bộ Tài chính 30/6/2026</td></tr>
+                <tr><td><b>USD</b></td><td>Chênh mua–bán của ngân hàng; gửi USD lãi 0%</td><td class="wb-cell-muted">Giá bán ra</td><td class="wb-cell-muted">Biểu tỷ giá ngân hàng; QĐ 2410/QĐ-NHNN</td></tr>
+                <tr><td><b>Tiền gửi</b></td><td>Lãi miễn thuế; rút trước hạn chỉ được lãi không kỳ hạn thấp nhất cho phần rút</td><td class="wb-cell-muted">Phần rút</td><td class="wb-cell-muted">Luật 109/2025/QH15, Điều 4; Thông tư 04/2022/TT-NHNN (sửa bởi Thông tư 47/2024)</td></tr>
+              </tbody>
+            </table></div></div>
+          </div></details>
+          <details class="wb-accordion__item"><summary>Phí quản lý 1,75% một năm nghe nhỏ — sau mười năm nó là bao nhiêu?</summary><div class="wb-accordion__body">
+            <p class="rb-prose">Phí năm $f$ bị trừ vào tài sản mỗi năm, nên sau $n$ năm còn lại $(1-f)^n$ phần so với cùng danh mục không phí. Với $f = 1{,}75\%$ và $n = 10$: còn $0{,}9825^{10} \approx 0{,}838$, tức mất <b>16,2%</b> tài sản cuối kỳ. Với tỷ lệ chi phí 0,8% của quỹ ETF VN30: mất 7,7%. Quỹ chủ động phải thắng chỉ số ít nhất phần chênh ấy mỗi năm, đều đặn, thì người giữ chứng chỉ quỹ mới hoà với người giữ ETF.</p>
+            <p class="rb-prose">Chênh mua–bán của vàng nhẫn (3,1% sáng 17/11/2026) cao hơn vàng miếng SJC (2,2%) vì tiệm mua nhẫn vào phải chịu rủi ro hao hụt, kiểm định lại; với USD, chênh 1,6% ở quầy là giá của việc ngân hàng cầm ngoại tệ thay bạn. Mỗi con số là của một thương hiệu, một buổi sáng: so đúng nơi bạn mua và bán.</p>
+          </div></details>
+        </div>
+      </section>
+
+      <hr class="wb-divider">
+
+      <!-- ============ A11 — ĐANG CẦM TIỀN MẶT ============ -->
+      <section id="a11-hanhdong">
+        <p class="rb-sec-eyebrow"><b>A11</b> — Từ hiểu sang làm</p>
         <h2 class="rb-sec-title">Đang cầm tiền mặt: bốn câu hỏi theo đúng thứ tự, và lúc nào giữ tiền là quyết định đúng</h2>
         <p class="rb-lede">Không có quy tắc nào trên trang này nói "mua ngày nào". Thứ các chương trước cho bạn là <b>một thứ tự hỏi</b> và <b>một phép so</b>: mọi tài sản đều được so với việc để tiền nằm yên trong tiền gửi. Giữ tiền chờ không phải là "không làm gì" — nó là một khoản đầu tư có lãi suất thực của riêng nó.</p>
 
@@ -1504,7 +1590,7 @@
         <div class="rb-viz" id="viz-sig">
           <div class="rb-viz__head">
             <p class="rb-viz__title">Bốn phép so với tiền gửi — điền số của ngày bạn đọc</p>
-            <p class="rb-viz__hint">Số điền sẵn (tính đến 17/11/2026): tiết kiệm 12 tháng 6,5% (giữa vùng 6,1–7%), CPI bình quân 10 tháng 4,57% (lạm phát đã qua, dùng tạm cho lạm phát kỳ vọng), P/E VN-Index 10,7 (3/11/2026, BSC), lợi suất cho thuê 3,4% (TP.HCM cũ, quý III/2026), lãi vay mua nhà 10% (giả định), vàng và tỷ giá sáng 17/11/2026. Hai ô "mức tôi đòi" là của riêng bạn.</p>
+            <p class="rb-viz__hint">Số điền sẵn (tính đến 17/11/2026): tiết kiệm 12 tháng 6,5% (giữa vùng 6,1–7%), CPI bình quân 10 tháng 4,57% (lạm phát đã qua, dùng tạm cho lạm phát kỳ vọng), P/E VN-Index 10,7 (3/11/2026, BSC), lợi suất cho thuê 3,4% (TP.HCM cũ, quý III/2026), lãi vay mua nhà 10% (giả định), vàng và tỷ giá sáng 17/11/2026. Hai ô "mức tôi đòi" là của riêng bạn; ô phí quỹ điền sẵn 0,8%/năm của quỹ ETF VN30, để 0 nếu tự mua cổ phiếu.</p>
           </div>
           <div class="rb-viz__body rb-viz__body--split">
             <div style="display:grid;gap:10px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
@@ -1519,19 +1605,21 @@
               <div class="wb-field"><label class="wb-label" for="sUsdBank">USD ngân hàng bán (đ)</label><input class="wb-input" type="number" id="sUsdBank" value="25950" step="10" inputmode="decimal"></div>
               <div class="wb-field"><label class="wb-label" for="sUsdFree">USD tự do bán (đ)</label><input class="wb-input" type="number" id="sUsdFree" value="26030" step="10" inputmode="decimal"></div>
               <div class="wb-field"><label class="wb-label" for="sCentral">Tỷ giá trung tâm (đ)</label><input class="wb-input" type="number" id="sCentral" value="25652" step="1" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="sHold">Giữ bao lâu (năm)</label><input class="wb-input" type="number" id="sHold" value="3" step="1" min="0.25" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="sFee">Phí quỹ mỗi năm (%)</label><input class="wb-input" type="number" id="sFee" value="0.8" step="0.05" min="0" inputmode="decimal"></div>
             </div>
             <div class="wb-table-scroll"><table class="wb-table">
               <thead><tr><th>Phép so</th><th>Số</th><th>Đọc là</th></tr></thead>
               <tbody>
                 <tr><td><b>Chờ</b><br><span class="wb-cell-muted">lãi tiết kiệm − lạm phát</span></td><td id="sigReal">+1,9%</td><td id="sigRealV">Chờ được trả công</td></tr>
-                <tr><td><b>Cổ phiếu</b><br><span class="wb-cell-muted">1/(P/E) − lãi thực</span></td><td id="sigErp">+7,4%</td><td id="sigErpV">Rẻ hơn mức bạn đòi</td></tr>
-                <tr><td><b>Nhà cho thuê</b><br><span class="wb-cell-muted">lãi vay − lợi suất thuê</span></td><td id="sigHouse">6,6 điểm</td><td id="sigHouseV">Vay toàn bộ thì giá phải tăng 6,6%/năm mới bù lãi</td></tr>
+                <tr><td><b>Cổ phiếu</b><br><span class="wb-cell-muted">1/(P/E) − lãi thực; rồi trừ phí</span></td><td><span id="sigErp">+7,4%</span><br><span class="wb-cell-muted" id="sigErpNet">sau phí +6,5%</span></td><td id="sigErpV">Ngang mức bạn đòi</td></tr>
+                <tr><td><b>Nhà cho thuê</b><br><span class="wb-cell-muted">lãi vay − lợi suất thuê</span></td><td id="sigHouse">6,6 điểm</td><td id="sigHouseV">Vay toàn bộ thì giá phải tăng 7,4%/năm mới bù lãi và phí vào–ra</td></tr>
                 <tr><td><b>Vàng miếng</b><br><span class="wb-cell-muted">chênh so với thế giới</span></td><td id="sigGold">+13,6%</td><td id="sigGoldV">Phần lớn sẽ mất nếu cửa nhập mở</td></tr>
                 <tr><td><b>USD</b><br><span class="wb-cell-muted">tự do − ngân hàng; còn tới trần</span></td><td id="sigUsd">+0,3% · 3,8%</td><td id="sigUsdV">Áp lực tỷ giá thấp</td></tr>
               </tbody>
             </table></div>
           </div>
-          <div class="rb-viz__foot" id="sigFoot">Cách đọc: dòng <b>Chờ</b> là thước đo cho mọi dòng dưới. Cổ phiếu được so bằng <b>phần bù rủi ro ước tính</b>: lợi nhuận trên giá (1/(P/E)) là một lợi suất "thực" vì lợi nhuận doanh nghiệp lớn lên theo giá cả, nên phải trừ lãi <em>thực</em> của tiền gửi chứ không phải lãi danh nghĩa. Mỗi dòng là một tín hiệu cho vài năm, không cho tháng tới <span class="wb-cap wb-cap--warning wb-cap--sm">R-I03</span>. Ngưỡng chữ ở cột "Đọc là": chờ ±0,25 điểm; cổ phiếu ±1 điểm quanh mức bạn đòi; vàng 3%; USD khi giá tự do cao hơn ngân hàng 2% hoặc còn dưới 1% tới trần — ngưỡng để đọc nhanh, không phải luật.</div>
+          <div class="rb-viz__foot" id="sigFoot">Cách đọc: dòng <b>Chờ</b> là thước đo cho mọi dòng dưới. Cổ phiếu được so bằng <b>phần bù rủi ro ước tính</b>: lợi nhuận trên giá (1/(P/E)) là một lợi suất "thực" vì lợi nhuận doanh nghiệp lớn lên theo giá cả, nên phải trừ lãi <em>thực</em> của tiền gửi chứ không phải lãi danh nghĩa. Mỗi dòng là một tín hiệu cho vài năm, không cho tháng tới <span class="wb-cap wb-cap--warning wb-cap--sm">R-I03</span>. Dòng cổ phiếu và nhà đã trừ phí ở A10: một vòng mua–bán (0,4% với cổ phiếu, 2,5% với nhà) chia cho số năm giữ, cộng phí quỹ mỗi năm; vàng và USD chưa trừ chênh mua–bán (2,2% và 1,6% một vòng). Ngưỡng chữ ở cột "Đọc là": chờ ±0,25 điểm; cổ phiếu sau phí ±1 điểm quanh mức bạn đòi; vàng 3%; USD khi giá tự do cao hơn ngân hàng 2% hoặc còn dưới 1% tới trần — ngưỡng để đọc nhanh, không phải luật.</div>
         </div>
 
         <p class="rb-prose"><b>Câu 4.</b> Cỡ tiền quyết định nhiều hơn đúng sai về hướng (R-M08 ở mục 06). Hai quy tắc dùng được ngay: không đặt vào một tài sản số tiền mà mất một phần ba của nó sẽ làm bạn phải bán; và <b>chia khoản tiền lớn thành nhiều đợt</b> theo lịch định trước, không theo tin tức.</p>
@@ -1562,9 +1650,9 @@
 
       <hr class="wb-divider">
 
-      <!-- ============ A11 — BÁO CHÍ ============ -->
-      <section id="a11-baochi">
-        <p class="rb-sec-eyebrow"><b>A11</b> — Kiểm tra lại trực giác</p>
+      <!-- ============ A12 — BÁO CHÍ ============ -->
+      <section id="a12-baochi">
+        <p class="rb-sec-eyebrow"><b>A12</b> — Kiểm tra lại trực giác</p>
         <h2 class="rb-sec-title">Bảy câu hay đọc được, và điều thực sự đang xảy ra</h2>
         <p class="rb-lede">Nếu kiến thức của bạn đến từ báo chí, bảy câu dưới đây gần như chắc chắn đã nằm sẵn trong đầu. Không câu nào <em>hoàn toàn</em> vô lý — mỗi câu đều có một logic nghe được, nếu không nó đã không lan rộng. Nhưng mỗi câu đều hỏng ở một chỗ cụ thể.</p>
 
@@ -1617,9 +1705,9 @@
 
       <hr class="wb-divider">
 
-      <!-- ============ A12 — TỪ ĐIỂN ============ -->
-      <section id="a12-tudien">
-        <p class="rb-sec-eyebrow"><b>A12</b> — Từ điển</p>
+      <!-- ============ A13 — TỪ ĐIỂN ============ -->
+      <section id="a13-tudien">
+        <p class="rb-sec-eyebrow"><b>A13</b> — Từ điển</p>
         <h2 class="rb-sec-title">Thuật ngữ, mỗi từ một dòng — và vì sao nó đáng quan tâm</h2>
         <p class="rb-sec-intro">Tra khi gặp một từ lạ ở Phần B. Cột thứ ba là phần quan trọng: một định nghĩa không nói cho bạn biết <b>khi nào thì cần đến nó</b>.</p>
 
@@ -1755,7 +1843,7 @@
 
         <div class="wb-alert wb-alert--info" style="margin-top:16px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">info</span></span><div class="wb-alert__body">
           <p class="wb-alert__title">Hết Phần A — từ đây trở xuống là sổ tay tra cứu</p>
-          <p class="wb-alert__msg">Phần B nén những cơ chế vừa đọc thành <span data-rule-total>75</span> mệnh đề "nếu… thì…", mỗi mệnh đề gắn một <b>thẻ độ cứng</b> nói cho bạn biết được phép tin nó đến mức nào. Đọc <a href="#s0-cach-doc">mục 00</a> trước để hiểu hệ thẻ, rồi dùng bộ lọc ở <a href="#s3-quytac">mục 03</a>.</p>
+          <p class="wb-alert__msg">Phần B nén những cơ chế vừa đọc thành <span data-rule-total>77</span> mệnh đề "nếu… thì…", mỗi mệnh đề gắn một <b>thẻ độ cứng</b> nói cho bạn biết được phép tin nó đến mức nào. Đọc <a href="#s0-cach-doc">mục 00</a> trước để hiểu hệ thẻ, rồi dùng bộ lọc ở <a href="#s3-quytac">mục 03</a>.</p>
         </div></div>
       </section>
 
@@ -1992,7 +2080,7 @@
       <!-- ============ 03 — DANH MỤC QUY TẮC ============ -->
       <section id="s3-quytac" data-part="b">
         <p class="rb-sec-eyebrow"><b>03</b> — Danh mục quy tắc</p>
-        <h2 class="rb-sec-title"><span data-rule-total>75</span> quy tắc "nếu… thì…"</h2>
+        <h2 class="rb-sec-title"><span data-rule-total>77</span> quy tắc "nếu… thì…"</h2>
         <p class="rb-sec-intro"><b>Đừng đọc mục này từ trên xuống.</b> Gõ từ khoá ("vàng", "Fed", "tỷ giá") hoặc bấm nhãn để lọc. Mẹo dùng: tắt hết chỉ để lại <span class="wb-cap wb-cap--warning wb-cap--sm">T3</span> — bạn sẽ thấy đúng danh sách những quy tắc <b>có thể quay ngược 180°</b>, tức là những câu đáng nghi nhất mỗi khi nghe ai đó phát biểu chúng chắc nịch.</p>
         <p class="rb-sec-intro" style="margin-bottom:12px">Ký hiệu trong thẻ: <b>Δt</b> là độ trễ — bao lâu thì chuyện mới xảy ra. Dấu <b>⚠</b> là điều kiện làm quy tắc đó ngừng đúng.</p>
 
@@ -2115,8 +2203,10 @@
           <div class="wb-card rb-rule" id="R-I02" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I02</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> giữ tiền gửi để chờ, <b>thì</b> chi phí của việc chờ chính là <b>lãi thực của tiền gửi</b>: dương thì chờ được trả công, âm thì mỗi tháng chờ mất sức mua chắc chắn.</p><p class="rb-note">11/2026: tiết kiệm 12 tháng 6,1–7%, CPI bình quân 10 tháng 4,57% — chờ đang được trả khoảng 1,5–2,4%/năm.</p></div>
           <div class="wb-card rb-rule" id="R-I03" data-tag="T3" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I03</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> 1/(P/E) trừ lãi thực tiền gửi — phần bù rủi ro ước tính — cao hơn mức bạn đòi, <b>thì</b> cổ phiếu rẻ tương đối so với chờ; thấp hơn thì đắt.</p><p class="rb-note">⚠ Tín hiệu cho 3–5 năm, không cho tháng tới (R-E07). P/E của một năm lợi nhuận đỉnh trông rẻ giả.</p></div>
           <div class="wb-card rb-rule" id="R-I04" data-tag="T2" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I04</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> mua vàng miếng khi chênh lệch với giá thế giới quy đổi lớn, <b>thì</b> đang đặt cược rằng cửa nhập vẫn đóng; phần chênh vượt chi phí nhập khẩu là khoản lỗ khi cửa mở (R-D07).</p><p class="rb-note">Sáng 17/11/2026 khoản ấy là khoảng 16 triệu đồng/lượng, tức 13–14% giá thế giới.</p></div>
-          <div class="wb-card rb-rule" id="R-I05" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I05</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> chia một khoản tiền thành nhiều đợt mua bằng nhau, <b>thì</b> giá vốn là <b>trung bình điều hoà</b> của các giá mua — không bao giờ cao hơn trung bình cộng; nhưng khi giá đi lên đều, mua một lần lời hơn.</p><p class="rb-note">Chia đợt là trả một phần lợi nhuận kỳ vọng để khỏi mua đúng đỉnh. Ví dụ có số ở A10.</p></div>
+          <div class="wb-card rb-rule" id="R-I05" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I05</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> chia một khoản tiền thành nhiều đợt mua bằng nhau, <b>thì</b> giá vốn là <b>trung bình điều hoà</b> của các giá mua — không bao giờ cao hơn trung bình cộng; nhưng khi giá đi lên đều, mua một lần lời hơn.</p><p class="rb-note">Chia đợt là trả một phần lợi nhuận kỳ vọng để khỏi mua đúng đỉnh. Ví dụ có số ở A11.</p></div>
           <div class="wb-card rb-rule" id="R-I06" data-tag="T3" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> giá USD tự do sát giá ngân hàng và giá ngân hàng còn xa trần, <b>thì</b> áp lực tỷ giá thấp; giữ USD lúc ấy là trả lãi VND bỏ lỡ cho một sự bảo vệ ít cần.</p><p class="rb-note">Sáng 17/11/2026: giá tự do cao hơn ngân hàng 0,3%, ngân hàng còn 3,8% tới trần.</p></div>
+          <div class="wb-card rb-rule" id="R-I07" data-tag="T0" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I07</span><span class="wb-cap wb-cap--success wb-cap--sm">T0</span></div><p class="rb-body"><b>Nếu</b> một vòng mua–bán tốn $c$ (chênh giá, phí, thuế) và giữ $H$ năm, <b>thì</b> chi phí là $c/H$ mỗi năm; còn phí trừ hằng năm $f$ thì không giảm theo thời gian giữ, và sau $n$ năm chỉ còn $(1-f)^n$.</p><p class="rb-note">Sáng 17/11/2026 một vòng: vàng nhẫn PNJ 3,1%, SJC 2,2%, USD ở Vietcombank 1,6%, nhà ít nhất 2,5%, cổ phiếu khoảng 0,4%. Phí quản lý 1,75%/năm trong 10 năm lấy đi 16,2% tài sản cuối kỳ.</p></div>
+          <div class="wb-card rb-rule" id="R-I08" data-tag="T2" data-cat="I"><div class="rb-rule-head"><span class="rb-id">R-I08</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> rút tiền gửi trước hạn, <b>thì</b> phần rút chỉ được lãi không kỳ hạn thấp nhất của ngân hàng ấy, phần còn lại giữ lãi cũ — nên khoản có ngày cần tiền phải gửi kỳ hạn khớp ngày ấy, và khoản lớn nên chia nhiều sổ.</p><p class="rb-note">Thông tư 04/2022/TT-NHNN, sửa bởi Thông tư 47/2024/TT-NHNN. Lãi tiền gửi miễn thuế thu nhập cá nhân (Luật 109/2025/QH15).</p></div>
 
         </div>
         <div class="wb-empty" id="ruleEmpty" style="display:none">
@@ -2604,7 +2694,7 @@
           </tbody>
         </table></div></div>
         <h3 class="rb-sub-title">Nguồn của các con số hiện hành, tính đến 17/11/2026</h3>
-        <p class="rb-prose" style="color:var(--wb-fg-muted);font-size:13.5px">Các chương A5–A10 dùng số của một ngày cụ thể. Số nào đổi thì mô hình vẫn đúng; chỉ cần điền số mới vào ô nhập. Văn bản pháp luật ghi theo số hiệu; tin báo ghi theo ngày đăng.</p>
+        <p class="rb-prose" style="color:var(--wb-fg-muted);font-size:13.5px">Các chương A5–A11 dùng số của một ngày cụ thể. Số nào đổi thì mô hình vẫn đúng; chỉ cần điền số mới vào ô nhập. Văn bản pháp luật ghi theo số hiệu; tin báo ghi theo ngày đăng.</p>
         <div class="wb-card"><div class="wb-table-scroll"><table class="wb-table">
           <thead><tr><th>Con số</th><th>Nguồn</th><th>Ngày</th></tr></thead>
           <tbody>
@@ -2684,9 +2774,10 @@
           <a class="wb-footer__link" href="#a7-chungkhoan">Chứng khoán Việt Nam</a>
           <a class="wb-footer__link" href="#a8-vang">Vàng</a>
           <a class="wb-footer__link" href="#a9-taisan">Nhà, USD, dầu, tiền gửi</a>
-          <a class="wb-footer__link" href="#a10-hanhdong">Đang cầm tiền mặt</a>
-          <a class="wb-footer__link" href="#a11-baochi">Bảy câu báo hay viết</a>
-          <a class="wb-footer__link" href="#a12-tudien">Từ điển thuật ngữ</a>
+          <a class="wb-footer__link" href="#a10-chiphi">Chi phí và thuế</a>
+          <a class="wb-footer__link" href="#a11-hanhdong">Đang cầm tiền mặt</a>
+          <a class="wb-footer__link" href="#a12-baochi">Bảy câu báo hay viết</a>
+          <a class="wb-footer__link" href="#a13-tudien">Từ điển thuật ngữ</a>
         </div>
         <div class="wb-footer__col" data-part="b">
           <h4 class="wb-footer__title">Phần B — Tra cứu</h4>
@@ -3191,20 +3282,66 @@
     $('hCashSub').textContent = vn(R) + ' triệu tiền thuê − ' + vn(interest) + ' triệu lãi vay.';
   });
 
-  /* A10 — bốn phép so với tiền gửi */
-  bind(['sDep', 'sInf', 'sPe', 'sErp', 'sRent', 'sMort', 'sGold', 'sWorld', 'sUsdBank', 'sUsdFree', 'sCentral'], function () {
+  /* A10 — chi phí một vòng mua–bán quy ra %/năm: khoản một lần c chia cho số năm giữ H, cộng phí năm f.
+     Chênh mua–bán là của sáng 17/11/2026, khớp bảng nguồn mục 09. */
+  (function () {
+    var sl = $('costH');
+    if (!sl) return;
+    var ONE = {
+      stock: 0.15 * 2 + 0.1,                     // môi giới hai chiều (giả định) + thuế 0,1% khi bán
+      usd: (25950 - 25540) / 25950 * 100,        // Vietcombank bán − mua
+      sjc: (137.2 - 134.2) / 137.2 * 100,        // SJC bán − mua
+      ring: (136.6 - 132.4) / 136.6 * 100,       // nhẫn PNJ bán − mua
+      house: 2 + 0.5                             // thuế TNCN người bán + lệ phí trước bạ người mua
+    };
+    function fundOne(m) { return (m < 12 ? 2 : m < 24 ? 1.5 : 0.5) + (m < 24 ? 0.1 : 0); }   // phí bán VESAF + thuế, miễn từ 2 năm
+    function costs(m) {
+      var h = m / 12;
+      return { dep: 0, stock: ONE.stock / h, etf: ONE.stock / h + 0.8, fund: fundOne(m) / h + 1.75,
+               usd: ONE.usd / h, sjc: ONE.sjc / h, ring: ONE.ring / h, house: ONE.house / h };
+    }
+    function X(m) { return 34 + (m - 3) / 57 * 278; }
+    function Y(v) { return 128 - Math.min(v, 6) / 6 * 118; }
+    var LINES = { costLnRing: 'ring', costLnFund: 'fund', costLnEtf: 'etf', costLnStock: 'stock' };
+    Object.keys(LINES).forEach(function (id) {
+      var pts = [];
+      for (var m = 3; m <= 60; m++) pts.push(X(m).toFixed(1) + ',' + Y(costs(m)[LINES[id]]).toFixed(1));
+      $(id).setAttribute('points', pts.join(' '));
+    });
+    var BARS = { Dep: 'dep', Stock: 'stock', Etf: 'etf', Fund: 'fund', Usd: 'usd', Sjc: 'sjc', Ring: 'ring', House: 'house' };
+    function render() {
+      var m = +sl.value, c = costs(m), top = 0, k;
+      for (k in c) top = Math.max(top, c[k]);
+      $('costHVal').textContent = m + ' tháng';
+      Object.keys(BARS).forEach(function (n) {
+        var val = c[BARS[n]];
+        $('cost' + n).textContent = vn(val, 1) + '%/năm';
+        $('costBar' + n).style.width = (top > 0 ? val / top * 100 : 0) + '%';
+      });
+      $('costMark').setAttribute('x1', X(m).toFixed(1)); $('costMark').setAttribute('x2', X(m).toFixed(1));
+    }
+    sl.addEventListener('input', render);
+    render();
+  })();
+
+  /* A11 — bốn phép so với tiền gửi */
+  bind(['sDep', 'sInf', 'sPe', 'sErp', 'sRent', 'sMort', 'sGold', 'sWorld', 'sUsdBank', 'sUsdFree', 'sCentral', 'sHold', 'sFee'], function () {
     function v(id) { return +$(id).value || 0; }
     var real = v('sDep') - v('sInf');
+    // Phí ở A10: một vòng mua–bán chia cho số năm giữ, cộng phí quỹ mỗi năm.
+    var hold = Math.max(v('sHold'), 0.25), stockCost = 0.4 / hold + v('sFee'), houseCost = 2.5 / hold;
     $('sigReal').textContent = pct(real);
     $('sigRealV').textContent = real > 0.25 ? 'Chờ được trả công' : real >= -0.25 ? 'Hoà: chờ không mất, không được' : 'Chờ là mất sức mua chắc chắn';
     if (v('sPe') > 0) {
-      var erp = 100 / v('sPe') - real, gap = erp - v('sErp');
+      var erp = 100 / v('sPe') - real, net = erp - stockCost, gap = net - v('sErp');
       $('sigErp').textContent = pct(erp);
+      $('sigErpNet').textContent = 'sau phí ' + pct(net);
       $('sigErpV').textContent = gap > 1 ? 'Rẻ hơn mức bạn đòi' : gap >= -1 ? 'Ngang mức bạn đòi' : 'Đắt hơn mức bạn đòi';
     }
     var carry = v('sMort') - v('sRent');
     $('sigHouse').textContent = vn(carry, 1) + ' điểm';
-    $('sigHouseV').textContent = carry > 0 ? 'Vay toàn bộ thì giá phải tăng ' + vn(carry, 1) + '%/năm mới bù lãi' : 'Tiền thuê đã trả đủ lãi vay';
+    var houseNeed = carry + houseCost;
+    $('sigHouseV').textContent = houseNeed > 0 ? 'Vay toàn bộ thì giá phải tăng ' + vn(houseNeed, 1) + '%/năm mới bù lãi và phí vào–ra' : 'Tiền thuê đã trả đủ lãi vay và phí';
     if (v('sWorld') > 0) {
       var prem = (v('sGold') / v('sWorld') - 1) * 100;
       $('sigGold').textContent = pct(prem);
