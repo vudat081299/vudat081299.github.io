@@ -15,8 +15,6 @@
   - Chưa có chi phí và thuế: thuế 0,1% khi bán cổ phiếu, phí môi giới, rút tiết kiệm trước hạn.
   - A10 thiếu một ví dụ chạy trọn bốn câu hỏi với một khoản tiền cụ thể.
   - Chưa giải thích VN thiếu thước đo thị trường cho lạm phát kỳ vọng.
-- `finance-econ-rulebook.html`: chưa có nợ công, bội chi 2026 và mức thuế quan Mỹ hiện hành (chưa tra được
-  nguồn gốc thống nhất).
 
 ## CHỜ CHỦ TRANG
 

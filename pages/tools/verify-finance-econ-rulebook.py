@@ -250,6 +250,17 @@ def phan_B():
     need('lợi suất cho thuê trong bài', '<b>khoảng 3,4%/năm ở TP.HCM cũ và 2,4% ở Hà Nội (quý III/2026)</b>')
     need('lợi suất cho thuê trong gợi ý A10', 'lợi suất cho thuê 3,4% (TP.HCM cũ, quý III/2026)')
     claim('3,1% không còn gán cho Hà Nội', '3,1% ở Hà Nội' not in HTML and '3,1% (Hà Nội)' not in HTML)
+    # ngân sách 2026 và thuế quan Mỹ hiện hành (A6): 605.800 tỷ là 4,2% GDP thì GDP danh nghĩa dự toán
+    # khoảng 14,4 triệu tỷ; 598,3 nghìn tỷ trên cùng GDP phải ra khoảng 4,1%
+    gdp = 605800 / 0.042
+    claim('bội chi: 598,3 nghìn tỷ ≈ 4,1% GDP', vi(598300 / gdp * 100, 1) == '4,1', f'{598300 / gdp * 100:.2f}%')
+    claim('bội chi: trung ương 583.700 + địa phương 22.100 = 605.800', 583700 + 22100 == 605800)
+    need('bội chi dự toán trong bài', 'bội chi 605.800 tỷ đồng, tức 4,2% GDP')
+    need('bội chi ước 2026', 'ước cả năm 598,3 nghìn tỷ, khoảng 4,1% GDP')
+    need('nợ công trong khung xương', 'nợ công cuối năm dự kiến 33–34% GDP, xa trần 60%')
+    need('nợ công trong chi tiết', 'nợ công cuối năm khoảng 33–34% GDP')
+    need('thuế Mục 301', 'từ 24/7/2026 thuế Mục 301 12,5% cộng trên thuế MFN')
+    need('điều tra sở hữu trí tuệ', 'được gia hạn tới 28/2/2027')
     # số quy tắc in trong bài = số thẻ trong danh mục
     cards = re.findall(r'<div class="wb-card rb-rule" id="(R-[A-Z]+\d+)" data-tag="(T\d)" data-cat="([A-Z])"', HTML)
     shown = set(re.findall(r'<span data-rule-total>(\d+)</span>', HTML))
