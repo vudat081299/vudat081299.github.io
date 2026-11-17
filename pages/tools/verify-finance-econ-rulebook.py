@@ -288,6 +288,22 @@ def phan_A():
     need('sai số bám SSIAM', 'lệch chỉ số 0,29% tính tới 25/12/2025')
     need('2025: VN30 và NAV', 'chỉ số VN30 tăng 51,00% trong khi giá trị tài sản ròng mỗi chứng chỉ quỹ ETF VN30 của SSIAM tăng 51,28%')
 
+    # A12 — lạm phát kỳ vọng: không có thước đo thị trường; ba con số thay thế cho ba mức lãi thực
+    dep = attr('sDep')
+    proxies = [('Mục tiêu CPI 2026 của Quốc hội: 4,5%', 4.5), ('CPI bình quân 10 tháng: 4,57%', 4.57),
+               ('CPI tháng 10 so cùng kỳ: 5,09%', 5.09)]
+    reals = [dep - x for _, x in proxies]
+    for (name, x), r_ in zip(proxies, reals):
+        mm = re.search(re.escape(name) + r'</span><span class="rb-cmp__track"><span class="rb-cmp__fill[^"]*" style="width:(\d+)%"></span></span><span class="rb-cmp__val">([^<]+)</span>', HTML)
+        claim('lạm phát thay thế: ' + name, bool(mm) and mm.group(2) == pct(r_) and abs(int(mm.group(1)) - r_ / max(reals) * 100) < 1,
+              mm and mm.groups())
+    need('khoảng xê dịch', 'lãi thực xê dịch %s điểm' % vi(max(reals) - min(reals), 1))
+    claim('cả ba lãi thực đều dương như lời văn', min(reals) > 0.25)
+    need('R-I13: khoảng', 'lãi thực %s đến %s' % (pct(min(reals)), pct(max(reals))))
+    need('CPI tháng 10 có trong bảng nguồn', 'tháng 10 +5,09% so với cùng kỳ')
+    need('TPCP 10 năm', 'trái phiếu chính phủ 10 năm cuối tháng 10/2026 là 4,43%/năm')
+    claim('TPCP 10 năm thấp hơn CPI như lời văn', 4.43 < 4.57 and '10 năm 4,43%' in HTML)
+
     # VN-Index 2022
     need('VN-Index 2022', 'mất ' + vi((1007.09 / 1498.28 - 1) * -100, 1) + '%')
     need('R-I01 note', vi(1498.28, 2) + ' xuống ' + vi(1007.09, 2) + ' điểm, tức ' + vi((1007.09 / 1498.28 - 1) * 100, 1) + '%')

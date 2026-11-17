@@ -11,7 +11,6 @@
   mục 09; cổng `verify-finance-econ-rulebook.py` giữ chúng nhất quán.
 - `finance-econ-rulebook.html`, lỗ hổng sư phạm còn lại (theo mức quan trọng):
   - A12 (Đang cầm tiền mặt) thiếu một ví dụ chạy trọn bốn câu hỏi với một khoản tiền cụ thể.
-  - Chưa giải thích VN thiếu thước đo thị trường cho lạm phát kỳ vọng.
 
 ## CHỜ CHỦ TRANG
 
