@@ -263,6 +263,22 @@ def phan_C():
         ('đếm quy tắc', "document.querySelectorAll('[data-rule-total]'), function (el) { el.textContent = cards.length; }"),
     ]:
         need('mã: ' + label, line)
+    # margin: số hiện ra và điều kiện "đã thủng" dùng cùng một số làm tròn một chữ số. Trước kia 29,6%
+    # hiện "30%" ngay cạnh câu "đã thủng mức tối thiểu" (D = 100, giá giảm 29%).
+    need('mã: margin hiện một chữ số', "$('mgRatio').textContent = vn(r1, 1) + '%';")
+    need('mã: margin xét điều kiện trên số đã làm tròn', 'else if (r1 < 30)')
+    claim('margin: không còn làm tròn số nguyên', "$('mgRatio').textContent = vn(Math.max(ratio, 0)) + '%'" not in HTML)
+    r = 1 - 100 / (200 * (1 - 0.29))
+    claim('margin: ví dụ 29,6% nằm dưới ngưỡng', vi(r * 100, 1) == '29,6' and round(r * 100, 1) < 30)
+    # sơ đồ A6: lớp "Bên ngoài" có mũi tên vào lớp "Nhà nước"; đầu mũi tên chạm đúng mép phải thanh Nhà nước
+    m = re.search(r'id="actorsExtIn" x1="(\d+)" y1="(\d+)" x2="(\d+)" y2="(\d+)" marker-end', HTML)
+    bar = re.search(r'<rect class="rb-dg-boxa" x="(\d+)" y="(\d+)" width="(\d+)" height="(\d+)" rx="5"></rect><text class="rb-dg-t" x="160" y="101"', HTML)
+    claim('A6: có mũi tên Bên ngoài → Nhà nước', bool(m and bar))
+    if m and bar:
+        x1, y1, x2, y2 = map(int, m.groups())
+        bx, by, bw, bh = map(int, bar.groups())
+        claim('A6: mũi tên chạm mép phải thanh Nhà nước', x2 == bx + bw and by < y2 < by + bh and y1 == y2,
+              f'đầu ({x2},{y2}), thanh x {bx}–{bx + bw}, y {by}–{by + bh}')
     # luật vàng đã sửa: "cả hai vượt" không được kết luận là "cầu trú ẩn thật"
     claim('kết luận vàng đã sửa', "t = 'Cầu trú ẩn thật'" not in HTML and "t = 'Cầu trong nước lớn hơn lượng vàng nhập được'" in HTML)
     claim('R-D06 đã sửa', 'đó là cầu trú ẩn <b>thật</b>' not in HTML)

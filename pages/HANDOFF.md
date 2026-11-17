@@ -17,8 +17,6 @@
   - Chưa giải thích VN thiếu thước đo thị trường cho lạm phát kỳ vọng.
 - `finance-econ-rulebook.html`: lợi suất cho thuê 3,1% gán cho Hà Nội có thể sai địa phương (nguồn Batdongsan
   lệch nhau); lãi qua đêm 5,54%, USD tự do 26.057, nhẫn PNJ 136,6 tr chưa đối chiếu lần hai.
-- `finance-econ-rulebook.html`: `mgRatio` làm tròn số nguyên (29,6% hiện "30%" cạnh câu "đã thủng 30%"); sơ đồ
-  A6 thiếu mũi tên từ lớp "Bên ngoài" xuống lớp "Nhà nước".
 - `finance-econ-rulebook.html`: chưa có nợ công, bội chi 2026 và mức thuế quan Mỹ hiện hành (chưa tra được
   nguồn gốc thống nhất).
 
