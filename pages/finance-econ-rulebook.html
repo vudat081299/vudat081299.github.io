@@ -195,10 +195,12 @@
   }
   /* Màn hẹp: __actions của kit không co, nên chữ "Trang chủ" ẩn đi (còn mũi tên) và tên trang cắt
      bằng dấu … trong span của nó. Đừng cho .wb-navbar__brand co (`flex: 0 1 auto`): chữ bị cắt sớm dù
-     thanh còn chỗ (web-builder/CLAUDE.md). 200px = hai lề 18px + dấu § + các khe + hai nút icon (đo ở 320px). */
+     thanh còn chỗ (web-builder/CLAUDE.md). 240px = hai lề 18px + dấu § + các khe + ba nút icon (đo ở 320px). */
   @media (max-width: 560px) { .rb-navhide { display: none; } }
+  /* Đọc liền đang bật: chữ xanh trên nền xanh pha 9%, như mục đang đọc ở mục lục. */
+  .rb-read-btn[aria-pressed="true"] { color: var(--green); background: var(--green-soft); }
   @media (max-width: 480px) {
-    .rb-brand-name { max-width: calc(100vw - 200px); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .rb-brand-name { max-width: calc(100vw - 240px); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
   }
 
   /* ==========================================================================
@@ -339,6 +341,7 @@
   <span class="wb-navbar__spacer"></span>
   <div class="wb-navbar__actions">
     <a class="wb-btn wb-btn--ghost wb-btn--sm" href="../index.html"><span class="wb-ico wb-ico--sm">arrow_back</span> <span class="rb-navhide">Trang chủ</span></a>
+    <button type="button" class="wb-btn wb-btn--ghost wb-btn--sm rb-read-btn" id="readBtn" aria-pressed="false" aria-label="Đọc liền" title="Đọc liền: mở mọi khối chi tiết. Bấm lại để về phần lõi."><span class="wb-ico wb-ico--sm" aria-hidden="true">menu_book</span> <span class="rb-navhide">Đọc liền</span></button>
     <button class="wb-btn wb-btn--ghost wb-btn--icon wb-theme-toggle" id="theme-toggle" aria-label="Sáng / Tối">
       <span class="wb-ico wb-theme-toggle__to-dark">dark_mode</span>
       <span class="wb-ico wb-theme-toggle__to-light">light_mode</span>
@@ -432,7 +435,7 @@
       <div class="rb-part-head">
         <p class="rb-kicker">Phần A · đọc theo thứ tự</p>
         <h2>Hiểu hệ thống trước, tra quy tắc sau</h2>
-        <p>Mười hai chương dưới đây không giả định bạn biết bất cứ thuật ngữ kinh tế nào. Mỗi thuật ngữ bắt buộc phải dùng đều được định nghĩa ngay lần đầu xuất hiện; những từ còn lại nằm trong <a href="#a12-tudien">từ điển ở A12</a>.</p>
+        <p>Mười hai chương dưới đây không giả định bạn biết bất cứ thuật ngữ kinh tế nào. Mỗi thuật ngữ bắt buộc phải dùng đều được định nghĩa ngay lần đầu xuất hiện; những từ còn lại nằm trong <a href="#a12-tudien">từ điển ở A12</a>. Mỗi chương mở sẵn phần lõi: sơ đồ, ý chính, con số. Chi tiết nằm trong các khối gập ngay sau ý nó mở rộng; nút <b>Đọc liền</b> ở thanh trên mở mọi khối để đọc trọn một mạch, bấm lại để về phần lõi.</p>
       </div>
 
       <!-- ============ A1 — VÒNG TIỀN CHẢY ============ -->
@@ -2761,6 +2764,72 @@
       applyNovice(noviceBox.checked);
       try { localStorage.setItem('rb-novice', noviceBox.checked ? '1' : '0'); } catch (e) {}
     });
+  }
+
+  /* ---- Đọc liền (REPO-026): mở mọi khối gập để đọc trọn; bấm lại thì về trạng thái lúc tải trang.
+     Lưu ở 'rb-read-all'. Khối ở Phần B bị chế độ người mới ẩn vẫn được mở, để bật lại Phần B là thấy
+     đúng độ sâu đang chọn. Bật, tắt giữ nguyên chỗ đang đọc: neo vào phần tử đầu tiên còn thấy dưới
+     thanh trên, rồi cuộn bù đúng phần chữ vừa chen vào hay rút đi phía trên nó. ---- */
+  var readBtn = document.getElementById('readBtn');
+  var folds = [].slice.call(document.querySelectorAll('main details'));
+  var foldDefault = folds.map(function (d) { return d.open; });
+  var TOPLINE = 72;
+  function shown(el) {
+    if (!el.getClientRects().length) return false;
+    var d = el.parentElement && el.parentElement.closest('details:not([open])');
+    return !d || (el.tagName === 'SUMMARY' && el.parentElement === d);
+  }
+  function takeAnchor(closing) {
+    var list = document.querySelectorAll('main h2, main h3, main p, main summary, main li, main tr, main .rb-viz, main .rb-rule');
+    for (var i = 0; i < list.length; i++) {
+      var el = list[i];
+      if (!shown(el) || el.getBoundingClientRect().bottom <= TOPLINE) continue;
+      if (closing) {
+        // Neo nằm trong khối sắp đóng: neo vào summary của khối ngoài cùng sẽ đóng.
+        for (var q = el.parentElement, outer = null; q; q = q.parentElement)
+          if (q.tagName === 'DETAILS' && q.open && !foldDefault[folds.indexOf(q)]) outer = q;
+        if (outer) { var s = outer.querySelector('summary'); return { el: s, top: Math.max(TOPLINE, s.getBoundingClientRect().top) }; }
+      }
+      return { el: el, top: el.getBoundingClientRect().top };
+    }
+    return null;
+  }
+  function applyRead(on, keep) {
+    if (!readBtn) return;
+    readBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    var a = keep ? takeAnchor(!on) : null;
+    folds.forEach(function (d, i) { d.open = on || foldDefault[i]; });
+    if (a) {
+      var dy = a.el.getBoundingClientRect().top - a.top;
+      if (Math.abs(dy) >= 1) window.scrollBy(0, dy);
+    }
+  }
+  if (readBtn) {
+    var readSaved = null;
+    try { readSaved = localStorage.getItem('rb-read-all'); } catch (e) {}
+    if (readSaved === '1') applyRead(true, false);
+    readBtn.addEventListener('click', function () {
+      var on = readBtn.getAttribute('aria-pressed') !== 'true';
+      try { localStorage.setItem('rb-read-all', on ? '1' : '0'); } catch (e) {}
+      applyRead(on, true);
+    });
+  }
+  /* Link nội trang tới một id nằm trong khối gập: mở mọi khối tổ tiên rồi mới cuộn tới. */
+  function openTo(id) {
+    var el = id && document.getElementById(id), opened = false;
+    if (!el) return null;
+    for (var q = el.parentElement; q; q = q.parentElement) if (q.tagName === 'DETAILS' && !q.open) { q.open = true; opened = true; }
+    return opened ? el : null;
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a || a.getAttribute('href').length < 2) return;
+    var el = document.getElementById(decodeURIComponent(a.getAttribute('href').slice(1)));
+    if (el && el.parentElement && el.parentElement.closest('details:not([open])')) { openTo(el.id); }
+  });
+  if (location.hash) {
+    var hashEl = openTo(decodeURIComponent(location.hash.slice(1)));
+    if (hashEl) hashEl.scrollIntoView();
   }
 
   /* ---- rule catalog filter (Part 5) ---- */

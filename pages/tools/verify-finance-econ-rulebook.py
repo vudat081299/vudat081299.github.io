@@ -283,6 +283,13 @@ def phan_C():
         ('đếm quy tắc', "document.querySelectorAll('[data-rule-total]'), function (el) { el.textContent = cards.length; }"),
     ]:
         need('mã: ' + label, line)
+    # Đọc liền (REPO-026): một nút trên thanh trên, mở mọi khối gập trong <main>, tắt thì về trạng thái lúc tải,
+    # nhớ ở 'rb-read-all'. Chi tiết nằm trong khối gập nên nút này là lối duy nhất để đọc trọn một mạch.
+    need('Đọc liền: nút', 'id="readBtn" aria-pressed="false" aria-label="Đọc liền"')
+    need('Đọc liền: mở mọi khối trong main', "var folds = [].slice.call(document.querySelectorAll('main details'));")
+    need('Đọc liền: tắt thì về trạng thái lúc tải', 'folds.forEach(function (d, i) { d.open = on || foldDefault[i]; });')
+    need('Đọc liền: nhớ lựa chọn', "localStorage.setItem('rb-read-all', on ? '1' : '0')")
+    need('Đọc liền: lời dẫn', 'nút <b>Đọc liền</b> ở thanh trên mở mọi khối')
     # margin: số hiện ra và điều kiện "đã thủng" dùng cùng một số làm tròn một chữ số. Trước kia 29,6%
     # hiện "30%" ngay cạnh câu "đã thủng mức tối thiểu" (D = 100, giá giảm 29%).
     need('mã: margin hiện một chữ số', "$('mgRatio').textContent = vn(r1, 1) + '%';")
