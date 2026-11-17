@@ -26,6 +26,8 @@ Quyết định chủ trang đã chốt cho từng trang trong `pages/`. Quyết
 - PAGES-021 · hidden-curriculum: tổng quan trước, đọc trong khung · `pages/hidden-curriculum.html`
 - PAGES-022 · hidden-curriculum: Gỡ rối trong đầu · `pages/hidden-curriculum.html`, `pages/data/hidden-curriculum.json`
 - PAGES-023 · Trang sách: nắm đủ tư duy với ít thời gian đọc nhất · `pages/books-in-brief.html`, `pages/seeing-like-a-state.html`, `pages/the-art-of-doing-science-and-engineering.html`, `pages/a-short-history-of-nearly-everything.html`, `pages/how-to-lie-with-statistics.html`, `pages/how-to-win-every-argument.html`, `pages/the-little-blue-reasoning-book.html`, `pages/how-money-works.html`
+- PAGES-024 · finance-econ-rulebook: màu trang chủ · `pages/finance-econ-rulebook.html`
+- PAGES-025 · finance-econ-rulebook: từ hiểu kinh tế tới hành động với tiền · `pages/finance-econ-rulebook.html`
 <!-- index:end -->
 
 ## PAGES-001 · Trang giải thích dễ hiểu mà đủ kiến thức
@@ -178,3 +180,16 @@ một câu ngắn; bỏ câu sáo rỗng. Mỗi suy nghĩ có nhãn độ tin, n
 Mục đích cao nhất: người đọc nắm đủ tư duy và kiến thức của sách mà tốn ít thời gian hơn nhiều so với đọc bản đầy đủ; bố cục logic trước, trang trí sau.
 Sách mà giá trị nằm ở cả mạch lập luận thì có trang riêng; sách chỉ cần lõi ý và cách nghĩ thì vào `books-in-brief.html`.
 Trang sách mới dùng thiết kế mới, không theo khuôn web-builder của các trang sách cũ; trang dài nhiều mục thì đầu trang phải thấy tổng quan mọi mục.
+
+## PAGES-024 · finance-econ-rulebook: màu trang chủ
+17/11/2026 · `pages/finance-econ-rulebook.html`
+
+Giao diện theo bảng màu và kiểu chữ của trang chủ: đen, trắng, một xanh lá, tiêu đề Space Grotesk.
+Giữ `web-builder.css` và class `wb-*`; màu chỉ đổi qua token của trang, đủ sáng lẫn tối.
+
+## PAGES-025 · finance-econ-rulebook: từ hiểu kinh tế tới hành động với tiền
+17/11/2026 · `pages/finance-econ-rulebook.html`
+
+Mục đích: người đọc hiểu nền kinh tế, rồi kinh tế Việt Nam, BĐS, vàng, cổ phiếu, USD, dầu, tiền gửi, rồi biết khi nào mua gì và khi nào giữ tiền chờ.
+Trang phải có đủ công cụ của NHNN và các thực thể khác tác động nền kinh tế, mỗi cái nói kéo biến nào, tới tài sản nào, trễ bao lâu, đọc ở đâu.
+Tín hiệu hành động gắn nhãn độ tin, nói rõ giới hạn; số hiện hành ghi nguồn và ngày.

@@ -7,6 +7,12 @@
     giữa hai vách khe và Adam đi gần thẳng. Đổi luật "Chạy cả hai" nên phải sửa cả phép kiểm M3 trong cổng.
   - M8 (#s-backprop): thêm một nút có hai đầu ra để bước ngược cho thấy hai đạo hàm cộng vào một nút.
 
+- `finance-econ-rulebook.html`: chưa có nút "Đọc liền" (REPO-026); chi tiết đã nằm trong khối gập.
+- `finance-econ-rulebook.html`: số hiện hành ở A5–A10 cần làm mới định kỳ — sửa ô nhập mặc định và bảng nguồn
+  mục 09; cổng `verify-finance-econ-rulebook.py` giữ chúng nhất quán.
+- `finance-econ-rulebook.html`: chưa có nợ công, bội chi 2026 và mức thuế quan Mỹ hiện hành (chưa tra được
+  nguồn gốc thống nhất).
+
 ## CHỜ CHỦ TRANG
 
 - Năm trang sách cũ (how-money-works, how-to-win-every-argument, the-little-blue-reasoning-book,
