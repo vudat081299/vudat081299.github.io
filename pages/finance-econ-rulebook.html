@@ -192,7 +192,7 @@
     <p class="rb-eyebrow">Bản học tương tác · kinh tế · chứng khoán Việt Nam · vàng</p>
     <h1 class="rb-title">Từ nền kinh tế đến bảng giá — <u>một chuỗi nhân quả</u>, không phải một đống tin tức.</h1>
     <p class="rb-sub">Trang này viết cho người <b style="color:var(--wb-fg)">không có nền kinh tế học</b>, đã có ít kinh nghiệm thực chiến với chứng khoán và vàng, và muốn hiểu <em>vì sao</em> giá chạy chứ không chỉ nhớ <em>giá đã chạy</em>. Đọc xong Phần A, bạn phải tự trả lời được: "Fed vừa làm X — chuyện gì sẽ đi qua những mắt xích nào để tới cổ phiếu tôi đang cầm, và mất bao lâu?"</p>
-    <p class="rb-meta">CẬP NHẬT 31·07·2026 · SỐ LIỆU ĐẾN PHIÊN 29·07·2026 · MỤC ĐÍCH HỌC TẬP, KHÔNG PHẢI KHUYẾN NGHỊ ĐẦU TƯ</p>
+    <p class="rb-meta">CẬP NHẬT 17·11·2026 · SỐ LIỆU ĐẾN SÁNG 17·11·2026 · MỤC ĐÍCH HỌC TẬP, KHÔNG PHẢI KHUYẾN NGHỊ ĐẦU TƯ</p>
   </header>
 
   <div class="wb-alert wb-alert--plain" style="margin-bottom:14px">
@@ -693,7 +693,7 @@
         </div>
 
         <p class="rb-prose" style="color:var(--wb-fg-muted);font-size:13.5px">Viết gọn — vẫn là phép nhân ở trên:</p>
-        <div class="rb-formula">$$\text{Giá} \;=\; \underbrace{\frac{P}{E}}_{\text{thị trường chịu trả}} \times \underbrace{EPS}_{\text{doanh nghiệp lãi}}$$</div>
+        <div class="rb-formula" id="eq-stock">$$\text{Giá} \;=\; \underbrace{\frac{P}{E}}_{\text{thị trường chịu trả}} \times \underbrace{EPS}_{\text{doanh nghiệp lãi}}$$</div>
 
         <h3 class="rb-sub-title">Bốn thứ làm thị trường Việt Nam hành xử khác</h3>
         <p class="rb-prose">Bốn đặc điểm dưới đây không phải chi tiết kỹ thuật vụn vặt — chúng giải thích phần lớn những chuyện "vô lý" mà nhà đầu tư cá nhân gặp phải.</p>
@@ -870,51 +870,53 @@
           <thead><tr><th>Loại</th><th>Là gì</th><th>Bị chi phối bởi</th><th>Bám giá thế giới</th></tr></thead>
           <tbody>
             <tr><td><b>XAU/USD</b></td><td>Vàng thế giới, tính bằng USD/ounce</td><td>Lãi suất thực Mỹ, niềm tin vào hệ thống</td><td class="wb-cell-muted">— là chuẩn</td></tr>
-            <tr><td><b>Vàng nhẫn 9999</b></td><td>Vàng trơn, không thương hiệu độc quyền</td><td>XAU × tỷ giá + phí gia công</td><td><span class="wb-cap wb-cap--success wb-cap--sm">Bám khá sát</span></td></tr>
-            <tr><td><b>Vàng miếng SJC</b></td><td>Thương hiệu do Nhà nước độc quyền sản xuất</td><td>XAU × tỷ giá + phí + <b>địa tô độc quyền</b></td><td><span class="wb-cap wb-cap--danger wb-cap--sm">Lệch dai dẳng</span></td></tr>
+            <tr><td><b>Vàng nhẫn 9999</b></td><td>Vàng trơn, không thương hiệu độc quyền, làm từ vàng nguyên liệu</td><td>XAU × tỷ giá + phí gia công + <b>độ chặt của hạn ngạch nhập vàng nguyên liệu</b></td><td><span class="wb-cap wb-cap--warning wb-cap--sm">Bám khi nhập được</span></td></tr>
+            <tr><td><b>Vàng miếng SJC</b></td><td>Thương hiệu Nhà nước độc quyền sản xuất tới 10/2025; nay sản xuất vàng miếng phải xin phép</td><td>XAU × tỷ giá + phí + <b>địa tô độc quyền</b></td><td><span class="wb-cap wb-cap--danger wb-cap--sm">Lệch dai dẳng</span></td></tr>
           </tbody>
         </table></div></div>
 
         <div class="rb-viz" id="viz-gold">
           <div class="rb-viz__head">
             <p class="rb-viz__title">Tự tính thử — hôm nay bạn đang trả thêm bao nhiêu, và trả cho cái gì?</p>
-            <p class="rb-viz__hint">Một lượng vàng = 37,5 gam = <b>1,20565 ounce</b> (hằng số, không phải ước lượng). Điền bốn con số của ngày bạn đọc — giá thế giới và tỷ giá tra trên mạng mất 30 giây.</p>
+            <p class="rb-viz__hint">Một lượng vàng = 37,5 gam = <b>1,20565 ounce</b> (hằng số, không phải ước lượng). Số điền sẵn là của sáng 17/11/2026: XAU 3.860 USD/oz (Kitco), giá bán USD ở Vietcombank 25.850 đ, SJC bán 137,2 tr, nhẫn PNJ bán 136,6 tr. Điền số của ngày bạn đọc để xem hôm nay.</p>
           </div>
           <div class="rb-viz__body rb-viz__body--split">
             <div style="display:grid;gap:10px">
-              <div class="wb-field"><label class="wb-label" for="gXau">Giá vàng thế giới (USD/ounce)</label><input class="wb-input" type="number" id="gXau" value="3300" step="10" inputmode="decimal"></div>
-              <div class="wb-field"><label class="wb-label" for="gFx">Tỷ giá (đồng / USD)</label><input class="wb-input" type="number" id="gFx" value="26000" step="100" inputmode="decimal"></div>
-              <div class="wb-field"><label class="wb-label" for="gSjc">Vàng miếng SJC niêm yết (triệu/lượng)</label><input class="wb-input" type="number" id="gSjc" value="120" step="0.5" inputmode="decimal"></div>
-              <div class="wb-field"><label class="wb-label" for="gRing">Vàng nhẫn 9999 niêm yết (triệu/lượng)</label><input class="wb-input" type="number" id="gRing" value="105" step="0.5" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="gXau">Giá vàng thế giới (USD/ounce)</label><input class="wb-input" type="number" id="gXau" value="3860" step="10" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="gFx">Tỷ giá (đồng / USD)</label><input class="wb-input" type="number" id="gFx" value="25850" step="100" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="gSjc">Vàng miếng SJC niêm yết (triệu/lượng)</label><input class="wb-input" type="number" id="gSjc" value="137.2" step="0.5" inputmode="decimal"></div>
+              <div class="wb-field"><label class="wb-label" for="gRing">Vàng nhẫn 9999 niêm yết (triệu/lượng)</label><input class="wb-input" type="number" id="gRing" value="136.6" step="0.5" inputmode="decimal"></div>
             </div>
             <div style="display:grid;gap:12px">
               <div class="rb-out">
                 <span class="rb-out__label">Giá thế giới quy ra tiền Việt</span>
-                <span class="rb-out__val" id="gWorld">103,4 tr/lượng</span>
-                <span class="rb-out__sub" id="gCalc">3.300 × 1,20565 × 26.000</span>
+                <span class="rb-out__val" id="gWorld">120,3 tr/lượng</span>
+                <span class="rb-out__sub" id="gCalc">3.860 × 1,20565 × 25.850</span>
               </div>
               <div class="rb-cmp">
-                <div class="rb-cmp__row"><span class="rb-cmp__name">SJC trả thêm</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--danger" id="gBarS" style="width:60%"></span></span><span class="rb-cmp__val" id="gGapS">+16,6 tr</span></div>
-                <div class="rb-cmp__row"><span class="rb-cmp__name">Nhẫn trả thêm</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--muted" id="gBarR" style="width:6%"></span></span><span class="rb-cmp__val" id="gGapR">+1,6 tr</span></div>
+                <div class="rb-cmp__row"><span class="rb-cmp__name">SJC trả thêm</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--danger" id="gBarS" style="width:100%"></span></span><span class="rb-cmp__val" id="gGapS">+16,9 tr</span></div>
+                <div class="rb-cmp__row"><span class="rb-cmp__name">Nhẫn trả thêm</span><span class="rb-cmp__track"><span class="rb-cmp__fill rb-cmp__fill--muted" id="gBarR" style="width:96%"></span></span><span class="rb-cmp__val" id="gGapR">+16,3 tr</span></div>
               </div>
               <div class="wb-alert wb-alert--plain" style="margin:0"><div class="wb-alert__body">
-                <p class="wb-alert__title" id="gVerdictT" style="margin-bottom:2px">Chuyện thương hiệu, không phải chuyện kinh tế</p>
-                <p class="wb-alert__msg" id="gVerdictM" style="margin:0;font-size:12.5px">Nhẫn bám sát giá thế giới, chỉ mình SJC vượt xa. Khoản chênh đó là giá của việc gần như không ai được nhập vàng về bán rẻ hơn — bạn đang trả cho một hàng rào giấy tờ, không phải cho vàng.</p>
+                <p class="wb-alert__title" id="gVerdictT" style="margin-bottom:2px">Cầu trong nước lớn hơn lượng vàng nhập được</p>
+                <p class="wb-alert__msg" id="gVerdictM" style="margin:0;font-size:12.5px">Cả hai loại cùng vượt giá thế giới.</p>
               </div></div>
             </div>
           </div>
-          <div class="rb-viz__foot">Cách đọc: <b>cả hai cùng vượt</b> → người dân đang thật sự đổ tiền vào vàng. <b>Chỉ SJC vượt</b> → chuyện độc quyền thương hiệu, đừng đọc thành tín hiệu kinh tế <span class="wb-cap wb-cap--warning wb-cap--sm">R-D06</span>. Quy tắc này chỉ có được nhờ tách ba thị trường ra; gộp làm một là mất sạch thông tin.</div>
+          <div class="rb-viz__foot">Cách đọc: <b>chỉ SJC vượt</b> → chuyện thương hiệu vàng miếng, đừng đọc thành tín hiệu kinh tế. <b>Cả hai cùng vượt</b> → cầu trong nước đang lớn hơn lượng vàng nhập về được; chênh lệch chỉ đứng được vì cửa nhập vàng nguyên liệu cũng bị hạn ngạch <span class="wb-cap wb-cap--warning wb-cap--sm">R-D06</span>. Quy tắc này chỉ có được nhờ tách ba thị trường ra; gộp làm một là mất sạch thông tin.</div>
         </div>
 
         <div class="wb-alert wb-alert--success" style="margin-top:14px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">check</span></span><div class="wb-alert__body">
           <p class="wb-alert__title">Quy tắc chẩn đoán — chỉ có được nhờ tách ba thị trường</p>
           <p class="wb-alert__msg">Khi thấy vàng trong nước "sốt", so <b>cả hai</b> loại với giá thế giới quy đổi:</p>
-          <p class="wb-alert__msg">· <b>Cả SJC và nhẫn cùng vượt</b> → cầu trú ẩn <b>thật</b>, người dân đang thực sự chuyển tài sản sang vàng.<br>· <b>Chỉ SJC vượt, nhẫn bám sát</b> → hiện tượng <b>thương hiệu và độc quyền</b>, không phải tín hiệu kinh tế. <span class="wb-cap wb-cap--warning wb-cap--sm">R-D06</span></p>
+          <p class="wb-alert__msg">· <b>Chỉ SJC vượt, nhẫn bám sát</b> → hiện tượng <b>thương hiệu và độc quyền</b>, không phải tín hiệu kinh tế.<br>· <b>Cả SJC và nhẫn cùng vượt</b> → cầu trong nước <b>thật</b> lớn hơn lượng vàng nhập được. Hai điều kiện cùng có mặt: người dân đang mua (trú ẩn, hoặc lãi thực tiền gửi thấp), <em>và</em> cửa nhập vàng nguyên liệu bị chặn. Thiếu điều kiện sau thì nhà nhập khẩu đã kéo chênh lệch về. <span class="wb-cap wb-cap--warning wb-cap--sm">R-D06</span></p>
+          <p class="wb-alert__msg">Sáng 17/11/2026 là trường hợp thứ hai: giá thế giới ở đáy một năm mà SJC và nhẫn cùng cao hơn giá quy đổi khoảng 16–17 triệu đồng/lượng.</p>
         </div></div>
 
         <h3 class="rb-sub-title">Vì sao chênh lệch tồn tại, và điều kiện để nó biến mất</h3>
-        <p class="rb-prose">Thông thường, chênh lệch giá giữa hai thị trường bị <b>arbitrage</b> — mua rẻ ở nơi này, bán đắt ở nơi kia — kéo về sát nhau. Cơ chế đó chỉ chạy khi hàng hoá <em>di chuyển được</em>. Nghị định 24/2012 trao cho Nhà nước độc quyền sản xuất vàng miếng và siết nhập khẩu, tức là <b>chặn đúng cái chân của arbitrage</b>. Chênh lệch SJC vì thế không tự đóng, và từng lên tới 18–20 triệu đồng/lượng vào cuối 2023.</p>
-        <p class="rb-prose">Nghị định 232/2025 (hiệu lực 10/10/2025) sửa đổi Nghị định 24 với kỳ vọng thu hẹp chênh lệch. Điều này cho một <b>dự đoán khả bác</b> — loại phát biểu tốt nhất bạn có thể có: nếu rào cản nhập khẩu thực sự được nới, chênh lệch <b>phải</b> co về mức chi phí nhập khẩu cận biên cộng chi phí giao dịch <span class="wb-cap wb-cap--info wb-cap--sm">R-D07</span>. Nếu sau một thời gian đủ dài mà nó không co, kết luận đúng là <em>rào cản chưa thực sự được nới</em>, chứ không phải "thị trường bất hợp lý". Cách kiểm chứng bằng dữ liệu nằm ở <a href="#s9-kiemchung">Phần 09</a>.</p>
+        <p class="rb-prose">Thông thường, chênh lệch giá giữa hai thị trường bị <b>arbitrage</b> — mua rẻ ở nơi này, bán đắt ở nơi kia — kéo về sát nhau. Cơ chế đó chỉ chạy khi hàng hoá <em>di chuyển được</em>. Nghị định 24/2012 trao cho Nhà nước độc quyền sản xuất vàng miếng và cấp hạn ngạch nhập vàng nguyên liệu, tức là <b>chặn đúng cái chân của arbitrage</b>. Chênh lệch SJC vì thế không tự đóng, và từng lên tới 18–20 triệu đồng/lượng vào cuối 2023. Khi cầu dồn sang vàng nhẫn, nhẫn cũng chênh theo, vì nhẫn làm từ chính thứ vàng nguyên liệu bị hạn ngạch ấy.</p>
+        <p class="rb-prose">Năm 2024 NHNN thử bơm cung thay vì mở cửa: đấu thầu vàng miếng từ tháng 4, rồi từ 3/6/2024 bán thẳng qua bốn ngân hàng thương mại nhà nước và Công ty SJC. Chênh lệch co lại trong lúc kho còn bán, rồi giãn trở lại: đỉnh 22 triệu đồng/lượng ngày 4/11/2025, tức sau cả ngày Nghị định 232 có hiệu lực. Bơm một lượng cố định không thay được một cửa arbitrage mở.</p>
+        <p class="rb-prose">Nghị định 232/2025 (hiệu lực 10/10/2025) sửa Nghị định 24: bỏ độc quyền sản xuất vàng miếng và độc quyền nhập vàng nguyên liệu để làm vàng miếng, chuyển sang cấp phép (doanh nghiệp cần vốn điều lệ từ 1.000 tỷ đồng), và bắt mọi giao dịch vàng từ 20 triệu đồng/ngày trở lên đi qua tài khoản ngân hàng. Điều này cho một <b>dự đoán khả bác</b> — loại phát biểu tốt nhất bạn có thể có: nếu rào cản nhập khẩu thực sự được nới, chênh lệch <b>phải</b> co về mức chi phí nhập khẩu cận biên cộng chi phí giao dịch <span class="wb-cap wb-cap--info wb-cap--sm">R-D07</span>. Nếu sau một thời gian đủ dài mà nó không co, kết luận đúng là <em>rào cản chưa thực sự được nới</em>, chứ không phải "thị trường bất hợp lý". Kiểm tới 17/11/2026: tới giữa tháng 4/2026 NHNN mới nhận 11 hồ sơ xin phép sản xuất vàng miếng và còn đang thẩm định; vàng nguyên liệu chỉ được xét nhập sau khi có giấy phép sản xuất; chênh lệch vẫn khoảng 17 triệu đồng/lượng. Theo đúng quy tắc trên: luật đã đổi, cửa nhập thì chưa mở. Cách kiểm chứng bằng dữ liệu nằm ở <a href="#s9-kiemchung">Phần 09</a>.</p>
         <p class="rb-prose">Còn một kênh nội địa nữa, độc lập với thế giới: khi <b>lãi suất tiết kiệm VND thấp hơn lạm phát</b> — tức lãi thực âm — hộ gia đình chuyển một phần tiết kiệm sang vàng đơn giản vì gửi ngân hàng là chắc chắn mất sức mua. Cầu vàng trong nước có thể tăng ngay cả khi giá thế giới đứng yên <span class="wb-cap wb-cap--warning wb-cap--sm">R-D08</span>.</p>
       </section>
 
@@ -1051,7 +1053,7 @@
                 <tr><td><b>Đuôi dày</b></td><td>Biến cố cực đoan xảy ra <em>thường xuyên hơn nhiều</em> so với đường hình chuông dự đoán</td><td class="wb-cell-muted">Bẫy lớn nhất với người từ nền toán/kỹ thuật bước vào tài chính — đo bằng độ nhọn, chữa bằng Student-t, cả hai ở nhóm thống kê dưới (mục 06)</td></tr>
                 <tr><td><b>Free-float</b></td><td>Phần cổ phiếu thực sự tự do giao dịch</td><td class="wb-cell-muted">Cơ sở tính trọng số của VN30/VNAllshare — <b>không phải</b> của VN-Index, vốn dùng vốn hoá toàn phần</td></tr>
                 <tr><td><b>Margin / call margin</b></td><td>Vay tiền công ty chứng khoán để mua; bị bán cưỡng chế khi tỷ lệ ký quỹ thủng ngưỡng</td><td class="wb-cell-muted">Nguồn phi tuyến lớn nhất của thị trường VN (A5)</td></tr>
-                <tr><td><b>Nâng hạng thị trường</b></td><td>Được FTSE/MSCI xếp lên nhóm cao hơn</td><td class="wb-cell-muted">Quỹ chỉ số <em>buộc phải</em> mua bất kể giá — sự kiện biết trước lịch</td></tr>
+                <tr><td><b>Nâng hạng thị trường</b></td><td>Được FTSE/MSCI xếp lên nhóm cao hơn. FTSE nâng Việt Nam lên Mới nổi thứ cấp từ 21/9/2026</td><td class="wb-cell-muted">Quỹ chỉ số <em>buộc phải</em> mua bất kể giá — sự kiện biết trước lịch</td></tr>
                 <tr><td><b>ERP</b><br><span class="wb-cell-muted">phần bù rủi ro cổ phiếu</span></td><td>Phần lời cộng thêm nhà đầu tư đòi khi mua cổ phiếu thay vì trái phiếu chính phủ</td><td class="wb-cell-muted">Nó co lại nghĩa là thị trường đang <b>ít sợ</b>, tức đắt hơn vẻ ngoài</td></tr>
                 <tr><td><b>Độ rộng thị trường</b></td><td>Bao nhiêu mã tăng so với bao nhiêu mã giảm trong một phiên</td><td class="wb-cell-muted">Trả lời "danh mục tôi hôm nay ra sao", điều VN-Index <b>không</b> trả lời</td></tr>
                 <tr><td><b>T+2</b></td><td>Mua hôm nay thì hai ngày làm việc sau cổ phiếu mới thực sự về tài khoản</td><td class="wb-cell-muted">Không bán lại được trong phiên → sổ lệnh mỏng, lệnh lớn đẩy giá đi xa hơn</td></tr>
@@ -1412,8 +1414,8 @@
           <div class="wb-card rb-rule" id="R-D02" data-tag="T2" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D02</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body">Vàng <b>không phải</b> hàng rào chống lạm phát — mà là hàng rào cho <b>lãi suất thực âm</b> và <b>mất niềm tin</b> vào tiền pháp định/hệ thống. Hai động lực này đôi khi xung đột.</p></div>
           <div class="wb-card rb-rule" id="R-D03" data-tag="T3" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D03</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> bình thường, <b>thì</b> vàng và USD nghịch nhau.</p><p class="rb-note">⚠ Khủng hoảng hệ thống/địa chính trị → cả hai cùng tăng.</p></div>
           <div class="wb-card rb-rule" id="R-D04" data-tag="T2" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D04</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> vàng miếng bị áp độc quyền sản xuất và hạn chế nhập khẩu, <b>thì</b> $\beta(XAU\to SJC)&lt;1$ và chênh lệch <b>tồn tại dai dẳng</b> — địa tô độc quyền.</p></div>
-          <div class="wb-card rb-rule" id="R-D05" data-tag="T2" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D05</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body">$\beta(XAU\to\text{vàng nhẫn})>\beta(XAU\to SJC)$, vì nhẫn không bị ràng buộc độc quyền thương hiệu.</p></div>
-          <div class="wb-card rb-rule" id="R-D06" data-tag="T3" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu cả</b> SJC <b>và</b> nhẫn cùng vượt giá thế giới quy đổi, <b>thì</b> đó là cầu trú ẩn <b>thật</b>. Nếu <b>chỉ</b> SJC vượt, đó là hiện tượng thương hiệu/độc quyền.</p><p class="rb-note">Quy tắc này chỉ có được nhờ tách ba thị trường ra; gộp làm một là mất sạch thông tin.</p></div>
+          <div class="wb-card rb-rule" id="R-D05" data-tag="T2" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D05</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> vàng nguyên liệu nhập được theo nhu cầu, <b>thì</b> $\beta(XAU\to\text{vàng nhẫn})>\beta(XAU\to SJC)$, vì nhẫn không bị ràng buộc độc quyền thương hiệu.</p><p class="rb-note">⚠ Khi hạn ngạch nhập vàng nguyên liệu cũng chặt (từ 2024), nhẫn chênh gần bằng SJC và quy tắc này ngừng phân biệt được hai loại.</p></div>
+          <div class="wb-card rb-rule" id="R-D06" data-tag="T3" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D06</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu chỉ</b> SJC vượt giá thế giới quy đổi, <b>thì</b> đó là hiện tượng thương hiệu/độc quyền. <b>Nếu cả</b> SJC <b>và</b> nhẫn cùng vượt, <b>thì</b> cầu trong nước đang lớn hơn lượng vàng nhập được — cần cả cầu thật lẫn cửa nhập bị chặn.</p><p class="rb-note">Quy tắc này chỉ có được nhờ tách ba thị trường ra; gộp làm một là mất sạch thông tin. ⚠ Không tách được "cầu trú ẩn" khỏi "lãi thực tiền gửi thấp": xem thêm R-D08.</p></div>
           <div class="wb-card rb-rule" id="R-D07" data-tag="T1" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D07</span><span class="wb-cap wb-cap--info wb-cap--sm">T1</span></div><p class="rb-body"><b>Nếu</b> rào cản nhập khẩu được nới, <b>thì</b> chênh lệch phải co về <b>chi phí nhập khẩu cận biên + chi phí giao dịch</b>.</p></div>
           <div class="wb-card rb-rule" id="R-D08" data-tag="T3" data-cat="D"><div class="rb-rule-head"><span class="rb-id">R-D08</span><span class="wb-cap wb-cap--warning wb-cap--sm">T3</span></div><p class="rb-body"><b>Nếu</b> lãi suất thực tiền gửi VND âm, <b>thì</b> cầu vàng nội địa tăng (thay thế trong tiết kiệm hộ gia đình).</p></div>
 
@@ -1446,7 +1448,7 @@
           <div class="wb-card rb-rule" id="R-H03" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H03</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> mã mất thanh khoản không bán được, <b>thì</b> công ty chứng khoán bán mã <b>còn</b> thanh khoản để thu hồi nợ → <b>call margin chéo</b> → lây sang cổ phiếu không liên quan.</p><p class="rb-note">Cùng kiểu domino: viên sau đổ vì viên trước vừa đổ, không vì ai đẩy nó.</p></div>
           <div class="wb-card rb-rule" id="R-H04" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H04</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> chỉ số có trọng số theo vốn hoá (mã càng lớn càng nặng ký), <b>thì</b> <b>VN-Index không đo thị trường, nó đo nhóm trụ</b>.</p><p class="rb-note">Muốn đo sức khỏe thật: xem độ rộng và chỉ số bình quân giản đơn.</p></div>
           <div class="wb-card rb-rule" id="R-H05" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H05</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> thanh toán T+2, <b>thì</b> không bán được thứ vừa mua trong cùng phiên → thanh khoản mỏng hơn thị trường T+0.</p></div>
-          <div class="wb-card rb-rule" id="R-H06" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H06</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> một mã vào/ra rổ MSCI hoặc FTSE, <b>thì</b> dòng tiền thụ động <b>buộc phải</b> mua/bán bất chấp giá.</p><p class="rb-note">Sự kiện biết trước lịch.</p></div>
+          <div class="wb-card rb-rule" id="R-H06" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H06</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> một mã vào/ra rổ MSCI hoặc FTSE, <b>thì</b> dòng tiền thụ động <b>buộc phải</b> mua/bán bất chấp giá.</p><p class="rb-note">Sự kiện biết trước lịch, nên phần lớn đã vào giá trước ngày hiệu lực (R-A04). FTSE Russell chốt (4/2026) đưa Việt Nam lên nhóm Mới nổi thứ cấp, hiệu lực từ 21/9/2026.</p></div>
           <div class="wb-card rb-rule" id="R-H07" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H07</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> tỷ lệ NĐT cá nhân rất cao (&gt;85% giá trị giao dịch), <b>thì</b> biên độ phản ứng lớn hơn cú sốc gốc.</p></div>
           <div class="wb-card rb-rule" id="R-H08" data-tag="T2" data-cat="H"><div class="rb-rule-head"><span class="rb-id">R-H08</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> VN là nền kinh tế nhỏ mở, <b>thì</b> ảnh hưởng chỉ đi <b>một chiều</b>: thế giới tác động mạnh vào VN, VN tác động ngược lại gần như bằng 0. VN là <b>người nhận giá</b>, gần như tuyệt đối.</p></div>
 
@@ -1518,7 +1520,7 @@
           </tbody>
         </table></div></div>
 
-        <div class="wb-card rb-rule" id="R-BR01" data-tag="T2" style="margin-top:14px"><div class="rb-rule-head"><span class="rb-id">R-BR01</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> cầu nối là loại <b>D</b>, <b>thì</b> đừng suy luận cơ học. Lãi suất VND liên ngân hàng qua đêm có lúc lên <b>11%/năm</b> cuối tháng 5 đầu tháng 6/2026 — không đến từ Fed mà từ thanh khoản nội địa.</p></div>
+        <div class="wb-card rb-rule" id="R-BR01" data-tag="T2" style="margin-top:14px"><div class="rb-rule-head"><span class="rb-id">R-BR01</span><span class="wb-cap wb-cap--sm">T2</span></div><p class="rb-body"><b>Nếu</b> cầu nối là loại <b>D</b>, <b>thì</b> đừng suy luận cơ học. Lãi suất VND liên ngân hàng qua đêm lên <b>10,66–11%/năm</b> ngày 1/6/2026 rồi về 5,4% ngày 3/6 — không đến từ Fed mà từ thanh khoản nội địa.</p></div>
 
         <h3 class="rb-sub-title">5.2 — Khoảng chênh giữa giá Việt Nam và giá thế giới là một tín hiệu, không phải nhiễu</h3>
         <p class="rb-sec-intro" style="margin-bottom:12px">Lấy giá trong nước trừ đi giá thế giới quy ra tiền Việt. Nhiều người coi phần dư đó là chuyện lặt vặt. Thực ra nó là <b>một thông tin riêng về Việt Nam</b> mà bạn quan sát được miễn phí, hằng ngày, không cần chờ ai công bố số liệu:</p>
@@ -1813,7 +1815,7 @@
 
           <details class="wb-accordion__item"><summary>7.3 — Độc quyền tạo chênh lệch giá: trường hợp vàng SJC</summary><div class="wb-accordion__body">
             <p class="rb-body"><span class="wb-cap">T2</span>&nbsp; <b>Nếu</b> một mặt hàng có thể arbitrage bị áp đặt độc quyền sản xuất và hạn chế nhập khẩu, <b>thì</b> giá nội địa tách khỏi giá thế giới và phần chênh là <b>địa tô độc quyền</b>, không phải tín hiệu cung–cầu.</p>
-            <p class="wb-help" style="margin-top:10px">Nghị định 24/2012 cho Nhà nước độc quyền sản xuất vàng miếng. Chênh lệch SJC từng lên 18–20 triệu đồng/lượng (cuối 2023). Nghị định 232/2025 (hiệu lực 10/10/2025) sửa đổi NĐ 24 với kỳ vọng thu hẹp chênh lệch.</p>
+            <p class="wb-help" style="margin-top:10px">Nghị định 24/2012 cho Nhà nước độc quyền sản xuất vàng miếng và cấp hạn ngạch nhập vàng nguyên liệu. Chênh lệch SJC từng lên 18–20 triệu đồng/lượng (cuối 2023). Nghị định 232/2025 (hiệu lực 10/10/2025) bỏ độc quyền, chuyển sang cấp phép; tới 11/2026 chênh lệch vẫn khoảng 17 triệu đồng/lượng vì chưa nhà sản xuất mới nào nhập được nguyên liệu (mục A6).</p>
             <div class="wb-alert wb-alert--success" style="margin-top:12px"><span class="wb-alert__icon"><span class="wb-ico wb-ico--xs">check</span></span><div class="wb-alert__body"><p class="wb-alert__title">Suy ra T1 — dự đoán khả bác</p><p class="wb-alert__msg">Khi rào cản được nới, chênh lệch phải co về <b>chi phí nhập khẩu cận biên + chi phí giao dịch</b>.</p></div></div>
           </div></details>
 
@@ -1931,7 +1933,7 @@
             <tr><td>VN-Index, giá cổ phiếu, dữ liệu tài chính</td><td><code>vnstock</code> (Python)</td></tr>
             <tr><td>Foreign net flow, dư nợ margin</td><td>vietstock, fireant</td></tr>
             <tr><td>Giá vàng SJC, vàng nhẫn, tỷ giá</td><td>website doanh nghiệp vàng, NHNN</td></tr>
-            <tr><td>CPI VN và trọng số rổ</td><td>Tổng cục Thống kê</td></tr>
+            <tr><td>CPI VN và trọng số rổ, GDP</td><td>Cục Thống kê, Bộ Tài chính (nso.gov.vn; trước 3/2025 là Tổng cục Thống kê)</td></tr>
             <tr><td>Lãi suất liên ngân hàng, dự trữ ngoại hối</td><td>NHNN, SBV</td></tr>
           </tbody>
         </table></div></div>
@@ -1942,7 +1944,7 @@
       <div class="wb-alert wb-alert--plain">
         <div class="wb-alert__body">
           <p class="wb-alert__title">Về tài liệu này</p>
-          <p class="wb-alert__msg">Tổng hợp phục vụ <b>mục đích học tập</b> — không phải khuyến nghị đầu tư. Các mốc chính sách và con số thị trường nên được kiểm tra lại tại thời điểm sử dụng; cách tự kiểm chứng bằng dữ liệu nằm ở <a href="#s9-kiemchung">Phần 09</a>. Cập nhật 31/7/2026, số liệu đến phiên 29/7/2026.</p>
+          <p class="wb-alert__msg">Tổng hợp phục vụ <b>mục đích học tập</b> — không phải khuyến nghị đầu tư. Các mốc chính sách và con số thị trường nên được kiểm tra lại tại thời điểm sử dụng; cách tự kiểm chứng bằng dữ liệu nằm ở <a href="#s9-kiemchung">Phần 09</a>. Cập nhật 17/11/2026, số liệu đến sáng 17/11/2026; mỗi con số hiện hành ghi kèm ngày và nguồn.</p>
         </div>
       </div>
 
@@ -2327,8 +2329,8 @@
     $('gBarR').style.width = Math.min(100, Math.abs(gr) / scale * 100) + '%';
     var lim = world * 0.03, t, m;
     if (gs > lim && gr > lim) {
-      t = 'Cầu trú ẩn thật';
-      m = '<b>Cả hai loại cùng vượt giá thế giới.</b> Người dân đang thực sự chuyển tài sản sang vàng — đây là tín hiệu kinh tế, đáng để ý.';
+      t = 'Cầu trong nước lớn hơn lượng vàng nhập được';
+      m = '<b>Cả hai loại cùng vượt giá thế giới.</b> Người dân đang thật sự mua vàng, và cửa nhập vàng nguyên liệu không đủ rộng để kéo giá về. Khoản chênh là thứ bạn mất ngay nếu cửa ấy mở.';
     } else if (gs > lim) {
       t = 'Chuyện thương hiệu, không phải chuyện kinh tế';
       m = 'Nhẫn bám sát giá thế giới, chỉ mình SJC vượt xa. Khoản chênh đó là giá của việc gần như không ai được nhập vàng về bán rẻ hơn — <b>bạn đang trả cho một hàng rào giấy tờ, không phải cho vàng</b>.';
