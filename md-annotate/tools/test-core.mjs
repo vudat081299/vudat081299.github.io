@@ -473,6 +473,16 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   const ns = normSession({ text, comments: [{ id: 'a', quote: 'Alpha one.', comment: 'c', origin: 'src', parts: [{ quote: 'Alpha one.', origin: 'src', rel: 'x', prefix: 3, suffix: null }, { quote: 'Gamma three.', origin: 9 }] }] }, 's');
   const pa = anchorAll(ns.comments, text, '').anchors.a.parts;
   check('normSession: trường hỏng của parts được sửa, phần vẫn neo', pa.every((x) => x.src) && ns.comments[0].parts.every((p) => typeof p.prefix === 'string' && typeof p.suffix === 'string' && Number.isFinite(p.rel) && (p.origin === 'src' || p.origin === 'md')), JSON.stringify([pa, ns.comments[0].parts]));
+  // Sửa hàng loạt (đổi một từ ở mọi đoạn) trong văn bản dài đã đọc hết: mọi dấu thành changed, neo lại vẫn nhanh
+  // (chạy ở mỗi lần vẽ khi đang gõ).
+  const mk = (tag) => Array.from({ length: 2500 }, (_, i) => {
+    const q = tag + ' paragraph number ' + i + ' with some words about topic ' + (i % 17) + ' and more text here';
+    return { a: i * 2, b: i * 2, h: R.hashStr(q), q: q.slice(0, 80), block: i, item: -1, head: false, depth: 0, sec: 0 };
+  });
+  const UA = mk('alpha'), UB = mk('beta'), MA = R.setMarks(UA, [], R.resolveMarks(UA, []), UA.map((_, i) => i), true);
+  R.resolveMarks(UB, MA);
+  const t0 = performance.now(), rB = R.resolveMarks(UB, MA), ms = performance.now() - t0;
+  check('resolveMarks: 2.500 dấu đều đổi chữ, neo lại dưới 400ms', ms < 400 && rB.state.every((x, i) => x === 'changed' && rB.owner[i] === i), Math.round(ms) + 'ms');
 }
 // ── end đã đọc, nhiều dòng: trường hợp biên ──
 

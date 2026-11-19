@@ -62,22 +62,17 @@ export function makeMark(units, i) {
   var n = units.length;
   return { h: units[i].h, p: i > 0 ? units[i - 1].h : '', n: i + 1 < n ? units[i + 1].h : '', q: units[i].q, r: rel(i, n) };
 }
-var wordsMemo = {}, wordsN = 0;
+/* Tập từ (chữ thường) của một đoạn đầu: Set. */
 function words(q) {
-  if (!wordsMemo[q]) {
-    if (++wordsN > 4000) { wordsMemo = {}; wordsN = 1; }
-    var set = {};
-    (q.toLowerCase().match(/[\p{L}\p{N}]+/gu) || []).forEach(function (w) { set[w] = true; });
-    wordsMemo[q] = set;
-  }
-  return wordsMemo[q];
+  return new Set(q.toLowerCase().match(/[\p{L}\p{N}]+/gu) || []);
 }
-/* Gần giống: tỉ lệ từ chung trên mọi từ (Jaccard) của hai đoạn đầu. */
-function similar(a, b) {
-  var A = words(a), B = words(b), inter = 0, uni = 0, w;
-  for (w in A) { uni++; if (B[w]) inter++; }
-  for (w in B) if (!A[w]) uni++;
-  return uni ? inter / uni : 0;
+/* Gần giống: tỉ lệ từ chung trên mọi từ (Jaccard). Hai tập lệch cỡ quá `floor` thì không thể đạt: trả 0, khỏi đếm. */
+function similar(A, B, floor) {
+  var a = A.size, b = B.size;
+  if (!a || !b || Math.min(a, b) < floor * Math.max(a, b)) return 0;
+  var S = a <= b ? A : B, L = a <= b ? B : A, inter = 0;
+  S.forEach(function (w) { if (L.has(w)) inter++; });
+  return inter / (a + b - inter);
 }
 var WINDOW = 150;   // dấu đã đổi chữ chỉ tìm trong ±150 đơn vị quanh chỗ cũ, để văn bản dài vẫn nhanh
 
@@ -101,11 +96,12 @@ export function resolveMarks(units, marks) {
     });
     if (best >= 0) { owner[best] = k; state[best] = 'done'; } else pend.push(k);
   });
+  var uw = [];   // tập từ của đơn vị, tính khi cần lần đầu
   pend.forEach(function (k) {
-    var m = marks[k], best = -1, bs = -Infinity, mid = Math.round(m.r * (n - 1));
+    var m = marks[k], best = -1, bs = -Infinity, mid = Math.round(m.r * (n - 1)), mw = words(m.q);
     for (var i = Math.max(0, mid - WINDOW); i < Math.min(n, mid + WINDOW + 1); i++) {
       if (owner[i] >= 0) continue;
-      var c = ctx(m, i), sim = similar(m.q, units[i].q);
+      var c = ctx(m, i), sim = similar(mw, uw[i] || (uw[i] = words(units[i].q)), c === 2 ? 0 : c ? 0.5 : 0.7);
       if (!(c === 2 || (c === 1 && sim >= 0.5) || sim >= 0.7)) continue;
       var s = c * 2 + sim * 2 - Math.abs(rel(i, n) - m.r);
       if (s > bs) { bs = s; best = i; }
