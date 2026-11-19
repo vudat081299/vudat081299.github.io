@@ -1,55 +1,78 @@
-/* TOKEN: màu, font, khoảng cách, bo góc, chuyển động; theme sáng ở :root, tối ở html.dark.
-   Mã màu chỉ khai ở file này. */
-/* TOKEN — nền, mực, font chép từ index.html gốc. Xanh lá riêng của trang này, sáng hơn trang chủ (MDAN-002).
-   Đổi màu ở đây, đừng rải vào từng luật. */
+/* TOKEN: màu, chữ, khoảng cách, bo góc, chiều cao, chuyển động; theme sáng ở :root, tối ở html.dark.
+   Mã màu, cỡ chữ và bán kính chỉ khai ở file này (tools/lint.py kiểm). Nền, mực, font chép từ trang chủ.
+   Một màu xanh: --accent, sáng (MDAN-009). Mọi sắc xanh khác pha từ nó; chữ không bao giờ màu xanh trên nền sáng. */
 :root {
   --bg:        #f5f6f3;
   --surface:   #ffffff;
   --surface-2: #eceee9;
   --ink:       #0b0f0c;
   --ink-2:     #464e48;
-  --ink-3:     #5b645e;
+  --ink-3:     #5b645e;              /* chữ phụ: ≥ 5:1 trên mọi nền */
+  --ink-4:     #7a837d;              /* chỉ cho vạch, viền trạng thái, biểu tượng mờ: ≥ 3:1, không cho chữ */
   --line:      #d6dad4;
   --line-2:    #e6e9e4;
-  --green:     #15803d;              /* chữ, viền, link xanh trên nền sáng (5:1 trên trắng) */
-  --green-hi:  #22c55e;
-  --green-soft: rgba(34, 197, 94, .12);
-  --green-line: rgba(21, 128, 61, .40);
-  --accent:    #22c55e;              /* nền nút chính, huy hiệu số */
-  --on-accent: #052e16;              /* chữ trên --accent: 6,5:1 */
-  --scrim:     rgba(11, 15, 12, .38);
-  --shadow:    0 24px 60px -18px rgba(11, 15, 12, .35), 0 2px 6px rgba(11, 15, 12, .06);
-  --hl:        rgba(34, 197, 94, .16);
-  --hl-2:      rgba(34, 197, 94, .28);
-  --hl-pend:   rgba(34, 197, 94, .36);
   --danger:    #b42318;
-  --toast-act: #4ade80;
+
+  /* Xanh duy nhất. Chữ trên nó: --on-accent (6,5:1). Trên nền sáng nó chỉ ~2,3:1, nên không làm chữ. */
+  --accent:      #22c55e;
+  --on-accent:   #052e16;
+  --accent-soft: color-mix(in srgb, var(--accent) 12%, transparent);   /* nền nhạt: thẻ chọn, rê chip */
+  --accent-line: color-mix(in srgb, var(--accent) 55%, transparent);   /* gạch chân highlight, vạch trang trí */
+  --hl:          color-mix(in srgb, var(--accent) 16%, transparent);
+  --hl-2:        color-mix(in srgb, var(--accent) 28%, transparent);
+  --hl-pend:     color-mix(in srgb, var(--accent) 36%, transparent);
+  --hl-mirror:   color-mix(in srgb, var(--accent) 38%, transparent);
+  /* Chỉ báo trạng thái không phải chữ cần ≥ 3:1: nền sáng dùng mực, nền tối dùng --accent. */
+  --ring:      var(--ink);           /* vòng focus, viền ô nhập đang gõ */
+  --edge-on:   var(--ink-4);         /* viền của thẻ / hàng đang chọn */
+
+  --scrim:     rgba(11, 15, 12, .38);
+  --chip:      rgba(11, 15, 12, .05);
+  --kbd-on-accent: color-mix(in srgb, var(--on-accent) 8%, transparent);   /* chữ --on-accent trên nó ≥ 4,5:1 */
   --lift:      0 1px 3px rgba(11, 15, 12, .12);
-  --tab-on:    var(--surface);           /* nền tab, nút kiểu đang chọn */
-  /* Tô màu tab Nguồn, theo tinh thần VS Code Light+; ≥ 4,5:1 trên nền và trên highlight. */
+  --shadow:    0 24px 60px -18px rgba(11, 15, 12, .35), 0 2px 6px rgba(11, 15, 12, .06);
+  --shadow-1:  0 1px 2px rgba(11, 15, 12, .05), 0 1px 1px rgba(11, 15, 12, .03);
+  --shadow-pop: 0 20px 48px -16px rgba(11, 15, 12, .30), 0 6px 14px -6px rgba(11, 15, 12, .12);
+  --tab-on:    var(--surface);       /* nền mục đang chọn của nhóm tab */
+  --tab-ring:  var(--lift);
+
+  /* Tô màu tab Source, theo tinh thần VS Code Light+; ≥ 4,5:1 trên nền và trên highlight (MDAN-001). */
   --sx-head:   #800000;
   --sx-punct:  #9000c0;
   --sx-link:   #0451a5;
-  /* Preview kiểu GitHub (màu Primer, sáng) */
+  --sx-url:    #005a9e;
+  --sx-code:   #6f5520;
+  --sx-tag:    #1b6b82;
+  --sx-string: #a31515;
+  /* Preview kiểu GitHub (màu Primer, sáng; MDAN-006) */
   --gh-fg: #1f2328; --gh-muted: #59636e; --gh-border: #d1d9e0; --gh-border-muted: #d1d9e0b3; --gh-subtle: #f6f8fa;
   --gh-link: #0969da; --gh-code-bg: #818b981f; --gh-row: #f6f8fa;
   --gh-note: #0969da; --gh-tip: #1a7f37; --gh-important: #8250df; --gh-warning: #9a6700; --gh-caution: #d1242f;
   --hl-keyword: #cf222e; --hl-title: #8250df; --hl-string: #0a3069; --hl-number: #0550ae; --hl-comment: #59636e;
   --hl-builtin: #953800; --hl-name: #116329; --hl-add-bg: #dafbe1; --hl-add: #116329; --hl-del-bg: #ffebe9; --hl-del: #82071e;
-  --sx-url:    #005a9e;
-  --sx-code:   #6f5520;
-  --sx-tag:    #1b6b82;
-  --sx-string: #a31515;
-  --tab-ring:  var(--lift);
-  --ink-4:     #8a938c;              /* số dòng, biểu tượng mờ — không dùng cho chữ cần đọc */
-  --chip:      rgba(11, 15, 12, .05);
-  --kbd-on-accent: rgba(5, 46, 22, .14);
-  --shadow-1:  0 1px 2px rgba(11, 15, 12, .05), 0 1px 1px rgba(11, 15, 12, .03);
-  --shadow-pop: 0 20px 48px -16px rgba(11, 15, 12, .30), 0 6px 14px -6px rgba(11, 15, 12, .12);
+  --gh-r: 6px;                         /* bo góc khối code của GitHub */
 
-  /* Thang khoảng cách, bo góc, chuyển động */
+  /* Chữ: năm cỡ, ba độ cao dòng, ba độ đậm (400, 500 mono, 600). */
+  --fs-xs: 12px;                       /* mono: nhãn, số đếm, huy hiệu, phím, số dòng */
+  --fs-sm: 13px;                       /* chữ phụ, trích dẫn, chip, mã */
+  --fs-md: 14px;                       /* thân giao diện, nút, tab, ô nhập */
+  --fs-lg: 16px;                       /* tiêu đề hộp thoại; Preview mặc định */
+  --fs-xl: 20px;                       /* tiêu đề trang, thẻ bắt đầu */
+  --lh-tight: 1.25;
+  --lh:       1.5;
+  --lh-code:  1.7;
+  --md-fs: var(--fs-lg);               /* cỡ chữ Preview; hộp Layout đặt lại trên <html> */
+
+  /* Khoảng cách, bo góc (vật lồng trong bo nhỏ hơn vật chứa), chiều cao điều khiển, chuyển động */
   --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px;
-  --r-sm: 8px; --r: 12px; --r-lg: 16px;
+  --r-xs: 4px;                         /* mục trong nhóm tab, huy hiệu, phím */
+  --r-sm: 8px;                         /* nút, ô nhập, nhóm tab, hàng */
+  --r:    12px;                        /* thẻ, khối trong panel, toast */
+  --r-lg: 16px;                        /* bề mặt: văn bản, panel, hộp thoại, hộp nhận xét, tấm trượt */
+  --r-pill: 999px;
+  --h-sm: 32px;                        /* nhỏ: mục trong nhóm tab, chip, nút trong thẻ */
+  --h:    40px;                        /* mặc định: nút, ô nhập, nhóm tab */
+  --h-touch: 44px;                     /* màn cảm ứng, điện thoại */
   --dur: .16s; --ease: cubic-bezier(.2, .7, .2, 1);
 
   --pad: 24px;                         /* lề trang trong vùng làm việc (MDAN-005) */
@@ -67,42 +90,45 @@ html.dark {
   --ink:       #eef2ed;
   --ink-2:     #a9b3ac;
   --ink-3:     #8d9891;
+  --ink-4:     #5f6a63;
   --line:      #262d29;
   --line-2:    #1a201c;
-  --green:     #4ade80;
-  --green-hi:  #4ade80;
-  --green-soft: rgba(74, 222, 128, .10);
-  --green-line: rgba(74, 222, 128, .38);
-  --accent:    #4ade80;
-  --on-accent: #052e16;              /* 8,5:1 */
-  --scrim:     rgba(0, 0, 0, .62);
-  --shadow:    0 30px 80px -20px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 255, 255, .02);
-  /* Nền tối: phủ mỏng, để chữ màu (--sx-*) vẫn ≥ 4,5:1 trên highlight. */
-  --hl:        rgba(74, 222, 128, .09);
-  --hl-2:      rgba(74, 222, 128, .15);
-  --hl-pend:   rgba(74, 222, 128, .22);
   --danger:    #ff8a7a;
-  --toast-act: #166534;
+
+  --accent:      #4ade80;
+  --on-accent:   #052e16;            /* 8,5:1 */
+  --accent-soft: color-mix(in srgb, var(--accent) 10%, transparent);
+  --accent-line: color-mix(in srgb, var(--accent) 38%, transparent);
+  /* Nền tối: phủ mỏng, để chữ màu (--sx-*) vẫn ≥ 4,5:1 trên highlight. */
+  --hl:          color-mix(in srgb, var(--accent) 9%, transparent);
+  --hl-2:        color-mix(in srgb, var(--accent) 15%, transparent);
+  --hl-pend:     color-mix(in srgb, var(--accent) 22%, transparent);
+  --hl-mirror:   color-mix(in srgb, var(--accent) 38%, transparent);
+  --ring:      var(--accent);
+  --edge-on:   var(--accent);
+
+  --scrim:     rgba(0, 0, 0, .62);
+  --chip:      rgba(255, 255, 255, .06);
+  --kbd-on-accent: color-mix(in srgb, var(--on-accent) 8%, transparent);
   --lift:      0 1px 3px rgba(0, 0, 0, .5);
+  --shadow:    0 30px 80px -20px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 255, 255, .02);
+  --shadow-1:  0 0 0 1px rgba(255, 255, 255, .01);
+  --shadow-pop: 0 24px 60px -16px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .05);
   --tab-on:    var(--line);
+  --tab-ring:  inset 0 0 0 1px var(--accent-line);
+
   /* Dark+ */
   --sx-head:   #6cb0ef;
   --sx-punct:  #d49bd0;
   --sx-link:   #4fc1ff;
+  --sx-url:    #5aa9ff;
+  --sx-code:   #dba088;
+  --sx-tag:    #4ec9b0;
+  --sx-string: #d7ba7d;
   /* Preview kiểu GitHub (màu Primer, tối) */
   --gh-fg: #f0f6fc; --gh-muted: #9198a1; --gh-border: #3d444d; --gh-border-muted: #3d444db3; --gh-subtle: #151b23;
   --gh-link: #4493f8; --gh-code-bg: #656c7633; --gh-row: #151b23;
   --gh-note: #4493f8; --gh-tip: #3fb950; --gh-important: #ab7df8; --gh-warning: #d29922; --gh-caution: #f85149;
   --hl-keyword: #ff7b72; --hl-title: #d2a8ff; --hl-string: #a5d6ff; --hl-number: #79c0ff; --hl-comment: #9198a1;
   --hl-builtin: #ffa657; --hl-name: #7ee787; --hl-add-bg: #033a16; --hl-add: #aff5b4; --hl-del-bg: #67060c; --hl-del: #ffdcd7;
-  --sx-url:    #5aa9ff;
-  --sx-code:   #dba088;
-  --sx-tag:    #4ec9b0;
-  --sx-string: #d7ba7d;
-  --tab-ring:  inset 0 0 0 1px var(--green-line);
-  --ink-4:     #5f6a63;
-  --chip:      rgba(255, 255, 255, .06);
-  --kbd-on-accent: rgba(5, 46, 22, .16);
-  --shadow-1:  0 0 0 1px rgba(255, 255, 255, .01);
-  --shadow-pop: 0 24px 60px -16px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .05);
 }

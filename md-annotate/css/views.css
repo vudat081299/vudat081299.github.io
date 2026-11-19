@@ -2,57 +2,46 @@
    Preview kiểu GitHub (MDAN-006), highlight.js (--hl-*), đoạn đã nhận xét (mark.ma-hl). */
 /* VĂN BẢN */
 .ma-doc { min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-1); }
-.ma-doc.is-drop { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-soft); }
+.ma-doc.is-drop { border-color: var(--edge-on); box-shadow: 0 0 0 3px var(--accent-soft); }
 .ma-doc__bar {
   display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3);
-  min-height: 57px; padding: var(--s2) var(--s3) var(--s2) var(--s2); border-bottom: 1px solid var(--line-2);
+  padding: var(--s2) var(--s2) var(--s2) var(--s2); border-bottom: 1px solid var(--line-2);
 }
-.ma-tabs { order: 2; display: inline-flex; gap: 2px; padding: 3px; background: var(--surface-2); border-radius: var(--r); }
-.ma-tab {
-  min-height: 34px; padding: 0 14px; border: 0; border-radius: 9px; background: transparent;
-  font: 600 13.5px/1 var(--sans); color: var(--ink-2);
-  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
-}
-.ma-tab:hover { color: var(--ink); }
-.ma-tab[aria-selected="true"] { background: var(--tab-on); color: var(--ink); box-shadow: var(--tab-ring); }
-.ma-doc__meta { order: 1; margin-left: auto; flex: none; font: 500 11.5px/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.ma-tabs { order: 2; }   /* nhóm tab: base.css */
+.ma-doc__meta { order: 1; margin-left: auto; flex: none; font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
 
 .ma-edit { padding: var(--s4); display: flex; flex-direction: column; gap: var(--s3); }
 .ma-ta {
-  width: 100%; min-width: 0; padding: 12px 14px; resize: vertical;
-  background: var(--bg); border: 1px solid var(--line); border-radius: var(--r);
-  font: 500 13.5px/1.6 var(--mono); tab-size: 4;
+  width: 100%; min-width: 0; padding: var(--s3); resize: vertical;
+  background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-sm);
+  font: 500 var(--fs-sm)/var(--lh-code) var(--mono); tab-size: 4;
   transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
 }
 #src-input { min-height: 52vh; }
 #src-input.is-empty { min-height: 140px; }
-.ma-edit__tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-.ma-edit__tools .ma-hint { font-size: 13px; color: var(--ink-3); }
-.ma-edit__note { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+.ma-edit__tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); }
+.ma-edit__tools .ma-hint { font-size: var(--fs-sm); color: var(--ink-3); }
+.ma-edit__note { margin: 0; font-size: var(--fs-sm); color: var(--ink-2); }
 .ma-edit__note b { color: var(--danger); font-weight: 600; }
 /* Trạng thái trống: vùng thả file, ba bước, nút bắt đầu. */
 .ma-start {
   display: flex; flex-direction: column; align-items: center; gap: var(--s5); text-align: center;
-  padding: var(--s6) var(--s5); border: 1.5px dashed var(--line); border-radius: var(--r-lg);
+  padding: var(--s6) var(--s5); border: 1px dashed var(--ink-4); border-radius: var(--r);
   background: var(--bg); transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
-.ma-doc.is-drop .ma-start { border-color: var(--green); background: var(--green-soft); }
+.ma-doc.is-drop .ma-start { border-color: var(--edge-on); background: var(--accent-soft); }
 .ma-start__icon {
-  display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px;
-  background: var(--green-soft); color: var(--green);
+  display: grid; place-items: center; width: 48px; height: 48px; margin: 0 auto; border-radius: var(--r);
+  background: var(--accent-soft); color: var(--ink);
 }
 .ma-start__icon svg { width: 24px; height: 24px; }
-.ma-start h2 { margin: var(--s3) 0 var(--s1); font: 600 20px/1.25 var(--display); letter-spacing: -.01em; }
+.ma-start h2 { margin: var(--s3) 0 var(--s1); font: 600 var(--fs-xl)/var(--lh-tight) var(--display); letter-spacing: -.01em; }
 .ma-start p { margin: 0; max-width: 46ch; color: var(--ink-2); }
 .ma-start p code { font: 500 .9em var(--mono); }
 .ma-start__acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s2); }
 .ma-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s4); width: 100%; max-width: 640px; text-align: left; }
-.ma-steps li { display: flex; gap: var(--s2); align-items: flex-start; font-size: 13.5px; color: var(--ink-2); }
+.ma-steps li { display: flex; gap: var(--s2); align-items: flex-start; font-size: var(--fs-sm); color: var(--ink-2); }
 .ma-steps b { color: var(--ink); font-weight: 600; }
-.ma-steps__n {
-  flex: none; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 999px;
-  font: 500 11px/1 var(--mono); color: var(--on-accent); background: var(--accent);
-}
 
 .ma-views { display: grid; grid-template-columns: minmax(0, 1fr); }
 /* Song song: hai khung cao bằng phần còn lại của khung nhìn (--pane-h, JS tính), cuộn riêng; vách giữa kéo được. */
@@ -64,11 +53,11 @@
 .ma-divider:focus-visible { outline: none; }
 .ma-view { min-width: 0; padding: var(--s5) var(--s6) var(--s6); }
 #wrap-src { padding-left: var(--s4); }
-.ma-view__lbl { display: none; margin-bottom: 10px; }
+.ma-view__lbl { display: none; margin-bottom: var(--s2); }
 .ma-views[data-mode="split"] .ma-view__lbl { display: block; }
 .ma-src {
   margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; word-break: normal;
-  font: 500 13.5px/1.7 var(--mono); color: var(--ink);
+  font: 500 var(--fs-sm)/var(--lh-code) var(--mono); color: var(--ink);
   counter-reset: ln; tab-size: 4;
 }
 /* Lề số dòng kiểu VS Code. Số là ::before ở đầu khối dòng, nên dòng dài xuống hàng vẫn thẳng hàng đầu. */
@@ -76,20 +65,20 @@
 .ma-ln::before {
   counter-increment: ln; content: counter(ln);
   position: absolute; left: 0; top: 0; width: var(--gw, 2ch);
-  text-align: right; font-size: 12px; color: var(--ink-4); font-variant-numeric: tabular-nums;
+  text-align: right; font-size: var(--fs-xs); color: var(--ink-3); font-variant-numeric: tabular-nums;
   -webkit-user-select: none; user-select: none; pointer-events: none;
 }
-.ma-ln.has-c::before { color: var(--green); pointer-events: auto; cursor: pointer; }
+.ma-ln.has-c::before { color: var(--ink); font-weight: 600; pointer-events: auto; cursor: pointer; }
 .ma-ln.has-c::after {
-  content: ''; position: absolute; left: calc(var(--gw, 2ch) + 8px); top: 4px; bottom: 4px; width: 3px;
-  border-radius: 2px; background: var(--accent); cursor: pointer;
+  content: ''; position: absolute; left: calc(var(--gw, 2ch) + 8px); top: var(--s1); bottom: var(--s1); width: 3px;
+  border-radius: var(--r-pill); background: var(--accent); cursor: pointer;
 }
-.ma-view__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: -8px 0 6px; }
+.ma-view__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin: calc(-1 * var(--s2)) 0 var(--s2); }
 .ma-view__head .ma-view__lbl { margin: 0; }
-.ma-syn { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; min-height: 32px; font-size: 12.5px; color: var(--ink-3); cursor: pointer; }
-.ma-syn input { width: 16px; height: 16px; margin: 0; accent-color: var(--green); }
+.ma-syn { margin-left: auto; display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--h-sm); font-size: var(--fs-sm); color: var(--ink-3); cursor: pointer; }
+.ma-syn input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
 /* Màu cú pháp: chỉ đổi màu và kiểu chữ, không đổi chữ — text của khung vẫn đúng bằng nguồn. */
-.sx-head { color: var(--sx-head); font-weight: 700; }
+.sx-head { color: var(--sx-head); font-weight: 600; }
 .sx-punct, .sx-quote { color: var(--sx-punct); }
 .sx-qtext { color: var(--ink-2); font-style: italic; }
 .sx-link { color: var(--sx-link); }
@@ -97,17 +86,17 @@
 .sx-code, .sx-fence, .sx-info { color: var(--sx-code); }
 .sx-tag { color: var(--sx-tag); }
 .sx-string { color: var(--sx-string); }
-.sx-strong { font-weight: 700; }
+.sx-strong { font-weight: 600; }
 .sx-em { font-style: italic; }
 .sx-strike { text-decoration: line-through; }
-.ma-empty { display: flex; flex-direction: column; align-items: center; gap: var(--s3); padding: 64px var(--s5); color: var(--ink-3); }
+.ma-empty { display: flex; flex-direction: column; align-items: center; gap: var(--s3); padding: calc(2 * var(--s6)) var(--s5); color: var(--ink-3); }
 .ma-empty p { margin: 0; }
 
 /* Markdown đã dựng: giống GitHub (MDAN-006) — font hệ thống, tiêu đề có gạch dưới, khối code xám tô màu theo
    ngôn ngữ, bảng kẻ ô sọc, hộp Note/Tip/…; màu ở token --gh-* / --hl-*. Cỡ chữ theo --md-fs, mọi khoảng cách bằng em. */
 .ma-md {
   max-width: var(--md-max, none); margin: 0 auto; color: var(--gh-fg);
-  font: 400 var(--md-fs, 16px)/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  font: 400 var(--md-fs)/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
   overflow-wrap: break-word;
 }
 .ma-md > :first-child { margin-top: 0 !important; }
@@ -133,8 +122,8 @@
 .ma-md blockquote { margin-left: 0; margin-right: 0; padding: 0 1em; color: var(--gh-muted); border-left: .25em solid var(--gh-border); }
 .ma-md blockquote > :last-child { margin-bottom: 0; }
 .ma-md :is(code, kbd, pre, samp) { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
-.ma-md code { padding: .2em .4em; margin: 0; font-size: 85%; white-space: break-spaces; background: var(--gh-code-bg); border-radius: 6px; }
-.ma-md pre { padding: 1em; overflow: auto; font-size: 85%; line-height: 1.45; color: var(--gh-fg); background: var(--gh-subtle); border-radius: 6px; word-wrap: normal; }
+.ma-md code { padding: .2em .4em; margin: 0; font-size: 85%; white-space: break-spaces; background: var(--gh-code-bg); border-radius: var(--gh-r); }
+.ma-md pre { padding: 1em; overflow: auto; font-size: 85%; line-height: 1.45; color: var(--gh-fg); background: var(--gh-subtle); border-radius: var(--gh-r); word-wrap: normal; }
 .ma-md pre code { display: inline; padding: 0; margin: 0; font-size: 100%; white-space: pre; background: transparent; border: 0; word-break: normal; }
 .ma-md table { display: block; width: max-content; max-width: 100%; overflow: auto; border-spacing: 0; border-collapse: collapse; font-variant: tabular-nums; }
 .ma-md :is(th, td) { padding: .375em .8125em; border: 1px solid var(--gh-border); }
@@ -176,15 +165,15 @@
 /* Đoạn đã nhận xét. Không bo góc: có gạch chân (REPO-025 chỉ cấm viền một cạnh + bo; ở đây là nền). */
 .ma-hl {
   background: var(--hl); color: inherit; cursor: pointer;
-  text-decoration: underline 2px var(--green-line); text-underline-offset: 3px;
+  text-decoration: underline 2px var(--accent-line); text-underline-offset: 3px;
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
 .ma-hl.is-multi { background: var(--hl-2); }
-.ma-hl.is-active { background: var(--hl-pend); text-decoration-color: var(--green); }
+.ma-hl.is-active { background: var(--hl-pend); text-decoration-color: var(--accent); }
 .ma-hl[data-n]::after {
-  content: attr(data-n); display: inline-block; margin-left: 3px; padding: 2px 4px;
-  font: 500 10px/1 var(--mono); color: var(--on-accent); background: var(--accent);
-  border-radius: 5px; vertical-align: 2px; text-decoration: none;
+  content: attr(data-n); display: inline-block; margin-left: 2px; padding: 2px var(--s1);
+  font: 500 var(--fs-xs)/1 var(--mono); color: var(--on-accent); background: var(--accent);
+  border-radius: var(--r-xs); vertical-align: 1px; text-decoration: none;
   -webkit-user-select: none; user-select: none;
 }
 @media (prefers-reduced-motion: no-preference) {
