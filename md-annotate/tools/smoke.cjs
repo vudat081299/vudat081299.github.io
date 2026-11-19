@@ -736,6 +736,23 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     check('dữ liệu: Undo sau khi chuyển phiên không thêm nhận xét vào phiên đang mở', (await items(dp)).length === 0, (await items(dp)).join(' | '));
     await dp.click('#btn-hist'); await dp.click('#hist-list .ma-row:has-text("Doc A") .ma-row__main'); await dp.waitForTimeout(200);
     check('dữ liệu: Undo trả nhận xét về phiên của nó', (await items(dp)).length === 1 && /fix/.test((await items(dp))[0] || ''), (await items(dp)).join(' | '));
+    // History: đổi tên phiên đang mở, xoá tên thì về tên tự đặt; xoá phiên đang mở thì mở phiên kế, không ghi lại phiên đã xoá.
+    const renameCur = async (name) => {
+      await dp.click('#btn-hist'); await dp.click('#hist-list .ma-row.is-cur [aria-label="Rename"]');
+      await dp.fill('#hist-list input', name); await dp.keyboard.press('Enter'); await dp.keyboard.press('Escape');
+    };
+    await renameCur('Tên riêng');
+    check('dữ liệu: đổi tên phiên đang mở', (await dp.inputValue('#s-name')) === 'Tên riêng');
+    await renameCur('');
+    check('dữ liệu: xoá tên thì về tên tự đặt', (await dp.inputValue('#s-name')) === '' && (await dp.getAttribute('#s-name', 'placeholder')) === 'Doc A');
+    const delId = await dp.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:current')));
+    await dp.click('#btn-hist');
+    dp.once('dialog', (d) => d.accept());
+    await dp.click('#hist-list .ma-row.is-cur [aria-label="Delete session"]'); await dp.keyboard.press('Escape');
+    await dp.waitForTimeout(500);
+    const after = await dp.evaluate((id) => ({ text: document.getElementById('src-input').value, gone: localStorage.getItem('md-annotate:s:' + id) === null,
+      idx: JSON.parse(localStorage.getItem('md-annotate:index:v1')).map((e) => e.name) }), delId);
+    check('dữ liệu: xoá phiên đang mở thì mở phiên kế, phiên đã xoá không quay lại', after.text === 'Other doc\n' && after.gone && after.idx.join() === 'Other doc', JSON.stringify(after));
     await dctx.close();
   }
   // ── end review: data path ──

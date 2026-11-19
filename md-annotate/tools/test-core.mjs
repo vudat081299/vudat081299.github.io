@@ -155,6 +155,16 @@ import * as dpText from '../js/core/text.js';
     const idx = dpSession.normIndex([{ id: 'a' }, null, 'x', { id: 'b', updated: 'hỏng' }, { id: 'c', updated: 7 }]);
     check('normIndex: mục thiếu giờ sửa vẫn ra ngày hợp lệ', idx.length === 3 && idx.every((e) => Number.isFinite(e.updated)) && idx[2].updated === 7, JSON.stringify(idx));
   }
+  // Phiên: đổi tên, index.
+  {
+    const s = { text: '# Tiêu đề\n\nthân', comments: [], named: true, name: 'Cũ' };
+    dpSession.renameSession(s, '');
+    check('renameSession: tên rỗng thì về tên tự đặt', s.named === false && s.name === 'Tiêu đề');
+    const idx = [{ id: 'a' }, { id: 'b' }];
+    check('indexWith / indexWithout', eq(dpSession.indexWithout(idx, 'a'), [{ id: 'b' }]) &&
+      dpSession.indexWith(idx, { id: 'b', text: 'x', comments: [], name: 'x', created: 1, updated: 2 })[0].id === 'b' &&
+      eq(dpSession.indexWith(idx, { id: 'a', text: ' ', comments: [] }).map((e) => e.id), ['b']));
+  }
 }
 // ── end review: data path ──
 

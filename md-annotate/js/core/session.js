@@ -1,7 +1,7 @@
 /* Mô hình phiên, thuần (dữ liệu thường, không DOM, không localStorage): tạo phiên, chuẩn hoá phiên đọc từ bộ nhớ,
    tên tự đặt, danh sách phiên (index). Đọc / ghi bộ nhớ ở ui/state.js.
-   Xuất: autoName, createSession, indexWith, isEmpty, normIndex, normSession, renameIndex, renameSession,
-     touchSession, uid.
+   Xuất: autoName, createSession, indexWith, indexWithout, isEmpty, normIndex, normSession, renameIndex,
+     renameSession, touchSession, uid.
    Dùng: không module nào. */
 
 export function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
@@ -55,11 +55,12 @@ export function touchSession(s) {
 }
 /* Danh sách phiên sau khi lưu s: s lên đầu; phiên trống không vào danh sách. */
 export function indexWith(idx, s) {
-  idx = idx.filter(function (e) { return e.id !== s.id; });
+  idx = indexWithout(idx, s.id);
   if (!isEmpty(s)) idx.unshift({ id: s.id, name: s.name, created: s.created, updated: s.updated, chars: s.text.length, count: s.comments.length });
   return idx;
 }
-/* Đổi tên một phiên không mở; tên rỗng thì về tên tự đặt. */
+export function indexWithout(idx, id) { return idx.filter(function (e) { return e.id !== id; }); }
+/* Đổi tên một phiên; tên rỗng thì về tên tự đặt. */
 export function renameSession(s, name) {
   s.named = !!name; s.name = name || autoName(s.text);
 }

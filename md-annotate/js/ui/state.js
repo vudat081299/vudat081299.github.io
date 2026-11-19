@@ -1,7 +1,7 @@
-/* Phiên đang mở (S): đọc / ghi localStorage, lưu (hẹn giờ 300ms), chuyển phiên. S chỉ gán lại qua setS() /
-   switchTo(). Mô hình phiên (tạo, chuẩn hoá, tên tự đặt) ở core/session.js.
-   Xuất: cancelSave, flushSave, initState, loadIndex, loadSession, newSession, S, saveClosed, saveNow, scheduleSave,
-     setS, switchTo.
+/* Phiên đang mở (S): đọc / ghi localStorage, lưu (hẹn giờ 300ms), chuyển phiên. S chỉ gán lại qua switchTo() /
+   replaceDeleted(). Mô hình phiên (tạo, chuẩn hoá, tên tự đặt) ở core/session.js.
+   Xuất: flushSave, initState, loadIndex, loadSession, newSession, replaceDeleted, S, saveClosed, saveNow,
+     scheduleSave, switchTo.
    Dùng: core/session.js, ui/store.js, ui/dom.js, ui/render.js, ui/views.js, ui/popup.js, ui/history.js,
      ui/editor.js. */
 import { createSession, indexWith, isEmpty, normIndex, normSession, touchSession } from '../core/session.js';
@@ -21,9 +21,6 @@ export var S = (function () {
   var cur = store.get(KEY.cur, null);
   return (cur && loadSession(cur)) || newSession('');
 })();
-
-/* Gán lại phiên đang mở từ module khác (ESM không cho gán vào biến import). */
-export function setS(next) { S = next; }
 
 /* LƯU PHIÊN */
 var saveTimer = null, warnedQuota = false;
@@ -48,11 +45,18 @@ export function saveClosed(s) {
   if (store.set(KEY.s(s.id), s)) store.set(KEY.index, indexWith(loadIndex(), s));
   renderHistCount();
 }
-/* Huỷ lần lưu đang hẹn (VD vừa xoá phiên đang mở: đừng ghi lại nó). */
-export function cancelSave() { clearTimeout(saveTimer); saveTimer = null; }
+/* Mở phiên next thay phiên đang mở; phiên đang mở được lưu trước, trống thì xoá khỏi bộ nhớ. */
 export function switchTo(next) {
   flushSave();
   if (isEmpty(S) && next.id !== S.id) store.del(KEY.s(S.id));
+  show(next);
+}
+/* Phiên đang mở vừa bị xoá khỏi bộ nhớ (hộp History): bỏ lần lưu đang hẹn, để không ghi lại nó, rồi mở next. */
+export function replaceDeleted(next) {
+  clearTimeout(saveTimer); saveTimer = null;
+  show(next);
+}
+function show(next) {
   S = next;
   store.set(KEY.cur, S.id);
   closePop(true);

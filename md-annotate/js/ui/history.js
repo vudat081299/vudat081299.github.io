@@ -2,10 +2,10 @@
    Xuất: initHistory, renderHistCount.
    Dùng: core/text.js, core/session.js, ui/store.js, ui/dom.js, ui/state.js, ui/editor.js. */
 import { plural } from '../core/text.js';
-import { renameIndex, renameSession } from '../core/session.js';
+import { indexWithout, renameIndex, renameSession } from '../core/session.js';
 import { KEY, store } from './store.js';
 import { $, h, icon, toast } from './dom.js';
-import { cancelSave, flushSave, loadIndex, loadSession, newSession, S, saveNow, setS, switchTo } from './state.js';
+import { flushSave, loadIndex, loadSession, newSession, replaceDeleted, S, saveNow, switchTo } from './state.js';
 import { syncInputs } from './editor.js';
 
 var dateFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
@@ -56,7 +56,7 @@ function renameRow(row, main, e) {
 }
 function setSessionName(id, name) {
   if (id === S.id) {
-    S.name = name; S.named = !!name;
+    renameSession(S, name);
     saveNow(); syncInputs();
     return;
   }
@@ -69,12 +69,10 @@ function setSessionName(id, name) {
 function deleteSession(e) {
   if (!window.confirm('Delete session "' + (e.name || 'untitled') + '" and all its comments?')) return;
   store.del(KEY.s(e.id));
-  store.set(KEY.index, loadIndex().filter(function (x) { return x.id !== e.id; }));
+  store.set(KEY.index, indexWithout(loadIndex(), e.id));
   if (e.id === S.id) {
     var rest = loadIndex(), next = rest.length ? loadSession(rest[0].id) : null;
-    cancelSave();                                         // đừng ghi lại phiên vừa xoá
-    setS({ id: '__deleted__', text: '', comments: [] });
-    switchTo(next || newSession(''));
+    replaceDeleted(next || newSession(''));
   }
   renderHist(); renderHistCount();
 }
