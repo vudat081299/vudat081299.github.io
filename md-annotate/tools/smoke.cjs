@@ -125,6 +125,24 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await page.click('#pop-chips .ma-chip:has-text("Cần kiểm tra lại tính xác thực")');
   const o2 = await out(page);
   check('gợi ý lưu ngay, xếp theo thứ tự văn bản', o2.includes('\n\n1. L3 "liên kết tới ví dụ](https://example.com/path) ở giữa" — Cần kiểm tra lại tính xác thực\n2. L5 "chữ đậm'), JSON.stringify(o2));
+  // 2b. Tô màu nguồn: text vẫn đúng bằng nguồn, có token, highlight vẫn nằm đúng chỗ, tương phản, nút tắt.
+  const syn = await page.evaluate(() => {
+    const v = document.getElementById('v-src');
+    const lum = (c) => { const x = c.match(/[\d.]+/g).slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+    const bg = lum(getComputedStyle(document.getElementById('doc')).backgroundColor);
+    const low = [...v.querySelectorAll('span')].map((sp) => { const l = lum(getComputedStyle(sp).color); return [sp.className, (Math.max(l, bg) + 0.05) / (Math.min(l, bg) + 0.05)]; }).filter((x) => x[1] < 4.5);
+    const pick = (c) => [...v.querySelectorAll('.' + c)].map((e) => e.textContent);
+    return { same: v.textContent === document.getElementById('src-input').value, url: pick('sx-url'), link: pick('sx-link'), strong: pick('sx-strong'), punct: pick('sx-punct'), head: pick('sx-head'), low,
+      markInsideColor: !!v.querySelector('mark .sx-url') };
+  });
+  check('tô màu: text của khung đúng bằng nguồn', syn.same);
+  check('tô màu: link xanh, URL, đậm, đầu mục, số danh sách', syn.url.includes('https://example.com/path') && syn.link.includes('liên kết tới ví dụ') && syn.strong.includes('chữ đậm ở đây') && syn.head.includes(' Bài thử') && syn.punct.includes('#') && syn.punct.includes('1.'), JSON.stringify(syn));
+  check('tô màu: highlight bọc ngoài token màu', syn.markInsideColor);
+  check('tô màu: mọi token ≥ 4,5:1 trên nền (sáng)', !syn.low.length, JSON.stringify(syn.low));
+  await page.uncheck('#syn');
+  check('tắt tô màu: không còn span, text vẫn đúng', await page.evaluate(() => !document.querySelector('#v-src span') && document.getElementById('v-src').textContent === document.getElementById('src-input').value));
+  await page.check('#syn');
+  check('bật lại tô màu', await page.evaluate(() => !!document.querySelector('#v-src .sx-url')));
   await page.click('.ma-tab[data-view="view"]');
   const mdMarks = await page.$$eval('#v-md mark', (els) => els.map((m) => m.textContent).join('|'));
   check('bản dựng có highlight của đoạn chọn ở nguồn', /liên kết tới ví dụ/.test(mdMarks) && /ở giữa/.test(mdMarks), mdMarks);
@@ -198,6 +216,13 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await page.waitForFunction(() => window.marked && window.DOMPurify);
   check('tải lại: văn bản và nhận xét còn', (await items(page)).length === 3 && (await page.inputValue('#src-input')).startsWith('Thêm một dòng'));
   check('tải lại: lời dẫn còn', (await out(page)).startsWith('Sửa văn bản markdown'));
+  await page.click('.ma-tab[data-view="src"]');
+  await page.uncheck('#syn');
+  await page.reload();
+  await page.waitForFunction(() => window.marked && window.DOMPurify);
+  check('tắt tô màu được nhớ qua tải lại', !(await page.isChecked('#syn')) && !(await page.$('#v-src span')));
+  await page.check('#syn');
+  await page.click('.ma-tab[data-view="view"]');
 
   // 8. Lịch sử: phiên mới, mở lại, đổi tên, xoá.
   await page.click('#btn-new');
@@ -297,6 +322,15 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     const a = lum(getComputedStyle(t).backgroundColor), b = lum(getComputedStyle(t.parentElement).backgroundColor);
     return { ratio: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05), ring: getComputedStyle(t).boxShadow };
   });
+  await dpage.click('#btn-sample');
+  await dpage.click('.ma-tab[data-view="src"]');
+  const dlow = await dpage.evaluate(() => {
+    const lum = (c) => { const x = c.match(/[\d.]+/g).slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+    const bg = lum(getComputedStyle(document.getElementById('doc')).backgroundColor);
+    const sp = [...document.querySelectorAll('#v-src span')];
+    return { n: sp.length, low: sp.map((e) => { const l = lum(getComputedStyle(e).color); return [e.className, (Math.max(l, bg) + 0.05) / (Math.min(l, bg) + 0.05)]; }).filter((x) => x[1] < 4.5) };
+  });
+  check('tô màu: mọi token ≥ 4,5:1 trên nền (tối)', dlow.n > 10 && !dlow.low.length, JSON.stringify(dlow));
   check('tối: tab đang chọn sáng hơn nền nhóm tab và có viền xanh', tab.ratio >= 1.2 && /inset/.test(tab.ring), JSON.stringify(tab));
   await dctx.close();
 

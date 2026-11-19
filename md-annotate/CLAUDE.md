@@ -26,6 +26,16 @@
 - Highlight của nhận xét là `<mark class="ma-hl" data-ids>`; số thứ tự hiện bằng `::after`, nên không lọt vào
   chữ của chế độ xem.
 
+## Tô màu tab Nguồn (MDAN-001)
+
+- `tokens()` tách token theo dòng (khối rào, đầu mục, kẻ ngang, phân cách bảng, trích khối, dấu danh sách), rồi
+  `inlineToks()` trong dòng (mã, link, thẻ HTML, URL, đậm, nghiêng, gạch, chuỗi, `|` của bảng).
+- Token không chồng nhau, theo thứ tự. `paintSrc()` cắt nguồn theo mép token và mép highlight; `<mark>` bọc ngoài
+  `<span class="sx-*">`. Không bao giờ gán innerHTML từ chữ người dùng.
+- Text của `#v-src` phải đúng bằng nguồn: vùng chọn, neo, số dòng đều đếm trên nó (smoke kiểm).
+- Màu chỉ ở token `--sx-*`; mỗi màu ≥ 4,5:1 trên nền thẻ và trên `--hl` / `--hl-2`, cả hai theme.
+- Nút *Tô màu* lưu ở `prefs.syntax`; tắt thì khung là chữ trơn.
+
 ## Neo đoạn trích
 
 - Mỗi nhận xét lưu `quote`, `prefix`, `suffix` (48 ký tự), `origin` (`src` | `md`) và `rel` (vị trí tương đối),
@@ -58,7 +68,7 @@
 
 - Mọi lần đọc ghi `localStorage` bọc try/catch; hỏng thì trang vẫn chạy, chỉ báo một lần.
 - Khoá: `md-annotate:index:v1` (danh sách phiên), `md-annotate:s:<id>` (một phiên), `md-annotate:current`,
-  `md-annotate:stats:v1` (số đếm gợi ý), `md-annotate:prefs:v1` (chế độ xem, kiểu prompt, lời dẫn mặc định).
+  `md-annotate:stats:v1` (số đếm gợi ý), `md-annotate:prefs:v1` (chế độ xem, kiểu prompt, lời dẫn mặc định, tô màu).
 - Đổi cấu trúc phiên thì tăng hậu tố `v1` và chuyển dữ liệu cũ, đừng bỏ.
 - Phiên trống (không văn bản, không nhận xét) không vào lịch sử.
 - Mở file hoặc văn bản mẫu khi phiên đang có nội dung thì mở phiên mới, không ghi đè.
