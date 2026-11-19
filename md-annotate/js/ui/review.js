@@ -3,9 +3,13 @@
    đã đọc (.is-rv, html.ma-rvdim). Đơn vị, neo dấu, tiến độ ở core/review.js; tab Review ở ui/review-panel.js.
    Làn là lớp phủ .ma-lane trong #wrap-src / #wrap-md (ngoài #v-src / #v-md: text của khung không đổi). Vẽ lại sau mỗi
    renderAll() (applyReview) và khi khung đổi cỡ (ResizeObserver); đánh dấu (commitReviews) chỉ tô lại nút có sẵn.
-   Xuất: applyReview, commitReviews, initReview, jumpUnit, markUnits, reviewDoc, rvState, setRvTouched, stepOpen, toggleSection.
+   Dải tiến độ (ui/minimap.js) và gợi ý theo thời gian đọc (ui/dwell.js, MDAN-016) vẽ lại sau mỗi lần xếp hay tô lại làn;
+   chúng đọc toạ độ làn (laneGeo) và dải đọc (readingBand) ở đây.
+   Xuất: applyReview, commitReviews, initReview, jumpUnit, laneGeo, markUnits, readingBand, reviewDoc, rvState, setRvTouched,
+     stepOpen, toggleSection.
    Dùng: core/anchor.js, core/text.js, core/sections.js, core/review.js, ui/dom.js, ui/store.js, ui/state.js,
-     ui/sync-scroll.js, ui/views.js, ui/layout.js, ui/popup.js, ui/picks.js, ui/prompt.js, ui/review-panel.js. */
+     ui/sync-scroll.js, ui/views.js, ui/layout.js, ui/popup.js, ui/picks.js, ui/prompt.js, ui/review-panel.js,
+     ui/dwell.js, ui/minimap.js. */
 import { locate } from '../core/anchor.js';
 import { lineOf, plural } from '../core/text.js';
 import { bandBounds, bandPick, bandScroll } from '../core/sections.js';
@@ -20,6 +24,8 @@ import { closePop, pending, pop, popDirty, renderPopHints } from './popup.js';
 import { clearPicks } from './picks.js';
 import { renderPrompt } from './prompt.js';
 import { renderReviewPanel } from './review-panel.js';
+import { noteJump, paintSug, syncSug } from './dwell.js';
+import { drawMinimap } from './minimap.js';
 
 /* Đơn vị và dấu đã neo của văn bản đang mở: { units, res, secs }. Nhớ theo văn bản, mảng dấu và khối nguồn. */
 var memo = { text: null, marks: null, spans: null };
@@ -130,7 +136,10 @@ function fillLane(w, r) {
 }
 var laying = false, painting = false;   // chặn vòng: currentUnit() → ensureGeo() → layoutLanes() → paintCur()
 var laneUnits = null;                    // units mà làn đang vẽ
-function layoutLanes() { var r = rvState(); laying = true; fillLane('src', r); fillLane('md', r); laying = false; laneUnits = r.units; paintCur(); }
+function layoutLanes() {
+  var r = rvState(); laying = true; fillLane('src', r); fillLane('md', r); laying = false; laneUnits = r.units; paintCur();
+  paintSug(); drawMinimap();
+}
 /* Chỉ dấu đổi (đơn vị, chỗ không đổi): đổi lớp và tooltip của nút có sẵn, không đo lại, không dựng lại (văn bản dài). */
 function restyleLanes(r) {
   var secOf = secStates(r);
@@ -142,8 +151,10 @@ function restyleLanes(r) {
       if (b.title !== t) b.title = t;
     });
   });
-  paintCur();
+  paintCur(); paintSug(); drawMinimap();
 }
+/* Toạ độ làn đã xếp: { src, md }, mỗi khung [{ i, top, bottom }] theo toạ độ nội dung của #wrap-*. Chỉ đọc. */
+export function laneGeo() { return geo; }
 /* Đơn vị X sẽ đánh dấu (dải đọc, hay dưới con trỏ): làn của nó có .is-cur ở cả hai khung. */
 var curRaf = 0;
 function paintCur() {
@@ -206,6 +217,7 @@ export function applyReview(marksOnly) {
   renderReviewPanel(r, p);
   syncPill(r, p);
   syncPopRv();
+  syncSug(r);
 }
 
 /* ĐƠN VỊ HIỆN TẠI: dưới con trỏ khi Focus mode theo chuột, không thì đơn vị chạm dải đọc 25–50% (core/sections.js) của
@@ -225,16 +237,25 @@ function currentUnit() {
     for (var k = 0; k < gp.length; k++) if (gp[k].bottom > y) return gp[k].i;
     return gp[gp.length - 1].i;
   }
-  var wrap = wrapOf(w), split = isSplit(), sc = split ? wrap : document.scrollingElement;
+  var sc = isSplit() ? wrapOf(w) : document.scrollingElement;
   if (pin) {
     var t = sc.scrollTop;
     if (pin.sc === sc && pin.units === rvState().units && t >= Math.min(pin.from, pin.to) - 2 && t <= Math.max(pin.from, pin.to) + 2) return pin.i;
     pin = null;
   }
+  var b = readingBand(w);
+  return g[bandPick(g.length, function (j) { return g[j].bottom; }, function (j) { return g[j].top; }, b.b1, b.b2)].i;
+}
+/* Dải đọc 25–50% (core/sections.js) của khung w (mặc định: khung đang dùng), theo toạ độ nội dung của #wrap-* như laneGeo:
+   { w, b1, b2 }, hoặc null khi không khung nào hiện. */
+export function readingBand(w) {
+  w = w || activePane();
+  if (!w) return null;
+  var wrap = wrapOf(w), split = isSplit(), sc = split ? wrap : document.scrollingElement;
   var vr = split ? wrap.getBoundingClientRect() : { top: Math.max(0, rootOf(w).getBoundingClientRect().top), bottom: window.innerHeight };
   var band = bandBounds(vr.top, vr.bottom, window.innerHeight, sc.scrollTop, sc.scrollHeight - sc.clientHeight);
   var off = wrap.getBoundingClientRect().top - wrap.scrollTop;
-  return g[bandPick(g.length, function (j) { return g[j].bottom + off; }, function (j) { return g[j].top + off; }, band[0], band[1])].i;
+  return { w: w, b1: band[0] - off, b2: band[1] - off };
 }
 /* Đơn vị vừa nhảy tới (jumpUnit) là đơn vị hiện tại khi khung còn ở trên đường cuộn tới nó (from → to): cuộn mượt chưa
    xong, hay không cuộn được (văn bản ngắn, sát mép), X / J kế tiếp vẫn tính từ nó. Người dùng cuộn ra ngoài thì bỏ. */
@@ -247,6 +268,7 @@ export function jumpUnit(i) {
   var w = activePane(), g = ensureGeo(w), e = g.filter(function (x) { return x.i === i; })[0];
   if (!e && w) { var o = w === 'src' ? 'md' : 'src'; if (shown(rootOf(o))) { e = ensureGeo(o).filter(function (x) { return x.i === i; })[0]; if (e) w = o; } }
   if (!e) return;
+  noteJump();   // cuộn do trang: đơn vị đi qua dải lúc này không tính là đã đọc (ui/dwell.js)
   var wrap = wrapOf(w), how = reduceMotion.matches ? 'auto' : 'smooth', vh = window.innerHeight, wr = wrap.getBoundingClientRect();
   if (isSplit()) {
     var maxS = wrap.scrollHeight - wrap.clientHeight, ts = bandScroll(function (s) {

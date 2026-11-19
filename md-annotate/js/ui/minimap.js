@@ -1,0 +1,141 @@
+/* Dải tiến độ (MDAN-016): một dải dọc mảnh sát mép phải mỗi khung đang hiện (Source, Preview; cả hai ở Split), ngay
+   trái thanh cuộn. Mỗi đơn vị một đoạn theo vị trí / chiều cao của nó trong khung: đặc --accent đã đọc, rỗng viền đã đổi
+   chữ (○), nhạt chưa đọc, viền đứt được gợi ý (ui/dwell.js); chấm ở chỗ có nhận xét; hộp khung nhìn. Bấm / kéo trên dải
+   thì cuộn tới đó (cuộn do trang, không tính là đọc). Không có đơn vị thì ẩn.
+   Dải là phần tử position: fixed ngoài #v-src / #v-md (text của khung không đổi), đặt theo khung bằng JS. Vẽ lại đoạn
+   khi ui/review.js xếp làn (vẽ, đánh dấu, đổi cỡ); khi cuộn chỉ dời hộp khung nhìn (và khung, ở chế độ cuộn cửa sổ).
+   Điện thoại (≤ 720px): ẩn — lề chỉ 12px, dải sẽ đè chữ, thanh đáy đã có ✓ N%. Màn cảm ứng: chỉ để xem, không nhận chạm
+   (dải 14px không đạt --h-touch, lại nằm đúng chỗ ngón tay vuốt cuộn).
+   Toán ở core/minimap.js.
+   Xuất: drawMinimap, initMinimap.
+   Dùng: core/minimap.js, ui/dom.js, ui/state.js, ui/views.js, ui/review.js, ui/dwell.js. */
+import { mmDots, mmScroll, mmSegments, mmView } from '../core/minimap.js';
+import { $, h, shown } from './dom.js';
+import { S } from './state.js';
+import { isSplit, view } from './views.js';
+import { laneGeo, rvState } from './review.js';
+import { noteJump, sugIdx } from './dwell.js';
+
+var GAP = 8, MIN_H = 80, SEG_MIN = 2, VIEW_MIN = 12, DOT_GAP = 5;
+var mqPhone = window.matchMedia('(max-width: 720px)');
+var strips = {}, frames = { src: null, md: null };
+function wrapOf(w) { return $(w === 'src' ? 'wrap-src' : 'wrap-md'); }
+function rootOf(w) { return $(w === 'src' ? 'v-src' : 'v-md'); }
+function barBottom() { var b = document.querySelector('.ma-bar'); return b ? Math.max(0, b.getBoundingClientRect().bottom) : 0; }
+function dockTop() { var d = $('dock'); return d && shown(d) ? d.getBoundingClientRect().top : window.innerHeight; }
+
+/* Khung của dải w trong khung nhìn: { left, top, H, total, split }, hoặc null khi không đặt được. */
+function frameOf(w) {
+  var wrap = wrapOf(w), wr = wrap.getBoundingClientRect(), split = isSplit();
+  var top = Math.max(wr.top + GAP, barBottom() + GAP), bot = Math.min(wr.bottom - GAP, dockTop() - GAP, window.innerHeight - GAP);
+  if (bot - top < MIN_H) return null;
+  var sbw = split ? wrap.offsetWidth - wrap.clientWidth : 0;
+  return { left: wr.right - sbw - strips[w].offsetWidth - 2, top: top, H: bot - top, total: wrap.scrollHeight, split: split, wr: wr };
+}
+/* Phần nội dung của khung đang thấy: { scroll, view } theo toạ độ nội dung. */
+function seen(w, f) {
+  var wrap = wrapOf(w);
+  if (f.split) return { scroll: wrap.scrollTop, view: wrap.clientHeight };
+  var wr = wrap.getBoundingClientRect(), a = Math.max(0, Math.min(f.total, barBottom() - wr.top)), b = Math.max(a, Math.min(f.total, window.innerHeight - wr.top));
+  return { scroll: a, view: b - a };
+}
+function placeView(w, f) {
+  var s = seen(w, f), v = mmView(s.scroll, s.view, f.total, f.H, VIEW_MIN), box = strips[w].lastElementChild;
+  box.style.top = v.y + 'px'; box.style.height = v.h + 'px';
+}
+function place(w, f) {
+  var st = strips[w].style;
+  st.left = Math.round(f.left) + 'px'; st.top = Math.round(f.top) + 'px'; st.height = Math.round(f.H) + 'px';
+}
+
+/* Vẽ lại cả hai dải: gọi sau mỗi lần xếp làn (ui/review.js layoutLanes). */
+export function drawMinimap() {
+  if (!strips.src) return;
+  var r = rvState(), g = laneGeo(), sg = {};
+  sugIdx(r).forEach(function (i) { sg[i] = true; });
+  ['src', 'md'].forEach(function (w) {
+    var el = strips[w], gw = g[w] || [];
+    var ok = view !== 'edit' && !!S.text && !mqPhone.matches && shown(rootOf(w)) && gw.length > 0;
+    el.hidden = !ok;
+    var f = ok ? frameOf(w) : null;
+    frames[w] = f;
+    if (!f) { el.hidden = true; return; }
+    place(w, f);
+    var items = gw.map(function (e) {
+      var s = r.res.state[e.i];
+      return { top: e.top, bottom: e.bottom, state: s !== 'done' && sg[e.i] ? 'sug' : s };
+    });
+    var segs = mmSegments(items, f.total, f.H, SEG_MIN, 1).map(function (s) {
+      var n = h('i', { class: 'ma-mm__s is-' + s.state });
+      n.style.cssText = 'top:' + s.y.toFixed(1) + 'px;height:' + s.h.toFixed(1) + 'px';
+      return n;
+    });
+    /* Chấm nhận xét: đỉnh của <mark> đầu tiên mỗi nhận xét trong khung. */
+    var wrap = wrapOf(w), off = f.wr.top - wrap.scrollTop, ys = [], seenId = {};
+    rootOf(w).querySelectorAll('mark.ma-hl').forEach(function (m) {
+      var id = m.dataset.ids;
+      if (seenId[id]) return;
+      seenId[id] = true;
+      ys.push(m.getBoundingClientRect().top - off);
+    });
+    var dots = mmDots(ys, f.total, f.H, DOT_GAP).map(function (y) {
+      var n = h('b', { class: 'ma-mm__dot' });
+      n.style.top = y.toFixed(1) + 'px';
+      return n;
+    });
+    el.firstElementChild.replaceChildren.apply(el.firstElementChild, segs.concat(dots));
+    placeView(w, f);
+  });
+}
+/* Cuộn: chỉ dời hộp khung nhìn; chế độ cuộn cửa sổ thì khung của dải cũng đổi (đỉnh khung trượt dưới thanh trên), cao
+   đổi thì vẽ lại. */
+var raf = 0;
+function onScroll() {
+  if (raf) return;
+  raf = requestAnimationFrame(function () {
+    raf = 0;
+    var redraw = false;
+    ['src', 'md'].forEach(function (w) {
+      var f = frames[w];
+      if (!f || strips[w].hidden) return;
+      if (!f.split) {
+        var nf = frameOf(w);
+        if (!nf || Math.abs(nf.H - f.H) > 0.5 || Math.abs(nf.left - f.left) > 0.5) { redraw = true; return; }
+        frames[w] = f = nf; place(w, f);
+      }
+      placeView(w, f);
+    });
+    if (redraw) drawMinimap();
+  });
+}
+/* Bấm / kéo: điểm ấy của nội dung vào giữa khung nhìn, ngay (không trượt), để kéo theo kịp con trỏ. */
+function scrollAt(w, clientY) {
+  var f = frames[w];
+  if (!f) return;
+  noteJump();
+  var s = seen(w, f), target = mmScroll(clientY - f.top, f.H, f.total, s.view);
+  if (f.split) { wrapOf(w).scrollTop = target; return; }
+  window.scrollTo(0, window.scrollY + f.wr.top + target - Math.max(0, barBottom()));
+}
+export function initMinimap() {
+  ['src', 'md'].forEach(function (w) {
+    var el = h('div', { class: 'ma-mm', 'data-w': w, 'aria-hidden': 'true', hidden: true, title: 'Review progress. Click or drag to scroll' },
+      h('div', { class: 'ma-mm__in' }), h('div', { class: 'ma-mm__view' }));
+    strips[w] = el;
+    document.body.append(el);
+    el.addEventListener('pointerdown', function (e) {
+      if (e.button !== 0) return;
+      e.preventDefault();   // không bắt đầu bôi đen, không lấy focus
+      el.setPointerCapture(e.pointerId);
+      el.classList.add('is-drag');
+      scrollAt(w, e.clientY);
+    });
+    el.addEventListener('pointermove', function (e) { if (el.hasPointerCapture(e.pointerId)) scrollAt(w, e.clientY); });
+    function end(e) { if (el.hasPointerCapture(e.pointerId)) el.releasePointerCapture(e.pointerId); el.classList.remove('is-drag'); }
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+    wrapOf(w).addEventListener('scroll', onScroll, { passive: true });
+  });
+  window.addEventListener('scroll', onScroll, { passive: true });
+  mqPhone.addEventListener('change', drawMinimap);
+}

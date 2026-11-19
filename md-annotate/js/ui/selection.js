@@ -47,7 +47,7 @@ export function initSelection() {
   document.addEventListener('pointerdown', function (e) {
     if (e.pointerType !== 'mouse' || e.button !== 0) return;
     var t = e.target;
-    if (!t || !t.closest || t.closest('button, input, textarea, select, label, a, summary, [contenteditable], .ma-panel, .ma-pop, dialog, .ma-bar, .ma-divider, #panel-grip, .ma-dock, #fab')) return;
+    if (!t || !t.closest || t.closest('button, input, textarea, select, label, a, summary, [contenteditable], .ma-panel, .ma-pop, dialog, .ma-bar, .ma-divider, #panel-grip, .ma-dock, #fab, .ma-mm')) return;
     if (t.nodeType === 1 && t !== document.documentElement && (e.offsetX > t.clientWidth || e.offsetY > t.clientHeight)) return;
     dragging = true;
   }, true);

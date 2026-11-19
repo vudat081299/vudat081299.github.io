@@ -13,6 +13,7 @@
 - MDAN-013 · Đánh dấu đoạn đã đọc kỹ, xem còn lại bao nhiêu · `md-annotate/`
 - MDAN-014 · Hộp của các dòng đã chọn không đóng khi bấm ra ngoài · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/picks.js`
 - MDAN-015 · Hộp Settings giữa màn hình, nền mờ; bảng phím tắt mới · `md-annotate/`
+- MDAN-016 · Dải tiến độ cạnh khung, gợi ý đã đọc theo thời gian đọc · `md-annotate/`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -113,3 +114,13 @@ bên thay đổi theo. Nút *Shortcuts* ở đầu hộp Settings (hoặc phím 
 kiểu giữa màn hình, nền mờ. Bảng chỉ liệt kê phím và cú bấm mới thêm (cú bấm chuột, chạm cũng tính là phím tắt), chữ
 ở `data/shortcuts.json`: nhận xét nhiều dòng, đánh dấu đã đọc.
 
+
+## MDAN-016 · Dải tiến độ cạnh khung, gợi ý đã đọc theo thời gian đọc
+19/11/2026 · `md-annotate/`
+
+Chủ trang soát Tech Design không theo thứ tự rồi đọc từ trên xuống, nên cần thấy cả văn bản đã đọc tới đâu. Mỗi khung có
+một dải mảnh ở mép phải (trái thanh cuộn): đoạn theo vị trí từng khối, đặc là đã đọc, rỗng là đã đổi chữ, nhạt là chưa
+đọc, chấm ở nhận xét, hộp khung nhìn; bấm / kéo thì cuộn tới. Điện thoại ẩn dải; màn cảm ứng chỉ xem. Khối nằm ở dải đọc
+đủ lâu (khoảng 40% số từ ở 230 từ/phút, 4–60 giây) rồi người đọc tự cuộn qua thì được gợi ý (✓ viền đứt, nút "Accept N
+suggested"); gợi ý không bao giờ tự thành dấu. Mặc định bật, tắt được ở tab Review; gợi ý không lưu, chỉ trong phiên đang
+mở. Tab ẩn, cửa sổ mất focus, rảnh tay, cuộn do trang (J / K / X, dải tiến độ) không tính.
