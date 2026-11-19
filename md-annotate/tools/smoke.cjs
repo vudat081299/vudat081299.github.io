@@ -705,6 +705,31 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await sp.click('#btn-layout'); await sp.click('#set-reset'); await sp.keyboard.press('Escape');
   await sctx.close();
 
+  // ── review: data path ──
+  {
+    const dctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    await dctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(BASE).origin });
+    const dp = await dctx.newPage(); watch(dp);
+    await dp.goto(BASE); await dp.waitForFunction(() => window.marked && window.DOMPurify);
+    const setText = (t) => dp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
+    const clip = () => dp.evaluate(() => navigator.clipboard.readText());
+    await setText('# Doc A\n\nalpha line\n\nTarget sentence here.\n'); await dp.waitForTimeout(400);
+    await dp.click('.ma-tab[data-view="src"]');
+    await dragSelect(dp, '#v-src', 'Target sentence');
+    await dp.keyboard.type('fix'); await dp.keyboard.press('Enter');
+    check('dữ liệu: nhận xét ở dòng 5', /1\. L5 "Target sentence" — fix$/.test(await out(dp)), JSON.stringify(await out(dp)));
+    // Gõ ở Edit rồi chép ngay (trước lần vẽ lại sau 250ms): số dòng theo văn bản vừa gõ.
+    await dp.click('.ma-tab[data-view="edit"]'); await dp.click('#src-input');
+    await dp.keyboard.press('Control+Home'); await dp.keyboard.press('Enter'); await dp.keyboard.press('Enter');
+    await dp.keyboard.press('Control+Shift+KeyC'); await dp.waitForTimeout(60);
+    const fast = await clip();
+    check('dữ liệu: chép ngay sau khi gõ, số dòng theo văn bản mới (L7)', /1\. L7 "Target sentence" — fix$/.test(fast), JSON.stringify(fast));
+    await dp.waitForTimeout(400);
+    check('dữ liệu: prompt sau lần vẽ lại cũng L7', /1\. L7 "Target sentence" — fix$/.test(await out(dp)));
+    await dctx.close();
+  }
+  // ── end review: data path ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');
