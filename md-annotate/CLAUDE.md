@@ -3,9 +3,7 @@
 - Một trang, `index.html`: dán văn bản markdown, xem ở *Source* hoặc *Preview* (đủ chỗ thì có *Split*), bôi đen
   một đoạn để ghi nhận xét, mọi nhận xét gom thành một prompt theo thứ tự trong văn bản.
 - Không bước build: `index.html` là markup, CSS ở `css/`, JS là module ES ở `js/` (mục *Code*, MDAN-008).
-  Chữ lặp duy nhất là gợi ý mặc định: `data/hints.json` (REPO-001).
-- Văn bản mẫu (*Sample text*) và câu mẫu của lời dẫn đầu là khối độc nhất, nằm trong HTML.
-- Trang chủ trỏ tới `md-annotate/`; đổi tên thư mục thì `tools/lint-collection.py` đỏ.
+  Chữ lặp duy nhất là gợi ý mặc định (`data/hints.json`, REPO-001); *Sample text* và câu mẫu lời dẫn ở HTML.
 
 ## Code (MDAN-008)
 
@@ -16,9 +14,10 @@
 | `js/main.js` | gọi `init…` theo thứ tự, khởi động; phím tắt chép, đóng hộp thoại, nút theme |
 | `js/core/anchor.js`, `js/core/comments.js` | neo đoạn trích (`locate`, `quoteFrom`); thêm / sửa / xoá, neo, xếp, đánh số nhận xét |
 | `js/core/session.js`, `js/core/prompt.js` | mô hình phiên, index, tên tự đặt; dựng prompt, nhãn L12 |
-| `js/core/hints.js` | đếm, xếp hạng gợi ý, chip của hộp nhận xét |
-| `js/core/tokens.js`, `js/core/runs.js` | token của *Source*; cắt chữ theo token / highlight / dòng |
-| `js/core/blocks.js`, `js/core/sections.js` | `lexSpans(text, lex)`; đánh số section, chọn khối của dải đọc |
+| `js/core/hints.js`, `js/core/place.js` | đếm, xếp hạng gợi ý, chip của hộp nhận xét; chỗ đặt hộp nổi (`popPlace`) |
+| `js/core/tokens.js`, `js/core/runs.js` | token của *Source*; cắt chữ theo token / highlight / dòng, `lineCount` |
+| `js/core/blocks.js`, `js/core/sections.js` | `lexSpans`, `pairBlocks` (khối nguồn ↔ Preview); đánh số section, dải đọc |
+| `js/core/panes.js` | Split đủ chỗ không (`splitFits`), chiều cao hai khung và `ma-fit` (`paneHeight`) |
 | `js/core/sync-math.js`, `js/core/text.js` | đường cong cuộn theo nhau; `plural`, `lineOf`, `slug` |
 | `js/ui/store.js`, `js/ui/dom.js` | `localStorage`, khoá, `prefs`; `$`, `h()`, `icon()`, `toast()`, `dragBar()` |
 | `js/ui/state.js`, `js/ui/render.js` | phiên `S`, lưu, chuyển phiên; `renderAll()`, kết quả neo `mdText`, `anchors`, `ordered`… |
@@ -56,7 +55,7 @@
 - Khoảng cách theo thang `--s1`…`--s6`, bo góc `--r-sm` / `--r` / `--r-lg`, chuyển động `--dur` + `--ease`.
 - Bề rộng (MDAN-005): `.ma-wrap` rộng `max(70vw, 1280px)`, không quá khung nhìn, căn giữa, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
   320–560, `prefs.side`), thu gọn thành `.ma-rail` 56px (`html.ma-railed`, `prefs.rail`); thanh dọc giữ nút chép.
-- *Split* khi `#doc` đủ cho hai khung ≥ 420px (`splitOK()`), không theo media query. Chưa đủ chỗ thì hiện
+- *Split* khi `#doc` đủ cho hai khung ≥ 420px (`splitFits()`), không theo media query. Chưa đủ chỗ thì hiện
   *Preview* nhưng `prefs.view` vẫn nhớ `split`. Hai khung cao `--pane-h` (JS: khung nhìn trừ đỉnh khung và 17px
   đáy, trừ thêm thanh đáy khi ≤ 1080px), cuộn riêng; trang không cuộn. Vách `#divider` lưu `prefs.split`.
 - Split vừa khung nhìn (khung ≥ 320px): `sizePanes()` gắn `html.ma-fit` (khoá cuộn trang), để thanh cuộn chính không
@@ -66,17 +65,17 @@
   (`prefs.mdfs` 13–22px, `--md-fs`). Áp ngay khi kéo; hộp neo góc phải, nền sau trong suốt; điện thoại ẩn mục bề rộng.
 - *Focus mode* trong hộp *Layout* (`prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ mọi thứ ngoài một
   section. Section bắt đầu ở mỗi tiêu đề cấp cao: h1–h6 con trực tiếp của `#v-md`; ở *Source* là dòng đầu token
-  `heading` cấp cao của `marked.lexer` (cùng cách đếm, số section hai bên khớp). `markSections()` gắn `data-sec` lười;
-  section sáng có `.is-sec`, khung có `.is-focusing`.
+  `heading` hoặc khối HTML mở bằng `<h1>`…`<h6>` của `marked.lexer` (số section hai bên khớp). Sáng: `.is-sec`.
 - Chọn section (`prefs.focusBy`): `pointer` theo chuột (rời cả hai khung thì hết mờ, trừ khi hộp nhận xét mở); `band`
-  là section chạm dải 25–50% vùng nhìn (khung cuộn ở *Split*, cửa sổ ở chế độ khác). *Split*: section cùng số ở khung
+  là section chạm dải 25–50% vùng nhìn (khung cuộn ở *Split*, cửa sổ ở chế độ khác); trong nửa vùng nhìn sát đầu /
+  cuối, hai mốc trượt về mép (`bandBounds`). Vẽ lại thì section đang sáng được đặt lại (`refreshBand()`). *Split*: section cùng số ở khung
   kia cũng sáng; dải chỉ đo trên khung người dùng cuộn gần nhất (`bandFrom`), cuộn do trang đặt (`setByPage`) không đổi
   nó; chưa cuộn thì đo trên Preview.
 - "Chạm dải" (`bandPick`): khối đầu tiên có đáy dưới mốc 25% và đỉnh trên mốc 50%. Đuôi section trước còn nằm trong
   dải thì section trước thắng; không khối nào chạm thì lấy khối ngay trên dải.
 - Ở dải đọc, dòng dưới chuột cũng sáng (`.is-line`): một `.ma-ln`, hoặc `li` / `tr` / `dt` / `dd` / khối cấp cao ở
-  *Preview*; phần khác của khối cấp cao chứa nó mờ (`.ma-dimx`). Ở *Split* khung kia sáng cả khối tương ứng (khối i ↔
-  token i của `lexSpans`, chỉ khi số khối hai bên bằng nhau). Cuộn thì tìm lại dòng dưới chuột; rời khung thì hết.
+  *Preview*; phần khác của khối cấp cao chứa nó mờ (`.ma-dimx`). Ở *Split* khung kia sáng cả khối tương ứng (cặp của
+  `blockPairs()`: cùng số khối thì i ↔ i, lệch thì `pairBlocks` ghép theo dãy con chung dài nhất của thẻ). Cuộn thì tìm lại dòng dưới chuột; rời khung thì hết.
 - Khối nguồn (`lexSpans`) neo vào văn bản gốc, không cộng dồn `raw`: marked bỏ khối `[id]: url` và đổi tab đầu dòng.
 - Bôi đen ở *Split*: đoạn tương ứng ở khung kia tô bằng CSS Highlight `ma-mirror` (`mirrorSel`, tìm bằng `locate`, như neo
   nhận xét). Hộp nhận xét mở thì `ma-pending` thay thế.
@@ -84,11 +83,10 @@
   (ghim phiên bản, có `integrity`) với màu `--hl-*`, chỉ khi khối rào ghi ngôn ngữ hljs biết. `ghExtras()` đổi
   `> [!NOTE|TIP|IMPORTANT|WARNING|CAUTION]` thành `.ma-alert`; tiêu đề và biểu tượng vẽ bằng CSS, không thêm chữ.
 - Cỡ chữ trong `.ma-md` (bảng, khối code, tiêu đề) tính bằng `em` theo `--md-fs`, không dùng `px`.
-- Cuộn theo nhau ở *Split* (`prefs.sync`, mặc định bật, tắt trong *Layout*): `buildSyncMap()` ghép khối cấp cao của
-  `marked.lexer` với con của `#v-md` theo thứ tự, chỉ đỉnh với đỉnh (thêm đáy làm tốc độ giật), nội suy Hermite đơn
-  điệu (`monoCurve`). Điểm tham chiếu ở giữa khung, sát đầu / cuối trượt về mép. Lệch số khối thì chỉ còn hai mốc.
-- Khung theo được đặt ngay trong sự kiện cuộn của khung dẫn (không qua rAF, không trễ khung hình). Vị trí trang tự
-  đặt ghi ở `syncExpect`; sự kiện cuộn khớp vị trí ấy thì bỏ qua, nên không vòng lặp. Smoke đo ±40px.
+- Cuộn theo nhau ở *Split* (`prefs.sync`, mặc định bật, tắt trong *Layout*): `buildSyncMap()` lấy mốc từ các cặp khối của
+  `blockPairs()`, chỉ đỉnh với đỉnh (thêm đáy làm tốc độ giật), nội suy Hermite đơn
+  điệu (`monoCurve`). Điểm tham chiếu ở giữa khung, sát đầu / cuối trượt về mép. Không cặp nào thì chỉ còn hai mốc.
+- Khung theo đặt ngay trong sự kiện cuộn của khung dẫn (không rAF); cuộn do trang đặt (`syncExpect`) bị bỏ qua.
 - Hộp thoại: chỉ `.ma-dlg__b` cuộn. Tab *Prompt*: thân panel không cuộn; *Options* mở cuộn riêng (≤ 38vh), `#out` lấp
   phần còn lại và tự cuộn. Không lồng hai vùng cuộn.
 - *Preview* mặc định rộng hết khung; trích khối là vạch trái một cạnh (không bo), bảng có viền ngoài bo góc.
@@ -109,7 +107,7 @@
 - ⌘/Ctrl + Shift + C chép prompt ở mọi chỗ. Chép xong nút đổi thành *Copied ✓* một lúc; báo đọc màn hình qua
   `#sr-live`. Toast chỉ dùng khi chép hỏng. Chép / tải neo lại lúc bấm (`freshDoc()`): *Edit* vẽ lại trễ 250ms.
 - ≤ 1080px: panel ẩn khỏi lưới; thanh đáy có *Comments · N* (mở panel trong tấm trượt `#dlg-panel`, đóng thì panel
-  về chỗ cũ) và nút chép.
+  về chỗ cũ) và nút chép. Lưới một cột kể cả khi `html.ma-railed`.
 - Thẻ nhận xét: không viền; số, vị trí (L12), nhận xét nổi bật, trích dẫn mờ có vạch trái (một cạnh nên không bo,
   REPO-025). Nút sửa / xoá hiện khi rê hoặc focus; màn cảm ứng thì luôn hiện. Rê thẻ thì tô đoạn và ngược lại.
 - Điện thoại (≤ 720px): một cột, vùng chạm ≥ 44px, không có *Split*. Lưu nhận xét không cuộn trang.
@@ -123,7 +121,7 @@
   `--chip`, không viền; *Save* là nút `--accent`. Hiện ra có chuyển động ngắn, tắt khi `prefers-reduced-motion`.
 - Chuột thì mở ngay khi thả, kể cả khi kéo bắt đầu ở vùng nền (lề trái / phải, nền trang quanh khung; trừ nút, ô nhập,
   panel, hộp thoại, vách kéo, thanh cuộn); cảm ứng và bàn phím thì hiện nút nổi *Comment on selection*. Máy hẹp hoặc màn cảm
-  ứng: hộp là tấm trượt đáy.
+  ứng: hộp là tấm trượt đáy. Hộp dưới đoạn chọn, thiếu chỗ thì lên trên, luôn trọn khung nhìn (`popPlace`).
 - Đoạn đang chọn tô bằng CSS Custom Highlight (`::highlight(ma-pending)`), không sửa DOM: sửa DOM giữa lúc kéo chuột
   làm mất vùng chọn.
 - Highlight của nhận xét là `<mark class="ma-hl" data-ids>`; số thứ tự hiện bằng `::after`, nên không lọt vào chữ
@@ -135,7 +133,8 @@
   `inlineToks()` trong dòng (mã, link, thẻ HTML, URL, đậm, nghiêng, gạch, chuỗi, `|` của bảng).
 - Token không chồng nhau, theo thứ tự. `paintSrc()` cắt nguồn theo mép token, mép highlight và đầu dòng; `<mark>`
   bọc ngoài `<span class="sx-*">`. Không bao giờ gán innerHTML từ chữ người dùng.
-- Text của `#v-src` phải đúng bằng nguồn: vùng chọn, neo, số dòng đều đếm trên nó (smoke kiểm).
+- Text của `#v-src` phải đúng bằng nguồn: vùng chọn, neo, số dòng đều đếm trên nó (smoke kiểm). `#doc-meta` đếm dòng
+  bằng `lineCount()` như lề. Tìm token không quét lại cả dòng sau mỗi token (dòng dài vẫn tuyến tính).
 - Màu chỉ ở token `--sx-*`; mỗi màu ≥ 4,5:1 trên nền thẻ và trên `--hl` / `--hl-2`, cả hai theme.
 - Nút *Syntax colors* lưu ở `prefs.syntax`; tắt thì khung là chữ trơn.
 - Lề số dòng: mỗi dòng một `<span class="ma-ln">` (block, giữ cả ký tự xuống dòng), số là `::before` + counter,
@@ -184,7 +183,8 @@
 
 ## An toàn
 
-- Markdown dựng bằng `marked` rồi làm sạch bằng `DOMPurify`, cả hai ghim phiên bản và có `integrity`.
+- Markdown dựng bằng `marked` rồi làm sạch bằng `DOMPurify`, cả hai ghim phiên bản và có `integrity`. DOMPurify bỏ
+  `<style>`, `style=`, `<form>`, `<dialog>`; id / name thêm tiền tố `user-content-`: markdown không chạm CSS, id của trang.
 - Link ở bản dựng đổi thành `<span class="ma-a">` (`unlink()`, URL ở `title`): không chuyển trang, kéo trên link vẫn
   là bôi đen. Không dựng lại `<a>`.
 - Chỉ một chỗ gán `innerHTML` (`renderAll()` ở `js/ui/render.js`): HTML đã qua DOMPurify. Mọi chỗ khác dựng DOM bằng `h()` và `textContent`.
