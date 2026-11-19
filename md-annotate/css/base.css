@@ -148,8 +148,8 @@ html:not(.dark) .ma-moon, html.dark .ma-sun { display: none; }
 }
 .ma-check input[type="checkbox"]:checked, .ma-syn input[type="checkbox"]:checked { background: var(--accent); border-color: var(--accent); }
 .ma-check input[type="checkbox"]:checked::after, .ma-syn input[type="checkbox"]:checked::after {
-  content: ''; position: absolute; left: 4px; top: 0; width: 4px; height: 9px;
-  border: solid var(--on-accent); border-width: 0 2px 2px 0; transform: rotate(45deg);
+  content: ''; position: absolute; left: 50%; top: 50%; width: 4px; height: 8px; box-sizing: border-box;
+  border: solid var(--on-accent); border-width: 0 2px 2px 0; transform: translate(-50%, -60%) rotate(45deg);
 }
 .ma-check input[type="checkbox"]:focus-visible, .ma-syn input[type="checkbox"]:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 .ma-check input[type="checkbox"]:disabled, .ma-syn input[type="checkbox"]:disabled { opacity: .5; cursor: default; }
