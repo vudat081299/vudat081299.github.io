@@ -22,6 +22,7 @@ nằm ở CLAUDE.md trong thư mục của nó; Claude Code tự nạp file ấy
 | `masters-degree/big-data-storage-processing/` | project | môn Lưu trữ và xử lý dữ liệu lớn, theo thứ tự slide |
 | `web-builder/` | project | design system `wb-*`; nhiều trang link thẳng vào `web-builder.css` |
 | `json-analysis/` | project | công cụ xem, sửa, so JSON |
+| `md-annotate/` | project | nhận xét lên văn bản markdown, gom thành prompt cho AI |
 | `loto/` | project | thống kê và heatmap xổ số |
 | `read-excel-file-to-table/` | project | đọc file Excel ra bảng |
 | `poem/` | project | thơ Việt, engine Truyện Kiều |

@@ -438,6 +438,14 @@
               "desc": "Đọc file Excel ra bảng",
               "href": "read-excel-file-to-table/index.html",
               "tags": "Read Excel files into a table"
+            },
+            {
+              "key": "3",
+              "icon": "rate_review",
+              "name": "Markdown Annotate",
+              "desc": "Ghi nhận xét lên từng đoạn markdown, gom thành prompt sửa bài cho AI",
+              "href": "md-annotate/",
+              "tags": "Annotate markdown, comment on quotes, AI prompt, nhận xét, trích dẫn"
             }
           ]
         }
