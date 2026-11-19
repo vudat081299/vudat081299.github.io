@@ -902,7 +902,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     check('nhiều dòng: bôi đen chữ trong chế độ không mở hộp đoạn chữ', (await ml.isVisible('#pop-head')) && (await ml.textContent('#pop-q')).startsWith('Alpha') && !(await ml.isVisible('#fab')));
     await ml.fill('#pop-text', '');
     await dragSelect(ml, '#v-src', 'Delta end');
-    check('nhiều dòng: bôi đen (hộp chưa gõ) chỉ đóng hộp, dòng đã chọn còn', !(await ml.isVisible('#pop')) && (await picks()) === '3,4,8,9' && !(await ml.isVisible('#fab')), await picks());
+    check('nhiều dòng: bôi đen (hộp chưa gõ) không đóng hộp (MDAN-014), dòng đã chọn còn', (await ml.isVisible('#pop')) && (await picks()) === '3,4,8,9' && !(await ml.isVisible('#fab')), await picks());
     await ml.evaluate(() => getSelection().removeAllRanges());
     await gclick(9);
     check('nhiều dòng: bấm lề mở lại hộp', (await ml.isVisible('#pop')) && (await sum()) === '3 lines · L3-4, L8');
@@ -974,6 +974,45 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     await mctx2.close();
   }
   // ── end nhận xét nhiều dòng ──
+
+  // ── hộp của các dòng đã chọn không đóng khi bấm ra ngoài (MDAN-014) ──
+  {
+    const sctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    const st = await sctx.newPage(); watch(st);
+    await st.goto(BASE); await st.waitForFunction(() => window.marked && window.DOMPurify);
+    const SL = ['# Sticky', '', 'Alpha line one.', 'Beta line two.', '', 'Gamma middle.', 'Delta end.', ''].concat(Array.from({ length: 60 }, (_, i) => 'Filler line ' + (i + 1) + '.')).join('\n');
+    await st.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, SL);
+    await st.waitForTimeout(150);
+    await st.click('.ma-tab[data-view="src"]'); await st.waitForTimeout(100);
+    const gut = (n) => st.$eval(`#v-src .ma-ln:nth-child(${n})`, (el) => { el.scrollIntoView({ block: 'center' }); const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
+    const gclick = async (n) => { const g = await gut(n); await st.mouse.click(g.x, g.y); await st.waitForTimeout(80); };
+    const picks = () => st.$$eval('#v-src .ma-ln', (ls) => ls.map((l, i) => (l.classList.contains('is-pick') ? i + 1 : 0)).filter(Boolean).join());
+    const g3 = await gut(3); await st.mouse.dblclick(g3.x, g3.y); await st.waitForTimeout(150);
+    await gclick(4);
+    await st.fill('#pop-text', 'giữ chữ');
+    const txt = await st.$eval('#v-src .ma-ln:nth-child(7)', (el) => { const r = el.getBoundingClientRect(); return { x: r.right - 40, y: r.top + 8 }; });
+    await st.mouse.click(txt.x, txt.y); await st.waitForTimeout(80);
+    await st.click('#ptab-prompt'); await st.waitForTimeout(80);
+    await st.click('#ptab-list'); await st.waitForTimeout(80);
+    await st.mouse.click(4, 450); await st.waitForTimeout(80);
+    await st.mouse.wheel(0, 300); await st.waitForTimeout(150);
+    check('nhiều dòng: bấm chữ, panel, nền, cuộn — hộp vẫn hiện, giữ dòng và chữ đang gõ', (await st.isVisible('#pop')) && (await picks()) === '3,4' && (await st.inputValue('#pop-text')) === 'giữ chữ', JSON.stringify([await st.isVisible('#pop'), await picks()]));
+    check('nhiều dòng: bấm tab panel khi hộp mở vẫn đổi tab', await st.$eval('#ptab-list', (el) => el.getAttribute('aria-selected') === 'true'));
+    await st.click('#pop-cancel');
+    check('nhiều dòng: Cancel chỉ ẩn hộp, giữ các dòng', !(await st.isVisible('#pop')) && (await picks()) === '3,4');
+    await gclick(6);
+    check('nhiều dòng: sau Cancel bấm số dòng thì hộp hiện lại với các dòng hiện có', (await st.isVisible('#pop')) && (await st.textContent('#pop-sum')) === '3 lines · L3-4, L6', await st.textContent('#pop-sum'));
+    await st.mouse.click(4, 450); await st.waitForTimeout(80);
+    check('nhiều dòng: hộp mở lại cũng không đóng khi bấm ngoài', await st.isVisible('#pop'));
+    await st.keyboard.press('Escape');
+    check('nhiều dòng: Esc ẩn hộp và bỏ các dòng', !(await st.isVisible('#pop')) && (await picks()) === '');
+    await dragSelect(st, '#v-src', 'Delta end');
+    check('bôi đen: hộp đoạn chữ mở', await st.isVisible('#pop'));
+    await st.mouse.click(4, 450); await st.waitForTimeout(80);
+    check('bôi đen: bấm ra ngoài vẫn đóng hộp đoạn chữ', !(await st.isVisible('#pop')));
+    await sctx.close();
+  }
+  // ── end hộp dòng không đóng ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();

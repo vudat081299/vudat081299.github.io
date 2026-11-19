@@ -10,6 +10,7 @@
 - MDAN-010 · Dải đọc: chữ của mục cha vẫn sáng khi rê vào mục con · `md-annotate/js/ui/focus.js`, `md-annotate/css/focus.css`
 - MDAN-011 · Cảnh báo trùng đoạn theo chữ, không theo chỗ · `md-annotate/js/core/comments.js`
 - MDAN-012 · Nhận xét nhiều dòng chọn theo số dòng · `md-annotate/`
+- MDAN-014 · Hộp của các dòng đã chọn không đóng khi bấm ra ngoài · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/picks.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -82,3 +83,10 @@ không bằng bôi đen: bấm đúp số dòng thì vào chế độ chọn dò
 Cancel đóng hộp nhưng giữ các dòng. Ngoài chế độ, bấm số dòng và bôi đen chữ giữ như cũ. Hộp nhận xét của chế độ này
 có nút kéo đi chỗ khác; lần mở sau hộp về chỗ mặc định. Mỗi dải dòng liền là một đoạn trích; prompt gọn ghi
 `3. L12 "…"; L15-16 "…" — nhận xét`, nhận xét một đoạn ra chữ y như trước.
+
+## MDAN-014 · Hộp của các dòng đã chọn không đóng khi bấm ra ngoài
+19/11/2026 · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/picks.js`
+
+Đang chọn nhiều dòng thì hộp nhận xét ở lại khi bấm chữ, panel, nền trang hay cuộn: chỉ Esc (thoát chế độ, ẩn hộp),
+Save (lưu, thoát) và Cancel (ẩn hộp, giữ các dòng) đóng nó. Sau Cancel, bấm một số dòng thì hộp hiện lại với các dòng
+đang chọn. Hộp của đoạn bôi đen và hộp sửa vẫn đóng khi bấm ra ngoài như cũ.

@@ -1,6 +1,7 @@
 /* Hộp nhận xét: mở cho đoạn mới (openNew) hoặc để sửa (openEdit), tô đoạn đang chọn (ma-pending),
    gợi ý dạng chip, lưu, đóng. Đoạn mới có thể là các dòng chọn ở lề số (pending.lines, ui/picks.js): hộp có thêm
-   hàng đầu (số dòng, nhãn, nút kéo) và cập nhật tại chỗ khi chọn thêm / bỏ dòng (updateNew).
+   hàng đầu (số dòng, nhãn, nút kéo), cập nhật tại chỗ khi chọn thêm / bỏ dòng (updateNew), và không đóng khi bấm
+   ra ngoài (MDAN-014).
    Xuất: closePop, initPopup, openEdit, openNew, paintPending, pending, pop, popDirty, renderPopHints, updateNew.
    Dùng: core/text.js, core/anchor.js, core/hints.js, core/comments.js, core/place.js, core/picks.js, ui/dom.js,
      ui/anchor-dom.js, ui/state.js, ui/hints.js, ui/marks.js, ui/render.js, ui/list.js, ui/views.js,
@@ -207,8 +208,10 @@ export function initPopup() {
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && pop.mode && !document.querySelector('dialog[open]')) { e.preventDefault(); closePop(); }
   });
+  /* Bấm ra ngoài đóng hộp đoạn chữ / hộp sửa (chưa gõ gì). Hộp của các dòng đã chọn thì ở lại (MDAN-014): chỉ Esc,
+     Save, Cancel đóng; bấm ngoài vẫn tới đích như thường. */
   document.addEventListener('pointerdown', function (e) {
-    if (!pop.mode) return;
+    if (!pop.mode || (pop.mode === 'new' && pending && pending.lines)) return;
     if ($('pop').contains(e.target) || $('fab').contains(e.target)) return;
     if (picking && gutterLine(e)) return;   // chọn thêm / bỏ dòng: hộp ở lại, cập nhật tại chỗ
     if (popDirty()) return;

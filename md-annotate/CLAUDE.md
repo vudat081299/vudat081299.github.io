@@ -133,7 +133,8 @@
 - Chỉ ở nơi có lề số dòng (*Source*, khung Source của *Split*), chỉ bằng lề số (`ui/picks.js`). *Preview* không chọn dòng.
 - Bấm đúp lề: vào chế độ chọn dòng với dòng ấy, mở hộp; không bôi đen chữ. Ngoài chế độ, bấm một lần giữ như cũ.
 - Trong chế độ, bấm lề thêm / bỏ một dòng (không cần liền; dòng trống không chọn được); hộp đang mở cập nhật tại chỗ.
-- Thoát: Esc, Save, bỏ dòng cuối, sang Edit / Preview, mở phiên khác, văn bản đổi (`repaintPicks()`). Cancel giữ các dòng.
+- Thoát: Esc, Save, bỏ dòng cuối, sang Edit / Preview, mở phiên khác, văn bản đổi (`repaintPicks()`).
+- Hộp của chế độ không đóng khi bấm ra ngoài (MDAN-014); Cancel chỉ ẩn hộp, giữ các dòng, bấm lề thì hộp hiện lại.
 - Trong chế độ, bôi đen chữ không mở hộp, không hiện nút nổi. Dòng đã chọn `.is-pick`; *Split* tô chữ ở Preview (`ma-mirror`).
 - Hộp: `3 lines · L12, L15-16` và nút kéo `#pop-grip` (con trỏ, phím mũi tên; trọn khung nhìn; không nhớ chỗ). Mặc định
   dưới dòng vừa bấm, lùi qua lề số để không che lề. Tấm trượt đáy và hộp bôi đen không có nút kéo.
@@ -196,5 +197,4 @@
 
 - `tools/lint.py`: luật nó kiểm ghi ở đầu file (dữ liệu gợi ý, một chỗ `innerHTML`, file mồ côi, `js/core/` thuần, token).
 - `tools/test-core.mjs` (node, không trình duyệt): bài thử của `js/core/`. Logic thuần mới thì thêm bài thử ở đây.
-- Sửa sự kiện, neo hay giao diện thì chạy thêm `tools/smoke.cjs` (CI chưa chạy): `python3 -m http.server 8347` ở gốc
-  repo, rồi `node md-annotate/tools/smoke.cjs http://127.0.0.1:8347/md-annotate/`. Văn bản mẫu: `tools/fixtures/`.
+- Sửa sự kiện, neo hay giao diện thì chạy thêm `tools/smoke.cjs` (CI chưa chạy; cách chạy ở đầu file). Văn bản mẫu: `tools/fixtures/`.
