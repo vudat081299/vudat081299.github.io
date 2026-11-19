@@ -158,11 +158,24 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
       markInsideColor: !!v.querySelector('mark .sx-url') };
   });
   check('tô màu: text của khung đúng bằng nguồn', syn.same);
+  const gut = await page.evaluate(() => {
+    const v = document.getElementById('v-src'), ls = [...v.querySelectorAll('.ma-ln')];
+    const src = document.getElementById('src-input').value;
+    const bef = getComputedStyle(ls[0], '::before');
+    return { n: ls.length, lines: src.replace(/\n$/, '').split('\n').length, content: bef.content, top: bef.top,
+      marked: ls.map((l, i) => l.classList.contains('has-c') ? i + 1 : 0).filter(Boolean).join() };
+  });
+  check('lề số dòng: một khối mỗi dòng, số là counter ngoài text', gut.n === gut.lines && /counter\(ln\)/.test(gut.content) && gut.top === '0px', JSON.stringify(gut));
+  check('lề số dòng: dòng có nhận xét được đánh dấu (3, 5)', gut.marked === '3,5', gut.marked);
+  const g3 = await page.$eval('#v-src .ma-ln:nth-child(3)', (el) => { const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
+  await page.mouse.click(g3.x, g3.y);
+  check('bấm lề dòng 3 mở nhận xét của dòng ấy', await page.isVisible('#pop-del') && (await page.inputValue('#pop-text')) === 'Cần kiểm tra lại tính xác thực');
+  await page.keyboard.press('Escape');
   check('tô màu: link xanh, URL, đậm, đầu mục, số danh sách', syn.url.includes('https://example.com/path') && syn.link.includes('liên kết tới ví dụ') && syn.strong.includes('chữ đậm ở đây') && syn.head.includes(' Bài thử') && syn.punct.includes('#') && syn.punct.includes('1.'), JSON.stringify(syn));
   check('tô màu: highlight bọc ngoài token màu', syn.markInsideColor);
   check('tô màu: mọi token ≥ 4,5:1 trên nền (sáng)', !syn.low.length, JSON.stringify(syn.low));
   await page.uncheck('#syn');
-  check('tắt tô màu: không còn span, text vẫn đúng', await page.evaluate(() => !document.querySelector('#v-src span') && document.getElementById('v-src').textContent === document.getElementById('src-input').value));
+  check('tắt tô màu: không còn span, text vẫn đúng', await page.evaluate(() => !document.querySelector('#v-src span[class*="sx-"]') && document.getElementById('v-src').textContent === document.getElementById('src-input').value));
   await page.check('#syn');
   check('bật lại tô màu', await page.evaluate(() => !!document.querySelector('#v-src .sx-url')));
   await page.click('.ma-tab[data-view="view"]');
@@ -252,7 +265,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await page.uncheck('#syn');
   await page.reload();
   await page.waitForFunction(() => window.marked && window.DOMPurify);
-  check('tắt tô màu được nhớ qua tải lại', !(await page.isChecked('#syn')) && !(await page.$('#v-src span')));
+  check('tắt tô màu được nhớ qua tải lại', !(await page.isChecked('#syn')) && !(await page.$('#v-src span[class*="sx-"]')));
   await page.check('#syn');
   await page.click('.ma-tab[data-view="view"]');
 

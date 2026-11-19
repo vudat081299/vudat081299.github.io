@@ -271,6 +271,20 @@
       .ma-src {
         margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; word-break: normal;
         font: 500 13.5px/1.7 var(--mono); color: var(--ink);
+        counter-reset: ln; tab-size: 4;
+      }
+      /* Lề số dòng kiểu VS Code. Số là ::before ở đầu khối dòng, nên dòng dài xuống hàng vẫn thẳng hàng đầu. */
+      .ma-ln { display: block; position: relative; padding-left: calc(var(--gw, 2ch) + 22px); }
+      .ma-ln::before {
+        counter-increment: ln; content: counter(ln);
+        position: absolute; left: 0; top: 0; width: var(--gw, 2ch);
+        text-align: right; font-size: 12px; color: var(--ink-4); font-variant-numeric: tabular-nums;
+        -webkit-user-select: none; user-select: none; pointer-events: none;
+      }
+      .ma-ln.has-c::before { color: var(--green); pointer-events: auto; cursor: pointer; }
+      .ma-ln.has-c::after {
+        content: ''; position: absolute; left: calc(var(--gw, 2ch) + 8px); top: 4px; bottom: 4px; width: 3px;
+        border-radius: 2px; background: var(--accent); cursor: pointer;
       }
       .ma-view__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: -8px 0 6px; }
       .ma-view__head .ma-view__lbl { margin: 0; }
@@ -1296,21 +1310,41 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         root.textContent = '';
         if (!text) return;
         var toks = prefs.syntax === false ? [] : tokens(text);
+        /* Mỗi dòng một <span class="ma-ln"> (block), chứa cả ký tự xuống dòng của nó: text của khung vẫn đúng
+           bằng nguồn. Số dòng là ::before (counter), không phải chữ, nên không lọt vào vùng chọn hay neo. */
+        lineOf(text, 0);
+        var starts = lineCache.starts;
+        var nLines = starts.length - (text.charCodeAt(text.length - 1) === 10 ? 1 : 0);
+        root.style.setProperty('--gw', String(nLines).length + 'ch');
         var pts = [0, text.length];
         toks.forEach(function (t) { pts.push(t.s, t.e); });
         ranges.forEach(function (r) { pts.push(r.s, r.e); });
+        starts.forEach(function (x) { if (x < text.length) pts.push(x); });
         pts.sort(function (x, y) { return x - y; });
-        var frag = document.createDocumentFragment(), ti = 0;
+        var frag = document.createDocumentFragment(), ti = 0, li = -1, line = null, lines = [];
         for (var i = 0; i < pts.length - 1; i++) {
           var a = pts[i], b = pts[i + 1];
           if (a >= b) continue;
+          while (li + 1 < starts.length && starts[li + 1] <= a) {
+            li++; line = h('span', { class: 'ma-ln' }); lines.push(line); frag.append(line);
+          }
           while (ti < toks.length && toks[ti].e <= a) ti++;
           var tok = ti < toks.length && toks[ti].s <= a && toks[ti].e >= b ? toks[ti] : null;
           var t = text.slice(a, b);
           var node = tok ? h('span', { class: tok.c }, t) : document.createTextNode(t);
           var cover = ranges.filter(function (r) { return r.s <= a && r.e >= b; });
-          frag.append(cover.length ? markEl(node, cover, b) : node);
+          line.append(cover.length ? markEl(node, cover, b) : node);
         }
+        /* Dòng có nhận xét: vạch xanh ở lề số; bấm vào lề thì mở nhận xét. */
+        ranges.forEach(function (r) {
+          var l0 = lineOf(text, r.s) - 1, l1 = lineOf(text, Math.max(r.s, r.e - 1)) - 1;
+          for (var k = l0; k <= l1; k++) {
+            var el = lines[k];
+            if (!el) continue;
+            el.classList.add('has-c');
+            el.dataset.c = el.dataset.c ? el.dataset.c + ' ' + r.id : r.id;
+          }
+        });
         root.append(frag);
       }
       function paintMd(root, nodes, ranges) {
@@ -2220,6 +2254,15 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         var root = $(id);
         root.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse' && e.button === 0) dragging = true; });
         root.addEventListener('click', function (e) {
+          var ln = root.id === 'v-src' && e.target.closest && e.target.closest('.ma-ln');
+          if (ln && e.clientX < ln.getBoundingClientRect().left + parseFloat(getComputedStyle(ln).paddingLeft) - 4) {
+            /* Bấm vào lề số dòng: mở nhận xét đầu tiên của dòng ấy. */
+            if (ln.dataset.c && !(pop.mode && popDirty())) {
+              var cid = ln.dataset.c.split(' ')[0], ms = marksOf(cid);
+              openEdit(cid, ms.length ? ms[ms.length - 1] : ln);
+            }
+            return;
+          }
           var sel = window.getSelection();
           if (sel && !sel.isCollapsed) return;
           var m = e.target.closest && e.target.closest('mark.ma-hl');

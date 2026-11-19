@@ -43,6 +43,9 @@
 - Text của `#v-src` phải đúng bằng nguồn: vùng chọn, neo, số dòng đều đếm trên nó (smoke kiểm).
 - Màu chỉ ở token `--sx-*`; mỗi màu ≥ 4,5:1 trên nền thẻ và trên `--hl` / `--hl-2`, cả hai theme.
 - Nút *Tô màu* lưu ở `prefs.syntax`; tắt thì khung là chữ trơn.
+- Lề số dòng: mỗi dòng một `<span class="ma-ln">` (block, giữ cả ký tự xuống dòng), số là `::before` + counter,
+  `user-select: none`. Không chèn số dòng thành chữ. Dòng có nhận xét: `.has-c` + `data-c` (id), vạch `--accent`;
+  bấm vào lề mở nhận xét đầu của dòng.
 
 ## Neo đoạn trích
 
