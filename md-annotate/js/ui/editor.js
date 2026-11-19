@@ -16,6 +16,7 @@ export function syncInputs() {
   $('p-head').value = S.header;
   $('p-foot').value = S.footer;
   $('inc-doc').checked = S.includeDoc;
+  $('rv-prompt').checked = !!S.rvPrompt;
   $('line-nums').checked = S.lineNums;
   $('p-path').value = S.path;
   $('path-row').hidden = !S.lineNums;

@@ -4,7 +4,7 @@
    Xuất: anchors, checkRenderer, mdText, numbers, ordered, orphans, renderAll, renderMeta.
    Dùng: core/text.js, core/comments.js, core/runs.js, ui/dom.js, ui/state.js, ui/markdown.js, ui/marks.js,
      ui/source-view.js, ui/list.js, ui/prompt.js, ui/views.js, ui/sync-scroll.js, ui/focus.js, ui/popup.js,
-     ui/picks.js. */
+     ui/picks.js, ui/review.js. */
 import { plural } from '../core/text.js';
 import { anchorAll, markRanges } from '../core/comments.js';
 import { lineCount } from '../core/runs.js';
@@ -20,6 +20,7 @@ import { invalidateSync } from './sync-scroll.js';
 import { refreshBand } from './focus.js';
 import { paintPending, pending, pop } from './popup.js';
 import { repaintPicks } from './picks.js';
+import { applyReview } from './review.js';
 
 export var mdText = '';            // chữ của bản dựng (nối các nút text)
 export var anchors = {};           // id → { src: [a,b] | null, md: [a,b] | null }
@@ -58,6 +59,7 @@ export function renderAll() {
   renderList();
   renderPrompt();
   renderMeta();
+  applyReview();    // làn dấu đã đọc, làm mờ, tab Review: khung vừa vẽ lại
 }
 
 export function renderMeta() {

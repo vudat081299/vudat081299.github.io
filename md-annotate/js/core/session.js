@@ -15,7 +15,7 @@ export function createSession(text, prefs) {
     header: typeof prefs.header === 'string' ? prefs.header : '',
     footer: typeof prefs.footer === 'string' ? prefs.footer : '',
     fmt: prefs.fmt === 'block' ? 'block' : 'inline', includeDoc: false,
-    lineNums: true, path: ''
+    lineNums: true, path: '', reviews: [], rvPrompt: false
   };
 }
 /* Phiên đọc từ bộ nhớ (s có thể hỏng): sửa tại chỗ cho đúng khuôn, hoặc null nếu không dùng được. */
@@ -38,6 +38,13 @@ export function normSession(s, id) {
   s.includeDoc = !!s.includeDoc;
   s.lineNums = s.lineNums !== false;
   if (typeof s.path !== 'string') s.path = '';
+  /* reviews (dấu đã đọc, core/review.js) và rvPrompt là trường thêm, không đổi khoá: thiếu hay hỏng thì mặc định. */
+  s.reviews = Array.isArray(s.reviews) ? s.reviews.filter(function (m) { return m && typeof m.h === 'string' && m.h; })
+    .map(function (m) {
+      return { h: m.h, p: typeof m.p === 'string' ? m.p : '', n: typeof m.n === 'string' ? m.n : '',
+        q: typeof m.q === 'string' ? m.q : '', r: Number.isFinite(m.r) ? Math.max(0, Math.min(1, m.r)) : 0 };
+    }) : [];
+  s.rvPrompt = s.rvPrompt === true;
   s.created = +s.created || Date.now(); s.updated = +s.updated || s.created;
   return s;
 }
@@ -60,10 +67,14 @@ export function touchSession(s) {
   if (!s.named) s.name = isEmpty(s) ? '' : autoName(s.text);
   s.updated = Date.now();
 }
-/* Danh sách phiên sau khi lưu s: s lên đầu; phiên trống không vào danh sách. */
+/* Danh sách phiên sau khi lưu s: s lên đầu; phiên trống không vào danh sách. rv: % đã đọc khi phiên có dấu. */
 export function indexWith(idx, s) {
   idx = indexWithout(idx, s.id);
-  if (!isEmpty(s)) idx.unshift({ id: s.id, name: s.name, created: s.created, updated: s.updated, chars: s.text.length, count: s.comments.length });
+  if (!isEmpty(s)) {
+    var e = { id: s.id, name: s.name, created: s.created, updated: s.updated, chars: s.text.length, count: s.comments.length };
+    if (Number.isFinite(s.rvPct)) e.rv = s.rvPct;   // % đã đọc, ui/review.js tính lúc vẽ; hộp History hiện
+    idx.unshift(e);
+  }
   return idx;
 }
 export function indexWithout(idx, id) { return idx.filter(function (e) { return e.id !== id; }); }

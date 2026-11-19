@@ -78,6 +78,7 @@
   --pad: 24px;                         /* lề trang trong vùng làm việc (MDAN-005) */
   --bar-h: 60px;
   --side: 360px;                       /* bề rộng panel; người dùng kéo được 320–560, lưu ở prefs.side */
+  --lane-w: 16px;                      /* làn dấu đã đọc cạnh khối (css/review.css, MDAN-013) */
 
   --display: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --sans:    'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;

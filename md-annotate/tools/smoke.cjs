@@ -975,6 +975,187 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   }
   // ── end nhận xét nhiều dòng ──
 
+  // ── đánh dấu đã đọc (MDAN-013) ──
+  {
+    const rctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    await rctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(BASE).origin });
+    const rv = await rctx.newPage(); watch(rv);
+    await rv.goto(BASE); await rv.waitForFunction(() => window.marked && window.DOMPurify);
+    const paras = Array.from({ length: 12 }, (_, i) => `Para A${i + 1} ` + 'chữ '.repeat(40).trim() + '.');
+    const RV = ['# Review doc', '', 'Intro para one.', '', '## Part A', '', ...paras.flatMap((x) => [x, '']), '## Part B', '', '- item one', '- item two', '  - nested two', '- item three', '', 'Last para here.', ''].join('\n');
+    const setText = (t) => rv.evaluate((t) => { const ta = document.getElementById('src-input'); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
+    await rv.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, RV);
+    await rv.waitForTimeout(200);
+    await rv.click('.ma-tab[data-view="split"]'); await rv.waitForTimeout(250);
+    // Đơn vị của chữ `n` ở Preview (khối hay mục), tìm làn cùng đỉnh; trạng thái của đơn vị ở hai khung.
+    const unitOf = (n) => rv.evaluate((n) => {
+      const el = [...document.querySelectorAll('#v-md > *, #v-md li')].filter((e) => e.textContent.includes(n)).pop();
+      const t = el.getBoundingClientRect().top;
+      const b = [...document.querySelectorAll('#wrap-md .ma-lane__b')].find((x) => Math.abs(x.getBoundingClientRect().top - t) < 2);
+      return b ? +b.dataset.u : -1;
+    }, n);
+    const st = (u) => rv.$$eval(`.ma-lane__b[data-u="${u}"]`, (bs) => bs.map((b) => (b.className.match(/is-(done|changed|todo)/) || [])[1]).join(','));
+    const nDone = () => rv.$$eval('#wrap-md .ma-lane__b.is-done', (bs) => bs.length);
+    // Đỉnh của chữ `n` ở Preview, theo % chiều cao khung Preview (dải đọc là 25–50%).
+    const bandPos = (n) => rv.evaluate((n) => {
+      const w = document.getElementById('wrap-md'), wr = w.getBoundingClientRect();
+      const el = [...document.querySelectorAll('#v-md > *')].find((e) => e.textContent.includes(n));
+      return Math.round((el.getBoundingClientRect().top - wr.top) / wr.height * 100);
+    }, n);
+    // Đơn vị X sẽ đánh dấu (làn có .is-cur). Cuộn Preview như người dùng cho tới khi đơn vị của chữ `n` là đơn vị ấy.
+    const cur = () => rv.evaluate(() => { const b = document.querySelector('#wrap-md .ma-lane__b.is-cur'); return b ? +b.dataset.u : -1; });
+    const scrollCur = async (n) => {
+      const u = await unitOf(n);
+      const est = await rv.evaluate((n) => { const w = document.getElementById('wrap-md'); const el = [...document.querySelectorAll('#v-md > *')].find((e) => e.textContent.includes(n)); return el.getBoundingClientRect().top - w.getBoundingClientRect().top + w.scrollTop - w.clientHeight * 0.3; }, n);
+      for (let y = Math.max(0, Math.round(est) - 300); y < est + 300; y += 8) {
+        await rv.$eval('#wrap-md', (w, y) => { w.scrollTop = y; }, y); await rv.waitForTimeout(40);
+        if ((await cur()) === u) return true;
+      }
+      return false;
+    };
+    const nl = await rv.$$eval('#wrap-src .ma-lane__b', (b) => b.length), nm = await rv.$$eval('#wrap-md .ma-lane__b', (b) => b.length);
+    check('đã đọc: làn ở cả hai khung, mỗi mục danh sách một đơn vị (3 tiêu đề, 14 đoạn, 3 mục)', nl === 20 && nm === 20, nl + ' / ' + nm);
+    const it2 = await unitOf('item two');
+    const it2h = await rv.$eval(`#wrap-src .ma-lane__b[data-u="${it2}"]`, (b) => b.getBoundingClientRect().height);
+    check('đã đọc: mục con thuộc mục cha (làn Source của "item two" cao hai dòng)', it2h > 30, String(it2h));
+    check('đã đọc: text của #v-src vẫn đúng bằng nguồn', (await rv.$eval('#v-src', (e) => e.textContent)) === (await rv.inputValue('#src-input')));
+    // X: đánh dấu đơn vị ở dải đọc, rồi cuộn đơn vị chưa đọc kế tiếp vào dải.
+    const a3 = await unitOf('Para A3 ');
+    check('dải đọc: làn của đơn vị X sẽ đánh dấu có .is-cur', await scrollCur('Para A3 '));
+    await rv.keyboard.press('x'); await rv.waitForTimeout(700);
+    check('X: đánh dấu đơn vị ở dải đọc, ở cả hai khung', (await st(a3)) === 'done,done' && (await nDone()) === 1, await st(a3));
+    const p4 = await bandPos('Para A4 ');
+    check('X: đơn vị chưa đọc kế tiếp vào dải đọc, X kế tiếp sẽ trúng nó', (await cur()) === a3 + 1 && p4 >= 10 && p4 <= 50, (await cur()) + ' ' + p4 + '%');
+    await rv.keyboard.press('x'); await rv.waitForTimeout(700);
+    check('X lần nữa: đánh dấu đơn vị vừa tới', (await st(await unitOf('Para A4 '))) === 'done,done');
+    await rv.keyboard.press('k'); await rv.waitForTimeout(700);
+    check('K: tới đơn vị chưa đọc trước đó (bỏ qua đơn vị đã đọc)', (await cur()) === a3 - 1, String(await cur()));
+    await rv.keyboard.press('j'); await rv.waitForTimeout(700);
+    check('J: tới đơn vị chưa đọc kế tiếp', (await cur()) === a3 + 2, String(await cur()));
+    await rv.keyboard.press('x'); await rv.waitForTimeout(700);
+    check('X: J rồi X đánh dấu đơn vị vừa tới', (await nDone()) === 3);
+    await scrollCur('Para A3 ');
+    const y3 = await rv.$eval('#wrap-md', (w) => w.scrollTop);
+    await rv.keyboard.press('x'); await rv.waitForTimeout(400);
+    check('X trên đơn vị đã đọc thì bỏ dấu, không cuộn đi', (await st(a3)) === 'todo,todo' && (await nDone()) === 2 && (await rv.$eval('#wrap-md', (w) => w.scrollTop)) === y3);
+    // Shift+X: cả section Part A (tiêu đề + 12 đoạn).
+    await rv.keyboard.press('Shift+X'); await rv.waitForTimeout(700);
+    const hA = await unitOf('Part A');
+    check('Shift+X: cả section đã đọc, nút section ✓', (await nDone()) === 13 && /sec-done/.test(await rv.$eval(`#wrap-md .ma-lane__b[data-u="${hA}"]`, (b) => b.className)), String(await nDone()));
+    check('Shift+X: toast có Undo', /Marked 13 blocks/.test(await rv.textContent('#toast')) && await rv.isVisible('.ma-toast__btn'));
+    await rv.click('.ma-toast__btn'); await rv.waitForTimeout(150);
+    check('Undo: trả lại dấu trước đó', (await nDone()) === 2, String(await nDone()));
+    // Nút section ở làn của tiêu đề: đánh dấu cả section.
+    await rv.$eval(`#wrap-md .ma-lane__b[data-u="${hA}"]`, (b) => b.scrollIntoView({ block: 'center' })); await rv.waitForTimeout(150);
+    await rv.click(`#wrap-md .ma-lane__b[data-u="${hA}"]`);
+    check('bấm nút section (làn tiêu đề): cả section đã đọc', (await nDone()) === 13 && /sec-done/.test(await rv.$eval(`#wrap-src .ma-lane__b[data-u="${hA}"]`, (b) => b.className)), String(await nDone()));
+    // Phím bị bỏ qua: đang gõ, có Ctrl, hộp thoại mở.
+    const before = await nDone();
+    await rv.keyboard.press('Control+x'); await rv.click('#btn-layout'); await rv.keyboard.press('x'); await rv.keyboard.press('Escape');
+    await rv.click('#ptab-prompt'); await rv.click('#opts summary'); await rv.focus('#p-head'); await rv.keyboard.press('x');
+    check('phím: bỏ qua khi có Ctrl, hộp thoại mở, đang gõ', (await nDone()) === before && (await rv.inputValue('#p-head')).endsWith('x'), (await nDone()) + ' / ' + before);
+    await rv.fill('#p-head', ''); await rv.click('#opts summary');
+    // Bấm làn ở Preview; Shift + bấm đánh dấu cả dải.
+    const i1 = await unitOf('item one'), i3 = await unitOf('item three');
+    await rv.$eval(`#wrap-md .ma-lane__b[data-u="${i1}"]`, (b) => b.scrollIntoView({ block: 'center' })); await rv.waitForTimeout(150);
+    await rv.click(`#wrap-md .ma-lane__b[data-u="${i1}"]`);
+    check('bấm làn: đánh dấu một đơn vị', (await st(i1)) === 'done,done');
+    await rv.click(`#wrap-md .ma-lane__b[data-u="${i3}"]`, { modifiers: ['Shift'] });
+    check('Shift + bấm làn: đánh dấu cả dải', (await st(i1 + 1)) === 'done,done' && (await st(i3)) === 'done,done');
+    await rv.click(`#wrap-md .ma-lane__b[data-u="${i3}"]`);
+    check('bấm làn đã đọc: bỏ dấu, không mở hộp nhận xét', (await st(i3)) === 'todo,todo' && !(await rv.isVisible('#pop')));
+    // Bôi đen → hộp nhận xét có ✓ Reviewed, nói dòng nào, nới ra trọn khối.
+    await dragSelect(rv, '#v-md', 'here');
+    check('hộp nhận xét: nút ✓ Reviewed nói dòng nào', (await rv.isVisible('#pop-rv')) && (await rv.textContent('#pop-rv')) === '✓ ReviewedL' + (RV.split('\n').indexOf('Last para here.') + 1), await rv.textContent('#pop-rv'));
+    await rv.click('#pop-rv');
+    check('✓ Reviewed: đánh dấu trọn khối, đóng hộp', (await st(await unitOf('Last para'))) === 'done,done' && !(await rv.isVisible('#pop')));
+    // Nhận xét không đánh dấu đã đọc.
+    const nb = await nDone();
+    await dragSelect(rv, '#v-md', 'Intro para');
+    await rv.keyboard.type('Sửa'); await rv.keyboard.press('Enter'); await rv.waitForTimeout(150);
+    check('thêm nhận xét không đánh dấu đã đọc', (await nDone()) === nb && (await st(await unitOf('Intro para'))) === 'todo,todo');
+    // Chọn nhiều dòng ở lề số: hộp có ✓ Reviewed, bấm thì đánh dấu và thoát chế độ.
+    const gut = (n) => rv.$eval(`#v-src .ma-ln:nth-child(${n})`, (el) => { el.scrollIntoView({ block: 'center' }); const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
+    const lnI1 = RV.split('\n').indexOf('- item one') + 1;
+    await rv.click(`#wrap-md .ma-lane__b[data-u="${i1}"]`); await rv.click(`#wrap-md .ma-lane__b[data-u="${i1 + 1}"]`);   // bỏ dấu hai mục đầu
+    let g = await gut(lnI1); await rv.mouse.dblclick(g.x, g.y); await rv.waitForTimeout(150);
+    g = await gut(lnI1 + 2); await rv.mouse.click(g.x, g.y); await rv.waitForTimeout(120);
+    check('nhiều dòng: hộp có ✓ Reviewed với dòng của các khối', (await rv.isVisible('#pop-rv')) && (await rv.textContent('#pop-rv-l')) === 'L' + lnI1 + '–' + (lnI1 + 2), await rv.textContent('#pop-rv-l'));
+    await rv.click('#pop-rv');
+    check('nhiều dòng: ✓ Reviewed đánh dấu, thoát chế độ', (await st(i1)) === 'done,done' && (await st(i1 + 1)) === 'done,done' && !(await rv.$$('#v-src .is-pick')).length && !(await rv.isVisible('#pop')));
+    // Làn ở Source không phải lề số: bấm làn không mở nhận xét / chế độ chọn dòng.
+    const sl = await rv.$(`#wrap-src .ma-lane__b[data-u="${i3}"]`);
+    await sl.scrollIntoViewIfNeeded(); await sl.dblclick(); await rv.waitForTimeout(150);
+    check('làn Source: bấm đúp không vào chế độ chọn dòng', !(await rv.$$('#v-src .is-pick')).length && !(await rv.isVisible('#pop')) && (await st(i3)) === 'todo,todo');
+    // Tab Review: tiến độ, dàn ý, nhảy tới section.
+    await rv.click('#ptab-review');
+    const outline = await rv.$$eval('#rv-secs .ma-rvs', (ls) => ls.map((l) => l.className.replace('ma-rvs ', '') + ':' + l.textContent));
+    check('tab Review: dàn ý ba section, trạng thái, số nhận xét', outline.length === 3 && /is-todo:Review doc0\/2 · 1 comment/.test(outline[0]) && /is-done:Part A13\/13/.test(outline[1]) && /is-part:Part B/.test(outline[2]), JSON.stringify(outline));
+    check('tab Review: % và thanh tiến độ', /^\d+%$/.test(await rv.textContent('#rv-pct')) && (await rv.textContent('#rv-pct')) === (await rv.getAttribute('#rv-bar', 'aria-valuenow')) + '%');
+    await rv.$eval('#wrap-md', (w) => { w.scrollTop = 0; }); await rv.waitForTimeout(150);
+    await rv.click('#rv-secs .ma-rvs:nth-child(3) .ma-rvs__main'); await rv.waitForTimeout(900);
+    check('dàn ý: bấm section thì tới khối chưa đọc đầu tiên của nó', (await cur()) === hA + 13, (await cur()) + ' ' + (await bandPos('Part B')) + '%');
+    // Dim reviewed: chỉ mờ, không gập.
+    const hBefore = await rv.$eval('#v-md', (e) => e.scrollHeight);
+    await rv.check('#rv-dim'); await rv.waitForTimeout(350);
+    const op = await rv.evaluate(() => [...document.querySelectorAll('#v-md > *')].find((e) => e.textContent.includes('Para A7 ')).ownerDocument.defaultView.getComputedStyle([...document.querySelectorAll('#v-md > *')].find((e) => e.textContent.includes('Para A7 '))).opacity);
+    check('Dim reviewed: khối đã đọc mờ, chiều cao không đổi', +op < 0.5 && (await rv.$eval('#v-md', (e) => e.scrollHeight)) === hBefore, op);
+    await rv.uncheck('#rv-dim');
+    // Prompt: tắt thì không có dòng đã đọc; bật thì có, tóm tắt Options có "reviewed".
+    await openOpts(rv);
+    check('prompt: mặc định không có dòng đã đọc', !/Đã đọc kỹ/.test(await out(rv)));
+    await rv.check('#rv-prompt');
+    check('prompt: bật thì có dòng đã đọc / chưa đọc', /\nĐã đọc kỹ: L\d+-\d+.*; chỗ nào không có nhận xét là ổn\. Chưa đọc: L/.test(await out(rv)) && /reviewed/.test(await rv.textContent('#opts-sum')), await out(rv));
+    // Sửa chữ một khối đã đọc: changed (○), bấm xác nhận lại. Xoá một khối đã đọc: báo mất. Chuyển chỗ: vẫn ✓.
+    const t1 = (await rv.inputValue('#src-input')).replace('Para A7 chữ', 'Para A7 đã sửa chữ');
+    await rv.click('.ma-tab[data-view="edit"]'); await setText(t1); await rv.waitForTimeout(400); await rv.click('.ma-tab[data-view="split"]'); await rv.waitForTimeout(250);
+    const a7 = await unitOf('Para A7 ');
+    check('sửa chữ khối đã đọc: changed ở cả hai khung', (await st(a7)) === 'changed,changed', await st(a7));
+    await rv.click('#ptab-review');
+    const ol2 = (await rv.$$eval('#rv-secs .ma-rvs', (ls) => ls.map((l) => l.className.replace('ma-rvs ', '') + ':' + l.textContent))).join('|');
+    check('tab Review: đếm khối đổi chữ', /1 edited since/.test(await rv.textContent('#rv-sub')) && /is-changed:Part A/.test(ol2), ol2);
+    await rv.$eval(`#wrap-md .ma-lane__b[data-u="${a7}"]`, (b) => b.scrollIntoView({ block: 'center' })); await rv.waitForTimeout(100);
+    await rv.click(`#wrap-md .ma-lane__b[data-u="${a7}"]`);
+    check('bấm làn khối changed: xác nhận lại thành done', (await st(a7)) === 'done,done');
+    const lastLine = 'Last para here.';
+    const t2 = (await rv.inputValue('#src-input')).replace('\n\n' + lastLine, '').replace('Para A9 ', 'Gone soon ').split('\n').filter((l) => !l.startsWith('Gone soon')).join('\n');
+    await rv.click('.ma-tab[data-view="edit"]'); await setText(lastLine + '\n\n' + t2); await rv.waitForTimeout(400);
+    check('xoá khối đã đọc: báo mất (toast)', /edited away/.test(await rv.textContent('#toast')), await rv.textContent('#toast'));
+    await rv.click('.ma-tab[data-view="split"]'); await rv.waitForTimeout(250);
+    check('chuyển khối đã đọc lên đầu: vẫn ✓', (await st(await unitOf('Last para'))) === 'done,done');
+    check('tab Review: hiện dấu mất, Dismiss bỏ', (await rv.isVisible('#rv-lost')) && /1 reviewed block is no longer/.test(await rv.textContent('#rv-lost')));
+    await rv.click('#rv-lost-x');
+    check('Dismiss: hết dấu mất', !(await rv.isVisible('#rv-lost')));
+    // Tải lại: dấu còn; History hiện %.
+    const lanesNow = () => rv.$$eval('#wrap-md .ma-lane__b', (bs) => bs.map((b) => b.className.replace(/ is-(flash|cur)/g, '')).join('|'));
+    const snap = await lanesNow();
+    await rv.waitForTimeout(400);
+    await rv.reload(); await rv.waitForFunction(() => window.marked && window.DOMPurify); await rv.waitForTimeout(300);
+    check('tải lại: dấu còn nguyên', (await lanesNow()) === snap);
+    await rv.click('#btn-hist');
+    check('History: hiện % đã đọc', /\d+% reviewed/.test(await rv.textContent('#hist-list')));
+    await rv.keyboard.press('Escape');
+    // Thanh dọc hiện %.
+    await rv.click('#btn-rail');
+    check('thanh dọc: hiện %', (await rv.isVisible('#rail-rv')) && /^\d+%$/.test(await rv.textContent('#rail-rv')));
+    await rv.click('#rail-rv');
+    check('thanh dọc: bấm % mở tab Review', (await rv.isVisible('#pane-review')) && (await rv.getAttribute('#ptab-review', 'aria-selected')) === 'true');
+    // Điện thoại: viên thuốc ✓ Done · next ↓, thanh đáy có %, không tràn ngang.
+    await rv.setViewportSize({ width: 390, height: 844 }); await rv.waitForTimeout(300);
+    await rv.click('.ma-tab[data-view="view"]'); await rv.waitForTimeout(300);
+    check('điện thoại: viên thuốc hiện, cao ≥ 44px', (await rv.isVisible('#rv-pill')) && (await rv.$eval('#rv-pill', (b) => b.getBoundingClientRect().height)) >= 44);
+    check('điện thoại: thanh đáy có %, nút chép trọn trong khung', (await rv.isVisible('#dock-rv')) && /^✓ \d+%$/.test(await rv.textContent('#dock-rv')) && (await rv.$eval('#dock-copy', (b) => b.getBoundingClientRect().right)) <= 390);
+    const intro = await unitOf('Intro para');
+    const introY = await rv.evaluate(() => [...document.querySelectorAll('#v-md > *')].find((e) => e.textContent.includes('Intro para')).getBoundingClientRect().top + window.scrollY - innerHeight * 0.4);
+    for (let y = Math.max(0, Math.round(introY)); y < introY + 400 && (await cur()) !== intro; y += 8) { await rv.evaluate((y) => window.scrollTo(0, y), y); await rv.waitForTimeout(40); }
+    check('điện thoại: đơn vị ở dải đọc có .is-cur', (await cur()) === intro, String(await cur()));
+    await rv.click('#rv-pill'); await rv.waitForTimeout(700);
+    check('điện thoại: viên thuốc đánh dấu đơn vị ở dải đọc', (await st(intro)) === 'done', await st(intro));
+    check('điện thoại: không tràn ngang', (await overflow(rv)) === 0, String(await overflow(rv)));
+    await rctx.close();
+  }
+  // ── end đánh dấu đã đọc ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

@@ -39,6 +39,7 @@
     <link rel="stylesheet" href="css/popup.css" />
     <link rel="stylesheet" href="css/dialogs.css" />
     <link rel="stylesheet" href="css/focus.css" />
+    <link rel="stylesheet" href="css/review.css" />
     <link rel="stylesheet" href="css/mobile.css" />
   </head>
 
@@ -159,7 +160,7 @@
 
         <!-- Cột phải: một panel. Thân là chỗ cuộn duy nhất; thanh đáy (nút chép) luôn thấy, dù bao nhiêu nhận xét.
              Máy ≤ 1080px: panel nằm trong tấm trượt đáy #dlg-panel, mở từ thanh đáy. -->
-        <aside class="ma-panel" id="panel" aria-label="Comments and prompt">
+        <aside class="ma-panel" id="panel" aria-label="Comments, prompt and review">
           <div class="ma-panel__grip" id="panel-grip" role="separator" aria-orientation="vertical" tabindex="0"
                aria-label="Resize panel" title="Drag to resize"></div>
           <div class="ma-rail">
@@ -167,6 +168,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
             </button>
             <button class="ma-rail__n" type="button" id="rail-n" title="Comments" aria-label="Show comments"></button>
+            <button class="ma-rail__n" type="button" id="rail-rv" title="Review progress" hidden></button>
             <span class="ma-rail__sp"></span>
             <button class="ma-icbtn ma-icbtn--bare" type="button" id="rail-export" aria-label="Download .md" title="Download .md">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m-4-4 4 4 4-4M5 20h14" /></svg>
@@ -182,8 +184,13 @@
                 Comments <span class="ma-ptab__n" id="n-comments"></span>
               </button>
               <button class="ma-ptab" role="tab" type="button" id="ptab-prompt" data-pane="prompt" aria-controls="pane-prompt">Prompt</button>
+              <button class="ma-ptab" role="tab" type="button" id="ptab-review" data-pane="review" aria-controls="pane-review">
+                Review <span class="ma-ptab__n" id="n-review"></span>
+              </button>
             </div>
-            <button class="ma-btn ma-btn--quiet" type="button" id="btn-hints" title="Manage comment hints">Hints</button>
+            <button class="ma-icbtn ma-icbtn--bare" type="button" id="btn-hints" aria-label="Comment hints" title="Manage comment hints">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.1V16h5v-.1c0-.8.4-1.6 1.1-2.1A6 6 0 0 0 12 3z" /></svg>
+            </button>
             <button class="ma-icbtn ma-icbtn--bare" type="button" id="btn-rail" aria-label="Collapse panel" title="Collapse panel">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
             </button>
@@ -220,6 +227,7 @@
                     <input class="ma-input" id="p-path" type="text" spellcheck="false" autocomplete="off"
                            placeholder="notes/a.md (optional)" aria-label="File path, locations become file:line" />
                   </label>
+                  <label class="ma-check" title="Adds a line listing the lines you marked reviewed, so the AI knows those parts are fine"><input type="checkbox" id="rv-prompt" /> Say which lines I reviewed</label>
                   <label class="ma-check"><input type="checkbox" id="inc-doc" /> Include the full text at the end</label>
                   <div class="ma-opts__field">
                     <span class="ma-opts__lbl"><label class="ma-label" for="p-head">Header</label>
@@ -234,6 +242,29 @@
                 </div>
               </details>
               <pre class="ma-out" id="out" tabindex="0" aria-label="Prompt" data-ph="The prompt appears here once you add comments."></pre>
+            </div>
+
+            <!-- Tab Review (ui/review-panel.js): tiến độ, dàn ý section, đơn vị chưa đọc kế tiếp, làm mờ. -->
+            <div class="ma-pane" id="pane-review" role="tabpanel" aria-labelledby="ptab-review" hidden>
+              <div class="ma-blank" id="rv-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10" /></svg>
+                <p><b>Nothing to review yet</b>Paste a text, then mark blocks as you read them.</p>
+              </div>
+              <div class="ma-rv" id="rv-body" hidden>
+                <div class="ma-rv__prog">
+                  <div class="ma-rv__nums"><span class="ma-rv__pct" id="rv-pct"></span><span class="ma-rv__sub" id="rv-sub"></span></div>
+                  <div class="ma-rv__bar" id="rv-bar" role="progressbar" aria-label="Reviewed" aria-valuemin="0" aria-valuemax="100"><span id="rv-fill"></span></div>
+                </div>
+                <div class="ma-rv__acts">
+                  <button class="ma-btn" type="button" id="rv-next" title="Scroll to the next block you have not reviewed (J)">Next unreviewed ↓</button>
+                  <label class="ma-check" title="Fade reviewed blocks, for a top-to-bottom pass"><input type="checkbox" id="rv-dim" /> Dim reviewed</label>
+                </div>
+                <p class="ma-rv__lost" id="rv-lost" hidden><span id="rv-lost-t"></span><button class="ma-link" type="button" id="rv-lost-x">Dismiss</button></p>
+                <ol class="ma-rvs-list" id="rv-secs" aria-label="Sections"></ol>
+                <p class="ma-sub ma-rv__keys"><kbd>X</kbd> mark the block in the reading band · <kbd>⇧ X</kbd> its section ·
+                  <kbd>J</kbd> / <kbd>K</kbd> next / previous unreviewed. Or click the thin lane beside a block.</p>
+                <div><button class="ma-btn ma-btn--quiet ma-btn--danger" type="button" id="rv-clear">Clear all marks</button></div>
+              </div>
             </div>
           </div>
 
@@ -268,6 +299,8 @@
       <textarea class="ma-ta" id="pop-text" rows="2" placeholder="Comment… (or pick a hint)" aria-label="Comment"></textarea>
       <div class="ma-pop__bar">
         <span class="ma-pop__keys"><kbd>Enter</kbd> save · <kbd>⇧ Enter</kbd> new line · <kbd>Esc</kbd> close</span>
+        <!-- ui/review.js: đánh dấu đã đọc các khối chạm đoạn này -->
+        <button class="ma-btn ma-btn--quiet ma-pop__rv" type="button" id="pop-rv" hidden><span id="pop-rv-t"></span><span class="ma-pop__rvl" id="pop-rv-l"></span></button>
         <button class="ma-btn ma-btn--quiet ma-btn--danger" type="button" id="pop-del" hidden>Delete</button>
         <button class="ma-btn ma-btn--quiet" type="button" id="pop-cancel">Cancel</button>
         <button class="ma-btn ma-btn--go" type="button" id="pop-save">Save</button>
@@ -275,9 +308,12 @@
     </div>
 
     <button class="ma-btn ma-btn--go ma-fab" type="button" id="fab" hidden>Comment on selection</button>
+    <!-- Máy hẹp / cảm ứng (ui/review.js): đánh dấu đơn vị ở dải đọc rồi tới đơn vị chưa đọc kế tiếp. Sau #fab (CSS ẩn khi #fab hiện). -->
+    <button class="ma-btn ma-btn--go ma-rvpill" type="button" id="rv-pill" hidden title="Mark the block in the reading band reviewed, then go to the next unreviewed one"><span id="rv-pill-t"></span></button>
 
     <div class="ma-dock" id="dock">
       <button class="ma-btn ma-btn--quiet ma-dock__list" type="button" id="dock-n" aria-haspopup="dialog"></button>
+      <button class="ma-btn ma-btn--quiet ma-dock__rv" type="button" id="dock-rv" aria-haspopup="dialog" title="Review progress" hidden></button>
       <button class="ma-btn ma-btn--go ma-copy" type="button" id="dock-copy">
         <svg class="ma-i ma-copy__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a1 1 0 0 1 1-1h9" /></svg>
         <span class="ma-copy__lbl">Copy prompt</span>
@@ -302,7 +338,7 @@
       </div>
     </dialog>
 
-    <dialog class="ma-dlg ma-dlg--panel" id="dlg-panel" aria-label="Comments and prompt"></dialog>
+    <dialog class="ma-dlg ma-dlg--panel" id="dlg-panel" aria-label="Comments, prompt and review"></dialog>
 
     <dialog class="ma-dlg ma-dlg--live" id="dlg-layout" aria-labelledby="dlg-layout-t">
       <div class="ma-dlg__in">

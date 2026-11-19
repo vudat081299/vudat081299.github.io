@@ -1,6 +1,7 @@
 /* Prompt, thuần: dựng chữ prompt từ phiên s và kết quả neo d (core/comments.js anchorAll: ordered, orphans,
    anchors), nhãn vị trí L12 / tệp:12-14, tóm tắt Options, tên file tải về. Câu vào prompt bằng tiếng Việt (MDAN-007).
    Nhận xét nhiều phần: mỗi phần tìm thấy một nhãn và một trích dẫn; phần mất neo bị bỏ.
+   d.review (tuỳ chọn): dải dòng đã đọc / chưa đọc (core/review.js reviewRanges); chỉ vào prompt khi s.rvPrompt.
    Xuất: buildPrompt, exportName, included, locLabel, optionsSummary, promptSize, rangeLabel.
    Dùng: core/text.js, core/session.js, core/comments.js. */
 import { lineOf, oneLine, slug } from './text.js';
@@ -32,6 +33,12 @@ export function locLabel(s, d, c, withPath) {
 function blockQuote(q) {
   return q.trim().replace(/\n{3,}/g, '\n\n').split('\n').map(function (l) { return l.trim() ? '> ' + l : '>'; }).join('\n');
 }
+/* Dòng đã đọc (MDAN-013): báo AI chỗ nào đã đọc kỹ mà không có nhận xét là ổn. Chưa đánh dấu gì thì ''. */
+function reviewLine(r, path) {
+  if (!r || !r.done.length) return '';
+  var f = function (rs) { return rs.map(function (x) { return rangeLabel(x[0], x[1], path); }).join(', '); };
+  return 'Đã đọc kỹ: ' + f(r.done) + '; chỗ nào không có nhận xét là ổn.' + (r.todo.length ? ' Chưa đọc: ' + f(r.todo) + '.' : '');
+}
 export function buildPrompt(s, d) {
   var items = included(d);
   var parts = [];
@@ -39,13 +46,14 @@ export function buildPrompt(s, d) {
   var fs = items.map(function (c) {
     return found(s, d, c, true).map(function (f) { return { quote: f.quote, loc: s.lineNums ? f.loc : '' }; });
   });
-  var head = s.header.trim();
-  if (fs.some(function (f) { return f.some(function (x) { return x.loc; }); })) {
+  var head = s.header.trim(), rv = s.rvPrompt ? reviewLine(d.review, s.path.trim()) : '';
+  if (fs.some(function (f) { return f.some(function (x) { return x.loc; }); }) || rv) {
     var note = s.path.trim()
       ? 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.'
       : 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.';
     head = head ? head + '\n' + note : note;
   }
+  if (rv) head += '\n' + rv;
   if (head) parts.push(head);
   if (items.length) {
     if (s.fmt === 'block') {
@@ -82,6 +90,7 @@ export function optionsSummary(s) {
   var sum = [s.fmt === 'block' ? 'block' : 'compact'];
   if (s.lineNums) sum.push(s.path.trim() || 'line numbers');
   if (s.includeDoc) sum.push('full text');
+  if (s.rvPrompt) sum.push('reviewed');
   if (s.header.trim() || s.footer.trim()) sum.push('header');
   return sum.join(' · ');
 }

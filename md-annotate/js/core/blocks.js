@@ -1,8 +1,9 @@
-/* Khối cấp cao của văn bản markdown, thuần: lexSpans(text, lex) → [{ a, b, heading, tag }], a / b là dòng đầu / cuối
-   (đếm từ 0), heading: khối mở section (token heading, hoặc khối HTML mở bằng <h1>…<h6>), tag: thẻ phần tử khối dựng
-   ra ở Preview ('' nếu không đoán được). lex là bộ tách token (marked.lexer, ui/markdown.js mdLex); nó ném lỗi thì
-   không có khối. pairBlocks() ghép khối nguồn với khối cấp cao của Preview.
-   Dùng cho cuộn theo nhau (ui/sync-scroll.js) và Focus mode (ui/focus.js).
+/* Khối cấp cao của văn bản markdown, thuần: lexSpans(text, lex) → [{ a, b, heading, tag, items? }], a / b là dòng đầu /
+   cuối (đếm từ 0), heading: khối mở section (token heading, hoặc khối HTML mở bằng <h1>…<h6>), tag: thẻ phần tử khối
+   dựng ra ở Preview ('' nếu không đoán được), items: dòng đầu của từng mục cấp cao (chỉ danh sách ≥ 2 mục tìm đủ mục).
+   lex là bộ tách token (marked.lexer, ui/markdown.js mdLex); nó ném lỗi thì không có khối. pairBlocks() ghép khối
+   nguồn với khối cấp cao của Preview.
+   Dùng cho cuộn theo nhau (ui/sync-scroll.js), Focus mode (ui/focus.js) và đánh dấu đã đọc (core/review.js).
    Xuất: lexSpans, pairBlocks.
    Dùng: core/text.js. */
 
@@ -28,6 +29,20 @@ export function lexSpans(text, lex) {
     }
     return -1;
   }
+  /* Dòng đầu của từng mục cấp cao trong danh sách [at, end): dòng đầu của raw mỗi mục, cùng thụt lề với mục đầu (dòng
+     giống hệt của mục con thụt sâu hơn). Thiếu một mục thì null: cả danh sách là một khối. */
+  function listItems(its, at, end) {
+    var out = [], from = at, indent = at - starts[lineAt(at)];
+    for (var k = 0; k < its.length; k++) {
+      var first = (its[k].raw || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean)[0];
+      var j = first ? findAtLineStart(first, from) : -1;
+      while (j >= 0 && j < end && j - starts[lineAt(j)] !== indent) j = findAtLineStart(first, j + 1);
+      if (j < 0 || j >= end) return null;
+      out.push(lineAt(j));
+      from = j + first.length;
+    }
+    return out;
+  }
   toks.forEach(function (t) {
     if (t.type === 'space' || t.type === 'def') return;
     var lines = (t.raw || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
@@ -44,7 +59,12 @@ export function lexSpans(text, lex) {
     }
     // Khối HTML mở bằng <h1>…<h6> là tiêu đề cấp cao ở Preview, nên cũng mở section ở Source.
     var heading = t.type === 'heading' || (t.type === 'html' && /^<h[1-6][\s>/]/i.test(lines[0]));
-    spans.push({ a: lineAt(at), b: lineAt(Math.max(at, end - 1)), heading: heading, tag: blockTag(t) });
+    var sp = { a: lineAt(at), b: lineAt(Math.max(at, end - 1)), heading: heading, tag: blockTag(t) };
+    if (t.type === 'list' && t.items && t.items.length > 1) {
+      var items = listItems(t.items, at, end);
+      if (items) sp.items = items;
+    }
+    spans.push(sp);
     pos = end;
   });
   return spans;

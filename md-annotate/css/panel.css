@@ -11,9 +11,13 @@
   /* Đáy lưới bằng khoảng hở dưới panel, để tới cuối trang panel không trượt vào dưới thanh trên. */
   .ma-grid { padding-bottom: var(--s4); }
 }
-.ma-panel__head { flex: none; display: flex; align-items: center; gap: var(--s2); padding: var(--s3); border-bottom: 1px solid var(--line-2); }
+.ma-panel__head { flex: none; display: flex; align-items: center; gap: var(--s1); padding: var(--s3); border-bottom: 1px solid var(--line-2); }
 .ma-seg { flex: 1; min-width: 0; }   /* nhóm tab: base.css */
-.ma-ptab { flex: 1; }
+/* Ba tab trong panel 320–560px: đệm hẹp; panel hẹp thì bỏ huy hiệu (số vẫn ở thanh đáy, thanh dọc, tab Review). */
+.ma-panel { container-type: inline-size; }
+.ma-ptab { flex: 1 1 auto; min-width: 0; padding: 0 calc(1.5 * var(--s1)); gap: var(--s1); }
+@container (max-width: 389px) { #n-review { display: none; } }
+@container (max-width: 345px) { .ma-ptab__n { display: none; } .ma-panel__head { padding-inline: var(--s2); } }
 .ma-panel__close { display: none; }
 /* Kéo mép trái để đổi bề rộng panel. */
 .ma-panel__grip { position: absolute; z-index: 2; left: 0; top: 0; bottom: 0; width: 8px; cursor: col-resize; touch-action: none; }

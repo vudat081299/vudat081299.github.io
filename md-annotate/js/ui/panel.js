@@ -1,18 +1,16 @@
-/* Panel bên phải: hai tab (setPane), kéo mép trái đổi bề rộng (prefs.side), thu gọn thành thanh dọc
+/* Panel bên phải: ba tab Comments / Prompt / Review (setPane; thân của tab là #pane-<data-pane>), kéo mép trái đổi bề rộng (prefs.side), thu gọn thành thanh dọc
    (prefs.rail), tấm trượt #dlg-panel ở máy ≤ 1080px.
    Xuất: initPanel, setPane.
    Dùng: ui/store.js, ui/dom.js. */
 import { prefs, savePrefs } from './store.js';
 import { $, dragBar, mqSide } from './dom.js';
 
-/* Panel: hai tab. */
 export function setPane(name) {
   document.querySelectorAll('.ma-ptab').forEach(function (b) {
     var on = b.dataset.pane === name;
     b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1;
+    $('pane-' + b.dataset.pane).hidden = !on;
   });
-  $('pane-list').hidden = name !== 'list';
-  $('pane-prompt').hidden = name !== 'prompt';
 }
 
 /* Panel: kéo mép trái đổi bề rộng (320–560), hoặc thu gọn thành thanh dọc. Lưu ở prefs.side, prefs.rail. */
@@ -45,7 +43,8 @@ export function initPanel() {
     b.addEventListener('click', function () { setPane(b.dataset.pane); });
     b.addEventListener('keydown', function (e) {
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      var t = b.dataset.pane === 'list' ? $('ptab-prompt') : $('ptab-list');
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('.ma-ptab'));
+      var t = tabs[(tabs.indexOf(b) + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length];
       setPane(t.dataset.pane); t.focus();
     });
   });

@@ -1,7 +1,8 @@
 /* Panel Prompt: hiện prompt, chép (⌘/Ctrl + Shift + C ở main.js), tải .md, tuỳ chọn trong Options (kiểu, số dòng,
-   tệp, toàn văn, lời dẫn). Dựng chữ prompt ở core/prompt.js.
+   tệp, dòng đã đọc, toàn văn, lời dẫn). Dựng chữ prompt ở core/prompt.js; dải dòng đã đọc từ ui/review.js.
    Xuất: copyPrompt, initPrompt, locText, renderPrompt.
-   Dùng: core/text.js, core/comments.js, core/prompt.js, ui/store.js, ui/dom.js, ui/state.js, ui/render.js. */
+   Dùng: core/text.js, core/comments.js, core/prompt.js, ui/store.js, ui/dom.js, ui/state.js, ui/render.js,
+     ui/review.js. */
 import { plural } from '../core/text.js';
 import { anchorAll } from '../core/comments.js';
 import { buildPrompt, exportName, included, locLabel, optionsSummary, promptSize } from '../core/prompt.js';
@@ -9,12 +10,13 @@ import { prefs, savePrefs } from './store.js';
 import { $, h, toast } from './dom.js';
 import { S, scheduleSave } from './state.js';
 import { anchors, mdText, ordered, orphans } from './render.js';
+import { reviewDoc } from './review.js';
 
 /* Kết quả neo của lần vẽ gần nhất (render.js): đủ cho panel, vì renderAll() vẽ lại prompt ngay sau khi neo. */
-function doc() { return { ordered: ordered, orphans: orphans, anchors: anchors }; }
+function doc() { return { ordered: ordered, orphans: orphans, anchors: anchors, review: reviewDoc() }; }
 /* Chép / tải: neo lại theo S.text lúc này. Gõ ở Edit đổi S.text ngay nhưng chỉ vẽ lại sau 250ms (ui/editor.js), nên
    kết quả neo của lần vẽ trước có thể thuộc văn bản cũ: số dòng lệch. */
-function freshDoc() { return anchorAll(S.comments, S.text, mdText); }
+function freshDoc() { var d = anchorAll(S.comments, S.text, mdText); d.review = reviewDoc(); return d; }
 /* Nhãn vị trí của nhận xét c cho danh sách (L12) hoặc prompt (tệp:12). */
 export function locText(c, withPath) { return locLabel(S, doc(), c, withPath); }
 export function renderPrompt() {
@@ -76,6 +78,7 @@ export function initPrompt() {
     $('p-head').dispatchEvent(new Event('input'));
   });
   $('inc-doc').addEventListener('change', function (e) { S.includeDoc = e.target.checked; scheduleSave(); renderPrompt(); });
+  $('rv-prompt').addEventListener('change', function (e) { S.rvPrompt = e.target.checked; scheduleSave(); renderPrompt(); });
   $('line-nums').addEventListener('change', function (e) {
     S.lineNums = e.target.checked; $('path-row').hidden = !S.lineNums;
     scheduleSave(); renderPrompt();

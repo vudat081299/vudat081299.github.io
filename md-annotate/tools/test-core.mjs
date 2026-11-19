@@ -327,6 +327,117 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   check('partsOf: không parts thì chính nó', partsOf(ns.comments[3])[0] === ns.comments[3] && partsOf(ns.comments[0]) === ns.comments[0].parts);
 }
 // ── end nhận xét nhiều dòng ──
-
+// ── đánh dấu đã đọc (MDAN-013) ──
+{
+  const R = await import('../js/core/review.js');
+  const { buildPrompt, optionsSummary } = await import('../js/core/prompt.js');
+  const { anchorAll } = await import('../js/core/comments.js');
+  const { normSession, createSession, indexWith } = await import('../js/core/session.js');
+  // Bộ tách giả: mỗi khối cách nhau dòng trống; khối mở bằng '#' là tiêu đề; danh sách có items như marked.
+  const lexer = (text) => text.split(/\n{2,}/).filter((b) => b.trim()).map((raw) => {
+    if (/^#/.test(raw)) return { type: 'heading', depth: raw.match(/^#+/)[0].length, raw };
+    if (/^(?:[-*]|\d+\.) /.test(raw)) {
+      const items = raw.split(/\n(?=(?:[-*]|\d+\.) )/).map((x, i, a) => x + (i < a.length - 1 ? '\n' : ''));
+      return { type: 'list', ordered: /^\d/.test(raw), raw, items: items.map((x) => ({ raw: x })) };
+    }
+    if (/^---$/.test(raw)) return { type: 'hr', raw };
+    return { type: 'paragraph', raw };
+  });
+  const U = (t) => R.reviewUnits(t, lexSpans(t, lexer));
+  const T0 = ['# Đầu', 'Mở bài.', '- mục một\n  - con của một\n- mục hai', '---', '## Hai', 'Đoạn A.', 'Đoạn B.', '1. bước một\n2. bước hai'].join('\n\n');
+  const u0 = U(T0);
+  check('reviewUnits: mỗi mục cấp cao một đơn vị, mục con thuộc mục cha, kẻ ngang không là đơn vị',
+    eq(u0.map((u) => [u.a, u.b, u.item]), [[0, 0, -1], [2, 2, -1], [4, 5, 0], [6, 6, 1], [10, 10, -1], [12, 12, -1], [14, 14, -1], [16, 16, 0], [17, 17, 1]]), JSON.stringify(u0.map((u) => [u.a, u.b, u.item])));
+  check('reviewUnits: section và cấp tiêu đề', eq(u0.map((u) => u.sec), [1, 1, 1, 1, 2, 2, 2, 2, 2]) && u0[0].depth === 1 && u0[4].depth === 2 && u0[4].head && !u0[5].head);
+  {
+    // Mục con có chữ giống hệt mục cấp cao kế tiếp: mục kế tiếp vẫn bắt đầu ở đúng dòng (cùng thụt lề với mục đầu).
+    const t = '- a\n  - b\n- b\n';
+    const sp = lexSpans(t, () => [{ type: 'list', raw: '- a\n  - b\n- b', items: [{ raw: '- a\n  - b\n' }, { raw: '- b' }] }]);
+    check('lexSpans: dòng đầu mục cấp cao không nhầm với mục con cùng chữ', eq(sp[0].items, [0, 2]), JSON.stringify(sp));
+  }
+  check('normUnit: đánh số lại danh sách không đổi chữ chuẩn hoá', R.normUnit('1. bước  một\n') === R.normUnit('7) bước một') && R.normUnit('- x') === 'x' && R.normUnit('# H') === '# H');
+  const all = (units) => units.map((_, i) => i);
+  const markAll = (units, idx) => R.setMarks(units, [], R.resolveMarks(units, []), idx, true);
+  // Đã đọc 'Đoạn A.' (đơn vị 5). Chuyển nó lên đầu văn bản, chữ giữ nguyên: vẫn done.
+  const mA = markAll(u0, [5]);
+  check('dấu: không lưu số dòng', mA.length === 1 && eq(Object.keys(mA[0]).sort(), ['h', 'n', 'p', 'q', 'r']));
+  const moved = 'Đoạn A.\n\n' + T0.replace('Đoạn A.\n\n', '');
+  let r = R.resolveMarks(U(moved), mA);
+  check('resolveMarks: khối chuyển chỗ, chữ không đổi thì vẫn done', r.state[0] === 'done' && r.state.filter((x) => x === 'done').length === 1 && !r.lost.length, JSON.stringify(r));
+  // Sửa chữ tại chỗ: changed (không done, không mất).
+  const edited = T0.replace('Đoạn A.', 'Đoạn A đã sửa hẳn.');
+  r = R.resolveMarks(U(edited), mA);
+  check('resolveMarks: chữ đổi tại chỗ thì changed', r.state[5] === 'changed' && !r.lost.length, JSON.stringify(r.state));
+  check('progress: changed tính là chưa đọc', R.progress(U(edited), r.state).done === 0 && R.progress(U(edited), r.state).changed === 1);
+  // Đánh dấu lại đơn vị changed: done, dấu cũ được thay (không thêm dấu thứ hai).
+  const re = R.setMarks(U(edited), mA, r, [5], true);
+  check('setMarks: xác nhận lại changed thì done, một dấu', re.length === 1 && R.resolveMarks(U(edited), re).state[5] === 'done');
+  // Xoá hẳn khối đã đọc: dấu mất (báo), khối sau dồn lên không bị nhận là changed.
+  const gone = T0.replace('Đoạn A.\n\n', '');
+  r = R.resolveMarks(U(gone), mA);
+  check('resolveMarks: khối đã đọc bị xoá thì dấu mất, khối sau không thành changed', r.lost.length === 1 && r.state.every((x) => x === 'todo'), JSON.stringify(r));
+  check('dropLost: bỏ dấu mất', R.dropLost(mA, r).length === 0);
+  check('setMarks: dấu mất được giữ khi đánh dấu khối khác', R.setMarks(U(gone), mA, r, [0], true).length === 2);
+  // Hai khối giống hệt chữ: dấu ở khối thứ hai không nhảy sang khối thứ nhất.
+  const twin = ['# T', 'Cùng chữ.', 'Trước một.', 'Cùng chữ.', 'Sau hai.'].join('\n\n'), ut = U(twin);
+  r = R.resolveMarks(ut, markAll(ut, [3]));
+  check('resolveMarks: chữ trùng hai chỗ, dấu ở chỗ thứ hai', r.state[1] === 'todo' && r.state[3] === 'done', JSON.stringify(r.state));
+  // Đánh số lại danh sách có thứ tự (chèn bước ở đầu): các bước cũ vẫn done.
+  const mSteps = markAll(u0, [7, 8]);
+  const renum = T0.replace('1. bước một\n2. bước hai', '1. bước mới\n2. bước một\n3. bước hai');
+  r = R.resolveMarks(U(renum), mSteps);
+  check('resolveMarks: đánh số lại danh sách không làm mất dấu', eq(r.state.slice(-3), ['todo', 'done', 'done']), JSON.stringify(r.state));
+  // Bỏ dấu.
+  r = R.resolveMarks(u0, mSteps);
+  check('setMarks: bỏ dấu', R.resolveMarks(u0, R.setMarks(u0, mSteps, r, [7], false)).state[7] === 'todo');
+  // Tiến độ theo số dòng; 100% chỉ khi đọc hết.
+  const pAll = R.progress(u0, R.resolveMarks(u0, markAll(u0, all(u0))).state);
+  const pMost = R.progress(u0, R.resolveMarks(u0, markAll(u0, all(u0).slice(1))).state);
+  check('progress: theo dòng, 100 chỉ khi đọc hết', pAll.pct === 100 && pMost.pct === 90 && pMost.done === 8, JSON.stringify(pMost));
+  // Kế tiếp / trước: bỏ qua done, vòng qua mép.
+  const st = ['done', 'todo', 'done', 'changed', 'done'];
+  check('nextOpen: kế tiếp, trước, vòng', eq(R.nextOpen(st, 1, 1), { i: 3, wrapped: false }) && eq(R.nextOpen(st, 3, 1), { i: 1, wrapped: true }) && eq(R.nextOpen(st, 3, -1), { i: 1, wrapped: false }) && eq(R.nextOpen(st, -1, 1), { i: 1, wrapped: false }) && R.nextOpen(['done'], 0, 1) === null);
+  check('unitAt / unitsIn: bôi đen nới ra trọn khối', R.unitAt(u0, 5) === 2 && R.unitAt(u0, 1) === -1 && eq(R.unitsIn(u0, 5, 6), [2, 3]));
+  // Section: dàn ý, số nhận xét, trạng thái.
+  const ss = R.reviewSections(u0, ['done', 'done', 'done', 'done', 'done', 'changed', 'todo', 'todo', 'todo'], [2, 12, 12]);
+  check('reviewSections: tiêu đề, trạng thái, số nhận xét', eq(ss.map((x) => [x.title, x.state, x.done, x.total, x.comments]), [['Đầu', 'done', 4, 4, 1], ['Hai', 'changed', 1, 5, 2]]), JSON.stringify(ss));
+  check('reviewSections: một phần là part', R.reviewSections(u0, ['done', 'todo', 'todo', 'todo', 'todo', 'todo', 'todo', 'todo', 'todo'], [])[0].state === 'part');
+  // Dải dòng cho prompt: gộp đơn vị liền nhau cùng loại, changed là chưa đọc.
+  const rg = R.reviewRanges(u0, ['done', 'done', 'done', 'todo', 'changed', 'done', 'done', 'todo', 'done']);
+  check('reviewRanges: gộp dải, changed là chưa đọc', eq(rg, { done: [[1, 6], [13, 15], [18, 18]], todo: [[7, 11], [17, 17]] }), JSON.stringify(rg));
+  // Prompt: tắt thì y hệt từng byte; bật thì thêm dòng tiếng Việt; chưa đánh dấu gì thì không thêm.
+  const text = 'Dòng một.\n\nDòng ba.\n';
+  const cm = { id: 'a', quote: 'Dòng ba.', comment: 'Sửa', origin: 'src', prefix: 'Dòng một.\n\n', suffix: '\n', rel: 0.5, created: 1 };
+  const s = Object.assign(createSession(text, {}), { comments: [cm] });
+  const d = anchorAll(s.comments, text, '');
+  const base = buildPrompt(s, d);
+  const dR = Object.assign({}, d, { review: { done: [[1, 1]], todo: [[3, 3]] } });
+  check('buildPrompt: tắt dòng đã đọc thì y hệt từng byte', buildPrompt(s, dR) === base && base === 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. L3 "Dòng ba." — Sửa', JSON.stringify(base));
+  s.rvPrompt = true;
+  check('buildPrompt: bật dòng đã đọc', buildPrompt(s, dR) === 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: L1; chỗ nào không có nhận xét là ổn. Chưa đọc: L3.\n\n1. L3 "Dòng ba." — Sửa', JSON.stringify(buildPrompt(s, dR)));
+  check('buildPrompt: bật mà chưa đánh dấu gì thì y hệt', buildPrompt(s, Object.assign({}, d, { review: { done: [], todo: [[1, 3]] } })) === base && buildPrompt(s, d) === base);
+  check('buildPrompt: đọc hết thì không có "Chưa đọc", có tệp thì tệp:dòng', buildPrompt(Object.assign({}, s, { path: 'a.md', header: 'Đầu' }), Object.assign({}, d, { review: { done: [[1, 3]], todo: [] } })) ===
+    'Đầu\nVị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\nĐã đọc kỹ: a.md:1-3; chỗ nào không có nhận xét là ổn.\n\n1. a.md:3 "Dòng ba." — Sửa');
+  check('optionsSummary: có "reviewed" khi bật', optionsSummary(s) === 'compact · line numbers · reviewed' && optionsSummary(Object.assign({}, s, { rvPrompt: false })) === 'compact · line numbers');
+  // Phiên: reviews là trường thêm; thiếu hay hỏng thì mặc định, phiên cũ vẫn đọc được.
+  const old = normSession({ text: 'x', comments: [] }, 'o');
+  const bad = normSession({ text: 'x', comments: [], reviews: [null, { h: 5 }, { h: 'k', r: 7, q: 3 }], rvPrompt: 'yes' }, 'b');
+  check('normSession: phiên cũ không có reviews thì []', eq(old.reviews, []) && old.rvPrompt === false);
+  check('normSession: bỏ dấu hỏng, sửa trường', eq(bad.reviews, [{ h: 'k', p: '', n: '', q: '', r: 1 }]) && bad.rvPrompt === false, JSON.stringify(bad.reviews));
+  {
+    // bandScroll: cuộn tới đâu để khối k là khối dải đọc chọn (X kế tiếp trúng nó), cả khi dải trượt sát đầu / cuối.
+    const { bandScroll } = await import('../js/core/sections.js');
+    const blocks = []; for (let y = 0, i = 0; i < 30; i++) { const h = 40 + (i * 37) % 120; blocks.push([y, y + h]); y += h + 16; }
+    const H = 800, top = 100, max = blocks[blocks.length - 1][1] - H;
+    const pickAt = (s) => { const b = bandBounds(top, top + H, 2000, s, max); return bandPick(blocks.length, (j) => top + blocks[j][1] - s, (j) => top + blocks[j][0] - s, b[0], b[1]); };
+    const at = (k) => bandScroll((s) => top + blocks[k][0] - s - bandBounds(top, top + H, 2000, s, max)[0], max, 6);
+    const reach = blocks.map((_, k) => k).filter((k) => pickAt(at(k)) === k);
+    const naive = blocks.map((_, k) => k).filter((k) => pickAt(Math.max(0, Math.min(max, blocks[k][0] - H * 0.3))) === k);
+    check('bandScroll: mọi khối giữa văn bản tới được dải đọc, sát đầu / cuối cũng được', reach.length >= 27 && [0, 1, 2, 10, 20].every((k) => reach.includes(k)), JSON.stringify(reach));
+    check('bandScroll: đặt đỉnh ở 30% thì khối trước thắng (cách cũ hỏng)', naive.length < reach.length - 10, naive.length + ' / ' + reach.length);
+  }
+  check('indexWith: % đã đọc vào index khi có', indexWith([], Object.assign(createSession('x', {}), { rvPct: 40 }))[0].rv === 40 && !('rv' in indexWith([], createSession('x', {}))[0]));
+}
+// ── end đánh dấu đã đọc ──
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);

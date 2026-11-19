@@ -61,7 +61,8 @@
   counter-reset: ln; tab-size: 4;
 }
 /* Lề số dòng kiểu VS Code. Số là ::before ở đầu khối dòng, nên dòng dài xuống hàng vẫn thẳng hàng đầu. */
-.ma-ln { display: block; position: relative; padding-left: calc(var(--gw, 2ch) + 22px); }
+/* Lề: số [0, gw], vạch nhận xét [gw + 8, gw + 11], làn dấu đã đọc (--lane-w, css/review.css) trước chữ 6px. */
+.ma-ln { display: block; position: relative; padding-left: calc(var(--gw, 2ch) + 20px + var(--lane-w)); }
 .ma-ln::before {
   counter-increment: ln; content: counter(ln);
   position: absolute; left: 0; top: 0; width: var(--gw, 2ch);

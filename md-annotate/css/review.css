@@ -1,0 +1,114 @@
+/* Đánh dấu đã đọc (MDAN-013, ui/review.js, ui/review-panel.js): làn dấu cạnh khối, làm mờ khối đã đọc, nút ✓ Reviewed
+   của hộp nhận xét, viên thuốc ở máy hẹp, tab Review của panel. Nạp sau focus.css, trước mobile.css.
+   ✓ là chữ --on-accent trên nền --accent (6,5:1); ○ (đã đổi chữ) là vòng --ink-3 (≥ 3:1), không dùng xanh làm chữ. */
+/* LÀN: lớp phủ trong #wrap-*, nút đặt tuyệt đối theo toạ độ JS tính; không chữ, không chọn được. */
+.ma-view { position: relative; }
+.ma-lane { position: absolute; left: 0; top: 0; width: 0; height: 0; -webkit-user-select: none; user-select: none; }
+.ma-lane__b {
+  position: absolute; z-index: 1; width: var(--lane-w); min-height: 0; padding: 0; margin: 0;
+  border: 0; border-radius: var(--r-xs); background: transparent; cursor: pointer;
+}
+/* Vạch dọc suốt khối (::before) và dấu ở đầu khối (::after, 14px). */
+.ma-lane__b::before {
+  content: ''; position: absolute; left: 50%; top: var(--s1); bottom: var(--s1); width: 2px; margin-left: -1px;
+  border-radius: var(--r-pill); background: transparent;
+}
+.ma-lane__b::after {
+  content: ''; position: absolute; left: 50%; top: 2px; width: 14px; height: 14px; margin-left: -7px; box-sizing: border-box;
+  display: grid; place-items: center; border-radius: var(--r-pill);
+  font: 600 var(--fs-xs)/1 var(--sans);
+}
+.ma-lane__b.is-done::before { background: var(--accent-line); top: 18px; }
+.ma-lane__b.is-done::after { content: '✓'; background: var(--accent); color: var(--on-accent); }
+.ma-lane__b.is-changed::before { top: 18px; background: repeating-linear-gradient(to bottom, var(--ink-4) 0 3px, transparent 3px 6px); }
+.ma-lane__b.is-changed::after { border: 1.5px solid var(--ink-3); background: var(--surface); }
+/* Khối tiêu đề: nút của cả section, hình vuông (khối là hình tròn): ✓ hết, nửa xanh một phần hay có khối đổi chữ
+   (viền --ink-3), rỗng chưa đọc. */
+.ma-lane__b.is-head::before { display: none; }
+.ma-lane__b.is-head::after { content: ''; color: var(--on-accent); border: 1.5px solid var(--ink-4); border-radius: var(--r-xs); background: var(--surface); }
+.ma-lane__b.is-head.sec-done::after { content: '✓'; border-color: var(--accent); background: var(--accent); }
+.ma-lane__b.is-head.sec-part::after { border-color: var(--accent); background: linear-gradient(to right, var(--accent) 50%, var(--surface) 50%); }
+.ma-lane__b.is-head.sec-changed::after { border-color: var(--ink-3); background: linear-gradient(to right, var(--accent) 50%, var(--surface) 50%); }
+/* Chưa có dấu nào thì nút section chỉ hiện khi rê; chưa đọc thì không hiện gì (rê: dấu mờ). */
+html:not(.ma-reviewing) .ma-lane__b.is-head:not(:hover)::after { visibility: hidden; }
+@media (hover: hover) {
+  .ma-lane__b:hover { background: var(--chip); }
+  .ma-lane__b.is-todo:not(.is-head):hover::after { content: '✓'; color: var(--ink-3); border: 1px dashed var(--ink-4); }
+}
+/* Màn cảm ứng chưa có dấu: tắt làn, để chạm sát mép không đánh dấu nhầm (bắt đầu bằng hộp nhận xét hay tab Review). */
+@media (hover: none) { html:not(.ma-reviewing) .ma-lane { display: none; } }
+/* Đơn vị X sẽ đánh dấu (khi phiên đã có dấu): chưa đọc thì hiện dấu ✓ mờ viền đứt, đã đọc / đổi chữ thì thêm vòng ngoài. */
+html.ma-reviewing .ma-lane__b.is-cur.is-todo:not(.is-head)::after { content: '✓'; color: var(--ink-3); border: 1px dashed var(--ink-3); background: var(--surface); }
+html.ma-reviewing .ma-lane__b.is-cur:not(.is-todo)::after,
+html.ma-reviewing .ma-lane__b.is-cur.is-head::after { box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--edge-on); }
+.ma-lane__b:focus-visible { outline: 2px solid var(--ring); outline-offset: 0; }
+@media (prefers-reduced-motion: no-preference) { .ma-lane__b.is-flash::after { animation: ma-rv-flash 1.1s var(--ease) 1; } }
+.ma-lane__b.is-flash { background: var(--accent-soft); }
+@keyframes ma-rv-flash { 0%, 30% { box-shadow: 0 0 0 4px var(--accent-line); } 100% { box-shadow: 0 0 0 0 transparent; } }
+/* Điện thoại: Preview chừa lề trái cho làn khi đang đánh dấu. */
+@media (max-width: 720px) { html.ma-reviewing #wrap-md { padding-left: calc(var(--lane-w) + var(--s3)); } }
+
+/* LÀM MỜ khối đã đọc (Dim reviewed): chỉ mờ, không gập — gập làm lệch cuộn theo nhau và dải đọc. */
+#v-src .ma-ln.is-rv, #v-md .is-rv { transition: opacity .2s var(--ease); }
+html.ma-rvdim #v-src .ma-ln.is-rv, html.ma-rvdim #v-md .is-rv { opacity: .4; }
+
+/* HỘP NHẬN XÉT: nút ✓ Reviewed kèm nhãn dòng (mono, mờ), đầu hàng nút; có nó thì dòng phím tắt lên một hàng riêng. */
+.ma-pop__rv { gap: var(--s1); margin-right: auto; }
+.ma-pop__bar:has(> .ma-pop__rv:not([hidden])) { flex-wrap: wrap; }
+.ma-pop__bar:has(> .ma-pop__rv:not([hidden])) .ma-pop__keys { flex-basis: 100%; }
+.ma-pop__rvl { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); }
+
+/* VIÊN THUỐC "✓ Done · next ↓": máy hẹp / cảm ứng, góc phải dưới, trên thanh đáy. Ẩn khi nút nổi hay hộp nhận xét hiện. */
+.ma-rvpill { display: none; }
+@media (max-width: 1080px), (pointer: coarse) {
+  .ma-rvpill {
+    display: inline-flex; position: fixed; z-index: 45; right: var(--s4); bottom: calc(var(--s5) + env(safe-area-inset-bottom));
+    min-height: var(--h-touch); padding: 0 var(--s4); border-radius: var(--r-pill); box-shadow: var(--shadow-pop);
+  }
+}
+@media (max-width: 1080px) { .ma-rvpill { bottom: calc(86px + env(safe-area-inset-bottom)); } }
+.ma-pop:not([hidden]) ~ .ma-rvpill, .ma-fab:not([hidden]) ~ .ma-rvpill { display: none; }
+.ma-dock__rv { flex: none; padding: 0 var(--s3); font: 500 var(--fs-xs)/1 var(--mono); }
+
+/* TAB REVIEW */
+.ma-rv { display: flex; flex-direction: column; gap: var(--s3); }
+.ma-rv__prog { display: flex; flex-direction: column; gap: var(--s2); padding: var(--s1) var(--s1) 0; }
+.ma-rv__nums { display: flex; align-items: baseline; gap: var(--s2); min-width: 0; }
+.ma-rv__pct { font: 600 var(--fs-xl)/var(--lh-tight) var(--display); font-variant-numeric: tabular-nums; }
+.ma-rv__sub { min-width: 0; font-size: var(--fs-sm); color: var(--ink-3); }
+.ma-rv__bar { height: 6px; border-radius: var(--r-pill); background: var(--surface-2); overflow: hidden; }
+.ma-rv__bar > span { display: block; height: 100%; width: 0; border-radius: var(--r-pill); background: var(--accent); transition: width var(--dur) var(--ease); }
+.ma-rv__acts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); }
+.ma-rv__lost { margin: 0; font-size: var(--fs-sm); color: var(--danger); }
+.ma-rv__keys kbd {
+  display: inline-block; padding: 0 var(--s1); border: 1px solid var(--line); border-bottom-width: 2px; border-radius: var(--r-xs);
+  font: 500 var(--fs-xs)/var(--lh) var(--mono); color: var(--ink-2); background: var(--surface);
+}
+/* Dàn ý: mỗi section một hàng — nút trạng thái (bấm: cả section) và tên (bấm: tới chỗ chưa đọc đầu tiên). */
+.ma-rvs-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.ma-rvs { display: flex; align-items: flex-start; gap: var(--s1); padding-left: calc(var(--d, 0) * var(--s3)); }
+.ma-rvs__ic {
+  position: relative; flex: none; width: var(--h-sm); height: var(--h-sm); padding: 0; border: 0; border-radius: var(--r-sm);
+  background: transparent; cursor: pointer;
+}
+.ma-rvs__ic::after {
+  content: ''; position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; box-sizing: border-box;
+  display: grid; place-items: center; border-radius: var(--r-xs); border: 1.5px solid var(--ink-4); background: var(--surface);
+  font: 600 var(--fs-xs)/1 var(--sans); color: var(--on-accent);
+}
+.ma-rvs.is-done .ma-rvs__ic::after { content: '✓'; border-color: var(--accent); background: var(--accent); }
+.ma-rvs.is-part .ma-rvs__ic::after { border-color: var(--accent); background: linear-gradient(to right, var(--accent) 50%, var(--surface) 50%); }
+.ma-rvs.is-changed .ma-rvs__ic::after { border-color: var(--ink-3); background: linear-gradient(to right, var(--accent) 50%, var(--surface) 50%); }
+.ma-rvs__main {
+  flex: 1; min-width: 0; display: flex; align-items: baseline; gap: var(--s2); min-height: var(--h-sm); padding: var(--s1) var(--s2);
+  border: 0; border-radius: var(--r-sm); background: transparent; text-align: left;
+}
+.ma-rvs__t { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--fs-md); color: var(--ink); }
+.ma-rvs__t.is-pre { color: var(--ink-3); font-style: italic; }
+.ma-rvs.is-done .ma-rvs__t { color: var(--ink-3); }
+.ma-rvs__m { flex: none; font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+@media (hover: hover) { .ma-rvs__ic:hover, .ma-rvs__main:hover { background: var(--chip); } }
+@media (max-width: 720px), (pointer: coarse) {
+  .ma-rvs__ic { width: var(--h-touch); height: var(--h-touch); }
+  .ma-rvs__main { min-height: var(--h-touch); align-items: center; }
+}

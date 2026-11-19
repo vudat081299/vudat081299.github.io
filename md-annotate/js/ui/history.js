@@ -20,7 +20,7 @@ function renderHist() {
   if (!idx.length) ol.append(h('li', { class: 'ma-sub' }, 'No sessions yet. Sessions with text appear here automatically.'));
   idx.forEach(function (e) {
     var cur = e.id === S.id;
-    var meta = dateFmt.format(new Date(e.updated)) + ' · ' + plural(e.count || 0, 'comment') + ' · ' + (e.chars || 0).toLocaleString('en') + ' chars' + (cur ? ' · open' : '');
+    var meta = dateFmt.format(new Date(e.updated)) + ' · ' + plural(e.count || 0, 'comment') + ' · ' + (e.chars || 0).toLocaleString('en') + ' chars' + (e.rv != null ? ' · ' + e.rv + '% reviewed' : '') + (cur ? ' · open' : '');
     var main = h('button', {
       class: 'ma-row__main', type: 'button', title: cur ? 'Current session' : 'Open this session',
       onclick: function () {

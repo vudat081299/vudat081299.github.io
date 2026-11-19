@@ -7,11 +7,12 @@
    - initShortcuts trước initPopup: keydown của document;
    - initPopup trước initSelection: pointerdown của document;
    - initPopup trước initPicks: keydown của document (Esc đóng hộp trước, rồi bỏ các dòng đã chọn);
-   - initPanel trước initDialogs: close của #dlg-panel (panel về chỗ cũ trước khi trả toast).
+   - initPanel trước initDialogs: close của #dlg-panel (panel về chỗ cũ trước khi trả toast);
+   - initSyncScroll trước initReview: cuộn #wrap-* (như initFocus, đọc setByPage).
    Xuất: không (chạy khi nạp).
    Dùng: ui/store.js, ui/dom.js, ui/state.js, ui/hints.js, ui/render.js, ui/list.js, ui/prompt.js, ui/views.js,
      ui/sync-scroll.js, ui/panel.js, ui/layout.js, ui/focus.js, ui/popup.js, ui/selection.js, ui/picks.js,
-     ui/history.js, ui/editor.js. */
+     ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js. */
 import { KEY, store } from './ui/store.js';
 import { $ } from './ui/dom.js';
 import { initState, S } from './ui/state.js';
@@ -29,6 +30,8 @@ import { initSelection } from './ui/selection.js';
 import { initPicks } from './ui/picks.js';
 import { initHistory, renderHistCount } from './ui/history.js';
 import { initEditor, syncInputs } from './ui/editor.js';
+import { initReview } from './ui/review.js';
+import { initReviewPanel } from './ui/review-panel.js';
 
 function initShortcuts() {
   /* ⌘/Ctrl + Shift + C chép prompt, ở đâu cũng được. */
@@ -71,6 +74,8 @@ initTheme();
 initPopup();
 initSelection();
 initPicks();
+initReview();
+initReviewPanel();
 initState();
 
 /* KHỞI ĐỘNG */
