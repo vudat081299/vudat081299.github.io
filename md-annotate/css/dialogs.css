@@ -17,6 +17,22 @@
 .ma-dlg--live { width: min(420px, calc(100vw - 2 * var(--s4))); }
 .ma-dlg--live::backdrop { background: var(--scrim-live); }
 @media (max-width: 720px) { .ma-set.ma-set--wrap { display: none; } }
+/* Nút phụ ở đầu hộp (Shortcuts trong Settings): nhỏ như nút trong thẻ. */
+.ma-dlg__act { min-height: var(--h-sm); padding: 0 var(--s2); font-size: var(--fs-sm); }
+/* Hộp Shortcuts: mỗi nhóm một tiêu đề, hàng là lưới hai cột (phím | việc, cột phím cùng rộng ở mọi nhóm), phím là chip .ma-key. */
+.ma-keys__all { display: flex; flex-direction: column; gap: var(--s4); }
+.ma-keys { display: flex; flex-direction: column; gap: var(--s2); }
+.ma-keys__h { margin: 0; font: 600 var(--fs-md)/var(--lh-tight) var(--sans); color: var(--ink); }
+.ma-keys__l { display: grid; grid-template-columns: 15em minmax(0, 1fr); gap: var(--s2) var(--s4); margin: 0; padding-top: var(--s1); border-top: 1px solid var(--line-2); }
+.ma-keys__l dt { padding-top: var(--s1); line-height: 1.9; }
+.ma-keys__l dd { margin: 0; padding-top: var(--s1); font-size: var(--fs-sm); line-height: var(--lh); color: var(--ink-2); }
+.ma-keys__or { font-size: var(--fs-xs); color: var(--ink-3); }
+.ma-keys__c, .ma-keys .ma-key { white-space: nowrap; }
+/* Hẹp: phím trên, việc dưới. */
+@media (max-width: 520px) {
+  .ma-keys__l { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
+  .ma-keys__l dd { padding: 0 0 var(--s2); }
+}
 /* Mục của hộp Settings: nhãn --fs-md 600, giá trị mono --fs-xs; ngăn bằng đường kẻ. */
 .ma-set { display: flex; flex-direction: column; gap: var(--s2); padding-bottom: var(--s3); border-bottom: 1px solid var(--line-2); }
 .ma-set:last-of-type { border-bottom: 0; padding-bottom: 0; }

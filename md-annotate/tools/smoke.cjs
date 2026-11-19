@@ -1033,6 +1033,33 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   }
   // ── end hộp Settings ──
 
+  // ── hộp Shortcuts: mở từ Settings, hàng vẽ từ data/shortcuts.json (MDAN-015) ──
+  {
+    const kctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
+    const kp = await kctx.newPage(); watch(kp);
+    await kp.goto(BASE); await kp.waitForFunction(() => window.marked && window.DOMPurify);
+    await kp.click('#btn-sample'); await kp.waitForTimeout(150);
+    await kp.click('#btn-layout'); await kp.click('#btn-keys');
+    await kp.waitForSelector('#keys-list dl'); await kp.waitForTimeout(250);
+    const want = await kp.evaluate(() => fetch('data/shortcuts.json').then((r) => r.json()).then((d) => d.groups.map((g) => g.title + ':' + g.rows.map((r) => r.keys.map((c) => c.join('+')).join('/') + '=' + r.action).join('|')).join('#')));
+    const got = await kp.$$eval('#keys-list .ma-keys', (ss) => ss.map((s) => s.querySelector('.ma-keys__h').textContent + ':' + [...s.querySelectorAll('dt')].map((dt) => [...dt.querySelectorAll('.ma-keys__c')].map((c) => [...c.querySelectorAll('kbd')].map((k) => k.textContent).join('+')).join('/') + '=' + dt.nextElementSibling.textContent).join('|')).join('#'));
+    check('Shortcuts: nút trong Settings mở hộp, mọi hàng của data/shortcuts.json hiện đúng', got === want && got.length > 0, got.slice(0, 120));
+    const k = await kp.$eval('#dlg-keys', (d) => { const r = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, bd: getComputedStyle(d, '::backdrop').backgroundColor, kbd: d.querySelectorAll('kbd.ma-key').length }; });
+    check('Shortcuts: hộp giữa màn hình, nền sau mờ, phím là chip kbd', Math.abs(k.cx - 720) <= 2 && Math.abs(k.cy - 450) <= 2 && /rgba\(\d+, \d+, \d+, 0\.[1-9]/.test(k.bd) && k.kbd > 10, JSON.stringify(k));
+    await kp.keyboard.press('Escape');
+    check('Shortcuts: Esc đóng hộp Shortcuts, Settings còn mở', !(await kp.$eval('#dlg-keys', (d) => d.open)) && (await kp.$eval('#dlg-layout', (d) => d.open)));
+    await kp.keyboard.press('Escape');
+    await kp.keyboard.press('Shift+Slash'); await kp.waitForTimeout(100);
+    check('Shortcuts: phím ? mở hộp', await kp.$eval('#dlg-keys', (d) => d.open));
+    await kp.keyboard.press('Escape');
+    await kp.click('.ma-tab[data-view="edit"]'); await kp.focus('#src-input');
+    const before = await kp.inputValue('#src-input');
+    await kp.keyboard.press('End'); await kp.keyboard.type('?');
+    check('Shortcuts: gõ ? trong ô nhập không mở hộp', !(await kp.$eval('#dlg-keys', (d) => d.open)) && (await kp.inputValue('#src-input')).length === before.length + 1);
+    await kctx.close();
+  }
+  // ── end hộp Shortcuts ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

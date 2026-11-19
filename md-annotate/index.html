@@ -2,7 +2,7 @@
 <!--
   Markdown Annotate — bôi đen đoạn văn markdown, ghi nhận xét, gom thành một prompt.
   Luật và bản đồ code: md-annotate/CLAUDE.md. File này chỉ có markup; CSS ở css/, JS ở js/ (vào: js/main.js).
-  Gợi ý mặc định ở data/hints.json (REPO-001).
+  Chữ lặp ở data/ (REPO-001): gợi ý mặc định hints.json, bảng phím tắt shortcuts.json.
   Nền, mực, font theo trang chủ; một màu xanh sáng riêng, token ở css/tokens.css (MDAN-009); theme dùng khoá chung 'hub-theme' (REPO-024).
 -->
 <html lang="en">
@@ -308,6 +308,10 @@
       <div class="ma-dlg__in">
         <div class="ma-dlg__h">
           <h2 id="dlg-layout-t">Settings</h2>
+          <button class="ma-btn ma-btn--quiet ma-dlg__act" type="button" id="btn-keys" aria-haspopup="dialog" title="Shortcuts and gestures (?)">
+            <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="2" /><path d="M6.5 10h1M10.5 10h1M14.5 10h1M18 10h-.5M8 14h8" /></svg>
+            <span>Shortcuts</span>
+          </button>
           <button class="ma-icbtn ma-icbtn--bare" type="button" data-close aria-label="Close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
           </button>
@@ -344,6 +348,22 @@
               the matching section in the other pane stays bright too.</p>
           </div>
           <div><button class="ma-btn ma-btn--quiet" type="button" id="set-reset">Reset to defaults</button></div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Bảng phím tắt: chữ ở data/shortcuts.json, ui/help.js vẽ (REPO-001). -->
+    <dialog class="ma-dlg ma-dlg--center" id="dlg-keys" aria-labelledby="dlg-keys-t">
+      <div class="ma-dlg__in">
+        <div class="ma-dlg__h">
+          <h2 id="dlg-keys-t">Shortcuts and gestures</h2>
+          <button class="ma-icbtn ma-icbtn--bare" type="button" data-close aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+          </button>
+        </div>
+        <div class="ma-dlg__b">
+          <p class="ma-sub">Recently added keys, clicks and taps.</p>
+          <div class="ma-keys__all" id="keys-list"></div>
         </div>
       </div>
     </dialog>

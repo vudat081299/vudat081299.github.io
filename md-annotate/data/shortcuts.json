@@ -1,0 +1,35 @@
+{
+  "groups": [
+    {
+      "title": "Multi-line comments",
+      "note": "In Source, or the Source pane of Split.",
+      "rows": [
+        { "keys": [["Double-click"]], "action": "A line number: start picking lines for one comment" },
+        { "keys": [["Click"], ["Tap"]], "action": "A line number while picking: add or remove that line" },
+        { "keys": [["Esc"]], "action": "Leave line picking: hide the comment box and drop the lines" },
+        { "keys": [["Enter"], ["Save"]], "action": "Save the comment and leave line picking" },
+        { "keys": [["Cancel"]], "action": "Hide the comment box but keep the lines; click a line number to bring it back" },
+        { "keys": [["Drag ⠿"]], "action": "Move the comment box" },
+        { "keys": [["Arrow keys"], ["Shift", "Arrow keys"]], "action": "With the ⠿ grip focused: move the comment box; Shift takes a bigger step" }
+      ]
+    },
+    {
+      "title": "Review",
+      "note": "Mark the blocks you have read.",
+      "rows": [
+        { "keys": [["X"]], "action": "Mark or unmark the block in the reading band, then go to the next unreviewed block" },
+        { "keys": [["Shift", "X"]], "action": "Mark the whole section" },
+        { "keys": [["J"], ["K"]], "action": "Next / previous unreviewed block" },
+        { "keys": [["Click"]], "action": "The tick lane: mark or unmark a block" },
+        { "keys": [["Shift", "Click"]], "action": "The tick lane: mark a range of blocks" },
+        { "keys": [["✓ Reviewed"]], "action": "In the comment box: mark the selected blocks as reviewed" }
+      ]
+    },
+    {
+      "title": "This list",
+      "rows": [
+        { "keys": [["?"]], "action": "Open this list (not while typing in a box)" }
+      ]
+    }
+  ]
+}
