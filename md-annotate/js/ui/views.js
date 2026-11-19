@@ -1,15 +1,15 @@
 /* Chế độ xem: Edit / Source / Preview / Split (setView), Split chỉ khi đủ chỗ (splitOK), chiều cao hai khung
    (sizePanes, html.ma-fit), vách giữa (prefs.split), nút Syntax colors.
    Xuất: initViews, isSplit, lastRead, refreshSplit, setView, sizePanes, view.
-   Dùng: ui/store.js, ui/dom.js, ui/render.js, ui/popup.js. */
+   Dùng: core/panes.js, ui/store.js, ui/dom.js, ui/render.js, ui/popup.js. */
+import { paneHeight, splitFits } from '../core/panes.js';
 import { prefs, savePrefs } from './store.js';
 import { $, dragBar, mqSide, shown } from './dom.js';
 import { renderAll, renderMeta } from './render.js';
 import { closePop, pop } from './popup.js';
 
-/* Song song chỉ khi mỗi khung được ≥ 420px. Muốn song song mà chưa đủ chỗ thì hiện Hiển thị, vẫn nhớ ý muốn. */
-var PANE_MIN = 420;
-function splitOK() { return $('doc').clientWidth >= 2 * PANE_MIN + 9; }
+/* Split chỉ khi mỗi khung được ≥ 420px. Muốn Split mà chưa đủ chỗ thì hiện Preview, prefs.view vẫn nhớ 'split'. */
+function splitOK() { return splitFits($('doc').clientWidth); }
 export var view = prefs.view || 'view';
 export var lastRead = view === 'edit' ? 'view' : view;
 export function setView(v) {
@@ -33,7 +33,7 @@ export function setView(v) {
   if (v !== 'edit' && pop.mode) closePop(true);
 }
 export function isSplit() { return $('views').dataset.mode === 'split'; }
-/* Bề rộng thay đổi (cửa sổ, panel, thu gọn): xem lại Song song và chiều cao hai khung. */
+/* Bề rộng thay đổi (cửa sổ, panel, thu gọn): xem lại Split và chiều cao hai khung. */
 export function refreshSplit() {
   $('tab-split').hidden = !splitOK();
   if (view !== 'edit' && ((prefs.view === 'split') !== (view === 'split'))) setView(prefs.view === 'split' ? 'split' : view);
@@ -41,14 +41,12 @@ export function refreshSplit() {
 }
 export function sizePanes() {
   var v = $('views'), de = document.documentElement;
-  if (v.dataset.mode !== 'split' || v.hidden) { de.classList.remove('ma-fit'); return; }
+  if (!isSplit() || v.hidden) { de.classList.remove('ma-fit'); return; }
   var top = v.getBoundingClientRect().top + window.scrollY;
-  var reserve = 17 + (mqSide.matches ? 0 : $('dock').offsetHeight);
-  var ph = Math.floor(window.innerHeight - top - reserve);
-  v.style.setProperty('--pane-h', Math.max(320, ph) + 'px');
-  var fit = ph >= 320;
-  if (fit && !de.classList.contains('ma-fit')) window.scrollTo(0, 0);
-  de.classList.toggle('ma-fit', fit);
+  var ph = paneHeight(window.innerHeight, top, mqSide.matches ? 0 : $('dock').offsetHeight);
+  v.style.setProperty('--pane-h', ph.h + 'px');
+  if (ph.fit && !de.classList.contains('ma-fit')) window.scrollTo(0, 0);
+  de.classList.toggle('ma-fit', ph.fit);
 }
 var rafSplit = 0;
 /* Vách giữa hai khung: kéo hoặc phím mũi tên; tỉ lệ lưu ở prefs.split. */

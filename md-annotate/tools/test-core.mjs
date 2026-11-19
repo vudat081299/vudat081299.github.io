@@ -1,8 +1,9 @@
 /* Bài thử của js/core/ (logic thuần), chạy bằng node, không trình duyệt:  node md-annotate/tools/test-core.mjs
  * Thêm logic thuần mới thì thêm bài thử ở đây. Hành vi cần DOM thì thử ở tools/smoke.cjs. */
-import { lexSpans } from '../js/core/blocks.js';
+import { lexSpans, pairBlocks } from '../js/core/blocks.js';
 import { numberSections, lineSections, bandBounds, bandPick, spanAt } from '../js/core/sections.js';
 import { syncCurves, followTop } from '../js/core/sync-math.js';
+import { paneHeight, splitFits } from '../js/core/panes.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -10,6 +11,7 @@ const check = (name, ok, detail = '') => {
   console.log(`${ok ? '  ok  ' : '  LỖI'} ${name}${detail ? '  — ' + detail : ''}`);
 };
 const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+const abh = ({ a, b, heading }) => ({ a, b, heading }); // bỏ `tag` của khối khi so dòng
 
 /* Bộ tách giả, làm đúng ba điều marked.lexer làm với nguồn: bỏ khối định nghĩa link, dán định nghĩa ngay sau đoạn văn
  * vào raw của đoạn ấy (thêm '\n'), đổi tab đầu dòng thành bốn dấu cách. */
@@ -19,28 +21,28 @@ const tok = (type, raw) => ({ type, raw });
 {
   const text = 'Para\n\n[id]: https://x.jpg  "T"\n\n\n## Plugins\n\nThe killer\n[syntax](u).\n';
   const lex = () => [tok('paragraph', 'Para'), tok('space', '\n\n'), tok('heading', '## Plugins\n\n'), tok('paragraph', 'The killer\n[syntax](u).'), tok('space', '\n')];
-  const sp = lexSpans(text, lex);
+  const sp = lexSpans(text, lex).map(abh);
   check('lexSpans: định nghĩa link bị bỏ không làm lệch dòng', eq(sp, [{ a: 0, b: 0, heading: false }, { a: 5, b: 5, heading: true }, { a: 7, b: 8, heading: false }]), JSON.stringify(sp));
 }
 // 2. Định nghĩa dán vào đoạn văn trên nó: khối bao cả dòng định nghĩa, khối sau đúng dòng.
 {
   const text = 'With ref:\n[id]: https://x.jpg\n\n## Next\n';
   const lex = () => [tok('paragraph', 'With ref:\n\n[id]: https://x.jpg'), tok('space', '\n\n'), tok('heading', '## Next\n')];
-  const sp = lexSpans(text, lex);
+  const sp = lexSpans(text, lex).map(abh);
   check('lexSpans: định nghĩa dán vào đoạn trên', eq(sp, [{ a: 0, b: 1, heading: false }, { a: 3, b: 3, heading: true }]), JSON.stringify(sp));
 }
 // 3. Tab đầu dòng đổi thành dấu cách trong raw: vẫn tìm ra.
 {
   const text = 'Intro\n\n\tcode line\n\tmore\n\n# H\n';
   const lex = () => [tok('paragraph', 'Intro'), tok('space', '\n\n'), tok('code', '    code line\n    more\n\n'), tok('heading', '# H\n')];
-  const sp = lexSpans(text, lex);
+  const sp = lexSpans(text, lex).map(abh);
   check('lexSpans: tab đầu dòng', eq(sp, [{ a: 0, b: 0, heading: false }, { a: 2, b: 3, heading: false }, { a: 5, b: 5, heading: true }]), JSON.stringify(sp));
 }
 // 4. Nội dung khối xuất hiện giữa một dòng trước đó: chỉ khớp ở đầu dòng.
 {
   const text = '[x]: https://u\n\nx\n';
   const lex = () => [tok('paragraph', 'x'), tok('space', '\n')];
-  const sp = lexSpans(text, lex);
+  const sp = lexSpans(text, lex).map(abh);
   check('lexSpans: chỉ khớp ở đầu dòng', eq(sp, [{ a: 2, b: 2, heading: false }]), JSON.stringify(sp));
 }
 // 5. Bộ tách ném lỗi: không có khối.
@@ -201,6 +203,52 @@ import { popPlace } from '../js/core/place.js';
   check('popPlace: đoạn đã cuộn khuất phía trên thì hộp vẫn trong khung nhìn', P({ top: -300, bottom: -280, left: 50 }).top === 8);
 }
 // ── end review: render & select ──
+// ── review: layout & scroll ──
+{
+  // Dòng cuối của khối trùng một dòng trước nó trong khối (rào ``` của khối code trong mục danh sách): khối vẫn tới dòng cuối thật.
+  const F = '`'.repeat(3);
+  const text = '1. step\n\n   ' + F + '\n   x\n   ' + F + '\n\n# H\n';
+  const lex = () => [tok('list', '1. step\n\n   ' + F + '\n   x\n   ' + F + '\n\n'), tok('heading', '# H\n')];
+  const sp = lexSpans(text, lex).map(({ a, b }) => [a, b]);
+  check('lexSpans: dòng cuối lặp lại trong khối vẫn tính tới dòng cuối thật', eq(sp, [[0, 4], [6, 6]]), JSON.stringify(sp));
+}
+{
+  // Khối HTML mở bằng <h1>…<h6> thành tiêu đề cấp cao ở Preview, nên ở Source nó cũng mở section.
+  const text = '<h1 align="center">Title</h1>\n\nIntro\n\n<div>x</div>\n';
+  const lex = () => [tok('html', '<h1 align="center">Title</h1>\n\n'), tok('paragraph', 'Intro'), tok('space', '\n\n'), tok('html', '<div>x</div>\n')];
+  const sp = lexSpans(text, lex).map((s) => s.heading);
+  check('lexSpans: khối HTML <h1> là tiêu đề, <div> thì không', eq(sp, [true, false, false]), JSON.stringify(sp));
+}
+{
+  // Thẻ dự đoán của khối, để ghép với Preview.
+  const lex = () => [{ type: 'heading', depth: 2, raw: '## A' }, tok('html', '<!-- c -->\n<details>\n'), { type: 'list', ordered: true, raw: '1. x' }, tok('html', '<!-- only -->')];
+  const tags = lexSpans('## A\n<!-- c -->\n<details>\n1. x\n<!-- only -->\n', lex).map((s) => s.tag);
+  check('lexSpans: thẻ của khối (H2, DETAILS sau chú thích, OL, chú thích thì rỗng)', eq(tags, ['H2', 'DETAILS', 'OL', '']), JSON.stringify(tags));
+}
+{
+  // Ghép khối nguồn ↔ Preview khi số khối lệch: khối HTML không dựng ra gì, dựng ra hai phần tử, hay gộp ba khối.
+  const P = (s, m) => pairBlocks(s.split(' '), m.split(' ')).md;
+  check('pairBlocks: cùng số khối thì ghép theo thứ tự', eq(P('H1 P UL', 'H1 P OL'), [0, 1, 2]));
+  check('pairBlocks: chú thích HTML không dựng ra gì', eq(pairBlocks(['H1', '', 'P', 'H2', 'P'], ['H1', 'P', 'H2', 'P']).md, [0, -1, 1, 2, 3]));
+  check('pairBlocks: một khối HTML dựng ra hai <p>', eq(P('H1 P H2 P', 'H1 P P H2 P'), [0, 1, 3, 4]));
+  const d = pairBlocks(['H1', 'DETAILS', 'P', '', 'H2', 'P'], ['H1', 'DETAILS', 'H2', 'P']);
+  check('pairBlocks: <details> gộp ba khối', eq(d.md, [0, 1, -1, -1, 2, 3]) && eq(d.src, [0, 1, 4, 5]), JSON.stringify(d));
+}
+{
+  // Dải đọc trượt về mép khi vùng cuộn ở sát đầu / cuối, để section đầu và cuối cũng chạm dải được.
+  check('bandBounds: giữa vùng cuộn vẫn 25–50%', eq(bandBounds(100, 900, 1000, 2000, 5000), [300, 500]));
+  check('bandBounds: cuộn hết lên thì hai mốc ở mép trên', eq(bandBounds(100, 900, 1000, 0, 5000), [100, 100]));
+  check('bandBounds: cuộn hết xuống thì hai mốc ở mép dưới', eq(bandBounds(100, 900, 1000, 5000, 5000), [900, 900]));
+  let prev, mono = true;
+  for (const max of [100, 500, 5000]) {
+    prev = [-Infinity, -Infinity];
+    for (let s = 0; s <= max; s += 10) { const b = bandBounds(0, 800, 800, s, max).map((x) => x + s); if (b[0] < prev[0] || b[1] < prev[1]) mono = false; prev = b; }
+  }
+  check('bandBounds: dải (theo vị trí trong văn bản) không lùi khi cuộn tới', mono);
+}
+check('splitFits: hai khung 420px + vách 9px', !splitFits(848) && splitFits(849));
+check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi ≥ 320', eq(paneHeight(900, 100.5, 0), { h: 782, fit: true }) && eq(paneHeight(500, 100, 76), { h: 320, fit: false }));
+// ── end review: layout & scroll ──
 
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);

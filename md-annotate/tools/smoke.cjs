@@ -800,6 +800,75 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     await rctx.close();
   }
   // ── end review: render & select ──
+  // ── review: layout & scroll ──
+  const rctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  await rctx.addInitScript(() => { try { if (!sessionStorage.getItem('r')) { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ view: 'split', focus: true })); sessionStorage.setItem('r', '1'); } } catch (e) {} });
+  const rv = await rctx.newPage(); watch(rv);
+  await rv.goto(BASE); await rv.waitForFunction(() => window.marked && window.DOMPurify);
+  const rvLoad = async (t) => {
+    await rv.click('.ma-tab[data-view="edit"]');
+    await rv.evaluate((t) => { const ta = document.getElementById('src-input'); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
+    await rv.waitForTimeout(350);
+    await rv.click('.ma-tab[data-view="split"]'); await rv.waitForTimeout(200);
+  };
+  const litSrc = () => rv.evaluate(() => [...document.querySelectorAll('#v-src .ma-ln.is-sec')].map((l) => l.textContent.trim()).filter(Boolean));
+  // Tiêu đề viết bằng HTML (<h1 align="center">, hay gặp ở README) mở section ở cả hai khung: số section khớp.
+  await rvLoad('<h1 align="center">Title</h1>\n\nIntro para.\n\n## Two\n\nTwo para.\n');
+  await rv.hover('#v-md > p:has-text("Two para.")'); await rv.waitForTimeout(300);
+  const lh = await litSrc();
+  check('Focus ở Split, tiêu đề HTML: Source sáng đúng section của Preview', lh.join('|') === '## Two|Two para.', JSON.stringify(lh));
+  // Focus theo chuột, chuột đứng yên, trang vẽ lại (lưu nhận xét, đổi Syntax colors): section vẫn sáng, Source không mờ hết.
+  await rv.hover('#v-src .ma-ln:has-text("Two para.")'); await rv.waitForTimeout(300);
+  await rv.evaluate(() => { const s = document.getElementById('syn'); s.checked = !s.checked; s.dispatchEvent(new Event('change')); });
+  await rv.waitForTimeout(300);
+  const rr = await rv.evaluate(() => [...document.querySelectorAll('#v-src .ma-ln')].filter((l) => getComputedStyle(l).opacity === '1').map((l) => l.textContent.trim()).filter(Boolean));
+  check('Focus theo chuột: vẽ lại khi chuột đứng yên, section vẫn sáng', rr.join('|') === '## Two|Two para.', JSON.stringify(rr));
+  await rv.evaluate(() => { const s = document.getElementById('syn'); s.checked = !s.checked; s.dispatchEvent(new Event('change')); });
+  await rv.mouse.move(5, 5);
+  // Chú thích HTML (<!-- toc -->) không dựng ra phần tử nào: số khối hai bên lệch, nhưng các khối khác vẫn ghép được,
+  // nên dải đọc vẫn sáng dòng tương ứng ở khung kia và cuộn theo nhau vẫn theo khối (không về tỉ lệ).
+  const tall = ['# Doc', '', '<!-- toc -->', ''];
+  for (let i = 1; i <= 12; i++) tall.push('## Part ' + i, '', 'Line of part ' + i + '.', '', '![](data:image/gif;base64,R0lGODlhAQABAAAAACw=)', '');
+  await rvLoad(tall.join('\n'));
+  await rv.evaluate(() => [...document.querySelectorAll('#v-md img')].forEach((im) => { im.style.height = '260px'; im.style.display = 'block'; }));
+  await rv.click('#btn-layout'); await rv.click('label:has(input[name="focusby"][value="band"])'); await rv.keyboard.press('Escape');
+  await rv.hover('#v-md > p:has-text("Line of part 1.")'); await rv.waitForTimeout(300);
+  const lm = await rv.evaluate(() => [...document.querySelectorAll('#v-src .ma-ln.is-line')].map((l) => l.textContent.trim()));
+  check('lệch số khối (chú thích HTML): dải đọc vẫn sáng dòng tương ứng ở Source', lm.join('|') === 'Line of part 1.', JSON.stringify(lm));
+  await rv.mouse.move(5, 5);
+  await rv.evaluate(() => { const w = document.getElementById('wrap-src'); const ln = [...w.querySelectorAll('.ma-ln')].find((l) => l.textContent.startsWith('## Part 8'));
+    w.scrollTop += ln.getBoundingClientRect().top + ln.offsetHeight / 2 - (w.getBoundingClientRect().top + w.clientHeight / 2); });
+  await rv.waitForTimeout(300);
+  const dP = await rv.evaluate(() => { const w = document.getElementById('wrap-md').getBoundingClientRect(); const h = [...document.querySelectorAll('#v-md > h2')].find((e) => e.textContent === 'Part 8').getBoundingClientRect();
+    return Math.round(h.top + h.height / 2 - (w.top + w.height / 2)); });
+  check('lệch số khối (chú thích HTML): cuộn Source, tiêu đề Part 8 ở giữa khung Preview (±40px)', Math.abs(dP) <= 40, dP + 'px');
+  // Dải đọc ở sát đầu / cuối: section đầu (ngắn) và section cuối (ngắn) cũng chọn được, ở Split và ở Preview.
+  const edge = ['# Title', '', 'Short intro.', ''];
+  for (let i = 1; i <= 16; i++) { edge.push('## Sec ' + i, ''); for (let k = 0; k < 4; k++) edge.push('Paragraph ' + i + '.' + k + ' ' + 'lorem ipsum '.repeat(10), ''); }
+  edge.push('## Last', '', 'Final short line.', '');
+  await rvLoad(edge.join('\n'));
+  const litMd = () => rv.evaluate(() => { const h = [...document.querySelectorAll('#v-md > .is-sec')].find((e) => /^H[1-6]$/.test(e.tagName)); return h ? h.textContent : null; });
+  for (const mode of ['split', 'view']) {
+    await rv.click(`.ma-tab[data-view="${mode}"]`); await rv.waitForTimeout(150);
+    const sc = mode === 'split' ? 'document.getElementById("wrap-md")' : 'document.scrollingElement';
+    await rv.evaluate(`${sc}.scrollTop = 1; ${sc}.scrollTop = 0`); await rv.waitForTimeout(250);
+    const top = await litMd();
+    await rv.evaluate(`${sc}.scrollTop = 1e7`); await rv.waitForTimeout(250);
+    const end = await litMd();
+    check(`dải đọc (${mode}): cuộn tới đầu sáng section đầu, tới cuối sáng section cuối`, top === 'Title' && end === 'Last', JSON.stringify({ top, end }));
+  }
+  await rv.click('.ma-tab[data-view="split"]');
+  await rv.click('#btn-layout'); await rv.click('#set-reset'); await rv.keyboard.press('Escape');
+  // Panel thu gọn (prefs.rail) rồi thu hẹp cửa sổ ≤ 1080px: panel đã ẩn khỏi lưới, văn bản không mất cột 56px.
+  await rv.click('#btn-rail');
+  for (const w of [1024, 390]) {
+    await rv.setViewportSize({ width: w, height: 800 }); await rv.waitForTimeout(200);
+    const gc = await rv.evaluate(() => getComputedStyle(document.querySelector('.ma-grid')).gridTemplateColumns);
+    check(`${w}px, panel thu gọn: lưới một cột`, gc.trim().split(/\s+/).length === 1, gc);
+  }
+  await rv.setViewportSize({ width: 1440, height: 900 }); await rv.click('#btn-unrail');
+  await rctx.close();
+  // ── end review: layout & scroll ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();

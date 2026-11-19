@@ -3,7 +3,7 @@
    Xuất: initPanel, setPane.
    Dùng: ui/store.js, ui/dom.js. */
 import { prefs, savePrefs } from './store.js';
-import { $, dragBar } from './dom.js';
+import { $, dragBar, mqSide } from './dom.js';
 
 /* Panel: hai tab. */
 export function setPane(name) {
@@ -60,5 +60,5 @@ export function initPanel() {
   $('dlg-panel').addEventListener('click', function (e) {
     if (e.target === $('dlg-panel')) $('dlg-panel').close();
   });
-  window.matchMedia('(min-width: 1081px)').addEventListener('change', function (e) { if (e.matches && $('dlg-panel').open) $('dlg-panel').close(); });
+  mqSide.addEventListener('change', function (e) { if (e.matches && $('dlg-panel').open) $('dlg-panel').close(); });
 }

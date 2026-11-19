@@ -1,15 +1,11 @@
 /* Focus mode: mờ mọi thứ ngoài một section; chọn section theo chuột (pointer) hoặc dải đọc 25–50% (band). Ở dải đọc,
    dòng dưới chuột cũng sáng (.is-line).
    Xuất: initFocus, refreshBand, refreshFocus.
-   Dùng: core/blocks.js, core/sections.js, ui/dom.js, ui/state.js, ui/markdown.js, ui/views.js, ui/sync-scroll.js,
-     ui/layout.js. */
-import { lexSpans } from '../core/blocks.js';
+   Dùng: core/sections.js, ui/dom.js, ui/views.js, ui/sync-scroll.js, ui/layout.js. */
 import { bandBounds, bandPick, lineSections, numberSections, spanAt } from '../core/sections.js';
 import { $, shown } from './dom.js';
-import { S } from './state.js';
-import { mdLex } from './markdown.js';
 import { isSplit } from './views.js';
-import { setByPage } from './sync-scroll.js';
+import { blockPairs, setByPage } from './sync-scroll.js';
 import { layoutVal } from './layout.js';
 
 /* Focus mode theo section. Section mới bắt đầu ở mỗi tiêu đề cấp cao: h1–h6 là con trực tiếp của #v-md ở Preview;
@@ -22,15 +18,10 @@ function secBlocks(root) {
   return root.id === 'v-src' ? Array.prototype.slice.call(root.querySelectorAll('.ma-ln'))
     : Array.prototype.filter.call(root.children, function (el) { return el.nodeType === 1; });
 }
-var spanMemo = { text: null, spans: [] };
-function srcSpans() {
-  if (spanMemo.text !== S.text) spanMemo = { text: S.text, spans: window.marked ? lexSpans(S.text, mdLex) : [] };
-  return spanMemo.spans;
-}
 function markSections(root) {
   var blocks = secBlocks(root);
   var secs = root.id === 'v-src'
-    ? lineSections(srcSpans(), blocks.length)
+    ? lineSections(blockPairs().spans, blocks.length)
     : numberSections(blocks.map(function (el) { return /^H[1-6]$/.test(el.tagName); }));
   blocks.forEach(function (el, i) { el.dataset.sec = secs[i]; });
 }
@@ -39,19 +30,20 @@ function ensureSec(root) {
   if (blocks.length && (!blocks[0].dataset.sec || !blocks[blocks.length - 1].dataset.sec)) markSections(root);
   return blocks;
 }
+var litSec = { 'v-src': null, 'v-md': null }; // section đang sáng của mỗi khung (null: không làm mờ)
 function applySec(root, sec) {
   if (!shown(root)) return;
   var blocks = ensureSec(root);
-  if (root._sec === sec && root.classList.contains('is-focusing') && root.querySelector('.is-sec')) return;
+  if (litSec[root.id] === sec && root.classList.contains('is-focusing') && root.querySelector('.is-sec')) return;
   root.querySelectorAll('.is-sec').forEach(function (x) { x.classList.remove('is-sec'); });
   blocks.forEach(function (x) { if (x.dataset.sec === sec) x.classList.add('is-sec'); });
-  root._sec = sec;
+  litSec[root.id] = sec;
   root.classList.add('is-focusing');
 }
 function clearFocus(root) {
   root.classList.remove('is-focusing');
   root.querySelectorAll('.is-sec').forEach(function (el) { el.classList.remove('is-sec'); });
-  root._sec = null;
+  litSec[root.id] = null;
 }
 function otherRoot(root) { return root.id === 'v-src' ? $('v-md') : $('v-src'); }
 function focusOn() { return document.documentElement.classList.contains('ma-focus'); }
@@ -65,8 +57,9 @@ function bandSec(root) {
   var blocks = ensureSec(root);
   if (!blocks.length) return null;
   var pane = root.closest('.ma-view');
+  var sc = isSplit() ? pane : document.scrollingElement;
   var vr = isSplit() ? pane.getBoundingClientRect() : { top: Math.max(0, root.getBoundingClientRect().top), bottom: window.innerHeight };
-  var band = bandBounds(vr.top, vr.bottom, window.innerHeight);
+  var band = bandBounds(vr.top, vr.bottom, window.innerHeight, sc.scrollTop, sc.scrollHeight - sc.clientHeight);
   var i = bandPick(blocks.length,
     function (k) { return blocks[k].getBoundingClientRect().bottom; },
     function (k) { return blocks[k].getBoundingClientRect().top; }, band[0], band[1]);
@@ -78,7 +71,9 @@ export function refreshBand(from) {
   if (bandRaf) return;
   bandRaf = requestAnimationFrame(function () {
     bandRaf = 0;
-    if (!focusOn() || layoutVal('focusBy') !== 'band') return;
+    if (!focusOn()) return;
+    // Theo chuột: khung vẽ lại mất .is-sec; đặt lại section đang sáng, không thì cả khung mờ tới lần rê kế tiếp.
+    if (layoutVal('focusBy') !== 'band') { ['v-src', 'v-md'].forEach(function (id) { if (litSec[id] != null) applySec($(id), litSec[id]); }); return; }
     var root = bandFrom && shown(bandFrom) ? bandFrom : (shown($('v-md')) ? $('v-md') : $('v-src'));
     if (!shown(root)) return;
     var sec = bandSec(root);
@@ -96,14 +91,12 @@ export function refreshFocus() {
 
 /* Dòng dưới chuột ở dải đọc. Source: một .ma-ln. Preview: mục danh sách, hàng bảng, mục định nghĩa, hoặc cả khối cấp
    cao. Khối cấp cao chứa nó (host) sáng; trong host, anh em của nó và của mỗi tổ tiên tới host mờ (.ma-dimx), vì
-   opacity của con không vượt được cha. Ở Split, khung kia sáng khối tương ứng: khối cấp cao thứ i ↔ token thứ i của
-   marked.lexer (chỉ khi số khối hai bên bằng nhau, như cuộn theo nhau). */
+   opacity của con không vượt được cha. Ở Split, khung kia sáng khối ghép với nó (blockPairs, như cuộn theo nhau). */
 function clearLines() {
   ['v-src', 'v-md'].forEach(function (id) {
     $(id).querySelectorAll('.is-line, .ma-dimx').forEach(function (x) { x.classList.remove('is-line', 'ma-dimx'); });
   });
 }
-function mdBlocks() { return Array.prototype.filter.call($('v-md').children, function (el) { return el.nodeType === 1; }); }
 function lightMdUnit(u) {
   var root = $('v-md'), host = u;
   while (host.parentElement !== root) host = host.parentElement;
@@ -119,20 +112,20 @@ function lightSrcLines(a, b) {
 function lineAtPointer(root, t) {
   clearLines();
   if (!t || !t.closest || !root.contains(t)) return;
-  var spans = srcSpans(), blocks = mdBlocks(), paired = isSplit() && spans.length === blocks.length;
+  var bp = blockPairs(), split = isSplit();
   if (root.id === 'v-src') {
     var ln = t.closest('.ma-ln');
     if (!ln) return;
     ln.classList.add('is-line');
-    var idx = Array.prototype.indexOf.call(root.querySelectorAll('.ma-ln'), ln), k = spanAt(spans, idx);
-    if (paired && k >= 0) lightMdUnit(blocks[k]);
+    var idx = Array.prototype.indexOf.call(root.querySelectorAll('.ma-ln'), ln), k = spanAt(bp.spans, idx);
+    if (split && k >= 0 && bp.toMd[k] >= 0) lightMdUnit(bp.blocks[bp.toMd[k]]);
   } else {
     var u = t.closest('li, tr, dt, dd') || t.closest('#v-md > *');
     if (!u || !root.contains(u) || u === root) return;
     lightMdUnit(u);
     var host = u; while (host.parentElement !== root) host = host.parentElement;
-    var j = blocks.indexOf(host);
-    if (paired && j >= 0) lightSrcLines(spans[j].a, spans[j].b);
+    var j = bp.blocks.indexOf(host), k2 = j >= 0 ? bp.toSrc[j] : -1;
+    if (split && k2 >= 0) lightSrcLines(bp.spans[k2].a, bp.spans[k2].b);
   }
 }
 

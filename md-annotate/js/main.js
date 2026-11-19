@@ -1,7 +1,12 @@
 /* Điểm vào: gọi init… của từng module đúng thứ tự cũ, rồi khởi động. Chỉ giữ ở đây việc dùng chung cả trang:
    phím tắt chép prompt, đóng hộp thoại, nút theme.
-   Thứ tự quan trọng: initSyncScroll trước initFocus (cùng nghe cuộn #wrap-src / #wrap-md), initPopup trước
-   initSelection (cùng nghe pointerdown của document), initPanel trước initDialogs (cùng nghe #dlg-panel).
+   Thứ tự quan trọng (hai module nghe cùng phần tử):
+   - initSyncScroll trước initFocus: cuộn #wrap-src / #wrap-md (sync bỏ syncExpect cũ của khung người dùng cuộn trước
+     khi focus hỏi setByPage);
+   - initViews trước initFocus trước initPopup: resize của window (chiều cao khung trước, dải đọc sau);
+   - initShortcuts trước initPopup: keydown của document;
+   - initPopup trước initSelection: pointerdown của document;
+   - initPanel trước initDialogs: close của #dlg-panel (panel về chỗ cũ trước khi trả toast).
    Xuất: không (chạy khi nạp).
    Dùng: ui/store.js, ui/dom.js, ui/state.js, ui/hints.js, ui/render.js, ui/list.js, ui/prompt.js, ui/views.js,
      ui/sync-scroll.js, ui/panel.js, ui/layout.js, ui/focus.js, ui/popup.js, ui/selection.js, ui/history.js,
@@ -25,7 +30,7 @@ import { initEditor, syncInputs } from './ui/editor.js';
 
 function initShortcuts() {
   /* ⌘/Ctrl + Shift + C chép prompt, ở đâu cũng được. */
-  var isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+  var isMac = /Mac|iPhone|iPad/.test((navigator.userAgentData && navigator.userAgentData.platform) || navigator.userAgent);
   document.querySelectorAll('.js-copy-kbd').forEach(function (k) { k.textContent = isMac ? '⌘⇧C' : 'Ctrl⇧C'; });
   document.addEventListener('keydown', function (e) {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && !e.altKey && e.code === 'KeyC') { e.preventDefault(); copyPrompt(); }
