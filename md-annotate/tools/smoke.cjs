@@ -332,6 +332,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   const LONG = Array.from({ length: 120 }, (_, i) => `Đoạn số ${i + 1} của một văn bản dài dùng để thử cột phải.`).join('\n\n');
   await page.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, LONG);
   await page.waitForTimeout(150);
+  await page.click('.ma-tab[data-view="view"]');
   for (let i = 1; i <= 32; i++) {
     await dragSelect(page, '#v-md', `Đoạn số ${i * 3} của`);
     await page.click('#pop-chips .ma-chip >> nth=0');
@@ -366,6 +367,49 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await page.click('#dlg-panel [data-close]');
   await page.waitForTimeout(50);
   check('đóng tấm: panel về cột phải', !(await page.isVisible('#dlg-panel')) && await page.evaluate(() => document.getElementById('panel').parentNode.classList.contains('ma-grid')));
+  await page.setViewportSize({ width: 1280, height: 900 });
+
+  // 10c. Bố cục rộng: không lề thừa, Song song hai khung cao trọn khung nhìn, vách giữa và mép panel kéo được, thu gọn panel.
+  const geo = () => page.evaluate(() => {
+    const d = document.getElementById('doc').getBoundingClientRect(), pn = document.getElementById('panel').getBoundingClientRect();
+    const a = document.getElementById('wrap-src'), m = document.getElementById('wrap-md');
+    return { docL: Math.round(d.left), panelR: Math.round(innerWidth - pn.right), panelW: Math.round(pn.width),
+      mode: document.getElementById('views').dataset.mode, a: Math.round(a.getBoundingClientRect().width), b: Math.round(m.getBoundingClientRect().width),
+      page: document.documentElement.scrollHeight - innerHeight, srcScroll: a.scrollHeight > a.clientHeight, mdScroll: m.scrollHeight > m.clientHeight };
+  });
+  for (const w of [1280, 1920, 2560]) {
+    await page.setViewportSize({ width: w, height: 900 });
+    await page.click('.ma-tab[data-view="split"]');
+    const g = await geo();
+    check(`${w}px: Song song, mỗi khung ≥ 420px, lề trang 24px`, g.mode === 'split' && g.a >= 420 && g.b >= 420 && g.docL === 24 && g.panelR === 24, JSON.stringify(g));
+  }
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  let g = await geo();
+  check('Song song: hai khung cuộn riêng, trang không cuộn', g.page <= 0 && g.srcScroll && g.mdScroll, JSON.stringify(g));
+  const dv = await page.$eval('#divider', (el) => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + 200 }; });
+  await page.mouse.move(dv.x, dv.y); await page.mouse.down(); await page.mouse.move(dv.x + 120, dv.y, { steps: 5 }); await page.mouse.up();
+  const L2 = await geo();
+  check('kéo vách giữa: khung nguồn rộng thêm', L2.a - g.a > 100, `${g.a} → ${L2.a}`);
+  const gp = await page.$eval('#panel-grip', (el) => { const r = el.getBoundingClientRect(); return { x: r.left + 3, y: r.top + 300 }; });
+  await page.mouse.move(gp.x, gp.y); await page.mouse.down(); await page.mouse.move(gp.x - 80, gp.y, { steps: 5 }); await page.mouse.up();
+  const L3 = await geo();
+  check('kéo mép panel: panel rộng thêm', L3.panelW - L2.panelW >= 70, `${L2.panelW} → ${L3.panelW}`);
+  await page.reload(); await page.waitForFunction(() => window.marked && window.DOMPurify); await page.waitForTimeout(150);
+  const L4 = await geo();
+  check('tải lại: nhớ tỉ lệ hai khung và bề rộng panel', Math.abs(L4.a - L3.a) <= 2 && Math.abs(L4.panelW - L3.panelW) <= 1, JSON.stringify([L3, L4]));
+  await page.click('#btn-rail');
+  const L5 = await geo();
+  check('thu gọn panel: thanh dọc 56px, văn bản rộng ra', L5.panelW === 56 && L5.a > L4.a, JSON.stringify(L5));
+  check('thu gọn: nút chép vẫn thấy', await inView(page, '#rail-copy'));
+  await page.evaluate(() => navigator.clipboard.writeText('trống'));
+  await page.click('#rail-copy'); await page.waitForTimeout(150);
+  check('thu gọn: nút chép ở thanh dọc chép prompt', (await page.evaluate(() => navigator.clipboard.readText())) === (await out(page)));
+  await page.reload(); await page.waitForFunction(() => window.marked && window.DOMPurify);
+  check('tải lại: panel vẫn thu gọn', (await geo()).panelW === 56);
+  await page.click('#btn-unrail');
+  check('mở lại panel', (await geo()).panelW === L4.panelW && await inView(page, '#btn-copy'));
+  await page.evaluate(() => { localStorage.removeItem('md-annotate:prefs:v1'); });
   await page.setViewportSize({ width: 1280, height: 900 });
 
   // 11. Theme: nút đổi thắng sau khi bấm.

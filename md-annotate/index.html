@@ -77,10 +77,9 @@
         --r-sm: 8px; --r: 12px; --r-lg: 16px;
         --dur: .16s; --ease: cubic-bezier(.2, .7, .2, 1);
 
-        --wrap: 1320px;
-        --pad: 32px;
+        --pad: 24px;                         /* lề trang; vùng làm việc không giới hạn bề rộng (MDAN-003) */
         --bar-h: 60px;
-        --side: 392px;
+        --side: 360px;                       /* bề rộng panel; người dùng kéo được 320–560, lưu ở prefs.side */
 
         --display: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
         --sans:    'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -143,7 +142,7 @@
       ::selection { background: var(--accent); color: var(--on-accent); }
       ::highlight(ma-pending) { background-color: var(--hl-pend); }
       :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: 4px; }
-      .ma-wrap { width: 100%; max-width: var(--wrap); margin: 0 auto; padding: 0 var(--pad); }
+      .ma-wrap { width: 100%; padding: 0 var(--pad); }
       svg.ma-i { width: 16px; height: 16px; flex: none; }
 
       /* THANH TRÊN */
@@ -229,7 +228,7 @@
       .ma-notice code { font: 500 12.5px var(--mono); color: var(--ink); }
 
       /* LƯỚI */
-      .ma-grid { display: grid; grid-template-columns: minmax(0, 1fr) var(--side); gap: var(--s5); align-items: start; padding-top: var(--s4); padding-bottom: var(--s5); }
+      .ma-grid { display: grid; grid-template-columns: minmax(0, 1fr) var(--side); gap: var(--s4); align-items: start; padding-top: var(--s4); padding-bottom: var(--s5); }
       .ma-left { min-width: 0; }
 
       /* VĂN BẢN */
@@ -263,8 +262,13 @@
       .ma-file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 
       .ma-views { display: grid; grid-template-columns: minmax(0, 1fr); }
-      .ma-views[data-mode="split"] { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-      .ma-views[data-mode="split"] .ma-view + .ma-view { border-left: 1px solid var(--line); }
+      /* Song song: hai khung cao bằng phần còn lại của khung nhìn (--pane-h, JS tính), cuộn riêng; vách giữa kéo được. */
+      .ma-views[data-mode="split"] { grid-template-columns: minmax(0, var(--ra, 1fr)) 9px minmax(0, var(--rb, 1fr)); }
+      .ma-views[data-mode="split"] .ma-view { height: var(--pane-h, 70vh); overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+      .ma-divider { position: relative; cursor: col-resize; touch-action: none; }
+      .ma-divider::before { content: ''; position: absolute; top: 0; bottom: 0; left: 4px; width: 1px; background: var(--line); transition: background var(--dur) var(--ease), width var(--dur) var(--ease), left var(--dur) var(--ease); }
+      .ma-divider:hover::before, .ma-divider:focus-visible::before, .ma-divider.is-drag::before { left: 3px; width: 3px; background: var(--accent); }
+      .ma-divider:focus-visible { outline: none; }
       .ma-view { min-width: 0; padding: 18px 22px 26px; }
       .ma-view__lbl { display: none; margin-bottom: 10px; }
       .ma-views[data-mode="split"] .ma-view__lbl { display: block; }
@@ -306,7 +310,8 @@
       .ma-empty p { margin: 0 0 14px; }
 
       /* Markdown đã dựng */
-      .ma-md { font-size: 15.5px; line-height: 1.7; overflow-wrap: anywhere; }
+      /* Khổ đọc ~72ch, nằm giữa khung; khung thì rộng. */
+      .ma-md { max-width: 72ch; margin: 0 auto; font-size: 15.5px; line-height: 1.7; overflow-wrap: anywhere; }
       .ma-md > :first-child { margin-top: 0; }
       .ma-md h1, .ma-md h2, .ma-md h3, .ma-md h4, .ma-md h5, .ma-md h6 { font-family: var(--display); font-weight: 600; line-height: 1.25; margin: 1.4em 0 .5em; }
       .ma-md h1 { font-size: 1.7em; } .ma-md h2 { font-size: 1.35em; } .ma-md h3 { font-size: 1.15em; } .ma-md h4, .ma-md h5, .ma-md h6 { font-size: 1em; }
@@ -374,6 +379,25 @@
       }
       .ma-ptab__n:empty { display: none; }
       .ma-panel__close { display: none; }
+      /* Kéo mép trái để đổi bề rộng panel. */
+      .ma-panel__grip { position: absolute; z-index: 2; left: 0; top: 0; bottom: 0; width: 8px; cursor: col-resize; touch-action: none; }
+      .ma-panel__grip::before { content: ''; position: absolute; top: 12px; bottom: 12px; left: 0; width: 3px; border-radius: 2px; background: transparent; transition: background var(--dur) var(--ease); }
+      .ma-panel__grip:hover::before, .ma-panel__grip:focus-visible::before, .ma-panel__grip.is-drag::before { background: var(--accent); }
+      .ma-panel__grip:focus-visible { outline: none; }
+      /* Thu gọn thành thanh dọc: còn nút mở, số nhận xét, tải và chép. */
+      .ma-rail { display: none; }
+      html.ma-railed .ma-grid { grid-template-columns: minmax(0, 1fr) 56px; }
+      html.ma-railed .ma-grid > .ma-panel > :not(.ma-rail) { display: none; }
+      html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: column; align-items: center; gap: var(--s2); height: 100%; padding: var(--s2) 0; }
+      .ma-rail__n {
+        min-width: 36px; min-height: 36px; border: 0; border-radius: var(--r-sm); background: var(--chip);
+        font: 500 12px/1 var(--mono); color: var(--ink-2);
+      }
+      .ma-rail__n:hover { color: var(--ink); background: var(--green-soft); }
+      .ma-rail__sp { flex: 1; }
+      .ma-rail__copy { width: 44px; min-height: 44px; padding: 0; }
+      .ma-rail__copy.is-done svg { display: none; }
+      .ma-rail__copy.is-done::after { content: '✓'; font-weight: 600; }
       .ma-panel__body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: var(--s3); scrollbar-width: thin; }
       .ma-panel__foot {
         flex: none; display: flex; flex-direction: column; gap: var(--s2);
@@ -389,7 +413,7 @@
         font: 500 11px/1 var(--mono); color: var(--on-accent); background: var(--kbd-on-accent);
       }
       .ma-kbd:empty { display: none; }
-      .ma-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .ma-sr { position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
       .ma-blank { display: flex; flex-direction: column; align-items: center; gap: var(--s2); padding: var(--s6) var(--s4); text-align: center; color: var(--ink-3); }
       .ma-blank svg { width: 28px; height: 28px; color: var(--ink-4); }
       .ma-blank p { margin: 0; font-size: 13.5px; max-width: 30ch; }
@@ -566,6 +590,7 @@
           border: 0; border-radius: 0; box-shadow: none;
         }
         .ma-dlg--panel .ma-panel__close { display: inline-grid; }
+        .ma-dlg--panel .ma-panel__grip, .ma-dlg--panel #btn-rail { display: none; }
         .ma-dlg--panel .ma-kbd { display: none; }
       }
       @media (max-width: 720px) {
@@ -682,6 +707,8 @@
               </div>
               <pre class="ma-src" id="v-src"></pre>
             </div>
+            <div class="ma-divider" id="divider" role="separator" aria-orientation="vertical" tabindex="0"
+                 aria-label="Resize panes" title="Drag to resize" hidden></div>
             <div class="ma-view" id="wrap-md">
               <div class="ma-view__lbl ma-label">Hiển thị</div>
               <article class="ma-md" id="v-md"></article>
@@ -698,6 +725,22 @@
         <!-- Cột phải: một panel. Thân là chỗ cuộn duy nhất; thanh đáy (nút chép) luôn thấy, dù bao nhiêu nhận xét.
              Máy ≤ 1080px: panel nằm trong tấm trượt đáy #dlg-panel, mở từ thanh đáy. -->
         <aside class="ma-panel" id="panel" aria-label="Nhận xét và prompt">
+          <div class="ma-panel__grip" id="panel-grip" role="separator" aria-orientation="vertical" tabindex="0"
+               aria-label="Resize panel" title="Drag to resize"></div>
+          <div class="ma-rail">
+            <button class="ma-icbtn ma-icbtn--bare" type="button" id="btn-unrail" aria-label="Expand panel" title="Expand panel">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg>
+            </button>
+            <button class="ma-rail__n" type="button" id="rail-n" title="Comments" aria-label="Show comments"></button>
+            <span class="ma-rail__sp"></span>
+            <button class="ma-icbtn ma-icbtn--bare" type="button" id="rail-export" aria-label="Download .md" title="Download .md">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m-4-4 4 4 4-4M5 20h14" /></svg>
+            </button>
+            <button class="ma-btn ma-btn--go ma-copy ma-rail__copy" type="button" id="rail-copy" title="Copy prompt">
+              <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a1 1 0 0 1 1-1h9" /></svg>
+              <span class="ma-copy__lbl ma-sr">Copy prompt</span>
+            </button>
+          </div>
           <div class="ma-panel__head">
             <div class="ma-seg" role="tablist" aria-label="Nội dung panel">
               <button class="ma-ptab" role="tab" type="button" id="ptab-list" data-pane="list" aria-controls="pane-list">
@@ -706,6 +749,9 @@
               <button class="ma-ptab" role="tab" type="button" id="ptab-prompt" data-pane="prompt" aria-controls="pane-prompt">Prompt</button>
             </div>
             <button class="ma-btn ma-btn--quiet ma-btn--sm" type="button" id="btn-hints" title="Quản lý gợi ý nhận xét">Gợi ý</button>
+            <button class="ma-icbtn ma-icbtn--bare" type="button" id="btn-rail" aria-label="Collapse panel" title="Collapse panel">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+            </button>
             <button class="ma-icbtn ma-icbtn--bare ma-panel__close" type="button" data-close aria-label="Đóng">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
             </button>
@@ -947,7 +993,6 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
       var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
       var mqSheet = window.matchMedia('(max-width: 720px), (pointer: coarse)');
-      var mqSplit = window.matchMedia('(min-width: 1100px)');
       var mqSide = window.matchMedia('(min-width: 1081px)');
 
       /* ======================================================================
@@ -1438,6 +1483,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         } else note.hidden = true;
         $('empty').hidden = !(view !== 'edit' && !t);
         $('views').hidden = view === 'edit' || !t;
+        sizePanes();
       }
 
       /* Danh sách nhận xét trong panel. Panel nằm ở cột phải (máy rộng) hoặc trong tấm trượt #dlg-panel. */
@@ -1447,6 +1493,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         $('n-comments').textContent = total ? String(total) : '';
         $('list-empty').hidden = total > 0;
         $('dock-n').textContent = total ? 'Nhận xét · ' + total : 'Nhận xét';
+        $('rail-n').textContent = String(total);
       }
       function inSheet() { return $('dlg-panel').open; }
       function leaveSheet(fn) { return function () { if (inSheet()) $('dlg-panel').close(); fn(); }; }
@@ -1547,7 +1594,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         $('out-n').textContent = p ? p.length.toLocaleString('vi-VN') + ' ký tự · ' + words.toLocaleString('vi-VN') + ' từ' : '';
         var n = ordered.filter(function (c) { return !orphans[c.id]; }).length;
         $('foot-n').textContent = n ? n + ' nhận xét trong prompt' : 'Chưa có nhận xét';
-        $('btn-copy').disabled = !p; $('btn-export').disabled = !p; $('dock-copy').disabled = !p;
+        ['btn-copy', 'btn-export', 'dock-copy', 'rail-copy', 'rail-export'].forEach(function (id) { $(id).disabled = !p; });
         var sum = [S.fmt === 'block' ? 'khối' : 'gọn'];
         if (S.lineNums) sum.push(S.path.trim() || 'số dòng');
         if (S.includeDoc) sum.push('toàn văn');
@@ -1601,11 +1648,15 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       /* ======================================================================
          CHẾ ĐỘ XEM
          ====================================================================== */
+      /* Song song chỉ khi mỗi khung được ≥ 420px. Muốn song song mà chưa đủ chỗ thì hiện Hiển thị, vẫn nhớ ý muốn. */
+      var PANE_MIN = 420;
+      function splitOK() { return $('doc').clientWidth >= 2 * PANE_MIN + 9; }
       function setView(v) {
-        if (v === 'split' && !mqSplit.matches) v = 'view';
+        var want = v;
+        if (v === 'split' && !splitOK()) v = 'view';
         view = v;
-        if (v !== 'edit') lastRead = v;
-        prefs.view = v; savePrefs();
+        if (want !== 'edit') lastRead = want;
+        prefs.view = want; savePrefs();
         document.querySelectorAll('.ma-tab').forEach(function (b) {
           b.setAttribute('aria-selected', String(b.dataset.view === v));
           b.tabIndex = b.dataset.view === v ? 0 : -1;
@@ -1615,7 +1666,8 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         $('wrap-src').hidden = !(v === 'src' || v === 'split');
         $('syn').checked = prefs.syntax !== false;
         $('wrap-md').hidden = !(v === 'view' || v === 'split');
-        $('tab-split').hidden = !mqSplit.matches;
+        $('tab-split').hidden = !splitOK();
+        $('divider').hidden = v !== 'split';
         renderMeta();
         if (v !== 'edit' && pop.mode) closePop(true);
       }
@@ -2080,7 +2132,81 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
           setView(t.dataset.view); t.focus();
         });
       });
-      mqSplit.addEventListener('change', function () { setView(view); });
+      /* Bề rộng thay đổi (cửa sổ, panel, thu gọn): xem lại Song song và chiều cao hai khung. */
+      function refreshSplit() {
+        $('tab-split').hidden = !splitOK();
+        if (view !== 'edit' && ((prefs.view === 'split') !== (view === 'split'))) setView(prefs.view === 'split' ? 'split' : view);
+        else sizePanes();
+      }
+      function sizePanes() {
+        var v = $('views');
+        if (v.dataset.mode !== 'split' || v.hidden) return;
+        var top = v.getBoundingClientRect().top + window.scrollY;
+        var reserve = 17 + (mqSide.matches ? 0 : $('dock').offsetHeight);
+        v.style.setProperty('--pane-h', Math.max(320, Math.floor(window.innerHeight - top - reserve)) + 'px');
+      }
+      var rafSplit = 0;
+      if (window.ResizeObserver) new ResizeObserver(function () {
+        cancelAnimationFrame(rafSplit); rafSplit = requestAnimationFrame(refreshSplit);
+      }).observe($('doc'));
+      window.addEventListener('resize', function () { cancelAnimationFrame(rafSplit); rafSplit = requestAnimationFrame(refreshSplit); });
+
+      /* Vách giữa hai khung: kéo hoặc phím mũi tên; tỉ lệ lưu ở prefs.split. */
+      function applySplit(r) {
+        r = Math.max(0.25, Math.min(0.75, r));
+        $('views').style.setProperty('--ra', r + 'fr'); $('views').style.setProperty('--rb', (1 - r) + 'fr');
+        $('divider').setAttribute('aria-valuenow', String(Math.round(r * 100)));
+        return r;
+      }
+      var splitR = applySplit(typeof prefs.split === 'number' ? prefs.split : 0.5);
+      function dragBar(el, onMove, onDone) {
+        el.addEventListener('pointerdown', function (e) {
+          if (e.button !== 0) return;
+          e.preventDefault(); el.setPointerCapture(e.pointerId); el.classList.add('is-drag');
+          var move = function (ev) { onMove(ev.clientX); };
+          var up = function () {
+            el.classList.remove('is-drag');
+            el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up);
+            onDone();
+          };
+          el.addEventListener('pointermove', move); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+        });
+      }
+      dragBar($('divider'), function (x) {
+        var r = $('views').getBoundingClientRect();
+        splitR = applySplit((x - r.left) / r.width);
+      }, function () { prefs.split = splitR; savePrefs(); });
+      $('divider').addEventListener('keydown', function (e) {
+        var d = e.key === 'ArrowLeft' ? -0.02 : e.key === 'ArrowRight' ? 0.02 : 0;
+        if (!d) return;
+        e.preventDefault(); splitR = applySplit(splitR + d); prefs.split = splitR; savePrefs();
+      });
+
+      /* Panel: kéo mép trái đổi bề rộng (320–560), hoặc thu gọn thành thanh dọc. Lưu ở prefs.side, prefs.rail. */
+      var SIDE_MIN = 320, SIDE_MAX = 560;
+      function applySide(w) {
+        w = Math.max(SIDE_MIN, Math.min(SIDE_MAX, Math.round(w)));
+        document.documentElement.style.setProperty('--side', w + 'px');
+        return w;
+      }
+      var sideW = typeof prefs.side === 'number' ? applySide(prefs.side) : 360;
+      dragBar($('panel-grip'), function (x) { sideW = applySide($('panel').getBoundingClientRect().right - x); },
+        function () { prefs.side = sideW; savePrefs(); });
+      $('panel-grip').addEventListener('keydown', function (e) {
+        var d = e.key === 'ArrowLeft' ? 16 : e.key === 'ArrowRight' ? -16 : 0;
+        if (!d) return;
+        e.preventDefault(); sideW = applySide(sideW + d); prefs.side = sideW; savePrefs();
+      });
+      function setRail(on) {
+        document.documentElement.classList.toggle('ma-railed', on);
+        prefs.rail = on; savePrefs();
+      }
+      if (prefs.rail) document.documentElement.classList.add('ma-railed');
+      $('btn-rail').addEventListener('click', function () { setRail(true); $('btn-unrail').focus(); });
+      $('btn-unrail').addEventListener('click', function () { setRail(false); $('btn-rail').focus(); });
+      $('rail-n').addEventListener('click', function () { setRail(false); setPane('list'); });
+      $('rail-copy').addEventListener('click', copyPrompt);
+      $('rail-export').addEventListener('click', exportMd);
 
       var ta = $('src-input'), pasteIntoEmpty = false, renderTimer = null;
       ta.addEventListener('paste', function () { pasteIntoEmpty = !ta.value.trim(); });

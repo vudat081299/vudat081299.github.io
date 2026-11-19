@@ -3,6 +3,7 @@
 <!-- index:start -->
 - MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code · `md-annotate/index.html`
 - MDAN-002 · Xanh lá riêng, sáng hơn trang chủ · `md-annotate/index.html`
+- MDAN-003 · Bố cục tràn bề rộng, panel và hai khung chỉnh được · `md-annotate/index.html`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -20,3 +21,11 @@ REPO-023 chỉ ràng `index.html`; trang này có xanh lá riêng, tươi hơn. 
 (`#22c55e` sáng, `#4ade80` tối) với chữ tối `--on-accent` (`#052e16`, ≥ 6,5:1). Chữ, viền, link xanh trên nền sáng
 dùng sắc đậm cùng họ `--green` (`#15803d`). Nền highlight pha từ cùng màu; ở theme tối phủ mỏng để chữ màu của
 tab Nguồn vẫn ≥ 4,5:1. Nền, mực và font vẫn chép từ trang chủ.
+
+## MDAN-003 · Bố cục tràn bề rộng, panel và hai khung chỉnh được
+19/11/2026 · `md-annotate/index.html`
+
+Vùng làm việc không giới hạn bề rộng, chỉ chừa lề trang 24px (16px ở điện thoại); văn bản lấy hết chỗ còn lại sau
+panel. Panel rộng 360px, kéo mép trái được (320–560px) hoặc thu thành thanh dọc 56px vẫn giữ nút chép; cả hai nhớ
+trong trình duyệt. *Song song* có khi mỗi khung được ≥ 420px: hai khung cao trọn khung nhìn, cuộn riêng, vách giữa
+kéo được và nhớ tỉ lệ. Khung *Hiển thị* giữ khổ đọc ~72ch ở giữa.

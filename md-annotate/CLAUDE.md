@@ -15,6 +15,12 @@
 - Đầu trang một dòng (tên + phụ đề mờ). Tên phiên sửa tại chỗ ở thanh của khung văn bản.
 - Cột phải là một panel (`#panel`): đầu có hai tab *Nhận xét · N* / *Prompt*, thân là chỗ cuộn duy nhất, đáy ghim
   trạng thái, *Tải .md* và *Chép prompt*. Nút chép luôn trong khung nhìn, dù bao nhiêu nhận xét (smoke đo với 32).
+- Bố cục tràn bề rộng (MDAN-003): `.ma-wrap` không có `max-width`, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
+  320–560, `prefs.side`), thu gọn thành `.ma-rail` 56px (`html.ma-railed`, `prefs.rail`); thanh dọc giữ nút chép.
+- *Song song* khi `#doc` đủ cho hai khung ≥ 420px (`splitOK()`), không theo media query. Chưa đủ chỗ thì hiện
+  *Hiển thị* nhưng `prefs.view` vẫn nhớ `split`. Hai khung cao `--pane-h` (JS: khung nhìn trừ đỉnh khung và 17px
+  đáy, trừ thêm thanh đáy khi ≤ 1080px), cuộn riêng; trang không cuộn. Vách `#divider` lưu `prefs.split`.
+- Phần tử ẩn cho trình đọc màn hình (`.ma-sr`) đặt `top: 0`, không thì nó đẩy trang dài thêm 1px.
 - Máy rộng (≥ 1081px): panel dính, chạy từ đỉnh vùng nội dung tới đáy khung nhìn; tiêu đề trang nằm ở cột trái.
   `top`, `height` của panel và `padding` trên dưới của lưới cùng dùng `--s4`: đổi một chỗ thì đổi cả ba.
 - Tuỳ chọn prompt (kiểu, số dòng, tệp, toàn văn, lời dẫn) gập trong *Tuỳ chọn* ở tab Prompt; dòng tóm tắt cạnh
