@@ -41,9 +41,10 @@ async function dragSelect(page, rootSel, needle, nth = 0) {
     const full = nodes.map((x) => x.data).join('');
     let i = -1; for (let k = 0; k <= nth; k++) i = full.indexOf(needle, i + 1);
     if (i < 0) return null;
-    const at = (off) => { let p = 0; for (const t of nodes) { if (off <= p + t.data.length) return [t, off - p]; p += t.data.length; } };
+    // Đầu vùng: nút chứa ký tự đầu (so sánh chặt), để không rơi vào nút xuống dòng của khối trước.
+    const at = (off, start) => { let p = 0; for (const t of nodes) { if (start ? off < p + t.data.length : off <= p + t.data.length) return [t, off - p]; p += t.data.length; } };
     const r = document.createRange();
-    r.setStart(...at(i)); r.setEnd(...at(i + needle.length));
+    r.setStart(...at(i, true)); r.setEnd(...at(i + needle.length, false));
     r.startContainer.parentElement.scrollIntoView({ block: 'center' });
     const rs = r.getClientRects(); const a = rs[0], b = rs[rs.length - 1];
     return { x1: a.left + 1, y1: a.top + a.height / 2, x2: b.right - 1, y2: b.top + b.height / 2 };
@@ -90,6 +91,8 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('HTTP 200', res.status() === 200, String(res.status()));
   await page.waitForFunction(() => window.marked && window.DOMPurify);
   check('trang trống mở tab Soạn', await page.isVisible('#src-input'));
+  const docTop = await page.$eval('#doc', (el) => el.getBoundingClientRect().top);
+  check('đầu trang gọn: văn bản bắt đầu ≤ 130px', docTop <= 130, Math.round(docTop) + 'px');
   check('nền sáng theo hệ điều hành', !(await page.evaluate(() => document.documentElement.classList.contains('dark'))));
 
   await page.evaluate((t) => {
@@ -165,6 +168,8 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
 
   // 5. Kiểu khối, lời dẫn, kèm toàn văn, chép.
   await page.click('.ma-fmt label:nth-child(2)');
+  const grow = await page.$eval('#out', (el) => ({ h: el.offsetHeight, sh: el.scrollHeight, max: innerHeight * 0.4 }));
+  check('khung prompt cao theo nội dung tới 40vh', grow.h > 120 && grow.h >= Math.min(grow.sh, grow.max) - 1, JSON.stringify(grow));
   check('prompt kiểu khối, số dòng ở tiêu đề mục', /\n\n### 1 · L3\n> liên kết/.test(await out(page)), JSON.stringify(await out(page)));
   await page.click('#wrapbox summary');
   await page.click('#btn-headtpl');
@@ -185,7 +190,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('nhận xét mất neo được báo', /1 nhận xét không còn tìm thấy/.test(await page.textContent('#edit-note')));
   const o6 = await out(page);
   check('nhận xét mất neo không vào prompt', !/chữ đậm/.test(o6) && /1\. L5 "liên kết/.test(o6) && /2\. L12 "Câu lặp lại/.test(o6), JSON.stringify(o6));
-  check('mục mất neo có dấu !', (await page.$$eval('.ma-item.is-orphan .ma-item__n', (e) => e.map((x) => x.textContent))).join() === '!');
+  check('mục mất neo có dấu !', (await page.$$eval('#list .ma-item.is-orphan .ma-item__n', (e) => e.map((x) => x.textContent))).join() === '!');
 
   // 7. Tải lại trang: phiên còn nguyên.
   await page.waitForTimeout(400);
@@ -249,6 +254,30 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('đủ 5 lần dùng thì gợi ý hiện %', /%/.test(await page.textContent('#hints-list')));
   await page.keyboard.press('Escape');
 
+  // 10b. Văn bản dài: cột phải dính, danh sách cuộn bên trong, nút chép luôn thấy.
+  await page.click('#btn-new');
+  const LONG = Array.from({ length: 120 }, (_, i) => `Đoạn số ${i + 1} của một văn bản dài dùng để thử cột phải.`).join('\n\n');
+  await page.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, LONG);
+  await page.waitForTimeout(150);
+  for (let i = 1; i <= 12; i++) {
+    await dragSelect(page, '#v-md', `Đoạn số ${i * 9} của`);
+    await page.click('#pop-chips .ma-chip >> nth=0');
+  }
+  check('văn bản dài: 12 nhận xét', (await items(page)).length === 12);
+  const bigOut = await page.$eval('#out', (el) => ({ h: el.offsetHeight, sh: el.scrollHeight, max: innerHeight * 0.4 }));
+  check('khung prompt dừng ở 40vh rồi cuộn', bigOut.h <= bigOut.max + 1 && bigOut.sh > bigOut.h, JSON.stringify(bigOut));
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForTimeout(100);
+  const side = await page.evaluate(() => {
+    const s = document.querySelector('.ma-side').getBoundingClientRect();
+    const c = document.getElementById('btn-copy').getBoundingClientRect();
+    const l = document.getElementById('list');
+    return { top: s.top, bottom: s.bottom, copyBottom: c.bottom, vh: innerHeight, scrollY, listScroll: l.scrollHeight > l.clientHeight };
+  });
+  check('cuộn tới cuối: cột phải dính dưới thanh trên', side.scrollY > 1000 && side.top >= 60 && side.top <= 90 && side.bottom <= side.vh, JSON.stringify(side));
+  check('cuộn tới cuối: nút chép còn trong khung nhìn', side.copyBottom <= side.vh, JSON.stringify(side));
+  check('danh sách dài cuộn bên trong cột', side.listScroll);
+
   // 11. Theme: nút đổi thắng sau khi bấm.
   await page.click('#theme');
   check('nút theme đổi sang tối', await page.evaluate(() => document.documentElement.classList.contains('dark') && localStorage.getItem('hub-theme') === 'dark'));
@@ -262,6 +291,13 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   const dpage = await dctx.newPage(); watch(dpage);
   await dpage.goto(BASE);
   check('máy tối thì trang tối', await dpage.evaluate(() => document.documentElement.classList.contains('dark')));
+  const tab = await dpage.evaluate(() => {
+    const lum = (c) => { const v = c.match(/[\d.]+/g).slice(0, 3).map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2]; };
+    const t = document.querySelector('.ma-tab[aria-selected="true"]');
+    const a = lum(getComputedStyle(t).backgroundColor), b = lum(getComputedStyle(t.parentElement).backgroundColor);
+    return { ratio: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05), ring: getComputedStyle(t).boxShadow };
+  });
+  check('tối: tab đang chọn sáng hơn nền nhóm tab và có viền xanh', tab.ratio >= 1.2 && /inset/.test(tab.ring), JSON.stringify(tab));
   await dctx.close();
 
   /* ---------- Điện thoại ---------- */
@@ -272,6 +308,8 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('điện thoại: tab Soạn không tràn ngang', (await overflow(m)) === 0);
   await m.click('#btn-sample');
   await m.waitForTimeout(150);
+  const mTop = await m.$eval('#doc', (el) => el.getBoundingClientRect().top);
+  check('điện thoại: văn bản bắt đầu ≤ 110px', mTop <= 110, Math.round(mTop) + 'px');
   check('điện thoại: tab Hiển thị không tràn ngang', (await overflow(m)) === 0);
   check('điện thoại: không có tab Song song', !(await m.isVisible('#tab-split')));
   await scriptSelect(m, '#v-md', 'Thử bôi đen câu này');
@@ -279,6 +317,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await m.tap('#fab');
   check('điện thoại: hộp nhận xét là tấm đáy', await m.isVisible('#pop') && await m.evaluate(() => document.getElementById('pop').classList.contains('is-sheet')));
   await m.tap('#pop-chips .ma-chip:has-text("Viết gọn lại")');
+  check('điện thoại: lưu nhận xét không kéo trang xuống danh sách', await m.evaluate(() => document.getElementById('list').getBoundingClientRect().top > innerHeight));
   check('điện thoại: chạm gợi ý thì lưu', /1\. L\d+ "Thử bôi đen câu này" — Viết gọn lại/.test(await out(m)), JSON.stringify(await out(m)));
   const small = await m.evaluate(() => {
     const bad = [];
@@ -291,6 +330,22 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     return bad;
   });
   check('điện thoại: vùng chạm ≥ 44px', !small.length, small.join(', '));
+  await m.tap('#dock-n');
+  check('điện thoại: chạm số nhận xét mở tấm danh sách', await m.isVisible('#dlg-list') && (await m.$$('#sheet-list .ma-item')).length === 1);
+  check('điện thoại: tấm danh sách không tràn ngang', (await overflow(m)) === 0);
+  await m.tap('#sheet-list .ma-item__main');
+  await m.waitForTimeout(100);
+  check('điện thoại: chạm mục thì đóng tấm và nháy đoạn', !(await m.isVisible('#dlg-list')) && (await m.$$('#v-md mark.is-flash')).length > 0);
+  await m.tap('#dock-n');
+  await m.tap('#sheet-list [aria-label="Sửa nhận xét"]');
+  check('điện thoại: sửa từ tấm danh sách mở hộp sửa', !(await m.isVisible('#dlg-list')) && await m.isVisible('#pop-del'));
+  await m.tap('#pop-cancel');
+  await m.tap('#dock-n');
+  await m.tap('#sheet-list [aria-label="Xoá nhận xét"]');
+  check('điện thoại: xoá trong tấm, hoàn tác hiện trên tấm', await m.isVisible('#dlg-list #toast .ma-toast__btn'));
+  await m.tap('#dlg-list #toast .ma-toast__btn');
+  check('điện thoại: hoàn tác trả lại nhận xét', (await m.$$('#sheet-list .ma-item')).length === 1);
+  await m.tap('#dlg-list [data-close]');
   for (const v of ['src', 'view', 'edit']) {
     await m.tap(`.ma-tab[data-view="${v}"]`);
     check(`điện thoại: tab ${v} không tràn ngang`, (await overflow(m)) === 0);

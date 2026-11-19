@@ -10,7 +10,15 @@
 
 - Token màu và font chép từ `index.html` gốc (REPO-023). Mã màu chỉ khai ở `:root` / `html.dark`.
 - Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024).
-- Điện thoại (≤ 720px): một cột, vùng chạm ≥ 44px, thanh đáy có nút chép, không có *Song song*.
+- Đầu trang một dòng (tên + phụ đề mờ). Tên phiên sửa tại chỗ ở thanh của khung văn bản.
+- Máy rộng (≥ 1081px): cột phải dính dưới thanh trên; hai thẻ co lại và cuộn bên trong. Nút chép nằm ở đầu
+  thẻ Prompt, dính trên cùng, nên luôn thấy. Đáy lưới 13px khớp khoảng hở dưới cột, đừng nới.
+- Khung prompt cao theo nội dung tới 40vh rồi cuộn.
+- Điện thoại (≤ 720px): một cột, vùng chạm ≥ 44px, không có *Song song*. Thanh đáy: số nhận xét (bấm mở tấm
+  danh sách: nhảy, sửa, xoá) và nút chép. Lưu nhận xét không kéo trang xuống danh sách.
+- Toast không nhận chuột (trừ nút Hoàn tác), để không chặn bôi đen chữ bên dưới; có hộp thoại mở thì toast
+  nằm trong hộp thoại.
+- Tối: tab đang chọn dùng `--tab-on` / `--tab-ring` (nền sáng hơn nhóm tab, viền xanh).
 - Hộp nhận xét: chuột thì mở ngay khi thả; cảm ứng và bàn phím thì hiện nút nổi *Nhận xét đoạn đã chọn*.
   Máy hẹp hoặc màn cảm ứng: hộp là tấm trượt đáy.
 - Đoạn đang chọn tô bằng CSS Custom Highlight (`::highlight(ma-pending)`), không sửa DOM: sửa DOM giữa lúc
