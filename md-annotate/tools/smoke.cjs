@@ -389,6 +389,10 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await page.evaluate(() => window.scrollTo(0, 0));
   let g = await geo();
   check('Song song: hai khung cuộn riêng, trang không cuộn', g.page <= 0 && g.srcScroll && g.mdScroll, JSON.stringify(g));
+  check('Song song vừa khung nhìn: khoá cuộn trang (ma-fit)', await page.evaluate(() => document.documentElement.classList.contains('ma-fit') && getComputedStyle(document.documentElement).overflowY === 'hidden'));
+  await page.click('.ma-tab[data-view="view"]');
+  check('rời Song song: bỏ khoá, trang cuộn được', await page.evaluate(() => !document.documentElement.classList.contains('ma-fit') && document.documentElement.scrollHeight > innerHeight));
+  await page.click('.ma-tab[data-view="split"]');
   const dv = await page.$eval('#divider', (el) => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + 200 }; });
   await page.mouse.move(dv.x, dv.y); await page.mouse.down(); await page.mouse.move(dv.x + 120, dv.y, { steps: 5 }); await page.mouse.up();
   const L2 = await geo();

@@ -142,6 +142,8 @@
       *, *::before, *::after { box-sizing: border-box; }
       [hidden] { display: none !important; }
       html { -webkit-text-size-adjust: 100%; }
+      /* Split vừa khít khung nhìn: khoá cuộn trang, để thanh cuộn chính không chập chờn khi trang dư hay thiếu 1px. */
+      html.ma-fit { overflow: hidden; }
       body {
         margin: 0; min-height: 100vh;
         background: var(--bg); color: var(--ink);
@@ -1909,7 +1911,7 @@ This page lets you **comment on individual passages** of a markdown text, then g
         $('wrap-md').hidden = !(v === 'view' || v === 'split');
         $('tab-split').hidden = !splitOK();
         $('divider').hidden = v !== 'split';
-        renderMeta();
+        renderMeta(); // gọi sizePanes(): bật / tắt khoá cuộn trang (ma-fit) theo chế độ
         if (v !== 'edit' && pop.mode) closePop(true);
       }
       function shown(el) { return !!(el && el.getClientRects().length); }
@@ -2382,11 +2384,15 @@ This page lets you **comment on individual passages** of a markdown text, then g
         else sizePanes();
       }
       function sizePanes() {
-        var v = $('views');
-        if (v.dataset.mode !== 'split' || v.hidden) return;
+        var v = $('views'), de = document.documentElement;
+        if (v.dataset.mode !== 'split' || v.hidden) { de.classList.remove('ma-fit'); return; }
         var top = v.getBoundingClientRect().top + window.scrollY;
         var reserve = 17 + (mqSide.matches ? 0 : $('dock').offsetHeight);
-        v.style.setProperty('--pane-h', Math.max(320, Math.floor(window.innerHeight - top - reserve)) + 'px');
+        var ph = Math.floor(window.innerHeight - top - reserve);
+        v.style.setProperty('--pane-h', Math.max(320, ph) + 'px');
+        var fit = ph >= 320;
+        if (fit && !de.classList.contains('ma-fit')) window.scrollTo(0, 0);
+        de.classList.toggle('ma-fit', fit);
       }
       var rafSplit = 0;
       if (window.ResizeObserver) new ResizeObserver(function () {
