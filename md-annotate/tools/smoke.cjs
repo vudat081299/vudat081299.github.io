@@ -722,6 +722,13 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await rv.hover('#v-md > p:has-text("Two para.")'); await rv.waitForTimeout(300);
   const lh = await litSrc();
   check('Focus ở Split, tiêu đề HTML: Source sáng đúng section của Preview', lh.join('|') === '## Two|Two para.', JSON.stringify(lh));
+  // Focus theo chuột, chuột đứng yên, trang vẽ lại (lưu nhận xét, đổi Syntax colors): section vẫn sáng, Source không mờ hết.
+  await rv.hover('#v-src .ma-ln:has-text("Two para.")'); await rv.waitForTimeout(300);
+  await rv.evaluate(() => { const s = document.getElementById('syn'); s.checked = !s.checked; s.dispatchEvent(new Event('change')); });
+  await rv.waitForTimeout(300);
+  const rr = await rv.evaluate(() => [...document.querySelectorAll('#v-src .ma-ln')].filter((l) => getComputedStyle(l).opacity === '1').map((l) => l.textContent.trim()).filter(Boolean));
+  check('Focus theo chuột: vẽ lại khi chuột đứng yên, section vẫn sáng', rr.join('|') === '## Two|Two para.', JSON.stringify(rr));
+  await rv.evaluate(() => { const s = document.getElementById('syn'); s.checked = !s.checked; s.dispatchEvent(new Event('change')); });
   await rv.mouse.move(5, 5);
   // Chú thích HTML (<!-- toc -->) không dựng ra phần tử nào: số khối hai bên lệch, nhưng các khối khác vẫn ghép được,
   // nên dải đọc vẫn sáng dòng tương ứng ở khung kia và cuộn theo nhau vẫn theo khối (không về tỉ lệ).

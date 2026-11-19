@@ -70,7 +70,9 @@ export function refreshBand(from) {
   if (bandRaf) return;
   bandRaf = requestAnimationFrame(function () {
     bandRaf = 0;
-    if (!focusOn() || layoutVal('focusBy') !== 'band') return;
+    if (!focusOn()) return;
+    // Theo chuột: khung vẽ lại mất .is-sec; đặt lại section đang sáng, không thì cả khung mờ tới lần rê kế tiếp.
+    if (layoutVal('focusBy') !== 'band') { ['v-src', 'v-md'].forEach(function (id) { var r = $(id); if (r._sec != null) applySec(r, r._sec); }); return; }
     var root = bandFrom && shown(bandFrom) ? bandFrom : (shown($('v-md')) ? $('v-md') : $('v-src'));
     if (!shown(root)) return;
     var sec = bandSec(root);
