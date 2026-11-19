@@ -8,7 +8,8 @@ import { lineStarts } from './text.js';
 
 /* Neo từng khối vào văn bản gốc, không cộng dồn độ dài raw: marked bỏ khối định nghĩa link (`[id]: url`), dán nó vào
    raw của đoạn văn ngay trên, và đổi tab đầu dòng thành dấu cách, nên cộng dồn thì lệch dòng từ đó trở xuống.
-   Dòng đầu / cuối của khối tìm theo nội dung đã cắt khoảng trắng hai đầu, đứng đầu dòng, sau chỗ khối trước kết thúc. */
+   Mỗi dòng của khối tìm theo nội dung đã cắt khoảng trắng hai đầu, đứng đầu dòng: dòng đầu sau chỗ khối trước kết thúc,
+   các dòng sau lần lượt, ngay sau dòng trước. */
 export function lexSpans(text, lex) {
   var toks = [];
   try { toks = lex(text); } catch (e) { toks = []; }
@@ -31,8 +32,14 @@ export function lexSpans(text, lex) {
     if (!lines.length) return;
     var at = findAtLineStart(lines[0], pos);
     if (at < 0) return; // không tìm thấy: bỏ khối, đừng đoán vị trí
-    var last = lines[lines.length - 1], end = at + lines[0].length;
-    if (lines.length > 1) { var j = findAtLineStart(last, end); if (j >= 0) end = j + last.length; }
+    // Đi lần lượt từng dòng, mỗi dòng chỉ cách dòng trước bằng khoảng trắng: tìm thẳng dòng cuối thì dừng ở lần đầu
+    // nó xuất hiện (rào ``` mở của khối code trong mục danh sách). Dòng không thấy thì khối dừng ở dòng trước.
+    var end = at + lines[0].length;
+    for (var k = 1; k < lines.length; k++) {
+      var j = findAtLineStart(lines[k], end);
+      if (j < 0 || !/^\s*$/.test(text.slice(end, j))) break;
+      end = j + lines[k].length;
+    }
     spans.push({ a: lineAt(at), b: lineAt(Math.max(at, end - 1)), heading: t.type === 'heading' });
     pos = end;
   });

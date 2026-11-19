@@ -72,5 +72,16 @@ check('spanAt: dòng trong khối, giữa hai khối', eq([0, 1, 2, 3, 4, 5].map
   check('followTop: đầu khớp đầu, cuối khớp cuối', Math.abs(followTop(c.fwd, 200, 1200, 0, 200, 1400)) < 1e-6 && Math.abs(followTop(c.fwd, 200, 1200, 1000, 200, 1400) - 1200) < 1e-6);
 }
 
+// ── review: layout & scroll ──
+{
+  // Dòng cuối của khối trùng một dòng trước nó trong khối (rào ``` của khối code trong mục danh sách): khối vẫn tới dòng cuối thật.
+  const F = '`'.repeat(3);
+  const text = '1. step\n\n   ' + F + '\n   x\n   ' + F + '\n\n# H\n';
+  const lex = () => [tok('list', '1. step\n\n   ' + F + '\n   x\n   ' + F + '\n\n'), tok('heading', '# H\n')];
+  const sp = lexSpans(text, lex).map(({ a, b }) => [a, b]);
+  check('lexSpans: dòng cuối lặp lại trong khối vẫn tính tới dòng cuối thật', eq(sp, [[0, 4], [6, 6]]), JSON.stringify(sp));
+}
+// ── end review: layout & scroll ──
+
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);
