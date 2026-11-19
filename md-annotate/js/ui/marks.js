@@ -1,5 +1,6 @@
-/* Đoạn đã nhận xét: bọc chữ trong <mark class="ma-hl" data-ids> (Preview), tìm, tô active / hover.
-   Xuất: hoverMarks, lastRect, markActive, markEl, marksOf, paintMd.
+/* Đoạn đã nhận xét: bọc chữ trong <mark class="ma-hl" data-ids> (markEl cho cả hai khung, paintMd cho Preview), tìm,
+   tô active / hover.
+   Xuất: hoverMarks, markActive, markEl, marksOf, paintMd.
    Dùng: core/runs.js, ui/dom.js. */
 import { textRuns } from '../core/runs.js';
 import { $, h, shown } from './dom.js';
@@ -49,11 +50,6 @@ export function marksOf(id) {
     });
   });
   return out;
-}
-export function lastRect(target) {
-  if (!target) return null;
-  var rects = target.getClientRects();
-  return rects.length ? rects[rects.length - 1] : target.getBoundingClientRect();
 }
 export function hoverMarks(id, on) {
   marksOf(id).forEach(function (m) { m.classList.toggle('is-hover', on); });

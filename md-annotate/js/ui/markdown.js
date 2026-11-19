@@ -3,7 +3,10 @@
    Xuất: ghExtras, mdHtml, mdLex, unlink.
    Dùng: không module nào. */
 
-/* MARKDOWN — marked + DOMPurify, ghim phiên bản. Chỉ HTML đã làm sạch vào innerHTML. */
+/* Chỉ HTML đã làm sạch vào innerHTML. Bản dựng nằm giữa trang, nên ngoài script còn chặn thứ thoát khỏi khung (như
+   GitHub): <style> và thuộc tính style (đè CSS cả trang, phủ lớp cố định), <form> (gửi là rời trang), <dialog> (trang
+   coi như có hộp thoại mở); id / name thêm tiền tố user-content- để không chiếm id của giao diện ($('list')…). */
+var PURIFY = { FORBID_TAGS: ['style', 'form', 'dialog'], FORBID_ATTR: ['style'], SANITIZE_NAMED_PROPS: true };
 var mdCache = { text: null, html: null };
 export function mdHtml(text) {
   if (!window.marked || !window.DOMPurify) return null;
@@ -11,7 +14,7 @@ export function mdHtml(text) {
     var raw;
     try { raw = window.marked.parse(text, { gfm: true }); } catch (e) { raw = ''; }
     mdCache.text = text;
-    mdCache.html = window.DOMPurify.sanitize(raw);
+    mdCache.html = window.DOMPurify.sanitize(raw, PURIFY);
   }
   return mdCache.html;
 }

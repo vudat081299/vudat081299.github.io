@@ -1,10 +1,10 @@
 /* Tách token markdown cho khung Source, thuần (chỉ chuỗi): theo dòng (khối rào, đầu mục, kẻ ngang, trích khối, dấu
    danh sách) rồi trong dòng (mã, link, URL, đậm, nghiêng…). Màu kiểu VS Code (MDAN-001); vẽ ở ui/source-view.js.
+   tokens(text) → [{ s, e, c }]: không chồng nhau, theo thứ tự; khung chỉ bọc chữ trong <span>, nên text vẫn đúng
+   bằng nguồn.
    Xuất: tokens.
    Dùng: không module nào. */
 
-/* TÔ MÀU NGUỒN — tách token theo từng dòng, kiểu VS Code. Token không chồng nhau,
-   theo thứ tự; khung chỉ bọc chữ trong <span>, nên text vẫn đúng bằng nguồn. */
 var INLINE = [
   ['code', /(`+)([^`\n]|[^`\n][^\n]*?[^`\n])(\1)(?!`)/g, ['sx-code', 'sx-code', 'sx-code']],
   ['link', /(!?\[)([^\]\n]*)(\]\()([^)\s]*)((?:\s+"[^"\n]*")?)(\))/g, ['sx-punct', 'sx-link', 'sx-punct', 'sx-url', 'sx-string', 'sx-punct']],
@@ -13,23 +13,27 @@ var INLINE = [
   ['tag', /(<!--.*?-->|<\/?[A-Za-z][\w-]*(?:\s[^<>\n]*)?\/?>)/g, ['sx-tag']],
   ['url', /(\bhttps?:\/\/[^\s<>()\[\]"']*[^\s<>()\[\]"'.,;:!?])/g, ['sx-url']],
   ['strong', /(\*\*|__)(?=\S)([^\n]*?\S)(\1)/g, ['sx-punct', 'sx-strong', 'sx-punct']],
-  ['em', /(\*|_)(?=[^\s*_])([^\n]*?[^\s*_]|[^\s*_])(\1)(?![\w*])/g, ['sx-punct', 'sx-em', 'sx-punct']],
+  /* _nhấn_ không bắt đầu giữa từ (snake_case): lookbehind loại ngay trong regex, khỏi thử lại từng dấu _ giữa từ */
+  ['em', /(\*|(?<![\p{L}\p{N}])_)(?=[^\s*_])([^\n]*?[^\s*_]|[^\s*_])(\1)(?![\w*])/gu, ['sx-punct', 'sx-em', 'sx-punct']],
   ['strike', /(~~)(?=\S)([^\n]*?\S)(~~)/g, ['sx-punct', 'sx-strike', 'sx-punct']],
   ['string', /("[^"\n]{1,200}"|“[^”\n]{1,200}”)/g, ['sx-string']]
 ];
 var PIPE = ['pipe', /(\|)/g, ['sx-punct']];
+/* Chỗ khớp đầu tiên của luật từ vị trí `from` trở đi, hoặc null. */
+function nextMatch(rule, line, from) {
+  rule[1].lastIndex = from;
+  return rule[1].exec(line);
+}
 function inlineToks(line, off, base, out, table) {
   var rules = table ? INLINE.concat([PIPE]) : INLINE, pos = 0;
+  /* Nhớ chỗ khớp kế tiếp của từng luật: chỗ khớp ở vị trí i không phụ thuộc nơi bắt đầu tìm, nên còn đúng tới khi
+     pos vượt qua nó; luật không còn khớp (null) thì thôi tìm. Tìm lại mỗi vòng làm dòng dài nhiều token chậm bậc ba. */
+  var next = rules.map(function () { return undefined; });
   while (pos < line.length) {
     var best = null, rule = null;
     for (var r = 0; r < rules.length; r++) {
-      var rx = rules[r][1], m;
-      rx.lastIndex = pos;
-      m = rx.exec(line);
-      /* _nhấn_ không bắt đầu giữa từ (snake_case) */
-      while (m && rules[r][0] === 'em' && m[1] === '_' && m.index > 0 && /[\p{L}\p{N}]/u.test(line[m.index - 1])) {
-        rx.lastIndex = m.index + 1; m = rx.exec(line);
-      }
+      if (next[r] === undefined || (next[r] && next[r].index < pos)) next[r] = nextMatch(rules[r], line, pos);
+      var m = next[r];
       if (m && m[0].length && (!best || m.index < best.index)) { best = m; rule = rules[r]; }
     }
     if (!best) break;

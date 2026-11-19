@@ -756,6 +756,50 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     await dctx.close();
   }
   // ── end review: data path ──
+  // ── review: render & select ──
+  {
+    const rctx = await browser.newContext({ viewport: { width: 1280, height: 560 }, colorScheme: 'light' });
+    const rp = await rctx.newPage(); watch(rp);
+    await rp.goto(BASE); await rp.waitForFunction(() => window.marked && window.DOMPurify);
+    const fill = async (t) => {
+      await rp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
+      await rp.waitForTimeout(350);
+    };
+    // Markdown dán vào không được thoát khỏi khung Preview: <style> đè CSS cả trang, id trùng id giao diện, lớp phủ cố định,
+    // form gửi đi (rời trang), <dialog open> (trang tưởng có hộp thoại mở).
+    await fill('# T\n\nText.\n\n<style>.ma-panel{display:none}</style>\n\n<div id="list">x</div>\n\n<p style="position:fixed;inset:0;z-index:9999">cover</p>\n\n<form action="https://example.com/"><button>go</button></form>\n\n<dialog open>d</dialog>\n');
+    const esc = await rp.evaluate(() => ({
+      panel: getComputedStyle(document.getElementById('panel')).display,
+      list: !!document.getElementById('list').closest('#v-md'),
+      style: !!document.querySelector('#v-md style, #v-md [style]'),
+      form: !!document.querySelector('#v-md form'),
+      dialog: !!document.querySelector('dialog[open]')
+    }));
+    check('Preview: markdown không đè CSS, id, lớp phủ, form, hộp thoại của trang', esc.panel !== 'none' && !esc.list && !esc.style && !esc.form && !esc.dialog, JSON.stringify(esc));
+
+    // Khung nhìn thấp (560px), bôi đen dòng giữa màn hình: dưới và trên đều không đủ chỗ cho hộp, hộp vẫn trọn trong
+    // khung nhìn (nút Save thấy được).
+    await rp.click('.ma-tab[data-view="edit"]');
+    await fill(Array.from({ length: 60 }, (_, i) => `Paragraph number ${i + 1} with some words.`).join('\n\n') + '\n');
+    await rp.click('.ma-tab[data-view="view"]'); await rp.waitForTimeout(150);
+    const mb = await rp.evaluate(() => {
+      const p = document.querySelectorAll('#v-md p')[20];
+      p.scrollIntoView({ block: 'center' });
+      const r = p.getBoundingClientRect();
+      return { x1: r.left + 2, x2: r.left + 120, y: r.top + r.height / 2 };
+    });
+    await rp.mouse.move(mb.x1, mb.y); await rp.mouse.down(); await rp.mouse.move(mb.x2, mb.y, { steps: 5 }); await rp.mouse.up();
+    await rp.waitForTimeout(200);
+    const pr = await rp.evaluate(() => { const r = document.getElementById('pop').getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom), vh: innerHeight }; });
+    check('hộp nhận xét ở khung nhìn thấp: trọn trong khung nhìn', await rp.isVisible('#pop') && pr.top >= 0 && pr.bottom <= pr.vh && await inView(rp, '#pop-save'), JSON.stringify(pr));
+    await rp.keyboard.press('Escape');
+
+    // Thanh trên đếm dòng như lề số dòng của Source (văn bản kết thúc bằng xuống dòng: 60 đoạn = 119 dòng).
+    const lc = await rp.evaluate(() => ({ meta: document.getElementById('doc-meta').textContent, gutter: document.querySelectorAll('#v-src .ma-ln').length }));
+    check('số dòng ở thanh trên bằng số dòng ở lề Source', new RegExp('· ' + lc.gutter + ' lines$').test(lc.meta), JSON.stringify(lc));
+    await rctx.close();
+  }
+  // ── end review: render & select ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();

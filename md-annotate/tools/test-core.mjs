@@ -167,6 +167,40 @@ import * as dpText from '../js/core/text.js';
   }
 }
 // ── end review: data path ──
+// ── review: render & select ──
+import { tokens } from '../js/core/tokens.js';
+import { sourceLines } from '../js/core/runs.js';
+{
+  // Text của #v-src ghép từ các đoạn của sourceLines: phải đúng bằng nguồn, kể cả tab, dấu cách cuối dòng, rào chưa
+  // đóng, emoji (cặp surrogate), thẻ HTML, dòng trống cuối.
+  const srcText = (t) => sourceLines(t, tokens(t), [{ s: 1, e: t.length, id: 'a', n: 1 }]).lines.map((l) => l.runs.map((r) => r.t).join('')).join('');
+  const cases = ['\tcode\n  trailing  \n', '```js\nunclosed *x*\n', '*😀* `😀` **😀x** _😀_\n> 😀', '<div a="b">\n<!-- c -->\n', 'a\n\n', '| a | b |\n|:-:|--|\n| `|` | **x** |'];
+  check('sourceLines: text ghép lại đúng bằng nguồn', cases.every((t) => srcText(t) === t), JSON.stringify(cases.filter((t) => srcText(t) !== t)));
+  // Một dòng dài nhiều token (dán văn bản một dòng): trước đây mỗi token quét lại cả dòng bằng mọi luật, bậc ba (≈ 2 s).
+  const line = '**b** '.repeat(1000);
+  const t0 = performance.now(), k = tokens(line), ms = performance.now() - t0;
+  check('tokens: dòng 6 000 ký tự, 1 000 chữ đậm, dưới 300 ms', ms < 300 && k.length === 3000 && k[1].c === 'sx-strong', Math.round(ms) + ' ms, ' + k.length + ' token');
+  // Một dòng dài toàn snake_case (JSON một dòng): mỗi dấu _ giữa từ từng làm regex nghiêng quét lại tới cuối dòng (≈ 2,7 s).
+  const snake = 'x_y '.repeat(20000), t1 = performance.now(), ks = tokens(snake), ms1 = performance.now() - t1;
+  check('tokens: 80 000 ký tự snake_case, dưới 300 ms, không nghiêng', ms1 < 300 && ks.length === 0, Math.round(ms1) + ' ms, ' + ks.length + ' token');
+  check('tokens: _nhấn_ vẫn nhận ở đầu từ, bỏ giữa từ', eq(tokens('a _b_ c_d_ e').map((x) => x.c), ['sx-punct', 'sx-em', 'sx-punct']));
+}
+import { lineCount } from '../js/core/runs.js';
+// Số dòng ở thanh trên (#doc-meta) phải bằng số dòng ở lề Source: xuống dòng cuối không mở dòng mới.
+check('lineCount: như lề số dòng', eq(['', 'a', 'a\n', 'a\nb', 'a\n\n', '\n'].map(lineCount), [0, 1, 1, 2, 2, 1]));
+check('lineCount = số dòng của sourceLines', ['a\nb\n', 'x', '\n\nq'].every((t) => lineCount(t) === sourceLines(t, [], []).lines.length));
+import { popPlace } from '../js/core/place.js';
+{
+  // Khung nhìn 1280×560, hộp 400×264. Dưới đoạn đủ chỗ: ngay dưới; chỉ trên đủ: lên trên; không bên nào đủ: vẫn trọn
+  // trong khung nhìn; mép phải: lùi vào.
+  const P = (r) => popPlace(r, 400, 264, 1280, 560);
+  check('popPlace: dưới đoạn', eq(P({ top: 100, bottom: 120, left: 50 }), { top: 130, left: 50 }));
+  check('popPlace: dưới không đủ thì lên trên', eq(P({ top: 400, bottom: 420, left: 50 }), { top: 126, left: 50 }));
+  const mid = P({ top: 279, bottom: 299, left: 1200 });
+  check('popPlace: hai bên đều không đủ thì vẫn trọn trong khung nhìn', mid.top >= 8 && mid.top + 264 <= 552 && mid.left === 864, JSON.stringify(mid));
+  check('popPlace: đoạn đã cuộn khuất phía trên thì hộp vẫn trong khung nhìn', P({ top: -300, bottom: -280, left: 50 }).top === 8);
+}
+// ── end review: render & select ──
 
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);
