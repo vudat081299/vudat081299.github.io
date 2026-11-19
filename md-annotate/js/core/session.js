@@ -34,8 +34,10 @@ export function normSession(s, id) {
   s.created = +s.created || Date.now(); s.updated = +s.updated || s.created;
   return s;
 }
+/* Danh sách phiên đọc từ bộ nhớ: bỏ mục hỏng; giờ sửa luôn là số (hộp History định dạng nó thành ngày). */
 export function normIndex(a) {
-  return Array.isArray(a) ? a.filter(function (e) { return e && e.id; }) : [];
+  return Array.isArray(a) ? a.filter(function (e) { return e && typeof e === 'object' && e.id; })
+    .map(function (e) { e.updated = +e.updated || 0; return e; }) : [];
 }
 
 export function autoName(t) {

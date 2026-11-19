@@ -10,7 +10,9 @@ var POP_CHIPS = 5;        // số gợi ý trong hộp trước khi gom vào chi
 
 /* stats đọc từ bộ nhớ (có thể hỏng hoặc chưa có): trả stats dùng được. */
 export function normStats(stats) {
-  if (!stats || typeof stats.items !== 'object' || !stats.items) stats = { items: {} };
+  var items = stats && stats.items;
+  if (!items || typeof items !== 'object' || Array.isArray(items)) return { items: {} };
+  Object.keys(items).forEach(function (k) { if (!items[k] || typeof items[k] !== 'object') delete items[k]; });
   return stats;
 }
 export function normKey(t) {
