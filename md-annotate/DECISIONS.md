@@ -7,6 +7,8 @@
 - MDAN-007 · Giao diện tiếng Anh, gợi ý và prompt tiếng Việt · thay cho MDAN-004 · `md-annotate/`
 - MDAN-008 · Code tách theo tính năng, logic tách khỏi giao diện, không build · `md-annotate/`
 - MDAN-009 · Một màu xanh sáng, thang token cho chữ, bo góc, chiều cao · thay cho MDAN-002 · `md-annotate/`
+- MDAN-010 · Dải đọc: chữ của mục cha vẫn sáng khi rê vào mục con · `md-annotate/js/ui/focus.js`, `md-annotate/css/focus.css`
+- MDAN-011 · Cảnh báo trùng đoạn theo chữ, không theo chỗ · `md-annotate/js/core/comments.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -58,3 +60,15 @@ highlight, gạch chân, vùng chọn phản chiếu pha từ chính nó; không
 không làm chữ: chữ từng xanh thành mực, nhấn bằng vạch, nền nhạt hoặc huy hiệu; chữ trên nền xanh là `--on-accent`.
 Cỡ chữ, bo góc, chiều cao điều khiển và khoảng cách theo thang token ở `css/tokens.css`; mỗi họ component (nút, nhóm tab,
 ô nhập, chip, huy hiệu, thẻ, hộp thoại) cùng cao, cùng bo, cùng chữ, cùng trạng thái. Nền, mực và font vẫn chép từ trang chủ.
+
+## MDAN-010 · Dải đọc: chữ của mục cha vẫn sáng khi rê vào mục con
+19/11/2026 · `md-annotate/js/ui/focus.js`, `md-annotate/css/focus.css`
+
+Ở dải đọc, rê vào một mục con của danh sách thì mục con sáng, các mục cùng cấp mờ; chữ của mục cha vẫn sáng (nút chữ
+không làm mờ riêng được bằng opacity). Đừng bọc chữ trong phần tử mới hay đổi cách làm mờ chỉ để làm mờ phần ấy.
+
+## MDAN-011 · Cảnh báo trùng đoạn theo chữ, không theo chỗ
+19/11/2026 · `md-annotate/js/core/comments.js`
+
+"Same passage as comment #N" hiện khi đoạn trích mới có cùng chữ với một nhận xét đã có, kể cả ở chỗ khác trong văn
+bản: hai mục ấy trông y hệt nhau trong prompt. Chỉ cảnh báo, không chặn lưu.
