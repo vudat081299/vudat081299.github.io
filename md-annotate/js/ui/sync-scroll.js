@@ -68,7 +68,8 @@ function syncFrom(src) {
 }
 export function invalidateSync() { syncMap = null; }
 
-/* Phải đăng ký trước sự kiện cuộn của dải đọc (initFocus): setByPage() đọc syncExpect trước khi nó bị xoá. */
+/* Đăng ký trước sự kiện cuộn của dải đọc (initFocus): người dùng cuộn thì syncExpect cũ của khung bị bỏ trước khi
+   focus.js hỏi setByPage(). */
 export function initSyncScroll() {
   ['wrap-src', 'wrap-md'].forEach(function (id) {
     var el = $(id);

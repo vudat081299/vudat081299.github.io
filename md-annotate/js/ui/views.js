@@ -7,7 +7,7 @@ import { $, dragBar, mqSide, shown } from './dom.js';
 import { renderAll, renderMeta } from './render.js';
 import { closePop, pop } from './popup.js';
 
-/* Song song chỉ khi mỗi khung được ≥ 420px. Muốn song song mà chưa đủ chỗ thì hiện Hiển thị, vẫn nhớ ý muốn. */
+/* Split chỉ khi mỗi khung được ≥ 420px. Muốn Split mà chưa đủ chỗ thì hiện Preview, prefs.view vẫn nhớ 'split'. */
 var PANE_MIN = 420;
 function splitOK() { return $('doc').clientWidth >= 2 * PANE_MIN + 9; }
 export var view = prefs.view || 'view';
@@ -33,7 +33,7 @@ export function setView(v) {
   if (v !== 'edit' && pop.mode) closePop(true);
 }
 export function isSplit() { return $('views').dataset.mode === 'split'; }
-/* Bề rộng thay đổi (cửa sổ, panel, thu gọn): xem lại Song song và chiều cao hai khung. */
+/* Bề rộng thay đổi (cửa sổ, panel, thu gọn): xem lại Split và chiều cao hai khung. */
 export function refreshSplit() {
   $('tab-split').hidden = !splitOK();
   if (view !== 'edit' && ((prefs.view === 'split') !== (view === 'split'))) setView(prefs.view === 'split' ? 'split' : view);
@@ -41,7 +41,7 @@ export function refreshSplit() {
 }
 export function sizePanes() {
   var v = $('views'), de = document.documentElement;
-  if (v.dataset.mode !== 'split' || v.hidden) { de.classList.remove('ma-fit'); return; }
+  if (!isSplit() || v.hidden) { de.classList.remove('ma-fit'); return; }
   var top = v.getBoundingClientRect().top + window.scrollY;
   var reserve = 17 + (mqSide.matches ? 0 : $('dock').offsetHeight);
   var ph = Math.floor(window.innerHeight - top - reserve);

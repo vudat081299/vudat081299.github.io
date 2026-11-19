@@ -30,19 +30,20 @@ function ensureSec(root) {
   if (blocks.length && (!blocks[0].dataset.sec || !blocks[blocks.length - 1].dataset.sec)) markSections(root);
   return blocks;
 }
+var litSec = { 'v-src': null, 'v-md': null }; // section đang sáng của mỗi khung (null: không làm mờ)
 function applySec(root, sec) {
   if (!shown(root)) return;
   var blocks = ensureSec(root);
-  if (root._sec === sec && root.classList.contains('is-focusing') && root.querySelector('.is-sec')) return;
+  if (litSec[root.id] === sec && root.classList.contains('is-focusing') && root.querySelector('.is-sec')) return;
   root.querySelectorAll('.is-sec').forEach(function (x) { x.classList.remove('is-sec'); });
   blocks.forEach(function (x) { if (x.dataset.sec === sec) x.classList.add('is-sec'); });
-  root._sec = sec;
+  litSec[root.id] = sec;
   root.classList.add('is-focusing');
 }
 function clearFocus(root) {
   root.classList.remove('is-focusing');
   root.querySelectorAll('.is-sec').forEach(function (el) { el.classList.remove('is-sec'); });
-  root._sec = null;
+  litSec[root.id] = null;
 }
 function otherRoot(root) { return root.id === 'v-src' ? $('v-md') : $('v-src'); }
 function focusOn() { return document.documentElement.classList.contains('ma-focus'); }
@@ -56,7 +57,7 @@ function bandSec(root) {
   var blocks = ensureSec(root);
   if (!blocks.length) return null;
   var pane = root.closest('.ma-view');
-  var se = document.scrollingElement, sc = isSplit() ? pane : se;
+  var sc = isSplit() ? pane : document.scrollingElement;
   var vr = isSplit() ? pane.getBoundingClientRect() : { top: Math.max(0, root.getBoundingClientRect().top), bottom: window.innerHeight };
   var band = bandBounds(vr.top, vr.bottom, window.innerHeight, sc.scrollTop, sc.scrollHeight - sc.clientHeight);
   var i = bandPick(blocks.length,
@@ -72,7 +73,7 @@ export function refreshBand(from) {
     bandRaf = 0;
     if (!focusOn()) return;
     // Theo chuột: khung vẽ lại mất .is-sec; đặt lại section đang sáng, không thì cả khung mờ tới lần rê kế tiếp.
-    if (layoutVal('focusBy') !== 'band') { ['v-src', 'v-md'].forEach(function (id) { var r = $(id); if (r._sec != null) applySec(r, r._sec); }); return; }
+    if (layoutVal('focusBy') !== 'band') { ['v-src', 'v-md'].forEach(function (id) { if (litSec[id] != null) applySec($(id), litSec[id]); }); return; }
     var root = bandFrom && shown(bandFrom) ? bandFrom : (shown($('v-md')) ? $('v-md') : $('v-src'));
     if (!shown(root)) return;
     var sec = bandSec(root);
