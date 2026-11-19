@@ -360,6 +360,7 @@
       .ma-chip:hover { border-color: var(--green); color: var(--ink); background: var(--green-soft); }
       .ma-chip__t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .ma-chip__p { font: 500 10.5px/1 var(--mono); color: var(--ink-3); }
+      .ma-chip--more { font: 500 12px/1 var(--mono); color: var(--ink-2); min-width: 44px; justify-content: center; }
       #pop-text { min-height: 72px; font: 400 14px/1.5 var(--sans); background: var(--surface); }
       .ma-pop__bar { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 10px; }
       .ma-pop__keys { flex: 1 1 auto; min-width: 0; margin-right: auto; font: 500 10.5px/1.45 var(--mono); color: var(--ink-3); }
@@ -650,8 +651,8 @@
           </button>
         </div>
         <div class="ma-dlg__b">
-          <p class="ma-sub">Xếp theo số lần dùng trong trình duyệt này. Tỉ lệ = (số lần + 1) / (tổng số lần + số gợi ý).
-            Nhận xét gõ tay dùng từ hai lần trở lên thì thành gợi ý.</p>
+          <p class="ma-sub">Xếp theo số lần dùng trong trình duyệt này. Tỉ lệ = (số lần + 1) / (tổng số lần + số gợi ý),
+            hiện khi đã có từ 5 lần nhận xét. Nhận xét gõ tay dùng từ hai lần trở lên thì thành gợi ý.</p>
           <p class="ma-sub" id="hints-seed-note" hidden></p>
           <form class="ma-addrow" id="hint-add">
             <input class="ma-input" id="hint-add-in" type="text" maxlength="80" placeholder="Thêm gợi ý…" aria-label="Gợi ý mới" />
@@ -784,6 +785,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
          ====================================================================== */
       var WS = /\s/;
       var ALNUM = /[\p{L}\p{N}]/u;
+      var WORD = /[\p{L}\p{N}\p{M}]/u;   // chữ Việt có dấu là \p{L}; dấu rời (NFD) là \p{M}
       var SYNTAX = /\]\([^)\n]*\)|<\/?[A-Za-z][^>\n]*>|&#?[0-9A-Za-z]+;|^[ \t]*(?:`{3,}|~{3,})[^\n]*$|^[ \t]*\[[^\]\n]+\]:[^\n]*$|^[ \t]*\d{1,9}[.)](?=[ \t])|^[ \t]*[-*+][ \t]+\[[ xX]\]/gm;
 
       function normWs(str) {
@@ -959,6 +961,8 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
          THỐNG KÊ GỢI Ý — đếm số lần dùng mỗi nhận xét (chuẩn hoá), xếp theo tần suất.
          ====================================================================== */
       var MAX_HINT = 80;
+      var MIN_PCT = 5;          // chưa đủ số lần dùng thì tỉ lệ chỉ là nhiễu: không hiện
+      var POP_CHIPS = 5;        // số gợi ý trong hộp trước khi gom vào chip "+N"
       var stats = store.get(KEY.stats, null);
       if (!stats || typeof stats.items !== 'object' || !stats.items) stats = { items: {} };
       var seedState = 'loading';
@@ -1001,6 +1005,8 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         var N = arr.reduce(function (s, x) { return s + x.n; }, 0), K = arr.length;
         arr.forEach(function (x) { x.p = (x.n + 1) / (N + K); });
         arr.sort(function (a, b) { return b.n - a.n || b.last - a.last || a.o - b.o; });
+        /* Số lần dùng mọi nhận xét đã đếm, kể cả chưa thành gợi ý: ngưỡng để hiện tỉ lệ. */
+        arr.total = Object.keys(stats.items).reduce(function (t, k) { return t + (+stats.items[k].n || 0); }, 0);
         return arr;
       }
       function pct(p) { var v = p * 100; return (v < 1 ? '<1' : Math.round(v)) + '%'; }
@@ -1314,11 +1320,15 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
           while (s < e && WS.test(full[s])) s++;
           while (e > s && WS.test(full[e - 1])) e--;
           if (e <= s) return null;
+          /* Kéo chuột hay bắt đầu, kết thúc giữa từ: nới ra tới mép từ. */
+          var s0 = s, e0 = e;
+          while (s > 0 && WORD.test(full[s - 1]) && WORD.test(full[s])) s--;
+          while (e < full.length && WORD.test(full[e]) && WORD.test(full[e - 1])) e++;
           var quote;
           if (which === 'src') quote = full.slice(s, e);
           else {
-            quote = (clipped ? c.toString() : sel.toString()).trim().replace(/\n{3,}/g, '\n\n');
-            if (!quote) quote = full.slice(s, e);
+            var mid = (clipped ? c.toString() : sel.toString()).trim().replace(/\n{3,}/g, '\n\n');
+            quote = mid ? full.slice(s, s0) + mid + full.slice(e0, e) : full.slice(s, e);
           }
           return {
             origin: which, quote: quote, s: s, e: e,
@@ -1343,6 +1353,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
          HỘP NHẬN XÉT
          ====================================================================== */
       var pop = { mode: null, id: null, orig: '' };
+      var popExpanded = false;
       var pending = null;
       var hasHL = !!(window.CSS && CSS.highlights && window.Highlight);
 
@@ -1398,6 +1409,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         $('pop-warn').hidden = !warn; $('pop-warn').textContent = warn || '';
         $('pop-del').hidden = true;
         $('pop-text').value = '';
+        popExpanded = false;
         showPop(rs.length ? lastRect(rs[0]) : null);
       }
       function openEdit(id, anchorEl) {
@@ -1412,6 +1424,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         $('pop-warn').textContent = orphans[id] ? 'Không còn thấy đoạn này trong văn bản.' : '';
         $('pop-del').hidden = false;
         $('pop-text').value = c.comment;
+        popExpanded = false;
         showPop(lastRect(anchorEl));
       }
       function overlapWarning(srcPos, quote) {
@@ -1490,16 +1503,26 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       function renderPopHints() {
         var box = $('pop-chips');
         var q = normKey($('pop-text').value);
-        var list = rankedHints();
-        if (q) list = list.filter(function (x) { return x.key.indexOf(q) >= 0 && x.key !== q; });
-        list = list.slice(0, 6);
+        var all = rankedHints(), showPct = all.total >= MIN_PCT;
+        var list = q ? all.filter(function (x) { return x.key.indexOf(q) >= 0 && x.key !== q; }) : all;
+        var more = popExpanded ? 0 : Math.max(0, list.length - POP_CHIPS);
+        list = list.slice(0, popExpanded ? 12 : POP_CHIPS);
         box.replaceChildren();
         list.forEach(function (x) {
           box.append(h('button', {
             class: 'ma-chip', type: 'button', title: 'Đã dùng ' + x.n + ' lần',
             onclick: function () { savePop(x.t); }
-          }, h('span', { class: 'ma-chip__t' }, x.t), h('span', { class: 'ma-chip__p' }, pct(x.p))));
+          }, h('span', { class: 'ma-chip__t' }, x.t), showPct ? h('span', { class: 'ma-chip__p' }, pct(x.p)) : null));
         });
+        if (more) {
+          box.append(h('button', {
+            class: 'ma-chip ma-chip--more', type: 'button', 'aria-label': 'Hiện thêm ' + more + ' gợi ý',
+            onclick: function () {
+              popExpanded = true; renderPopHints();
+              if (!$('pop').classList.contains('is-sheet')) $('pop-text').focus({ preventScroll: true });
+            }
+          }, '+' + more));
+        }
         if (!list.length && !q && seedState === 'fail') {
           box.append(h('span', { class: 'ma-sub' }, 'Chưa có gợi ý: mở trang qua HTTP để nạp gợi ý mặc định.'));
         }
@@ -1650,7 +1673,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
           ol.append(h('li', { class: 'ma-row' },
             h('span', { class: 'ma-row__main ma-row__main--static' },
               h('span', { class: 'ma-row__t' }, x.t),
-              h('span', { class: 'ma-row__m' }, x.n + ' lần · ' + pct(x.p))),
+              h('span', { class: 'ma-row__m' }, x.n + ' lần' + (list.total >= MIN_PCT ? ' · ' + pct(x.p) : ''))),
             h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Bỏ gợi ý ' + x.t, title: 'Bỏ gợi ý',
               onclick: function () { x.v.hidden = true; saveStats(); renderHintsDlg(); } }, icon('x'))));
         });

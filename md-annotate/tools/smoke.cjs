@@ -100,11 +100,15 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('dán vào ô trống thì sang tab Hiển thị', await page.isVisible('#v-md h1'));
 
   // 1. Bôi đen ở bản dựng, gõ nhận xét.
-  await dragSelect(page, '#v-md', 'chữ đậm ở đây và kết thúc');
+  // Kéo từ giữa chữ "chữ" tới giữa chữ "thúc": đoạn trích phải nới ra trọn từ.
+  await dragSelect(page, '#v-md', 'ữ đậm ở đây và kết thú');
   check('bôi đen bằng chuột mở hộp nhận xét', await page.isVisible('#pop'));
+  check('vùng chọn nới ra trọn từ (chữ Việt)', (await page.textContent('#pop-q')) === 'chữ đậm ở đây và kết thúc', await page.textContent('#pop-q'));
   const chips = await page.$$eval('#pop-chips .ma-chip', (els) => els.map((e) => e.textContent));
-  check('hộp có 6 gợi ý kèm %', chips.length === 6 && chips.every((c) => /%$/.test(c)), chips.join(' | '));
-  check('gợi ý mặc định từ data/hints.json', chips.some((c) => c.startsWith('Sai, nói chưa rõ ràng')));
+  check('hộp có 5 gợi ý, chưa có % khi chưa dùng, chip +3', chips.length === 6 && chips[5] === '+3' && chips.every((c) => !/%/.test(c)), chips.join(' | '));
+  check('gợi ý mặc định từ data/hints.json', chips[0] === 'Sai, nói chưa rõ ràng');
+  await page.click('#pop-chips .ma-chip--more');
+  check('chip +N mở hết gợi ý', (await page.$$('#pop-chips .ma-chip')).length === 8 && !(await page.$('#pop-chips .ma-chip--more')));
   await page.keyboard.type('Câu này sai');
   await page.keyboard.press('Enter');
   check('Enter lưu nhận xét', (await items(page)).length === 1 && !(await page.isVisible('#pop')));
@@ -215,6 +219,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   const before = await page.$$eval('#hints-list .ma-row', (e) => e.length);
   await page.click('#hints-list .ma-row:has-text("Xoá đoạn này") button');
   check('bỏ gợi ý', (await page.$$eval('#hints-list .ma-row', (e) => e.length)) === before - 1 && !/Xoá đoạn này/.test(await page.textContent('#hints-list')));
+  check('dưới 5 lần dùng thì chưa hiện %', !/%/.test(await page.textContent('#hints-list')));
   await page.keyboard.press('Escape');
 
   // 10. Song song.
@@ -240,6 +245,9 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await page.setInputFiles('#file-in', { name: 'ghi-chu.md', mimeType: 'text/markdown', buffer: Buffer.from('# Ghi chú\n\nMột dòng.\n') });
   await page.waitForTimeout(200);
   check('mở file: phiên mới, tệp điền sẵn tên file', (await page.inputValue('#p-path')) === 'ghi-chu.md' && (await page.$$('#list .ma-item')).length === 0);
+  await page.click('#btn-hints');
+  check('đủ 5 lần dùng thì gợi ý hiện %', /%/.test(await page.textContent('#hints-list')));
+  await page.keyboard.press('Escape');
 
   // 11. Theme: nút đổi thắng sau khi bấm.
   await page.click('#theme');

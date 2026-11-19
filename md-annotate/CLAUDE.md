@@ -27,6 +27,7 @@
 - Đoạn trích xuất hiện nhiều lần: chọn chỗ khớp `prefix` / `suffix` dài nhất, rồi gần `rel` nhất.
 - Không tìm thấy ở cả hai chế độ: nhận xét mất neo, hiện `!` trong danh sách và không vào prompt.
 - Chọn ở *Nguồn* thì trích đúng nguồn markdown; chọn ở *Hiển thị* thì trích chữ đã dựng.
+- Vùng chọn bắt đầu hay kết thúc giữa từ thì nới ra tới mép từ (chữ, số, dấu Unicode) trước khi neo.
 - Thứ tự trong prompt là thứ tự đoạn trích trong nguồn.
 
 ## Prompt
@@ -40,7 +41,8 @@
 ## Gợi ý nhận xét
 
 - Đếm số lần dùng theo khoá chuẩn hoá (`normKey`); xếp theo số lần, rồi lần dùng gần nhất, rồi thứ tự gốc.
-- Tỉ lệ hiện trên gợi ý: (số lần + 1) / (tổng số lần + số gợi ý). Hộp nhận xét hiện 6 gợi ý đầu.
+- Tỉ lệ: (số lần + 1) / (tổng số lần + số gợi ý). Chỉ hiện khi đã đếm từ 5 lần nhận xét (`MIN_PCT`).
+- Hộp nhận xét hiện 5 gợi ý đầu (`POP_CHIPS`); phần còn lại sau chip `+N`.
 - Nhận xét gõ tay ≤ 80 ký tự được đếm; dùng từ hai lần trở lên thì thành gợi ý.
 - Bỏ gợi ý là ẩn, không xoá số đếm: gợi ý mặc định không quay lại khi nạp lại `data/hints.json`.
 
