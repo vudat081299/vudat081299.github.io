@@ -726,6 +726,16 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     check('dữ liệu: chép ngay sau khi gõ, số dòng theo văn bản mới (L7)', /1\. L7 "Target sentence" — fix$/.test(fast), JSON.stringify(fast));
     await dp.waitForTimeout(400);
     check('dữ liệu: prompt sau lần vẽ lại cũng L7', /1\. L7 "Target sentence" — fix$/.test(await out(dp)));
+    // Xoá nhận xét, chuyển sang phiên khác, rồi bấm Undo: nhận xét về phiên của nó, không vào phiên đang mở.
+    await dp.click('#btn-new'); await setText('Other doc\n'); await dp.waitForTimeout(400);
+    await dp.click('#btn-hist'); await dp.click('#hist-list .ma-row:has-text("Doc A") .ma-row__main'); await dp.waitForTimeout(200);
+    await dp.click('#list .ma-item [aria-label="Delete comment"]');
+    check('dữ liệu: xoá nhận xét hiện Undo', await dp.isVisible('.ma-toast__btn'));
+    await dp.click('#btn-hist'); await dp.click('#hist-list .ma-row:has-text("Other doc") .ma-row__main'); await dp.waitForTimeout(200);
+    await dp.click('.ma-toast__btn'); await dp.waitForTimeout(400);
+    check('dữ liệu: Undo sau khi chuyển phiên không thêm nhận xét vào phiên đang mở', (await items(dp)).length === 0, (await items(dp)).join(' | '));
+    await dp.click('#btn-hist'); await dp.click('#hist-list .ma-row:has-text("Doc A") .ma-row__main'); await dp.waitForTimeout(200);
+    check('dữ liệu: Undo trả nhận xét về phiên của nó', (await items(dp)).length === 1 && /fix/.test((await items(dp))[0] || ''), (await items(dp)).join(' | '));
     await dctx.close();
   }
   // ── end review: data path ──

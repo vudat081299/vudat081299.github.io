@@ -1,7 +1,7 @@
 /* Phiên đang mở (S): đọc / ghi localStorage, lưu (hẹn giờ 300ms), chuyển phiên. S chỉ gán lại qua setS() /
    switchTo(). Mô hình phiên (tạo, chuẩn hoá, tên tự đặt) ở core/session.js.
-   Xuất: cancelSave, flushSave, initState, loadIndex, loadSession, newSession, S, saveNow, scheduleSave, setS,
-     switchTo.
+   Xuất: cancelSave, flushSave, initState, loadIndex, loadSession, newSession, S, saveClosed, saveNow, scheduleSave,
+     setS, switchTo.
    Dùng: core/session.js, ui/store.js, ui/dom.js, ui/render.js, ui/views.js, ui/popup.js, ui/history.js,
      ui/editor.js. */
 import { createSession, indexWith, isEmpty, normIndex, normSession, touchSession } from '../core/session.js';
@@ -42,6 +42,12 @@ export function saveNow() {
   renderHistCount();
 }
 export function flushSave() { if (saveTimer) saveNow(); }
+/* Ghi một phiên không mở (VD Undo xoá nhận xét sau khi đã chuyển phiên): lưu, đưa lên đầu index. */
+export function saveClosed(s) {
+  touchSession(s);
+  if (store.set(KEY.s(s.id), s)) store.set(KEY.index, indexWith(loadIndex(), s));
+  renderHistCount();
+}
 /* Huỷ lần lưu đang hẹn (VD vừa xoá phiên đang mở: đừng ghi lại nó). */
 export function cancelSave() { clearTimeout(saveTimer); saveTimer = null; }
 export function switchTo(next) {

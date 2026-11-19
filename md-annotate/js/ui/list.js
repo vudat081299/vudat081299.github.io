@@ -4,7 +4,7 @@
      ui/panel.js, ui/popup.js. */
 import { cutComment, restoreComment } from '../core/comments.js';
 import { $, h, icon, mqSide, reduceMotion, toast } from './dom.js';
-import { S, scheduleSave } from './state.js';
+import { loadSession, S, saveClosed, scheduleSave } from './state.js';
 import { hoverMarks, marksOf } from './marks.js';
 import { numbers, ordered, orphans, renderAll } from './render.js';
 import { locText } from './prompt.js';
@@ -75,13 +75,18 @@ function editFromList(id) {
   openEdit(id, ms.length ? ms[ms.length - 1] : li);
 }
 export function removeComment(id) {
-  var cut = cutComment(S, id);
+  var cut = cutComment(S, id), sid = S.id;
   if (!cut) return;
   if (pop.id === id) closePop(true);
   scheduleSave(); renderAll();
   toast('Comment deleted.', {
     label: 'Undo',
-    fn: function () { restoreComment(S, cut); scheduleSave(); renderAll(); }
+    fn: function () {
+      if (S.id === sid) { restoreComment(S, cut); scheduleSave(); renderAll(); return; }
+      /* Đã chuyển phiên trong lúc toast còn hiện: trả nhận xét về phiên của nó (đã lưu khi chuyển), không vào S. */
+      var s = loadSession(sid);
+      if (s) { restoreComment(s, cut); saveClosed(s); }
+    }
   });
 }
 
