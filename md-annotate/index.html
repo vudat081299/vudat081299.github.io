@@ -396,31 +396,38 @@
       .ma-blank b { display: block; margin-bottom: 2px; font-weight: 600; color: var(--ink-2); }
       .ma-sub { margin: 0; font-size: 13.5px; color: var(--ink-3); }
 
-      .ma-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
-      .ma-item { display: flex; align-items: flex-start; gap: 4px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); }
-      .ma-item.is-flash { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-soft); }
-      .ma-item__main {
-        flex: 1; min-width: 0; display: flex; gap: 10px; align-items: flex-start; text-align: left;
-        padding: 10px 4px 10px 10px; border: 0; background: transparent; border-radius: 12px;
+      /* Thẻ nhận xét: không viền; nhận xét nổi bật, trích dẫn mờ có vạch trái (một cạnh nên không bo, REPO-025). */
+      .ma-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+      .ma-item {
+        position: relative; display: flex; align-items: flex-start; border-radius: var(--r);
+        transition: background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
       }
+      .ma-item:hover, .ma-item.is-hover { background: var(--chip); }
+      .ma-item.is-active, .ma-item.is-flash { background: var(--green-soft); box-shadow: inset 0 0 0 1px var(--green-line); }
+      .ma-item__main {
+        flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; text-align: left;
+        padding: 10px 4px 12px 12px; border: 0; background: transparent; border-radius: var(--r);
+      }
+      .ma-item__top { display: flex; align-items: center; gap: var(--s2); min-height: 22px; }
       .ma-item__n {
-        flex: none; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 7px;
+        flex: none; min-width: 22px; height: 20px; padding: 0 6px; border-radius: 6px;
         display: inline-grid; place-items: center;
         font: 500 11px/1 var(--mono); color: var(--on-accent); background: var(--accent);
       }
       .ma-item.is-orphan .ma-item__n { background: var(--danger); color: var(--surface); }
-      .ma-item__body { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-      .ma-item__loc { font: 500 11px/1.2 var(--mono); color: var(--ink-3); overflow-wrap: anywhere; }
+      .ma-item__loc { font: 500 11px/1 var(--mono); color: var(--ink-3); overflow-wrap: anywhere; }
+      .ma-item__c { font: 600 14.5px/1.45 var(--sans); color: var(--ink); overflow-wrap: anywhere; white-space: pre-wrap; }
       .ma-item__q {
-        font-size: 13.5px; color: var(--ink-2);
-        display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
-        overflow-wrap: anywhere;
+        padding-left: 10px; border-left: 2px solid var(--line);
+        font-size: 13px; line-height: 1.5; color: var(--ink-3);
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere;
       }
-      .ma-item__q::before { content: '“'; } .ma-item__q::after { content: '”'; }
-      .ma-item__c { font-weight: 600; font-size: 14px; overflow-wrap: anywhere; white-space: pre-wrap; }
+      .ma-item.is-active .ma-item__q, .ma-item.is-hover .ma-item__q { border-left-color: var(--accent); }
       .ma-item__warn { font-size: 12.5px; color: var(--danger); }
-      .ma-item__act { display: flex; flex-direction: column; padding: 4px; }
-      .ma-item__act .ma-icbtn { width: 34px; height: 34px; }
+      .ma-item__act { display: flex; gap: 2px; padding: 6px 6px 0 0; opacity: 0; transition: opacity var(--dur) var(--ease); }
+      .ma-item:hover .ma-item__act, .ma-item:focus-within .ma-item__act, .ma-item.is-active .ma-item__act { opacity: 1; }
+      @media (hover: none) { .ma-item__act { opacity: 1; } }
+      .ma-item__act .ma-icbtn { width: 32px; height: 32px; }
       .ma-item__act .ma-icbtn svg { width: 16px; height: 16px; }
 
       .ma-fmt { display: flex; gap: 2px; padding: 3px; background: var(--surface-2); border-radius: 12px; margin-bottom: 10px; }
