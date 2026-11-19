@@ -135,6 +135,16 @@ import * as dpText from '../js/core/text.js';
     check('lineOf: đầu dòng, cuối văn bản', dpText.lineOf('a\nb\n', 0) === 1 && dpText.lineOf('a\nb\n', 2) === 2 && dpText.lineOf('a\nb\n', 4) === 3);
     check('slug: bỏ dấu tiếng Việt', dpText.slug('Bài thử Đặng — số 1') === 'bai-thu-dang-so-1');
   }
+  // Gợi ý: renamed chỉ dồn số đếm của gợi ý mặc định cũ; nhận xét tự gõ trùng chữ cũ giữ nguyên.
+  {
+    const renamed = { 'Add an example': 'Thêm ví dụ' };
+    const st = { items: { 'add an example': { t: 'Add an example', n: 3, last: 5, o: 4, seed: true, hidden: true } } };
+    dpHints.migrateHints(st, renamed);
+    check('migrateHints: gợi ý mặc định cũ dồn sang khoá mới, giữ ẩn', eq(Object.keys(st.items), ['thêm ví dụ']) && st.items['thêm ví dụ'].n === 3 && st.items['thêm ví dụ'].hidden === true);
+    const own = { items: { 'add an example': { t: 'Add an example', n: 2, last: 9, o: 1e6 } } };
+    dpHints.migrateHints(own, renamed);
+    check('migrateHints: nhận xét tự gõ trùng chữ gợi ý cũ không bị đổi', eq(Object.keys(own.items), ['add an example']) && own.items['add an example'].n === 2, JSON.stringify(own));
+  }
 }
 // ── end review: data path ──
 

@@ -16,11 +16,12 @@ export function normStats(stats) {
 export function normKey(t) {
   return String(t).normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim().replace(/[.!…]+$/, '').trim();
 }
-/* Gợi ý mặc định đổi chữ (VD tiếng Việt → tiếng Anh): dồn số đếm của khoá cũ sang khoá mới, giữ trạng thái ẩn. */
+/* Gợi ý mặc định đổi chữ (renamed: chữ cũ → chữ mới): dồn số đếm của khoá cũ sang khoá mới, giữ trạng thái ẩn. Chỉ
+   khoá từng là gợi ý mặc định (seed); nhận xét tự gõ trùng chữ cũ giữ nguyên. */
 export function migrateHints(stats, renamed) {
   Object.keys(renamed || {}).forEach(function (oldT) {
     var ko = normKey(oldT), kn = normKey(renamed[oldT]), old = stats.items[ko];
-    if (!old || ko === kn) return;
+    if (!old || !old.seed || ko === kn) return;
     var it = stats.items[kn] || (stats.items[kn] = { t: renamed[oldT], n: 0, last: 0, o: 1e6 });
     it.n = (+it.n || 0) + (+old.n || 0);
     it.last = Math.max(+it.last || 0, +old.last || 0);
