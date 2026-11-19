@@ -23,7 +23,7 @@
 - Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024).
 - Khoảng cách theo thang `--s1`…`--s6`, bo góc `--r-sm` / `--r` / `--r-lg`, chuyển động `--dur` + `--ease`.
 - Tiêu đề trang một dòng ở cột trái. Tên phiên sửa tại chỗ ở thanh của khung văn bản.
-- Bố cục tràn bề rộng (MDAN-003): `.ma-wrap` không có `max-width`, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
+- Bề rộng (MDAN-005): `.ma-wrap` rộng `max(70vw, 1280px)`, không quá khung nhìn, căn giữa, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
   320–560, `prefs.side`), thu gọn thành `.ma-rail` 56px (`html.ma-railed`, `prefs.rail`); thanh dọc giữ nút chép.
 - *Split* khi `#doc` đủ cho hai khung ≥ 420px (`splitOK()`), không theo media query. Chưa đủ chỗ thì hiện
   *Preview* nhưng `prefs.view` vẫn nhớ `split`. Hai khung cao `--pane-h` (JS: khung nhìn trừ đỉnh khung và 17px

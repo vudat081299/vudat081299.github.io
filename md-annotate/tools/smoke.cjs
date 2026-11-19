@@ -369,7 +369,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('đóng tấm: panel về cột phải', !(await page.isVisible('#dlg-panel')) && await page.evaluate(() => document.getElementById('panel').parentNode.classList.contains('ma-grid')));
   await page.setViewportSize({ width: 1280, height: 900 });
 
-  // 10c. Bố cục rộng: không lề thừa, Song song hai khung cao trọn khung nhìn, vách giữa và mép panel kéo được, thu gọn panel.
+  // 10c. Bố cục rộng: vùng làm việc ~70% ở giữa, Song song hai khung cao trọn khung nhìn, vách giữa và mép panel kéo được, thu gọn panel.
   const geo = () => page.evaluate(() => {
     const d = document.getElementById('doc').getBoundingClientRect(), pn = document.getElementById('panel').getBoundingClientRect();
     const a = document.getElementById('wrap-src'), m = document.getElementById('wrap-md');
@@ -381,9 +381,11 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     await page.setViewportSize({ width: w, height: 900 });
     await page.click('.ma-tab[data-view="split"]');
     const g = await geo();
-    check(`${w}px: Song song, mỗi khung ≥ 420px, lề trang 24px`, g.mode === 'split' && g.a >= 420 && g.b >= 420 && g.docL === 24 && g.panelR === 24, JSON.stringify(g));
+    const side = Math.round((w - Math.min(w, Math.max(0.7 * w, 1280))) / 2) + 24;
+    check(`${w}px: Song song, mỗi khung ≥ 420px, vùng làm việc ~70% ở giữa`, g.mode === 'split' && g.a >= 420 && g.b >= 420 && Math.abs(g.docL - side) <= 1 && Math.abs(g.panelR - side) <= 1, JSON.stringify({ ...g, side }));
   }
-  await page.setViewportSize({ width: 1440, height: 900 });
+  // Kéo panel rộng thêm vẫn phải còn Song song: thử ở màn đủ rộng.
+  await page.setViewportSize({ width: 2560, height: 900 });
   await page.evaluate(() => window.scrollTo(0, 0));
   let g = await geo();
   check('Song song: hai khung cuộn riêng, trang không cuộn', g.page <= 0 && g.srcScroll && g.mdScroll, JSON.stringify(g));

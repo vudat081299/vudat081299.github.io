@@ -77,7 +77,7 @@
         --r-sm: 8px; --r: 12px; --r-lg: 16px;
         --dur: .16s; --ease: cubic-bezier(.2, .7, .2, 1);
 
-        --pad: 24px;                         /* lề trang; vùng làm việc không giới hạn bề rộng (MDAN-003) */
+        --pad: 24px;                         /* lề trang trong vùng làm việc (MDAN-005) */
         --bar-h: 60px;
         --side: 360px;                       /* bề rộng panel; người dùng kéo được 320–560, lưu ở prefs.side */
 
@@ -142,7 +142,7 @@
       ::selection { background: var(--accent); color: var(--on-accent); }
       ::highlight(ma-pending) { background-color: var(--hl-pend); }
       :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: var(--r-sm); }
-      .ma-wrap { width: 100%; padding: 0 var(--pad); }
+      .ma-wrap { width: min(100%, max(70vw, 1280px)); margin-inline: auto; padding: 0 var(--pad); } /* ~70% màn hình, không hẹp hơn 1280px (MDAN-005) */
       svg.ma-i { width: 16px; height: 16px; flex: none; }
 
       /* THANH TRÊN */
