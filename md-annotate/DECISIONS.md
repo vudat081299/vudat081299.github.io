@@ -9,6 +9,7 @@
 - MDAN-009 · Một màu xanh sáng, thang token cho chữ, bo góc, chiều cao · thay cho MDAN-002 · `md-annotate/`
 - MDAN-010 · Dải đọc: chữ của mục cha vẫn sáng khi rê vào mục con · `md-annotate/js/ui/focus.js`, `md-annotate/css/focus.css`
 - MDAN-011 · Cảnh báo trùng đoạn theo chữ, không theo chỗ · `md-annotate/js/core/comments.js`
+- MDAN-012 · Nhận xét nhiều dòng chọn theo số dòng · `md-annotate/`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -72,3 +73,12 @@ không làm mờ riêng được bằng opacity). Đừng bọc chữ trong ph�
 
 "Same passage as comment #N" hiện khi đoạn trích mới có cùng chữ với một nhận xét đã có, kể cả ở chỗ khác trong văn
 bản: hai mục ấy trông y hệt nhau trong prompt. Chỉ cảnh báo, không chặn lưu.
+
+## MDAN-012 · Nhận xét nhiều dòng chọn theo số dòng
+19/11/2026 · `md-annotate/`
+
+Một nhận xét có thể gắn vào nhiều dòng không liền nhau. Chỉ chọn bằng lề số dòng (*Source* và khung Source của *Split*),
+không bằng bôi đen: bấm đúp số dòng thì vào chế độ chọn dòng, bấm một lần để thêm / bỏ dòng; Esc hoặc Save thì thoát,
+Cancel đóng hộp nhưng giữ các dòng. Ngoài chế độ, bấm số dòng và bôi đen chữ giữ như cũ. Hộp nhận xét của chế độ này
+có nút kéo đi chỗ khác; lần mở sau hộp về chỗ mặc định. Mỗi dải dòng liền là một đoạn trích; prompt gọn ghi
+`3. L12 "…"; L15-16 "…" — nhận xét`, nhận xét một đoạn ra chữ y như trước.

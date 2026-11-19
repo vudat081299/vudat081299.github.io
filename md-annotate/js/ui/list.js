@@ -2,11 +2,11 @@
    Xuất: flashItem, initList, removeComment, renderList.
    Dùng: core/comments.js, ui/dom.js, ui/state.js, ui/marks.js, ui/render.js, ui/prompt.js, ui/views.js,
      ui/panel.js, ui/popup.js. */
-import { cutComment, restoreComment } from '../core/comments.js';
+import { cutComment, partsOf, restoreComment } from '../core/comments.js';
 import { $, h, icon, mqSide, reduceMotion, toast } from './dom.js';
 import { loadSession, S, saveClosed, scheduleSave } from './state.js';
 import { hoverMarks, marksOf } from './marks.js';
-import { numbers, ordered, orphans, renderAll } from './render.js';
+import { anchors, numbers, ordered, orphans, renderAll } from './render.js';
 import { locText } from './prompt.js';
 import { lastRead, setView, view } from './views.js';
 import { setPane } from './panel.js';
@@ -33,7 +33,7 @@ function fillList(ol) {
           h('span', { class: 'ma-item__n' }, orphan ? '!' : String(num)),
           loc ? h('span', { class: 'ma-item__loc' }, loc) : null),
         h('span', { class: 'ma-item__c' }, c.comment),
-        h('span', { class: 'ma-item__q' }, c.quote),
+        quotes(c, orphan),
         orphan ? h('span', { class: 'ma-item__warn' }, 'This quote is no longer in the text, so it is left out of the prompt. Fix the text or delete the comment.') : null),
       h('span', { class: 'ma-item__act' },
         h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Edit comment', title: 'Edit',
@@ -45,6 +45,16 @@ function fillList(ol) {
     li.addEventListener('mouseleave', function () { hoverMarks(c.id, false); });
     ol.append(li);
   });
+}
+
+/* Trích dẫn của thẻ: một đoạn như cũ; nhiều phần thì mỗi phần một dòng trích (gập 2 dòng), phần mất neo mờ, gạch. */
+function quotes(c, orphan) {
+  var ps = partsOf(c), a = anchors[c.id];
+  if (ps.length < 2) return h('span', { class: 'ma-item__q' }, c.quote);
+  return h('span', { class: 'ma-item__qs' }, ps.map(function (p, k) {
+    var lost = !orphan && a && a.parts[k] && !a.parts[k].src && !a.parts[k].md;
+    return h('span', { class: 'ma-item__q' + (lost ? ' is-lost' : ''), title: lost ? 'No longer in the text: left out of the prompt.' : null }, p.quote);
+  }));
 }
 
 /* DANH SÁCH: nhảy tới, sửa, xoá */

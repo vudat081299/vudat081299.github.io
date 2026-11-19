@@ -1,13 +1,16 @@
 /* Hộp nhận xét: mở cho đoạn mới (openNew) hoặc để sửa (openEdit), tô đoạn đang chọn (ma-pending),
-   gợi ý dạng chip, lưu, đóng.
-   Xuất: closePop, initPopup, openEdit, openNew, paintPending, pending, pop, popDirty, renderPopHints.
-   Dùng: core/text.js, core/anchor.js, core/hints.js, core/comments.js, core/place.js, ui/dom.js, ui/anchor-dom.js,
-     ui/state.js, ui/hints.js, ui/marks.js, ui/render.js, ui/list.js, ui/views.js, ui/selection.js. */
+   gợi ý dạng chip, lưu, đóng. Đoạn mới có thể là các dòng chọn ở lề số (pending.lines, ui/picks.js): hộp có thêm
+   hàng đầu (số dòng, nhãn, nút kéo) và cập nhật tại chỗ khi chọn thêm / bỏ dòng (updateNew).
+   Xuất: closePop, initPopup, openEdit, openNew, paintPending, pending, pop, popDirty, renderPopHints, updateNew.
+   Dùng: core/text.js, core/anchor.js, core/hints.js, core/comments.js, core/place.js, core/picks.js, ui/dom.js,
+     ui/anchor-dom.js, ui/state.js, ui/hints.js, ui/marks.js, ui/render.js, ui/list.js, ui/views.js,
+     ui/selection.js, ui/picks.js. */
 import { plural } from '../core/text.js';
 import { locate } from '../core/anchor.js';
 import { chipHints, pct } from '../core/hints.js';
-import { addComment, editComment, findComment, overlapWarning } from '../core/comments.js';
+import { addComment, editComment, findComment, overlapWarning, partsOf } from '../core/comments.js';
 import { popPlace } from '../core/place.js';
+import { pickSummary } from '../core/picks.js';
 import { $, h, hasHL, mqSheet, shown, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { S, scheduleSave } from './state.js';
@@ -17,10 +20,11 @@ import { anchors, mdText, numbers, ordered, orphans, renderAll } from './render.
 import { flashItem, removeComment } from './list.js';
 import { view } from './views.js';
 import { onSelChange } from './selection.js';
+import { clearPicks, gutterLine, picking } from './picks.js';
 
 export var pop = { mode: null, id: null, orig: '' };
 var popExpanded = false;
-export var pending = null;   // đoạn đang chọn (kết quả quoteFrom) khi hộp mở cho nhận xét mới
+export var pending = null;   // đoạn đang chọn (kết quả quoteFrom, hoặc pickInfo khi chọn dòng) khi hộp mở cho nhận xét mới
 /* Vị trí của đoạn đang chọn trong nguồn (src) và chữ bản dựng (md): [a, b] hoặc null. Khung chọn thì lấy đúng vị trí
    đã chọn; khung kia tìm bằng locate, như neo nhận xét. */
 function pendingPos() {
@@ -32,7 +36,7 @@ function pendingPos() {
 /* Tô đoạn đang chọn ở khung nào đang hiện (CSS Highlight 'ma-pending', không sửa DOM); trả các Range đã tô. */
 export function paintPending() {
   var rs = [];
-  if (pending) {
+  if (pending && !pending.lines) {   // dòng đã chọn: ui/picks.js tô cả dòng
     var pos = pendingPos();
     if (pos.src && shown($('v-src'))) { var a = rangeAt($('v-src'), pos.src[0], pos.src[1]); if (a) rs.push(a); }
     if (pos.md && shown($('v-md'))) { var b = rangeAt($('v-md'), pos.md[0], pos.md[1]); if (b) rs.push(b); }
@@ -43,18 +47,45 @@ export function paintPending() {
   }
   return rs;
 }
-export function openNew(info) {
+/* rect: chỗ đặt hộp (dòng vừa bấm ở lề số); không có thì dưới đoạn đang chọn. */
+export function openNew(info, rect) {
   if (view === 'edit') return;
+  if (pop.mode === 'edit') closePop(true);
   pending = info; pop.mode = 'new'; pop.id = null; pop.orig = '';
   var rs = paintPending();
   try { window.getSelection().removeAllRanges(); } catch (e) {}
-  $('pop-q').textContent = info.quote;
-  var warn = overlapWarning({ ordered: ordered, anchors: anchors, numbers: numbers }, pendingPos().src, info.quote);
-  $('pop-warn').hidden = !warn; $('pop-warn').textContent = warn || '';
+  fillNew();
   $('pop-del').hidden = true;
   $('pop-text').value = '';
   popExpanded = false;
-  showPop(rs.length ? lastRect(rs[0]) : null);
+  showPop(rect || (rs.length ? lastRect(rs[0]) : null));
+}
+/* Chọn thêm / bỏ dòng khi hộp đang mở: đổi nội dung, giữ chỗ (kể cả chỗ đã kéo tới) và chữ đang gõ. */
+export function updateNew(info) {
+  pending = info;
+  fillNew();
+  markLong();
+  renderPopHints();
+}
+function fillNew() {
+  var multi = !!pending.lines;
+  setHead(multi ? pickSummary(pending.lines) : '');
+  $('pop').setAttribute('aria-label', multi ? 'Comment on the picked lines' : 'Comment on the selected passage');
+  $('pop-q').classList.toggle('is-lines', multi);
+  $('pop-q').textContent = multi ? pending.parts.map(function (p) { return p.quote; }).join('\n') : pending.quote;
+  var picks = multi ? pending.parts.map(function (p) { return { pos: [p.s, p.e], quote: p.quote }; })
+    : [{ pos: pendingPos().src, quote: pending.quote }];
+  var warn = overlapWarning({ ordered: ordered, anchors: anchors, numbers: numbers }, picks);
+  $('pop-warn').hidden = !warn; $('pop-warn').textContent = warn || '';
+}
+/* Hàng đầu (số dòng, nhãn, nút kéo) chỉ khi chọn nhiều dòng; sum rỗng thì ẩn. */
+function setHead(sum) {
+  $('pop-head').hidden = !sum;
+  $('pop-sum').textContent = sum;
+}
+function markLong() {
+  var q = $('pop-q');
+  q.classList.toggle('is-long', q.scrollHeight > q.clientHeight + 1);
 }
 export function openEdit(id, anchorEl) {
   var c = findComment(S, id);
@@ -63,7 +94,10 @@ export function openEdit(id, anchorEl) {
   if (pop.id) markActive(pop.id, false);
   pop.mode = 'edit'; pop.id = id; pop.orig = c.comment;
   markActive(id, true);
-  $('pop-q').textContent = c.quote;
+  setHead('');
+  $('pop').setAttribute('aria-label', 'Edit comment');
+  $('pop-q').classList.toggle('is-lines', partsOf(c).length > 1);
+  $('pop-q').textContent = partsOf(c).map(function (p) { return p.quote; }).join('\n');
   $('pop-warn').hidden = !orphans[id];
   $('pop-warn').textContent = orphans[id] ? 'This quote is no longer in the text.' : '';
   $('pop-del').hidden = false;
@@ -83,8 +117,8 @@ function showPop(rect) {
   el.classList.toggle('is-sheet', sheet);
   el.hidden = false;
   $('fab').hidden = true;
-  var q = $('pop-q');
-  q.classList.toggle('is-long', q.scrollHeight > q.clientHeight + 1);
+  $('pop-grip').hidden = sheet;   // tấm trượt đáy đứng yên
+  markLong();
   renderPopHints();
   if (!sheet) {
     el.style.top = '0px'; el.style.left = '0px';
@@ -115,7 +149,7 @@ export function popDirty() {
 function savePop(textOverride) {
   var t = (textOverride != null ? textOverride : $('pop-text').value).trim();
   if (!t) { $('pop-text').focus(); toast('Type a comment or pick a hint.'); return; }
-  var id;
+  var id, lines = pop.mode === 'new' && pending && pending.lines;
   if (pop.mode === 'new' && pending) {
     id = addComment(S, pending, t);
     recordUse(t);
@@ -124,6 +158,7 @@ function savePop(textOverride) {
     if (editComment(S, id, t)) recordUse(t);
   }
   closePop(true);
+  if (lines) clearPicks();   // lưu xong thì thoát chế độ chọn dòng
   scheduleSave();
   renderAll();
   if (id) flashItem(id);
@@ -175,10 +210,13 @@ export function initPopup() {
   document.addEventListener('pointerdown', function (e) {
     if (!pop.mode) return;
     if ($('pop').contains(e.target) || $('fab').contains(e.target)) return;
+    if (picking && gutterLine(e)) return;   // chọn thêm / bỏ dòng: hộp ở lại, cập nhật tại chỗ
     if (popDirty()) return;
     closePop(true);
   }, true);
   window.addEventListener('resize', function () {
-    if (pop.mode && !$('pop').classList.contains('is-sheet') && mqSheet.matches) $('pop').classList.add('is-sheet');
+    if (pop.mode && !$('pop').classList.contains('is-sheet') && mqSheet.matches) {
+      $('pop').classList.add('is-sheet'); $('pop').style.top = ''; $('pop').style.left = ''; $('pop-grip').hidden = true;
+    }
   });
 }

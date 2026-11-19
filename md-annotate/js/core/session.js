@@ -25,7 +25,14 @@ export function normSession(s, id) {
   s.comments = Array.isArray(s.comments) ? s.comments.filter(function (c) {
     return c && typeof c.quote === 'string' && typeof c.comment === 'string';
   }) : [];
-  s.comments.forEach(function (c) { if (!c.id) c.id = uid(); });
+  s.comments.forEach(function (c) {
+    if (!c.id) c.id = uid();
+    /* parts (nhận xét nhiều dòng) là trường thêm, không đổi khoá: hỏng hoặc dưới hai phần thì bỏ, còn quote ở ngoài. */
+    if ('parts' in c) {
+      var ps = Array.isArray(c.parts) ? c.parts.filter(function (p) { return p && typeof p.quote === 'string' && p.quote; }) : [];
+      if (ps.length > 1) c.parts = ps; else delete c.parts;
+    }
+  });
   ['name', 'header', 'footer'].forEach(function (k) { if (typeof s[k] !== 'string') s[k] = ''; });
   s.fmt = s.fmt === 'block' ? 'block' : 'inline';
   s.includeDoc = !!s.includeDoc;

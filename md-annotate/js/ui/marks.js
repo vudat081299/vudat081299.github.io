@@ -6,9 +6,11 @@ import { textRuns } from '../core/runs.js';
 import { $, h, shown } from './dom.js';
 
 export function markEl(text, cover, end) {
-  var m = h('mark', { class: 'ma-hl' + (cover.length > 1 ? ' is-multi' : '') }, text);
-  m.dataset.ids = cover.map(function (r) { return r.id; }).join(' ');
-  var ns = cover.filter(function (r) { return r.e === end; }).map(function (r) { return r.n; });
+  /* Hai phần của cùng một nhận xét có thể neo chồng nhau: mỗi id một lần. */
+  var ids = cover.map(function (r) { return r.id; }).filter(function (x, i, a) { return a.indexOf(x) === i; });
+  var m = h('mark', { class: 'ma-hl' + (ids.length > 1 ? ' is-multi' : '') }, text);
+  m.dataset.ids = ids.join(' ');
+  var ns = cover.filter(function (r) { return r.e === end && r.n; }).map(function (r) { return r.n; });   // n = 0: phần sau của nhận xét nhiều phần
   if (ns.length) m.dataset.n = ns.join(',');
   return m;
 }

@@ -54,7 +54,7 @@ export function sourceLines(text, toks, ranges) {
   }
   ranges.forEach(function (r) {
     var l0 = lineOf(text, r.s) - 1, l1 = lineOf(text, Math.max(r.s, r.e - 1)) - 1;
-    for (var k = l0; k <= l1; k++) if (lines[k]) lines[k].ids.push(r.id);
+    for (var k = l0; k <= l1; k++) if (lines[k] && lines[k].ids.indexOf(r.id) < 0) lines[k].ids.push(r.id);
   });
   return { digits: String(lineCount(text)).length, lines: lines };
 }
