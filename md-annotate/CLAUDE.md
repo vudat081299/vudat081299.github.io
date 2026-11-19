@@ -10,7 +10,7 @@
 | File | Việc |
 |---|---|
 | `index.html` | markup, script theme (trước lần vẽ đầu), báo `file://`, ba thư viện CDN, `js/main.js` |
-| `css/*.css` | `tokens` → `base` → `views` → `panel` → `popup` → `dialogs` → `focus` → `mobile`; thứ tự link là cascade |
+| `css/*.css` | `tokens` → `base` → `views` → `panel` → `popup` → `dialogs` → `focus` → `review` → `reading` → `mobile`; thứ tự link là cascade |
 | `js/main.js` | gọi `init…` theo thứ tự, khởi động; phím tắt chép, đóng hộp thoại, nút theme |
 | `js/core/anchor.js`, `js/core/comments.js` | neo đoạn trích (`locate`, `quoteFrom`); thêm / sửa / xoá, neo, xếp, đánh số nhận xét, `partsOf` |
 | `js/core/session.js`, `js/core/prompt.js` | mô hình phiên, index, tên tự đặt; dựng prompt, nhãn L12 |
@@ -19,6 +19,7 @@
 | `js/core/blocks.js`, `js/core/sections.js` | `lexSpans`, `pairBlocks` (khối nguồn ↔ Preview); đánh số section, dải đọc |
 | `js/core/panes.js`, `js/core/picks.js`, `js/core/sync-math.js`, `js/core/text.js`, `js/core/shortcuts.js` | `splitFits`, cao hai khung; nhiều dòng (`pickInfo`); cuộn theo nhau; `plural`, `lineOf`, `slug`; `normShortcuts` |
 | `js/core/review.js`, `js/ui/review.js`, `js/ui/review-panel.js` | đã đọc: đơn vị, neo dấu, tiến độ; làn, phím, nút hộp nhận xét, viên thuốc; tab *Review* |
+| `js/core/minimap.js`, `js/ui/minimap.js`, `js/core/dwell.js`, `js/ui/dwell.js` | dải tiến độ cạnh khung; gợi ý đã đọc theo thời gian đọc (MDAN-016) |
 | `js/ui/store.js`, `js/ui/dom.js` | `localStorage`, khoá, `prefs`; `$`, `h()`, `icon()`, `toast()`, `dragBar()` |
 | `js/ui/state.js`, `js/ui/render.js` | phiên `S`, lưu, chuyển phiên; `renderAll()`, kết quả neo `mdText`, `anchors`, `ordered`… |
 | `js/ui/anchor-dom.js`, `js/ui/marks.js` | vùng chọn ↔ vị trí chữ; `<mark class="ma-hl">`, tô active / hover |
@@ -112,8 +113,7 @@
   bọc ngoài `<span class="sx-*">`. Không bao giờ gán innerHTML từ chữ người dùng.
 - Text của `#v-src` phải đúng bằng nguồn: vùng chọn, neo, số dòng đều đếm trên nó (smoke kiểm). `#doc-meta` đếm dòng
   bằng `lineCount()` như lề. Tìm token không quét lại cả dòng sau mỗi token (dòng dài vẫn tuyến tính).
-- Màu chỉ ở token `--sx-*`; mỗi màu ≥ 4,5:1 trên nền thẻ và trên `--hl` / `--hl-2`, cả hai theme.
-- Nút *Syntax colors* lưu ở `prefs.syntax`; tắt thì khung là chữ trơn.
+- Màu chỉ ở token `--sx-*`; mỗi màu ≥ 4,5:1 trên nền thẻ và trên `--hl` / `--hl-2`, cả hai theme. *Syntax colors* (`prefs.syntax`) tắt: chữ trơn.
 - Lề số dòng: mỗi dòng một `<span class="ma-ln">` (block, giữ cả ký tự xuống dòng), số là `::before` + counter,
   `user-select: none`. Không chèn số dòng thành chữ. Dòng có nhận xét: `.has-c` + `data-c` (id), vạch `--accent`;
   bấm vào lề mở nhận xét đầu của dòng, bấm đúp thì chọn nhiều dòng. Sau vạch là làn đã đọc (`--lane-w`), rồi chữ.
@@ -147,17 +147,20 @@
 - Nút ✓ Reviewed của hộp nhận xét (nới ra trọn khối, cả khi chọn dòng ở lề số) do `ui/review.js` theo dõi hộp bằng MutationObserver.
 - Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt) thêm `Đã đọc kỹ: … Chưa đọc: …`; tắt thì prompt y hệt từng byte.
 - Máy hẹp / cảm ứng: viên thuốc `#rv-pill` chỉ đánh dấu, không bỏ dấu. Màn cảm ứng chưa có dấu thì tắt làn.
+- Dải tiến độ (MDAN-016): `.ma-mm` fixed, mép phải khung đang hiện, trái thanh cuộn; mỗi đơn vị một đoạn theo vị trí (đặc ✓, rỗng ○, nhạt,
+  viền đứt gợi ý), chấm nhận xét, hộp khung nhìn; bấm / kéo thì cuộn tới; rộng 8px, lề còn lại vẫn kéo bôi đen. ≤ 720px ẩn; cảm ứng chỉ xem.
+- Gợi ý (`prefs.rvSuggest`, mặc định bật): đơn vị chạm dải đọc (luật của Focus band, cả khi Focus tắt) cộng thời gian; rời dải đi lên sau
+  `dwellNeed` (40% số từ ÷ 230 wpm, 4–60 s) thì có ✓ viền đứt `.is-sug` và nút *Accept N suggested* ở tab *Review*. Không bao giờ tự đánh dấu.
+- Chỉ đếm khi tab hiện, cửa sổ có focus, có thao tác trong 60 s; rời dải chỉ tính lúc người dùng tự cuộn; J / K / X, dải tiến độ gọi `noteJump()`.
+  Gợi ý chỉ ở bộ nhớ, theo phiên; khoá là băm chữ, chữ đổi thì rơi. Chấp nhận: X, bấm làn, nút (Undo trả cả gợi ý).
 
 ## Neo đoạn trích
 
-- Mỗi nhận xét lưu `quote`, `prefix`, `suffix` (48 ký tự), `origin` (`src` | `md`) và `rel` (vị trí tương đối),
-  kiểu TextQuoteSelector của W3C Web Annotation. Không lưu offset: văn bản đổi thì offset sai.
-- Mỗi lần vẽ, tìm lại đoạn trích trong cả nguồn lẫn bản dựng: tầng 1 khớp nguyên văn sau khi gộp khoảng trắng;
-  tầng 2 chỉ so chữ và số, chữ thường, bỏ cú pháp markdown có chữ (`SYNTAX`).
+- Mỗi nhận xét lưu `quote`, `prefix`, `suffix` (48 ký tự), `origin` (`src` | `md`), `rel` (vị trí tương đối), kiểu W3C TextQuoteSelector; không lưu offset.
+- Mỗi lần vẽ, tìm lại đoạn trích ở nguồn lẫn bản dựng: tầng 1 nguyên văn sau khi gộp khoảng trắng; tầng 2 chỉ chữ và số, chữ thường, bỏ cú pháp (`SYNTAX`).
 - Nhiều chỗ khớp: `prefix` / `suffix` khớp dài nhất, rồi gần `rel` nhất (so mọi chỗ; trích ở khung kia thì so ở tầng 2).
-- Không tìm thấy ở cả hai chế độ: nhận xét mất neo, hiện `!` trong danh sách và không vào prompt.
+- Không tìm thấy ở cả hai chế độ: nhận xét mất neo, hiện `!` trong danh sách, không vào prompt. Prompt xếp theo vị trí trích trong nguồn.
 - Chọn ở *Source* thì trích đúng nguồn, ở *Preview* thì chữ đã dựng; vùng chọn giữa từ thì nới ra mép từ (chữ, số, dấu Unicode).
-- Thứ tự trong prompt là thứ tự đoạn trích trong nguồn.
 
 ## Prompt
 
@@ -165,25 +168,22 @@
 - Nhiều phần: `3. L12 "q1"; L15-16 "q2" — comment`; khối `### 3 · L12, L15-16` + mỗi phần một khối `>`. Một đoạn: y như cũ.
 - *Line numbers* (mặc định bật, lưu theo phiên): dòng đầu và cuối của neo trong nguồn; chọn ở bản dựng cũng tính
   qua neo nguồn. Có *File* thì ghi `file:12-14`, dạng agent đọc thẳng; mở file thì điền sẵn tên file.
-- Bật số dòng thì lời dẫn có thêm một câu: số dòng chỉ là gợi ý, lệch thì tìm theo trích dẫn. Luôn giữ trích dẫn.
-- Lời dẫn đầu, cuối và tuỳ chọn kèm toàn văn (trong khối rào dài hơn mọi dãy backtick của văn bản).
+- Bật số dòng thì lời dẫn thêm câu: số dòng chỉ là gợi ý, lệch thì tìm theo trích dẫn (luôn giữ). Lời dẫn đầu, cuối, tuỳ chọn kèm toàn văn (khối rào dài hơn mọi dãy backtick).
 
 ## Gợi ý nhận xét
 
-- Đếm số lần dùng theo khoá chuẩn hoá (`normKey`); xếp theo số lần, rồi lần dùng gần nhất, rồi thứ tự gốc.
-- Tỉ lệ: (số lần + 1) / (tổng số lần + số gợi ý). Chỉ hiện khi đã đếm từ 5 lần nhận xét (`MIN_PCT`).
+- Đếm theo khoá chuẩn hoá (`normKey`); xếp theo số lần, lần dùng gần nhất, thứ tự gốc. Tỉ lệ (số lần + 1) / (tổng + số gợi ý), hiện từ 5 lần (`MIN_PCT`).
 - Hộp nhận xét hiện 5 gợi ý đầu (`POP_CHIPS`), còn lại sau chip `+N`. Nhận xét gõ tay ≤ 80 ký tự được đếm; từ hai lần thì thành gợi ý.
-- Bỏ gợi ý là ẩn, không xoá số đếm: gợi ý mặc định không quay lại khi nạp lại `data/hints.json`.
-- Đổi chữ một gợi ý mặc định: thêm cặp cũ → mới vào `renamed` trong `data/hints.json`; `migrateHints()` dồn số đếm
-  và giữ trạng thái ẩn. Chỉ khoá từng là gợi ý mặc định (`seed`) được dồn.
+- Bỏ gợi ý là ẩn, không xoá số đếm (gợi ý mặc định không quay lại). Đổi chữ gợi ý mặc định: cặp cũ → mới vào `renamed` của `data/hints.json`;
+  `migrateHints()` dồn số đếm, giữ trạng thái ẩn, chỉ cho khoá từng là gợi ý mặc định (`seed`).
 
 ## Lưu trữ
 
-- Mọi lần đọc ghi `localStorage` bọc try/catch; hỏng thì trang vẫn chạy, chỉ báo một lần.
+- Mọi lần đọc ghi `localStorage` bọc try/catch; hỏng thì trang vẫn chạy, chỉ báo một lần. Phiên trống không vào lịch sử.
 - Khoá: `md-annotate:index:v1` (danh sách phiên), `md-annotate:s:<id>` (một phiên), `md-annotate:current`,
-  `md-annotate:stats:v1` (số đếm gợi ý), `md-annotate:prefs:v1` (chế độ xem, kiểu prompt, lời dẫn, tô màu, panel, *Settings*, `rvDim`).
+  `md-annotate:stats:v1` (số đếm gợi ý), `md-annotate:prefs:v1` (chế độ xem, kiểu prompt, lời dẫn, tô màu, panel, *Settings*, `rvDim`, `rvSuggest`).
 - Đổi cấu trúc phiên thì tăng hậu tố `v1` và chuyển dữ liệu cũ. Trường thêm, tuỳ chọn (`parts`, `reviews`, `rvPrompt`) thì không tăng.
-- Phiên trống không vào lịch sử. Mở file / văn bản mẫu khi phiên có nội dung thì mở phiên mới.
+- Mở file / văn bản mẫu khi phiên có nội dung thì mở phiên mới.
 
 ## An toàn
 
