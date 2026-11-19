@@ -28,7 +28,11 @@
 - *Split* khi `#doc` đủ cho hai khung ≥ 420px (`splitOK()`), không theo media query. Chưa đủ chỗ thì hiện
   *Preview* nhưng `prefs.view` vẫn nhớ `split`. Hai khung cao `--pane-h` (JS: khung nhìn trừ đỉnh khung và 17px
   đáy, trừ thêm thanh đáy khi ≤ 1080px), cuộn riêng; trang không cuộn. Vách `#divider` lưu `prefs.split`.
-- *Preview* giữ khổ đọc ~72ch ở giữa khung.
+- *Preview* giữ khổ đọc ~72ch ở giữa khung; trích khối là vạch trái một cạnh (không bo), bảng có viền ngoài bo góc.
+- Trống văn bản: thẻ `#start` (vùng thả, *Paste from clipboard*, *Open .md file*, *Sample text*, ba bước) trên ô
+  nhập thấp; có chữ thì ẩn thẻ, hiện hàng công cụ. Ctrl/⌘ + V ngoài ô nhập cũng dán khi còn trống.
+- Một `<input type="file" id="file-in">` ẩn; mọi nút *Open .md file* (`.js-open`) gọi `click()` của nó.
+- Hiệu ứng rê chuột bọc trong `@media (hover: hover)`, để màn cảm ứng không dính trạng thái rê.
 - Phần tử ẩn cho trình đọc màn hình (`.ma-sr`) đặt `top: 0`, không thì nó đẩy trang dài thêm 1px.
 
 ## Panel bên phải
@@ -52,6 +56,8 @@
 
 ## Hộp nhận xét
 
+- Khung soạn nổi: trích dẫn tối đa 2 dòng, dài hơn thì mờ dần (`.is-long`, mask theo `--ink`); chip gợi ý nền
+  `--chip`, không viền; *Save* là nút `--accent`. Hiện ra có chuyển động ngắn, tắt khi `prefers-reduced-motion`.
 - Chuột thì mở ngay khi thả; cảm ứng và bàn phím thì hiện nút nổi *Comment on selection*. Máy hẹp hoặc màn cảm
   ứng: hộp là tấm trượt đáy.
 - Đoạn đang chọn tô bằng CSS Custom Highlight (`::highlight(ma-pending)`), không sửa DOM: sửa DOM giữa lúc kéo chuột

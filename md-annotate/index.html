@@ -141,7 +141,7 @@
       a { color: inherit; }
       ::selection { background: var(--accent); color: var(--on-accent); }
       ::highlight(ma-pending) { background-color: var(--hl-pend); }
-      :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: 4px; }
+      :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: var(--r-sm); }
       .ma-wrap { width: 100%; padding: 0 var(--pad); }
       svg.ma-i { width: 16px; height: 16px; flex: none; }
 
@@ -167,6 +167,9 @@
       .ma-brand b { font-weight: 500; color: var(--ink); }
       .ma-brand__txt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       .ma-bar__sp { flex: 1; }
+      /* Thanh trên: nút nhẹ, không viền, cùng cao 40px. */
+      .ma-bar .ma-btn, .ma-bar .ma-icbtn { background: transparent; border-color: transparent; }
+      .ma-bar .ma-btn:hover, .ma-bar .ma-icbtn:hover { background: var(--chip); border-color: transparent; }
 
       /* NÚT */
       .ma-btn {
@@ -174,7 +177,7 @@
         min-height: 40px; padding: 0 14px;
         font: 600 13.5px/1 var(--sans); color: var(--ink-2); text-decoration: none; white-space: nowrap;
         background: var(--surface); border: 1px solid var(--line); border-radius: 11px;
-        transition: color .15s ease, border-color .15s ease, background .15s ease;
+        transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease), filter var(--dur) var(--ease);
       }
       .ma-btn:hover { color: var(--ink); border-color: var(--ink-3); }
       .ma-btn:disabled { opacity: .5; cursor: default; }
@@ -189,7 +192,7 @@
         width: 40px; height: 40px; padding: 0;
         color: var(--ink-2); background: var(--surface);
         border: 1px solid var(--line); border-radius: 11px;
-        transition: color .15s ease, border-color .15s ease;
+        transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
       }
       .ma-icbtn:hover { color: var(--ink); border-color: var(--ink-3); }
       .ma-icbtn--bare { background: transparent; border-color: transparent; }
@@ -232,34 +235,58 @@
       .ma-left { min-width: 0; }
 
       /* VĂN BẢN */
-      .ma-doc { min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
+      .ma-doc { min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-1); }
       .ma-doc.is-drop { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-soft); }
       .ma-doc__bar {
-        display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
-        padding: 10px 12px; border-bottom: 1px solid var(--line);
+        display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3);
+        min-height: 57px; padding: var(--s2) var(--s3) var(--s2) var(--s2); border-bottom: 1px solid var(--line-2);
       }
-      .ma-tabs { display: inline-flex; gap: 2px; padding: 3px; background: var(--surface-2); border-radius: 12px; }
+      .ma-tabs { order: 2; display: inline-flex; gap: 2px; padding: 3px; background: var(--surface-2); border-radius: var(--r); }
       .ma-tab {
-        min-height: 36px; padding: 0 14px; border: 0; border-radius: 9px; background: transparent;
+        min-height: 34px; padding: 0 14px; border: 0; border-radius: 9px; background: transparent;
         font: 600 13.5px/1 var(--sans); color: var(--ink-2);
+        transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
       }
       .ma-tab:hover { color: var(--ink); }
       .ma-tab[aria-selected="true"] { background: var(--tab-on); color: var(--ink); box-shadow: var(--tab-ring); }
-      .ma-doc__meta { flex: none; font: 500 11.5px/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+      .ma-doc__meta { order: 1; margin-left: auto; flex: none; font: 500 11.5px/1 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
 
-      .ma-edit { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+      .ma-edit { padding: var(--s4); display: flex; flex-direction: column; gap: var(--s3); }
       .ma-ta {
         width: 100%; min-width: 0; padding: 12px 14px; resize: vertical;
-        background: var(--bg); border: 1px solid var(--line); border-radius: 12px;
+        background: var(--bg); border: 1px solid var(--line); border-radius: var(--r);
         font: 500 13.5px/1.6 var(--mono); tab-size: 4;
+        transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
       }
       #src-input { min-height: 52vh; }
+      #src-input.is-empty { min-height: 140px; }
       .ma-edit__tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
       .ma-edit__tools .ma-hint { font-size: 13px; color: var(--ink-3); }
       .ma-edit__note { margin: 0; font-size: 13.5px; color: var(--ink-2); }
       .ma-edit__note b { color: var(--danger); font-weight: 600; }
-      .ma-file { position: relative; overflow: hidden; }
-      .ma-file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+      /* Trạng thái trống: vùng thả file, ba bước, nút bắt đầu. */
+      .ma-start {
+        display: flex; flex-direction: column; align-items: center; gap: var(--s5); text-align: center;
+        padding: var(--s6) var(--s5); border: 1.5px dashed var(--line); border-radius: var(--r-lg);
+        background: var(--bg); transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+      }
+      .ma-doc.is-drop .ma-start { border-color: var(--green); background: var(--green-soft); }
+      .ma-start__icon {
+        display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px;
+        background: var(--green-soft); color: var(--green);
+      }
+      .ma-start__icon svg { width: 24px; height: 24px; }
+      .ma-start h2 { margin: var(--s3) 0 var(--s1); font: 600 20px/1.25 var(--display); letter-spacing: -.01em; }
+      .ma-start p { margin: 0; max-width: 46ch; color: var(--ink-2); }
+      .ma-start p code { font: 500 .9em var(--mono); }
+      .ma-start__acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s2); }
+      .ma-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s4); width: 100%; max-width: 640px; text-align: left; }
+      .ma-steps li { display: flex; gap: var(--s2); align-items: flex-start; font-size: 13.5px; color: var(--ink-2); }
+      .ma-steps b { color: var(--ink); font-weight: 600; }
+      .ma-steps__n {
+        flex: none; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 999px;
+        font: 500 11px/1 var(--mono); color: var(--on-accent); background: var(--accent);
+      }
 
       .ma-views { display: grid; grid-template-columns: minmax(0, 1fr); }
       /* Song song: hai khung cao bằng phần còn lại của khung nhìn (--pane-h, JS tính), cuộn riêng; vách giữa kéo được. */
@@ -269,7 +296,8 @@
       .ma-divider::before { content: ''; position: absolute; top: 0; bottom: 0; left: 4px; width: 1px; background: var(--line); transition: background var(--dur) var(--ease), width var(--dur) var(--ease), left var(--dur) var(--ease); }
       .ma-divider:hover::before, .ma-divider:focus-visible::before, .ma-divider.is-drag::before { left: 3px; width: 3px; background: var(--accent); }
       .ma-divider:focus-visible { outline: none; }
-      .ma-view { min-width: 0; padding: 18px 22px 26px; }
+      .ma-view { min-width: 0; padding: var(--s5) var(--s6) var(--s6); }
+      #wrap-src { padding-left: var(--s4); }
       .ma-view__lbl { display: none; margin-bottom: 10px; }
       .ma-views[data-mode="split"] .ma-view__lbl { display: block; }
       .ma-src {
@@ -306,28 +334,46 @@
       .sx-strong { font-weight: 700; }
       .sx-em { font-style: italic; }
       .sx-strike { text-decoration: line-through; }
-      .ma-empty { padding: 48px 22px; text-align: center; color: var(--ink-2); }
-      .ma-empty p { margin: 0 0 14px; }
+      .ma-empty { display: flex; flex-direction: column; align-items: center; gap: var(--s3); padding: 64px var(--s5); color: var(--ink-3); }
+      .ma-empty p { margin: 0; }
 
-      /* Markdown đã dựng */
-      /* Khổ đọc ~72ch, nằm giữa khung; khung thì rộng. */
-      .ma-md { max-width: 72ch; margin: 0 auto; font-size: 15.5px; line-height: 1.7; overflow-wrap: anywhere; }
+      /* Markdown đã dựng: trang tài liệu — khổ ~72ch ở giữa, nhịp tiêu đề rõ. */
+      .ma-md { max-width: 72ch; margin: 0 auto; font-size: 16px; line-height: 1.75; overflow-wrap: anywhere; }
       .ma-md > :first-child { margin-top: 0; }
-      .ma-md h1, .ma-md h2, .ma-md h3, .ma-md h4, .ma-md h5, .ma-md h6 { font-family: var(--display); font-weight: 600; line-height: 1.25; margin: 1.4em 0 .5em; }
-      .ma-md h1 { font-size: 1.7em; } .ma-md h2 { font-size: 1.35em; } .ma-md h3 { font-size: 1.15em; } .ma-md h4, .ma-md h5, .ma-md h6 { font-size: 1em; }
-      .ma-md p, .ma-md ul, .ma-md ol, .ma-md blockquote, .ma-md pre, .ma-md table { margin: 0 0 1em; }
-      .ma-md ul, .ma-md ol { padding-left: 1.4em; }
-      .ma-md li + li { margin-top: .25em; }
-      .ma-md blockquote { padding: 10px 16px; color: var(--ink-2); background: var(--surface-2); border-radius: 10px; }
-      .ma-md blockquote > :last-child, .ma-md li > :last-child { margin-bottom: 0; }
-      .ma-md code { font: 500 .86em var(--mono); background: var(--surface-2); padding: .1em .35em; border-radius: 5px; }
-      .ma-md pre { padding: 12px 14px; background: var(--surface-2); border-radius: 10px; overflow-x: auto; }
-      .ma-md pre code { padding: 0; background: none; }
-      .ma-md table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; }
-      .ma-md th, .ma-md td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; }
-      .ma-md th { background: var(--surface-2); }
-      .ma-md img { max-width: 100%; height: auto; }
-      .ma-md hr { border: 0; height: 1px; background: var(--line); margin: 1.6em 0; }
+      .ma-md > :last-child { margin-bottom: 0; }
+      .ma-md h1, .ma-md h2, .ma-md h3 { font-family: var(--display); font-weight: 600; letter-spacing: -.015em; line-height: 1.25; }
+      .ma-md h1 { font-size: 2em; margin: 0 0 .6em; }
+      .ma-md h2 { font-size: 1.45em; margin: 1.9em 0 .6em; }
+      .ma-md h3 { font-size: 1.2em; margin: 1.6em 0 .5em; }
+      .ma-md h4, .ma-md h5, .ma-md h6 { font: 600 1em/1.4 var(--sans); margin: 1.4em 0 .4em; }
+      .ma-md p { margin: 0 0 1.1em; }
+      .ma-md ul, .ma-md ol { margin: 0 0 1.1em; padding-left: 1.5em; }
+      .ma-md li { margin: .3em 0; }
+      .ma-md li::marker { color: var(--ink-3); }
+      .ma-md li > ul, .ma-md li > ol { margin: .3em 0; }
+      .ma-md li > p { margin: 0 0 .4em; }
+      .ma-md li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.3em; }
+      .ma-md input[type="checkbox"] { margin: 0 .5em 0 0; accent-color: var(--green); vertical-align: -1px; }
+      /* Trích khối: vạch trái một cạnh, không bo (REPO-025). */
+      .ma-md blockquote { margin: 0 0 1.1em; padding: .1em 0 .1em 1.1em; border-left: 3px solid var(--line); color: var(--ink-2); }
+      .ma-md blockquote > :last-child { margin-bottom: 0; }
+      .ma-md code { font: 500 .86em var(--mono); background: var(--surface-2); padding: .12em .4em; border-radius: 6px; }
+      .ma-md pre {
+        margin: 0 0 1.2em; padding: 14px 16px; overflow-x: auto;
+        font-size: 13.5px; line-height: 1.6; background: var(--bg); border: 1px solid var(--line-2); border-radius: var(--r);
+      }
+      .ma-md pre code { font-size: inherit; padding: 0; background: none; border-radius: 0; }
+      .ma-md table {
+        display: block; max-width: 100%; width: max-content; overflow-x: auto; margin: 0 0 1.2em;
+        border-collapse: separate; border-spacing: 0; border: 1px solid var(--line); border-radius: var(--r); font-size: 14.5px; line-height: 1.5;
+      }
+      .ma-md th, .ma-md td { padding: 8px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line-2); }
+      .ma-md td + td, .ma-md th + th { border-left: 1px solid var(--line-2); }
+      .ma-md tr:last-child td { border-bottom: 0; }
+      .ma-md th { background: var(--surface-2); font-weight: 600; border-bottom-color: var(--line); }
+      .ma-md img { max-width: 100%; height: auto; border-radius: var(--r-sm); }
+      .ma-md hr { border: 0; height: 1px; background: var(--line); margin: 2.2em 0; }
+      .ma-md strong { font-weight: 600; }
       .ma-md .ma-a { color: var(--sx-link); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--sx-link) 45%, transparent); text-underline-offset: 2px; cursor: text; }
       .ma-note { color: var(--ink-3); font-style: italic; }
 
@@ -395,7 +441,7 @@
       }
       .ma-rail__n:hover { color: var(--ink); background: var(--green-soft); }
       .ma-rail__sp { flex: 1; }
-      .ma-rail__copy { width: 44px; min-height: 44px; padding: 0; }
+      .ma-rail .ma-rail__copy { flex: none; width: 44px; height: 44px; min-height: 44px; padding: 0; }
       .ma-rail__copy.is-done svg { display: none; }
       .ma-rail__copy.is-done::after { content: '✓'; font-weight: 600; }
       .ma-panel__body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: var(--s3); scrollbar-width: thin; }
@@ -426,7 +472,8 @@
         position: relative; display: flex; align-items: flex-start; border-radius: var(--r);
         transition: background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
       }
-      .ma-item:hover, .ma-item.is-hover { background: var(--chip); }
+      .ma-item.is-hover { background: var(--chip); }
+      @media (hover: hover) { .ma-item:hover { background: var(--chip); } }
       .ma-item.is-active, .ma-item.is-flash { background: var(--green-soft); box-shadow: inset 0 0 0 1px var(--green-line); }
       .ma-item__main {
         flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; text-align: left;
@@ -495,31 +542,44 @@
       }
       .ma-out:empty::before { content: attr(data-ph); color: var(--ink-3); font-family: var(--sans); }
 
-      /* HỘP NHẬN XÉT */
+      /* HỘP NHẬN XÉT: khung soạn nổi — trích dẫn 2 dòng mờ dần, gợi ý nhẹ, nút Save sáng. */
       .ma-pop {
-        position: absolute; z-index: 60; width: min(420px, calc(100vw - 32px));
-        background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
-        box-shadow: var(--shadow); padding: 14px;
+        position: absolute; z-index: 60; width: min(440px, calc(100vw - 32px));
+        background: var(--surface); border: 1px solid var(--line-2); border-radius: 14px;
+        box-shadow: var(--shadow-pop); padding: var(--s3);
       }
+      @media (prefers-reduced-motion: no-preference) {
+        .ma-pop:not([hidden]) { animation: ma-pop-in var(--dur) var(--ease); }
+      }
+      @keyframes ma-pop-in { from { opacity: 0; transform: translateY(4px) scale(.985); } to { opacity: 1; transform: none; } }
+      /* Vạch trái một cạnh, không bo (REPO-025). Dài quá 2 dòng thì mờ dần. */
       .ma-pop__q {
-        margin: 0 0 8px; padding: 8px 10px; font-size: 13px; color: var(--ink-2);
-        background: var(--surface-2); border-radius: 10px;
-        display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere;
+        margin: 2px 0 var(--s3); padding: 0 0 0 10px; border-left: 2px solid var(--accent);
+        font-size: 13px; line-height: 1.5; color: var(--ink-2); max-height: 3em; overflow: hidden; overflow-wrap: anywhere;
       }
-      .ma-pop__warn { margin: 0 0 8px; font-size: 12.5px; color: var(--danger); }
-      .ma-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+      .ma-pop__q.is-long {
+        -webkit-mask-image: linear-gradient(to bottom, var(--ink) 35%, transparent 100%);
+        mask-image: linear-gradient(to bottom, var(--ink) 35%, transparent 100%);
+      }
+      .ma-pop__warn { margin: 0 0 var(--s2); font-size: 12.5px; color: var(--danger); }
+      .ma-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: var(--s3); }
       .ma-chip {
-        display: inline-flex; align-items: center; gap: 6px; min-height: 34px; max-width: 100%;
-        padding: 0 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--bg);
+        display: inline-flex; align-items: center; gap: 6px; min-height: 30px; max-width: 100%;
+        padding: 0 11px; border: 0; border-radius: 999px; background: var(--chip); color: var(--ink-2);
         font-size: 13px; text-align: left;
+        transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
       }
-      .ma-chip:hover { border-color: var(--green); color: var(--ink); background: var(--green-soft); }
+      .ma-chip:hover { background: var(--green-soft); color: var(--ink); }
       .ma-chip__t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .ma-chip__p { font: 500 10.5px/1 var(--mono); color: var(--ink-3); }
-      .ma-chip--more { font: 500 12px/1 var(--mono); color: var(--ink-2); min-width: 44px; justify-content: center; }
-      #pop-text { min-height: 72px; font: 400 14px/1.5 var(--sans); background: var(--surface); }
-      .ma-pop__bar { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 10px; }
-      .ma-pop__keys { flex: 1 1 auto; min-width: 0; margin-right: auto; font: 500 10.5px/1.45 var(--mono); color: var(--ink-3); }
+      .ma-chip--more { font: 500 12px/1 var(--mono); min-width: 40px; justify-content: center; }
+      #pop-text { min-height: 64px; font: 400 14px/1.5 var(--sans); background: var(--bg); border-color: var(--line-2); }
+      .ma-pop__bar { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-top: var(--s3); }
+      .ma-pop__keys { flex: 1 1 auto; min-width: 0; margin-right: auto; font-size: 11.5px; line-height: 1.6; color: var(--ink-3); }
+      .ma-pop__keys kbd, .ma-kbd--plain {
+        padding: 1px 5px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px;
+        font: 500 10.5px/1.4 var(--mono); color: var(--ink-2); background: var(--surface);
+      }
       .ma-link {
         border: 0; background: none; padding: 0; min-height: 0; font-size: 12.5px; color: var(--ink-3);
         text-decoration: underline; text-underline-offset: 2px;
@@ -530,7 +590,7 @@
       .ma-fab {
         position: fixed; z-index: 55; left: 50%; transform: translateX(-50%);
         bottom: calc(20px + env(safe-area-inset-bottom));
-        min-height: 48px; padding: 0 20px; border-radius: 999px; box-shadow: var(--shadow);
+        min-height: 48px; padding: 0 22px; border-radius: 999px; box-shadow: var(--shadow-pop);
       }
       .ma-dock { display: none; }
       .ma-toast {
@@ -608,13 +668,16 @@
         .ma-docname { flex-basis: 100%; height: 44px; }
         .ma-doc__meta { display: none; }
         .ma-doc__bar { padding: 8px; }
+        .ma-start { padding: var(--s5) var(--s4); gap: var(--s4); }
+        .ma-steps { grid-template-columns: 1fr; gap: var(--s2); }
         .ma-tabs { flex: 1; }
         .ma-tab { flex: 1; padding: 0 8px; }
         .ma-doc__meta { margin-left: 0; width: 100%; }
-        .ma-view { padding: 14px 14px 20px; }
+        .ma-view, #wrap-src { padding: 14px 14px 20px; }
         .ma-syn { min-height: 44px; }
         .ma-edit { padding: 10px; }
         #src-input { min-height: 46vh; }
+        #src-input.is-empty { min-height: 120px; }
         .ma-dlg { width: 100vw; max-width: 100vw; margin: auto 0 0; max-height: 85vh; border-radius: 16px 16px 0 0; }
       }
       /* Hộp nhận xét thành tấm trượt đáy ở máy hẹp hoặc màn cảm ứng */
@@ -684,17 +747,36 @@
           </div>
 
           <div class="ma-edit" id="pane-edit">
+            <input type="file" id="file-in" class="ma-sr" tabindex="-1" aria-hidden="true" accept=".md,.markdown,.txt,text/markdown,text/plain" />
+            <div class="ma-start" id="start">
+              <div>
+                <span class="ma-start__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6v18h12V7l-4-4z" /><path d="M14 3v4h4M9 13h6M9 17h4" /></svg>
+                </span>
+                <h2>Start with a markdown text</h2>
+                <p>Paste it, drop a <code>.md</code> file anywhere on this card, or try the sample.</p>
+              </div>
+              <div class="ma-start__acts">
+                <button class="ma-btn ma-btn--go" type="button" id="btn-paste">Paste from clipboard</button>
+                <button class="ma-btn js-open" type="button">Open .md file</button>
+                <button class="ma-btn" type="button" id="btn-sample">Sample text</button>
+              </div>
+              <ol class="ma-steps" aria-label="How it works">
+                <li><span class="ma-steps__n">1</span><span><b>Paste</b> your markdown</span></li>
+                <li><span class="ma-steps__n">2</span><span><b>Select</b> a passage and add a comment</span></li>
+                <li><span class="ma-steps__n">3</span><span><b>Copy prompt</b> and paste it into your AI</span></li>
+              </ol>
+            </div>
             <textarea class="ma-ta" id="src-input" spellcheck="false" aria-label="Markdown text"
-                      placeholder="Paste or type markdown here. After a paste the page switches to Preview so you can select and comment."></textarea>
-            <div class="ma-edit__tools">
-              <label class="ma-btn ma-file">
+                      placeholder="…or type or paste markdown here (Ctrl/⌘ + V)"></textarea>
+            <div class="ma-edit__tools" id="edit-tools">
+              <button class="ma-btn js-open" type="button">
                 <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6v18h12V7l-4-4z" /><path d="M14 3v4h4M12 11v6M9 14l3-3 3 3" /></svg>
                 Open .md file
-                <input type="file" id="file-in" accept=".md,.markdown,.txt,text/markdown,text/plain" />
-              </label>
-              <button class="ma-btn" type="button" id="btn-sample">Sample text</button>
+              </button>
+              <button class="ma-btn" type="button" id="btn-sample-2">Sample text</button>
               <button class="ma-btn ma-btn--quiet ma-btn--danger" type="button" id="btn-clear">Clear text</button>
-              <span class="ma-hint">or drop a file here</span>
+              <span class="ma-hint">or drop a file on this card</span>
             </div>
             <p class="ma-edit__note" id="edit-note" hidden></p>
           </div>
@@ -716,8 +798,8 @@
           </div>
 
           <div class="ma-empty" id="empty" hidden>
-            <p>No text yet.</p>
-            <button class="ma-btn ma-btn--go" type="button" id="btn-goedit">Paste text</button>
+            <p>No text yet. Paste one in the Edit tab.</p>
+            <button class="ma-btn ma-btn--go" type="button" id="btn-goedit">Go to Edit</button>
           </div>
         </section>
       </div>
@@ -824,7 +906,7 @@
       <div class="ma-chips" id="pop-chips"></div>
       <textarea class="ma-ta" id="pop-text" rows="2" placeholder="Comment… (or pick a hint)" aria-label="Comment"></textarea>
       <div class="ma-pop__bar">
-        <span class="ma-pop__keys">Enter saves · ⇧Enter new line<br />Esc closes</span>
+        <span class="ma-pop__keys"><kbd>Enter</kbd> save · <kbd>⇧ Enter</kbd> new line · <kbd>Esc</kbd> close</span>
         <button class="ma-btn ma-btn--quiet ma-btn--danger" type="button" id="pop-del" hidden>Delete</button>
         <button class="ma-btn ma-btn--quiet" type="button" id="pop-cancel">Cancel</button>
         <button class="ma-btn ma-btn--go" type="button" id="pop-save">Save</button>
@@ -1496,6 +1578,8 @@ This page lets you **comment on individual passages** of a markdown text, then g
             lost ? h('b', null, ' ' + plural(lost, 'comment') + (lost === 1 ? ' has' : ' have') + ' lost its quote.') : '');
         } else note.hidden = true;
         $('empty').hidden = !(view !== 'edit' && !t);
+        $('start').hidden = !!t; $('edit-tools').hidden = !t;
+        $('src-input').classList.toggle('is-empty', !t);
         $('views').hidden = view === 'edit' || !t;
         sizePanes();
       }
@@ -1853,6 +1937,8 @@ This page lets you **comment on individual passages** of a markdown text, then g
         el.classList.toggle('is-sheet', sheet);
         el.hidden = false;
         $('fab').hidden = true;
+        var q = $('pop-q');
+        q.classList.toggle('is-long', q.scrollHeight > q.clientHeight + 1);
         renderPopHints();
         if (!sheet) {
           el.style.top = '0px'; el.style.left = '0px';
@@ -2236,10 +2322,30 @@ This page lets you **comment on individual passages** of a markdown text, then g
         renderTimer = setTimeout(renderAll, 250);
         renderMeta();
       });
-      $('btn-sample').addEventListener('click', function () {
+      function loadSample() {
         var t = $('sample-md').textContent.replace(/^\n/, '');
         if (!isEmpty(S)) switchTo(newSession(''));
         setText(t); setView(lastRead);
+      }
+      $('btn-sample').addEventListener('click', loadSample);
+      $('btn-sample-2').addEventListener('click', loadSample);
+      document.querySelectorAll('.js-open').forEach(function (b) { b.addEventListener('click', function () { $('file-in').click(); }); });
+      /* Trang trống: dán từ clipboard bằng nút, hoặc Ctrl/⌘ + V ở bất cứ đâu ngoài ô nhập. */
+      function pasteText(t) {
+        if (!t || !t.trim()) { toast('The clipboard has no text.'); return; }
+        ta.value = t.replace(/\r\n?/g, '\n'); pasteIntoEmpty = true;
+        ta.dispatchEvent(new Event('input'));
+      }
+      $('btn-paste').addEventListener('click', function () {
+        if (!navigator.clipboard || !navigator.clipboard.readText) { ta.focus(); toast('Press Ctrl/⌘ + V to paste.'); return; }
+        navigator.clipboard.readText().then(pasteText, function () { ta.focus(); toast('Press Ctrl/⌘ + V to paste.'); });
+      });
+      document.addEventListener('paste', function (e) {
+        if (S.text || view !== 'edit') return;
+        var a = document.activeElement;
+        if (a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.isContentEditable)) return;
+        var t = e.clipboardData && e.clipboardData.getData('text/plain');
+        if (t) { e.preventDefault(); pasteText(t); }
       });
       $('btn-clear').addEventListener('click', function () {
         if (!S.text) return;
