@@ -1,5 +1,6 @@
 /* Khối cấp cao của văn bản markdown theo dòng nguồn, thuần: lexSpans(text, lex) → [{ a, b, heading }], a / b là dòng
-   đầu / cuối (đếm từ 0). lex là bộ tách token (marked.lexer, ui/markdown.js mdLex); nó ném lỗi thì không có khối.
+   đầu / cuối (đếm từ 0), heading: khối mở section (token heading, hoặc khối HTML mở bằng <h1>…<h6>).
+   lex là bộ tách token (marked.lexer, ui/markdown.js mdLex); nó ném lỗi thì không có khối.
    Dùng cho cuộn theo nhau (ui/sync-scroll.js) và đánh số section (ui/focus.js).
    Xuất: lexSpans.
    Dùng: core/text.js. */
@@ -40,7 +41,9 @@ export function lexSpans(text, lex) {
       if (j < 0 || !/^\s*$/.test(text.slice(end, j))) break;
       end = j + lines[k].length;
     }
-    spans.push({ a: lineAt(at), b: lineAt(Math.max(at, end - 1)), heading: t.type === 'heading' });
+    // Khối HTML mở bằng <h1>…<h6> là tiêu đề cấp cao ở Preview, nên cũng mở section ở Source.
+    var heading = t.type === 'heading' || (t.type === 'html' && /^<h[1-6][\s>/]/i.test(lines[0]));
+    spans.push({ a: lineAt(at), b: lineAt(Math.max(at, end - 1)), heading: heading });
     pos = end;
   });
   return spans;

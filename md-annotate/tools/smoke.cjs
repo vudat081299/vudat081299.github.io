@@ -705,6 +705,27 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await sp.click('#btn-layout'); await sp.click('#set-reset'); await sp.keyboard.press('Escape');
   await sctx.close();
 
+  // ── review: layout & scroll ──
+  const rctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  await rctx.addInitScript(() => { try { if (!sessionStorage.getItem('r')) { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ view: 'split', focus: true })); sessionStorage.setItem('r', '1'); } } catch (e) {} });
+  const rv = await rctx.newPage(); watch(rv);
+  await rv.goto(BASE); await rv.waitForFunction(() => window.marked && window.DOMPurify);
+  const rvLoad = async (t) => {
+    await rv.click('.ma-tab[data-view="edit"]');
+    await rv.evaluate((t) => { const ta = document.getElementById('src-input'); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
+    await rv.waitForTimeout(350);
+    await rv.click('.ma-tab[data-view="split"]'); await rv.waitForTimeout(200);
+  };
+  const litSrc = () => rv.evaluate(() => [...document.querySelectorAll('#v-src .ma-ln.is-sec')].map((l) => l.textContent.trim()).filter(Boolean));
+  // Tiêu đề viết bằng HTML (<h1 align="center">, hay gặp ở README) mở section ở cả hai khung: số section khớp.
+  await rvLoad('<h1 align="center">Title</h1>\n\nIntro para.\n\n## Two\n\nTwo para.\n');
+  await rv.hover('#v-md > p:has-text("Two para.")'); await rv.waitForTimeout(300);
+  const lh = await litSrc();
+  check('Focus ở Split, tiêu đề HTML: Source sáng đúng section của Preview', lh.join('|') === '## Two|Two para.', JSON.stringify(lh));
+  await rv.mouse.move(5, 5);
+  await rctx.close();
+  // ── end review: layout & scroll ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

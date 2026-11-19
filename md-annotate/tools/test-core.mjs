@@ -81,6 +81,13 @@ check('spanAt: dòng trong khối, giữa hai khối', eq([0, 1, 2, 3, 4, 5].map
   const sp = lexSpans(text, lex).map(({ a, b }) => [a, b]);
   check('lexSpans: dòng cuối lặp lại trong khối vẫn tính tới dòng cuối thật', eq(sp, [[0, 4], [6, 6]]), JSON.stringify(sp));
 }
+{
+  // Khối HTML mở bằng <h1>…<h6> thành tiêu đề cấp cao ở Preview, nên ở Source nó cũng mở section.
+  const text = '<h1 align="center">Title</h1>\n\nIntro\n\n<div>x</div>\n';
+  const lex = () => [tok('html', '<h1 align="center">Title</h1>\n\n'), tok('paragraph', 'Intro'), tok('space', '\n\n'), tok('html', '<div>x</div>\n')];
+  const sp = lexSpans(text, lex).map((s) => s.heading);
+  check('lexSpans: khối HTML <h1> là tiêu đề, <div> thì không', eq(sp, [true, false, false]), JSON.stringify(sp));
+}
 // ── end review: layout & scroll ──
 
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
