@@ -147,7 +147,7 @@
   kiểu TextQuoteSelector của W3C Web Annotation. Không lưu offset: văn bản đổi thì offset sai.
 - Mỗi lần vẽ, tìm lại đoạn trích trong cả nguồn lẫn bản dựng: tầng 1 khớp nguyên văn sau khi gộp khoảng trắng;
   tầng 2 chỉ so chữ và số, chữ thường, bỏ cú pháp markdown có chữ (`SYNTAX`).
-- Đoạn trích xuất hiện nhiều lần: chọn chỗ khớp `prefix` / `suffix` dài nhất, rồi gần `rel` nhất. So mọi chỗ khớp, không giới hạn số.
+- Nhiều chỗ khớp: `prefix` / `suffix` khớp dài nhất, rồi gần `rel` nhất (so mọi chỗ; trích ở khung kia thì so ở tầng 2).
 - Không tìm thấy ở cả hai chế độ: nhận xét mất neo, hiện `!` trong danh sách và không vào prompt.
 - Chọn ở *Source* thì trích đúng nguồn markdown; chọn ở *Preview* thì trích chữ đã dựng.
 - Vùng chọn bắt đầu hay kết thúc giữa từ thì nới ra tới mép từ (chữ, số, dấu Unicode) trước khi neo.

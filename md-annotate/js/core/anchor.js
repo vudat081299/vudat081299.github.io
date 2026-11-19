@@ -60,34 +60,39 @@ function findAll(hay, needle) {
 function tailMatch(pre, hay, i) { var n = 0; while (n < pre.length && n < i && pre[pre.length - 1 - n] === hay[i - 1 - n]) n++; return n; }
 /* Số ký tự đầu của suf trùng với các ký tự từ vị trí j của hay. */
 function headMatch(suf, hay, j) { var n = 0; while (n < suf.length && j + n < hay.length && suf[n] === hay[j + n]) n++; return n; }
-/* Vị trí của needle trong hay, hoặc -1. Nhiều chỗ khớp: chỗ khớp pre / suf dài nhất, rồi gần rel nhất. Đúng một chỗ
-   còn nguyên pre + needle + suf thì chỗ ấy thắng chắc, lấy ngay khỏi so từng chỗ. */
+/* Chỗ của needle trong hay: { i, sure }, i = -1 nếu không có. Nhiều chỗ khớp: chỗ khớp pre / suf dài nhất, rồi gần
+   rel nhất. sure: chỉ một chỗ khớp, hoặc đúng một chỗ còn nguyên pre + needle + suf (chỗ ấy thắng, khỏi so từng chỗ). */
 function find(hay, needle, pre, suf, rel) {
-  if (!needle) return -1;
+  if (!needle) return { i: -1, sure: false };
   var whole = pre + needle + suf, k = hay.indexOf(whole);
-  if (k !== -1 && hay.indexOf(whole, k + 1) === -1) return k + pre.length;
+  if (k !== -1 && hay.indexOf(whole, k + 1) === -1) return { i: k + pre.length, sure: true };
   var hits = findAll(hay, needle);
-  if (hits.length < 2) return hits.length ? hits[0] : -1;
+  if (hits.length < 2) return { i: hits.length ? hits[0] : -1, sure: hits.length === 1 };
   var best = -1, bs = -Infinity;
   hits.forEach(function (i) {
     var sc = tailMatch(pre, hay, i) + headMatch(suf, hay, i + needle.length) - Math.abs(i / Math.max(1, hay.length) - (rel || 0));
     if (sc > bs) { bs = sc; best = i; }
   });
-  return best;
+  return { i: best, sure: false };
 }
-/* Trả [đầu, cuối) trong `text`, hoặc null. srcDomain: text là nguồn markdown. */
+/* Trả [đầu, cuối) trong `text`, hoặc null. srcDomain: text là nguồn markdown.
+   Đoạn trích lấy ở khung kia (chọn ở Preview, tìm trong nguồn, hay ngược lại) mà khớp nguyên văn nhiều chỗ thì đừng
+   tin tầng 1: ngữ cảnh hai khung khác cú pháp (`**`, `|`, `[`) nên so ký tự thô chọn nhầm. Sang tầng 2, nơi ngữ
+   cảnh cũng chỉ còn chữ và số; tầng 2 không ra thì mới dùng kết quả tầng 1. */
 export function locate(c, text, srcDomain) {
   if (!text || !c.quote) return null;
   var P = prep(text, srcDomain);
+  var cross = (c.origin === 'src') !== !!srcDomain;
   /* Tầng 1: nguyên văn, gộp khoảng trắng. */
   var q = normWs(c.quote).s.trim();
-  var i = find(P.n.s, q, normWs(c.prefix || '').s, normWs(c.suffix || '').s, c.rel);
-  if (i >= 0) return [P.n.map[i], P.n.map[i + q.length - 1] + 1];
+  var r1 = find(P.n.s, q, normWs(c.prefix || '').s, normWs(c.suffix || '').s, c.rel);
+  var t1 = r1.i >= 0 ? [P.n.map[r1.i], P.n.map[r1.i + q.length - 1] + 1] : null;
+  if (t1 && (r1.sure || !cross)) return t1;
   /* Tầng 2: chỉ chữ và số; bỏ cú pháp markdown ở trích dẫn khi nó lấy từ nguồn. */
   var qd = c.origin === 'src';
   var k = skel(c.quote, qd).s;
-  i = find(P.k.s, k, skel(c.prefix || '', qd).s, skel(c.suffix || '', qd).s, c.rel);
-  return i >= 0 ? [P.k.map[i], P.k.map[i + k.length - 1] + 1] : null;
+  var r2 = find(P.k.s, k, skel(c.prefix || '', qd).s, skel(c.suffix || '', qd).s, c.rel);
+  return r2.i >= 0 ? [P.k.map[r2.i], P.k.map[r2.i + k.length - 1] + 1] : t1;
 }
 
 /* Vùng chọn → đoạn trích. full: chữ của khung; [s, e): vùng chọn trong full (đã cắt theo khung); which: 'src' |

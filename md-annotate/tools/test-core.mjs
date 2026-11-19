@@ -250,5 +250,17 @@ check('splitFits: hai khung 420px + vách 9px', !splitFits(848) && splitFits(849
 check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi ≥ 320', eq(paneHeight(900, 100.5, 0), { h: 782, fit: true }) && eq(paneHeight(500, 100, 76), { h: 320, fit: false }));
 // ── end review: layout & scroll ──
 
+// ── neo khác khung ──
+// Chọn ở Preview, tìm trong nguồn: ngữ cảnh so trên chữ và số, không trên ký tự thô (`**`, `|`).
+{
+  const { locate, quoteFrom } = await import('../js/core/anchor.js');
+  const src = '| a | b |\n|---|---|\n| alpha | one two |\n\nSome text alpha and **one two** again.\n';
+  const md = 'a\tb\nalpha\tone two\nSome text alpha and one two again.';
+  const at = (nth) => { const s = nth ? md.lastIndexOf('one two') : md.indexOf('one two'); return locate(quoteFrom(md, s, s + 7, 'md', 'one two'), src, true); };
+  check('locate khác khung: chọn "one two" ở đoạn văn thì neo vào đoạn văn, không vào hàng bảng', eq(at(1), [src.indexOf('**one two**') + 2, src.indexOf('**one two**') + 9]), JSON.stringify(at(1)));
+  check('locate khác khung: chọn ở hàng bảng thì vẫn neo vào hàng bảng', eq(at(0), [src.indexOf('one two'), src.indexOf('one two') + 7]), JSON.stringify(at(0)));
+}
+// ── end neo khác khung ──
+
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);
