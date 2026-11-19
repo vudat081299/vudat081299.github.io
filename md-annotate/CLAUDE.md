@@ -31,8 +31,10 @@
 - Hộp *Layout* (`#btn-layout`, `#dlg-layout`): bề rộng vùng làm việc (`prefs.wrap`: `auto` hoặc 50–100%, sàn 720px,
   đặt `--wrap-w`), khổ chữ *Preview* (`prefs.measure`: 0 = hết khung hoặc 50–140ch, `--md-max`), cỡ chữ *Preview*
   (`prefs.mdfs` 13–22px, `--md-fs`). Áp ngay khi kéo; hộp neo góc phải, nền sau trong suốt; điện thoại ẩn mục bề rộng.
-- *Focus mode* trong hộp *Layout* (`prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ mọi khối trừ khối
-  dưới con trỏ (đoạn ở *Preview*, dòng ± 1 ở *Source*), chỉ khi con trỏ trong khung, chỉ `@media (hover: hover)`. Chỉ CSS.
+- *Focus mode* trong hộp *Layout* (`prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ mọi thứ ngoài
+  section dưới con trỏ. Section bắt đầu ở mỗi tiêu đề (h1–h6 ở *Preview*; dòng `#…` ngoài khối rào ở *Source*).
+  `markSections()` gắn `data-sec` lười khi trỏ; section đang trỏ có `.is-sec`, khung có `.is-focusing`. Chỉ chuột;
+  rời khung thì hết mờ, trừ khi hộp nhận xét đang mở.
 - Cỡ chữ trong `.ma-md` (bảng, khối code, tiêu đề) tính bằng `em` theo `--md-fs`, không dùng `px`.
 - Hộp thoại: chỉ `.ma-dlg__b` cuộn. Tab *Prompt*: thân panel không cuộn; *Options* mở cuộn riêng (≤ 38vh), `#out` lấp
   phần còn lại và tự cuộn. Không lồng hai vùng cuộn.

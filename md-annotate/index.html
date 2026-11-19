@@ -628,14 +628,11 @@
         .ma-dlg--live { width: min(400px, calc(100vw - 32px)); margin: 68px max(16px, calc((100vw - min(100vw, max(70vw, 1280px))) / 2 + 8px)) auto auto; }
       }
       @media (max-width: 720px) { .ma-set.ma-set--wrap { display: none; } }
-      /* Focus mode: mờ mọi khối trừ khối dưới con trỏ. Preview theo đoạn; Source theo dòng đang trỏ ± 1.
-         Chỉ khi con trỏ đang trong khung, và chỉ máy có chuột (cảm ứng không có hover). */
-      @media (hover: hover) {
-        html.ma-focus .ma-md :is(p, h1, h2, h3, h4, h5, h6, pre, tr, hr, img, li:not(:has(p))),
-        html.ma-focus #v-src .ma-ln { transition: opacity .18s var(--ease); }
-        html.ma-focus .ma-md:hover :is(p, h1, h2, h3, h4, h5, h6, pre, tr, hr, img, li:not(:has(p))):not(:hover),
-        html.ma-focus #v-src:hover .ma-ln:not(:hover):not(:has(+ .ma-ln:hover)):not(.ma-ln:hover + .ma-ln) { opacity: var(--dim, .3); }
-      }
+      /* Focus mode: mờ mọi thứ ngoài section dưới con trỏ (từ tiêu đề gần nhất phía trên tới trước tiêu đề kế tiếp).
+         JS gắn data-sec cho khối con của .ma-md và cho mỗi .ma-ln, rồi gắn .is-sec cho section đang trỏ. */
+      html.ma-focus .ma-md > [data-sec], html.ma-focus #v-src .ma-ln { transition: opacity .2s var(--ease); }
+      html.ma-focus .ma-md.is-focusing > [data-sec]:not(.is-sec),
+      html.ma-focus #v-src.is-focusing .ma-ln:not(.is-sec) { opacity: var(--dim, .3); }
       .ma-set { display: flex; flex-direction: column; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
       .ma-set:last-of-type { border-bottom: 0; padding-bottom: 0; }
       .ma-set__h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
@@ -1005,8 +1002,8 @@
           <div class="ma-set ma-set--focus">
             <div class="ma-set__h"><label class="ma-check" for="set-focus"><input type="checkbox" id="set-focus" /> Focus mode</label><output id="set-dim-o" for="set-dim"></output></div>
             <input type="range" id="set-dim" min="10" max="70" step="5" aria-label="Brightness of the dimmed text" />
-            <p class="ma-sub">Dims all but the block under the pointer: the paragraph in Preview, the line ± 1 in Source.
-              Mouse or trackpad only.</p>
+            <p class="ma-sub">Dims everything outside the section under the pointer: from the nearest heading above to the
+              next heading. Mouse or trackpad only.</p>
           </div>
           <div><button class="ma-btn ma-btn--quiet" type="button" id="set-reset">Reset to defaults</button></div>
         </div>
@@ -2415,6 +2412,60 @@ This page lets you **comment on individual passages** of a markdown text, then g
         delete prefs.wrap; delete prefs.measure; delete prefs.mdfs; delete prefs.focus; delete prefs.dim; savePrefs(); applyLayout(); refreshSplit();
       });
       $('btn-layout').addEventListener('click', function () { $('dlg-layout').showModal(); });
+
+      /* Focus mode theo section. Section mới bắt đầu ở mỗi tiêu đề (h1–h6 ở Preview; dòng `#…` ngoài khối rào ở
+         Source). Đánh số lười: khung vẽ lại thì phần tử mới chưa có data-sec, lần trỏ kế tiếp đánh lại. */
+      var mqHover = window.matchMedia('(hover: hover)');
+      function secBlocks(root) {
+        return root.id === 'v-src' ? Array.prototype.slice.call(root.querySelectorAll('.ma-ln'))
+          : Array.prototype.filter.call(root.children, function (el) { return el.nodeType === 1; });
+      }
+      function markSections(root) {
+        var sec = 0, fence = false;
+        secBlocks(root).forEach(function (el) {
+          if (root.id === 'v-src') {
+            var t = el.textContent;
+            if (/^\s{0,3}(```|~~~)/.test(t)) fence = !fence;
+            else if (!fence && /^\s{0,3}#{1,6}(\s|$)/.test(t)) sec++;
+          } else if (/^H[1-6]$/.test(el.tagName)) sec++;
+          el.dataset.sec = String(sec);
+        });
+      }
+      function clearFocus(root) {
+        root.classList.remove('is-focusing');
+        root.querySelectorAll('.is-sec').forEach(function (el) { el.classList.remove('is-sec'); });
+        root._sec = null;
+      }
+      ['v-src', 'v-md'].forEach(function (id) {
+        var root = $(id), raf = 0, lastT = null;
+        root.addEventListener('pointermove', function (e) {
+          if (!document.documentElement.classList.contains('ma-focus') || !mqHover.matches || e.pointerType === 'touch') return;
+          lastT = e.target;
+          if (raf) return;
+          raf = requestAnimationFrame(function () {
+            raf = 0;
+            var blocks = secBlocks(root);
+            var el = lastT && lastT.closest && lastT.closest(id === 'v-src' ? '.ma-ln' : '#v-md > *');
+            if (!el || !root.contains(el)) return;
+            if (!el.dataset.sec || (blocks[0] && !blocks[0].dataset.sec)) markSections(root);
+            var sec = el.dataset.sec;
+            if (root._sec === sec && root.classList.contains('is-focusing') && el.classList.contains('is-sec')) return;
+            root.querySelectorAll('.is-sec').forEach(function (x) { x.classList.remove('is-sec'); });
+            blocks.forEach(function (x) { if (x.dataset.sec === sec) x.classList.add('is-sec'); });
+            root._sec = sec;
+            root.classList.add('is-focusing');
+          });
+        });
+        root.addEventListener('pointerleave', function () {
+          if ($('pop') && !$('pop').hidden) return; // đang ghi nhận xét: giữ section sáng
+          clearFocus(root);
+        });
+      });
+      // Đóng hộp nhận xét khi con trỏ đã ra ngoài khung: bỏ làm mờ.
+      new MutationObserver(function () {
+        if (!$('pop').hidden) return;
+        ['v-src', 'v-md'].forEach(function (id) { if (!$(id).matches(':hover')) clearFocus($(id)); });
+      }).observe($('pop'), { attributes: true, attributeFilter: ['hidden'] });
       $('rail-export').addEventListener('click', exportMd);
 
       var ta = $('src-input'), pasteIntoEmpty = false, renderTimer = null;

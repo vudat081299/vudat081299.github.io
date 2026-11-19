@@ -432,20 +432,6 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await page.check('#set-focus');
   await setRange('#set-dim', 20);
   await page.keyboard.press('Escape');
-  await page.click('.ma-tab[data-view="view"]');
-  const fp = await page.$$eval('#v-md p', (ps) => ps.length);
-  if (fp >= 2) {
-    await page.hover('#v-md p >> nth=0');
-    await page.waitForTimeout(300);
-    const op = await page.$$eval('#v-md p', (ps) => ps.slice(0, 2).map((p) => getComputedStyle(p).opacity));
-    check('Focus mode: đoạn dưới con trỏ rõ, đoạn khác mờ 20%', op[0] === '1' && op[1] === '0.2', op.join(','));
-  }
-  await page.click('.ma-tab[data-view="src"]');
-  await page.hover('#v-src .ma-ln >> nth=2'); await page.waitForTimeout(300);
-  const ol = await page.$$eval('#v-src .ma-ln', (ls) => ls.slice(0, 6).map((l) => getComputedStyle(l).opacity));
-  check('Focus mode ở Source: dòng trỏ ± 1 rõ, dòng xa mờ', ol[1] === '1' && ol[2] === '1' && ol[3] === '1' && ol[0] === '0.2' && ol[5] === '0.2', ol.join(','));
-  await page.mouse.move(5, 5); await page.waitForTimeout(300);
-  check('Focus mode: con trỏ ra ngoài khung thì không mờ', (await page.$eval('#v-src .ma-ln', (l) => getComputedStyle(l).opacity)) === '1');
   await page.reload(); await page.waitForFunction(() => window.marked && window.DOMPurify); await page.waitForTimeout(100);
   check('tải lại: nhớ bề rộng 100%', (await wrapW()) === 1920);
   check('tải lại: nhớ Focus mode', await page.evaluate(() => document.documentElement.classList.contains('ma-focus')));
@@ -573,6 +559,28 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await m.click('#btn-hist');
   check('điện thoại: lịch sử không tràn ngang', (await overflow(m)) === 0 && await m.isVisible('#dlg-hist'));
   await mctx.close();
+
+  /* ---------- Focus mode theo section ---------- */
+  const fctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await fctx.addInitScript(() => { try { if (!sessionStorage.getItem('f')) { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ focus: true, dim: 20 })); sessionStorage.setItem('f', '1'); } } catch (e) {} });
+  const f = await fctx.newPage(); watch(f);
+  await f.goto(BASE); await f.waitForFunction(() => window.marked && window.DOMPurify);
+  const FDOC = ['# Title', '', 'Intro paragraph.', '', '## Alpha', '', 'Alpha one.', '', 'Alpha two.', '', '```', '# not a heading', '```', '', '## Beta', '', 'Beta one.', ''].join('\n');
+  await f.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, FDOC);
+  await f.waitForTimeout(150);
+  await f.click('.ma-tab[data-view="view"]');
+  await f.hover('#v-md p:has-text("Alpha two")'); await f.waitForTimeout(350);
+  const fo = await f.$$eval('#v-md > *', (els) => els.map((e) => e.tagName + ':' + e.textContent.trim().slice(0, 10) + '=' + getComputedStyle(e).opacity));
+  const op = (pre) => (fo.find((x) => x.includes(pre)) || '').split('=')[1];
+  check('Focus Preview: cả section Alpha sáng (tiêu đề, hai đoạn, code)', op('H2:Alpha') === '1' && op('P:Alpha one') === '1' && op('P:Alpha two') === '1' && op('PRE:') === '1', fo.join(' | '));
+  check('Focus Preview: section khác mờ 20%', op('P:Intro') === '0.2' && op('H2:Beta') === '0.2' && op('P:Beta one') === '0.2', fo.join(' | '));
+  await f.click('.ma-tab[data-view="src"]');
+  await f.hover('#v-src .ma-ln >> nth=6'); await f.waitForTimeout(350);
+  const so = await f.$$eval('#v-src .ma-ln', (ls) => ls.map((l) => getComputedStyle(l).opacity));
+  check('Focus Source: dòng 5–14 (## Alpha tới trước ## Beta, kể cả "#" trong khối rào) sáng, ngoài mờ', so.slice(4, 14).every((o) => o === '1') && so[2] === '0.2' && so[14] === '0.2' && so[16] === '0.2', so.join(','));
+  await f.mouse.move(5, 5); await f.waitForTimeout(350);
+  check('Focus: con trỏ ra ngoài khung thì hết mờ', (await f.$$eval('#v-src .ma-ln', (ls) => ls.every((l) => getComputedStyle(l).opacity === '1'))));
+  await fctx.close();
 
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
