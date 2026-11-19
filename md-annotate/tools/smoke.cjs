@@ -742,6 +742,10 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     const pr = await rp.evaluate(() => { const r = document.getElementById('pop').getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom), vh: innerHeight }; });
     check('hộp nhận xét ở khung nhìn thấp: trọn trong khung nhìn', await rp.isVisible('#pop') && pr.top >= 0 && pr.bottom <= pr.vh && await inView(rp, '#pop-save'), JSON.stringify(pr));
     await rp.keyboard.press('Escape');
+
+    // Thanh trên đếm dòng như lề số dòng của Source (văn bản kết thúc bằng xuống dòng: 60 đoạn = 119 dòng).
+    const lc = await rp.evaluate(() => ({ meta: document.getElementById('doc-meta').textContent, gutter: document.querySelectorAll('#v-src .ma-ln').length }));
+    check('số dòng ở thanh trên bằng số dòng ở lề Source', new RegExp('· ' + lc.gutter + ' lines$').test(lc.meta), JSON.stringify(lc));
     await rctx.close();
   }
   // ── end review: render & select ──

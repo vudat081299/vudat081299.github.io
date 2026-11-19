@@ -1,6 +1,6 @@
 /* Cắt chữ thành từng đoạn theo mép highlight (và mép token, đầu dòng ở Source), thuần: UI chỉ việc dựng DOM từ kết
    quả. Mỗi đoạn có `cover`: các nhận xét phủ trọn đoạn ấy (rỗng thì không bọc <mark>).
-   Xuất: sourceLines, textRuns.
+   Xuất: lineCount, sourceLines, textRuns.
    Dùng: core/text.js. */
 import { lineOf, lineStarts } from './text.js';
 
@@ -26,11 +26,15 @@ export function textRuns(text, base, ranges) {
   return out;
 }
 
+/* Số dòng của văn bản như lề số dòng của Source đếm: ký tự xuống dòng cuối cùng không mở dòng mới. */
+export function lineCount(text) {
+  return text ? lineStarts(text).length - (text.charCodeAt(text.length - 1) === 10 ? 1 : 0) : 0;
+}
+
 /* Khung Source: { digits: số chữ số của số dòng lớn nhất, lines: [{ runs: [{ t, cls, cover, end }], ids }] }.
    Mỗi dòng chứa cả ký tự xuống dòng của nó; ids: nhận xét chạm dòng ấy (vạch ở lề số). */
 export function sourceLines(text, toks, ranges) {
   var starts = lineStarts(text);
-  var nLines = starts.length - (text.charCodeAt(text.length - 1) === 10 ? 1 : 0);
   var pts = [0, text.length];
   toks.forEach(function (t) { pts.push(t.s, t.e); });
   ranges.forEach(function (r) { pts.push(r.s, r.e); });
@@ -52,5 +56,5 @@ export function sourceLines(text, toks, ranges) {
     var l0 = lineOf(text, r.s) - 1, l1 = lineOf(text, Math.max(r.s, r.e - 1)) - 1;
     for (var k = l0; k <= l1; k++) if (lines[k]) lines[k].ids.push(r.id);
   });
-  return { digits: String(nLines).length, lines: lines };
+  return { digits: String(lineCount(text)).length, lines: lines };
 }

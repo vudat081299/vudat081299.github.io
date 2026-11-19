@@ -2,10 +2,11 @@
    Neo, xếp, đánh số ở core/comments.js. Kết quả (mdText, anchors, ordered, numbers, orphans) chỉ gán ở
    renderAll(); module khác chỉ đọc.
    Xuất: anchors, checkRenderer, mdText, numbers, ordered, orphans, renderAll, renderMeta.
-   Dùng: core/text.js, core/comments.js, ui/dom.js, ui/state.js, ui/markdown.js, ui/marks.js, ui/source-view.js,
-     ui/list.js, ui/prompt.js, ui/views.js, ui/sync-scroll.js, ui/focus.js, ui/popup.js. */
+   Dùng: core/text.js, core/comments.js, core/runs.js, ui/dom.js, ui/state.js, ui/markdown.js, ui/marks.js,
+     ui/source-view.js, ui/list.js, ui/prompt.js, ui/views.js, ui/sync-scroll.js, ui/focus.js, ui/popup.js. */
 import { plural } from '../core/text.js';
 import { anchorAll, markRanges } from '../core/comments.js';
+import { lineCount } from '../core/runs.js';
 import { $, h, textNodes } from './dom.js';
 import { S } from './state.js';
 import { ghExtras, mdHtml, unlink } from './markdown.js';
@@ -58,7 +59,7 @@ export function renderAll() {
 
 export function renderMeta() {
   var t = S.text;
-  var lines = t ? t.split('\n').length : 0;
+  var lines = lineCount(t);
   $('doc-meta').textContent = t ? t.length.toLocaleString('en') + ' chars · ' + lines.toLocaleString('en') + (lines === 1 ? ' line' : ' lines') : '';
   var lost = Object.keys(orphans).length, note = $('edit-note');
   if (S.comments.length) {
