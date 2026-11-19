@@ -31,7 +31,10 @@
 
 ## Prompt
 
-- Hai kiểu: gọn `1. "trích" — nhận xét` (mặc định) và khối `### 1` + `> trích` + nhận xét.
+- Hai kiểu: gọn `1. L12 "trích" — nhận xét` (mặc định) và khối `### 1 · L12-14` + `> trích` + nhận xét.
+- *Kèm số dòng* (mặc định bật, lưu theo phiên): dòng đầu và cuối của neo trong nguồn; chọn ở bản dựng
+  cũng tính qua neo nguồn. Có *Tệp* thì ghi `tệp:12-14`, dạng agent đọc thẳng; mở file thì điền sẵn tên file.
+- Bật số dòng thì lời dẫn có thêm một câu: số dòng chỉ là gợi ý, lệch thì tìm theo trích dẫn. Luôn giữ trích dẫn.
 - Lời dẫn đầu, cuối và tuỳ chọn kèm toàn văn (trong khối rào dài hơn mọi dãy backtick của văn bản).
 
 ## Gợi ý nhận xét

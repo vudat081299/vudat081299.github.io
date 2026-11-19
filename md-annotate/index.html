@@ -294,6 +294,7 @@
       }
       .ma-item.is-orphan .ma-item__n { background: var(--danger); color: var(--surface); }
       .ma-item__body { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+      .ma-item__loc { font: 500 11px/1.2 var(--mono); color: var(--ink-3); overflow-wrap: anywhere; }
       .ma-item__q {
         font-size: 13.5px; color: var(--ink-2);
         display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
@@ -327,6 +328,8 @@
       .ma-wrapbox .ma-ta { min-height: 64px; font: 400 13.5px/1.5 var(--sans); background: var(--surface); }
       .ma-check { display: flex; align-items: center; gap: 10px; min-height: 40px; font-size: 13.5px; color: var(--ink-2); cursor: pointer; }
       .ma-check input { width: 18px; height: 18px; accent-color: var(--green); margin: 0; }
+      .ma-pathrow { display: flex; align-items: center; gap: 10px; margin: 2px 0 6px 28px; }
+      .ma-pathrow .ma-input { height: 36px; font: 500 12.5px var(--mono); }
       .ma-out {
         margin: 6px 0 10px; padding: 12px; min-height: 90px; max-height: 42vh; overflow: auto;
         white-space: pre-wrap; overflow-wrap: anywhere;
@@ -576,6 +579,12 @@
                 <textarea class="ma-ta" id="p-foot" rows="2" placeholder="Ví dụ: Liệt kê những chỗ đã sửa."></textarea>
               </div>
             </details>
+            <label class="ma-check"><input type="checkbox" id="line-nums" /> Kèm số dòng</label>
+            <label class="ma-pathrow" id="path-row">
+              <span class="ma-label">Tệp</span>
+              <input class="ma-input" id="p-path" type="text" spellcheck="false" autocomplete="off"
+                     placeholder="notes/a.md (tuỳ chọn)" aria-label="Đường dẫn tệp, ghi vị trí dạng tệp:dòng" />
+            </label>
             <label class="ma-check"><input type="checkbox" id="inc-doc" /> Kèm toàn văn bản ở cuối prompt</label>
             <pre class="ma-out" id="out" tabindex="0" aria-label="Prompt" data-ph="Prompt hiện ở đây khi có nhận xét."></pre>
             <div class="ma-out__bar">
@@ -868,7 +877,8 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
           text: text || '', comments: [],
           header: typeof prefs.header === 'string' ? prefs.header : '',
           footer: typeof prefs.footer === 'string' ? prefs.footer : '',
-          fmt: prefs.fmt === 'block' ? 'block' : 'inline', includeDoc: false
+          fmt: prefs.fmt === 'block' ? 'block' : 'inline', includeDoc: false,
+          lineNums: true, path: ''
         };
       }
       function loadSession(id) {
@@ -882,6 +892,8 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         ['name', 'header', 'footer'].forEach(function (k) { if (typeof s[k] !== 'string') s[k] = ''; });
         s.fmt = s.fmt === 'block' ? 'block' : 'inline';
         s.includeDoc = !!s.includeDoc;
+        s.lineNums = s.lineNums !== false;
+        if (typeof s.path !== 'string') s.path = '';
         s.created = +s.created || Date.now(); s.updated = +s.updated || s.created;
         return s;
       }
@@ -1122,6 +1134,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
             h('button', { class: 'ma-item__main', type: 'button', title: 'Tới đoạn này', onclick: function () { jumpTo(c.id); } },
               h('span', { class: 'ma-item__n' }, orphan ? '!' : String(num)),
               h('span', { class: 'ma-item__body' },
+                orphan ? null : h('span', { class: 'ma-item__loc' }, locText(c, false)),
                 h('span', { class: 'ma-item__q' }, c.quote),
                 h('span', { class: 'ma-item__c' }, c.comment),
                 orphan ? h('span', { class: 'ma-item__warn' }, 'Không còn thấy đoạn này trong văn bản, nên không đưa vào prompt. Sửa lại văn bản hoặc xoá nhận xét.') : null)),
@@ -1142,19 +1155,53 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
          PROMPT
          ====================================================================== */
       function oneLine(s) { return s.replace(/\s+/g, ' ').trim(); }
+      /* Số dòng (đếm từ 1) của vị trí i trong nguồn; mảng đầu dòng nhớ theo văn bản. */
+      var lineCache = { text: null, starts: null };
+      function lineOf(text, i) {
+        if (lineCache.text !== text) {
+          var st = [0];
+          for (var k = 0; k < text.length; k++) if (text.charCodeAt(k) === 10) st.push(k + 1);
+          lineCache = { text: text, starts: st };
+        }
+        var a = lineCache.starts, lo = 0, hi = a.length - 1;
+        while (lo < hi) { var mid = (lo + hi + 1) >> 1; if (a[mid] <= i) lo = mid; else hi = mid - 1; }
+        return lo + 1;
+      }
+      /* Dòng đầu và cuối của neo trong nguồn; chọn ở bản dựng cũng đi qua neo nguồn. */
+      function lineRange(c) {
+        var a = anchors[c.id];
+        if (!a || !a.src) return null;
+        return [lineOf(S.text, a.src[0]), lineOf(S.text, Math.max(a.src[0], a.src[1] - 1))];
+      }
+      /* "L12", "L12-14", hoặc "notes/a.md:12-14" khi có tệp. */
+      function locText(c, withPath) {
+        var r = lineRange(c);
+        if (!r) return '';
+        var n = r[0] === r[1] ? String(r[0]) : r[0] + '-' + r[1];
+        var p = withPath ? S.path.trim() : '';
+        return p ? p + ':' + n : 'L' + n;
+      }
       function buildPrompt() {
         var items = ordered.filter(function (c) { return !orphans[c.id]; });
         var parts = [];
-        if (S.header.trim()) parts.push(S.header.trim());
+        var locs = items.map(function (c) { return S.lineNums ? locText(c, true) : ''; });
+        var head = S.header.trim();
+        if (locs.some(Boolean)) {
+          var note = S.path.trim()
+            ? 'Vị trí ghi dạng tệp:dòng, tính theo bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.'
+            : 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.';
+          head = head ? head + '\n' + note : note;
+        }
+        if (head) parts.push(head);
         if (items.length) {
           if (S.fmt === 'block') {
             parts.push(items.map(function (c, i) {
               var q = c.quote.trim().replace(/\n{3,}/g, '\n\n').split('\n').map(function (l) { return l.trim() ? '> ' + l : '>'; }).join('\n');
-              return '### ' + (i + 1) + '\n' + q + '\n\n' + c.comment.trim();
+              return '### ' + (i + 1) + (locs[i] ? ' · ' + locs[i] : '') + '\n' + q + '\n\n' + c.comment.trim();
             }).join('\n\n'));
           } else {
             parts.push(items.map(function (c, i) {
-              return (i + 1) + '. "' + oneLine(c.quote) + '" — ' + oneLine(c.comment);
+              return (i + 1) + '. ' + (locs[i] ? locs[i] + ' ' : '') + '"' + oneLine(c.quote) + '" — ' + oneLine(c.comment);
             }).join('\n'));
           }
         }
@@ -1624,6 +1671,9 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         $('p-head').value = S.header;
         $('p-foot').value = S.footer;
         $('inc-doc').checked = S.includeDoc;
+        $('line-nums').checked = S.lineNums;
+        $('p-path').value = S.path;
+        $('path-row').hidden = !S.lineNums;
         document.querySelectorAll('input[name="fmt"]').forEach(function (r) { r.checked = r.value === S.fmt; });
         if (S.header.trim() || S.footer.trim()) $('wrapbox').open = true;
       }
@@ -1642,6 +1692,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
           var fresh = !isEmpty(S);
           if (fresh) { flushSave(); switchTo(newSession('')); }
           S.name = file.name.replace(/\.[^.]+$/, ''); S.named = true;
+          S.path = file.name;
           setText(t); saveNow(); syncInputs();
           setView(lastRead);
           toast(fresh ? 'Đã mở "' + file.name + '" trong phiên mới. Phiên cũ ở Lịch sử.' : 'Đã mở "' + file.name + '".');
@@ -1716,6 +1767,11 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         $('p-head').dispatchEvent(new Event('input'));
       });
       $('inc-doc').addEventListener('change', function (e) { S.includeDoc = e.target.checked; scheduleSave(); renderPrompt(); });
+      $('line-nums').addEventListener('change', function (e) {
+        S.lineNums = e.target.checked; $('path-row').hidden = !S.lineNums;
+        scheduleSave(); renderPrompt();
+      });
+      $('p-path').addEventListener('input', function (e) { S.path = e.target.value.trim(); scheduleSave(); renderPrompt(); });
       document.querySelectorAll('input[name="fmt"]').forEach(function (r) {
         r.addEventListener('change', function () { S.fmt = r.value; prefs.fmt = r.value; savePrefs(); scheduleSave(); renderPrompt(); });
       });
