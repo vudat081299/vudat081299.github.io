@@ -136,14 +136,14 @@
 ## Đánh dấu đã đọc (MDAN-013)
 
 - Đơn vị: khối của `lexSpans`; danh sách ≥ 2 mục thì mỗi mục cấp cao một đơn vị (mục con thuộc mục cha); bảng, khối code là
-  một đơn vị; khối không chữ / số (kẻ ngang) không tính. Tiến độ tính theo số dòng, làm tròn xuống.
+  một đơn vị; khối không chữ / số / emoji (kẻ ngang) không tính. Tiến độ tính theo số dòng, làm tròn xuống.
 - Dấu ở `S.reviews` (`{ h, p, n, q, r }`, không số dòng): băm chữ chuẩn hoá (bỏ dấu mục), băm hai hàng xóm, 80 ký tự đầu.
   Chuyển chỗ, chữ giữ nguyên: ✓. Chữ đổi: ○, tính là chưa đọc, đánh dấu lại là ✓. Không tìm lại được: mất, báo toast và tab *Review*.
 - Nhận xét không đánh dấu đã đọc. *Dim reviewed* (`prefs.rvDim`) chỉ làm mờ, không gập: gập làm lệch cuộn theo nhau và dải đọc.
 - Làn: lớp phủ `.ma-lane` trong `#wrap-*`, ngoài `#v-src` / `#v-md`. *Source*: giữa vạch nhận xét và chữ, không phải lề số;
   *Preview*: lề trái. Bấm: bật / tắt; Shift + bấm: cả dải; làn của tiêu đề (hình vuông) bật cả section.
-- Phím X / Shift+X / J / K: bỏ qua khi đang gõ, khi hộp thoại hay hộp nhận xét mở, khi có phím bổ trợ khác Shift. Đơn vị hiện tại
-  là đơn vị chạm dải đọc (dưới con trỏ khi Focus theo chuột), làn có `.is-cur`. Nhảy tới thì đặt đỉnh ngay trên mốc trên (`bandScroll`).
+- Phím X / Shift+X / J / K: bỏ qua khi đang gõ chữ, khi hộp thoại hay hộp nhận xét mở, khi có phím bổ trợ khác Shift. Đơn vị hiện tại: chạm
+  dải đọc (dưới con trỏ khi Focus theo chuột), làn `.is-cur`; vừa nhảy tới (đỉnh ngay trên mốc trên, `bandScroll`) thì là nó tới khi khung rời đường cuộn (`pin`).
 - Nút ✓ Reviewed của hộp nhận xét (nới ra trọn khối, cả khi chọn dòng ở lề số) do `ui/review.js` theo dõi hộp bằng MutationObserver.
 - Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt) thêm `Đã đọc kỹ: … Chưa đọc: …`; tắt thì prompt y hệt từng byte.
 - Máy hẹp / cảm ứng: viên thuốc `#rv-pill` chỉ đánh dấu, không bỏ dấu. Màn cảm ứng chưa có dấu thì tắt làn.
