@@ -400,7 +400,9 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await page.reload(); await page.waitForFunction(() => window.marked && window.DOMPurify); await page.waitForTimeout(150);
   const L4 = await geo();
   check('tải lại: nhớ tỉ lệ hai khung và bề rộng panel', Math.abs(L4.a - L3.a) <= 2 && Math.abs(L4.panelW - L3.panelW) <= 1, JSON.stringify([L3, L4]));
+  await page.click('#ptab-prompt');
   await page.click('#btn-rail');
+  check('thu gọn khi đang ở tab Prompt: thân panel ẩn hết', await page.$eval('#panel-body', (el) => getComputedStyle(el).display === 'none'));
   const L5 = await geo();
   check('thu gọn panel: thanh dọc 56px, văn bản rộng ra', L5.panelW === 56 && L5.a > L4.a, JSON.stringify(L5));
   check('thu gọn: nút chép vẫn thấy', await inView(page, '#rail-copy'));

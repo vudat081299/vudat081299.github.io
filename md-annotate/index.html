@@ -578,7 +578,8 @@
       .ma-pathrow .ma-input { height: 36px; font: 500 12.5px var(--mono); }
       /* Tab Prompt: thân panel không cuộn; Options (mở) cuộn riêng, tối đa ~38% chiều cao; khung prompt lấp phần còn lại
          và tự cuộn. Hai vùng cuộn đứng cạnh nhau, không lồng nhau. */
-      .ma-panel__body:has(> #pane-prompt:not([hidden])) { overflow: hidden; display: flex; flex-direction: column; }
+      /* :where() giữ độ ưu tiên thấp, để luật thu gọn panel (html.ma-railed …) vẫn ẩn được thân panel. */
+      .ma-panel__body:has(> :where(#pane-prompt):not([hidden])) { overflow: hidden; display: flex; flex-direction: column; }
       #pane-prompt:not([hidden]) { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
       #pane-prompt .ma-opts { flex: none; }
       #pane-prompt .ma-opts[open] .ma-opts__in { max-height: min(38vh, 360px); overflow: auto; overscroll-behavior: contain; }
