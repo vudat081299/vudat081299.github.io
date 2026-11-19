@@ -705,6 +705,30 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await sp.click('#btn-layout'); await sp.click('#set-reset'); await sp.keyboard.press('Escape');
   await sctx.close();
 
+  // ── review: render & select ──
+  {
+    const rctx = await browser.newContext({ viewport: { width: 1280, height: 560 }, colorScheme: 'light' });
+    const rp = await rctx.newPage(); watch(rp);
+    await rp.goto(BASE); await rp.waitForFunction(() => window.marked && window.DOMPurify);
+    const fill = async (t) => {
+      await rp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
+      await rp.waitForTimeout(350);
+    };
+    // Markdown dán vào không được thoát khỏi khung Preview: <style> đè CSS cả trang, id trùng id giao diện, lớp phủ cố định,
+    // form gửi đi (rời trang), <dialog open> (trang tưởng có hộp thoại mở).
+    await fill('# T\n\nText.\n\n<style>.ma-panel{display:none}</style>\n\n<div id="list">x</div>\n\n<p style="position:fixed;inset:0;z-index:9999">cover</p>\n\n<form action="https://example.com/"><button>go</button></form>\n\n<dialog open>d</dialog>\n');
+    const esc = await rp.evaluate(() => ({
+      panel: getComputedStyle(document.getElementById('panel')).display,
+      list: !!document.getElementById('list').closest('#v-md'),
+      style: !!document.querySelector('#v-md style, #v-md [style]'),
+      form: !!document.querySelector('#v-md form'),
+      dialog: !!document.querySelector('dialog[open]')
+    }));
+    check('Preview: markdown không đè CSS, id, lớp phủ, form, hộp thoại của trang', esc.panel !== 'none' && !esc.list && !esc.style && !esc.form && !esc.dialog, JSON.stringify(esc));
+    await rctx.close();
+  }
+  // ── end review: render & select ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');
