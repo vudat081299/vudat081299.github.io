@@ -2,6 +2,7 @@
  * Thêm logic thuần mới thì thêm bài thử ở đây. Hành vi cần DOM thì thử ở tools/smoke.cjs. */
 import { lexSpans } from '../js/core/blocks.js';
 import { numberSections, lineSections, bandBounds, bandPick } from '../js/core/sections.js';
+import { syncCurves, followTop } from '../js/core/sync-math.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -56,6 +57,17 @@ check('bandBounds: 25–50% vùng nhìn', eq(bandBounds(100, 900, 1000), [300, 5
   check('bandPick: đuôi khối trước còn trong dải thì khối trước thắng', pick(200, 400) === 1);
   check('bandPick: khối đầu tiên chạm dải', pick(300, 500) === 2);
   check('bandPick: không khối nào chạm thì lấy khối ngay trên', pick(950, 1000) === 3);
+}
+
+// Cuộn theo nhau: khung theo đi đúng điểm neo và không bao giờ lùi khi khung dẫn tiến.
+{
+  const c = syncCurves([[0, 0], [100, 300], [400, 350], [1000, 1200]]);
+  // Khung dẫn cao 200 / tổng 1200, khung theo cao 200 / tổng 1400: tại top = 300, giữa khung (400) ↔ 350.
+  check('followTop: điểm neo nằm giữa cả hai khung', Math.abs(followTop(c.fwd, 200, 1200, 300, 200, 1400) - 250) < 1e-6);
+  let prev = -1, mono = true;
+  for (let top = 0; top <= 1000; top += 5) { const t = followTop(c.fwd, 200, 1200, top, 200, 1400); if (t < prev - 1e-9) mono = false; prev = t; }
+  check('followTop: đơn điệu tăng', mono);
+  check('followTop: đầu khớp đầu, cuối khớp cuối', Math.abs(followTop(c.fwd, 200, 1200, 0, 200, 1400)) < 1e-6 && Math.abs(followTop(c.fwd, 200, 1200, 1000, 200, 1400) - 1200) < 1e-6);
 }
 
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');

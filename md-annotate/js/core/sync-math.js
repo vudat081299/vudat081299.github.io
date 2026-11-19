@@ -35,12 +35,15 @@ export function syncCurves(pts) {
   var xs = clean.map(function (p) { return p[0]; }), ys = clean.map(function (p) { return p[1]; });
   return { fwd: monoCurve(xs, ys), back: monoCurve(ys, xs) };
 }
-/* Khung dẫn cao h, tổng cao sh, đang ở top; khung theo cao oh, tổng cao osh. Điểm tham chiếu ở giữa khung, sát đầu /
-   cuối thì trượt về mép. Trả scrollTop của khung theo. */
+/* Điểm tham chiếu của một khung cao h, cuộn tối đa max, đang ở top: giữa khung, sát đầu / cuối thì trượt về mép.
+   top + refOff(…) tăng ngặt theo top. */
+function refOff(h, max, top) { return h / 2 - Math.max(0, h / 2 - top) + Math.max(0, h / 2 - (max - top)); }
+/* Khung dẫn cao h, tổng cao sh, đang ở top; khung theo cao oh, tổng cao osh. Trả scrollTop của khung theo sao cho điểm
+   tham chiếu của nó trỏ đúng chỗ ứng với điểm tham chiếu khung dẫn. Khung theo dùng cùng quy tắc trượt và tính ngược
+   bằng tìm nhị phân, nên khung dẫn tiến thì khung theo không bao giờ lùi (ghép hai hàm tăng). */
 export function followTop(curve, h, sh, top, oh, osh) {
-  var max = sh - h;
-  var off = h / 2 - Math.max(0, h / 2 - top) + Math.max(0, h / 2 - (max - top));
-  var y = evalCurve(curve, top + off);
-  var omax = osh - oh;
-  return Math.max(0, Math.min(omax, y - off * oh / h));
+  var q = evalCurve(curve, top + refOff(h, sh - h, top));
+  var omax = Math.max(0, osh - oh), lo = 0, hi = omax;
+  for (var k = 0; k < 40; k++) { var mid = (lo + hi) / 2; if (mid + refOff(oh, omax, mid) < q) lo = mid; else hi = mid; }
+  return (lo + hi) / 2;
 }
