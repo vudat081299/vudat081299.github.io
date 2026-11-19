@@ -517,12 +517,8 @@
         border-radius: var(--r);
       }
       .ma-opts summary::-webkit-details-marker { display: none; }
-      .ma-opts summary::after {
-        content: ''; width: 7px; height: 7px; margin: -3px 4px 0 auto; flex: none;
-        border: solid var(--ink-3); border-width: 0 2px 2px 0; transform: rotate(45deg);
-        transition: transform var(--dur) var(--ease);
-      }
-      .ma-opts[open] summary::after { transform: translateY(3px) rotate(225deg); }
+      .ma-opts__chev { flex: none; width: 16px; height: 16px; margin-left: auto; color: var(--ink-3); transition: transform var(--dur) var(--ease); }
+      .ma-opts[open] .ma-opts__chev { transform: rotate(180deg); }
       .ma-opts summary:hover { color: var(--ink); }
       .ma-opts__sum { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 500 11.5px/1 var(--mono); color: var(--ink-3); }
       .ma-opts__in { display: flex; flex-direction: column; gap: var(--s1); padding: 0 var(--s3) var(--s3); }
@@ -854,6 +850,7 @@
                   <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" /><circle cx="16" cy="7" r="2" /><circle cx="10" cy="17" r="2" /></svg>
                   <span>Options</span>
                   <span class="ma-opts__sum" id="opts-sum"></span>
+                  <svg class="ma-opts__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
                 </summary>
                 <div class="ma-opts__in">
                   <div class="ma-fmt" role="radiogroup" aria-label="Quote style">
