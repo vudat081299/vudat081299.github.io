@@ -75,6 +75,17 @@ function find(hay, needle, pre, suf, rel) {
   });
   return { i: best, sure: false };
 }
+/* Ngữ cảnh đã gộp khoảng trắng, nối được vào trích dẫn đã trim: normWs bỏ khoảng trắng đầu chuỗi và trim bỏ khoảng
+   trắng hai đầu trích dẫn, còn trong văn bản chỗ nối là một dấu cách. Thiếu dấu cách ấy thì suffix bắt đầu bằng xuống
+   dòng (VD trích trọn dòng) không bao giờ khớp. */
+function joinPre(c) {
+  var pre = normWs(c.prefix || '').s;
+  return pre && pre[pre.length - 1] !== ' ' && WS.test(c.quote.charAt(0)) ? pre + ' ' : pre;
+}
+function joinSuf(c) {
+  var suf = normWs(c.suffix || '').s;
+  return suf && (WS.test((c.suffix || '').charAt(0)) || WS.test(c.quote.charAt(c.quote.length - 1))) ? ' ' + suf : suf;
+}
 /* Trả [đầu, cuối) trong `text`, hoặc null. srcDomain: text là nguồn markdown.
    Đoạn trích lấy ở khung kia (chọn ở Preview, tìm trong nguồn, hay ngược lại) mà khớp nguyên văn nhiều chỗ thì đừng
    tin tầng 1: ngữ cảnh hai khung khác cú pháp (`**`, `|`, `[`) nên so ký tự thô chọn nhầm. Sang tầng 2, nơi ngữ
@@ -85,7 +96,7 @@ export function locate(c, text, srcDomain) {
   var cross = (c.origin === 'src') !== !!srcDomain;
   /* Tầng 1: nguyên văn, gộp khoảng trắng. */
   var q = normWs(c.quote).s.trim();
-  var r1 = find(P.n.s, q, normWs(c.prefix || '').s, normWs(c.suffix || '').s, c.rel);
+  var r1 = find(P.n.s, q, joinPre(c), joinSuf(c), c.rel);
   var t1 = r1.i >= 0 ? [P.n.map[r1.i], P.n.map[r1.i + q.length - 1] + 1] : null;
   if (t1 && (r1.sure || !cross)) return t1;
   /* Tầng 2: chỉ chữ và số; bỏ cú pháp markdown ở trích dẫn khi nó lấy từ nguồn. */
