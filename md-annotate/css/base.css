@@ -1,4 +1,5 @@
-/* NỀN, thanh trên, nút, đầu trang, lưới hai cột. Nạp sau tokens.css. */
+/* NỀN, thanh trên, nút, ô nhập, nhóm tab, huy hiệu, đầu trang, lưới hai cột. Nạp sau tokens.css.
+   Mọi giá trị lấy từ token (css/tokens.css); file này không khai màu, cỡ chữ hay bán kính thô. */
 /* NỀN */
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -8,17 +9,18 @@ html.ma-fit { overflow: hidden; }
 body {
   margin: 0; min-height: 100vh;
   background: var(--bg); color: var(--ink);
-  font: 400 15px/1.55 var(--sans);
+  font: 400 var(--fs-md)/var(--lh) var(--sans);
   -webkit-font-smoothing: antialiased;
 }
-button, input, textarea { font: inherit; color: inherit; }
+button, input, textarea, select { font: inherit; color: inherit; }
+input::placeholder, textarea::placeholder { color: var(--ink-3); opacity: 1; }
 button { cursor: pointer; }
 a { color: inherit; }
 ::selection { background: var(--accent); color: var(--on-accent); }
 ::highlight(ma-pending) { background-color: var(--hl-pend); }
 /* Vùng chọn phản chiếu sang khung kia ở Split: cùng màu vùng chọn, nhạt hơn. */
-::highlight(ma-mirror) { background-color: color-mix(in srgb, var(--accent) 38%, transparent); }
-:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: var(--r-sm); }
+::highlight(ma-mirror) { background-color: var(--hl-mirror); }
+:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 /* Thanh cuộn mảnh, nhạt, theo theme. */
 * { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--ink) 22%, transparent) transparent; }
 .ma-panel__body, .ma-dlg__b, .ma-out, .ma-opts__in, .ma-view { scrollbar-gutter: stable; }
@@ -34,81 +36,105 @@ svg.ma-i { width: 16px; height: 16px; flex: none; }
   border-bottom: 1px solid var(--line);
 }
 @supports not (backdrop-filter: blur(1px)) { .ma-bar { background: var(--bg); } }
-.ma-bar__in { display: flex; align-items: center; gap: 10px; min-height: var(--bar-h); }
+.ma-bar__in { display: flex; align-items: center; gap: var(--s2); min-height: var(--bar-h); }
 .ma-brand {
-  display: inline-flex; align-items: center; gap: 10px; min-width: 0; min-height: 44px;
-  font: 500 12.5px/1 var(--mono); text-decoration: none; color: var(--ink-3);
+  display: inline-flex; align-items: center; gap: var(--s3); min-width: 0; min-height: var(--h-touch);
+  font: 500 var(--fs-xs)/1 var(--mono); text-decoration: none; color: var(--ink-3);
 }
-.ma-brand__mark { position: relative; width: 24px; height: 24px; flex: none; border-radius: 7px; background: var(--ink); }
+.ma-brand__mark { position: relative; width: 24px; height: 24px; flex: none; border-radius: var(--r-sm); background: var(--ink); }
 .ma-brand__mark::after {
   content: ''; position: absolute; left: 6px; bottom: 6px; width: 9px; height: 3px;
-  border-radius: 1px; background: var(--green-hi);
+  border-radius: 1px; background: var(--accent);
 }
 .ma-brand b { font-weight: 500; color: var(--ink); }
 .ma-brand__txt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ma-bar__sp { flex: 1; }
-/* Thanh trên: nút nhẹ, không viền, cùng cao 40px. */
-.ma-bar .ma-btn, .ma-bar .ma-icbtn { background: transparent; border-color: transparent; }
-.ma-bar .ma-btn:hover, .ma-bar .ma-icbtn:hover { background: var(--chip); border-color: transparent; }
 
-/* NÚT */
-.ma-btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  min-height: 40px; padding: 0 14px;
-  font: 600 13.5px/1 var(--sans); color: var(--ink-2); text-decoration: none; white-space: nowrap;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 11px;
+/* NÚT — một họ: chính (--go), phụ (mặc định), trơn (--quiet, --bare, thanh trên), chỉ biểu tượng (.ma-icbtn).
+   Cao --h (trong thẻ: --h-sm), bo --r-sm, chữ --fs-md 600. Rê: nền --chip; tắt: mờ 50%. */
+.ma-btn, .ma-icbtn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s2); flex: none;
+  min-height: var(--h); padding: 0 var(--s4);
+  font: 600 var(--fs-md)/1 var(--sans); color: var(--ink-2); text-decoration: none; white-space: nowrap;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);
   transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease), filter var(--dur) var(--ease);
 }
-.ma-btn:hover { color: var(--ink); border-color: var(--ink-3); }
-.ma-btn:disabled { opacity: .5; cursor: default; }
-.ma-btn--go { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-.ma-btn--go:hover { color: var(--on-accent); border-color: var(--accent); filter: brightness(1.06); }
-.ma-btn--quiet { background: transparent; border-color: transparent; }
-.ma-btn--quiet:hover { background: var(--surface-2); border-color: transparent; }
-.ma-btn--danger { color: var(--danger); }
-.ma-btn--sm { min-height: 34px; padding: 0 10px; font-size: 13px; }
-.ma-icbtn {
-  display: inline-grid; place-items: center; flex: none;
-  width: 40px; height: 40px; padding: 0;
-  color: var(--ink-2); background: var(--surface);
-  border: 1px solid var(--line); border-radius: 11px;
-  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease), background var(--dur) var(--ease);
-}
-.ma-icbtn:hover { color: var(--ink); border-color: var(--ink-3); }
-.ma-icbtn--bare { background: transparent; border-color: transparent; }
-.ma-icbtn--bare:hover { background: var(--surface-2); border-color: transparent; }
+.ma-icbtn { width: var(--h); height: var(--h); min-height: 0; padding: 0; }
 .ma-icbtn svg { width: 18px; height: 18px; }
+.ma-btn--quiet, .ma-icbtn--bare, .ma-bar .ma-btn, .ma-bar .ma-icbtn { background: transparent; border-color: transparent; }
+.ma-btn--go { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.ma-btn--danger { color: var(--danger); }
+@media (hover: hover) {
+  .ma-btn:hover, .ma-icbtn:hover { color: var(--ink); background: var(--surface-2); }
+  .ma-btn--quiet:hover, .ma-icbtn--bare:hover, .ma-bar .ma-btn:hover, .ma-bar .ma-icbtn:hover { background: var(--chip); }
+  .ma-btn--danger:hover { color: var(--danger); }
+  .ma-btn--go:hover { color: var(--on-accent); background: var(--accent); filter: brightness(1.06); }
+}
+.ma-btn:disabled, .ma-icbtn:disabled { opacity: .5; cursor: default; filter: none; }
 html:not(.dark) .ma-moon, html.dark .ma-sun { display: none; }
+
+/* HUY HIỆU — số đếm (trung tính, viên thuốc) và số thứ tự nhận xét (nền --accent, bo --r-xs). Mono --fs-xs, cao 20px. */
 .ma-badge {
-  font: 500 11px/1 var(--mono); color: var(--ink-3);
+  font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
+.ma-ptab__n, .ma-item__n, .ma-steps__n {
+  display: inline-grid; place-items: center; flex: none; min-width: 20px; height: 20px; padding: 0 var(--s1);
+  font: 500 var(--fs-xs)/1 var(--mono); font-variant-numeric: tabular-nums;
+}
+.ma-ptab__n { border-radius: var(--r-pill); background: var(--chip); color: var(--ink-2); }
+.ma-ptab__n:empty { display: none; }
+.ma-item__n, .ma-steps__n { border-radius: var(--r-xs); background: var(--accent); color: var(--on-accent); }
+/* Phím: viền đủ bốn cạnh, đáy dày hơn. Trong nút chính (.ma-kbd) thì nền pha từ --on-accent, không viền. */
+.ma-pop__keys kbd, .ma-kbd {
+  display: inline-block; padding: 0 var(--s1); border-radius: var(--r-xs);
+  font: 500 var(--fs-xs)/var(--lh) var(--mono);
+}
+.ma-pop__keys kbd { border: 1px solid var(--line); border-bottom-width: 2px; color: var(--ink-2); background: var(--surface); }
+.ma-kbd { margin-left: var(--s1); color: var(--on-accent); background: var(--kbd-on-accent); }
+.ma-kbd:empty { display: none; }
+
+/* NHÓM TAB — một họ: chế độ xem (.ma-tabs), panel (.ma-seg), kiểu trích (.ma-fmt). Rãnh cao --h, đệm --s1;
+   mục cao --h-sm, bo --r-xs (rãnh bo --r-sm = --r-xs + đệm). Mục chọn: nền --tab-on, viền --tab-ring, mực đậm. */
+.ma-tabs, .ma-seg, .ma-fmt { display: flex; gap: 0; padding: var(--s1); background: var(--surface-2); border-radius: var(--r-sm); }
+.ma-tab, .ma-ptab, .ma-fmt span {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s2);
+  min-height: var(--h-sm); padding: 0 var(--s3); border: 0; border-radius: var(--r-xs); background: transparent;
+  font: 600 var(--fs-sm)/1 var(--sans); color: var(--ink-3); white-space: nowrap;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+@media (hover: hover) { .ma-tab:hover, .ma-ptab:hover, .ma-fmt span:hover { color: var(--ink); } }
+.ma-tab[aria-selected="true"], .ma-ptab[aria-selected="true"], .ma-fmt input:checked + span { background: var(--tab-on); color: var(--ink); box-shadow: var(--tab-ring); }
 
 /* ĐẦU TRANG */
 .ma-head { display: flex; align-items: baseline; gap: var(--s3); min-width: 0; padding: 0 0 var(--s3); }
-.ma-head h1 { flex: none; margin: 0; font: 600 20px/1.2 var(--display); letter-spacing: -.01em; }
-.ma-head p { min-width: 0; margin: 0; color: var(--ink-3); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ma-head h1 { flex: none; margin: 0; font: 600 var(--fs-xl)/var(--lh-tight) var(--display); letter-spacing: -.01em; }
+.ma-head p { min-width: 0; margin: 0; color: var(--ink-3); font-size: var(--fs-md); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Ô NHẬP — một họ: .ma-input (một dòng), .ma-ta (nhiều dòng), tên phiên. Bo --r-sm, chữ --fs-md;
+   gõ: viền --ring + quầng --accent-soft. */
+.ma-input {
+  width: 100%; min-width: 0; height: var(--h); padding: 0 var(--s3);
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.ma-input:focus, .ma-ta:focus, .ma-docname:focus { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px var(--accent-soft); }
 /* Tên phiên: sửa tại chỗ, trông như chữ cho tới khi rê hoặc bấm vào. */
 .ma-docname {
-  flex: 1 1 180px; min-width: 0; height: 36px; padding: 0 8px;
-  font: 600 14.5px/1 var(--sans); color: var(--ink);
-  background: transparent; border: 1px solid transparent; border-radius: 9px;
+  flex: 1 1 180px; min-width: 0; height: var(--h); padding: 0 var(--s2);
+  font: 600 var(--fs-md)/1 var(--sans); color: var(--ink);
+  background: transparent; border: 1px solid transparent; border-radius: var(--r-sm);
   text-overflow: ellipsis;
 }
 .ma-docname::placeholder { color: var(--ink-2); }
-.ma-docname:hover { border-color: var(--line); }
-.ma-docname:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px var(--green-soft); background: var(--bg); }
-.ma-label { font: 500 11px/1.2 var(--mono); color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
-.ma-input {
-  width: 100%; min-width: 0; height: 42px; padding: 0 12px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 11px;
-}
-.ma-input:focus, .ma-ta:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 3px var(--green-soft); }
+@media (hover: hover) { .ma-docname:hover { border-color: var(--line); } }
+.ma-docname:focus { background: var(--bg); }
+.ma-label { font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-3); letter-spacing: .04em; text-transform: uppercase; }
 .ma-notice {
-  margin: 0 0 16px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px;
-  background: var(--surface); color: var(--ink-2); font-size: 14px;
+  margin: 0 0 var(--s4); padding: var(--s2) var(--s3); border: 1px solid var(--line); border-radius: var(--r);
+  background: var(--surface); color: var(--ink-2); font-size: var(--fs-md);
 }
-.ma-notice code { font: 500 12.5px var(--mono); color: var(--ink); }
+.ma-notice code { font: 500 var(--fs-sm) var(--mono); color: var(--ink); }
 
 /* LƯỚI */
 .ma-grid { display: grid; grid-template-columns: minmax(0, 1fr) var(--side); gap: var(--s4); align-items: start; padding-top: var(--s4); padding-bottom: var(--s5); }

@@ -40,19 +40,20 @@
 
 ## Ngôn ngữ (MDAN-007)
 
-- Chữ giao diện bằng tiếng Anh: nút, nhãn, tooltip, placeholder giao diện, `aria-label`, toast, hộp thoại, văn bản
-  mẫu. `<html lang="en">`.
+- Chữ giao diện bằng tiếng Anh: nút, nhãn, tooltip, placeholder giao diện, `aria-label`, toast, hộp thoại, văn bản mẫu; `<html lang="en">`.
 - Nội dung vào prompt bằng tiếng Việt: gợi ý mặc định (`data/hints.json`), câu số dòng, `Văn bản gốc:`, câu mẫu và
   placeholder của lời dẫn đầu / cuối. Trích dẫn và nhận xét của người dùng giữ nguyên như đã gõ.
 - Chú thích code, tài liệu `.md`, `desc` trang chủ: tiếng Việt. Số nhiều qua `plural(n, word)`; số theo `en`, ngày theo `en-GB`.
 
 ## Giao diện
 
-- Nền, mực và font chép từ `index.html` gốc; xanh lá riêng, sáng hơn (MDAN-002). Mã màu chỉ khai ở `:root` /
-  `html.dark` (`css/tokens.css`).
-- Nền nút chính và huy hiệu: `--accent` + chữ `--on-accent`. Chữ, viền, link xanh: `--green` (sắc đậm cùng họ).
+- Nền, mực, font chép từ `index.html` gốc. Một màu xanh: `--accent` (MDAN-009); nền nhạt, highlight, vạch pha từ nó.
+- Xanh không làm chữ trên nền sáng (~2,3:1): chữ là mực, nhấn bằng vạch / nền nhạt / huy hiệu. Chữ trên `--accent`: `--on-accent`.
+- Chữ ≥ 4,5:1; chỉ báo trạng thái ≥ 3:1 (focus `--ring`, thẻ / hàng đang chọn `--edge-on`), cả hai theme.
+- Token ở `css/tokens.css`: chữ `--fs-xs`…`--fs-xl` + `--lh*`, bo `--r-xs` / `--r-sm` / `--r` / `--r-lg` / `--r-pill` (vật lồng
+  trong bo nhỏ hơn), cao `--h-sm` / `--h` / `--h-touch`, khoảng `--s1`…`--s6`, `--dur` + `--ease`. File CSS khác chỉ dùng token.
+- Họ component chung luật ở `css/base.css` (nút, nhóm tab `.ma-tabs` / `.ma-seg` / `.ma-fmt`, ô nhập, huy hiệu, phím): thêm biến thể vào họ.
 - Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024).
-- Khoảng cách theo thang `--s1`…`--s6`, bo góc `--r-sm` / `--r` / `--r-lg`, chuyển động `--dur` + `--ease`.
 - Bề rộng (MDAN-005): `.ma-wrap` rộng `max(70vw, 1280px)`, không quá khung nhìn, căn giữa, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
   320–560, `prefs.side`), thu gọn thành `.ma-rail` 56px (`html.ma-railed`, `prefs.rail`); thanh dọc giữ nút chép.
 - *Split* khi `#doc` đủ cho hai khung ≥ 420px (`splitFits()`), không theo media query. Chưa đủ chỗ thì hiện
@@ -102,18 +103,16 @@
   *Download .md* và *Copy prompt*. Nút chép luôn trong khung nhìn, dù bao nhiêu nhận xét (smoke đo với 32).
 - Máy rộng (≥ 1081px): panel dính, chạy từ đỉnh vùng nội dung tới đáy khung nhìn. `top`, `height` của panel và
   `padding` trên dưới của lưới cùng dùng `--s4`: đổi một chỗ thì đổi cả ba.
-- Tuỳ chọn prompt (kiểu, số dòng, tệp, toàn văn, lời dẫn) gập trong *Options* ở tab Prompt; dòng tóm tắt cạnh nhãn
-  cho biết đang bật gì.
+- Tuỳ chọn prompt (kiểu, số dòng, tệp, toàn văn, lời dẫn) gập trong *Options* ở tab Prompt; dòng tóm tắt cho biết đang bật gì.
 - ⌘/Ctrl + Shift + C chép prompt ở mọi chỗ. Chép xong nút đổi thành *Copied ✓* một lúc; báo đọc màn hình qua
   `#sr-live`. Toast chỉ dùng khi chép hỏng. Chép / tải neo lại lúc bấm (`freshDoc()`): *Edit* vẽ lại trễ 250ms.
 - ≤ 1080px: panel ẩn khỏi lưới; thanh đáy có *Comments · N* (mở panel trong tấm trượt `#dlg-panel`, đóng thì panel
   về chỗ cũ) và nút chép. Lưới một cột kể cả khi `html.ma-railed`.
 - Thẻ nhận xét: không viền; số, vị trí (L12), nhận xét nổi bật, trích dẫn mờ có vạch trái (một cạnh nên không bo,
   REPO-025). Nút sửa / xoá hiện khi rê hoặc focus; màn cảm ứng thì luôn hiện. Rê thẻ thì tô đoạn và ngược lại.
-- Điện thoại (≤ 720px): một cột, vùng chạm ≥ 44px, không có *Split*. Lưu nhận xét không cuộn trang.
-- Toast không nhận chuột (trừ nút *Undo*), để không chặn bôi đen chữ bên dưới; có hộp thoại mở thì toast nằm trong
-  hộp thoại.
-- Tối: tab đang chọn dùng `--tab-on` / `--tab-ring` (nền sáng hơn nhóm tab, viền xanh).
+- Điện thoại (≤ 720px): một cột, không có *Split*; vùng chạm ≥ `--h-touch` (cả màn cảm ứng). Lưu nhận xét không cuộn trang.
+- Toast không nhận chuột (trừ nút *Undo*), để không chặn bôi đen chữ dưới; có hộp thoại mở thì toast nằm trong nó.
+- Tab đang chọn: `--tab-on` / `--tab-ring` (tối: nền sáng hơn nhóm tab, viền xanh).
 
 ## Hộp nhận xét
 
@@ -194,7 +193,8 @@
 ## Cổng: `sh md-annotate/tools/check.sh`
 
 - `tools/lint.py`: `data/hints.json` đúng khuôn, không trùng, `renamed` trỏ đúng; một chỗ `innerHTML`; script ngoài
-  ghim phiên bản, có `integrity`; `index.html` không `<style>`; không file `css/`, `js/` mồ côi; `js/core/` thuần.
+  ghim phiên bản, có `integrity`; `index.html` không `<style>`; không file `css/`, `js/` mồ côi; `js/core/` thuần;
+  ngoài `css/tokens.css` không màu, cỡ chữ, bo góc thô; không token xanh cũ (`--green*`, `--toast-act`).
 - `tools/test-core.mjs` (node, không trình duyệt): bài thử của `js/core/`. Logic thuần mới thì thêm bài thử ở đây.
 - Sửa sự kiện, neo hay giao diện thì chạy thêm `tools/smoke.cjs` (CI chưa chạy): `python3 -m http.server 8347` ở gốc
   repo, rồi `node md-annotate/tools/smoke.cjs http://127.0.0.1:8347/md-annotate/`. Văn bản mẫu: `tools/fixtures/`.

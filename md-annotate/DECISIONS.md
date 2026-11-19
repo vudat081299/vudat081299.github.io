@@ -2,11 +2,11 @@
 
 <!-- index:start -->
 - MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code · `md-annotate/`
-- MDAN-002 · Xanh lá riêng, sáng hơn trang chủ · `md-annotate/`
 - MDAN-005 · Vùng làm việc khoảng 70% màn hình, ở giữa · thay cho MDAN-003 · `md-annotate/`
 - MDAN-006 · Preview giống GitHub, cuộn theo nhau ở Split · `md-annotate/`
 - MDAN-007 · Giao diện tiếng Anh, gợi ý và prompt tiếng Việt · thay cho MDAN-004 · `md-annotate/`
 - MDAN-008 · Code tách theo tính năng, logic tách khỏi giao diện, không build · `md-annotate/`
+- MDAN-009 · Một màu xanh sáng, thang token cho chữ, bo góc, chiều cao · thay cho MDAN-002 · `md-annotate/`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -16,14 +16,6 @@ Tab *Nguồn* tô màu markdown như trình soạn VS Code: đầu mục, dấu 
 khối, dấu danh sách, bảng, đường kẻ, thẻ HTML, chuỗi trong ngoặc kép. Bộ tách token tự viết, theo dòng, không
 thư viện; chỉ bọc chữ trong `<span>`, nên text của khung đúng bằng nguồn. Màu là token `--sx-*`, ≥ 4,5:1 trên nền
 và trên highlight. Nút *Tô màu* (mặc định bật, nhớ trong trình duyệt) trả về chữ trơn.
-
-## MDAN-002 · Xanh lá riêng, sáng hơn trang chủ
-19/11/2026 · `md-annotate/`
-
-REPO-023 chỉ ràng `index.html`; trang này có xanh lá riêng, tươi hơn. Nền nút chính và huy hiệu số là `--accent`
-(`#22c55e` sáng, `#4ade80` tối) với chữ tối `--on-accent` (`#052e16`, ≥ 6,5:1). Chữ, viền, link xanh trên nền sáng
-dùng sắc đậm cùng họ `--green` (`#15803d`). Nền highlight pha từ cùng màu; ở theme tối phủ mỏng để chữ màu của
-tab Nguồn vẫn ≥ 4,5:1. Nền, mực và font vẫn chép từ trang chủ.
 
 ## MDAN-005 · Vùng làm việc khoảng 70% màn hình, ở giữa · thay cho MDAN-003
 19/11/2026 · `md-annotate/`
@@ -57,3 +49,12 @@ logic (cũng như ngược lại). `index.html` chỉ còn markup; CSS tách the
 thuần trong `js/core/` (dữ liệu vào, dữ liệu ra, không DOM, không `localStorage`), giao diện trong `js/ui/` (đọc DOM,
 gọi logic, ghi DOM, sự kiện trong `init…` của chính module), `js/main.js` gọi theo thứ tự. Vẫn không có bước build.
 Đổi lại, trang không chạy qua `file://`: mở bằng `file://` chỉ thấy lời báo cách mở qua HTTP.
+
+## MDAN-009 · Một màu xanh sáng, thang token cho chữ, bo góc, chiều cao · thay cho MDAN-002
+19/11/2026 · `md-annotate/`
+
+Chủ trang thấy trang dùng quá nhiều sắc xanh: chỉ giữ xanh sáng `--accent` (`#22c55e` sáng, `#4ade80` tối). Nền nhạt,
+highlight, gạch chân, vùng chọn phản chiếu pha từ chính nó; không còn xanh đậm. Xanh sáng trên nền trắng chỉ ~2,3:1 nên
+không làm chữ: chữ từng xanh thành mực, nhấn bằng vạch, nền nhạt hoặc huy hiệu; chữ trên nền xanh là `--on-accent`.
+Cỡ chữ, bo góc, chiều cao điều khiển và khoảng cách theo thang token ở `css/tokens.css`; mỗi họ component (nút, nhóm tab,
+ô nhập, chip, huy hiệu, thẻ, hộp thoại) cùng cao, cùng bo, cùng chữ, cùng trạng thái. Nền, mực và font vẫn chép từ trang chủ.

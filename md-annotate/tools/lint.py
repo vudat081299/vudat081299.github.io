@@ -11,6 +11,9 @@
      import; mọi link / import trỏ tới file có thật.
   6. js/core/ là logic thuần: code (bỏ chú thích) không nhắc document, window, localStorage, querySelector,
      classList, getBoundingClientRect, và không import từ js/ui/ hay js/main.js.
+  7. Token (MDAN-009): css/*.css ngoài tokens.css không có mã màu (hex, rgb, hsl, white, black), không cỡ chữ px
+     (font-size, font), không bán kính px trừ 0 / 1px / 999px. Token xanh đã bỏ (--green*, --toast-act) không
+     xuất hiện ở css/, js/, index.html.
 
 Chạy:  python3 md-annotate/tools/lint.py
 """
@@ -132,6 +135,35 @@ for f, text in js_src.items():
     for m in deps.get(f, []):
         if not m.startswith('core/'):
             errors.append(f'js/{f}: module thuần import js/{m} — js/core/ chỉ import js/core/')
+
+# 7. Token (MDAN-009): màu, cỡ chữ, bán kính chỉ khai ở css/tokens.css; tên xanh cũ không quay lại.
+COLOR = re.compile(r'#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?)\(|\b(?:white|black)\b')
+RAW_PX = re.compile(r'(?<![\w.-])(\d*\.?\d+)px\b')
+RADIUS_OK = {'0', '1', '999'}
+OLD_GREEN = re.compile(r'--(?:green(?:-hi|-soft|-line)?|toast-act)\b')
+for f in css_files:
+    text = open(os.path.join(CSS_DIR, f), encoding='utf-8').read()
+    code = re.sub(r'/\*.*?\*/', lambda m: '\n' * m.group(0).count('\n'), text, flags=re.S)
+    for m in OLD_GREEN.finditer(code):
+        errors.append(f'css/{f}:{code.count(chr(10), 0, m.start()) + 1}: token đã bỏ {m.group(0)} — dùng --accent (MDAN-009)')
+    if f == 'tokens.css':
+        continue
+    for m in re.finditer(r'([^{};]+)\{([^{}]*)\}', code):
+        for decl in m.group(2).split(';'):
+            if ':' not in decl:
+                continue
+            prop, val = (x.strip() for x in decl.split(':', 1))
+            line = code.count('\n', 0, m.start(2) + m.group(2).find(decl)) + 1
+            where = f'css/{f}:{line}: {prop}'
+            if COLOR.search(val):
+                errors.append(f'{where} — mã màu thô "{val}"; khai token ở css/tokens.css')
+            if prop in ('font-size', 'font') and RAW_PX.search(val):
+                errors.append(f'{where} — cỡ chữ px thô "{val}"; dùng --fs-* (hoặc em trong .ma-md)')
+            if 'radius' in prop and any(n not in RADIUS_OK for n in RAW_PX.findall(val)):
+                errors.append(f'{where} — bán kính px thô "{val}"; dùng --r-xs / --r-sm / --r / --r-lg / --r-pill')
+for name, text in [('index.html', html)] + [('js/' + f, t) for f, t in js_src.items()]:
+    for m in OLD_GREEN.finditer(text):
+        errors.append(f'{name}: token đã bỏ {m.group(0)} — dùng --accent (MDAN-009)')
 
 if errors:
     for e in errors:
