@@ -155,6 +155,8 @@ for f in css_files:
             prop, val = (x.strip() for x in decl.split(':', 1))
             line = code.count('\n', 0, m.start(2) + m.group(2).find(decl)) + 1
             where = f'css/{f}:{line}: {prop}'
+            if prop == 'accent-color':
+                errors.append(f'{where} — Chrome tự làm tối accent-color sáng (thành xanh đậm); vẽ tay như ô đánh dấu ở css/base.css')
             if COLOR.search(val):
                 errors.append(f'{where} — mã màu thô "{val}"; khai token ở css/tokens.css')
             if prop in ('font-size', 'font') and RAW_PX.search(val):

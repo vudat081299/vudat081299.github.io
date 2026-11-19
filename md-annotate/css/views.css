@@ -76,7 +76,7 @@
 .ma-view__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin: calc(-1 * var(--s2)) 0 var(--s2); }
 .ma-view__head .ma-view__lbl { margin: 0; }
 .ma-syn { margin-left: auto; display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--h-sm); font-size: var(--fs-sm); color: var(--ink-3); cursor: pointer; }
-.ma-syn input { width: 16px; height: 16px; margin: 0; accent-color: var(--accent); }
+.ma-syn input { width: 16px; height: 16px; margin: 0; }
 /* Màu cú pháp: chỉ đổi màu và kiểu chữ, không đổi chữ — text của khung vẫn đúng bằng nguồn. */
 .sx-head { color: var(--sx-head); font-weight: 600; }
 .sx-punct, .sx-quote { color: var(--sx-punct); }

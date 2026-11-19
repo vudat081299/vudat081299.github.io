@@ -139,3 +139,17 @@ html:not(.dark) .ma-moon, html.dark .ma-sun { display: none; }
 /* LƯỚI */
 .ma-grid { display: grid; grid-template-columns: minmax(0, 1fr) var(--side); gap: var(--s4); align-items: start; padding-top: var(--s4); padding-bottom: var(--s5); }
 .ma-left { min-width: 0; }
+/* Ô đánh dấu vẽ tay: Chrome tự làm tối accent-color khi màu sáng (thành xanh đậm), nên không dùng accent-color.
+   Đang chọn: nền --accent, dấu --on-accent. Ô trong bản dựng (.ma-md, task list kiểu GitHub) giữ mặc định. */
+.ma-check input[type="checkbox"], .ma-syn input[type="checkbox"] {
+  -webkit-appearance: none; appearance: none; flex: none; position: relative; width: 16px; height: 16px; margin: 0;
+  border: 1.5px solid var(--ink-4); border-radius: var(--r-xs); background: var(--surface); cursor: pointer;
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.ma-check input[type="checkbox"]:checked, .ma-syn input[type="checkbox"]:checked { background: var(--accent); border-color: var(--accent); }
+.ma-check input[type="checkbox"]:checked::after, .ma-syn input[type="checkbox"]:checked::after {
+  content: ''; position: absolute; left: 4px; top: 0; width: 4px; height: 9px;
+  border: solid var(--on-accent); border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+.ma-check input[type="checkbox"]:focus-visible, .ma-syn input[type="checkbox"]:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.ma-check input[type="checkbox"]:disabled, .ma-syn input[type="checkbox"]:disabled { opacity: .5; cursor: default; }

@@ -105,7 +105,7 @@ html.ma-railed .ma-grid > .ma-panel .ma-rail { display: flex; flex-direction: co
 .ma-opts .ma-ta { min-height: 56px; font: 400 var(--fs-md)/var(--lh) var(--sans); background: var(--surface); }
 /* Ô chọn: hàng cao --h, ô 16px cách chữ --s3. */
 .ma-check { display: flex; align-items: center; gap: var(--s3); min-height: var(--h); font-size: var(--fs-md); color: var(--ink-2); cursor: pointer; }
-.ma-check input { width: 16px; height: 16px; accent-color: var(--accent); margin: 0; }
+.ma-check input { width: 16px; height: 16px; margin: 0; }
 .ma-pathrow { display: flex; align-items: center; gap: var(--s2); margin: 0 0 var(--s2) 28px; }
 .ma-pathrow .ma-input { height: var(--h-sm); padding: 0 var(--s2); font: 500 var(--fs-xs) var(--mono); }
 /* Tab Prompt: thân panel không cuộn; Options (mở) cuộn riêng, tối đa ~38% chiều cao; khung prompt lấp phần còn lại
