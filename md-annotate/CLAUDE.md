@@ -35,7 +35,7 @@
   (`tools/lint.py` kiểm). `js/ui/` đọc DOM và vị trí, gọi `js/core/`, ghi DOM; sự kiện trong `init…()` của nó.
 - Tính năng mới: logic vào `js/core/`, giao diện và sự kiện vào một module `js/ui/`; `main.js` gọi `init…()`.
 - Thứ tự gọi `init…()` là thứ tự đăng ký sự kiện: hai module nghe cùng phần tử thì đừng đảo (cặp ghi ở đầu `main.js`).
-- Biến dùng chung: `export var` ở module sở hữu; nơi khác chỉ đọc, gán lại qua hàm của chủ (`setS()`).
+- Biến dùng chung: `export var` ở module sở hữu; nơi khác chỉ đọc, gán lại qua hàm của chủ (`switchTo()`, `replaceDeleted()`).
 - Import vòng được; code cấp cao của module không gọi sang module khác, việc lúc nạp nằm trong `init…()`.
 - Mỗi file mở đầu bằng chú thích: làm gì, xuất gì, dùng module nào.
 
@@ -107,7 +107,7 @@
 - Tuỳ chọn prompt (kiểu, số dòng, tệp, toàn văn, lời dẫn) gập trong *Options* ở tab Prompt; dòng tóm tắt cạnh nhãn
   cho biết đang bật gì.
 - ⌘/Ctrl + Shift + C chép prompt ở mọi chỗ. Chép xong nút đổi thành *Copied ✓* một lúc; báo đọc màn hình qua
-  `#sr-live`. Toast chỉ dùng khi chép hỏng.
+  `#sr-live`. Toast chỉ dùng khi chép hỏng. Chép / tải neo lại lúc bấm (`freshDoc()`): *Edit* vẽ lại trễ 250ms.
 - ≤ 1080px: panel ẩn khỏi lưới; thanh đáy có *Comments · N* (mở panel trong tấm trượt `#dlg-panel`, đóng thì panel
   về chỗ cũ) và nút chép.
 - Thẻ nhận xét: không viền; số, vị trí (L12), nhận xét nổi bật, trích dẫn mờ có vạch trái (một cạnh nên không bo,
@@ -148,7 +148,7 @@
   kiểu TextQuoteSelector của W3C Web Annotation. Không lưu offset: văn bản đổi thì offset sai.
 - Mỗi lần vẽ, tìm lại đoạn trích trong cả nguồn lẫn bản dựng: tầng 1 khớp nguyên văn sau khi gộp khoảng trắng;
   tầng 2 chỉ so chữ và số, chữ thường, bỏ cú pháp markdown có chữ (`SYNTAX`).
-- Đoạn trích xuất hiện nhiều lần: chọn chỗ khớp `prefix` / `suffix` dài nhất, rồi gần `rel` nhất.
+- Đoạn trích xuất hiện nhiều lần: chọn chỗ khớp `prefix` / `suffix` dài nhất, rồi gần `rel` nhất. So mọi chỗ khớp, không giới hạn số.
 - Không tìm thấy ở cả hai chế độ: nhận xét mất neo, hiện `!` trong danh sách và không vào prompt.
 - Chọn ở *Source* thì trích đúng nguồn markdown; chọn ở *Preview* thì trích chữ đã dựng.
 - Vùng chọn bắt đầu hay kết thúc giữa từ thì nới ra tới mép từ (chữ, số, dấu Unicode) trước khi neo.
@@ -170,7 +170,7 @@
 - Nhận xét gõ tay ≤ 80 ký tự được đếm; dùng từ hai lần trở lên thì thành gợi ý.
 - Bỏ gợi ý là ẩn, không xoá số đếm: gợi ý mặc định không quay lại khi nạp lại `data/hints.json`.
 - Đổi chữ một gợi ý mặc định: thêm cặp cũ → mới vào `renamed` trong `data/hints.json`; `migrateHints()` dồn số đếm
-  và giữ trạng thái ẩn. Gợi ý tự gõ không đổi.
+  và giữ trạng thái ẩn. Chỉ khoá từng là gợi ý mặc định (`seed`) được dồn.
 
 ## Lưu trữ
 
