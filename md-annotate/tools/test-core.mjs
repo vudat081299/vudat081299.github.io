@@ -454,5 +454,27 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
 }
 // ── end bảng phím tắt ──
 
+// ── đã đọc, nhiều dòng: trường hợp biên ──
+{
+  const R = await import('../js/core/review.js');
+  const { normSession } = await import('../js/core/session.js');
+  const { anchorAll } = await import('../js/core/comments.js');
+  // Tiêu đề setext (gạch === / --- ở dòng dưới): tên section không kèm vạch gạch.
+  const st = 'Title\n=====\n\nBody one.\n\nSub\n---\n\nBody two.\n';
+  const ss = R.reviewSections(R.reviewUnits(st, [{ a: 0, b: 1, heading: true, tag: 'H1' }, { a: 3, b: 3, heading: false, tag: 'P' },
+    { a: 5, b: 6, heading: true, tag: 'H2' }, { a: 8, b: 8, heading: false, tag: 'P' }]), ['todo', 'todo', 'todo', 'todo'], []);
+  check('reviewSections: tiêu đề setext không kèm vạch gạch', eq(ss.map((x) => x.title), ['Title', 'Sub']), JSON.stringify(ss.map((x) => x.title)));
+  // Tiêu đề hay đoạn chỉ có emoji vẫn là đơn vị (có chữ để đọc); kẻ ngang vẫn không.
+  const et = '# 🎉\n\n🎉🎉\n\n***\n\n---\n';
+  const eu = R.reviewUnits(et, [{ a: 0, b: 0, heading: true, tag: 'H1' }, { a: 2, b: 2, heading: false, tag: 'P' }, { a: 4, b: 4, heading: false, tag: 'HR' }, { a: 6, b: 6, heading: false, tag: 'HR' }]);
+  check('reviewUnits: tiêu đề / đoạn chỉ có emoji là đơn vị, kẻ ngang thì không', eq(eu.map((u) => [u.a, u.head]), [[0, true], [2, false]]) && R.reviewSections(eu, ['todo', 'todo'], [])[0].title === '🎉', JSON.stringify(eu.map((u) => [u.a, u.head])));
+  // parts hỏng từng trường (rel không phải số, prefix không phải chuỗi) trong bộ nhớ: sửa lại, phần vẫn neo được.
+  const text = 'Alpha one.\nBeta two.\nGamma three.\nAlpha one.\n';
+  const ns = normSession({ text, comments: [{ id: 'a', quote: 'Alpha one.', comment: 'c', origin: 'src', parts: [{ quote: 'Alpha one.', origin: 'src', rel: 'x', prefix: 3, suffix: null }, { quote: 'Gamma three.', origin: 9 }] }] }, 's');
+  const pa = anchorAll(ns.comments, text, '').anchors.a.parts;
+  check('normSession: trường hỏng của parts được sửa, phần vẫn neo', pa.every((x) => x.src) && ns.comments[0].parts.every((p) => typeof p.prefix === 'string' && typeof p.suffix === 'string' && Number.isFinite(p.rel) && (p.origin === 'src' || p.origin === 'md')), JSON.stringify([pa, ns.comments[0].parts]));
+}
+// ── end đã đọc, nhiều dòng: trường hợp biên ──
+
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);

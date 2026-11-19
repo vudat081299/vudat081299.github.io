@@ -55,12 +55,12 @@ export function renderReviewPanel(r, p) {
   var secs = reviewSections(r.units, r.res.state, commentLines());
   var min = Math.min.apply(null, secs.map(function (s) { return s.depth || 9; }));
   $('rv-secs').replaceChildren.apply($('rv-secs'), secs.map(function (s) {
-    var d = s.depth ? s.depth - min : 0;
+    var d = s.depth ? s.depth - min : 0, name = s.title || (s.sec ? 'Untitled section' : 'Before the first heading');
     var meta = s.done + '/' + s.total + (s.changed ? ' · ' + s.changed + ' edited' : '') + (s.comments ? ' · ' + plural(s.comments, 'comment') : '');
     return h('li', { class: 'ma-rvs is-' + s.state, style: '--d:' + Math.max(0, d) },
       h('button', {
         class: 'ma-rvs__ic', type: 'button', title: GLYPH[s.state] + '. Click to ' + (s.state === 'done' ? 'unmark' : 'mark') + ' the whole section',
-        'aria-label': (s.state === 'done' ? 'Unmark' : 'Mark') + ' section "' + (s.title || 'Before the first heading') + '" reviewed',
+        'aria-label': (s.state === 'done' ? 'Unmark' : 'Mark') + ' section "' + name + '" reviewed',
         onclick: function () { toggleSection(s.sec); }
       }),
       h('button', {
@@ -70,7 +70,7 @@ export function renderReviewPanel(r, p) {
           for (var k = s.first; k <= s.last; k++) if (st[k] !== 'done') { i = k; break; }
           jumpUnit(i);
         })
-      }, h('span', { class: 'ma-rvs__t' + (s.title ? '' : ' is-pre') }, s.title || 'Before the first heading'), h('span', { class: 'ma-rvs__m' }, meta)));
+      }, h('span', { class: 'ma-rvs__t' + (s.title ? '' : ' is-pre') }, name), h('span', { class: 'ma-rvs__m' }, meta)));
   }));
 }
 

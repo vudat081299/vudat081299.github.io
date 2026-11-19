@@ -1,7 +1,7 @@
 /* Đánh dấu đã đọc (MDAN-013), thuần: đơn vị đọc từ văn bản + khối (lexSpans), dấu đã đọc lưu ở phiên (s.reviews), neo
    lại dấu sau khi văn bản đổi, trạng thái từng đơn vị, tiến độ, section, đơn vị chưa đọc kế tiếp, dải dòng cho prompt.
    Đơn vị: mỗi khối cấp cao; danh sách ≥ 2 mục thì mỗi mục cấp cao một đơn vị (mục con thuộc mục cha). Khối không có
-   chữ hay số (kẻ ngang) không là đơn vị. Dòng đếm từ 0 (a, b).
+   chữ, số hay emoji (kẻ ngang) không là đơn vị. Dòng đếm từ 0 (a, b).
    Dấu (mark) = { h, p, n, q, r }: h băm chữ chuẩn hoá của đơn vị, p / n băm đơn vị liền trước / sau, q 80 ký tự đầu
    (so gần giống, hiện khi mất), r vị trí tương đối. Không lưu số dòng: văn bản đổi thì số dòng sai.
    Trạng thái: 'done' (dấu khớp đúng chữ, ở đâu cũng được), 'changed' (chữ đã đổi, tìm lại nhờ hàng xóm / chữ gần
@@ -46,7 +46,7 @@ export function reviewUnits(text, spans) {
     } else rs.push([sp.a, sp.b, -1]);
     rs.forEach(function (r) {
       var norm = normUnit(text.slice(st[r[0]], lineEnd(r[1])));
-      if (!/[\p{L}\p{N}]/u.test(norm)) return;
+      if (!/[\p{L}\p{N}\p{So}]/u.test(norm)) return;   // \p{So}: emoji, ✓ (tiêu đề chỉ có emoji vẫn là đơn vị)
       units.push({
         a: r[0], b: r[1], block: k, item: r[2], head: !!sp.heading,
         depth: sp.heading && /^H[1-6]$/.test(sp.tag) ? +sp.tag[1] : 0, sec: sec, h: hashStr(norm), q: norm.slice(0, 80)
@@ -173,8 +173,11 @@ export function unitsIn(units, la, lb) {
   return out;
 }
 
-/* Tiêu đề section: chữ của khối tiêu đề, bỏ dấu # và thẻ HTML. */
-function headTitle(q) { return q.replace(/<[^>]*>/g, ' ').replace(/^#{1,6}\s*/, '').replace(/\s+#+\s*$/, '').replace(/\s+/g, ' ').trim(); }
+/* Tiêu đề section: chữ của khối tiêu đề, bỏ dấu #, vạch gạch setext và thẻ HTML. */
+function headTitle(q) {
+  if (!/^\s*[#<]/.test(q)) q = q.replace(/\s+(?:=+|-+)\s*$/, '');   // tiêu đề setext: bỏ dòng gạch === / ---
+  return q.replace(/<[^>]*>/g, ' ').replace(/^#{1,6}\s*/, '').replace(/\s+#+\s*$/, '').replace(/\s+/g, ' ').trim();
+}
 /* Section cho dàn ý: [{ sec, first, last, a, b, title, depth, done, changed, total, comments, state }]. first / last:
    đơn vị đầu / cuối; a / b: dòng đầu / cuối; title rỗng cho phần trước tiêu đề đầu; comments: số dòng trong cLines
    (dòng đầu của nhận xét, đếm từ 0) rơi vào section; state: 'done' | 'changed' (có đơn vị đổi chữ) | 'part' | 'todo'. */

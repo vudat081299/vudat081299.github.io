@@ -27,10 +27,11 @@ export function normSession(s, id) {
   }) : [];
   s.comments.forEach(function (c) {
     if (!c.id) c.id = uid();
+    normSelector(c);
     /* parts (nhận xét nhiều dòng) là trường thêm, không đổi khoá: hỏng hoặc dưới hai phần thì bỏ, còn quote ở ngoài. */
     if ('parts' in c) {
       var ps = Array.isArray(c.parts) ? c.parts.filter(function (p) { return p && typeof p.quote === 'string' && p.quote; }) : [];
-      if (ps.length > 1) c.parts = ps; else delete c.parts;
+      if (ps.length > 1) c.parts = ps.map(normSelector); else delete c.parts;
     }
   });
   ['name', 'header', 'footer'].forEach(function (k) { if (typeof s[k] !== 'string') s[k] = ''; });
@@ -47,6 +48,15 @@ export function normSession(s, id) {
   s.rvPrompt = s.rvPrompt === true;
   s.created = +s.created || Date.now(); s.updated = +s.updated || s.created;
   return s;
+}
+/* Ngữ cảnh neo của một đoạn trích (nhận xét hay một phần) sửa tại chỗ cho đúng kiểu: rel không phải số thì locate
+   không chọn được chỗ nào khi trích dẫn khớp nhiều chỗ. */
+function normSelector(p) {
+  if (typeof p.prefix !== 'string') p.prefix = '';
+  if (typeof p.suffix !== 'string') p.suffix = '';
+  if (p.origin !== 'md') p.origin = 'src';
+  p.rel = Number.isFinite(p.rel) ? Math.max(0, Math.min(1, p.rel)) : 0;
+  return p;
 }
 /* Danh sách phiên đọc từ bộ nhớ: bỏ mục hỏng; giờ sửa luôn là số (hộp History định dạng nó thành ngày). */
 export function normIndex(a) {
