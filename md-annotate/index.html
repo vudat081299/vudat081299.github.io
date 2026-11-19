@@ -2429,69 +2429,93 @@ This page lets you **comment on individual passages** of a markdown text, then g
          nằm ở cùng một chỗ. Điểm tham chiếu là giữa khung; sát đầu / cuối thì trượt dần về mép, để hai khung cùng chạm
          đầu và cùng chạm cuối. Bản đồ: mỗi khối cấp cao của marked.lexer ↔ phần tử con của #v-md (cùng thứ tự), cặp
          (đỉnh dòng nguồn, đỉnh khối) và (đáy, đáy); giữa các mốc nội suy tuyến tính. Lệch số khối thì theo tỉ lệ. */
-      var syncMap = null, syncLock = null, syncRaf = 0;
+      var syncMap = null, syncExpect = new Map();
       function paneY(pane, el, bottom) {
         var r = el.getBoundingClientRect();
         return (bottom ? r.bottom : r.top) - pane.getBoundingClientRect().top + pane.scrollTop;
       }
-      function buildSyncMap() {
-        var ws = $('wrap-src'), wm = $('wrap-md');
-        var lines = $('v-src').querySelectorAll('.ma-ln');
-        var blocks = Array.prototype.filter.call($('v-md').children, function (el) { return el.nodeType === 1; });
+      function lexSpans() {
         var toks = [];
         try { toks = window.marked.lexer(S.text, { gfm: true }); } catch (e) { toks = []; }
         var line = 0, spans = [];
         toks.forEach(function (t) {
           var raw = t.raw || '', n = (raw.match(/\n/g) || []).length, body = raw.replace(/\n+$/, '');
-          if (t.type !== 'space' && t.type !== 'def') spans.push([line, line + (body.match(/\n/g) || []).length]);
+          if (t.type !== 'space' && t.type !== 'def') spans.push({ a: line, b: line + (body.match(/\n/g) || []).length, heading: t.type === 'heading' });
           line += n;
         });
+        return spans;
+      }
+      /* Nội suy Hermite đơn điệu (Fritsch–Carlson): tốc độ khung theo đổi mượt qua ranh giới khối, không gãy khúc. */
+      function monoCurve(xs, ys) {
+        var n = xs.length, d = [], m = new Array(n), k;
+        for (k = 0; k < n - 1; k++) d.push((ys[k + 1] - ys[k]) / (xs[k + 1] - xs[k]));
+        if (n < 2) return { xs: xs, ys: ys, m: [1] };
+        m[0] = d[0]; m[n - 1] = d[n - 2];
+        for (k = 1; k < n - 1; k++) m[k] = d[k - 1] * d[k] <= 0 ? 0 : (d[k - 1] + d[k]) / 2;
+        for (k = 0; k < n - 1; k++) {
+          if (d[k] === 0) { m[k] = m[k + 1] = 0; continue; }
+          var a = m[k] / d[k], b = m[k + 1] / d[k], h = a * a + b * b;
+          if (h > 9) { var t = 3 / Math.sqrt(h); m[k] = t * a * d[k]; m[k + 1] = t * b * d[k]; }
+        }
+        return { xs: xs, ys: ys, m: m };
+      }
+      function evalCurve(c, x) {
+        var xs = c.xs, n = xs.length;
+        if (n < 2) return x;
+        if (x <= xs[0]) return c.ys[0] + (x - xs[0]) * c.m[0];
+        if (x >= xs[n - 1]) return c.ys[n - 1] + (x - xs[n - 1]) * c.m[n - 1];
+        var lo = 0, hi = n - 1;
+        while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (xs[mid] <= x) lo = mid; else hi = mid; }
+        var h = xs[hi] - xs[lo], t = (x - xs[lo]) / h, t2 = t * t, t3 = t2 * t;
+        return (2 * t3 - 3 * t2 + 1) * c.ys[lo] + (t3 - 2 * t2 + t) * h * c.m[lo] + (-2 * t3 + 3 * t2) * c.ys[hi] + (t3 - t2) * h * c.m[hi];
+      }
+      function syncKey() {
+        var ws = $('wrap-src'), wm = $('wrap-md');
+        return ws.scrollHeight + ':' + wm.scrollHeight + ':' + ws.clientWidth + ':' + wm.clientWidth + ':' + S.text.length;
+      }
+      function buildSyncMap() {
+        var ws = $('wrap-src'), wm = $('wrap-md');
+        var lines = $('v-src').querySelectorAll('.ma-ln');
+        var blocks = Array.prototype.filter.call($('v-md').children, function (el) { return el.nodeType === 1; });
+        var spans = lexSpans();
         var pts = [[0, 0]];
         if (spans.length === blocks.length && lines.length) {
           spans.forEach(function (sp, i) {
-            var a = lines[Math.min(sp[0], lines.length - 1)], b = lines[Math.min(sp[1], lines.length - 1)];
+            var a = lines[Math.min(sp.a, lines.length - 1)];
+            // Chỉ lấy đỉnh khối: đỉnh + đáy xen kẽ làm tốc độ đổi liên tục giữa thân khối và khoảng trống.
             pts.push([paneY(ws, a), paneY(wm, blocks[i])]);
-            pts.push([paneY(ws, b, true), paneY(wm, blocks[i], true)]);
           });
         }
         pts.push([ws.scrollHeight, wm.scrollHeight]);
+        // Giữ điểm tăng ngặt ở cả hai trục, để đường cong đi được hai chiều.
         var clean = [pts[0]];
-        pts.slice(1).forEach(function (p) { var q = clean[clean.length - 1]; if (p[0] >= q[0] && p[1] >= q[1]) clean.push(p); });
-        syncMap = { pts: clean, key: ws.scrollHeight + ':' + wm.scrollHeight + ':' + ws.clientWidth + ':' + wm.clientWidth + ':' + S.text.length };
+        pts.slice(1).forEach(function (p) { var q = clean[clean.length - 1]; if (p[0] > q[0] + 0.5 && p[1] > q[1] + 0.5) clean.push(p); });
+        var xs = clean.map(function (p) { return p[0]; }), ys = clean.map(function (p) { return p[1]; });
+        syncMap = { key: syncKey(), fwd: monoCurve(xs, ys), back: monoCurve(ys, xs) };
       }
-      function interp(pts, y, from) {
-        var to = 1 - from;
-        for (var i = 1; i < pts.length; i++) {
-          var a = pts[i - 1], b = pts[i];
-          if (y <= b[from] || i === pts.length - 1) {
-            var d = b[from] - a[from];
-            return d > 0 ? a[to] + (b[to] - a[to]) * Math.max(0, Math.min(1, (y - a[from]) / d)) : a[to];
-          }
-        }
-        return y;
-      }
+      /* Khung nào đổi vị trí khác với vị trí trang vừa đặt là khung người dùng đang cuộn: nó dẫn, khung kia theo ngay
+         trong cùng khung hình. Sự kiện cuộn do trang đặt thì bỏ qua, nên không có vòng lặp qua lại. */
       function syncFrom(src) {
         var ws = $('wrap-src'), wm = $('wrap-md');
-        var other = src === ws ? wm : ws, from = src === ws ? 0 : 1;
-        var key = ws.scrollHeight + ':' + wm.scrollHeight + ':' + ws.clientWidth + ':' + wm.clientWidth + ':' + S.text.length;
-        if (!syncMap || syncMap.key !== key) buildSyncMap();
+        var other = src === ws ? wm : ws;
+        if (!syncMap || syncMap.key !== syncKey()) buildSyncMap();
         var h = src.clientHeight, max = src.scrollHeight - h, top = src.scrollTop;
         var off = h / 2 - Math.max(0, h / 2 - top) + Math.max(0, h / 2 - (max - top));
-        var y = interp(syncMap.pts, top + off, from);
-        var t = Math.round(y - off * other.clientHeight / h);
-        if (Math.abs(other.scrollTop - t) < 1) return;
-        syncLock = other;
+        var y = evalCurve(src === ws ? syncMap.fwd : syncMap.back, top + off);
+        var omax = other.scrollHeight - other.clientHeight;
+        var t = Math.max(0, Math.min(omax, y - off * other.clientHeight / h));
+        if (Math.abs(other.scrollTop - t) < 0.5) return;
         other.scrollTop = t;
-        // Không có sự kiện cuộn (đã ở mép) thì nhả khoá, để lần cuộn tay kế tiếp không bị bỏ qua.
-        requestAnimationFrame(function () { requestAnimationFrame(function () { if (syncLock === other) syncLock = null; }); });
+        syncExpect.set(other, other.scrollTop);
       }
       ['wrap-src', 'wrap-md'].forEach(function (id) {
-        $(id).addEventListener('scroll', function () {
-          var el = $(id);
-          if (syncLock === el) { syncLock = null; return; }
+        var el = $(id);
+        el.addEventListener('scroll', function () {
+          var exp = syncExpect.get(el);
+          if (exp != null && Math.abs(el.scrollTop - exp) < 1) return; // do trang đặt
+          syncExpect.delete(el);
           if ($('views').dataset.mode !== 'split' || layoutVal('sync') === false) return;
-          cancelAnimationFrame(syncRaf);
-          syncRaf = requestAnimationFrame(function () { syncFrom(el); });
+          syncFrom(el);
         }, { passive: true });
       });
       function invalidateSync() { syncMap = null; }

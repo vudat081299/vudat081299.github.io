@@ -40,8 +40,10 @@
   `> [!NOTE|TIP|IMPORTANT|WARNING|CAUTION]` thành `.ma-alert`; tiêu đề và biểu tượng vẽ bằng CSS, không thêm chữ.
 - Cỡ chữ trong `.ma-md` (bảng, khối code, tiêu đề) tính bằng `em` theo `--md-fs`, không dùng `px`.
 - Cuộn theo nhau ở *Split* (`prefs.sync`, mặc định bật, tắt trong *Layout*): `buildSyncMap()` ghép khối cấp cao của
-  `marked.lexer` với con của `#v-md` theo thứ tự (đỉnh với đỉnh, đáy với đáy), nội suy tuyến tính; điểm tham chiếu ở
-  giữa khung, sát đầu / cuối trượt về mép. Lệch số khối thì chỉ còn hai mốc đầu, cuối. Smoke đo ±40px.
+  `marked.lexer` với con của `#v-md` theo thứ tự, chỉ đỉnh với đỉnh (thêm đáy làm tốc độ giật), nội suy Hermite đơn
+  điệu (`monoCurve`). Điểm tham chiếu ở giữa khung, sát đầu / cuối trượt về mép. Lệch số khối thì chỉ còn hai mốc.
+- Khung theo được đặt ngay trong sự kiện cuộn của khung dẫn (không qua rAF, không trễ khung hình). Vị trí trang tự
+  đặt ghi ở `syncExpect`; sự kiện cuộn khớp vị trí ấy thì bỏ qua, nên không vòng lặp. Smoke đo ±40px.
 - Hộp thoại: chỉ `.ma-dlg__b` cuộn. Tab *Prompt*: thân panel không cuộn; *Options* mở cuộn riêng (≤ 38vh), `#out` lấp
   phần còn lại và tự cuộn. Không lồng hai vùng cuộn.
 - *Preview* mặc định rộng hết khung; trích khối là vạch trái một cạnh (không bo), bảng có viền ngoài bo góc.
