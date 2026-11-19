@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Cổng của md-annotate/: dữ liệu gợi ý và hai luật an toàn của trang.
 
-  1. data/hints.json: có `hints` là danh sách chuỗi, không rỗng, ≤ 80 ký tự (MAX_HINT trong trang),
+  1. data/hints.json: có `hints` là danh sách chuỗi (và `renamed` cũ → mới trỏ đúng gợi ý), không rỗng, ≤ 80 ký tự (MAX_HINT trong trang),
      không trùng sau khi chuẩn hoá như trang làm (chữ thường, gộp khoảng trắng, bỏ dấu chấm cuối),
      đủ 6 mục để hộp nhận xét có đủ gợi ý ở lần mở đầu.
   2. index.html: chỉ một chỗ gán innerHTML, và chỗ ấy nhận HTML đã qua DOMPurify.
@@ -47,6 +47,15 @@ if data is not None:
         if k in seen:
             errors.append(f'data/hints.json: "{h}" trùng với "{seen[k]}"')
         seen[k] = h
+    renamed = data.get('renamed', {}) if isinstance(data, dict) else {}
+    if not isinstance(renamed, dict):
+        errors.append('data/hints.json: "renamed" phải là bảng cũ → mới')
+        renamed = {}
+    for old, new in renamed.items():
+        if norm(new) not in seen:
+            errors.append(f'data/hints.json: renamed "{old}" → "{new}" không trỏ tới gợi ý nào trong "hints"')
+        if norm(old) in seen:
+            errors.append(f'data/hints.json: renamed "{old}" vẫn còn trong "hints"')
     if len(seen) < 6:
         errors.append(f'data/hints.json: {len(seen)} gợi ý — cần ít nhất 6')
 

@@ -4,14 +4,14 @@
   Luật: md-annotate/CLAUDE.md. Gợi ý mặc định ở data/hints.json (REPO-001); mọi thứ khác inline ở đây.
   Màu và font theo trang chủ (REPO-023); theme dùng khoá chung 'hub-theme' (REPO-024).
 -->
-<html lang="vi">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" id="theme-color" content="#f5f6f3" />
     <title>Markdown Annotate</title>
-    <meta name="description" content="Bôi đen đoạn văn markdown, ghi nhận xét, gom thành một prompt sửa bài cho AI." />
+    <meta name="description" content="Select passages of a markdown text, comment on them, and gather the comments into one prompt for an AI." />
 
     <script>
       /* Theme trước lần vẽ đầu. Khoá 'hub-theme' dùng chung cả site; chưa chọn thì theo hệ điều hành. */
@@ -632,21 +632,21 @@
   <body>
     <header class="ma-bar">
       <div class="ma-wrap ma-bar__in">
-        <a class="ma-brand" href="../" aria-label="Về trang chủ">
+        <a class="ma-brand" href="../" aria-label="Back to home">
           <span class="ma-brand__mark" aria-hidden="true"></span>
           <span class="ma-brand__txt">vudat081299 / <b>md-annotate</b></span>
         </a>
         <span class="ma-bar__sp"></span>
-        <button class="ma-btn" id="btn-new" type="button" title="Phiên mới">
+        <button class="ma-btn" id="btn-new" type="button" title="New session">
           <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
-          <span class="ma-btn__lbl">Phiên mới</span>
+          <span class="ma-btn__lbl">New session</span>
         </button>
-        <button class="ma-btn" id="btn-hist" type="button" title="Lịch sử phiên">
+        <button class="ma-btn" id="btn-hist" type="button" title="Session history">
           <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5M12 7v5l3 2" /></svg>
-          <span class="ma-btn__lbl">Lịch sử</span>
+          <span class="ma-btn__lbl">History</span>
           <span class="ma-badge ma-btn__lbl" id="hist-n"></span>
         </button>
-        <button class="ma-icbtn" id="theme" type="button" aria-label="Đổi sáng / tối" title="Sáng / tối">
+        <button class="ma-icbtn" id="theme" type="button" aria-label="Toggle light / dark" title="Light / dark">
           <svg class="ma-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z" />
           </svg>
@@ -662,39 +662,39 @@
       <div class="ma-left">
       <div class="ma-head">
         <h1>Markdown Annotate</h1>
-        <p>Bôi đen đoạn cần sửa, ghi nhận xét, chép một prompt cho AI.</p>
+        <p>Select what needs fixing, comment, copy one prompt for your AI.</p>
       </div>
 
       <p class="ma-notice" id="file-notice" hidden>
-        Trang đang mở bằng <code>file://</code> nên không nạp được gợi ý mặc định. Chạy <code>python3 -m http.server</code>
-        ở thư mục gốc repo rồi mở <code>http://localhost:8000/md-annotate/</code>.
+        This page is open via <code>file://</code>, so the default hints can't load. Run <code>python3 -m http.server</code>
+        in the repo root and open <code>http://localhost:8000/md-annotate/</code>.
       </p>
 
-        <section class="ma-doc" id="doc" aria-label="Văn bản">
+        <section class="ma-doc" id="doc" aria-label="Document">
           <div class="ma-doc__bar">
             <input class="ma-docname" id="s-name" type="text" autocomplete="off" spellcheck="false"
-                   aria-label="Tên phiên" title="Tên phiên: bấm để đổi" placeholder="Tên phiên" />
-            <div class="ma-tabs" role="tablist" aria-label="Chế độ xem">
-              <button class="ma-tab" role="tab" type="button" data-view="edit">Soạn</button>
-              <button class="ma-tab" role="tab" type="button" data-view="src">Nguồn</button>
-              <button class="ma-tab" role="tab" type="button" data-view="view">Hiển thị</button>
-              <button class="ma-tab" role="tab" type="button" data-view="split" id="tab-split">Song song</button>
+                   aria-label="Session name" title="Session name: click to rename" placeholder="Session name" />
+            <div class="ma-tabs" role="tablist" aria-label="View mode">
+              <button class="ma-tab" role="tab" type="button" data-view="edit">Edit</button>
+              <button class="ma-tab" role="tab" type="button" data-view="src">Source</button>
+              <button class="ma-tab" role="tab" type="button" data-view="view">Preview</button>
+              <button class="ma-tab" role="tab" type="button" data-view="split" id="tab-split">Split</button>
             </div>
             <span class="ma-doc__meta" id="doc-meta"></span>
           </div>
 
           <div class="ma-edit" id="pane-edit">
-            <textarea class="ma-ta" id="src-input" spellcheck="false" aria-label="Văn bản markdown"
-                      placeholder="Dán văn bản markdown vào đây. Dán xong trang tự chuyển sang chế độ xem để bôi đen và nhận xét."></textarea>
+            <textarea class="ma-ta" id="src-input" spellcheck="false" aria-label="Markdown text"
+                      placeholder="Paste or type markdown here. After a paste the page switches to Preview so you can select and comment."></textarea>
             <div class="ma-edit__tools">
               <label class="ma-btn ma-file">
                 <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6v18h12V7l-4-4z" /><path d="M14 3v4h4M12 11v6M9 14l3-3 3 3" /></svg>
-                Mở file .md
+                Open .md file
                 <input type="file" id="file-in" accept=".md,.markdown,.txt,text/markdown,text/plain" />
               </label>
-              <button class="ma-btn" type="button" id="btn-sample">Văn bản mẫu</button>
-              <button class="ma-btn ma-btn--quiet ma-btn--danger" type="button" id="btn-clear">Xoá văn bản</button>
-              <span class="ma-hint">hoặc kéo thả file vào khung này</span>
+              <button class="ma-btn" type="button" id="btn-sample">Sample text</button>
+              <button class="ma-btn ma-btn--quiet ma-btn--danger" type="button" id="btn-clear">Clear text</button>
+              <span class="ma-hint">or drop a file here</span>
             </div>
             <p class="ma-edit__note" id="edit-note" hidden></p>
           </div>
@@ -702,29 +702,29 @@
           <div class="ma-views" id="views" data-mode="view">
             <div class="ma-view" id="wrap-src">
               <div class="ma-view__head">
-                <span class="ma-view__lbl ma-label">Nguồn</span>
-                <label class="ma-syn" title="Tô màu cú pháp markdown ở tab Nguồn"><input type="checkbox" id="syn" /> Tô màu</label>
+                <span class="ma-view__lbl ma-label">Source</span>
+                <label class="ma-syn" title="Color markdown syntax in the Source view"><input type="checkbox" id="syn" /> Syntax colors</label>
               </div>
               <pre class="ma-src" id="v-src"></pre>
             </div>
             <div class="ma-divider" id="divider" role="separator" aria-orientation="vertical" tabindex="0"
                  aria-label="Resize panes" title="Drag to resize" hidden></div>
             <div class="ma-view" id="wrap-md">
-              <div class="ma-view__lbl ma-label">Hiển thị</div>
+              <div class="ma-view__lbl ma-label">Preview</div>
               <article class="ma-md" id="v-md"></article>
             </div>
           </div>
 
           <div class="ma-empty" id="empty" hidden>
-            <p>Chưa có văn bản.</p>
-            <button class="ma-btn ma-btn--go" type="button" id="btn-goedit">Dán văn bản</button>
+            <p>No text yet.</p>
+            <button class="ma-btn ma-btn--go" type="button" id="btn-goedit">Paste text</button>
           </div>
         </section>
       </div>
 
         <!-- Cột phải: một panel. Thân là chỗ cuộn duy nhất; thanh đáy (nút chép) luôn thấy, dù bao nhiêu nhận xét.
              Máy ≤ 1080px: panel nằm trong tấm trượt đáy #dlg-panel, mở từ thanh đáy. -->
-        <aside class="ma-panel" id="panel" aria-label="Nhận xét và prompt">
+        <aside class="ma-panel" id="panel" aria-label="Comments and prompt">
           <div class="ma-panel__grip" id="panel-grip" role="separator" aria-orientation="vertical" tabindex="0"
                aria-label="Resize panel" title="Drag to resize"></div>
           <div class="ma-rail">
@@ -742,17 +742,17 @@
             </button>
           </div>
           <div class="ma-panel__head">
-            <div class="ma-seg" role="tablist" aria-label="Nội dung panel">
+            <div class="ma-seg" role="tablist" aria-label="Panel content">
               <button class="ma-ptab" role="tab" type="button" id="ptab-list" data-pane="list" aria-controls="pane-list">
-                Nhận xét <span class="ma-ptab__n" id="n-comments"></span>
+                Comments <span class="ma-ptab__n" id="n-comments"></span>
               </button>
               <button class="ma-ptab" role="tab" type="button" id="ptab-prompt" data-pane="prompt" aria-controls="pane-prompt">Prompt</button>
             </div>
-            <button class="ma-btn ma-btn--quiet ma-btn--sm" type="button" id="btn-hints" title="Quản lý gợi ý nhận xét">Gợi ý</button>
+            <button class="ma-btn ma-btn--quiet ma-btn--sm" type="button" id="btn-hints" title="Manage comment hints">Hints</button>
             <button class="ma-icbtn ma-icbtn--bare" type="button" id="btn-rail" aria-label="Collapse panel" title="Collapse panel">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
             </button>
-            <button class="ma-icbtn ma-icbtn--bare ma-panel__close" type="button" data-close aria-label="Đóng">
+            <button class="ma-icbtn ma-icbtn--bare ma-panel__close" type="button" data-close aria-label="Close">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
             </button>
           </div>
@@ -761,7 +761,7 @@
             <div class="ma-pane" id="pane-list" role="tabpanel" aria-labelledby="ptab-list">
               <div class="ma-blank" id="list-empty">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5z" /><path d="M8 9h8M8 12h5" /></svg>
-                <p><b>Chưa có nhận xét</b>Bôi đen một đoạn trong văn bản để thêm nhận xét.</p>
+                <p><b>No comments yet</b>Select a passage in the document to add one.</p>
               </div>
               <ol class="ma-list" id="list"></ol>
             </div>
@@ -770,46 +770,46 @@
               <details class="ma-opts" id="opts">
                 <summary>
                   <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" /><circle cx="16" cy="7" r="2" /><circle cx="10" cy="17" r="2" /></svg>
-                  <span>Tuỳ chọn</span>
+                  <span>Options</span>
                   <span class="ma-opts__sum" id="opts-sum"></span>
                 </summary>
                 <div class="ma-opts__in">
-                  <div class="ma-fmt" role="radiogroup" aria-label="Kiểu trích">
-                    <label><input type="radio" name="fmt" value="inline" /><span>"Trích" — nhận xét</span></label>
-                    <label><input type="radio" name="fmt" value="block" /><span>&gt; Khối trích</span></label>
+                  <div class="ma-fmt" role="radiogroup" aria-label="Quote style">
+                    <label><input type="radio" name="fmt" value="inline" /><span>"Quote" — comment</span></label>
+                    <label><input type="radio" name="fmt" value="block" /><span>&gt; Block quote</span></label>
                   </div>
-                  <label class="ma-check"><input type="checkbox" id="line-nums" /> Kèm số dòng</label>
+                  <label class="ma-check"><input type="checkbox" id="line-nums" /> Line numbers</label>
                   <label class="ma-pathrow" id="path-row">
-                    <span class="ma-label">Tệp</span>
+                    <span class="ma-label">File</span>
                     <input class="ma-input" id="p-path" type="text" spellcheck="false" autocomplete="off"
-                           placeholder="notes/a.md (tuỳ chọn)" aria-label="Đường dẫn tệp, ghi vị trí dạng tệp:dòng" />
+                           placeholder="notes/a.md (optional)" aria-label="File path, locations become file:line" />
                   </label>
-                  <label class="ma-check"><input type="checkbox" id="inc-doc" /> Kèm toàn văn bản ở cuối</label>
+                  <label class="ma-check"><input type="checkbox" id="inc-doc" /> Include the full text at the end</label>
                   <div class="ma-opts__field">
-                    <span class="ma-opts__lbl"><label class="ma-label" for="p-head">Lời dẫn đầu</label>
+                    <span class="ma-opts__lbl"><label class="ma-label" for="p-head">Header</label>
                       <button class="ma-link" type="button" id="btn-headtpl"
-                              data-tpl="Sửa văn bản markdown theo từng nhận xét dưới đây. Mỗi mục là một đoạn trích nguyên văn kèm việc cần làm. Giữ nguyên những phần không được nhắc tới, trả về toàn bộ văn bản đã sửa.">Dùng câu mẫu</button></span>
-                    <textarea class="ma-ta" id="p-head" rows="2" placeholder="Ví dụ: Sửa văn bản theo từng nhận xét dưới đây."></textarea>
+                              data-tpl="Revise the markdown text according to each comment below. Each item quotes a passage verbatim and says what to change. Leave everything else as it is, and return the full revised text.">Use template</button></span>
+                    <textarea class="ma-ta" id="p-head" rows="2" placeholder="e.g. Revise the text according to the comments below."></textarea>
                   </div>
                   <div class="ma-opts__field">
-                    <label class="ma-label" for="p-foot">Lời dẫn cuối</label>
-                    <textarea class="ma-ta" id="p-foot" rows="2" placeholder="Ví dụ: Liệt kê những chỗ đã sửa."></textarea>
+                    <label class="ma-label" for="p-foot">Footer</label>
+                    <textarea class="ma-ta" id="p-foot" rows="2" placeholder="e.g. List the changes you made."></textarea>
                   </div>
                 </div>
               </details>
-              <pre class="ma-out" id="out" tabindex="0" aria-label="Prompt" data-ph="Prompt hiện ở đây khi có nhận xét."></pre>
+              <pre class="ma-out" id="out" tabindex="0" aria-label="Prompt" data-ph="The prompt appears here once you add comments."></pre>
             </div>
           </div>
 
           <div class="ma-panel__foot">
             <div class="ma-foot__stat"><span id="foot-n"></span><span id="out-n"></span></div>
             <div class="ma-foot__row">
-              <button class="ma-icbtn" type="button" id="btn-export" aria-label="Tải prompt thành file .md" title="Tải .md">
+              <button class="ma-icbtn" type="button" id="btn-export" aria-label="Download the prompt as .md" title="Download .md">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m-4-4 4 4 4-4M5 20h14" /></svg>
               </button>
               <button class="ma-btn ma-btn--go ma-copy" type="button" id="btn-copy">
                 <svg class="ma-i ma-copy__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a1 1 0 0 1 1-1h9" /></svg>
-                <span class="ma-copy__lbl">Chép prompt</span>
+                <span class="ma-copy__lbl">Copy prompt</span>
                 <kbd class="ma-kbd js-copy-kbd" aria-hidden="true"></kbd>
               </button>
             </div>
@@ -818,26 +818,26 @@
     </main>
 
     <!-- Hộp nhận xét: mở khi bôi đen (chuột) hoặc bấm nút nổi (cảm ứng, bàn phím) -->
-    <div class="ma-pop" id="pop" role="dialog" aria-label="Nhận xét cho đoạn đã chọn" hidden>
+    <div class="ma-pop" id="pop" role="dialog" aria-label="Comment on the selected passage" hidden>
       <p class="ma-pop__q" id="pop-q"></p>
       <p class="ma-pop__warn" id="pop-warn" hidden></p>
       <div class="ma-chips" id="pop-chips"></div>
-      <textarea class="ma-ta" id="pop-text" rows="2" placeholder="Nhận xét… (hoặc bấm một gợi ý)" aria-label="Nhận xét"></textarea>
+      <textarea class="ma-ta" id="pop-text" rows="2" placeholder="Comment… (or pick a hint)" aria-label="Comment"></textarea>
       <div class="ma-pop__bar">
-        <span class="ma-pop__keys">Enter lưu · ⇧Enter xuống dòng<br />Esc đóng</span>
-        <button class="ma-btn ma-btn--quiet ma-btn--danger" type="button" id="pop-del" hidden>Xoá</button>
-        <button class="ma-btn ma-btn--quiet" type="button" id="pop-cancel">Huỷ</button>
-        <button class="ma-btn ma-btn--go" type="button" id="pop-save">Lưu</button>
+        <span class="ma-pop__keys">Enter saves · ⇧Enter new line<br />Esc closes</span>
+        <button class="ma-btn ma-btn--quiet ma-btn--danger" type="button" id="pop-del" hidden>Delete</button>
+        <button class="ma-btn ma-btn--quiet" type="button" id="pop-cancel">Cancel</button>
+        <button class="ma-btn ma-btn--go" type="button" id="pop-save">Save</button>
       </div>
     </div>
 
-    <button class="ma-btn ma-btn--go ma-fab" type="button" id="fab" hidden>Nhận xét đoạn đã chọn</button>
+    <button class="ma-btn ma-btn--go ma-fab" type="button" id="fab" hidden>Comment on selection</button>
 
     <div class="ma-dock" id="dock">
       <button class="ma-btn ma-btn--quiet ma-dock__list" type="button" id="dock-n" aria-haspopup="dialog"></button>
       <button class="ma-btn ma-btn--go ma-copy" type="button" id="dock-copy">
         <svg class="ma-i ma-copy__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a1 1 0 0 1 1-1h9" /></svg>
-        <span class="ma-copy__lbl">Chép prompt</span>
+        <span class="ma-copy__lbl">Copy prompt</span>
       </button>
     </div>
 
@@ -847,68 +847,68 @@
     <dialog class="ma-dlg" id="dlg-hist" aria-labelledby="dlg-hist-t">
       <div class="ma-dlg__in">
         <div class="ma-dlg__h">
-          <h2 id="dlg-hist-t">Lịch sử phiên</h2>
-          <button class="ma-icbtn ma-icbtn--bare" type="button" data-close aria-label="Đóng">
+          <h2 id="dlg-hist-t">Session history</h2>
+          <button class="ma-icbtn ma-icbtn--bare" type="button" data-close aria-label="Close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
           </button>
         </div>
         <div class="ma-dlg__b">
-          <p class="ma-sub">Mỗi phiên là một văn bản cùng nhận xét của nó, tự lưu trong trình duyệt này. <span id="hist-usage"></span></p>
+          <p class="ma-sub">Each session is one text with its comments, saved automatically in this browser. <span id="hist-usage"></span></p>
           <ol class="ma-rows" id="hist-list"></ol>
         </div>
       </div>
     </dialog>
 
-    <dialog class="ma-dlg ma-dlg--panel" id="dlg-panel" aria-label="Nhận xét và prompt"></dialog>
+    <dialog class="ma-dlg ma-dlg--panel" id="dlg-panel" aria-label="Comments and prompt"></dialog>
 
     <dialog class="ma-dlg" id="dlg-hints" aria-labelledby="dlg-hints-t">
       <div class="ma-dlg__in">
         <div class="ma-dlg__h">
-          <h2 id="dlg-hints-t">Gợi ý nhận xét</h2>
-          <button class="ma-icbtn ma-icbtn--bare" type="button" data-close aria-label="Đóng">
+          <h2 id="dlg-hints-t">Comment hints</h2>
+          <button class="ma-icbtn ma-icbtn--bare" type="button" data-close aria-label="Close">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
           </button>
         </div>
         <div class="ma-dlg__b">
-          <p class="ma-sub">Xếp theo số lần dùng trong trình duyệt này. Tỉ lệ = (số lần + 1) / (tổng số lần + số gợi ý),
-            hiện khi đã có từ 5 lần nhận xét. Nhận xét gõ tay dùng từ hai lần trở lên thì thành gợi ý.</p>
+          <p class="ma-sub">Ranked by how often you use them in this browser. Share = (uses + 1) / (total uses + number of hints),
+            shown after 5 comments. A comment you type twice or more becomes a hint.</p>
           <p class="ma-sub" id="hints-seed-note" hidden></p>
           <form class="ma-addrow" id="hint-add">
-            <input class="ma-input" id="hint-add-in" type="text" maxlength="80" placeholder="Thêm gợi ý…" aria-label="Gợi ý mới" />
-            <button class="ma-btn" type="submit">Thêm</button>
+            <input class="ma-input" id="hint-add-in" type="text" maxlength="80" placeholder="Add a hint…" aria-label="New hint" />
+            <button class="ma-btn" type="submit">Add</button>
           </form>
           <ol class="ma-rows" id="hints-list"></ol>
-          <div><button class="ma-btn ma-btn--quiet ma-btn--danger" type="button" id="hints-reset">Đặt lại thống kê</button></div>
+          <div><button class="ma-btn ma-btn--quiet ma-btn--danger" type="button" id="hints-reset">Reset usage counts</button></div>
         </div>
       </div>
     </dialog>
 
     <!-- Văn bản mẫu: khối độc nhất, nên nằm ở HTML (REPO-001). -->
-    <script type="text/plain" id="sample-md"># Cách dùng Markdown Annotate
+    <script type="text/plain" id="sample-md"># How to use Markdown Annotate
 
-Trang này giúp bạn **ghi nhận xét lên từng đoạn** của một văn bản markdown, rồi gom tất cả thành một prompt để dán cho AI.
+This page lets you **comment on individual passages** of a markdown text, then gathers every comment into one prompt you can paste into an AI chat.
 
-## Ba bước
+## Three steps
 
-1. Dán văn bản vào tab *Soạn*.
-2. Bôi đen một đoạn ở tab *Nguồn* hoặc *Hiển thị*, rồi gõ nhận xét hoặc bấm một gợi ý.
-3. Bấm **Chép prompt** và dán vào khung chat.
+1. Paste your text in the *Edit* tab.
+2. Select a passage in *Source* or *Preview*, then type a comment or pick a hint.
+3. Click **Copy prompt** and paste it into the chat.
 
-## Mẹo
+## Tips
 
-- Gợi ý xếp theo số lần bạn dùng; nhận xét gõ tay dùng từ hai lần trở lên cũng thành gợi ý.
-- Sửa văn bản ở tab *Soạn* thì nhận xét tự tìm lại đoạn trích; đoạn không còn thì bị đánh dấu.
-- Mọi thứ lưu trong trình duyệt này; mục *Lịch sử* mở lại phiên cũ.
+- Hints are ranked by how often you use them; a comment you type twice becomes a hint too.
+- Edit the text and each comment finds its quote again; a quote that is gone gets flagged.
+- Everything is saved in this browser; *History* reopens earlier sessions.
 
-> Thử bôi đen câu này rồi bấm gợi ý "Viết gọn lại".
+> Try selecting this sentence, then pick the hint "Make it shorter".
 
-| Phím | Việc |
+| Key | Action |
 |---|---|
-| Enter | Lưu nhận xét |
-| Shift + Enter | Xuống dòng |
-| Esc | Đóng hộp nhận xét |
+| Enter | Save the comment |
+| Shift + Enter | New line |
+| Esc | Close the comment box |
 
-Phím `Ctrl/⌘ + Enter` cũng lưu.
+`Ctrl/⌘ + Enter` also saves, and `Ctrl/⌘ + Shift + C` copies the prompt.
 </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"
@@ -990,6 +990,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         while ((n = w.nextNode())) out.push(n);
         return out;
       }
+      function plural(n, word) { return n + ' ' + word + (n === 1 ? '' : 's'); }
       function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
       var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
       var mqSheet = window.matchMedia('(max-width: 720px), (pointer: coarse)');
@@ -1144,7 +1145,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         var m = t.match(/^[ \t]*#{1,6}[ \t]+(.+)$/m) || t.match(/^[ \t]*(\S.*)$/m);
         var line = m ? m[1] : '';
         line = line.replace(/\]\([^)]*\)/g, '').replace(/[*_`#>\[\]|]/g, '').replace(/\s+/g, ' ').trim();
-        return line.slice(0, 60) || 'Phiên chưa đặt tên';
+        return line.slice(0, 60) || 'Untitled session';
       }
       function isEmpty(s) { return !s.text.trim() && !s.comments.length; }
       function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 300); }
@@ -1157,10 +1158,10 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         var ok = store.set(KEY.s(S.id), S) && store.set(KEY.index, idx) && store.set(KEY.cur, S.id);
         if (!ok && !warnedQuota) {
           warnedQuota = true;
-          toast('Không lưu được vào bộ nhớ trình duyệt (đầy hoặc bị chặn). Xoá bớt phiên cũ trong Lịch sử.');
+          toast('Could not save to browser storage (full or blocked). Delete old sessions in History.');
         }
         if (document.activeElement !== $('s-name')) $('s-name').value = S.named ? S.name : '';
-        $('s-name').placeholder = S.named ? '' : (S.name || 'Tên phiên');
+        $('s-name').placeholder = S.named ? '' : (S.name || 'Session name');
         renderHistCount();
       }
       function flushSave() { if (saveTimer) saveNow(); }
@@ -1189,6 +1190,19 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         return String(t).normalize('NFC').toLowerCase().replace(/\s+/g, ' ').trim().replace(/[.!…]+$/, '').trim();
       }
       function saveStats() { store.set(KEY.stats, stats); }
+      /* Gợi ý mặc định đổi chữ (VD tiếng Việt → tiếng Anh): dồn số đếm của khoá cũ sang khoá mới, giữ trạng thái ẩn. */
+      function migrateHints(renamed) {
+        Object.keys(renamed || {}).forEach(function (oldT) {
+          var ko = normKey(oldT), kn = normKey(renamed[oldT]), old = stats.items[ko];
+          if (!old || ko === kn) return;
+          var it = stats.items[kn] || (stats.items[kn] = { t: renamed[oldT], n: 0, last: 0, o: 1e6 });
+          it.n = (+it.n || 0) + (+old.n || 0);
+          it.last = Math.max(+it.last || 0, +old.last || 0);
+          if (old.hidden) it.hidden = true;
+          if (old.pin) it.pin = true;
+          delete stats.items[ko];
+        });
+      }
       function seedHints(list) {
         list.forEach(function (t, i) {
           var k = normKey(t);
@@ -1430,7 +1444,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         var html = mdHtml(text);
         if (html == null) {
           mdRoot.replaceChildren(h('p', { class: 'ma-note' },
-            mdReady === false ? 'Không tải được bộ dựng markdown (cần mạng). Hãy bôi đen ở tab Nguồn.' : 'Đang tải bộ dựng markdown…'));
+            mdReady === false ? 'The markdown renderer could not load (needs a network). Select in the Source view instead.' : 'Loading the markdown renderer…'));
           mdText = '';
         } else {
           mdRoot.innerHTML = html; // đã qua DOMPurify
@@ -1474,12 +1488,12 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       function renderMeta() {
         var t = S.text;
         var lines = t ? t.split('\n').length : 0;
-        $('doc-meta').textContent = t ? t.length.toLocaleString('vi-VN') + ' ký tự · ' + lines.toLocaleString('vi-VN') + ' dòng' : '';
+        $('doc-meta').textContent = t ? t.length.toLocaleString('en') + ' chars · ' + lines.toLocaleString('en') + (lines === 1 ? ' line' : ' lines') : '';
         var lost = Object.keys(orphans).length, note = $('edit-note');
         if (S.comments.length) {
           note.hidden = false;
-          note.replaceChildren(S.comments.length + ' nhận xét đang neo vào văn bản này.',
-            lost ? h('b', null, ' ' + lost + ' nhận xét không còn tìm thấy đoạn trích.') : '');
+          note.replaceChildren(plural(S.comments.length, 'comment') + ' anchored to this text.',
+            lost ? h('b', null, ' ' + plural(lost, 'comment') + (lost === 1 ? ' has' : ' have') + ' lost its quote.') : '');
         } else note.hidden = true;
         $('empty').hidden = !(view !== 'edit' && !t);
         $('views').hidden = view === 'edit' || !t;
@@ -1492,7 +1506,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         var total = S.comments.length;
         $('n-comments').textContent = total ? String(total) : '';
         $('list-empty').hidden = total > 0;
-        $('dock-n').textContent = total ? 'Nhận xét · ' + total : 'Nhận xét';
+        $('dock-n').textContent = total ? 'Comments · ' + total : 'Comments';
         $('rail-n').textContent = String(total);
       }
       function inSheet() { return $('dlg-panel').open; }
@@ -1502,17 +1516,17 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         ordered.forEach(function (c) {
           var orphan = !!orphans[c.id], num = numbers[c.id], loc = orphan ? '' : locText(c, false);
           var li = h('li', { class: 'ma-item' + (orphan ? ' is-orphan' : '') + (pop.id === c.id ? ' is-active' : ''), 'data-id': c.id },
-            h('button', { class: 'ma-item__main', type: 'button', title: 'Tới đoạn này', onclick: leaveSheet(function () { jumpTo(c.id); }) },
+            h('button', { class: 'ma-item__main', type: 'button', title: 'Go to this passage', onclick: leaveSheet(function () { jumpTo(c.id); }) },
               h('span', { class: 'ma-item__top' },
                 h('span', { class: 'ma-item__n' }, orphan ? '!' : String(num)),
                 loc ? h('span', { class: 'ma-item__loc' }, loc) : null),
               h('span', { class: 'ma-item__c' }, c.comment),
               h('span', { class: 'ma-item__q' }, c.quote),
-              orphan ? h('span', { class: 'ma-item__warn' }, 'Không còn thấy đoạn này trong văn bản, nên không đưa vào prompt. Sửa lại văn bản hoặc xoá nhận xét.') : null),
+              orphan ? h('span', { class: 'ma-item__warn' }, 'This quote is no longer in the text, so it is left out of the prompt. Fix the text or delete the comment.') : null),
             h('span', { class: 'ma-item__act' },
-              h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Sửa nhận xét', title: 'Sửa',
+              h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Edit comment', title: 'Edit',
                 onclick: leaveSheet(function () { editFromList(c.id); }) }, icon('pencil')),
-              h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Xoá nhận xét', title: 'Xoá',
+              h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Delete comment', title: 'Delete',
                 onclick: function () { removeComment(c.id); } }, icon('x'))));
           /* Rê lên thẻ thì tô đoạn của nó, và ngược lại (xem onViewHover). */
           li.addEventListener('mouseenter', function () { hoverMarks(c.id, true); });
@@ -1561,8 +1575,8 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         var head = S.header.trim();
         if (locs.some(Boolean)) {
           var note = S.path.trim()
-            ? 'Vị trí ghi dạng tệp:dòng, tính theo bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.'
-            : 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.';
+            ? "Locations are file:line in the text I pasted; if they don't match, locate the passage by its quote."
+            : "Line numbers (L) refer to the text I pasted; if they don't match, locate the passage by its quote.";
           head = head ? head + '\n' + note : note;
         }
         if (head) parts.push(head);
@@ -1583,7 +1597,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
           var runs = S.text.match(/`{3,}/g) || [], len = 3;
           runs.forEach(function (r) { if (r.length >= len) len = r.length + 1; });
           var fence = new Array(len + 1).join('`');
-          parts.push('Văn bản gốc:\n' + fence + 'markdown\n' + S.text.replace(/\s+$/, '') + '\n' + fence);
+          parts.push('Original text:\n' + fence + 'markdown\n' + S.text.replace(/\s+$/, '') + '\n' + fence);
         }
         return items.length || S.includeDoc ? parts.join('\n\n') : '';
       }
@@ -1591,14 +1605,14 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         var p = buildPrompt();
         $('out').textContent = p;
         var words = p ? p.trim().split(/\s+/).length : 0;
-        $('out-n').textContent = p ? p.length.toLocaleString('vi-VN') + ' ký tự · ' + words.toLocaleString('vi-VN') + ' từ' : '';
+        $('out-n').textContent = p ? p.length.toLocaleString('en') + ' chars · ' + words.toLocaleString('en') + ' words' : '';
         var n = ordered.filter(function (c) { return !orphans[c.id]; }).length;
-        $('foot-n').textContent = n ? n + ' nhận xét trong prompt' : 'Chưa có nhận xét';
+        $('foot-n').textContent = n ? plural(n, 'comment') + ' in the prompt' : 'No comments yet';
         ['btn-copy', 'btn-export', 'dock-copy', 'rail-copy', 'rail-export'].forEach(function (id) { $(id).disabled = !p; });
-        var sum = [S.fmt === 'block' ? 'khối' : 'gọn'];
-        if (S.lineNums) sum.push(S.path.trim() || 'số dòng');
-        if (S.includeDoc) sum.push('toàn văn');
-        if (S.header.trim() || S.footer.trim()) sum.push('lời dẫn');
+        var sum = [S.fmt === 'block' ? 'block' : 'compact'];
+        if (S.lineNums) sum.push(S.path.trim() || 'line numbers');
+        if (S.includeDoc) sum.push('full text');
+        if (S.header.trim() || S.footer.trim()) sum.push('header');
         $('opts-sum').textContent = sum.join(' · ');
       }
       function legacyCopy(t) {
@@ -1611,12 +1625,12 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       }
       function copyPrompt() {
         var p = buildPrompt();
-        if (!p) { toast('Chưa có gì để chép: bôi đen một đoạn và thêm nhận xét trước.'); return; }
+        if (!p) { toast('Nothing to copy yet: select a passage and add a comment first.'); return; }
         var n = ordered.filter(function (c) { return !orphans[c.id]; }).length;
         var done = function (ok) {
-          if (!ok) { toast('Trình duyệt chặn chép. Mở tab Prompt, bôi đen khung prompt rồi chép tay.'); return; }
+          if (!ok) { toast('The browser blocked copying. Open the Prompt tab, select the prompt and copy it by hand.'); return; }
           morphCopy();
-          $('sr-live').textContent = 'Đã chép prompt: ' + n + ' nhận xét, ' + p.length + ' ký tự.';
+          $('sr-live').textContent = 'Prompt copied: ' + plural(n, 'comment') + ', ' + p.length + ' characters.';
         };
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(p).then(function () { done(true); }, function () { done(legacyCopy(p)); });
@@ -1626,21 +1640,21 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       var morphTimer = null;
       function morphCopy() {
         var btns = document.querySelectorAll('.ma-copy');
-        btns.forEach(function (b) { b.classList.add('is-done'); b.querySelector('.ma-copy__lbl').textContent = 'Đã chép ✓'; });
+        btns.forEach(function (b) { b.classList.add('is-done'); b.querySelector('.ma-copy__lbl').textContent = 'Copied ✓'; });
         clearTimeout(morphTimer);
         morphTimer = setTimeout(function () {
-          btns.forEach(function (b) { b.classList.remove('is-done'); b.querySelector('.ma-copy__lbl').textContent = 'Chép prompt'; });
+          btns.forEach(function (b) { b.classList.remove('is-done'); b.querySelector('.ma-copy__lbl').textContent = 'Copy prompt'; });
         }, 1600);
       }
       function slug(s) {
-        return (s || 'phien').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D')
-          .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 50) || 'phien';
+        return (s || 'session').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D')
+          .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 50) || 'session';
       }
       function exportMd() {
         var p = buildPrompt();
         if (!p) return;
         var url = URL.createObjectURL(new Blob([p + '\n'], { type: 'text/markdown;charset=utf-8' }));
-        var a = h('a', { href: url, download: slug(S.name || autoName(S.text)) + '-nhan-xet.md' });
+        var a = h('a', { href: url, download: slug(S.name || autoName(S.text)) + '-comments.md' });
         document.body.append(a); a.click(); a.remove();
         setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
       }
@@ -1815,7 +1829,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         markActive(id, true);
         $('pop-q').textContent = c.quote;
         $('pop-warn').hidden = !orphans[id];
-        $('pop-warn').textContent = orphans[id] ? 'Không còn thấy đoạn này trong văn bản.' : '';
+        $('pop-warn').textContent = orphans[id] ? 'This quote is no longer in the text.' : '';
         $('pop-del').hidden = false;
         $('pop-text').value = c.comment;
         popExpanded = false;
@@ -1829,8 +1843,8 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
           if (normKey(c.quote) === nq) same.push(numbers[c.id] || '!');
           else if (srcPos && a && a.src && a.src[0] < srcPos[1] && srcPos[0] < a.src[1]) over.push(numbers[c.id]);
         });
-        if (same.length) return 'Trùng đoạn với nhận xét #' + same.join(', #') + '. Lưu thì thành một mục riêng.';
-        if (over.length) return 'Chồng lên nhận xét #' + over.join(', #') + '.';
+        if (same.length) return 'Same passage as comment #' + same.join(', #') + '. Saving adds a separate item.';
+        if (over.length) return 'Overlaps comment #' + over.join(', #') + '.';
         return '';
       }
       function showPop(rect) {
@@ -1875,7 +1889,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       function find(id) { for (var i = 0; i < S.comments.length; i++) if (S.comments[i].id === id) return S.comments[i]; return null; }
       function savePop(textOverride) {
         var t = (textOverride != null ? textOverride : $('pop-text').value).trim();
-        if (!t) { $('pop-text').focus(); toast('Gõ nhận xét hoặc bấm một gợi ý.'); return; }
+        if (!t) { $('pop-text').focus(); toast('Type a comment or pick a hint.'); return; }
         var id;
         if (pop.mode === 'new' && pending) {
           id = uid();
@@ -1904,13 +1918,13 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         box.replaceChildren();
         list.forEach(function (x) {
           box.append(h('button', {
-            class: 'ma-chip', type: 'button', title: 'Đã dùng ' + x.n + ' lần',
+            class: 'ma-chip', type: 'button', title: 'Used ' + plural(x.n, 'time'),
             onclick: function () { savePop(x.t); }
           }, h('span', { class: 'ma-chip__t' }, x.t), showPct ? h('span', { class: 'ma-chip__p' }, pct(x.p)) : null));
         });
         if (more) {
           box.append(h('button', {
-            class: 'ma-chip ma-chip--more', type: 'button', 'aria-label': 'Hiện thêm ' + more + ' gợi ý',
+            class: 'ma-chip ma-chip--more', type: 'button', 'aria-label': 'Show ' + more + ' more hints',
             onclick: function () {
               popExpanded = true; renderPopHints();
               if (!$('pop').classList.contains('is-sheet')) $('pop-text').focus({ preventScroll: true });
@@ -1918,7 +1932,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
           }, '+' + more));
         }
         if (!list.length && !q && seedState === 'fail') {
-          box.append(h('span', { class: 'ma-sub' }, 'Chưa có gợi ý: mở trang qua HTTP để nạp gợi ý mặc định.'));
+          box.append(h('span', { class: 'ma-sub' }, 'No hints yet: open the page over HTTP to load the default hints.'));
         }
         box.hidden = !box.childNodes.length;
         if (!$('pop').hidden && !$('pop').classList.contains('is-sheet')) {
@@ -1941,7 +1955,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         setTimeout(function () { li.classList.remove('is-flash'); }, 1200);
       }
       function jumpTo(id, instant) {
-        if (orphans[id]) { toast('Không còn thấy đoạn này trong văn bản.'); return []; }
+        if (orphans[id]) { toast('This quote is no longer in the text.'); return []; }
         if (view === 'edit') setView(lastRead);
         var ms = marksOf(id);
         if (!ms.length) return ms;
@@ -1964,8 +1978,8 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         var removed = S.comments.splice(i, 1)[0];
         if (pop.id === id) closePop(true);
         scheduleSave(); renderAll();
-        toast('Đã xoá nhận xét.', {
-          label: 'Hoàn tác',
+        toast('Comment deleted.', {
+          label: 'Undo',
           fn: function () { S.comments.splice(Math.min(i, S.comments.length), 0, removed); scheduleSave(); renderAll(); }
         });
       }
@@ -1988,7 +2002,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       /* ======================================================================
          LỊCH SỬ PHIÊN
          ====================================================================== */
-      var dateFmt = new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+      var dateFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
       function renderHistCount() {
         var n = loadIndex().length;
         $('hist-n').textContent = n ? String(n) : '';
@@ -1997,28 +2011,28 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         var ol = $('hist-list');
         ol.replaceChildren();
         var idx = loadIndex();
-        if (!idx.length) ol.append(h('li', { class: 'ma-sub' }, 'Chưa có phiên nào. Phiên có văn bản sẽ tự hiện ở đây.'));
+        if (!idx.length) ol.append(h('li', { class: 'ma-sub' }, 'No sessions yet. Sessions with text appear here automatically.'));
         idx.forEach(function (e) {
           var cur = e.id === S.id;
-          var meta = dateFmt.format(new Date(e.updated)) + ' · ' + (e.count || 0) + ' nhận xét · ' + (e.chars || 0).toLocaleString('vi-VN') + ' ký tự' + (cur ? ' · đang mở' : '');
+          var meta = dateFmt.format(new Date(e.updated)) + ' · ' + plural(e.count || 0, 'comment') + ' · ' + (e.chars || 0).toLocaleString('en') + ' chars' + (cur ? ' · open' : '');
           var main = h('button', {
-            class: 'ma-row__main', type: 'button', title: cur ? 'Phiên đang mở' : 'Mở phiên này',
+            class: 'ma-row__main', type: 'button', title: cur ? 'Current session' : 'Open this session',
             onclick: function () {
-              if (!cur) { var s = loadSession(e.id); if (s) switchTo(s); else toast('Không đọc được phiên này.'); }
+              if (!cur) { var s = loadSession(e.id); if (s) switchTo(s); else toast('Could not read this session.'); }
               $('dlg-hist').close();
             }
-          }, h('span', { class: 'ma-row__t' }, e.name || 'Phiên chưa đặt tên'), h('span', { class: 'ma-row__m' }, meta));
+          }, h('span', { class: 'ma-row__t' }, e.name || 'Untitled session'), h('span', { class: 'ma-row__m' }, meta));
           var row = h('li', { class: 'ma-row' + (cur ? ' is-cur' : '') }, main,
-            h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Đổi tên', title: 'Đổi tên',
+            h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Rename', title: 'Rename',
               onclick: function () { renameRow(row, main, e); } }, icon('pencil')),
-            h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Xoá phiên', title: 'Xoá',
+            h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Delete session', title: 'Delete',
               onclick: function () { deleteSession(e); } }, icon('trash')));
           ol.append(row);
         });
-        $('hist-usage').textContent = 'Đang dùng khoảng ' + Math.max(1, Math.round(store.bytes() / 1024)) + ' KB.';
+        $('hist-usage').textContent = 'Using about ' + Math.max(1, Math.round(store.bytes() / 1024)) + ' KB.';
       }
       function renameRow(row, main, e) {
-        var input = h('input', { class: 'ma-input', type: 'text', value: e.name || '', 'aria-label': 'Tên phiên mới' });
+        var input = h('input', { class: 'ma-input', type: 'text', value: e.name || '', 'aria-label': 'New session name' });
         var done = false;
         function commit(save) {
           if (done) return; done = true;
@@ -2047,7 +2061,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         store.set(KEY.index, loadIndex().map(function (e) { if (e.id === id) e.name = s.name; return e; }));
       }
       function deleteSession(e) {
-        if (!window.confirm('Xoá phiên "' + (e.name || 'chưa đặt tên') + '" cùng mọi nhận xét của nó?')) return;
+        if (!window.confirm('Delete session "' + (e.name || 'untitled') + '" and all its comments?')) return;
         store.del(KEY.s(e.id));
         store.set(KEY.index, loadIndex().filter(function (x) { return x.id !== e.id; }));
         if (e.id === S.id) {
@@ -2066,20 +2080,20 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         var ol = $('hints-list');
         ol.replaceChildren();
         var list = rankedHints();
-        if (!list.length) ol.append(h('li', { class: 'ma-sub' }, 'Chưa có gợi ý nào.'));
+        if (!list.length) ol.append(h('li', { class: 'ma-sub' }, 'No hints yet.'));
         list.forEach(function (x) {
           ol.append(h('li', { class: 'ma-row' },
             h('span', { class: 'ma-row__main ma-row__main--static' },
               h('span', { class: 'ma-row__t' }, x.t),
-              h('span', { class: 'ma-row__m' }, x.n + ' lần' + (list.total >= MIN_PCT ? ' · ' + pct(x.p) : ''))),
-            h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Bỏ gợi ý ' + x.t, title: 'Bỏ gợi ý',
+              h('span', { class: 'ma-row__m' }, plural(x.n, 'use') + (list.total >= MIN_PCT ? ' · ' + pct(x.p) : ''))),
+            h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Remove hint ' + x.t, title: 'Remove hint',
               onclick: function () { x.v.hidden = true; saveStats(); renderHintsDlg(); } }, icon('x'))));
         });
         var note = $('hints-seed-note');
         note.hidden = seedState !== 'fail';
         note.textContent = location.protocol === 'file:'
-          ? 'Trang mở bằng file:// nên không nạp được gợi ý mặc định (data/hints.json). Mở qua HTTP: python3 -m http.server ở gốc repo.'
-          : 'Không nạp được gợi ý mặc định (data/hints.json).';
+          ? 'Opened via file://, so the default hints (data/hints.json) could not load. Serve over HTTP: python3 -m http.server in the repo root.'
+          : 'The default hints (data/hints.json) could not load.';
       }
 
       /* ======================================================================
@@ -2088,7 +2102,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       function syncInputs() {
         $('src-input').value = S.text;
         $('s-name').value = S.named ? S.name : '';
-        $('s-name').placeholder = S.named ? '' : (S.name || 'Tên phiên');
+        $('s-name').placeholder = S.named ? '' : (S.name || 'Session name');
         $('p-head').value = S.header;
         $('p-foot').value = S.footer;
         $('inc-doc').checked = S.includeDoc;
@@ -2105,7 +2119,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       function loadFile(file) {
         if (!file) return;
         if (!/\.(md|markdown|txt)$/i.test(file.name) && file.type && !/^text\//.test(file.type)) {
-          toast('Chỉ mở được file chữ (.md, .markdown, .txt).');
+          toast('Only text files can be opened (.md, .markdown, .txt).');
           return;
         }
         file.text().then(function (t) {
@@ -2115,8 +2129,8 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
           S.path = file.name;
           setText(t); saveNow(); syncInputs();
           setView(lastRead);
-          toast(fresh ? 'Đã mở "' + file.name + '" trong phiên mới. Phiên cũ ở Lịch sử.' : 'Đã mở "' + file.name + '".');
-        }, function () { toast('Không đọc được file.'); });
+          toast(fresh ? 'Opened "' + file.name + '" in a new session. The previous one is in History.' : 'Opened "' + file.name + '".');
+        }, function () { toast('Could not read the file.'); });
       }
 
       /* ======================================================================
@@ -2229,7 +2243,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       });
       $('btn-clear').addEventListener('click', function () {
         if (!S.text) return;
-        if (S.comments.length && !window.confirm('Xoá văn bản? ' + S.comments.length + ' nhận xét sẽ mất neo.')) return;
+        if (S.comments.length && !window.confirm('Clear the text? ' + plural(S.comments.length, 'comment') + ' will lose their anchors.')) return;
         setText(''); ta.focus();
       });
       $('btn-goedit').addEventListener('click', function () { setView('edit'); ta.focus(); });
@@ -2256,7 +2270,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       $('p-foot').addEventListener('input', function (e) { S.footer = e.target.value; prefs.footer = S.footer; savePrefs(); scheduleSave(); renderPrompt(); });
       $('btn-headtpl').addEventListener('click', function () {
         var tpl = $('btn-headtpl').dataset.tpl;
-        if (S.header.trim() && S.header.trim() !== tpl && !window.confirm('Thay lời dẫn đầu hiện có bằng câu mẫu?')) return;
+        if (S.header.trim() && S.header.trim() !== tpl && !window.confirm('Replace the current header with the template?')) return;
         $('p-head').value = tpl;
         $('p-head').dispatchEvent(new Event('input'));
       });
@@ -2276,7 +2290,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       $('btn-new').addEventListener('click', function () {
         if (!isEmpty(S)) switchTo(newSession(''));
         setView('edit'); ta.focus();
-        toast('Phiên mới. Phiên trước nằm trong Lịch sử.');
+        toast('New session. The previous one is in History.');
       });
       $('btn-hist').addEventListener('click', function () { flushSave(); renderHist(); $('dlg-hist').showModal(); });
       $('btn-hints').addEventListener('click', function () { renderHintsDlg(); $('dlg-hints').showModal(); });
@@ -2344,7 +2358,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         saveStats(); $('hint-add-in').value = ''; renderHintsDlg();
       });
       $('hints-reset').addEventListener('click', function () {
-        if (!window.confirm('Đặt lại số lần dùng và hiện lại mọi gợi ý mặc định? Gợi ý tự thêm sẽ bị xoá.')) return;
+        if (!window.confirm('Reset usage counts and restore every default hint? Hints you added will be removed.')) return;
         Object.keys(stats.items).forEach(function (k) {
           var v = stats.items[k];
           if (v.seed) { v.n = 0; v.last = 0; delete v.hidden; delete v.pin; } else delete stats.items[k];
@@ -2447,6 +2461,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       fetch('data/hints.json', { cache: 'no-cache' })
         .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
         .then(function (d) {
+          if (d && d.renamed && typeof d.renamed === 'object') migrateHints(d.renamed);
           seedHints(Array.isArray(d && d.hints) ? d.hints.filter(function (x) { return typeof x === 'string' && x.trim(); }) : []);
           seedState = 'ok';
         })
