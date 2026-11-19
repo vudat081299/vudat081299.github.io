@@ -6,12 +6,12 @@
 - Văn bản mẫu (*Sample text*) và câu mẫu của lời dẫn đầu là khối độc nhất, nằm trong HTML.
 - Trang chủ trỏ tới `md-annotate/`; đổi tên thư mục thì `tools/lint-collection.py` đỏ.
 
-## Ngôn ngữ (MDAN-004)
+## Ngôn ngữ (MDAN-007)
 
-- Mọi chữ trên giao diện bằng tiếng Anh: nút, nhãn, tooltip, placeholder, `aria-label`, toast, hộp thoại, văn bản
-  mẫu, gợi ý mặc định. `<html lang="en">`.
-- Chữ khung của prompt (câu số dòng, `Original text:`, câu mẫu lời dẫn) cũng tiếng Anh. Trích dẫn và nhận xét
-  của người dùng giữ nguyên như đã gõ.
+- Chữ giao diện bằng tiếng Anh: nút, nhãn, tooltip, placeholder giao diện, `aria-label`, toast, hộp thoại, văn bản
+  mẫu. `<html lang="en">`.
+- Nội dung vào prompt bằng tiếng Việt: gợi ý mặc định (`data/hints.json`), câu số dòng, `Văn bản gốc:`, câu mẫu và
+  placeholder của lời dẫn đầu / cuối. Trích dẫn và nhận xét của người dùng giữ nguyên như đã gõ.
 - Chú thích trong code, tài liệu `.md` và `desc` ở `data/collection.json` vẫn tiếng Việt.
 - Số nhiều đi qua `plural(n, word)`; số và ngày định dạng `en` / `en-GB`.
 

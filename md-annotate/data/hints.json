@@ -1,24 +1,25 @@
 {
   "note": "Gợi ý mặc định của hộp nhận xét. Trang xếp lại theo số lần dùng thật, lưu trong trình duyệt; sửa file này chỉ đổi danh sách khởi đầu. Đổi chữ một gợi ý cũ thì thêm cặp cũ → mới vào \"renamed\" để số đếm đi theo.",
   "hints": [
-    "Unclear or wrong — rewrite",
-    "Verify this is factually accurate",
-    "Make it shorter",
-    "Explain in more detail",
-    "Add an example",
-    "Remove this",
-    "Cite a source",
-    "Fix spelling and grammar",
-    "Rephrase for flow"
+    "Sai, nói chưa rõ ràng",
+    "Cần kiểm tra lại tính xác thực",
+    "Viết gọn lại",
+    "Giải thích kỹ hơn",
+    "Thêm ví dụ",
+    "Xoá đoạn này",
+    "Dẫn nguồn cho ý này",
+    "Sửa chính tả, ngữ pháp",
+    "Diễn đạt lại cho trôi chảy"
   ],
   "renamed": {
-    "Sai, nói chưa rõ ràng": "Unclear or wrong — rewrite",
-    "Cần kiểm tra lại tính xác thực": "Verify this is factually accurate",
-    "Viết gọn lại": "Make it shorter",
-    "Giải thích kỹ hơn": "Explain in more detail",
-    "Thêm ví dụ": "Add an example",
-    "Xoá đoạn này": "Remove this",
-    "Dẫn nguồn cho ý này": "Cite a source",
-    "Sửa chính tả, ngữ pháp": "Fix spelling and grammar"
+    "Unclear or wrong — rewrite": "Sai, nói chưa rõ ràng",
+    "Verify this is factually accurate": "Cần kiểm tra lại tính xác thực",
+    "Make it shorter": "Viết gọn lại",
+    "Explain in more detail": "Giải thích kỹ hơn",
+    "Add an example": "Thêm ví dụ",
+    "Remove this": "Xoá đoạn này",
+    "Cite a source": "Dẫn nguồn cho ý này",
+    "Fix spelling and grammar": "Sửa chính tả, ngữ pháp",
+    "Rephrase for flow": "Diễn đạt lại cho trôi chảy"
   }
 }

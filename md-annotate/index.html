@@ -944,12 +944,12 @@
                   <div class="ma-opts__field">
                     <span class="ma-opts__lbl"><label class="ma-label" for="p-head">Header</label>
                       <button class="ma-link" type="button" id="btn-headtpl"
-                              data-tpl="Revise the markdown text according to each comment below. Each item quotes a passage verbatim and says what to change. Leave everything else as it is, and return the full revised text.">Use template</button></span>
-                    <textarea class="ma-ta" id="p-head" rows="2" placeholder="e.g. Revise the text according to the comments below."></textarea>
+                              data-tpl="Sửa văn bản markdown theo từng nhận xét dưới đây. Mỗi mục trích nguyên văn một đoạn và nói cần sửa gì. Giữ nguyên phần còn lại, rồi trả về toàn bộ văn bản đã sửa.">Use template</button></span>
+                    <textarea class="ma-ta" id="p-head" rows="2" placeholder="VD: Sửa văn bản theo các nhận xét dưới đây."></textarea>
                   </div>
                   <div class="ma-opts__field">
                     <label class="ma-label" for="p-foot">Footer</label>
-                    <textarea class="ma-ta" id="p-foot" rows="2" placeholder="e.g. List the changes you made."></textarea>
+                    <textarea class="ma-ta" id="p-foot" rows="2" placeholder="VD: Liệt kê những chỗ đã sửa."></textarea>
                   </div>
                 </div>
               </details>
@@ -1095,7 +1095,7 @@ This page lets you **comment on individual passages** of a markdown text, then g
 - Edit the text and each comment finds its quote again; a quote that is gone gets flagged.
 - Everything is saved in this browser; *History* reopens earlier sessions.
 
-> Try selecting this sentence, then pick the hint "Make it shorter".
+> Try selecting this sentence, then pick the hint "Viết gọn lại".
 
 | Key | Action |
 |---|---|
@@ -1801,8 +1801,8 @@ This page lets you **comment on individual passages** of a markdown text, then g
         var head = S.header.trim();
         if (locs.some(Boolean)) {
           var note = S.path.trim()
-            ? "Locations are file:line in the text I pasted; if they don't match, locate the passage by its quote."
-            : "Line numbers (L) refer to the text I pasted; if they don't match, locate the passage by its quote.";
+            ? 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.'
+            : 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.';
           head = head ? head + '\n' + note : note;
         }
         if (head) parts.push(head);
@@ -1823,7 +1823,7 @@ This page lets you **comment on individual passages** of a markdown text, then g
           var runs = S.text.match(/`{3,}/g) || [], len = 3;
           runs.forEach(function (r) { if (r.length >= len) len = r.length + 1; });
           var fence = new Array(len + 1).join('`');
-          parts.push('Original text:\n' + fence + 'markdown\n' + S.text.replace(/\s+$/, '') + '\n' + fence);
+          parts.push('Văn bản gốc:\n' + fence + 'markdown\n' + S.text.replace(/\s+$/, '') + '\n' + fence);
         }
         return items.length || S.includeDoc ? parts.join('\n\n') : '';
       }

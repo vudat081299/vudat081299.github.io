@@ -3,9 +3,9 @@
 <!-- index:start -->
 - MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code · `md-annotate/index.html`
 - MDAN-002 · Xanh lá riêng, sáng hơn trang chủ · `md-annotate/index.html`
-- MDAN-004 · Giao diện bằng tiếng Anh · `md-annotate/index.html`, `md-annotate/data/hints.json`
 - MDAN-005 · Vùng làm việc khoảng 70% màn hình, ở giữa · thay cho MDAN-003 · `md-annotate/index.html`
 - MDAN-006 · Preview giống GitHub, cuộn theo nhau ở Split · `md-annotate/index.html`
+- MDAN-007 · Giao diện tiếng Anh, gợi ý và prompt tiếng Việt · thay cho MDAN-004 · `md-annotate/index.html`, `md-annotate/data/hints.json`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -24,13 +24,6 @@ REPO-023 chỉ ràng `index.html`; trang này có xanh lá riêng, tươi hơn. 
 dùng sắc đậm cùng họ `--green` (`#15803d`). Nền highlight pha từ cùng màu; ở theme tối phủ mỏng để chữ màu của
 tab Nguồn vẫn ≥ 4,5:1. Nền, mực và font vẫn chép từ trang chủ.
 
-## MDAN-004 · Giao diện bằng tiếng Anh
-19/11/2026 · `md-annotate/index.html`, `md-annotate/data/hints.json`
-
-Mọi chữ trên giao diện bằng tiếng Anh, kể cả văn bản mẫu, gợi ý mặc định và chữ khung của prompt; `lang="en"`.
-Trích dẫn và nhận xét người dùng gõ giữ nguyên. Số đếm của gợi ý mặc định tiếng Việt cũ chuyển sang gợi ý tiếng Anh
-tương ứng qua `renamed`; phiên đã lưu không đổi. `desc` trên trang chủ vẫn tiếng Việt (REPO-002).
-
 ## MDAN-005 · Vùng làm việc khoảng 70% màn hình, ở giữa · thay cho MDAN-003
 19/11/2026 · `md-annotate/index.html`
 
@@ -46,3 +39,11 @@ trong hộp *Layout*; mặc định là các số trên.
 *Preview* dựng markdown theo kiểu GitHub: font hệ thống, màu Primer sáng / tối, tiêu đề h1–h2 có gạch dưới, khối
 code xám có tô màu theo ngôn ngữ, bảng sọc, hộp `[!NOTE]` / `[!TIP]` / `[!IMPORTANT]` / `[!WARNING]` / `[!CAUTION]`.
 Ở *Split*, cuộn một khung thì khung kia cuộn theo để cùng một đoạn nằm giữa cả hai; tắt được trong *Layout*.
+
+## MDAN-007 · Giao diện tiếng Anh, gợi ý và prompt tiếng Việt · thay cho MDAN-004
+19/11/2026 · `md-annotate/index.html`, `md-annotate/data/hints.json`
+
+Chữ giao diện bằng tiếng Anh: nút, nhãn, tooltip, placeholder giao diện, toast, hộp thoại, văn bản mẫu; `lang="en"`.
+Nội dung đi vào prompt bằng tiếng Việt: gợi ý nhận xét mặc định, câu số dòng, `Văn bản gốc:`, câu mẫu và ví dụ của lời
+dẫn đầu / cuối. Số đếm của gợi ý tiếng Anh cũ chuyển về gợi ý tiếng Việt tương ứng qua `renamed`; phiên đã lưu không
+đổi. `desc` trên trang chủ vẫn tiếng Việt (REPO-002).

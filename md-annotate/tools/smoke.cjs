@@ -131,22 +131,22 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('vùng chọn nới ra trọn từ (chữ Việt)', (await page.textContent('#pop-q')) === 'chữ đậm ở đây và kết thúc', await page.textContent('#pop-q'));
   const chips = await page.$$eval('#pop-chips .ma-chip', (els) => els.map((e) => e.textContent));
   check('hộp có 5 gợi ý, chưa có % khi chưa dùng, chip +4', chips.length === 6 && chips[5] === '+4' && chips.every((c) => !/%/.test(c)), chips.join(' | '));
-  check('gợi ý mặc định từ data/hints.json', chips[0] === 'Unclear or wrong — rewrite');
+  check('gợi ý mặc định từ data/hints.json', chips[0] === 'Sai, nói chưa rõ ràng');
   await page.click('#pop-chips .ma-chip--more');
   check('chip +N mở hết gợi ý', (await page.$$('#pop-chips .ma-chip')).length === 9 && !(await page.$('#pop-chips .ma-chip--more')));
   await page.keyboard.type('Câu này sai');
   await page.keyboard.press('Enter');
   check('Enter lưu nhận xét', (await items(page)).length === 1 && !(await page.isVisible('#pop')));
-  check('prompt kiểu gọn, có số dòng và câu dẫn', (await out(page)) === `Line numbers (L) refer to the text I pasted; if they don't match, locate the passage by its quote.\n\n1. L5 "chữ đậm ở đây và kết thúc" — Câu này sai`, JSON.stringify(await out(page)));
+  check('prompt kiểu gọn, có số dòng và câu dẫn', (await out(page)) === `Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. L5 "chữ đậm ở đây và kết thúc" — Câu này sai`, JSON.stringify(await out(page)));
   check('mục trong danh sách hiện số dòng', (await page.textContent('#list .ma-item__loc')) === 'L5');
 
   // 2. Bôi đen ở nguồn (đoạn đứng trước), bấm gợi ý.
   await page.click('.ma-tab[data-view="src"]');
   check('nguồn có highlight của đoạn chọn ở bản dựng', await page.$eval('#v-src', (el) => [...el.querySelectorAll('mark')].map((m) => m.textContent).join('')) === 'chữ đậm ở đây** và kết thúc');
   await dragSelect(page, '#v-src', 'liên kết tới ví dụ](https://example.com/path) ở giữa');
-  await page.click('#pop-chips .ma-chip:has-text("Verify this is factually accurate")');
+  await page.click('#pop-chips .ma-chip:has-text("Cần kiểm tra lại tính xác thực")');
   const o2 = await out(page);
-  check('gợi ý lưu ngay, xếp theo thứ tự văn bản', o2.includes('\n\n1. L3 "liên kết tới ví dụ](https://example.com/path) ở giữa" — Verify this is factually accurate\n2. L5 "chữ đậm'), JSON.stringify(o2));
+  check('gợi ý lưu ngay, xếp theo thứ tự văn bản', o2.includes('\n\n1. L3 "liên kết tới ví dụ](https://example.com/path) ở giữa" — Cần kiểm tra lại tính xác thực\n2. L5 "chữ đậm'), JSON.stringify(o2));
   // 2b. Tô màu nguồn: text vẫn đúng bằng nguồn, có token, highlight vẫn nằm đúng chỗ, tương phản, nút tắt.
   const syn = await page.evaluate(() => {
     const v = document.getElementById('v-src');
@@ -169,7 +169,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('lề số dòng: dòng có nhận xét được đánh dấu (3, 5)', gut.marked === '3,5', gut.marked);
   const g3 = await page.$eval('#v-src .ma-ln:nth-child(3)', (el) => { const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
   await page.mouse.click(g3.x, g3.y);
-  check('bấm lề dòng 3 mở nhận xét của dòng ấy', await page.isVisible('#pop-del') && (await page.inputValue('#pop-text')) === 'Verify this is factually accurate');
+  check('bấm lề dòng 3 mở nhận xét của dòng ấy', await page.isVisible('#pop-del') && (await page.inputValue('#pop-text')) === 'Cần kiểm tra lại tính xác thực');
   await page.keyboard.press('Escape');
   check('tô màu: link xanh, URL, đậm, đầu mục, số danh sách', syn.url.includes('https://example.com/path') && syn.link.includes('liên kết tới ví dụ') && syn.strong.includes('chữ đậm ở đây') && syn.head.includes(' Bài thử') && syn.punct.includes('#') && syn.punct.includes('1.'), JSON.stringify(syn));
   check('tô màu: highlight bọc ngoài token màu', syn.markInsideColor);
@@ -197,9 +197,9 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('cảnh báo trùng đoạn', /Same passage as comment #3/.test(await page.textContent('#pop-warn')));
   const chips2 = await page.$$eval('#pop-chips .ma-chip .ma-chip__t', (els) => els.map((e) => e.textContent));
   check('nhận xét gõ hai lần thành gợi ý đứng đầu', chips2[0] === 'Câu này sai', chips2.join(' | '));
-  await page.keyboard.type('detail');
+  await page.keyboard.type('kỹ hơn');
   const chips3 = await page.$$eval('#pop-chips .ma-chip .ma-chip__t', (els) => els.map((e) => e.textContent));
-  check('gõ thì lọc gợi ý', chips3.length >= 1 && chips3.every((t) => /detail/i.test(t)), chips3.join(' | '));
+  check('gõ thì lọc gợi ý', chips3.length >= 1 && chips3.every((t) => /kỹ hơn/i.test(t)), chips3.join(' | '));
   await page.keyboard.press('Escape');
   check('Esc đóng hộp', !(await page.isVisible('#pop')));
 
@@ -216,7 +216,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await page.waitForTimeout(100);
   check('bấm mục thì nháy highlight', (await page.$$('#v-md mark.is-flash')).length > 0);
   await page.click('#v-md mark[data-n="1"]');
-  check('bấm highlight mở hộp sửa', await page.isVisible('#pop-del') && (await page.inputValue('#pop-text')) === 'Verify this is factually accurate');
+  check('bấm highlight mở hộp sửa', await page.isVisible('#pop-del') && (await page.inputValue('#pop-text')) === 'Cần kiểm tra lại tính xác thực');
   await page.keyboard.press('Escape');
 
   // 5. Kiểu khối, lời dẫn, kèm toàn văn, chép.
@@ -225,9 +225,9 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await page.click('.ma-fmt label:nth-child(2)');
   check('prompt kiểu khối, số dòng ở tiêu đề mục', /\n\n### 1 · L3\n> liên kết/.test(await out(page)), JSON.stringify(await out(page)));
   await page.click('#btn-headtpl');
-  check('lời dẫn đầu, câu số dòng nối ngay sau', /^Revise the markdown text according to each comment below[^\n]*\nLine numbers \(L\) refer to the text I pasted; if they don't match, locate the passage by its quote\.\n\n/.test(await out(page)));
+  check('lời dẫn đầu, câu số dòng nối ngay sau', /^Sửa văn bản markdown theo từng nhận xét dưới đây[^\n]*\nSố dòng \(L\) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn\.\n\n/.test(await out(page)));
   await page.check('#inc-doc');
-  check('kèm toàn văn trong khối rào', /Original text:\n```markdown\n# Bài thử[\s\S]*\n```$/.test(await out(page)));
+  check('kèm toàn văn trong khối rào', /Văn bản gốc:\n```markdown\n# Bài thử[\s\S]*\n```$/.test(await out(page)));
   const acc = await accentCheck(page);
   check('nút chính xanh sáng, chữ tối ≥ 4,5:1 (sáng)', acc.bgLum > 0.3 && acc.ratio >= 4.5, JSON.stringify(acc));
   await page.click('#btn-copy');
@@ -260,7 +260,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await page.reload();
   await page.waitForFunction(() => window.marked && window.DOMPurify);
   check('tải lại: văn bản và nhận xét còn', (await items(page)).length === 3 && (await page.inputValue('#src-input')).startsWith('Thêm một dòng'));
-  check('tải lại: lời dẫn còn', (await out(page)).startsWith('Revise the markdown text'));
+  check('tải lại: lời dẫn còn', (await out(page)).startsWith('Sửa văn bản markdown'));
   await page.click('.ma-tab[data-view="src"]');
   await page.uncheck('#syn');
   await page.reload();
@@ -292,8 +292,8 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   // 9. Gợi ý: bỏ một gợi ý.
   await page.click('#btn-hints');
   const before = await page.$$eval('#hints-list .ma-row', (e) => e.length);
-  await page.click('#hints-list .ma-row:has-text("Remove this") button');
-  check('bỏ gợi ý', (await page.$$eval('#hints-list .ma-row', (e) => e.length)) === before - 1 && !/Remove this/.test(await page.textContent('#hints-list')));
+  await page.click('#hints-list .ma-row:has-text("Xoá đoạn này") button');
+  check('bỏ gợi ý', (await page.$$eval('#hints-list .ma-row', (e) => e.length)) === before - 1 && !/Xoá đoạn này/.test(await page.textContent('#hints-list')));
   check('dưới 5 lần dùng thì chưa hiện %', !/%/.test(await page.textContent('#hints-list')));
   await page.keyboard.press('Escape');
 
@@ -309,7 +309,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await openOpts(page);
   await page.fill('#p-path', 'notes/a.md');
   const o10 = await out(page);
-  check('có tệp: vị trí dạng tệp:dòng', /\. notes\/a\.md:9-10 "Mục một/.test(o10) && /\. notes\/a\.md:5 "liên kết/.test(o10) && /file:line/.test(o10), JSON.stringify(o10));
+  check('có tệp: vị trí dạng tệp:dòng', /\. notes\/a\.md:9-10 "Mục một/.test(o10) && /\. notes\/a\.md:5 "liên kết/.test(o10) && /tệp:dòng/.test(o10), JSON.stringify(o10));
   await page.uncheck('#line-nums');
   const o11 = await out(page);
   check('tắt số dòng: không vị trí, không câu dẫn', !/notes\/a\.md|L\d|file:line|Line numbers/.test(o11) && !(await page.isVisible('#p-path')), JSON.stringify(o11));
@@ -449,15 +449,15 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('máy rộng không tràn ngang', (await overflow(page)) === 0);
   await ctx.close();
 
-  /* ---------- Chuyển gợi ý tiếng Việt cũ sang tiếng Anh, giữ số đếm và phiên ---------- */
+  /* ---------- Chuyển gợi ý tiếng Anh (bản trước) về tiếng Việt, giữ số đếm và phiên ---------- */
   const vctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const vp = await vctx.newPage(); watch(vp);
   await vp.addInitScript(() => {
     if (sessionStorage.getItem('seeded')) return;
     sessionStorage.setItem('seeded', '1');
     localStorage.setItem('md-annotate:stats:v1', JSON.stringify({ items: {
-      'viết gọn lại': { t: 'Viết gọn lại', n: 7, last: 5, o: 2, seed: true },
-      'xoá đoạn này': { t: 'Xoá đoạn này', n: 1, last: 1, o: 5, seed: true, hidden: true },
+      'make it shorter': { t: 'Make it shorter', n: 7, last: 5, o: 2, seed: true },
+      'remove this': { t: 'Remove this', n: 1, last: 1, o: 5, seed: true, hidden: true },
       'ý riêng của tôi': { t: 'Ý riêng của tôi', n: 3, last: 9, o: 1e6 } } }));
     localStorage.setItem('md-annotate:s:old1', JSON.stringify({ id: 'old1', name: 'Phiên cũ', named: true, created: 1, updated: 2, text: '# Cũ\n\nMột câu cũ.', comments: [{ id: 'c1', quote: 'Một câu cũ.', comment: 'Viết gọn lại', origin: 'src', prefix: '', suffix: '', rel: 0.5, created: 1 }], header: '', footer: '', fmt: 'inline', includeDoc: false }));
     localStorage.setItem('md-annotate:index:v1', JSON.stringify([{ id: 'old1', name: 'Phiên cũ', created: 1, updated: 2, chars: 18, count: 1 }]));
@@ -467,8 +467,8 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await vp.waitForFunction(() => window.marked && window.DOMPurify);
   await vp.waitForTimeout(300);
   const mig = await vp.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:stats:v1')).items);
-  check('chuyển gợi ý: số đếm sang khoá tiếng Anh, giữ ẩn, giữ gợi ý tự gõ',
-    mig['make it shorter'] && mig['make it shorter'].n === 7 && !mig['viết gọn lại'] && mig['remove this'] && mig['remove this'].hidden && mig['ý riêng của tôi'].n === 3, JSON.stringify(mig));
+  check('chuyển gợi ý: số đếm từ khoá tiếng Anh về tiếng Việt, giữ ẩn, giữ gợi ý tự gõ',
+    mig['viết gọn lại'] && mig['viết gọn lại'].n === 7 && !mig['make it shorter'] && mig['xoá đoạn này'] && mig['xoá đoạn này'].hidden && mig['ý riêng của tôi'].n === 3, JSON.stringify(mig));
   check('phiên cũ còn nguyên, nhận xét giữ đúng chữ đã gõ', (await out(vp)).includes('"Một câu cũ." — Viết gọn lại'), JSON.stringify(await out(vp)));
   check('trang có lang="en"', (await vp.getAttribute('html', 'lang')) === 'en');
   await vctx.close();
@@ -519,9 +519,9 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await m.tap('#fab');
   check('điện thoại: hộp nhận xét là tấm đáy', await m.isVisible('#pop') && await m.evaluate(() => document.getElementById('pop').classList.contains('is-sheet')));
   const sy = await m.evaluate(() => scrollY);
-  await m.tap('#pop-chips .ma-chip:has-text("Make it shorter")');
+  await m.tap('#pop-chips .ma-chip:has-text("Viết gọn lại")');
   check('điện thoại: lưu nhận xét không kéo trang', Math.abs((await m.evaluate(() => scrollY)) - sy) < 2);
-  check('điện thoại: chạm gợi ý thì lưu', /1\. L\d+ "Try selecting this sentence" — Make it shorter/.test(await out(m)), JSON.stringify(await out(m)));
+  check('điện thoại: chạm gợi ý thì lưu', /1\. L\d+ "Try selecting this sentence" — Viết gọn lại/.test(await out(m)), JSON.stringify(await out(m)));
   const small = await m.evaluate(() => {
     const bad = [];
     document.querySelectorAll('button, a, .ma-tab, summary, .ma-check, .ma-fmt span').forEach((el) => {
