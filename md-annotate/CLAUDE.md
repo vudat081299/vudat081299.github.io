@@ -28,7 +28,7 @@
 - *Split* khi `#doc` đủ cho hai khung ≥ 420px (`splitOK()`), không theo media query. Chưa đủ chỗ thì hiện
   *Preview* nhưng `prefs.view` vẫn nhớ `split`. Hai khung cao `--pane-h` (JS: khung nhìn trừ đỉnh khung và 17px
   đáy, trừ thêm thanh đáy khi ≤ 1080px), cuộn riêng; trang không cuộn. Vách `#divider` lưu `prefs.split`.
-- *Preview* giữ khổ đọc ~72ch ở giữa khung; trích khối là vạch trái một cạnh (không bo), bảng có viền ngoài bo góc.
+- *Preview* rộng hết khung, không giới hạn khổ chữ; trích khối là vạch trái một cạnh (không bo), bảng có viền ngoài bo góc.
 - Trống văn bản: thẻ `#start` (vùng thả, *Paste from clipboard*, *Open .md file*, *Sample text*, ba bước) trên ô
   nhập thấp; có chữ thì ẩn thẻ, hiện hàng công cụ. Ctrl/⌘ + V ngoài ô nhập cũng dán khi còn trống.
 - Một `<input type="file" id="file-in">` ẩn; mọi nút *Open .md file* (`.js-open`) gọi `click()` của nó.

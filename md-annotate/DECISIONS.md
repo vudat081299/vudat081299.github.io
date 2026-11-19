@@ -36,4 +36,4 @@ tương ứng qua `renamed`; phiên đã lưu không đổi. `desc` trên trang 
 Vùng làm việc rộng 70% khung nhìn, căn giữa, không hẹp hơn 1280px (màn nhỏ hơn thì tràn hết, lề 24px; điện thoại
 16px). Panel rộng 360px, kéo mép trái được (320–560px) hoặc thu thành thanh dọc 56px vẫn giữ nút chép; cả hai nhớ
 trong trình duyệt. *Song song* có khi mỗi khung được ≥ 420px: hai khung cao trọn khung nhìn, cuộn riêng, vách giữa
-kéo được và nhớ tỉ lệ. Khung *Hiển thị* giữ khổ đọc ~72ch ở giữa.
+kéo được và nhớ tỉ lệ. Chữ ở *Preview* rộng hết khung, không giới hạn khổ.
