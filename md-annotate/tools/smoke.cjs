@@ -411,6 +411,29 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('tải lại: panel vẫn thu gọn', (await geo()).panelW === 56);
   await page.click('#btn-unrail');
   check('mở lại panel', (await geo()).panelW === L4.panelW && await inView(page, '#btn-copy'));
+  // 10d. Hộp Layout: bề rộng vùng làm việc, khổ chữ Preview, cỡ chữ; áp ngay, nhớ sau tải lại, đặt lại được.
+  await page.setViewportSize({ width: 1920, height: 900 });
+  const wrapW = () => page.$eval('main.ma-wrap', (el) => Math.round(el.getBoundingClientRect().width));
+  check('Layout mặc định: vùng làm việc 70% ở 1920', Math.abs((await wrapW()) - 1344) <= 1, String(await wrapW()));
+  await page.click('#btn-layout');
+  check('nút Layout mở hộp', await page.isVisible('#dlg-layout'));
+  const setRange = (sel, v) => page.$eval(sel, (el, v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }, v);
+  await setRange('#set-wrap', 50);
+  check('kéo bề rộng 50% áp ngay', Math.abs((await wrapW()) - 960) <= 1 && (await page.textContent('#set-wrap-o')) === '50%', String(await wrapW()));
+  await setRange('#set-wrap', 100);
+  check('bề rộng 100% tràn khung nhìn', (await wrapW()) === 1920, String(await wrapW()));
+  await page.check('#set-measure-on');
+  await setRange('#set-measure', 60);
+  await setRange('#set-fs', 18);
+  const md = await page.$eval('#v-md', (el) => { const cs = getComputedStyle(el); return { max: cs.maxWidth, fs: cs.fontSize }; });
+  check('giới hạn khổ chữ 60ch và cỡ chữ 18px', md.max === '60ch' || (parseFloat(md.max) > 400 && parseFloat(md.max) < 800), JSON.stringify(md));
+  check('cỡ chữ Preview 18px', md.fs === '18px', md.fs);
+  await page.keyboard.press('Escape');
+  await page.reload(); await page.waitForFunction(() => window.marked && window.DOMPurify); await page.waitForTimeout(100);
+  check('tải lại: nhớ bề rộng 100%', (await wrapW()) === 1920);
+  await page.click('#btn-layout'); await page.click('#set-reset');
+  check('Reset về mặc định', Math.abs((await wrapW()) - 1344) <= 1 && (await page.textContent('#set-measure-o')) === 'Fill pane' && (await page.textContent('#set-fs-o')) === '16px');
+  await page.keyboard.press('Escape');
   await page.evaluate(() => { localStorage.removeItem('md-annotate:prefs:v1'); });
   await page.setViewportSize({ width: 1280, height: 900 });
 

@@ -142,7 +142,7 @@
       ::selection { background: var(--accent); color: var(--on-accent); }
       ::highlight(ma-pending) { background-color: var(--hl-pend); }
       :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: var(--r-sm); }
-      .ma-wrap { width: min(100%, max(70vw, 1280px)); margin-inline: auto; padding: 0 var(--pad); } /* ~70% màn hình, không hẹp hơn 1280px (MDAN-005) */
+      .ma-wrap { width: var(--wrap-w, min(100%, max(70vw, 1280px))); margin-inline: auto; padding: 0 var(--pad); } /* mặc định ~70%, ≥ 1280px; chỉnh ở Layout (MDAN-005) */
       svg.ma-i { width: 16px; height: 16px; flex: none; }
 
       /* THANH TRÊN */
@@ -338,7 +338,7 @@
       .ma-empty p { margin: 0; }
 
       /* Markdown đã dựng: trang tài liệu, rộng hết khung (MDAN-005), nhịp tiêu đề rõ. */
-      .ma-md { max-width: none; margin: 0; font-size: 16px; line-height: 1.75; overflow-wrap: anywhere; }
+      .ma-md { max-width: var(--md-max, none); margin: 0 auto; font-size: var(--md-fs, 16px); line-height: 1.75; overflow-wrap: anywhere; }
       .ma-md > :first-child { margin-top: 0; }
       .ma-md > :last-child { margin-bottom: 0; }
       .ma-md h1, .ma-md h2, .ma-md h3 { font-family: var(--display); font-weight: 600; letter-spacing: -.015em; line-height: 1.25; }
@@ -608,6 +608,20 @@
       .ma-dlg__h { display: flex; align-items: center; gap: 10px; padding: 12px 12px 12px 18px; border-bottom: 1px solid var(--line); }
       .ma-dlg__h h2 { margin: 0; flex: 1; font: 600 18px/1.2 var(--display); }
       .ma-dlg__b { padding: 14px 18px 18px; overflow: auto; display: flex; flex-direction: column; gap: 12px; }
+      /* Hộp Layout: nền sau trong suốt để thấy ngay thay đổi. */
+      .ma-dlg--live::backdrop { background: transparent; }
+      @media (min-width: 721px) {
+        /* Neo góc phải dưới thanh trên, chừa văn bản để thấy thay đổi. */
+        .ma-dlg--live { width: min(400px, calc(100vw - 32px)); margin: 68px max(16px, calc((100vw - min(100vw, max(70vw, 1280px))) / 2 + 8px)) auto auto; }
+      }
+      @media (max-width: 720px) { .ma-set--wrap { display: none; } }
+      .ma-set { display: flex; flex-direction: column; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+      .ma-set:last-of-type { border-bottom: 0; padding-bottom: 0; }
+      .ma-set__h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+      .ma-set__h label, .ma-set__h span:first-child { font-weight: 600; font-size: 14px; }
+      .ma-set output { font: 500 12.5px/1 var(--mono); color: var(--ink-2); }
+      .ma-set input[type="range"] { width: 100%; accent-color: var(--green); margin: 4px 0; min-height: 28px; }
+      .ma-set input[type="range"]:disabled { opacity: .45; }
       .ma-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
       .ma-row { display: flex; align-items: center; gap: 4px; border: 1px solid var(--line); border-radius: 12px; padding: 4px; }
       .ma-row.is-cur { border-color: var(--green); }
@@ -704,6 +718,9 @@
           <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" /><path d="M3 3v5h5M12 7v5l3 2" /></svg>
           <span class="ma-btn__lbl">History</span>
           <span class="ma-badge ma-btn__lbl" id="hist-n"></span>
+        </button>
+        <button class="ma-icbtn" id="btn-layout" type="button" aria-label="Layout settings" title="Layout: widths and text size">
+          <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" /><circle cx="16" cy="7" r="2" /><circle cx="10" cy="17" r="2" /></svg>
         </button>
         <button class="ma-icbtn" id="theme" type="button" aria-label="Toggle light / dark" title="Light / dark">
           <svg class="ma-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -939,6 +956,36 @@
     </dialog>
 
     <dialog class="ma-dlg ma-dlg--panel" id="dlg-panel" aria-label="Comments and prompt"></dialog>
+
+    <dialog class="ma-dlg ma-dlg--live" id="dlg-layout" aria-labelledby="dlg-layout-t">
+      <div class="ma-dlg__in">
+        <div class="ma-dlg__h">
+          <h2 id="dlg-layout-t">Layout</h2>
+          <button class="ma-icbtn ma-icbtn--bare" type="button" data-close aria-label="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+          </button>
+        </div>
+        <div class="ma-dlg__b">
+          <p class="ma-sub">Changes apply as you drag and are saved in this browser.</p>
+          <div class="ma-set ma-set--wrap">
+            <div class="ma-set__h"><label for="set-wrap">Workspace width</label><output id="set-wrap-o" for="set-wrap"></output></div>
+            <input type="range" id="set-wrap" min="50" max="100" step="5" />
+            <p class="ma-sub">Share of the screen used by the document and the side panel. Auto is 70%, at least 1280px.
+              Split needs about 420px per pane.</p>
+          </div>
+          <div class="ma-set">
+            <div class="ma-set__h"><label class="ma-check" for="set-measure-on"><input type="checkbox" id="set-measure-on" /> Limit Preview line length</label><output id="set-measure-o" for="set-measure"></output></div>
+            <input type="range" id="set-measure" min="50" max="140" step="5" aria-label="Preview line length in characters" />
+            <p class="ma-sub">Typography guides suggest 45–75 characters per line for long reading; off means the text fills the pane.</p>
+          </div>
+          <div class="ma-set">
+            <div class="ma-set__h"><label for="set-fs">Preview text size</label><output id="set-fs-o" for="set-fs"></output></div>
+            <input type="range" id="set-fs" min="13" max="22" step="1" />
+          </div>
+          <div><button class="ma-btn ma-btn--quiet" type="button" id="set-reset">Reset to defaults</button></div>
+        </div>
+      </div>
+    </dialog>
 
     <dialog class="ma-dlg" id="dlg-hints" aria-labelledby="dlg-hints-t">
       <div class="ma-dlg__in">
@@ -2303,6 +2350,36 @@ This page lets you **comment on individual passages** of a markdown text, then g
       $('btn-unrail').addEventListener('click', function () { setRail(false); $('btn-rail').focus(); });
       $('rail-n').addEventListener('click', function () { setRail(false); setPane('list'); });
       $('rail-copy').addEventListener('click', copyPrompt);
+
+      /* Layout: bề rộng vùng làm việc (prefs.wrap: 'auto' | 50–100 %), khổ chữ Preview (prefs.measure: 0 = hết khung |
+         50–140ch), cỡ chữ Preview (prefs.mdfs: 13–22px). Đổi là áp ngay qua biến CSS. */
+      var LAYOUT_DEF = { wrap: 'auto', measure: 0, mdfs: 16 };
+      function layoutVal(k) { return prefs[k] == null ? LAYOUT_DEF[k] : prefs[k]; }
+      function applyLayout() {
+        var root = document.documentElement.style, w = layoutVal('wrap'), m = layoutVal('measure'), fs = layoutVal('mdfs');
+        if (w === 'auto') root.removeProperty('--wrap-w');
+        else root.setProperty('--wrap-w', 'min(100%, max(' + w + 'vw, 720px))');
+        if (m) root.setProperty('--md-max', m + 'ch'); else root.removeProperty('--md-max');
+        root.setProperty('--md-fs', fs + 'px');
+        $('set-wrap').value = w === 'auto' ? 70 : w;
+        $('set-wrap-o').textContent = w === 'auto' ? 'Auto (70%)' : w + '%';
+        $('set-measure-on').checked = !!m;
+        $('set-measure').disabled = !m;
+        $('set-measure').value = m || 90;
+        $('set-measure-o').textContent = m ? m + ' ch' : 'Fill pane';
+        $('set-fs').value = fs;
+        $('set-fs-o').textContent = fs + 'px';
+      }
+      function setLayout(k, v) { prefs[k] = v; savePrefs(); applyLayout(); refreshSplit(); }
+      applyLayout();
+      $('set-wrap').addEventListener('input', function (e) { setLayout('wrap', +e.target.value); });
+      $('set-measure-on').addEventListener('change', function (e) { setLayout('measure', e.target.checked ? +$('set-measure').value : 0); });
+      $('set-measure').addEventListener('input', function (e) { setLayout('measure', +e.target.value); });
+      $('set-fs').addEventListener('input', function (e) { setLayout('mdfs', +e.target.value); });
+      $('set-reset').addEventListener('click', function () {
+        delete prefs.wrap; delete prefs.measure; delete prefs.mdfs; savePrefs(); applyLayout(); refreshSplit();
+      });
+      $('btn-layout').addEventListener('click', function () { $('dlg-layout').showModal(); });
       $('rail-export').addEventListener('click', exportMd);
 
       var ta = $('src-input'), pasteIntoEmpty = false, renderTimer = null;
