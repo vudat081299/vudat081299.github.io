@@ -33,10 +33,15 @@
 - Hộp *Layout* (`#btn-layout`, `#dlg-layout`): bề rộng vùng làm việc (`prefs.wrap`: `auto` hoặc 50–100%, sàn 720px,
   đặt `--wrap-w`), khổ chữ *Preview* (`prefs.measure`: 0 = hết khung hoặc 50–140ch, `--md-max`), cỡ chữ *Preview*
   (`prefs.mdfs` 13–22px, `--md-fs`). Áp ngay khi kéo; hộp neo góc phải, nền sau trong suốt; điện thoại ẩn mục bề rộng.
-- *Focus mode* trong hộp *Layout* (`prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ mọi thứ ngoài
-  section dưới con trỏ. Section bắt đầu ở mỗi tiêu đề (h1–h6 ở *Preview*; dòng `#…` ngoài khối rào ở *Source*).
-  `markSections()` gắn `data-sec` lười khi trỏ; section đang trỏ có `.is-sec`, khung có `.is-focusing`. Chỉ chuột;
-  rời khung thì hết mờ, trừ khi hộp nhận xét đang mở.
+- *Focus mode* trong hộp *Layout* (`prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ mọi thứ ngoài một
+  section. Section bắt đầu ở mỗi tiêu đề cấp cao: h1–h6 con trực tiếp của `#v-md`; ở *Source* là dòng đầu token
+  `heading` cấp cao của `marked.lexer` (cùng cách đếm, số section hai bên khớp). `markSections()` gắn `data-sec` lười;
+  section sáng có `.is-sec`, khung có `.is-focusing`.
+- Chọn section (`prefs.focusBy`): `pointer` theo chuột (chỉ chuột; rời cả hai khung thì hết mờ, trừ khi hộp nhận xét
+  mở); `band` là section đầu tiên chạm dải 25–50% chiều cao vùng nhìn (khung cuộn ở *Split*, cửa sổ ở chế độ khác),
+  cập nhật khi cuộn và khi vẽ lại. Ở *Split*, section cùng số ở khung kia cũng sáng (`focusBoth`).
+- Bôi đen ở *Split*: đoạn tương ứng ở khung kia tô bằng CSS Highlight `ma-mirror` (`mirrorSel`, tìm bằng `locate`, như neo
+  nhận xét). Hộp nhận xét mở thì `ma-pending` thay thế.
 - *Preview* giống GitHub (MDAN-006): font hệ thống, màu Primer ở token `--gh-*`, code tô màu bằng highlight.js
   (ghim phiên bản, có `integrity`) với màu `--hl-*`, chỉ khi khối rào ghi ngôn ngữ hljs biết. `ghExtras()` đổi
   `> [!NOTE|TIP|IMPORTANT|WARNING|CAUTION]` thành `.ma-alert`; tiêu đề và biểu tượng vẽ bằng CSS, không thêm chữ.

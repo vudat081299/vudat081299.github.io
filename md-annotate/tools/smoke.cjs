@@ -622,6 +622,34 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('cuộn nguồn về đầu: Preview cũng về đầu', (await sp.$eval('#wrap-md', (w) => w.scrollTop)) === 0);
   await sp.evaluate(() => { const w = document.getElementById('wrap-src'); w.scrollTop = w.scrollHeight; }); await sp.waitForTimeout(300);
   check('cuộn nguồn tới cuối: Preview cũng tới cuối', await sp.$eval('#wrap-md', (w) => w.scrollHeight - w.clientHeight - w.scrollTop <= 2));
+  // Bôi đen ở Source: đoạn tương ứng bên Preview được tô (ma-mirror), chưa mở hộp.
+  await scriptSelect(sp, '#v-src', 'Short paragraph number 3.');
+  await sp.waitForTimeout(150);
+  const mir = await sp.evaluate(() => { const h = CSS.highlights.get('ma-mirror'); if (!h) return null; const r = [...h][0]; return { t: r.toString(), inMd: document.getElementById('v-md').contains(r.startContainer) }; });
+  check('Split: bôi đen ở Source thì Preview tô đúng đoạn', mir && mir.inMd && mir.t === 'Short paragraph number 3.', JSON.stringify(mir));
+  await scriptSelect(sp, '#v-md', 'Short paragraph number 4');
+  await sp.waitForTimeout(150);
+  const mir2 = await sp.evaluate(() => { const h = CSS.highlights.get('ma-mirror'); if (!h) return null; const r = [...h][0]; return { t: r.toString(), inSrc: document.getElementById('v-src').contains(r.startContainer) }; });
+  check('Split: bôi đen ở Preview thì Source tô đúng đoạn', mir2 && mir2.inSrc && mir2.t.startsWith('Short paragraph number 4'), JSON.stringify(mir2));
+  await sp.evaluate(() => getSelection().removeAllRanges()); await sp.waitForTimeout(150);
+  check('bỏ chọn thì hết tô phản chiếu', await sp.evaluate(() => !CSS.highlights.get('ma-mirror')));
+  // Focus theo chuột ở Split: section cùng số bên kia cũng sáng.
+  await sp.click('#btn-layout'); await sp.check('#set-focus'); await sp.keyboard.press('Escape');
+  await sp.evaluate(() => { document.getElementById('wrap-src').scrollTop = 0; }); await sp.waitForTimeout(150);
+  await sp.hover('#v-src .ma-ln:has-text("Short paragraph number 2.")'); await sp.waitForTimeout(350);
+  const fm = await sp.evaluate(() => { const hs = [...document.querySelectorAll('#v-md > h2')]; const o = (t) => getComputedStyle(hs.find((h) => h.textContent === t)).opacity; return [o('Section 2'), o('Section 3')]; });
+  check('Focus theo chuột ở Split: Preview sáng section 2, mờ section 3', fm[0] === '1' && fm[1] !== '1', fm.join(','));
+  // Dải đọc 25–50%: cuộn Source, section trong dải sáng ở cả hai bên.
+  await sp.click('#btn-layout'); await sp.click('label:has(input[name="focusby"][value="band"])'); await sp.keyboard.press('Escape');
+  await sp.mouse.move(5, 5);
+  await sp.evaluate(() => { const w = document.getElementById('wrap-src'); const ln = [...w.querySelectorAll('.ma-ln')].find((l) => l.textContent.startsWith('## Section 10'));
+    w.scrollTop += ln.getBoundingClientRect().top - (w.getBoundingClientRect().top + w.clientHeight * 0.3); });
+  await sp.waitForTimeout(400);
+  const band = await sp.evaluate(() => ({ src: [...document.querySelectorAll('#v-src .ma-ln.is-sec')].map((l) => l.textContent).find((t) => t.startsWith('##')),
+    md: [...document.querySelectorAll('#v-md > .is-sec')].map((e) => e.textContent).find((t) => /^Section/.test(t)) }));
+  check('Dải đọc: section 10 sáng ở Source và Preview', band.src && band.src.startsWith('## Section 10') && band.md === 'Section 10', JSON.stringify(band));
+  await sp.click('#btn-layout'); await sp.click('#set-reset'); await sp.keyboard.press('Escape');
+
   // Kéo bắt đầu ở lề phải của khung Preview, rồi ở nền trang bên trái khung: đều mở hộp nhận xét.
   await sp.evaluate(() => { document.getElementById('wrap-md').scrollTop = 0; }); await sp.waitForTimeout(150);
   for (const [name, side] of [['lề phải khung Preview', 'right'], ['nền trang bên trái khung', 'left']]) {

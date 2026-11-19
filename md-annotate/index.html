@@ -155,6 +155,8 @@
       a { color: inherit; }
       ::selection { background: var(--accent); color: var(--on-accent); }
       ::highlight(ma-pending) { background-color: var(--hl-pend); }
+      /* Vùng chọn phản chiếu sang khung kia ở Split: cùng màu vùng chọn, nhạt hơn. */
+      ::highlight(ma-mirror) { background-color: color-mix(in srgb, var(--accent) 38%, transparent); }
       :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: var(--r-sm); }
       /* Thanh cuộn mảnh, nhạt, theo theme. */
       * { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--ink) 22%, transparent) transparent; }
@@ -1050,9 +1052,14 @@
           </div>
           <div class="ma-set ma-set--focus">
             <div class="ma-set__h"><label class="ma-check" for="set-focus"><input type="checkbox" id="set-focus" /> Focus mode</label><output id="set-dim-o" for="set-dim"></output></div>
+            <div class="ma-fmt" role="radiogroup" aria-label="Which section stays bright">
+              <label><input type="radio" name="focusby" value="pointer" /><span>Follow pointer</span></label>
+              <label><input type="radio" name="focusby" value="band" /><span>Reading band 25–50%</span></label>
+            </div>
             <input type="range" id="set-dim" min="10" max="70" step="5" aria-label="Brightness of the dimmed text" />
-            <p class="ma-sub">Dims everything outside the section under the pointer: from the nearest heading above to the
-              next heading. Mouse or trackpad only.</p>
+            <p class="ma-sub">A section runs from a heading to the next heading. Follow pointer: the section under the mouse.
+              Reading band: the first section between 25% and 50% of the pane's height, updated as you scroll. In Split
+              the matching section in the other pane stays bright too.</p>
           </div>
           <div><button class="ma-btn ma-btn--quiet" type="button" id="set-reset">Reset to defaults</button></div>
         </div>
@@ -1727,6 +1734,7 @@ This page lets you **comment on individual passages** of a markdown text, then g
         $('src-input').classList.toggle('is-empty', !t);
         $('views').hidden = view === 'edit' || !t;
         sizePanes();
+        refreshBand(); // khung vẽ lại thì section đang sáng mất lớp: đặt lại (chỉ khi dải đọc)
       }
 
       /* Danh sách nhận xét trong panel. Panel nằm ở cột phải (máy rộng) hoặc trong tấm trượt #dlg-panel. */
@@ -2553,7 +2561,7 @@ This page lets you **comment on individual passages** of a markdown text, then g
 
       /* Layout: bề rộng vùng làm việc (prefs.wrap: 'auto' | 50–100 %), khổ chữ Preview (prefs.measure: 0 = hết khung |
          50–140ch), cỡ chữ Preview (prefs.mdfs: 13–22px). Đổi là áp ngay qua biến CSS. */
-      var LAYOUT_DEF = { wrap: 'auto', measure: 0, mdfs: 16, focus: false, dim: 30, sync: true };
+      var LAYOUT_DEF = { wrap: 'auto', measure: 0, mdfs: 16, focus: false, dim: 30, sync: true, focusBy: 'pointer' };
       function layoutVal(k) { return prefs[k] == null ? LAYOUT_DEF[k] : prefs[k]; }
       function applyLayout() {
         var root = document.documentElement.style, w = layoutVal('wrap'), m = layoutVal('measure'), fs = layoutVal('mdfs');
@@ -2572,6 +2580,8 @@ This page lets you **comment on individual passages** of a markdown text, then g
         root.setProperty('--dim', String(dim / 100));
         $('set-focus').checked = fo;
         $('set-dim').disabled = !fo;
+        document.querySelectorAll('input[name="focusby"]').forEach(function (r) { r.checked = r.value === layoutVal('focusBy'); r.disabled = !fo; });
+        if (typeof refreshFocus === 'function') refreshFocus();
         $('set-dim').value = dim;
         $('set-dim-o').textContent = fo ? dim + '% visible' : 'Off';
         $('set-sync').checked = layoutVal('sync') !== false;
@@ -2586,64 +2596,124 @@ This page lets you **comment on individual passages** of a markdown text, then g
       $('set-fs').addEventListener('input', function (e) { setLayout('mdfs', +e.target.value); });
       $('set-focus').addEventListener('change', function (e) { setLayout('focus', e.target.checked); });
       $('set-sync').addEventListener('change', function (e) { setLayout('sync', e.target.checked); });
+      document.querySelectorAll('input[name="focusby"]').forEach(function (r) {
+        r.addEventListener('change', function () { if (r.checked) setLayout('focusBy', r.value); });
+      });
       $('set-dim').addEventListener('input', function (e) { setLayout('dim', +e.target.value); });
       $('set-reset').addEventListener('click', function () {
-        delete prefs.wrap; delete prefs.measure; delete prefs.mdfs; delete prefs.focus; delete prefs.dim; delete prefs.sync; savePrefs(); applyLayout(); refreshSplit();
+        delete prefs.wrap; delete prefs.measure; delete prefs.mdfs; delete prefs.focus; delete prefs.dim; delete prefs.sync; delete prefs.focusBy; savePrefs(); applyLayout(); refreshSplit();
       });
       $('btn-layout').addEventListener('click', function () { $('dlg-layout').showModal(); });
 
-      /* Focus mode theo section. Section mới bắt đầu ở mỗi tiêu đề (h1–h6 ở Preview; dòng `#…` ngoài khối rào ở
-         Source). Đánh số lười: khung vẽ lại thì phần tử mới chưa có data-sec, lần trỏ kế tiếp đánh lại. */
+      /* Focus mode theo section. Section mới bắt đầu ở mỗi tiêu đề cấp cao: h1–h6 là con trực tiếp của #v-md ở Preview;
+         ở Source là dòng đầu của token `heading` cấp cao của marked.lexer (cùng cách đếm, nên số section hai bên khớp).
+         Hai cách chọn section (prefs.focusBy): 'pointer' theo chuột; 'band' là section đầu tiên chạm dải 25–50% chiều
+         cao vùng nhìn của khung, cập nhật khi cuộn. Ở Split, section cùng số ở khung kia cũng sáng.
+         Đánh số lười: khung vẽ lại thì phần tử mới chưa có data-sec, lần dùng kế tiếp đánh lại. */
       var mqHover = window.matchMedia('(hover: hover)');
       function secBlocks(root) {
         return root.id === 'v-src' ? Array.prototype.slice.call(root.querySelectorAll('.ma-ln'))
           : Array.prototype.filter.call(root.children, function (el) { return el.nodeType === 1; });
       }
       function markSections(root) {
-        var sec = 0, fence = false;
-        secBlocks(root).forEach(function (el) {
-          if (root.id === 'v-src') {
-            var t = el.textContent;
-            if (/^\s{0,3}(```|~~~)/.test(t)) fence = !fence;
-            else if (!fence && /^\s{0,3}#{1,6}(\s|$)/.test(t)) sec++;
-          } else if (/^H[1-6]$/.test(el.tagName)) sec++;
-          el.dataset.sec = String(sec);
-        });
+        var blocks = secBlocks(root), sec = 0;
+        if (root.id === 'v-src') {
+          var heads = {};
+          if (window.marked) lexSpans().forEach(function (sp) { if (sp.heading) heads[sp.a] = true; });
+          blocks.forEach(function (el, i) { if (heads[i]) sec++; el.dataset.sec = String(sec); });
+        } else {
+          blocks.forEach(function (el) { if (/^H[1-6]$/.test(el.tagName)) sec++; el.dataset.sec = String(sec); });
+        }
+      }
+      function ensureSec(root) {
+        var blocks = secBlocks(root);
+        if (blocks.length && (!blocks[0].dataset.sec || !blocks[blocks.length - 1].dataset.sec)) markSections(root);
+        return blocks;
+      }
+      function applySec(root, sec) {
+        if (!shown(root)) return;
+        var blocks = ensureSec(root);
+        if (root._sec === sec && root.classList.contains('is-focusing') && root.querySelector('.is-sec')) return;
+        root.querySelectorAll('.is-sec').forEach(function (x) { x.classList.remove('is-sec'); });
+        blocks.forEach(function (x) { if (x.dataset.sec === sec) x.classList.add('is-sec'); });
+        root._sec = sec;
+        root.classList.add('is-focusing');
       }
       function clearFocus(root) {
         root.classList.remove('is-focusing');
         root.querySelectorAll('.is-sec').forEach(function (el) { el.classList.remove('is-sec'); });
         root._sec = null;
       }
+      function otherRoot(root) { return root.id === 'v-src' ? $('v-md') : $('v-src'); }
+      function focusOn() { return document.documentElement.classList.contains('ma-focus'); }
+      function isSplit() { return $('views').dataset.mode === 'split'; }
+      function focusBoth(root, sec) {
+        applySec(root, sec);
+        var o = otherRoot(root);
+        if (isSplit()) applySec(o, sec); else clearFocus(o);
+      }
+      /* Dải đọc: vùng nhìn là khung cuộn ở Split, là cửa sổ ở chế độ khác. Khối xếp dọc theo thứ tự nên tìm nhị phân. */
+      function bandSec(root) {
+        var blocks = ensureSec(root);
+        if (!blocks.length) return null;
+        var pane = root.closest('.ma-view');
+        var vr = isSplit() ? pane.getBoundingClientRect() : { top: Math.max(0, root.getBoundingClientRect().top), bottom: window.innerHeight };
+        var vtop = vr.top, vh = Math.max(1, Math.min(window.innerHeight, vr.bottom) - vtop);
+        var b1 = vtop + vh * 0.25, b2 = vtop + vh * 0.5;
+        var lo = 0, hi = blocks.length - 1, first = blocks.length;
+        while (lo <= hi) { var mid = (lo + hi) >> 1; if (blocks[mid].getBoundingClientRect().bottom > b1) { first = mid; hi = mid - 1; } else lo = mid + 1; }
+        var pick = first < blocks.length && blocks[first].getBoundingClientRect().top < b2 ? blocks[first]
+          : blocks[Math.max(0, Math.min(blocks.length - 1, first - 1))];
+        return pick.dataset.sec;
+      }
+      var bandRaf = 0, bandFrom = null;
+      function refreshBand(from) {
+        if (from) bandFrom = from;
+        if (bandRaf) return;
+        bandRaf = requestAnimationFrame(function () {
+          bandRaf = 0;
+          if (!focusOn() || layoutVal('focusBy') !== 'band') return;
+          var root = bandFrom && shown(bandFrom) ? bandFrom : (shown($('v-md')) ? $('v-md') : $('v-src'));
+          if (!shown(root)) return;
+          var sec = bandSec(root);
+          if (sec != null) focusBoth(root, sec);
+        });
+      }
+      function refreshFocus() {
+        ['v-src', 'v-md'].forEach(function (id) { clearFocus($(id)); });
+        if (focusOn() && layoutVal('focusBy') === 'band') refreshBand();
+      }
       ['v-src', 'v-md'].forEach(function (id) {
         var root = $(id), raf = 0, lastT = null;
         root.addEventListener('pointermove', function (e) {
-          if (!document.documentElement.classList.contains('ma-focus') || !mqHover.matches || e.pointerType === 'touch') return;
+          if (!focusOn() || layoutVal('focusBy') !== 'pointer' || !mqHover.matches || e.pointerType === 'touch') return;
           lastT = e.target;
           if (raf) return;
           raf = requestAnimationFrame(function () {
             raf = 0;
-            var blocks = secBlocks(root);
             var el = lastT && lastT.closest && lastT.closest(id === 'v-src' ? '.ma-ln' : '#v-md > *');
             if (!el || !root.contains(el)) return;
-            if (!el.dataset.sec || (blocks[0] && !blocks[0].dataset.sec)) markSections(root);
-            var sec = el.dataset.sec;
-            if (root._sec === sec && root.classList.contains('is-focusing') && el.classList.contains('is-sec')) return;
-            root.querySelectorAll('.is-sec').forEach(function (x) { x.classList.remove('is-sec'); });
-            blocks.forEach(function (x) { if (x.dataset.sec === sec) x.classList.add('is-sec'); });
-            root._sec = sec;
-            root.classList.add('is-focusing');
+            ensureSec(root);
+            if (!el.dataset.sec) markSections(root);
+            focusBoth(root, el.dataset.sec);
           });
         });
         root.addEventListener('pointerleave', function () {
+          if (layoutVal('focusBy') !== 'pointer') return;
           if ($('pop') && !$('pop').hidden) return; // đang ghi nhận xét: giữ section sáng
-          clearFocus(root);
+          var o = otherRoot(root);
+          if (o.matches(':hover')) return;
+          clearFocus(root); clearFocus(o);
         });
       });
-      // Đóng hộp nhận xét khi con trỏ đã ra ngoài khung: bỏ làm mờ.
+      $('wrap-src').addEventListener('scroll', function () { refreshBand($('v-src')); }, { passive: true });
+      $('wrap-md').addEventListener('scroll', function () { refreshBand($('v-md')); }, { passive: true });
+      window.addEventListener('scroll', function () { refreshBand(); }, { passive: true });
+      window.addEventListener('resize', function () { refreshBand(); });
+      // Đóng hộp nhận xét khi con trỏ đã ra ngoài khung: bỏ làm mờ (chế độ theo chuột).
       new MutationObserver(function () {
-        if (!$('pop').hidden) return;
-        ['v-src', 'v-md'].forEach(function (id) { if (!$(id).matches(':hover')) clearFocus($(id)); });
+        if (!$('pop').hidden || layoutVal('focusBy') !== 'pointer') return;
+        if (!$('v-src').matches(':hover') && !$('v-md').matches(':hover')) { clearFocus($('v-src')); clearFocus($('v-md')); }
       }).observe($('pop'), { attributes: true, attributeFilter: ['hidden'] });
       $('rail-export').addEventListener('click', exportMd);
 
@@ -2890,7 +2960,26 @@ This page lets you **comment on individual passages** of a markdown text, then g
       }
       document.addEventListener('selectionchange', function () {
         clearTimeout(selTimer); selTimer = setTimeout(onSelChange, 120);
+        mirrorSel();
       });
+      /* Split: bôi đen một bên thì đoạn tương ứng bên kia được tô (CSS Highlight 'ma-mirror', không sửa DOM). Tìm đoạn
+         bằng chính cách neo nhận xét (locate: nguyên văn, rồi chỉ chữ và số), nên chọn ở Source có cú pháp markdown vẫn
+         khớp chữ đã dựng. Vùng chọn đã nới trọn từ. Hộp nhận xét mở thì tô 'ma-pending' thay thế. */
+      var mirrorRaf = 0;
+      function mirrorSel() {
+        if (!hasHL || mirrorRaf) return;
+        mirrorRaf = requestAnimationFrame(function () {
+          mirrorRaf = 0;
+          var info = !pop.mode && isSplit() ? readSelection() : null;
+          var r = null;
+          if (info) {
+            var toSrc = info.origin === 'md';
+            var pos = toSrc ? locate(info, S.text, true) : (mdText ? locate(info, mdText, false) : null);
+            if (pos) r = rangeAt(toSrc ? $('v-src') : $('v-md'), pos[0], pos[1]);
+          }
+          if (r) CSS.highlights.set('ma-mirror', new Highlight(r)); else CSS.highlights.delete('ma-mirror');
+        });
+      }
       $('fab').addEventListener('pointerdown', function (e) { e.preventDefault(); });
       $('fab').addEventListener('mousedown', function (e) { e.preventDefault(); });
       $('fab').addEventListener('click', function () {
