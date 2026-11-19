@@ -61,6 +61,12 @@
         --sx-head:   #800000;
         --sx-punct:  #9000c0;
         --sx-link:   #0451a5;
+        /* Preview kiểu GitHub (màu Primer, sáng) */
+        --gh-fg: #1f2328; --gh-muted: #59636e; --gh-border: #d1d9e0; --gh-border-muted: #d1d9e0b3; --gh-subtle: #f6f8fa;
+        --gh-link: #0969da; --gh-code-bg: #818b981f; --gh-row: #f6f8fa;
+        --gh-note: #0969da; --gh-tip: #1a7f37; --gh-important: #8250df; --gh-warning: #9a6700; --gh-caution: #d1242f;
+        --hl-keyword: #cf222e; --hl-title: #8250df; --hl-string: #0a3069; --hl-number: #0550ae; --hl-comment: #59636e;
+        --hl-builtin: #953800; --hl-name: #116329; --hl-add-bg: #dafbe1; --hl-add: #116329; --hl-del-bg: #ffebe9; --hl-del: #82071e;
         --sx-url:    #005a9e;
         --sx-code:   #6f5520;
         --sx-tag:    #1b6b82;
@@ -114,6 +120,12 @@
         --sx-head:   #6cb0ef;
         --sx-punct:  #d49bd0;
         --sx-link:   #4fc1ff;
+        /* Preview kiểu GitHub (màu Primer, tối) */
+        --gh-fg: #f0f6fc; --gh-muted: #9198a1; --gh-border: #3d444d; --gh-border-muted: #3d444db3; --gh-subtle: #151b23;
+        --gh-link: #4493f8; --gh-code-bg: #656c7633; --gh-row: #151b23;
+        --gh-note: #4493f8; --gh-tip: #3fb950; --gh-important: #ab7df8; --gh-warning: #d29922; --gh-caution: #f85149;
+        --hl-keyword: #ff7b72; --hl-title: #d2a8ff; --hl-string: #a5d6ff; --hl-number: #79c0ff; --hl-comment: #9198a1;
+        --hl-builtin: #ffa657; --hl-name: #7ee787; --hl-add-bg: #033a16; --hl-add: #aff5b4; --hl-del-bg: #67060c; --hl-del: #ffdcd7;
         --sx-url:    #5aa9ff;
         --sx-code:   #dba088;
         --sx-tag:    #4ec9b0;
@@ -340,44 +352,74 @@
       .ma-empty { display: flex; flex-direction: column; align-items: center; gap: var(--s3); padding: 64px var(--s5); color: var(--ink-3); }
       .ma-empty p { margin: 0; }
 
-      /* Markdown đã dựng: trang tài liệu, rộng hết khung (MDAN-005), nhịp tiêu đề rõ. */
-      .ma-md { max-width: var(--md-max, none); margin: 0 auto; font-size: var(--md-fs, 16px); line-height: 1.75; overflow-wrap: anywhere; }
-      .ma-md > :first-child { margin-top: 0; }
-      .ma-md > :last-child { margin-bottom: 0; }
-      .ma-md h1, .ma-md h2, .ma-md h3 { font-family: var(--display); font-weight: 600; letter-spacing: -.015em; line-height: 1.25; }
-      .ma-md h1 { font-size: 2em; margin: 0 0 .6em; }
-      .ma-md h2 { font-size: 1.45em; margin: 1.9em 0 .6em; }
-      .ma-md h3 { font-size: 1.2em; margin: 1.6em 0 .5em; }
-      .ma-md h4, .ma-md h5, .ma-md h6 { font: 600 1em/1.4 var(--sans); margin: 1.4em 0 .4em; }
-      .ma-md p { margin: 0 0 1.1em; }
-      .ma-md ul, .ma-md ol { margin: 0 0 1.1em; padding-left: 1.5em; }
-      .ma-md li { margin: .3em 0; }
-      .ma-md li::marker { color: var(--ink-3); }
-      .ma-md li > ul, .ma-md li > ol { margin: .3em 0; }
-      .ma-md li > p { margin: 0 0 .4em; }
-      .ma-md li:has(> input[type="checkbox"]) { list-style: none; margin-left: -1.3em; }
-      .ma-md input[type="checkbox"] { margin: 0 .5em 0 0; accent-color: var(--green); vertical-align: -1px; }
-      /* Trích khối: vạch trái một cạnh, không bo (REPO-025). */
-      .ma-md blockquote { margin: 0 0 1.1em; padding: .1em 0 .1em 1.1em; border-left: 3px solid var(--line); color: var(--ink-2); }
-      .ma-md blockquote > :last-child { margin-bottom: 0; }
-      .ma-md code { font: 500 .86em var(--mono); background: var(--surface-2); padding: .12em .4em; border-radius: 6px; }
-      .ma-md pre {
-        margin: 0 0 1.2em; padding: 14px 16px; overflow-x: auto;
-        font-size: .845em; line-height: 1.6; background: var(--bg); border: 1px solid var(--line-2); border-radius: var(--r);
+      /* Markdown đã dựng: giống GitHub (MDAN-006) — font hệ thống, tiêu đề có gạch dưới, khối code xám tô màu theo
+         ngôn ngữ, bảng kẻ ô sọc, hộp Note/Tip/…; màu ở token --gh-* / --hl-*. Cỡ chữ theo --md-fs, mọi khoảng cách bằng em. */
+      .ma-md {
+        max-width: var(--md-max, none); margin: 0 auto; color: var(--gh-fg);
+        font: 400 var(--md-fs, 16px)/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+        overflow-wrap: break-word;
       }
-      .ma-md pre code { font-size: inherit; padding: 0; background: none; border-radius: 0; }
-      .ma-md table {
-        display: block; max-width: 100%; width: max-content; overflow-x: auto; margin: 0 0 1.2em;
-        border-collapse: separate; border-spacing: 0; border: 1px solid var(--line); border-radius: var(--r); font-size: .905em; line-height: 1.5;
-      }
-      .ma-md th, .ma-md td { padding: .55em .95em; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line-2); }
-      .ma-md td + td, .ma-md th + th { border-left: 1px solid var(--line-2); }
-      .ma-md tr:last-child td { border-bottom: 0; }
-      .ma-md th { background: var(--surface-2); font-weight: 600; border-bottom-color: var(--line); }
-      .ma-md img { max-width: 100%; height: auto; border-radius: var(--r-sm); }
-      .ma-md hr { border: 0; height: 1px; background: var(--line); margin: 2.2em 0; }
+      .ma-md > :first-child { margin-top: 0 !important; }
+      .ma-md > :last-child { margin-bottom: 0 !important; }
+      .ma-md :is(p, blockquote, ul, ol, dl, table, pre, details) { margin-top: 0; margin-bottom: 1em; }
+      .ma-md :is(h1, h2, h3, h4, h5, h6) { margin: 1.5em 0 1em; font-weight: 600; line-height: 1.25; }
+      .ma-md h1 { font-size: 2em; padding-bottom: .3em; border-bottom: 1px solid var(--gh-border-muted); }
+      .ma-md h2 { font-size: 1.5em; padding-bottom: .3em; border-bottom: 1px solid var(--gh-border-muted); }
+      .ma-md h3 { font-size: 1.25em; }
+      .ma-md h4 { font-size: 1em; }
+      .ma-md h5 { font-size: .875em; }
+      .ma-md h6 { font-size: .85em; color: var(--gh-muted); }
+      .ma-md :is(ul, ol) { padding-left: 2em; }
+      .ma-md li + li { margin-top: .25em; }
+      .ma-md li > p { margin-top: 1em; }
+      .ma-md li > :is(ul, ol) { margin-top: 0; margin-bottom: 0; }
+      .ma-md li:has(> input[type="checkbox"]) { list-style: none; }
+      .ma-md li > input[type="checkbox"] { margin: 0 .2em .25em -1.4em; vertical-align: middle; }
       .ma-md strong { font-weight: 600; }
-      .ma-md .ma-a { color: var(--sx-link); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--sx-link) 45%, transparent); text-underline-offset: 2px; cursor: text; }
+      .ma-md .ma-a { color: var(--gh-link); text-decoration: none; cursor: text; }
+      @media (hover: hover) { .ma-md .ma-a:hover { text-decoration: underline; } }
+      /* Trích khối: vạch trái một cạnh, không bo (REPO-025). */
+      .ma-md blockquote { margin-left: 0; margin-right: 0; padding: 0 1em; color: var(--gh-muted); border-left: .25em solid var(--gh-border); }
+      .ma-md blockquote > :last-child { margin-bottom: 0; }
+      .ma-md :is(code, kbd, pre, samp) { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
+      .ma-md code { padding: .2em .4em; margin: 0; font-size: 85%; white-space: break-spaces; background: var(--gh-code-bg); border-radius: 6px; }
+      .ma-md pre { padding: 1em; overflow: auto; font-size: 85%; line-height: 1.45; color: var(--gh-fg); background: var(--gh-subtle); border-radius: 6px; word-wrap: normal; }
+      .ma-md pre code { display: inline; padding: 0; margin: 0; font-size: 100%; white-space: pre; background: transparent; border: 0; word-break: normal; }
+      .ma-md table { display: block; width: max-content; max-width: 100%; overflow: auto; border-spacing: 0; border-collapse: collapse; font-variant: tabular-nums; }
+      .ma-md :is(th, td) { padding: .375em .8125em; border: 1px solid var(--gh-border); }
+      .ma-md th { font-weight: 600; }
+      .ma-md tr { border-top: 1px solid var(--gh-border-muted); }
+      .ma-md tbody tr:nth-child(2n) { background: var(--gh-row); }
+      .ma-md img { max-width: 100%; box-sizing: content-box; }
+      .ma-md hr { height: .25em; padding: 0; margin: 1.5em 0; background: var(--gh-border); border: 0; }
+      .ma-md del { color: var(--gh-muted); }
+      /* Hộp cảnh báo kiểu GitHub: > [!NOTE] … Tiêu đề và biểu tượng vẽ bằng CSS, không thêm chữ vào bản dựng. */
+      .ma-md blockquote.ma-alert { position: relative; color: inherit; border-left-color: var(--al); padding: .5em 1em; }
+      .ma-md blockquote.ma-alert::before { content: attr(data-alert); display: block; margin-bottom: .25em; padding-left: 1.5em; font-weight: 500; line-height: 1.25; color: var(--al); }
+      .ma-md blockquote.ma-alert::after {
+        content: ""; position: absolute; left: 1em; top: .55em; width: 1em; height: 1em; background: var(--al);
+        -webkit-mask: var(--al-ic) center / contain no-repeat; mask: var(--al-ic) center / contain no-repeat;
+      }
+      .ma-alert--note { --al: var(--gh-note); --al-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E"); }
+      .ma-alert--tip { --al: var(--gh-tip); --al-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z'/%3E%3C/svg%3E"); }
+      .ma-alert--important { --al: var(--gh-important); --al-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'/%3E%3C/svg%3E"); }
+      .ma-alert--warning { --al: var(--gh-warning); --al-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z'/%3E%3C/svg%3E"); }
+      .ma-alert--caution { --al: var(--gh-caution); --al-ic: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'/%3E%3C/svg%3E"); }
+      /* Tô màu code (highlight.js) theo bảng màu GitHub. */
+      .ma-md .hljs-doctag, .ma-md .hljs-keyword, .ma-md .hljs-meta .hljs-keyword, .ma-md .hljs-template-tag,
+      .ma-md .hljs-template-variable, .ma-md .hljs-type, .ma-md .hljs-variable.language_ { color: var(--hl-keyword); }
+      .ma-md .hljs-title, .ma-md .hljs-title.class_, .ma-md .hljs-title.class_.inherited__, .ma-md .hljs-title.function_ { color: var(--hl-title); }
+      .ma-md .hljs-attr, .ma-md .hljs-attribute, .ma-md .hljs-literal, .ma-md .hljs-meta, .ma-md .hljs-number, .ma-md .hljs-operator,
+      .ma-md .hljs-variable, .ma-md .hljs-selector-attr, .ma-md .hljs-selector-class, .ma-md .hljs-selector-id { color: var(--hl-number); }
+      .ma-md .hljs-regexp, .ma-md .hljs-string, .ma-md .hljs-meta .hljs-string { color: var(--hl-string); }
+      .ma-md .hljs-built_in, .ma-md .hljs-symbol, .ma-md .hljs-bullet { color: var(--hl-builtin); }
+      .ma-md .hljs-comment, .ma-md .hljs-code, .ma-md .hljs-formula { color: var(--hl-comment); }
+      .ma-md .hljs-name, .ma-md .hljs-quote, .ma-md .hljs-selector-tag, .ma-md .hljs-selector-pseudo { color: var(--hl-name); }
+      .ma-md .hljs-section { color: var(--hl-number); font-weight: 600; }
+      .ma-md .hljs-emphasis { font-style: italic; }
+      .ma-md .hljs-strong { font-weight: 600; }
+      .ma-md .hljs-addition { color: var(--hl-add); background: var(--hl-add-bg); }
+      .ma-md .hljs-deletion { color: var(--hl-del); background: var(--hl-del-bg); }
       .ma-note { color: var(--ink-3); font-style: italic; }
 
       /* Đoạn đã nhận xét. Không bo góc: có gạch chân (REPO-025 chỉ cấm viền một cạnh + bo; ở đây là nền). */
@@ -999,6 +1041,10 @@
             <div class="ma-set__h"><label for="set-fs">Preview text size</label><output id="set-fs-o" for="set-fs"></output></div>
             <input type="range" id="set-fs" min="13" max="22" step="1" />
           </div>
+          <div class="ma-set">
+            <div class="ma-set__h"><label class="ma-check" for="set-sync"><input type="checkbox" id="set-sync" /> Sync scroll in Split</label></div>
+            <p class="ma-sub">Scrolling one pane scrolls the other so the same passage sits in the middle of both.</p>
+          </div>
           <div class="ma-set ma-set--focus">
             <div class="ma-set__h"><label class="ma-check" for="set-focus"><input type="checkbox" id="set-focus" /> Focus mode</label><output id="set-dim-o" for="set-dim"></output></div>
             <input type="range" id="set-dim" min="10" max="70" step="5" aria-label="Brightness of the dimmed text" />
@@ -1064,6 +1110,8 @@ This page lets you **comment on individual passages** of a markdown text, then g
             integrity="sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"
             integrity="sha384-+VfUPEb0PdtChMwmBcBmykRMDd+v6D/oFmB3rZM/puCMDYcIvF968OimRh4KQY9a" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+            integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
 
     <script>
     (function () {
@@ -1588,6 +1636,31 @@ This page lets you **comment on individual passages** of a markdown text, then g
         root.querySelectorAll('img').forEach(function (img) { img.draggable = false; });
       }
 
+      /* Thêm kiểu GitHub cho bản dựng: hộp > [!NOTE] … và tô màu code. Không đổi chữ nào ngoài nhãn [!…]. */
+      var ALERTS = { NOTE: 'Note', TIP: 'Tip', IMPORTANT: 'Important', WARNING: 'Warning', CAUTION: 'Caution' };
+      function ghExtras(root) {
+        root.querySelectorAll('blockquote').forEach(function (bq) {
+          var p = bq.firstElementChild;
+          if (!p || p.tagName !== 'P' || !p.firstChild || p.firstChild.nodeType !== 3) return;
+          var m = /^\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*/i.exec(p.firstChild.data);
+          if (!m) return;
+          var kind = m[1].toUpperCase();
+          p.firstChild.data = p.firstChild.data.slice(m[0].length);
+          if (p.firstChild.data === '' && p.firstChild.nextSibling && p.firstChild.nextSibling.tagName === 'BR') p.removeChild(p.firstChild.nextSibling);
+          if (!p.textContent.trim() && !p.querySelector('img')) p.remove();
+          bq.classList.add('ma-alert', 'ma-alert--' + kind.toLowerCase());
+          bq.setAttribute('data-alert', ALERTS[kind]);
+        });
+        if (!window.hljs) return;
+        window.hljs.configure({ ignoreUnescapedHTML: true });
+        root.querySelectorAll('pre code').forEach(function (code) {
+          var m = /(?:^|\s)language-([\w+#.-]+)/.exec(code.className);
+          // Như GitHub: chỉ tô khi khối rào ghi ngôn ngữ hljs biết; không ghi hoặc lạ thì để chữ trơn.
+          if (!m || !window.hljs.getLanguage(m[1])) return;
+          window.hljs.highlightElement(code);
+        });
+      }
+
       function renderAll() {
         var text = S.text, mdRoot = $('v-md');
         var html = mdHtml(text);
@@ -1598,6 +1671,8 @@ This page lets you **comment on individual passages** of a markdown text, then g
         } else {
           mdRoot.innerHTML = html; // đã qua DOMPurify
           unlink(mdRoot);
+          ghExtras(mdRoot);
+          if (typeof invalidateSync === 'function') invalidateSync();
           mdText = textNodes(mdRoot).map(function (n) { return n.data; }).join('');
         }
 
@@ -2349,6 +2424,77 @@ This page lets you **comment on individual passages** of a markdown text, then g
         e.preventDefault(); splitR = applySplit(splitR + d); prefs.split = splitR; savePrefs();
       });
 
+      /* Cuộn theo nhau ở Song song (prefs.sync, mặc định bật): cuộn một khung thì khung kia cuộn sao cho cùng một đoạn
+         nằm ở cùng một chỗ. Điểm tham chiếu là giữa khung; sát đầu / cuối thì trượt dần về mép, để hai khung cùng chạm
+         đầu và cùng chạm cuối. Bản đồ: mỗi khối cấp cao của marked.lexer ↔ phần tử con của #v-md (cùng thứ tự), cặp
+         (đỉnh dòng nguồn, đỉnh khối) và (đáy, đáy); giữa các mốc nội suy tuyến tính. Lệch số khối thì theo tỉ lệ. */
+      var syncMap = null, syncLock = null, syncRaf = 0;
+      function paneY(pane, el, bottom) {
+        var r = el.getBoundingClientRect();
+        return (bottom ? r.bottom : r.top) - pane.getBoundingClientRect().top + pane.scrollTop;
+      }
+      function buildSyncMap() {
+        var ws = $('wrap-src'), wm = $('wrap-md');
+        var lines = $('v-src').querySelectorAll('.ma-ln');
+        var blocks = Array.prototype.filter.call($('v-md').children, function (el) { return el.nodeType === 1; });
+        var toks = [];
+        try { toks = window.marked.lexer(S.text, { gfm: true }); } catch (e) { toks = []; }
+        var line = 0, spans = [];
+        toks.forEach(function (t) {
+          var raw = t.raw || '', n = (raw.match(/\n/g) || []).length, body = raw.replace(/\n+$/, '');
+          if (t.type !== 'space' && t.type !== 'def') spans.push([line, line + (body.match(/\n/g) || []).length]);
+          line += n;
+        });
+        var pts = [[0, 0]];
+        if (spans.length === blocks.length && lines.length) {
+          spans.forEach(function (sp, i) {
+            var a = lines[Math.min(sp[0], lines.length - 1)], b = lines[Math.min(sp[1], lines.length - 1)];
+            pts.push([paneY(ws, a), paneY(wm, blocks[i])]);
+            pts.push([paneY(ws, b, true), paneY(wm, blocks[i], true)]);
+          });
+        }
+        pts.push([ws.scrollHeight, wm.scrollHeight]);
+        var clean = [pts[0]];
+        pts.slice(1).forEach(function (p) { var q = clean[clean.length - 1]; if (p[0] >= q[0] && p[1] >= q[1]) clean.push(p); });
+        syncMap = { pts: clean, key: ws.scrollHeight + ':' + wm.scrollHeight + ':' + ws.clientWidth + ':' + wm.clientWidth + ':' + S.text.length };
+      }
+      function interp(pts, y, from) {
+        var to = 1 - from;
+        for (var i = 1; i < pts.length; i++) {
+          var a = pts[i - 1], b = pts[i];
+          if (y <= b[from] || i === pts.length - 1) {
+            var d = b[from] - a[from];
+            return d > 0 ? a[to] + (b[to] - a[to]) * Math.max(0, Math.min(1, (y - a[from]) / d)) : a[to];
+          }
+        }
+        return y;
+      }
+      function syncFrom(src) {
+        var ws = $('wrap-src'), wm = $('wrap-md');
+        var other = src === ws ? wm : ws, from = src === ws ? 0 : 1;
+        var key = ws.scrollHeight + ':' + wm.scrollHeight + ':' + ws.clientWidth + ':' + wm.clientWidth + ':' + S.text.length;
+        if (!syncMap || syncMap.key !== key) buildSyncMap();
+        var h = src.clientHeight, max = src.scrollHeight - h, top = src.scrollTop;
+        var off = h / 2 - Math.max(0, h / 2 - top) + Math.max(0, h / 2 - (max - top));
+        var y = interp(syncMap.pts, top + off, from);
+        var t = Math.round(y - off * other.clientHeight / h);
+        if (Math.abs(other.scrollTop - t) < 1) return;
+        syncLock = other;
+        other.scrollTop = t;
+        // Không có sự kiện cuộn (đã ở mép) thì nhả khoá, để lần cuộn tay kế tiếp không bị bỏ qua.
+        requestAnimationFrame(function () { requestAnimationFrame(function () { if (syncLock === other) syncLock = null; }); });
+      }
+      ['wrap-src', 'wrap-md'].forEach(function (id) {
+        $(id).addEventListener('scroll', function () {
+          var el = $(id);
+          if (syncLock === el) { syncLock = null; return; }
+          if ($('views').dataset.mode !== 'split' || layoutVal('sync') === false) return;
+          cancelAnimationFrame(syncRaf);
+          syncRaf = requestAnimationFrame(function () { syncFrom(el); });
+        }, { passive: true });
+      });
+      function invalidateSync() { syncMap = null; }
+
       /* Panel: kéo mép trái đổi bề rộng (320–560), hoặc thu gọn thành thanh dọc. Lưu ở prefs.side, prefs.rail. */
       var SIDE_MIN = 320, SIDE_MAX = 560;
       function applySide(w) {
@@ -2376,7 +2522,7 @@ This page lets you **comment on individual passages** of a markdown text, then g
 
       /* Layout: bề rộng vùng làm việc (prefs.wrap: 'auto' | 50–100 %), khổ chữ Preview (prefs.measure: 0 = hết khung |
          50–140ch), cỡ chữ Preview (prefs.mdfs: 13–22px). Đổi là áp ngay qua biến CSS. */
-      var LAYOUT_DEF = { wrap: 'auto', measure: 0, mdfs: 16, focus: false, dim: 30 };
+      var LAYOUT_DEF = { wrap: 'auto', measure: 0, mdfs: 16, focus: false, dim: 30, sync: true };
       function layoutVal(k) { return prefs[k] == null ? LAYOUT_DEF[k] : prefs[k]; }
       function applyLayout() {
         var root = document.documentElement.style, w = layoutVal('wrap'), m = layoutVal('measure'), fs = layoutVal('mdfs');
@@ -2397,6 +2543,7 @@ This page lets you **comment on individual passages** of a markdown text, then g
         $('set-dim').disabled = !fo;
         $('set-dim').value = dim;
         $('set-dim-o').textContent = fo ? dim + '% visible' : 'Off';
+        $('set-sync').checked = layoutVal('sync') !== false;
         $('set-fs').value = fs;
         $('set-fs-o').textContent = fs + 'px';
       }
@@ -2407,9 +2554,10 @@ This page lets you **comment on individual passages** of a markdown text, then g
       $('set-measure').addEventListener('input', function (e) { setLayout('measure', +e.target.value); });
       $('set-fs').addEventListener('input', function (e) { setLayout('mdfs', +e.target.value); });
       $('set-focus').addEventListener('change', function (e) { setLayout('focus', e.target.checked); });
+      $('set-sync').addEventListener('change', function (e) { setLayout('sync', e.target.checked); });
       $('set-dim').addEventListener('input', function (e) { setLayout('dim', +e.target.value); });
       $('set-reset').addEventListener('click', function () {
-        delete prefs.wrap; delete prefs.measure; delete prefs.mdfs; delete prefs.focus; delete prefs.dim; savePrefs(); applyLayout(); refreshSplit();
+        delete prefs.wrap; delete prefs.measure; delete prefs.mdfs; delete prefs.focus; delete prefs.dim; delete prefs.sync; savePrefs(); applyLayout(); refreshSplit();
       });
       $('btn-layout').addEventListener('click', function () { $('dlg-layout').showModal(); });
 

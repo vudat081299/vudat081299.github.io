@@ -5,6 +5,7 @@
 - MDAN-002 · Xanh lá riêng, sáng hơn trang chủ · `md-annotate/index.html`
 - MDAN-004 · Giao diện bằng tiếng Anh · `md-annotate/index.html`, `md-annotate/data/hints.json`
 - MDAN-005 · Vùng làm việc khoảng 70% màn hình, ở giữa · thay cho MDAN-003 · `md-annotate/index.html`
+- MDAN-006 · Preview giống GitHub, cuộn theo nhau ở Split · `md-annotate/index.html`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -38,3 +39,10 @@ Vùng làm việc rộng 70% khung nhìn, căn giữa, không hẹp hơn 1280px 
 trong trình duyệt. *Song song* có khi mỗi khung được ≥ 420px: hai khung cao trọn khung nhìn, cuộn riêng, vách giữa
 kéo được và nhớ tỉ lệ. Chữ ở *Preview* mặc định rộng hết khung. Người dùng chỉnh bề rộng vùng làm việc, khổ chữ và cỡ chữ *Preview*
 trong hộp *Layout*; mặc định là các số trên.
+
+## MDAN-006 · Preview giống GitHub, cuộn theo nhau ở Split
+19/11/2026 · `md-annotate/index.html`
+
+*Preview* dựng markdown theo kiểu GitHub: font hệ thống, màu Primer sáng / tối, tiêu đề h1–h2 có gạch dưới, khối
+code xám có tô màu theo ngôn ngữ, bảng sọc, hộp `[!NOTE]` / `[!TIP]` / `[!IMPORTANT]` / `[!WARNING]` / `[!CAUTION]`.
+Ở *Split*, cuộn một khung thì khung kia cuộn theo để cùng một đoạn nằm giữa cả hai; tắt được trong *Layout*.

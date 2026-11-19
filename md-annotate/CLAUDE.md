@@ -35,7 +35,13 @@
   section dưới con trỏ. Section bắt đầu ở mỗi tiêu đề (h1–h6 ở *Preview*; dòng `#…` ngoài khối rào ở *Source*).
   `markSections()` gắn `data-sec` lười khi trỏ; section đang trỏ có `.is-sec`, khung có `.is-focusing`. Chỉ chuột;
   rời khung thì hết mờ, trừ khi hộp nhận xét đang mở.
+- *Preview* giống GitHub (MDAN-006): font hệ thống, màu Primer ở token `--gh-*`, code tô màu bằng highlight.js
+  (ghim phiên bản, có `integrity`) với màu `--hl-*`, chỉ khi khối rào ghi ngôn ngữ hljs biết. `ghExtras()` đổi
+  `> [!NOTE|TIP|IMPORTANT|WARNING|CAUTION]` thành `.ma-alert`; tiêu đề và biểu tượng vẽ bằng CSS, không thêm chữ.
 - Cỡ chữ trong `.ma-md` (bảng, khối code, tiêu đề) tính bằng `em` theo `--md-fs`, không dùng `px`.
+- Cuộn theo nhau ở *Split* (`prefs.sync`, mặc định bật, tắt trong *Layout*): `buildSyncMap()` ghép khối cấp cao của
+  `marked.lexer` với con của `#v-md` theo thứ tự (đỉnh với đỉnh, đáy với đáy), nội suy tuyến tính; điểm tham chiếu ở
+  giữa khung, sát đầu / cuối trượt về mép. Lệch số khối thì chỉ còn hai mốc đầu, cuối. Smoke đo ±40px.
 - Hộp thoại: chỉ `.ma-dlg__b` cuộn. Tab *Prompt*: thân panel không cuộn; *Options* mở cuộn riêng (≤ 38vh), `#out` lấp
   phần còn lại và tự cuộn. Không lồng hai vùng cuộn.
 - *Preview* mặc định rộng hết khung; trích khối là vạch trái một cạnh (không bo), bảng có viền ngoài bo góc.

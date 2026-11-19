@@ -582,6 +582,42 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('Focus: con trỏ ra ngoài khung thì hết mờ', (await f.$$eval('#v-src .ma-ln', (ls) => ls.every((l) => getComputedStyle(l).opacity === '1'))));
   await fctx.close();
 
+  /* ---------- Cuộn theo nhau ở Song song: cùng một đoạn ở giữa hai khung ---------- */
+  const sctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  await sctx.addInitScript(() => { try { if (!sessionStorage.getItem('s')) { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ view: 'split' })); sessionStorage.setItem('s', '1'); } } catch (e) {} });
+  const sp = await sctx.newPage(); watch(sp);
+  await sp.goto(BASE); await sp.waitForFunction(() => window.marked && window.DOMPurify);
+  const parts = [];
+  for (let i = 1; i <= 24; i++) {
+    parts.push(`## Section ${i}`, '', 'Short paragraph number ' + i + '.', '');
+    if (i % 3 === 0) parts.push('```js', 'const a = ' + i + ';', 'const b = a * 2;', 'console.log(a, b);', '```', '');
+    if (i % 4 === 0) parts.push('- one', '- two', '- three', '');
+    if (i % 5 === 0) parts.push('| a | b |', '|---|---|', '| 1 | 2 |', '| 3 | 4 |', '');
+  }
+  await sp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, parts.join('\n'));
+  await sp.waitForTimeout(200);
+  await sp.click('.ma-tab[data-view="split"]'); await sp.waitForTimeout(200);
+  const centerOf = (pane, sel) => sp.evaluate(([pane, sel]) => {
+    const p = document.getElementById(pane), r = p.getBoundingClientRect(); const el = [...p.querySelectorAll(sel.q)].find((e) => e.textContent.includes(sel.t));
+    const e = el.getBoundingClientRect(); return Math.round((e.top + e.height / 2) - (r.top + r.height / 2));
+  }, [pane, sel]);
+  // Đặt dòng "## Section 14" của nguồn vào giữa khung nguồn.
+  await sp.evaluate(() => { const w = document.getElementById('wrap-src'); const ln = [...w.querySelectorAll('.ma-ln')].find((l) => l.textContent.startsWith('## Section 14'));
+    w.scrollTop = ln.offsetTop - w.clientHeight / 2 + ln.offsetHeight / 2 + (ln.getBoundingClientRect().top - w.getBoundingClientRect().top + w.scrollTop - ln.offsetTop); });
+  await sp.waitForTimeout(300);
+  const dMd = await centerOf('wrap-md', { q: 'h2', t: 'Section 14' });
+  check('cuộn nguồn: tiêu đề Section 14 ở giữa khung Preview (±40px)', Math.abs(dMd) <= 40, dMd + 'px');
+  await sp.evaluate(() => { const w = document.getElementById('wrap-md'); const h = [...w.querySelectorAll('h2')].find((e) => e.textContent === 'Section 7');
+    w.scrollTop += h.getBoundingClientRect().top + h.offsetHeight / 2 - (w.getBoundingClientRect().top + w.clientHeight / 2); });
+  await sp.waitForTimeout(300);
+  const dSrc = await centerOf('wrap-src', { q: '.ma-ln', t: '## Section 7' });
+  check('cuộn Preview: dòng ## Section 7 ở giữa khung nguồn (±40px)', Math.abs(dSrc) <= 40, dSrc + 'px');
+  await sp.evaluate(() => { document.getElementById('wrap-src').scrollTop = 0; }); await sp.waitForTimeout(300);
+  check('cuộn nguồn về đầu: Preview cũng về đầu', (await sp.$eval('#wrap-md', (w) => w.scrollTop)) === 0);
+  await sp.evaluate(() => { const w = document.getElementById('wrap-src'); w.scrollTop = w.scrollHeight; }); await sp.waitForTimeout(300);
+  check('cuộn nguồn tới cuối: Preview cũng tới cuối', await sp.$eval('#wrap-md', (w) => w.scrollHeight - w.clientHeight - w.scrollTop <= 2));
+  await sctx.close();
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');
