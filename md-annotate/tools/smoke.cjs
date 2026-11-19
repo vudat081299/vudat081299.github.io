@@ -725,6 +725,23 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
       dialog: !!document.querySelector('dialog[open]')
     }));
     check('Preview: markdown không đè CSS, id, lớp phủ, form, hộp thoại của trang', esc.panel !== 'none' && !esc.list && !esc.style && !esc.form && !esc.dialog, JSON.stringify(esc));
+
+    // Khung nhìn thấp (560px), bôi đen dòng giữa màn hình: dưới và trên đều không đủ chỗ cho hộp, hộp vẫn trọn trong
+    // khung nhìn (nút Save thấy được).
+    await rp.click('.ma-tab[data-view="edit"]');
+    await fill(Array.from({ length: 60 }, (_, i) => `Paragraph number ${i + 1} with some words.`).join('\n\n') + '\n');
+    await rp.click('.ma-tab[data-view="view"]'); await rp.waitForTimeout(150);
+    const mb = await rp.evaluate(() => {
+      const p = document.querySelectorAll('#v-md p')[20];
+      p.scrollIntoView({ block: 'center' });
+      const r = p.getBoundingClientRect();
+      return { x1: r.left + 2, x2: r.left + 120, y: r.top + r.height / 2 };
+    });
+    await rp.mouse.move(mb.x1, mb.y); await rp.mouse.down(); await rp.mouse.move(mb.x2, mb.y, { steps: 5 }); await rp.mouse.up();
+    await rp.waitForTimeout(200);
+    const pr = await rp.evaluate(() => { const r = document.getElementById('pop').getBoundingClientRect(); return { top: Math.round(r.top), bottom: Math.round(r.bottom), vh: innerHeight }; });
+    check('hộp nhận xét ở khung nhìn thấp: trọn trong khung nhìn', await rp.isVisible('#pop') && pr.top >= 0 && pr.bottom <= pr.vh && await inView(rp, '#pop-save'), JSON.stringify(pr));
+    await rp.keyboard.press('Escape');
     await rctx.close();
   }
   // ── end review: render & select ──

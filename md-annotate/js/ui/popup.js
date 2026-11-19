@@ -1,12 +1,13 @@
 /* Hộp nhận xét: mở cho đoạn mới (openNew) hoặc để sửa (openEdit), tô đoạn đang chọn (ma-pending),
    gợi ý dạng chip, lưu, đóng.
    Xuất: closePop, initPopup, openEdit, openNew, paintPending, pending, pop, popDirty, renderPopHints.
-   Dùng: core/text.js, core/anchor.js, core/hints.js, core/comments.js, ui/dom.js, ui/anchor-dom.js, ui/state.js,
+   Dùng: core/text.js, core/anchor.js, core/hints.js, core/comments.js, core/place.js, ui/dom.js, ui/anchor-dom.js, ui/state.js,
      ui/hints.js, ui/marks.js, ui/render.js, ui/list.js, ui/views.js, ui/selection.js. */
 import { plural } from '../core/text.js';
 import { locate } from '../core/anchor.js';
 import { chipHints, pct } from '../core/hints.js';
 import { addComment, editComment, findComment, overlapWarning } from '../core/comments.js';
+import { popPlace } from '../core/place.js';
 import { $, h, hasHL, mqSheet, shown, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { S, scheduleSave } from './state.js';
@@ -77,15 +78,9 @@ function showPop(rect) {
   renderPopHints();
   if (!sheet) {
     el.style.top = '0px'; el.style.left = '0px';
-    var pw = el.offsetWidth, ph = el.offsetHeight, vw = document.documentElement.clientWidth;
-    var top, left;
-    if (rect) {
-      top = rect.bottom + 10; left = rect.left;
-      if (top + ph > window.innerHeight - 12 && rect.top - ph - 10 > 12) top = rect.top - ph - 10;
-    } else { top = window.innerHeight / 2 - ph / 2; left = vw / 2 - pw / 2; }
-    left = Math.max(16, Math.min(left, vw - pw - 16));
-    el.style.top = Math.round(top + window.scrollY) + 'px';
-    el.style.left = Math.round(left + window.scrollX) + 'px';
+    var at = popPlace(rect, el.offsetWidth, el.offsetHeight, document.documentElement.clientWidth, window.innerHeight);
+    el.style.top = Math.round(at.top + window.scrollY) + 'px';
+    el.style.left = Math.round(at.left + window.scrollX) + 'px';
     $('pop-text').focus({ preventScroll: true });
   } else {
     el.style.top = ''; el.style.left = '';

@@ -86,6 +86,17 @@ import { sourceLines } from '../js/core/runs.js';
   const t0 = performance.now(), k = tokens(line), ms = performance.now() - t0;
   check('tokens: dòng 6 000 ký tự, 1 000 chữ đậm, dưới 300 ms', ms < 300 && k.length === 3000 && k[1].c === 'sx-strong', Math.round(ms) + ' ms, ' + k.length + ' token');
 }
+import { popPlace } from '../js/core/place.js';
+{
+  // Khung nhìn 1280×560, hộp 400×264. Dưới đoạn đủ chỗ: ngay dưới; chỉ trên đủ: lên trên; không bên nào đủ: vẫn trọn
+  // trong khung nhìn; mép phải: lùi vào.
+  const P = (r) => popPlace(r, 400, 264, 1280, 560);
+  check('popPlace: dưới đoạn', eq(P({ top: 100, bottom: 120, left: 50 }), { top: 130, left: 50 }));
+  check('popPlace: dưới không đủ thì lên trên', eq(P({ top: 400, bottom: 420, left: 50 }), { top: 126, left: 50 }));
+  const mid = P({ top: 279, bottom: 299, left: 1200 });
+  check('popPlace: hai bên đều không đủ thì vẫn trọn trong khung nhìn', mid.top >= 8 && mid.top + 264 <= 552 && mid.left === 864, JSON.stringify(mid));
+  check('popPlace: đoạn đã cuộn khuất phía trên thì hộp vẫn trong khung nhìn', P({ top: -300, bottom: -280, left: 50 }).top === 8);
+}
 // ── end review: render & select ──
 
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
