@@ -1241,6 +1241,38 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   }
   // ── end hộp Shortcuts ──
 
+  // ── đã đọc: J / K / X tiến lên được cả khi trang không cuộn được, cả khi bấm nhanh lúc đang cuộn mượt ──
+  {
+    const actx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    const ap = await actx.newPage(); watch(ap);
+    await ap.goto(BASE); await ap.waitForFunction(() => window.marked && window.DOMPurify);
+    const put = (t) => ap.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, t);
+    const lanes = (w) => ap.$$eval(`#wrap-${w} .ma-lane__b`, (bs) => bs.map((b) => (b.classList.contains('is-cur') ? '*' : '') + b.className.match(/is-(done|todo|changed)/)[1][0]).join(''));
+    await put(['# Short', '', 'One para.', '', 'Two para.', '', 'Three para.', ''].join('\n')); await ap.waitForTimeout(250);
+    for (const v of ['src', 'split']) {
+      await ap.click(`.ma-tab[data-view="${v}"]`); await ap.waitForTimeout(250); await ap.mouse.click(3, 880);
+      const w = v === 'src' ? 'src' : 'md', c0 = await lanes(w);
+      await ap.keyboard.press('j'); await ap.waitForTimeout(150);
+      const c1 = await lanes(w);
+      await ap.keyboard.press('j'); await ap.waitForTimeout(150);
+      const c2 = await lanes(w);
+      check(`đã đọc ${v}: văn bản ngắn (không cuộn được), J vẫn tới đơn vị kế tiếp`, c0 !== c1 && c1 !== c2 && c0 !== c2, [c0, c1, c2].join(' → '));
+      for (let i = 0; i < 3; i++) { await ap.keyboard.press('x'); await ap.waitForTimeout(150); }
+      const done = (await lanes(w)).replace(/\*/g, '');
+      check(`đã đọc ${v}: văn bản ngắn, X ba lần đánh dấu ba đơn vị (không bật / tắt một đơn vị)`, done.split('d').length - 1 === 3, await lanes(w));
+      await ap.$eval('#rv-clear', (b) => b.click()); await ap.waitForTimeout(150);
+    }
+    const long = [];
+    for (let s = 0; s < 10; s++) { long.push('## S' + s, ''); for (let k = 0; k < 6; k++) long.push('Para ' + s + '.' + k + ' ' + 'word '.repeat(30), ''); }
+    await ap.click('.ma-tab[data-view="edit"]'); await put(long.join('\n')); await ap.waitForTimeout(250);
+    await ap.click('.ma-tab[data-view="view"]'); await ap.waitForTimeout(250); await ap.mouse.click(3, 880);
+    for (let i = 0; i < 6; i++) { await ap.keyboard.press('x'); await ap.waitForTimeout(60); }
+    await ap.waitForTimeout(1200);
+    check('đã đọc: X bấm nhanh lúc trang đang cuộn mượt đánh dấu sáu đơn vị đầu liền nhau', (await lanes('md')).replace(/\*/g, '').startsWith('ddddddt'), await lanes('md'));
+    await actx.close();
+  }
+  // ── end J / K / X tiến lên ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

@@ -206,11 +206,19 @@ function currentUnit() {
     return gp[gp.length - 1].i;
   }
   var wrap = wrapOf(w), split = isSplit(), sc = split ? wrap : document.scrollingElement;
+  if (pin) {
+    var t = sc.scrollTop;
+    if (pin.sc === sc && pin.units === rvState().units && t >= Math.min(pin.from, pin.to) - 2 && t <= Math.max(pin.from, pin.to) + 2) return pin.i;
+    pin = null;
+  }
   var vr = split ? wrap.getBoundingClientRect() : { top: Math.max(0, rootOf(w).getBoundingClientRect().top), bottom: window.innerHeight };
   var band = bandBounds(vr.top, vr.bottom, window.innerHeight, sc.scrollTop, sc.scrollHeight - sc.clientHeight);
   var off = wrap.getBoundingClientRect().top - wrap.scrollTop;
   return g[bandPick(g.length, function (j) { return g[j].bottom + off; }, function (j) { return g[j].top + off; }, band[0], band[1])].i;
 }
+/* Đơn vị vừa nhảy tới (jumpUnit) là đơn vị hiện tại khi khung còn ở trên đường cuộn tới nó (from → to): cuộn mượt chưa
+   xong, hay không cuộn được (văn bản ngắn, sát mép), X / J kế tiếp vẫn tính từ nó. Người dùng cuộn ra ngoài thì bỏ. */
+var pin = null;
 /* Cuộn đơn vị i vào dải đọc của khung đang dùng; khung kia theo nhờ cuộn theo nhau. Đỉnh đặt ngay trên mốc trên của
    dải (bandScroll): đặt thấp hơn thì đuôi đơn vị trước còn trong dải và thắng (bandPick), X kế tiếp sẽ trúng nó. Mốc
    trượt về mép khi gần đầu / cuối (bandBounds), nên tính theo chính vị trí cuộn đích. */
@@ -221,21 +229,25 @@ export function jumpUnit(i) {
   if (!e) return;
   var wrap = wrapOf(w), how = reduceMotion.matches ? 'auto' : 'smooth', vh = window.innerHeight, wr = wrap.getBoundingClientRect();
   if (isSplit()) {
-    var maxS = wrap.scrollHeight - wrap.clientHeight;
-    wrap.scrollTo({ behavior: how, top: bandScroll(function (s) {
+    var maxS = wrap.scrollHeight - wrap.clientHeight, ts = bandScroll(function (s) {
       return wr.top + e.top - s - bandBounds(wr.top, wr.bottom, vh, s, maxS)[0];
-    }, maxS, BAND_UP) });
+    }, maxS, BAND_UP);
+    pin = { i: i, sc: wrap, from: wrap.scrollTop, to: ts, units: rvState().units };
+    wrap.scrollTo({ behavior: how, top: ts });
   } else {
     var de = document.scrollingElement, maxW = de.scrollHeight - de.clientHeight, y0 = window.scrollY;
     var unitY = wr.top + y0 + e.top, rootY = rootOf(w).getBoundingClientRect().top + y0;
-    window.scrollTo({ behavior: how, top: bandScroll(function (s) {
+    var tw = bandScroll(function (s) {
       return unitY - s - bandBounds(Math.max(0, rootY - s), vh, vh, s, maxW)[0];
-    }, maxW, BAND_UP) });
+    }, maxW, BAND_UP);
+    pin = { i: i, sc: de, from: de.scrollTop, to: tw, units: rvState().units };
+    window.scrollTo({ behavior: how, top: tw });
   }
   document.querySelectorAll('.ma-lane__b[data-u="' + i + '"]').forEach(function (b) {
     b.classList.remove('is-flash'); void b.offsetWidth; b.classList.add('is-flash');
     setTimeout(function () { b.classList.remove('is-flash'); }, 1200);
   });
+  scheduleCur();   // không cuộn được thì không có sự kiện cuộn: .is-cur vẫn phải sang đơn vị mới
 }
 /* J / K, nút Next unreviewed: đơn vị chưa đọc kế tiếp (dir 1) / trước (dir -1) từ đơn vị hiện tại. */
 export function stepOpen(dir, from) {
