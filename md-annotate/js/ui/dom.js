@@ -1,6 +1,6 @@
-/* Tiện ích DOM: $(id), h() dựng phần tử, icon(), textNodes(), media query dùng chung, shown(), dragBar() (kéo
-   vách), toast().
-   Xuất: $, dragBar, h, hasHL, icon, mqSheet, mqSide, reduceMotion, shown, textNodes, toast.
+/* Tiện ích DOM: $(id), h() dựng phần tử, icon(), textNodes(), media query dùng chung, shown(), typing() (phím tắt
+   một chữ), dragBar() (kéo vách), toast().
+   Xuất: $, dragBar, h, hasHL, icon, mqSheet, mqSide, reduceMotion, shown, textNodes, toast, typing.
    Dùng: không module nào. */
 
 export function $(id) { return document.getElementById(id); }
@@ -45,6 +45,14 @@ export var mqSheet = window.matchMedia('(max-width: 720px), (pointer: coarse)');
 export var mqSide = window.matchMedia('(min-width: 1081px)');
 export var hasHL = !!(window.CSS && CSS.highlights && window.Highlight);
 export function shown(el) { return !!(el && el.getClientRects().length); }
+/* Phần tử nhận phím là chỗ gõ chữ (ô nhập chữ, textarea, select, contenteditable): phím tắt một chữ (X, J, K, ?) bỏ qua.
+   Checkbox, radio, thanh trượt không phải chỗ gõ: vừa bấm "Dim reviewed" thì X vẫn chạy. */
+var NOT_TEXT = /^(?:checkbox|radio|range|button|submit|reset|file|color|image)$/;
+export function typing(t) {
+  if (!t || !t.closest) return false;
+  if (t.isContentEditable || t.closest('textarea, select')) return true;
+  return t.tagName === 'INPUT' && !NOT_TEXT.test(t.type);
+}
 
 /* Kéo một vách (chuột / bút / chạm) theo trục ngang: onMove(clientX) khi kéo, onDone() khi thả. */
 export function dragBar(el, onMove, onDone) {

@@ -4,7 +4,7 @@
    Xuất: initHelp.
    Dùng: core/shortcuts.js, ui/dom.js. */
 import { normShortcuts } from '../core/shortcuts.js';
-import { $, h } from './dom.js';
+import { $, h, typing } from './dom.js';
 
 var loaded = null;   // promise nạp dữ liệu: nạp một lần, lỗi thì lần mở sau thử lại
 
@@ -49,9 +49,6 @@ function load() {
 function openHelp() {
   load();
   if (!$('dlg-keys').open) $('dlg-keys').showModal();
-}
-function typing(t) {
-  return !!(t && t.closest && t.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])'));
 }
 
 export function initHelp() {

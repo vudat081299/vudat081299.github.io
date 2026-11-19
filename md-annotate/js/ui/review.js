@@ -10,7 +10,7 @@ import { locate } from '../core/anchor.js';
 import { lineOf, plural } from '../core/text.js';
 import { bandBounds, bandPick, bandScroll } from '../core/sections.js';
 import { nextOpen, progress, resolveMarks, reviewRanges, reviewSections, reviewUnits, setMarks, unitAt, unitsIn } from '../core/review.js';
-import { $, h, mqSheet, mqSide, reduceMotion, shown, toast } from './dom.js';
+import { $, h, mqSheet, mqSide, reduceMotion, shown, toast, typing } from './dom.js';
 import { prefs } from './store.js';
 import { loadSession, S, saveClosed, scheduleSave } from './state.js';
 import { blockPairs, setByPage } from './sync-scroll.js';
@@ -368,8 +368,7 @@ export function initReview() {
     if (e.ctrlKey || e.metaKey || e.altKey || e.isComposing || e.repeat) return;
     var k = (e.key || '').toLowerCase();
     if ((k !== 'x' && k !== 'j' && k !== 'k') || (e.shiftKey && k !== 'x')) return;
-    var t = e.target;
-    if (t && (t.isContentEditable || (t.closest && t.closest('input, textarea, select')))) return;
+    if (typing(e.target)) return;
     if (document.querySelector('dialog[open]') || !$('pop').hidden) return;
     if (view === 'edit' || !S.text) return;
     e.preventDefault();

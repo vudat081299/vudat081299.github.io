@@ -1299,6 +1299,12 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     await ap.click('#btn-hist'); await ap.click('#hist-list .ma-row:has-text("Doc R") .ma-row__main'); await ap.waitForTimeout(300);
     await ap.click('.ma-tab[data-view="split"]'); await ap.waitForTimeout(250);
     check('đã đọc: Clear all marks rồi chuyển phiên, Undo trả dấu về phiên của nó', (await ap.$$eval('#wrap-md .ma-lane__b.is-done', (b) => b.length)) === 1, await lanes('md'));
+    // Vừa bấm ô đánh dấu (Dim reviewed): focus ở checkbox, không phải đang gõ; X và ? vẫn chạy.
+    await ap.click('#ptab-review'); await ap.click('#rv-dim'); await ap.keyboard.press('x'); await ap.waitForTimeout(150);
+    const nx = await ap.$$eval('#wrap-md .ma-lane__b.is-done', (b) => b.length);
+    await ap.keyboard.press('Shift+Slash'); await ap.waitForTimeout(100);
+    check('đã đọc: focus ở checkbox thì X (bỏ dấu đơn vị hiện tại) và ? vẫn chạy', nx === 0 && (await ap.$eval('#dlg-keys', (d) => d.open)), JSON.stringify([nx, await lanes('md')]));
+    await ap.keyboard.press('Escape');
     await actx.close();
   }
   // ── end J / K / X tiến lên ──
