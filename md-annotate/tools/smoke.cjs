@@ -1289,6 +1289,16 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
       return out.slice(1).sort((a, b) => a - b).map(Math.round);   // lần đầu bật html.ma-reviewing: vẽ lại cả làn
     });
     check('đã đọc: văn bản 5.000 dòng, X ở Split dưới 100ms (trung vị)', ms[1] < 100 && (await ap.$$eval('#wrap-md .ma-lane__b.is-done', (b) => b.length)) === 5, JSON.stringify(ms));
+    // Clear all marks, chuyển phiên, rồi Undo: dấu về phiên của nó (như Undo của X), không mất lặng lẽ.
+    await ap.click('#btn-new'); await put('Doc R\n\nPara one.\n\nPara two.\n'); await ap.waitForTimeout(300);
+    await ap.click('.ma-tab[data-view="split"]'); await ap.waitForTimeout(250); await ap.mouse.click(3, 880);
+    await ap.keyboard.press('x'); await ap.waitForTimeout(150);
+    await ap.$eval('#rv-clear', (b) => b.click()); await ap.waitForTimeout(100);
+    await ap.click('#btn-hist'); await ap.click('#hist-list .ma-row:has-text("Section 0") .ma-row__main'); await ap.waitForTimeout(300);
+    await ap.click('.ma-toast__btn'); await ap.waitForTimeout(300);
+    await ap.click('#btn-hist'); await ap.click('#hist-list .ma-row:has-text("Doc R") .ma-row__main'); await ap.waitForTimeout(300);
+    await ap.click('.ma-tab[data-view="split"]'); await ap.waitForTimeout(250);
+    check('đã đọc: Clear all marks rồi chuyển phiên, Undo trả dấu về phiên của nó', (await ap.$$eval('#wrap-md .ma-lane__b.is-done', (b) => b.length)) === 1, await lanes('md'));
     await actx.close();
   }
   // ── end J / K / X tiến lên ──

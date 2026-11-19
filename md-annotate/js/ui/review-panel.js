@@ -8,7 +8,7 @@ import { lineOf, plural } from '../core/text.js';
 import { dropLost, reviewSections } from '../core/review.js';
 import { $, h, toast } from './dom.js';
 import { prefs, savePrefs } from './store.js';
-import { S } from './state.js';
+import { loadSession, S, saveClosed } from './state.js';
 import { anchors, ordered, orphans } from './render.js';
 import { lastRead, setView, view } from './views.js';
 import { setPane } from './panel.js';
@@ -89,7 +89,9 @@ export function initReviewPanel() {
     if (!before.length) return;
     S.reviews = []; commitReviews();
     toast('Cleared ' + plural(before.length, 'review mark') + '.', { label: 'Undo', fn: function () {
-      if (S.id === sid) { S.reviews = before; commitReviews(); }
+      if (S.id === sid) { S.reviews = before; commitReviews(); return; }
+      var o = loadSession(sid);   // đã chuyển phiên: trả dấu về phiên của nó
+      if (o) { o.reviews = before; saveClosed(o); }
     } });
   });
   $('rail-rv').addEventListener('click', function () { $('btn-unrail').click(); setPane('review'); });
