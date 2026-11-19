@@ -1,0 +1,88 @@
+/* Panel Prompt: hiện prompt, chép (⌘/Ctrl + Shift + C ở main.js), tải .md, tuỳ chọn trong Options (kiểu, số dòng,
+   tệp, toàn văn, lời dẫn). Dựng chữ prompt ở core/prompt.js.
+   Xuất: copyPrompt, initPrompt, locText, renderPrompt.
+   Dùng: core/text.js, core/prompt.js, ui/store.js, ui/dom.js, ui/state.js, ui/render.js. */
+import { plural } from '../core/text.js';
+import { buildPrompt, exportName, included, locLabel, optionsSummary, promptSize } from '../core/prompt.js';
+import { prefs, savePrefs } from './store.js';
+import { $, h, toast } from './dom.js';
+import { S, scheduleSave } from './state.js';
+import { anchors, ordered, orphans } from './render.js';
+
+function doc() { return { ordered: ordered, orphans: orphans, anchors: anchors }; }
+function current() { return buildPrompt(S, doc()); }
+/* Nhãn vị trí của nhận xét c cho danh sách (L12) hoặc prompt (tệp:12). */
+export function locText(c, withPath) { return locLabel(S, doc(), c, withPath); }
+export function renderPrompt() {
+  var p = current();
+  $('out').textContent = p;
+  $('out-n').textContent = promptSize(p);
+  var n = included(doc()).length;
+  $('foot-n').textContent = n ? plural(n, 'comment') : 'No comments yet';
+  ['btn-copy', 'btn-export', 'dock-copy', 'rail-copy', 'rail-export'].forEach(function (id) { $(id).disabled = !p; });
+  $('opts-sum').textContent = optionsSummary(S);
+}
+function legacyCopy(t) {
+  var ta = h('textarea', { style: 'position:fixed;top:0;left:0;opacity:0', readonly: true });
+  ta.value = t; document.body.append(ta); ta.select();
+  var ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) {}
+  ta.remove();
+  return ok;
+}
+export function copyPrompt() {
+  var p = current();
+  if (!p) { toast('Nothing to copy yet: select a passage and add a comment first.'); return; }
+  var n = included(doc()).length;
+  var done = function (ok) {
+    if (!ok) { toast('The browser blocked copying. Open the Prompt tab, select the prompt and copy it by hand.'); return; }
+    morphCopy();
+    $('sr-live').textContent = 'Prompt copied: ' + plural(n, 'comment') + ', ' + p.length + ' characters.';
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(p).then(function () { done(true); }, function () { done(legacyCopy(p)); });
+  } else done(legacyCopy(p));
+}
+/* Sau khi chép: nút đổi thành "Đã chép ✓" một lúc. */
+var morphTimer = null;
+function morphCopy() {
+  var btns = document.querySelectorAll('.ma-copy');
+  btns.forEach(function (b) { b.classList.add('is-done'); b.querySelector('.ma-copy__lbl').textContent = 'Copied ✓'; });
+  clearTimeout(morphTimer);
+  morphTimer = setTimeout(function () {
+    btns.forEach(function (b) { b.classList.remove('is-done'); b.querySelector('.ma-copy__lbl').textContent = 'Copy prompt'; });
+  }, 1600);
+}
+function exportMd() {
+  var p = current();
+  if (!p) return;
+  var url = URL.createObjectURL(new Blob([p + '\n'], { type: 'text/markdown;charset=utf-8' }));
+  var a = h('a', { href: url, download: exportName(S) });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
+
+export function initPrompt() {
+  $('p-head').addEventListener('input', function (e) { S.header = e.target.value; prefs.header = S.header; savePrefs(); scheduleSave(); renderPrompt(); });
+  $('p-foot').addEventListener('input', function (e) { S.footer = e.target.value; prefs.footer = S.footer; savePrefs(); scheduleSave(); renderPrompt(); });
+  $('btn-headtpl').addEventListener('click', function () {
+    var tpl = $('btn-headtpl').dataset.tpl;
+    if (S.header.trim() && S.header.trim() !== tpl && !window.confirm('Replace the current header with the template?')) return;
+    $('p-head').value = tpl;
+    $('p-head').dispatchEvent(new Event('input'));
+  });
+  $('inc-doc').addEventListener('change', function (e) { S.includeDoc = e.target.checked; scheduleSave(); renderPrompt(); });
+  $('line-nums').addEventListener('change', function (e) {
+    S.lineNums = e.target.checked; $('path-row').hidden = !S.lineNums;
+    scheduleSave(); renderPrompt();
+  });
+  $('p-path').addEventListener('input', function (e) { S.path = e.target.value.trim(); scheduleSave(); renderPrompt(); });
+  document.querySelectorAll('input[name="fmt"]').forEach(function (r) {
+    r.addEventListener('change', function () { S.fmt = r.value; prefs.fmt = r.value; savePrefs(); scheduleSave(); renderPrompt(); });
+  });
+  $('btn-copy').addEventListener('click', copyPrompt);
+  $('dock-copy').addEventListener('click', copyPrompt);
+  $('btn-export').addEventListener('click', exportMd);
+  $('rail-copy').addEventListener('click', copyPrompt);
+  $('rail-export').addEventListener('click', exportMd);
+}

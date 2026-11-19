@@ -1,0 +1,108 @@
+/* TOKEN: màu, font, khoảng cách, bo góc, chuyển động; theme sáng ở :root, tối ở html.dark.
+   Mã màu chỉ khai ở file này. */
+/* TOKEN — nền, mực, font chép từ index.html gốc. Xanh lá riêng của trang này, sáng hơn trang chủ (MDAN-002).
+   Đổi màu ở đây, đừng rải vào từng luật. */
+:root {
+  --bg:        #f5f6f3;
+  --surface:   #ffffff;
+  --surface-2: #eceee9;
+  --ink:       #0b0f0c;
+  --ink-2:     #464e48;
+  --ink-3:     #5b645e;
+  --line:      #d6dad4;
+  --line-2:    #e6e9e4;
+  --green:     #15803d;              /* chữ, viền, link xanh trên nền sáng (5:1 trên trắng) */
+  --green-hi:  #22c55e;
+  --green-soft: rgba(34, 197, 94, .12);
+  --green-line: rgba(21, 128, 61, .40);
+  --accent:    #22c55e;              /* nền nút chính, huy hiệu số */
+  --on-accent: #052e16;              /* chữ trên --accent: 6,5:1 */
+  --scrim:     rgba(11, 15, 12, .38);
+  --shadow:    0 24px 60px -18px rgba(11, 15, 12, .35), 0 2px 6px rgba(11, 15, 12, .06);
+  --hl:        rgba(34, 197, 94, .16);
+  --hl-2:      rgba(34, 197, 94, .28);
+  --hl-pend:   rgba(34, 197, 94, .36);
+  --danger:    #b42318;
+  --toast-act: #4ade80;
+  --lift:      0 1px 3px rgba(11, 15, 12, .12);
+  --tab-on:    var(--surface);           /* nền tab, nút kiểu đang chọn */
+  /* Tô màu tab Nguồn, theo tinh thần VS Code Light+; ≥ 4,5:1 trên nền và trên highlight. */
+  --sx-head:   #800000;
+  --sx-punct:  #9000c0;
+  --sx-link:   #0451a5;
+  /* Preview kiểu GitHub (màu Primer, sáng) */
+  --gh-fg: #1f2328; --gh-muted: #59636e; --gh-border: #d1d9e0; --gh-border-muted: #d1d9e0b3; --gh-subtle: #f6f8fa;
+  --gh-link: #0969da; --gh-code-bg: #818b981f; --gh-row: #f6f8fa;
+  --gh-note: #0969da; --gh-tip: #1a7f37; --gh-important: #8250df; --gh-warning: #9a6700; --gh-caution: #d1242f;
+  --hl-keyword: #cf222e; --hl-title: #8250df; --hl-string: #0a3069; --hl-number: #0550ae; --hl-comment: #59636e;
+  --hl-builtin: #953800; --hl-name: #116329; --hl-add-bg: #dafbe1; --hl-add: #116329; --hl-del-bg: #ffebe9; --hl-del: #82071e;
+  --sx-url:    #005a9e;
+  --sx-code:   #6f5520;
+  --sx-tag:    #1b6b82;
+  --sx-string: #a31515;
+  --tab-ring:  var(--lift);
+  --ink-4:     #8a938c;              /* số dòng, biểu tượng mờ — không dùng cho chữ cần đọc */
+  --chip:      rgba(11, 15, 12, .05);
+  --kbd-on-accent: rgba(5, 46, 22, .14);
+  --shadow-1:  0 1px 2px rgba(11, 15, 12, .05), 0 1px 1px rgba(11, 15, 12, .03);
+  --shadow-pop: 0 20px 48px -16px rgba(11, 15, 12, .30), 0 6px 14px -6px rgba(11, 15, 12, .12);
+
+  /* Thang khoảng cách, bo góc, chuyển động */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px;
+  --r-sm: 8px; --r: 12px; --r-lg: 16px;
+  --dur: .16s; --ease: cubic-bezier(.2, .7, .2, 1);
+
+  --pad: 24px;                         /* lề trang trong vùng làm việc (MDAN-005) */
+  --bar-h: 60px;
+  --side: 360px;                       /* bề rộng panel; người dùng kéo được 320–560, lưu ở prefs.side */
+
+  --display: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --sans:    'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+html.dark {
+  --bg:        #090b0a;
+  --surface:   #101412;
+  --surface-2: #171c19;
+  --ink:       #eef2ed;
+  --ink-2:     #a9b3ac;
+  --ink-3:     #8d9891;
+  --line:      #262d29;
+  --line-2:    #1a201c;
+  --green:     #4ade80;
+  --green-hi:  #4ade80;
+  --green-soft: rgba(74, 222, 128, .10);
+  --green-line: rgba(74, 222, 128, .38);
+  --accent:    #4ade80;
+  --on-accent: #052e16;              /* 8,5:1 */
+  --scrim:     rgba(0, 0, 0, .62);
+  --shadow:    0 30px 80px -20px rgba(0, 0, 0, .9), 0 0 0 1px rgba(255, 255, 255, .02);
+  /* Nền tối: phủ mỏng, để chữ màu (--sx-*) vẫn ≥ 4,5:1 trên highlight. */
+  --hl:        rgba(74, 222, 128, .09);
+  --hl-2:      rgba(74, 222, 128, .15);
+  --hl-pend:   rgba(74, 222, 128, .22);
+  --danger:    #ff8a7a;
+  --toast-act: #166534;
+  --lift:      0 1px 3px rgba(0, 0, 0, .5);
+  --tab-on:    var(--line);
+  /* Dark+ */
+  --sx-head:   #6cb0ef;
+  --sx-punct:  #d49bd0;
+  --sx-link:   #4fc1ff;
+  /* Preview kiểu GitHub (màu Primer, tối) */
+  --gh-fg: #f0f6fc; --gh-muted: #9198a1; --gh-border: #3d444d; --gh-border-muted: #3d444db3; --gh-subtle: #151b23;
+  --gh-link: #4493f8; --gh-code-bg: #656c7633; --gh-row: #151b23;
+  --gh-note: #4493f8; --gh-tip: #3fb950; --gh-important: #ab7df8; --gh-warning: #d29922; --gh-caution: #f85149;
+  --hl-keyword: #ff7b72; --hl-title: #d2a8ff; --hl-string: #a5d6ff; --hl-number: #79c0ff; --hl-comment: #9198a1;
+  --hl-builtin: #ffa657; --hl-name: #7ee787; --hl-add-bg: #033a16; --hl-add: #aff5b4; --hl-del-bg: #67060c; --hl-del: #ffdcd7;
+  --sx-url:    #5aa9ff;
+  --sx-code:   #dba088;
+  --sx-tag:    #4ec9b0;
+  --sx-string: #d7ba7d;
+  --tab-ring:  inset 0 0 0 1px var(--green-line);
+  --ink-4:     #5f6a63;
+  --chip:      rgba(255, 255, 255, .06);
+  --kbd-on-accent: rgba(5, 46, 22, .16);
+  --shadow-1:  0 0 0 1px rgba(255, 255, 255, .01);
+  --shadow-pop: 0 24px 60px -16px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .05);
+}

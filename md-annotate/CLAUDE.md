@@ -2,9 +2,42 @@
 
 - Một trang, `index.html`: dán văn bản markdown, xem ở *Source* hoặc *Preview* (đủ chỗ thì có *Split*), bôi đen
   một đoạn để ghi nhận xét, mọi nhận xét gom thành một prompt theo thứ tự trong văn bản.
-- CSS và JS inline trong `index.html`. Chữ lặp duy nhất là gợi ý mặc định: `data/hints.json` (REPO-001).
+- Không bước build: `index.html` là markup, CSS ở `css/`, JS là module ES ở `js/` (mục *Code*, MDAN-008).
+  Chữ lặp duy nhất là gợi ý mặc định: `data/hints.json` (REPO-001).
 - Văn bản mẫu (*Sample text*) và câu mẫu của lời dẫn đầu là khối độc nhất, nằm trong HTML.
 - Trang chủ trỏ tới `md-annotate/`; đổi tên thư mục thì `tools/lint-collection.py` đỏ.
+
+## Code (MDAN-008)
+
+| File | Việc |
+|---|---|
+| `index.html` | markup, script theme (trước lần vẽ đầu), báo `file://`, ba thư viện CDN, `js/main.js` |
+| `css/*.css` | `tokens` → `base` → `views` → `panel` → `popup` → `dialogs` → `focus` → `mobile`; thứ tự link là cascade |
+| `js/main.js` | gọi `init…` theo thứ tự, khởi động; phím tắt chép, đóng hộp thoại, nút theme |
+| `js/core/anchor.js`, `js/core/comments.js` | neo đoạn trích (`locate`, `quoteFrom`); thêm / sửa / xoá, neo, xếp, đánh số nhận xét |
+| `js/core/session.js`, `js/core/prompt.js` | mô hình phiên, index, tên tự đặt; dựng prompt, nhãn L12 |
+| `js/core/hints.js` | đếm, xếp hạng gợi ý, chip của hộp nhận xét |
+| `js/core/tokens.js`, `js/core/runs.js` | token của *Source*; cắt chữ theo token / highlight / dòng |
+| `js/core/blocks.js`, `js/core/sections.js` | `lexSpans(text, lex)`; đánh số section, chọn khối của dải đọc |
+| `js/core/sync-math.js`, `js/core/text.js` | đường cong cuộn theo nhau; `plural`, `lineOf`, `slug` |
+| `js/ui/store.js`, `js/ui/dom.js` | `localStorage`, khoá, `prefs`; `$`, `h()`, `icon()`, `toast()`, `dragBar()` |
+| `js/ui/state.js`, `js/ui/render.js` | phiên `S`, lưu, chuyển phiên; `renderAll()`, kết quả neo `mdText`, `anchors`, `ordered`… |
+| `js/ui/anchor-dom.js`, `js/ui/marks.js` | vùng chọn ↔ vị trí chữ; `<mark class="ma-hl">`, tô active / hover |
+| `js/ui/markdown.js`, `js/ui/source-view.js` | `marked` + DOMPurify, `unlink()`, `ghExtras()`, `mdLex()`; vẽ `#v-src` |
+| `js/ui/list.js`, `js/ui/prompt.js` | danh sách nhận xét; panel *Prompt*, chép, tải, *Options* |
+| `js/ui/popup.js`, `js/ui/selection.js` | hộp nhận xét; bôi đen → hộp, nút nổi, `ma-mirror` |
+| `js/ui/views.js`, `js/ui/sync-scroll.js` | chế độ xem, `splitOK()`, `sizePanes()`, vách giữa; cuộn theo nhau |
+| `js/ui/focus.js`, `js/ui/layout.js` | *Focus mode*, dải đọc; hộp *Layout*, `layoutVal()` |
+| `js/ui/panel.js`, `js/ui/hints.js` | panel, mép kéo, thanh dọc, tấm trượt; số đếm gợi ý trong bộ nhớ, hộp *Hints* |
+| `js/ui/history.js`, `js/ui/editor.js` | hộp *History*; khung *Edit*, dán, mở / thả file, văn bản mẫu, tên phiên |
+
+- `js/core/` là logic: nhận và trả dữ liệu thường; không DOM, `window`, `localStorage`, lớp CSS; chỉ import `js/core/`
+  (`tools/lint.py` kiểm). `js/ui/` đọc DOM và vị trí, gọi `js/core/`, ghi DOM; sự kiện trong `init…()` của nó.
+- Tính năng mới: logic vào `js/core/`, giao diện và sự kiện vào một module `js/ui/`; `main.js` gọi `init…()`.
+- Thứ tự gọi `init…()` là thứ tự đăng ký sự kiện: hai module nghe cùng phần tử thì đừng đảo (cặp ghi ở đầu `main.js`).
+- Biến dùng chung: `export var` ở module sở hữu; nơi khác chỉ đọc, gán lại qua hàm của chủ (`setS()`).
+- Import vòng được; code cấp cao của module không gọi sang module khác, việc lúc nạp nằm trong `init…()`.
+- Mỗi file mở đầu bằng chú thích: làm gì, xuất gì, dùng module nào.
 
 ## Ngôn ngữ (MDAN-007)
 
@@ -18,7 +51,7 @@
 ## Giao diện
 
 - Nền, mực và font chép từ `index.html` gốc; xanh lá riêng, sáng hơn (MDAN-002). Mã màu chỉ khai ở `:root` /
-  `html.dark`.
+  `html.dark` (`css/tokens.css`).
 - Nền nút chính và huy hiệu: `--accent` + chữ `--on-accent`. Chữ, viền, link xanh: `--green` (sắc đậm cùng họ).
 - Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024).
 - Khoảng cách theo thang `--s1`…`--s6`, bo góc `--r-sm` / `--r` / `--r-lg`, chuyển động `--dur` + `--ease`.
@@ -153,14 +186,14 @@
 - Markdown dựng bằng `marked` rồi làm sạch bằng `DOMPurify`, cả hai ghim phiên bản và có `integrity`.
 - Link ở bản dựng đổi thành `<span class="ma-a">` (`unlink()`, URL ở `title`): không chuyển trang, kéo trên link vẫn
   là bôi đen. Không dựng lại `<a>`.
-- Chỉ một chỗ gán `innerHTML`: HTML đã qua DOMPurify. Mọi chỗ khác dựng DOM bằng `h()` và `textContent`.
+- Chỉ một chỗ gán `innerHTML` (`renderAll()` ở `js/ui/render.js`): HTML đã qua DOMPurify. Mọi chỗ khác dựng DOM bằng `h()` và `textContent`.
 - Thiếu mạng thì *Preview* báo lỗi, *Source* vẫn dùng được.
-- Mở bằng `file://`: trang báo không nạp được `data/hints.json`; mọi thứ khác vẫn chạy.
+- Mở bằng `file://`: module ES không chạy; script inline chỉ hiện `#file-notice` (cách mở qua HTTP).
 
 ## Cổng: `sh md-annotate/tools/check.sh`
 
-- `tools/lint.py`: `data/hints.json` đúng khuôn, không trùng, `renamed` trỏ đúng gợi ý; một chỗ `innerHTML`; script
-  ngoài ghim phiên bản và có `integrity`.
+- `tools/lint.py`: `data/hints.json` đúng khuôn, không trùng, `renamed` trỏ đúng; một chỗ `innerHTML`; script ngoài
+  ghim phiên bản, có `integrity`; `index.html` không `<style>`; không file `css/`, `js/` mồ côi; `js/core/` thuần.
 - Cổng không bấm nút. Sửa sự kiện, neo hay giao diện thì chạy `tools/smoke.cjs` (CI chưa chạy): dán, bôi đen ở hai
   chế độ, gõ và bấm gợi ý, prompt, chép, phím tắt, mất neo, tải lại, lịch sử, bố cục rộng, chuyển gợi ý cũ, theme,
   khổ 1024px và 390px. Chạy tay: `python3 -m http.server 8347` ở gốc repo, rồi

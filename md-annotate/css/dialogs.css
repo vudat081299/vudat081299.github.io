@@ -1,0 +1,42 @@
+/* Hộp thoại: khung chung, hộp Layout (.ma-set), hàng của History / Hints (.ma-row). */
+/* HỘP THOẠI */
+.ma-dlg {
+  width: min(600px, calc(100vw - 32px)); max-height: min(80vh, 720px); padding: 0;
+  background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
+}
+.ma-dlg::backdrop { background: var(--scrim); }
+/* Hộp thoại là khung flex không cuộn; chỉ thân (.ma-dlg__b) cuộn. Tránh hai thanh cuộn chồng nhau. */
+.ma-dlg[open]:not(.ma-dlg--panel) { display: flex; flex-direction: column; overflow: hidden; }
+.ma-dlg__in { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.ma-dlg__h { flex: none; }
+.ma-dlg__h { display: flex; align-items: center; gap: 10px; padding: 12px 12px 12px 18px; border-bottom: 1px solid var(--line); }
+.ma-dlg__h h2 { margin: 0; flex: 1; font: 600 18px/1.2 var(--display); }
+.ma-dlg__b { flex: 1 1 auto; min-height: 0; overscroll-behavior: contain; padding: 14px 18px 18px; overflow: auto; display: flex; flex-direction: column; gap: 12px; }
+/* Hộp Layout: nền sau trong suốt để thấy ngay thay đổi. */
+.ma-dlg--live::backdrop { background: transparent; }
+@media (min-width: 721px) {
+  /* Neo góc phải dưới thanh trên, chừa văn bản để thấy thay đổi. */
+  .ma-dlg--live { width: min(400px, calc(100vw - 32px)); margin: 68px max(16px, calc((100vw - min(100vw, max(70vw, 1280px))) / 2 + 8px)) auto auto; }
+}
+@media (max-width: 720px) { .ma-set.ma-set--wrap { display: none; } }
+.ma-set { display: flex; flex-direction: column; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.ma-set:last-of-type { border-bottom: 0; padding-bottom: 0; }
+.ma-set__h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.ma-set__h label, .ma-set__h span:first-child { font-weight: 600; font-size: 14px; }
+.ma-set output { font: 500 12.5px/1 var(--mono); color: var(--ink-2); }
+.ma-set input[type="range"] { width: 100%; accent-color: var(--green); margin: 4px 0; min-height: 28px; }
+.ma-set input[type="range"]:disabled { opacity: .45; }
+.ma-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.ma-row { display: flex; align-items: center; gap: 4px; border: 1px solid var(--line); border-radius: 12px; padding: 4px; }
+.ma-row.is-cur { border-color: var(--green); }
+.ma-row__main {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; align-items: flex-start; text-align: left;
+  border: 0; background: transparent; padding: 6px 8px; border-radius: 9px; min-height: 44px; justify-content: center;
+}
+.ma-row__main:hover { background: var(--surface-2); }
+.ma-row__t { font-weight: 600; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ma-row__m { font: 500 11.5px/1.3 var(--mono); color: var(--ink-3); }
+.ma-row__main--static { cursor: default; }
+.ma-row__main--static:hover { background: transparent; }
+.ma-row .ma-input { height: 40px; }
+.ma-addrow { display: flex; gap: 8px; }

@@ -1,0 +1,6 @@
+/* Focus mode: mờ mọi khối ngoài section đang sáng (html.ma-focus, .is-focusing, .is-sec). */
+/* Focus mode: mờ mọi thứ ngoài section dưới con trỏ (từ tiêu đề gần nhất phía trên tới trước tiêu đề kế tiếp).
+   JS gắn data-sec cho khối con của .ma-md và cho mỗi .ma-ln, rồi gắn .is-sec cho section đang trỏ. */
+html.ma-focus .ma-md > [data-sec], html.ma-focus #v-src .ma-ln { transition: opacity .2s var(--ease); }
+html.ma-focus .ma-md.is-focusing > [data-sec]:not(.is-sec),
+html.ma-focus #v-src.is-focusing .ma-ln:not(.is-sec) { opacity: var(--dim, .3); }
