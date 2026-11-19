@@ -11,7 +11,7 @@
    - initSyncScroll trước initReview: cuộn #wrap-* (như initFocus, đọc setByPage).
    Xuất: không (chạy khi nạp).
    Dùng: ui/store.js, ui/dom.js, ui/state.js, ui/hints.js, ui/render.js, ui/list.js, ui/prompt.js, ui/views.js,
-     ui/sync-scroll.js, ui/panel.js, ui/layout.js, ui/focus.js, ui/popup.js, ui/selection.js, ui/picks.js,
+     ui/sync-scroll.js, ui/panel.js, ui/layout.js, ui/help.js, ui/focus.js, ui/popup.js, ui/selection.js, ui/picks.js,
      ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js. */
 import { KEY, store } from './ui/store.js';
 import { $ } from './ui/dom.js';
@@ -24,6 +24,7 @@ import { initViews, setView, view } from './ui/views.js';
 import { initSyncScroll } from './ui/sync-scroll.js';
 import { initPanel } from './ui/panel.js';
 import { initLayout } from './ui/layout.js';
+import { initHelp } from './ui/help.js';
 import { initFocus } from './ui/focus.js';
 import { initPopup, pop, renderPopHints } from './ui/popup.js';
 import { initSelection } from './ui/selection.js';
@@ -62,6 +63,7 @@ initViews();
 initSyncScroll();
 initPanel();
 initLayout();
+initHelp();
 initFocus();
 initEditor();
 initPrompt();

@@ -86,11 +86,11 @@ html:not(.dark) .ma-moon, html.dark .ma-sun { display: none; }
 .ma-ptab__n:empty { display: none; }
 .ma-item__n, .ma-steps__n { border-radius: var(--r-xs); background: var(--accent); color: var(--on-accent); }
 /* Phím: viền đủ bốn cạnh, đáy dày hơn. Trong nút chính (.ma-kbd) thì nền pha từ --on-accent, không viền. */
-.ma-pop__keys kbd, .ma-kbd {
+.ma-pop__keys kbd, .ma-key, .ma-kbd {
   display: inline-block; padding: 0 var(--s1); border-radius: var(--r-xs);
   font: 500 var(--fs-xs)/var(--lh) var(--mono);
 }
-.ma-pop__keys kbd { border: 1px solid var(--line); border-bottom-width: 2px; color: var(--ink-2); background: var(--surface); }
+.ma-pop__keys kbd, .ma-key { border: 1px solid var(--line); border-bottom-width: 2px; color: var(--ink-2); background: var(--surface); }
 .ma-kbd { margin-left: var(--s1); color: var(--on-accent); background: var(--kbd-on-accent); }
 .ma-kbd:empty { display: none; }
 

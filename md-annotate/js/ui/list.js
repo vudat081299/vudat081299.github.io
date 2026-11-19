@@ -10,7 +10,7 @@ import { anchors, numbers, ordered, orphans, renderAll } from './render.js';
 import { locText } from './prompt.js';
 import { lastRead, setView, view } from './views.js';
 import { setPane } from './panel.js';
-import { closePop, openEdit, pop } from './popup.js';
+import { closePop, openEdit, pending, pop, popDirty } from './popup.js';
 
 /* Danh sách nhận xét trong panel. Panel nằm ở cột phải (máy rộng) hoặc trong tấm trượt #dlg-panel. */
 export function renderList() {
@@ -80,6 +80,8 @@ function jumpTo(id, instant) {
   return ms;
 }
 function editFromList(id) {
+  /* Hộp của các dòng đã chọn đang có chữ (hộp ấy không tự đóng, MDAN-014): đừng thay nó bằng hộp sửa. */
+  if (pop.mode === 'new' && pending && pending.lines && popDirty()) { toast('Save or cancel the comment on the picked lines first.'); return; }
   var ms = orphans[id] ? [] : jumpTo(id, true);
   var li = $('list').querySelector('[data-id="' + id + '"]');
   openEdit(id, ms.length ? ms[ms.length - 1] : li);

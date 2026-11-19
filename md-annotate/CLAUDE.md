@@ -3,7 +3,7 @@
 - Một trang, `index.html`: dán văn bản markdown, xem ở *Source* hoặc *Preview* (đủ chỗ thì có *Split*), bôi đen
   một đoạn để ghi nhận xét, mọi nhận xét gom thành một prompt theo thứ tự trong văn bản.
 - Không bước build: `index.html` là markup, CSS ở `css/`, JS là module ES ở `js/` (mục *Code*, MDAN-008).
-  Chữ lặp duy nhất là gợi ý mặc định (`data/hints.json`, REPO-001); *Sample text* và câu mẫu lời dẫn ở HTML.
+  Chữ lặp ở `data/` (REPO-001): gợi ý mặc định `hints.json`, bảng phím tắt `shortcuts.json`; *Sample text* và câu mẫu lời dẫn ở HTML.
 
 ## Code (MDAN-008)
 
@@ -17,7 +17,7 @@
 | `js/core/hints.js`, `js/core/place.js` | đếm, xếp hạng gợi ý, chip của hộp nhận xét; chỗ đặt hộp nổi (`popPlace`) |
 | `js/core/tokens.js`, `js/core/runs.js` | token của *Source*; cắt chữ theo token / highlight / dòng, `lineCount` |
 | `js/core/blocks.js`, `js/core/sections.js` | `lexSpans`, `pairBlocks` (khối nguồn ↔ Preview); đánh số section, dải đọc |
-| `js/core/panes.js`, `js/core/picks.js`, `js/core/sync-math.js`, `js/core/text.js` | `splitFits`, cao hai khung; nhiều dòng (`pickInfo`); cuộn theo nhau; `plural`, `lineOf`, `slug` |
+| `js/core/panes.js`, `js/core/picks.js`, `js/core/sync-math.js`, `js/core/text.js`, `js/core/shortcuts.js` | `splitFits`, cao hai khung; nhiều dòng (`pickInfo`); cuộn theo nhau; `plural`, `lineOf`, `slug`; `normShortcuts` |
 | `js/core/review.js`, `js/ui/review.js`, `js/ui/review-panel.js` | đã đọc: đơn vị, neo dấu, tiến độ; làn, phím, nút hộp nhận xét, viên thuốc; tab *Review* |
 | `js/ui/store.js`, `js/ui/dom.js` | `localStorage`, khoá, `prefs`; `$`, `h()`, `icon()`, `toast()`, `dragBar()` |
 | `js/ui/state.js`, `js/ui/render.js` | phiên `S`, lưu, chuyển phiên; `renderAll()`, kết quả neo `mdText`, `anchors`, `ordered`… |
@@ -26,7 +26,7 @@
 | `js/ui/list.js`, `js/ui/prompt.js` | danh sách nhận xét; panel *Prompt*, chép, tải, *Options* |
 | `js/ui/popup.js`, `js/ui/selection.js`, `js/ui/picks.js` | hộp nhận xét; bôi đen → hộp, nút nổi, `ma-mirror`; chọn nhiều dòng ở lề số, nút kéo hộp |
 | `js/ui/views.js`, `js/ui/sync-scroll.js` | chế độ xem, `splitOK()`, `sizePanes()`, vách giữa; cuộn theo nhau |
-| `js/ui/focus.js`, `js/ui/layout.js` | *Focus mode*, dải đọc; hộp *Layout*, `layoutVal()` |
+| `js/ui/focus.js`, `js/ui/layout.js`, `js/ui/help.js` | *Focus mode*, dải đọc; hộp *Settings* (`#dlg-layout`), `layoutVal()`; hộp *Shortcuts* |
 | `js/ui/panel.js`, `js/ui/hints.js` | panel, mép kéo, thanh dọc, tấm trượt; số đếm gợi ý trong bộ nhớ, hộp *Hints* |
 | `js/ui/history.js`, `js/ui/editor.js` | hộp *History*; khung *Edit*, dán, mở / thả file, văn bản mẫu, tên phiên |
 
@@ -58,9 +58,10 @@
   vẫn nhớ `split`. Hai khung cao `--pane-h` (`paneHeight`), cuộn riêng; trang không cuộn. Vách `#divider` lưu `prefs.split`.
 - Split vừa khung nhìn (khung ≥ 320px): `sizePanes()` gắn `html.ma-fit` (khoá cuộn trang), để thanh cuộn chính không
   chập chờn khi trang dư 1px. Rời Split thì bỏ. Đừng thêm `scrollbar-gutter` cho `html`: nó ăn bề rộng, mất Split ở 1280px.
-- Hộp *Layout*: bề rộng vùng làm việc (`prefs.wrap`: `auto` hoặc 50–100%, sàn 720px, `--wrap-w`), khổ chữ *Preview* (`prefs.measure`:
-  0 = hết khung hoặc 50–140ch, `--md-max`), cỡ chữ *Preview* (`prefs.mdfs` 13–22px, `--md-fs`). Áp ngay khi kéo; điện thoại ẩn bề rộng.
-- *Focus mode* (hộp *Layout*, `prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ ngoài một section. Section mở ở mỗi tiêu đề
+- Hộp *Settings* (`#dlg-layout`): `prefs.wrap` (bề rộng vùng làm việc, `auto` / 50–100%, sàn 720px; điện thoại ẩn), `prefs.measure` (khổ chữ
+  *Preview*, 0 / 50–140ch), `prefs.mdfs` (cỡ chữ *Preview*, 13–22px); áp ngay khi kéo. ≤ 420px, nền mờ nhẹ `--scrim-live` (MDAN-015).
+- *Settings* và *Shortcuts* (`#dlg-keys`: phím / cú bấm mới, từ `data/shortcuts.json`; nút đầu *Settings* hoặc `?` ngoài ô nhập) giữa màn hình (`.ma-dlg--center`).
+- *Focus mode* (hộp *Settings*, `prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ ngoài một section. Section mở ở mỗi tiêu đề
   cấp cao: h1–h6 con của `#v-md`; *Source*: token `heading` hay khối HTML `<h1>`…`<h6>` của `marked.lexer` (số khớp). Sáng: `.is-sec`.
 - Chọn section (`prefs.focusBy`): `pointer` theo chuột (rời cả hai khung thì hết mờ, trừ khi hộp nhận xét mở); `band` là section
   chạm dải 25–50% vùng nhìn (khung cuộn ở *Split*, cửa sổ ở chế độ khác); trong nửa vùng nhìn sát đầu / cuối, hai mốc trượt về mép
@@ -72,12 +73,11 @@
   `pairBlocks` theo dãy con chung dài nhất của thẻ). Cuộn thì tìm lại dòng dưới chuột; rời khung thì hết.
 - Khối nguồn (`lexSpans`) neo vào văn bản gốc, không cộng dồn `raw`: marked bỏ khối `[id]: url` và đổi tab đầu dòng.
 - Bôi đen ở *Split*: đoạn tương ứng ở khung kia tô bằng Highlight `ma-mirror` (`mirrorSel`, `locate`); hộp nhận xét mở thì `ma-pending` thay.
-- *Preview* giống GitHub (MDAN-006): màu Primer `--gh-*`, code tô bằng highlight.js (`--hl-*`) khi khối rào ghi ngôn ngữ hljs biết.
-  `ghExtras()` đổi `> [!NOTE|TIP|…]` thành `.ma-alert`, tiêu đề vẽ bằng CSS. Cỡ chữ trong `.ma-md` bằng `em` theo `--md-fs`.
+- *Preview* giống GitHub (MDAN-006): màu `--gh-*`, code tô bằng highlight.js (`--hl-*`) khi khối rào ghi ngôn ngữ hljs biết; `ghExtras()` đổi
+  `> [!NOTE|TIP|…]` thành `.ma-alert`. Cỡ chữ trong `.ma-md` bằng `em` theo `--md-fs`. Rộng hết khung; trích khối vạch trái, bảng viền bo góc.
 - Cuộn theo nhau ở *Split* (`prefs.sync`, mặc định bật): mốc là đỉnh các cặp khối của `blockPairs()` (thêm đáy làm giật), nội suy Hermite
   đơn điệu; tham chiếu giữa khung, sát mép trượt về mép. Khung theo đặt ngay trong sự kiện cuộn (không rAF); bỏ qua `syncExpect`.
 - Hộp thoại: chỉ `.ma-dlg__b` cuộn. Tab *Prompt*: thân không cuộn; *Options* mở cuộn riêng (≤ 38vh), `#out` lấp phần còn lại. Không lồng vùng cuộn.
-- *Preview* mặc định rộng hết khung; trích khối là vạch trái một cạnh (không bo), bảng có viền ngoài bo góc.
 - Trống văn bản: thẻ `#start`; có chữ thì hiện hàng công cụ. Ctrl/⌘ + V ngoài ô nhập cũng dán khi trống. Một `#file-in` ẩn cho mọi `.js-open`.
 - Rê chuột bọc trong `@media (hover: hover)` (cảm ứng không dính trạng thái rê). `.ma-sr` đặt `top: 0`, không thì trang dài thêm 1px.
 
@@ -123,7 +123,8 @@
 - Chỉ ở nơi có lề số dòng (*Source*, khung Source của *Split*), chỉ bằng lề số (`ui/picks.js`). *Preview* không chọn dòng.
 - Bấm đúp lề: vào chế độ chọn dòng với dòng ấy, mở hộp; không bôi đen chữ. Ngoài chế độ, bấm một lần giữ như cũ.
 - Trong chế độ, bấm lề thêm / bỏ một dòng (không cần liền; dòng trống không chọn được); hộp đang mở cập nhật tại chỗ.
-- Thoát: Esc, Save, bỏ dòng cuối, sang Edit / Preview, mở phiên khác, văn bản đổi (`repaintPicks()`). Cancel giữ các dòng.
+- Thoát: Esc, Save, bỏ dòng cuối, sang Edit / Preview, mở phiên khác, văn bản đổi (`repaintPicks()`).
+- Hộp của chế độ không đóng khi bấm ra ngoài (MDAN-014); Cancel chỉ ẩn hộp, giữ các dòng, bấm lề thì hộp hiện lại.
 - Trong chế độ, bôi đen chữ không mở hộp, không hiện nút nổi. Dòng đã chọn `.is-pick`; *Split* tô chữ ở Preview (`ma-mirror`).
 - Hộp: `3 lines · L12, L15-16` và nút kéo `#pop-grip` (con trỏ, phím mũi tên; trọn khung nhìn; không nhớ chỗ). Mặc định
   dưới dòng vừa bấm, lùi qua lề số để không che lề. Tấm trượt đáy và hộp bôi đen không có nút kéo.
@@ -180,9 +181,9 @@
 
 - Mọi lần đọc ghi `localStorage` bọc try/catch; hỏng thì trang vẫn chạy, chỉ báo một lần.
 - Khoá: `md-annotate:index:v1` (danh sách phiên), `md-annotate:s:<id>` (một phiên), `md-annotate:current`,
-  `md-annotate:stats:v1` (số đếm gợi ý), `md-annotate:prefs:v1` (chế độ xem, kiểu prompt, lời dẫn, tô màu, panel, Layout, `rvDim`).
+  `md-annotate:stats:v1` (số đếm gợi ý), `md-annotate:prefs:v1` (chế độ xem, kiểu prompt, lời dẫn, tô màu, panel, *Settings*, `rvDim`).
 - Đổi cấu trúc phiên thì tăng hậu tố `v1` và chuyển dữ liệu cũ. Trường thêm, tuỳ chọn (`parts`, `reviews`, `rvPrompt`) thì không tăng.
-- Phiên trống (không văn bản, không nhận xét) không vào lịch sử. Mở file / văn bản mẫu khi phiên có nội dung thì mở phiên mới.
+- Phiên trống không vào lịch sử. Mở file / văn bản mẫu khi phiên có nội dung thì mở phiên mới.
 
 ## An toàn
 
@@ -194,7 +195,6 @@
 
 ## Cổng: `sh md-annotate/tools/check.sh`
 
-- `tools/lint.py`: luật nó kiểm ghi ở đầu file (dữ liệu gợi ý, một chỗ `innerHTML`, file mồ côi, `js/core/` thuần, token).
-- `tools/test-core.mjs` (node, không trình duyệt): bài thử của `js/core/`. Logic thuần mới thì thêm bài thử ở đây.
-- Sửa sự kiện, neo hay giao diện thì chạy thêm `tools/smoke.cjs` (CI chưa chạy): `python3 -m http.server 8347` ở gốc
-  repo, rồi `node md-annotate/tools/smoke.cjs http://127.0.0.1:8347/md-annotate/`. Văn bản mẫu: `tools/fixtures/`.
+- `tools/lint.py`: luật nó kiểm ghi ở đầu file (dữ liệu gợi ý và phím tắt, một chỗ `innerHTML`, file mồ côi, `js/core/` thuần, token).
+- `tools/test-core.mjs` (node): bài thử của `js/core/`, logic thuần mới thêm bài thử ở đây. Sửa sự kiện, neo, giao diện: chạy thêm
+  `tools/smoke.cjs` (CI chưa chạy; cách chạy ở đầu file). Văn bản mẫu: `tools/fixtures/`.

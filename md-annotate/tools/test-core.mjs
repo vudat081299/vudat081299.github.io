@@ -4,6 +4,7 @@ import { lexSpans, pairBlocks } from '../js/core/blocks.js';
 import { numberSections, lineSections, bandBounds, bandPick, spanAt } from '../js/core/sections.js';
 import { syncCurves, followTop } from '../js/core/sync-math.js';
 import { paneHeight, splitFits } from '../js/core/panes.js';
+import { normShortcuts } from '../js/core/shortcuts.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -439,5 +440,19 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   check('indexWith: % đã đọc vào index khi có', indexWith([], Object.assign(createSession('x', {}), { rvPct: 40 }))[0].rv === 40 && !('rv' in indexWith([], createSession('x', {}))[0]));
 }
 // ── end đánh dấu đã đọc ──
+
+// ── bảng phím tắt (data/shortcuts.json) ──
+{
+  const d = { groups: [
+    { title: ' Multi ', note: 'n', rows: [{ keys: [['Shift', 'X'], ['J']], action: ' Go ' }, { keys: [['']], action: 'bad' }, { keys: [], action: 'none' }, { keys: [['K']] }, null] },
+    { title: 'Empty', rows: [{ keys: 'X', action: 'a' }] },
+    { rows: [{ keys: [['X']], action: 'no title' }] }
+  ] };
+  const g = normShortcuts(d);
+  check('normShortcuts: giữ hàng hợp lệ, cắt khoảng trắng, bỏ hàng / nhóm hỏng', eq(g, [{ title: 'Multi', note: 'n', rows: [{ keys: [['Shift', 'X'], ['J']], action: 'Go' }] }]), JSON.stringify(g));
+  check('normShortcuts: dữ liệu rỗng hay sai kiểu thì danh sách rỗng', eq(normShortcuts(null), []) && eq(normShortcuts({ groups: 'x' }), []));
+}
+// ── end bảng phím tắt ──
+
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);

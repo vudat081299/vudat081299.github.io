@@ -902,7 +902,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     check('nhiều dòng: bôi đen chữ trong chế độ không mở hộp đoạn chữ', (await ml.isVisible('#pop-head')) && (await ml.textContent('#pop-q')).startsWith('Alpha') && !(await ml.isVisible('#fab')));
     await ml.fill('#pop-text', '');
     await dragSelect(ml, '#v-src', 'Delta end');
-    check('nhiều dòng: bôi đen (hộp chưa gõ) chỉ đóng hộp, dòng đã chọn còn', !(await ml.isVisible('#pop')) && (await picks()) === '3,4,8,9' && !(await ml.isVisible('#fab')), await picks());
+    check('nhiều dòng: bôi đen (hộp chưa gõ) không đóng hộp (MDAN-014), dòng đã chọn còn', (await ml.isVisible('#pop')) && (await picks()) === '3,4,8,9' && !(await ml.isVisible('#fab')), await picks());
     await ml.evaluate(() => getSelection().removeAllRanges());
     await gclick(9);
     check('nhiều dòng: bấm lề mở lại hộp', (await ml.isVisible('#pop')) && (await sum()) === '3 lines · L3-4, L8');
@@ -1155,6 +1155,91 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     await rctx.close();
   }
   // ── end đánh dấu đã đọc ──
+
+  // ── hộp của các dòng đã chọn không đóng khi bấm ra ngoài (MDAN-014) ──
+  {
+    const sctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    const st = await sctx.newPage(); watch(st);
+    await st.goto(BASE); await st.waitForFunction(() => window.marked && window.DOMPurify);
+    const SL = ['# Sticky', '', 'Alpha line one.', 'Beta line two.', '', 'Gamma middle.', 'Delta end.', ''].concat(Array.from({ length: 60 }, (_, i) => 'Filler line ' + (i + 1) + '.')).join('\n');
+    await st.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, SL);
+    await st.waitForTimeout(150);
+    await st.click('.ma-tab[data-view="src"]'); await st.waitForTimeout(100);
+    const gut = (n) => st.$eval(`#v-src .ma-ln:nth-child(${n})`, (el) => { el.scrollIntoView({ block: 'center' }); const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
+    const gclick = async (n) => { const g = await gut(n); await st.mouse.click(g.x, g.y); await st.waitForTimeout(80); };
+    const picks = () => st.$$eval('#v-src .ma-ln', (ls) => ls.map((l, i) => (l.classList.contains('is-pick') ? i + 1 : 0)).filter(Boolean).join());
+    const g3 = await gut(3); await st.mouse.dblclick(g3.x, g3.y); await st.waitForTimeout(150);
+    await gclick(4);
+    await st.fill('#pop-text', 'giữ chữ');
+    const txt = await st.$eval('#v-src .ma-ln:nth-child(7)', (el) => { const r = el.getBoundingClientRect(); return { x: r.right - 40, y: r.top + 8 }; });
+    await st.mouse.click(txt.x, txt.y); await st.waitForTimeout(80);
+    await st.click('#ptab-prompt'); await st.waitForTimeout(80);
+    await st.click('#ptab-list'); await st.waitForTimeout(80);
+    await st.mouse.click(4, 450); await st.waitForTimeout(80);
+    await st.mouse.wheel(0, 300); await st.waitForTimeout(150);
+    check('nhiều dòng: bấm chữ, panel, nền, cuộn — hộp vẫn hiện, giữ dòng và chữ đang gõ', (await st.isVisible('#pop')) && (await picks()) === '3,4' && (await st.inputValue('#pop-text')) === 'giữ chữ', JSON.stringify([await st.isVisible('#pop'), await picks()]));
+    check('nhiều dòng: bấm tab panel khi hộp mở vẫn đổi tab', await st.$eval('#ptab-list', (el) => el.getAttribute('aria-selected') === 'true'));
+    await st.click('#pop-cancel');
+    check('nhiều dòng: Cancel chỉ ẩn hộp, giữ các dòng', !(await st.isVisible('#pop')) && (await picks()) === '3,4');
+    await gclick(6);
+    check('nhiều dòng: sau Cancel bấm số dòng thì hộp hiện lại với các dòng hiện có', (await st.isVisible('#pop')) && (await st.textContent('#pop-sum')) === '3 lines · L3-4, L6', await st.textContent('#pop-sum'));
+    await st.mouse.click(4, 450); await st.waitForTimeout(80);
+    check('nhiều dòng: hộp mở lại cũng không đóng khi bấm ngoài', await st.isVisible('#pop'));
+    await st.keyboard.press('Escape');
+    check('nhiều dòng: Esc ẩn hộp và bỏ các dòng', !(await st.isVisible('#pop')) && (await picks()) === '');
+    await dragSelect(st, '#v-src', 'Delta end');
+    check('bôi đen: hộp đoạn chữ mở', await st.isVisible('#pop'));
+    await st.mouse.click(4, 450); await st.waitForTimeout(80);
+    check('bôi đen: bấm ra ngoài vẫn đóng hộp đoạn chữ', !(await st.isVisible('#pop')));
+    await sctx.close();
+  }
+  // ── end hộp dòng không đóng ──
+
+  // ── hộp Settings giữa màn hình, nền sau mờ (MDAN-015) ──
+  for (const [vw, vh, scheme] of [[1440, 900, 'light'], [1440, 900, 'dark'], [390, 844, 'light']]) {
+    const gctx = await browser.newContext({ viewport: { width: vw, height: vh }, colorScheme: scheme, hasTouch: vw < 700, isMobile: vw < 700 });
+    const gp = await gctx.newPage(); watch(gp);
+    await gp.goto(BASE); await gp.waitForFunction(() => window.marked && window.DOMPurify);
+    await gp.click('#btn-sample'); await gp.waitForTimeout(150);
+    await gp.click('#btn-layout'); await gp.waitForTimeout(250);
+    const g = await gp.$eval('#dlg-layout', (d) => { const r = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: innerWidth, h: innerHeight, bd: getComputedStyle(d, '::backdrop').backgroundColor }; });
+    const tag = `${vw}×${vh} ${scheme}`;
+    check(`Settings ${tag}: hộp giữa màn hình`, Math.abs(g.cx - g.w / 2) <= 2 && Math.abs(g.cy - g.h / 2) <= 2, JSON.stringify(g));
+    check(`Settings ${tag}: nền sau mờ`, /rgba\(\d+, \d+, \d+, 0\.[1-9]/.test(g.bd), g.bd);
+    await gp.mouse.click(4, Math.round(vh / 2)); await gp.waitForTimeout(100);
+    check(`Settings ${tag}: bấm nền mờ thì đóng`, !(await gp.$eval('#dlg-layout', (d) => d.open)));
+    await gp.click('#btn-layout'); await gp.waitForTimeout(100); await gp.keyboard.press('Escape');
+    check(`Settings ${tag}: Esc đóng`, !(await gp.$eval('#dlg-layout', (d) => d.open)));
+    await gctx.close();
+  }
+  // ── end hộp Settings ──
+
+  // ── hộp Shortcuts: mở từ Settings, hàng vẽ từ data/shortcuts.json (MDAN-015) ──
+  {
+    const kctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light' });
+    const kp = await kctx.newPage(); watch(kp);
+    await kp.goto(BASE); await kp.waitForFunction(() => window.marked && window.DOMPurify);
+    await kp.click('#btn-sample'); await kp.waitForTimeout(150);
+    await kp.click('#btn-layout'); await kp.click('#btn-keys');
+    await kp.waitForSelector('#keys-list dl'); await kp.waitForTimeout(250);
+    const want = await kp.evaluate(() => fetch('data/shortcuts.json').then((r) => r.json()).then((d) => d.groups.map((g) => g.title + ':' + g.rows.map((r) => r.keys.map((c) => c.join('+')).join('/') + '=' + r.action).join('|')).join('#')));
+    const got = await kp.$$eval('#keys-list .ma-keys', (ss) => ss.map((s) => s.querySelector('.ma-keys__h').textContent + ':' + [...s.querySelectorAll('dt')].map((dt) => [...dt.querySelectorAll('.ma-keys__c')].map((c) => [...c.querySelectorAll('kbd')].map((k) => k.textContent).join('+')).join('/') + '=' + dt.nextElementSibling.textContent).join('|')).join('#'));
+    check('Shortcuts: nút trong Settings mở hộp, mọi hàng của data/shortcuts.json hiện đúng', got === want && got.length > 0, got.slice(0, 120));
+    const k = await kp.$eval('#dlg-keys', (d) => { const r = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, bd: getComputedStyle(d, '::backdrop').backgroundColor, kbd: d.querySelectorAll('kbd.ma-key').length }; });
+    check('Shortcuts: hộp giữa màn hình, nền sau mờ, phím là chip kbd', Math.abs(k.cx - 720) <= 2 && Math.abs(k.cy - 450) <= 2 && /rgba\(\d+, \d+, \d+, 0\.[1-9]/.test(k.bd) && k.kbd > 10, JSON.stringify(k));
+    await kp.keyboard.press('Escape');
+    check('Shortcuts: Esc đóng hộp Shortcuts, Settings còn mở', !(await kp.$eval('#dlg-keys', (d) => d.open)) && (await kp.$eval('#dlg-layout', (d) => d.open)));
+    await kp.keyboard.press('Escape');
+    await kp.keyboard.press('Shift+Slash'); await kp.waitForTimeout(100);
+    check('Shortcuts: phím ? mở hộp', await kp.$eval('#dlg-keys', (d) => d.open));
+    await kp.keyboard.press('Escape');
+    await kp.click('.ma-tab[data-view="edit"]'); await kp.focus('#src-input');
+    const before = await kp.inputValue('#src-input');
+    await kp.keyboard.press('End'); await kp.keyboard.type('?');
+    check('Shortcuts: gõ ? trong ô nhập không mở hộp', !(await kp.$eval('#dlg-keys', (d) => d.open)) && (await kp.inputValue('#src-input')).length === before.length + 1);
+    await kctx.close();
+  }
+  // ── end hộp Shortcuts ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();

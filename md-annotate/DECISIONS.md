@@ -11,6 +11,8 @@
 - MDAN-011 · Cảnh báo trùng đoạn theo chữ, không theo chỗ · `md-annotate/js/core/comments.js`
 - MDAN-012 · Nhận xét nhiều dòng chọn theo số dòng · `md-annotate/`
 - MDAN-013 · Đánh dấu đoạn đã đọc kỹ, xem còn lại bao nhiêu · `md-annotate/`
+- MDAN-014 · Hộp của các dòng đã chọn không đóng khi bấm ra ngoài · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/picks.js`
+- MDAN-015 · Hộp Settings giữa màn hình, nền mờ; bảng phím tắt mới · `md-annotate/`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -94,3 +96,20 @@ không tìm lại được thì báo, không mất lặng lẽ. Đánh dấu b�
 cạnh khối (không phải lề số dòng), nút ✓ Reviewed trong hộp nhận xét, nút cạnh tiêu đề; điện thoại có nút "✓ Done · next".
 Tab *Review* có tiến độ, dàn ý section và *Dim reviewed* (chỉ làm mờ, không gập). Prompt có thể thêm một dòng tiếng Việt
 nói dòng nào đã đọc kỹ; mặc định tắt.
+
+## MDAN-014 · Hộp của các dòng đã chọn không đóng khi bấm ra ngoài
+19/11/2026 · `md-annotate/js/ui/popup.js`, `md-annotate/js/ui/picks.js`
+
+Đang chọn nhiều dòng thì hộp nhận xét ở lại khi bấm chữ, panel, nền trang hay cuộn: chỉ Esc (thoát chế độ, ẩn hộp),
+Save (lưu, thoát) và Cancel (ẩn hộp, giữ các dòng) đóng nó. Sau Cancel, bấm một số dòng thì hộp hiện lại với các dòng
+đang chọn. Hộp của đoạn bôi đen và hộp sửa vẫn đóng khi bấm ra ngoài như cũ.
+
+## MDAN-015 · Hộp Settings giữa màn hình, nền mờ; bảng phím tắt mới
+19/11/2026 · `md-annotate/`
+
+Hộp chỉnh giao diện (nút thanh trượt ở thanh trên) đổi tên thành *Settings*, mở giữa màn hình, nền sau mờ, cả ở điện
+thoại; Esc hoặc bấm nền mờ thì đóng. Hộp vẫn áp thay đổi ngay khi kéo: nền chỉ mờ nhẹ và hộp hẹp, để vẫn thấy chữ ở hai
+bên thay đổi theo. Nút *Shortcuts* ở đầu hộp Settings (hoặc phím `?` khi không gõ trong ô nhập) mở bảng phím tắt cùng
+kiểu giữa màn hình, nền mờ. Bảng chỉ liệt kê phím và cú bấm mới thêm (cú bấm chuột, chạm cũng tính là phím tắt), chữ
+ở `data/shortcuts.json`: nhận xét nhiều dòng, đánh dấu đã đọc.
+
