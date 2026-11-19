@@ -3,6 +3,7 @@
 import { lexSpans, pairBlocks } from '../js/core/blocks.js';
 import { numberSections, lineSections, bandBounds, bandPick, spanAt } from '../js/core/sections.js';
 import { syncCurves, followTop } from '../js/core/sync-math.js';
+import { paneHeight, splitFits } from '../js/core/panes.js';
 
 let fails = 0;
 const check = (name, ok, detail = '') => {
@@ -116,6 +117,8 @@ check('spanAt: dòng trong khối, giữa hai khối', eq([0, 1, 2, 3, 4, 5].map
   }
   check('bandBounds: dải (theo vị trí trong văn bản) không lùi khi cuộn tới', mono);
 }
+check('splitFits: hai khung 420px + vách 9px', !splitFits(848) && splitFits(849));
+check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi ≥ 320', eq(paneHeight(900, 100.5, 0), { h: 782, fit: true }) && eq(paneHeight(500, 100, 76), { h: 320, fit: false }));
 // ── end review: layout & scroll ──
 
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
