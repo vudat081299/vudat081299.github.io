@@ -1014,6 +1014,25 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   }
   // ── end hộp dòng không đóng ──
 
+  // ── hộp Settings giữa màn hình, nền sau mờ (MDAN-015) ──
+  for (const [vw, vh, scheme] of [[1440, 900, 'light'], [1440, 900, 'dark'], [390, 844, 'light']]) {
+    const gctx = await browser.newContext({ viewport: { width: vw, height: vh }, colorScheme: scheme, hasTouch: vw < 700, isMobile: vw < 700 });
+    const gp = await gctx.newPage(); watch(gp);
+    await gp.goto(BASE); await gp.waitForFunction(() => window.marked && window.DOMPurify);
+    await gp.click('#btn-sample'); await gp.waitForTimeout(150);
+    await gp.click('#btn-layout'); await gp.waitForTimeout(250);
+    const g = await gp.$eval('#dlg-layout', (d) => { const r = d.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, w: innerWidth, h: innerHeight, bd: getComputedStyle(d, '::backdrop').backgroundColor }; });
+    const tag = `${vw}×${vh} ${scheme}`;
+    check(`Settings ${tag}: hộp giữa màn hình`, Math.abs(g.cx - g.w / 2) <= 2 && Math.abs(g.cy - g.h / 2) <= 2, JSON.stringify(g));
+    check(`Settings ${tag}: nền sau mờ`, /rgba\(\d+, \d+, \d+, 0\.[1-9]/.test(g.bd), g.bd);
+    await gp.mouse.click(4, Math.round(vh / 2)); await gp.waitForTimeout(100);
+    check(`Settings ${tag}: bấm nền mờ thì đóng`, !(await gp.$eval('#dlg-layout', (d) => d.open)));
+    await gp.click('#btn-layout'); await gp.waitForTimeout(100); await gp.keyboard.press('Escape');
+    check(`Settings ${tag}: Esc đóng`, !(await gp.$eval('#dlg-layout', (d) => d.open)));
+    await gctx.close();
+  }
+  // ── end hộp Settings ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

@@ -1,4 +1,4 @@
-/* Hộp Layout: bề rộng vùng làm việc, khổ và cỡ chữ Preview, Focus mode, cuộn theo nhau. Áp ngay qua biến CSS.
+/* Hộp Settings (#dlg-layout): bề rộng vùng làm việc, khổ và cỡ chữ Preview, Focus mode, cuộn theo nhau. Áp ngay qua biến CSS.
    layoutVal(k): tuỳ chọn Layout, chưa đặt thì lấy mặc định.
    Xuất: initLayout, layoutVal.
    Dùng: ui/store.js, ui/dom.js, ui/views.js, ui/focus.js. */

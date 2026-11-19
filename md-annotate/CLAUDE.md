@@ -26,7 +26,7 @@
 | `js/ui/list.js`, `js/ui/prompt.js` | danh sách nhận xét; panel *Prompt*, chép, tải, *Options* |
 | `js/ui/popup.js`, `js/ui/selection.js`, `js/ui/picks.js` | hộp nhận xét; bôi đen → hộp, nút nổi, `ma-mirror`; chọn nhiều dòng ở lề số, nút kéo hộp |
 | `js/ui/views.js`, `js/ui/sync-scroll.js` | chế độ xem, `splitOK()`, `sizePanes()`, vách giữa; cuộn theo nhau |
-| `js/ui/focus.js`, `js/ui/layout.js` | *Focus mode*, dải đọc; hộp *Layout*, `layoutVal()` |
+| `js/ui/focus.js`, `js/ui/layout.js` | *Focus mode*, dải đọc; hộp *Settings* (`#dlg-layout`), `layoutVal()` |
 | `js/ui/panel.js`, `js/ui/hints.js` | panel, mép kéo, thanh dọc, tấm trượt; số đếm gợi ý trong bộ nhớ, hộp *Hints* |
 | `js/ui/history.js`, `js/ui/editor.js` | hộp *History*; khung *Edit*, dán, mở / thả file, văn bản mẫu, tên phiên |
 
@@ -59,9 +59,10 @@
   vẫn nhớ `split`. Hai khung cao `--pane-h` (`paneHeight`), cuộn riêng; trang không cuộn. Vách `#divider` lưu `prefs.split`.
 - Split vừa khung nhìn (khung ≥ 320px): `sizePanes()` gắn `html.ma-fit` (khoá cuộn trang), để thanh cuộn chính không
   chập chờn khi trang dư 1px. Rời Split thì bỏ. Đừng thêm `scrollbar-gutter` cho `html`: nó ăn bề rộng, mất Split ở 1280px.
-- Hộp *Layout*: bề rộng vùng làm việc (`prefs.wrap`: `auto` hoặc 50–100%, sàn 720px, `--wrap-w`), khổ chữ *Preview* (`prefs.measure`:
-  0 = hết khung hoặc 50–140ch, `--md-max`), cỡ chữ *Preview* (`prefs.mdfs` 13–22px, `--md-fs`). Áp ngay khi kéo; điện thoại ẩn bề rộng.
-- *Focus mode* trong hộp *Layout* (`prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ mọi thứ ngoài một
+- Hộp *Settings* (`#dlg-layout`): bề rộng vùng làm việc (`prefs.wrap`: `auto` hoặc 50–100%, sàn 720px, `--wrap-w`), khổ chữ *Preview*
+  (`prefs.measure`: 0 = hết khung hoặc 50–140ch, `--md-max`), cỡ chữ *Preview* (`prefs.mdfs` 13–22px, `--md-fs`). Áp ngay khi kéo; điện thoại ẩn bề rộng.
+- *Settings* giữa màn hình cả ở điện thoại (`.ma-dlg--center`), rộng ≤ 420px, nền mờ nhẹ `--scrim-live` để vẫn thấy thay đổi (MDAN-015).
+- *Focus mode* trong hộp *Settings* (`prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ mọi thứ ngoài một
   section. Section bắt đầu ở mỗi tiêu đề cấp cao: h1–h6 con trực tiếp của `#v-md`; ở *Source* là dòng đầu token
   `heading` hoặc khối HTML mở bằng `<h1>`…`<h6>` của `marked.lexer` (số section hai bên khớp). Sáng: `.is-sec`.
 - Chọn section (`prefs.focusBy`): `pointer` theo chuột (rời cả hai khung thì hết mờ, trừ khi hộp nhận xét mở); `band` là section
@@ -178,8 +179,7 @@
 
 - Mọi lần đọc ghi `localStorage` bọc try/catch; hỏng thì trang vẫn chạy, chỉ báo một lần.
 - Khoá: `md-annotate:index:v1` (danh sách phiên), `md-annotate:s:<id>` (một phiên), `md-annotate:current`,
-  `md-annotate:stats:v1` (số đếm gợi ý), `md-annotate:prefs:v1` (chế độ xem, kiểu prompt, lời dẫn mặc định, tô màu,
-  bề rộng panel, thu gọn, tỉ lệ hai khung).
+  `md-annotate:stats:v1` (số đếm gợi ý), `md-annotate:prefs:v1` (mọi tuỳ chọn giao diện: chế độ xem, prompt, *Settings*, panel).
 - Đổi cấu trúc phiên thì tăng hậu tố `v1` và chuyển dữ liệu cũ, đừng bỏ. Trường thêm, tuỳ chọn (`parts`) thì không tăng.
 - Phiên trống (không văn bản, không nhận xét) không vào lịch sử.
 - Mở file hoặc văn bản mẫu khi phiên đang có nội dung thì mở phiên mới, không ghi đè.

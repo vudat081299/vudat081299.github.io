@@ -27,6 +27,7 @@
   --edge-on:   var(--ink-4);         /* viền của thẻ / hàng đang chọn */
 
   --scrim:     rgba(11, 15, 12, .38);
+  --scrim-live: rgba(11, 15, 12, .2);   /* hộp Settings: mờ nhẹ, vẫn đọc được thay đổi phía sau */
   --chip:      rgba(11, 15, 12, .05);
   --kbd-on-accent: color-mix(in srgb, var(--on-accent) 8%, transparent);   /* chữ --on-accent trên nó ≥ 4,5:1 */
   --lift:      0 1px 3px rgba(11, 15, 12, .12);
@@ -108,6 +109,7 @@ html.dark {
   --edge-on:   var(--accent);
 
   --scrim:     rgba(0, 0, 0, .62);
+  --scrim-live: rgba(0, 0, 0, .42);
   --chip:      rgba(255, 255, 255, .06);
   --kbd-on-accent: color-mix(in srgb, var(--on-accent) 8%, transparent);
   --lift:      0 1px 3px rgba(0, 0, 0, .5);
