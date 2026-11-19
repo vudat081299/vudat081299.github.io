@@ -13,7 +13,7 @@ function saveStats() { store.set(KEY.stats, stats); }
 /* Đếm một lần dùng nhận xét t và lưu. */
 export function recordUse(t) { if (countUse(stats, t)) saveStats(); }
 
-/* Nạp gợi ý mặc định; lỗi (VD file://) thì seedState = 'fail'. Trả promise để người gọi vẽ lại. */
+/* Nạp gợi ý mặc định (đổi chữ theo renamed, rồi gieo); lỗi mạng thì seedState = 'fail'. Trả promise để người gọi vẽ lại. */
 export function loadDefaultHints() {
   return fetch('data/hints.json', { cache: 'no-cache' })
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
@@ -42,9 +42,7 @@ export function renderHintsDlg() {
   });
   var note = $('hints-seed-note');
   note.hidden = seedState !== 'fail';
-  note.textContent = location.protocol === 'file:'
-    ? 'Opened via file://, so the default hints (data/hints.json) could not load. Serve over HTTP: python3 -m http.server in the repo root.'
-    : 'The default hints (data/hints.json) could not load.';
+  note.textContent = 'The default hints (data/hints.json) could not load.';
 }
 
 export function initHints() {
