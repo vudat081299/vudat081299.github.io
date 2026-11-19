@@ -3,9 +3,12 @@
    đã đọc (.is-rv, html.ma-rvdim). Đơn vị, neo dấu, tiến độ ở core/review.js; tab Review ở ui/review-panel.js.
    Làn là lớp phủ .ma-lane trong #wrap-src / #wrap-md (ngoài #v-src / #v-md: text của khung không đổi). Vẽ lại sau mỗi
    renderAll() (applyReview) và khi khung đổi cỡ (ResizeObserver).
-   Xuất: applyReview, commitReviews, initReview, jumpUnit, markUnits, reviewDoc, rvState, setRvTouched, stepOpen, toggleSection.
+   Dải tiến độ (ui/minimap.js, MDAN-016) vẽ lại sau mỗi lần xếp làn; nó đọc toạ độ làn (laneGeo) ở đây.
+   Xuất: applyReview, commitReviews, initReview, jumpUnit, laneGeo, markUnits, reviewDoc, rvState, setRvTouched, stepOpen,
+     toggleSection.
    Dùng: core/anchor.js, core/text.js, core/sections.js, core/review.js, ui/dom.js, ui/store.js, ui/state.js,
-     ui/sync-scroll.js, ui/views.js, ui/layout.js, ui/popup.js, ui/picks.js, ui/prompt.js, ui/review-panel.js. */
+     ui/sync-scroll.js, ui/views.js, ui/layout.js, ui/popup.js, ui/picks.js, ui/prompt.js, ui/review-panel.js,
+     ui/minimap.js. */
 import { locate } from '../core/anchor.js';
 import { lineOf, plural } from '../core/text.js';
 import { bandBounds, bandPick, bandScroll } from '../core/sections.js';
@@ -20,6 +23,7 @@ import { closePop, pending, pop, popDirty, renderPopHints } from './popup.js';
 import { clearPicks } from './picks.js';
 import { renderPrompt } from './prompt.js';
 import { renderReviewPanel } from './review-panel.js';
+import { drawMinimap } from './minimap.js';
 
 /* Đơn vị và dấu đã neo của văn bản đang mở: { units, res, secs }. Nhớ theo văn bản, mảng dấu và khối nguồn. */
 var memo = { text: null, marks: null, spans: null };
@@ -127,7 +131,12 @@ function fillLane(w, r) {
   box.append(frag);
 }
 var laying = false, painting = false;   // chặn vòng: currentUnit() → ensureGeo() → layoutLanes() → paintCur()
-function layoutLanes() { var r = rvState(); laying = true; fillLane('src', r); fillLane('md', r); laying = false; paintCur(); }
+function layoutLanes() {
+  var r = rvState(); laying = true; fillLane('src', r); fillLane('md', r); laying = false; paintCur();
+  drawMinimap();
+}
+/* Toạ độ làn đã xếp: { src, md }, mỗi khung [{ i, top, bottom }] theo toạ độ nội dung của #wrap-*. Chỉ đọc. */
+export function laneGeo() { return geo; }
 /* Đơn vị X sẽ đánh dấu (dải đọc, hay dưới con trỏ): làn của nó có .is-cur ở cả hai khung. */
 var curRaf = 0;
 function paintCur() {

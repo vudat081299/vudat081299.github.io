@@ -1241,6 +1241,100 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   }
   // ── end hộp Shortcuts ──
 
+  // ── dải tiến độ (MDAN-016) ──
+  {
+    const mctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light', reducedMotion: 'reduce' });
+    const mp = await mctx.newPage(); watch(mp);
+    await mp.clock.install();   // đồng hồ giả: runFor() đẩy thời gian đọc mà không phải chờ thật
+    await mp.goto(BASE); await mp.waitForFunction(() => window.marked && window.DOMPurify);
+    const paras = Array.from({ length: 24 }, (_, i) => `Para P${i + 1} ` + 'chữ đọc thử '.repeat(8 + (i % 3) * 4).trim() + '.');
+    const MD = ['# Dwell doc', '', ...paras.flatMap((x) => [x, '']), '## Tail', '', 'Last para here.', ''].join('\n');
+    const tick = async (ms = 120) => { await mp.waitForTimeout(60); await mp.clock.runFor(ms); };
+    await mp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, MD);
+    await tick(400);
+    await mp.click('.ma-tab[data-view="split"]'); await tick(300);
+    await mp.click('#ptab-review'); await tick();
+    const laneOf = (n) => mp.evaluate((n) => {
+      const el = [...document.querySelectorAll('#v-md > *')].find((e) => e.textContent.startsWith(n));
+      const t = el.getBoundingClientRect().top;
+      const b = [...document.querySelectorAll('#wrap-md .ma-lane__b')].find((x) => Math.abs(x.getBoundingClientRect().top - t) < 2);
+      return b ? +b.dataset.u : -1;
+    }, n);
+    const sugs = () => mp.$$eval('#wrap-md .ma-lane__b.is-sug', (bs) => bs.map((b) => +b.dataset.u));
+    const nDone = () => mp.$$eval('#wrap-md .ma-lane__b.is-done', (bs) => bs.length);
+    // Đặt đỉnh đoạn `n` ở `frac` chiều cao khung Preview (cuộn do script, không phải người dùng).
+    const putAt = (n, frac) => mp.evaluate(([n, frac]) => {
+      const w = document.getElementById('wrap-md'), el = [...document.querySelectorAll('#v-md > *')].find((e) => e.textContent.startsWith(n));
+      w.scrollTop = el.getBoundingClientRect().top - w.getBoundingClientRect().top + w.scrollTop - w.clientHeight * frac;
+    }, [n, frac]);
+    const md = await mp.$eval('#wrap-md', (w) => { const r = w.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await mp.mouse.move(md.x, md.y);
+    const wheel = async (dy, steps = 1) => { await mp.mouse.move(md.x, md.y); for (let k = 0; k < steps; k++) { await mp.mouse.wheel(0, dy); await tick(80); } };
+
+    // Dải: cạnh phải mỗi khung ở Split, trái thanh cuộn, không đè chữ / làn, có hộp khung nhìn.
+    const strip = (w) => mp.evaluate((w) => {
+      const m = document.querySelector(`.ma-mm[data-w="${w}"]`), p = document.getElementById(w === 'src' ? 'wrap-src' : 'wrap-md');
+      const r = m.getBoundingClientRect(), pr = p.getBoundingClientRect(), root = document.getElementById(w === 'src' ? 'v-src' : 'v-md').getBoundingClientRect();
+      const lanes = [...p.querySelectorAll('.ma-lane__b')].map((b) => b.getBoundingClientRect().right);
+      return { shown: !m.hidden && r.width > 0, left: r.left, right: r.right, top: r.top, bottom: r.bottom, h: r.height, sbLeft: pr.left + p.clientLeft + p.clientWidth, paneTop: pr.top, paneBottom: pr.bottom,
+        textRight: root.right, laneRight: Math.max(...lanes), segs: [...m.querySelectorAll('.ma-mm__s')].map((s) => s.className.replace('ma-mm__s is-', '') + '@' + Math.round(parseFloat(s.style.top))),
+        view: !!m.querySelector('.ma-mm__view').offsetHeight, dots: m.querySelectorAll('.ma-mm__dot').length };
+    }, w);
+    for (const w of ['src', 'md']) {
+      const s = await strip(w);
+      check(`dải tiến độ (${w}): hiện ở Split, sát mép phải, trái thanh cuộn, không đè chữ hay làn`, s.shown && s.right <= s.sbLeft + 0.5 && s.sbLeft - s.right <= 8 && s.left >= s.textRight - 1 && s.left > s.laneRight && s.top >= s.paneTop && s.bottom <= s.paneBottom, JSON.stringify(s));
+      check(`dải tiến độ (${w}): chưa đọc gì thì mọi đoạn nhạt, có hộp khung nhìn`, s.segs.length > 0 && s.segs.every((x) => x.startsWith('todo')) && s.view, s.segs.slice(0, 4).join(' '));
+    }
+    // Trạng thái đoạn: đã đọc đặc, đổi chữ rỗng, chấm ở nhận xét; vị trí theo đơn vị trong khung.
+    const u3 = await laneOf('Para P3 '), u10 = await laneOf('Para P10 ');
+    for (const u of [u3, u10]) {
+      await mp.$eval(`#wrap-md .ma-lane__b[data-u="${u}"]`, (b) => b.scrollIntoView({ block: 'center' })); await tick();
+      await mp.click(`#wrap-md .ma-lane__b[data-u="${u}"]`); await tick();
+    }
+    const want10 = await mp.evaluate((u) => {
+      const w = document.getElementById('wrap-md'), b = document.querySelector(`#wrap-md .ma-lane__b[data-u="${u}"]`), m = document.querySelector('.ma-mm[data-w="md"]');
+      return Math.round((b.getBoundingClientRect().top - w.getBoundingClientRect().top + w.scrollTop) / w.scrollHeight * m.getBoundingClientRect().height);
+    }, u10);
+    let s = await strip('md');
+    check('dải tiến độ: đoạn đã đọc đặc, đúng chỗ của đơn vị trong khung (±3px)', s.segs.filter((x) => x.startsWith('done')).length === 2 && s.segs.some((x) => x.startsWith('done@') && Math.abs(+x.split('@')[1] - want10) <= 3), want10 + ' ' + s.segs.join(' '));
+    await mp.evaluate(() => { const ta = document.getElementById('src-input'); ta.value = ta.value.replace('Para P3 chữ', 'Para P3 sửa chữ'); ta.dispatchEvent(new Event('input')); });
+    await tick(500);
+    await mp.evaluate(() => {
+      const el = [...document.querySelectorAll('#v-md > p')].find((e) => e.textContent.startsWith('Para P12 ')); el.scrollIntoView({ block: 'center' });
+    }); await tick();
+    await dragSelect(mp, '#v-md', 'Para P12 chữ'); await tick();
+    await mp.fill('#pop-text', 'Xem lại'); await mp.keyboard.press('Enter'); await tick(300);
+    s = await strip('md');
+    check('dải tiến độ: đơn vị đổi chữ là đoạn rỗng (○), có chấm nhận xét ở cả hai khung', s.segs.some((x) => x.startsWith('changed')) && s.dots === 1 && (await strip('src')).dots === 1, s.segs.join(' ') + ' dots ' + s.dots);
+    // Bấm dải: cuộn khung tới đó, không bôi đen, không mở hộp nhận xét.
+    await mp.evaluate(() => getSelection().removeAllRanges());
+    const before = await mp.$eval('#wrap-md', (w) => w.scrollTop);
+    await mp.mouse.click((s.left + s.right) / 2, s.top + s.h * 0.8); await tick(200);
+    const after = await mp.evaluate(() => { const w = document.getElementById('wrap-md'); return { top: w.scrollTop, want: Math.max(0, Math.min(w.scrollHeight - w.clientHeight, 0.8 * w.scrollHeight - w.clientHeight / 2)), sel: String(getSelection()), pop: !document.getElementById('pop').hidden }; });
+    check('dải tiến độ: bấm thì cuộn khung tới chỗ ấy (giữa khung nhìn), không bôi đen, không mở hộp', after.top !== before && Math.abs(after.top - after.want) <= 4 && !after.sel && !after.pop, JSON.stringify(after));
+    const vb = await mp.$eval('.ma-mm[data-w="md"] .ma-mm__view', (v) => Math.round(parseFloat(v.style.top)));
+    await mp.mouse.move((s.left + s.right) / 2, s.top + s.h * 0.8); await mp.mouse.down(); await mp.mouse.move((s.left + s.right) / 2, s.top + s.h * 0.3, { steps: 4 }); await mp.mouse.up(); await tick(200);
+    check('dải tiến độ: kéo thì cuộn theo, hộp khung nhìn dời theo', (await mp.$eval('.ma-mm[data-w="md"] .ma-mm__view', (v) => Math.round(parseFloat(v.style.top)))) < vb - 50);
+    check('dải tiến độ: Split 1440 không tràn ngang', (await overflow(mp)) === 0, String(await overflow(mp)));
+
+    // Preview một mình (cuộn cửa sổ): dải dính trong khung nhìn, dưới thanh trên; bấm cuộn cửa sổ.
+    await mp.click('.ma-tab[data-view="view"]'); await tick(300);
+    await mp.evaluate(() => window.scrollTo(0, 600)); await tick(300);
+    const pv = await mp.evaluate(() => {
+      const m = document.querySelector('.ma-mm[data-w="md"]'), r = m.getBoundingClientRect(), p = document.getElementById('wrap-md').getBoundingClientRect(), bar = document.querySelector('.ma-bar').getBoundingClientRect();
+      return { shown: !m.hidden, src: !document.querySelector('.ma-mm[data-w="src"]').hidden, top: r.top, bottom: r.bottom, right: r.right, pr: p.right, bar: bar.bottom, ih: innerHeight, textRight: document.getElementById('v-md').getBoundingClientRect().right, left: r.left };
+    });
+    check('Preview: dải trong khung nhìn, dưới thanh trên, mép phải khung, không đè chữ', pv.shown && !pv.src && pv.top >= pv.bar && pv.bottom <= pv.ih && pv.right <= pv.pr && pv.left >= pv.textRight - 1, JSON.stringify(pv));
+    await mp.mouse.click((pv.left + pv.right) / 2, pv.top + (pv.bottom - pv.top) * 0.9); await tick(200);
+    check('Preview: bấm dải cuộn cửa sổ', (await mp.evaluate(() => window.scrollY)) > 1200, String(await mp.evaluate(() => window.scrollY)));
+    check('Preview 1440: không tràn ngang', (await overflow(mp)) === 0);
+    // Điện thoại: dải ẩn (lề hẹp; thanh đáy có ✓ N%), không tràn ngang.
+    await mp.setViewportSize({ width: 390, height: 844 }); await tick(400);
+    check('390px: dải ẩn, không tràn ngang', (await mp.$$eval('.ma-mm', (ms) => ms.every((m) => m.hidden || !m.getBoundingClientRect().width))) && (await overflow(mp)) === 0, String(await overflow(mp)));
+    await mctx.close();
+  }
+  // ── end dải tiến độ ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

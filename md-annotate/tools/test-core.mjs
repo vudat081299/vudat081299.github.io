@@ -454,5 +454,26 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
 }
 // ── end bảng phím tắt ──
 
+// ── dải tiến độ (MDAN-016) ──
+{
+  const M = await import('../js/core/minimap.js');
+  // Đoạn của dải: co theo tỉ lệ, cao tối thiểu, gộp đơn vị liền cùng trạng thái.
+  const seg = M.mmSegments([{ top: 0, bottom: 100, state: 'done' }, { top: 110, bottom: 200, state: 'done' }, { top: 210, bottom: 212, state: 'todo' }, { top: 600, bottom: 1000, state: 'done' }], 1000, 100, 2, 1);
+  check('mmSegments: co theo H / total, gộp hai đơn vị liền cùng trạng thái', seg.length === 3 && seg[0].y === 0 && seg[0].h === 20 && seg[0].n === 2, JSON.stringify(seg));
+  check('mmSegments: đơn vị thấp vẫn cao ít nhất minH', seg[1].state === 'todo' && seg[1].h === 2 && Math.abs(seg[1].y - 21) < 1e-9, JSON.stringify(seg[1]));
+  check('mmSegments: cách xa thì không gộp, đặt đúng chỗ', seg[2].y === 60 && seg[2].h === 40 && seg[2].n === 1, JSON.stringify(seg[2]));
+  check('mmSegments: cùng trạng thái nhưng cách xa thì hai đoạn', M.mmSegments([{ top: 0, bottom: 10, state: 'done' }, { top: 500, bottom: 510, state: 'done' }], 1000, 100, 0, 1).length === 2);
+  check('mmSegments: khác trạng thái thì không gộp', M.mmSegments([{ top: 0, bottom: 10, state: 'done' }, { top: 10, bottom: 20, state: 'changed' }], 20, 20, 0, 1).length === 2);
+  check('mmSegments: tổng cao 0 thì không có đoạn', !M.mmSegments([{ top: 0, bottom: 10, state: 'done' }], 0, 100).length);
+  const v = M.mmView(500, 250, 1000, 200, 10);
+  check('mmView: hộp khung nhìn theo tỉ lệ', v.y === 100 && v.h === 50, JSON.stringify(v));
+  const v2 = M.mmView(990, 10, 1000, 200, 12);
+  check('mmView: cao tối thiểu, không tràn khỏi dải', v2.h === 12 && v2.y === 188, JSON.stringify(v2));
+  check('mmScroll: bấm giữa dải thì giữa văn bản vào giữa khung nhìn', M.mmScroll(100, 200, 1000, 200) === 400);
+  check('mmScroll: sát đầu / cuối kẹp trong [0, total - view]', M.mmScroll(0, 200, 1000, 200) === 0 && M.mmScroll(200, 200, 1000, 200) === 800 && M.mmScroll(50, 200, 100, 200) === 0);
+  check('mmDots: đổi ra px trên dải, bỏ chấm quá gần', eq(M.mmDots([500, 10, 520, 900], 1000, 100, 4), [1, 50, 90]), JSON.stringify(M.mmDots([500, 10, 520, 900], 1000, 100, 4)));
+}
+// ── end dải tiến độ ──
+
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);

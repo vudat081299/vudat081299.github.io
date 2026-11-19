@@ -24,7 +24,8 @@
         { "keys": [["Shift", "Click"]], "action": "The lane: mark or unmark every block between the last clicked lane and this one" },
         { "keys": [["Click ▢"]], "action": "The square beside a heading: mark or unmark the whole section" },
         { "keys": [["✓ Reviewed"]], "action": "In the comment box: mark the whole blocks touched by the selection or the picked lines" },
-        { "keys": [["✓ Done · next ↓"]], "action": "Phone / touch: mark the block in the reading band and go to the next unreviewed one" }
+        { "keys": [["✓ Done · next ↓"]], "action": "Phone / touch: mark the block in the reading band and go to the next unreviewed one" },
+        { "keys": [["Click"], ["Drag"]], "action": "The progress strip at a pane's right edge: scroll there (mouse only)" }
       ]
     },
     {
