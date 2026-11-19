@@ -66,11 +66,21 @@
         --sx-tag:    #1b6b82;
         --sx-string: #a31515;
         --tab-ring:  var(--lift);
+        --ink-4:     #8a938c;              /* số dòng, biểu tượng mờ — không dùng cho chữ cần đọc */
+        --chip:      rgba(11, 15, 12, .05);
+        --kbd-on-accent: rgba(5, 46, 22, .14);
+        --shadow-1:  0 1px 2px rgba(11, 15, 12, .05), 0 1px 1px rgba(11, 15, 12, .03);
+        --shadow-pop: 0 20px 48px -16px rgba(11, 15, 12, .30), 0 6px 14px -6px rgba(11, 15, 12, .12);
+
+        /* Thang khoảng cách, bo góc, chuyển động */
+        --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px;
+        --r-sm: 8px; --r: 12px; --r-lg: 16px;
+        --dur: .16s; --ease: cubic-bezier(.2, .7, .2, 1);
 
         --wrap: 1320px;
         --pad: 32px;
         --bar-h: 60px;
-        --side: 400px;
+        --side: 392px;
 
         --display: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
         --sans:    'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -110,6 +120,11 @@
         --sx-tag:    #4ec9b0;
         --sx-string: #d7ba7d;
         --tab-ring:  inset 0 0 0 1px var(--green-line);
+        --ink-4:     #5f6a63;
+        --chip:      rgba(255, 255, 255, .06);
+        --kbd-on-accent: rgba(5, 46, 22, .16);
+        --shadow-1:  0 0 0 1px rgba(255, 255, 255, .01);
+        --shadow-pop: 0 24px 60px -16px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .05);
       }
 
       /* NỀN */
@@ -169,6 +184,7 @@
       .ma-btn--quiet { background: transparent; border-color: transparent; }
       .ma-btn--quiet:hover { background: var(--surface-2); border-color: transparent; }
       .ma-btn--danger { color: var(--danger); }
+      .ma-btn--sm { min-height: 34px; padding: 0 10px; font-size: 13px; }
       .ma-icbtn {
         display: inline-grid; place-items: center; flex: none;
         width: 40px; height: 40px; padding: 0;
@@ -187,7 +203,7 @@
       }
 
       /* ĐẦU TRANG */
-      .ma-head { display: flex; align-items: baseline; gap: 12px; min-width: 0; padding: 16px 0 12px; }
+      .ma-head { display: flex; align-items: baseline; gap: var(--s3); min-width: 0; padding: 0 0 var(--s3); }
       .ma-head h1 { flex: none; margin: 0; font: 600 20px/1.2 var(--display); letter-spacing: -.01em; }
       .ma-head p { min-width: 0; margin: 0; color: var(--ink-3); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
       /* Tên phiên: sửa tại chỗ, trông như chữ cho tới khi rê hoặc bấm vào. */
@@ -213,8 +229,8 @@
       .ma-notice code { font: 500 12.5px var(--mono); color: var(--ink); }
 
       /* LƯỚI */
-      .ma-grid { display: grid; grid-template-columns: minmax(0, 1fr) var(--side); gap: 24px; align-items: start; padding-bottom: 48px; }
-      .ma-card__h--prompt { flex-wrap: wrap; }
+      .ma-grid { display: grid; grid-template-columns: minmax(0, 1fr) var(--side); gap: var(--s5); align-items: start; padding-top: var(--s4); padding-bottom: var(--s5); }
+      .ma-left { min-width: 0; }
 
       /* VĂN BẢN */
       .ma-doc { min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }
@@ -316,33 +332,54 @@
       .ma-hl.is-flash { background: var(--hl-pend); }
       @keyframes ma-flash { 0%, 40% { background: var(--accent); color: var(--on-accent); } 100% { background: var(--hl-pend); } }
 
-      /* CỘT PHẢI */
-      /* Máy rộng: cột phải dính dưới thanh trên; danh sách cuộn bên trong, thẻ Prompt (nút chép) luôn thấy. */
-      .ma-side {
-        position: sticky; top: calc(var(--bar-h) + 13px);
-        max-height: calc(100vh - var(--bar-h) - 26px); overflow: auto;
-        display: flex; flex-direction: column; gap: 12px; min-width: 0;
-        scrollbar-width: thin;
+      /* CỘT PHẢI: một panel — đầu (tab), thân (chỗ cuộn duy nhất), đáy (nút chép, luôn thấy). */
+      .ma-panel {
+        /* Panel chạy từ đỉnh vùng nội dung tới đáy khung nhìn: lúc chưa cuộn và lúc đã dính đều trọn trong màn hình. */
+        position: sticky; top: calc(var(--bar-h) + 1px + var(--s4));
+        height: calc(100vh - var(--bar-h) - 1px - 2 * var(--s4)); min-height: 360px;
+        display: flex; flex-direction: column; min-width: 0; overflow: hidden;
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); box-shadow: var(--shadow-1);
       }
       @media (min-width: 1081px) {
-        /* Đáy lưới bằng khoảng hở dưới cột phải, để tới cuối trang cột không trượt vào dưới thanh trên. */
-        .ma-grid { padding-bottom: 13px; }
-        .ma-side { overflow: hidden; }
-        /* Hai thẻ cùng co khi không đủ chỗ; mỗi thẻ cuộn bên trong. Đầu thẻ Prompt (nút chép) dính trên cùng. */
-        .ma-side > .ma-card { flex: 0 1 auto; display: flex; flex-direction: column; }
-        .ma-side > .ma-card:first-child { min-height: 150px; }
-        .ma-side > .ma-card:first-child .ma-list { flex: 1 1 auto; min-height: 0; overflow: auto; scrollbar-width: thin; padding: 2px; margin: -2px; }
-        .ma-side > .ma-card:last-child { min-height: 220px; overflow: auto; scrollbar-width: thin; padding-top: 0; }
-        .ma-side > .ma-card:last-child .ma-card__h {
-          position: sticky; top: 0; z-index: 1; flex: none;
-          padding: 14px 0 10px; margin: 0; background: var(--surface);
-        }
-        .ma-side > .ma-card:last-child > * { flex: none; }
+        /* Đáy lưới bằng khoảng hở dưới panel, để tới cuối trang panel không trượt vào dưới thanh trên. */
+        .ma-grid { padding-bottom: var(--s4); }
       }
-      .ma-card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px; min-width: 0; }
-      .ma-card__h { display: flex; align-items: center; gap: 8px; margin: 0 0 10px; }
-      .ma-card__h h2 { margin: 0; font: 600 16px/1.2 var(--display); }
-      .ma-card__h .ma-badge { margin-right: auto; }
+      .ma-panel__head { flex: none; display: flex; align-items: center; gap: var(--s2); padding: var(--s3); border-bottom: 1px solid var(--line-2); }
+      .ma-seg { flex: 1; display: flex; gap: 2px; padding: 3px; background: var(--surface-2); border-radius: var(--r); }
+      .ma-ptab {
+        flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+        min-height: 34px; padding: 0 10px; border: 0; border-radius: 9px; background: transparent;
+        font: 600 13.5px/1 var(--sans); color: var(--ink-2);
+        transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+      }
+      .ma-ptab:hover { color: var(--ink); }
+      .ma-ptab[aria-selected="true"] { background: var(--tab-on); color: var(--ink); box-shadow: var(--tab-ring); }
+      .ma-ptab__n {
+        min-width: 20px; padding: 2px 5px; border-radius: 999px; background: var(--chip);
+        font: 500 11px/1.2 var(--mono); color: var(--ink-2); font-variant-numeric: tabular-nums;
+      }
+      .ma-ptab__n:empty { display: none; }
+      .ma-panel__close { display: none; }
+      .ma-panel__body { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: var(--s3); scrollbar-width: thin; }
+      .ma-panel__foot {
+        flex: none; display: flex; flex-direction: column; gap: var(--s2);
+        padding: var(--s3); border-top: 1px solid var(--line-2); background: var(--surface);
+      }
+      .ma-foot__stat { display: flex; justify-content: space-between; gap: var(--s2); font: 500 11.5px/1.2 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+      .ma-foot__row { display: flex; gap: var(--s2); }
+      .ma-foot__row .ma-icbtn { width: 44px; height: 44px; }
+      .ma-copy { flex: 1; min-height: 44px; font-size: 14.5px; border-radius: var(--r); }
+      .ma-copy.is-done { filter: none; }
+      .ma-kbd {
+        margin-left: 2px; padding: 3px 6px; border-radius: 6px;
+        font: 500 11px/1 var(--mono); color: var(--on-accent); background: var(--kbd-on-accent);
+      }
+      .ma-kbd:empty { display: none; }
+      .ma-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+      .ma-blank { display: flex; flex-direction: column; align-items: center; gap: var(--s2); padding: var(--s6) var(--s4); text-align: center; color: var(--ink-3); }
+      .ma-blank svg { width: 28px; height: 28px; color: var(--ink-4); }
+      .ma-blank p { margin: 0; font-size: 13.5px; max-width: 30ch; }
+      .ma-blank b { display: block; margin-bottom: 2px; font-weight: 600; color: var(--ink-2); }
       .ma-sub { margin: 0; font-size: 13.5px; color: var(--ink-3); }
 
       .ma-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
@@ -381,28 +418,37 @@
       }
       .ma-fmt input:checked + span { background: var(--tab-on); color: var(--ink); box-shadow: var(--tab-ring); }
       .ma-fmt input:focus-visible + span { outline: 2px solid var(--green); outline-offset: 1px; }
-      .ma-wrapbox { margin-bottom: 10px; border: 1px solid var(--line); border-radius: 12px; }
-      .ma-wrapbox summary {
-        min-height: 40px; display: flex; align-items: center; padding: 0 12px; cursor: pointer;
-        font-size: 13.5px; font-weight: 600; color: var(--ink-2); list-style: none;
+      .ma-opts { margin-bottom: var(--s3); border: 1px solid var(--line); border-radius: var(--r); }
+      .ma-opts summary {
+        display: flex; align-items: center; gap: var(--s2); min-height: 40px; padding: 0 var(--s3);
+        list-style: none; cursor: pointer; font-size: 13.5px; font-weight: 600; color: var(--ink-2);
+        border-radius: var(--r);
       }
-      .ma-wrapbox summary::-webkit-details-marker { display: none; }
-      .ma-wrapbox summary::before { content: '+'; font: 500 14px var(--mono); width: 18px; color: var(--ink-3); }
-      .ma-wrapbox[open] summary::before { content: '−'; }
-      .ma-wrapbox__in { padding: 0 12px 12px; display: flex; flex-direction: column; gap: 8px; }
-      .ma-wrapbox .ma-ta { min-height: 64px; font: 400 13.5px/1.5 var(--sans); background: var(--surface); }
+      .ma-opts summary::-webkit-details-marker { display: none; }
+      .ma-opts summary::after {
+        content: ''; width: 7px; height: 7px; margin: -3px 4px 0 auto; flex: none;
+        border: solid var(--ink-3); border-width: 0 2px 2px 0; transform: rotate(45deg);
+        transition: transform var(--dur) var(--ease);
+      }
+      .ma-opts[open] summary::after { transform: translateY(3px) rotate(225deg); }
+      .ma-opts summary:hover { color: var(--ink); }
+      .ma-opts__sum { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 500 11.5px/1 var(--mono); color: var(--ink-3); }
+      .ma-opts__in { display: flex; flex-direction: column; gap: var(--s1); padding: 0 var(--s3) var(--s3); }
+      .ma-opts__in .ma-fmt { margin: 0 0 var(--s1); }
+      .ma-opts__field { display: flex; flex-direction: column; gap: 6px; margin-top: var(--s2); }
+      .ma-opts__lbl { display: flex; align-items: center; justify-content: space-between; }
+      .ma-opts .ma-ta { min-height: 56px; font: 400 13.5px/1.5 var(--sans); background: var(--surface); }
       .ma-check { display: flex; align-items: center; gap: 10px; min-height: 40px; font-size: 13.5px; color: var(--ink-2); cursor: pointer; }
       .ma-check input { width: 18px; height: 18px; accent-color: var(--green); margin: 0; }
       .ma-pathrow { display: flex; align-items: center; gap: 10px; margin: 2px 0 6px 28px; }
       .ma-pathrow .ma-input { height: 36px; font: 500 12.5px var(--mono); }
+      /* Khung prompt cao theo nội dung; thân panel là chỗ cuộn. */
       .ma-out {
-        margin: 6px 0 10px; padding: 12px; min-height: 64px; max-height: 40vh; overflow: auto;
+        margin: 0; padding: var(--s3); min-height: 96px;
         white-space: pre-wrap; overflow-wrap: anywhere;
-        font: 500 12.5px/1.6 var(--mono); background: var(--bg); border: 1px solid var(--line); border-radius: 12px;
+        font: 500 12.5px/1.65 var(--mono); background: var(--bg); border: 1px solid var(--line-2); border-radius: var(--r);
       }
       .ma-out:empty::before { content: attr(data-ph); color: var(--ink-3); font-family: var(--sans); }
-      .ma-out__bar { display: flex; justify-content: flex-end; }
-      .ma-out { margin-bottom: 6px; }
 
       /* HỘP NHẬN XÉT */
       .ma-pop {
@@ -479,17 +525,38 @@
       /* ĐIỆN THOẠI */
       @media (max-width: 1080px) {
         .ma-grid { grid-template-columns: minmax(0, 1fr); }
-        .ma-side { position: static; max-height: none; overflow: visible; }
+        .ma-grid > .ma-panel { display: none; }
+        /* Thanh đáy: số nhận xét (mở panel trong tấm trượt) và nút chép. */
+        body { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+        .ma-dock {
+          display: flex; align-items: center; gap: var(--s2); position: fixed; z-index: 40; left: 0; right: 0; bottom: 0;
+          padding: 10px max(16px, calc((100vw - 720px) / 2)) calc(10px + env(safe-area-inset-bottom));
+          background: color-mix(in srgb, var(--surface) 92%, transparent);
+          backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+          border-top: 1px solid var(--line);
+        }
+        .ma-dock .ma-copy { flex: 0 1 220px; }
+        .ma-dock__list { margin-right: auto; min-height: 44px; padding: 0 12px 0 10px; }
+        .ma-dock__list::after { content: ''; width: 7px; height: 7px; margin-left: 2px; border: solid currentColor; border-width: 2px 2px 0 0; transform: translateY(2px) rotate(-45deg); }
+        .ma-fab, .ma-toast { bottom: calc(86px + env(safe-area-inset-bottom)); }
+        .ma-dlg.ma-dlg--panel { width: min(640px, 100vw); max-width: 100vw; margin: auto auto 0; max-height: none; border-radius: var(--r-lg) var(--r-lg) 0 0; border-bottom: 0; }
+        .ma-dlg--panel .ma-panel {
+          position: static; height: min(86vh, 760px); min-height: 0;
+          border: 0; border-radius: 0; box-shadow: none;
+        }
+        .ma-dlg--panel .ma-panel__close { display: inline-grid; }
+        .ma-dlg--panel .ma-kbd { display: none; }
       }
       @media (max-width: 720px) {
         :root { --pad: 16px; --bar-h: 56px; }
         .ma-bar { position: static; }
-        .ma-btn, .ma-icbtn, .ma-tab, .ma-chip, .ma-fmt span, .ma-wrapbox summary, .ma-check { min-height: 44px; }
+        .ma-btn, .ma-icbtn, .ma-tab, .ma-ptab, .ma-chip, .ma-fmt span, .ma-opts summary, .ma-check { min-height: 44px; }
         .ma-icbtn { width: 44px; height: 44px; }
         .ma-item__act .ma-icbtn { width: 44px; height: 44px; }
         .ma-bar .ma-btn__lbl { display: none; }
         .ma-bar .ma-btn { width: 44px; padding: 0; flex: none; }
-        .ma-head { padding: 10px 0 8px; }
+        .ma-grid { padding-top: 10px; }
+        .ma-head { padding: 0 0 8px; }
         .ma-head h1 { font-size: 17px; }
         .ma-head p { font-size: 13px; }
         .ma-docname { flex-basis: 100%; height: 44px; }
@@ -502,18 +569,6 @@
         .ma-syn { min-height: 44px; }
         .ma-edit { padding: 10px; }
         #src-input { min-height: 46vh; }
-        body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
-        .ma-dock {
-          display: flex; align-items: center; gap: 10px; position: fixed; z-index: 40; left: 0; right: 0; bottom: 0;
-          padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-          background: color-mix(in srgb, var(--surface) 92%, transparent);
-          backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-          border-top: 1px solid var(--line);
-        }
-        .ma-dock__list { margin-right: auto; padding: 0 12px 0 10px; }
-        .ma-dock__list::after { content: ''; width: 7px; height: 7px; margin-left: 2px; border: solid currentColor; border-width: 2px 2px 0 0; transform: translateY(2px) rotate(-45deg); }
-        .ma-fab { bottom: calc(82px + env(safe-area-inset-bottom)); }
-        .ma-toast { bottom: calc(82px + env(safe-area-inset-bottom)); }
         .ma-dlg { width: 100vw; max-width: 100vw; margin: auto 0 0; max-height: 85vh; border-radius: 16px 16px 0 0; }
       }
       /* Hộp nhận xét thành tấm trượt đáy ở máy hẹp hoặc màn cảm ứng */
@@ -557,7 +612,8 @@
       </div>
     </header>
 
-    <main class="ma-wrap">
+    <main class="ma-wrap ma-grid">
+      <div class="ma-left">
       <div class="ma-head">
         <h1>Markdown Annotate</h1>
         <p>Bôi đen đoạn cần sửa, ghi nhận xét, chép một prompt cho AI.</p>
@@ -568,7 +624,6 @@
         ở thư mục gốc repo rồi mở <code>http://localhost:8000/md-annotate/</code>.
       </p>
 
-      <div class="ma-grid">
         <section class="ma-doc" id="doc" aria-label="Văn bản">
           <div class="ma-doc__bar">
             <input class="ma-docname" id="s-name" type="text" autocomplete="off" spellcheck="false"
@@ -617,58 +672,82 @@
             <button class="ma-btn ma-btn--go" type="button" id="btn-goedit">Dán văn bản</button>
           </div>
         </section>
+      </div>
 
-        <aside class="ma-side" aria-label="Nhận xét và prompt">
-          <section class="ma-card">
-            <div class="ma-card__h">
-              <h2>Nhận xét</h2>
-              <span class="ma-badge" id="n-comments"></span>
-              <button class="ma-btn ma-btn--quiet" type="button" id="btn-hints">Gợi ý</button>
+        <!-- Cột phải: một panel. Thân là chỗ cuộn duy nhất; thanh đáy (nút chép) luôn thấy, dù bao nhiêu nhận xét.
+             Máy ≤ 1080px: panel nằm trong tấm trượt đáy #dlg-panel, mở từ thanh đáy. -->
+        <aside class="ma-panel" id="panel" aria-label="Nhận xét và prompt">
+          <div class="ma-panel__head">
+            <div class="ma-seg" role="tablist" aria-label="Nội dung panel">
+              <button class="ma-ptab" role="tab" type="button" id="ptab-list" data-pane="list" aria-controls="pane-list">
+                Nhận xét <span class="ma-ptab__n" id="n-comments"></span>
+              </button>
+              <button class="ma-ptab" role="tab" type="button" id="ptab-prompt" data-pane="prompt" aria-controls="pane-prompt">Prompt</button>
             </div>
-            <p class="ma-sub" id="list-empty">Bôi đen một đoạn trong văn bản để thêm nhận xét.</p>
-            <ol class="ma-list" id="list"></ol>
-          </section>
+            <button class="ma-btn ma-btn--quiet ma-btn--sm" type="button" id="btn-hints" title="Quản lý gợi ý nhận xét">Gợi ý</button>
+            <button class="ma-icbtn ma-icbtn--bare ma-panel__close" type="button" data-close aria-label="Đóng">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+            </button>
+          </div>
 
-          <section class="ma-card">
-            <div class="ma-card__h ma-card__h--prompt">
-              <h2>Prompt</h2>
-              <span class="ma-bar__sp"></span>
+          <div class="ma-panel__body" id="panel-body">
+            <div class="ma-pane" id="pane-list" role="tabpanel" aria-labelledby="ptab-list">
+              <div class="ma-blank" id="list-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5z" /><path d="M8 9h8M8 12h5" /></svg>
+                <p><b>Chưa có nhận xét</b>Bôi đen một đoạn trong văn bản để thêm nhận xét.</p>
+              </div>
+              <ol class="ma-list" id="list"></ol>
+            </div>
+
+            <div class="ma-pane" id="pane-prompt" role="tabpanel" aria-labelledby="ptab-prompt" hidden>
+              <details class="ma-opts" id="opts">
+                <summary>
+                  <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" /><circle cx="16" cy="7" r="2" /><circle cx="10" cy="17" r="2" /></svg>
+                  <span>Tuỳ chọn</span>
+                  <span class="ma-opts__sum" id="opts-sum"></span>
+                </summary>
+                <div class="ma-opts__in">
+                  <div class="ma-fmt" role="radiogroup" aria-label="Kiểu trích">
+                    <label><input type="radio" name="fmt" value="inline" /><span>"Trích" — nhận xét</span></label>
+                    <label><input type="radio" name="fmt" value="block" /><span>&gt; Khối trích</span></label>
+                  </div>
+                  <label class="ma-check"><input type="checkbox" id="line-nums" /> Kèm số dòng</label>
+                  <label class="ma-pathrow" id="path-row">
+                    <span class="ma-label">Tệp</span>
+                    <input class="ma-input" id="p-path" type="text" spellcheck="false" autocomplete="off"
+                           placeholder="notes/a.md (tuỳ chọn)" aria-label="Đường dẫn tệp, ghi vị trí dạng tệp:dòng" />
+                  </label>
+                  <label class="ma-check"><input type="checkbox" id="inc-doc" /> Kèm toàn văn bản ở cuối</label>
+                  <div class="ma-opts__field">
+                    <span class="ma-opts__lbl"><label class="ma-label" for="p-head">Lời dẫn đầu</label>
+                      <button class="ma-link" type="button" id="btn-headtpl"
+                              data-tpl="Sửa văn bản markdown theo từng nhận xét dưới đây. Mỗi mục là một đoạn trích nguyên văn kèm việc cần làm. Giữ nguyên những phần không được nhắc tới, trả về toàn bộ văn bản đã sửa.">Dùng câu mẫu</button></span>
+                    <textarea class="ma-ta" id="p-head" rows="2" placeholder="Ví dụ: Sửa văn bản theo từng nhận xét dưới đây."></textarea>
+                  </div>
+                  <div class="ma-opts__field">
+                    <label class="ma-label" for="p-foot">Lời dẫn cuối</label>
+                    <textarea class="ma-ta" id="p-foot" rows="2" placeholder="Ví dụ: Liệt kê những chỗ đã sửa."></textarea>
+                  </div>
+                </div>
+              </details>
+              <pre class="ma-out" id="out" tabindex="0" aria-label="Prompt" data-ph="Prompt hiện ở đây khi có nhận xét."></pre>
+            </div>
+          </div>
+
+          <div class="ma-panel__foot">
+            <div class="ma-foot__stat"><span id="foot-n"></span><span id="out-n"></span></div>
+            <div class="ma-foot__row">
               <button class="ma-icbtn" type="button" id="btn-export" aria-label="Tải prompt thành file .md" title="Tải .md">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m-4-4 4 4 4-4M5 20h14" /></svg>
               </button>
-              <button class="ma-btn ma-btn--go" type="button" id="btn-copy">
-                <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a1 1 0 0 1 1-1h9" /></svg>
-                Chép prompt
+              <button class="ma-btn ma-btn--go ma-copy" type="button" id="btn-copy">
+                <svg class="ma-i ma-copy__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a1 1 0 0 1 1-1h9" /></svg>
+                <span class="ma-copy__lbl">Chép prompt</span>
+                <kbd class="ma-kbd js-copy-kbd" aria-hidden="true"></kbd>
               </button>
             </div>
-            <div class="ma-fmt" role="radiogroup" aria-label="Kiểu trích">
-              <label><input type="radio" name="fmt" value="inline" /><span>"Trích" — nhận xét</span></label>
-              <label><input type="radio" name="fmt" value="block" /><span>&gt; Khối trích</span></label>
-            </div>
-            <details class="ma-wrapbox" id="wrapbox">
-              <summary>Lời dẫn đầu và cuối</summary>
-              <div class="ma-wrapbox__in">
-                <label class="ma-label" for="p-head">Đầu prompt</label>
-                <textarea class="ma-ta" id="p-head" rows="3"
-                          placeholder="Ví dụ: Sửa văn bản theo từng nhận xét dưới đây."></textarea>
-                <button class="ma-link" type="button" id="btn-headtpl"
-                        data-tpl="Sửa văn bản markdown theo từng nhận xét dưới đây. Mỗi mục là một đoạn trích nguyên văn kèm việc cần làm. Giữ nguyên những phần không được nhắc tới, trả về toàn bộ văn bản đã sửa.">Dùng câu mẫu</button>
-                <label class="ma-label" for="p-foot">Cuối prompt</label>
-                <textarea class="ma-ta" id="p-foot" rows="2" placeholder="Ví dụ: Liệt kê những chỗ đã sửa."></textarea>
-              </div>
-            </details>
-            <label class="ma-check"><input type="checkbox" id="line-nums" /> Kèm số dòng</label>
-            <label class="ma-pathrow" id="path-row">
-              <span class="ma-label">Tệp</span>
-              <input class="ma-input" id="p-path" type="text" spellcheck="false" autocomplete="off"
-                     placeholder="notes/a.md (tuỳ chọn)" aria-label="Đường dẫn tệp, ghi vị trí dạng tệp:dòng" />
-            </label>
-            <label class="ma-check"><input type="checkbox" id="inc-doc" /> Kèm toàn văn bản ở cuối prompt</label>
-            <pre class="ma-out" id="out" tabindex="0" aria-label="Prompt" data-ph="Prompt hiện ở đây khi có nhận xét."></pre>
-            <div class="ma-out__bar"><span class="ma-badge" id="out-n"></span></div>
-          </section>
+          </div>
         </aside>
-      </div>
     </main>
 
     <!-- Hộp nhận xét: mở khi bôi đen (chuột) hoặc bấm nút nổi (cảm ứng, bàn phím) -->
@@ -689,10 +768,14 @@
 
     <div class="ma-dock" id="dock">
       <button class="ma-btn ma-btn--quiet ma-dock__list" type="button" id="dock-n" aria-haspopup="dialog"></button>
-      <button class="ma-btn ma-btn--go" type="button" id="dock-copy">Chép prompt</button>
+      <button class="ma-btn ma-btn--go ma-copy" type="button" id="dock-copy">
+        <svg class="ma-i ma-copy__ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a1 1 0 0 1 1-1h9" /></svg>
+        <span class="ma-copy__lbl">Chép prompt</span>
+      </button>
     </div>
 
     <div class="ma-toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <span class="ma-sr" id="sr-live" role="status" aria-live="polite"></span>
 
     <dialog class="ma-dlg" id="dlg-hist" aria-labelledby="dlg-hist-t">
       <div class="ma-dlg__in">
@@ -709,19 +792,7 @@
       </div>
     </dialog>
 
-    <dialog class="ma-dlg" id="dlg-list" aria-labelledby="dlg-list-t">
-      <div class="ma-dlg__in">
-        <div class="ma-dlg__h">
-          <h2 id="dlg-list-t">Nhận xét</h2>
-          <button class="ma-icbtn ma-icbtn--bare" type="button" data-close aria-label="Đóng">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
-          </button>
-        </div>
-        <div class="ma-dlg__b">
-          <ol class="ma-list" id="sheet-list"></ol>
-        </div>
-      </div>
-    </dialog>
+    <dialog class="ma-dlg ma-dlg--panel" id="dlg-panel" aria-label="Nhận xét và prompt"></dialog>
 
     <dialog class="ma-dlg" id="dlg-hints" aria-labelledby="dlg-hints-t">
       <div class="ma-dlg__in">
@@ -1328,37 +1399,41 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         $('views').hidden = view === 'edit' || !t;
       }
 
-      /* Một danh sách, hai chỗ vẽ: cột phải, và tấm trượt đáy ở điện thoại (bấm số nhận xét trên thanh đáy). */
+      /* Danh sách nhận xét trong panel. Panel nằm ở cột phải (máy rộng) hoặc trong tấm trượt #dlg-panel. */
       function renderList() {
-        fillList($('list'), false);
-        fillList($('sheet-list'), true);
+        fillList($('list'));
         var total = S.comments.length;
         $('n-comments').textContent = total ? String(total) : '';
         $('list-empty').hidden = total > 0;
-        $('dock-n').textContent = total ? total + ' nhận xét' : 'Chưa có nhận xét';
-        $('dock-n').disabled = !total;
+        $('dock-n').textContent = total ? 'Nhận xét · ' + total : 'Nhận xét';
       }
-      function fillList(ol, inSheet) {
+      function inSheet() { return $('dlg-panel').open; }
+      function leaveSheet(fn) { return function () { if (inSheet()) $('dlg-panel').close(); fn(); }; }
+      function fillList(ol) {
         ol.replaceChildren();
-        var leave = function (fn) { return function () { if (inSheet) $('dlg-list').close(); fn(); }; };
         ordered.forEach(function (c) {
-          var orphan = !!orphans[c.id], num = numbers[c.id];
-          var li = h('li', { class: 'ma-item' + (orphan ? ' is-orphan' : ''), 'data-id': c.id },
-            h('button', { class: 'ma-item__main', type: 'button', title: 'Tới đoạn này', onclick: leave(function () { jumpTo(c.id); }) },
-              h('span', { class: 'ma-item__n' }, orphan ? '!' : String(num)),
-              h('span', { class: 'ma-item__body' },
-                orphan ? null : h('span', { class: 'ma-item__loc' }, locText(c, false)),
-                h('span', { class: 'ma-item__q' }, c.quote),
-                h('span', { class: 'ma-item__c' }, c.comment),
-                orphan ? h('span', { class: 'ma-item__warn' }, 'Không còn thấy đoạn này trong văn bản, nên không đưa vào prompt. Sửa lại văn bản hoặc xoá nhận xét.') : null)),
+          var orphan = !!orphans[c.id], num = numbers[c.id], loc = orphan ? '' : locText(c, false);
+          var li = h('li', { class: 'ma-item' + (orphan ? ' is-orphan' : '') + (pop.id === c.id ? ' is-active' : ''), 'data-id': c.id },
+            h('button', { class: 'ma-item__main', type: 'button', title: 'Tới đoạn này', onclick: leaveSheet(function () { jumpTo(c.id); }) },
+              h('span', { class: 'ma-item__top' },
+                h('span', { class: 'ma-item__n' }, orphan ? '!' : String(num)),
+                loc ? h('span', { class: 'ma-item__loc' }, loc) : null),
+              h('span', { class: 'ma-item__c' }, c.comment),
+              h('span', { class: 'ma-item__q' }, c.quote),
+              orphan ? h('span', { class: 'ma-item__warn' }, 'Không còn thấy đoạn này trong văn bản, nên không đưa vào prompt. Sửa lại văn bản hoặc xoá nhận xét.') : null),
             h('span', { class: 'ma-item__act' },
               h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Sửa nhận xét', title: 'Sửa',
-                onclick: leave(function () { editFromList(c.id); }) }, icon('pencil')),
+                onclick: leaveSheet(function () { editFromList(c.id); }) }, icon('pencil')),
               h('button', { class: 'ma-icbtn ma-icbtn--bare', type: 'button', 'aria-label': 'Xoá nhận xét', title: 'Xoá',
                 onclick: function () { removeComment(c.id); } }, icon('x'))));
+          /* Rê lên thẻ thì tô đoạn của nó, và ngược lại (xem onViewHover). */
+          li.addEventListener('mouseenter', function () { hoverMarks(c.id, true); });
+          li.addEventListener('mouseleave', function () { hoverMarks(c.id, false); });
           ol.append(li);
         });
-        if (inSheet && !ordered.length) ol.append(h('li', { class: 'ma-sub' }, 'Chưa có nhận xét.'));
+      }
+      function hoverMarks(id, on) {
+        marksOf(id).forEach(function (m) { m.classList.toggle('is-hover', on); });
       }
 
       /* ======================================================================
@@ -1429,7 +1504,14 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         $('out').textContent = p;
         var words = p ? p.trim().split(/\s+/).length : 0;
         $('out-n').textContent = p ? p.length.toLocaleString('vi-VN') + ' ký tự · ' + words.toLocaleString('vi-VN') + ' từ' : '';
+        var n = ordered.filter(function (c) { return !orphans[c.id]; }).length;
+        $('foot-n').textContent = n ? n + ' nhận xét trong prompt' : 'Chưa có nhận xét';
         $('btn-copy').disabled = !p; $('btn-export').disabled = !p; $('dock-copy').disabled = !p;
+        var sum = [S.fmt === 'block' ? 'khối' : 'gọn'];
+        if (S.lineNums) sum.push(S.path.trim() || 'số dòng');
+        if (S.includeDoc) sum.push('toàn văn');
+        if (S.header.trim() || S.footer.trim()) sum.push('lời dẫn');
+        $('opts-sum').textContent = sum.join(' · ');
       }
       function legacyCopy(t) {
         var ta = h('textarea', { style: 'position:fixed;top:0;left:0;opacity:0', readonly: true });
@@ -1444,12 +1526,23 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         if (!p) { toast('Chưa có gì để chép: bôi đen một đoạn và thêm nhận xét trước.'); return; }
         var n = ordered.filter(function (c) { return !orphans[c.id]; }).length;
         var done = function (ok) {
-          toast(ok ? 'Đã chép prompt: ' + n + ' nhận xét, ' + p.length.toLocaleString('vi-VN') + ' ký tự.'
-                   : 'Trình duyệt chặn chép. Bôi đen khung prompt rồi chép tay.');
+          if (!ok) { toast('Trình duyệt chặn chép. Mở tab Prompt, bôi đen khung prompt rồi chép tay.'); return; }
+          morphCopy();
+          $('sr-live').textContent = 'Đã chép prompt: ' + n + ' nhận xét, ' + p.length + ' ký tự.';
         };
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(p).then(function () { done(true); }, function () { done(legacyCopy(p)); });
         } else done(legacyCopy(p));
+      }
+      /* Sau khi chép: nút đổi thành "Đã chép ✓" một lúc. */
+      var morphTimer = null;
+      function morphCopy() {
+        var btns = document.querySelectorAll('.ma-copy');
+        btns.forEach(function (b) { b.classList.add('is-done'); b.querySelector('.ma-copy__lbl').textContent = 'Đã chép ✓'; });
+        clearTimeout(morphTimer);
+        morphTimer = setTimeout(function () {
+          btns.forEach(function (b) { b.classList.remove('is-done'); b.querySelector('.ma-copy__lbl').textContent = 'Chép prompt'; });
+        }, 1600);
       }
       function slug(s) {
         return (s || 'phien').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D')
@@ -1584,6 +1677,9 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         document.querySelectorAll('mark.ma-hl').forEach(function (m) {
           var has = (' ' + (m.dataset.ids || '') + ' ').indexOf(' ' + id + ' ') >= 0;
           m.classList.toggle('is-active', on && has);
+        });
+        document.querySelectorAll('#list .ma-item').forEach(function (li) {
+          li.classList.toggle('is-active', on && li.dataset.id === id);
         });
       }
       function marksOf(id) {
@@ -1743,6 +1839,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
          DANH SÁCH: nhảy tới, sửa, xoá
          ====================================================================== */
       function flashItem(id) {
+        setPane('list');
         var li = $('list').querySelector('[data-id="' + id + '"]');
         if (!li) return;
         li.classList.add('is-flash');
@@ -1906,7 +2003,6 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         $('p-path').value = S.path;
         $('path-row').hidden = !S.lineNums;
         document.querySelectorAll('input[name="fmt"]').forEach(function (r) { r.checked = r.value === S.fmt; });
-        if (S.header.trim() || S.footer.trim()) $('wrapbox').open = true;
       }
       function setText(t) {
         S.text = t.replace(/\r\n?/g, '\n');
@@ -2018,9 +2114,55 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
       $('btn-hist').addEventListener('click', function () { flushSave(); renderHist(); $('dlg-hist').showModal(); });
       $('btn-hints').addEventListener('click', function () { renderHintsDlg(); $('dlg-hints').showModal(); });
       $('syn').addEventListener('change', function (e) { prefs.syntax = e.target.checked; savePrefs(); renderAll(); });
-      $('dock-n').addEventListener('click', function () { if (S.comments.length) $('dlg-list').showModal(); });
+      /* Rê lên đoạn đã nhận xét thì thẻ của nó sáng lên. */
+      ['v-src', 'v-md'].forEach(function (id) {
+        var root = $(id);
+        var mark = function (ids) {
+          document.querySelectorAll('#list .ma-item').forEach(function (li) { li.classList.toggle('is-hover', ids.indexOf(li.dataset.id) >= 0); });
+        };
+        root.addEventListener('mouseover', function (e) {
+          var m = e.target.closest && e.target.closest('mark.ma-hl');
+          mark(m && m.dataset.ids ? m.dataset.ids.split(' ') : []);
+        });
+        root.addEventListener('mouseleave', function () { mark([]); });
+      });
+      /* Panel: hai tab. */
+      function setPane(name) {
+        document.querySelectorAll('.ma-ptab').forEach(function (b) {
+          var on = b.dataset.pane === name;
+          b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1;
+        });
+        $('pane-list').hidden = name !== 'list';
+        $('pane-prompt').hidden = name !== 'prompt';
+      }
+      document.querySelectorAll('.ma-ptab').forEach(function (b) {
+        b.addEventListener('click', function () { setPane(b.dataset.pane); });
+        b.addEventListener('keydown', function (e) {
+          if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+          var t = b.dataset.pane === 'list' ? $('ptab-prompt') : $('ptab-list');
+          setPane(t.dataset.pane); t.focus();
+        });
+      });
+      setPane('list');
+      /* Máy ≤ 1080px: panel vào tấm trượt khi bấm số nhận xét trên thanh đáy, đóng thì về chỗ cũ. */
+      var panelHome = $('panel').parentNode, panelNext = $('panel').nextSibling;
+      $('dock-n').addEventListener('click', function () {
+        $('dlg-panel').append($('panel'));
+        $('dlg-panel').showModal();
+      });
+      $('dlg-panel').addEventListener('close', function () { panelHome.insertBefore($('panel'), panelNext); });
+      $('dlg-panel').addEventListener('click', function (e) {
+        if (e.target === $('dlg-panel')) $('dlg-panel').close();
+      });
+      window.matchMedia('(min-width: 1081px)').addEventListener('change', function (e) { if (e.matches && $('dlg-panel').open) $('dlg-panel').close(); });
+      /* ⌘/Ctrl + Shift + C chép prompt, ở đâu cũng được. */
+      var isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+      document.querySelectorAll('.js-copy-kbd').forEach(function (k) { k.textContent = isMac ? '⌘⇧C' : 'Ctrl⇧C'; });
+      document.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && !e.altKey && e.code === 'KeyC') { e.preventDefault(); copyPrompt(); }
+      });
       document.querySelectorAll('[data-close]').forEach(function (b) {
-        b.addEventListener('click', function () { b.closest('dialog').close(); });
+        b.addEventListener('click', function () { var d = b.closest('dialog'); if (d) d.close(); });
       });
       document.querySelectorAll('dialog').forEach(function (d) {
         d.addEventListener('click', function (e) { if (e.target === d) d.close(); });

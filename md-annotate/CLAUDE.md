@@ -13,11 +13,17 @@
 - Nền nút chính và huy hiệu: `--accent` + chữ `--on-accent`. Chữ, viền, link xanh: `--green` (sắc đậm cùng họ).
 - Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024).
 - Đầu trang một dòng (tên + phụ đề mờ). Tên phiên sửa tại chỗ ở thanh của khung văn bản.
-- Máy rộng (≥ 1081px): cột phải dính dưới thanh trên; hai thẻ co lại và cuộn bên trong. Nút chép nằm ở đầu
-  thẻ Prompt, dính trên cùng, nên luôn thấy. Đáy lưới 13px khớp khoảng hở dưới cột, đừng nới.
-- Khung prompt cao theo nội dung tới 40vh rồi cuộn.
-- Điện thoại (≤ 720px): một cột, vùng chạm ≥ 44px, không có *Song song*. Thanh đáy: số nhận xét (bấm mở tấm
-  danh sách: nhảy, sửa, xoá) và nút chép. Lưu nhận xét không kéo trang xuống danh sách.
+- Cột phải là một panel (`#panel`): đầu có hai tab *Nhận xét · N* / *Prompt*, thân là chỗ cuộn duy nhất, đáy ghim
+  trạng thái, *Tải .md* và *Chép prompt*. Nút chép luôn trong khung nhìn, dù bao nhiêu nhận xét (smoke đo với 32).
+- Máy rộng (≥ 1081px): panel dính, chạy từ đỉnh vùng nội dung tới đáy khung nhìn; tiêu đề trang nằm ở cột trái.
+  `top`, `height` của panel và `padding` trên dưới của lưới cùng dùng `--s4`: đổi một chỗ thì đổi cả ba.
+- Tuỳ chọn prompt (kiểu, số dòng, tệp, toàn văn, lời dẫn) gập trong *Tuỳ chọn* ở tab Prompt; dòng tóm tắt cạnh
+  nhãn cho biết đang bật gì. Khung prompt cao theo nội dung; thân panel cuộn.
+- ⌘/Ctrl + Shift + C chép prompt ở mọi chỗ. Chép xong nút đổi thành *Đã chép ✓* một lúc; báo đọc màn hình qua
+  `#sr-live`. Toast chỉ dùng khi chép hỏng.
+- ≤ 1080px: panel ẩn khỏi lưới; thanh đáy có *Nhận xét · N* (mở panel trong tấm trượt `#dlg-panel`, đóng thì panel
+  về chỗ cũ) và nút chép.
+- Điện thoại (≤ 720px): một cột, vùng chạm ≥ 44px, không có *Song song*. Lưu nhận xét không cuộn trang.
 - Toast không nhận chuột (trừ nút Hoàn tác), để không chặn bôi đen chữ bên dưới; có hộp thoại mở thì toast
   nằm trong hộp thoại.
 - Tối: tab đang chọn dùng `--tab-on` / `--tab-ring` (nền sáng hơn nhóm tab, viền xanh).
