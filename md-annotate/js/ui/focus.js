@@ -1,15 +1,11 @@
 /* Focus mode: mờ mọi thứ ngoài một section; chọn section theo chuột (pointer) hoặc dải đọc 25–50% (band). Ở dải đọc,
    dòng dưới chuột cũng sáng (.is-line).
    Xuất: initFocus, refreshBand, refreshFocus.
-   Dùng: core/blocks.js, core/sections.js, ui/dom.js, ui/state.js, ui/markdown.js, ui/views.js, ui/sync-scroll.js,
-     ui/layout.js. */
-import { lexSpans } from '../core/blocks.js';
+   Dùng: core/sections.js, ui/dom.js, ui/views.js, ui/sync-scroll.js, ui/layout.js. */
 import { bandBounds, bandPick, lineSections, numberSections, spanAt } from '../core/sections.js';
 import { $, shown } from './dom.js';
-import { S } from './state.js';
-import { mdLex } from './markdown.js';
 import { isSplit } from './views.js';
-import { setByPage } from './sync-scroll.js';
+import { blockPairs, setByPage } from './sync-scroll.js';
 import { layoutVal } from './layout.js';
 
 /* Focus mode theo section. Section mới bắt đầu ở mỗi tiêu đề cấp cao: h1–h6 là con trực tiếp của #v-md ở Preview;
@@ -22,15 +18,10 @@ function secBlocks(root) {
   return root.id === 'v-src' ? Array.prototype.slice.call(root.querySelectorAll('.ma-ln'))
     : Array.prototype.filter.call(root.children, function (el) { return el.nodeType === 1; });
 }
-var spanMemo = { text: null, spans: [] };
-function srcSpans() {
-  if (spanMemo.text !== S.text) spanMemo = { text: S.text, spans: window.marked ? lexSpans(S.text, mdLex) : [] };
-  return spanMemo.spans;
-}
 function markSections(root) {
   var blocks = secBlocks(root);
   var secs = root.id === 'v-src'
-    ? lineSections(srcSpans(), blocks.length)
+    ? lineSections(blockPairs().spans, blocks.length)
     : numberSections(blocks.map(function (el) { return /^H[1-6]$/.test(el.tagName); }));
   blocks.forEach(function (el, i) { el.dataset.sec = secs[i]; });
 }
@@ -96,14 +87,12 @@ export function refreshFocus() {
 
 /* Dòng dưới chuột ở dải đọc. Source: một .ma-ln. Preview: mục danh sách, hàng bảng, mục định nghĩa, hoặc cả khối cấp
    cao. Khối cấp cao chứa nó (host) sáng; trong host, anh em của nó và của mỗi tổ tiên tới host mờ (.ma-dimx), vì
-   opacity của con không vượt được cha. Ở Split, khung kia sáng khối tương ứng: khối cấp cao thứ i ↔ token thứ i của
-   marked.lexer (chỉ khi số khối hai bên bằng nhau, như cuộn theo nhau). */
+   opacity của con không vượt được cha. Ở Split, khung kia sáng khối ghép với nó (blockPairs, như cuộn theo nhau). */
 function clearLines() {
   ['v-src', 'v-md'].forEach(function (id) {
     $(id).querySelectorAll('.is-line, .ma-dimx').forEach(function (x) { x.classList.remove('is-line', 'ma-dimx'); });
   });
 }
-function mdBlocks() { return Array.prototype.filter.call($('v-md').children, function (el) { return el.nodeType === 1; }); }
 function lightMdUnit(u) {
   var root = $('v-md'), host = u;
   while (host.parentElement !== root) host = host.parentElement;
@@ -119,20 +108,20 @@ function lightSrcLines(a, b) {
 function lineAtPointer(root, t) {
   clearLines();
   if (!t || !t.closest || !root.contains(t)) return;
-  var spans = srcSpans(), blocks = mdBlocks(), paired = isSplit() && spans.length === blocks.length;
+  var bp = blockPairs(), split = isSplit();
   if (root.id === 'v-src') {
     var ln = t.closest('.ma-ln');
     if (!ln) return;
     ln.classList.add('is-line');
-    var idx = Array.prototype.indexOf.call(root.querySelectorAll('.ma-ln'), ln), k = spanAt(spans, idx);
-    if (paired && k >= 0) lightMdUnit(blocks[k]);
+    var idx = Array.prototype.indexOf.call(root.querySelectorAll('.ma-ln'), ln), k = spanAt(bp.spans, idx);
+    if (split && k >= 0 && bp.toMd[k] >= 0) lightMdUnit(bp.blocks[bp.toMd[k]]);
   } else {
     var u = t.closest('li, tr, dt, dd') || t.closest('#v-md > *');
     if (!u || !root.contains(u) || u === root) return;
     lightMdUnit(u);
     var host = u; while (host.parentElement !== root) host = host.parentElement;
-    var j = blocks.indexOf(host);
-    if (paired && j >= 0) lightSrcLines(spans[j].a, spans[j].b);
+    var j = bp.blocks.indexOf(host), k2 = j >= 0 ? bp.toSrc[j] : -1;
+    if (split && k2 >= 0) lightSrcLines(bp.spans[k2].a, bp.spans[k2].b);
   }
 }
 

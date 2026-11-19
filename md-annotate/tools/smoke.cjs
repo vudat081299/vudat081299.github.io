@@ -723,6 +723,24 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   const lh = await litSrc();
   check('Focus ở Split, tiêu đề HTML: Source sáng đúng section của Preview', lh.join('|') === '## Two|Two para.', JSON.stringify(lh));
   await rv.mouse.move(5, 5);
+  // Chú thích HTML (<!-- toc -->) không dựng ra phần tử nào: số khối hai bên lệch, nhưng các khối khác vẫn ghép được,
+  // nên dải đọc vẫn sáng dòng tương ứng ở khung kia và cuộn theo nhau vẫn theo khối (không về tỉ lệ).
+  const tall = ['# Doc', '', '<!-- toc -->', ''];
+  for (let i = 1; i <= 12; i++) tall.push('## Part ' + i, '', 'Line of part ' + i + '.', '', '![](data:image/gif;base64,R0lGODlhAQABAAAAACw=)', '');
+  await rvLoad(tall.join('\n'));
+  await rv.evaluate(() => [...document.querySelectorAll('#v-md img')].forEach((im) => { im.style.height = '260px'; im.style.display = 'block'; }));
+  await rv.click('#btn-layout'); await rv.click('label:has(input[name="focusby"][value="band"])'); await rv.keyboard.press('Escape');
+  await rv.hover('#v-md > p:has-text("Line of part 1.")'); await rv.waitForTimeout(300);
+  const lm = await rv.evaluate(() => [...document.querySelectorAll('#v-src .ma-ln.is-line')].map((l) => l.textContent.trim()));
+  check('lệch số khối (chú thích HTML): dải đọc vẫn sáng dòng tương ứng ở Source', lm.join('|') === 'Line of part 1.', JSON.stringify(lm));
+  await rv.mouse.move(5, 5);
+  await rv.evaluate(() => { const w = document.getElementById('wrap-src'); const ln = [...w.querySelectorAll('.ma-ln')].find((l) => l.textContent.startsWith('## Part 8'));
+    w.scrollTop += ln.getBoundingClientRect().top + ln.offsetHeight / 2 - (w.getBoundingClientRect().top + w.clientHeight / 2); });
+  await rv.waitForTimeout(300);
+  const dP = await rv.evaluate(() => { const w = document.getElementById('wrap-md').getBoundingClientRect(); const h = [...document.querySelectorAll('#v-md > h2')].find((e) => e.textContent === 'Part 8').getBoundingClientRect();
+    return Math.round(h.top + h.height / 2 - (w.top + w.height / 2)); });
+  check('lệch số khối (chú thích HTML): cuộn Source, tiêu đề Part 8 ở giữa khung Preview (±40px)', Math.abs(dP) <= 40, dP + 'px');
+  await rv.click('#btn-layout'); await rv.click('#set-reset'); await rv.keyboard.press('Escape');
   await rctx.close();
   // ── end review: layout & scroll ──
 
