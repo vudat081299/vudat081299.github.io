@@ -194,7 +194,6 @@
 
 - `tools/lint.py`: `data/hints.json` đúng khuôn, không trùng, `renamed` trỏ đúng; một chỗ `innerHTML`; script ngoài
   ghim phiên bản, có `integrity`; `index.html` không `<style>`; không file `css/`, `js/` mồ côi; `js/core/` thuần.
-- Cổng không bấm nút. Sửa sự kiện, neo hay giao diện thì chạy `tools/smoke.cjs` (CI chưa chạy): dán, bôi đen ở hai
-  chế độ, gõ và bấm gợi ý, prompt, chép, phím tắt, mất neo, tải lại, lịch sử, bố cục rộng, chuyển gợi ý cũ, theme,
-  khổ 1024px và 390px. Chạy tay: `python3 -m http.server 8347` ở gốc repo, rồi
-  `node md-annotate/tools/smoke.cjs http://127.0.0.1:8347/md-annotate/`.
+- `tools/test-core.mjs` (node, không trình duyệt): bài thử của `js/core/`. Logic thuần mới thì thêm bài thử ở đây.
+- Sửa sự kiện, neo hay giao diện thì chạy thêm `tools/smoke.cjs` (CI chưa chạy): `python3 -m http.server 8347` ở gốc
+  repo, rồi `node md-annotate/tools/smoke.cjs http://127.0.0.1:8347/md-annotate/`. Văn bản mẫu: `tools/fixtures/`.

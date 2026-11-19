@@ -670,6 +670,20 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     check(`kéo từ ${name} mở hộp nhận xét`, await sp.isVisible('#pop'));
     await sp.keyboard.press('Escape'); await sp.waitForTimeout(100);
   }
+  // Văn bản có định nghĩa link `[id]: url` (marked bỏ khối ấy): section ở Source vẫn khớp Preview, không lệch dòng.
+  const demo = require('fs').readFileSync(require('path').join(__dirname, 'fixtures/markdown-it-demo.md'), 'utf8');
+  await sp.click('.ma-tab[data-view="edit"]');
+  await sp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.value = t; ta.dispatchEvent(new Event('input')); }, demo);
+  await sp.waitForTimeout(200);
+  await sp.click('.ma-tab[data-view="split"]'); await sp.waitForTimeout(200);
+  await sp.click('#btn-layout'); await sp.check('#set-focus'); await sp.keyboard.press('Escape');
+  await sp.evaluate(() => [...document.querySelectorAll('#v-md > p')].find((e) => e.textContent.startsWith('The killer feature')).scrollIntoView({ block: 'center' }));
+  await sp.waitForTimeout(200);
+  await sp.hover('#v-md > p:has-text("The killer feature")'); await sp.waitForTimeout(350);
+  const lit = await sp.evaluate(() => [...document.querySelectorAll('#v-src .ma-ln.is-sec')].map((l) => l.textContent.replace(/\n$/, '')).filter((t) => t.trim()));
+  check('Focus ở Split, văn bản có [id]: url: Source sáng đúng section Plugins',
+    lit[0] === '## Plugins' && lit.some((t) => t.startsWith('[syntax plugins]')) && !lit.some((t) => t.startsWith('[id]:')) && lit.length === 3, JSON.stringify(lit));
+  await sp.click('#btn-layout'); await sp.click('#set-reset'); await sp.keyboard.press('Escape');
   await sctx.close();
 
   check('không lỗi console', !errors.length, errors.join(' | '));
