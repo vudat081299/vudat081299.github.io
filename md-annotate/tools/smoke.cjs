@@ -428,11 +428,28 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   const md = await page.$eval('#v-md', (el) => { const cs = getComputedStyle(el); return { max: cs.maxWidth, fs: cs.fontSize }; });
   check('giới hạn khổ chữ 60ch và cỡ chữ 18px', md.max === '60ch' || (parseFloat(md.max) > 400 && parseFloat(md.max) < 800), JSON.stringify(md));
   check('cỡ chữ Preview 18px', md.fs === '18px', md.fs);
+  await page.check('#set-focus');
+  await setRange('#set-dim', 20);
   await page.keyboard.press('Escape');
+  await page.click('.ma-tab[data-view="view"]');
+  const fp = await page.$$eval('#v-md p', (ps) => ps.length);
+  if (fp >= 2) {
+    await page.hover('#v-md p >> nth=0');
+    await page.waitForTimeout(300);
+    const op = await page.$$eval('#v-md p', (ps) => ps.slice(0, 2).map((p) => getComputedStyle(p).opacity));
+    check('Focus mode: đoạn dưới con trỏ rõ, đoạn khác mờ 20%', op[0] === '1' && op[1] === '0.2', op.join(','));
+  }
+  await page.click('.ma-tab[data-view="src"]');
+  await page.hover('#v-src .ma-ln >> nth=2'); await page.waitForTimeout(300);
+  const ol = await page.$$eval('#v-src .ma-ln', (ls) => ls.slice(0, 6).map((l) => getComputedStyle(l).opacity));
+  check('Focus mode ở Source: dòng trỏ ± 1 rõ, dòng xa mờ', ol[1] === '1' && ol[2] === '1' && ol[3] === '1' && ol[0] === '0.2' && ol[5] === '0.2', ol.join(','));
+  await page.mouse.move(5, 5); await page.waitForTimeout(300);
+  check('Focus mode: con trỏ ra ngoài khung thì không mờ', (await page.$eval('#v-src .ma-ln', (l) => getComputedStyle(l).opacity)) === '1');
   await page.reload(); await page.waitForFunction(() => window.marked && window.DOMPurify); await page.waitForTimeout(100);
   check('tải lại: nhớ bề rộng 100%', (await wrapW()) === 1920);
+  check('tải lại: nhớ Focus mode', await page.evaluate(() => document.documentElement.classList.contains('ma-focus')));
   await page.click('#btn-layout'); await page.click('#set-reset');
-  check('Reset về mặc định', Math.abs((await wrapW()) - 1344) <= 1 && (await page.textContent('#set-measure-o')) === 'Fill pane' && (await page.textContent('#set-fs-o')) === '16px');
+  check('Reset về mặc định', Math.abs((await wrapW()) - 1344) <= 1 && (await page.textContent('#set-measure-o')) === 'Fill pane' && (await page.textContent('#set-fs-o')) === '16px' && !(await page.evaluate(() => document.documentElement.classList.contains('ma-focus'))));
   await page.keyboard.press('Escape');
   await page.evaluate(() => { localStorage.removeItem('md-annotate:prefs:v1'); });
   await page.setViewportSize({ width: 1280, height: 900 });

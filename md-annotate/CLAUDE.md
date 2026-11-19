@@ -31,6 +31,8 @@
 - Hộp *Layout* (`#btn-layout`, `#dlg-layout`): bề rộng vùng làm việc (`prefs.wrap`: `auto` hoặc 50–100%, sàn 720px,
   đặt `--wrap-w`), khổ chữ *Preview* (`prefs.measure`: 0 = hết khung hoặc 50–140ch, `--md-max`), cỡ chữ *Preview*
   (`prefs.mdfs` 13–22px, `--md-fs`). Áp ngay khi kéo; hộp neo góc phải, nền sau trong suốt; điện thoại ẩn mục bề rộng.
+- *Focus mode* trong hộp *Layout* (`prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ mọi khối trừ khối
+  dưới con trỏ (đoạn ở *Preview*, dòng ± 1 ở *Source*), chỉ khi con trỏ trong khung, chỉ `@media (hover: hover)`. Chỉ CSS.
 - *Preview* mặc định rộng hết khung; trích khối là vạch trái một cạnh (không bo), bảng có viền ngoài bo góc.
 - Trống văn bản: thẻ `#start` (vùng thả, *Paste from clipboard*, *Open .md file*, *Sample text*, ba bước) trên ô
   nhập thấp; có chữ thì ẩn thẻ, hiện hàng công cụ. Ctrl/⌘ + V ngoài ô nhập cũng dán khi còn trống.
