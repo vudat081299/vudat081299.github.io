@@ -8,7 +8,9 @@
 
 ## Giao diện
 
-- Token màu và font chép từ `index.html` gốc (REPO-023). Mã màu chỉ khai ở `:root` / `html.dark`.
+- Nền, mực và font chép từ `index.html` gốc; xanh lá riêng, sáng hơn (MDAN-002). Mã màu chỉ khai ở `:root` /
+  `html.dark`.
+- Nền nút chính và huy hiệu: `--accent` + chữ `--on-accent`. Chữ, viền, link xanh: `--green` (sắc đậm cùng họ).
 - Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024).
 - Đầu trang một dòng (tên + phụ đề mờ). Tên phiên sửa tại chỗ ở thanh của khung văn bản.
 - Máy rộng (≥ 1081px): cột phải dính dưới thanh trên; hai thẻ co lại và cuộn bên trong. Nút chép nằm ở đầu

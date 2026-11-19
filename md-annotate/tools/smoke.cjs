@@ -73,6 +73,12 @@ async function scriptSelect(page, rootSel, needle) {
 }
 const out = (page) => page.$eval('#out', (el) => el.textContent);
 const items = (page) => page.$$eval('#list .ma-item', (els) => els.map((e) => e.textContent));
+const accentCheck = (page) => page.evaluate(() => {
+  const lum = (c) => { const x = c.match(/[\d.]+/g).slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+  const b = document.getElementById('btn-copy'), cs = getComputedStyle(b);
+  const bg = lum(cs.backgroundColor), fg = lum(cs.color);
+  return { bgLum: +bg.toFixed(2), ratio: +((Math.max(bg, fg) + 0.05) / (Math.min(bg, fg) + 0.05)).toFixed(2) };
+});
 const overflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
 (async () => {
@@ -194,6 +200,8 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('lời dẫn đầu, câu số dòng nối ngay sau', /^Sửa văn bản markdown theo từng nhận xét[^\n]*\nSố dòng \(L\) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n/.test(await out(page)));
   await page.check('#inc-doc');
   check('kèm toàn văn trong khối rào', /Văn bản gốc:\n```markdown\n# Bài thử[\s\S]*\n```$/.test(await out(page)));
+  const acc = await accentCheck(page);
+  check('nút chính xanh sáng, chữ tối ≥ 4,5:1 (sáng)', acc.bgLum > 0.3 && acc.ratio >= 4.5, JSON.stringify(acc));
   await page.click('#btn-copy');
   await page.waitForTimeout(150);
   const clip = await page.evaluate(() => navigator.clipboard.readText());
@@ -331,6 +339,8 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     return { n: sp.length, low: sp.map((e) => { const l = lum(getComputedStyle(e).color); return [e.className, (Math.max(l, bg) + 0.05) / (Math.min(l, bg) + 0.05)]; }).filter((x) => x[1] < 4.5) };
   });
   check('tô màu: mọi token ≥ 4,5:1 trên nền (tối)', dlow.n > 10 && !dlow.low.length, JSON.stringify(dlow));
+  const dacc = await accentCheck(dpage);
+  check('nút chính xanh sáng, chữ tối ≥ 4,5:1 (tối)', dacc.bgLum > 0.3 && dacc.ratio >= 4.5, JSON.stringify(dacc));
   check('tối: tab đang chọn sáng hơn nền nhóm tab và có viền xanh', tab.ratio >= 1.2 && /inset/.test(tab.ring), JSON.stringify(tab));
   await dctx.close();
 
