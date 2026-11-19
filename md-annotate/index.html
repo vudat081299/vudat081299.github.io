@@ -2836,6 +2836,16 @@ This page lets you **comment on individual passages** of a markdown text, then g
 
       /* Bôi đen: chuột mở hộp ngay khi thả; cảm ứng và bàn phím hiện nút nổi. */
       var dragging = false, lastSel = null, lastSelAt = 0, selTimer = null;
+      /* Kéo bắt đầu ở vùng nền (lề trái / phải của khung, nền trang quanh khung) cũng là bôi đen: thả ra mà vùng chọn
+         nằm trong văn bản thì mở hộp nhận xét như kéo trên chữ. Bỏ qua nút, ô nhập, panel, hộp thoại, vách kéo, và bấm
+         trên thanh cuộn (offsetX/Y vượt clientWidth/Height). */
+      document.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'mouse' || e.button !== 0) return;
+        var t = e.target;
+        if (!t || !t.closest || t.closest('button, input, textarea, select, label, a, summary, [contenteditable], .ma-panel, .ma-pop, dialog, .ma-bar, .ma-divider, #panel-grip, .ma-dock, #fab')) return;
+        if (t.nodeType === 1 && t !== document.documentElement && (e.offsetX > t.clientWidth || e.offsetY > t.clientHeight)) return;
+        dragging = true;
+      }, true);
       ['v-src', 'v-md'].forEach(function (id) {
         var root = $(id);
         root.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse' && e.button === 0) dragging = true; });

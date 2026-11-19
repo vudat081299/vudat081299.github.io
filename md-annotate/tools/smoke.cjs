@@ -618,6 +618,16 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('cuộn nguồn về đầu: Preview cũng về đầu', (await sp.$eval('#wrap-md', (w) => w.scrollTop)) === 0);
   await sp.evaluate(() => { const w = document.getElementById('wrap-src'); w.scrollTop = w.scrollHeight; }); await sp.waitForTimeout(300);
   check('cuộn nguồn tới cuối: Preview cũng tới cuối', await sp.$eval('#wrap-md', (w) => w.scrollHeight - w.clientHeight - w.scrollTop <= 2));
+  // Kéo bắt đầu ở lề phải của khung Preview, rồi ở nền trang bên trái khung: đều mở hộp nhận xét.
+  await sp.evaluate(() => { document.getElementById('wrap-md').scrollTop = 0; }); await sp.waitForTimeout(150);
+  for (const [name, side] of [['lề phải khung Preview', 'right'], ['nền trang bên trái khung', 'left']]) {
+    const g = await sp.evaluate((side) => { const w = document.getElementById('wrap-md').getBoundingClientRect(), d = document.getElementById('doc').getBoundingClientRect();
+      const ps = [...document.querySelectorAll('#v-md > p')].slice(0, 3).map((p) => p.getBoundingClientRect().top + 8);
+      return { x: side === 'right' ? w.right - 22 : d.left - 8, y1: ps[0], y2: ps[2] }; }, side);
+    await sp.mouse.move(g.x, g.y1); await sp.mouse.down(); await sp.mouse.move(g.x, g.y2, { steps: 6 }); await sp.mouse.up(); await sp.waitForTimeout(200);
+    check(`kéo từ ${name} mở hộp nhận xét`, await sp.isVisible('#pop'));
+    await sp.keyboard.press('Escape'); await sp.waitForTimeout(100);
+  }
   await sctx.close();
 
   check('không lỗi console', !errors.length, errors.join(' | '));

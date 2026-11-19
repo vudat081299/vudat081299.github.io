@@ -76,7 +76,8 @@
 
 - Khung soạn nổi: trích dẫn tối đa 2 dòng, dài hơn thì mờ dần (`.is-long`, mask theo `--ink`); chip gợi ý nền
   `--chip`, không viền; *Save* là nút `--accent`. Hiện ra có chuyển động ngắn, tắt khi `prefers-reduced-motion`.
-- Chuột thì mở ngay khi thả; cảm ứng và bàn phím thì hiện nút nổi *Comment on selection*. Máy hẹp hoặc màn cảm
+- Chuột thì mở ngay khi thả, kể cả khi kéo bắt đầu ở vùng nền (lề trái / phải, nền trang quanh khung; trừ nút, ô nhập,
+  panel, hộp thoại, vách kéo, thanh cuộn); cảm ứng và bàn phím thì hiện nút nổi *Comment on selection*. Máy hẹp hoặc màn cảm
   ứng: hộp là tấm trượt đáy.
 - Đoạn đang chọn tô bằng CSS Custom Highlight (`::highlight(ma-pending)`), không sửa DOM: sửa DOM giữa lúc kéo chuột
   làm mất vùng chọn.
