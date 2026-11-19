@@ -764,6 +764,14 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   }
   await rv.click('.ma-tab[data-view="split"]');
   await rv.click('#btn-layout'); await rv.click('#set-reset'); await rv.keyboard.press('Escape');
+  // Panel thu gọn (prefs.rail) rồi thu hẹp cửa sổ ≤ 1080px: panel đã ẩn khỏi lưới, văn bản không mất cột 56px.
+  await rv.click('#btn-rail');
+  for (const w of [1024, 390]) {
+    await rv.setViewportSize({ width: w, height: 800 }); await rv.waitForTimeout(200);
+    const gc = await rv.evaluate(() => getComputedStyle(document.querySelector('.ma-grid')).gridTemplateColumns);
+    check(`${w}px, panel thu gọn: lưới một cột`, gc.trim().split(/\s+/).length === 1, gc);
+  }
+  await rv.setViewportSize({ width: 1440, height: 900 }); await rv.click('#btn-unrail');
   await rctx.close();
   // ── end review: layout & scroll ──
 

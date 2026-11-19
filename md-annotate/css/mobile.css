@@ -2,7 +2,8 @@
    thành tấm đáy, prefers-reduced-motion. Nạp cuối cùng. */
 /* ĐIỆN THOẠI */
 @media (max-width: 1080px) {
-  .ma-grid { grid-template-columns: minmax(0, 1fr); }
+  /* Kèm html.ma-railed: panel thu gọn ở máy rộng không được để lại cột 56px trống khi cửa sổ hẹp lại. */
+  .ma-grid, html.ma-railed .ma-grid { grid-template-columns: minmax(0, 1fr); }
   .ma-grid > .ma-panel { display: none; }
   /* Thanh đáy: số nhận xét (mở panel trong tấm trượt) và nút chép. */
   body { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
