@@ -56,8 +56,9 @@ function bandSec(root) {
   var blocks = ensureSec(root);
   if (!blocks.length) return null;
   var pane = root.closest('.ma-view');
+  var se = document.scrollingElement, sc = isSplit() ? pane : se;
   var vr = isSplit() ? pane.getBoundingClientRect() : { top: Math.max(0, root.getBoundingClientRect().top), bottom: window.innerHeight };
-  var band = bandBounds(vr.top, vr.bottom, window.innerHeight);
+  var band = bandBounds(vr.top, vr.bottom, window.innerHeight, sc.scrollTop, sc.scrollHeight - sc.clientHeight);
   var i = bandPick(blocks.length,
     function (k) { return blocks[k].getBoundingClientRect().bottom; },
     function (k) { return blocks[k].getBoundingClientRect().top; }, band[0], band[1]);

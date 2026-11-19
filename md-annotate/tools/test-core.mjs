@@ -104,6 +104,18 @@ check('spanAt: dòng trong khối, giữa hai khối', eq([0, 1, 2, 3, 4, 5].map
   const d = pairBlocks(['H1', 'DETAILS', 'P', '', 'H2', 'P'], ['H1', 'DETAILS', 'H2', 'P']);
   check('pairBlocks: <details> gộp ba khối', eq(d.md, [0, 1, -1, -1, 2, 3]) && eq(d.src, [0, 1, 4, 5]), JSON.stringify(d));
 }
+{
+  // Dải đọc trượt về mép khi vùng cuộn ở sát đầu / cuối, để section đầu và cuối cũng chạm dải được.
+  check('bandBounds: giữa vùng cuộn vẫn 25–50%', eq(bandBounds(100, 900, 1000, 2000, 5000), [300, 500]));
+  check('bandBounds: cuộn hết lên thì hai mốc ở mép trên', eq(bandBounds(100, 900, 1000, 0, 5000), [100, 100]));
+  check('bandBounds: cuộn hết xuống thì hai mốc ở mép dưới', eq(bandBounds(100, 900, 1000, 5000, 5000), [900, 900]));
+  let prev, mono = true;
+  for (const max of [100, 500, 5000]) {
+    prev = [-Infinity, -Infinity];
+    for (let s = 0; s <= max; s += 10) { const b = bandBounds(0, 800, 800, s, max).map((x) => x + s); if (b[0] < prev[0] || b[1] < prev[1]) mono = false; prev = b; }
+  }
+  check('bandBounds: dải (theo vị trí trong văn bản) không lùi khi cuộn tới', mono);
+}
 // ── end review: layout & scroll ──
 
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');

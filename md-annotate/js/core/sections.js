@@ -15,10 +15,17 @@ export function lineSections(spans, n) {
   for (var i = 0; i < n; i++) flags.push(!!heads[i]);
   return numberSections(flags);
 }
-/* Dải đọc: 25–50% chiều cao vùng nhìn [top, min(viewH, bottom)]. Trả [mốc trên, mốc dưới]. */
-export function bandBounds(top, bottom, viewH) {
-  var vh = Math.max(1, Math.min(viewH, bottom) - top);
-  return [top + vh * 0.25, top + vh * 0.5];
+/* Dải đọc: 25–50% chiều cao vùng nhìn [top, min(viewH, bottom)]. Biết vị trí cuộn (scrolled trên tổng max) thì hai
+   mốc trượt về mép trong nửa vùng nhìn sát đầu / cuối: cuộn hết lên thì cả hai ở mép trên, hết xuống thì ở mép dưới,
+   không thì section đầu / cuối ngắn không bao giờ thắng. Mốc (tính trong văn bản) không lùi khi cuộn tới.
+   Trả [mốc trên, mốc dưới]. */
+export function bandBounds(top, bottom, viewH, scrolled, max) {
+  var vh = Math.max(1, Math.min(viewH, bottom) - top), r = vh / 2;
+  function mark(p) {
+    if (!(max > 0)) return top + vh * p;
+    return top + vh * (p * Math.min(1, scrolled / r) + (1 - p) * Math.max(0, 1 - (max - scrolled) / r));
+  }
+  return [mark(0.25), mark(0.5)];
 }
 /* Khối "chạm dải" trong n khối xếp dọc theo thứ tự: khối đầu tiên có đáy dưới b1 và đỉnh trên b2; không có thì khối
    ngay trên dải. bottomAt(i) / topAt(i) đọc vị trí khối i (tìm nhị phân nên chỉ đọc vài khối). Trả chỉ số; n > 0. */

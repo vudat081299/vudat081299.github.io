@@ -740,6 +740,22 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   const dP = await rv.evaluate(() => { const w = document.getElementById('wrap-md').getBoundingClientRect(); const h = [...document.querySelectorAll('#v-md > h2')].find((e) => e.textContent === 'Part 8').getBoundingClientRect();
     return Math.round(h.top + h.height / 2 - (w.top + w.height / 2)); });
   check('lệch số khối (chú thích HTML): cuộn Source, tiêu đề Part 8 ở giữa khung Preview (±40px)', Math.abs(dP) <= 40, dP + 'px');
+  // Dải đọc ở sát đầu / cuối: section đầu (ngắn) và section cuối (ngắn) cũng chọn được, ở Split và ở Preview.
+  const edge = ['# Title', '', 'Short intro.', ''];
+  for (let i = 1; i <= 16; i++) { edge.push('## Sec ' + i, ''); for (let k = 0; k < 4; k++) edge.push('Paragraph ' + i + '.' + k + ' ' + 'lorem ipsum '.repeat(10), ''); }
+  edge.push('## Last', '', 'Final short line.', '');
+  await rvLoad(edge.join('\n'));
+  const litMd = () => rv.evaluate(() => { const h = [...document.querySelectorAll('#v-md > .is-sec')].find((e) => /^H[1-6]$/.test(e.tagName)); return h ? h.textContent : null; });
+  for (const mode of ['split', 'view']) {
+    await rv.click(`.ma-tab[data-view="${mode}"]`); await rv.waitForTimeout(150);
+    const sc = mode === 'split' ? 'document.getElementById("wrap-md")' : 'document.scrollingElement';
+    await rv.evaluate(`${sc}.scrollTop = 1; ${sc}.scrollTop = 0`); await rv.waitForTimeout(250);
+    const top = await litMd();
+    await rv.evaluate(`${sc}.scrollTop = 1e7`); await rv.waitForTimeout(250);
+    const end = await litMd();
+    check(`dải đọc (${mode}): cuộn tới đầu sáng section đầu, tới cuối sáng section cuối`, top === 'Title' && end === 'Last', JSON.stringify({ top, end }));
+  }
+  await rv.click('.ma-tab[data-view="split"]');
   await rv.click('#btn-layout'); await rv.click('#set-reset'); await rv.keyboard.press('Escape');
   await rctx.close();
   // ── end review: layout & scroll ──
