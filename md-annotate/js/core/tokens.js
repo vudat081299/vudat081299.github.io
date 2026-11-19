@@ -13,21 +13,16 @@ var INLINE = [
   ['tag', /(<!--.*?-->|<\/?[A-Za-z][\w-]*(?:\s[^<>\n]*)?\/?>)/g, ['sx-tag']],
   ['url', /(\bhttps?:\/\/[^\s<>()\[\]"']*[^\s<>()\[\]"'.,;:!?])/g, ['sx-url']],
   ['strong', /(\*\*|__)(?=\S)([^\n]*?\S)(\1)/g, ['sx-punct', 'sx-strong', 'sx-punct']],
-  ['em', /(\*|_)(?=[^\s*_])([^\n]*?[^\s*_]|[^\s*_])(\1)(?![\w*])/g, ['sx-punct', 'sx-em', 'sx-punct']],
+  /* _nhấn_ không bắt đầu giữa từ (snake_case): lookbehind loại ngay trong regex, khỏi thử lại từng dấu _ giữa từ */
+  ['em', /(\*|(?<![\p{L}\p{N}])_)(?=[^\s*_])([^\n]*?[^\s*_]|[^\s*_])(\1)(?![\w*])/gu, ['sx-punct', 'sx-em', 'sx-punct']],
   ['strike', /(~~)(?=\S)([^\n]*?\S)(~~)/g, ['sx-punct', 'sx-strike', 'sx-punct']],
   ['string', /("[^"\n]{1,200}"|“[^”\n]{1,200}”)/g, ['sx-string']]
 ];
 var PIPE = ['pipe', /(\|)/g, ['sx-punct']];
-/* Chỗ khớp đầu tiên của luật r từ vị trí `from` trở đi, hoặc null. */
+/* Chỗ khớp đầu tiên của luật từ vị trí `from` trở đi, hoặc null. */
 function nextMatch(rule, line, from) {
-  var rx = rule[1], m;
-  rx.lastIndex = from;
-  m = rx.exec(line);
-  /* _nhấn_ không bắt đầu giữa từ (snake_case) */
-  while (m && rule[0] === 'em' && m[1] === '_' && m.index > 0 && /[\p{L}\p{N}]/u.test(line[m.index - 1])) {
-    rx.lastIndex = m.index + 1; m = rx.exec(line);
-  }
-  return m;
+  rule[1].lastIndex = from;
+  return rule[1].exec(line);
 }
 function inlineToks(line, off, base, out, table) {
   var rules = table ? INLINE.concat([PIPE]) : INLINE, pos = 0;
