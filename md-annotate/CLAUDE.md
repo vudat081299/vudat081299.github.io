@@ -17,8 +17,8 @@
 | `js/core/hints.js`, `js/core/place.js` | đếm, xếp hạng gợi ý, chip của hộp nhận xét; chỗ đặt hộp nổi (`popPlace`) |
 | `js/core/tokens.js`, `js/core/runs.js` | token của *Source*; cắt chữ theo token / highlight / dòng, `lineCount` |
 | `js/core/blocks.js`, `js/core/sections.js` | `lexSpans`, `pairBlocks` (khối nguồn ↔ Preview); đánh số section, dải đọc |
-| `js/core/panes.js`, `js/core/picks.js` | Split đủ chỗ không (`splitFits`), cao hai khung, `ma-fit`; nhiều dòng: dải dòng, nhãn, `pickInfo` |
-| `js/core/sync-math.js`, `js/core/text.js` | đường cong cuộn theo nhau; `plural`, `lineOf`, `slug` |
+| `js/core/panes.js`, `js/core/picks.js`, `js/core/sync-math.js`, `js/core/text.js` | `splitFits`, cao hai khung; nhiều dòng (`pickInfo`); cuộn theo nhau; `plural`, `lineOf`, `slug` |
+| `js/core/review.js`, `js/ui/review.js`, `js/ui/review-panel.js` | đã đọc: đơn vị, neo dấu, tiến độ; làn, phím, nút hộp nhận xét, viên thuốc; tab *Review* |
 | `js/ui/store.js`, `js/ui/dom.js` | `localStorage`, khoá, `prefs`; `$`, `h()`, `icon()`, `toast()`, `dragBar()` |
 | `js/ui/state.js`, `js/ui/render.js` | phiên `S`, lưu, chuyển phiên; `renderAll()`, kết quả neo `mdText`, `anchors`, `ordered`… |
 | `js/ui/anchor-dom.js`, `js/ui/marks.js` | vùng chọn ↔ vị trí chữ; `<mark class="ma-hl">`, tô active / hover |
@@ -41,8 +41,7 @@
 ## Ngôn ngữ (MDAN-007)
 
 - Chữ giao diện bằng tiếng Anh: nút, nhãn, tooltip, placeholder giao diện, `aria-label`, toast, hộp thoại, văn bản mẫu; `<html lang="en">`.
-- Nội dung vào prompt bằng tiếng Việt: gợi ý mặc định (`data/hints.json`), câu số dòng, `Văn bản gốc:`, câu mẫu và
-  placeholder của lời dẫn đầu / cuối. Trích dẫn và nhận xét của người dùng giữ nguyên như đã gõ.
+- Prompt bằng tiếng Việt: gợi ý mặc định, câu số dòng, `Văn bản gốc:`, dòng đã đọc, câu mẫu / placeholder lời dẫn. Trích dẫn, nhận xét giữ nguyên.
 - Chú thích code, tài liệu `.md`, `desc` trang chủ: tiếng Việt. Số nhiều qua `plural(n, word)`; số theo `en`, ngày theo `en-GB`.
 
 ## Giao diện
@@ -61,47 +60,38 @@
   chập chờn khi trang dư 1px. Rời Split thì bỏ. Đừng thêm `scrollbar-gutter` cho `html`: nó ăn bề rộng, mất Split ở 1280px.
 - Hộp *Layout*: bề rộng vùng làm việc (`prefs.wrap`: `auto` hoặc 50–100%, sàn 720px, `--wrap-w`), khổ chữ *Preview* (`prefs.measure`:
   0 = hết khung hoặc 50–140ch, `--md-max`), cỡ chữ *Preview* (`prefs.mdfs` 13–22px, `--md-fs`). Áp ngay khi kéo; điện thoại ẩn bề rộng.
-- *Focus mode* trong hộp *Layout* (`prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ mọi thứ ngoài một
-  section. Section bắt đầu ở mỗi tiêu đề cấp cao: h1–h6 con trực tiếp của `#v-md`; ở *Source* là dòng đầu token
-  `heading` hoặc khối HTML mở bằng `<h1>`…`<h6>` của `marked.lexer` (số section hai bên khớp). Sáng: `.is-sec`.
+- *Focus mode* (hộp *Layout*, `prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ ngoài một section. Section mở ở mỗi tiêu đề
+  cấp cao: h1–h6 con của `#v-md`; *Source*: token `heading` hay khối HTML `<h1>`…`<h6>` của `marked.lexer` (số khớp). Sáng: `.is-sec`.
 - Chọn section (`prefs.focusBy`): `pointer` theo chuột (rời cả hai khung thì hết mờ, trừ khi hộp nhận xét mở); `band` là section
   chạm dải 25–50% vùng nhìn (khung cuộn ở *Split*, cửa sổ ở chế độ khác); trong nửa vùng nhìn sát đầu / cuối, hai mốc trượt về mép
   (`bandBounds`). Vẽ lại thì section đang sáng được đặt lại (`refreshBand()`). *Split*: section cùng số ở khung kia cũng sáng; dải
   chỉ đo trên khung người dùng cuộn gần nhất (`bandFrom`), cuộn do trang đặt (`setByPage`) không đổi nó; chưa cuộn thì đo trên Preview.
-- "Chạm dải" (`bandPick`): khối đầu tiên có đáy dưới mốc 25% và đỉnh trên mốc 50%. Đuôi section trước còn nằm trong
-  dải thì section trước thắng; không khối nào chạm thì lấy khối ngay trên dải.
-- Ở dải đọc, dòng dưới chuột cũng sáng (`.is-line`): một `.ma-ln`, hoặc `li` / `tr` / `dt` / `dd` / khối cấp cao ở
-  *Preview*; phần khác của khối cấp cao chứa nó mờ (`.ma-dimx`). Ở *Split* khung kia sáng cả khối tương ứng (cặp của
-  `blockPairs()`: cùng số khối thì i ↔ i, lệch thì `pairBlocks` ghép theo dãy con chung dài nhất của thẻ). Cuộn thì tìm lại dòng dưới chuột; rời khung thì hết.
+- "Chạm dải" (`bandPick`): khối đầu tiên có đáy dưới mốc 25%, đỉnh trên mốc 50%; đuôi khối trước còn trong dải thì nó thắng; không chạm thì khối ngay trên.
+- Ở dải đọc, dòng dưới chuột cũng sáng (`.is-line`): một `.ma-ln`, hoặc `li` / `tr` / `dt` / `dd` / khối cấp cao ở *Preview*; phần
+  khác của khối chứa nó mờ (`.ma-dimx`). *Split*: khung kia sáng khối ghép (`blockPairs()`: cùng số khối thì i ↔ i, lệch thì
+  `pairBlocks` theo dãy con chung dài nhất của thẻ). Cuộn thì tìm lại dòng dưới chuột; rời khung thì hết.
 - Khối nguồn (`lexSpans`) neo vào văn bản gốc, không cộng dồn `raw`: marked bỏ khối `[id]: url` và đổi tab đầu dòng.
-- Bôi đen ở *Split*: đoạn tương ứng ở khung kia tô bằng CSS Highlight `ma-mirror` (`mirrorSel`, tìm bằng `locate`, như neo
-  nhận xét). Hộp nhận xét mở thì `ma-pending` thay thế.
+- Bôi đen ở *Split*: đoạn tương ứng ở khung kia tô bằng Highlight `ma-mirror` (`mirrorSel`, `locate`); hộp nhận xét mở thì `ma-pending` thay.
 - *Preview* giống GitHub (MDAN-006): màu Primer `--gh-*`, code tô bằng highlight.js (`--hl-*`) khi khối rào ghi ngôn ngữ hljs biết.
   `ghExtras()` đổi `> [!NOTE|TIP|…]` thành `.ma-alert`, tiêu đề vẽ bằng CSS. Cỡ chữ trong `.ma-md` bằng `em` theo `--md-fs`.
-- Cuộn theo nhau ở *Split* (`prefs.sync`, mặc định bật): `buildSyncMap()` lấy mốc từ các cặp khối của `blockPairs()`, chỉ đỉnh với
-  đỉnh (thêm đáy làm tốc độ giật), nội suy Hermite đơn điệu (`monoCurve`). Điểm tham chiếu ở giữa khung, sát đầu / cuối trượt về mép.
-- Khung theo đặt ngay trong sự kiện cuộn của khung dẫn (không rAF); cuộn do trang đặt (`syncExpect`) bị bỏ qua.
-- Hộp thoại: chỉ `.ma-dlg__b` cuộn. Tab *Prompt*: thân panel không cuộn; *Options* mở cuộn riêng (≤ 38vh), `#out` lấp
-  phần còn lại và tự cuộn. Không lồng hai vùng cuộn.
+- Cuộn theo nhau ở *Split* (`prefs.sync`, mặc định bật): mốc là đỉnh các cặp khối của `blockPairs()` (thêm đáy làm giật), nội suy Hermite
+  đơn điệu; tham chiếu giữa khung, sát mép trượt về mép. Khung theo đặt ngay trong sự kiện cuộn (không rAF); bỏ qua `syncExpect`.
+- Hộp thoại: chỉ `.ma-dlg__b` cuộn. Tab *Prompt*: thân không cuộn; *Options* mở cuộn riêng (≤ 38vh), `#out` lấp phần còn lại. Không lồng vùng cuộn.
 - *Preview* mặc định rộng hết khung; trích khối là vạch trái một cạnh (không bo), bảng có viền ngoài bo góc.
-- Trống văn bản: thẻ `#start` trên ô nhập thấp; có chữ thì ẩn thẻ, hiện hàng công cụ. Ctrl/⌘ + V ngoài ô nhập cũng dán khi còn trống.
-- Một `<input type="file" id="file-in">` ẩn; mọi nút *Open .md file* (`.js-open`) gọi `click()` của nó.
-- Hiệu ứng rê chuột bọc trong `@media (hover: hover)`, để màn cảm ứng không dính trạng thái rê.
-- Phần tử ẩn cho trình đọc màn hình (`.ma-sr`) đặt `top: 0`, không thì nó đẩy trang dài thêm 1px.
+- Trống văn bản: thẻ `#start`; có chữ thì hiện hàng công cụ. Ctrl/⌘ + V ngoài ô nhập cũng dán khi trống. Một `#file-in` ẩn cho mọi `.js-open`.
+- Rê chuột bọc trong `@media (hover: hover)` (cảm ứng không dính trạng thái rê). `.ma-sr` đặt `top: 0`, không thì trang dài thêm 1px.
 
 ## Panel bên phải
 
-- Một panel (`#panel`): đầu có hai tab *Comments · N* / *Prompt*, thân cuộn (tab *Prompt*: xem mục Hộp thoại ở trên), đáy ghim trạng thái,
-  *Download .md* và *Copy prompt*. Nút chép luôn trong khung nhìn, dù bao nhiêu nhận xét (smoke đo với 32).
-- Máy rộng (≥ 1081px): panel dính, chạy từ đỉnh vùng nội dung tới đáy khung nhìn. `top`, `height` của panel và
-  `padding` trên dưới của lưới cùng dùng `--s4`: đổi một chỗ thì đổi cả ba.
-- Tuỳ chọn prompt (kiểu, số dòng, tệp, toàn văn, lời dẫn) gập trong *Options* ở tab Prompt; dòng tóm tắt cho biết đang bật gì.
+- Một panel (`#panel`): đầu có ba tab *Comments · N* / *Prompt* / *Review* và nút biểu tượng *Hints*, thân cuộn, đáy ghim trạng thái,
+  *Download .md* và *Copy prompt*. Nút chép luôn trong khung nhìn (smoke đo với 32 nhận xét). Panel hẹp thì bỏ huy hiệu tab (container query).
+- Máy rộng (≥ 1081px): panel dính từ đỉnh vùng nội dung tới đáy khung nhìn; `top`, `height` của panel và đệm dọc lưới cùng `--s4`.
+- Tuỳ chọn prompt (kiểu, số dòng, tệp, dòng đã đọc, toàn văn, lời dẫn) gập trong *Options* ở tab Prompt; dòng tóm tắt cho biết đang bật gì.
 - ⌘/Ctrl + Shift + C chép prompt ở mọi chỗ. Chép xong nút đổi thành *Copied ✓* một lúc; báo đọc màn hình qua
   `#sr-live`. Toast chỉ dùng khi chép hỏng. Chép / tải neo lại lúc bấm (`freshDoc()`): *Edit* vẽ lại trễ 250ms.
-- ≤ 1080px: panel ẩn khỏi lưới; thanh đáy có *Comments · N* (mở panel trong tấm trượt `#dlg-panel`, đóng thì panel
-  về chỗ cũ) và nút chép. Lưới một cột kể cả khi `html.ma-railed`.
-- Thẻ nhận xét: không viền; số, vị trí (L12), nhận xét nổi bật, trích dẫn mờ có vạch trái (một cạnh nên không bo,
-  REPO-025). Nút sửa / xoá hiện khi rê hoặc focus; màn cảm ứng thì luôn hiện. Rê thẻ thì tô đoạn và ngược lại.
+- ≤ 1080px: panel ra khỏi lưới; thanh đáy: *Comments · N* (panel vào tấm trượt `#dlg-panel`, đóng thì về chỗ), `✓ N%`, nút chép; một cột cả khi `ma-railed`.
+- Thẻ nhận xét: không viền; số, L12, nhận xét, trích dẫn mờ có vạch trái (không bo, REPO-025). Sửa / xoá hiện khi rê hoặc
+  focus (cảm ứng: luôn). Rê thẻ thì tô đoạn và ngược lại.
 - Điện thoại (≤ 720px): một cột, không có *Split*; vùng chạm ≥ `--h-touch` (cả màn cảm ứng). Lưu nhận xét không cuộn trang.
 - Toast không nhận chuột (trừ nút *Undo*), để không chặn bôi đen chữ dưới; có hộp thoại mở thì toast nằm trong nó.
 
@@ -126,7 +116,7 @@
 - Nút *Syntax colors* lưu ở `prefs.syntax`; tắt thì khung là chữ trơn.
 - Lề số dòng: mỗi dòng một `<span class="ma-ln">` (block, giữ cả ký tự xuống dòng), số là `::before` + counter,
   `user-select: none`. Không chèn số dòng thành chữ. Dòng có nhận xét: `.has-c` + `data-c` (id), vạch `--accent`;
-  bấm vào lề mở nhận xét đầu của dòng, bấm đúp thì chọn nhiều dòng (mục dưới).
+  bấm vào lề mở nhận xét đầu của dòng, bấm đúp thì chọn nhiều dòng. Sau vạch là làn đã đọc (`--lane-w`), rồi chữ.
 
 ## Nhận xét nhiều dòng (MDAN-012)
 
@@ -142,6 +132,21 @@
 - Mỗi phần neo riêng; phần mất neo bỏ khỏi highlight và prompt; mất hết mới mất neo. Xếp theo phần đầu tìm thấy; số ở phần đầu.
 - Thẻ: `L12, L15-16`, mỗi phần một trích dẫn (mất neo thì gạch). `overlapWarning`: trùng khi mọi trích dẫn giống nhau.
 
+## Đánh dấu đã đọc (MDAN-013)
+
+- Đơn vị: khối của `lexSpans`; danh sách ≥ 2 mục thì mỗi mục cấp cao một đơn vị (mục con thuộc mục cha); bảng, khối code là
+  một đơn vị; khối không chữ / số (kẻ ngang) không tính. Tiến độ tính theo số dòng, làm tròn xuống.
+- Dấu ở `S.reviews` (`{ h, p, n, q, r }`, không số dòng): băm chữ chuẩn hoá (bỏ dấu mục), băm hai hàng xóm, 80 ký tự đầu.
+  Chuyển chỗ, chữ giữ nguyên: ✓. Chữ đổi: ○, tính là chưa đọc, đánh dấu lại là ✓. Không tìm lại được: mất, báo toast và tab *Review*.
+- Nhận xét không đánh dấu đã đọc. *Dim reviewed* (`prefs.rvDim`) chỉ làm mờ, không gập: gập làm lệch cuộn theo nhau và dải đọc.
+- Làn: lớp phủ `.ma-lane` trong `#wrap-*`, ngoài `#v-src` / `#v-md`. *Source*: giữa vạch nhận xét và chữ, không phải lề số;
+  *Preview*: lề trái. Bấm: bật / tắt; Shift + bấm: cả dải; làn của tiêu đề (hình vuông) bật cả section.
+- Phím X / Shift+X / J / K: bỏ qua khi đang gõ, khi hộp thoại hay hộp nhận xét mở, khi có phím bổ trợ khác Shift. Đơn vị hiện tại
+  là đơn vị chạm dải đọc (dưới con trỏ khi Focus theo chuột), làn có `.is-cur`. Nhảy tới thì đặt đỉnh ngay trên mốc trên (`bandScroll`).
+- Nút ✓ Reviewed của hộp nhận xét (nới ra trọn khối, cả khi chọn dòng ở lề số) do `ui/review.js` theo dõi hộp bằng MutationObserver.
+- Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt) thêm `Đã đọc kỹ: … Chưa đọc: …`; tắt thì prompt y hệt từng byte.
+- Máy hẹp / cảm ứng: viên thuốc `#rv-pill` chỉ đánh dấu, không bỏ dấu. Màn cảm ứng chưa có dấu thì tắt làn.
+
 ## Neo đoạn trích
 
 - Mỗi nhận xét lưu `quote`, `prefix`, `suffix` (48 ký tự), `origin` (`src` | `md`) và `rel` (vị trí tương đối),
@@ -150,8 +155,7 @@
   tầng 2 chỉ so chữ và số, chữ thường, bỏ cú pháp markdown có chữ (`SYNTAX`).
 - Nhiều chỗ khớp: `prefix` / `suffix` khớp dài nhất, rồi gần `rel` nhất (so mọi chỗ; trích ở khung kia thì so ở tầng 2).
 - Không tìm thấy ở cả hai chế độ: nhận xét mất neo, hiện `!` trong danh sách và không vào prompt.
-- Chọn ở *Source* thì trích đúng nguồn markdown; chọn ở *Preview* thì trích chữ đã dựng.
-- Vùng chọn bắt đầu hay kết thúc giữa từ thì nới ra tới mép từ (chữ, số, dấu Unicode) trước khi neo.
+- Chọn ở *Source* thì trích đúng nguồn, ở *Preview* thì chữ đã dựng; vùng chọn giữa từ thì nới ra mép từ (chữ, số, dấu Unicode).
 - Thứ tự trong prompt là thứ tự đoạn trích trong nguồn.
 
 ## Prompt
@@ -167,8 +171,7 @@
 
 - Đếm số lần dùng theo khoá chuẩn hoá (`normKey`); xếp theo số lần, rồi lần dùng gần nhất, rồi thứ tự gốc.
 - Tỉ lệ: (số lần + 1) / (tổng số lần + số gợi ý). Chỉ hiện khi đã đếm từ 5 lần nhận xét (`MIN_PCT`).
-- Hộp nhận xét hiện 5 gợi ý đầu (`POP_CHIPS`); phần còn lại sau chip `+N`.
-- Nhận xét gõ tay ≤ 80 ký tự được đếm; dùng từ hai lần trở lên thì thành gợi ý.
+- Hộp nhận xét hiện 5 gợi ý đầu (`POP_CHIPS`), còn lại sau chip `+N`. Nhận xét gõ tay ≤ 80 ký tự được đếm; từ hai lần thì thành gợi ý.
 - Bỏ gợi ý là ẩn, không xoá số đếm: gợi ý mặc định không quay lại khi nạp lại `data/hints.json`.
 - Đổi chữ một gợi ý mặc định: thêm cặp cũ → mới vào `renamed` trong `data/hints.json`; `migrateHints()` dồn số đếm
   và giữ trạng thái ẩn. Chỉ khoá từng là gợi ý mặc định (`seed`) được dồn.
@@ -177,11 +180,9 @@
 
 - Mọi lần đọc ghi `localStorage` bọc try/catch; hỏng thì trang vẫn chạy, chỉ báo một lần.
 - Khoá: `md-annotate:index:v1` (danh sách phiên), `md-annotate:s:<id>` (một phiên), `md-annotate:current`,
-  `md-annotate:stats:v1` (số đếm gợi ý), `md-annotate:prefs:v1` (chế độ xem, kiểu prompt, lời dẫn mặc định, tô màu,
-  bề rộng panel, thu gọn, tỉ lệ hai khung).
-- Đổi cấu trúc phiên thì tăng hậu tố `v1` và chuyển dữ liệu cũ, đừng bỏ. Trường thêm, tuỳ chọn (`parts`) thì không tăng.
-- Phiên trống (không văn bản, không nhận xét) không vào lịch sử.
-- Mở file hoặc văn bản mẫu khi phiên đang có nội dung thì mở phiên mới, không ghi đè.
+  `md-annotate:stats:v1` (số đếm gợi ý), `md-annotate:prefs:v1` (chế độ xem, kiểu prompt, lời dẫn, tô màu, panel, Layout, `rvDim`).
+- Đổi cấu trúc phiên thì tăng hậu tố `v1` và chuyển dữ liệu cũ. Trường thêm, tuỳ chọn (`parts`, `reviews`, `rvPrompt`) thì không tăng.
+- Phiên trống (không văn bản, không nhận xét) không vào lịch sử. Mở file / văn bản mẫu khi phiên có nội dung thì mở phiên mới.
 
 ## An toàn
 
@@ -189,8 +190,7 @@
   `<style>`, `style=`, `<form>`, `<dialog>`; id / name thêm tiền tố `user-content-`: markdown không chạm CSS, id của trang.
 - Link ở bản dựng thành `<span class="ma-a">` (`unlink()`, URL ở `title`), không dựng lại `<a>`: kéo trên link vẫn là bôi đen.
 - Chỉ một chỗ gán `innerHTML` (`renderAll()` ở `js/ui/render.js`): HTML đã qua DOMPurify. Mọi chỗ khác dựng DOM bằng `h()` và `textContent`.
-- Thiếu mạng thì *Preview* báo lỗi, *Source* vẫn dùng được.
-- Mở bằng `file://`: module ES không chạy; script inline chỉ hiện `#file-notice` (cách mở qua HTTP).
+- Thiếu mạng thì *Preview* báo lỗi, *Source* vẫn dùng được (không có đơn vị đã đọc). `file://`: chỉ hiện `#file-notice`.
 
 ## Cổng: `sh md-annotate/tools/check.sh`
 

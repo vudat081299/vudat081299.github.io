@@ -10,6 +10,7 @@
 - MDAN-010 · Dải đọc: chữ của mục cha vẫn sáng khi rê vào mục con · `md-annotate/js/ui/focus.js`, `md-annotate/css/focus.css`
 - MDAN-011 · Cảnh báo trùng đoạn theo chữ, không theo chỗ · `md-annotate/js/core/comments.js`
 - MDAN-012 · Nhận xét nhiều dòng chọn theo số dòng · `md-annotate/`
+- MDAN-013 · Đánh dấu đoạn đã đọc kỹ, xem còn lại bao nhiêu · `md-annotate/`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -82,3 +83,14 @@ không bằng bôi đen: bấm đúp số dòng thì vào chế độ chọn dò
 Cancel đóng hộp nhưng giữ các dòng. Ngoài chế độ, bấm số dòng và bôi đen chữ giữ như cũ. Hộp nhận xét của chế độ này
 có nút kéo đi chỗ khác; lần mở sau hộp về chỗ mặc định. Mỗi dải dòng liền là một đoạn trích; prompt gọn ghi
 `3. L12 "…"; L15-16 "…" — nhận xét`, nhận xét một đoạn ra chữ y như trước.
+
+## MDAN-013 · Đánh dấu đoạn đã đọc kỹ, xem còn lại bao nhiêu
+19/11/2026 · `md-annotate/`
+
+Chủ trang đọc soát không theo thứ tự (vài đoạn rải rác trước, rồi từ trên xuống) nên cần đánh dấu chỗ đã đọc và thấy
+chỗ còn lại. Đơn vị là khối (mỗi mục cấp cao của danh sách là một đơn vị), gộp lên theo section. Ghi nhận xét không tự
+đánh dấu. Khối đã đọc mà chữ đổi thì thành "đã đổi" (○), tính là chưa đọc; chuyển chỗ mà chữ giữ nguyên thì vẫn ✓; dấu
+không tìm lại được thì báo, không mất lặng lẽ. Đánh dấu bằng phím X (Shift+X cả section, J / K tới chỗ chưa đọc), làn mảnh
+cạnh khối (không phải lề số dòng), nút ✓ Reviewed trong hộp nhận xét, nút cạnh tiêu đề; điện thoại có nút "✓ Done · next".
+Tab *Review* có tiến độ, dàn ý section và *Dim reviewed* (chỉ làm mờ, không gập). Prompt có thể thêm một dòng tiếng Việt
+nói dòng nào đã đọc kỹ; mặc định tắt.
