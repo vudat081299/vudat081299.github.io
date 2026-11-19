@@ -2,7 +2,7 @@
    X / Shift+X / J / K, nút ✓ Reviewed của hộp nhận xét, viên thuốc "✓ Done · next ↓" ở máy hẹp / cảm ứng, làm mờ đơn vị
    đã đọc (.is-rv, html.ma-rvdim). Đơn vị, neo dấu, tiến độ ở core/review.js; tab Review ở ui/review-panel.js.
    Làn là lớp phủ .ma-lane trong #wrap-src / #wrap-md (ngoài #v-src / #v-md: text của khung không đổi). Vẽ lại sau mỗi
-   renderAll() (applyReview) và khi khung đổi cỡ (ResizeObserver).
+   renderAll() (applyReview) và khi khung đổi cỡ (ResizeObserver); đánh dấu (commitReviews) chỉ tô lại nút có sẵn.
    Xuất: applyReview, commitReviews, initReview, jumpUnit, markUnits, reviewDoc, rvState, setRvTouched, stepOpen, toggleSection.
    Dùng: core/anchor.js, core/text.js, core/sections.js, core/review.js, ui/dom.js, ui/store.js, ui/state.js,
      ui/sync-scroll.js, ui/views.js, ui/layout.js, ui/popup.js, ui/picks.js, ui/prompt.js, ui/review-panel.js. */
@@ -26,7 +26,8 @@ var memo = { text: null, marks: null, spans: null };
 export function rvState() {
   var spans = blockPairs().spans, marks = S.reviews || (S.reviews = []);
   if (memo.text !== S.text || memo.marks !== marks || memo.spans !== spans) {
-    var units = reviewUnits(S.text, spans), res = resolveMarks(units, marks);
+    /* Chỉ dấu đổi: giữ mảng units cũ (làn đang vẽ cho nó thì chỉ tô lại, restyleLanes). */
+    var units = memo.text === S.text && memo.spans === spans ? memo.units : reviewUnits(S.text, spans), res = resolveMarks(units, marks);
     memo = { text: S.text, marks: marks, spans: spans, units: units, res: res, secs: reviewSections(units, res.state, []) };
   }
   return memo;
@@ -39,7 +40,7 @@ export function reviewDoc() {
 }
 
 /* ĐÁNH DẤU. Thao tác nhiều đơn vị có Undo trên toast (trang không có chồng hoàn tác chung). */
-export function commitReviews() { scheduleSave(); applyReview(); if (S.rvPrompt) renderPrompt(); }
+export function commitReviews() { scheduleSave(); applyReview(true); if (S.rvPrompt) renderPrompt(); }
 export function markUnits(idxs, on, undoMsg) {
   if (!idxs.length) return;
   var r = rvState(), before = S.reviews, sid = S.id;
@@ -89,6 +90,12 @@ function tip(r, i) {
   if (s === 'changed') return 'Text changed since you reviewed it. Click to confirm ' + lines + ' (X)';
   return 'Mark ' + lines + ' reviewed (X). Shift+click marks a range';
 }
+/* Lớp của nút làn đơn vị i (không gồm .is-cur / .is-flash). secOf: số section → trạng thái section. */
+function laneClass(r, i, secOf) {
+  var u = r.units[i];
+  return 'ma-lane__b is-' + r.res.state[i] + (u.head ? ' is-head sec-' + secOf[u.sec] : '');
+}
+function secStates(r) { var o = {}; r.secs.forEach(function (sc) { o[sc.sec] = sc.state; }); return o; }
 function fillLane(w, r) {
   var box = lanes[w], wrap = wrapOf(w), root = rootOf(w), out = [];
   box.replaceChildren();
@@ -101,9 +108,7 @@ function fillLane(w, r) {
     if (!l0) return;
     x = l0.getBoundingClientRect().left - wr.left + parseFloat(getComputedStyle(l0).paddingLeft) - laneW - 6;
   } else x = Math.max(0, root.getBoundingClientRect().left - wr.left - laneW - 6);
-  var secOf = {};
-  r.secs.forEach(function (sc) { secOf[sc.sec] = sc.state; });
-  var frag = document.createDocumentFragment();
+  var secOf = secStates(r), frag = document.createDocumentFragment();
   r.units.forEach(function (u, i) {
     var top, bottom;
     if (w === 'src') {
@@ -117,17 +122,28 @@ function fillLane(w, r) {
     }
     top -= off; bottom -= off;
     out.push({ i: i, top: top, bottom: bottom });
-    var btn = h('button', {
-      type: 'button', tabindex: '-1', 'data-u': String(i), title: tip(r, i),
-      class: 'ma-lane__b is-' + r.res.state[i] + (u.head ? ' is-head sec-' + secOf[u.sec] : '')
-    });
+    var btn = h('button', { type: 'button', tabindex: '-1', 'data-u': String(i), title: tip(r, i), class: laneClass(r, i, secOf) });
     btn.style.cssText = 'left:' + Math.round(x) + 'px;top:' + Math.round(top) + 'px;height:' + Math.max(16, Math.round(bottom - top)) + 'px';
     frag.append(btn);
   });
   box.append(frag);
 }
 var laying = false, painting = false;   // chặn vòng: currentUnit() → ensureGeo() → layoutLanes() → paintCur()
-function layoutLanes() { var r = rvState(); laying = true; fillLane('src', r); fillLane('md', r); laying = false; paintCur(); }
+var laneUnits = null;                    // units mà làn đang vẽ
+function layoutLanes() { var r = rvState(); laying = true; fillLane('src', r); fillLane('md', r); laying = false; laneUnits = r.units; paintCur(); }
+/* Chỉ dấu đổi (đơn vị, chỗ không đổi): đổi lớp và tooltip của nút có sẵn, không đo lại, không dựng lại (văn bản dài). */
+function restyleLanes(r) {
+  var secOf = secStates(r);
+  ['src', 'md'].forEach(function (w) {
+    Array.prototype.forEach.call(lanes[w].children, function (b) {
+      var i = +b.dataset.u, want = laneClass(r, i, secOf), t = tip(r, i);
+      ['is-cur', 'is-flash'].forEach(function (c) { if (b.classList.contains(c)) want += ' ' + c; });
+      if (b.className !== want) b.className = want;
+      if (b.title !== t) b.title = t;
+    });
+  });
+  paintCur();
+}
 /* Đơn vị X sẽ đánh dấu (dải đọc, hay dưới con trỏ): làn của nó có .is-cur ở cả hai khung. */
 var curRaf = 0;
 function paintCur() {
@@ -157,24 +173,28 @@ function onLaneClick(e) {
   anchorU = i;
 }
 
-/* Làm mờ đơn vị đã đọc: lớp .is-rv trên dòng Source và phần tử Preview; CSS chỉ làm mờ khi html.ma-rvdim. */
+/* Làm mờ đơn vị đã đọc: lớp .is-rv trên dòng Source và phần tử Preview; CSS chỉ làm mờ khi html.ma-rvdim. Chỉ chạm
+   phần tử đổi trạng thái: gỡ hết rồi gắn lại thì trình duyệt tính lại kiểu của mọi dòng (văn bản dài: hàng trăm ms). */
 function paintDone(r) {
-  document.querySelectorAll('#v-src .is-rv, #v-md .is-rv').forEach(function (el) { el.classList.remove('is-rv'); });
-  var lines = $('v-src').children;
+  var lines = $('v-src').children, on = new Uint8Array(lines.length), md = new Set();
   r.units.forEach(function (u, i) {
     if (r.res.state[i] !== 'done') return;
-    for (var k = u.a; k <= u.b && k < lines.length; k++) lines[k].classList.add('is-rv');
+    for (var k = u.a; k <= u.b && k < lines.length; k++) on[k] = 1;
     var el = mdEl(r, i);
-    if (el) el.classList.add('is-rv');
+    if (el) md.add(el);
   });
+  for (var k = 0; k < lines.length; k++) lines[k].classList.toggle('is-rv', !!on[k]);
+  document.querySelectorAll('#v-md .is-rv').forEach(function (el) { if (!md.has(el)) el.classList.remove('is-rv'); });
+  md.forEach(function (el) { el.classList.toggle('is-rv', true); });
 }
 
-/* VẼ: gọi cuối renderAll() và sau mỗi lần đánh dấu. */
+/* VẼ: gọi cuối renderAll() và sau mỗi lần đánh dấu (marksOnly: văn bản và khung không đổi, làn chỉ tô lại). */
 var lostSeen = { sid: null, n: 0 };
-export function applyReview() {
-  var r = rvState(), p = progress(r.units, r.res.state), nl = r.res.lost.length;
+export function applyReview(marksOnly) {
+  var r = rvState(), p = progress(r.units, r.res.state), nl = r.res.lost.length, de = document.documentElement;
   if (S.reviews.length) S.rvPct = p.pct; else delete S.rvPct;
-  document.documentElement.classList.toggle('ma-reviewing', S.reviews.length > 0);
+  if (de.classList.contains('ma-reviewing') !== S.reviews.length > 0) marksOnly = false;   // điện thoại: lề trái Preview đổi
+  de.classList.toggle('ma-reviewing', S.reviews.length > 0);
   /* Dấu mất vì văn bản đổi: báo một lần, như nhận xét mất neo; danh sách ở tab Review. */
   if (lostSeen.sid === S.id && nl > lostSeen.n) {
     var k = nl - lostSeen.n;
@@ -182,7 +202,7 @@ export function applyReview() {
   }
   lostSeen = { sid: S.id, n: nl };
   paintDone(r);
-  layoutLanes();
+  if (marksOnly && laneUnits === r.units) restyleLanes(r); else layoutLanes();
   renderReviewPanel(r, p);
   syncPill(r, p);
   syncPopRv();

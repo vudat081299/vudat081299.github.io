@@ -1269,6 +1269,26 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     for (let i = 0; i < 6; i++) { await ap.keyboard.press('x'); await ap.waitForTimeout(60); }
     await ap.waitForTimeout(1200);
     check('đã đọc: X bấm nhanh lúc trang đang cuộn mượt đánh dấu sáu đơn vị đầu liền nhau', (await lanes('md')).replace(/\*/g, '').startsWith('ddddddt'), await lanes('md'));
+    // Văn bản ~5.000 dòng ở Split: X (đã có dấu) không dựng lại làn, không tính lại kiểu mọi dòng.
+    const big = [];
+    for (let s = 0; s < 160; s++) {
+      big.push('## Section ' + s, '');
+      for (let k = 0; k < 8; k++) big.push('Paragraph ' + s + '.' + k + ' some words here to read and review carefully.', '');
+      big.push('- item a ' + s, '- item b ' + s, '  - nested', '- item c ' + s, '', '```js', 'const x = ' + s + ';', '```', '', '| a | b |', '|---|---|', '| ' + s + ' | y |', '');
+    }
+    await ap.click('.ma-tab[data-view="edit"]'); await put(big.join('\n')); await ap.waitForTimeout(800);
+    await ap.click('.ma-tab[data-view="split"]'); await ap.waitForTimeout(800); await ap.mouse.click(3, 880);
+    const ms = await ap.evaluate(async () => {
+      const out = [];
+      for (let i = 0; i < 5; i++) {
+        const t0 = performance.now();
+        document.dispatchEvent(new KeyboardEvent('keydown', { key: 'x', bubbles: true }));
+        out.push(performance.now() - t0);
+        await new Promise((r) => setTimeout(r, 250));
+      }
+      return out.slice(1).sort((a, b) => a - b).map(Math.round);   // lần đầu bật html.ma-reviewing: vẽ lại cả làn
+    });
+    check('đã đọc: văn bản 5.000 dòng, X ở Split dưới 100ms (trung vị)', ms[1] < 100 && (await ap.$$eval('#wrap-md .ma-lane__b.is-done', (b) => b.length)) === 5, JSON.stringify(ms));
     await actx.close();
   }
   // ── end J / K / X tiến lên ──
