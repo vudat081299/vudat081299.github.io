@@ -643,11 +643,21 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await sp.click('#btn-layout'); await sp.click('label:has(input[name="focusby"][value="band"])'); await sp.keyboard.press('Escape');
   await sp.mouse.move(5, 5);
   await sp.evaluate(() => { const w = document.getElementById('wrap-src'); const ln = [...w.querySelectorAll('.ma-ln')].find((l) => l.textContent.startsWith('## Section 10'));
-    w.scrollTop += ln.getBoundingClientRect().top - (w.getBoundingClientRect().top + w.clientHeight * 0.3); });
+    w.scrollTop += ln.getBoundingClientRect().top - (w.getBoundingClientRect().top + w.clientHeight * 0.24); });
   await sp.waitForTimeout(400);
   const band = await sp.evaluate(() => ({ src: [...document.querySelectorAll('#v-src .ma-ln.is-sec')].map((l) => l.textContent).find((t) => t.startsWith('##')),
     md: [...document.querySelectorAll('#v-md > .is-sec')].map((e) => e.textContent).find((t) => /^Section/.test(t)) }));
   check('Dải đọc: section 10 sáng ở Source và Preview', band.src && band.src.startsWith('## Section 10') && band.md === 'Section 10', JSON.stringify(band));
+  // Cuộn Preview bằng bánh xe: dải đo trên Preview (khung dẫn), không trên Source vừa bị kéo theo.
+  const mdBox = await sp.evaluate(() => { const r = document.getElementById('wrap-md').getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+  await sp.mouse.move(mdBox.x, mdBox.y);
+  for (let i = 0; i < 12; i++) { await sp.mouse.wheel(0, 90); await sp.waitForTimeout(40); }
+  await sp.waitForTimeout(400);
+  const lead = await sp.evaluate(() => { const w = document.getElementById('wrap-md').getBoundingClientRect(), b1 = w.top + w.height * 0.25, b2 = w.top + w.height * 0.5;
+    const bl = [...document.querySelectorAll('#v-md > *')]; let i = bl.findIndex((e) => e.getBoundingClientRect().bottom > b1);
+    if (i < 0 || bl[i].getBoundingClientRect().top >= b2) i = Math.max(0, (i < 0 ? bl.length : i) - 1);
+    const lit = document.querySelector('#v-md > .is-sec'); return { want: bl[i].dataset.sec, got: lit && lit.dataset.sec }; });
+  check('Dải đọc ở Split đo trên khung đang cuộn (Preview)', lead.want != null && lead.want === lead.got, JSON.stringify(lead));
   await sp.click('#btn-layout'); await sp.click('#set-reset'); await sp.keyboard.press('Escape');
 
   // Kéo bắt đầu ở lề phải của khung Preview, rồi ở nền trang bên trái khung: đều mở hộp nhận xét.

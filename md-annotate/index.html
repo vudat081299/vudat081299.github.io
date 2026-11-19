@@ -2509,6 +2509,7 @@ This page lets you **comment on individual passages** of a markdown text, then g
       }
       /* Khung nào đổi vị trí khác với vị trí trang vừa đặt là khung người dùng đang cuộn: nó dẫn, khung kia theo ngay
          trong cùng khung hình. Sự kiện cuộn do trang đặt thì bỏ qua, nên không có vòng lặp qua lại. */
+      function setByPage(el) { var exp = syncExpect.get(el); return exp != null && Math.abs(el.scrollTop - exp) < 1; }
       function syncFrom(src) {
         var ws = $('wrap-src'), wm = $('wrap-md');
         var other = src === ws ? wm : ws;
@@ -2525,8 +2526,7 @@ This page lets you **comment on individual passages** of a markdown text, then g
       ['wrap-src', 'wrap-md'].forEach(function (id) {
         var el = $(id);
         el.addEventListener('scroll', function () {
-          var exp = syncExpect.get(el);
-          if (exp != null && Math.abs(el.scrollTop - exp) < 1) return; // do trang đặt
+          if (setByPage(el)) return;
           syncExpect.delete(el);
           if ($('views').dataset.mode !== 'split' || layoutVal('sync') === false) return;
           syncFrom(el);
@@ -2706,8 +2706,11 @@ This page lets you **comment on individual passages** of a markdown text, then g
           clearFocus(root); clearFocus(o);
         });
       });
-      $('wrap-src').addEventListener('scroll', function () { refreshBand($('v-src')); }, { passive: true });
-      $('wrap-md').addEventListener('scroll', function () { refreshBand($('v-md')); }, { passive: true });
+      /* Dải đọc đo trên khung người dùng đang cuộn; khung đi theo (do trang đặt) không giành quyền đo. */
+      [['wrap-src', 'v-src'], ['wrap-md', 'v-md']].forEach(function (p) {
+        var w = $(p[0]);
+        w.addEventListener('scroll', function () { refreshBand(setByPage(w) ? null : $(p[1])); }, { passive: true });
+      });
       window.addEventListener('scroll', function () { refreshBand(); }, { passive: true });
       window.addEventListener('resize', function () { refreshBand(); });
       // Đóng hộp nhận xét khi con trỏ đã ra ngoài khung: bỏ làm mờ (chế độ theo chuột).

@@ -40,6 +40,10 @@
 - Chọn section (`prefs.focusBy`): `pointer` theo chuột (chỉ chuột; rời cả hai khung thì hết mờ, trừ khi hộp nhận xét
   mở); `band` là section đầu tiên chạm dải 25–50% chiều cao vùng nhìn (khung cuộn ở *Split*, cửa sổ ở chế độ khác),
   cập nhật khi cuộn và khi vẽ lại. Ở *Split*, section cùng số ở khung kia cũng sáng (`focusBoth`).
+- Dải đọc ở *Split* chỉ đo trên một khung: khung người dùng cuộn gần nhất (`bandFrom`). Khung bị kéo theo phát sự
+  kiện cuộn do trang đặt (`setByPage`); sự kiện ấy không được đổi `bandFrom`. Chưa cuộn lần nào thì đo trên Preview.
+- "Chạm dải" (`bandSec`): khối đầu tiên có đáy dưới mốc 25% và đỉnh trên mốc 50%. Đuôi section trước còn nằm trong
+  dải thì section trước thắng; không khối nào chạm thì lấy khối ngay trên dải.
 - Bôi đen ở *Split*: đoạn tương ứng ở khung kia tô bằng CSS Highlight `ma-mirror` (`mirrorSel`, tìm bằng `locate`, như neo
   nhận xét). Hộp nhận xét mở thì `ma-pending` thay thế.
 - *Preview* giống GitHub (MDAN-006): font hệ thống, màu Primer ở token `--gh-*`, code tô màu bằng highlight.js
