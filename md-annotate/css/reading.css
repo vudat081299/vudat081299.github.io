@@ -1,5 +1,5 @@
-/* Dải tiến độ (MDAN-016; ui/minimap.js). Nạp sau review.css, trước mobile.css.
-   Đã đọc là --accent đặc; đã đổi chữ rỗng viền --ink-3 (≥ 3:1); chưa đọc nhạt --line. */
+/* Dải tiến độ và gợi ý theo thời gian đọc (MDAN-016; ui/minimap.js, ui/dwell.js). Nạp sau review.css, trước mobile.css.
+   Đã đọc là --accent đặc; đã đổi chữ rỗng viền --ink-3 (≥ 3:1); chưa đọc nhạt --line; gợi ý nền --hl-2 viền đứt. */
 
 /* DẢI TIẾN ĐỘ: fixed, JS đặt left / top / height sát mép phải khung, trái thanh cuộn. Vùng bấm chỉ rộng hơn vạch 2px:
    phần lề phải còn lại vẫn là nền để kéo bôi đen (MDAN-016). */
@@ -12,6 +12,7 @@
 .ma-mm__s { position: absolute; left: 0; right: 0; border-radius: 1px; background: var(--line); }
 .ma-mm__s.is-done { background: var(--accent); }
 .ma-mm__s.is-changed { background: var(--surface); box-shadow: inset 0 0 0 1px var(--ink-3); }
+.ma-mm__s.is-sug { background: var(--hl-2); outline: 1px dashed var(--ink-4); outline-offset: -1px; }
 /* Chấm nhận xét: tròn mực, viền nền để nổi trên đoạn xanh lẫn đoạn nhạt. */
 .ma-mm__dot {
   position: absolute; left: 50%; width: var(--mm-w); height: var(--mm-w); margin: calc(var(--mm-w) / -2) 0 0 calc(var(--mm-w) / -2);
@@ -24,3 +25,24 @@
 @media (hover: hover) { .ma-mm:hover .ma-mm__view, .ma-mm.is-drag .ma-mm__view { border-color: var(--ring); } }
 /* Màn cảm ứng: chỉ để xem (vạch mảnh không đạt --h-touch, lại nằm chỗ ngón tay vuốt). Điện thoại: ui/minimap.js ẩn. */
 @media (pointer: coarse) { .ma-mm { pointer-events: none; } }
+
+/* GỢI Ý trên làn: ✓ viền đứt trên nền xanh nhạt, vạch đứt suốt khối. Khác .is-cur (✓ viền đứt trên nền trắng). */
+.ma-lane .ma-lane__b.is-sug:not(.is-head)::before { top: 18px; background: repeating-linear-gradient(to bottom, var(--accent-line) 0 3px, transparent 3px 6px); }
+.ma-lane .ma-lane__b.is-sug:not(.is-head)::after { content: '✓'; color: var(--ink-2); border: 1.5px dashed var(--ink-3); background: var(--hl-2); }
+html.ma-reviewing .ma-lane__b.is-sug.is-cur:not(.is-head)::after {
+  content: '✓'; color: var(--ink-2); border: 1.5px dashed var(--ink-3); background: var(--hl-2);
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--edge-on);
+}
+@media (hover: hover) { .ma-lane__b.is-sug:not(.is-head):hover::after { border-style: solid; } }
+/* Màn cảm ứng chưa có dấu: làn tắt (review.css); có gợi ý thì chỉ hiện nút của đơn vị được gợi ý. */
+@media (hover: none) {
+  html:not(.ma-reviewing) .ma-lane:has(.is-sug) { display: block; }
+  html:not(.ma-reviewing) .ma-lane:has(.is-sug) .ma-lane__b:not(.is-sug) { display: none; }
+}
+
+/* TAB REVIEW: hàng gợi ý (chữ, Accept N suggested, Dismiss). */
+.ma-rv__sug {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) var(--s3); padding: var(--s2) var(--s3);
+  border-radius: var(--r); background: var(--accent-soft);
+}
+.ma-rv__sugt { flex: 1 1 100%; min-width: 0; font-size: var(--fs-sm); color: var(--ink-2); }

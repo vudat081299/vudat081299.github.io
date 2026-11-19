@@ -1,19 +1,20 @@
 /* Dải tiến độ (MDAN-016): một dải dọc mảnh sát mép phải mỗi khung đang hiện (Source, Preview; cả hai ở Split), ngay
    trái thanh cuộn. Mỗi đơn vị một đoạn theo vị trí / chiều cao của nó trong khung: đặc --accent đã đọc, rỗng viền đã đổi
-   chữ (○), nhạt chưa đọc; chấm ở chỗ có nhận xét; hộp khung nhìn. Bấm / kéo trên dải thì cuộn tới đó. Không có đơn vị
-   thì ẩn.
+   chữ (○), nhạt chưa đọc, viền đứt được gợi ý (ui/dwell.js); chấm ở chỗ có nhận xét; hộp khung nhìn. Bấm / kéo trên dải
+   thì cuộn tới đó (cuộn do trang, không tính là đọc). Không có đơn vị thì ẩn.
    Dải là phần tử position: fixed ngoài #v-src / #v-md (text của khung không đổi), đặt theo khung bằng JS. Vẽ lại đoạn
    khi ui/review.js xếp làn (vẽ, đánh dấu, đổi cỡ); khi cuộn chỉ dời hộp khung nhìn (và khung, ở chế độ cuộn cửa sổ).
    Điện thoại (≤ 720px): ẩn — lề chỉ 12px, dải sẽ đè chữ, thanh đáy đã có ✓ N%. Màn cảm ứng: chỉ để xem, không nhận chạm
    (dải 14px không đạt --h-touch, lại nằm đúng chỗ ngón tay vuốt cuộn).
    Toán ở core/minimap.js.
    Xuất: drawMinimap, initMinimap.
-   Dùng: core/minimap.js, ui/dom.js, ui/state.js, ui/views.js, ui/review.js. */
+   Dùng: core/minimap.js, ui/dom.js, ui/state.js, ui/views.js, ui/review.js, ui/dwell.js. */
 import { mmDots, mmScroll, mmSegments, mmView } from '../core/minimap.js';
 import { $, h, shown } from './dom.js';
 import { S } from './state.js';
 import { isSplit, view } from './views.js';
 import { laneGeo, rvState } from './review.js';
+import { noteJump, sugIdx } from './dwell.js';
 
 var GAP = 8, MIN_H = 80, SEG_MIN = 2, VIEW_MIN = 12, DOT_GAP = 5;
 var mqPhone = window.matchMedia('(max-width: 720px)');
@@ -50,7 +51,8 @@ function place(w, f) {
 /* Vẽ lại cả hai dải: gọi sau mỗi lần xếp làn (ui/review.js layoutLanes). */
 export function drawMinimap() {
   if (!strips.src) return;
-  var r = rvState(), g = laneGeo();
+  var r = rvState(), g = laneGeo(), sg = {};
+  sugIdx(r).forEach(function (i) { sg[i] = true; });
   ['src', 'md'].forEach(function (w) {
     var el = strips[w], gw = g[w] || [];
     var ok = view !== 'edit' && !!S.text && !mqPhone.matches && shown(rootOf(w)) && gw.length > 0;
@@ -59,7 +61,10 @@ export function drawMinimap() {
     frames[w] = f;
     if (!f) { el.hidden = true; return; }
     place(w, f);
-    var items = gw.map(function (e) { return { top: e.top, bottom: e.bottom, state: r.res.state[e.i] }; });
+    var items = gw.map(function (e) {
+      var s = r.res.state[e.i];
+      return { top: e.top, bottom: e.bottom, state: s !== 'done' && sg[e.i] ? 'sug' : s };
+    });
     var segs = mmSegments(items, f.total, f.H, SEG_MIN, 1).map(function (s) {
       var n = h('i', { class: 'ma-mm__s is-' + s.state });
       n.style.cssText = 'top:' + s.y.toFixed(1) + 'px;height:' + s.h.toFixed(1) + 'px';
@@ -107,6 +112,7 @@ function onScroll() {
 function scrollAt(w, clientY) {
   var f = frames[w];
   if (!f) return;
+  noteJump();
   var s = seen(w, f), target = mmScroll(clientY - f.top, f.H, f.total, s.view);
   if (f.split) { wrapOf(w).scrollTop = target; return; }
   window.scrollTo(0, window.scrollY + f.wr.top + target - Math.max(0, barBottom()));

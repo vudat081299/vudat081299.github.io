@@ -12,7 +12,7 @@
    Xuất: không (chạy khi nạp).
    Dùng: ui/store.js, ui/dom.js, ui/state.js, ui/hints.js, ui/render.js, ui/list.js, ui/prompt.js, ui/views.js,
      ui/sync-scroll.js, ui/panel.js, ui/layout.js, ui/help.js, ui/focus.js, ui/popup.js, ui/selection.js, ui/picks.js,
-     ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js. */
+     ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js. */
 import { KEY, store } from './ui/store.js';
 import { $ } from './ui/dom.js';
 import { initState, S } from './ui/state.js';
@@ -34,6 +34,7 @@ import { initEditor, syncInputs } from './ui/editor.js';
 import { initReview } from './ui/review.js';
 import { initReviewPanel } from './ui/review-panel.js';
 import { initMinimap } from './ui/minimap.js';
+import { initDwell } from './ui/dwell.js';
 
 function initShortcuts() {
   /* ⌘/Ctrl + Shift + C chép prompt, ở đâu cũng được. */
@@ -80,6 +81,7 @@ initPicks();
 initReview();
 initReviewPanel();
 initMinimap();
+initDwell();
 initState();
 
 /* KHỞI ĐỘNG */

@@ -1241,7 +1241,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   }
   // ── end hộp Shortcuts ──
 
-  // ── dải tiến độ (MDAN-016) ──
+  // ── dải tiến độ và gợi ý theo thời gian đọc (MDAN-016) ──
   {
     const mctx = await browser.newContext({ viewport: { width: 1440, height: 900 }, colorScheme: 'light', reducedMotion: 'reduce' });
     const mp = await mctx.newPage(); watch(mp);
@@ -1317,6 +1317,68 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     check('dải tiến độ: kéo thì cuộn theo, hộp khung nhìn dời theo', (await mp.$eval('.ma-mm[data-w="md"] .ma-mm__view', (v) => Math.round(parseFloat(v.style.top)))) < vb - 50);
     check('dải tiến độ: Split 1440 không tràn ngang', (await overflow(mp)) === 0, String(await overflow(mp)));
 
+    // Gợi ý: đọc P6 ở dải (đồng hồ giả 15 s), rồi tự cuộn qua thì hiện ✓ viền đứt; không tự đánh dấu.
+    await mp.mouse.move(md.x, md.y);
+    const u6 = await laneOf('Para P6 ');
+    const done0 = await nDone();
+    await putAt('Para P6 ', 0.32); await tick(600); await wheel(4);
+    await mp.clock.runFor(15000);
+    await wheel(120, 5); await tick(600);
+    let sg = await sugs();
+    await mp.click('#ptab-review'); await tick();
+    check('gợi ý: đơn vị đọc đủ lâu rồi cuộn qua có ✓ viền đứt, không thành dấu', sg.includes(u6) && (await nDone()) === done0 && (await mp.$$eval(`.ma-lane__b[data-u="${u6}"].is-sug`, (b) => b.length)) === 2, JSON.stringify(sg) + ' u6=' + u6);
+    check('gợi ý: tab Review có "Accept N suggested"', (await mp.isVisible('#rv-sug')) && (await mp.textContent('#rv-sug-ok')) === `Accept ${sg.length} suggested`, await mp.textContent('#rv-sug-ok'));
+    check('gợi ý: ✓ viền đứt khác đơn vị hiện tại (.is-cur)', await mp.$eval(`#wrap-md .ma-lane__b[data-u="${u6}"]`, (b) => getComputedStyle(b, '::after').backgroundColor !== 'rgb(255, 255, 255)' && getComputedStyle(b, '::after').borderStyle === 'dashed'));
+    check('gợi ý: dải tiến độ có đoạn được gợi ý', (await strip('md')).segs.some((x) => x.startsWith('sug')));
+    await mp.click('#rv-sug-ok'); await tick();
+    check('gợi ý: Accept đánh dấu mọi đơn vị được gợi ý', (await nDone()) === done0 + sg.length && !(await sugs()).length && !(await mp.isVisible('#rv-sug')), String(await nDone()));
+    await mp.click('.ma-toast__btn'); await tick();
+    check('gợi ý: Undo trả dấu và ✓ viền đứt', (await nDone()) === done0 && (await sugs()).length === sg.length);
+    await mp.$eval(`#wrap-md .ma-lane__b[data-u="${u6}"]`, (b) => b.scrollIntoView({ block: 'center' })); await tick();
+    await mp.click(`#wrap-md .ma-lane__b[data-u="${u6}"]`); await tick();
+    check('gợi ý: bấm làn của nó thì chấp nhận (đánh dấu), ✓ viền đứt mất', (await nDone()) === done0 + 1 && !(await sugs()).includes(u6));
+    await mp.click('#rv-sug-x'); await tick();
+    check('gợi ý: Dismiss bỏ các gợi ý còn lại', !(await sugs()).length && !(await mp.isVisible('#rv-sug')));
+
+    // Cuộn do script (không có thao tác người dùng): không gợi ý.
+    const u15 = await laneOf('Para P15 ');
+    await putAt('Para P15 ', 0.32); await tick(600); await wheel(4);
+    await mp.clock.runFor(15000);
+    await mp.$eval('#wrap-md', (w) => { w.scrollTop += 700; }); await tick(600);
+    check('gợi ý: cuộn do trang đặt (không bánh xe / phím / chạm) không gợi ý', !(await sugs()).includes(u15), JSON.stringify(await sugs()));
+    // J ngay sau khi lăn bánh xe: đơn vị hiện tại rời dải vì J (cuộn do trang) nên không được gợi ý.
+    const curU = () => mp.evaluate(() => { const b = document.querySelector('#wrap-md .ma-lane__b.is-cur'); return b ? +b.dataset.u : -1; });
+    await putAt('Para P18 ', 0.3); await tick(600); await wheel(4);
+    await mp.clock.runFor(15000);
+    await wheel(2);
+    const cj = await curU();
+    await mp.keyboard.press('j'); await tick(700);
+    const jb = await mp.evaluate((u) => { const w = document.getElementById('wrap-md'), b = document.querySelector(`#wrap-md .ma-lane__b[data-u="${u}"]`); return b.getBoundingClientRect().bottom - w.getBoundingClientRect().top < w.clientHeight * 0.25; }, cj);
+    check('gợi ý: J đưa đơn vị ra khỏi dải nhưng không gợi ý nó', cj >= 0 && jb && (await curU()) !== cj && !(await sugs()).includes(cj), JSON.stringify({ cj, jb, s: await sugs() }));
+    // Tab ẩn: thời gian không đếm.
+    const u11 = await laneOf('Para P11 ');   // giữa văn bản: dải đọc không trượt về mép
+    await putAt('Para P11 ', 0.32); await tick(600); await wheel(4);
+    await mp.evaluate(() => { Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'hidden' }); document.dispatchEvent(new Event('visibilitychange')); });
+    await mp.clock.runFor(15000);
+    await mp.evaluate(() => { delete document.visibilityState; document.dispatchEvent(new Event('visibilitychange')); });
+    await wheel(120, 5); await tick(600);
+    check('gợi ý: thời gian lúc tab ẩn không tính', (await mp.evaluate(() => document.visibilityState)) === 'visible' && !(await sugs()).includes(u11), JSON.stringify(await sugs()));
+    // Chữ của đơn vị đổi thì gợi ý của nó mất; tắt "Suggest from reading time" thì không gợi ý.
+    const u8 = await laneOf('Para P8 ');
+    await putAt('Para P8 ', 0.32); await tick(600); await wheel(4);
+    await mp.clock.runFor(15000);
+    await wheel(120, 5); await tick(600);
+    const had8 = (await sugs()).includes(u8);
+    await mp.evaluate(() => { const ta = document.getElementById('src-input'); ta.value = ta.value.replace('Para P8 chữ', 'Para P8 đổi chữ'); ta.dispatchEvent(new Event('input')); });
+    await tick(500);
+    check('gợi ý: chữ của đơn vị đổi thì gợi ý của nó mất', had8 && !(await sugs()).includes(await laneOf('Para P8 ')), String(had8));
+    await mp.click('#rv-suggest'); await tick();
+    await putAt('Para P9 ', 0.32); await tick(600); await wheel(4);
+    await mp.clock.runFor(15000);
+    await wheel(120, 5); await tick(600);
+    check('gợi ý: tắt "Suggest from reading time" thì không gợi ý, tuỳ chọn được nhớ', !(await sugs()).length && (await mp.evaluate(() => JSON.parse(localStorage.getItem('md-annotate:prefs:v1')).rvSuggest)) === false);
+    await mp.click('#rv-suggest'); await tick();
+
     // Preview một mình (cuộn cửa sổ): dải dính trong khung nhìn, dưới thanh trên; bấm cuộn cửa sổ.
     await mp.click('.ma-tab[data-view="view"]'); await tick(300);
     await mp.evaluate(() => window.scrollTo(0, 600)); await tick(300);
@@ -1333,7 +1395,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     check('390px: dải ẩn, không tràn ngang', (await mp.$$eval('.ma-mm', (ms) => ms.every((m) => m.hidden || !m.getBoundingClientRect().width))) && (await overflow(mp)) === 0, String(await overflow(mp)));
     await mctx.close();
   }
-  // ── end dải tiến độ ──
+  // ── end dải tiến độ và gợi ý ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();

@@ -454,9 +454,49 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
 }
 // ── end bảng phím tắt ──
 
-// ── dải tiến độ (MDAN-016) ──
+// ── dải tiến độ và gợi ý theo thời gian đọc (MDAN-016) ──
 {
+  const D = await import('../js/core/dwell.js');
   const M = await import('../js/core/minimap.js');
+  const R = await import('../js/core/review.js');
+  // Thời gian cần: 40% số từ ÷ 230 từ/phút, sàn 4 s, trần 60 s.
+  check('dwellNeed: 460 từ cần 48 s (40% ÷ 230 wpm)', D.dwellNeed(460) === 48000, String(D.dwellNeed(460)));
+  check('dwellNeed: đoạn ngắn cần ít nhất 4 s, đoạn rất dài nhiều nhất 60 s', D.dwellNeed(3) === 4000 && D.dwellNeed(0) === 4000 && D.dwellNeed(5000) === 60000);
+  check('dwellReady: đủ thời gian thì sẵn, thiếu 1 ms thì chưa', D.dwellReady(48000, 460) && !D.dwellReady(47999, 460) && !D.dwellReady(undefined, 10));
+  // Khoá: băm chữ + thứ tự trong các đơn vị trùng chữ; chữ đổi thì khoá đổi.
+  const text = '# T\n\nSame para.\n\nSame para.\n\nOther words here now.\n';
+  const spans = [{ a: 0, b: 0, heading: true, tag: 'H1' }, { a: 2, b: 2 }, { a: 4, b: 4 }, { a: 6, b: 6 }];
+  const units = R.reviewUnits(text, spans), keys = D.sugKeys(units);
+  check('sugKeys: đơn vị trùng chữ có khoá khác nhau', keys[1] !== keys[2] && keys[1].split('.')[0] === keys[2].split('.')[0] && new Set(keys).size === 4, JSON.stringify(keys));
+  check('unitWords: đếm từ của từng đơn vị', eq(D.unitWords(text, units), [1, 2, 2, 4]), JSON.stringify(D.unitWords(text, units)));
+  const units2 = R.reviewUnits(text.replace('Other words', 'Other changed words'), spans), keys2 = D.sugKeys(units2);
+  // Một bước đo: dải [200, 300]; A chạm dải, B dưới dải.
+  const it = (k, top, bottom, w) => ({ k, top, bottom, w });
+  const band = [200, 300];
+  let s = D.dwellStep({}, [it('A', 150, 250, 10), it('B', 320, 400, 10)], band, 0, { count: true, emit: true });
+  check('dwellStep: đơn vị chạm dải vào inb, đơn vị ngoài dải không', eq(s.tr.inb, ['A']) && !s.ready.length, JSON.stringify(s.tr));
+  // Đọc 5 s (mười bước 500 ms) rồi người dùng cuộn xuống: A lên trên dải → sẵn sàng gợi ý.
+  let tr = s.tr;
+  for (let k = 0; k < 10; k++) tr = D.dwellStep(tr, [it('A', 150, 250, 10), it('B', 320, 400, 10)], band, 500, { count: true, emit: true }).tr;
+  check('dwellStep: thời gian cộng cho đơn vị chạm dải ở bước trước', tr.ms.A === 5000 && !tr.ms.B, JSON.stringify(tr.ms));
+  const moved = D.dwellStep(s.tr, [it('A', 50, 150, 10), it('B', 220, 300, 10)], band, 1000, { count: true, emit: false }).tr;
+  check('dwellStep: khoảng thời gian thuộc về đơn vị chạm dải ở đầu khoảng, không phải đơn vị vừa vào', moved.ms.A === 1000 && !moved.ms.B, JSON.stringify(moved.ms));
+  const up = [it('A', 0, 100, 10), it('B', 170, 250, 10)];
+  check('dwellStep: rời dải đi lên sau đủ thời gian thì gợi ý', eq(D.dwellStep(tr, up, band, 0, { count: true, emit: true }).ready, ['A']));
+  check('dwellStep: rời dải do cuộn không phải của người dùng (emit tắt) thì không gợi ý', !D.dwellStep(tr, up, band, 0, { count: true, emit: false }).ready.length);
+  const down = [it('A', 400, 500, 10), it('B', 600, 700, 10)];
+  check('dwellStep: rời dải đi xuống (cuộn ngược lên) thì không gợi ý', !D.dwellStep(tr, down, band, 0, { count: true, emit: true }).ready.length);
+  let hid = s.tr;
+  for (let k = 0; k < 10; k++) hid = D.dwellStep(hid, [it('A', 150, 250, 10)], band, 500, { count: false, emit: true }).tr;
+  check('dwellStep: thời gian không đếm (tab ẩn, mất focus, cuộn do trang) không cộng', !hid.ms.A && !D.dwellStep(hid, up, band, 0, { count: true, emit: true }).ready.length, JSON.stringify(hid.ms));
+  let short = s.tr;
+  for (let k = 0; k < 7; k++) short = D.dwellStep(short, [it('A', 150, 250, 10)], band, 500, { count: true, emit: true }).tr;
+  check('dwellStep: chưa đủ 4 s thì không gợi ý', short.ms.A === 3500 && !D.dwellStep(short, up, band, 0, { count: true, emit: true }).ready.length);
+  // Vòng đời gợi ý: chỉ đơn vị chưa đọc hiện gợi ý; chữ đổi thì khoá cũ không còn, gợi ý rơi.
+  const sug = { [keys[1]]: true, [keys[3]]: true };
+  check('sugList: gợi ý hiện ở đơn vị chưa đọc hay đã đổi chữ', eq(D.sugList(sug, keys, ['todo', 'todo', 'todo', 'changed']), [1, 3]));
+  check('sugList: đơn vị đã đọc (chấp nhận gợi ý) không còn gợi ý', eq(D.sugList(sug, keys, ['todo', 'done', 'todo', 'todo']), [3]));
+  check('sugList: chữ của đơn vị đổi thì gợi ý của nó rơi', eq(D.sugList(sug, keys2, ['todo', 'todo', 'todo', 'todo']), [1]), JSON.stringify(keys2));
   // Đoạn của dải: co theo tỉ lệ, cao tối thiểu, gộp đơn vị liền cùng trạng thái.
   const seg = M.mmSegments([{ top: 0, bottom: 100, state: 'done' }, { top: 110, bottom: 200, state: 'done' }, { top: 210, bottom: 212, state: 'todo' }, { top: 600, bottom: 1000, state: 'done' }], 1000, 100, 2, 1);
   check('mmSegments: co theo H / total, gộp hai đơn vị liền cùng trạng thái', seg.length === 3 && seg[0].y === 0 && seg[0].h === 20 && seg[0].n === 2, JSON.stringify(seg));
@@ -473,7 +513,7 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
   check('mmScroll: sát đầu / cuối kẹp trong [0, total - view]', M.mmScroll(0, 200, 1000, 200) === 0 && M.mmScroll(200, 200, 1000, 200) === 800 && M.mmScroll(50, 200, 100, 200) === 0);
   check('mmDots: đổi ra px trên dải, bỏ chấm quá gần', eq(M.mmDots([500, 10, 520, 900], 1000, 100, 4), [1, 50, 90]), JSON.stringify(M.mmDots([500, 10, 520, 900], 1000, 100, 4)));
 }
-// ── end dải tiến độ ──
+// ── end dải tiến độ và gợi ý ──
 
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);

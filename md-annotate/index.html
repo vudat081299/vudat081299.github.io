@@ -259,6 +259,13 @@
                 <div class="ma-rv__acts">
                   <button class="ma-btn" type="button" id="rv-next" title="Scroll to the next block you have not reviewed (J)">Next unreviewed ↓</button>
                   <label class="ma-check" title="Fade reviewed blocks, for a top-to-bottom pass"><input type="checkbox" id="rv-dim" /> Dim reviewed</label>
+                  <label class="ma-check" title="When a block has sat in the reading band long enough to read it and you scroll past it, show a dashed ✓ on it. Nothing is marked until you accept it"><input type="checkbox" id="rv-suggest" /> Suggest from reading time</label>
+                </div>
+                <!-- Gợi ý theo thời gian đọc (ui/dwell.js, MDAN-016): chỉ gợi ý, người dùng chấp nhận mới thành dấu. -->
+                <div class="ma-rv__sug" id="rv-sug" hidden>
+                  <span class="ma-rv__sugt" id="rv-sug-t"></span>
+                  <button class="ma-btn ma-btn--go" type="button" id="rv-sug-ok" title="Mark every block shown with a dashed ✓ reviewed"></button>
+                  <button class="ma-link" type="button" id="rv-sug-x" title="Hide these suggestions">Dismiss</button>
                 </div>
                 <p class="ma-rv__lost" id="rv-lost" hidden><span id="rv-lost-t"></span><button class="ma-link" type="button" id="rv-lost-x">Dismiss</button></p>
                 <ol class="ma-rvs-list" id="rv-secs" aria-label="Sections"></ol>

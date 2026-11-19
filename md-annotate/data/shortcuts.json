@@ -25,7 +25,9 @@
         { "keys": [["Click ▢"]], "action": "The square beside a heading: mark or unmark the whole section" },
         { "keys": [["✓ Reviewed"]], "action": "In the comment box: mark the whole blocks touched by the selection or the picked lines" },
         { "keys": [["✓ Done · next ↓"]], "action": "Phone / touch: mark the block in the reading band and go to the next unreviewed one" },
-        { "keys": [["Click"], ["Drag"]], "action": "The progress strip at a pane's right edge: scroll there (mouse only)" }
+        { "keys": [["Click"], ["Drag"]], "action": "The progress strip at a pane's right edge: scroll there (mouse only)" },
+        { "keys": [["X"], ["Click"]], "action": "A dashed ✓ suggested from your reading time: accept it, marking the block reviewed" },
+        { "keys": [["Accept N suggested"]], "action": "Review tab: mark every block with a dashed ✓ reviewed" }
       ]
     },
     {
