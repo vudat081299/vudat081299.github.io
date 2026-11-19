@@ -142,6 +142,9 @@
       ::selection { background: var(--accent); color: var(--on-accent); }
       ::highlight(ma-pending) { background-color: var(--hl-pend); }
       :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; border-radius: var(--r-sm); }
+      /* Thanh cuộn mảnh, nhạt, theo theme. */
+      * { scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--ink) 22%, transparent) transparent; }
+      .ma-panel__body, .ma-dlg__b, .ma-out, .ma-opts__in, .ma-view { scrollbar-gutter: stable; }
       .ma-wrap { width: var(--wrap-w, min(100%, max(70vw, 1280px))); margin-inline: auto; padding: 0 var(--pad); } /* mặc định ~70%, ≥ 1280px; chỉnh ở Layout (MDAN-005) */
       svg.ma-i { width: 16px; height: 16px; flex: none; }
 
@@ -360,14 +363,14 @@
       .ma-md code { font: 500 .86em var(--mono); background: var(--surface-2); padding: .12em .4em; border-radius: 6px; }
       .ma-md pre {
         margin: 0 0 1.2em; padding: 14px 16px; overflow-x: auto;
-        font-size: 13.5px; line-height: 1.6; background: var(--bg); border: 1px solid var(--line-2); border-radius: var(--r);
+        font-size: .845em; line-height: 1.6; background: var(--bg); border: 1px solid var(--line-2); border-radius: var(--r);
       }
       .ma-md pre code { font-size: inherit; padding: 0; background: none; border-radius: 0; }
       .ma-md table {
         display: block; max-width: 100%; width: max-content; overflow-x: auto; margin: 0 0 1.2em;
-        border-collapse: separate; border-spacing: 0; border: 1px solid var(--line); border-radius: var(--r); font-size: 14.5px; line-height: 1.5;
+        border-collapse: separate; border-spacing: 0; border: 1px solid var(--line); border-radius: var(--r); font-size: .905em; line-height: 1.5;
       }
-      .ma-md th, .ma-md td { padding: 8px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line-2); }
+      .ma-md th, .ma-md td { padding: .55em .95em; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line-2); }
       .ma-md td + td, .ma-md th + th { border-left: 1px solid var(--line-2); }
       .ma-md tr:last-child td { border-bottom: 0; }
       .ma-md th { background: var(--surface-2); font-weight: 600; border-bottom-color: var(--line); }
@@ -449,7 +452,8 @@
         flex: none; display: flex; flex-direction: column; gap: var(--s2);
         padding: var(--s3); border-top: 1px solid var(--line-2); background: var(--surface);
       }
-      .ma-foot__stat { display: flex; justify-content: space-between; gap: var(--s2); font: 500 11.5px/1.2 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+      .ma-foot__stat { display: flex; justify-content: space-between; gap: var(--s2); font: 500 11.5px/1.2 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .ma-foot__stat > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
       .ma-foot__row { display: flex; gap: var(--s2); }
       .ma-foot__row .ma-icbtn { width: 44px; height: 44px; }
       .ma-copy { flex: 1; min-height: 44px; font-size: 14.5px; border-radius: var(--r); }
@@ -530,7 +534,13 @@
       .ma-check input { width: 18px; height: 18px; accent-color: var(--green); margin: 0; }
       .ma-pathrow { display: flex; align-items: center; gap: 10px; margin: 2px 0 6px 28px; }
       .ma-pathrow .ma-input { height: 36px; font: 500 12.5px var(--mono); }
-      /* Khung prompt cao theo nội dung; thân panel là chỗ cuộn. */
+      /* Tab Prompt: thân panel không cuộn; Options (mở) cuộn riêng, tối đa ~38% chiều cao; khung prompt lấp phần còn lại
+         và tự cuộn. Hai vùng cuộn đứng cạnh nhau, không lồng nhau. */
+      .ma-panel__body:has(> #pane-prompt:not([hidden])) { overflow: hidden; display: flex; flex-direction: column; }
+      #pane-prompt:not([hidden]) { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+      #pane-prompt .ma-opts { flex: none; }
+      #pane-prompt .ma-opts[open] .ma-opts__in { max-height: min(38vh, 360px); overflow: auto; overscroll-behavior: contain; }
+      #pane-prompt .ma-out { flex: 1 1 auto; min-height: 120px; overflow: auto; overscroll-behavior: contain; }
       .ma-out {
         margin: 0; padding: var(--s3); min-height: 96px;
         white-space: pre-wrap; overflow-wrap: anywhere;
@@ -604,17 +614,20 @@
         background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow);
       }
       .ma-dlg::backdrop { background: var(--scrim); }
-      .ma-dlg__in { display: flex; flex-direction: column; max-height: inherit; }
+      /* Hộp thoại là khung flex không cuộn; chỉ thân (.ma-dlg__b) cuộn. Tránh hai thanh cuộn chồng nhau. */
+      .ma-dlg[open]:not(.ma-dlg--panel) { display: flex; flex-direction: column; overflow: hidden; }
+      .ma-dlg__in { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+      .ma-dlg__h { flex: none; }
       .ma-dlg__h { display: flex; align-items: center; gap: 10px; padding: 12px 12px 12px 18px; border-bottom: 1px solid var(--line); }
       .ma-dlg__h h2 { margin: 0; flex: 1; font: 600 18px/1.2 var(--display); }
-      .ma-dlg__b { padding: 14px 18px 18px; overflow: auto; display: flex; flex-direction: column; gap: 12px; }
+      .ma-dlg__b { flex: 1 1 auto; min-height: 0; overscroll-behavior: contain; padding: 14px 18px 18px; overflow: auto; display: flex; flex-direction: column; gap: 12px; }
       /* Hộp Layout: nền sau trong suốt để thấy ngay thay đổi. */
       .ma-dlg--live::backdrop { background: transparent; }
       @media (min-width: 721px) {
         /* Neo góc phải dưới thanh trên, chừa văn bản để thấy thay đổi. */
         .ma-dlg--live { width: min(400px, calc(100vw - 32px)); margin: 68px max(16px, calc((100vw - min(100vw, max(70vw, 1280px))) / 2 + 8px)) auto auto; }
       }
-      @media (max-width: 720px) { .ma-set--wrap { display: none; } }
+      @media (max-width: 720px) { .ma-set.ma-set--wrap { display: none; } }
       /* Focus mode: mờ mọi khối trừ khối dưới con trỏ. Preview theo đoạn; Source theo dòng đang trỏ ± 1.
          Chỉ khi con trỏ đang trong khung, và chỉ máy có chuột (cảm ứng không có hover). */
       @media (hover: hover) {
@@ -1748,7 +1761,7 @@ This page lets you **comment on individual passages** of a markdown text, then g
         var words = p ? p.trim().split(/\s+/).length : 0;
         $('out-n').textContent = p ? p.length.toLocaleString('en') + ' chars · ' + words.toLocaleString('en') + ' words' : '';
         var n = ordered.filter(function (c) { return !orphans[c.id]; }).length;
-        $('foot-n').textContent = n ? plural(n, 'comment') + ' in the prompt' : 'No comments yet';
+        $('foot-n').textContent = n ? plural(n, 'comment') : 'No comments yet';
         ['btn-copy', 'btn-export', 'dock-copy', 'rail-copy', 'rail-export'].forEach(function (id) { $(id).disabled = !p; });
         var sum = [S.fmt === 'block' ? 'block' : 'compact'];
         if (S.lineNums) sum.push(S.path.trim() || 'line numbers');

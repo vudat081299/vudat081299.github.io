@@ -33,6 +33,9 @@
   (`prefs.mdfs` 13–22px, `--md-fs`). Áp ngay khi kéo; hộp neo góc phải, nền sau trong suốt; điện thoại ẩn mục bề rộng.
 - *Focus mode* trong hộp *Layout* (`prefs.focus`, `prefs.dim` 10–70%, `html.ma-focus`, `--dim`): mờ mọi khối trừ khối
   dưới con trỏ (đoạn ở *Preview*, dòng ± 1 ở *Source*), chỉ khi con trỏ trong khung, chỉ `@media (hover: hover)`. Chỉ CSS.
+- Cỡ chữ trong `.ma-md` (bảng, khối code, tiêu đề) tính bằng `em` theo `--md-fs`, không dùng `px`.
+- Hộp thoại: chỉ `.ma-dlg__b` cuộn. Tab *Prompt*: thân panel không cuộn; *Options* mở cuộn riêng (≤ 38vh), `#out` lấp
+  phần còn lại và tự cuộn. Không lồng hai vùng cuộn.
 - *Preview* mặc định rộng hết khung; trích khối là vạch trái một cạnh (không bo), bảng có viền ngoài bo góc.
 - Trống văn bản: thẻ `#start` (vùng thả, *Paste from clipboard*, *Open .md file*, *Sample text*, ba bước) trên ô
   nhập thấp; có chữ thì ẩn thẻ, hiện hàng công cụ. Ctrl/⌘ + V ngoài ô nhập cũng dán khi còn trống.
@@ -42,12 +45,12 @@
 
 ## Panel bên phải
 
-- Một panel (`#panel`): đầu có hai tab *Comments · N* / *Prompt*, thân là chỗ cuộn duy nhất, đáy ghim trạng thái,
+- Một panel (`#panel`): đầu có hai tab *Comments · N* / *Prompt*, thân cuộn (tab *Prompt*: xem mục Hộp thoại ở trên), đáy ghim trạng thái,
   *Download .md* và *Copy prompt*. Nút chép luôn trong khung nhìn, dù bao nhiêu nhận xét (smoke đo với 32).
 - Máy rộng (≥ 1081px): panel dính, chạy từ đỉnh vùng nội dung tới đáy khung nhìn. `top`, `height` của panel và
   `padding` trên dưới của lưới cùng dùng `--s4`: đổi một chỗ thì đổi cả ba.
 - Tuỳ chọn prompt (kiểu, số dòng, tệp, toàn văn, lời dẫn) gập trong *Options* ở tab Prompt; dòng tóm tắt cạnh nhãn
-  cho biết đang bật gì. Khung prompt cao theo nội dung; thân panel cuộn.
+  cho biết đang bật gì.
 - ⌘/Ctrl + Shift + C chép prompt ở mọi chỗ. Chép xong nút đổi thành *Copied ✓* một lúc; báo đọc màn hình qua
   `#sr-live`. Toast chỉ dùng khi chép hỏng.
 - ≤ 1080px: panel ẩn khỏi lưới; thanh đáy có *Comments · N* (mở panel trong tấm trượt `#dlg-panel`, đóng thì panel

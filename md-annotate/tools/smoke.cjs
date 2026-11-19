@@ -416,6 +416,7 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   const wrapW = () => page.$eval('main.ma-wrap', (el) => Math.round(el.getBoundingClientRect().width));
   check('Layout mặc định: vùng làm việc 70% ở 1920', Math.abs((await wrapW()) - 1344) <= 1, String(await wrapW()));
   await page.click('#btn-layout');
+  check('hộp Layout: một vùng cuộn, khung hộp không cuộn', await page.$eval('#dlg-layout', (d) => d.scrollHeight <= d.clientHeight));
   check('nút Layout mở hộp', await page.isVisible('#dlg-layout'));
   const setRange = (sel, v) => page.$eval(sel, (el, v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }, v);
   await setRange('#set-wrap', 50);
@@ -523,6 +524,10 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   check('điện thoại: văn bản bắt đầu ≤ 110px', mTop <= 110, Math.round(mTop) + 'px');
   check('điện thoại: tab Hiển thị không tràn ngang', (await overflow(m)) === 0);
   check('điện thoại: không có tab Song song', !(await m.isVisible('#tab-split')));
+  await m.tap('#btn-layout'); await m.waitForTimeout(200);
+  const ml = await m.evaluate(() => { const d = document.getElementById('dlg-layout'); return { w: getComputedStyle(document.querySelector('.ma-set--wrap')).display, dlg: d.scrollHeight - d.clientHeight }; });
+  check('điện thoại: hộp Layout ẩn mục bề rộng, chỉ thân hộp cuộn', ml.w === 'none' && ml.dlg <= 0, JSON.stringify(ml));
+  await m.tap('#dlg-layout [data-close]');
   await scriptSelect(m, '#v-md', 'Try selecting this sentence');
   check('điện thoại: vùng chọn hiện nút nổi', await m.isVisible('#fab'));
   await m.tap('#fab');
