@@ -49,22 +49,28 @@ function prep(text, drop) {
   preps.unshift(p); if (preps.length > 4) preps.pop();
   return p;
 }
+/* Mọi chỗ khớp, không giới hạn số: đoạn trích ngắn ("an", "và") khớp hàng nghìn lần trong văn bản dài, và chỗ đúng
+   có thể nằm sau cùng. */
 function findAll(hay, needle) {
   var out = [];
-  if (!needle) return out;
-  var i = hay.indexOf(needle);
-  while (i !== -1 && out.length < 500) { out.push(i); i = hay.indexOf(needle, i + 1); }
+  for (var i = hay.indexOf(needle); i !== -1; i = hay.indexOf(needle, i + 1)) out.push(i);
   return out;
 }
-function commonSuffix(a, b) { var n = 0; while (n < a.length && n < b.length && a[a.length - 1 - n] === b[b.length - 1 - n]) n++; return n; }
-function commonPrefix(a, b) { var n = 0; while (n < a.length && n < b.length && a[n] === b[n]) n++; return n; }
-function pick(hits, len, hay, pre, suf, rel) {
-  if (hits.length === 1) return hits[0];
-  var best = hits[0], bs = -Infinity;
+/* Số ký tự cuối của pre trùng với các ký tự ngay trước vị trí i của hay. */
+function tailMatch(pre, hay, i) { var n = 0; while (n < pre.length && n < i && pre[pre.length - 1 - n] === hay[i - 1 - n]) n++; return n; }
+/* Số ký tự đầu của suf trùng với các ký tự từ vị trí j của hay. */
+function headMatch(suf, hay, j) { var n = 0; while (n < suf.length && j + n < hay.length && suf[n] === hay[j + n]) n++; return n; }
+/* Vị trí của needle trong hay, hoặc -1. Nhiều chỗ khớp: chỗ khớp pre / suf dài nhất, rồi gần rel nhất. Đúng một chỗ
+   còn nguyên pre + needle + suf thì chỗ ấy thắng chắc, lấy ngay khỏi so từng chỗ. */
+function find(hay, needle, pre, suf, rel) {
+  if (!needle) return -1;
+  var whole = pre + needle + suf, k = hay.indexOf(whole);
+  if (k !== -1 && hay.indexOf(whole, k + 1) === -1) return k + pre.length;
+  var hits = findAll(hay, needle);
+  if (hits.length < 2) return hits.length ? hits[0] : -1;
+  var best = -1, bs = -Infinity;
   hits.forEach(function (i) {
-    var sc = commonSuffix(pre, hay.slice(Math.max(0, i - pre.length), i)) +
-             commonPrefix(suf, hay.slice(i + len, i + len + suf.length)) -
-             Math.abs(i / Math.max(1, hay.length) - (rel || 0));
+    var sc = tailMatch(pre, hay, i) + headMatch(suf, hay, i + needle.length) - Math.abs(i / Math.max(1, hay.length) - (rel || 0));
     if (sc > bs) { bs = sc; best = i; }
   });
   return best;
@@ -73,23 +79,16 @@ function pick(hits, len, hay, pre, suf, rel) {
 export function locate(c, text, srcDomain) {
   if (!text || !c.quote) return null;
   var P = prep(text, srcDomain);
-  var q = normWs(c.quote).s.trim(), hits, i;
-  if (q) {
-    hits = findAll(P.n.s, q);
-    if (hits.length) {
-      i = pick(hits, q.length, P.n.s, normWs(c.prefix || '').s, normWs(c.suffix || '').s, c.rel);
-      return [P.n.map[i], P.n.map[i + q.length - 1] + 1];
-    }
-  }
+  /* Tầng 1: nguyên văn, gộp khoảng trắng. */
+  var q = normWs(c.quote).s.trim();
+  var i = find(P.n.s, q, normWs(c.prefix || '').s, normWs(c.suffix || '').s, c.rel);
+  if (i >= 0) return [P.n.map[i], P.n.map[i + q.length - 1] + 1];
+  /* Tầng 2: chỉ chữ và số; bỏ cú pháp markdown ở trích dẫn khi nó lấy từ nguồn. */
   var qd = c.origin === 'src';
   var k = skel(c.quote, qd).s;
-  if (!k) return null;
-  hits = findAll(P.k.s, k);
-  if (!hits.length) return null;
-  i = pick(hits, k.length, P.k.s, skel(c.prefix || '', qd).s, skel(c.suffix || '', qd).s, c.rel);
-  return [P.k.map[i], P.k.map[i + k.length - 1] + 1];
+  i = find(P.k.s, k, skel(c.prefix || '', qd).s, skel(c.suffix || '', qd).s, c.rel);
+  return i >= 0 ? [P.k.map[i], P.k.map[i + k.length - 1] + 1] : null;
 }
-
 
 /* Vùng chọn → đoạn trích. full: chữ của khung; [s, e): vùng chọn trong full (đã cắt theo khung); which: 'src' |
    'md'; selText: chữ trình duyệt trả cho vùng chọn (chỉ dùng khi which = 'md'). Trả null khi chỉ có khoảng trắng. */

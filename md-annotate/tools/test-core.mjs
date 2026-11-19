@@ -72,5 +72,71 @@ check('spanAt: dòng trong khối, giữa hai khối', eq([0, 1, 2, 3, 4, 5].map
   check('followTop: đầu khớp đầu, cuối khớp cuối', Math.abs(followTop(c.fwd, 200, 1200, 0, 200, 1400)) < 1e-6 && Math.abs(followTop(c.fwd, 200, 1200, 1000, 200, 1400) - 1200) < 1e-6);
 }
 
+// ── review: data path ──
+// Neo → nhận xét → prompt, phiên, số đếm gợi ý. Import theo không gian tên dp*, để không trùng tên với khối khác.
+import * as dpAnchor from '../js/core/anchor.js';
+import * as dpComments from '../js/core/comments.js';
+import * as dpPrompt from '../js/core/prompt.js';
+import * as dpSession from '../js/core/session.js';
+import * as dpHints from '../js/core/hints.js';
+import * as dpText from '../js/core/text.js';
+{
+  /* Nhận xét dựng như ui/anchor-dom.js: quoteFrom trên chữ của khung, chỗ của chuỗi `needle` thứ nth. */
+  const quoteAt = (full, needle, nth, which = 'src') => {
+    let i = -1; for (let k = 0; k <= nth; k++) i = full.indexOf(needle, i + 1);
+    return dpAnchor.quoteFrom(full, i, i + needle.length, which, needle);
+  };
+  const cm = (id, info, comment, created = 0) => ({ id, quote: info.quote, comment, origin: info.origin, prefix: info.prefix, suffix: info.suffix, rel: info.rel, created });
+  const ses = (text, comments, o = {}) => Object.assign({ text, comments, header: '', footer: '', fmt: 'inline', includeDoc: false, lineNums: true, path: '' }, o);
+
+  // Đoạn trích lặp nhiều lần: chọn đúng chỗ theo prefix / suffix, kể cả khi có hơn 500 chỗ khớp trước nó.
+  {
+    const text = 'Many people can understand an answer and an idea. '.repeat(120) + 'Finally we found an apple.';
+    const want = text.lastIndexOf('an apple');
+    const info = dpAnchor.quoteFrom(text, want, want + 2, 'src', '');
+    check('locate: đoạn trích ngắn lặp > 500 lần vẫn neo đúng chỗ', eq(dpAnchor.locate(info, text, true), [want, want + 2]), JSON.stringify(dpAnchor.locate(info, text, true)) + ' muốn ' + want);
+    const vi = 'x và '.repeat(600) + 'TARGET và end.';
+    const j = vi.lastIndexOf('và');
+    check('locate: từ Việt lặp > 500 lần vẫn neo đúng chỗ', eq(dpAnchor.locate(dpAnchor.quoteFrom(vi, j, j + 2, 'src', ''), vi, true), [j, j + 2]));
+  }
+  {
+    const text = 'Câu lặp lại. Câu lặp lại.\n';
+    const a = quoteAt(text, 'Câu lặp lại.', 1);
+    check('locate: hai câu giống nhau sát nhau, chọn câu thứ hai', eq(dpAnchor.locate(a, text, true), [13, 25]));
+    check('locate: văn bản rỗng hoặc trích dẫn rỗng thì null', dpAnchor.locate(a, '', true) === null && dpAnchor.locate({ quote: '' }, text, true) === null);
+  }
+  // Chọn ở Preview, neo về nguồn qua tầng 2 (bỏ cú pháp markdown).
+  {
+    const src = 'Intro\n\nĐoạn có **chữ đậm** và [link](https://x.y/z) ở giữa.\n';
+    const md = 'Intro\nĐoạn có chữ đậm và link ở giữa.';
+    const info = quoteAt(md, 'chữ đậm và link', 0, 'md');
+    const r = dpAnchor.locate(info, src, true);
+    check('locate: trích ở Preview tìm được trong nguồn', r && src.slice(r[0], r[1]) === 'chữ đậm** và [link', JSON.stringify(r && src.slice(r[0], r[1])));
+  }
+  // Prompt: số dòng, hai kiểu, tệp, toàn văn trong rào dài hơn mọi dãy backtick.
+  {
+    const text = '# T\n\nDòng ba.\nDòng bốn\ntiếp dòng năm.\n\n````\ncode\n````\n';
+    const c1 = cm('a', quoteAt(text, 'Dòng bốn\ntiếp', 0), 'Gộp\n hai   dòng', 2);
+    const c2 = cm('b', quoteAt(text, 'Dòng ba.', 0), 'Ngắn hơn', 1);
+    const c3 = cm('c', { quote: 'không còn trong văn bản', origin: 'src', prefix: '', suffix: '', rel: 0 }, 'mất neo', 0);
+    const s = ses(text, [c1, c2, c3]);
+    const d = dpComments.anchorAll(s.comments, s.text, '');
+    check('anchorAll: xếp theo vị trí, mất neo không có số', eq(d.ordered.map((c) => c.id), ['b', 'a', 'c']) && eq(d.numbers, { b: 1, a: 2 }) && d.orphans.c === true);
+    check('buildPrompt: gọn, L3 và L4-5', dpPrompt.buildPrompt(s, d) ===
+      'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. L3 "Dòng ba." — Ngắn hơn\n2. L4-5 "Dòng bốn tiếp" — Gộp hai dòng', JSON.stringify(dpPrompt.buildPrompt(s, d)));
+    s.fmt = 'block'; s.path = 'notes/a.md'; s.header = ' Đầu '; s.footer = 'Cuối'; s.includeDoc = true;
+    check('buildPrompt: khối, tệp:dòng, lời dẫn, toàn văn', dpPrompt.buildPrompt(s, d) ===
+      'Đầu\nVị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n' +
+      '### 1 · notes/a.md:3\n> Dòng ba.\n\nNgắn hơn\n\n### 2 · notes/a.md:4-5\n> Dòng bốn\n> tiếp\n\nGộp\n hai   dòng\n\nCuối\n\n' +
+      'Văn bản gốc:\n`````markdown\n' + text.trimEnd() + '\n`````', JSON.stringify(dpPrompt.buildPrompt(s, d)));
+    s.lineNums = false;
+    check('buildPrompt: tắt số dòng thì không nhãn, không câu dẫn số dòng', !/notes\/a\.md|tệp:dòng/.test(dpPrompt.buildPrompt(s, d)));
+    check('buildPrompt: không nhận xét, không toàn văn thì rỗng', dpPrompt.buildPrompt(ses(text, [c3]), dpComments.anchorAll([c3], text, '')) === '');
+    check('lineOf: đầu dòng, cuối văn bản', dpText.lineOf('a\nb\n', 0) === 1 && dpText.lineOf('a\nb\n', 2) === 2 && dpText.lineOf('a\nb\n', 4) === 3);
+    check('slug: bỏ dấu tiếng Việt', dpText.slug('Bài thử Đặng — số 1') === 'bai-thu-dang-so-1');
+  }
+}
+// ── end review: data path ──
+
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);
