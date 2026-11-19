@@ -870,6 +870,111 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await rctx.close();
   // ── end review: layout & scroll ──
 
+  // ── nhận xét nhiều dòng: chọn bằng lề số dòng ──
+  {
+    const mctx2 = await browser.newContext({ viewport: { width: 1280, height: 900 }, colorScheme: 'light' });
+    const ml = await mctx2.newPage(); watch(ml);
+    await ml.goto(BASE); await ml.waitForFunction(() => window.marked && window.DOMPurify);
+    const ML = ['# Multi', '', 'Alpha line one.', 'Beta line two.', '', '- [ ] same item', 'Gamma middle.', '- [ ] same item', 'Delta end.',
+      '```js', 'const x = 1;', '```', 'Long ' + 'word '.repeat(240), ''].join('\r\n');   // CRLF: ô nhập đổi thành \n
+    await ml.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, ML);
+    await ml.waitForTimeout(150);
+    await ml.click('.ma-tab[data-view="src"]'); await ml.waitForTimeout(100);
+    const gut = (n) => ml.$eval(`#v-src .ma-ln:nth-child(${n})`, (el) => { el.scrollIntoView({ block: 'nearest' }); const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
+    const gclick = async (n) => { const g = await gut(n); await ml.mouse.click(g.x, g.y); await ml.waitForTimeout(80); };
+    const gdbl = async (n) => { const g = await gut(n); await ml.mouse.dblclick(g.x, g.y); await ml.waitForTimeout(150); };
+    const picks = () => ml.$$eval('#v-src .ma-ln', (ls) => ls.map((l, i) => (l.classList.contains('is-pick') ? i + 1 : 0)).filter(Boolean).join());
+    const sum = () => ml.textContent('#pop-sum');
+    const popBox = () => ml.$eval('#pop', (el) => { const r = el.getBoundingClientRect(); return { x: Math.round(r.left), y: Math.round(r.top), r: Math.round(r.right), b: Math.round(r.bottom) }; });
+
+    await gdbl(3);
+    check('nhiều dòng: bấm đúp lề vào chế độ, chọn dòng ấy, mở hộp', (await picks()) === '3' && (await ml.isVisible('#pop')) && (await sum()) === '1 line · L3', (await picks()) + ' | ' + (await sum()));
+    check('nhiều dòng: bấm đúp không bôi đen chữ', await ml.evaluate(() => getSelection().isCollapsed || !getSelection().toString()));
+    check('nhiều dòng: hộp có nút kéo', await ml.isVisible('#pop-grip'));
+    await gclick(8); await gclick(4); await gclick(5);
+    check('nhiều dòng: bấm một lần thêm dòng không liền, dòng trống không chọn được', (await picks()) === '3,4,8' && (await sum()) === '3 lines · L3-4, L8', (await picks()) + ' | ' + (await sum()));
+    check('nhiều dòng: hộp hiện chữ các dòng', (await ml.textContent('#pop-q')) === 'Alpha line one.\nBeta line two.\n- [ ] same item', JSON.stringify(await ml.textContent('#pop-q')));
+    const b0 = await popBox();
+    await ml.fill('#pop-text', 'đang gõ');
+    await gclick(9);
+    check('nhiều dòng: hộp đang mở cập nhật tại chỗ, giữ chữ đang gõ', (await sum()) === '4 lines · L3-4, L8-9' && (await ml.inputValue('#pop-text')) === 'đang gõ' && JSON.stringify(await popBox()).startsWith(JSON.stringify({ x: b0.x, y: b0.y }).slice(0, -1)), JSON.stringify([await sum(), b0, await popBox()]));
+    await dragSelect(ml, '#v-src', 'Gamma middle');
+    check('nhiều dòng: bôi đen chữ trong chế độ không mở hộp đoạn chữ', (await ml.isVisible('#pop-head')) && (await ml.textContent('#pop-q')).startsWith('Alpha') && !(await ml.isVisible('#fab')));
+    await ml.fill('#pop-text', '');
+    await dragSelect(ml, '#v-src', 'Delta end');
+    check('nhiều dòng: bôi đen (hộp chưa gõ) chỉ đóng hộp, dòng đã chọn còn', !(await ml.isVisible('#pop')) && (await picks()) === '3,4,8,9' && !(await ml.isVisible('#fab')), await picks());
+    await ml.evaluate(() => getSelection().removeAllRanges());
+    await gclick(9);
+    check('nhiều dòng: bấm lề mở lại hộp', (await ml.isVisible('#pop')) && (await sum()) === '3 lines · L3-4, L8');
+    await ml.click('#pop-cancel');
+    check('nhiều dòng: Cancel đóng hộp, giữ dòng đã chọn', !(await ml.isVisible('#pop')) && (await picks()) === '3,4,8');
+    await gclick(9);
+    const def = await popBox();
+    const gb = await ml.$eval('#pop-grip', (el) => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await ml.mouse.move(gb.x, gb.y); await ml.mouse.down(); await ml.mouse.move(gb.x + 240, gb.y - 160, { steps: 8 }); await ml.mouse.up();
+    const moved = await popBox();
+    check('nhiều dòng: kéo nút kéo thì hộp đi theo', Math.abs(moved.x - (def.x + 240)) <= 2 && Math.abs(moved.y - (def.y - 160)) <= 2, JSON.stringify({ def, moved }));
+    await ml.mouse.move(gb.x + 240, gb.y - 160); await ml.mouse.down(); await ml.mouse.move(-500, -500, { steps: 4 }); await ml.mouse.up();
+    const clamp = await popBox();
+    check('nhiều dòng: kéo quá mép thì hộp vẫn trọn khung nhìn', clamp.x >= 0 && clamp.y >= 0, JSON.stringify(clamp));
+    await ml.focus('#pop-grip'); await ml.keyboard.press('ArrowRight');
+    check('nhiều dòng: phím mũi tên trên nút kéo dời hộp', (await popBox()).x === clamp.x + 16, JSON.stringify(await popBox()));
+    await ml.click('#pop-cancel'); await gclick(9); await gclick(9);
+    const back = await popBox();
+    check('nhiều dòng: mở lại thì hộp về chỗ mặc định', Math.abs(back.x - def.x) <= 1 && Math.abs(back.y - def.y) <= 1, JSON.stringify({ def, back }));
+    await ml.keyboard.press('Escape');
+    check('nhiều dòng: Esc đóng hộp, bỏ mọi dòng đã chọn', !(await ml.isVisible('#pop')) && (await picks()) === '' && !(await ml.$eval('#v-src', (el) => el.classList.contains('is-picking'))));
+    await dragSelect(ml, '#v-src', 'Delta end');
+    check('bôi đen ngoài chế độ: hộp đoạn chữ như cũ, không có nút kéo', (await ml.isVisible('#pop')) && !(await ml.isVisible('#pop-grip')) && !(await ml.isVisible('#pop-head')) && (await ml.textContent('#pop-q')) === 'Delta end', JSON.stringify([await ml.isVisible('#pop'), await ml.isVisible('#pop-grip'), await ml.textContent('#pop-q')]));
+    await ml.keyboard.press('Escape'); await ml.evaluate(() => getSelection().removeAllRanges());
+    // Lưu: một nhận xét, hai phần; dòng 8 (không phải dòng 6 giống hệt) được tô.
+    await gdbl(3); await gclick(4); await gclick(8);
+    await ml.keyboard.type('Gộp hai chỗ'); await ml.keyboard.press('Enter');
+    const want = 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. L3-4 "Alpha line one. Beta line two."; L8 "- [ ] same item" — Gộp hai chỗ';
+    check('nhiều dòng: Save tạo một nhận xét hai phần, prompt đúng', (await items(ml)).length === 1 && (await out(ml)) === want, JSON.stringify(await out(ml)));
+    check('nhiều dòng: Save thoát chế độ', (await picks()) === '' && !(await ml.isVisible('#pop')));
+    const hl = await ml.evaluate(() => ({ lines: [...document.querySelectorAll('#v-src .ma-ln')].map((l, i) => (l.classList.contains('has-c') ? i + 1 : 0)).filter(Boolean).join(),
+      badges: document.querySelectorAll('#v-src mark[data-n]').length, loc: document.querySelector('#list .ma-item__loc').textContent, qs: document.querySelectorAll('#list .ma-item__q').length }));
+    check('nhiều dòng: tô mọi phần (dòng 8, không phải dòng 6), một số thứ tự, thẻ có nhãn từng phần', hl.lines === '3,4,8' && hl.badges === 1 && hl.loc === 'L3-4, L8' && hl.qs === 2, JSON.stringify(hl));
+    await ml.hover('#list .ma-item');
+    check('nhiều dòng: rê thẻ tô mọi phần', (await ml.$$eval('#v-src mark.is-hover', (ms) => ms.length)) >= 2);
+    await ml.mouse.move(5, 5);
+    // Dòng đã có nhận xét: bấm một lần mở nhận xét như cũ, bấm đúp vào chế độ chọn dòng.
+    await gdbl(3);
+    check('nhiều dòng: bấm đúp lề dòng đã nhận xét vẫn vào chế độ (hộp mới, không phải hộp sửa)', (await picks()) === '3' && (await ml.isVisible('#pop-head')) && !(await ml.isVisible('#pop-del')));
+    await ml.keyboard.press('Escape');
+    // Dòng rào code và dòng rất dài.
+    await gdbl(13);
+    check('nhiều dòng: dòng rất dài, trích dẫn mờ dần sau 2 dòng', await ml.$eval('#pop-q', (el) => el.classList.contains('is-long')));
+    await ml.keyboard.press('Escape');
+    await gdbl(10); await gclick(11);
+    await ml.keyboard.type('Rào code'); await ml.keyboard.press('Enter');
+    check('nhiều dòng: chọn dòng rào code', (await out(ml)).endsWith('\n2. L10-11 "```js const x = 1;" — Rào code'), JSON.stringify(await out(ml)));
+    // Split: chữ của các dòng đã chọn tô ở Preview (ma-mirror); Split ↔ Source giữ dòng; Preview thoát.
+    await ml.click('.ma-tab[data-view="split"]'); await ml.waitForTimeout(150);
+    await gdbl(7); await gclick(9);
+    const mir = () => ml.evaluate(() => { const h = CSS.highlights.get('ma-mirror'); return h ? [...h].map((r) => r.toString()).join('|') : ''; });
+    check('Split: các dòng đã chọn tô ở Preview', (await mir()) === 'Gamma middle.|Delta end.', await mir());
+    await ml.click('.ma-tab[data-view="src"]'); await ml.waitForTimeout(100);
+    check('Split → Source: giữ dòng đã chọn, bỏ tô Preview', (await picks()) === '7,9' && (await mir()) === '');
+    await ml.click('.ma-tab[data-view="split"]'); await ml.waitForTimeout(100);
+    check('Source → Split: tô lại ở Preview', (await picks()) === '7,9' && (await mir()) === 'Gamma middle.|Delta end.', await mir());
+    await ml.click('.ma-tab[data-view="view"]'); await ml.waitForTimeout(100);
+    await ml.click('.ma-tab[data-view="split"]'); await ml.waitForTimeout(100);
+    check('sang Preview thì thoát chế độ', (await picks()) === '' && (await mir()) === '');
+    await gdbl(7);
+    await ml.click('.ma-tab[data-view="edit"]'); await ml.click('.ma-tab[data-view="split"]'); await ml.waitForTimeout(100);
+    check('sang Edit thì thoát chế độ', (await picks()) === '');
+    await ml.dblclick('#v-md p');
+    check('Preview không có chọn dòng', (await picks()) === '' && !(await ml.isVisible('#pop-head')));
+    await ml.keyboard.press('Escape');
+    // Tải lại: nhận xét nhiều phần còn nguyên.
+    await ml.reload(); await ml.waitForFunction(() => window.marked && window.DOMPurify); await ml.waitForTimeout(200);
+    check('tải lại: nhận xét nhiều phần còn, prompt như trước', (await out(ml)).startsWith(want) && (await ml.textContent('#list .ma-item__loc')) === 'L3-4, L8');
+    await mctx2.close();
+  }
+  // ── end nhận xét nhiều dòng ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

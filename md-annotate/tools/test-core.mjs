@@ -262,5 +262,71 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
 }
 // ── end neo khác khung ──
 
+// ── nhận xét nhiều dòng ──
+{
+  const { lineRuns, pickable, pickInfo, pickSummary } = await import('../js/core/picks.js');
+  const { addComment, anchorAll, markRanges, overlapWarning, partsOf } = await import('../js/core/comments.js');
+  const { buildPrompt, locLabel } = await import('../js/core/prompt.js');
+  const { normSession } = await import('../js/core/session.js');
+  const { locate } = await import('../js/core/anchor.js');
+  check('lineRuns: xếp, gộp dòng liền, bỏ trùng', eq(lineRuns([20, 12, 16, 15, 16]), [[12, 12], [15, 16], [20, 20]]));
+  check('pickSummary: số dòng và nhãn', pickSummary([20, 12, 16, 15]) === '4 lines · L12, L15-16, L20' && pickSummary([3]) === '1 line · L3');
+  const text = ['# Doc', '', 'Alpha line.', 'Beta line.', '   ', '- [ ] same', 'Gamma.', '- [ ] same', 'Delta.', '```js', 'x = 1', '```', ''].join('\n');
+  check('pickable: dòng trống, chỉ khoảng trắng, ngoài văn bản thì không', pickable(text, 1) && !pickable(text, 2) && !pickable(text, 5) && !pickable(text, 0) && !pickable(text, 99) && pickable(text, 10));
+  const info = pickInfo(text, [8, 3, 4, 2]);
+  check('pickInfo: dòng trống bị bỏ, mỗi dải liền một phần, quote là trọn dòng', eq(info.lines, [3, 4, 8]) && eq(info.parts.map((p) => p.quote), ['Alpha line.\nBeta line.', '- [ ] same']) && info.quote === info.parts[0].quote, JSON.stringify(info.parts.map((p) => p.quote)));
+  const at8 = text.lastIndexOf('- [ ] same');
+  check('pickInfo: prefix / suffix 48 ký tự quanh dải', info.parts[1].prefix === text.slice(at8 - 48, at8) && info.parts[1].suffix === text.slice(at8 + 10, at8 + 58) && info.parts[1].suffix.startsWith('\nDelta.'));
+  check('pickInfo: không dòng nào chọn được thì null', pickInfo(text, [2, 5]) === null);
+  const S = { text, comments: [], header: '', footer: '', fmt: 'inline', includeDoc: false, lineNums: true, path: '' };
+  addComment(S, info, 'Gộp lại');
+  const mc = S.comments[0];
+  check('addComment: lưu parts (chỉ trường neo), ngoài bằng parts[0]', mc.parts.length === 2 && eq(Object.keys(mc.parts[0]).sort(), ['origin', 'prefix', 'quote', 'rel', 'suffix']) && mc.quote === mc.parts[0].quote && mc.prefix === mc.parts[0].prefix && mc.origin === 'src');
+  addComment(S, pickInfo(text, [6]), 'Một dòng');
+  check('addComment: một dải thì là nhận xét thường, không parts', !('parts' in S.comments[1]) && S.comments[1].quote === '- [ ] same');
+  // Dòng giống hệt nhau (6 và 8): mỗi phần neo đúng chỗ nhờ prefix / suffix.
+  const second = text.lastIndexOf('- [ ] same'), first = text.indexOf('- [ ] same');
+  check('neo phần: dòng giống hệt, chọn dòng 8 thì neo dòng 8', eq(locate(mc.parts[1], text, true), [second, second + 10]), JSON.stringify(locate(mc.parts[1], text, true)));
+  check('neo phần: chọn dòng 6 thì neo dòng 6', eq(locate(S.comments[1], text, true), [first, first + 10]));
+  // Hai khối giống hệt cả 48 ký tự trước, chỉ khác sau: suffix bắt đầu bằng xuống dòng vẫn được tính.
+  const twin = 'x'.repeat(60) + '\nsame line\nAAA\n' + 'x'.repeat(60) + '\nsame line\nBBB\n';
+  const tw = Object.assign(pickInfo(twin, [5]), { rel: 0 }); // rel lệch về chỗ đầu: chỉ suffix phân biệt được
+  check('locate: suffix bắt đầu bằng xuống dòng phân biệt hai dòng giống hệt', eq(locate(tw, twin, true), [twin.lastIndexOf('same line'), twin.lastIndexOf('same line') + 9]), JSON.stringify(locate(tw, twin, true)));
+  let d = anchorAll(S.comments, text, '');
+  check('anchorAll: mỗi phần một neo, ngoài là phần đầu', d.anchors[mc.id].parts.length === 2 && eq(d.anchors[mc.id].src, d.anchors[mc.id].parts[0].src) && !d.orphans[mc.id]);
+  check('anchorAll: xếp theo vị trí phần đầu', eq(d.ordered.map((c) => c.id), [mc.id, S.comments[1].id]));
+  const rs = markRanges(d).src.filter((r) => r.id === mc.id);
+  check('markRanges: mỗi phần một dải, số chỉ ở phần đầu', rs.length === 2 && rs[0].n === 1 && rs[1].n === 0);
+  check('locLabel: nhãn từng phần', locLabel(S, d, mc, false) === 'L3-4, L8' && locLabel(Object.assign({}, S, { path: 'a.md' }), d, mc, true) === 'a.md:3-4, a.md:8');
+  check('buildPrompt nhiều phần: gọn', buildPrompt(S, d) ===
+    'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n1. L3-4 "Alpha line. Beta line."; L8 "- [ ] same" — Gộp lại\n2. L6 "- [ ] same" — Một dòng', JSON.stringify(buildPrompt(S, d)));
+  check('buildPrompt nhiều phần: gọn, có tệp', buildPrompt(Object.assign({}, S, { path: 'a.md' }), d).includes('\n1. a.md:3-4 "Alpha line. Beta line."; a.md:8 "- [ ] same" — Gộp lại\n'));
+  check('buildPrompt nhiều phần: khối', buildPrompt(Object.assign({}, S, { fmt: 'block' }), d) ===
+    'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.\n\n### 1 · L3-4, L8\n> Alpha line.\n> Beta line.\n\n> - [ ] same\n\nGộp lại\n\n### 2 · L6\n> - [ ] same\n\nMột dòng', JSON.stringify(buildPrompt(Object.assign({}, S, { fmt: 'block' }), d)));
+  check('buildPrompt nhiều phần: tắt số dòng', buildPrompt(Object.assign({}, S, { lineNums: false }), d) === '1. "Alpha line. Beta line."; "- [ ] same" — Gộp lại\n2. "- [ ] same" — Một dòng');
+  check('buildPrompt nhiều phần: khối, tắt số dòng', buildPrompt(Object.assign({}, S, { fmt: 'block', lineNums: false }), d).startsWith('### 1\n> Alpha line.\n> Beta line.\n\n> - [ ] same\n\nGộp lại'));
+  // Mất một phần: bỏ khỏi highlight và prompt, nhận xét vẫn neo. Mất hết: mất neo.
+  const t2 = text.replace('Alpha line.\nBeta line.', 'Đã viết lại hẳn.');
+  d = anchorAll(S.comments, t2, '');
+  check('mất một phần: nhận xét vẫn neo, phần ấy null', !d.orphans[mc.id] && d.anchors[mc.id].parts[0].src === null && !!d.anchors[mc.id].parts[1].src);
+  check('mất một phần: xếp theo phần đầu tìm thấy', eq(d.ordered.map((c) => c.id), [S.comments[1].id, mc.id]));
+  check('mất một phần: prompt bỏ phần ấy', buildPrompt(Object.assign({}, S, { text: t2 }), d).endsWith('1. L5 "- [ ] same" — Một dòng\n2. L7 "- [ ] same" — Gộp lại'), JSON.stringify(buildPrompt(Object.assign({}, S, { text: t2 }), d)));
+  check('mất một phần: số chỉ ở phần còn lại', markRanges(d).src.filter((r) => r.id === mc.id).map((r) => r.n).join() === '2');
+  d = anchorAll([mc], 'Không còn gì.', '');
+  check('mất mọi phần: mất neo', d.orphans[mc.id] === true);
+  // Cảnh báo trùng / chồng.
+  d = anchorAll(S.comments, text, '');
+  const pk = (inf) => inf.parts.map((p) => ({ pos: [p.s, p.e], quote: p.quote }));
+  check('overlapWarning: cùng các phần thì trùng', /Same passage as comment #1\./.test(overlapWarning(d, pk(pickInfo(text, [3, 4, 8])))));
+  check('overlapWarning: một phần chạm phần của nhận xét khác thì chồng', overlapWarning(d, pk(pickInfo(text, [4, 9]))) === 'Overlaps comment #1.');
+  check('overlapWarning: một đoạn thường như cũ', overlapWarning(d, [{ pos: [first, first + 10], quote: '- [ ] same' }]) === 'Same passage as comment #2. Saving adds a separate item.');
+  // Phiên đã lưu: parts giữ, parts hỏng / một phần thì bỏ, phiên cũ không đổi.
+  const raw = JSON.parse(JSON.stringify({ text, comments: [mc, { id: 'z', quote: 'Delta.', comment: 'c', parts: [{ quote: 'Delta.' }, null, 5] }, { id: 'y', quote: 'Gamma.', comment: 'c', parts: 'x' }, { id: 'w', quote: 'Gamma.', comment: 'c' }] }));
+  const ns = normSession(raw, 'id1');
+  check('normSession: giữ parts hợp lệ, bỏ parts hỏng hay một phần', ns.comments.length === 4 && ns.comments[0].parts.length === 2 && !('parts' in ns.comments[1]) && !('parts' in ns.comments[2]) && !('parts' in ns.comments[3]));
+  check('partsOf: không parts thì chính nó', partsOf(ns.comments[3])[0] === ns.comments[3] && partsOf(ns.comments[0]) === ns.comments[0].parts);
+}
+// ── end nhận xét nhiều dòng ──
+
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
 process.exit(fails ? 1 : 0);

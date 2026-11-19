@@ -6,11 +6,12 @@
    - initViews trước initFocus trước initPopup: resize của window (chiều cao khung trước, dải đọc sau);
    - initShortcuts trước initPopup: keydown của document;
    - initPopup trước initSelection: pointerdown của document;
+   - initPopup trước initPicks: keydown của document (Esc đóng hộp trước, rồi bỏ các dòng đã chọn);
    - initPanel trước initDialogs: close của #dlg-panel (panel về chỗ cũ trước khi trả toast).
    Xuất: không (chạy khi nạp).
    Dùng: ui/store.js, ui/dom.js, ui/state.js, ui/hints.js, ui/render.js, ui/list.js, ui/prompt.js, ui/views.js,
-     ui/sync-scroll.js, ui/panel.js, ui/layout.js, ui/focus.js, ui/popup.js, ui/selection.js, ui/history.js,
-     ui/editor.js. */
+     ui/sync-scroll.js, ui/panel.js, ui/layout.js, ui/focus.js, ui/popup.js, ui/selection.js, ui/picks.js,
+     ui/history.js, ui/editor.js. */
 import { KEY, store } from './ui/store.js';
 import { $ } from './ui/dom.js';
 import { initState, S } from './ui/state.js';
@@ -25,6 +26,7 @@ import { initLayout } from './ui/layout.js';
 import { initFocus } from './ui/focus.js';
 import { initPopup, pop, renderPopHints } from './ui/popup.js';
 import { initSelection } from './ui/selection.js';
+import { initPicks } from './ui/picks.js';
 import { initHistory, renderHistCount } from './ui/history.js';
 import { initEditor, syncInputs } from './ui/editor.js';
 
@@ -68,6 +70,7 @@ initDialogs();
 initTheme();
 initPopup();
 initSelection();
+initPicks();
 initState();
 
 /* KHỞI ĐỘNG */

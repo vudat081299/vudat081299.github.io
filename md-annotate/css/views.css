@@ -73,6 +73,13 @@
   content: ''; position: absolute; left: calc(var(--gw, 2ch) + 8px); top: var(--s1); bottom: var(--s1); width: 3px;
   border-radius: var(--r-pill); background: var(--accent); cursor: pointer;
 }
+/* Chọn nhiều dòng (ui/picks.js): lề số bấm được; dòng đã chọn tô nền phần chữ, số dòng trên nền --accent. */
+#v-src.is-picking .ma-ln::before { pointer-events: auto; cursor: pointer; }
+.ma-ln.is-pick { background: linear-gradient(to right, transparent calc(var(--gw, 2ch) + 14px), var(--hl-2) 0); }
+.ma-ln.is-pick::before {
+  left: calc(-1 * var(--s1)); width: calc(var(--gw, 2ch) + 2 * var(--s1)); padding-right: var(--s1);
+  border-radius: var(--r-xs); background: var(--accent); color: var(--on-accent); font-weight: 600;
+}
 .ma-view__head { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); margin: calc(-1 * var(--s2)) 0 var(--s2); }
 .ma-view__head .ma-view__lbl { margin: 0; }
 .ma-syn { margin-left: auto; display: inline-flex; align-items: center; gap: var(--s2); min-height: var(--h-sm); font-size: var(--fs-sm); color: var(--ink-3); cursor: pointer; }

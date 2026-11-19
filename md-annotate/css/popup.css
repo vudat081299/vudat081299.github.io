@@ -18,6 +18,14 @@
   -webkit-mask-image: linear-gradient(to bottom, var(--ink) 35%, transparent 100%);
   mask-image: linear-gradient(to bottom, var(--ink) 35%, transparent 100%);
 }
+/* Hàng đầu khi chọn nhiều dòng: "3 lines · L12, L15-16" và nút kéo hộp (ui/picks.js). */
+.ma-pop__head { display: flex; align-items: center; gap: var(--s2); margin: calc(-1 * var(--s1)) calc(-1 * var(--s1)) var(--s2) 0; }
+.ma-pop__sum { flex: 1 1 auto; min-width: 0; font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-2); overflow-wrap: anywhere; }
+.ma-pop__grip { width: var(--h-sm); height: var(--h-sm); color: var(--ink-3); cursor: grab; touch-action: none; }
+.ma-pop.is-moving .ma-pop__grip { cursor: grabbing; color: var(--ink); background: var(--chip); }
+.ma-pop.is-moving { user-select: none; -webkit-user-select: none; }
+@media (hover: hover) { .ma-pop__grip:hover { color: var(--ink); background: var(--chip); } }
+.ma-pop__q.is-lines { white-space: pre-line; }
 .ma-pop__warn { margin: 0 0 var(--s2); font-size: var(--fs-sm); color: var(--danger); }
 /* CHIP GỢI Ý: viên thuốc cao --h-sm, nền --chip, không viền; rê: nền --accent-soft. */
 .ma-chips { display: flex; flex-wrap: wrap; gap: var(--s2); margin-bottom: var(--s3); }

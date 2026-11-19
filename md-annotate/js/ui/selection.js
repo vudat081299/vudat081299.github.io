@@ -1,21 +1,22 @@
 /* Bôi đen → hộp nhận xét: chuột mở ngay khi thả (kể cả kéo từ vùng nền), cảm ứng / bàn phím hiện nút nổi;
-   bấm đoạn đã nhận xét hoặc lề số dòng để sửa; Split tô đoạn tương ứng ở khung kia (ma-mirror).
+   bấm đoạn đã nhận xét để sửa; Split tô đoạn tương ứng ở khung kia (ma-mirror). Lề số dòng ở ui/picks.js; đang chọn
+   dòng thì bôi đen không mở hộp, không hiện nút nổi, không tô ma-mirror.
    Xuất: initSelection, onSelChange.
-   Dùng: core/anchor.js, ui/dom.js, ui/anchor-dom.js, ui/state.js, ui/marks.js, ui/render.js, ui/views.js,
-     ui/popup.js. */
+   Dùng: core/anchor.js, ui/dom.js, ui/anchor-dom.js, ui/state.js, ui/render.js, ui/views.js, ui/popup.js,
+     ui/picks.js. */
 import { locate } from '../core/anchor.js';
 import { $, hasHL } from './dom.js';
 import { rangeAt, readSelection } from './anchor-dom.js';
 import { S } from './state.js';
-import { marksOf } from './marks.js';
 import { mdText } from './render.js';
 import { isSplit } from './views.js';
 import { closePop, openEdit, openNew, pop, popDirty } from './popup.js';
+import { gutterLine, picking } from './picks.js';
 
 var dragging = false, lastSel = null, lastSelAt = 0, selTimer = null;
 export function onSelChange() {
   if (dragging) return;
-  var info = pop.mode ? null : readSelection();
+  var info = pop.mode || picking ? null : readSelection();
   if (info) { lastSel = info; lastSelAt = Date.now(); }
   $('fab').hidden = !info;
 }
@@ -24,9 +25,10 @@ export function onSelChange() {
    khớp chữ đã dựng. Vùng chọn đã nới trọn từ. Hộp nhận xét mở thì tô 'ma-pending' thay thế. */
 var mirrorRaf = 0;
 function mirrorSel() {
-  if (!hasHL || mirrorRaf) return;
+  if (!hasHL || mirrorRaf || picking) return;
   mirrorRaf = requestAnimationFrame(function () {
     mirrorRaf = 0;
+    if (picking) return;   // ma-mirror đang tô các dòng đã chọn (ui/picks.js)
     var info = !pop.mode && isSplit() ? readSelection() : null;
     var r = null;
     if (info) {
@@ -53,15 +55,7 @@ export function initSelection() {
     var root = $(id);
     root.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse' && e.button === 0) dragging = true; });
     root.addEventListener('click', function (e) {
-      var ln = root.id === 'v-src' && e.target.closest && e.target.closest('.ma-ln');
-      if (ln && e.clientX < ln.getBoundingClientRect().left + parseFloat(getComputedStyle(ln).paddingLeft) - 4) {
-        /* Bấm vào lề số dòng: mở nhận xét đầu tiên của dòng ấy. */
-        if (ln.dataset.c && !(pop.mode && popDirty())) {
-          var cid = ln.dataset.c.split(' ')[0], ms = marksOf(cid);
-          openEdit(cid, ms.length ? ms[ms.length - 1] : ln);
-        }
-        return;
-      }
+      if (gutterLine(e) || picking) return;   // lề số dòng: ui/picks.js
       var sel = window.getSelection();
       if (sel && !sel.isCollapsed) return;
       var m = e.target.closest && e.target.closest('mark.ma-hl');
@@ -73,8 +67,9 @@ export function initSelection() {
   document.addEventListener('pointerup', function (e) {
     if (!dragging) return;
     dragging = false;
+    if (picking) return;   // chọn nhiều dòng chỉ bằng lề số dòng
     setTimeout(function () {
-      if (pop.mode && popDirty()) return;
+      if (picking || (pop.mode && popDirty())) return;
       var info = readSelection();
       if (info) { if (pop.mode) closePop(true); openNew(info); }
     }, 0);
@@ -88,6 +83,6 @@ export function initSelection() {
   $('fab').addEventListener('click', function () {
     var info = readSelection() || (Date.now() - lastSelAt < 2000 ? lastSel : null);
     $('fab').hidden = true;
-    if (info) openNew(info);
+    if (info && !picking) openNew(info);
   });
 }

@@ -3,7 +3,8 @@
    renderAll(); module khác chỉ đọc.
    Xuất: anchors, checkRenderer, mdText, numbers, ordered, orphans, renderAll, renderMeta.
    Dùng: core/text.js, core/comments.js, core/runs.js, ui/dom.js, ui/state.js, ui/markdown.js, ui/marks.js,
-     ui/source-view.js, ui/list.js, ui/prompt.js, ui/views.js, ui/sync-scroll.js, ui/focus.js, ui/popup.js. */
+     ui/source-view.js, ui/list.js, ui/prompt.js, ui/views.js, ui/sync-scroll.js, ui/focus.js, ui/popup.js,
+     ui/picks.js. */
 import { plural } from '../core/text.js';
 import { anchorAll, markRanges } from '../core/comments.js';
 import { lineCount } from '../core/runs.js';
@@ -18,6 +19,7 @@ import { sizePanes, view } from './views.js';
 import { invalidateSync } from './sync-scroll.js';
 import { refreshBand } from './focus.js';
 import { paintPending, pending, pop } from './popup.js';
+import { repaintPicks } from './picks.js';
 
 export var mdText = '';            // chữ của bản dựng (nối các nút text)
 export var anchors = {};           // id → { src: [a,b] | null, md: [a,b] | null }
@@ -51,6 +53,7 @@ export function renderAll() {
   if (html != null) paintMd(mdRoot, textNodes(mdRoot), rs.md);
   if (pop.mode === 'edit' && pop.id) markActive(pop.id, true);
   if (pop.mode === 'new' && pending) paintPending();
+  repaintPicks();   // dòng đã chọn: tô lại, hoặc thoát khi văn bản đã đổi
 
   renderList();
   renderPrompt();

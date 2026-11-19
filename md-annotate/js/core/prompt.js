@@ -1,32 +1,46 @@
 /* Prompt, thuần: dựng chữ prompt từ phiên s và kết quả neo d (core/comments.js anchorAll: ordered, orphans,
    anchors), nhãn vị trí L12 / tệp:12-14, tóm tắt Options, tên file tải về. Câu vào prompt bằng tiếng Việt (MDAN-007).
-   Xuất: buildPrompt, exportName, included, locLabel, optionsSummary, promptSize.
-   Dùng: core/text.js, core/session.js. */
+   Nhận xét nhiều phần: mỗi phần tìm thấy một nhãn và một trích dẫn; phần mất neo bị bỏ.
+   Xuất: buildPrompt, exportName, included, locLabel, optionsSummary, promptSize, rangeLabel.
+   Dùng: core/text.js, core/session.js, core/comments.js. */
 import { lineOf, oneLine, slug } from './text.js';
 import { autoName } from './session.js';
+import { partsOf } from './comments.js';
 
 /* Nhận xét vào prompt: theo thứ tự trong văn bản, bỏ nhận xét mất neo. */
 export function included(d) { return d.ordered.filter(function (c) { return !d.orphans[c.id]; }); }
-/* Dòng đầu và cuối của neo trong nguồn; chọn ở bản dựng cũng đi qua neo nguồn. */
-function lineRange(s, d, c) {
-  var a = d.anchors[c.id];
-  if (!a || !a.src) return null;
-  return [lineOf(s.text, a.src[0]), lineOf(s.text, Math.max(a.src[0], a.src[1] - 1))];
+/* "L12", "L12-14", hoặc "notes/a.md:12-14" khi có tệp (path). */
+export function rangeLabel(a, b, path) {
+  var n = a === b ? String(a) : a + '-' + b;
+  return path ? path + ':' + n : 'L' + n;
 }
-/* "L12", "L12-14", hoặc "notes/a.md:12-14" khi có tệp. */
+/* Các phần tìm thấy của nhận xét c: [{ quote, loc }], loc là nhãn dòng đầu – cuối của neo trong nguồn ('' khi phần ấy
+   chỉ tìm thấy ở bản dựng). Chọn ở bản dựng cũng đi qua neo nguồn. */
+function found(s, d, c, withPath) {
+  var a = d.anchors[c.id], ps = partsOf(c), path = withPath ? s.path.trim() : '';
+  if (!a) return [];
+  return a.parts.map(function (x, k) {
+    if (!x.src && !x.md) return null;
+    var loc = x.src ? rangeLabel(lineOf(s.text, x.src[0]), lineOf(s.text, Math.max(x.src[0], x.src[1] - 1)), path) : '';
+    return { quote: ps[k].quote, loc: loc };
+  }).filter(Boolean);
+}
+/* Nhãn vị trí của nhận xét: "L12", hoặc "L12, L15-16" khi nhiều phần. */
 export function locLabel(s, d, c, withPath) {
-  var r = lineRange(s, d, c);
-  if (!r) return '';
-  var n = r[0] === r[1] ? String(r[0]) : r[0] + '-' + r[1];
-  var p = withPath ? s.path.trim() : '';
-  return p ? p + ':' + n : 'L' + n;
+  return found(s, d, c, withPath).map(function (f) { return f.loc; }).filter(Boolean).join(', ');
+}
+function blockQuote(q) {
+  return q.trim().replace(/\n{3,}/g, '\n\n').split('\n').map(function (l) { return l.trim() ? '> ' + l : '>'; }).join('\n');
 }
 export function buildPrompt(s, d) {
   var items = included(d);
   var parts = [];
-  var locs = items.map(function (c) { return s.lineNums ? locLabel(s, d, c, true) : ''; });
+  /* Mỗi nhận xét: các phần tìm thấy; tắt số dòng thì không nhãn. */
+  var fs = items.map(function (c) {
+    return found(s, d, c, true).map(function (f) { return { quote: f.quote, loc: s.lineNums ? f.loc : '' }; });
+  });
   var head = s.header.trim();
-  if (locs.some(Boolean)) {
+  if (fs.some(function (f) { return f.some(function (x) { return x.loc; }); })) {
     var note = s.path.trim()
       ? 'Vị trí ghi dạng tệp:dòng, tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.'
       : 'Số dòng (L) tính theo văn bản tôi dán; nếu lệch thì tìm đoạn theo trích dẫn.';
@@ -35,13 +49,17 @@ export function buildPrompt(s, d) {
   if (head) parts.push(head);
   if (items.length) {
     if (s.fmt === 'block') {
+      /* ### 3 · L12, L15-16 rồi mỗi phần một khối trích (cách nhau dòng trống), rồi nhận xét. */
       parts.push(items.map(function (c, i) {
-        var q = c.quote.trim().replace(/\n{3,}/g, '\n\n').split('\n').map(function (l) { return l.trim() ? '> ' + l : '>'; }).join('\n');
-        return '### ' + (i + 1) + (locs[i] ? ' · ' + locs[i] : '') + '\n' + q + '\n\n' + c.comment.trim();
+        var loc = fs[i].map(function (f) { return f.loc; }).filter(Boolean).join(', ');
+        var q = fs[i].map(function (f) { return blockQuote(f.quote); }).join('\n\n');
+        return '### ' + (i + 1) + (loc ? ' · ' + loc : '') + '\n' + q + '\n\n' + c.comment.trim();
       }).join('\n\n'));
     } else {
+      /* 3. L12 "q1"; L15-16 "q2" — nhận xét */
       parts.push(items.map(function (c, i) {
-        return (i + 1) + '. ' + (locs[i] ? locs[i] + ' ' : '') + '"' + oneLine(c.quote) + '" — ' + oneLine(c.comment);
+        var qs = fs[i].map(function (f) { return (f.loc ? f.loc + ' ' : '') + '"' + oneLine(f.quote) + '"'; }).join('; ');
+        return (i + 1) + '. ' + qs + ' — ' + oneLine(c.comment);
       }).join('\n'));
     }
   }

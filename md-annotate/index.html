@@ -255,6 +255,13 @@
 
     <!-- Hộp nhận xét: mở khi bôi đen (chuột) hoặc bấm nút nổi (cảm ứng, bàn phím) -->
     <div class="ma-pop" id="pop" role="dialog" aria-label="Comment on the selected passage" hidden>
+      <!-- Chỉ khi chọn nhiều dòng (ui/picks.js): số dòng, nhãn, nút kéo hộp -->
+      <div class="ma-pop__head" id="pop-head" hidden>
+        <span class="ma-pop__sum" id="pop-sum" title="Click more line numbers to add or remove lines"></span>
+        <button class="ma-icbtn ma-icbtn--bare ma-pop__grip" type="button" id="pop-grip" aria-label="Move comment box (drag, or use arrow keys)" title="Drag to move">
+          <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01" /></svg>
+        </button>
+      </div>
       <p class="ma-pop__q" id="pop-q"></p>
       <p class="ma-pop__warn" id="pop-warn" hidden></p>
       <div class="ma-chips" id="pop-chips"></div>
