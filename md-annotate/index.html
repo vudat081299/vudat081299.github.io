@@ -293,7 +293,7 @@
       .ma-md th { background: var(--surface-2); }
       .ma-md img { max-width: 100%; height: auto; }
       .ma-md hr { border: 0; height: 1px; background: var(--line); margin: 1.6em 0; }
-      .ma-md a { color: var(--green); }
+      .ma-md .ma-a { color: var(--sx-link); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--sx-link) 45%, transparent); text-underline-offset: 2px; cursor: text; }
       .ma-note { color: var(--ink-3); font-style: italic; }
 
       /* Đoạn đã nhận xét. Không bo góc: có gạch chân (REPO-025 chỉ cấm viền một cạnh + bo; ở đây là nền). */
@@ -1254,6 +1254,20 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         }
       }
 
+      /* Link trong bản dựng chỉ để đọc và bôi đen: đổi <a> thành <span>, không chuyển trang, không kéo-thả link.
+         Chữ giữ nguyên nên neo không đổi; URL hiện khi rê chuột. */
+      function unlink(root) {
+        root.querySelectorAll('a').forEach(function (a) {
+          var s = document.createElement('span');
+          s.className = 'ma-a';
+          var href = a.getAttribute('href');
+          if (href) s.title = href;
+          while (a.firstChild) s.appendChild(a.firstChild);
+          a.replaceWith(s);
+        });
+        root.querySelectorAll('img').forEach(function (img) { img.draggable = false; });
+      }
+
       function renderAll() {
         var text = S.text, mdRoot = $('v-md');
         var html = mdHtml(text);
@@ -1263,6 +1277,7 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
           mdText = '';
         } else {
           mdRoot.innerHTML = html; // đã qua DOMPurify
+          unlink(mdRoot);
           mdText = textNodes(mdRoot).map(function (n) { return n.data; }).join('');
         }
 
@@ -2063,8 +2078,6 @@ Phím `Ctrl/⌘ + Enter` cũng lưu.
         var root = $(id);
         root.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse' && e.button === 0) dragging = true; });
         root.addEventListener('click', function (e) {
-          var a = e.target.closest && e.target.closest('a');
-          if (a && root.contains(a) && !(e.ctrlKey || e.metaKey)) e.preventDefault();
           var sel = window.getSelection();
           if (sel && !sel.isCollapsed) return;
           var m = e.target.closest && e.target.closest('mark.ma-hl');

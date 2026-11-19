@@ -78,6 +78,8 @@
 ## An toàn
 
 - Markdown dựng bằng `marked` rồi làm sạch bằng `DOMPurify`, cả hai ghim phiên bản và có `integrity`.
+- Link ở bản dựng đổi thành `<span class="ma-a">` (`unlink()`, URL ở `title`): không chuyển trang, kéo trên link vẫn
+  là bôi đen. Không dựng lại `<a>`.
 - Chỉ một chỗ gán `innerHTML`: HTML đã qua DOMPurify. Mọi chỗ khác dựng DOM bằng `h()` và `textContent`.
 - Thiếu mạng thì *Hiển thị* báo lỗi, *Nguồn* vẫn dùng được.
 - Mở bằng `file://`: trang báo không nạp được `data/hints.json`; mọi thứ khác vẫn chạy.

@@ -108,6 +108,16 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   await page.waitForTimeout(100);
   check('dán vào ô trống thì sang tab Hiển thị', await page.isVisible('#v-md h1'));
 
+  // 0. Link ở bản dựng không chuyển trang; kéo bắt đầu trên link vẫn là bôi đen.
+  const lk = await page.evaluate(() => ({ a: document.querySelectorAll('#v-md a').length, span: (document.querySelector('#v-md .ma-a') || {}).textContent, title: (document.querySelector('#v-md .ma-a') || {}).title }));
+  check('link ở bản dựng thành chữ, không còn <a>', lk.a === 0 && lk.span === 'liên kết tới ví dụ' && lk.title === 'https://example.com/path', JSON.stringify(lk));
+  await page.click('#v-md .ma-a');
+  check('bấm link không rời trang', page.url() === BASE || page.url().startsWith(BASE), page.url());
+  await dragSelect(page, '#v-md', 'liên kết tới ví dụ');
+  check('kéo trên link mở hộp nhận xét', await page.isVisible('#pop') && (await page.textContent('#pop-q')) === 'liên kết tới ví dụ', await page.textContent('#pop-q'));
+  await page.keyboard.press('Escape');
+  await page.evaluate(() => getSelection().removeAllRanges());
+
   // 1. Bôi đen ở bản dựng, gõ nhận xét.
   // Kéo từ giữa chữ "chữ" tới giữa chữ "thúc": đoạn trích phải nới ra trọn từ.
   await dragSelect(page, '#v-md', 'ữ đậm ở đây và kết thú');
