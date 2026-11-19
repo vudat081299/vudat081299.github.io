@@ -658,6 +658,25 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
     if (i < 0 || bl[i].getBoundingClientRect().top >= b2) i = Math.max(0, (i < 0 ? bl.length : i) - 1);
     const lit = document.querySelector('#v-md > .is-sec'); return { want: bl[i].dataset.sec, got: lit && lit.dataset.sec }; });
   check('Dải đọc ở Split đo trên khung đang cuộn (Preview)', lead.want != null && lead.want === lead.got, JSON.stringify(lead));
+  // Dải đọc: dòng dưới chuột sáng dù ngoài section; ở Split khung kia sáng khối tương ứng.
+  const outP = await sp.evaluate(() => { const w = document.getElementById('wrap-md').getBoundingClientRect();
+    const p = [...document.querySelectorAll('#v-md > p:not(.is-sec)')].find((e) => { const r = e.getBoundingClientRect(); return r.top > w.top + w.height * 0.6 && r.bottom < w.bottom; });
+    return p && p.textContent; });
+  await sp.hover(`#v-md > p:has-text("${outP}")`); await sp.waitForTimeout(250);
+  const ln = await sp.evaluate((t) => { const p = [...document.querySelectorAll('#v-md > p')].find((e) => e.textContent === t);
+    return { op: getComputedStyle(p).opacity, src: [...document.querySelectorAll('#v-src .ma-ln.is-line')].map((l) => l.textContent.trim()) }; }, outP);
+  check('Dải đọc: đoạn dưới chuột (ngoài section) sáng, Source sáng dòng tương ứng', ln.op === '1' && ln.src.length === 1 && ln.src[0] === outP, JSON.stringify({ outP, ln }));
+  const li = await sp.evaluate(() => { const w = document.getElementById('wrap-md').getBoundingClientRect();
+    const ul = [...document.querySelectorAll('#v-md > ul:not(.is-sec)')].find((e) => { const r = e.getBoundingClientRect(); return r.top > w.top && r.bottom < w.bottom; });
+    if (!ul) return null; const r = ul.children[1].getBoundingClientRect(); return { x: r.left + 20, y: r.top + r.height / 2 }; });
+  if (li) {
+    await sp.mouse.move(li.x, li.y); await sp.waitForTimeout(250);
+    const lo = await sp.evaluate(() => { const ul = document.querySelector('#v-md > ul.is-line'); if (!ul) return null; const o = (e) => getComputedStyle(e).opacity;
+      return [o(ul), o(ul.children[0]), o(ul.children[1])]; });
+    check('Dải đọc: mục danh sách dưới chuột sáng, mục khác mờ', lo && lo[0] === '1' && lo[1] !== '1' && lo[2] === '1', JSON.stringify(lo));
+  } else check('Dải đọc: có danh sách ngoài section để thử', false);
+  await sp.mouse.move(5, 5); await sp.waitForTimeout(200);
+  check('Dải đọc: chuột rời khung thì hết sáng theo dòng', await sp.evaluate(() => !document.querySelector('.is-line, .ma-dimx')));
   await sp.click('#btn-layout'); await sp.click('#set-reset'); await sp.keyboard.press('Escape');
 
   // Kéo bắt đầu ở lề phải của khung Preview, rồi ở nền trang bên trái khung: đều mở hộp nhận xét.

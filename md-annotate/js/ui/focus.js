@@ -1,9 +1,10 @@
-/* Focus mode: mờ mọi thứ ngoài một section; chọn section theo chuột (pointer) hoặc dải đọc 25–50% (band).
+/* Focus mode: mờ mọi thứ ngoài một section; chọn section theo chuột (pointer) hoặc dải đọc 25–50% (band). Ở dải đọc,
+   dòng dưới chuột cũng sáng (.is-line).
    Xuất: initFocus, refreshBand, refreshFocus.
    Dùng: core/blocks.js, core/sections.js, ui/dom.js, ui/state.js, ui/markdown.js, ui/views.js, ui/sync-scroll.js,
      ui/layout.js. */
 import { lexSpans } from '../core/blocks.js';
-import { bandBounds, bandPick, lineSections, numberSections } from '../core/sections.js';
+import { bandBounds, bandPick, lineSections, numberSections, spanAt } from '../core/sections.js';
 import { $, shown } from './dom.js';
 import { S } from './state.js';
 import { mdLex } from './markdown.js';
@@ -21,10 +22,15 @@ function secBlocks(root) {
   return root.id === 'v-src' ? Array.prototype.slice.call(root.querySelectorAll('.ma-ln'))
     : Array.prototype.filter.call(root.children, function (el) { return el.nodeType === 1; });
 }
+var spanMemo = { text: null, spans: [] };
+function srcSpans() {
+  if (spanMemo.text !== S.text) spanMemo = { text: S.text, spans: window.marked ? lexSpans(S.text, mdLex) : [] };
+  return spanMemo.spans;
+}
 function markSections(root) {
   var blocks = secBlocks(root);
   var secs = root.id === 'v-src'
-    ? lineSections(window.marked ? lexSpans(S.text, mdLex) : [], blocks.length)
+    ? lineSections(srcSpans(), blocks.length)
     : numberSections(blocks.map(function (el) { return /^H[1-6]$/.test(el.tagName); }));
   blocks.forEach(function (el, i) { el.dataset.sec = secs[i]; });
 }
@@ -66,7 +72,7 @@ function bandSec(root) {
     function (k) { return blocks[k].getBoundingClientRect().top; }, band[0], band[1]);
   return blocks[i].dataset.sec;
 }
-var bandRaf = 0, bandFrom = null;
+var bandRaf = 0, bandFrom = null, ptr = null; // ptr: vị trí chuột cuối trong một khung, cho dòng ở dải đọc
 export function refreshBand(from) {
   if (from) bandFrom = from;
   if (bandRaf) return;
@@ -77,11 +83,57 @@ export function refreshBand(from) {
     if (!shown(root)) return;
     var sec = bandSec(root);
     if (sec != null) focusBoth(root, sec);
+    // Cuộn bằng bánh xe: chuột đứng yên, chữ chạy dưới nó; tìm lại dòng dưới chuột.
+    var t = ptr && document.elementFromPoint(ptr.x, ptr.y), r = t && t.closest('#v-src, #v-md');
+    if (r) lineAtPointer(r, t); else clearLines();
   });
 }
 export function refreshFocus() {
   ['v-src', 'v-md'].forEach(function (id) { clearFocus($(id)); });
+  clearLines();
   if (focusOn() && layoutVal('focusBy') === 'band') refreshBand();
+}
+
+/* Dòng dưới chuột ở dải đọc. Source: một .ma-ln. Preview: mục danh sách, hàng bảng, mục định nghĩa, hoặc cả khối cấp
+   cao. Khối cấp cao chứa nó (host) sáng; trong host, anh em của nó và của mỗi tổ tiên tới host mờ (.ma-dimx), vì
+   opacity của con không vượt được cha. Ở Split, khung kia sáng khối tương ứng: khối cấp cao thứ i ↔ token thứ i của
+   marked.lexer (chỉ khi số khối hai bên bằng nhau, như cuộn theo nhau). */
+function clearLines() {
+  ['v-src', 'v-md'].forEach(function (id) {
+    $(id).querySelectorAll('.is-line, .ma-dimx').forEach(function (x) { x.classList.remove('is-line', 'ma-dimx'); });
+  });
+}
+function mdBlocks() { return Array.prototype.filter.call($('v-md').children, function (el) { return el.nodeType === 1; }); }
+function lightMdUnit(u) {
+  var root = $('v-md'), host = u;
+  while (host.parentElement !== root) host = host.parentElement;
+  host.classList.add('is-line');
+  for (var n = u; n !== host; n = n.parentElement) {
+    Array.prototype.forEach.call(n.parentElement.children, function (x) { if (x !== n) x.classList.add('ma-dimx'); });
+  }
+}
+function lightSrcLines(a, b) {
+  var lines = $('v-src').querySelectorAll('.ma-ln');
+  for (var i = a; i <= b && i < lines.length; i++) lines[i].classList.add('is-line');
+}
+function lineAtPointer(root, t) {
+  clearLines();
+  if (!t || !t.closest || !root.contains(t)) return;
+  var spans = srcSpans(), blocks = mdBlocks(), paired = isSplit() && spans.length === blocks.length;
+  if (root.id === 'v-src') {
+    var ln = t.closest('.ma-ln');
+    if (!ln) return;
+    ln.classList.add('is-line');
+    var idx = Array.prototype.indexOf.call(root.querySelectorAll('.ma-ln'), ln), k = spanAt(spans, idx);
+    if (paired && k >= 0) lightMdUnit(blocks[k]);
+  } else {
+    var u = t.closest('li, tr, dt, dd') || t.closest('#v-md > *');
+    if (!u || !root.contains(u) || u === root) return;
+    lightMdUnit(u);
+    var host = u; while (host.parentElement !== root) host = host.parentElement;
+    var j = blocks.indexOf(host);
+    if (paired && j >= 0) lightSrcLines(spans[j].a, spans[j].b);
+  }
 }
 
 /* Sự kiện cuộn của dải đọc phải đăng ký sau initSyncScroll (xem setByPage). */
@@ -89,11 +141,12 @@ export function initFocus() {
   ['v-src', 'v-md'].forEach(function (id) {
     var root = $(id), raf = 0, lastT = null;
     root.addEventListener('pointermove', function (e) {
-      if (!focusOn() || layoutVal('focusBy') !== 'pointer' || !mqHover.matches || e.pointerType === 'touch') return;
-      lastT = e.target;
+      if (!focusOn() || !mqHover.matches || e.pointerType === 'touch') return;
+      lastT = e.target; ptr = { x: e.clientX, y: e.clientY };
       if (raf) return;
       raf = requestAnimationFrame(function () {
         raf = 0;
+        if (layoutVal('focusBy') === 'band') { lineAtPointer(root, lastT); return; }
         var el = lastT && lastT.closest && lastT.closest(id === 'v-src' ? '.ma-ln' : '#v-md > *');
         if (!el || !root.contains(el)) return;
         ensureSec(root);
@@ -102,6 +155,7 @@ export function initFocus() {
       });
     });
     root.addEventListener('pointerleave', function () {
+      if (layoutVal('focusBy') === 'band') { ptr = null; clearLines(); return; }
       if (layoutVal('focusBy') !== 'pointer') return;
       if ($('pop') && !$('pop').hidden) return; // đang ghi nhận xét: giữ section sáng
       var o = otherRoot(root);

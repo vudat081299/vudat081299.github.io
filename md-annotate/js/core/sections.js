@@ -1,6 +1,6 @@
 /* Section của Focus mode, thuần: đánh số section (mỗi tiêu đề cấp cao mở một section mới) và chọn khối chạm dải đọc.
    Đọc / ghi DOM ở ui/focus.js.
-   Xuất: bandBounds, bandPick, lineSections, numberSections.
+   Xuất: bandBounds, bandPick, lineSections, numberSections, spanAt.
    Dùng: không module nào. */
 
 /* flags[i]: khối i mở section mới. Trả số section ('0', '1', …) của từng khối. */
@@ -26,4 +26,13 @@ export function bandPick(n, bottomAt, topAt, b1, b2) {
   var lo = 0, hi = n - 1, first = n;
   while (lo <= hi) { var mid = (lo + hi) >> 1; if (bottomAt(mid) > b1) { first = mid; hi = mid - 1; } else lo = mid + 1; }
   return first < n && topAt(first) < b2 ? first : Math.max(0, Math.min(n - 1, first - 1));
+}
+/* Chỉ số khối (spans của core/blocks.js, xếp theo dòng) chứa dòng `line` (đếm từ 0); -1 nếu dòng nằm giữa hai khối. */
+export function spanAt(spans, line) {
+  var lo = 0, hi = spans.length - 1;
+  while (lo <= hi) {
+    var mid = (lo + hi) >> 1;
+    if (line < spans[mid].a) hi = mid - 1; else if (line > spans[mid].b) lo = mid + 1; else return mid;
+  }
+  return -1;
 }

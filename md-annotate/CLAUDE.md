@@ -45,8 +45,7 @@
   mẫu. `<html lang="en">`.
 - Nội dung vào prompt bằng tiếng Việt: gợi ý mặc định (`data/hints.json`), câu số dòng, `Văn bản gốc:`, câu mẫu và
   placeholder của lời dẫn đầu / cuối. Trích dẫn và nhận xét của người dùng giữ nguyên như đã gõ.
-- Chú thích trong code, tài liệu `.md` và `desc` ở `data/collection.json` vẫn tiếng Việt.
-- Số nhiều đi qua `plural(n, word)`; số và ngày định dạng `en` / `en-GB`.
+- Chú thích code, tài liệu `.md`, `desc` trang chủ: tiếng Việt. Số nhiều qua `plural(n, word)`; số theo `en`, ngày theo `en-GB`.
 
 ## Giao diện
 
@@ -55,7 +54,6 @@
 - Nền nút chính và huy hiệu: `--accent` + chữ `--on-accent`. Chữ, viền, link xanh: `--green` (sắc đậm cùng họ).
 - Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024).
 - Khoảng cách theo thang `--s1`…`--s6`, bo góc `--r-sm` / `--r` / `--r-lg`, chuyển động `--dur` + `--ease`.
-- Tiêu đề trang một dòng ở cột trái. Tên phiên sửa tại chỗ ở thanh của khung văn bản.
 - Bề rộng (MDAN-005): `.ma-wrap` rộng `max(70vw, 1280px)`, không quá khung nhìn, căn giữa, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
   320–560, `prefs.side`), thu gọn thành `.ma-rail` 56px (`html.ma-railed`, `prefs.rail`); thanh dọc giữ nút chép.
 - *Split* khi `#doc` đủ cho hai khung ≥ 420px (`splitOK()`), không theo media query. Chưa đủ chỗ thì hiện
@@ -70,13 +68,16 @@
   section. Section bắt đầu ở mỗi tiêu đề cấp cao: h1–h6 con trực tiếp của `#v-md`; ở *Source* là dòng đầu token
   `heading` cấp cao của `marked.lexer` (cùng cách đếm, số section hai bên khớp). `markSections()` gắn `data-sec` lười;
   section sáng có `.is-sec`, khung có `.is-focusing`.
-- Chọn section (`prefs.focusBy`): `pointer` theo chuột (chỉ chuột; rời cả hai khung thì hết mờ, trừ khi hộp nhận xét
-  mở); `band` là section đầu tiên chạm dải 25–50% chiều cao vùng nhìn (khung cuộn ở *Split*, cửa sổ ở chế độ khác),
-  cập nhật khi cuộn và khi vẽ lại. Ở *Split*, section cùng số ở khung kia cũng sáng (`focusBoth`).
-- Dải đọc ở *Split* chỉ đo trên một khung: khung người dùng cuộn gần nhất (`bandFrom`). Khung bị kéo theo phát sự
-  kiện cuộn do trang đặt (`setByPage`); sự kiện ấy không được đổi `bandFrom`. Chưa cuộn lần nào thì đo trên Preview.
-- "Chạm dải" (`bandSec`): khối đầu tiên có đáy dưới mốc 25% và đỉnh trên mốc 50%. Đuôi section trước còn nằm trong
+- Chọn section (`prefs.focusBy`): `pointer` theo chuột (rời cả hai khung thì hết mờ, trừ khi hộp nhận xét mở); `band`
+  là section chạm dải 25–50% vùng nhìn (khung cuộn ở *Split*, cửa sổ ở chế độ khác). *Split*: section cùng số ở khung
+  kia cũng sáng; dải chỉ đo trên khung người dùng cuộn gần nhất (`bandFrom`), cuộn do trang đặt (`setByPage`) không đổi
+  nó; chưa cuộn thì đo trên Preview.
+- "Chạm dải" (`bandPick`): khối đầu tiên có đáy dưới mốc 25% và đỉnh trên mốc 50%. Đuôi section trước còn nằm trong
   dải thì section trước thắng; không khối nào chạm thì lấy khối ngay trên dải.
+- Ở dải đọc, dòng dưới chuột cũng sáng (`.is-line`): một `.ma-ln`, hoặc `li` / `tr` / `dt` / `dd` / khối cấp cao ở
+  *Preview*; phần khác của khối cấp cao chứa nó mờ (`.ma-dimx`). Ở *Split* khung kia sáng cả khối tương ứng (khối i ↔
+  token i của `lexSpans`, chỉ khi số khối hai bên bằng nhau). Cuộn thì tìm lại dòng dưới chuột; rời khung thì hết.
+- Khối nguồn (`lexSpans`) neo vào văn bản gốc, không cộng dồn `raw`: marked bỏ khối `[id]: url` và đổi tab đầu dòng.
 - Bôi đen ở *Split*: đoạn tương ứng ở khung kia tô bằng CSS Highlight `ma-mirror` (`mirrorSel`, tìm bằng `locate`, như neo
   nhận xét). Hộp nhận xét mở thì `ma-pending` thay thế.
 - *Preview* giống GitHub (MDAN-006): font hệ thống, màu Primer ở token `--gh-*`, code tô màu bằng highlight.js

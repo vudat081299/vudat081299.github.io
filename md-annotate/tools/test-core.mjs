@@ -1,7 +1,7 @@
 /* Bài thử của js/core/ (logic thuần), chạy bằng node, không trình duyệt:  node md-annotate/tools/test-core.mjs
  * Thêm logic thuần mới thì thêm bài thử ở đây. Hành vi cần DOM thì thử ở tools/smoke.cjs. */
 import { lexSpans } from '../js/core/blocks.js';
-import { numberSections, lineSections, bandBounds, bandPick } from '../js/core/sections.js';
+import { numberSections, lineSections, bandBounds, bandPick, spanAt } from '../js/core/sections.js';
 import { syncCurves, followTop } from '../js/core/sync-math.js';
 
 let fails = 0;
@@ -58,6 +58,8 @@ check('bandBounds: 25–50% vùng nhìn', eq(bandBounds(100, 900, 1000), [300, 5
   check('bandPick: khối đầu tiên chạm dải', pick(300, 500) === 2);
   check('bandPick: không khối nào chạm thì lấy khối ngay trên', pick(950, 1000) === 3);
 }
+
+check('spanAt: dòng trong khối, giữa hai khối', eq([0, 1, 2, 3, 4, 5].map((l) => spanAt([{ a: 0, b: 0 }, { a: 2, b: 4 }], l)), [0, -1, 1, 1, 1, -1]));
 
 // Cuộn theo nhau: khung theo đi đúng điểm neo và không bao giờ lùi khi khung dẫn tiến.
 {

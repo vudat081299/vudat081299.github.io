@@ -4,3 +4,7 @@
 html.ma-focus .ma-md > [data-sec], html.ma-focus #v-src .ma-ln { transition: opacity .2s var(--ease); }
 html.ma-focus .ma-md.is-focusing > [data-sec]:not(.is-sec),
 html.ma-focus #v-src.is-focusing .ma-ln:not(.is-sec) { opacity: var(--dim, .3); }
+/* Dải đọc: dòng dưới chuột sáng dù ngoài section (.is-line); trong khối cấp cao, phần khác của khối mờ (.ma-dimx). */
+html.ma-focus #v-src.is-focusing .ma-ln.is-line,
+html.ma-focus .ma-md.is-focusing > [data-sec].is-line { opacity: 1; }
+html.ma-focus .ma-md.is-focusing > .is-line:not(.is-sec) .ma-dimx { opacity: var(--dim, .3); }
