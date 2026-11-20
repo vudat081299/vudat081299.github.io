@@ -691,9 +691,11 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
   // Kéo bắt đầu ở lề phải của khung Preview, rồi ở nền trang bên trái khung: đều mở hộp nhận xét.
   await sp.evaluate(() => { document.getElementById('wrap-md').scrollTop = 0; }); await sp.waitForTimeout(150);
   for (const [name, side] of [['lề phải khung Preview', 'right'], ['nền trang bên trái khung', 'left']]) {
-    const g = await sp.evaluate((side) => { const w = document.getElementById('wrap-md').getBoundingClientRect(), d = document.getElementById('doc').getBoundingClientRect();
+    // Lề phải: giữa mép chữ và dải tiến độ (phần lề dải không chiếm).
+    const g = await sp.evaluate((side) => { const d = document.getElementById('doc').getBoundingClientRect(), m = document.querySelector('.ma-mm[data-w="md"]');
+      const t = document.getElementById('v-md').getBoundingClientRect().right, ml = m.hidden ? document.getElementById('wrap-md').getBoundingClientRect().right : m.getBoundingClientRect().left;
       const ps = [...document.querySelectorAll('#v-md > p')].slice(0, 3).map((p) => p.getBoundingClientRect().top + 8);
-      return { x: side === 'right' ? w.right - 22 : d.left - 8, y1: ps[0], y2: ps[2] }; }, side);
+      return { x: side === 'right' ? (t + ml) / 2 : d.left - 8, y1: ps[0], y2: ps[2] }; }, side);
     await sp.mouse.move(g.x, g.y1); await sp.mouse.down(); await sp.mouse.move(g.x, g.y2, { steps: 6 }); await sp.mouse.up(); await sp.waitForTimeout(200);
     check(`kéo từ ${name} mở hộp nhận xét`, await sp.isVisible('#pop'));
     await sp.keyboard.press('Escape'); await sp.waitForTimeout(100);

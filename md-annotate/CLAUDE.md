@@ -148,7 +148,7 @@
 - Prompt: *Say which lines I reviewed* (`rvPrompt`, mặc định tắt) thêm `Đã đọc kỹ: … Chưa đọc: …`; tắt thì prompt y hệt từng byte.
 - Máy hẹp / cảm ứng: viên thuốc `#rv-pill` chỉ đánh dấu, không bỏ dấu. Màn cảm ứng chưa có dấu thì tắt làn.
 - Dải tiến độ (MDAN-016): `.ma-mm` fixed, mép phải khung đang hiện, trái thanh cuộn; mỗi đơn vị một đoạn theo vị trí (đặc ✓, rỗng ○, nhạt,
-  viền đứt gợi ý), chấm nhận xét, hộp khung nhìn; bấm / kéo thì cuộn tới; rộng 8px, lề còn lại vẫn kéo bôi đen. ≤ 720px ẩn; cảm ứng chỉ xem.
+  viền đứt gợi ý), chấm nhận xét, hai đầu bo tròn; cột đen khung nhìn riêng bên trái dải; bấm / kéo thì cuộn tới; lề còn lại vẫn kéo bôi đen. ≤ 720px ẩn; cảm ứng chỉ xem.
 - Gợi ý (`prefs.rvSuggest`, mặc định bật): đơn vị chạm dải đọc (luật của Focus band, cả khi Focus tắt) cộng thời gian; rời dải đi lên sau
   `dwellNeed` (40% số từ ÷ 230 wpm, 4–60 s) thì có ✓ viền đứt `.is-sug` và nút *Accept N suggested* ở tab *Review*. Không bao giờ tự đánh dấu.
 - Chỉ đếm khi tab hiện, cửa sổ có focus, có thao tác trong 60 s; rời dải chỉ tính lúc người dùng tự cuộn; J / K / X, dải tiến độ gọi `noteJump()`.

@@ -4,12 +4,15 @@
 /* DẢI TIẾN ĐỘ: fixed, JS đặt left / top / height sát mép phải khung, trái thanh cuộn. Vùng bấm chỉ rộng hơn vạch 2px:
    phần lề phải còn lại vẫn là nền để kéo bôi đen (MDAN-016). */
 .ma-mm {
-  position: fixed; z-index: 20; width: calc(var(--mm-w) + 2px); cursor: pointer; touch-action: none;
+  position: fixed; z-index: 20; width: calc(var(--mm-v) + var(--mm-w) + 5px); cursor: pointer; touch-action: none;
   -webkit-user-select: none; user-select: none;
 }
 .ma-mm > * { pointer-events: none; }
-.ma-mm__in { position: absolute; top: 0; bottom: 0; left: 1px; right: 1px; }
+/* Dải đơn vị sát thanh cuộn, hai đầu bo tròn; cột khung nhìn (.ma-mm__view) riêng bên trái, không đè lên dải. */
+.ma-mm__in { position: absolute; top: 0; bottom: 0; right: 1px; width: var(--mm-w); border-radius: var(--r-pill); overflow: hidden; }
 .ma-mm__s { position: absolute; left: 0; right: 0; border-radius: 1px; background: var(--line); }
+.ma-mm__s:first-child { border-top-left-radius: var(--r-pill); border-top-right-radius: var(--r-pill); }
+.ma-mm__s:last-of-type { border-bottom-left-radius: var(--r-pill); border-bottom-right-radius: var(--r-pill); }
 .ma-mm__s.is-done { background: var(--accent); }
 .ma-mm__s.is-changed { background: var(--surface); box-shadow: inset 0 0 0 1px var(--ink-3); }
 .ma-mm__s.is-sug { background: var(--hl-2); outline: 1px dashed var(--ink-4); outline-offset: -1px; }
@@ -18,11 +21,8 @@
   position: absolute; left: 50%; width: var(--mm-w); height: var(--mm-w); margin: calc(var(--mm-w) / -2) 0 0 calc(var(--mm-w) / -2);
   border-radius: var(--r-pill); background: var(--ink); box-shadow: 0 0 0 1px var(--surface);
 }
-.ma-mm__view {
-  position: absolute; left: 0; right: 0; box-sizing: border-box; border: 1px solid var(--ink-4); border-radius: var(--r-xs);
-  background: var(--chip);
-}
-@media (hover: hover) { .ma-mm:hover .ma-mm__view, .ma-mm.is-drag .ma-mm__view { border-color: var(--ring); } }
+.ma-mm__view { position: absolute; left: 1px; width: var(--mm-v); border-radius: var(--r-pill); background: var(--ink); }
+@media (hover: hover) { .ma-mm:hover .ma-mm__view, .ma-mm.is-drag .ma-mm__view { background: var(--ring); } }
 /* Màn cảm ứng: chỉ để xem (vạch mảnh không đạt --h-touch, lại nằm chỗ ngón tay vuốt). Điện thoại: ui/minimap.js ẩn. */
 @media (pointer: coarse) { .ma-mm { pointer-events: none; } }
 

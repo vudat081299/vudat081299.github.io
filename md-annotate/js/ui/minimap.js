@@ -1,6 +1,6 @@
 /* Dải tiến độ (MDAN-016): một dải dọc mảnh sát mép phải mỗi khung đang hiện (Source, Preview; cả hai ở Split), ngay
    trái thanh cuộn. Mỗi đơn vị một đoạn theo vị trí / chiều cao của nó trong khung: đặc --accent đã đọc, rỗng viền đã đổi
-   chữ (○), nhạt chưa đọc, viền đứt được gợi ý (ui/dwell.js); chấm ở chỗ có nhận xét; hộp khung nhìn. Bấm / kéo trên dải
+   chữ (○), nhạt chưa đọc, viền đứt được gợi ý (ui/dwell.js); chấm ở chỗ có nhận xét; khung nhìn là cột đen riêng bên trái dải. Bấm / kéo trên dải
    thì cuộn tới đó (cuộn do trang, không tính là đọc). Không có đơn vị thì ẩn.
    Dải là phần tử position: fixed ngoài #v-src / #v-md (text của khung không đổi), đặt theo khung bằng JS. Vẽ lại đoạn
    khi ui/review.js xếp làn (vẽ, đánh dấu, đổi cỡ); khi cuộn chỉ dời hộp khung nhìn (và khung, ở chế độ cuộn cửa sổ).

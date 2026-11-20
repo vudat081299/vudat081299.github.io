@@ -119,8 +119,9 @@ kiểu giữa màn hình, nền mờ. Bảng chỉ liệt kê phím và cú bấ
 19/11/2026 · `md-annotate/`
 
 Chủ trang soát Tech Design không theo thứ tự rồi đọc từ trên xuống, nên cần thấy cả văn bản đã đọc tới đâu. Mỗi khung có
-một dải mảnh ở mép phải (trái thanh cuộn): đoạn theo vị trí từng khối, đặc là đã đọc, rỗng là đã đổi chữ, nhạt là chưa
-đọc, chấm ở nhận xét, hộp khung nhìn; bấm / kéo thì cuộn tới. Điện thoại ẩn dải; màn cảm ứng chỉ xem. Khối nằm ở dải đọc
+một dải mảnh ở mép phải (trái thanh cuộn), hai đầu bo tròn: đoạn theo vị trí từng khối, đặc là đã đọc, rỗng là đã đổi
+chữ, nhạt là chưa đọc, chấm ở nhận xét. Khung nhìn là cột đen riêng bên trái dải, không đè lên dải, không nền, ứng với
+con trượt của thanh cuộn; bấm / kéo thì cuộn tới. Điện thoại ẩn dải; màn cảm ứng chỉ xem. Khối nằm ở dải đọc
 đủ lâu (khoảng 40% số từ ở 230 từ/phút, 4–60 giây) rồi người đọc tự cuộn qua thì được gợi ý (✓ viền đứt, nút "Accept N
 suggested"); gợi ý không bao giờ tự thành dấu. Mặc định bật, tắt được ở tab Review; gợi ý không lưu, chỉ trong phiên đang
 mở. Tab ẩn, cửa sổ mất focus, rảnh tay, cuộn do trang (J / K / X, dải tiến độ) không tính.
