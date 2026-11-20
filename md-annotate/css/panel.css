@@ -22,7 +22,9 @@
 /* Kéo mép trái để đổi bề rộng panel. */
 .ma-panel__grip { position: absolute; z-index: 2; left: 0; top: 0; bottom: 0; width: 8px; cursor: col-resize; touch-action: none; }
 .ma-panel__grip::before { content: ''; position: absolute; top: var(--s3); bottom: var(--s3); left: 0; width: 3px; border-radius: var(--r-pill); background: transparent; transition: background var(--dur) var(--ease); }
-.ma-panel__grip:hover::before, .ma-tabbing .ma-panel__grip:focus-visible::before, .ma-panel__grip.is-drag::before { background: var(--accent); }
+/* Vạch là chỉ báo trạng thái (≥ 3:1): rê / kéo --edge-on, focus --ring; --accent chỉ ~2,3:1 trên nền sáng. */
+.ma-panel__grip:hover::before, .ma-panel__grip.is-drag::before { background: var(--edge-on); }
+.ma-tabbing .ma-panel__grip:focus-visible::before { background: var(--ring); }
 .ma-panel__grip:focus-visible { outline: none; }
 /* Thu gọn thành thanh dọc: còn nút mở, số nhận xét, tải và chép. */
 .ma-rail { display: none; }
