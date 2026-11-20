@@ -1,16 +1,18 @@
 /* Chế độ xem: Edit / Source / Preview / Split (setView), Split chỉ khi đủ chỗ (splitOK), chiều cao hai khung
    (sizePanes, html.ma-fit), vách giữa (prefs.split), nút Syntax colors.
    Xuất: initViews, isSplit, lastRead, refreshSplit, setView, sizePanes, view.
-   Dùng: core/panes.js, ui/store.js, ui/dom.js, ui/render.js, ui/popup.js, ui/picks.js. */
+   Dùng: core/panes.js, ui/store.js, ui/dom.js, ui/render.js, ui/popup.js, ui/picks.js, ui/tree.js. */
 import { paneHeight, splitFits } from '../core/panes.js';
 import { prefs, savePrefs } from './store.js';
 import { $, dragBar, mqSide, shown } from './dom.js';
 import { renderAll, renderMeta } from './render.js';
 import { closePop, pop } from './popup.js';
 import { clearPicks, repaintPicks } from './picks.js';
+import { layoutTree, treeTakes } from './tree.js';
 
-/* Split chỉ khi mỗi khung được ≥ 420px. Muốn Split mà chưa đủ chỗ thì hiện Preview, prefs.view vẫn nhớ 'split'. */
-function splitOK() { return splitFits($('doc').clientWidth); }
+/* Split chỉ khi mỗi khung được ≥ 420px. Muốn Split mà chưa đủ chỗ thì hiện Preview, prefs.view vẫn nhớ 'split'.
+   Đo #doc như khi không có cột cây: chọn Split thì cây nhường chỗ, sang tấm trượt (ui/tree.js). */
+function splitOK() { return splitFits($('doc').clientWidth + treeTakes()); }
 export var view = prefs.view || 'view';
 export var lastRead = view === 'edit' ? 'view' : view;
 export function setView(v) {
@@ -34,6 +36,7 @@ export function setView(v) {
   if (v !== 'edit' && pop.mode) closePop(true);
   /* Chọn dòng chỉ có ở nơi có lề số dòng (Source, Split): sang Edit / Preview thì thoát. */
   if (v === 'edit' || v === 'view') clearPicks(); else repaintPicks();
+  layoutTree();   // chế độ đọc đã chọn đổi: cây vào / ra lưới
 }
 export function isSplit() { return $('views').dataset.mode === 'split'; }
 /* Bề rộng thay đổi (cửa sổ, panel, thu gọn): xem lại Split và chiều cao hai khung.

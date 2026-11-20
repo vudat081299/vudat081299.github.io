@@ -14,13 +14,13 @@
 | `js/core/anchor.js`, `js/core/comments.js` | neo đoạn trích (`locate`, `quoteFrom`); thêm / sửa / xoá, neo, xếp, đánh số nhận xét, `partsOf` |
 | `js/core/session.js`, `js/core/tree.js`, `js/core/zip.js`, `js/core/prompt.js` | phiên là cây file (thêm, xoá, nạp, mở file từ đĩa, Undo), index, tên tự đặt; cây phẳng (thứ tự, tên, chuyển); ghi `.zip`; prompt một / mọi file, nhãn L12 |
 | `js/core/hints.js`, `js/core/place.js`, `js/core/tokens.js`, `js/core/runs.js`, `js/core/color.js` | đếm, xếp hạng gợi ý, chip; chỗ đặt hộp nổi (`popPlace`); token của *Source*; cắt chữ theo token / highlight / dòng, `lineCount`; trộn lớp mờ lên nền (`barColor`) |
-| `js/core/blocks.js`, `js/core/sections.js`, `js/core/panes.js`, `js/core/picks.js`, `js/core/sync-math.js`, `js/core/text.js`, `js/core/shortcuts.js` | `lexSpans`, `pairBlocks` (khối nguồn ↔ Preview); đánh số section, dải đọc; `splitFits`, cao hai khung; nhiều dòng (`pickInfo`); cuộn theo nhau; `plural`, `lineOf`, `slug`, `importCheck`; `normShortcuts` |
+| `js/core/blocks.js`, `js/core/sections.js`, `js/core/panes.js`, `js/core/picks.js`, `js/core/sync-math.js`, `js/core/text.js`, `js/core/shortcuts.js` | `lexSpans`, `pairBlocks` (khối nguồn ↔ Preview); đánh số section, dải đọc; `splitFits`, cao hai khung, `treeDocks`; nhiều dòng (`pickInfo`); cuộn theo nhau; `plural`, `lineOf`, `slug`, `importCheck`; `normShortcuts` |
 | `js/{core,ui}/review.js`, `js/ui/review-panel.js`, `js/{core,ui}/minimap.js`, `js/{core,ui}/dwell.js` | đã đọc: đơn vị, neo dấu, tiến độ; làn, phím, nút hộp nhận xét, viên thuốc; tab *Review*; dải tiến độ; gợi ý theo thời gian đọc (MDAN-016) |
 | `js/ui/store.js`, `js/ui/dom.js`, `js/ui/state.js`, `js/ui/render.js` | `localStorage`, khoá, `prefs`; `$`, `h()`, `icon()`, `toast()`, `dragBar()`, `saveFile()`, `syncBar()`; phiên `S`, file mở `D`, lưu, chuyển phiên / file; `renderAll()`, kết quả neo `mdText`, `anchors`…, `anchorsOf(doc)` |
 | `js/ui/anchor-dom.js`, `js/ui/marks.js`, `js/ui/markdown.js`, `js/ui/source-view.js` | vùng chọn ↔ vị trí chữ; `<mark class="ma-hl">`, tô active / hover; `marked` + DOMPurify, `unlink()`, `ghExtras()`, `mdLex()`; vẽ `#v-src` |
 | `js/ui/list.js`, `js/ui/prompt.js`, `js/ui/popup.js`, `js/ui/selection.js`, `js/ui/picks.js` | danh sách nhận xét; panel *Prompt*, chép, tải, *Options*; hộp nhận xét; bôi đen → hộp, nút nổi, `ma-mirror`; chọn nhiều dòng ở lề số, nút kéo hộp |
 | `js/ui/views.js`, `js/ui/sync-scroll.js`, `js/ui/focus.js`, `js/ui/layout.js`, `js/ui/help.js` | chế độ xem, `splitOK()`, `sizePanes()`, vách giữa; cuộn theo nhau; *Focus mode*, dải đọc; hộp *Settings* (`#dlg-layout`), `layoutVal()`; hộp *Shortcuts* |
-| `js/ui/panel.js`, `js/ui/hints.js`, `js/ui/history.js`, `js/ui/editor.js`, `js/ui/tree.js`, `js/ui/files.js` | panel, mép kéo, thanh dọc, tấm trượt; số đếm gợi ý, hộp *Hints*; hộp *History*; khung *Edit*, dán, mở / thả file, văn bản mẫu, tên phiên; cột cây / tấm trượt trái, chỉ vẽ và nghe (`renderTree(model, actions)`); việc của cây, `setTree()`, nạp folder, tải |
+| `js/ui/panel.js`, `js/ui/hints.js`, `js/ui/history.js`, `js/ui/editor.js`, `js/ui/tree.js`, `js/ui/files.js` | panel, mép kéo, thanh dọc, tấm trượt; số đếm gợi ý, hộp *Hints*; hộp *History*; khung *Edit*, dán, mở / thả file, văn bản mẫu, tên phiên; cây (cột hay tấm trượt trái, `layoutTree()`), chỉ vẽ và nghe (`renderTree(model, actions)`); việc của cây, `setTree()`, nạp folder, tải |
 
 - `js/core/` là logic: nhận và trả dữ liệu thường; không DOM, `window`, `localStorage`, lớp CSS; chỉ import `js/core/`
   (`tools/lint.py` kiểm). Tính năng mới: giao diện và sự kiện vào một module `js/ui/` (đọc DOM, gọi `js/core/`, ghi DOM), sự kiện trong `init…()` của nó, `main.js` gọi.
@@ -37,8 +37,7 @@
 ## Giao diện
 
 - Nền, mực, font chép từ `index.html` gốc. Một màu xanh: `--accent` (MDAN-009); nền nhạt, highlight, vạch pha từ nó.
-- Xanh không làm chữ trên nền sáng (~2,3:1): chữ là mực, nhấn bằng vạch / nền nhạt / huy hiệu. Chữ trên `--accent`: `--on-accent`.
-- Chữ ≥ 4,5:1; chỉ báo trạng thái ≥ 3:1 (focus `--ring`, thẻ / hàng đang chọn `--edge-on`), cả hai theme. Vòng focus chỉ sau phím Tab (MDAN-020).
+- Xanh không làm chữ trên nền sáng (~2,3:1): chữ là mực, nhấn bằng vạch / nền nhạt / huy hiệu. Chữ trên `--accent`: `--on-accent`. Chữ ≥ 4,5:1; chỉ báo trạng thái ≥ 3:1 (focus `--ring`, thẻ / hàng đang chọn `--edge-on`), cả hai theme. Vòng focus chỉ sau phím Tab (MDAN-020).
 - Token ở `css/tokens.css` (chữ `--fs-*` + `--lh*`, bo `--r-*`, vật lồng trong bo nhỏ hơn; cao `--h-*`, khoảng `--s*`, `--dur`).
 - Họ component chung luật ở `css/base.css` (nút, nhóm tab `.ma-tabs` / `.ma-seg` / `.ma-fmt`, ô nhập, huy hiệu, phím): thêm biến thể vào họ.
 - Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024). `html` và `body` có nền `--bg` đặt rõ.
@@ -63,36 +62,31 @@
 - Ở dải đọc, dòng dưới chuột cũng sáng (`.is-line`): một `.ma-ln`, hoặc `li` / `tr` / `dt` / `dd` / khối cấp cao ở *Preview*; phần
   khác của khối chứa nó mờ (`.ma-dimx`). *Split*: khung kia sáng khối ghép (`blockPairs()`: cùng số khối thì i ↔ i, lệch thì
   `pairBlocks` theo dãy con chung dài nhất của thẻ). Cuộn thì tìm lại dòng dưới chuột; rời khung thì hết.
-- Khối nguồn (`lexSpans`) neo vào văn bản gốc, không cộng dồn `raw`: marked bỏ khối `[id]: url` và đổi tab đầu dòng.
-- Bôi đen ở *Split*: đoạn tương ứng ở khung kia tô bằng Highlight `ma-mirror` (`mirrorSel`, `locate`); hộp nhận xét mở thì `ma-pending` thay.
+- Khối nguồn (`lexSpans`) neo vào văn bản gốc, không cộng dồn `raw`: marked bỏ khối `[id]: url` và đổi tab đầu dòng. Bôi đen ở *Split*: đoạn tương ứng ở khung kia tô bằng Highlight `ma-mirror` (`mirrorSel`, `locate`); hộp nhận xét mở thì `ma-pending` thay.
 - *Preview* giống GitHub (MDAN-006): màu `--gh-*`, code tô bằng highlight.js (`--hl-*`) khi khối rào ghi ngôn ngữ hljs biết; `ghExtras()` đổi
   `> [!NOTE|TIP|…]` thành `.ma-alert`. Cỡ chữ trong `.ma-md` bằng `em` theo `--md-fs`. Rộng hết khung; trích khối vạch trái, bảng viền bo góc.
 - Cuộn theo nhau ở *Split* (`prefs.sync`, mặc định bật): mốc là đỉnh các cặp khối của `blockPairs()` (thêm đáy làm giật), nội suy Hermite
   đơn điệu; tham chiếu giữa khung, sát mép trượt về mép. Khung theo đặt ngay trong sự kiện cuộn (không rAF); bỏ qua `syncExpect`.
-- Chỉ `.ma-dlg__b` của hộp thoại cuộn; *Options* (tab *Prompt*) cuộn riêng ≤ 38vh; không lồng vùng cuộn. Góc bo x: thanh cuộn cách góc ≥ x (MDAN-018).
-- Trống văn bản: thẻ `#start`; có chữ thì hiện hàng công cụ. Ctrl/⌘ + V ngoài ô nhập cũng dán khi trống. Một `#file-in` ẩn cho mọi `.js-open`.
-- Rê chuột bọc trong `@media (hover: hover)`. `.ma-sr` đặt `top: 0`, không thì trang dài thêm 1px.
+- Trống văn bản: thẻ `#start`; có chữ thì hiện hàng công cụ. Ctrl/⌘ + V ngoài ô nhập cũng dán khi trống. Một `#file-in` ẩn cho mọi `.js-open`. Rê chuột bọc trong `@media (hover: hover)`. `.ma-sr` đặt `top: 0`, không thì trang dài thêm 1px. Chỉ `.ma-dlg__b` của hộp thoại cuộn; *Options* (tab *Prompt*) cuộn riêng ≤ 38vh; không lồng vùng cuộn. Góc bo x: thanh cuộn cách góc ≥ x (MDAN-018).
 
 ## Panel bên phải
 
 - Một panel (`#panel`): đầu có ba tab *Comments · N* / *Prompt* / *Review* và nút biểu tượng *Hints*, thân cuộn, đáy ghim trạng thái,
   *Download .md* và *Copy prompt*. Nút chép luôn trong khung nhìn (smoke đo với 32 nhận xét). Panel hẹp thì bỏ huy hiệu tab (container query).
-- Máy rộng (≥ 1081px): panel dính từ đỉnh vùng nội dung tới đáy khung nhìn; `top`, `height` của panel và đệm dọc lưới cùng `--s4`.
-- Tuỳ chọn prompt (kiểu, mọi file, số dòng, folder, dòng đã đọc, toàn văn, lời dẫn) gập trong *Options* ở tab Prompt; dòng tóm tắt cho biết đang bật gì.
+- Máy rộng (≥ 1081px): panel dính từ đỉnh vùng nội dung tới đáy khung nhìn; `top`, `height` của panel và đệm dọc lưới cùng `--s4`. Tuỳ chọn prompt (kiểu, mọi file, số dòng, folder, dòng đã đọc, toàn văn, lời dẫn) gập trong *Options* ở tab Prompt; dòng tóm tắt cho biết đang bật gì.
 - ⌘/Ctrl + Shift + C chép ở mọi chỗ; chép xong nút thành *Copied ✓* một lúc, báo qua `#sr-live`, toast chỉ khi hỏng. Chép / tải neo lại lúc bấm (`freshDoc()`).
 - ≤ 1080px: panel ra khỏi lưới; thanh đáy: *Comments · N* (panel vào tấm trượt `#dlg-panel`, đóng thì về chỗ), `✓ N%`, nút chép; một cột cả khi `ma-railed`.
 - Thẻ nhận xét: không viền; số, L12, nhận xét, trích dẫn mờ vạch trái (không bo, REPO-025). Sửa / xoá hiện khi rê / focus (cảm ứng: luôn); rê thẻ tô đoạn và ngược lại.
 - Điện thoại (≤ 720px): một cột, không có *Split*; vùng chạm ≥ `--h-touch` (cả màn cảm ứng). Lưu nhận xét không cuộn trang.
-- Toast không nhận chuột (trừ nút *Undo*), để không chặn bôi đen chữ dưới; có hộp thoại mở thì toast nằm trong nó.
+- Toast không nhận chuột (trừ *Undo*); có hộp thoại mở thì toast nằm trong nó.
 
 ## Hộp nhận xét
 
-- Trích dẫn tối đa 2 dòng, dài hơn thì mờ dần (`.is-long`, mask theo `--ink`). Chuyển động mở tắt khi `prefers-reduced-motion`.
+- Trích dẫn tối đa 2 dòng, dài hơn thì mờ dần (`.is-long`, mask theo `--ink`). Chuyển động mở tắt khi `prefers-reduced-motion`. Highlight của nhận xét là `<mark class="ma-hl" data-ids>`; số thứ tự hiện bằng `::after`, không lọt vào chữ của khung.
 - Chuột thì mở ngay khi thả, kể cả khi kéo bắt đầu ở vùng nền (lề trái / phải, nền trang quanh khung; trừ nút, ô nhập,
   panel, hộp thoại, vách kéo, thanh cuộn); cảm ứng và bàn phím thì hiện nút nổi *Comment on selection*. Máy hẹp hoặc màn cảm
   ứng: hộp là tấm trượt đáy. Hộp dưới đoạn chọn (Split: ở khung đã bôi đen), thiếu chỗ thì lên trên, trọn khung nhìn (`popPlace`).
 - Đoạn đang chọn tô bằng `::highlight(ma-pending)`, không sửa DOM: sửa DOM giữa lúc kéo chuột làm mất vùng chọn. Mọi Highlight tô qua `paintHL()`.
-- Highlight của nhận xét là `<mark class="ma-hl" data-ids>`; số thứ tự hiện bằng `::after`, không lọt vào chữ của khung.
 
 ## Tô màu và lề số dòng ở *Source* (MDAN-001)
 
@@ -173,11 +167,14 @@
   Bất biến (≥ 1 file, `open` là một file, mỗi file đúng một doc) và mọi luật tên, trùng, file kế bên ở core; hàm đổi cây trả phiên mới.
 - `S` là phiên, `D` là doc của file mở: chữ, nhận xét, dấu đọc qua `D`, tuỳ chọn prompt ở `S`. Gắn với một văn bản (Undo, gợi ý, chọn dòng): `docKey()`.
 - Một chỗ ghi cây: `setTree()` ở `ui/files.js` (lưu, vẽ prompt và cây, Undo bằng `restoreTree`). Actions của `renderTree` chỉ gọi core rồi `setTree`.
-- Cây hiện mặc định khi phiên ≥ 2 mục; Ctrl/⌘ + B, `prefs.tree` (MDAN-023). Đổi file giữ chế độ xem; chỗ cuộn mỗi file nhớ trong bộ nhớ.
+- Hai cách hiện (MDAN-035, `layoutTree()`): cột trái khi `#doc` nhường cây xong vẫn ≥ `viewNeed(lastRead)` (*Split* 849, khác `READ_MIN` 580;
+  quyết theo chế độ đọc đã chọn, không theo chế độ đang hiện, để khỏi lật); không thì tấm trượt `#dlg-tree` ở mọi bề rộng, chọn file thì đóng.
+- `prefs.tree` (chưa chọn: hiện khi phiên ≥ 2 mục) là "muốn thấy cây": cột thì `#btn-tree` / Ctrl/⌘ + B đổi nó; tấm trượt thì chỉ mở tấm. Xét lại
+  khi `#doc` đổi bề rộng (ResizeObserver, trước lần vẽ), đổi chế độ xem, vẽ cây. Kéo mép cây dừng ở chỗ còn lại. *Split* tính `#doc` như khi không có cột (`treeTakes()`). Đổi file giữ chế độ xem; chỗ cuộn mỗi file nhớ trong bộ nhớ.
 - Mở file từ đĩa: file mở trống thì điền, không thì thêm cạnh nó (MDAN-024). Nạp folder (nút đầu cây, thả lên cây hay thẻ văn bản) là bản sao:
   bỏ mục ẩn, `node_modules`, file không phải chữ hay > 1 MB (`importCheck`); phiên trống thì folder là cả phiên; bộ nhớ đầy thì hoàn lại.
-- Xoá không hỏi, toast có Undo (cả chuyển). Tải: file `.md`, folder và cả phiên `.zip` (`zipOf`). Không ghi ngược ra đĩa (MDAN-022).
-- *All files* (`S.promptAll`, ẩn khi một file, MDAN-025): `buildPromptAll`; file không mở neo qua `anchorsOf()`. Tab *Comments* chỉ có file mở.
+- Xoá không hỏi, toast có Undo (cả chuyển). Tải: file `.md`, folder và cả phiên `.zip` (`zipOf`). Không ghi ngược ra đĩa (MDAN-022). *All files*
+  (`S.promptAll`, ẩn khi một file, MDAN-025): `buildPromptAll`; file không mở neo qua `anchorsOf()`. Tab *Comments* chỉ có file mở.
 
 ## Lưu trữ
 

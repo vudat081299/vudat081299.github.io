@@ -3,7 +3,7 @@
 import { lexSpans, pairBlocks } from '../js/core/blocks.js';
 import { numberSections, lineSections, bandBounds, bandPick, spanAt } from '../js/core/sections.js';
 import { syncCurves, followTop } from '../js/core/sync-math.js';
-import { paneHeight, splitFits } from '../js/core/panes.js';
+import { paneHeight, READ_MIN, splitFits, treeDocks, treeRoom, viewNeed } from '../js/core/panes.js';
 import { normShortcuts } from '../js/core/shortcuts.js';
 
 let fails = 0;
@@ -252,6 +252,18 @@ import { popPlace } from '../js/core/place.js';
   check('bandBounds: dải (theo vị trí trong văn bản) không lùi khi cuộn tới', mono);
 }
 check('splitFits: hai khung 420px + vách 9px', !splitFits(848) && splitFits(849));
+check('viewNeed: Split cần hai khung + vách, chế độ khác cần READ_MIN (580)', viewNeed('split') === 849 && viewNeed('view') === READ_MIN && viewNeed('src') === 580 && viewNeed('edit') === 580);
+{
+  // Số đo thật (vùng làm việc mặc định, panel 360px / thanh dọc 56px, cây 248px, khe 16px): avail là #doc khi không có cây.
+  const dock = (avail, v) => treeDocks({ avail, tree: 248, gap: 16, need: viewNeed(v) });
+  check('treeDocks: 2560 panel mở (1366) — Split docked', dock(1366, 'split'));
+  check('treeDocks: 1920 panel mở (918) — Split thành tấm trượt, Preview docked', !dock(918, 'split') && dock(918, 'view'));
+  check('treeDocks: 1920 thanh dọc (1222) — Split docked', dock(1222, 'split'));
+  check('treeDocks: 1280 / 1440 panel mở (854) — Split tấm trượt, Preview docked (590 ≥ 580)', !dock(854, 'split') && dock(854, 'view'));
+  check('treeDocks: mốc đúng bằng need thì docked, thiếu 1px thì không', treeDocks({ avail: 1113, tree: 248, gap: 16, need: 849 }) && !treeDocks({ avail: 1112, tree: 248, gap: 16, need: 849 }));
+  check('treeDocks: điện thoại 390 (356) không bao giờ docked, kể cả cây 180px', !treeDocks({ avail: 356, tree: 180, gap: 16, need: viewNeed('view') }));
+  check('treeRoom: cây rộng nhất còn docked', treeRoom({ avail: 1366, gap: 16, need: 849 }) === 501 && treeRoom({ avail: 854, gap: 16, need: 580 }) === 258);
+}
 check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi ≥ 320', eq(paneHeight(900, 100.5, 0), { h: 782, fit: true }) && eq(paneHeight(500, 100, 76), { h: 320, fit: false }));
 // ── end review: layout & scroll ──
 

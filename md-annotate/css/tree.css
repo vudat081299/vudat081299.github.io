@@ -1,11 +1,17 @@
-/* Cây folder + file (ui/tree.js): cột trái của lưới ở máy rộng, tấm trượt trái #dlg-tree ở máy ≤ 1080px; đầu cây,
-   hàng, huy hiệu, ô đổi tên, chỗ thả, menu hàng. Nạp sau panel.css (luật cột của lưới đè luật thanh dọc). */
-/* CỘT TRÁI: chỉ khi html.ma-tree-on (cây có dữ liệu và đang hiện) và máy rộng. Bề rộng --tree, kéo 180–420 (prefs.treeW). */
+/* Cây folder + file (ui/tree.js): cột trái của lưới khi đủ chỗ, không thì tấm trượt trái #dlg-tree (mọi bề rộng); đầu
+   cây, hàng, huy hiệu, ô đổi tên, chỗ thả, menu hàng (.ma-menu). Nạp sau panel.css và trước
+   mobile.css: luật cột ≤ 1080px ghi kèm .ma-railed để đè luật một cột của mobile.css. */
+/* CỘT TRÁI: chỉ khi html.ma-tree-on (ui/tree.js: cây có dữ liệu, đang hiện, #doc còn đủ chỗ). Bề rộng --tree, kéo 180–420 (prefs.treeW). */
 .ma-grid > .ma-tree { display: none; }
+html.ma-tree-on .ma-grid > .ma-tree { display: flex; }
 @media (min-width: 1081px) {
   html.ma-tree-on .ma-grid { grid-template-columns: var(--tree) minmax(0, 1fr) var(--side); }
   html.ma-tree-on.ma-railed .ma-grid { grid-template-columns: var(--tree) minmax(0, 1fr) 56px; }
-  html.ma-tree-on .ma-grid > .ma-tree { display: flex; }
+}
+@media (max-width: 1080px) {
+  /* Panel ra khỏi lưới; thanh đáy (mobile.css) cao 76px che đáy: cây dừng trên nó. */
+  html.ma-tree-on .ma-grid, html.ma-tree-on.ma-railed .ma-grid { grid-template-columns: var(--tree) minmax(0, 1fr); }
+  .ma-grid > .ma-tree { height: calc(100vh - var(--bar-h) - 1px - 2 * var(--s4) - 76px - env(safe-area-inset-bottom)); }
 }
 /* Dính như panel: từ đỉnh vùng nội dung tới đáy khung nhìn. */
 .ma-tree {
@@ -102,19 +108,16 @@
 /* Danh sách folder của "Move to…": thụt theo cấp, có trần. */
 .ma-menu__i[data-depth] { padding-left: calc(var(--s2) + min(calc(var(--depth, 0) * var(--tree-step)), 96px)); }
 
-/* MÁY ≤ 1080px: cây ra khỏi lưới, nằm trong tấm trượt từ trái. */
-@media (max-width: 1080px) {
-  /* Thẻ là .ma-tree, sát mép trái lớp #dlg-tree (dialogs.css). */
-  .ma-dlg--tree .ma-tree {
-    display: flex; position: static; flex: none; width: min(340px, 88vw); max-width: 88vw; height: 100vh; height: 100dvh; min-height: 0;
-    margin: 0 auto 0 0; border: 0; border-right: 1px solid var(--line); border-radius: 0; box-shadow: var(--shadow);
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  .ma-dlg--tree .ma-tree__body { border-bottom-width: var(--s2); }
-  .ma-dlg--tree .ma-tree__close { display: inline-flex; }
-  .ma-dlg--tree .ma-tree__grip { display: none; }
+/* TẤM TRƯỢT: không đủ chỗ cho cột (mọi bề rộng), cây vào #dlg-tree. Thẻ là .ma-tree, sát mép trái lớp (dialogs.css). */
+.ma-dlg--tree .ma-tree {
+  display: flex; position: static; flex: none; width: min(340px, 88vw); max-width: 88vw; height: 100vh; height: 100dvh; min-height: 0;
+  margin: 0 auto 0 0; border: 0; border-right: 1px solid var(--line); border-radius: 0; box-shadow: var(--shadow);
+  padding-bottom: env(safe-area-inset-bottom);
 }
-@media (max-width: 1080px) and (prefers-reduced-motion: no-preference) {
+.ma-dlg--tree .ma-tree__body { border-bottom-width: var(--s2); }
+.ma-dlg--tree .ma-tree__close { display: inline-flex; }
+.ma-dlg--tree .ma-tree__grip { display: none; }
+@media (prefers-reduced-motion: no-preference) {
   .ma-dlg--tree[open] .ma-tree { animation: ma-tree-in .22s var(--ease); }
 }
 @keyframes ma-tree-in { from { transform: translateX(-24px); opacity: 0; } to { transform: none; opacity: 1; } }

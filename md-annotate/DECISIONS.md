@@ -20,10 +20,10 @@
 - MDAN-020 · Vòng focus chỉ hiện sau phím Tab · `md-annotate/css/**`, `md-annotate/js/main.js`
 - MDAN-021 · Độ sáng của khối đã đọc chỉnh ở Settings · `md-annotate/`
 - MDAN-022 · Một phiên là một cây folder + file, lưu trong trình duyệt · `md-annotate/`
-- MDAN-023 · Cây file hiện mặc định khi phiên có từ hai mục · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`
 - MDAN-024 · Mở file từ đĩa thêm vào cây cạnh file đang mở · `md-annotate/`
 - MDAN-025 · Prompt cho mọi file là một tuỳ chọn, mặc định chỉ file đang mở · `md-annotate/`
 - MDAN-026 · Không nền mờ sau tấm nhận xét khi chọn nhiều dòng · `md-annotate/js/ui/popup.js`, `md-annotate/css/mobile.css`
+- MDAN-035 · Cây file là cột khi văn bản còn đủ rộng, không thì trượt từ trái · thay cho MDAN-023 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -179,12 +179,6 @@ bản sao (bỏ mục ẩn, `node_modules`, file không phải chữ hay lớn h
 phiên `.zip`. Trang không ghi ngược ra đĩa; lớp lưu tách riêng để sau có thể thêm chế độ folder thật mà không đổi nghiệp vụ.
 Phiên một văn bản cũ thành cây một file, prompt giữ nguyên.
 
-## MDAN-023 · Cây file hiện mặc định khi phiên có từ hai mục
-20/11/2026 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`
-
-Chưa chọn thì cây chỉ hiện khi phiên có từ hai mục, để người dùng một file vẫn có *Split* ở 1280px. Ctrl/⌘ + B hay nút
-trên thanh trên ẩn / hiện cây, lựa chọn được nhớ. Nạp folder xong thì cây hiện. Xoá không hỏi, có Undo.
-
 ## MDAN-024 · Mở file từ đĩa thêm vào cây cạnh file đang mở
 20/11/2026 · `md-annotate/`
 
@@ -204,3 +198,11 @@ Bật: một prompt gom nhận xét của mọi file theo thứ tự cây, mỗi
 
 Trên điện thoại, hộp nhận xét của các dòng chọn ở lề số là tấm đáy không có nền mờ phía sau: người dùng vẫn chạm lề số
 các dòng khác để thêm / bỏ dòng, nền mờ khiến trông như trang bị khoá. Tấm của đoạn bôi đen và tấm sửa nhận xét vẫn có nền mờ nhẹ.
+
+## MDAN-035 · Cây file là cột khi văn bản còn đủ rộng, không thì trượt từ trái · thay cho MDAN-023
+20/11/2026 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
+
+Chưa chọn thì cây chỉ hiện khi phiên có từ hai mục. Cây nằm thành cột trái chỉ khi văn bản, sau khi nhường cột, vẫn đủ
+rộng cho chế độ đọc người dùng chọn: *Split* cần hai khung 420px, chế độ khác cần 580px. Không đủ thì, ở mọi bề rộng màn
+hình, cây là tấm trượt từ trái: nút trên thanh trên hay Ctrl/⌘ + B mở tấm, chọn file thì tấm đóng, lựa chọn ẩn / hiện
+không đổi. Khi là cột, nút và Ctrl/⌘ + B ẩn / hiện cây, lựa chọn được nhớ. Nạp folder xong thì cây hiện. Xoá không hỏi, có Undo.
