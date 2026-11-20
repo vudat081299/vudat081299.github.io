@@ -1,16 +1,17 @@
-/* Nhận xét nhiều dòng: lề số dòng của #v-src (Source, khung Source ở Split) là cách duy nhất chọn dòng. Bấm đúp hoặc
-   Shift + bấm vào lề thì vào chế độ chọn dòng; trong chế độ, bấm một lần thì thêm / bỏ dòng (không cần liền nhau),
+/* Nhận xét nhiều dòng: lề số dòng của #v-src (Source, khung Source ở Split) là cách duy nhất chọn dòng. Bấm đúp, nhấn giữ
+   (chạm, MDAN-050) hoặc Shift + bấm vào lề thì vào chế độ chọn dòng; trong chế độ, bấm một lần thì thêm / bỏ dòng (không cần liền nhau),
    Shift + bấm thêm cả dải từ dòng bấm gần nhất, kéo trên lề thêm (bắt đầu ở dòng chưa chọn) hoặc bỏ (bắt đầu ở dòng
    đã chọn) cả dải kéo qua (MDAN-019); bỏ dòng cuối,
-   Esc, Save, sang Edit / Preview, mở phiên khác, văn bản đổi thì thoát. Ngoài chế độ, bấm lề mở nhận xét của dòng.
+   Esc, Save, nút Done của hộp, sang Edit / Preview, mở phiên khác, văn bản đổi thì thoát (màn cảm ứng: cả Cancel). Hộp đã
+   ẩn (Cancel) thì chạm một dòng đã chọn chỉ mở lại hộp, không bỏ dòng ấy. Ngoài chế độ, bấm lề mở nhận xét của dòng.
    Dòng đã chọn: .is-pick; ở Split chữ tương ứng ở Preview tô 'ma-mirror' (chỉ để nhìn). Nút kéo hộp (#pop-grip).
    Logic (dải dòng, nhãn, đoạn trích) ở core/picks.js.
-   Xuất: clearPicks, gutterLine, initPicks, picking, repaintPicks.
+   Xuất: cancelPicks, clearPicks, gutterLine, initPicks, picking, repaintPicks.
    Dùng: core/anchor.js, core/picks.js, ui/dom.js, ui/anchor-dom.js, ui/state.js, ui/marks.js, ui/render.js,
      ui/views.js, ui/popup.js. */
 import { locate } from '../core/anchor.js';
 import { pickable, pickInfo } from '../core/picks.js';
-import { $, hasHL, paintHL } from './dom.js';
+import { $, hasHL, mqTouch, paintHL } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { D, docKey } from './state.js';
 import { marksOf } from './marks.js';
@@ -23,12 +24,15 @@ var picked = [];                // số dòng đã chọn (đếm từ 1)
 var pickText = null, pickSid = null;   // văn bản và phiên lúc chọn: đổi thì bỏ hết
 var anchor = 0;                 // dòng bấm gần nhất: đầu dải của Shift + bấm
 var drag = null, eatClick = false;   // kéo trên lề: { start, add, base, last, moved, id }; kéo xong thì bỏ cú click theo sau
+var lp = null, lpT = 0, LONG_MS = 500;   // nhấn giữ lề số (chạm): { id, x, y, fired }
 
-/* Dòng .ma-ln của #v-src khi sự kiện chuột rơi vào lề số dòng (phần đệm trái của dòng), không thì null. */
+/* Dòng .ma-ln của #v-src khi sự kiện chuột rơi vào lề số dòng (số và vạch nhận xét, dừng trước làn đã đọc: css/views.css,
+   ui/review.js đặt làn ở paddingLeft − --lane-w − 6), không thì null. */
 export function gutterLine(e) {
   var ln = e.target && e.target.closest && e.target.closest('.ma-ln');
   if (!ln || ln.parentNode !== $('v-src')) return null;
-  return e.clientX < ln.getBoundingClientRect().left + parseFloat(getComputedStyle(ln).paddingLeft) - 4 ? ln : null;
+  var cs = getComputedStyle(ln), lane = parseFloat(cs.getPropertyValue('--lane-w')) || 16;
+  return e.clientX < ln.getBoundingClientRect().left + parseFloat(cs.paddingLeft) - lane - 6 ? ln : null;
 }
 function lineNo(ln) { return Array.prototype.indexOf.call($('v-src').children, ln) + 1; }
 
@@ -57,7 +61,7 @@ function showPicks(ln) {
 function placeFor(ln) {
   var r = ln.getBoundingClientRect(), cs = getComputedStyle(ln);
   var shift = parseFloat(cs.paddingLeft) + parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--s6')) || 0;
-  return { top: r.top, bottom: r.bottom, left: r.left + shift };
+  return { top: r.top, bottom: r.bottom, left: r.left + shift, node: ln };   // node: tấm đáy cuộn khung chứa dòng (ui/popup.js)
 }
 function toggle(n, ln) {
   var i = picked.indexOf(n);
@@ -196,7 +200,9 @@ export function initPicks() {
       return;
     }
     if (picking) {
-      if (pickable(D.text, n)) toggle(n, ln);
+      /* Hộp đã ẩn (Cancel) mà chạm dòng đã chọn: chỉ mở lại hộp. */
+      if (picked.indexOf(n) >= 0 && !(pop.mode === 'new' && pending && pending.lines)) showPicks(ln);
+      else if (pickable(D.text, n)) toggle(n, ln);
       return;
     }
     /* Ngoài chế độ: mở nhận xét đầu tiên của dòng ấy. */
@@ -215,5 +221,42 @@ export function initPicks() {
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && picking && !document.querySelector('dialog[open]')) clearPicks();
   });
+  $('pop-done').addEventListener('click', clearPicks);
+  initLongPress(root);
   initGrip();
 }
+
+/* Nhấn giữ lề số (chạm, LONG_MS) ngoài chế độ: vào chế độ với dòng ấy, như bấm đúp. Ngón tay xê dịch (cuộn), nhấc sớm thì
+   thôi. Lúc giữ: không bôi đen, không menu (lớp .is-lp, contextmenu), cú click sau đó (nếu có) bị nuốt. */
+function initLongPress(root) {
+  var stop = function (e) {
+    if (!lp || (e && e.pointerId !== lp.id)) return;
+    clearTimeout(lpT);
+    if (lp.fired) eatClick = true;
+    lp = null;
+    root.classList.remove('is-lp');
+  };
+  root.addEventListener('pointerdown', function (e) {
+    if (e.pointerType !== 'touch') return;
+    var ln = gutterLine(e), n = ln && lineNo(ln);
+    if (!ln) return;
+    stop();
+    lp = { id: e.pointerId, x: e.clientX, y: e.clientY, fired: false };
+    root.classList.add('is-lp');
+    if (picking || !pickable(D.text, n)) return;
+    lpT = setTimeout(function () {
+      if (!lp || (pop.mode && popDirty())) return;
+      lp.fired = true;
+      enter(n, ln);
+    }, LONG_MS);
+  });
+  document.addEventListener('pointermove', function (e) {
+    if (lp && e.pointerId === lp.id && Math.abs(e.clientX - lp.x) + Math.abs(e.clientY - lp.y) > 10) stop(e);
+  });
+  document.addEventListener('pointerup', stop);
+  document.addEventListener('pointercancel', stop);
+  root.addEventListener('contextmenu', function (e) { if (lp || gutterLine(e)) e.preventDefault(); });
+  root.addEventListener('selectstart', function (e) { if (lp) e.preventDefault(); });
+}
+/* Cancel: ẩn hộp, giữ các dòng (MDAN-014); màn cảm ứng thì thoát chế độ luôn (không có Esc, MDAN-050). Gọi trước khi đóng hộp. */
+export function cancelPicks() { if (picking && mqTouch.matches) clearPicks(); }

@@ -25,6 +25,8 @@
   /* Chỉ báo trạng thái không phải chữ cần ≥ 3:1: nền sáng dùng mực, nền tối dùng --accent. */
   --ring:      var(--ink);           /* vòng focus, viền ô nhập đang gõ */
   --edge-on:   var(--ink-4);         /* viền của thẻ / hàng đang chọn */
+  --sug-fill:  color-mix(in srgb, var(--accent) 34%, var(--surface));   /* đĩa gợi ý đã đọc (css/review.css): ✓ mờ trên nó ≥ 3:1 */
+  --done-edge: #15803d;              /* viền dấu ✓ đã đọc, ô đánh dấu đã chọn: --accent trên nền sáng chỉ ~2,3:1 */
 
   --sb-thumb:    color-mix(in srgb, var(--ink) 26%, transparent);   /* con trượt thanh cuộn, cả thanh tự vẽ */
   --sb-thumb-on: color-mix(in srgb, var(--ink) 45%, transparent);
@@ -85,6 +87,14 @@
   --side: 360px;                       /* bề rộng panel; người dùng kéo được 320–560, lưu ở prefs.side */
   --tree: 248px;                       /* bề rộng cây file (css/tree.css); kéo được 180–420, lưu ở prefs.treeW */
   --tree-step: 12px;                   /* thụt mỗi cấp của cây file */
+  /* Vùng an toàn (tai thỏ, thanh home; viewport-fit=cover) và bàn phím ảo che đáy khung nhìn (--kb, ui/dom.js đặt). */
+  --sa-t: env(safe-area-inset-top, 0px); --sa-r: env(safe-area-inset-right, 0px);
+  --sa-b: env(safe-area-inset-bottom, 0px); --sa-l: env(safe-area-inset-left, 0px);
+  --kb: 0px;
+  /* Tay nắm của mọi tấm đáy: ba lớp nền (hai đầu tròn, thân), vẽ trên border-box nên không bị overflow cắt. */
+  --grip: radial-gradient(circle closest-side, var(--ink-4) 92%, transparent) calc(50% - 16px) var(--s2) / 4px 4px no-repeat border-box,
+          radial-gradient(circle closest-side, var(--ink-4) 92%, transparent) calc(50% + 16px) var(--s2) / 4px 4px no-repeat border-box,
+          linear-gradient(var(--ink-4), var(--ink-4)) center var(--s2) / 32px 4px no-repeat border-box;
   --lane-w: 16px;                      /* làn dấu đã đọc cạnh khối (css/review.css, MDAN-013) */
   --ic-box: 14px;                      /* mọi ô đánh dấu: dấu đã đọc (bộ dấu ở đầu css/review.css), ô đánh dấu của form */
   /* Dấu ✓ là ảnh, không phải ký tự (ký tự lệch theo font): một chỗ khai báo, mọi ô đánh dấu dùng lại. Màu nằm trong ảnh:
@@ -124,6 +134,8 @@ html.dark {
   --hl-mirror:   color-mix(in srgb, var(--accent) 38%, transparent);
   --ring:      var(--accent);
   --edge-on:   var(--accent);
+  --done-edge: var(--accent);
+  --sug-fill:  color-mix(in srgb, var(--accent) 24%, var(--surface));
 
   --scrim:     rgba(0, 0, 0, .62);
   --scrim-live: rgba(0, 0, 0, .42);

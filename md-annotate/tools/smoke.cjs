@@ -7,9 +7,9 @@
 'use strict';
 const BASE = process.argv[2] || 'http://127.0.0.1:8347/md-annotate/';
 
-let chromium;
+let chromium, pw;
 for (const name of ['playwright-core', 'playwright']) {
-  try { ({ chromium } = require(name)); break; } catch (e) { /* thử tên tiếp theo */ }
+  try { pw = require(name); ({ chromium } = pw); break; } catch (e) { /* thử tên tiếp theo */ }
 }
 if (!chromium) { console.log('BỎ QUA: chưa có playwright.'); process.exit(2); }
 
@@ -406,7 +406,7 @@ const cornerClash = (page) => page.evaluate(() => {
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
   check('1024×768, cuộn tới cuối: nút chép vẫn trong khung nhìn', await inView(page, '#dock-copy'));
   check('1024×768: không tràn ngang', (await overflow(page)) === 0);
-  await page.click('#dock-n');
+  await page.click('#dock-n'); await page.waitForTimeout(300);   // tấm trượt lên (.22s) rồi mới đo
   check('1024×768: bấm số nhận xét mở panel trong tấm trượt, nút chép thấy', await page.isVisible('#dlg-panel #list') && (await page.$$('#dlg-panel #list .ma-item')).length === 32 && await inView(page, '#dlg-panel #btn-copy'));
   await page.click('#dlg-panel [data-close]');
   await page.waitForTimeout(50);
@@ -1432,7 +1432,7 @@ const cornerClash = (page) => page.evaluate(() => {
     check(`tấm đáy ${scheme}: chạm ra ngoài (xuyên qua nền mờ) đóng tấm, nền mờ ẩn, theme-color trả lại`, !d2.sheet && !d2.shown && d2.tc === bg, JSON.stringify(d2));
     // Chọn nhiều dòng ở lề số (Source): tấm hiện, không có nền mờ; chạm lề dòng khác vẫn thêm / bỏ dòng.
     await sp.tap('.ma-tab[data-view="src"]'); await sp.waitForTimeout(150);
-    const gut = (n) => sp.$eval(`#v-src .ma-ln:nth-child(${n})`, (el) => { el.scrollIntoView({ block: 'start' }); const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
+    const gut = (n) => sp.$eval(`#v-src .ma-ln:nth-child(${n})`, (el) => { el.scrollIntoView({ block: 'center' }); const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
     const picks = () => sp.$$eval('#v-src .ma-ln', (ls) => ls.map((l, i) => (l.classList.contains('is-pick') ? i + 1 : 0)).filter(Boolean).join());
     const g3 = await gut(3); await sp.mouse.dblclick(g3.x, g3.y); await sp.waitForTimeout(250);
     const d3 = await dim();
@@ -1616,7 +1616,7 @@ const cornerClash = (page) => page.evaluate(() => {
       await zc.close();
     }
 
-    // Gợi ý: đọc P6 ở dải (đồng hồ giả 15 s), rồi tự cuộn qua thì hiện ✓ viền đứt; không tự đánh dấu.
+    // Gợi ý: đọc P6 ở dải (đồng hồ giả 15 s), rồi tự cuộn qua thì hiện đĩa ✓ gợi ý; không tự đánh dấu.
     await mp.mouse.move(md.x, md.y);
     const u6 = await laneOf('Para P6 ');
     const done0 = await nDone();
@@ -1625,17 +1625,18 @@ const cornerClash = (page) => page.evaluate(() => {
     await wheel(120, 5); await tick(600);
     let sg = await sugs();
     await mp.click('#ptab-review'); await tick();
-    check('gợi ý: đơn vị đọc đủ lâu rồi cuộn qua có ✓ viền đứt, không thành dấu', sg.includes(u6) && (await nDone()) === done0 && (await mp.$$eval(`.ma-lane__b[data-u="${u6}"].is-sug`, (b) => b.length)) === 2, JSON.stringify(sg) + ' u6=' + u6);
+    check('gợi ý: đơn vị đọc đủ lâu rồi cuộn qua có đĩa ✓ gợi ý, không thành dấu', sg.includes(u6) && (await nDone()) === done0 && (await mp.$$eval(`.ma-lane__b[data-u="${u6}"].is-sug`, (b) => b.length)) === 2, JSON.stringify(sg) + ' u6=' + u6);
     check('gợi ý: tab Review có "Accept N suggested"', (await mp.isVisible('#rv-sug')) && (await mp.textContent('#rv-sug-ok')) === `Accept ${sg.length} suggested`, await mp.textContent('#rv-sug-ok'));
-    check('gợi ý: ✓ viền đứt khác đơn vị hiện tại (.is-cur)', await mp.$eval(`#wrap-md .ma-lane__b[data-u="${u6}"]`, (b) => getComputedStyle(b, '::after').backgroundColor !== 'rgb(255, 255, 255)' && getComputedStyle(b, '::after').borderStyle === 'dashed'));
+    // MDAN-052 (thay luật cũ "viền đứt"): gợi ý là đĩa xanh nhạt đặc có ✓, không viền đứt; đơn vị hiện tại là vạch, không ✓.
+    check('gợi ý: đĩa ✓ xanh nhạt đặc, không viền đứt, khác đơn vị hiện tại (.is-cur)', await mp.$eval(`#wrap-md .ma-lane__b[data-u="${u6}"]`, (b) => { const a = getComputedStyle(b, '::after'); return a.backgroundColor !== 'rgb(255, 255, 255)' && a.borderStyle !== 'dashed' && a.backgroundImage.includes('svg'); }));
     check('gợi ý: dải tiến độ có đoạn được gợi ý', (await strip('md')).segs.some((x) => x.startsWith('sug')));
     await mp.click('#rv-sug-ok'); await tick();
     check('gợi ý: Accept đánh dấu mọi đơn vị được gợi ý', (await nDone()) === done0 + sg.length && !(await sugs()).length && !(await mp.isVisible('#rv-sug')), String(await nDone()));
     await mp.click('.ma-toast__btn'); await tick();
-    check('gợi ý: Undo trả dấu và ✓ viền đứt', (await nDone()) === done0 && (await sugs()).length === sg.length);
+    check('gợi ý: Undo trả dấu và đĩa ✓ gợi ý', (await nDone()) === done0 && (await sugs()).length === sg.length);
     await mp.$eval(`#wrap-md .ma-lane__b[data-u="${u6}"]`, (b) => b.scrollIntoView({ block: 'center' })); await tick();
     await mp.click(`#wrap-md .ma-lane__b[data-u="${u6}"]`); await tick();
-    check('gợi ý: bấm làn của nó thì chấp nhận (đánh dấu), ✓ viền đứt mất', (await nDone()) === done0 + 1 && !(await sugs()).includes(u6));
+    check('gợi ý: bấm làn của nó thì chấp nhận (đánh dấu), đĩa ✓ gợi ý mất', (await nDone()) === done0 + 1 && !(await sugs()).includes(u6));
     await mp.click('#rv-sug-x'); await tick();
     check('gợi ý: Dismiss bỏ các gợi ý còn lại', !(await sugs()).length && !(await mp.isVisible('#rv-sug')));
 
@@ -2553,9 +2554,10 @@ const cornerClash = (page) => page.evaluate(() => {
       const R = (q) => document.querySelector(q).getBoundingClientRect(), bin = document.querySelector('.ma-bar__in'), cs = getComputedStyle(bin);
       const tg = R('#btn-tree'), br = R('.ma-brand'), m = R('main'), t = document.getElementById('tree'), on = document.documentElement.classList.contains('ma-tree-on');
       const pad = parseFloat(cs.paddingRight), gap = parseFloat(cs.columnGap);
+      const padTok = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pad'));   // lề phải còn gồm vùng an toàn phải (mobile.css)
       const inset = (() => { const x = document.createElement('i'); x.style.cssText = 'position:fixed;padding-left:env(safe-area-inset-left)'; document.body.append(x); const v = parseFloat(getComputedStyle(x).paddingLeft); x.remove(); return v; })();
       const want = Math.max(m.left + pad, tg.right + gap), tr = on ? t.getBoundingClientRect() : null;
-      return { tgL: tg.left, pad, inset, brL: br.left, want, mL: m.left, gap, overlap: tg.right > br.left, on,
+      return { tgL: tg.left, pad, padTok, inset, brL: br.left, want, mL: m.left, gap, overlap: tg.right > br.left, on,
         above: tr ? tg.left >= tr.left && tg.right <= tr.right && tg.bottom <= tr.top : null,
         surf: on ? getComputedStyle(document.querySelector('.ma-bar'), '::before').backgroundColor === getComputedStyle(t).backgroundColor : null };
     });
@@ -2598,7 +2600,7 @@ const cornerClash = (page) => page.evaluate(() => {
       if (!ok) console.log('  BỎ QUA tấm trượt ngang theo vùng an toàn: trình duyệt không giả lập được safe-area');
       else {
         const b = await bar(p);
-        check('nút Files 852 ngang: x = --pad + vùng an toàn trái, tên trang sau nút', Math.abs(b.tgL - b.pad - 59) <= 0.5 && Math.abs(b.brL - b.want) <= 0.5 && !b.overlap, JSON.stringify(b));
+        check('nút Files 852 ngang: x = --pad + vùng an toàn trái, tên trang sau nút', Math.abs(b.tgL - b.padTok - 59) <= 0.5 && Math.abs(b.brL - b.want) <= 0.5 && !b.overlap, JSON.stringify(b));
         await p.tap('#btn-tree'); await p.waitForTimeout(400);
         const d = await p.evaluate(() => {
           const t = document.getElementById('tree'), rows = [...t.querySelectorAll('.ma-trow')].map((x) => x.getBoundingClientRect().left);
@@ -2832,6 +2834,412 @@ const cornerClash = (page) => page.evaluate(() => {
     await p.close();
     await ctx.close();
   }
+
+  // ── mob:touch-layout ──
+  /* ---------- Điện thoại / máy tính bảng, chạm thật (thiết bị của playwright, chạm qua CDP): khoá cuộn sau lớp mờ, toast
+     không che, vùng an toàn, Settings ở màn cảm ứng, làn và lề số, tấm đáy, viên thuốc sau khi tự cuộn ---------- */
+  {
+    const devices = pw.devices;
+    const dev = async (name, scheme = 'light', o = {}) => {
+      const d = Object.assign({}, name ? devices[name] : {}, { deviceScaleFactor: 1, colorScheme: scheme });
+      delete d.defaultBrowserType;
+      if (o.viewport) Object.assign(d, { viewport: o.viewport, hasTouch: true, isMobile: true });
+      if (o.reduced) d.reducedMotion = 'reduce';
+      const c = await browser.newContext(d), p = await c.newPage(); watch(p);
+      const cdp = await c.newCDPSession(p);
+      if (o.safe) await cdp.send('Emulation.setSafeAreaInsetsOverride', { insets: o.safe });
+      await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+      if (o.sample !== false) { await p.evaluate(() => document.getElementById('btn-sample').click()); await p.waitForTimeout(250); }
+      return { c, p, cdp };
+    };
+    const tpt = (cdp, type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts });
+    const swipe = async (p, cdp, x, y1, y2) => {
+      await tpt(cdp, 'touchStart', [{ x, y: y1 }]);
+      for (let i = 1; i <= 8; i++) { await tpt(cdp, 'touchMove', [{ x, y: y1 + (y2 - y1) * i / 8 }]); await p.waitForTimeout(16); }
+      await tpt(cdp, 'touchEnd', []); await p.waitForTimeout(350);
+    };
+    const tapEl = async (p, sel) => { const b = await p.locator(sel).first().boundingBox(); await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await p.waitForTimeout(200); };
+    const clickEl = async (p, sel) => { await p.$eval(sel, (e) => e.click()); await p.waitForTimeout(250); };
+    /* Bôi đen như ngón tay: cuộn đoạn vào giữa khung nhìn rồi đặt vùng chọn. */
+    const selectIn = async (p, needle) => {
+      await p.evaluate((n) => { const w = document.createTreeWalker(document.getElementById('v-md'), NodeFilter.SHOW_TEXT); let t; while ((t = w.nextNode())) if (t.data.includes(n)) { t.parentElement.scrollIntoView({ block: 'center' }); break; } }, needle);
+      await p.waitForTimeout(150); await scriptSelect(p, '#v-md', needle);
+    };
+    const box = (p, sel) => p.evaluate((s) => { const e = document.querySelector(s); if (!e || !e.getClientRects().length) return null; const r = e.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom }; }, sel);
+
+    // Khoá cuộn: Settings, tấm panel, tấm nhận xét có nền mờ. Vuốt trên lớp mờ / trên thẻ không cuộn trang; đóng thì không nhảy.
+    let { c, p, cdp } = await dev('iPhone 15 Pro');
+    await p.evaluate(() => window.scrollTo(0, 220)); await p.waitForTimeout(100);
+    for (const [open, where] of [['#btn-layout', 'Settings'], ['#dock-n', 'tấm panel']]) {
+      await clickEl(p, open); await p.waitForTimeout(100);
+      const y0 = await p.evaluate(() => scrollY);
+      await swipe(p, cdp, 200, 40, 10); await swipe(p, cdp, 200, 500, 300);
+      const y1 = await p.evaluate(() => [scrollY, document.documentElement.classList.contains('ma-lock')]);
+      await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+      const y2 = await p.evaluate(() => [scrollY, document.documentElement.classList.contains('ma-lock')]);
+      check(`chạm: ${where} mở thì trang sau lớp mờ không cuộn, đóng không nhảy`, y1[0] === y0 && y1[1] && y2[0] === y0 && !y2[1], JSON.stringify([y0, y1, y2]));
+    }
+    await selectIn(p, 'Try selecting this sentence'); await tapEl(p, '#fab'); await p.waitForTimeout(300);
+    await p.fill('#pop-text', 'draft');   // có chữ: chạm ra ngoài không đóng tấm
+    const s0 = await p.evaluate(() => scrollY);
+    await swipe(p, cdp, 200, 60, 10);
+    check('chạm: tấm nhận xét có nền mờ thì trang không cuộn sau nó', (await p.evaluate(() => scrollY)) === s0 && await p.isVisible('#pop') && await p.evaluate(() => document.documentElement.classList.contains('ma-lock')));
+    // Toast trên tấm nhận xét (không che ô chữ, Save).
+    await p.evaluate(async () => (await import('./js/ui/dom.js')).toast('A toast while the sheet is open'));
+    await p.waitForTimeout(250);
+    const tb = await box(p, '#toast'), pb = await box(p, '#pop');
+    check('chạm: toast nằm trên tấm nhận xét, không che ô chữ / Save', tb && pb && tb.b <= pb.t + 1, JSON.stringify([tb, pb]));
+    await p.fill('#pop-text', ''); await tapEl(p, '#pop-cancel');
+    // Toast trên viên thuốc và nút nổi.
+    await p.evaluate(async () => { (await import('./js/ui/review.js')).markUnits([1], true); });
+    await p.evaluate(async () => (await import('./js/ui/dom.js')).toast('Another toast, long enough to span the width')); await p.waitForTimeout(250);
+    const tb2 = await box(p, '#toast'), pill = await box(p, '#rv-pill');
+    check('chạm: toast nằm trên viên thuốc', tb2 && pill && tb2.b <= pill.t + 1, JSON.stringify([tb2, pill]));
+    await selectIn(p, 'Try selecting this sentence');
+    await p.evaluate(async () => (await import('./js/ui/dom.js')).toast('Toast with the floating button')); await p.waitForTimeout(250);
+    const tb3 = await box(p, '#toast'), fab = await box(p, '#fab');
+    check('chạm: toast không che nút nổi', tb3 && fab && (tb3.b <= fab.t + 1 || tb3.t >= fab.b - 1), JSON.stringify([tb3, fab]));
+    await p.evaluate(() => getSelection().removeAllRanges());
+    // Lề số dừng trước làn; làn có vùng chạm ≥ 44px (lớp giả), không đổi bố cục.
+    await clickEl(p, '.ma-tab[data-view="src"]'); await p.waitForTimeout(250);
+    const lane = await p.evaluate(async () => {
+      const P = await import('./js/ui/picks.js');
+      const b = [...document.querySelectorAll('#wrap-src .ma-lane__b')].find((x) => x.getClientRects().length);
+      b.scrollIntoView({ block: 'center' });
+      const r = b.getBoundingClientRect(), y = r.top + Math.min(r.height / 2, 10), ln = document.elementsFromPoint(r.left + 1, y).find((e) => e.classList.contains('ma-ln'));
+      const hits = [r.left - 13, r.right + 13].map((x) => document.elementFromPoint(x, y) === b);
+      const ys = [r.top + r.height / 2 - 21, r.top + r.height / 2 + 21].map((yy) => { const e = document.elementFromPoint(r.left + r.width / 2, yy); return !!(e && e.classList.contains('ma-lane__b')); });
+      return { w: r.width, hits, ys, onLane: !!(ln && P.gutterLine({ target: ln, clientX: r.left + 1 })), onNum: !!(ln && P.gutterLine({ target: ln, clientX: ln.getBoundingClientRect().left + 4 })) };
+    });
+    check('chạm: làn rộng 16px mà vùng chạm ≥ 44px; lề số dừng trước làn', lane.w === 16 && lane.hits.every(Boolean) && lane.ys.every(Boolean) && !lane.onLane && lane.onNum, JSON.stringify(lane));
+    await c.close();
+
+    // Vùng an toàn: nằm ngang, tai thỏ hai bên, thanh home; dọc có tai thỏ trên.
+    ({ c, p, cdp } = await dev('iPhone 15 Pro landscape', 'light', { safe: { top: 0, bottom: 21, left: 59, right: 59 } }));
+    await p.evaluate(async () => { (await import('./js/ui/review.js')).markUnits([1], true); }); await p.waitForTimeout(200);
+    const sa = await p.evaluate(() => {
+      const vw = innerWidth, r = (s) => document.querySelector(s).getBoundingClientRect();
+      return { wrap: parseFloat(getComputedStyle(document.querySelector('main.ma-wrap')).paddingLeft), dockL: r('#dock-n').left, copyR: vw - r('#dock-copy').right,
+        pillR: vw - r('#rv-pill').right, dockPad: parseFloat(getComputedStyle(document.getElementById('dock')).paddingBottom) };
+    });
+    check('vùng an toàn, nằm ngang: chữ, thanh đáy, viên thuốc tránh tai thỏ và thanh home', sa.wrap >= 59 && sa.dockL >= 59 && sa.copyR >= 59 && sa.pillR >= 59 && sa.dockPad >= 21, JSON.stringify(sa));
+    await selectIn(p, 'Try selecting this sentence'); await tapEl(p, '#fab'); await p.waitForTimeout(250);
+    const sp2 = await p.evaluate(() => { const cs = getComputedStyle(document.getElementById('pop')); return [parseFloat(cs.paddingLeft), parseFloat(cs.paddingRight), parseFloat(cs.paddingBottom)]; });
+    check('vùng an toàn, nằm ngang: tấm nhận xét chừa hai bên và thanh home', sp2[0] >= 59 && sp2[1] >= 59 && sp2[2] >= 21 + 16, JSON.stringify(sp2));
+    await c.close();
+    ({ c, p, cdp } = await dev('iPhone 15 Pro', 'light', { safe: { top: 59, bottom: 34, left: 0, right: 0 } }));
+    const st = await p.evaluate(() => parseFloat(getComputedStyle(document.querySelector('.ma-bar')).paddingTop));
+    await clickEl(p, '#btn-hist'); await p.waitForTimeout(300);
+    const hb = await p.evaluate(() => parseFloat(getComputedStyle(document.querySelector('#dlg-hist .ma-dlg__b')).borderBottomWidth));
+    await p.keyboard.press('Escape'); await clickEl(p, '#dock-n'); await p.waitForTimeout(300);
+    const fb = await p.evaluate(() => parseFloat(getComputedStyle(document.querySelector('#dlg-panel .ma-panel__foot')).paddingBottom));
+    check('vùng an toàn, dọc: thanh trên dưới tai thỏ; History, panel chừa thanh home', st >= 59 && hb >= 16 + 34 && fb >= 12 + 34, JSON.stringify([st, hb, fb]));
+    // Mọi tấm đáy: tay nắm vẽ bằng nền (không bị overflow cắt), trượt lên khi mở.
+    const sheets = await p.evaluate(() => { const el = document.querySelector('#dlg-panel .ma-panel'), cs = getComputedStyle(el); return [cs.backgroundImage.includes('gradient'), cs.animationName]; });
+    await p.keyboard.press('Escape'); await p.waitForTimeout(150);
+    await clickEl(p, '#btn-hist'); await p.waitForTimeout(100);
+    const hs = await p.evaluate(() => { const cs = getComputedStyle(document.querySelector('#dlg-hist .ma-dlg__in')); return [cs.backgroundImage.includes('gradient'), cs.animationName]; });
+    await p.keyboard.press('Escape');
+    await selectIn(p, 'Try selecting this sentence'); await tapEl(p, '#fab'); await p.waitForTimeout(100);
+    const cs3 = await p.evaluate(() => { const cs = getComputedStyle(document.getElementById('pop')); return [cs.backgroundImage.includes('gradient'), cs.animationName]; });
+    check('tấm đáy (panel, History, nhận xét): cùng tay nắm, cùng trượt lên', [sheets, hs, cs3].every((x) => x[0] && x[1] === 'ma-sheet-in'), JSON.stringify([sheets, hs, cs3]));
+    await c.close();
+
+    // Settings ở 320px, cảm ứng: không tràn ngang, hàng ≥ 44px, thanh trượt chừa dải để vuốt, không Sync scroll, Focus theo dải đọc.
+    ({ c, p, cdp } = await dev(null, 'light', { viewport: { width: 320, height: 640 } }));
+    await clickEl(p, '#btn-layout'); await p.waitForTimeout(250);
+    const s320 = await p.evaluate(() => {
+      const b = document.querySelector('#dlg-layout .ma-dlg__b'), vis = (e) => e.getClientRects().length;
+      const hs = [...b.querySelectorAll('.ma-check, input[type=range], .ma-fmt span')].filter(vis).map((e) => Math.round(e.getBoundingClientRect().height));
+      const rg = b.querySelector('#set-fs').getBoundingClientRect(), br = b.getBoundingClientRect();
+      return { ox: b.scrollWidth - b.clientWidth, minH: Math.min(...hs), gutter: Math.round(br.right - rg.right), sync: !!vis(document.getElementById('set-sync')),
+        ptr: document.querySelector('input[name=focusby][value=pointer]').disabled, note: !!vis(document.getElementById('set-focus-touch')) };
+    });
+    check('Settings 320px cảm ứng: không tràn ngang, hàng ≥ 44px, thanh trượt chừa dải vuốt, không Sync scroll, Follow pointer tắt kèm dòng giải thích',
+      s320.ox === 0 && s320.minH >= 44 && s320.gutter >= 44 && !s320.sync && s320.ptr && s320.note, JSON.stringify(s320));
+    await p.click('#set-focus'); await p.waitForTimeout(100);
+    check('Settings cảm ứng: Focus bật thì theo dải đọc', await p.evaluate(async () => (await import('./js/ui/layout.js')).layoutVal('focusBy') === 'band' && document.querySelector('input[name=focusby][value=band]').checked));
+    await c.close();
+    // Thẻ bắt đầu ở điện thoại nhỏ: không có thanh đáy (nút chép chưa có gì để chép).
+    ({ c, p, cdp } = await dev('iPhone SE', 'light', { sample: false }));
+    check('thẻ bắt đầu ở điện thoại: không thanh đáy', !(await p.isVisible('#dock')) && await p.isVisible('#start'));
+    await c.close();
+    // Viên thuốc sau lần nhảy về đầu (cuộn từ cuối lên): người dùng tự vuốt xuống giữa đường nhảy thì viên thuốc đánh dấu
+    // khối ở dải đọc, không phải khối vừa nhảy tới đã khuất (pin bỏ khi người dùng tự cuộn).
+    ({ c, p, cdp } = await dev('iPhone 15 Pro', 'light', { reduced: true }));
+    await p.evaluate(async () => { (await import('./js/ui/review.js')).setRvTouched(); window.scrollTo(0, 1e6); }); await p.waitForTimeout(200);
+    await p.evaluate(async () => { (await import('./js/ui/review.js')).jumpUnit(0); }); await p.waitForTimeout(300);
+    await swipe(p, cdp, 200, 560, 260); await p.waitForTimeout(300);
+    const before = await p.evaluate(() => { const b = document.querySelector('#wrap-md .ma-lane__b.is-cur'); return b ? [b.dataset.u, Math.round(b.getBoundingClientRect().bottom), scrollY] : null; });
+    await tapEl(p, '#rv-pill'); await p.waitForTimeout(300);
+    const done = await p.evaluate((y) => { window.scrollTo(0, y); return [...document.querySelectorAll('#wrap-md .ma-lane__b.is-done')].map((b) => { const r = b.getBoundingClientRect(); return [b.dataset.u, Math.round(r.top), Math.round(r.bottom)]; }); }, before ? before[2] : 0);
+    check('viên thuốc: sau khi tự cuộn, đánh dấu khối ở dải đọc, không phải khối vừa nhảy tới', before && before[2] > 100 && done.length === 1 && done[0][0] === before[0] && done[0][0] !== '0' && done[0][2] > 0 && done[0][1] < 659, JSON.stringify([before, done]));
+    await c.close();
+    // Dấu ✓ đã đọc ở theme sáng: viền của hình ≥ 3:1 trên nền thẻ.
+    for (const scheme of ['light', 'dark']) {
+      ({ c, p, cdp } = await dev(null, scheme, { viewport: { width: 1280, height: 800 } }));
+      await p.click('.ma-tab[data-view="view"]');
+      await p.evaluate(async () => { (await import('./js/ui/review.js')).markUnits([1], true); }); await p.waitForTimeout(200);
+      const ring = await p.evaluate(() => {
+        const b = document.querySelector('#wrap-md .ma-lane__b.is-done'), cs = getComputedStyle(b, '::after');
+        const rgb = (c) => c.match(/[\d.]+/g).slice(0, 3).map(Number);
+        const lum = (c) => { const x = c.map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+        const a = lum(rgb(cs.borderTopColor)), s = lum(rgb(getComputedStyle(document.getElementById('doc')).backgroundColor));
+        return +((Math.max(a, s) + 0.05) / (Math.min(a, s) + 0.05)).toFixed(2);
+      });
+      check(`dấu ✓ đã đọc (${scheme}): viền hình ≥ 3:1 trên nền`, ring >= 3, String(ring));
+      await c.close();
+    }
+  }
+  // ── end mob:touch-layout ──
+
+  // ── mob:touch-sheet ──
+  /* ---------- Tấm nhận xét ở điện thoại: cuộn để đoạn chọn nằm ngay trên tấm (lưu không cuộn), nút nổi tránh đoạn chọn,
+     Return xuống dòng ở màn cảm ứng, bàn phím ảo không che tấm / toast ---------- */
+  {
+    const devices = pw.devices;
+    for (const name of ['iPhone 15 Pro', 'iPhone SE', 'iPhone 15 Pro landscape']) {
+      const d = Object.assign({}, devices[name], { deviceScaleFactor: 1 }); delete d.defaultBrowserType;
+      const c = await browser.newContext(d), p = await c.newPage(); watch(p);
+      await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+      await p.evaluate(() => document.getElementById('btn-sample').click()); await p.waitForTimeout(250);
+      const res = [];
+      for (const needle of ['Three steps', 'then type a comment', 'Copy prompt']) {
+        await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(100);
+        await scriptSelect(p, '#v-md', needle);
+        const sel = await p.evaluate(() => { const r = getSelection().getRangeAt(0).getBoundingClientRect(); return [r.top, r.bottom]; });
+        const fb = await p.$eval('#fab', (f) => { const r = f.getBoundingClientRect(); return [r.top, r.bottom]; });
+        const b = await p.locator('#fab').boundingBox(); await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2);
+        await p.waitForTimeout(700);
+        const r = await p.evaluate(() => {
+          const rg = [...CSS.highlights.get('ma-pending')][0].getBoundingClientRect(), pop = document.getElementById('pop');
+          return { top: rg.top, bottom: rg.bottom, sheet: innerHeight - pop.offsetHeight, bar: Math.max(0, document.querySelector('.ma-bar').getBoundingClientRect().bottom), y: scrollY };
+        });
+        await p.fill('#pop-text', 'note');
+        const sb = await p.locator('#pop-save').boundingBox(); await p.touchscreen.tap(sb.x + sb.width / 2, sb.y + sb.height / 2);
+        await p.waitForTimeout(250);
+        res.push({ needle, fabClear: fb[1] <= sel[0] || fb[0] >= sel[1], shown: r.bottom <= r.sheet && r.top >= r.bar - 1, saveKept: (await p.evaluate(() => scrollY)) === r.y });
+      }
+      check(`tấm nhận xét (${name}): đoạn chọn hiện ngay trên tấm, nút nổi không che đoạn, lưu không cuộn trang`, res.every((x) => x.fabClear && x.shown && x.saveKept), JSON.stringify(res));
+      if (name === 'iPhone 15 Pro') {
+        // Return xuống dòng ở màn cảm ứng; lưu bằng Save.
+        await p.evaluate(() => window.scrollTo(0, 0)); await scriptSelect(p, '#v-md', 'Three steps');
+        const b = await p.locator('#fab').boundingBox(); await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await p.waitForTimeout(300);
+        await p.focus('#pop-text'); await p.keyboard.type('line one'); await p.keyboard.press('Enter'); await p.keyboard.type('line two');
+        const ret = await p.evaluate(() => [document.getElementById('pop-text').value, !document.getElementById('pop').hidden, document.getElementById('pop-text').getAttribute('enterkeyhint')]);
+        check('màn cảm ứng: Return trong ô nhận xét xuống dòng, không lưu; enterkeyhint=enter', ret[0] === 'line one\nline two' && ret[1] && ret[2] === 'enter', JSON.stringify(ret));
+        // Bàn phím ảo kiểu iOS: khung nhìn không co, chỉ visualViewport co. Tấm và toast nằm trên bàn phím.
+        const kb = await p.evaluate(async () => {
+          const vv = window.visualViewport, h = innerHeight - 300;
+          Object.defineProperty(vv, 'height', { configurable: true, get: () => h });
+          vv.dispatchEvent(new Event('resize'));
+          (await import('./js/ui/dom.js')).toast('Saved somewhere');
+          await new Promise((r) => setTimeout(r, 250));
+          const pop = document.getElementById('pop').getBoundingClientRect(), t = document.getElementById('toast').getBoundingClientRect();
+          const out = { kb: getComputedStyle(document.documentElement).getPropertyValue('--kb').trim(), popBottom: Math.round(pop.bottom), popTop: Math.round(pop.top), toastBottom: Math.round(t.bottom), vvh: h };
+          delete vv.height; vv.dispatchEvent(new Event('resize'));
+          return out;
+        });
+        check('bàn phím ảo (visualViewport co): tấm nhận xét và toast nằm trên bàn phím, tấm trọn phần còn lại', kb.kb === '300px' && kb.popBottom <= kb.vvh + 1 && kb.popTop >= 0 && kb.toastBottom <= kb.popTop + 1, JSON.stringify(kb));
+        const sb = await p.locator('#pop-save').boundingBox(); await p.touchscreen.tap(sb.x + sb.width / 2, sb.y + sb.height / 2); await p.waitForTimeout(200);
+        check('màn cảm ứng: Save lưu nhận xét nhiều dòng', /line one\nline two|line one line two/.test(await p.$eval('#out', (e) => e.textContent)) || (await p.$$('#list .ma-item')).length > 0);
+      }
+      await c.close();
+    }
+  }
+  // ── end mob:touch-sheet ──
+
+  // ── mob:touch-picks ──
+  /* ---------- Chọn dòng bằng chạm (MDAN-050): nhấn giữ số dòng vào chế độ, chạm thêm / bỏ, Done và Cancel thoát, đáy trang
+     đủ chỗ cho dòng cuối, gợi ý ở hộp Shortcuts ---------- */
+  {
+    const devices = pw.devices;
+    const mk = async (name) => {
+      const d = Object.assign({}, devices[name], { deviceScaleFactor: 1 }); delete d.defaultBrowserType;
+      const c = await browser.newContext(d), p = await c.newPage(); watch(p);
+      await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+      await p.evaluate(() => document.getElementById('btn-sample').click()); await p.waitForTimeout(200);
+      await p.$eval('.ma-tab[data-view="src"]', (e) => e.click()); await p.waitForTimeout(200);
+      return { c, p, cdp: await c.newCDPSession(p) };
+    };
+    const tpt = (cdp, type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts });
+    const hold = async (p, cdp, x, y, ms) => { await tpt(cdp, 'touchStart', [{ x, y }]); await p.waitForTimeout(ms); await tpt(cdp, 'touchEnd', []); await p.waitForTimeout(250); };
+    const gut = (p, n) => p.evaluate((n) => { const el = document.querySelector(`#v-src .ma-ln:nth-child(${n})`); const r = el.getBoundingClientRect(); return { x: r.left + 6, y: r.top + 8 }; }, n);
+    const st = (p) => p.evaluate(() => ({ picking: document.getElementById('v-src').classList.contains('is-picking'),
+      picks: [...document.querySelectorAll('#v-src .ma-ln')].map((l, i) => (l.classList.contains('is-pick') ? i + 1 : 0)).filter(Boolean).join(),
+      pop: !document.getElementById('pop').hidden, done: !!document.getElementById('pop-done').getClientRects().length, sel: getSelection().toString() }));
+    /* Một dòng có chữ, khác `not`, đầu dòng nằm giữa thanh trên và đỉnh tấm (hay đáy khung nhìn). */
+    const visLine = (p, not) => p.evaluate((not) => {
+      const pop = document.getElementById('pop'), lim = pop.hidden ? innerHeight - 90 : pop.getBoundingClientRect().top;
+      const ls = [...document.querySelectorAll('#v-src .ma-ln')];
+      return ls.findIndex((l, i) => i + 1 !== not && l.textContent.trim() && l.getBoundingClientRect().top > 80 && l.getBoundingClientRect().top < lim - 24) + 1;
+    }, not);
+    let { c, p, cdp } = await mk('iPhone 15 Pro');
+    check('chọn dòng bằng chạm: lề số không phóng to khi chạm hai lần (touch-action)', (await p.$eval('#v-src', (e) => getComputedStyle(e).touchAction)) === 'manipulation');
+    let n = await visLine(p), g = await gut(p, n);
+    await hold(p, cdp, g.x, g.y, 120);
+    const s0 = await st(p);
+    await tpt(cdp, 'touchStart', [{ x: g.x, y: g.y }]);
+    for (let i = 1; i <= 6; i++) { await tpt(cdp, 'touchMove', [{ x: g.x, y: g.y - i * 15 }]); await p.waitForTimeout(40); }
+    await p.waitForTimeout(500); await tpt(cdp, 'touchEnd', []); await p.waitForTimeout(250);
+    const s1 = await st(p);
+    check('chọn dòng bằng chạm: chạm ngắn hay vuốt từ lề số không vào chế độ', !s0.picking && !s1.picking && !s0.pop && !s1.pop, JSON.stringify([s0, s1]));
+    await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(150);
+    n = await visLine(p); g = await gut(p, n);
+    await hold(p, cdp, g.x, g.y, 650);
+    const s2 = await st(p);
+    check('chọn dòng bằng chạm: nhấn giữ số dòng vào chế độ với dòng ấy, mở tấm có Done, không bôi đen', s2.picking && s2.picks === String(n) && s2.pop && s2.done && !s2.sel, JSON.stringify([n, s2]));
+    const m = await visLine(p, n); g = await gut(p, m);
+    await p.touchscreen.tap(g.x, g.y); await p.waitForTimeout(250);
+    const s3 = await st(p);
+    check('chọn dòng bằng chạm: chạm số dòng khác thì thêm', s3.picks.split(',').length === 2 && s3.pop, JSON.stringify([m, s3]));
+    // Đáy trang đủ chỗ: cuộn hết xuống thì dòng cuối nằm trên tấm.
+    await p.evaluate(() => window.scrollTo(0, 1e6)); await p.waitForTimeout(250);
+    const lastV = await p.evaluate(() => { const ls = document.querySelectorAll('#v-src .ma-ln'); return [ls[ls.length - 1].getBoundingClientRect().bottom, document.getElementById('pop').getBoundingClientRect().top]; });
+    check('chọn dòng bằng chạm: cuộn hết xuống thì dòng cuối nằm trên tấm', lastV[0] <= lastV[1], JSON.stringify(lastV));
+    let b = await p.locator('#pop-cancel').boundingBox(); await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await p.waitForTimeout(250);
+    const s4 = await st(p);
+    check('chọn dòng bằng chạm: Cancel ở màn cảm ứng thoát chế độ', !s4.picking && !s4.picks && !s4.pop, JSON.stringify(s4));
+    await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(150);
+    n = await visLine(p); g = await gut(p, n); await hold(p, cdp, g.x, g.y, 650);
+    b = await p.locator('#pop-done').boundingBox(); await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await p.waitForTimeout(250);
+    const s5 = await st(p);
+    check('chọn dòng bằng chạm: Done thoát chế độ, bỏ các dòng', !s5.picking && !s5.picks && !s5.pop && b.height >= 44, JSON.stringify([s5, b.height]));
+    // Hộp Shortcuts: gợi ý nhấn giữ chỉ ở màn cảm ứng.
+    await p.$eval('#btn-layout', (e) => e.click()); await p.$eval('#btn-keys', (e) => e.click()); await p.waitForTimeout(400);
+    const hint = await p.evaluate(() => [!![...document.querySelectorAll('#dlg-keys .ma-only-touch')].find((e) => e.getClientRects().length && /long-press a line number/i.test(e.textContent)),
+      [...document.querySelectorAll('#keys-list .ma-key')].some((k) => k.textContent === 'Long-press')]);
+    check('hộp Shortcuts ở màn cảm ứng: có dòng "long-press a line number" và phím Long-press', hint[0] && hint[1], JSON.stringify(hint));
+    await c.close();
+    // Nằm ngang: tấm chọn dòng gọn, còn thấy lề số phía trên.
+    ({ c, p, cdp } = await mk('iPhone 15 Pro landscape'));
+    n = await p.evaluate(() => [...document.querySelectorAll('#v-src .ma-ln')].findIndex((l) => l.textContent.trim() && l.getBoundingClientRect().top > 70) + 1);
+    await p.evaluate((n) => document.querySelector(`#v-src .ma-ln:nth-child(${n})`).scrollIntoView({ block: 'center' }), n); await p.waitForTimeout(150);
+    g = await gut(p, n); await hold(p, cdp, g.x, g.y, 650); await p.waitForTimeout(300);
+    const land = await p.evaluate(() => [Math.round(document.getElementById('pop').getBoundingClientRect().top), innerHeight, !!document.querySelector('#v-src .is-pick')]);
+    check('chọn dòng bằng chạm, nằm ngang: tấm gọn, còn ≥ 40% khung nhìn cho lề số', land[2] && land[0] >= land[1] * 0.4, JSON.stringify(land));
+    await c.close();
+    // Máy tính: Cancel giữ dòng (MDAN-014); bấm dòng đã chọn chỉ mở lại hộp, không bỏ dòng. Không có gợi ý nhấn giữ.
+    c = await browser.newContext({ viewport: { width: 1280, height: 900 } }); p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await p.click('#btn-sample'); await p.click('.ma-tab[data-view="src"]'); await p.waitForTimeout(200);
+    g = await gut(p, 3); await p.mouse.dblclick(g.x, g.y); await p.waitForTimeout(200);
+    await p.click('#pop-cancel'); await p.waitForTimeout(100);
+    const d1 = await st(p);
+    g = await gut(p, 3); await p.mouse.click(g.x, g.y); await p.waitForTimeout(200);
+    const d2 = await st(p);
+    check('máy tính: Cancel giữ dòng; bấm dòng đã chọn mở lại hộp mà không bỏ dòng', d1.picking && d1.picks === '3' && !d1.pop && d2.picks === '3' && d2.pop && d2.done, JSON.stringify([d1, d2]));
+    await p.click('#pop-done'); await p.waitForTimeout(100);
+    check('máy tính: nút Done thoát chế độ chọn dòng', !(await st(p)).picking);
+    await p.click('#btn-layout'); await p.click('#btn-keys'); await p.waitForTimeout(400);
+    check('hộp Shortcuts ở máy tính: không có dòng gợi ý chỉ cho cảm ứng', await p.evaluate(() => [...document.querySelectorAll('#dlg-keys .ma-only-touch')].every((e) => !e.getClientRects().length)));
+    await c.close();
+  }
+  // ── end mob:touch-picks ──
+
+  // ── mob:touch-bar ──
+  /* ---------- Thanh trên tự ẩn ở điện thoại (MDAN-051): cuộn xuống thì trượt lên khuất, cuộn lên một chút thì về; luôn hiện ở
+     đầu trang và khi hộp thoại / menu mở; giảm chuyển động thì không trượt; máy tính không ẩn ---------- */
+  {
+    const devices = pw.devices;
+    const barState = (p) => p.evaluate(() => { const b = document.querySelector('.ma-bar'), r = b.getBoundingClientRect(); return { away: b.classList.contains('is-away'), bottom: Math.round(r.bottom), y: Math.round(scrollY), tr: getComputedStyle(b).transitionDuration }; });
+    for (const [name, reduced] of [['iPhone 15 Pro', false], ['iPhone 15 Pro landscape', false], ['Pixel 7', true]]) {
+      const d = Object.assign({}, devices[name], { deviceScaleFactor: 1, reducedMotion: reduced ? 'reduce' : 'no-preference' }); delete d.defaultBrowserType;
+      const c = await browser.newContext(d), p = await c.newPage(); watch(p);
+      const cdp = await c.newCDPSession(p);
+      await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+      await p.evaluate(() => document.getElementById('btn-sample').click()); await p.waitForTimeout(250);
+      const vh = await p.evaluate(() => innerHeight);
+      const sw = async (y1, y2) => {
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 150, y: y1 }] });
+        for (let i = 1; i <= 8; i++) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 150, y: y1 + (y2 - y1) * i / 8 }] }); await p.waitForTimeout(16); }
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await p.waitForTimeout(450);
+      };
+      const top = await barState(p);
+      await sw(vh - 80, vh - 280);
+      const down = await barState(p);
+      await sw(vh / 2, vh / 2 + 50);
+      const up = await barState(p);
+      await sw(vh - 80, vh - 280);
+      await p.$eval('#btn-layout', (e) => e.click()); await p.waitForTimeout(300);
+      const dlg = await barState(p);
+      await p.keyboard.press('Escape'); await p.waitForTimeout(100);
+      await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(300);
+      const back = await barState(p);
+      check(`thanh trên tự ẩn (${name}${reduced ? ', giảm chuyển động' : ''}): ở đầu trang hiện; cuộn xuống khuất; cuộn lên chút thì về; hộp thoại mở thì hiện; về đầu thì hiện`,
+        !top.away && down.away && down.bottom <= 0 && down.y > 0 && !up.away && up.bottom > 0 && !dlg.away && !back.away && (reduced ? parseFloat(down.tr) === 0 : parseFloat(down.tr) > 0),
+        JSON.stringify({ top, down, up, dlg, back }));
+      await c.close();
+    }
+    const c = await browser.newContext({ viewport: { width: 1280, height: 800 } }), p = await c.newPage(); watch(p);
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    await p.click('#btn-sample'); await p.waitForTimeout(200);
+    await p.mouse.move(600, 500); await p.mouse.wheel(0, 400); await p.waitForTimeout(300);
+    check('máy tính: thanh trên không tự ẩn', !(await barState(p)).away);
+    await c.close();
+  }
+  // ── end mob:touch-bar ──
+
+  // ── mob:touch-review ──
+  /* ---------- Hai dấu tách bạch (MDAN-052): gợi ý = đĩa ✓ xanh nhạt đặc, không viền đứt; đơn vị hiện tại = vạch dọc mảnh
+     cạnh khối, không ✓; cả hai ≥ 3:1, hai theme. Màn cảm ứng có gợi ý: viên thuốc "Accept N", chạm thì đánh dấu, có Undo ---------- */
+  for (const scheme of ['light', 'dark']) {
+    const d = Object.assign({}, pw.devices['iPhone 15 Pro'], { deviceScaleFactor: 1, colorScheme: scheme, reducedMotion: 'reduce' }); delete d.defaultBrowserType;
+    const c = await browser.newContext(d), p = await c.newPage(); watch(p);
+    const cdp = await c.newCDPSession(p);
+    await p.clock.install();
+    await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+    const paras = Array.from({ length: 16 }, (_, i) => `Para P${i + 1} ` + 'chữ đọc thử '.repeat(6).trim() + '.');
+    await p.evaluate((t) => { const ta = document.getElementById('src-input'); ta.value = t; ta.dispatchEvent(new Event('input')); }, ['# Touch review', '', ...paras.flatMap((x) => [x, ''])].join('\n'));
+    await p.clock.runFor(400);
+    await p.$eval('.ma-tab[data-view="view"]', (e) => e.click()); await p.clock.runFor(300);
+    const sw = async (y1, y2) => {
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 200, y: y1 }] });
+      for (let i = 1; i <= 6; i++) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 200, y: y1 + (y2 - y1) * i / 6 }] }); await p.waitForTimeout(20); await p.clock.runFor(20); }
+      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await p.waitForTimeout(60); await p.clock.runFor(300);
+    };
+    // Đọc: vuốt từng nhịp, mỗi nhịp đứng 15 s (đồng hồ giả), rồi vuốt qua: các khối vừa đọc thành gợi ý.
+    for (let k = 0; k < 4; k++) { await sw(520, 400); await p.clock.runFor(15000); }
+    await sw(560, 300); await p.clock.runFor(600);
+    const sg = await p.$$eval('#wrap-md .ma-lane__b.is-sug', (bs) => bs.map((b) => b.dataset.u));
+    const pill = await p.evaluate(() => [!document.getElementById('rv-pill').hidden && !!document.getElementById('rv-pill').getClientRects().length, document.getElementById('rv-pill-t').textContent]);
+    check(`cảm ứng (${scheme}): có gợi ý thì viên thuốc hiện "Accept N" (chưa có dấu nào)`, sg.length > 0 && pill[0] && pill[1] === 'Accept ' + sg.length, JSON.stringify([sg, pill]));
+    // Kiểu hai dấu.
+    const look = await p.evaluate(() => {
+      const rgb = (c) => c.match(/[\d.]+/g).slice(0, 3).map(Number);
+      const lum = (c) => { const x = c.map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+      const ratio = (a, b) => { const x = lum(a), y = lum(b); return +((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2); };
+      const surf = rgb(getComputedStyle(document.getElementById('doc')).backgroundColor);
+      const dark = document.documentElement.classList.contains('dark'), hint = dark ? [0x8d, 0x98, 0x91] : [0x5b, 0x64, 0x5e];   // nét ✓ của --ic-check-hint
+      const s = document.querySelector('#wrap-md .ma-lane__b.is-sug'), sa = getComputedStyle(s, '::after');
+      const fill = rgb(sa.backgroundColor);
+      document.documentElement.classList.add('ma-reviewing');   // vạch đơn vị hiện tại chỉ vẽ khi đã có dấu
+      const cur = [...document.querySelectorAll('#wrap-md .ma-lane__b')].find((b) => !b.classList.contains('is-sug') && !b.classList.contains('is-head'));
+      cur.classList.add('is-cur');
+      const cs = getComputedStyle(cur), ca = getComputedStyle(cur, '::after'), bar = cs.boxShadow.match(/rgba?\([^)]*\)/);
+      const out = { sugBorder: sa.borderTopStyle, sugImg: sa.backgroundImage.includes('svg'), sugFill: ratio(fill, surf) > 1.05, glyph: ratio(hint, fill),
+        curImg: ca.backgroundImage, curBar: bar ? ratio(rgb(bar[0]), surf) : 0, curShadow: cs.boxShadow };
+      cur.classList.remove('is-cur'); document.documentElement.classList.remove('ma-reviewing');
+      return out;
+    });
+    check(`dấu gợi ý vs đơn vị hiện tại (${scheme}): gợi ý là đĩa đặc có ✓ (≥ 3:1), không viền đứt; hiện tại là vạch ≥ 3:1, không ✓`,
+      look.sugBorder !== 'dashed' && look.sugImg && look.sugFill && look.glyph >= 3 && look.curImg === 'none' && look.curBar >= 3, JSON.stringify(look));
+    const b = await p.locator('#rv-pill').boundingBox();
+    await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await p.clock.runFor(300);
+    const after = await p.evaluate(() => [[...document.querySelectorAll('#wrap-md .ma-lane__b.is-done')].map((x) => x.dataset.u), document.querySelectorAll('#wrap-md .ma-lane__b.is-sug').length,
+      document.getElementById('rv-pill-t').textContent, !!document.querySelector('#toast:not([hidden]) .ma-toast__btn')]);
+    check(`cảm ứng (${scheme}): chạm "Accept N" đánh dấu đúng các khối được gợi ý, viên thuốc về "✓ Done · next", toast có Undo`,
+      after[0].join() === sg.join() && after[1] === 0 && after[2] === '✓ Done · next ↓' && after[3], JSON.stringify([sg, after]));
+    await p.$eval('#toast .ma-toast__btn', (e) => e.click()); await p.clock.runFor(200);
+    const undo = await p.evaluate(() => [document.querySelectorAll('#wrap-md .ma-lane__b.is-done').length, document.getElementById('rv-pill-t').textContent]);
+    check(`cảm ứng (${scheme}): Undo trả lại cả gợi ý ("Accept N")`, undo[0] === 0 && undo[1] === 'Accept ' + sg.length, JSON.stringify(undo));
+    // Tab Review ở màn cảm ứng nói về viên thuốc, không về X / J / K / làn.
+    await p.$eval('#dock-n', (e) => e.click()); await p.$eval('#ptab-review', (e) => e.click()); await p.clock.runFor(300);
+    const copy = await p.evaluate(() => [...document.querySelectorAll('#rv-body .ma-sub')].filter((e) => e.getClientRects().length).map((e) => e.textContent).join(' '));
+    check(`tab Review ở màn cảm ứng (${scheme}): nói về viên thuốc và Accept N, không nói X / J / K / làn`, /Done · next/.test(copy) && /Accept N/.test(copy) && !/\bJ\b|\bK\b|lane/.test(copy), copy);
+    await c.close();
+  }
+  // ── end mob:touch-review ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();

@@ -8,7 +8,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
     <meta name="color-scheme" content="light dark" />
     <meta name="theme-color" id="theme-color" content="#f5f6f3" />
     <title>Markdown Annotate</title>
@@ -321,18 +321,21 @@
                 <div class="ma-rv__acts">
                   <button class="ma-btn" type="button" id="rv-next" title="Scroll to the next block you have not reviewed (J)">Next unreviewed ↓</button>
                   <label class="ma-check" title="Fade reviewed blocks, for a top-to-bottom pass"><input type="checkbox" id="rv-dim" /> Dim reviewed</label>
-                  <label class="ma-check" title="When a block has sat in the reading band long enough to read it and you scroll past it, show a dashed ✓ on it. Nothing is marked until you accept it"><input type="checkbox" id="rv-suggest" /> Suggest from reading time</label>
+                  <label class="ma-check" title="When a block has sat in the reading band long enough to read it and you scroll past it, show a pale green ✓ beside it. Nothing is marked until you accept it"><input type="checkbox" id="rv-suggest" /> Suggest from reading time</label>
                 </div>
                 <!-- Gợi ý theo thời gian đọc (ui/dwell.js, MDAN-016): chỉ gợi ý, người dùng chấp nhận mới thành dấu. -->
                 <div class="ma-rv__sug" id="rv-sug" hidden>
                   <span class="ma-rv__sugt" id="rv-sug-t"></span>
-                  <button class="ma-btn ma-btn--go" type="button" id="rv-sug-ok" title="Mark every block shown with a dashed ✓ reviewed"></button>
+                  <button class="ma-btn ma-btn--go" type="button" id="rv-sug-ok" title="Mark every block with a pale green ✓ reviewed"></button>
                   <button class="ma-link" type="button" id="rv-sug-x" title="Hide these suggestions">Dismiss</button>
                 </div>
                 <p class="ma-rv__lost" id="rv-lost" hidden><span id="rv-lost-t"></span><button class="ma-link" type="button" id="rv-lost-x">Dismiss</button></p>
                 <ol class="ma-rvs-list" id="rv-secs" aria-label="Sections"></ol>
-                <p class="ma-sub ma-rv__keys"><kbd>X</kbd> mark the block in the reading band · <kbd>⇧ X</kbd> its section ·
+                <p class="ma-sub ma-rv__keys ma-only-mouse"><kbd>X</kbd> mark the block in the reading band (thin bar beside it) · <kbd>⇧ X</kbd> its section ·
                   <kbd>J</kbd> / <kbd>K</kbd> next / previous unreviewed. Or click the thin lane beside a block.</p>
+                <p class="ma-sub ma-only-touch">Tap <b>✓ Done · next</b> at the bottom right to mark the block in the reading band
+                  (thin bar beside it) and go to the next unreviewed one. When blocks look read (pale green ✓), the same
+                  button offers <b>Accept N</b>.</p>
                 <div><button class="ma-btn ma-btn--quiet ma-btn--danger" type="button" id="rv-clear">Clear all marks</button></div>
               </div>
             </div>
@@ -358,9 +361,13 @@
     <div class="ma-scrim" id="pop-scrim" hidden></div>
     <!-- Hộp nhận xét: mở khi bôi đen (chuột) hoặc bấm nút nổi (cảm ứng, bàn phím) -->
     <div class="ma-pop" id="pop" role="dialog" aria-label="Comment on the selected passage" hidden>
-      <!-- Chỉ khi chọn nhiều dòng (ui/picks.js): số dòng, nhãn, nút kéo hộp -->
+      <!-- Chỉ khi chọn nhiều dòng (ui/picks.js): số dòng, nhãn, nút Done (thoát chế độ chọn dòng), nút kéo hộp -->
       <div class="ma-pop__head" id="pop-head" hidden>
         <span class="ma-pop__sum" id="pop-sum" title="Click more line numbers to add or remove lines"></span>
+        <button class="ma-btn ma-btn--quiet ma-pop__done" type="button" id="pop-done" title="Leave line picking and drop the lines (Esc)">
+          <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+          <span>Done</span>
+        </button>
         <button class="ma-icbtn ma-icbtn--bare ma-pop__grip" type="button" id="pop-grip" aria-label="Move comment box (drag, or use arrow keys)" title="Drag to move">
           <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01" /></svg>
         </button>
@@ -441,7 +448,7 @@
             <div class="ma-set__h"><label for="set-fs">Preview text size</label><output id="set-fs-o" for="set-fs"></output></div>
             <input type="range" id="set-fs" min="13" max="22" step="1" />
           </div>
-          <div class="ma-set">
+          <div class="ma-set ma-set--sync">
             <div class="ma-set__h"><label class="ma-check" for="set-sync"><input type="checkbox" id="set-sync" /> Sync scroll in Split</label></div>
             <p class="ma-sub">Scrolling one pane scrolls the other so the same passage sits in the middle of both.</p>
           </div>
@@ -451,6 +458,7 @@
               <label><input type="radio" name="focusby" value="pointer" /><span>Follow pointer</span></label>
               <label><input type="radio" name="focusby" value="band" /><span>Reading band 25–50%</span></label>
             </div>
+            <p class="ma-sub" id="set-focus-touch" hidden>On a touch screen Focus follows the reading band.</p>
             <input type="range" id="set-dim" min="10" max="70" step="5" aria-label="Brightness of the dimmed text" />
             <p class="ma-sub">A section runs from a heading to the next heading. Follow pointer: the section under the mouse.
               Reading band: the first section between 25% and 50% of the pane's height, updated as you scroll. In Split
@@ -477,6 +485,7 @@
         </div>
         <div class="ma-dlg__b">
           <p class="ma-sub">Recently added keys, clicks and taps.</p>
+          <p class="ma-sub ma-only-touch">On a touch screen: long-press a line number to pick lines.</p>
           <div class="ma-keys__all" id="keys-list"></div>
         </div>
       </div>

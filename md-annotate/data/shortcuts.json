@@ -4,13 +4,14 @@
       "title": "Multi-line comments",
       "note": "In Source, or the Source pane of Split.",
       "rows": [
-        { "keys": [["Double-click"], ["Shift", "Click"]], "action": "A line number: start picking lines for one comment" },
-        { "keys": [["Click"], ["Tap"]], "action": "A line number while picking: add or remove that line" },
+        { "keys": [["Double-click"], ["Shift", "Click"], ["Long-press"]], "action": "A line number: start picking lines for one comment" },
+        { "keys": [["Click"], ["Tap"]], "action": "A line number while picking: add or remove that line (after Cancel, a picked line only brings the box back)" },
         { "keys": [["Shift", "Click"]], "action": "A line number while picking: add every line from the last clicked one to this one" },
         { "keys": [["Drag"]], "action": "Across line numbers while picking: add the lines (start on an unpicked line) or remove them (start on a picked one)" },
         { "keys": [["Esc"]], "action": "Leave line picking: hide the comment box and drop the lines" },
+        { "keys": [["Done"]], "action": "In the comment box while picking: leave line picking and drop the lines" },
         { "keys": [["Enter"], ["Save"]], "action": "Save the comment and leave line picking" },
-        { "keys": [["Cancel"]], "action": "Hide the comment box but keep the lines; click a line number to bring it back" },
+        { "keys": [["Cancel"]], "action": "Hide the comment box but keep the lines; click a line number to bring it back. On a touch screen Cancel also leaves line picking" },
         { "keys": [["Drag ⠿"]], "action": "Move the comment box" },
         { "keys": [["Arrow keys"], ["Shift", "Arrow keys"]], "action": "With the ⠿ grip focused: move the comment box; Shift takes a bigger step" }
       ]
@@ -19,7 +20,7 @@
       "title": "Review",
       "note": "Mark the blocks you have read. Keys work when you are not typing and no box is open.",
       "rows": [
-        { "keys": [["X"]], "action": "Mark or unmark the block in the reading band (under the pointer in pointer Focus mode); after marking, go to the next unreviewed block" },
+        { "keys": [["X"]], "action": "Mark or unmark the block in the reading band, shown by a thin bar beside it (under the pointer in pointer Focus mode); after marking, go to the next unreviewed block" },
         { "keys": [["Shift", "X"]], "action": "Mark or unmark the whole section of that block" },
         { "keys": [["J"], ["K"]], "action": "Next / previous unreviewed block" },
         { "keys": [["Click"]], "action": "The lane beside a block: mark, unmark, or confirm a changed block (○)" },
@@ -28,8 +29,9 @@
         { "keys": [["✓ Reviewed"]], "action": "In the comment box: mark the whole blocks touched by the selection or the picked lines" },
         { "keys": [["✓ Done · next ↓"]], "action": "Phone / touch: mark the block in the reading band and go to the next unreviewed one" },
         { "keys": [["Click"], ["Drag"]], "action": "The progress strip at a pane's right edge: scroll there (mouse only)" },
-        { "keys": [["X"], ["Click"]], "action": "A dashed ✓ suggested from your reading time: accept it, marking the block reviewed" },
-        { "keys": [["Accept N suggested"]], "action": "Review tab: mark every block with a dashed ✓ reviewed" }
+        { "keys": [["X"], ["Click"]], "action": "A pale green ✓ suggested from your reading time: accept it, marking the block reviewed" },
+        { "keys": [["Accept N suggested"]], "action": "Review tab: mark every block with a pale green ✓ reviewed" },
+        { "keys": [["Accept N"]], "action": "Touch: the button at the bottom right, when blocks look read: mark them all reviewed (Undo in the message)" }
       ]
     },
     {

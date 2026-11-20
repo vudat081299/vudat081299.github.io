@@ -26,7 +26,7 @@
    mờ nhẹ (--scrim-live) để vẫn thấy thay đổi đang kéo ở hai bên hộp (MDAN-015). */
 .ma-dlg--live { background-color: var(--scrim-live); }
 .ma-dlg--live .ma-dlg__in { width: min(420px, calc(100vw - 2 * var(--s4))); }
-@media (max-width: 720px) { .ma-set.ma-set--wrap { display: none; } }
+@media (max-width: 720px) { .ma-set.ma-set--wrap, .ma-set.ma-set--sync { display: none; } }   /* điện thoại: không bề rộng, không Split */
 /* Nút phụ ở đầu hộp (Shortcuts trong Settings): nhỏ như nút trong thẻ. */
 .ma-dlg__act { min-height: var(--h-sm); padding: 0 var(--s2); font-size: var(--fs-sm); }
 /* Hộp Shortcuts: mỗi nhóm một tiêu đề, hàng là lưới hai cột (phím | việc, cột phím cùng rộng ở mọi nhóm), phím là chip .ma-key. */

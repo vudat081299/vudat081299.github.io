@@ -21,6 +21,7 @@
 /* Hàng đầu khi chọn nhiều dòng: "3 lines · L12, L15-16" và nút kéo hộp (ui/picks.js). */
 .ma-pop__head { display: flex; align-items: center; gap: var(--s2); margin: calc(-1 * var(--s1)) calc(-1 * var(--s1)) var(--s2) 0; }
 .ma-pop__sum { flex: 1 1 auto; min-width: 0; font: 500 var(--fs-xs)/var(--lh-tight) var(--mono); color: var(--ink-2); overflow-wrap: anywhere; }
+.ma-pop__done { min-height: var(--h-sm); padding: 0 var(--s2); font-size: var(--fs-sm); }
 .ma-pop__grip { width: var(--h-sm); height: var(--h-sm); color: var(--ink-3); cursor: grab; touch-action: none; }
 .ma-pop.is-moving .ma-pop__grip { cursor: grabbing; color: var(--ink); background: var(--chip); }
 .ma-pop.is-moving { user-select: none; -webkit-user-select: none; }
@@ -54,15 +55,17 @@
 /* Nút nổi khi có vùng chọn (điện thoại, bàn phím), thanh đáy ở điện thoại, toast */
 .ma-fab {
   position: fixed; z-index: 55; left: 50%; transform: translateX(-50%);
-  bottom: calc(var(--s5) + env(safe-area-inset-bottom));
+  bottom: calc(var(--s5) + var(--sa-b));
   min-height: var(--h-touch); padding: 0 var(--s5); border-radius: var(--r-pill); box-shadow: var(--shadow-pop);
 }
+/* Đoạn chọn ở nửa dưới: nút lên đỉnh, ngay dưới thanh trên (--fab-top: đáy thanh trên, ui/selection.js). */
+.ma-fab.is-top { top: calc(max(var(--fab-top, 0px), var(--sa-t)) + var(--s3)); bottom: auto; }
 .ma-dock { display: none; }
 /* TOAST: nền đảo (mực), chữ nền, một dòng nếu đủ chỗ. width: max-content: left 50% không được bóp hộp còn nửa khung nhìn.
    Nút Undo: chữ đậm trên nền mờ của chính màu chữ, đọc được ở cả hai theme. Điện thoại: rộng hết, trừ lề (mobile.css). */
 .ma-toast {
   position: fixed; z-index: 80; left: 50%; transform: translateX(-50%);
-  bottom: calc(var(--s5) + env(safe-area-inset-bottom));
+  bottom: calc(var(--s5) + var(--sa-b) + var(--kb));
   width: max-content; max-width: min(560px, calc(100vw - 2 * var(--s4)));
   display: flex; align-items: center; gap: var(--s3); min-height: calc(var(--h-sm) + 2 * var(--s2)); padding: var(--s2) var(--s4);
   background: var(--ink); color: var(--bg); border-radius: var(--r); box-shadow: var(--shadow-pop);

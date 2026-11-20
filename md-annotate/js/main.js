@@ -1,5 +1,5 @@
 /* Điểm vào: gọi init… của từng module đúng thứ tự cũ, rồi khởi động. Chỉ giữ ở đây việc dùng chung cả trang:
-   phím tắt chép prompt, đóng hộp thoại (và màu thanh trình duyệt theo lớp mờ, syncBar), nút theme.
+   phím tắt chép prompt, đóng hộp thoại (và màu thanh trình duyệt theo lớp mờ, syncBar), nút theme, bàn phím ảo (trackKeyboard).
    Thứ tự quan trọng (hai module nghe cùng phần tử):
    - initSyncScroll trước initFocus: cuộn #wrap-src / #wrap-md (sync bỏ syncExpect cũ của khung người dùng cuộn trước
      khi focus hỏi setByPage);
@@ -15,7 +15,7 @@
      ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js, ui/tree.js, ui/bar.js.
    ui/files.js (cây của phiên) không có init: renderAll() vẽ cây lần đầu. */
 import { KEY, store } from './ui/store.js';
-import { $, syncBar } from './ui/dom.js';
+import { $, syncBar, trackKeyboard } from './ui/dom.js';
 import { D, initState, S } from './ui/state.js';
 import { initHints, loadDefaultHints, renderHintsDlg } from './ui/hints.js';
 import { checkRenderer, renderAll } from './ui/render.js';
@@ -89,6 +89,7 @@ initShortcuts();
 initDialogs();
 initKbdRing();
 initTheme();
+trackKeyboard();
 initBar();
 initPopup();
 initSelection();

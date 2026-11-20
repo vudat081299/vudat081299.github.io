@@ -80,6 +80,9 @@
 }
 /* Chọn nhiều dòng (ui/picks.js): lề số bấm được; dòng đã chọn tô nền phần chữ, số dòng trên nền --accent. */
 #v-src.is-picking .ma-ln::before { pointer-events: auto; cursor: pointer; }
+/* Màn cảm ứng: chạm hai lần không phóng to (bấm đúp lề số vẫn chạy); nhấn giữ lề số không mở menu / bôi đen (ui/picks.js). */
+#v-src { touch-action: manipulation; }
+#v-src.is-lp { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 .ma-ln.is-pick { background: linear-gradient(to right, transparent calc(var(--gw, 2ch) + 14px), var(--hl-2) 0); }
 .ma-ln.is-pick::before {
   left: calc(-1 * var(--s1)); width: calc(var(--gw, 2ch) + 2 * var(--s1)); padding-right: var(--s1);
