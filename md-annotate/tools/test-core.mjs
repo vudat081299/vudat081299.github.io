@@ -1038,7 +1038,7 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
 // ── end màu thanh ──
 
 // ── loại file, sổ ngôn ngữ, token code (MDAN-066) ──
-import { fileType, langOf } from '../js/core/file-type.js';
+import { fileType, langOf, viewFor } from '../js/core/file-type.js';
 import { LANGS, CORE_SRI } from '../js/core/langs.js';
 import { hlRuns, sxTokens } from '../js/core/code-tokens.js';
 {
@@ -1046,6 +1046,10 @@ import { hlRuns, sxTokens } from '../js/core/code-tokens.js';
   check('loại file: markdown theo đuôi, không đuôi là markdown', ['a.md', 'B.MARKDOWN', 'x.mdx', 'README', 'notes/LICENSE'].every((n) => k(n) === 'markdown:null'));
   check('loại file: code theo đuôi hay tên', k('a.py') === 'code:python' && k('App.TSX') === 'code:typescript' && k('Makefile') === 'code:makefile' && k('Dockerfile') === 'code:dockerfile' && k('i.htm') === 'code:xml');
   check('loại file: đuôi lạ là chữ trơn', ['a.txt', 'data.csv', 'x.log', 'a.', '.env'].every((n) => k(n) === 'plain:null'));
+  check('loại file: chỉ markdown có Preview / Split', fileType('a.md').preview && fileType('README').preview && !fileType('a.py').preview && !fileType('a.txt').preview);
+  const md = fileType('a.md'), py = fileType('a.py');
+  check('viewFor: markdown giữ mọi chế độ', ['edit', 'src', 'view', 'split'].every((v) => viewFor(md, v) === v));
+  check('viewFor: file không có Preview — Preview / Split về Source, Edit / Source giữ', ['edit', 'src', 'src', 'src'].join() === ['edit', 'src', 'view', 'split'].map((v) => viewFor(py, v)).join());
   check('langOf: khối rào theo alias, chữ hoa, ký tự lạ', langOf('JS') === 'javascript' && langOf('c++') === 'cpp' && langOf('c#') === 'csharp' && langOf('text') === null && langOf('') === null);
   const sri = /^sha384-[A-Za-z0-9+/]{64}$/;
   const bad = Object.keys(LANGS).filter((id) => !sri.test(LANGS[id][1]) || (LANGS[id][2] || '').split(' ').some((d) => d && !LANGS[d]));

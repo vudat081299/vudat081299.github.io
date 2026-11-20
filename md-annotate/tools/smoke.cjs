@@ -3463,6 +3463,58 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   // ── end hl ──
 
+  // ── modes: Preview / Split chỉ cho markdown (MDAN-067) ──
+  {
+    const mRow = (name) => `#tree-list .ma-trow:has(> .ma-trow__name:text-is("${name}"))`;
+    const mc = await treeContext({ viewport: { width: 1920, height: 900 }, colorScheme: 'light' });
+    const mp = await mc.newPage(); watch(mp);
+    const state = () => mp.evaluate(() => ({
+      tabs: [...document.querySelectorAll('.ma-tab')].filter((b) => !b.hidden && b.getClientRects().length).map((b) => b.dataset.view).join(),
+      mode: document.getElementById('views').dataset.mode,
+      pref: JSON.parse(localStorage.getItem('md-annotate:prefs:v1') || '{}').view
+    }));
+    await mp.goto(BASE); await mp.waitForFunction(() => window.marked && window.DOMPurify);
+    await mp.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, DOC);
+    await mp.click('.ma-tab[data-view="split"]'); await mp.waitForTimeout(150);
+    const md = await state();
+    check('chế độ xem: file .md có Edit, Source, Preview, Split', md.tabs === 'edit,src,view,split' && md.mode === 'split' && md.pref === 'split', JSON.stringify(md));
+
+    await mp.setInputFiles('#file-in', { name: 'main.rs', mimeType: 'text/plain', buffer: Buffer.from('fn main() {\n    let n = 1;\n}\n') });
+    await mp.waitForTimeout(200);
+    const rs = await state();
+    check('chế độ xem: file .rs ẩn Preview / Split, hiện Source, Split đã nhớ không bị ghi đè', rs.tabs === 'edit,src' && rs.mode === 'src' && rs.pref === 'split', JSON.stringify(rs));
+    await mp.focus('.ma-tab[data-view="src"]'); await mp.keyboard.press('ArrowRight'); await mp.waitForTimeout(100);
+    const kEdit = await state();
+    await mp.keyboard.press('ArrowRight'); await mp.waitForTimeout(100);
+    const kSrc = await state();
+    check('chế độ xem: phím mũi tên ở hàng tab bỏ qua Preview / Split ẩn', kEdit.mode === 'edit' && kSrc.mode === 'src', JSON.stringify([kEdit, kSrc]));
+    await mp.click('.ma-tab[data-view="src"]'); await mp.waitForTimeout(100);
+    check('chế độ xem: bấm Source ở file .rs không ghi đè Split đã nhớ', (await state()).pref === 'split', JSON.stringify(await state()));
+
+    // Hộp nhận xét mở ở file .rs: đổi cỡ cửa sổ không đóng nó (Split không "về lại" ở file không có Preview).
+    await mp.waitForTimeout(700);
+    await dragSelect(mp, '#v-src', 'let n = 1;');
+    await mp.keyboard.type('Ghi chú');
+    await mp.setViewportSize({ width: 1800, height: 900 }); await mp.waitForTimeout(300);
+    check('chế độ xem: đổi cỡ cửa sổ ở file .rs không đóng hộp nhận xét', await mp.isVisible('#pop') && (await mp.inputValue('#pop-text')) === 'Ghi chú');
+    await mp.keyboard.press('Escape'); await mp.waitForTimeout(100);
+    if (await mp.isVisible('#pop')) { await mp.click('#pop-cancel').catch(() => {}); await mp.waitForTimeout(100); }
+
+    await mp.click(mRow('untitled.md')); await mp.waitForTimeout(200);
+    const back = await state();
+    check('chế độ xem: về file .md thì Split trở lại', back.tabs === 'edit,src,view,split' && back.mode === 'split', JSON.stringify(back));
+
+    // Tải lại khi file .rs đang mở: Source; sang .md: Split.
+    await mp.click(mRow('main.rs')); await mp.waitForTimeout(200);
+    await mp.reload(); await mp.waitForFunction(() => window.marked && window.DOMPurify); await mp.waitForTimeout(200);
+    const re = await state();
+    await mp.click(mRow('untitled.md')); await mp.waitForTimeout(200);
+    const re2 = await state();
+    check('chế độ xem: tải lại với file .rs mở — Source; sang .md — Split', re.mode === 'src' && re.tabs === 'edit,src' && re2.mode === 'split', JSON.stringify([re, re2]));
+    await mc.close();
+  }
+  // ── end modes ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

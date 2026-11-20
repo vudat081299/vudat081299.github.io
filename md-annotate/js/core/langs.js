@@ -2,8 +2,11 @@
    Markdown tô Source bằng core/tokens.js (có sẵn trong trang); ngôn ngữ khác tô bằng highlight.js 11.9.0, mỗi ngôn ngữ
    một module ES trên cdnjs, chỉ tải khi có file hay khối rào của nó. Thêm ngôn ngữ: một dòng trong LANGS, in bằng
    node md-annotate/tools/hl-lang.mjs <id>.
-   Xuất: CORE_SRI, HLJS, LANGS.
+   Xuất: CORE_SRI, HLJS, KINDS, LANGS.
    Dùng: không module nào. */
+
+/* Loại file → chế độ xem có được: chỉ markdown có Preview và Split (MDAN-067). */
+export var KINDS = { markdown: { preview: true }, code: { preview: false }, plain: { preview: false } };
 
 export var HLJS = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/';
 export var CORE_SRI = 'sha384-nhKFTE0p1v7w4VPdiCXEuAKBuGnZRjVarChm69kITyFj/Dfcu1U9oxHOtcCDQVWe';   // core.min.js

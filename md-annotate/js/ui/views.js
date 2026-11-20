@@ -1,10 +1,12 @@
-/* Chế độ xem: Edit / Source / Preview / Split (setView), Split chỉ khi đủ chỗ (splitOK), chiều cao hai khung
-   (sizePanes, html.ma-fit), vách giữa (prefs.split), nút Syntax colors.
+/* Chế độ xem: Edit / Source / Preview / Split (setView); Preview và Split chỉ ở file markdown (viewFor, MDAN-067), Split
+   chỉ khi đủ chỗ (splitOK); chiều cao hai khung (sizePanes, html.ma-fit), vách giữa (prefs.split), nút Syntax colors.
    Xuất: initViews, isSplit, lastRead, refreshSplit, setView, sizePanes, view.
-   Dùng: core/panes.js, ui/store.js, ui/dom.js, ui/render.js, ui/popup.js, ui/picks.js, ui/tree.js. */
+   Dùng: core/panes.js, core/file-type.js, ui/store.js, ui/dom.js, ui/state.js, ui/render.js, ui/popup.js, ui/picks.js. */
 import { paneHeight, splitFits } from '../core/panes.js';
+import { viewFor } from '../core/file-type.js';
 import { prefs, savePrefs } from './store.js';
 import { $, dragBar, mqSide, shown } from './dom.js';
+import { openType } from './state.js';
 import { renderAll, renderMeta } from './render.js';
 import { closePop, pop } from './popup.js';
 import { clearPicks, repaintPicks } from './picks.js';
@@ -12,14 +14,18 @@ import { clearPicks, repaintPicks } from './picks.js';
 /* Split chỉ khi mỗi khung được ≥ 420px. Muốn Split mà chưa đủ chỗ (kể cả vì cột cây) thì hiện Preview, prefs.view vẫn nhớ
    'split'; ẩn cây hay kéo hẹp cây thì Split về. */
 function splitOK() { return splitFits($('doc').clientWidth); }
+/* Nút Split hiện khi file có Preview và đủ chỗ. */
+function splitShown() { return openType().preview && splitOK(); }
 export var view = prefs.view || 'view';
 export var lastRead = view === 'edit' ? 'view' : view;
 export function setView(v) {
-  var want = v;
+  var want = v, t = openType();
+  v = viewFor(t, v);
   if (v === 'split' && !splitOK()) v = 'view';
   view = v;
-  if (want !== 'edit') lastRead = want;
-  prefs.view = want; savePrefs();
+  /* Chế độ đọc chỉ nhớ ở file có đủ chế độ: Source ở file code không ghi đè Preview / Split đã chọn cho markdown. */
+  if (want !== 'edit' && t.preview) lastRead = want;
+  prefs.view = want === 'edit' ? want : lastRead; savePrefs();
   document.querySelectorAll('.ma-tab').forEach(function (b) {
     b.setAttribute('aria-selected', String(b.dataset.view === v));
     b.tabIndex = b.dataset.view === v ? 0 : -1;
@@ -29,7 +35,8 @@ export function setView(v) {
   $('wrap-src').hidden = !(v === 'src' || v === 'split');
   $('syn').checked = prefs.syntax !== false;
   $('wrap-md').hidden = !(v === 'view' || v === 'split');
-  $('tab-split').hidden = !splitOK();
+  $('tab-view').hidden = !t.preview;
+  $('tab-split').hidden = !splitShown();
   $('divider').hidden = v !== 'split';
   renderMeta(); // gọi sizePanes(): bật / tắt khoá cuộn trang (ma-fit) theo chế độ
   if (v !== 'edit' && pop.mode) closePop(true);
@@ -40,8 +47,8 @@ export function isSplit() { return $('views').dataset.mode === 'split'; }
 /* Bề rộng thay đổi (cửa sổ, panel, thu gọn): xem lại Split và chiều cao hai khung.
    Muốn Split: hết chỗ thì lùi về Preview, đủ chỗ lại thì về Split (setView quyết). */
 export function refreshSplit() {
-  $('tab-split').hidden = !splitOK();
-  if (view !== 'edit' && prefs.view === 'split' && (view === 'split') !== splitOK()) setView('split');
+  $('tab-split').hidden = !splitShown();
+  if (view !== 'edit' && prefs.view === 'split' && (view === 'split') !== splitShown()) setView('split');
   else sizePanes();
 }
 export function sizePanes() {

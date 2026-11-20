@@ -44,6 +44,7 @@
 - MDAN-064 · Kéo từ nền hai bên văn bản là bôi đen văn bản; thanh trên và panel không bôi đen được · `md-annotate/js/ui/selection.js`, `md-annotate/css/base.css`
 - MDAN-065 · Hàng cây file cao hơn: 32px · `md-annotate/css/tree.css`
 - MDAN-066 · Tô màu code theo loại file, chỉ tải khi cần · `md-annotate/js/core/langs.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/ui/highlight.js`
+- MDAN-067 · Preview và Split chỉ cho file markdown · `md-annotate/js/core/langs.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/ui/views.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -379,3 +380,9 @@ Mỗi loại file có bộ tô màu riêng, và bộ tô màu của một loại
 trang. Markdown dùng bộ tách token có sẵn (file mặc định là markdown). File code (py, js, rs…) tô ở Source bằng highlight.js
 theo đuôi; khối code có ghi ngôn ngữ ở Preview cũng thế. Đuôi lạ (txt, csv…) là chữ trơn. Chưa tải xong hay tải hỏng thì
 hiện chữ trơn, tải xong tự lên màu.
+
+## MDAN-067 · Preview và Split chỉ cho file markdown
+20/11/2026 · `md-annotate/js/core/langs.js`, `md-annotate/js/core/file-type.js`, `md-annotate/js/ui/views.js`
+
+Preview và Split chỉ có nghĩa với markdown: file khác (code, chữ trơn) ẩn hai tab ấy và mở ở Source. Chế độ đã chọn cho
+markdown vẫn được nhớ: mở file code rồi quay lại file .md thì về đúng Preview / Split cũ, kể cả sau khi tải lại trang.
