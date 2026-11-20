@@ -39,6 +39,7 @@
 @media (max-width: 720px) {
   :root { --pad: var(--s4); --bar-h: 56px; }
   .ma-bar { position: static; }
+  .ma-bar__in { gap: var(--s1); }   /* 360px: đủ chỗ cho tên md-annotate cạnh bốn nút */
   .ma-bar .ma-btn__lbl { display: none; }
   .ma-bar .ma-btn { width: var(--h-touch); padding: 0; flex: none; }
   .ma-grid { padding-top: var(--s2); }
@@ -49,6 +50,7 @@
   .ma-doc__meta { display: none; }
   .ma-doc__bar { padding: var(--s2); }
   .ma-start { padding: var(--s5) var(--s4); gap: var(--s4); }
+  .ma-start__acts { flex-direction: column; align-items: stretch; width: min(100%, 280px); }   /* ba nút cùng bề rộng */
   .ma-steps { grid-template-columns: 1fr; gap: var(--s2); }
   .ma-tabs { flex: 1; margin-top: 0; }
   .ma-tab { flex: 1; padding: 0 var(--s2); }
@@ -61,6 +63,8 @@
   .ma-dlg.ma-dlg--center { width: calc(100vw - 2 * var(--s4)); margin: auto; border-radius: var(--r-lg); }
   .ma-toast { left: var(--s4); right: var(--s4); transform: none; width: auto; max-width: none; }
 }
+/* Máy 320px: thanh trên chỉ đủ chỗ cho biểu tượng và bốn nút; tên trang có ở tiêu đề ngay dưới. */
+@media (max-width: 359px) { .ma-brand__txt { display: none; } }
 /* Hộp nhận xét thành tấm trượt đáy ở máy hẹp hoặc màn cảm ứng: nền mờ phía sau bằng bóng (không chặn chạm: chạm ra
    ngoài vẫn tới trang và đóng hộp), tay nắm trang trí, trượt lên khi mở; chip gợi ý một hàng cuộn ngang. */
 .ma-pop.is-sheet {

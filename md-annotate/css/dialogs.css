@@ -39,7 +39,7 @@
 .ma-set__h { display: flex; align-items: center; justify-content: space-between; gap: var(--s3); min-height: var(--h-sm); }
 .ma-set__h label, .ma-set__h span:first-child { font-weight: 600; font-size: var(--fs-md); color: var(--ink); }
 .ma-set__h .ma-check { min-height: var(--h-sm); }
-.ma-set output { font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); }
+.ma-set output { flex: none; font: 500 var(--fs-xs)/1 var(--mono); color: var(--ink-2); white-space: nowrap; }
 /* Thanh trượt vẽ tay: Chrome tô phần chưa kéo gần đen khi accent-color sáng. Rãnh --line, núm --accent có vòng
    --ink-4 (≥ 3:1) để thấy vị trí trên mọi nền. */
 .ma-set input[type="range"] {
