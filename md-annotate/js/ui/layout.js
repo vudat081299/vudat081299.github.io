@@ -1,17 +1,21 @@
 /* Hộp Settings (#dlg-layout): bề rộng vùng làm việc, khổ và cỡ chữ Preview, Focus mode, cuộn theo nhau, làm mờ khối đã đọc
    (prefs.rvDim, độ sáng prefs.rvDimV; ô Dim reviewed của tab Review cũng gọi setLayout). Áp ngay qua biến CSS.
-   layoutVal(k): tuỳ chọn Layout, chưa đặt thì lấy mặc định.
+   layoutVal(k): tuỳ chọn Layout, chưa đặt thì lấy mặc định. Màn cảm ứng: Focus luôn theo dải đọc (không có con trỏ để theo),
+   nút Follow pointer tắt, kèm một dòng giải thích.
    Xuất: initLayout, layoutVal, setLayout.
    Dùng: ui/store.js, ui/dom.js, ui/views.js, ui/focus.js. */
 import { prefs, savePrefs } from './store.js';
-import { $ } from './dom.js';
+import { $, mqTouch } from './dom.js';
 import { refreshSplit } from './views.js';
 import { refreshFocus } from './focus.js';
 
 /* Layout: bề rộng vùng làm việc (prefs.wrap: 'auto' | 50–100 %), khổ chữ Preview (prefs.measure: 0 = hết khung |
    50–140ch), cỡ chữ Preview (prefs.mdfs: 13–22px). Đổi là áp ngay qua biến CSS. */
 var LAYOUT_DEF = { wrap: 'auto', measure: 0, mdfs: 16, focus: false, dim: 30, sync: true, focusBy: 'pointer', rvDim: false, rvDimV: 40 };
-export function layoutVal(k) { return prefs[k] == null ? LAYOUT_DEF[k] : prefs[k]; }
+export function layoutVal(k) {
+  if (k === 'focusBy' && mqTouch.matches) return 'band';
+  return prefs[k] == null ? LAYOUT_DEF[k] : prefs[k];
+}
 function applyLayout() {
   var root = document.documentElement.style, w = layoutVal('wrap'), m = layoutVal('measure'), fs = layoutVal('mdfs');
   if (w === 'auto') { root.removeProperty('--wrap-f'); root.removeProperty('--wrap-min'); }
@@ -29,7 +33,10 @@ function applyLayout() {
   root.setProperty('--dim', String(dim / 100));
   $('set-focus').checked = fo;
   $('set-dim').disabled = !fo;
-  document.querySelectorAll('input[name="focusby"]').forEach(function (r) { r.checked = r.value === layoutVal('focusBy'); r.disabled = !fo; });
+  document.querySelectorAll('input[name="focusby"]').forEach(function (r) {
+    r.checked = r.value === layoutVal('focusBy'); r.disabled = !fo || (r.value === 'pointer' && mqTouch.matches);
+  });
+  $('set-focus-touch').hidden = !mqTouch.matches;
   refreshFocus();
   $('set-dim').value = dim;
   $('set-dim-o').textContent = fo ? dim + '% visible' : 'Off';
@@ -65,4 +72,5 @@ export function initLayout() {
     savePrefs(); applyLayout(); refreshSplit();
   });
   $('btn-layout').addEventListener('click', function () { $('dlg-layout').showModal(); });
+  mqTouch.addEventListener('change', applyLayout);
 }

@@ -7,9 +7,9 @@
 'use strict';
 const BASE = process.argv[2] || 'http://127.0.0.1:8347/md-annotate/';
 
-let chromium;
+let chromium, pw;
 for (const name of ['playwright-core', 'playwright']) {
-  try { ({ chromium } = require(name)); break; } catch (e) { /* thử tên tiếp theo */ }
+  try { pw = require(name); ({ chromium } = pw); break; } catch (e) { /* thử tên tiếp theo */ }
 }
 if (!chromium) { console.log('BỎ QUA: chưa có playwright.'); process.exit(2); }
 
@@ -2497,6 +2497,164 @@ const cornerClash = (page) => page.evaluate(() => {
     await p.close();
     await ctx.close();
   }
+
+  // ── mob:touch-layout ──
+  /* ---------- Điện thoại / máy tính bảng, chạm thật (thiết bị của playwright, chạm qua CDP): khoá cuộn sau lớp mờ, toast
+     không che, vùng an toàn, Settings ở màn cảm ứng, làn và lề số, tấm đáy, viên thuốc sau khi tự cuộn ---------- */
+  {
+    const devices = pw.devices;
+    const dev = async (name, scheme = 'light', o = {}) => {
+      const d = Object.assign({}, name ? devices[name] : {}, { deviceScaleFactor: 1, colorScheme: scheme });
+      delete d.defaultBrowserType;
+      if (o.viewport) Object.assign(d, { viewport: o.viewport, hasTouch: true, isMobile: true });
+      if (o.reduced) d.reducedMotion = 'reduce';
+      const c = await browser.newContext(d), p = await c.newPage(); watch(p);
+      const cdp = await c.newCDPSession(p);
+      if (o.safe) await cdp.send('Emulation.setSafeAreaInsetsOverride', { insets: o.safe });
+      await p.goto(BASE); await p.waitForFunction(() => window.marked && window.DOMPurify);
+      if (o.sample !== false) { await p.evaluate(() => document.getElementById('btn-sample').click()); await p.waitForTimeout(250); }
+      return { c, p, cdp };
+    };
+    const tpt = (cdp, type, pts) => cdp.send('Input.dispatchTouchEvent', { type, touchPoints: pts });
+    const swipe = async (p, cdp, x, y1, y2) => {
+      await tpt(cdp, 'touchStart', [{ x, y: y1 }]);
+      for (let i = 1; i <= 8; i++) { await tpt(cdp, 'touchMove', [{ x, y: y1 + (y2 - y1) * i / 8 }]); await p.waitForTimeout(16); }
+      await tpt(cdp, 'touchEnd', []); await p.waitForTimeout(350);
+    };
+    const tapEl = async (p, sel) => { const b = await p.locator(sel).first().boundingBox(); await p.touchscreen.tap(b.x + b.width / 2, b.y + b.height / 2); await p.waitForTimeout(200); };
+    const clickEl = async (p, sel) => { await p.$eval(sel, (e) => e.click()); await p.waitForTimeout(250); };
+    /* Bôi đen như ngón tay: cuộn đoạn vào giữa khung nhìn rồi đặt vùng chọn. */
+    const selectIn = async (p, needle) => {
+      await p.evaluate((n) => { const w = document.createTreeWalker(document.getElementById('v-md'), NodeFilter.SHOW_TEXT); let t; while ((t = w.nextNode())) if (t.data.includes(n)) { t.parentElement.scrollIntoView({ block: 'center' }); break; } }, needle);
+      await p.waitForTimeout(150); await scriptSelect(p, '#v-md', needle);
+    };
+    const box = (p, sel) => p.evaluate((s) => { const e = document.querySelector(s); if (!e || !e.getClientRects().length) return null; const r = e.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom }; }, sel);
+
+    // Khoá cuộn: Settings, tấm panel, tấm nhận xét có nền mờ. Vuốt trên lớp mờ / trên thẻ không cuộn trang; đóng thì không nhảy.
+    let { c, p, cdp } = await dev('iPhone 15 Pro');
+    await p.evaluate(() => window.scrollTo(0, 220)); await p.waitForTimeout(100);
+    for (const [open, where] of [['#btn-layout', 'Settings'], ['#dock-n', 'tấm panel']]) {
+      await clickEl(p, open); await p.waitForTimeout(100);
+      const y0 = await p.evaluate(() => scrollY);
+      await swipe(p, cdp, 200, 40, 10); await swipe(p, cdp, 200, 500, 300);
+      const y1 = await p.evaluate(() => [scrollY, document.documentElement.classList.contains('ma-lock')]);
+      await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+      const y2 = await p.evaluate(() => [scrollY, document.documentElement.classList.contains('ma-lock')]);
+      check(`chạm: ${where} mở thì trang sau lớp mờ không cuộn, đóng không nhảy`, y1[0] === y0 && y1[1] && y2[0] === y0 && !y2[1], JSON.stringify([y0, y1, y2]));
+    }
+    await selectIn(p, 'Try selecting this sentence'); await tapEl(p, '#fab'); await p.waitForTimeout(300);
+    await p.fill('#pop-text', 'draft');   // có chữ: chạm ra ngoài không đóng tấm
+    const s0 = await p.evaluate(() => scrollY);
+    await swipe(p, cdp, 200, 60, 10);
+    check('chạm: tấm nhận xét có nền mờ thì trang không cuộn sau nó', (await p.evaluate(() => scrollY)) === s0 && await p.isVisible('#pop') && await p.evaluate(() => document.documentElement.classList.contains('ma-lock')));
+    // Toast trên tấm nhận xét (không che ô chữ, Save).
+    await p.evaluate(async () => (await import('./js/ui/dom.js')).toast('A toast while the sheet is open'));
+    await p.waitForTimeout(250);
+    const tb = await box(p, '#toast'), pb = await box(p, '#pop');
+    check('chạm: toast nằm trên tấm nhận xét, không che ô chữ / Save', tb && pb && tb.b <= pb.t + 1, JSON.stringify([tb, pb]));
+    await p.fill('#pop-text', ''); await tapEl(p, '#pop-cancel');
+    // Toast trên viên thuốc và nút nổi.
+    await p.evaluate(async () => { (await import('./js/ui/review.js')).markUnits([1], true); });
+    await p.evaluate(async () => (await import('./js/ui/dom.js')).toast('Another toast, long enough to span the width')); await p.waitForTimeout(250);
+    const tb2 = await box(p, '#toast'), pill = await box(p, '#rv-pill');
+    check('chạm: toast nằm trên viên thuốc', tb2 && pill && tb2.b <= pill.t + 1, JSON.stringify([tb2, pill]));
+    await selectIn(p, 'Try selecting this sentence');
+    await p.evaluate(async () => (await import('./js/ui/dom.js')).toast('Toast with the floating button')); await p.waitForTimeout(250);
+    const tb3 = await box(p, '#toast'), fab = await box(p, '#fab');
+    check('chạm: toast không che nút nổi', tb3 && fab && (tb3.b <= fab.t + 1 || tb3.t >= fab.b - 1), JSON.stringify([tb3, fab]));
+    await p.evaluate(() => getSelection().removeAllRanges());
+    // Lề số dừng trước làn; làn có vùng chạm ≥ 44px (lớp giả), không đổi bố cục.
+    await clickEl(p, '.ma-tab[data-view="src"]'); await p.waitForTimeout(250);
+    const lane = await p.evaluate(async () => {
+      const P = await import('./js/ui/picks.js');
+      const b = [...document.querySelectorAll('#wrap-src .ma-lane__b')].find((x) => x.getClientRects().length);
+      b.scrollIntoView({ block: 'center' });
+      const r = b.getBoundingClientRect(), y = r.top + Math.min(r.height / 2, 10), ln = document.elementsFromPoint(r.left + 1, y).find((e) => e.classList.contains('ma-ln'));
+      const hits = [r.left - 13, r.right + 13].map((x) => document.elementFromPoint(x, y) === b);
+      const ys = [r.top + r.height / 2 - 21, r.top + r.height / 2 + 21].map((yy) => { const e = document.elementFromPoint(r.left + r.width / 2, yy); return !!(e && e.classList.contains('ma-lane__b')); });
+      return { w: r.width, hits, ys, onLane: !!(ln && P.gutterLine({ target: ln, clientX: r.left + 1 })), onNum: !!(ln && P.gutterLine({ target: ln, clientX: ln.getBoundingClientRect().left + 4 })) };
+    });
+    check('chạm: làn rộng 16px mà vùng chạm ≥ 44px; lề số dừng trước làn', lane.w === 16 && lane.hits.every(Boolean) && lane.ys.every(Boolean) && !lane.onLane && lane.onNum, JSON.stringify(lane));
+    await c.close();
+
+    // Vùng an toàn: nằm ngang, tai thỏ hai bên, thanh home; dọc có tai thỏ trên.
+    ({ c, p, cdp } = await dev('iPhone 15 Pro landscape', 'light', { safe: { top: 0, bottom: 21, left: 59, right: 59 } }));
+    await p.evaluate(async () => { (await import('./js/ui/review.js')).markUnits([1], true); }); await p.waitForTimeout(200);
+    const sa = await p.evaluate(() => {
+      const vw = innerWidth, r = (s) => document.querySelector(s).getBoundingClientRect();
+      return { wrap: parseFloat(getComputedStyle(document.querySelector('main.ma-wrap')).paddingLeft), dockL: r('#dock-n').left, copyR: vw - r('#dock-copy').right,
+        pillR: vw - r('#rv-pill').right, dockPad: parseFloat(getComputedStyle(document.getElementById('dock')).paddingBottom) };
+    });
+    check('vùng an toàn, nằm ngang: chữ, thanh đáy, viên thuốc tránh tai thỏ và thanh home', sa.wrap >= 59 && sa.dockL >= 59 && sa.copyR >= 59 && sa.pillR >= 59 && sa.dockPad >= 21, JSON.stringify(sa));
+    await selectIn(p, 'Try selecting this sentence'); await tapEl(p, '#fab'); await p.waitForTimeout(250);
+    const sp2 = await p.evaluate(() => { const cs = getComputedStyle(document.getElementById('pop')); return [parseFloat(cs.paddingLeft), parseFloat(cs.paddingRight), parseFloat(cs.paddingBottom)]; });
+    check('vùng an toàn, nằm ngang: tấm nhận xét chừa hai bên và thanh home', sp2[0] >= 59 && sp2[1] >= 59 && sp2[2] >= 21 + 16, JSON.stringify(sp2));
+    await c.close();
+    ({ c, p, cdp } = await dev('iPhone 15 Pro', 'light', { safe: { top: 59, bottom: 34, left: 0, right: 0 } }));
+    const st = await p.evaluate(() => parseFloat(getComputedStyle(document.querySelector('.ma-bar')).paddingTop));
+    await clickEl(p, '#btn-hist'); await p.waitForTimeout(300);
+    const hb = await p.evaluate(() => parseFloat(getComputedStyle(document.querySelector('#dlg-hist .ma-dlg__b')).borderBottomWidth));
+    await p.keyboard.press('Escape'); await clickEl(p, '#dock-n'); await p.waitForTimeout(300);
+    const fb = await p.evaluate(() => parseFloat(getComputedStyle(document.querySelector('#dlg-panel .ma-panel__foot')).paddingBottom));
+    check('vùng an toàn, dọc: thanh trên dưới tai thỏ; History, panel chừa thanh home', st >= 59 && hb >= 16 + 34 && fb >= 12 + 34, JSON.stringify([st, hb, fb]));
+    // Mọi tấm đáy: tay nắm vẽ bằng nền (không bị overflow cắt), trượt lên khi mở.
+    const sheets = await p.evaluate(() => { const el = document.querySelector('#dlg-panel .ma-panel'), cs = getComputedStyle(el); return [cs.backgroundImage.includes('gradient'), cs.animationName]; });
+    await p.keyboard.press('Escape'); await p.waitForTimeout(150);
+    await clickEl(p, '#btn-hist'); await p.waitForTimeout(100);
+    const hs = await p.evaluate(() => { const cs = getComputedStyle(document.querySelector('#dlg-hist .ma-dlg__in')); return [cs.backgroundImage.includes('gradient'), cs.animationName]; });
+    await p.keyboard.press('Escape');
+    await selectIn(p, 'Try selecting this sentence'); await tapEl(p, '#fab'); await p.waitForTimeout(100);
+    const cs3 = await p.evaluate(() => { const cs = getComputedStyle(document.getElementById('pop')); return [cs.backgroundImage.includes('gradient'), cs.animationName]; });
+    check('tấm đáy (panel, History, nhận xét): cùng tay nắm, cùng trượt lên', [sheets, hs, cs3].every((x) => x[0] && x[1] === 'ma-sheet-in'), JSON.stringify([sheets, hs, cs3]));
+    await c.close();
+
+    // Settings ở 320px, cảm ứng: không tràn ngang, hàng ≥ 44px, thanh trượt chừa dải để vuốt, không Sync scroll, Focus theo dải đọc.
+    ({ c, p, cdp } = await dev(null, 'light', { viewport: { width: 320, height: 640 } }));
+    await clickEl(p, '#btn-layout'); await p.waitForTimeout(250);
+    const s320 = await p.evaluate(() => {
+      const b = document.querySelector('#dlg-layout .ma-dlg__b'), vis = (e) => e.getClientRects().length;
+      const hs = [...b.querySelectorAll('.ma-check, input[type=range], .ma-fmt span')].filter(vis).map((e) => Math.round(e.getBoundingClientRect().height));
+      const rg = b.querySelector('#set-fs').getBoundingClientRect(), br = b.getBoundingClientRect();
+      return { ox: b.scrollWidth - b.clientWidth, minH: Math.min(...hs), gutter: Math.round(br.right - rg.right), sync: !!vis(document.getElementById('set-sync')),
+        ptr: document.querySelector('input[name=focusby][value=pointer]').disabled, note: !!vis(document.getElementById('set-focus-touch')) };
+    });
+    check('Settings 320px cảm ứng: không tràn ngang, hàng ≥ 44px, thanh trượt chừa dải vuốt, không Sync scroll, Follow pointer tắt kèm dòng giải thích',
+      s320.ox === 0 && s320.minH >= 44 && s320.gutter >= 44 && !s320.sync && s320.ptr && s320.note, JSON.stringify(s320));
+    await p.click('#set-focus'); await p.waitForTimeout(100);
+    check('Settings cảm ứng: Focus bật thì theo dải đọc', await p.evaluate(async () => (await import('./js/ui/layout.js')).layoutVal('focusBy') === 'band' && document.querySelector('input[name=focusby][value=band]').checked));
+    await c.close();
+    // Thẻ bắt đầu ở điện thoại nhỏ: không có thanh đáy (nút chép chưa có gì để chép).
+    ({ c, p, cdp } = await dev('iPhone SE', 'light', { sample: false }));
+    check('thẻ bắt đầu ở điện thoại: không thanh đáy', !(await p.isVisible('#dock')) && await p.isVisible('#start'));
+    await c.close();
+    // Viên thuốc sau lần nhảy về đầu (cuộn từ cuối lên): người dùng tự vuốt xuống giữa đường nhảy thì viên thuốc đánh dấu
+    // khối ở dải đọc, không phải khối vừa nhảy tới đã khuất (pin bỏ khi người dùng tự cuộn).
+    ({ c, p, cdp } = await dev('iPhone 15 Pro', 'light', { reduced: true }));
+    await p.evaluate(async () => { (await import('./js/ui/review.js')).setRvTouched(); window.scrollTo(0, 1e6); }); await p.waitForTimeout(200);
+    await p.evaluate(async () => { (await import('./js/ui/review.js')).jumpUnit(0); }); await p.waitForTimeout(300);
+    await swipe(p, cdp, 200, 560, 260); await p.waitForTimeout(300);
+    const before = await p.evaluate(() => { const b = document.querySelector('#wrap-md .ma-lane__b.is-cur'); return b ? [b.dataset.u, Math.round(b.getBoundingClientRect().bottom), scrollY] : null; });
+    await tapEl(p, '#rv-pill'); await p.waitForTimeout(300);
+    const done = await p.evaluate((y) => { window.scrollTo(0, y); return [...document.querySelectorAll('#wrap-md .ma-lane__b.is-done')].map((b) => { const r = b.getBoundingClientRect(); return [b.dataset.u, Math.round(r.top), Math.round(r.bottom)]; }); }, before ? before[2] : 0);
+    check('viên thuốc: sau khi tự cuộn, đánh dấu khối ở dải đọc, không phải khối vừa nhảy tới', before && before[2] > 100 && done.length === 1 && done[0][0] === before[0] && done[0][0] !== '0' && done[0][2] > 0 && done[0][1] < 659, JSON.stringify([before, done]));
+    await c.close();
+    // Dấu ✓ đã đọc ở theme sáng: viền của hình ≥ 3:1 trên nền thẻ.
+    for (const scheme of ['light', 'dark']) {
+      ({ c, p, cdp } = await dev(null, scheme, { viewport: { width: 1280, height: 800 } }));
+      await p.click('.ma-tab[data-view="view"]');
+      await p.evaluate(async () => { (await import('./js/ui/review.js')).markUnits([1], true); }); await p.waitForTimeout(200);
+      const ring = await p.evaluate(() => {
+        const b = document.querySelector('#wrap-md .ma-lane__b.is-done'), cs = getComputedStyle(b, '::after');
+        const rgb = (c) => c.match(/[\d.]+/g).slice(0, 3).map(Number);
+        const lum = (c) => { const x = c.map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
+        const a = lum(rgb(cs.borderTopColor)), s = lum(rgb(getComputedStyle(document.getElementById('doc')).backgroundColor));
+        return +((Math.max(a, s) + 0.05) / (Math.min(a, s) + 0.05)).toFixed(2);
+      });
+      check(`dấu ✓ đã đọc (${scheme}): viền hình ≥ 3:1 trên nền`, ring >= 3, String(ring));
+      await c.close();
+    }
+  }
+  // ── end mob:touch-layout ──
 
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();

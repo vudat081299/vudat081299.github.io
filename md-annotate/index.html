@@ -431,7 +431,7 @@
             <div class="ma-set__h"><label for="set-fs">Preview text size</label><output id="set-fs-o" for="set-fs"></output></div>
             <input type="range" id="set-fs" min="13" max="22" step="1" />
           </div>
-          <div class="ma-set">
+          <div class="ma-set ma-set--sync">
             <div class="ma-set__h"><label class="ma-check" for="set-sync"><input type="checkbox" id="set-sync" /> Sync scroll in Split</label></div>
             <p class="ma-sub">Scrolling one pane scrolls the other so the same passage sits in the middle of both.</p>
           </div>
@@ -441,6 +441,7 @@
               <label><input type="radio" name="focusby" value="pointer" /><span>Follow pointer</span></label>
               <label><input type="radio" name="focusby" value="band" /><span>Reading band 25–50%</span></label>
             </div>
+            <p class="ma-sub" id="set-focus-touch" hidden>On a touch screen Focus follows the reading band.</p>
             <input type="range" id="set-dim" min="10" max="70" step="5" aria-label="Brightness of the dimmed text" />
             <p class="ma-sub">A section runs from a heading to the next heading. Follow pointer: the section under the mouse.
               Reading band: the first section between 25% and 50% of the pane's height, updated as you scroll. In Split

@@ -1,8 +1,8 @@
 /* Tiện ích DOM: $(id), h() dựng phần tử, icon(), textNodes(), media query dùng chung, shown(), typing() (phím tắt
    một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight), saveFile() (tải một Blob về máy),
    droppedItems() (mục thả từ máy), syncBar() (màu thanh trình duyệt khi có lớp mờ).
-   Xuất: $, dragBar, droppedItems, h, hasHL, icon, mqSheet, mqSide, paintHL, reduceMotion, saveFile, shown, syncBar, textNodes,
-     toast, typing.
+   Xuất: $, dragBar, droppedItems, h, hasHL, icon, mqSheet, mqSide, mqTouch, paintHL, placeToast, reduceMotion, saveFile, shown,
+     syncBar, textNodes, toast, typing.
    Dùng: core/color.js. */
 import { barColor } from '../core/color.js';
 
@@ -58,6 +58,7 @@ export function textNodes(root) {
 export var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 export var mqSheet = window.matchMedia('(max-width: 720px), (pointer: coarse)');
 export var mqSide = window.matchMedia('(min-width: 1081px)');
+export var mqTouch = window.matchMedia('(pointer: coarse)');   // màn cảm ứng (con trỏ chính là ngón tay)
 export var hasHL = !!(window.CSS && CSS.highlights && window.Highlight);
 /* Tô CSS Highlight `name` bằng các Range (rỗng: bỏ tô). Mỗi tên giữ một Highlight trong registry, chỉ thay range: Safari
    không vẽ lại khi xoá Highlight khỏi registry, vết tô còn trên chữ. Đừng gọi CSS.highlights.set / delete ở chỗ khác. */
@@ -94,7 +95,7 @@ export function dragBar(el, onMove, onDone) {
 }
 
 /* Toast: một thông báo ngắn, tuỳ chọn một nút (VD Undo). Có hộp thoại mở thì nằm trong hộp thoại. */
-var toastTimer = null;
+var toastTimer = null, toastWatch = null;
 export function toast(msg, action) {
   var t = $('toast');
   var host = document.querySelector('dialog[open]') || document.body;
@@ -102,8 +103,30 @@ export function toast(msg, action) {
   t.replaceChildren(h('span', null, msg));
   if (action) t.append(h('button', { class: 'ma-toast__btn', type: 'button', onclick: function () { t.hidden = true; action.fn(); } }, action.label));
   t.hidden = false;
+  placeToast();
+  if (!toastWatch) {   // tấm nhận xét, nút nổi, viên thuốc hiện / ẩn khi toast còn: xếp lại
+    toastWatch = new MutationObserver(placeToast);
+    STACK.forEach(function (id) { toastWatch.observe($(id), { attributes: true, attributeFilter: ['hidden', 'class'] }); });
+    window.addEventListener('resize', placeToast);
+  }
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function () { t.hidden = true; }, action ? 6000 : 2800);
+}
+/* Toast không che tấm nhận xét (ô chữ, Save), nút nổi, viên thuốc: nằm trên cái cao nhất trong số chúng đang hiện và
+   chồng ngang với nó. Trong hộp thoại thì để CSS đặt. */
+var STACK = ['pop', 'fab', 'rv-pill'];
+export function placeToast() {
+  var t = $('toast');
+  t.style.bottom = '';
+  if (t.hidden || t.parentNode !== document.body) return;
+  var tr = t.getBoundingClientRect(), vh = window.innerHeight, lift = 0;
+  STACK.forEach(function (id) {
+    var el = $(id);
+    if (!shown(el) || (id === 'pop' && !el.classList.contains('is-sheet'))) return;
+    var r = el.getBoundingClientRect();
+    if (r.right > tr.left && r.left < tr.right && r.top < tr.bottom) lift = Math.max(lift, vh - r.top + 8);
+  });
+  if (lift) t.style.bottom = Math.round(lift) + 'px';
 }
 
 /* Tải data (Blob) về máy với tên name: link tạm có download, bấm, thu hồi URL sau một giây. */
@@ -136,4 +159,13 @@ export function syncBar() {
   document.querySelectorAll('dialog[open], .ma-scrim:not([hidden])').forEach(function (el) { layers.push(getComputedStyle(el).backgroundColor); });
   var c = barColor(getComputedStyle(document.documentElement).backgroundColor, layers);
   if (c) $('theme-color').setAttribute('content', c);
+  lockScroll(layers.length > 0);
+}
+/* Có lớp mờ thì trang sau nó không cuộn (html.ma-lock, mobile.css); chỗ cuộn giữ nguyên nên đóng lớp không nhảy. Trang đang có
+   thanh cuộn chiếm chỗ (máy tính) thì giữ rãnh của nó (ma-lock-g), để chữ không xô ngang. */
+function lockScroll(on) {
+  var de = document.documentElement;
+  if (on === de.classList.contains('ma-lock')) return;
+  if (on) de.classList.toggle('ma-lock-g', window.innerWidth > de.clientWidth);
+  de.classList.toggle('ma-lock', on);
 }

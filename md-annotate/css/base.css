@@ -172,7 +172,7 @@ html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 }
 /* ✓ dùng chung ảnh --ic-check (tokens.css) với dấu đã đọc. */
 .ma-check input[type="checkbox"]:checked, .ma-syn input[type="checkbox"]:checked {
-  border-color: var(--accent); background: var(--accent) var(--ic-check) center / 100% no-repeat border-box;
+  border-color: var(--done-edge); background: var(--accent) var(--ic-check) center / 100% no-repeat border-box;
 }
 .ma-tabbing .ma-check input[type="checkbox"]:focus-visible, .ma-tabbing .ma-syn input[type="checkbox"]:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 .ma-check input[type="checkbox"]:disabled, .ma-syn input[type="checkbox"]:disabled { opacity: .5; cursor: default; }

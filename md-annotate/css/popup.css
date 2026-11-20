@@ -54,7 +54,7 @@
 /* Nút nổi khi có vùng chọn (điện thoại, bàn phím), thanh đáy ở điện thoại, toast */
 .ma-fab {
   position: fixed; z-index: 55; left: 50%; transform: translateX(-50%);
-  bottom: calc(var(--s5) + env(safe-area-inset-bottom));
+  bottom: calc(var(--s5) + var(--sa-b));
   min-height: var(--h-touch); padding: 0 var(--s5); border-radius: var(--r-pill); box-shadow: var(--shadow-pop);
 }
 .ma-dock { display: none; }
@@ -62,7 +62,7 @@
    Nút Undo: chữ đậm trên nền mờ của chính màu chữ, đọc được ở cả hai theme. Điện thoại: rộng hết, trừ lề (mobile.css). */
 .ma-toast {
   position: fixed; z-index: 80; left: 50%; transform: translateX(-50%);
-  bottom: calc(var(--s5) + env(safe-area-inset-bottom));
+  bottom: calc(var(--s5) + var(--sa-b));
   width: max-content; max-width: min(560px, calc(100vw - 2 * var(--s4)));
   display: flex; align-items: center; gap: var(--s3); min-height: calc(var(--h-sm) + 2 * var(--s2)); padding: var(--s2) var(--s4);
   background: var(--ink); color: var(--bg); border-radius: var(--r); box-shadow: var(--shadow-pop);

@@ -428,6 +428,11 @@ export function initReview() {
   }
   window.addEventListener('resize', scheduleLayout);
   window.addEventListener('scroll', scheduleCur, { passive: true });
+  /* Người dùng tự cuộn (bánh xe, vuốt, phím cuộn) thì bỏ pin ngay, kể cả khi vẫn còn trong đường cuộn của lần nhảy: không thì
+     X / viên thuốc đánh dấu đơn vị đã khuất. */
+  var unpin = function () { if (pin) { pin = null; scheduleCur(); } };
+  ['wheel', 'touchmove'].forEach(function (t) { document.addEventListener(t, unpin, { passive: true, capture: true }); });
+  document.addEventListener('keydown', function (e) { if (/^(Arrow(Up|Down)|Page(Up|Down)|Home|End| )$/.test(e.key) && !typing(e.target)) unpin(); }, true);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(scheduleLayout);
   new MutationObserver(syncPopRv).observe($('pop'), { attributes: true, attributeFilter: ['hidden'] });
   new MutationObserver(syncPopRv).observe($('pop-q'), { childList: true, characterData: true, subtree: true });

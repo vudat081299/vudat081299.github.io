@@ -24,11 +24,13 @@ var pickText = null, pickSid = null;   // văn bản và phiên lúc chọn: đ�
 var anchor = 0;                 // dòng bấm gần nhất: đầu dải của Shift + bấm
 var drag = null, eatClick = false;   // kéo trên lề: { start, add, base, last, moved, id }; kéo xong thì bỏ cú click theo sau
 
-/* Dòng .ma-ln của #v-src khi sự kiện chuột rơi vào lề số dòng (phần đệm trái của dòng), không thì null. */
+/* Dòng .ma-ln của #v-src khi sự kiện chuột rơi vào lề số dòng (số và vạch nhận xét, dừng trước làn đã đọc: css/views.css,
+   ui/review.js đặt làn ở paddingLeft − --lane-w − 6), không thì null. */
 export function gutterLine(e) {
   var ln = e.target && e.target.closest && e.target.closest('.ma-ln');
   if (!ln || ln.parentNode !== $('v-src')) return null;
-  return e.clientX < ln.getBoundingClientRect().left + parseFloat(getComputedStyle(ln).paddingLeft) - 4 ? ln : null;
+  var cs = getComputedStyle(ln), lane = parseFloat(cs.getPropertyValue('--lane-w')) || 16;
+  return e.clientX < ln.getBoundingClientRect().left + parseFloat(cs.paddingLeft) - lane - 6 ? ln : null;
 }
 function lineNo(ln) { return Array.prototype.indexOf.call($('v-src').children, ln) + 1; }
 
