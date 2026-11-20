@@ -2548,9 +2548,10 @@ const cornerClash = (page) => page.evaluate(() => {
       const R = (q) => document.querySelector(q).getBoundingClientRect(), bin = document.querySelector('.ma-bar__in'), cs = getComputedStyle(bin);
       const tg = R('#btn-tree'), br = R('.ma-brand'), m = R('main'), t = document.getElementById('tree'), on = document.documentElement.classList.contains('ma-tree-on');
       const pad = parseFloat(cs.paddingRight), gap = parseFloat(cs.columnGap);
+      const padTok = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--pad'));   // lề phải còn gồm vùng an toàn phải (mobile.css)
       const inset = (() => { const x = document.createElement('i'); x.style.cssText = 'position:fixed;padding-left:env(safe-area-inset-left)'; document.body.append(x); const v = parseFloat(getComputedStyle(x).paddingLeft); x.remove(); return v; })();
       const want = Math.max(m.left + pad, tg.right + gap), tr = on ? t.getBoundingClientRect() : null;
-      return { tgL: tg.left, pad, inset, brL: br.left, want, mL: m.left, gap, overlap: tg.right > br.left, on,
+      return { tgL: tg.left, pad, padTok, inset, brL: br.left, want, mL: m.left, gap, overlap: tg.right > br.left, on,
         above: tr ? tg.left >= tr.left && tg.right <= tr.right && tg.bottom <= tr.top : null,
         surf: on ? getComputedStyle(document.querySelector('.ma-bar'), '::before').backgroundColor === getComputedStyle(t).backgroundColor : null };
     });
@@ -2593,7 +2594,7 @@ const cornerClash = (page) => page.evaluate(() => {
       if (!ok) console.log('  BỎ QUA tấm trượt ngang theo vùng an toàn: trình duyệt không giả lập được safe-area');
       else {
         const b = await bar(p);
-        check('nút Files 852 ngang: x = --pad + vùng an toàn trái, tên trang sau nút', Math.abs(b.tgL - b.pad - 59) <= 0.5 && Math.abs(b.brL - b.want) <= 0.5 && !b.overlap, JSON.stringify(b));
+        check('nút Files 852 ngang: x = --pad + vùng an toàn trái, tên trang sau nút', Math.abs(b.tgL - b.padTok - 59) <= 0.5 && Math.abs(b.brL - b.want) <= 0.5 && !b.overlap, JSON.stringify(b));
         await p.tap('#btn-tree'); await p.waitForTimeout(400);
         const d = await p.evaluate(() => {
           const t = document.getElementById('tree'), rows = [...t.querySelectorAll('.ma-trow')].map((x) => x.getBoundingClientRect().left);
