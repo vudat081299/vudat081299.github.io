@@ -40,9 +40,13 @@
 @media (max-width: 720px) {
   :root { --pad: var(--s4); --bar-h: 56px; }
   .ma-bar { position: static; }
-  .ma-bar__in { gap: var(--s1); }   /* 360px: đủ chỗ cho tên md-annotate cạnh bốn nút */
-  .ma-bar .ma-btn__lbl { display: none; }
+  /* Thanh trên: Files, tên, History, Settings, More (New session, theme, Shortcuts trong menu #bar-menu, ui/bar.js).
+     360px: đủ chỗ cho tên md-annotate cạnh bốn nút. */
+  .ma-bar__in { gap: var(--s1); }
+  .ma-bar .ma-btn__lbl, .ma-bar .ma-bar__opt { display: none; }
+  .ma-bar .ma-bar__more { display: inline-flex; }
   .ma-bar .ma-btn { width: var(--h-touch); padding: 0; flex: none; }
+  .ma-menu:focus { outline: none; }   /* mở bằng chạm: focus ở khung menu, không vòng */
   .ma-grid { padding-top: var(--s2); }
   .ma-head { padding: 0 0 var(--s2); }
   .ma-head h1 { font-size: var(--fs-lg); }

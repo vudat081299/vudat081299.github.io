@@ -1,5 +1,5 @@
 /* Cây folder + file (ui/tree.js): cột trái của lưới khi đủ chỗ, không thì tấm trượt trái #dlg-tree (mọi bề rộng); đầu
-   cây, hàng, huy hiệu, ô đổi tên, chỗ thả, menu hàng (.ma-menu). Nạp sau panel.css và trước
+   cây, hàng, huy hiệu, ô đổi tên, chỗ thả, menu hàng (.ma-menu, cả menu More của thanh trên). Nạp sau panel.css và trước
    mobile.css: luật cột ≤ 1080px ghi kèm .ma-railed để đè luật một cột của mobile.css. */
 /* CỘT TRÁI: chỉ khi html.ma-tree-on (ui/tree.js: cây có dữ liệu, đang hiện, #doc còn đủ chỗ). Bề rộng --tree, kéo 180–420 (prefs.treeW). */
 .ma-grid > .ma-tree { display: none; }

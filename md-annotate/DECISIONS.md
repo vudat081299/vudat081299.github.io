@@ -24,6 +24,7 @@
 - MDAN-025 · Prompt cho mọi file là một tuỳ chọn, mặc định chỉ file đang mở · `md-annotate/`
 - MDAN-026 · Không nền mờ sau tấm nhận xét khi chọn nhiều dòng · `md-annotate/js/ui/popup.js`, `md-annotate/css/mobile.css`
 - MDAN-035 · Cây file là cột khi văn bản còn đủ rộng, không thì trượt từ trái · thay cho MDAN-023 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
+- MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -206,3 +207,10 @@ Chưa chọn thì cây chỉ hiện khi phiên có từ hai mục. Cây nằm th
 rộng cho chế độ đọc người dùng chọn: *Split* cần hai khung 420px, chế độ khác cần 580px. Không đủ thì, ở mọi bề rộng màn
 hình, cây là tấm trượt từ trái: nút trên thanh trên hay Ctrl/⌘ + B mở tấm, chọn file thì tấm đóng, lựa chọn ẩn / hiện
 không đổi. Khi là cột, nút và Ctrl/⌘ + B ẩn / hiện cây, lựa chọn được nhớ. Nạp folder xong thì cây hiện. Xoá không hỏi, có Undo.
+
+## MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More
+20/11/2026 · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
+
+Điện thoại (≤ 720px): trái là nút *Files* (biểu tượng sidebar) rồi tên gọn; phải là *History*, *Settings* và *More* (⋯).
+*New session*, đổi theme sáng / tối và *Shortcuts* nằm trong *More*. *History* (đổi phiên) và *Settings* (cỡ chữ, khổ
+chữ, Focus) là việc dùng thường khi đọc trên điện thoại; mở phiên mới, đổi theme ít dùng. Máy rộng giữ nguyên các nút.

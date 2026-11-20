@@ -1,5 +1,6 @@
 /* Bấm thật trong Chromium: dán văn bản, bôi đen ở hai chế độ xem, nhận xét bằng gõ và bằng gợi ý, prompt,
- * neo lại khi sửa văn bản, tải lại trang, lịch sử phiên, theme, khổ điện thoại, cây file của phiên (docked / tấm trượt).
+ * neo lại khi sửa văn bản, tải lại trang, lịch sử phiên, theme, khổ điện thoại, cây file của phiên (docked / tấm trượt),
+ * thanh trên ở điện thoại (menu More).
  * Chạy: python3 -m http.server 8347 (ở gốc repo), rồi
  *       node md-annotate/tools/smoke.cjs http://127.0.0.1:8347/md-annotate/
  * Thiếu playwright thì thoát mã 2 (BỎ QUA), như tools/smoke-index.js. */
@@ -2197,6 +2198,78 @@ const cornerClash = (page) => page.evaluate(() => {
     s = await dst(p);
     check('cây docked: kéo mép rộng thêm 200px dừng ở 258px, vẫn docked', docked(s) && s.w === 258 && s.doc === 580, JSON.stringify(s));
     await c.close();
+  }
+
+  /* ---------- Thanh trên ở điện thoại: Files, tên, History, Settings, More; New session, theme, Shortcuts trong menu More ---------- */
+  for (const [w, scheme] of [[320, 'light'], [360, 'dark'], [390, 'light']]) {
+    const hc = await browser.newContext({ viewport: { width: w, height: 760 }, colorScheme: scheme, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+    const hp = await hc.newPage(); watch(hp);
+    await hp.goto(BASE); await hp.waitForFunction(() => window.marked && window.DOMPurify);
+    await hp.tap('#btn-sample'); await hp.waitForTimeout(150);
+    await hp.evaluate(async () => {   // cây vài file: nút Files hiện
+      const T = await import('./js/ui/tree.js'), noop = () => '';
+      T.renderTree({ nodes: [{ id: 'f1', parent: null, kind: 'file', name: 'a.md' }, { id: 'f2', parent: null, kind: 'file', name: 'b.md' }], open: 'f1', collapsed: [], counts: {}, title: 'Demo' },
+        { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
+    });
+    const bar = await hp.evaluate(() => {
+      const ids = ['btn-tree', 'btn-hist', 'btn-layout', 'btn-more'], rs = ids.map((id) => document.getElementById(id).getBoundingClientRect());
+      const brand = document.querySelector('.ma-brand').getBoundingClientRect();
+      return { h: Math.round(document.querySelector('.ma-bar').getBoundingClientRect().height),
+        order: [rs[0], brand, ...rs.slice(1)].every((r, i, a) => !i || r.left >= a[i - 1].right) && rs[0].left === 16,
+        sizes: rs.every((r) => r.width >= 44 && r.height >= 44 && r.left >= 0 && r.right <= innerWidth),
+        hidden: ['btn-new', 'theme'].every((id) => !document.getElementById(id).getClientRects().length),
+        more: document.getElementById('btn-more').getAttribute('aria-haspopup') };
+    });
+    check(`thanh trên ${w}: Files sát lề trái, rồi tên, History, Settings, More; nút ≥ 44px, trong khung; New session và theme ẩn; cao 57px`,
+      bar.h === 57 && bar.order && bar.sizes && bar.hidden && bar.more === 'menu' && (await overflow(hp)) === 0, JSON.stringify(bar));
+    // Chạm: mở menu, mục ≥ 44px, trong khung nhìn, chưa có vòng focus; chạm ngoài thì đóng.
+    await hp.tap('#btn-more'); await hp.waitForTimeout(150);
+    const mn = await hp.evaluate(() => {
+      const m = document.getElementById('bar-menu'), r = m.getBoundingClientRect(), its = [...m.querySelectorAll('.ma-menu__i')], ae = document.activeElement;
+      const probe = document.createElement('i'); document.body.append(probe); probe.style.backgroundColor = 'var(--surface)'; const surface = getComputedStyle(probe).backgroundColor; probe.remove();
+      return { open: m.classList.contains('is-open'), exp: document.getElementById('btn-more').getAttribute('aria-expanded'), inView: r.left >= 0 && r.right <= innerWidth && r.bottom <= innerHeight,
+        items: its.map((i) => i.textContent.trim()), tall: its.every((i) => i.getBoundingClientRect().height >= 44), ring: getComputedStyle(ae).outlineStyle !== 'none' || document.documentElement.classList.contains('ma-tabbing'),
+        bg: getComputedStyle(m).backgroundColor === surface };
+    });
+    const themeWord = scheme === 'dark' ? 'Light theme' : 'Dark theme';
+    check(`thanh trên ${w}: chạm More mở menu (New session, ${themeWord}, Shortcuts), mục ≥ 44px, trong khung, nền --surface, không vòng focus`,
+      mn.open && mn.exp === 'true' && mn.inView && mn.items.join() === `New session,${themeWord},Shortcuts` && mn.tall && !mn.ring && mn.bg, JSON.stringify(mn));
+    await hp.touchscreen.tap(20, 600); await hp.waitForTimeout(150);
+    check(`thanh trên ${w}: chạm ngoài thì đóng`, !(await hp.evaluate(() => document.getElementById('bar-menu').classList.contains('is-open'))) && (await hp.getAttribute('#btn-more', 'aria-expanded')) === 'false');
+    // Mục theme đổi theme; Shortcuts mở hộp, đóng thì focus về More; New session mở phiên mới.
+    await hp.tap('#btn-more'); await hp.waitForTimeout(100); await hp.tap('#bar-menu >> text=' + themeWord); await hp.waitForTimeout(150);
+    check(`thanh trên ${w}: mục theme đổi theme, menu đóng`, (await hp.evaluate(() => document.documentElement.classList.contains('dark'))) === (scheme !== 'dark') && !(await hp.isVisible('#bar-menu')));
+    await hp.tap('#btn-more'); await hp.waitForTimeout(100); await hp.tap('#bar-menu >> text=Shortcuts'); await hp.waitForTimeout(250);
+    const ko = await hp.evaluate(() => document.getElementById('dlg-keys').open);
+    await hp.keyboard.press('Escape'); await hp.waitForTimeout(150);
+    check(`thanh trên ${w}: Shortcuts mở hộp phím tắt, đóng thì focus về More`, ko && (await hp.evaluate(() => document.activeElement.id)) === 'btn-more');
+    await hp.tap('#btn-more'); await hp.waitForTimeout(100); await hp.tap('#bar-menu >> text=New session'); await hp.waitForTimeout(200);
+    check(`thanh trên ${w}: New session mở phiên mới (khung Edit)`, (await hp.isVisible('#src-input')) && /New session/.test(await hp.textContent('#toast')));
+    // Bàn phím: Enter mở và vào mục đầu; ↓ ↑ vòng, End, Home; Esc đóng, focus về nút; ↑ trên nút vào mục cuối; Tab đóng.
+    const fo = () => hp.evaluate(() => (document.activeElement.textContent || '').trim() || document.activeElement.id);
+    await hp.focus('#btn-more'); await hp.keyboard.press('Tab'); await hp.keyboard.press('Shift+Tab');
+    await hp.keyboard.press('Enter'); await hp.waitForTimeout(80);
+    const k1 = await fo(); await hp.keyboard.press('ArrowDown'); const k2 = await fo(); await hp.keyboard.press('End'); const k3 = await fo();
+    await hp.keyboard.press('ArrowDown'); const k4 = await fo(); await hp.keyboard.press('ArrowUp'); const k5 = await fo(); await hp.keyboard.press('Home'); const k6 = await fo();
+    const ring = await hp.evaluate(() => getComputedStyle(document.activeElement).outlineStyle !== 'none');
+    await hp.keyboard.press('Escape'); await hp.waitForTimeout(80);
+    const k7 = await fo(), shut = !(await hp.isVisible('#bar-menu'));
+    await hp.keyboard.press('ArrowUp'); await hp.waitForTimeout(80); const k8 = await fo();
+    await hp.keyboard.press('Tab'); await hp.waitForTimeout(80);
+    const k9 = await fo(), shut2 = !(await hp.isVisible('#bar-menu'));
+    const kw = scheme === 'dark' ? 'Dark theme' : 'Light theme';   // theme đã đổi ở trên
+    check(`thanh trên ${w}: bàn phím — Enter vào mục đầu, ↓ ↑ End Home, vòng focus sau Tab, Esc / Tab đóng và trả focus, ↑ trên nút vào mục cuối`,
+      k1 === 'New session' && k2 === kw && k3 === 'Shortcuts' && k4 === 'New session' && k5 === 'Shortcuts' && k6 === 'New session' && ring && k7 === 'btn-more' && shut && k8 === 'Shortcuts' && k9 === 'btn-more' && shut2,
+      JSON.stringify([k1, k2, k3, k4, k5, k6, ring, k7, shut, k8, k9, shut2]));
+    check(`thanh trên ${w}: không tràn ngang`, (await overflow(hp)) === 0);
+    await hc.close();
+  }
+  {
+    const dc = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+    const dp2 = await dc.newPage(); watch(dp2);
+    await dp2.goto(BASE); await dp2.waitForFunction(() => window.marked && window.DOMPurify);
+    check('thanh trên 1280: không có More, New session và theme hiện', !(await dp2.isVisible('#btn-more')) && (await dp2.isVisible('#btn-new')) && (await dp2.isVisible('#theme')));
+    await dc.close();
   }
 
   check('không lỗi console', !errors.length, errors.join(' | '));

@@ -12,7 +12,7 @@
    Xuất: không (chạy khi nạp).
    Dùng: ui/store.js, ui/dom.js, ui/state.js, ui/hints.js, ui/render.js, ui/list.js, ui/prompt.js, ui/views.js,
      ui/sync-scroll.js, ui/panel.js, ui/layout.js, ui/help.js, ui/focus.js, ui/popup.js, ui/selection.js, ui/picks.js,
-     ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js, ui/tree.js.
+     ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js, ui/tree.js, ui/bar.js.
    ui/files.js (cây của phiên) không có init: renderAll() vẽ cây lần đầu. */
 import { KEY, store } from './ui/store.js';
 import { $, syncBar } from './ui/dom.js';
@@ -25,6 +25,7 @@ import { initViews, setView, view } from './ui/views.js';
 import { initSyncScroll } from './ui/sync-scroll.js';
 import { initPanel } from './ui/panel.js';
 import { initTree } from './ui/tree.js';
+import { initBar } from './ui/bar.js';
 import { initLayout } from './ui/layout.js';
 import { initHelp } from './ui/help.js';
 import { initFocus } from './ui/focus.js';
@@ -88,6 +89,7 @@ initShortcuts();
 initDialogs();
 initKbdRing();
 initTheme();
+initBar();
 initPopup();
 initSelection();
 initPicks();

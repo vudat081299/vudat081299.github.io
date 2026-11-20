@@ -58,7 +58,8 @@
           <span class="ma-brand__txt"><span class="ma-brand__own">vudat081299 / </span><b>md-annotate</b></span>
         </a>
         <span class="ma-bar__sp"></span>
-        <button class="ma-btn" id="btn-new" type="button" title="New session">
+        <!-- .ma-bar__opt: điện thoại (≤ 720px) ẩn, có ở menu More (#btn-more, ui/bar.js). -->
+        <button class="ma-btn ma-bar__opt" id="btn-new" type="button" title="New session">
           <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
           <span class="ma-btn__lbl">New session</span>
         </button>
@@ -70,7 +71,7 @@
         <button class="ma-icbtn" id="btn-layout" type="button" aria-label="Settings" title="Settings: layout, focus mode, shortcuts">
           <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" /><circle cx="16" cy="7" r="2" /><circle cx="10" cy="17" r="2" /></svg>
         </button>
-        <button class="ma-icbtn" id="theme" type="button" aria-label="Toggle light / dark" title="Light / dark">
+        <button class="ma-icbtn ma-bar__opt" id="theme" type="button" aria-label="Toggle light / dark" title="Light / dark">
           <svg class="ma-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z" />
           </svg>
@@ -79,8 +80,28 @@
             <path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6" />
           </svg>
         </button>
+        <button class="ma-icbtn ma-bar__more" id="btn-more" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="bar-menu"
+                aria-label="More" title="More">
+          <svg class="ma-i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2zM12 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2zM19 11a1 1 0 1 0 0 2 1 1 0 1 0 0-2z" /></svg>
+        </button>
       </div>
     </header>
+    <!-- Menu More của thanh trên ở điện thoại: mỗi mục bấm nút thật của nó (data-for). Kiểu .ma-menu (css/tree.css). -->
+    <div class="ma-menu" id="bar-menu" role="menu" aria-label="More" tabindex="-1">
+      <button class="ma-menu__i" type="button" role="menuitem" tabindex="-1" data-for="btn-new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+        <span>New session</span>
+      </button>
+      <button class="ma-menu__i" type="button" role="menuitem" tabindex="-1" data-for="theme">
+        <svg class="ma-to-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z" /></svg>
+        <svg class="ma-to-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2" /><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6" /></svg>
+        <span id="bar-theme">Dark theme</span>
+      </button>
+      <button class="ma-menu__i" type="button" role="menuitem" tabindex="-1" data-for="btn-keys">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18v12H3zM7 10h.01M11 10h.01M15 10h.01M8 14h8" /></svg>
+        <span>Shortcuts</span>
+      </button>
+    </div>
 
     <main class="ma-wrap ma-grid">
       <!-- Cột trái: cây folder + file của phiên (ui/tree.js). Thân là chỗ cuộn. Máy ≤ 1080px: cây nằm trong tấm trượt

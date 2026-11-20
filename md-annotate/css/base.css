@@ -53,6 +53,8 @@ svg.ma-i { width: 16px; height: 16px; flex: none; }
 .ma-brand b { font-weight: 500; color: var(--ink); }
 .ma-brand__txt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ma-bar__sp { flex: 1; }
+/* Nút More: chỉ ở điện thoại (mobile.css), thay các nút .ma-bar__opt. */
+.ma-bar .ma-bar__more { display: none; }
 
 /* NÚT — một họ: chính (--go), phụ (mặc định), trơn (--quiet, --bare, thanh trên), chỉ biểu tượng (.ma-icbtn).
    Cao --h (trong thẻ: --h-sm), bo --r-sm, chữ --fs-md 600. Rê: nền --chip; tắt: mờ 50%, nút chính tắt thì xám. */
@@ -79,6 +81,8 @@ svg.ma-i { width: 16px; height: 16px; flex: none; }
 .ma-btn--go:disabled { opacity: 1; background: var(--chip); border-color: transparent; color: var(--ink-3); }
 .ma-btn--go:disabled .ma-kbd { color: inherit; background: color-mix(in srgb, var(--ink) 8%, transparent); }
 html:not(.dark) .ma-moon, html.dark .ma-sun { display: none; }
+/* Mục theme của menu More: biểu tượng của theme sẽ chuyển sang. */
+html.dark .ma-to-dark, html:not(.dark) .ma-to-light { display: none; }
 
 /* HUY HIỆU — số đếm (trung tính, viên thuốc) và số thứ tự nhận xét (nền --accent, bo --r-xs). Mono --fs-xs, cao 20px. */
 .ma-badge {
