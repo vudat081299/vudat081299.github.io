@@ -213,7 +213,7 @@ import { lineCount } from '../js/core/runs.js';
 // Số dòng ở thanh trên (#doc-meta) phải bằng số dòng ở lề Source: xuống dòng cuối không mở dòng mới.
 check('lineCount: như lề số dòng', eq(['', 'a', 'a\n', 'a\nb', 'a\n\n', '\n'].map(lineCount), [0, 1, 1, 2, 2, 1]));
 check('lineCount = số dòng của sourceLines', ['a\nb\n', 'x', '\n\nq'].every((t) => lineCount(t) === sourceLines(t, [], []).lines.length));
-import { fabSide, popPlace, sheetReveal } from '../js/core/place.js';
+import { clampInto, edgeScroll, fabSide, popPlace, sheetReveal } from '../js/core/place.js';
 {
   // Khung nhìn 1280×560, hộp 400×264. Dưới đoạn đủ chỗ: ngay dưới; chỉ trên đủ: lên trên; không bên nào đủ: vẫn trọn
   // trong khung nhìn; mép phải: lùi vào.
@@ -230,6 +230,13 @@ import { fabSide, popPlace, sheetReveal } from '../js/core/place.js';
   check('sheetReveal: đoạn dưới thanh trên thì cuộn lên, không đẩy đáy xuống dưới tấm', R(30, 60) === -38 && R(20, 380) === -8);
   check('sheetReveal: đoạn cao hơn chỗ trống thì đáy sát tấm', R(10, 900) === 512);
   check('fabSide: đoạn ở nửa dưới hay chạm nút thì nút lên trên', fabSide(500, 520, 529, 659) === 'top' && fabSide(100, 130, 529, 659) === 'bottom' && fabSide(200, 525, 529, 659) === 'top');
+  const box = { left: 100, right: 500, top: 50, bottom: 650 };
+  check('clampInto: trái hộp là đầu dòng, phải hộp là cuối dòng, trên / dưới về dòng đầu / cuối đang thấy, trong hộp giữ nguyên',
+    JSON.stringify([clampInto(4, 300, box), clampInto(900, 300, box), clampInto(200, 10, box), clampInto(200, 700, box), clampInto(200, 300, box)])
+    === JSON.stringify([{ x: 101, y: 300 }, { x: 499, y: 300 }, { x: 200, y: 51 }, { x: 200, y: 649 }, { x: 200, y: 300 }]));
+  check('edgeScroll: giữa vùng thấy không cuộn; vào dải 16px sát mép hay quá mép thì cuộn theo khoảng vào dải, tối đa 24px mỗi khung hình',
+    edgeScroll(300, 50, 650) === 0 && edgeScroll(66, 50, 650) === 0 && edgeScroll(634, 50, 650) === 0 && edgeScroll(56, 50, 650) === -5
+    && edgeScroll(649, 50, 650) === 7 && edgeScroll(670, 50, 650) === 18 && edgeScroll(2000, 50, 650) === 24 && edgeScroll(-900, 50, 650) === -24);
 }
 // ── end review: render & select ──
 // ── review: layout & scroll ──

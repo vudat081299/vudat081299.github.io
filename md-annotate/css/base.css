@@ -22,6 +22,10 @@ a { color: inherit; }
 ::highlight(ma-pending) { background-color: var(--hl-pend); }
 /* Vùng chọn phản chiếu sang khung kia ở Split: cùng màu vùng chọn, nhạt hơn. */
 ::highlight(ma-mirror) { background-color: var(--hl-mirror); }
+/* Khung trang (thanh trên, cây file, panel nhận xét và thanh đáy thay nó ở máy hẹp) không bôi đen được, trừ ô gõ chữ
+   (MDAN-064). Kéo bắt đầu ở nền panel là bôi đen văn bản (ui/selection.js). */
+.ma-bar, .ma-tree, .ma-panel, .ma-dock { -webkit-user-select: none; user-select: none; }
+:is(.ma-bar, .ma-tree, .ma-panel) :is(input, textarea, [contenteditable]) { -webkit-user-select: text; user-select: text; }
 :focus-visible { outline: none; }
 /* Vòng focus chỉ khi đang dùng bàn phím (html.ma-tabbing, main.js): Safari iOS vẽ :focus-visible cả cho focus do script
    đặt (mở / đóng hộp thoại), Chrome vẽ cho nút hộp thoại tự focus. Mọi luật vòng focus bắt đầu bằng .ma-tabbing. */

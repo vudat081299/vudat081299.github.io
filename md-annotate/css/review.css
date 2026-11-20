@@ -29,6 +29,8 @@ html.ma-reviewing .ma-lane__b.is-cur, .ma-lane .ma-lane__b.is-cur.is-sug { box-s
 /* LÀN: lớp phủ trong #wrap-*, nút đặt tuyệt đối theo toạ độ JS tính; không chữ, không chọn được. */
 .ma-view { position: relative; }
 .ma-lane { position: absolute; left: 0; top: 0; width: 0; height: 0; -webkit-user-select: none; user-select: none; }
+/* Đang kéo từ vùng nền (ui/selection.js): nút làn không chắn chỗ con trỏ chữ ở mép hộp chữ (máy hẹp, làn đè lên chữ). */
+html.ma-bgdrag .ma-lane { pointer-events: none; }
 .ma-lane__b {
   position: absolute; z-index: 1; width: var(--lane-w); min-height: 0; padding: 0; margin: 0;
   border: 0; border-radius: var(--r-xs); background: transparent; cursor: pointer;

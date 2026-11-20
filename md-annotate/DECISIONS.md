@@ -41,6 +41,7 @@
 - MDAN-061 · Cây file không tự ẩn khi chật; chỉ điện thoại là tấm trượt, đóng sẵn · thay cho MDAN-035 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/views.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
 - MDAN-062 · Không có dòng mô tả dưới tên trang · `md-annotate/index.html`, `md-annotate/css/base.css`
 - MDAN-063 · Cây file nông không cuộn ngang; ⋯ một cột cố định ở mép phải hàng · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`
+- MDAN-064 · Kéo từ nền hai bên văn bản là bôi đen văn bản; thanh trên và panel không bôi đen được · `md-annotate/js/ui/selection.js`, `md-annotate/css/base.css`
 - MDAN-065 · Hàng cây file cao hơn: 32px · `md-annotate/css/tree.css`
 <!-- index:end -->
 
@@ -355,6 +356,14 @@ Thanh bên cây file không có thanh cuộn ngang trong trường hợp thườ
 sâu, khi phần thụt đẩy tên hàng sâu nhất xuống dưới ~96px, mới cuộn ngang như MDAN-060; cây không thụt thì không bao giờ,
 kể cả khi kéo hẹp. Nút ⋯ mọi hàng đứng một cột cố định ở mép phải: cùng cỡ, giữa hàng, thẳng nút ⋯ của đầu cây; huy hiệu
 đứng trước nó, không bị ẩn khi rê.
+
+## MDAN-064 · Kéo từ nền hai bên văn bản là bôi đen văn bản; thanh trên và panel không bôi đen được
+20/11/2026 · `md-annotate/js/ui/selection.js`, `md-annotate/css/base.css`
+
+Bấm giữ rồi kéo ở nền bên phải văn bản (lề trang, nền panel nhận xét) bôi đen các dòng của văn bản, như đã làm được ở nền
+bên trái; không còn bôi đen chữ của panel. Ở Split, kéo bắt đầu ở nền phía trước (trái) bôi đen Source, ở nền phía sau
+(phải, cả panel) bôi đen Preview. Thanh trên, panel nhận xét (cả thẻ nhận xét) và cây file không bôi đen được chữ nào,
+trừ ô gõ chữ. Chỉ chuột và bút; màn cảm ứng kéo vẫn là cuộn.
 
 ## MDAN-065 · Hàng cây file cao hơn: 32px
 20/11/2026 · `md-annotate/css/tree.css`

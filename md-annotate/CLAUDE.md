@@ -18,7 +18,7 @@
 | `js/{core,ui}/review.js`, `js/ui/review-panel.js`, `js/{core,ui}/minimap.js`, `js/{core,ui}/dwell.js` | đã đọc: đơn vị, neo dấu, tiến độ; làn, phím, nút hộp nhận xét, viên thuốc; tab *Review*; dải tiến độ; gợi ý theo thời gian đọc (MDAN-016) |
 | `js/ui/store.js`, `js/ui/dom.js`, `js/ui/state.js`, `js/ui/render.js` | `localStorage`, khoá, `prefs`; `$`, `h()`, `icon()`, `toast()` / `placeToast()`, `dragBar()`, `saveFile()`, `syncBar()` (cả khoá cuộn), `trackKeyboard()`; phiên `S`, file mở `D`, lưu, chuyển phiên / file; `renderAll()`, kết quả neo `mdText`, `anchors`…, `anchorsOf(doc)` |
 | `js/ui/anchor-dom.js`, `js/ui/marks.js`, `js/ui/markdown.js`, `js/ui/source-view.js` | vùng chọn ↔ vị trí chữ; `<mark class="ma-hl">`, tô active / hover; `marked` + DOMPurify, `unlink()`, `ghExtras()`, `mdLex()`; vẽ `#v-src` |
-| `js/ui/list.js`, `js/ui/prompt.js`, `js/ui/popup.js`, `js/ui/selection.js`, `js/ui/picks.js` | danh sách nhận xét; panel *Prompt*, chép, tải, *Options*; hộp nhận xét; bôi đen → hộp, nút nổi, `ma-mirror`; chọn nhiều dòng ở lề số, nút kéo hộp |
+| `js/ui/list.js`, `js/ui/prompt.js`, `js/ui/popup.js`, `js/ui/selection.js`, `js/ui/picks.js` | danh sách nhận xét; panel *Prompt*, chép, tải, *Options*; hộp nhận xét; bôi đen → hộp, kéo từ vùng nền, nút nổi, `ma-mirror`; chọn nhiều dòng ở lề số, nút kéo hộp |
 | `js/ui/views.js`, `js/ui/sync-scroll.js`, `js/ui/focus.js`, `js/ui/layout.js`, `js/ui/help.js`, `js/ui/bar.js` | chế độ xem, `splitOK()`, `sizePanes()`, vách giữa; cuộn theo nhau; *Focus mode*, dải đọc; hộp *Settings* (`#dlg-layout`), `layoutVal()`; hộp *Shortcuts*; menu *More*, thanh trên tự ẩn |
 | `js/ui/panel.js`, `js/ui/hints.js`, `js/ui/history.js`, `js/ui/editor.js`, `js/ui/tree.js`, `js/ui/files.js` | panel, mép kéo, thanh dọc, tấm trượt; số đếm gợi ý, hộp *Hints*; hộp *History*; khung *Edit*, dán, mở / thả file, văn bản mẫu, tên phiên; cây (cột ở mép trái màn hình hay tấm trượt trái, `layoutTree()`), chỉ vẽ và nghe (`renderTree(model, actions)`); việc của cây, `setTree()`, nạp folder, tải |
 
@@ -40,7 +40,7 @@
 - Xanh không làm chữ trên nền sáng (~2,3:1): chữ là mực, nhấn bằng vạch / nền nhạt / huy hiệu. Chữ trên `--accent`: `--on-accent`. Chữ ≥ 4,5:1; chỉ báo trạng thái ≥ 3:1 (focus `--ring`, hàng đang chọn `--edge-on`; thẻ file mở trong cây chỉ có nền), cả hai theme. Vòng focus chỉ sau Tab, hay mũi tên / Home / End trong cây, menu của nó và menu *More* (MDAN-020).
 - Token ở `css/tokens.css` (chữ `--fs-*` + `--lh*`, bo `--r-*`, vật lồng trong bo nhỏ hơn; cao `--h-*`, khoảng `--s*`, `--dur`).
 - Họ component chung luật ở `css/base.css` (nút, nhóm tab `.ma-tabs` / `.ma-seg` / `.ma-fmt`, ô nhập, huy hiệu, phím): thêm biến thể vào họ.
-- Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024). `html` và `body` có nền `--bg` đặt rõ.
+- Theme: khoá chung `hub-theme`, đặt trước lần vẽ đầu; chưa chọn thì theo hệ điều hành (REPO-024). `html` và `body` có nền `--bg` đặt rõ. Thanh trên, cây, panel, thanh đáy không bôi đen được trừ ô gõ chữ: một luật ở `css/base.css` (MDAN-064), đừng đặt `user-select` từng phần tử.
 - Lớp mờ: phần tử fixed trọn khung nhìn, không `::backdrop` / bóng (iOS 26 Safari tô vùng thanh trạng thái theo nền phần tử fixed ở mép). Hộp thoại: chính `<dialog>`, nền `--scrim`, thẻ là con; tấm nhận xét: `#pop-scrim`, `--scrim-live` (nhẹ hơn: không chặn chạm), không có khi chọn dòng (MDAN-026).
   Hiện / ẩn lớp: `syncBar()`: `theme-color` = nền trộn lớp, và `html.ma-lock` (trang sau lớp không cuộn, đóng không nhảy); thẻ, tấm `overscroll-behavior: contain`.
 - Bề rộng (MDAN-005): `.ma-wrap` rộng `max(70%, 1280px)` của khung nhìn trừ cây docked (`--wrap-f`, `--wrap-min`), không quá chỗ ấy, căn giữa trong nó, lề `--pad`. Panel rộng `--side` (kéo `#panel-grip`,
@@ -83,8 +83,8 @@
 ## Hộp nhận xét
 
 - Trích dẫn tối đa 2 dòng, dài hơn thì mờ dần (`.is-long`, mask theo `--ink`). Chuyển động mở tắt khi `prefers-reduced-motion`. Highlight của nhận xét là `<mark class="ma-hl" data-ids>`; số thứ tự hiện bằng `::after`, không lọt vào chữ của khung. Đoạn đang chọn tô bằng `::highlight(ma-pending)`, không sửa DOM (sửa giữa lúc kéo chuột làm mất vùng chọn); mọi Highlight tô qua `paintHL()`.
-- Chuột thì mở ngay khi thả, kể cả khi kéo bắt đầu ở vùng nền (lề trái / phải, nền trang quanh khung; trừ nút, ô nhập,
-  panel, hộp thoại, vách kéo, thanh cuộn); cảm ứng và bàn phím thì hiện nút nổi *Comment on selection* (đoạn ở nửa dưới thì nút lên đỉnh, `fabSide`).
+- Chuột / bút thì mở ngay khi thả. Kéo bắt đầu ở vùng nền (`BG` ở `ui/selection.js`: lề trang hai bên, nền thẻ, nền panel; không nút, ô nhập, thẻ nhận xét, hộp thoại, vách kéo, thanh cuộn) bôi đen khung đích (MDAN-064):
+  điểm kéo vào hộp chữ (`clampInto`), sát mép thì cuộn (`edgeScroll`); Split: trái tâm vách là Source, phải là Preview. Cảm ứng và bàn phím thì hiện nút nổi *Comment on selection* (đoạn ở nửa dưới thì nút lên đỉnh, `fabSide`).
   Hộp dưới đoạn chọn (Split: ở khung đã bôi đen), thiếu chỗ thì lên trên, trọn khung nhìn (`popPlace`). Máy hẹp hoặc màn cảm ứng: tấm trượt đáy;
   mở thì trang (khung *Split*) cuộn ngay để đoạn nằm trên tấm (MDAN-053, `sheetReveal`), đáy trang thêm chỗ bằng tấm (`html.ma-sheet-sp`, bỏ khi không làm trang nhảy).
 - Mọi tấm đáy (nhận xét, panel, History / Hints): tay nắm `--grip` vẽ bằng nền, trượt lên, chừa thanh home. Bàn phím ảo: `trackKeyboard()` đặt `--kb` / `--vvh`, tấm, hộp thoại, toast nằm trên nó. Màn cảm ứng: Return xuống dòng, lưu bằng Save (MDAN-054).

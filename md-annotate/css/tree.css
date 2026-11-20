@@ -52,7 +52,7 @@ html.ma-tree-on body > .ma-tree {
 @media (max-width: 1080px) {
   html.ma-tree-on body > .ma-tree { bottom: calc(76px + env(safe-area-inset-bottom)); padding-bottom: 0; }
 }
-.ma-tree { flex-direction: column; min-width: 0; overflow: hidden; background: var(--surface); user-select: none; -webkit-user-select: none; }
+.ma-tree { flex-direction: column; min-width: 0; overflow: hidden; background: var(--surface); }
 /* Kéo mép phải để đổi bề rộng. */
 .ma-tree__grip { position: absolute; z-index: 2; right: 0; top: 0; bottom: 0; width: 8px; cursor: col-resize; touch-action: none; }
 .ma-tree__grip::before { content: ''; position: absolute; top: var(--s3); bottom: var(--s3); right: 0; width: 3px; border-radius: var(--r-pill); background: transparent; transition: background var(--dur) var(--ease); }
@@ -191,7 +191,6 @@ html.ma-tree-on body > .ma-tree {
   flex: 1 1 auto; width: 0; min-width: 0; height: calc(var(--name-fs) * var(--lh-tight)); margin: 0; padding: 0;
   border: 0; border-radius: 0; background: transparent; color: inherit; box-shadow: none; outline: none;
   font: inherit; font-size: var(--name-fs); font-weight: var(--name-w, 400); line-height: var(--lh-tight); letter-spacing: inherit;
-  user-select: text; -webkit-user-select: text;
 }
 .ma-trow__ren::selection { background: color-mix(in srgb, var(--accent) 32%, transparent); color: var(--ink); }
 

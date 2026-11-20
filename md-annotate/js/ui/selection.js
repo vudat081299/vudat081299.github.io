@@ -1,13 +1,13 @@
-/* Bôi đen → hộp nhận xét: chuột mở ngay khi thả (kể cả kéo từ vùng nền), cảm ứng / bàn phím hiện nút nổi (ở đáy, đoạn chọn
-   ở nửa dưới thì lên đỉnh: core/place.js fabSide);
+/* Bôi đen → hộp nhận xét: chuột mở ngay khi thả, cảm ứng / bàn phím hiện nút nổi (ở đáy, đoạn chọn ở nửa dưới thì lên
+   đỉnh: core/place.js fabSide); kéo bắt đầu ở vùng nền (lề trang hai bên, nền thẻ, panel nhận xét) là bôi đen văn bản;
    bấm đoạn đã nhận xét để sửa; Split tô đoạn tương ứng ở khung kia (ma-mirror). Lề số dòng ở ui/picks.js; đang chọn
    dòng thì bôi đen không mở hộp, không hiện nút nổi, không tô ma-mirror.
    Xuất: initSelection, onSelChange.
    Dùng: core/anchor.js, core/place.js, ui/dom.js, ui/anchor-dom.js, ui/state.js, ui/render.js, ui/views.js, ui/popup.js,
      ui/picks.js. */
 import { locate } from '../core/anchor.js';
-import { fabSide } from '../core/place.js';
-import { $, hasHL, paintHL } from './dom.js';
+import { clampInto, edgeScroll, fabSide } from '../core/place.js';
+import { $, hasHL, paintHL, shown } from './dom.js';
 import { rangeAt, readSelection } from './anchor-dom.js';
 import { D } from './state.js';
 import { mdText } from './render.js';
@@ -53,17 +53,93 @@ function mirrorSel() {
   });
 }
 
+/* KÉO TỪ VÙNG NỀN (chuột, bút): kéo bắt đầu ở nền quanh văn bản (BG: lề trang trái / phải, nền thẻ #doc, đầu khung, cả
+   panel nhận xét trừ nút và ô gõ chữ) bôi đen văn bản của khung đích như kéo trên chữ. Khung đích: một khung thì khung ấy;
+   Split thì bên trái tâm vách là Source, bên phải là Preview. Mỗi điểm chuột kéo vào hộp chữ của khung (clampInto: ngoài
+   trái là đầu dòng, ngoài phải là cuối dòng), lấy chỗ con trỏ chữ ở đó; vùng chọn từ điểm bấm (Shift: từ đầu vùng chọn cũ
+   trong khung) tới điểm hiện tại. Kéo quá mép trên / dưới phần thấy thì khung cuộn (edgeScroll). Thả ra vào cùng luồng với
+   kéo trên chữ (pointerup). */
+var BG = 'html, body, .ma-grid, .ma-left, .ma-head, .ma-doc, .ma-doc__bar, .ma-views, .ma-view, .ma-view__head, .ma-panel, .ma-panel *';
+var bg = null;   // { root, scroller, anchor, x, y, moved, raf }
+function caretAt(x, y) {
+  var p = document.caretPositionFromPoint ? document.caretPositionFromPoint(x, y) : null;
+  if (p) return [p.offsetNode, p.offset];
+  var r = document.caretRangeFromPoint ? document.caretRangeFromPoint(x, y) : null;
+  return r ? [r.startContainer, r.startOffset] : null;
+}
+/* Hộp chữ của khung đích (hộp nội dung của root) cắt theo phần thấy: dưới thanh trên, trên thanh đáy, trong khung cuộn ở
+   Split. vt / vb: mép phần thấy, quá đó thì cuộn. */
+function textBox(g) {
+  var r = g.root.getBoundingClientRect(), cs = getComputedStyle(g.root);
+  var v = g.scroller ? g.scroller.getBoundingClientRect() : { top: 0, bottom: window.innerHeight };
+  var vt = Math.max(v.top, document.querySelector('.ma-bar').getBoundingClientRect().bottom), vb = v.bottom;
+  if (shown($('dock'))) vb = Math.min(vb, $('dock').getBoundingClientRect().top);
+  return { left: r.left + parseFloat(cs.paddingLeft), right: r.right - parseFloat(cs.paddingRight),
+    top: Math.max(vt, r.top), bottom: Math.min(vb, r.bottom), vt: vt, vb: vb };
+}
+function bgCaret(g) {
+  var p = clampInto(g.x, g.y, textBox(g)), c = caretAt(p.x, p.y);
+  return c && g.root.contains(c[0]) ? c : null;
+}
+function bgExtend() {
+  var c = bgCaret(bg);
+  if (c) window.getSelection().setBaseAndExtent(bg.anchor[0], bg.anchor[1], c[0], c[1]);
+}
+function bgTick() {
+  bg.raf = 0;
+  var b = textBox(bg), dy = edgeScroll(bg.y, b.vt, b.vb);
+  if (!dy) return;
+  if (bg.scroller) bg.scroller.scrollTop += dy; else window.scrollBy(0, dy);
+  bgExtend();
+  bg.raf = requestAnimationFrame(bgTick);
+}
+function bgEnd() {
+  if (bg) cancelAnimationFrame(bg.raf);
+  bg = null;
+  document.documentElement.classList.remove('ma-bgdrag');
+}
+function bgStart(e) {
+  if (!e.target.matches(BG)) return;
+  var mode = $('views').dataset.mode, root = null;
+  if (mode === 'split') { var d = $('divider').getBoundingClientRect(); root = $(e.clientX < d.left + d.width / 2 ? 'v-src' : 'v-md'); }
+  else if (mode === 'src' || mode === 'view') root = $(mode === 'src' ? 'v-src' : 'v-md');
+  if (!root || !shown(root)) return;
+  document.documentElement.classList.add('ma-bgdrag');   // làn đã đọc không chắn chỗ con trỏ chữ (css/review.css)
+  var g = { root: root, scroller: mode === 'split' ? root.parentNode : null, x: e.clientX, y: e.clientY, moved: false, raf: 0 };
+  var c = bgCaret(g), sel = window.getSelection();
+  if (!c) { bgEnd(); return; }
+  g.anchor = e.shiftKey && sel.rangeCount && root.contains(sel.anchorNode) ? [sel.anchorNode, sel.anchorOffset] : c;
+  bg = g;
+  if (e.shiftKey) { g.moved = true; bgExtend(); } else sel.removeAllRanges();   // bấm nền bỏ vùng chọn cũ, như trình duyệt
+}
+
 export function initSelection() {
-  /* Kéo bắt đầu ở vùng nền (lề trái / phải của khung, nền trang quanh khung) cũng là bôi đen: thả ra mà vùng chọn
-     nằm trong văn bản thì mở hộp nhận xét như kéo trên chữ. Bỏ qua nút, ô nhập, panel, hộp thoại, vách kéo, và bấm
-     trên thanh cuộn (offsetX/Y vượt clientWidth/Height). */
+  /* Chuột / bút: thả ra mà vùng chọn nằm trong văn bản thì mở hộp nhận xét, dù kéo bắt đầu ở đâu (nền: bgStart). Bỏ qua
+     nút, ô nhập, hộp thoại, thanh trên, cây, vách kéo, và bấm trên thanh cuộn (offsetX/Y vượt clientWidth/Height). */
   document.addEventListener('pointerdown', function (e) {
-    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    if (e.pointerType === 'touch' || e.button !== 0) return;
     var t = e.target;
-    if (!t || !t.closest || t.closest('button, input, textarea, select, label, a, summary, [contenteditable], .ma-panel, .ma-pop, dialog, .ma-bar, .ma-divider, #panel-grip, .ma-dock, #fab, .ma-mm')) return;
+    if (!t || !t.closest || t.closest('button, input, textarea, select, label, a, summary, [contenteditable], .ma-pop, dialog, .ma-bar, .ma-tree, .ma-divider, #panel-grip, .ma-dock, #fab, .ma-mm')) return;
     if (t.nodeType === 1 && t !== document.documentElement && (e.offsetX > t.clientWidth || e.offsetY > t.clientHeight)) return;
     dragging = true;
+    bgStart(e);
   }, true);
+  /* Kéo từ nền: trình duyệt không tự bôi đen (nó sẽ chọn chữ của panel hay không chọn gì), không đổi focus; ô đang gõ
+     ngoài hộp nhận xét thì rời như khi bấm nền. */
+  document.addEventListener('mousedown', function (e) {
+    if (!bg) return;
+    e.preventDefault();
+    var a = document.activeElement;
+    if (a && a !== document.body && !$('pop').contains(a)) a.blur();
+  }, true);
+  document.addEventListener('pointermove', function (e) {
+    if (!bg) return;
+    if (!(e.buttons & 1)) { bgEnd(); return; }   // thả ở chỗ không nhận pointerup
+    if (!bg.moved && Math.abs(e.clientX - bg.x) + Math.abs(e.clientY - bg.y) < 4) return;
+    bg.moved = true; bg.x = e.clientX; bg.y = e.clientY;
+    bgExtend();
+    if (!bg.raf) bg.raf = requestAnimationFrame(bgTick);
+  });
   ['v-src', 'v-md'].forEach(function (id) {
     var root = $(id);
     root.addEventListener('pointerdown', function (e) { if (e.pointerType === 'mouse' && e.button === 0) dragging = true; });
@@ -77,7 +153,8 @@ export function initSelection() {
       openEdit(m.dataset.ids.split(' ')[0], m);
     });
   });
-  document.addEventListener('pointerup', function (e) {
+  document.addEventListener('pointerup', function () {
+    if (bg) bgEnd();
     if (!dragging) return;
     dragging = false;
     if (picking) return;   // chọn nhiều dòng chỉ bằng lề số dòng

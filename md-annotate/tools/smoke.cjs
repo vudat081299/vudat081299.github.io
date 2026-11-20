@@ -782,6 +782,46 @@ const cornerClash = (page) => page.evaluate(() => {
     check(`kéo từ ${name} mở hộp nhận xét`, await sp.isVisible('#pop'));
     await sp.keyboard.press('Escape'); await sp.waitForTimeout(100);
   }
+  /* Kéo từ vùng nền (MDAN-064): ở Split, nền bên trái tâm vách bôi đen Source, bên phải (lề phải, cả panel nhận xét) bôi đen
+     Preview; mỗi điểm bắt dòng gần nhất ở cùng độ cao; thả ra mở hộp nhận xét. Panel, thanh trên, cây không bôi đen được, trừ ô
+     gõ chữ. Bấm nền panel (không kéo) bỏ vùng chọn cũ, không mở hộp. Kéo tới mép dưới thì khung cuộn theo. */
+  {
+    await sp.evaluate(() => {
+      const where = (n) => { const e = n && (n.nodeType === 1 ? n : n.parentElement); return !e ? '-' : e.closest('#v-src') ? 'src' : e.closest('#v-md') ? 'md' : 'other'; };
+      document.addEventListener('pointerup', () => { const s = getSelection(); window.__bgUp = { a: where(s.anchorNode), f: where(s.focusNode), n: s.toString().trim().length }; }, true);
+      document.getElementById('wrap-src').scrollTop = 0; document.getElementById('wrap-md').scrollTop = 0;
+    });
+    await sp.waitForTimeout(150);
+    const geo = await sp.evaluate(() => { const d = document.getElementById('doc').getBoundingClientRect(), pn = document.getElementById('panel').getBoundingClientRect();
+      const w = document.getElementById('wrap-md').getBoundingClientRect();
+      const ps = [...document.querySelectorAll('#v-md > p')].slice(0, 3).map((p) => { const r = p.getBoundingClientRect(); return r.top + r.height / 2; });
+      return { left: d.left - 10, right: Math.round((d.right + innerWidth) / 2), panel: pn.left + pn.width / 2, y1: ps[0], y2: ps[2], bottom: w.bottom }; });
+    const drag = async (x, y1, y2) => {
+      await sp.mouse.move(x, y1); await sp.mouse.down(); await sp.mouse.move(x, y2, { steps: 6 }); await sp.mouse.up(); await sp.waitForTimeout(200);
+      const r = { ...(await sp.evaluate(() => window.__bgUp)), pop: await sp.isVisible('#pop') };
+      await sp.keyboard.press('Escape'); await sp.waitForTimeout(100); return r;
+    };
+    for (const [name, x, want] of [['nền trang bên trái', geo.left, 'src'], ['lề trang bên phải', geo.right, 'md'], ['nền panel nhận xét', geo.panel, 'md']]) {
+      const r = await drag(x, geo.y1, geo.y2);
+      check(`Split: kéo từ ${name} bôi đen ${want === 'src' ? 'Source' : 'Preview'}, mở hộp nhận xét`, r.a === want && r.f === want && r.n > 20 && r.pop, JSON.stringify(r));
+    }
+    const us = await sp.evaluate(() => Object.fromEntries([['bar', '.ma-bar'], ['panel', '#panel .ma-panel__body'], ['tab', '#panel .ma-seg button, #panel button'], ['tree', '#tree'], ['head', '#p-head'], ['path', '#p-path']]
+      .map(([k, q]) => [k, getComputedStyle(document.querySelector(q)).userSelect])));
+    check('thanh trên, panel, cây không bôi đen được; ô gõ chữ trong panel thì được', us.bar === 'none' && us.panel === 'none' && us.tab === 'none' && us.tree === 'none' && us.head === 'text' && us.path === 'text', JSON.stringify(us));
+    await sp.evaluate(() => { const r = document.createRange(); r.selectNodeContents(document.querySelector('#v-md p')); getSelection().removeAllRanges(); getSelection().addRange(r); });
+    await sp.mouse.click(geo.panel, geo.y2); await sp.waitForTimeout(200);
+    const clk = { sel: await sp.evaluate(() => getSelection().toString()), pop: await sp.isVisible('#pop') };
+    check('bấm nền panel (không kéo): bỏ vùng chọn cũ, không mở hộp nhận xét', clk.sel === '' && !clk.pop, JSON.stringify(clk));
+    await sp.mouse.move(geo.panel, geo.y1); await sp.mouse.down(); await sp.mouse.move(geo.panel, geo.bottom + 40, { steps: 6 }); await sp.waitForTimeout(600); await sp.mouse.up(); await sp.waitForTimeout(200);
+    const auto = { top: await sp.evaluate(() => document.getElementById('wrap-md').scrollTop), ...(await sp.evaluate(() => window.__bgUp)) };
+    check('kéo từ nền quá mép dưới khung Preview: khung cuộn theo, vùng chọn dài ra', auto.top > 100 && auto.a === 'md' && auto.f === 'md' && auto.n > 200, JSON.stringify(auto));
+    await sp.keyboard.press('Escape'); await sp.waitForTimeout(100);
+    await sp.evaluate(() => { document.getElementById('wrap-md').scrollTop = 0; getSelection().removeAllRanges(); });
+    await sp.keyboard.press('Control+a');
+    const all = await sp.evaluate(() => getSelection().toString());
+    check('Ctrl+A: chọn văn bản, không lấy chữ của thanh trên, panel', all.includes('Short paragraph number 3.') && !/Copy prompt|Comments|History/.test(all), all.length);
+    await sp.evaluate(() => getSelection().removeAllRanges()); await sp.keyboard.press('Escape');
+  }
   // Văn bản có định nghĩa link `[id]: url` (marked bỏ khối ấy): section ở Source vẫn khớp Preview, không lệch dòng.
   const demo = require('fs').readFileSync(require('path').join(__dirname, 'fixtures/markdown-it-demo.md'), 'utf8');
   await sp.click('.ma-tab[data-view="edit"]');

@@ -1,8 +1,9 @@
 /* Chỗ đặt hộp nổi cạnh một đoạn, thuần (chỉ số): dưới đoạn; dưới không đủ mà trên đủ thì lên trên; rồi giữ trọn
    trong khung nhìn (hộp có thể che đoạn, còn hơn nút Save nằm ngoài màn hình khi trang khoá cuộn ở Split).
    Tấm đáy (điện thoại, cảm ứng) thì không đặt chỗ mà cuộn trang để đoạn nằm ngay trên tấm (sheetReveal); nút nổi
-   Comment on selection ở phía không có đoạn chọn (fabSide).
-   Xuất: fabSide, popPlace, sheetReveal.
+   Comment on selection ở phía không có đoạn chọn (fabSide). Kéo từ vùng nền: điểm chuột kéo vào hộp chữ (clampInto), cuộn
+   khi kéo quá mép (edgeScroll).
+   Xuất: clampInto, edgeScroll, fabSide, popPlace, sheetReveal.
    Dùng: không module nào. */
 
 /* rect: { top, bottom, left } của đoạn trong khung nhìn, hoặc null (giữa màn hình); pw, ph: cỡ hộp; vw, vh: cỡ khung
@@ -29,4 +30,16 @@ export function sheetReveal(top, bottom, sheetTop, head, gap) {
    hoặc chạm dải của nút. Trả 'top' | 'bottom'. */
 export function fabSide(top, bottom, fabTop, vh) {
   return (top + bottom) / 2 > vh / 2 || bottom > fabTop - 8 ? 'top' : 'bottom';
+}
+/* Kéo từ vùng nền (ui/selection.js): đưa điểm (x, y) vào trong hộp chữ box { left, right, top, bottom } (lùi 1px khỏi mép)
+   để bắt dòng gần nhất: trái hộp là đầu dòng, phải hộp là cuối dòng, trên / dưới hộp là dòng đầu / cuối đang thấy. */
+export function clampInto(x, y, box) {
+  return { x: Math.min(Math.max(x, box.left + 1), box.right - 1), y: Math.min(Math.max(y, box.top + 1), box.bottom - 1) };
+}
+/* Kéo tới gần mép trên / dưới vùng thấy [top, bottom] (trong dải 16px) hay quá mép: cuộn bao nhiêu px mỗi khung hình (âm là
+   lên), theo khoảng vào dải, tối đa 24. Dải trong mép: con trỏ không ra được ngoài cửa sổ (toàn màn hình) vẫn cuộn được. */
+var EDGE = 16;
+export function edgeScroll(y, top, bottom) {
+  var d = y < top + EDGE ? y - top - EDGE : y > bottom - EDGE ? y - bottom + EDGE : 0;
+  return Math.max(-24, Math.min(24, Math.trunc(d / 2)));
 }
