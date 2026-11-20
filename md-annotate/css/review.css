@@ -1,6 +1,6 @@
 /* Đánh dấu đã đọc (MDAN-013, ui/review.js, ui/review-panel.js): làn dấu cạnh khối, làm mờ khối đã đọc, nút ✓ Reviewed
    của hộp nhận xét, viên thuốc ở máy hẹp, tab Review của panel. Nạp sau focus.css, trước mobile.css.
-   ✓ là ảnh --ic-check (--on-accent trên --accent, 6,5:1); ○ (đã đổi chữ) là vòng --ink-3 (≥ 3:1), không dùng xanh làm chữ. */
+   ✓ là ảnh --ic-check (--on-accent trên --accent, 6,5:1), viền --done-edge; ○ (đã đổi chữ) là vòng --ink-3 (≥ 3:1), không dùng xanh làm chữ. */
 
 /* BỘ DẤU ĐÃ ĐỌC: một hình, một bộ trạng thái, khai báo ở đây, dùng chung cho làn (.ma-lane__b::after) và dàn ý tab Review
    (.ma-rvs__ic::after); ô đánh dấu của form (base.css) dùng cùng ảnh ✓. Tròn là một khối, vuông là cả section.
@@ -20,16 +20,12 @@
 }
 .ma-lane__b.is-head.sec-changed::after, .ma-rvs.is-changed .ma-rvs__ic::after, .ma-lane__b.is-changed::after { border-color: var(--ink-3); }
 .ma-lane__b.is-changed::after { background-color: var(--surface); }
-/* ✓ mờ viền đứt: rê lên khối chưa đọc, khối X sẽ đánh dấu (.is-cur), khối được gợi ý (.is-sug, nền xanh nhạt). */
+/* Hai dấu tách bạch (MDAN-052). Gợi ý theo thời gian đọc (.is-sug): đĩa xanh nhạt đặc --sug-fill, ✓ mờ (--ic-check-hint
+   ≥ 3:1 trên nó), không viền. Đơn vị hiện tại (.is-cur: X, viên thuốc sẽ đánh dấu nó): vạch dọc mảnh --edge-on sát mép phải
+   làn, suốt khối, không ✓ (bóng ngoài lệch phải: không đổi bố cục, không đụng ::after / ::before). Rê khối chưa đọc: ✓ mờ viền đứt. */
 @media (hover: hover) { .ma-lane__b.is-todo:not(.is-head):hover::after { border: 1px dashed var(--ink-4); background-image: var(--ic-check-hint); } }
-html.ma-reviewing .ma-lane__b.is-cur.is-todo:not(.is-head)::after,
-.ma-lane .ma-lane__b.is-sug:not(.is-head)::after { border: 1.5px dashed var(--ink-3); background-color: var(--surface); background-image: var(--ic-check-hint); }
-.ma-lane .ma-lane__b.is-sug:not(.is-head)::after { background-color: var(--hl-2); }
-@media (hover: hover) { .ma-lane__b.is-sug:not(.is-head):hover::after { border-style: solid; } }
-/* Vòng ngoài: khối X sẽ đánh dấu khi nó đã có dấu, hay là tiêu đề. */
-html.ma-reviewing .ma-lane__b.is-cur:not(.is-todo)::after,
-html.ma-reviewing .ma-lane__b.is-cur.is-head::after,
-html.ma-reviewing .ma-lane__b.is-sug.is-cur:not(.is-head)::after { box-shadow: 0 0 0 2px var(--surface), 0 0 0 3px var(--edge-on); }
+.ma-lane .ma-lane__b.is-sug:not(.is-head)::after { border-color: var(--sug-fill); background-color: var(--sug-fill); background-image: var(--ic-check-hint); }
+html.ma-reviewing .ma-lane__b.is-cur, .ma-lane .ma-lane__b.is-cur.is-sug { box-shadow: 3px 0 0 -1px var(--edge-on); }
 /* LÀN: lớp phủ trong #wrap-*, nút đặt tuyệt đối theo toạ độ JS tính; không chữ, không chọn được. */
 .ma-view { position: relative; }
 .ma-lane { position: absolute; left: 0; top: 0; width: 0; height: 0; -webkit-user-select: none; user-select: none; }

@@ -1,11 +1,12 @@
 /* Gợi ý đã đọc theo thời gian đọc (MDAN-016): đo thời gian mỗi đơn vị chạm dải đọc (cùng luật dải của Focus band, chạy
-   cả khi Focus tắt), đơn vị rời dải đi lên sau đủ thời gian thành "gợi ý": dấu ✓ viền đứt trên làn (.is-sug) và nút
-   "Accept N suggested" ở tab Review. Không bao giờ tự đánh dấu: chấp nhận bằng X, bấm làn (ui/review.js) hay nút.
+   cả khi Focus tắt), đơn vị rời dải đi lên sau đủ thời gian thành "gợi ý": đĩa ✓ xanh nhạt trên làn (.is-sug), nút
+   "Accept N suggested" ở tab Review và, ở màn cảm ứng, "Accept N" trên viên thuốc (MDAN-052). Không bao giờ tự đánh dấu:
+   chấp nhận bằng X, bấm làn (ui/review.js) hay nút (acceptSug).
    Chỉ đếm khi tab hiện, cửa sổ có focus, người dùng không rảnh tay quá 60 s; cuộn do trang (J / K / X, dải tiến độ, cuộn
    theo nhau, setByPage) không tính là đọc; đơn vị chỉ được gợi ý khi rời dải lúc người dùng tự cuộn (bánh xe, chạm,
    phím cuộn, kéo thanh cuộn). Gợi ý và thời gian chỉ ở bộ nhớ của file đang mở (docKey), không lưu.
    Toán ở core/dwell.js; toạ độ làn, dải đọc, lớp .is-sug của làn và việc ghi dấu ở ui/review.js.
-   Xuất: initDwell, noteJump, noteLayout, sugIdx, syncSug.
+   Xuất: acceptSug, initDwell, noteJump, noteLayout, sugIdx, syncSug.
    Dùng: core/dwell.js, core/review.js, core/text.js, ui/dom.js, ui/store.js, ui/state.js, ui/views.js, ui/review.js. */
 import { dwellStep, sugKeys, sugList, unitWords } from '../core/dwell.js';
 import { markWord, setMarks } from '../core/review.js';
@@ -87,7 +88,8 @@ export function syncSug(r) {
   syncPanel(r);
 }
 
-function acceptAll() {
+/* Chấp nhận mọi gợi ý đang hiện: một lần ghi dấu, toast có Undo (trả cả gợi ý). */
+export function acceptSug() {
   var r = rvState(), km = keysOf(r), idx = sugIdx(r);
   if (!idx.length) return;
   var sb = Object.assign({}, sug);
@@ -139,6 +141,6 @@ export function initDwell() {
     tr = {}; sug = {}; rebase = true;
     repaintLanes(); syncPanel(rvState());
   });
-  $('rv-sug-ok').addEventListener('click', acceptAll);
+  $('rv-sug-ok').addEventListener('click', acceptSug);
   $('rv-sug-x').addEventListener('click', dismissAll);
 }

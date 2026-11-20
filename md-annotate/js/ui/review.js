@@ -1,5 +1,6 @@
 /* Đánh dấu đã đọc (MDAN-013): làn dấu cạnh từng đơn vị ở Source (bên phải vạch nhận xét) và Preview (lề trái), phím
-   X / Shift+X / J / K, nút ✓ Reviewed của hộp nhận xét, viên thuốc "✓ Done · next ↓" ở máy hẹp / cảm ứng, làm mờ đơn vị
+   X / Shift+X / J / K, nút ✓ Reviewed của hộp nhận xét, viên thuốc "✓ Done · next ↓" ở máy hẹp / cảm ứng (có gợi ý ở màn
+   cảm ứng thì "Accept N", MDAN-052), làm mờ đơn vị
    đã đọc (.is-rv, html.ma-rvdim). Đơn vị, neo dấu, tiến độ ở core/review.js; tab Review ở ui/review-panel.js.
    Làn là lớp phủ .ma-lane trong #wrap-src / #wrap-md (ngoài #v-src / #v-md: text của khung không đổi). Vẽ lại sau mỗi
    renderAll() (applyReview) và khi khung đổi cỡ (ResizeObserver); đánh dấu (setReviews) chỉ tô lại nút có sẵn.
@@ -21,7 +22,7 @@ import { allDone, linesWord, markWord, nextOpen, progress, resolveMarks, reviewR
 import { lexSpans } from '../core/blocks.js';
 import { docOf } from '../core/session.js';
 import { wantsReview } from '../core/prompt.js';
-import { $, h, mqSheet, mqSide, reduceMotion, shown, toast, typing } from './dom.js';
+import { $, h, mqSheet, mqSide, mqTouch, reduceMotion, shown, toast, typing } from './dom.js';
 import { D, docKey, S, saveClosed, scheduleSave, sessionFor } from './state.js';
 import { mdLex } from './markdown.js';
 import { refreshTree } from './files.js';
@@ -32,7 +33,7 @@ import { closePop, pending, pop, popDirty, renderPopHints } from './popup.js';
 import { clearPicks } from './picks.js';
 import { renderPrompt } from './prompt.js';
 import { renderReviewPanel } from './review-panel.js';
-import { noteJump, noteLayout, sugIdx, syncSug } from './dwell.js';
+import { acceptSug, noteJump, noteLayout, sugIdx, syncSug } from './dwell.js';
 import { drawMinimap } from './minimap.js';
 
 /* Đơn vị và dấu đã neo của văn bản đang mở: { units, res, secs }. Nhớ theo văn bản, mảng dấu và khối nguồn. */
@@ -197,7 +198,7 @@ function restyleLanes(r) {
       if (b.title !== t) b.title = t;
     });
   });
-  paintCur(); drawMinimap();
+  paintCur(); drawMinimap(); syncPill(r);
 }
 /* Gợi ý đổi (ui/dwell.js): tô lại làn và dải tiến độ. */
 export function repaintLanes() { if (laneUnits === rvState().units) restyleLanes(rvState()); }
@@ -269,9 +270,9 @@ export function applyReview(marksOnly) {
   paintDone(r);
   if (marksOnly && laneUnits === r.units) restyleLanes(r); else layoutLanes();
   renderReviewPanel(r, p, blind);
+  syncSug(r);   // trước viên thuốc: bỏ gợi ý của đơn vị vừa đánh dấu
   syncPill(r, p);
   syncPopRv();
-  syncSug(r);
 }
 
 /* ĐƠN VỊ HIỆN TẠI: dưới con trỏ khi Focus mode theo chuột, không thì đơn vị chạm dải đọc 25–50% (core/sections.js) của
@@ -399,14 +400,20 @@ function popReviewed() {
   try { window.getSelection().removeAllRanges(); } catch (e) {}
 }
 
-/* VIÊN THUỐC ở máy hẹp / cảm ứng: khi phiên đã có dấu, hoặc đã mở tab Review. */
-var touched = false;
+/* VIÊN THUỐC ở máy hẹp / cảm ứng: khi phiên đã có dấu, hoặc đã mở tab Review. Màn cảm ứng có gợi ý (không có phím X, làn
+   nhỏ): viên thuốc thành "Accept N", hiện cả khi chưa có dấu nào. */
+var touched = false, PILL_TIP = '';
 export function setRvTouched() { touched = true; syncPill(); }
+function pillSug(r) { return mqTouch.matches ? sugIdx(r).length : 0; }
 function syncPill(r, p) {
   r = r || rvState(); p = p || progress(r.units, r.res.state);
-  var want = (!mqSide.matches || mqSheet.matches) && view !== 'edit' && !!D.text && r.units.length > 0 && (D.reviews.length > 0 || touched);
-  $('rv-pill').hidden = !want;
-  if (want) $('rv-pill-t').textContent = p.pct === 100 ? 'All reviewed ✓' : '✓ Done · next ↓';
+  var ns = pillSug(r), b = $('rv-pill');
+  var want = (!mqSide.matches || mqSheet.matches) && view !== 'edit' && !!D.text && r.units.length > 0 && (D.reviews.length > 0 || touched || ns > 0);
+  b.hidden = !want;
+  if (!want) return;
+  PILL_TIP = PILL_TIP || b.title;
+  $('rv-pill-t').textContent = ns ? 'Accept ' + ns : p.pct === 100 ? 'All reviewed ✓' : '✓ Done · next ↓';
+  b.title = ns ? 'Mark the ' + plural(ns, 'block') + ' that look read (pale green ✓) reviewed' : PILL_TIP;
 }
 
 export function initReview() {
@@ -440,6 +447,7 @@ export function initReview() {
   /* Viên thuốc chỉ đánh dấu, không bỏ dấu: đơn vị ở dải đọc đã đọc thì chỉ tới đơn vị chưa đọc kế tiếp. */
   $('rv-pill').addEventListener('click', function () {
     var r = rvState(), cur = currentUnit();
+    if (pillSug(r)) { acceptSug(); return; }
     if (cur >= 0 && r.res.state[cur] === 'done') stepOpen(1, cur); else markCurrent(false);
   });
   /* X, Shift+X, J, K: bỏ qua khi đang gõ, khi hộp thoại hay hộp nhận xét mở, khi có phím bổ trợ khác Shift. */

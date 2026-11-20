@@ -20,7 +20,7 @@
       "title": "Review",
       "note": "Mark the blocks you have read. Keys work when you are not typing and no box is open.",
       "rows": [
-        { "keys": [["X"]], "action": "Mark or unmark the block in the reading band (under the pointer in pointer Focus mode); after marking, go to the next unreviewed block" },
+        { "keys": [["X"]], "action": "Mark or unmark the block in the reading band, shown by a thin bar beside it (under the pointer in pointer Focus mode); after marking, go to the next unreviewed block" },
         { "keys": [["Shift", "X"]], "action": "Mark or unmark the whole section of that block" },
         { "keys": [["J"], ["K"]], "action": "Next / previous unreviewed block" },
         { "keys": [["Click"]], "action": "The lane beside a block: mark, unmark, or confirm a changed block (○)" },
@@ -29,8 +29,9 @@
         { "keys": [["✓ Reviewed"]], "action": "In the comment box: mark the whole blocks touched by the selection or the picked lines" },
         { "keys": [["✓ Done · next ↓"]], "action": "Phone / touch: mark the block in the reading band and go to the next unreviewed one" },
         { "keys": [["Click"], ["Drag"]], "action": "The progress strip at a pane's right edge: scroll there (mouse only)" },
-        { "keys": [["X"], ["Click"]], "action": "A dashed ✓ suggested from your reading time: accept it, marking the block reviewed" },
-        { "keys": [["Accept N suggested"]], "action": "Review tab: mark every block with a dashed ✓ reviewed" }
+        { "keys": [["X"], ["Click"]], "action": "A pale green ✓ suggested from your reading time: accept it, marking the block reviewed" },
+        { "keys": [["Accept N suggested"]], "action": "Review tab: mark every block with a pale green ✓ reviewed" },
+        { "keys": [["Accept N"]], "action": "Touch: the button at the bottom right, when blocks look read: mark them all reviewed (Undo in the message)" }
       ]
     },
     {
