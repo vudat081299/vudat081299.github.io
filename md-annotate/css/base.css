@@ -4,7 +4,8 @@
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 /* Nền đặt rõ ở cả html: Safari coi gốc trong suốt là trắng khi tô vùng thanh trạng thái. */
-html { -webkit-text-size-adjust: 100%; background-color: var(--bg); }
+/* Trang không nảy khi kéo quá đầu / cuối: thanh trên (sticky) không trôi khỏi cột cây (fixed). */
+html { -webkit-text-size-adjust: 100%; background-color: var(--bg); overscroll-behavior-y: none; }
 /* Split vừa khít khung nhìn: khoá cuộn trang, để thanh cuộn chính không chập chờn khi trang dư hay thiếu 1px. */
 html.ma-fit { overflow: hidden; }
 body {
