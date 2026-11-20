@@ -237,8 +237,9 @@ export function renderTree(m, actions) {
   if (editing && !(editing.id in at)) editing = null;
   reconcile($('tree-list'), want);
   var nf = m.nodes.filter(function (n) { return n.kind === 'file'; }).length;
-  $('tree-title').textContent = m.title || 'Files';
-  $('tree-title').title = (m.title || 'Files') + ' · ' + plural(nf, 'file');
+  /* Phiên trống chưa có tên: không lặp chữ "Files" dưới nhãn FILES. */
+  $('tree-title').textContent = m.title || 'Untitled session';
+  $('tree-title').title = (m.title || 'Untitled session') + ' · ' + plural(nf, 'file');
   $('tree').classList.toggle('is-sparse', m.nodes.length <= 1);
 
   /* Hàng hiện tại vừa mất (xoá, gập folder chứa nó): hàng vào chỗ nó; chưa có thì file mở. */

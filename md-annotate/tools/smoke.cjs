@@ -2169,6 +2169,8 @@ const cornerClash = (page) => page.evaluate(() => {
     const ren = () => tp.$eval('#tree-list', (ul) => { const i = ul.querySelector('.ma-trow__ren'); return i ? { v: i.value, f: document.activeElement === i, sel: i.value.slice(i.selectionStart, i.selectionEnd) } : null; });
     let rn = await ren();
     check('cây: F2 mở ô đổi tên, chọn phần tên trước đuôi', rn && rn.v === 'README.md' && rn.f && rn.sel === 'README', JSON.stringify(rn));
+    const selBg = await tp.$eval('.ma-trow__ren', (i) => [getComputedStyle(i, '::selection').backgroundColor, getComputedStyle(document.body, '::selection').backgroundColor]);
+    check('cây: vùng chọn khi đổi tên nhạt hơn vùng chọn chung (có alpha)', selBg[0] !== selBg[1] && /rgba?\(.*,\s*0?\.\d+\)|color\(srgb .* \/ 0?\.\d+\)/.test(selBg[0]), JSON.stringify(selBg));
     await tp.keyboard.type('a/b'); await tp.keyboard.press('Enter'); await tp.waitForTimeout(80);
     rn = await ren();
     check('cây: tên sai thì toast lỗi, vẫn đang sửa', rn && rn.f && (await tp.isVisible('#toast')) && /cannot/.test(await tp.textContent('#toast')), JSON.stringify(rn));
