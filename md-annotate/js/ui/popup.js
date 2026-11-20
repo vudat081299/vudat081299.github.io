@@ -14,7 +14,7 @@ import { popPlace } from '../core/place.js';
 import { pickSummary } from '../core/picks.js';
 import { $, h, mqSheet, paintHL, shown, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
-import { S, scheduleSave } from './state.js';
+import { D, scheduleSave } from './state.js';
 import { recordUse, seedState, stats } from './hints.js';
 import { markActive } from './marks.js';
 import { anchors, mdText, numbers, ordered, orphans, renderAll } from './render.js';
@@ -30,7 +30,7 @@ export var pending = null;   // đoạn đang chọn (kết quả quoteFrom, ho�
    đã chọn; khung kia tìm bằng locate, như neo nhận xét. */
 function pendingPos() {
   return {
-    src: pending.origin === 'src' ? [pending.s, pending.e] : locate(pending, S.text, true),
+    src: pending.origin === 'src' ? [pending.s, pending.e] : locate(pending, D.text, true),
     md: pending.origin === 'md' ? [pending.s, pending.e] : (mdText ? locate(pending, mdText, false) : null)
   };
 }
@@ -91,7 +91,7 @@ function markLong() {
   q.classList.toggle('is-long', q.scrollHeight > q.clientHeight + 1);
 }
 export function openEdit(id, anchorEl) {
-  var c = findComment(S, id);
+  var c = findComment(D, id);
   if (!c) return;
   if (pop.mode === 'new') clearPending();
   if (pop.id) markActive(pop.id, false);
@@ -154,11 +154,11 @@ function savePop(textOverride) {
   if (!t) { $('pop-text').focus(); toast('Type a comment or pick a hint.'); return; }
   var id, lines = pop.mode === 'new' && pending && pending.lines;
   if (pop.mode === 'new' && pending) {
-    id = addComment(S, pending, t);
+    id = addComment(D, pending, t);
     recordUse(t);
   } else if (pop.mode === 'edit') {
     id = pop.id;
-    if (editComment(S, id, t)) recordUse(t);
+    if (editComment(D, id, t)) recordUse(t);
   }
   closePop(true);
   if (lines) clearPicks();   // lưu xong thì thoát chế độ chọn dòng

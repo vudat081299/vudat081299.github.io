@@ -1,12 +1,13 @@
 /* Hộp History: danh sách phiên đã lưu, mở, đổi tên, xoá; số phiên trên nút.
    Xuất: initHistory, renderHistCount.
-   Dùng: core/text.js, core/session.js, ui/store.js, ui/dom.js, ui/state.js, ui/editor.js. */
+   Dùng: core/text.js, core/session.js, ui/store.js, ui/dom.js, ui/state.js, ui/editor.js, ui/files.js. */
 import { plural } from '../core/text.js';
 import { indexWithout, renameIndex, renameSession } from '../core/session.js';
 import { KEY, store } from './store.js';
 import { $, h, icon, toast } from './dom.js';
 import { flushSave, loadIndex, loadSession, newSession, replaceDeleted, S, saveNow, switchTo } from './state.js';
 import { syncInputs } from './editor.js';
+import { refreshTree } from './files.js';
 
 var dateFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 export function renderHistCount() {
@@ -20,7 +21,7 @@ function renderHist() {
   if (!idx.length) ol.append(h('li', { class: 'ma-sub' }, 'No sessions yet. Sessions with text appear here automatically.'));
   idx.forEach(function (e) {
     var cur = e.id === S.id;
-    var meta = dateFmt.format(new Date(e.updated)) + ' · ' + plural(e.count || 0, 'comment') + ' · ' + (e.chars || 0).toLocaleString('en') + ' chars' + (e.rv != null ? ' · ' + e.rv + '% reviewed' : '') + (cur ? ' · open' : '');
+    var meta = dateFmt.format(new Date(e.updated)) + ' · ' + (e.files > 1 ? plural(e.files, 'file') + ' · ' : '') + plural(e.count || 0, 'comment') + ' · ' + (e.chars || 0).toLocaleString('en') + ' chars' + (e.rv != null ? ' · ' + e.rv + '% reviewed' : '') + (cur ? ' · open' : '');
     var main = h('button', {
       class: 'ma-row__main', type: 'button', title: cur ? 'Current session' : 'Open this session',
       onclick: function () {
@@ -57,7 +58,7 @@ function renameRow(row, main, e) {
 function setSessionName(id, name) {
   if (id === S.id) {
     renameSession(S, name);
-    saveNow(); syncInputs();
+    saveNow(); syncInputs(); refreshTree();
     return;
   }
   var s = loadSession(id);

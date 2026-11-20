@@ -145,6 +145,7 @@ export function removeNode(nodes, id) {
 }
 /* Nạp danh sách đường dẫn ('a/b/c.md', tính từ parentId) thành file: dựng folder trung gian, gộp vào folder đã có cùng
    tên (không phân biệt hoa thường); file trùng tên một nút đã có thì đổi tên bằng uniqueName. mkId(kind) cho id mới.
+   Đường dẫn kết thúc bằng '/' ('a/empty/') chỉ dựng folder (folder rỗng nạp từ đĩa), không có trong ids.
    Đoạn rỗng và '.' bị bỏ ('a//b', './a'); đường dẫn có đoạn không dùng được ('..', quá dài) bị bỏ, không có trong ids.
    Trả { nodes, ids: { path: fileId } } (khoá là đường dẫn đúng như đưa vào). */
 export function fromPaths(nodes, parentId, paths, mkId) {
@@ -156,10 +157,10 @@ export function fromPaths(nodes, parentId, paths, mkId) {
   out.forEach(function (n) { at(parentOf(n)).set(nameKey(n.name), n); });
   (paths || []).forEach(function (path) {
     if (typeof path !== 'string') return;
-    var segs = path.split(/[\/\\]/).filter(function (x) { return x && x !== '.'; });
+    var segs = path.split(/[\/\\]/).filter(function (x) { return x && x !== '.'; }), dirOnly = /[\/\\]$/.test(path);
     if (!segs.length || segs.some(function (x) { return nameError([], null, x, null); })) return;
     var p = root;
-    for (var i = 0; i < segs.length - 1; i++) {
+    for (var i = 0; i < segs.length - (dirOnly ? 0 : 1); i++) {
       var have = at(p).get(nameKey(segs[i]));
       if (!have || have.kind !== 'dir') {
         var nm = have ? freeName(new Set(at(p).keys()), segs[i]) : segs[i];
@@ -170,6 +171,7 @@ export function fromPaths(nodes, parentId, paths, mkId) {
       }
       p = have.id;
     }
+    if (dirOnly) return;
     var name = freeName(new Set(at(p).keys()), segs[segs.length - 1]);
     var f = { id: mkId('file'), parent: p, kind: 'file', name: name };
     out.push(f); at(p).set(nameKey(name), f);

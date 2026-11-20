@@ -19,6 +19,10 @@
 - MDAN-019 · Chọn một dải dòng bằng Shift + bấm hoặc kéo trên lề số · `md-annotate/js/ui/picks.js`
 - MDAN-020 · Vòng focus chỉ hiện sau phím Tab · `md-annotate/css/**`, `md-annotate/js/main.js`
 - MDAN-021 · Độ sáng của khối đã đọc chỉnh ở Settings · `md-annotate/`
+- MDAN-022 · Một phiên là một cây folder + file, lưu trong trình duyệt · `md-annotate/`
+- MDAN-023 · Cây file hiện mặc định khi phiên có từ hai mục · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`
+- MDAN-024 · Mở file từ đĩa thêm vào cây cạnh file đang mở · `md-annotate/`
+- MDAN-025 · Prompt cho mọi file là một tuỳ chọn, mặc định chỉ file đang mở · `md-annotate/`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -164,3 +168,32 @@ thoại, đóng hộp, chạm hay bấm chuột thì không có vòng; bấm chu
 
 Hộp *Settings* có mục *Dim reviewed blocks*: cùng công tắc với ô *Dim reviewed* ở tab Review, thêm thanh kéo độ sáng
 của khối đã đọc (10–80%, mặc định 40%), áp ngay khi kéo.
+
+## MDAN-022 · Một phiên là một cây folder + file, lưu trong trình duyệt
+20/11/2026 · `md-annotate/`
+
+Một phiên chứa cả một cây folder và file chữ, sâu bao nhiêu cũng được, mỗi file có nhận xét và dấu đã đọc riêng; cây
+hiện ở cột trái (máy hẹp: tấm trượt trái). Cây lưu trong bộ nhớ trình duyệt, một khoá cho cả phiên. Nạp folder từ đĩa là
+bản sao (bỏ mục ẩn, `node_modules`, file không phải chữ hay lớn hơn 1 MB); tải về từng file `.md`, một folder hay cả
+phiên `.zip`. Trang không ghi ngược ra đĩa; lớp lưu tách riêng để sau có thể thêm chế độ folder thật mà không đổi nghiệp vụ.
+Phiên một văn bản cũ thành cây một file, prompt giữ nguyên.
+
+## MDAN-023 · Cây file hiện mặc định khi phiên có từ hai mục
+20/11/2026 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/files.js`
+
+Chưa chọn thì cây chỉ hiện khi phiên có từ hai mục, để người dùng một file vẫn có *Split* ở 1280px. Ctrl/⌘ + B hay nút
+trên thanh trên ẩn / hiện cây, lựa chọn được nhớ. Nạp folder xong thì cây hiện. Xoá không hỏi, có Undo.
+
+## MDAN-024 · Mở file từ đĩa thêm vào cây cạnh file đang mở
+20/11/2026 · `md-annotate/`
+
+Mở hay thả một file: file đang mở còn trống (không chữ, không nhận xét) thì file ấy nhận chữ và tên; không thì file mới
+vào cùng folder với file đang mở và được mở. Không còn mở phiên mới, không ghi ô *Folder*. *Sample text* giữ như cũ:
+phiên có nội dung thì mở phiên mới.
+
+## MDAN-025 · Prompt cho mọi file là một tuỳ chọn, mặc định chỉ file đang mở
+20/11/2026 · `md-annotate/`
+
+*Options* có ô *All files* (lưu theo phiên, ẩn khi phiên có một file). Tắt: prompt, chép, tải chỉ gồm file đang mở.
+Bật: một prompt gom nhận xét của mọi file theo thứ tự cây, mỗi file một mục `## Tệp <đường dẫn>`, số chạy tiếp. Tab
+*Comments* luôn chỉ liệt kê file đang mở.

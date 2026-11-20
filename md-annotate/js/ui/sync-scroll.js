@@ -7,7 +7,7 @@
 import { lexSpans, pairBlocks } from '../core/blocks.js';
 import { followTop, syncCurves } from '../core/sync-math.js';
 import { $ } from './dom.js';
-import { S } from './state.js';
+import { D } from './state.js';
 import { mdLex } from './markdown.js';
 import { layoutVal } from './layout.js';
 import { isSplit } from './views.js';
@@ -17,10 +17,10 @@ import { isSplit } from './views.js';
 var pairMemo = { text: null, first: undefined, val: null };
 export function blockPairs() {
   var first = $('v-md').firstElementChild;
-  if (pairMemo.text !== S.text || pairMemo.first !== first) {
-    var spans = lexSpans(S.text, mdLex), blocks = Array.prototype.slice.call($('v-md').children);
+  if (pairMemo.text !== D.text || pairMemo.first !== first) {
+    var spans = lexSpans(D.text, mdLex), blocks = Array.prototype.slice.call($('v-md').children);
     var p = pairBlocks(spans.map(function (sp) { return sp.tag; }), blocks.map(function (el) { return el.tagName; }));
-    pairMemo = { text: S.text, first: first, val: { spans: spans, blocks: blocks, toMd: p.md, toSrc: p.src } };
+    pairMemo = { text: D.text, first: first, val: { spans: spans, blocks: blocks, toMd: p.md, toSrc: p.src } };
   }
   return pairMemo.val;
 }
@@ -35,7 +35,7 @@ function paneY(pane, el, bottom) {
 }
 function syncKey() {
   var ws = $('wrap-src'), wm = $('wrap-md');
-  return ws.scrollHeight + ':' + wm.scrollHeight + ':' + ws.clientWidth + ':' + wm.clientWidth + ':' + S.text.length;
+  return ws.scrollHeight + ':' + wm.scrollHeight + ':' + ws.clientWidth + ':' + wm.clientWidth + ':' + D.text.length;
 }
 function buildSyncMap() {
   var ws = $('wrap-src'), wm = $('wrap-md');

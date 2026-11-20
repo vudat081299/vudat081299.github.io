@@ -252,11 +252,12 @@
                     <label><input type="radio" name="fmt" value="inline" /><span>"Quote" — comment</span></label>
                     <label><input type="radio" name="fmt" value="block" /><span>&gt; Block quote</span></label>
                   </div>
+                  <label class="ma-check" id="all-row" title="One prompt with the comments of every file in this session" hidden><input type="checkbox" id="p-all" /> All files</label>
                   <label class="ma-check"><input type="checkbox" id="line-nums" /> Line numbers</label>
-                  <label class="ma-pathrow" id="path-row">
-                    <span class="ma-label">File</span>
+                  <label class="ma-pathrow" id="path-row" title="Folder of these files on disk: locations become folder/file:line">
+                    <span class="ma-label">Folder</span>
                     <input class="ma-input" id="p-path" type="text" spellcheck="false" autocomplete="off"
-                           placeholder="notes/a.md (optional)" aria-label="File path, locations become file:line" />
+                           placeholder="docs/ (optional)" aria-label="Folder path on disk, locations become folder/file:line" />
                   </label>
                   <label class="ma-check" id="rv-prompt-row" title="Adds a line listing the lines you marked reviewed, so the AI knows those parts are fine"><input type="checkbox" id="rv-prompt" /> Say which lines I reviewed</label>
                   <label class="ma-check"><input type="checkbox" id="inc-doc" /> Include the full text at the end</label>

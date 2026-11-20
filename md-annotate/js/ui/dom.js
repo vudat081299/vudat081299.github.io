@@ -1,6 +1,6 @@
 /* Tiện ích DOM: $(id), h() dựng phần tử, icon(), textNodes(), media query dùng chung, shown(), typing() (phím tắt
-   một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight).
-   Xuất: $, dragBar, h, hasHL, icon, mqSheet, mqSide, paintHL, reduceMotion, shown, textNodes, toast, typing.
+   một chữ), dragBar() (kéo vách), toast(), paintHL() (tô CSS Highlight), saveFile() (tải một Blob về máy).
+   Xuất: $, dragBar, h, hasHL, icon, mqSheet, mqSide, paintHL, reduceMotion, saveFile, shown, textNodes, toast, typing.
    Dùng: không module nào. */
 
 export function $(id) { return document.getElementById(id); }
@@ -101,4 +101,12 @@ export function toast(msg, action) {
   t.hidden = false;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function () { t.hidden = true; }, action ? 6000 : 2800);
+}
+
+/* Tải data (Blob) về máy với tên name: link tạm có download, bấm, thu hồi URL sau một giây. */
+export function saveFile(data, name) {
+  var url = URL.createObjectURL(data);
+  var a = h('a', { href: url, download: name });
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
 }

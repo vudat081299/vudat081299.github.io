@@ -12,10 +12,11 @@
    Xuất: không (chạy khi nạp).
    Dùng: ui/store.js, ui/dom.js, ui/state.js, ui/hints.js, ui/render.js, ui/list.js, ui/prompt.js, ui/views.js,
      ui/sync-scroll.js, ui/panel.js, ui/layout.js, ui/help.js, ui/focus.js, ui/popup.js, ui/selection.js, ui/picks.js,
-     ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js, ui/tree.js. */
+     ui/history.js, ui/editor.js, ui/review.js, ui/review-panel.js, ui/minimap.js, ui/dwell.js, ui/tree.js.
+   ui/files.js (cây của phiên) không có init: renderAll() vẽ cây lần đầu. */
 import { KEY, store } from './ui/store.js';
 import { $ } from './ui/dom.js';
-import { initState, S } from './ui/state.js';
+import { D, initState, S } from './ui/state.js';
 import { initHints, loadDefaultHints, renderHintsDlg } from './ui/hints.js';
 import { checkRenderer, renderAll } from './ui/render.js';
 import { initList } from './ui/list.js';
@@ -98,7 +99,7 @@ initState();
 checkRenderer();
 syncInputs();
 renderAll();
-setView(S.text ? view : 'edit');
+setView(D.text ? view : 'edit');
 renderHistCount();
 store.set(KEY.cur, S.id);
 

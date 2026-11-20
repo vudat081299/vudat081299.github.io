@@ -7,7 +7,7 @@
 import { locate } from '../core/anchor.js';
 import { $, hasHL, paintHL } from './dom.js';
 import { rangeAt, readSelection } from './anchor-dom.js';
-import { S } from './state.js';
+import { D } from './state.js';
 import { mdText } from './render.js';
 import { isSplit } from './views.js';
 import { closePop, openEdit, openNew, pop, popDirty } from './popup.js';
@@ -33,7 +33,7 @@ function mirrorSel() {
     var r = null;
     if (info) {
       var toSrc = info.origin === 'md';
-      var pos = toSrc ? locate(info, S.text, true) : (mdText ? locate(info, mdText, false) : null);
+      var pos = toSrc ? locate(info, D.text, true) : (mdText ? locate(info, mdText, false) : null);
       if (pos) r = rangeAt(toSrc ? $('v-src') : $('v-md'), pos[0], pos[1]);
     }
     paintHL('ma-mirror', r ? [r] : []);

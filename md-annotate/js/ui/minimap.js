@@ -15,7 +15,7 @@
 import { mmDots, mmScroll, mmSegments, mmView } from '../core/minimap.js';
 import { withSug } from '../core/review.js';
 import { $, h, shown } from './dom.js';
-import { S } from './state.js';
+import { D } from './state.js';
 import { isSplit, view } from './views.js';
 import { laneGeo, rvState } from './review.js';
 import { noteJump, sugIdx } from './dwell.js';
@@ -87,7 +87,7 @@ export function drawMinimap() {
   sizeStrips();
   ['src', 'md'].forEach(function (w) {
     var el = strips[w], gw = g[w] || [], wrap = wrapOf(w);
-    var ok = view !== 'edit' && !!S.text && !mqPhone.matches && shown(rootOf(w)) && gw.length > 0;
+    var ok = view !== 'edit' && !!D.text && !mqPhone.matches && shown(rootOf(w)) && gw.length > 0;
     el.hidden = !ok;
     var f = ok ? frameOf(w) : null;
     frames[w] = f;

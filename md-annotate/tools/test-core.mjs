@@ -777,6 +777,69 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     check('zipOf: cả cây', dec.decode(S.zipOf(s, new Date(2024, 0, 1)).subarray(30, 30 + 6)) === 'a/b.md');
   }
 }
+// ── nối cây vào giao diện: mở file từ đĩa, nạp folder, tải một folder, Undo ──
+{
+  const T = await import('../js/core/tree.js');
+  const S = await import('../js/core/session.js');
+  const X = await import('../js/core/text.js');
+  let k = 0; const mk = (kind) => kind[0] + (++k);
+  const byName = (s, name) => s.nodes.find((n) => n.name === name);
+  const paths = (s) => T.filesInOrder(s.nodes).map((id) => T.pathOf(s.nodes, id));
+  {
+    const r = T.fromPaths([], null, ['a/empty/', 'a/b.md', 'a/empty/'], mk);
+    check('fromPaths: đường dẫn kết thúc / chỉ dựng folder, không vào ids, không trùng', eq(r.nodes.map((n) => n.kind + ':' + n.name), ['dir:a', 'dir:empty', 'file:b.md']) && eq(Object.keys(r.ids), ['a/b.md']), JSON.stringify(r));
+  }
+  // Mở file từ đĩa (MDAN-024): file đang mở trống thì điền, không thì thêm cạnh nó.
+  {
+    const s0 = S.createSession('', {});
+    const a = S.openFromDisk(s0, 'ghi-chu.md', '# G\n');
+    check('openFromDisk: phiên trống — điền file đang mở, tên thật, phiên mang tên file', !a.added && a.id === s0.open && a.s.nodes.length === 1 && a.s.nodes[0].name === 'ghi-chu.md' && S.docOf(a.s).text === '# G\n' && S.docOf(a.s).real && a.s.name === 'ghi-chu' && a.s.named && S.docOf(s0).text === '', JSON.stringify(a.s));
+    let s1 = S.addPaths(S.createSession('', {}), null, [{ path: 'docs/a.md', text: 'A' }]).s;
+    s1 = S.openFile(s1, T.filesInOrder(s1.nodes)[0]);
+    const docs = byName(s1, 'docs').id;
+    const b = S.openFromDisk(s1, 'a.md', 'B');
+    check('openFromDisk: file đang mở có chữ — thêm cạnh nó (cùng folder), tên tránh trùng, mở file mới', b.added && b.s.open === b.id && S.dirOf(b.s, b.id) === docs && eq(paths(b.s), ['docs/a-2.md', 'docs/a.md', 'untitled.md']) && S.docOf(b.s).text === 'B' && !b.s.named, JSON.stringify(paths(b.s)));
+    const c = S.openFromDisk(S.openFile(b.s, byName(b.s, 'untitled.md').id), 'x.md', 'X');
+    check('openFromDisk: file trống trong phiên nhiều file — điền, không đổi tên phiên', !c.added && byName(c.s, 'x.md') && c.s.nodes.length === b.s.nodes.length && !c.s.named, JSON.stringify(paths(c.s)));
+    const d = S.openFromDisk(s0, 'a/b', 'z');
+    check('openFromDisk: tên hỏng thì giữ untitled.md', d.s.nodes[0].name === 'untitled.md' && S.docOf(d.s).text === 'z');
+  }
+  // Nạp folder (MDAN-022): phiên trống thì thay nội dung, không thì nạp dưới folder đích và mở folder ấy ra.
+  {
+    const items = [{ path: 'notes/a.md', text: 'A' }, { path: 'notes/sub/deep/b.md', text: 'B' }, { path: 'notes/empty/', text: '' }];
+    const r = S.importPaths(S.createSession('', {}), null, items);
+    S.touchSession(r.s);
+    check('importPaths: phiên trống — folder nạp là cả phiên, mở file đầu, tên phiên là tên folder', r.files === 2 && eq(paths(r.s), ['notes/sub/deep/b.md', 'notes/a.md']) && r.s.open === r.ids['notes/sub/deep/b.md'] && r.s.name === 'notes' && !!byName(r.s, 'empty') && S.normSession(JSON.parse(JSON.stringify(r.s)), r.s.id).nodes.length === r.s.nodes.length, JSON.stringify(paths(r.s)));
+    let s = S.addDir(S.createSession('text', {}), null, 'inbox').s;
+    const inbox = byName(s, 'inbox').id, open = s.open;
+    s = S.toggleDir(s, inbox);
+    const r2 = S.importPaths(s, inbox, items);
+    check('importPaths: phiên có chữ — nạp dưới folder đích, folder ấy mở ra, file mở giữ nguyên', r2.files === 2 && r2.s.open === open && r2.s.collapsed.indexOf(inbox) < 0 && eq(paths(r2.s), ['inbox/notes/sub/deep/b.md', 'inbox/notes/a.md', 'untitled.md']), JSON.stringify(paths(r2.s)));
+    const r3 = S.importPaths(S.createSession('', {}), null, [{ path: 'only/', text: '' }]);
+    check('importPaths: phiên trống, chỉ folder rỗng — giữ file trống', r3.files === 0 && S.fileCount(r3.s) === 1 && !!byName(r3.s, 'only'));
+  }
+  // Tải một folder: đường dẫn tính từ folder cha của nó; gập hết; mở ra; Undo giữ chữ sửa sau ảnh chụp.
+  {
+    let s = S.addPaths(S.createSession('', {}), null, [{ path: 'p/notes/a.md', text: 'A' }, { path: 'p/notes/x/', text: '' }, { path: 'p/z.md', text: 'Z' }]).s;
+    const notes = byName(s, 'notes').id;
+    check('treeFiles(folder): đường dẫn từ folder cha, giữ folder rỗng, bỏ file ngoài', eq(S.treeFiles(s, notes), [{ path: 'notes/a.md', text: 'A' }, { path: 'notes/x/', text: '' }]), JSON.stringify(S.treeFiles(s, notes)));
+    const z = S.zipOf(s, new Date(2024, 0, 1), notes);
+    check('zipOf(folder): mục đầu là notes/a.md', new TextDecoder().decode(z.subarray(30, 30 + 10)) === 'notes/a.md');
+    const all = S.collapseAll(s);
+    check('collapseAll: mọi folder gập, phiên đầu vào không đổi', all.collapsed.length === 3 && s.collapsed.length === 0);
+    const rv = S.reveal(all, byName(s, 'a.md').id);
+    check('reveal: mở các folder chứa nút', eq(rv.collapsed, [byName(s, 'x').id]) && S.reveal(all, notes, true).collapsed.indexOf(notes) < 0);
+    s = S.openFile(s, byName(s, 'a.md').id);
+    const snap = s, del = S.removeNodes(s, [notes]).s;
+    S.docOf(del, byName(s, 'z.md').id).text = 'Z sửa sau';
+    const back = S.restoreTree(Object.assign({}, del, { header: 'H' }), snap);
+    check('restoreTree: cây, file mở về như ảnh chụp; chữ sửa sau và tuỳ chọn giữ', eq(back.nodes, snap.nodes) && back.open === snap.open && S.docOf(back, byName(s, 'z.md').id).text === 'Z sửa sau' && S.docOf(back).text === 'A' && back.header === 'H');
+    check('dirOf: folder chứa, gốc là null', S.dirOf(s, byName(s, 'a.md').id) === notes && S.dirOf(s, byName(s, 'p').id) === null && S.dirOf(s, 'không có') === null);
+  }
+  check('importCheck: ẩn / node_modules bỏ không đếm, folder chọn ẩn vẫn nạp; ảnh, > 1 MB bỏ có đếm',
+    X.importCheck('r/.git/x.md', '', 1) === 'ignore' && X.importCheck('r/node_modules/a.md', '', 1) === 'ignore' && X.importCheck('.cfg/a.md', '', 1) === '' &&
+    X.importCheck('r/a.png', 'image/png', 1) === 'skip' && X.importCheck('r/a.md', '', X.MAX_IMPORT + 1) === 'skip' && X.importCheck('r/a.md', '', X.MAX_IMPORT) === '' && X.importCheck('.env', '', 1) === 'ignore');
+}
 // ── end cây folder + file ──
 
 console.log(fails ? `md-annotate core: ${fails} LỖI` : 'md-annotate core: OK');
