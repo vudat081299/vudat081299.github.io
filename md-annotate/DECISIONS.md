@@ -15,6 +15,7 @@
 - MDAN-015 · Hộp Settings giữa màn hình, nền mờ; bảng phím tắt mới · `md-annotate/`
 - MDAN-016 · Dải tiến độ cạnh khung, gợi ý đã đọc theo thời gian đọc · `md-annotate/`
 - MDAN-017 · Một bộ dấu đã đọc, khai báo một chỗ · `md-annotate/css/**`
+- MDAN-018 · Thanh cuộn không chạm góc bo · `md-annotate/css/**`, `md-annotate/js/ui/minimap.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -134,3 +135,9 @@ mở. Tab ẩn, cửa sổ mất focus, rảnh tay, cuộn do trang (J / K / X, 
 Mọi dấu đã đọc (làn cạnh khối, dàn ý tab Review) và ô đánh dấu của form dùng chung một bộ: cùng cỡ, cùng ảnh ✓, cùng
 màu cho từng trạng thái, khai báo một lần rồi dùng lại. ✓ là ảnh, không phải ký tự, để luôn nằm giữa ô. Dấu căn giữa
 dòng đầu của khối.
+
+## MDAN-018 · Thanh cuộn không chạm góc bo
+20/11/2026 · `md-annotate/css/**`, `md-annotate/js/ui/minimap.js`
+
+Vùng nào có góc bo x thì thanh cuộn (tự vẽ hay của hệ thống) cách mép trên / dưới ở góc ấy ít nhất x, để khi cuộn tới
+đầu hoặc cuối con trượt không bị góc bo cắt hay dính vào đường cong. Áp cho mọi vùng cuộn của trang.

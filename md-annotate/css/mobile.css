@@ -70,10 +70,11 @@
 .ma-pop.is-sheet {
   position: fixed; left: 0; right: 0; bottom: 0; top: auto; width: auto; max-height: 82vh; overflow: auto;
   border: 0; border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: 0 0 0 100vmax var(--scrim-live), var(--shadow-pop);
-  padding: calc(var(--s4) + var(--s2)) var(--s4) calc(var(--s4) + env(safe-area-inset-bottom));
+  border-top: var(--r-lg) solid transparent;   /* tấm cuộn được: thanh cuộn dừng cách góc bo một bán kính (như .ma-dlg__b) */
+  padding: calc(var(--s4) + var(--s2) - var(--r-lg)) var(--s4) calc(var(--s4) + env(safe-area-inset-bottom));
 }
 .ma-pop.is-sheet::before {
-  content: ''; position: absolute; top: var(--s2); left: 50%; width: 36px; height: 4px; margin-left: -18px;
+  content: ''; position: absolute; top: calc(var(--s2) - var(--r-lg)); left: 50%; width: 36px; height: 4px; margin-left: -18px;
   border-radius: var(--r-pill); background: var(--ink-4);
 }
 @media (prefers-reduced-motion: no-preference) {

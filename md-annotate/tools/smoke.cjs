@@ -1377,8 +1377,8 @@ const overflow = (page) => page.evaluate(() => document.documentElement.scrollWi
         const d = document.getElementById('doc'), dr = d.getBoundingClientRect(), rad = parseFloat(getComputedStyle(d).borderBottomRightRadius);
         return { col: [c.top, c.bottom, c.width], lane: [l.top, l.bottom, l.width], gap: l.left - c.right, toCorner: dr.bottom - l.bottom, rad };
       }, w);
-      check(`dải tiến độ (${w}): thanh cuộn và dải cùng cao, cùng rộng 6px, cách nhau ≥ 4px`,
-        geo.col[0] === geo.lane[0] && geo.col[1] === geo.lane[1] && geo.col[2] === 6 && geo.lane[2] === 6 && geo.gap >= 4, JSON.stringify(geo));
+      check(`dải tiến độ (${w}): thanh cuộn và dải cùng cao, cùng rộng 6px, cách nhau ≥ 4px, đáy cách góc bo của khung ≥ bán kính`,
+        geo.col[0] === geo.lane[0] && geo.col[1] === geo.lane[1] && geo.col[2] === 6 && geo.lane[2] === 6 && geo.gap >= 4 && geo.toCorner >= geo.rad, JSON.stringify(geo));
     }
     // Trạng thái đoạn: đã đọc đặc, đổi chữ rỗng, chấm ở nhận xét; vị trí theo đơn vị trong khung.
     const u3 = await laneOf('Para P3 '), u10 = await laneOf('Para P10 ');

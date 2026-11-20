@@ -12,6 +12,9 @@
 .ma-dlg__h { flex: none; display: flex; align-items: center; gap: var(--s2); padding: var(--s2) var(--s2) var(--s2) var(--s4); border-bottom: 1px solid var(--line); }
 .ma-dlg__h h2 { margin: 0; flex: 1; font: 600 var(--fs-lg)/var(--lh-tight) var(--display); }
 .ma-dlg__b { flex: 1 1 auto; min-height: 0; overscroll-behavior: contain; padding: var(--s4); overflow: auto; display: flex; flex-direction: column; gap: var(--s3); }
+/* Góc bo: thân sát đáy hộp bo --r-lg, thanh cuộn hệ thống chạm vào đường cong. Đệm đáy đổi thành viền trong suốt cùng
+   bề dày: thanh cuộn nằm trong viền nên dừng cách đáy một bán kính; chữ trông như cũ. */
+.ma-dlg__b { padding-bottom: 0; border-bottom: var(--r-lg) solid transparent; }
 /* Hộp giữa màn hình (Settings, Shortcuts): giữa cả ở điện thoại (mobile.css), nền sau mờ. Settings (--live) hẹp và
    mờ nhẹ (--scrim-live) để vẫn thấy thay đổi đang kéo ở hai bên hộp (MDAN-015). */
 .ma-dlg--live { width: min(420px, calc(100vw - 2 * var(--s4))); }

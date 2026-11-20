@@ -2,7 +2,8 @@
    trái thanh cuộn. Mỗi đơn vị một đoạn theo vị trí / chiều cao của nó trong khung: đặc --accent đã đọc, rỗng viền đã đổi
    chữ (○), nhạt chưa đọc, viền đứt được gợi ý (ui/dwell.js). Trái dải là thanh cuộn tự vẽ: con trượt xám theo khung nhìn,
    chấm ở chỗ có nhận xét; ở Split nó thay thanh cuộn hệ thống của khung (css/reading.css ẩn thanh ấy), để không có hai thanh.
-   Bề rộng, lề, khe, mép trái làm tròn theo điểm ảnh thật (devicePixelRatio), để hai khung vẽ cột rộng như nhau ở mọi mức thu phóng. Bấm / kéo trên dải
+   Bề rộng, lề, khe, mép trái làm tròn theo điểm ảnh thật (devicePixelRatio), để hai khung vẽ cột rộng như nhau ở mọi mức thu phóng.
+   Hai đầu dải cách mép khung có góc bo ít nhất bằng bán kính góc (cornerLimits). Bấm / kéo trên dải
    thì cuộn tới đó (cuộn do trang, không tính là đọc). Không có đơn vị thì ẩn.
    Dải là phần tử position: fixed ngoài #v-src / #v-md (text của khung không đổi), đặt theo khung bằng JS. Vẽ lại đoạn
    khi ui/review.js xếp làn (vẽ, đánh dấu, đổi cỡ); khi cuộn chỉ dời hộp khung nhìn (và khung, ở chế độ cuộn cửa sổ).
@@ -36,10 +37,25 @@ function sizeStrips() {
   });
 }
 
+/* Góc bo: khung và mọi khung chứa nó có góc bo thì đầu dải cách mép trên / dưới của khung ấy ít nhất bằng bán kính góc,
+   để dải không chạm vào đường cong (khung văn bản bo --r-lg ở đáy). Trả { top, bot } theo toạ độ khung nhìn. */
+function cornerLimits(el) {
+  var top = -Infinity, bot = Infinity;
+  for (var n = el; n && n !== document.body; n = n.parentElement) {
+    var cs = getComputedStyle(n), rt = Math.max(parseFloat(cs.borderTopLeftRadius) || 0, parseFloat(cs.borderTopRightRadius) || 0);
+    var rb = Math.max(parseFloat(cs.borderBottomLeftRadius) || 0, parseFloat(cs.borderBottomRightRadius) || 0);
+    if (!rt && !rb) continue;
+    var r = n.getBoundingClientRect();
+    if (rt) top = Math.max(top, r.top + rt);
+    if (rb) bot = Math.min(bot, r.bottom - rb);
+  }
+  return { top: top, bot: bot };
+}
 /* Khung của dải w trong khung nhìn: { left, top, H, total, split }, hoặc null khi không đặt được. */
 function frameOf(w) {
-  var wrap = wrapOf(w), wr = wrap.getBoundingClientRect(), split = isSplit();
-  var top = Math.max(wr.top + GAP, barBottom() + GAP), bot = Math.min(wr.bottom - GAP, dockTop() - GAP, window.innerHeight - GAP);
+  var wrap = wrapOf(w), wr = wrap.getBoundingClientRect(), split = isSplit(), cl = cornerLimits(wrap);
+  var top = Math.max(wr.top + GAP, barBottom() + GAP, cl.top);
+  var bot = Math.min(wr.bottom - GAP, dockTop() - GAP, window.innerHeight - GAP, cl.bot);
   if (bot - top < MIN_H) return null;
   var sbw = split ? wrap.offsetWidth - wrap.clientWidth : 0;
   return { left: wr.right - sbw - strips[w].getBoundingClientRect().width - 2, top: top, H: bot - top, total: wrap.scrollHeight, split: split, wr: wr };
