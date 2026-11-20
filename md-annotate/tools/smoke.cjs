@@ -1591,6 +1591,224 @@ const cornerClash = (page) => page.evaluate(() => {
   }
   // ── end dải tiến độ và gợi ý ──
 
+  // ── làm mờ: Focus mode và Dim reviewed gộp bằng min, dòng dưới chuột sáng (MDAN-045) ──
+  {
+    /* Đo độ sáng thấy được (tích opacity qua mọi tổ tiên) của từng mẫu ở mọi tổ hợp: khung {Source, Preview, Split} ×
+       chọn section {pointer, band} × {đã đọc, chưa} × {trong section sáng, ngoài} × {đoạn, mục danh sách, bảng, code} ×
+       {dòng dưới chuột, không}. Kỳ vọng: dòng dưới chuột (và phần ghép ở khung kia) = 1; còn lại = min(--dim nếu ngoài
+       section, --rv-dim nếu đã đọc). Split: hai khung cho cùng một số. */
+    const DIM = 0.3, RVD = 0.4;
+    const xctx = await browser.newContext({ viewport: { width: 1440, height: 1300 }, colorScheme: 'light' });
+    await xctx.addInitScript(() => { try { if (!sessionStorage.getItem('x')) { localStorage.setItem('md-annotate:prefs:v1', JSON.stringify({ view: 'split', focus: true, rvDim: true })); sessionStorage.setItem('x', '1'); } } catch (e) {} });
+    const mx = await xctx.newPage(); watch(mx);
+    await mx.goto(BASE); await mx.waitForFunction(() => window.marked && window.DOMPurify);
+    const sec = (X) => [`## Sec ${X}`, '', `Para ${X}1 reviewed text.`, '', `Para ${X}2 plain text.`, '', `- Item ${X}1 plain`, `- Item ${X}2 reviewed`, `- Item ${X}3 plain`, '',
+      '| Col | Val |', '|---|---|', `| T${X}1 row1 | r |`, `| T${X}1 row2 | r |`, '', '| Col | Val |', '|---|---|', `| T${X}2 row1 | p |`, '',
+      '```', `C${X}1 reviewed code`, '```', '', '```', `C${X}2 plain code`, '```', ''];
+    const XDOC = ['# Doc', '', 'Intro line.', '', ...sec('A'), ...sec('B')].join('\n');
+    await mx.evaluate((t) => { const ta = document.getElementById('src-input'); ta.focus(); ta.dispatchEvent(new Event('paste')); ta.value = t; ta.dispatchEvent(new Event('input')); }, XDOC);
+    await mx.waitForTimeout(250);
+    await mx.click('.ma-tab[data-view="split"]'); await mx.waitForTimeout(250);
+    // Đơn vị: 0 # Doc, 1 Intro, 2 ## Sec A, 3–11 section A, 12 ## Sec B, 13–21 section B. Đã đọc: đoạn 1, mục 2, bảng 1, code 1.
+    for (const u of [3, 6, 8, 10, 13, 16, 18, 20]) await mx.$eval(`#wrap-md .ma-lane__b[data-u="${u}"]`, (b) => b.click());
+    await mx.waitForTimeout(400);
+    // Mẫu: [khoá, section, đã đọc, loại, thẻ Preview, chữ]
+    const PROBES = [];
+    for (const X of ['A', 'B']) {
+      PROBES.push([X + ':p+', X, true, 'p', 'p', `Para ${X}1`], [X + ':p-', X, false, 'p', 'p', `Para ${X}2`],
+        [X + ':li+', X, true, 'li', 'li', `Item ${X}2`], [X + ':li-', X, false, 'li', 'li', `Item ${X}1`],
+        [X + ':t+', X, true, 'table', 'td', `T${X}1 row1`], [X + ':t-', X, false, 'table', 'td', `T${X}2 row1`],
+        [X + ':c+', X, true, 'code', 'pre code', `C${X}1`], [X + ':c-', X, false, 'code', 'pre code', `C${X}2`]);
+    }
+    const rvOk = await mx.evaluate((P) => P.every(([, , rev, , tag, txt]) => {
+      const el = [...document.querySelectorAll('#v-md ' + tag)].find((e) => e.textContent.includes(txt));
+      const unit = el.closest('li') || el.closest('#v-md > *');
+      const ln = [...document.querySelectorAll('#v-src .ma-ln')].find((l) => l.textContent.includes(txt));
+      return unit.classList.contains('is-rv') === rev && ln.classList.contains('is-rv') === rev;
+    }), PROBES);
+    check('làm mờ: đánh dấu đúng tám đơn vị đã đọc ở cả hai khung', rvOk);
+    /* Đo mọi mẫu ở các khung đang hiện: { khoá: { src, md, srcSec, mdSec } }. */
+    const measure = () => mx.evaluate((P) => {
+      const eff = (el) => { let o = 1; for (let n = el; n && n.nodeType === 1; n = n.parentElement) o *= +getComputedStyle(n).opacity; return Math.round(o * 1000) / 1000; };
+      const vis = (id) => !!document.getElementById(id).getClientRects().length;
+      const out = {};
+      for (const [k, , , , tag, txt] of P) {
+        const r = {};
+        if (vis('v-md')) {
+          const el = [...document.querySelectorAll('#v-md ' + tag)].find((e) => e.textContent.includes(txt)), host = el.closest('#v-md > *');
+          r.md = eff(el); r.mdLit = document.getElementById('v-md').classList.contains('is-focusing') ? host.classList.contains('is-sec') : null;
+        }
+        if (vis('v-src')) {
+          const ln = [...document.querySelectorAll('#v-src .ma-ln')].find((l) => l.textContent.includes(txt));
+          r.src = eff(ln); r.srcLit = document.getElementById('v-src').classList.contains('is-focusing') ? ln.classList.contains('is-sec') : null;
+        }
+        out[k] = r;
+      }
+      return out;
+    }, PROBES);
+    /* Toạ độ giữa mẫu k ở khung w nếu nó hiện trọn (không bị khung cuộn cắt, không bị thanh trên che), không thì null. */
+    const spot = (k, w) => mx.evaluate(([P, k, w]) => {
+      const [, , , , tag, txt] = P.find((p) => p[0] === k);
+      const el = w === 'md' ? [...document.querySelectorAll('#v-md ' + tag)].find((e) => e.textContent.includes(txt))
+        : [...document.querySelectorAll('#v-src .ma-ln')].find((l) => l.textContent.includes(txt));
+      const r = el.getBoundingClientRect(), x = w === 'src' ? r.left + Math.min(r.width / 2, 140) : r.left + r.width / 2, y = r.top + r.height / 2;
+      const hit = document.elementFromPoint(x, y);
+      return hit && (el.contains(hit) || hit.contains(el)) && y > 0 && y < innerHeight ? { x, y } : null;
+    }, [PROBES, k, w]);
+    const cells = {}, bad = [];
+    const tally = (view, mode, lit, hov, m) => {
+      for (const [k, X, rev, kind] of PROBES) {
+        for (const w of ['src', 'md']) {
+          if (m[k][w] == null) continue;
+          const line = hov === k, inSec = lit == null || X === lit;
+          const want = line ? 1 : Math.min(inSec ? 1 : DIM, rev ? RVD : 1);
+          const key = `${view}|${mode}|${rev ? 'rev' : 'plain'}|${inSec ? 'in' : 'out'}|${kind}|${line ? 'line' : '-'}`;
+          const ok = Math.abs(m[k][w] - want) < 0.006;
+          cells[key] = cells[key] || { n: 0, bad: 0 };
+          cells[key].n++; if (!ok) { cells[key].bad++; bad.push(`${view}/${mode} hover ${hov || '-'} lit ${lit} ${k}@${w}=${m[k][w]} want ${want}`); }
+        }
+        if (view === 'split' && m[k].src != null && m[k].md != null && Math.abs(m[k].src - m[k].md) >= 0.006) bad.push(`${view}/${mode} hover ${hov} ${k}: Source ${m[k].src} ≠ Preview ${m[k].md}`);
+      }
+    };
+    const setBy = async (v) => {
+      await mx.click('#btn-layout'); await mx.click(`label:has(input[name="focusby"][value="${v}"])`); await mx.keyboard.press('Escape');
+      await mx.mouse.move(2, 2); await mx.waitForTimeout(350);
+    };
+    /* Section đang sáng: 'A', 'B', hay '-' (section khác). Split: hai khung phải cùng một section. */
+    const litNow = () => mx.evaluate(() => {
+      const md = document.getElementById('v-md').getClientRects().length ? [...document.querySelectorAll('#v-md > .is-sec')].map((e) => e.textContent) : null;
+      const src = document.getElementById('v-src').getClientRects().length ? [...document.querySelectorAll('#v-src .ma-ln.is-sec')].map((l) => l.textContent) : null;
+      const of = (ts) => (ts.join('\n').match(/Sec ([AB])/) || [])[1] || '-';
+      return md && src && of(md) !== of(src) ? 'mismatch' : of(md || src);
+    });
+    const panesOf = (view) => (view === 'split' ? ['src', 'md'] : view === 'src' ? ['src'] : ['md']);
+    for (const view of ['src', 'view', 'split']) {
+      await mx.click(`.ma-tab[data-view="${view}"]`); await mx.mouse.move(2, 2); await mx.waitForTimeout(300);
+      // Theo chuột: rê vào từng mẫu ở từng khung; section của nó sáng, nó là dòng dưới chuột.
+      await setBy('pointer');
+      for (const w of panesOf(view)) {
+        for (const [k, X] of PROBES) {
+          await mx.evaluate(([P, k, w]) => {
+            const [, , , , tag, txt] = P.find((p) => p[0] === k);
+            const el = w === 'md' ? [...document.querySelectorAll('#v-md ' + tag)].find((e) => e.textContent.includes(txt)) : [...document.querySelectorAll('#v-src .ma-ln')].find((l) => l.textContent.includes(txt));
+            el.scrollIntoView({ block: 'center' });
+          }, [PROBES, k, w]);
+          await mx.waitForTimeout(80);
+          const at = await spot(k, w);
+          if (!at) { bad.push(`${view}/pointer: không rê được ${k}@${w}`); continue; }
+          await mx.mouse.move(at.x, at.y); await mx.waitForTimeout(350);
+          const m = await measure();
+          const lits = Object.values(m).flatMap((r) => [r.srcLit, r.mdLit]);
+          if (lits.some((v) => v === null)) bad.push(`${view}/pointer hover ${k}@${w}: khung không làm mờ`);
+          tally(view, 'pointer', X, k, m);
+        }
+      }
+      await mx.mouse.move(2, 2); await mx.waitForTimeout(350);
+      // Dải đọc: cuộn tới chỗ section A sáng, rồi tới cuối (B sáng); rê vào mọi mẫu đang hiện, ở trong lẫn ngoài section.
+      await setBy('band');
+      for (const want of ['A', 'B']) {
+        const max = await mx.evaluate((view) => { const sc = view === 'split' ? document.getElementById('wrap-md') : document.scrollingElement; return sc.scrollHeight - sc.clientHeight; }, view);
+        for (let s = want === 'B' ? max : 0; s >= 0 && s <= max; s += want === 'A' ? 16 : max + 1) {
+          await mx.evaluate(([view, s]) => { (view === 'split' ? document.getElementById('wrap-md') : document.scrollingElement).scrollTop = s; }, [view, s]);
+          await mx.waitForTimeout(want === 'A' ? 60 : 300);
+          if (want !== 'A' || (await litNow()) === 'A') break;
+        }
+        await mx.waitForTimeout(350);
+        const lit0 = await litNow();
+        const m0 = await measure();
+        tally(view, 'band', lit0, null, m0);
+        for (const w of panesOf(view)) {
+          for (const [k] of PROBES) {
+            const at = await spot(k, w);
+            if (!at) continue;
+            await mx.mouse.move(at.x, at.y); await mx.waitForTimeout(350);
+            tally(view, 'band', lit0, k, await measure());
+          }
+        }
+        await mx.mouse.move(2, 2); await mx.waitForTimeout(300);
+      }
+    }
+    const lines = Object.entries(cells).map(([k, v]) => `${k}:${v.bad ? 'LỖI ' + v.bad + '/' : ''}${v.n}`);
+    const need = [];
+    for (const view of ['src', 'view', 'split']) for (const mode of ['pointer', 'band']) for (const rev of ['rev', 'plain']) for (const io of ['in', 'out'])
+      for (const kind of ['p', 'li', 'table', 'code']) for (const ln of ['line', '-']) {
+        if (mode === 'pointer' && io === 'out' && ln === 'line') continue;   // theo chuột: dòng dưới chuột luôn trong section sáng
+        if (!cells[`${view}|${mode}|${rev}|${io}|${kind}|${ln}`]) need.push(`${view}|${mode}|${rev}|${io}|${kind}|${ln}`);
+      }
+    check('làm mờ: ma trận đủ ô (khung × cách chọn × đã đọc × trong / ngoài section × loại khối × dòng dưới chuột)', !need.length, need.join(' '));
+    check('làm mờ: độ sáng thấy được = min(Focus, Dim reviewed), dòng dưới chuột = 1, hai khung Split như nhau', !bad.length, bad.slice(0, 12).join(' | ') + (bad.length > 12 ? ` … (+${bad.length - 12})` : ''));
+    if (process.env.MATRIX) console.log(lines.join("\n"));   // MATRIX=1: in bảng ô của ma trận
+
+    // Dòng trống giữa hai khối đã đọc (Source) mờ theo khối trên, không thành khe sáng.
+    const gap = await mx.evaluate(() => { const ls = [...document.querySelectorAll('#v-src .ma-ln')], i = ls.findIndex((l) => l.textContent.startsWith('Para B1'));
+      return [ls[i + 1].textContent.trim() === '' && ls[i + 1].classList.contains('is-rv'), ls[i + 3].textContent.trim() === '' && !ls[i + 3].classList.contains('is-rv')]; });
+    check('làm mờ: dòng trống ngay dưới khối đã đọc mờ theo nó, dưới khối chưa đọc thì không', gap[0] && gap[1], JSON.stringify(gap));
+    // Hộp nhận xét mở (theo chuột): con trỏ vào hộp, section và đoạn đang ghi vẫn sáng ở cả hai khung.
+    await mx.click('.ma-tab[data-view="split"]'); await setBy('pointer');
+    await dragSelect(mx, '#v-md', 'Para B1 reviewed');
+    const popBox = await mx.$eval('#pop', (p) => { const r = p.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + 12 }; });
+    await mx.mouse.move(popBox.x, popBox.y, { steps: 4 }); await mx.waitForTimeout(350);
+    const pm = await measure();
+    check('hộp nhận xét mở: section B và đoạn đang ghi (đã đọc) vẫn sáng ở hai khung', (await mx.isVisible('#pop')) && pm['B:p+'].md === 1 && pm['B:p+'].src === 1 && pm['B:p-'].md === 1 && pm['A:p-'].md === DIM && pm['B:li+'].md === RVD, JSON.stringify([pm['B:p+'], pm['B:p-'], pm['A:p-'], pm['B:li+']]));
+    await mx.keyboard.type('x'); await mx.keyboard.press('Enter'); await mx.waitForTimeout(250);
+    // Highlight nhận xét mờ như chữ quanh nó: dải đọc ở đầu (trượt về mép: section A sáng), đoạn B1 (đã đọc, ngoài
+    // section) = min(.3, .4).
+    await setBy('band');
+    await mx.evaluate(() => { document.getElementById('wrap-md').scrollTop = 1; document.getElementById('wrap-md').scrollTop = 0; });
+    await mx.waitForTimeout(400);
+    check('dải đọc ở đầu văn bản: section A sáng ở hai khung', (await litNow()) === 'A');
+    const hl = await mx.evaluate(() => { const eff = (el) => { let o = 1; for (let n = el; n && n.nodeType === 1; n = n.parentElement) o *= +getComputedStyle(n).opacity; return Math.round(o * 1000) / 1000; };
+      const mk = (sel) => [...document.querySelectorAll(sel + ' mark.ma-hl')].find((m) => m.textContent.includes('B1'));
+      const a = mk('#v-md'), b = mk('#v-src');
+      return a && b ? [eff(a), eff(a.closest('p')), eff(b), eff(b.closest('.ma-ln'))] : null; });
+    check('highlight nhận xét mờ như chữ của nó, hai khung như nhau', hl && hl.every((v) => v === DIM), JSON.stringify(hl));
+    // Settings: kéo --dim, --rv-dim thì độ sáng đổi ngay, vẫn lấy số nhỏ hơn.
+    await mx.click('#btn-layout');
+    await mx.$eval('#set-dim', (el) => { el.value = 50; el.dispatchEvent(new Event('input', { bubbles: true })); });
+    await mx.$eval('#set-rvdimv', (el) => { el.value = 20; el.dispatchEvent(new Event('input', { bubbles: true })); });
+    await mx.waitForTimeout(350);
+    const live = await measure();
+    await mx.keyboard.press('Escape');
+    const lv = ['A:p+', 'B:p-', 'B:li+', 'B:li-', 'A:t+', 'B:c-', 'A:c+'].map((k) => [live[k].md, live[k].src]);
+    check('Settings: kéo Focus 50% và Dim reviewed 20% áp ngay, vẫn lấy số nhỏ hơn, hai khung như nhau',
+      JSON.stringify(lv) === JSON.stringify([[0.2, 0.2], [0.5, 0.5], [0.2, 0.2], [0.5, 0.5], [0.2, 0.2], [0.5, 0.5], [0.2, 0.2]]), JSON.stringify(lv));
+    // Split, danh sách lồng và trích khối: phần dưới chuột là phần sâu nhất ghép được hai bên (mục con; trích khối thì cả
+    // khối), chữ trần của mục cha sáng ở cả hai khung (MDAN-010); mục đã đọc khác mờ như nhau ở hai khung.
+    await mx.click('.ma-tab[data-view="edit"]');
+    await mx.evaluate((t) => { const ta = document.getElementById('src-input'); ta.value = t; ta.dispatchEvent(new Event('input')); },
+      ['# N', '', '- P1 parent', '  - C1 child', '  - C2 child', '- P2 parent', '', '> Quote line', '> - QL1', '> - QL2', ''].join('\n'));
+    await mx.waitForTimeout(350);
+    await mx.click('.ma-tab[data-view="split"]'); await mx.waitForTimeout(300);
+    for (const u of [1, 3]) await mx.$eval(`#wrap-md .ma-lane__b[data-u="${u}"]`, (b) => b.click());
+    await mx.waitForTimeout(350);
+    const nestAll = () => mx.evaluate(() => {
+      const eff = (el) => { let o = 1; for (let n = el; n && n.nodeType === 1; n = n.parentElement) o *= +getComputedStyle(n).opacity; return Math.round(o * 1000) / 1000; };
+      const out = {};
+      for (const t of ['P1 parent', 'C1 child', 'C2 child', 'P2 parent', 'Quote line', 'QL1', 'QL2']) {
+        const md = [...document.querySelectorAll('#v-md li, #v-md p')].find((x) => x.textContent.startsWith(t)), src = [...document.querySelectorAll('#v-src .ma-ln')].find((l) => l.textContent.includes(t));
+        out[t] = [eff(md), eff(src)];
+      }
+      return out;
+    });
+    const hoverAt = async (w, t) => {
+      const at = await mx.evaluate(([w, t]) => { const el = w === 'md' ? [...document.querySelectorAll('#v-md li, #v-md p')].find((x) => x.textContent.startsWith(t)) : [...document.querySelectorAll('#v-src .ma-ln')].find((l) => l.textContent.includes(t));
+        const r = el.getBoundingClientRect(); return { x: r.left + (w === 'md' ? 40 : 140), y: r.top + 8 }; }, [w, t]);   // Source: qua lề số và làn
+      await mx.mouse.move(at.x, at.y); await mx.waitForTimeout(350);
+      return nestAll();
+    };
+    const nv = [await hoverAt('md', 'C1 child'), await hoverAt('src', 'C2 child'), await hoverAt('md', 'QL1')];
+    const same = nv.every((o) => Object.values(o).every(([a, b]) => a === b));
+    const rd = 0.2;   // Dim reviewed đang ở 20% (Settings ở trên)
+    check('Split, danh sách lồng và trích khối: hai khung như nhau, mục con dưới chuột và chữ mục cha sáng, mục anh em đã đọc mờ, trích khối sáng cả khối',
+      same && nv[0]['C1 child'][0] === 1 && nv[0]['P1 parent'][1] === 1 && nv[0]['C2 child'][0] === rd && nv[1]['C2 child'][0] === 1 && nv[1]['C1 child'][1] === rd
+        && ['Quote line', 'QL1', 'QL2'].every((t) => nv[2][t][0] === 1) && nv[2]['C1 child'][0] === rd, JSON.stringify(nv));
+    // Edit: không gì mờ.
+    await mx.click('.ma-tab[data-view="edit"]'); await mx.waitForTimeout(300);
+    check('Edit: ô soạn không mờ', (await mx.$eval('#src-input', (el) => { let o = 1; for (let n = el; n; n = n.parentElement) o *= +getComputedStyle(n).opacity; return o; })) === 1);
+    await xctx.close();
+  }
+  // ── end làm mờ ──
+
   check('không lỗi console', !errors.length, errors.join(' | '));
   await browser.close();
   console.log(fails ? `md-annotate smoke: ${fails} LỖI` : 'md-annotate smoke: OK');

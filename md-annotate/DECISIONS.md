@@ -19,6 +19,7 @@
 - MDAN-019 · Chọn một dải dòng bằng Shift + bấm hoặc kéo trên lề số · `md-annotate/js/ui/picks.js`
 - MDAN-020 · Vòng focus chỉ hiện sau phím Tab · `md-annotate/css/**`, `md-annotate/js/main.js`
 - MDAN-021 · Độ sáng của khối đã đọc chỉnh ở Settings · `md-annotate/`
+- MDAN-045 · Focus mode và Dim reviewed gộp bằng số mờ hơn, dòng dưới chuột luôn sáng · `md-annotate/`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -164,3 +165,11 @@ thoại, đóng hộp, chạm hay bấm chuột thì không có vòng; bấm chu
 
 Hộp *Settings* có mục *Dim reviewed blocks*: cùng công tắc với ô *Dim reviewed* ở tab Review, thêm thanh kéo độ sáng
 của khối đã đọc (10–80%, mặc định 40%), áp ngay khi kéo.
+
+## MDAN-045 · Focus mode và Dim reviewed gộp bằng số mờ hơn, dòng dưới chuột luôn sáng
+20/11/2026 · `md-annotate/`
+
+Bật cả Focus mode và *Dim reviewed*: độ sáng thấy được của mỗi khối là số nhỏ hơn trong hai độ mờ (ngoài section đang
+sáng: `--dim`; đã đọc: `--rv-dim`), không nhân với nhau, và như nhau ở Source, Preview, hai khung Split. Dòng / khối
+dưới chuột (theo chuột lẫn dải đọc, cùng phần ghép ở khung kia) luôn sáng hẳn, đã đọc hay chưa; khối đã đọc khác trong
+section đang sáng vẫn mờ theo *Dim reviewed*. Dòng trống ở Source mờ theo dòng ngay trên nó.

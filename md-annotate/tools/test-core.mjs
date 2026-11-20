@@ -63,6 +63,23 @@ check('bandBounds: 25–50% vùng nhìn', eq(bandBounds(100, 900, 1000), [300, 5
 }
 
 check('spanAt: dòng trong khối, giữa hai khối', eq([0, 1, 2, 3, 4, 5].map((l) => spanAt([{ a: 0, b: 0 }, { a: 2, b: 4 }], l)), [0, -1, 1, 1, 1, -1]));
+{
+  const { partAt, partCount, partLines } = await import('../js/core/sections.js');
+  // Danh sách dòng 10–15: mục ở 10, 12, 14 (mục giữa có dòng trống ở đuôi, dòng 13); bảng dòng 20–23: đầu, phân cách, hai hàng.
+  const li = { a: 10, b: 15, tag: 'UL', items: [10, 12, 14] }, tb = { a: 20, b: 23, tag: 'TABLE' }, p = { a: 30, b: 32, tag: 'P' };
+  const blank = (k) => k === 13;
+  check('partCount: mục danh sách, hàng bảng (trừ dòng phân cách), khối khác 0', partCount(li) === 3 && partCount(tb) === 3 && partCount(p) === 0);
+  check('partAt: dòng → mục; ngoài khối -1', eq([9, 10, 11, 12, 13, 14, 15, 16].map((l) => partAt(li, l)), [-1, 0, 0, 1, 1, 2, 2, -1]));
+  check('partAt: hàng bảng; dòng phân cách -1; đoạn văn -1', eq([20, 21, 22, 23].map((l) => partAt(tb, l)), [0, -1, 1, 2]) && partAt(p, 31) === -1);
+  check('partLines: mục bỏ dòng trống ở đuôi, mục cuối tới hết khối', eq([0, 1, 2].map((i) => partLines(li, i, blank)), [[10, 11], [12, 12], [14, 15]]));
+  check('partLines: hàng bảng một dòng, bỏ dòng phân cách; khối khác cả khối',
+    eq([0, 1, 2].map((i) => partLines(tb, i, blank)), [[20, 20], [22, 22], [23, 23]]) && eq(partLines(p, 0, blank), [30, 32]));
+  const { subItems } = await import('../js/core/sections.js');
+  const T = ['- P1', '  - C1', '    - G1', '  - C2', '', '    more of C2', '- P2'];
+  check('subItems: mục con theo thứ tự cây, mục con chứa cháu, bỏ dòng trống ở đuôi', eq(subItems(T, 0, 5), [[1, 2], [2, 2], [3, 5]]), JSON.stringify(subItems(T, 0, 5)));
+  check('subItems: mục không có con thì rỗng; dòng thụt bằng mục cha không là con', eq(subItems(['1. a', 'tiếp', '2. b'], 0, 1), []) && eq(subItems(['  - x', '  - y'], 0, 1), []));
+  check('partAt ↔ partLines: mỗi dòng của phần i trả lại i', [li, tb].every((sp) => [0, 1, 2].every((i) => { const r = partLines(sp, i, blank); return partAt(sp, r[0]) === i && partAt(sp, r[1]) === i; })));
+}
 
 // Cuộn theo nhau: khung theo đi đúng điểm neo và không bao giờ lùi khi khung dẫn tiến.
 {
@@ -403,6 +420,13 @@ check('paneHeight: khung nhìn trừ đỉnh, 17px đáy, thanh đáy; vừa khi
     check('resolveMarks: xoá khối đã đọc, hàng xóm gần giống không thành changed', r4.lost.length === 1 && r4.state.every((x) => x === 'todo'), JSON.stringify(r4));
     check('reviewUnits: khối chỉ có chú thích HTML không là đơn vị', U('Một.\n\n<!-- ghi chú -->\n\nHai.').length === 2);
     check('unitRuns / markWord: gộp đơn vị liền nhau', eq(R.unitRuns(u0, [0, 1, 5, 6]), [[0, 2], [12, 14]]) && R.markWord(u0, [0, 1, 5, 6], true) === 'Marked 4 blocks (L1–3, L13–15) reviewed.' && R.markWord(u0, [5], false) === 'Unmarked 1 block (L13).');
+    {
+      // Đơn vị 0–1 (đã đọc), 3 (chưa), 5–6 (đã đọc); dòng 2, 4, 7, 8 trống; dòng 9 có chữ, ngoài đơn vị.
+      const us = [{ a: 0, b: 1 }, { a: 3, b: 3 }, { a: 5, b: 6 }], bl = [0, 0, 1, 0, 1, 0, 0, 1, 1, 0].map(Boolean);
+      check('rvLines: dòng của đơn vị đã đọc và dải dòng trống ngay dưới nó mờ; dòng trống sau khối chưa đọc thì không',
+        eq([...R.rvLines(us, ['done', 'todo', 'done'], bl)], [1, 1, 1, 0, 0, 1, 1, 1, 1, 0]) && eq([...R.rvLines(us, ['todo', 'done', 'changed'], bl)], [0, 0, 0, 1, 1, 0, 0, 0, 0, 0]));
+      check('rvLines: đơn vị vượt số dòng thì cắt', eq([...R.rvLines([{ a: 1, b: 9 }], ['done'], [false, false, true])], [0, 1, 1]));
+    }
     check('unitsOfLines / allDone / withSug', eq(R.unitsOfLines(u0, [6, 5, 7, 2]), [2, 3]) && R.allDone(['done', 'done'], [0, 1]) && !R.allDone(['done'], []) && !R.allDone(['done', 'todo'], [0, 1]) && eq(R.withSug(['done', 'todo', 'changed'], [0, 1, 2]), ['done', 'sug', 'sug']));
   }
   // Đánh số lại danh sách có thứ tự (chèn bước ở đầu): các bước cũ vẫn done.

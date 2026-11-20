@@ -1,10 +1,15 @@
-/* Focus mode: mờ mọi khối ngoài section đang sáng (html.ma-focus, .is-focusing, .is-sec). */
-/* Focus mode: mờ mọi thứ ngoài section dưới con trỏ (từ tiêu đề gần nhất phía trên tới trước tiêu đề kế tiếp).
-   JS gắn data-sec cho khối con của .ma-md và cho mỗi .ma-ln, rồi gắn .is-sec cho section đang trỏ. */
-html.ma-focus .ma-md > [data-sec], html.ma-focus #v-src .ma-ln { transition: opacity .2s var(--ease); }
-html.ma-focus .ma-md.is-focusing > [data-sec]:not(.is-sec),
-html.ma-focus #v-src.is-focusing .ma-ln:not(.is-sec) { opacity: var(--dim, .3); }
-/* Dải đọc: dòng dưới chuột sáng dù ngoài section (.is-line); trong khối cấp cao, phần khác của khối mờ (.ma-dimx). */
-html.ma-focus #v-src.is-focusing .ma-ln.is-line,
-html.ma-focus .ma-md.is-focusing > [data-sec].is-line { opacity: 1; }
-html.ma-focus .ma-md.is-focusing > .is-line:not(.is-sec) .ma-dimx { opacity: var(--dim, .3); }
+/* Làm mờ khối: Focus mode (html.ma-focus, mờ ngoài section đang sáng) và Dim reviewed (html.ma-rvdim, mờ đơn vị đã đọc).
+   JS gắn data-sec cho khối con của #v-md và cho mỗi .ma-ln, .is-sec cho section đang sáng (ui/focus.js); .is-rv cho
+   đơn vị đã đọc (ui/review.js). Độ sáng thấy được của một khối = min(Focus, Dim reviewed), không nhân (MDAN-045):
+   mỗi lớp chỉ đặt biến (--o-f, --o-r; con kế thừa), opacity chỉ đặt trên phần tử mang — dòng Source, khối cấp cao,
+   mục của danh sách cấp cao, phần .ma-dimx — và không bao giờ trên tổ tiên của một phần tử mang khác. */
+html.ma-focus #v-src.is-focusing .ma-ln:not(.is-sec),
+html.ma-focus #v-md.is-focusing > [data-sec]:not(.is-sec) { --o-f: var(--dim, .3); }
+html.ma-rvdim #v-src .is-rv, html.ma-rvdim #v-md .is-rv { --o-r: var(--rv-dim, .4); }   /* Settings: prefs.dim, prefs.rvDimV */
+#v-src .ma-ln, #v-md > *, #v-md > :is(ul, ol) > *, #v-md .ma-dimx { opacity: min(var(--o-f, 1), var(--o-r, 1)); }
+:is(html.ma-focus, html.ma-rvdim) :is(#v-src .ma-ln, #v-md > *, #v-md > :is(ul, ol) > *, #v-md .ma-dimx) { transition: opacity .2s var(--ease); }
+/* Danh sách cấp cao: mục mang opacity, danh sách thì không. */
+#v-md > :is(ul, ol) { opacity: 1; }
+/* Dòng dưới chuột (.is-line: một .ma-ln, hay khối cấp cao chứa phần dưới chuột ở Preview) sáng hẳn, đã đọc hay không.
+   Trong khối ấy, đường từ khối tới phần dưới chuột sáng; phần khác (.ma-dimx, ui/focus.js) mang độ mờ của chính nó. */
+#v-src .ma-ln.is-line, #v-md > .is-line, #v-md > .is-line > :not(.ma-dimx) { opacity: 1; }

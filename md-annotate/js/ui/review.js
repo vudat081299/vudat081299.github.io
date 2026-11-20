@@ -15,7 +15,7 @@
 import { locate } from '../core/anchor.js';
 import { lineOf, plural } from '../core/text.js';
 import { bandBounds, bandPick, bandScroll } from '../core/sections.js';
-import { allDone, linesWord, markWord, nextOpen, progress, resolveMarks, reviewRanges, reviewSections, reviewUnits, setMarks, unitsIn,
+import { allDone, linesWord, markWord, nextOpen, progress, resolveMarks, reviewRanges, reviewSections, reviewUnits, rvLines, setMarks, unitsIn,
   unitsOfLines, withSug } from '../core/review.js';
 import { $, h, mqSheet, mqSide, reduceMotion, shown, toast, typing } from './dom.js';
 import { loadSession, S, saveClosed, scheduleSave } from './state.js';
@@ -210,13 +210,15 @@ function onLaneClick(e) {
   anchor = { i: i, units: rvState().units };
 }
 
-/* Làm mờ đơn vị đã đọc: lớp .is-rv trên dòng Source và phần tử Preview; CSS chỉ làm mờ khi html.ma-rvdim. Chỉ chạm
-   phần tử đổi trạng thái: gỡ hết rồi gắn lại thì trình duyệt tính lại kiểu của mọi dòng (văn bản dài: hàng trăm ms). */
+/* Làm mờ đơn vị đã đọc: lớp .is-rv trên dòng Source (cả dòng trống ngay dưới, core rvLines) và phần tử Preview; CSS
+   chỉ làm mờ khi html.ma-rvdim (cách gộp với Focus mode ở css/focus.css). Chỉ chạm phần tử đổi trạng thái: gỡ hết rồi
+   gắn lại thì trình duyệt tính lại kiểu của mọi dòng (văn bản dài: hàng trăm ms). */
 function paintDone(r) {
-  var lines = $('v-src').children, on = new Uint8Array(lines.length), md = new Set();
+  var lines = $('v-src').children, md = new Set(), txt = (S.text || '').split('\n'), blank = [];
+  for (var b = 0; b < lines.length; b++) blank.push(!/\S/.test(txt[b] || ''));
+  var on = rvLines(r.units, r.res.state, blank);
   r.units.forEach(function (u, i) {
     if (r.res.state[i] !== 'done') return;
-    for (var k = u.a; k <= u.b && k < lines.length; k++) on[k] = 1;
     var el = mdEl(r, i);
     if (el) md.add(el);
   });

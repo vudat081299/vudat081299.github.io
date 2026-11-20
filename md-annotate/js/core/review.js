@@ -7,7 +7,7 @@
    Trạng thái: 'done' (dấu khớp đúng chữ, ở đâu cũng được), 'changed' (chữ đã đổi, tìm lại nhờ hàng xóm / chữ gần
    giống; tính là chưa đọc), 'todo'. Dấu không tìm lại được là mất (lost), giữ tới khi người dùng bỏ.
    Xuất: allDone, dropLost, firstOpen, hashStr, linesWord, makeMark, markWord, nextOpen, normUnit, progress,
-     resolveMarks, reviewRanges, reviewSections, reviewUnits, setMarks, unitAt, unitRuns, unitsIn, unitsOfLines, withSug.
+     resolveMarks, reviewRanges, reviewSections, reviewUnits, rvLines, setMarks, unitAt, unitRuns, unitsIn, unitsOfLines, withSug.
    Dùng: core/text.js. */
 import { lineStarts } from './text.js';
 
@@ -164,6 +164,16 @@ export function unitsOfLines(units, lines) {
   var out = [];
   lines.forEach(function (n) { var k = unitAt(units, n - 1); if (k >= 0 && out.indexOf(k) < 0) out.push(k); });
   return out.sort(function (a, b) { return a - b; });
+}
+/* Dòng Source làm mờ khi Dim reviewed: dòng của đơn vị đã đọc, và dòng trống theo dòng ngay trên nó (cả dải trống liền
+   nhau), để vùng đã đọc không có khe sáng. blank[k]: dòng k trống. Trả Uint8Array, 1 là mờ. */
+export function rvLines(units, state, blank) {
+  var n = blank.length, on = new Uint8Array(n);
+  units.forEach(function (u, i) {
+    if (state[i] === 'done') for (var k = u.a; k <= u.b && k < n; k++) on[k] = 1;
+  });
+  for (var k = 1; k < n; k++) if (!on[k] && blank[k] && on[k - 1]) on[k] = 1;
+  return on;
 }
 /* Trạng thái hiển thị của từng đơn vị (làn, dải tiến độ): state, trừ đơn vị chưa đọc được gợi ý (sugIdx) thì 'sug'. */
 export function withSug(state, sugIdx) {
