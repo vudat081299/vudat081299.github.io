@@ -13,7 +13,7 @@
    tên, Home, End bật vòng focus như Tab, MDAN-020); kéo thả bằng chuột, chỗ thả được theo core canMove. Hàng bị xoá: hàng
    hiện tại thành hàng vào chỗ nó. Đầu cây một hàng (MDAN-060): New file, New folder, ⋯ (#tree-head-menu: Import folder,
    Download .zip, Collapse all, theo mẫu menu button); phiên ≤ 1 mục thì #tree.is-sparse hiện gợi ý thả / nạp folder. Thụt
-   đều mọi cấp: vạch thụt là phần tử riêng (#tree-guides), cây sâu thì thân cuộn ngang (--dmax); đổi tên là ô nhập trong suốt
+   đều mọi cấp: vạch thụt là phần tử riêng (#tree-guides), cây sâu thì thân cuộn ngang (--dmax, .is-x); đổi tên là ô nhập trong suốt
    đúng chỗ tên.
    Xuất: editName, focusRow, initTree, renderTree, revealTree.
    Dùng: core/tree.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js. */
@@ -159,17 +159,16 @@ function reconcile(list, want) {
   });
   while (ref) { var nx = ref.nextSibling; list.removeChild(ref); ref = nx; }
 }
-/* Cuộn thân cây vừa đủ để thấy hàng (không cuộn trang): dọc cả hàng; ngang từ ô chevron tới ~96px đầu của tên (cây sâu
-   rộng hơn thân). */
-var NAME_SEEN = 96;
+/* Cuộn thân cây vừa đủ để thấy hàng (không cuộn trang): dọc cả hàng; ngang (cây sâu rộng hơn thân) từ ô chevron về phía mép
+   phải hàng, ô chevron luôn trong tầm nhìn. */
 function reveal(li) {
   var b = $('tree-body'), r = li.getBoundingClientRect(), q = b.getBoundingClientRect();
   if (r.top < q.top) b.scrollTop -= q.top - r.top + 4;
   else if (r.bottom > q.top + b.clientHeight) b.scrollTop += r.bottom - (q.top + b.clientHeight) + 4;
   var ch = li.querySelector('.ma-trow__chev');
   if (!ch || b.scrollWidth <= b.clientWidth) return;
-  var x = ch.getBoundingClientRect().left - q.left - b.clientLeft + b.scrollLeft;   // toạ độ trong vùng cuộn
-  var x0 = Math.max(0, x - 12), x1 = Math.max(x + 20 + 24 + NAME_SEEN, r.right - q.left - b.clientLeft + b.scrollLeft);   // tới mép phải hàng
+  var off = b.scrollLeft - q.left - b.clientLeft;   // đổi toạ độ màn hình sang toạ độ trong vùng cuộn
+  var x0 = Math.max(0, ch.getBoundingClientRect().left + off - 12), x1 = r.right + off;
   if (x0 < b.scrollLeft) b.scrollLeft = x0;
   else if (x1 > b.scrollLeft + b.clientWidth) b.scrollLeft = Math.min(x0, x1 - b.clientWidth);
 }
@@ -188,7 +187,11 @@ function paintGuides() {
   });
   $('tree-guides').replaceChildren.apply($('tree-guides'), out);
   $('tree-rows').style.setProperty('--dmax', String(dmax));
+  syncX();
 }
+/* Thân tràn ngang (cây sâu) thì đuôi dính mép phải có nền che phần tên cuộn dưới nó (css/tree.css .is-x); không tràn thì
+   đuôi không vẽ gì ngoài nút. Gọi khi vẽ cây và khi thân đổi cỡ (kéo mép, thanh cuộn dọc hiện / ẩn). */
+function syncX() { var b = $('tree-body'); b.classList.toggle('is-x', b.scrollWidth > b.clientWidth); }
 /* Vạch đậm: folder đang mở là hàng hiện tại thì vạch của nó, không thì vạch của folder chứa hàng hiện tại (như VS Code). */
 function markGuide() {
   var i = at[cur], on = null;
@@ -568,6 +571,7 @@ export function initTree() {
   $('tree-new-file').addEventListener('click', function () { call('newFile', targetDir()); });
   $('tree-new-dir').addEventListener('click', function () { call('newDir', targetDir()); });
   initHead();
+  if (window.ResizeObserver) new ResizeObserver(syncX).observe($('tree-body'));
   $('tree-dir-in').addEventListener('change', function (e) {
     if (e.target.files && e.target.files.length) call('importDir', e.target.files, null);
     e.target.value = '';

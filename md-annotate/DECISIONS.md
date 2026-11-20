@@ -40,6 +40,7 @@
 - MDAN-054 · Màn cảm ứng: Return trong ô nhận xét là xuống dòng · `md-annotate/js/ui/popup.js`
 - MDAN-061 · Cây file không tự ẩn khi chật; chỉ điện thoại là tấm trượt, đóng sẵn · thay cho MDAN-035 · `md-annotate/js/ui/tree.js`, `md-annotate/js/ui/views.js`, `md-annotate/js/core/panes.js`, `md-annotate/css/tree.css`
 - MDAN-062 · Không có dòng mô tả dưới tên trang · `md-annotate/index.html`, `md-annotate/css/base.css`
+- MDAN-063 · Cây file nông không cuộn ngang; ⋯ một cột cố định ở mép phải hàng · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`
 <!-- index:end -->
 
 ## MDAN-001 · Tab Nguồn tô màu cú pháp kiểu VS Code
@@ -345,3 +346,11 @@ văn bản: cột cây chiếm chỗ thì *Split* lùi về *Preview*, ẩn cây
 20/11/2026 · `md-annotate/index.html`, `md-annotate/css/base.css`
 
 Dưới tiêu đề Markdown Annotate không có câu giới thiệu.
+
+## MDAN-063 · Cây file nông không cuộn ngang; ⋯ một cột cố định ở mép phải hàng
+20/11/2026 · `md-annotate/css/tree.css`, `md-annotate/js/ui/tree.js`
+
+Thanh bên cây file không có thanh cuộn ngang trong trường hợp thường: tên dài cắt bằng …, tên đầy đủ ở tooltip. Chỉ cây
+sâu, khi phần thụt đẩy tên hàng sâu nhất xuống dưới ~96px, mới cuộn ngang như MDAN-060; cây không thụt thì không bao giờ,
+kể cả khi kéo hẹp. Nút ⋯ mọi hàng đứng một cột cố định ở mép phải: cùng cỡ, giữa hàng, thẳng nút ⋯ của đầu cây; huy hiệu
+đứng trước nó, không bị ẩn khi rê.

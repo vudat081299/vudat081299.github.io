@@ -2101,7 +2101,7 @@ const cornerClash = (page) => page.evaluate(() => {
       const b = document.getElementById('tree-body'), q = b.getBoundingClientRect(), nm = by.zf.querySelector('.ma-trow__name').getBoundingClientRect();
       const top = by.zr.getBoundingClientRect(), sel = getComputedStyle(by.zf, '::before');
       return { steps: [...steps], step: parseFloat(getComputedStyle(by.z0).getPropertyValue('--tree-step')), guides: n, delta, px, span, nameW: Math.round(nm.width),
-        bodyX: b.scrollWidth - b.clientWidth, sl: b.scrollLeft, page: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        bodyX: b.scrollWidth - b.clientWidth, isX: b.classList.contains('is-x'), sl: b.scrollLeft, page: document.documentElement.scrollWidth - document.documentElement.clientWidth,
         seen: nm.left >= q.left - 0.5 && nm.left + 96 <= q.left + b.clientWidth + 0.5, topW: Math.round(top.width), bodyW: b.clientWidth, cardR: sel.right, ends: ends() };
       /* Đuôi ⋯ của mọi hàng: một cột, trong tầm nhìn của thân, ở cả hai đầu cuộn ngang (sticky). */
       function ends() {
@@ -2112,8 +2112,42 @@ const cornerClash = (page) => page.evaluate(() => {
     });
     check('cây 25 cấp: thụt đều 12px mọi cấp, 25 vạch dưới tâm chevron (±0,5px, 1px trùng điểm ảnh), dài đúng các hàng con cháu',
       deep25.steps.length === 1 && deep25.steps[0] === deep25.step && deep25.step === 12 && deep25.guides === 25 && deep25.delta <= 0.5 && deep25.px === 0 && deep25.span <= 0.5, JSON.stringify(deep25));
-    check('cây 25 cấp: tên sâu nhất ≥ 96px; thân cuộn ngang, trang không; file mở được cuộn ngang vào tầm nhìn', deep25.nameW >= 96 && deep25.bodyX > 0 && deep25.sl > 0 && deep25.page === 0 && deep25.seen, JSON.stringify(deep25));
+    check('cây 25 cấp: tên sâu nhất ≥ 96px; thân cuộn ngang, trang không; file mở được cuộn ngang vào tầm nhìn', deep25.nameW >= 96 && deep25.bodyX > 0 && deep25.isX && deep25.sl > 0 && deep25.page === 0 && deep25.seen, JSON.stringify(deep25));
     check('cây 25 cấp: ⋯ mọi hàng một cột, dính mép phải thân khi cuộn ngang (không trôi giữa tấm, không bị cắt)', deep25.ends.every((e) => e.one && e.inView), JSON.stringify(deep25.ends));
+
+    /* Cây nông (3 cấp, tên dài, 30 file: thanh cuộn dọc) ở 248px và 180px: thân không tràn ngang (cả 1px), tên dài cắt … ;
+       ⋯ một cột cố định: cùng x, cùng cỡ, giữa hàng; chuột: ẩn ở hàng thường, hiện ở file mở và khi rê, huy hiệu vẫn hiện khi rê. */
+    const shallow = async (w) => {
+      await tp.evaluate((w) => document.documentElement.style.setProperty('--tree', w + 'px'), w);
+      return tp.evaluate(async () => {
+        const T = await import('./js/ui/tree.js'), noop = () => '';
+        const nodes = [{ id: 'sd', parent: null, kind: 'dir', name: 'docs' }, { id: 'sg', parent: 'sd', kind: 'dir', name: 'guides' },
+          { id: 'sf', parent: 'sg', kind: 'file', name: 'a-very-long-file-name-that-must-truncate-with-an-ellipsis.md' }];
+        for (let i = 0; i < 30; i++) nodes.push({ id: 's' + i, parent: null, kind: 'file', name: 'file-' + i + (i % 4 ? '' : '-with-a-long-descriptive-name') + '.md' });
+        T.renderTree({ sid: 'shallow', nodes, open: 'sf', collapsed: [], counts: { sf: { c: 12, rv: 40 }, s1: { c: 3 } }, title: 'Shallow' },
+          { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
+        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+        const b = document.getElementById('tree-body'), rows = [...document.querySelectorAll('#tree-list .ma-trow')];
+        const mores = rows.map((r) => { const m = r.querySelector('.ma-trow__more').getBoundingClientRect(), q = r.getBoundingClientRect();
+          return [+m.left.toFixed(1), m.width, +((m.top + m.height / 2) - (q.top + q.height / 2)).toFixed(1)]; });
+        const sf = rows.find((r) => r.dataset.id === 'sf'), nm = sf.querySelector('.ma-trow__name');
+        return { bodyX: b.scrollWidth - b.clientWidth, isX: b.classList.contains('is-x'), vbar: b.scrollHeight > b.clientHeight, xs: new Set(mores.map((m) => m[0])).size, ws: new Set(mores.map((m) => m[1])).size,
+          dy: Math.max(...mores.map((m) => Math.abs(m[2]))), cut: nm.scrollWidth > nm.clientWidth && getComputedStyle(nm).textOverflow === 'ellipsis',
+          selMore: getComputedStyle(sf.querySelector('.ma-trow__more')).opacity, idle: getComputedStyle(rows.find((r) => r.dataset.id === 's2').querySelector('.ma-trow__more')).opacity };
+      });
+    };
+    for (const w of [248, 180]) {
+      const sh = await shallow(w);
+      check(`cây nông ${w}px: thân không tràn ngang, tên dài cắt …, ⋯ một cột cùng cỡ giữa hàng, hiện ở file mở, ẩn ở hàng thường`,
+        sh.bodyX === 0 && !sh.isX && sh.vbar && sh.cut && sh.xs === 1 && sh.ws === 1 && sh.dy <= 0.5 && sh.selMore === '1' && sh.idle === '0', JSON.stringify(sh));
+    }
+    const hov = await tp.evaluate(() => { const r = [...document.querySelectorAll('#tree-list .ma-trow')].find((l) => l.dataset.id === 's1'); r.scrollIntoView({ block: 'center' }); const q = r.getBoundingClientRect(); return { x: q.left + 30, y: q.top + q.height / 2 }; });
+    await tp.mouse.move(hov.x, hov.y); await tp.waitForTimeout(250);
+    const hv = await tp.evaluate(() => { const r = [...document.querySelectorAll('#tree-list .ma-trow')].find((l) => l.dataset.id === 's1');
+      const c = r.querySelector('.ma-trow__c'), m = r.querySelector('.ma-trow__more'); return { badge: getComputedStyle(c).visibility, cR: c.getBoundingClientRect().right, mL: m.getBoundingClientRect().left, more: getComputedStyle(m).opacity }; });
+    check('cây nông: rê hàng có huy hiệu — ⋯ hiện, huy hiệu vẫn hiện, đứng trước ⋯', hv.more === '1' && hv.badge === 'visible' && hv.cR <= hv.mL, JSON.stringify(hv));
+    await tp.mouse.move(600, 600);
+    await tp.evaluate(() => document.documentElement.style.setProperty('--tree', '248px'));
     await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
 
     // Bàn phím (mẫu tree WAI-ARIA) và vòng focus chỉ sau Tab (MDAN-020).
