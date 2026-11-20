@@ -81,8 +81,10 @@ const out = (page) => page.$eval('#out', (el) => el.textContent);
 const items = (page) => page.$$eval('#list .ma-item', (els) => els.map((e) => e.textContent));
 const accentCheck = (page) => page.evaluate(() => {
   const lum = (c) => { const x = c.match(/[\d.]+/g).slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
-  const b = document.getElementById('btn-copy'), cs = getComputedStyle(b);
-  const bg = lum(cs.backgroundColor), fg = lum(cs.color);
+  const b = document.getElementById('btn-copy'), was = b.disabled;
+  b.disabled = false;   // màu của nút chính khi bật; nút tắt thì xám
+  const cs = getComputedStyle(b), bg = lum(cs.backgroundColor), fg = lum(cs.color);
+  b.disabled = was;
   return { bgLum: +bg.toFixed(2), ratio: +((Math.max(bg, fg) + 0.05) / (Math.min(bg, fg) + 0.05)).toFixed(2) };
 });
 const overflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
