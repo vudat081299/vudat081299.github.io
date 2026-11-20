@@ -13,7 +13,9 @@
    --tree, kéo #tree-grip 180–420 (docked: không quá chỗ còn lại), prefs.treeW. Bàn phím theo mẫu tree của WAI-ARIA (mũi
    tên, Home, End bật vòng focus như Tab, MDAN-020); kéo thả bằng chuột, chỗ thả được theo core canMove. Hàng bị xoá: hàng
    hiện tại thành hàng vào chỗ nó. Đầu cây một hàng (MDAN-060): New file, New folder, ⋯ (#tree-head-menu: Import folder,
-   Download .zip, Collapse all, theo mẫu menu button); phiên ≤ 1 mục thì #tree.is-sparse hiện gợi ý thả / nạp folder.
+   Download .zip, Collapse all, theo mẫu menu button); phiên ≤ 1 mục thì #tree.is-sparse hiện gợi ý thả / nạp folder. Thụt
+   đều mọi cấp: vạch thụt là phần tử riêng (#tree-guides), cây sâu thì thân cuộn ngang (--dmax); đổi tên là ô nhập trong suốt
+   đúng chỗ tên.
    Xuất: editName, focusRow, initTree, layoutTree, renderTree, revealTree, treeTakes.
    Dùng: core/tree.js, core/panes.js, core/text.js, ui/store.js, ui/dom.js, ui/views.js. */
 import { canMove, moveTargets, visibleRows } from '../core/tree.js';
@@ -134,14 +136,14 @@ function fill(li, r) {
   var meta = h('span', { class: 'ma-trow__meta' },
     c && c.c ? h('span', { class: 'ma-trow__c' }, String(c.c)) : null,
     c && typeof c.rv === 'number' && c.rv > 0 ? h('span', { class: 'ma-trow__rv' }, c.rv + '%') : null);
-  var parts = [
+  /* Đuôi: huy hiệu rồi ⋯ (css/tree.css: chuột thì ⋯ đè chỗ huy hiệu khi rê). */
+  var end = h('span', { class: 'ma-trow__end' }, meta.childNodes.length ? meta : null,
+    h('button', { class: 'ma-icbtn ma-icbtn--bare ma-trow__more', type: 'button', tabindex: '-1', 'aria-haspopup': 'menu',
+      'aria-label': 'Actions for ' + n.name, title: 'More actions' }, icon('dots')));
+  li.replaceChildren(
     h('span', { class: 'ma-trow__chev', 'aria-hidden': 'true' }, dir ? icon('chev') : null),
     h('span', { class: 'ma-trow__ic', 'aria-hidden': 'true' }, icon(dir ? (shut ? 'folder' : 'folder-open') : 'file')),
-    h('span', { class: 'ma-trow__name' }, n.name)];
-  if (meta.childNodes.length) parts.push(meta);
-  parts.push(h('button', { class: 'ma-icbtn ma-icbtn--bare ma-trow__more', type: 'button', tabindex: '-1', 'aria-haspopup': 'menu',
-    'aria-label': 'Actions for ' + n.name, title: 'More actions' }, icon('dots')));
-  li.replaceChildren.apply(li, parts);
+    h('span', { class: 'ma-trow__name' }, n.name), end);
 }
 function rowEl(r, pos, size, path) {
   var n = r.node, li = els[n.id];
@@ -172,11 +174,41 @@ function reconcile(list, want) {
   });
   while (ref) { var nx = ref.nextSibling; list.removeChild(ref); ref = nx; }
 }
-/* Cuộn thân cây vừa đủ để thấy hàng (không cuộn trang). */
+/* Cuộn thân cây vừa đủ để thấy hàng (không cuộn trang): dọc cả hàng; ngang từ ô chevron tới ~96px đầu của tên (cây sâu
+   rộng hơn thân). */
+var NAME_SEEN = 96;
 function reveal(li) {
   var b = $('tree-body'), r = li.getBoundingClientRect(), q = b.getBoundingClientRect();
   if (r.top < q.top) b.scrollTop -= q.top - r.top + 4;
   else if (r.bottom > q.top + b.clientHeight) b.scrollTop += r.bottom - (q.top + b.clientHeight) + 4;
+  var ch = li.querySelector('.ma-trow__chev');
+  if (!ch || b.scrollWidth <= b.clientWidth) return;
+  var x = ch.getBoundingClientRect().left - q.left - b.clientLeft + b.scrollLeft;   // toạ độ trong vùng cuộn
+  var x0 = Math.max(0, x - 12), x1 = Math.max(x + 20 + 24 + NAME_SEEN, r.right - q.left - b.clientLeft + b.scrollLeft);   // tới mép phải hàng
+  if (x0 < b.scrollLeft) b.scrollLeft = x0;
+  else if (x1 > b.scrollLeft + b.clientWidth) b.scrollLeft = Math.min(x0, x1 - b.clientWidth);
+}
+/* VẠCH THỤT: một vạch cho mỗi folder đang hiện con, dài đúng các hàng con cháu (vị trí, độ dài: css/tree.css theo --d, --i,
+   --n). --dmax (cấp sâu nhất đang hiện) cho khối hàng bề rộng tối thiểu: thụt không bị nén, thân cuộn ngang. */
+function paintGuides() {
+  var out = [], dmax = 0;
+  rows.forEach(function (r, i) {
+    if (r.depth > dmax) dmax = r.depth;
+    var n = 0;
+    while (rows[i + 1 + n] && rows[i + 1 + n].depth > r.depth) n++;
+    if (!n) return;
+    var g = h('div', { class: 'ma-tree__g', style: '--d:' + r.depth + ';--i:' + (i + 1) + ';--n:' + n });
+    g.dataset.for = r.node.id;
+    out.push(g);
+  });
+  $('tree-guides').replaceChildren.apply($('tree-guides'), out);
+  $('tree-rows').style.setProperty('--dmax', String(dmax));
+}
+/* Vạch đậm: folder đang mở là hàng hiện tại thì vạch của nó, không thì vạch của folder chứa hàng hiện tại (như VS Code). */
+function markGuide() {
+  var i = at[cur], on = null;
+  if (i != null) on = rows[i + 1] && rows[i + 1].depth > rows[i].depth ? cur : parentOf(cur);
+  Array.prototype.forEach.call($('tree-guides').children, function (g) { g.classList.toggle('is-on', on != null && g.dataset.for === String(on)); });
 }
 
 export function renderTree(m, actions) {
@@ -214,6 +246,7 @@ export function renderTree(m, actions) {
   if (cur == null || !(cur in at)) cur = m.open in at ? m.open : (rows[0] ? rows[0].node.id : null);
   curAt = cur in at ? at[cur] : 0;
   rows.forEach(function (r) { els[r.node.id].tabIndex = r.node.id === cur ? 0 : -1; });
+  paintGuides(); markGuide();
   if (hadFocus && cur != null && !editing) els[cur].focus({ preventScroll: true });
   if (m.open !== lastOpen) {
     lastOpen = m.open;
@@ -226,6 +259,7 @@ function setCur(id, focus) {
   if (!(id in at)) return;
   if (cur != null && els[cur]) els[cur].tabIndex = -1;
   cur = id; curAt = at[id]; els[id].tabIndex = 0;
+  markGuide();
   if (focus) { els[id].focus({ preventScroll: true }); reveal(els[id]); }
 }
 
@@ -239,7 +273,8 @@ function activate(id) {
   closeSheet();
 }
 
-/* ĐỔI TÊN tại chỗ: Enter lưu (lỗi thì toast, vẫn sửa), Esc bỏ, rời ô thì lưu (lỗi thì toast, bỏ). */
+/* ĐỔI TÊN ngay trên tên: ô nhập trong suốt thay chỗ tên, cùng chữ, cùng vị trí (css/tree.css). Enter lưu (lỗi thì toast,
+   vẫn sửa), Esc bỏ, rời ô thì lưu (lỗi thì toast, bỏ). */
 export function editName(id) {
   var li = els[id], n = byId[id];
   if (!li || !li.isConnected || !n) return;
@@ -247,7 +282,7 @@ export function editName(id) {
   if (editing) endEdit(false);
   setCur(id, false);
   var inp = h('input', { class: 'ma-input ma-trow__ren', type: 'text', value: n.name, spellcheck: 'false', autocomplete: 'off',
-    'aria-label': 'New name for ' + n.name });
+    'aria-label': 'Rename ' + n.name });
   editing = { id: id, input: inp, orig: n.name };
   var name = li.querySelector('.ma-trow__name');
   li.querySelectorAll('.ma-trow__meta, .ma-trow__more').forEach(function (x) { x.remove(); });
@@ -261,7 +296,8 @@ export function editName(id) {
   });
   inp.addEventListener('blur', function () { if (editing && editing.input === inp) commit(false); });
   ['click', 'dblclick', 'pointerdown'].forEach(function (t) { inp.addEventListener(t, function (e) { e.stopPropagation(); }); });
-  inp.focus();
+  inp.focus({ preventScroll: true });
+  reveal(li);
   var dot = n.kind === 'file' ? n.name.lastIndexOf('.') : -1;
   inp.setSelectionRange(0, dot > 0 ? dot : n.name.length);
 }

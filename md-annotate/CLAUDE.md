@@ -173,8 +173,8 @@
   thanh trên tới đáy khung nhìn (≤ 1080px: trên thanh đáy); `body` đệm trái `--tree`, vùng làm việc và phần trong thanh trên căn giữa phần còn lại (`docRoom`).
 - `prefs.tree` (chưa chọn: hiện khi ≥ 2 mục) là "muốn thấy cây": cột thì `#btn-tree` / Ctrl/⌘ + B đổi nó; tấm trượt thì chỉ mở tấm. Nạp folder hiện cây cho phiên ấy, không ghi
   nó (MDAN-032). Xét lại khi `#doc` đổi rộng (ResizeObserver), đổi chế độ xem, vẽ cây; kéo mép dừng ở chỗ còn lại; *Split* tính `#doc` như khi không có cột (`treeTakes()`).
-- Dáng (MDAN-060): `#btn-tree` > 720px luôn ở mép trái thanh trên (`--pad` + vùng an toàn), tên trang thẳng vùng làm việc, hẹp thì đứng sau nút. Đầu cây một hàng (FILES,
-  tên, New file, New folder, ⋯); hàng 28px, vạch thụt `--guide`; file mở: `--accent-soft` + vạch trái bo trọn `--edge-on`; tấm trượt: vùng an toàn, góc phải bo, không viền.
+- Dáng (MDAN-060): `#btn-tree` > 720px ở mép trái thanh trên (`--pad` + vùng an toàn), tên trang thẳng vùng làm việc, hẹp thì sau nút. Đầu cây: FILES nhỏ trên tên phiên, New file, New folder, ⋯ (tấm trượt: Close sau một vạch).
+  Hàng cao đúng `--row-h`; thụt đều `--tree-step` mọi cấp, không trần: sâu thì `#tree-body` cuộn ngang (`--dmax`, tên ≥ 96px), trang không; mỗi folder mở một vạch `#tree-guides` dưới tâm chevron, dài đúng các hàng con. File mở: thẻ bo, viền đủ bốn cạnh `--edge-on`, nền `--accent-soft`, bắt đầu trước biểu tượng, không tô cả hàng. Đổi tên: ô nhập trong suốt đúng chỗ tên. Tấm trượt: vùng an toàn, góc phải bo, không viền.
 - Mở file từ đĩa: file mở trống, chưa có tên thật thì điền, không thì thêm cạnh nó (MDAN-024). Nạp folder là bản sao, bộ nhớ đầy thì hoàn lại: bỏ `skipEntry`
   (không đọc vào), không phải chữ (`isTextFile`, MDAN-030), có NUL, > 1 MB; phiên trống thì mở `firstFile` (MDAN-031); xong mà đã đổi phiên thì vào phiên ấy.
 - Xoá không hỏi, toast có Undo (cả chuyển): `applyUndo` chỉ trả lại mục ấy (MDAN-028), cả khi đã đổi phiên (`sessionFor`). Tải: `downloadOf`, `zipOf`. *All files* (`S.promptAll`, `allFilesOffered`, MDAN-025): `buildPromptAll`; file không mở neo qua `anchorsOf()` (nhớ theo doc). Tab *Comments* chỉ có file mở.

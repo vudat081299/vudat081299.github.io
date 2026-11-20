@@ -108,7 +108,7 @@
     <nav class="ma-tree" id="tree" aria-label="Files">
       <div class="ma-tree__grip" id="tree-grip" role="separator" aria-orientation="vertical" tabindex="0"
            aria-label="Resize file list" title="Drag to resize"></div>
-      <!-- Đầu cây một hàng: nhãn Files + tên phiên, New file, New folder, ⋯ (#tree-head-menu), Close (chỉ tấm trượt). -->
+      <!-- Đầu cây một hàng: nhãn Files nhỏ trên tên phiên, New file, New folder, ⋯ (#tree-head-menu), Close (chỉ tấm trượt). -->
       <div class="ma-tree__head">
         <span class="ma-tree__t"><span class="ma-tree__k">Files</span><span class="ma-tree__n" id="tree-title"></span></span>
         <button class="ma-icbtn ma-icbtn--bare" type="button" id="tree-new-file" aria-label="New file" title="New file"></button>
@@ -128,7 +128,11 @@
         <button class="ma-menu__i" type="button" role="menuitem" tabindex="-1" id="tree-collapse" title="Collapse all folders"><span>Collapse all</span></button>
       </div>
       <div class="ma-tree__body" id="tree-body">
-        <ul class="ma-tree__list" id="tree-list" role="tree" aria-label="Files"></ul>
+        <!-- Khối hàng: vạch thụt (#tree-guides, ui/tree.js vẽ) dưới danh sách; rộng hơn thân khi cây sâu (thân cuộn ngang). -->
+        <div class="ma-tree__rows" id="tree-rows">
+          <div class="ma-tree__guides" id="tree-guides" aria-hidden="true"></div>
+          <ul class="ma-tree__list" id="tree-list" role="tree" aria-label="Files"></ul>
+        </div>
         <!-- Phiên ≤ 1 mục (ui/tree.js .is-sparse): gợi ý thả file / nạp folder. -->
         <div class="ma-tree__hint" id="tree-hint">
           <p class="ma-tree__hint-t"><span class="ma-tree__hint-p">Drop files or a folder here</span><span class="ma-tree__hint-c">Add files from your device</span></p>

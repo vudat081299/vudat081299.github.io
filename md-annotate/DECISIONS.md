@@ -33,7 +33,7 @@
 - MDAN-036 · Thanh trên ở điện thoại giữ nút chính, còn lại trong menu More · `md-annotate/index.html`, `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
 - MDAN-037 · Cây file docked nằm sát mép trái màn hình, vùng làm việc căn giữa phần còn lại · `md-annotate/css/tree.css`, `md-annotate/css/base.css`, `md-annotate/js/ui/tree.js`, `md-annotate/js/core/panes.js`
 - MDAN-045 · Focus mode và Dim reviewed gộp bằng số mờ hơn, dòng dưới chuột luôn sáng · `md-annotate/`
-- MDAN-060 · Thanh bên cây file: đầu một hàng, vạch thụt, nút Files ở mép trái, theo vùng an toàn · `md-annotate/css/tree.css`, `md-annotate/index.html`, `md-annotate/js/ui/tree.js`
+- MDAN-060 · Thanh bên cây file: thụt đều mọi cấp, thẻ cho file mở, đổi tên ngay trên tên, nút Files ở mép trái · `md-annotate/css/tree.css`, `md-annotate/index.html`, `md-annotate/js/ui/tree.js`
 - MDAN-050 · Chọn dòng bằng chạm: nhấn giữ số dòng · `md-annotate/js/ui/picks.js`, `md-annotate/js/ui/popup.js`, `md-annotate/data/shortcuts.json`
 - MDAN-051 · Thanh trên ở điện thoại tự ẩn khi cuộn xuống · `md-annotate/js/ui/bar.js`, `md-annotate/css/mobile.css`
 - MDAN-052 · Gợi ý đã đọc và khối hiện tại là hai dấu khác nhau; viên thuốc Accept N · `md-annotate/css/review.css`, `md-annotate/js/ui/review.js`, `md-annotate/js/ui/dwell.js`
@@ -287,15 +287,20 @@ section đang sáng vẫn mờ theo *Dim reviewed*. Dòng trống ở Source m�
 trên phần màn hình còn lại và căn giữa trong đó; tên trang và các nút trên thanh trên thẳng hàng với vùng làm việc, trừ nút
 Files (MDAN-060).
 
-## MDAN-060 · Thanh bên cây file: đầu một hàng, vạch thụt, nút Files ở mép trái, theo vùng an toàn
+## MDAN-060 · Thanh bên cây file: thụt đều mọi cấp, thẻ cho file mở, đổi tên ngay trên tên, nút Files ở mép trái
 20/11/2026 · `md-annotate/css/tree.css`, `md-annotate/index.html`, `md-annotate/js/ui/tree.js`
 
 Cây file trông như thanh bên của trình soạn mã. Nút Files luôn ở mép trái thanh trên (lề trang cộng vùng an toàn), dù cây
 là cột, tấm trượt hay đang ẩn; tên trang vẫn thẳng hàng vùng làm việc, cửa sổ hẹp thì đứng ngay sau nút, không chồng, không
-nhảy. Khi là cột, phần thanh trên phía trên cột cùng nền với cột. Đầu cây một hàng: nhãn Files, tên phiên, New file, New
-folder và ⋯ (Import folder, Download .zip, Collapse all); tấm trượt thêm nút đóng. Hàng thấp (28px, cảm ứng 44px), mỗi cấp
-một vạch dọc mảnh; file đang mở là nền xanh nhạt cùng vạch trái bo tròn, không phải hộp có viền. Phiên chỉ một file thì có
-gợi ý thả file hay nạp folder. Tấm trượt rộng tối đa 320px, tránh vùng an toàn trên, trái, dưới, góc phải bo, nổi bằng bóng.
+nhảy. Khi là cột, phần thanh trên phía trên cột cùng nền với cột. Đầu cây một hàng: nhãn Files nhỏ trên tên phiên, New
+file, New folder và ⋯ (Import folder, Download .zip, Collapse all); tấm trượt thêm nút đóng, tách bằng một vạch. Hàng thấp
+(28px, cảm ứng 44px). Mỗi cấp thụt bằng nhau, ở mọi độ sâu, không nén: tên sắp hẹp hơn ~96px thì danh sách cuộn ngang
+trong thanh bên, trang không cuộn ngang, file đang mở được cuộn vào tầm nhìn. Mỗi folder đang mở có một vạch mảnh, nhạt,
+dưới tâm chevron của nó, chỉ dài qua các hàng con; vạch của folder chứa hàng hiện tại đậm hơn. File đang mở là một thẻ bo
+góc có viền đủ bốn cạnh (≥ 3:1) và nền xanh nhạt, ôm phần biểu tượng và tên, không tô cả hàng, không vạch trái riêng. Đổi
+tên ngay trên tên: không ô nhập nhìn thấy (không viền, không vòng, không nền), chữ không xê dịch, chỉ có con trỏ và màu
+vùng chọn chung. Phiên chỉ một file thì có gợi ý thả file hay nạp folder. Tấm trượt rộng tối đa 320px, tránh vùng an toàn
+trên, trái, dưới, góc phải bo, nổi bằng bóng.
 
 ## MDAN-050 · Chọn dòng bằng chạm: nhấn giữ số dòng
 20/11/2026 · `md-annotate/js/ui/picks.js`, `md-annotate/js/ui/popup.js`, `md-annotate/data/shortcuts.json`

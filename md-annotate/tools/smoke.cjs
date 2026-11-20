@@ -1988,14 +1988,18 @@ const cornerClash = (page) => page.evaluate(() => {
     ts = await tstate(tp);
     check('cây: cột trái rộng 248px trước #doc, Split vẫn có', ts.shown && ts.w === 248 && ts.left < ts.docL && ts.split && ts.rows === 50, JSON.stringify(ts));
     check('cây: nhiều mục thì không có gợi ý', !(await hint()).on);
-    /* Đầu cây một hàng (MDAN-060): nhãn, tên, New file, New folder, ⋯ cùng một hàng cao --h; Close ẩn khi là cột. */
+    /* Đầu cây một hàng (MDAN-060): khối chữ (FILES nhỏ trên tên phiên, cùng mép trái), rồi New file, New folder, ⋯ cùng một
+       hàng cao --h + --s2; nút 28px, tâm ⋯ thẳng tâm ⋯ của hàng; Close ẩn khi là cột. */
     const head = await tp.evaluate(() => {
       const hd = document.querySelector('#tree .ma-tree__head').getBoundingClientRect();
-      const parts = ['.ma-tree__k', '#tree-title', '#tree-new-file', '#tree-new-dir', '#tree-more'].map((q) => document.querySelector(q).getBoundingClientRect());
-      return { h: hd.height, row: parts.every((r) => r.height > 0 && r.top >= hd.top && r.bottom <= hd.bottom), order: parts.every((r, i, a) => !i || r.left >= a[i - 1].right - 0.5),
-        close: !!document.querySelector('#tree .ma-tree__close').getClientRects().length, btn: Math.round(parts[2].width) };
+      const [k, t, ...b] = ['.ma-tree__k', '#tree-title', '#tree-new-file', '#tree-new-dir', '#tree-more'].map((q) => document.querySelector(q).getBoundingClientRect());
+      const li = document.querySelector('#tree-list .ma-trow'), bd = document.getElementById('tree-body'); li.classList.add('is-menu');
+      const rm = li.querySelector('.ma-trow__more').getBoundingClientRect(); li.classList.remove('is-menu');
+      return { h: hd.height, row: [k, t, ...b].every((r) => r.height > 0 && r.top >= hd.top && r.bottom <= hd.bottom), stack: k.bottom <= t.top + 0.5 && Math.abs(k.left - t.left) <= 0.5,
+        order: b.every((r, i) => r.left >= (i ? b[i - 1].right : Math.max(k.right, t.right)) - 0.5), close: !!document.querySelector('#tree .ma-tree__close').getClientRects().length,
+        btn: Math.round(b[0].width), moreDx: Math.abs((b[2].left + b[2].width / 2) - (rm.left + rm.width / 2) - (bd.offsetWidth - bd.clientWidth)) };   // trừ thanh cuộn dọc nếu nó chiếm chỗ
     });
-    check('cây: đầu cây một hàng cao 40px: FILES, tên, New file, New folder, ⋯; nút 28px; không có Close', head.h === 40 && head.row && head.order && !head.close && head.btn === 28, JSON.stringify(head));
+    check('cây: đầu cây một hàng cao 48px: FILES trên tên, rồi New file, New folder, ⋯; nút 28px, ⋯ thẳng ⋯ của hàng; không có Close', head.h === 48 && head.row && head.stack && head.order && !head.close && head.btn === 28 && head.moreDx <= 0.5, JSON.stringify(head));
     // Menu ⋯: bấm mở (Import folder…, Download .zip, Collapse all), Esc đóng và trả focus; ↓ trên nút mở và vào mục đầu.
     await tp.click('#tree-more'); await tp.waitForTimeout(80);
     const hm = await tp.evaluate(() => ({ open: document.getElementById('tree-head-menu').classList.contains('is-open'), exp: document.getElementById('tree-more').getAttribute('aria-expanded'),
@@ -2054,6 +2058,39 @@ const cornerClash = (page) => page.evaluate(() => {
     dp = await deep();
     check('cây: 248px, hàng cấp 9 thụt vào mà vẫn thấy ≥ 8 ký tự tên', dp.w >= dp.need && dp.indent >= 60, JSON.stringify(dp));
 
+    /* Cây 25 cấp (MDAN-060): thụt mỗi cấp bằng nhau (--tree-step), mỗi folder đang mở có đúng một vạch dưới tâm chevron (±0,5px,
+       trùng điểm ảnh), dài đúng các hàng con cháu; tên hàng sâu nhất vẫn ≥ 96px; thân cây cuộn ngang, trang không; file mở ở
+       cấp sâu nhất được cuộn ngang vào tầm nhìn. */
+    const deep25 = await tp.evaluate(async () => {
+      const T = await import('./js/ui/tree.js'), noop = () => '', nodes = [];
+      let parent = null;
+      for (let d = 0; d < 25; d++) { nodes.push({ id: 'z' + d, parent, kind: 'dir', name: d % 3 ? 'folder' : 'folder-' + d }); parent = 'z' + d; }
+      nodes.push({ id: 'zf', parent, kind: 'file', name: 'deepest-note.md' }, { id: 'zr', parent: null, kind: 'file', name: 'top.md' });
+      T.renderTree({ sid: 'deep25', nodes, open: 'zf', collapsed: [], counts: {}, title: 'Deep' },
+        { open: noop, toggle: noop, newFile: noop, newDir: noop, rename: noop, move: noop, remove: noop, importDir: noop, download: noop, collapseAll: noop });
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const rows = [...document.querySelectorAll('#tree-list .ma-trow')], by = Object.fromEntries(rows.map((r) => [r.dataset.id, r]));
+      const chevX = (li) => { const s = li.querySelector('.ma-trow__chev').getBoundingClientRect(); return s.left + s.width / 2; };
+      const steps = new Set(); for (let d = 1; d < 25; d++) steps.add(+(chevX(by['z' + d]) - chevX(by['z' + (d - 1)])).toFixed(2));
+      let delta = 0, px = 0, span = 0, n = 0;
+      for (const g of document.querySelectorAll('#tree-guides .ma-tree__g')) {
+        const r = g.getBoundingClientRect(), li = by[g.dataset.for], i = rows.indexOf(li);
+        delta = Math.max(delta, Math.abs(r.left + r.width / 2 - chevX(li)));
+        px = Math.max(px, Math.abs(r.left * devicePixelRatio - Math.round(r.left * devicePixelRatio)), Math.abs(r.width - 1));
+        let k = 0; while (rows[i + 1 + k] && +rows[i + 1 + k].getAttribute('aria-level') > +li.getAttribute('aria-level')) k++;
+        span = Math.max(span, Math.abs(r.top - rows[i + 1].getBoundingClientRect().top), Math.abs(r.bottom - rows[i + k].getBoundingClientRect().bottom)); n++;
+      }
+      const b = document.getElementById('tree-body'), q = b.getBoundingClientRect(), nm = by.zf.querySelector('.ma-trow__name').getBoundingClientRect();
+      const top = by.zr.getBoundingClientRect(), sel = getComputedStyle(by.zf, '::before');
+      return { steps: [...steps], step: parseFloat(getComputedStyle(by.z0).getPropertyValue('--tree-step')), guides: n, delta, px, span, nameW: Math.round(nm.width),
+        bodyX: b.scrollWidth - b.clientWidth, sl: b.scrollLeft, page: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        seen: nm.left >= q.left - 0.5 && nm.left + 96 <= q.left + b.clientWidth + 0.5, topW: Math.round(top.width), bodyW: b.clientWidth, cardR: sel.right };
+    });
+    check('cây 25 cấp: thụt đều 12px mọi cấp, 25 vạch dưới tâm chevron (±0,5px, 1px trùng điểm ảnh), dài đúng các hàng con cháu',
+      deep25.steps.length === 1 && deep25.steps[0] === deep25.step && deep25.step === 12 && deep25.guides === 25 && deep25.delta <= 0.5 && deep25.px === 0 && deep25.span <= 0.5, JSON.stringify(deep25));
+    check('cây 25 cấp: tên sâu nhất ≥ 96px; thân cuộn ngang, trang không; file mở được cuộn ngang vào tầm nhìn', deep25.nameW >= 96 && deep25.bodyX > 0 && deep25.sl > 0 && deep25.page === 0 && deep25.seen, JSON.stringify(deep25));
+    await tp.evaluate(treeDemo, false); await tp.waitForTimeout(150);
+
     // Bàn phím (mẫu tree WAI-ARIA) và vòng focus chỉ sau Tab (MDAN-020).
     await tp.click(row('archive'));
     const ring = await tp.$eval(row('archive'), (l) => getComputedStyle(l).outlineStyle);
@@ -2078,8 +2115,16 @@ const cornerClash = (page) => page.evaluate(() => {
     await tp.keyboard.press('r');
     check('cây: gõ chữ nhảy tới tên', (await focusName(tp)) === 'README.md', await focusName(tp));
     await tp.keyboard.press('Enter'); await tp.waitForTimeout(250);   // nền chuyển màu --dur
-    const sel = await tp.$eval(row('README.md'), (l) => { const a = getComputedStyle(l, '::after'); return [l.getAttribute('aria-selected'), getComputedStyle(l).backgroundColor, a.width, a.borderRadius, getComputedStyle(l).boxShadow]; });
-    check('cây: Enter mở file, hàng thành đang chọn (nền nhạt + vạch trái bo trọn 3px, không viền một cạnh; MDAN-060)', JSON.stringify(await tl()) === JSON.stringify(['open', ids['README.md']]) && sel[0] === 'true' && !/\/ 0\)$|, 0\)$|transparent/.test(sel[1]) && sel[2] === '3px' && parseFloat(sel[3]) > 1 && sel[4] === 'none', JSON.stringify(sel));
+    const sel = await tp.$eval(row('README.md'), (l) => {
+      const a = getComputedStyle(l, '::before'), r = l.getBoundingClientRect(), ic = l.querySelector('.ma-trow__ic').getBoundingClientRect();
+      const L = r.left + parseFloat(a.left), R = r.right - parseFloat(a.right);
+      return { sel: l.getAttribute('aria-selected'), rowBg: getComputedStyle(l).backgroundColor, fill: a.backgroundColor, radius: parseFloat(a.borderTopLeftRadius),
+        border: [a.borderTopWidth, a.borderRightWidth, a.borderBottomWidth, a.borderLeftWidth, a.borderTopStyle].join(' '), insetL: +(ic.left - L).toFixed(1), w: +(R - L).toFixed(1), rowW: r.width,
+        bodyL: document.getElementById('tree-body').getBoundingClientRect().left, L, after: getComputedStyle(l, '::after').content, shadow: getComputedStyle(l).boxShadow };
+    });
+    check('cây: Enter mở file, hàng thành thẻ chọn: bo, viền đủ bốn cạnh 1px, nền nhạt, lùi vào trong (bắt đầu trước biểu tượng, không trọn hàng), hàng không tô, không vạch riêng (MDAN-060)',
+      JSON.stringify(await tl()) === JSON.stringify(['open', ids['README.md']]) && sel.sel === 'true' && /rgba\(0, 0, 0, 0\)|transparent/.test(sel.rowBg) && !/, 0\)$|transparent/.test(sel.fill)
+      && sel.radius >= 4 && sel.border === '1px 1px 1px 1px solid' && sel.insetL > 0 && sel.insetL <= 12 && sel.w < sel.rowW - 8 && sel.L - sel.bodyL >= 8 && sel.after === 'none' && sel.shadow === 'none', JSON.stringify(sel));
     /* Tương phản trên hàng đang chọn (nền pha nhiều lớp): chữ ≥ 4,5:1, viền --edge-on ≥ 3:1, cả hai theme. */
     const treeContrast = () => tp.evaluate(() => {
       const parse = (c) => { const m = c.match(/[\d.]+/g).map(Number); return c.startsWith('color(') ? [m[0] * 255, m[1] * 255, m[2] * 255, m.length > 3 ? m[3] : 1] : [m[0], m[1], m[2], m.length > 3 ? m[3] : 1]; };
@@ -2088,19 +2133,19 @@ const cornerClash = (page) => page.evaluate(() => {
       const lum = (c) => { const x = c.slice(0, 3).map((n) => { n /= 255; return n <= 0.03928 ? n / 12.92 : ((n + 0.055) / 1.055) ** 2.4; }); return 0.2126 * x[0] + 0.7152 * x[1] + 0.0722 * x[2]; };
       const ratio = (a, b) => { const x = lum(a), y = lum(b); return +((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05)).toFixed(2); };
       const sel = document.querySelector('#tree-list .ma-trow[aria-selected="true"]'), out = {};
-      for (const [k, q] of [['name', '.ma-trow__name'], ['c', '.ma-trow__c'], ['rv', '.ma-trow__rv']]) { const el = sel.querySelector(q); out[k] = el ? ratio(parse(getComputedStyle(el).color), bgOf(el)) : 0; }
-      /* Vạch trái (::after) trên nền hàng đang chọn; vạch thụt (--guide) trên nền thân cây (trang trí, chỉ ghi số). */
-      out.edge = ratio(over(parse(getComputedStyle(sel, '::after').backgroundColor), bgOf(sel)), bgOf(sel));
-      const g = document.querySelector('#tree-list .ma-trow[aria-level="3"]');
-      const gm = g && getComputedStyle(g, '::before').backgroundImage.match(/rgba?\([^)]*\)|color\([^)]*\)/);
-      out.guide = gm ? ratio(over(parse(gm[0]), bgOf(g)), bgOf(g)) : 0;
+      /* Viền thẻ chọn (::before) trên nền thân và trên nền thẻ; chữ trên nền thẻ; vạch thụt trên nền thân (trang trí, chỉ ghi số). */
+      const cb = getComputedStyle(sel, '::before'), base = bgOf(sel), fill = over(parse(cb.backgroundColor), base);
+      for (const [k, q] of [['name', '.ma-trow__name'], ['c', '.ma-trow__c'], ['rv', '.ma-trow__rv']]) { const el = sel.querySelector(q); if (el) { const bg = over(parse(getComputedStyle(el).backgroundColor), fill); out[k] = ratio(parse(getComputedStyle(el).color), bg); } }
+      out.edge = Math.min(ratio(over(parse(cb.borderTopColor), base), base), ratio(over(parse(cb.borderTopColor), fill), fill));
+      const g = document.querySelector('#tree-guides .ma-tree__g');
+      out.guide = g ? ratio(over(parse(getComputedStyle(g).backgroundColor), base), base) : 0;
       return out;
     });
     await tp.evaluate(() => { const m = window.__tree.model; m.counts[m.open] = { c: 3, rv: 42 }; window.__tree.render(); });
     for (const dark of [false, true]) {
       await tp.evaluate((d) => document.documentElement.classList.toggle('dark', d), dark); await tp.waitForTimeout(300);
       const tc = await treeContrast();
-      check(`cây (${dark ? 'tối' : 'sáng'}): hàng đang chọn — tên, huy hiệu ≥ 4,5:1, vạch trái ≥ 3:1`, tc.name >= 4.5 && tc.c >= 4.5 && tc.rv >= 4.5 && tc.edge >= 3, JSON.stringify(tc));
+      check(`cây (${dark ? 'tối' : 'sáng'}): thẻ chọn — tên, huy hiệu ≥ 4,5:1, viền thẻ ≥ 3:1 trên nền thân và nền thẻ; vạch thụt thấy được (≥ 1,15:1)`, tc.name >= 4.5 && tc.c >= 4.5 && tc.rv >= 4.5 && tc.edge >= 3 && tc.guide >= 1.15, JSON.stringify(tc));
     }
     await tp.evaluate(() => document.documentElement.classList.remove('dark'));
     const tabbed = await tp.evaluate(() => document.documentElement.classList.contains('ma-tabbing'));
@@ -2113,7 +2158,14 @@ const cornerClash = (page) => page.evaluate(() => {
     const kr = await tp.evaluate(() => [document.activeElement.classList.contains('ma-trow'), getComputedStyle(document.activeElement).outlineStyle]);
     check('cây: Tab vào cây tới hàng hiện tại, có vòng focus', kr[0] && kr[1] === 'solid' && (await focusName(tp)) === 'README.md', JSON.stringify(kr));
     // Đổi tên: F2, lỗi thì toast và vẫn sửa, Esc bỏ; bấm đúp; Enter lưu.
+    const nameBox = (q) => tp.$eval(row('README.md'), (l, q) => { const e = l.querySelector(q), r = e.getBoundingClientRect(), cs = getComputedStyle(e);
+      return { x: r.left, y: r.top, h: r.height, font: cs.font, ls: cs.letterSpacing, border: cs.borderTopWidth + cs.borderLeftWidth, outline: cs.outlineStyle, bg: cs.backgroundColor, shadow: cs.boxShadow, label: e.getAttribute('aria-label'), ring: getComputedStyle(l).outlineStyle }; }, q);
+    const nb0 = await nameBox('.ma-trow__name');
     await tp.keyboard.press('F2');
+    const nb1 = await nameBox('.ma-trow__ren');
+    check('cây: ô đổi tên vô hình — cùng chỗ, cùng cao, cùng chữ với tên (±0,5px); không viền, không vòng (cả vòng Tab của hàng), không nền, không bóng; nhãn Rename …',
+      Math.abs(nb1.x - nb0.x) <= 0.5 && Math.abs(nb1.y - nb0.y) <= 0.5 && Math.abs(nb1.h - nb0.h) <= 0.5 && nb1.font === nb0.font && nb1.ls === nb0.ls
+      && nb1.border === '0px0px' && nb1.outline === 'none' && /rgba\(0, 0, 0, 0\)|transparent/.test(nb1.bg) && nb1.shadow === 'none' && nb1.ring === 'none' && nb1.label === 'Rename README.md', JSON.stringify([nb0, nb1]));
     const ren = () => tp.$eval('#tree-list', (ul) => { const i = ul.querySelector('.ma-trow__ren'); return i ? { v: i.value, f: document.activeElement === i, sel: i.value.slice(i.selectionStart, i.selectionEnd) } : null; });
     let rn = await ren();
     check('cây: F2 mở ô đổi tên, chọn phần tên trước đuôi', rn && rn.v === 'README.md' && rn.f && rn.sel === 'README', JSON.stringify(rn));

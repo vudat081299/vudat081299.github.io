@@ -86,7 +86,7 @@
   --bar-h: 60px;
   --side: 360px;                       /* bề rộng panel; người dùng kéo được 320–560, lưu ở prefs.side */
   --tree: 248px;                       /* bề rộng cây file (css/tree.css); kéo được 180–420, lưu ở prefs.treeW */
-  --tree-step: 12px;                   /* thụt mỗi cấp của cây file */
+  --tree-step: 12px;                   /* thụt mỗi cấp của cây file, đều mọi độ sâu; cảm ứng 14px (css/tree.css) */
   /* Vùng an toàn (tai thỏ, thanh home; viewport-fit=cover) và bàn phím ảo che đáy khung nhìn (--kb, ui/dom.js đặt). */
   --sa-t: env(safe-area-inset-top, 0px); --sa-r: env(safe-area-inset-right, 0px);
   --sa-b: env(safe-area-inset-bottom, 0px); --sa-l: env(safe-area-inset-left, 0px);
