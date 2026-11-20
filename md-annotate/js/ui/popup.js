@@ -14,7 +14,7 @@ import { chipHints, pct } from '../core/hints.js';
 import { addComment, editComment, findComment, overlapWarning, partsOf } from '../core/comments.js';
 import { popPlace, sheetReveal } from '../core/place.js';
 import { pickSummary } from '../core/picks.js';
-import { $, h, mqSheet, mqTouch, paintHL, reduceMotion, shown, syncBar, toast } from './dom.js';
+import { $, h, mqSheet, mqTouch, paintHL, shown, syncBar, toast } from './dom.js';
 import { rangeAt } from './anchor-dom.js';
 import { D, scheduleSave } from './state.js';
 import { recordUse, seedState, stats } from './hints.js';
@@ -175,7 +175,7 @@ function revealAbove(span) {
   var d = Math.round(sheetReveal(span.top, span.bottom, sheetTop, head, 12));
   if (!d) return;
   noteJump();
-  (pane || window).scrollBy({ top: d, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+  (pane || window).scrollBy(0, d);   // ngay, không cuộn mượt: tấm đang trượt lên, và lưu ngay sau đó không được thấy trang còn trôi
 }
 /* Nền mờ sau tấm đáy: chỉ khi tấm hiện và không ở chế độ chọn dòng (vẫn bấm lề số các dòng khác, MDAN-026). */
 function syncScrim() {

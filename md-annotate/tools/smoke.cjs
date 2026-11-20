@@ -1432,7 +1432,7 @@ const cornerClash = (page) => page.evaluate(() => {
     check(`tấm đáy ${scheme}: chạm ra ngoài (xuyên qua nền mờ) đóng tấm, nền mờ ẩn, theme-color trả lại`, !d2.sheet && !d2.shown && d2.tc === bg, JSON.stringify(d2));
     // Chọn nhiều dòng ở lề số (Source): tấm hiện, không có nền mờ; chạm lề dòng khác vẫn thêm / bỏ dòng.
     await sp.tap('.ma-tab[data-view="src"]'); await sp.waitForTimeout(150);
-    const gut = (n) => sp.$eval(`#v-src .ma-ln:nth-child(${n})`, (el) => { el.scrollIntoView({ block: 'start' }); const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
+    const gut = (n) => sp.$eval(`#v-src .ma-ln:nth-child(${n})`, (el) => { el.scrollIntoView({ block: 'center' }); const r = el.getBoundingClientRect(); return { x: r.left + 4, y: r.top + 8 }; });
     const picks = () => sp.$$eval('#v-src .ma-ln', (ls) => ls.map((l, i) => (l.classList.contains('is-pick') ? i + 1 : 0)).filter(Boolean).join());
     const g3 = await gut(3); await sp.mouse.dblclick(g3.x, g3.y); await sp.waitForTimeout(250);
     const d3 = await dim();
